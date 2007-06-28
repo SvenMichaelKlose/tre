@@ -15,10 +15,6 @@ struct lisp_list {
     lispptr cdr;
 };
 
-/*
- * Type pointers to list items have unset type flags, so we can use them
- * immediately as the index into the list node table.
- */
 #define _CAR(x) 	(lisp_lists[x].car)
 #define _CDR(x) 	(lisp_lists[x].cdr)
 
@@ -100,7 +96,6 @@ extern lispptr lisplist_nth (lispptr, unsigned);
 extern lispptr lisplist_last (lispptr);
 
 extern void lisplist_free (lispptr);
-extern void lisplist_free_noref (lispptr);
 extern void lisplist_free_expr (lispptr);
 extern void lisplist_free_toplevel (lispptr);
 

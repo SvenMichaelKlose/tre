@@ -1024,7 +1024,7 @@ STRUCTURES
 
     (WITH-STRUCT struct-name var &REST body) - non-standard macro
 	Binds all fields of structure 'var' of type 'structure-name' to
-	equally named variabled for the evaluation of 'body'.
+	equally named variables for the evaluation of 'body'.
 
 STREAMS
 
