@@ -231,7 +231,7 @@ lispatom_builtin_atom_list_s (lispptr ret)
 
     for (n = 0; n < NUM_ATOMS; n++) {
 	if (a->type == ATOM_FUNCTION) {
-            PUSH(ret, TYPEINDEX_TO_LISPPTR(ATOM_FUNCTION, n));
+            LISPLIST_PUSH(ret, TYPEINDEX_TO_LISPPTR(ATOM_FUNCTION, n));
 	}
 	a++;
     }

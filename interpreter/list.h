@@ -53,12 +53,6 @@ struct lisp_list {
 #define _DOLIST(iter,lst) \
     for (iter = lst; iter != lispptr_nil; iter = _CDR(iter))
 
-#define PUSH(to, what) \
-    { \
-	lispptr tmp = CONS(what, to); \
-	to = tmp; \
-    }
-
 #define LISP_MARK(marks, i)     (marks[i >> 3] |= (1 << (i & 7)))
 #define LISP_UNMARK(marks, i)   (marks[i >> 3] &= ~(1 << (i & 7)))
 #define LISP_GETMARK(marks, i)  (marks[i >> 3] & (1 << (i & 7)))
