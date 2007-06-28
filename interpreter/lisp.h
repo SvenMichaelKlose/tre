@@ -10,7 +10,7 @@
 
 typedef int bool;
 
-#define LISP_VERSION	"0.0.1"
+#define LISP_VERSION	"0.2.0"
 
 #if 0
 #define LISP_DIAGNOSTICS	/* Do diagnostic checks. */
@@ -74,8 +74,7 @@ typedef int bool;
 
 #ifndef LISP_COPYRIGHT
 #define LISP_COPYRIGHT \
-	"nix operating system project\n" \
-	"list processor " LISP_VERSION " (" __DATE__ " " __TIME__ ")\n"
+	"nix list processor " LISP_VERSION " (" __DATE__ " " __TIME__ ")\n"
 #endif
 
 #define LISPPTR_TYPESHIFT	27
