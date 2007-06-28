@@ -10,7 +10,7 @@
 
 typedef int bool;
 
-#define LISP_VERSION	"0.2.0"
+#define LISP_VERSION	"0.3.0"
 
 #if 0
 #define LISP_DIAGNOSTICS	/* Do diagnostic checks. */
