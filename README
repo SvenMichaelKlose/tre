@@ -1,0 +1,18 @@
+nix lisp machine
+Copyright (C) 2005-2007 Sven Klose <pixel@copei.de>
+
+This is a LISP interpreter for unixoid systems, written in C.
+
+BUGS		A list of known bugs.
+MANUAL		The user manual.
+README		This file.
+TODO		What's missing.
+
+compiler	The LISP compiler.
+environment	The LISP environment with standard functions and macros.
+interpreter	The LISP interpreter.
+
+make-clean.sh	The directory cleaner. Make backups before use!
+make-crunsh.sh	Compiles a compressed version of the interpreter.
+make-debug.sh	Compiles the interpreter for use with GDB.
+make.sh		Make a developer version.
