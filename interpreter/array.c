@@ -29,7 +29,6 @@ lisparray_get_raw (unsigned size)
 	return NULL;
 
     /* Initialise elements. */
-    lisp_atoms[0].refcnt += size;
     while (size--)
 	array[size] = lispptr_nil;
 
@@ -77,14 +76,6 @@ lisparray_get (lispptr sizes)
 void
 lisparray_free (lispptr array)
 {
-    unsigned  size = LISPARRAY_SIZE(array);
-    lispptr   *p = LISPATOM_DETAIL(array);
-
-    /* Unref all elements in array. */
-    while (size--)
-	lispatom_unref (*p++);
-
-    /* Free array and its definition. */
     lispalloc_free (LISPATOM_DETAIL(array));
 }
 
@@ -108,9 +99,7 @@ lisparray_set (lispptr *a, unsigned idx, lispptr val)
     if (a[idx] == val)
 	return;
 
-    lispatom_unref (a[idx]);
     a[idx] = val;
-    lispatom_ref (a[idx]);
 }
 
 /* Sequence: replace value at index. */

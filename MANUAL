@@ -1240,9 +1240,6 @@ INTERNAL FUNCTIONS
     LISP_ENVIRONMENT
         Path to environment directory.
 
-    LISP_NO_REFCNT         
-	No reference counting. (Reference counting will be removed!)
-
     LISP_NO_MANUAL_FREE    
 	Don't free internal garbage manually, leave it for mark-and-sweep
 	removal.

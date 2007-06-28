@@ -114,7 +114,8 @@ lisperror_builtin_error (lispptr args)
 void
 lisperror_init ()
 {
-    lisperror_current_macro = lispatom_refget ("*CURRENT-MACRO*", LISPCONTEXT_PACKAGE());
+    lisperror_current_macro = lispatom_get ("*CURRENT-MACRO*", LISPCONTEXT_PACKAGE());
+    EXPAND_UNIVERSE(lisperror_current_macro);
 }
 
 char *

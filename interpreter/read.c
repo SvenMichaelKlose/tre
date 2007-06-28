@@ -357,9 +357,14 @@ lispread_init ()
     LISPCONTEXT_TOKEN_NAME()[0] = 0;
 
     /* Reader expansions. */
-    lispatom_quote = lispatom_refget ("QUOTE", LISPCONTEXT_PACKAGE());
-    lispatom_backquote = lispatom_refget ("BACKQUOTE", LISPCONTEXT_PACKAGE());
-    lispatom_quasiquote = lispatom_refget ("QUASIQUOTE", LISPCONTEXT_PACKAGE());
-    lispatom_quasiquote_splice = lispatom_refget ("QUASIQUOTE-SPLICE", LISPCONTEXT_PACKAGE());
-    lispatom_function = lispatom_refget ("FUNCTION", LISPCONTEXT_PACKAGE());
+    lispatom_quote = lispatom_get ("QUOTE", LISPCONTEXT_PACKAGE());
+    lispatom_backquote = lispatom_get ("BACKQUOTE", LISPCONTEXT_PACKAGE());
+    lispatom_quasiquote = lispatom_get ("QUASIQUOTE", LISPCONTEXT_PACKAGE());
+    lispatom_quasiquote_splice = lispatom_get ("QUASIQUOTE-SPLICE", LISPCONTEXT_PACKAGE());
+    lispatom_function = lispatom_get ("FUNCTION", LISPCONTEXT_PACKAGE());
+    EXPAND_UNIVERSE(lispatom_quote);
+    EXPAND_UNIVERSE(lispatom_backquote);
+    EXPAND_UNIVERSE(lispatom_quasiquote);
+    EXPAND_UNIVERSE(lispatom_quasiquote_splice); /* XXX */
+    EXPAND_UNIVERSE(lispatom_function);
 }

@@ -205,12 +205,10 @@ lispprint_indent (lispptr p, unsigned indent, bool nobracket, char *prepend)
     if (_CAR(p) == p) {
 	printf ("cons self-referenced in car");
         _CAR(p) = lispptr_nil;
-        lispatom_ref (lispptr_nil);
     }
     if (_CDR(p) == p) {
 	printf ("cons self-referenced in car");
         _CDR(p) = lispptr_nil;
-        lispatom_ref (lispptr_nil);
     }
 
     car = _CAR(p);

@@ -85,21 +85,10 @@ lispspecial_setq (lispptr list)
 	/* Catch RETURN-FROM. */
 	LISPEVAL_RETURN_JUMP(cdr);
 
-	switch (LISPPTR_TYPE(car)) {
-	    case ATOM_VARIABLE:
-                /* Make object permanent if it is assigned to a symbol. */
-	        if (atom->value == car) {
-		    lispatom_ref (car); /* make atom in car permanent. */
-		    lispatom_ref (cdr);
-		    atom->value = cdr;
-	        } else
-	            /* Let variable point to result. */
-                    lispatom_set_value (car, cdr);
-		break;
-
-	    default:
-	        return lisperror (car, "variable expected");
-	}
+	if (LISPPTR_TYPE(car) == ATOM_VARIABLE)
+            lispatom_set_value (car, cdr);
+        else
+	    return lisperror (car, "variable expected");
 
 	/* Step to next pair. */
     } while (list != lispptr_nil);
@@ -460,9 +449,13 @@ void
 lispspecial_init ()
 {
     lisp_atom_evaluated_go
-        = lispatom_refget ("%%EVALD-GO", LISPCONTEXT_PACKAGE());
+        = lispatom_get ("%%EVALD-GO", LISPCONTEXT_PACKAGE());
     lisp_atom_evaluated_return_from
-        = lispatom_refget ("%%EVALD-RETURN-FROM", LISPCONTEXT_PACKAGE());
+        = lispatom_get ("%%EVALD-RETURN-FROM", LISPCONTEXT_PACKAGE());
     lispatom_lambda
-        = lispatom_refget ("LAMBDA", LISPCONTEXT_PACKAGE());
+        = lispatom_get ("LAMBDA", LISPCONTEXT_PACKAGE());
+
+    EXPAND_UNIVERSE(lisp_atom_evaluated_go);
+    EXPAND_UNIVERSE(lisp_atom_evaluated_return_from);
+    EXPAND_UNIVERSE(lispatom_lambda);
 }

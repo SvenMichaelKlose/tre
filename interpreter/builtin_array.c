@@ -141,11 +141,7 @@ lisparray_builtin_set_aref (lispptr list)
     if (elts == NULL)
         return lisperror (lispptr_invalid, "index error");
 
-    if (*elts != val) {
-        lispatom_unref (*elts);
-        lispatom_ref (val);
-        *elts = val;
-    }
+    *elts = val;
 
     return val;
 }

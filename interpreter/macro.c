@@ -65,7 +65,7 @@ lispmacro_builtin_macroexpand (lispptr list)
 void
 lispmacro_init (void)
 {
-    lispptr_macroexpand_hook = lispatom_refget ("*MACROEXPAND-HOOK*",
-                                                LISPCONTEXT_PACKAGE());
+    lispptr_macroexpand_hook = lispatom_get ("*MACROEXPAND-HOOK*", LISPCONTEXT_PACKAGE());
+    EXPAND_UNIVERSE(lispptr_macroexpand_hook);
     lispatom_macroexpand_hook = LISPPTR_TO_ATOM(lispptr_macroexpand_hook);
 }

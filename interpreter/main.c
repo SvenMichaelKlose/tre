@@ -117,8 +117,8 @@ lisp_init (int argc, char *argv)
 
     /* Create global %LAUNCHFILE variable containing the application file
      * to evaluate after the environment is set up. */
-    lf = lispatom_refget ("%LAUNCHFILE", LISPCONTEXT_PACKAGE());
-    lispatom_ref (lf); /* Make atom permanent. */
+    lf = lispatom_get ("%LAUNCHFILE", LISPCONTEXT_PACKAGE());
+    EXPAND_UNIVERSE(lf);
     if (argc == 2)
         tmp = lispstring_get (argv);
     else
@@ -149,9 +149,6 @@ main (int argc, char *argv[])
 #endif
 #ifdef LISP_GC_DEBUG
     printf ("!!! LISP_GC_DEBUG - will run GC everywhere !!!\n");
-#endif
-#ifndef LISP_NO_REFCNT
-    printf ("Reference counting ON.\n");
 #endif
 #ifdef LISP_NO_MANUAL_FREE
     printf ("Early garbage removal OFF.\n");

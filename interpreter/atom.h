@@ -3,11 +3,6 @@
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * Atom-related section.
- *
- * Atoms are generic structure representing symbol values which may be
- * any type of opbject. Reference counting is used for number values
- * and vectors containing only values, like strings. Reference counting
- * is not used for other types to avoid circular references.
  */
 
 #ifndef LISP_ATOM_H
@@ -40,7 +35,6 @@ struct lisp_atom {
     lispptr	binding;
     lispptr	package;
     void 	*detail;
-    unsigned	refcnt;
 };
 
 extern struct lisp_atom lisp_atoms[NUM_ATOMS];
@@ -57,7 +51,6 @@ extern lispptr lisp_package_keyword;
 	lisp_atoms[atomi].binding = lispptr_nil;	\
 	lisp_atoms[atomi].package = pack;	\
 	lisp_atoms[atomi].type = typ;	\
-	lisp_atoms[atomi].refcnt = 0; \
 	lisp_atoms[atomi].detail = NULL
 
 #define LISPATOM_FLAGS		(-1 << LISPPTR_TYPESHIFT)
@@ -76,7 +69,6 @@ extern lispptr lisp_package_keyword;
 #define LISPATOM_FUN(ptr)	(LISPPTR_TO_ATOM(ptr)->fun)
 #define LISPATOM_BINDING(ptr)	(LISPPTR_TO_ATOM(ptr)->binding)
 #define LISPATOM_PACKAGE(ptr)	(LISPPTR_TO_ATOM(ptr)->package)
-#define LISPATOM_REFCNT(ptr)	(LISPPTR_TO_ATOM(ptr)->refcnt)
 #define LISPATOM_DETAIL(ptr)	(LISPPTR_TO_ATOM(ptr)->detail)
 #define LISPATOM_SET_DETAIL(ptr, val)	(LISPPTR_TO_ATOM(ptr)->detail = (void *) val)
 #define LISPATOM_STRING(ptr)	((struct lisp_string *) LISPATOM_DETAIL(ptr))
@@ -100,9 +92,12 @@ extern lispptr lisp_package_keyword;
 
 #define LISPPTR_TRUTH(test)	((test) ? lispptr_t : lispptr_nil)
 
+#define EXPAND_UNIVERSE(atom)   (universe = CONS(atom, universe))
+
 extern const lispptr lispptr_nil;
 extern const lispptr lispptr_t;
 extern const lispptr lispptr_invalid;
+extern lispptr universe;
 extern lispptr lispptr_universe;
 
 /* Already looked-up atoms. */
@@ -123,7 +118,6 @@ extern lispptr lispatom_seek (char *, lispptr package);
 
 /* Lookup or create atom. */
 extern lispptr lispatom_get (char *, lispptr package);
-extern lispptr lispatom_refget (char *, lispptr package);
 
 /* Create new number atom for computational values. */
 extern lispptr lispatom_number_get (float, int type);
@@ -131,9 +125,6 @@ extern lispptr lispatom_number_get (float, int type);
 extern lispptr lispatom_alloc (char *symbol, lispptr package, int type, lispptr value);
 extern void lispatom_free (lispptr);
 
-extern void lispatom_ref (lispptr);
-extern void lispatom_unref (lispptr);
-extern void lispatom_reref (lispptr *old, lispptr new);
 extern void lispatom_remove (lispptr);
 
 extern void lispatom_set_value (lispptr atom, lispptr value);

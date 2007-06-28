@@ -304,9 +304,12 @@ void
 lisparg_init (void)
 {
     /* Create keywords. */
-    lisp_atom_rest = lispatom_refget ("&REST", lispptr_nil);
-    lisp_atom_optional = lispatom_refget ("&OPTIONAL", lispptr_nil);
-    lisp_atom_key = lispatom_refget ("&KEY", lispptr_nil);
+    lisp_atom_rest = lispatom_get ("&REST", lispptr_nil);
+    lisp_atom_optional = lispatom_get ("&OPTIONAL", lispptr_nil);
+    lisp_atom_key = lispatom_get ("&KEY", lispptr_nil);
+    EXPAND_UNIVERSE(lisp_atom_rest);
+    EXPAND_UNIVERSE(lisp_atom_optional);
+    EXPAND_UNIVERSE(lisp_atom_key);
 
     lispthread_make ();
 }

@@ -4,7 +4,7 @@
 ;;;;
 ;;;; Environment toplevel
 
-(setq *universe* (cons 'env-load (cons '%launchfile *universe*)))
+(setq *universe* (cons 'env-load *universe*))
 
 (%set-atom-fun env-load
   #'(lambda (path)

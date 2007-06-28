@@ -70,7 +70,7 @@ lispnumber_alloc (float value, int type)
 	    lisperror_internal (next_free, "out of numbers");
     }
 
-    lisplist_free_noref (lisp_numbers_unused);
+    lisplist_free (lisp_numbers_unused);
     lisp_numbers_unused = next_free;
     NUMBER_SET(&lisp_numbers[i], value, type);
 

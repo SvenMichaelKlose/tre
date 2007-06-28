@@ -69,7 +69,6 @@ lispenv_bind (lispptr la, lispptr lv)
     	atom = LISPPTR_TO_ATOM(arg);
         atom->binding = CONS(atom->value, atom->binding);
         atom->value = val;
-        lispatom_ref (val);
     }
 
     if (la != lispptr_nil)
@@ -103,7 +102,6 @@ lispenv_bind_sloppy (lispptr la, lispptr lv)
             atom->value = CAR(lv);
         else
             atom->value = lispptr_nil;
-        lispatom_ref (atom->value);
         
         la = CDR(la);
         if (lv != lispptr_nil)
@@ -121,7 +119,6 @@ lispenv_unbind (lispptr la)
     for (;la != lispptr_nil; la = CDR(la)) {
         atom = LISPPTR_TO_ATOM(CAR(la));
         bding = atom->binding; 
-        lispatom_unref (atom->value);
         atom->value = CAR(bding);
         atom->binding = CDR(bding);
         LISPLIST_FREE_EARLY(bding);

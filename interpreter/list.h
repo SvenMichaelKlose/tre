@@ -74,19 +74,13 @@ struct lisp_list {
 #define LISPLIST_PUSH(stack, expr) \
     stack = _lisplist_get (expr, stack);
 
-#define LISPLIST_PUSH_NOREF(stack, expr) \
-    stack = lisplist_get_noref ((lispptr) expr, stack);
-
 #define LISPLIST_POP(stack) \
     { int __llpp = CDR(stack); 	\
       lisplist_free (stack);	\
       stack = __llpp;		\
     }
-
-#define LISPLIST_POP_NOREF(stack) \
-    { int __llpp = _CDR(stack); \
-      stack = __llpp;		\
-    }
+#define LISPLIST_PUSH_NOREF(stack, expr) \
+    stack = lisplist_get_noref ((lispptr) expr, stack);
 
 #define LISPLIST_DEFREGS() \
 	lispptr car;	\

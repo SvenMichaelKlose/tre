@@ -63,8 +63,6 @@ lisplist_rplaca (lispptr cons, lispptr val)
 #endif
 
     CHKPTR(val);
-    lispatom_ref (val);
-    lispatom_unref (_CAR(cons));
     _CAR(cons) = val;
 }
 
@@ -77,8 +75,6 @@ lisplist_rplacd (lispptr cons, lispptr val)
 #endif
 
     CHKPTR(val);
-    lispatom_ref (val);
-    lispatom_unref (_CDR(cons));
     _CDR(cons) = val;
 }
 
@@ -86,7 +82,7 @@ lisplist_rplacd (lispptr cons, lispptr val)
  * Free single list element.
  */
 void
-lisplist_free_noref (lispptr node)
+lisplist_free (lispptr node)
 {
     CHKPTR(node);
 
@@ -108,17 +104,6 @@ lisplist_free_noref (lispptr node)
     lisplist_free_nodes = node;
 
     lisplist_num_used--;
-}
-
-/*
- * Free single list element.
- */
-void
-lisplist_free (lispptr node)
-{
-    lispatom_unref (CAR(node));
-    lispatom_unref (CDR(node));
-    lisplist_free_noref (node);
 }
 
 /*
@@ -196,11 +181,6 @@ _lisplist_get (lispptr car, lispptr cdr)
 
     CHKPTR(car);
     CHKPTR(cdr);
-
-    /* Avoid removal of register values by garbage-collection. */
-
-    lispatom_ref (car);
-    lispatom_ref (cdr);
 
     ret = lisplist_get_noref (car, cdr);
     lispgc_push (ret);

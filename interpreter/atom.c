@@ -40,7 +40,8 @@ const lispptr lispptr_nil = TYPEINDEX_TO_LISPPTR(1, 0);
 const lispptr lispptr_t = TYPEINDEX_TO_LISPPTR(1, 1);
 const lispptr lispptr_invalid = (lispptr) -1;
 
-lispptr lispptr_universe;
+lispptr universe; /* Universe list */
+lispptr lispptr_universe; /* *UNIVERSE* variable */
 
 lispptr lispatom_quote;
 lispptr lispatom_backquote;
@@ -62,13 +63,6 @@ lispatom_init_nil (void)
     lisp_atoms[0].value = TYPEINDEX_TO_LISPPTR(ATOM_VARIABLE, 0), 1;
     lisp_atoms[0].fun = lispptr_nil;
     lisp_atoms[0].binding = lispptr_nil;
-
-    /*
-     * Reference counts of NIL = all empty atom values, bindings and functions
-     * plus 1 to make NIL permanent. This saves (de-)referencing
-     * initial NIL values when (de-)allocating atoms.
-     */
-    lisp_atoms[0].refcnt = (NUM_ATOMS * 3) + 1;
 }
 
 void
@@ -89,11 +83,6 @@ lispatom_init_atom_table (void)
     lisp_atoms_unused = p;
 }
 
-#define EXPAND_UNIVERSE(atom) \
-    universe = CONS(atom, universe)
-
-lispptr universe;
-
 void
 lispatom_init_builtins (void)
 {
@@ -105,7 +94,6 @@ lispatom_init_builtins (void)
         atom = lispatom_alloc (lisp_builtin_names[i], lispptr_nil,
                                ATOM_BUILTIN, lispptr_nil);
         LISPATOM_SET_DETAIL(atom, i);
-        lispatom_ref (atom);
         EXPAND_UNIVERSE(atom);
     }
 
@@ -114,7 +102,6 @@ lispatom_init_builtins (void)
         atom = lispatom_alloc (lisp_special_names[i], lispptr_nil,
                                ATOM_SPECIAL, lispptr_nil);
         LISPATOM_SET_DETAIL(atom, i);
-        lispatom_ref (atom);
         EXPAND_UNIVERSE(atom);
     }
 }
@@ -125,16 +112,20 @@ lispatom_init_builtins (void)
 void
 lispatom_init (void)
 {
+    lispptr t;
+
     lispatom_init_nil ();
     lispatom_init_atom_table ();
-    (void) lispatom_refget ("T", lispptr_nil);
-    lisp_package_keyword = lispatom_alloc ("", lispptr_nil,
-                                           ATOM_PACKAGE, lispptr_nil);
-    universe = CONS(lisp_package_keyword, lispptr_nil);
+
+    t = lispatom_get ("T", lispptr_nil);
+    EXPAND_UNIVERSE(t);
+
+    lisp_package_keyword = lispatom_alloc ("", lispptr_nil, ATOM_PACKAGE, lispptr_nil);
+    EXPAND_UNIVERSE(lisp_package_keyword);
+
     lispatom_init_builtins ();
-    lispptr_universe = lispatom_alloc ("*UNIVERSE*", lispptr_nil,
-                                       ATOM_VARIABLE, universe);
-    lispatom_ref (lispptr_universe);
+
+    lispptr_universe = lispatom_alloc ("*UNIVERSE*", lispptr_nil, ATOM_VARIABLE, universe);
 }
 
 void
@@ -146,19 +137,19 @@ lispatom_set_name (lispptr atom, char *name)
 void
 lispatom_set_value (lispptr atom, lispptr value)
 {
-    lispatom_reref (&LISPATOM_VALUE(atom), value);
+    LISPATOM_VALUE(atom) = value;
 }
 
 void
 lispatom_set_function (lispptr atom, lispptr value)
 {
-    lispatom_reref (&LISPATOM_FUN(atom), value);
+    LISPATOM_FUN(atom) = value;
 }
 
 void
 lispatom_set_binding (lispptr atom, lispptr value)
 {
-    lispatom_reref (&LISPATOM_BINDING(atom), value);
+    LISPATOM_BINDING(atom) = value;
 }
 
 /* Allocate an atom. */
@@ -181,7 +172,7 @@ lispatom_alloc (char *symbol, lispptr package, int type, lispptr value)
 	lisperror_internal (lispptr_invalid, "trying to free unused atom");
 #endif
     ntop = CDR(lisp_atoms_unused);
-    lisplist_free_noref (lisp_atoms_unused);
+    lisplist_free (lisp_atoms_unused);
     lisp_atoms_unused = ntop;
 
     /* Make self-referencing ordinary. */
@@ -278,7 +269,7 @@ lispatom_seek (char *symbol, lispptr package)
 /*
  * Seek or create symbolic atom.
  *
- * Create or reuse atom of name 'symbol'. The reference count is set to 0.
+ * Create or reuse atom of name 'symbol'.
  */
 lispptr
 lispatom_get (char *symbol, lispptr package)
@@ -295,43 +286,6 @@ lispatom_get (char *symbol, lispptr package)
         return lispatom_number_get (valuetofloat (symbol), LISPNUMTYPE_FLOAT);
 
     return lispatom_alloc (symbol, package, ATOM_VARIABLE, lispptr_invalid);
-}
-
-/* Seek or create symbolic atom with reference count set to 1. */
-lispptr
-lispatom_refget (char *symbol, lispptr package)
-{
-    lispptr ret = lispatom_get (symbol, package);
-    lispatom_ref (ret);
-    return ret;
-}
-
-/* Replace pointer. */
-void
-lispatom_reref (lispptr *old, lispptr new)
-{
-    if (*old == new) /* Do nothing if same to not remove old by accident. */
-	return;
-
-    lispatom_ref (new);
-    lispatom_unref (*old);
-    *old = new;
-}
-
-/* Increment atom reference counter. */
-void
-lispatom_ref (lispptr el)
-{
-#ifdef LISP_NO_REFCNT
-    return;
-#else
-    CHKPTR(el);
-
-    if (LISPPTR_IS_EXPR(el))
-	return;
-
-    LISPATOM_REFCNT(el)++;
-#endif
 }
 
 /*
@@ -356,54 +310,6 @@ lispatom_remove (lispptr el)
     }
 
     lispatom_free (el);
-}
-
-/*
- * Decrement atom reference counter.
- *
- * If the counter reaches 0 the atom is removed.
- */
-void
-lispatom_unref (lispptr el)
-{
-#ifdef LISP_NO_REFCNT
-    return;
-#else
-    struct lisp_atom *a;
-
-    if (LISPPTR_IS_EXPR(el))
-	return;
-
-    /* When GC is running, avoid unreferencing already removed atoms. */
-    if (lispgc_running)
-        if (LISPPTR_TO_ATOM(el)->type == ATOM_UNUSED)
-	    return;
-
-    CHKPTR(el);
-    if (LISPATOM_REFCNT(el) == 2 && LISPATOM_VALUE(el) == el) {
-        lispatom_remove (el);
-        return;
-    }
-
-    a = LISP_ATOM(LISPPTR_INDEX(el));
-
-#ifdef LISP_DIAGNOSTICS
-    if (a->refcnt <= 0) {
-        if (a->type == ATOM_NUMBER)
-	    lisperror_internal (
-                lispptr_invalid,
-                "atom_unref: number '%-g' underflow, refcnt %d",
-                LISPNUMBER_VAL(el), a->refcnt);
-	else
-	    lisperror_internal (a->value, "atom_unref: '%s' underflow, refcnt %d", a->name, a->refcnt);
-    }
-#endif
-
-    if (--a->refcnt)
-        return;
-
-    lispatom_remove (el);
-#endif
 }
 
 /* Lookup variable that points to function containing body. */

@@ -24,8 +24,6 @@ typedef int bool;
 #define LISP_NO_MANUAL_FREE	/* Don't free internal garbage manually. */
 #endif
 
-#define LISP_NO_REFCNT		/* No reference counting. Keep it! */
-
 #define LISP_MAX_SYMLEN		64
 #define LISP_MAX_STRINGLEN	1024
 #define LISP_SYMBOL_TABLE_SIZE	65536

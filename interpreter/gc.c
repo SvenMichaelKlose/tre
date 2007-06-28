@@ -43,9 +43,6 @@ bool lispgc_running;
 void
 lispgc_push (lispptr expr)
 {
-    if (LISPPTR_IS_ATOM(expr))
-	lispatom_ref (expr);
-
     LISPLIST_PUSH_NOREF(lispgc_save_stack, expr);
 }
 
@@ -61,16 +58,11 @@ lispgc_pop ()
 }
 
 /*
- * Reference return value. Unreference former return value.
+ * Save value during GC. One at a time.
  */
 void
 lispgc_retval (lispptr retval)
 {
-    if (lispgc_retval_current == retval)
-	return;
-
-    lispatom_ref (retval);
-    lispatom_unref (lispgc_retval_current);
     lispgc_retval_current = retval;
 }
 
@@ -168,22 +160,6 @@ lispgc_trace_atom (lispptr a)
     lispgc_trace_object (atom->binding);
 }
 
-#ifndef LISP_NO_REFCNT
-/* Trace all symbols. */
-void
-lispgc_trace_symbols (void)
-{
-    unsigned  i;
-
-    DOTIMES(i, NUM_ATOMS) {
-        if (lisp_atoms[i].type == ATOM_UNUSED && lisp_atoms[i].name != NULL)
-	    continue;
-
-	lispgc_trace_atom (LISPATOM_PTR(i));
-    }
-}
-#endif
-
 void
 lispgc_mark (void)
 {
@@ -213,10 +189,6 @@ lispgc_mark (void)
     lispgc_trace_expr_toplevel (lisplist_free_nodes);
     lispgc_trace_expr_toplevel (lisp_numbers_unused);
     lispgc_trace_expr_toplevel (lisp_atoms_unused);
-
-#ifndef LISP_NO_REFCNT
-    lispgc_trace_symbols ();
-#endif
 }
  
 /* Remove all unmarked cons. */
@@ -228,7 +200,6 @@ lispgc_sweep (void)
     unsigned  idx;
     char  c;
 
-#ifdef LISP_NO_REFCNT
     /* Free marked atoms.
      *
      * Atoms must be freed first, so they can remove their internal conses.
@@ -246,7 +217,6 @@ lispgc_sweep (void)
 	    c <<= 1;
         }
     }
-#endif
 
     /* Free marked list elements. */
     DOTIMES(i, sizeof (lispgc_listmarks)) {

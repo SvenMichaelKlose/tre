@@ -14,6 +14,7 @@
 #include "error.h"
 #include "string.h"
 #include "thread.h"
+#include "list.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -147,9 +148,10 @@ lispio_init ()
     lispptr tmp;
     lispptr str;
 
-    tmp = lispatom_refget ("*ENVIRONMENT-PATH*", LISPCONTEXT_PACKAGE());
+    tmp = lispatom_get ("*ENVIRONMENT-PATH*", LISPCONTEXT_PACKAGE());
+    EXPAND_UNIVERSE(tmp);
+
     str = lispstring_get (LISP_ENVIRONMENT);
-    lispatom_ref (str);
     LISPATOM_VALUE(tmp) = str;
 
     lispio_mkstd ();
