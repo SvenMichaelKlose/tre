@@ -43,7 +43,7 @@ bool lispgc_running;
 void
 lispgc_push (lispptr expr)
 {
-    LISPLIST_PUSH_NOREF(lispgc_save_stack, expr);
+    LISPLIST_PUSH(lispgc_save_stack, expr);
 }
 
 void

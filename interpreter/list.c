@@ -182,8 +182,10 @@ _lisplist_get (lispptr car, lispptr cdr)
     CHKPTR(car);
     CHKPTR(cdr);
 
+    lispgc_car = car;
+    lispgc_cdr = cdr;
     ret = lisplist_get_noref (car, cdr);
-    lispgc_push (ret);
+    lispgc_retval (ret);
 
     /* Pop node from free list. */
     if (lisplist_num_used > (NUM_LISTNODES - 16)) {
@@ -198,7 +200,6 @@ _lisplist_get (lispptr car, lispptr cdr)
         lispgc_force ();
 #endif
 
-    lispgc_pop (); /* ret */
     return ret;
 }
 

@@ -89,7 +89,7 @@ lispnumber_free (lispptr n)
 #endif
 
     i = LISPNUMBER_INDEX(n);
-    lisp_numbers_unused = lisplist_get_noref (i, lisp_numbers_unused);
+    lisp_numbers_unused = CONS(i, lisp_numbers_unused);
 }
 
 /* Initialise this section. */
@@ -101,6 +101,6 @@ lispnumber_init ()
 
     /* Put all numbers on free list. */
     for (i = NUM_NUMBERS - 1; i != (unsigned) -1; i--)
-	p = lisplist_get_noref (i, p);
+	p = CONS(i, p);
     lisp_numbers_unused = p;
 }

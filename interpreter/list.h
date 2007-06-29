@@ -69,9 +69,6 @@ struct lisp_list {
       lisplist_free (stack);	\
       stack = __llpp;		\
     }
-#define LISPLIST_PUSH_NOREF(stack, expr) \
-    stack = lisplist_get_noref ((lispptr) expr, stack);
-
 #define LISPLIST_DEFREGS() \
 	lispptr car;	\
 	lispptr cdr
@@ -83,7 +80,6 @@ extern lispptr lisplist_free_nodes;
 extern unsigned lisplist_num_used;
 
 extern lispptr _lisplist_get (lispptr car, lispptr cdr);
-extern lispptr lisplist_get_noref (lispptr car, lispptr cdr);
 extern lispptr lisplist_copy (lispptr);
 extern lispptr lisplist_copy_tree (lispptr);
 extern lispptr lisplist_delete (unsigned, lispptr);

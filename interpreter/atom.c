@@ -63,6 +63,7 @@ lispatom_init_nil (void)
     lisp_atoms[0].value = TYPEINDEX_TO_LISPPTR(ATOM_VARIABLE, 0), 1;
     lisp_atoms[0].fun = lispptr_nil;
     lisp_atoms[0].binding = lispptr_nil;
+    EXPAND_UNIVERSE(lispptr_nil);
 }
 
 void
@@ -79,7 +80,7 @@ lispatom_init_atom_table (void)
     /* Put atom entries on the free atom list, except NIL. */
     p = lispptr_nil;
     for (i = NUM_ATOMS - 1; i > 0; i--)
-        p = lisplist_get_noref (i, p);
+        p = CONS(i, p);
     lisp_atoms_unused = p;
 }
 
@@ -114,6 +115,7 @@ lispatom_init (void)
 {
     lispptr t;
 
+    universe = lispptr_nil;
     lispatom_init_nil ();
     lispatom_init_atom_table ();
 
@@ -217,14 +219,13 @@ lispatom_free (lispptr atom)
     LISPPTR_TO_ATOM(atom)->type = ATOM_UNUSED;
 
     /* Add entry to list of free atoms. */
-    lisp_atoms_unused = lisplist_get_noref (LISPPTR_INDEX(atom),
-		                            lisp_atoms_unused);
+    lisp_atoms_unused = CONS(LISPPTR_INDEX(atom), lisp_atoms_unused);
+
+    /* Release symbol string. */
     if (LISPATOM_NAME(atom) != NULL) {
         lispsymbol_free (LISPATOM_NAME(atom));
     	LISPATOM_NAME(atom) = NULL;
     }
-
-    LISP_UNMARK(lispgc_atommarks, LISPPTR_INDEX(atom));
 }
 
 /*
