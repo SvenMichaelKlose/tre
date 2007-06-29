@@ -175,6 +175,10 @@ lispprint_atom (lispptr atom, unsigned indent)
 	    lispprint_array (atom);
 	    break;
 
+        case ATOM_PACKAGE:
+            printf ("(PACKAGE-ATOM)");
+	    break;
+
 	default:
 	    lisperror_internal (lispptr_invalid,
                                 "#<unknown atom %d (type %d index %d)>",
