@@ -526,9 +526,6 @@ lispdebug (void)
     lispdebug_level++;
     lispdebug_next = lispptr_nil;
     lispdebug_init_mirror_stack ();
-#if 0
-    lispdebug_print_parents ();
-#endif
 
     while (1) {
         if (ret) {
@@ -539,6 +536,8 @@ lispdebug (void)
         lispdebug_prompt ();
 	lispio_skip_spaces (lispio_console);
         c = lispio_getc (lispio_console);
+        if (lispio_eof (lispio_console))
+            lisp_exit (-1);
 
         switch (c) {
 	    case 's':
