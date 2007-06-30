@@ -51,7 +51,6 @@ lispio_getc (struct lisp_stream *s)
         c = LISPIO_GETC(s);
 #ifdef LISP_READ_ECHO
         putc (c, stdout);
-        fflush (stdout);
 #endif
     }
 
@@ -155,8 +154,6 @@ lispio_init ()
     LISPATOM_VALUE(tmp) = str;
 
     lispio_mkstd ();
-
-    printf (LISP_COPYRIGHT);
 }
 
 void
