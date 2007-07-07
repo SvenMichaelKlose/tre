@@ -18,22 +18,20 @@
 lispptr lispptr_macroexpand_hook;
 struct lisp_atom *lispatom_macroexpand_hook;
 
+lispptr lispptr_current_macro;
+
 lispptr
 lispmacro_builtin_macroexpand_1 (lispptr list)
 {
-    lispptr  args;
     lispptr  ret;
     lispptr  fake;
 
     if (lispatom_macroexpand_hook->fun == lispptr_nil)
         return list;
 
-    args = CONS(list, lispptr_nil);
-    lispgc_push (args);
-    fake = CONS(lispptr_macroexpand_hook, args),
+    fake = CONS(lispptr_macroexpand_hook, CONS(list, lispptr_nil));
     lispgc_push (fake);
     ret = lispeval_funcall (lispatom_macroexpand_hook->fun, fake, FALSE);
-    lispgc_pop ();
     lispgc_pop ();
 
     return ret;
@@ -42,7 +40,7 @@ lispmacro_builtin_macroexpand_1 (lispptr list)
 /*
  * (MACRO-EXPAND form)
  *
- * Expand all macro calls in form.
+ * Expand macros in form until it doesn't change anymore.
  */
 lispptr
 lispmacro_builtin_macroexpand (lispptr list)
@@ -66,6 +64,9 @@ void
 lispmacro_init (void)
 {
     lispptr_macroexpand_hook = lispatom_get ("*MACROEXPAND-HOOK*", LISPCONTEXT_PACKAGE());
-    EXPAND_UNIVERSE(lispptr_macroexpand_hook);
     lispatom_macroexpand_hook = LISPPTR_TO_ATOM(lispptr_macroexpand_hook);
+    EXPAND_UNIVERSE(lispptr_macroexpand_hook);
+
+    lispptr_current_macro = lispatom_get ("*CURRENT-MACRO*", LISPCONTEXT_PACKAGE());
+    EXPAND_UNIVERSE(lispptr_current_macro);
 }

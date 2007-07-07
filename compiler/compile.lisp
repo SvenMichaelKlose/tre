@@ -40,13 +40,11 @@
   (atomic-expand fun))
 
 (defun atomic-expand-all ()
-  (dolist (i (reverse (%atom-list)))
-    (when (functionp i)
-      (atomic-expand i)))
-  (format t "(environment-test")
-  (force-output)
-  (do-tests *tests*)
-  (format t ")~%"))
+  (dolist (i (reverse *universe*))
+    (awhen (symbol-function i)
+      (when (functionp !)
+        (atomic-expand !))
+      (do-tests *tests*))))
 
 (defun compile-all ()
   (tree-expand-reset)
@@ -56,4 +54,4 @@
 (defun test ()
   '(a b))
 
-(compile #'test)
+;(compile #'test)

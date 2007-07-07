@@ -36,7 +36,7 @@ lisparg_get (lispptr list)
         return lisperror (list, "argument expected");
     
     if (CDR(list) != lispptr_nil)
-        lisperror (list, "single argument expected");
+        return lisperror (list, "single argument expected");
     
     return CAR(list);
 }
@@ -50,21 +50,22 @@ void
 lisparg_get2 (lispptr *a, lispptr *b, lispptr list)
 {
     lispptr  cdr;
+    lispptr  tmp;
 
     *a = lispptr_nil;
     *b = lispptr_nil;
-    if (list == lispptr_nil) {
-        lisperror (list, "two args required. Would use NIL instead");
-	return;
-    }
+    while (list == lispptr_nil)
+        list = lisperror (list, "two args required");
 
     *a = CAR(list);
 
     cdr = CDR(list);
-    if (cdr == lispptr_nil)
-        *b = lisperror (list, "two args required (just one given). "
-                              "Specify second");
-    else
+    if (cdr == lispptr_nil) {
+        for (tmp = cdr; tmp == lispptr_nil;)
+            tmp = lisperror (list, "two args required (just one given). "
+                                   "Specify second");
+        *b = tmp;
+    } else
         *b = CAR(cdr);
 
     if (CDR(cdr) != lispptr_nil)

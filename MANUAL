@@ -13,9 +13,17 @@ INVOKATION
 
 USAGE
 
-    The program reads LISP expressions from the input stream and
-    interprets them. When reading from standard input, a prompt ('*')
-    is printed before reads.
+    lisp [-h] [-i image-file] [source-file]
+
+      -h  Print help message.
+      -i  Load image file before source-file.
+          See SYS-IMAGE-CREATE for details.
+
+    First, the interpreter checks if an image of the standard environment
+    exists. It is usually placed at ~/.nix-lisp.image. It is then loaded
+    instead of the source files.
+    When the environment is set up, an image is written, if it doesn't
+    already exist, and 'source-file' is loaded.
 
 SYNTAX
 
@@ -87,7 +95,7 @@ EXPRESSIONS
 	- user-defined special forms, also known as 'macros'
 	- and list elements, referred to as 'conses'.
 
-    Unbound symbols are variables which point to themselves.
+    Symbols are variables which point to themselves.
 
     Expressions are singly-linked lists. They are opened and closed with
     round brackets, '(' and ')' respectively. "(1 2 3)" would be a valid
@@ -290,11 +298,6 @@ COMPUTATIONAL VALUES
     (+ 0 1) will evaluate to a new number.
 
     Recursive functions will waste a lot of numbers.
-
-FUNCTIONS
-
-    There's no own name space for functions. The function quote #' is not
-    required and not supported.
 
 ### FUNCTION REFERENCE #####################################################
 
@@ -646,14 +649,13 @@ FUNCTIONS
     (FUNCTION (LAMBDA argument-list body)) - built-in special form (r)
     (FUNCTION argument-list body)
     (FUNCTION symbol)
-	Create new function or return function bound to symbol.
+	Create new function or return function bound to variable.
 
     (MACRO argument-list body) - built-in special form
-	Same as LAMBDA but returns user-defined special form. Arguments
-	are not evaluated before a special form is called.
+	Same as LAMBDA but returns a macro.
 
     (SPECIAL argument-list body) - built-in special form
-	Returns a function whose arguments are not evalueated when called.
+	Returns a function whose arguments are not evaluated when called.
 
 MACROS
 
@@ -1079,13 +1081,13 @@ PRINTING
 
 DEBUGGING
 
-    (INVOKE-DEBUGGER) - Built-in function
+    (INVOKE-DEBUGGER) - built-in function
 	Launches the debugger.
 
-    (SET-BREAKPOINT variable) - Built-in special operator
+    (SET-BREAKPOINT variable) - built-in special operator
 	Set breakpoint for function in variable.
 
-    (REMOVE-BREAKPOINT variable) - Built-in special operator
+    (REMOVE-BREAKPOINT variable) - built-in special operator
 	Remove breakpoint for function in variable.
 
     (END-DEBUG) - non-standard built-in function
@@ -1098,31 +1100,45 @@ ARGUMENTS
 	first contains the argument keywords, the second contains the
 	values.
 
+EXECUTABLES AND IMAGES
+
+    (SYS-IMAGE-CREATE filepath &OPTIONAL init-fun) - built-in function
+        Creates or replaces machine snapshot at 'filepath'.
+        The snapshot can is executable if the interpreter is in the
+        search path.
+        'init-fun' is an optional function that is evaluated after
+        the image is loaded.
+
+    (SYS-IMAGE-LOAD filepath) - built-in function
+        Replaces the running environment by an image.  If an initialisation
+        function was specified at the time the image was dumped, it is
+        evaluated.
+
 ALIEN INTERFACE
 
     The alien interface allows to link shared libraries and to call C
     functions.
 
-    (ALIEN-DLOPEN path)
+    (ALIEN-DLOPEN path) - built-in function
 	Expects a path to an object file. Returns a numeric handle.
 	The object file is dynamically linked to the environment.
 
-    (ALIEN-DLCLOSE handle)
+    (ALIEN-DLCLOSE handle) - built-in function
 	Unlinks an object file from the environment. An error is caused
 	if something goes wrong.
 
-    (ALIEN-DLSYM handle symbol_string)
+    (ALIEN-DLSYM handle symbol_string) - built-in function
 	Returns the numeric address of a symbol in the linked object
 	file specified by 'handle'.
 
-    (ALIEN-DLCALLx handle [args])
+    (ALIEN-DLCALLx handle [args]) - built-in function
 	Calls a C function in linked object file specified by handle.
 	x is the number of arguments to pass to the function. 0 means
 	no arguments. Up to four arguments are supported.
 
 MISCELLANEOUS
 
-    (GC) - non-standard built-in function
+    (GC) - built-in function
 	Triggers garbage collection. Prints statistics if compile-time
 	option LISP_VERBOSE_GC is set. Returns NIL.
 
@@ -1230,6 +1246,14 @@ INTERNAL FUNCTIONS
 
     LISP_BOOTFILE
         Path to environment toplevel file, relative to LISP_ENVIRONMENT.
+
+    LISP_BOOT_IMAGE
+        Path to cached environment dump which is loaded instead of
+        LISP_BOOT_IMAGE (if exists).
+
+    LISP_BOOT_IMAGE_HEADER
+        String to prefix images with. Used to for hash bang and informative
+        messages.
 
     LISP_DIAGNOSTICS
        Do diagnostic checks.

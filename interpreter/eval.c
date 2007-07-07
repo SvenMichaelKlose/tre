@@ -70,20 +70,6 @@ lispeval_funcall (lispptr func, lispptr expr, bool do_argeval)
         env_parent = LISPENV_PARENT(env_parent);
     }
 
-#ifdef LISP_DIAGNOSTICS
-    if (env) {
-        if (env == env_parent)
-	    lisperror_internal (lispptr_invalid,
-                                "funcall: env: parent %d is same", env);
-        if (env->symbols == 1)
-	    lisperror_internal (lispptr_invalid,
-                                "funcall: env should be unused");
-        if (env->parent && env->parent->symbols == 1)
-	    lisperror_internal (lispptr_invalid,
-                                "funcall: parent env should be unused");
-    }
-#endif
-
     /* Expand argument keywords. */
     lisparg_expand (&expforms, &expvals, forms, args, do_argeval);
     lispgc_push (expforms);

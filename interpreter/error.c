@@ -17,11 +17,10 @@
 #include "thread.h"
 #include "argument.h"
 #include "string.h"
+#include "macro.h"
 
 #include <stdio.h>
 #include <stdarg.h>
-
-lispptr lisperror_current_macro;
 
 void
 lisperror_msg (lispptr expr, const char *prefix, const char *msg, va_list ap)
@@ -53,7 +52,7 @@ lisperror_internal (lispptr expr, const char *msg, ...)
 void
 lisperror_macroexpansion (void)
 {
-    lispptr c = LISPATOM_VALUE(lisperror_current_macro);
+    lispptr c = LISPATOM_VALUE(lispptr_current_macro);
 
     if (c == lispptr_nil)
         return;
@@ -109,13 +108,6 @@ lisperror_builtin_error (lispptr args)
         lisperror (arg, "string expected");
 
     return lisperror (lispptr_invalid, LISPATOM_STRINGP(arg));
-}
-
-void
-lisperror_init ()
-{
-    lisperror_current_macro = lispatom_get ("*CURRENT-MACRO*", LISPCONTEXT_PACKAGE());
-    EXPAND_UNIVERSE(lisperror_current_macro);
 }
 
 char *

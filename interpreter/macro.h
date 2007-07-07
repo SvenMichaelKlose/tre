@@ -8,6 +8,8 @@
 #ifndef LISP_MACRO_H
 #define LISP_MACRO_H
 
+extern lispptr lispptr_current_macro;
+
 extern lispptr lispmacro_builtin_macroexpand_1 (lispptr);
 extern lispptr lispmacro_builtin_macroexpand (lispptr);
 

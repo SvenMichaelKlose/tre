@@ -12,7 +12,7 @@ extern lispptr lispeval_toplevel_current;
 extern bool lisp_is_initialized;
 
 extern void lisp_exit (int);
-extern void lisp_restart (void);
+extern void lisp_restart (lispptr);
 extern lispptr lisp_main_line (struct lisp_stream *);
 extern void lisp_main (void);
 

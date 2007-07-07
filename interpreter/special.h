@@ -14,8 +14,8 @@ extern bool lispeval_is_jump (lispptr);
 
 extern char *lisp_special_names[];
 
-extern lispptr lisp_atom_go;
-extern lispptr lisp_atom_return_from;
+extern lispptr lisp_atom_evaluated_go;
+extern lispptr lisp_atom_evaluated_return_from;
 
 extern lispptr lispspecial (lispptr func, lispptr expr);
 extern void lispspecial_init (void);

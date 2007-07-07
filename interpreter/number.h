@@ -19,12 +19,12 @@ struct lisp_number {
 
 #define LISP_NUMBER(index) (&lisp_numbers[index])
 #define LISPNUMBER_VAL(ptr) \
-	((LISP_NUMBER((int) LISPATOM_DETAIL(ptr)))->value)
+	((LISP_NUMBER((unsigned) LISPATOM_DETAIL(ptr)))->value)
 #define LISPNUMBER_TYPE(ptr) \
-	((LISP_NUMBER((int) LISPATOM_DETAIL(ptr)))->type)
+	((LISP_NUMBER((unsigned) LISPATOM_DETAIL(ptr)))->type)
 
 extern struct lisp_number lisp_numbers[NUM_NUMBERS];
-extern lispptr lisp_numbers_unused;
+extern lispptr lisp_numbers_free;
 
 /* Check if string contains a number. */
 extern bool lispnumber_is_value (char *);

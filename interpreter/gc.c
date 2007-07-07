@@ -21,6 +21,8 @@
 #include "alloc.h"
 #include "symbol.h"
 #include "xxx.h"
+#include "special.h"
+#include "image.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -29,7 +31,6 @@
 char lispgc_listmarks[NUM_LISTNODES_TOTAL >> 3];
 char lispgc_atommarks[NUM_ATOMS >> 3];
 
-lispptr lispgc_cons;
 lispptr lispgc_car;
 lispptr lispgc_cdr;
 lispptr lispgc_save_stack;
@@ -146,7 +147,6 @@ lispgc_trace_atom (lispptr a)
         case ATOM_FUNCTION:
 #if 0
         case ATOM_MACRO:
-        case ATOM_USERSPECIAL:
 #endif
 	    lispgc_trace_object ((lispptr) atom->detail);
 	    break;
@@ -161,34 +161,36 @@ lispgc_trace_atom (lispptr a)
 }
 
 void
-lispgc_mark (void)
+lispgc_mark_non_internal ()
 {
-    lispptr   p;
-
     /* Initialise mark map, */
     memset (lispgc_listmarks, -1, sizeof (lispgc_listmarks));
     memset (lispgc_atommarks, -1, sizeof (lispgc_atommarks));
 
-    _DOLIST(p, lisp_atoms_unused) {
-        LISP_UNMARK(lispgc_atommarks, _CAR(p));
-    }
-
     lispgc_trace_object (lispptr_universe);
+    lispgc_trace_object (lispimage_initfun);
+}
 
-    /* Mark function stack.*/
+void
+lispgc_mark (void)
+{
+    lispgc_mark_non_internal ();
+
     lispgc_trace_expr_toplevel (LISPCONTEXT_FUNSTACK());
 
     /* Mark temporarily untraceable objects. */
     lispgc_trace_object (lispgc_save_stack);
-    lispgc_trace_object (lispgc_cons);
     lispgc_trace_object (lispgc_car);
     lispgc_trace_object (lispgc_cdr);
     lispgc_trace_object (lispgc_retval_current);
 
     /* Mark bookkeeping lists. */
-    lispgc_trace_expr_toplevel (lisplist_free_nodes);
-    lispgc_trace_expr_toplevel (lisp_numbers_unused);
-    lispgc_trace_expr_toplevel (lisp_atoms_unused);
+    lispgc_trace_expr_toplevel (lisp_lists_free);
+    lispgc_trace_expr_toplevel (lisp_atoms_free);
+    lispgc_trace_expr_toplevel (lisp_numbers_free);
+
+    lispgc_trace_atom (lisp_atom_evaluated_go);
+    lispgc_trace_atom (lisp_atom_evaluated_return_from);
 }
  
 /* Remove all unmarked cons. */
@@ -209,9 +211,8 @@ lispgc_sweep (void)
 	DOTIMES(j, 8) {
 	    if (lispgc_atommarks[i] & c) {
 	        idx = (i << 3) + j;
-		if (LISPPTR_TO_ATOM(idx)->type != ATOM_UNUSED) {
+		if (LISPPTR_TO_ATOM(idx)->type != ATOM_UNUSED)
 	            lispatom_remove (TYPEINDEX_TO_LISPPTR(LISPATOM_TYPE(idx), idx));
-		}
             }
 
 	    c <<= 1;
@@ -292,20 +293,14 @@ lispgc_print_stats ()
             c[(unsigned) lisp_atoms[i].type]++;
         }
 
-    printf (": %d cons, %d atoms (%d var, %d num, %d arr, %d str, %d fun, %d mac, %d usr, %d pkg, %d blt, %d spc).\n",
-            lisplist_num_used - NUM_NUMBERS - NUM_ATOMS
-		+ atoms + c[ATOM_NUMBER],
+    printf (": %d cons, %d atoms "
+            "(%d var, %d num, %d arr, %d str, "
+            "%d fun, %d mac, %d usr, %d pkg, %d blt, %d spc).\n",
+            lisplist_num_used,
             atoms,
-            c[ATOM_VARIABLE],
-	    c[ATOM_NUMBER],
-            c[ATOM_ARRAY],
-	    c[ATOM_STRING],
-            c[ATOM_FUNCTION],
-            c[ATOM_MACRO],
-            c[ATOM_USERSPECIAL],
-            c[ATOM_PACKAGE],
-            c[ATOM_BUILTIN],
-            c[ATOM_SPECIAL]);
+            c[ATOM_VARIABLE], c[ATOM_NUMBER], c[ATOM_ARRAY], c[ATOM_STRING],
+            c[ATOM_FUNCTION], c[ATOM_MACRO], c[ATOM_USERSPECIAL],
+            c[ATOM_PACKAGE], c[ATOM_BUILTIN], c[ATOM_SPECIAL]);
     fflush (stdout);
 }
 
@@ -315,7 +310,6 @@ lispgc_init ()
     lispgc_running = FALSE;
     lispgc_save_stack = lispptr_nil;
     lispgc_retval_current = lispptr_nil;
-    lispgc_cons = lispptr_nil;
     lispgc_car = lispptr_nil;
     lispgc_cdr = lispptr_nil;
 }

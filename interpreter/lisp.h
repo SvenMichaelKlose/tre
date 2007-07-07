@@ -10,7 +10,12 @@
 
 typedef int bool;
 
-#define LISP_VERSION	"0.3.0"
+#ifndef LISP_COPYRIGHT
+#define LISP_COPYRIGHT \
+	"nix list processor " LISP_VERSION " (" __DATE__ " " __TIME__ ")\n"
+#endif
+
+#define LISP_VERSION	"current"
 
 #if 0
 #define LISP_DIAGNOSTICS	/* Do diagnostic checks. */
@@ -46,8 +51,6 @@ typedef int bool;
 #define NUM_LISTNODES	(1024 * 1024)
 #endif
 
-#define LISP_ENVPOOLS   (4 * 1024)
-
 #define NUM_LISTNODES_TOTAL	(NUM_LISTNODES + NUM_ATOMS + NUM_NUMBERS)
 
 #ifndef NULL
@@ -70,9 +73,12 @@ typedef int bool;
 #define LISP_BOOTFILE	"environment/main.lisp"
 #endif
 
-#ifndef LISP_COPYRIGHT
-#define LISP_COPYRIGHT \
-	"nix list processor " LISP_VERSION " (" __DATE__ " " __TIME__ ")\n"
+#ifndef LISP_BOOT_IMAGE
+#define LISP_BOOT_IMAGE	"~/.nix-lisp.image"
+#endif
+
+#ifndef LISP_IMAGE_HEADER
+#define LISP_IMAGE_HEADER  "#!lisp -i\n" LISP_COPYRIGHT
 #endif
 
 #define LISPPTR_TYPESHIFT	27

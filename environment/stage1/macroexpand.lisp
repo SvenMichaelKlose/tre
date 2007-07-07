@@ -5,15 +5,7 @@
 ;;;; Macro expansion
 
 (setq *universe* (cons '*macrop-diversion*
-                 (cons '*macrocall-diversion*
-                 (cons '%macroexpand-backquote
-                 (cons '%macroexpand-list
-                 (cons '%macroexpand-call
-                 (cons '%macroexpand
-                 (cons '%%macrop
-                 (cons '%%macrocall
-                 (cons '*current-macro*
-                 (cons '*macroexpand-hook* *universe*)))))))))))
+                 (cons '*macrocall-diversion* *universe*)))
 
 (setq *macrop-diversion* nil
       *macrocall-diversion* nil

@@ -4,6 +4,11 @@ Version numbers contain a major, minor and micro- version number separated
 by dots. If the minor version is an even number, the release is stable.
 Uneven minor versions are for releases under construction.
 
+0.2.1 (2007/07/07):
+
+    The machine can be dumped and loaded to/from an image. See new
+    built-in functions SYS-IMAGE-CREATE and SYS-IMAGE-LOAD.
+
 0.2.0 (2007/06/28):
 
     After endless experimenting with various designs, this is the first

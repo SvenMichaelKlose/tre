@@ -76,7 +76,7 @@ struct lisp_list {
 extern void lisplist_init (void);
 
 extern struct lisp_list lisp_lists[NUM_LISTNODES_TOTAL];
-extern lispptr lisplist_free_nodes;
+extern lispptr lisp_lists_free;
 extern unsigned lisplist_num_used;
 
 extern lispptr _lisplist_get (lispptr car, lispptr cdr);
@@ -84,7 +84,6 @@ extern lispptr lisplist_copy (lispptr);
 extern lispptr lisplist_copy_tree (lispptr);
 extern lispptr lisplist_delete (unsigned, lispptr);
 extern void lisplist_append (lispptr *lst, lispptr lst2);
-extern lispptr lisplist_reverse (lispptr);
 extern int lisplist_position (lispptr elt, lispptr lst);
 extern unsigned lisplist_length (lispptr);
 extern bool lisplist_equal (lispptr, lispptr);

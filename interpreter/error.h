@@ -8,8 +8,6 @@
 #ifndef LISP_ERROR_H
 #define LISP_ERROR_H
 
-extern void lisperror_init (void);
-
 extern void lisperror_internal (lispptr, const char *msg, ...);
 extern lispptr lisperror (lispptr, const char *msg, ...);
 extern void lisperror_norecover (lispptr, const char *msg, ...);

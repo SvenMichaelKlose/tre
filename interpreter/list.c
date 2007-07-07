@@ -25,7 +25,7 @@ struct lisp_list lisp_lists[NUM_LISTNODES_TOTAL];
 char lisplist_marks[NUM_LISTNODES_TOTAL >> 3];
 #endif
 
-lispptr lisplist_free_nodes;
+lispptr lisp_lists_free;
 unsigned lisplist_num_used;
 
 #define LISPNODE_SET(node, value) \
@@ -99,9 +99,9 @@ lisplist_free (lispptr node)
     _CAR(node) = -5;
 #endif
 
-    _CDR(node) = lisplist_free_nodes;
+    _CDR(node) = lisp_lists_free;
 
-    lisplist_free_nodes = node;
+    lisp_lists_free = node;
 
     lisplist_num_used--;
 }
@@ -126,7 +126,7 @@ lisplist_free_expr (lispptr node)
 }
 
 /*
- * Free pure list, excluding sublists.
+ * Free pure list, ignoring sublists.
  */
 void
 lisplist_free_toplevel (lispptr node)
@@ -141,18 +141,14 @@ lisplist_free_toplevel (lispptr node)
 }
 
 /*
- * Create a list node.
- *
- * Garbage collection is run when out of list elements.
- * The car and cdr is saved accordingly. Other lists not bound to an atom
- * must be saved in advanced using lispgc_save_push().
+ * Allocate a list node.
  */
 lispptr
 lisplist_get_noref (lispptr car, lispptr cdr)
 {
     lispptr i;
 
-    i = lisplist_free_nodes;
+    i = lisp_lists_free;
 
 #ifdef LISP_DIAGNOSTICS
     if (LISP_GETMARK(lisplist_marks, i))
@@ -160,7 +156,7 @@ lisplist_get_noref (lispptr car, lispptr cdr)
     LISP_MARK(lisplist_marks, i);
 #endif
 
-    lisplist_free_nodes = _CDR(i);
+    lisp_lists_free = _CDR(i);
     LISPLIST_SET(i, car, cdr);
     lisplist_num_used++;
 
@@ -168,7 +164,7 @@ lisplist_get_noref (lispptr car, lispptr cdr)
 }
 
 /*
- * Create a list node.
+ * Allocate a list node.
  *
  * Garbage collection is run when out of list elements.
  * The car and cdr is saved accordingly. Other lists not bound to an atom
@@ -191,7 +187,7 @@ _lisplist_get (lispptr car, lispptr cdr)
     if (lisplist_num_used > (NUM_LISTNODES - 16)) {
 	/* Collect garbage and try again, */
 	lispgc_force ();
-        if (lisplist_free_nodes == lispptr_nil)
+        if (lisp_lists_free == lispptr_nil)
 	    lisperror_internal (lispptr_invalid, "no more free list elements");
     }
 
@@ -380,23 +376,6 @@ lisplist_append (lispptr *lst, lispptr lst2)
     RPLACD(tmp, lst2);
 }
 
-/* Copy list reversed. */
-lispptr
-lisplist_reverse (lispptr p)
-{
-    lispptr rev = lispptr_nil;
-
-    if (p == lispptr_nil)
-	return lispptr_nil;
-
-    while (p != lispptr_nil) {
-        rev = CONS(CAR(p), rev);                         
-	p = CDR(p);
-    }
-
-    return rev;
-}
-
 /* Return T if trees have the same layout and contain the same elements. */
 bool
 lisplist_equal (lispptr la, lispptr lb)
@@ -430,7 +409,7 @@ lisplist_init ()
     }
     lisp_lists[LAST_LISTNODE].cdr = LISPPTR_NIL();
 
-    lisplist_free_nodes = 0;
+    lisp_lists_free = 0;
     lisplist_num_used = 0;
 
 #ifdef LISP_DIAGNOSTICS

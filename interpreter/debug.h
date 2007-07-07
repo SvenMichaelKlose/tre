@@ -31,4 +31,6 @@ extern void lispdebug_chk_next (void);
 
 extern void lispdebug_cnt (void);
 
+extern lispptr lispptr_index (lispptr);
+extern lispptr lispptr_type (lispptr);
 #endif	/* #ifndef LISP_DEBUG_H */

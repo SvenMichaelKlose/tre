@@ -127,7 +127,7 @@ lispio_make_stream (struct lispio_ops *ops)
 }
 
 void
-lispio_mkstd (void)
+lispio_init ()
 {
     struct lisp_stream *s = lispio_make_stream (&lispio_ops_std);
 
@@ -138,22 +138,6 @@ lispio_mkstd (void)
     lispio_readerstreamptr = 1;
     lispio_reader = s;
     lispio_console = s;
-}
-
-/* Initialise file I/O. */
-void
-lispio_init ()
-{
-    lispptr tmp;
-    lispptr str;
-
-    tmp = lispatom_get ("*ENVIRONMENT-PATH*", LISPCONTEXT_PACKAGE());
-    EXPAND_UNIVERSE(tmp);
-
-    str = lispstring_get (LISP_ENVIRONMENT);
-    LISPATOM_VALUE(tmp) = str;
-
-    lispio_mkstd ();
 }
 
 void

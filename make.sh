@@ -2,9 +2,11 @@
 
 ARGS="$1 $2 $3 $4 $5 $6 $7 $8 $9"
 
+BOOT_IMAGE=`echo ~/.nix-lisp.image`
+
 compile() {
 	local TMP
-	TMP="gcc -O2 -Wall -Wextra -Wshadow -Wstrict-prototypes -Wredundant-decls -DLISP_VERBOSE_LOAD $ARGS -pipe -ansi -c -o $1.o $1"
+	TMP="gcc -DLISP_BOOT_IMAGE=\"$BOOT_IMAGE\" -O2 -Wall -Wextra -Wshadow -Wstrict-prototypes -Wredundant-decls -DLISP_VERBOSE_LOAD $ARGS -pipe -ansi -c -o $1.o $1"
 	echo $TMP
 	$TMP
 }
@@ -23,6 +25,7 @@ compile builtin_array.c
 compile builtin_atom.c
 compile builtin_debug.c
 compile builtin_fileio.c
+compile builtin_image.c
 compile builtin_list.c
 compile builtin_number.c
 compile builtin_stream.c
@@ -33,6 +36,7 @@ compile error.c
 compile env.c
 compile eval.c
 compile gc.c
+compile image.c
 compile io.c
 compile io_std.c
 compile list.c

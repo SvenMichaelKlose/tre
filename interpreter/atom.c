@@ -34,13 +34,12 @@
  * The atom list is a growing table.
  */
 struct lisp_atom lisp_atoms[NUM_ATOMS];
-lispptr lisp_atoms_unused;
+lispptr lisp_atoms_free;
 
 const lispptr lispptr_nil = TYPEINDEX_TO_LISPPTR(1, 0);
 const lispptr lispptr_t = TYPEINDEX_TO_LISPPTR(1, 1);
 const lispptr lispptr_invalid = (lispptr) -1;
 
-lispptr universe; /* Universe list */
 lispptr lispptr_universe; /* *UNIVERSE* variable */
 
 lispptr lispatom_quote;
@@ -57,13 +56,12 @@ void
 lispatom_init_nil (void)
 {
     /* Initialise NIL atom manually to make list functions work. */
-    ATOM_SET(0, "NIL", lispptr_nil, ATOM_VARIABLE);
+    ATOM_SET(0, lispsymbol_add ("NIL"), lispptr_nil, ATOM_VARIABLE);
 
     /* Reinitialize every slot that takes NIL. */
     lisp_atoms[0].value = TYPEINDEX_TO_LISPPTR(ATOM_VARIABLE, 0), 1;
     lisp_atoms[0].fun = lispptr_nil;
     lisp_atoms[0].binding = lispptr_nil;
-    EXPAND_UNIVERSE(lispptr_nil);
 }
 
 void
@@ -81,7 +79,7 @@ lispatom_init_atom_table (void)
     p = lispptr_nil;
     for (i = NUM_ATOMS - 1; i > 0; i--)
         p = CONS(i, p);
-    lisp_atoms_unused = p;
+    lisp_atoms_free = p;
 }
 
 void
@@ -115,19 +113,16 @@ lispatom_init (void)
 {
     lispptr t;
 
-    universe = lispptr_nil;
     lispatom_init_nil ();
     lispatom_init_atom_table ();
 
     t = lispatom_get ("T", lispptr_nil);
-    EXPAND_UNIVERSE(t);
-
     lisp_package_keyword = lispatom_alloc ("", lispptr_nil, ATOM_PACKAGE, lispptr_nil);
+
+    lispptr_universe = lispatom_alloc ("*UNIVERSE*", lispptr_nil, ATOM_VARIABLE, lispptr_nil);
+    EXPAND_UNIVERSE(t);
     EXPAND_UNIVERSE(lisp_package_keyword);
-
     lispatom_init_builtins ();
-
-    lispptr_universe = lispatom_alloc ("*UNIVERSE*", lispptr_nil, ATOM_VARIABLE, universe);
 }
 
 void
@@ -161,21 +156,21 @@ lispatom_alloc (char *symbol, lispptr package, int type, lispptr value)
     unsigned  atomi;
     lispptr   ntop;
 
-    if (lisp_atoms_unused == lispptr_nil) {
+    if (lisp_atoms_free == lispptr_nil) {
         lispgc_force ();
-        if (lisp_atoms_unused == lispptr_nil)
+        if (lisp_atoms_free == lispptr_nil)
 	    return lisperror (lispptr_invalid, "atom table full");
     }
 
     /* Pop free atom from free atom list. */
-    atomi = CAR(lisp_atoms_unused);
+    atomi = CAR(lisp_atoms_free);
 #ifdef LISP_DIAGNOSTICS
     if (LISPPTR_TO_ATOM(atomi)->type != ATOM_UNUSED)
 	lisperror_internal (lispptr_invalid, "trying to free unused atom");
 #endif
-    ntop = CDR(lisp_atoms_unused);
-    lisplist_free (lisp_atoms_unused);
-    lisp_atoms_unused = ntop;
+    ntop = CDR(lisp_atoms_free);
+    lisplist_free (lisp_atoms_free);
+    lisp_atoms_free = ntop;
 
     /* Make self-referencing ordinary. */
     if (value == lispptr_invalid)
@@ -199,7 +194,7 @@ lispatom_free (lispptr atom)
 
     /* Check if atom is already on the free atom list. */
     if (lisp_is_initialized) {
-        _DOLIST(i, lisp_atoms_unused) {
+        _DOLIST(i, lisp_atoms_free) {
             if (_CAR(i) == LISPPTR_INDEX(atom))
                 lisperror_internal (lispptr_invalid,
 				    "atom %d already on free list",
@@ -212,6 +207,10 @@ lispatom_free (lispptr atom)
 	lisperror_internal (lispptr_invalid, "trying to free unused atom");
 #endif
 
+                    if (TYPEINDEX_TO_LISPPTR(LISPATOM_TYPE(atom), atom)
+== lispatom_quasiquote)
+lisperror_internal (lispptr_invalid, "!!!!!!!!!!!!!!!");
+
     if (LISPATOM_VALUE(atom) != atom)
         lispatom_set_value (atom, lispptr_nil);
     lispatom_set_function (atom, lispptr_nil);
@@ -219,7 +218,7 @@ lispatom_free (lispptr atom)
     LISPPTR_TO_ATOM(atom)->type = ATOM_UNUSED;
 
     /* Add entry to list of free atoms. */
-    lisp_atoms_unused = CONS(LISPPTR_INDEX(atom), lisp_atoms_unused);
+    lisp_atoms_free = CONS(LISPPTR_INDEX(atom), lisp_atoms_free);
 
     /* Release symbol string. */
     if (LISPATOM_NAME(atom) != NULL) {

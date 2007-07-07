@@ -7,15 +7,10 @@
 ;;;; The funny argument names are used to avoid collisions with symbols
 ;;;; during evaluation.
 
-(setq *universe* (cons '%backquote-quasiquote
-                 (cons '%backquote-quasiquote-splice
-                 (cons '%backquote-1
-                 (cons '%backquote
-                 (cons 'backquote
-                 (cons 'not
+(setq *universe* (cons 'not
                  (cons 'last
                  (cons '%nconc
-                 (cons 'copy-tree *universe*))))))))))
+                 (cons 'copy-tree *universe*)))))
 
 (%set-atom-fun not
   #'(lambda (x)

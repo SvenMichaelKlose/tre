@@ -362,9 +362,10 @@ lispread_init ()
     lispatom_quasiquote = lispatom_get ("QUASIQUOTE", LISPCONTEXT_PACKAGE());
     lispatom_quasiquote_splice = lispatom_get ("QUASIQUOTE-SPLICE", LISPCONTEXT_PACKAGE());
     lispatom_function = lispatom_get ("FUNCTION", LISPCONTEXT_PACKAGE());
+
     EXPAND_UNIVERSE(lispatom_quote);
     EXPAND_UNIVERSE(lispatom_backquote);
     EXPAND_UNIVERSE(lispatom_quasiquote);
-    EXPAND_UNIVERSE(lispatom_quasiquote_splice); /* XXX */
+    EXPAND_UNIVERSE(lispatom_quasiquote_splice);
     EXPAND_UNIVERSE(lispatom_function);
 }

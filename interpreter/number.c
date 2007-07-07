@@ -19,8 +19,7 @@
 /* Number table. */
 struct lisp_number lisp_numbers[NUM_NUMBERS];
 
-/* Index list of unused numbers. */
-lispptr lisp_numbers_unused;
+lispptr lisp_numbers_free;
 
 #define NUMBER_SET(num, val, typ) \
     (num)->value = val; \
@@ -60,18 +59,18 @@ lispnumber_alloc (float value, int type)
     unsigned  i;	/* number index */
 
     /* Add new number. */
-    i = _CAR(lisp_numbers_unused);
-    next_free = _CDR(lisp_numbers_unused);
+    i = _CAR(lisp_numbers_free);
+    next_free = _CDR(lisp_numbers_free);
 
     if (next_free == lispptr_nil) {
         lispgc_force ();
-        next_free = _CDR(lisp_numbers_unused);
+        next_free = _CDR(lisp_numbers_free);
         if (next_free == lispptr_nil)
 	    lisperror_internal (next_free, "out of numbers");
     }
 
-    lisplist_free (lisp_numbers_unused);
-    lisp_numbers_unused = next_free;
+    lisplist_free (lisp_numbers_free);
+    lisp_numbers_free = next_free;
     NUMBER_SET(&lisp_numbers[i], value, type);
 
     return i;
@@ -89,7 +88,7 @@ lispnumber_free (lispptr n)
 #endif
 
     i = LISPNUMBER_INDEX(n);
-    lisp_numbers_unused = CONS(i, lisp_numbers_unused);
+    lisp_numbers_free = CONS(i, lisp_numbers_free);
 }
 
 /* Initialise this section. */
@@ -102,5 +101,5 @@ lispnumber_init ()
     /* Put all numbers on free list. */
     for (i = NUM_NUMBERS - 1; i != (unsigned) -1; i--)
 	p = CONS(i, p);
-    lisp_numbers_unused = p;
+    lisp_numbers_free = p;
 }

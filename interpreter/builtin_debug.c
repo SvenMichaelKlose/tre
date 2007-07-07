@@ -47,7 +47,7 @@ lispdebug_builtin_end_debug (lispptr no_args)
 	atom->binding = lispptr_nil;
     }
 
-    lisp_restart ();
+    lisp_restart (lispptr_nil);
 
     /*NOTREACHED*/
     return lispptr_nil;

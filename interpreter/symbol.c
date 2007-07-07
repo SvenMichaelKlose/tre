@@ -22,7 +22,7 @@
 #endif
 
 char symbol_table[LISP_SYMBOL_TABLE_SIZE];
-char *symbol_table_unused;
+char *symbol_table_free;
 
 unsigned num_symbols;
 
@@ -57,7 +57,7 @@ lispsymbol_gc ()
         n = 1 + stpcpy (n, o);
         o += 1 + l;
     }
-    symbol_table_unused = n;
+    symbol_table_free = n;
 
     /* Correct symbol pointers in atoms. */
     DOTIMES(j, NUM_ATOMS) {
@@ -78,7 +78,7 @@ lispsymbol_gc ()
 }
 
 #define SYMBOL_TABLE_FULLP(len) \
-    ((symbol_table_unused + len + 2) >= &symbol_table[LISP_SYMBOL_TABLE_SIZE])
+    ((symbol_table_free + len + 2) >= &symbol_table[LISP_SYMBOL_TABLE_SIZE])
 
 /* Add symbol to symbol table. */
 char *
@@ -100,9 +100,9 @@ lispsymbol_add (char *symbol)
         }
     }
 
-    nstr = symbol_table_unused;
+    nstr = symbol_table_free;
     *nstr++ = l;
-    symbol_table_unused = (char *) stpcpy (nstr, symbol) + 1;
+    symbol_table_free = (char *) stpcpy (nstr, symbol) + 1;
     num_symbols++;
 
     return nstr;
@@ -124,6 +124,6 @@ void
 lispsymbol_init ()
 {
     bzero (symbol_table, LISP_SYMBOL_TABLE_SIZE);
-    symbol_table_unused = symbol_table;
+    symbol_table_free = symbol_table;
     num_symbols = 0;
 }

@@ -13,7 +13,6 @@
 extern lispptr lispalloc_used;
 extern lispptr lispalloc_unused;
 
-extern void lispalloc_init (void);
 extern void *lispalloc (size_t);
 extern void lispalloc_free (void *);
 

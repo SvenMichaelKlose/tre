@@ -38,7 +38,7 @@ struct lisp_atom {
 };
 
 extern struct lisp_atom lisp_atoms[NUM_ATOMS];
-extern lispptr lisp_atoms_unused;
+extern lispptr lisp_atoms_free;
 
 extern lispptr lisp_package_keyword;
 
@@ -92,19 +92,18 @@ extern lispptr lisp_package_keyword;
 
 #define LISPPTR_TRUTH(test)	((test) ? lispptr_t : lispptr_nil)
 
-#define EXPAND_UNIVERSE(atom)   (universe = CONS(atom, universe))
+#define EXPAND_UNIVERSE(atom) \
+    (LISPATOM_VALUE(lispptr_universe) = CONS(atom, LISPATOM_VALUE(lispptr_universe)))
 
 extern const lispptr lispptr_nil;
 extern const lispptr lispptr_t;
 extern const lispptr lispptr_invalid;
-extern lispptr universe;
 extern lispptr lispptr_universe;
 
 /* Already looked-up atoms. */
 extern lispptr lispatom_quote;
 extern lispptr lispatom_lambda;
 extern lispptr lispatom_backquote;
-extern lispptr lispatom_quasiquote;
 extern lispptr lispatom_quasiquote_splice;
 extern lispptr lispatom_function;
 extern lispptr lispatom_values;

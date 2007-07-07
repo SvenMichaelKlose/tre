@@ -29,6 +29,7 @@
 #include "builtin_atom.h"
 #include "builtin_debug.h"
 #include "builtin_fileio.h"
+#include "builtin_image.h"
 #include "builtin_list.h"
 #include "builtin_number.h"
 #include "builtin_stream.h"
@@ -327,6 +328,8 @@ char *lisp_builtin_names[] = {
 
     "INTERN",
 
+    "SYS-IMAGE-CREATE", "SYS-IMAGE-LOAD",
+
     NULL
 };
 
@@ -440,6 +443,9 @@ lispevalfunc_t lispeval_xlat_builtin[] = {
 
     lispbuiltin_debug,
     lispbuiltin_intern,
+
+    lispimage_builtin_create,
+    lispimage_builtin_load,
     NULL
 };
 

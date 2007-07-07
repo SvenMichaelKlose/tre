@@ -20,11 +20,6 @@
 
 #include "alloc.h"
 
-void
-lispalloc_init (void)
-{
-}
-
 void *
 lispalloc (size_t size)
 {

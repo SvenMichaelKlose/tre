@@ -455,7 +455,5 @@ lispspecial_init ()
     lispatom_lambda
         = lispatom_get ("LAMBDA", LISPCONTEXT_PACKAGE());
 
-    EXPAND_UNIVERSE(lisp_atom_evaluated_go);
-    EXPAND_UNIVERSE(lisp_atom_evaluated_return_from);
     EXPAND_UNIVERSE(lispatom_lambda);
 }

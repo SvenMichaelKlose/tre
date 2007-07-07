@@ -623,3 +623,15 @@ lispdebug_init (void)
 
     lispdebug_level = 0;
 }
+
+lispptr
+lispptr_index (lispptr x)
+{
+    return LISPPTR_INDEX(x);
+}
+
+lispptr
+lispptr_type (lispptr x)
+{
+    return LISPPTR_TYPE(x);
+}

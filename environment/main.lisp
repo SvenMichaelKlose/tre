@@ -15,7 +15,15 @@
 (env-load "stage3/main.lisp")
 (env-load "../compiler/main.lisp")
 
-(when %launchfile
-  (load %launchfile))
-
+; Keep tests for reuse in definition order.
 (setq *tests* (reverse *tests*))
+
+(defun %load-launchfile ()
+  (do-tests *tests*)
+  (when %launchfile
+    (load %launchfile)))
+
+(format t "Dump to image '~A': " *boot-image*)(force-output)
+(sys-image-create *boot-image* #'%load-launchfile)
+(format t "OK~%")
+(%load-launchfile)

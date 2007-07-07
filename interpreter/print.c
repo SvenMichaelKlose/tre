@@ -264,7 +264,7 @@ lispprint_indent (lispptr p, unsigned indent, bool nobracket, char *prepend)
 	/* Check if we already passed car. */
         if (LISPPTR_IS_EXPR(car) && LISPPRINT_GET_MARK_CONS(car)) {
             printf ("*circular*");
-	    goto next;
+            return;
 	}
 
         /* Print dotted pair. */
@@ -283,7 +283,6 @@ lispprint_indent (lispptr p, unsigned indent, bool nobracket, char *prepend)
         prepend = "";
         postatom = 1;
 
-next:
         LISPPRINT_HLCLOSE(car);
         LISPPRINT_HLCLOSE(p);
         p = _CDR(p);
