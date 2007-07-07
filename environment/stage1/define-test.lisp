@@ -16,7 +16,10 @@
     ((punchcard-equal 	(eval (car (cdr test)))
                       	(eval (car (cdr (cdr test))))))
                   (t    (print (car test))
-			(print 'FAILED)
+			(print 'FAILED-RESULT)
+			(print (eval (car (cdr test))))
+			(print 'WANTED-RESULT)
+			(print (eval (car (cdr (cdr test)))))
 			(invoke-debugger))))
 
 (%defun do-tests (tests)
