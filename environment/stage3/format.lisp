@@ -13,7 +13,8 @@
                         (print (car args))
                         (princ (car args) str))
                     (%format str l (1+ i) txt (cdr args)))
-       (t           (error "unknown FORMAT directive")))))
+       (t           (princ #\~)
+                    (%format str l i txt args)))))
 
 (defun %format (str l i txt args)
   (when (< i l)
