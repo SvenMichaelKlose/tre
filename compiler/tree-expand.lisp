@@ -24,7 +24,7 @@
 
 (defun tree-expand-body (l)
   "Split expression list after jumps and before tags."
-  (with brk nil
+  (with (brk nil)
     (split-if #'((x)
                   (if (or brk (atom x))
                       t
@@ -49,13 +49,12 @@
 (defun tree-expand-new-block (l)
   "Make a list of CBLOCKs from expression list. Returns first block."
   (when l
-    (mvb (tags rest) (split-tags-rest l)
-      (mvb (expr rest) (tree-expand-body rest)
-        (with b (make-cblock
-                  :code (clean-code expr)
-                  :follower (tree-expand-new-block rest))
-          (add-tags b tags)
-          b)))))
+    (with ((tags rest) (split-tags-rest l)
+           (expr rest) (tree-expand-body rest)
+           b (make-cblock :code (clean-code expr)
+                          :follower (tree-expand-new-block rest)))
+      (add-tags b tags)
+      b)))
 
 (defun tree-expand-make-cblocks (l)
   (setf *tags-cblocks* nil)
@@ -83,7 +82,7 @@
 
 (defun link-cblocks! (b)
   (with-tracer b *traced-cblocks*
-    (let ((l (car (last (cblock-code b)))))
+    (with (l (car (last (cblock-code b))))
       (if (vm-jump? l)
           (progn
             (if (vm-go? l)
@@ -141,7 +140,7 @@
 
 (defun tree-expand (fi l)
   (setf *traced-cblocks* nil)
-  (let ((b (tree-expand-make-cblocks l)))
+  (with (b (tree-expand-make-cblocks l))
     (link-cblocks! b)
     (setf (funinfo-first-cblock fi) b)))
 

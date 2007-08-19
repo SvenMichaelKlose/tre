@@ -52,7 +52,7 @@
   (tree-walk body
     :ascending
       #'(lambda (e)
-          (let ((x (car e)))
+          (with (x (car e))
             (when (is-stackvar? x fi)
 ;	      (funinfo-add-op fi e)
               (setf (car e) (make-stackop (car e) fi))))))
@@ -75,12 +75,12 @@
 ;;; LAMBDA export
 
 (defun replace-expr-by-funref (function-expr name fi exp-fi)
-  (let ((fv (queue-list (funinfo-free-vars exp-fi))))
+  (with (fv (queue-list (funinfo-free-vars exp-fi)))
     (setf (car function-expr)
           (if fv
             (with-gensym g
               (funinfo-env-add-args fi (list g))
-              (let ((s (make-stackop g fi)))
+              (with (s (make-stackop g fi))
                 `(vm-scope
                    (%setq ,s (make-array ,(length fv)))
                    ,@(mapcar #'(lambda (v)
@@ -95,7 +95,7 @@
   (with-gensym g
     (verbose "(export ~A) " (symbol-name g))
     (eval `(%set-atom-fun ,g ,(car n)))
-    (let ((f (symbol-function g)))
+    (with (f (symbol-function g))
       (multiple-value-bind (body exp-fi)
         (atom-expand-lambda f (function-body f) (funinfo-env-this fi))
         (replace-expr-by-funref n g fi exp-fi)))))
@@ -120,16 +120,16 @@
 
 (defun lambda-expand! (fun body &optional (parent-env nil))
   "Convert native function to stack function."
-  (let ((args (copy-tree (function-arguments fun))))
-    (multiple-value-bind (forms inits) (%stackarg-expansion! args)
-      (let ((fi (make-funinfo :env (list forms parent-env))))
-        (lambda-embed-or-export! body fi)
-        (awhen forms
-          (verbose "(args")
-          (print-symbols forms)
-          (verbose ") "))
-        (awhen (queue-list (funinfo-free-vars fi))
-          (verbose "(free")
-          (print-symbols !)
-          (verbose ") "))
-      (values body fi)))))
+  (with (args  (copy-tree (function-arguments fun))
+         (forms inits)  (%stackarg-expansion! args)
+         fi    (make-funinfo :env (list forms parent-env)))
+    (lambda-embed-or-export! body fi)
+    (awhen forms
+      (verbose "(args")
+      (print-symbols forms)
+      (verbose ") "))
+    (awhen (queue-list (funinfo-free-vars fi))
+      (verbose "(free")
+      (print-symbols !)
+      (verbose ") "))
+    (values body fi)))

@@ -7,27 +7,19 @@
 (defvar *expanded-functions* nil)
 
 (defun atom-expand-lambda (fun mex &optional (parent-env nil))
-  (verbose "(lambda ")
-  (multiple-value-bind (lex fi) (lambda-expand! fun mex parent-env)
-    (verbose "(expr ")
-    (with eex (expex-expand-body lex)
-      (verbose "(tree ")
-        (tree-expand fi eex)
-        (verbose ")))")
-	(force-output)
-;        (setf (assoc fun *expanded-functions*) fi)
-        (values eex fi))))
+  (with ((lex fi) (lambda-expand! fun mex parent-env)
+         eex (expex-expand-body lex))
+    (tree-expand fi eex)
+    (setf (assoc fun *expanded-functions*) fi)
+    (values eex fi)))
  
 (defun atomic-expand-fun (fun)
-  (let ((body (function-body fun)))
-    (format t "(compile ~A "
+  (with (body (function-body fun))
+    (format t "(compile ~A)~%"
               (if (eq (first (car body)) 'block)
                   (symbol-name (second (car body)))
                   ""))
-    (force-output)
-    (verbose "(c-macro ")
-    (atom-expand-lambda fun (compiler-macroexpand body))
-    (verbose "))~%")))
+    (atom-expand-lambda fun (compiler-macroexpand body))))
  
 ; Replace function by optimized version.
 (defun atomic-expand (fun)
@@ -48,7 +40,6 @@
 
 (defun compile-all ()
   (tree-expand-reset)
-  (gc)
   (atomic-expand-all))
 
 (defun test ()

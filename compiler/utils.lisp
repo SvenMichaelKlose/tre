@@ -21,14 +21,6 @@
   (when l
     (cons (subseq l 0 size) (group (subseq l size) size))))
 
-(defmacro with (&rest body)
-  (let ((b (car body)))
-    (if (atom b)
-      `(let ((,b ,(second body)))
-         ,@(cddr body))
-      `(let ,(group b 2)
-         ,@(cdr body)))))
-
 (defun split-if (fun l &key (test-cons nil))
   (labels ((fcall (x)
              (funcall fun (if test-cons x (car x))))

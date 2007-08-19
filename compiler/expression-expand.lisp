@@ -10,16 +10,16 @@
   (make-symbol (string-concat "~E" (string *expexsym-counter*))))
 
 (defun expex-vmscope (q expr)
-  (with e (expex-expand-body (cdr expr))
+  (with (e (expex-expand-body (cdr expr)))
     (aif (butlast e)
-      (with s (expexsym)
+      (with (s (expexsym))
         (enqueue-many q (nconc ! `((,s ,(car (last e))))))
         s)
       (car e))))
 
 (defun expex-make-assignment (expr)
   "Makes a single statement assigment."
-  (with s (expexsym)
+  (with (s (expexsym))
     (enqueue q `(,s ,expr))
     s))
 

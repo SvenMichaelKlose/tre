@@ -15,6 +15,7 @@
 (env-load "stage2/char.lisp")
 (env-load "stage2/in.lisp")
 (env-load "stage2/multiple-value-bind.lisp")
+(env-load "stage2/with.lisp")
 (env-load "stage2/defstruct.lisp")
 (env-load "stage2/string.lisp")
 (env-load "stage2/while.lisp")
