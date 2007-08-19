@@ -22,8 +22,8 @@ USAGE
     First, the interpreter checks if an image of the standard environment
     exists. It is usually placed at ~/.nix-lisp.image. It is then loaded
     instead of the source files.
-    When the environment is set up, an image is written, if it doesn't
-    already exist, and 'source-file' is loaded.
+    Otherwise, the source files of the environment are read and an image
+    file is written to speed up the next program start.
 
 SYNTAX
 
@@ -179,8 +179,7 @@ FUNCTIONS
     The interpreter accepts the &REST, &OPTIONAL and &KEY keywords in
     argument list definitions.
 
-    The &REST keyword will cause all following arguments in the list to be
-    passed as a single argument.
+    The &REST keyword will return a list of remaining arguments.
 
     The &OPTIONAL keyword will initialise following missing arguments to
     NIL.
@@ -202,31 +201,10 @@ FUNCTIONS
     * (#'(lambda (&key comment) (print comment)) :comment "FNORD!")
     "FNORD"
 
-CLOSURES
+SPECIAL FUNCTIONS
 
-    Lisp comes with excellent features for code reuse. Let's suppose we have
-    a function that should add some value to each element of a list:
-
-    * (setf mylist '(1 2 3))
-
-    We use MAPCAR to step through the list and have our adder called:
-
-    * (mapcar #'(lambda (x)
-                  (+ 1 x))
-              mylist)
-    (2 3 4)
-
-    In case we want different values to be added by ADDER, we seem to be in
-    trouble at first glance. The additionally required argument couldn't
-    be passed to MAPCAR. MAPCAR will just call the function with a single
-    argument. The solution of the problem is to refer to the number outside
-    the adder function. This 'free' variable is called a closure and it will
-    refer to the value in the lexical context where it is used:
-
-    * (defun list-add (num list)
-        (mapcar #'(lambda (x)
-                    (+ x num))
-                lst))
+    A special functions is like an ordinary function but is evaluated
+    in the environment of its caller.
 
 ### DEBUGGER ################################################################
 
