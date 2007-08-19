@@ -145,9 +145,7 @@ lispgc_trace_atom (lispptr a)
 
     switch (atom->type) {
         case ATOM_FUNCTION:
-#if 0
         case ATOM_MACRO:
-#endif
 	    lispgc_trace_object ((lispptr) atom->detail);
 	    break;
 
