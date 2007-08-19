@@ -58,6 +58,7 @@ lispdebug_builtin_invoke_debugger (lispptr no_args)
 {
     (void) no_args;
 
+    printf ("INVOKE-DEBUGGER called.\n");
     lispdebug_mode = LISPDEBUGM_STEP;
 
     lispdebug ();
