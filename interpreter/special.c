@@ -104,12 +104,14 @@ lispspecial_setq (lispptr list)
 lispptr
 lispspecial_macro (lispptr list)
 {
+    lispptr  f;
     lispptr  expr = lisplist_copy (list);
 
     lisparg_apply_keyword_package (CAR(expr));
+    f = lispatom_alloc (NULL, LISPCONTEXT_PACKAGE(), ATOM_MACRO, expr);
+    lispenv_create (f);
 
-    /* Create macro atom. */
-    return lispatom_alloc (NULL, LISPCONTEXT_PACKAGE(), ATOM_MACRO, expr);
+    return f;
 }
 
 /*
