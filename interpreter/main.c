@@ -163,7 +163,7 @@ lispmain_get_args (int argc, char *argv[])
                     "Usage: lisp [-h] [-i image-file] [source-file]\n"
                     "\n"
                     " -h  Print this help message.\n"
-                    " -i  Load image file befor source-file.\n"
+                    " -i  Load image file before source-file.\n"
                     "\n"
                     "See MANUAL for details.\n");
             exit (0);
