@@ -1,11 +1,11 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de
  *
  * Dynamic linker support
  */
 
-#include "lisp.h"
+#include "config.h"
 #include "atom.h"
 #include "error.h"
 #include "argument.h"
@@ -17,170 +17,170 @@
 #include <dlfcn.h>
 
 /* Open shared object. */
-lispptr
-lispalien_builtin_dlopen (lispptr args)
+treptr
+trealien_builtin_dlopen (treptr args)
 {
-    lispptr path = lisparg_get (args);
+    treptr path = trearg_get (args);
     void *hdl;
 
-    while (LISPPTR_IS_STRING(path) == FALSE)
-        path = lisperror (path, "path to shared object expected");
+    while (TREPTR_IS_STRING(path) == FALSE)
+        path = treerror (path, "path to shared object expected");
 
-    hdl = dlopen (LISPATOM_STRINGP(path), RTLD_NOW);
+    hdl = dlopen (TREATOM_STRINGP(path), RTLD_NOW);
     if (hdl == NULL)
-        return lisperror (path, dlerror ());
-    return lispatom_number_get ((float) (int) hdl, LISPNUMTYPE_INTEGER);
+        return treerror (path, dlerror ());
+    return treatom_number_get ((float) (int) hdl, TRENUMTYPE_INTEGER);
 }
 
 /* Close shared object. */
-lispptr
-lispalien_builtin_dlclose (lispptr args)
+treptr
+trealien_builtin_dlclose (treptr args)
 {
-    lispptr hdl = lisparg_get (args);
+    treptr hdl = trearg_get (args);
     int     ret;
 
-    while (LISPPTR_IS_NUMBER(hdl) == FALSE)
-        hdl = lisperror (hdl, "number handle expected");
+    while (TREPTR_IS_NUMBER(hdl) == FALSE)
+        hdl = treerror (hdl, "number handle expected");
 
-    ret = dlclose ((void*) (int) LISPNUMBER_VAL(hdl));
+    ret = dlclose ((void*) (int) TRENUMBER_VAL(hdl));
     if (ret == -1)
-        return lisperror (hdl, dlerror ());
-    return lispatom_number_get ((float) ret, LISPNUMTYPE_INTEGER);
+        return treerror (hdl, dlerror ());
+    return treatom_number_get ((float) ret, TRENUMTYPE_INTEGER);
 }
 
 /* Get pointer to symbol. */
-lispptr
-lispalien_builtin_dlsym (lispptr args)
+treptr
+trealien_builtin_dlsym (treptr args)
 {
-    lispptr  hdl;
-    lispptr  sym;
+    treptr  hdl;
+    treptr  sym;
     void     *ret;
 
-    lisparg_get2 (&hdl, &sym, args);
+    trearg_get2 (&hdl, &sym, args);
 
-    while (LISPPTR_IS_NUMBER(hdl) == FALSE)
-        hdl = lisperror (hdl, "number handle expected");
+    while (TREPTR_IS_NUMBER(hdl) == FALSE)
+        hdl = treerror (hdl, "number handle expected");
 
-    while (LISPPTR_IS_STRING(sym) == FALSE)
-        sym = lisperror (sym, "symbol string expected");
+    while (TREPTR_IS_STRING(sym) == FALSE)
+        sym = treerror (sym, "symbol string expected");
 
-    ret = dlsym ((void*) (int) LISPNUMBER_VAL(hdl), LISPATOM_STRINGP(sym));
+    ret = dlsym ((void*) (int) TRENUMBER_VAL(hdl), TREATOM_STRINGP(sym));
     if (ret == NULL)
-        return lisperror (hdl, dlerror ());
-    return lispatom_number_get ((float) (int) ret, LISPNUMTYPE_INTEGER);
+        return treerror (hdl, dlerror ());
+    return treatom_number_get ((float) (int) ret, TRENUMTYPE_INTEGER);
 }
 
 size_t
-lispalien_argconv (lispptr arg)
+trealien_argconv (treptr arg)
 {
-    if (LISPPTR_IS_NUMBER(arg))
-        return (size_t) LISPNUMBER_VAL(arg);
-    if (LISPPTR_IS_STRING(arg))
-        return (size_t) LISPATOM_STRINGP(arg);
+    if (TREPTR_IS_NUMBER(arg))
+        return (size_t) TRENUMBER_VAL(arg);
+    if (TREPTR_IS_STRING(arg))
+        return (size_t) TREATOM_STRINGP(arg);
 
-    lisperror_norecover (arg, "integer number or string expected");
+    treerror_norecover (arg, "integer number or string expected");
 
     /*NOTREACHED*/
     return 0;
 }
 
 /* Call C function with 0 arguments. */
-lispptr
-lispalien_builtin_dlcall0 (lispptr args)
+treptr
+trealien_builtin_dlcall0 (treptr args)
 {
     int      ret;
-    lispptr  ptr;
+    treptr  ptr;
     int      (*fun) (void);
 
-    ptr = lisparg_get (args);
-    while (LISPPTR_IS_NUMBER(ptr) == FALSE)
-        ptr = lisperror (ptr, "number expected");
+    ptr = trearg_get (args);
+    while (TREPTR_IS_NUMBER(ptr) == FALSE)
+        ptr = treerror (ptr, "number expected");
 
-    fun = (void *) (int) LISPNUMBER_VAL(ptr);
+    fun = (void *) (int) TRENUMBER_VAL(ptr);
     ret = (*fun) ();
-    return lispatom_number_get ((float) ret, LISPNUMTYPE_INTEGER);
+    return treatom_number_get ((float) ret, TRENUMTYPE_INTEGER);
 }
 
 /* Call C function with 1 arguments. */
-lispptr
-lispalien_builtin_dlcall1 (lispptr args)
+treptr
+trealien_builtin_dlcall1 (treptr args)
 {
     int      ret;
-    lispptr  ptr;
+    treptr  ptr;
     int      (*fun) (int);
     int      a1;
 
     ptr = CAR(args);
-    while (LISPPTR_IS_NUMBER(ptr) == FALSE)
-        ptr = lisperror (ptr, "number expected");
+    while (TREPTR_IS_NUMBER(ptr) == FALSE)
+        ptr = treerror (ptr, "number expected");
 
-    a1 = lispalien_argconv (CADR(args));
+    a1 = trealien_argconv (CADR(args));
 
-    fun = (void *) (int) LISPNUMBER_VAL(ptr);
+    fun = (void *) (int) TRENUMBER_VAL(ptr);
     ret = (*fun) (a1);
-    return lispatom_number_get ((float) ret, LISPNUMTYPE_INTEGER);
+    return treatom_number_get ((float) ret, TRENUMTYPE_INTEGER);
 }
 
 /* Call C function with 2 arguments. */
-lispptr
-lispalien_builtin_dlcall2 (lispptr args)
+treptr
+trealien_builtin_dlcall2 (treptr args)
 {
     int      ret;
-    lispptr  ptr;
-    lispptr  a;
+    treptr  ptr;
+    treptr  a;
     int      (*fun) (int, int);
     int      a1;
     int      a2;
 
     ptr = CAR(args);
-    while (LISPPTR_IS_NUMBER(ptr) == FALSE)
-        ptr = lisperror (ptr, "number expected");
+    while (TREPTR_IS_NUMBER(ptr) == FALSE)
+        ptr = treerror (ptr, "number expected");
 
     a = CDR(args);
-    a1 = lispalien_argconv (CAR(a));
+    a1 = trealien_argconv (CAR(a));
     a = CDR(a);
-    a2 = lispalien_argconv (CAR(a));
+    a2 = trealien_argconv (CAR(a));
 
-    fun = (void *) (int) LISPNUMBER_VAL(ptr);
+    fun = (void *) (int) TRENUMBER_VAL(ptr);
     ret = (*fun) (a1, a2);
-    return lispatom_number_get ((float) ret, LISPNUMTYPE_INTEGER);
+    return treatom_number_get ((float) ret, TRENUMTYPE_INTEGER);
 }
 
 /* Call C function with 3 arguments. */
-lispptr
-lispalien_builtin_dlcall3 (lispptr args)
+treptr
+trealien_builtin_dlcall3 (treptr args)
 {
     int      ret;
-    lispptr  ptr;
-    lispptr  a;
+    treptr  ptr;
+    treptr  a;
     int      (*fun) (int, int, int);
     int      a1;
     int      a2;
     int      a3;
 
     ptr = CAR(args);
-    while (LISPPTR_IS_NUMBER(ptr) == FALSE)
-        ptr = lisperror (ptr, "number expected");
+    while (TREPTR_IS_NUMBER(ptr) == FALSE)
+        ptr = treerror (ptr, "number expected");
 
     a = CDR(args);
-    a1 = lispalien_argconv (CAR(a));
+    a1 = trealien_argconv (CAR(a));
     a = CDR(a);
-    a2 = lispalien_argconv (CAR(a));
+    a2 = trealien_argconv (CAR(a));
     a = CDR(a);
-    a3 = lispalien_argconv (CAR(a));
+    a3 = trealien_argconv (CAR(a));
 
-    fun = (void *) (int) LISPNUMBER_VAL(ptr);
+    fun = (void *) (int) TRENUMBER_VAL(ptr);
     ret = (*fun) (a1, a2, a3);
-    return lispatom_number_get ((float) ret, LISPNUMTYPE_INTEGER);
+    return treatom_number_get ((float) ret, TRENUMTYPE_INTEGER);
 }
 
 /* Call C function with 4 arguments. */
-lispptr
-lispalien_builtin_dlcall4 (lispptr args)
+treptr
+trealien_builtin_dlcall4 (treptr args)
 {
     int      ret;
-    lispptr  ptr;
-    lispptr  a;
+    treptr  ptr;
+    treptr  a;
     int      (*fun) (int, int, int, int);
     int      a1;
     int      a2;
@@ -188,19 +188,19 @@ lispalien_builtin_dlcall4 (lispptr args)
     int      a4;
 
     ptr = CAR(args);
-    while (LISPPTR_IS_NUMBER(ptr) == FALSE)
-        ptr = lisperror (ptr, "number expected");
+    while (TREPTR_IS_NUMBER(ptr) == FALSE)
+        ptr = treerror (ptr, "number expected");
 
     a = CDR(args);
-    a1 = lispalien_argconv (CAR(a));
+    a1 = trealien_argconv (CAR(a));
     a = CDR(a);
-    a2 = lispalien_argconv (CAR(a));
+    a2 = trealien_argconv (CAR(a));
     a = CDR(a);
-    a3 = lispalien_argconv (CAR(a));
+    a3 = trealien_argconv (CAR(a));
     a = CDR(a);
-    a4 = lispalien_argconv (CAR(a));
+    a4 = trealien_argconv (CAR(a));
 
-    fun = (void *) (int) LISPNUMBER_VAL(ptr);
+    fun = (void *) (int) TRENUMBER_VAL(ptr);
     ret = (*fun) (a1, a2, a3, a4);
-    return lispatom_number_get ((float) ret, LISPNUMTYPE_INTEGER);
+    return treatom_number_get ((float) ret, TRENUMTYPE_INTEGER);
 }

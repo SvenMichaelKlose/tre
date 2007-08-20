@@ -1,17 +1,17 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2006 Sven Klose <pixel@copei.de>
  *
  * Built-in list functions
  */
 
-#ifndef LISP_BUILTIN_DEBUG_H
-#define LISP_BUILTIN_DEBUG_H
+#ifndef TRE_BUILTIN_DEBUG_H
+#define TRE_BUILTIN_DEBUG_H
 
-extern lispptr lispdebug_builtin_end_debug (lispptr);
-extern lispptr lispdebug_builtin_invoke_debugger (lispptr);
-extern lispptr lispdebug_builtin_set_breakpoint (lispptr);
-extern lispptr lispdebug_builtin_remove_breakpoint (lispptr);
+extern treptr tredebug_builtin_end_debug (treptr);
+extern treptr tredebug_builtin_invoke_debugger (treptr);
+extern treptr tredebug_builtin_set_breakpoint (treptr);
+extern treptr tredebug_builtin_remove_breakpoint (treptr);
 
 
-#endif	/* #ifndef LISP_BUILTIN_DEBUG_H */
+#endif	/* #ifndef TRE_BUILTIN_DEBUG_H */

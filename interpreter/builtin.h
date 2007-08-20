@@ -1,15 +1,15 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2006 Sven Klose <pixel@copei.de>
  *
  * Built-in functions.
  */
 
-#ifndef LISP_BUILTIN_H
-#define LISP_BUILTIN_H
+#ifndef TRE_BUILTIN_H
+#define TRE_BUILTIN_H
 
-extern char *lisp_builtin_names[];
+extern char *tre_builtin_names[];
 
-extern lispptr lispbuiltin (lispptr func, lispptr expr);
+extern treptr trebuiltin (treptr func, treptr expr);
 
-#endif	/* #ifndef LISP_BUILTIN_H */
+#endif	/* #ifndef TRE_BUILTIN_H */

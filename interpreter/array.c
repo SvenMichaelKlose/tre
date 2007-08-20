@@ -1,11 +1,11 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * Array related section.
  */
 
-#include "lisp.h"
+#include "config.h"
 #include "atom.h"
 #include "list.h"
 #include "number.h"
@@ -19,52 +19,52 @@
 #include "thread.h"
 
 /* Allocate and initialise array. */
-lispptr *
-lisparray_get_raw (unsigned size)
+treptr *
+trearray_get_raw (unsigned size)
 {
-    lispptr  *array;
+    treptr  *array;
 
-    array = lispalloc (sizeof (lispptr) * size);
+    array = trealloc (sizeof (treptr) * size);
     if (array == NULL)
 	return NULL;
 
     /* Initialise elements. */
     while (size--)
-	array[size] = lispptr_nil;
+	array[size] = treptr_nil;
 
     return array;
 }
 
 /* Get total size of array. */
 unsigned
-lisparray_get_size (lispptr sizes)
+trearray_get_size (treptr sizes)
 {
-    lispptr  a;
-    lispptr  car;
+    treptr  a;
+    treptr  car;
     unsigned      size = 1;
 
     DOLIST(a, sizes) {
 	car = CAR(a);
-	if (LISPPTR_IS_NUMBER(car) == FALSE)
-	    return lisperror (car, "array size: number expected");
-	size *= LISPNUMBER_VAL(car);
+	if (TREPTR_IS_NUMBER(car) == FALSE)
+	    return treerror (car, "array size: number expected");
+	size *= TRENUMBER_VAL(car);
     }
 
     return size;
 }
 
 /* Create array atom. */
-lispptr
-lisparray_get (lispptr sizes)
+treptr
+trearray_get (treptr sizes)
 {
-    lispptr   a;
-    unsigned  size = lisparray_get_size (sizes);
+    treptr   a;
+    unsigned  size = trearray_get_size (sizes);
 
-    a = lispatom_alloc (NULL, LISPCONTEXT_PACKAGE(), ATOM_ARRAY, lispptr_nil);
-    lispatom_set_value (a, lisplist_copy (sizes));
-    LISPATOM_DETAIL(a) = lisparray_get_raw (size);
-    if (LISPATOM_DETAIL(a) == NULL)
-	return lisperror (lispptr_invalid, "out of memory");
+    a = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), ATOM_ARRAY, treptr_nil);
+    treatom_set_value (a, trelist_copy (sizes));
+    TREATOM_DETAIL(a) = trearray_get_raw (size);
+    if (TREATOM_DETAIL(a) == NULL)
+	return treerror (treptr_invalid, "out of memory");
     return a;
 }
 
@@ -74,27 +74,27 @@ lisparray_get (lispptr sizes)
  * The atom is not freed.
  */
 void
-lisparray_free (lispptr array)
+trearray_free (treptr array)
 {
-    lispalloc_free (LISPATOM_DETAIL(array));
+    trealloc_free (TREATOM_DETAIL(array));
 }
 
 /* Sequence: Get value at index. */
-lispptr
-lisparray_t_get (lispptr array, unsigned idx)
+treptr
+trearray_t_get (treptr array, unsigned idx)
 {
-    lispptr   adef = LISPATOM_VALUE(array);
+    treptr   adef = TREATOM_VALUE(array);
     unsigned  size = CAR(adef);
-    lispptr   *a = (lispptr *) LISPATOM_DETAIL(array);
+    treptr   *a = (treptr *) TREATOM_DETAIL(array);
 
     if (size <= idx)
-        return lisperror (array, "index %d out of range", idx);
+        return treerror (array, "index %d out of range", idx);
 
     return a[idx];
 }
 
 void
-lisparray_set (lispptr *a, unsigned idx, lispptr val)
+trearray_set (treptr *a, unsigned idx, treptr val)
 {
     if (a[idx] == val)
 	return;
@@ -104,30 +104,30 @@ lisparray_set (lispptr *a, unsigned idx, lispptr val)
 
 /* Sequence: replace value at index. */
 void
-lisparray_t_set (lispptr array, unsigned idx, lispptr val)
+trearray_t_set (treptr array, unsigned idx, treptr val)
 {
-    lispptr   adef = LISPATOM_VALUE(array);
+    treptr   adef = TREATOM_VALUE(array);
     unsigned  size = CAR(adef);
-    lispptr   *a = (lispptr *) LISPATOM_DETAIL(array);
+    treptr   *a = (treptr *) TREATOM_DETAIL(array);
 
     if (size <= idx) {
-        lisperror (array, "index %d out of range", idx);
+        treerror (array, "index %d out of range", idx);
 	return;
     }
 
-    lisparray_set (a, idx, val);
+    trearray_set (a, idx, val);
 }
 
 /* Sequence: Return length of array. */
 unsigned
-lisparray_t_length (lispptr array)
+trearray_t_length (treptr array)
 {
-    return LISPARRAY_SIZE(array);
+    return TREARRAY_SIZE(array);
 }
 
 /* Sequence type configuration. */
-struct lisp_sequence_type lisparray_seqtype = {
-    lisparray_t_set,
-    lisparray_t_get,
-    lisparray_t_length
+struct tre_sequence_type trearray_seqtype = {
+    trearray_t_set,
+    trearray_t_get,
+    trearray_t_length
 };

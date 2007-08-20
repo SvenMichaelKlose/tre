@@ -1,14 +1,14 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * Atom-related section.
  */
 
-#ifndef LISP_ATOM_H
-#define LISP_ATOM_H
+#ifndef TRE_ATOM_H
+#define TRE_ATOM_H
 
-typedef unsigned lispptr;
+typedef unsigned treptr;
 
 #define ATOM_EXPR		0
 #define ATOM_VARIABLE		1
@@ -24,116 +24,116 @@ typedef unsigned lispptr;
 #define ATOM_MAXTYPE		10
 #define ATOM_UNUSED		-1
 
-#define LISPPTR_NIL()	TYPEINDEX_TO_LISPPTR(ATOM_VARIABLE, 0)
+#define TREPTR_NIL()	TYPEINDEX_TO_TREPTR(ATOM_VARIABLE, 0)
 
 /* Atom table. */
-struct lisp_atom {
+struct tre_atom {
     char   	*name;
     char	type;
-    lispptr	value;
-    lispptr	fun;
-    lispptr	binding;
-    lispptr	package;
+    treptr	value;
+    treptr	fun;
+    treptr	binding;
+    treptr	package;
     void 	*detail;
 };
 
-extern struct lisp_atom lisp_atoms[NUM_ATOMS];
-extern lispptr lisp_atoms_free;
+extern struct tre_atom tre_atoms[NUM_ATOMS];
+extern treptr tre_atoms_free;
 
-extern lispptr lisp_package_keyword;
+extern treptr tre_package_keyword;
 
-#define LISP_ATOM(atomi)	(&lisp_atoms[atomi])
+#define TRE_ATOM(atomi)	(&tre_atoms[atomi])
 
 #define ATOM_SET(atomi, nam, pack, typ) \
-	lisp_atoms[atomi].name = nam;	\
-	lisp_atoms[atomi].value = lispptr_nil;	\
-	lisp_atoms[atomi].fun = lispptr_nil;	\
-	lisp_atoms[atomi].binding = lispptr_nil;	\
-	lisp_atoms[atomi].package = pack;	\
-	lisp_atoms[atomi].type = typ;	\
-	lisp_atoms[atomi].detail = NULL
+	tre_atoms[atomi].name = nam;	\
+	tre_atoms[atomi].value = treptr_nil;	\
+	tre_atoms[atomi].fun = treptr_nil;	\
+	tre_atoms[atomi].binding = treptr_nil;	\
+	tre_atoms[atomi].package = pack;	\
+	tre_atoms[atomi].type = typ;	\
+	tre_atoms[atomi].detail = NULL
 
-#define LISPATOM_FLAGS		(-1 << LISPPTR_TYPESHIFT)
-#define TYPEINDEX_TO_LISPPTR(type, index) \
-	((type << LISPPTR_TYPESHIFT) | index)
-#define LISPATOM_PTR(idx)	(TYPEINDEX_TO_LISPPTR(LISP_ATOM(idx)->type, \
+#define TREATOM_FLAGS		(-1 << TREPTR_TYPESHIFT)
+#define TYPEINDEX_TO_TREPTR(type, index) \
+	((type << TREPTR_TYPESHIFT) | index)
+#define TREATOM_PTR(idx)	(TYPEINDEX_TO_TREPTR(TRE_ATOM(idx)->type, \
 			                              idx))
 
-#define ATOM_TO_LISPPTR(index) \
-	TYPEINDEX_TO_LISPPTR(lisp_atoms[index].type, index)
-#define LISPPTR_TO_ATOM(ptr)	(LISP_ATOM(LISPPTR_INDEX(ptr)))
+#define ATOM_TO_TREPTR(index) \
+	TYPEINDEX_TO_TREPTR(tre_atoms[index].type, index)
+#define TREPTR_TO_ATOM(ptr)	(TRE_ATOM(TREPTR_INDEX(ptr)))
 
-#define LISPATOM_NAME(ptr)	(LISPPTR_TO_ATOM(ptr)->name)
-#define LISPATOM_TYPE(ptr)	(LISPPTR_TO_ATOM(ptr)->type)
-#define LISPATOM_VALUE(ptr)	(LISPPTR_TO_ATOM(ptr)->value)
-#define LISPATOM_FUN(ptr)	(LISPPTR_TO_ATOM(ptr)->fun)
-#define LISPATOM_BINDING(ptr)	(LISPPTR_TO_ATOM(ptr)->binding)
-#define LISPATOM_PACKAGE(ptr)	(LISPPTR_TO_ATOM(ptr)->package)
-#define LISPATOM_DETAIL(ptr)	(LISPPTR_TO_ATOM(ptr)->detail)
-#define LISPATOM_SET_DETAIL(ptr, val)	(LISPPTR_TO_ATOM(ptr)->detail = (void *) val)
-#define LISPATOM_STRING(ptr)	((struct lisp_string *) LISPATOM_DETAIL(ptr))
-#define LISPATOM_SET_STRING(ptr, val)	(LISPATOM_DETAIL(ptr) = (struct lisp_string *) val)
-#define LISPATOM_STRINGP(ptr)	((char *) &(LISPATOM_STRING(ptr)->str))
+#define TREATOM_NAME(ptr)	(TREPTR_TO_ATOM(ptr)->name)
+#define TREATOM_TYPE(ptr)	(TREPTR_TO_ATOM(ptr)->type)
+#define TREATOM_VALUE(ptr)	(TREPTR_TO_ATOM(ptr)->value)
+#define TREATOM_FUN(ptr)	(TREPTR_TO_ATOM(ptr)->fun)
+#define TREATOM_BINDING(ptr)	(TREPTR_TO_ATOM(ptr)->binding)
+#define TREATOM_PACKAGE(ptr)	(TREPTR_TO_ATOM(ptr)->package)
+#define TREATOM_DETAIL(ptr)	(TREPTR_TO_ATOM(ptr)->detail)
+#define TREATOM_SET_DETAIL(ptr, val)	(TREPTR_TO_ATOM(ptr)->detail = (void *) val)
+#define TREATOM_STRING(ptr)	((struct tre_string *) TREATOM_DETAIL(ptr))
+#define TREATOM_SET_STRING(ptr, val)	(TREATOM_DETAIL(ptr) = (struct tre_string *) val)
+#define TREATOM_STRINGP(ptr)	((char *) &(TREATOM_STRING(ptr)->str))
 
-#define LISPPTR_TYPE(ptr)	(ptr >> LISPPTR_TYPESHIFT)
-#define LISPPTR_INDEX(ptr)	(ptr & ~LISPATOM_FLAGS)
-#define LISPPTR_IS_EXPR(ptr)		((ptr & LISPATOM_FLAGS) == 0)
-#define LISPPTR_IS_ATOM(ptr)		(LISPPTR_IS_EXPR(ptr) == FALSE)
-#define LISPPTR_IS_VARIABLE(ptr)	(LISPPTR_TYPE(ptr) == ATOM_VARIABLE)
-#define LISPPTR_IS_SYMBOL(ptr) \
-	(LISPPTR_IS_VARIABLE(ptr) && LISPATOM_VALUE(ptr) == ptr)
-#define LISPPTR_IS_NUMBER(ptr)		(LISPPTR_TYPE(ptr) == ATOM_NUMBER)
-#define LISPPTR_IS_STRING(ptr)		(LISPPTR_TYPE(ptr) == ATOM_STRING)
-#define LISPPTR_IS_ARRAY(ptr)		(LISPPTR_TYPE(ptr) == ATOM_ARRAY)
-#define LISPPTR_IS_BUILTIN(ptr)		(LISPPTR_TYPE(ptr) == ATOM_BUILTIN)
-#define LISPPTR_IS_SPECIAL(ptr)		(LISPPTR_TYPE(ptr) == ATOM_SPECIAL)
-#define LISPPTR_IS_MACRO(ptr)		(LISPPTR_TYPE(ptr) == ATOM_MACRO)
-#define LISPPTR_IS_FUNCTION(ptr)	(LISPPTR_TYPE(ptr) == ATOM_FUNCTION)
+#define TREPTR_TYPE(ptr)	(ptr >> TREPTR_TYPESHIFT)
+#define TREPTR_INDEX(ptr)	(ptr & ~TREATOM_FLAGS)
+#define TREPTR_IS_EXPR(ptr)		((ptr & TREATOM_FLAGS) == 0)
+#define TREPTR_IS_ATOM(ptr)		(TREPTR_IS_EXPR(ptr) == FALSE)
+#define TREPTR_IS_VARIABLE(ptr)	(TREPTR_TYPE(ptr) == ATOM_VARIABLE)
+#define TREPTR_IS_SYMBOL(ptr) \
+	(TREPTR_IS_VARIABLE(ptr) && TREATOM_VALUE(ptr) == ptr)
+#define TREPTR_IS_NUMBER(ptr)		(TREPTR_TYPE(ptr) == ATOM_NUMBER)
+#define TREPTR_IS_STRING(ptr)		(TREPTR_TYPE(ptr) == ATOM_STRING)
+#define TREPTR_IS_ARRAY(ptr)		(TREPTR_TYPE(ptr) == ATOM_ARRAY)
+#define TREPTR_IS_BUILTIN(ptr)		(TREPTR_TYPE(ptr) == ATOM_BUILTIN)
+#define TREPTR_IS_SPECIAL(ptr)		(TREPTR_TYPE(ptr) == ATOM_SPECIAL)
+#define TREPTR_IS_MACRO(ptr)		(TREPTR_TYPE(ptr) == ATOM_MACRO)
+#define TREPTR_IS_FUNCTION(ptr)	(TREPTR_TYPE(ptr) == ATOM_FUNCTION)
 
-#define LISPPTR_TRUTH(test)	((test) ? lispptr_t : lispptr_nil)
+#define TREPTR_TRUTH(test)	((test) ? treptr_t : treptr_nil)
 
 #define EXPAND_UNIVERSE(atom) \
-    (LISPATOM_VALUE(lispptr_universe) = CONS(atom, LISPATOM_VALUE(lispptr_universe)))
+    (TREATOM_VALUE(treptr_universe) = CONS(atom, TREATOM_VALUE(treptr_universe)))
 
-extern const lispptr lispptr_nil;
-extern const lispptr lispptr_t;
-extern const lispptr lispptr_invalid;
-extern lispptr lispptr_universe;
+extern const treptr treptr_nil;
+extern const treptr treptr_t;
+extern const treptr treptr_invalid;
+extern treptr treptr_universe;
 
 /* Already looked-up atoms. */
-extern lispptr lispatom_quote;
-extern lispptr lispatom_lambda;
-extern lispptr lispatom_backquote;
-extern lispptr lispatom_quasiquote_splice;
-extern lispptr lispatom_function;
-extern lispptr lispatom_values;
+extern treptr treatom_quote;
+extern treptr treatom_lambda;
+extern treptr treatom_backquote;
+extern treptr treatom_quasiquote_splice;
+extern treptr treatom_function;
+extern treptr treatom_values;
 
 /* Initialise this section. */
-extern void lispatom_init (void);
+extern void treatom_init (void);
 
 /* Lookup atom. */
-extern lispptr lispatom_seek (char *, lispptr package);
-#define ATOM_NOT_FOUND  ((lispptr) -2)
+extern treptr treatom_seek (char *, treptr package);
+#define ATOM_NOT_FOUND  ((treptr) -2)
 
 /* Lookup or create atom. */
-extern lispptr lispatom_get (char *, lispptr package);
+extern treptr treatom_get (char *, treptr package);
 
 /* Create new number atom for computational values. */
-extern lispptr lispatom_number_get (float, int type);
+extern treptr treatom_number_get (float, int type);
 
-extern lispptr lispatom_alloc (char *symbol, lispptr package, int type, lispptr value);
-extern void lispatom_free (lispptr);
+extern treptr treatom_alloc (char *symbol, treptr package, int type, treptr value);
+extern void treatom_free (treptr);
 
-extern void lispatom_remove (lispptr);
+extern void treatom_remove (treptr);
 
-extern void lispatom_set_value (lispptr atom, lispptr value);
-extern void lispatom_set_function (lispptr atom, lispptr value);
-extern void lispatom_set_binding (lispptr atom, lispptr value);
+extern void treatom_set_value (treptr atom, treptr value);
+extern void treatom_set_function (treptr atom, treptr value);
+extern void treatom_set_binding (treptr atom, treptr value);
 
 /* Lookup variable that points to function containing body. */
-extern lispptr lispatom_body_to_var (lispptr body);
+extern treptr treatom_body_to_var (treptr body);
 
 /* Return body of function or macro. */
-extern lispptr lispatom_fun_body (lispptr atomp);
+extern treptr treatom_fun_body (treptr atomp);
 
 #endif

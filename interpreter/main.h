@@ -1,19 +1,19 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * Top-level.
  */
 
-#ifndef LISP_MAIN_H
-#define LISP_MAIN_H
+#ifndef TRE_MAIN_H
+#define TRE_MAIN_H
 
-extern lispptr lispeval_toplevel_current;
-extern bool lisp_is_initialized;
+extern treptr treeval_toplevel_current;
+extern bool tre_is_initialized;
 
-extern void lisp_exit (int);
-extern void lisp_restart (lispptr);
-extern lispptr lisp_main_line (struct lisp_stream *);
-extern void lisp_main (void);
+extern void tre_exit (int);
+extern void tre_restart (treptr);
+extern treptr tre_main_line (struct tre_stream *);
+extern void tre_main (void);
 
-#endif /* #ifndef LISP_MAIN_H */
+#endif /* #ifndef TRE_MAIN_H */

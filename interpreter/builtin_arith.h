@@ -1,21 +1,21 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2006 Sven Klose <pixel@copei.de>
  *
  * Built-in number-related functions
  */
 
-#ifndef LISP_BUILTIN_ARITH_H
-#define LISP_BUILTIN_ARITH_H
+#ifndef TRE_BUILTIN_ARITH_H
+#define TRE_BUILTIN_ARITH_H
 
-extern lispptr lispnumber_builtin_plus (lispptr);
-extern lispptr lispnumber_builtin_difference (lispptr);
-extern lispptr lispnumber_builtin_times (lispptr);
-extern lispptr lispnumber_builtin_quotient (lispptr);
-extern lispptr lispnumber_builtin_mod (lispptr);
-extern lispptr lispnumber_builtin_logxor (lispptr);
-extern lispptr lispnumber_builtin_number_equal (lispptr);
-extern lispptr lispnumber_builtin_lessp (lispptr);
-extern lispptr lispnumber_builtin_greaterp (lispptr);
+extern treptr trenumber_builtin_plus (treptr);
+extern treptr trenumber_builtin_difference (treptr);
+extern treptr trenumber_builtin_times (treptr);
+extern treptr trenumber_builtin_quotient (treptr);
+extern treptr trenumber_builtin_mod (treptr);
+extern treptr trenumber_builtin_logxor (treptr);
+extern treptr trenumber_builtin_number_equal (treptr);
+extern treptr trenumber_builtin_lessp (treptr);
+extern treptr trenumber_builtin_greaterp (treptr);
 
-#endif	/* #ifndef LISP_BUILTIN_ARITH_H */
+#endif	/* #ifndef TRE_BUILTIN_ARITH_H */

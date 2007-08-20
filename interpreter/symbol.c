@@ -1,11 +1,11 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * Symbol table
  */
 
-#include "lisp.h"
+#include "config.h"
 #include "atom.h"
 #include "list.h"
 #include "error.h"
@@ -17,17 +17,17 @@
 #include <strings.h>
 #include <stdlib.h>
 
-#ifdef LISP_VERBOSE_GC
+#ifdef TRE_VERBOSE_GC
 #include <stdio.h>
 #endif
 
-char symbol_table[LISP_SYMBOL_TABLE_SIZE];
+char symbol_table[TRE_SYMBOL_TABLE_SIZE];
 char *symbol_table_free;
 
 unsigned num_symbols;
 
 void
-lispsymbol_gc ()
+tresymbol_gc ()
 {
     char      **reloc = malloc (num_symbols * sizeof (char *) * 2);
     char      **r;
@@ -37,7 +37,7 @@ lispsymbol_gc ()
     unsigned  j;
     unsigned  l;
 
-#ifdef LISP_VERBOSE_GC
+#ifdef TRE_VERBOSE_GC
     printf ("SYMBOL-GC");
     fflush (stdout);
 #endif
@@ -61,13 +61,13 @@ lispsymbol_gc ()
 
     /* Correct symbol pointers in atoms. */
     DOTIMES(j, NUM_ATOMS) {
-        if (lisp_atoms[j].type == ATOM_UNUSED)
+        if (tre_atoms[j].type == ATOM_UNUSED)
 	    continue;
 
         r = reloc;
         DOTIMES(i, num_symbols) {
-            if (*r++ == LISPATOM_NAME(j)) {
-		LISPATOM_NAME(j) = *r;
+            if (*r++ == TREATOM_NAME(j)) {
+		TREATOM_NAME(j) = *r;
 		break;
             }
 	    r++;
@@ -78,11 +78,11 @@ lispsymbol_gc ()
 }
 
 #define SYMBOL_TABLE_FULLP(len) \
-    ((symbol_table_free + len + 2) >= &symbol_table[LISP_SYMBOL_TABLE_SIZE])
+    ((symbol_table_free + len + 2) >= &symbol_table[TRE_SYMBOL_TABLE_SIZE])
 
 /* Add symbol to symbol table. */
 char *
-lispsymbol_add (char *symbol)
+tresymbol_add (char *symbol)
 {
     unsigned  l;
     char      *nstr;
@@ -93,9 +93,9 @@ lispsymbol_add (char *symbol)
     l = strlen (symbol) + 1;
 
     if (SYMBOL_TABLE_FULLP(l)) {
-	lispsymbol_gc ();
+	tresymbol_gc ();
         if (SYMBOL_TABLE_FULLP(l)) {
-	    lisperror_internal (lispptr_invalid, "symbol table overflow");
+	    treerror_internal (treptr_invalid, "symbol table overflow");
 	    return NULL;
         }
     }
@@ -109,7 +109,7 @@ lispsymbol_add (char *symbol)
 }
 
 void
-lispsymbol_free (char *symbol)
+tresymbol_free (char *symbol)
 {
     if (symbol == NULL)
         return;
@@ -121,9 +121,9 @@ lispsymbol_free (char *symbol)
 }
 
 void
-lispsymbol_init ()
+tresymbol_init ()
 {
-    bzero (symbol_table, LISP_SYMBOL_TABLE_SIZE);
+    bzero (symbol_table, TRE_SYMBOL_TABLE_SIZE);
     symbol_table_free = symbol_table;
     num_symbols = 0;
 }

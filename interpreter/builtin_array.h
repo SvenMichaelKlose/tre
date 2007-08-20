@@ -1,16 +1,16 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2006 Sven Klose <pixel@copei.de>
  *
  * Array-related section.
  */
 
-#ifndef LISP_BUILTIN_ARRAY_H
-#define LISP_BUILTIN_ARRAY_H
+#ifndef TRE_BUILTIN_ARRAY_H
+#define TRE_BUILTIN_ARRAY_H
 
-extern lispptr lisparray_builtin_make (lispptr);
-extern lispptr lisparray_builtin_p (lispptr);
-extern lispptr lisparray_builtin_aref (lispptr);
-extern lispptr lisparray_builtin_set_aref (lispptr);
+extern treptr trearray_builtin_make (treptr);
+extern treptr trearray_builtin_p (treptr);
+extern treptr trearray_builtin_aref (treptr);
+extern treptr trearray_builtin_set_aref (treptr);
 
 #endif

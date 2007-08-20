@@ -1,11 +1,11 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * Number atom related section.
  */
 
-#include "lisp.h"
+#include "config.h"
 #include "atom.h"
 #include "list.h"
 #include "number.h"
@@ -17,19 +17,19 @@
 #include <ctype.h>
 
 /* Number table. */
-struct lisp_number lisp_numbers[NUM_NUMBERS];
+struct tre_number tre_numbers[NUM_NUMBERS];
 
-lispptr lisp_numbers_free;
+treptr tre_numbers_free;
 
 #define NUMBER_SET(num, val, typ) \
     (num)->value = val; \
     (num)->type = typ;	/* unused */
 
-#define LISPNUMBER_INDEX(ptr) 	((unsigned) LISPATOM_DETAIL(ptr))
+#define TRENUMBER_INDEX(ptr) 	((unsigned) TREATOM_DETAIL(ptr))
 
 /* Check if string contains a number. */
 bool
-lispnumber_is_value (char *symbol)
+trenumber_is_value (char *symbol)
 {
     unsigned  ndots = 0; /* Number of dots in string. */
     char      c;         /* Last read character. */
@@ -53,53 +53,53 @@ lispnumber_is_value (char *symbol)
 
 /* Allocate number entry. */
 unsigned
-lispnumber_alloc (float value, int type)
+trenumber_alloc (float value, int type)
 {
-    lispptr   next_free;
+    treptr   next_free;
     unsigned  i;	/* number index */
 
     /* Add new number. */
-    i = _CAR(lisp_numbers_free);
-    next_free = _CDR(lisp_numbers_free);
+    i = _CAR(tre_numbers_free);
+    next_free = _CDR(tre_numbers_free);
 
-    if (next_free == lispptr_nil) {
-        lispgc_force ();
-        next_free = _CDR(lisp_numbers_free);
-        if (next_free == lispptr_nil)
-	    lisperror_internal (next_free, "out of numbers");
+    if (next_free == treptr_nil) {
+        tregc_force ();
+        next_free = _CDR(tre_numbers_free);
+        if (next_free == treptr_nil)
+	    treerror_internal (next_free, "out of numbers");
     }
 
-    lisplist_free (lisp_numbers_free);
-    lisp_numbers_free = next_free;
-    NUMBER_SET(&lisp_numbers[i], value, type);
+    trelist_free (tre_numbers_free);
+    tre_numbers_free = next_free;
+    NUMBER_SET(&tre_numbers[i], value, type);
 
     return i;
 }
 
 /* Free number entry. */
 void
-lispnumber_free (lispptr n)
+trenumber_free (treptr n)
 {
     unsigned  i; /* number index */
 
-#ifdef LISP_DIAGNOSTICS
-    if (LISPPTR_IS_NUMBER(n) == FALSE)
-	lisperror_internal (n, "lispnumber_free(): not a number");
+#ifdef TRE_DIAGNOSTICS
+    if (TREPTR_IS_NUMBER(n) == FALSE)
+	treerror_internal (n, "trenumber_free(): not a number");
 #endif
 
-    i = LISPNUMBER_INDEX(n);
-    lisp_numbers_free = CONS(i, lisp_numbers_free);
+    i = TRENUMBER_INDEX(n);
+    tre_numbers_free = CONS(i, tre_numbers_free);
 }
 
 /* Initialise this section. */
 void
-lispnumber_init ()
+trenumber_init ()
 {
-    lispptr   p = lispptr_nil;
+    treptr   p = treptr_nil;
     unsigned  i;
 
     /* Put all numbers on free list. */
     for (i = NUM_NUMBERS - 1; i != (unsigned) -1; i--)
 	p = CONS(i, p);
-    lisp_numbers_free = p;
+    tre_numbers_free = p;
 }

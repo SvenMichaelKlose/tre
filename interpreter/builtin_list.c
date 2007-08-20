@@ -1,11 +1,11 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * Built-in list functions.
  */
 
-#include "lisp.h"
+#include "config.h"
 #include "atom.h"
 #include "list.h"
 #include "eval.h"
@@ -22,11 +22,11 @@
  * Returns a cons containing the first argument as the CAR
  * and the second argument as the CDR.
  */
-lispptr
-lisplist_builtin_cons (lispptr list)
+treptr
+trelist_builtin_cons (treptr list)
 {
-    LISPLIST_DEFREGS();
-    lisparg_get2 (&car, &cdr, list);
+    TRELIST_DEFREGS();
+    trearg_get2 (&car, &cdr, list);
     return CONS(car, cdr);
 }
 
@@ -35,20 +35,20 @@ lisplist_builtin_cons (lispptr list)
  *
  * Returns copy of argument list.
  */
-lispptr
-lisplist_builtin_list (lispptr list)
+treptr
+trelist_builtin_list (treptr list)
 {
-    return lisplist_copy (list);
+    return trelist_copy (list);
 }
 
-lispptr
-lisplist_builtin_cxr_arg (lispptr list)
+treptr
+trelist_builtin_cxr_arg (treptr list)
 {
-    lispptr arg = lisparg_get (list);
+    treptr arg = trearg_get (list);
 
     RETURN_NIL(arg);
-    if (LISPPTR_IS_EXPR(arg) == FALSE)
-	return lisperror (arg, "list expected");
+    if (TREPTR_IS_EXPR(arg) == FALSE)
+	return treerror (arg, "list expected");
     return arg;
 }
 
@@ -57,10 +57,10 @@ lisplist_builtin_cxr_arg (lispptr list)
  *
  * Returns the CAR of a cons. Returns NIL if the cons is NIL.
  */
-lispptr
-lisplist_builtin_car (lispptr list)
+treptr
+trelist_builtin_car (treptr list)
 {
-    lispptr arg = lisplist_builtin_cxr_arg (list);
+    treptr arg = trelist_builtin_cxr_arg (list);
 
     RETURN_NIL(arg);
     return CAR(arg);
@@ -71,30 +71,30 @@ lisplist_builtin_car (lispptr list)
  *
  * Returns the CDR of a cons. Returns NIL if the cons is NIL.
  */
-lispptr
-lisplist_builtin_cdr (lispptr list)
+treptr
+trelist_builtin_cdr (treptr list)
 {
-    lispptr arg = lisplist_builtin_cxr_arg (list);
+    treptr arg = trelist_builtin_cxr_arg (list);
     RETURN_NIL(arg);
     return CDR(arg);
 }
 
-#define LISPLISTARG_GET2(cons, new, list) \
-    lispptr  cons;	\
-    lispptr  new;	\
-    lisparg_get2 (&cons, &new, list);	\
-    if (LISPPTR_IS_EXPR(cons) == FALSE)	\
-        return lisperror (cons, "1st argument is not an expression");
+#define TRELISTARG_GET2(cons, new, list) \
+    treptr  cons;	\
+    treptr  new;	\
+    trearg_get2 (&cons, &new, list);	\
+    if (TREPTR_IS_EXPR(cons) == FALSE)	\
+        return treerror (cons, "1st argument is not an expression");
 
 /*
  * (RPLACA list value)
  *
  * Set adress register of cons to new value.
  */
-lispptr
-lisplist_builtin_rplaca (lispptr list)
+treptr
+trelist_builtin_rplaca (treptr list)
 {
-    LISPLISTARG_GET2(cons, new, list);
+    TRELISTARG_GET2(cons, new, list);
     RPLACA(cons, new);
     return cons;
 }
@@ -104,10 +104,10 @@ lisplist_builtin_rplaca (lispptr list)
  *
  * Set decrement register of cons to new value.
  */
-lispptr
-lisplist_builtin_rplacd (lispptr list)
+treptr
+trelist_builtin_rplacd (treptr list)
 {
-    LISPLISTARG_GET2(cons, new, list);
+    TRELISTARG_GET2(cons, new, list);
     RPLACD(cons, new);
     return cons;
 }
@@ -117,12 +117,12 @@ lisplist_builtin_rplacd (lispptr list)
  *
  * Returns T if the argument is a cons. NIL otherwise.
  */
-lispptr
-lisplist_builtin_consp (lispptr list)
+treptr
+trelist_builtin_consp (treptr list)
 {
-    lispptr arg = lisparg_get (list);
+    treptr arg = trearg_get (list);
 
-    if (LISPPTR_IS_EXPR(arg))
-	return lispptr_t;
-    return lispptr_nil;
+    if (TREPTR_IS_EXPR(arg))
+	return treptr_t;
+    return treptr_nil;
 }

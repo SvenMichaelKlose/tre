@@ -1,11 +1,11 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * Number atom related section.
  */
 
-#include "lisp.h"
+#include "config.h"
 #include "atom.h"
 #include "list.h"
 #include "number.h"
@@ -21,14 +21,14 @@
  *
  * Returns T if the argument is a number. NIL otherwise.
  */
-lispptr
-lispnumber_builtin_numberp (lispptr list)
+treptr
+trenumber_builtin_numberp (treptr list)
 {
-    lispptr  arg = lisparg_get (list);
+    treptr  arg = trearg_get (list);
 
-    if (LISPPTR_IS_NUMBER(arg) == FALSE)
-        return lispptr_nil;
-    return lispptr_t;
+    if (TREPTR_IS_NUMBER(arg) == FALSE)
+        return treptr_nil;
+    return treptr_t;
 }
 
 /*
@@ -36,13 +36,13 @@ lispnumber_builtin_numberp (lispptr list)
  *
  * Issues an error if the argument is not a number.
  */
-lispptr
-lispnumber_get_arg (lispptr args)
+treptr
+trenumber_get_arg (treptr args)
 {
-    lispptr  arg = lisparg_get (args);
+    treptr  arg = trearg_get (args);
 
-    if (LISPPTR_IS_NUMBER(arg) == FALSE)
-	return lisperror (arg, "number expected");
+    if (TREPTR_IS_NUMBER(arg) == FALSE)
+	return treerror (arg, "number expected");
 
     return arg;
 }
@@ -52,15 +52,15 @@ lispnumber_get_arg (lispptr args)
  *
  * Returns the character corresponding to code 'integer'.
  */
-lispptr
-lispnumber_builtin_characterp (lispptr args)
+treptr
+trenumber_builtin_characterp (treptr args)
 {
-    lispptr  arg = lisparg_get (args);
+    treptr  arg = trearg_get (args);
 
-    if (LISPPTR_IS_NUMBER(arg) && (LISPNUMBER_TYPE(arg) == LISPNUMTYPE_CHAR))
-	return lispptr_t;
+    if (TREPTR_IS_NUMBER(arg) && (TRENUMBER_TYPE(arg) == TRENUMTYPE_CHAR))
+	return treptr_t;
 
-    return lispptr_nil;
+    return treptr_nil;
 }
 
 /*
@@ -68,14 +68,14 @@ lispnumber_builtin_characterp (lispptr args)
  *
  * Returns the character corresponding to code 'integer'.
  */
-lispptr
-lispnumber_builtin_code_char (lispptr args)
+treptr
+trenumber_builtin_code_char (treptr args)
 {
-    lispptr  arg = lispnumber_get_arg (args);
+    treptr  arg = trenumber_get_arg (args);
     char tmp;
 
-    tmp = (char) LISPNUMBER_VAL(arg);
-    return lispatom_number_get ((float) tmp, LISPNUMTYPE_CHAR);
+    tmp = (char) TRENUMBER_VAL(arg);
+    return treatom_number_get ((float) tmp, TRENUMTYPE_CHAR);
 }
 
 /*
@@ -83,11 +83,11 @@ lispnumber_builtin_code_char (lispptr args)
  *
  * Returns 'number' converted to integer or the original 'number'.
  */
-lispptr
-lispnumber_builtin_integer (lispptr args)
+treptr
+trenumber_builtin_integer (treptr args)
 {
-    lispptr  arg = lispnumber_get_arg (args);
-    int  tmp = (int) LISPNUMBER_VAL(arg);
+    treptr  arg = trenumber_get_arg (args);
+    int  tmp = (int) TRENUMBER_VAL(arg);
 
-    return lispatom_number_get ((float) tmp, LISPNUMTYPE_INTEGER);
+    return treatom_number_get ((float) tmp, TRENUMTYPE_INTEGER);
 }

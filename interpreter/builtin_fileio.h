@@ -1,13 +1,13 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2006 Sven Klose <pixel@copei.de>
  *
  * Built-in file I/O functions
  */
 
-#ifndef LISP_BUILTIN_FILEIO_H
-#define LISP_BUILTIN_FILEIO_H
+#ifndef TRE_BUILTIN_FILEIO_H
+#define TRE_BUILTIN_FILEIO_H
 
-extern lispptr lispstream_builtin_fopen (lispptr);
+extern treptr trestream_builtin_fopen (treptr);
 
-#endif	/* #ifndef LISP_BUILTIN_FILEIO_H */
+#endif	/* #ifndef TRE_BUILTIN_FILEIO_H */

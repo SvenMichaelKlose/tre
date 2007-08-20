@@ -1,18 +1,18 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * Macro expansion
  */
 
-#ifndef LISP_MACRO_H
-#define LISP_MACRO_H
+#ifndef TRE_MACRO_H
+#define TRE_MACRO_H
 
-extern lispptr lispptr_current_macro;
+extern treptr treptr_current_macro;
 
-extern lispptr lispmacro_builtin_macroexpand_1 (lispptr);
-extern lispptr lispmacro_builtin_macroexpand (lispptr);
+extern treptr tremacro_builtin_macroexpand_1 (treptr);
+extern treptr tremacro_builtin_macroexpand (treptr);
 
-extern void lispmacro_init (void);
+extern void tremacro_init (void);
 
-#endif 	/* #ifndef LISP_MACRO_H */
+#endif 	/* #ifndef TRE_MACRO_H */

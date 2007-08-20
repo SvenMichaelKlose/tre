@@ -1,11 +1,11 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * Atom related section.
  */
 
-#include "lisp.h"
+#include "config.h"
 #include "atom.h"
 #include "number.h"
 #include "list.h"
@@ -33,74 +33,74 @@
 /*
  * The atom list is a growing table.
  */
-struct lisp_atom lisp_atoms[NUM_ATOMS];
-lispptr lisp_atoms_free;
+struct tre_atom tre_atoms[NUM_ATOMS];
+treptr tre_atoms_free;
 
-const lispptr lispptr_nil = TYPEINDEX_TO_LISPPTR(1, 0);
-const lispptr lispptr_t = TYPEINDEX_TO_LISPPTR(1, 1);
-const lispptr lispptr_invalid = (lispptr) -1;
+const treptr treptr_nil = TYPEINDEX_TO_TREPTR(1, 0);
+const treptr treptr_t = TYPEINDEX_TO_TREPTR(1, 1);
+const treptr treptr_invalid = (treptr) -1;
 
-lispptr lispptr_universe; /* *UNIVERSE* variable */
+treptr treptr_universe; /* *UNIVERSE* variable */
 
-lispptr lispatom_quote;
-lispptr lispatom_backquote;
-lispptr lispatom_quasiquote;
-lispptr lispatom_quasiquote_splice;
-lispptr lispatom_function;
-lispptr lispatom_values;
-lispptr lispatom_lambda;
+treptr treatom_quote;
+treptr treatom_backquote;
+treptr treatom_quasiquote;
+treptr treatom_quasiquote_splice;
+treptr treatom_function;
+treptr treatom_values;
+treptr treatom_lambda;
 
-lispptr lisp_package_keyword;
+treptr tre_package_keyword;
 
 void
-lispatom_init_nil (void)
+treatom_init_nil (void)
 {
     /* Initialise NIL atom manually to make list functions work. */
-    ATOM_SET(0, lispsymbol_add ("NIL"), lispptr_nil, ATOM_VARIABLE);
+    ATOM_SET(0, tresymbol_add ("NIL"), treptr_nil, ATOM_VARIABLE);
 
     /* Reinitialize every slot that takes NIL. */
-    lisp_atoms[0].value = TYPEINDEX_TO_LISPPTR(ATOM_VARIABLE, 0), 1;
-    lisp_atoms[0].fun = lispptr_nil;
-    lisp_atoms[0].binding = lispptr_nil;
+    tre_atoms[0].value = TYPEINDEX_TO_TREPTR(ATOM_VARIABLE, 0), 1;
+    tre_atoms[0].fun = treptr_nil;
+    tre_atoms[0].binding = treptr_nil;
 }
 
 void
-lispatom_init_atom_table (void)
+treatom_init_atom_table (void)
 {
-    lispptr   p;
+    treptr   p;
     unsigned  i;
 
     /* Prepare unused atom entries. */
     for (i = 1; i < NUM_ATOMS; i++) {
-        ATOM_SET(i, NULL, lispptr_nil, ATOM_UNUSED);
+        ATOM_SET(i, NULL, treptr_nil, ATOM_UNUSED);
     }
 
     /* Put atom entries on the free atom list, except NIL. */
-    p = lispptr_nil;
+    p = treptr_nil;
     for (i = NUM_ATOMS - 1; i > 0; i--)
         p = CONS(i, p);
-    lisp_atoms_free = p;
+    tre_atoms_free = p;
 }
 
 void
-lispatom_init_builtins (void)
+treatom_init_builtins (void)
 {
-    lispptr   atom;
+    treptr   atom;
     unsigned  i;
 
     /* Builtin functions. */
-    for (i = 0; lisp_builtin_names[i] != NULL; i++) {
-        atom = lispatom_alloc (lisp_builtin_names[i], lispptr_nil,
-                               ATOM_BUILTIN, lispptr_nil);
-        LISPATOM_SET_DETAIL(atom, i);
+    for (i = 0; tre_builtin_names[i] != NULL; i++) {
+        atom = treatom_alloc (tre_builtin_names[i], treptr_nil,
+                               ATOM_BUILTIN, treptr_nil);
+        TREATOM_SET_DETAIL(atom, i);
         EXPAND_UNIVERSE(atom);
     }
 
     /* Special forms. */
-    for (i = 0; lisp_special_names[i] != NULL; i++) {
-        atom = lispatom_alloc (lisp_special_names[i], lispptr_nil,
-                               ATOM_SPECIAL, lispptr_nil);
-        LISPATOM_SET_DETAIL(atom, i);
+    for (i = 0; tre_special_names[i] != NULL; i++) {
+        atom = treatom_alloc (tre_special_names[i], treptr_nil,
+                               ATOM_SPECIAL, treptr_nil);
+        TREATOM_SET_DETAIL(atom, i);
         EXPAND_UNIVERSE(atom);
     }
 }
@@ -109,121 +109,121 @@ lispatom_init_builtins (void)
  * Initialise atom table.
  */
 void
-lispatom_init (void)
+treatom_init (void)
 {
-    lispptr t;
+    treptr t;
 
-    lispatom_init_nil ();
-    lispatom_init_atom_table ();
+    treatom_init_nil ();
+    treatom_init_atom_table ();
 
-    t = lispatom_get ("T", lispptr_nil);
-    lisp_package_keyword = lispatom_alloc ("", lispptr_nil, ATOM_PACKAGE, lispptr_nil);
+    t = treatom_get ("T", treptr_nil);
+    tre_package_keyword = treatom_alloc ("", treptr_nil, ATOM_PACKAGE, treptr_nil);
 
-    lispptr_universe = lispatom_alloc ("*UNIVERSE*", lispptr_nil, ATOM_VARIABLE, lispptr_nil);
+    treptr_universe = treatom_alloc ("*UNIVERSE*", treptr_nil, ATOM_VARIABLE, treptr_nil);
     EXPAND_UNIVERSE(t);
-    EXPAND_UNIVERSE(lisp_package_keyword);
-    lispatom_init_builtins ();
+    EXPAND_UNIVERSE(tre_package_keyword);
+    treatom_init_builtins ();
 }
 
 void
-lispatom_set_name (lispptr atom, char *name)
+treatom_set_name (treptr atom, char *name)
 {
-    LISPATOM_NAME(atom) = name;
+    TREATOM_NAME(atom) = name;
 }
 
 void
-lispatom_set_value (lispptr atom, lispptr value)
+treatom_set_value (treptr atom, treptr value)
 {
-    LISPATOM_VALUE(atom) = value;
+    TREATOM_VALUE(atom) = value;
 }
 
 void
-lispatom_set_function (lispptr atom, lispptr value)
+treatom_set_function (treptr atom, treptr value)
 {
-    LISPATOM_FUN(atom) = value;
+    TREATOM_FUN(atom) = value;
 }
 
 void
-lispatom_set_binding (lispptr atom, lispptr value)
+treatom_set_binding (treptr atom, treptr value)
 {
-    LISPATOM_BINDING(atom) = value;
+    TREATOM_BINDING(atom) = value;
 }
 
 /* Allocate an atom. */
-lispptr
-lispatom_alloc (char *symbol, lispptr package, int type, lispptr value)
+treptr
+treatom_alloc (char *symbol, treptr package, int type, treptr value)
 {
     unsigned  atomi;
-    lispptr   ntop;
+    treptr   ntop;
 
-    if (lisp_atoms_free == lispptr_nil) {
-        lispgc_force ();
-        if (lisp_atoms_free == lispptr_nil)
-	    return lisperror (lispptr_invalid, "atom table full");
+    if (tre_atoms_free == treptr_nil) {
+        tregc_force ();
+        if (tre_atoms_free == treptr_nil)
+	    return treerror (treptr_invalid, "atom table full");
     }
 
     /* Pop free atom from free atom list. */
-    atomi = CAR(lisp_atoms_free);
-#ifdef LISP_DIAGNOSTICS
-    if (LISPPTR_TO_ATOM(atomi)->type != ATOM_UNUSED)
-	lisperror_internal (lispptr_invalid, "trying to free unused atom");
+    atomi = CAR(tre_atoms_free);
+#ifdef TRE_DIAGNOSTICS
+    if (TREPTR_TO_ATOM(atomi)->type != ATOM_UNUSED)
+	treerror_internal (treptr_invalid, "trying to free unused atom");
 #endif
-    ntop = CDR(lisp_atoms_free);
-    lisplist_free (lisp_atoms_free);
-    lisp_atoms_free = ntop;
+    ntop = CDR(tre_atoms_free);
+    trelist_free (tre_atoms_free);
+    tre_atoms_free = ntop;
 
     /* Make self-referencing ordinary. */
-    if (value == lispptr_invalid)
-	value = TYPEINDEX_TO_LISPPTR(type, atomi);
+    if (value == treptr_invalid)
+	value = TYPEINDEX_TO_TREPTR(type, atomi);
 
-    symbol = lispsymbol_add (symbol);
+    symbol = tresymbol_add (symbol);
     ATOM_SET(atomi, symbol, package, type);
-    lispatom_set_value (atomi, value);
-    LISP_UNMARK(lispgc_atommarks, atomi);
+    treatom_set_value (atomi, value);
+    TRE_UNMARK(tregc_atommarks, atomi);
 
     /* Return typed pointer. */
-    return TYPEINDEX_TO_LISPPTR(type, atomi);
+    return TYPEINDEX_TO_TREPTR(type, atomi);
 }
 
 /* Free an atom. */
 void
-lispatom_free (lispptr atom)
+treatom_free (treptr atom)
 {
-#ifdef LISP_DIAGNOSTICS
-    lispptr  i;
+#ifdef TRE_DIAGNOSTICS
+    treptr  i;
 
     /* Check if atom is already on the free atom list. */
-    if (lisp_is_initialized) {
-        _DOLIST(i, lisp_atoms_free) {
-            if (_CAR(i) == LISPPTR_INDEX(atom))
-                lisperror_internal (lispptr_invalid,
+    if (tre_is_initialized) {
+        _DOLIST(i, tre_atoms_free) {
+            if (_CAR(i) == TREPTR_INDEX(atom))
+                treerror_internal (treptr_invalid,
 				    "atom %d already on free list",
-				    LISPPTR_INDEX(atom));
+				    TREPTR_INDEX(atom));
         }
      }
 
     /* Check if atom is already marked as being unused. */
-    if (LISPPTR_TO_ATOM(atom)->type == ATOM_UNUSED)
-	lisperror_internal (lispptr_invalid, "trying to free unused atom");
+    if (TREPTR_TO_ATOM(atom)->type == ATOM_UNUSED)
+	treerror_internal (treptr_invalid, "trying to free unused atom");
 #endif
 
-                    if (TYPEINDEX_TO_LISPPTR(LISPATOM_TYPE(atom), atom)
-== lispatom_quasiquote)
-lisperror_internal (lispptr_invalid, "!!!!!!!!!!!!!!!");
+                    if (TYPEINDEX_TO_TREPTR(TREATOM_TYPE(atom), atom)
+== treatom_quasiquote)
+treerror_internal (treptr_invalid, "!!!!!!!!!!!!!!!");
 
-    if (LISPATOM_VALUE(atom) != atom)
-        lispatom_set_value (atom, lispptr_nil);
-    lispatom_set_function (atom, lispptr_nil);
-    lispatom_set_binding (atom, lispptr_nil);
-    LISPPTR_TO_ATOM(atom)->type = ATOM_UNUSED;
+    if (TREATOM_VALUE(atom) != atom)
+        treatom_set_value (atom, treptr_nil);
+    treatom_set_function (atom, treptr_nil);
+    treatom_set_binding (atom, treptr_nil);
+    TREPTR_TO_ATOM(atom)->type = ATOM_UNUSED;
 
     /* Add entry to list of free atoms. */
-    lisp_atoms_free = CONS(LISPPTR_INDEX(atom), lisp_atoms_free);
+    tre_atoms_free = CONS(TREPTR_INDEX(atom), tre_atoms_free);
 
     /* Release symbol string. */
-    if (LISPATOM_NAME(atom) != NULL) {
-        lispsymbol_free (LISPATOM_NAME(atom));
-    	LISPATOM_NAME(atom) = NULL;
+    if (TREATOM_NAME(atom) != NULL) {
+        tresymbol_free (TREATOM_NAME(atom));
+    	TREATOM_NAME(atom) = NULL;
     }
 }
 
@@ -232,34 +232,34 @@ lisperror_internal (lispptr_invalid, "!!!!!!!!!!!!!!!");
  *
  * Already existing numbers with the same value are not reused.
  */
-lispptr
-lispatom_number_get (float value, int type)
+treptr
+treatom_number_get (float value, int type)
 {
-    lispptr   atom;
+    treptr   atom;
     unsigned  num;
 
-    atom = lispatom_alloc (NULL, lispptr_nil, ATOM_NUMBER, lispptr_nil);
-    num = lispnumber_alloc (value, type);
-    LISPATOM_SET_DETAIL(atom, num);
+    atom = treatom_alloc (NULL, treptr_nil, ATOM_NUMBER, treptr_nil);
+    num = trenumber_alloc (value, type);
+    TREATOM_SET_DETAIL(atom, num);
 
     return atom;
 }
 
 /* Seek symbolic atom. */
-lispptr
-lispatom_seek (char *symbol, lispptr package)
+treptr
+treatom_seek (char *symbol, treptr package)
 {   
     unsigned  a;
 
     /* Reuse existing atom. */
     for (a = 0; a < NUM_ATOMS; a++) {
-	if (lisp_atoms[a].type == ATOM_UNUSED)
+	if (tre_atoms[a].type == ATOM_UNUSED)
 	    continue;
 
-	if (lisp_atoms[a].name != NULL
-	    && lisp_atoms[a].package == package
-            && strcmp (lisp_atoms[a].name, symbol) == 0) {
-	    return ATOM_TO_LISPPTR(a);
+	if (tre_atoms[a].name != NULL
+	    && tre_atoms[a].package == package
+            && strcmp (tre_atoms[a].name, symbol) == 0) {
+	    return ATOM_TO_TREPTR(a);
         }
     }
 
@@ -271,87 +271,87 @@ lispatom_seek (char *symbol, lispptr package)
  *
  * Create or reuse atom of name 'symbol'.
  */
-lispptr
-lispatom_get (char *symbol, lispptr package)
+treptr
+treatom_get (char *symbol, treptr package)
 {   
-    lispptr  atom;
+    treptr  atom;
 
     /* Reuse existing atom. */
-    atom = lispatom_seek (symbol, package);
+    atom = treatom_seek (symbol, package);
     if (atom != ATOM_NOT_FOUND)
 	return atom;
 
     /* Create number. */
-    if (lispnumber_is_value (symbol))
-        return lispatom_number_get (valuetofloat (symbol), LISPNUMTYPE_FLOAT);
+    if (trenumber_is_value (symbol))
+        return treatom_number_get (valuetofloat (symbol), TRENUMTYPE_FLOAT);
 
-    return lispatom_alloc (symbol, package, ATOM_VARIABLE, lispptr_invalid);
+    return treatom_alloc (symbol, package, ATOM_VARIABLE, treptr_invalid);
 }
 
 /*
  * Remove atom and object.
  */
 void
-lispatom_remove (lispptr el)
+treatom_remove (treptr el)
 {
     /* Do type specific clean-up. */
-    switch (LISPPTR_TYPE(el)) {
+    switch (TREPTR_TYPE(el)) {
         case ATOM_NUMBER:
-            lispnumber_free (el);
+            trenumber_free (el);
 	    break;
 
         case ATOM_ARRAY:
-	    lisparray_free (el);
+	    trearray_free (el);
 	    break;
 
         case ATOM_STRING:
-	    lispstring_free (el);
+	    trestring_free (el);
 	    break;
     }
 
-    lispatom_free (el);
+    treatom_free (el);
 }
 
 /* Lookup variable that points to function containing body. */
-lispptr
-lispatom_body_to_var (lispptr body)
+treptr
+treatom_body_to_var (treptr body)
 {        
     unsigned  a;
     unsigned  b; 
 
     for (a = 0; a < NUM_ATOMS; a++) {
-        if (lisp_atoms[a].type != ATOM_FUNCTION &&
-	    lisp_atoms[a].type != ATOM_MACRO)
+        if (tre_atoms[a].type != ATOM_FUNCTION &&
+	    tre_atoms[a].type != ATOM_MACRO)
 	    continue;
 
-        if (CAR(CDR(lisp_atoms[a].value)) != body)
+        if (CAR(CDR(tre_atoms[a].value)) != body)
 	    continue;
 
         for (b = 0; b < NUM_ATOMS; b++) {
-            if (lisp_atoms[b].type == ATOM_VARIABLE &&
-		lisp_atoms[b].name != NULL &&
-                lisp_atoms[b].fun == LISPATOM_PTR(a))
-                return LISPATOM_PTR(b);
+            if (tre_atoms[b].type == ATOM_VARIABLE &&
+		tre_atoms[b].name != NULL &&
+                tre_atoms[b].fun == TREATOM_PTR(a))
+                return TREATOM_PTR(b);
         }
     }
 
-    return lispptr_nil;
+    return treptr_nil;
 }
 
 /* Return body of user-defined form. */
-lispptr
-lispatom_fun_body (lispptr atomp)
+treptr
+treatom_fun_body (treptr atomp)
 {
-    lispptr fun;
+    treptr fun;
 
-    if (LISPPTR_IS_VARIABLE(atomp) == FALSE) {
-        lisperror_internal (atomp, "variable expected");
-	return lispptr_nil;
+    if (TREPTR_IS_VARIABLE(atomp) == FALSE) {
+        treerror_internal (atomp, "variable expected");
+	return treptr_nil;
     }
 
-    fun = LISPATOM_FUN(atomp);
-    if (fun != lispptr_nil)
-        return CDR(LISPATOM_VALUE(fun));
+    fun = TREATOM_FUN(atomp);
+    if (fun != treptr_nil)
+        return CDR(TREATOM_VALUE(fun));
 
-    return lispptr_nil;
+    return treptr_nil;
 }

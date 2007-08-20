@@ -1,20 +1,20 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * Error handling.
  */
 
-#ifndef LISP_ERROR_H
-#define LISP_ERROR_H
+#ifndef TRE_ERROR_H
+#define TRE_ERROR_H
 
-extern void lisperror_internal (lispptr, const char *msg, ...);
-extern lispptr lisperror (lispptr, const char *msg, ...);
-extern void lisperror_norecover (lispptr, const char *msg, ...);
-extern void lispwarn (lispptr, const char *msg, ...);
+extern void treerror_internal (treptr, const char *msg, ...);
+extern treptr treerror (treptr, const char *msg, ...);
+extern void treerror_norecover (treptr, const char *msg, ...);
+extern void trewarn (treptr, const char *msg, ...);
 
-extern lispptr lisperror_builtin_error (lispptr);
+extern treptr treerror_builtin_error (treptr);
 
-extern char *lisperror_typestring (lispptr);
+extern char *treerror_typestring (treptr);
 
-#endif	/* #ifndef LISP_ERROR_H */
+#endif	/* #ifndef TRE_ERROR_H */

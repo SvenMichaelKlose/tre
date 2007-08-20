@@ -1,40 +1,40 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * Threading
  */
 
-#include "lisp.h"
+#include "config.h"
 #include "atom.h"
 #include "list.h"
 #include "thread.h"
 
 /* Single-thread context. */
-struct lisp_thread_context lisp_context;
+struct tre_thread_context tre_context;
 
 void
-lispthread_make ()
+trethread_make ()
 {
-    LISPCONTEXT_ENV_CURRENT() = lispptr_nil;
-    LISPCONTEXT_FUNSTACK() = lispptr_nil;
-    LISPCONTEXT_PACKAGE() = lispptr_nil;
+    TRECONTEXT_ENV_CURRENT() = treptr_nil;
+    TRECONTEXT_FUNSTACK() = treptr_nil;
+    TRECONTEXT_PACKAGE() = treptr_nil;
 }
 
 /* Add body to function stack. */
 void
-lispthread_push_call (lispptr list)
+trethread_push_call (treptr list)
 {
-    LISPCONTEXT_FUNSTACK() = CONS(list, LISPCONTEXT_FUNSTACK());
+    TRECONTEXT_FUNSTACK() = CONS(list, TRECONTEXT_FUNSTACK());
 }
 
 /* Destructive pop from function stack. */
 void
-lispthread_pop_call ()
+trethread_pop_call ()
 {
-    lispptr tmp;
+    treptr tmp;
 
-    tmp = LISPCONTEXT_FUNSTACK();
-    LISPCONTEXT_FUNSTACK() = CDR(LISPCONTEXT_FUNSTACK());
-    LISPLIST_FREE_EARLY(tmp);
+    tmp = TRECONTEXT_FUNSTACK();
+    TRECONTEXT_FUNSTACK() = CDR(TRECONTEXT_FUNSTACK());
+    TRELIST_FREE_EARLY(tmp);
 }

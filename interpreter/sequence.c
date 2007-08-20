@@ -1,11 +1,11 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * Generic sequences.
  */
 
-#include "lisp.h"
+#include "config.h"
 #include "atom.h"
 #include "list.h"
 #include "number.h"
@@ -24,16 +24,16 @@
 #include <stdio.h>
 #include <math.h>
 
-struct lisp_sequence_type *
-lispsequence_get_type (lispptr seq)
+struct tre_sequence_type *
+tresequence_get_type (treptr seq)
 {
-    switch (LISPPTR_TYPE(seq)) {
+    switch (TREPTR_TYPE(seq)) {
 	case ATOM_STRING:
-	    return &lispstring_seqtype;
+	    return &trestring_seqtype;
 	case ATOM_ARRAY:
-	    return &lisparray_seqtype;
+	    return &trearray_seqtype;
 	case ATOM_EXPR:
-	    return &lisplist_seqtype;
+	    return &trelist_seqtype;
     }
 
     return NULL;
@@ -44,22 +44,22 @@ lispsequence_get_type (lispptr seq)
  *
  * Return element of sequence (zero-indexed).
  */
-lispptr
-lispsequence_builtin_set_elt (lispptr args)
+treptr
+tresequence_builtin_set_elt (treptr args)
 {
-    struct lisp_sequence_type *t;
-    lispptr  val = CAR(args);
-    lispptr  seq = CADR(args);
-    lispptr  idx = CADDR(args);
+    struct tre_sequence_type *t;
+    treptr  val = CAR(args);
+    treptr  seq = CADR(args);
+    treptr  idx = CADDR(args);
 
-    if (LISPPTR_IS_NUMBER(idx) == FALSE)
-	return lisperror (idx, "index must be integer");
+    if (TREPTR_IS_NUMBER(idx) == FALSE)
+	return treerror (idx, "index must be integer");
 
-    t = lispsequence_get_type (seq);
+    t = tresequence_get_type (seq);
     if (t == NULL)
-        return lisperror (lispptr_invalid, "sequence expected");
+        return treerror (treptr_invalid, "sequence expected");
 
-    (*t->set) (seq, (unsigned) LISPNUMBER_VAL(idx), val);
+    (*t->set) (seq, (unsigned) TRENUMBER_VAL(idx), val);
 
     return val;
 }
@@ -69,22 +69,22 @@ lispsequence_builtin_set_elt (lispptr args)
  *
  * Return element of sequence (zero-indexed).
  */
-lispptr
-lispsequence_builtin_elt (lispptr args)
+treptr
+tresequence_builtin_elt (treptr args)
 {
-    struct lisp_sequence_type *t;
-    lispptr  car;
-    lispptr  cdr;
+    struct tre_sequence_type *t;
+    treptr  car;
+    treptr  cdr;
 
-    lisparg_get2 (&car, &cdr, args);
+    trearg_get2 (&car, &cdr, args);
 
-    if (LISPPTR_IS_NUMBER(cdr) == FALSE)
-	return lisperror (cdr, "index must be integer");
+    if (TREPTR_IS_NUMBER(cdr) == FALSE)
+	return treerror (cdr, "index must be integer");
 
-    t = lispsequence_get_type (car);
+    t = tresequence_get_type (car);
     if (t == NULL)
-        return lisperror (car, "sequence expected");
-    return (*t->get) (car, (unsigned) LISPNUMBER_VAL(cdr));
+        return treerror (car, "sequence expected");
+    return (*t->get) (car, (unsigned) TRENUMBER_VAL(cdr));
 }
 
 /*
@@ -92,19 +92,19 @@ lispsequence_builtin_elt (lispptr args)
  *
  * Return number of elements in sequence.
  */
-lispptr
-lispsequence_builtin_length (lispptr args)
+treptr
+tresequence_builtin_length (treptr args)
 {
-    lispptr seq = lisparg_get (args);
-    struct lisp_sequence_type *t;
+    treptr seq = trearg_get (args);
+    struct tre_sequence_type *t;
 
-    if (seq == lispptr_nil)
-	return lispatom_number_get ((float) 0, LISPNUMTYPE_INTEGER);
+    if (seq == treptr_nil)
+	return treatom_number_get ((float) 0, TRENUMTYPE_INTEGER);
 
-    t = lispsequence_get_type (seq);
+    t = tresequence_get_type (seq);
     if (t == NULL)
-        return lisperror (seq, "sequence expected");
+        return treerror (seq, "sequence expected");
 
-    return lispatom_number_get ((float) (*t->length) (seq),
-                                LISPNUMTYPE_INTEGER);
+    return treatom_number_get ((float) (*t->length) (seq),
+                                TRENUMTYPE_INTEGER);
 }

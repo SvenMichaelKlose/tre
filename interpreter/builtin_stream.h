@@ -1,16 +1,16 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2006 Sven Klose <pixel@copei.de>
  *
  * Streams
  */
 
-#ifndef LISP_BUILTIN_STREAM_H
-#define LISP_BUILTIN_STREAM_H
+#ifndef TRE_BUILTIN_STREAM_H
+#define TRE_BUILTIN_STREAM_H
 
-extern lispptr lispstream_builtin_princ (lispptr);
-extern lispptr lispstream_builtin_force_output (lispptr);
-extern lispptr lispstream_builtin_read_char (lispptr);
-extern lispptr lispstream_builtin_feof (lispptr);
+extern treptr trestream_builtin_princ (treptr);
+extern treptr trestream_builtin_force_output (treptr);
+extern treptr trestream_builtin_read_char (treptr);
+extern treptr trestream_builtin_feof (treptr);
 
-#endif /* #ifndef LISP_BUILTIN_STREAM_H */
+#endif /* #ifndef TRE_BUILTIN_STREAM_H */

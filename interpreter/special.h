@@ -1,23 +1,23 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * Built-in special forms.
  */
 
-#ifndef LISP_SPECIAL_H
-#define LISP_SPECIAL_H
+#ifndef TRE_SPECIAL_H
+#define TRE_SPECIAL_H
 
-extern bool lispeval_is_return (lispptr);
-extern bool lispeval_is_go (lispptr);
-extern bool lispeval_is_jump (lispptr);
+extern bool treeval_is_return (treptr);
+extern bool treeval_is_go (treptr);
+extern bool treeval_is_jump (treptr);
 
-extern char *lisp_special_names[];
+extern char *tre_special_names[];
 
-extern lispptr lisp_atom_evaluated_go;
-extern lispptr lisp_atom_evaluated_return_from;
+extern treptr tre_atom_evaluated_go;
+extern treptr tre_atom_evaluated_return_from;
 
-extern lispptr lispspecial (lispptr func, lispptr expr);
-extern void lispspecial_init (void);
+extern treptr trespecial (treptr func, treptr expr);
+extern void trespecial_init (void);
 
-#endif	/* #ifndef LISP_SPECIAL_H */
+#endif	/* #ifndef TRE_SPECIAL_H */

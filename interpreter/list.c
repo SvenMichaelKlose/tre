@@ -1,11 +1,11 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * List related section.
  */
 
-#include "lisp.h"
+#include "config.h"
 #include "atom.h"
 #include "list.h"
 #include "error.h"
@@ -20,34 +20,34 @@
 #include <string.h>
 #include <strings.h>
 
-struct lisp_list lisp_lists[NUM_LISTNODES_TOTAL];
-#ifdef LISP_DIAGNOSTICS
-char lisplist_marks[NUM_LISTNODES_TOTAL >> 3];
+struct tre_list tre_lists[NUM_LISTNODES_TOTAL];
+#ifdef TRE_DIAGNOSTICS
+char trelist_marks[NUM_LISTNODES_TOTAL >> 3];
 #endif
 
-lispptr lisp_lists_free;
-unsigned lisplist_num_used;
+treptr tre_lists_free;
+unsigned trelist_num_used;
 
-#define LISPNODE_SET(node, value) \
+#define TRENODE_SET(node, value) \
     (node)->car = car; 	\
     (node)->cdr = cdr;
 
-#ifdef LISP_DIAGNOSTICS
-lispptr
-lisplist_car (lispptr lst)
+#ifdef TRE_DIAGNOSTICS
+treptr
+trelist_car (treptr lst)
 {
-    if (LISP_GETMARK(lisplist_marks, lst) == FALSE)
-        lisperror_internal (_CAR(lst), "car of free cons");
+    if (TRE_GETMARK(trelist_marks, lst) == FALSE)
+        treerror_internal (_CAR(lst), "car of free cons");
 
     CHKPTR(_CAR(lst));
     return _CAR(lst);
 }
 
-lispptr
-lisplist_cdr (lispptr lst)
+treptr
+trelist_cdr (treptr lst)
 {
-    if (LISP_GETMARK(lisplist_marks, lst) == FALSE)
-        lisperror_internal (_CAR(lst), "cdr using free cons. cdr gone. car");
+    if (TRE_GETMARK(trelist_marks, lst) == FALSE)
+        treerror_internal (_CAR(lst), "cdr using free cons. cdr gone. car");
 
     CHKPTR(_CDR(lst));
     return _CDR(lst);
@@ -55,11 +55,11 @@ lisplist_cdr (lispptr lst)
 #endif
 
 void
-lisplist_rplaca (lispptr cons, lispptr val)
+trelist_rplaca (treptr cons, treptr val)
 {
-#ifdef LISP_DIAGNOSTICS
-    if (LISP_GETMARK(lisplist_marks, cons) == FALSE)
-	lisperror_internal (cons, "rplaca of free cons");
+#ifdef TRE_DIAGNOSTICS
+    if (TRE_GETMARK(trelist_marks, cons) == FALSE)
+	treerror_internal (cons, "rplaca of free cons");
 #endif
 
     CHKPTR(val);
@@ -67,11 +67,11 @@ lisplist_rplaca (lispptr cons, lispptr val)
 }
 
 void
-lisplist_rplacd (lispptr cons, lispptr val)
+trelist_rplacd (treptr cons, treptr val)
 {
-#ifdef LISP_DIAGNOSTICS
-    if (LISP_GETMARK(lisplist_marks, cons) == FALSE)
-	lisperror_internal (cons, "rplacd of free cons");
+#ifdef TRE_DIAGNOSTICS
+    if (TRE_GETMARK(trelist_marks, cons) == FALSE)
+	treerror_internal (cons, "rplacd of free cons");
 #endif
 
     CHKPTR(val);
@@ -82,28 +82,28 @@ lisplist_rplacd (lispptr cons, lispptr val)
  * Free single list element.
  */
 void
-lisplist_free (lispptr node)
+trelist_free (treptr node)
 {
     CHKPTR(node);
 
-#ifdef LISP_DIAGNOSTICS
-    if (LISPPTR_IS_EXPR(node) == FALSE)
-	lisperror_internal (node, "list_free: not a cons");
+#ifdef TRE_DIAGNOSTICS
+    if (TREPTR_IS_EXPR(node) == FALSE)
+	treerror_internal (node, "list_free: not a cons");
 
-    if (LISP_GETMARK(lisplist_marks, node) == FALSE)
-        lisperror_internal (lispptr_nil, "already free cons");
+    if (TRE_GETMARK(trelist_marks, node) == FALSE)
+        treerror_internal (treptr_nil, "already free cons");
 #endif
 
-#ifdef LISP_DIAGNOSTICS
-    LISP_UNMARK(lisplist_marks, node);
+#ifdef TRE_DIAGNOSTICS
+    TRE_UNMARK(trelist_marks, node);
     _CAR(node) = -5;
 #endif
 
-    _CDR(node) = lisp_lists_free;
+    _CDR(node) = tre_lists_free;
 
-    lisp_lists_free = node;
+    tre_lists_free = node;
 
-    lisplist_num_used--;
+    trelist_num_used--;
 }
 
 /*
@@ -112,30 +112,30 @@ lisplist_free (lispptr node)
  * Atoms are left alone.
  */
 void
-lisplist_free_expr (lispptr node)
+trelist_free_expr (treptr node)
 {
-    lispptr  car = CAR(node);
-    lispptr  cdr = CDR(node);
+    treptr  car = CAR(node);
+    treptr  cdr = CDR(node);
 
-    if (LISPPTR_IS_EXPR(car))
-	lisplist_free_expr (car);
-    if (LISPPTR_IS_EXPR(cdr))
-	lisplist_free_expr (cdr);
+    if (TREPTR_IS_EXPR(car))
+	trelist_free_expr (car);
+    if (TREPTR_IS_EXPR(cdr))
+	trelist_free_expr (cdr);
 
-    lisplist_free (node);
+    trelist_free (node);
 }
 
 /*
  * Free pure list, ignoring sublists.
  */
 void
-lisplist_free_toplevel (lispptr node)
+trelist_free_toplevel (treptr node)
 {
-    lispptr cdr;
+    treptr cdr;
 
-    while (node != lispptr_nil) {
+    while (node != treptr_nil) {
         cdr = CDR(node);
-        lisplist_free (node);
+        trelist_free (node);
         node = cdr;
     }
 }
@@ -143,22 +143,22 @@ lisplist_free_toplevel (lispptr node)
 /*
  * Allocate a list node.
  */
-lispptr
-lisplist_get_noref (lispptr car, lispptr cdr)
+treptr
+trelist_get_noref (treptr car, treptr cdr)
 {
-    lispptr i;
+    treptr i;
 
-    i = lisp_lists_free;
+    i = tre_lists_free;
 
-#ifdef LISP_DIAGNOSTICS
-    if (LISP_GETMARK(lisplist_marks, i))
-        lisperror_internal (i, "already allocd cons");
-    LISP_MARK(lisplist_marks, i);
+#ifdef TRE_DIAGNOSTICS
+    if (TRE_GETMARK(trelist_marks, i))
+        treerror_internal (i, "already allocd cons");
+    TRE_MARK(trelist_marks, i);
 #endif
 
-    lisp_lists_free = _CDR(i);
-    LISPLIST_SET(i, car, cdr);
-    lisplist_num_used++;
+    tre_lists_free = _CDR(i);
+    TRELIST_SET(i, car, cdr);
+    trelist_num_used++;
 
     return i;
 }
@@ -168,65 +168,65 @@ lisplist_get_noref (lispptr car, lispptr cdr)
  *
  * Garbage collection is run when out of list elements.
  * The car and cdr is saved accordingly. Other lists not bound to an atom
- * must be saved in advanced using lispgc_save_push().
+ * must be saved in advanced using tregc_save_push().
  */
-lispptr
-_lisplist_get (lispptr car, lispptr cdr)
+treptr
+_trelist_get (treptr car, treptr cdr)
 {
-    lispptr ret;
+    treptr ret;
 
     CHKPTR(car);
     CHKPTR(cdr);
 
-    lispgc_car = car;
-    lispgc_cdr = cdr;
-    ret = lisplist_get_noref (car, cdr);
-    lispgc_retval (ret);
+    tregc_car = car;
+    tregc_cdr = cdr;
+    ret = trelist_get_noref (car, cdr);
+    tregc_retval (ret);
 
     /* Pop node from free list. */
-    if (lisplist_num_used > (NUM_LISTNODES - 16)) {
+    if (trelist_num_used > (NUM_LISTNODES - 16)) {
 	/* Collect garbage and try again, */
-	lispgc_force ();
-        if (lisp_lists_free == lispptr_nil)
-	    lisperror_internal (lispptr_invalid, "no more free list elements");
+	tregc_force ();
+        if (tre_lists_free == treptr_nil)
+	    treerror_internal (treptr_invalid, "no more free list elements");
     }
 
-#ifdef LISP_GC_DEBUG
-    if (lisp_is_initialized)
-        lispgc_force ();
+#ifdef TRE_GC_DEBUG
+    if (tre_is_initialized)
+        tregc_force ();
 #endif
 
     return ret;
 }
 
 /* Return last cons of a list. */
-lispptr
-lisplist_last (lispptr l)
+treptr
+trelist_last (treptr l)
 {
     RETURN_NIL(l);
 
-    while (CDR(l) != lispptr_nil)
+    while (CDR(l) != treptr_nil)
 	l = CDR(l);
 
     return l;
 }
 
 /* Copy tree. */
-lispptr
-lisplist_copy_tree (lispptr l)
+treptr
+trelist_copy_tree (treptr l)
 {
-    lispptr car;
-    lispptr cdr;
-    lispptr ret;
+    treptr car;
+    treptr cdr;
+    treptr ret;
 
-    if (LISPPTR_IS_EXPR(l) == FALSE)
+    if (TREPTR_IS_EXPR(l) == FALSE)
 	return l;
 
-    car = lisplist_copy_tree (CAR(l));
-    lispgc_push (car);
-    cdr = lisplist_copy_tree (CDR(l));
+    car = trelist_copy_tree (CAR(l));
+    tregc_push (car);
+    cdr = trelist_copy_tree (CDR(l));
     ret = CONS(car, cdr);
-    lispgc_pop ();
+    tregc_pop ();
 
     return ret;
 }
@@ -235,15 +235,15 @@ lisplist_copy_tree (lispptr l)
  * Copy tree.
  *
  * Will run garbage collection when out of list elements. The argument is
- * saved. Use lispgc_save_push() for other unbound lists.
+ * saved. Use tregc_save_push() for other unbound lists.
  */
-lispptr
-lisplist_copy (lispptr l)
+treptr
+trelist_copy (treptr l)
 {
-    if (LISPPTR_IS_EXPR(l) == FALSE)
+    if (TREPTR_IS_EXPR(l) == FALSE)
 	return l;
 
-    return CONS(CAR(l), lisplist_copy (CDR(l)));
+    return CONS(CAR(l), trelist_copy (CDR(l)));
 }
 
 /*
@@ -251,16 +251,16 @@ lisplist_copy (lispptr l)
  *
  * The element is unlinked and left for garbage collection.
  */
-lispptr
-lisplist_delete (unsigned i, lispptr l)
+treptr
+trelist_delete (unsigned i, treptr l)
 {
-    lispptr  p;
-    lispptr  f = lispptr_nil;
+    treptr  p;
+    treptr  f = treptr_nil;
 
     if (i == 0)
 	return CDR(l);
 
-    for (p = l; p != lispptr_nil; i--, p = CDR(p)) {
+    for (p = l; p != treptr_nil; i--, p = CDR(p)) {
 	if (i) {
 	    f = p;
 	    continue;
@@ -270,16 +270,16 @@ lisplist_delete (unsigned i, lispptr l)
 	return l;
     }
 
-    return lisperror (l, "lisplist_delete: index '%d' out of range", i);
+    return treerror (l, "trelist_delete: index '%d' out of range", i);
 }
 
 /* Get zero-indexed position of element in list. */
 int
-lisplist_position (lispptr elt, lispptr l)
+trelist_position (treptr elt, treptr l)
 {
     int c = 0;
 
-    while (l != lispptr_nil) {
+    while (l != treptr_nil) {
 	if (CAR(l) == elt)
 	    return c;
 
@@ -292,11 +292,11 @@ lisplist_position (lispptr elt, lispptr l)
 
 /* Get length of a pure list. */
 unsigned
-lisplist_length (lispptr p)
+trelist_length (treptr p)
 {
     unsigned len = 0;
 
-    while (p != lispptr_nil) {
+    while (p != treptr_nil) {
 	len++;
 	p = CDR(p);
     }
@@ -305,13 +305,13 @@ lisplist_length (lispptr p)
 }
 
 /* Return cons pointing to the nth element. */
-lispptr
-lisplist_nth (lispptr l, unsigned idx)
+treptr
+trelist_nth (treptr l, unsigned idx)
 {
-    while (l != lispptr_nil && idx--)
+    while (l != treptr_nil && idx--)
         l = CDR(l);
 
-    if (l == lispptr_nil)
+    if (l == treptr_nil)
 	return l;
 
     return CAR(l);
@@ -319,35 +319,35 @@ lisplist_nth (lispptr l, unsigned idx)
 
 /* Sequence type: replace element at index. */
 void
-lisplist_t_set (lispptr s, unsigned idx, lispptr val)
+trelist_t_set (treptr s, unsigned idx, treptr val)
 {
-    s = lisplist_nth (s, idx);
+    s = trelist_nth (s, idx);
 
     RPLACA(s, val);
 }
 
 /* Sequence type: return element at index. */
-lispptr
-lisplist_t_get (lispptr s, unsigned idx)
+treptr
+trelist_t_get (treptr s, unsigned idx)
 {
-    s = lisplist_nth (s, idx);
+    s = trelist_nth (s, idx);
 
     return s;
 }
 
 /* Sequence type configuration. */
-struct lisp_sequence_type lisplist_seqtype = {
-	lisplist_t_set,
-	lisplist_t_get,
-	lisplist_length
+struct tre_sequence_type trelist_seqtype = {
+	trelist_t_set,
+	trelist_t_get,
+	trelist_length
 };
 
 /* Return T if all elements in a list are of the same type. */
 bool
-lisplist_check_type (lispptr list, unsigned type)
+trelist_check_type (treptr list, unsigned type)
 {
-    for (; list != lispptr_nil; list = CDR(list))
-        if (LISPPTR_TYPE(CAR(list)) != type)
+    for (; list != treptr_nil; list = CDR(list))
+        if (TREPTR_TYPE(CAR(list)) != type)
 	    return FALSE;
 
     return TRUE;
@@ -355,39 +355,39 @@ lisplist_check_type (lispptr list, unsigned type)
 
 /* Append lst2 after lst. */
 void
-lisplist_append (lispptr *lst, lispptr lst2)
+trelist_append (treptr *lst, treptr lst2)
 {
-    lispptr tmp;
+    treptr tmp;
 
-    if (lst2 == lispptr_nil)
+    if (lst2 == treptr_nil)
 	return;
 
-#ifdef LISP_DIAGNOSTICS
-    if (LISPPTR_IS_ATOM(lst2))
-	lisperror_internal (lst2, "lisplist_append: can append list only");
+#ifdef TRE_DIAGNOSTICS
+    if (TREPTR_IS_ATOM(lst2))
+	treerror_internal (lst2, "trelist_append: can append list only");
 #endif
 
-    if (*lst == lispptr_nil) {
+    if (*lst == treptr_nil) {
         *lst = lst2;
 	return;
     }
 
-    tmp = lisplist_last (*lst);
+    tmp = trelist_last (*lst);
     RPLACD(tmp, lst2);
 }
 
 /* Return T if trees have the same layout and contain the same elements. */
 bool
-lisplist_equal (lispptr la, lispptr lb)
+trelist_equal (treptr la, treptr lb)
 {
-    while (la != lispptr_nil && lb != lispptr_nil) {
-        if (LISPPTR_IS_EXPR(la) != LISPPTR_IS_EXPR(lb))
+    while (la != treptr_nil && lb != treptr_nil) {
+        if (TREPTR_IS_EXPR(la) != TREPTR_IS_EXPR(lb))
 	    return FALSE;
 
-        if (LISPPTR_IS_EXPR(la) == FALSE)
+        if (TREPTR_IS_EXPR(la) == FALSE)
 	    return la == lb;
 
-        if (lisplist_equal (CAR(la), CAR(lb)) == FALSE)
+        if (trelist_equal (CAR(la), CAR(lb)) == FALSE)
 	    return FALSE;
 
 	la = CDR(la);
@@ -398,21 +398,21 @@ lisplist_equal (lispptr la, lispptr lb)
 }
 
 void
-lisplist_init ()
+trelist_init ()
 {
     unsigned  i;
 
     /* Make a list of all elements. */
     for (i = 0; i < LAST_LISTNODE; i++) {
-	lisp_lists[i].car = (lispptr) -23;
-	lisp_lists[i].cdr = (lispptr) i + 1;
+	tre_lists[i].car = (treptr) -23;
+	tre_lists[i].cdr = (treptr) i + 1;
     }
-    lisp_lists[LAST_LISTNODE].cdr = LISPPTR_NIL();
+    tre_lists[LAST_LISTNODE].cdr = TREPTR_NIL();
 
-    lisp_lists_free = 0;
-    lisplist_num_used = 0;
+    tre_lists_free = 0;
+    trelist_num_used = 0;
 
-#ifdef LISP_DIAGNOSTICS
-    bzero (lisplist_marks, sizeof (lisplist_marks));
+#ifdef TRE_DIAGNOSTICS
+    bzero (trelist_marks, sizeof (trelist_marks));
 #endif
 }

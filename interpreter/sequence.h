@@ -1,25 +1,25 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * Sequence-related section.
  */
 
-#ifndef LISP_SEQUENCE_H
-#define LISP_SEQUENCE_H
+#ifndef TRE_SEQUENCE_H
+#define TRE_SEQUENCE_H
 
 /*
  * Access to sequences is dispatched. For each sequence type a
- * lisp_sequence_type must be defined.
+ * tre_sequence_type must be defined.
  */
-struct lisp_sequence_type {
-     void (*set) (lispptr, unsigned, lispptr);
-     lispptr (*get) (lispptr, unsigned);
-     unsigned (*length) (lispptr);
+struct tre_sequence_type {
+     void (*set) (treptr, unsigned, treptr);
+     treptr (*get) (treptr, unsigned);
+     unsigned (*length) (treptr);
 };
 
-extern lispptr lispsequence_builtin_elt (lispptr);
-extern lispptr lispsequence_builtin_set_elt (lispptr);
-extern lispptr lispsequence_builtin_length (lispptr);
+extern treptr tresequence_builtin_elt (treptr);
+extern treptr tresequence_builtin_set_elt (treptr);
+extern treptr tresequence_builtin_length (treptr);
 
 #endif

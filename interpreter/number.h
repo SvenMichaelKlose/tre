@@ -1,37 +1,37 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * Number-related section.
  */
 
-#ifndef LISP_NUMBERS_H
-#define LISP_NUMBERS_H
+#ifndef TRE_NUMBERS_H
+#define TRE_NUMBERS_H
 
-#define LISPNUMTYPE_CHAR   	0
-#define LISPNUMTYPE_INTEGER   	1
-#define LISPNUMTYPE_FLOAT 	2
+#define TRENUMTYPE_CHAR   	0
+#define TRENUMTYPE_INTEGER   	1
+#define TRENUMTYPE_FLOAT 	2
 
-struct lisp_number {
+struct tre_number {
     float   value;
     int     type;
 };
 
-#define LISP_NUMBER(index) (&lisp_numbers[index])
-#define LISPNUMBER_VAL(ptr) \
-	((LISP_NUMBER((unsigned) LISPATOM_DETAIL(ptr)))->value)
-#define LISPNUMBER_TYPE(ptr) \
-	((LISP_NUMBER((unsigned) LISPATOM_DETAIL(ptr)))->type)
+#define TRE_NUMBER(index) (&tre_numbers[index])
+#define TRENUMBER_VAL(ptr) \
+	((TRE_NUMBER((unsigned) TREATOM_DETAIL(ptr)))->value)
+#define TRENUMBER_TYPE(ptr) \
+	((TRE_NUMBER((unsigned) TREATOM_DETAIL(ptr)))->type)
 
-extern struct lisp_number lisp_numbers[NUM_NUMBERS];
-extern lispptr lisp_numbers_free;
+extern struct tre_number tre_numbers[NUM_NUMBERS];
+extern treptr tre_numbers_free;
 
 /* Check if string contains a number. */
-extern bool lispnumber_is_value (char *);
+extern bool trenumber_is_value (char *);
 
-extern unsigned lispnumber_alloc (float value, int type);
-extern void lispnumber_free (lispptr);
+extern unsigned trenumber_alloc (float value, int type);
+extern void trenumber_free (treptr);
 
-extern void lispnumber_init (void);
+extern void trenumber_init (void);
 
 #endif

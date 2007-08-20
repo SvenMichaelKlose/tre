@@ -1,11 +1,11 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * String type
  */
 
-#include "lisp.h"
+#include "config.h"
 #include "atom.h"
 #include "list.h"
 #include "number.h"
@@ -22,11 +22,11 @@
 #include <strings.h>
 
 /* Allocate and initialise string. */
-struct lisp_string *
-lispstring_get_raw (unsigned len)
+struct tre_string *
+trestring_get_raw (unsigned len)
 {
-    unsigned  l = len + sizeof (struct lisp_string);
-    struct lisp_string *nstr = lispalloc (l);
+    unsigned  l = len + sizeof (struct tre_string);
+    struct tre_string *nstr = trealloc (l);
 
     if (nstr == NULL)
 	return nstr;
@@ -37,81 +37,81 @@ lispstring_get_raw (unsigned len)
 }
 
 void
-lispstring_copy (char *to, lispptr str)
+trestring_copy (char *to, treptr str)
 {
-    struct lisp_string *s = LISPATOM_STRING(str);
+    struct tre_string *s = TREATOM_STRING(str);
     strncpy (to, &s->str, s->len + 1);
 }
 
 /* Create string atom. */
-lispptr
-lispstring_get (const char *str)
+treptr
+trestring_get (const char *str)
 {
-    struct lisp_string *nstr = lispstring_get_raw (strlen (str));
-    lispptr  atom;
+    struct tre_string *nstr = trestring_get_raw (strlen (str));
+    treptr  atom;
 
     if (nstr == NULL)
-        return lisperror (lispptr_invalid, "out of memory");
+        return treerror (treptr_invalid, "out of memory");
     strcpy (&nstr->str, str);
-    atom = lispatom_alloc (NULL, LISPCONTEXT_PACKAGE(), ATOM_STRING, lispptr_nil);
-    LISPATOM_SET_STRING(atom, nstr);
+    atom = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), ATOM_STRING, treptr_nil);
+    TREATOM_SET_STRING(atom, nstr);
     return atom;
 }
 
 /* Remove string. */
 void
-lispstring_free (lispptr str)
+trestring_free (treptr str)
 {
-    struct lisp_string *s = LISPATOM_STRING(str);
+    struct tre_string *s = TREATOM_STRING(str);
 
-    lispalloc_free (s);
+    trealloc_free (s);
 }
 
 /* Sequence: Get character at index. */
-lispptr
-lispstring_t_get (lispptr str, unsigned idx)
+treptr
+trestring_t_get (treptr str, unsigned idx)
 {
-    struct lisp_string *s = LISPATOM_STRING(str);
+    struct tre_string *s = TREATOM_STRING(str);
 
     if (s->len < idx) {
-        lispwarn (LISPCONTEXT_CURRENT(), "index out of range");
-	return lispptr_nil;
+        trewarn (TRECONTEXT_CURRENT(), "index out of range");
+	return treptr_nil;
     }
 
-    return lispatom_number_get ((float) (&s->str)[idx], LISPNUMTYPE_CHAR);
+    return treatom_number_get ((float) (&s->str)[idx], TRENUMTYPE_CHAR);
 }
 
 /* Sequence: replace character at index. */
 void
-lispstring_t_set (lispptr str, unsigned idx, lispptr val)
+trestring_t_set (treptr str, unsigned idx, treptr val)
 {
-    struct lisp_string *s = LISPATOM_STRING(str);
+    struct tre_string *s = TREATOM_STRING(str);
 
     if (s->len < idx) {
-        lisperror (LISPCONTEXT_CURRENT(), "index out of range");
+        treerror (TRECONTEXT_CURRENT(), "index out of range");
 	return;
     }
 
-    if (LISPPTR_IS_NUMBER(val) == FALSE) {
-        lisperror (val, "can only assign numbers");
+    if (TREPTR_IS_NUMBER(val) == FALSE) {
+        treerror (val, "can only assign numbers");
         return;
     }
 
-    (&s->str)[idx] = LISPNUMBER_VAL(val);
+    (&s->str)[idx] = TRENUMBER_VAL(val);
 }
 
 /* Sequence: Return length of string. */
 unsigned
-lispstring_t_length (lispptr str)
+trestring_t_length (treptr str)
 {
-    struct lisp_string *s = LISPATOM_STRING(str);
+    struct tre_string *s = TREATOM_STRING(str);
 
     return strlen (&s->str);
 }
 
 /* Sequence type configuration. */
-struct lisp_sequence_type lispstring_seqtype = {
-	lispstring_t_set,
-	lispstring_t_get,
-	lispstring_t_length
+struct tre_sequence_type trestring_seqtype = {
+	trestring_t_set,
+	trestring_t_get,
+	trestring_t_length
 };

@@ -1,5 +1,5 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * Environment
@@ -14,7 +14,7 @@
  * lexically parent functions are bound before the argument.
  */
 
-#include "lisp.h"
+#include "config.h"
 #include "atom.h"
 #include "list.h"
 #include "number.h"
@@ -32,18 +32,18 @@
 
 /* Create new environment for atom. */
 void
-lispenv_create (lispptr a)
+treenv_create (treptr a)
 {
-    LISPATOM_DETAIL(a) = (void *) 
-        CONS(LISPCONTEXT_ENV_CURRENT(), CONS(lispptr_nil, lispptr_nil));
+    TREATOM_DETAIL(a) = (void *) 
+        CONS(TRECONTEXT_ENV_CURRENT(), CONS(treptr_nil, treptr_nil));
 }
 /* Update bindings of environment. */
 void
-lispenv_update (lispptr env, lispptr atoms, lispptr values)
+treenv_update (treptr env, treptr atoms, treptr values)
 {
     RETURN_IF_NIL(env);
-    LISPENV_SET_SYMBOLS(env, lisplist_copy (atoms));
-    LISPENV_SET_BINDINGS(env, lisplist_copy (values));
+    TREENV_SET_SYMBOLS(env, trelist_copy (atoms));
+    TREENV_SET_BINDINGS(env, trelist_copy (values));
 }
    
 /*
@@ -52,29 +52,29 @@ lispenv_update (lispptr env, lispptr atoms, lispptr values)
 
 /* Bind argument list to atoms. */
 void
-lispenv_bind (lispptr la, lispptr lv)
+treenv_bind (treptr la, treptr lv)
 {
-    struct lisp_atom *atom;
-    lispptr  arg;
-    lispptr  val;
+    struct tre_atom *atom;
+    treptr  arg;
+    treptr  val;
 
-    for (;la != lispptr_nil && lv != lispptr_nil; la = CDR(la), lv = CDR(lv)) {
+    for (;la != treptr_nil && lv != treptr_nil; la = CDR(la), lv = CDR(lv)) {
         arg = CAR(la);
         val = CAR(lv);
-#ifdef LISP_DIAGNOSTICS
-        if (LISPPTR_IS_VARIABLE(arg) == FALSE)
-            lisperror_internal (arg, "bind: variable expected");
+#ifdef TRE_DIAGNOSTICS
+        if (TREPTR_IS_VARIABLE(arg) == FALSE)
+            treerror_internal (arg, "bind: variable expected");
 #endif
 
-    	atom = LISPPTR_TO_ATOM(arg);
+    	atom = TREPTR_TO_ATOM(arg);
         atom->binding = CONS(atom->value, atom->binding);
         atom->value = val;
     }
 
-    if (la != lispptr_nil)
-        lisperror (la, "arguments missing");
-    if (lv != lispptr_nil)
-        lisperror (lv, "too many arguments. Rest of forms");
+    if (la != treptr_nil)
+        treerror (la, "arguments missing");
+    if (lv != treptr_nil)
+        treerror (lv, "too many arguments. Rest of forms");
 }
 
 /*
@@ -83,45 +83,45 @@ lispenv_bind (lispptr la, lispptr lv)
 
 /* Bind argument list to atoms. Stop if the shorter list ends. */
 void
-lispenv_bind_sloppy (lispptr la, lispptr lv)
+treenv_bind_sloppy (treptr la, treptr lv)
 {
-    struct lisp_atom *atom;
-    lispptr  car;
+    struct tre_atom *atom;
+    treptr  car;
     
-    while (la != lispptr_nil) {
+    while (la != treptr_nil) {
         car = CAR(la);
-#ifdef LISP_DIAGNOSTICS
-        if (LISPPTR_IS_VARIABLE(car) == FALSE)
-            lisperror_internal (car, "sloppy bind: variable expexted");
+#ifdef TRE_DIAGNOSTICS
+        if (TREPTR_IS_VARIABLE(car) == FALSE)
+            treerror_internal (car, "sloppy bind: variable expexted");
 #endif  
         
         /* Push value on binding list. */
-        atom = LISPPTR_TO_ATOM(car); 
+        atom = TREPTR_TO_ATOM(car); 
         atom->binding = CONS(atom->value, atom->binding);
-        if (lv != lispptr_nil)
+        if (lv != treptr_nil)
             atom->value = CAR(lv);
         else
-            atom->value = lispptr_nil;
+            atom->value = treptr_nil;
         
         la = CDR(la);
-        if (lv != lispptr_nil)
+        if (lv != treptr_nil)
             lv = CDR(lv);
     }
 }
 
 /* Unbind argument list from atoms. */
 void
-lispenv_unbind (lispptr la)
+treenv_unbind (treptr la)
 {
-    struct lisp_atom  *atom;
-    lispptr  bding;
+    struct tre_atom  *atom;
+    treptr  bding;
 
-    for (;la != lispptr_nil; la = CDR(la)) {
-        atom = LISPPTR_TO_ATOM(CAR(la));
+    for (;la != treptr_nil; la = CDR(la)) {
+        atom = TREPTR_TO_ATOM(CAR(la));
         bding = atom->binding; 
         atom->value = CAR(bding);
         atom->binding = CDR(bding);
-        LISPLIST_FREE_EARLY(bding);
+        TRELIST_FREE_EARLY(bding);
     }
 }
 
@@ -131,22 +131,22 @@ lispenv_unbind (lispptr la)
 
 /* Bind parent environments until one matches 'parent'. */
 void
-lispenv_bind_env (lispptr env, lispptr parent)
+treenv_bind_env (treptr env, treptr parent)
 {
     RETURN_IF_NIL(env);
-    RETURN_IF_NIL(LISPENV_PARENT(env));
+    RETURN_IF_NIL(TREENV_PARENT(env));
 
-    for (env = LISPENV_PARENT(env); env != lispptr_nil && env != parent; env = LISPENV_PARENT(env))
-        lispenv_bind (LISPENV_SYMBOLS(env), LISPENV_BINDINGS(env));
+    for (env = TREENV_PARENT(env); env != treptr_nil && env != parent; env = TREENV_PARENT(env))
+        treenv_bind (TREENV_SYMBOLS(env), TREENV_BINDINGS(env));
 }
 
 /* Unbind parent environments until one matches 'parent'. */
 void
-lispenv_unbind_env (lispptr env, lispptr parent)
+treenv_unbind_env (treptr env, treptr parent)
 {
     RETURN_IF_NIL(env);
-    RETURN_IF_NIL(LISPENV_PARENT(env));
+    RETURN_IF_NIL(TREENV_PARENT(env));
 
-    for (env = LISPENV_PARENT(env); env != lispptr_nil && env != parent; env = LISPENV_PARENT(env))
-        lispenv_unbind (LISPENV_SYMBOLS(env));
+    for (env = TREENV_PARENT(env); env != treptr_nil && env != parent; env = TREENV_PARENT(env))
+        treenv_unbind (TREENV_SYMBOLS(env));
 }

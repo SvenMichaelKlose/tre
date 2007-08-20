@@ -1,41 +1,41 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * Thread
  */
 
-#ifndef LISP_THREAD_H
-#define LISP_THREAD_H
+#ifndef TRE_THREAD_H
+#define TRE_THREAD_H
 
-struct lisp_thread_context {
-    lispptr  funstack;
+struct tre_thread_context {
+    treptr  funstack;
     
     int      token;
-    char     token_name[LISP_MAX_SYMLEN + 1];
-    char     package_name[LISP_MAX_SYMLEN + 1];
+    char     token_name[TRE_MAX_SYMLEN + 1];
+    char     package_name[TRE_MAX_SYMLEN + 1];
 
-    lispptr  package;
-    lispptr  env_current;
+    treptr  package;
+    treptr  env_current;
 };
 
-extern struct lisp_thread_context lisp_context;
+extern struct tre_thread_context tre_context;
 
-#define LISPCONTEXT_FUNSTACK()		(lisp_context.funstack)
+#define TRECONTEXT_FUNSTACK()		(tre_context.funstack)
 
-#define LISPCONTEXT_TOKEN()		(lisp_context.token)
-#define LISPCONTEXT_TOKEN_NAME()	(lisp_context.token_name)
-#define LISPCONTEXT_PACKAGE()		(lisp_context.package)
-#define LISPCONTEXT_PACKAGE_NAME()	(lisp_context.package_name)
+#define TRECONTEXT_TOKEN()		(tre_context.token)
+#define TRECONTEXT_TOKEN_NAME()	(tre_context.token_name)
+#define TRECONTEXT_PACKAGE()		(tre_context.package)
+#define TRECONTEXT_PACKAGE_NAME()	(tre_context.package_name)
 
-#define LISPCONTEXT_ENV_CURRENT()	(lisp_context.env_current)
+#define TRECONTEXT_ENV_CURRENT()	(tre_context.env_current)
 
-#define LISPCONTEXT_PARENT()		(CADR(LISPCONTEXT_FUNSTACK()))
-#define LISPCONTEXT_CURRENT()		(CAR(LISPCONTEXT_FUNSTACK()))
+#define TRECONTEXT_PARENT()		(CADR(TRECONTEXT_FUNSTACK()))
+#define TRECONTEXT_CURRENT()		(CAR(TRECONTEXT_FUNSTACK()))
 
-extern void lispthread_make (void);
+extern void trethread_make (void);
 
-extern void lispthread_push_call (lispptr list);
-extern void lispthread_pop_call (void);
+extern void trethread_push_call (treptr list);
+extern void trethread_pop_call (void);
 
-#endif	/* #ifndef LISP_THREAD_H */
+#endif	/* #ifndef TRE_THREAD_H */

@@ -1,17 +1,17 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2006 Sven Klose <pixel@copei.de>
  *
  * Streams
  */
 
-#ifndef LISP_STREAM_H
-#define LISP_STREAM_H
+#ifndef TRE_STREAM_H
+#define TRE_STREAM_H
 
 #include <stdio.h>
 
-extern FILE* lisp_fileio_handles[LISP_FILEIO_MAX_FILES];
+extern FILE* tre_fileio_handles[TRE_FILEIO_MAX_FILES];
 
-extern int lispstream_fopen (lispptr path, lispptr mode);
+extern int trestream_fopen (treptr path, treptr mode);
 
-#endif /* #ifndef LISP_STREAM_H */
+#endif /* #ifndef TRE_STREAM_H */

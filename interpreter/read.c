@@ -1,11 +1,11 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
- * Reading LISP expressions.
+ * Reading TRE expressions.
  */
 
-#include "lisp.h"
+#include "config.h"
 #include "atom.h"
 #include "list.h"
 #include "io.h"
@@ -24,17 +24,17 @@
  *
  * Don't forget to update is_symchar().
  */
-#define LISPTOKEN_BRACKET_OPEN		1
-#define LISPTOKEN_BRACKET_CLOSE		2
-#define LISPTOKEN_DOT			3
-#define LISPTOKEN_DBLQUOTE		4
-#define LISPTOKEN_QUOTE			5
-#define LISPTOKEN_BACKQUOTE		6
-#define LISPTOKEN_QUASIQUOTE		7
-#define LISPTOKEN_QUASIQUOTE_SPLICE	8
-#define LISPTOKEN_FUNCTION		9
-#define LISPTOKEN_CHAR			10
-#define LISPTOKEN_SYMBOL		11	/* Keep this at the end. */
+#define TRETOKEN_BRACKET_OPEN		1
+#define TRETOKEN_BRACKET_CLOSE		2
+#define TRETOKEN_DOT			3
+#define TRETOKEN_DBLQUOTE		4
+#define TRETOKEN_QUOTE			5
+#define TRETOKEN_BACKQUOTE		6
+#define TRETOKEN_QUASIQUOTE		7
+#define TRETOKEN_QUASIQUOTE_SPLICE	8
+#define TRETOKEN_FUNCTION		9
+#define TRETOKEN_CHAR			10
+#define TRETOKEN_SYMBOL		11	/* Keep this at the end. */
 
 /*
  * Check if the next incoming character would be legal part of a symbol.
@@ -53,7 +53,7 @@ is_symchar (char c)
  * of input is read.
  */
 int
-get_symbol (struct lisp_stream *str, char *s, char *p)
+get_symbol (struct tre_stream *str, char *s, char *p)
 {
     unsigned  len = 0;
     char      *os = s;
@@ -62,23 +62,23 @@ get_symbol (struct lisp_stream *str, char *s, char *p)
     *s = 0;
     *p = -1;
 again:
-    lispio_skip_spaces (str);
+    treio_skip_spaces (str);
 
     /* Ignore comments. */
     while (str->last_char == ';') {
-        while (lispio_getc (str) >= ' '); /* Read until line end. */
+        while (treio_getc (str) >= ' '); /* Read until line end. */
         goto again;
     }
 
 after_pname:
     /* Read until a non-symbol character is found. */
     while (1) {
-        c = toupper (lispio_getc (str));
+        c = toupper (treio_getc (str));
         if (is_symchar (c)) {
 	    /* Take read symbol as package name. */
             if (c == ':') {
 		if (*p != -1)
-		    lisperror (lispptr_invalid, "double package name");
+		    treerror (treptr_invalid, "double package name");
 		strcpy (p, os);
 		len = 0;
 		s = os;
@@ -87,10 +87,10 @@ after_pname:
 
             *s++ = c;
             len++;
-	    if (len > LISP_MAX_SYMLEN)
-		lisperror_internal (lispptr_invalid,
+	    if (len > TRE_MAX_SYMLEN)
+		treerror_internal (treptr_invalid,
 			   "symbols must be no longer than %d chars",
-			   LISP_MAX_SYMLEN);
+			   TRE_MAX_SYMLEN);
 
 	    if (len == 1 && c == '.')
 		return len;
@@ -99,7 +99,7 @@ after_pname:
 
         *s++ = 0;
         if (len > 0)
-	    lispio_putback (str);
+	    treio_putback (str);
 
         return len;
     }
@@ -107,57 +107,57 @@ after_pname:
 
 /* Read token. */
 void
-lispread_token (struct lisp_stream *stream)
+treread_token (struct tre_stream *stream)
 {
-    unsigned  len = get_symbol (stream, LISPCONTEXT_TOKEN_NAME(),
-	                        LISPCONTEXT_PACKAGE_NAME());
+    unsigned  len = get_symbol (stream, TRECONTEXT_TOKEN_NAME(),
+	                        TRECONTEXT_PACKAGE_NAME());
     char  c;
 
     if (len != 0) {
-	LISPCONTEXT_TOKEN() = LISPTOKEN_SYMBOL;
+	TRECONTEXT_TOKEN() = TRETOKEN_SYMBOL;
 	return;
     }
 
     switch (stream->last_char) {
         case '(':
-	    LISPCONTEXT_TOKEN() = LISPTOKEN_BRACKET_OPEN;
+	    TRECONTEXT_TOKEN() = TRETOKEN_BRACKET_OPEN;
 	    break;
         case ')':
-	    LISPCONTEXT_TOKEN() = LISPTOKEN_BRACKET_CLOSE;
+	    TRECONTEXT_TOKEN() = TRETOKEN_BRACKET_CLOSE;
 	    break;
         case '.':
-	    LISPCONTEXT_TOKEN() = LISPTOKEN_DOT;
+	    TRECONTEXT_TOKEN() = TRETOKEN_DOT;
 	    break;
         case '\'':
-	    LISPCONTEXT_TOKEN() = LISPTOKEN_QUOTE;
+	    TRECONTEXT_TOKEN() = TRETOKEN_QUOTE;
 	    break;
         case '`':
-	    LISPCONTEXT_TOKEN() = LISPTOKEN_BACKQUOTE;
+	    TRECONTEXT_TOKEN() = TRETOKEN_BACKQUOTE;
 	    break;
         case '"':
-	    LISPCONTEXT_TOKEN() = LISPTOKEN_DBLQUOTE;
+	    TRECONTEXT_TOKEN() = TRETOKEN_DBLQUOTE;
 	    break;
         case ',':
-	    c = lispio_getc (stream);
+	    c = treio_getc (stream);
 	    if (c == '@')
-		LISPCONTEXT_TOKEN() = LISPTOKEN_QUASIQUOTE_SPLICE;
+		TRECONTEXT_TOKEN() = TRETOKEN_QUASIQUOTE_SPLICE;
 	    else {
-	        LISPCONTEXT_TOKEN() = LISPTOKEN_QUASIQUOTE;
-		lispio_putback (stream);
+	        TRECONTEXT_TOKEN() = TRETOKEN_QUASIQUOTE;
+		treio_putback (stream);
 	    }
 	    break;
         case '#':
-	    c = lispio_getc (stream);
+	    c = treio_getc (stream);
 	    if (c == '\\') {
-		LISPCONTEXT_TOKEN() = LISPTOKEN_CHAR;
+		TRECONTEXT_TOKEN() = TRETOKEN_CHAR;
 		break;
 	    }
             if (c != '\'')
-		lisperror_norecover (lispptr_invalid, "syntax error after '#'");
-            LISPCONTEXT_TOKEN() = LISPTOKEN_FUNCTION;
+		treerror_norecover (treptr_invalid, "syntax error after '#'");
+            TRECONTEXT_TOKEN() = TRETOKEN_FUNCTION;
 	    break;
         case -1:
-	    LISPCONTEXT_TOKEN() = 0;	/* end of file */
+	    TRECONTEXT_TOKEN() = 0;	/* end of file */
 	    break;
     }
 }
@@ -165,207 +165,207 @@ lispread_token (struct lisp_stream *stream)
 /*
  * Read ordinary atom.
  */
-lispptr
-lispread_atom (struct lisp_stream *stream)
+treptr
+treread_atom (struct tre_stream *stream)
 {
-    char      str[LISP_MAX_STRINGLEN + 1];
+    char      str[TRE_MAX_STRINGLEN + 1];
     char      *i;
     char      c;
     unsigned  l;
-    lispptr package;
+    treptr package;
 
     /* Read string atom. */
-    if (LISPCONTEXT_TOKEN() == LISPTOKEN_DBLQUOTE) {
+    if (TRECONTEXT_TOKEN() == TRETOKEN_DBLQUOTE) {
         i = str;
 	l = 0;
 	while (1) {
-	    c = lispio_getc (stream);
+	    c = treio_getc (stream);
 
             if (c == '"')
 		break;
             if (c == '\\')
-		c = lispio_getc (stream);
+		c = treio_getc (stream);
 	    *i++ = c;
-	    if (++l > LISP_MAX_STRINGLEN)
-		return lisperror (lispptr_invalid,
+	    if (++l > TRE_MAX_STRINGLEN)
+		return treerror (treptr_invalid,
                                   "string must be no longer than %d chars",
-			          LISP_MAX_STRINGLEN);
+			          TRE_MAX_STRINGLEN);
 	}
 	*i = 0;
-	return lispstring_get (str);
+	return trestring_get (str);
     }
 
-    if (LISPCONTEXT_TOKEN() == LISPTOKEN_CHAR)
-        return lispatom_number_get ((float) lispio_getc (stream),
-                                    LISPNUMTYPE_CHAR);
+    if (TRECONTEXT_TOKEN() == TRETOKEN_CHAR)
+        return treatom_number_get ((float) treio_getc (stream),
+                                    TRENUMTYPE_CHAR);
 
-    if (LISPCONTEXT_TOKEN() < LISPTOKEN_SYMBOL)
-	return lisperror (lispptr_invalid, "syntax error");
+    if (TRECONTEXT_TOKEN() < TRETOKEN_SYMBOL)
+	return treerror (treptr_invalid, "syntax error");
 
-    package = (*LISPCONTEXT_PACKAGE_NAME() == -1) ?
-	          lispptr_nil :
-	          lispatom_get (LISPCONTEXT_PACKAGE_NAME(), lispptr_nil);
+    package = (*TRECONTEXT_PACKAGE_NAME() == -1) ?
+	          treptr_nil :
+	          treatom_get (TRECONTEXT_PACKAGE_NAME(), treptr_nil);
 
-    return lispatom_get (LISPCONTEXT_TOKEN_NAME(), package);
+    return treatom_get (TRECONTEXT_TOKEN_NAME(), package);
 }
 
-lispptr lispread_expr (struct lisp_stream *stream);
+treptr treread_expr (struct tre_stream *stream);
 
 /* Expand quotation shortcut to special form. */
-lispptr
-lispread_quote (struct lisp_stream *stream)
+treptr
+treread_quote (struct tre_stream *stream)
 {
-    lispptr  atom;
-    lispptr  expr;
+    treptr  atom;
+    treptr  expr;
 
-    switch (LISPCONTEXT_TOKEN()) {
-	case LISPTOKEN_QUOTE:
-	    atom = lispatom_quote;
+    switch (TRECONTEXT_TOKEN()) {
+	case TRETOKEN_QUOTE:
+	    atom = treatom_quote;
 	    break;
-	case LISPTOKEN_BACKQUOTE:
-	    atom = lispatom_backquote;
+	case TRETOKEN_BACKQUOTE:
+	    atom = treatom_backquote;
 	    break;
-	case LISPTOKEN_QUASIQUOTE:
-	    atom = lispatom_quasiquote;
+	case TRETOKEN_QUASIQUOTE:
+	    atom = treatom_quasiquote;
 	    break;
-	case LISPTOKEN_QUASIQUOTE_SPLICE:
-	    atom = lispatom_quasiquote_splice;
+	case TRETOKEN_QUASIQUOTE_SPLICE:
+	    atom = treatom_quasiquote_splice;
 	    break;
-	case LISPTOKEN_FUNCTION:
-	    atom = lispatom_function;
+	case TRETOKEN_FUNCTION:
+	    atom = treatom_function;
 	    break;
 	default:
-	    return lisperror (lispptr_invalid,
-                              "lispread_quote: unsupported token");
+	    return treerror (treptr_invalid,
+                              "treread_quote: unsupported token");
     }
 
-    expr = lispread_expr (stream);
-    expr = CONS(expr, lispptr_nil);
+    expr = treread_expr (stream);
+    expr = CONS(expr, treptr_nil);
     return CONS(atom, expr);
 }
 
 /*
  * Continue reading an expression.
  */
-lispptr
-lispread_list (struct lisp_stream *stream)
+treptr
+treread_list (struct tre_stream *stream)
 {
-    lispptr  car;
-    lispptr  cdr;
-    lispptr  ret;
+    treptr  car;
+    treptr  cdr;
+    treptr  ret;
 
     /* Read CAR. */
-    switch (LISPCONTEXT_TOKEN()) {
-	case LISPTOKEN_QUOTE:
-	case LISPTOKEN_BACKQUOTE:
-	case LISPTOKEN_QUASIQUOTE:
-	case LISPTOKEN_QUASIQUOTE_SPLICE:
-	case LISPTOKEN_FUNCTION:
+    switch (TRECONTEXT_TOKEN()) {
+	case TRETOKEN_QUOTE:
+	case TRETOKEN_BACKQUOTE:
+	case TRETOKEN_QUASIQUOTE:
+	case TRETOKEN_QUASIQUOTE_SPLICE:
+	case TRETOKEN_FUNCTION:
 	    /* Expand quote. */
-	    car = lispread_quote (stream);
+	    car = treread_quote (stream);
 	    break;
 
-	case LISPTOKEN_BRACKET_OPEN:
+	case TRETOKEN_BRACKET_OPEN:
 	    /* Step into new expression. */
-            lispread_token (stream);
-	    car = lispread_list (stream);
+            treread_token (stream);
+	    car = treread_list (stream);
 	    break;
 
-	case LISPTOKEN_BRACKET_CLOSE:
-	    return lispptr_nil;
+	case TRETOKEN_BRACKET_CLOSE:
+	    return treptr_nil;
 
 	default:
 	    /* Read single atom. */
-	    car = lispread_atom (stream);
+	    car = treread_atom (stream);
     }
 
-    lispgc_push (car);
+    tregc_push (car);
 
     /* Read CDR. */
-    lispread_token (stream);
-    switch (LISPCONTEXT_TOKEN()) {
-	case LISPTOKEN_DOT:
+    treread_token (stream);
+    switch (TRECONTEXT_TOKEN()) {
+	case TRETOKEN_DOT:
 	    /* Read atom or expression. */
-            cdr = lispread_expr (stream);
-            lispread_token (stream);
-            if (LISPCONTEXT_TOKEN() != LISPTOKEN_BRACKET_CLOSE)
+            cdr = treread_expr (stream);
+            treread_token (stream);
+            if (TRECONTEXT_TOKEN() != TRETOKEN_BRACKET_CLOSE)
 		goto error;
 	    break;
-	case LISPTOKEN_BRACKET_CLOSE:
+	case TRETOKEN_BRACKET_CLOSE:
 	    /* End of expression reached. */
-	    cdr = lispptr_nil;
+	    cdr = treptr_nil;
 	    break;
 	default:
 	    /* Continue reading current expression. */
-            cdr = lispread_list (stream);
+            cdr = treread_list (stream);
     }
 
     /* Cons CAR & CDR. */
     ret = CONS(car, cdr);
-    lispgc_pop ();
+    tregc_pop ();
     return ret;
 
 error:
-    lispgc_pop ();
-    return lisperror (lispptr_invalid, "closing bracket expected");
+    tregc_pop ();
+    return treerror (treptr_invalid, "closing bracket expected");
 }
 
 /* Read an expression or atom. */
-lispptr
-lispread_expr (struct lisp_stream *stream)
+treptr
+treread_expr (struct tre_stream *stream)
 {
-    lispread_token (stream);
+    treread_token (stream);
 
-    if (LISPCONTEXT_TOKEN() == 0) /* End of file. */
-        return lispptr_invalid;
+    if (TRECONTEXT_TOKEN() == 0) /* End of file. */
+        return treptr_invalid;
 
     /* Expand quote. */
-    if (LISPCONTEXT_TOKEN() >= LISPTOKEN_QUOTE
-     && LISPCONTEXT_TOKEN() <= LISPTOKEN_FUNCTION)
-	return lispread_quote (stream);
+    if (TRECONTEXT_TOKEN() >= TRETOKEN_QUOTE
+     && TRECONTEXT_TOKEN() <= TRETOKEN_FUNCTION)
+	return treread_quote (stream);
 
     /* Read atom. */
-    if (LISPCONTEXT_TOKEN() != LISPTOKEN_BRACKET_OPEN)
-	return lispread_atom (stream);
+    if (TRECONTEXT_TOKEN() != TRETOKEN_BRACKET_OPEN)
+	return treread_atom (stream);
 
     /* Test on empty list. */
-    lispread_token (stream);	/* Skip opening bracket. */
-    if (LISPCONTEXT_TOKEN() == LISPTOKEN_BRACKET_CLOSE)
-        return lispptr_nil;
+    treread_token (stream);	/* Skip opening bracket. */
+    if (TRECONTEXT_TOKEN() == TRETOKEN_BRACKET_CLOSE)
+        return treptr_nil;
 
     /* Read expression. */
-    return lispread_list (stream);
+    return treread_list (stream);
 }
 
-lispptr
-lispread (struct lisp_stream *stream)
+treptr
+treread (struct tre_stream *stream)
 {
-    lispio_prompt ();
+    treio_prompt ();
 
     /* Test on empty file. */
-    lispio_skip_spaces (stream);
-    if (lispio_eof (stream))
-	return lispptr_invalid;
+    treio_skip_spaces (stream);
+    if (treio_eof (stream))
+	return treptr_invalid;
 
-    return lispread_expr (stream);
+    return treread_expr (stream);
 }
 
 void
-lispread_init ()
+treread_init ()
 {
-    LISPCONTEXT_TOKEN() = (int) -1;
-    LISPCONTEXT_TOKEN_NAME()[0] = 0;
+    TRECONTEXT_TOKEN() = (int) -1;
+    TRECONTEXT_TOKEN_NAME()[0] = 0;
 
     /* Reader expansions. */
-    lispatom_quote = lispatom_get ("QUOTE", LISPCONTEXT_PACKAGE());
-    lispatom_backquote = lispatom_get ("BACKQUOTE", LISPCONTEXT_PACKAGE());
-    lispatom_quasiquote = lispatom_get ("QUASIQUOTE", LISPCONTEXT_PACKAGE());
-    lispatom_quasiquote_splice = lispatom_get ("QUASIQUOTE-SPLICE", LISPCONTEXT_PACKAGE());
-    lispatom_function = lispatom_get ("FUNCTION", LISPCONTEXT_PACKAGE());
+    treatom_quote = treatom_get ("QUOTE", TRECONTEXT_PACKAGE());
+    treatom_backquote = treatom_get ("BACKQUOTE", TRECONTEXT_PACKAGE());
+    treatom_quasiquote = treatom_get ("QUASIQUOTE", TRECONTEXT_PACKAGE());
+    treatom_quasiquote_splice = treatom_get ("QUASIQUOTE-SPLICE", TRECONTEXT_PACKAGE());
+    treatom_function = treatom_get ("FUNCTION", TRECONTEXT_PACKAGE());
 
-    EXPAND_UNIVERSE(lispatom_quote);
-    EXPAND_UNIVERSE(lispatom_backquote);
-    EXPAND_UNIVERSE(lispatom_quasiquote);
-    EXPAND_UNIVERSE(lispatom_quasiquote_splice);
-    EXPAND_UNIVERSE(lispatom_function);
+    EXPAND_UNIVERSE(treatom_quote);
+    EXPAND_UNIVERSE(treatom_backquote);
+    EXPAND_UNIVERSE(treatom_quasiquote);
+    EXPAND_UNIVERSE(treatom_quasiquote_splice);
+    EXPAND_UNIVERSE(treatom_function);
 }

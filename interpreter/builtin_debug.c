@@ -1,11 +1,11 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * Built-in functions.
  */
 
-#include "lisp.h"
+#include "config.h"
 #include "atom.h"
 #include "list.h"
 #include "number.h"
@@ -23,71 +23,71 @@
  *
  * Removes all argument bindings.
  */
-lispptr
-lispdebug_builtin_end_debug (lispptr no_args)
+treptr
+tredebug_builtin_end_debug (treptr no_args)
 {
-    struct lisp_atom *atom;
-    lispptr   b;
+    struct tre_atom *atom;
+    treptr   b;
     unsigned  i;
 
     (void) no_args;
 
     for (i = 0; i < NUM_ATOMS; i++) {
-        atom = &lisp_atoms[i];
+        atom = &tre_atoms[i];
 	if (atom->type == ATOM_UNUSED)
 	    continue;
         b = atom->binding;
-        if (b == lispptr_nil)
+        if (b == treptr_nil)
 	    continue;
 
-	while (CDR(b) != lispptr_nil)
+	while (CDR(b) != treptr_nil)
 	    b = CDR(b);
 
         atom->value = CAR(b);
-	atom->binding = lispptr_nil;
+	atom->binding = treptr_nil;
     }
 
-    lisp_restart (lispptr_nil);
+    tre_restart (treptr_nil);
 
     /*NOTREACHED*/
-    return lispptr_nil;
+    return treptr_nil;
 }
 
-lispptr
-lispdebug_builtin_invoke_debugger (lispptr no_args)
+treptr
+tredebug_builtin_invoke_debugger (treptr no_args)
 {
     (void) no_args;
 
     printf ("INVOKE-DEBUGGER called.\n");
-    lispdebug_mode = LISPDEBUGM_STEP;
+    tredebug_mode = TREDEBUGM_STEP;
 
-    lispdebug ();
+    tredebug ();
 
-    return lispptr_nil;
+    return treptr_nil;
 }
 
-lispptr
-lispdebug_builtin_set_breakpoint (lispptr name)
+treptr
+tredebug_builtin_set_breakpoint (treptr name)
 {
-    lispptr  n = lisparg_get (name);
+    treptr  n = trearg_get (name);
 
-    if (!LISPPTR_IS_VARIABLE(n))
-	return lisperror (n, "variable expected");
+    if (!TREPTR_IS_VARIABLE(n))
+	return treerror (n, "variable expected");
 
-    lispdebug_set_breakpoint (LISPATOM_NAME(n));
+    tredebug_set_breakpoint (TREATOM_NAME(n));
 
-    return lispptr_nil;
+    return treptr_nil;
 }
 
-lispptr
-lispdebug_builtin_remove_breakpoint (lispptr name)
+treptr
+tredebug_builtin_remove_breakpoint (treptr name)
 {
-    lispptr  n = lisparg_get (name);
+    treptr  n = trearg_get (name);
 
-    if (!LISPPTR_IS_VARIABLE(n))
-	return lisperror (n, "variable expected");
+    if (!TREPTR_IS_VARIABLE(n))
+	return treerror (n, "variable expected");
 
-    lispdebug_remove_breakpoint (LISPATOM_NAME(n));
+    tredebug_remove_breakpoint (TREATOM_NAME(n));
 
-    return lispptr_nil;
+    return treptr_nil;
 }

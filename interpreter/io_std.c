@@ -1,11 +1,11 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * UN*X file I/O
  */
 
-#include "lisp.h"
+#include "config.h"
 #include "atom.h"
 #include "io.h"
 #include "io_std.h"
@@ -17,7 +17,7 @@
 #include <errno.h>
 
 int
-lispiostd_eof (void *s)
+treiostd_eof (void *s)
 {
     FILE *fd = (FILE *) s;
 
@@ -25,24 +25,24 @@ lispiostd_eof (void *s)
 }
 
 void
-lispiostd_flush (void *s)
+treiostd_flush (void *s)
 {
     FILE *fd = (FILE *) s;
 
     fflush (fd);
 }
 
-struct lisp_stream *
-lispiostd_open_file (char *name)
+struct tre_stream *
+treiostd_open_file (char *name)
 {
-    struct lisp_stream *s = lispio_make_stream (&lispio_ops_std);
+    struct tre_stream *s = treio_make_stream (&treio_ops_std);
     FILE *fd;
 
     fd = fopen (name, "r");
     if (fd == NULL) {
         fprintf (stderr, "%s\n", name);
 	perror ("couldn't open file");
-        lisperror_internal (lispptr_invalid, "file error");
+        treerror_internal (treptr_invalid, "file error");
     }
 
     s->detail_in = fd;
@@ -50,7 +50,7 @@ lispiostd_open_file (char *name)
 }
 
 void
-lispiostd_close (void *s)
+treiostd_close (void *s)
 {
     FILE *fd = (FILE *) s;
 
@@ -60,7 +60,7 @@ lispiostd_close (void *s)
 
 /* Get character from input stream. */
 int
-lispiostd_getc (void *s)
+treiostd_getc (void *s)
 {
     FILE *fd = (FILE *) s;
 
@@ -68,17 +68,17 @@ lispiostd_getc (void *s)
 }
 
 void
-lispiostd_putc (void *s, char c)
+treiostd_putc (void *s, char c)
 {
     FILE *fd = (FILE *) s;
 
     fputc (c, fd);
 }
 
-struct lispio_ops lispio_ops_std = {
-    lispiostd_getc,
-    lispiostd_putc,
-    lispiostd_eof,
-    lispiostd_flush,
-    lispiostd_close
+struct treio_ops treio_ops_std = {
+    treiostd_getc,
+    treiostd_putc,
+    treiostd_eof,
+    treiostd_flush,
+    treiostd_close
 };

@@ -1,24 +1,24 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * Simple streams
  */
 
-#ifndef LISP_IO_H
-#define LISP_IO_H
+#ifndef TRE_IO_H
+#define TRE_IO_H
 
 #include <stdio.h>
 
-struct lisp_stream {
-    struct lispio_ops  *ops;
+struct tre_stream {
+    struct treio_ops  *ops;
     int  putback_char;
     int  last_char;
     void  *detail_in;
     void  *detail_out;
 };
 
-struct lispio_ops {
+struct treio_ops {
     int (*getc) (void *);
     void (*putc) (void *, char);
     int (*eof) (void *);
@@ -26,35 +26,35 @@ struct lispio_ops {
     void (*close) (void *);
 };
 
-#define LISPIO_OP(s) (s->ops)
-#define LISPIO_GETC(s) ((*s->ops->getc) (s->detail_in))
-#define LISPIO_PUTC(s, c) ((*s->ops->putc) (s->detail_out, c))
-#define LISPIO_EOF(s) ((*s->ops->eof) (s->detail_in))
-#define LISPIO_CLOSE(s) ((*s->ops->close) (s->detail_in))
-#define LISPIO_FLUSH(s) ((*s->ops->flush) (s->detail_out))
+#define TREIO_OP(s) (s->ops)
+#define TREIO_GETC(s) ((*s->ops->getc) (s->detail_in))
+#define TREIO_PUTC(s, c) ((*s->ops->putc) (s->detail_out, c))
+#define TREIO_EOF(s) ((*s->ops->eof) (s->detail_in))
+#define TREIO_CLOSE(s) ((*s->ops->close) (s->detail_in))
+#define TREIO_FLUSH(s) ((*s->ops->flush) (s->detail_out))
 
-extern struct lisp_stream  *lispio_reader;  /* Reader stream */
-extern struct lisp_stream  *lispio_console; /* Console stream */
+extern struct tre_stream  *treio_reader;  /* Reader stream */
+extern struct tre_stream  *treio_console; /* Console stream */
 
 /* Reader stream diversion stack pointer */
-extern unsigned lispio_readerstreamptr;
+extern unsigned treio_readerstreamptr;
 
-extern struct lisp_stream *lispio_make_stream (struct lispio_ops *ops);
+extern struct tre_stream *treio_make_stream (struct treio_ops *ops);
 
-extern int lispio_getc (struct lisp_stream *);
-extern int lispio_getline (struct lisp_stream *,char *s, unsigned maxlen);
-extern void lispio_putback (struct lisp_stream *);
-extern void lispio_putc (struct lisp_stream *, char);
-extern void lispio_flush (struct lisp_stream *);
-extern void lispio_skip_spaces (struct lisp_stream *);
-extern int lispio_eof (struct lisp_stream *);
-extern void lispio_prompt (void);
+extern int treio_getc (struct tre_stream *);
+extern int treio_getline (struct tre_stream *,char *s, unsigned maxlen);
+extern void treio_putback (struct tre_stream *);
+extern void treio_putc (struct tre_stream *, char);
+extern void treio_flush (struct tre_stream *);
+extern void treio_skip_spaces (struct tre_stream *);
+extern int treio_eof (struct tre_stream *);
+extern void treio_prompt (void);
 
 /* Standard stream diversion for LOAD and related functions. */
-extern void lispiostd_divert (struct lisp_stream *);
-extern void lispiostd_undivert (void);
-extern void lispiostd_undivert_all (void);
+extern void treiostd_divert (struct tre_stream *);
+extern void treiostd_undivert (void);
+extern void treiostd_undivert_all (void);
 
-extern void lispio_init (void);
+extern void treio_init (void);
 
 #endif

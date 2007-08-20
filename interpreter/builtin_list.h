@@ -1,19 +1,19 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2006 Sven Klose <pixel@copei.de>
  *
  * Built-in list functions
  */
 
-#ifndef LISP_BUILTIN_LIST_H
-#define LISP_BUILTIN_LIST_H
+#ifndef TRE_BUILTIN_LIST_H
+#define TRE_BUILTIN_LIST_H
 
-extern lispptr lisplist_builtin_cons (lispptr);
-extern lispptr lisplist_builtin_list (lispptr);
-extern lispptr lisplist_builtin_car (lispptr);
-extern lispptr lisplist_builtin_cdr (lispptr);
-extern lispptr lisplist_builtin_rplaca (lispptr);
-extern lispptr lisplist_builtin_rplacd (lispptr);
-extern lispptr lisplist_builtin_consp (lispptr);
+extern treptr trelist_builtin_cons (treptr);
+extern treptr trelist_builtin_list (treptr);
+extern treptr trelist_builtin_car (treptr);
+extern treptr trelist_builtin_cdr (treptr);
+extern treptr trelist_builtin_rplaca (treptr);
+extern treptr trelist_builtin_rplacd (treptr);
+extern treptr trelist_builtin_consp (treptr);
 
-#endif	/* #ifndef LISP_BUILTIN_LIST_H */
+#endif	/* #ifndef TRE_BUILTIN_LIST_H */

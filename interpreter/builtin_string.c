@@ -1,11 +1,11 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * Built-in string functions
  */
 
-#include "lisp.h"
+#include "config.h"
 #include "atom.h"
 #include "list.h"
 #include "string.h"
@@ -28,14 +28,14 @@
  *
  * Returns T if the argument is a string. NIL otherwise. 
  */
-lispptr
-lispstring_builtin_stringp (lispptr list)
+treptr
+trestring_builtin_stringp (treptr list)
 {
-    lispptr arg = lisparg_get (list);
+    treptr arg = trearg_get (list);
 
-    if (LISPPTR_IS_STRING(arg) == FALSE)
-        return lispptr_nil;
-    return lispptr_t;
+    if (TREPTR_IS_STRING(arg) == FALSE)
+        return treptr_nil;
+    return treptr_t;
 }
 
 /*
@@ -43,19 +43,19 @@ lispstring_builtin_stringp (lispptr list)
  *
  * Makes new string consisting of n elements.
  */
-lispptr
-lispstring_builtin_make (lispptr list)
+treptr
+trestring_builtin_make (treptr list)
 {
-    lispptr  arg = lisparg_get (list);
-    struct lisp_string *str;
-    lispptr atom;
+    treptr  arg = trearg_get (list);
+    struct tre_string *str;
+    treptr atom;
 
-    if (LISPPTR_IS_NUMBER(arg) == FALSE)
-	return lisperror (arg, "integer expected");
+    if (TREPTR_IS_NUMBER(arg) == FALSE)
+	return treerror (arg, "integer expected");
 
-    str = lispstring_get_raw ((unsigned) LISPNUMBER_VAL(arg));
-    atom = lispatom_alloc (NULL, LISPCONTEXT_PACKAGE(), ATOM_STRING, lispptr_nil);
-    LISPATOM_SET_STRING(atom, str);
+    str = trestring_get_raw ((unsigned) TRENUMBER_VAL(arg));
+    atom = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), ATOM_STRING, treptr_nil);
+    TREATOM_SET_STRING(atom, str);
     return atom;
 }
 
@@ -64,37 +64,37 @@ lispstring_builtin_make (lispptr list)
  *
  * Concatenates string arguments in order as a new string.
  */
-lispptr
-lispstring_builtin_concat (lispptr list)
+treptr
+trestring_builtin_concat (treptr list)
 {
-    struct lisp_string  *news;
-    lispptr   p;
-    lispptr   car;
-    lispptr   atom;
+    struct tre_string  *news;
+    treptr   p;
+    treptr   car;
+    treptr   atom;
     char      *newp;
     unsigned  len = 0;
 
     /* Sum up length of all elements in the list. */
     DOLIST(p, list) {
         car = CAR(p);
-	if (LISPPTR_IS_STRING(car) == FALSE)
-	    return lisperror (car, "can only concatenate strings");
+	if (TREPTR_IS_STRING(car) == FALSE)
+	    return treerror (car, "can only concatenate strings");
 	else
-	    len += strlen (LISPATOM_STRINGP(car));
+	    len += strlen (TREATOM_STRINGP(car));
     }
 
     /* Copy elements to new string. */
-    news = lispstring_get_raw (len);
+    news = trestring_get_raw (len);
     if (news == NULL)
-	return lisperror (lispptr_invalid, "out of memory");
+	return treerror (treptr_invalid, "out of memory");
     newp = &news->str;
 
     DOLIST(p, list)
-	newp = stpcpy (newp, LISPATOM_STRINGP(CAR(p)));
+	newp = stpcpy (newp, TREATOM_STRINGP(CAR(p)));
 
     /* Return new string atom. */
-    atom = lispatom_alloc (NULL, LISPCONTEXT_PACKAGE(), ATOM_STRING, lispptr_nil);
-    LISPATOM_SET_STRING(atom, news);
+    atom = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), ATOM_STRING, treptr_nil);
+    TREATOM_SET_STRING(atom, news);
     return atom;
 }
 
@@ -104,28 +104,28 @@ lispstring_builtin_concat (lispptr list)
  * Returns a copy of 'obj' of type string. If 'obj' is already a string,
  * returns the original.
  */
-lispptr
-lispstring_builtin_string (lispptr list)
+treptr
+trestring_builtin_string (treptr list)
 {
-    char     buf[LISP_MAX_STRINGLEN];
-    lispptr  arg = lisparg_get (list);
+    char     buf[TRE_MAX_STRINGLEN];
+    treptr  arg = trearg_get (list);
 
-    switch (LISPPTR_TYPE(arg)) {
+    switch (TREPTR_TYPE(arg)) {
         case ATOM_VARIABLE:
         case ATOM_BUILTIN:
 	    /* Convert symbol to string. */
-	    strcpy (buf, LISPATOM_NAME(arg));
-            return lispstring_get (buf);
+	    strcpy (buf, TREATOM_NAME(arg));
+            return trestring_get (buf);
 
         case ATOM_STRING:
 	    return arg;
 
         case ATOM_NUMBER:
-            sprintf (buf, "%-g", LISPNUMBER_VAL(arg));
-            return lispstring_get (buf);
+            sprintf (buf, "%-g", TRENUMBER_VAL(arg));
+            return trestring_get (buf);
     }
 
-    return lisperror (lispptr_invalid, "conversion unsupported");
+    return treerror (treptr_invalid, "conversion unsupported");
 }
 
 /*
@@ -133,21 +133,21 @@ lispstring_builtin_string (lispptr list)
  *
  * Returns the symbol name of obj as a string.
  */
-lispptr
-lispstring_builtin_symbol_name (lispptr list)
+treptr
+trestring_builtin_symbol_name (treptr list)
 {
-    char     buf[LISP_MAX_STRINGLEN];
-    lispptr  arg;
+    char     buf[TRE_MAX_STRINGLEN];
+    treptr  arg;
     char     *an;
 
-    arg = lisparg_get (list);
-    if (LISPPTR_IS_ATOM(arg) == FALSE)
-        arg = lisperror (arg, "atom expected");
+    arg = trearg_get (list);
+    if (TREPTR_IS_ATOM(arg) == FALSE)
+        arg = treerror (arg, "atom expected");
 
-    an = LISPATOM_NAME(arg);
+    an = TREATOM_NAME(arg);
 
     buf[0] = 0;
     if (an)
         strcpy (buf, an);
-    return lispstring_get (buf);
+    return trestring_get (buf);
 }

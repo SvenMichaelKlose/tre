@@ -1,26 +1,26 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2006 Sven Klose <pixel@copei.de>
  *
  * Built-in functions
  */
 
-#ifndef LISP_BUILTIN_ATOM_H
-#define LISP_BUILTIN_ATOM_H
+#ifndef TRE_BUILTIN_ATOM_H
+#define TRE_BUILTIN_ATOM_H
 
-extern lispptr lispatom_builtin_eq (lispptr);
-extern lispptr lispatom_builtin_eql (lispptr);
-extern lispptr lispatom_builtin_make_symbol (lispptr);
-extern lispptr lispatom_builtin_atom (lispptr);
-extern lispptr lispatom_builtin_symbol_value (lispptr);
-extern lispptr lispatom_builtin_atom_value (lispptr);
-extern lispptr lispatom_builtin_symbol_function (lispptr);
-extern lispptr lispatom_builtin_set_atom_fun (lispptr);
-extern lispptr lispatom_builtin_mkfunctionatom (lispptr);
-extern lispptr lispatom_builtin_functionp (lispptr);
-extern lispptr lispatom_builtin_boundp (lispptr);
-extern lispptr lispatom_builtin_fboundp (lispptr);
-extern lispptr lispatom_builtin_macrop (lispptr);
-extern lispptr lispatom_builtin_atom_list (lispptr expr);
+extern treptr treatom_builtin_eq (treptr);
+extern treptr treatom_builtin_eql (treptr);
+extern treptr treatom_builtin_make_symbol (treptr);
+extern treptr treatom_builtin_atom (treptr);
+extern treptr treatom_builtin_symbol_value (treptr);
+extern treptr treatom_builtin_atom_value (treptr);
+extern treptr treatom_builtin_symbol_function (treptr);
+extern treptr treatom_builtin_set_atom_fun (treptr);
+extern treptr treatom_builtin_mkfunctionatom (treptr);
+extern treptr treatom_builtin_functionp (treptr);
+extern treptr treatom_builtin_boundp (treptr);
+extern treptr treatom_builtin_fboundp (treptr);
+extern treptr treatom_builtin_macrop (treptr);
+extern treptr treatom_builtin_atom_list (treptr expr);
 
-#endif	/* #ifndef LISP_BUILTIN_ATOM_H */
+#endif	/* #ifndef TRE_BUILTIN_ATOM_H */

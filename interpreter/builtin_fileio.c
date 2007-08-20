@@ -1,11 +1,11 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * Built-in file-I/O functions
  */
 
-#include "lisp.h"
+#include "config.h"
 #include "atom.h"
 #include "list.h"
 #include "eval.h"
@@ -19,29 +19,29 @@
 
 #include <stdio.h>
 
-FILE* lisp_fileio_handles[LISP_FILEIO_MAX_FILES];
+FILE* tre_fileio_handles[TRE_FILEIO_MAX_FILES];
 
 /*
  * (> x y) - builtin function
  *
  * Returns T if number x is greater than number y.
  */
-lispptr
-lispstream_builtin_fopen (lispptr list)
+treptr
+trestream_builtin_fopen (treptr list)
 {
-    lispptr  car;
-    lispptr  cdr;
-    lispptr  handle;
+    treptr  car;
+    treptr  cdr;
+    treptr  handle;
 
-    lisparg_get2 (&car, &cdr, list);
+    trearg_get2 (&car, &cdr, list);
 
-    if (LISPPTR_IS_STRING(car) == FALSE)
-	return lisperror (car, "string expected");
-    if (LISPPTR_IS_STRING(cdr) == FALSE)
-	return lisperror (cdr, "string expected");
+    if (TREPTR_IS_STRING(car) == FALSE)
+	return treerror (car, "string expected");
+    if (TREPTR_IS_STRING(cdr) == FALSE)
+	return treerror (cdr, "string expected");
 
-    handle = lispstream_fopen (car, cdr);
+    handle = trestream_fopen (car, cdr);
     RETURN_NIL(handle);
 
-    return lispatom_number_get ((float) handle, LISPNUMTYPE_INTEGER);
+    return treatom_number_get ((float) handle, TRENUMTYPE_INTEGER);
 }

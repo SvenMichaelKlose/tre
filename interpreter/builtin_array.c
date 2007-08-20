@@ -1,11 +1,11 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * Array related section.
  */
 
-#include "lisp.h"
+#include "config.h"
 #include "atom.h"
 #include "list.h"
 #include "number.h"
@@ -22,19 +22,19 @@
  *
  * Makes new array consisting of n elements.
  */
-lispptr
-lisparray_builtin_make (lispptr sizes)
+treptr
+trearray_builtin_make (treptr sizes)
 {
-    lispptr  i;
+    treptr  i;
 
-    if (sizes == lispptr_nil)
-	return lisperror (sizes, "size(s) expexted");
+    if (sizes == treptr_nil)
+	return treerror (sizes, "size(s) expexted");
 
     DOLIST(i, sizes)
-        if (LISPPTR_IS_NUMBER(CAR(i)) == FALSE)
-	    return lisperror (CAR(i), "integer expected");
+        if (TREPTR_IS_NUMBER(CAR(i)) == FALSE)
+	    return treerror (CAR(i), "integer expected");
 
-    return lisparray_get (sizes);
+    return trearray_get (sizes);
 }
 
 /*
@@ -43,25 +43,25 @@ lisparray_builtin_make (lispptr sizes)
  * Checks if the number of indices are correct and if indices are in range.
  */
 unsigned
-lisparray_get_check_index (lispptr indices, lispptr sizes)
+trearray_get_check_index (treptr indices, treptr sizes)
 {
-    lispptr  i;
-    lispptr  s;
+    treptr  i;
+    treptr  s;
     int  tmp;
     unsigned  ti = 0;
     unsigned  r = 1;
     unsigned  argnum = 2;
 
-    for (i = indices, s = sizes; i != lispptr_nil && s != lispptr_nil;
+    for (i = indices, s = sizes; i != treptr_nil && s != treptr_nil;
              i = CDR(i), s = CDR(s)) {
-        tmp = LISPNUMBER_VAL(CAR(i));
+        tmp = TRENUMBER_VAL(CAR(i));
         if (tmp < 0)
 	    return (unsigned) -1;
 
         ti += (int) tmp * r;
-        r *= LISPNUMBER_VAL(CAR(s));
+        r *= TRENUMBER_VAL(CAR(s));
 	if (ti >= r) {
-	    lispwarn (lispptr_invalid, "index %d (arg %d) is larger than %d",
+	    trewarn (treptr_invalid, "index %d (arg %d) is larger than %d",
 		      (unsigned) tmp, argnum, r - 1);
 	    return (unsigned) -1;
 	}
@@ -69,77 +69,77 @@ lisparray_get_check_index (lispptr indices, lispptr sizes)
         argnum++;
     }
 
-    if (i != lispptr_nil || s != lispptr_nil)
+    if (i != treptr_nil || s != treptr_nil)
         return (unsigned) -1;
 
     return ti;
 }
 
-lispptr *
-lisparray_get_elt (lispptr list)
+treptr *
+trearray_get_elt (treptr list)
 {
-    lispptr  array;
-    lispptr  indices;
-    lispptr  sizes;
-    lispptr  *elts;
+    treptr  array;
+    treptr  indices;
+    treptr  sizes;
+    treptr  *elts;
     unsigned  idx;
 
     /* Get/check arguments. */
-    if (list == lispptr_nil)
-	lisperror (list, "array expexted");
-    if (CDR(list) == lispptr_nil)
-	lisperror (list, "index expexted");
+    if (list == treptr_nil)
+	treerror (list, "array expexted");
+    if (CDR(list) == treptr_nil)
+	treerror (list, "index expexted");
     array = CAR(list);
-    if (LISPPTR_IS_ARRAY(array) == FALSE)
-	lisperror (array, "not an array");
+    if (TREPTR_IS_ARRAY(array) == FALSE)
+	treerror (array, "not an array");
     indices = CDR(list);
 
     /* Check that indices are integers. */
-    if (lisplist_check_type (indices, ATOM_NUMBER) == FALSE)
-	lisperror (indices, "integer expected");
+    if (trelist_check_type (indices, ATOM_NUMBER) == FALSE)
+	treerror (indices, "integer expected");
 
     /* Get array definition and pointer to elements. */
-    sizes = LISPATOM_VALUE(array);
-    elts = LISPATOM_DETAIL(array);
+    sizes = TREATOM_VALUE(array);
+    elts = TREATOM_DETAIL(array);
 
     /* Get one dimensional index. */
-    idx = lisparray_get_check_index (indices, sizes);
+    idx = trearray_get_check_index (indices, sizes);
     if (idx == (unsigned) -1)
 	return NULL;
 
     return &elts[idx];
 }
 
-lispptr
-lisparray_builtin_p (lispptr list)
+treptr
+trearray_builtin_p (treptr list)
 {
-    lispptr arg = lisparg_get (list);
+    treptr arg = trearg_get (list);
 
-    if (LISPPTR_IS_ARRAY(arg))
-        return lispptr_t;
-    return lispptr_nil;
+    if (TREPTR_IS_ARRAY(arg))
+        return treptr_t;
+    return treptr_nil;
 }
 
 
-lispptr
-lisparray_builtin_aref (lispptr list)
+treptr
+trearray_builtin_aref (treptr list)
 {
-    lispptr *elts = lisparray_get_elt (list);
+    treptr *elts = trearray_get_elt (list);
 
     if (elts == NULL)
-        return lisperror (lispptr_invalid, "index error");
+        return treerror (treptr_invalid, "index error");
 
     /* Return element at index. */
     return *elts;
 }
 
-lispptr
-lisparray_builtin_set_aref (lispptr list)
+treptr
+trearray_builtin_set_aref (treptr list)
 {
-    lispptr  val = CAR(list);
-    lispptr  *elts = lisparray_get_elt (CDR(list));
+    treptr  val = CAR(list);
+    treptr  *elts = trearray_get_elt (CDR(list));
     if (elts == NULL)
-        return lisperror (lispptr_invalid, "index error");
+        return treerror (treptr_invalid, "index error");
 
     *elts = val;
 

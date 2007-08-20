@@ -1,11 +1,11 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * Error handling.
  */
 
-#include "lisp.h"
+#include "config.h"
 #include "atom.h"
 #include "list.h"
 #include "io.h"
@@ -23,75 +23,75 @@
 #include <stdarg.h>
 
 void
-lisperror_msg (lispptr expr, const char *prefix, const char *msg, va_list ap)
+treerror_msg (treptr expr, const char *prefix, const char *msg, va_list ap)
 {
     fflush (stdout);
     fprintf (stderr, "*** %s: ", prefix);
     vfprintf (stderr, msg, ap);
     fprintf (stderr, ".\n");
 
-    if (expr != lispptr_invalid) {
+    if (expr != treptr_invalid) {
 	fprintf (stderr, "Erroraneous object:\n");
-        lispprint (expr);
+        treprint (expr);
     }
     fflush (stderr);
 }
 
 void
-lisperror_internal (lispptr expr, const char *msg, ...)
+treerror_internal (treptr expr, const char *msg, ...)
 {
     va_list ap;
     va_start(ap, msg);
 
-    lisperror_msg (expr, "INTERNAL INTERPRETER ERROR", msg, ap);
+    treerror_msg (expr, "INTERNAL INTERPRETER ERROR", msg, ap);
 
-    (void) lispdebug ();
-    lisp_exit (-1);
+    (void) tredebug ();
+    tre_exit (-1);
 }
 
 void
-lisperror_macroexpansion (void)
+treerror_macroexpansion (void)
 {
-    lispptr c = LISPATOM_VALUE(lispptr_current_macro);
+    treptr c = TREATOM_VALUE(treptr_current_macro);
 
-    if (c == lispptr_nil)
+    if (c == treptr_nil)
         return;
 
-    fprintf (stderr, "During expansion of macro %s:\n", LISPATOM_NAME(c));
+    fprintf (stderr, "During expansion of macro %s:\n", TREATOM_NAME(c));
 }
 
-lispptr
-lisperror (lispptr expr, const char *msg, ...)
+treptr
+treerror (treptr expr, const char *msg, ...)
 {
     va_list ap;
     va_start(ap, msg);
 
-    lisperror_macroexpansion ();
-    lisperror_msg (expr, "ERROR", msg, ap);
+    treerror_macroexpansion ();
+    treerror_msg (expr, "ERROR", msg, ap);
 
-    return lispdebug ();
-}
-
-void
-lisperror_norecover (lispptr expr, const char *msg, ...)
-{
-    va_list ap;
-    va_start(ap, msg);
-
-    lisperror_macroexpansion ();
-    lisperror_msg (expr, "UNRECOVERABLE ERROR", msg, ap);
-
-    lispdebug ();
+    return tredebug ();
 }
 
 void
-lispwarn (lispptr expr, const char *msg, ...)
+treerror_norecover (treptr expr, const char *msg, ...)
 {
     va_list ap;
     va_start(ap, msg);
 
-    lisperror_macroexpansion ();
-    lisperror_msg (expr, "WARNING", msg, ap);
+    treerror_macroexpansion ();
+    treerror_msg (expr, "UNRECOVERABLE ERROR", msg, ap);
+
+    tredebug ();
+}
+
+void
+trewarn (treptr expr, const char *msg, ...)
+{
+    va_list ap;
+    va_start(ap, msg);
+
+    treerror_macroexpansion ();
+    treerror_msg (expr, "WARNING", msg, ap);
 }
 
 /*
@@ -99,21 +99,21 @@ lispwarn (lispptr expr, const char *msg, ...)
  *
  * Terminate current read-eval loop and issue an error.
  */
-lispptr
-lisperror_builtin_error (lispptr args)
+treptr
+treerror_builtin_error (treptr args)
 {
-    lispptr  arg = lisparg_get (args);
+    treptr  arg = trearg_get (args);
 
-    if (LISPPTR_IS_STRING(arg) == FALSE)
-        lisperror (arg, "string expected");
+    if (TREPTR_IS_STRING(arg) == FALSE)
+        treerror (arg, "string expected");
 
-    return lisperror (lispptr_invalid, LISPATOM_STRINGP(arg));
+    return treerror (treptr_invalid, TREATOM_STRINGP(arg));
 }
 
 char *
-lisperror_typestring (lispptr x)
+treerror_typestring (treptr x)
 {
-    switch (LISPPTR_TYPE(x)) {
+    switch (TREPTR_TYPE(x)) {
         case ATOM_STRING:
             return "string";
 
@@ -127,7 +127,7 @@ lisperror_typestring (lispptr x)
             return "cons";
 
         case ATOM_VARIABLE:
-            return LISPPTR_IS_SYMBOL(x) ? "symbol" : "variable";
+            return TREPTR_IS_SYMBOL(x) ? "symbol" : "variable";
 
         case ATOM_MACRO:
             return "macro";
@@ -136,7 +136,7 @@ lisperror_typestring (lispptr x)
             return "special form";
 
         default:
-            lisperror_internal (x, "unkown atom");
+            treerror_internal (x, "unkown atom");
             return NULL;
     }
 }

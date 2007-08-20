@@ -1,33 +1,33 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * Garbage-collection.
  */
 
-#ifndef LISP_GC_H
-#define LISP_GC_H
+#ifndef TRE_GC_H
+#define TRE_GC_H
 
-extern int lispgc_running;
-extern lispptr lispgc_save_stack;
+extern int tregc_running;
+extern treptr tregc_save_stack;
 
 /* List element marks. */
-extern char lispgc_listmarks[NUM_LISTNODES_TOTAL >> 3];
-extern char lispgc_atommarks[NUM_ATOMS >> 3];
+extern char tregc_listmarks[NUM_LISTNODES_TOTAL >> 3];
+extern char tregc_atommarks[NUM_ATOMS >> 3];
 
-extern lispptr lispgc_car;
-extern lispptr lispgc_cdr;
+extern treptr tregc_car;
+extern treptr tregc_cdr;
 
-extern void lispgc_trace_object (lispptr);
-extern void lispgc_mark_non_internal (void);
-extern void lispgc_force (void);
-extern void lispgc_force_user (void);
-extern void lispgc_init (void);
+extern void tregc_trace_object (treptr);
+extern void tregc_mark_non_internal (void);
+extern void tregc_force (void);
+extern void tregc_force_user (void);
+extern void tregc_init (void);
 
-extern void lispgc_push (lispptr);
-extern void lispgc_pop (void);
-extern void lispgc_retval (lispptr);
+extern void tregc_push (treptr);
+extern void tregc_pop (void);
+extern void tregc_retval (treptr);
 
-extern void lispgc_print_stats (void);
+extern void tregc_print_stats (void);
 
 #endif

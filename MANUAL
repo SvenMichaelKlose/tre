@@ -1,26 +1,26 @@
 
-    nix operating system project
-    List processor manual
+    TRE tree processor manual
     Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
 
 PURPOSE
 
-    This is an interpreter for the LISP programming language.
+    This is an interpreter for the TRE programming language, which provides
+    a terse notation for programs and documents.
 
 INVOKATION
 
-    lisp [optional source file]
+    tre [optional source file]
 
 USAGE
 
-    lisp [-h] [-i image-file] [source-file]
+    tre [-h] [-i image-file] [source-file]
 
       -h  Print help message.
       -i  Load image file before source-file.
           See SYS-IMAGE-CREATE for details.
 
     First, the interpreter checks if an image of the standard environment
-    exists. It is usually placed at ~/.nix-lisp.image. It is then loaded
+    exists. It is usually placed at ~/.tre.image. It is then loaded
     instead of the source files.
     Otherwise, the source files of the environment are read and an image
     file is written to speed up the next program start.
@@ -28,11 +28,15 @@ USAGE
 SYNTAX
 
     The interpreter reads single characters from the input stream and
-    groups them into symbols and special characters.
-    Lowercase letters are converted to uppercase.
+    groups them into symbols and special characters. With special
+    characters are grouped in to lists and trees.
 
-    These are the special characters which may not be used with symbols:
+    Lowercase letters are converted to uppercase. These are the special
+    characters which may not be used with symbols; their uses will be
+    explained in the following sections of this manual:
 
+        Whitespaces
+	    Including spaces and control characters, like the tabulator.
         '(' Opens an expression
         ')' Closes an expression
 	'.' Dot
@@ -42,8 +46,6 @@ SYNTAX
 	'#' Hash
 	';' Comment (ignore everything until end of line)
 	'"' Start/end of a character string constant
-
-    Whitespaces include spaces and control characters.
 
 SYMBOLS
 
@@ -64,7 +66,7 @@ EXPRESSIONS
 	(1 2 3)
 	A list with three symbols.
 
-    Lists may also be nested:
+    Lists may also be nested, forming trees:
 
 	(1 (2 3))
 	A list containing symbol 1 and another list with symbols 2 and 3.
@@ -79,7 +81,7 @@ EXPRESSIONS
 	* (+ 2 3)
 	5
 
-    This is a list of object types:
+    This is a list of object types of the TRE programming language:
 
 	- variable; refers to other objects. It may be assigned a
 	  function object and any other object that is not a function at the
@@ -166,6 +168,11 @@ QUOTING
         * `(1 ,@l 3)
         (1 7 8 9 3)
 
+    COLLECTING-QUOTE collects a set of objects which is to be inserted by the
+    parent QUASIQUOTE or QUASIQUOTE-SPLICE. Its abbreviated form is the accent
+    circonflex ('^').
+    Each time a COLLECTING-QUOTE is evaluated, its result is appended to the set.
+
 FUNCTIONS
 
     All functions require a list of argument definitions.
@@ -184,12 +191,12 @@ FUNCTIONS
     The &OPTIONAL keyword will initialise following missing arguments to
     NIL.
 
-    * (#'(lambda (&optional var) var))
+    * (#'((&optional var) var))
     NIL
 
     An alternative intialisation value may be declared inside a list:
 
-    * (#'(lambda (&optional (var 23) var))
+    * (#'((&optional (var 23) var))
     23
 
     The &KEY keyword will search for the following keywords in the
@@ -198,13 +205,46 @@ FUNCTIONS
     to the keyword when calling the function. If a key was not specified,
     it is initialised to NIL.
 
-    * (#'(lambda (&key comment) (print comment)) :comment "FNORD!")
+    * (#'((&key comment) (print comment)) :comment "FNORD!")
     "FNORD"
 
 SPECIAL FUNCTIONS
 
     A special functions is like an ordinary function but is evaluated
     in the environment of its caller.
+
+DATA STRUCTURES
+
+    Square brackets express access to a list or tree structure. The first
+    element in a 'square' expression is the data structure from which an
+    element should be read, followed by the element name. Further elements
+    may follow, if the former element is also a data structure.
+    If the element name is an integer, it denotes the Nth element in the list.
+
+ABBREVIATED TREE NOTATION
+
+    To reduce the number of round brackets, curly brackets can be used instead.
+    Like with round brackets, expressions opened with curly brackets must
+    be ended with the same number of closing curly brackets. But all missing
+    round brackets that come after a curly bracket are closed implicitly:
+
+    {format t "Hello world number ~A!" (+ 1 1}
+
+    The missing closing, round bracket is validated. This effect is nestable:
+
+    {html
+      `(head (title "My document"))
+       (body
+         (h1 "Phone numbers from the database")
+         {table
+           ,@(foreach result (mysql-query "SELECT * FROM people"
+                                          :database "people-db"
+                                          :host "localhost"
+                                          :user "sven" :password "fnord")
+               ^(tr
+                  (td [result "name"])
+                  (td [result "phone"])}
+         (a :href "/" "Link back home")}
 
 ### DEBUGGER ################################################################
 
@@ -239,7 +279,7 @@ SPECIAL FUNCTIONS
 
 	s	Step into function.
 	n	Execute expression including arguments.
-	x E	Execute LISP expression.
+	x E	Execute TRE expression.
         *	Set return value, which is used to replace the
                 erroraneous expression when continuing.
                 You cannot set the return value if an error is
@@ -302,7 +342,7 @@ TERMINOLOGY
 	- macro.
 
     Optionally, '(r)' tells that the function cannot be implemented in
-    LISP to run the interpreter.
+    TRE to run the interpreter.
 
 NUMBERS
 
@@ -639,7 +679,7 @@ MACROS
 
     (DEFINE-COMPILER-MACRO (name args body) - macro
 	Defines a macro which is used by the compiler to translate
-	built-in functions to native LISP expressions.
+	built-in functions to native TRE expressions.
 
     (DEFMACRO name args documentation-string body) - macro
 	Like DEFUN but the arguments are not evaluated before the macro
@@ -656,7 +696,7 @@ MACROS
 
     (MACROEXPAND-1 form) - built-in function
 	Expand macro calls in form. Does not expand nested macros.
-	The LISP function assigned to *MACROEXPAND-HOOK* is used for
+	The TRE function assigned to *MACROEXPAND-HOOK* is used for
 	expansion. If *MACROEXPAND-HOOK* is NIL, nothing is done.
 
     (MACROEXPAND form) - built-in function
@@ -1055,7 +1095,7 @@ STREAMS
 PRINTING
 
     (PRINT obj)	- built-in function
-	Print object in LISP notation. Returns the printed object.
+	Print object in TRE notation. Returns the printed object.
 
 DEBUGGING
 
@@ -1118,7 +1158,7 @@ MISCELLANEOUS
 
     (GC) - built-in function
 	Triggers garbage collection. Prints statistics if compile-time
-	option LISP_VERBOSE_GC is set. Returns NIL.
+	option TRE_VERBOSE_GC is set. Returns NIL.
 
 INTERNAL FUNCTIONS
 
@@ -1196,7 +1236,7 @@ INTERNAL FUNCTIONS
 	before.
 
     %LAUNCH-FILE
-	A LISP file specified on the command-line, evaluated after the
+	A TRE file specified on the command-line, evaluated after the
 	environment.
 
 ### GLOBAL ENVIRONMENT VARIABLES ############################################
@@ -1222,46 +1262,46 @@ INTERNAL FUNCTIONS
     Compile-time options are useful for debugging, or if the size of the
     application is to be reduced.
 
-    LISP_BOOTFILE
-        Path to environment toplevel file, relative to LISP_ENVIRONMENT.
+    TRE_BOOTFILE
+        Path to environment toplevel file, relative to TRE_ENVIRONMENT.
 
-    LISP_BOOT_IMAGE
+    TRE_BOOT_IMAGE
         Path to cached environment dump which is loaded instead of
-        LISP_BOOT_IMAGE (if exists).
+        TRE_BOOT_IMAGE (if exists).
 
-    LISP_BOOT_IMAGE_HEADER
+    TRE_BOOT_IMAGE_HEADER
         String to prefix images with. Used to for hash bang and informative
         messages.
 
-    LISP_DIAGNOSTICS
+    TRE_DIAGNOSTICS
        Do diagnostic checks.
 
-    LISP_GC_DEBUG          
+    TRE_GC_DEBUG          
 	Run garbage collector everywhere.
 
-    LISP_ENVIRONMENT
+    TRE_ENVIRONMENT
         Path to environment directory.
 
-    LISP_NO_MANUAL_FREE    
+    TRE_NO_MANUAL_FREE    
 	Don't free internal garbage manually, leave it for mark-and-sweep
 	removal.
 
-    LISP_PRINT_MACROEXPANSIONS
+    TRE_PRINT_MACROEXPANSIONS
 	Print macroexpansions in read-eval loop.
 
-    LISP_READ_ECHO         
+    TRE_READ_ECHO         
 	Echo what is READ in the read-eval loop.
 
-    LISP_VERBOSE_GC        
+    TRE_VERBOSE_GC        
 	Print statistics after GC.
 
-    LISP_VERBOSE_LOAD      
+    TRE_VERBOSE_LOAD      
 	Print what files are loaded.
 
-    LISP_VERBOSE_EVAL      
+    TRE_VERBOSE_EVAL      
 	Print what is evaluated if global variable *VERBOSE-EVAL* is T.
 
-    LISP_VERBOSE_READ      
+    TRE_VERBOSE_READ      
 	Print READ expressions in read-eval loop.
 
 ### TERMINOLOGY ############################################################

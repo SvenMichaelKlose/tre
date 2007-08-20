@@ -1,25 +1,25 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * Argument-related section
  */
 
-#ifndef LISP_ARGUMENTS_H
-#define LISP_ARGUMENTS_H
+#ifndef TRE_ARGUMENTS_H
+#define TRE_ARGUMENTS_H
 
-extern void lisparg_get2 (lispptr *car, lispptr *cdr, lispptr args);
-extern lispptr lisparg_get (lispptr args);
+extern void trearg_get2 (treptr *car, treptr *cdr, treptr args);
+extern treptr trearg_get (treptr args);
 
-extern void lisparg_expand (lispptr *rvars, lispptr *rvals,
-                            lispptr argdef, lispptr args,
+extern void trearg_expand (treptr *rvars, treptr *rvals,
+                            treptr argdef, treptr args,
                             bool do_argeval);
 
-extern void lisparg_init (void);
+extern void trearg_init (void);
 
 /* Return atom with same symbol in keyword package. */
-extern void lisparg_apply_keyword_package (lispptr atom);
+extern void trearg_apply_keyword_package (treptr atom);
 
-extern lispptr lisp_atom_rest;
+extern treptr tre_atom_rest;
 
-#endif 	/* #ifndef LISP_ARGUMENTS_H */
+#endif 	/* #ifndef TRE_ARGUMENTS_H */

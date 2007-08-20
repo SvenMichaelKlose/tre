@@ -1,21 +1,21 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * Array-related section.
  */
 
-#ifndef LISP_ARRAY_H
-#define LISP_ARRAY_H
+#ifndef TRE_ARRAY_H
+#define TRE_ARRAY_H
 
-extern void lisparray_init (void);
+extern void trearray_init (void);
 
-extern lispptr lisparray_get (lispptr sizes);
-extern void lisparray_free (lispptr);
-extern unsigned lisparray_get_size (lispptr sizes);
+extern treptr trearray_get (treptr sizes);
+extern void trearray_free (treptr);
+extern unsigned trearray_get_size (treptr sizes);
 
-extern struct lisp_sequence_type lisparray_seqtype;
+extern struct tre_sequence_type trearray_seqtype;
 
-#define LISPARRAY_SIZE(arr) (lisparray_get_size (LISPATOM_VALUE(arr)))
+#define TREARRAY_SIZE(arr) (trearray_get_size (TREATOM_VALUE(arr)))
 
 #endif

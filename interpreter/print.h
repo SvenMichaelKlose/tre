@@ -1,17 +1,17 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2006 Sven Klose <pixel@copei.de>
  *
  * Expression printing.
  */
 
-#ifndef LISP_PRINT_H
-#define LISP_PRINT_H
+#ifndef TRE_PRINT_H
+#define TRE_PRINT_H
 
-extern lispptr lispprint_highlight;
+extern treptr treprint_highlight;
 
-extern void lispprint (lispptr);
+extern void treprint (treptr);
 
-extern lispptr lispprint_builtin_princ (lispptr);
+extern treptr treprint_builtin_princ (treptr);
 
-#endif /* #ifndef LISP_PRINT_H */
+#endif /* #ifndef TRE_PRINT_H */

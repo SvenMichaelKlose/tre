@@ -1,16 +1,16 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * Standard I/O
  */
 
-#ifndef LISP_IO_STD_H
-#define LISP_IO_STD_H
+#ifndef TRE_IO_STD_H
+#define TRE_IO_STD_H
 
-extern struct lispio_ops lispio_ops_std;
+extern struct treio_ops treio_ops_std;
 
-struct lisp_stream *lispiostd_open_file (char *name);
-void lispiostd_close_file (void *s);
+struct tre_stream *treiostd_open_file (char *name);
+void treiostd_close_file (void *s);
 
-#endif /* #ifndef LISP_IO_STD_H */
+#endif /* #ifndef TRE_IO_STD_H */

@@ -2,16 +2,16 @@
 
 ARGS="$1 $2 $3 $4 $5 $6 $7 $8 $9"
 
-BOOT_IMAGE=`echo ~/.nix-lisp.image`
+BOOT_IMAGE=`echo ~/.tre.image`
 
 compile() {
 	local TMP
-	TMP="gcc -DLISP_BOOT_IMAGE=\"$BOOT_IMAGE\" -O2 -Wall -Wextra -Wshadow -Wstrict-prototypes -Wredundant-decls -DLISP_VERBOSE_LOAD $ARGS -pipe -ansi -c -o $1.o $1"
+	TMP="gcc -DTRE_BOOT_IMAGE=\"$BOOT_IMAGE\" -O2 -Wall -Wextra -Wshadow -Wstrict-prototypes -Wredundant-decls -DTRE_VERBOSE_LOAD $ARGS -pipe -ansi -c -o $1.o $1"
 	echo $TMP
 	$TMP
 }
 
-rm lisp.core
+rm *.core
 cd interpreter
 rm *.o
 compile alien_dl.c
@@ -54,5 +54,5 @@ compile thread.c
 compile util.c
 
 OBJS=`find . -name \*.o`
-gcc -lm -o ../lisp $OBJS
+gcc -lm -o ../tre $OBJS
 rm $OBJS

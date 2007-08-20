@@ -1,15 +1,15 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
- * Printing LISP expressions.
+ * Printing TRE expressions.
  */
 
 /*
  * Use _CAR() and _CDR() to enable debug dumps.
  */
 
-#include "lisp.h"
+#include "config.h"
 #include "atom.h"
 #include "list.h"
 #include "number.h"
@@ -25,76 +25,76 @@
 #include <strings.h>
 
 /* List element marks. */
-char lispprint_marks_cons[NUM_LISTNODES_TOTAL >> 3];
-char lispprint_marks_atoms[NUM_ATOMS >> 3];
+char treprint_marks_cons[NUM_LISTNODES_TOTAL >> 3];
+char treprint_marks_atoms[NUM_ATOMS >> 3];
 
-#define LISPPRINT_MARK_CONS(i) \
-    LISP_MARK(lispprint_marks_cons, i)
-#define LISPPRINT_GET_MARK_CONS(i) \
-    LISP_GETMARK(lispprint_marks_cons, i)
+#define TREPRINT_MARK_CONS(i) \
+    TRE_MARK(treprint_marks_cons, i)
+#define TREPRINT_GET_MARK_CONS(i) \
+    TRE_GETMARK(treprint_marks_cons, i)
 
-#define LISPPRINT_MARK_ATOM(i) \
-    LISP_MARK(lispprint_marks_atoms, LISPPTR_INDEX(i))
-#define LISPPRINT_GET_MARK_ATOM(i) \
-    LISP_GETMARK(lispprint_marks_atoms, LISPPTR_INDEX(i))
+#define TREPRINT_MARK_ATOM(i) \
+    TRE_MARK(treprint_marks_atoms, TREPTR_INDEX(i))
+#define TREPRINT_GET_MARK_ATOM(i) \
+    TRE_GETMARK(treprint_marks_atoms, TREPTR_INDEX(i))
 
 void
-lispprint_wipe_marks (void)
+treprint_wipe_marks (void)
 {
-    bzero (lispprint_marks_cons, sizeof (lispprint_marks_cons));
-    bzero (lispprint_marks_atoms, sizeof (lispprint_marks_atoms));
+    bzero (treprint_marks_cons, sizeof (treprint_marks_cons));
+    bzero (treprint_marks_atoms, sizeof (treprint_marks_atoms));
 }
 
-void lispprint_indent (lispptr p, unsigned indent, bool nobracket, char *prepend);
+void treprint_indent (treptr p, unsigned indent, bool nobracket, char *prepend);
 
-bool lispprint_no_nl;
+bool treprint_no_nl;
 
-lispptr lispprint_highlight;
+treptr treprint_highlight;
 
-#define LISPPRINT_HL(x,txt) \
-    if (lispprint_highlight != lispptr_nil && lispprint_highlight == x) \
+#define TREPRINT_HL(x,txt) \
+    if (treprint_highlight != treptr_nil && treprint_highlight == x) \
         printf (txt) 
 
-#define LISPPRINT_HLOPEN(x) \
-    if (lispprint_highlight != lispptr_nil && lispprint_highlight == x) \
+#define TREPRINT_HLOPEN(x) \
+    if (treprint_highlight != treptr_nil && treprint_highlight == x) \
         printf ("===>") 
-#define LISPPRINT_HLCLOSE(x) \
-    if (lispprint_highlight != lispptr_nil && lispprint_highlight == x) { \
+#define TREPRINT_HLCLOSE(x) \
+    if (treprint_highlight != treptr_nil && treprint_highlight == x) { \
         printf ("<==="); \
-	lispprint_highlight = lispptr_nil; \
+	treprint_highlight = treptr_nil; \
     }
 
-void lispprint_r (lispptr);
+void treprint_r (treptr);
 
 void
-lispprint_array (lispptr array)
+treprint_array (treptr array)
 {
-    lispptr   *elts = LISPATOM_DETAIL(array);
-    unsigned  size = LISPNUMBER_VAL(_CAR(LISPATOM_VALUE(array)));
+    treptr   *elts = TREATOM_DETAIL(array);
+    unsigned  size = TRENUMBER_VAL(_CAR(TREATOM_VALUE(array)));
     unsigned  i;
 
     printf ("#(");
 
     DOTIMES(i, size) {
-	lispprint_no_nl = TRUE;
+	treprint_no_nl = TRUE;
         if (i)
 	    printf (" ");
-        lispprint_r (elts[i]);
+        treprint_r (elts[i]);
     }
 
     printf (")");
 }
 
 bool
-lispprint_chk_atom_mark (lispptr atom)
+treprint_chk_atom_mark (treptr atom)
 {
     bool mark;
 
-    if (LISPPTR_IS_ATOM(atom)) {
-        mark = LISPPRINT_GET_MARK_ATOM(atom);
-        LISPPRINT_MARK_ATOM(atom);
+    if (TREPTR_IS_ATOM(atom)) {
+        mark = TREPRINT_GET_MARK_ATOM(atom);
+        TREPRINT_MARK_ATOM(atom);
         if (mark) {
-            switch (LISPPTR_TYPE(atom)) {
+            switch (TREPTR_TYPE(atom)) {
 	        case ATOM_FUNCTION:
 	        case ATOM_MACRO:
 	        case ATOM_USERSPECIAL:
@@ -108,71 +108,71 @@ lispprint_chk_atom_mark (lispptr atom)
 }
 
 void
-lispprint_atom (lispptr atom, unsigned indent)
+treprint_atom (treptr atom, unsigned indent)
 {
     char *name;
 
-    if (lispprint_chk_atom_mark (atom)) {
+    if (treprint_chk_atom_mark (atom)) {
         printf ("*circular*");
         return;
     }
 
-    LISPPRINT_HLOPEN(atom);
+    TREPRINT_HLOPEN(atom);
 
-    switch (LISPPTR_TYPE(atom)) {
+    switch (TREPTR_TYPE(atom)) {
 	case ATOM_VARIABLE:
 	case ATOM_BUILTIN:
 	case ATOM_SPECIAL:
-	    if (LISPATOM_PACKAGE(atom) != LISPCONTEXT_PACKAGE())
-                printf ("%s:", LISPATOM_NAME(LISPATOM_PACKAGE(atom)));
-            printf ("%s", LISPATOM_NAME(atom));
+	    if (TREATOM_PACKAGE(atom) != TRECONTEXT_PACKAGE())
+                printf ("%s:", TREATOM_NAME(TREATOM_PACKAGE(atom)));
+            printf ("%s", TREATOM_NAME(atom));
 	    break;
 
 	case ATOM_NUMBER:
-	    if (LISPNUMBER_TYPE(atom) == LISPNUMTYPE_CHAR) {
+	    if (TRENUMBER_TYPE(atom) == TRENUMTYPE_CHAR) {
 		printf ("#\\");
-	        putchar ((int) LISPNUMBER_VAL(atom));
+	        putchar ((int) TRENUMBER_VAL(atom));
 	    } else
-                printf ("%-g", LISPNUMBER_VAL(atom));
+                printf ("%-g", TRENUMBER_VAL(atom));
 	    break;
 
 	case ATOM_STRING:
-            printf ("\"%s\"", (char *) LISPATOM_STRINGP(atom));
+            printf ("\"%s\"", (char *) TREATOM_STRINGP(atom));
 	    break;
 
 	case ATOM_FUNCTION:
-            name = LISPATOM_NAME(atom);
+            name = TREATOM_NAME(atom);
             if (name == NULL) {
 	        printf ("#<FUNCTION>(");
-	        lispprint_indent (LISPATOM_VALUE(atom), indent, TRUE, "");
+	        treprint_indent (TREATOM_VALUE(atom), indent, TRUE, "");
             } else
                 printf (name);
 	    break;
 
 	case ATOM_MACRO:
-            name = LISPATOM_NAME(atom);
+            name = TREATOM_NAME(atom);
             if (name == NULL) {
 	        printf ("#<user-defined macro>");
-	        lispprint_r (LISPATOM_VALUE(atom));
+	        treprint_r (TREATOM_VALUE(atom));
             } else
                 printf (name);
 	    break;
 
 	case ATOM_USERSPECIAL:
-            name = LISPATOM_NAME(atom);
+            name = TREATOM_NAME(atom);
             if (name == NULL) {
 	        printf ("#<user-defined special form>");
-	        lispprint_r (LISPATOM_VALUE(atom));
+	        treprint_r (TREATOM_VALUE(atom));
             } else
                 printf (name);
 	    break;
 
 	case ATOM_EXPR:
-	    lispprint_r (atom);
+	    treprint_r (atom);
 	    break;
 
         case ATOM_ARRAY:
-	    lispprint_array (atom);
+	    treprint_array (atom);
 	    break;
 
         case ATOM_PACKAGE:
@@ -180,60 +180,60 @@ lispprint_atom (lispptr atom, unsigned indent)
 	    break;
 
 	default:
-	    lisperror_internal (lispptr_invalid,
+	    treerror_internal (treptr_invalid,
                                 "#<unknown atom %d (type %d index %d)>",
-                                atom, LISPPTR_TYPE(atom), LISPPTR_INDEX(atom));
+                                atom, TREPTR_TYPE(atom), TREPTR_INDEX(atom));
     }
-    LISPPRINT_HLCLOSE(atom);
+    TREPRINT_HLCLOSE(atom);
 }
 
 void
-lispprint_indent (lispptr p, unsigned indent, bool nobracket, char *prepend)
+treprint_indent (treptr p, unsigned indent, bool nobracket, char *prepend)
 {
-    lispptr   car;
-    lispptr   cdr;
+    treptr   car;
+    treptr   cdr;
     int       postatom = 0;
     unsigned  i;
 
-    if (LISPPTR_IS_EXPR(p) == FALSE) {
-	lispprint_atom (p, indent);
+    if (TREPTR_IS_EXPR(p) == FALSE) {
+	treprint_atom (p, indent);
 	return;
     }
 
-    if (LISPPRINT_GET_MARK_CONS(p)) {
+    if (TREPRINT_GET_MARK_CONS(p)) {
         printf ("*");
 	return;
     } else
-        LISPPRINT_MARK_CONS(p);
+        TREPRINT_MARK_CONS(p);
 
     if (_CAR(p) == p) {
 	printf ("cons self-referenced in car");
-        _CAR(p) = lispptr_nil;
+        _CAR(p) = treptr_nil;
     }
     if (_CDR(p) == p) {
 	printf ("cons self-referenced in car");
-        _CDR(p) = lispptr_nil;
+        _CDR(p) = treptr_nil;
     }
 
     car = _CAR(p);
     cdr = _CDR(p);
 
 #if 0
-    if (cdr != lispptr_nil) { /* Print name of atomic quote. */
-        if (car == lispatom_quote) {
-	    lispprint_indent (cdr, indent, TRUE, "'");
+    if (cdr != treptr_nil) { /* Print name of atomic quote. */
+        if (car == treatom_quote) {
+	    treprint_indent (cdr, indent, TRUE, "'");
 	    return;
         }
-        if (car == lispatom_backquote) {
-	    lispprint_indent (cdr, indent, TRUE, "`");
+        if (car == treatom_backquote) {
+	    treprint_indent (cdr, indent, TRUE, "`");
 	    return;
         }
-        if (car == lispatom_quasiquote) {
-	    lispprint_indent (cdr, indent, TRUE, ",");
+        if (car == treatom_quasiquote) {
+	    treprint_indent (cdr, indent, TRUE, ",");
 	    return;
         }
-        if (car == lispatom_quasiquote_splice) {
-	    lispprint_indent (cdr, indent, TRUE, ",@");
+        if (car == treatom_quasiquote_splice) {
+	    treprint_indent (cdr, indent, TRUE, ",@");
 	    return;
         }
     }
@@ -251,43 +251,43 @@ lispprint_indent (lispptr p, unsigned indent, bool nobracket, char *prepend)
 	prepend = "";
     }
 
-    while (p != lispptr_nil) {
+    while (p != treptr_nil) {
         car = _CAR(p);
         cdr = _CDR(p);
 
-        LISPPRINT_HLOPEN(p);
-        LISPPRINT_HLOPEN(car);
+        TREPRINT_HLOPEN(p);
+        TREPRINT_HLOPEN(car);
 
         if (postatom)
 	    printf (" ");
 
 	/* Check if we already passed car. */
-        if (LISPPTR_IS_EXPR(car) && LISPPRINT_GET_MARK_CONS(car)) {
+        if (TREPTR_IS_EXPR(car) && TREPRINT_GET_MARK_CONS(car)) {
             printf ("*circular*");
             return;
 	}
 
         /* Print dotted pair. */
-        if (cdr != lispptr_nil && LISPPTR_IS_EXPR(cdr) == FALSE) {
-	    lispprint_atom (car, indent);
+        if (cdr != treptr_nil && TREPTR_IS_EXPR(cdr) == FALSE) {
+	    treprint_atom (car, indent);
     	    printf (" . ");
-	    lispprint_atom (cdr, indent);
+	    treprint_atom (cdr, indent);
             break;
-        } else if (LISPPTR_IS_EXPR(car)) {
-	    lispprint_indent (car, indent + postatom, FALSE, prepend);
+        } else if (TREPTR_IS_EXPR(car)) {
+	    treprint_indent (car, indent + postatom, FALSE, prepend);
 	} else {
             printf (prepend);
-            lispprint_atom (car, indent + postatom);
+            treprint_atom (car, indent + postatom);
         }
 
         prepend = "";
         postatom = 1;
 
-        LISPPRINT_HLCLOSE(car);
-        LISPPRINT_HLCLOSE(p);
+        TREPRINT_HLCLOSE(car);
+        TREPRINT_HLCLOSE(p);
         p = _CDR(p);
 	/* Check if we already passed cdr. */
-        if (LISPPTR_IS_EXPR(p) && LISPPRINT_GET_MARK_CONS(p)) {
+        if (TREPTR_IS_EXPR(p) && TREPRINT_GET_MARK_CONS(p)) {
             printf ("*circular");
 	    break;
 	}
@@ -298,16 +298,16 @@ lispprint_indent (lispptr p, unsigned indent, bool nobracket, char *prepend)
 }
 
 void
-lispprint_r (lispptr p)
+treprint_r (treptr p)
 {
-    lispprint_indent (p, 0, FALSE, "");
-    lispprint_no_nl = FALSE;
+    treprint_indent (p, 0, FALSE, "");
+    treprint_no_nl = FALSE;
 }
 
 void
-lispprint (lispptr p)
+treprint (treptr p)
 {
-    lispprint_wipe_marks ();
-    lispprint_r (p);
+    treprint_wipe_marks ();
+    treprint_r (p);
     printnl ();
 }

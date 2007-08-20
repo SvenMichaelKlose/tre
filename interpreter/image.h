@@ -1,15 +1,15 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2007 Sven Klose <pixel@copei.de>
  */
 
-#ifndef LISP_IMAGE_H
-#define LISP_IMAGE_H
+#ifndef TRE_IMAGE_H
+#define TRE_IMAGE_H
 
-extern lispptr lispimage_initfun;
+extern treptr treimage_initfun;
 
-extern void lispimage_init (void);
-extern int lispimage_create (char *, lispptr init_fun);
-extern int lispimage_load (char *);
+extern void treimage_init (void);
+extern int treimage_create (char *, treptr init_fun);
+extern int treimage_load (char *);
 
-#endif	/* #ifndef LISP_IMAGE_H */
+#endif	/* #ifndef TRE_IMAGE_H */

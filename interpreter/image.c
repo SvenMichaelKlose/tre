@@ -1,11 +1,11 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2007 Sven Klose <pixel@copei.de>
  *
  * Images
  */
 
-#include "lisp.h"
+#include "config.h"
 #include "atom.h"
 #include "number.h"
 #include "list.h"
@@ -33,18 +33,18 @@
 #include <stdlib.h>
 
 #ifdef CRUNSHED
-#define LISP_IMAGE_FORMAT_VERSION    -1
+#define TRE_IMAGE_FORMAT_VERSION    -1
 #else
-#define LISP_IMAGE_FORMAT_VERSION    1
+#define TRE_IMAGE_FORMAT_VERSION    1
 #endif
 
 #define NMARK_SIZE  (NUM_NUMBERS >> 3)
 
-lispptr lispimage_initfun;
+treptr treimage_initfun;
 
-struct lispimage_header {
+struct treimage_header {
     int       format_version;
-    lispptr   init_fun;
+    treptr   init_fun;
 
     unsigned  len_symbols;
     void      *ofs_symbols;
@@ -54,33 +54,33 @@ struct lispimage_header {
 };
 
 void
-lispimage_write (FILE *f, void *p, unsigned len)
+treimage_write (FILE *f, void *p, unsigned len)
 {
    fwrite (p, len, 1, f); 
 }
 
 void
-lispimage_read (FILE *f, void *p, unsigned len)
+treimage_read (FILE *f, void *p, unsigned len)
 {
    fread (p, len, 1, f); 
 }
 
 void
-lispimage_write_atoms (FILE *f)
+treimage_write_atoms (FILE *f)
 {
     unsigned i;
     unsigned j;
     unsigned idx;
     char c;
 
-    lispimage_write (f, lispgc_atommarks, sizeof lispgc_atommarks);
+    treimage_write (f, tregc_atommarks, sizeof tregc_atommarks);
 
-    DOTIMES(i, sizeof lispgc_atommarks) {
+    DOTIMES(i, sizeof tregc_atommarks) {
         c = 1;
         DOTIMES(j, 8) {
-            if (!(lispgc_atommarks[i] & c)) {
+            if (!(tregc_atommarks[i] & c)) {
                 idx = (i << 3) + j;
-                lispimage_write (f, &lisp_atoms[idx], sizeof (struct lisp_atom));
+                treimage_write (f, &tre_atoms[idx], sizeof (struct tre_atom));
             }
 
             c <<= 1;
@@ -89,21 +89,21 @@ lispimage_write_atoms (FILE *f)
 }
 
 void
-lispimage_write_conses (FILE *f)
+treimage_write_conses (FILE *f)
 {
     unsigned i;
     unsigned j;
     unsigned idx;
     char c;
 
-    lispimage_write (f, lispgc_listmarks, sizeof lispgc_listmarks);
+    treimage_write (f, tregc_listmarks, sizeof tregc_listmarks);
 
-    DOTIMES(i, sizeof lispgc_listmarks) {
+    DOTIMES(i, sizeof tregc_listmarks) {
         c = 1;
         DOTIMES(j, 8) {
-            if (!(lispgc_listmarks[i] & c)) {
+            if (!(tregc_listmarks[i] & c)) {
                 idx = (i << 3) + j;
-                lispimage_write (f, &lisp_lists[idx], sizeof (struct lisp_list));
+                treimage_write (f, &tre_lists[idx], sizeof (struct tre_list));
             }
 
             c <<= 1;
@@ -112,21 +112,21 @@ lispimage_write_conses (FILE *f)
 }
 
 void
-lispimage_write_numbers (FILE *f, char *nmarks)
+treimage_write_numbers (FILE *f, char *nmarks)
 {
     unsigned i;
     unsigned j;
     unsigned idx;
     char c;
 
-    lispimage_write (f, nmarks, NMARK_SIZE);
+    treimage_write (f, nmarks, NMARK_SIZE);
 
     DOTIMES(i, NMARK_SIZE) {
         c = 1;
         DOTIMES(j, 8) {
             if (nmarks[i] & c) {
                 idx = (i << 3) + j;
-                lispimage_write (f, &lisp_numbers[idx], sizeof (struct lisp_number));
+                treimage_write (f, &tre_numbers[idx], sizeof (struct tre_number));
             }
 
             c <<= 1;
@@ -135,61 +135,61 @@ lispimage_write_numbers (FILE *f, char *nmarks)
 }
 
 void
-lispimage_write_arrays (FILE *f)
+treimage_write_arrays (FILE *f)
 {
     unsigned  i;
 
     DOTIMES(i, NUM_ATOMS)
-        if (lisp_atoms[i].type == ATOM_ARRAY)
-            lispimage_write (f, lisp_atoms[i].detail,
-                             LISPARRAY_SIZE(i) * sizeof (lispptr));
+        if (tre_atoms[i].type == ATOM_ARRAY)
+            treimage_write (f, tre_atoms[i].detail,
+                             TREARRAY_SIZE(i) * sizeof (treptr));
 }
 
 void
-lispimage_write_strings (FILE *f, unsigned num)
+treimage_write_strings (FILE *f, unsigned num)
 {
     unsigned  i;
     unsigned  j;
-    struct lisp_string *s;
+    struct tre_string *s;
     unsigned  *lens = malloc (sizeof (unsigned) * num);
 
     /* Make and write length index. */
     j = 0;
     DOTIMES(i, NUM_ATOMS)
-        if (lisp_atoms[i].type == ATOM_STRING)
-            lens[j++] = LISPATOM_STRING(i)->len;
-    lispimage_write (f, lens, sizeof (unsigned) * num);
+        if (tre_atoms[i].type == ATOM_STRING)
+            lens[j++] = TREATOM_STRING(i)->len;
+    treimage_write (f, lens, sizeof (unsigned) * num);
 
     /* Write strings. */
     DOTIMES(i, NUM_ATOMS) {
-        if (lisp_atoms[i].type != ATOM_STRING)
+        if (tre_atoms[i].type != ATOM_STRING)
             continue;
-        s = LISPATOM_STRING(i);
-        lispimage_write (f, &s->str, s->len);
+        s = TREATOM_STRING(i);
+        treimage_write (f, &s->str, s->len);
     }
 
     free (lens);
 }
 
 int
-lispimage_create (char *file, lispptr init_fun)
+treimage_create (char *file, treptr init_fun)
 {
-    struct lispimage_header  h;
+    struct treimage_header  h;
     unsigned n_arr = 0;
     unsigned n_str = 0;
     unsigned i;
     FILE  *f;
     char  nmarks[NMARK_SIZE];
 
-    lispimage_initfun = init_fun;
-    lispgc_force ();
-    lispsymbol_gc ();
-    lispgc_mark_non_internal ();
+    treimage_initfun = init_fun;
+    tregc_force ();
+    tresymbol_gc ();
+    tregc_mark_non_internal ();
 
     /* Count arrays and strings, trace numbers. */
     bzero (nmarks, NMARK_SIZE);
     DOTIMES(i, NUM_ATOMS) {
-        switch (lisp_atoms[i].type) {
+        switch (tre_atoms[i].type) {
             case ATOM_ARRAY:
                 n_arr++;
                 break;
@@ -199,12 +199,12 @@ lispimage_create (char *file, lispptr init_fun)
                 break;
 
             case ATOM_NUMBER:
-                LISP_MARK(nmarks, (unsigned) LISPATOM_DETAIL(i));
+                TRE_MARK(nmarks, (unsigned) TREATOM_DETAIL(i));
                 break;
         }
     }
 
-    h.format_version = LISP_IMAGE_FORMAT_VERSION;
+    h.format_version = TRE_IMAGE_FORMAT_VERSION;
     h.init_fun = init_fun;
 
     h.len_symbols = (unsigned) symbol_table_free - (unsigned) symbol_table;
@@ -217,50 +217,50 @@ lispimage_create (char *file, lispptr init_fun)
     if (f == NULL)
         return -1;
 
-    fprintf (f, LISP_IMAGE_HEADER);
+    fprintf (f, TRE_IMAGE_HEADER);
     fputc (255, f); /* Mark header start. */
-    lispimage_write (f, &h, sizeof (struct lispimage_header));
-    lispimage_write_atoms (f);
-    lispimage_write_conses (f);
-    lispimage_write_numbers (f, nmarks);
-    lispimage_write_arrays (f);
-    lispimage_write (f, symbol_table, h.len_symbols);
-    lispimage_write_strings (f, n_str);
+    treimage_write (f, &h, sizeof (struct treimage_header));
+    treimage_write_atoms (f);
+    treimage_write_conses (f);
+    treimage_write_numbers (f, nmarks);
+    treimage_write_arrays (f);
+    treimage_write (f, symbol_table, h.len_symbols);
+    treimage_write_strings (f, n_str);
 
     fclose (f);
     return 0;
 }
 
 void
-lispimage_remove_atoms (void)
+treimage_remove_atoms (void)
 {
     unsigned  i;
 
     DOTIMES(i, NUM_ATOMS) {
-        switch (lisp_atoms[i].type) {
+        switch (tre_atoms[i].type) {
             case ATOM_ARRAY:
             case ATOM_STRING:
-                lispatom_remove (i);
+                treatom_remove (i);
         }
     }
 }
 
 void
-lispimage_read_atoms (FILE *f)
+treimage_read_atoms (FILE *f)
 {
     unsigned i;
     unsigned j;
     unsigned idx;
     char c;
 
-    lispimage_read (f, lispgc_atommarks, sizeof lispgc_atommarks);
+    treimage_read (f, tregc_atommarks, sizeof tregc_atommarks);
 
-    DOTIMES(i, sizeof lispgc_atommarks) {
+    DOTIMES(i, sizeof tregc_atommarks) {
         c = 1;
         DOTIMES(j, 8) {
-            if (!(lispgc_atommarks[i] & c)) {
+            if (!(tregc_atommarks[i] & c)) {
                 idx = (i << 3) + j;
-                lispimage_read (f, &lisp_atoms[idx], sizeof (struct lisp_atom));
+                treimage_read (f, &tre_atoms[idx], sizeof (struct tre_atom));
             }
 
             c <<= 1;
@@ -270,7 +270,7 @@ lispimage_read_atoms (FILE *f)
 
 /* Read conses and link free conses not in image. */
 void
-lispimage_read_conses (FILE *f)
+treimage_read_conses (FILE *f)
 {
     unsigned i;
     unsigned j;
@@ -278,49 +278,49 @@ lispimage_read_conses (FILE *f)
     unsigned last;
     char c;
 
-    lispimage_read (f, lispgc_listmarks, sizeof lispgc_listmarks);
+    treimage_read (f, tregc_listmarks, sizeof tregc_listmarks);
 
-    lisplist_num_used = 0;
-    lisp_lists_free = lispptr_nil;
-    last = lispptr_nil;
-    DOTIMES(i, sizeof lispgc_listmarks) {
+    trelist_num_used = 0;
+    tre_lists_free = treptr_nil;
+    last = treptr_nil;
+    DOTIMES(i, sizeof tregc_listmarks) {
         c = 1;
         DOTIMES(j, 8) {
             idx = (i << 3) + j;
-            if (!(lispgc_listmarks[i] & c)) {
-                lispimage_read (f, &lisp_lists[idx], sizeof (struct lisp_list));
-                lisplist_num_used++;
+            if (!(tregc_listmarks[i] & c)) {
+                treimage_read (f, &tre_lists[idx], sizeof (struct tre_list));
+                trelist_num_used++;
             } else {
-                if (lisp_lists_free == lispptr_nil)
-                    lisp_lists_free = idx;
-                if (last != lispptr_nil)
-                    lisp_lists[last].cdr = idx;
+                if (tre_lists_free == treptr_nil)
+                    tre_lists_free = idx;
+                if (last != treptr_nil)
+                    tre_lists[last].cdr = idx;
                 last = idx;
             }
 
             c <<= 1;
         }
     }
-    lisp_lists[last].cdr = lispptr_nil;
+    tre_lists[last].cdr = treptr_nil;
 }
 
 /* Make list of free atoms. */
 void
-lispimage_make_free (void)
+treimage_make_free (void)
 {
     unsigned i;
     unsigned j;
     unsigned idx;
     char c;
 
-    lisp_atoms_free = lispptr_nil;
-    DOTIMES(i, sizeof lispgc_atommarks) {
+    tre_atoms_free = treptr_nil;
+    DOTIMES(i, sizeof tregc_atommarks) {
         c = 1;
         DOTIMES(j, 8) {
-            if (lispgc_atommarks[i] & c) {
+            if (tregc_atommarks[i] & c) {
                 idx = (i << 3) + j;
-                lisp_atoms_free = CONS(idx, lisp_atoms_free);
-                lisp_atoms[idx].type = ATOM_UNUSED;
+                tre_atoms_free = CONS(idx, tre_atoms_free);
+                tre_atoms[idx].type = ATOM_UNUSED;
             }
 
             c <<= 1;
@@ -329,7 +329,7 @@ lispimage_make_free (void)
 }
 
 void
-lispimage_read_numbers (FILE *f)
+treimage_read_numbers (FILE *f)
 {
     unsigned i;
     unsigned j;
@@ -337,17 +337,17 @@ lispimage_read_numbers (FILE *f)
     char c;
     char  nmarks[NMARK_SIZE];
 
-    lispimage_read (f, nmarks, NMARK_SIZE);
+    treimage_read (f, nmarks, NMARK_SIZE);
 
-    lisp_numbers_free = lispptr_nil;
+    tre_numbers_free = treptr_nil;
     DOTIMES(i, NMARK_SIZE) {
         c = 1;
         DOTIMES(j, 8) {
             idx = (i << 3) + j;
             if (nmarks[i] & c) {
-                lispimage_read (f, &lisp_numbers[idx], sizeof (struct lisp_number));
+                treimage_read (f, &tre_numbers[idx], sizeof (struct tre_number));
             } else
-                lisp_numbers_free = CONS(idx, lisp_numbers_free);
+                tre_numbers_free = CONS(idx, tre_numbers_free);
 
             c <<= 1;
         }
@@ -355,38 +355,38 @@ lispimage_read_numbers (FILE *f)
 }
 
 void
-lispimage_read_arrays (FILE *f)
+treimage_read_arrays (FILE *f)
 {
     unsigned  i;
     unsigned  l;
     void      *a;
 
     DOTIMES(i, NUM_ATOMS) {
-        if (lisp_atoms[i].type != ATOM_ARRAY)
+        if (tre_atoms[i].type != ATOM_ARRAY)
             continue;
 
-        l = LISPARRAY_SIZE(i) * sizeof (lispptr);
+        l = TREARRAY_SIZE(i) * sizeof (treptr);
         a = malloc (l);
-        lispimage_read (f, a, l);
-        LISPATOM_SET_DETAIL(i, a);
+        treimage_read (f, a, l);
+        TREATOM_SET_DETAIL(i, a);
     }
 }
 
 void
-lispimage_read_symbols (FILE *f, struct lispimage_header *h)
+treimage_read_symbols (FILE *f, struct treimage_header *h)
 {
     unsigned  i;
 
     bzero (symbol_table, sizeof symbol_table);
-    lispimage_read (f, symbol_table, h->len_symbols);
+    treimage_read (f, symbol_table, h->len_symbols);
 
     /* Correct symbol pointers. */
     num_symbols = 0;
     DOTIMES(i, NUM_ATOMS) {
-        if (lisp_atoms[i].type == ATOM_UNUSED || lisp_atoms[i].name == NULL)
+        if (tre_atoms[i].type == ATOM_UNUSED || tre_atoms[i].name == NULL)
             continue;
 
-        LISPATOM_NAME(i) = (char *) LISPATOM_NAME(i)
+        TREATOM_NAME(i) = (char *) TREATOM_NAME(i)
                            - (char *) h->ofs_symbols
                            + (char *) &symbol_table;
         num_symbols++;
@@ -396,27 +396,27 @@ lispimage_read_symbols (FILE *f, struct lispimage_header *h)
 }
 
 void
-lispimage_read_strings (FILE *f, struct lispimage_header *h)
+treimage_read_strings (FILE *f, struct treimage_header *h)
 {
-    struct lisp_string *s;
+    struct tre_string *s;
     unsigned  i;
     unsigned  j;
     unsigned  l;
     unsigned  lenlen = sizeof (unsigned) * h->num_strings;
     unsigned  *lens = malloc (lenlen);
 
-    lispimage_read (f, lens, lenlen);
+    treimage_read (f, lens, lenlen);
 
     j = 0;
     DOTIMES(i, NUM_ATOMS) {
-        if (lisp_atoms[i].type != ATOM_STRING)
+        if (tre_atoms[i].type != ATOM_STRING)
             continue;
 
         l = lens[j++];
-        s = malloc (l + sizeof (struct lisp_string));
+        s = malloc (l + sizeof (struct tre_string));
         s->len = l;
-        LISPATOM_SET_STRING(i, s);
-        lispimage_read (f, &s->str, l);
+        TREATOM_SET_STRING(i, s);
+        treimage_read (f, &s->str, l);
         (&s->str)[l] = 0;
     }
 
@@ -424,9 +424,9 @@ lispimage_read_strings (FILE *f, struct lispimage_header *h)
 }
 
 int
-lispimage_load (char *file)
+treimage_load (char *file)
 {
-    struct lispimage_header  h;
+    struct treimage_header  h;
     FILE  *f;
 
     f = fopen (file, "r");
@@ -438,26 +438,26 @@ lispimage_load (char *file)
         if (feof (f))
             goto error;
 
-    lispimage_read (f, &h, sizeof (struct lispimage_header));
-    if (h.format_version != LISP_IMAGE_FORMAT_VERSION)
+    treimage_read (f, &h, sizeof (struct treimage_header));
+    if (h.format_version != TRE_IMAGE_FORMAT_VERSION)
         goto error;
 
-    lispimage_remove_atoms ();
+    treimage_remove_atoms ();
 
-    lispimage_read_atoms (f);
-    lispimage_read_conses (f);
-    lispimage_make_free ();
-    lispimage_read_numbers (f);
-    lispimage_read_arrays (f);
-    lispimage_read_symbols (f, &h);
-    lispimage_read_strings (f, &h);
+    treimage_read_atoms (f);
+    treimage_read_conses (f);
+    treimage_make_free ();
+    treimage_read_numbers (f);
+    treimage_read_arrays (f);
+    treimage_read_symbols (f, &h);
+    treimage_read_strings (f, &h);
 
-    lispgc_init ();
-    lispthread_make ();
-    LISPCONTEXT_FUNSTACK() = lispptr_nil;
+    tregc_init ();
+    trethread_make ();
+    TRECONTEXT_FUNSTACK() = treptr_nil;
 
     fclose (f);
-    lisp_restart (h.init_fun);
+    tre_restart (h.init_fun);
 
 error:
     fclose (f);
@@ -465,7 +465,7 @@ error:
 }
 
 void
-lispimage_init ()
+treimage_init ()
 {
-    lispimage_initfun = lispptr_nil;
+    treimage_initfun = treptr_nil;
 }

@@ -1,14 +1,14 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2007 Sven Klose <pixel@copei.de>
  *
  * Built-in file I/O functions
  */
 
-#ifndef LISP_BUILTIN_IMAGE_H
-#define LISP_BUILTIN_IMAGE_H
+#ifndef TRE_BUILTIN_IMAGE_H
+#define TRE_BUILTIN_IMAGE_H
 
-extern lispptr lispimage_builtin_create (lispptr);
-extern lispptr lispimage_builtin_load (lispptr);
+extern treptr treimage_builtin_create (treptr);
+extern treptr treimage_builtin_load (treptr);
 
-#endif	/* #ifndef LISP_BUILTIN_IMAGE_H */
+#endif	/* #ifndef TRE_BUILTIN_IMAGE_H */

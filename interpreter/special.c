@@ -1,11 +1,11 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * Built-in special forms.
  */
 
-#include "lisp.h"
+#include "config.h"
 #include "atom.h"
 #include "list.h"
 #include "number.h"
@@ -21,34 +21,34 @@
 #include "builtin_debug.h"
 #include "builtin_atom.h"
 
-lispptr lisp_atom_evaluated_go;
-lispptr lisp_atom_evaluated_return_from;
+treptr tre_atom_evaluated_go;
+treptr tre_atom_evaluated_return_from;
 
 /* Test if expression is an evaluated RETURN-FROM. */
 bool
-lispeval_is_return (lispptr p)
+treeval_is_return (treptr p)
 {
-    if (LISPPTR_IS_EXPR(p) == FALSE)
+    if (TREPTR_IS_EXPR(p) == FALSE)
 	return FALSE;
 
-    return CAR(p) == lisp_atom_evaluated_return_from;
+    return CAR(p) == tre_atom_evaluated_return_from;
 }
 
 /* Test if expression is an evaluated GO. */
 bool
-lispeval_is_go (lispptr p)
+treeval_is_go (treptr p)
 {
-    if (LISPPTR_IS_EXPR(p) == FALSE)
+    if (TREPTR_IS_EXPR(p) == FALSE)
 	return FALSE;
 
-    return CAR(p) == lisp_atom_evaluated_go;
+    return CAR(p) == tre_atom_evaluated_go;
 }
 
 /* Test if expression is an evaluated GO or RETURN-FROM. */
 bool
-lispeval_is_jump (lispptr p)
+treeval_is_jump (treptr p)
 {
-    return lispeval_is_return (p) || lispeval_is_go (p);
+    return treeval_is_return (p) || treeval_is_go (p);
 }
 
 /*
@@ -56,42 +56,42 @@ lispeval_is_jump (lispptr p)
  *
  * Assign quoted value to variable.
  */
-lispptr
-lispspecial_setq (lispptr list)
+treptr
+trespecial_setq (treptr list)
 {
-    struct lisp_atom *atom;
-    lispptr car;
-    lispptr cdr;
-    lispptr tmp;
+    struct tre_atom *atom;
+    treptr car;
+    treptr cdr;
+    treptr tmp;
 
     /* Check if there're any arguments. */
-    if (list == lispptr_nil)
-	return lisperror (lispptr_nil, "arguments expected");
+    if (list == treptr_nil)
+	return treerror (treptr_nil, "arguments expected");
 
     do {
         /* Check arguments. */
         car = CAR(list);
-        atom = LISPPTR_TO_ATOM(car);
+        atom = TREPTR_TO_ATOM(car);
 
         list = CDR(list);
-        if (list == lispptr_nil)
-	    return lisperror (list, "even number arguments expected");
+        if (list == treptr_nil)
+	    return treerror (list, "even number arguments expected");
 
 	/* Evaluate value expression. */
         tmp = CDR(list);
-        cdr = lispeval (CAR(list));
+        cdr = treeval (CAR(list));
         list = tmp;
 
 	/* Catch RETURN-FROM. */
-	LISPEVAL_RETURN_JUMP(cdr);
+	TREEVAL_RETURN_JUMP(cdr);
 
-	if (LISPPTR_TYPE(car) == ATOM_VARIABLE)
-            lispatom_set_value (car, cdr);
+	if (TREPTR_TYPE(car) == ATOM_VARIABLE)
+            treatom_set_value (car, cdr);
         else
-	    return lisperror (car, "variable expected");
+	    return treerror (car, "variable expected");
 
 	/* Step to next pair. */
-    } while (list != lispptr_nil);
+    } while (list != treptr_nil);
 
     return cdr;
 }
@@ -101,15 +101,15 @@ lispspecial_setq (lispptr list)
  *
  * Return user defined special form.
  */
-lispptr
-lispspecial_macro (lispptr list)
+treptr
+trespecial_macro (treptr list)
 {
-    lispptr  f;
-    lispptr  expr = lisplist_copy (list);
+    treptr  f;
+    treptr  expr = trelist_copy (list);
 
-    lisparg_apply_keyword_package (CAR(expr));
-    f = lispatom_alloc (NULL, LISPCONTEXT_PACKAGE(), ATOM_MACRO, expr);
-    lispenv_create (f);
+    trearg_apply_keyword_package (CAR(expr));
+    f = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), ATOM_MACRO, expr);
+    treenv_create (f);
 
     return f;
 }
@@ -119,18 +119,18 @@ lispspecial_macro (lispptr list)
  *
  * Return user defined special form.
  */
-lispptr
-lispspecial_special (lispptr list)
+treptr
+trespecial_special (treptr list)
 {
-    lispptr  expr = lisplist_copy (list);
-    lispptr  ret;
+    treptr  expr = trelist_copy (list);
+    treptr  ret;
 
-    lisparg_apply_keyword_package (CAR(expr));
+    trearg_apply_keyword_package (CAR(expr));
 
     /* Create macro atom. */
-    lispgc_push (expr);
-    ret = lispatom_alloc (NULL, LISPCONTEXT_PACKAGE(), ATOM_USERSPECIAL, expr);
-    lispgc_pop ();
+    tregc_push (expr);
+    ret = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), ATOM_USERSPECIAL, expr);
+    tregc_pop ();
 
     return ret;
 }
@@ -142,28 +142,28 @@ lispspecial_special (lispptr list)
  *  the expression is evaluated and returned. If no test matches NIL is
  *  returned.
  */
-lispptr
-lispspecial_cond (lispptr p)
+treptr
+trespecial_cond (treptr p)
 {
-    lispptr pair;
-    lispptr test;
-    lispptr body;
+    treptr pair;
+    treptr test;
+    treptr body;
 
-    if (LISPPTR_IS_EXPR(p) == FALSE)
-	return lisperror (p, "expression expected");
+    if (TREPTR_IS_EXPR(p) == FALSE)
+	return treerror (p, "expression expected");
 
-    for (;p != lispptr_nil; p = CDR(p)) {
+    for (;p != treptr_nil; p = CDR(p)) {
 	pair = CAR(p);
-	if (p == lispptr_nil || LISPPTR_IS_ATOM(p))
-	    return lisperror (p, "test/expression pair expected");
+	if (p == treptr_nil || TREPTR_IS_ATOM(p))
+	    return treerror (p, "test/expression pair expected");
 
 	test = CAR(pair);
 	body = CDR(pair);
-	if (lispeval (test) != lispptr_nil)
-	    return lispeval_list (body);
+	if (treeval (test) != treptr_nil)
+	    return treeval_list (body);
     }
 
-    return lispptr_nil;
+    return treptr_nil;
 }
 
 /*
@@ -172,11 +172,11 @@ lispspecial_cond (lispptr p)
  * Returns expression unevaluated. The short form "'", preceding
  * symbols and expressions, may be used.
  */
-lispptr
-lispspecial_quote (lispptr list)
+treptr
+trespecial_quote (treptr list)
 {
-    if (list == lispptr_nil)
-        lisperror (lispptr_nil, "argument expected");
+    if (list == treptr_nil)
+        treerror (treptr_nil, "argument expected");
     return CAR(list);
 }
 
@@ -185,14 +185,14 @@ lispspecial_quote (lispptr list)
  *
  * Evaluates expressions and returns the value of the last.
  */
-lispptr
-lispspecial_progn (lispptr list)
+treptr
+trespecial_progn (treptr list)
 {
-    lispptr last;
+    treptr last;
 
-    for (last = lispptr_nil; list != lispptr_nil; list = CDR(list)) {
-	last = lispeval (CAR(list));
-	LISPEVAL_RETURN_JUMP(last);
+    for (last = treptr_nil; list != treptr_nil; list = CDR(list)) {
+	last = treeval (CAR(list));
+	TREEVAL_RETURN_JUMP(last);
     }
 
     return last;
@@ -205,25 +205,25 @@ lispspecial_progn (lispptr list)
  * On evaluation of RETURN-FROM inside the body, evaluation of the
  * block is terminated.
  */
-lispptr
-lispspecial_block (lispptr args)
+treptr
+trespecial_block (treptr args)
 {
-    lispptr tag;
-    lispptr p;
-    lispptr last = lispptr_nil;
+    treptr tag;
+    treptr p;
+    treptr last = treptr_nil;
 
     tag = CAR(args);
-    if (LISPPTR_IS_EXPR(tag))
-	return lisperror (tag, "tag expected instead of an expression");
+    if (TREPTR_IS_EXPR(tag))
+	return treerror (tag, "tag expected instead of an expression");
 
     p = CDR(args);
-    if (p == lispptr_nil)
-	return lispptr_nil;
+    if (p == treptr_nil)
+	return treptr_nil;
 
-    while (p != lispptr_nil) {
-	last = lispeval (CAR(p));
+    while (p != treptr_nil) {
+	last = treeval (CAR(p));
 
-	if (!lispeval_is_return (last)) {
+	if (!treeval_is_return (last)) {
             p = CDR(p);
 	    continue;
         }
@@ -232,8 +232,8 @@ lispspecial_block (lispptr args)
 	    return last;
 
         p = CADDR(last);
-	LISPLIST_FREE_EARLY(CDR(last));
-	LISPLIST_FREE_EARLY(last);
+	TRELIST_FREE_EARLY(CDR(last));
+	TRELIST_FREE_EARLY(last);
         /* XXX more to free of return expression? */
 	return p;
     }
@@ -246,29 +246,29 @@ lispspecial_block (lispptr args)
  *
  * Exit BLOCK named tag and return the evaluated expression.
  */
-lispptr
-lispspecial_return_from (lispptr args)
+treptr
+trespecial_return_from (treptr args)
 {
-    lispptr tmp;
-    lispptr ret;
+    treptr tmp;
+    treptr ret;
 
     /* Check arguments. */
-    if (args == lispptr_nil)
-	return lisperror (lispptr_invalid, "tag and expression expected");
-    if (CDR(args) == lispptr_nil)
-	return lisperror (lispptr_invalid, "expression missing after tag");
-    if (CDDR(args) != lispptr_nil)
-	return lisperror (CDDR(args), "only two args expected");
+    if (args == treptr_nil)
+	return treerror (treptr_invalid, "tag and expression expected");
+    if (CDR(args) == treptr_nil)
+	return treerror (treptr_invalid, "expression missing after tag");
+    if (CDDR(args) != treptr_nil)
+	return treerror (CDDR(args), "only two args expected");
 
     /* Evaluate expression for return value. */
-    args = lisplist_copy (args);
-    lispgc_push (args);
+    args = trelist_copy (args);
+    tregc_push (args);
 
     tmp = CDR(args);
-    RPLACA(tmp, lispeval (CAR(tmp)));
-    ret = CONS(lisp_atom_evaluated_return_from, args);
+    RPLACA(tmp, treeval (CAR(tmp)));
+    ret = CONS(tre_atom_evaluated_return_from, args);
 
-    lispgc_pop ();
+    tregc_pop ();
     return ret;
 }
 
@@ -280,34 +280,34 @@ lispspecial_return_from (lispptr args)
  * On evaluation of GO inside the body, evaluation is continued
  * after the tag specified.
  */
-lispptr
-lispspecial_tagbody (lispptr body)
+treptr
+trespecial_tagbody (treptr body)
 {
-    lispptr res = lispptr_nil;
-    lispptr tag;
-    lispptr p;
-    lispptr car;
+    treptr res = treptr_nil;
+    treptr tag;
+    treptr p;
+    treptr car;
 
     p = body;
     while (1) {
 tag_found:
 	/* Return on end of list. */
-	if (p == lispptr_nil)
+	if (p == treptr_nil)
 	    break;
 
         /* Evaluate expression, skip non-expression. */
 	car = CAR(p);
-	if (LISPPTR_IS_EXPR(car) == FALSE)
+	if (TREPTR_IS_EXPR(car) == FALSE)
             goto next;
 
-        res = lispeval (car);
+        res = treeval (car);
 
         /* Pass through RETURN-FROM for BLOCK. */
-        if (lispeval_is_return (res))
+        if (treeval_is_return (res))
             return res;
 
         /* Continue to next if expression didn't return a GO expression. */
-	if (!lispeval_is_go (res))
+	if (!treeval_is_go (res))
             goto next;
 
 	/* We have a GO. Continue after occurence of the tag. */
@@ -317,7 +317,7 @@ tag_found:
 		continue;
 
 	    p = CDR(p);
-	    LISPLIST_FREE_EARLY(res);
+	    TRELIST_FREE_EARLY(res);
 	    goto tag_found;
 	}
 
@@ -327,7 +327,7 @@ next:
         p = CDR(p);
     }
 
-    return lispptr_nil;
+    return treptr_nil;
 }
 
 /*
@@ -335,10 +335,10 @@ next:
  *
  * Inside a TAGBODY, continue evaluation at tag.
  */
-lispptr
-lispspecial_go (lispptr args)
+treptr
+trespecial_go (treptr args)
 {
-    return CONS(lisp_atom_evaluated_go, lisparg_get (args));
+    return CONS(tre_atom_evaluated_go, trearg_get (args));
 }
 
 /*
@@ -347,26 +347,26 @@ lispspecial_go (lispptr args)
  * Return function atom referred to by a variable's function pointer or
  * create one from a LAMBDA expression.
  */
-lispptr
-lispspecial_function (lispptr fun)
+treptr
+trespecial_function (treptr fun)
 {
-    lispptr car;
-    lispptr f;
-    lispptr args_body;
+    treptr car;
+    treptr f;
+    treptr args_body;
 
-    if (fun == lispptr_nil)
-	return lisperror (fun, "function name expected");
-    if (CDR(fun) != lispptr_nil)
-	return lisperror (fun, "single argument expected");
+    if (fun == treptr_nil)
+	return treerror (fun, "function name expected");
+    if (CDR(fun) != treptr_nil)
+	return treerror (fun, "single argument expected");
 
     car = CAR(fun);
 
-    switch (LISPPTR_TYPE(car)) {
+    switch (TREPTR_TYPE(car)) {
         case ATOM_EXPR:
 	    break;
 
         case ATOM_VARIABLE:
-            return LISPATOM_FUN(car);
+            return TREATOM_FUN(car);
 
         case ATOM_FUNCTION:
         case ATOM_BUILTIN:
@@ -377,29 +377,29 @@ lispspecial_function (lispptr fun)
 	    goto no_fun;
     }
 
-    if (LISPPTR_IS_ATOM(CAR(car)) && CAR(car) != lispatom_lambda)
+    if (TREPTR_IS_ATOM(CAR(car)) && CAR(car) != treatom_lambda)
         goto no_fun;
 
-    args_body = LISPPTR_IS_EXPR(CAR(car)) ?  car : CDR(car);
-    if (args_body == lispptr_nil)
-        return lisperror (fun, "argument list and body missing");
+    args_body = TREPTR_IS_EXPR(CAR(car)) ?  car : CDR(car);
+    if (args_body == treptr_nil)
+        return treerror (fun, "argument list and body missing");
 
-    args_body = lisplist_copy (args_body);
-    lispgc_push (args_body);
+    args_body = trelist_copy (args_body);
+    tregc_push (args_body);
 
-    lisparg_apply_keyword_package (CAR(args_body));
-    f = lispatom_alloc (NULL, LISPCONTEXT_PACKAGE(), ATOM_FUNCTION, args_body);
-    lispgc_retval (f);
-    lispenv_create (f);
+    trearg_apply_keyword_package (CAR(args_body));
+    f = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), ATOM_FUNCTION, args_body);
+    tregc_retval (f);
+    treenv_create (f);
 
-    lispgc_pop ();
+    tregc_pop ();
     return f;
 
 no_fun:
-    return lisperror (car, "function or argument/body pair expected");
+    return treerror (car, "function or argument/body pair expected");
 }
 
-char *lisp_special_names[] = {
+char *tre_special_names[] = {
     "SETQ",
 
     "MACRO", "SPECIAL",
@@ -420,42 +420,42 @@ char *lisp_special_names[] = {
     NULL
 };
 
-lispevalfunc_t lispeval_xlat_spec[] = {
-    lispspecial_setq,
-    lispspecial_macro,
-    lispspecial_special,
-    lispspecial_cond,
-    lispspecial_quote,
-    lispspecial_progn,
-    lispspecial_block,
-    lispspecial_return_from,
-    lispspecial_tagbody,
-    lispspecial_go,
-    lispspecial_function,
-    lispatom_builtin_set_atom_fun,
-    lispdebug_builtin_set_breakpoint,
-    lispdebug_builtin_remove_breakpoint,
+treevalfunc_t treeval_xlat_spec[] = {
+    trespecial_setq,
+    trespecial_macro,
+    trespecial_special,
+    trespecial_cond,
+    trespecial_quote,
+    trespecial_progn,
+    trespecial_block,
+    trespecial_return_from,
+    trespecial_tagbody,
+    trespecial_go,
+    trespecial_function,
+    treatom_builtin_set_atom_fun,
+    tredebug_builtin_set_breakpoint,
+    tredebug_builtin_remove_breakpoint,
     NULL
 };
 
 /*
  * Call built-in special operator
  */
-lispptr
-lispspecial (lispptr func, lispptr expr)
+treptr
+trespecial (treptr func, treptr expr)
 {
-    return lispeval_xlat_function (lispeval_xlat_spec, func, expr, FALSE);
+    return treeval_xlat_function (treeval_xlat_spec, func, expr, FALSE);
 }
 
 void
-lispspecial_init ()
+trespecial_init ()
 {
-    lisp_atom_evaluated_go
-        = lispatom_get ("%%EVALD-GO", LISPCONTEXT_PACKAGE());
-    lisp_atom_evaluated_return_from
-        = lispatom_get ("%%EVALD-RETURN-FROM", LISPCONTEXT_PACKAGE());
-    lispatom_lambda
-        = lispatom_get ("LAMBDA", LISPCONTEXT_PACKAGE());
+    tre_atom_evaluated_go
+        = treatom_get ("%%EVALD-GO", TRECONTEXT_PACKAGE());
+    tre_atom_evaluated_return_from
+        = treatom_get ("%%EVALD-RETURN-FROM", TRECONTEXT_PACKAGE());
+    treatom_lambda
+        = treatom_get ("LAMBDA", TRECONTEXT_PACKAGE());
 
-    EXPAND_UNIVERSE(lispatom_lambda);
+    EXPAND_UNIVERSE(treatom_lambda);
 }

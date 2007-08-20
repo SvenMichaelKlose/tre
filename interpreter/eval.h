@@ -1,27 +1,27 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * Evaluation-related section.
  */
 
-#ifndef LISP_EVAL_H
-#define LISP_EVAL_H
+#ifndef TRE_EVAL_H
+#define TRE_EVAL_H
 
-#define LISPEVAL_RETURN_JUMP(p) \
-        if (lispeval_is_jump (p)) { return p; }
+#define TREEVAL_RETURN_JUMP(p) \
+        if (treeval_is_jump (p)) { return p; }
 
-typedef lispptr (*lispevalfunc_t) (lispptr);
-typedef float (*lispeval_opfunc_t) (float, float);
+typedef treptr (*treevalfunc_t) (treptr);
+typedef float (*treeval_opfunc_t) (float, float);
 
-extern lispptr lispeval (lispptr);
-extern lispptr lispeval_args (lispptr p);
-extern lispptr lispeval_list (lispptr);
-extern lispptr lispeval_funcall (lispptr fnc, lispptr, bool evalargs);
-extern lispptr lispeval_xlat_function (lispevalfunc_t *, lispptr func, lispptr expr, bool do_argeval);
+extern treptr treeval (treptr);
+extern treptr treeval_args (treptr p);
+extern treptr treeval_list (treptr);
+extern treptr treeval_funcall (treptr fnc, treptr, bool evalargs);
+extern treptr treeval_xlat_function (treevalfunc_t *, treptr func, treptr expr, bool do_argeval);
 
-extern void lispeval_set_stackplace (lispptr plc, lispptr val);
+extern void treeval_set_stackplace (treptr plc, treptr val);
 
-extern void lispeval_init (void);
+extern void treeval_init (void);
 
-#endif 	/* #ifndef LISP_EVAL_H */
+#endif 	/* #ifndef TRE_EVAL_H */

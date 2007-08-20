@@ -1,11 +1,11 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2006 Sven Klose <pixel@copei.de>
  *
  * Built-in number-related functions
  */
 
-#include "lisp.h"
+#include "config.h"
 #include "atom.h"
 #include "list.h"
 #include "eval.h"
@@ -18,49 +18,49 @@
 #include <math.h>
 
 /* Perform operation over list. */
-lispptr
-lispeval_exprop (lispptr list, lispeval_opfunc_t func)
+treptr
+treeval_exprop (treptr list, treeval_opfunc_t func)
 {
-    lispptr  arg;
+    treptr  arg;
     float    val;
 
     arg = CAR(list);
-    if (LISPPTR_IS_NUMBER(arg) == FALSE)
-        return lisperror (arg, "not a number");
-    val = LISPNUMBER_VAL(arg);
+    if (TREPTR_IS_NUMBER(arg) == FALSE)
+        return treerror (arg, "not a number");
+    val = TRENUMBER_VAL(arg);
 
     list = CDR(list);
-    while (list != lispptr_nil) {
+    while (list != treptr_nil) {
         arg = CAR(list);
-        if (LISPPTR_IS_NUMBER(arg) == FALSE)
-            return lisperror (arg, "not a number");
+        if (TREPTR_IS_NUMBER(arg) == FALSE)
+            return treerror (arg, "not a number");
 
-        val = (*func) (val, LISPNUMBER_VAL(arg));
+        val = (*func) (val, TRENUMBER_VAL(arg));
 
         list = CDR(list);
     }
 
-    return lispatom_number_get (val, LISPNUMTYPE_FLOAT);
+    return treatom_number_get (val, TRENUMTYPE_FLOAT);
 }
 
-float lispeval_op_plus (float a, float b) { return a + b; }
-float lispeval_op_difference (float a, float b) { return a - b; }
-float lispeval_op_times (float a, float b) { return a * b; }
-float lispeval_op_quotient (float a, float b) { return a / b; }
-float lispeval_op_logxor (float a, float b) { return (unsigned) a ^ (unsigned) b; }
+float treeval_op_plus (float a, float b) { return a + b; }
+float treeval_op_difference (float a, float b) { return a - b; }
+float treeval_op_times (float a, float b) { return a * b; }
+float treeval_op_quotient (float a, float b) { return a / b; }
+float treeval_op_logxor (float a, float b) { return (unsigned) a ^ (unsigned) b; }
 
 /*
  * (+ &rest args)
  *
  * Returns the sum of args.
  */
-lispptr
-lispnumber_builtin_plus (lispptr list)
+treptr
+trenumber_builtin_plus (treptr list)
 {
-    if (list == lispptr_nil)
-	return lispatom_number_get (0, LISPNUMTYPE_FLOAT);
+    if (list == treptr_nil)
+	return treatom_number_get (0, TRENUMTYPE_FLOAT);
 
-    return lispeval_exprop (list, lispeval_op_plus);
+    return treeval_exprop (list, treeval_op_plus);
 }
 
 /*
@@ -69,16 +69,16 @@ lispnumber_builtin_plus (lispptr list)
  * When called with one argument, returns -nl. When called with
  * additional arguments, they're substracted from nl.
  */
-lispptr
-lispnumber_builtin_difference (lispptr list)
+treptr
+trenumber_builtin_difference (treptr list)
 {
-    if (list == lispptr_nil)
-	return lisperror (lispptr_nil, "Argument expected");
+    if (list == treptr_nil)
+	return treerror (treptr_nil, "Argument expected");
 
-    if (CDR(list) == lispptr_nil)
-	return lispatom_number_get (-LISPATOM_VALUE(CAR(list)), LISPNUMTYPE_FLOAT);
+    if (CDR(list) == treptr_nil)
+	return treatom_number_get (-TREATOM_VALUE(CAR(list)), TRENUMTYPE_FLOAT);
 
-    return lispeval_exprop (list, lispeval_op_difference);
+    return treeval_exprop (list, treeval_op_difference);
 }
 
 /*
@@ -87,13 +87,13 @@ lispnumber_builtin_difference (lispptr list)
  * When called without arguments, 1 is returned. Otherwise returns
  * the product of the arguments.
  */
-lispptr
-lispnumber_builtin_times (lispptr list)
+treptr
+trenumber_builtin_times (treptr list)
 {
-    if (list == lispptr_nil)
-	return lispatom_number_get (1, LISPNUMTYPE_FLOAT);
+    if (list == treptr_nil)
+	return treatom_number_get (1, TRENUMTYPE_FLOAT);
 
-    return lispeval_exprop (list, lispeval_op_times);
+    return treeval_exprop (list, treeval_op_times);
 }
 
 /*
@@ -102,26 +102,26 @@ lispnumber_builtin_times (lispptr list)
  * When called with one argument, 0 is returned. Otherwise returns
  * the first argument divided by the rest.
  */
-lispptr
-lispnumber_builtin_quotient (lispptr list)
+treptr
+trenumber_builtin_quotient (treptr list)
 {
-    if (list == lispptr_nil)
-	return lisperror (lispptr_nil, "Argument expected");
+    if (list == treptr_nil)
+	return treerror (treptr_nil, "Argument expected");
 
-    if (CDR(list) == lispptr_nil)
-	return lispatom_number_get (1.0 / LISPATOM_VALUE(CAR(list)), LISPNUMTYPE_FLOAT);
+    if (CDR(list) == treptr_nil)
+	return treatom_number_get (1.0 / TREATOM_VALUE(CAR(list)), TRENUMTYPE_FLOAT);
 
-    return lispeval_exprop (list, lispeval_op_quotient);
+    return treeval_exprop (list, treeval_op_quotient);
 }
 
 void
-lispnumber_builtin_args (lispptr *car, lispptr *cdr, lispptr list)
+trenumber_builtin_args (treptr *car, treptr *cdr, treptr list)
 {
-    lisparg_get2 (car, cdr, list);
-    if (LISPPTR_IS_NUMBER(*car) == FALSE)
-	*car = lisperror (*car, "first argument must be a number");
-    if (LISPPTR_IS_NUMBER(*cdr) == FALSE)
-	*cdr = lisperror (*cdr, "second argument must be a number");
+    trearg_get2 (car, cdr, list);
+    if (TREPTR_IS_NUMBER(*car) == FALSE)
+	*car = treerror (*car, "first argument must be a number");
+    if (TREPTR_IS_NUMBER(*cdr) == FALSE)
+	*cdr = treerror (*cdr, "second argument must be a number");
 }
 
 /*
@@ -129,15 +129,15 @@ lispnumber_builtin_args (lispptr *car, lispptr *cdr, lispptr list)
  *
  * Returns remainder of x / y.
  */
-lispptr
-lispnumber_builtin_mod (lispptr list)
+treptr
+trenumber_builtin_mod (treptr list)
 {
-    LISPLIST_DEFREGS();
+    TRELIST_DEFREGS();
     float    val;
-    lispnumber_builtin_args (&car, &cdr, list);
+    trenumber_builtin_args (&car, &cdr, list);
 
-    val = fmod (LISPNUMBER_VAL(car), LISPNUMBER_VAL(cdr));
-    return lispatom_number_get (val, LISPNUMTYPE_FLOAT);
+    val = fmod (TRENUMBER_VAL(car), TRENUMBER_VAL(cdr));
+    return treatom_number_get (val, TRENUMTYPE_FLOAT);
 }
 
 /*
@@ -145,13 +145,13 @@ lispnumber_builtin_mod (lispptr list)
  *
  * Returns the sum of args.
  */
-lispptr
-lispnumber_builtin_logxor (lispptr list)
+treptr
+trenumber_builtin_logxor (treptr list)
 {
-    if (list == lispptr_nil)
-	return lispatom_number_get (0, LISPNUMTYPE_FLOAT);
+    if (list == treptr_nil)
+	return treatom_number_get (0, TRENUMTYPE_FLOAT);
 
-    return lispeval_exprop (list, lispeval_op_logxor);
+    return treeval_exprop (list, treeval_op_logxor);
 }
 
 /*
@@ -159,15 +159,15 @@ lispnumber_builtin_logxor (lispptr list)
  *
  * Returns T if x and y are the same or if their values match.
  */
-lispptr
-lispnumber_builtin_number_equal (lispptr list)
+treptr
+trenumber_builtin_number_equal (treptr list)
 {
-    LISPLIST_DEFREGS();
-    lispnumber_builtin_args (&car, &cdr, list);
+    TRELIST_DEFREGS();
+    trenumber_builtin_args (&car, &cdr, list);
 
-    if (LISPNUMBER_VAL(car) == LISPNUMBER_VAL(cdr))
-        return lispptr_t;
-    return lispptr_nil;
+    if (TRENUMBER_VAL(car) == TRENUMBER_VAL(cdr))
+        return treptr_t;
+    return treptr_nil;
 }
 
 /*
@@ -175,15 +175,15 @@ lispnumber_builtin_number_equal (lispptr list)
  *
  * Returns T if number x is less than number y.
  */
-lispptr
-lispnumber_builtin_lessp (lispptr list)
+treptr
+trenumber_builtin_lessp (treptr list)
 {
-    LISPLIST_DEFREGS();
-    lispnumber_builtin_args (&car, &cdr, list);
+    TRELIST_DEFREGS();
+    trenumber_builtin_args (&car, &cdr, list);
 
-    if (LISPNUMBER_VAL(car) < LISPNUMBER_VAL(cdr))
-        return lispptr_t;
-    return lispptr_nil;
+    if (TRENUMBER_VAL(car) < TRENUMBER_VAL(cdr))
+        return treptr_t;
+    return treptr_nil;
 }
 
 /*
@@ -191,13 +191,13 @@ lispnumber_builtin_lessp (lispptr list)
  *
  * Returns T if number x is greater than number y.
  */
-lispptr
-lispnumber_builtin_greaterp (lispptr list)
+treptr
+trenumber_builtin_greaterp (treptr list)
 {
-    LISPLIST_DEFREGS();
-    lispnumber_builtin_args (&car, &cdr, list);
+    TRELIST_DEFREGS();
+    trenumber_builtin_args (&car, &cdr, list);
 
-    if (LISPNUMBER_VAL(car) > LISPNUMBER_VAL(cdr))
-        return lispptr_t;
-    return lispptr_nil;
+    if (TRENUMBER_VAL(car) > TRENUMBER_VAL(cdr))
+        return treptr_t;
+    return treptr_nil;
 }

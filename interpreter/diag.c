@@ -1,11 +1,11 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * Diagnostic functions.
  */
 
-#include "lisp.h"
+#include "config.h"
 #include "atom.h"
 #include "list.h"
 #include "eval.h"
@@ -16,9 +16,9 @@
 #include "util.h"
 #include "diag.h"
 
-#ifdef LISP_DIAGNOSTICS
+#ifdef TRE_DIAGNOSTICS
 
-int lisp_user = 0;
+int tre_user = 0;
 
 /*************************************
  * Functions for manual diagnostics. *
@@ -26,25 +26,25 @@ int lisp_user = 0;
 
 /* Check if cons is referenced by another. */
 void
-lispdiag_cons_used (lispptr to)
+trediag_cons_used (treptr to)
 {
-    lispptr i;
-    lispptr j;
-    lispptr elm;
+    treptr i;
+    treptr j;
+    treptr elm;
     char    c;
 
-    DOTIMES(i, sizeof (lispgc_listmarks)) {
-        c = lispgc_listmarks[i];
+    DOTIMES(i, sizeof (tregc_listmarks)) {
+        c = tregc_listmarks[i];
         if (!c)
             continue;
 
         DOTIMES(j, 8) {
             if (!(c & 1)) {
                 elm = (i << 3) + j;
-                if (lisp_lists[elm].car == to)
-		    lispwarn (-1, "%d ref in car of %d", to, elm);
-                if (lisp_lists[elm].cdr == to)
-		    lispwarn (-1, "%d ref in cdr of %d", to, elm);
+                if (tre_lists[elm].car == to)
+		    trewarn (-1, "%d ref in car of %d", to, elm);
+                if (tre_lists[elm].cdr == to)
+		    trewarn (-1, "%d ref in cdr of %d", to, elm);
             }
             c >>= 1;
         }    
@@ -52,36 +52,36 @@ lispdiag_cons_used (lispptr to)
 }
 
 void
-lispdiag_is_cons_of_r (lispptr orig, lispptr expr, lispptr cons)
+trediag_is_cons_of_r (treptr orig, treptr expr, treptr cons)
 {
-    lispptr i;
+    treptr i;
 
-    if (expr == lispptr_nil || LISPPTR_IS_EXPR(expr) == FALSE)
+    if (expr == treptr_nil || TREPTR_IS_EXPR(expr) == FALSE)
         return;
 
     if (expr == cons)
-        lisperror (-1, "%d ref in cdr of %d", cons, orig);
+        treerror (-1, "%d ref in cdr of %d", cons, orig);
 
-    for (i = expr; i != lispptr_nil; i = _CDR(i))
-        lispdiag_is_cons_of_r (orig, _CAR(expr), cons);
+    for (i = expr; i != treptr_nil; i = _CDR(i))
+        trediag_is_cons_of_r (orig, _CAR(expr), cons);
 }
 
 void
-lispdiag_is_cons_of (lispptr orig, lispptr cons)
+trediag_is_cons_of (treptr orig, treptr cons)
 {
-    lispdiag_is_cons_of_r (orig, orig, cons);
+    trediag_is_cons_of_r (orig, orig, cons);
 }
 
 unsigned
-lispdiag_atom_of (lispptr p)
+trediag_atom_of (treptr p)
 {
     unsigned  i;
 
     for (i = 0; i < NUM_ATOMS; i++)
-        if (lisp_atoms[i].type == ATOM_VARIABLE && LISPPTR_INDEX(lisp_atoms[i].fun) == LISPPTR_INDEX(p))
+        if (tre_atoms[i].type == ATOM_VARIABLE && TREPTR_INDEX(tre_atoms[i].fun) == TREPTR_INDEX(p))
 	    return i;
 
     return -1;
 }
 
-#endif /* #ifdef LISP_DIAGNOSTICS */
+#endif /* #ifdef TRE_DIAGNOSTICS */

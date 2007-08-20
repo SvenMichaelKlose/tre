@@ -1,11 +1,11 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * Evaluation related section.
  */
 
-#include "lisp.h"
+#include "config.h"
 #include "atom.h"
 #include "list.h"
 #include "eval.h"
@@ -15,24 +15,24 @@
 #include "thread.h"
 #include "debug.h"
 
-lispptr lispptr_macroexpand_hook;
-struct lisp_atom *lispatom_macroexpand_hook;
+treptr treptr_macroexpand_hook;
+struct tre_atom *treatom_macroexpand_hook;
 
-lispptr lispptr_current_macro;
+treptr treptr_current_macro;
 
-lispptr
-lispmacro_builtin_macroexpand_1 (lispptr list)
+treptr
+tremacro_builtin_macroexpand_1 (treptr list)
 {
-    lispptr  ret;
-    lispptr  fake;
+    treptr  ret;
+    treptr  fake;
 
-    if (lispatom_macroexpand_hook->fun == lispptr_nil)
+    if (treatom_macroexpand_hook->fun == treptr_nil)
         return list;
 
-    fake = CONS(lispptr_macroexpand_hook, CONS(list, lispptr_nil));
-    lispgc_push (fake);
-    ret = lispeval_funcall (lispatom_macroexpand_hook->fun, fake, FALSE);
-    lispgc_pop ();
+    fake = CONS(treptr_macroexpand_hook, CONS(list, treptr_nil));
+    tregc_push (fake);
+    ret = treeval_funcall (treatom_macroexpand_hook->fun, fake, FALSE);
+    tregc_pop ();
 
     return ret;
 }
@@ -42,31 +42,31 @@ lispmacro_builtin_macroexpand_1 (lispptr list)
  *
  * Expand macros in form until it doesn't change anymore.
  */
-lispptr
-lispmacro_builtin_macroexpand (lispptr list)
+treptr
+tremacro_builtin_macroexpand (treptr list)
 {   
-    lispptr  n = list;
+    treptr  n = list;
 
-    if (lispatom_macroexpand_hook->fun == lispptr_nil)
+    if (treatom_macroexpand_hook->fun == treptr_nil)
         return list;
 
     do {
 	list = n;
-	lispgc_push (list);
-        n = lispmacro_builtin_macroexpand_1 (list);
-	lispgc_pop ();
-    } while (!lisplist_equal (list, n));
+	tregc_push (list);
+        n = tremacro_builtin_macroexpand_1 (list);
+	tregc_pop ();
+    } while (!trelist_equal (list, n));
 
     return n;
 }            
 
 void
-lispmacro_init (void)
+tremacro_init (void)
 {
-    lispptr_macroexpand_hook = lispatom_get ("*MACROEXPAND-HOOK*", LISPCONTEXT_PACKAGE());
-    lispatom_macroexpand_hook = LISPPTR_TO_ATOM(lispptr_macroexpand_hook);
-    EXPAND_UNIVERSE(lispptr_macroexpand_hook);
+    treptr_macroexpand_hook = treatom_get ("*MACROEXPAND-HOOK*", TRECONTEXT_PACKAGE());
+    treatom_macroexpand_hook = TREPTR_TO_ATOM(treptr_macroexpand_hook);
+    EXPAND_UNIVERSE(treptr_macroexpand_hook);
 
-    lispptr_current_macro = lispatom_get ("*CURRENT-MACRO*", LISPCONTEXT_PACKAGE());
-    EXPAND_UNIVERSE(lispptr_current_macro);
+    treptr_current_macro = treatom_get ("*CURRENT-MACRO*", TRECONTEXT_PACKAGE());
+    EXPAND_UNIVERSE(treptr_current_macro);
 }

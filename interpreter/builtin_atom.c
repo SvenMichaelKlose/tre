@@ -1,11 +1,11 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2006 Sven Klose <pixel@copei.de>
  *
  * Built-in atom-related functions
  */
 
-#include "lisp.h"
+#include "config.h"
 #include "atom.h"
 #include "list.h"
 #include "number.h"
@@ -21,13 +21,13 @@
  *
  * Return T if the two objects are identical, NIL otherwise.
  */
-lispptr
-lispatom_builtin_eq (lispptr list)
+treptr
+treatom_builtin_eq (treptr list)
 {
-    LISPLIST_DEFREGS();
-    lisparg_get2 (&car, &cdr, list);
+    TRELIST_DEFREGS();
+    trearg_get2 (&car, &cdr, list);
 
-    return LISPPTR_TRUTH(car == cdr);
+    return TREPTR_TRUTH(car == cdr);
 }
 
 /*
@@ -35,21 +35,21 @@ lispatom_builtin_eq (lispptr list)
  *
  * Return T if the two objects are identical, or numbers with the same value.
  */
-lispptr
-lispatom_builtin_eql (lispptr list)
+treptr
+treatom_builtin_eql (treptr list)
 {
-    LISPLIST_DEFREGS();
-    lisparg_get2 (&car, &cdr, list);
+    TRELIST_DEFREGS();
+    trearg_get2 (&car, &cdr, list);
 
-    if (LISPPTR_IS_NUMBER(car)) {
-        if (LISPPTR_IS_NUMBER(cdr) == FALSE)
-	    return lispptr_nil;
-        if (LISPNUMBER_TYPE(car) != LISPNUMBER_TYPE(cdr))
-	    return lispptr_nil;
-        return LISPPTR_TRUTH(LISPNUMBER_VAL(car) == LISPNUMBER_VAL(cdr));
+    if (TREPTR_IS_NUMBER(car)) {
+        if (TREPTR_IS_NUMBER(cdr) == FALSE)
+	    return treptr_nil;
+        if (TRENUMBER_TYPE(car) != TRENUMBER_TYPE(cdr))
+	    return treptr_nil;
+        return TREPTR_TRUTH(TRENUMBER_VAL(car) == TRENUMBER_VAL(cdr));
     }
 
-    return LISPPTR_TRUTH(car == cdr);
+    return TREPTR_TRUTH(car == cdr);
 }
 
 /*
@@ -57,15 +57,15 @@ lispatom_builtin_eql (lispptr list)
  *
  * Returns newly created self-referencing atom.
  */
-lispptr
-lispatom_builtin_make_symbol (lispptr list)
+treptr
+treatom_builtin_make_symbol (treptr list)
 {
-    lispptr arg = lisparg_get (list);
+    treptr arg = trearg_get (list);
 
-    if (LISPPTR_IS_STRING(arg) == FALSE)
-        arg = lisperror (arg, "string expected");
+    if (TREPTR_IS_STRING(arg) == FALSE)
+        arg = treerror (arg, "string expected");
 
-    return lispatom_get (LISPATOM_STRINGP(arg), LISPCONTEXT_PACKAGE());
+    return treatom_get (TREATOM_STRINGP(arg), TRECONTEXT_PACKAGE());
 }
 
 /*
@@ -73,23 +73,23 @@ lispatom_builtin_make_symbol (lispptr list)
  *
  * Returns T if obj is not a cons.
  */
-lispptr
-lispatom_builtin_atom (lispptr list)
+treptr
+treatom_builtin_atom (treptr list)
 {
-    lispptr arg = lisparg_get (list);
+    treptr arg = trearg_get (list);
 
-    if (LISPPTR_IS_EXPR(arg))
-	return lispptr_nil;
-    return lispptr_t;
+    if (TREPTR_IS_EXPR(arg))
+	return treptr_nil;
+    return treptr_t;
 }
 
-lispptr
-lispatom_builtin_arg (lispptr list)
+treptr
+treatom_builtin_arg (treptr list)
 {
-    lispptr arg = lisparg_get (list);
+    treptr arg = trearg_get (list);
 
-    if (LISPPTR_IS_ATOM(arg) == FALSE)
-	arg = lisperror (arg, "atom expected");
+    if (TREPTR_IS_ATOM(arg) == FALSE)
+	arg = treerror (arg, "atom expected");
 
     return arg;
 }
@@ -99,11 +99,11 @@ lispatom_builtin_arg (lispptr list)
  *
  * Returns value bound to atom.
  */
-lispptr
-lispatom_builtin_symbol_value (lispptr list)
+treptr
+treatom_builtin_symbol_value (treptr list)
 {
-    lispptr arg = lispatom_builtin_arg (list);
-    return LISPATOM_VALUE(arg);
+    treptr arg = treatom_builtin_arg (list);
+    return TREATOM_VALUE(arg);
 }
 
 /*
@@ -111,11 +111,11 @@ lispatom_builtin_symbol_value (lispptr list)
  *
  * Returns function bound to atom.
  */
-lispptr
-lispatom_builtin_atom_value (lispptr list)
+treptr
+treatom_builtin_atom_value (treptr list)
 {
-    lispptr arg = lispatom_builtin_arg (list);
-    return LISPATOM_VALUE(arg);
+    treptr arg = treatom_builtin_arg (list);
+    return TREATOM_VALUE(arg);
 }
 
 
@@ -124,11 +124,11 @@ lispatom_builtin_atom_value (lispptr list)
  *
  * Returns function bound to atom.
  */
-lispptr
-lispatom_builtin_symbol_function (lispptr list)
+treptr
+treatom_builtin_symbol_function (treptr list)
 {
-    lispptr arg = lispatom_builtin_arg (list);
-    return LISPATOM_FUN(arg);
+    treptr arg = treatom_builtin_arg (list);
+    return TREATOM_FUN(arg);
 }
 
 /*
@@ -136,17 +136,17 @@ lispatom_builtin_symbol_function (lispptr list)
  *
  * Set function of atom.
  */
-lispptr
-lispatom_builtin_set_atom_fun (lispptr list)
+treptr
+treatom_builtin_set_atom_fun (treptr list)
 {
-    LISPLIST_DEFREGS();
-    lisparg_get2 (&car, &cdr, list);
+    TRELIST_DEFREGS();
+    trearg_get2 (&car, &cdr, list);
 
-    if (LISPPTR_IS_ATOM(car) == FALSE)
-	return lisperror (car, "atom expected");
+    if (TREPTR_IS_ATOM(car) == FALSE)
+	return treerror (car, "atom expected");
 
-    cdr = lispeval (cdr);
-    lispatom_set_function (car, cdr);
+    cdr = treeval (cdr);
+    treatom_set_function (car, cdr);
     return cdr;
 }
 
@@ -155,14 +155,14 @@ lispatom_builtin_set_atom_fun (lispptr list)
  *
  * Returns new function atom.
  */
-lispptr
-lispatom_builtin_mkfunctionatom (lispptr list)
+treptr
+treatom_builtin_mkfunctionatom (treptr list)
 {
-    lispptr arg = lisparg_get (list);
+    treptr arg = trearg_get (list);
 
-    if (LISPPTR_IS_EXPR(arg) == FALSE)
-	return lisperror (arg, "list expected");
-    return lispatom_alloc (NULL, LISPCONTEXT_PACKAGE(), ATOM_FUNCTION, arg);
+    if (TREPTR_IS_EXPR(arg) == FALSE)
+	return treerror (arg, "list expected");
+    return treatom_alloc (NULL, TRECONTEXT_PACKAGE(), ATOM_FUNCTION, arg);
 }
 
 /*
@@ -170,14 +170,14 @@ lispatom_builtin_mkfunctionatom (lispptr list)
  *
  * Returns T if the argument is a number. NIL otherwise.
  */
-lispptr
-lispatom_builtin_functionp (lispptr list)
+treptr
+treatom_builtin_functionp (treptr list)
 {
-    lispptr arg = lisparg_get (list);
+    treptr arg = trearg_get (list);
 
-    if (LISPPTR_IS_FUNCTION(arg) || LISPPTR_IS_BUILTIN(arg))
-	return lispptr_t;
-    return lispptr_nil;
+    if (TREPTR_IS_FUNCTION(arg) || TREPTR_IS_BUILTIN(arg))
+	return treptr_t;
+    return treptr_nil;
 }
 
 /*
@@ -185,14 +185,14 @@ lispatom_builtin_functionp (lispptr list)
  *
  * Returns T if global symbol is bound to a variable.
  */
-lispptr
-lispatom_builtin_boundp (lispptr list)
+treptr
+treatom_builtin_boundp (treptr list)
 {
-    lispptr arg = lisparg_get (list);
+    treptr arg = trearg_get (list);
 
-    if (LISPATOM_VALUE(arg) != arg)
-	return lispptr_t;
-    return lispptr_nil;
+    if (TREATOM_VALUE(arg) != arg)
+	return treptr_t;
+    return treptr_nil;
 }
 
 /*
@@ -200,38 +200,38 @@ lispatom_builtin_boundp (lispptr list)
  *
  * Returns T if global symbol is bound to a function.
  */
-lispptr
-lispatom_builtin_fboundp (lispptr list)
+treptr
+treatom_builtin_fboundp (treptr list)
 {
-    lispptr arg = lisparg_get (list);
+    treptr arg = trearg_get (list);
 
-    if (LISPATOM_FUN(arg) != lispptr_nil)
-	return lispptr_t;
-    return lispptr_nil;
+    if (TREATOM_FUN(arg) != treptr_nil)
+	return treptr_t;
+    return treptr_nil;
 }
 
 /*
  * (MACROP obj)
  */
-lispptr
-lispatom_builtin_macrop (lispptr list)
+treptr
+treatom_builtin_macrop (treptr list)
 {
-    lispptr arg = lisparg_get (list);
+    treptr arg = trearg_get (list);
 
-    if (LISPPTR_IS_MACRO(arg))
-	return lispptr_t;
-    return lispptr_nil;
+    if (TREPTR_IS_MACRO(arg))
+	return treptr_t;
+    return treptr_nil;
 }
 
-lispptr
-lispatom_builtin_atom_list_s (lispptr ret)
+treptr
+treatom_builtin_atom_list_s (treptr ret)
 {
-    struct lisp_atom *a = lisp_atoms;
+    struct tre_atom *a = tre_atoms;
     unsigned  n;
 
     for (n = 0; n < NUM_ATOMS; n++) {
 	if (a->type == ATOM_FUNCTION) {
-            LISPLIST_PUSH(ret, TYPEINDEX_TO_LISPPTR(ATOM_FUNCTION, n));
+            TRELIST_PUSH(ret, TYPEINDEX_TO_TREPTR(ATOM_FUNCTION, n));
 	}
 	a++;
     }
@@ -239,10 +239,10 @@ lispatom_builtin_atom_list_s (lispptr ret)
     return ret;
 }
 
-lispptr
-lispatom_builtin_atom_list (lispptr no_args)
+treptr
+treatom_builtin_atom_list (treptr no_args)
 {
     (void) no_args;
 
-    return lispatom_builtin_atom_list_s (lispptr_nil);
+    return treatom_builtin_atom_list_s (treptr_nil);
 }

@@ -1,11 +1,11 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * Built-in functions.
  */
 
-#include "lisp.h"
+#include "config.h"
 #include "atom.h"
 #include "list.h"
 #include "number.h"
@@ -44,12 +44,12 @@
 #include <math.h>
 #include <string.h>
 
-lispevalfunc_t lispeval_xlat_builtin[];
+treevalfunc_t treeval_xlat_builtin[];
 
-lispptr
-lispbuiltin_identity (lispptr args)
+treptr
+trebuiltin_identity (treptr args)
 {
-    return lisparg_get (args);
+    return trearg_get (args);
 }
 
 /*
@@ -57,36 +57,36 @@ lispbuiltin_identity (lispptr args)
  *
  * Terminate the interpreter.
  */
-lispptr
-lispbuiltin_quit (lispptr args)
+treptr
+trebuiltin_quit (treptr args)
 {
-    lispptr  arg;
+    treptr  arg;
     int      code = 0;
 
-    if (args != lispptr_nil) {
+    if (args != treptr_nil) {
         arg = CAR(args);
-        if (LISPPTR_IS_NUMBER(arg) == FALSE)
-	    return lisperror (arg, "integer expected");
-        code = LISPNUMBER_VAL(arg);
+        if (TREPTR_IS_NUMBER(arg) == FALSE)
+	    return treerror (arg, "integer expected");
+        code = TRENUMBER_VAL(arg);
     }
 
     printnl ();
-    lisp_exit (code);
+    tre_exit (code);
 
     /*NOTREACHED*/
-    return lispptr_nil;
+    return treptr_nil;
 }
 
 /*
  * (PRINT obj)
  *
- * Print object in LISP notation. Returns the printed object.
+ * Print object in TRE notation. Returns the printed object.
  */
-lispptr
-lispbuiltin_print (lispptr expr)
+treptr
+trebuiltin_print (treptr expr)
 {
-    expr = lisparg_get (expr);
-    lispprint (expr);
+    expr = trearg_get (expr);
+    treprint (expr);
     return expr;
 }
 
@@ -95,10 +95,10 @@ lispbuiltin_print (lispptr expr)
  *
  * Evaluates expression and returns its result.
  */
-lispptr
-lispbuiltin_eval (lispptr list)
+treptr
+trebuiltin_eval (treptr list)
 {
-    return lispeval (lisparg_get (list));
+    return treeval (trearg_get (list));
 }
 
 /*
@@ -108,38 +108,38 @@ lispbuiltin_eval (lispptr list)
  * appended to the second last element. The last list is copied because
  * it'd be removed as a part of the temporary argument list.
  */
-lispptr
-lispbuiltin_apply_args (lispptr list)
+treptr
+trebuiltin_apply_args (treptr list)
 {
-    lispptr i;
+    treptr i;
 
     RETURN_NIL(list); /* No arguments. */
 
     /* Handle single argument. */
-    if (CDR(list) == lispptr_nil) {
+    if (CDR(list) == treptr_nil) {
 	RETURN_NIL(CAR(list));
-        if (LISPPTR_IS_EXPR(CAR(list)) == FALSE)
+        if (TREPTR_IS_EXPR(CAR(list)) == FALSE)
             goto error;
-        return lisplist_copy (CAR(list));
+        return trelist_copy (CAR(list));
     }
 
     /* Handle two or more arguments. */
     DOLIST(i, list) {
-        if (CDDR(i) != lispptr_nil)
+        if (CDDR(i) != treptr_nil)
             continue;
-        if (CADR(i) == lispptr_nil)
+        if (CADR(i) == treptr_nil)
 	    break;
-        if (LISPPTR_IS_EXPR(CADR(i)) == FALSE)
+        if (TREPTR_IS_EXPR(CADR(i)) == FALSE)
             goto error;
 
-        RPLACD(i, lisplist_copy (CADR(i)));
+        RPLACD(i, trelist_copy (CADR(i)));
         break;
     }
 
     return list;
 
 error:
-    return lisperror (list, "last argument must be a list "
+    return treerror (list, "last argument must be a list "
                             "(waiting for new argument list)");
 }
 
@@ -148,142 +148,142 @@ error:
  *
  * Call function with argument list.
  */
-lispptr
-lispbuiltin_apply (lispptr list)
+treptr
+trebuiltin_apply (treptr list)
 {
-    lispptr  func;
-    lispptr  args;
-    lispptr  fake;
-    lispptr  efunc;
-    lispptr  res;
+    treptr  func;
+    treptr  args;
+    treptr  fake;
+    treptr  efunc;
+    treptr  res;
 
-    if (list == lispptr_nil)
-	return lisperror (list, "arguments expected");
+    if (list == treptr_nil)
+	return treerror (list, "arguments expected");
 
     func = CAR(list);
-    args = lispbuiltin_apply_args (lisplist_copy (CDR(list)));
+    args = trebuiltin_apply_args (trelist_copy (CDR(list)));
 
     fake = CONS(func, args);
-    lispgc_push (fake);
+    tregc_push (fake);
 
-    efunc = lispeval (func);
+    efunc = treeval (func);
     RPLACA(fake, efunc);
 
     /* Avoid re-evaluation of arguments. */
-    if (LISPPTR_IS_FUNCTION(efunc))
-        res = lispeval_funcall (efunc, fake, FALSE);
-    else if (LISPPTR_IS_BUILTIN(efunc))
-        res = lispeval_xlat_function (lispeval_xlat_builtin, efunc, fake, FALSE);
-    else if (LISPPTR_IS_SPECIAL(efunc))
-        res = lispspecial (efunc, fake);
+    if (TREPTR_IS_FUNCTION(efunc))
+        res = treeval_funcall (efunc, fake, FALSE);
+    else if (TREPTR_IS_BUILTIN(efunc))
+        res = treeval_xlat_function (treeval_xlat_builtin, efunc, fake, FALSE);
+    else if (TREPTR_IS_SPECIAL(efunc))
+        res = trespecial (efunc, fake);
     else
-        res = lisperror (efunc, "function expected");
+        res = treerror (efunc, "function expected");
 
-    lispgc_pop ();
-    LISPLIST_FREE_EARLY(fake);
+    tregc_pop ();
+    TRELIST_FREE_EARLY(fake);
 
     return res;
 }
 
-lispptr
-lispbuiltin_macrocall (lispptr list)
+treptr
+trebuiltin_macrocall (treptr list)
 {
-    lispptr macro;
-    lispptr args;
-    lispptr fake;
-    lispptr res;
+    treptr macro;
+    treptr args;
+    treptr fake;
+    treptr res;
 
-    lisparg_get2 (&macro, &args, list);
+    trearg_get2 (&macro, &args, list);
 
-    if (LISPPTR_IS_MACRO(macro) == FALSE) {
-	lisperror_norecover (list, "macro expected");
-	return lispptr_nil;
+    if (TREPTR_IS_MACRO(macro) == FALSE) {
+	treerror_norecover (list, "macro expected");
+	return treptr_nil;
     }
 
     fake = CONS(macro, args);
-    lispgc_push (fake);
+    tregc_push (fake);
 
-    lispthread_push_call (CDR(LISPATOM_VALUE(macro)));
-    res = lispeval_funcall (macro, fake, FALSE);
-    lispthread_pop_call ();
+    trethread_push_call (CDR(TREATOM_VALUE(macro)));
+    res = treeval_funcall (macro, fake, FALSE);
+    trethread_pop_call ();
 
-    lispgc_pop ();
-    LISPLIST_FREE_EARLY(fake);
+    tregc_pop ();
+    TRELIST_FREE_EARLY(fake);
 
     return res;
 }
 
-lispptr
-lispbuiltin_load (lispptr expr)
+treptr
+trebuiltin_load (treptr expr)
 {
-    struct lisp_stream *stream;
-    lispptr  arg = lisparg_get (expr);
+    struct tre_stream *stream;
+    treptr  arg = trearg_get (expr);
     char     fname[1024];
 
-    if (LISPPTR_IS_STRING(arg) == FALSE)
-	return lisperror (arg, "string expected");
+    if (TREPTR_IS_STRING(arg) == FALSE)
+	return treerror (arg, "string expected");
 
-    lispstring_copy (fname, arg);
+    trestring_copy (fname, arg);
 
-#ifdef LISP_VERBOSE_LOAD
+#ifdef TRE_VERBOSE_LOAD
     printf ("(load \"%s\")\n", fname);
 #endif
 
-    stream = lispiostd_open_file (fname);
+    stream = treiostd_open_file (fname);
     if (stream == NULL)
-        return lisperror (lispptr_invalid, "couldn't load file %s", fname);
+        return treerror (treptr_invalid, "couldn't load file %s", fname);
 
-    lispiostd_divert (stream);
-    lisp_main ();
-    lispiostd_undivert ();
+    treiostd_divert (stream);
+    tre_main ();
+    treiostd_undivert ();
 
-    return lispptr_nil;
+    return treptr_nil;
 }
 
 /*
  * Force garbage collection.
  */
-lispptr
-lispbuiltin_gc (lispptr no_args)
+treptr
+trebuiltin_gc (treptr no_args)
 {
     (void) no_args;
 
-    lispgc_force_user ();
+    tregc_force_user ();
 
-    return lispptr_nil;
+    return treptr_nil;
 }
 
-lispptr
-lispbuiltin_intern (lispptr args)
+treptr
+trebuiltin_intern (treptr args)
 {
-    lispptr  name;
-    lispptr  package;
-    lispptr  p;
+    treptr  name;
+    treptr  package;
+    treptr  p;
     char     *n;
 
     name = CAR(args);
-    if (LISPPTR_IS_EXPR(CDR(args))) {
+    if (TREPTR_IS_EXPR(CDR(args))) {
         package = CADR(args);
-        if (CDDR(args) != lispptr_nil)
-	    lisperror (args, "INTERN: one or two arguments required");
+        if (CDDR(args) != treptr_nil)
+	    treerror (args, "INTERN: one or two arguments required");
     } else
-        package = lispptr_nil;
+        package = treptr_nil;
 
-    if (LISPPTR_IS_STRING(name) == FALSE)
-	lisperror (name, "first argument (the symbol name) must be a string");
-    if (!package == lispptr_nil && LISPPTR_IS_STRING(package) == FALSE)
-	lisperror (name, "second argument (the package name) must be a string");
+    if (TREPTR_IS_STRING(name) == FALSE)
+	treerror (name, "first argument (the symbol name) must be a string");
+    if (!package == treptr_nil && TREPTR_IS_STRING(package) == FALSE)
+	treerror (name, "second argument (the package name) must be a string");
 
-    n = &LISPATOM_STRING(name)->str;
-    if (package != lispptr_nil)
-        p = lispatom_get (&LISPATOM_STRING(package)->str, lispptr_nil);
+    n = &TREATOM_STRING(name)->str;
+    if (package != treptr_nil)
+        p = treatom_get (&TREATOM_STRING(package)->str, treptr_nil);
     else
-        p = lispptr_nil;
+        p = treptr_nil;
 
-    return lispatom_get (n, p);
+    return treatom_get (n, p);
 }
 
-char *lisp_builtin_names[] = {
+char *tre_builtin_names[] = {
     "IDENTITY",
     "QUIT", "ERROR", "+", "-", "*", "/", "MOD",
     "LOGXOR",
@@ -333,127 +333,127 @@ char *lisp_builtin_names[] = {
     NULL
 };
 
-lispptr
-lispbuiltin_debug (lispptr no_args)
+treptr
+trebuiltin_debug (treptr no_args)
 {
     (void) no_args;
 
     printf ("(DEBUG) called!");
-    return lispptr_nil;
+    return treptr_nil;
 }
 
-lispevalfunc_t lispeval_xlat_builtin[] = {
-    lispbuiltin_identity,
-    lispbuiltin_quit,
-    lisperror_builtin_error,
+treevalfunc_t treeval_xlat_builtin[] = {
+    trebuiltin_identity,
+    trebuiltin_quit,
+    treerror_builtin_error,
 
-    lispnumber_builtin_plus,
-    lispnumber_builtin_difference,
-    lispnumber_builtin_times,
-    lispnumber_builtin_quotient,
-    lispnumber_builtin_mod,
-    lispnumber_builtin_logxor,
+    trenumber_builtin_plus,
+    trenumber_builtin_difference,
+    trenumber_builtin_times,
+    trenumber_builtin_quotient,
+    trenumber_builtin_mod,
+    trenumber_builtin_logxor,
 
-    lispatom_builtin_eq,
-    lispatom_builtin_eql,
+    treatom_builtin_eq,
+    treatom_builtin_eql,
 
-    lisplist_builtin_cons,
-    lisplist_builtin_list,
+    trelist_builtin_cons,
+    trelist_builtin_list,
 
-    lispbuiltin_print,
+    trebuiltin_print,
 
-    lisplist_builtin_car,
-    lisplist_builtin_cdr,
-    lisplist_builtin_rplaca,
-    lisplist_builtin_rplacd,
+    trelist_builtin_car,
+    trelist_builtin_cdr,
+    trelist_builtin_rplaca,
+    trelist_builtin_rplacd,
 
-    lispbuiltin_eval,
-    lispbuiltin_apply,
-    lispbuiltin_macrocall,
+    trebuiltin_eval,
+    trebuiltin_apply,
+    trebuiltin_macrocall,
 
-    lispatom_builtin_make_symbol,
+    treatom_builtin_make_symbol,
 
-    lispatom_builtin_atom,
-    lispatom_builtin_symbol_value,
-    lispatom_builtin_atom_value,
-    lispatom_builtin_symbol_function,
-    lispatom_builtin_mkfunctionatom,
-    lisplist_builtin_consp,
-    lispnumber_builtin_numberp,
-    lispatom_builtin_functionp,
-    lispatom_builtin_boundp,
-    lispatom_builtin_fboundp,
-    lispatom_builtin_macrop,
-    lispstring_builtin_stringp,
+    treatom_builtin_atom,
+    treatom_builtin_symbol_value,
+    treatom_builtin_atom_value,
+    treatom_builtin_symbol_function,
+    treatom_builtin_mkfunctionatom,
+    trelist_builtin_consp,
+    trenumber_builtin_numberp,
+    treatom_builtin_functionp,
+    treatom_builtin_boundp,
+    treatom_builtin_fboundp,
+    treatom_builtin_macrop,
+    trestring_builtin_stringp,
 
-    lispnumber_builtin_number_equal,
-    lispnumber_builtin_lessp,
-    lispnumber_builtin_greaterp,
+    trenumber_builtin_number_equal,
+    trenumber_builtin_lessp,
+    trenumber_builtin_greaterp,
 
-    lispsequence_builtin_elt,
-    lispsequence_builtin_set_elt,
-    lispsequence_builtin_length,
+    tresequence_builtin_elt,
+    tresequence_builtin_set_elt,
+    tresequence_builtin_length,
 
     /* type conversion */
-    lispnumber_builtin_code_char,
-    lispnumber_builtin_integer,
+    trenumber_builtin_code_char,
+    trenumber_builtin_integer,
 
     /* type checking */
-    lispnumber_builtin_characterp,
+    trenumber_builtin_characterp,
 
     /* string functions */
-    lispstring_builtin_make,
-    lispstring_builtin_concat,
-    lispstring_builtin_string,
-    lispstring_builtin_symbol_name,
+    trestring_builtin_make,
+    trestring_builtin_concat,
+    trestring_builtin_string,
+    trestring_builtin_symbol_name,
 
     /* array functions */
-    lisparray_builtin_make,
-    lisparray_builtin_p,
-    lisparray_builtin_aref,
-    lisparray_builtin_set_aref,
+    trearray_builtin_make,
+    trearray_builtin_p,
+    trearray_builtin_aref,
+    trearray_builtin_set_aref,
 
-    lispmacro_builtin_macroexpand_1,
-    lispmacro_builtin_macroexpand,
+    tremacro_builtin_macroexpand_1,
+    tremacro_builtin_macroexpand,
 
-    lispbuiltin_load,
+    trebuiltin_load,
 
-    lispstream_builtin_princ,
-    lispstream_builtin_force_output,
-    lispstream_builtin_read_char,
+    trestream_builtin_princ,
+    trestream_builtin_force_output,
+    trestream_builtin_read_char,
 
-    lispstream_builtin_fopen,
-    lispstream_builtin_feof,
+    trestream_builtin_fopen,
+    trestream_builtin_feof,
 
-    lispbuiltin_gc,
+    trebuiltin_gc,
 
-    lispdebug_builtin_end_debug,
-    lispdebug_builtin_invoke_debugger,
+    tredebug_builtin_end_debug,
+    tredebug_builtin_invoke_debugger,
 
-    lispatom_builtin_atom_list,
+    treatom_builtin_atom_list,
 
-    lispalien_builtin_dlopen,
-    lispalien_builtin_dlclose,
-    lispalien_builtin_dlsym,
-    lispalien_builtin_dlcall0,
-    lispalien_builtin_dlcall1,
-    lispalien_builtin_dlcall2,
-    lispalien_builtin_dlcall3,
-    lispalien_builtin_dlcall4,
+    trealien_builtin_dlopen,
+    trealien_builtin_dlclose,
+    trealien_builtin_dlsym,
+    trealien_builtin_dlcall0,
+    trealien_builtin_dlcall1,
+    trealien_builtin_dlcall2,
+    trealien_builtin_dlcall3,
+    trealien_builtin_dlcall4,
 
-    lispbuiltin_debug,
-    lispbuiltin_intern,
+    trebuiltin_debug,
+    trebuiltin_intern,
 
-    lispimage_builtin_create,
-    lispimage_builtin_load,
+    treimage_builtin_create,
+    treimage_builtin_load,
     NULL
 };
 
 /*
  * Call built-in function
  */
-lispptr
-lispbuiltin (lispptr func, lispptr expr)
+treptr
+trebuiltin (treptr func, treptr expr)
 {
-    return lispeval_xlat_function (lispeval_xlat_builtin, func, expr, TRUE);
+    return treeval_xlat_function (treeval_xlat_builtin, func, expr, TRUE);
 }

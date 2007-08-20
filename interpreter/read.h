@@ -1,16 +1,16 @@
 /*
- * nix operating system project lisp interpreter
+ * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * Reader.
  */
 
-#ifndef LISP_READ_H
-#define LISP_READ_H
+#ifndef TRE_READ_H
+#define TRE_READ_H
 
-extern lispptr lispatom_quasiquote;
-extern void lispread_init (void);
+extern treptr treatom_quasiquote;
+extern void treread_init (void);
 
-extern lispptr lispread (struct lisp_stream *s);
+extern treptr treread (struct tre_stream *s);
 
 #endif
