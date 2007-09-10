@@ -57,8 +57,8 @@
 (defun %struct-getters (name fields)
   (with-queue form
     (do ((i fields (cdr i))
-	 (index 1 (1+ index)))
-	((endp i) (queue-list form))
+	     (index 1 (1+ index)))
+	    ((endp i) (queue-list form))
       (enqueue form (%struct-single-get name (%struct-field-name (car i)) index)))))
 
 (defun %struct-p (name)
@@ -81,10 +81,27 @@
 (defun %struct-add-def (name def)
   (acons! name def *struct-defs*))
 
+(defun %struct-def (name)
+  (assoc name *struct-defs*))
+
 (defun %struct-name (obj)
   (if (not (arrayp obj))
     (error "object is not a struct")
     (elt 0 obj)))
+
+(defun %struct-fields (name)
+  (with-queue form
+    (dolist (i (%struct-def name) (queue-list form))
+      (enqueue form (car i)))))
+
+(defmacro with-struct (name s &rest body)
+  (with-gensym g
+    `(with (,g ,s
+			,@(mapcan
+				#'((x)
+				,x (,(make-symbol (string-concat (symbol-name name) "-" (symbol-name x) ,g)))
+				(%struct-fields s))))
+	   ,@body)))
 
 (defmacro defstruct (name &rest fields-and-options)
   "Define new structure."
@@ -93,4 +110,6 @@
     `(progn
       ,(%struct-make name flds opts)
       ,(%struct-p name)
-      ,@(%struct-getters name flds))))
+      ,@(%struct-getters name flds)
+      (defmacro ,(make-symbol (string-concat "WITH-" (symbol-name name))) (s &rest body)
+		 `(with-struct ,,name ,s ,@body)))))
