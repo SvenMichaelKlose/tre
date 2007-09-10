@@ -37,10 +37,6 @@
         (values nil l)
         (rec l))))
 
-(defmacro mvb (v a &rest body)
-  `(multiple-value-bind ,v ,a
-     ,@body))
-
 (defun remove-if (fun x)
   (when x
     (if (not (funcall fun (car x)))
