@@ -1,6 +1,6 @@
 /*
  * nix operating system project tre interpreter
- * Copyright (c) 2005-2006 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * Built-in number-related functions
  */
@@ -49,67 +49,89 @@ float treeval_op_times (float a, float b) { return a * b; }
 float treeval_op_quotient (float a, float b) { return a / b; }
 float treeval_op_logxor (float a, float b) { return (unsigned) a ^ (unsigned) b; }
 
-/*
- * (+ &rest args)
- *
- * Returns the sum of args.
+/** section numbers **/
+
+/**
+    <cmd name="+" essential="yes">
+        <args>
+            <rest name="args"/>
+        <args>
+        <para>
+            Returns the sum of args.
+        </para>
+    </cmd>
  */
 treptr
 trenumber_builtin_plus (treptr list)
 {
     if (list == treptr_nil)
-	return treatom_number_get (0, TRENUMTYPE_FLOAT);
+		return treatom_number_get (0, TRENUMTYPE_FLOAT);
 
     return treeval_exprop (list, treeval_op_plus);
 }
 
-/*
- * (- na &rest nd)
- *
- * When called with one argument, returns -nl. When called with
- * additional arguments, they're substracted from nl.
- */
+/**
+     <cmd name="-" essential="yes">
+        <args>
+            <rest name="args"/>
+        <args>
+        <para>
+            When called with one argument, returns -nl. When called with
+            additional arguments, they're substracted from nl.
+        </para>
+    </cmd>
+*/
 treptr
 trenumber_builtin_difference (treptr list)
 {
     if (list == treptr_nil)
-	return treerror (treptr_nil, "Argument expected");
+		return treerror (treptr_nil, "Argument expected");
 
     if (CDR(list) == treptr_nil)
-	return treatom_number_get (-TREATOM_VALUE(CAR(list)), TRENUMTYPE_FLOAT);
+		return treatom_number_get (-TREATOM_VALUE(CAR(list)), TRENUMTYPE_FLOAT);
 
     return treeval_exprop (list, treeval_op_difference);
 }
 
-/*
- * (* &rest args)
- *
- * When called without arguments, 1 is returned. Otherwise returns
- * the product of the arguments.
+/**
+    <cmd name="*" essential="yes">
+        <args>
+            <rest name="args"/>
+        <args>
+        <para>
+            When called without arguments, 1 is returned. Otherwise returns
+            the product of the arguments.
+        </para>
+    </cmd>
  */
 treptr
 trenumber_builtin_times (treptr list)
 {
     if (list == treptr_nil)
-	return treatom_number_get (1, TRENUMTYPE_FLOAT);
+		return treatom_number_get (1, TRENUMTYPE_FLOAT);
 
     return treeval_exprop (list, treeval_op_times);
 }
 
-/*
- * (/ na &rest args)
- *
- * When called with one argument, 0 is returned. Otherwise returns
- * the first argument divided by the rest.
+/**
+    <cmd name="/" essential="yes">
+        <args>
+            <rest name="args"/>
+        <args>
+        <para>
+            When called with one argument, 0 is returned. Otherwise returns
+            the first argument divided by the rest.
+        </para>
+    </cmd>
  */
 treptr
 trenumber_builtin_quotient (treptr list)
 {
     if (list == treptr_nil)
-	return treerror (treptr_nil, "Argument expected");
+		return treerror (treptr_nil, "Argument expected");
 
     if (CDR(list) == treptr_nil)
-	return treatom_number_get (1.0 / TREATOM_VALUE(CAR(list)), TRENUMTYPE_FLOAT);
+		return treatom_number_get (1.0 / TREATOM_VALUE(CAR(list)), TRENUMTYPE_FLOAT);
 
     return treeval_exprop (list, treeval_op_quotient);
 }
@@ -119,15 +141,21 @@ trenumber_builtin_args (treptr *car, treptr *cdr, treptr list)
 {
     trearg_get2 (car, cdr, list);
     if (TREPTR_IS_NUMBER(*car) == FALSE)
-	*car = treerror (*car, "first argument must be a number");
+		*car = treerror (*car, "first argument must be a number");
     if (TREPTR_IS_NUMBER(*cdr) == FALSE)
-	*cdr = treerror (*cdr, "second argument must be a number");
+		*cdr = treerror (*cdr, "second argument must be a number");
 }
 
-/*
- * (MOD x y)
- *
- * Returns remainder of x / y.
+/**
+    <cmd name="MOD" essential="yes">
+        <args>
+            <arg name="x"/>
+            <arg name="y"/>
+        <args>
+        <para>
+            Returns the remainder of x divided by y.
+        </para>
+    </cmd>
  */
 treptr
 trenumber_builtin_mod (treptr list)
@@ -140,24 +168,37 @@ trenumber_builtin_mod (treptr list)
     return treatom_number_get (val, TRENUMTYPE_FLOAT);
 }
 
-/*
- * (LOGXOR &rest args)
- *
- * Returns the sum of args.
+/** section "Logical operators"
+    <cmd name="LOGXOR">
+        <args>
+            <rest name="args"/>
+        <args>
+        <para>
+            Exclusive OR numbers.
+        </para>
+    </cmd>
  */
 treptr
 trenumber_builtin_logxor (treptr list)
 {
     if (list == treptr_nil)
-	return treatom_number_get (0, TRENUMTYPE_FLOAT);
+		return treatom_number_get (0, TRENUMTYPE_FLOAT);
 
     return treeval_exprop (list, treeval_op_logxor);
 }
 
-/*
- * (EQUAL x y)
- *
- * Returns T if x and y are the same or if their values match.
+/** section "Comparison" */
+
+/**
+    <cmd name="=" essential="yes>
+        <args>
+            <arg name="x"/>
+            <arg name="y"/>
+        <args>
+        <para>
+            Returns T if the values of x and y match.
+        </para>
+    </cmd>
  */
 treptr
 trenumber_builtin_number_equal (treptr list)
@@ -170,10 +211,16 @@ trenumber_builtin_number_equal (treptr list)
     return treptr_nil;
 }
 
-/*
- * (< x y)
- *
- * Returns T if number x is less than number y.
+/**
+    <cmd name="<" essential="yes">
+        <args>
+            <arg name="x"/>
+            <arg name="y"/>
+        <args>
+        <para>
+            Returns T if number x is less than number y.
+        </para>
+    </cmd>
  */
 treptr
 trenumber_builtin_lessp (treptr list)
@@ -186,10 +233,16 @@ trenumber_builtin_lessp (treptr list)
     return treptr_nil;
 }
 
-/*
- * (> x y) - builtin function
- *
- * Returns T if number x is greater than number y.
+/**
+    <cmd name=">">
+        <args>
+            <arg name="x"/>
+            <arg name="y"/>
+        <args>
+        <para>
+    Returns T if number x is greater than number y.
+        </para>
+    </cmd>
  */
 treptr
 trenumber_builtin_greaterp (treptr list)
