@@ -5,12 +5,14 @@
 ;;;; BACKQUOTE expansion
 ;;;;
 ;;;; The funny argument names are used to avoid collisions with symbols
-;;;; during evaluation.
+;;;; in the caller's environment during evaluation.
 
 (setq *universe* (cons 'not
                  (cons 'last
                  (cons '%nconc
                  (cons 'copy-tree *universe*)))))
+
+;;; Helper functions (helping us to stay sane).
 
 (%set-atom-fun not
   #'(lambda (x)
@@ -38,19 +40,27 @@
     (rplacd (last a) b)
     a))
 
+;;; BACKQUOTE evaluation
+
+;; BACKQUOTE-expand argument list with decremented sublevel.
+(%set-atom-fun %quasiquote-subexpand
+  #'(lambda (%gstype %gsbq %gsbqsub)
+      (cons (cons %gstype
+                  (%backquote (cdr (car %gsbq)) (- %gsbqsub 1)))
+            (%backquote-1 (cdr %gsbq) %gsbqsub))))
+
+;; Expand QUASIQUOTE.
 (%set-atom-fun %backquote-quasiquote
   #'(lambda (%gsbq %gsbqsub)
     (cond
       ; No sublevel. Insert evaluated QUASIQUOTE value.
       ((= %gsbqsub 0)
           (cons (copy-tree (eval (car (cdr (car %gsbq)))))
-		(%backquote-1 (cdr %gsbq) %gsbqsub)))
+                (%backquote-1 (cdr %gsbq) %gsbqsub)))
 
-      ; Expand QUASIQUOTE expression with decremented sublevel.
-      (t  (cons (cons 'QUASIQUOTE
-		      (%backquote (cdr (car %gsbq)) (- %gsbqsub 1)))
-	        (%backquote-1 (cdr %gsbq) %gsbqsub))))))
+      (t  (%quasiquote-subexpand 'QUASIQUOTE %gsbq %gsbqsub)))))
 
+;; Expand QUASIQUOTE-SPLICE.
 (%set-atom-fun %backquote-quasiquote-splice
   #'(lambda (%gsbq %gsbqsub)
     (cond
@@ -58,20 +68,18 @@
       ((= %gsbqsub 0)
           (#'(lambda (%gstmp)
                (cond
-		 ; Ignore NIL evaluation.
+                 ; Ignore NIL evaluation.
                  ((not %gstmp)
-			(%backquote (cdr %gsbq) %gsbqsub))
-		 ((atom %gstmp)
-			(error "QUASIQUOTE-SPLICE: list expected"))
-                 (t     (%nconc (copy-tree %gstmp)
-		      		(%backquote-1 (cdr %gsbq) %gsbqsub)))))
-  	    (eval (car (cdr (car %gsbq))))))
+                      (%backquote (cdr %gsbq) %gsbqsub))
+                 ((atom %gstmp)
+                      (error "QUASIQUOTE-SPLICE: list expected"))
+                 (t   (%nconc (copy-tree %gstmp)
+                      (%backquote-1 (cdr %gsbq) %gsbqsub)))))
+              (eval (car (cdr (car %gsbq))))))
 
-      ; Return QUASIQUOTE-SPLICE with decremented sublevel.
-      (t  (cons (cons 'QUASIQUOTE-SPLICE
-		      (%backquote (cdr (car %gsbq)) (- %gsbqsub 1)))
-		(%backquote-1 (cdr %gsbq) %gsbqsub))))))
+      (t  (%quasiquote-subexpand 'QUASIQUOTE-SPLICE %gsbq %gsbqsub)))))
 
+;; Expand BACKQUOTE arguments.
 (%set-atom-fun %backquote-1
   #'(lambda (%gsbq %gsbqsub)
     (cond
@@ -81,21 +89,22 @@
 
       ; Return element if it's not a cons.
       ((atom (car %gsbq))
-	  (cons (car %gsbq)
+          (cons (car %gsbq)
                 (%backquote-1 (cdr %gsbq) %gsbqsub)))
 
       ; Do QUASIQUOTE expansion.
       ((eq (car (car %gsbq)) 'QUASIQUOTE)
-	  (%backquote-quasiquote %gsbq %gsbqsub))
+          (%backquote-quasiquote %gsbq %gsbqsub))
 
       ; Do QUASIQUOTE-SPLICE expansion.
       ((eq (car (car %gsbq)) 'QUASIQUOTE-SPLICE)
-	  (%backquote-quasiquote-splice %gsbq %gsbqsub))
+          (%backquote-quasiquote-splice %gsbq %gsbqsub))
 
       ; Expand sublist and rest.
       (t  (cons (%backquote (car %gsbq) %gsbqsub)
-	        (%backquote-1 (cdr %gsbq) %gsbqsub))))))
+                (%backquote-1 (cdr %gsbq) %gsbqsub))))))
 
+;; Expand BACKQUOTE, check for nested BACKQUOTE (and increment sublevel) first.
 (%set-atom-fun %backquote
   #'(lambda (%gsbq %gsbqsub)
     (cond
@@ -111,5 +120,6 @@
       ; No new backquote level, continue normally.
       (t  (%backquote-1 %gsbq %gsbqsub)))))
 
+;; Initialise expansion with sublevel of 0.
 (%set-atom-fun backquote
   (special (%gsbq) (%backquote %gsbq 0)))
