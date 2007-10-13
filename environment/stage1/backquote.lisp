@@ -58,9 +58,13 @@
       ((= %gsbqsub 0)
           (#'(lambda (%gstmp)
                (cond
-                 (%gstmp (%nconc (copy-tree %gstmp)
-		         (%backquote-1 (cdr %gsbq) %gsbqsub)))
-                 (t      (%backquote (cdr %gsbq) %gsbqsub))))
+		 ; Ignore NIL evaluation.
+                 ((not %gstmp)
+			(%backquote (cdr %gsbq) %gsbqsub))
+		 ((atom %gstmp)
+			(error "QUASIQUOTE-SPLICE: list expected"))
+                 (t     (%nconc (copy-tree %gstmp)
+		      		(%backquote-1 (cdr %gsbq) %gsbqsub)))))
   	    (eval (car (cdr (car %gsbq))))))
 
       ; Return QUASIQUOTE-SPLICE with decremented sublevel.
