@@ -5,12 +5,18 @@
 ;;;; Macro expansion
 
 (setq *universe* (cons '*macrop-diversion*
-                 (cons '*macrocall-diversion* *universe*)))
+                 (cons '*macroexpand-backquote-diversion*
+                 (cons '*macrocall-diversion* *universe*))))
 
 (setq *macrop-diversion* nil
       *macrocall-diversion* nil
+      *macroexpand-backquote-diversion* nil
       *current-macro* nil)
 
+;;;; Expand macros in BACKQUOTE expression.
+;;;;
+;;;; This algorithm is incomplete - it doesn't handle
+;;;; nested backquotes.
 (%set-atom-fun %macroexpand-backquote
   #'(lambda (%gsme)
     (cond
@@ -66,7 +72,7 @@
           %gsme)
       ((eq (car %gsme) 'BACKQUOTE)
           (cons 'BACKQUOTE
-                (%macroexpand-backquote (cdr %gsme))))
+                (apply *macroexpand-backquote-diversion* (list (cdr %gsme)))))
       (t  (%macroexpand-call (cons (car %gsme)
                                    (%macroexpand-list (cdr %gsme))))))))
 
@@ -82,5 +88,6 @@
   #'(lambda (%gsme)
     (setq *macrop-diversion* #'%%macrop
           *macrocall-diversion* #'%%macrocall
+          *macroexpand-backquote-diversion* #'%macroexpand-backquote
           *current-macro* nil)
     (%macroexpand %gsme)))
