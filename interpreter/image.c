@@ -141,8 +141,7 @@ treimage_write_arrays (FILE *f)
 
     DOTIMES(i, NUM_ATOMS)
         if (tre_atoms[i].type == ATOM_ARRAY)
-            treimage_write (f, tre_atoms[i].detail,
-                             TREARRAY_SIZE(i) * sizeof (treptr));
+            treimage_write (f, tre_atoms[i].detail, TREARRAY_SIZE(i) * sizeof (treptr));
 }
 
 void

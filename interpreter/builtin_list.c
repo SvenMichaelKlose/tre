@@ -48,7 +48,7 @@ trelist_builtin_cxr_arg (treptr list)
 
     RETURN_NIL(arg);
     if (TREPTR_IS_EXPR(arg) == FALSE)
-	return treerror (arg, "list expected");
+		return treerror (arg, "list expected");
     return arg;
 }
 
@@ -123,6 +123,6 @@ trelist_builtin_consp (treptr list)
     treptr arg = trearg_get (list);
 
     if (TREPTR_IS_EXPR(arg))
-	return treptr_t;
+		return treptr_t;
     return treptr_nil;
 }

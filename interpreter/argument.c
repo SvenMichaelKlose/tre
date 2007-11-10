@@ -116,148 +116,148 @@ trearg_expand (treptr *rvars, treptr *rvals, treptr iargdef, treptr args,
     while (1) {
 	/* Stop, if all arguments are processed. */
         if (argdef == treptr_nil)
-	    break;
+	    	break;
 
         if (TREPTR_IS_EXPR(argdef) == FALSE) {
-	    treerror_norecover (iargdef, "argument definition must be a list");
-	    return;
-	}
+	    	treerror_norecover (iargdef, "argument definition must be a list");
+	    	return;
+		}
 
-	/* Fetch next form and argument. */
+		/* Fetch next form and argument. */
         var = CAR(argdef);
-	val = (args != treptr_nil) ?
+		val = (args != treptr_nil) ?
 	      CAR(args) :
 	      treptr_nil;
 
-	/* Process sub-level argument list. */
+		/* Process sub-level argument list. */
         if (TREPTR_IS_EXPR(var)) {
             if (TREPTR_IS_EXPR(val) == FALSE) {
-	        treerror_norecover (var, "list type argument expected");
+	        	treerror_norecover (var, "list type argument expected");
                 goto error;
             }
 
-	    trearg_expand (&svars, &svals, var, val, do_argeval);
+	    	trearg_expand (&svars, &svals, var, val, do_argeval);
             RPLACD(dvars, svars);
             RPLACD(dvals, svals);
-	    dvars = trelist_last (dvars);
-	    dvals = trelist_last (dvals);
-	    goto next;
+	    	dvars = trelist_last (dvars);
+	    	dvals = trelist_last (dvals);
+	    	goto next;
         }
 
         /* Process &REST argument. */
-	if (var == tre_atom_rest) {
-	    /* Get form after keyword. */
-	    _ADDF(dvars, trelist_copy (CDR(argdef)));
+		if (var == tre_atom_rest) {
+	    	/* Get form after keyword. */
+	    	_ADDF(dvars, trelist_copy (CDR(argdef)));
 
-	    /* Evaluate following arguments if so desired. */
-	    svals = (do_argeval) ? treeval_args (args) : args;
+	    	/* Evaluate following arguments if so desired. */
+	    	svals = (do_argeval) ? treeval_args (args) : args;
 
-	    /* Add arguments as a list. */
-	    _ADDF(dvals, CONS(svals, treptr_nil));
-	    args = treptr_nil;
-	    break;
+	    	/* Add arguments as a list. */
+	    	_ADDF(dvals, CONS(svals, treptr_nil));
+	    	args = treptr_nil;
+	    	break;
         }
 
         /* Process &OPTIONAL argument. */
-	if (var == tre_atom_optional) {
+		if (var == tre_atom_optional) {
             argdef = CDR(argdef);
-	    while (1) {
+	    	while (1) {
                 if (argdef == treptr_nil) {
-		    if (args != treptr_nil)
-			treerror (args, "too many &OPTIONAL arguments - "
-					 "(continue to ignore)");
-		    break;
-		}
+		    		if (args != treptr_nil)
+						treerror (args, "too many &OPTIONAL arguments - "
+					 					"(continue to ignore)");
+		    		break;
+				}
 
-	        /* Get form. */
-		form = CAR(argdef);
+	        	/* Get form. */
+				form = CAR(argdef);
 
-		/* Get init value. */
-		init = treptr_nil;
-		if (TREPTR_IS_EXPR(form)) {
-		    init = CADR(form);
-		    form = CAR(form);
-		}
+				/* Get init value. */
+				init = treptr_nil;
+				if (TREPTR_IS_EXPR(form)) {
+		    		init = CADR(form);
+		    		form = CAR(form);
+				}
 
-	        _ADDF(dvars, CONS(form, treptr_nil));
+	        	_ADDF(dvars, CONS(form, treptr_nil));
 
-		svals = (args != treptr_nil) ? CAR(args) : init;
+				svals = (args != treptr_nil) ? CAR(args) : init;
 
-	        if (do_argeval)
-		    svals = treeval (svals);
+	        	if (do_argeval)
+		    		svals = treeval (svals);
 
-	        /* Add argument as a list. */
-	        _ADDF(dvals, CONS(svals, treptr_nil));
+	        	/* Add argument as a list. */
+	        	_ADDF(dvals, CONS(svals, treptr_nil));
 
-	        argdef = CDR(argdef);
-		if (args != treptr_nil)
-	            args = CDR(args);
-	    }
-	    args = treptr_nil;
-	    break;
+	        	argdef = CDR(argdef);
+				if (args != treptr_nil)
+	            	args = CDR(args);
+	    	}
+	    	args = treptr_nil;
+	    	break;
         }
 
         /* Process &KEY argument. */
-	if (var == tre_atom_key) {
+		if (var == tre_atom_key) {
             argdef = CDR(argdef);
-	    while (argdef != treptr_nil) {
-	        key = CAR(argdef);
-		init = treptr_nil;
+	    	while (argdef != treptr_nil) {
+	        	key = CAR(argdef);
+				init = treptr_nil;
                 if (TREPTR_IS_EXPR(key)) {
-		    init = CADR(key);
-		    key = CAR(key);
- 		}
+		    		init = CADR(key);
+		    		key = CAR(key);
+ 				}
 
                 /* Get position of key in argument list. */
-		kpos = (unsigned) trelist_position (key, args);
-	 	if (kpos != (unsigned) -1) {
-		    /* Get argument after key. */
-		    svals = trelist_nth (args, kpos + 1);
+				kpos = (unsigned) trelist_position (key, args);
+	 			if (kpos != (unsigned) -1) {
+		    		/* Get argument after key. */
+		    		svals = trelist_nth (args, kpos + 1);
 
-		    /* Remove keyword and value from argument list. */
-        	    if (CDR(args) == treptr_nil)
-	    	        args = treerror (
+		    		/* Remove keyword and value from argument list. */
+        	    	if (CDR(args) == treptr_nil)
+	    	        	args = treerror (
                             args, "missing argument after keyword"
                         );
-		    args = trelist_delete (kpos, args);
-		    args = trelist_delete (kpos, args);
-		} else
-		    svals = init;
+		    		args = trelist_delete (kpos, args);
+		    		args = trelist_delete (kpos, args);
+				} else
+		    		svals = init;
 
-		/* Evaluate value. */
-  		if (do_argeval)
-		    svals = treeval (svals);
+				/* Evaluate value. */
+  				if (do_argeval)
+		    		svals = treeval (svals);
 
-		tregc_push (svals);
-		key = treatom_get (TREATOM_NAME(key), treptr_nil);
-		_ADDF(dvars, CONS(key, treptr_nil));
-		_ADDF(dvals, CONS(svals, treptr_nil));
-		tregc_pop ();
+				tregc_push (svals);
+				key = treatom_get (TREATOM_NAME(key), treptr_nil);
+				_ADDF(dvars, CONS(key, treptr_nil));
+				_ADDF(dvals, CONS(svals, treptr_nil));
+				tregc_pop ();
 
-	        argdef = CDR(argdef);
-	    }
-	    break;
+	        	argdef = CDR(argdef);
+	    	}
+	    	break;
         }
 
         if (args == treptr_nil)
-	    val = treerror (argdef, "missing argument");
+	    	val = treerror (argdef, "missing argument");
 
-	/* Evaluate single argument if so desired. */
+		/* Evaluate single argument if so desired. */
         if (do_argeval)
-	    val = treeval (CAR(args));
+	    	val = treeval (CAR(args));
 
         tregc_push (val);
         _ADDF(dvars, CONS(var, treptr_nil));
         _ADDF(dvals, CONS(val, treptr_nil));
         tregc_pop ();
 
-next:
-	argdef = CDR(argdef);
-	args = CDR(args);
+	next:
+		argdef = CDR(argdef);
+		args = CDR(args);
     }
 
     if (args != treptr_nil)
-	treerror (args, "too many arguments (continue to ignore)");
+		treerror (args, "too many arguments (continue to ignore)");
 
     *rvars = CDR(vars);
     *rvals = CDR(vals);
@@ -282,20 +282,20 @@ trearg_apply_keyword_package (treptr args)
     treptr  a;
 
     if (args == treptr_nil)
-	return;
+		return;
 
     if (TREPTR_IS_EXPR(CAR(args)))
-	trearg_apply_keyword_package (CAR(args));
+		trearg_apply_keyword_package (CAR(args));
     else {
-	if (CAR(args) == tre_atom_key) {
-	    DOLIST(a, CDR(args)) {
-		if (TREPTR_IS_EXPR(CAR(a)))
-		    RPLACA(CAR(a), trearg_get_keyword (CAAR(a)));
-	        else
-		    RPLACA(a, trearg_get_keyword (CAR(a)));
-	    }
-	    return;
-	}
+		if (CAR(args) == tre_atom_key) {
+	    	DOLIST(a, CDR(args)) {
+				if (TREPTR_IS_EXPR(CAR(a)))
+		    		RPLACA(CAR(a), trearg_get_keyword (CAAR(a)));
+	        	else
+		    		RPLACA(a, trearg_get_keyword (CAR(a)));
+	    	}
+	    	return;
+		}
     }
 
     trearg_apply_keyword_package (CDR(args));

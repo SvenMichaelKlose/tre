@@ -51,7 +51,7 @@ trestring_builtin_make (treptr list)
     treptr atom;
 
     if (TREPTR_IS_NUMBER(arg) == FALSE)
-	return treerror (arg, "integer expected");
+		return treerror (arg, "integer expected");
 
     str = trestring_get_raw ((unsigned) TRENUMBER_VAL(arg));
     atom = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), ATOM_STRING, treptr_nil);
@@ -77,16 +77,16 @@ trestring_builtin_concat (treptr list)
     /* Sum up length of all elements in the list. */
     DOLIST(p, list) {
         car = CAR(p);
-	if (TREPTR_IS_STRING(car) == FALSE)
-	    return treerror (car, "can only concatenate strings");
-	else
-	    len += strlen (TREATOM_STRINGP(car));
+		if (TREPTR_IS_STRING(car) == FALSE)
+	    	return treerror (car, "can only concatenate strings");
+		else
+	    	len += strlen (TREATOM_STRINGP(car));
     }
 
     /* Copy elements to new string. */
     news = trestring_get_raw (len);
     if (news == NULL)
-	return treerror (treptr_invalid, "out of memory");
+		return treerror (treptr_invalid, "out of memory");
     newp = &news->str;
 
     DOLIST(p, list)
@@ -113,12 +113,12 @@ trestring_builtin_string (treptr list)
     switch (TREPTR_TYPE(arg)) {
         case ATOM_VARIABLE:
         case ATOM_BUILTIN:
-	    /* Convert symbol to string. */
-	    strcpy (buf, TREATOM_NAME(arg));
+	    	/* Convert symbol to string. */
+	    	strcpy (buf, TREATOM_NAME(arg));
             return trestring_get (buf);
 
         case ATOM_STRING:
-	    return arg;
+	    	return arg;
 
         case ATOM_NUMBER:
             sprintf (buf, "%-g", TRENUMBER_VAL(arg));

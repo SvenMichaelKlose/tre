@@ -28,12 +28,12 @@ struct tre_sequence_type *
 tresequence_get_type (treptr seq)
 {
     switch (TREPTR_TYPE(seq)) {
-	case ATOM_STRING:
-	    return &trestring_seqtype;
-	case ATOM_ARRAY:
-	    return &trearray_seqtype;
-	case ATOM_EXPR:
-	    return &trelist_seqtype;
+		case ATOM_STRING:
+	    	return &trestring_seqtype;
+		case ATOM_ARRAY:
+	    	return &trearray_seqtype;
+		case ATOM_EXPR:
+	    	return &trelist_seqtype;
     }
 
     return NULL;
@@ -53,7 +53,7 @@ tresequence_builtin_set_elt (treptr args)
     treptr  idx = CADDR(args);
 
     if (TREPTR_IS_NUMBER(idx) == FALSE)
-	return treerror (idx, "index must be integer");
+		return treerror (idx, "index must be integer");
 
     t = tresequence_get_type (seq);
     if (t == NULL)
@@ -79,7 +79,7 @@ tresequence_builtin_elt (treptr args)
     trearg_get2 (&car, &cdr, args);
 
     if (TREPTR_IS_NUMBER(cdr) == FALSE)
-	return treerror (cdr, "index must be integer");
+		return treerror (cdr, "index must be integer");
 
     t = tresequence_get_type (car);
     if (t == NULL)
@@ -99,12 +99,11 @@ tresequence_builtin_length (treptr args)
     struct tre_sequence_type *t;
 
     if (seq == treptr_nil)
-	return treatom_number_get ((float) 0, TRENUMTYPE_INTEGER);
+		return treatom_number_get ((float) 0, TRENUMTYPE_INTEGER);
 
     t = tresequence_get_type (seq);
     if (t == NULL)
         return treerror (seq, "sequence expected");
 
-    return treatom_number_get ((float) (*t->length) (seq),
-                                TRENUMTYPE_INTEGER);
+    return treatom_number_get ((float) (*t->length) (seq), TRENUMTYPE_INTEGER);
 }

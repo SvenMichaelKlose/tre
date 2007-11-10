@@ -64,11 +64,8 @@ treeval_funcall (treptr func, treptr expr, bool do_argeval)
     env_parent = TRECONTEXT_ENV_CURRENT();
     TRECONTEXT_ENV_CURRENT() = env;
     old_parent = env_parent;
-    while (env == env_parent) {
-        if (!env_parent)
-	    break;
+    while (env_parent && env == env_parent)
         env_parent = TREENV_PARENT(env_parent);
-    }
 
     /* Expand argument keywords. */
     trearg_expand (&expforms, &expvals, forms, args, do_argeval);
@@ -105,7 +102,7 @@ treeval_funcall (treptr func, treptr expr, bool do_argeval)
 
 #ifdef TRE_DIAGNOSTICS
     if (funstack != TRECONTEXT_FUNSTACK())
-	treerror_internal (treptr_invalid, "function stack corrupted");
+		treerror_internal (treptr_invalid, "function stack corrupted");
 #endif
 
     return ret;
@@ -148,7 +145,7 @@ treeval_xlat_function (treevalfunc_t *xlat, treptr func, treptr expr,
 
 #ifdef TRE_DIAGNOSTICS
     if (funstack != TRECONTEXT_FUNSTACK())
-	treerror_internal (treptr_invalid, "function stack corrupted");
+		treerror_internal (treptr_invalid, "function stack corrupted");
 #endif
 
     return ret;
@@ -193,7 +190,7 @@ treeval_expr (treptr x)
 
         default:
             return treerror (fun, "function expected instead of %s",
-                              treerror_typestring (fun));
+                             treerror_typestring (fun));
     }
 
     tredebug_chk_next ();
@@ -216,7 +213,7 @@ treeval (treptr x)
 
 #ifdef TRE_VERBOSE_EVAL
     if (TREATOM_VALUE(treopt_verbose_eval) != treptr_nil)
-      treprint (x);
+		treprint (x);
 #endif
 
     RETURN_NIL(x);
@@ -263,7 +260,7 @@ treeval (treptr x)
 
 #ifdef TRE_DIAGNOSTICS
     if (gcss != tregc_save_stack)
-	treerror_internal (x, "GC stack corrupted");
+		treerror_internal (x, "GC stack corrupted");
 #endif
 
     return val;
@@ -298,7 +295,7 @@ treeval_args (treptr x)
     RETURN_NIL(x);
 
     if (x == tre_atom_rest)
-	return x;
+		return x;
 
     tregc_push (x);
 
@@ -316,7 +313,6 @@ treeval_args (treptr x)
 void
 treeval_init ()
 {
-    treopt_verbose_eval = treatom_get ("*VERBOSE-EVAL*",
-                                         TRECONTEXT_PACKAGE());
+    treopt_verbose_eval = treatom_get ("*VERBOSE-EVAL*", TRECONTEXT_PACKAGE());
     treatom_set_value (treopt_verbose_eval, treptr_nil);
 }

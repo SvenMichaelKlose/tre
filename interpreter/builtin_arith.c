@@ -66,7 +66,6 @@ trenumber_builtin_plus (treptr list)
 {
     if (list == treptr_nil)
 		return treatom_number_get (0, TRENUMTYPE_FLOAT);
-
     return treeval_exprop (list, treeval_op_plus);
 }
 
@@ -109,7 +108,6 @@ trenumber_builtin_times (treptr list)
 {
     if (list == treptr_nil)
 		return treatom_number_get (1, TRENUMTYPE_FLOAT);
-
     return treeval_exprop (list, treeval_op_times);
 }
 
@@ -183,7 +181,6 @@ trenumber_builtin_logxor (treptr list)
 {
     if (list == treptr_nil)
 		return treatom_number_get (0, TRENUMTYPE_FLOAT);
-
     return treeval_exprop (list, treeval_op_logxor);
 }
 

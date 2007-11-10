@@ -35,17 +35,17 @@ trenumber_is_value (char *symbol)
     char      c;         /* Last read character. */
 
     if (*symbol == '-')
-	symbol++;
+		symbol++;
 
     while ((c = *symbol++) != 0) {
-	if (c == '.') {
-	    if (ndots++)
-	        return FALSE;
-	    continue;
+		if (c == '.') {
+	    	if (ndots++)
+	        	return FALSE;
+	    	continue;
         }
 
-	if (!isdigit (c))
-	    return FALSE;
+		if (!isdigit (c))
+	    	return FALSE;
     }
 
     return TRUE;
@@ -66,7 +66,7 @@ trenumber_alloc (float value, int type)
         tregc_force ();
         next_free = _CDR(tre_numbers_free);
         if (next_free == treptr_nil)
-	    treerror_internal (next_free, "out of numbers");
+	    	treerror_internal (next_free, "out of numbers");
     }
 
     trelist_free (tre_numbers_free);
@@ -84,7 +84,7 @@ trenumber_free (treptr n)
 
 #ifdef TRE_DIAGNOSTICS
     if (TREPTR_IS_NUMBER(n) == FALSE)
-	treerror_internal (n, "trenumber_free(): not a number");
+		treerror_internal (n, "trenumber_free(): not a number");
 #endif
 
     i = TRENUMBER_INDEX(n);
@@ -100,6 +100,6 @@ trenumber_init ()
 
     /* Put all numbers on free list. */
     for (i = NUM_NUMBERS - 1; i != (unsigned) -1; i--)
-	p = CONS(i, p);
+		p = CONS(i, p);
     tre_numbers_free = p;
 }

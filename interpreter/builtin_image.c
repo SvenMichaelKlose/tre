@@ -35,7 +35,7 @@ treimage_builtin_create (treptr list)
         init_fun = CADR(list);
 
     if (TREPTR_IS_STRING(file) == FALSE)
-	return treerror (file, "path string expected");
+		return treerror (file, "path string expected");
 
     r = treimage_create (&TREATOM_STRING(file)->str, init_fun);
     if (r)
@@ -53,7 +53,7 @@ treimage_builtin_load (treptr list)
     int r;
 
     if (TREPTR_IS_STRING(file) == FALSE)
-	return treerror (file, "path string expected");
+		return treerror (file, "path string expected");
 
     r = treimage_load (&TREATOM_STRING(file)->str);
     if (r == 2)

@@ -66,11 +66,10 @@ trebuiltin_quit (treptr args)
     if (args != treptr_nil) {
         arg = CAR(args);
         if (TREPTR_IS_NUMBER(arg) == FALSE)
-	    return treerror (arg, "integer expected");
+	    	return treerror (arg, "integer expected");
         code = TRENUMBER_VAL(arg);
     }
 
-    printnl ();
     tre_exit (code);
 
     /*NOTREACHED*/
@@ -117,7 +116,7 @@ trebuiltin_apply_args (treptr list)
 
     /* Handle single argument. */
     if (CDR(list) == treptr_nil) {
-	RETURN_NIL(CAR(list));
+		RETURN_NIL(CAR(list));
         if (TREPTR_IS_EXPR(CAR(list)) == FALSE)
             goto error;
         return trelist_copy (CAR(list));
@@ -128,7 +127,7 @@ trebuiltin_apply_args (treptr list)
         if (CDDR(i) != treptr_nil)
             continue;
         if (CADR(i) == treptr_nil)
-	    break;
+	    	break;
         if (TREPTR_IS_EXPR(CADR(i)) == FALSE)
             goto error;
 
@@ -158,7 +157,7 @@ trebuiltin_apply (treptr list)
     treptr  res;
 
     if (list == treptr_nil)
-	return treerror (list, "arguments expected");
+		return treerror (list, "arguments expected");
 
     func = CAR(list);
     args = trebuiltin_apply_args (trelist_copy (CDR(list)));
@@ -196,8 +195,8 @@ trebuiltin_macrocall (treptr list)
     trearg_get2 (&macro, &args, list);
 
     if (TREPTR_IS_MACRO(macro) == FALSE) {
-	treerror_norecover (list, "macro expected");
-	return treptr_nil;
+		treerror_norecover (list, "macro expected");
+		return treptr_nil;
     }
 
     fake = CONS(macro, args);
@@ -221,7 +220,7 @@ trebuiltin_load (treptr expr)
     char     fname[1024];
 
     if (TREPTR_IS_STRING(arg) == FALSE)
-	return treerror (arg, "string expected");
+		return treerror (arg, "string expected");
 
     trestring_copy (fname, arg);
 
@@ -247,9 +246,7 @@ treptr
 trebuiltin_gc (treptr no_args)
 {
     (void) no_args;
-
     tregc_force_user ();
-
     return treptr_nil;
 }
 
@@ -265,14 +262,14 @@ trebuiltin_intern (treptr args)
     if (TREPTR_IS_EXPR(CDR(args))) {
         package = CADR(args);
         if (CDDR(args) != treptr_nil)
-	    treerror (args, "INTERN: one or two arguments required");
+	    	treerror (args, "INTERN: one or two arguments required");
     } else
         package = treptr_nil;
 
     if (TREPTR_IS_STRING(name) == FALSE)
-	treerror (name, "first argument (the symbol name) must be a string");
+		treerror (name, "first argument (the symbol name) must be a string");
     if (!package == treptr_nil && TREPTR_IS_STRING(package) == FALSE)
-	treerror (name, "second argument (the package name) must be a string");
+		treerror (name, "second argument (the package name) must be a string");
 
     n = &TREATOM_STRING(name)->str;
     if (package != treptr_nil)

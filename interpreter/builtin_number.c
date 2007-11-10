@@ -42,8 +42,7 @@ trenumber_get_arg (treptr args)
     treptr  arg = trearg_get (args);
 
     if (TREPTR_IS_NUMBER(arg) == FALSE)
-	return treerror (arg, "number expected");
-
+		return treerror (arg, "number expected");
     return arg;
 }
 
@@ -58,8 +57,7 @@ trenumber_builtin_characterp (treptr args)
     treptr  arg = trearg_get (args);
 
     if (TREPTR_IS_NUMBER(arg) && (TRENUMBER_TYPE(arg) == TRENUMTYPE_CHAR))
-	return treptr_t;
-
+		return treptr_t;
     return treptr_nil;
 }
 

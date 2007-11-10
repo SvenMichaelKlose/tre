@@ -36,9 +36,9 @@ trestream_builtin_fopen (treptr list)
     trearg_get2 (&car, &cdr, list);
 
     if (TREPTR_IS_STRING(car) == FALSE)
-	return treerror (car, "string expected");
+		return treerror (car, "string expected");
     if (TREPTR_IS_STRING(cdr) == FALSE)
-	return treerror (cdr, "string expected");
+		return treerror (cdr, "string expected");
 
     handle = trestream_fopen (car, cdr);
     RETURN_NIL(handle);

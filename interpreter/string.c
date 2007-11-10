@@ -29,7 +29,7 @@ trestring_get_raw (unsigned len)
     struct tre_string *nstr = trealloc (l);
 
     if (nstr == NULL)
-	return nstr;
+		return nstr;
 
     nstr->len = len;
     bzero (&nstr->str, len + 1);
@@ -75,7 +75,7 @@ trestring_t_get (treptr str, unsigned idx)
 
     if (s->len < idx) {
         trewarn (TRECONTEXT_CURRENT(), "index out of range");
-	return treptr_nil;
+		return treptr_nil;
     }
 
     return treatom_number_get ((float) (&s->str)[idx], TRENUMTYPE_CHAR);
@@ -89,7 +89,7 @@ trestring_t_set (treptr str, unsigned idx, treptr val)
 
     if (s->len < idx) {
         treerror (TRECONTEXT_CURRENT(), "index out of range");
-	return;
+		return;
     }
 
     if (TREPTR_IS_NUMBER(val) == FALSE) {

@@ -28,26 +28,26 @@ trestream_builtin_princ (treptr args)
     if (handle != treptr_nil)
         str = tre_fileio_handles[(int) TRENUMBER_VAL(handle)];
     else
- 	str = stdout;
+ 		str = stdout;
 
     switch (TREPTR_TYPE(obj)) {
-	case ATOM_STRING:
-	    fprintf (str, TREATOM_STRINGP(obj));
-	    break;
+		case ATOM_STRING:
+	    	fprintf (str, TREATOM_STRINGP(obj));
+	    	break;
 
-	case ATOM_VARIABLE:
-	    fprintf (str, TREATOM_NAME(obj));
-	    break;
+		case ATOM_VARIABLE:
+	    	fprintf (str, TREATOM_NAME(obj));
+	    	break;
 
-	case ATOM_NUMBER:
-	    if (TRENUMBER_TYPE(obj) == TRENUMTYPE_CHAR)
+		case ATOM_NUMBER:
+	    	if (TRENUMBER_TYPE(obj) == TRENUMTYPE_CHAR)
                 fputc ((int) TRENUMBER_VAL(obj), str);
-	    else
-		fprintf (str, "%-g", TRENUMBER_VAL(obj));
-	    break;
+	    	else
+				fprintf (str, "%-g", TRENUMBER_VAL(obj));
+	    	break;
 
-  	default:
-	    return treerror (obj, "type not supported");
+  		default:
+	    	return treerror (obj, "type not supported");
     }
 
     return obj;
@@ -62,7 +62,7 @@ trestream_builtin_force_output (treptr args)
     if (handle != treptr_nil)
         str = tre_fileio_handles[(int) TRENUMBER_VAL(handle)];
     else
- 	str = stdout;
+ 		str = stdout;
 
     fflush (str);
     return treptr_nil;
@@ -77,7 +77,7 @@ trestream_builtin_feof (treptr args)
     if (handle != treptr_nil)
         str = tre_fileio_handles[(int) TRENUMBER_VAL(handle)];
     else
- 	str = stdin;
+ 		str = stdin;
 
     if (feof (str))
         return treptr_t;
@@ -94,7 +94,7 @@ trestream_builtin_read_char (treptr args)
     if (handle != treptr_nil)
         str = tre_fileio_handles[(int) TRENUMBER_VAL(handle)];
     else
- 	str = stdin;
+ 		str = stdin;
 
     c = fgetc (str);
 

@@ -29,7 +29,7 @@ bool
 treeval_is_return (treptr p)
 {
     if (TREPTR_IS_EXPR(p) == FALSE)
-	return FALSE;
+		return FALSE;
 
     return CAR(p) == tre_atom_evaluated_return_from;
 }
@@ -39,7 +39,7 @@ bool
 treeval_is_go (treptr p)
 {
     if (TREPTR_IS_EXPR(p) == FALSE)
-	return FALSE;
+		return FALSE;
 
     return CAR(p) == tre_atom_evaluated_go;
 }
@@ -66,7 +66,7 @@ trespecial_setq (treptr list)
 
     /* Check if there're any arguments. */
     if (list == treptr_nil)
-	return treerror (treptr_nil, "arguments expected");
+		return treerror (treptr_nil, "arguments expected");
 
     do {
         /* Check arguments. */
@@ -75,20 +75,20 @@ trespecial_setq (treptr list)
 
         list = CDR(list);
         if (list == treptr_nil)
-	    return treerror (list, "even number arguments expected");
+	    	return treerror (list, "even number arguments expected");
 
-	/* Evaluate value expression. */
+		/* Evaluate value expression. */
         tmp = CDR(list);
         cdr = treeval (CAR(list));
         list = tmp;
 
-	/* Catch RETURN-FROM. */
-	TREEVAL_RETURN_JUMP(cdr);
+		/* Catch RETURN-FROM. */
+		TREEVAL_RETURN_JUMP(cdr);
 
-	if (TREPTR_TYPE(car) == ATOM_VARIABLE)
+		if (TREPTR_TYPE(car) == ATOM_VARIABLE)
             treatom_set_value (car, cdr);
         else
-	    return treerror (car, "variable expected");
+	    	return treerror (car, "variable expected");
 
 	/* Step to next pair. */
     } while (list != treptr_nil);
@@ -150,17 +150,17 @@ trespecial_cond (treptr p)
     treptr body;
 
     if (TREPTR_IS_EXPR(p) == FALSE)
-	return treerror (p, "expression expected");
+		return treerror (p, "expression expected");
 
     for (;p != treptr_nil; p = CDR(p)) {
-	pair = CAR(p);
-	if (p == treptr_nil || TREPTR_IS_ATOM(p))
-	    return treerror (p, "test/expression pair expected");
+		pair = CAR(p);
+		if (p == treptr_nil || TREPTR_IS_ATOM(p))
+	    	return treerror (p, "test/expression pair expected");
 
-	test = CAR(pair);
-	body = CDR(pair);
-	if (treeval (test) != treptr_nil)
-	    return treeval_list (body);
+		test = CAR(pair);
+		body = CDR(pair);
+		if (treeval (test) != treptr_nil)
+	    	return treeval_list (body);
     }
 
     return treptr_nil;
@@ -191,8 +191,8 @@ trespecial_progn (treptr list)
     treptr last;
 
     for (last = treptr_nil; list != treptr_nil; list = CDR(list)) {
-	last = treeval (CAR(list));
-	TREEVAL_RETURN_JUMP(last);
+		last = treeval (CAR(list));
+		TREEVAL_RETURN_JUMP(last);
     }
 
     return last;
@@ -214,28 +214,27 @@ trespecial_block (treptr args)
 
     tag = CAR(args);
     if (TREPTR_IS_EXPR(tag))
-	return treerror (tag, "tag expected instead of an expression");
+		return treerror (tag, "tag expected instead of an expression");
 
     p = CDR(args);
     if (p == treptr_nil)
-	return treptr_nil;
+		return treptr_nil;
 
     while (p != treptr_nil) {
-	last = treeval (CAR(p));
+		last = treeval (CAR(p));
 
-	if (!treeval_is_return (last)) {
+		if (!treeval_is_return (last)) {
             p = CDR(p);
-	    continue;
+	    	continue;
         }
 
         if (tag != CADR(last))
-	    return last;
+	    	return last;
 
         p = CADDR(last);
-	TRELIST_FREE_EARLY(CDR(last));
-	TRELIST_FREE_EARLY(last);
-        /* XXX more to free of return expression? */
-	return p;
+		TRELIST_FREE_EARLY(CDR(last));
+		TRELIST_FREE_EARLY(last);
+		return p;
     }
 
     return last;
@@ -254,11 +253,11 @@ trespecial_return_from (treptr args)
 
     /* Check arguments. */
     if (args == treptr_nil)
-	return treerror (treptr_invalid, "tag and expression expected");
+		return treerror (treptr_invalid, "tag and expression expected");
     if (CDR(args) == treptr_nil)
-	return treerror (treptr_invalid, "expression missing after tag");
+		return treerror (treptr_invalid, "expression missing after tag");
     if (CDDR(args) != treptr_nil)
-	return treerror (CDDR(args), "only two args expected");
+		return treerror (CDDR(args), "only two args expected");
 
     /* Evaluate expression for return value. */
     args = trelist_copy (args);
@@ -290,14 +289,14 @@ trespecial_tagbody (treptr body)
 
     p = body;
     while (1) {
-tag_found:
-	/* Return on end of list. */
-	if (p == treptr_nil)
-	    break;
+	tag_found:
+		/* Return on end of list. */
+		if (p == treptr_nil)
+	    	break;
 
         /* Evaluate expression, skip non-expression. */
-	car = CAR(p);
-	if (TREPTR_IS_EXPR(car) == FALSE)
+		car = CAR(p);
+		if (TREPTR_IS_EXPR(car) == FALSE)
             goto next;
 
         res = treeval (car);
@@ -307,23 +306,23 @@ tag_found:
             return res;
 
         /* Continue to next if expression didn't return a GO expression. */
-	if (!treeval_is_go (res))
+		if (!treeval_is_go (res))
             goto next;
 
-	/* We have a GO. Continue after occurence of the tag. */
+		/* We have a GO. Continue after occurence of the tag. */
         tag = CDR(res);
-	DOLIST(p, body) {
-	    if (CAR(p) != tag)
-		continue;
+		DOLIST(p, body) {
+	    	if (CAR(p) != tag)
+				continue;
 
-	    p = CDR(p);
-	    TRELIST_FREE_EARLY(res);
-	    goto tag_found;
-	}
+	    	p = CDR(p);
+	    	TRELIST_FREE_EARLY(res);
+	    	goto tag_found;
+		}
 
-	return res;
+		return res;
 
-next:
+	next:
         p = CDR(p);
     }
 
@@ -355,15 +354,15 @@ trespecial_function (treptr fun)
     treptr args_body;
 
     if (fun == treptr_nil)
-	return treerror (fun, "function name expected");
+		return treerror (fun, "function name expected");
     if (CDR(fun) != treptr_nil)
-	return treerror (fun, "single argument expected");
+		return treerror (fun, "single argument expected");
 
     car = CAR(fun);
 
     switch (TREPTR_TYPE(car)) {
         case ATOM_EXPR:
-	    break;
+	    	break;
 
         case ATOM_VARIABLE:
             return TREATOM_FUN(car);
@@ -371,10 +370,10 @@ trespecial_function (treptr fun)
         case ATOM_FUNCTION:
         case ATOM_BUILTIN:
         case ATOM_SPECIAL:
-	    return car;
+	    	return car;
 
         default:
-	    goto no_fun;
+	    	goto no_fun;
     }
 
     if (TREPTR_IS_ATOM(CAR(car)) && CAR(car) != treatom_lambda)

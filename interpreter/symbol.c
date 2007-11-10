@@ -2,7 +2,7 @@
  * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
- * Symbol table
+ * Symbol table.
  */
 
 #include "config.h"
@@ -53,7 +53,7 @@ tresymbol_gc ()
             o++;
         l = *o;
         *r++ = 1 + o;
-	*r++ = 1 + n;
+		*r++ = 1 + n;
         n = 1 + stpcpy (n, o);
         o += 1 + l;
     }
@@ -62,16 +62,16 @@ tresymbol_gc ()
     /* Correct symbol pointers in atoms. */
     DOTIMES(j, NUM_ATOMS) {
         if (tre_atoms[j].type == ATOM_UNUSED)
-	    continue;
+	    	continue;
 
         r = reloc;
         DOTIMES(i, num_symbols) {
             if (*r++ == TREATOM_NAME(j)) {
-		TREATOM_NAME(j) = *r;
-		break;
+				TREATOM_NAME(j) = *r;
+				break;
             }
-	    r++;
-	}
+	    	r++;
+		}
     }
 
     free (reloc);
@@ -88,15 +88,15 @@ tresymbol_add (char *symbol)
     char      *nstr;
 
     if (symbol == NULL)
-	return NULL;
+		return NULL;
 
     l = strlen (symbol) + 1;
 
     if (SYMBOL_TABLE_FULLP(l)) {
-	tresymbol_gc ();
+		tresymbol_gc ();
         if (SYMBOL_TABLE_FULLP(l)) {
-	    treerror_internal (treptr_invalid, "symbol table overflow");
-	    return NULL;
+	    	treerror_internal (treptr_invalid, "symbol table overflow");
+	    	return NULL;
         }
     }
 

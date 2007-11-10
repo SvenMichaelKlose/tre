@@ -34,17 +34,17 @@ tredebug_builtin_end_debug (treptr no_args)
 
     for (i = 0; i < NUM_ATOMS; i++) {
         atom = &tre_atoms[i];
-	if (atom->type == ATOM_UNUSED)
-	    continue;
+		if (atom->type == ATOM_UNUSED)
+	    	continue;
         b = atom->binding;
         if (b == treptr_nil)
-	    continue;
+	    	continue;
 
-	while (CDR(b) != treptr_nil)
-	    b = CDR(b);
+		while (CDR(b) != treptr_nil)
+	    	b = CDR(b);
 
         atom->value = CAR(b);
-	atom->binding = treptr_nil;
+		atom->binding = treptr_nil;
     }
 
     tre_restart (treptr_nil);
@@ -72,7 +72,7 @@ tredebug_builtin_set_breakpoint (treptr name)
     treptr  n = trearg_get (name);
 
     if (!TREPTR_IS_VARIABLE(n))
-	return treerror (n, "variable expected");
+		return treerror (n, "variable expected");
 
     tredebug_set_breakpoint (TREATOM_NAME(n));
 
@@ -85,7 +85,7 @@ tredebug_builtin_remove_breakpoint (treptr name)
     treptr  n = trearg_get (name);
 
     if (!TREPTR_IS_VARIABLE(n))
-	return treerror (n, "variable expected");
+		return treerror (n, "variable expected");
 
     tredebug_remove_breakpoint (TREATOM_NAME(n));
 
