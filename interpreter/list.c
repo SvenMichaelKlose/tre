@@ -88,21 +88,17 @@ trelist_free (treptr node)
 
 #ifdef TRE_DIAGNOSTICS
     if (TREPTR_IS_EXPR(node) == FALSE)
-	treerror_internal (node, "list_free: not a cons");
+		treerror_internal (node, "list_free: not a cons");
 
     if (TRE_GETMARK(trelist_marks, node) == FALSE)
         treerror_internal (treptr_nil, "already free cons");
-#endif
 
-#ifdef TRE_DIAGNOSTICS
     TRE_UNMARK(trelist_marks, node);
     _CAR(node) = -5;
 #endif
 
     _CDR(node) = tre_lists_free;
-
     tre_lists_free = node;
-
     trelist_num_used--;
 }
 
@@ -114,14 +110,11 @@ trelist_free (treptr node)
 void
 trelist_free_expr (treptr node)
 {
-    treptr  car = CAR(node);
-    treptr  cdr = CDR(node);
+    if (TREPTR_IS_EXPR(node) == FALSE)
+		return;
 
-    if (TREPTR_IS_EXPR(car))
-	trelist_free_expr (car);
-    if (TREPTR_IS_EXPR(cdr))
-	trelist_free_expr (cdr);
-
+	trelist_free_expr (CAR(node));
+	trelist_free_expr (CDR(node));
     trelist_free (node);
 }
 
@@ -144,33 +137,6 @@ trelist_free_toplevel (treptr node)
  * Allocate a list node.
  */
 treptr
-trelist_get_noref (treptr car, treptr cdr)
-{
-    treptr i;
-
-    i = tre_lists_free;
-
-#ifdef TRE_DIAGNOSTICS
-    if (TRE_GETMARK(trelist_marks, i))
-        treerror_internal (i, "already allocd cons");
-    TRE_MARK(trelist_marks, i);
-#endif
-
-    tre_lists_free = _CDR(i);
-    TRELIST_SET(i, car, cdr);
-    trelist_num_used++;
-
-    return i;
-}
-
-/*
- * Allocate a list node.
- *
- * Garbage collection is run when out of list elements.
- * The car and cdr is saved accordingly. Other lists not bound to an atom
- * must be saved in advanced using tregc_save_push().
- */
-treptr
 _trelist_get (treptr car, treptr cdr)
 {
     treptr ret;
@@ -178,17 +144,25 @@ _trelist_get (treptr car, treptr cdr)
     CHKPTR(car);
     CHKPTR(cdr);
 
-    tregc_car = car;
-    tregc_cdr = cdr;
-    ret = trelist_get_noref (car, cdr);
+    ret = tre_lists_free;
+
+#ifdef TRE_DIAGNOSTICS
+    if (TRE_GETMARK(trelist_marks, ret))
+        treerror_internal (ret, "already allocd cons");
+    TRE_MARK(trelist_marks, ret);
+#endif
+
+    tre_lists_free = _CDR(ret);
+    TRELIST_SET(ret, car, cdr);
+    trelist_num_used++;
     tregc_retval (ret);
 
     /* Pop node from free list. */
     if (trelist_num_used > (NUM_LISTNODES - 16)) {
-	/* Collect garbage and try again, */
-	tregc_force ();
+		/* Collect garbage and try again, */
+		tregc_force ();
         if (tre_lists_free == treptr_nil)
-	    treerror_internal (treptr_invalid, "no more free list elements");
+	    	treerror_internal (treptr_invalid, "no more free list elements");
     }
 
 #ifdef TRE_GC_DEBUG
@@ -203,10 +177,8 @@ _trelist_get (treptr car, treptr cdr)
 treptr
 trelist_last (treptr l)
 {
-    RETURN_NIL(l);
-
     while (CDR(l) != treptr_nil)
-	l = CDR(l);
+		l = CDR(l);
 
     return l;
 }
@@ -220,7 +192,7 @@ trelist_copy_tree (treptr l)
     treptr ret;
 
     if (TREPTR_IS_EXPR(l) == FALSE)
-	return l;
+		return l;
 
     car = trelist_copy_tree (CAR(l));
     tregc_push (car);
@@ -241,7 +213,7 @@ treptr
 trelist_copy (treptr l)
 {
     if (TREPTR_IS_EXPR(l) == FALSE)
-	return l;
+		return l;
 
     return CONS(CAR(l), trelist_copy (CDR(l)));
 }
@@ -258,16 +230,16 @@ trelist_delete (unsigned i, treptr l)
     treptr  f = treptr_nil;
 
     if (i == 0)
-	return CDR(l);
+		return CDR(l);
 
     for (p = l; p != treptr_nil; i--, p = CDR(p)) {
-	if (i) {
-	    f = p;
-	    continue;
-	}
+		if (i) {
+	    	f = p;
+	    	continue;
+		}
 
-	RPLACD(f, CDR(p));
-	return l;
+		RPLACD(f, CDR(p));
+		return l;
     }
 
     return treerror (l, "trelist_delete: index '%d' out of range", i);
@@ -280,11 +252,11 @@ trelist_position (treptr elt, treptr l)
     int c = 0;
 
     while (l != treptr_nil) {
-	if (CAR(l) == elt)
-	    return c;
+		if (CAR(l) == elt)
+	    	return c;
 
         l = CDR(l);
-	c++;
+		c++;
     }
 
     return -1;
@@ -297,8 +269,8 @@ trelist_length (treptr p)
     unsigned len = 0;
 
     while (p != treptr_nil) {
-	len++;
-	p = CDR(p);
+		len++;
+		p = CDR(p);
     }
 
     return len;
@@ -312,7 +284,7 @@ trelist_nth (treptr l, unsigned idx)
         l = CDR(l);
 
     if (l == treptr_nil)
-	return l;
+		return l;
 
     return CAR(l);
 }
@@ -348,7 +320,7 @@ trelist_check_type (treptr list, unsigned type)
 {
     for (; list != treptr_nil; list = CDR(list))
         if (TREPTR_TYPE(CAR(list)) != type)
-	    return FALSE;
+	    	return FALSE;
 
     return TRUE;
 }
@@ -360,11 +332,11 @@ trelist_append (treptr *lst, treptr lst2)
     treptr tmp;
 
     if (lst2 == treptr_nil)
-	return;
+		return;
 
 #ifdef TRE_DIAGNOSTICS
     if (TREPTR_IS_ATOM(lst2))
-	treerror_internal (lst2, "trelist_append: can append list only");
+		treerror_internal (lst2, "trelist_append: can append list only");
 #endif
 
     if (*lst == treptr_nil) {
@@ -382,16 +354,16 @@ trelist_equal (treptr la, treptr lb)
 {
     while (la != treptr_nil && lb != treptr_nil) {
         if (TREPTR_IS_EXPR(la) != TREPTR_IS_EXPR(lb))
-	    return FALSE;
+	    	return FALSE;
 
         if (TREPTR_IS_EXPR(la) == FALSE)
-	    return la == lb;
+	    	return la == lb;
 
         if (trelist_equal (CAR(la), CAR(lb)) == FALSE)
-	    return FALSE;
+	    	return FALSE;
 
-	la = CDR(la);
-	lb = CDR(lb);
+		la = CDR(la);
+		lb = CDR(lb);
     }
 
     return TRUE;
@@ -404,8 +376,10 @@ trelist_init ()
 
     /* Make a list of all elements. */
     for (i = 0; i < LAST_LISTNODE; i++) {
-	tre_lists[i].car = (treptr) -23;
-	tre_lists[i].cdr = (treptr) i + 1;
+#ifdef TRE_DIAGNOSTICS
+		tre_lists[i].car = (treptr) -23;
+#endif
+		tre_lists[i].cdr = (treptr) i + 1;
     }
     tre_lists[LAST_LISTNODE].cdr = TREPTR_NIL();
 

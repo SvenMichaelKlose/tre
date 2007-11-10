@@ -2,7 +2,7 @@
  * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
- * Garbage collection
+ * Garbage collection.
  */
 
 #include "config.h"
@@ -52,7 +52,7 @@ tregc_pop ()
 {
 #ifdef TRE_DIAGNOSTICS
     if (tregc_save_stack == treptr_nil)
-	treerror_internal (treptr_invalid, "GC save stack underflow");
+		treerror_internal (treptr_invalid, "GC save stack underflow");
 #endif
 
     TRELIST_POP(tregc_save_stack);
@@ -75,7 +75,7 @@ tregc_trace_expr_toplevel (treptr expr)
 {
     while (expr != treptr_nil) {
         TRE_UNMARK(tregc_listmarks, expr);
-	expr = _CDR(expr);
+		expr = _CDR(expr);
     }
 }
 
@@ -92,7 +92,7 @@ tregc_trace_expr (treptr p)
     _DOLIST(i, p) {
         /* Avoid circular trace. */
         if (TRE_GETMARK(tregc_listmarks, i) == FALSE)
-	    return;
+	    	return;
 
         TRE_UNMARK(tregc_listmarks, i);
 
@@ -100,8 +100,8 @@ tregc_trace_expr (treptr p)
 
         if (TREPTR_IS_EXPR(_CDR(i)) == FALSE) {
             tregc_trace_object (_CDR(i));
-	    return;
-	}
+	    	return;
+		}
     }
 }
 
@@ -128,7 +128,7 @@ tregc_trace_array (treptr arr)
 
     /* Mark elements in array. */
     while (size--)
-	tregc_trace_object (*i++);
+		tregc_trace_object (*i++);
 }
 
 /* Mark expressions bound to atoms. */
@@ -140,18 +140,18 @@ tregc_trace_atom (treptr a)
 
     /* Avoid circular trace. */
     if (TRE_GETMARK(tregc_atommarks, ai) == FALSE)
-	return;
+		return;
     TRE_UNMARK(tregc_atommarks, ai);
 
     switch (atom->type) {
         case ATOM_FUNCTION:
         case ATOM_MACRO:
-	    tregc_trace_object ((treptr) atom->detail);
-	    break;
+	    	tregc_trace_object ((treptr) atom->detail);
+	    	break;
 
         case ATOM_ARRAY:
-	    tregc_trace_array (a);
-	    break;
+	    	tregc_trace_array (a);
+	    	break;
     }
     tregc_trace_object (atom->value);
     tregc_trace_object (atom->fun);
@@ -178,8 +178,6 @@ tregc_mark (void)
 
     /* Mark temporarily untraceable objects. */
     tregc_trace_object (tregc_save_stack);
-    tregc_trace_object (tregc_car);
-    tregc_trace_object (tregc_cdr);
     tregc_trace_object (tregc_retval_current);
 
     /* Mark bookkeeping lists. */
@@ -205,28 +203,28 @@ tregc_sweep (void)
      * Atoms must be freed first, so they can remove their internal conses.
      */
     DOTIMES(i, sizeof (tregc_atommarks)) {
-	c = 1;
-	DOTIMES(j, 8) {
-	    if (tregc_atommarks[i] & c) {
-	        idx = (i << 3) + j;
-		if (TREPTR_TO_ATOM(idx)->type != ATOM_UNUSED)
-	            treatom_remove (TYPEINDEX_TO_TREPTR(TREATOM_TYPE(idx), idx));
+		c = 1;
+		DOTIMES(j, 8) {
+	    	if (tregc_atommarks[i] & c) {
+	        	idx = (i << 3) + j;
+				if (TREPTR_TO_ATOM(idx)->type != ATOM_UNUSED)
+	            	treatom_remove (TYPEINDEX_TO_TREPTR(TREATOM_TYPE(idx), idx));
             }
 
-	    c <<= 1;
+	    	c <<= 1;
         }
     }
 
     /* Free marked list elements. */
     DOTIMES(i, sizeof (tregc_listmarks)) {
         c = 1;
-	DOTIMES(j, 8) {
-	    if (tregc_listmarks[i] & c) {
-	        idx = (i << 3) + j;
-	        trelist_free (idx);
+		DOTIMES(j, 8) {
+	    	if (tregc_listmarks[i] & c) {
+	        	idx = (i << 3) + j;
+	        	trelist_free (idx);
             }
 
-	    c <<= 1;
+	    	c <<= 1;
         }
     }
 }
@@ -244,7 +242,7 @@ void
 tregc_force ()
 {
     if (tregc_running)
-	return;
+		return;
 
 #if TRE_VERBOSE_GC
     printf ("before gc");
@@ -264,7 +262,7 @@ void
 tregc_force_user ()
 {
     if (tregc_running)
-	return;
+		return;
 
     printf ("before gc");
     tregc_print_stats ();
