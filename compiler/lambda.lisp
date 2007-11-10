@@ -4,11 +4,22 @@
 ;;;;
 ;;;; LAMBDA-related utilities.
 
+(defun past-lambda (expr)
+  (if (eq (first expr) 'lambda)
+	(cdr expr)
+	expr))
+
+(defun lambda-args (expr)
+  (car (past-lambda expr)))
+
+(defun lambda-body (expr)
+  (cdr (past-lambda expr)))
+
 (defun lambda-call-args (expr)
-  (cadadar expr))
+  (lambda-args (first expr)))
 
 (defun lambda-call-body (expr)
-  (cddadar expr))
+  (lambda-body (first expr)))
 
 (defun lambda-call-vals (expr)
   (cdr expr))
@@ -16,7 +27,7 @@
 (defun is-lambda? (expr)
   (and (consp expr)
        (eq (car expr) 'function)
-       (listp (cdr expr))
+       (consp (cdr expr))
        (listp (cadr expr))
        (or (consp (caadr expr))
            (eq (caadr expr) 'lambda))))
@@ -29,11 +40,11 @@
 
 (defmacro with-lambda-call ((args vals body call) &rest exprs)
   (with-gensym (tmp start)
-    `(let* ((,tmp ,call)
-	   (,start (if (eq (car ,tmp) 'lambda) (cdr ,tmp) ,tmp))
-           (,args (lambda-call-args ,start))
-           (,vals (lambda-call-vals ,start))
-           (,body (lambda-call-body ,start)))
+    `(with (,tmp ,call
+	   	    ,start (past-lambda ,tmp)
+       	    ,args (lambda-call-args ,start)
+       	    ,vals (lambda-call-vals ,start)
+       	    ,body (lambda-call-body ,start))
        ,@exprs)))
 
 (defun function-arguments (fun)
