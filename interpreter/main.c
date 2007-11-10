@@ -171,7 +171,7 @@ tremain_get_args (int argc, char *argv[])
 
     tremain_self = argv[0];
 
-    for (p = 0; p < argc; p++) {
+    for (p = 1; p < argc; p++) {
 		char * v = argv[p];
         if (!strcmp ("-n", v)) {
 			tremain_noimage = TRUE;
@@ -204,12 +204,13 @@ main (int argc, char *argv[])
 
     /* Return here on errors. */
     setjmp (jmp_main);
-	if (tremain_noimage)
-		goto boot;
     if (c == 1)
 		goto load_error;
     if (c == 2)
 		goto user;
+
+	if (tremain_noimage)
+		goto boot;
 
     c = 2;
     treimage_load (tremain_imagelaunch ? tremain_imagelaunch : TRE_BOOT_IMAGE);
