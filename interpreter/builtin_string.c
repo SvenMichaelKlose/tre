@@ -79,8 +79,7 @@ trestring_builtin_concat (treptr list)
         car = CAR(p);
 		if (TREPTR_IS_STRING(car) == FALSE)
 	    	return treerror (car, "can only concatenate strings");
-		else
-	    	len += strlen (TREATOM_STRINGP(car));
+	   	len += strlen (TREATOM_STRINGP(car));
     }
 
     /* Copy elements to new string. */
@@ -90,7 +89,7 @@ trestring_builtin_concat (treptr list)
     newp = &news->str;
 
     DOLIST(p, list)
-	newp = stpcpy (newp, TREATOM_STRINGP(CAR(p)));
+		newp = stpcpy (newp, TREATOM_STRINGP(CAR(p)));
 
     /* Return new string atom. */
     atom = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), ATOM_STRING, treptr_nil);
