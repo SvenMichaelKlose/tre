@@ -35,6 +35,7 @@
 char *tremain_self = NULL;   /* Path to running executable. */
 char *tremain_imagelaunch = NULL;
 char *tremain_launchfile = NULL;
+bool tremain_noimage = FALSE;
 
 struct tremain_arg {
     char *option;
@@ -102,7 +103,7 @@ tre_main (void)
 {
     while (1)
         if (tre_main_line (treio_reader) == treptr_invalid)
-	    break;
+	    	break;
 }
 
 /* Initialise everything. */
@@ -150,33 +151,43 @@ tre_init (void)
 }
 
 void
+tremain_help (void)
+{
+	printf (TRE_COPYRIGHT
+            "Usage: tre [-h] [-i image-file] [source-file]\n"
+            "\n"
+            " -h  Print this help message.\n"
+            " -i  Load image file before source-file.\n"
+            " -n  Make new default image.\n"
+            "\n"
+            "See MANUAL for details.\n");
+}
+
+void
 tremain_get_args (int argc, char *argv[])
 {
     unsigned  i;
-    int       p = 1;
+	int  p;
 
     tremain_self = argv[0];
 
-    while (p < argc) {
-        if (!strcmp ("-h", argv[p])) {
-            printf (TRE_COPYRIGHT
-                    "Usage: tre [-h] [-i image-file] [source-file]\n"
-                    "\n"
-                    " -h  Print this help message.\n"
-                    " -i  Load image file before source-file.\n"
-                    "\n"
-                    "See MANUAL for details.\n");
+    for (p = 0; p < argc; p++) {
+		char * v = argv[p];
+        if (!strcmp ("-n", v)) {
+			tremain_noimage = TRUE;
+			continue;
+		}
+        if (!strcmp ("-h", v)) {
+			tremain_help ();
             exit (0);
         }
         DOTIMES(i, sizeof tremain_args / sizeof (struct tremain_arg)) {
-            if (!strcmp (tremain_args[i].option, argv[p])) {
+            if (!strcmp (tremain_args[i].option, v)) {
                 *tremain_args[i].value = argv[++p];
-                p++;
                 goto next;
             }
         }
-        tremain_launchfile = argv[p];
-        return;
+        tremain_launchfile = v;
 next:
         continue;
     }
@@ -193,15 +204,18 @@ main (int argc, char *argv[])
 
     /* Return here on errors. */
     setjmp (jmp_main);
+	if (tremain_noimage)
+		goto boot;
     if (c == 1)
-	goto load_error;
+		goto load_error;
     if (c == 2)
-	goto user;
+		goto user;
 
     c = 2;
     treimage_load (tremain_imagelaunch ? tremain_imagelaunch : TRE_BOOT_IMAGE);
     tremain_imagelaunch = NULL;
 
+boot:
     /* Execute boot code. */
     c = 1;
     treiostd_divert (treiostd_open_file (TRE_BOOTFILE));
