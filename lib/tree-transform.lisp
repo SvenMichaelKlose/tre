@@ -49,7 +49,7 @@
     (setq ,name
       (make-tree-transform :placeholders ,placeholders
                            :match ,match
-			   :conversion #'(lambda (&key ,@(cadr placeholders))
+			   :conversion #'((&key ,@(cadr placeholders))
 					 ,conversion)))
     (tree-transform-compile ,name)))
 
@@ -85,7 +85,7 @@
             (if (consp mcar)
               (awhen (tree-transform-compile-r mcar trn)
                 (enqueue form '(consp (car e)))
-                (enqueue form `(#'(lambda (e) (block nil (and ,@!))) (car e))))
+                (enqueue form `(#'((e) (block nil (and ,@!))) (car e))))
               (if (numberp mcar)
                 (enqueue form `(= (car e) ,mcar))
                 (enqueue form `(eq (car e) ',mcar))))))
@@ -107,7 +107,7 @@
   (setf (tree-transform-clips trn) nil)
   (let ((form (tree-transform-compile-r (tree-transform-match trn) trn)))
     (setf (tree-transform-compiled-match trn)
-      (eval (car (macroexpand `#'(lambda (e trn)
+      (eval (car (macroexpand `#'((e trn)
         (and
           ,@form))))))))
 
