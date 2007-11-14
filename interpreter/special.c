@@ -341,6 +341,39 @@ trespecial_go (treptr args)
 }
 
 /*
+ */
+treptr
+trespecial_function_from_expr (treptr expr)
+{
+    treptr past_lambda;
+    treptr args;
+    treptr body;
+    treptr f;
+
+	/* Jump past optional LAMBDA keyword. */
+	past_lambda = (TREPTR_IS_ATOM(CAR(expr)) && CAR(expr) == treatom_lambda)
+					  ? CDR(expr)
+					  : expr;
+
+    if (past_lambda == treptr_nil)
+        return treerror (expr, "argument list and body missing");
+    if (TREPTR_IS_ATOM(CAR(past_lambda)) && CAR(past_lambda) != treptr_nil)
+        return treerror (expr, "argument list expected instead of atom");
+    past_lambda = trelist_copy (past_lambda);
+    tregc_push (past_lambda);
+    args = CAR(past_lambda);
+    body = CDR(past_lambda);
+
+    trearg_apply_keyword_package (args);
+    f = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), ATOM_FUNCTION, past_lambda);
+    tregc_retval (f);
+    treenv_create (f);
+
+    tregc_pop ();
+    return f;
+}
+
+/*
  * (FUNCTION var | lambda-expression)
  *
  * Return function atom referred to by a variable's function pointer or
@@ -350,8 +383,6 @@ treptr
 trespecial_function (treptr fun)
 {
     treptr car;
-    treptr f;
-    treptr args_body;
 
     if (fun == treptr_nil)
 		return treerror (fun, "function name expected");
@@ -362,7 +393,7 @@ trespecial_function (treptr fun)
 
     switch (TREPTR_TYPE(car)) {
         case ATOM_EXPR:
-	    	break;
+			return trespecial_function_from_expr (car);
 
         case ATOM_VARIABLE:
             return TREATOM_FUN(car);
@@ -371,30 +402,8 @@ trespecial_function (treptr fun)
         case ATOM_BUILTIN:
         case ATOM_SPECIAL:
 	    	return car;
-
-        default:
-	    	goto no_fun;
     }
 
-    if (TREPTR_IS_ATOM(CAR(car)) && CAR(car) != treatom_lambda)
-        goto no_fun;
-
-    args_body = TREPTR_IS_EXPR(CAR(car)) ?  car : CDR(car);
-    if (args_body == treptr_nil)
-        return treerror (fun, "argument list and body missing");
-
-    args_body = trelist_copy (args_body);
-    tregc_push (args_body);
-
-    trearg_apply_keyword_package (CAR(args_body));
-    f = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), ATOM_FUNCTION, args_body);
-    tregc_retval (f);
-    treenv_create (f);
-
-    tregc_pop ();
-    return f;
-
-no_fun:
     return treerror (car, "function or argument/body pair expected");
 }
 
