@@ -8,7 +8,6 @@
 #ifndef TRE_READ_H
 #define TRE_READ_H
 
-extern treptr treatom_quasiquote;
 extern void treread_init (void);
 
 extern treptr treread (struct tre_stream *s);

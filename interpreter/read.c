@@ -36,14 +36,17 @@
 #define TRETOKEN_CHAR			10
 #define TRETOKEN_SYMBOL		11	/* Keep this at the end. */
 
+#define TRETOKEN_IS_QUOTE(x) \
+	(x >= TRETOKEN_QUOTE && x <= TRETOKEN_FUNCTION)
+
 /*
  * Check if the next incoming character would be legal part of a symbol.
  */
 bool
 is_symchar (char c)
 {
-    return (c > ' ' && c != '(' && c != ')' && c != '\'' && c != '.'
-	    && c != '`' && c != ',' && c != '"' && c != ';' &&c != '#');
+    return (c > ' ' && c != '(' && c != ')' && c != '\'' && c != '.' &&
+			c != '`' && c != ',' && c != '"' && c != ';' &&c != '#');
 }
 
 /*
@@ -75,31 +78,31 @@ after_pname:
     while (1) {
         c = toupper (treio_getc (str));
         if (is_symchar (c)) {
-	    /* Take read symbol as package name. */
+	    	/* Take read symbol as package name. */
             if (c == ':') {
-		if (*p != -1)
-		    treerror (treptr_invalid, "double package name");
-		strcpy (p, os);
-		len = 0;
-		s = os;
-		goto after_pname;
-	    }
+				if (*p != -1)
+		    		treerror (treptr_invalid, "double package name");
+				strcpy (p, os);
+				len = 0;
+				s = os;
+				goto after_pname;
+	    	}
 
             *s++ = c;
             len++;
-	    if (len > TRE_MAX_SYMLEN)
-		treerror_internal (treptr_invalid,
-			   "symbols must be no longer than %d chars",
-			   TRE_MAX_SYMLEN);
+	    	if (len > TRE_MAX_SYMLEN)
+				treerror_internal (treptr_invalid,
+			   					   "symbols must be no longer than %d chars",
+			   					   TRE_MAX_SYMLEN);
 
-	    if (len == 1 && c == '.')
-		return len;
+	    	if (len == 1 && c == '.')
+				return len;
             continue;
         }
 
         *s++ = 0;
         if (len > 0)
-	    treio_putback (str);
+	    	treio_putback (str);
 
         return len;
     }
@@ -110,56 +113,88 @@ void
 treread_token (struct tre_stream *stream)
 {
     unsigned  len = get_symbol (stream, TRECONTEXT_TOKEN_NAME(),
-	                        TRECONTEXT_PACKAGE_NAME());
+	                        	TRECONTEXT_PACKAGE_NAME());
     char  c;
 
     if (len != 0) {
-	TRECONTEXT_TOKEN() = TRETOKEN_SYMBOL;
-	return;
+		TRECONTEXT_TOKEN() = TRETOKEN_SYMBOL;
+		return;
     }
 
     switch (stream->last_char) {
         case '(':
-	    TRECONTEXT_TOKEN() = TRETOKEN_BRACKET_OPEN;
-	    break;
+	    	TRECONTEXT_TOKEN() = TRETOKEN_BRACKET_OPEN;
+	    	break;
         case ')':
-	    TRECONTEXT_TOKEN() = TRETOKEN_BRACKET_CLOSE;
-	    break;
+	    	TRECONTEXT_TOKEN() = TRETOKEN_BRACKET_CLOSE;
+	    	break;
         case '.':
-	    TRECONTEXT_TOKEN() = TRETOKEN_DOT;
-	    break;
+	    	TRECONTEXT_TOKEN() = TRETOKEN_DOT;
+	    	break;
         case '\'':
-	    TRECONTEXT_TOKEN() = TRETOKEN_QUOTE;
-	    break;
+	    	TRECONTEXT_TOKEN() = TRETOKEN_QUOTE;
+	    	break;
         case '`':
-	    TRECONTEXT_TOKEN() = TRETOKEN_BACKQUOTE;
-	    break;
+	    	TRECONTEXT_TOKEN() = TRETOKEN_BACKQUOTE;
+	    	break;
         case '"':
-	    TRECONTEXT_TOKEN() = TRETOKEN_DBLQUOTE;
-	    break;
+	    	TRECONTEXT_TOKEN() = TRETOKEN_DBLQUOTE;
+	    	break;
         case ',':
-	    c = treio_getc (stream);
-	    if (c == '@')
-		TRECONTEXT_TOKEN() = TRETOKEN_QUASIQUOTE_SPLICE;
-	    else {
-	        TRECONTEXT_TOKEN() = TRETOKEN_QUASIQUOTE;
-		treio_putback (stream);
-	    }
-	    break;
+	    	c = treio_getc (stream);
+	    	if (c == '@')
+				TRECONTEXT_TOKEN() = TRETOKEN_QUASIQUOTE_SPLICE;
+	    	else {
+	        	TRECONTEXT_TOKEN() = TRETOKEN_QUASIQUOTE;
+				treio_putback (stream);
+	    	}
+	    	break;
         case '#':
-	    c = treio_getc (stream);
-	    if (c == '\\') {
-		TRECONTEXT_TOKEN() = TRETOKEN_CHAR;
-		break;
-	    }
-            if (c != '\'')
-		treerror_norecover (treptr_invalid, "syntax error after '#'");
-            TRECONTEXT_TOKEN() = TRETOKEN_FUNCTION;
-	    break;
+	    	c = treio_getc (stream);
+	    	if (c == '\\') {
+				TRECONTEXT_TOKEN() = TRETOKEN_CHAR;
+				break;
+	    	}
+	    	if (c == '\'') {
+            	TRECONTEXT_TOKEN() = TRETOKEN_FUNCTION;
+				break;
+	    	}
+			treerror_norecover (treptr_invalid, "syntax error after '#'");
+	    	break;
         case -1:
-	    TRECONTEXT_TOKEN() = 0;	/* end of file */
-	    break;
+	    	TRECONTEXT_TOKEN() = 0;	/* end of file */
+	    	break;
     }
+}
+
+/*
+ * Read string atom.
+ */
+treptr
+treread_string (struct tre_stream *stream)
+{
+    char      str[TRE_MAX_STRINGLEN + 1];
+    char      *i;
+    char      c;
+    unsigned  l;
+
+    i = str;
+	l = 0;
+	while (1) {
+		c = treio_getc (stream);
+
+       	if (c == '"')
+			break;
+       	if (c == '\\')
+			c = treio_getc (stream);
+	   	*i++ = c;
+	   	if (++l > TRE_MAX_STRINGLEN)
+			return treerror (treptr_invalid,
+                       	 	 "string must be no longer than %d chars",
+		             	 	 TRE_MAX_STRINGLEN);
+	}
+	*i = 0;
+	return trestring_get (str);
 }
 
 /*
@@ -168,45 +203,22 @@ treread_token (struct tre_stream *stream)
 treptr
 treread_atom (struct tre_stream *stream)
 {
-    char      str[TRE_MAX_STRINGLEN + 1];
-    char      *i;
-    char      c;
-    unsigned  l;
-    treptr package;
-
     /* Read string atom. */
-    if (TRECONTEXT_TOKEN() == TRETOKEN_DBLQUOTE) {
-        i = str;
-	l = 0;
-	while (1) {
-	    c = treio_getc (stream);
-
-            if (c == '"')
-		break;
-            if (c == '\\')
-		c = treio_getc (stream);
-	    *i++ = c;
-	    if (++l > TRE_MAX_STRINGLEN)
-		return treerror (treptr_invalid,
-                                  "string must be no longer than %d chars",
-			          TRE_MAX_STRINGLEN);
-	}
-	*i = 0;
-	return trestring_get (str);
-    }
+    if (TRECONTEXT_TOKEN() == TRETOKEN_DBLQUOTE)
+		return treread_string (stream);
 
     if (TRECONTEXT_TOKEN() == TRETOKEN_CHAR)
-        return treatom_number_get ((float) treio_getc (stream),
-                                    TRENUMTYPE_CHAR);
+        return treatom_number_get ((float) treio_getc (stream), TRENUMTYPE_CHAR);
 
     if (TRECONTEXT_TOKEN() < TRETOKEN_SYMBOL)
-	return treerror (treptr_invalid, "syntax error");
+		return treerror (treptr_invalid, "syntax error");
 
-    package = (*TRECONTEXT_PACKAGE_NAME() == -1) ?
-	          treptr_nil :
-	          treatom_get (TRECONTEXT_PACKAGE_NAME(), treptr_nil);
-
-    return treatom_get (TRECONTEXT_TOKEN_NAME(), package);
+    return treatom_get (
+		TRECONTEXT_TOKEN_NAME(),
+    	(*TRECONTEXT_PACKAGE_NAME() == -1)
+	   		? treptr_nil
+	   		: treatom_get (TRECONTEXT_PACKAGE_NAME(), treptr_nil)
+	);
 }
 
 treptr treread_expr (struct tre_stream *stream);
@@ -219,24 +231,24 @@ treread_quote (struct tre_stream *stream)
     treptr  expr;
 
     switch (TRECONTEXT_TOKEN()) {
-	case TRETOKEN_QUOTE:
-	    atom = treatom_quote;
-	    break;
-	case TRETOKEN_BACKQUOTE:
-	    atom = treatom_backquote;
-	    break;
-	case TRETOKEN_QUASIQUOTE:
-	    atom = treatom_quasiquote;
-	    break;
-	case TRETOKEN_QUASIQUOTE_SPLICE:
-	    atom = treatom_quasiquote_splice;
-	    break;
-	case TRETOKEN_FUNCTION:
-	    atom = treatom_function;
-	    break;
-	default:
-	    return treerror (treptr_invalid,
-                              "treread_quote: unsupported token");
+		case TRETOKEN_QUOTE:
+	    	atom = treatom_quote;
+	    	break;
+		case TRETOKEN_BACKQUOTE:
+	    	atom = treatom_backquote;
+	    	break;
+		case TRETOKEN_QUASIQUOTE:
+	    	atom = treatom_quasiquote;
+	    	break;
+		case TRETOKEN_QUASIQUOTE_SPLICE:
+	    	atom = treatom_quasiquote_splice;
+	    	break;
+		case TRETOKEN_FUNCTION:
+	    	atom = treatom_function;
+	    	break;
+		default:
+	    	return treerror (treptr_invalid,
+                             "treread_quote: unsupported token");
     }
 
     expr = treread_expr (stream);
@@ -256,27 +268,27 @@ treread_list (struct tre_stream *stream)
 
     /* Read CAR. */
     switch (TRECONTEXT_TOKEN()) {
-	case TRETOKEN_QUOTE:
-	case TRETOKEN_BACKQUOTE:
-	case TRETOKEN_QUASIQUOTE:
-	case TRETOKEN_QUASIQUOTE_SPLICE:
-	case TRETOKEN_FUNCTION:
-	    /* Expand quote. */
-	    car = treread_quote (stream);
-	    break;
+		case TRETOKEN_QUOTE:
+		case TRETOKEN_BACKQUOTE:
+		case TRETOKEN_QUASIQUOTE:
+		case TRETOKEN_QUASIQUOTE_SPLICE:
+		case TRETOKEN_FUNCTION:
+	    	/* Expand quote. */
+	    	car = treread_quote (stream);
+	    	break;
 
-	case TRETOKEN_BRACKET_OPEN:
-	    /* Step into new expression. */
+		case TRETOKEN_BRACKET_OPEN:
+	    	/* Step into new expression. */
             treread_token (stream);
-	    car = treread_list (stream);
-	    break;
+	    	car = treread_list (stream);
+	    	break;
 
-	case TRETOKEN_BRACKET_CLOSE:
-	    return treptr_nil;
+		case TRETOKEN_BRACKET_CLOSE:
+	    	return treptr_nil;
 
-	default:
-	    /* Read single atom. */
-	    car = treread_atom (stream);
+		default:
+	    	/* Read single atom. */
+	    	car = treread_atom (stream);
     }
 
     tregc_push (car);
@@ -284,19 +296,21 @@ treread_list (struct tre_stream *stream)
     /* Read CDR. */
     treread_token (stream);
     switch (TRECONTEXT_TOKEN()) {
-	case TRETOKEN_DOT:
-	    /* Read atom or expression. */
+		case TRETOKEN_DOT:
+	    	/* Read atom or expression. */
             cdr = treread_expr (stream);
             treread_token (stream);
             if (TRECONTEXT_TOKEN() != TRETOKEN_BRACKET_CLOSE)
-		goto error;
-	    break;
-	case TRETOKEN_BRACKET_CLOSE:
-	    /* End of expression reached. */
-	    cdr = treptr_nil;
-	    break;
-	default:
-	    /* Continue reading current expression. */
+				goto error;
+	    	break;
+
+		case TRETOKEN_BRACKET_CLOSE:
+	    	/* End of expression reached. */
+	    	cdr = treptr_nil;
+	    	break;
+
+		default:
+	    	/* Continue reading current expression. */
             cdr = treread_list (stream);
     }
 
@@ -320,13 +334,12 @@ treread_expr (struct tre_stream *stream)
         return treptr_invalid;
 
     /* Expand quote. */
-    if (TRECONTEXT_TOKEN() >= TRETOKEN_QUOTE
-     && TRECONTEXT_TOKEN() <= TRETOKEN_FUNCTION)
-	return treread_quote (stream);
+    if (TRETOKEN_IS_QUOTE(TRECONTEXT_TOKEN()))
+		return treread_quote (stream);
 
     /* Read atom. */
     if (TRECONTEXT_TOKEN() != TRETOKEN_BRACKET_OPEN)
-	return treread_atom (stream);
+		return treread_atom (stream);
 
     /* Test on empty list. */
     treread_token (stream);	/* Skip opening bracket. */
@@ -345,7 +358,7 @@ treread (struct tre_stream *stream)
     /* Test on empty file. */
     treio_skip_spaces (stream);
     if (treio_eof (stream))
-	return treptr_invalid;
+		return treptr_invalid;
 
     return treread_expr (stream);
 }

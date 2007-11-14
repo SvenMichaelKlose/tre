@@ -2,7 +2,7 @@
  * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
- * Printing TRE expressions.
+ * Printing expressions.
  */
 
 /*
@@ -78,7 +78,7 @@ treprint_array (treptr array)
     DOTIMES(i, size) {
 	treprint_no_nl = TRUE;
         if (i)
-	    printf (" ");
+	    	printf (" ");
         treprint_r (elts[i]);
     }
 
@@ -95,9 +95,9 @@ treprint_chk_atom_mark (treptr atom)
         TREPRINT_MARK_ATOM(atom);
         if (mark) {
             switch (TREPTR_TYPE(atom)) {
-	        case ATOM_FUNCTION:
-	        case ATOM_MACRO:
-	        case ATOM_USERSPECIAL:
+	        	case ATOM_FUNCTION:
+	        	case ATOM_MACRO:
+	        	case ATOM_USERSPECIAL:
                 case ATOM_ARRAY:
                     return TRUE;
             }
@@ -120,67 +120,67 @@ treprint_atom (treptr atom, unsigned indent)
     TREPRINT_HLOPEN(atom);
 
     switch (TREPTR_TYPE(atom)) {
-	case ATOM_VARIABLE:
-	case ATOM_BUILTIN:
-	case ATOM_SPECIAL:
-	    if (TREATOM_PACKAGE(atom) != TRECONTEXT_PACKAGE())
+		case ATOM_VARIABLE:
+		case ATOM_BUILTIN:
+		case ATOM_SPECIAL:
+	    	if (TREATOM_PACKAGE(atom) != TRECONTEXT_PACKAGE())
                 printf ("%s:", TREATOM_NAME(TREATOM_PACKAGE(atom)));
-            printf ("%s", TREATOM_NAME(atom));
-	    break;
+            	printf ("%s", TREATOM_NAME(atom));
+	    	break;
 
-	case ATOM_NUMBER:
-	    if (TRENUMBER_TYPE(atom) == TRENUMTYPE_CHAR) {
-		printf ("#\\");
-	        putchar ((int) TRENUMBER_VAL(atom));
-	    } else
+		case ATOM_NUMBER:
+	    	if (TRENUMBER_TYPE(atom) == TRENUMTYPE_CHAR) {
+				printf ("#\\");
+	        	putchar ((int) TRENUMBER_VAL(atom));
+	    	} else
                 printf ("%-g", TRENUMBER_VAL(atom));
-	    break;
+	    	break;
 
-	case ATOM_STRING:
+		case ATOM_STRING:
             printf ("\"%s\"", (char *) TREATOM_STRINGP(atom));
-	    break;
+	    	break;
 
-	case ATOM_FUNCTION:
+		case ATOM_FUNCTION:
             name = TREATOM_NAME(atom);
             if (name == NULL) {
-	        printf ("#<FUNCTION>(");
-	        treprint_indent (TREATOM_VALUE(atom), indent, TRUE, "");
+	        	printf ("#<FUNCTION>(");
+	        	treprint_indent (TREATOM_VALUE(atom), indent, TRUE, "");
             } else
                 printf (name);
 	    break;
 
-	case ATOM_MACRO:
+		case ATOM_MACRO:
             name = TREATOM_NAME(atom);
             if (name == NULL) {
-	        printf ("#<user-defined macro>");
-	        treprint_r (TREATOM_VALUE(atom));
+	        	printf ("#<user-defined macro>");
+	        	treprint_r (TREATOM_VALUE(atom));
             } else
                 printf (name);
 	    break;
 
-	case ATOM_USERSPECIAL:
+		case ATOM_USERSPECIAL:
             name = TREATOM_NAME(atom);
             if (name == NULL) {
-	        printf ("#<user-defined special form>");
-	        treprint_r (TREATOM_VALUE(atom));
+	        	printf ("#<user-defined special form>");
+	        	treprint_r (TREATOM_VALUE(atom));
             } else
                 printf (name);
 	    break;
 
-	case ATOM_EXPR:
-	    treprint_r (atom);
-	    break;
+		case ATOM_EXPR:
+	    	treprint_r (atom);
+	    	break;
 
         case ATOM_ARRAY:
-	    treprint_array (atom);
-	    break;
+	    	treprint_array (atom);
+	    	break;
 
         case ATOM_PACKAGE:
             printf ("(PACKAGE-ATOM)");
-	    break;
+	    	break;
 
-	default:
-	    treerror_internal (treptr_invalid,
+		default:
+	    	treerror_internal (treptr_invalid,
                                 "#<unknown atom %d (type %d index %d)>",
                                 atom, TREPTR_TYPE(atom), TREPTR_INDEX(atom));
     }
@@ -196,47 +196,47 @@ treprint_indent (treptr p, unsigned indent, bool nobracket, char *prepend)
     unsigned  i;
 
     if (TREPTR_IS_EXPR(p) == FALSE) {
-	treprint_atom (p, indent);
-	return;
+		treprint_atom (p, indent);
+		return;
     }
 
     if (TREPRINT_GET_MARK_CONS(p)) {
         printf ("*");
-	return;
+		return;
     } else
         TREPRINT_MARK_CONS(p);
 
     if (_CAR(p) == p) {
-	printf ("cons self-referenced in car");
+		printf ("cons self-referenced in car");
         _CAR(p) = treptr_nil;
     }
     if (_CDR(p) == p) {
-	printf ("cons self-referenced in car");
+		printf ("cons self-referenced in car");
         _CDR(p) = treptr_nil;
     }
 
     car = _CAR(p);
     cdr = _CDR(p);
 
-#if 0
     if (cdr != treptr_nil) { /* Print name of atomic quote. */
         if (car == treatom_quote) {
-	    treprint_indent (cdr, indent, TRUE, "'");
-	    return;
+	    	treprint_indent (cdr, indent, TRUE, "'");
+	    	return;
         }
         if (car == treatom_backquote) {
-	    treprint_indent (cdr, indent, TRUE, "`");
-	    return;
+	    	treprint_indent (cdr, indent, TRUE, "`");
+	    	return;
         }
         if (car == treatom_quasiquote) {
-	    treprint_indent (cdr, indent, TRUE, ",");
-	    return;
+	    	treprint_indent (cdr, indent, TRUE, ",");
+	    	return;
         }
         if (car == treatom_quasiquote_splice) {
-	    treprint_indent (cdr, indent, TRUE, ",@");
-	    return;
+	    	treprint_indent (cdr, indent, TRUE, ",@");
+	    	return;
         }
     }
+#if 0
 #endif
 
     /* Indent line. */
@@ -248,7 +248,7 @@ treprint_indent (treptr p, unsigned indent, bool nobracket, char *prepend)
 
     if (!nobracket) {
         printf ("%s(", prepend);
-	prepend = "";
+		prepend = "";
     }
 
     while (p != treptr_nil) {
@@ -259,23 +259,23 @@ treprint_indent (treptr p, unsigned indent, bool nobracket, char *prepend)
         TREPRINT_HLOPEN(car);
 
         if (postatom)
-	    printf (" ");
+	    	printf (" ");
 
-	/* Check if we already passed car. */
+		/* Check if we already passed car. */
         if (TREPTR_IS_EXPR(car) && TREPRINT_GET_MARK_CONS(car)) {
             printf ("*circular*");
             return;
-	}
+		}
 
         /* Print dotted pair. */
         if (cdr != treptr_nil && TREPTR_IS_EXPR(cdr) == FALSE) {
-	    treprint_atom (car, indent);
+	    	treprint_atom (car, indent);
     	    printf (" . ");
-	    treprint_atom (cdr, indent);
+	    	treprint_atom (cdr, indent);
             break;
         } else if (TREPTR_IS_EXPR(car)) {
-	    treprint_indent (car, indent + postatom, FALSE, prepend);
-	} else {
+	    	treprint_indent (car, indent + postatom, FALSE, prepend);
+		} else {
             printf (prepend);
             treprint_atom (car, indent + postatom);
         }
@@ -286,11 +286,11 @@ treprint_indent (treptr p, unsigned indent, bool nobracket, char *prepend)
         TREPRINT_HLCLOSE(car);
         TREPRINT_HLCLOSE(p);
         p = _CDR(p);
-	/* Check if we already passed cdr. */
+		/* Check if we already passed cdr. */
         if (TREPTR_IS_EXPR(p) && TREPRINT_GET_MARK_CONS(p)) {
             printf ("*circular");
-	    break;
-	}
+	    	break;
+		}
     }
 
     if (!nobracket)

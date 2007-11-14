@@ -104,6 +104,7 @@ extern treptr treptr_universe;
 extern treptr treatom_quote;
 extern treptr treatom_lambda;
 extern treptr treatom_backquote;
+extern treptr treatom_quasiquote;
 extern treptr treatom_quasiquote_splice;
 extern treptr treatom_function;
 extern treptr treatom_values;
