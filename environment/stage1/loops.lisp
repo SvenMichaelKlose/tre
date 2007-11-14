@@ -22,11 +22,11 @@
 (defmacro do (binds (test &rest result) &rest body)
   (let ((tag (gensym)))
     `(block nil
-      (let (,@(mapcar #'(lambda (b) `(,(first b) ,(second b))) binds))
+      (let (,@(mapcar #'((b) `(,(first b) ,(second b))) binds))
         (tagbody
           ,tag
           (if ,test
             (return (progn ,@result)))
           ,@body
-          ,@(mapcar #'(lambda (b) (and (third b) `(setq ,(first b) ,(third b)))) binds)
+          ,@(mapcar #'((b) (and (third b) `(setq ,(first b) ,(third b)))) binds)
           (go ,tag))))))

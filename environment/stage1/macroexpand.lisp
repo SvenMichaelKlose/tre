@@ -18,7 +18,7 @@
 ;;;; This algorithm is incomplete - it doesn't handle
 ;;;; nested backquotes.
 (%set-atom-fun %macroexpand-backquote
-  #'(lambda (%gsme)
+  #'((%gsme)
     (cond
       ((not %gsme))
       ((not (consp %gsme))
@@ -40,7 +40,7 @@
 	        (%macroexpand-backquote (cdr %gsme)))))))
 
 (%set-atom-fun %macroexpand-list
-  #'(lambda (%gsme)
+  #'((%gsme)
     (cond
       ((not %gsme))
       ((not (consp %gsme))
@@ -49,21 +49,21 @@
                 (%macroexpand-list (cdr %gsme)))))))
 
 (%set-atom-fun %macroexpand-call
-  #'(lambda (%gsme)
+  #'((%gsme)
     (cond
       ((consp (car %gsme))
           (cons (%macroexpand (car %gsme))
                 (cdr %gsme)))
       ((apply *macrop-diversion* (list (car %gsme)))
           (setq *current-macro* (car %gsme))
-          (#'(lambda (%gsmt)
+          (#'((%gsmt)
                (setq *current-macro* nil)
                %gsmt)
             (apply *macrocall-diversion* (list (car %gsme) (cdr %gsme)))))
       (t  %gsme))))
 
 (%set-atom-fun %macroexpand
-  #'(lambda (%gsme)
+  #'((%gsme)
     (cond
       ((not %gsme))
       ((not (consp %gsme))
@@ -77,15 +77,15 @@
                                    (%macroexpand-list (cdr %gsme))))))))
 
 (%set-atom-fun %%macrop
-  #'(lambda (%gsme)
+  #'((%gsme)
     (macrop (symbol-function %gsme))))
 
 (%set-atom-fun %%macrocall
-  #'(lambda (%gsme %gsmp)
+  #'((%gsme %gsmp)
     (%macrocall (symbol-function %gsme) %gsmp)))
 
 (%set-atom-fun *macroexpand-hook*
-  #'(lambda (%gsme)
+  #'((%gsme)
     (setq *macrop-diversion* #'%%macrop
           *macrocall-diversion* #'%%macrocall
           *macroexpand-backquote-diversion* #'%macroexpand-backquote

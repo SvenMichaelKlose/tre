@@ -36,16 +36,16 @@
       (progn
         ; Check on keyword arguments.
         (%simple-mapcar
-          #'(lambda (expr)
+          #'((expr)
               (cond
                 ((%ltest #'%arg-keyword-p expr)
                   (error "illegal keyword argument"))))
           alst)
 
         ; Create LAMBDA expression.
-        `(#'(lambda ,(%simple-mapcar #'car alst)
-	     (progn ,@body))
-          ,@(%simple-mapcar #'cadr alst))))))
+        `(#'(,(%simple-mapcar #'car alst)
+	            (progn ,@body))
+          	  ,@(%simple-mapcar #'cadr alst))))))
 
 ;; Create new local variables.
 ;;
@@ -60,11 +60,11 @@
     (t
       (cond
         ((not (cdr alst))
-          `(#'(lambda (,(caar alst))
+          `(#'((,(caar alst))
 		(progn ,@body))
             ,@(cdar alst)))
         (t
-          `(#'(lambda (,(caar alst))
+          `(#'((,(caar alst))
 		(let* ,(cdr alst)
 		  (progn ,@body)))
 	    ,@(cdar alst)))))))

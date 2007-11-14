@@ -16,7 +16,7 @@
 	 (s (or start 0))
 	 (tst (or test
 		  (if test-not
-		    #'(lambda (x y)
+		    #'((x y)
 		        (not (funcall test-not x y))))
 		  #'eql)))
     ; Make sure the start and end indices are sane.

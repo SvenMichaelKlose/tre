@@ -15,11 +15,11 @@
 ;;; Helper functions (helping us to stay sane).
 
 (%set-atom-fun not
-  #'(lambda (x)
+  #'((x)
     (eq x nil)))
 
 (%set-atom-fun copy-tree
-  #'(lambda (x)
+  #'((x)
     (cond
       (x (cond
            ((atom x)
@@ -28,7 +28,7 @@
                      (copy-tree (cdr x)))))))))
 
 (%set-atom-fun last
-  #'(lambda (x)
+  #'((x)
     (cond
       (x  (cond
             ((cdr x)
@@ -36,7 +36,7 @@
             (t  x))))))
 
 (%set-atom-fun %nconc
-  #'(lambda (a b)
+  #'((a b)
     (rplacd (last a) b)
     a))
 
@@ -44,14 +44,14 @@
 
 ;; BACKQUOTE-expand argument list with decremented sublevel.
 (%set-atom-fun %quasiquote-subexpand
-  #'(lambda (%gstype %gsbq %gsbqsub)
+  #'((%gstype %gsbq %gsbqsub)
       (cons (cons %gstype
                   (%backquote (cdr (car %gsbq)) (- %gsbqsub 1)))
             (%backquote-1 (cdr %gsbq) %gsbqsub))))
 
 ;; Expand QUASIQUOTE.
 (%set-atom-fun %backquote-quasiquote
-  #'(lambda (%gsbq %gsbqsub)
+  #'((%gsbq %gsbqsub)
     (cond
       ; No sublevel. Insert evaluated QUASIQUOTE value.
       ((= %gsbqsub 0)
@@ -62,11 +62,11 @@
 
 ;; Expand QUASIQUOTE-SPLICE.
 (%set-atom-fun %backquote-quasiquote-splice
-  #'(lambda (%gsbq %gsbqsub)
+  #'((%gsbq %gsbqsub)
     (cond
       ; No sublevel. Splice evaluated QUASIQUOTE-SPLICE expression.
       ((= %gsbqsub 0)
-          (#'(lambda (%gstmp)
+          (#'((%gstmp)
                (cond
                  ; Ignore NIL evaluation.
                  ((not %gstmp)
@@ -81,7 +81,7 @@
 
 ;; Expand BACKQUOTE arguments.
 (%set-atom-fun %backquote-1
-  #'(lambda (%gsbq %gsbqsub)
+  #'((%gsbq %gsbqsub)
     (cond
       ; Return atom as is.
       ((atom %gsbq)
@@ -106,7 +106,7 @@
 
 ;; Expand BACKQUOTE, check for nested BACKQUOTE (and increment sublevel) first.
 (%set-atom-fun %backquote
-  #'(lambda (%gsbq %gsbqsub)
+  #'((%gsbq %gsbqsub)
     (cond
       ; Return atom as is.
       ((atom %gsbq)

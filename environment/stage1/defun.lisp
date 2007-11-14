@@ -36,7 +36,7 @@
     `(tagbody
        (setq *universe* (cons ',name *universe*))
        (%set-atom-fun ,name
-         #'(lambda ,(%defun-args args)
+         #'(,(%defun-args args)
              (block ,name
                ,@(%add-documentation name body))))
        (if *compiler-hook*

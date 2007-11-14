@@ -14,9 +14,9 @@
   "Open a file and return a stream object."
   (awhen (%fopen path (%fopen-direction direction))
     (make-stream :handle !
-		 :fun-in #'(lambda (str) (%read-char (stream-handle str)))
-		 :fun-out #'(lambda (c str) (%princ c (stream-handle str)))
-		 :fun-eof #'(lambda (str) (%feof (stream-handle str))))))
+		 :fun-in #'((str) (%read-char (stream-handle str)))
+		 :fun-out #'((c str) (%princ c (stream-handle str)))
+		 :fun-eof #'((str) (%feof (stream-handle str))))))
 
 (defmacro with-open-file (var file &rest body)
   `(let ((,var ,file))

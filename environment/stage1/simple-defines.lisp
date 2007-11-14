@@ -11,7 +11,7 @@
     `(block nil
        (setq *universe* (cons ',name *universe*))
        (%set-atom-fun ,name
-         #'(lambda ,args ,@body)))))
+         #'(,args ,@body)))))
 
 (%set-atom-fun %defspecial
   (macro (name args &rest body)

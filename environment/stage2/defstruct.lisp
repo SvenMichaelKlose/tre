@@ -69,11 +69,11 @@
 (defun %struct-sort-fields (fields-and-options)
   "Split list into fields and options."
   (with-queue (f o)
-    (mapcar #'(lambda (x)
-	        (if (and (consp x) (%struct-option-keyword (car x)))
-	          (enqueue o x)
-	          (enqueue f x)))
-	    fields-and-options)
+    (mapcar #'((x)
+	             (if (and (consp x) (%struct-option-keyword (car x)))
+	                 (enqueue o x)
+	                 (enqueue f x)))
+	        fields-and-options)
     (values (queue-list f) (queue-list o))))
 
 (defvar *struct-defs*)

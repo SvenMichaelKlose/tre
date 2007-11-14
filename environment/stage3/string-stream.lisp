@@ -9,7 +9,7 @@
    See also GET-OUTPUT-STREAM-STRING."
   (make-stream
     :user-detail  (make-queue)
-    :fun-out      #'(lambda (c str)
+    :fun-out      #'((c str)
                       (enqueue (stream-user-detail str) c))))
 
 (defun get-output-stream-string (str)

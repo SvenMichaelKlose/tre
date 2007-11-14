@@ -11,7 +11,7 @@
 	 (body (cddr fn)))
     `(let ((,name))
        (%set-atom-fun ,name
-	 #'(lambda ,args
+	 #'(,args
 	     (block ,name
 	       ,@body)))
        ,@(if (cdr fdefs)

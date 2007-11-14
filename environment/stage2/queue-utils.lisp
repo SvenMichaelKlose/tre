@@ -5,8 +5,10 @@
 ;;;; Queue utilities
 
 (defmacro with-queue (q &rest body)
-  `(let (,@(mapcar #'(lambda (x) `(,x (make-queue))) 
-		   (if (consp q) q (list q))))
+  `(let (,@(mapcar #'((x) `(,x (make-queue))) 
+		           (if (consp q)
+					   q
+					   (list q))))
      ,@body))
 
 (defmacro dolist-queue (q dlargs &rest body)

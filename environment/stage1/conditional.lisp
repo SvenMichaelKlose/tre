@@ -20,8 +20,8 @@
     `(let ((,g ,val))
       (cond 
         ,@(%simple-mapcar
-          #'(lambda ((test expr))
-            (if (eq t test)
+          #'(((test expr))
+              (if (eq t test)
 	      `(t ,expr)
               `((equal ,g ,test) ,expr)))
           tests)))))

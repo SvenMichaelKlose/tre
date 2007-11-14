@@ -98,7 +98,7 @@
   (let* ((a (copy-tree args))
          (v (%argument-expand-r a (copy-tree vals))))
     (flatten-trees-sync! a v)
-    (values (mapcar #'(lambda (x)
+    (values (mapcar #'((x)
                         (make-symbol (symbol-name x))) a)
             v)))
 

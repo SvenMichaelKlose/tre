@@ -5,9 +5,9 @@
 ;;;; Standard streams
 
 (defun make-standard-stream ()
-  (make-stream :fun-in #'(lambda (str) (%read-char nil))
-	       :fun-out #'(lambda (c str) (%princ c nil))
-	       :fun-eof #'(lambda (str) nil)))
+  (make-stream :fun-in #'((str) (%read-char nil))
+	       :fun-out #'((c str) (%princ c nil))
+	       :fun-eof #'((str) nil)))
 
 (defvar *standard-output* (make-standard-stream))
 (defvar *standard-input* (make-standard-stream))

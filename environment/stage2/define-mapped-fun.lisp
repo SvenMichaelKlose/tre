@@ -7,7 +7,7 @@
 (defmacro define-mapped-fun (mapfun name &rest fun)
   (with-gensym g
     `(defun ,name (,g)
-       (,mapfun #'(lambda ,@fun) ,g))))
+       (,mapfun #'(,@fun) ,g))))
 
 (defmacro define-mapcar-fun (name &rest fun)
   `(define-mapped-fun mapcar ,name ,@fun))
