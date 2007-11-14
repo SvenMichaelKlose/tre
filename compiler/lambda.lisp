@@ -28,9 +28,9 @@
   (and (consp expr)
        (eq (car expr) 'function)
        (consp (cdr expr))
-       (listp (cadr expr))
-       (or (consp (caadr expr))
-           (eq (caadr expr) 'lambda))))
+       (consp (cadr expr))
+	   (with (l (past-lambda (cadr expr)))
+		 (and l (consp l) (listp (car l))))))
 
 (defun is-lambda-call? (expr)
   (and (consp expr)
