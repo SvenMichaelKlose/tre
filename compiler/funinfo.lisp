@@ -2,33 +2,57 @@
 ;;;; lisp compiler
 ;;;; Copyright (C) 2006-2007 Sven Klose <pixel@copei.de>
 
-;;; Function information
+(defstruct argument-place
+  ; Object pointer?
+  (is-object nil)
 
+  ; Stack position.
+  (stack-position nil)
+
+  ; Rest list argument to which to append this argument.
+  (restlist nil))
+
+;;; Function information.
+;;;
+;;; This structure contains all information required to generate a native function.
 (defstruct funinfo
-  ; Lists of stack variables. The rest contains the parent
-  ; parent environments.
+  ; Lists of stack variables. The rest contains the parent environments.
   (env        (cons nil nil))
+
+  ; List of arguments.
   (args       nil)
+
+  ; Argument expansion description.
+  ;
+  ; Tells, where arguments must be placed on the stack or if they must be
+  ; placed on a rest list. This is used to insert argument passing instructions.
+  (argument-places nil)
+
+  ; Total size of stack with arguments and local variables.
   (stack-size nil)
+
+  ; List of variables defined outside the function.
   (free-vars  (make-queue))
+
+  ; Entry code block.
   first-cblock)
 
 (defun funinfo-add-free-var (fi var)
+  "Add free variable."
   (enqueue (funinfo-free-vars fi) var)
   nil)
 
 (defun funinfo-env-this (fi)
+  "Get current environment description."
   (car (funinfo-env fi)))
 
-(defun funinfo-add-op (fi op)
-  (enqueue (funinfo-ops fi) op)
-  nil)
-
 (defun funinfo-push-env (fi forms)
+  "Open new environment."
   (push forms (funinfo-env fi))
   nil)
  
 (defun funinfo-pop-env (fi)
+  "Close environment."
   (pop (funinfo-env fi))
   nil)
 
@@ -40,12 +64,15 @@
   nil)
 
 (defun funinfo-free-var-pos (fi var)
+  "Get index of free variable in environment vector."
   (position var (queue-list (funinfo-free-vars fi))))
 
 (defun funinfo-env-pos (fi var)
+  "Get index of variable on the stack."
   (position var (funinfo-env-this fi)))
 
 (defmacro with-funinfo-env-temporary (fi args &rest body)
+  "Execute body with new environment, containing 'args'."
   (with-gensym old-env
     `(let ((,old-env (funinfo-env ,fi)))
        (funinfo-env-add-args ,fi ,args)

@@ -1,6 +1,11 @@
-;;;; nix operating system project
-;;;; lisp compiler
-;;;; Copyright (c) 2006-2007 Sven Klose <pixel@copei.de>
+;;;;; nix operating system project
+;;;;; lisp compiler
+;;;;; Copyright (c) 2006-2007 Sven Klose <pixel@copei.de>
+;;;;;
+;;;;; Expression expansion.
+;;;;;
+;;;;; Expand nested expressions into a sequence of instructions assigning
+;;;;; unique variables. VM-SCOPEs are merged in this process.
 
 (defvar *expexsym-counter* 0)
 
@@ -10,7 +15,10 @@
   (make-symbol (string-concat "~E" (string *expexsym-counter*))))
 
 (defun expex-vmscope (q expr)
+  "Merge in VMSCOPE."
   (with (e (expex-expand-body (cdr expr)))
+	; If the scope contains more than one expression, place return
+	; value in new variable and replace scope by the variable.
     (aif (butlast e)
       (with (s (expexsym))
         (enqueue-many q (nconc ! `((,s ,(car (last e))))))
@@ -24,20 +32,19 @@
     s))
 
 (defun expex-expand (expr q)
-  "Expand expression, except virtual machine expressions."
+  "Expand argument."
   (if (atom expr)
     expr
     (if (vm-scope? expr)
-        (expex-vmscope q expr)
+        (expex-vmscope q expr) ; Make VMSCOPEs disappear.
         (with-cons a d expr
           (if (in? a '%funref 'vm-go 'vm-go-nil '%stack 'quote)
               expr
               (expex-make-assignment (cons a (expex-expand-args d q))))))))
 
 (defun expex-expand-args (args q)
-  "Make assignments for a list of expressions."
-  (mapcar #'(lambda (a)
-              (expex-expand a q))
+  "Move arguments to new assignments."
+  (mapcar #'((a) (expex-expand a q))
           args))
 
 (defun expex-expand-toplevel (expr q)

@@ -1,10 +1,10 @@
 ;;;; nix operating system project
 ;;;; lisp compiler
-;;;; Copyright (c) 2005-2006 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
 ;;;;
-;;;; Stack arguments
+;;;; Stack arguments.
 ;;;;
-;;;; Translates argument definitions for compiled functions.
+;;;; Translates argument definitions into stack layouts.
 
 ;; Expand &REST keyword.
 (defun %stackarg-expand-rest (args)
@@ -39,8 +39,8 @@
 ;; Expand &KEY keyword.
 (defun %stackarg-expand-key (args)
   (%remove-keyword! args)
-  (let* ((forms (%stackarg-keyword-init-forms args))
-         (inits (pairlis forms (%stackarg-keyword-inits args))))
+  (with (forms (%stackarg-keyword-init-forms args)
+         inits (pairlis forms (%stackarg-keyword-inits args)))
     (rplac-cons args (carlist inits))
     (cdrlist inits)))
 
@@ -52,14 +52,14 @@
     ('&key       (%stackarg-expand-key args))))
 
 (defun %stackarg-expand-sublevel (args)
-  (let ((a (car args)))
+  (with (a (car args))
     (cons (%stackarg-expansion-r a)
           (%stackarg-expansion-r (cdr args)))))
 
 ;; Expand argument keywords.
 (defun %stackarg-expansion-r (args)
   (if args
-    (let ((arg (car args)))
+    (with (arg (car args))
       (if (listp arg)
         (%stackarg-expand-sublevel args)
         (if (%arg-keyword-p arg)
@@ -68,8 +68,8 @@
 
 (defun %stackarg-expansion! (args)
   "Map expand argument form into flat list."
-  (let* ((a (copy-tree args))
-         (v (%stackarg-expansion-r a)))
+  (with (a (copy-tree args)
+         v (%stackarg-expansion-r a))
     (flatten-trees-sync! a v)
     (values a v)))
 

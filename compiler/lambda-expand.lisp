@@ -1,21 +1,26 @@
-;;;; nix operating system project
-;;;; lisp compiler
-;;;; Copyright (C) 2005-2007 Sven Klose <pixel@copei.de>
-;;;;
-;;;; This is the LAMBDA expansion pass of the LISP compiler. It embeds
-;;;; or exports functions from functions and allocates stack slots for
-;;;; arguments and free-variable bindings, to enable the following
-;;;; expression expansion.
-;;;;
-;;;; Expressions of the following form are inlined:
-;;;;
-;;;;   ((#'lambda (x) x) y)
-;;;;
-;;;; Functions with free variables are exported:
-;;;;
-;;;;   #'(lambda (x) y)
+;;;;; nix operating system project
+;;;;; lisp compiler
+;;;;; Copyright (C) 2005-2007 Sven Klose <pixel@copei.de>
+;;;;;
+;;;;; LAMBDA expansion.
+;;;;;
+;;;;; This pass embeds or exports functions from functions and allocates
+;;;;; stack slots for arguments and free-variable bindings, to enable the
+;;;;; following expression expansion.
+;;;;;
+;;;;; Expressions of the following form are inlined:
+;;;;;
+;;;;;   ((#'lambda (x) x) y)
+;;;;;
+;;;;; Functions with free variables are exported:
+;;;;;
+;;;;;   #'(lambda (x) y)
+;;;;;
+;;;;; Executed unnamed toplevel functions don't a stack but a resident memory block is allocated.
 
 ;;; Stack setup
+;;;
+;;; Stack operations should be created in the ssa pass.
 
 (defun make-stackop (var fi)
   "Make stack operation. If the variable is not in the current environment,
@@ -27,18 +32,6 @@
                              (funinfo-add-free-var fi var)
                              (funinfo-free-var-pos fi var))))))
 
-(defun make-stack-initialisers (args vals)
-  "Make stack variable initialisers."
-  `(vm-scope ,@(mapcar #'(lambda (a v)
-                           `(%setq ,a ,v))
-	               args vals)))
-
-(defun make-stack-body (args vals body)
-  "Make body with stack variaable initialisers."
-  `(vm-scope
-     ,(make-stack-initialisers args vals)
-     ,@body))
-
 (defun is-stackvar? (var fi)
   "Check if a variable is on the stack."
   (and (atom var)
@@ -46,90 +39,78 @@
       (when (and sl (find var sl))
         (return t)))))
 
-(defun vars-to-stackops! (body fi)
+(defun vars-to-stackops (body fi)
   "Replaces variables by stack operations. Returns modified body.
    Free variables are added to free-vars of the funinfo."
   (tree-walk body
     :ascending
-      #'(lambda (e)
-          (with (x (car e))
-            (when (is-stackvar? x fi)
-;	      (funinfo-add-op fi e)
-              (setf (car e) (make-stackop (car e) fi))))))
-  body)
+      #'((e)
+           (if (is-stackvar? e fi)
+               (make-stackop e fi)
+			   e))))
 
 ;;; LAMBDA inlining
 
-(defun lambda-embed! (lambda-call fi)
+(defun make-inline-body (args vals body)
+  "Make body with stack variable initialisers."
+  `(vm-scope
+	 ,@(mapcar #'((a v)
+				    `(%setq ,a ,v))
+			   args vals)
+     ,@body))
+
+(defun lambda-call-embed (lambda-call fi)
   "Replace local LAMBDA expression by its body using stack variables."
   (with-lambda-call (args vals body lambda-call)
-    (verbose "(stack")
-    (print-symbols args)
-    (verbose ") ")
-    (multiple-value-bind (a v) (argument-expand args vals)
-      (vars-to-stackops! vals fi)
-      (with-funinfo-env-temporary fi args
-        (lambda-embed-or-export! body fi)
-        (rplac-cons lambda-call (make-stack-body a v body))))))
+    (with-funinfo-env-temporary fi args
+      (with ((a v) (argument-expand args vals))
+        (make-inline-body
+			a
+      		(vars-to-stackops v fi)
+			(lambda-embed-or-export body fi))))))
 
 ;;; LAMBDA export
 
-(defun replace-expr-by-funref (function-expr name fi exp-fi)
-  (with (fv (queue-list (funinfo-free-vars exp-fi)))
-    (setf (car function-expr)
-          (if fv
-            (with-gensym g
-              (funinfo-env-add-args fi (list g))
-              (with (s (make-stackop g fi))
-                `(vm-scope
-                   (%setq ,s (make-array ,(length fv)))
-                   ,@(mapcar #'(lambda (v)
-                                 `(%set-vec ,s ,(position v fv)
-                                            ,(make-stackop v fi)))
-                             fv)
-                   (%funref ,name ,g))))
-            `(%funref ,name)))))
+(defun make-varblock-inits (fi fv)
+  (mapcar #'((v) `(%set-vec ,s ,(position v fv) ,(make-stackop v fi))) fv))
 
-(defun lambda-export! (n fi)
+(defun make-call-to-exported (f fi)
+  (with ((body exp-fi) (atomic-expand-lambda f (function-body f) (funinfo-env-this fi))
+         fv            (queue-list (funinfo-free-vars exp-fi)))
+    (if fv
+        (with-gensym g
+		  ; XXX move past SSA.
+          (funinfo-env-add-args fi (list g))
+          (with (s (make-stackop g fi))
+            `(vm-scope
+               (%setq ,s (make-array ,(length fv)))
+			   ,@(make-varblock-inits fi fv)
+               (%funref ,name ,s))))
+		`(%funref ,name nil))))
+
+(defun lambda-export (n fi)
   "Export and expand LAMBDA expression out of a function."
   (with-gensym g
-    (verbose "(export ~A) " (symbol-name g))
-    (eval `(%set-atom-fun ,g ,(car n)))
-    (with (f (symbol-function g))
-      (multiple-value-bind (body exp-fi)
-        (atom-expand-lambda f (function-body f) (funinfo-env-this fi))
-        (replace-expr-by-funref n g fi exp-fi)))))
+    (eval `(%set-atom-fun ,g ,n)) ; Create new function.
+    (make-call-to-exported (symbol-function g) fi)))
 
 ;;; Toplevel
 
-(defun lambda-embed-or-export! (body fi)
+(defun lambda-embed-or-export (body fi)
   "Merge LAMBDA expressions and replace variables by stack operations."
-  (tree-walk body
-    :ascending
-      #'(lambda (x)
-          (if (is-lambda-call? (car x))
-              (lambda-embed! (car x) fi)
-              (when (is-lambda? (car x))
-                (lambda-export! x fi))))
+  (vars-to-stackops
+      (tree-walk body
+      	  :ascending
+        	  #'((x)
+             	  (if (is-lambda-call? x)
+                 	  (lambda-call-embed x fi)
+                 	  (if (is-lambda? x)
+                   	  	  (lambda-export x fi)
+				   	  	  x))))
+	  fi))
 
-    :dont-ascend-if
-      #'(lambda (x)
-          (or (is-lambda? (car x))
-              (is-lambda-call? (car x)))))
-  (vars-to-stackops! body fi))
-
-(defun lambda-expand! (fun body &optional (parent-env nil))
+(defun lambda-expand (fun body &optional (parent-env nil))
   "Convert native function to stack function."
-  (with (args  (copy-tree (function-arguments fun))
-         (forms inits)  (%stackarg-expansion! args)
-         fi    (make-funinfo :env (list forms parent-env)))
-    (lambda-embed-or-export! body fi)
-    (awhen forms
-      (verbose "(args")
-      (print-symbols forms)
-      (verbose ") "))
-    (awhen (queue-list (funinfo-free-vars fi))
-      (verbose "(free")
-      (print-symbols !)
-      (verbose ") "))
-    (values body fi)))
+  (with ((forms inits)  (%stackarg-expansion! (copy-tree (function-arguments fun)))
+         fi             (make-funinfo :env (list forms parent-env)))
+    (values (lambda-embed-or-export body fi) fi)))

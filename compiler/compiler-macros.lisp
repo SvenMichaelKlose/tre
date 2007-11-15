@@ -1,15 +1,21 @@
 ;;;;; nix operating system project
 ;;;;; lisp compiler
-;;;;; Copyright (C) 2006 Sven Klose <pixel@copei.de>
+;;;;; Copyright (C) 2006,2007 Sven Klose <pixel@copei.de>
 ;;;;;
-;;;;; Compiler-macro expansion
+;;;;; Compiler-macro expansion.
+;;;;;
+;;;;; Converts control-flow functions into jumps.
+;;;;; VM-GO unconditionally jumps to a label.
+;;;;; VM-GO-NIL jumps to a label if the first argument is NIL.
+;;;;; Both jump types are removed when tree-expanding.
+;;;;; VM-SCOPE holds a list of expresions and labels. They are nerged in the next pass.
 
 (defvar *compiler-macros*)
 (defvar *tagbody-replacements*)
 (defvar *blockname-replacements*)
 
 (defmacro define-compiler-macro (name args body)
-  `(acons! ',name #'(lambda ,args ,@(macroexpand body)) *compiler-macros*))
+  `(acons! ',name #'(,args ,@(macroexpand body)) *compiler-macros*))
 
 (defun compiler-macrop (expr)
   (assoc expr *compiler-macros*))
@@ -53,7 +59,8 @@
 ;;; TAGBODY tag replacement
 ;;;
 ;;; All labels of a tagbody are replaced by gensyms to avoid name-clashes
-;;; when TAGBODYs are removed. Since GOs are be expanded before, the
+;;; when TAGBODYs are removed. GOs are expanded beforehand
+;;; (because macro expansion is done from leave to root), and the
 ;;; new labels are added to *tagbody-replacements* and used when TAGBODY
 ;;; is expanded.
 
@@ -66,12 +73,12 @@
 
 (define-compiler-macro tagbody (&rest args)
   `(vm-scope
-     ,@(mapcar #'(lambda (x)
- 	           (if (consp x)
-		     x
-		     (aif (assoc x *tagbody-replacements*)
-		       !
-		       x)))
+     ,@(mapcar #'((x)
+ 	                (if (consp x)
+		     		    x
+		     			(aif (assoc x *tagbody-replacements*)
+		       				!
+		       				x)))
                args)
      (identity nil)))
 
@@ -80,10 +87,10 @@
 
 (defun lookup-create-gensym (block-name)
   (aif (assoc block-name *blockname-replacements*)
-    !
-    (with-gensym g
-      (acons! block-name g *blockname-replacements*)
-      g)))
+      !
+      (with-gensym g
+        (acons! block-name g *blockname-replacements*)
+        g)))
 
 (define-compiler-macro return-from (block-name expr)
   `(vm-scope
@@ -98,10 +105,9 @@
                  (setq ~%ret ,@tail)))
          (bname (assoc block-name *blockname-replacements*)))
     (if bname
-      (nconc ret (list bname) '((identity ~%ret)))
-      (nconc ret '((identity ~%ret))))))
+        (nconc ret (list bname) '((identity ~%ret)))
+        (nconc ret '((identity ~%ret))))))
 
 (define-compiler-macro setq (&rest args)
-  `(vm-scope ,@(mapcar #'(lambda (x)
-                           `(%setq ,(first x) ,(second x)))
+  `(vm-scope ,@(mapcar #'((x) `(%setq ,(first x) ,(second x)))
                        (group args 2))))
