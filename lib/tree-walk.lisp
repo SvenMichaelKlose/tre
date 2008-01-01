@@ -6,12 +6,15 @@
 (defun tree-walk (i &key (ascending nil) (dont-ascend-if nil))
   (if (atom i)
 	i
-	(with (a (if (and dont-ascend-if (funcall dont-ascend-if (car i)))
-				 (car i)
-	  			 (tree-walk
-					 (if ascending
-					 	 (funcall ascending (car i))
-					 	 (car i))
-					 :ascending ascending :dont-ascend-if dont-ascend-if)))
+	(with (y (car i)
+		   a (if (and dont-ascend-if
+				      (funcall dont-ascend-if y))
+				 y
+	  			 (tree-walk (if ascending
+					 	 		(funcall ascending y)
+					 	 		y)
+					 		:ascending ascending
+					 		:dont-ascend-if dont-ascend-if)))
 	  (cons a
-	  		(tree-walk (cdr i) :ascending ascending :dont-ascend-if dont-ascend-if)))))
+	  		(tree-walk (cdr i) :ascending ascending
+							   :dont-ascend-if dont-ascend-if)))))
