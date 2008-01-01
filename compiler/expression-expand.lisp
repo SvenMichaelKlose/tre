@@ -44,14 +44,20 @@
 
 (defun expex-expand-args (args q)
   "Move arguments to new assignments."
-  (mapcar #'((a) (expex-expand a q))
+  (mapcar #'((a)
+			   (expex-expand a q))
           args))
+
+(defun force-setq (x)
+  (if (vm-go? x)
+	  x
+	  (list (expexsym) x)))
 
 (defun expex-expand-toplevel (expr q)
   "Expand an expression or return atom as is."
   (if (consp expr)
       (enqueue q (cons (car expr) (expex-expand-args (cdr expr) q)))
-      (enqueue q expr)))
+   	  (enqueue q expr)))
 
 (defun expex-expand-body (body)
   "Expand list of expressions."

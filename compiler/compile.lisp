@@ -7,10 +7,9 @@
 (defvar *expanded-functions* nil)
 
 (defun atomic-expand-lambda (fun mex &optional (parent-env nil))
-  (with ((lex fi) (lambda-expand fun mex parent-env)
-         tex      (tree-expand fi (expex-expand-body (backquote-expand lex))))
-    (setf (assoc fun *expanded-functions*) fi)
-    (values tex fi)))
+  (with ((lex fi) (lambda-expand fun mex parent-env))
+    (tree-expand fi (expex-expand-body (backquote-expand lex)))
+    (setf (assoc fun *expanded-functions*) fi)))
  
 (defun atomic-expand-fun (fun)
   (with (body (function-body fun))
@@ -38,13 +37,9 @@
     (awhen (symbol-function i)
       (when (compilable? !)
         (atomic-expand !))
-      (do-tests *tests*))))
+      ;(do-tests *tests*)
+)))
 
 (defun compile-all ()
   (tree-expand-reset)
   (atomic-expand-all))
-
-(defun test ()
-  '(a b))
-
-;(compile #'test)

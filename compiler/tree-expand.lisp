@@ -1,11 +1,5 @@
 ;;;;; nix list processor
 ;;;;; Copyright (c) 2007 Sven Klose <pixel@copei.de>
-;
-;;;; Pass 1:
-
-(defun identity? (x)
-  (and (consp x)
-       (eq (car x) 'identity)))
 
 (defun filter-identity (l)
   "Remove IDENTITY expressions."
@@ -15,7 +9,7 @@
                   x))
 		  l))
 
-(defun clean-code (l)
+(defun remove-setq (l)
   "Remove inital SETQ symbol from expressions."
   (mapcar #'((x)
               (if (consp x)
@@ -25,10 +19,21 @@
                   x))
           (remove-if #'identity? l)))
 
-;;;; Toplevel
+(defun get-double-labels (x)
+  (when x
+	(if (and (atom (first x))
+			 (consp (cdr x))
+			 (atom (second x)))
+	    (acons (first x) (second x) (get-double-labels (cdr x)))
+		(get-double-labels (cdr x)))))
+
+(defun clean-tags (x)
+  (with (labs (get-double-labels x))
+    x))
 
 (defun tree-expand (fi l)
-  (setf (funinfo-first-cblock fi) (filter-identity (clean-code l))))
+  (with (x (clean-tags (filter-identity (remove-setq l))))
+    (setf (funinfo-first-cblock fi) x)))
 
 (defun tree-expand-reset ()
   (setf *tags-cblocks* nil))

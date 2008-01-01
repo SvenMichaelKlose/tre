@@ -16,7 +16,8 @@
 ;;;;;
 ;;;;;   #'(lambda (x) y)
 ;;;;;
-;;;;; Executed unnamed toplevel functions don't a stack but a resident memory block is allocated.
+;;;;; Executed unnamed toplevel functions don't a stack but a resident
+;;;;; memory block is allocated.
 
 ;;; Stack setup
 ;;;
@@ -42,12 +43,14 @@
 (defun vars-to-stackops (body fi)
   "Replaces variables by stack operations. Returns modified body.
    Free variables are added to free-vars of the funinfo."
+(or body
   (tree-walk body
     :ascending
       #'((e)
-           (if (is-stackvar? e fi)
-               (make-stackop e fi)
-			   e))))
+         (if (is-stackvar? e fi)
+             (make-stackop e fi)
+			 e))))
+)
 
 ;;; LAMBDA inlining
 
@@ -55,7 +58,7 @@
   "Make body with stack variable initialisers."
   `(vm-scope
 	 ,@(mapcar #'((a v)
-				    `(%setq ,a ,v))
+				  `(%setq ,a ,v))
 			   args vals)
      ,@body))
 
@@ -74,9 +77,13 @@
 (defun make-varblock-inits (fi fv)
   (mapcar #'((v) `(%set-vec ,s ,(position v fv) ,(make-stackop v fi))) fv))
 
-(defun make-call-to-exported (f fi)
-  (with ((body exp-fi) (atomic-expand-lambda f (function-body f) (funinfo-env-this fi))
-         fv            (queue-list (funinfo-free-vars exp-fi)))
+(defun make-varblock-exits (fi fv)
+  (mapcar #'((v) `(%get-vec ,s ,(make-stackop v fi) ,(position v fv))) fv))
+
+(defun make-call-to-exported (name fi)
+  (with (f	    (symbol-function name)
+		 exp-fi	(atomic-expand-lambda f (function-body f) (funinfo-env-this fi))
+         fv     (queue-list (funinfo-free-vars exp-fi)))
     (if fv
         (with-gensym g
 		  ; XXX move past SSA.
@@ -85,14 +92,15 @@
             `(vm-scope
                (%setq ,s (make-array ,(length fv)))
 			   ,@(make-varblock-inits fi fv)
-               (%funref ,name ,s))))
+               (%funref ,name ,s)
+			   ,@(make-varblock-exits fi fv))))
 		`(%funref ,name nil))))
 
-(defun lambda-export (n fi)
+(defun lambda-export (x fi)
   "Export and expand LAMBDA expression out of a function."
   (with-gensym g
-    (eval `(%set-atom-fun ,g ,n)) ; Create new function.
-    (make-call-to-exported (symbol-function g) fi)))
+    (eval `(%set-atom-fun ,g ,x)) ; Create new function.
+    (make-call-to-exported g fi)))
 
 ;;; Toplevel
 
@@ -102,11 +110,11 @@
       (tree-walk body
       	  :ascending
         	  #'((x)
-             	  (if (is-lambda-call? x)
-                 	  (lambda-call-embed x fi)
-                 	  (if (is-lambda? x)
-                   	  	  (lambda-export x fi)
-				   	  	  x))))
+             	 (if (is-lambda-call? x)
+                 	 (lambda-call-embed x fi)
+                 	 (if (is-lambda? x)
+                   	  	 (lambda-export x fi)
+				   	  	 x))))
 	  fi))
 
 (defun lambda-expand (fun body &optional (parent-env nil))

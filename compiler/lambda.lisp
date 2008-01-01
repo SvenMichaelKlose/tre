@@ -4,48 +4,53 @@
 ;;;;
 ;;;; LAMBDA-related utilities.
 
-(defun past-lambda (expr)
-  (if (eq (first expr) 'lambda)
-	(cdr expr)
-	expr))
+(defun past-lambda (x)
+  (if (eq (first x) 'lambda)
+	(cdr x)
+	x))
 
-(defun lambda-args (expr)
-  (car (past-lambda expr)))
+(defun lambda-args (x)
+  (car (past-lambda x)))
 
-(defun lambda-body (expr)
-  (cdr (past-lambda expr)))
+(defun lambda-body (x)
+  (cdr (past-lambda x)))
 
-(defun lambda-call-args (expr)
-  (lambda-args (first expr)))
+(defun lambda-call-vals (x)
+  (cdr x))
 
-(defun lambda-call-body (expr)
-  (lambda-body (first expr)))
-
-(defun lambda-call-vals (expr)
-  (cdr expr))
-
-(defun is-lambda? (expr)
-  (and (consp expr)
-       (eq (car expr) 'function)
-       (consp (cdr expr))
-       (consp (cadr expr))
-	   (with (l (past-lambda (cadr expr)))
+(defun is-lambda? (x)
+  (and (consp x)
+       (eq (car x) 'function)
+       (consp (cdr x))
+       (consp (cadr x))
+	   (with (l (past-lambda (cadr x)))
 		 (and l (consp l) (listp (car l))))))
 
-(defun is-lambda-call? (expr)
-  (and (consp expr)
-       (is-lambda? (car expr))
-       (listp (lambda-call-args expr))
-       (listp (lambda-call-body expr))))
+(define-test "IS-LAMBDA? works"
+  ((is-lambda? '#'((x) x)))
+  t)
 
-(defmacro with-lambda-call ((args vals body call) &rest exprs)
-  (with-gensym (tmp start)
+(define-test "IS-LAMBDA? works with LAMBDA"
+  ((is-lambda? '#'(lambda (x) x)))
+  t)
+
+(defun is-lambda-call? (x)
+  (and (consp x)
+	   (cdr x)
+       (is-lambda? (car x))))
+
+(define-test "IS-LAMBDA-CALL? works"
+  ((is-lambda-call? '(#'((x) x) nil)))
+  t)
+
+(defmacro with-lambda-call ((args vals body call) &rest xs)
+  (with-gensym (tmp l)
     `(with (,tmp ,call
-	   	    ,start (past-lambda ,tmp)
-       	    ,args (lambda-call-args ,start)
-       	    ,vals (lambda-call-vals ,start)
-       	    ,body (lambda-call-body ,start))
-       ,@exprs)))
+	   	    ,l (second (car ,tmp))
+       	    ,args (lambda-args ,l)
+       	    ,vals (lambda-call-vals ,tmp)
+       	    ,body (lambda-body ,l))
+       ,@xs)))
 
 (defun function-arguments (fun)
   "Returns arguments of a function."

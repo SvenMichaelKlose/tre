@@ -28,13 +28,16 @@
   ; placed on a rest list. This is used to insert argument passing instructions.
   (argument-places nil)
 
+  ; Called functions.
+  (callees nil)
+
   ; Total size of stack with arguments and local variables.
   (stack-size nil)
 
   ; List of variables defined outside the function.
   (free-vars  (make-queue))
 
-  ; Entry code block.
+  ; Function code. The format depends on the compilation pass.
   first-cblock)
 
 (defun funinfo-add-free-var (fi var)
