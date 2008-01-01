@@ -24,15 +24,12 @@
 (defun map (func &rest lists)
   (%map func lists))
 
-(defun %mapcar (func lists)
+(defun mapcar (func &rest lists)
   "Calls function for all head CARs in lists. Then call with next elements.
    If a list runs out of elements, the function stops."
   (let ((args (%map func lists)))
     (when args
-      (cons (apply func args) (%mapcar func lists)))))
-
-(defun mapcar (func &rest lists)
-  (%mapcar func (copy-tree lists)))
+      (cons (apply func args) (apply #'mapcar func lists)))))
 
 (defun mapcan (func &rest lists)
   "Like MAPCAR but concatenate the resulting lists."
@@ -49,24 +46,6 @@
         (tagbody
           ,starttag
           (if (eq ,tmplst nil)
-            (go ,endtag))
-          (setq ,iter (car ,tmplst))
-          ,@body
-          (setq ,tmplst (cdr ,tmplst))
-          (go ,starttag)
-          ,endtag
-          (return (progn ,@result)))))))
-
-(defmacro dolist-skipatoms ((iter lst &rest result) &rest body)
-  (let ((starttag (gensym))
-        (endtag (gensym))
-	(tmplst (gensym)))
-    `(block nil
-      (let ((,tmplst ,lst)
-	    (,iter nil))
-        (tagbody
-          ,starttag
-          (if (not (consp ,tmplst))
             (go ,endtag))
           (setq ,iter (car ,tmplst))
           ,@body
