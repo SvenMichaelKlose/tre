@@ -1,19 +1,25 @@
 ;;;; nix operating system project
 ;;;; list processor environment
-;;;; Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; List manipulation functions
 
 (defun append (&rest lsts)
-  "Concatenate lists. All list, except the last, are copied."
+  "Concatenate lists. All lists, except the last, are copied."
   (if (not (cdr lsts))
     (car lsts)
-    (let ((n (copy-list (car lsts))))
-      (rplacd (last n) (apply #'append (cdr lsts)))
-      n)))
+	(if (car lsts)
+    	(let ((n (copy-list (car lsts))))
+          (rplacd (last n) (apply #'append (cdr lsts)))
+          n)
+		(apply #'append (cdr lsts)))))
 
 (define-test "APPEND works with two lists"
   ((append '(l i) '(s p)))
+  '(l i s p))
+
+(define-test "APPEND works with empty lists"
+  ((append nil '(l i) nil '(s p) nil))
   '(l i s p))
 
 (define-test "APPEND works with three lists"
