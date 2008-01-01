@@ -19,6 +19,10 @@
 (defun endp (x)
   (eq x nil))
 
+(defun symbolp (x)
+  (and (not (symbol-function x))
+	   (eq x (symbol-value x))))
+
 (define-test "NOT works with NIL"
   ((not nil))
   t)
