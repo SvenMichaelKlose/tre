@@ -292,7 +292,8 @@ tregc_print_stats ()
     printf (": %d cons, %d atoms "
             "(%d var, %d num, %d arr, %d str, "
             "%d fun, %d mac, %d usr, %d pkg, %d blt, %d spc).\n",
-            trelist_num_used,
+            trelist_num_used - trelist_length (tre_atoms_free)
+							 - trelist_length (tre_numbers_free),
             atoms,
             c[ATOM_VARIABLE], c[ATOM_NUMBER], c[ATOM_ARRAY], c[ATOM_STRING],
             c[ATOM_FUNCTION], c[ATOM_MACRO], c[ATOM_USERSPECIAL],
