@@ -1,6 +1,6 @@
 ;;;; nix operating system project
 ;;;; lisp compiler
-;;;; Copyright (C) 2005-2007 Sven Klose <pixel@copei.de>
+;;;; Copyright (C) 2005-2008 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Miscellaneous utilities.
 
@@ -23,3 +23,6 @@
 
 (defmacro t? (x)
   `(eq t ,x))
+
+(defun assoc-splice (x)
+  (values (carlist x) (cdrlist x)))
