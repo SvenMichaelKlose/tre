@@ -33,12 +33,19 @@
 
 (defun nconc (&rest lsts)
   "Concatenate list arguments destructively."
-  (do ((l lsts (cdr l)))
-      ((endp l) (car lsts))
-    (rplacd (last (car l)) (cadr l))))
+  (when lsts
+    (aif (car lsts)
+	    (progn
+		  (rplacd (last !) (apply #'nconc (cdr lsts)))
+		  !)
+		(apply #'nconc (cdr lsts)))))
 
 (define-test "NCONC works"
   ((nconc (copy-list '(l i)) (copy-list '(s p))))
+  '(l i s p))
+
+(define-test "NCONC works with empty lists"
+  ((nconc nil (copy-list '(l i)) nil (copy-list '(s p)) nil))
   '(l i s p))
 
 (defun adjoin (obj lst &rest args)
