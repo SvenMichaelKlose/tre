@@ -1,6 +1,6 @@
 /*
  * nix operating system project tre interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Debugger for interpreted expressions
  */
@@ -47,10 +47,10 @@ trefunstack_get_named_function (treptr fspos)
 
     /* Lookup first named function on the stack. */
     DOLIST(p, fspos) {
-	/* Get variable of atom containing body. */
-	a = treatom_body_to_var (CAR(p));
+		/* Get variable of atom containing body. */
+		a = treatom_body_to_var (CAR(p));
         if (a != treptr_nil && TREATOM_NAME(a))
-	    break; /* Atom is named. */
+	    	break; /* Atom is named. */
     }
 
     return a;
@@ -97,16 +97,15 @@ tredebug_chk_breakpoints (treptr expr)
     if (!tredebug_num_breakpoints)
         return;
 
+	/* Seek breakpoint for expression function. */
     fun = CAR(expr);
     DOTIMES(i, TREDEBUG_MAX_BREAKPOINTS) {
         if (tredebug_breakpoints[i] == fun) {
-	    tredebug_mode = TREDEBUGM_STEP;
+	    	tredebug_mode = TREDEBUGM_STEP;
             printf ("*** BREAKPOINT ***\n");
-	    return;
-	}
+	    	return;
+		}
     }
-
-    TREDEBUG_STEP();
 }
 
 void
@@ -237,13 +236,13 @@ tredebug_remove_breakpoint (char *name)
 
     DOTIMES(j, TREDEBUG_MAX_BREAKPOINTS) {
         if (!strcmp (name, TREATOM_NAME(tredebug_breakpoints[j]))) {
-	    tredebug_breakpoints[j] = treptr_nil;
-	    c = TRUE;
-	}
+	    	tredebug_breakpoints[j] = treptr_nil;
+	    	c = TRUE;
+		}
     }
 
     if (!c)
-	printf ("No breakpoint for %s found.\n", name);
+		printf ("No breakpoint for %s found.\n", name);
     else
         tredebug_num_breakpoints--;
 
@@ -261,22 +260,23 @@ tredebug_breakpoint (void)
     if (tredebug_argc == 0) {
         printf ("Currently set breakpoints: ");
         i = 0;
-	DOTIMES(a, TREDEBUG_MAX_BREAKPOINTS)
+		DOTIMES(a, TREDEBUG_MAX_BREAKPOINTS) {
             if (tredebug_breakpoints[i] != treptr_nil) {
- 	        printf ("%s ", TREATOM_NAME(tredebug_breakpoints[a]));
-		i++;
-	    }
-        if (!i) {
-            printf ("none.\n");
-	    return;
- 	}
- 	printnl ();
-	return;
+ 	        	printf ("%s ", TREATOM_NAME(tredebug_breakpoints[a]));
+				i++;
+	    	}
+		}
+       	if (!i) {
+           	printf ("none.\n");
+	   		return;
+ 		}
+ 		printnl ();
+		return;
     }
 
     DOTIMES(a, tredebug_argc)
-	if (!tredebug_set_breakpoint (tredebug_argv[a]))
-	    return;
+		if (!tredebug_set_breakpoint (tredebug_argv[a]))
+	    	return;
 }
 
 /* Delete all breakpoints. */
@@ -287,7 +287,7 @@ tredebug_breakpoints_delete_all (void)
 
     DOTIMES(i, TREDEBUG_MAX_BREAKPOINTS) {
         if (tredebug_breakpoints[i] != treptr_nil)
- 	    printf ("%s ", TREATOM_NAME(tredebug_breakpoints[i]));
+ 	    	printf ("%s ", TREATOM_NAME(tredebug_breakpoints[i]));
         tredebug_breakpoints[i] = treptr_nil;
     }
 }
@@ -304,7 +304,8 @@ tredebug_breakpoints_delete (void)
     i = 0;
     DOTIMES(a, TREDEBUG_MAX_BREAKPOINTS)
         if (tredebug_breakpoints[a] != treptr_nil)
-	    i++;
+	    	i++;
+
     if (i == 0) {
         printf ("No breakpoints that could be deleted.\n");
         return;
@@ -312,22 +313,22 @@ tredebug_breakpoints_delete (void)
 
     /* Delete all breakpoints. */
     if (tredebug_argc == 0) {
-	printf ("Delete all breakpoints?: ");
-	c = treio_getc (treio_console);
-	printf ("\nDeleted breakpoints: ");
-        if (c == 'y' || c == 'Y')
-	    tredebug_breakpoints_delete_all ();
-	printnl ();
-	return;
-    }
+		printf ("Delete all breakpoints?: ");
+		c = treio_getc (treio_console);
+		printf ("\nDeleted breakpoints: ");
+		if (c == 'y' || c == 'Y')
+	    	tredebug_breakpoints_delete_all ();
+		printnl ();
+		return;
+	}
 
     /* Remove breakpoints specified by arguments. */
     DOTIMES(i, tredebug_argc) {
         if (!tredebug_remove_breakpoint (tredebug_argv[i])) {
             printf ("Symbol %s not breakpointed.\n", tredebug_argv[i]);
-	    return;
-        }
-   }
+			return;
+		}
+	}
 }
 
 void
@@ -339,20 +340,20 @@ tredebug_print (void)
     tredebug_read_args ();
 
     if (tredebug_argc == 0) {
-	tredebug_print_current ();
-	return;
+		tredebug_print_current ();
+		return;
     }
 
     DOTIMES(i, tredebug_argc) {
 	atom = treatom_seek (tredebug_argv[i], TRECONTEXT_PACKAGE());
         if (atom == ATOM_NOT_FOUND) {
-	    printf ("Symbol not found.\n");
-	    return;
-	}
+	    	printf ("Symbol not found.\n");
+	    	return;
+		}
         printf ("Value of symbol '%s':\n", TREATOM_NAME(atom));
-	treprint (TREATOM_VALUE(atom));
+		treprint (TREATOM_VALUE(atom));
         printf ("Function of symbol '%s':\n", TREATOM_NAME(atom));
-	treprint (TREATOM_FUN(atom));
+		treprint (TREATOM_FUN(atom));
     }
 }
 
@@ -379,7 +380,7 @@ tredebug_parent_funstack (treptr fspos)
         fspos = CDR(fspos);
 
     if (fspos == treptr_nil)
-	treerror_internal (fspos, "tredebug_parent_funstack() SFY");
+		treerror_internal (fspos, "tredebug_parent_funstack() SFY");
 
     return fspos;
 }
@@ -395,25 +396,25 @@ tredebug_lookup_bodyname (treptr body)
 
     var = treatom_body_to_var (body);
     if (var == treptr_nil)
-	return;
+		return;
 
     tmp = body;
     does_repeat = (former_fun == var);
 
     if (does_repeat)
-	repetitions++;
+		repetitions++;
     else
         former_fun = var;
 
     if (repetitions > 0 && does_repeat)
-	return;
+		return;
 
     printf ("%s ", TREATOM_NAME(var));
 
     if (!does_repeat) {
         if (repetitions > 0)
             printf ("(%d times) ", repetitions + 1);
-	repetitions = 0;
+		repetitions = 0;
     }
 }
 
@@ -471,10 +472,9 @@ tredebug_up (void)
         return;
 
     tmp = tredebug_parent_funstack (tredebug_fspos);
-
     if (tmp == treptr_nil) {
         printf ("Already at top-level.\n");
-	return;
+		return;
     }
     expr = CAR(CDR(tmp));
     tredebug_fspos = tmp;
@@ -530,11 +530,11 @@ tredebug (void)
     while (1) {
         if (ret) {
             printf ("Return value:\n");
-	    treprint (ret);
+	    	treprint (ret);
         }
 
         tredebug_prompt ();
-	treio_skip_spaces (treio_console);
+		treio_skip_spaces (treio_console);
         c = treio_getc (treio_console);
         if (treio_eof (treio_console))
             tre_exit (-1);
@@ -542,65 +542,65 @@ tredebug (void)
         switch (c) {
 	    case 's':
 	        tredebug_mode = TREDEBUGM_STEP;
-		tredebug_level--;
-                f_print = TRUE;
-		goto end;
+			tredebug_level--;
+ 			f_print = TRUE;
+			goto end;
 
 	    case 'n':
 	        tredebug_next = TRECONTEXT_FUNSTACK();
-		tredebug_level--;
-                f_print = TRUE;
-		goto end;
+			tredebug_level--;
+			f_print = TRUE;
+			goto end;
 
 	    case 'c':
-		tredebug_level--;
-		printf ("Continuing...\n");
-		goto end;
+			tredebug_level--;
+			printf ("Continuing...\n");
+			goto end;
 
-            case 'u':
-                tredebug_up ();
-		continue;
+		case 'u':
+			tredebug_up ();
+			continue;
 
-            case 'd':
-                tredebug_down ();
-		continue;
+		case 'd':
+			tredebug_down ();
+			continue;
 
 	    case 'h':
-		printf (tredebug_help);
-		continue;
+			printf (tredebug_help);
+			continue;
 
 	    case 't':
-                tredebug_trace ();
+			tredebug_trace ();
 	        continue;
 
 	    case 'x':
 	        tredebug_mode = TREDEBUGM_STEP;
-		tre_main_line (treio_console);
-		continue;
+			tre_main_line (treio_console);
+			continue;
 
 	    case '*':
-		ret = tre_main_line (treio_console);
-		continue;
+			ret = tre_main_line (treio_console);
+			continue;
 
 	    case 'b':
 	        tredebug_breakpoint ();
-		continue;
+			continue;
 
 	    case 'k':
 	        tredebug_breakpoints_delete ();
-		continue;
+			continue;
 
 	    case 'p':
 	        tredebug_print ();
-		continue;
+			continue;
 
 	    case 'q':
-		printf ("Terminating program.\n");
-		tredebug_level = 0;
-                tredebug_builtin_end_debug (treptr_nil);
+			printf ("Terminating program.\n");
+			tredebug_level = 0;
+			tredebug_builtin_end_debug (treptr_nil);
 
 	    default:
-		printf ("Unknown command '%c'. Type 'h' for help.\n", c);
+			printf ("Unknown command '%c'. Type 'h' for help.\n", c);
         }
     }
 

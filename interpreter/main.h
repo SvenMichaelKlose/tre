@@ -10,6 +10,7 @@
 
 extern treptr treeval_toplevel_current;
 extern bool tre_is_initialized;
+extern bool tre_interrupt_debugger;
 
 extern void tre_exit (int);
 extern void tre_restart (treptr);

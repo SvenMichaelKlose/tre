@@ -27,11 +27,12 @@ typedef int bool;
 #define TRE_PRINT_MACROEXPANSIONS ; Print macroexpansions in read-eval loop. */ */
 #define TRE_READ_ECHO		/* Echo what is READ. */
 #define TRE_NO_MANUAL_FREE	/* Don't free internal garbage manually. */
+#define TRE_EXIT_ON_STDIO_SIGINT /* Exit on SIGINT in stdio prompt. */
 #endif
 
 #define TRE_MAX_SYMLEN		64
-#define TRE_MAX_STRINGLEN	1024
-#define TRE_SYMBOL_TABLE_SIZE	65536
+#define TRE_MAX_STRINGLEN	8192
+#define TRE_SYMBOL_TABLE_SIZE	(16 * 1024)
 #define TRE_MAX_NESTED_FILES	16
 #define TRE_FILEIO_MAX_FILES   16
 
@@ -40,15 +41,15 @@ typedef int bool;
 #define TREDEBUG_MAX_BREAKPOINTS	16
 
 #ifndef NUM_NUMBERS
-#define NUM_NUMBERS	(64 * 1024)
+#define NUM_NUMBERS	(8 * 1024)
 #endif
 
 #ifndef NUM_ATOMS
-#define NUM_ATOMS	(128 * 1024)
+#define NUM_ATOMS	(8 * 1024)
 #endif
 
 #ifndef NUM_LISTNODES
-#define NUM_LISTNODES	(1024 * 1024)
+#define NUM_LISTNODES	(128 * 1024)
 #endif
 
 #define NUM_LISTNODES_TOTAL	(NUM_LISTNODES + NUM_ATOMS + NUM_NUMBERS)

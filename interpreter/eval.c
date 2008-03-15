@@ -1,6 +1,6 @@
 /*
  * nix operating system project tre interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Evaluation related section.
  *
@@ -164,6 +164,7 @@ treeval_expr (treptr x)
     treptr  v = treptr_nil;
 
     tredebug_chk_breakpoints (x);
+	TREDEBUG_STEP();
 
     if (TREPTR_IS_EXPR(fun))
         fun = treeval (fun);

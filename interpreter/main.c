@@ -1,6 +1,6 @@
 /*
  * nix operating system project tre interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Top-level control
  */
@@ -31,6 +31,7 @@
 #include <setjmp.h>
 #include <stdlib.h>
 #include <string.h>
+#include <signal.h>
 
 char *tremain_self = NULL;   /* Path to running executable. */
 char *tremain_imagelaunch = NULL;
@@ -55,6 +56,26 @@ tre_exit (int code)
     exit (code);
 }
 
+bool tre_interrupt_debugger;
+
+void
+tre_signal (int signum)
+{
+	switch (signum) {
+	case SIGINT:
+		if (! tre_interrupt_debugger)
+#ifdef TRE_EXIT_ON_STDIO_SIGINT
+			exit (-1);
+#else
+			break;
+#endif
+		printf ("*USER-BREAK*");
+		fflush (stdout);
+		tredebug_mode = TREDEBUGM_STEP;
+		break;
+	}
+}
+
 void
 tre_restart (treptr fun)
 {
@@ -76,6 +97,9 @@ tre_main_line (struct tre_stream *stream)
 #ifdef TRE_VERBOSE_READ
     treprint (expr);
 #endif
+
+	/* The stdin prompt may have disabled the debugger. */
+	tre_interrupt_debugger = TRUE;
 
     /* Expand macros. */
     tregc_push (expr);
@@ -111,6 +135,7 @@ void
 tre_init (void)
 {
     tre_is_initialized = FALSE;
+    tre_interrupt_debugger = FALSE;
 
     treio_init ();
     tredebug_init ();
@@ -147,7 +172,9 @@ tre_init (void)
             trestring_get (TRE_BOOT_IMAGE)));
 
     tre_restart_fun = treptr_nil;
+	signal (SIGINT, tre_signal);
     tre_is_initialized = TRUE;
+    tre_interrupt_debugger = TRUE;
 }
 
 void

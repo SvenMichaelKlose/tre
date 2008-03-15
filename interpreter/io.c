@@ -15,6 +15,7 @@
 #include "string.h"
 #include "thread.h"
 #include "list.h"
+#include "main.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -177,5 +178,6 @@ treio_prompt ()
         return;
 
     printf ("* ");
+	tre_interrupt_debugger = FALSE;
     TREIO_FLUSH(treio_console);
 }
