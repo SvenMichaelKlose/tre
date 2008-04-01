@@ -1,18 +1,16 @@
+<book>
+	<title>TRE tree processor manual</title>
+    <copyright>Copyright (c) 2005-2007</copyright>
+	<author>
+		<name>Sven Klose</name>
+		<email>pixel@copei.de</email>
+	</author>
+    <description>
+		This is the definitive description of the TRE programming language,
+    	which provides a terse notation for programs and documents.
+    </description>
 
-    TRE tree processor manual
-    Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
-
-PURPOSE
-
-    This is an interpreter for the TRE programming language, which provides
-    a terse notation for programs and documents.
-
-INVOKATION
-
-    tre [optional source file]
-
-USAGE
-
+<ection>
     tre [-h] [-i image-file] [source-file]
 
       -h  Print help message.
@@ -24,93 +22,205 @@ USAGE
     instead of the source files.
     Otherwise, the source files of the environment are read and an image
     file is written to speed up the next program start.
+</ection>
 
-SYNTAX
+<section>
+	<title>SYNTAX</title>
+	<para>
+    	The interpreter reads single characters from the input stream and
+    	groups them into symbols and special characters. With special
+    	characters are grouped in to lists and trees.
+	</para>
 
-    The interpreter reads single characters from the input stream and
-    groups them into symbols and special characters. With special
-    characters are grouped in to lists and trees.
+	<para>
+    	Lowercase letters are converted to uppercase. These are the special
+    	characters which may not be used with symbols; their uses will be
+    	explained in the following sections of this manual:
+	</para>
 
-    Lowercase letters are converted to uppercase. These are the special
-    characters which may not be used with symbols; their uses will be
-    explained in the following sections of this manual:
+    <special-char>
+        <item>
+			<char>Whitespaces</char>
+	    	<descr>Including spaces and control characters, like the tabulator.</descr>
+		</item>
+        <item>
+			<char>(</char>
+			<descr>Opens an expression</descr>
+		</item>
+        <item>
+         )  Closes an expression
+		</item>
+        <item>
+         {  Opens a parent expression
+		</item>
+        <item>
+         }  Closes a parent expression
+		</item>
+        <item>
+	 [  Open index expression
+		</item>
+        <item>
+	 ]  Close index expression
+		</item>
+        <item>
+	 .  Dot, denoting a cell
+		</item>
+        <item>
+	 '  Quote
+		</item>
+        <item>
+	 `  Backquote
+		</item>
+        <item>
+	 ^  Collecting quote
+		</item>
+        <item>
+	 ,  Comma
+		</item>
+        <item>
+	 #  Read macro escape.
+		</item>
+        <item>
+	 ;  Comment (ignore everything until end of line)
+		</item>
+        <item>
+	 "  Start/end of a character string constant
+		</item>
+        <item>
+	 $  Accumulator set/get, catching the value of the following object.
+		</item>
+        <item>
+	 :  Namespace delimiter.
+		</item>
+        <item>
+	 |  Start/end of symbol without character limitations.
+		</item>
 
-        Whitespaces
-	    Including spaces and control characters, like the tabulator.
-        '(' Opens an expression
-        ')' Closes an expression
-	'.' Dot
-	''' Quote
-	'`' Backquote
-	',' Comma
-	'#' Hash
-	';' Comment (ignore everything until end of line)
-	'"' Start/end of a character string constant
+	<para>
+    	These characters may be used in future version of TRE:
+		@$%&\?~
+	</para>
 
-SYMBOLS
+<section>
+	<title>Symbols<title>
 
-    Any single character or sequence of characters without whitespaces or
-    special characters are grouped to 'symbols'. Every time a new symbol is
-    read, it is added to the symbol table.
+	<para>
+    	Any single character or sequence of characters without whitespaces or
+    	special characters are grouped to 'symbols'. Every time a new symbol is
+    	read, it is added to the symbol table.
+	</para>
 
-    A symbol may refer to any other object, including itself. Symbols
-    refering to other objects are called 'variables'.
+	<para>
+    	A symbol may refer to any other object, including itself. Symbols
+    	refering to other objects are called 'variables'.
+	</para>
 
-    Function names are separated from names of all other objects.
+	<para>
+    	Function names are separated from names of all other objects.
+	</para>
+
+LISTS
+
+	<para>
+    	One can create a list of symbols by embracing them with round brackets
+    	(see special characters).
+	</para>
+
+		(1 2 3)
+		A list with three symbols.
+
+	<para>
+    	Lists may also be nested, forming trees:
+	</para>
+
+		(1 (2 3))
+		A list containing symbol 1 and another list with symbols 2 and 3.
+
+LIST ELEMENTS
+
+	<para>
+    	TRE knows three forms for notating cell elements. All variants
+    	behave the same:
+	</para>
+
+		1. The dot special form. (. a b)
+		2. The dot-in-the-middle special form. (a . b)
+		3. The CONS special form. (CONS a b)
+
+ABBREVIATED TREE NOTATION
+
+	<para>
+    	To reduce the number of round brackets, curly brackets can be used instead.
+    	Like with round brackets, expressions opened with curly brackets must
+    	be ended with the same number of closing curly brackets. But all missing
+    	round brackets that come after a curly bracket are closed implicitly:
+
+    	{format t "Hello world number ~A!" (+ 1 1}
+
+	<para>
+    	The missing closing, round bracket is validated. This effect is nestable:
+
+    	{html
+      	`(head (title "My document"))
+       	(body
+         	(h1 "Phone numbers from the database")
+         	{table
+           	,@(foreach result (mysql-query "SELECT * FROM people"
+                                          	:database "people-db"
+                                          	:host "localhost"
+                                          	:user "sven" :password "fnord")
+               	^(tr
+                  	(td [result "name"])
+                  	(td [result "phone"])}
+         	(a :href "/" "Link back home")}
 
 EXPRESSIONS
 
-    One can create a list of symbols by embracing them with round brackets
-    (see special characters).
+	<para>
+    	If the interpreter read a top-level list, it evaluates the list; the
+    	list is interpreted as a function call, starting with a function object,
+    	continued by its arguments. This is why the two examples above cause
+    	an error if typed into the command prompt (the first elements are
+    	numbers, not functions. '+' is a built-in function that would do
+    	something useful:
 
-	(1 2 3)
-	A list with three symbols.
+		* (+ 2 3)
+		5
 
-    Lists may also be nested, forming trees:
+	<para>
+    	This is a list of object types of the TRE programming language:
 
-	(1 (2 3))
-	A list containing symbol 1 and another list with symbols 2 and 3.
+		- variable; refers to other objects. It may be assigned a
+	  	function object and any other object that is not a function at the
+	  	same time,
+		- number, contains a single floating-point value,
+        	- array, contains a fixed number of objects that can be indexed
+	  	using indices starting with 0,
+		- strings, contains sequences of 0 or more characters,
+		- built-in functions, essential functions required to build the
+	  	language with user-defined functions
+		- built-in special forms; built-in function without argument
+		- user-defined functions
+		- user-defined special forms, also known as 'macros'
+		- and list elements, referred to as 'conses'.
 
-    If the interpreter read a top-level list, it evaluates the list; the
-    list is interpreted as a function call, starting with a function object,
-    continued by its arguments. This is why the two examples above cause
-    an error if typed into the command prompt (the first elements are
-    numbers, not functions. '+' is a built-in function that would do
-    something useful:
+	<para>
+    	Symbols are variables which point to themselves.
 
-	* (+ 2 3)
-	5
-
-    This is a list of object types of the TRE programming language:
-
-	- variable; refers to other objects. It may be assigned a
-	  function object and any other object that is not a function at the
-	  same time,
-	- number, contains a single floating-point value,
-        - array, contains a fixed number of objects that can be indexed
-	  using indices starting with 0,
-	- strings, contains sequences of 0 or more characters,
-	- built-in functions, essential functions required to build the
-	  language with user-defined functions
-	- built-in special forms; built-in function without argument
-	- user-defined functions
-	- user-defined special forms, also known as 'macros'
-	- and list elements, referred to as 'conses'.
-
-    Symbols are variables which point to themselves.
-
-    Expressions are singly-linked lists. They are opened and closed with
-    round brackets, '(' and ')' respectively. "(1 2 3)" would be a valid
-    expression with three elements. It cannot be typed into the prompt
-    because when expressions are evaluated, they're expected to be
-    function calls.
+	<para>
+    	Expressions are singly-linked lists. They are opened and closed with
+    	round brackets, '(' and ')' respectively. "(1 2 3)" would be a valid
+    	expression with three elements. It cannot be typed into the prompt
+    	because when expressions are evaluated, they're expected to be
+    	function calls.
 
 EVALUATION
 
-    As soon as a token or expression was read its elements are executed
-    (also called 'evaluation' for the rest of this document) and replaced by
-    their return values. The first element must be a function which is
-    called with the remaining elements as its arguments.
+	<para>
+    	As soon as a token or expression was read its elements are executed
+    	(also called 'evaluation' for the rest of this document) and replaced by
+    	their return values. The first element must be a function which is
+    	called with the remaining elements as its arguments.
 
         * (+ 1 2)
         3
@@ -118,185 +228,191 @@ EVALUATION
         [Call to function '+' with arguments 1 and 2. 3 is the returned
          value.]
 
-    As noted before, expression elements may also be expressions:
+	<para>
+    	As noted before, expression elements may also be expressions:
 
         * (+ 1 (+ 2 3))
 
-    first evaluates to
+	<para>
+    	first evaluates to
 
-	(+ 1 5)
+		(+ 1 5)
 
-    and then to
+	<para>
+    	and then to
 
-	6
+		6
 
 QUOTING
 
-    Evaluation requires the first argument to be a function. This is why
-    lists cannot be entered literally to build data structures:
+	<para>
+    	Evaluation requires the first argument to be a function. This is why
+    	lists cannot be entered literally to build data structures:
 
         * (1 2 3)
         function expected instead of number '1'.
 
-    To circumvent evaluation use the QUOTE special form. Special forms
-    are functions that take their arguments unevaluated. QUOTE returns
-    a copy of its unevaluated arguments:
+	<para>
+    	To circumvent evaluation use the QUOTE special form. Special forms
+    	are functions that take their arguments unevaluated. QUOTE returns
+    	a copy of its unevaluated arguments:
 
         * (quote (1 2 3))
         (1 2 3)
 
-    Because quoting is used very often, there's an abbreviated form:
+	<para>
+    	Because quoting is used very often, there's an abbreviated form:
 
         * '(1 2 3)
         (1 2 3)
 
-    If you use the BACKQUOTE (or "`" for short, QUASIQUOTE (",") and
-    QUASIQUOTE-SPLICE (",@") functions insert their single evaluated
-    argument into the BACKQUOTEd expression.
+	<para>
+    	If you use the BACKQUOTE (or "`" for short, QUASIQUOTE (",") and
+    	QUASIQUOTE-SPLICE (",@") functions insert their single evaluated
+    	argument into the BACKQUOTEd expression.
 
-    QUASIQUOTE inserts an expression like a single atom.
+	<para>
+    	QUASIQUOTE inserts an expression like a single atom.
 
         * (setq a 3)
         3
         * `(1 ,a 2)
         (1 3 2)
 
-    QUASIQUOTE-SPLICE splices a list into another
+	<para>
+    	QUASIQUOTE-SPLICE splices a list into another
 
         * (setq l '(7 8 9))
         (7 8 9)
         * `(1 ,@l 3)
         (1 7 8 9 3)
 
-    COLLECTING-QUOTE collects a set of objects which is to be inserted by the
-    parent QUASIQUOTE or QUASIQUOTE-SPLICE. Its abbreviated form is the accent
-    circonflex ('^').
-    Each time a COLLECTING-QUOTE is evaluated, its result is appended to the set.
+	<para>
+    	COLLECTING-QUOTE collects a set of objects which is to be inserted by the
+    	parent QUASIQUOTE or QUASIQUOTE-SPLICE. Its abbreviated form is the accent
+    	circonflex ('^').
+    	Each time a COLLECTING-QUOTE is evaluated, its result is appended to the
+    	set.
 
 FUNCTIONS
 
-    All functions require a list of argument definitions.
-    Each element of the list is a symbol representing a value passed to the
-    function or a keyword specifying optional or keyword-associated arguments.
-    Argument definitions may be nested.
+	<para>
+    	All functions require a list of argument definitions.
+    	Each element of the list is a symbol representing a value passed to the
+    	function or a keyword specifying optional or keyword-associated arguments.
+    	Argument definitions may be nested.
 
-    (defun myfun (name (surname middle-name)) ... )
-    (myfun "Klose" ("Sven" "Michael"))
+    	(defun myfun (name (surname middle-name)) ... )
+    	(myfun "Klose" ("Sven" "Michael"))
 
-    The interpreter accepts the &REST, &OPTIONAL and &KEY keywords in
-    argument list definitions.
+	<para>
+    	The interpreter accepts the &REST, &OPTIONAL and &KEY keywords in
+    	argument list definitions.
 
-    The &REST keyword will return a list of remaining arguments.
+	<para>
+    	The &REST keyword will return a list of remaining arguments.
 
-    The &OPTIONAL keyword will initialise following missing arguments to
-    NIL.
+	<para>
+    	The &OPTIONAL keyword will initialise following missing arguments to
+    	NIL.
 
-    * (#'((&optional var) var))
-    NIL
+    	* (#'((&optional var) var))
+    	NIL
 
-    An alternative intialisation value may be declared inside a list:
+	<para>
+    	An alternative intialisation value may be declared inside a list:
 
-    * (#'((&optional (var 23) var))
-    23
+    	* (#'((&optional (var 23) var))
+    	23
 
-    The &KEY keyword will search for the following keywords in the
-    arguments passed to the function and will take the following value.
-    Usually the keyword namespace is specified by prepending a colon ':'
-    to the keyword when calling the function. If a key was not specified,
-    it is initialised to NIL.
+	<para>
+    	The &KEY keyword will search for the following keywords in the
+    	arguments passed to the function and will take the following value.
+    	Usually the keyword namespace is specified by prepending a colon ':'
+    	to the keyword when calling the function. If a key was not specified,
+    	it is initialised to NIL.
 
-    * (#'((&key comment) (print comment)) :comment "FNORD!")
-    "FNORD"
+    	* (#'((&key comment) (print comment)) :comment "FNORD!")
+    	"FNORD"
 
 SPECIAL FUNCTIONS
 
-    A special functions is like an ordinary function but is evaluated
-    in the environment of its caller.
+	<para>
+    	A special functions is like an ordinary function but is evaluated
+    	in the environment of its caller.
 
 DATA STRUCTURES
 
-    Square brackets express access to a list or tree structure. The first
-    element in a 'square' expression is the data structure from which an
-    element should be read, followed by the element name. Further elements
-    may follow, if the former element is also a data structure.
-    If the element name is an integer, it denotes the Nth element in the list.
+	<para>
+    	Square brackets express access to a list or tree structure. The first
+    	element in a 'square' expression is the data structure from which an
+    	element should be read, followed by the element name. Further elements
+    	may follow, if the former element is also a data structure.
+    	If the element name is an integer, it denotes the Nth element in the list.
 
-ABBREVIATED TREE NOTATION
+ACCUMULATOR
 
-    To reduce the number of round brackets, curly brackets can be used instead.
-    Like with round brackets, expressions opened with curly brackets must
-    be ended with the same number of closing curly brackets. But all missing
-    round brackets that come after a curly bracket are closed implicitly:
-
-    {format t "Hello world number ~A!" (+ 1 1}
-
-    The missing closing, round bracket is validated. This effect is nestable:
-
-    {html
-      `(head (title "My document"))
-       (body
-         (h1 "Phone numbers from the database")
-         {table
-           ,@(foreach result (mysql-query "SELECT * FROM people"
-                                          :database "people-db"
-                                          :host "localhost"
-                                          :user "sven" :password "fnord")
-               ^(tr
-                  (td [result "name"])
-                  (td [result "phone"])}
-         (a :href "/" "Link back home")}
+	<para>
+    	The accumulator setter @ will save the value of the following expression.
+    	The tile ~ will get the value. A virtually unlimited number of
+    	accumulators is available. Other accumulators can be specified using
+    	an immediately following integer, other that 0.
 
 ### DEBUGGER ################################################################
 
-    In case an error occured or (INVOKE-DEBUGGER) is evaluated, the
-    debugger is invoked, prompting you for input. It understands a set of
-    single-character commands. The debugger prompt has the following format.
+	<para>
+    	In case an error occured or (INVOKE-DEBUGGER) is evaluated, the
+    	debugger is invoked, prompting you for input. It understands a set of
+    	single-character commands. The debugger prompt has the following format.
 
         [<return value>:]<debug level> ]
 
-    The prompt may contain a return value:
+	<para>
+    	The prompt may contain a return value:
 
         (1 2 3) : 1]
         1]
 
-    Commands may take arguments; prefixed spaces are ignored: You may
-    type 'pSYMBOL' instead of 'p SYMBOL'.
+	<para>
+    	Commands may take arguments; prefixed spaces are ignored: You may
+    	type 'pSYMBOL' instead of 'p SYMBOL'.
 
-    Here is a list of all commands:
+	<para>
+    	Here is a list of all commands:
 
-    Stack
-	u	Move up to calling function.
-        d       Move back down a function.
-	t	Print function-call backtrace.
+    	Stack
+		u	Move up to calling function.
+        	d       Move back down a function.
+		t	Print function-call backtrace.
 
-    Printing:
+    	Printing:
 
-	p S	Print contents of symbol S. If the print contains the
-                currently evaluated expression, the expression is embraced
-                with arrows of the form "===>expression<===".
+		p S	Print contents of symbol S. If the print contains the
+                	currently evaluated expression, the expression is embraced
+                	with arrows of the form "===>expression&lt;===".
 
-    Execution:
+    	Execution:
 
-	s	Step into function.
-	n	Execute expression including arguments.
-	x E	Execute TRE expression.
-        *	Set return value, which is used to replace the
-                erroraneous expression when continuing.
-                You cannot set the return value if an error is
-                unrecoverable, which is printed when the debugger is
-                invoked.
-        c	Continue execution with current return value.
+		s	Step into function.
+		n	Execute expression including arguments.
+		x E	Execute TRE expression.
+        	*	Set return value, which is used to replace the
+                	erroraneous expression when continuing.
+                	You cannot set the return value if an error is
+                	unrecoverable, which is printed when the debugger is
+                	invoked.
+        	c	Continue execution with current return value.
 
-    Breakpoints and watch expressions:
+    	Breakpoints and watch expressions:
 
-	b N	Set breakpoint for calls to function N. Prints names of
-                breakpointed functions if no arguments are given.
-	k N	Remove breakpoint for function N.
+		b N	Set breakpoint for calls to function N. Prints names of
+                	breakpointed functions if no arguments are given.
+		k N	Remove breakpoint for function N.
 
-    Miscellaneous:
+    	Miscellaneous:
 
-	h	Prints a help page
-	q	Terminate program, return to toplevel.
+		h	Prints a help page
+		q	Terminate program, return to toplevel.
 
 ### NON-STANDARD BEHAVIOURS #################################################
 
@@ -344,99 +460,158 @@ TERMINOLOGY
     Optionally, '(r)' tells that the function cannot be implemented in
     TRE to run the interpreter.
 
-NUMBERS
+<section>
+	<title>Numbers</title>
 
-    Only floating point numbers are supported.
+	<para>
+    	Only floating point numbers are supported.
+	</para>
 
-    (+ &rest args) - built-in function (r)
-	Returns the sum of args.
+	<cmd name="INTEGER" type="bt">
+		<arg name="number"/>
+		<para>
+			Same as CHAR for integers.
+		</para>
+	</cmd>
 
-    (- na &rest nd) - built-in function (r)
-	When called with one argument, returns -nl. When called with
-	additional arguments, they're substracted from nl.
 
-    (* &rest args) - built-in function (r)
-	When called without arguments, 1 is returned. Otherwise returns
-	the product of the arguments.
+</section>
 
-    (/ na &rest args) - built-in function (r)
-	When called with one argument, 0 is returned. Otherwise returns
-	the first argument divided by the rest.
+<section>
+	<title>Comparison</title>
 
-    (INTEGER number) - built-in function
-	Same as CHAR for integers.
-
-    (MOD x y) - built-in function (r)
-	Returns remainder of x / y.
-
-LOGICAL OPERATORS
-
-    (LOGXOR &rest args) - built-in function
-	Exclusive OR numbers.
-
-COMPARISON
-
-    (= x y) - built-in function (r)
-	Returns T if the values of x and y match.
-
-    (< x y) - built-in function (r)
-	Returns T if number x is less than number y.
-
-    (> x y) - built-in function
-	Returns T if number x is greater than number y.
-
-    (>= x y) - function
+	<cmd name=">=" type="bt">
+			<arg name="x"/>
+			<arg name="y"/>
+		<para>
 	Return T if x is greater than or equal to y.
+		</para>
+	</cmd>
 
-    (<= x y) - function
+	<cmd name="<=" type="bt">
+			<arg name="x"/>
+			<arg name="y"/>
+		<para>
 	Return T if x is less than or equal to y.
+		</para>
+	</cmd>
 
-    (EQ o1 o2) - built-in function (r)
+
+	<cmd name="EQ" type="bt" essential="yes">
+			<arg name="x"/>
+			<arg name="y"/>
+		<para>
 	Return T if the two objects are identical.
+		</para>
+	</cmd>
 
-    (EQL o1 o2) - built-in function
+
+	<cmd name="EQL" type="bt">
+			<arg name="x"/>
+			<arg name="y"/>
+		<para>
 	Return T if the two objects are identical, or if they are numbers
         or characters that have the same value. EQL is the default testing
 	predicate.
+		</para>
+	</cmd>
 
-    (EQUAL x y) - function
-	Like EQ but traverses conses. Compares only atoms.
 
-    (EVENP x) - function
+	<cmd name="EVENP" type="f">
+			<arg name="x"/>
+		<para>
 	Returns T if x is an even number.
+		</para>
+	</cmd>
 
-    (NEQL o1 o2) - non-standard function
-	Like (not (eql o1 o2)).
+	<cmd name="NEQL" type="non-standard function">
+			<arg name="x"/>
+			<arg name="y"/>
+		<para>
+	Like (not (eql x y)).
+		</para>
+	</cmd>
 
-    (NOT x) - function
+
+	<cmd name="NOT" type="f">
+			<arg name="x"/>
+		<para>
 	Returns T if x is not NIL.
+		</para>
+	</cmd>
 
-    (NULL x) - function
+	<cmd name="NULL" type="f">
+			<arg name="x"/>
+		<para>
 	Same as LISTP. Returns T if x is a cons.
+		</para>
+	</cmd>
 
-    (RANGE-P num bottom top) - non-standard function
+
+	<cmd name="RANGE-P" type="f" flavour="tre">
+			<arg name="num"/>
+			<arg name="bottom"/>
+			<arg name="top"/>
+		<para>
 	Returns T if the number is within the range starting at bottom
-	and ending at top (>= bottom and <= top).
+	and ending at top (>= bottom and &lt;= top).
+		</para>
+	</cmd>
 
-TYPES
+</section>
 
-    (ATOM obj) - built-in function (r)
-        Returns T if obj is not a cons.
+<section>
+	<title>Types</title>
 
-    (CHARACTERP obj) - built-in function
-	Returns T if the argument is a character.
+	<cmd name="ATOM" type="builtin-function" required="yes">
+		<arg name="obj"/>
+        <para>
+			Returns T if obj is not a cons.
+		</para>
+	</cmd>
 
-    (FUNCTIONP obj) - built-in function
-	Returns T if the argument is a function.
+	<cmd name="CHARACTERP" type="builtin-function">
+		<arg name="obj"/>
+        <para>
+			Returns T if the argument is a character.
+		</para>
+	</cmd>
 
-    (NUMBERP obj) - built-in function
-	Returns T if the argument is a number.
+	<cmd name="FUNCTIONP" type="builtin-function">
+		<arg name="obj"/>
+        <para>
+			Returns T if the argument is a function.
+		</para>
+	</cmd>
 
-    (STRINGP obj) - built-in function
-	Returns T if the argument is a string.
+	<cmd name="MACROP" type="builtin-function">
+		<arg name="obj"/>
+        <para>
+			Returns T if the argument is a macro.
+		</para>
+	</cmd>
 
-    (ZEROP x) - function
-	Returns T if x contains the number 0.
+	<cmd name="NUMBERP" type="builtin-function">
+		<arg name="obj"/>
+        <para>
+			Returns T if the argument is a number.
+		</para>
+	</cmd>
+
+	<cmd name="STRINGP" type="builtin-function">
+		<arg name="obj"/>
+        <para>
+			Returns T if the argument is a string.
+		</para>
+	</cmd>
+
+	<cmd name="ZEROP" type="function">
+		<arg name="obj"/>
+        <para>
+			Returns T if x contains the number 0.
+		</para>
+	</cmd>
+
 
 CHARACTERS
 
@@ -451,6 +626,9 @@ SYMBOLS
     (MAKE-SYMBOL string) - built-in function
         Returns newly created self-referencing atom. Already existing
 	atoms are reused.
+
+	(SYMBOLP x) - funtion
+		Tests, if x is an atom containing itself.
 
     (SYMBOL-FUNCTION var) - Built-in function/place
 	Get function assigned to variable.
@@ -502,6 +680,12 @@ VARIABLES
 
     (VALUES expression*) - function
         Returns multiple values for MULTIPLE-VALUE-BIND.
+
+    (WITH (symbol/list expr ...)) - macro
+	This macro is a merge of LET*, MULTIPLE-VALUE-BIND and LABELS. It expects
+	place/value pairs instead. If a symbol is the first element of
+	a pair, it behaves like LET*. If the destination is a list of
+	symbols, WITH behaves like MULTIPLE-VALUE-BIND.
 
     (XCHG a b) - macro
 	Swaps values of the arguments.
@@ -660,6 +844,10 @@ FUNCTIONS
 	If name is a list of the form (SETF name), the function is called
         if 'name' is used as a SETF place. It must then take the value
 	as the first argument, and the place as the second argument.
+	See also: SELF
+
+	(SELF &REST args) - macro
+	Recursively call DEFUNed function in which this macro occurs.
 
     (DOCUMENTATION funcname) - function
 	Returns documentation string of function.
