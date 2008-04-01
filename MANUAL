@@ -681,11 +681,27 @@ VARIABLES
     (VALUES expression*) - function
         Returns multiple values for MULTIPLE-VALUE-BIND.
 
-    (WITH (symbol/list expr ...)) - macro
-	This macro is a merge of LET*, MULTIPLE-VALUE-BIND and LABELS. It expects
-	place/value pairs instead. If a symbol is the first element of
-	a pair, it behaves like LET*. If the destination is a list of
-	symbols, WITH behaves like MULTIPLE-VALUE-BIND.
+    (WITH (place/value-pair ...) &REST body) - macro
+	<cmd name="WITH" type="macro">
+		<arglist tail="yes">
+			<arg name="place/value-pair"/>
+		</arglist>
+		<argrest name="body"/>
+		<para>
+			This macro is a mix of LET*, MULTIPLE-VALUE-BIND and LABELS.
+			Opposite to those macros, WITH expects place/value-pairs in a
+			single list, not in separate lists.
+		</pare>
+		<pare>
+			If the place is a symbol, it's value (like LET*)
+			or function is set (like LABELS),
+			depending on whether the value is a function or not.
+		</pare>
+		<pare>
+			If the place is a list of symbols, WITH behaves like MULTIPLE-VALUE-BIND.
+		</pare>
+	</cmd>
+
 
     (XCHG a b) - macro
 	Swaps values of the arguments.
