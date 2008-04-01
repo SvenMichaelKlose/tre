@@ -1,6 +1,6 @@
 ;;;; nix operating system project
 ;;;; list processor environment
-;;;; Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Function definition
 
@@ -30,14 +30,22 @@
 
 (defvar *compiler-hook* nil)
 
+(defvar *defun-name* nil)
+
 (defmacro defun (name args &rest body)
   "Define a function."
   (let ((name (%defun-name name)))
     `(tagbody
-       (setq *universe* (cons ',name *universe*))
+       (setq *universe* (cons ',name *universe*)
+			 *defun-name* name)
        (%set-atom-fun ,name
          #'(,(%defun-args args)
              (block ,name
                ,@(%add-documentation name body))))
        (if *compiler-hook*
-           (compile (function ,name))))))
+           (compile (function ,name)))
+	   (setq *defun-name* nil))))
+
+(defmacro self (&rest args)
+  "Recursively call current DEFUNed function."
+  `(,name ,@args))
