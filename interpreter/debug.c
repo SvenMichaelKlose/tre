@@ -116,7 +116,8 @@ tredebug_chk_next (void)
 }
 
 const char *tredebug_help =
-    "\nExecution:\n"
+	"TRE debugger commands:\n"
+    "Execution:\n"
     "\n"
     " s    Step into function.\n"
     " n    Execute expression including arguments.\n"
@@ -125,6 +126,7 @@ const char *tredebug_help =
     " u    Step to parent function.\n"
     " d    Step to child function.\n"
     " *    Set replacement value for erroranoeous expression.\n"
+    " q    Quit debugger and program and return to toplevel.\n"
     "\n"
     "Breakpoints and watch expressions:\n"
     "\n"
@@ -137,11 +139,7 @@ const char *tredebug_help =
     "\n"
     " p S  Print contents of symbols S. If p is missing, the current function\n"
     "      is printed.\n"
-    " t    Print function call backtrace.\n"
-    "\n"
-    "Miscellaneous:\n"
-    "\n"
-    " q    Quit debugger.\n";
+    " t    Print function call backtrace.\n";
 
 unsigned  tredebug_argc;
 char      *tredebug_argv[TREDEBUG_MAX_ARGS];
