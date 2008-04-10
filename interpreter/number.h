@@ -13,7 +13,7 @@
 #define TRENUMTYPE_FLOAT 	2
 
 struct tre_number {
-    float   value;
+    double   value;
     int     type;
 };
 
@@ -29,7 +29,7 @@ extern treptr tre_numbers_free;
 /* Check if string contains a number. */
 extern bool trenumber_is_value (char *);
 
-extern unsigned trenumber_alloc (float value, int type);
+extern unsigned trenumber_alloc (double value, int type);
 extern void trenumber_free (treptr);
 
 extern void trenumber_init (void);

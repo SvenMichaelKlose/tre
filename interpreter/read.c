@@ -1,6 +1,6 @@
 /*
  * nix operating system project tre interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Reading TRE expressions.
  */
@@ -208,7 +208,7 @@ treread_atom (struct tre_stream *stream)
 		return treread_string (stream);
 
     if (TRECONTEXT_TOKEN() == TRETOKEN_CHAR)
-        return treatom_number_get ((float) treio_getc (stream), TRENUMTYPE_CHAR);
+        return treatom_number_get ((double) treio_getc (stream), TRENUMTYPE_CHAR);
 
     if (TRECONTEXT_TOKEN() < TRETOKEN_SYMBOL)
 		return treerror (treptr_invalid, "syntax error");

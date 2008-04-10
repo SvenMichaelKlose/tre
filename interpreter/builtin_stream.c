@@ -98,5 +98,5 @@ trestream_builtin_read_char (treptr args)
 
     c = fgetc (str);
 
-    return treatom_number_get ((float) c, TRENUMTYPE_CHAR);
+    return treatom_number_get ((double) c, TRENUMTYPE_CHAR);
 }

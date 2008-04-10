@@ -120,7 +120,7 @@ extern treptr treatom_seek (char *, treptr package);
 extern treptr treatom_get (char *, treptr package);
 
 /* Create new number atom for computational values. */
-extern treptr treatom_number_get (float, int type);
+extern treptr treatom_number_get (double, int type);
 
 extern treptr treatom_alloc (char *symbol, treptr package, int type, treptr value);
 extern void treatom_free (treptr);

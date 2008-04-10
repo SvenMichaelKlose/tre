@@ -73,7 +73,7 @@ trenumber_builtin_code_char (treptr args)
     char tmp;
 
     tmp = (char) TRENUMBER_VAL(arg);
-    return treatom_number_get ((float) tmp, TRENUMTYPE_CHAR);
+    return treatom_number_get ((double) tmp, TRENUMTYPE_CHAR);
 }
 
 /*
@@ -87,5 +87,5 @@ trenumber_builtin_integer (treptr args)
     treptr  arg = trenumber_get_arg (args);
     int  tmp = (int) TRENUMBER_VAL(arg);
 
-    return treatom_number_get ((float) tmp, TRENUMTYPE_INTEGER);
+    return treatom_number_get ((double) tmp, TRENUMTYPE_INTEGER);
 }

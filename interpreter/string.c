@@ -78,7 +78,7 @@ trestring_t_get (treptr str, unsigned idx)
 		return treptr_nil;
     }
 
-    return treatom_number_get ((float) (&s->str)[idx], TRENUMTYPE_CHAR);
+    return treatom_number_get ((double) (&s->str)[idx], TRENUMTYPE_CHAR);
 }
 
 /* Sequence: replace character at index. */

@@ -1,6 +1,6 @@
 /*
  * nix operating system project tre interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Generic sequences.
  */
@@ -99,11 +99,11 @@ tresequence_builtin_length (treptr args)
     struct tre_sequence_type *t;
 
     if (seq == treptr_nil)
-		return treatom_number_get ((float) 0, TRENUMTYPE_INTEGER);
+		return treatom_number_get (0, TRENUMTYPE_INTEGER);
 
     t = tresequence_get_type (seq);
     if (t == NULL)
         return treerror (seq, "sequence expected");
 
-    return treatom_number_get ((float) (*t->length) (seq), TRENUMTYPE_INTEGER);
+    return treatom_number_get ((double) (*t->length) (seq), TRENUMTYPE_INTEGER);
 }

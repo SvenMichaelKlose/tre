@@ -53,7 +53,7 @@ trenumber_is_value (char *symbol)
 
 /* Allocate number entry. */
 unsigned
-trenumber_alloc (float value, int type)
+trenumber_alloc (double value, int type)
 {
     treptr   next_free;
     unsigned  i;	/* number index */

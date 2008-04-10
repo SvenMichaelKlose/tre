@@ -16,7 +16,6 @@
 #include "array.h"
 #include "diag.h"
 #include "gc.h"
-#include "util.h"
 #include "builtin.h"
 #include "special.h"
 #include "env.h"
@@ -229,7 +228,7 @@ treatom_free (treptr atom)
  * Already existing numbers with the same value are not reused.
  */
 treptr
-treatom_number_get (float value, int type)
+treatom_number_get (double value, int type)
 {
     treptr   atom;
     unsigned  num;
@@ -243,7 +242,7 @@ treatom_number_get (float value, int type)
 
 /* Seek symbolic atom. */
 treptr
-treatom_seek (char *symbol, treptr package)
+treatom_seek (char * symbol, treptr package)
 {   
     unsigned  a;
 
@@ -267,9 +266,11 @@ treatom_seek (char *symbol, treptr package)
  * Create or reuse atom of name 'symbol'.
  */
 treptr
-treatom_get (char *symbol, treptr package)
+treatom_get (char * symbol, treptr package)
 {   
     treptr  atom;
+	double  dvalue;
+	long	ivalue;
 
     /* Reuse existing atom. */
     atom = treatom_seek (symbol, package);
@@ -277,8 +278,14 @@ treatom_get (char *symbol, treptr package)
 		return atom;
 
     /* Create number. */
-    if (trenumber_is_value (symbol))
-        return treatom_number_get (valuetofloat (symbol), TRENUMTYPE_FLOAT);
+    if (trenumber_is_value (symbol)) {
+		if (sscanf (symbol, "%d", &ivalue) == 1)
+			dvalue = (double) ivalue;
+		else
+			if (sscanf (symbol, "%F", &dvalue) != 1)
+				treerror (treptr_nil, "illegal number format");
+        return treatom_number_get (dvalue, TRENUMTYPE_FLOAT);
+	}
 
     return treatom_alloc (symbol, package, ATOM_VARIABLE, treptr_invalid);
 }

@@ -1,6 +1,6 @@
 /*
  * nix operating system project tre interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Built-in file-I/O functions
  */
@@ -43,5 +43,5 @@ trestream_builtin_fopen (treptr list)
     handle = trestream_fopen (car, cdr);
     RETURN_NIL(handle);
 
-    return treatom_number_get ((float) handle, TRENUMTYPE_INTEGER);
+    return treatom_number_get ((double) handle, TRENUMTYPE_INTEGER);
 }

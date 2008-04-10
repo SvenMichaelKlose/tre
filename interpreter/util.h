@@ -11,7 +11,6 @@
 #define DOTIMES(iter,top) \
     for (iter = 0; iter < top; iter ++)
 
-extern float valuetofloat (char *val);
 extern void printnl (void);
 
 #endif	/* #ifndef TRE_UTIL_H */

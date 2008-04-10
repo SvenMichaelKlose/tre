@@ -1,6 +1,6 @@
 /*
  * nix operating system project tre interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Evaluation-related section.
  */
@@ -12,7 +12,7 @@
         if (treeval_is_jump (p)) { return p; }
 
 typedef treptr (*treevalfunc_t) (treptr);
-typedef float (*treeval_opfunc_t) (float, float);
+typedef double (*treeval_opfunc_t) (double, double);
 
 extern treptr treeval (treptr);
 extern treptr treeval_args (treptr p);

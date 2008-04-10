@@ -1,6 +1,6 @@
 /*
  * nix operating system project tre interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Built-in number-related functions
  */
@@ -22,7 +22,7 @@ treptr
 treeval_exprop (treptr list, treeval_opfunc_t func)
 {
     treptr  arg;
-    float    val;
+    double  val;
 
     arg = CAR(list);
     if (TREPTR_IS_NUMBER(arg) == FALSE)
@@ -43,11 +43,11 @@ treeval_exprop (treptr list, treeval_opfunc_t func)
     return treatom_number_get (val, TRENUMTYPE_FLOAT);
 }
 
-float treeval_op_plus (float a, float b) { return a + b; }
-float treeval_op_difference (float a, float b) { return a - b; }
-float treeval_op_times (float a, float b) { return a * b; }
-float treeval_op_quotient (float a, float b) { return a / b; }
-float treeval_op_logxor (float a, float b) { return (unsigned) a ^ (unsigned) b; }
+double treeval_op_plus (double a, double b) { return a + b; }
+double treeval_op_difference (double a, double b) { return a - b; }
+double treeval_op_times (double a, double b) { return a * b; }
+double treeval_op_quotient (double a, double b) { return a / b; }
+double treeval_op_logxor (double a, double b) { return (unsigned) a ^ (unsigned) b; }
 
 /** section numbers **/
 
@@ -159,7 +159,7 @@ treptr
 trenumber_builtin_mod (treptr list)
 {
     TRELIST_DEFREGS();
-    float    val;
+    double    val;
     trenumber_builtin_args (&car, &cdr, list);
 
     val = fmod (TRENUMBER_VAL(car), TRENUMBER_VAL(cdr));
