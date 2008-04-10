@@ -33,14 +33,14 @@
 #include <string.h>
 #include <signal.h>
 
-char *tremain_self = NULL;   /* Path to running executable. */
-char *tremain_imagelaunch = NULL;
-char *tremain_launchfile = NULL;
+char * tremain_self = NULL;   /* Path to running executable. */
+char * tremain_imagelaunch = NULL;
+char * tremain_launchfile = NULL;
 bool tremain_noimage = FALSE;
 
 struct tremain_arg {
-    char *option;
-    char **value;
+    char * option;
+    char ** value;
 } tremain_args[] = {
     { "-i", &tremain_imagelaunch}
 };
