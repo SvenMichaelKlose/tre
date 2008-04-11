@@ -1,6 +1,6 @@
 /*
  * nix operating system project tre interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Built-in functions.
  */
@@ -31,6 +31,7 @@
 #include "builtin_fileio.h"
 #include "builtin_image.h"
 #include "builtin_list.h"
+/*#include "builtin_native.h"*/
 #include "builtin_number.h"
 #include "builtin_stream.h"
 #include "builtin_string.h"
@@ -282,7 +283,7 @@ trebuiltin_intern (treptr args)
 
 char *tre_builtin_names[] = {
     "IDENTITY",
-    "QUIT", "ERROR", "+", "-", "*", "/", "MOD",
+    "QUIT", "%ERROR", "+", "-", "*", "/", "MOD",
     "LOGXOR",
     "EQ", "EQL", "CONS", "LIST",
     "PRINT",
@@ -319,7 +320,7 @@ char *tre_builtin_names[] = {
     "%ATOM-LIST",
 
     "ALIEN-DLOPEN", "ALIEN-DLCLOSE", "ALIEN-DLSYM",
-    "ALIEN-CALL0", "ALIEN-CALL1", "ALIEN-CALL2", "ALIEN-CALL3", "ALIEN-CALL4",
+    "ALIEN-CALL-0", "ALIEN-CALL-1", "ALIEN-CALL-2", "ALIEN-CALL-3", "ALIEN-CALL-4",
 
     "DEBUG",
 
@@ -432,17 +433,18 @@ treevalfunc_t treeval_xlat_builtin[] = {
     trealien_builtin_dlopen,
     trealien_builtin_dlclose,
     trealien_builtin_dlsym,
-    trealien_builtin_dlcall0,
-    trealien_builtin_dlcall1,
-    trealien_builtin_dlcall2,
-    trealien_builtin_dlcall3,
-    trealien_builtin_dlcall4,
+    trealien_builtin_call0,
+    trealien_builtin_call1,
+    trealien_builtin_call2,
+    trealien_builtin_call3,
+    trealien_builtin_call4,
 
     trebuiltin_debug,
     trebuiltin_intern,
 
     treimage_builtin_create,
     treimage_builtin_load,
+
     NULL
 };
 
