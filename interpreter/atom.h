@@ -11,17 +11,17 @@
 typedef unsigned treptr;
 
 #define ATOM_EXPR		0
-#define ATOM_VARIABLE		1
+#define ATOM_VARIABLE	1
 #define ATOM_NUMBER		2
 #define ATOM_STRING		3
 #define ATOM_ARRAY		4
-#define ATOM_BUILTIN		5
-#define ATOM_SPECIAL		6
+#define ATOM_BUILTIN	5
+#define ATOM_SPECIAL	6
 #define ATOM_MACRO		7
 #define ATOM_FUNCTION		8
 #define ATOM_USERSPECIAL	9
-#define ATOM_PACKAGE		10
-#define ATOM_MAXTYPE		10
+#define ATOM_PACKAGE	10
+#define ATOM_MAXTYPE	10
 #define ATOM_UNUSED		-1
 
 #define TREPTR_NIL()	TYPEINDEX_TO_TREPTR(ATOM_VARIABLE, 0)
@@ -52,6 +52,12 @@ extern treptr tre_package_keyword;
 	tre_atoms[atomi].package = pack;	\
 	tre_atoms[atomi].type = typ;	\
 	tre_atoms[atomi].detail = NULL
+
+#define ATOM_GET_FUNCTION(ptr) \
+	(tre_atoms[TREPTR_INDEX(ptr)].fun)
+
+#define ATOM_SET_FUNCTION(ptr, x) \
+	tre_atoms[TREPTR_INDEX(ptr)].fun = x
 
 #define TREATOM_FLAGS		(-1 << TREPTR_TYPESHIFT)
 #define TYPEINDEX_TO_TREPTR(type, index) \
