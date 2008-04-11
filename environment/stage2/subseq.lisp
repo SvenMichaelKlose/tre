@@ -11,7 +11,7 @@
       (xchg start end))
     (if (consp seq)
         (copy (nthcdr start seq) (- end start))
-        (error "only cons supported yet")))))
+        (%error "only cons supported yet")))))
 
 (define-test "SUBSEQ basically works"
   ((subseq '(1 2 3 4) 1 3))

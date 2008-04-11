@@ -26,11 +26,11 @@
 	     ,g)))
         (progn
           (print p)
-	  (error "place not settable"))))))
+	  (%error "place not settable"))))))
 
 (defun %setf (args)
   (if (not (cdr args))
-    (error "pairs expected"))
+    (%error "pairs expected"))
     (cons
       (%setf-complement (car args) (cadr args))
       (if (cddr args)
@@ -38,7 +38,7 @@
 
 (defmacro setf (&rest args)
   (if (not args)
-    (error "arguments expected")
+    (%error "arguments expected")
     (if (= 1 (length args))
       `(%%defunsetf ,(car args)) ; Keep for DEFUN argument name.
       `(progn ,@(%setf args)))))

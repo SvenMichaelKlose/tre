@@ -11,8 +11,8 @@
     (if (%arg-keyword-p a)
         (if d
             (if (%arg-keyword-p d)
-                (error "keyword following keyword"))
-            (error "end after keyword")))))
+                (%error "keyword following keyword"))
+            (%error "end after keyword")))))
 
 ; Check and return argument list.
 (%defun %defun-args (args)
@@ -26,10 +26,9 @@
       name
       (if (eq (car name) '%%defunsetf)
           (make-symbol (string-concat "%%USETF-" (string (cadr name))))
-          (error "illegal function name"))))
+          (%error "illegal function name"))))
 
 (defvar *compiler-hook* nil)
-
 (defvar *defun-name* nil)
 
 (defmacro defun (name args &rest body)
@@ -48,4 +47,4 @@
 
 (defmacro self (&rest args)
   "Recursively call current DEFUNed function."
-  `(,name ,@args))
+  `(,*defun-name* ,@args))

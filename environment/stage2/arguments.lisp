@@ -32,7 +32,7 @@
       (if (consp (car args))
         (rplaca args (caar args))))
     (if vals
-      (error "too many optional arguments"))))
+      (%error "too many optional arguments"))))
 
 ;; Expand &OPTIONAL keyword.
 (defun %argument-expand-optional (args vals)
@@ -44,6 +44,7 @@
   (%argument-init a))
 
 ;; Returns argument list without init forms.
+;; XXX (consp nil) -> nil ?
 (define-mapcar-fun %argument-expand-key-init-forms (a)
   (if (consp a)
     (first a)
@@ -56,7 +57,7 @@
       (progn
         (rplacd ! (second vals))
         (%argument-expand-key-r! keyinits (cddr vals)))
-      (error "keyword argument not defined"))))
+      (%error "keyword argument not defined"))))
 
 ;; Expand &KEY keyword.
 (defun %argument-expand-key (args vals)
@@ -79,12 +80,12 @@
     (if (listp v)
       (cons (%argument-expand-r a v)
             (%argument-expand-r (cdr args) (cdr vals)))
-      (error "list expected"))))
+      (%error "list expected"))))
 
 (defun %argument-expand-r (args vals)
   (if (endp args)
      (when vals
-       (error "too many arguments"))
+       (%error "too many arguments"))
      (let ((arg (car args)))
        (if (listp arg)
          (%argument-expand-sublevel args vals)

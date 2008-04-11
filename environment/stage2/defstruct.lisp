@@ -86,7 +86,7 @@
 
 (defun %struct-name (obj)
   (if (not (arrayp obj))
-    (error "object is not a struct")
+    (%error "object is not a struct")
     (elt 0 obj)))
 
 (defun %struct-fields (name)

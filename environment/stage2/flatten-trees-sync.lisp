@@ -15,7 +15,7 @@
         (flatten-trees-sync! na nb)
         (progn
           (unless (listp eb)
-            (error "missing sublevel list in inferior list"))
+            (%error "missing sublevel list in inferior list"))
           (flatten-trees-sync! ea eb)
           (rplaca la (car ea))
           (rplacd la (cdr ea))

@@ -13,7 +13,7 @@
 			                          (incf i)))
 		                  forms)
 	         ,@body)
-           (error "VALUES expected"))))))
+           (%error "VALUES expected"))))))
 
 (defun values (&rest vals)
   (cons 'VALUES vals))

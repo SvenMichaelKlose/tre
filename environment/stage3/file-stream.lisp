@@ -8,7 +8,7 @@
   (case direction
     ('input   "r")
     ('output  "w")
-    (t	      (error ":direction not specified"))))
+    (t	      (%error ":direction not specified"))))
 
 (defun open (path &key direction)
   "Open a file and return a stream object."
@@ -21,5 +21,5 @@
 (defmacro with-open-file (var file &rest body)
   `(let ((,var ,file))
      (unless ,var
-       (error "couldn't open file"))
+       (%error "couldn't open file"))
      ,@body)) ; XXX need to close file

@@ -5,12 +5,13 @@
 ;;;; Associative lists
 
 (defun assoc (key lst &key test)
+  "Search value for key in associative list."
   (when (consp lst)
     (dolist (i lst)
       (if (consp i)
 	(if (funcall (or test eql) key (car i))
 	  (return (cdr i)))
-	(error "not a pair")))))
+	(%error "not a pair")))))
 
 (defun assoc-cons (key lst &key test)
   (when (consp lst)
@@ -18,7 +19,7 @@
       (if (consp i)
 	(if (funcall (or test eql) key (car i))
 	  (return i))
-	(error "not a pair")))))
+	(%error "not a pair")))))
 
 (defun (setf assoc) (new-value key lst &key test)
   (when (consp lst)
@@ -27,7 +28,7 @@
 	(when (funcall (or test eql) key (car i))
           (rplacd i new-value)
 	  (return new-value))
-	(error "not a pair")))))
+	(%error "not a pair")))))
 
 (defun acons (key val lst)
   "Prepend key/value pair to associative list."

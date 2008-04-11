@@ -31,7 +31,7 @@
     ((atom (car alst))
       (progn
         (print alst)
-        (error "assignment list expected")))
+        (%error "assignment list expected")))
     (t
       (progn
         ; Check on keyword arguments.
@@ -39,7 +39,7 @@
           #'((expr)
               (cond
                 ((%ltest #'%arg-keyword-p expr)
-                  (error "illegal keyword argument"))))
+                  (%error "illegal keyword argument"))))
           alst)
 
         ; Create LAMBDA expression.
@@ -55,7 +55,7 @@
   ; Check if keyword arguments are used illegally.
   (cond
     ((%arg-keyword-p (car alst))
-      (error "unexpected keyword"))
+      (%error "unexpected keyword"))
     ; Create nested LAMBDA expression.
     (t
       (cond

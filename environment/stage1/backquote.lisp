@@ -72,7 +72,7 @@
                  ((not %gstmp)
                       (%backquote (cdr %gsbq) %gsbqsub))
                  ((atom %gstmp)
-                      (error "QUASIQUOTE-SPLICE: list expected"))
+                      (%error "QUASIQUOTE-SPLICE: list expected"))
                  (t   (%nconc (copy-tree %gstmp)
                       (%backquote-1 (cdr %gsbq) %gsbqsub)))))
               (eval (car (cdr (car %gsbq))))))

@@ -29,7 +29,8 @@
   (cond
     ((stringp obj) (%princ-string obj str))
     ((characterp obj) (%princ-character obj str))
-    ((numberp obj) (%princ-number obj str))))
+    ((numberp obj) (%princ-number obj str))
+    ((symbolp obj) (%princ-string (symbol-name obj) str))))
 
 (defun terpri (&optional (str *standard-output*))
   "Open a new line."

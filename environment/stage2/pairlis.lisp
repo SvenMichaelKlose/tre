@@ -8,4 +8,4 @@
     (acons (car keys) (car vals)
            (pairlis (cdr keys) (cdr vals)))
     (if vals
-      (error "lists must have the same length"))))
+      (%error "lists must have the same length"))))

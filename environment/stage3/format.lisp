@@ -28,3 +28,6 @@
   "Print formatted string."
   (with-default-stream str
         (%format str (length txt) 0 txt args)))
+
+(defun error (format &rest args)
+  (%error (apply #'format nil args)))
