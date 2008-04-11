@@ -31,7 +31,6 @@
 #include "builtin_fileio.h"
 #include "builtin_image.h"
 #include "builtin_list.h"
-/*#include "builtin_native.h"*/
 #include "builtin_number.h"
 #include "builtin_stream.h"
 #include "builtin_string.h"
@@ -281,6 +280,44 @@ trebuiltin_intern (treptr args)
     return treatom_get (n, p);
 }
 
+treptr
+trebuiltin_set (treptr args)
+{
+    treptr ptr;
+    treptr value;
+	char   c;
+	char   * p;
+
+    trearg_get2 (&ptr, &value, args);
+
+    while (TREPTR_IS_NUMBER(ptr) == FALSE)
+		ptr = treerror (args, "1st arg: number expected");
+
+    while (TREPTR_IS_NUMBER(value) == FALSE)
+		value = treerror (args, "2nd arg: number expected");
+
+	c = (char) TRENUMBER_VAL(value);
+	p = TRENUMBER_CHARPTR(ptr);
+	* p = c;
+
+    return value;
+}
+
+treptr
+trebuiltin_get (treptr args)
+{
+    treptr ptr = trearg_get (args);
+	char   * p;
+
+    while (TREPTR_IS_NUMBER(ptr) == FALSE)
+		ptr = treerror (args, "number expected");
+
+	p = TRENUMBER_CHARPTR(ptr);
+
+	return treatom_number_get ((double) * p, TRENUMTYPE_FLOAT);
+}
+
+
 char *tre_builtin_names[] = {
     "IDENTITY",
     "QUIT", "%ERROR", "+", "-", "*", "/", "MOD",
@@ -327,6 +364,8 @@ char *tre_builtin_names[] = {
     "INTERN",
 
     "SYS-IMAGE-CREATE", "SYS-IMAGE-LOAD",
+
+	"%%SET", "%%GET",
 
     NULL
 };
@@ -440,6 +479,9 @@ treevalfunc_t treeval_xlat_builtin[] = {
 
     treimage_builtin_create,
     treimage_builtin_load,
+
+	trebuiltin_set,
+	trebuiltin_get,
 
     NULL
 };
