@@ -441,6 +441,7 @@ tredebug_trace (void)
 		x = CAR(i);
 
 		switch (TREPTR_TYPE(x)) {
+			case ATOM_EXPR:
 			case ATOM_FUNCTION:
 			case ATOM_USERSPECIAL:
 			case ATOM_MACRO:
