@@ -57,10 +57,10 @@ treptr treprint_highlight;
 
 #define TREPRINT_HLOPEN(x) \
     if (treprint_highlight != treptr_nil && treprint_highlight == x) \
-        printf ("===>") 
+        printf (" ---> ") 
 #define TREPRINT_HLCLOSE(x) \
     if (treprint_highlight != treptr_nil && treprint_highlight == x) { \
-        printf ("<==="); \
+        printf (" <--- "); \
 	treprint_highlight = treptr_nil; \
     }
 
@@ -256,7 +256,6 @@ treprint_indent (treptr p, unsigned indent, bool nobracket, char *prepend)
         cdr = _CDR(p);
 
         TREPRINT_HLOPEN(p);
-        TREPRINT_HLOPEN(car);
 
         if (postatom)
 	    	printf (" ");
