@@ -109,9 +109,11 @@ tre_main_line (struct tre_stream *stream)
     tregc_push (expr);
 
 	/* Update history. */
+/*
 	TREATOM_VALUE(tremain_history_3) = TREATOM_VALUE(tremain_history_2);
 	TREATOM_VALUE(tremain_history_2) = TREATOM_VALUE(tremain_history);
 	TREATOM_VALUE(tremain_history) = expr;
+*/
 
     /* Expand macros. */
     expr = tremacro_builtin_macroexpand (expr);
@@ -183,6 +185,7 @@ tre_init (void)
 
 	MAKE_VAR("*BOOT-IMAGE*", trestring_get (TRE_BOOT_IMAGE));
 	MAKE_VAR("*LIBC-PATH*", trestring_get (LIBC_PATH));
+	MAKE_VAR("*ENDIANESS*", treatom_alloc (TRE_ENDIANESS_STRING, TRECONTEXT_PACKAGE(), ATOM_VARIABLE, treptr_invalid));
 
 	MAKE_HOOK_VAR(tremain_history, "_");
 	MAKE_HOOK_VAR(tremain_history_2, "__");

@@ -89,4 +89,12 @@ typedef int bool;
 
 #define TREPTR_INDEX_WIDTH	27
 
+#ifdef LITTLE_ENDIAN
+#define TRE_ENDIANESS_STRING	"LITTLE"
+#endif
+
+#ifdef BIG_ENDIAN
+#define TRE_ENDIANESS_STRING	"BIG"
+#endif
+
 #endif /* #ifndef TRE_TRE_H */
