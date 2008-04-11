@@ -133,7 +133,7 @@ treprint_atom (treptr atom, unsigned indent)
 				printf ("#\\");
 	        	putchar ((int) TRENUMBER_VAL(atom));
 	    	} else
-                printf ("%-g", TRENUMBER_VAL(atom));
+                printf ("%G", TRENUMBER_VAL(atom));
 	    	break;
 
 		case ATOM_STRING:
