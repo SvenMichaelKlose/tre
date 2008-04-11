@@ -431,13 +431,28 @@ tredebug_trace (void)
 {
     treptr  st = TRECONTEXT_FUNSTACK();
     treptr  i;
+    treptr  x;
 
     if (!has_funstack ())
         return;
 
     printf ("Function-call backtrace:\n");
-    DOLIST(i, st)
-        tredebug_lookup_bodyname (CAR(i));
+    DOLIST(i, st) {
+		x = CAR(i);
+
+		switch (TREPTR_TYPE(x)) {
+			case ATOM_FUNCTION:
+			case ATOM_USERSPECIAL:
+			case ATOM_MACRO:
+        		tredebug_lookup_bodyname (x);
+				break;
+
+			/* built-in functions don't recurse. */
+			case ATOM_BUILTIN:
+    			printf ("%s ", TREATOM_NAME(x));
+				break;
+		}
+	}
     printnl ();
 }
 
