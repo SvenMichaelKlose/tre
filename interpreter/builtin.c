@@ -117,7 +117,7 @@ trebuiltin_apply_args (treptr list)
     /* Handle single argument. */
     if (CDR(list) == treptr_nil) {
 		RETURN_NIL(CAR(list));
-        if (TREPTR_IS_EXPR(CAR(list)) == FALSE)
+        if (TREPTR_IS_CONS(CAR(list)) == FALSE)
             goto error;
         return trelist_copy (CAR(list));
     }
@@ -128,7 +128,7 @@ trebuiltin_apply_args (treptr list)
             continue;
         if (CADR(i) == treptr_nil)
 	    	break;
-        if (TREPTR_IS_EXPR(CADR(i)) == FALSE)
+        if (TREPTR_IS_CONS(CADR(i)) == FALSE)
             goto error;
 
         RPLACD(i, trelist_copy (CADR(i)));
@@ -259,7 +259,7 @@ trebuiltin_intern (treptr args)
     char     *n;
 
     name = CAR(args);
-    if (TREPTR_IS_EXPR(CDR(args))) {
+    if (TREPTR_IS_CONS(CDR(args))) {
         package = CADR(args);
         if (CDDR(args) != treptr_nil)
 	    	treerror (args, "INTERN: one or two arguments required");

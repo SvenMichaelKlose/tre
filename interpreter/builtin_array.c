@@ -95,7 +95,7 @@ trearray_get_elt (treptr list)
     indices = CDR(list);
 
     /* Check that indices are integers. */
-    if (trelist_check_type (indices, ATOM_NUMBER) == FALSE)
+    if (trelist_check_type (indices, TRETYPE_NUMBER) == FALSE)
 		treerror (indices, "integer expected");
 
     /* Get array definition and pointer to elements. */

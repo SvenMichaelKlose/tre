@@ -78,7 +78,7 @@ treatom_builtin_atom (treptr list)
 {
     treptr arg = trearg_get (list);
 
-    if (TREPTR_IS_EXPR(arg))
+    if (TREPTR_IS_CONS(arg))
 		return treptr_nil;
     return treptr_t;
 }
@@ -159,9 +159,9 @@ treatom_builtin_mkfunctionatom (treptr list)
 {
     treptr arg = trearg_get (list);
 
-    if (TREPTR_IS_EXPR(arg) == FALSE)
+    if (TREPTR_IS_CONS(arg) == FALSE)
 		return treerror (arg, "list expected");
-    return treatom_alloc (NULL, TRECONTEXT_PACKAGE(), ATOM_FUNCTION, arg);
+    return treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_FUNCTION, arg);
 }
 
 /*
@@ -229,8 +229,8 @@ treatom_builtin_atom_list_s (treptr ret)
     unsigned  n;
 
     for (n = 0; n < NUM_ATOMS; n++) {
-		if (a->type == ATOM_FUNCTION) {
-            TRELIST_PUSH(ret, TYPEINDEX_TO_TREPTR(ATOM_FUNCTION, n));
+		if (a->type == TRETYPE_FUNCTION) {
+            TRELIST_PUSH(ret, TYPEINDEX_TO_TREPTR(TRETYPE_FUNCTION, n));
 		}
 		a++;
     }

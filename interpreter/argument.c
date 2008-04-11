@@ -32,7 +32,7 @@ treptr tre_atom_key;
 treptr
 trearg_get (treptr list)
 {   
-    if (TREPTR_IS_EXPR(list) == FALSE)
+    if (TREPTR_IS_CONS(list) == FALSE)
         return treerror (list, "argument expected");
     
     if (CDR(list) != treptr_nil)
@@ -118,7 +118,7 @@ trearg_expand (treptr *rvars, treptr *rvals, treptr iargdef, treptr args,
         if (argdef == treptr_nil)
 	    	break;
 
-        if (TREPTR_IS_EXPR(argdef) == FALSE) {
+        if (TREPTR_IS_CONS(argdef) == FALSE) {
 	    	treerror_norecover (iargdef, "argument definition must be a list");
 	    	return;
 		}
@@ -130,8 +130,8 @@ trearg_expand (treptr *rvars, treptr *rvals, treptr iargdef, treptr args,
 	      treptr_nil;
 
 		/* Process sub-level argument list. */
-        if (TREPTR_IS_EXPR(var)) {
-            if (TREPTR_IS_EXPR(val) == FALSE) {
+        if (TREPTR_IS_CONS(var)) {
+            if (TREPTR_IS_CONS(val) == FALSE) {
 	        	treerror_norecover (var, "list type argument expected");
                 goto error;
             }
@@ -174,7 +174,7 @@ trearg_expand (treptr *rvars, treptr *rvals, treptr iargdef, treptr args,
 
 				/* Get init value. */
 				init = treptr_nil;
-				if (TREPTR_IS_EXPR(form)) {
+				if (TREPTR_IS_CONS(form)) {
 		    		init = CADR(form);
 		    		form = CAR(form);
 				}
@@ -203,7 +203,7 @@ trearg_expand (treptr *rvars, treptr *rvals, treptr iargdef, treptr args,
 	    	while (argdef != treptr_nil) {
 	        	key = CAR(argdef);
 				init = treptr_nil;
-                if (TREPTR_IS_EXPR(key)) {
+                if (TREPTR_IS_CONS(key)) {
 		    		init = CADR(key);
 		    		key = CAR(key);
  				}
@@ -284,12 +284,12 @@ trearg_apply_keyword_package (treptr args)
     if (args == treptr_nil)
 		return;
 
-    if (TREPTR_IS_EXPR(CAR(args)))
+    if (TREPTR_IS_CONS(CAR(args)))
 		trearg_apply_keyword_package (CAR(args));
     else {
 		if (CAR(args) == tre_atom_key) {
 	    	DOLIST(a, CDR(args)) {
-				if (TREPTR_IS_EXPR(CAR(a)))
+				if (TREPTR_IS_CONS(CAR(a)))
 		    		RPLACA(CAR(a), trearg_get_keyword (CAAR(a)));
 	        	else
 		    		RPLACA(a, trearg_get_keyword (CAR(a)));

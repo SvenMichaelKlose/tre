@@ -61,7 +61,7 @@ tresymbol_gc ()
 
     /* Correct symbol pointers in atoms. */
     DOTIMES(j, NUM_ATOMS) {
-        if (tre_atoms[j].type == ATOM_UNUSED)
+        if (tre_atoms[j].type == TRETYPE_UNUSED)
 	    	continue;
 
         r = reloc;

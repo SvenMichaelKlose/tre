@@ -53,7 +53,7 @@ trestring_get (const char *str)
     if (nstr == NULL)
         return treerror (treptr_invalid, "out of memory");
     strcpy (&nstr->str, str);
-    atom = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), ATOM_STRING, treptr_nil);
+    atom = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_STRING, treptr_nil);
     TREATOM_SET_STRING(atom, nstr);
     return atom;
 }

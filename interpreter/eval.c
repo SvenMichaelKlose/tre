@@ -169,26 +169,26 @@ treeval_expr (treptr x)
 	/* Get function value of variable immediately. */
     if (TREPTR_IS_VARIABLE(fun))
          fun = TREATOM_FUN(fun);
-    else /* if (TREPTR_IS_EXPR(fun)) */
+    else /* if (TREPTR_IS_CONS(fun)) */
         fun = treeval (fun);
 	fun = treeval (fun);
 
     tregc_push (fun);
 
     switch (TREPTR_TYPE(fun)) {
-        case ATOM_FUNCTION:
+        case TRETYPE_FUNCTION:
             v = treeval_funcall (fun, x, TRUE);
             break;
 
-        case ATOM_BUILTIN:
+        case TRETYPE_BUILTIN:
             v = trebuiltin (fun, x);
             break;
 
-        case ATOM_SPECIAL:
+        case TRETYPE_SPECIAL:
             v = trespecial (fun, x);
             break;
 
-        case ATOM_USERSPECIAL:
+        case TRETYPE_USERSPECIAL:
             v = treeval_funcall (fun, x, FALSE);
             break;
 
@@ -227,25 +227,25 @@ treeval (treptr x)
 
     switch (TREPTR_TYPE(x)) {
         /* Call function, special form or macro. */
-        case ATOM_EXPR:
+        case TRETYPE_CONS:
             val = treeval_expr (x);
             break;
 
         /* Return variable value. */
-        case ATOM_VARIABLE:
+        case TRETYPE_VARIABLE:
             val = TREATOM_VALUE(x);
             break;
 
 #ifdef TRE_DIAGNOSTICS
         /* Return constants as they are. */
-        case ATOM_NUMBER:
-        case ATOM_STRING:
-        case ATOM_ARRAY:
-        case ATOM_FUNCTION:
-        case ATOM_USERSPECIAL:
-        case ATOM_BUILTIN:
-        case ATOM_SPECIAL:
-        case ATOM_MACRO:
+        case TRETYPE_NUMBER:
+        case TRETYPE_STRING:
+        case TRETYPE_ARRAY:
+        case TRETYPE_FUNCTION:
+        case TRETYPE_USERSPECIAL:
+        case TRETYPE_BUILTIN:
+        case TRETYPE_SPECIAL:
+        case TRETYPE_MACRO:
             break;
 
     /* Cough, if we don't know the atom type. */

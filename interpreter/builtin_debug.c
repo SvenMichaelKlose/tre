@@ -34,7 +34,7 @@ tredebug_builtin_end_debug (treptr no_args)
 
     for (i = 0; i < NUM_ATOMS; i++) {
         atom = &tre_atoms[i];
-		if (atom->type == ATOM_UNUSED)
+		if (atom->type == TRETYPE_UNUSED)
 	    	continue;
         b = atom->binding;
         if (b == treptr_nil)

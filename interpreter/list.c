@@ -87,7 +87,7 @@ trelist_free (treptr node)
     CHKPTR(node);
 
 #ifdef TRE_DIAGNOSTICS
-    if (TREPTR_IS_EXPR(node) == FALSE)
+    if (TREPTR_IS_CONS(node) == FALSE)
 		treerror_internal (node, "list_free: not a cons");
 
     if (TRE_GETMARK(trelist_marks, node) == FALSE)
@@ -110,7 +110,7 @@ trelist_free (treptr node)
 void
 trelist_free_expr (treptr node)
 {
-    if (TREPTR_IS_EXPR(node) == FALSE)
+    if (TREPTR_IS_CONS(node) == FALSE)
 		return;
 
 	trelist_free_expr (CAR(node));
@@ -191,7 +191,7 @@ trelist_copy_tree (treptr l)
     treptr cdr;
     treptr ret;
 
-    if (TREPTR_IS_EXPR(l) == FALSE)
+    if (TREPTR_IS_CONS(l) == FALSE)
 		return l;
 
     car = trelist_copy_tree (CAR(l));
@@ -212,7 +212,7 @@ trelist_copy_tree (treptr l)
 treptr
 trelist_copy (treptr l)
 {
-    if (TREPTR_IS_EXPR(l) == FALSE)
+    if (TREPTR_IS_CONS(l) == FALSE)
 		return l;
 
     return CONS(CAR(l), trelist_copy (CDR(l)));
@@ -353,10 +353,10 @@ bool
 trelist_equal (treptr la, treptr lb)
 {
     while (la != treptr_nil && lb != treptr_nil) {
-        if (TREPTR_IS_EXPR(la) != TREPTR_IS_EXPR(lb))
+        if (TREPTR_IS_CONS(la) != TREPTR_IS_CONS(lb))
 	    	return FALSE;
 
-        if (TREPTR_IS_EXPR(la) == FALSE)
+        if (TREPTR_IS_CONS(la) == FALSE)
 	    	return la == lb;
 
         if (trelist_equal (CAR(la), CAR(lb)) == FALSE)

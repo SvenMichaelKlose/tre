@@ -60,7 +60,7 @@ trearray_get (treptr sizes)
     treptr   a;
     unsigned  size = trearray_get_size (sizes);
 
-    a = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), ATOM_ARRAY, treptr_nil);
+    a = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_ARRAY, treptr_nil);
     treatom_set_value (a, trelist_copy (sizes));
     TREATOM_DETAIL(a) = trearray_get_raw (size);
     if (TREATOM_DETAIL(a) == NULL)

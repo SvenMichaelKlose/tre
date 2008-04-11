@@ -47,7 +47,7 @@ trelist_builtin_cxr_arg (treptr list)
     treptr arg = trearg_get (list);
 
     RETURN_NIL(arg);
-    if (TREPTR_IS_EXPR(arg) == FALSE)
+    if (TREPTR_IS_CONS(arg) == FALSE)
 		return treerror (arg, "list expected");
     return arg;
 }
@@ -83,7 +83,7 @@ trelist_builtin_cdr (treptr list)
     treptr  cons;	\
     treptr  new;	\
     trearg_get2 (&cons, &new, list);	\
-    if (TREPTR_IS_EXPR(cons) == FALSE)	\
+    if (TREPTR_IS_CONS(cons) == FALSE)	\
         return treerror (cons, "1st argument is not an expression");
 
 /*
@@ -122,7 +122,7 @@ trelist_builtin_consp (treptr list)
 {
     treptr arg = trearg_get (list);
 
-    if (TREPTR_IS_EXPR(arg))
+    if (TREPTR_IS_CONS(arg))
 		return treptr_t;
     return treptr_nil;
 }

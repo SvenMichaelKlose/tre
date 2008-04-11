@@ -27,11 +27,11 @@ treimage_builtin_create (treptr list)
     treptr  init_fun = treptr_nil;
     int r;
 
-    while (list == treptr_nil || TREPTR_IS_EXPR(list) == FALSE)
+    while (list == treptr_nil || TREPTR_IS_CONS(list) == FALSE)
         list = treerror (treptr_invalid, "argument list missing");
 
     file = CAR(list);
-    if (TREPTR_IS_EXPR(CDR(list)))
+    if (TREPTR_IS_CONS(CDR(list)))
         init_fun = CADR(list);
 
     if (TREPTR_IS_STRING(file) == FALSE)

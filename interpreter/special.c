@@ -28,7 +28,7 @@ treptr tre_atom_evaluated_return_from;
 bool
 treeval_is_return (treptr p)
 {
-    if (TREPTR_IS_EXPR(p) == FALSE)
+    if (TREPTR_IS_CONS(p) == FALSE)
 		return FALSE;
 
     return CAR(p) == tre_atom_evaluated_return_from;
@@ -38,7 +38,7 @@ treeval_is_return (treptr p)
 bool
 treeval_is_go (treptr p)
 {
-    if (TREPTR_IS_EXPR(p) == FALSE)
+    if (TREPTR_IS_CONS(p) == FALSE)
 		return FALSE;
 
     return CAR(p) == tre_atom_evaluated_go;
@@ -83,7 +83,7 @@ trespecial_setq (treptr list)
 		/* Catch RETURN-FROM. */
 		TREEVAL_RETURN_JUMP(cdr);
 
-		if (TREPTR_TYPE(car) == ATOM_VARIABLE)
+		if (TREPTR_TYPE(car) == TRETYPE_VARIABLE)
             treatom_set_value (car, cdr);
         else
 	    	return treerror (car, "variable expected");
@@ -106,7 +106,7 @@ trespecial_macro (treptr list)
     treptr  expr = trelist_copy (list);
 
     trearg_apply_keyword_package (CAR(expr));
-    f = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), ATOM_MACRO, expr);
+    f = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_MACRO, expr);
     treenv_create (f);
 
     return f;
@@ -127,7 +127,7 @@ trespecial_special (treptr list)
 
     /* Create macro atom. */
     tregc_push (expr);
-    ret = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), ATOM_USERSPECIAL, expr);
+    ret = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_USERSPECIAL, expr);
     tregc_pop ();
 
     return ret;
@@ -147,7 +147,7 @@ trespecial_cond (treptr p)
     treptr test;
     treptr body;
 
-    if (TREPTR_IS_EXPR(p) == FALSE)
+    if (TREPTR_IS_CONS(p) == FALSE)
 		return treerror (p, "expression expected");
 
     for (;p != treptr_nil; p = CDR(p)) {
@@ -211,7 +211,7 @@ trespecial_block (treptr args)
     treptr last = treptr_nil;
 
     tag = CAR(args);
-    if (TREPTR_IS_EXPR(tag))
+    if (TREPTR_IS_CONS(tag))
 		return treerror (tag, "tag expected instead of an expression");
 
     p = CDR(args);
@@ -294,7 +294,7 @@ trespecial_tagbody (treptr body)
 
         /* Evaluate expression, skip non-expression. */
 		car = CAR(p);
-		if (TREPTR_IS_EXPR(car) == FALSE)
+		if (TREPTR_IS_CONS(car) == FALSE)
             goto next;
 
         res = treeval (car);
@@ -363,7 +363,7 @@ trespecial_function_from_expr (treptr expr)
     body = CDR(past_lambda);
 
     trearg_apply_keyword_package (args);
-    f = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), ATOM_FUNCTION, past_lambda);
+    f = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_FUNCTION, past_lambda);
     tregc_retval (f);
     treenv_create (f);
 
@@ -390,15 +390,15 @@ trespecial_function (treptr fun)
     car = CAR(fun);
 
     switch (TREPTR_TYPE(car)) {
-        case ATOM_EXPR:
+        case TRETYPE_CONS:
 			return trespecial_function_from_expr (car);
 
-        case ATOM_VARIABLE:
+        case TRETYPE_VARIABLE:
             return TREATOM_FUN(car);
 
-        case ATOM_FUNCTION:
-        case ATOM_BUILTIN:
-        case ATOM_SPECIAL:
+        case TRETYPE_FUNCTION:
+        case TRETYPE_BUILTIN:
+        case TRETYPE_SPECIAL:
 	    	return car;
     }
 

@@ -98,7 +98,7 @@ tregc_trace_expr (treptr p)
 
         tregc_trace_object (_CAR(i));
 
-        if (TREPTR_IS_EXPR(_CDR(i)) == FALSE) {
+        if (TREPTR_IS_CONS(_CDR(i)) == FALSE) {
             tregc_trace_object (_CDR(i));
 	    	return;
 		}
@@ -109,7 +109,7 @@ tregc_trace_expr (treptr p)
 void
 tregc_trace_object (treptr p)
 {
-    if (TREPTR_IS_EXPR(p))
+    if (TREPTR_IS_CONS(p))
         tregc_trace_expr (p);
     else
         tregc_trace_atom (p);
@@ -142,12 +142,12 @@ tregc_trace_atom (treptr a)
     TRE_UNMARK(tregc_atommarks, ai);
 
     switch (TREATOM_TYPE(a)) {
-        case ATOM_FUNCTION:
-        case ATOM_MACRO:
+        case TRETYPE_FUNCTION:
+        case TRETYPE_MACRO:
 	    	tregc_trace_object ((treptr) TREATOM_DETAIL(a));
 	    	break;
 
-        case ATOM_ARRAY:
+        case TRETYPE_ARRAY:
 	    	tregc_trace_array (a);
 	    	break;
     }
@@ -205,7 +205,7 @@ tregc_sweep (void)
 		DOTIMES(j, 8) {
 	    	if (tregc_atommarks[i] & c) {
 	        	idx = (i << 3) + j;
-				if (TREPTR_TO_ATOM(idx).type != ATOM_UNUSED)
+				if (TREPTR_TO_ATOM(idx).type != TRETYPE_UNUSED)
 	            	treatom_remove (TYPEINDEX_TO_TREPTR(TREATOM_TYPE(idx), idx));
             }
 
@@ -274,15 +274,15 @@ tregc_force_user ()
 void
 tregc_print_stats ()
 {
-    unsigned c[ATOM_MAXTYPE + 1];
+    unsigned c[TRETYPE_MAXTYPE + 1];
     unsigned i;
     unsigned atoms;
 
-    for (i = 0; i <= ATOM_MAXTYPE; i++)
+    for (i = 0; i <= TRETYPE_MAXTYPE; i++)
         c[i] = 0;
 
     for (atoms = i = 0; i < NUM_ATOMS; i++)
-        if (tre_atoms[i].type != ATOM_UNUSED) {
+        if (tre_atoms[i].type != TRETYPE_UNUSED) {
             atoms++;
             c[(unsigned) tre_atoms[i].type]++;
         }
@@ -293,9 +293,9 @@ tregc_print_stats ()
             trelist_num_used - trelist_length (tre_atoms_free)
 							 - trelist_length (tre_numbers_free),
             atoms,
-            c[ATOM_VARIABLE], c[ATOM_NUMBER], c[ATOM_ARRAY], c[ATOM_STRING],
-            c[ATOM_FUNCTION], c[ATOM_MACRO], c[ATOM_USERSPECIAL],
-            c[ATOM_PACKAGE], c[ATOM_BUILTIN], c[ATOM_SPECIAL]);
+            c[TRETYPE_VARIABLE], c[TRETYPE_NUMBER], c[TRETYPE_ARRAY], c[TRETYPE_STRING],
+            c[TRETYPE_FUNCTION], c[TRETYPE_MACRO], c[TRETYPE_USERSPECIAL],
+            c[TRETYPE_PACKAGE], c[TRETYPE_BUILTIN], c[TRETYPE_SPECIAL]);
     fflush (stdout);
 }
 

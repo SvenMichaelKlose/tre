@@ -28,11 +28,11 @@ struct tre_sequence_type *
 tresequence_get_type (treptr seq)
 {
     switch (TREPTR_TYPE(seq)) {
-		case ATOM_STRING:
+		case TRETYPE_STRING:
 	    	return &trestring_seqtype;
-		case ATOM_ARRAY:
+		case TRETYPE_ARRAY:
 	    	return &trearray_seqtype;
-		case ATOM_EXPR:
+		case TRETYPE_CONS:
 	    	return &trelist_seqtype;
     }
 

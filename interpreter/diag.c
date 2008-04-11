@@ -56,7 +56,7 @@ trediag_is_cons_of_r (treptr orig, treptr expr, treptr cons)
 {
     treptr i;
 
-    if (expr == treptr_nil || TREPTR_IS_EXPR(expr) == FALSE)
+    if (expr == treptr_nil || TREPTR_IS_CONS(expr) == FALSE)
         return;
 
     if (expr == cons)

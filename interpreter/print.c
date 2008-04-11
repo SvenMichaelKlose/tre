@@ -95,10 +95,10 @@ treprint_chk_atom_mark (treptr atom)
         TREPRINT_MARK_ATOM(atom);
         if (mark) {
             switch (TREPTR_TYPE(atom)) {
-	        	case ATOM_FUNCTION:
-	        	case ATOM_MACRO:
-	        	case ATOM_USERSPECIAL:
-                case ATOM_ARRAY:
+	        	case TRETYPE_FUNCTION:
+	        	case TRETYPE_MACRO:
+	        	case TRETYPE_USERSPECIAL:
+                case TRETYPE_ARRAY:
                     return TRUE;
             }
         }
@@ -120,15 +120,15 @@ treprint_atom (treptr atom, unsigned indent)
     TREPRINT_HLOPEN(atom);
 
     switch (TREPTR_TYPE(atom)) {
-		case ATOM_VARIABLE:
-		case ATOM_BUILTIN:
-		case ATOM_SPECIAL:
+		case TRETYPE_VARIABLE:
+		case TRETYPE_BUILTIN:
+		case TRETYPE_SPECIAL:
 	    	if (TREATOM_PACKAGE(atom) != TRECONTEXT_PACKAGE())
                 printf ("%s:", TREATOM_NAME(TREATOM_PACKAGE(atom)));
             	printf ("%s", TREATOM_NAME(atom));
 	    	break;
 
-		case ATOM_NUMBER:
+		case TRETYPE_NUMBER:
 	    	if (TRENUMBER_TYPE(atom) == TRENUMTYPE_CHAR) {
 				printf ("#\\");
 	        	putchar ((int) TRENUMBER_VAL(atom));
@@ -136,11 +136,11 @@ treprint_atom (treptr atom, unsigned indent)
                 printf ("%G", TRENUMBER_VAL(atom));
 	    	break;
 
-		case ATOM_STRING:
+		case TRETYPE_STRING:
             printf ("\"%s\"", (char *) TREATOM_STRINGP(atom));
 	    	break;
 
-		case ATOM_FUNCTION:
+		case TRETYPE_FUNCTION:
             name = TREATOM_NAME(atom);
             if (name == NULL) {
 	        	printf ("#<FUNCTION>(");
@@ -149,7 +149,7 @@ treprint_atom (treptr atom, unsigned indent)
                 printf (name);
 	    break;
 
-		case ATOM_MACRO:
+		case TRETYPE_MACRO:
             name = TREATOM_NAME(atom);
             if (name == NULL) {
 	        	printf ("#<user-defined macro>");
@@ -158,7 +158,7 @@ treprint_atom (treptr atom, unsigned indent)
                 printf (name);
 	    break;
 
-		case ATOM_USERSPECIAL:
+		case TRETYPE_USERSPECIAL:
             name = TREATOM_NAME(atom);
             if (name == NULL) {
 	        	printf ("#<user-defined special form>");
@@ -167,15 +167,15 @@ treprint_atom (treptr atom, unsigned indent)
                 printf (name);
 	    break;
 
-		case ATOM_EXPR:
+		case TRETYPE_CONS:
 	    	treprint_r (atom);
 	    	break;
 
-        case ATOM_ARRAY:
+        case TRETYPE_ARRAY:
 	    	treprint_array (atom);
 	    	break;
 
-        case ATOM_PACKAGE:
+        case TRETYPE_PACKAGE:
             printf ("(PACKAGE-ATOM)");
 	    	break;
 
@@ -195,7 +195,7 @@ treprint_indent (treptr p, unsigned indent, bool nobracket, char *prepend)
     int       postatom = 0;
     unsigned  i;
 
-    if (TREPTR_IS_EXPR(p) == FALSE) {
+    if (TREPTR_IS_CONS(p) == FALSE) {
 		treprint_atom (p, indent);
 		return;
     }
@@ -261,18 +261,18 @@ treprint_indent (treptr p, unsigned indent, bool nobracket, char *prepend)
 	    	printf (" ");
 
 		/* Check if we already passed car. */
-        if (TREPTR_IS_EXPR(car) && TREPRINT_GET_MARK_CONS(car)) {
+        if (TREPTR_IS_CONS(car) && TREPRINT_GET_MARK_CONS(car)) {
             printf ("*circular*");
             return;
 		}
 
         /* Print dotted pair. */
-        if (cdr != treptr_nil && TREPTR_IS_EXPR(cdr) == FALSE) {
+        if (cdr != treptr_nil && TREPTR_IS_CONS(cdr) == FALSE) {
 	    	treprint_atom (car, indent);
     	    printf (" . ");
 	    	treprint_atom (cdr, indent);
             break;
-        } else if (TREPTR_IS_EXPR(car)) {
+        } else if (TREPTR_IS_CONS(car)) {
 	    	treprint_indent (car, indent + postatom, FALSE, prepend);
 		} else {
             printf (prepend);
@@ -286,7 +286,7 @@ treprint_indent (treptr p, unsigned indent, bool nobracket, char *prepend)
         TREPRINT_HLCLOSE(p);
         p = _CDR(p);
 		/* Check if we already passed cdr. */
-        if (TREPTR_IS_EXPR(p) && TREPRINT_GET_MARK_CONS(p)) {
+        if (TREPTR_IS_CONS(p) && TREPRINT_GET_MARK_CONS(p)) {
             printf ("*circular");
 	    	break;
 		}

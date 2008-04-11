@@ -441,15 +441,15 @@ tredebug_trace (void)
 		x = CAR(i);
 
 		switch (TREPTR_TYPE(x)) {
-			case ATOM_EXPR:
-			case ATOM_FUNCTION:
-			case ATOM_USERSPECIAL:
-			case ATOM_MACRO:
+			case TRETYPE_CONS:
+			case TRETYPE_FUNCTION:
+			case TRETYPE_USERSPECIAL:
+			case TRETYPE_MACRO:
         		tredebug_lookup_bodyname (x);
 				break;
 
 			/* built-in functions don't recurse. */
-			case ATOM_BUILTIN:
+			case TRETYPE_BUILTIN:
     			printf ("%s ", TREATOM_NAME(x));
 				break;
 		}

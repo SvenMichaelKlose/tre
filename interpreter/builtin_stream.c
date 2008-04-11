@@ -31,15 +31,15 @@ trestream_builtin_princ (treptr args)
  		str = stdout;
 
     switch (TREPTR_TYPE(obj)) {
-		case ATOM_STRING:
+		case TRETYPE_STRING:
 	    	fprintf (str, TREATOM_STRINGP(obj));
 	    	break;
 
-		case ATOM_VARIABLE:
+		case TRETYPE_VARIABLE:
 	    	fprintf (str, TREATOM_NAME(obj));
 	    	break;
 
-		case ATOM_NUMBER:
+		case TRETYPE_NUMBER:
 	    	if (TRENUMBER_TYPE(obj) == TRENUMTYPE_CHAR)
                 fputc ((int) TRENUMBER_VAL(obj), str);
 	    	else

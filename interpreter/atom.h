@@ -10,21 +10,21 @@
 
 typedef unsigned treptr;
 
-#define ATOM_EXPR		0
-#define ATOM_VARIABLE	1
-#define ATOM_NUMBER		2
-#define ATOM_STRING		3
-#define ATOM_ARRAY		4
-#define ATOM_BUILTIN	5
-#define ATOM_SPECIAL	6
-#define ATOM_MACRO		7
-#define ATOM_FUNCTION		8
-#define ATOM_USERSPECIAL	9
-#define ATOM_PACKAGE	10
-#define ATOM_MAXTYPE	10
-#define ATOM_UNUSED		-1
+#define TRETYPE_CONS		0
+#define TRETYPE_VARIABLE	1
+#define TRETYPE_NUMBER		2
+#define TRETYPE_STRING		3
+#define TRETYPE_ARRAY		4
+#define TRETYPE_BUILTIN		5
+#define TRETYPE_SPECIAL		6
+#define TRETYPE_MACRO		7
+#define TRETYPE_FUNCTION	8
+#define TRETYPE_USERSPECIAL	9
+#define TRETYPE_PACKAGE		10
+#define TRETYPE_MAXTYPE		10
+#define TRETYPE_UNUSED		-1
 
-#define TREPTR_NIL()	TYPEINDEX_TO_TREPTR(ATOM_VARIABLE, 0)
+#define TREPTR_NIL()	TYPEINDEX_TO_TREPTR(TRETYPE_VARIABLE, 0)
 
 /* Atom table. */
 struct tre_atom {
@@ -78,18 +78,18 @@ extern treptr tre_package_keyword;
 
 #define TREPTR_TYPE(ptr)	(ptr >> TREPTR_INDEX_WIDTH)
 #define TREPTR_INDEX(ptr)	(ptr & ~TREATOM_FLAGS)
-#define TREPTR_IS_EXPR(ptr)		((ptr & TREATOM_FLAGS) == 0)
-#define TREPTR_IS_ATOM(ptr)		(TREPTR_IS_EXPR(ptr) == FALSE)
-#define TREPTR_IS_VARIABLE(ptr)	(TREPTR_TYPE(ptr) == ATOM_VARIABLE)
+#define TREPTR_IS_CONS(ptr)		((ptr & TREATOM_FLAGS) == TRETYPE_CONS)
+#define TREPTR_IS_ATOM(ptr)		(TREPTR_IS_CONS(ptr) == FALSE)
+#define TREPTR_IS_VARIABLE(ptr)	(TREPTR_TYPE(ptr) == TRETYPE_VARIABLE)
 #define TREPTR_IS_SYMBOL(ptr)	(TREPTR_IS_VARIABLE(ptr) && \
 								 TREATOM_VALUE(ptr) == ptr)
-#define TREPTR_IS_NUMBER(ptr)		(TREPTR_TYPE(ptr) == ATOM_NUMBER)
-#define TREPTR_IS_STRING(ptr)		(TREPTR_TYPE(ptr) == ATOM_STRING)
-#define TREPTR_IS_ARRAY(ptr)		(TREPTR_TYPE(ptr) == ATOM_ARRAY)
-#define TREPTR_IS_BUILTIN(ptr)		(TREPTR_TYPE(ptr) == ATOM_BUILTIN)
-#define TREPTR_IS_SPECIAL(ptr)		(TREPTR_TYPE(ptr) == ATOM_SPECIAL)
-#define TREPTR_IS_MACRO(ptr)		(TREPTR_TYPE(ptr) == ATOM_MACRO)
-#define TREPTR_IS_FUNCTION(ptr)	(TREPTR_TYPE(ptr) == ATOM_FUNCTION)
+#define TREPTR_IS_NUMBER(ptr)		(TREPTR_TYPE(ptr) == TRETYPE_NUMBER)
+#define TREPTR_IS_STRING(ptr)		(TREPTR_TYPE(ptr) == TRETYPE_STRING)
+#define TREPTR_IS_ARRAY(ptr)		(TREPTR_TYPE(ptr) == TRETYPE_ARRAY)
+#define TREPTR_IS_BUILTIN(ptr)		(TREPTR_TYPE(ptr) == TRETYPE_BUILTIN)
+#define TREPTR_IS_SPECIAL(ptr)		(TREPTR_TYPE(ptr) == TRETYPE_SPECIAL)
+#define TREPTR_IS_MACRO(ptr)		(TREPTR_TYPE(ptr) == TRETYPE_MACRO)
+#define TREPTR_IS_FUNCTION(ptr)	(TREPTR_TYPE(ptr) == TRETYPE_FUNCTION)
 
 #define TREPTR_TRUTH(test)	((test) ? treptr_t : treptr_nil)
 

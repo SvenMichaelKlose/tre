@@ -54,7 +54,7 @@ trestring_builtin_make (treptr list)
 		return treerror (arg, "integer expected");
 
     str = trestring_get_raw ((unsigned) TRENUMBER_VAL(arg));
-    atom = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), ATOM_STRING, treptr_nil);
+    atom = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_STRING, treptr_nil);
     TREATOM_SET_STRING(atom, str);
     return atom;
 }
@@ -92,7 +92,7 @@ trestring_builtin_concat (treptr list)
 		newp = stpcpy (newp, TREATOM_STRINGP(CAR(p)));
 
     /* Return new string atom. */
-    atom = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), ATOM_STRING, treptr_nil);
+    atom = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_STRING, treptr_nil);
     TREATOM_SET_STRING(atom, news);
     return atom;
 }
@@ -110,16 +110,16 @@ trestring_builtin_string (treptr list)
     treptr  arg = trearg_get (list);
 
     switch (TREPTR_TYPE(arg)) {
-        case ATOM_VARIABLE:
-        case ATOM_BUILTIN:
+        case TRETYPE_VARIABLE:
+        case TRETYPE_BUILTIN:
 	    	/* Convert symbol to string. */
 	    	strcpy (buf, TREATOM_NAME(arg));
             return trestring_get (buf);
 
-        case ATOM_STRING:
+        case TRETYPE_STRING:
 	    	return arg;
 
-        case ATOM_NUMBER:
+        case TRETYPE_NUMBER:
             sprintf (buf, "%-g", TRENUMBER_VAL(arg));
             return trestring_get (buf);
     }

@@ -114,25 +114,25 @@ char *
 treerror_typestring (treptr x)
 {
     switch (TREPTR_TYPE(x)) {
-        case ATOM_STRING:
+        case TRETYPE_STRING:
             return "string";
 
-        case ATOM_ARRAY:
+        case TRETYPE_ARRAY:
             return "array";
 
-        case ATOM_NUMBER:
+        case TRETYPE_NUMBER:
             return "number";
 
-        case ATOM_EXPR:
+        case TRETYPE_CONS:
             return "cons";
 
-        case ATOM_VARIABLE:
+        case TRETYPE_VARIABLE:
             return TREPTR_IS_SYMBOL(x) ? "symbol" : "variable";
 
-        case ATOM_MACRO:
+        case TRETYPE_MACRO:
             return "macro";
 
-        case ATOM_SPECIAL:
+        case TRETYPE_SPECIAL:
             return "special form";
 
         default:

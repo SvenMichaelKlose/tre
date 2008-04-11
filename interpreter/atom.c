@@ -55,10 +55,10 @@ void
 treatom_init_nil (void)
 {
     /* Initialise NIL atom manually to make list functions work. */
-    ATOM_SET(0, tresymbol_add ("NIL"), treptr_nil, ATOM_VARIABLE);
+    ATOM_SET(0, tresymbol_add ("NIL"), treptr_nil, TRETYPE_VARIABLE);
 
     /* Reinitialize every slot that takes NIL. */
-    tre_atoms[0].value = TYPEINDEX_TO_TREPTR(ATOM_VARIABLE, 0), 1;
+    tre_atoms[0].value = TYPEINDEX_TO_TREPTR(TRETYPE_VARIABLE, 0), 1;
     tre_atoms[0].fun = treptr_nil;
     tre_atoms[0].binding = treptr_nil;
 }
@@ -71,7 +71,7 @@ treatom_init_atom_table (void)
 
     /* Prepare unused atom entries. */
     for (i = 1; i < NUM_ATOMS; i++) {
-        ATOM_SET(i, NULL, treptr_nil, ATOM_UNUSED);
+        ATOM_SET(i, NULL, treptr_nil, TRETYPE_UNUSED);
     }
 
     /* Put atom entries on the free atom list, except NIL. */
@@ -90,7 +90,7 @@ treatom_init_builtins (void)
     /* Builtin functions. */
     for (i = 0; tre_builtin_names[i] != NULL; i++) {
         atom = treatom_alloc (tre_builtin_names[i], treptr_nil,
-                              ATOM_BUILTIN, treptr_nil);
+                              TRETYPE_BUILTIN, treptr_nil);
         TREATOM_SET_DETAIL(atom, i);
         EXPAND_UNIVERSE(atom);
     }
@@ -98,7 +98,7 @@ treatom_init_builtins (void)
     /* Special forms. */
     for (i = 0; tre_special_names[i] != NULL; i++) {
         atom = treatom_alloc (tre_special_names[i], treptr_nil,
-                              ATOM_SPECIAL, treptr_nil);
+                              TRETYPE_SPECIAL, treptr_nil);
         TREATOM_SET_DETAIL(atom, i);
         EXPAND_UNIVERSE(atom);
     }
@@ -116,9 +116,9 @@ treatom_init (void)
     treatom_init_atom_table ();
 
     t = treatom_get ("T", treptr_nil);
-    tre_package_keyword = treatom_alloc ("", treptr_nil, ATOM_PACKAGE, treptr_nil);
+    tre_package_keyword = treatom_alloc ("", treptr_nil, TRETYPE_PACKAGE, treptr_nil);
 
-    treptr_universe = treatom_alloc ("*UNIVERSE*", treptr_nil, ATOM_VARIABLE, treptr_nil);
+    treptr_universe = treatom_alloc ("*UNIVERSE*", treptr_nil, TRETYPE_VARIABLE, treptr_nil);
     EXPAND_UNIVERSE(t);
     EXPAND_UNIVERSE(tre_package_keyword);
     treatom_init_builtins ();
@@ -164,7 +164,7 @@ treatom_alloc (char *symbol, treptr package, int type, treptr value)
     /* Pop free atom from free atom list. */
     atomi = CAR(tre_atoms_free);
 #ifdef TRE_DIAGNOSTICS
-    if (TREPTR_TO_ATOM(atomi)->type != ATOM_UNUSED)
+    if (TREPTR_TO_ATOM(atomi)->type != TRETYPE_UNUSED)
 		treerror_internal (treptr_invalid, "trying to free unused atom");
 #endif
     ntop = CDR(tre_atoms_free);
@@ -202,7 +202,7 @@ treatom_free (treptr atom)
      }
 
     /* Check if atom is already marked as being unused. */
-    if (TREPTR_TO_ATOM(atom)->type == ATOM_UNUSED)
+    if (TREPTR_TO_ATOM(atom)->type == TRETYPE_UNUSED)
 	treerror_internal (treptr_invalid, "trying to free unused atom");
 #endif
 
@@ -210,7 +210,7 @@ treatom_free (treptr atom)
         treatom_set_value (atom, treptr_nil);
     treatom_set_function (atom, treptr_nil);
     treatom_set_binding (atom, treptr_nil);
-    TREPTR_TO_ATOM(atom).type = ATOM_UNUSED;
+    TREPTR_TO_ATOM(atom).type = TRETYPE_UNUSED;
 
     /* Add entry to list of free atoms. */
     tre_atoms_free = CONS(TREPTR_INDEX(atom), tre_atoms_free);
@@ -233,7 +233,7 @@ treatom_number_get (double value, int type)
     treptr   atom;
     unsigned  num;
 
-    atom = treatom_alloc (NULL, treptr_nil, ATOM_NUMBER, treptr_nil);
+    atom = treatom_alloc (NULL, treptr_nil, TRETYPE_NUMBER, treptr_nil);
     num = trenumber_alloc (value, type);
     TREATOM_SET_DETAIL(atom, num);
 
@@ -248,7 +248,7 @@ treatom_seek (char * symbol, treptr package)
 
     /* Reuse existing atom. */
     for (a = 0; a < NUM_ATOMS; a++) {
-		if (tre_atoms[a].type == ATOM_UNUSED)
+		if (tre_atoms[a].type == TRETYPE_UNUSED)
 	    	continue;
 
 		if (tre_atoms[a].name != NULL
@@ -287,7 +287,7 @@ treatom_get (char * symbol, treptr package)
         return treatom_number_get (dvalue, TRENUMTYPE_FLOAT);
 	}
 
-    return treatom_alloc (symbol, package, ATOM_VARIABLE, treptr_invalid);
+    return treatom_alloc (symbol, package, TRETYPE_VARIABLE, treptr_invalid);
 }
 
 /*
@@ -298,15 +298,15 @@ treatom_remove (treptr el)
 {
     /* Do type specific clean-up. */
     switch (TREPTR_TYPE(el)) {
-        case ATOM_NUMBER:
+        case TRETYPE_NUMBER:
             trenumber_free (el);
 	    	break;
 
-        case ATOM_ARRAY:
+        case TRETYPE_ARRAY:
 	    	trearray_free (el);
 	    	break;
 
-        case ATOM_STRING:
+        case TRETYPE_STRING:
 	    	trestring_free (el);
 	    	break;
     }
@@ -322,14 +322,14 @@ treatom_body_to_var (treptr body)
     unsigned  b; 
 
     for (a = 0; a < NUM_ATOMS; a++) {
-        if (tre_atoms[a].type != ATOM_FUNCTION && tre_atoms[a].type != ATOM_MACRO)
+        if (tre_atoms[a].type != TRETYPE_FUNCTION && tre_atoms[a].type != TRETYPE_MACRO)
 	    	continue;
 
         if (CAR(CDR(tre_atoms[a].value)) != body)
 	    	continue;
 
         for (b = 0; b < NUM_ATOMS; b++)
-            if (tre_atoms[b].type == ATOM_VARIABLE
+            if (tre_atoms[b].type == TRETYPE_VARIABLE
 					&& tre_atoms[b].name != NULL
 					&& tre_atoms[b].fun == TREATOM_PTR(a))
                 return TREATOM_PTR(b);
