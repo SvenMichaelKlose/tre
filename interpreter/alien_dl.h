@@ -8,11 +8,7 @@
 #ifndef TRE_ALIEN_DL_H
 #define TRE_ALIEN_DL_H
 
-extern treptr trealien_builtin_call0 (treptr);
-extern treptr trealien_builtin_call1 (treptr);
-extern treptr trealien_builtin_call2 (treptr);
-extern treptr trealien_builtin_call3 (treptr);
-extern treptr trealien_builtin_call4 (treptr);
+extern treptr trealien_builtin_call (treptr);
 
 extern treptr trealien_builtin_dlopen (treptr);
 extern treptr trealien_builtin_dlsym (treptr);

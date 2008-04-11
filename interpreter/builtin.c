@@ -320,7 +320,7 @@ char *tre_builtin_names[] = {
     "%ATOM-LIST",
 
     "ALIEN-DLOPEN", "ALIEN-DLCLOSE", "ALIEN-DLSYM",
-    "ALIEN-CALL-0", "ALIEN-CALL-1", "ALIEN-CALL-2", "ALIEN-CALL-3", "ALIEN-CALL-4",
+    "ALIEN-CALL",
 
     "DEBUG",
 
@@ -433,11 +433,7 @@ treevalfunc_t treeval_xlat_builtin[] = {
     trealien_builtin_dlopen,
     trealien_builtin_dlclose,
     trealien_builtin_dlsym,
-    trealien_builtin_call0,
-    trealien_builtin_call1,
-    trealien_builtin_call2,
-    trealien_builtin_call3,
-    trealien_builtin_call4,
+    trealien_builtin_call,
 
     trebuiltin_debug,
     trebuiltin_intern,

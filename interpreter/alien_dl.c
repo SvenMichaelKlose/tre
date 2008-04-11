@@ -84,9 +84,9 @@ trealien_argconv (treptr arg)
     return 0;
 }
 
-/* Call C function with 0 arguments. */
+/* Call C function without arguments. */
 treptr
-trealien_builtin_call0 (treptr args)
+trealien_builtin_call (treptr args)
 {
     int     ret;
     treptr  ptr;
@@ -98,109 +98,5 @@ trealien_builtin_call0 (treptr args)
 
     fun = (void *) (int) TRENUMBER_VAL(ptr);
     ret = (* fun) ();
-    return treatom_number_get ((double) ret, TRENUMTYPE_INTEGER);
-}
-
-/* Call C function with 1 arguments. */
-treptr
-trealien_builtin_call1 (treptr args)
-{
-    int     ret;
-    treptr  ptr;
-    int     (* fun) (int);
-    int     a1;
-
-    ptr = CAR(args);
-    while (TREPTR_IS_NUMBER(ptr) == FALSE)
-        ptr = treerror (ptr, "number expected");
-
-    a1 = trealien_argconv (CADR(args));
-
-    fun = (void *) (int) TRENUMBER_VAL(ptr);
-    ret = (* fun) (a1);
-    return treatom_number_get ((double) ret, TRENUMTYPE_INTEGER);
-}
-
-/* Call C function with 2 arguments. */
-treptr
-trealien_builtin_call2 (treptr args)
-{
-    int     ret;
-    treptr  ptr;
-    treptr  a;
-    int     (* fun) (int, int);
-    int     a1;
-    int     a2;
-
-    ptr = CAR(args);
-    while (TREPTR_IS_NUMBER(ptr) == FALSE)
-        ptr = treerror (ptr, "number expected");
-
-    a = CDR(args);
-    a1 = trealien_argconv (CAR(a));
-    a = CDR(a);
-    a2 = trealien_argconv (CAR(a));
-
-    fun = (void *) (int) TRENUMBER_VAL(ptr);
-    ret = (* fun) (a1, a2);
-    return treatom_number_get ((double) ret, TRENUMTYPE_INTEGER);
-}
-
-/* Call C function with 3 arguments. */
-treptr
-trealien_builtin_call3 (treptr args)
-{
-    int     ret;
-    treptr  ptr;
-    treptr  a;
-    int     (* fun) (int, int, int);
-    int     a1;
-    int     a2;
-    int     a3;
-
-    ptr = CAR(args);
-    while (TREPTR_IS_NUMBER(ptr) == FALSE)
-        ptr = treerror (ptr, "number expected");
-
-    a = CDR(args);
-    a1 = trealien_argconv (CAR(a));
-    a = CDR(a);
-    a2 = trealien_argconv (CAR(a));
-    a = CDR(a);
-    a3 = trealien_argconv (CAR(a));
-
-    fun = (void *) (int) TRENUMBER_VAL(ptr);
-    ret = (* fun) (a1, a2, a3);
-    return treatom_number_get ((double) ret, TRENUMTYPE_INTEGER);
-}
-
-/* Call C function with 4 arguments. */
-treptr
-trealien_builtin_call4 (treptr args)
-{
-    int     ret;
-    treptr  ptr;
-    treptr  a;
-    int     (* fun) (int, int, int, int);
-    int     a1;
-    int     a2;
-    int     a3;
-    int     a4;
-
-    ptr = CAR(args);
-    while (TREPTR_IS_NUMBER(ptr) == FALSE)
-        ptr = treerror (ptr, "number expected");
-
-    a = CDR(args);
-    a1 = trealien_argconv (CAR(a));
-    a = CDR(a);
-    a2 = trealien_argconv (CAR(a));
-    a = CDR(a);
-    a3 = trealien_argconv (CAR(a));
-    a = CDR(a);
-    a4 = trealien_argconv (CAR(a));
-
-    fun = (void *) (int) TRENUMBER_VAL(ptr);
-    ret = (* fun) (a1, a2, a3, a4);
     return treatom_number_get ((double) ret, TRENUMTYPE_INTEGER);
 }
