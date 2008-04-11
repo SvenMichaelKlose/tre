@@ -230,7 +230,7 @@ treatom_builtin_atom_list_s (treptr ret)
 
     for (n = 0; n < NUM_ATOMS; n++) {
 		if (a->type == TRETYPE_FUNCTION) {
-            TRELIST_PUSH(ret, TYPEINDEX_TO_TREPTR(TRETYPE_FUNCTION, n));
+            TRELIST_PUSH(ret, TRETYPE_INDEX_TO_PTR(TRETYPE_FUNCTION, n));
 		}
 		a++;
     }

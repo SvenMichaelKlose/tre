@@ -35,8 +35,8 @@
 struct tre_atom tre_atoms[NUM_ATOMS];
 treptr tre_atoms_free;
 
-const treptr treptr_nil = TYPEINDEX_TO_TREPTR(1, 0);
-const treptr treptr_t = TYPEINDEX_TO_TREPTR(1, 1);
+const treptr treptr_nil = TRETYPE_INDEX_TO_PTR(1, 0);
+const treptr treptr_t = TRETYPE_INDEX_TO_PTR(1, 1);
 const treptr treptr_invalid = (treptr) -1;
 
 treptr treptr_universe; /* *UNIVERSE* variable */
@@ -58,7 +58,7 @@ treatom_init_nil (void)
     ATOM_SET(0, tresymbol_add ("NIL"), treptr_nil, TRETYPE_VARIABLE);
 
     /* Reinitialize every slot that takes NIL. */
-    tre_atoms[0].value = TYPEINDEX_TO_TREPTR(TRETYPE_VARIABLE, 0), 1;
+    tre_atoms[0].value = TRETYPE_INDEX_TO_PTR(TRETYPE_VARIABLE, 0), 1;
     tre_atoms[0].fun = treptr_nil;
     tre_atoms[0].binding = treptr_nil;
 }
@@ -173,7 +173,7 @@ treatom_alloc (char *symbol, treptr package, int type, treptr value)
 
     /* Make self-referencing ordinary. */
     if (value == treptr_invalid)
-		value = TYPEINDEX_TO_TREPTR(type, atomi);
+		value = TRETYPE_INDEX_TO_PTR(type, atomi);
 
     symbol = tresymbol_add (symbol);
     ATOM_SET(atomi, symbol, package, type);
@@ -181,7 +181,7 @@ treatom_alloc (char *symbol, treptr package, int type, treptr value)
     TRE_UNMARK(tregc_atommarks, atomi);
 
     /* Return typed pointer. */
-    return TYPEINDEX_TO_TREPTR(type, atomi);
+    return TRETYPE_INDEX_TO_PTR(type, atomi);
 }
 
 /* Free an atom. */
@@ -254,7 +254,7 @@ treatom_seek (char * symbol, treptr package)
 		if (tre_atoms[a].name != NULL
 	    		&& tre_atoms[a].package == package
             	&& strcmp (tre_atoms[a].name, symbol) == 0)
-	    	return ATOM_TO_TREPTR(a);
+	    	return TREATOM_INDEX_TO_PTR(a);
     }
 
     return ATOM_NOT_FOUND;
@@ -331,8 +331,8 @@ treatom_body_to_var (treptr body)
         for (b = 0; b < NUM_ATOMS; b++)
             if (tre_atoms[b].type == TRETYPE_VARIABLE
 					&& tre_atoms[b].name != NULL
-					&& tre_atoms[b].fun == TREATOM_PTR(a))
-                return TREATOM_PTR(b);
+					&& tre_atoms[b].fun == TREATOM_INDEX_TO_PTR(a))
+                return TREATOM_INDEX_TO_PTR(b);
     }
 
     return treptr_nil;

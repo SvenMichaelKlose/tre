@@ -206,7 +206,7 @@ tregc_sweep (void)
 	    	if (tregc_atommarks[i] & c) {
 	        	idx = (i << 3) + j;
 				if (TREPTR_TO_ATOM(idx).type != TRETYPE_UNUSED)
-	            	treatom_remove (TYPEINDEX_TO_TREPTR(TREATOM_TYPE(idx), idx));
+	            	treatom_remove (TREATOM_TO_PTR(idx));
             }
 
 	    	c <<= 1;
