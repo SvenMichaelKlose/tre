@@ -86,7 +86,7 @@ trealien_argconv (treptr arg)
 
 /* Call C function with 0 arguments. */
 treptr
-trealien_builtin_dlcall0 (treptr args)
+trealien_builtin_call0 (treptr args)
 {
     int     ret;
     treptr  ptr;
@@ -103,7 +103,7 @@ trealien_builtin_dlcall0 (treptr args)
 
 /* Call C function with 1 arguments. */
 treptr
-trealien_builtin_dlcall1 (treptr args)
+trealien_builtin_call1 (treptr args)
 {
     int     ret;
     treptr  ptr;
@@ -123,7 +123,7 @@ trealien_builtin_dlcall1 (treptr args)
 
 /* Call C function with 2 arguments. */
 treptr
-trealien_builtin_dlcall2 (treptr args)
+trealien_builtin_call2 (treptr args)
 {
     int     ret;
     treptr  ptr;
@@ -148,7 +148,7 @@ trealien_builtin_dlcall2 (treptr args)
 
 /* Call C function with 3 arguments. */
 treptr
-trealien_builtin_dlcall3 (treptr args)
+trealien_builtin_call3 (treptr args)
 {
     int     ret;
     treptr  ptr;
@@ -176,7 +176,7 @@ trealien_builtin_dlcall3 (treptr args)
 
 /* Call C function with 4 arguments. */
 treptr
-trealien_builtin_dlcall4 (treptr args)
+trealien_builtin_call4 (treptr args)
 {
     int     ret;
     treptr  ptr;
