@@ -20,6 +20,8 @@ struct tre_number {
 #define TRE_NUMBER(index) (&tre_numbers[index])
 #define TRENUMBER_VAL(ptr) \
 	((TRE_NUMBER((unsigned) TREATOM_DETAIL(ptr)))->value)
+#define TRENUMBER_CHARPTR(ptr) \
+	((char *) (int) (TRE_NUMBER((unsigned) TREATOM_DETAIL(ptr)))->value)
 #define TRENUMBER_TYPE(ptr) \
 	((TRE_NUMBER((unsigned) TREATOM_DETAIL(ptr)))->type)
 
