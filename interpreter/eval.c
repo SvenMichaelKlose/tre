@@ -166,10 +166,13 @@ treeval_expr (treptr x)
     tredebug_chk_breakpoints (x);
 	TREDEBUG_STEP();
 
-    if (TREPTR_IS_EXPR(fun))
-        fun = treeval (fun);
+	/* Get function value of variable immediately. */
     if (TREPTR_IS_VARIABLE(fun))
-        fun = TREATOM_FUN(fun);
+         fun = TREATOM_FUN(fun);
+    else /* if (TREPTR_IS_EXPR(fun)) */
+        fun = treeval (fun);
+	fun = treeval (fun);
+
     tregc_push (fun);
 
     switch (TREPTR_TYPE(fun)) {
@@ -190,7 +193,7 @@ treeval_expr (treptr x)
             break;
 
         default:
-            return treerror (fun, "function expected instead of %s",
+            return treerror (CAR(x), "function expected instead of %s",
                              treerror_typestring (fun));
     }
 
@@ -212,17 +215,15 @@ treeval (treptr x)
     treptr gcss = tregc_save_stack;
 #endif
 
+    RETURN_NIL(x);
+
 #ifdef TRE_VERBOSE_EVAL
     if (TREATOM_VALUE(treopt_verbose_eval) != treptr_nil)
 		treprint (x);
 #endif
 
-    RETURN_NIL(x);
-
-    /* Remember parent node. */
-    trethread_push_call (x);
-
     tregc_push (x);
+    trethread_push_call (x);
 
     switch (TREPTR_TYPE(x)) {
         /* Call function, special form or macro. */
@@ -254,10 +255,8 @@ treeval (treptr x)
     }
 
     tregc_retval (val);
-    tregc_pop ();
-
-    /* Forget parent. */
     trethread_pop_call ();
+    tregc_pop ();
 
 #ifdef TRE_DIAGNOSTICS
     if (gcss != tregc_save_stack)
