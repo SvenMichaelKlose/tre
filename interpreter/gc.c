@@ -119,12 +119,11 @@ tregc_trace_object (treptr p)
 void
 tregc_trace_array (treptr arr)
 {
-    struct tre_atom  *atom = TREPTR_TO_ATOM(arr);
-    treptr  	      *i = atom->detail;
-    unsigned          size = TREARRAY_SIZE(arr);
+    treptr    * i = TREATOM_DETAIL(arr);
+    unsigned  size = TREARRAY_SIZE(arr);
 
     /* Mark dimension list. */
-    tregc_trace_expr (atom->value);
+    tregc_trace_expr (TREATOM_VALUE(arr));
 
     /* Mark elements in array. */
     while (size--)
@@ -135,7 +134,6 @@ tregc_trace_array (treptr arr)
 void
 tregc_trace_atom (treptr a)
 {
-    struct tre_atom  *atom = TREPTR_TO_ATOM(a);
     unsigned  ai = TREPTR_INDEX(a);
 
     /* Avoid circular trace. */
@@ -143,19 +141,19 @@ tregc_trace_atom (treptr a)
 		return;
     TRE_UNMARK(tregc_atommarks, ai);
 
-    switch (atom->type) {
+    switch (TREATOM_TYPE(a)) {
         case ATOM_FUNCTION:
         case ATOM_MACRO:
-	    	tregc_trace_object ((treptr) atom->detail);
+	    	tregc_trace_object ((treptr) TREATOM_DETAIL(a));
 	    	break;
 
         case ATOM_ARRAY:
 	    	tregc_trace_array (a);
 	    	break;
     }
-    tregc_trace_object (atom->value);
-    tregc_trace_object (atom->fun);
-    tregc_trace_object (atom->binding);
+    tregc_trace_object (TREATOM_VALUE(a));
+    tregc_trace_object (TREATOM_FUN(a));
+    tregc_trace_object (TREATOM_BINDING(a));
 }
 
 void
@@ -207,7 +205,7 @@ tregc_sweep (void)
 		DOTIMES(j, 8) {
 	    	if (tregc_atommarks[i] & c) {
 	        	idx = (i << 3) + j;
-				if (TREPTR_TO_ATOM(idx)->type != ATOM_UNUSED)
+				if (TREPTR_TO_ATOM(idx).type != ATOM_UNUSED)
 	            	treatom_remove (TYPEINDEX_TO_TREPTR(TREATOM_TYPE(idx), idx));
             }
 

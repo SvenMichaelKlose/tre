@@ -42,52 +42,47 @@ extern treptr tre_atoms_free;
 
 extern treptr tre_package_keyword;
 
-#define TRE_ATOM(atomi)	(&tre_atoms[atomi])
+#define TRE_INDEX_TO_ATOM(index)	(tre_atoms[index])
 
-#define ATOM_SET(atomi, nam, pack, typ) \
-	tre_atoms[atomi].name = nam;	\
-	tre_atoms[atomi].value = treptr_nil;	\
-	tre_atoms[atomi].fun = treptr_nil;	\
-	tre_atoms[atomi].binding = treptr_nil;	\
-	tre_atoms[atomi].package = pack;	\
-	tre_atoms[atomi].type = typ;	\
-	tre_atoms[atomi].detail = NULL
+#define ATOM_SET(index, nam, pack, typ) \
+	tre_atoms[index].name = nam;	\
+	tre_atoms[index].value = treptr_nil;	\
+	tre_atoms[index].fun = treptr_nil;	\
+	tre_atoms[index].binding = treptr_nil;	\
+	tre_atoms[index].package = pack;	\
+	tre_atoms[index].type = typ;	\
+	tre_atoms[index].detail = NULL
 
-#define ATOM_GET_FUNCTION(ptr) \
-	(tre_atoms[TREPTR_INDEX(ptr)].fun)
-
-#define ATOM_SET_FUNCTION(ptr, x) \
-	tre_atoms[TREPTR_INDEX(ptr)].fun = x
-
-#define TREATOM_FLAGS		(-1 << TREPTR_TYPESHIFT)
+#define TREATOM_FLAGS	\
+	(-1 << TREPTR_INDEX_WIDTH)
 #define TYPEINDEX_TO_TREPTR(type, index) \
-	((type << TREPTR_TYPESHIFT) | index)
-#define TREATOM_PTR(idx)	(TYPEINDEX_TO_TREPTR(TRE_ATOM(idx)->type, \
-			                              idx))
+	((type << TREPTR_INDEX_WIDTH) | index)
+#define TREATOM_PTR(idx)	\
+	(TYPEINDEX_TO_TREPTR(TRE_INDEX_TO_ATOM(idx).type, idx))
 
 #define ATOM_TO_TREPTR(index) \
 	TYPEINDEX_TO_TREPTR(tre_atoms[index].type, index)
-#define TREPTR_TO_ATOM(ptr)	(TRE_ATOM(TREPTR_INDEX(ptr)))
+#define TREPTR_TO_ATOM(ptr)	TRE_INDEX_TO_ATOM(TREPTR_INDEX(ptr))
 
-#define TREATOM_NAME(ptr)	(TREPTR_TO_ATOM(ptr)->name)
-#define TREATOM_TYPE(ptr)	(TREPTR_TO_ATOM(ptr)->type)
-#define TREATOM_VALUE(ptr)	(TREPTR_TO_ATOM(ptr)->value)
-#define TREATOM_FUN(ptr)	(TREPTR_TO_ATOM(ptr)->fun)
-#define TREATOM_BINDING(ptr)	(TREPTR_TO_ATOM(ptr)->binding)
-#define TREATOM_PACKAGE(ptr)	(TREPTR_TO_ATOM(ptr)->package)
-#define TREATOM_DETAIL(ptr)	(TREPTR_TO_ATOM(ptr)->detail)
-#define TREATOM_SET_DETAIL(ptr, val)	(TREPTR_TO_ATOM(ptr)->detail = (void *) val)
-#define TREATOM_STRING(ptr)	((struct tre_string *) TREATOM_DETAIL(ptr))
-#define TREATOM_SET_STRING(ptr, val)	(TREATOM_DETAIL(ptr) = (struct tre_string *) val)
+#define TREATOM_NAME(ptr)	(TREPTR_TO_ATOM(ptr).name)
+#define TREATOM_TYPE(ptr)	(TREPTR_TO_ATOM(ptr).type)
+#define TREATOM_VALUE(ptr)	(TREPTR_TO_ATOM(ptr).value)
+#define TREATOM_FUN(ptr)	(TREPTR_TO_ATOM(ptr).fun)
+#define TREATOM_BINDING(ptr)	(TREPTR_TO_ATOM(ptr).binding)
+#define TREATOM_PACKAGE(ptr)	(TREPTR_TO_ATOM(ptr).package)
+#define TREATOM_DETAIL(ptr)		(TREPTR_TO_ATOM(ptr).detail)
+#define TREATOM_STRING(ptr)		((struct tre_string *) TREATOM_DETAIL(ptr))
 #define TREATOM_STRINGP(ptr)	((char *) &(TREATOM_STRING(ptr)->str))
+#define TREATOM_SET_DETAIL(ptr, val)	(TREPTR_TO_ATOM(ptr).detail = (void *) val)
+#define TREATOM_SET_STRING(ptr, val)	(TREATOM_DETAIL(ptr) = (struct tre_string *) val)
 
-#define TREPTR_TYPE(ptr)	(ptr >> TREPTR_TYPESHIFT)
+#define TREPTR_TYPE(ptr)	(ptr >> TREPTR_INDEX_WIDTH)
 #define TREPTR_INDEX(ptr)	(ptr & ~TREATOM_FLAGS)
 #define TREPTR_IS_EXPR(ptr)		((ptr & TREATOM_FLAGS) == 0)
 #define TREPTR_IS_ATOM(ptr)		(TREPTR_IS_EXPR(ptr) == FALSE)
 #define TREPTR_IS_VARIABLE(ptr)	(TREPTR_TYPE(ptr) == ATOM_VARIABLE)
-#define TREPTR_IS_SYMBOL(ptr) \
-	(TREPTR_IS_VARIABLE(ptr) && TREATOM_VALUE(ptr) == ptr)
+#define TREPTR_IS_SYMBOL(ptr)	(TREPTR_IS_VARIABLE(ptr) && \
+								 TREATOM_VALUE(ptr) == ptr)
 #define TREPTR_IS_NUMBER(ptr)		(TREPTR_TYPE(ptr) == ATOM_NUMBER)
 #define TREPTR_IS_STRING(ptr)		(TREPTR_TYPE(ptr) == ATOM_STRING)
 #define TREPTR_IS_ARRAY(ptr)		(TREPTR_TYPE(ptr) == ATOM_ARRAY)
@@ -98,8 +93,8 @@ extern treptr tre_package_keyword;
 
 #define TREPTR_TRUTH(test)	((test) ? treptr_t : treptr_nil)
 
-#define EXPAND_UNIVERSE(atom) \
-    (TREATOM_VALUE(treptr_universe) = CONS(atom, TREATOM_VALUE(treptr_universe)))
+#define EXPAND_UNIVERSE(ptr) \
+    (TREATOM_VALUE(treptr_universe) = CONS(ptr, TREATOM_VALUE(treptr_universe)))
 
 extern const treptr treptr_nil;
 extern const treptr treptr_t;

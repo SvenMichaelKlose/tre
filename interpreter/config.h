@@ -1,6 +1,6 @@
 /*
- * nix operating system project tre interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * TRE interpreter
+ * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Compile-time configuration.
  */
@@ -10,21 +10,26 @@
 
 typedef int bool;
 
+#ifndef TRE_INFO
+#define TRE_INFO \
+	"TRE tree processor " TRE_VERSION " (" __DATE__ " " __TIME__ ")\n"
+#endif
+
 #ifndef TRE_COPYRIGHT
 #define TRE_COPYRIGHT \
-	"nix list processor " TRE_VERSION " (" __DATE__ " " __TIME__ ")\n"
+	"Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>\n"
 #endif
 
 #define TRE_VERSION	"current"
 
 #if 0
-#define TRE_DIAGNOSTICS	/* Do diagnostic checks. */
+#define TRE_DIAGNOSTICS		/* Do diagnostic checks. */
 #define TRE_GC_DEBUG		/* Run garbage collector everywhere. */
-#define TRE_VERBOSE_GC 	/* Print statistics after GC. */
+#define TRE_VERBOSE_GC 		/* Print statistics after GC. */
 #define TRE_VERBOSE_LOAD	/* Print what files are loaded. */
 #define TRE_VERBOSE_EVAL	/* Print what is evaluated. */
-#define TRE_VERBOSE_READ       /* Print READ expressions in read-eval loop. */ */
-#define TRE_PRINT_MACROEXPANSIONS ; Print macroexpansions in read-eval loop. */ */
+#define TRE_VERBOSE_READ    /* Print READ expressions in read-eval loop. */
+#define TRE_PRINT_MACROEXPANSIONS /* Print macroexpansions in read-eval loop. */
 #define TRE_READ_ECHO		/* Echo what is READ. */
 #define TRE_NO_MANUAL_FREE	/* Don't free internal garbage manually. */
 #define TRE_EXIT_ON_STDIO_SIGINT /* Exit on SIGINT in stdio prompt. */
@@ -75,13 +80,13 @@ typedef int bool;
 #endif
 
 #ifndef TRE_BOOT_IMAGE
-#define TRE_BOOT_IMAGE	"~/.nix-tre.image"
+#define TRE_BOOT_IMAGE	"~/.tre.image"
 #endif
 
 #ifndef TRE_IMAGE_HEADER
-#define TRE_IMAGE_HEADER  "#!tre -i\n" TRE_COPYRIGHT
+#define TRE_IMAGE_HEADER  "#!tre -i\n" TRE_INFO
 #endif
 
-#define TREPTR_TYPESHIFT	27
+#define TREPTR_INDEX_WIDTH	27
 
 #endif /* #ifndef TRE_TRE_H */

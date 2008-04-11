@@ -210,7 +210,7 @@ treatom_free (treptr atom)
         treatom_set_value (atom, treptr_nil);
     treatom_set_function (atom, treptr_nil);
     treatom_set_binding (atom, treptr_nil);
-    TREPTR_TO_ATOM(atom)->type = ATOM_UNUSED;
+    TREPTR_TO_ATOM(atom).type = ATOM_UNUSED;
 
     /* Add entry to list of free atoms. */
     tre_atoms_free = CONS(TREPTR_INDEX(atom), tre_atoms_free);

@@ -54,7 +54,6 @@ treenv_update (treptr env, treptr atoms, treptr values)
 void
 treenv_bind (treptr la, treptr lv)
 {
-    struct tre_atom *atom;
     treptr  arg;
     treptr  val;
 
@@ -66,9 +65,8 @@ treenv_bind (treptr la, treptr lv)
             treerror_internal (arg, "bind: variable expected");
 #endif
 
-    	atom = TREPTR_TO_ATOM(arg);
-        atom->binding = CONS(atom->value, atom->binding);
-        atom->value = val;
+		TREATOM_BINDING(arg) = CONS(TREATOM_VALUE(arg), TREATOM_BINDING(arg));
+		TREATOM_VALUE(arg) = val;
     }
 
     if (la != treptr_nil)
@@ -85,7 +83,6 @@ treenv_bind (treptr la, treptr lv)
 void
 treenv_bind_sloppy (treptr la, treptr lv)
 {
-    struct tre_atom *atom;
     treptr  car;
     
     while (la != treptr_nil) {
@@ -96,13 +93,9 @@ treenv_bind_sloppy (treptr la, treptr lv)
 #endif  
         
         /* Push value on binding list. */
-        atom = TREPTR_TO_ATOM(car); 
-        atom->binding = CONS(atom->value, atom->binding);
-        if (lv != treptr_nil)
-            atom->value = CAR(lv);
-        else
-            atom->value = treptr_nil;
-        
+        TREATOM_BINDING(car) = CONS(TREATOM_VALUE(car), TREATOM_BINDING(car));
+        TREATOM_VALUE(car) = (lv != treptr_nil) ? CAR(lv) : treptr_nil;
+
         la = CDR(la);
         if (lv != treptr_nil)
             lv = CDR(lv);
@@ -113,14 +106,14 @@ treenv_bind_sloppy (treptr la, treptr lv)
 void
 treenv_unbind (treptr la)
 {
-    struct tre_atom  *atom;
     treptr  bding;
+    treptr  car;
 
     for (;la != treptr_nil; la = CDR(la)) {
-        atom = TREPTR_TO_ATOM(CAR(la));
-        bding = atom->binding; 
-        atom->value = CAR(bding);
-        atom->binding = CDR(bding);
+        car = CAR(la);
+        bding = TREATOM_BINDING(car);
+        TREATOM_VALUE(car) = CAR(bding);
+        TREATOM_BINDING(car) = CDR(bding);
         TRELIST_FREE_EARLY(bding);
     }
 }

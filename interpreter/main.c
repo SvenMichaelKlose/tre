@@ -36,6 +36,11 @@
 char * tremain_self = NULL;   /* Path to running executable. */
 char * tremain_imagelaunch = NULL;
 char * tremain_launchfile = NULL;
+
+treptr tremain_history;
+treptr tremain_history_2;
+treptr tremain_history_3;
+
 bool tremain_noimage = FALSE;
 
 struct tremain_arg {
@@ -101,8 +106,14 @@ tre_main_line (struct tre_stream *stream)
 	/* The stdin prompt may have disabled the debugger. */
 	tre_interrupt_debugger = TRUE;
 
-    /* Expand macros. */
     tregc_push (expr);
+
+	/* Update history. */
+	TREATOM_VALUE(tremain_history_3) = TREATOM_VALUE(tremain_history_2);
+	TREATOM_VALUE(tremain_history_2) = TREATOM_VALUE(tremain_history);
+	TREATOM_VALUE(tremain_history) = expr;
+
+    /* Expand macros. */
     expr = tremacro_builtin_macroexpand (expr);
     tregc_pop ();
 
@@ -112,7 +123,9 @@ tre_main_line (struct tre_stream *stream)
 
     /* Evaluate expression. */
     tregc_push (expr);
+	trethread_push_call (tremain_history);
     expr = treeval (expr);
+	trethread_pop_call ();
     tregc_pop ();
 
     /* Print result on stdout if expression was read from stdin. */
@@ -129,6 +142,13 @@ tre_main (void)
         if (tre_main_line (treio_reader) == treptr_invalid)
 	    	break;
 }
+
+#define MAKE_HOOK_VAR(var, symbol_name) \
+	var = treatom_alloc (symbol_name, TRECONTEXT_PACKAGE(), ATOM_VARIABLE, treptr_nil); \
+    EXPAND_UNIVERSE(var)
+
+#define MAKE_VAR(symbol_name, init) \
+    EXPAND_UNIVERSE(treatom_alloc (symbol_name, TRECONTEXT_PACKAGE(), ATOM_VARIABLE, init))
 
 /* Initialise everything. */
 void
@@ -153,26 +173,25 @@ tre_init (void)
     trespecial_init ();
     treimage_init ();
 
-    EXPAND_UNIVERSE(
-        treatom_alloc ("*ENVIRONMENT-PATH*", TRECONTEXT_PACKAGE(), ATOM_VARIABLE,
-                        trestring_get (TRE_ENVIRONMENT)));
+    MAKE_VAR("*ENVIRONMENT-PATH*", trestring_get (TRE_ENVIRONMENT));
 
     /* Create global %LAUNCHFILE variable containing the application file
      * to evaluate after the environment is set up. */
-    EXPAND_UNIVERSE(
-        treatom_alloc (
-            "%LAUNCHFILE", TRECONTEXT_PACKAGE(), ATOM_VARIABLE,
-            (tremain_launchfile ?
-                trestring_get (tremain_launchfile) :
-                treptr_nil)));
+    MAKE_VAR("%LAUNCHFILE", (tremain_launchfile ?
+                				trestring_get (tremain_launchfile) :
+                				treptr_nil));
 
-    EXPAND_UNIVERSE(
-        treatom_alloc (
-            "*BOOT-IMAGE*", TRECONTEXT_PACKAGE(), ATOM_VARIABLE,
-            trestring_get (TRE_BOOT_IMAGE)));
+	MAKE_VAR("*BOOT-IMAGE*", trestring_get (TRE_BOOT_IMAGE));
+	MAKE_VAR("*LIBC-PATH*", trestring_get (LIBC_PATH));
+
+	MAKE_HOOK_VAR(tremain_history, "_");
+	MAKE_HOOK_VAR(tremain_history_2, "__");
+	MAKE_HOOK_VAR(tremain_history_3, "___");
 
     tre_restart_fun = treptr_nil;
+
 	signal (SIGINT, tre_signal);
+
     tre_is_initialized = TRUE;
     tre_interrupt_debugger = TRUE;
 }
@@ -180,7 +199,8 @@ tre_init (void)
 void
 tremain_help (void)
 {
-	printf (TRE_COPYRIGHT
+	printf (TRE_INFO
+			TRE_COPYRIGHT
             "Usage: tre [-h] [-i image-file] [source-file]\n"
             "\n"
             " -h  Print this help message.\n"
@@ -253,13 +273,14 @@ load_error:
     c = 2;
     treiostd_undivert ();
 
-    /* Start the eval loop. */
 user:
+	/* Call init function. */
     if (tre_restart_fun != treptr_nil) {
         treeval (CONS(tre_restart_fun, treptr_nil));
         tre_restart_fun = treptr_nil;
     }
 
+    /* Start the toplevel eval loop. */
     tre_main ();
 
     return 0;

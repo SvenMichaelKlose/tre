@@ -59,7 +59,6 @@ treeval_is_jump (treptr p)
 treptr
 trespecial_setq (treptr list)
 {
-    struct tre_atom *atom;
     treptr car;
     treptr cdr;
     treptr tmp;
@@ -71,7 +70,6 @@ trespecial_setq (treptr list)
     do {
         /* Check arguments. */
         car = CAR(list);
-        atom = TREPTR_TO_ATOM(car);
 
         list = CDR(list);
         if (list == treptr_nil)
