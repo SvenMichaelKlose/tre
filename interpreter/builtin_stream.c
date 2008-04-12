@@ -53,16 +53,25 @@ trestream_builtin_princ (treptr args)
     return obj;
 }
 
+
+FILE *
+trestream_builtin_get_handle (treptr args)
+{
+	treptr handle = trearg_get (args);
+
+	while (handle != treptr_nil && TREPTR_IS_NUMBER(handle) == FALSE)
+		handle = trearg_correct (TRETYPE_NUMBER, 1,
+								 "stream handle or NIL for stdout", handle);
+
+    return (handle != treptr_nil) ?
+           tre_fileio_handles[(int) TRENUMBER_VAL(handle)] :
+ 		   stdout;
+}
+
 treptr
 trestream_builtin_force_output (treptr args)
 {
-    treptr handle = trearg_get (args);
-    FILE    *str;
-
-    if (handle != treptr_nil)
-        str = tre_fileio_handles[(int) TRENUMBER_VAL(handle)];
-    else
- 		str = stdout;
+    FILE  * str = trestream_builtin_get_handle (args);
 
     fflush (str);
     return treptr_nil;
@@ -71,13 +80,7 @@ trestream_builtin_force_output (treptr args)
 treptr
 trestream_builtin_feof (treptr args)
 {
-    treptr handle = trearg_get (args);
-    FILE    *str;
-
-    if (handle != treptr_nil)
-        str = tre_fileio_handles[(int) TRENUMBER_VAL(handle)];
-    else
- 		str = stdin;
+    FILE  * str = trestream_builtin_get_handle (args);
 
     if (feof (str))
         return treptr_t;
@@ -87,16 +90,9 @@ trestream_builtin_feof (treptr args)
 treptr
 trestream_builtin_read_char (treptr args)
 {
-    treptr handle = trearg_get (args);
-    FILE    *str;
-    char c;
-
-    if (handle != treptr_nil)
-        str = tre_fileio_handles[(int) TRENUMBER_VAL(handle)];
-    else
- 		str = stdin;
+    FILE  * str = trestream_builtin_get_handle (args);
+    char  c;
 
     c = fgetc (str);
-
     return treatom_number_get ((double) c, TRENUMTYPE_CHAR);
 }

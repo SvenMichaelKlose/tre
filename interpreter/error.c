@@ -135,8 +135,11 @@ treerror_typestring (treptr x)
         case TRETYPE_SPECIAL:
             return "special form";
 
+        case TRETYPE_ATOM:
+            return "atom";
+
         default:
-            treerror_internal (x, "unkown atom");
+            treerror_internal (x, "unkown type");
             return NULL;
     }
 }

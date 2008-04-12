@@ -20,6 +20,7 @@
 #define TRETYPE_USERSPECIAL	9
 #define TRETYPE_PACKAGE		10
 #define TRETYPE_MAXTYPE		10
+#define TRETYPE_ATOM		11 /* parameter dummy */
 #define TRETYPE_UNUSED		-1
 
 #endif /* #ifndef TRE_TYPE_H */

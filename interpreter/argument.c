@@ -20,6 +20,8 @@
 #include "env.h"
 #include "xxx.h"
 
+#include <stdio.h>
+
 treptr tre_atom_rest;
 treptr tre_atom_optional;
 treptr tre_atom_key;
@@ -31,12 +33,15 @@ treptr tre_atom_key;
  */
 treptr
 trearg_get (treptr list)
-{   
-    if (TREPTR_IS_CONS(list) == FALSE)
-        return treerror (list, "argument expected");
+{
+   	if (list == treptr_nil)
+       	return treerror (treptr_invalid, "argument expected");
+
+   	if (TREPTR_IS_ATOM(list))
+       	return treerror (list, "atom instead of list - need 1 argument");
     
     if (CDR(list) != treptr_nil)
-        return treerror (list, "single argument expected");
+        trewarn (list, "single argument expected");
     
     return CAR(list);
 }
@@ -49,27 +54,104 @@ trearg_get (treptr list)
 void
 trearg_get2 (treptr *a, treptr *b, treptr list)
 {
-    treptr  cdr;
-    treptr  tmp;
+    treptr  second;
 
     *a = treptr_nil;
     *b = treptr_nil;
-    while (list == treptr_nil)
-        list = treerror (list, "two args required");
+
+	do {
+   		while (list == treptr_nil)
+        	list = treerror (treptr_invalid, "two args required");
+
+   		if (TREPTR_IS_CONS(list))
+			break;
+
+       	list = treerror (list, "atom instead of list - need 2 arguments");
+	} while (TRUE);
+
+    if (CDDR(list) != treptr_nil)
+        trewarn (list, "no more than two args required - ignoring rest");
+
+    if (CDR(list) == treptr_nil)
+    	while (second == treptr_nil)
+        	second = treerror (treptr_invalid, "second argument missing");
+	else
+		second = CADR(list);
 
     *a = CAR(list);
+    *b = second;
+}
 
-    cdr = CDR(list);
-    if (cdr == treptr_nil) {
-        for (tmp = cdr; tmp == treptr_nil;)
-            tmp = treerror (list, "two args required (just one given). "
-                                   "Specify second");
-        *b = tmp;
-    } else
-        *b = CAR(cdr);
+treptr
+trearg_correct (int type, int argnum, const char * descr, treptr x)
+{
+	char buf[4096];
+	const char * l = descr ? " (" : "";
+	const char * r = descr ? ")" : "";
 
-    if (CDR(cdr) != treptr_nil)
-        trewarn (list, "no more than two args required.");
+	if (descr == NULL)
+		descr = "";
+
+	sprintf (buf, "argument %d%s%s%s: %s expected instead of %s",
+			 argnum, l, descr, r,
+			 treerror_typestring (type),
+			 treerror_typestring (TREPTR_TYPE(x)));
+
+	return treerror (x, buf);
+}
+
+treptr
+trearg_typed (int type, int argnum, const char * descr, treptr x)
+{
+	while (TREPTR_TYPE(x) != type)
+		x = trearg_correct (type, argnum, descr, x);
+
+	return x;
+}
+
+treptr
+trearg_cons (int n, const char * d, treptr x)
+{
+	return trearg_typed (TRETYPE_CONS, n, d, x);
+}
+
+treptr
+trearg_atom (int n, const char * d, treptr x)
+{
+	while (TREPTR_IS_CONS(x))
+		x = trearg_typed (TRETYPE_ATOM, n, d, x);
+
+	return x;
+}
+
+treptr
+trearg_variable (int n, const char * d, treptr x)
+{
+	return trearg_typed (TRETYPE_VARIABLE, n, d, x);
+}
+
+treptr
+trearg_number (int n, const char * d, treptr x)
+{
+	return trearg_typed (TRETYPE_NUMBER, n, d, x);
+}
+
+treptr
+trearg_array (int n, const char * d, treptr x)
+{
+	return trearg_typed (TRETYPE_ARRAY, n, d, x);
+}
+
+treptr
+trearg_string (int n, const char * d, treptr x)
+{
+	return trearg_typed (TRETYPE_STRING, n, d, x);
+}
+
+treptr
+trearg_macro (int n, const char * d, treptr x)
+{
+	return trearg_typed (TRETYPE_MACRO, n, d, x);
 }
 
 #define _ADDF(to, what) \
@@ -118,10 +200,8 @@ trearg_expand (treptr *rvars, treptr *rvals, treptr iargdef, treptr args,
         if (argdef == treptr_nil)
 	    	break;
 
-        if (TREPTR_IS_CONS(argdef) == FALSE) {
-	    	treerror_norecover (iargdef, "argument definition must be a list");
-	    	return;
-		}
+        while (TREPTR_IS_ATOM(argdef))
+	    	argdef = treerror (iargdef, "argument definition must be a list");
 
 		/* Fetch next form and argument. */
         var = CAR(argdef);
@@ -131,10 +211,8 @@ trearg_expand (treptr *rvars, treptr *rvals, treptr iargdef, treptr args,
 
 		/* Process sub-level argument list. */
         if (TREPTR_IS_CONS(var)) {
-            if (TREPTR_IS_CONS(val) == FALSE) {
-	        	treerror_norecover (var, "list type argument expected");
-                goto error;
-            }
+            while (TREPTR_IS_ATOM(val))
+	        	val = treerror (val, "list type argument expected");
 
 	    	trearg_expand (&svars, &svals, var, val, do_argeval);
             RPLACD(dvars, svars);
@@ -164,8 +242,7 @@ trearg_expand (treptr *rvars, treptr *rvals, treptr iargdef, treptr args,
 	    	while (1) {
                 if (argdef == treptr_nil) {
 		    		if (args != treptr_nil)
-						treerror (args, "too many &OPTIONAL arguments - "
-					 					"(continue to ignore)");
+						trewarn (args, "too many &OPTIONAL arguments");
 		    		break;
 				}
 
@@ -215,10 +292,8 @@ trearg_expand (treptr *rvars, treptr *rvals, treptr iargdef, treptr args,
 		    		svals = trelist_nth (args, kpos + 1);
 
 		    		/* Remove keyword and value from argument list. */
-        	    	if (CDR(args) == treptr_nil)
-	    	        	args = treerror (
-                            args, "missing argument after keyword"
-                        );
+        	    	while (CDR(args) == treptr_nil)
+	    	        	RPLACD(args, CONS(treerror (args, "missing argument after keyword"), treptr_nil));
 		    		args = trelist_delete (kpos, args);
 		    		args = trelist_delete (kpos, args);
 				} else
@@ -257,7 +332,7 @@ trearg_expand (treptr *rvars, treptr *rvals, treptr iargdef, treptr args,
     }
 
     if (args != treptr_nil)
-		treerror (args, "too many arguments (continue to ignore)");
+		trewarn (args, "too many arguments (continue to ignore)");
 
     *rvars = CDR(vars);
     *rvals = CDR(vals);

@@ -1,6 +1,6 @@
 /*
  * nix operating system project tre interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Printing expressions.
  */
@@ -190,12 +190,12 @@ treprint_atom (treptr atom, unsigned indent)
 void
 treprint_indent (treptr p, unsigned indent, bool nobracket, char *prepend)
 {
-    treptr   car;
-    treptr   cdr;
+    treptr    car;
+    treptr    cdr;
     int       postatom = 0;
     unsigned  i;
 
-    if (TREPTR_IS_CONS(p) == FALSE) {
+    if (TREPTR_IS_ATOM(p)) {
 		treprint_atom (p, indent);
 		return;
     }
@@ -267,7 +267,7 @@ treprint_indent (treptr p, unsigned indent, bool nobracket, char *prepend)
 		}
 
         /* Print dotted pair. */
-        if (cdr != treptr_nil && TREPTR_IS_CONS(cdr) == FALSE) {
+        if (cdr != treptr_nil && TREPTR_IS_ATOM(cdr)) {
 	    	treprint_atom (car, indent);
     	    printf (" . ");
 	    	treprint_atom (cdr, indent);

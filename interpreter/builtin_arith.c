@@ -23,20 +23,18 @@ treeval_exprop (treptr list, treeval_opfunc_t func)
 {
     treptr  arg;
     double  val;
+	int     n = 1;
 
     arg = CAR(list);
     if (TREPTR_IS_NUMBER(arg) == FALSE)
         return treerror (arg, "not a number");
     val = TRENUMBER_VAL(arg);
 
+	n = 2;
     list = CDR(list);
     while (list != treptr_nil) {
-        arg = CAR(list);
-        if (TREPTR_IS_NUMBER(arg) == FALSE)
-            return treerror (arg, "not a number");
-
+        arg = trearg_number (n++, "in arithmetic operation", CAR(list));
         val = (*func) (val, TRENUMBER_VAL(arg));
-
         list = CDR(list);
     }
 
@@ -137,11 +135,11 @@ trenumber_builtin_quotient (treptr list)
 void
 trenumber_builtin_args (treptr *car, treptr *cdr, treptr list)
 {
+	const char * descr = "in binary arithmetic operation";
+
     trearg_get2 (car, cdr, list);
-    if (TREPTR_IS_NUMBER(*car) == FALSE)
-		*car = treerror (*car, "first argument must be a number");
-    if (TREPTR_IS_NUMBER(*cdr) == FALSE)
-		*cdr = treerror (*cdr, "second argument must be a number");
+	*car = trearg_number (1, descr, *car);
+	*cdr = trearg_number (2, descr, *cdr);
 }
 
 /**

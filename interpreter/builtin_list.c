@@ -47,9 +47,7 @@ trelist_builtin_cxr_arg (treptr list)
     treptr arg = trearg_get (list);
 
     RETURN_NIL(arg);
-    if (TREPTR_IS_CONS(arg) == FALSE)
-		return treerror (arg, "list expected");
-    return arg;
+	return trearg_cons (1, NULL, arg);
 }
 
 /*
@@ -83,8 +81,7 @@ trelist_builtin_cdr (treptr list)
     treptr  cons;	\
     treptr  new;	\
     trearg_get2 (&cons, &new, list);	\
-    if (TREPTR_IS_CONS(cons) == FALSE)	\
-        return treerror (cons, "1st argument is not an expression");
+    cons = trearg_cons (1, "destination", cons)
 
 /*
  * (RPLACA list value)

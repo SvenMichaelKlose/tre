@@ -67,27 +67,21 @@ tredebug_builtin_invoke_debugger (treptr no_args)
 }
 
 treptr
-tredebug_builtin_set_breakpoint (treptr name)
+tredebug_breakpoint_arg (treptr args)
 {
-    treptr  n = trearg_get (name);
+    return trearg_variable (1, "want 'FUNCTION-NAME", trearg_get (args));
+}
 
-    if (!TREPTR_IS_VARIABLE(n))
-		return treerror (n, "variable expected");
-
-    tredebug_set_breakpoint (TREATOM_NAME(n));
-
+treptr
+tredebug_builtin_set_breakpoint (treptr args)
+{
+    tredebug_set_breakpoint (TREATOM_NAME(tredebug_breakpoint_arg (args)));
     return treptr_nil;
 }
 
 treptr
-tredebug_builtin_remove_breakpoint (treptr name)
+tredebug_builtin_remove_breakpoint (treptr args)
 {
-    treptr  n = trearg_get (name);
-
-    if (!TREPTR_IS_VARIABLE(n))
-		return treerror (n, "variable expected");
-
-    tredebug_remove_breakpoint (TREATOM_NAME(n));
-
+    tredebug_remove_breakpoint (TREATOM_NAME(tredebug_breakpoint_arg (args)));
     return treptr_nil;
 }

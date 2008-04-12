@@ -39,11 +39,7 @@ trenumber_builtin_numberp (treptr list)
 treptr
 trenumber_get_arg (treptr args)
 {
-    treptr  arg = trearg_get (args);
-
-    if (TREPTR_IS_NUMBER(arg) == FALSE)
-		return treerror (arg, "number expected");
-    return arg;
+	return trearg_number (1, NULL, trearg_get (args));
 }
 
 /*

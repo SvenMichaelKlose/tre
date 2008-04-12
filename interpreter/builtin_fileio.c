@@ -35,10 +35,8 @@ trestream_builtin_fopen (treptr list)
 
     trearg_get2 (&car, &cdr, list);
 
-    if (TREPTR_IS_STRING(car) == FALSE)
-		return treerror (car, "string expected");
-    if (TREPTR_IS_STRING(cdr) == FALSE)
-		return treerror (cdr, "string expected");
+	car = trearg_string (1, "pathname", car);
+	cdr = trearg_string (2, "access mode", cdr);
 
     handle = trestream_fopen (car, cdr);
     RETURN_NIL(handle);

@@ -26,11 +26,11 @@ trearray_get_raw (unsigned size)
 
     array = trealloc (sizeof (treptr) * size);
     if (array == NULL)
-	return NULL;
+		return NULL;
 
     /* Initialise elements. */
     while (size--)
-	array[size] = treptr_nil;
+		array[size] = treptr_nil;
 
     return array;
 }
@@ -47,7 +47,7 @@ trearray_get_size (treptr sizes)
 	car = CAR(a);
 	if (TREPTR_IS_NUMBER(car) == FALSE)
 	    return treerror (car, "array size: number expected");
-	size *= TRENUMBER_VAL(car);
+		size *= TRENUMBER_VAL(car);
     }
 
     return size;
@@ -64,7 +64,7 @@ trearray_get (treptr sizes)
     treatom_set_value (a, trelist_copy (sizes));
     TREATOM_DETAIL(a) = trearray_get_raw (size);
     if (TREATOM_DETAIL(a) == NULL)
-	return treerror (treptr_invalid, "out of memory");
+		return treerror (treptr_invalid, "out of memory");
     return a;
 }
 
@@ -83,9 +83,9 @@ trearray_free (treptr array)
 treptr
 trearray_t_get (treptr array, unsigned idx)
 {
-    treptr   adef = TREATOM_VALUE(array);
+    treptr    adef = TREATOM_VALUE(array);
     unsigned  size = CAR(adef);
-    treptr   *a = (treptr *) TREATOM_DETAIL(array);
+    treptr    * a = (treptr *) TREATOM_DETAIL(array);
 
     if (size <= idx)
         return treerror (array, "index %d out of range", idx);
@@ -97,7 +97,7 @@ void
 trearray_set (treptr *a, unsigned idx, treptr val)
 {
     if (a[idx] == val)
-	return;
+		return;
 
     a[idx] = val;
 }
@@ -112,7 +112,7 @@ trearray_t_set (treptr array, unsigned idx, treptr val)
 
     if (size <= idx) {
         treerror (array, "index %d out of range", idx);
-	return;
+		return;
     }
 
     trearray_set (a, idx, val);

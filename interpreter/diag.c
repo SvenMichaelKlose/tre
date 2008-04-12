@@ -1,6 +1,6 @@
 /*
  * nix operating system project tre interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Diagnostic functions.
  */
@@ -56,7 +56,7 @@ trediag_is_cons_of_r (treptr orig, treptr expr, treptr cons)
 {
     treptr i;
 
-    if (expr == treptr_nil || TREPTR_IS_CONS(expr) == FALSE)
+    if (expr == treptr_nil || TREPTR_IS_ATOM(expr))
         return;
 
     if (expr == cons)

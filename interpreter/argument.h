@@ -11,6 +11,17 @@
 extern void trearg_get2 (treptr *car, treptr *cdr, treptr args);
 extern treptr trearg_get (treptr args);
 
+extern treptr trearg_correct (int type, int argnum, const char * descr, treptr);
+
+extern treptr trearg_typed (int type, int argnum, const char * descr, treptr);
+extern treptr trearg_cons (int argnum, const char * descr, treptr);
+extern treptr trearg_atom (int argnum, const char * descr, treptr);
+extern treptr trearg_variable (int argnum, const char * descr, treptr);
+extern treptr trearg_number (int argnum, const char * descr, treptr);
+extern treptr trearg_array (int argnum, const char * descr, treptr);
+extern treptr trearg_string (int argnum, const char * descr, treptr);
+extern treptr trearg_macro (int argnum, const char * descr, treptr);
+
 extern void trearg_expand (treptr *rvars, treptr *rvals,
                             treptr argdef, treptr args,
                             bool do_argeval);

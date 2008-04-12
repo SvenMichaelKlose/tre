@@ -98,7 +98,7 @@ tregc_trace_expr (treptr p)
 
         tregc_trace_object (_CAR(i));
 
-        if (TREPTR_IS_CONS(_CDR(i)) == FALSE) {
+        if (TREPTR_IS_ATOM(_CDR(i))) {
             tregc_trace_object (_CDR(i));
 	    	return;
 		}

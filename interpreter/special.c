@@ -28,7 +28,7 @@ treptr tre_atom_evaluated_return_from;
 bool
 treeval_is_return (treptr p)
 {
-    if (TREPTR_IS_CONS(p) == FALSE)
+    if (TREPTR_IS_ATOM(p))
 		return FALSE;
 
     return CAR(p) == tre_atom_evaluated_return_from;
@@ -38,7 +38,7 @@ treeval_is_return (treptr p)
 bool
 treeval_is_go (treptr p)
 {
-    if (TREPTR_IS_CONS(p) == FALSE)
+    if (TREPTR_IS_ATOM(p))
 		return FALSE;
 
     return CAR(p) == tre_atom_evaluated_go;
@@ -59,36 +59,37 @@ treeval_is_jump (treptr p)
 treptr
 trespecial_setq (treptr list)
 {
-    treptr car;
-    treptr cdr;
-    treptr tmp;
+    treptr  car;
+    treptr  cdr;
+    treptr  tmp;
+	int     argnum = 1;
 
     /* Check if there're any arguments. */
-    if (list == treptr_nil)
-		return treerror (treptr_nil, "arguments expected");
+    while (list == treptr_nil)
+		list = treerror (treptr_invalid, "arguments expected");
 
     do {
         /* Check arguments. */
-        car = CAR(list);
+		car = trearg_variable (argnum, "place", CAR(list));
 
+		argnum++;
         list = CDR(list);
-        if (list == treptr_nil)
-	    	return treerror (list, "even number arguments expected");
-
-		/* Evaluate value expression. */
-        tmp = CDR(list);
-        cdr = treeval (CAR(list));
-        list = tmp;
+        if (list == treptr_nil) {
+	    	cdr = treerror (treptr_invalid, "even number arguments expected - supply missing");
+			list = treptr_nil;
+		} else {
+			/* Evaluate value expression. */
+        	tmp = CDR(list);
+        	cdr = treeval (CAR(list));
+        	list = tmp;
+		}
 
 		/* Catch RETURN-FROM. */
 		TREEVAL_RETURN_JUMP(cdr);
 
-		if (TREPTR_TYPE(car) == TRETYPE_VARIABLE)
-            treatom_set_value (car, cdr);
-        else
-	    	return treerror (car, "variable expected");
+        treatom_set_value (car, cdr);
 
-	/* Step to next pair. */
+		argnum++;
     } while (list != treptr_nil);
 
     return cdr;
@@ -147,7 +148,7 @@ trespecial_cond (treptr p)
     treptr test;
     treptr body;
 
-    if (TREPTR_IS_CONS(p) == FALSE)
+    if (TREPTR_IS_ATOM(p))
 		return treerror (p, "expression expected");
 
     for (;p != treptr_nil; p = CDR(p)) {
@@ -287,14 +288,14 @@ trespecial_tagbody (treptr body)
 
     p = body;
     while (1) {
-	tag_found:
+tag_found:
 		/* Return on end of list. */
 		if (p == treptr_nil)
 	    	break;
 
         /* Evaluate expression, skip non-expression. */
 		car = CAR(p);
-		if (TREPTR_IS_CONS(car) == FALSE)
+		if (TREPTR_IS_ATOM(car))
             goto next;
 
         res = treeval (car);
@@ -320,7 +321,7 @@ trespecial_tagbody (treptr body)
 
 		return res;
 
-	next:
+next:
         p = CDR(p);
     }
 

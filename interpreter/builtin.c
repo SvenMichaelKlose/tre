@@ -117,7 +117,7 @@ trebuiltin_apply_args (treptr list)
     /* Handle single argument. */
     if (CDR(list) == treptr_nil) {
 		RETURN_NIL(CAR(list));
-        if (TREPTR_IS_CONS(CAR(list)) == FALSE)
+        if (TREPTR_IS_ATOM(CAR(list)))
             goto error;
         return trelist_copy (CAR(list));
     }
@@ -128,7 +128,7 @@ trebuiltin_apply_args (treptr list)
             continue;
         if (CADR(i) == treptr_nil)
 	    	break;
-        if (TREPTR_IS_CONS(CADR(i)) == FALSE)
+        if (TREPTR_IS_ATOM(CADR(i)))
             goto error;
 
         RPLACD(i, trelist_copy (CADR(i)));
@@ -194,10 +194,7 @@ trebuiltin_macrocall (treptr list)
 
     trearg_get2 (&macro, &args, list);
 
-    if (TREPTR_IS_MACRO(macro) == FALSE) {
-		treerror_norecover (list, "macro expected");
-		return treptr_nil;
-    }
+	macro = trearg_macro (1, "macro to call", macro);
 
     fake = CONS(macro, args);
     tregc_push (fake);
@@ -215,14 +212,13 @@ trebuiltin_macrocall (treptr list)
 treptr
 trebuiltin_load (treptr expr)
 {
-    struct tre_stream *stream;
-    treptr  arg = trearg_get (expr);
-    char     fname[1024];
+    struct  tre_stream *stream;
+    treptr  pathname = trearg_get (expr);
+    char    fname[1024];
 
-    if (TREPTR_IS_STRING(arg) == FALSE)
-		return treerror (arg, "string expected");
+	pathname = trearg_string (1, "pathname", pathname);
 
-    trestring_copy (fname, arg);
+    trestring_copy (fname, pathname);
 
 #ifdef TRE_VERBOSE_LOAD
     printf ("(load \"%s\")\n", fname);
@@ -266,10 +262,9 @@ trebuiltin_intern (treptr args)
     } else
         package = treptr_nil;
 
-    if (TREPTR_IS_STRING(name) == FALSE)
-		treerror (name, "first argument (the symbol name) must be a string");
-    if (!package == treptr_nil && TREPTR_IS_STRING(package) == FALSE)
-		treerror (name, "second argument (the package name) must be a string");
+	name = trearg_string (1, "symbol name", name);
+    if (package != treptr_nil)
+		package = trearg_string (1, "package name", package);
 
     n = &TREATOM_STRING(name)->str;
     if (package != treptr_nil)
@@ -284,23 +279,20 @@ treptr
 trebuiltin_set (treptr args)
 {
     treptr ptr;
-    treptr value;
+    treptr val;
 	char   c;
 	char   * p;
 
-    trearg_get2 (&ptr, &value, args);
+    trearg_get2 (&ptr, &val, args);
 
-    while (TREPTR_IS_NUMBER(ptr) == FALSE)
-		ptr = treerror (args, "1st arg: number expected");
+	ptr = trearg_number (1, "address", ptr);
+	val = trearg_number (2, "byte", ptr);
 
-    while (TREPTR_IS_NUMBER(value) == FALSE)
-		value = treerror (args, "2nd arg: number expected");
-
-	c = (char) TRENUMBER_VAL(value);
+	c = (char) TRENUMBER_VAL(val);
 	p = TRENUMBER_CHARPTR(ptr);
 	* p = c;
 
-    return value;
+    return val;
 }
 
 treptr
@@ -309,8 +301,7 @@ trebuiltin_get (treptr args)
     treptr ptr = trearg_get (args);
 	char   * p;
 
-    while (TREPTR_IS_NUMBER(ptr) == FALSE)
-		ptr = treerror (args, "number expected");
+	ptr = trearg_number (1, "address", ptr);
 
 	p = TRENUMBER_CHARPTR(ptr);
 
