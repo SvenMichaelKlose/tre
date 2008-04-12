@@ -1,6 +1,6 @@
 /*
  * nix operating system project tre interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Array related section.
  */
@@ -44,9 +44,9 @@ trearray_get_size (treptr sizes)
     unsigned      size = 1;
 
     DOLIST(a, sizes) {
-	car = CAR(a);
-	if (TREPTR_IS_NUMBER(car) == FALSE)
-	    return treerror (car, "array size: number expected");
+		car = CAR(a);
+		if (TREPTR_IS_NUMBER(car) == FALSE)
+	    	return treerror (car, "array size: number expected");
 		size *= TRENUMBER_VAL(car);
     }
 
