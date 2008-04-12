@@ -23,12 +23,16 @@ trealien_builtin_dlopen (treptr args)
     treptr  path = trearg_get (args);
     void    * hdl;
 
+retry:
     while (TREPTR_IS_STRING(path) == FALSE)
         path = treerror (path, "path to shared object expected");
 
     hdl = dlopen (TREATOM_STRINGP(path), RTLD_NOW);
-    if (hdl == NULL)
-        return treerror (path, dlerror ());
+    if (hdl == NULL) {
+        path = treerror (path, dlerror ());
+		goto retry;
+	}
+
     return treatom_number_get ((double) (int) hdl, TRENUMTYPE_INTEGER);
 }
 
@@ -44,7 +48,8 @@ trealien_builtin_dlclose (treptr args)
 
     ret = dlclose ((void *) (int) TRENUMBER_VAL(hdl));
     if (ret == -1)
-        return treerror (hdl, dlerror ());
+        return trestring_get (dlerror ());
+
     return treatom_number_get ((double) ret, TRENUMTYPE_INTEGER);
 }
 
@@ -66,22 +71,9 @@ trealien_builtin_dlsym (treptr args)
 
     ret = dlsym ((void *) (int) TRENUMBER_VAL(hdl), TREATOM_STRINGP(sym));
     if (ret == NULL)
-        return treerror (hdl, dlerror ());
+        return trestring_get (dlerror ());
+
     return treatom_number_get ((double) (int) ret, TRENUMTYPE_INTEGER);
-}
-
-size_t
-trealien_argconv (treptr arg)
-{
-    if (TREPTR_IS_NUMBER(arg))
-        return (size_t) TRENUMBER_VAL(arg);
-    if (TREPTR_IS_STRING(arg))
-        return (size_t) TREATOM_STRINGP(arg);
-
-    treerror_norecover (arg, "integer number or string expected");
-
-    /*NOTREACHED*/
-    return 0;
 }
 
 /* Call C function without arguments. */
