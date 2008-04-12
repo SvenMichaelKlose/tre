@@ -150,7 +150,7 @@ treatom_set_binding (treptr atom, treptr value)
 
 /* Allocate an atom. */
 treptr
-treatom_alloc (char *symbol, treptr package, int type, treptr value)
+treatom_alloc (char * symbol, treptr package, int type, treptr value)
 {
     unsigned  atomi;
     treptr   ntop;
@@ -161,24 +161,28 @@ treatom_alloc (char *symbol, treptr package, int type, treptr value)
 	    	return treerror (treptr_invalid, "atom table full");
     }
 
-    /* Pop free atom from free atom list. */
     atomi = CAR(tre_atoms_free);
+
 #ifdef TRE_DIAGNOSTICS
     if (TREPTR_TO_ATOM(atomi)->type != TRETYPE_UNUSED)
 		treerror_internal (treptr_invalid, "trying to free unused atom");
 #endif
+
+    TREGC_ALLOC_ATOM(atomi);
+
+    /* Pop free atom from free atom list. */
     ntop = CDR(tre_atoms_free);
     trelist_free (tre_atoms_free);
     tre_atoms_free = ntop;
 
-    /* Make self-referencing ordinary. */
+    /* Make symbol. */
     if (value == treptr_invalid)
 		value = TRETYPE_INDEX_TO_PTR(type, atomi);
 
     symbol = tresymbol_add (symbol);
+
     ATOM_SET(atomi, symbol, package, type);
     treatom_set_value (atomi, value);
-    TRE_UNMARK(tregc_atommarks, atomi);
 
     /* Return typed pointer. */
     return TRETYPE_INDEX_TO_PTR(type, atomi);
@@ -186,7 +190,7 @@ treatom_alloc (char *symbol, treptr package, int type, treptr value)
 
 /* Free an atom. */
 void
-treatom_free (treptr atom)
+treatom_free (treptr atomi)
 {
 #ifdef TRE_DIAGNOSTICS
     treptr  i;
@@ -194,31 +198,25 @@ treatom_free (treptr atom)
     /* Check if atom is already on the free atom list. */
     if (tre_is_initialized) {
         _DOLIST(i, tre_atoms_free) {
-            if (_CAR(i) == TREPTR_INDEX(atom))
-                treerror_internal (
-					treptr_invalid, "atom %d already on free list", TREPTR_INDEX(atom)
-				);
+            if (_CAR(i) == TREPTR_INDEX(atomi))
+                treerror_internal (treptr_invalid, "atom %d already on free list", atomi);
         }
      }
 
     /* Check if atom is already marked as being unused. */
-    if (TREPTR_TO_ATOM(atom)->type == TRETYPE_UNUSED)
-	treerror_internal (treptr_invalid, "trying to free unused atom");
+    if (TREPTR_TO_ATOM(atomi)->type == TRETYPE_UNUSED)
+		treerror_internal (treptr_invalid, "trying to free unused atom");
 #endif
 
-    if (TREATOM_VALUE(atom) != atom)
-        treatom_set_value (atom, treptr_nil);
-    treatom_set_function (atom, treptr_nil);
-    treatom_set_binding (atom, treptr_nil);
-    TREPTR_TO_ATOM(atom).type = TRETYPE_UNUSED;
+    TREPTR_TO_ATOM(atomi).type = TRETYPE_UNUSED;
 
     /* Add entry to list of free atoms. */
-    tre_atoms_free = CONS(TREPTR_INDEX(atom), tre_atoms_free);
+    tre_atoms_free = CONS(TREPTR_INDEX(atomi), tre_atoms_free);
 
     /* Release symbol string. */
-    if (TREATOM_NAME(atom) != NULL) {
-        tresymbol_free (TREATOM_NAME(atom));
-    	TREATOM_NAME(atom) = NULL;
+    if (TREATOM_NAME(atomi) != NULL) {
+        tresymbol_free (TREATOM_NAME(atomi));
+    	TREATOM_NAME(atomi) = NULL;
     }
 }
 

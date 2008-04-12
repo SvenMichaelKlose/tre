@@ -27,6 +27,9 @@
 #include <stdio.h>
 #include <string.h>
 
+#define TREGC_FREE_ATOM(index)	TRE_MARK(tregc_atommarks, index)
+#define TREGC_FREE_CONS(index)	TRE_MARK(tregc_listmarks, index)
+
 /* List element marks. */
 char tregc_listmarks[NUM_LISTNODES_TOTAL >> 3];
 char tregc_atommarks[NUM_ATOMS >> 3];
@@ -74,7 +77,7 @@ void
 tregc_trace_expr_toplevel (treptr expr)
 {
     while (expr != treptr_nil) {
-        TRE_UNMARK(tregc_listmarks, expr);
+        TREGC_ALLOC_CONS(expr);
 		expr = _CDR(expr);
     }
 }
@@ -94,7 +97,7 @@ tregc_trace_expr (treptr p)
         if (TRE_GETMARK(tregc_listmarks, i) == FALSE)
 	    	return;
 
-        TRE_UNMARK(tregc_listmarks, i);
+        TREGC_ALLOC_CONS(i);
 
         tregc_trace_object (_CAR(i));
 
@@ -139,7 +142,7 @@ tregc_trace_atom (treptr a)
     /* Avoid circular trace. */
     if (TRE_GETMARK(tregc_atommarks, ai) == FALSE)
 		return;
-    TRE_UNMARK(tregc_atommarks, ai);
+    TREGC_ALLOC_ATOM(ai);
 
     switch (TREATOM_TYPE(a)) {
         case TRETYPE_FUNCTION:
@@ -150,6 +153,9 @@ tregc_trace_atom (treptr a)
         case TRETYPE_ARRAY:
 	    	tregc_trace_array (a);
 	    	break;
+
+        case TRETYPE_UNUSED:
+			return;
     }
     tregc_trace_object (TREATOM_VALUE(a));
     tregc_trace_object (TREATOM_FUN(a));

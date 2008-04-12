@@ -30,4 +30,7 @@ extern void tregc_retval (treptr);
 
 extern void tregc_print_stats (void);
 
+#define TREGC_ALLOC_ATOM(index)	TRE_UNMARK(tregc_atommarks, index)
+#define TREGC_ALLOC_CONS(index)	TRE_UNMARK(tregc_listmarks, index)
+
 #endif

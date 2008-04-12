@@ -93,7 +93,6 @@ trelist_free (treptr node)
     if (TRE_GETMARK(trelist_marks, node) == FALSE)
         treerror_internal (treptr_nil, "already free cons");
 
-    TRE_UNMARK(trelist_marks, node);
     _CAR(node) = -5;
 #endif
 
@@ -149,8 +148,9 @@ _trelist_get (treptr car, treptr cdr)
 #ifdef TRE_DIAGNOSTICS
     if (TRE_GETMARK(trelist_marks, ret))
         treerror_internal (ret, "already allocd cons");
-    TRE_MARK(trelist_marks, ret);
 #endif
+
+    TREGC_ALLOC_CONS(ret);
 
     tre_lists_free = _CDR(ret);
     TRELIST_SET(ret, car, cdr);
