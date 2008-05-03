@@ -1223,7 +1223,8 @@ SEQUENCES
 
     (SUBSEQ sequence start &OPTIONAL end) - function
 	Return copy of subsequence of the same type. The ending position is
-        not included.
+    not included. Copies from lists, arrays and strings.
+	Returns NIL if 'sequence' is NIL.
 
 	(GROUP sequence size) - function
 	Break up sequence into list of pieces of 'size' elements (or less at the end).

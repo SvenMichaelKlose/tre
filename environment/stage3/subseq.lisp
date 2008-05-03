@@ -1,17 +1,36 @@
 ;;;;; nix operating system project
 ;;;;; Copyright (c) 2007 Sven Klose <pixel@copei.de>
 
-(defun subseq (seq start &optional (end 99999))
+(defun subseq-list (seq start end)
   (labels ((copy (lst len)
-             (when lst
-               (when (< 0 len)
-                 (cons (car lst) (copy (cdr lst) (1- len)))))))
+             (when (and lst (< 0 len))
+                 (cons (car lst) (copy (cdr lst) (1- len))))))
   (when seq
     (when (> start end)
       (xchg start end))
-    (if (consp seq)
-        (copy (nthcdr start seq) (- end start))
-        (%error "only cons supported yet")))))
+    (copy (nthcdr start seq) (- end start)))))
+
+(defun subseq-sequence (maker seq start end)
+  (when (> start end)
+    (xchg start end))
+  (with (seqlen  (length seq))
+  	(when (< start seqlen)
+	  (when (>= end seqlen)
+	    (setf end seqlen))
+  	  (with (l (- end start)
+		     s (funcall maker l))
+        (dotimes (x l s)
+	  	  (setf (elt s x) (elt seq (+ start x))))))))
+
+(defun subseq (seq start &optional (end 99999))
+  (when seq
+	(if (consp seq)
+		(subseq-list seq start end)
+		(if (stringp seq)
+			(subseq-sequence #'make-string seq start end)
+			(if (arrayp seq)
+				(subseq-sequence #'make-array seq start end)
+				(error "type not supported"))))))
 
 (define-test "SUBSEQ basically works"
   ((subseq '(1 2 3 4) 1 3))

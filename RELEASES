@@ -34,6 +34,7 @@ most recent changes in unstable releases.
 	- DECF: Fixed - behaved like INCF.
 	- FRESH-LINE: Fixed - always printed to standard output.
 	- GROUP: New function splits up sequences into equally sized chunks.
+	- SUBSEQ: Now not only works with lists but also with strings and arrays.
 
 	- Improved alien interface and configurable C calls.
 	- ED: New built-in editor for ANSI terminals.
