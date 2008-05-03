@@ -69,14 +69,14 @@ trearg_get2 (treptr *a, treptr *b, treptr list)
        	list = treerror (list, "atom instead of list - need 2 arguments");
 	} while (TRUE);
 
-    if (CDDR(list) != treptr_nil)
-        trewarn (list, "no more than two args required - ignoring rest");
-
     if (CDR(list) == treptr_nil)
     	while (second == treptr_nil)
         	second = treerror (treptr_invalid, "second argument missing");
 	else
 		second = CADR(list);
+
+    if (CDDR(list) != treptr_nil)
+        trewarn (list, "no more than two args required - ignoring rest");
 
     *a = CAR(list);
     *b = second;
