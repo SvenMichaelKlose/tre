@@ -1,6 +1,6 @@
 ;;;; nix operating system project
 ;;;; list processor environment
-;;;; Copyright (C) 2005-2007 Sven Klose <pixel@copei.de>
+;;;; Copyright (C) 2006-2008 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; FORMAT function
 
@@ -9,11 +9,11 @@
      (cond
        ((= el #\%)  (terpri str)
                       (%format str l (1+ i) txt args))
-       ((= el #\A)  (if (listp (car args))
-                        (print (car args))
+       ((= el #\A)  (if (consp (car args))
+                        (print (car args)) ; XXX
                         (princ (car args) str))
                     (%format str l (1+ i) txt (cdr args)))
-       (t           (princ #\~)
+       (t           (princ #\~ str)
                     (%format str l i txt args)))))
 
 (defun %format (str l i txt args)
