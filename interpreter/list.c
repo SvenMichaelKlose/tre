@@ -173,6 +173,13 @@ _trelist_get (treptr car, treptr cdr)
     return ret;
 }
 
+/*
+ * UTILITIES
+ *
+ * These are implemented in C because lists are also used by the
+ * interpreter to stack free lists, atoms and numbers.
+ */
+
 /* Return last cons of a list. */
 treptr
 trelist_last (treptr l)
