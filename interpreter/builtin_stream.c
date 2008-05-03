@@ -55,7 +55,7 @@ trestream_builtin_princ (treptr args)
 
 
 FILE *
-trestream_builtin_get_handle (treptr args)
+trestream_builtin_get_handle (treptr args, FILE * default_stream)
 {
 	treptr handle = trearg_get (args);
 
@@ -65,13 +65,13 @@ trestream_builtin_get_handle (treptr args)
 
     return (handle != treptr_nil) ?
            tre_fileio_handles[(int) TRENUMBER_VAL(handle)] :
- 		   stdout;
+ 		   default_stream;
 }
 
 treptr
 trestream_builtin_force_output (treptr args)
 {
-    FILE  * str = trestream_builtin_get_handle (args);
+    FILE  * str = trestream_builtin_get_handle (args, stdout);
 
     fflush (str);
     return treptr_nil;
@@ -80,7 +80,7 @@ trestream_builtin_force_output (treptr args)
 treptr
 trestream_builtin_feof (treptr args)
 {
-    FILE  * str = trestream_builtin_get_handle (args);
+    FILE  * str = trestream_builtin_get_handle (args, stdin);
 
     if (feof (str))
         return treptr_t;
@@ -90,9 +90,45 @@ trestream_builtin_feof (treptr args)
 treptr
 trestream_builtin_read_char (treptr args)
 {
-    FILE  * str = trestream_builtin_get_handle (args);
+    FILE  * str = trestream_builtin_get_handle (args, stdin);
     char  c;
 
     c = fgetc (str);
     return treatom_number_get ((double) c, TRENUMTYPE_CHAR);
+}
+
+#include <stdio.h>
+#include <unistd.h>
+#include <termios.h>
+
+treptr
+trestream_builtin_terminal_raw (treptr dummy)
+{
+    struct termios settings;
+    int result;
+    int desc = STDIN_FILENO;
+
+    result = tcgetattr (desc, &settings);
+    settings.c_lflag &= ~(ICANON | ECHO);
+    settings.c_cc[VMIN] = 1;
+    settings.c_cc[VTIME] = 0;
+    result = tcsetattr (desc, TCSANOW, &settings);
+
+	return treptr_nil;
+}
+
+treptr
+trestream_builtin_terminal_normal (treptr dummy)
+{
+    struct termios settings;
+    int result;
+    int desc = STDIN_FILENO;
+
+    result = tcgetattr (desc, &settings);
+    settings.c_lflag |= ICANON | ECHO;
+    settings.c_cc[VMIN] = 1;
+    settings.c_cc[VTIME] = 0;
+    result = tcsetattr (desc, TCSANOW, &settings);
+
+	return treptr_nil;
 }
