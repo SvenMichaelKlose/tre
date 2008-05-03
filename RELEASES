@@ -1,8 +1,63 @@
-nix list processor releases
+TRE releases
 
 Version numbers contain a major, minor and micro- version number separated
 by dots. If the minor version is an even number, the release is stable.
 Uneven minor versions are for releases under construction.
+
+This file is maintained accurately for stable releases. See Changelog for
+most recent changes in unstable releases.
+
+0.4.0
+	DIALECT
+
+	- Numbers now have double precision.
+	- Lexical scope in macros.
+	- LAMBDA keyowrd is optional. Removed from environment.
+
+	- Raw memory access and allocation (Mew: %%SET, %%GET, %MALLOC, %FREE)
+	- New predicate SYMBOLP: Returns T if variable points to itself. NIL otherwise.
+	- New macro WITH merges LET*, MULTIPLE-VALUE-BIND and LABELS.
+	- New macro SELF denotes currently DEFUNed function.
+
+	- ERROR takes formatted string (New: %ERROR).
+	- APPEND/NCONC now ignore empty lists.
+	- MAKE-HASH-TABLE: Now symbols can be used as keys.
+	- TREE-WALK: Now returns a copy of the tree (which may be modified).
+	- DEFSTRUCT: Now also defines WITH-<structname> macro.
+	- FORMAT: Now ignores unknown directives.
+	- PRINT: Print keyword package atom.
+	- ELT: Returns NIL if sequence is NIL.
+	- STRING: Converts character to single-character string.
+	- CHAR-STRING: Removed.
+	- %TERMINA-RAW: New: Switch off terminal buffering and echoing.
+	- %TERMINA-NORMAL: New: Switch on terminal buffering and echoing.
+	- DECF: Fixed - behaved like INCF.
+	- FRESH-LINE: Fixed - always printed to standard output.
+
+	- Improved alien interface and configurable C calls.
+	- ED: New built-in editor for ANSI terminals.
+
+	DEBUGGING
+
+	- Errors are now correcteable. Retries until user input is valid.
+	- If first element is not a function, print the unevaluated value.
+	- Show built-in functions in backtrace.
+	- Switch to debugger on SIGINT (CTRL+C), except when reading from standard input.
+
+	GARBAGE COLLECTOR
+
+	- GC statistics don't include conses used internally.
+	- GC can call TRE functions.
+
+	MISCELLANOUS
+
+	- Fixed standard input stream.
+	- Exit if standard input stream ends (CTRL+D).
+
+	COMPILER (under construction)
+
+	- Compiler BACKQUOTE expansion added.
+	- Compiler: CBLOCKs vanished.
 
 0.2.1 (2007/07/07):
 
