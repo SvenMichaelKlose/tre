@@ -33,6 +33,7 @@ most recent changes in unstable releases.
 	- %TERMINA-NORMAL: New: Switch on terminal buffering and echoing.
 	- DECF: Fixed - behaved like INCF.
 	- FRESH-LINE: Fixed - always printed to standard output.
+	- GROUP: New function splits up sequences into equally sized chunks.
 
 	- Improved alien interface and configurable C calls.
 	- ED: New built-in editor for ANSI terminals.

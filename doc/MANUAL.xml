@@ -1225,6 +1225,9 @@ SEQUENCES
 	Return copy of subsequence of the same type. The ending position is
         not included.
 
+	(GROUP sequence size) - function
+	Break up sequence into list of pieces of 'size' elements (or less at the end).
+
 STRUCTURES
 
     (DEFSTRUCT name &REST fields) - macro
