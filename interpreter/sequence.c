@@ -81,6 +81,8 @@ tresequence_builtin_elt (treptr args)
     if (TREPTR_IS_NUMBER(cdr) == FALSE)
 		return treerror (cdr, "index must be integer");
 
+	RETURN_NIL(car);
+
     t = tresequence_get_type (car);
     if (t == NULL)
         return treerror (car, "sequence expected");
