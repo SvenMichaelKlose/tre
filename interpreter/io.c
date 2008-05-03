@@ -1,6 +1,6 @@
 /*
  * nix operating system project tre interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Simple streams
  *
@@ -16,6 +16,7 @@
 #include "thread.h"
 #include "list.h"
 #include "main.h"
+#include "builtin_stream.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -177,6 +178,7 @@ treio_prompt ()
     if (treio_readerstreamptr != 1)
         return;
 
+	(void) trestream_builtin_terminal_normal (treptr_nil);
     printf ("* ");
 	tre_interrupt_debugger = FALSE;
     TREIO_FLUSH(treio_console);

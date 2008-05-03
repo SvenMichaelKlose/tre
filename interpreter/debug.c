@@ -17,6 +17,7 @@
 #include "util.h"
 #include "list.h"
 #include "builtin_debug.h"
+#include "builtin_stream.h"
 #include "xxx.h"
 
 #include <stdarg.h>
@@ -148,6 +149,7 @@ char      tredebug_argvbuf[256];
 void
 tredebug_prompt (void)
 {
+	(void) trestream_builtin_terminal_normal (treptr_nil);
     printf (":%d] ", tredebug_level);
 }
 
