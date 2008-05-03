@@ -19,20 +19,20 @@
   `(&key ,@fields))
 
 (defun %struct-make-init (fields)
-  (let ((form (make-queue)))
+  (with (form (make-queue))
     (do ((i fields (cdr i))
-	 (idx 1 (1+ idx)))
+	     (idx 1 (1+ idx)))
         ((endp i) (queue-list form))
       (if (consp (car i))
         (enqueue form `(setf (elt a ,idx) ,(caar i)))
         (enqueue form `(setf (elt a ,idx) ,(car i)))))))
 
 (defun %struct-make (name fields options)
-  (let ((sym (%struct-make-symbol name options))
-        (user-init (%struct-make-init fields))
-	(type-init `((setf (elt a 0) ',name))))
+  (with (sym (%struct-make-symbol name options)
+         user-init (%struct-make-init fields)
+	     type-init `((setf (elt a 0) ',name)))
     `(defun ,sym ,(%struct-make-args fields)
-       (let ((a (make-array ,(1+ (length fields)))))
+       (with (a (make-array ,(1+ (length fields))))
          ,@(if user-init
 	     (nconc type-init user-init)
 	     type-init)
@@ -43,11 +43,11 @@
 
 (defun %struct-field-name (field)
   (if (consp field)
-    (car field)
-    field))
+      (car field)
+      field))
 
 (defun %struct-single-get (name field index)
-  (let ((sym (%struct-getter-symbol name field)))
+  (with (sym (%struct-getter-symbol name field))
     `(progn
       (defun ,sym (arr)
         (elt arr ,index))
@@ -62,9 +62,9 @@
       (enqueue form (%struct-single-get name (%struct-field-name (car i)) index)))))
 
 (defun %struct-p (name)
-  (let ((sym (%struct-p-symbol name)))
+  (with (sym (%struct-p-symbol name))
     `(defun ,sym (arr)
-        (and (arrayp arr) (eq (elt arr 0) ,name)))))
+       (and (arrayp arr) (eq (elt arr 0) ,name)))))
 
 (defun %struct-sort-fields (fields-and-options)
   "Split list into fields and options."
@@ -86,8 +86,8 @@
 
 (defun %struct-name (obj)
   (if (not (arrayp obj))
-    (%error "object is not a struct")
-    (elt 0 obj)))
+      (%error "object is not a struct")
+      (elt 0 obj)))
 
 (defun %struct-fields (name)
   (with-queue form
