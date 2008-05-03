@@ -1,6 +1,6 @@
 ;;;; nix operating system project
 ;;;; list processor environment
-;;;; Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Simple printing
 
@@ -45,7 +45,7 @@
 (defun fresh-line (&optional (str *standard-output*))
   "Open a new line if not already opened."
   (unless (fresh-line? str)
-    (terpri)
+    (terpri str)
     t))
 
 (defun force-output (&optional (str *standard-output*))
