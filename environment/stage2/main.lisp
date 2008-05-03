@@ -8,7 +8,7 @@
 (env-load "stage2/search-list.lisp")
 (env-load "stage2/search-sequence.lisp")
 (env-load "stage2/define-mapped-fun.lisp")
-(env-load "stage2/force-cons.lisp")
+;(env-load "stage2/force-cons.lisp")
 (env-load "stage2/queue-utils.lisp")
 (env-load "stage2/list-manipulation.lisp")
 (env-load "stage2/assoc.lisp")
