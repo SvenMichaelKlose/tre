@@ -1,8 +1,10 @@
 ;;;; nix operating system project
 ;;;; list processor environment
-;;;; Copyright (c) 2006-2007 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2006-2008 Sven Klose <pixel@copei.de>
 ;;;;
-;;;; Macro expansion
+;;;; Macro expansion.
+;;;;
+;;;; Macros are expanded from the leaves to the root.
 
 (setq *universe* (cons '*macrop-diversion*
                  (cons '*macroexpand-backquote-diversion*
@@ -21,30 +23,35 @@
   #'((%gsme)
     (cond
       ((not %gsme))
+
       ((not (consp %gsme))
           %gsme)
+
       ((not (consp (car %gsme)))
-	  (cons (car %gsme)
+	  	  (cons (car %gsme)
                 (%macroexpand-backquote (cdr %gsme))))
+
       ((eq (car (car %gsme)) 'QUASIQUOTE)
-	  (cons (cons 'QUASIQUOTE
-		      (%macroexpand (cdr (car %gsme))))
-	        (%macroexpand-backquote (cdr %gsme))))
+	  	  (cons (cons 'QUASIQUOTE
+		        	  (%macroexpand (cdr (car %gsme))))
+	            (%macroexpand-backquote (cdr %gsme))))
 
       ((eq (car (car %gsme)) 'QUASIQUOTE-SPLICE)
-	  (cons (cons 'QUASIQUOTE-SPLICE
-		      (%macroexpand (cdr (car %gsme))))
-	        (%macroexpand-backquote (cdr %gsme))))
+	  	  (cons (cons 'QUASIQUOTE-SPLICE
+		        	  (%macroexpand (cdr (car %gsme))))
+	            (%macroexpand-backquote (cdr %gsme))))
 
       (t  (cons (%macroexpand-backquote (car %gsme))
-	        (%macroexpand-backquote (cdr %gsme)))))))
+	            (%macroexpand-backquote (cdr %gsme)))))))
 
 (%set-atom-fun %macroexpand-list
   #'((%gsme)
     (cond
       ((not %gsme))
+
       ((not (consp %gsme))
           %gsme)
+
       (t  (cons (%macroexpand (car %gsme))
                 (%macroexpand-list (cdr %gsme)))))))
 
@@ -54,25 +61,31 @@
       ((consp (car %gsme))
           (cons (%macroexpand (car %gsme))
                 (cdr %gsme)))
+
       ((apply *macrop-diversion* (list (car %gsme)))
           (setq *current-macro* (car %gsme))
           (#'((%gsmt)
                (setq *current-macro* nil)
                %gsmt)
             (apply *macrocall-diversion* (list (car %gsme) (cdr %gsme)))))
+
       (t  %gsme))))
 
 (%set-atom-fun %macroexpand
   #'((%gsme)
     (cond
       ((not %gsme))
+
       ((not (consp %gsme))
           %gsme)
+
       ((eq (car %gsme) 'QUOTE)
           %gsme)
+
       ((eq (car %gsme) 'BACKQUOTE)
           (cons 'BACKQUOTE
                 (apply *macroexpand-backquote-diversion* (list (cdr %gsme)))))
+
       (t  (%macroexpand-call (cons (car %gsme)
                                    (%macroexpand-list (cdr %gsme))))))))
 
