@@ -1,0 +1,1 @@
+DEFSTRUCT: MAKE-*: Keywords don't set value if it has the name of a function.
