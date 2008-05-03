@@ -1,6 +1,6 @@
 ;;;; nix operating system project
 ;;;; list processor environment
-;;;; Copyright (C) 2005-2006 Sven Klose <pixel@copei.de>
+;;;; Copyright (C) 2005-2008 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; String functions
 
@@ -26,15 +26,6 @@
   ((and (string= nil nil)
         (string= 1 1)
 	(string= #'eq #'eq)))
-  t)
-
-(defun char-string (chr)
-  (let ((s (make-string 1)))
-    (setf (elt s 0) chr)
-    s))
-
-(define-test "CHAR-STRING works"
-  ((string= (char-string #\A) "A"))
   t)
 
 (defun list-string (lst)

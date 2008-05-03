@@ -117,6 +117,11 @@ trestring_builtin_string (treptr list)
 	    		return arg;
 
         	case TRETYPE_NUMBER:
+				if (TRENUMBER_TYPE(arg) == TRENUMTYPE_CHAR) {
+					buf[0] = TRENUMBER_VAL(arg);
+					buf[1] = 0;
+            		return trestring_get (buf);
+            	}
             	sprintf (buf, "%G", TRENUMBER_VAL(arg));
             	return trestring_get (buf);
 

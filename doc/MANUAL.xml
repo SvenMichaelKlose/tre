@@ -1123,9 +1123,6 @@ STRINGS
     Strings are not unique. (EQ "a" "a") evaluates to NIL. Use STRING=
     instead. Strings are also sequences.
 
-    (CHAR-STRING character) - non-standard function
-	Converts single character to new string.
-
     (LIST-STRING string) - non-standard function
 	Makes string from list of numbers. If string is NIL, NIL is returned.
     
@@ -1139,8 +1136,9 @@ STRINGS
 	Return new string with upper case characters.
 
     (STRING obj) - built-in function
-	Returns obj converted to a string. Numbers and symbol conversion is
-        supported. It is an error trying to convert other types.
+	Returns obj converted to a string. Non-character numbers are printed
+	in decimal notation. Characters are converted to one-character-strings.
+    For all other data types the symbol name is used.
 
     (STRING= str1 str2) - function
 	Returns T if strings match.
