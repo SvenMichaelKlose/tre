@@ -1,6 +1,6 @@
 ;;;; nix operating system project
 ;;;; list processor environment
-;;;; Copyright (C) 2005 Sven Klose <pixel@copei.de>
+;;;; Copyright (C) 2005, 2008 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Increment/decrement functions
 
@@ -8,4 +8,4 @@
   `(setf ,place (+ ,place ,n)))
 
 (defmacro decf (place &optional (n 1))
-  `(setf ,place (+ ,place ,n)))
+  `(setf ,place (- ,place ,n)))
