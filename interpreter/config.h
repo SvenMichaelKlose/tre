@@ -37,7 +37,7 @@ typedef int bool;
 
 #define TRE_MAX_SYMLEN		64
 #define TRE_MAX_STRINGLEN	8192
-#define TRE_SYMBOL_TABLE_SIZE	(16 * 1024)
+#define TRE_SYMBOL_TABLE_SIZE	(32 * 1024)
 #define TRE_MAX_NESTED_FILES	16
 #define TRE_FILEIO_MAX_FILES   16
 
