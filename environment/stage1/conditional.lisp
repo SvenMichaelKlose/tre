@@ -1,6 +1,6 @@
 ;;;; nix operating system project
 ;;;; list processor environment
-;;;; Copyright (C) 2005-2006 Sven Klose <pixel@copei.de>
+;;;; Copyright (C) 2005-2008 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Conditional evaluation
 
@@ -20,8 +20,8 @@
     `(let ((,g ,val))
       (cond 
         ,@(%simple-mapcar
-            #'(((test expr))
-                  (if (eq t test)
-	      	          `(t ,expr)
-                      `((equal ,g ,test) ,expr)))
+            #'((x)
+                  (if (eq t (car x))
+	      	          `(t ,@(cdr x))
+                      `((equal ,g ,(car x)) ,@(cdr x))))
             tests)))))

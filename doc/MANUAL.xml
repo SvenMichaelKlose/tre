@@ -967,8 +967,9 @@ CONTROL FLOW
 	On evaluation of RETURN-FROM inside the body, evaluation of the
         block is terminated.
 
-    (CASE value (match expression)*) - macro
+    (CASE value (match expression?)*) - macro
         Evaluates first expression whose 'match' is EQUAL to 'value'.
+		Expression is optional,
 
     (COND (test expression)*) - built-in special form (r)
 	Evaluates test-expression pairs in order. If a test returns non-NIL,
