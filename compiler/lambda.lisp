@@ -1,24 +1,28 @@
-;;;; nix operating system project
-;;;; lisp compiler
-;;;; (c) 2005 Sven Klose <pixel@copei.de>
+;;;; TRE environment
+;;;; Copyright (c) 2006-2008  Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; LAMBDA-related utilities.
 
 (defun past-lambda (x)
+  "Get cons after optional LAMBDA keyword in function expression."
   (if (eq (first x) 'lambda)
 	(cdr x)
 	x))
 
 (defun lambda-args (x)
+  "Get arguments of function expression."
   (car (past-lambda x)))
 
 (defun lambda-body (x)
+  "Get body of function expression."
   (cdr (past-lambda x)))
 
 (defun lambda-call-vals (x)
+  "Get arguments to local function call (used to introduce local symbols)."
   (cdr x))
 
 (defun is-lambda? (x)
+  "Checks if expression is a function/LAMBDA expression."
   (and (consp x)
        (eq (car x) 'function)
        (consp (cdr x))
@@ -35,6 +39,7 @@
   t)
 
 (defun is-lambda-call? (x)
+  "Checks if expression is a local function call."
   (and (consp x)
 	   (cdr x)
        (is-lambda? (car x))))
@@ -43,7 +48,8 @@
   ((is-lambda-call? '(#'((x) x) nil)))
   t)
 
-(defmacro with-lambda-call ((args vals body call) &rest xs)
+(defmacro with-lambda-call ((args vals body call) &rest exec-body)
+  "Bind local function call components to variables for exec-body."
   (with-gensym (tmp l)
     `(with (,tmp ,call
 	   	    ,l (second (car ,tmp))
