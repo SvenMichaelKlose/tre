@@ -1,10 +1,10 @@
-;;;; nix operating system project
-;;;; list processor environment
-;;;; Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+;;;; TRE environment
+;;;; Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
 
 (setq *universe* (cons '%defun
                  (cons '%defspecial
-                 (cons 'defvar *universe*))))
+                 (cons 'defvar
+                 (cons 'defconstant *universe*)))))
 
 (%set-atom-fun %defun
   (macro (name args &rest body)
@@ -22,6 +22,12 @@
 
 (%set-atom-fun defvar
   (macro (name &optional (init nil))
-    `(block nil
-       (setq *universe* (cons ',name *universe*))
-       (setq ,name ,init))))
+    `(setq *universe* (cons ',name *universe*)
+           ,name ,init)))
+
+(defvar *constants* nil)
+
+(%set-atom-fun defconstant
+  (macro (name &optional (init nil))
+    `(setq *constants* (cons ',name *constants*)
+           ,name ,init)))
