@@ -13,20 +13,23 @@
 
 (defun %setf-complement (p val)
   (if (atom p)
-    (list 'setq p val)
-    (let* ((fun (car p))
-	   (args (cdr p))
-	   (setfun (%setf-make-symbol fun))
-	   (funat (eval `(function ,setfun))))
-      (if (functionp funat)
-	(let ((g (gensym)))
-          `(progn
-	     (let ((,g ,val))
-	       (,setfun ,g ,@args)
-	     ,g)))
-        (progn
-          (print p)
-	  (%error "place not settable"))))))
+	  (progn
+		(if (member p *constants*)
+		  (%error "cannot set constant"))
+      	(list 'setq p val))
+      (let* ((fun (car p))
+	         (args (cdr p))
+	         (setfun (%setf-make-symbol fun))
+	         (funat (eval `(function ,setfun))))
+        (if (functionp funat)
+	        (let ((g (gensym)))
+              `(progn
+	             (let ((,g ,val))
+	               (,setfun ,g ,@args)
+	               ,g)))
+               (progn
+                 (print p)
+	             (%error "place not settable"))))))
 
 (defun %setf (args)
   (if (not (cdr args))
