@@ -1,21 +1,20 @@
-;;;; nix operating system project
-;;;; list processor environment
-;;;; Copyright (C) 2006 Sven Klose <pixel@copei.de>
+;;;; TRE environment
+;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
 
 (defvar *tests* nil)
 
-(%defun punchcard-equal (x y)
+(%defun test-equal (x y)
   (cond
     ((atom x)	 (eql x y))
     ((atom y)	 (eql x y))
-    ((punchcard-equal (car x) (car y))
-      		 (punchcard-equal (cdr x) (cdr y)))))
+    ((test-equal (car x) (car y))
+      		 (test-equal (cdr x) (cdr y)))))
 
 (%defun do-test (test)
   (cond
-    ((punchcard-equal 	(eval (car (cdr test)))
-                      	(eval (car (cdr (cdr test))))))
-                  (t    (print (car test))
+    ((test-equal 	(eval (car (cdr test)))
+                  	(eval (car (cdr (cdr test))))))
+     (t     (print (car test))
 			(print 'FAILED-RESULT)
 			(print (eval (car (cdr test))))
 			(print 'WANTED-RESULT)
@@ -37,3 +36,15 @@
 				  (cons result nil)))
                         *tests*))
   (do-test (car *tests*)))
+
+(define-test "BACKQUOTE"
+  (`(1 2 3))
+  '(1 2 3))
+
+(define-test "QUASIQUOTE"
+  (`(1 ,2 ,,3 ,,4))
+  '(1 2 ,3 ,4))
+
+(define-test "QUASIQUOTE-SPLICE"
+  (`(1 ,@'(2) ,,@3 ,,@4))
+  '(1 2 ,@3 ,@4))
