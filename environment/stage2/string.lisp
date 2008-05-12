@@ -1,6 +1,5 @@
-;;;; nix operating system project
-;;;; list processor environment
-;;;; Copyright (C) 2005-2008 Sven Klose <pixel@copei.de>
+;;;; TRE environment
+;;;; Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; String functions
 
@@ -51,8 +50,7 @@
       (do ((i 0 (1+ i)))
           ((= i n) s)
         (let ((c (elt str i)))
-          (when (and (>= c #\a) (<= c #\z))
-            (setf (elt s i) (char-upcase c))))))))
+            (setf (elt s i) (char-upcase c)))))))
 
 (define-test "STRING-UPCASE works"
   ((string= (string-upcase "lisp")
