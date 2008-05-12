@@ -1,5 +1,4 @@
-;;;; nix operating system project
-;;;; list processor environment
+;;;; TRE environment
 ;;;; Copyright (c) 2007 Sven Klose <pixel@copei.de>
 
 (defun read-line (&optional (str *standard-input*))

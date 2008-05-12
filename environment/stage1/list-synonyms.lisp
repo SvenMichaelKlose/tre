@@ -20,6 +20,6 @@
 						 l)
 				   (incf i))
 			 *first-to-tenth*)
-		 (print l))))
+		 l)))
 
 (%make-list-synonyms)

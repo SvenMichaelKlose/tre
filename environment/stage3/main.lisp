@@ -16,5 +16,6 @@
 (env-load "stage3/loop.lisp")
 (env-load "stage3/with-struct.lisp")
 (env-load "stage3/read-line.lisp")
+(env-load "stage3/read-integer.lisp")
 (env-load "stage3/group.lisp")
 (env-load "stage3/subseq.lisp")

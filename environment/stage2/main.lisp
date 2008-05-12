@@ -5,7 +5,6 @@
 ;;;; Second environment stage
 
 (env-load "stage2/with-gensym.lisp")
-(env-load "stage2/search-list.lisp")
 (env-load "stage2/search-sequence.lisp")
 (env-load "stage2/define-mapped-fun.lisp")
 (env-load "stage2/queue-utils.lisp")
