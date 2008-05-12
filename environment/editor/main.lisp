@@ -4,6 +4,7 @@
 ;;;; Built-in text editor for ANSI compatible terminals.
 
 (env-load "editor/config.lisp")
+(env-load "editor/misc.lisp")
 (env-load "editor/ansi.lisp")
 (env-load "editor/math.lisp")
 (env-load "editor/terminal.lisp")

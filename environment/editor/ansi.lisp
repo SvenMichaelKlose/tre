@@ -3,156 +3,113 @@
 ;;;;;
 ;;;;; ANSI terminal functions.
 
+;;;; Primitives.
+
 (defun ansi-csi ()
   "Print control sequence initialiser."
   (princ (code-char 27))
   (princ #\[))
 
-(defun ansi-cmd0 (x)
+(define-template-macro defcsi
+  ((ansi-csi)))
+
+(defcsi ansi-cmd0 (x)
   "Print control sequence without arguments."
-  (ansi-csi)
   (format t "~A" x))
 
-(defun ansi-cmd1 (n c)
+(defcsi ansi-cmd1 (n c)
   "Print control sequence with argument."
-  (ansi-csi)
   (format t "~A~A" n c))
 
-(defun ansi-cmd2 (x y c)
+(defcsi ansi-cmd2 (x y c)
   "Print control sequence with two arguments."
-  (ansi-csi)
   (format t "~A;~A~A" x y c))
 
-(defun ansi-set-flag (x)
+(defcsi ansi-set-flag (x)
   "Print control sequence for flag."
-  (ansi-csi)
   (format t "?~A" x))
 
-(defun ansi-up (&optional (n 1))
-  "Move cursor up."
-  (ansi-cmd1 n #\A))
-
-(defun ansi-down (&optional (n 1))
-  "Move cursor down."
-  (ansi-cmd1 n #\B))
-
-(defun ansi-right (&optional (n 1))
-  "Move cursor right."
-  (ansi-cmd1 n #\C))
-
-(defun ansi-left (&optional (n 1))
-  "Move cursor left."
-  (ansi-cmd1 n #\D))
-
-(defun ansi-nextline (&optional (n 1))
-  (ansi-cmd1 n #\E))
-
-(defun ansi-prevline (&optional (n 1))
-  (ansi-cmd1 n #\F))
-
-(defun ansi-column (n)
-  "Move cursor to column N."
-  (ansi-cmd1 (1+ n) #\G))
-
-(defun ansi-home ()
-  "Move cursor to the top left corner."
-  (ansi-cmd0 #\H))
-
-(defun ansi-position (x y)
-  "Move cursor to absolute position."
-  (ansi-cmd2 (1+ y) (1+ x) #\H))
-
-(defun ansi-clrscr-after ()
-  "Clear screen after cursor."
-  (ansi-cmd1 0 #\J))
-
-(defun ansi-clrscr-before ()
-  "Clear screen before cursor."
-  (ansi-cmd1 1 #\J))
-
-(defun ansi-clrscr ()
-  "Clear screen."
-  (ansi-cmd1 2 #\J))
-
-(defun ansi-clrln-after ()
-  "Clear line after cursor."
-  (ansi-cmd1 0 #\K))
-
-(defun ansi-clrln-before ()
-  "Clear line before cursor."
-  (ansi-cmd1 1 #\K))
-
-(defun ansi-clrln ()
-  "Clear line."
-  (ansi-cmd1 2 #\K))
-
-(defun ansi-scroll-up (&optional (n 1))
-  "Scroll screen up."
-  (ansi-cmd1 n #\S))
-
-(defun ansi-scroll-down (&optional (n 1))
-  "Scroll screen down."
-  (ansi-cmd1 n #\T))
-
-(defun ansi-reset ()
-  "Reset/restart terminal."
-  (ansi-cmd0 #\m))
-
-(defun ansi-sgr (x)
-  "Print special graphics redition control sequence."
-  (ansi-cmd1 x #\m))
-
-(defun ansi-cursor-hide ()
-  "Hide cursor."
-  (ansi-set-flag "25l"))
-
-(defun ansi-cursor-show ()
-  "Show cursor."
-  (ansi-set-flag "25h"))
-
-(defun ansi-cursor-save ()
-  "Save cursor state and position. One at a time."
-  (ansi-cmd0 "s"))
-
-(defun ansi-cursor-restore ()
-  "Restore cursor state and position."
-  (ansi-cmd0 "u"))
-
-(defun ansi-bold ()
-  "Print bold characters."
-  (ansi-sgr "1"))
-
-(defun ansi-negative ()
-  "Print negative characters."
-  (ansi-sgr "7"))
-
-(defun ansi-underline-on ()
-  "Print underlined characters."
-  (ansi-sgr "21"))
-
-(defun ansi-normal ()
-  "Print normal characters."
-  (ansi-sgr "22"))
-
-(defun ansi-set-color (which c)
-  (ansi-csi)
+(defcsi ansi-set-color (which c)
   (format t "~A~Am" which c))
 
-(defun ansi-foreground-color (c)
-  (ansi-set-color 3 c))
+;;;; Macros.
 
-(defun ansi-background-color (c)
-  (ansi-set-color 4 c))
+(defmacro defc (cmd name args description &rest codes)
+  `(defun ,name ,args
+	 ,description
+	 ,(cons cmd codes)))
 
-(defun ansi-foreground-color-high (c)
-  (ansi-set-color 9 c))
+(defmacro %defz (defname cmd)
+  `(defmacro ,defname (name &rest args)
+     `(defc ,cmd ,,name () ,,@args)))
 
-(defun ansi-background-color-high (c)
-  (ansi-set-color 10 c))
+(%defz defs ansi-set-flag)
+(%defz def-sgr ansi-sgr)
+(%defz def0 ansi-cmd0)
+
+(defmacro def1 (&rest args)
+  `(defc ansi-cmd1 ,@args))
+
+(defmacro def2 (&rest args)
+  `(defc ansi-cmd2 ,@args))
+
+;;;; Public functions.
+
+(defmacro defx (head cmds)
+  (cons 'progn
+	 	(mapcar #'((x) (cons head x)) cmds)))
+
+(defx def0
+	  ((ansi-reset "Reset/restart terminal." #\m)
+	   (ansi-cursor-save "Save cursor state and position. One at a time." "s")
+	   (ansi-cursor-restore "Restore cursor state and position." "u")
+	   (ansi-home "Move cursor to the top left corner." #\H)))
+
+(defx def1
+	  ((ansi-up (&optional (n 1)) "Move cursor up." n #\A)
+	   (ansi-down (&optional (n 1)) "Move cursor down." n #\B)
+	   (ansi-right (&optional (n 1)) "Move cursor right." n #\C)
+	   (ansi-left (&optional (n 1)) "Move cursor left." n #\D)
+	   (ansi-nextline (&optional (n 1)) "Move to next line." n #\E)
+	   (ansi-prevline (&optional (n 1)) "Move to previous line." n #\F)
+	   (ansi-column (n) "Move cursor to column N." (1+ n) #\G)
+	   (ansi-clrscr-after () "Clear screen after cursor." 0 #\J)
+	   (ansi-clrscr-before () "Clear screen before cursor." 1 #\J)
+	   (ansi-clrscr () "Clear screen." 2 #\J)
+	   (ansi-clrln-after () "Clear line after cursor." 0 #\K)
+	   (ansi-clrln-before () "Clear line before cursor." 1 #\K)
+	   (ansi-clrln () "Clear line." 2 #\K)
+	   (ansi-scroll-up (&optional (n 1)) "Scroll screen up." n #\S)
+	   (ansi-scroll-down (&optional (n 1)) "Scroll screen down." n #\T)
+	   (ansi-sgr (x) "Print special graphics redition control sequence." x #\m)))
+
+(def2 ansi-position (x y) "Move cursor to absolute position." (1+ y) (1+ x) #\H)
+
+(defs ansi-cursor-hide "Hide cursor." "25l")
+(defs ansi-cursor-show "Show cursor." "25h")
+
+(defx def-sgr
+	  ((ansi-bold "Print bold characters." "1")
+	   (ansi-negative "Print negative characters." "7")
+	   (ansi-underline-on "Print underlined characters." "21")
+	   (ansi-normal "Print normal characters." "22")))
 
 (defun ansi-color (name)
   "Translates symbol to ANSI color number."
   (position name '(black red green yellow blue magenta cyan white)))
+
+(defmacro defcol (where high code)
+  (with (name ($ 'ansi-
+			     (if where 'foreground 'background)
+			     '-color
+			     (if high '-high "")))
+	 `(defun ,name (c)
+        (ansi-set-color ,code c))))
+
+(defcol nil nil 4)
+(defcol nil t 10)
+(defcol t nil 3)
+(defcol t t 9)
 
 (defun ansi-read-nonctrl ()
   (with (c (read-char))

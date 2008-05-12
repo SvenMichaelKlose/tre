@@ -10,7 +10,8 @@
   column-offset
   name
   text
-  quit)
+  quit
+  mode)
 
 (defvar *editor-state*)
 
@@ -31,6 +32,6 @@
 		*editor-state*
         	(make-editor-state
           	  :x 0 :y 0 :line-offset 0 :column-offset 0 :name name
-		      :quit nil
+		      :quit nil :mode nil
 		      :text *text*)
 		(editor-state-quit *editor-state*) nil))

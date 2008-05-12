@@ -49,19 +49,31 @@
   (with (x	(editor-state-x *editor-state*)
   		 y	(editor-state-y *editor-state*))
 	(ansi-bold)
-  	(ansi-position 0 (1- (terminal-height *terminal*)))
+	(ansi-foreground-color-high (ansi-color 'white))
+	(when (editor-state-mode *editor-state*)
+	  (ansi-column 0)
+	  (princ (editor-state-mode *editor-state*)))
+
+  	(ansi-position (integer (/ (terminal-width *terminal*) 2)) (1- (terminal-height *terminal*)))
+
 	(ansi-foreground-color-high (ansi-color 'white))
     (princ #\")
 	(ansi-foreground-color-high (ansi-color 'blue))
 	(princ (editor-state-name *editor-state*))
 	(ansi-foreground-color-high (ansi-color 'white))
     (princ #\")
-  	(ansi-position (integer (/ (terminal-width *terminal*) 2)) (1- (terminal-height *terminal*)))
+
+    (princ #\ )
+
     (princ (+ 1 x (editor-state-column-offset *editor-state*)))
     (princ #\:)
     (princ (+ 1 y (editor-state-line-offset *editor-state*)))
     (princ #\/)
     (princ (length (text-container-lines *text*)))
+
+    (princ #\ )
+    (princ (editor-state-line-offset *editor-state*))
+
 	(ansi-normal)
     (ansi-position x y)))
 
@@ -71,6 +83,7 @@
   (princ #\~)
   (ansi-normal)
   (ansi-clrln-after))
+
 (defun editor-draw-line (y)
   (editor-default-color)
   (with (line (list-string (editor-expand-line (elt (text-container-lines *text*) y))))
@@ -80,13 +93,14 @@
 		  (return-from editor-draw-line nil))
 	    (princ (elt line lx))))))
 
-(defun editor-redraw-line (y)
-  (ansi-position 0 y)
-  (ansi-clrln)
-  (with (ty (+ y (editor-state-line-offset *editor-state*)))
-    (if (> ty (length (text-container-lines *text*)))
-        (editor-draw-invalid-line)
-        (editor-draw-line ty))))
+(defun editor-redraw-line (&optional (n nil))
+  (with (y	(or n (editor-state-y *editor-state*)))
+    (ansi-position 0 y)
+    (ansi-clrln)
+    (with (ty (+ y (editor-state-line-offset *editor-state*)))
+      (if (> ty (length (text-container-lines *text*)))
+          (editor-draw-invalid-line)
+          (editor-draw-line ty)))))
 
 (defun editor-redraw ()
   (ansi-home)
