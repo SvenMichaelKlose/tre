@@ -18,7 +18,9 @@ most recent changes in unstable releases.
 	- New predicate SYMBOLP: Returns T if variable points to itself. NIL otherwise.
 	- New macro WITH merges LET*, MULTIPLE-VALUE-BIND and LABELS.
 	- New macro SELF denotes currently DEFUNed function.
+	- Expansion of nested BACKQUOTEs reversed. QUOTEs are always evaluated.
 
+	- DEFCONSTANT: New.
 	- ERROR takes formatted string (New: %ERROR).
 	- APPEND/NCONC now ignore empty lists.
 	- MAKE-HASH-TABLE: Now symbols can be used as keys.
@@ -36,6 +38,8 @@ most recent changes in unstable releases.
 	- GROUP: New function splits up sequences into equally sized chunks.
 	- SUBSEQ: Now not only works with lists but also with strings and arrays.
 	- CASE: Expression optional after match.
+	- $: New function converts arguments to strings, concatenates them and
+	  makes a new symbol.
 
 	- Improved alien interface and configurable C calls.
 	- ED: New built-in editor for ANSI terminals.

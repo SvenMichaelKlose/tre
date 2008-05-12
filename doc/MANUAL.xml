@@ -114,7 +114,7 @@
 	 "  Start/end of a character string constant
 		</item>
         <item>
-	 $  Accumulator set/get, catching the value of the following object.
+	 $ (XXX already used)  Accumulator set/get, catching the value of the following object.
 		</item>
         <item>
 	 :  Namespace delimiter.
@@ -280,6 +280,7 @@ QUOTING
 
         * (1 2 3)
         function expected instead of number '1'.
+	</para>
 
 	<para>
     	To circumvent evaluation use the QUOTE special form. Special forms
@@ -288,20 +289,24 @@ QUOTING
 
         * (quote (1 2 3))
         (1 2 3)
+	</para>
 
 	<para>
     	Because quoting is used very often, there's an abbreviated form:
 
         * '(1 2 3)
         (1 2 3)
+	</para>
 
 	<para>
     	If you use the BACKQUOTE (or "`" for short, QUASIQUOTE (",") and
     	QUASIQUOTE-SPLICE (",@") functions insert their single evaluated
     	argument into the BACKQUOTEd expression.
+	</para>
 
 	<para>
     	QUASIQUOTE inserts an expression like a single atom.
+	</para>
 
         * (setq a 3)
         3
@@ -309,7 +314,13 @@ QUOTING
         (1 3 2)
 
 	<para>
+		When BACKQUOTE is nested, multiple QUASIQUOTES must be nested
+		as well, to shield them from evaluation.
+	</para>
+
+	<para>
     	QUASIQUOTE-SPLICE splices a list into another
+	</para>
 
         * (setq l '(7 8 9))
         (7 8 9)
@@ -322,6 +333,7 @@ QUOTING
     	circonflex ('^').
     	Each time a COLLECTING-QUOTE is evaluated, its result is appended to the
     	set.
+	</para>
 
 FUNCTIONS
 
@@ -368,7 +380,28 @@ SPECIAL FUNCTIONS
 
 	<para>
     	A special functions is like an ordinary function but is evaluated
-    	in the environment of its caller.
+    	in the environment of its caller. Arguments are not evaluated.
+	</para>
+
+MACROS
+
+	TRE expands macros of READ expressions before they're evaluated.
+	Macros are expanded towards the expression root, so arguments to
+	macros are always expanded. Imagine what would happen if the
+	following expression would be expanded towards the leaves:
+
+	(setf (unsettable-place-maker x) y)
+
+	Macros are usually expressions, but TRE also allows atomic macros.
+	(defmacro (atom plc)
+	  `(place-setter-item x))
+
+	WITH macros use them to provide settable places:
+
+	(defun mystruct-set-pos (x y)
+	  (with-mystruct x
+	    (setf x new-x
+			  y new-y)))
 
 DATA STRUCTURES
 
@@ -383,7 +416,7 @@ ACCUMULATOR
 
 	<para>
     	The accumulator setter @ will save the value of the following expression.
-    	The tile ~ will get the value. A virtually unlimited number of
+    	The tilde ~ will get the value. A virtually unlimited number of
     	accumulators is available. Other accumulators can be specified using
     	an immediately following integer, other that 0.
 
@@ -653,11 +686,16 @@ SYMBOLS
     (SYMBOL-VALUE var) - Built-in function
 	Get value assigned to variable.
 
+	($ &REST args) - non-standard macro
+	Converts all arguments to strings, concatenates them and makes a symbol.
 VARIABLES
 
+    (DEFCONSTANT variable &OPTIONAL init-value) - macro
+	Defines and initialises a constant variable which cannot be 
+	modified with SETF.
+
     (DEFVAR variable &OPTIONAL init-value) - macro
-	Defines and initialises a variable. This is equivalent to
-	SETF.
+	Defines and initialises a variable.
 
     (LABELS ((function_name argument_list body)*) exprs) - macro
 	Create local functions visible while evaluating
@@ -834,15 +872,14 @@ LIST TRAVERSAL
 	On the first call the first conses in the lists are used, on the
 	second call the second conses are applied, and so on, until a
 	list runs out of elements.
+	MAP always evaluated to NIL.
 
     (MAPCAR function list*) - function
-	Call function with each element of the lists as arguments.
-	On the first call the first elements in the lists are used, on the
-	second call the second elements are applied, and so on, until a
-	list runs out of elements.
+	Like MAP but the return values of the function are returned in a list.
 
     (MAPCAN function list*) - function
-	Like MAPCAR but concatenates the returned lists.
+	Like MAPCAR but concatenates the lists returned by the function.
+	A LISTP on every return value must evaluate to T.
 
 FUNCTIONS
 
@@ -1031,14 +1068,6 @@ ITERATION
         The DOLIST expansion is encapsulated in a block named NIL
 	(see RETURN). The result is returned if it is specified, otherwise
 	NIL is returned.
-
-    (DOLIST-INDEXED (var index list result &key (start-index 0)
-		    expressions*) - non-standard macro
-	Create new local variable var and evaluate expressions for each
-	element in list. 'index' is initialized to start-index and
-        incremented after each iteration. The expansion is encapsulated in
-        a block named NIL (see RETURN). The result is returned if it is
-	specified, otherwise NIL is returned.
 
 LOOPS
 
@@ -1286,6 +1315,9 @@ STREAMS
     (READ-CHAR &OPTIONAL stream) - function
 	Take character from input stream.
 
+    (READ-INTEGER &OPTIONAL stream) - function
+	Read decimal integer from stream.
+
     (READ-LINE &OPTIONAL stream) - function
 	Read line from stream.
 
@@ -1456,7 +1488,14 @@ INTERNAL FUNCTIONS
 	Set to macro function before it is called (during macro-expansion)
         and reset to NIL after its return.
 
-    *FORBID-EMPTY-DEFUN*
+	*CONSTANTS*
+	A list of symbols defined with DEFCONSTANT.
+
+	*DEFUN-NAME*
+	Name of currently epanded, DEFUNed function.
+
+	*FIRST-TO-TENTH*
+	Contains all symbols from FIRST to TENTH.
 
     *STRUCT-DEFS*
 	An associative array of all structure definitions make with DEFSTRUCT.
