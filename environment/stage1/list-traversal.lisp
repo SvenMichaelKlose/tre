@@ -1,6 +1,6 @@
 ;;;; nix operating system project
 ;;;; list processor environment
-;;;; Copyright (C) 2005-2007 Sven Klose <pixel@copei.de>
+;;;; Copyright (C) 2005-2008 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; List traversal
 
@@ -22,7 +22,8 @@
         (go start)))))
 
 (defun map (func &rest lists)
-  (%map func lists))
+  (%map func lists)
+  nil)
 
 (defun mapcar (func &rest lists)
   "Calls function for all head CARs in lists. Then call with next elements.
@@ -53,25 +54,3 @@
           (go ,starttag)
           ,endtag
           (return (progn ,@result)))))))
-
-(defmacro dolist-indexed ((iter index lst result &key (start-index 0))
-			  &rest body)
-  "Iterate over list."
-  (let ((starttag (gensym))
-        (endtag (gensym))
-	(tmplst (gensym)))
-    `(block nil
-      (let ((,tmplst ,lst)
-	    (,iter nil)
-	    (,index ,start-index))
-        (tagbody
-          ,starttag
-          (if (eq ,tmplst nil)
-            (go ,endtag))
-          (setq ,iter (car ,tmplst))
-          ,@body
-          (setq ,tmplst (cdr ,tmplst))
-	  (setq ,index (+ 1 ,index))
-          (go ,starttag)
-          ,endtag
-          (return ,result))))))
