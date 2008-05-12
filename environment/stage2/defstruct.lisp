@@ -112,4 +112,4 @@
       ,(%struct-p name)
       ,@(%struct-getters name flds)
       (defmacro ,(make-symbol (string-concat "WITH-" (symbol-name name))) (s &rest body)
-		 `(with-struct ,,name ,s ,@body)))))
+		 `(with-struct ,name ,,s ,,@body)))))
