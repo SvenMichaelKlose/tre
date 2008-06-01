@@ -236,7 +236,7 @@ treread_hexnum (struct tre_stream *stream)
 		return treerror (treatom_number_get ((double) c, TRENUMTYPE_CHAR),
 				         "Missing characters after initiating hexadecimal number");
 
-	if (! isspace (c))
+	if (! isspace (c) && isalpha (c))
 		return treerror (treatom_number_get ((double) c, TRENUMTYPE_CHAR),
 				         "Illegal character for hexadecimal number");
 
