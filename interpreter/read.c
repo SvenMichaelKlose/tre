@@ -34,7 +34,8 @@
 #define TRETOKEN_QUASIQUOTE_SPLICE	8
 #define TRETOKEN_FUNCTION		9
 #define TRETOKEN_CHAR			10
-#define TRETOKEN_SYMBOL		11	/* Keep this at the end. */
+#define TRETOKEN_HEXNUM			11
+#define TRETOKEN_SYMBOL		12	/* Keep this at the end. */
 
 #define TRETOKEN_IS_QUOTE(x) \
 	(x >= TRETOKEN_QUOTE && x <= TRETOKEN_FUNCTION)
@@ -155,6 +156,10 @@ treread_token (struct tre_stream *stream)
 				TRECONTEXT_TOKEN() = TRETOKEN_CHAR;
 				break;
 	    	}
+	    	if (c == 'x') {
+				TRECONTEXT_TOKEN() = TRETOKEN_HEXNUM;
+				break;
+	    	}
 	    	if (c == '\'') {
             	TRECONTEXT_TOKEN() = TRETOKEN_FUNCTION;
 				break;
@@ -197,6 +202,47 @@ treread_string (struct tre_stream *stream)
 	return trestring_get (str);
 }
 
+bool
+ishex (c)
+{
+	return isdigit (c) ||
+		   (c >= 'A' && c <= 'F') ||
+		   (c >= 'a' && c <= 'f');
+}
+
+treptr
+treread_hexnum (struct tre_stream *stream)
+{
+	long v = 0;
+	long n = 0;
+	char c;
+
+	while (1) {
+	    c = toupper (treio_getc (stream));
+
+		if (! ishex (c))
+			break;
+
+		v <<= 4;
+		v += isdigit (c) ?
+			 c :
+			 c - 'A' + 10;
+		n++;
+	}
+
+	treio_putback (stream);
+
+	if (! n)
+		return treerror (treatom_number_get ((double) c, TRENUMTYPE_CHAR),
+				         "Missing characters after initiating hexadecimal number");
+
+	if (! isspace (c))
+		return treerror (treatom_number_get ((double) c, TRENUMTYPE_CHAR),
+				         "Illegal character for hexadecimal number");
+
+	return treatom_number_get ((double) v, TRENUMTYPE_INTEGER);
+}
+
 /*
  * Read ordinary atom.
  */
@@ -209,6 +255,9 @@ treread_atom (struct tre_stream *stream)
 
     if (TRECONTEXT_TOKEN() == TRETOKEN_CHAR)
         return treatom_number_get ((double) treio_getc (stream), TRENUMTYPE_CHAR);
+
+    if (TRECONTEXT_TOKEN() == TRETOKEN_HEXNUM)
+        return treread_hexnum (stream);
 
     if (TRECONTEXT_TOKEN() < TRETOKEN_SYMBOL)
 		return treerror (treptr_invalid, "syntax error");

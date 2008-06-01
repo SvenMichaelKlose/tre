@@ -75,71 +75,88 @@
 			<descr>Opens an expression</descr>
 		</item>
         <item>
-         )  Closes an expression
+         	<char>)</char>
+			<descr>Closes an expression</descr>
 		</item>
         <item>
-         {  Opens a parent expression
+         	<char>{</char>
+			<descr>Opens a parent expression</descr>
 		</item>
         <item>
-         }  Closes a parent expression
+         	<char>}</char>
+			<descr>Closes a parent expression</descr>
 		</item>
         <item>
-	 [  Open index expression
+	 		<char>[</char>
+			<descr>Open index expression</descr>
 		</item>
         <item>
-	 ]  Close index expression
+	 		<char>]</char>
+			<descr>Close index expression</descr>
 		</item>
         <item>
-	 .  Dot, denoting a cell
+	 		<char>.</char>
+			<descr>Dot, denoting a cell</descr>
 		</item>
         <item>
-	 '  Quote
+	 		<char>'</char>
+			<descr>Quote</descr>
 		</item>
         <item>
-	 `  Backquote
+	 		<char>`</char>
+			<descr>Backquote</descr>
 		</item>
         <item>
-	 ^  Collecting quote
+	 		<char>^</char>
+			<descr>Collecting quote</descr>
 		</item>
         <item>
-	 ,  Comma
+	 		<char>,</char>
+			<descr>Comma</descr>
 		</item>
         <item>
-	 #  Read macro escape.
+	 		<char>#</char>
+			<descr>Read macro escape.</descr>
 		</item>
         <item>
-	 ;  Comment (ignore everything until end of line)
+	 		<char>;</char>
+			<descr>Comment (ignore everything until end of line)</descr>
 		</item>
         <item>
-	 "  Start/end of a character string constant
+	 		<char>"</char>
+			<descr>Start/end of a character string constant</descr>
 		</item>
         <item>
-	 $ (XXX already used)  Accumulator set/get, catching the value of the following object.
+	 		<char>$</char>
+			<descr>(XXX already used)  Accumulator set/get, catching the value of the following object.</descr>
 		</item>
         <item>
-	 :  Namespace delimiter.
+	 		<char>:</char>
+			<descr>Namespace delimiter.</descr>
 		</item>
         <item>
-	 |  Start/end of symbol without character limitations.
+	 		<char>|</char>
+			<descr>Start/end of character sequence without limitations.</descr>
 		</item>
 
 	<para>
     	These characters may be used in future version of TRE:
 		@$%&\?~
 	</para>
+</section>
 
 <section>
 	<title>Symbols<title>
 
 	<para>
     	Any single character or sequence of characters without whitespaces or
-    	special characters are grouped to 'symbols'. Every time a new symbol is
+    	special characters is grouped to a 'symbol'. Every time a new symbol is
     	read, it is added to the symbol table.
 	</para>
 
 	<para>
-    	A symbol may refer to any other object, including itself. Symbols
-    	refering to other objects are called 'variables'.
+    	A symbol may refer to any object, including itself. Symbols
+    	referring to other objects are called 'variables'.
 	</para>
 
 	<para>
@@ -184,10 +201,12 @@ ABBREVIATED TREE NOTATION
 		This is syntactically correct expression:
 
     	{format t "Hello world number ~A!" (+ 1 1}
+	</para>
 
 	<para>
 		The curly bracket is intended to save many round brackets where it can be
 		noticed easily: at the end of deeply nested branches.
+	</para>
 
     	{html
       	`(head (title "My document"))
@@ -212,12 +231,14 @@ EXPRESSIONS
     	an error if typed into the command prompt (the first elements are
     	numbers, not functions. '+' is a built-in function that would do
     	something useful:
+	</para>
 
 		* (+ 2 3)
 		5
 
 	<para>
     	This is a list of object types of the TRE programming language:
+	</para>
 
 		- variable; refers to other objects. It may be assigned a
 	  	function object and any other object that is not a function at the
@@ -235,6 +256,7 @@ EXPRESSIONS
 
 	<para>
     	Symbols are variables which point to themselves.
+	</para>
 
 	<para>
     	Expressions are singly-linked lists. They are opened and closed with
@@ -242,6 +264,7 @@ EXPRESSIONS
     	expression with three elements. It cannot be typed into the prompt
     	because when expressions are evaluated, they're expected to be
     	function calls.
+	</para>
 
 EVALUATION
 
@@ -250,6 +273,7 @@ EVALUATION
     	(also called 'evaluation' for the rest of this document) and replaced by
     	their return values. The first element must be a function which is
     	called with the remaining elements as its arguments.
+	</para>
 
         * (+ 1 2)
         3
@@ -259,16 +283,19 @@ EVALUATION
 
 	<para>
     	As noted before, expression elements may also be expressions:
+	</para>
 
         * (+ 1 (+ 2 3))
 
 	<para>
     	first evaluates to
+	</para>
 
 		(+ 1 5)
 
 	<para>
     	and then to
+	</para>
 
 		6
 
@@ -277,26 +304,26 @@ QUOTING
 	<para>
     	Evaluation requires the first argument to be a function. This is why
     	lists cannot be entered literally to build data structures:
+	</para>
 
         * (1 2 3)
         function expected instead of number '1'.
-	</para>
 
 	<para>
     	To circumvent evaluation use the QUOTE special form. Special forms
     	are functions that take their arguments unevaluated. QUOTE returns
     	a copy of its unevaluated arguments:
+	</para>
 
         * (quote (1 2 3))
         (1 2 3)
-	</para>
 
 	<para>
     	Because quoting is used very often, there's an abbreviated form:
+	</para>
 
         * '(1 2 3)
         (1 2 3)
-	</para>
 
 	<para>
     	If you use the BACKQUOTE (or "`" for short, QUASIQUOTE (",") and
@@ -342,6 +369,7 @@ FUNCTIONS
     	Each element of the list is a symbol representing a value passed to the
     	function or a keyword specifying optional or keyword-associated arguments.
     	Argument definitions may be nested.
+	</para>
 
     	(defun myfun (name (surname middle-name)) ... )
     	(myfun "Klose" ("Sven" "Michael"))
@@ -349,19 +377,23 @@ FUNCTIONS
 	<para>
     	The interpreter accepts the &REST, &OPTIONAL and &KEY keywords in
     	argument list definitions.
+	</para>
 
 	<para>
     	The &REST keyword will return a list of remaining arguments.
+	</para>
 
 	<para>
     	The &OPTIONAL keyword will initialise following missing arguments to
     	NIL.
+	</para>
 
     	* (#'((&optional var) var))
     	NIL
 
 	<para>
     	An alternative intialisation value may be declared inside a list:
+	</para>
 
     	* (#'((&optional (var 23) var))
     	23
@@ -372,6 +404,7 @@ FUNCTIONS
     	Usually the keyword namespace is specified by prepending a colon ':'
     	to the keyword when calling the function. If a key was not specified,
     	it is initialised to NIL.
+	</para>
 
     	* (#'((&key comment) (print comment)) :comment "FNORD!")
     	"FNORD"
@@ -385,23 +418,40 @@ SPECIAL FUNCTIONS
 
 MACROS
 
-	TRE expands macros of READ expressions before they're evaluated.
-	Macros are expanded towards the expression root, so arguments to
-	macros are always expanded. Imagine what would happen if the
-	following expression would be expanded towards the leaves:
+	<para>
+		TRE expands macros of READ expressions before they're evaluated.
+		Macros are expanded towards the expression root, so arguments to
+		macros are always expanded. Imagine what would happen if the
+		following expression would be expanded towards the leaves:
+	</para>
 
 	(setf (unsettable-place-maker x) y)
 
-	Macros are usually expressions, but TRE also allows atomic macros.
+	<para>
+		Macros are usually expressions, but TRE also allows atomic macros.
+	</para>
+
 	(defmacro (atom plc)
 	  `(place-setter-item x))
 
-	WITH macros use them to provide settable places:
+	<para>
+		WITH macros use them to provide settable places:
+	</para>
 
 	(defun mystruct-set-pos (x y)
 	  (with-mystruct x
 	    (setf x new-x
 			  y new-y)))
+
+NUMBER NOTATION
+
+	<para>
+		#x initiates a hexadecimal number whose characters have to follow
+		immediately.
+	</para>
+
+	* #xff
+	255
 
 DATA STRUCTURES
 
@@ -411,6 +461,7 @@ DATA STRUCTURES
     	element should be read, followed by the element name. Further elements
     	may follow, if the former element is also a data structure.
     	If the element name is an integer, it denotes the Nth element in the list.
+	</para>
 
 ACCUMULATOR
 
@@ -419,6 +470,7 @@ ACCUMULATOR
     	The tilde ~ will get the value. A virtually unlimited number of
     	accumulators is available. Other accumulators can be specified using
     	an immediately following integer, other that 0.
+	</para>
 
 ### DEBUGGER ################################################################
 
@@ -426,6 +478,7 @@ ACCUMULATOR
     	In case an error occured or (INVOKE-DEBUGGER) is evaluated, the
     	debugger is invoked, prompting you for input. It understands a set of
     	single-character commands. The debugger prompt has the following format.
+	</para>
 
         [<return value>:]<debug level> ]
 
@@ -438,9 +491,11 @@ ACCUMULATOR
 	<para>
     	Commands may take arguments; prefixed spaces are ignored: You may
     	type 'pSYMBOL' instead of 'p SYMBOL'.
+	</para>
 
 	<para>
     	Here is a list of all commands:
+	</para>
 
     	Stack
 		u	Move up to calling function.
@@ -475,6 +530,7 @@ ACCUMULATOR
 
 		h	Prints a help page
 		q	Terminate program, return to toplevel.
+</section>
 
 ### NON-STANDARD BEHAVIOURS #################################################
 
@@ -537,8 +593,6 @@ TERMINOLOGY
 			Same as CHAR for integers.
 		</para>
 	</cmd>
-
-
 </section>
 
 <section>
