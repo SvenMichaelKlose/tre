@@ -84,7 +84,7 @@ typedef int bool;
 #endif
 
 #ifndef TRE_IMAGE_HEADER
-#define TRE_IMAGE_HEADER  "#!tre -i\n" TRE_INFO
+#define TRE_IMAGE_HEADER  "#!/usr/local/bin/tre -i\n" TRE_INFO
 #endif
 
 #define TREPTR_INDEX_WIDTH	27
