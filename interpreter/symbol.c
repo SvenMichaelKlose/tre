@@ -1,6 +1,6 @@
 /*
  * nix operating system project tre interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Symbol table.
  */
@@ -13,12 +13,12 @@
 #include "symbol.h"
 
 #define _GNU_SOURCE
-#include <string.h>
-#include <strings.h>
+# include <string.h>
+# include <strings.h>
 #include <stdlib.h>
 
 #ifdef TRE_VERBOSE_GC
-#include <stdio.h>
+# include <stdio.h>
 #endif
 
 char symbol_table[TRE_SYMBOL_TABLE_SIZE];
@@ -29,16 +29,16 @@ unsigned num_symbols;
 void
 tresymbol_gc ()
 {
-    char      **reloc = malloc (num_symbols * sizeof (char *) * 2);
-    char      **r;
-    char      *o;
-    char      *n;
+    char      ** reloc = malloc (num_symbols * sizeof (char *) * 2);
+    char      ** r;
+    char      * o;
+    char      * n;
     unsigned  i;
     unsigned  j;
     unsigned  l;
 
-#ifdef TRE_VERBOSE_GC
-    printf ("SYMBOL-GC");
+#ifdef TRE_VERBOSE_SYMBOL_GC
+    printf (" *SYMBOL-GC* ");
     fflush (stdout);
 #endif
 
@@ -48,7 +48,7 @@ tresymbol_gc ()
     r = reloc;
     o = symbol_table;
     n = symbol_table;
-    DOTIMES(i, num_symbols) {
+    DOTIMES(i, num_symbols + 1) { /* XXX I don't understand + 1... */
         while (!*o)
             o++;
         l = *o;
@@ -82,10 +82,10 @@ tresymbol_gc ()
 
 /* Add symbol to symbol table. */
 char *
-tresymbol_add (char *symbol)
+tresymbol_add (char * symbol)
 {
     unsigned  l;
-    char      *nstr;
+    char      * nstr;
 
     if (symbol == NULL)
 		return NULL;

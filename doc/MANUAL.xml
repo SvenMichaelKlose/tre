@@ -1599,6 +1599,9 @@ INTERNAL FUNCTIONS
     TRE_VERBOSE_GC        
 	Print statistics after GC.
 
+    TRE_VERBOSE_SYMBOL_GC        
+	Print ' *SYMBOL-GC* ' before symbol GC.
+
     TRE_VERBOSE_LOAD      
 	Print what files are loaded.
 

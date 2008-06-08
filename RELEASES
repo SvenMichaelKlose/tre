@@ -56,6 +56,7 @@ most recent changes in unstable releases.
 
 	- GC statistics don't include conses used internally.
 	- GC can call TRE functions.
+	- Symbol GC won't lose last symbol anymore.
 
 	MISCELLANOUS
 

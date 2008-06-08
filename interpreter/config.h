@@ -25,7 +25,8 @@ typedef int bool;
 #if 0
 #define TRE_DIAGNOSTICS		/* Do diagnostic checks. */
 #define TRE_GC_DEBUG		/* Run garbage collector everywhere. */
-#define TRE_VERBOSE_GC 		/* Print statistics after GC. */
+#define TRE_VERBOSE_GC 		/* Print statistics after GC. Implies TRE_VERBOSE_SYMBOL_GC. */
+#define TRE_VERBOSE_SYMBOL_GC 	/* Print statistics after GC. */
 #define TRE_VERBOSE_LOAD	/* Print what files are loaded. */
 #define TRE_VERBOSE_EVAL	/* Print what is evaluated. */
 #define TRE_VERBOSE_READ    /* Print READ expressions in read-eval loop. */
@@ -95,6 +96,10 @@ typedef int bool;
 
 #ifdef BIG_ENDIAN
 #define TRE_ENDIANESS_STRING	"BIG"
+#endif
+
+#ifdef TRE_VERBOSE_GC
+#define TRE_VERBOSE_SYMBOL_GC
 #endif
 
 #endif /* #ifndef TRE_TRE_H */
