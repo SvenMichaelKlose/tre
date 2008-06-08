@@ -22,7 +22,7 @@ trestream_builtin_princ (treptr args)
 {
     treptr obj;
     treptr handle;
-    FILE    *str;
+    FILE   * str;
 
     trearg_get2 (&obj, &handle, args);
     if (handle != treptr_nil)
@@ -94,7 +94,7 @@ trestream_builtin_read_char (treptr args)
     char  c;
 
     c = fgetc (str);
-    return treatom_number_get ((double) c, TRENUMTYPE_CHAR);
+    return treatom_number_get ((double) abs (c), TRENUMTYPE_CHAR);
 }
 
 #include <stdio.h>
