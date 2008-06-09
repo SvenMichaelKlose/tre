@@ -26,6 +26,12 @@
     (+ c (- #\A #\a))
     c))
 
+(defun char-downcase (c)
+  "Return upper case equivalent of upper case character."
+  (if (upper-case-p c)
+    (+ c (- #\a #\A))
+    c))
+
 (defun digit-char-p (c &optional base)
   "Return T if character is a digit."
   (labels ((digit-p ()

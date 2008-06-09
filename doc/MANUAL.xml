@@ -1204,6 +1204,9 @@ CHARACTERS
     (ALPHANUMERICP char) - function
 	Returns T if 'char' is an alphabetic character or a digit.
 
+    (CHAR-DOWNCASE char) - function
+	Returns the lower case equivalent of 'char' or 'char' itself.
+
     (CHAR-UPCASE char) - function
 	Returns the upper case equivalent of 'char' or 'char' itself.
 
@@ -1229,6 +1232,9 @@ STRINGS
 
     (STRING-CONCAT string*) - built-in function
 	Concatenates arguments to new string.
+
+    (STRING-DOWNCASE string) - function
+	Return new string with lower case characters.
 
     (STRING-UPCASE string) - function
 	Return new string with upper case characters.
