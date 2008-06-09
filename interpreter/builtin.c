@@ -276,6 +276,33 @@ trebuiltin_intern (treptr args)
 }
 
 treptr
+trebuiltin_malloc (treptr args)
+{
+    treptr  arg;
+    void    * ret;
+
+    arg = trearg_get (args);
+	arg = trearg_number (1, "size", arg);
+
+	ret = malloc ((size_t) TRENUMBER_VAL(arg));
+
+	return treatom_number_get ((double) (long) ret, TRENUMTYPE_INTEGER);
+}
+
+treptr
+trebuiltin_free (treptr args)
+{
+    treptr  arg;
+
+    arg = trearg_get (args);
+	arg = trearg_number (1, "address", arg);
+
+	free ((void *) (long) TRENUMBER_VAL(arg));
+
+	return treptr_nil;
+}
+
+treptr
 trebuiltin_set (treptr args)
 {
     treptr ptr;
@@ -286,7 +313,7 @@ trebuiltin_set (treptr args)
     trearg_get2 (&ptr, &val, args);
 
 	ptr = trearg_number (1, "address", ptr);
-	val = trearg_number (2, "byte", ptr);
+	val = trearg_number (2, "byte", val);
 
 	c = (char) TRENUMBER_VAL(val);
 	p = TRENUMBER_CHARPTR(ptr);
@@ -320,11 +347,13 @@ char *tre_builtin_names[] = {
 
     "EVAL", "APPLY", "%MACROCALL",
 
-    "MAKE-SYMBOL", "ATOM", "SYMBOL-VALUE", "%ATOM-VALUE", "SYMBOL-FUNCTION",
+    "MAKE-SYMBOL", "ATOM", "SYMBOL-VALUE", "%ATOM-VALUE", "%TYPE-ID", "SYMBOL-FUNCTION",
     "%MKFUNCTIONATOM", "CONSP", "NUMBERP", "FUNCTIONP",
     "BOUNDP", "FBOUNDP",
     "MACROP", "STRINGP",
     "=", "<", ">",
+	"BIT-OR", "BIT-AND",
+	"<<", ">>",
 
     "ELT", "%SET-ELT", "LENGTH",
 
@@ -348,7 +377,7 @@ char *tre_builtin_names[] = {
     "%ATOM-LIST",
 
     "ALIEN-DLOPEN", "ALIEN-DLCLOSE", "ALIEN-DLSYM",
-    "ALIEN-CALL",
+    "ALIEN-CALL", "ALIEN-CALL-1",
 
     "DEBUG",
 
@@ -356,6 +385,7 @@ char *tre_builtin_names[] = {
 
     "SYS-IMAGE-CREATE", "SYS-IMAGE-LOAD",
 
+	"%MALLOC", "%FREE",
 	"%%SET", "%%GET",
 
     NULL
@@ -404,6 +434,7 @@ treevalfunc_t treeval_xlat_builtin[] = {
     treatom_builtin_atom,
     treatom_builtin_symbol_value,
     treatom_builtin_atom_value,
+    treatom_builtin_type_id,
     treatom_builtin_symbol_function,
     treatom_builtin_mkfunctionatom,
     trelist_builtin_consp,
@@ -417,6 +448,10 @@ treevalfunc_t treeval_xlat_builtin[] = {
     trenumber_builtin_number_equal,
     trenumber_builtin_lessp,
     trenumber_builtin_greaterp,
+    trenumber_builtin_bit_or,
+    trenumber_builtin_bit_and,
+    trenumber_builtin_bit_shift_left,
+    trenumber_builtin_bit_shift_right,
 
     tresequence_builtin_elt,
     tresequence_builtin_set_elt,
@@ -466,12 +501,16 @@ treevalfunc_t treeval_xlat_builtin[] = {
     trealien_builtin_dlclose,
     trealien_builtin_dlsym,
     trealien_builtin_call,
+    trealien_builtin_call_1,
 
     trebuiltin_debug,
     trebuiltin_intern,
 
     treimage_builtin_create,
     treimage_builtin_load,
+
+	trebuiltin_malloc,
+	trebuiltin_free,
 
 	trebuiltin_set,
 	trebuiltin_get,

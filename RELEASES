@@ -41,6 +41,7 @@ most recent changes in unstable releases.
 	- CASE: Expression optional after match.
 	- $: New function converts arguments to strings, concatenates them and
 	  makes a new symbol.
+	- BIT-OR, BIT-AND, <<, >>: New bit-level operations.
 
 	- Improved alien interface and configurable C calls.
 	- ED: New built-in editor for ANSI terminals.
@@ -62,6 +63,11 @@ most recent changes in unstable releases.
 
 	- Fixed standard input stream.
 	- Exit if standard input stream ends (CTRL+D).
+
+	ALIEN INTERFACE
+
+	- ALIEN-CALL-1 reintroduced. Calls C function with one argument.
+	- %MALLOC, %FREE: Built-in functions.
 
 	COMPILER (under construction)
 

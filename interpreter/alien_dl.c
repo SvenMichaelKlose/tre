@@ -14,6 +14,8 @@
 #include "list.h"
 #include "string.h"
 
+#include "xxx.h"
+
 #include <dlfcn.h>
 
 /* Open shared object. */
@@ -33,7 +35,7 @@ retry:
 		goto retry;
 	}
 
-    return treatom_number_get ((double) (int) hdl, TRENUMTYPE_INTEGER);
+    return treatom_number_get ((double) (long) hdl, TRENUMTYPE_INTEGER);
 }
 
 /* Close shared object. */
@@ -41,12 +43,12 @@ treptr
 trealien_builtin_dlclose (treptr args)
 {
     treptr  hdl = trearg_get (args);
-    int     ret;
+    long    ret;
 
     while (TREPTR_IS_NUMBER(hdl) == FALSE)
         hdl = treerror (hdl, "number handle expected");
 
-    ret = dlclose ((void *) (int) TRENUMBER_VAL(hdl));
+    ret = dlclose ((void *) (long) TRENUMBER_VAL(hdl));
     if (ret == -1)
         return trestring_get (dlerror ());
 
@@ -69,26 +71,46 @@ trealien_builtin_dlsym (treptr args)
     while (TREPTR_IS_STRING(sym) == FALSE)
         sym = treerror (sym, "symbol string expected");
 
-    ret = dlsym ((void *) (int) TRENUMBER_VAL(hdl), TREATOM_STRINGP(sym));
+    ret = dlsym ((void *) (long) TRENUMBER_VAL(hdl), TREATOM_STRINGP(sym));
     if (ret == NULL)
         return trestring_get (dlerror ());
 
-    return treatom_number_get ((double) (int) ret, TRENUMTYPE_INTEGER);
+    return treatom_number_get ((double) (long) ret, TRENUMTYPE_INTEGER);
 }
+
+#include <stdio.h>
 
 /* Call C function without arguments. */
 treptr
 trealien_builtin_call (treptr args)
 {
-    int     ret;
+    long    ret;
     treptr  ptr;
-    int     (* fun) (void);
+    long    (* fun) (void);
 
     ptr = trearg_get (args);
     while (TREPTR_IS_NUMBER(ptr) == FALSE)
         ptr = treerror (ptr, "number expected");
 
-    fun = (void *) (int) TRENUMBER_VAL(ptr);
+    fun = (void *) (long) TRENUMBER_VAL(ptr);
     ret = (* fun) ();
     return treatom_number_get ((double) ret, TRENUMTYPE_INTEGER);
+}
+
+/* Call C function without arguments. */
+treptr
+trealien_builtin_call_1 (treptr args)
+{
+    long    ret;
+    treptr  ptr;
+    treptr  arg;
+    long    (* fun) (long);
+
+    trearg_get2 (&ptr, &arg, args);
+    while (TREPTR_IS_NUMBER(ptr) == FALSE)
+        ptr = treerror (ptr, "number expected");
+
+    fun = (void *) (long) TRENUMBER_VAL(ptr);
+    ret = (* fun) (arg);
+	return treatom_number_get ((double) ret, TRENUMTYPE_INTEGER);
 }

@@ -813,6 +813,20 @@ MATH
     (INCF place &OPTIONAL (n 1)) - macro
 	Increment place by n.
 
+BIT OPERATIONS
+
+	(BIT-OR x y) - builtin function
+	Bitwise OR of two integers. Returns an integer.
+
+	(BIT-AND x y) - builtin function
+	Bitwise AND of two integers. Returns an integer.
+
+	(<< x num-bits) - builtin function
+	Shift integer x num-bits left. Returns an integer.
+
+	(>> x num-bits) - builtin function
+	Shift integer x num-bits right. Returns an integer.
+
 CONS
 
     (CONS car cdr) - built-in function (r)
@@ -1429,21 +1443,24 @@ ALIEN INTERFACE
     functions.
 
     (ALIEN-DLOPEN path) - built-in function
-	Expects a path to an object file. Returns a numeric handle.
+	Expects a path to an object file.
 	The object file is dynamically linked to the environment.
+ 	Returns a numeric handle.
 
     (ALIEN-DLCLOSE handle) - built-in function
-	Unlinks an object file from the environment. An error is caused
-	if something goes wrong.
+	Unlinks an object file from the environment.
 
     (ALIEN-DLSYM handle symbol_string) - built-in function
 	Returns the numeric address of a symbol in the linked object
 	file specified by 'handle'.
 
-    (ALIEN-DLCALLx handle [args]) - built-in function
-	Calls a C function in linked object file specified by handle.
-	x is the number of arguments to pass to the function. 0 means
-	no arguments. Up to four arguments are supported.
+    (ALIEN-CALL ptr) - built-in function
+	Calls a C function at 'ptr' (an integer probably returned by ALIEN-DLSYM.
+	Returns the return value of the function as an integer.
+
+    (ALIEN-CALL-1 ptr long) - built-in function
+	Calls a C function at 'ptr' with argument of C type 'long'.
+	Returns the return value of the function as an integer.
 
 MISCELLANEOUS
 
@@ -1496,6 +1513,12 @@ INTERNAL FUNCTIONS
 
 	(%%GET address) - Built-in finction
 	Reads a byte from memory.
+
+	(%MALLOC bytes) - Built-in finction
+	Allocated 'bytes' bytes and returns an integer pointer.
+
+	(%FREE ptr) - built-in function
+	Frees MALLOCd memory.
 
 ### VIRTUAL FUNCTIONS #######################################################
 
