@@ -1,6 +1,6 @@
 /*
  * nix operating system project tre interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Number atom related section.
  */
@@ -84,4 +84,68 @@ trenumber_builtin_integer (treptr args)
     int  tmp = (int) TRENUMBER_VAL(arg);
 
     return treatom_number_get ((double) tmp, TRENUMTYPE_INTEGER);
+}
+
+/*
+ * (BIT-OR number number)
+ */
+treptr
+trenumber_builtin_bit_or (treptr args)
+{
+	treptr x;
+	treptr y;
+
+    trearg_get2 (&x, &y, args);
+    int  ix = (int) TRENUMBER_VAL(x);
+    int  iy = (int) TRENUMBER_VAL(y);
+
+    return treatom_number_get ((double) (ix | iy), TRENUMTYPE_INTEGER);
+}
+
+/*
+ * (BIT-AND number number)
+ */
+treptr
+trenumber_builtin_bit_and (treptr args)
+{
+	treptr x;
+	treptr y;
+
+    trearg_get2 (&x, &y, args);
+    int  ix = (int) TRENUMBER_VAL(x);
+    int  iy = (int) TRENUMBER_VAL(y);
+
+    return treatom_number_get ((double) (ix & iy), TRENUMTYPE_INTEGER);
+}
+
+/*
+ * (<< number bits)
+ */
+treptr
+trenumber_builtin_bit_shift_left (treptr args)
+{
+	treptr x;
+	treptr y;
+
+    trearg_get2 (&x, &y, args);
+    unsigned long  ix = (unsigned long) TRENUMBER_VAL(x);
+    unsigned long  iy = (unsigned long) TRENUMBER_VAL(y);
+
+    return treatom_number_get ((double) (ix << iy), TRENUMTYPE_INTEGER);
+}
+
+/*
+ * (>> number bits)
+ */
+treptr
+trenumber_builtin_bit_shift_right (treptr args)
+{
+	treptr x;
+	treptr y;
+
+    trearg_get2 (&x, &y, args);
+    unsigned long  ix = (unsigned long) TRENUMBER_VAL(x);
+    unsigned long  iy = (unsigned long) TRENUMBER_VAL(y);
+
+    return treatom_number_get ((double) (ix >> iy), TRENUMTYPE_INTEGER);
 }
