@@ -57,5 +57,21 @@
 	    "LISP"))
   t)
 
+(defun string-downcase (str)
+  "Return new string with characters converted to lower case."
+  (when str
+    (let* ((n (length str))
+           (s (make-string n)))
+      (do ((i 0 (1+ i)))
+          ((= i n) s)
+        (let ((c (elt str i)))
+            (setf (elt s i) (char-downcase c)))))))
+
+(define-test "STRING-DOWNCASE works"
+  ((string= (string-downcase "LISP")
+	    "lisp"))
+  t)
+
+
 (defun char-code (chr)
   (integer chr))

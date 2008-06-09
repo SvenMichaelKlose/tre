@@ -42,6 +42,7 @@ most recent changes in unstable releases.
 	- $: New function converts arguments to strings, concatenates them and
 	  makes a new symbol.
 	- BIT-OR, BIT-AND, <<, >>: New bit-level operations.
+	- STRING-DOWNCASE: New function convert string to lower case.
 
 	- Improved alien interface and configurable C calls.
 	- ED: New built-in editor for ANSI terminals.
