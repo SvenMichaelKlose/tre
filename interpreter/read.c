@@ -225,7 +225,7 @@ treread_hexnum (struct tre_stream *stream)
 
 		v <<= 4;
 		v += isdigit (c) ?
-			 c :
+			 c - '0' :
 			 c - 'A' + 10;
 		n++;
 	}
