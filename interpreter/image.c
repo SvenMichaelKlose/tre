@@ -1,6 +1,6 @@
 /*
  * nix operating system project tre interpreter
- * Copyright (c) 2007 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2007-2008 Sven Klose <pixel@copei.de>
  *
  * Images
  */
@@ -456,6 +456,8 @@ treimage_load (char *file)
     TRECONTEXT_FUNSTACK() = treptr_nil;
 
     fclose (f);
+
+	tremain_init_after_image_loaded ();
     tre_restart (h.init_fun);
 
 error:

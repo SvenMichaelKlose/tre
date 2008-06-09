@@ -150,7 +150,11 @@ tre_main (void)
     EXPAND_UNIVERSE(var)
 
 #define MAKE_VAR(symbol_name, init) \
-    EXPAND_UNIVERSE(treatom_alloc (symbol_name, TRECONTEXT_PACKAGE(), TRETYPE_VARIABLE, init))
+	if (treatom_seek (symbol_name, TRECONTEXT_PACKAGE()) == ATOM_NOT_FOUND) { \
+    	EXPAND_UNIVERSE(treatom_alloc (symbol_name, TRECONTEXT_PACKAGE(), TRETYPE_VARIABLE, init)); \
+	} else { \
+		TREATOM_VALUE(treatom_get (symbol_name, TRECONTEXT_PACKAGE())) = init; \
+	}
 
 /* Initialise everything. */
 void
@@ -177,12 +181,6 @@ tre_init (void)
 
     MAKE_VAR("*ENVIRONMENT-PATH*", trestring_get (TRE_ENVIRONMENT));
 
-    /* Create global %LAUNCHFILE variable containing the application file
-     * to evaluate after the environment is set up. */
-    MAKE_VAR("%LAUNCHFILE", (tremain_launchfile ?
-                				trestring_get (tremain_launchfile) :
-                				treptr_nil));
-
 	MAKE_VAR("*BOOT-IMAGE*", trestring_get (TRE_BOOT_IMAGE));
 	MAKE_VAR("*LIBC-PATH*", trestring_get (LIBC_PATH));
 	MAKE_VAR("*ENDIANESS*", treatom_alloc (TRE_ENDIANESS_STRING, TRECONTEXT_PACKAGE(), TRETYPE_VARIABLE, treptr_invalid));
@@ -197,6 +195,16 @@ tre_init (void)
 
     tre_is_initialized = TRUE;
     tre_interrupt_debugger = TRUE;
+}
+
+void
+tremain_init_after_image_loaded ()
+{
+    /* Create global %LAUNCHFILE variable containing the application file
+     * to evaluate after the environment is set up. */
+    MAKE_VAR("%LAUNCHFILE", (tremain_launchfile ?
+                				trestring_get (tremain_launchfile) :
+                				treptr_nil));
 }
 
 void
@@ -233,7 +241,7 @@ tremain_get_args (int argc, char *argv[])
         }
         DOTIMES(i, sizeof tremain_args / sizeof (struct tremain_arg)) {
             if (!strcmp (tremain_args[i].option, v)) {
-                *tremain_args[i].value = argv[++p];
+                * tremain_args[i].value = argv[++p];
                 goto next;
             }
         }
@@ -270,6 +278,7 @@ boot:
     /* Execute boot code. */
     c = 1;
     treiostd_divert (treiostd_open_file (TRE_BOOTFILE));
+    tremain_init_after_image_loaded ();
     tre_main ();
 
 load_error:

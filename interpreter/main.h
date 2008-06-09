@@ -1,6 +1,6 @@
 /*
  * nix operating system project tre interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Top-level.
  */
@@ -16,5 +16,7 @@ extern void tre_exit (int);
 extern void tre_restart (treptr);
 extern treptr tre_main_line (struct tre_stream *);
 extern void tre_main (void);
+
+extern void tremain_init_after_image_loaded (void);
 
 #endif /* #ifndef TRE_MAIN_H */
