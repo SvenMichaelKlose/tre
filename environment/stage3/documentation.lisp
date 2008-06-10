@@ -1,11 +1,12 @@
-;;;; nix operating system project
-;;;; list processor environment
-;;;; Copyright (C) 2005-2006 Sven Klose <pixel@copei.de>
+;;;; TRE environment
+;;;; Copyright (c) 2005-2006, 2008 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Documentation
 
 (defun documentation (sym)
   "Returns documentation string of function or macro."
-  (dolist (i *documentation*)
-    (when (eq (car i) sym)
-      (return (cdr i)))))
+  (aif (assoc sym *documentation*)
+	(format t "Documentation for ~A:~%~A~%" sym !)
+	(format t "No documentation for ~A. Sorry.~%" sym ))
+  (awhen (symbol-function sym)
+	(format t "Arguments to ~A:~%~A~%" sym (function-arguments !))))

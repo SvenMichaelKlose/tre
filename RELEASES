@@ -43,6 +43,7 @@ most recent changes in unstable releases.
 	  makes a new symbol.
 	- BIT-OR, BIT-AND, <<, >>: New bit-level operations.
 	- CHAR-DOWNCASE, STRING-DOWNCASE: New functions convert to lower case.
+	- DOCUMENTATION: Also print arguments.
 
 	- Improved alien interface and configurable C calls.
 	- ED: New built-in editor for ANSI terminals.
