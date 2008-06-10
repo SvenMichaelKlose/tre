@@ -8,6 +8,8 @@
 #ifndef TRE_TYPE_H
 #define TRE_TYPE_H
 
+/* NOTE: You must change %TYPE-ID callers with these. */
+
 #define TRETYPE_CONS		0
 #define TRETYPE_VARIABLE	1
 #define TRETYPE_NUMBER		2
