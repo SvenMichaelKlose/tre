@@ -21,7 +21,6 @@
 (setq *tests* (reverse *tests*))
 
 (defun %load-launchfile ()
-  (do-tests *tests*)
   (when %LAUNCHFILE
     (load %LAUNCHFILE)))
 
