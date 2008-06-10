@@ -8,7 +8,7 @@
    (let ((el (char-upcase (elt txt i))))
      (cond
        ((= el #\%)  (terpri str)
-                      (%format str l (1+ i) txt args))
+                    (%format str l (1+ i) txt args))
        ((= el #\A)  (if (consp (car args))
                         (print (car args)) ; XXX
                         (princ (car args) str))
@@ -19,15 +19,15 @@
 (defun %format (str l i txt args)
   (when (< i l)
     (if (= (elt txt i) #\~)
-      (%format-directive str l (1+ i) txt args)
-      (progn
-        (princ (elt txt i) str)
-        (%format str l (1+ i) txt args)))))
+        (%format-directive str l (1+ i) txt args)
+        (progn
+          (princ (elt txt i) str)
+          (%format str l (1+ i) txt args)))))
 
 (defun format (str txt &rest args)
   "Print formatted string."
   (with-default-stream str
-        (%format str (length txt) 0 txt args)))
+    (%format str (length txt) 0 txt args)))
 
 (defun error (format &rest args)
   (%error (apply #'format nil args)))
