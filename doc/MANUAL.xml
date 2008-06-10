@@ -1526,6 +1526,10 @@ INTERNAL FUNCTIONS
 	(%FREE ptr) - built-in function
 	Frees MALLOCd memory.
 
+	(%TYPE-ID obj) - built-in function
+	Return internal type-ID of object. See interpreter/type.h for
+	returned values.
+
 ### VIRTUAL FUNCTIONS #######################################################
 
     This functions are low-level primitives to break up code into simpler

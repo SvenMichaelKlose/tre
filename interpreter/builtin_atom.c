@@ -233,3 +233,13 @@ treatom_builtin_atom_list (treptr no_args)
 
     return treatom_builtin_atom_list_s (treptr_nil);
 }
+
+treptr
+treatom_builtin_type_id (treptr args)
+{
+    treptr arg = trearg_get (args);
+
+	if (TREPTR_IS_CONS(arg))
+		return treatom_number_get (0, TRENUMTYPE_INTEGER);
+    return treatom_number_get (TREATOM_TYPE(arg), TRENUMTYPE_INTEGER);
+}
