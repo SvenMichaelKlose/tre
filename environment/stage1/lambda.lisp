@@ -48,20 +48,10 @@
   ((is-lambda-call? '(#'((x) x) nil)))
   t)
 
-(defmacro with-lambda-call ((args vals body call) &rest exec-body)
-  "Bind local function call components to variables for exec-body."
-  (with-gensym (tmp l)
-    `(let* ((,tmp ,call)
-	   	    (,l (second (car ,tmp)))
-       	    (,args (lambda-args ,l))
-       	    (,vals (lambda-call-vals ,tmp))
-       	    (,body (lambda-body ,l)))
-       ,@xs)))
-
-(defun function-arguments (fun)
-  "Returns arguments of a function."
-  (first (symbol-value fun)))
-
-(defun function-body (fun)
-  "Returns body of a function."
-  (cdr (symbol-value fun)))
+-(defun function-arguments (fun)
+-  "Returns arguments of a function."
+-  (first (symbol-value fun)))
+-
+-(defun function-body (fun)
+-  "Returns body of a function."
+-  (cdr (symbol-value fun)))

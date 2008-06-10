@@ -19,6 +19,16 @@
 ;;;;; Executed unnamed toplevel functions don't a stack but a resident
 ;;;;; memory block is allocated.
 
+(defmacro with-lambda-call ((args vals body call) &rest exec-body)
+  "Bind local function call components to variables for exec-body."
+  (with-gensym (tmp l)
+    `(let* ((,tmp ,call)
+                    (,l (second (car ,tmp)))
+            (,args (lambda-args ,l))
+            (,vals (lambda-call-vals ,tmp))
+            (,body (lambda-body ,l)))
+       ,@exec-body)))
+
 ;;; Stack setup
 ;;;
 ;;; Stack operations should be created in the ssa pass.
