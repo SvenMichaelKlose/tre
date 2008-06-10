@@ -3,4 +3,14 @@
 ;;;;;
 ;;;;; Configuration.
 
-(defvar *editor-tabstop* 4)
+(defvar *editor-config*)
+
+(defun editor-conf-add (name val)
+  (acons! name val *editor-config*))
+
+(defun editor-conf (name)
+  (assoc name *editor-config*))
+
+(editor-conf-add 'tabstop 4)
+(editor-conf-add 'color-text-foreground (ansi-color 'white t))
+(editor-conf-add 'color-text-background (ansi-color 'black))

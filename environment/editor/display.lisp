@@ -4,8 +4,9 @@
 ;;;;; Displaying stuff.
 
 (defun editor-default-color ()
-  (ansi-background-color (ansi-color 'black))
-  (ansi-foreground-color-high (ansi-color 'white)))
+  "Set default text color."
+  (ansi-background-color (editor-conf 'color-text-background))
+  (ansi-foreground-color (editor-conf 'color-text-foreground)))
 
 (defun editor-scroll-up (n)
   (ansi-scroll-down n)
@@ -35,7 +36,7 @@
 (defun editor-expand-line (line &optional (i 0) (pos 0))
   (with (expand-tab
 		  #'((line i pos)
-  		       (if (= 0 (mod pos *editor-tabstop*))
+  		       (if (= 0 (mod pos (editor-conf 'tabstop)))
       		       (editor-expand-line line (1+ i) pos)
       		       (cons 32 (expand-tab line i (1+ pos))))))
     (when (< i (length line))
@@ -49,18 +50,18 @@
   (with (x	(editor-state-x *editor-state*)
   		 y	(editor-state-y *editor-state*))
 	(ansi-bold)
-	(ansi-foreground-color-high (ansi-color 'white))
+	(ansi-foreground-color (ansi-color 'white t))
 	(when (editor-state-mode *editor-state*)
 	  (ansi-column 0)
 	  (princ (editor-state-mode *editor-state*)))
 
   	(ansi-position (integer (/ (terminal-width *terminal*) 2)) (1- (terminal-height *terminal*)))
 
-	(ansi-foreground-color-high (ansi-color 'white))
+	(ansi-foreground-color (ansi-color 'white t))
     (princ #\")
-	(ansi-foreground-color-high (ansi-color 'blue))
+	(ansi-foreground-color (ansi-color 'blue t))
 	(princ (editor-state-name *editor-state*))
-	(ansi-foreground-color-high (ansi-color 'white))
+	(ansi-foreground-color (ansi-color 'white t))
     (princ #\")
 
     (princ #\ )
@@ -78,7 +79,7 @@
     (ansi-position x y)))
 
 (defun editor-draw-invalid-line ()
-  (ansi-foreground-color-high (ansi-color 'blue))
+  (ansi-foreground-color (ansi-color 'blue t))
   (ansi-bold)
   (princ #\~)
   (ansi-normal)

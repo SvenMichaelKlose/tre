@@ -29,7 +29,7 @@
   "Print control sequence for flag."
   (format t "?~A" x))
 
-(defcsi ansi-set-color (which c)
+(defcsi ansi-set-color-raw (which c)
   (format t "~A~Am" which c))
 
 ;;;; Macros.
@@ -94,22 +94,38 @@
 	   (ansi-underline-on "Print underlined characters." "21")
 	   (ansi-normal "Print normal characters." "22")))
 
-(defun ansi-color (name)
+(defconstant *ansi-color-names* '(black red green yellow blue magenta cyan white))
+
+(defun ansi-color (name &optional (high nil))
   "Translates symbol to ANSI color number."
-  (position name '(black red green yellow blue magenta cyan white)))
+  (+ (position name *ansi-color-names*)
+     (if high
+		 (length *ansi-color-names*)
+		 0)))
 
 (defmacro defcol (where high code)
   (with (name ($ 'ansi-
 			     (if where 'foreground 'background)
 			     '-color
-			     (if high '-high "")))
+			     (if high '-high "")
+				 '-raw))
 	 `(defun ,name (c)
-        (ansi-set-color ,code c))))
+        (ansi-set-color-raw ,code c))))
 
 (defcol nil nil 4)
 (defcol nil t 10)
 (defcol t nil 3)
 (defcol t t 9)
+
+(defmacro defmastercol (where)
+  (with (name ($ 'ansi- where -color))
+    `(defun ,name (code)
+       (if (> code (length *ansi-color-names*))
+	       (,($ name '-high-raw) (- code (length *ansi-color-names*)))
+	       (,($ name '-raw) code)))))
+
+(defmastercol foreground)
+(defmastercol background)
 
 (defun ansi-read-nonctrl ()
   (with (c (read-char))
@@ -145,11 +161,11 @@
 	  (ansi-position x y))))
 
 (defun ansi-welcome ()
-  (ansi-foreground-color-high (ansi-color 'yellow))
+  (ansi-foreground-color (ansi-color 'yellow t))
   (ansi-background-color (ansi-color 'black))
   (ansi-bold)
   (format t "ANSI terminal driver~%")
   (ansi-normal)
-  (ansi-foreground-color-high (ansi-color 'white)))
+  (ansi-foreground-color (ansi-color 'white t)))
 
 (ansi-welcome)
