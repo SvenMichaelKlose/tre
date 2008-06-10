@@ -44,8 +44,8 @@ most recent changes in unstable releases.
 	- BIT-OR, BIT-AND, <<, >>: New bit-level operations.
 	- CHAR-DOWNCASE, STRING-DOWNCASE: New functions convert to lower case.
 	- DOCUMENTATION: Also print arguments.
+	- END-OF-FILE: Now tells if *STANDARD-INPUT* ends.
 
-	- Improved alien interface and configurable C calls.
 	- ED: New built-in editor for ANSI terminals.
 
 	DEBUGGING
@@ -68,6 +68,7 @@ most recent changes in unstable releases.
 
 	ALIEN INTERFACE
 
+	- Improved alien interface and configurable C calls.
 	- ALIEN-CALL-1 reintroduced. Calls C function with one argument.
 	- %MALLOC, %FREE: Built-in functions.
 
