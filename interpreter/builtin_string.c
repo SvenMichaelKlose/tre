@@ -15,6 +15,7 @@
 #include "sequence.h"
 #include "thread.h"
 #include "argument.h"
+#include "gc.h"
 #include "builtin_string.h"
 
 #define _GNU_SOURCE
@@ -46,8 +47,8 @@ trestring_builtin_stringp (treptr list)
 treptr
 trestring_builtin_make (treptr list)
 {
-    treptr  arg = trearg_number (arg, "length", trearg_get (list));
-    struct  tre_string *str;
+    struct tre_string * str;
+    treptr  arg = trearg_number (1, "length", trearg_get (list));
     treptr  atom;
 
     str = trestring_get_raw ((unsigned) TRENUMBER_VAL(arg));
@@ -64,7 +65,7 @@ trestring_builtin_make (treptr list)
 treptr
 trestring_builtin_concat (treptr list)
 {
-    struct tre_string  *news;
+    struct tre_string * news;
     treptr    p;
     treptr    car;
     treptr    atom;
@@ -112,7 +113,6 @@ trestring_builtin_string (treptr list)
 
 	while (TRUE) {
     	switch (TREPTR_TYPE(arg)) {
-
         	case TRETYPE_STRING:
 	    		return arg;
 

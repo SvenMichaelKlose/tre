@@ -78,8 +78,6 @@ trealien_builtin_dlsym (treptr args)
     return treatom_number_get ((double) (long) ret, TRENUMTYPE_INTEGER);
 }
 
-#include <stdio.h>
-
 /* Call C function without arguments. */
 treptr
 trealien_builtin_call (treptr args)

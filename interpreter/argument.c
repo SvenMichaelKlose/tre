@@ -54,7 +54,7 @@ trearg_get (treptr list)
 void
 trearg_get2 (treptr *a, treptr *b, treptr list)
 {
-    treptr  second;
+    treptr  second = treptr_nil;
 
     *a = treptr_nil;
     *b = treptr_nil;
@@ -338,7 +338,6 @@ trearg_expand (treptr *rvars, treptr *rvals, treptr iargdef, treptr args,
     *rvars = CDR(vars);
     *rvals = CDR(vals);
 
-error:
     TRELIST_FREE_EARLY(vars);
     TRELIST_FREE_EARLY(vals);
 

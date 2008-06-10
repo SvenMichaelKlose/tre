@@ -25,7 +25,6 @@ treimage_builtin_create (treptr list)
 {
     treptr  file;
     treptr  init_fun = treptr_nil;
-    int r;
 
     while (list == treptr_nil || TREPTR_IS_ATOM(list))
         list = treerror (treptr_invalid, "argument list missing");

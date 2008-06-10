@@ -17,6 +17,8 @@
 #include "string.h"
 #include "builtin_stream.h"
 
+#include <stdlib.h>
+
 treptr
 trestream_builtin_princ (treptr args)
 {
