@@ -12,4 +12,6 @@
 #define RETURN_IF_NULL(x)   if (x == NULL) return;
 #define RETURN_IF_NIL(x)    if (x == treptr_nil) return;
 
+#define CRASH()		(*(char *) 0 = 0)
+
 #endif	/* #ifndef TRE_XXX_H */
