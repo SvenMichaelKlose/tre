@@ -34,7 +34,7 @@
 (defmacro defun (name args &rest body)
   "Define a function."
   (let ((name (%defun-name name)))
-    `(tagbody
+    `(block nil
        (setq *universe* (cons ',name *universe*)
 			 *defun-name* name)
        (%set-atom-fun ,name
@@ -43,7 +43,8 @@
                ,@(%add-documentation name body))))
        (if *compiler-hook*
            (compile (function ,name)))
-	   (setq *defun-name* nil))))
+	   (setq *defun-name* nil)
+	   (return-from nil ',name))))
 
 (defmacro self (&rest args)
   "Recursively call current DEFUNed function."
