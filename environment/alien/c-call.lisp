@@ -7,21 +7,54 @@
   (funptr nil)
   (args nil))
 
-(defun c-call-add-arg (c-call type value)
+(defun c-call-add-arg (c-call value)
   "Add argument type and value to C-CALL."
-  (setf (c-call-args c-call)
-  		(push (cons type value) (c-call-args c-call))))
+  (push value (c-call-args c-call)))
 
-(defun c-call-do (c-call)
+(defun integer-bytes (x num-bytes)
+  (when (> num-bytes 0)
+    (cons (bit-and x #xff) (integer-bytes (>> x 8) (1- num-bytes)))))
+
+(defun dword-bytes (x)
+  (integer-bytes x 4))
+
+(defun x86-push-const-dword (val)
+  `(#x68 ,@(dword-bytes val)))
+
+(defun x86-mov-eax-const (val)
+  `(#xb8 ,@(dword-bytes val)))
+
+(defun x86-call (val)
+  `(#xe8 ,@(dword-bytes val)))
+
+(defun x86-call-eax ()
+  `(#xff #xd0))
+
+(defun x86-add-esp-const (val)
+  `(#x81 #xc4 ,@(dword-bytes val)))
+
+(defun x86-ret ()
+  `(#xc3))
+
+(defun c-call-epilogue (num-args)
+  `(,@(x86-add-esp-const (* 4 num-args)) ,@(x86-ret)))
+
+(defun c-call-put-arg (p val)
+  (%put-list p (x86-push-const-dword val)))
+
+(defun c-call-do (cc)
   "Execute C-CALL. See also MAKE-C-CALL and C-CALL-ADD-ARG."
-  (with (args (c-call-args c-call)
-		 code (%malloc (+ 32 (* (length args) 4)))
-		 p (list-memory code '(1 2 3 4 5 6)))
+  (with (args (c-call-args cc)
+		 code (%malloc 1024) ; (+ 32 (* (length args) 4)))
+		 p code)
 
 	(dolist (a args)
-	  (setf p (%put-int p (car a) (cdr a))))
+      (setf p (c-call-put-arg p a)))
 
-	(setf p (%put *i386-call* p)
-		  p (%put-ptr (c-call-funptr c-call) p)
-		  p (list-memory p '(1 2 3 4 5)))
-	(alien-call code)))
+	(%put-list p (append (x86-mov-eax-const (c-call-funptr cc))
+						 (x86-call-eax)
+                         (c-call-epilogue (length args))))
+
+	(alien-call code)
+	(%free code)
+))

@@ -1,37 +1,47 @@
 ;;;; TRE environment
-;;;; Copyright (c) Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
 
-(defun %put (ptr val)
+(defun litte-endianess? ()
+  (eq *endianess* 'little))
+
+(defun big-endianess? ()
+  (eq *endianess* 'big))
+
+(defun %put-char (ptr val)
   "Write byte to address."
   (%%set ptr val)
   (1+ ptr))
 
-(defun %put-int (ptr val)
+(defun %put-short (ptr val)
   "Write 16 bit integer to address. Regards *ENDIANESS*."
   (with (lo (mod val 255)
 		 hi (>> val 8))
-	(when (eq *endianess* 'big)
-	  (%put ptr lo))
-	(%put ptr hi)
-	(when (eq *endianess* 'little)
-	  (%put ptr lo))))
+	(when (big-endianess?)
+	  (%put-char ptr lo))
+	(%put-char ptr hi)
+	(when (little-endianess?)
+	  (%put-char ptr lo))))
 
-(defun list-memory (ptr lst)
-  "Write list of bytes to memory."
-  (dolist (v lst)
-	(setf ptr (%put ptr v))))
+(defun rotate-int-char-left (x)
+  (bit-or (and (<< x 24) #x00ffffff)
+		  (and (>> x 24))))
 
-;; Get standard C library's malloc() and free().
-(with (libc (alien-dlopen *LIBC-PATH*)
-	   alien-malloc (alien-dlsym libc "malloc")
-	   alien-free (alien-dlsym libc "free"))
+(defun %put-int (ptr val)
+  "Write 32 bit integer to address. Regards *ENDIANESS*."
+  (when (litte-endianess?)
+    (setf val (rotate-int-byte-left val)))
 
-  (defun %malloc (size)
-	"Allocate raw memory block. Free with %FREE."
-    (alien-call-1 alien-malloc size))
+  (dotimes (dummy 4 p)
+	(setf p (%put-char p val))
+		  val (if (litte-endianess?)
+				  (rotate-int-char-left val)
+				  (>> val 8))))
+	
+(defun %put-list (ptr lst)
+  "Write list of bytes to memory. Returns following address."
+  (dolist (v lst ptr)
+	(setf ptr (%put-char ptr v))))
 
-  (defun %free (ptr)
-	"Free %MALLOCed memory block."
-    (alien-call-1 alien-free ptr))
-
-  (alien-dlclose libc))
+(defun %put-string (ptr str)
+  (dotimes (x (length str) (%put-char ptr 0))
+    (setf ptr (%put-char ptr (elt str x)))))
