@@ -7,9 +7,9 @@
   (funptr nil)
   (args nil))
 
-(defun c-call-add-arg (c-call value)
+(defun c-call-add-arg (cc value)
   "Add argument type and value to C-CALL."
-  (push value (c-call-args c-call)))
+  (setf (c-call-args cc) (nconc (c-call-args cc) (list value))))
 
 (defun integer-bytes (x num-bytes)
   (when (> num-bytes 0)
@@ -45,10 +45,10 @@
 (defun c-call-do (cc)
   "Execute C-CALL. See also MAKE-C-CALL and C-CALL-ADD-ARG."
   (with (args (c-call-args cc)
-		 code (%malloc 1024) ; (+ 32 (* (length args) 4)))
+		 code (%malloc 1024)
 		 p code)
 
-	(dolist (a args)
+	(dolist (a (reverse args))
       (setf p (c-call-put-arg p a)))
 
 	(%put-list p (append (x86-mov-eax-const (c-call-funptr cc))
@@ -56,5 +56,4 @@
                          (c-call-epilogue (length args))))
 
 	(alien-call code)
-	(%free code)
-))
+	(%free code)))

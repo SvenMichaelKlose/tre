@@ -959,9 +959,10 @@ FUNCTIONS
     (DEFUN name args documentation-string body) - macro
 	Defines a global function. The body is placed in a BLOCK named
 	NIL and a TAGBODY.
-	The documentation string is ignored.
+	The documentation string is added to *DOCUMENTATION* and should
+	be received through function DOCUMENTATION.
 	If name is a list of the form (SETF name), the function is called
-        if 'name' is used as a SETF place. It must then take the value
+    if 'name' is used as a SETF place. It must then take the value
 	as the first argument, and the place as the second argument.
 
     (DOCUMENTATION funcname) - function
@@ -1442,6 +1443,21 @@ EXECUTABLES AND IMAGES
         Replaces the running environment by an image.  If an initialisation
         function was specified at the time the image was dumped, it is
         evaluated.
+ 
+PROCESSES
+
+	(EXEC path (&REST args) &OPTIONAL (environment nil)) - function
+		Overlay current process with program at 'path'.
+		'args' is a list of argument strings.
+		'environment' may be an associative list of variable/value pairs.
+
+	(FORK) - function
+		Creates a copy instance of the current process. Returns the new
+		process-ID to the calling process and 0 to the new process.
+
+	(WAIT) - function
+		Waits until a child process exits. Returns a status integer as
+		specified in the UNIX man page wait (2).
 
 ALIEN INTERFACE
 

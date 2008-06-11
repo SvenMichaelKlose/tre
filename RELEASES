@@ -46,6 +46,8 @@ most recent changes in unstable releases.
 	- DOCUMENTATION: Also print arguments.
 	- END-OF-FILE: Now tells if *STANDARD-INPUT* ends.
 
+	- EXEC, FORK, WAIT: New functions for process execution.
+
 	- ED: New built-in editor for ANSI terminals.
 
 	DEBUGGING
