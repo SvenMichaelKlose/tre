@@ -45,6 +45,7 @@ most recent changes in unstable releases.
 	- CHAR-DOWNCASE, STRING-DOWNCASE: New functions convert to lower case.
 	- DOCUMENTATION: Also print arguments.
 	- END-OF-FILE: Now tells if *STANDARD-INPUT* ends.
+	- QUEUE-POP: Pops first element off a queue and returns its value.
 
 	- EXEC, FORK, WAIT: New functions for process execution.
 

@@ -1,6 +1,6 @@
 ;;;; nix operating system project
 ;;;; list processor environment
-;;;; Copyright (C) 2005-2006 Sven Klose <pixel@copei.de>
+;;;; Copyright (C) 2005-2006, 2008 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Queue functions
 ;;;;
@@ -11,6 +11,7 @@
   '(cons nil nil))
 
 (defmacro enqueue (queue obj)
+  "Append element to end of queue."
   (let ((q (gensym))
 	(o (gensym)))
   `(let ((,q ,queue)
@@ -19,6 +20,14 @@
        (setf (car ,q) (setf (cdar ,q) (list ,o)))
        (setf (car ,q) (setf (cdr ,q) (list ,o))))
      ,o)))
+
+(defmacro queue-pop (queue)
+  "Pop first element off a queue and return it."
+  (let ((q (gensym)))
+    `(let ((,q ,queue))
+       (prog1
+	     (second ,q)
+	     (setf (cdr ,q) (cddr ,q))))))
 
 (defmacro queue-list (queue)
   `(cdr ,queue))
