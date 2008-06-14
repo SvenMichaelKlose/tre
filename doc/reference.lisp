@@ -830,11 +830,11 @@ STREAMS
     (FRESH-LINE? &OPTIONAL stream) - non-standard function
 	Checks if output stream is at the beginning of a line.
 
-    (GET-OUTPUT-STREAM-STRING string-stream) - function
-	Returns string accumulated string-stream.
+    (GET-STREAM-STRING string-stream) - function
+	Returns string accumulated string-stream. The stream is emptied.
 	See also MAKE-STRING-OUTPUT-STREAM.
 
-    (MAKE-STRING-OUTPUT-STREAM) - function
+    (MAKE-STRING-STREAM) - function
 	Returns a stream which accumulates all strings written to
         it. See also GET-OUTPUT-STREAM-STRING.
 
@@ -866,6 +866,13 @@ PRINTING
 
     (PRINT obj)	- built-in function
 	Print object in TRE notation. Returns the printed object.
+
+	(FORMAT stream format &rest format-args) - function
+	Prints format to stream. Inside the format string "~A"s are replaced
+	by format-argument elements in the same order. "~%" is replaced by
+	newlines.
+	When stream is t, FORMAT prints to *standard-output*. If it is NIL,
+	a string is returned.
 
 DEBUGGING
 

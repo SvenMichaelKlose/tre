@@ -27,7 +27,7 @@ most recent changes in unstable releases.
 	- MAKE-HASH-TABLE: Now symbols can be used as keys.
 	- TREE-WALK: Now returns a copy of the tree (which may be modified).
 	- DEFSTRUCT: Now also defines WITH-<structname> macro.
-	- FORMAT: Now ignores unknown directives.
+	- FORMAT: Now ignores unknown directives. Returns a string if stream is NIL.
 	- PRINT: Print keyword package atom.
 	- ELT: Returns NIL if sequence is NIL.
 	- STRING: Converts character to single-character string.
@@ -47,6 +47,8 @@ most recent changes in unstable releases.
 	- END-OF-FILE: Now tells if *STANDARD-INPUT* ends.
 	- QUEUE-POP: Pops first element off a queue and returns its value.
 	- IN?, IN=?: New macros check if element occurs in the rest of its arguments.
+	- MAKE-STRING-STREAM: Formerly MAKE-STRING-OUTPUT-STREAM. Now bidirectional.
+	- GET-STRING-STREAM: Empties the stream.
 
 	- EXEC, FORK, WAIT: New functions for process execution.
 

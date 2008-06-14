@@ -1,24 +1,24 @@
 ;;;; nix operating system project
 ;;;; list processor environment
-;;;; Copyright (C) 2005-2006 Sven Klose <pixel@copei.de>
+;;;; Copyright (C) 2005-2006, 2008 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; String stream
 
-(defun make-string-output-stream ()
+(defun make-string-stream ()
   "Makes stream which accumulates all strings written to it.
-   See also GET-OUTPUT-STREAM-STRING."
+   See also GET-STREAM-STRING."
   (make-stream
     :user-detail  (make-queue)
+    :fun-in       #'((str)
+                      (queue-pop (stream-user-detail str)))
     :fun-out      #'((c str)
-                      (enqueue (stream-user-detail str) c))))
+                      (enqueue (stream-user-detail str) c))
+	:fun-eof	  #'((str)
+					  (eq (stream-user-detail str) nil))))
 
-(defun get-output-stream-string (str)
-  "Returns string accumulated by string-output-stream. The stream is
-   emptied. Seel also MAKE-STRING-OUTPUT-STREAM."
-  (let* ((sl (queue-list (stream-user-detail str)))
-        (l (length sl))
-        (s (make-string l)))
-    (do ((p sl (cdr p))
-         (i 0 (1+ i)))
-        ((endp p) s)
-      (setf (elt s i) (car p)))))
+(defun get-stream-string (str)
+  "Returns string accumulated by string-stream. The stream is
+   emptied. See also MAKE-STRING-STREAM."
+  (prog1
+	(list-string (queue-list (stream-user-detail str)))
+	(setf (stream-user-detail str) (make-queue))))

@@ -10,7 +10,7 @@
     `(let ((,g str))
       (cond
         ((eq ,str t) (setq ,str *standard-output*))
-        ((eq ,str nil) (setq ,str (make-string-output-stream))))
+        ((eq ,str nil) (setq ,str (make-string-stream))))
       ,@body
       (unless ,g
-        (get-output-stream-string ,str)))))
+        (get-stream-string ,str)))))
