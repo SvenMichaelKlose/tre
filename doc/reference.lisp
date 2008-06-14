@@ -736,6 +736,9 @@ QUEUES *NON-STANDARD*
     (QUEUE-LIST) - macro
 	Return the list of queue elements.
 
+    (QUEUE-POP queue) - macro
+	Pops first element off the queue and returns it.
+
     (WITH-QUEUE { name | name-list} &REST body) - macro
 	Creates one or more queues before body is evaluated.
 
@@ -766,6 +769,13 @@ SEQUENCES
 	and 'end' define the starting and ending index searched. 'start'
 	and 'end' may be exchanged to make sense. If 'from-end' is not NIL,
 	the search is performed backwards.
+
+	(IN? element &rest list) - function
+	Checks if element is EQ to any list element.
+
+	(IN=? element &rest list) - function
+	Checks if element is = to any list element. Will be obsoleted if TEST
+	keyword can follow &REST.
 
     (LENGTH sequence) - built-in function
 	Returns number of elements in sequence.

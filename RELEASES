@@ -46,6 +46,7 @@ most recent changes in unstable releases.
 	- DOCUMENTATION: Also print arguments.
 	- END-OF-FILE: Now tells if *STANDARD-INPUT* ends.
 	- QUEUE-POP: Pops first element off a queue and returns its value.
+	- IN?, IN=?: New macros check if element occurs in the rest of its arguments.
 
 	- EXEC, FORK, WAIT: New functions for process execution.
 

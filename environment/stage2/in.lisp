@@ -1,6 +1,11 @@
 ;;;; nix operating system project
 ;;;; list processor environment
-;;;; Copyright (C) 2006 Sven Klose <pixel@copei.de>
+;;;; Copyright (C) 2006-2008 Sven Klose <pixel@copei.de>
 
-(defmacro in? (obj &rest opts)
+(defmacro in? (obj &rest lst)
+  "Check if obj is EQ to any member of lst."
   `(or ,@(mapcar #'((x) `(eq ,obj ,x)) opts)))
+
+(defmacro in=? (obj &rest lst)
+  "Check if obj is = to any member of lst."
+  `(or ,@(mapcar #'((x) `(= ,obj ,x)) opts)))
