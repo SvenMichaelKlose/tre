@@ -45,7 +45,9 @@ treenv_update (treptr env, treptr atoms, treptr values)
     TREENV_SET_SYMBOLS(env, trelist_copy (atoms));
     TREENV_SET_BINDINGS(env, trelist_copy (values));
 }
-   
+
+#define PUSH_BINDING(x)	(TREATOM_BINDING(x) = CONS(TREATOM_VALUE(x), TREATOM_BINDING(x)))
+
 /*
  * Argument bindings
  */
@@ -65,7 +67,7 @@ treenv_bind (treptr la, treptr lv)
             treerror_internal (arg, "bind: variable expected");
 #endif
 
-		TREATOM_BINDING(arg) = CONS(TREATOM_VALUE(arg), TREATOM_BINDING(arg));
+		PUSH_BINDING(arg);
 		TREATOM_VALUE(arg) = val;
     }
 
@@ -93,7 +95,7 @@ treenv_bind_sloppy (treptr la, treptr lv)
 #endif  
         
         /* Push value on binding list. */
-        TREATOM_BINDING(car) = CONS(TREATOM_VALUE(car), TREATOM_BINDING(car));
+		PUSH_BINDING(car);
         TREATOM_VALUE(car) = (lv != treptr_nil) ? CAR(lv) : treptr_nil;
 
         la = CDR(la);
@@ -122,15 +124,32 @@ treenv_unbind (treptr la)
  * Environment bindings
  */
 
+treptr treenv_scope_buffer;
+
 /* Bind parent environments until one matches 'parent'. */
 void
 treenv_bind_env (treptr env, treptr parent)
 {
+	treptr x;
+
     RETURN_IF_NIL(env);
     RETURN_IF_NIL(TREENV_PARENT(env));
 
+	/* Read scope environments into list, so it can be reversed into the right order. */
+	treenv_scope_buffer = treptr_nil;
+	tregc_push (treenv_scope_buffer);
+
     for (env = TREENV_PARENT(env); env != treptr_nil && env != parent; env = TREENV_PARENT(env))
+		TRELIST_PUSH(treenv_scope_buffer, env);
+
+	_DOLIST(x, treenv_scope_buffer) {
+		env = CAR(x);
         treenv_bind (TREENV_SYMBOLS(env), TREENV_BINDINGS(env));
+	}
+
+	tregc_pop ();
+	trelist_free_toplevel (treenv_scope_buffer);
+	treenv_scope_buffer = treptr_nil;
 }
 
 /* Unbind parent environments until one matches 'parent'. */

@@ -41,6 +41,8 @@ extern void treenv_unbind (treptr atoms);
  * Environment bindings
  */
 
+extern treptr treenv_scope_buffer;
+
 /* Bind parent environments until one matches 'parent'. */
 extern void treenv_bind_env (treptr env, treptr parent);
 /* Unbind parent environments until one matches 'parent'. */
