@@ -127,6 +127,8 @@ treatom_init (void)
 void
 treatom_set_name (treptr atom, char *name)
 {
+	if (TREATOM_VALUE(atom) != atom)
+		trewarn (atom, "changing name of %s '%s'", treerror_typename (TREPTR_TYPE(atom)), TREATOM_NAME(atom));
     TREATOM_NAME(atom) = name;
 }
 
@@ -139,6 +141,8 @@ treatom_set_value (treptr atom, treptr value)
 void
 treatom_set_function (treptr atom, treptr value)
 {
+	if (TREATOM_FUN(atom) != treptr_nil && TREATOM_BINDING(atom) == treptr_nil)
+		trewarn (atom, "redefining function of %s '%s'", treerror_typename (TREPTR_TYPE(atom)), TREATOM_NAME(atom));
     TREATOM_FUN(atom) = value;
 }
 
@@ -182,7 +186,7 @@ treatom_alloc (char * symbol, treptr package, int type, treptr value)
     symbol = tresymbol_add (symbol);
 
     ATOM_SET(atomi, symbol, package, type);
-    treatom_set_value (atomi, value);
+    TREATOM_VALUE(atomi) = value;
 
     /* Return typed pointer. */
     return TRETYPE_INDEX_TO_PTR(type, atomi);
@@ -318,12 +322,14 @@ treatom_body_to_var (treptr body)
 {        
     unsigned  a;
     unsigned  b; 
+	treptr    tmp;
 
     for (a = 0; a < NUM_ATOMS; a++) {
         if (tre_atoms[a].type != TRETYPE_FUNCTION && tre_atoms[a].type != TRETYPE_MACRO)
 	    	continue;
 
-        if (CAR(CDR(tre_atoms[a].value)) != body)
+        tmp = CDR(tre_atoms[a].value);
+        if (NULLP(tmp) || CAR(tmp) != body)
 	    	continue;
 
         for (b = 0; b < NUM_ATOMS; b++)

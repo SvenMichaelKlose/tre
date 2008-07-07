@@ -37,7 +37,7 @@ typedef int bool;
 #endif
 
 #define TRE_MAX_SYMLEN		64
-#define TRE_MAX_STRINGLEN	8192
+#define TRE_MAX_STRINGLEN	65536
 #define TRE_SYMBOL_TABLE_SIZE	(32 * 1024)
 #define TRE_MAX_NESTED_FILES	16
 #define TRE_FILEIO_MAX_FILES   16
@@ -47,11 +47,11 @@ typedef int bool;
 #define TREDEBUG_MAX_BREAKPOINTS	16
 
 #ifndef NUM_NUMBERS
-#define NUM_NUMBERS	(8 * 1024)
+#define NUM_NUMBERS	(32 * 1024)
 #endif
 
 #ifndef NUM_ATOMS
-#define NUM_ATOMS	(8 * 1024)
+#define NUM_ATOMS	(32 * 1024)
 #endif
 
 #ifndef NUM_LISTNODES
@@ -88,7 +88,7 @@ typedef int bool;
 #define TRE_IMAGE_HEADER  "#!/usr/local/bin/tre -i\n" TRE_INFO
 #endif
 
-#define TREPTR_INDEX_WIDTH	27
+#define TREPTR_INDEX_WIDTH	28
 
 #ifdef LITTLE_ENDIAN
 #define TRE_ENDIANESS_STRING	"LITTLE"

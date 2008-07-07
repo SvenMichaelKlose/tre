@@ -31,7 +31,7 @@ treerror_msg (treptr expr, const char *prefix, const char *msg, va_list ap)
     fprintf (stderr, ".\n");
 
     if (expr != treptr_invalid) {
-	fprintf (stderr, "Erroraneous object:\n");
+		fprintf (stderr, "Erroraneous object:\n");
         treprint (expr);
     }
     fflush (stderr);
@@ -91,7 +91,7 @@ trewarn (treptr expr, const char *msg, ...)
     va_start(ap, msg);
 
     treerror_macroexpansion ();
-    treerror_msg (expr, "WARNING", msg, ap);
+    treerror_msg (treptr_invalid, "WARNING", msg, ap);
 }
 
 /*
@@ -110,36 +110,27 @@ treerror_builtin_error (treptr args)
     return treerror (treptr_invalid, TREATOM_STRINGP(arg));
 }
 
-char *
-treerror_typestring (treptr x)
+const char *
+treerror_typename (unsigned t)
 {
-    switch (TREPTR_TYPE(x)) {
-        case TRETYPE_STRING:
-            return "string";
+	/* !!! Keep this in sync with type.h! */
+	static const char * type_names[] = {
+		"cons",
+		"variable",
+		"number",
+		"string",
+		"array",
+		"built-in function",
+		"built-in special form",
+		"macro",
+		"function",
+		"special form",
+		"package",
+		"atom"
+	};
 
-        case TRETYPE_ARRAY:
-            return "array";
+	if (t > TRETYPE_ATOM)
+		treerror_internal (t, "unknown type index %u", t);
 
-        case TRETYPE_NUMBER:
-            return "number";
-
-        case TRETYPE_CONS:
-            return "cons";
-
-        case TRETYPE_VARIABLE:
-            return TREPTR_IS_SYMBOL(x) ? "symbol" : "variable";
-
-        case TRETYPE_MACRO:
-            return "macro";
-
-        case TRETYPE_SPECIAL:
-            return "special form";
-
-        case TRETYPE_ATOM:
-            return "atom";
-
-        default:
-            treerror_internal (x, "unkown type");
-            return NULL;
-    }
+	return type_names[t];
 }

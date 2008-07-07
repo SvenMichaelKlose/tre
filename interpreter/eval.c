@@ -40,13 +40,13 @@ treptr treopt_verbose_eval;
 treptr
 treeval_funcall (treptr func, treptr expr, bool do_argeval)
 {
-    treptr  args;	/* Arguments; second to last expression element. */
+    treptr  args;		/* Arguments; second to last expression element. */
     treptr  funcdef;	/* Function definition tree. */
     treptr  expforms;	/* Expanded argument forms. */
-    treptr  expvals;   /* Expanded argument values. */
-    treptr  ret;	/* Function return value. */
-    treptr  forms;	/* Unexpanded argument definition. */
-    treptr  body;	/* Function body. */
+    treptr  expvals;    /* Expanded argument values. */
+    treptr  ret;		/* Function return value. */
+    treptr  forms;		/* Unexpanded argument definition. */
+    treptr  body;		/* Function body. */
     treptr  env;
     treptr  env_parent;
     treptr  old_parent;
@@ -194,7 +194,7 @@ treeval_expr (treptr x)
 
         default:
             return treerror (CAR(x), "function expected instead of %s",
-                             treerror_typestring (fun));
+                             treerror_typename (TREPTR_TYPE(CAR(x))));
     }
 
     tredebug_chk_next ();

@@ -11,7 +11,7 @@
 #include "config.h"
 #include "type.h"
 
-typedef unsigned treptr;
+typedef unsigned long treptr;
 
 #define TREPTR_FLAGS	(-1 << TREPTR_INDEX_WIDTH)
 
@@ -53,6 +53,8 @@ typedef unsigned treptr;
 #define TREPTR_IS_FUNCTION(ptr)	(TREPTR_TYPE(ptr) == TRETYPE_FUNCTION)
 
 #define TREPTR_TRUTH(test)	((test) ? treptr_t : treptr_nil)
+
+#define NULLP(x)	(x == treptr_nil)
 
 extern const treptr treptr_nil;
 extern const treptr treptr_t;

@@ -1,6 +1,6 @@
 /*
  * nix operating system project tre interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Arguement related section
  */
@@ -84,7 +84,7 @@ trearg_get2 (treptr *a, treptr *b, treptr list)
 }
 
 treptr
-trearg_correct (int type, int argnum, const char * descr, treptr x)
+trearg_correct (unsigned argnum, int type, treptr x, const char * descr)
 {
 	char buf[4096];
 	const char * l = descr ? " (" : "";
@@ -95,64 +95,20 @@ trearg_correct (int type, int argnum, const char * descr, treptr x)
 
 	sprintf (buf, "argument %d%s%s%s: %s expected instead of %s",
 			 argnum, l, descr, r,
-			 treerror_typestring (type),
-			 treerror_typestring (TREPTR_TYPE(x)));
+			 treerror_typename (type),
+			 treerror_typename (TREPTR_TYPE(x)));
 
 	return treerror (x, buf);
 }
 
 treptr
-trearg_typed (int type, int argnum, const char * descr, treptr x)
+trearg_typed (unsigned argnum, int type, treptr x, const char * descr)
 {
-	while (TREPTR_TYPE(x) != type)
-		x = trearg_correct (type, argnum, descr, x);
+	while ((type == TRETYPE_ATOM && TREPTR_TYPE(x) == TRETYPE_CONS)
+		   || (type != TRETYPE_ATOM && TREPTR_TYPE(x) != type))
+		x = trearg_correct (argnum, type, x, descr);
 
 	return x;
-}
-
-treptr
-trearg_cons (int n, const char * d, treptr x)
-{
-	return trearg_typed (TRETYPE_CONS, n, d, x);
-}
-
-treptr
-trearg_atom (int n, const char * d, treptr x)
-{
-	while (TREPTR_IS_CONS(x))
-		x = trearg_typed (TRETYPE_ATOM, n, d, x);
-
-	return x;
-}
-
-treptr
-trearg_variable (int n, const char * d, treptr x)
-{
-	return trearg_typed (TRETYPE_VARIABLE, n, d, x);
-}
-
-treptr
-trearg_number (int n, const char * d, treptr x)
-{
-	return trearg_typed (TRETYPE_NUMBER, n, d, x);
-}
-
-treptr
-trearg_array (int n, const char * d, treptr x)
-{
-	return trearg_typed (TRETYPE_ARRAY, n, d, x);
-}
-
-treptr
-trearg_string (int n, const char * d, treptr x)
-{
-	return trearg_typed (TRETYPE_STRING, n, d, x);
-}
-
-treptr
-trearg_macro (int n, const char * d, treptr x)
-{
-	return trearg_typed (TRETYPE_MACRO, n, d, x);
 }
 
 #define _ADDF(to, what) \
@@ -194,6 +150,8 @@ trearg_expand (treptr *rvars, treptr *rvals, treptr iargdef, treptr args,
     tregc_push (dvars);
     dvals = vals = CONS(treptr_nil, treptr_nil);
     tregc_push (dvals);
+    args = trelist_copy (args);
+    tregc_push (args);
 
     /* Process an unlimited number of arguments. */
     while (1) {
@@ -341,6 +299,7 @@ trearg_expand (treptr *rvars, treptr *rvals, treptr iargdef, treptr args,
     TRELIST_FREE_EARLY(vars);
     TRELIST_FREE_EARLY(vals);
 
+    tregc_pop ();
     tregc_pop ();
     tregc_pop ();
 }

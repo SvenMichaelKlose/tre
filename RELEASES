@@ -17,6 +17,7 @@ most recent changes in unstable releases.
 	- Dot-notation for CONSes: Dot must must follow a whitespace or it's part
       the symbol.
 	- Lexical scoping fixed.
+	- Argument type checks for built-in functions added.
 
 	- Raw memory access and allocation (Mew: %%SET, %%GET, %MALLOC, %FREE)
 	- New predicate SYMBOLP: Returns T if variable points to itself. NIL otherwise.

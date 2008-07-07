@@ -62,8 +62,7 @@ trestream_builtin_get_handle (treptr args, FILE * default_stream)
 	treptr handle = trearg_get (args);
 
 	while (handle != treptr_nil && TREPTR_IS_NUMBER(handle) == FALSE)
-		handle = trearg_correct (TRETYPE_NUMBER, 1,
-								 "stream handle or NIL for stdout", handle);
+		handle = trearg_correct (1, TRETYPE_NUMBER, handle, "stream handle or NIL for stdout");
 
     return (handle != treptr_nil) ?
            tre_fileio_handles[(int) TRENUMBER_VAL(handle)] :

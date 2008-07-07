@@ -89,7 +89,7 @@ trearray_get_elt (treptr list)
 		treerror (list, "array expexted");
     if (CDR(list) == treptr_nil)
 		treerror (list, "index expexted");
-    array = trearg_array (1, NULL, CAR(list));
+    array = trearg_typed (1, TRETYPE_ARRAY, CAR(list), NULL);
     indices = CDR(list);
 
     /* Check that indices are integers. */

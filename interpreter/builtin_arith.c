@@ -33,7 +33,7 @@ treeval_exprop (treptr list, treeval_opfunc_t func)
 	n = 2;
     list = CDR(list);
     while (list != treptr_nil) {
-        arg = trearg_number (n++, "in arithmetic operation", CAR(list));
+        arg = trearg_typed (n++, TRETYPE_NUMBER, CAR(list), "in arithmetic operation");
         val = (*func) (val, TRENUMBER_VAL(arg));
         list = CDR(list);
     }
@@ -138,8 +138,8 @@ trenumber_builtin_args (treptr *car, treptr *cdr, treptr list)
 	const char * descr = "in binary arithmetic operation";
 
     trearg_get2 (car, cdr, list);
-	*car = trearg_number (1, descr, *car);
-	*cdr = trearg_number (2, descr, *cdr);
+	*car = trearg_typed (1, TRETYPE_NUMBER, *car, descr);
+	*cdr = trearg_typed (2, TRETYPE_NUMBER, *cdr, descr);
 }
 
 /**

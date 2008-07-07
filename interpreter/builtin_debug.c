@@ -69,7 +69,7 @@ tredebug_builtin_invoke_debugger (treptr no_args)
 treptr
 tredebug_breakpoint_arg (treptr args)
 {
-    return trearg_variable (1, "want 'FUNCTION-NAME", trearg_get (args));
+    return trearg_typed (1, TRETYPE_VARIABLE, trearg_get (args), "function name");
 }
 
 treptr

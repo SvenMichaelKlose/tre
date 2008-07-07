@@ -9,6 +9,7 @@
 #define TRE_TYPE_H
 
 /* NOTE: You must change %TYPE-ID callers with these. */
+/* NOTE: Keep in sync with error.c:treerror_typename(). */
 
 #define TRETYPE_CONS		0
 #define TRETYPE_VARIABLE	1

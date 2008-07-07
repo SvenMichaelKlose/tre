@@ -2,7 +2,7 @@
  * nix operating system project tre interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
- * Evaluation related section.
+ * Macro-expansion wrappers calling TRE function, if defined.
  */
 
 #include "config.h"

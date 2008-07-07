@@ -48,7 +48,7 @@ treptr
 trestring_builtin_make (treptr list)
 {
     struct tre_string * str;
-    treptr  arg = trearg_number (1, "length", trearg_get (list));
+    treptr  arg = trearg_typed (1, TRETYPE_NUMBER, trearg_get (list), "length");
     treptr  atom;
 
     str = trestring_get_raw ((unsigned) TRENUMBER_VAL(arg));
@@ -75,7 +75,7 @@ trestring_builtin_concat (treptr list)
 
     /* Sum up length of all elements in the list. */
     DOLIST(p, list) {
-        car = trearg_string (argnum++, NULL, CAR(p));
+        car = trearg_typed (argnum++, TRETYPE_STRING, CAR(p), NULL);
 	   	len += strlen (TREATOM_STRINGP(car));
     }
 
@@ -148,7 +148,7 @@ treptr
 trestring_builtin_symbol_name (treptr list)
 {
     char    buf[TRE_MAX_STRINGLEN];
-    treptr  arg = trearg_atom (1, NULL, trearg_get (list));
+    treptr  arg = trearg_typed (1, TRETYPE_ATOM, trearg_get (list), NULL);
     char    * an = TREATOM_NAME(arg);
 
     buf[0] = 0;

@@ -37,9 +37,22 @@ trenumber_builtin_numberp (treptr list)
  * Issues an error if the argument is not a number.
  */
 treptr
-trenumber_get_arg (treptr args)
+trenumber_arg_get (treptr args)
 {
-	return trearg_number (1, NULL, trearg_get (args));
+	return trearg_typed (1, TRETYPE_NUMBER, trearg_get (args), NULL);
+}
+
+/*
+ * Expect and take two arguments.
+ *
+ * Issues an error if an argument is not a number.
+ */
+void
+trenumber_arg_get2 (treptr * first, treptr * second, treptr args)
+{
+	trearg_get2 (first, second, args);
+	*first = trearg_typed (1, TRETYPE_NUMBER, *first, NULL);
+	*second = trearg_typed (2, TRETYPE_NUMBER, *second, NULL);
 }
 
 /*
@@ -65,7 +78,7 @@ trenumber_builtin_characterp (treptr args)
 treptr
 trenumber_builtin_code_char (treptr args)
 {
-    treptr  arg = trenumber_get_arg (args);
+    treptr  arg = trenumber_arg_get (args);
     char tmp;
 
     tmp = (char) TRENUMBER_VAL(arg);
@@ -80,7 +93,7 @@ trenumber_builtin_code_char (treptr args)
 treptr
 trenumber_builtin_integer (treptr args)
 {
-    treptr  arg = trenumber_get_arg (args);
+    treptr  arg = trenumber_arg_get (args);
     int  tmp = (int) TRENUMBER_VAL(arg);
 
     return treatom_number_get ((double) tmp, TRENUMTYPE_INTEGER);
@@ -95,7 +108,7 @@ trenumber_builtin_bit_or (treptr args)
 	treptr x;
 	treptr y;
 
-    trearg_get2 (&x, &y, args);
+    trenumber_arg_get2 (&x, &y, args);
     int  ix = (int) TRENUMBER_VAL(x);
     int  iy = (int) TRENUMBER_VAL(y);
 
@@ -111,7 +124,7 @@ trenumber_builtin_bit_and (treptr args)
 	treptr x;
 	treptr y;
 
-    trearg_get2 (&x, &y, args);
+    trenumber_arg_get2 (&x, &y, args);
     int  ix = (int) TRENUMBER_VAL(x);
     int  iy = (int) TRENUMBER_VAL(y);
 
@@ -127,7 +140,7 @@ trenumber_builtin_bit_shift_left (treptr args)
 	treptr x;
 	treptr y;
 
-    trearg_get2 (&x, &y, args);
+    trenumber_arg_get2 (&x, &y, args);
     unsigned long  ix = (unsigned long) TRENUMBER_VAL(x);
     unsigned long  iy = (unsigned long) TRENUMBER_VAL(y);
 
@@ -143,7 +156,7 @@ trenumber_builtin_bit_shift_right (treptr args)
 	treptr x;
 	treptr y;
 
-    trearg_get2 (&x, &y, args);
+    trenumber_arg_get2 (&x, &y, args);
     unsigned long  ix = (unsigned long) TRENUMBER_VAL(x);
     unsigned long  iy = (unsigned long) TRENUMBER_VAL(y);
 

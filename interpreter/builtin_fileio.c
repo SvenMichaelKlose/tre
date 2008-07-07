@@ -35,8 +35,8 @@ trestream_builtin_fopen (treptr list)
 
     trearg_get2 (&car, &cdr, list);
 
-	car = trearg_string (1, "pathname", car);
-	cdr = trearg_string (2, "access mode", cdr);
+	car = trearg_typed (1, TRETYPE_STRING, car, "pathname");
+	cdr = trearg_typed (2, TRETYPE_STRING, cdr, "access mode");
 
     handle = trestream_fopen (car, cdr);
     RETURN_NIL(handle);

@@ -47,7 +47,7 @@ trelist_builtin_cxr_arg (treptr list)
     treptr arg = trearg_get (list);
 
     RETURN_NIL(arg);
-	return trearg_cons (1, NULL, arg);
+	return trearg_typed (1, TRETYPE_CONS, arg, NULL);
 }
 
 /*
@@ -81,7 +81,7 @@ trelist_builtin_cdr (treptr list)
     treptr  cons;	\
     treptr  new;	\
     trearg_get2 (&cons, &new, list);	\
-    cons = trearg_cons (1, "destination", cons)
+	cons = trearg_typed (1, TRETYPE_CONS, cons, NULL);
 
 /*
  * (RPLACA list value)

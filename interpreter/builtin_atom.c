@@ -60,7 +60,7 @@ treatom_builtin_eql (treptr list)
 treptr
 treatom_builtin_make_symbol (treptr args)
 {
-    treptr arg = trearg_string (1, "symbol name", trearg_get (args));
+    treptr arg = trearg_typed (1, TRETYPE_STRING, trearg_get (args), "symbol name");
     return treatom_get (TREATOM_STRINGP(arg), TRECONTEXT_PACKAGE());
 }
 
@@ -82,7 +82,7 @@ treatom_builtin_atom (treptr list)
 treptr
 treatom_builtin_arg (treptr list)
 {
-    return trearg_atom (1, NULL, trearg_get (list));
+    return trearg_typed (1, TRETYPE_ATOM, trearg_get (list), NULL);
 }
 
 /*
@@ -133,7 +133,7 @@ treatom_builtin_set_atom_fun (treptr list)
     TRELIST_DEFREGS();
     trearg_get2 (&car, &cdr, list);
 
-	car = trearg_atom (1, "atom expected", car);
+	car = trearg_typed (1, TRETYPE_ATOM, car, NULL);
     cdr = treeval (cdr);
     treatom_set_function (car, cdr);
     return cdr;
@@ -149,7 +149,7 @@ treatom_builtin_mkfunctionatom (treptr list)
 {
 
     return treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_FUNCTION,
-						  trearg_cons (1, "list expected", trearg_get (list)));
+						  trearg_typed (1, TRETYPE_CONS, trearg_get (list), "list expected"));
 }
 
 /*

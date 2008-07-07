@@ -177,7 +177,7 @@ trebuiltin_apply (treptr list)
     else if (TREPTR_IS_SPECIAL(efunc))
         res = trespecial (efunc, fake);
     else
-        res = treerror (efunc, "function expected");
+        res = treerror (func, "function expected");
 
     tregc_pop ();
     TRELIST_FREE_EARLY(fake);
@@ -195,7 +195,7 @@ trebuiltin_macrocall (treptr list)
 
     trearg_get2 (&macro, &args, list);
 
-	macro = trearg_macro (1, "macro to call", macro);
+	macro = trearg_typed (1, TRETYPE_MACRO, macro, "macro to call");
 
     fake = CONS(macro, args);
     tregc_push (fake);
@@ -217,7 +217,7 @@ trebuiltin_load (treptr expr)
     treptr  pathname = trearg_get (expr);
     char    fname[1024];
 
-	pathname = trearg_string (1, "pathname", pathname);
+	pathname = trearg_typed (1, TRETYPE_STRING, pathname, "pathname");
 
     trestring_copy (fname, pathname);
 
@@ -263,9 +263,9 @@ trebuiltin_intern (treptr args)
     } else
         package = treptr_nil;
 
-	name = trearg_string (1, "symbol name", name);
+	name = trearg_typed (1, TRETYPE_STRING, name, "symbol name");
     if (package != treptr_nil)
-		package = trearg_string (1, "package name", package);
+		package = trearg_typed (1, TRETYPE_STRING, package, "package name");
 
     n = &TREATOM_STRING(name)->str;
     if (package != treptr_nil)
@@ -283,7 +283,7 @@ trebuiltin_malloc (treptr args)
     void    * ret;
 
     arg = trearg_get (args);
-	arg = trearg_number (1, "size", arg);
+	arg = trearg_typed (1, TRETYPE_NUMBER, arg, "size");
 
 	ret = malloc ((size_t) TRENUMBER_VAL(arg));
 
@@ -296,7 +296,7 @@ trebuiltin_free (treptr args)
     treptr  arg;
 
     arg = trearg_get (args);
-	arg = trearg_number (1, "address", arg);
+	arg = trearg_typed (1, TRETYPE_NUMBER, arg, "address");
 
 	free ((void *) (long) TRENUMBER_VAL(arg));
 
@@ -313,8 +313,8 @@ trebuiltin_set (treptr args)
 
     trearg_get2 (&ptr, &val, args);
 
-	ptr = trearg_number (1, "address", ptr);
-	val = trearg_number (2, "byte", val);
+	ptr = trearg_typed (1, TRETYPE_NUMBER, ptr, "address");
+	val = trearg_typed (2, TRETYPE_NUMBER, val, "byte");
 
 	c = (char) TRENUMBER_VAL(val);
 	p = TRENUMBER_CHARPTR(ptr);
@@ -329,7 +329,7 @@ trebuiltin_get (treptr args)
     treptr ptr = trearg_get (args);
 	char   * p;
 
-	ptr = trearg_number (1, "address", ptr);
+	ptr = trearg_typed (1, TRETYPE_NUMBER, ptr, "address");
 
 	p = TRENUMBER_CHARPTR(ptr);
 

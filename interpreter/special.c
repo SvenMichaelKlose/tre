@@ -70,7 +70,7 @@ trespecial_setq (treptr list)
 
     do {
         /* Check arguments. */
-		car = trearg_variable (argnum, "place", CAR(list));
+		car = trearg_typed (argnum, TRETYPE_VARIABLE, CAR(list), "place");
 
 		argnum++;
         list = CDR(list);
