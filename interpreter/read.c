@@ -24,8 +24,9 @@
  *
  * Don't forget to update is_symchar().
  */
-#define TRETOKEN_BRACKET_OPEN		1
-#define TRETOKEN_BRACKET_CLOSE		2
+#define TRETOKEN_EOF			0	/* end of file */
+#define TRETOKEN_BRACKET_OPEN	1
+#define TRETOKEN_BRACKET_CLOSE	2
 #define TRETOKEN_DOT			3
 #define TRETOKEN_DBLQUOTE		4
 #define TRETOKEN_QUOTE			5
@@ -35,7 +36,7 @@
 #define TRETOKEN_FUNCTION		9
 #define TRETOKEN_CHAR			10
 #define TRETOKEN_HEXNUM			11
-#define TRETOKEN_SYMBOL		12	/* Keep this at the end. */
+#define TRETOKEN_SYMBOL			12	/* Keep this at the end. */
 
 #define TRETOKEN_IS_QUOTE(x) \
 	(x >= TRETOKEN_QUOTE && x <= TRETOKEN_FUNCTION)
@@ -46,7 +47,7 @@
 bool
 is_symchar (char c)
 {
-    return (c > ' ' && c != '(' && c != ')' && c != '\'' && c != '.' &&
+    return (c > ' ' && c != '(' && c != ')' && c != '\'' && 
 			c != '`' && c != ',' && c != '"' && c != ';' &&c != '#');
 }
 
@@ -117,6 +118,11 @@ treread_token (struct tre_stream *stream)
 	                        	TRECONTEXT_PACKAGE_NAME());
     char  c;
 
+    if (len == 1 && stream->last_char == '.') {
+    	TRECONTEXT_TOKEN() = TRETOKEN_DOT;
+    	return;
+	}
+
     if (len != 0) {
 		TRECONTEXT_TOKEN() = TRETOKEN_SYMBOL;
 		return;
@@ -128,9 +134,6 @@ treread_token (struct tre_stream *stream)
 	    	break;
         case ')':
 	    	TRECONTEXT_TOKEN() = TRETOKEN_BRACKET_CLOSE;
-	    	break;
-        case '.':
-	    	TRECONTEXT_TOKEN() = TRETOKEN_DOT;
 	    	break;
         case '\'':
 	    	TRECONTEXT_TOKEN() = TRETOKEN_QUOTE;
@@ -167,7 +170,7 @@ treread_token (struct tre_stream *stream)
 			treerror_norecover (treptr_invalid, "syntax error after '#'");
 	    	break;
         case -1:
-	    	TRECONTEXT_TOKEN() = 0;	/* end of file */
+	    	TRECONTEXT_TOKEN() = TRETOKEN_EOF;
 	    	break;
     }
 }
@@ -379,7 +382,7 @@ treread_expr (struct tre_stream *stream)
 {
     treread_token (stream);
 
-    if (TRECONTEXT_TOKEN() == 0) /* End of file. */
+    if (TRECONTEXT_TOKEN() == TRETOKEN_EOF)
         return treptr_invalid;
 
     /* Expand quote. */
