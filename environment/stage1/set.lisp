@@ -15,7 +15,7 @@
   (if (atom p)
 	  (progn
 		(if (member p *constants*)
-		  (%error "cannot set constant"))
+		    (%error "cannot set constant"))
       	(list 'setq p val))
       (let* ((fun (car p))
 	         (args (cdr p))
@@ -23,13 +23,15 @@
 	         (funat (eval `(function ,setfun))))
         (if (functionp funat)
 	        (let ((g (gensym)))
+			   (if (member (car args) *constants*)
+		    	   (%error "cannot set constant"))
               `(progn
 	             (let ((,g ,val))
 	               (,setfun ,g ,@args)
 	               ,g)))
-               (progn
-                 (print p)
-	             (%error "place not settable"))))))
+            (progn
+              (print p)
+	          (%error "place not settable"))))))
 
 (defun %setf (args)
   (if (not (cdr args))
