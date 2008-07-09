@@ -8,19 +8,23 @@
 
 (defun atomic-expand-lambda (fun mex &optional (parent-env nil))
   (with ((lex fi) (lambda-expand fun mex parent-env))
-    (tree-expand fi (expex-expand-body (backquote-expand lex)))
-    (setf (assoc fun *expanded-functions*) fi)))
+    (tree-expand fi (expression-expand (backquote-expand lex)))
+    ;(setf (assoc fun *expanded-functions*) fi)
+	(funinfo-env fi)))
  
 (defun atomic-expand-fun (fun)
   (with (body (function-body fun))
-    (format t "(compile ~A)~%"
+    (format t "(Processing ~A ~A)~%"
+			  (cond
+				((functionp fun)	"function")
+				((macrop fun)	"macro"))
               (if (eq (first (car body)) 'block)
                   (symbol-name (second (car body)))
                   ""))
     (atomic-expand-lambda fun (compiler-macroexpand body))))
 
 (defun compilable? (x)
-  (or (functionp x))) ; (macrop x)))
+  (or (functionp x) (macrop x)))
  
 ; Replace function by optimized version.
 (defun atomic-expand (fun)
