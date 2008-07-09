@@ -4,27 +4,25 @@
 ;;;;;
 ;;;;; Compiler toplevel.
 
-;;;; Externals.
-(env-load "../lib/tree-walk.lisp")
 (env-load "../compiler/utils.lisp")
-(env-load "../compiler/lambda.lisp")
-
-;;;; Data shared across passes.
+(env-load "../compiler/predicates.lisp")
 (env-load "../compiler/verbose.lisp")
-
-;;;; Data shared across passes.
-(env-load "../compiler/funinfo.lisp")
 
 ;;;; Expansion.
 ;;;;
 ;;;; Transforms toplevel expressions into virtual code.
-(env-load "../compiler/predicates.lisp")
-(env-load "../compiler/subatomic.lisp")
 (env-load "../compiler/quote-expand.lisp")
+(env-load "../compiler/define-expander.lisp")
 (env-load "../compiler/compiler-macros.lisp")
+
 (env-load "../compiler/stack-arguments.lisp")
+(env-load "../lib/tree-walk.lisp")
+(env-load "../compiler/funinfo.lisp")
+(env-load "../compiler/subatomic.lisp")
 (env-load "../compiler/lambda-expand.lisp")
+
 (env-load "../compiler/expression-expand.lisp")
+
 (env-load "../compiler/tree-expand.lisp")
 
 ;;;; Optimisation.
@@ -45,9 +43,3 @@
 
 ;; Set this if EVAL should COMPILE.
 ;(defvar *compiler-hook* t)
-;(compile-everything)
-
-(defun fnord ()
-  (#'((a) (print a)) 23))
-
-(compile #'equal)

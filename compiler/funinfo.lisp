@@ -61,9 +61,7 @@
 
 (defun funinfo-env-add-args (fi args)
   "Add variables to the current environment."
-  (setf (car (funinfo-env fi)) (if (funinfo-env-this fi)
-                                   (append (funinfo-env-this fi) args)
-		                   args))
+  (setf (car (funinfo-env fi)) (append (car (funinfo-env fi)) args))
   nil)
 
 (defun funinfo-free-var-pos (fi var)
@@ -82,4 +80,4 @@
        (prog1
          (progn
            ,@body)
-	 (setf (funinfo-env ,fi) ,old-env)))))
+	     (setf (funinfo-env ,fi) ,old-env)))))
