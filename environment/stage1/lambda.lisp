@@ -5,6 +5,8 @@
 
 (defun past-lambda (x)
   "Get cons after optional LAMBDA keyword in function expression."
+  (when (eq (first x) 'function)
+      (setf x (second x)))
   (if (eq (first x) 'lambda)
 	(cdr x)
 	x))
@@ -48,10 +50,10 @@
   ((is-lambda-call? '(#'((x) x) nil)))
   t)
 
--(defun function-arguments (fun)
--  "Returns arguments of a function."
--  (first (symbol-value fun)))
--
--(defun function-body (fun)
--  "Returns body of a function."
--  (cdr (symbol-value fun)))
+(defun function-arguments (fun)
+  "Returns arguments of a function."
+  (first (symbol-value fun)))
+
+(defun function-body (fun)
+  "Returns body of a function."
+  (cdr (symbol-value fun)))
