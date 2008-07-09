@@ -28,7 +28,7 @@
   (let ((args (%map func lists)))
     (when args
       (apply func args)
-	  (apply #'mapcar func lists)))
+	  (apply #'map func lists)))
   nil)
 
 (defun mapcar (func &rest lists)
