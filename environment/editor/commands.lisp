@@ -8,7 +8,7 @@
 		  #'((line p i pos)
   			   (if (= p i)
 	  			   pos
-      			   (if (= 0 (mod pos *editor-tabstop*))
+      			   (if (= 0 (mod pos (editor-conf 'tabstop)))
           			   (editor-expand-pos line p (1+ i) pos)
           			   (expand-tab line p i (1+ pos))))))
     (if (= p i)
