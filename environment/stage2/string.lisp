@@ -42,6 +42,23 @@
 	    "LISP"))
   t)
 
+(defun string-list (x)
+  "Make list of characters from string."
+  (let ((l (length x))
+		(s))
+    (do ((i (1- l) (1- i)))
+		((< i 0))
+      (setf s (push (elt x i) s)))
+	s))
+
+(define-test "STRING-LIST works"
+  ((equal (string-list "LISP") '(#\L #\I #\S #\P)))
+  t)
+
+(defun queue-string (x)
+  "Convert queue of characters to string."
+  (list-string (queue-list x)))
+
 (defun string-upcase (str)
   "Return new string with characters converted to upper case."
   (when str
@@ -71,7 +88,6 @@
   ((string= (string-downcase "LISP")
 	    "lisp"))
   t)
-
 
 (defun char-code (chr)
   (integer chr))
