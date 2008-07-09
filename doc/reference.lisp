@@ -306,8 +306,7 @@ CONS
 LISTS
 
     (APPEND &REST lists) - function
-	Returns 'lists' concatenated. All lists, except the last, are
-	copied.
+	Returns 'lists' concatenated. All lists are copied.
 
     (BUTLAST list) - built-in function
 	Returns last without last element.

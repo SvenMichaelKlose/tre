@@ -2,14 +2,14 @@
 ;;;; list processor environment
 ;;;; Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
 ;;;;
-;;;; List manipulation functions
+;;;; List manipulation functions.
 
 (defun append (&rest lsts)
-  "Concatenate lists. All lists, except the last, are copied."
+  "Concatenate lists. All lists are copied."
   (if (not (cdr lsts))
-    (car lsts)
+    (copy-list (car lsts))
 	(if (car lsts)
-    	(let ((n (copy-list (car lsts))))
+   	    (let ((n (copy-list (car lsts))))
           (rplacd (last n) (apply #'append (cdr lsts)))
           n)
 		(apply #'append (cdr lsts)))))
@@ -26,10 +26,10 @@
   ((append '(i) '(l i k e) '(l i s p)))
   '(i l i k e l i s p))
 
-(define-test "APPEND doesn't copy last"
+(define-test "APPEND copies last"
   ((let ((tmp '(s)))
      (eq tmp (cdr (append '(l) tmp)))))
-  t)
+  nil)
 
 (defun nconc (&rest lsts)
   "Concatenate list arguments destructively."

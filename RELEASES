@@ -28,6 +28,7 @@ most recent changes in unstable releases.
 	- DEFCONSTANT: New.
 	- ERROR takes formatted string (New: %ERROR).
 	- APPEND/NCONC now ignore empty lists.
+	- APPEND also copies last list.
 	- MAKE-HASH-TABLE: Now symbols can be used as keys.
 	- TREE-WALK: Now returns a copy of the tree (which may be modified).
 	- DEFSTRUCT: Now also defines WITH-<structname> macro.
