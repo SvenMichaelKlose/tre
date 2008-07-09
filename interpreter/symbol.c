@@ -48,14 +48,14 @@ tresymbol_gc ()
     r = reloc;
     o = symbol_table;
     n = symbol_table;
-    DOTIMES(i, num_symbols + 1) { /* XXX I don't understand + 1... */
-        while (!*o)
+    DOTIMES(i, num_symbols) {
+        while (!*o) /* Seek symbol start. */
             o++;
-        l = *o;
-        *r++ = 1 + o;
-		*r++ = 1 + n;
+        l = *o;		/* symbol length. */
+        *r++ = 1 + o;	/* Save old position. */
+		*r++ = 1 + n;	/* Save new position. */
         n = 1 + stpcpy (n, o);
-        o += 1 + l;
+        o += 1 + l; /* Jump past old string. */
     }
     symbol_table_free = n;
 
