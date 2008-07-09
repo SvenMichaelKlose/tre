@@ -6,15 +6,15 @@
 
 (defmacro labels (fdefs &rest main-body)
   (let* ((fn (first fdefs))
-	 (name (first fn))
-	 (args (second fn))
-	 (body (cddr fn)))
+	     (name (first fn))
+	     (args (second fn))
+	     (body (cddr fn)))
     `(let ((,name))
        (%set-atom-fun ,name
-	 #'(,args
-	     (block ,name
-	       ,@body)))
+	     #'(,args
+	         (block ,name
+	           ,@body)))
        ,@(if (cdr fdefs)
-	   `((labels ,(cdr fdefs)
-	       ,@main-body))
-	   main-body))))
+	         `((labels ,(cdr fdefs)
+	             ,@main-body))
+	         main-body))))

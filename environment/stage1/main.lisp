@@ -37,3 +37,4 @@
 (env-load "stage1/lambda.lisp")
 (env-load "stage1/loops.lisp")
 (env-load "stage1/labels.lisp")
+(env-load "stage1/test-lexical-scope.lisp")

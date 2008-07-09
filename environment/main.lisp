@@ -4,7 +4,8 @@
 ;;;;
 ;;;; Environment toplevel
 
-(setq *UNIVERSE* (cons 'env-load *UNIVERSE*))
+(setq *UNIVERSE* (cons '%scope-toplevel-test (cons 'env-load *UNIVERSE*))
+	  %scope-toplevel-test 'some-test-value)
 
 (%SET-ATOM-FUN env-load
   #'(lambda (path)
@@ -15,7 +16,13 @@
 (env-load "stage3/main.lisp")
 (env-load "alien/main.lisp")
 (env-load "editor/main.lisp")
-;(env-load "../compiler/main.lisp")
+
+; Test lexical scoping.
+(unless (eq %scope-toplevel-test 'some-test-value)
+  (error "scope-toplevel test"))
+(setq *UNIVERSE* (cdr *UNIVERSE*))
+
+(env-load "../compiler/main.lisp")
 
 ; Keep tests for reuse in definition order.
 (setq *tests* (reverse *tests*))
