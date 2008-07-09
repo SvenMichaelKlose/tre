@@ -20,7 +20,8 @@
   (eq x nil))
 
 (defun symbolp (x)
-  (and (not (symbol-function x))
+  (and (atom x)
+	   (not (symbol-function x))
 	   (eq x (symbol-value x))))
 
 (define-test "NOT works with NIL"
