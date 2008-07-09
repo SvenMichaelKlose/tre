@@ -3,9 +3,9 @@
 
 (defun read-line (&optional (str *standard-input*))
   "Read line from string."
-  (with-default-stream str
+  (with-default-stream nstr str
     (with-queue q
-       (do ((c (read-char str) (read-char str)))
-           ((or (= c 10) (= c 13) (end-of-file str))
+       (do ((c (read-char nstr) (read-char nstr)))
+           ((or (= c 10) (= c 13) (end-of-file nstr))
             (return-from read-line (list-string (queue-list q))))
          (enqueue q c)))))
