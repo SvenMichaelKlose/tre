@@ -171,6 +171,12 @@
 			  (t		'opening))
 			attrs)))
 
+(defun xml-parse-version-tag (in)
+  (xml-expect-char in #\?)
+  (while (not (= #\? (xml-read-char in))) (progn
+											(xml-expect-char in #\>)
+											(values nil ? 'inline nil))))
+
 (defun xml-parse-tag (in)
   "Read tag and return xml-node."
   (xml-skip-spaces in)
@@ -179,13 +185,12 @@
 
 (defun xml-parse-list (in this-ns this-name)
   "Parse block tag (until it's closed) or inline tag."
-;(format t "xml-parse-list: ~A ~A~%" this-ns this-name)
   (xml-skip-spaces in)
   (if (= (xml-peek-char in) #\<)
       (with ((ns name type attrs) (xml-parse-tag in))
 	    (case type
 	      ('inline
-	  	       `((,name) ,@(xml-parse-list in this-ns this-name)))
+	  	       `((,name ,@attrs) ,@(xml-parse-list in this-ns this-name)))
 	      ('closing
 	           (unless (and (string= ns this-ns)
 				            (string= name this-name))
@@ -197,12 +202,19 @@
 
 (defun xml-parse-block (in ns name attrs)
   "Parse block tag (until it's closed) or inline tag."
-;(format t "xml-parse-block: ~A ~A" name attrs)
   `(,name ,@attrs ,@(xml-parse-list in ns name)))
 
 (defun xml-parse-toplevel (in)
   "Parse top-level block tag."
-  (with ((ns name type attrs) (xml-parse-tag in))
+  (xml-skip-spaces in)
+  (unless (= #\< (xml-read-char in))
+	(error "expected tag instead of text"))
+  (when (= #\? (xml-peek-char in))
+	(xml-parse-version-tag in))
+  (xml-skip-spaces in)
+  (unless (= #\< (xml-read-char in))
+	(error "expected tag instead of text"))
+  (with ((ns name type attrs) (xml-parse-standard-tag in))
 	(unless (eq type 'opening)
 	  (xml-error "Opening tag expected instead of ~A." type))
 	(xml-parse-block in ns name attrs)))
