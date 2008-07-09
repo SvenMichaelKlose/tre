@@ -41,6 +41,9 @@
 (%defun caddar (lst)
  (car (cdr (cdr (car lst)))))
 
+(%defun cdddar (lst)
+ (cdr (cdr (cdr (car lst)))))
+
 (%defun cadadar (lst)
  (car (cdr (car (cdr (car lst))))))
 
