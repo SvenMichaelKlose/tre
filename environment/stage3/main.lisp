@@ -19,3 +19,4 @@
 (env-load "stage3/read-integer.lisp")
 (env-load "stage3/group.lisp")
 (env-load "stage3/subseq.lisp")
+(env-load "stage3/collected-errors.lisp")
