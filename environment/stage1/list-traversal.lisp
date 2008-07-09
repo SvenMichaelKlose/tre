@@ -22,12 +22,19 @@
         (go start)))))
 
 (defun map (func &rest lists)
-  (%map func lists)
+  "Calls function for all head CARs in lists. Then call with next elements.
+   If a list runs out of elements, the function stops.
+   Returns NIL."
+  (let ((args (%map func lists)))
+    (when args
+      (apply func args)
+	  (apply #'mapcar func lists)))
   nil)
 
 (defun mapcar (func &rest lists)
   "Calls function for all head CARs in lists. Then call with next elements.
-   If a list runs out of elements, the function stops."
+   If a list runs out of elements, the function stops.
+Returns a list of all return values of the function."
   (let ((args (%map func lists)))
     (when args
       (cons (apply func args) (apply #'mapcar func lists)))))
