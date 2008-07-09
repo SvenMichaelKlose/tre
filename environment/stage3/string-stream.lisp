@@ -10,15 +10,15 @@
   (make-stream
     :user-detail  (make-queue)
     :fun-in       #'((str)
-                      (queue-pop (stream-user-detail str)))
+                       (queue-pop (stream-user-detail str)))
     :fun-out      #'((c str)
-                      (enqueue (stream-user-detail str) c))
+                       (enqueue (stream-user-detail str) c))
 	:fun-eof	  #'((str)
-					  (eq (stream-user-detail str) nil))))
+					   (eq (stream-user-detail str) nil))))
 
 (defun get-stream-string (str)
   "Returns string accumulated by string-stream. The stream is
    emptied. See also MAKE-STRING-STREAM."
   (prog1
-	(list-string (queue-list (stream-user-detail str)))
+	(queue-string (stream-user-detail str))
 	(setf (stream-user-detail str) (make-queue))))
