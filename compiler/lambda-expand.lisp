@@ -53,14 +53,12 @@
 (defun vars-to-stackops (body fi)
   "Replaces variables by stack operations. Returns modified body.
    Free variables are added to free-vars of the funinfo."
-(or body
   (tree-walk body
     :ascending
       #'((e)
          (if (is-stackvar? e fi)
              (make-stackop e fi)
 			 e))))
-)
 
 ;;; LAMBDA inlining
 
@@ -72,15 +70,15 @@
 			   args vals)
      ,@body))
 
-(defun lambda-call-embed (lambda-call fi)
+(defun lambda-call-embed (lambda-call fi export-lambdas)
   "Replace local LAMBDA expression by its body using stack variables."
   (with-lambda-call (args vals body lambda-call)
-    (with-funinfo-env-temporary fi args
-      (with ((a v) (argument-expand args vals))
+    (with ((a v) (argument-expand args vals))
+      (with-funinfo-env-temporary fi args
         (make-inline-body
 			a
       		(vars-to-stackops v fi)
-			(lambda-embed-or-export body fi))))))
+			(lambda-embed-or-export body fi export-lambdas))))))
 
 ;;; LAMBDA export
 
@@ -114,21 +112,22 @@
 
 ;;; Toplevel
 
-(defun lambda-embed-or-export (body fi)
+(defun lambda-embed-or-export (body fi export-lambdas)
   "Merge LAMBDA expressions and replace variables by stack operations."
   (vars-to-stackops
       (tree-walk body
       	  :ascending
         	  #'((x)
              	 (if (is-lambda-call? x)
-                 	 (lambda-call-embed x fi)
-                 	 (if (is-lambda? x)
+                 	 (lambda-call-embed x fi export-lambdas)
+                 	 (if (and export-lambdas
+							  (is-lambda? x))
                    	  	 (lambda-export x fi)
 				   	  	 x))))
 	  fi))
 
-(defun lambda-expand (fun body &optional (parent-env nil))
+(defun lambda-expand (fun body &optional (parent-env nil) (export-lambdas t))
   "Convert native function to stack function."
   (with ((forms inits)  (%stackarg-expansion! (copy-tree (function-arguments fun)))
          fi             (make-funinfo :env (list forms parent-env)))
-    (values (lambda-embed-or-export body fi) fi)))
+    (values (lambda-embed-or-export body fi export-lambdas) fi)))
