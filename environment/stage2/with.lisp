@@ -19,8 +19,8 @@
 			 ,@(sub))
 
 		  ; Place function is set of value is a function.
-		  (if (and (consp val) (eq (first val) 'FUNCTION))
-			  `(labels ((,plc ,@(second val)))
+		  (if (is-lambda? val)
+			  `(labels ((,plc ,@(past-lambda (second val))))
 				 ,@(sub))
 
 			  ; Value assignment to variable.
