@@ -1,6 +1,6 @@
 /*
  * nix operating system project tre interpreter
- * Copyright (c) 2005-2006 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Built-in atom-related functions
  */
@@ -98,20 +98,7 @@ treatom_builtin_symbol_value (treptr list)
 }
 
 /*
- * (%ATOM-VALUE obj)
- *
- * Returns function bound to atom.
- */
-treptr
-treatom_builtin_atom_value (treptr list)
-{
-    treptr arg = treatom_builtin_arg (list);
-    return TREATOM_VALUE(arg);
-}
-
-
-/*
- * (%ATOM-FUN obj)
+ * (SYMBOL-FUNCTION  obj)
  *
  * Returns function bound to atom.
  */
@@ -120,6 +107,18 @@ treatom_builtin_symbol_function (treptr list)
 {
     treptr arg = treatom_builtin_arg (list);
     return TREATOM_FUN(arg);
+}
+
+/*
+ * (SYMBOL-PACKAGE obj)
+ *
+ * Returns function bound to atom.
+ */
+treptr
+treatom_builtin_symbol_package (treptr list)
+{
+    treptr arg = treatom_builtin_arg (list);
+    return TREATOM_PACKAGE(arg);
 }
 
 /*
@@ -137,19 +136,6 @@ treatom_builtin_set_atom_fun (treptr list)
     cdr = treeval (cdr);
     treatom_set_function (car, cdr);
     return cdr;
-}
-
-/*
- * (%MKFUNCTIONATOM def)
- *
- * Returns new function atom.
- */
-treptr
-treatom_builtin_mkfunctionatom (treptr list)
-{
-
-    return treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_FUNCTION,
-						  trearg_typed (1, TRETYPE_CONS, trearg_get (list), "list expected"));
 }
 
 /*
