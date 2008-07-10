@@ -71,7 +71,9 @@ again:
 
     /* Ignore comments. */
     while (str->last_char == ';') {
-        while (treio_getc (str) >= ' '); /* Read until line end. */
+        do { /* Read until line end. */
+			c = treio_getc (str);
+		} while (c != 10 && c != -1);
         goto again;
     }
 
