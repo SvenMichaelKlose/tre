@@ -1,6 +1,6 @@
 /*
  * nix operating system project tre interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Built-in functions.
  */
@@ -13,5 +13,7 @@
 #define RETURN_IF_NIL(x)    if (x == treptr_nil) return;
 
 #define CRASH()		(*(char *) 0 = 0)
+
+#define STR(x)		#x
 
 #endif	/* #ifndef TRE_XXX_H */

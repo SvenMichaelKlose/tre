@@ -25,10 +25,17 @@
 void
 treerror_msg (treptr expr, const char *prefix, const char *msg, va_list ap)
 {
+	struct tre_stream * s = treio_get_stream ();
+
     fflush (stdout);
     fprintf (stderr, "*** %s: ", prefix);
     vfprintf (stderr, msg, ap);
     fprintf (stderr, ".\n");
+
+	if (treio_readerstreamptr) {
+		fprintf (stderr, "In %s, line %u, column %u.\n",
+						 s->file_name, s->line, s->column);
+	}
 
     if (expr != treptr_invalid) {
 		fprintf (stderr, "Erroraneous object:\n");

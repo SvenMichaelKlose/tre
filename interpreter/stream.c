@@ -21,9 +21,9 @@ FILE* tre_fileio_handles[TRE_FILEIO_MAX_FILES];
 int
 trestream_fopen (treptr path, treptr mode)
 {
-    char      *spath = TREATOM_STRINGP(path);
-    char      *smode = TREATOM_STRINGP(mode);
-    FILE      *file = fopen (spath, smode);
+    char      * spath = TREATOM_STRINGP(path);
+    char      * smode = TREATOM_STRINGP(mode);
+    FILE      * file = fopen (spath, smode);
     unsigned  i;
 
     if (file == NULL)

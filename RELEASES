@@ -65,6 +65,7 @@ most recent changes in unstable releases.
 	- If first element is not a function, print the unevaluated value.
 	- Show built-in functions in backtrace.
 	- Switch to debugger on SIGINT (CTRL+C), except when reading from standard input.
+	- Displays current stream/file name, line and column on warning or error.
 
 	GARBAGE COLLECTOR
 
