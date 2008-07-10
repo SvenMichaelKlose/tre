@@ -17,10 +17,6 @@
   (dolist (i forms)
     (verbose " ~A" (symbol-name i))))
 
-(defun group (l size)
-  (when l
-    (cons (subseq l 0 size) (group (subseq l size) size))))
-
 (defmacro t? (x)
   `(eq t ,x))
 
