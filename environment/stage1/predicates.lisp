@@ -1,6 +1,6 @@
 ;;;; nix operating system project
 ;;;; list processor environment
-;;;; Copyright (C) 2005-2006 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2005-2006,2008 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Predicate functions
 
@@ -17,12 +17,18 @@
   (listp x))
 
 (defun endp (x)
+  "Tests on end of a list (NIL)."
   (eq x nil))
 
 (defun symbolp (x)
+  "Tests if variable points to itself."
   (and (atom x)
 	   (not (symbol-function x))
 	   (eq x (symbol-value x))))
+
+(defun keywordp (x)
+  "Tests if symbol is in the keyword package."
+  (eq (symbol-package x) *keyword-package*))
 
 (define-test "NOT works with NIL"
   ((not nil))

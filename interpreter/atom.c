@@ -23,6 +23,7 @@
 #include "main.h"
 #include "symbol.h"
 #include "print.h"
+#include "thread.h"
 
 #define _GNU_SOURCE
 #include <string.h>
@@ -119,8 +120,12 @@ treatom_init (void)
     tre_package_keyword = treatom_alloc ("", treptr_nil, TRETYPE_PACKAGE, treptr_nil);
 
     treptr_universe = treatom_alloc ("*UNIVERSE*", treptr_nil, TRETYPE_VARIABLE, treptr_nil);
+
     EXPAND_UNIVERSE(t);
+
     EXPAND_UNIVERSE(tre_package_keyword);
+	MAKE_VAR("*KEYWORD-PACKAGE*", tre_package_keyword);
+
     treatom_init_builtins ();
 }
 

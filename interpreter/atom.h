@@ -41,6 +41,17 @@ extern treptr tre_package_keyword;
 #define EXPAND_UNIVERSE(ptr) \
     (TREATOM_VALUE(treptr_universe) = CONS(ptr, TREATOM_VALUE(treptr_universe)))
 
+#define MAKE_HOOK_VAR(var, symbol_name) \
+    var = treatom_alloc (symbol_name, TRECONTEXT_PACKAGE(), TRETYPE_VARIABLE, treptr_nil); \
+    EXPAND_UNIVERSE(var)
+
+#define MAKE_VAR(symbol_name, init) \
+    if (treatom_seek (symbol_name, TRECONTEXT_PACKAGE()) == ATOM_NOT_FOUND) { \
+        EXPAND_UNIVERSE(treatom_alloc (symbol_name, TRECONTEXT_PACKAGE(), TRETYPE_VARIABLE, init)); \
+    } else { \
+        TREATOM_VALUE(treatom_get (symbol_name, TRECONTEXT_PACKAGE())) = init; \
+    }
+
 /* Initialise this section. */
 extern void treatom_init (void);
 

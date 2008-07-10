@@ -145,17 +145,6 @@ tre_main (void)
 	    	break;
 }
 
-#define MAKE_HOOK_VAR(var, symbol_name) \
-	var = treatom_alloc (symbol_name, TRECONTEXT_PACKAGE(), TRETYPE_VARIABLE, treptr_nil); \
-    EXPAND_UNIVERSE(var)
-
-#define MAKE_VAR(symbol_name, init) \
-	if (treatom_seek (symbol_name, TRECONTEXT_PACKAGE()) == ATOM_NOT_FOUND) { \
-    	EXPAND_UNIVERSE(treatom_alloc (symbol_name, TRECONTEXT_PACKAGE(), TRETYPE_VARIABLE, init)); \
-	} else { \
-		TREATOM_VALUE(treatom_get (symbol_name, TRECONTEXT_PACKAGE())) = init; \
-	}
-
 /* Initialise everything. */
 void
 tre_init (void)
