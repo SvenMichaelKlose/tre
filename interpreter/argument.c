@@ -201,7 +201,7 @@ trearg_expand (treptr *rvars, treptr *rvals, treptr iargdef, treptr args,
 	    	while (1) {
                 if (argdef == treptr_nil) {
 		    		if (args != treptr_nil)
-						trewarn (args, "too many &OPTIONAL arguments");
+						trewarn (args, "stale &OPTIONAL keyword in argument definition");
 		    		break;
 				}
 
@@ -236,6 +236,10 @@ trearg_expand (treptr *rvars, treptr *rvals, treptr iargdef, treptr args,
         /* Process &KEY argument. */
 		if (var == tre_atom_key) {
             argdef = CDR(argdef);
+            if (argdef == treptr_nil) {
+		       if (args != treptr_nil)
+				   trewarn (args, "stale &KEY keyword in argument definition");
+			}
 	    	while (argdef != treptr_nil) {
 	        	key = CAR(argdef);
 				init = treptr_nil;
