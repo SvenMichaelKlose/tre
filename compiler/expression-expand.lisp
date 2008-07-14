@@ -15,35 +15,48 @@
   (setf *expexsym-counter* (+ 1 *expexsym-counter*))
   (make-symbol (string-concat "~E" (string *expexsym-counter*))))
 
-;; Expand VM-SCOPE body and have the return value of the
-;; last expression assigned to a gensym which will replace
-;; it in the parent expression.
-(defun expex-vmscope (x)
-  (with (e (expex-body (vm-scope-body x))
-    	 s (expex-sym)
-		 l (car (last e)))
-   	(cons (aif (butlast e)
-			     (nconc ! `((%setq ,s ,l)))
-                 `((%setq ,s ,(car e))))
-		      s)))
+;; Check if an expression is expandable.
+;;
+;; Declines atoms and expressions with meta-forms.
+(defun expex-able? (x)
+  (not (or (atom x)
+           (in? (car x) '%funref 'vm-go 'vm-go-nil '%stack 'quote))))
+
+;; Check if an expression has a return value.
+(defun expex-returnable? (x)
+  (not (vm-jump? x)))
+
+(defun expex-make-return-value (e s)
+  (with (b (butlast e)
+		 l (last e))
+   	(if (expex-returnable? (car l))
+		(nconc b (if (%setq? (car l))
+					(if (%setqret? (car l))
+				        `((%setq ~%ret ,(caddar l)))
+						`((%setq ,(cadar l) ,(caddar l))  ; Assign to return value.
+						  (%setq ~%ret ,(caddar l))))
+				    `((%setq ,s ,@l))))
+		e)))
 
 ;; Transform moved expression to one which assigns its return
 ;; value to a gensym.
 ;;
-;; Returns a CONS with the new head expression in CAR and
+;; Returns a CONS with the new head expressions in CAR and
 ;; the replacement symbol for the parent in CDR.
 (defun expex-assignment (x)
   (if (not (expex-able? x))
 	  (cons nil x)
+  	  (with (s (expex-sym))
   	  (if (vm-scope? x)
-	      (expex-vmscope x) ; Special treatment for VM-SCOPE arguments.
-  	      (with (s (expex-sym)
-				 (head tail) (expex-toplevel x))
-    	    (cons (nconc head
-						 (if (vm-jump? (car tail))
-							 tail
-						     `((%setq ,s ,@tail))))
-		  	      s)))))
+		  (if (vm-scope-body x)
+	          (cons (expex-body (vm-scope-body x) s) ; Special treatment for VM-SCOPE arguments.
+				    s)
+			  (cons '(nil) s))
+  	      (with ((head tail) (expex-expr x))
+    	    (cons (nconc head (if (expex-returnable? (car tail))
+								  `((%setq ,s ,@tail))
+								  tail))
+		  	      s))))))
 
 ;; Move subexpressions out of a parent.
 ;;
@@ -54,37 +67,42 @@
     (values (apply #'nconc pre)
 			main)))
 
-;; Check if an expression is expandable.
-;;
-;; Declines expression for meta-forms.
-(defun expex-able? (x)
-  (not (or (atom x)
-           (in? (car x) '%funref 'vm-go 'vm-go-nil '%stack 'quote))))
-
-;; Expands expression.
+;; Expands standard expression.
 ;;
 ;; The arguments are replaced by gensyms.
-(defun expex-expr (x)
+(defun expex-std-expr (x)
   (with ((pre newargs) (expex-args x))
     (values pre (list (cons (car x) newargs)))))
 
-(defun expex-toplevel (x)
+;; Expand expression depending on type.
+;;
+;; Recurses into LAMBDA-expressions and VM-SCOPEs.
+;; VM-SCOPES are removed.
+(defun expex-expr (x)
   (if (is-lambda? x)
-      (values nil (list `#'(lambda ,(lambda-args (cadr  x))
-						     ,@(expex-body (lambda-body (cadr x))))))
+      (values nil (list `#'(lambda ,(lambda-args x)
+						     ,@(expex-body (lambda-body x)))))
       (if (not (expex-able? x))
 	      (values nil (list x))
   	      (if (vm-scope? x)
 	          (values nil (expex-body (cdr x)))
-	          (expex-expr x)))))
+	          (expex-std-expr x)))))
 
 ;; Entry point.
 ;;
-;; Simply concatenates heads and tails.
-(defun expex-body (x)
+;; Simply concatenates the results of all expression
+;; expansions in a body.
+(defun expex-list (x)
   (when x
-     (with ((head tail) (expex-toplevel (car x)))
-       (nconc head tail (expex-body (cdr x))))))
+     (with ((head tail) (expex-expr (car x)))
+       (nconc head tail (expex-list (cdr x))))))
+
+;; Expand VM-SCOPE body and have the return value of the
+;; last expression assigned to a gensym which will replace
+;; it in the parent expression.
+(defun expex-body (x &optional (s '~%ret))
+  (with (e (expex-list x))
+   	(expex-make-return-value e s)))
 
 (define-expander 'expex)
 (define-expander-macro 'expex %setq (plc val)
@@ -93,4 +111,5 @@
 	  `(%setq ,plc ,val)))
 
 (defun expression-expand (x)
-  (expander-expand 'expex (expex-body x)))
+  ;(expander-expand 'expex (expex-list x)))
+  (expex-body x))
