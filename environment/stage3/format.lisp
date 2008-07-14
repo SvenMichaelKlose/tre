@@ -31,3 +31,6 @@
 
 (defun error (&rest args)
   (%error (apply #'format t args)))
+
+(defun warn (&rest args)
+  (apply #'format t (string-concat "WARNING: " (first args)) (cdr args)))

@@ -50,14 +50,14 @@
 (defun gethash (key h &optional default)
   "Get hash value by key."
   (%with-hash-bucket b i h key
-    (assoc key b :test (%hash-table-test h))))
+    (cdr (assoc key b :test (%hash-table-test h)))))
 
 (defun (setf gethash) (new-value key h &optional default)
   (with (tst (%hash-table-test h))
     (%with-hash-bucket b i h key
       (if (assoc key b :test tst)
         ; Modify existing value.
-        (setf (assoc key b :test tst) new-value)
+        (setf (cdr (assoc key b :test tst)) new-value)
         ; Add new value/key pair.
         (setf (aref (%hash-table-hash h) i) (acons key new-value b)))))
   new-value)

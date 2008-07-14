@@ -9,7 +9,7 @@
   (acons! name val *editor-config*))
 
 (defun editor-conf (name)
-  (assoc name *editor-config*))
+  (cdr (assoc name *editor-config*)))
 
 (editor-conf-add 'tabstop 4)
 (editor-conf-add 'color-text-foreground (ansi-color 'white t))

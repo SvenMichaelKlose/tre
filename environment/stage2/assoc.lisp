@@ -1,6 +1,6 @@
 ;;;; nix operating system project
 ;;;; list processor environment
-;;;; Copyright (C) 2005-2006 Sven Klose <pixel@copei.de>
+;;;; Copyright (C) 2005-2006,2008 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Associative lists
 
@@ -9,26 +9,28 @@
   (when (consp lst)
     (dolist (i lst)
       (if (consp i)
-	(if (funcall (or test eql) key (car i))
-	  (return (cdr i)))
+		  (if (funcall (or test eql) key (car i))
+	  	  	  (return i))
 	(%error "not a pair")))))
 
 (defun assoc-cons (key lst &key test)
   (when (consp lst)
     (dolist (i lst)
       (if (consp i)
-	(if (funcall (or test eql) key (car i))
-	  (return i))
+		  (if (funcall (or test eql) key (car i))
+	  	  (return i))
 	(%error "not a pair")))))
 
+(defun %setf-assoc (new-value key x &key test)
+  (if (listp x)
+      (when x
+		(if (funcall (or test eql) key (car x))
+            (rplaca lst new-value)
+			(%setf-assoc new-value key (cdr x) :test test)))
+	  (%error "not a pair")))
+
 (defun (setf assoc) (new-value key lst &key test)
-  (when (consp lst)
-    (dolist (i lst)
-      (if (consp i)
-	(when (funcall (or test eql) key (car i))
-          (rplacd i new-value)
-	  (return new-value))
-	(%error "not a pair")))))
+  (%setf-assoc new-value key lst :test test))
 
 (defun acons (key val lst)
   "Prepend key/value pair to associative list."
@@ -40,7 +42,6 @@
 
 (defun copy-alist (lst)
   "Copy associative list."
-  (let ((new nil))
-    (do ((i lst (cdr lst)))
-        ((endp i) new)
-      (setf end (append! end (cons (car i) (cdr i)))))))
+  (mapcar #'((x y)
+			   (cons x y))
+		  lst))

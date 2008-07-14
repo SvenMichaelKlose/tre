@@ -8,7 +8,7 @@
   (in? e :constructor))
 
 (defun %struct-make-symbol (name options)
-  (aif (assoc :constructor options)
+  (aif (cdr (assoc :constructor options))
      (car !)
      (make-symbol (string-concat "MAKE-" (symbol-name name)))))
 
@@ -82,7 +82,7 @@
   (acons! name def *struct-defs*))
 
 (defun %struct-def (name)
-  (assoc name *struct-defs*))
+  (cdr (assoc name *struct-defs*)))
 
 (defun %struct-name (obj)
   (if (not (arrayp obj))
@@ -93,15 +93,6 @@
   (with-queue form
     (dolist (i (%struct-def name) (queue-list form))
       (enqueue form (car i)))))
-
-(defmacro with-struct (name s &rest body)
-  (with-gensym g
-    `(with (,g ,s
-			,@(mapcan
-				#'((x)
-				,x (,(make-symbol (string-concat (symbol-name name) "-" (symbol-name x) ,g)))
-				(%struct-fields s))))
-	   ,@body)))
 
 (defmacro defstruct (name &rest fields-and-options)
   "Define new structure."

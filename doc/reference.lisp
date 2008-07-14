@@ -606,7 +606,7 @@ LOOPS
 ASSOC LISTS
 
     (ASSOC key list) - function/place
-	Looks up entry in associative list.
+	Looks up pair in associative list.
 
     (ASSOC-CONS key list) - function
 	Like ASSOC but returning the cons containing the key and the value.
@@ -968,11 +968,6 @@ INTERNAL FUNCTIONS
 
     (%SET-ATOM-FUN var fun) - Built-in special form
 	Assign new function to a variable's function slot.
-
-    (%MKFUNCTIONATOM function_definition) - Built-in function
-	Returns a function. function_definition must be a cons. CAR
-        must contain the argument definition and CDR must contain the
-	function body.
 
     (%FOPEN file mode) - Built-in function
 	Opens a file using fopen() (see Standard-C library documentation

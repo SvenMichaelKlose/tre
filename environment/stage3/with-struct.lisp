@@ -6,5 +6,5 @@
   `(let (,@(mapcar #'((d)
 		                (let ((n (%struct-field-name d)))
 	                      `(,n (,(%struct-getter-symbol typ n) ,strct))))
-	               (assoc typ *struct-defs*)))
+	               (cdr (assoc typ *struct-defs*))))
      ,@body))

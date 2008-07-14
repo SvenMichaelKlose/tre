@@ -5,7 +5,7 @@
 
 (defun documentation (sym)
   "Returns documentation string of function or macro."
-  (aif (assoc sym *documentation*)
+  (aif (cdr (assoc sym *documentation*))
 	(format t "Documentation for ~A:~%~A~%" sym !)
 	(format t "No documentation for ~A. Sorry.~%" sym ))
   (awhen (symbol-function sym)
