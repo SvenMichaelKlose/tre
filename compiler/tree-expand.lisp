@@ -47,7 +47,7 @@
   		   (when x
   			 (if (consp (car x))
 				 (progn
-				   (setf (assoc (car x) lst) first-label)
+				   (setf (cdr (assoc (car x) lst) first-label))
 			  	   (get-label-sequence (cdr x) first-label))
 	    		 (find-label-sequence x))))
 
@@ -60,7 +60,10 @@
 	(values label-list (find-label-sequence x))))
 
 (defun replace-labels (x replacement-list)
-  (tree-walk x :ascending #'((elm) (aif (assoc elm replacement-list) !  elm))))
+  (tree-walk x :ascending
+				 #'((elm)
+					  (or (cdr (assoc elm replacement-list))
+					      elm))))
 
 (defun compress-labels (x)
   (when x
