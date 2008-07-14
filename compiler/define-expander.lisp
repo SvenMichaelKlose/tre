@@ -13,6 +13,9 @@
   pre
   post)
 
+(defun expander-get (name)
+  (cdr (assoc name *expanders*)))
+
 (defun define-expander (expander-name &optional (pre nil) (post nil) (pred nil) (call nil))
   (with (e  (make-expander :macros nil
 						   :pred pred
@@ -22,18 +25,18 @@
     (acons! expander-name e *expanders*)
     (unless pred
       (setf (expander-pred e) #'(lambda (x)
-							      (assoc x (expander-macros e)))))
+							      (cdr (assoc x (expander-macros e))))))
     (unless call
       (setf (expander-call e) #'(lambda (fun x)
-                                  (apply (assoc fun (expander-macros e)) x))))))
+                                  (apply (cdr (assoc fun (expander-macros e))) x))))))
 
 (defmacro define-expander-macro (expander-name name args body)
-   (unless (atom name)
-     (error "Atom expected instead of ~A for expander ~A." name expander-name))
+  (unless (atom name)
+    (error "Atom expected instead of ~A for expander ~A." name expander-name))
   `(acons! ',name
 			#'(,args
 			    ,@(macroexpand body))
-		   (expander-macros (assoc ,expander-name *expanders*))))
+		   (expander-macros (expander-get ,expander-name))))
 
 (defun repeat-while-changes (fun x)
  (with (new (funcall fun x))
@@ -42,7 +45,7 @@
 	   (repeat-while-changes fun new))))
 
 (defun expander-expand (expander-name expr)
-  (with (e       (assoc expander-name *expanders*))
+  (with (e  (expander-get expander-name))
     (setq *macrop-diversion* (expander-pred e)
 	      *macrocall-diversion* (expander-call e))
 	(funcall (expander-pre e))
@@ -53,4 +56,4 @@
 	  (funcall (expander-post e)))))
 
 (defun expander-has-macro? (expander-name macro-name)
-  (assoc macro-name (expander-macros (assoc expander-name *expanders*))))
+  (cdr (assoc macro-name (expander-macros (expander-get expander-name)))))
