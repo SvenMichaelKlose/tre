@@ -16,7 +16,7 @@ most recent changes in unstable releases.
 	- Hexadecimal notation (#x<NUMBER>) introduced.
 	- Dot-notation for CONSes: Dot must must follow a whitespace or it's part
       the symbol.
-	- Lexical scoping fixed.
+	- Lexical scoping removed.
 	- Argument type checks for built-in functions added.
 
 	- Raw memory access and allocation (Mew: %%SET, %%GET, %MALLOC, %FREE)
@@ -54,6 +54,7 @@ most recent changes in unstable releases.
 	- IN?, IN=?: New macros check if element occurs in the rest of its arguments.
 	- MAKE-STRING-STREAM: Formerly MAKE-STRING-OUTPUT-STREAM. Now bidirectional.
 	- GET-STRING-STREAM: Empties the stream.
+	- SYMBOL-PACKAGE: New built-in function returns package of a symbol.
 
 	- EXEC, FORK, WAIT: New functions for process execution.
 
