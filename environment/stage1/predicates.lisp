@@ -28,7 +28,9 @@
 
 (defun keywordp (x)
   "Tests if symbol is in the keyword package."
-  (eq (symbol-package x) *keyword-package*))
+  (and (atom x)
+	   (eq (symbol-package x)
+		   *keyword-package*)))
 
 (define-test "NOT works with NIL"
   ((not nil))
