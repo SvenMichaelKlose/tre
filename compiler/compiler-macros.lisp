@@ -59,7 +59,7 @@
 ;;; is expanded.
 
 (define-compiler-macro go (label)
-  (aif (assoc label *tagbody-replacements*)
+  (aif (cdr (assoc label *tagbody-replacements*))
     `(vm-go ,!)
     (with-gensym g
       (acons! label g *tagbody-replacements*)
@@ -70,7 +70,7 @@
      ,@(mapcar #'((x)
  	                (if (consp x)
 		     		    x
-		     			(aif (assoc x *tagbody-replacements*)
+		     			(aif (cdr (assoc x *tagbody-replacements*))
 		       				!
 		       				x)))
                args)
@@ -80,7 +80,7 @@
   `(vm-scope ,@(vars-to-identity body)))
 
 (defun lookup-create-gensym (block-name)
-  (or (assoc block-name *blockname-replacements*)
+  (or (cdr (assoc block-name *blockname-replacements*))
       (with-gensym g
         (acons! block-name g *blockname-replacements*)
         g)))
@@ -99,7 +99,7 @@
                       ,@(if (vm-jump? (car tail))
 						    tail
 						    `((%setq ~%ret ,@tail)))))
-             (bname (assoc block-name *blockname-replacements*)))
+             (bname (cdr (assoc block-name *blockname-replacements*))))
         (if bname
             (nconc ret (list bname) '((identity ~%ret)))
             (nconc ret '((identity ~%ret)))))
