@@ -99,6 +99,8 @@ trewarn (treptr expr, const char *msg, ...)
 
     treerror_macroexpansion ();
     treerror_msg (treptr_invalid, "WARNING", msg, ap);
+
+    tredebug ();
 }
 
 /*
