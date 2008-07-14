@@ -27,28 +27,23 @@
     (cond
       ; No sublevel. Splice evaluated QUASIQUOTE-SPLICE expression.
       ((= sublevel 0)
-          (with (x (cadar e))
-               (cond
-                 ; Ignore NIL evaluation.
-                 ((not x)
-                      (quote-expand-0 (cdr e) sublevel))
-                 ((atom x)
-                      (error "QUASIQUOTE-SPLICE: list expected"))
-                 (t   `(append ,x
-                               ,(quote-expand-1 (cdr e) sublevel))))))
+          `(append ,(cadar e)
+                   ,(quote-expand-1 (cdr e) sublevel)))
 
       (t  (quasiquote-subexpand 'QUASIQUOTE-SPLICE e sublevel))))
 
 ;; Expand BACKQUOTE arguments.
 (defun quote-expand-1 (e sublevel)
     (cond
+	  ((endp e))
+
       ; Return atom as is.
       ((atom e)
-          `(quote e))
+          `(%quote ,e))
 
       ; Return element if it's not a cons.
       ((atom (car e))
-          `(cons (quote ,(car e))
+          `(cons (%quote ,(car e))
                 ,(quote-expand-1 (cdr e) sublevel)))
 
       ; Do QUASIQUOTE expansion.
@@ -68,7 +63,7 @@
     (cond
       ; Return atom as is.
       ((atom e)
-          `(quote e))
+          `(%quote e))
 
       ; Enter new backquote level.
       ((eq (car e) 'BACKQUOTE)
@@ -81,12 +76,19 @@
 (defun quote-expand (e)
   (quote-expand-0 e 0))
 
+(defun simple-quote-expand (x)
+  (when x
+	(if (atom x)
+		`(%quote ,x)
+		`(cons ,(simple-quote-expand (car x))
+		       ,(simple-quote-expand (cdr x))))))
+
 (defun backquote-expand (l)
   (tree-walk l
 	:ascending
 	  #'((x)
-		   (if (backquote? x)
-			 (quote-expand x)
-			 x))
-	:dont-ascend-if
-	  #'quote?))
+		   (if (quote? x)
+			   (simple-quote-expand (cdr x))
+		   	   (if (backquote? x)
+			  	   (quote-expand (cdr x))
+			       x)))))
