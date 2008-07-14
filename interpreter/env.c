@@ -1,6 +1,6 @@
 /*
  * nix operating system project tre interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Environment
  *
@@ -37,6 +37,7 @@ treenv_create (treptr a)
     TREATOM_DETAIL(a) = (void *) 
         CONS(TRECONTEXT_ENV_CURRENT(), CONS(treptr_nil, treptr_nil));
 }
+
 /* Update bindings of environment. */
 void
 treenv_update (treptr env, treptr atoms, treptr values)
@@ -52,7 +53,11 @@ treenv_update (treptr env, treptr atoms, treptr values)
  * Argument bindings
  */
 
-/* Bind argument list to atoms. */
+/* Bind argument list to atoms.
+ *
+ * Pushes values of atoms in 'la' into their binding lists and sets
+ * values in 'lv'.
+ */
 void
 treenv_bind (treptr la, treptr lv)
 {
@@ -104,7 +109,10 @@ treenv_bind_sloppy (treptr la, treptr lv)
     }
 }
 
-/* Unbind argument list from atoms. */
+/* Unbind argument list from atoms.
+ *
+ * Restores values of atoms in 'la', popping the off their binding lists.
+ */
 void
 treenv_unbind (treptr la)
 {
@@ -118,47 +126,4 @@ treenv_unbind (treptr la)
         TREATOM_BINDING(car) = CDR(bding);
         TRELIST_FREE_EARLY(bding);
     }
-}
-
-/*
- * Environment bindings
- */
-
-treptr treenv_scope_buffer;
-
-/* Bind parent environments until one matches 'parent'. */
-void
-treenv_bind_env (treptr env, treptr parent)
-{
-	treptr x;
-
-    RETURN_IF_NIL(env);
-    RETURN_IF_NIL(TREENV_PARENT(env));
-
-	/* Read scope environments into list, so it can be reversed into the right order. */
-	treenv_scope_buffer = treptr_nil;
-	tregc_push (treenv_scope_buffer);
-
-    for (env = TREENV_PARENT(env); env != treptr_nil && env != parent; env = TREENV_PARENT(env))
-		TRELIST_PUSH(treenv_scope_buffer, env);
-
-	_DOLIST(x, treenv_scope_buffer) {
-		env = CAR(x);
-        treenv_bind (TREENV_SYMBOLS(env), TREENV_BINDINGS(env));
-	}
-
-	tregc_pop ();
-	trelist_free_toplevel (treenv_scope_buffer);
-	treenv_scope_buffer = treptr_nil;
-}
-
-/* Unbind parent environments until one matches 'parent'. */
-void
-treenv_unbind_env (treptr env, treptr parent)
-{
-    RETURN_IF_NIL(env);
-    RETURN_IF_NIL(TREENV_PARENT(env));
-
-    for (env = TREENV_PARENT(env); env != treptr_nil && env != parent; env = TREENV_PARENT(env))
-        treenv_unbind (TREENV_SYMBOLS(env));
 }

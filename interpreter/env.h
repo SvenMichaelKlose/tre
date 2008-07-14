@@ -1,6 +1,6 @@
 /*
  * nix operating system project tre interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Utility functions
  */
@@ -36,16 +36,5 @@ extern void treenv_bind_sloppy (treptr atoms, treptr values);
 
 /* Unbind each atom. */
 extern void treenv_unbind (treptr atoms);
-
-/*
- * Environment bindings
- */
-
-extern treptr treenv_scope_buffer;
-
-/* Bind parent environments until one matches 'parent'. */
-extern void treenv_bind_env (treptr env, treptr parent);
-/* Unbind parent environments until one matches 'parent'. */
-extern void treenv_unbind_env (treptr env, treptr parent);
 
 #endif	/* #ifndef TRE_ENV_H */

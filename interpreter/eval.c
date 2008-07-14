@@ -64,22 +64,11 @@ treeval_funcall (treptr func, treptr expr, bool do_argeval)
     env_parent = TRECONTEXT_ENV_CURRENT();
     TRECONTEXT_ENV_CURRENT() = env;
     old_parent = env_parent;
-    while (env_parent && env == env_parent)
-        env_parent = TREENV_PARENT(env_parent);
 
     /* Expand argument keywords. */
     trearg_expand (&expforms, &expvals, forms, args, do_argeval);
     tregc_push (expforms);
     tregc_push (expvals);
-
-    /* Prepare environment. */
-    if (do_argeval) {
-        /* Bind new parent environments. */
-        treenv_bind_env (env, env_parent);
-
-        /* Update function's environment. */
-        treenv_update (env, expforms, expvals);
-    }
 
     /* Bind arguments. */
     treenv_bind (expforms, expvals);
@@ -90,8 +79,6 @@ treeval_funcall (treptr func, treptr expr, bool do_argeval)
 
     /* Restore former environment. */
     treenv_unbind (expforms);
-    if (do_argeval)
-        treenv_unbind_env (env, env_parent);
     TRECONTEXT_ENV_CURRENT() = old_parent;
 
     /* Free argument list. */

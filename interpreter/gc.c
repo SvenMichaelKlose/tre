@@ -1,6 +1,6 @@
 /*
  * nix operating system project tre interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Garbage collection.
  */
@@ -188,7 +188,6 @@ tregc_mark (void)
     tregc_trace_expr_toplevel (tre_lists_free);
     tregc_trace_expr_toplevel (tre_atoms_free);
     tregc_trace_expr_toplevel (tre_numbers_free);
-    tregc_trace_expr_toplevel (treenv_scope_buffer);
 
     tregc_trace_atom (tre_atom_evaluated_go);
     tregc_trace_atom (tre_atom_evaluated_return_from);
