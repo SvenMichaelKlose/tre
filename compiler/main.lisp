@@ -15,7 +15,6 @@
 (env-load "../compiler/define-expander.lisp")
 (env-load "../compiler/compiler-macros.lisp")
 
-(env-load "../compiler/stack-arguments.lisp")
 (env-load "../lib/tree-walk.lisp")
 (env-load "../compiler/funinfo.lisp")
 (env-load "../compiler/subatomic.lisp")
