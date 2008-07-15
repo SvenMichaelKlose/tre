@@ -20,7 +20,7 @@
 ;; Declines atoms and expressions with meta-forms.
 (defun expex-able? (x)
   (not (or (atom x)
-           (in? (car x) '%funref 'vm-go 'vm-go-nil '%stack 'quote))))
+           (in? (car x) '%funref 'vm-go 'vm-go-nil '%stack '%quote '%transpiler-string))))
 
 ;; Check if an expression has a return value.
 (defun expex-returnable? (x)
@@ -35,7 +35,7 @@
 				        `((%setq ~%ret ,(caddar l)))
 						`((%setq ,(cadar l) ,(caddar l))  ; Assign to return value.
 						  (%setq ~%ret ,(caddar l))))
-				    `((%setq ,s ,@l))))
+				    `((%setq ,s ,@(or l '(nil))))))
 		e)))
 
 ;; Transform moved expression to one which assigns its return
@@ -63,16 +63,33 @@
 ;; Returns the head of moved expressions and a new parent with
 ;; replaced arguments.
 (defun expex-args (x)
-  (with ((pre main) (assoc-splice (mapcar #'expex-assignment (cdr x))))
+  (with ((pre main) (assoc-splice (mapcar #'expex-assignment x)))
     (values (apply #'nconc pre)
 			main)))
+
+(defun expex-argexpand-do (fun args)
+  (mapcar #'((x)
+			   (if (and (consp x)
+						(eq '&rest (car x)))
+				   (simple-quote-expand (cdr x))
+				   x))
+		  (cdrlist (argument-expand (function-arguments (symbol-function fun)) args t))))
+
+(defun expex-argexpand (fun args)
+(print `(,fun ,@args))
+  (if (and (atom fun)
+		   (functionp (symbol-function fun)))
+	  (expex-argexpand-do fun args)
+	  args))
 
 ;; Expands standard expression.
 ;;
 ;; The arguments are replaced by gensyms.
 (defun expex-std-expr (x)
-  (with ((pre newargs) (expex-args x))
-    (values pre (list (cons (car x) newargs)))))
+  (with (argexp (expex-argexpand (car x) (cdr x))
+		 (pre newargs) (expex-args argexp))
+    (values pre
+			(list (cons (car x) newargs)))))
 
 ;; Expand expression depending on type.
 ;;
