@@ -43,22 +43,29 @@
                              (funinfo-add-free-var fi var)
                              (funinfo-free-var-pos fi var))))))
 
-(defun is-stackvar? (var fi)
+(defun is-stackvar? (var fi locals)
   "Check if a variable is on the stack."
   (and (atom var)
     (dolist (sl (funinfo-env fi))
-      (when (and sl (find var sl))
+      (when (and sl
+				 (find var sl)
+				 (not (find var locals)))
         (return t)))))
 
 (defun vars-to-stackops (body fi)
   "Replaces variables by stack operations. Returns modified body.
    Free variables are added to free-vars of the funinfo."
-  (tree-walk body
-    :ascending
-      #'((e)
-         (if (is-stackvar? e fi)
-             (make-stackop e fi)
-			 e))))
+  (with (locals nil)
+    (tree-walk body
+      :ascending
+        #'((e)
+		   (if (is-lambda? e) ; Add variables to ignore in subfunctions.
+			   (progn
+				 (setf locals (append locals (lambda-args e)))
+				 e)
+           	   (if (is-stackvar? e fi locals)
+               	   (make-stackop e fi)
+			   	   e))))))
 
 ;;; LAMBDA inlining
 
