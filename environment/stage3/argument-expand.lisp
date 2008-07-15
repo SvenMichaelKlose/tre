@@ -100,14 +100,14 @@
 			    (with  (w (make-symbol (symbol-name (first vals)))
 			    		k (assoc w key-args))
 				  (if k
-			          (and (rplacd k (second vals)) ; check if key-value exists.
-						   (exp-main def (cddr vals)))
+			          (progn
+						(rplacd k (second vals)) ; check if key-value exists.
+						(exp-main def (cddr vals)))
 					  (exp-main-non-key def vals))))
 
 		 exp-rest
 		   #'((def vals)
 				(setf no-static '&rest)
-				(check-val vals)
   			    (setf rest-arg (list (cons (first def)
 										   (cons '&rest
 												 vals))))
@@ -199,6 +199,16 @@
 (define-test "argument expansion can handle &REST keyword without apply-values"
   ((equal (argument-expand '(a b c &rest d) nil nil)
 	    '(a b c d)))
+  t)
+
+(define-test "argument expansion can handle missing &REST"
+  ((equal (argument-expand '(a b &rest c) '(23 5) t)
+	  '((a . 23) (b . 5) (c &rest))))
+  t)
+
+(define-test "argument expansion can handle missing &REST without apply-values"
+  ((equal (argument-expand '(a b &rest c) '(23 5) nil)
+	  '(a b c)))
   t)
 
 (define-test "argument expansion can handle &OPTIONAL keyword"
