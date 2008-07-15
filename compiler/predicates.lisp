@@ -2,6 +2,10 @@
 ;;;; lisp compiler
 ;;;; Copyright (c) 2006-2008 Sven Klose <pixel@copei.de>
 
+(defun %stack? (x)
+  (and (consp x)
+	   (eq '%STACK (car x))))
+
 (defun %setq? (x)
   (and (consp x)
 	   (eq '%SETQ (car x))))

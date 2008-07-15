@@ -80,8 +80,10 @@
   (when x
 	(if (atom x)
 		`(%quote ,x)
-		`(cons ,(simple-quote-expand (car x))
-		       ,(simple-quote-expand (cdr x))))))
+		(if (%stack? x)
+			x
+		    `(cons ,(simple-quote-expand (car x))
+		           ,(simple-quote-expand (cdr x)))))))
 
 (defun backquote-expand (l)
   (tree-walk l
