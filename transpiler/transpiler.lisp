@@ -27,12 +27,16 @@
   std-macro-renamer
   std-macro-expander
   macro-expander
-  function-args
-  separator)
+  separator
+  (function-args nil)
+  (wanted-functions nil))
 
 (defun create-transpiler (&rest args)
   (with (tr (apply #'make-transpiler args))
-    (define-expander (transpiler-preprocessor tr))
+    (define-expander (transpiler-preprocessor tr)
+					 nil nil
+					 nil #'(lambda (fun x)
+							 (transpiler-preprocessor-call tr fun x)))
     (define-expander (transpiler-std-macro-renamer tr))
     (define-expander (transpiler-std-macro-expander tr))
 	(define-expander (transpiler-macro-expander tr)
@@ -40,12 +44,6 @@
 					 nil #'(lambda (fun x)
 							 (transpiler-macrocall tr fun x)))
 	tr))
-
-;; Call expression expander.
-(defun transpiler-lambda-expand (x)
-  (with ((forms inits)  (values nil nil) ; (copy-tree (function-arguments fun)))
-         fi             (make-funinfo :env (list forms nil)))
-    (lambda-embed-or-export x fi nil)))
 
 ;;; OPERATOR EXPANSION
 
@@ -70,10 +68,13 @@
 (defmacro define-transpiler-preprocessor (tr name args body)
   `(define-expander-macro ,(transpiler-preprocessor (eval tr)) ,name ,args ,body))
 
+(defun transpiler-preprocessor-call (tr fun x)
+  (apply (cdr (assoc fun (expander-macros (expander-get (transpiler-preprocessor tr))))) tr x))
+
 (defun transpiler-encapsulate-strings (form)
   (maptree #'((x)
                (if (stringp x)
-                   `(%transpiler-string ,x)
+                   (list '%transpiler-string x)
                    x))
            form))
 
@@ -88,7 +89,7 @@
 
 ;;;; STANDARD MACRO EXPANSION
 
-(defun transpiler-std-macroexpand (x)
+(defun transpiler-macroexpand (x)
   (repeat-while-changes #'((x) (*macroexpand-hook* x)) x))
 
 ;;;; EXPANSION OF RENAMED STANDARD MACROS
@@ -104,18 +105,31 @@
 							  ,args
 		 ,body))))
 
+;;;; LAMBDA EXPANSION
+
+(defun transpiler-lambda-expand (x)
+  (with ((forms inits)  (values nil nil) ; (copy-tree (function-arguments fun)))
+         fi             (make-funinfo :env (list forms nil)))
+    (lambda-embed-or-export x fi nil)))
+
 ;;;; ARGUMENT EXPANSION
 
 (defun transpiler-expand-argdef (tr x)
   (or (cdr (assoc x (transpiler-function-args tr)))
       (function-arguments (symbol-function x))))
 
+(defun transpiler-add-wanted-function (tr fun)
+  (when (not (member fun (transpiler-wanted-functions tr)))
+	(push fun (transpiler-wanted-functions tr))))
+
 (defun transpiler-expand-args (tr x)
-  (with (d (transpiler-expand-argdef tr (first (third x))))
+  (with (fname  (first (third x))
+		 d (transpiler-expand-argdef tr fname))
 	(if d
         (cdrlist (argument-expand d (cdr (third x)) t))
-		(or (format t "Unknown function ~A~%" (third x))
-		    (cdr (third x))))))
+		(progn
+		   (transpiler-add-wanted-function tr fname)
+		   (cdr (third x))))))
 
 (defun transpiler-finalize-sexprs (tr x)
   (when x
@@ -132,16 +146,12 @@
 						  (transpiler-finalize-sexprs tr (cdr x))))
 	          (if (and (identity? e) (eq '~%ret (second e))) ; Remove (IDENTITY ~%RET).
 		          (transpiler-finalize-sexprs tr (cdr x))
-	              (if (and (%setq? e) (consp (third e)) (atom (first (third e)))) ; Expand arguments to function.
-					  (cons `(%setq ,(second e) (,(first (third e)) ,@(transpiler-expand-args tr e)))
-							(cons separator
-								  (transpiler-finalize-sexprs tr (cdr x))))
-				      ; Just copy with seperator. Make return-value assignment if missing.
-		              (cons (if (and (consp e) (not (or (vm-jump? e) (%setq? e))))
-								`(%setq ~%ret ,e)
-								e)
-							(cons separator
-								  (transpiler-finalize-sexprs tr (cdr x)))))))))))
+				  ; Just copy with seperator. Make return-value assignment if missing.
+		          (cons (if (and (consp e) (not (or (vm-jump? e) (%setq? e))))
+							`(%setq ~%ret ,e)
+							e)
+						(cons separator
+							  (transpiler-finalize-sexprs tr (cdr x))))))))))
 
 ;;;; TRANSPILER-MACRO EXPANDER
 
@@ -225,24 +235,65 @@
 
 ;;;; TOPLEVEL
 
-(defun transpiler-transpile (tr forms)
+(defun transpiler-pass (tr forms)
+(print
   (transpiler-concat-strings
     (transpiler-to-string tr
       (mapcar #'(lambda (x)
                   (funcall
 				    (compose #'(lambda (x)
+  								 (format t "Transpiler macro expansion...~%")
 								 (expander-expand (transpiler-macro-expander tr) x))
 						     #'(lambda (x)
+  								  (format t "Argument expansion and finalizing expressions...~%")
 								 (transpiler-finalize-sexprs tr x))
 						     #'list
 						     #'(lambda (x)
+  								 (format t "Standard-macro expansion...~%")
 								 (expander-expand (transpiler-std-macro-expander tr) x))
-						     #'transpiler-encapsulate-strings
-						     #'expression-expand
-						     #'transpiler-lambda-expand
-						     #'compiler-macroexpand
-						     #'transpiler-std-macroexpand
+							 #'(lambda (x)
+  								 (format t "Encapsulating...~%")
+						         (transpiler-encapsulate-strings x))
+#'print
+							 #'(lambda (x)
+  								 (format t "Expression expansion...~%")
+						         (expression-expand x))
+#'print
+							 #'(lambda (x)
+  								 (format t "Lamda expansion...~%")
+						     	 (transpiler-lambda-expand x))
+							 #'(lambda (x)
+  								 (format t "Quote expansion...~%")
+						         (backquote-expand x))
+							 #'(lambda (x)
+  								 (format t "Compiler-macro expansion...~%")
+						     	 (compiler-macroexpand x))
+							 #'(lambda (x)
+  								 (format t "Macro expansion...~%")
+						         (transpiler-macroexpand x))
 						     #'(lambda (x)
+  								 (format t "Standard-macro renaming...~%")
 								 (expander-expand (transpiler-std-macro-renamer tr) x)))
 				    x))
 		      forms))))
+)
+
+(defun transpiler-wanted (tr verbose)
+  (mapcan #'(lambda (x)
+			  (with (fun (symbol-function x))
+				(when (functionp fun)
+				(if fun
+					(or (and verbose (format t "Processing ~A~%" (list x)))
+			  	    	(list (transpiler-pass tr `((defun ,x ,(function-arguments fun)
+												      ,@(function-body fun))))))
+					(and verbose (format t "Unknown function ~A~%" (list x)))))))
+		  (append (transpiler-wanted-functions tr) *universe*)))
+
+(defun transpiler-transpile (tr forms)
+  (format t "Pass 1...~%")
+  (transpiler-pass tr forms)
+  (transpiler-wanted tr t)
+  (format t "Pass 2...~%")
+  (transpiler-concat-strings
+	(list (transpiler-pass tr forms)
+		  (transpiler-wanted tr t))))
