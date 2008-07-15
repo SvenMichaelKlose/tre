@@ -75,6 +75,8 @@ trestring_builtin_concat (treptr list)
 
     /* Sum up length of all elements in the list. */
     DOLIST(p, list) {
+		if (CAR(p) == treptr_nil)
+			continue;
         car = trearg_typed (argnum++, TRETYPE_STRING, CAR(p), NULL);
 	   	len += strlen (TREATOM_STRINGP(car));
     }
@@ -89,8 +91,11 @@ trestring_builtin_concat (treptr list)
 	}
     newp = &news->str;
 
-    DOLIST(p, list)
+    DOLIST(p, list) {
+		if (CAR(p) == treptr_nil)
+			continue;
 		newp = stpcpy (newp, TREATOM_STRINGP(CAR(p)));
+	}
 
     /* Return new string atom. */
     atom = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_STRING, treptr_nil);

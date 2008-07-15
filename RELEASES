@@ -55,6 +55,7 @@ most recent changes in unstable releases.
 	- MAKE-STRING-STREAM: Formerly MAKE-STRING-OUTPUT-STREAM. Now bidirectional.
 	- GET-STRING-STREAM: Empties the stream.
 	- SYMBOL-PACKAGE: New built-in function returns package of a symbol.
+	- STRING-CONCAT: Ignores NIL.
 
 	- EXEC, FORK, WAIT: New functions for process execution.
 
