@@ -106,7 +106,6 @@ trespecial_macro (treptr list)
     treptr  f;
     treptr  expr = trelist_copy (list);
 
-    trearg_apply_keyword_package (CAR(expr));
     f = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_MACRO, expr);
     treenv_create (f);
 
@@ -123,8 +122,6 @@ trespecial_special (treptr list)
 {
     treptr  expr = trelist_copy (list);
     treptr  ret;
-
-    trearg_apply_keyword_package (CAR(expr));
 
     /* Create macro atom. */
     tregc_push (expr);
@@ -358,12 +355,12 @@ trespecial_function_from_expr (treptr expr)
         return treerror (expr, "argument list and body missing");
     if (TREPTR_IS_ATOM(CAR(past_lambda)) && CAR(past_lambda) != treptr_nil)
         return treerror (expr, "argument list expected instead of atom");
+
     past_lambda = trelist_copy (past_lambda);
     tregc_push (past_lambda);
     args = CAR(past_lambda);
     body = CDR(past_lambda);
 
-    trearg_apply_keyword_package (args);
     f = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_FUNCTION, past_lambda);
     tregc_retval (f);
     treenv_create (f);

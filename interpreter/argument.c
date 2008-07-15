@@ -249,7 +249,7 @@ trearg_expand (treptr *rvars, treptr *rvals, treptr iargdef, treptr args,
  				}
 
                 /* Get position of key in argument list. */
-				kpos = (unsigned) trelist_position (key, args);
+				kpos = (unsigned) trelist_position_name (key, args);
 	 			if (kpos != (unsigned) -1) {
 		    		/* Get argument after key. */
 		    		svals = trelist_nth (args, kpos + 1);
@@ -312,31 +312,6 @@ treptr
 trearg_get_keyword (treptr a)
 {
     return treatom_get (TREATOM_NAME(a), tre_package_keyword);
-}
-
-void
-trearg_apply_keyword_package (treptr args)
-{
-    treptr  a;
-
-    if (args == treptr_nil)
-		return;
-
-    if (TREPTR_IS_CONS(CAR(args)))
-		trearg_apply_keyword_package (CAR(args));
-    else {
-		if (CAR(args) == tre_atom_key) {
-	    	DOLIST(a, CDR(args)) {
-				if (TREPTR_IS_CONS(CAR(a)))
-		    		RPLACA(CAR(a), trearg_get_keyword (CAAR(a)));
-	        	else
-		    		RPLACA(a, trearg_get_keyword (CAR(a)));
-	    	}
-	    	return;
-		}
-    }
-
-    trearg_apply_keyword_package (CDR(args));
 }
 
 void

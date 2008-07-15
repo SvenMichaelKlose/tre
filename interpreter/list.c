@@ -269,6 +269,25 @@ trelist_position (treptr elt, treptr l)
     return -1;
 }
 
+
+/* Get zero-indexed position of element in list by symbol name. */
+int
+trelist_position_name (treptr elt, treptr l)
+{
+    int c = 0;
+	const char * eltname = TREATOM_NAME(elt);
+
+    while (l != treptr_nil) {
+		if (TREPTR_IS_VARIABLE(CAR(l)) && ! strcmp (TREATOM_NAME(CAR(l)), eltname))
+	    	return c;
+
+        l = CDR(l);
+		c++;
+    }
+
+    return -1;
+}
+
 /* Get length of a pure list. */
 unsigned
 trelist_length (treptr p)

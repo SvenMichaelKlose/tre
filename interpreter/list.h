@@ -85,6 +85,7 @@ extern treptr trelist_copy_tree (treptr);
 extern treptr trelist_delete (unsigned, treptr);
 extern void trelist_append (treptr *lst, treptr lst2);
 extern int trelist_position (treptr elt, treptr lst);
+extern int trelist_position_name (treptr elt, treptr lst);
 extern unsigned trelist_length (treptr);
 extern bool trelist_equal (treptr, treptr);
 extern treptr trelist_nth (treptr, unsigned);

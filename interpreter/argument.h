@@ -20,9 +20,6 @@ extern void trearg_expand (treptr *rvars, treptr *rvals,
 
 extern void trearg_init (void);
 
-/* Return atom with same symbol in keyword package. */
-extern void trearg_apply_keyword_package (treptr atom);
-
 extern treptr tre_atom_rest;
 
 #endif 	/* #ifndef TRE_ARGUMENTS_H */
