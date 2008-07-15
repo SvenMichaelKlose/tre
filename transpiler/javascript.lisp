@@ -20,9 +20,10 @@
 (defmacro define-js-preprocessor (name args body)
   `(define-transpiler-preprocessor *js-transpiler* ,name ,args ,body))
 
-(define-js-preprocessor defun (args &rest body)
+(define-js-preprocessor defun (tr name &rest args)
   (block nil
-	(acons! name args (transpiler-function-args *js-transpiler*))))
+	(format t "Preprocessing ~A~%" `(,name ,(first args)))
+	(acons! name (first args) (transpiler-function-args tr))))
 
 ;;;; STANDARD MACRO RENAMING
 
@@ -52,15 +53,17 @@
     		  ,@body)))
 
 (define-js-macro function (x)
-  `("function ",@(transpiler-binary-expand
-				   ","
-				   (argument-expand (lambda-args x) nil nil))
-	,(code-char 10)
-	"{"
-	(~%ret "=" nil) ,*js-separator*
-    ,@(lambda-body x)
-    ("return " ~%ret ,*js-separator*)
-	"}"))
+  (if (atom x)
+	  (list x)
+      `("function " ,@(transpiler-binary-expand
+				      ","
+				      (argument-expand (lambda-args x) nil nil))
+	  ,(code-char 10)
+	  "{"
+	  (~%ret "=" nil) ,*js-separator*
+      ,@(lambda-body x)
+      ("return " ~%ret ,*js-separator*)
+	  "}")))
 
 (define-js-macro defvar (name val)
   `("var " ,name " = " ,val))
@@ -109,8 +112,9 @@
 (define-js-binary eq "===")
 (define-js-binary eql "==")
 
-(define-js-macro make-array ()
+(define-js-macro make-array (&rest ignored)
   "[]")
+
 (define-js-macro aref (arr &rest idx)
   `(%transpiler-native ,arr
     ,@(mapcar #'(lambda (x)
@@ -123,7 +127,7 @@
 (define-js-macro make-string (&optional size)
   `(%transpiler-string ""))
 
-(define-js-macro make-hash-table ()
+(define-js-macro make-hash-table (&rest ignored)
   "{}")
 
 (define-js-macro vm-go (tag)
@@ -153,8 +157,7 @@
 ;;;; basic functions to simulate basic data types.
 
 (defun js-base ()
-  (map #'((x)
-			(print (js-transpile (list x))))
+  (js-transpile 
 '(
 ; IDENTITY - use native
 
