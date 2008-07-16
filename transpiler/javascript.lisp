@@ -4,10 +4,7 @@
 
 (defun make-javascript-transpiler ()
   (create-transpiler
-	:preprocessor 'js-preprocessor
-	:rename-prefix "_jst%"
-	:std-macro-renamer 'js-std-rename
-	:std-macro-expander 'js-renamed-std
+	:std-macro-expander 'js-alternate-std
 	:macro-expander 'javascript
 	:separator (format nil ";~%")
 	:function-args nil))
@@ -15,22 +12,7 @@
 (defvar *js-transpiler* (make-javascript-transpiler))
 (defvar *js-separator* (transpiler-separator *js-transpiler*))
 
-;;;; PREPROCESSING MACROS
-
-(defmacro define-js-preprocessor (name args body)
-  `(define-transpiler-preprocessor *js-transpiler* ,name ,args ,body))
-
-(define-js-preprocessor defun (tr name &rest args)
-  (block nil
-	(format t "Preprocessing ~A~%" `(,name ,(first args)))
-	(acons! name (first args) (transpiler-function-args tr))))
-
-;;;; STANDARD MACRO RENAMING
-
-(defmacro define-js-rename (name)
-  `(define-transpiler-rename *js-transpiler* ,name))
-
-;;;; EXPANSION OF RENAMED STANDARD MACROS
+;;;; EXPANSION OF ALTERNATE STANDARD MACROS
 
 (defmacro define-js-std-macro (name args body)
   `(define-transpiler-std-macro *js-transpiler* ,name ,args ,body))
@@ -43,7 +25,7 @@
 ;;;; TOPLEVEL
 
 (defun js-transpile (x)
-  (transpiler-transpile *js-transpiler* x))
+  (transpiler-transpile *js-transpiler* x "tre-base.js"))
 
 ;;;; EXPANSION OF ALTERNATE STANDARD MACROS
 
@@ -69,7 +51,7 @@
   `("var " ,name " = " ,val))
 
 (define-js-macro %setq (dest val)
-  `(,dest "=" ,val))
+  `(,(transpiler-symbol-string *js-transpiler* dest) "=" ,val))
 
 ;;; TYPE PREDICATES
 
@@ -106,6 +88,8 @@
 (define-js-binary = "==")
 (define-js-binary < "<")
 (define-js-binary > ">")
+(define-js-binary >> ">>")
+(define-js-binary << "<<")
 (define-js-binary mod "%")
 (define-js-binary logxor "^")
 (define-js-binary not "!")
@@ -144,6 +128,9 @@
 
 (define-js-macro %stack (x)
   (js-stack x))
+
+(define-js-macro %quote (x)
+  `("T37quote(\"" ,(symbol-name x) "\")"))
 
 (define-js-macro %set-atom-fun (plc val)
   `(%setq ,plc ,val))
@@ -235,5 +222,4 @@
 											""))))
 	(eval (+ "fun (" args ")"))
 	(x.shift)))
-
 )))
