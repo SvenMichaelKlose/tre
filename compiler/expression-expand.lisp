@@ -30,12 +30,12 @@
   (with (b (butlast e)
 		 l (last e))
    	(if (expex-returnable? (car l))
-		(nconc b (if (%setq? (car l))
-					(if (%setqret? (car l))
-				        `((%setq ~%ret ,(caddar l)))
-						`((%setq ,(cadar l) ,(caddar l))  ; Assign to return value.
-						  (%setq ~%ret ,(caddar l))))
-				    `((%setq ,s ,@(or l '(nil))))))
+		(append b (if (%setq? (car l))
+					  (if (%setqret? (car l))
+				          `((%setq ~%ret ,(caddar l)))
+						  `((%setq ,(cadar l) ,(caddar l))  ; Assign to return value.
+						    (%setq ~%ret ,(caddar l))))
+				      `((%setq ,s ,@(or l '(nil))))))
 		e)))
 
 ;; Transform moved expression to one which assigns its return
@@ -53,9 +53,9 @@
 				    s)
 			  (cons '(nil) s))
   	      (with ((head tail) (expex-expr x))
-    	    (cons (nconc head (if (expex-returnable? (car tail))
-								  `((%setq ,s ,@tail))
-								  tail))
+    	    (cons (append head (if (expex-returnable? (car tail))
+								   `((%setq ,s ,@tail))
+								   tail))
 		  	      s))))))
 
 ;; Move subexpressions out of a parent.
@@ -64,14 +64,19 @@
 ;; replaced arguments.
 (defun expex-args (x)
   (with ((pre main) (assoc-splice (mapcar #'expex-assignment x)))
-    (values (apply #'nconc pre)
+    (values (apply #'append pre)
 			main)))
+
+(defun expex-argexpand-rest (args)
+  (when args
+	`(cons ,(car args)
+		   ,(expex-argexpand-rest (cdr args)))))
 
 (defun expex-argexpand-do (fun args)
   (mapcar #'((x)
 			   (if (and (consp x)
 						(eq '&rest (car x)))
-				   (simple-quote-expand (cdr x))
+				   (expex-argexpand-rest (cdr x))
 				   x))
 		  (cdrlist (argument-expand (function-arguments (symbol-function fun)) args t))))
 
@@ -111,7 +116,7 @@
 (defun expex-list (x)
   (when x
      (with ((head tail) (expex-expr (car x)))
-       (nconc head tail (expex-list (cdr x))))))
+       (append head tail (expex-list (cdr x))))))
 
 ;; Expand VM-SCOPE body and have the return value of the
 ;; last expression assigned to a gensym which will replace
