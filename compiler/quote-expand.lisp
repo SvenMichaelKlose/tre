@@ -79,18 +79,20 @@
 (defun simple-quote-expand (x)
   (when x
 	(if (atom x)
-		`(%quote ,x)
-		(if (%stack? x)
-			x
-		    `(cons ,(simple-quote-expand (car x))
-		           ,(simple-quote-expand (cdr x)))))))
+		(if (not (or (stringp x) (numberp x)))
+			`(%quote ,x)
+			x)
+		`(cons ,(simple-quote-expand (car x))
+		       ,(simple-quote-expand (cdr x))))))
 
 (defun backquote-expand (l)
   (tree-walk l
 	:ascending
 	  #'((x)
 		   (if (quote? x)
-			   (simple-quote-expand (cdr x))
+			   (if (eq '%stack (cadr x))
+				   '(%quote %stack)
+			   	   (simple-quote-expand (cdr x)))
 		   	   (if (backquote? x)
 			  	   (quote-expand (cdr x))
 			       x)))))
