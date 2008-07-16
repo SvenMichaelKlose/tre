@@ -1,6 +1,6 @@
 ;;;; nix operating system project
 ;;;; lisp compiler
-;;;; Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Environment toplevel
 
@@ -23,6 +23,8 @@
 (setq *UNIVERSE* (cdr *UNIVERSE*))
 
 (env-load "../compiler/main.lisp")
+(env-load "../transpiler/transpiler.lisp")
+(env-load "../transpiler/javascript.lisp")
 
 ; Keep tests for reuse in definition order.
 (setq *tests* (reverse *tests*))
