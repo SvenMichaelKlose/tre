@@ -76,7 +76,6 @@
 		  (cdrlist (argument-expand (function-arguments (symbol-function fun)) args t))))
 
 (defun expex-argexpand (fun args)
-(print `(,fun ,@args))
   (if (and (atom fun)
 		   (functionp (symbol-function fun)))
 	  (expex-argexpand-do fun args)
