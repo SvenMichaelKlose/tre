@@ -7,10 +7,11 @@
 (defvar *expanded-functions* nil)
 
 (defun atomic-expand-lambda (fun mex &optional (parent-env nil))
-  (with ((lex fi) (lambda-expand fun mex parent-env))
-    (tree-expand fi (expression-expand (backquote-expand lex)))
-    ;(setf (assoc fun *expanded-functions*) fi)
-	(funinfo-env fi)))
+  (with ((lex fi) (lambda-expand fun (backquote-expand mex) parent-env))
+    (tree-expand fi (expression-expand lex))
+fi
+))
+    ;(setf (cdr (assoc fun *expanded-functions*)) fi)
  
 (defun atomic-expand-fun (fun)
   (with (body (function-body fun))
@@ -46,4 +47,5 @@
 
 (defun compile-all ()
   (tree-expand-reset)
-  (atomic-expand-all))
+  (atomic-expand-all)
+  nil)
