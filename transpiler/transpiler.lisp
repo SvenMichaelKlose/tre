@@ -26,7 +26,8 @@
   macro-expander
   separator
   (function-args nil)
-  (wanted-functions nil))
+  (wanted-functions nil)
+  (identifier-char? nil))
 
 (defun create-transpiler (&rest args)
   (with (tr (apply #'make-transpiler args))
@@ -155,10 +156,14 @@
 ;;;; POST PROCESSING
 
 (defun transpiler-special-char? (tr x)
-  (in=? x #\% #\~))
+  (not (funcall (transpiler-identifier-char? tr) x)))
 
 (defun transpiler-symbol-string (tr s)
-  (with (convert-camel
+  (with (encapsulate-char
+		   #'((x)
+				(string-list (string-concat "T" (format nil "~A" (char-code x)))))
+				
+		 convert-camel
 		   #'((x)
 				(when x
 			      (with (c (char-downcase (car x)))
@@ -168,32 +173,46 @@
 						  (cons (char-upcase (cadr x))
 							    (convert-camel (cddr x))))
 					    (cons c (convert-camel (cdr x)))))))
+
+		 convert-special2
+		   #'((x)
+				(when x
+			      (with (c (car x))
+				    (if (transpiler-special-char? tr c)
+					    (append (encapsulate-char c)
+								(convert-special2 (cdr x)))
+					    (cons c (convert-special2 (cdr x)))))))
+
 		 convert-special
 		   #'((x)
 				(when x
 			      (with (c (car x))
-				    (aif (transpiler-special-char? tr c)
-					     (append (string-list (string-concat "T" (format nil "~A" (char-code c))))
-								 (convert-special (cdr x)))
-					     (cons c (convert-special (cdr x)))))))
+					; Encapsulate initial char if it's a digit.
+				    (if (digit-char-p c)
+					    (append (encapsulate-char c)
+							    (convert-special2 (cdr x)))
+						(convert-special2 x)))))
+
 		 str (string s)
 	     l (length str))
-    (list-string
-	  (append
-	    (convert-special
-          (if (and (< 2 (length str))
-			       (= (elt str 0) #\*)
-			       (= (elt str (1- l)) #\*))
-		      (remove-if #'((x)
-						      (= x #\-))
-					     (string-list (string-upcase (subseq str 1 (1- l)))))
-    	      (convert-camel (string-list str))))
-	    (list #\ )))))
+
+	(if (numberp s)
+		str
+        (list-string
+	      (append
+	        (convert-special
+              (if (and (< 2 (length str)) ; Make *GLOBAL* upcase.
+			           (= (elt str 0) #\*)
+			           (= (elt str (1- l)) #\*))
+		          (remove-if #'((x)
+						          (= x #\-))
+					         (string-list (string-upcase (subseq str 1 (1- l)))))
+    	          (convert-camel (string-list str))))
+	        (list #\ ))))))
 
 (defun transpiler-to-string (tr x)
   (maptree #'((e)
 				(cond
-				  ((numberp e) (format nil "~A" e))
 				  ((consp e)   (if (eq (car e) '%transpiler-string)
 								   (string-concat "\"" (cadr e) "\"")
 									(if (eq (car e) '%transpiler-native)
@@ -267,13 +286,14 @@
 						     #'list
 						     #'(lambda (x)
   								 (format t "Standard-macro expansion...~%")
-								 (expander-expand (transpiler-std-macro-expander tr) x)))
+								 (expander-expand (transpiler-std-macro-expander tr) x))
+)
 				    x))
 		      forms)))))
 
 (defun transpiler-wanted (tr pass verbose)
   (with (out nil)
-    (dolist (x (append (reverse *universe*) (transpiler-wanted-functions tr))
+    (dolist (x (append (reverse *universe*)(transpiler-wanted-functions tr))
 			 (reverse out))
 	  (with (fun (symbol-function x))
 		     (when (functionp fun)

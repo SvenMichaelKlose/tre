@@ -7,7 +7,13 @@
 	:std-macro-expander 'js-alternate-std
 	:macro-expander 'javascript
 	:separator (format nil ";~%")
-	:function-args nil))
+	:function-args nil
+	:identifier-char?
+	  #'(lambda (x)
+		  (or (and (>= x #\a) (<= x #\z))
+		  	  (and (>= x #\A) (<= x #\Z))
+		  	  (and (>= x #\0) (<= x #\9))
+			  (in=? x #\_ #\.)))))
 
 (defvar *js-transpiler* (make-javascript-transpiler))
 (defvar *js-separator* (transpiler-separator *js-transpiler*))
