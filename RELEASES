@@ -79,6 +79,8 @@ most recent changes in unstable releases.
 
 	- Fixed standard input stream.
 	- Exit if standard input stream ends (CTRL+D).
+	- Symbol table now maintained in character tree.
+	- Interpreter keyword arguments: no more lengthy seeks in symbol table.
 
 	ALIEN INTERFACE
 

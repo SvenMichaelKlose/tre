@@ -46,8 +46,10 @@ struct treimage_header {
     int       format_version;
     treptr   init_fun;
 
+#if 0
     unsigned  len_symbols;
     void      *ofs_symbols;
+#endif
 
     unsigned  num_strings;
     unsigned  num_arrays;
@@ -180,9 +182,9 @@ treimage_create (char *file, treptr init_fun)
     FILE  *f;
     char  nmarks[NMARK_SIZE];
 
+return 0;
     treimage_initfun = init_fun;
     tregc_force ();
-    tresymbol_gc ();
     tregc_mark_non_internal ();
 
     /* Count arrays and strings, trace numbers. */
@@ -206,8 +208,10 @@ treimage_create (char *file, treptr init_fun)
     h.format_version = TRE_IMAGE_FORMAT_VERSION;
     h.init_fun = init_fun;
 
+#if 0
     h.len_symbols = (unsigned) symbol_table_free - (unsigned) symbol_table;
     h.ofs_symbols = symbol_table;
+#endif
 
     h.num_strings = n_str;
     h.num_arrays = n_arr;
@@ -223,7 +227,9 @@ treimage_create (char *file, treptr init_fun)
     treimage_write_conses (f);
     treimage_write_numbers (f, nmarks);
     treimage_write_arrays (f);
+#if 0
     treimage_write (f, symbol_table, h.len_symbols);
+#endif
     treimage_write_strings (f, n_str);
 
     fclose (f);
@@ -371,6 +377,7 @@ treimage_read_arrays (FILE *f)
     }
 }
 
+#if 0
 void
 treimage_read_symbols (FILE *f, struct treimage_header *h)
 {
@@ -393,6 +400,7 @@ treimage_read_symbols (FILE *f, struct treimage_header *h)
 
     symbol_table_free = &symbol_table[h->len_symbols];
 }
+#endif
 
 void
 treimage_read_strings (FILE *f, struct treimage_header *h)
@@ -448,7 +456,9 @@ treimage_load (char *file)
     treimage_make_free ();
     treimage_read_numbers (f);
     treimage_read_arrays (f);
+#if 0
     treimage_read_symbols (f, &h);
+#endif
     treimage_read_strings (f, &h);
 
     tregc_init ();

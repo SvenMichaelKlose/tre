@@ -62,6 +62,8 @@ treatom_init_nil (void)
     tre_atoms[0].value = TRETYPE_INDEX_TO_PTR(TRETYPE_VARIABLE, 0), 1;
     tre_atoms[0].fun = treptr_nil;
     tre_atoms[0].binding = treptr_nil;
+
+	tresymbolpage_add (treptr_nil);
 }
 
 void
@@ -113,11 +115,13 @@ treatom_init (void)
 {
     treptr t;
 
+	tresymbolpage_set_package (0, treptr_nil);
     treatom_init_nil ();
     treatom_init_atom_table ();
 
     t = treatom_get ("T", treptr_nil);
     tre_package_keyword = treatom_alloc ("", treptr_nil, TRETYPE_PACKAGE, treptr_nil);
+	tresymbolpage_set_package (1, tre_package_keyword);
 
     treptr_universe = treatom_alloc ("*UNIVERSE*", treptr_nil, TRETYPE_VARIABLE, treptr_nil);
 
@@ -163,6 +167,7 @@ treatom_alloc (char * symbol, treptr package, int type, treptr value)
 {
     unsigned  atomi;
     treptr   ntop;
+    treptr   ret;
 
     if (tre_atoms_free == treptr_nil) {
         tregc_force ();
@@ -193,8 +198,10 @@ treatom_alloc (char * symbol, treptr package, int type, treptr value)
     ATOM_SET(atomi, symbol, package, type);
     TREATOM_VALUE(atomi) = value;
 
-    /* Return typed pointer. */
-    return TRETYPE_INDEX_TO_PTR(type, atomi);
+    /* Make typed pointer. */
+    ret = TRETYPE_INDEX_TO_PTR(type, atomi);
+	tresymbolpage_add (ret);
+	return ret;
 }
 
 /* Free an atom. */
@@ -224,6 +231,7 @@ treatom_free (treptr atomi)
 
     /* Release symbol string. */
     if (TREATOM_NAME(atomi) != NULL) {
+		tresymbolpage_remove (atomi);
         tresymbol_free (TREATOM_NAME(atomi));
     	TREATOM_NAME(atomi) = NULL;
     }
@@ -250,21 +258,8 @@ treatom_number_get (double value, int type)
 /* Seek symbolic atom. */
 treptr
 treatom_seek (char * symbol, treptr package)
-{   
-    unsigned  a;
-
-    /* Reuse existing atom. */
-    for (a = 0; a < NUM_ATOMS; a++) {
-		if (tre_atoms[a].type == TRETYPE_UNUSED)
-	    	continue;
-
-		if (tre_atoms[a].name != NULL
-	    		&& tre_atoms[a].package == package
-            	&& strcmp (tre_atoms[a].name, symbol) == 0)
-	    	return TREATOM_INDEX_TO_PTR(a);
-    }
-
-    return ATOM_NOT_FOUND;
+{
+	return tresymbolpage_find (symbol, package);
 }
 
 /*

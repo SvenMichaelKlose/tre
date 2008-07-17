@@ -12,7 +12,11 @@ extern char symbol_table[TRE_SYMBOL_TABLE_SIZE];
 extern char *symbol_table_free;
 extern unsigned num_symbols;
 
-extern void tresymbol_gc (void);
+extern void tresymbolpage_remove (treptr atom);
+extern void tresymbolpage_add (treptr atom);
+extern treptr tresymbolpage_find (char * name, treptr atom);
+extern void tresymbolpage_set_package (unsigned long root_index, treptr package);
+
 extern char *tresymbol_add (char *);
 extern void tresymbol_free (char *);
 

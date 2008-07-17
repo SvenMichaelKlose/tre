@@ -267,7 +267,6 @@ trearg_expand (treptr *rvars, treptr *rvals, treptr iargdef, treptr args,
 		    		svals = treeval (svals);
 
 				tregc_push (svals);
-				key = treatom_get (TREATOM_NAME(key), treptr_nil);
 				_ADDF(dvars, CONS(key, treptr_nil));
 				_ADDF(dvals, CONS(svals, treptr_nil));
 				tregc_pop ();

@@ -57,7 +57,7 @@ extern void treatom_init (void);
 
 /* Lookup atom. */
 extern treptr treatom_seek (char *, treptr package);
-#define ATOM_NOT_FOUND  ((treptr) -2)
+#define ATOM_NOT_FOUND  treptr_invalid
 
 /* Lookup or create atom. */
 extern treptr treatom_get (char *, treptr package);

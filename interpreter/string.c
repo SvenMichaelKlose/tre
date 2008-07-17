@@ -26,7 +26,7 @@ struct tre_string *
 trestring_get_raw (unsigned len)
 {
     unsigned  l = len + sizeof (struct tre_string);
-    struct tre_string *nstr = trealloc (l);
+    struct tre_string * nstr = trealloc (l);
 
     if (nstr == NULL)
 		return nstr;
