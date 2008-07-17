@@ -20,7 +20,7 @@
 ;; Declines atoms and expressions with meta-forms.
 (defun expex-able? (x)
   (not (or (atom x)
-           (in? (car x) '%funref 'vm-go 'vm-go-nil '%stack '%quote '%transpiler-string))))
+           (in? (car x) 'get-slot '%funref 'vm-go 'vm-go-nil '%stack '%quote '%transpiler-string))))
 
 ;; Check if an expression has a return value.
 (defun expex-returnable? (x)
@@ -28,13 +28,14 @@
 
 (defun expex-make-return-value (e s)
   (with (b (butlast e)
-		 l (last e))
-   	(if (expex-returnable? (car l))
-		(append b (if (%setq? (car l))
-					  (if (%setqret? (car l))
-				          `((%setq ~%ret ,(caddar l)))
-						  `((%setq ,(cadar l) ,(caddar l))  ; Assign to return value.
-						    (%setq ~%ret ,(caddar l))))
+		 l (last e)
+		 la (car l))
+   	(if (expex-returnable? la)
+		(append b (if (%setq? la)
+					  (if (%setqret? la)
+				          `((%setq ~%ret ,(third la)))
+						  `((%setq ,(second la) ,(third la))  ; Assign to return value.
+						    (%setq ~%ret ,(second la))))
 				      `((%setq ,s ,@(or l '(nil))))))
 		e)))
 

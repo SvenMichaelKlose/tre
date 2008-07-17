@@ -42,19 +42,28 @@
 
 (define-js-macro function (x)
   (if (atom x)
-	  (list x)
+	  x
       `("function " ,@(transpiler-binary-expand
 				      ","
 				      (argument-expand (lambda-args x) nil nil))
 	  ,(code-char 10)
-	  "{"
-	  (~%ret "=" nil) ,*js-separator*
+	  "{" ,(code-char 10)
       ,@(lambda-body x)
       ("return " ~%ret ,*js-separator*)
 	  "}")))
 
 (define-js-macro defvar (name val)
   `("var " ,name " = " ,val))
+
+(define-js-macro new (&rest x)
+  `(%transpiler-native "new " ,(first x) ,@(transpiler-binary-expand "," (cdr x))))
+
+(define-js-macro get-slot (slot obj)
+  `(%transpiler-native
+     ,(string-concat
+		(transpiler-symbol-string *js-transpiler* (print obj))
+		"."
+		(transpiler-symbol-string *js-transpiler* (print slot)))))
 
 (define-js-macro %setq (dest val)
   `(,(transpiler-symbol-string *js-transpiler* dest) "=" ,val))
@@ -63,7 +72,7 @@
 
 (defmacro def-js-type-predicate (name typestring)
   `(define-js-macro ,name (x)
-     `(== (instanceof ,,x ,typestring))))
+     `(%transpiler-native ,,x "instanceof " ,typestring)))
 
 (def-js-type-predicate symbolp "symbol")
 (def-js-type-predicate consp "cons")
@@ -75,13 +84,10 @@
 (defmacro define-js-infix (name)
   `(define-transpiler-infix *js-transpiler* ,name))
 
-(define-js-infix instanceof)
-(define-js-infix typeof)
-
 ;;;; Symbol replacement definitions.
 
-;(transpiler-rename-symbol 'nil  "null")
-;(transpiler-rename-symbol 't    "true")
+(transpiler-translate-symbol *js-transpiler* nil "null")
+(transpiler-translate-symbol *js-transpiler* t "false")
 
 ;;; Numbers, arithmetic and comparison.
 
@@ -98,9 +104,10 @@
 (define-js-binary << "<<")
 (define-js-binary mod "%")
 (define-js-binary logxor "^")
-(define-js-binary not "!")
 (define-js-binary eq "===")
 (define-js-binary eql "==")
+(define-js-binary bit-and "&")
+(define-js-binary bit-or "|")
 
 (define-js-macro make-array (&rest ignored)
   "[]")
@@ -139,7 +146,10 @@
   `("T37quote(\"" ,(symbol-name x) "\")"))
 
 (define-js-macro %set-atom-fun (plc val)
-  `(%setq ,plc ,val))
+  `(%transpiler-native ,plc "=" ,val))
+
+(define-js-macro not (x)
+  `(%transpiler-native "!" ,x))
 
 ;    "ELT", "%SET-ELT", "LENGTH",
 ;    "CODE-CHAR", "INTEGER",
@@ -185,7 +195,8 @@
 
 (defun cons (a d)
   (setf this._car a)
-  (setf this._cdr d))
+  (setf this._cdr d)
+  this)
 
 (defun car (x)
   x._car)

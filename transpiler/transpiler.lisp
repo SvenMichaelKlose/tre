@@ -27,7 +27,8 @@
   separator
   (function-args nil)
   (wanted-functions nil)
-  (identifier-char? nil))
+  (identifier-char? nil)
+  (symbol-translations nil))
 
 (defun create-transpiler (&rest args)
   (with (tr (apply #'make-transpiler args))
@@ -38,7 +39,24 @@
 							 (transpiler-macrocall tr fun x)))
 	tr))
 
-;;; OPERATOR EXPANSION
+(defun transpiler-translate-symbol (tr from to)
+  (acons! from to (transpiler-symbol-translations tr)))
+
+;;;; SLOT GETTER GENERATION
+
+(defun transpiler-make-slot-getters (x)
+  (maptree #'((x)
+				(if (and (atom x) (not (or (numberp x) (stringp x))))
+				    (with (sl (string-list (symbol-name x))
+					       p (position #\. sl :test #'=))
+				      (if p
+					      `(get-slot ,(make-symbol (list-string (subseq sl (1+ p))))
+								     ,(make-symbol (list-string (subseq sl 0 p))))
+					      x))
+					x))
+		  x))
+
+;;;; OPERATOR EXPANSION
 
 (defmacro define-transpiler-infix (tr name)
   `(define-expander-macro ,(transpiler-macro-expander (eval tr)) ,name (x y)
@@ -111,23 +129,25 @@
   (when x
 	(with (e          (car x)
 		   separator  (transpiler-separator tr))
-	  (if (atom e) ; Jump label.
-		  (cons (string-concat (transpiler-symbol-string tr e) (format nil ":~%"))
-		        (transpiler-finalize-sexprs tr (cdr x)))
-          (if (and (%setq? e) (is-lambda? (caddr e))) ; Recurse into function.
-	          (cons `(%setq ,(second e) (function
-							              (lambda ,(lambda-args (caddr e))
-							                ,@(transpiler-finalize-sexprs tr (lambda-body (caddr e))))))
-			        (cons separator
-						  (transpiler-finalize-sexprs tr (cdr x))))
-	          (if (and (identity? e) (eq '~%ret (second e))) ; Remove (IDENTITY ~%RET).
-		          (transpiler-finalize-sexprs tr (cdr x))
-				  ; Just copy with seperator. Make return-value assignment if missing.
-		          (cons (if (and (consp e) (not (or (vm-jump? e) (%setq? e))))
-							`(%setq ~%ret ,e)
-							e)
-						(cons separator
-							  (transpiler-finalize-sexprs tr (cdr x))))))))))
+	  (if (eq e nil)
+		  (transpiler-finalize-sexprs tr (cdr x))
+	  	  (if (atom e) ; Jump label.
+		      (cons (string-concat (transpiler-symbol-string tr e) (format nil ":~%"))
+		            (transpiler-finalize-sexprs tr (cdr x)))
+              (if (and (%setq? e) (is-lambda? (caddr e))) ; Recurse into function.
+	              (cons `(%setq ,(second e) (function
+							                  (lambda ,(lambda-args (caddr e))
+							                    ,@(transpiler-finalize-sexprs tr (lambda-body (caddr e))))))
+			            (cons separator
+						      (transpiler-finalize-sexprs tr (cdr x))))
+	              (if (and (identity? e) (eq '~%ret (second e))) ; Remove (IDENTITY ~%RET).
+		              (transpiler-finalize-sexprs tr (cdr x))
+				      ; Just copy with seperator. Make return-value assignment if missing.
+		              (cons (if (and (consp e) (not (or (vm-jump? e) (%setq? e))))
+							    `(%setq ~%ret ,e)
+							    e)
+						    (cons separator
+							      (transpiler-finalize-sexprs tr (cdr x)))))))))))
 
 ;;;; TRANSPILER-MACRO EXPANDER
 
@@ -146,6 +166,7 @@
     (if m
         (with (e (apply m x))
 	       (if (transpiler-macrop-funcall? `(,fun ,@x))
+				; Make C-style function call.
   		       `(,(first e) ,(second e) ,(first (third e)) ,@(transpiler-macrocall-funcall (cdr (third e))))
 		       e))
 		`(,fun ,@x))))
@@ -199,16 +220,14 @@
 	(if (numberp s)
 		str
         (list-string
-	      (append
-	        (convert-special
-              (if (and (< 2 (length str)) ; Make *GLOBAL* upcase.
-			           (= (elt str 0) #\*)
-			           (= (elt str (1- l)) #\*))
-		          (remove-if #'((x)
-						          (= x #\-))
-					         (string-list (string-upcase (subseq str 1 (1- l)))))
-    	          (convert-camel (string-list str))))
-	        (list #\ ))))))
+	      (convert-special
+            (if (and (< 2 (length str)) ; Make *GLOBAL* upcase.
+			         (= (elt str 0) #\*)
+			         (= (elt str (1- l)) #\*))
+		        (remove-if #'((x)
+						        (= x #\-))
+					       (string-list (string-upcase (subseq str 1 (1- l)))))
+    	        (convert-camel (string-list str))))))))
 
 (defun transpiler-to-string (tr x)
   (maptree #'((e)
@@ -219,9 +238,9 @@
 										(transpiler-to-string tr (cdr e))
 										e)))
 				  ((stringp e) e)
-				  (t		   (if (eq nil e)
-								   "null"
-								   (transpiler-symbol-string tr e)))))
+				  (t		   (aif (assoc e (transpiler-symbol-translations tr))
+								   (cdr !)
+								   (string-concat (transpiler-symbol-string tr e) " ")))))
 		   x))
 
 (defun transpiler-concat-strings (x)
@@ -284,6 +303,9 @@
   								 (format t "Macro expansion...~%")
 						         (transpiler-macroexpand x))
 						     #'list
+							 #'(lambda (x)
+  								 (format t "Generating slot getters...~%")
+						         (transpiler-make-slot-getters x))
 						     #'(lambda (x)
   								 (format t "Standard-macro expansion...~%")
 								 (expander-expand (transpiler-std-macro-expander tr) x))
@@ -293,7 +315,7 @@
 
 (defun transpiler-wanted (tr pass verbose)
   (with (out nil)
-    (dolist (x (append (reverse *universe*)(transpiler-wanted-functions tr))
+    (dolist (x (transpiler-wanted-functions tr)
 			 (reverse out))
 	  (with (fun (symbol-function x))
 		     (when (functionp fun)
