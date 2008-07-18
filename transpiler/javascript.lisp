@@ -7,7 +7,7 @@
 	:std-macro-expander 'js-alternate-std
 	:macro-expander 'javascript
 	:separator (format nil ";~%")
-	:unwanted-functions '($ cons car cdr list)
+	:unwanted-functions '($ cons car cdr list make-hash-table)
 	:identifier-char?
 	  #'(lambda (x)
 		  (or (and (>= x #\a) (<= x #\z))
@@ -39,9 +39,12 @@
 ;;;; EXPANSION OF ALTERNATE STANDARD MACROS
 
 (define-js-std-macro defun (name args &rest body)
-  `(%setq ,name
-		  #'(lambda ,args
-    		  ,@body)))
+  (progn
+	 (unless (in? name 'apply 'list)
+	   (acons! name args (transpiler-function-args tr)))
+    `(%setq ,name
+		    #'(lambda ,args
+    		    ,@body))))
 
 (define-js-macro function (x)
   (if (atom x)
@@ -124,8 +127,15 @@
 (define-js-macro make-string (&optional size)
   `(%transpiler-string ""))
 
-(define-js-macro make-hash-table (&rest ignored)
-  "{}")
+(define-js-macro make-hash-table (&rest args)
+  `("{"
+    ,@(when args
+	    (mapcan #'((x)
+				    (if (keywordp x)
+					    (list x ":")
+					    (list x)))
+			    args))
+   "}"))
 
 (define-js-macro vm-go (tag)
   `("goto " ,tag))

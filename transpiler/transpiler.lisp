@@ -48,8 +48,21 @@
 					 nil #'(lambda (fun x)
 							 (transpiler-macrocall tr fun x)))
 	(with (ex (make-expex))
-	  (setf (expex-function-collector ex) #'((fun args)
-											   (transpiler-add-wanted-function tr fun))
+	  (setf (expex-function-collector ex)
+			  #'((fun args)
+				  (transpiler-add-wanted-function tr fun))
+
+			(expex-functionp ex)
+			  #'((fun)
+				   (or (assoc fun (transpiler-function-args tr))
+					   (and (not (member fun (transpiler-unwanted-functions tr)))
+							(functionp (symbol-function fun)))))
+
+			(expex-function-arguments ex)
+			  #'((fun)
+				   (or (cdr (assoc fun (transpiler-function-args tr)))
+					   (function-arguments (symbol-function fun))))
+
 			(transpiler-expex tr) ex))
 	tr))
 
@@ -313,19 +326,18 @@
 				    x))
 		      forms))))
 
-(defun transpiler-wanted (tr pass verbose)
+(defun transpiler-wanted (tr pass funlist)
   (with (out nil)
-    (dolist (x (transpiler-wanted-functions tr)
-			 (reverse out))
+    (dolist (x funlist (reverse out))
 	  (with (fun (symbol-function x))
 		     (when (functionp fun)
 			   (if fun
 				   (or (and verbose
-						    (format t "~%Processing ~A" (list x)))
+						    (format t "Processing ~A~%" (symbol-name x)))
 			  	       (push (funcall pass tr `((defun ,x ,(function-arguments fun)
 											      ,@(function-body fun))))
 							 out))
-				  (and verbose (format t "Unknown function ~A" (list x)))))))))
+				  (and verbose (format t "Unknown function ~A~%" (symbol-name x)))))))))
 
 (defun transpiler-transpile (tr forms name)
   (format t "### Pass 1...~%")
@@ -333,13 +345,13 @@
   (with (w nil
 		 n (transpiler-wanted-functions tr))
 	(while (not (equal w n)) nil
-      (transpiler-wanted tr #'transpiler-pass1 t)
+      (transpiler-wanted tr #'transpiler-pass1 (transpiler-wanted-functions tr))
 	  (setf w n
 			n (transpiler-wanted-functions tr))))
 
   (format t "### Pass 2...~%")
   (with (src (transpiler-concat-strings
-			   (list (transpiler-wanted tr #'transpiler-pass2 t)
+			   (list (transpiler-wanted tr #'transpiler-pass2 (transpiler-wanted-functions tr))
 					 (transpiler-pass2 tr forms))))
   (format t "### Emitting code...~%")
 	(with-open-file f (open name :direction 'output)
