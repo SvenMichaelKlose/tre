@@ -10,6 +10,9 @@
 
 (defvar *expexsym-counter* 0)
 
+(defstruct expex
+  (function-collector #'identity))
+
 ;; Returns newly created, unique symbol.
 (defun expex-sym ()
   (setf *expexsym-counter* (+ 1 *expexsym-counter*))
@@ -18,19 +21,19 @@
 ;; Check if an expression is expandable.
 ;;
 ;; Declines atoms and expressions with meta-forms.
-(defun expex-able? (x)
+(defun expex-able? (ex x)
   (not (or (atom x)
-           (in? (car x) 'get-slot '%funref 'vm-go 'vm-go-nil '%stack '%quote '%transpiler-string))))
+           (in? (car x) 'get-slot '%funref 'vm-go 'vm-go-nil '%stack '%quote '%transpiler-string '%no-expex))))
 
 ;; Check if an expression has a return value.
-(defun expex-returnable? (x)
+(defun expex-returnable? (ex x)
   (not (vm-jump? x)))
 
-(defun expex-make-return-value (e s)
+(defun expex-make-return-value (ex e s)
   (with (b (butlast e)
 		 l (last e)
 		 la (car l))
-   	(if (expex-returnable? la)
+   	(if (expex-returnable? ex la)
 		(append b (if (%setq? la)
 					  (if (%setqret? la)
 				          `((%setq ~%ret ,(third la)))
@@ -44,17 +47,17 @@
 ;;
 ;; Returns a CONS with the new head expressions in CAR and
 ;; the replacement symbol for the parent in CDR.
-(defun expex-assignment (x)
-  (if (not (expex-able? x))
+(defun expex-assignment (ex x)
+  (if (not (expex-able? ex x))
 	  (cons nil x)
   	  (with (s (expex-sym))
   	  (if (vm-scope? x)
 		  (if (vm-scope-body x)
-	          (cons (expex-body (vm-scope-body x) s) ; Special treatment for VM-SCOPE arguments.
+	          (cons (expex-body ex (vm-scope-body x) s) ; Special treatment for VM-SCOPE arguments.
 				    s)
 			  (cons '(nil) s))
-  	      (with ((head tail) (expex-expr x))
-    	    (cons (append head (if (expex-returnable? (car tail))
+  	      (with ((head tail) (expex-expr ex x))
+    	    (cons (append head (if (expex-returnable? ex (car tail))
 								   `((%setq ,s ,@tail))
 								   tail))
 		  	      s))))))
@@ -63,8 +66,10 @@
 ;;
 ;; Returns the head of moved expressions and a new parent with
 ;; replaced arguments.
-(defun expex-args (x)
-  (with ((pre main) (assoc-splice (mapcar #'expex-assignment x)))
+(defun expex-args (ex x)
+  (with ((pre main) (assoc-splice (mapcar #'((x)
+											   (expex-assignment ex x))
+										  x)))
     (values (apply #'append pre)
 			main)))
 
@@ -73,7 +78,8 @@
 	`(cons ,(car args)
 		   ,(expex-argexpand-rest (cdr args)))))
 
-(defun expex-argexpand-do (fun args)
+(defun expex-argexpand-do (ex fun args)
+  (funcall (expex-function-collector ex) fun args)
   (mapcar #'((x)
 			   (if (and (consp x)
 						(eq '&rest (car x)))
@@ -81,18 +87,18 @@
 				   x))
 		  (cdrlist (argument-expand (function-arguments (symbol-function fun)) args t))))
 
-(defun expex-argexpand (fun args)
+(defun expex-argexpand (ex fun args)
   (if (and (atom fun)
 		   (functionp (symbol-function fun)))
-	  (expex-argexpand-do fun args)
+	  (expex-argexpand-do ex fun args)
 	  args))
 
 ;; Expands standard expression.
 ;;
 ;; The arguments are replaced by gensyms.
-(defun expex-std-expr (x)
-  (with (argexp (expex-argexpand (car x) (cdr x))
-		 (pre newargs) (expex-args argexp))
+(defun expex-std-expr (ex x)
+  (with (argexp (expex-argexpand ex (car x) (cdr x))
+		 (pre newargs) (expex-args ex argexp))
     (values pre
 			(list (cons (car x) newargs)))))
 
@@ -100,38 +106,31 @@
 ;;
 ;; Recurses into LAMBDA-expressions and VM-SCOPEs.
 ;; VM-SCOPES are removed.
-(defun expex-expr (x)
+(defun expex-expr (ex x)
   (if (is-lambda? x)
       (values nil (list `#'(lambda ,(lambda-args x)
-						     ,@(expex-body (lambda-body x)))))
-      (if (not (expex-able? x))
+						     ,@(expex-body ex (lambda-body x)))))
+      (if (not (expex-able? ex x))
 	      (values nil (list x))
   	      (if (vm-scope? x)
-	          (values nil (expex-body (cdr x)))
-	          (expex-std-expr x)))))
+	          (values nil (expex-body ex (cdr x)))
+	          (expex-std-expr ex x)))))
 
 ;; Entry point.
 ;;
 ;; Simply concatenates the results of all expression
 ;; expansions in a body.
-(defun expex-list (x)
+(defun expex-list (ex x)
   (when x
-     (with ((head tail) (expex-expr (car x)))
-       (append head tail (expex-list (cdr x))))))
+     (with ((head tail) (expex-expr ex (car x)))
+       (append head tail (expex-list ex (cdr x))))))
 
 ;; Expand VM-SCOPE body and have the return value of the
 ;; last expression assigned to a gensym which will replace
 ;; it in the parent expression.
-(defun expex-body (x &optional (s '~%ret))
-  (with (e (expex-list x))
-   	(expex-make-return-value e s)))
+(defun expex-body (ex x &optional (s '~%ret))
+  (with (e (expex-list ex x))
+   	(expex-make-return-value ex e s)))
 
-(define-expander 'expex)
-(define-expander-macro 'expex %setq (plc val)
-  (if (vm-jump? val)
-	  val
-	  `(%setq ,plc ,val)))
-
-(defun expression-expand (x)
-  ;(expander-expand 'expex (expex-list x)))
-  (expex-body x))
+(defun expression-expand (ex x)
+  (expex-body ex x))
