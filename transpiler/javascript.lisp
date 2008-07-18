@@ -7,7 +7,7 @@
 	:std-macro-expander 'js-alternate-std
 	:macro-expander 'javascript
 	:separator (format nil ";~%")
-	:function-args nil
+	:unwanted-functions '($ cons car cdr list)
 	:identifier-char?
 	  #'(lambda (x)
 		  (or (and (>= x #\a) (<= x #\z))
@@ -31,7 +31,10 @@
 ;;;; TOPLEVEL
 
 (defun js-transpile (x)
-  (transpiler-transpile *js-transpiler* x "tre-base.js"))
+  (with-open-file f (open "tre-base.js" :direction 'output)
+    (format t "Compiling JavaScript core functions...~%")
+    (format f "~A" (transpiler-pass2 *js-transpiler* *js-base*)))
+  (transpiler-transpile *js-transpiler* x "js.js"))
 
 ;;;; EXPANSION OF ALTERNATE STANDARD MACROS
 
@@ -59,30 +62,27 @@
   `(%transpiler-native "new " ,(first x) ,@(transpiler-binary-expand "," (cdr x))))
 
 (define-js-macro get-slot (slot obj)
-  `(%transpiler-native
-     ,(string-concat
-		(transpiler-symbol-string *js-transpiler* (print obj))
-		"."
-		(transpiler-symbol-string *js-transpiler* (print slot)))))
+  ($
+	(transpiler-symbol-string *js-transpiler* obj)
+	"."
+	(transpiler-symbol-string *js-transpiler* slot)))
 
 (define-js-macro %setq (dest val)
-  `(,(transpiler-symbol-string *js-transpiler* dest) "=" ,val))
+  `(,(if (atom dest)
+		 (transpiler-symbol-string *js-transpiler* dest)
+		 dest)
+    "=" ,val))
 
 ;;; TYPE PREDICATES
 
-(defmacro def-js-type-predicate (name typestring)
-  `(define-js-macro ,name (x)
-     `(%transpiler-native ,,x "instanceof " ,typestring)))
-
-(def-js-type-predicate symbolp "symbol")
-(def-js-type-predicate consp "cons")
-(def-js-type-predicate numberp "Number")
-(def-js-type-predicate arrayp "Array")
-(def-js-type-predicate stringp "String")
-(def-js-type-predicate functionp "Function")
-
 (defmacro define-js-infix (name)
   `(define-transpiler-infix *js-transpiler* ,name))
+
+(define-js-infix instanceof)
+
+(defun def-js-type-predicate (name typestring)
+  `(defun ,name (x)
+     (instanceof x (%no-expex (%transpiler-native ,typestring)))))
 
 ;;;; Symbol replacement definitions.
 
@@ -119,7 +119,7 @@
               idx)))
 
 (define-js-macro %%usetf-aref (val &rest x)
-  `((aref ,@x) "=" ,val))
+  `(%transpiler-native (aref ,@x) "=" ,val))
 
 (define-js-macro make-string (&optional size)
   `(%transpiler-string ""))
@@ -159,9 +159,7 @@
 ;;;; This are the low-level transpiler definitions of
 ;;;; basic functions to simulate basic data types.
 
-(defun js-base ()
-  (js-transpile 
-'(
+(defvar *js-base* `(
 ; IDENTITY - use native
 
 ;;; Symbols
@@ -218,6 +216,13 @@
                  (cons a (rec x))))))
     (rec arguments)))
 
+,(def-js-type-predicate symbolp "symbol")
+,(def-js-type-predicate consp "cons")
+,(def-js-type-predicate numberp "Number")
+,(def-js-type-predicate arrayp "Array")
+,(def-js-type-predicate stringp "String")
+,(def-js-type-predicate functionp "Function")
+
 (defun apply ()
   (when (= 0 arguments.length)
     (alert "apply requires a function arguments"))
@@ -239,4 +244,4 @@
 											""))))
 	(eval (+ "fun (" args ")"))
 	(x.shift)))
-)))
+))
