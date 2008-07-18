@@ -1,6 +1,6 @@
 /*
  * nix operating system project tre interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Built-in string functions
  */
@@ -129,14 +129,12 @@ trestring_builtin_string (treptr list)
             	}
             	sprintf (buf, "%G", TRENUMBER_VAL(arg));
             	return trestring_get (buf);
-
-			default:
-	    		/* Convert atom name to string. */
-	    		if (TREATOM_NAME(arg)) {
-	    			strcpy (buf, TREATOM_NAME(arg));
-            		return trestring_get (buf);
-				}
     	}
+   		/* Convert atom name to string. */
+   		if (TREPTR_IS_ATOM(arg) && TREATOM_NAME(arg)) {
+   			strcpy (buf, TREATOM_NAME(arg));
+       		return trestring_get (buf);
+		}
     	arg = treerror (arg, "string, number or named atom expected");
 	}
 
