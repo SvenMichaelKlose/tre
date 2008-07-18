@@ -11,7 +11,9 @@
 (defvar *expexsym-counter* 0)
 
 (defstruct expex
-  (function-collector #'identity))
+  functionp
+  function-arguments
+  (function-collector #'((fun args))))
 
 ;; Returns newly created, unique symbol.
 (defun expex-sym ()
@@ -85,11 +87,11 @@
 						(eq '&rest (car x)))
 				   (expex-argexpand-rest (cdr x))
 				   x))
-		  (cdrlist (argument-expand (function-arguments (symbol-function fun)) args t))))
+		  (cdrlist (argument-expand (funcall (expex-function-arguments ex) fun) args t))))
 
 (defun expex-argexpand (ex fun args)
   (if (and (atom fun)
-		   (functionp (symbol-function fun)))
+		   (funcall (expex-functionp ex) fun))
 	  (expex-argexpand-do ex fun args)
 	  args))
 
