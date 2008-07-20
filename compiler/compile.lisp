@@ -1,6 +1,6 @@
 ;;;; nix operating system project
 ;;;; lisp compiler
-;;;; Copyright (C) 2005, 2006 Sven Klose <pixel@copei.de>
+;;;; Copyright (C) 2005-2008 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Compiler toplevel
 
@@ -8,7 +8,7 @@
 
 (defun atomic-expand-lambda (fun mex &optional (parent-env nil))
   (with ((lex fi) (lambda-expand fun (backquote-expand mex) parent-env))
-    (tree-expand fi (expression-expand lex))
+    (tree-expand fi (print (opt-peephole (expression-expand (make-expex) lex))))
 fi
 ))
     ;(setf (cdr (assoc fun *expanded-functions*)) fi)

@@ -1,6 +1,6 @@
 ;;;;; nix operating system project
 ;;;;; lisp compiler
-;;;;; (c) 2005-2007 Sven Klose <pixel@copei.de>
+;;;;; (c) 2005-2008 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Compiler toplevel.
 
@@ -25,6 +25,7 @@
 (env-load "../compiler/tree-expand.lisp")
 
 ;;;; Optimisation.
+(env-load "../compiler/opt-peephole.lisp")
 ;(env-load "../compiler/opt-constfold.lisp")
 ;(env-load "../compiler/opt-double.lisp")
 ;(env-load "../compiler/opt-unused.lisp")
