@@ -47,7 +47,7 @@
   		   (when x
   			 (if (consp (car x))
 				 (progn
-				   (setf (cdr (assoc (car x) lst) first-label))
+				   (setf (cdr (assoc (car x) lst)) first-label)
 			  	   (get-label-sequence (cdr x) first-label))
 	    		 (find-label-sequence x))))
 

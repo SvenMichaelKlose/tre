@@ -27,4 +27,4 @@
   (rplacd (car lst) val))
 
 (defun (setf cddr) (val lst)
-  (rplacd (cdr lst)))
+  (rplacd (cdr lst) val))
