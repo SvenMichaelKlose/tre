@@ -80,7 +80,7 @@
 (defun lambda-call-embed (lambda-call fi export-lambdas)
   "Replace local LAMBDA expression by its body using stack variables."
   (with-lambda-call (args vals body lambda-call)
-    (with ((a v) (assoc-splice (argument-expand args vals t)))
+    (with ((a v) (assoc-splice (argument-expand 'local-var-fun args vals t)))
       (with-funinfo-env-temporary fi args
         (make-inline-body
 			a
@@ -135,6 +135,6 @@
 
 (defun lambda-expand (fun body &optional (parent-env nil) (export-lambdas t))
   "Convert native function to stack function."
-  (with (forms  (argument-expand (function-arguments fun) nil nil)
+  (with (forms  (argument-expand 'lambda-expansion (function-arguments fun) nil nil)
          fi     (make-funinfo :env (list forms parent-env)))
     (values (lambda-embed-or-export body fi export-lambdas) fi)))
