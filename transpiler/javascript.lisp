@@ -7,7 +7,7 @@
 	:std-macro-expander 'js-alternate-std
 	:macro-expander 'javascript
 	:separator (format nil ";~%")
-	:unwanted-functions '($ cons car cdr list make-hash-table)
+	:unwanted-functions '($ cons car cdr list make-hash-table maphash)
 	:identifier-char?
 	  #'(lambda (x)
 		  (or (and (>= x #\a) (<= x #\z))
@@ -46,12 +46,16 @@
 		    #'(lambda ,args
     		    ,@body))))
 
+(define-js-std-macro slot-value (x y)
+  `(%slot-value ,x ,(second y)))
+
 (define-js-macro function (x)
   (if (atom x)
 	  x
       `("function " ,@(transpiler-binary-expand
 				      ","
-				      (argument-expand (lambda-args x) nil nil))
+				      (argument-expand 'unnamed-js-function
+									   (lambda-args x) nil nil))
 	  ,(code-char 10)
 	  "{" ,(code-char 10)
       ,@(lambda-body x)
@@ -90,7 +94,7 @@
 ;;;; Symbol replacement definitions.
 
 (transpiler-translate-symbol *js-transpiler* nil "null")
-(transpiler-translate-symbol *js-transpiler* t "false")
+(transpiler-translate-symbol *js-transpiler* t "true")
 
 ;;; Numbers, arithmetic and comparison.
 
@@ -160,6 +164,11 @@
 
 (define-js-macro not (x)
   `(%transpiler-native "!" ,x))
+
+(define-js-macro %slot-value (x y)
+  `(%transpiler-native ,(string-concat (transpiler-symbol-string *js-transpiler* x)
+									   "."
+									   (transpiler-symbol-string *js-transpiler* y))))
 
 ;    "ELT", "%SET-ELT", "LENGTH",
 ;    "CODE-CHAR", "INTEGER",
@@ -254,4 +263,6 @@
 											""))))
 	(eval (+ "fun (" args ")"))
 	(x.shift)))
+
+(%transpiler-native "function maphash (fun, hash) { for (i in hash) fun (i); return null; }")
 ))
