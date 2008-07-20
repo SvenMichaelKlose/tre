@@ -17,6 +17,7 @@
 #include "list.h"
 #include "main.h"
 #include "builtin_stream.h"
+#include "alloc.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -125,8 +126,8 @@ treio_skip_spaces (struct tre_stream * s)
 struct tre_stream *
 treio_make_stream (struct treio_ops * ops, const char * name)
 {
-    struct tre_stream *s = malloc (sizeof (struct tre_stream));
-	char * n = malloc (strlen (name) + 1);
+    struct tre_stream *s = trealloc (sizeof (struct tre_stream));
+	char * n = trealloc (strlen (name) + 1);
 
 	strcpy (n, name);
 
@@ -143,8 +144,8 @@ treio_make_stream (struct treio_ops * ops, const char * name)
 void
 treio_free_stream (struct tre_stream * s)
 {
-	free (s->file_name);
-	free (s);
+	trealloc_free (s->file_name);
+	trealloc_free (s);
 }
 
 void

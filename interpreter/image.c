@@ -26,6 +26,7 @@
 #include "print.h"
 #include "thread.h"
 #include "image.h"
+#include "alloc.h"
 
 #define _GNU_SOURCE
 #include <string.h>
@@ -152,7 +153,7 @@ treimage_write_strings (FILE *f, unsigned num)
     unsigned  i;
     unsigned  j;
     struct tre_string *s;
-    unsigned  *lens = malloc (sizeof (unsigned) * num);
+    unsigned  *lens = trealloc (sizeof (unsigned) * num);
 
     /* Make and write length index. */
     j = 0;
@@ -169,7 +170,7 @@ treimage_write_strings (FILE *f, unsigned num)
         treimage_write (f, &s->str, s->len);
     }
 
-    free (lens);
+    trealloc_free (lens);
 }
 
 int
@@ -371,7 +372,7 @@ treimage_read_arrays (FILE *f)
             continue;
 
         l = TREARRAY_SIZE(i) * sizeof (treptr);
-        a = malloc (l);
+        a = trealloc (l);
         treimage_read (f, a, l);
         TREATOM_SET_DETAIL(i, a);
     }
@@ -410,7 +411,7 @@ treimage_read_strings (FILE *f, struct treimage_header *h)
     unsigned  j;
     unsigned  l;
     unsigned  lenlen = sizeof (unsigned) * h->num_strings;
-    unsigned  *lens = malloc (lenlen);
+    unsigned  *lens = trealloc (lenlen);
 
     treimage_read (f, lens, lenlen);
 
@@ -420,14 +421,14 @@ treimage_read_strings (FILE *f, struct treimage_header *h)
             continue;
 
         l = lens[j++];
-        s = malloc (l + sizeof (struct tre_string));
+        s = trealloc (l + sizeof (struct tre_string));
         s->len = l;
         TREATOM_SET_STRING(i, s);
         treimage_read (f, &s->str, l);
         (&s->str)[l] = 0;
     }
 
-    free (lens);
+    trealloc_free (lens);
 }
 
 int

@@ -39,6 +39,7 @@
 #include "alien_dl.h"
 #include "xxx.h"
 #include "util.h"
+#include "alloc.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -285,7 +286,7 @@ trebuiltin_malloc (treptr args)
     arg = trearg_get (args);
 	arg = trearg_typed (1, TRETYPE_NUMBER, arg, "size");
 
-	ret = malloc ((size_t) TRENUMBER_VAL(arg));
+	ret = trealloc ((size_t) TRENUMBER_VAL(arg));
 
 	return treatom_number_get ((double) (long) ret, TRENUMTYPE_INTEGER);
 }
@@ -298,7 +299,7 @@ trebuiltin_free (treptr args)
     arg = trearg_get (args);
 	arg = trearg_typed (1, TRETYPE_NUMBER, arg, "address");
 
-	free ((void *) (long) TRENUMBER_VAL(arg));
+	trealloc_free ((void *) (long) TRENUMBER_VAL(arg));
 
 	return treptr_nil;
 }

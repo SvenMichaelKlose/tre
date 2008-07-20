@@ -11,6 +11,7 @@
 #include "io_std.h"
 #include "error.h"
 #include "string.h"
+#include "alloc.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -38,7 +39,7 @@ treiostd_open_file (char * name)
 {
 	const char * txt1 = "file '";
 	const char * txt2 = "'";
-	char * n = malloc (strlen (txt1) + strlen (name) + strlen (txt2));
+	char * n = trealloc (strlen (txt1) + strlen (name) + strlen (txt2));
     struct tre_stream * s;
     FILE * fd;
 
