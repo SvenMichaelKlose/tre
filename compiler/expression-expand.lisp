@@ -11,8 +11,9 @@
 (defvar *expexsym-counter* 0)
 
 (defstruct expex
-  functionp
-  function-arguments
+  (function? #'((x)
+				  (functionp (symbol-value x))))
+  (function-arguments #'function-arguments)
   (function-collector #'((fun args))))
 
 ;; Returns newly created, unique symbol.
@@ -87,11 +88,11 @@
 						(eq '&rest (car x)))
 				   (expex-argexpand-rest (cdr x))
 				   x))
-		  (cdrlist (argument-expand (funcall (expex-function-arguments ex) fun) args t))))
+		  (cdrlist (argument-expand fun (funcall (expex-function-arguments ex) fun) args t))))
 
 (defun expex-argexpand (ex fun args)
   (if (and (atom fun)
-		   (funcall (expex-functionp ex) fun))
+		   (funcall (expex-function? ex) fun))
 	  (expex-argexpand-do ex fun args)
 	  args))
 
@@ -100,9 +101,13 @@
 ;; The arguments are replaced by gensyms.
 (defun expex-std-expr (ex x)
   (with (argexp (expex-argexpand ex (car x) (cdr x))
-		 (pre newargs) (expex-args ex argexp))
+		 (pre newargs) (expex-args ex (if (consp (car x))
+										  x
+										  argexp)))
     (values pre
-			(list (cons (car x) newargs)))))
+			(if (consp (car x))
+				(list newargs)
+				(list (cons (car x) newargs))))))
 
 ;; Expand expression depending on type.
 ;;
