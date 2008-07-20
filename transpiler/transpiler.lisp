@@ -52,7 +52,7 @@
 			  #'((fun args)
 				  (transpiler-add-wanted-function tr fun))
 
-			(expex-functionp ex)
+			(expex-function? ex)
 			  #'((fun)
 				   (or (assoc fun (transpiler-function-args tr))
 					   (and (not (member fun (transpiler-unwanted-functions tr)))
@@ -308,6 +308,8 @@
 								 (transpiler-finalize-sexprs tr x))
 							 #'(lambda (x)
 						         (transpiler-encapsulate-strings x))
+							 #'(lambda (x)
+						         (opt-peephole x))
 							 #'(lambda (x)
 						         (expression-expand (transpiler-expex tr) x))
 							 #'(lambda (x)
