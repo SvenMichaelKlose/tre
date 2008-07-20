@@ -1,15 +1,13 @@
 /*
  * nix operating system project tre interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
- * Symbol table
+ * Symbol database.
  */
 
 #ifndef TRE_SYMBOL_H
 #define TRE_SYMBOL_H
 
-extern char symbol_table[TRE_SYMBOL_TABLE_SIZE];
-extern char *symbol_table_free;
 extern unsigned num_symbols;
 
 extern void tresymbolpage_remove (treptr atom);
