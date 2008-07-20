@@ -92,7 +92,7 @@
 		   (if (quote? x)
 			   (if (eq '%stack (cadr x))
 				   '(%quote %stack)
-			   	   (simple-quote-expand (cdr x)))
+			   	   (simple-quote-expand (cadr x)))
 		   	   (if (backquote? x)
 			  	   (quote-expand (cdr x))
 			       x)))))
