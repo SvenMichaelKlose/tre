@@ -30,8 +30,6 @@
        ,@exec-body)))
 
 ;;; Stack setup
-;;;
-;;; Stack operations should be created in the ssa pass.
 
 (defun make-stackop (var fi)
   "Make stack operation. If the variable is not in the current environment,
@@ -83,17 +81,21 @@
     (with ((a v) (assoc-splice (argument-expand 'local-var-fun args vals t)))
       (with-funinfo-env-temporary fi args
         (make-inline-body
-			a
-      		(vars-to-stackops v fi)
+			(vars-to-stackops a fi)
+      		v
 			(lambda-embed-or-export body fi export-lambdas))))))
 
 ;;; LAMBDA export
 
 (defun make-varblock-inits (fi fv)
-  (mapcar #'((v) `(%set-vec ,s ,(position v fv) ,(make-stackop v fi))) fv))
+  (mapcar #'((v)
+			  `(%set-vec ,s ,(position v fv) ,(make-stackop v fi)))
+		  fv))
 
 (defun make-varblock-exits (fi fv)
-  (mapcar #'((v) `(%get-vec ,s ,(make-stackop v fi) ,(position v fv))) fv))
+  (mapcar #'((v)
+			  `(%get-vec ,s ,(make-stackop v fi) ,(position v fv)))
+		  fv))
 
 (defun make-call-to-exported (name fi)
   (with (f	    (symbol-function name)
