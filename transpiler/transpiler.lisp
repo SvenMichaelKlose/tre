@@ -66,8 +66,11 @@
 			(transpiler-expex tr) ex))
 	tr))
 
-(defun transpiler-translate-symbol (tr from to)
-  (acons! from to (transpiler-symbol-translations tr)))
+(defun transpiler-add-wanted-function (tr fun)
+  (when (not (or (member fun (transpiler-wanted-functions tr))
+				 (member fun (transpiler-unwanted-functions tr))
+				 (assoc fun (expander-macros (expander-get (transpiler-macro-expander tr))))))
+	(push fun (transpiler-wanted-functions tr))))
 
 ;;;; SLOT GETTER GENERATION
 
@@ -122,26 +125,6 @@
          fi             (make-funinfo :env (list forms nil)))
     (lambda-embed-or-export x fi nil)))
 
-;;;; ARGUMENT EXPANSION
-
-(defun transpiler-expand-argdef (tr x)
-  (or (cdr (assoc x (transpiler-function-args tr)))
-      (function-arguments (symbol-function x))))
-
-(defun transpiler-add-wanted-function (tr fun)
-  (when (not (or (member fun (transpiler-wanted-functions tr))
-				 (member fun (transpiler-unwanted-functions tr))
-				 (assoc fun (expander-macros (expander-get (transpiler-macro-expander tr))))))
-	(push fun (transpiler-wanted-functions tr))))
-
-(defun transpiler-expand-args (tr x)
-  (with (fname  (first (third x))
-		 d (transpiler-expand-argdef tr fname))
-    (transpiler-add-wanted-function tr fname)
-	(if d
-        (cdrlist (argument-expand d (cdr (third x)) t))
-	    (cdr (third x)))))
-
 ;;;; ENCAPSULATION
 
 (defun transpiler-encapsulate-strings (x)
@@ -163,7 +146,7 @@
 	  (if (eq e nil)
 		  (transpiler-finalize-sexprs tr (cdr x))
 	  	  (if (atom e) ; Jump label.
-		      (cons (string-concat (transpiler-symbol-string tr e) (format nil ":~%"))
+		      (cons (format nil "case \"~A\":~%" (transpiler-symbol-string tr e))
 		            (transpiler-finalize-sexprs tr (cdr x)))
               (if (and (%setq? e) (is-lambda? (caddr e))) ; Recurse into function.
 	              (cons `(%setq ,(second e) (function
@@ -207,6 +190,9 @@
 
 ;;;; POST PROCESSING
 
+(defun transpiler-translate-symbol (tr from to)
+  (acons! from to (transpiler-symbol-translations tr)))
+
 (defun transpiler-special-char? (tr x)
   (not (funcall (transpiler-identifier-char? tr) x)))
 
@@ -219,11 +205,10 @@
 		   #'((x)
 				(when x
 			      (with (c (char-downcase (car x)))
-			        (if (or (in=? c #\*)
-							(and (= #\- c) (cdr x)))
-				        (when (cdr x)
-						  (cons (char-upcase (cadr x))
-							    (convert-camel (cddr x))))
+			        (if (and (in=? c #\* #\-)
+							 (cdr x))
+						(cons (char-upcase (cadr x))
+							  (convert-camel (cddr x)))
 					    (cons c (convert-camel (cdr x)))))))
 
 		 convert-special2
