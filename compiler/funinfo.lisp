@@ -75,7 +75,7 @@
 (defmacro with-funinfo-env-temporary (fi args &rest body)
   "Execute body with new environment, containing 'args'."
   (with-gensym old-env
-    `(let ((,old-env (funinfo-env ,fi)))
+    `(let ((,old-env (copy-tree (funinfo-env ,fi))))
        (funinfo-env-add-args ,fi ,args)
        (prog1
          (progn
