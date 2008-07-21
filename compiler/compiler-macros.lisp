@@ -100,9 +100,13 @@
 						    tail
 						    `((%setq ~%ret ,@tail)))))
              (bname (cdr (assoc block-name *blockname-replacements*))))
-        (if bname
-            (nconc ret (list bname) '((identity ~%ret)))
-            (nconc ret '((identity ~%ret)))))
+        (prog1
+		  (if bname
+              (nconc ret (list bname) '((identity ~%ret)))
+              (nconc ret '((identity ~%ret))))
+		  (setf *blockname-replacements* (remove-if #'((x)
+											            (eq block-name (car x)))
+										 *blockname-replacements*))))
     `(identity nil)))
 
 (define-compiler-macro setq (&rest args)
