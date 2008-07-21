@@ -32,19 +32,6 @@
 (defun expex-returnable? (ex x)
   (not (vm-jump? x)))
 
-(defun expex-make-return-value (ex e s)
-  (with (b (butlast e)
-		 l (last e)
-		 la (car l))
-   	(if (expex-returnable? ex la)
-		(append b (if (%setq? la)
-					  (if (%setqret? la)
-				          `((%setq ~%ret ,(third la)))
-						  `((%setq ,(second la) ,(third la))  ; Assign to return value.
-						    (%setq ~%ret ,(second la))))
-				      `((%setq ,s ,@(or l '(nil))))))
-		e)))
-
 ;; Transform moved expression to one which assigns its return
 ;; value to a gensym.
 ;;
@@ -54,16 +41,16 @@
   (if (not (expex-able? ex x))
 	  (cons nil x)
   	  (with (s (expex-sym))
-  	  (if (vm-scope? x)
-		  (if (vm-scope-body x)
-	          (cons (expex-body ex (vm-scope-body x) s) ; Special treatment for VM-SCOPE arguments.
-				    s)
-			  (cons '(nil) s))
-  	      (with ((head tail) (expex-expr ex x))
-    	    (cons (append head (if (expex-returnable? ex (car tail))
-								   `((%setq ,s ,@tail))
-								   tail))
-		  	      s))))))
+  	    (if (vm-scope? x)
+		    (if (vm-scope-body x)
+	            (cons (expex-body ex (vm-scope-body x) s) ; Special treatment for VM-SCOPE arguments.
+				      s)
+			    (cons '(nil) s))
+  	        (with ((head tail) (expex-expr ex x))
+    	      (cons (append head (if (expex-returnable? ex (car tail))
+								     `((%setq ,s ,@tail))
+								     tail))
+		  	        s))))))
 
 ;; Move subexpressions out of a parent.
 ;;
@@ -131,6 +118,19 @@
   (when x
      (with ((head tail) (expex-expr ex (car x)))
        (append head tail (expex-list ex (cdr x))))))
+
+(defun expex-make-return-value (ex e s)
+  (with (b (butlast e)
+		 l (last e)
+		 la (car l))
+   	(if (expex-returnable? ex la)
+		(append b (if (%setq? la)
+					  (if (eq s (second la))
+				          l
+						  `(,la
+						    (%setq ,s ,(second la))))
+				      `((%setq ,s ,@(or l '(nil))))))
+		e)))
 
 ;; Expand VM-SCOPE body and have the return value of the
 ;; last expression assigned to a gensym which will replace
