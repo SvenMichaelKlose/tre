@@ -8,7 +8,7 @@
 
 (defun atomic-expand-lambda (fun mex &optional (parent-env nil))
   (with ((lex fi) (lambda-expand fun (backquote-expand mex) parent-env))
-    (tree-expand fi (print (opt-peephole (expression-expand (make-expex) lex))))
+    (tree-expand fi (opt-peephole (expression-expand (make-expex) lex)))
 fi
 ))
     ;(setf (cdr (assoc fun *expanded-functions*)) fi)
@@ -46,6 +46,5 @@ fi
 )))
 
 (defun compile-all ()
-  (tree-expand-reset)
   (atomic-expand-all)
   nil)

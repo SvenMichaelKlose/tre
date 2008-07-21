@@ -5,16 +5,6 @@
 ;;;;; removes IDENTITY and SETQ expressions, removes label sequences and
 ;;;;; builds a graph of code blocks.
 
-;;;; Simple filters.
-
-(defun filter-identity (l)
-  "Remove IDENTITY expressions."
-  (mapcar #'((x)
-              (if (and (consp x) (cdr x) (identity? (second x)))
-				(list (car x) (second (second x)))
-                  x))
-		  l))
-
 (defun remove-setq (l)
   "Remove inital SETQ symbol from expressions."
   (mapcar #'((x)
@@ -25,55 +15,8 @@
                   x))
           (remove-if #'identity? l)))
 
-(defun remove-vm-go (x)
-  "Remove VM-GO and VM-GO-NIL expressions that jump to their CDR."
-)
-
-;;;; Label compression.
-;;;;
-;;;; Code must be interrupted only by single labels.
-
-(defun label-sequence? (x)
-  "Check if x is a list that starts with two labels."
-  (and x
-       (consp x)
-	   (atom (first x))
-	   (consp (cdr x))
-	   (atom (second x))))
-
-(defun transform-labels (x)
-  (with (label-list nil
-		 get-label-sequence #'((x first-label)
-  		   (when x
-  			 (if (consp (car x))
-				 (progn
-				   (setf (cdr (assoc (car x) lst)) first-label)
-			  	   (get-label-sequence (cdr x) first-label))
-	    		 (find-label-sequence x))))
-
-		 find-label-sequences #'((x)
-  		   (when x
-    		 (cons (car x)
-		  		   (if (label-sequence? x)
-			  		   (get-label-sequence (cdr x) (car x))
-			  		   (self (cdr x)))))))
-	(values label-list (find-label-sequence x))))
-
-(defun replace-labels (x replacement-list)
-  (tree-walk x :ascending
-				 #'((elm)
-					  (or (cdr (assoc elm replacement-list))
-					      elm))))
-
-(defun compress-labels (x)
-  (when x
-	(replace-labels x (find-label-sequences x))))
-
 ;;;; Top-level.
 
 (defun tree-expand (fi l)
-  (with (x (filter-identity (remove-setq l)))
+  (with (x (remove-setq l))
     (setf (funinfo-first-cblock fi) x)))
-
-(defun tree-expand-reset ()
-  (setf *tags-cblocks* nil))
