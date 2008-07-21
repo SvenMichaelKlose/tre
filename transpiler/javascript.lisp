@@ -13,7 +13,7 @@
 		  (or (and (>= x #\a) (<= x #\z))
 		  	  (and (>= x #\A) (<= x #\Z))
 		  	  (and (>= x #\0) (<= x #\9))
-			  (in=? x #\_ #\.)))))
+			  (in=? x #\_ #\. #\$ #\#)))))
 
 (defvar *js-transpiler* (make-javascript-transpiler))
 (defvar *js-separator* (transpiler-separator *js-transpiler*))
@@ -36,6 +36,12 @@
     (format f "~A" (transpiler-pass2 *js-transpiler* *js-base*)))
   (transpiler-transpile *js-transpiler* x "js.js"))
 
+(defun js-machine (outfile)
+  (with-open-file f (open outfile :direction 'output)
+    (format f "~A"
+			(transpiler-concat-strings
+			  (transpiler-wanted *js-transpiler* #'transpiler-pass2 (reverse *UNIVERSE*))))))
+
 ;;;; EXPANSION OF ALTERNATE STANDARD MACROS
 
 (define-js-std-macro defun (name args &rest body)
@@ -45,6 +51,9 @@
     `(%setq ,name
 		    #'(lambda ,args
     		    ,@body))))
+
+(define-js-std-macro defvar (name val)
+  `(%setq ,name  ,val))
 
 (define-js-std-macro slot-value (x y)
   `(%slot-value ,x ,(second y)))
@@ -58,27 +67,21 @@
 									   (lambda-args x) nil nil))
 	  ,(code-char 10)
 	  "{" ,(code-char 10)
+	  "__l = \"\";"
+	  "while (1) {"
+	  "switch (__l) {case \"\":"
       ,@(lambda-body x)
-      ("return " ~%ret ,*js-separator*)
-	  "}")))
-
-(define-js-macro defvar (name val)
-  `("var " ,name " = " ,val))
+      ("}return " ~%ret ,*js-separator*)
+	  "}}")))
 
 (define-js-macro new (&rest x)
   `(%transpiler-native "new " ,(first x) ,@(transpiler-binary-expand "," (cdr x))))
 
 (define-js-macro get-slot (slot obj)
-  ($
-	(transpiler-symbol-string *js-transpiler* obj)
-	"."
-	(transpiler-symbol-string *js-transpiler* slot)))
+  ($ obj "." slot))
 
 (define-js-macro %setq (dest val)
-  `(,(if (atom dest)
-		 (transpiler-symbol-string *js-transpiler* dest)
-		 dest)
-    "=" ,val))
+  `((%transpiler-native ,dest) "=" ,val))
 
 ;;; TYPE PREDICATES
 
@@ -135,17 +138,18 @@
   `("{"
     ,@(when args
 	    (mapcan #'((x)
-				    (if (keywordp x)
-					    (list x ":")
-					    (list x)))
-			    args))
+					 (list (first x) ":" (second x) ","))
+			    (butlast (group args 2))))
+    ,@(when args
+		(with (x (car (last (group args 2))))
+		  (list (first x) ":" (second x))))
    "}"))
 
 (define-js-macro vm-go (tag)
-  `("goto " ,tag))
+  `("__l=\"" ,(transpiler-symbol-string *js-transpiler* tag) "\"; continue"))
 
 (define-js-macro vm-go-nil (val tag)
-  `("if (!" ,val ") goto " ,tag))
+  `("if (!" ,val ") {__l=\"" ,(transpiler-symbol-string *js-transpiler* tag) "\"; continue;}"))
 
 (define-js-macro identity (x)
   x)
@@ -166,9 +170,7 @@
   `(%transpiler-native "!" ,x))
 
 (define-js-macro %slot-value (x y)
-  `(%transpiler-native ,(string-concat (transpiler-symbol-string *js-transpiler* x)
-									   "."
-									   (transpiler-symbol-string *js-transpiler* y))))
+  ($ x "." y))
 
 ;    "ELT", "%SET-ELT", "LENGTH",
 ;    "CODE-CHAR", "INTEGER",
@@ -210,22 +212,25 @@
 ;;;
 ;;; Conses are objects containing a pair.
 
-(defun cons (a d)
-  (setf this._car a)
-  (setf this._cdr d)
+(defun %cons (a d)
+  (setf this._a a)
+  (setf this._d d)
   this)
 
+(defun cons (a d)
+  (new %cons a d))
+
 (defun car (x)
-  x._car)
+  x._a)
 
 (defun cdr (x)
-  x._cdr)
+  x._d)
 
 (defun rplaca (x val)
-  (setf x._car val))
+  (setf x._a val))
 
 (defun rplacd (x val)
-  (setf x._car val))
+  (setf x._d val))
 
 (defun list ()
   (labels ((rec (x)
@@ -236,7 +241,7 @@
     (rec arguments)))
 
 ,(def-js-type-predicate symbolp "symbol")
-,(def-js-type-predicate consp "cons")
+,(def-js-type-predicate consp '%cons)
 ,(def-js-type-predicate numberp "Number")
 ,(def-js-type-predicate arrayp "Array")
 ,(def-js-type-predicate stringp "String")
