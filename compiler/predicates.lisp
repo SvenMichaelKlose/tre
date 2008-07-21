@@ -2,6 +2,14 @@
 ;;;; lisp compiler
 ;;;; Copyright (c) 2006-2008 Sven Klose <pixel@copei.de>
 
+(defun expex-sym? (x)
+  (and (atom x)
+	   (string= "~E" (subseq (symbol-name x) 0 2))))
+
+(defun get-slot? (x)
+  (and (consp x)
+	   (eq 'GET-SLOT (car x))))
+
 (defun %stack? (x)
   (and (consp x)
 	   (eq '%STACK (car x))))
