@@ -844,6 +844,9 @@ STREAMS
 	Peek next character from input stream. The character will remain
         in the stream.
 
+	(READ &OPTIONAL stream) - function
+	Reads and returns expression from stream.
+
     (READ-CHAR &OPTIONAL stream) - function
 	Take character from input stream.
 

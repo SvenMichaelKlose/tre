@@ -56,6 +56,7 @@ most recent changes in unstable releases.
 	- GET-STRING-STREAM: Empties the stream.
 	- SYMBOL-PACKAGE: New built-in function returns package of a symbol.
 	- STRING-CONCAT: Ignores NIL.
+	- READ: New function reads and returns expression from stream.
 
 	- EXEC, FORK, WAIT: New functions for process execution.
 
