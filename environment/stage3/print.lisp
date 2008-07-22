@@ -63,7 +63,8 @@
 
 (defun peek-char (&optional (str *standard-input*))
   "Read character without stepping to next."
-    (setf (stream-peeked-char str) (read-char str)))
+  (or (stream-peeked-char str)
+      (setf (stream-peeked-char str) (read-char str))))
 
 (defun end-of-file (&optional (str *standard-input*))
   "Test if stream is at file end."
