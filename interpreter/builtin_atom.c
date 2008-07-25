@@ -60,8 +60,19 @@ treatom_builtin_eql (treptr list)
 treptr
 treatom_builtin_make_symbol (treptr args)
 {
-    treptr arg = trearg_typed (1, TRETYPE_STRING, trearg_get (args), "symbol name");
-    return treatom_get (TREATOM_STRINGP(arg), TRECONTEXT_PACKAGE());
+	unsigned num_args = trelist_length (args);
+	treptr name;
+	treptr package;
+
+	if (num_args == 0 || num_args > 2)
+		args = treerror (treptr_nil, "name and optional package required");
+	name = CAR(args);
+    name = trearg_typed (1, TRETYPE_STRING, name, "symbol name");
+	package = num_args == 2 ?
+			  CADR(args) :
+			  TRECONTEXT_PACKAGE();
+
+    return treatom_get (TREATOM_STRINGP(name), package);
 }
 
 /*
