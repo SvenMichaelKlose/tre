@@ -4,12 +4,11 @@
 
 (defmacro while (test result &rest body)
   "Loops over body unless test evaluates to NIL and returns result."
-  (let ((tag (gensym))
-	(bname (gensym)))
-    `(block ,bname
+  (let ((tag (gensym)))
+    `(block nil
        (tagbody
          ,tag
          (when ,test
            ,@body
            (go ,tag))
-         (return-from ,bname ,result)))))
+         (return-from nil ,result)))))
