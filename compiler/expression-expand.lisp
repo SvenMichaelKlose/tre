@@ -26,11 +26,17 @@
 ;; Declines atoms and expressions with meta-forms.
 (defun expex-able? (ex x)
   (not (or (atom x)
-           (in? (car x) 'get-slot '%funref 'vm-go 'vm-go-nil '%stack '%quote '%transpiler-string '%no-expex))))
+           (in? (car x) '%stack '%quote
+						'vm-go 'vm-go-nil
+						'%transpiler-native '%transpiler-string
+						'%var
+						'get-slot '%funref '%no-expex))))
 
 ;; Check if an expression has a return value.
 (defun expex-returnable? (ex x)
-  (not (vm-jump? x)))
+  (not (or (vm-jump? x)
+		   (and (consp x)
+				(eq '%var (car x))))))
 
 ;; Transform moved expression to one which assigns its return
 ;; value to a gensym.
@@ -116,8 +122,10 @@
 ;; expansions in a body.
 (defun expex-list (ex x)
   (when x
-     (with ((head tail) (expex-expr ex (car x)))
-       (append head tail (expex-list ex (cdr x))))))
+	(if (expex-able? ex (car x))
+        (with ((head tail) (expex-expr ex (car x)))
+          (append head tail (expex-list ex (cdr x))))
+		(cons (car x) (expex-list ex (cdr x))))))
 
 (defun expex-make-return-value (ex e s)
   (with (b (butlast e)
