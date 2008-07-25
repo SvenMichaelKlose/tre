@@ -34,6 +34,7 @@
   macro-expander
   separator
   unwanted-functions
+  expanded-functions
   (identifier-char? nil)
   (symbol-translations nil)
   (expex nil)
@@ -93,16 +94,14 @@
 	 `(%transpiler-native ,,x ,(string-downcase (string name)) " " ,,y)))
 
 (defun transpiler-binary-expand (op args)
-  (nconc (list "(")
-		 (mapcan #'(lambda (x)
+  (nconc (mapcan #'(lambda (x)
 					 `(,x ,op))
 				 (butlast args))
-		 (last args)
-		 (list ")")))
+		 (last args)))
 
 (defmacro define-transpiler-binary (tr op repl-op)
   `(define-expander-macro ,(transpiler-macro-expander (eval tr)) ,op (&rest args)
-     (transpiler-binary-expand ,repl-op args)))
+     `("(" ,,@(transpiler-binary-expand ,repl-op args) ")")))
 
 ;;;; STANDARD MACRO EXPANSION
 
@@ -157,7 +156,10 @@
 	              (if (and (identity? e) (eq '~%ret (second e))) ; Remove (IDENTITY ~%RET).
 		              (transpiler-finalize-sexprs tr (cdr x))
 				      ; Just copy with seperator. Make return-value assignment if missing.
-		              (cons (if (and (consp e) (not (or (vm-jump? e) (%setq? e))))
+		              (cons (if (and (consp e)
+									 (not (or (vm-jump? e)
+											  (%setq? e)
+											  (in? (car e) '%var '%transpiler-native))))
 							    `(%setq ~%ret ,e)
 							    e)
 						    (cons separator
@@ -173,7 +175,7 @@
 	   (not (in? (first (third x)) '%transpiler-string '%transpiler-native))))
 
 (defun transpiler-macrocall-funcall (x)
-  (transpiler-binary-expand "," x))
+  `("(" ,@(transpiler-binary-expand "," x) ")"))
 
 (defun transpiler-macrocall (tr fun x)
   (with (m (cdr (assoc fun (expander-macros (expander-get (transpiler-macro-expander tr))))))
@@ -233,7 +235,8 @@
 		 str (string s)
 	     l (length str))
 
-	(if (numberp s)
+	(if (or (stringp s)
+			(numberp s))
 		str
         (list-string
 	      (convert-special
@@ -250,9 +253,9 @@
 				(cond
 				  ((consp e)   (if (eq (car e) '%transpiler-string)
 								   (string-concat "\"" (cadr e) "\"")
-									(if (in? (car e) '%transpiler-native '%no-expex)
-										(transpiler-to-string tr (cdr e))
-										e)))
+								   (if (in? (car e) '%transpiler-native '%no-expex)
+									   (transpiler-to-string tr (cdr e))
+									   e)))
 				  ((stringp e) e)
 				  (t		   (aif (assoc e (transpiler-symbol-translations tr))
 								   (cdr !)
@@ -313,21 +316,47 @@
 				    x))
 		      forms))))
 
+(defmacro with-gensym-assignments ((&rest pairs) &rest body)
+  `(with-gensym ,(mapcar #'first (group pairs 2))
+	 `(with ,(mapcar #'((x)
+					      (list 'QUASIQUOTE x))
+					 pairs)
+	    ,(list 'QUASIQUOTE-SPLICE (cons 'QUOTE body)))))
+;,,@.'body)))))
+
+(defmacro assoc-update (key value alist)
+  (with-gensym-assignments (k key
+							v value)
+    (aif (assoc ,k ,alist)
+	     (setf (cdr !) ,v)
+	     (setf ,alist (acons ,k ,v ,alist)))))
+
+;(defun transpiler-sight (tr funlist)
+;  (with (out nil)
+;    (dolist (x funlist (reverse out))
+;	  (with (fun (symbol-function x))
+;	    (when (functionp fun)
+;		  (if fun
+;			  (assoc-update x
+;		  	  				(expanded (funcall #'transpiler-pass1
+;;							 				   tr `((defun ,x ,(function-arguments fun)
+;							                          ,@(function-body fun)))))
+;							(transpiler-expanded-functions tr))
+;			  (error "Unknown function ~A~%" (symbol-name x))))))))
+
 (defun transpiler-wanted (tr pass funlist)
   (with (out nil)
     (dolist (x funlist (reverse out))
 	  (with (fun (symbol-function x))
-		     (when (functionp fun)
-			   (if fun
-				   (or (and verbose
-						    (format t "Processing ~A~%" (symbol-name x)))
-			  	       (push (funcall pass tr `((defun ,x ,(function-arguments fun)
-											      ,@(function-body fun))))
-							 out))
-				  (and verbose (format t "Unknown function ~A~%" (symbol-name x)))))))))
+	    (when (functionp fun)
+		  (if fun
+		  	  (push (funcall pass tr `((defun ,x ,(function-arguments fun)
+									     ,@(function-body fun))))
+					out)
+			  (error "Unknown function ~A~%" (symbol-name x))))))))
 
-(defun transpiler-transpile (tr forms name)
-  (format t "### Pass 1...~%")
+(defun transpiler-transpile (tr forms)
+  (format t "Sighting...~%")
   (transpiler-pass1 tr forms)
   (with (w nil
 		 n (transpiler-wanted-functions tr))
@@ -336,12 +365,9 @@
 	  (setf w n
 			n (transpiler-wanted-functions tr))))
 
-  (format t "### Pass 2...~%")
-  (with (src (transpiler-concat-strings
-			   (list (transpiler-wanted tr #'transpiler-pass2 (transpiler-wanted-functions tr))
-					 (transpiler-pass2 tr forms))))
-  (format t "### Emitting code...~%")
-	(with-open-file f (open name :direction 'output)
-	  (format f "// TRE transpiler output~%")
-	  (format f "// http://www.copei.de~%")
-	  (format f "~A" src))))
+  (format t "Compiling...~%")
+  (transpiler-concat-strings
+	(list (format nil "// TRE transpiler output~%")
+	  	  (format nil "// http://www.copei.de~%")
+		  (transpiler-wanted tr #'transpiler-pass2 (transpiler-wanted-functions tr))
+		  (transpiler-pass2 tr forms))))
