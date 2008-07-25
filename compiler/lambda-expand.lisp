@@ -70,8 +70,9 @@
 (defun make-inline-body (args vals body)
   "Make body with stack variable initialisers."
   `(vm-scope
-	 ,@(mapcar #'((a v)
-				  `(%setq ,a ,v))
+	 ,@(mapcan #'((a v)
+				  `((%var ,a)
+					(%setq ,a ,v)))
 			   args vals)
      ,@body))
 
