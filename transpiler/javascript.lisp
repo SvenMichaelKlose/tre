@@ -30,11 +30,25 @@
 
 ;;;; TOPLEVEL
 
-(defun js-transpile (x)
-  (with-open-file f (open "tre-base.js" :direction 'output)
-    (format t "Compiling JavaScript core functions...~%")
-    (format f "~A" (transpiler-pass2 *js-transpiler* *js-base*)))
-  (transpiler-transpile *js-transpiler* x "js.js"))
+(defun read-many (str)
+  (with (x nil)
+	(while (not (end-of-file str)) (reverse x)
+	  (awhen (read str)
+		(push ! x)))))
+	
+(defun js-transpile (outfile infiles)
+  (with (x nil)
+	(dolist (file infiles)
+	  (format t "Reading file '~A'.~%" file)
+  	  (with-open-file f (open file :direction 'input)
+	    (setf x (append x (read-many f)))))
+    (with-open-file f (open outfile :direction 'output)
+	  (with (base (or (format t "Compiling JavaScript core...~%")
+      				  (transpiler-pass2 *js-transpiler* *js-base*))
+	  		 user (or (format t "Compiling user code...~%")
+      				  (transpiler-transpile *js-transpiler* x)))
+	    (format t "Emitting code.~%")
+		(format f "~A~A" base user)))))
 
 (defun js-machine (outfile)
   (with-open-file f (open outfile :direction 'output)
@@ -61,27 +75,27 @@
 (define-js-macro function (x)
   (if (atom x)
 	  x
-      `("function " ,@(transpiler-binary-expand
+      `("function (" ,@(transpiler-binary-expand
 				      ","
 				      (argument-expand 'unnamed-js-function
-									   (lambda-args x) nil nil))
+									   (lambda-args x) nil nil)) ")"
 	  ,(code-char 10)
-	  "{" ,(code-char 10)
-	  "__l = \"\";"
+	  "{var " ,'~%ret ,*js-separator*
+	  "var __l = \"\"" ,*js-separator*
 	  "while (1) {"
 	  "switch (__l) {case \"\":"
       ,@(lambda-body x)
-      ("}return " ~%ret ,*js-separator*)
+      ("}return " ,'~%ret ,*js-separator*)
 	  "}}")))
-
-(define-js-macro new (&rest x)
-  `(%transpiler-native "new " ,(first x) ,@(transpiler-binary-expand "," (cdr x))))
 
 (define-js-macro get-slot (slot obj)
   ($ obj "." slot))
 
 (define-js-macro %setq (dest val)
   `((%transpiler-native ,dest) "=" ,val))
+
+(define-js-macro %var (name)
+  `(%transpiler-native "var " ,name))
 
 ;;; TYPE PREDICATES
 
@@ -119,8 +133,8 @@
 (define-js-binary bit-and "&")
 (define-js-binary bit-or "|")
 
-(define-js-macro make-array (&rest ignored)
-  "[]")
+(define-js-macro make-array (&rest elements)
+  `(%transpiler-native "[" ,@(transpiler-binary-expand "," elements) "]"))
 
 (define-js-macro aref (arr &rest idx)
   `(%transpiler-native ,arr
@@ -144,6 +158,17 @@
 		(with (x (car (last (group args 2))))
 		  (list (first x) ":" (second x))))
    "}"))
+
+(define-js-macro %new (&rest x)
+  `(%transpiler-native "new " ,(first x) "(" ,@(transpiler-binary-expand "," (cdr x)) ")"))
+
+;; Make object if first argument is not a keyword, or string.
+(define-js-std-macro new (&rest x)
+  (if (and (consp x)
+		   (or (keywordp (first x))
+			   (stringp (first x))))
+	  `(make-hash-table ,@x)
+	  `(%new ,@x)))
 
 (define-js-macro vm-go (tag)
   `("__l=\"" ,(transpiler-symbol-string *js-transpiler* tag) "\"; continue"))
@@ -246,6 +271,9 @@
 ,(def-js-type-predicate arrayp "Array")
 ,(def-js-type-predicate stringp "String")
 ,(def-js-type-predicate functionp "Function")
+
+(defun atom (x)
+  (not (consp x)))
 
 (defun apply ()
   (when (= 0 arguments.length)
