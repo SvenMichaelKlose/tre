@@ -13,6 +13,16 @@
 
 ;;; Helper functions (helping us to stay sane).
 
+;(%set-atom-fun eql
+;  #'((x y)
+;	  (block eql
+;	    (cond
+;		  ((numberp x)
+;		     (cond
+;			   ((numberp y)
+;			      (return-from eql (= x y))))))
+;	    (eq x y))))
+
 (%set-atom-fun not
   #'((x)
     (eq x nil)))
@@ -61,7 +71,7 @@
           (cons (copy-tree (%quasiquote-eval %gsbq))
                 (%backquote-1 (cdr %gsbq))))
 
-      (t  (cons (copy-tree (car (cdr (car %gsbq))))
+      (t  (cons (%backquote (car (cdr (car %gsbq))))
                 (%backquote-1 (cdr %gsbq)))))))
 
 ;; Expand QUASIQUOTE-SPLICE.
