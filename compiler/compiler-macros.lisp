@@ -77,7 +77,9 @@
      (identity nil)))
 
 (define-compiler-macro progn (&rest body)
-  `(vm-scope ,@(vars-to-identity body)))
+  `(vm-scope ,@(aif (vars-to-identity body) ; XXX fscking workaround
+					!
+					'((identity nil)))))
 
 (defun lookup-create-gensym (block-name)
   (or (cdr (assoc block-name *blockname-replacements*))
