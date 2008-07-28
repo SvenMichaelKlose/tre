@@ -39,7 +39,9 @@
   (symbol-translations nil)
   (expex nil)
   (function-args nil)
-  (wanted-functions nil))
+  (wanted-functions nil)
+  (obfuscate? nil)
+  (obfuscations nil))
 
 (defun create-transpiler (&rest args)
   (with (tr (apply #'make-transpiler args))
@@ -81,8 +83,8 @@
 				     (with (sl (string-list (symbol-name x))
 					        p (position #\. sl :test #'=))
 				       (if p
-					       `(get-slot ,(make-symbol (list-string (subseq sl (1+ p))))
-								      ,(make-symbol (list-string (subseq sl 0 p))))
+					       `(%slot-value ,(make-symbol (list-string (subseq sl 0 p)))
+										 ,(make-symbol (list-string (subseq sl (1+ p)))))
 					       x))
 					 x))
 		   x))
@@ -262,8 +264,23 @@
 								   (string-concat (transpiler-symbol-string tr e) " ")))))
 		   x))
 
-(defun transpiler-concat-strings (x)
+(defun transpiler-concat-string-tree (x)
   (apply #'string-concat (tree-list x)))
+
+(defun transpiler-obfuscate (tr x)
+  (if (transpiler-obfuscate? tr)
+      (maptree #'((x)
+			        (if (and (variablep x)
+						     (not (keywordp x))
+						     (assoc x (transpiler-function-args tr)))
+					    (aif (assoc x (transpiler-obfuscations tr))
+						     (cdr !)
+						     (with (g (gensym))
+						       (acons! x g (transpiler-obfuscations tr))
+						       g))
+					    x))
+		       x)
+	  x))
 
 ;;;; TOPLEVEL
 
@@ -286,16 +303,21 @@
 	    x)))
 
 (defun transpiler-pass2 (tr forms)
-  (transpiler-concat-strings
-    (transpiler-to-string tr
-      (mapcar #'(lambda (x)
-                  (funcall
+  (with (str nil)
+	(dolist (x forms str)
+      (setf str
+	    (string-concat str
+		  (transpiler-concat-string-tree
+            (transpiler-to-string tr
+			  (funcall
 				    (compose #'(lambda (x)
 								 (expander-expand (transpiler-macro-expander tr) x))
 						     #'(lambda (x)
 								 (transpiler-finalize-sexprs tr x))
 							 #'(lambda (x)
 						         (transpiler-encapsulate-strings x))
+							 #'(lambda (x)
+								 (transpiler-obfuscate tr x))
 							 #'(lambda (x)
 						         (opt-peephole x))
 							 #'(lambda (x)
@@ -313,8 +335,7 @@
 						     #'list
 						     #'(lambda (x)
 								 (expander-expand (transpiler-std-macro-expander tr) x)))
-				    x))
-		      forms))))
+				    x))))))))
 
 (defmacro with-gensym-assignments ((&rest pairs) &rest body)
   `(with-gensym ,(mapcar #'first (group pairs 2))
@@ -327,9 +348,9 @@
 (defmacro assoc-update (key value alist)
   (with-gensym-assignments (k key
 							v value)
-    (aif (assoc ,k ,alist)
-	     (setf (cdr !) ,v)
-	     (setf ,alist (acons ,k ,v ,alist)))))
+    `(aif (assoc ,k ,alist)
+	     `(setf (cdr !) ,v)
+	     `(setf ,alist (acons ,k ,v ,alist)))))
 
 ;(defun transpiler-sight (tr funlist)
 ;  (with (out nil)
@@ -344,7 +365,6 @@
 ;							(transpiler-expanded-functions tr))
 ;			  (error "Unknown function ~A~%" (symbol-name x))))))))
 
-
 (defun transpiler-wanted (tr pass funlist)
   (with (out nil)
     (dolist (x funlist (reverse out))
@@ -354,7 +374,8 @@
 		  	  (push (funcall pass tr `((defun ,x ,(function-arguments fun)
 									     ,@(function-body fun))))
 					out)
-			  (error "Unknown function ~A~%" (symbol-name x))))))))
+			  (error "Unknown function ~A~%" (symbol-name x))))))
+  (transpiler-concat-string-tree out)))
 
 (defun transpiler-transpile (tr forms)
   (format t "Sighting...~%")
@@ -367,8 +388,6 @@
 			n (transpiler-wanted-functions tr))))
 
   (format t "Compiling...~%")
-  (transpiler-concat-strings
-	(list (format nil "// TRE transpiler output~%")
-	  	  (format nil "// http://www.copei.de~%")
-		  (transpiler-wanted tr #'transpiler-pass2 (transpiler-wanted-functions tr))
+  (apply #'string-concat
+	(list (transpiler-wanted tr #'transpiler-pass2 (transpiler-wanted-functions tr))
 		  (transpiler-pass2 tr forms))))

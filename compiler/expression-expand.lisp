@@ -30,7 +30,14 @@
 						'vm-go 'vm-go-nil
 						'%transpiler-native '%transpiler-string
 						'%var
-						'get-slot '%funref '%no-expex))))
+						'%funref '%no-expex))))
+
+;; Check if an expression is inline.
+;;
+;; These expressions are not moved out, but their arguments are expanded.
+(defun expex-inline? (ex x)
+  (and (consp x)
+       (in? (car x) '%slot-value)))
 
 ;; Check if an expression has a return value.
 (defun expex-returnable? (ex x)
@@ -44,19 +51,22 @@
 ;; Returns a CONS with the new head expressions in CAR and
 ;; the replacement symbol for the parent in CDR.
 (defun expex-assignment (ex x)
-  (if (not (expex-able? ex x))
-	  (cons nil x)
-  	  (with (s (expex-sym))
-  	    (if (vm-scope? x)
-		    (if (vm-scope-body x)
-	            (cons (expex-body ex (vm-scope-body x) s) ; Special treatment for VM-SCOPE arguments.
-				      s)
-			    (cons '(nil) s))
-  	        (with ((head tail) (expex-expr ex x))
-    	      (cons (append head (if (expex-returnable? ex (car tail))
-								     `((%setq ,s ,@tail))
-								     tail))
-		  	        s))))))
+  (if (expex-inline? ex x)
+	  (with ((p a) (expex-args ex (cdr x)))
+		(cons p (cons (car x) a)))
+	  (if (not (expex-able? ex x))
+	      (cons nil x)
+  	      (with (s (expex-sym))
+  	        (if (vm-scope? x)
+		        (if (vm-scope-body x)
+	                (cons (expex-body ex (vm-scope-body x) s) ; Special treatment for VM-SCOPE arguments.
+				          s)
+			        (cons '(nil) s))
+  	            (with ((head tail) (expex-expr ex x))
+    	          (cons (append head (if (expex-returnable? ex (car tail))
+								         `((%setq ,s ,@tail))
+								         tail))
+		  	            s)))))))
 
 ;; Move subexpressions out of a parent.
 ;;
@@ -94,13 +104,8 @@
 ;; The arguments are replaced by gensyms.
 (defun expex-std-expr (ex x)
   (with (argexp (expex-argexpand ex (car x) (cdr x))
-		 (pre newargs) (expex-args ex (if (consp (car x))
-										  x
-										  argexp)))
-    (values pre
-			(if (consp (car x))
-				(list newargs)
-				(list (cons (car x) newargs))))))
+		 (pre newargs) (expex-args ex x))
+    (values pre (list newargs))))
 
 ;; Expand expression depending on type.
 ;;
