@@ -373,7 +373,7 @@ char *tre_builtin_names[] = {
     "LOAD",
 
     "%PRINC", "%FORCE-OUTPUT", "%READ-CHAR",
-    "%FOPEN", "%FEOF", "%TERMINAL-RAW", "%TERMINAL-NORMAL",
+    "%FOPEN", "%FEOF", "%FCLOSE", "%TERMINAL-RAW", "%TERMINAL-NORMAL",
 
     "GC", "END-DEBUG", "INVOKE-DEBUGGER",
 
@@ -489,6 +489,7 @@ treevalfunc_t treeval_xlat_builtin[] = {
 
     trestream_builtin_fopen,
     trestream_builtin_feof,
+    trestream_builtin_fclose,
     trestream_builtin_terminal_raw,
     trestream_builtin_terminal_normal,
 

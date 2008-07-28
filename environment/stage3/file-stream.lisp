@@ -1,6 +1,6 @@
 ;;;; nix operating system project
 ;;;; list processor
-;;;; Copyright (C) 2005-2006 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2005-2006,2008 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; File streams
 
@@ -18,8 +18,14 @@
 		 :fun-out #'((c str) (%princ c (stream-handle str)))
 		 :fun-eof #'((str) (%feof (stream-handle str))))))
 
+(defun close (str)
+  (%fclose (stream-handle str)))
+
 (defmacro with-open-file (var file &rest body)
-  `(let ((,var ,file))
-     (unless ,var
-       (%error "couldn't open file"))
-     ,@body)) ; XXX need to close file
+  (with-gensym g
+    `(let ((,var ,file))
+       (unless ,var
+         (%error "couldn't open file"))
+       (with (,g (progn ,@body))
+		 (close ,var)
+		 ,g))))

@@ -1,6 +1,6 @@
 /*
  * nix operating system project tre interpreter
- * Copyright (c) 2005-2006 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2006,2008 Sven Klose <pixel@copei.de>
  *
  * Streams
  */
@@ -41,4 +41,17 @@ trestream_fopen (treptr path, treptr mode)
         return treptr_nil;
 
     return i;
+}
+
+int
+trestream_fclose (int handle)
+{
+	if (tre_fileio_handles[handle] == NULL)
+		return -1;
+
+	if (fclose (tre_fileio_handles[handle]))
+		return -1;
+
+	tre_fileio_handles[handle] = NULL;
+	return 0;
 }

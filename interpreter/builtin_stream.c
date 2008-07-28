@@ -55,17 +55,23 @@ trestream_builtin_princ (treptr args)
     return obj;
 }
 
+int
+trestream_builtin_get_handle_index (treptr args)
+{
+	treptr handle = trearg_get (args);
+
+	while (handle != treptr_nil && TREPTR_IS_NUMBER(handle) == FALSE)
+		handle = trearg_correct (1, TRETYPE_NUMBER, handle, "stream handle or NIL for stdout");
+    return (int) TRENUMBER_VAL(handle);
+}
 
 FILE *
 trestream_builtin_get_handle (treptr args, FILE * default_stream)
 {
 	treptr handle = trearg_get (args);
 
-	while (handle != treptr_nil && TREPTR_IS_NUMBER(handle) == FALSE)
-		handle = trearg_correct (1, TRETYPE_NUMBER, handle, "stream handle or NIL for stdout");
-
     return (handle != treptr_nil) ?
-           tre_fileio_handles[(int) TRENUMBER_VAL(handle)] :
+           tre_fileio_handles[trestream_builtin_get_handle_index (args)] :
  		   default_stream;
 }
 
@@ -84,6 +90,16 @@ trestream_builtin_feof (treptr args)
     FILE  * str = trestream_builtin_get_handle (args, stdin);
 
     if (feof (str))
+        return treptr_t;
+    return treptr_nil;
+}
+
+treptr
+trestream_builtin_fclose (treptr args)
+{
+    int  str = trestream_builtin_get_handle_index (args);
+
+    if (trestream_fclose (str))
         return treptr_t;
     return treptr_nil;
 }
