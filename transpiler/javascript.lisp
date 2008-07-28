@@ -7,7 +7,7 @@
 	:std-macro-expander 'js-alternate-std
 	:macro-expander 'javascript
 	:separator (format nil ";~%")
-	:unwanted-functions '($ cons car cdr list make-hash-table maphash)
+	:unwanted-functions '($ cons car cdr list make-hash-table map)
 	:identifier-char?
 	  #'(lambda (x)
 		  (or (and (>= x #\a) (<= x #\z))
@@ -42,6 +42,7 @@
 	  (format t "Reading file '~A'.~%" file)
   	  (with-open-file f (open file :direction 'input)
 	    (setf x (append x (read-many f)))))
+	(format t "OK. Will write to '~A'...~%" outfile)
     (with-open-file f (open outfile :direction 'output)
 	  (with (base (or (format t "Compiling JavaScript core...~%")
       				  (transpiler-pass2 *js-transpiler* *js-base*))
@@ -66,6 +67,11 @@
 		    #'(lambda ,args
     		    ,@body))))
 
+(define-js-std-macro defmacro (name args &rest body)
+  (progn
+	(eval (car (macroexpand `(define-js-std-macro ,name ,args ,@body))))
+    nil))
+
 (define-js-std-macro defvar (name val)
   `(%setq ,name  ,val))
 
@@ -87,9 +93,6 @@
       ,@(lambda-body x)
       ("}return " ,'~%ret ,*js-separator*)
 	  "}}")))
-
-(define-js-macro get-slot (slot obj)
-  ($ obj "." slot))
 
 (define-js-macro %setq (dest val)
   `((%transpiler-native ,dest) "=" ,val))
@@ -132,6 +135,9 @@
 (define-js-binary eql "==")
 (define-js-binary bit-and "&")
 (define-js-binary bit-or "|")
+
+(define-js-macro instance? (name typestring)
+  `(%transpiler-native ,name instanceof ,typestring))
 
 (define-js-macro make-array (&rest elements)
   `(%transpiler-native "[" ,@(transpiler-binary-expand "," elements) "]"))
@@ -197,6 +203,19 @@
 (define-js-macro %slot-value (x y)
   ($ x "." y))
 
+(define-js-std-macro doeach ((var seq &rest result) &rest body)
+  (with-gensym g
+    `(dotimes (,g (slot-value ,seq 'length) ,@result)
+	   (with (,var (aref ,seq ,g))
+         ,@body))))
+
+(define-js-std-macro dohash ((key val hash &rest result) &rest body)
+  (with-gensym g
+	`(block nil
+	   ((%transpiler-string "for (") ,key (%transpiler-string " in ") ,seq (%transpiler-string ")")
+	      (with (,var (aref ,seq ,g))
+            ,@body)))))
+
 ;    "ELT", "%SET-ELT", "LENGTH",
 ;    "CODE-CHAR", "INTEGER",
 ;    "CHARACTERP",
@@ -237,25 +256,25 @@
 ;;;
 ;;; Conses are objects containing a pair.
 
-(defun %cons (a d)
-  (setf this._a a)
-  (setf this._d d)
+(defun %cons (x y)
+  (setf this._ x)
+  (setf this.__ y)
   this)
 
-(defun cons (a d)
-  (new %cons a d))
+(defun cons (x y)
+  (new %cons x y))
 
 (defun car (x)
-  x._a)
+  x._)
 
 (defun cdr (x)
-  x._d)
+  x.__)
 
 (defun rplaca (x val)
-  (setf x._a val))
+  (setf x._ val))
 
 (defun rplacd (x val)
-  (setf x._d val))
+  (setf x.__ val))
 
 (defun list ()
   (labels ((rec (x)
@@ -297,5 +316,6 @@
 	(eval (+ "fun (" args ")"))
 	(x.shift)))
 
-(%transpiler-native "function maphash (fun, hash) { for (i in hash) fun (i); return null; }")
+(defun map (fun hash)
+  (%transpiler-native "null;for (i in hash) fun (i)"))
 ))

@@ -6,10 +6,6 @@
   (and (atom x)
 	   (string= "~E" (subseq (symbol-name x) 0 2))))
 
-(defun get-slot? (x)
-  (and (consp x)
-	   (eq 'GET-SLOT (car x))))
-
 (defun %stack? (x)
   (and (consp x)
 	   (eq '%STACK (car x))))
