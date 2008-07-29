@@ -64,11 +64,12 @@
 									(if (and (consp a)
 										 	(eq 'vm-go (first a)))
 						    			(cons a (remove-void (find-next-tag d)))
-										; Shorten (%setq expexsym sth) (%setq %ret sth).
-										(if (and (%setq? a) (%setqret? (car d))
+;							(cons a (remove-void d))))))))))
+										; Shorten (%setq expexsym sth) (%setq sth expexsym).
+										(if (and (%setq? a) (%setq? (car d))
 												 (expex-sym? (second a))
 												 (eq (second a) (third (car d))))
-											(cons `(%setq ~%ret ,(third a))
+											(cons `(%setq ,(second (car d)) ,(third a))
 												   (remove-void (cdr d)))
 											(cons a (remove-void d)))))))))))
 
@@ -76,7 +77,7 @@
 		   #'((x v)
 				(or (and (atom v)
 						 (expex-sym? v)
-						 (not x)) ; End of block - value won't be used.
+						 );(not x)) ; End of block - value won't be used.
 			        (when (and x (not (vm-jump? (car x)))) ; We don't know what happens after a jump.
 				      (or (and (%setq? (car x))
 						       (eq v (second (car x))))
@@ -106,7 +107,7 @@
 						; Don't set variable that will be modified anyway.
 						(if (and (%setq? a)
 							 	 (or (atom (third a))
-									 (get-slot? (third a))
+									 ;(get-slot? (third a))
 									 (%stack? (third a)))
 							 	 (will-be-set-again? d (second a)))
 							(remove-code d)
@@ -143,7 +144,7 @@
 					            x))
 						(funcall
 						  (compose #'reduce-tags
-								   #'remove-code
+								   ;#'remove-code
 								   #'remove-void
 )
 						  x))))
