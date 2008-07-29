@@ -26,6 +26,11 @@
 	   (not (symbol-function x))
 	   (eq x (symbol-value x))))
 
+(defun variablep (x)
+  (and (atom x)
+	   (not (or (stringp x)
+				(numberp x)))))
+
 (defun keywordp (x)
   "Tests if symbol is in the keyword package."
   (and (atom x)
