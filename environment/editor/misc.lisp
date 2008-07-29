@@ -18,10 +18,10 @@
 
 (defun $ (&rest args)
   "Converts arguments to strings, concatenates them and makes a symbol."
-  (make-symbol (apply #'string-concat (mapcar (compose string-upcase string) args))))
+  (make-symbol (apply #'string-concat (mapcar #'string args))))
 
 (define-test "$"
-  (($ "dollar-" 'test))
+  (($ "DOLLAR-" 'test))
   'dollar-test)
 
 (defmacro repeat (n &rest body)
