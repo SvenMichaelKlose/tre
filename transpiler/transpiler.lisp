@@ -149,21 +149,27 @@
 	  	  (if (atom e) ; Jump label.
 		      (cons (format nil "case \"~A\":~%" (transpiler-symbol-string tr e))
 		            (transpiler-finalize-sexprs tr (cdr x)))
-              (if (and (%setq? e) (is-lambda? (caddr e))) ; Recurse into function.
+			  ; Recurse into function.
+              (if (and (%setq? e) (is-lambda? (caddr e)))
 	              (cons `(%setq ,(second e) (function
 							                  (lambda ,(lambda-args (caddr e))
 							                    ,@(transpiler-finalize-sexprs tr (lambda-body (caddr e))))))
 			            (cons separator
 						      (transpiler-finalize-sexprs tr (cdr x))))
-	              (if (and (identity? e) (eq '~%ret (second e))) ; Remove (IDENTITY ~%RET).
+				  ; Remove (IDENTITY ~%RET).
+	              (if (and (identity? e) (eq '~%ret (second e)))
 		              (transpiler-finalize-sexprs tr (cdr x))
-				      ; Just copy with seperator. Make return-value assignment if missing.
+				      ; Just copy with separator. Make return-value assignment if missing.
 		              (cons (if (and (consp e)
 									 (not (or (vm-jump? e)
 											  (%setq? e)
 											  (in? (car e) '%var '%transpiler-native))))
-							    `(%setq ~%ret ,e)
-							    e)
+							        `(%setq ~%ret ,e)
+							        (if (and (consp e)
+											  (%setq? e)
+											 (expex-sym? (second e)))
+										`(%var ,e)
+										e))
 						    (cons separator
 							      (transpiler-finalize-sexprs tr (cdr x)))))))))))
 
