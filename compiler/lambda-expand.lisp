@@ -55,15 +55,18 @@
    Free variables are added to free-vars of the funinfo."
   (with (locals nil)
     (tree-walk body
+	  :dont-ascend-after-if #'%slot-value?
       :ascending
         #'((e)
 		   (if (is-lambda? e) ; Add variables to ignore in subfunctions.
 			   (progn
 				 (setf locals (append locals (lambda-args e)))
 				 e)
-           	   (if (is-stackvar? e fi locals)
-               	   (make-stackop e fi)
-			   	   e))))))
+			   (if (%slot-value? e)
+				   `(%slot-value ,(vars-to-stackops (second e) fi) ,(third e))
+           	       (if (is-stackvar? e fi locals)
+               	       (make-stackop e fi)
+			   	       e)))))))
 
 ;;; LAMBDA inlining
 
