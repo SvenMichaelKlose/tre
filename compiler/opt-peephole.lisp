@@ -75,15 +75,15 @@
 
 		 will-be-set-again?
 		   #'((x v)
-				(or (and (atom v)
-						 (expex-sym? v)
-						 );(not x)) ; End of block - value won't be used.
-			        (when (and x (not (vm-jump? (car x)))) ; We don't know what happens after a jump.
-				      (or (and (%setq? (car x))
-						       (eq v (second (car x))))
-					      ; Variable will be used - don't remove setter.
-					      (unless (find-tree (car x) v))
-					        (will-be-set-again? (cdr x) v)))))
+				(unless (and (atom v)
+						     (expex-sym? v)
+						     (not x)) ; End of block - value won't be used.
+			        (or (and x (not (vm-jump? (car x)))) ; We don't know what happens after a jump.
+				        (unless (and (%setq? (car x))
+						             (eq v (second (car x))))
+					        ; Variable will be used - don't remove setter.
+					        (or (find-tree (car x) v)
+					            (will-be-set-again? (cdr x) v))))))
 
 		 find-next-tag
 		   #'((x)
@@ -106,6 +106,7 @@
 						      (remove-code d))
 						; Don't set variable that will be modified anyway.
 						(if (and (%setq? a)
+								 (second a)
 							 	 (or (atom (third a))
 									 ;(get-slot? (third a))
 									 (%stack? (third a)))
