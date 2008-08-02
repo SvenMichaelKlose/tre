@@ -41,11 +41,11 @@
 	(dolist (file infiles)
 	  (format t "Reading file '~A'.~%" file)
   	  (with-open-file f (open file :direction 'input)
-	    (setf x (append x (read-many f)))))
+	    (setf x (append x (transpiler-sight *js-transpiler* (read-many f))))))
 	(format t "OK. Will write to '~A'...~%" outfile)
     (with-open-file f (open outfile :direction 'output)
 	  (with (base (or (format t "Compiling JavaScript core...~%")
-      				  (transpiler-pass2 *js-transpiler* *js-base*))
+      				  (transpiler-pass-complete *js-transpiler* *js-base*))
 	  		 user (or (format t "Compiling user code...~%")
       				  (transpiler-transpile *js-transpiler* x)))
 	    (format t "Emitting code.~%")
@@ -55,7 +55,7 @@
   (with-open-file f (open outfile :direction 'output)
     (format f "~A"
 			(transpiler-concat-strings
-			  (transpiler-wanted *js-transpiler* #'transpiler-pass2 (reverse *UNIVERSE*))))))
+			  (transpiler-wanted *js-transpiler* #'transpiler-pass-complete (reverse *UNIVERSE*))))))
 
 ;;;; EXPANSION OF ALTERNATE STANDARD MACROS
 
