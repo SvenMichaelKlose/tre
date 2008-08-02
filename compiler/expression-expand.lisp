@@ -1,4 +1,5 @@
-;;;;; nix operating system project ;;;;; lisp compiler
+;;;;; nix operating system project
+;;;;; lisp compiler
 ;;;;; Copyright (c) 2006-2008 Sven Klose <pixel@copei.de>
 ;;;;; 
 ;;;;; Breaks up nested expressions into lists of assignments.
@@ -133,8 +134,8 @@
 		(cons (car x) (expex-list ex (cdr x))))))
 
 (defun expex-make-return-value (ex e s)
-  (with (b (butlast e)
-		 l (last e)
+  (with (b  (butlast e)
+		 l  (last e)
 		 la (car l))
    	(if (expex-returnable? ex la)
 		(append b (if (%setq? la)
@@ -149,6 +150,8 @@
 ;; last expression assigned to a gensym which will replace
 ;; it in the parent expression.
 (defun expex-body (ex x &optional (s '~%ret))
+  (when (not x)	; Always return NIL.
+	(setf x '((identity nil))))
   (with (e (expex-list ex x))
    	(expex-make-return-value ex e s)))
 
