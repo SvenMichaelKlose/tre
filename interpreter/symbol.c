@@ -21,15 +21,11 @@
 
 unsigned num_symbols;
 
-struct tresymbol_entry {
-	char *		   name;	/* Full symbol */
-	unsigned long  atom;	/* Atom of the symbol. */
-	struct tresymbol_page * page; /* Page for next character. */
-};
-
 struct tresymbol_page {
-	struct tresymbol_entry  entries[256];
+	struct tresymbol_page * entries[256]; /* Page for next character. */
+	unsigned long  atom;	/* Atom of the symbol. */
 	unsigned long  num_entries;	/* Reference counter. */
+	char * name;
 };
 
 struct tresymbol_root {
@@ -85,25 +81,24 @@ tresymbolpage_add_rec (struct tresymbol_page * p, char * name, treptr atom, char
 	/* Continue with child node. */
 	if (*np) {
 		/* Allocate new node. */
-		if (p->entries[x].page == NULL)
-			p->entries[x].page = tresymbolpage_alloc ();
+		if (p->entries[x] == NULL)
+			p->entries[x] = tresymbolpage_alloc ();
 
-		tresymbolpage_add_rec (p->entries[x].page, name, atom, ++np);
+		tresymbolpage_add_rec (p->entries[x], name, atom, ++np);
 		return;
 	}
 
 	/* End of symbol. */
 
 	/* Check if symbol already exists. */
-	if (p->entries[0].name) {
+	if (p->name) {
 		printf ("tresymbol_page: '%s' already set", name);
 		exit (-1);
 	}
 
 	/* Make entry. */
-	p->entries[0].name = name;
-	p->entries[0].atom = atom;
-	p->entries[0].page = (struct tresymbol_page *) -1;
+	p->name = name;
+	p->atom = atom;
 }
 
 /* Add symbol to database. */
@@ -120,16 +115,16 @@ tresymbolpage_find_rec (struct tresymbol_page * p, char * np)
 {
 	unsigned long x = (unsigned long) *np;
 
-	if (p->entries[x].page == NULL)
+	if (x && p->entries[x] == NULL)
 		return treptr_invalid; /* Symbol doesn't exist. */
 
 	if (x == 0) /* End of symbol. */
-		return p->entries[x].page ? /* Exists? */
-			   p->entries[0].atom : /* Return its atom. */
+		return p->name ? /* Exists? */
+			   p->atom : /* Return its atom. */
 			   treptr_invalid; /* Symbol not found. */
 
 	/* Continue with next character. */
-	return tresymbolpage_find_rec (p->entries[x].page, ++np);
+	return tresymbolpage_find_rec (p->entries[x], ++np);
 }
 
 /* Find symbol in database. */
@@ -146,12 +141,14 @@ tresymbolpage_remove_rec (struct tresymbol_page * p, char * np)
 
 	if (x) {
 		/* Remove from children first. */
-		if (tresymbolpage_remove_rec (p->entries[x].page, ++np) == 0) {
-			trealloc_free (p->entries[x].page);
-			bzero (&(p->entries[x]), sizeof (struct tresymbol_entry));
+		if (tresymbolpage_remove_rec (p->entries[x], ++np) == 0) {
+			trealloc_free (p->entries[x]);
+			p->entries[x] = NULL;
 		}
-	} else
-		bzero (&(p->entries[0]), sizeof (struct tresymbol_entry));
+	} else {
+		p->name = NULL;
+		p->atom = 0;
+	}
 
 	return --p->num_entries;
 }
