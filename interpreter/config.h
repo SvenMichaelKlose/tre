@@ -53,7 +53,7 @@ typedef int bool;
 #endif
 
 #ifndef NUM_ATOMS
-#define NUM_ATOMS	(32 * 1024)
+#define NUM_ATOMS	(64 * 1024)
 #endif
 
 #ifndef NUM_LISTNODES
