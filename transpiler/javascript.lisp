@@ -237,7 +237,8 @@
 (defun symbol (x)
   (setf this.n x
         this.v nil
-        this.f nil)
+        this.f nil
+		(aref *symbols* s) this)
   this)
 
 (defun symbol-name (x)
@@ -251,6 +252,11 @@
 
 (defun make-symbol (x)
   (symbol x))
+
+(defun %quote (s)
+  (aif (aref *symbols* s)
+	   !
+	   (symbol s)))
 
 ;;; CONSES
 ;;;
