@@ -151,9 +151,9 @@
 		            (transpiler-finalize-sexprs tr (cdr x)))
 			  ; Recurse into function.
               (if (and (%setq? e) (is-lambda? (caddr e)))
-	              (cons `(%setq ,(second e) (function
+	              (cons `(%var (%setq ,(second e) (function
 							                  (lambda ,(lambda-args (caddr e))
-							                    ,@(transpiler-finalize-sexprs tr (lambda-body (caddr e))))))
+							                    ,@(transpiler-finalize-sexprs tr (lambda-body (caddr e)))))))
 			            (cons separator
 						      (transpiler-finalize-sexprs tr (cdr x))))
 				  ; Remove (IDENTITY ~%RET).
@@ -165,8 +165,7 @@
 											  (%setq? e)
 											  (in? (car e) '%var '%transpiler-native))))
 							        `(%setq ~%ret ,e)
-							        (if (and (consp e)
-											  (%setq? e)
+							        (if (and (%setq? e)
 											 (expex-sym? (second e)))
 										`(%var ,e)
 										e))
@@ -397,13 +396,14 @@ iio
 
 ;; User code must have been sightened by TRANSPILER-SIGHT.
 (defun transpiler-transpile (tr forms)
-  (format t "Collecting dependencies...~%")
-  (with (w nil
-		 n (transpiler-wanted-functions tr))
-	(while (not (equal w n)) nil
-      (transpiler-wanted tr #'transpiler-1st-half (transpiler-wanted-functions tr))
-	  (setf w n
-			n (transpiler-wanted-functions tr))))
+  (unless (eq t (transpiler-unwanted-functions tr))
+    (format t "Collecting dependencies...~%")
+    (with (w nil
+		   n (transpiler-wanted-functions tr))
+	  (while (not (equal w n)) nil
+        (transpiler-wanted tr #'transpiler-1st-half (transpiler-wanted-functions tr))
+	    (setf w n
+			  n (transpiler-wanted-functions tr)))))
 
   (format t "Compiling...~%")
   (apply #'string-concat
