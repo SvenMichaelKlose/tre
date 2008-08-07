@@ -7,7 +7,7 @@
 	:std-macro-expander 'js-alternate-std
 	:macro-expander 'javascript
 	:separator (format nil ";~%")
-	:unwanted-functions '($ cons car cdr list make-hash-table map)
+	:unwanted-functions '($ cons car cdr make-hash-table map)
 	:identifier-char?
 	  #'(lambda (x)
 		  (or (and (>= x #\a) (<= x #\z))
@@ -37,18 +37,16 @@
 		(push ! x)))))
 	
 (defun js-transpile (outfile infiles)
-  (with (x nil)
+  (with (base (or (format t "Compiling JavaScript core...~%")
+   				  (transpiler-pass-complete *js-transpiler* *js-base*))
+		 x nil)
 	(dolist (file infiles)
-	  (format t "Reading file '~A'.~%" file)
+	  (format t "Compiling '~A'...~%" file)
   	  (with-open-file f (open file :direction 'input)
 	    (setf x (append x (transpiler-sight *js-transpiler* (read-many f))))))
-	(format t "OK. Will write to '~A'...~%" outfile)
     (with-open-file f (open outfile :direction 'output)
-	  (with (base (or (format t "Compiling JavaScript core...~%")
-      				  (transpiler-pass-complete *js-transpiler* *js-base*))
-	  		 user (or (format t "Compiling user code...~%")
-      				  (transpiler-transpile *js-transpiler* x)))
-	    (format t "Emitting code.~%")
+	  (with (user (transpiler-transpile *js-transpiler* x))
+	    (format t "Emitting code to '~A'...~%" outfile)
 		(format f "~A~A" base user)))))
 
 (defun js-machine (outfile)
@@ -61,7 +59,7 @@
 
 (define-js-std-macro defun (name args &rest body)
   (progn
-	 (unless (in? name 'apply 'list)
+	 (unless (in? name 'apply)
 	   (acons! name args (transpiler-function-args tr)))
     `(%setq ,name
 		    #'(lambda ,args
@@ -282,13 +280,8 @@
 (defun rplacd (x val)
   (setf x.__ val))
 
-(defun list ()
-  (labels ((rec (x)
-             (unless (= x.length 0)
-               (with (a (aref x 0))
-				 (x.shift) ; pop off first element from array.
-                 (cons a (rec x))))))
-    (rec arguments)))
+(defun list (&rest x)
+  x)
 
 ,(def-js-type-predicate symbolp "symbol")
 ,(def-js-type-predicate consp '%cons)
