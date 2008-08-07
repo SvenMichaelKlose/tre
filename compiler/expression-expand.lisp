@@ -105,7 +105,7 @@
 ;; The arguments are replaced by gensyms.
 (defun expex-std-expr (ex x)
   (with (argexp (expex-argexpand ex (car x) (cdr x))
-		 (pre newargs) (expex-args ex x))
+		 (pre newargs) (expex-args ex (cons (car x) argexp)))
     (values pre (list newargs))))
 
 ;; Expand expression depending on type.
