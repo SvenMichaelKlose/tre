@@ -39,7 +39,7 @@ treiostd_open_file (char * name)
 {
 	const char * txt1 = "file '";
 	const char * txt2 = "'";
-	char * n = trealloc (strlen (txt1) + strlen (name) + strlen (txt2));
+	char * n = trealloc (strlen (txt1) + strlen (name) + strlen (txt2) + 1);
     struct tre_stream * s;
     FILE * fd;
 
