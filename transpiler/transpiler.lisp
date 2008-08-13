@@ -289,7 +289,7 @@
 iio
 ;;;; TOPLEVEL
 
-(defun transpiler-1st-half (tr forms)
+(defun transpiler-pass-1st-half (tr forms)
   (with (e nil)
     (dolist (x forms e)
 	  (setf e (append e
@@ -307,34 +307,6 @@ iio
 				       (expander-expand (transpiler-std-macro-expander tr) x)))
 	        x)))))))
 
-(defun transpiler-pass-complete (tr forms)
-  (with (str nil)
-	(dolist (x forms str)
-      (setf str
-	    (string-concat str
-		  (transpiler-concat-string-tree
-            (transpiler-to-string tr
-			  (funcall
-				(compose #'(lambda (x)
-							 (expander-expand (transpiler-macro-expander tr) x))
-						 #'(lambda (x)
-							 (transpiler-finalize-sexprs tr x))
-						 #'transpiler-encapsulate-strings
-						 #'(lambda (x)
-							 (transpiler-obfuscate tr x))
-						 #'opt-peephole
-						 #'(lambda (x)
-						     (expression-expand (transpiler-expex tr) x))
-						 #'transpiler-lambda-expand
-						 #'backquote-expand
-						 #'compiler-macroexpand
-						 #'transpiler-make-slot-getters
-						 #'transpiler-macroexpand
-						     #'list
-						     #'(lambda (x)
-								 (expander-expand (transpiler-std-macro-expander tr) x)))
-				    x))))))))
-
 (defun transpiler-pass-2nd-half (tr forms)
   (with (str nil)
 	(dolist (x forms str)
@@ -351,6 +323,9 @@ iio
 						 #'(lambda (x)
 							 (transpiler-obfuscate tr x)))
 				    x))))))))
+
+(defun transpiler-pass-complete (tr forms)
+  (transpiler-pass-2nd-half tr (transpiler-pass-1st-half tr forms)))
 
 (defmacro with-gensym-assignments ((&rest pairs) &rest body)
   `(with-gensym ,(mapcar #'first (group pairs 2))
@@ -374,7 +349,7 @@ iio
 ;	    (when (functionp fun)
 ;		  (if fun
 ;			  (assoc-update x
-;		  	  				(expanded (funcall #'transpiler-1st-half
+;		  	  				(expanded (funcall #'transpiler-pass-1st-half
 ;;							 				   tr `((defun ,x ,(function-arguments fun)
 ;							                          ,@(function-body fun)))))
 ;							(transpiler-expanded-functions tr))
@@ -392,7 +367,7 @@ iio
 			  (error "Unknown function ~A~%" (symbol-name x))))))))
 
 (defun transpiler-sight (tr forms)
-  (transpiler-1st-half tr forms))
+  (transpiler-pass-1st-half tr forms))
 
 ;; User code must have been sightened by TRANSPILER-SIGHT.
 (defun transpiler-transpile (tr forms)
@@ -401,11 +376,11 @@ iio
     (with (w nil
 		   n (transpiler-wanted-functions tr))
 	  (while (not (equal w n)) nil
-        (transpiler-wanted tr #'transpiler-1st-half (transpiler-wanted-functions tr))
+        (transpiler-wanted tr #'transpiler-pass-1st-half (transpiler-wanted-functions tr))
 	    (setf w n
 			  n (transpiler-wanted-functions tr)))))
 
-  (format t "Compiling...~%")
+  (format t "Generating code...~%")
   (apply #'string-concat
 	(list (transpiler-concat-string-tree (transpiler-wanted tr #'transpiler-pass-complete (transpiler-wanted-functions tr)))
 		  (transpiler-pass-2nd-half tr forms))))
