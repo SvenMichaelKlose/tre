@@ -122,6 +122,7 @@
 (define-js-binary + "+")
 (define-js-binary - "-")
 (define-js-binary / "/")
+(define-js-binary * "*")
 (define-js-binary = "==")
 (define-js-binary < "<")
 (define-js-binary > ">")
