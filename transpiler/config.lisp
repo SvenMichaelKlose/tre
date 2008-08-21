@@ -21,9 +21,8 @@
   (with (tr (apply #'make-transpiler args))
     (define-expander (transpiler-std-macro-expander tr))
 	(define-expander (transpiler-macro-expander tr)
-					 nil nil
-					 nil #'(lambda (fun x)
-							 (transpiler-macrocall tr fun x)))
+					 :call #'(lambda (fun x)
+							   (transpiler-macrocall tr fun x)))
 	(with (ex (make-expex))
 	  (setf (expex-function-collector ex)
 			  #'((fun args)

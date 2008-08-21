@@ -64,6 +64,8 @@
 							      (transpiler-finalize-sexprs tr (cdr x)))))))))))
 
 ;;;; TRANSPILER-MACRO EXPANDER
+;;;;
+;;;; Expands code-generating macros and converts expressions to C-style function calls.
 
 (defun transpiler-macrop-funcall? (x)
   (and (consp x)

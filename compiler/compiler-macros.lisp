@@ -17,8 +17,8 @@
   (setq *tagbody-replacements* nil
         *blockname-replacements* nil))
 
-(define-expander 'compiler #'compiler-macroexpand-prepost
-						   #'compiler-macroexpand-prepost)
+(define-expander 'compiler :pre  #'compiler-macroexpand-prepost
+						   :post #'compiler-macroexpand-prepost)
 
 (defmacro define-compiler-macro (name args body)
   `(define-expander-macro 'compiler ,name ,args ,body))

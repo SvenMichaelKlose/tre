@@ -1,5 +1,4 @@
-;;;;; nix operating system project
-;;;;; lisp compiler
+;;;;; nix operating system project lisp compiler
 ;;;;; Copyright (c) 2006-2008 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; User-defineable expansion.
@@ -16,7 +15,7 @@
 (defun expander-get (name)
   (cdr (assoc name *expanders*)))
 
-(defun define-expander (expander-name &optional (pre nil) (post nil) (pred nil) (call nil))
+(defun define-expander (expander-name &key (pre nil) (post nil) (pred nil) (call nil))
   (with (e  (make-expander :macros nil
 						   :pred pred
 						   :call call
@@ -37,12 +36,6 @@
 			#'(,args
 			    ,@(macroexpand body))
 		   (expander-macros (expander-get ,expander-name))))
-
-(defun repeat-while-changes (fun x)
- (with (new (funcall fun x))
-   (if (equal x new)
-	   x
-	   (repeat-while-changes fun new))))
 
 (defun expander-expand (expander-name expr)
   (with (e  (expander-get expander-name))
