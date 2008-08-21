@@ -7,7 +7,7 @@
 	:std-macro-expander 'js-alternate-std
 	:macro-expander 'javascript
 	:separator (format nil ";~%")
-	:unwanted-functions '($ cons car cdr make-hash-table map)
+	:unwanted-functions '($ not cons car cdr make-hash-table map)
 	:identifier-char?
 	  #'(lambda (x)
 		  (or (and (>= x #\a) (<= x #\z))
@@ -38,7 +38,7 @@
 	
 (defun js-transpile (outfile infiles)
   (with (base (or (format t "Compiling JavaScript core...~%")
-   				  (transpiler-pass-complete *js-transpiler* *js-base*))
+   				  (transpiler-expand-and-generate-code *js-transpiler* *js-base*))
 		 x nil)
 	(dolist (file infiles)
 	  (format t "Compiling '~A'...~%" file)
@@ -49,11 +49,12 @@
 	    (format t "Emitting code to '~A'...~%" outfile)
 		(format f "~A~A" base user)))))
 
+;; XXX defunct
 (defun js-machine (outfile)
   (with-open-file f (open outfile :direction 'output)
     (format f "~A"
 			(transpiler-concat-strings
-			  (transpiler-wanted *js-transpiler* #'transpiler-pass-complete (reverse *UNIVERSE*))))))
+			  (transpiler-wanted *js-transpiler* #'transpiler-expand-and-generate-code (reverse *UNIVERSE*))))))
 
 ;;;; EXPANSION OF ALTERNATE STANDARD MACROS
 
@@ -196,9 +197,6 @@
 (define-js-macro %set-atom-fun (plc val)
   `(%transpiler-native ,plc "=" ,val))
 
-(define-js-macro not (x)
-  `(%transpiler-native "!" ,x))
-
 (define-js-macro %slot-value (x y)
   ($ x "." y))
 
@@ -209,11 +207,10 @@
          ,@body))))
 
 (define-js-std-macro dohash ((key val hash &rest result) &rest body)
-  (with-gensym g
-	`(block nil
-	   ((%transpiler-string "for (") ,key (%transpiler-string " in ") ,seq (%transpiler-string ")")
-	      (with (,var (aref ,seq ,g))
-            ,@body)))))
+  `(block nil
+     ((%transpiler-native "for (") ,key (%transpiler-key " in ") ,seq (%transpiler-key ")")
+	    (with (,var (aref ,seq ,key))
+          ,@body))))
 
 ;    "ELT", "%SET-ELT", "LENGTH",
 ;    "CODE-CHAR", "INTEGER",
@@ -232,6 +229,11 @@
 ;;; them a distinguished type.
 
 (defvar *symbols* (make-hash-table))
+
+(defun not (x)
+  (if x
+	  nil
+	  t))
 
 (defun symbol (x)
   (setf this.n x
