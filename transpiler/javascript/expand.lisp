@@ -34,13 +34,14 @@
 	  `(%new ,@x)))
 
 (define-js-std-macro doeach ((var seq &rest result) &rest body)
-  (with-gensym g
-    `(dotimes (,g (slot-value ,seq 'length) ,@result)
-	   (with (,var (aref ,seq ,g))
-         ,@body))))
+  (with-gensym (evald-seq idx)
+    `(with (,evald-seq ,seq)
+	   (dotimes (,idx (slot-value ,evald-seq 'length) ,@result)
+	     (with (,var (aref ,evald-seq ,idx))
+           ,@body)))))
 
 (define-js-std-macro dohash ((key val hash &rest result) &rest body)
   `(block nil
-     ((%transpiler-native "for (") ,key (%transpiler-key " in ") ,seq (%transpiler-key ")")
-	    (with (,var (aref ,seq ,key))
-          ,@body))))
+     (((%transpiler-native "for (" ,key " in " ,seq ")")
+	    (%no-expex (with (,var (aref ,seq ,key))
+          ,@body))))))
