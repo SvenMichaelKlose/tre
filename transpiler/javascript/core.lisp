@@ -23,6 +23,10 @@
 	  nil
 	  t))
 
+(defun eql (x y)
+  (or (eq x y)
+	  (= x y)))
+
 (defun symbol (x)
   (setf this.n x
         this.v nil
@@ -105,6 +109,17 @@
 											""))))
 	(eval (+ "fun (" args ")"))
 	(x.shift)))
+
+(defun %list-length (x &optional (n 0))
+  (if (consp x)
+	  (%list-length (cdr x) (1+ n))
+	  n))
+  
+(defun length (x)
+  (when x
+    (if (consp x)
+	    (%list-length x)
+	    x.length)))
 
 (defun map (fun hash)
   (%transpiler-native "null;for (i in hash) fun (i)"))
