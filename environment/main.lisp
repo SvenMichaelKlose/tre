@@ -23,8 +23,19 @@
 (setq *UNIVERSE* (cdr *UNIVERSE*))
 
 (env-load "../compiler/main.lisp")
-(env-load "../transpiler/transpiler.lisp")
-(env-load "../transpiler/javascript.lisp")
+(env-load "../transpiler/utils.lisp")
+(env-load "../transpiler/config.lisp")
+(env-load "../transpiler/expand.lisp")
+(env-load "../transpiler/codegen.lisp")
+(env-load "../transpiler/obfuscate.lisp")
+(env-load "../transpiler/toplevel.lisp")
+(env-load "../transpiler/javascript/utils.lisp")
+(env-load "../transpiler/javascript/config.lisp")
+(env-load "../transpiler/javascript/expand.lisp")
+(env-load "../transpiler/javascript/codegen.lisp")
+(env-load "../transpiler/javascript/core.lisp")
+(env-load "../transpiler/javascript/toplevel.lisp")
+;(env-load "../transpiler/c.lisp")
 
 ; Keep tests for reuse in definition order.
 (setq *tests* (reverse *tests*))
