@@ -22,3 +22,9 @@
 
 (defun assoc-splice (x)
   (values (carlist x) (cdrlist x)))
+
+(defun repeat-while-changes (fun x)
+ (with (new (funcall fun x))
+   (if (equal x new)
+       x
+       (repeat-while-changes fun new))))
