@@ -28,7 +28,7 @@
       (let ((g (gensym)))
         `(let ((,g ,(car x)))
           (cond
-            ((eq ,g nil) ,(compiler-or (cdr x)))
+            ((not ,g) ,(compiler-or (cdr x)))
             (t ,g)))))
     (t (car x))))
 
