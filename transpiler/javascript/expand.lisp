@@ -31,7 +31,13 @@
 		   (or (keywordp (first x))
 			   (stringp (first x))))
 	  `(make-hash-table ,@x)
-	  `(%new ,@x)))
+	  `(%new ,(first x)
+			 ,@(if (transpiler-function-arguments? *js-transpiler* (first x))
+			       (argument-expand-compiled-values
+				       (first x)
+				       (transpiler-function-arguments *js-transpiler* (first x))
+				       (cdr x))
+				   (cdr x)))))
 
 (define-js-std-macro doeach ((var seq &rest result) &rest body)
   (with-gensym (evald-seq idx)

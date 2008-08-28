@@ -93,7 +93,10 @@
    "}"))
 
 (define-js-macro %new (&rest x)
-  `(%transpiler-native "new " ,(first x) "(" ,@(transpiler-binary-expand "," (cdr x)) ")"))
+  `(%transpiler-native "new "
+				       ,(first x)
+					   "(" ,@(transpiler-binary-expand "," (cdr x))
+ 					   ")"))
 
 (define-js-macro vm-go (tag)
   `("__l=\"" ,(transpiler-symbol-string *js-transpiler* tag) "\"; continue"))

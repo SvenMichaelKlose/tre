@@ -80,19 +80,9 @@
     (values (apply #'append pre)
 			main)))
 
-(defun expex-argexpand-rest (args)
-  (when args
-	`(cons ,(car args)
-		   ,(expex-argexpand-rest (cdr args)))))
-
 (defun expex-argexpand-do (ex fun args)
   (funcall (expex-function-collector ex) fun args)
-  (mapcar #'((x)
-			   (if (and (consp x)
-						(eq '&rest (car x)))
-				   (expex-argexpand-rest (cdr x))
-				   x))
-		  (cdrlist (argument-expand fun (funcall (expex-function-arguments ex) fun) args t))))
+  (argument-expand-compiled-values fun (funcall (expex-function-arguments ex) fun) args))
 
 (defun expex-argexpand (ex fun args)
   (if (and (atom fun)

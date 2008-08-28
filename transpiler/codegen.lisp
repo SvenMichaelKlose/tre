@@ -67,6 +67,7 @@
 ;;;;
 ;;;; Expands code-generating macros and converts expressions to C-style function calls.
 
+;; Returns T for every %SETQ expression assigning the value of a function call.
 (defun transpiler-macrop-funcall? (x)
   (and (consp x)
 	   (%setq? x)
@@ -78,7 +79,8 @@
   `("(" ,@(transpiler-binary-expand "," x) ")"))
 
 (defun transpiler-macrocall (tr fun x)
-  (with (m (cdr (assoc fun (expander-macros (expander-get (transpiler-macro-expander tr))))))
+  (with (m (cdr (assoc fun
+					   (expander-macros (expander-get (transpiler-macro-expander tr))))))
     (if m
         (with (e (apply m x))
 	       (if (transpiler-macrop-funcall? `(,fun ,@x))

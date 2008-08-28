@@ -17,6 +17,12 @@
   (obfuscate? nil)
   (obfuscations nil))
 
+(defun transpiler-function-arguments? (tr fun)
+  (assoc fun (transpiler-function-args tr)))
+
+(defun transpiler-function-arguments (tr fun)
+  (cdr (assoc fun (transpiler-function-args tr))))
+
 (defun create-transpiler (&rest args)
   (with (tr (apply #'make-transpiler args))
     (define-expander (transpiler-std-macro-expander tr))
@@ -36,7 +42,7 @@
 
 			(expex-function-arguments ex)
 			  #'((fun)
-				   (or (cdr (assoc fun (transpiler-function-args tr)))
+				   (or (transpiler-function-arguments tr fun)
 					   (function-arguments (symbol-function fun))))
 
 			(transpiler-expex tr) ex))
