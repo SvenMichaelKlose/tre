@@ -50,23 +50,22 @@
 				 (not (find var locals)))
         (return t)))))
 
-(defun vars-to-stackops (body fi)
+(defun vars-to-stackops (body fi &optional (locals nil))
   "Replaces variables by stack operations. Returns modified body.
    Free variables are added to free-vars of the funinfo."
-  (with (locals nil)
-    (tree-walk body
-	  :dont-ascend-after-if #'%slot-value?
-      :ascending
-        #'((e)
+  (tree-walk body
+	:dont-ascend-after-if #'((x)
+							   (or (%slot-value? x)
+								   (is-lambda? x)))
+    :ascending
+      #'((e)
 		   (if (is-lambda? e) ; Add variables to ignore in subfunctions.
-			   (progn
-				 (setf locals (append locals (lambda-args e)))
-				 e)
+			   (vars-to-stackops e fi (append locals (lambda-args e)))
 			   (if (%slot-value? e)
 				   `(%slot-value ,(vars-to-stackops (second e) fi) ,(third e))
            	       (if (is-stackvar? e fi locals)
                	       (make-stackop e fi)
-			   	       e)))))))
+			   	       e))))))
 
 ;;; LAMBDA inlining
 
