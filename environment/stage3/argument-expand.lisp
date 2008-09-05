@@ -178,6 +178,19 @@
 			   #'carlist)
 		   (argument-expand2 fun def vals apply-values)))
 
+(defun %argument-expand-rest (args)
+  (when args
+    `(cons ,(car args)
+           ,(%argument-expand-rest (cdr args)))))
+
+(defun argument-expand-compiled-values (fun def vals)
+  (mapcar #'((x)
+               (if (and (consp x)
+                        (eq '&rest (car x)))
+                   (%argument-expand-rest (cdr x))
+                   x))
+          (cdrlist (argument-expand fun def vals t))))
+
 ;;; Tests
 
 (define-test "argument expansion basically works"
