@@ -119,8 +119,9 @@
   (list token (read-expr str)))
 
 (defun read-list (str token pkg sym)
-  (unless (or (not token)
-			  (eq 'bracket-close token))
+  (unless token
+	(error "missing closing bracket"))
+  (unless (eq 'bracket-close token)
     (cons (cond
 			((token-is-quote? token)	(read-quote str token))
 			((eq 'bracket-open token)	(with ((token pkg sym) (read-token str))
@@ -148,6 +149,14 @@
 				  (read-list str token pkg sym))))))))
 
 (defun read (&optional (str *standard-input*))
+  "Read expression from stream."
   (skip-spaces str)
   (unless (end-of-file str)
 	(read-expr str)))
+
+(defun read-many (str)
+  "Read many toplevel expressions from stream."
+  (with (x nil)
+    (while (not (end-of-file str)) (reverse x)
+      (awhen (read str)
+        (push ! x)))))
