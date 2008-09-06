@@ -13,6 +13,7 @@
 (env-load "stage3/print.lisp")
 (env-load "stage3/format.lisp")
 (env-load "stage3/documentation.lisp")
+(env-load "stage3/assert.lisp")
 (env-load "stage3/loop.lisp")
 (env-load "stage3/with-struct.lisp")
 (env-load "stage3/read-line.lisp")
