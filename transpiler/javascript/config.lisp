@@ -8,7 +8,7 @@
 	:std-macro-expander 'js-alternate-std
 	:macro-expander 'javascript
 	:separator (format nil ";~%")
-	:unwanted-functions '($ not cons car cdr make-hash-table map)
+	:unwanted-functions '($ cons car cdr make-hash-table map)
 	:identifier-char?
 	  #'(lambda (x)
 		  (or (and (>= x #\a) (<= x #\z))

@@ -25,7 +25,9 @@
 
 (%set-atom-fun not
   #'((x)
-    (eq x nil)))
+	   (cond
+		 (x nil)
+		 (t t))))
 
 (%set-atom-fun copy-tree
   #'((x)

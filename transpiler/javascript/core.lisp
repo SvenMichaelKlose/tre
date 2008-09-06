@@ -18,11 +18,6 @@
 
 (defvar *symbols* (make-hash-table))
 
-(defun not (x)
-  (if x
-	  nil
-	  t))
-
 (defun eql (x y)
   (or (eq x y)
 	  (= x y)))
@@ -122,5 +117,4 @@
 	    x.length)))
 
 (defun map (fun hash)
-  (%transpiler-native "null;for (i in hash) fun (i)"))
-))
+  (%transpiler-native "null;for (i in hash) fun (i)"))))
