@@ -1,16 +1,13 @@
 ;;;; nix operating system project
 ;;;; list processor environment
-;;;; Copyright (C) 2005 Sven Klose <pixel@copei.de>
+;;;; Copyright (C) 2005,2008 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Basic conditional operators
 
-(defmacro if (test true &optional false)
-  (cond
-    (false
-      `(cond
-         (,test ,true)
-         (t ,false)))
-    (t `(cond (,test ,true)))))
+(defmacro if (predicate consequent &optional (alternative nil))
+  `(cond
+     (,predicate ,consequent)
+     (t ,alternative)))
 
 (%defun compiler-and (x)
   (cond

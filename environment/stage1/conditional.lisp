@@ -4,18 +4,18 @@
 ;;;;
 ;;;; Conditional evaluation
 
-(defmacro when (test &rest expr)
+(defmacro when (predicate &rest expr)
   `(and
-    ,test
+    ,predicate
     ; Encapsulate multiple expressions into PROGN.
     ,(if (cdr expr)
 	`(progn ,@expr)
 	(car expr))))
 
-(defmacro unless (test &rest expr)
-  `(when (not ,test) ,@expr))
+(defmacro unless (predicate &rest expr)
+  `(when (not ,predicate) ,@expr))
 
-(defmacro case (val &rest tests)
+(defmacro case (val &rest cases)
   (let ((g (gensym)))
     `(let ((,g ,val))
       (cond 
@@ -24,4 +24,4 @@
                   (if (eq t (car x))
 	      	          `(t ,@(cdr x))
                       `((equal ,g ,(car x)) ,@(cdr x))))
-            tests)))))
+            cases)))))
