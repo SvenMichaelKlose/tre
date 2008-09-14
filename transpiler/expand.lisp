@@ -2,22 +2,37 @@
 ;;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
 
 ;;;; SLOT GETTER GENERATION
-
-(defun transpiler-make-slot-getters (x)
-  (mapatree #'((x)
-				 (if (and (atom x)
-						  (not (or (numberp x)
-								   (stringp x))))
-				     (with (sl (string-list (symbol-name x))
-					        p (position #\. sl :test #'=))
-				       (if (and p
-								(not (or (= p 0)
-										 (= (1+ p) (length sl)))))
-					       `(%slot-value ,(make-symbol (list-string (subseq sl 0 p)))
-										 ,(make-symbol (list-string (subseq sl (1+ p)))))
-					       x))
-					 x))
-		   x))
+(defun transpiler-make-slot-values (x)
+  (with (conv #'((x)
+				   (with (sl (string-list (symbol-name x))
+					      p (position #\. sl :test #'=))
+				     (if (and p
+							  (not (or (= p 0)
+									   (= (1+ p) (length sl)))))
+					     `(%slot-value ,(make-symbol (list-string (subseq sl 0 p)))
+									   ,(make-symbol (list-string (subseq sl (1+ p)))))
+					     x)))
+		 label? #'((x)
+					 (not (or (consp x)
+							  (numberp x)
+					          (stringp x)))))
+)
+    (when x
+	  ; Combine this and next to %SLOT-VALUE if the next is a symbol and starts with
+	  ; a dot.
+      (if (and (consp x)
+			   (consp (cdr x))
+			   (label? (second x))
+			   (= #\. (elt (symbol-name (second x)) 0)))
+		  (cons `(%slot-value ,(first x) ,(conv (make-symbol (subseq (symbol-name (second x))
+																	 1))))
+			    (transpiler-make-slot-values (cddr x)))
+		  (if (label? x)
+			  (conv x)
+			  (if (consp x)
+				  (cons (transpiler-make-slot-values (car x))
+						(transpiler-make-slot-values (cdr x)))
+		      	  x)))))
 
 ;;;; STANDARD MACRO EXPANSION
 
@@ -82,5 +97,5 @@
 				       (expander-expand (transpiler-std-macro-expander tr) x))
 
 				   ; Convert dot-notation to %SLOT-VALUE expressions.
-				   #'transpiler-make-slot-getters)
+				   #'transpiler-make-slot-values)
 	        x)))))))
