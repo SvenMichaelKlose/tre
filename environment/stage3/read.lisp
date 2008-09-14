@@ -29,9 +29,12 @@
 (defun token-is-quote? (x)
   (in? x 'quote 'backquote 'quasiquote 'quasiquote-splice))
 
+(defun is-special-char? (x)
+  (in=? x #\( #\) #\' #\` #\, #\: #\; #\" #\#))
+
 (defun is-symchar? (x)
   (and (> x 32)
-	   (not (in=? x #\( #\) #\' #\` #\, #\" #\: #\; #\#))))
+	   (not (in=? x #\( #\) #\' #\` #\, #\: #\;))))
 
 (defun skip-comment (str)
   (with (c (read-char str))
@@ -59,7 +62,8 @@
                        (when (is-symchar? c)
                          (cons (char-upcase (read-char str))
                                (rec)))))))
-  (unless (end-of-file str)
+  (unless (or (end-of-file str)
+			  (is-special-char? (peek-char str)))
     (rec))))
 
 (defun get-symbol-and-package (str)
@@ -94,7 +98,7 @@
 			          (#\'	'quote)
 			          (#\`	'backquote)
 			          (#\"	'dblquote)
-			          (#\,	(if (eq #\@ (peek-char str))
+			          (#\,	(if (= #\@ (peek-char str))
 						        (and (read-char str)
 							         'quasiquote-splice)
 						        'quasiquote))
