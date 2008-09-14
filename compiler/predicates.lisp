@@ -14,10 +14,6 @@
   (and (consp x)
 	   (eq '%SETQ (car x))))
 
-(defun %slot-value? (x)
-  (and (consp x)
-	   (eq '%SLOT-VALUE (car x))))
-
 (defun %setqret? (x)
   (and (consp x)
 	   (eq '%SETQ (first x))

@@ -1,6 +1,6 @@
 ;;;; nix operating system project
 ;;;; list processor environment
-;;;; Copyright (C) 2005-2006 Sven Klose <pixel@copei.de>
+;;;; Copyright (C) 2005-2008 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; SETF macro
 
@@ -11,8 +11,13 @@
 (defun %setf-make-symbol (fun)
   (make-symbol (string-concat "%%USETF-" (symbol-name fun))))
 
+(defun %slot-value? (x)
+  (and (consp x)
+	   (eq '%SLOT-VALUE (car x))))
+
 (defun %setf-complement (p val)
-  (if (atom p)
+  (if (or (atom p)
+		  (%slot-value? p))
 	  (progn
 		(if (member p *constants*)
 		    (%error "cannot set constant"))
