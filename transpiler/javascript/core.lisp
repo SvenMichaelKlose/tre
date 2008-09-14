@@ -117,4 +117,10 @@
 	    x.length)))
 
 (defun map (fun hash)
-  (%transpiler-native "null;for (i in hash) fun (i)"))))
+  (%transpiler-native "null;for (i in hash) fun (i)"))
+
+;; Bind function to an object.
+;; See also macro BIND in 'core.lisp'.
+(defun %bind (obj fun)
+  #'(()
+      (fun.apply obj arguments)))))

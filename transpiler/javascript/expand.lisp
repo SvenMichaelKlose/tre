@@ -22,8 +22,14 @@
 (define-js-std-macro defvar (name val)
   `(%setq ,name  ,val))
 
-(define-js-std-macro slot-value (x y)
-  `(%slot-value ,x ,(second y)))
+(define-js-std-macro slot-value (place slot)
+  `(%slot-value ,place ,(second slot)))
+
+(define-js-std-macro bind (fun &rest args)
+  (progn
+    (unless (%slot-value? fun)
+      (error "function must be a SLOT-VALUE"))
+    `(%bind ,(second fun) ,fun)))
 
 ;; Make object if first argument is not a keyword, or string.
 (define-js-std-macro new (&rest x)
