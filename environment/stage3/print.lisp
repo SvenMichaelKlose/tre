@@ -70,3 +70,39 @@
   "Test if stream is at file end."
   (when (stream-fun-eof str)
     (funcall (stream-fun-eof str) str)))
+
+(defun %print-rest (c str)
+  (newprint (car c) str)
+  (with (x (cdr c))
+    (if x
+        (if (consp x)
+            (progn
+	          (princ #\  str)
+              (%print-rest x str))
+	        (progn
+			  (format str " . ")
+              (%print-atom x str)))
+        (format str ")~%"))))
+
+(defun %print-cons (x str)
+  (princ #\( str)
+  (%print-rest x str))
+
+(defun %print-string (x str)
+  (princ #\" str)
+  (dolist (c (string-list x))
+	(if (= c #\")
+		(format str "\\\"")
+		(princ c str)))
+  (princ #\" str))
+
+(defun %print-atom (x str)
+  (cond
+	((numberp x) (princ x str))
+	((stringp x) (%print-string x str))
+	(t			 (princ (symbol-name x) str))))
+
+(defun print (x &optional (str *standard-output*))
+  (if (consp x)
+	  (%print-cons x str)
+	  (%print-atom x str)))
