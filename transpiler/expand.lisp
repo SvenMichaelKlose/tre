@@ -5,10 +5,14 @@
 
 (defun transpiler-make-slot-getters (x)
   (mapatree #'((x)
-				 (if (and (atom x) (not (or (numberp x) (stringp x))))
+				 (if (and (atom x)
+						  (not (or (numberp x)
+								   (stringp x))))
 				     (with (sl (string-list (symbol-name x))
 					        p (position #\. sl :test #'=))
-				       (if p
+				       (if (and p
+								(not (or (= p 0)
+										 (= (1+ p) (length sl)))))
 					       `(%slot-value ,(make-symbol (list-string (subseq sl 0 p)))
 										 ,(make-symbol (list-string (subseq sl (1+ p)))))
 					       x))
@@ -43,15 +47,40 @@
     (dolist (x forms e)
 	  (setf e (append e
         (list (funcall
-	      (compose #'opt-peephole
+	      (compose ; Peephole-optimization.
+				   ; Removes some unused code.
+				   #'opt-peephole
+
+				   ; Break up nested expressions.
+				   ; After this pass function arguments may only be literals,
+				   ; constants or variables.
 			       #'(lambda (x)
 			           (expression-expand (transpiler-expex tr) x))
+
+				   ; Inline local function calls.
+				   ; Gives local variables stack slots.
 			       #'transpiler-lambda-expand
+
+				   ; Convert backquote-expressions into consing run-time expressions.
 			       #'backquote-expand
+
+				   ; Converts built-in control-forms into simpler meta-code.
+				   ; The resulting code uses only (un)conditional jumps to
+				   ; labels.
 			       #'compiler-macroexpand
-				   #'transpiler-make-slot-getters
+
+				   ; Do standard macro-expansion
 			       #'transpiler-macroexpand
+
+				   ; XXX Prepare for macro expansion.
 			       #'list
+
+				   ; Alternative standard-macros.
+				   ; Some macros in this pass just rename expression to bypass the
+				   ; standard macro-expansion.
 			       #'(lambda (x)
-				       (expander-expand (transpiler-std-macro-expander tr) x)))
+				       (expander-expand (transpiler-std-macro-expander tr) x))
+
+				   ; Convert dot-notation to %SLOT-VALUE expressions.
+				   #'transpiler-make-slot-getters)
 	        x)))))))
