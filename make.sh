@@ -13,7 +13,7 @@ FILES="alien_dl.c alloc.c argument.c array.c atom.c builtin.c builtin_arith.c
 CC=cc
 LD=cc
 
-LIBC_PATH=`find /lib -name libc.so\*`
+LIBC_PATH="/lib/libc.so.6" #`find /lib -name libc.so\*`
 
 CFLAGS="-pipe -ansi -Wall -DBIG_ENDIAN -DLIBC_PATH=\"$LIBC_PATH\" -DTRE_BOOT_IMAGE=\"$BOOT_IMAGE\" $ARGS"
 
@@ -34,7 +34,7 @@ link ()
 {
 	echo "Linking..."
 	OBJS=`find obj -name \*.o`
-	$LD -lm -lthr -o tre $OBJS
+	$LD -lm -ldl -o tre $OBJS
 }
 
 standard_compile ()
@@ -81,7 +81,7 @@ build)
 	;;
 crunsh)
 	CFLAGS="$CFLAGS -DCRUNSHED -Iinterpreter"
-	COPTS="$COPTS -O3 -march=pentium3m -fomit-frame-pointer -ffast-math -fwhole-program -lm -lthr "
+	COPTS="$COPTS -O3 -march=pentium3m -fomit-frame-pointer -ffast-math -fwhole-program -lm -ldl "
 	basic_clean
 	crunsh_compile
 	install_it
