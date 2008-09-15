@@ -13,7 +13,8 @@
 (setq *macrop-diversion* nil
       *macrocall-diversion* nil
       *macroexpand-backquote-diversion* nil
-      *current-macro* nil)
+      *current-macro* nil
+	  *last-macroexpansion* nil)
 
 ;;;; Expand macros in BACKQUOTE expression.
 ;;;;
@@ -102,5 +103,5 @@
     (setq *macrop-diversion* #'%%macrop
           *macrocall-diversion* #'%%macrocall
           *macroexpand-backquote-diversion* #'%macroexpand-backquote
-          *current-macro* nil)
-    (%macroexpand %gsme)))
+          *current-macro* nil
+    	  *last-macroexpansion* (%macroexpand %gsme))))
