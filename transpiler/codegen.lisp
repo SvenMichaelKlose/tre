@@ -31,35 +31,44 @@
 
 ;;;; EXPRESSION FINALIZATION
 
+;; Add separators.
+;;   Separators cannot be added later, because the expression bounds will
+;;   disappear when everything is expanded to target-language strings in
+;;   the next pass.
+;; Make jump labels.
+;; Remove (IDENTITY ~%RET)  expressions.
+;; Add %VAR declarations for expex symbols.
 (defun transpiler-finalize-sexprs (tr x)
   (when x
-	(with (e          (car x)
+	(with (a          (car x)
 		   separator  (transpiler-separator tr))
-	  (if (eq e nil)
+	  (if (eq a nil) ; ???
 		  (transpiler-finalize-sexprs tr (cdr x))
-	  	  (if (atom e) ; Jump label.
-		      (cons (format nil "case \"~A\":~%" (transpiler-symbol-string tr e))
+	  	  (if (atom a) 
+			  ; Make jump label.
+		      (cons (format nil "case \"~A\":~%" (transpiler-symbol-string tr a))
 		            (transpiler-finalize-sexprs tr (cdr x)))
-			  ; Recurse into function.
-              (if (and (%setq? e) (is-lambda? (caddr e)))
-	              (cons `(%var (%setq ,(second e) (function
-							                  (lambda ,(lambda-args (caddr e))
-							                    ,@(transpiler-finalize-sexprs tr (lambda-body (caddr e)))))))
+              (if (and (%setq? a)
+					   (is-lambda? (%setq-value a)))
+			  	  ; Recurse into function.
+	              (cons `(%var (%setq ,(%setq-place a)
+										   ,(copy-recurse-into-lambda (%setq-value a)
+										        #'((body)(transpiler-finalize-sexprs tr body)))))
 			            (cons separator
 						      (transpiler-finalize-sexprs tr (cdr x))))
-				  ; Remove (IDENTITY ~%RET).
-	              (if (and (identity? e) (eq '~%ret (second e)))
+	              (if (and (identity? a) (eq '~%ret (second a)))
+				  	  ; Ignore (IDENTITY ~%RET).
 		              (transpiler-finalize-sexprs tr (cdr x))
 				      ; Just copy with separator. Make return-value assignment if missing.
-		              (cons (if (and (consp e)
-									 (not (or (vm-jump? e)
-											  (%setq? e)
-											  (in? (car e) '%var '%transpiler-native))))
-							        `(%setq ~%ret ,e)
-							        (if (and (%setq? e)
-											 (expex-sym? (second e)))
-										`(%var ,e)
-										e))
+		              (cons (if (not (or (vm-jump? a)
+									 	 (%setq? a)
+									 	 (in? (car a) '%var '%transpiler-native)))
+							    `(%setq ~%ret ,a)
+								; Add %VAR declaration for EXOEX symbols.
+							    (if (and (%setq? a)
+										 (expex-sym? (%setq-place a)))
+									`(%var ,a)
+									a))
 						    (cons separator
 							      (transpiler-finalize-sexprs tr (cdr x)))))))))))
 
@@ -71,9 +80,9 @@
 (defun transpiler-macrop-funcall? (x)
   (and (consp x)
 	   (%setq? x)
-	   (consp (third x))
-	   (not (stringp (first (third x))))
-	   (not (in? (first (third x)) '%transpiler-string '%transpiler-native))))
+	   (consp (%setq-value x))
+	   (not (stringp (first (%setq-value x))))
+	   (not (in? (first (%setq-value x)) '%transpiler-string '%transpiler-native))))
 
 (defun transpiler-macrocall-funcall (x)
   `("(" ,@(transpiler-binary-expand "," x) ")"))
@@ -171,14 +180,24 @@
 	(dolist (x forms str)
       (setf str
 	    (string-concat str
-		  (transpiler-concat-string-tree
-            (transpiler-to-string tr
 			  (funcall
-				(compose #'(lambda (x)
+				(compose #'transpiler-concat-string-tree
+
+						 #'(lambda (x)
+            			     (transpiler-to-string tr x))
+
+						 ; Expand expressions to strings.
+						 #'(lambda (x)
 							 (expander-expand (transpiler-macro-expander tr) x))
+
+						 ; Expand top-level symbols, add expression separators.
 					     #'(lambda (x)
 							 (transpiler-finalize-sexprs tr x))
+
+						 ; Wrap strings in %TRANSPILER-STRING expressions.
 						 #'transpiler-encapsulate-strings
+
+						 ; Obfuscate symbol-names.
 						 #'(lambda (x)
 							 (transpiler-obfuscate tr x)))
-				    x))))))))
+				    x))))))

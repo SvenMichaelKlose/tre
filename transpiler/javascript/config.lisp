@@ -9,6 +9,7 @@
 	:macro-expander 'javascript
 	:separator (format nil ";~%")
 	:unwanted-functions '($ cons car cdr make-hash-table map)
+	:thisify-classes nil
 	:identifier-char?
 	  #'(lambda (x)
 		  (or (and (>= x #\a) (<= x #\z))

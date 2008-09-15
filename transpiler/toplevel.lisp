@@ -10,7 +10,7 @@
 	(push fun (transpiler-wanted-functions tr))))
 
 (defun transpiler-expand-and-generate-code (tr forms)
-  (transpiler-generate-code tr (transpiler-expand tr forms)))
+  (transpiler-generate-code tr (transpiler-expand tr (transpiler-preexpand tr forms))))
 
 (defmacro with-gensym-assignments ((&rest pairs) &rest body)
   `(with-gensym ,(mapcar #'first (group pairs 2))
@@ -40,7 +40,7 @@
 ;							(transpiler-expanded-functions tr))
 ;			  (error "Unknown function ~A~%" (symbol-name x))))))))
 
-(defun transpiler-wanted (tr pass funlist)
+(defun transpiler-collect-wanted (tr pass funlist)
   (with (out nil)
     (dolist (x funlist (reverse out))
 	  (with (fun (symbol-function x))
@@ -52,7 +52,7 @@
 			  (error "Unknown function ~A~%" (symbol-name x))))))))
 
 (defun transpiler-sight (tr forms)
-  (transpiler-expand tr forms))
+  (transpiler-expand tr (transpiler-preexpand tr forms)))
 
 ;; User code must have been sightened by TRANSPILER-SIGHT.
 (defun transpiler-transpile (tr forms)
@@ -60,12 +60,19 @@
     (format t "Collecting dependencies...~%")
     (with (w nil
 		   n (transpiler-wanted-functions tr))
-	  (while (not (equal w n)) nil
-        (transpiler-wanted tr #'transpiler-expand (transpiler-wanted-functions tr))
+	  (while (not (equal w n))
+			 nil
+        (transpiler-collect-wanted
+		    tr #'((tr x)
+					(transpiler-expand tr (transpiler-preexpand tr x)))
+		    (transpiler-wanted-functions tr))
 	    (setf w n
 			  n (transpiler-wanted-functions tr)))))
 
   (format t "Generating code...~%")
   (apply #'string-concat
-	(list (transpiler-concat-string-tree (transpiler-wanted tr #'transpiler-expand-and-generate-code (transpiler-wanted-functions tr)))
-		  (transpiler-generate-code tr forms))))
+		(list (transpiler-concat-string-tree
+		    	  (transpiler-collect-wanted
+			    	  tr #'transpiler-expand-and-generate-code
+					  (transpiler-wanted-functions tr)))
+		      (transpiler-generate-code tr forms))))

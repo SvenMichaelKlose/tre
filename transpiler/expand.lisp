@@ -69,8 +69,10 @@
 				   ; Break up nested expressions.
 				   ; After this pass function arguments may only be literals,
 				   ; constants or variables.
-			       #'(lambda (x)
-			           (expression-expand (transpiler-expex tr) x))
+			       #'((x) (expression-expand (transpiler-expex tr) x))
+
+				   ; Give context to member symbols.
+			       #'((x) (thisify (transpiler-thisify-classes tr) x))
 
 				   ; Inline local function calls.
 				   ; Gives local variables stack slots.
@@ -85,16 +87,20 @@
 			       #'compiler-macroexpand
 
 				   ; Do standard macro-expansion
-			       #'transpiler-macroexpand
+			       #'transpiler-macroexpand)
+	        x)))))))
 
-				   ; XXX Prepare for macro expansion.
-			       #'list
+(defun transpiler-preexpand (tr forms)
+  (with (e nil)
+    (dolist (x forms e)
+	  (setf e (append e
+        (list (funcall
+	      (compose #'list
 
 				   ; Alternative standard-macros.
 				   ; Some macros in this pass just rename expression to bypass the
 				   ; standard macro-expansion.
-			       #'(lambda (x)
-				       (expander-expand (transpiler-std-macro-expander tr) x))
+			       #'((x) (expander-expand (transpiler-std-macro-expander tr) x))
 
 				   ; Convert dot-notation to %SLOT-VALUE expressions.
 				   #'transpiler-make-slot-values)

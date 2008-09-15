@@ -10,6 +10,7 @@
   unwanted-functions
   expanded-functions
   (identifier-char? nil)
+  (thisify-classes nil)
   (symbol-translations nil)
   (expex nil)
   (function-args nil)

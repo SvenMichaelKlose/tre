@@ -79,6 +79,7 @@
 ,(def-js-type-predicate arrayp "Array")
 ,(def-js-type-predicate stringp "String")
 ,(def-js-type-predicate functionp "Function")
+,(def-js-type-predicate objectp "Object")
 
 (defun atom (x)
   (not (consp x)))
@@ -122,5 +123,6 @@
 ;; Bind function to an object.
 ;; See also macro BIND in 'core.lisp'.
 (defun %bind (obj fun)
+  (assert (functionp fun) "BIND requires a function")
   #'(()
       (fun.apply obj arguments)))))
