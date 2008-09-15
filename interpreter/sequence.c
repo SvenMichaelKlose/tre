@@ -73,20 +73,20 @@ treptr
 tresequence_builtin_elt (treptr args)
 {
     struct tre_sequence_type *t;
-    treptr  car;
-    treptr  cdr;
+    treptr  seq;
+    treptr  idx;
 
-    trearg_get2 (&car, &cdr, args);
+    trearg_get2 (&seq, &idx, args);
 
-    if (TREPTR_IS_NUMBER(cdr) == FALSE)
-		return treerror (cdr, "index must be integer");
+    if (TREPTR_IS_NUMBER(idx) == FALSE)
+		return treerror (idx, "index must be integer");
 
-	RETURN_NIL(car);
+	RETURN_NIL(seq);
 
-    t = tresequence_get_type (car);
+    t = tresequence_get_type (seq);
     if (t == NULL)
-        return treerror (car, "sequence expected");
-    return (*t->get) (car, (unsigned) TRENUMBER_VAL(cdr));
+        return treerror (seq, "sequence expected");
+    return (*t->get) (seq, (unsigned) TRENUMBER_VAL(idx));
 }
 
 /*

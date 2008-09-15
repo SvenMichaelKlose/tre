@@ -371,6 +371,7 @@ tredebug_parent_funstack (treptr fspos)
      * contains a named function.
      */
     fspos = CDR(fspos);
+
     tmp = trefunstack_get_named_function (fspos);
     RETURN_NIL(tmp);
     body = CADR(TREATOM_VALUE(TREATOM_FUN(tmp)));
@@ -466,7 +467,8 @@ tredebug_trace (void)
  * singly-linked function stack. It contains references to function stack
  * elements in reverse order. When moving up a function, the current function
  * stack position is pushed onto the mirror stack. When moving back down
- * again, the position is pop'ed from the mirror stack.
+ * again, the position is pop'ed from the mirror stack. The original funstack
+ * remains untouched.
  */
 void
 tredebug_init_mirror_stack (void)
