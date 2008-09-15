@@ -5,7 +5,7 @@
 
 (defvar *assert* t)
 
-(defmacro assert (x)
+(defmacro assert (x &optional (txt nil) &rest args)
   (when *assert*
     `(unless ,x
-	   (error "assertion failed"))))
+	   (error (+ "assertion failed: " ,txt) ,@args))))
