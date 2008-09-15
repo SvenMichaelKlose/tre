@@ -167,5 +167,3 @@
   (format t "ANSI terminal driver~%")
   (ansi-normal)
   (ansi-foreground-color (ansi-color 'white t)))
-
-(ansi-welcome)

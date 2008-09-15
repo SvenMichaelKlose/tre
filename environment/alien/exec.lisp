@@ -3,7 +3,7 @@
 ;;;;;
 ;;;;; Program execution.
 
-(defconstant *c-nl* (string (code-char 10)));
+(defconstant *c-nl* (string (code-char 10)))
 
 (defun fork ()
   "Create process copy. Returns the new process-ID to the calling process.

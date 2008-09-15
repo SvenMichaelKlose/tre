@@ -117,9 +117,10 @@
 		 exp-rest
 		   #'((def vals)
 				(setf no-static '&rest)
-  			    (setf rest-arg (list (cons (first def)
+  			    (setf rest-arg (list (cons (get-name def)
 										   (cons '&rest
-												 vals))))
+												 (or vals
+													 (get-default def))))))
 			    nil)
 
          exp-optional-rest

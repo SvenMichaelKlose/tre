@@ -29,13 +29,12 @@
 
 (defun list-string (lst)
   "Convert list of characters to string."
-  (if lst
-    (let* ((n (length lst))
-           (s (make-string n)))
-      (do ((i 0 (1+ i))
-           (l lst (cdr l)))
-          ((>= i n) s)
-        (setf (elt s i) (car l))))))
+  (let* ((n (length lst))
+         (s (make-string n)))
+    (do ((i 0 (1+ i))
+         (l lst (cdr l)))
+        ((>= i n) s)
+      (setf (elt s i) (car l)))))
 
 (define-test "LIST-STRING works"
   ((string= (list-string '(#\L #\I #\S #\P))
