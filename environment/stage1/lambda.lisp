@@ -57,3 +57,8 @@
 (defun function-body (fun)
   "Returns body of a function."
   (cdr (symbol-value fun)))
+
+(defun copy-recurse-into-lambda (x body-fun)
+  `#'(lambda ,(lambda-args x)
+       ,@(funcall body-fun (lambda-body x))))
+ 
