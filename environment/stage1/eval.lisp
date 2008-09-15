@@ -1,10 +1,10 @@
 ;;;; nix operating system project
 ;;;; list processor environment
-;;;; Copyright (C) 2005-2006 Sven Klose <pixel@copei.de>
+;;;; Copyright (C) 2005-2006,2008 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Evaluation
 
-(defmacro return (expr)
+(defmacro return (&optional (expr nil))
   `(return-from nil ,expr))
 
 (defun funcall (fun &rest args)
