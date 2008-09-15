@@ -1,6 +1,6 @@
 /*
  * nix operating system project tre interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Built-in list functions.
  */
@@ -110,16 +110,17 @@ trelist_builtin_rplacd (treptr list)
 }
 
 /*
- * (CONSP obj)
+ * (CONSP &REST obj)
  *
- * Returns T if the argument is a cons. NIL otherwise.
+ * Returns T if all objects are conses.
  */
 treptr
 trelist_builtin_consp (treptr list)
 {
-    treptr arg = trearg_get (list);
+	treptr x;
 
-    if (TREPTR_IS_CONS(arg))
-		return treptr_t;
-    return treptr_nil;
+	DOLIST(x, list)
+        if (TREPTR_IS_ATOM(CAR(x)))
+		    return treptr_nil;
+    return treptr_t;
 }

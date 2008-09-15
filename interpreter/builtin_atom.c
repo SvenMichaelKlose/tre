@@ -83,10 +83,11 @@ treatom_builtin_make_symbol (treptr args)
 treptr
 treatom_builtin_atom (treptr list)
 {
-    treptr arg = trearg_get (list);
+    treptr x;
 
-    if (TREPTR_IS_CONS(arg))
-		return treptr_nil;
+	DOLIST(x, list)
+        if (TREPTR_IS_CONS(CAR(x)))
+		    return treptr_nil;
     return treptr_t;
 }
 
