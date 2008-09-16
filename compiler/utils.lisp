@@ -28,3 +28,9 @@
    (if (equal x new)
        x
        (repeat-while-changes fun new))))
+
+(defun find-tree (x v)
+  (or (equal x v)
+      (when (consp x)
+        (or (find-tree (car x) v)   
+            (find-tree (cdr x) v)))))
