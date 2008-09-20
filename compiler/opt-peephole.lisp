@@ -32,7 +32,14 @@
 			 	     ; Remove IDENTITY from %SETQ value.
 					 (cons `(%setq ,(second a) ,(second (third a)))
 						   (remove-identity d)))))
-	
+
+		 find-next-tag
+		   #'((x)
+			    (when x
+				  (if (atom (car x))
+					  x
+					  (find-next-tag (cdr x)))))
+
 		 ; Remove unreached code or code that does nothing.
 		 remove-void
 		   #'((x)
@@ -70,33 +77,25 @@
 
 		 will-be-set-again?
 		   #'((x v)
-				(unless (and (atom v)
-						     (expex-sym? v)
-						     (not x)) ; End of block - value won't be used.
-			        (or (and x
-						     (not (vm-jump? (car x)))) ; We don't know what happens after a jump.
-				        (unless (and (%setq? (car x))
-						             (eq v (second (car x))))
-					        ; Variable will be used - don't remove setter.
-					        (or (find-tree (car x) v)
-					            (will-be-set-again? (cdr x) v))))))
-
-		 find-next-tag
-		   #'((x)
-			    (when x
-				  (if (atom (car x))
-					  x
-					  (find-next-tag (cdr x)))))
+				(if x
+			        (or (and (%setq? (car x))
+					         (eq v (second (car x))))
+		                (unless (or (vm-jump? (car x)) ; We don't know what happens after a jump.
+				                 (find-tree (car x) v)) ; Variable will be used.
+				        (will-be-set-again? (cdr x) v)))
+				    (and (atom v) ; End of block, EXPEX-sym not used.
+					     (expex-sym? v))))
 
 		 ; Remove code without side-effects whose result won't be used.
 		 remove-code
 		   #'((x)
 				(opt-peephole-fun #'remove-code
 				  ((and (%setq? a)
-					    (second a)
+					    (atom (second a))
 					    (or (atom (third a))
+						    (%slot-value? (third a))
 						    (%stack? (third a)))
-						    (will-be-set-again? d (second a)))
+						(will-be-set-again? d (second a)))
 				  		; Don't set variable that will be modified anyway.
 					  	(remove-code d))))
 
@@ -122,7 +121,7 @@
 					              x))
 						(funcall
 						  (compose #'reduce-tags
-								   ;#'remove-code
+								   #'remove-code
 								   #'remove-void
 )
 						  x))))
