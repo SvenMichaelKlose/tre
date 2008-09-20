@@ -114,7 +114,7 @@
   (js-stack x))
 
 (define-js-macro %quote (x)
-  `("T37quote(\"" ,(symbol-name x) "\")"))
+  `("symbol(\"" ,(symbol-name x) "\")"))
 
 (define-js-macro %set-atom-fun (plc val)
   `(%transpiler-native ,plc "=" ,val))

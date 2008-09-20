@@ -23,11 +23,12 @@
 	  (= x y)))
 
 (defun symbol (x)
-  (setf this.n x
-        this.v nil
-        this.f nil
-		(aref *symbols* s) this)
-  this)
+  (aif (aref *symbols* x)
+	   !
+  	   (setf this.n x
+        	 this.v nil
+        	 this.f nil
+			 (aref *symbols* x) this)))
 
 (defun symbol-name (x)
   x.n)
