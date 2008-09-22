@@ -3,36 +3,40 @@
 
 ;;;; SLOT GETTER GENERATION
 (defun transpiler-make-slot-values (x)
-  (with (conv #'((x)
-				   (with (sl (string-list (symbol-name x))
-					      p (position #\. sl :test #'=))
-				     (if (and p
-							  (not (or (= p 0)
-									   (= (1+ p) (length sl)))))
-					     `(%slot-value ,(make-symbol (list-string (subseq sl 0 p)))
-									   ,(make-symbol (list-string (subseq sl (1+ p)))))
-					     x)))
-		 label? #'((x)
-					 (not (or (consp x)
-							  (numberp x)
-					          (stringp x)))))
-)
+  (with (conv
+			#'((x)
+				 (with (sl (string-list (symbol-name x))
+					    p  (position #\. sl :test #'=))
+				   (if (and p
+							(not (or (= p 0)
+									 (= (1+ p) (length sl)))))
+					   `(%slot-value ,(make-symbol (list-string (subseq sl 0 p)))
+									 ,(conv (make-symbol (list-string (subseq sl (1+ p))))))
+					   x)))
+		 label?
+			#'((x)
+				 (not (or (consp x)
+						  (numberp x)
+				          (stringp x)))))
     (when x
-	  ; Combine this and next to %SLOT-VALUE if the next is a symbol and starts with
+	  ; Combine expression and next symbol to %SLOT-VALUE if the symbol and starts with
 	  ; a dot.
-      (if (and (consp x)
-			   (consp (cdr x))
-			   (label? (second x))
-			   (= #\. (elt (symbol-name (second x)) 0)))
-		  (cons `(%slot-value ,(first x) ,(conv (make-symbol (subseq (symbol-name (second x))
-																	 1))))
-			    (transpiler-make-slot-values (cddr x)))
-		  (if (label? x)
-			  (conv x)
-			  (if (consp x)
-				  (cons (transpiler-make-slot-values (car x))
-						(transpiler-make-slot-values (cdr x)))
-		      	  x)))))
+      (cond
+		((and (consp x)
+			  (consp (cdr x))
+			  (label? (second x))
+			  (= #\. (elt (symbol-name (second x)) 0)))
+		  	(cons `(%slot-value ,(transpiler-make-slot-values (first x))
+							    ,(conv (make-symbol (subseq (symbol-name (second x))
+														    1))))
+			      (transpiler-make-slot-values (cddr x))))
+		((label? x)
+			(conv x))
+		((consp x)
+		    (cons (transpiler-make-slot-values (car x))
+				  (transpiler-make-slot-values (cdr x))))
+      	(t
+			x)))))
 
 ;;;; STANDARD MACRO EXPANSION
 
