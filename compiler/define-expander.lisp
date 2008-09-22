@@ -39,14 +39,12 @@
 
 (defun expander-expand (expander-name expr)
   (with (e  (expander-get expander-name))
-    (setq *macrop-diversion* (expander-pred e)
-	      *macrocall-diversion* (expander-call e))
-	(funcall (expander-pre e))
     (prog1
-	  (repeat-while-changes #'%macroexpand expr)
-      (setq *macrop-diversion* nil
-	        *macrocall-diversion* nil)
-	  (funcall (expander-post e)))))
+      (with-temporary *macrop-diversion* (expander-pred e)
+        (with-temporary *macrocall-diversion* (expander-call e)
+	      (funcall (expander-pre e))
+	      (repeat-while-changes #'%macroexpand expr)))
+      (funcall (expander-post e)))))
 
 (defun expander-has-macro? (expander-name macro-name)
   (cdr (assoc macro-name (expander-macros (expander-get expander-name)))))
