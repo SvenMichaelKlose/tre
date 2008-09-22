@@ -1,8 +1,13 @@
 ;;;; list processor
-;;;; Copyright (c) 2007 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2007-2008 Sven Klose <pixel@copei.de>
 
 (defun remove-if (fun x)
   (when x
-    (if (not (funcall fun (car x)))
-      (cons (car x) (remove-if fun (cdr x)))
-      (remove-if fun (cdr x)))))
+    (if (funcall fun (car x))
+      (remove-if fun (cdr x))
+      (cons (car x) (remove-if fun (cdr x))))))
+
+(defun remove (elm lst &optional (test #'eq))
+  (remove-if #'((x)
+				  (funcall test elm x))
+			 lst))
