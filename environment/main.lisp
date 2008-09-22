@@ -11,6 +11,7 @@
   #'(lambda (path)
       (load (string-concat *ENVIRONMENT-PATH* "/environment/" path))))
 
+(env-load "stage0/main.lisp")
 (env-load "stage1/main.lisp")
 (env-load "stage2/main.lisp")
 (env-load "stage3/main.lisp")
