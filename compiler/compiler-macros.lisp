@@ -11,11 +11,9 @@
 ;;;;; VM-SCOPE holds a list of expresions and labels. They are nerged in the next pass.
 
 (defvar *tagbody-replacements*)
-(defvar *blockname-replacements*)
 
 (defun compiler-macroexpand-prepost ()
-  (setq *tagbody-replacements* nil
-        *blockname-replacements* nil))
+  (setq *tagbody-replacements* nil))
 
 (define-expander 'compiler :pre  #'compiler-macroexpand-prepost
 						   :post #'compiler-macroexpand-prepost)
@@ -81,34 +79,31 @@
 					!
 					'((identity nil)))))
 
-(defun lookup-create-gensym (block-name)
-  (or (cdr (assoc block-name *blockname-replacements*))
-      (with-gensym g
-        (acons! block-name g *blockname-replacements*)
-        g)))
+(define-expander 'compiler-return)
+(defvar *blockname* nil)
+(defvar *blockname-replacement* nil)
 
-(define-compiler-macro return-from (block-name expr)
-  `(vm-scope
-     (%setq ~%ret ,expr)
-     (vm-go ,(lookup-create-gensym block-name))))
+(define-expander-macro 'compiler-return return-from (block-name expr)
+  (if (eq block-name *blockname*)
+      `(vm-scope
+         (%setq ~%ret ,expr)
+         (vm-go ,*blockname-replacement*))
+	  `(return-from ,block-name ,expr)))
 
 (define-compiler-macro block (block-name &rest body)
   (if body
-      (let* ((head (butlast body))
-             (tail (last body))
-             (ret  `(vm-scope
-                      ,@head
-                      ,@(if (vm-jump? (car tail))
-						    tail
-						    `((%setq ~%ret ,@tail)))))
-             (bname (cdr (assoc block-name *blockname-replacements*))))
-        (prog1
-		  (if bname
-              (nconc ret (list bname) '((identity ~%ret)))
-              (nconc ret '((identity ~%ret))))
-		  (setf *blockname-replacements* (remove-if #'((x)
-											            (eq block-name (car x)))
-										 *blockname-replacements*))))
+	  (with (g (gensym))
+		(with-temporary *blockname* block-name
+		  (with-temporary *blockname-replacement* g
+            (with (b	 (expander-expand 'compiler-return body)
+			       head  (butlast b)
+                   tail  (last b)
+                   ret   `(vm-scope
+                            ,@head
+                            ,@(if (vm-jump? (car tail))
+						          tail
+						          `((%setq ~%ret ,@tail)))))
+              (nconc ret `(,g (identity ~%ret)))))))
     `(identity nil)))
 
 (define-compiler-macro setq (&rest args)
