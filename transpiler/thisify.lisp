@@ -4,7 +4,9 @@
 ;;;;; Wrap local method calls into SLOT-VALUEs.
 
 (defun thisify-list (classes x cls)
-  (with (classdef (cdr (assoc cls classes)))
+  (with (clsdesc (cdr (assoc cls classes))
+  		 classdef (append (js-class-methods clsdesc)
+						  (js-class-members clsdesc)))
     (with (thisify-symbol
 		     #'((x)
                   (aif (and classdef
