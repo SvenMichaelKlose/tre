@@ -16,7 +16,12 @@
 #include "util.h"
 #include "diag.h"
 
+#include <string.h>
+
 #ifdef TRE_DIAGNOSTICS
+
+char trediag_listmarks[NUM_LISTNODES >> 3];
+char trediag_atommarks[NUM_ATOMS >> 3];
 
 int tre_user = 0;
 
@@ -72,16 +77,35 @@ trediag_is_cons_of (treptr orig, treptr cons)
     trediag_is_cons_of_r (orig, orig, cons);
 }
 
-unsigned
-trediag_atom_of (treptr p)
+void
+trediag_chkptr (treptr x)
 {
-    unsigned  i;
+    if (TREPTR_TYPE(x) > TRETYPE_MAXTYPE) {
+		fprintf (stderr, "Type %d\n", TREPTR_INDEX(x));
+        treerror_internal (treptr_nil, "illegal type in ptr");
+	}
+	if (TREPTR_IS_CONS(x)) {
+		if (TREPTR_INDEX(x) > NUM_LISTNODES) {
+			fprintf (stderr, "Index %d\n", TREPTR_INDEX(x));
+            treerror_internal (treptr_nil, "illegal cons index");
+		}
+	} else {
+		if (TREPTR_INDEX(x) > NUM_ATOMS) {
+			fprintf (stderr, "Index %d\n", TREPTR_INDEX(x));
+            treerror_internal (treptr_nil, "illegal atom index");
+		}
+		if (tre_atoms[TREPTR_INDEX(x)].type == TRETYPE_UNUSED) {
+			fprintf (stderr, "Index %d\n", TREPTR_INDEX(x));
+            treerror_internal (treptr_nil, "accessing unused atom");
+		}
+    }
+}
 
-    for (i = 0; i < NUM_ATOMS; i++)
-        if (tre_atoms[i].type == ATOM_VARIABLE && TREPTR_INDEX(tre_atoms[i].fun) == TREPTR_INDEX(p))
-	    return i;
-
-    return -1;
+void
+trediag_init ()
+{
+    memset (trediag_listmarks, -1, sizeof (trediag_listmarks));
+    memset (trediag_atommarks, -1, sizeof (trediag_atommarks));
 }
 
 #endif /* #ifdef TRE_DIAGNOSTICS */

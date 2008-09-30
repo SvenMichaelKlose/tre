@@ -319,6 +319,7 @@ treimage_make_free (void)
     unsigned idx;
     char c;
 
+/* XXX
     tre_atoms_free = treptr_nil;
     DOTIMES(i, sizeof tregc_atommarks) {
         c = 1;
@@ -332,6 +333,7 @@ treimage_make_free (void)
             c <<= 1;
         }
     }
+*/
 }
 
 void
@@ -345,6 +347,7 @@ treimage_read_numbers (FILE *f)
 
     treimage_read (f, nmarks, NMARK_SIZE);
 
+/*
     tre_numbers_free = treptr_nil;
     DOTIMES(i, NMARK_SIZE) {
         c = 1;
@@ -358,6 +361,7 @@ treimage_read_numbers (FILE *f)
             c <<= 1;
         }
     }
+*/
 }
 
 void

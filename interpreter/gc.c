@@ -27,15 +27,30 @@
 #include <stdio.h>
 #include <string.h>
 
-#define TREGC_FREE_ATOM(index)	TRE_MARK(tregc_atommarks, index)
-#define TREGC_FREE_CONS(index)	TRE_MARK(tregc_listmarks, index)
-
 /* List element marks. */
-char tregc_listmarks[NUM_LISTNODES_TOTAL >> 3];
+char tregc_listmarks[NUM_LISTNODES >> 3];
 char tregc_atommarks[NUM_ATOMS >> 3];
+
+#define _TREGC_ALLOC_ATOM(index)	TRE_UNMARK(tregc_atommarks, index)
+#define _TREGC_ALLOC_CONS(index)	TRE_UNMARK(tregc_listmarks, index)
+#define _TREGC_FREE_ATOM(index)	TRE_MARK(tregc_atommarks, index)
+#define _TREGC_FREE_CONS(index)	TRE_MARK(tregc_listmarks, index)
+
+#ifdef TRE_DIAGNOSTICS
+#	define TREGC_ALLOC_ATOM(index)	_TREGC_ALLOC_ATOM(index)
+#	define TREGC_ALLOC_CONS(index)	_TREGC_ALLOC_CONS(index)
+#	define TREGC_FREE_ATOM(index)	_TREGC_FREE_ATOM(index)
+#	define TREGC_FREE_CONS(index)	_TREGC_FREE_CONS(index)
+#else
+#	define TREGC_ALLOC_ATOM(index)
+#	define TREGC_ALLOC_CONS(index)
+#	define TREGC_FREE_ATOM(index)
+#	define TREGC_FREE_CONS(index)
+#endif
 
 treptr tregc_car;
 treptr tregc_cdr;
+treptr tregc_save;
 treptr tregc_save_stack;
 treptr tregc_retval_current;
 
@@ -47,6 +62,8 @@ bool tregc_running;
 void
 tregc_push (treptr expr)
 {
+	CHKPTR(expr);
+	tregc_save = expr;
     TRELIST_PUSH(tregc_save_stack, expr);
 }
 
@@ -58,6 +75,7 @@ tregc_pop ()
 		treerror_internal (treptr_invalid, "GC save stack underflow");
 #endif
 
+	CHKPTR(_CAR(tregc_save_stack));
     TRELIST_POP(tregc_save_stack);
 }
 
@@ -67,6 +85,8 @@ tregc_pop ()
 void
 tregc_retval (treptr retval)
 {
+	CHKPTR(tregc_retval_current);
+	CHKPTR(retval);
     tregc_retval_current = retval;
 }
 
@@ -77,7 +97,7 @@ void
 tregc_trace_expr_toplevel (treptr expr)
 {
     while (expr != treptr_nil) {
-        TREGC_ALLOC_CONS(expr);
+        _TREGC_ALLOC_CONS(expr);
 		expr = _CDR(expr);
     }
 }
@@ -97,7 +117,7 @@ tregc_trace_expr (treptr p)
         if (TRE_GETMARK(tregc_listmarks, i) == FALSE)
 	    	return;
 
-        TREGC_ALLOC_CONS(i);
+        _TREGC_ALLOC_CONS(i);
 
         tregc_trace_object (_CAR(i));
 
@@ -142,7 +162,7 @@ tregc_trace_atom (treptr a)
     /* Avoid circular trace. */
     if (TRE_GETMARK(tregc_atommarks, ai) == FALSE)
 		return;
-    TREGC_ALLOC_ATOM(ai);
+    _TREGC_ALLOC_ATOM(ai);
 
     switch (TREATOM_TYPE(a)) {
         case TRETYPE_FUNCTION:
@@ -163,11 +183,17 @@ tregc_trace_atom (treptr a)
 }
 
 void
-tregc_mark_non_internal ()
+tregc_init_maps ()
 {
     /* Initialise mark map, */
     memset (tregc_listmarks, -1, sizeof (tregc_listmarks));
     memset (tregc_atommarks, -1, sizeof (tregc_atommarks));
+}
+
+void
+tregc_mark_non_internal ()
+{
+	tregc_init_maps ();
 
     tregc_trace_object (treptr_universe);
     tregc_trace_object (treimage_initfun);
@@ -181,13 +207,12 @@ tregc_mark (void)
     tregc_trace_expr_toplevel (TRECONTEXT_FUNSTACK());
 
     /* Mark temporarily untraceable objects. */
+    tregc_trace_object (tregc_save);
     tregc_trace_object (tregc_save_stack);
     tregc_trace_object (tregc_retval_current);
 
     /* Mark bookkeeping lists. */
     tregc_trace_expr_toplevel (tre_lists_free);
-    tregc_trace_expr_toplevel (tre_atoms_free);
-    tregc_trace_expr_toplevel (tre_numbers_free);
 
     tregc_trace_atom (tre_atom_evaluated_go);
     tregc_trace_atom (tre_atom_evaluated_return_from);
@@ -211,8 +236,8 @@ tregc_sweep (void)
 		DOTIMES(j, 8) {
 	    	if (tregc_atommarks[i] & c) {
 	        	idx = (i << 3) + j;
-				if (TREPTR_TO_ATOM(idx).type != TRETYPE_UNUSED)
-	            	treatom_remove (TREATOM_TO_PTR(idx));
+                if (TREPTR_TO_ATOM(idx).type != TRETYPE_UNUSED)
+	           	    treatom_remove (TREATOM_TO_PTR(idx));
             }
 
 	    	c <<= 1;
@@ -242,11 +267,28 @@ tregc_pass (void)
     tregc_running = FALSE;
 }
 
+/*
+int gc_run = 0;
+*/
 void
 tregc_force ()
 {
     if (tregc_running)
 		return;
+
+/*
+	gc_run++;
+    printf ("GC run %d\n", gc_run);
+	if (tre_atoms[3921].type != TRETYPE_UNUSED) {
+    	printf ("dump\n");
+		treprint (TREATOM_INDEX_TO_PTR(3921));
+	}
+ 	if (gc_run == 167)
+		CRASH();
+    if (_CAR(141) != -5) {
+    	treprint (141);
+	}
+*/
 
 #if TRE_VERBOSE_GC
     printf ("before gc");
@@ -258,6 +300,7 @@ tregc_force ()
 #ifdef TRE_VERBOSE_GC
     printf (" after gc");
     tregc_print_stats ();
+	fflush (stdout);
 #endif
 
 }
@@ -296,8 +339,7 @@ tregc_print_stats ()
     printf (": %d cons, %d atoms "
             "(%d var, %d num, %d arr, %d str, "
             "%d fun, %d mac, %d usr, %d pkg, %d blt, %d spc).\n",
-            trelist_num_used - trelist_length (tre_atoms_free)
-							 - trelist_length (tre_numbers_free),
+            trelist_num_used,
             atoms,
             c[TRETYPE_VARIABLE], c[TRETYPE_NUMBER], c[TRETYPE_ARRAY], c[TRETYPE_STRING],
             c[TRETYPE_FUNCTION], c[TRETYPE_MACRO], c[TRETYPE_USERSPECIAL],
@@ -310,7 +352,10 @@ tregc_init ()
 {
     tregc_running = FALSE;
     tregc_save_stack = treptr_nil;
+    tregc_save = treptr_nil;
     tregc_retval_current = treptr_nil;
     tregc_car = treptr_nil;
     tregc_cdr = treptr_nil;
+
+	tregc_init_maps ();
 }

@@ -25,6 +25,7 @@
 #include "argument.h"
 #include "string.h"
 #include "xxx.h"
+#include "diag.h"
 
 #include <stdio.h>
 
@@ -67,8 +68,7 @@ treeval_funcall (treptr func, treptr expr, bool do_argeval)
 
     /* Expand argument keywords. */
     trearg_expand (&expforms, &expvals, forms, args, do_argeval);
-    tregc_push (expforms);
-    tregc_push (expvals);
+    tregc_push (CONS(expforms, expvals));
 
     /* Bind arguments. */
     treenv_bind (expforms, expvals);
@@ -84,7 +84,6 @@ treeval_funcall (treptr func, treptr expr, bool do_argeval)
     /* Free argument list. */
     tregc_pop ();
     TRELIST_FREE_TOPLEVEL_EARLY(expvals);
-    tregc_pop ();
     TRELIST_FREE_TOPLEVEL_EARLY(expforms);
 
 #ifdef TRE_DIAGNOSTICS
@@ -147,8 +146,10 @@ treeval_xlat_function (treevalfunc_t *xlat, treptr func, treptr expr,
 treptr
 treeval_expr (treptr x)
 {
-    treptr  fun = CAR(x);
-    treptr  v = treptr_nil;
+    treptr  fun;
+    treptr  v;
+    fun = CAR(x);
+    v = treptr_nil;
 
     tredebug_chk_breakpoints (x);
 	TREDEBUG_STEP();
@@ -158,7 +159,6 @@ treeval_expr (treptr x)
          fun = TREATOM_FUN(fun);
     else /* if (TREPTR_IS_CONS(fun)) */
         fun = treeval (fun);
-	fun = treeval (fun);
 
     tregc_push (fun);
 
@@ -167,16 +167,16 @@ treeval_expr (treptr x)
             v = treeval_funcall (fun, x, TRUE);
             break;
 
+        case TRETYPE_USERSPECIAL:
+            v = treeval_funcall (fun, x, FALSE);
+            break;
+
         case TRETYPE_BUILTIN:
             v = trebuiltin (fun, x);
             break;
 
         case TRETYPE_SPECIAL:
             v = trespecial (fun, x);
-            break;
-
-        case TRETYPE_USERSPECIAL:
-            v = treeval_funcall (fun, x, FALSE);
             break;
 
         default:
@@ -198,6 +198,7 @@ treeval (treptr x)
 {
     treptr val = x;
 
+	CHKPTR(x);
 #ifdef TRE_DIAGNOSTICS
     treptr gcss = tregc_save_stack;
 #endif
@@ -235,7 +236,7 @@ treeval (treptr x)
         case TRETYPE_MACRO:
             break;
 
-    /* Cough, if we don't know the atom type. */
+        /* Cough, if we don't know the atom type. */
         default:
             treerror_internal (x, "invalid atom type");
 #endif

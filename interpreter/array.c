@@ -43,8 +43,8 @@ trearray_get_size (treptr sizes)
     treptr  car;
     unsigned      size = 1;
 
-    DOLIST(a, sizes) {
-		car = CAR(a);
+    _DOLIST(a, sizes) {
+		car = _CAR(a);
 		if (TREPTR_IS_NUMBER(car) == FALSE)
 	    	return treerror (car, "array size: number expected");
 		size *= TRENUMBER_VAL(car);

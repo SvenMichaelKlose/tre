@@ -27,6 +27,7 @@
 #include "string.h"
 #include "image.h"
 #include "util.h"
+#include "diag.h"
 
 #include <setjmp.h>
 #include <stdlib.h>
@@ -156,6 +157,9 @@ tre_init (void)
     tredebug_init ();
     trethread_make ();
     tregc_init ();
+#ifdef TRE_DIAGNOSTICS
+    trediag_init ();
+#endif
 
     trelist_init ();
     tresymbol_init ();

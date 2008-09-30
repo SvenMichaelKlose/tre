@@ -81,7 +81,7 @@ treio_putc (struct tre_stream * s, char c)
 void
 treio_putback (struct tre_stream * s)
 {
-#ifdef DIAGNOSTICS
+#ifdef TRE_DIAGNOSTICS
     if (s->putback_char != -1)
 	treerror_internal (treptr_nil, "treio: putback twice");
 #endif

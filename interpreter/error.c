@@ -18,6 +18,7 @@
 #include "argument.h"
 #include "string.h"
 #include "macro.h"
+#include "xxx.h"
 
 #include <stdio.h>
 #include <stdarg.h>
@@ -52,8 +53,7 @@ treerror_internal (treptr expr, const char *msg, ...)
 
     treerror_msg (expr, "INTERNAL INTERPRETER ERROR", msg, ap);
 
-    (void) tredebug ();
-    tre_exit (-1);
+	CRASH();
 }
 
 void

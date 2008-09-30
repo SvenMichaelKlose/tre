@@ -19,6 +19,7 @@
 #include "xxx.h"
 #include "string.h"
 #include "array.h"
+#include "diag.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -34,6 +35,8 @@ tresequence_get_type (treptr seq)
 	    	return &trearray_seqtype;
 		case TRETYPE_CONS:
 	    	return &trelist_seqtype;
+		default:
+			treerror_norecover (seq, "not a sequence");
     }
 
     return NULL;
@@ -97,9 +100,11 @@ tresequence_builtin_elt (treptr args)
 treptr
 tresequence_builtin_length (treptr args)
 {
+	treptr ret;
     treptr seq = trearg_get (args);
     struct tre_sequence_type *t;
 
+	CHKPTR(seq);
     if (seq == treptr_nil)
 		return treatom_number_get (0, TRENUMTYPE_INTEGER);
 
@@ -107,5 +112,7 @@ tresequence_builtin_length (treptr args)
     if (t == NULL)
         return treerror (seq, "sequence expected");
 
-    return treatom_number_get ((double) (*t->length) (seq), TRENUMTYPE_INTEGER);
+    ret = treatom_number_get ((double) (*t->length) (seq), TRENUMTYPE_INTEGER);
+	CHKPTR(ret);
+	return ret;
 }

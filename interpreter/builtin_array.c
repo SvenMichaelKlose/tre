@@ -112,9 +112,7 @@ trearray_builtin_p (treptr list)
 {
     treptr arg = trearg_get (list);
 
-    if (TREPTR_IS_ARRAY(arg))
-        return treptr_t;
-    return treptr_nil;
+    return TREPTR_TRUTH(TREPTR_IS_ARRAY(arg));
 }
 
 

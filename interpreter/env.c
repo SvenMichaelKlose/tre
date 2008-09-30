@@ -65,8 +65,14 @@ treenv_bind (treptr la, treptr lv)
     treptr  val;
 
     for (;la != treptr_nil && lv != treptr_nil; la = CDR(la), lv = CDR(lv)) {
+		CHKPTR(la);
         arg = CAR(la);
+		CHKPTR(arg);
+
+		CHKPTR(lv);
         val = CAR(lv);
+		CHKPTR(val);
+
 #ifdef TRE_DIAGNOSTICS
         if (TREPTR_IS_VARIABLE(arg) == FALSE)
             treerror_internal (arg, "bind: variable expected");
@@ -76,8 +82,10 @@ treenv_bind (treptr la, treptr lv)
 		TREATOM_VALUE(arg) = val;
     }
 
+	CHKPTR(la);
     if (la != treptr_nil)
         treerror (la, "arguments missing");
+	CHKPTR(lv);
     if (lv != treptr_nil)
         treerror (lv, "too many arguments. Rest of forms");
 }

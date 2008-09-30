@@ -49,18 +49,16 @@ typedef int bool;
 #define TREDEBUG_MAX_BREAKPOINTS	16
 
 #ifndef NUM_NUMBERS
-#define NUM_NUMBERS	(32 * 1024)
+#define NUM_NUMBERS	(16 * 1024)
 #endif
 
 #ifndef NUM_ATOMS
-#define NUM_ATOMS	(64 * 1024)
+#define NUM_ATOMS	(32 * 1024)
 #endif
 
 #ifndef NUM_LISTNODES
-#define NUM_LISTNODES	(1024 * 1024)
+#define NUM_LISTNODES	(256 * 1024)
 #endif
-
-#define NUM_LISTNODES_TOTAL	(NUM_LISTNODES + NUM_ATOMS + NUM_NUMBERS)
 
 #ifndef NULL
 #define NULL	((void *) 0)
@@ -90,7 +88,7 @@ typedef int bool;
 #define TRE_IMAGE_HEADER  "#!/usr/local/bin/tre -i\n" TRE_INFO
 #endif
 
-#define TREPTR_INDEX_WIDTH	28
+#define TREPTR_INDEX_WIDTH	27
 
 #ifdef LITTLE_ENDIAN
 #define TRE_ENDIANESS_STRING	"LITTLE"

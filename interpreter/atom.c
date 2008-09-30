@@ -24,6 +24,9 @@
 #include "symbol.h"
 #include "print.h"
 #include "thread.h"
+#include "alloc.h"
+#include "util.h"
+#include "xxx.h"
 
 #define _GNU_SOURCE
 #include <string.h>
@@ -33,11 +36,17 @@
 /*
  * The atom list is a growing table.
  */
+void * tre_atoms_free;
 struct tre_atom tre_atoms[NUM_ATOMS];
-treptr tre_atoms_free;
 
-const treptr treptr_nil = TRETYPE_INDEX_TO_PTR(1, 0);
-const treptr treptr_t = TRETYPE_INDEX_TO_PTR(1, 1);
+#define TREPTR_NIL_INDEX	0 /* NIL and T are allocated manually. */
+#define TREPTR_T_INDEX		1
+#define TREPTR_FIRST_INDEX	2 /* First allocator index. */
+
+#define TREPACKAGE_KEYWORD_INDEX	1
+
+const treptr treptr_nil = TRETYPE_INDEX_TO_PTR(TRETYPE_VARIABLE, TREPTR_NIL_INDEX);
+const treptr treptr_t = TRETYPE_INDEX_TO_PTR(TRETYPE_VARIABLE, TREPTR_T_INDEX);
 const treptr treptr_invalid = (treptr) -1;
 
 treptr treptr_universe; /* *UNIVERSE* variable */
@@ -53,35 +62,35 @@ treptr treatom_lambda;
 treptr tre_package_keyword;
 
 void
-treatom_init_nil (void)
+treatom_init_truth (void)
 {
     /* Initialise NIL atom manually to make list functions work. */
-    ATOM_SET(0, tresymbol_add ("NIL"), treptr_nil, TRETYPE_VARIABLE);
-
-    /* Reinitialize every slot that takes NIL. */
-    tre_atoms[0].value = TRETYPE_INDEX_TO_PTR(TRETYPE_VARIABLE, 0), 1;
-    tre_atoms[0].fun = treptr_nil;
-    tre_atoms[0].binding = treptr_nil;
-
+    ATOM_SET(TREPTR_NIL_INDEX, tresymbol_add ("NIL"), treptr_nil, TRETYPE_VARIABLE);
+    tre_atoms[TREPTR_NIL_INDEX].value = TRETYPE_INDEX_TO_PTR(TRETYPE_VARIABLE, TREPTR_NIL_INDEX);
+    tre_atoms[TREPTR_NIL_INDEX].fun = treptr_nil;
+    tre_atoms[TREPTR_NIL_INDEX].binding = treptr_nil;
 	tresymbolpage_add (treptr_nil);
+
+    ATOM_SET(TREPTR_T_INDEX, tresymbol_add ("T"), treptr_nil, TRETYPE_VARIABLE);
+    tre_atoms[TREPTR_T_INDEX].value = TRETYPE_INDEX_TO_PTR(TRETYPE_VARIABLE, TREPTR_T_INDEX);
+    tre_atoms[TREPTR_T_INDEX].fun = treptr_nil;
+    tre_atoms[TREPTR_T_INDEX].binding = treptr_nil;
+	tresymbolpage_add (treptr_t);
 }
 
 void
 treatom_init_atom_table (void)
 {
-    treptr   p;
-    unsigned  i;
+	unsigned x;
 
-    /* Prepare unused atom entries. */
-    for (i = 1; i < NUM_ATOMS; i++) {
-        ATOM_SET(i, NULL, treptr_nil, TRETYPE_UNUSED);
-    }
-
-    /* Put atom entries on the free atom list, except NIL. */
-    p = treptr_nil;
-    for (i = NUM_ATOMS - 1; i > 0; i--)
-        p = CONS(i, p);
-    tre_atoms_free = p;
+    tre_atoms_free = trealloc_item_init (
+		&tre_atoms[TREPTR_FIRST_INDEX],
+		NUM_ATOMS - TREPTR_FIRST_INDEX,
+		sizeof (struct tre_atom)
+	);
+	DOTIMES(x, NUM_ATOMS - TREPTR_FIRST_INDEX) {
+	  tre_atoms[x + TREPTR_FIRST_INDEX].type = TRETYPE_UNUSED;
+	}
 }
 
 void
@@ -107,29 +116,32 @@ treatom_init_builtins (void)
     }
 }
 
+void
+treatom_init_keyword_package ()
+{
+    tre_package_keyword = treatom_alloc ("", treptr_nil, TRETYPE_PACKAGE, treptr_nil);
+	tresymbolpage_set_package (TREPACKAGE_KEYWORD_INDEX, tre_package_keyword);
+}
+
+void
+treatom_init_big_bang ()
+{
+    treptr_universe = treatom_alloc ("*UNIVERSE*", treptr_nil, TRETYPE_VARIABLE, treptr_nil);
+    EXPAND_UNIVERSE(treptr_t);
+    EXPAND_UNIVERSE(tre_package_keyword);
+	MAKE_VAR("*KEYWORD-PACKAGE*", tre_package_keyword);
+}
+
 /*
  * Initialise atom table.
  */
 void
 treatom_init (void)
 {
-    treptr t;
-
-	tresymbolpage_set_package (0, treptr_nil);
-    treatom_init_nil ();
+    treatom_init_truth ();
     treatom_init_atom_table ();
-
-    t = treatom_get ("T", treptr_nil);
-    tre_package_keyword = treatom_alloc ("", treptr_nil, TRETYPE_PACKAGE, treptr_nil);
-	tresymbolpage_set_package (1, tre_package_keyword);
-
-    treptr_universe = treatom_alloc ("*UNIVERSE*", treptr_nil, TRETYPE_VARIABLE, treptr_nil);
-
-    EXPAND_UNIVERSE(t);
-
-    EXPAND_UNIVERSE(tre_package_keyword);
-	MAKE_VAR("*KEYWORD-PACKAGE*", tre_package_keyword);
-
+	treatom_init_keyword_package ();
+    treatom_init_big_bang ();
     treatom_init_builtins ();
 }
 
@@ -166,28 +178,19 @@ treptr
 treatom_alloc (char * symbol, treptr package, int type, treptr value)
 {
     unsigned  atomi;
-    treptr   ntop;
     treptr   ret;
+	void     * item;
 
-    if (tre_atoms_free == treptr_nil) {
+	item = trealloc_item (&tre_atoms_free, &tre_atoms, &tre_atoms[NUM_ATOMS]);
+	if (!item) {
         tregc_force ();
-        if (tre_atoms_free == treptr_nil)
+		item = trealloc_item (&tre_atoms_free, &tre_atoms, &tre_atoms[NUM_ATOMS]);
+    	if (!item)
 	    	return treerror (treptr_invalid, "atom table full");
     }
 
-    atomi = CAR(tre_atoms_free);
-
-#ifdef TRE_DIAGNOSTICS
-    if (TREPTR_TO_ATOM(atomi)->type != TRETYPE_UNUSED)
-		treerror_internal (treptr_invalid, "trying to free unused atom");
-#endif
-
+    atomi = ((unsigned long) item - (unsigned long) tre_atoms) / sizeof (struct tre_atom);
     TREGC_ALLOC_ATOM(atomi);
-
-    /* Pop free atom from free atom list. */
-    ntop = CDR(tre_atoms_free);
-    trelist_free (tre_atoms_free);
-    tre_atoms_free = ntop;
 
     /* Make symbol. */
     if (value == treptr_invalid)
@@ -206,35 +209,26 @@ treatom_alloc (char * symbol, treptr package, int type, treptr value)
 
 /* Free an atom. */
 void
-treatom_free (treptr atomi)
+treatom_free (treptr x)
 {
-#ifdef TRE_DIAGNOSTICS
-    treptr  i;
-
-    /* Check if atom is already on the free atom list. */
-    if (tre_is_initialized) {
-        _DOLIST(i, tre_atoms_free) {
-            if (_CAR(i) == TREPTR_INDEX(atomi))
-                treerror_internal (treptr_invalid, "atom %d already on free list", atomi);
-        }
-     }
-
-    /* Check if atom is already marked as being unused. */
-    if (TREPTR_TO_ATOM(atomi)->type == TRETYPE_UNUSED)
-		treerror_internal (treptr_invalid, "trying to free unused atom");
-#endif
-
-    TREPTR_TO_ATOM(atomi).type = TRETYPE_UNUSED;
-
-    /* Add entry to list of free atoms. */
-    tre_atoms_free = CONS(TREPTR_INDEX(atomi), tre_atoms_free);
+/*
+if (TREPTR_INDEX(x) == 49023) {
+    printf ("atom free %d. index %d\n", x, TREPTR_INDEX(x));
+    printf ("gcret %d\n", TREPTR_INDEX(tregc_retval_current));
+    CRASH();
+}
+*/
+    TREATOM_TYPE(x) = TRETYPE_UNUSED;
 
     /* Release symbol string. */
-    if (TREATOM_NAME(atomi) != NULL) {
-		tresymbolpage_remove (atomi);
-        tresymbol_free (TREATOM_NAME(atomi));
-    	TREATOM_NAME(atomi) = NULL;
+    if (TREATOM_NAME(x) != NULL) {
+		tresymbolpage_remove (x);
+        tresymbol_free (TREATOM_NAME(x));
+    	TREATOM_NAME(x) = NULL;
     }
+
+	trealloc_free_item (&tre_atoms_free, &tre_atoms[TREPTR_INDEX(x)],
+						&tre_atoms, &tre_atoms[NUM_ATOMS]);
 }
 
 /*
@@ -249,8 +243,10 @@ treatom_number_get (double value, int type)
     unsigned  num;
 
     atom = treatom_alloc (NULL, treptr_nil, TRETYPE_NUMBER, treptr_nil);
+CHKPTR(atom);
     num = trenumber_alloc (value, type);
     TREATOM_SET_DETAIL(atom, num);
+CHKPTR(atom);
 
     return atom;
 }

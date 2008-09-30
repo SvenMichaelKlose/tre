@@ -89,9 +89,7 @@ trestream_builtin_feof (treptr args)
 {
     FILE  * str = trestream_builtin_get_handle (args, stdin);
 
-    if (feof (str))
-        return treptr_t;
-    return treptr_nil;
+    return TREPTR_TRUTH(feof (str));
 }
 
 treptr
@@ -99,9 +97,7 @@ trestream_builtin_fclose (treptr args)
 {
     int  str = trestream_builtin_get_handle_index (args);
 
-    if (trestream_fclose (str))
-        return treptr_t;
-    return treptr_nil;
+    return TREPTR_TRUTH(trestream_fclose (str));
 }
 
 treptr

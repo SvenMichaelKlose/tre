@@ -160,9 +160,7 @@ treatom_builtin_functionp (treptr list)
 {
     treptr arg = trearg_get (list);
 
-    if (TREPTR_IS_FUNCTION(arg) || TREPTR_IS_BUILTIN(arg))
-		return treptr_t;
-    return treptr_nil;
+    return TREPTR_TRUTH(TREPTR_IS_FUNCTION(arg) || TREPTR_IS_BUILTIN(arg));
 }
 
 /*
@@ -175,9 +173,7 @@ treatom_builtin_boundp (treptr list)
 {
     treptr arg = trearg_get (list);
 
-    if (TREATOM_VALUE(arg) != arg)
-		return treptr_t;
-    return treptr_nil;
+    return TREPTR_TRUTH(TREATOM_VALUE(arg) != arg);
 }
 
 /*
@@ -190,9 +186,7 @@ treatom_builtin_fboundp (treptr list)
 {
     treptr arg = trearg_get (list);
 
-    if (TREATOM_FUN(arg) != treptr_nil)
-		return treptr_t;
-    return treptr_nil;
+    return TREPTR_TRUTH(TREATOM_FUN(arg) != treptr_nil);
 }
 
 /*
@@ -203,9 +197,7 @@ treatom_builtin_macrop (treptr list)
 {
     treptr arg = trearg_get (list);
 
-    if (TREPTR_IS_MACRO(arg))
-		return treptr_t;
-    return treptr_nil;
+    return TREPTR_TRUTH(TREPTR_IS_MACRO(arg));
 }
 
 treptr

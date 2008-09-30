@@ -8,7 +8,7 @@
 #ifndef TRE_LIST_H
 #define TRE_LIST_H
 
-#define LAST_LISTNODE	(NUM_LISTNODES_TOTAL - 1)
+#define LAST_LISTNODE	(NUM_LISTNODES - 1)
 
 struct tre_list {
     treptr car;
@@ -75,7 +75,7 @@ struct tre_list {
 
 extern void trelist_init (void);
 
-extern struct tre_list tre_lists[NUM_LISTNODES_TOTAL];
+extern struct tre_list tre_lists[NUM_LISTNODES];
 extern treptr tre_lists_free;
 extern unsigned trelist_num_used;
 

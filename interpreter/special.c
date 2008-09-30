@@ -75,7 +75,7 @@ trespecial_setq (treptr list)
 		argnum++;
         list = CDR(list);
         if (list == treptr_nil) {
-	    	cdr = treerror (treptr_invalid, "even number arguments expected - supply missing");
+	    	cdr = treerror (list, "even number arguments expected - supply the missing one");
 			list = treptr_nil;
 		} else {
 			/* Evaluate value expression. */
@@ -107,7 +107,9 @@ trespecial_macro (treptr list)
     treptr  expr = trelist_copy (list);
 
     f = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_MACRO, expr);
+	tregc_push (f);
     treenv_create (f);
+	tregc_pop ();
 
     return f;
 }
@@ -245,6 +247,7 @@ treptr
 trespecial_return_from (treptr args)
 {
     treptr tmp;
+    treptr evl;
     treptr ret;
 
     /* Check arguments. */
@@ -260,9 +263,12 @@ trespecial_return_from (treptr args)
     tregc_push (args);
 
     tmp = CDR(args);
-    RPLACA(tmp, treeval (CAR(tmp)));
+	evl = treeval (CAR(tmp));
+	tregc_push (evl);
+    RPLACA(tmp, evl);
     ret = CONS(tre_atom_evaluated_return_from, args);
 
+    tregc_pop ();
     tregc_pop ();
     return ret;
 }
@@ -342,8 +348,6 @@ treptr
 trespecial_function_from_expr (treptr expr)
 {
     treptr past_lambda;
-    treptr args;
-    treptr body;
     treptr f;
 
 	/* Jump past optional LAMBDA keyword. */
@@ -358,12 +362,10 @@ trespecial_function_from_expr (treptr expr)
 
     past_lambda = trelist_copy (past_lambda);
     tregc_push (past_lambda);
-    args = CAR(past_lambda);
-    body = CDR(past_lambda);
-
     f = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_FUNCTION, past_lambda);
-    tregc_retval (f);
+    tregc_push (f);
     treenv_create (f);
+    tregc_pop ();
 
     tregc_pop ();
     return f;

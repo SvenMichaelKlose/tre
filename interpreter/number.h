@@ -26,7 +26,6 @@ struct tre_number {
 	((TRE_NUMBER((unsigned) TREATOM_DETAIL(ptr)))->type)
 
 extern struct tre_number tre_numbers[NUM_NUMBERS];
-extern treptr tre_numbers_free;
 
 /* Check if string contains a number. */
 extern bool trenumber_is_value (char *);

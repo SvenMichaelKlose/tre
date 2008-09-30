@@ -22,7 +22,6 @@ struct tre_atom {
 };
 
 extern struct tre_atom tre_atoms[NUM_ATOMS];
-extern treptr tre_atoms_free;
 
 extern treptr treptr_universe;
 extern treptr tre_package_keyword;

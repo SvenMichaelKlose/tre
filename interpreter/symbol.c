@@ -207,4 +207,5 @@ tresymbol_init ()
 {
     num_symbols = 0;
 	tresymbolpage_init ();
+    tresymbolpage_set_package (0, treptr_nil);
 }

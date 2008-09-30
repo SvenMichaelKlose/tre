@@ -26,9 +26,7 @@ trenumber_builtin_numberp (treptr list)
 {
     treptr  arg = trearg_get (list);
 
-    if (TREPTR_IS_NUMBER(arg) == FALSE)
-        return treptr_nil;
-    return treptr_t;
+    return TREPTR_TRUTH(TREPTR_IS_NUMBER(arg));
 }
 
 /*
@@ -65,9 +63,7 @@ trenumber_builtin_characterp (treptr args)
 {
     treptr  arg = trearg_get (args);
 
-    if (TREPTR_IS_NUMBER(arg) && (TRENUMBER_TYPE(arg) == TRENUMTYPE_CHAR))
-		return treptr_t;
-    return treptr_nil;
+    return TREPTR_TRUTH(TREPTR_IS_NUMBER(arg) && (TRENUMBER_TYPE(arg) == TRENUMTYPE_CHAR));
 }
 
 /*

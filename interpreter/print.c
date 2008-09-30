@@ -20,12 +20,13 @@
 #include "io.h"
 #include "string.h"
 #include "thread.h"
+#include "diag.h"
 
 #include <stdio.h>
 #include <strings.h>
 
 /* List element marks. */
-char treprint_marks_cons[NUM_LISTNODES_TOTAL >> 3];
+char treprint_marks_cons[NUM_LISTNODES >> 3];
 char treprint_marks_atoms[NUM_ATOMS >> 3];
 
 #define TREPRINT_MARK_CONS(i) \
@@ -90,6 +91,8 @@ treprint_chk_atom_mark (treptr atom)
 {
     bool mark;
 
+	CHKPTR(atom);
+
     if (TREPTR_IS_CONS(atom))
     	return FALSE;
 
@@ -113,6 +116,8 @@ void
 treprint_atom (treptr atom, unsigned indent)
 {
     char * name;
+
+	CHKPTR(atom);
 
     if (treprint_chk_atom_mark (atom)) {
         printf ("*circular*");
@@ -306,6 +311,7 @@ treprint_r (treptr p)
 void
 treprint (treptr p)
 {
+	CHKPTR(p);
     treprint_wipe_marks ();
     treprint_r (p);
     printnl ();

@@ -34,9 +34,7 @@ trestring_builtin_stringp (treptr list)
 {
     treptr arg = trearg_get (list);
 
-    if (TREPTR_IS_STRING(arg) == FALSE)
-        return treptr_nil;
-    return treptr_t;
+    return TREPTR_TRUTH(TREPTR_IS_STRING(arg));
 }
 
 /*
