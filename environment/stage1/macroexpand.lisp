@@ -8,7 +8,13 @@
 
 (setq *universe* (cons '*macrop-diversion*
                  (cons '*macroexpand-backquote-diversion*
-                 (cons '*macrocall-diversion* *universe*))))
+                 (cons '*macrocall-diversion*
+				 (cons '%macroexpand
+				 (cons %macroexpand-backquote
+				 (cons %%macrop
+				 (cons %%macrocall
+				 (cons %macroexpand-list
+				 (cons %macroexpand-call *universe*))))))))))
 
 (setq *macrop-diversion* nil
       *macrocall-diversion* nil
