@@ -6,15 +6,20 @@
 
 (defun assoc (key lst &key test)
   "Search value for key in associative list."
-  (when (consp lst)
+  (when lst
+	(unless (consp lst)
+	  (%error "list expected"))
     (dolist (i lst)
       (if (consp i)
 		  (if (funcall (or test eql) key (car i))
 	  	  	  (return i))
-	(%error "not a pair")))))
+		  (and (print i)
+			   (%error "not a pair"))))))
 
 (defun assoc-cons (key lst &key test)
-  (when (consp lst)
+  (when lst
+	(unless (consp lst)
+	  (%error "list expected"))
     (dolist (i lst)
       (if (consp i)
 		  (if (funcall (or test eql) key (car i))
