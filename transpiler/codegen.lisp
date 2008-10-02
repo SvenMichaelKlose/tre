@@ -4,7 +4,7 @@
 ;;;; OPERATOR EXPANSION
 
 (defmacro define-transpiler-infix (tr name)
-  `(define-expander-macro ,(transpiler-macro-expander (eval tr)) ,name (x y)
+  `(define-expander-macro ',(transpiler-macro-expander (eval tr)) ,name (x y)
 	 `(%transpiler-native ,,x ,(string-downcase (string name)) " " ,,y)))
 
 (defun transpiler-binary-expand (op args)
@@ -14,7 +14,7 @@
 		 (last args)))
 
 (defmacro define-transpiler-binary (tr op repl-op)
-  `(define-expander-macro ,(transpiler-macro-expander (eval tr)) ,op (&rest args)
+  `(define-expander-macro ',(transpiler-macro-expander (eval tr)) ,op (&rest args)
      `("(" ,,@(transpiler-binary-expand ,repl-op args) ")")))
 
 ;;;; ENCAPSULATION
@@ -46,7 +46,7 @@
 		  (transpiler-finalize-sexprs tr (cdr x))
 	  	  (if (atom a) 
 			  ; Make jump label.
-		      (cons (format nil "case \"~A\":~%" (transpiler-symbol-string tr a))
+		      (cons (funcall (transpiler-make-label tr) a)
 		            (transpiler-finalize-sexprs tr (cdr x)))
               (if (and (%setq? a)
 					   (is-lambda? (%setq-value a)))
@@ -99,7 +99,7 @@
 		`(,fun ,@x))))
 
 (defmacro define-transpiler-macro (tr name args body)
-  `(define-expander-macro ,(transpiler-macro-expander (eval tr)) ,name ,args ,body))
+  `(define-expander-macro ',(transpiler-macro-expander (eval tr)) ,name ,args ,body))
 
 ;;;; POST PROCESSING
 

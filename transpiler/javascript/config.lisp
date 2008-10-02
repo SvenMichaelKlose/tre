@@ -15,7 +15,10 @@
 		  (or (and (>= x #\a) (<= x #\z))
 		  	  (and (>= x #\A) (<= x #\Z))
 		  	  (and (>= x #\0) (<= x #\9))
-			  (in=? x #\_ #\. #\$ #\#)))))
+			  (in=? x #\_ #\. #\$ #\#)))
+	:make-label
+	  #'((x)
+           (format nil "case \"~A\":~%" (transpiler-symbol-string *js-transpiler* a)))))
 
 (defvar *js-transpiler* (make-javascript-transpiler))
 (defvar *js-separator* (transpiler-separator *js-transpiler*))

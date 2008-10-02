@@ -47,9 +47,9 @@
 
 (defmacro define-transpiler-std-macro (tr name args body)
   (with (tre (eval tr))
-    `(define-expander-macro ,(transpiler-std-macro-expander tre)
-							  ,name
-							  ,args
+    `(define-expander-macro ',(transpiler-std-macro-expander tre)
+							,name
+							,args
 	   ,body)))
 
 ;;;; LAMBDA EXPANSION

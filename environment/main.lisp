@@ -36,11 +36,11 @@
 (env-load "../transpiler/javascript/codegen.lisp")
 (env-load "../transpiler/javascript/core.lisp")
 (env-load "../transpiler/javascript/toplevel.lisp")
-;(env-load "../transpiler/c/config.lisp")
-;(env-load "../transpiler/c/expand.lisp")
-;(env-load "../transpiler/c/codegen.lisp")
-;(env-load "../transpiler/c/core.lisp")
-;(env-load "../transpiler/c/toplevel.lisp")
+(env-load "../transpiler/c/config.lisp")
+(env-load "../transpiler/c/expand.lisp")
+(env-load "../transpiler/c/codegen.lisp")
+(env-load "../transpiler/c/core.lisp")
+(env-load "../transpiler/c/toplevel.lisp")
 
 ; Keep tests for reuse in definition order.
 (setq *tests* (reverse *tests*))

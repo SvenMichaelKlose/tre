@@ -16,7 +16,8 @@
   (function-args nil)
   (wanted-functions nil)
   (obfuscate? nil)
-  (obfuscations nil))
+  (obfuscations nil)
+  (make-label #'identity))
 
 (defun transpiler-function-arguments? (tr fun)
   (assoc fun (transpiler-function-args tr)))
@@ -38,7 +39,8 @@
 			(expex-function? ex)
 			  #'((fun)
 				   (or (assoc fun (transpiler-function-args tr))
-					   (and (not (member fun (transpiler-unwanted-functions tr)))
+					   (and (or (eq t (transpiler-unwanted-functions tr))
+							    (not (member fun (transpiler-unwanted-functions tr))))
 							(functionp (symbol-function fun)))))
 
 			(expex-function-arguments ex)

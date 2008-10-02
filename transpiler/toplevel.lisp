@@ -5,7 +5,8 @@
 
 (defun transpiler-add-wanted-function (tr fun)
   (when (not (or (member fun (transpiler-wanted-functions tr))
-				 (member fun (transpiler-unwanted-functions tr))
+				 (or (eq t (transpiler-unwanted-functions tr))
+					 (member fun (transpiler-unwanted-functions tr)))
 				 (assoc fun (expander-macros (expander-get (transpiler-macro-expander tr))))))
 	(push fun (transpiler-wanted-functions tr))))
 
