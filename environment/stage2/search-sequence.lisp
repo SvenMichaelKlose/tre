@@ -1,6 +1,6 @@
 ;;;; nix operating system project
 ;;;; list processor environment
-;;;; Copyright (C) 2005-2006 Sven Klose <pixel@copei.de>
+;;;; Copyright (C) 2005-2006,2008 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Searching sequences
 
@@ -11,30 +11,29 @@
 	   ,a ,b
 	   ,b ,g)))
 
-(defmacro with-find-parameters (&rest body)
-  `(let ((e (or end (1- (length seq))))
-	 (s (or start 0))
-	 (tst (or test
-		  (if test-not
-		    #'((x y)
-		        (not (funcall test-not x y))))
-		  #'eql)))
+(defun find-if (pred seq &key (start nil) (end nil) (from-end nil) (with-index nil))
+  (let ((e (or end (1- (length seq))))
+	 	(s (or start 0)))
     ; Make sure the start and end indices are sane.
-    (if (or (and (> s e) (not from-end))
-            (and (< s e) from-end))
+    (when (or (and (> s e) (not from-end))
+              (and (< s e) from-end))
       (xchg s e))
-    (do ((i s (if from-end (1- i) (1+ i))))
+    (do ((i s (if from-end
+				  (1- i)
+				  (1+ i))))
         ((if from-end
-	  (< i e) (> i e)))
-      (when seq
-        ,@body))))
+	         (< i e)
+			 (> i e)))
+	  (let ((elm (elt seq i)))
+        (when (apply pred `(,elm ,@(when with-index
+									 (list i))))
+		  (return elm))))))
  
-(defun find (val seq &key start end from-end test test-not)
+(defun find (obj seq &key (start nil) (end nil) (from-end nil) (test #'eql))
   "Return element in sequence."
-    (with-find-parameters
-      (let ((el (elt seq i)))
-        (when (funcall tst val el)
-          (return el)))))
+  (find-if #'((x)
+				(funcall test x obj))
+		   seq :start start :end end :from-end from-end))
 
 (define-test "FIND finds elements"
   ((find 's '(l i s p)))
@@ -56,29 +55,17 @@
   ((find 'l '(l i s p) :start 1 :end 2 :from-end 1))
   nil)
 
-(defun find-if (pred seq &key start end from-end)
-  "Return first element in sequence that matches the predicate function."
-  (let ((e (or end (1- (length seq))))
-	(s (or start 0)))
-    ; Make sure the start and end indices are sane.
-    (if (or (and (> s e) (not from-end))
-            (and (< s e) from-end))
-      (xchg s e))
-    (do ((i s (if from-end (1- i) (1+ i))))
-        ((if from-end
-	   (< i e) (> i e)))
-      (let ((el (elt seq i)))
-        (when (funcall pred el)
-          (return el))))))
-
 (define-test "FIND-IF finds elements"
   ((find-if #'numberp '(l i 5 p)))
   5)
 
-(defun position (val seq &key start end from-end test test-not)
-  (with-find-parameters
-    (when (funcall tst val (elt seq i))
-      (return i))))
+(defun position (obj seq &key (start nil) (end nil) (from-end nil) (test #'eql))
+  (let ((idx nil))
+    (find-if #'((x i)
+				  (when (funcall test x obj)
+					(setf idx i)))
+			 seq :start start :end end :from-end from-end :with-index t)
+	idx))
 
 (define-test "POSITION works"
   ((position 's '(l i s p)))
@@ -86,16 +73,14 @@
 
 (defun some (pred &rest seqs)
   "OR predicate over list elements."
-  (dolist (seq seqs)
-    (dotimes (i (length seq) nil)
-      (when (funcall pred (elt seq i))
-        (return-from some t)))))
+  (find-if pred (apply #'append seqs)))
 
 (define-test "SOME works"
   ((and (some #'numberp '(a b 3)))
         (not (some #'numberp '(a b c))))
   t)
 
+;; XXX FIND-IF version if compiler can optimize it.
 (defun every (pred &rest seqs)
   "AND predicate over list elements."
   (dolist (seq seqs)
