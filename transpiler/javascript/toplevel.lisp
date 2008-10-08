@@ -5,7 +5,7 @@
 
 (defun js-transpile (outfile infiles)
   (with (base (or (format t "Compiling JavaScript core...~%")
-   				  (transpiler-expand-and-generate-code *js-transpiler* *js-base*))
+   				  (transpiler-preexpand-and-expand *js-transpiler* *js-base*))
 		 x nil
 		 wanted-functions nil)
 	(dolist (file infiles)
@@ -23,7 +23,7 @@
     (with-open-file f (open outfile :direction 'output)
 	    (with (user (transpiler-transpile *js-transpiler* x))
 	      (format t "Emitting code to '~A'...~%" outfile)
-		  (format f "~A~A" base user)))))
+		  (format f "~A~A" (transpiler-generate-code *js-transpiler* base) user)))))
 
 ;; XXX defunct
 (defun js-machine (outfile)

@@ -27,7 +27,7 @@
 ;; Declines atoms and expressions with meta-forms.
 (defun expex-able? (ex x)
   (not (or (atom x)
-           (in? (car x) '%stack '%quote
+           (in? (car x) '%stack ;'%quote
 						'vm-go 'vm-go-nil
 						'%transpiler-native '%transpiler-string
 						'%var

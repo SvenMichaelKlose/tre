@@ -17,6 +17,7 @@
   (wanted-functions nil)
   (obfuscate? nil)
   (obfuscations nil)
+  (obfuscation-exceptions nil)
   (make-label #'identity))
 
 (defun transpiler-function-arguments? (tr fun)

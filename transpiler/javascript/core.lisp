@@ -86,8 +86,7 @@
   (not (consp x)))
 
 (defun apply ()
-  (when (= 0 arguments.length)
-    (alert "apply requires a function arguments"))
+  (assert (< 0 arguments.length) "apply requires a function arguments")
   (with (fun (aref arguments 0)
 		 args (make-string)
 		 last-arg (aref arguments (1- arguments.length))

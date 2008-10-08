@@ -8,11 +8,15 @@
 
 (define-js-std-macro defun (name args &rest body)
   (progn
+     (transpiler-obfuscate-symbol *js-transpiler* name)
 	 (unless (in? name 'apply)
 	   (acons! name args (transpiler-function-args tr)))
     `(%setq ,name
 		    #'(lambda ,args
-    		    ,@body))))
+    		    ,@(if (and (not *assert*)
+				    	   (stringp (first body)))
+					  (cdr body)
+					  body)))))
 
 (define-js-std-macro defmacro (name args &rest body)
   (progn
@@ -20,7 +24,9 @@
     nil))
 
 (define-js-std-macro defvar (name val)
-  `(%setq ,name  ,val))
+  (progn
+    (transpiler-obfuscate-symbol *js-transpiler* name)
+    `(%setq ,name  ,val)))
 
 (define-js-std-macro slot-value (place slot)
   `(%slot-value ,place ,(second slot)))

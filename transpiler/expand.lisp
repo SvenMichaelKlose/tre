@@ -90,6 +90,8 @@
 				   ; labels.
 			       #'compiler-macroexpand
 
+				   #'transpiler-make-slot-values
+
 				   ; Do standard macro-expansion
 			       #'transpiler-macroexpand)
 	        x)))))))

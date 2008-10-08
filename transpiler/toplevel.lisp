@@ -10,8 +10,11 @@
 				 (assoc fun (expander-macros (expander-get (transpiler-macro-expander tr))))))
 	(push fun (transpiler-wanted-functions tr))))
 
+(defun transpiler-preexpand-and-expand (tr forms)
+  (transpiler-expand tr (transpiler-preexpand tr forms)))
+
 (defun transpiler-expand-and-generate-code (tr forms)
-  (transpiler-generate-code tr (transpiler-expand tr (transpiler-preexpand tr forms))))
+  (transpiler-generate-code tr (transpiler-preexpand-and-expand tr forms)))
 
 (defmacro with-gensym-assignments ((&rest pairs) &rest body)
   `(with-gensym ,(mapcar #'first (group pairs 2))
@@ -73,7 +76,7 @@
   (format t "Generating code...~%")
   (apply #'string-concat
 		(list (transpiler-concat-string-tree
-		    	  (transpiler-collect-wanted
-			    	  tr #'transpiler-expand-and-generate-code
-					  (transpiler-wanted-functions tr)))
+		    	(transpiler-collect-wanted
+			      tr #'transpiler-expand-and-generate-code
+				  (transpiler-wanted-functions tr)))
 		      (transpiler-generate-code tr forms))))

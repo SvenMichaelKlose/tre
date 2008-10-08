@@ -10,6 +10,23 @@
 	:separator (format nil ";~%")
 	:unwanted-functions '($ cons car cdr make-hash-table map)
 	:thisify-classes nil
+	:obfuscate? nil
+	:obfuscation-exceptions
+	  '(fun callback
+
+		; JavaScript core
+		apply length push shift unshift
+
+		; DOM
+		document cursor style element 
+		client-x client-y
+		client-left client-top
+		scroll-left scroll-top
+		page-x page-y
+		body
+
+		; Event
+		type button char-code key-code target)
 	:identifier-char?
 	  #'(lambda (x)
 		  (or (and (>= x #\a) (<= x #\z))

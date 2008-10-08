@@ -11,18 +11,20 @@
 (define-js-macro function (x)
   (if (atom x)
 	  x
-      `("function (" ,@(transpiler-binary-expand
-				      ","
-				      (argument-expand 'unnamed-js-function
-									   (lambda-args x) nil nil)) ")"
-	  ,(code-char 10)
-	  "{var " ,'~%ret ,*js-separator*
-	  "var __l = \"\"" ,*js-separator*
-	  "while (1) {"
-	  "switch (__l) {case \"\":"
-      ,@(lambda-body x)
-      ("}return " ,'~%ret ,*js-separator*)
-	  "}}")))
+      (with (args (argument-expand 'unnamed-js-function (lambda-args x) nil nil))
+		(dolist (n args)
+		  (transpiler-obfuscate-symbol *js-transpiler* n))
+        `("function (" ,@(transpiler-binary-expand
+				            ","
+						    args) ")"
+	      ,(code-char 10)
+	      "{var " ,'~%ret ,*js-separator*
+	      "var __l = \"\"" ,*js-separator*
+	      "while (1) {"
+	      "switch (__l) {case \"\":"
+          ,@(lambda-body x)
+          ("}return " ,'~%ret ,*js-separator*)
+	      "}}"))))
 
 (define-js-macro %setq (dest val)
   `((%transpiler-native ,dest) "=" ,val))
