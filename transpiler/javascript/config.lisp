@@ -24,6 +24,7 @@
 		scroll-left scroll-top
 		page-x page-y
 		body
+		window open title
 
 		; Event
 		type button char-code key-code target)
