@@ -11,6 +11,14 @@
 ;;;;; VM-SCOPE holds a list of expresions and labels. They are nerged in the next pass.
 
 (defvar *tagbody-replacements*)
+(defvar *vm-label-counter* 1)
+
+(defun compiler-label ()
+  (incf *vm-label-counter*))
+
+(defmacro with-compiler-label (l &rest body)
+  `(with (,l (compiler-label))
+     ,@body))
 
 (defun compiler-macroexpand-prepost ()
   (setq *tagbody-replacements* nil))
@@ -30,27 +38,24 @@
       x))
 
 (define-compiler-macro cond (&rest args)
-  (with-queue form
-    (with-gensym end-tag
-      (dolist (expr args)
-        (with-gensym next-expr
-          (unless (t? (first expr))
-            (enqueue-many form
-              `((%setq ~%ret ,(first expr))
-                (vm-go-nil ~%ret ,next-expr))))
-          (enqueue-many form
-            `((%setq ~%ret (vm-scope
-							,@(vars-to-identity (cdr expr))))
-              (vm-go ,end-tag)
-              ,next-expr))))
-      `(vm-scope
-	     ,@(queue-list form)
-      ,end-tag
-	  (identity ~%ret)))))
+  (with-compiler-label end-tag
+    `(vm-scope
+       ,@(mapcan #'((expr)
+			          (with-compiler-label next
+                        `(,@(unless (t? (first expr))
+                              `((%setq ~%ret ,(first expr))
+                                (vm-go-nil ~%ret ,next)))
+                          (%setq ~%ret (vm-scope
+							             ,@(vars-to-identity (cdr expr))))
+                          (vm-go ,end-tag)
+                          ,next)))
+			     args)
+       ,end-tag
+	   (identity ~%ret))))
 
 ;;; TAGBODY tag replacement
 ;;;
-;;; All labels of a tagbody are replaced by gensyms to avoid name-clashes
+;;; All labels of a tagbody are replaced by compiler-labels to avoid name-clashes
 ;;; when TAGBODYs are removed. GOs are expanded beforehand
 ;;; (because macro expansion is done from leave to root), and the
 ;;; new labels are added to *tagbody-replacements* and used when TAGBODY
@@ -59,7 +64,7 @@
 (define-compiler-macro go (label)
   (aif (cdr (assoc label *tagbody-replacements*))
     `(vm-go ,!)
-    (with-gensym g
+    (with-compiler-label g
       (acons! label g *tagbody-replacements*)
       `(vm-go ,g))))
 
@@ -92,7 +97,7 @@
 
 (define-compiler-macro block (block-name &rest body)
   (if body
-	  (with (g (gensym))
+	  (with-compiler-label g
 		(with-temporary *blockname* block-name
 		  (with-temporary *blockname-replacement* g
             (with (b	 (expander-expand 'compiler-return body)
