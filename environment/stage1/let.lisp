@@ -1,6 +1,6 @@
 ;;;; nix operating system project
 ;;;; list processor environment
-;;;; Copyright (C) 2005-2006 Sven Klose <pixel@copei.de>
+;;;; Copyright (C) 2005-2006,2008 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Local variables
 
@@ -16,55 +16,74 @@
 ;;; This functions check if the arguments and keywords are in place.
 
 ;; Check if atom is an argument keyword.
-(%defun %arg-keyword-p (arg)
+(%defun %arg-keyword? (x)
   (cond
-    ((eq arg '&rest) t)
-    ((eq arg '&optional) t)
-    ((eq arg '&key) t)))
+    ((eq x '&rest) t)
+    ((eq x '&optional) t)
+    ((eq x '&key) t)))
+
+(%defun %chk-place (x)
+  (cond
+	((%arg-keyword? x)
+		(print x)
+	    (%error "place is an argument keyword"))))
+
+(%defun %error-if-not-unique (x)
+  (%simple-map #'((i)
+					(cond
+					  ((< 1 (count i x))
+	  				     (print i)
+	    				 (%error "place not unique"))))
+			   x))
+
+(%defun %let-places (x)
+  (%simple-mapcar #'car x))
+
+(%defun %let-chk-places (x)
+  (cond
+    ((atom x)
+       (print x)
+       (%error "assignment list expected instead of an atom")))
+  (%simple-map #'%chk-place x)
+  (%simple-map #'((p)
+  					(cond
+					  ((%error-if-not-unique (%let-places x))
+						 (print x)
+						 (%error "place is not unique"))))
+			   x))
 
 ;; Create new local variables.
 ;;
 ;; Inside the assignment list the local variables cannot be used.
 ;; Use LET* instead.
-(defmacro let ((&rest alst) &rest body)
+(defmacro let (alst &rest body)
   (cond
-    ((atom (car alst))
-      (progn
-        (print alst)
-        (%error "assignment list expected")))
-    (t
-      (progn
-        ; Check on keyword arguments.
-        (%simple-mapcar
-          #'((expr)
-              (cond
-                ((%ltest #'%arg-keyword-p expr)
-                  (%error "illegal keyword argument"))))
-          alst)
+	((not alst)
+	   `(progn
+		  ,@body))
 
-        ; Create LAMBDA expression.
-        `(#'(,(%simple-mapcar #'car alst)
-	            (progn ,@body))
-          	  ,@(%simple-mapcar #'cadr alst))))))
+    (t
+	   (%let-chk-places alst)
+
+       ; Create LAMBDA expression.
+	   `(#'(,(%simple-mapcar #'car alst)
+			  ,@body) ,@(%simple-mapcar #'cadr alst)))))
 
 ;; Create new local variables.
 ;;
 ;; Multiple arguments are nested so init expressions can use formerly
 ;; defined variables inside the assignment list.
 (defmacro let* (alst &rest body)
-  ; Check if keyword arguments are used illegally.
+  (%let-chk-places alst)
   (cond
-    ((%arg-keyword-p (car alst))
-      (%error "unexpected keyword"))
-    ; Create nested LAMBDA expression.
-    (t
-      (cond
-        ((not (cdr alst))
-          `(#'((,(caar alst))
-		(progn ,@body))
-            ,@(cdar alst)))
-        (t
-          `(#'((,(caar alst))
-		(let* ,(cdr alst)
-		  (progn ,@body)))
-	    ,@(cdar alst)))))))
+    ((not alst)
+	   `(progn
+		  ,@body))
+
+    ((not (cdr alst))
+       `(let ((,(caar alst) ,(cadar alst)))
+		   ,@body))
+
+    (t `(let ((,(caar alst) ,(cadar alst)))
+		  (let* ,(cdr alst)
+			,@body)))))
