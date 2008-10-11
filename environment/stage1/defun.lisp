@@ -8,9 +8,9 @@
 (%defun %defun-arg-keyword (args)
   (let ((a (car args))
         (d (and (cdr args) (cadr args))))
-    (if (%arg-keyword-p a)
+    (if (%arg-keyword? a)
         (if d
-            (if (%arg-keyword-p d)
+            (if (%arg-keyword? d)
                 (%error "keyword following keyword"))
             (%error "end after keyword")))))
 
