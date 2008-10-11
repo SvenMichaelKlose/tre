@@ -45,8 +45,8 @@
                         `(,@(unless (t? (first expr))
                               `((%setq ~%ret ,(first expr))
                                 (vm-go-nil ~%ret ,next)))
-                          (%setq ~%ret (vm-scope
-							             ,@(vars-to-identity (cdr expr))))
+                          ,@(awhen (vars-to-identity (cdr expr))
+							  `((%setq ~%ret (vm-scope ,@!))))
                           (vm-go ,end-tag)
                           ,next)))
 			     args)
