@@ -3,6 +3,9 @@
 ;;;;;
 ;;;;; Code generation
 
+(defun js-transpiler-make-label (x)
+  (format nil "case ~A:~%" (transpiler-symbol-string *js-transpiler* x)))
+
 ;;;; TRANSPILER-MACRO EXPANDER
 
 (defmacro define-js-macro (name args body)
