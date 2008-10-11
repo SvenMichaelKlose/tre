@@ -18,13 +18,13 @@
 				            ","
 						    args) ")"
 	      ,(code-char 10)
-	      "{var " ,'~%ret ,*js-separator*
-	      "var __l = \"\"" ,*js-separator*
-	      "while (1) {"
-	      "switch (__l) {case \"\":"
-          ,@(lambda-body x)
-          ("}return " ,'~%ret ,*js-separator*)
-	      "}}"))))
+	        "{var " ,'~%ret ,*js-separator*
+	        "var __l = 0" ,*js-separator*
+	        "while (1) {"
+	          "switch (__l) {case 0:"
+                ,@(lambda-body x)
+              ("}return " ,'~%ret ,*js-separator*)
+	        "}}"))))
 
 (define-js-macro %setq (dest val)
   `((%transpiler-native ,dest) "=" ,val))
@@ -101,10 +101,10 @@
  					   ")"))
 
 (define-js-macro vm-go (tag)
-  `("__l=\"" ,(transpiler-symbol-string *js-transpiler* tag) "\"; continue"))
+  `("__l=" ,(transpiler-symbol-string *js-transpiler* tag) "; continue"))
 
 (define-js-macro vm-go-nil (val tag)
-  `("if (!" ,val ") {__l=\"" ,(transpiler-symbol-string *js-transpiler* tag) "\"; continue;}"))
+  `("if (!" ,val ") {__l=" ,(transpiler-symbol-string *js-transpiler* tag) "; continue;}"))
 
 (define-js-macro identity (x)
   x)

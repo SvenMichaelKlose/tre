@@ -10,7 +10,7 @@
 	:separator (format nil ";~%")
 	:unwanted-functions '($ cons car cdr make-hash-table map)
 	:thisify-classes nil
-	:obfuscate? nil
+	:obfuscate? *assert*
 	:obfuscation-exceptions
 	  '(fun callback
 
@@ -26,6 +26,11 @@
 		body
 		window open title
 
+		set-attribute
+		get-attribute
+		append-child
+		insert-before
+
 		; Event
 		type button char-code key-code target)
 	:identifier-char?
@@ -35,8 +40,7 @@
 		  	  (and (>= x #\0) (<= x #\9))
 			  (in=? x #\_ #\. #\$ #\#)))
 	:make-label
-	  #'((x)
-           (format nil "case \"~A\":~%" (transpiler-symbol-string *js-transpiler* a)))))
+	  #'js-transpiler-make-label))
 
 (defvar *js-transpiler* (make-javascript-transpiler))
 (defvar *js-separator* (transpiler-separator *js-transpiler*))
