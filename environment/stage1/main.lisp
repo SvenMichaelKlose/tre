@@ -1,6 +1,6 @@
 ;;;; nix operating system project
 ;;;; list processor environment
-;;;; Copyright (C) 2005-2007 Sven Klose <pixel@copei.de>
+;;;; Copyright (C) 2005-2008 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; First, minimal environment
 
@@ -15,6 +15,7 @@
 (env-load "stage1/tests-builtins.lisp")
 
 (env-load "stage1/listp.lisp")
+(env-load "stage1/count.lisp")
 (env-load "stage1/simple-mapcar.lisp")
 (env-load "stage1/let.lisp")
 (env-load "stage1/math.lisp")
