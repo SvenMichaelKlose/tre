@@ -54,19 +54,23 @@
 (defun expex-assignment (ex x)
   (if (expex-inline? ex x)
 	  (with ((p a) (expex-args ex (cdr x)))
-		(cons p (cons (car x) a)))
+		(cons p
+			  (cons (car x) a)))
 	  (if (not (expex-able? ex x))
 	      (cons nil x)
   	      (with (s (expex-sym))
   	        (if (vm-scope? x)
-		        (if (vm-scope-body x)
-	                (cons (expex-body ex (vm-scope-body x) s) ; Special treatment for VM-SCOPE arguments.
-				          s)
-			        (cons '(nil) s))
+				(aif (vm-scope-body x)
+	                 (cons (append `((%var ,s))
+						           (expex-body ex ! s))
+						   s)
+					 (cons nil nil))
   	            (with ((head tail) (expex-expr ex x))
-    	          (cons (append head (if (expex-returnable? ex (car tail))
-								         `((%setq ,s ,@tail))
-								         tail))
+    	          (cons (append `((%var ,s))
+								head
+								(if (expex-returnable? ex (car tail))
+							        `((%setq ,s ,@tail))
+								    tail))
 		  	            s)))))))
 
 ;; Move subexpressions out of a parent.
