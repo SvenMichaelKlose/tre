@@ -18,6 +18,7 @@ extern treptr treatom_builtin_symbol_package (treptr);
 extern treptr treatom_builtin_set_symbol_package (treptr);
 extern treptr treatom_builtin_set_atom_fun (treptr);
 extern treptr treatom_builtin_functionp (treptr);
+extern treptr treatom_builtin_variablep (treptr);
 extern treptr treatom_builtin_boundp (treptr);
 extern treptr treatom_builtin_fboundp (treptr);
 extern treptr treatom_builtin_macrop (treptr);

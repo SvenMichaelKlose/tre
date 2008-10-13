@@ -164,6 +164,19 @@ treatom_builtin_functionp (treptr list)
 }
 
 /*
+ * (VARIABLEP obj)
+ *
+ * Returns T if the argument is a variable. NIL otherwise.
+ */
+treptr
+treatom_builtin_variablep (treptr list)
+{
+    treptr arg = trearg_get (list);
+
+    return TREPTR_TRUTH(TREPTR_IS_VARIABLE(arg));
+}
+
+/*
  * (BOUNDP obj)
  *
  * Returns T if global symbol is bound to a variable.
