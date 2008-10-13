@@ -27,6 +27,11 @@
   (and (consp x)
 	   (eq '%STACK (car x))))
 
+(defun %var? (x)
+  (and (consp x)
+	   (eq '%VAR (car x))
+	   (eq nil (cddr x))))
+
 (defun %setq? (x)
   (and (consp x)
 	   (eq '%SETQ (car x))))
