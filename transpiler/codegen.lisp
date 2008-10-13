@@ -41,7 +41,8 @@
 (defun transpiler-finalize-sexprs (tr x)
   (when x
 	(with (a          (car x)
-		   separator  (transpiler-separator tr))
+		   separator  (transpiler-separator tr)
+		   ret (transpiler-obfuscate tr '~%ret))
 	  (if (eq a nil) ; ???
 		  (transpiler-finalize-sexprs tr (cdr x))
 	  	  (if (atom a) 
@@ -56,15 +57,15 @@
 										        #'((body)(transpiler-finalize-sexprs tr body)))))
 			            (cons separator
 						      (transpiler-finalize-sexprs tr (cdr x))))
-	              (if (and (identity? a) (eq '~%ret (second a)))
+	              (if (and (identity? a) (eq ret (second a)))
 				  	  ; Ignore (IDENTITY ~%RET).
 		              (transpiler-finalize-sexprs tr (cdr x))
 				      ; Just copy with separator. Make return-value assignment if missing.
 		              (cons (if (not (or (vm-jump? a)
 									 	 (%setq? a)
 									 	 (in? (car a) '%var '%transpiler-native)))
-							    `(%setq ~%ret ,a)
-								; Add %VAR declaration for EXOEX symbols.
+							    `(%setq ,ret ,a)
+								; Add %VAR declaration for EXPEX symbols.
 							    (if (and (%setq? a)
 										 (expex-sym? (%setq-place a)))
 									`(%var ,a)
@@ -199,5 +200,8 @@
 
 						 ; Obfuscate symbol-names.
 						 #'(lambda (x)
-							 (transpiler-obfuscate tr x)))
-				    x))))))
+							 (transpiler-obfuscate tr x))
+
+						 #'(lambda (x)
+							 (remove-if #'atom x)))
+				 x))))))

@@ -23,6 +23,11 @@
     (with-open-file f (open outfile :direction 'output)
 	    (with (user (transpiler-transpile *js-transpiler* x))
 	      (format t "Emitting code to '~A'...~%" outfile)
+		  (format f "/*~%")
+		  (format f "   caroshi heavy obfuscator~%")
+		  (format f "   hugbox.org editor~%")
+		  (format f "   Copyright (c) 2005-2008 Sven Klose <pixel@copei.de~%")
+		  (format f "*/~%")
 		  (format f "~A~A" (transpiler-generate-code *js-transpiler* base) user)))))
 
 ;; XXX defunct

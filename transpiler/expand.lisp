@@ -97,6 +97,7 @@
 	        x)))))))
 
 (defun transpiler-preexpand (tr forms)
+  (transpiler-obfuscate-symbol tr '~%ret)
   (with (e nil)
     (dolist (x forms e)
 	  (setf e (append e

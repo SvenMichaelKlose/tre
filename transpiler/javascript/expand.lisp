@@ -6,27 +6,44 @@
 (defmacro define-js-std-macro (name args body)
   `(define-transpiler-std-macro *js-transpiler* ,name ,args ,body))
 
+(define-js-std-macro function (&rest x)
+  (with (e `(function ,@x))
+    (unless x
+      (error "FUNCTION expects arguments"))
+    (if (atom (car x))
+	    `(function ,(car x))
+
+	    (dolist (i (argument-expand 'unnamed-js-function (lambda-args e) nil nil)
+				 `(function (,(lambda-args e)
+				    ,@(lambda-body e))))
+		  (transpiler-obfuscate-symbol *js-transpiler* i)))))
+
 (define-js-std-macro defun (name args &rest body)
   (progn
-     (transpiler-obfuscate-symbol *js-transpiler* name)
-	 (unless (in? name 'apply)
-	   (acons! name args (transpiler-function-args tr)))
+	(print `(defun ,name))
+    (transpiler-obfuscate-symbol *js-transpiler* name)
+	(unless (in? name 'apply)
+	  (acons! name args (transpiler-function-args tr)))
     `(%setq ,name
-		    #'(lambda ,args
-    		    ,@(if (and (not *assert*)
-				    	   (stringp (first body)))
-					  (cdr body)
-					  body)))))
+		    #'(,args
+    		     ,@(if (and (not *assert*)
+			    	        (stringp (first body)))
+					   (cdr body)
+					   body)))))
 
 (define-js-std-macro defmacro (name args &rest body)
   (progn
+	(print `(defmacro ,name ))
 	(eval (car (macroexpand `(define-js-std-macro ,name ,args ,@body))))
     nil))
 
 (define-js-std-macro defvar (name val)
   (progn
+	(print `(defvar ,name))
     (transpiler-obfuscate-symbol *js-transpiler* name)
-    `(%setq ,name  ,val)))
+    `(progn
+	   (%var ,name)
+	   (%setq ,name  ,val))))
 
 (define-js-std-macro slot-value (place slot)
   `(%slot-value ,place ,(second slot)))

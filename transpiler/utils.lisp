@@ -24,7 +24,7 @@
 
 (defun maptree (fun tree)
   (if (atom tree)
-         tree
+      (funcall fun tree)
       (mapcar #'((x)
                   (if (consp x)
                       (funcall fun (maptree fun (funcall fun x)))
