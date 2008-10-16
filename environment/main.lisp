@@ -28,6 +28,7 @@
 (env-load "../transpiler/config.lisp")
 (env-load "../transpiler/thisify.lisp")
 (env-load "../transpiler/expand.lisp")
+(env-load "../transpiler/identifier.lisp")
 (env-load "../transpiler/codegen.lisp")
 (env-load "../transpiler/obfuscate.lisp")
 (env-load "../transpiler/toplevel.lisp")
