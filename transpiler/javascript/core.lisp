@@ -85,26 +85,19 @@
 (defun atom (x)
   (not (consp x)))
 
-(defun apply ()
-  (assert (< 0 arguments.length) "apply requires a function arguments")
-  (with (fun (aref arguments 0)
-		 args (make-string)
-		 last-arg (aref arguments (1- arguments.length))
+(defun %apply (fun &rest lst)
+  (assert (< 0 arguments.length) "apply requires arguments")
+  (with (last-arg nil
+		 args (make-array)
 		 last-args (make-array))
-    (do ((i 1 (1+ i)))
-		((= i (1- arguments.length)))
-      (setf args (+ args "arguments[" i "]" (if (< i (1- arguments.length))
-											    ","
-											    ""))))
-    (do ((i 0 (1+ i))
-		 (x last-arg (cdr x)))
-		((= i (1- last-args.length)))
-      (push last-args (car x))
-      (setf args (+ args "last-args[" i "]" (if (cdr x)
-											","
-											""))))
-	(eval (+ "fun (" args ")"))
-	(x.shift)))
+    (do ((i args (cdr i)))
+		((not (cdr i))
+		 (setf last-args (car i)))
+      (args.push (aref arguments i)))
+
+    (dolist (i last-args)
+      (args.push (aref last-args i)))
+	(fun.apply nil args)))
 
 (defun %list-length (x &optional (n 0))
   (if (consp x)
