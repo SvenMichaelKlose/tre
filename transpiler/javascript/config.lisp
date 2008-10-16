@@ -17,7 +17,8 @@
 	:obfuscations (make-hash-table)
 
 	:obfuscation-exceptions
-	  '(fun hash
+	  '(caroshi-start
+		fun hash class
 
 		; JavaScript core
 		apply length push shift unshift
@@ -98,7 +99,8 @@
 		add-event-listener attach-event
 		remove-event-listener detach-event
 		prevent-default stop-propagation
-		type button char-code key-code target)
+		type button char-code key-code target
+		cancel-bubble return-value)
 
 	:identifier-char?
 	  #'(lambda (x)
