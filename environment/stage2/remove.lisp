@@ -4,8 +4,14 @@
 (defun remove-if (fun x)
   (when x
     (if (funcall fun (car x))
-      (remove-if fun (cdr x))
-      (cons (car x) (remove-if fun (cdr x))))))
+        (remove-if fun (cdr x))
+        (cons (car x)
+			  (remove-if fun (cdr x))))))
+
+(defun remove-if-not (fun x)
+  (remove-if #'((x)
+				  (not (funcall fun x)))
+			 x))
 
 (defun remove (elm lst &optional (test #'eq))
   (remove-if #'((x)
