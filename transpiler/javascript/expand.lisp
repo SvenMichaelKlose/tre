@@ -8,6 +8,10 @@
 
 (define-js-std-macro function (&rest x)
   (with (e `(function ,@x))
+    (when (and x
+			   (= 1 (length x))
+			   (atom (car x)))
+	  (transpiler-add-wanted-function *js-transpiler* (car x)))
     (unless x
       (error "FUNCTION expects arguments"))
     (if (atom (car x))
@@ -24,12 +28,14 @@
     (transpiler-obfuscate-symbol *js-transpiler* name)
 	(unless (in? name 'apply)
 	  (acons! name args (transpiler-function-args tr)))
-    `(%setq ,name
-		    #'(,args
-    		     ,@(if (and (not *assert*)
-			    	        (stringp (first body)))
-					   (cdr body)
-					   body)))))
+    `(progn
+	   (%var ,name)
+	   (%setq ,name
+		      #'(,args
+    		       ,@(if (and (not *assert*)
+			    	          (stringp (first body)))
+					     (cdr body)
+					     body))))))
 
 (define-js-std-macro defmacro (name args &rest body)
   (progn
@@ -45,6 +51,12 @@
 	   (%var ,name)
 	   (%setq ,name  ,val))))
 
+(define-js-std-macro funcall (fun &rest x)
+  `(,fun ,@x))
+
+(define-js-std-macro apply (&rest x)
+  `(%apply ,@x))
+
 (define-js-std-macro slot-value (place slot)
   `(%slot-value ,place ,(second slot)))
 
@@ -59,7 +71,14 @@
   (if (and (consp x)
 		   (or (keywordp (first x))
 			   (stringp (first x))))
-	  `(make-hash-table ,@x)
+	  `(make-hash-table
+		 ,@(mapcan #'((x)
+						(list (if (and (not (stringp (first x)))
+									   (eq :class (first x)))
+								  "class" ; IE6 wants this.
+								  (first x))
+							  (second x)))
+				   (group x 2)))
 	  `(%new ,(first x)
 			 ,@(if (transpiler-function-arguments? *js-transpiler* (first x))
 			       (argument-expand-compiled-values
