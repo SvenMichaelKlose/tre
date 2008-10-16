@@ -22,15 +22,25 @@
   (with
 	  (removed-tags nil
 
+	   var-double?
+		 #'((x name)
+			  (when x
+                (with-cons a d x
+				  (or (and (%var? a)
+						   (eq name (second a)))
+					  (var-double? d name)))))
+
 	   accumulate-vars
 		 #'((x)
 			  (with (acc nil
 					 rec #'((x)
 			                  (when x
 				                (with-cons a d x
-				                  (if (%var? a)
+				                  (if (and (%var? a)
+										   (not (cddr a)))
 					                  (progn
-										(when (find-tree d (second a))
+										(when (and (not (var-double? d (second a)))
+												   (find-tree d (second a)))
 										  (setf acc (push a acc)))
 						                (rec d))
 				  	                  (if (and (%setq? a)
