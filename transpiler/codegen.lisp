@@ -43,35 +43,39 @@
 	(with (a          (car x)
 		   separator  (transpiler-separator tr)
 		   ret (transpiler-obfuscate tr '~%ret))
-	  (if (eq a nil) ; ???
-		  (transpiler-finalize-sexprs tr (cdr x))
-	  	  (if (atom a) 
-			  ; Make jump label.
-		      (cons (funcall (transpiler-make-label tr) a)
-		            (transpiler-finalize-sexprs tr (cdr x)))
-              (if (and (%setq? a)
-					   (is-lambda? (%setq-value a)))
-			  	  ; Recurse into function.
-	              (cons `(%var (%setq ,(%setq-place a)
-										   ,(copy-recurse-into-lambda (%setq-value a)
-										        #'((body)(transpiler-finalize-sexprs tr body)))))
-			            (cons separator
-						      (transpiler-finalize-sexprs tr (cdr x))))
-	              (if (and (identity? a) (eq ret (second a)))
-				  	  ; Ignore (IDENTITY ~%RET).
-		              (transpiler-finalize-sexprs tr (cdr x))
-				      ; Just copy with separator. Make return-value assignment if missing.
-		              (cons (if (not (or (vm-jump? a)
-									 	 (%setq? a)
-									 	 (in? (car a) '%var '%transpiler-native)))
-							    `(%setq ,ret ,a)
-								; Add %VAR declaration for EXPEX symbols.
-							    (if (and (%setq? a)
-										 (expex-sym? (%setq-place a)))
-									`(%var ,a)
-									a))
-						    (cons separator
-							      (transpiler-finalize-sexprs tr (cdr x)))))))))))
+	  (cond
+		((eq a nil) ; ???
+		   (transpiler-finalize-sexprs tr (cdr x)))
+
+	  	((atom a) 
+		   ; Make jump label.
+		   (cons (funcall (transpiler-make-label tr) a)
+		         (transpiler-finalize-sexprs tr (cdr x))))
+
+        ((and (%setq? a)
+			  (is-lambda? (%setq-value a)))
+		   ; Recurse into function.
+	       (cons `(%setq ,(%setq-place a)
+				    ,(copy-recurse-into-lambda
+					   (%setq-value a)
+					   #'((body)
+						    (transpiler-finalize-sexprs tr body))))
+			     (cons separator
+				       (transpiler-finalize-sexprs tr (cdr x)))))
+
+	    ((and (identity? a)
+			  (eq ret (second a)))
+		   ; Ignore (IDENTITY ~%RET).
+		   (transpiler-finalize-sexprs tr (cdr x)))
+
+	    (t ; Just copy with separator. Make return-value assignment if missing.
+		   (cons (if (or (vm-jump? a)
+						 (%setq? a)
+						 (in? (car a) '%var '%transpiler-native))
+					 a
+					 `(%setq ,ret ,a))
+				 (cons separator
+				       (transpiler-finalize-sexprs tr (cdr x)))))))))
 
 ;;;; TRANSPILER-MACRO EXPANDER
 ;;;;
