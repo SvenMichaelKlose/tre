@@ -88,7 +88,7 @@ typedef int bool;
 #define TRE_IMAGE_HEADER  "#!/usr/local/bin/tre -i\n" TRE_INFO
 #endif
 
-#define TREPTR_INDEX_WIDTH	27
+#define TREPTR_INDEX_WIDTH	28
 
 #ifdef LITTLE_ENDIAN
 #define TRE_ENDIANESS_STRING	"LITTLE"
