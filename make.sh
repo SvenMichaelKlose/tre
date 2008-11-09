@@ -3,17 +3,34 @@
 ARGS="$2 $3 $4 $5 $6 $7 $8 $9"
 
 BOOT_IMAGE=`echo ~/.tre.image`
-FILES="alien_dl.c alloc.c argument.c array.c atom.c builtin.c builtin_arith.c
-	builtin_array.c builtin_atom.c builtin_debug.c builtin_fileio.c builtin_image.c
-	builtin_list.c builtin_number.c builtin_stream.c builtin_string.c
-	debug.c diag.c
-	error.c env.c eval.c gc.c image.c io.c io_std.c list.c macro.c main.c number.c
-	print.c read.c sequence.c special.c stream.c string.c symbol.c thread.c util.c"
+FILES="alien_dl.c alloc.c argument.c array.c atom.c
+
+	builtin.c
+	builtin_arith.c builtin_array.c builtin_atom.c
+	builtin_debug.c
+	builtin_fileio.c
+	builtin_image.c
+	builtin_list.c
+	builtin_number.c
+	builtin_stream.c builtin_string.c
+
+	debug.c diag.c dot.c
+	error.c env.c eval.c
+	gc.c
+	image.c io.c io_std.c
+	list.c
+	macro.c main.c
+	number.c
+	print.c
+	quasiquote.c
+	read.c sequence.c special.c stream.c string.c symbol.c
+	thread.c
+	util.c"
 
 CC=cc
 LD=cc
 
-LIBC_PATH="/lib/libc.so.6" #`find /lib -name libc.so\*`
+LIBC_PATH="/lib/libc.so.7" #`find /lib -name libc.so\*`
 
 CFLAGS="-pipe -ansi -Wall -DBIG_ENDIAN -DLIBC_PATH=\"$LIBC_PATH\" -DTRE_BOOT_IMAGE=\"$BOOT_IMAGE\" $ARGS"
 
@@ -34,7 +51,7 @@ link ()
 {
 	echo "Linking..."
 	OBJS=`find obj -name \*.o`
-	$LD -lm -ldl -o tre $OBJS
+	$LD -lm -o tre $OBJS
 }
 
 standard_compile ()
@@ -81,7 +98,7 @@ build)
 	;;
 crunsh)
 	CFLAGS="$CFLAGS -DCRUNSHED -Iinterpreter"
-	COPTS="$COPTS -O3 -march=pentium3m -fomit-frame-pointer -ffast-math -fwhole-program -lm -ldl "
+	COPTS="$COPTS -O2 -fomit-frame-pointer -ffast-math -lm"
 	basic_clean
 	crunsh_compile
 	install_it

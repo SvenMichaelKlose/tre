@@ -62,7 +62,7 @@
   	        (if (vm-scope? x)
 				(aif (vm-scope-body x)
 	                 (cons (append `((%var ,s))
-						           (expex-body ex ! s))
+						             (expex-body ex ! s))
 						   s)
 					 (cons nil nil))
   	            (with ((head tail) (expex-expr ex x))
