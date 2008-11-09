@@ -16,6 +16,7 @@
 (env-load "stage2/main.lisp")
 (env-load "stage3/main.lisp")
 (env-load "alien/main.lisp")
+(env-load "oo/ducktype.lisp")
 (env-load "editor/main.lisp")
 
 ; Test lexical scoping.
@@ -26,9 +27,9 @@
 (env-load "../compiler/main.lisp")
 (env-load "../transpiler/utils.lisp")
 (env-load "../transpiler/config.lisp")
+(env-load "../transpiler/identifier.lisp")
 (env-load "../transpiler/thisify.lisp")
 (env-load "../transpiler/expand.lisp")
-(env-load "../transpiler/identifier.lisp")
 (env-load "../transpiler/codegen.lisp")
 (env-load "../transpiler/obfuscate.lisp")
 (env-load "../transpiler/toplevel.lisp")
@@ -37,11 +38,11 @@
 (env-load "../transpiler/javascript/codegen.lisp")
 (env-load "../transpiler/javascript/core.lisp")
 (env-load "../transpiler/javascript/toplevel.lisp")
-(env-load "../transpiler/c/config.lisp")
-(env-load "../transpiler/c/expand.lisp")
-(env-load "../transpiler/c/codegen.lisp")
-(env-load "../transpiler/c/core.lisp")
-(env-load "../transpiler/c/toplevel.lisp")
+;(env-load "../transpiler/c/config.lisp")
+;(env-load "../transpiler/c/expand.lisp")
+;(env-load "../transpiler/c/codegen.lisp")
+;(env-load "../transpiler/c/core.lisp")
+;(env-load "../transpiler/c/toplevel.lisp")
 
 ; Keep tests for reuse in definition order.
 (setq *tests* (reverse *tests*))

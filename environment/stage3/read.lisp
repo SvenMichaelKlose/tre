@@ -161,6 +161,7 @@
 (defun read-many (str)
   "Read many toplevel expressions from stream."
   (with (x nil)
-    (while (not (end-of-file str)) (reverse x)
+    (while (not (end-of-file str))
+           (reverse x)
       (awhen (read str)
         (push ! x)))))

@@ -1,11 +1,12 @@
 ;;;; nix operating system project
 ;;;; list processor environment
-;;;; Copyright (C) 2005-2008 Sven Klose <pixel@copei.de>
+;;;; Copyright (C) 2005-2007 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; First, minimal environment
 
 (env-load "stage1/backquote.lisp")
 (env-load "stage1/macroexpand.lisp")
+(env-load "stage1/quasiquote.lisp")
 (env-load "stage1/simple-defines.lisp")
 (env-load "stage1/basic-list.lisp")
 (env-load "stage1/cons.lisp")
@@ -22,6 +23,7 @@
 (env-load "stage1/basic-conditional.lisp")
 
 (env-load "stage1/defun.lisp")
+(env-load "stage1/fn.lisp")
 (env-load "stage1/predicates.lisp")
 (env-load "stage1/anaphoric.lisp")
 (env-load "stage1/comparison.lisp")
