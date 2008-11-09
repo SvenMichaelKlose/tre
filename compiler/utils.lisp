@@ -24,10 +24,10 @@
   (values (carlist x) (cdrlist x)))
 
 (defun repeat-while-changes (fun x)
- (with (new (funcall fun x))
-   (if (equal x new)
+ (with (y (funcall fun x))
+   (if (equal x y)
        x
-       (repeat-while-changes fun new))))
+       (repeat-while-changes fun y))))
 
 (defun find-tree (x v)
   (or (equal x v)
