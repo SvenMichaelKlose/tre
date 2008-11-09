@@ -11,7 +11,9 @@
 	:std-macro-expander 'js-alternate-std
 	:macro-expander 'javascript
 	:separator (format nil ";~%")
-	:unwanted-functions '($ cons car cdr make-hash-table map)
+	:unwanted-functions '($ cons car cdr make-hash-table map error
+						  new %new ; environment/oo/ducktype.lisp
+						 )
 	:thisify-classes nil
 	:obfuscate? (not *assert*)
 	:obfuscations (make-hash-table)
