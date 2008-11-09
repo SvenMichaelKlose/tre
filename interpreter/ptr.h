@@ -14,10 +14,10 @@
 
 typedef ulong treptr;
 
-#define TREPTR_FLAGS	(-1 << TREPTR_INDEX_WIDTH)
+#define TREPTR_FLAGS	((treptr) -1 << TREPTR_INDEX_WIDTH)
 
 #define TRETYPE_INDEX_TO_PTR(type, index) \
-	((type << TREPTR_INDEX_WIDTH) | index)
+	(((treptr) type << TREPTR_INDEX_WIDTH) | index)
 #define TREATOM_TO_PTR(idx)	\
 	(TRETYPE_INDEX_TO_PTR(TRE_ATOM(idx).type, idx))
 

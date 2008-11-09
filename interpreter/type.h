@@ -26,4 +26,6 @@
 #define TRETYPE_ATOM		11 /* parameter dummy */
 #define TRETYPE_UNUSED		-1
 
+#define TRETYPE_WIDTH		4
+
 #endif /* #ifndef TRE_TYPE_H */
