@@ -1,6 +1,6 @@
 /*
- * nix operating system project tre interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * TRE tree processor
+ * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Built-in special forms.
  */
@@ -62,7 +62,7 @@ trespecial_setq (treptr list)
     treptr  car;
     treptr  cdr;
     treptr  tmp;
-	int     argnum = 1;
+	long     argnum = 1;
 
     /* Check if there're any arguments. */
     while (list == treptr_nil)

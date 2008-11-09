@@ -42,36 +42,36 @@ trearray_builtin_make (treptr sizes)
  *
  * Checks if the number of indices are correct and if indices are in range.
  */
-unsigned
+ulong
 trearray_get_check_index (treptr indices, treptr sizes)
 {
     treptr  i;
     treptr  s;
-    int  tmp;
-    unsigned  ti = 0;
-    unsigned  r = 1;
-    unsigned  argnum = 2;
+    long  tmp;
+    ulong  ti = 0;
+    ulong  r = 1;
+    ulong  argnum = 2;
 
     for (i = indices, s = sizes;
 			 i != treptr_nil && s != treptr_nil;
              i = CDR(i), s = CDR(s)) {
         tmp = TRENUMBER_VAL(CAR(i));
         if (tmp < 0)
-	    	return (unsigned) -1;
+	    	return (ulong) -1;
 
-        ti += (int) tmp * r;
+        ti += (long) tmp * r;
         r *= TRENUMBER_VAL(CAR(s));
 		if (ti >= r) {
 	    	trewarn (treptr_invalid, "index %d (arg %d) is larger than %d",
-		      		 (unsigned) tmp, argnum, r - 1);
-	    	return (unsigned) -1;
+		      		 (ulong) tmp, argnum, r - 1);
+	    	return (ulong) -1;
 		}
 
         argnum++;
     }
 
     if (i != treptr_nil || s != treptr_nil)
-        return (unsigned) -1;
+        return (ulong) -1;
     return ti;
 }
 
@@ -82,7 +82,7 @@ trearray_get_elt (treptr list)
     treptr  indices;
     treptr  sizes;
     treptr  *elts;
-    unsigned  idx;
+    ulong  idx;
 
     /* Get/check arguments. */
     if (list == treptr_nil)
@@ -102,7 +102,7 @@ trearray_get_elt (treptr list)
 
     /* Get one dimensional index. */
     idx = trearray_get_check_index (indices, sizes);
-    if (idx == (unsigned) -1)
+    if (idx == (ulong) -1)
 		return NULL;
     return &elts[idx];
 }

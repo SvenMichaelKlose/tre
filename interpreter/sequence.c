@@ -62,7 +62,7 @@ tresequence_builtin_set_elt (treptr args)
     if (t == NULL)
         return treerror (treptr_invalid, "sequence expected");
 
-    (*t->set) (seq, (unsigned) TRENUMBER_VAL(idx), val);
+    (*t->set) (seq, (ulong) TRENUMBER_VAL(idx), val);
 
     return val;
 }
@@ -89,7 +89,7 @@ tresequence_builtin_elt (treptr args)
     t = tresequence_get_type (seq);
     if (t == NULL)
         return treerror (seq, "sequence expected");
-    return (*t->get) (seq, (unsigned) TRENUMBER_VAL(idx));
+    return (*t->get) (seq, (ulong) TRENUMBER_VAL(idx));
 }
 
 /*

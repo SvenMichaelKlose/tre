@@ -12,7 +12,7 @@ extern void trearray_init (void);
 
 extern treptr trearray_get (treptr sizes);
 extern void trearray_free (treptr);
-extern unsigned trearray_get_size (treptr sizes);
+extern ulong trearray_get_size (treptr sizes);
 
 extern struct tre_sequence_type trearray_seqtype;
 

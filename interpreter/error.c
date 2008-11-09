@@ -34,7 +34,7 @@ treerror_msg (treptr expr, const char *prefix, const char *msg, va_list ap)
     fprintf (stderr, ".\n");
 
 	if (treio_readerstreamptr) {
-		fprintf (stderr, "In %s, line %u, column %u.\n",
+		fprintf (stderr, "In %s, line %ld, column %ld.\n",
 						 s->file_name, s->line, s->column);
 	}
 
@@ -120,7 +120,7 @@ treerror_builtin_error (treptr args)
 }
 
 const char *
-treerror_typename (unsigned t)
+treerror_typename (ulong t)
 {
 	/* !!! Keep this in sync with type.h! */
 	static const char * type_names[] = {

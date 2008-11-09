@@ -143,7 +143,7 @@ void
 tregc_trace_array (treptr arr)
 {
     treptr    * i = TREATOM_DETAIL(arr);
-    unsigned  size = TREARRAY_SIZE(arr);
+    ulong  size = TREARRAY_SIZE(arr);
 
     /* Mark dimension list. */
     tregc_trace_expr (TREATOM_VALUE(arr));
@@ -157,7 +157,7 @@ tregc_trace_array (treptr arr)
 void
 tregc_trace_atom (treptr a)
 {
-    unsigned  ai = TREPTR_INDEX(a);
+    ulong  ai = TREPTR_INDEX(a);
 
     /* Avoid circular trace. */
     if (TRE_GETMARK(tregc_atommarks, ai) == FALSE)
@@ -222,9 +222,9 @@ tregc_mark (void)
 void
 tregc_sweep (void)
 {
-    unsigned  i;
-    unsigned  j;
-    unsigned  idx;
+    ulong  i;
+    ulong  j;
+    ulong  idx;
     char  c;
 
     /* Free marked atoms.
@@ -278,7 +278,7 @@ tregc_force ()
 
 /*
 	gc_run++;
-    printf ("GC run %d\n", gc_run);
+    printf ("GC run %ld\n", gc_run);
 	if (tre_atoms[3921].type != TRETYPE_UNUSED) {
     	printf ("dump\n");
 		treprint (TREATOM_INDEX_TO_PTR(3921));
@@ -323,9 +323,9 @@ tregc_force_user ()
 void
 tregc_print_stats ()
 {
-    unsigned c[TRETYPE_MAXTYPE + 1];
-    unsigned i;
-    unsigned atoms;
+    ulong c[TRETYPE_MAXTYPE + 1];
+    ulong i;
+    ulong atoms;
 
     for (i = 0; i <= TRETYPE_MAXTYPE; i++)
         c[i] = 0;
@@ -333,12 +333,12 @@ tregc_print_stats ()
     for (atoms = i = 0; i < NUM_ATOMS; i++)
         if (tre_atoms[i].type != TRETYPE_UNUSED) {
             atoms++;
-            c[(unsigned) tre_atoms[i].type]++;
+            c[(ulong) tre_atoms[i].type]++;
         }
 
-    printf (": %d cons, %d atoms "
-            "(%d var, %d num, %d arr, %d str, "
-            "%d fun, %d mac, %d usr, %d pkg, %d blt, %d spc).\n",
+    printf (": %ld cons, %ld atoms "
+            "(%ld var, %ld num, %ld arr, %ld str, "
+            "%ld fun, %ld mac, %ld usr, %ld pkg, %ld blt, %ld spc).\n",
             trelist_num_used,
             atoms,
             c[TRETYPE_VARIABLE], c[TRETYPE_NUMBER], c[TRETYPE_ARRAY], c[TRETYPE_STRING],

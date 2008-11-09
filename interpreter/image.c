@@ -48,22 +48,22 @@ struct treimage_header {
     treptr   init_fun;
 
 #if 0
-    unsigned  len_symbols;
+    ulong  len_symbols;
     void      *ofs_symbols;
 #endif
 
-    unsigned  num_strings;
-    unsigned  num_arrays;
+    ulong  num_strings;
+    ulong  num_arrays;
 };
 
 void
-treimage_write (FILE *f, void *p, unsigned len)
+treimage_write (FILE *f, void *p, ulong len)
 {
    fwrite (p, len, 1, f); 
 }
 
 void
-treimage_read (FILE *f, void *p, unsigned len)
+treimage_read (FILE *f, void *p, ulong len)
 {
    fread (p, len, 1, f); 
 }
@@ -71,9 +71,9 @@ treimage_read (FILE *f, void *p, unsigned len)
 void
 treimage_write_atoms (FILE *f)
 {
-    unsigned i;
-    unsigned j;
-    unsigned idx;
+    ulong i;
+    ulong j;
+    ulong idx;
     char c;
 
     treimage_write (f, tregc_atommarks, sizeof tregc_atommarks);
@@ -94,9 +94,9 @@ treimage_write_atoms (FILE *f)
 void
 treimage_write_conses (FILE *f)
 {
-    unsigned i;
-    unsigned j;
-    unsigned idx;
+    ulong i;
+    ulong j;
+    ulong idx;
     char c;
 
     treimage_write (f, tregc_listmarks, sizeof tregc_listmarks);
@@ -117,9 +117,9 @@ treimage_write_conses (FILE *f)
 void
 treimage_write_numbers (FILE *f, char *nmarks)
 {
-    unsigned i;
-    unsigned j;
-    unsigned idx;
+    ulong i;
+    ulong j;
+    ulong idx;
     char c;
 
     treimage_write (f, nmarks, NMARK_SIZE);
@@ -140,7 +140,7 @@ treimage_write_numbers (FILE *f, char *nmarks)
 void
 treimage_write_arrays (FILE *f)
 {
-    unsigned  i;
+    ulong  i;
 
     DOTIMES(i, NUM_ATOMS)
         if (tre_atoms[i].type == TRETYPE_ARRAY)
@@ -148,19 +148,19 @@ treimage_write_arrays (FILE *f)
 }
 
 void
-treimage_write_strings (FILE *f, unsigned num)
+treimage_write_strings (FILE *f, ulong num)
 {
-    unsigned  i;
-    unsigned  j;
+    ulong  i;
+    ulong  j;
     struct tre_string *s;
-    unsigned  *lens = trealloc (sizeof (unsigned) * num);
+    ulong  *lens = trealloc (sizeof (ulong) * num);
 
     /* Make and write length index. */
     j = 0;
     DOTIMES(i, NUM_ATOMS)
         if (tre_atoms[i].type == TRETYPE_STRING)
             lens[j++] = TREATOM_STRING(i)->len;
-    treimage_write (f, lens, sizeof (unsigned) * num);
+    treimage_write (f, lens, sizeof (ulong) * num);
 
     /* Write strings. */
     DOTIMES(i, NUM_ATOMS) {
@@ -177,9 +177,9 @@ int
 treimage_create (char *file, treptr init_fun)
 {
     struct treimage_header  h;
-    unsigned n_arr = 0;
-    unsigned n_str = 0;
-    unsigned i;
+    ulong n_arr = 0;
+    ulong n_str = 0;
+    ulong i;
     FILE  *f;
     char  nmarks[NMARK_SIZE];
 
@@ -201,7 +201,7 @@ return 0;
                 break;
 
             case TRETYPE_NUMBER:
-                TRE_MARK(nmarks, (unsigned) TREATOM_DETAIL(i));
+                TRE_MARK(nmarks, (ulong) TREATOM_DETAIL(i));
                 break;
         }
     }
@@ -210,7 +210,7 @@ return 0;
     h.init_fun = init_fun;
 
 #if 0
-    h.len_symbols = (unsigned) symbol_table_free - (unsigned) symbol_table;
+    h.len_symbols = (ulong) symbol_table_free - (ulong) symbol_table;
     h.ofs_symbols = symbol_table;
 #endif
 
@@ -240,7 +240,7 @@ return 0;
 void
 treimage_remove_atoms (void)
 {
-    unsigned  i;
+    ulong  i;
 
     DOTIMES(i, NUM_ATOMS) {
         switch (tre_atoms[i].type) {
@@ -254,9 +254,9 @@ treimage_remove_atoms (void)
 void
 treimage_read_atoms (FILE *f)
 {
-    unsigned i;
-    unsigned j;
-    unsigned idx;
+    ulong i;
+    ulong j;
+    ulong idx;
     char c;
 
     treimage_read (f, tregc_atommarks, sizeof tregc_atommarks);
@@ -278,10 +278,10 @@ treimage_read_atoms (FILE *f)
 void
 treimage_read_conses (FILE *f)
 {
-    unsigned i;
-    unsigned j;
-    unsigned idx;
-    unsigned last;
+    ulong i;
+    ulong j;
+    ulong idx;
+    ulong last;
     char c;
 
     treimage_read (f, tregc_listmarks, sizeof tregc_listmarks);
@@ -314,9 +314,9 @@ treimage_read_conses (FILE *f)
 void
 treimage_make_free (void)
 {
-    unsigned i;
-    unsigned j;
-    unsigned idx;
+    ulong i;
+    ulong j;
+    ulong idx;
     char c;
 
 /* XXX
@@ -339,9 +339,9 @@ treimage_make_free (void)
 void
 treimage_read_numbers (FILE *f)
 {
-    unsigned i;
-    unsigned j;
-    unsigned idx;
+    ulong i;
+    ulong j;
+    ulong idx;
     char c;
     char  nmarks[NMARK_SIZE];
 
@@ -367,8 +367,8 @@ treimage_read_numbers (FILE *f)
 void
 treimage_read_arrays (FILE *f)
 {
-    unsigned  i;
-    unsigned  l;
+    ulong  i;
+    ulong  l;
     void      *a;
 
     DOTIMES(i, NUM_ATOMS) {
@@ -386,7 +386,7 @@ treimage_read_arrays (FILE *f)
 void
 treimage_read_symbols (FILE *f, struct treimage_header *h)
 {
-    unsigned  i;
+    ulong  i;
 
     bzero (symbol_table, sizeof symbol_table);
     treimage_read (f, symbol_table, h->len_symbols);
@@ -411,11 +411,11 @@ void
 treimage_read_strings (FILE *f, struct treimage_header *h)
 {
     struct tre_string *s;
-    unsigned  i;
-    unsigned  j;
-    unsigned  l;
-    unsigned  lenlen = sizeof (unsigned) * h->num_strings;
-    unsigned  *lens = trealloc (lenlen);
+    ulong  i;
+    ulong  j;
+    ulong  l;
+    ulong  lenlen = sizeof (ulong) * h->num_strings;
+    ulong  *lens = trealloc (lenlen);
 
     treimage_read (f, lens, lenlen);
 

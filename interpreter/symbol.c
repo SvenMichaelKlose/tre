@@ -19,13 +19,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-unsigned num_symbols;
+ulong num_symbols;
 
 struct tresymbol_page {
 	struct tresymbol_page * entries[256]; /* Page for next character. */
-	unsigned long  atom;	/* Atom of the symbol. */
-	unsigned long  num_entries;	/* Reference counter. */
-	char * name;
+	ulong   atom;	/* Atom of the symbol. */
+	ulong   num_entries;	/* Reference counter. */
+	char    * name;
 };
 
 struct tresymbol_root {
@@ -54,7 +54,7 @@ tresymbolpage_alloc ()
 struct tresymbol_page *
 tresymbolpage_find_root (treptr package)
 {
-	int i;
+	long i;
 
 	for (i = 0; i < MAX_PACKAGES; i++)
 		if (tresymbol_roots[i].package == package)
@@ -65,7 +65,7 @@ tresymbolpage_find_root (treptr package)
 
 /* Set package for root node. */
 void
-tresymbolpage_set_package (unsigned long i, treptr package)
+tresymbolpage_set_package (ulong i, treptr package)
 {
 	tresymbol_roots[i].package = package;
 }
@@ -74,7 +74,7 @@ tresymbolpage_set_package (unsigned long i, treptr package)
 void
 tresymbolpage_add_rec (struct tresymbol_page * p, char * name, treptr atom, char * np)
 {
-	unsigned long x = (unsigned long) *np;
+	ulong x = (ulong) *np;
 
 	p->num_entries++; /* This node is occupied by one more symbol. */
 
@@ -113,7 +113,7 @@ tresymbolpage_add (treptr atom)
 treptr
 tresymbolpage_find_rec (struct tresymbol_page * p, char * np)
 {
-	unsigned long x = (unsigned long) *np;
+	ulong x = (ulong) *np;
 
 	if (x && p->entries[x] == NULL)
 		return treptr_invalid; /* Symbol doesn't exist. */
@@ -134,10 +134,10 @@ tresymbolpage_find (char * name, treptr package)
 	return tresymbolpage_find_rec (tresymbolpage_find_root (package), name);
 }
 
-unsigned long
+ulong
 tresymbolpage_remove_rec (struct tresymbol_page * p, char * np)
 {
-	unsigned long x = (unsigned long) *np;
+	ulong x = (ulong) *np;
 
 	if (x) {
 		/* Remove from children first. */
@@ -162,7 +162,7 @@ tresymbolpage_remove (treptr atom)
 void
 tresymbolpage_init ()
 {
-	int i;
+	long i;
 
 	bzero (&tresymbol_roots, sizeof (tresymbol_roots));
 

@@ -1,6 +1,6 @@
 /*
- * nix operating system project tre interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * TRE tree processor
+ * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * List related section.
  */
@@ -22,7 +22,7 @@
 
 treptr tre_lists_free;
 struct tre_list tre_lists[NUM_LISTNODES];
-unsigned trelist_num_used;
+ulong trelist_num_used;
 
 #define TRENODE_SET(node, value) \
     (node)->car = car; 	\
@@ -74,7 +74,7 @@ trelist_rplacd (treptr cons, treptr val)
     _CDR(cons) = val;
 }
 
-unsigned tmpcnt = -1;
+ulong tmpcnt = -1;
 
 /*
  * Free single list element.
@@ -245,7 +245,7 @@ trelist_copy (treptr l)
  * The element is unlinked and left for garbage collection.
  */
 treptr
-trelist_delete (unsigned i, treptr l)
+trelist_delete (ulong i, treptr l)
 {
     treptr  p;
     treptr  f = treptr_nil;
@@ -267,10 +267,10 @@ trelist_delete (unsigned i, treptr l)
 }
 
 /* Get zero-indexed position of element in list. */
-int
+long
 trelist_position (treptr elt, treptr l)
 {
-    int c = 0;
+    long c = 0;
 
     while (l != treptr_nil) {
 		if (CAR(l) == elt)
@@ -285,10 +285,10 @@ trelist_position (treptr elt, treptr l)
 
 
 /* Get zero-indexed position of element in list by symbol name. */
-int
+long
 trelist_position_name (treptr elt, treptr l)
 {
-    int c = 0;
+    long c = 0;
 	const char * eltname = TREATOM_NAME(elt);
 
     while (l != treptr_nil) {
@@ -303,10 +303,10 @@ trelist_position_name (treptr elt, treptr l)
 }
 
 /* Get length of a pure list. */
-unsigned
+ulong
 trelist_length (treptr p)
 {
-    unsigned len = 0;
+    ulong len = 0;
 
     while (p != treptr_nil) {
 		len++;
@@ -318,7 +318,7 @@ trelist_length (treptr p)
 
 /* Return cons pointing to the nth element. */
 treptr
-trelist_nth (treptr l, unsigned idx)
+trelist_nth (treptr l, ulong idx)
 {
     while (l != treptr_nil) {
 		if (TREPTR_IS_ATOM(l))
@@ -335,7 +335,7 @@ trelist_nth (treptr l, unsigned idx)
 
 /* Sequence type: replace element at index. */
 void
-trelist_t_set (treptr s, unsigned idx, treptr val)
+trelist_t_set (treptr s, ulong idx, treptr val)
 {
     s = trelist_nth (s, idx);
     RPLACA(s, val);
@@ -343,7 +343,7 @@ trelist_t_set (treptr s, unsigned idx, treptr val)
 
 /* Sequence type: return element at index. */
 treptr
-trelist_t_get (treptr s, unsigned idx)
+trelist_t_get (treptr s, ulong idx)
 {
     return trelist_nth (s, idx);
 }
@@ -357,7 +357,7 @@ struct tre_sequence_type trelist_seqtype = {
 
 /* Return T if all elements in a list are of the same type. */
 bool
-trelist_check_type (treptr list, unsigned type)
+trelist_check_type (treptr list, ulong type)
 {
     for (; list != treptr_nil; list = CDR(list))
         if (TREPTR_TYPE(CAR(list)) != type)
@@ -412,7 +412,7 @@ trelist_equal (treptr la, treptr lb)
 void
 trelist_init ()
 {
-    unsigned  i;
+    ulong  i;
 
     /* Make a list of all elements. */
     for (i = 0; i < LAST_LISTNODE; i++) {

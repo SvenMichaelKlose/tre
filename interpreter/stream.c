@@ -18,13 +18,13 @@
 
 FILE* tre_fileio_handles[TRE_FILEIO_MAX_FILES];
 
-int
+long
 trestream_fopen (treptr path, treptr mode)
 {
-    char      * spath = TREATOM_STRINGP(path);
-    char      * smode = TREATOM_STRINGP(mode);
-    FILE      * file = fopen (spath, smode);
-    unsigned  i;
+    char   * spath = TREATOM_STRINGP(path);
+    char   * smode = TREATOM_STRINGP(mode);
+    FILE   * file = fopen (spath, smode);
+    ulong  i;
 
     if (file == NULL)
         return treptr_nil;
@@ -43,8 +43,8 @@ trestream_fopen (treptr path, treptr mode)
     return i;
 }
 
-int
-trestream_fclose (int handle)
+long
+trestream_fclose (long handle)
 {
 	if (tre_fileio_handles[handle] == NULL)
 		return -1;

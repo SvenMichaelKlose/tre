@@ -28,7 +28,7 @@ tredebug_builtin_end_debug (treptr no_args)
 {
     struct tre_atom *atom;
     treptr   b;
-    unsigned  i;
+    ulong  i;
 
     (void) no_args;
 

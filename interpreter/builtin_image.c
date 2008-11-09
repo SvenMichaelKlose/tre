@@ -52,7 +52,7 @@ treptr
 treimage_builtin_load (treptr list)
 {
     treptr  file = trearg_get (list);
-    int     r;
+    long    r;
 
 	while (TRUE) {
     	file = trearg_typed (1, TRETYPE_STRING, file, "pathname");

@@ -12,13 +12,13 @@
 
 struct tre_stream {
     struct treio_ops  *ops;
-    int			putback_char;
-    int			last_char;
-    void		* detail_in;
-    void		* detail_out;
-	char  		* file_name;
-	unsigned	line;
-	unsigned	column;
+    int		putback_char;
+    int		last_char;
+    void	* detail_in;
+    void	* detail_out;
+	char  	* file_name;
+	ulong	line;
+	ulong	column;
 };
 
 struct treio_ops {
@@ -40,14 +40,14 @@ extern struct tre_stream  *treio_reader;  /* Reader stream */
 extern struct tre_stream  *treio_console; /* Console stream */
 
 /* Reader stream diversion stack pointer */
-extern unsigned treio_readerstreamptr;
+extern ulong treio_readerstreamptr;
 
 extern struct tre_stream * treio_make_stream (struct treio_ops *, const char * name);
 extern void treio_free_stream (struct tre_stream *);
 extern void treio_close_stream (struct tre_stream *);
 
 extern int treio_getc (struct tre_stream *);
-extern int treio_getline (struct tre_stream *,char *s, unsigned maxlen);
+extern int treio_getline (struct tre_stream *,char *s, ulong maxlen);
 extern void treio_putback (struct tre_stream *);
 extern void treio_putc (struct tre_stream *, char);
 extern void treio_flush (struct tre_stream *);

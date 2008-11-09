@@ -90,7 +90,7 @@ treptr
 trenumber_builtin_integer (treptr args)
 {
     treptr  arg = trenumber_arg_get (args);
-    int  tmp = (int) TRENUMBER_VAL(arg);
+    long  tmp = (long) TRENUMBER_VAL(arg);
 
     return treatom_number_get ((double) tmp, TRENUMTYPE_INTEGER);
 }
@@ -105,8 +105,8 @@ trenumber_builtin_bit_or (treptr args)
 	treptr y;
 
     trenumber_arg_get2 (&x, &y, args);
-    int  ix = (int) TRENUMBER_VAL(x);
-    int  iy = (int) TRENUMBER_VAL(y);
+    long  ix = (long) TRENUMBER_VAL(x);
+    long  iy = (long) TRENUMBER_VAL(y);
 
     return treatom_number_get ((double) (ix | iy), TRENUMTYPE_INTEGER);
 }
@@ -121,8 +121,8 @@ trenumber_builtin_bit_and (treptr args)
 	treptr y;
 
     trenumber_arg_get2 (&x, &y, args);
-    int  ix = (int) TRENUMBER_VAL(x);
-    int  iy = (int) TRENUMBER_VAL(y);
+    long  ix = (long) TRENUMBER_VAL(x);
+    long  iy = (long) TRENUMBER_VAL(y);
 
     return treatom_number_get ((double) (ix & iy), TRENUMTYPE_INTEGER);
 }
@@ -137,8 +137,8 @@ trenumber_builtin_bit_shift_left (treptr args)
 	treptr y;
 
     trenumber_arg_get2 (&x, &y, args);
-    unsigned long  ix = (unsigned long) TRENUMBER_VAL(x);
-    unsigned long  iy = (unsigned long) TRENUMBER_VAL(y);
+    ulong  ix = (ulong) TRENUMBER_VAL(x);
+    ulong  iy = (ulong) TRENUMBER_VAL(y);
 
     return treatom_number_get ((double) (ix << iy), TRENUMTYPE_INTEGER);
 }
@@ -153,8 +153,8 @@ trenumber_builtin_bit_shift_right (treptr args)
 	treptr y;
 
     trenumber_arg_get2 (&x, &y, args);
-    unsigned long  ix = (unsigned long) TRENUMBER_VAL(x);
-    unsigned long  iy = (unsigned long) TRENUMBER_VAL(y);
+    ulong  ix = (ulong) TRENUMBER_VAL(x);
+    ulong  iy = (ulong) TRENUMBER_VAL(y);
 
     return treatom_number_get ((double) (ix >> iy), TRENUMTYPE_INTEGER);
 }

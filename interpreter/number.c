@@ -1,6 +1,6 @@
 /*
- * nix operating system project tre interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * TRE tree processor
+ * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Number atom related section.
  */
@@ -26,19 +26,21 @@ struct tre_number tre_numbers[NUM_NUMBERS];
     (num)->value = val; \
     (num)->type = typ;	/* unused */
 
-#define TRENUMBER_INDEX(ptr) 	((unsigned) TREATOM_DETAIL(ptr))
+#define TRENUMBER_INDEX(ptr) 	((ulong) TREATOM_DETAIL(ptr))
 
 /* Check if string contains a number. */
 bool
 trenumber_is_value (char *symbol)
 {
-    unsigned  ndots = 0; /* Number of dots in string. */
-    char      c;         /* Last read character. */
+    ulong   ndots = 0;	/* Number of dots in string. */
+	ulong	len = 0;	/* Length of symbol. */
+    char    c;        	/* Last read character. */
 
     if (*symbol == '-')
 		symbol++;
 
     while ((c = *symbol++) != 0) {
+		len++;
 		if (c == '.') {
 	    	if (ndots++)
 	        	return FALSE;
@@ -49,14 +51,17 @@ trenumber_is_value (char *symbol)
 	    	return FALSE;
     }
 
+	if (ndots == 1 && len == 1)
+		return FALSE;
+
     return TRUE;
 }
 
 /* Allocate number entry. */
-unsigned
+ulong
 trenumber_alloc (double value, int type)
 {
-	unsigned idx;
+	ulong idx;
 
     void * i = trealloc_item (&tre_numbers_free,
                         &tre_numbers, &tre_numbers[NUM_NUMBERS]);
@@ -69,7 +74,7 @@ trenumber_alloc (double value, int type)
 	    	treerror_internal (treptr_nil, "out of numbers");
     }
 
-    idx = ((unsigned) i - (unsigned) tre_numbers) / sizeof (struct tre_number);
+    idx = ((ulong) i - (ulong) tre_numbers) / sizeof (struct tre_number);
     NUMBER_SET(&tre_numbers[idx], value, type);
 
     return idx;

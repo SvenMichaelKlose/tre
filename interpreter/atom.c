@@ -1,5 +1,5 @@
 /*
- * nix operating system project tre interpreter
+ * TRE tree processor
  * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Atom related section.
@@ -81,7 +81,7 @@ treatom_init_truth (void)
 void
 treatom_init_atom_table (void)
 {
-	unsigned x;
+	ulong x;
 
     tre_atoms_free = trealloc_item_init (
 		&tre_atoms[TREPTR_FIRST_INDEX],
@@ -97,7 +97,7 @@ void
 treatom_init_builtins (void)
 {
     treptr   atom;
-    unsigned  i;
+    ulong  i;
 
     /* Builtin functions. */
     for (i = 0; tre_builtin_names[i] != NULL; i++) {
@@ -177,7 +177,7 @@ treatom_set_binding (treptr atom, treptr value)
 treptr
 treatom_alloc (char * symbol, treptr package, int type, treptr value)
 {
-    unsigned  atomi;
+    ulong  atomi;
     treptr   ret;
 	void     * item;
 
@@ -189,7 +189,7 @@ treatom_alloc (char * symbol, treptr package, int type, treptr value)
 	    	return treerror (treptr_invalid, "atom table full");
     }
 
-    atomi = ((unsigned long) item - (unsigned long) tre_atoms) / sizeof (struct tre_atom);
+    atomi = ((ulong) item - (ulong) tre_atoms) / sizeof (struct tre_atom);
     TREGC_ALLOC_ATOM(atomi);
 
     /* Make symbol. */
@@ -240,7 +240,7 @@ treptr
 treatom_number_get (double value, int type)
 {
     treptr   atom;
-    unsigned  num;
+    ulong  num;
 
     atom = treatom_alloc (NULL, treptr_nil, TRETYPE_NUMBER, treptr_nil);
 CHKPTR(atom);
@@ -316,8 +316,8 @@ treatom_remove (treptr el)
 treptr
 treatom_body_to_var (treptr body)
 {        
-    unsigned  a;
-    unsigned  b; 
+    ulong  a;
+    ulong  b; 
 	treptr    tmp;
 
     for (a = 0; a < NUM_ATOMS; a++) {

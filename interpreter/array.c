@@ -1,5 +1,5 @@
 /*
- * nix operating system project tre interpreter
+ * TRE tree processor
  * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Array related section.
@@ -20,7 +20,7 @@
 
 /* Allocate and initialise array. */
 treptr *
-trearray_get_raw (unsigned size)
+trearray_get_raw (ulong size)
 {
     treptr  *array;
 
@@ -36,12 +36,12 @@ trearray_get_raw (unsigned size)
 }
 
 /* Get total size of array. */
-unsigned
+ulong
 trearray_get_size (treptr sizes)
 {
     treptr  a;
     treptr  car;
-    unsigned      size = 1;
+    ulong      size = 1;
 
     _DOLIST(a, sizes) {
 		car = _CAR(a);
@@ -58,7 +58,7 @@ treptr
 trearray_get (treptr sizes)
 {
     treptr   a;
-    unsigned  size = trearray_get_size (sizes);
+    ulong  size = trearray_get_size (sizes);
 
     a = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_ARRAY, treptr_nil);
     treatom_set_value (a, trelist_copy (sizes));
@@ -81,10 +81,10 @@ trearray_free (treptr array)
 
 /* Sequence: Get value at index. */
 treptr
-trearray_t_get (treptr array, unsigned idx)
+trearray_t_get (treptr array, ulong idx)
 {
     treptr    adef = TREATOM_VALUE(array);
-    unsigned  size = CAR(adef);
+    ulong  size = CAR(adef);
     treptr    * a = (treptr *) TREATOM_DETAIL(array);
 
     if (size <= idx)
@@ -94,7 +94,7 @@ trearray_t_get (treptr array, unsigned idx)
 }
 
 void
-trearray_set (treptr *a, unsigned idx, treptr val)
+trearray_set (treptr *a, ulong idx, treptr val)
 {
     if (a[idx] == val)
 		return;
@@ -104,10 +104,10 @@ trearray_set (treptr *a, unsigned idx, treptr val)
 
 /* Sequence: replace value at index. */
 void
-trearray_t_set (treptr array, unsigned idx, treptr val)
+trearray_t_set (treptr array, ulong idx, treptr val)
 {
     treptr   adef = TREATOM_VALUE(array);
-    unsigned  size = CAR(adef);
+    ulong  size = CAR(adef);
     treptr   *a = (treptr *) TREATOM_DETAIL(array);
 
     if (size <= idx) {
@@ -119,7 +119,7 @@ trearray_t_set (treptr array, unsigned idx, treptr val)
 }
 
 /* Sequence: Return length of array. */
-unsigned
+ulong
 trearray_t_length (treptr array)
 {
     return TREARRAY_SIZE(array);

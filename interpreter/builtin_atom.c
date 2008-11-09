@@ -60,7 +60,7 @@ treatom_builtin_eql (treptr list)
 treptr
 treatom_builtin_make_symbol (treptr args)
 {
-	unsigned num_args = trelist_length (args);
+	ulong num_args = trelist_length (args);
 	treptr name;
 	treptr package;
 
@@ -164,19 +164,6 @@ treatom_builtin_functionp (treptr list)
 }
 
 /*
- * (VARIABLEP obj)
- *
- * Returns T if the argument is a variable. NIL otherwise.
- */
-treptr
-treatom_builtin_variablep (treptr list)
-{
-    treptr arg = trearg_get (list);
-
-    return TREPTR_TRUTH(TREPTR_IS_VARIABLE(arg));
-}
-
-/*
  * (BOUNDP obj)
  *
  * Returns T if global symbol is bound to a variable.
@@ -217,7 +204,7 @@ treptr
 treatom_builtin_atom_list_s (treptr ret)
 {
     struct tre_atom *a = tre_atoms;
-    unsigned  n;
+    ulong  n;
 
     for (n = 0; n < NUM_ATOMS; n++) {
 		if (a->type == TRETYPE_FUNCTION) {

@@ -15,6 +15,6 @@ extern void trewarn (treptr, const char *msg, ...);
 
 extern treptr treerror_builtin_error (treptr);
 
-extern const char * treerror_typename (unsigned);
+extern const char * treerror_typename (ulong);
 
 #endif	/* #ifndef TRE_ERROR_H */

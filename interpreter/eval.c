@@ -122,7 +122,7 @@ treeval_xlat_function (treevalfunc_t *xlat, treptr func, treptr expr,
     tregc_push (evaldargs);
 
     /* Call internal function. */
-    ret = xlat[(int) TREATOM_DETAIL(func)] (evaldargs);
+    ret = xlat[(ulong) TREATOM_DETAIL(func)] (evaldargs);
     tregc_retval (ret);
 
     /* Free internal garbage immediately. */

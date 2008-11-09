@@ -1,6 +1,6 @@
 /*
  * nix operating system project tre interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * List-related section.
  */
@@ -77,18 +77,18 @@ extern void trelist_init (void);
 
 extern struct tre_list tre_lists[NUM_LISTNODES];
 extern treptr tre_lists_free;
-extern unsigned trelist_num_used;
+extern ulong trelist_num_used;
 
 extern treptr _trelist_get (treptr car, treptr cdr);
 extern treptr trelist_copy (treptr);
 extern treptr trelist_copy_tree (treptr);
-extern treptr trelist_delete (unsigned, treptr);
+extern treptr trelist_delete (ulong, treptr);
 extern void trelist_append (treptr *lst, treptr lst2);
-extern int trelist_position (treptr elt, treptr lst);
-extern int trelist_position_name (treptr elt, treptr lst);
-extern unsigned trelist_length (treptr);
+extern long trelist_position (treptr elt, treptr lst);
+extern long trelist_position_name (treptr elt, treptr lst);
+extern ulong trelist_length (treptr);
 extern bool trelist_equal (treptr, treptr);
-extern treptr trelist_nth (treptr, unsigned);
+extern treptr trelist_nth (treptr, ulong);
 extern treptr trelist_last (treptr);
 
 extern void trelist_free (treptr);
@@ -97,7 +97,7 @@ extern void trelist_free_toplevel (treptr);
 
 extern struct tre_sequence_type trelist_seqtype;
 
-extern bool trelist_check_type (treptr, unsigned atom_type);
+extern bool trelist_check_type (treptr, ulong atom_type);
 
 #ifdef TRE_DIAGNOSTICS
 extern treptr trelist_car (treptr);

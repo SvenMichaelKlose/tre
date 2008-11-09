@@ -1,6 +1,6 @@
 /*
  * nix operating system project tre interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * String-type related section.
  */
@@ -9,14 +9,14 @@
 #define TRE_STRING_H
 
 struct tre_string {
-    unsigned  len;
-    char      str;
+    ulong	len;
+    char	str;
 };
 
 extern treptr tre_strings;
 extern treptr trestring_get (const char *string);
 extern void trestring_free (treptr);
-extern struct tre_string *trestring_get_raw (unsigned len);
+extern struct tre_string *trestring_get_raw (ulong len);
 
 extern struct tre_sequence_type trestring_seqtype;
 

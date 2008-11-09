@@ -12,7 +12,7 @@
 
 extern FILE* tre_fileio_handles[TRE_FILEIO_MAX_FILES];
 
-extern int trestream_fopen (treptr path, treptr mode);
-extern int trestream_fclose (int handle);
+extern long trestream_fopen (treptr path, treptr mode);
+extern long trestream_fclose (long handle);
 
 #endif /* #ifndef TRE_STREAM_H */

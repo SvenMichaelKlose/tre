@@ -78,7 +78,7 @@ trealloc_free_item (void * start, void * item, void * map, void * end)
 }
 
 void *
-trealloc_item_init (void * map, unsigned num, unsigned size)
+trealloc_item_init (void * map, ulong num, ulong size)
 {
 	void * last = NULL;
 

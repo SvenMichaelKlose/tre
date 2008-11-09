@@ -84,7 +84,7 @@ trearg_get2 (treptr *a, treptr *b, treptr list)
 }
 
 treptr
-trearg_correct (unsigned argnum, int type, treptr x, const char * descr)
+trearg_correct (ulong argnum, int type, treptr x, const char * descr)
 {
 	char buf[4096];
 	const char * l = descr ? " (" : "";
@@ -93,7 +93,7 @@ trearg_correct (unsigned argnum, int type, treptr x, const char * descr)
 	if (descr == NULL)
 		descr = "";
 
-	sprintf (buf, "argument %d%s%s%s: %s expected instead of %s",
+	sprintf (buf, "argument %ld%s%s%s: %s expected instead of %s",
 			 argnum, l, descr, r,
 			 treerror_typename (type),
 			 treerror_typename (TREPTR_TYPE(x)));
@@ -102,7 +102,7 @@ trearg_correct (unsigned argnum, int type, treptr x, const char * descr)
 }
 
 treptr
-trearg_typed (unsigned argnum, int type, treptr x, const char * descr)
+trearg_typed (ulong argnum, int type, treptr x, const char * descr)
 {
 	while ((type == TRETYPE_ATOM && TREPTR_TYPE(x) == TRETYPE_CONS)
 		   || (type != TRETYPE_ATOM && TREPTR_TYPE(x) != type))
@@ -144,7 +144,7 @@ trearg_expand (treptr *rvars, treptr *rvals, treptr iargdef, treptr args,
     treptr   form;
     treptr   init;
     treptr   key;
-    unsigned  kpos;
+    ulong  kpos;
 
     dvars = vars = CONS(treptr_nil, treptr_nil);
     tregc_push (dvars);
@@ -249,8 +249,8 @@ trearg_expand (treptr *rvars, treptr *rvals, treptr iargdef, treptr args,
  				}
 
                 /* Get position of key in argument list. */
-				kpos = (unsigned) trelist_position_name (key, args);
-	 			if (kpos != (unsigned) -1) {
+				kpos = (ulong) trelist_position_name (key, args);
+	 			if (kpos != (ulong) -1) {
 		    		/* Get argument after key. */
 		    		svals = trelist_nth (args, kpos + 1);
 

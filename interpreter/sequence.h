@@ -1,6 +1,6 @@
 /*
  * nix operating system project tre interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Sequence-related section.
  */
@@ -13,9 +13,9 @@
  * tre_sequence_type must be defined.
  */
 struct tre_sequence_type {
-     void (*set) (treptr, unsigned, treptr);
-     treptr (*get) (treptr, unsigned);
-     unsigned (*length) (treptr);
+     void (*set) (treptr, ulong, treptr);
+     treptr (*get) (treptr, ulong);
+     ulong (*length) (treptr);
 };
 
 extern treptr tresequence_builtin_elt (treptr);

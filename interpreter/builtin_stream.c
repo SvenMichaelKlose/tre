@@ -95,7 +95,7 @@ trestream_builtin_feof (treptr args)
 treptr
 trestream_builtin_fclose (treptr args)
 {
-    int  str = trestream_builtin_get_handle_index (args);
+    long  str = trestream_builtin_get_handle_index (args);
 
     return TREPTR_TRUTH(trestream_fclose (str));
 }
@@ -118,8 +118,8 @@ treptr
 trestream_builtin_terminal_raw (treptr dummy)
 {
     struct termios settings;
-    int result;
-    int desc = STDIN_FILENO;
+    long result;
+    long desc = STDIN_FILENO;
 
     result = tcgetattr (desc, &settings);
     settings.c_lflag &= ~(ICANON | ECHO);
@@ -134,8 +134,8 @@ treptr
 trestream_builtin_terminal_normal (treptr dummy)
 {
     struct termios settings;
-    int result;
-    int desc = STDIN_FILENO;
+    long result;
+    long desc = STDIN_FILENO;
 
     result = tcgetattr (desc, &settings);
     settings.c_lflag |= ICANON | ECHO;

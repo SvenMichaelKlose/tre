@@ -45,6 +45,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
+#include <sys/mman.h>
 
 treevalfunc_t treeval_xlat_builtin[];
 
@@ -280,13 +281,28 @@ trebuiltin_intern (treptr args)
 treptr
 trebuiltin_malloc (treptr args)
 {
-    treptr  arg;
+    treptr  len;
     void    * ret;
 
-    arg = trearg_get (args);
-	arg = trearg_typed (1, TRETYPE_NUMBER, arg, "size");
+    len = trearg_get (args);
+	len = trearg_typed (1, TRETYPE_NUMBER, len, "size");
 
-	ret = trealloc ((size_t) TRENUMBER_VAL(arg));
+	ret = trealloc ((size_t) TRENUMBER_VAL(len));
+
+	return treatom_number_get ((double) (long) ret, TRENUMTYPE_INTEGER);
+}
+
+treptr
+trebuiltin_malloc_exec (treptr args)
+{
+    treptr  len;
+    void    * ret;
+
+    len = trearg_get (args);
+	len = trearg_typed (1, TRETYPE_NUMBER, len, "size");
+
+	ret = mmap (NULL, ((size_t) TRENUMBER_VAL(len)),
+				PROT_READ | PROT_WRITE | PROT_EXEC, MAP_ANON, -1, 0);
 
 	return treatom_number_get ((double) (long) ret, TRENUMTYPE_INTEGER);
 }
@@ -294,12 +310,27 @@ trebuiltin_malloc (treptr args)
 treptr
 trebuiltin_free (treptr args)
 {
-    treptr  arg;
+    treptr  ptr;
 
-    arg = trearg_get (args);
-	arg = trearg_typed (1, TRETYPE_NUMBER, arg, "address");
+    ptr = trearg_get (args);
+	ptr = trearg_typed (1, TRETYPE_NUMBER, ptr, "address");
 
-	trealloc_free ((void *) (long) TRENUMBER_VAL(arg));
+	trealloc_free ((void *) (long) TRENUMBER_VAL(ptr));
+
+	return treptr_nil;
+}
+
+treptr
+trebuiltin_free_exec (treptr args)
+{
+    treptr  ptr;
+    treptr  len;
+
+    trearg_get2 (&ptr, &len, args);
+	ptr = trearg_typed (1, TRETYPE_NUMBER, ptr, "address");
+	len = trearg_typed (1, TRETYPE_NUMBER, len, "size");
+
+	munmap ((void *) (long) TRENUMBER_VAL(ptr), (size_t) TRENUMBER_VAL(len));
 
 	return treptr_nil;
 }
@@ -351,7 +382,7 @@ char *tre_builtin_names[] = {
 
     "MAKE-SYMBOL", "ATOM", "SYMBOL-VALUE", "%TYPE-ID",
 	"SYMBOL-FUNCTION", "SYMBOL-PACKAGE",
-    "CONSP", "NUMBERP", "FUNCTIONP", "VARIABLEP",
+    "CONSP", "NUMBERP", "FUNCTIONP",
     "BOUNDP", "FBOUNDP",
     "MACROP", "STRINGP",
     "=", "<", ">",
@@ -388,7 +419,7 @@ char *tre_builtin_names[] = {
 
     "SYS-IMAGE-CREATE", "SYS-IMAGE-LOAD",
 
-	"%MALLOC", "%FREE",
+	"%MALLOC", "%MALLOC-EXEC", "%FREE", "%FREE-EXEC",
 	"%%SET", "%%GET",
 
     NULL
@@ -442,7 +473,6 @@ treevalfunc_t treeval_xlat_builtin[] = {
     trelist_builtin_consp,
     trenumber_builtin_numberp,
     treatom_builtin_functionp,
-    treatom_builtin_variablep,
     treatom_builtin_boundp,
     treatom_builtin_fboundp,
     treatom_builtin_macrop,
@@ -514,7 +544,9 @@ treevalfunc_t treeval_xlat_builtin[] = {
     treimage_builtin_load,
 
 	trebuiltin_malloc,
+	trebuiltin_malloc_exec,
 	trebuiltin_free,
+	trebuiltin_free_exec,
 
 	trebuiltin_set,
 	trebuiltin_get,

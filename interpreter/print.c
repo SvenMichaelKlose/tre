@@ -46,7 +46,7 @@ treprint_wipe_marks (void)
     bzero (treprint_marks_atoms, sizeof (treprint_marks_atoms));
 }
 
-void treprint_indent (treptr p, unsigned indent, bool nobracket, char *prepend);
+void treprint_indent (treptr p, ulong indent, bool nobracket, char *prepend);
 
 bool treprint_no_nl;
 
@@ -62,7 +62,7 @@ treptr treprint_highlight;
 #define TREPRINT_HLCLOSE(x) \
     if (treprint_highlight != treptr_nil && treprint_highlight == x) { \
         printf (" <--- "); \
-	treprint_highlight = treptr_nil; \
+		treprint_highlight = treptr_nil; \
     }
 
 void treprint_r (treptr);
@@ -70,9 +70,9 @@ void treprint_r (treptr);
 void
 treprint_array (treptr array)
 {
-    treptr    * elts = TREATOM_DETAIL(array);
-    unsigned  size = TRENUMBER_VAL(_CAR(TREATOM_VALUE(array)));
-    unsigned  i;
+    treptr  * elts = TREATOM_DETAIL(array);
+    ulong   size = TRENUMBER_VAL(_CAR(TREATOM_VALUE(array)));
+    ulong   i;
 
     printf ("#(");
 
@@ -113,7 +113,7 @@ treprint_chk_atom_mark (treptr atom)
 }
 
 void
-treprint_atom (treptr atom, unsigned indent)
+treprint_atom (treptr atom, ulong indent)
 {
     char * name;
 
@@ -195,7 +195,7 @@ treprint_atom (treptr atom, unsigned indent)
 }
 
 int
-treprint_cons (treptr * p, unsigned * indent, int * postatom, char ** prepend)
+treprint_cons (treptr * p, ulong * indent, int * postatom, char ** prepend)
 {
     treptr    car;
     treptr    cdr;
@@ -246,12 +246,12 @@ treprint_cons (treptr * p, unsigned * indent, int * postatom, char ** prepend)
 }
 
 void
-treprint_indent (treptr p, unsigned indent, bool nobracket, char * prepend)
+treprint_indent (treptr p, ulong indent, bool nobracket, char * prepend)
 {
     treptr    car;
     treptr    cdr;
     int       postatom = 0;
-    unsigned  i;
+    ulong  i;
 	int		  ret;
 
     if (TREPTR_IS_ATOM(p)) {

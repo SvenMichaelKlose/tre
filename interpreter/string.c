@@ -23,9 +23,9 @@
 
 /* Allocate and initialise string. */
 struct tre_string *
-trestring_get_raw (unsigned len)
+trestring_get_raw (ulong len)
 {
-    unsigned  l = len + sizeof (struct tre_string);
+    ulong  l = len + sizeof (struct tre_string);
     struct tre_string * nstr = trealloc (l);
 
     if (nstr == NULL)
@@ -69,7 +69,7 @@ trestring_free (treptr str)
 
 /* Sequence: Get character at index. */
 treptr
-trestring_t_get (treptr str, unsigned idx)
+trestring_t_get (treptr str, ulong idx)
 {
     struct tre_string *s = TREATOM_STRING(str);
 
@@ -83,7 +83,7 @@ trestring_t_get (treptr str, unsigned idx)
 
 /* Sequence: replace character at index. */
 void
-trestring_t_set (treptr str, unsigned idx, treptr val)
+trestring_t_set (treptr str, ulong idx, treptr val)
 {
     struct tre_string *s = TREATOM_STRING(str);
 
@@ -101,7 +101,7 @@ trestring_t_set (treptr str, unsigned idx, treptr val)
 }
 
 /* Sequence: Return length of string. */
-unsigned
+ulong
 trestring_t_length (treptr str)
 {
     struct tre_string *s = TREATOM_STRING(str);

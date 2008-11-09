@@ -28,6 +28,8 @@
 #include "image.h"
 #include "util.h"
 #include "diag.h"
+#include "dot.h"
+#include "quasiquote.h"
 
 #include <setjmp.h>
 #include <stdlib.h>
@@ -118,7 +120,14 @@ tre_main_line (struct tre_stream *stream)
 
     /* Expand macros. */
     expr = tremacro_builtin_macroexpand (expr);
-    tregc_pop ();
+
+	/* Dot expansion. */
+	tregc_push (expr);
+	expr = tredot_expand (expr);
+
+	/* QUASIQUOTE expansion. */
+	tregc_push (expr);
+	expr = trequasiquote_expand (expr);
 
 #ifdef TRE_PRINT_MACROEXPANSIONS
     treprint (expr);
@@ -129,6 +138,9 @@ tre_main_line (struct tre_stream *stream)
 	trethread_push_call (tremain_history);
     expr = treeval (expr);
 	trethread_pop_call ();
+    tregc_pop ();
+    tregc_pop ();
+    tregc_pop ();
     tregc_pop ();
 
     /* Print result on stdout if expression was read from stdin. */
@@ -169,6 +181,8 @@ tre_init (void)
     trearg_init ();
     treeval_init ();
     tremacro_init ();
+    trequasiquote_init ();
+    tredot_init ();
     trespecial_init ();
     treimage_init ();
 
@@ -289,4 +303,16 @@ user:
     tre_main ();
 
     return 0;
+}
+
+void
+tre_fnord2 (long a, long b, long c, long d, long e, long f, long g)
+{
+	exit (0);
+}
+
+void
+tre_fnord ()
+{
+	tre_fnord2 (1, 2, 3,4 ,5, 6, 7);
 }

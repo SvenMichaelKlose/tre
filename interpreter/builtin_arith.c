@@ -23,7 +23,7 @@ treeval_exprop (treptr list, treeval_opfunc_t func)
 {
     treptr  arg;
     double  val;
-	int     n = 1;
+	long    n = 1;
 
     arg = CAR(list);
     if (TREPTR_IS_NUMBER(arg) == FALSE)
@@ -45,7 +45,7 @@ double treeval_op_plus (double a, double b) { return a + b; }
 double treeval_op_difference (double a, double b) { return a - b; }
 double treeval_op_times (double a, double b) { return a * b; }
 double treeval_op_quotient (double a, double b) { return a / b; }
-double treeval_op_logxor (double a, double b) { return (unsigned) a ^ (unsigned) b; }
+double treeval_op_logxor (double a, double b) { return (ulong) a ^ (ulong) b; }
 
 /** section numbers **/
 

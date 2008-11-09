@@ -1,6 +1,6 @@
 /*
  * nix operating system project tre interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Object pointers.
  */
@@ -8,10 +8,11 @@
 #ifndef TRE_PTR_H
 #define TRE_PTR_H
 
+#include "ctype.h"
 #include "config.h"
 #include "type.h"
 
-typedef unsigned long treptr;
+typedef ulong treptr;
 
 #define TREPTR_FLAGS	(-1 << TREPTR_INDEX_WIDTH)
 

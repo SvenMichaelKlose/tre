@@ -1,5 +1,5 @@
 /*
- * nix operating system project tre interpreter
+ * TRE tre processor
  * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Built-in string functions
@@ -49,7 +49,7 @@ trestring_builtin_make (treptr list)
     treptr  arg = trearg_typed (1, TRETYPE_NUMBER, trearg_get (list), "length");
     treptr  atom;
 
-    str = trestring_get_raw ((unsigned) TRENUMBER_VAL(arg));
+    str = trestring_get_raw ((ulong) TRENUMBER_VAL(arg));
     atom = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_STRING, treptr_nil);
     TREATOM_SET_STRING(atom, str);
     return atom;
@@ -68,7 +68,7 @@ trestring_builtin_concat (treptr list)
     treptr    car;
     treptr    atom;
     char      *newp;
-    unsigned  len = 0;
+    ulong  len = 0;
 	int		  argnum = 1;
 
     /* Sum up length of all elements in the list. */

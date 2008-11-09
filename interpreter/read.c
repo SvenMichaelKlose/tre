@@ -1,5 +1,5 @@
 /*
- * nix operating system project tre interpreter
+ * TRE tre processor
  * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Reading TRE expressions.
@@ -60,9 +60,9 @@ is_symchar (char c)
 int
 get_symbol (struct tre_stream *str, char *s, char *p)
 {
-    unsigned  len = 0;
-    char      *os = s;
-    char      c;
+    ulong  len = 0;
+    char   * os = s;
+    char   c;
 
     *s = 0;
     *p = -1;
@@ -98,9 +98,6 @@ after_pname:
 				treerror_internal (treptr_invalid,
 			   					   "symbols must be no longer than %d chars",
 			   					   TRE_MAX_SYMLEN);
-
-	    	if (len == 1 && c == '.')
-				return len;
             continue;
         }
 
@@ -114,13 +111,13 @@ after_pname:
 
 /* Read token. */
 void
-treread_token (struct tre_stream *stream)
+treread_token (struct tre_stream * stream)
 {
-    unsigned  len = get_symbol (stream, TRECONTEXT_TOKEN_NAME(),
+    char   c;
+    ulong  len = get_symbol (stream, TRECONTEXT_TOKEN_NAME(),
 	                        	TRECONTEXT_PACKAGE_NAME());
-    char  c;
 
-    if (len == 1 && stream->last_char == '.') {
+    if (len == 1 && TRECONTEXT_TOKEN_NAME()[0] == '.') {
     	TRECONTEXT_TOKEN() = TRETOKEN_DOT;
     	return;
 	}
@@ -183,10 +180,10 @@ treread_token (struct tre_stream *stream)
 treptr
 treread_string (struct tre_stream *stream)
 {
-    char      str[TRE_MAX_STRINGLEN + 1];
-    char      *i;
-    char      c;
-    unsigned  l;
+    char   str[TRE_MAX_STRINGLEN + 1];
+    char   * i;
+    char   c;
+    ulong  l;
 
     i = str;
 	l = 0;

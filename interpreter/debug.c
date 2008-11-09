@@ -1,8 +1,8 @@
 /*
- * nix operating system project tre interpreter
+ * TRE tree processor
  * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
- * Debugger for interpreted expressions
+ * Debugger
  */
 
 #include "config.h"
@@ -26,7 +26,7 @@
 
 int      tredebug_mode;
 treptr  tredebug_next;
-unsigned tredebug_level;
+ulong tredebug_level;
 
 treptr  tredebug_breakpoints[TREDEBUG_MAX_BREAKPOINTS];
 int      tredebug_num_breakpoints;
@@ -93,7 +93,7 @@ void
 tredebug_chk_breakpoints (treptr expr)
 {
     treptr   fun;
-    unsigned  i;
+    ulong  i;
 
     if (!tredebug_num_breakpoints)
         return;
@@ -142,7 +142,7 @@ const char *tredebug_help =
     "      is printed.\n"
     " t    Print function call backtrace.\n";
 
-unsigned  tredebug_argc;
+ulong  tredebug_argc;
 char      *tredebug_argv[TREDEBUG_MAX_ARGS];
 char      tredebug_argvbuf[256];
 
@@ -150,13 +150,13 @@ void
 tredebug_prompt (void)
 {
 	(void) trestream_builtin_terminal_normal (treptr_nil);
-    printf (":%d] ", tredebug_level);
+    printf (":%ld] ", tredebug_level);
 }
 
 void
 tredebug_split_args (char *ap)
 {
-    unsigned  i = 0;
+    ulong  i = 0;
     char      *d = tredebug_argvbuf;
 
     while (*ap >= ' ' && i < TREDEBUG_MAX_ARGS) {
@@ -195,7 +195,7 @@ tredebug_set_breakpoint (char *name)
 {
     treptr   atom;
     treptr   fatom;
-    unsigned  i;
+    ulong  i;
 
     atom = treatom_seek (name, TRECONTEXT_PACKAGE());
     if (atom == treptr_nil) {
@@ -232,7 +232,7 @@ bool
 tredebug_remove_breakpoint (char *name)
 {
     bool      c = FALSE;
-    unsigned  j;
+    ulong  j;
 
     DOTIMES(j, TREDEBUG_MAX_BREAKPOINTS) {
         if (!strcmp (name, TREATOM_NAME(tredebug_breakpoints[j]))) {
@@ -253,8 +253,8 @@ tredebug_remove_breakpoint (char *name)
 void
 tredebug_breakpoint (void)
 {
-    unsigned  i;
-    unsigned  a;
+    ulong  i;
+    ulong  a;
 
     tredebug_read_args ();
     if (tredebug_argc == 0) {
@@ -283,7 +283,7 @@ tredebug_breakpoint (void)
 void
 tredebug_breakpoints_delete_all (void)
 {
-    unsigned  i;
+    ulong  i;
 
     DOTIMES(i, TREDEBUG_MAX_BREAKPOINTS) {
         if (tredebug_breakpoints[i] != treptr_nil)
@@ -295,8 +295,8 @@ tredebug_breakpoints_delete_all (void)
 void
 tredebug_breakpoints_delete (void)
 {
-    unsigned  i;
-    unsigned  a;
+    ulong  i;
+    ulong  a;
     char      c;
 
     tredebug_read_args ();
@@ -335,7 +335,7 @@ void
 tredebug_print (void)
 {
     treptr   atom;
-    unsigned  i;
+    ulong  i;
 
     tredebug_read_args ();
 
@@ -392,7 +392,7 @@ tredebug_lookup_bodyname (treptr body)
     treptr  var;
     treptr  tmp;
     static treptr   former_fun = (treptr) 0;
-    static unsigned  repetitions = 0;
+    static ulong  repetitions = 0;
     bool            does_repeat;
 
     var = treatom_body_to_var (body);
@@ -414,7 +414,7 @@ tredebug_lookup_bodyname (treptr body)
 
     if (!does_repeat) {
         if (repetitions > 0)
-            printf ("(%d times) ", repetitions + 1);
+            printf ("(%ld times) ", repetitions + 1);
 		repetitions = 0;
     }
 }
@@ -630,7 +630,7 @@ end:
 void
 tredebug_init (void)
 {
-    unsigned  i;
+    ulong  i;
 
     tredebug_mode = 0;
     tredebug_next = treptr_nil;
