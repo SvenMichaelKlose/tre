@@ -1,7 +1,12 @@
 ;;;; TRE environment
 ;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
 ;;;;
-;;;; Automatically generated C call wrappers.
+;;;; Alien C-calls
+
+(defstruct c-call-target
+  put-arg
+  call
+  epilogue)
 
 (defstruct c-call
   (funptr nil)
@@ -9,51 +14,30 @@
 
 (defun c-call-add-arg (cc value)
   "Add argument type and value to C-CALL."
-  (setf (c-call-args cc) (nconc (c-call-args cc) (list value))))
+  (setf (c-call-args cc) (append (c-call-args cc) (list value))))
 
-(defun integer-bytes (x num-bytes)
-  (when (> num-bytes 0)
-    (cons (bit-and x #xff) (integer-bytes (>> x 8) (1- num-bytes)))))
+(defun c-call-put-arg (target p val argnum)
+  (funcall (c-call-target-put-arg target) p val argnum))
 
-(defun dword-bytes (x)
-  (integer-bytes x 4))
+(defun c-call-call (cc target)
+  (funcall (c-call-target-call target) (c-call-funptr cc)))
 
-(defun x86-push-const-dword (val)
-  `(#x68 ,@(dword-bytes val)))
+(defun c-call-epilogue (target num-args)
+  (funcall (c-call-target-epilogue target) num-args))
 
-(defun x86-mov-eax-const (val)
-  `(#xb8 ,@(dword-bytes val)))
-
-(defun x86-call (val)
-  `(#xe8 ,@(dword-bytes val)))
-
-(defun x86-call-eax ()
-  `(#xff #xd0))
-
-(defun x86-add-esp-const (val)
-  `(#x81 #xc4 ,@(dword-bytes val)))
-
-(defun x86-ret ()
-  `(#xc3))
-
-(defun c-call-epilogue (num-args)
-  `(,@(x86-add-esp-const (* 4 num-args)) ,@(x86-ret)))
-
-(defun c-call-put-arg (p val)
-  (%put-list p (x86-push-const-dword val)))
-
-(defun c-call-do (cc)
+(defun c-call-do (cc target)
   "Execute C-CALL. See also MAKE-C-CALL and C-CALL-ADD-ARG."
   (with (args (c-call-args cc)
-		 code (%malloc 1024)
+		 code (%malloc-exec 1024) ; XXX
 		 p code)
 
-	(dolist (a (reverse args))
-      (setf p (c-call-put-arg p a)))
+	(do ((i args (cdr i))
+		 (argnum 0 (1+ argnum)))
+		((not i))
+	  (setf p (c-call-put-arg target p (car i) argnum)))
 
-	(%put-list p (append (x86-mov-eax-const (c-call-funptr cc))
-						 (x86-call-eax)
-                         (c-call-epilogue (length args))))
+	(%put-list p (append (c-call-call cc target)
+                         (c-call-epilogue target (length args))))
 
 	(alien-call code)
-	(%free code)))
+	(%free-exec code 1024)))
