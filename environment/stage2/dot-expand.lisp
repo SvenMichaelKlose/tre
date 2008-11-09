@@ -1,0 +1,65 @@
+;;;;; TRE tree processor
+;;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
+
+(defun dot-expand (x)
+  (with (starts-with-dot?
+		    #'((x)
+			     (= #\. (elt x 0)))
+
+  		 dot-position
+		    #'((x)
+			     (position #\. x :test #'=))
+
+  		 list-symbol
+		    #'((x)
+			     (make-symbol (list-string x)))
+
+		 conv
+			#'((x)
+				 (with (sl (string-list (symbol-name x))
+						l  (length sl)
+					    p  (dot-position sl))
+				   (cond
+					 ((or (= 1 l)
+						  (not p))
+						 x)
+
+					 ((= (1+ p) l)
+						 `(car ,(list-symbol (subseq sl 0 l))))
+
+					 ((= 0 p)
+						 `(cdr ,(list-symbol (subseq sl 1))))
+
+					 (t `(%slot-value
+						   ,(list-symbol (subseq sl 0 p))
+						   ,(conv (list-symbol (subseq sl (1+ p)))))))))
+
+		 label?
+			#'((x)
+				 (not (or (consp x)
+						  (numberp x)
+				          (stringp x)))))
+    (when x
+	  ; Combine expression and next symbol to %SLOT-VALUE if the symbol and
+	  ; starts with a dot.
+      (cond
+		((and (consp x)
+			  (consp (cdr x))
+			  (label? (second x))
+			  (< 1 (length (symbol-name (second x))))
+			  (starts-with-dot? (symbol-name (second x))))
+		  	(cons `(%slot-value ,(dot-expand (first x))
+							    ,(conv (make-symbol (subseq (symbol-name (second x))
+														    1))))
+			      (dot-expand (cddr x))))
+		((label? x)
+			(conv x))
+
+		((consp x)
+		    (cons (dot-expand (car x))
+				  (dot-expand (cdr x))))
+
+      	(t
+			x)))))
+
+;(%set-atom-fun *DOTEXPAND-HOOK* #'dot-expand)
