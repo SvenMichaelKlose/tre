@@ -1,6 +1,5 @@
-;;;; nix operating system project
-;;;; list processor environment
-;;;; Copyright (C) 2005-2006,2008 Sven Klose <pixel@copei.de>
+;;;; TRE environment
+;;;; Copyright (c) 2005-2006,2008 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Generalized hash-table
 
@@ -22,35 +21,30 @@
 
 (defun %make-hash-index-num (h k)
   "Make hash index from number."
-  (abs (mod k (%hash-table-size h))))
+  (mod k (%hash-table-size h)))
 
 (defun %make-hash-index-string (h str)
   "Make hash index from string."
   (with (k 0
 	     l (length str))
     (do ((i 0 (1+ i)))
-        ((= i l)
-		 (mod k (%hash-table-size h)))
+        ((or (= i l) (> i 7)) (mod k (%hash-table-size h)))
       (setf k (+ k (elt str i))))))
 
 (defun %make-hash-index (h key)
-  (when (consp key)
-    (%error "cons not supported as hash keys"))
   (if (numberp key)
       (%make-hash-index-num h key)
       (if (stringp key)
           (%make-hash-index-string h key)
-    	  (aif (symbol-name key)
-               (%make-hash-index-string h !)
-			   (progn
-				 (print key)
-                 (error "key type unsupported"))))))
+    	  (if (symbolp key)
+              (%make-hash-index-string h (symbol-name key))
+              (%error "key type unsupported")))))
 
 ; Get bucket list and its index.
 (defmacro %with-hash-bucket (bucket idx h key &rest body)
   `(with (,idx (%make-hash-index ,h ,key)
 	      ,bucket (aref (%hash-table-hash ,h) ,idx))
-     ,@body))
+    ,@body))
 
 (defun gethash (key h &optional default)
   "Get hash value by key."
@@ -66,3 +60,8 @@
         ; Add new value/key pair.
         (setf (aref (%hash-table-hash h) i) (acons key new-value b)))))
   new-value)
+
+(defun hashkeys (h)
+  (with (keys nil)
+	(dotimes (i (length (%hash-table-hash h)) keys)
+	  (setf keys (append (carlist (aref %hash-table-hash h) keys))))))
