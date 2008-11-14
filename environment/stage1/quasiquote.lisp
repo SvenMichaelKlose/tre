@@ -37,4 +37,4 @@
   #'((x)
 	   (car (%quasiquote-expand (list x)))))
 
-;(%set-atom-fun *QUASIQUOTEEXPAND-HOOK* #'quasiquote-expand)
+(%set-atom-fun *QUASIQUOTEEXPAND-HOOK* #'quasiquote-expand)

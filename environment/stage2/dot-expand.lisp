@@ -62,4 +62,4 @@
       	(t
 			x)))))
 
-;(%set-atom-fun *DOTEXPAND-HOOK* #'dot-expand)
+(%set-atom-fun *DOTEXPAND-HOOK* #'dot-expand)
