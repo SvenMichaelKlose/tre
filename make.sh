@@ -40,6 +40,27 @@ BINDIR="/usr/local/bin/"
 
 echo "libc is at '$LIBC_PATH'."
 
+rm -f interpreter/machine-info.h
+echo -n "#define TRE_KERNEL_IDENT \"" >> interpreter/machine-info.h
+uname -i | tr "\n" "\"" >> interpreter/machine-info.h
+echo >> interpreter/machine-info.h
+
+echo -n "#define TRE_SYSTEM_NAME \"" >> interpreter/machine-info.h
+uname -n | tr "\n" "\"" >> interpreter/machine-info.h
+echo >> interpreter/machine-info.h
+
+echo -n "#define TRE_CPU_TYPE \"" >> interpreter/machine-info.h
+uname -p | tr "\n" "\"" >> interpreter/machine-info.h
+echo >> interpreter/machine-info.h
+
+echo -n "#define TRE_OS_RELEASE \"" >> interpreter/machine-info.h
+uname -r | tr "\n" "\"" >> interpreter/machine-info.h
+echo >> interpreter/machine-info.h
+
+echo -n "#define TRE_OS_VERSION \"" >> interpreter/machine-info.h
+uname -v | tr "\n" "\"" >> interpreter/machine-info.h
+echo >> interpreter/machine-info.h
+
 basic_clean ()
 {
 	echo "Cleaning..."
@@ -98,7 +119,7 @@ build)
 	;;
 crunsh)
 	CFLAGS="$CFLAGS -DCRUNSHED -Iinterpreter"
-	COPTS="$COPTS -O2 -fomit-frame-pointer -ffast-math -lm"
+	COPTS="$COPTS -O3 -fomit-frame-pointer -ffast-math -fwhole-program -lm"
 	basic_clean
 	crunsh_compile
 	install_it

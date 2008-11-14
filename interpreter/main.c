@@ -31,6 +31,8 @@
 #include "dot.h"
 #include "quasiquote.h"
 
+#include "machine-info.h" /* Temporary created by makefile. */
+
 #include <setjmp.h>
 #include <stdlib.h>
 #include <string.h>
@@ -185,6 +187,12 @@ tre_init (void)
     tredot_init ();
     trespecial_init ();
     treimage_init ();
+
+    MAKE_VAR("*KERNEL-IDENT*", trestring_get (TRE_KERNEL_IDENT));
+    MAKE_VAR("*SYSTEM-NAME*", trestring_get (TRE_SYSTEM_NAME));
+    MAKE_VAR("*CPU-TYPE*", trestring_get (TRE_CPU_TYPE));
+    MAKE_VAR("*OS-RELEASE*", trestring_get (TRE_OS_RELEASE));
+    MAKE_VAR("*OS-VERSION*", trestring_get (TRE_OS_VERSION));
 
     MAKE_VAR("*ENVIRONMENT-PATH*", trestring_get (TRE_ENVIRONMENT));
 
