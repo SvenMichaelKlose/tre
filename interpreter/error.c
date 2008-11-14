@@ -16,7 +16,7 @@
 #include "debug.h"
 #include "thread.h"
 #include "argument.h"
-#include "string.h"
+#include "string2.h"
 #include "macro.h"
 #include "xxx.h"
 

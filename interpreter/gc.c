@@ -17,7 +17,7 @@
 #include "array.h"
 #include "env.h"
 #include "diag.h"
-#include "string.h"
+#include "string2.h"
 #include "alloc.h"
 #include "symbol.h"
 #include "xxx.h"

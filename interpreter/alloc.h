@@ -8,7 +8,7 @@
 #ifndef TRE_ALLOC_H
 #define TRE_ALLOC_H
 
-#include "ctype.h"
+#include "ctype2.h"
 
 #include <sys/types.h>
 

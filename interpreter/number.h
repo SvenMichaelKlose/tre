@@ -25,6 +25,7 @@ struct tre_number {
 #define TRENUMBER_TYPE(ptr) \
 	((TRE_NUMBER((ulong) TREATOM_DETAIL(ptr)))->type)
 
+extern void * tre_numbers_free;
 extern struct tre_number tre_numbers[NUM_NUMBERS];
 
 /* Check if string contains a number. */

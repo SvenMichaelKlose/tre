@@ -11,7 +11,7 @@
 #include "io.h"
 #include "read.h"
 #include "error.h"
-#include "string.h"
+#include "string2.h"
 #include "gc.h"
 #include "thread.h"
 #include "number.h"

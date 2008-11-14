@@ -18,7 +18,7 @@
 #include "util.h"
 #include "eval.h"
 #include "io.h"
-#include "string.h"
+#include "string2.h"
 #include "thread.h"
 #include "diag.h"
 

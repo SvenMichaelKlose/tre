@@ -18,6 +18,7 @@ extern void tresymbolpage_set_package (ulong root_index, treptr package);
 extern char *tresymbol_add (char *);
 extern void tresymbol_free (char *);
 
+extern void tresymbol_clear (void);
 extern void tresymbol_init (void);
 
 #endif

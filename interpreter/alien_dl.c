@@ -12,7 +12,7 @@
 #include "number.h"
 #include "alien_dl.h"
 #include "list.h"
-#include "string.h"
+#include "string2.h"
 
 #include "xxx.h"
 

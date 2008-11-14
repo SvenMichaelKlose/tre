@@ -1,5 +1,5 @@
 /*
- * nix operating system project tre interpreter
+ * TRE interpreter
  * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Symbol database.
@@ -79,7 +79,7 @@ tresymbolpage_add_rec (struct tresymbol_page * p, char * name, treptr atom, char
 	p->num_entries++; /* This node is occupied by one more symbol. */
 
 	/* Continue with child node. */
-	if (*np) {
+	if (* np) {
 		/* Allocate new node. */
 		if (p->entries[x] == NULL)
 			p->entries[x] = tresymbolpage_alloc ();
@@ -200,6 +200,23 @@ tresymbol_free (char *symbol)
 
 	trealloc_free (symbol);
     num_symbols--;
+}
+
+void
+tresymbol_clear ()
+{
+	ulong  i;
+	char   * symbol;
+
+    DOTIMES(i, NUM_ATOMS) {
+		if (tre_atoms[i].type == TRETYPE_UNUSED)
+			continue;
+		symbol = tre_atoms[i].name;
+		if (! symbol)
+			continue;
+		tresymbolpage_remove (i);
+		tresymbol_free (symbol);
+	}
 }
 
 void

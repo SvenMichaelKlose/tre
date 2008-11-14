@@ -21,6 +21,7 @@ struct tre_atom {
     void 	*detail;
 };
 
+extern void * tre_atoms_free;
 extern struct tre_atom tre_atoms[NUM_ATOMS];
 
 extern treptr treptr_universe;

@@ -13,7 +13,7 @@
 #include "eval.h"
 #include "sequence.h"
 #include "thread.h"
-#include "string.h"
+#include "string2.h"
 #include "alloc.h"
 
 #include <stdlib.h>

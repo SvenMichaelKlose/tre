@@ -13,7 +13,7 @@
 #include "error.h"
 #include "argument.h"
 #include "builtin_atom.h"
-#include "string.h"
+#include "string2.h"
 #include "thread.h"
 
 /*

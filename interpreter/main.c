@@ -24,7 +24,7 @@
 #include "argument.h"
 #include "alloc.h"
 #include "symbol.h"
-#include "string.h"
+#include "string2.h"
 #include "image.h"
 #include "util.h"
 #include "diag.h"

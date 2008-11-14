@@ -10,7 +10,7 @@
 #include "io.h"
 #include "io_std.h"
 #include "error.h"
-#include "string.h"
+#include "string2.h"
 #include "alloc.h"
 
 #include <stdlib.h>

@@ -14,7 +14,7 @@
 #include "util.h"
 #include "argument.h"
 #include "stream.h"
-#include "string.h"
+#include "string2.h"
 #include "builtin_stream.h"
 
 #include <stdlib.h>

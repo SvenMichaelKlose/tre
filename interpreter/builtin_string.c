@@ -8,7 +8,7 @@
 #include "config.h"
 #include "atom.h"
 #include "list.h"
-#include "string.h"
+#include "string2.h"
 #include "number.h"
 #include "error.h"
 #include "eval.h"

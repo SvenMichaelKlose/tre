@@ -8,7 +8,7 @@
 #ifndef TRE_PTR_H
 #define TRE_PTR_H
 
-#include "ctype.h"
+#include "ctype2.h"
 #include "config.h"
 #include "type.h"
 

@@ -14,7 +14,7 @@
 #include "util.h"
 #include "argument.h"
 #include "stream.h"
-#include "string.h"
+#include "string2.h"
 
 FILE* tre_fileio_handles[TRE_FILEIO_MAX_FILES];
 

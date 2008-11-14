@@ -9,7 +9,7 @@
 #include "atom.h"
 #include "list.h"
 #include "number.h"
-#include "string.h"
+#include "string2.h"
 #include "eval.h"
 #include "error.h"
 #include "print.h"
@@ -17,7 +17,6 @@
 #include "sequence.h"
 #include "argument.h"
 #include "xxx.h"
-#include "string.h"
 #include "array.h"
 #include "diag.h"
 

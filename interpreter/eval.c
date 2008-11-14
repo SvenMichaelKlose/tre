@@ -23,7 +23,7 @@
 #include "thread.h"
 #include "env.h"
 #include "argument.h"
-#include "string.h"
+#include "string2.h"
 #include "xxx.h"
 #include "diag.h"
 
