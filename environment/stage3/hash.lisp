@@ -32,13 +32,14 @@
       (setf k (+ k (elt str i))))))
 
 (defun %make-hash-index (h key)
-  (if (numberp key)
-      (%make-hash-index-num h key)
-      (if (stringp key)
-          (%make-hash-index-string h key)
-    	  (if (symbolp key)
-              (%make-hash-index-string h (symbol-name key))
-              (%error "key type unsupported")))))
+  (cond
+    ((numberp key)
+       (%make-hash-index-num h key))
+    ((stringp key)
+       (%make-hash-index-string h key))
+    ((< 0 (length (symbol-name key)))
+       (%make-hash-index-string h (symbol-name key)))
+    (t (%error "key type unsupported"))))
 
 ; Get bucket list and its index.
 (defmacro %with-hash-bucket (bucket idx h key &rest body)
