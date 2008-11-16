@@ -301,7 +301,7 @@ trebuiltin_malloc_exec (treptr args)
 	len = trearg_typed (1, TRETYPE_NUMBER, len, "size");
 
 	ret = mmap (NULL, ((size_t) TRENUMBER_VAL(len)),
-				PROT_READ | PROT_WRITE | PROT_EXEC, MAP_ANON, -1, 0);
+				PROT_READ | PROT_WRITE | PROT_EXEC, MAP_PRIVATE, -1, 0);
 
 	return treatom_number_get ((double) (long) ret, TRENUMTYPE_INTEGER);
 }
