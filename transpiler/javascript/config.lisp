@@ -15,7 +15,7 @@
 						  new %new ; environment/oo/ducktype.lisp
 						 )
 	:thisify-classes nil
-	:obfuscate? (not *assert*)
+	:obfuscate? nil
 	:obfuscations (make-hash-table)
 
 	:obfuscation-exceptions
