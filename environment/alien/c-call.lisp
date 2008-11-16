@@ -25,14 +25,18 @@
 (defun c-call-epilogue (target num-args)
   (funcall (c-call-target-epilogue target) num-args))
 
-(defun c-call-do (cc target)
+(defun c-call-do (cc)
   "Execute C-CALL. See also MAKE-C-CALL and C-CALL-ADD-ARG."
   (with (args (c-call-args cc)
-		 code (%malloc-exec 1024) ; XXX
-		 p code)
+		 code (%malloc-exec 65536) ; XXX
+		 p code
+		 target (make-alien-target))
 
-	(do ((i args (cdr i))
-		 (argnum 0 (1+ argnum)))
+	(when (= -1 code)
+	  (error "couldn't allocate trampoline"))
+
+	(do ((i (reverse args) (cdr i))
+		 (argnum (1- (length args)) (1- argnum)))
 		((not i))
 	  (setf p (c-call-put-arg target p (car i) argnum)))
 
@@ -40,4 +44,4 @@
                          (c-call-epilogue target (length args))))
 
 	(alien-call code)
-	(%free-exec code 1024)))
+	(%free-exec code 65536))) ; XXX

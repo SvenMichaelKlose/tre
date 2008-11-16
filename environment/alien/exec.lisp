@@ -18,7 +18,7 @@ Returns 0 to the new process."
 Return a status integer. See UNIX man page wait (2)."
   (with (libc	(alien-dlopen *LIBC-PATH*)
 	     fun	(alien-dlsym libc "wait")
-		 status (%malloc 4))
+		 status (%malloc *POINTER-SIZE*))
 
     (with (cc (make-c-call :funptr fun))
       (c-call-add-arg cc status)
@@ -29,21 +29,22 @@ Return a status integer. See UNIX man page wait (2)."
 	  (%get-dword status)
 	  (%free status))))
 
-(defun exec (path (&rest args) &optional (environment nil))
+(defun execve (path (&rest args) &optional (environment nil))
   "Overlays current process with a new program at 'path'.
 'args' is a list of argument strings.
 'environment' may be an associative list of variable/value string pairs.
 Returns NIL."
   (with (libc		(alien-dlopen *LIBC-PATH*)
          cexecve	(alien-dlsym libc "execve")
+         cperror	(alien-dlsym libc "perror")
 		 cpath		(%malloc-string path :null-terminated t)
 	     args		(cons path args)
 		 argptrs	(mapcar #'((x)
 								 (%malloc-string x :null-terminated t))
 						    args)
-		 argv		(%malloc (* 4 (1+ (length args))))
+		 argv		(%malloc (* *POINTER-SIZE* (1+ (length args))))
 		 environv   (if environment
-		 			    (%malloc (* 4 (1+ (length environment))))
+		 			    (%malloc (* *POINTER-SIZE* (1+ (length environment))))
 						0)
 		 envptrs	(when environment
 					  (mapcar #'((x)
@@ -74,3 +75,7 @@ Returns NIL."
 
     (alien-dlclose libc)
 	nil))
+
+; XXX
+;(execve "/usr/bin/mplayer" ("/usr/bin/mplayer", "-quiet", "test.mp3"))
+;(wait)

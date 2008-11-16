@@ -7,6 +7,18 @@
 (defun big-endianess? (&optional (endianess *endianess*))
   (eq endianess 'big))
 
+(defun value-bytes (val width)
+  (with (lst nil)
+	(dotimes (x width lst)
+	  (setf lst (append lst (list (mod val 256))))
+	  (setf val (>> val 8)))))
+
+(defun dword-bytes (val)
+  (value-bytes val 4))
+
+(defun qword-bytes (val)
+  (value-bytes val 9))
+
 (defun %put-char (ptr val)
   "Write byte to address."
   (%%set ptr val)

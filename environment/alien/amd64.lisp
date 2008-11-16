@@ -53,7 +53,7 @@
       (%put-list (%put-list p (x86-push-const-d val))
 			     (x86-push-const-d (>> val 32)))))
 
-(defun make-c-call-target-amd64 ()
+(defun make-alien-target ()
   (make-c-call-target
     :put-arg    #'amd64-c-call-put-arg
     :call       #'amd64-c-call
