@@ -6,7 +6,6 @@
 (env-load "editor/misc.lisp")
 (env-load "editor/ansi.lisp")
 (env-load "editor/config.lisp")
-(env-load "editor/math.lisp")
 (env-load "editor/terminal.lisp")
 (env-load "editor/text.lisp")
 (env-load "editor/state.lisp")
