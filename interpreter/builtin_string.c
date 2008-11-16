@@ -18,7 +18,6 @@
 #include "gc.h"
 #include "builtin_string.h"
 
-#define _GNU_SOURCE
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

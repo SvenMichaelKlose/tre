@@ -13,7 +13,6 @@
 #include "symbol.h"
 #include "alloc.h"
 
-#define _GNU_SOURCE
 #include <string.h>
 #include <strings.h>
 #include <stdlib.h>

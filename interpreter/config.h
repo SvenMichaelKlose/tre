@@ -57,7 +57,7 @@ typedef int bool;
 #endif
 
 #ifndef NUM_LISTNODES
-#define NUM_LISTNODES	(512 * 1024)
+#define NUM_LISTNODES	(256 * 1024)
 #endif
 
 #ifndef NULL

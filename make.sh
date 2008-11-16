@@ -1,5 +1,8 @@
 #!/bin/sh
 
+echo "TRE programming language"
+echo "Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>"
+
 ARGS="$2 $3 $4 $5 $6 $7 $8 $9"
 
 BOOT_IMAGE=`echo ~/.tre.image`
@@ -30,36 +33,27 @@ FILES="alien_dl.c alloc.c argument.c array.c atom.c
 CC=cc
 LD=cc
 
-LIBC_PATH="/lib/libc.so.7" #`find /lib -name libc.so\*`
+echo
+LIBC_PATH=`ls /lib/libc.so.*`
+KERNEL_IDENT=`uname -i`
+SYSTEM_NAME=`uname -n`
+CPU_TYPE=`uname -m`
+OS_RELEASE=`uname -r`
+OS_VERSION="unknown" #`uname -v`
+BUILD_MACHINE_INFO="-DBIG_ENDIAN -DLIBC_PATH=\"$LIBC_PATH\" -DTRE_KERNEL_IDENT=\"$KERNEL_IDENT\" -DTRE_SYSTEM_NAME=\"$SYSTEM_NAME\" -DTRE_CPU_TYPE=\"$CPU_TYPE\" -DTRE_OS_RELEASE=\"$OS_RELEASE\" -DTRE_OS_VERSION=\"$OS_VERSION\""
 
-CFLAGS="-pipe -ansi -Wall -DBIG_ENDIAN -DLIBC_PATH=\"$LIBC_PATH\" -DTRE_BOOT_IMAGE=\"$BOOT_IMAGE\" $ARGS"
+GNU_LIBC_FLAGS="-D_GNU_SOURCE -D_BSD_SOURCE -D_SVID_SOURCE"
+C_DIALECT_FLAGS="-ansi -Wall -Werror"
+
+CFLAGS="-pipe $C_DIALECT_FLAGS $GNU_LIBC_FLAGS $BUILD_MACHINE_INFO -DTRE_BOOT_IMAGE=\"$BOOT_IMAGE\" $ARGS"
 
 CRUNSHTMP="tmp.c"
 TRE="tre"
 BINDIR="/usr/local/bin/"
 
-echo "libc is at '$LIBC_PATH'."
-
-rm -f interpreter/machine-info.h
-echo -n "#define TRE_KERNEL_IDENT \"" >> interpreter/machine-info.h
-uname -i | tr "\n" "\"" >> interpreter/machine-info.h
-echo >> interpreter/machine-info.h
-
-echo -n "#define TRE_SYSTEM_NAME \"" >> interpreter/machine-info.h
-uname -n | tr "\n" "\"" >> interpreter/machine-info.h
-echo >> interpreter/machine-info.h
-
-echo -n "#define TRE_CPU_TYPE \"" >> interpreter/machine-info.h
-uname -p | tr "\n" "\"" >> interpreter/machine-info.h
-echo >> interpreter/machine-info.h
-
-echo -n "#define TRE_OS_RELEASE \"" >> interpreter/machine-info.h
-uname -r | tr "\n" "\"" >> interpreter/machine-info.h
-echo >> interpreter/machine-info.h
-
-echo -n "#define TRE_OS_VERSION \"" >> interpreter/machine-info.h
-uname -v | tr "\n" "\"" >> interpreter/machine-info.h
-echo >> interpreter/machine-info.h
+echo "libc is '$LIBC_PATH'."
+echo "Compiler: $CC"
+echo "Compiler flags:  $CFLAGS $COPTS"
 
 basic_clean ()
 {
@@ -72,7 +66,7 @@ link ()
 {
 	echo "Linking..."
 	OBJS=`find obj -name \*.o`
-	$LD -lm -o tre $OBJS
+	$LD -lm -ldl -o tre $OBJS
 }
 
 standard_compile ()
@@ -87,12 +81,13 @@ standard_compile ()
 crunsh_compile ()
 {
 	rm -f $CRUNSHTMP
+	echo "Compiling crunshed for best optimisation..."
+	echo "Concatenating sources..."
 	for f in $FILES; do
-		echo "Collecting $f"
 		cat interpreter/$f >>$CRUNSHTMP
 	done
-	echo "Compiling crunshed for best optimisation..."
-	$CC $CFLAGS $COPTS -o $TRE $CRUNSHTMP
+	echo "Compiling..."
+	$CC -ldl $CFLAGS $COPTS -o $TRE $CRUNSHTMP
 	rm $CRUNSHTMP
 }
 
@@ -118,7 +113,7 @@ build)
 	install_it
 	;;
 crunsh)
-	CFLAGS="$CFLAGS -DCRUNSHED -Iinterpreter"
+	CFLAGS="$CFLAGS -DTRE_COMPILED_CRUNSHED -Iinterpreter"
 	COPTS="$COPTS -O3 -fomit-frame-pointer -ffast-math -fwhole-program -lm"
 	basic_clean
 	crunsh_compile

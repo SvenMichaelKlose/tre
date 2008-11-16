@@ -31,8 +31,6 @@
 #include "dot.h"
 #include "quasiquote.h"
 
-#include "machine-info.h" /* Temporary created by makefile. */
-
 #include <setjmp.h>
 #include <stdlib.h>
 #include <string.h>
@@ -199,6 +197,7 @@ tre_init (void)
 	MAKE_VAR("*BOOT-IMAGE*", trestring_get (TRE_BOOT_IMAGE));
 	MAKE_VAR("*LIBC-PATH*", trestring_get (LIBC_PATH));
 	MAKE_VAR("*ENDIANESS*", treatom_alloc (TRE_ENDIANESS_STRING, TRECONTEXT_PACKAGE(), TRETYPE_VARIABLE, treptr_invalid));
+	MAKE_VAR("*POINTER-SIZE*", treatom_number_get (sizeof (void *), TRENUMTYPE_INTEGER));
 
 	MAKE_HOOK_VAR(tremain_history, "_");
 	MAKE_HOOK_VAR(tremain_history_2, "__");

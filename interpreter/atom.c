@@ -28,7 +28,6 @@
 #include "util.h"
 #include "xxx.h"
 
-#define _GNU_SOURCE
 #include <string.h>
 #include <strings.h>
 #include <stdlib.h>

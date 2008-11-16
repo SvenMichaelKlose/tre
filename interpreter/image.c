@@ -28,12 +28,11 @@
 #include "image.h"
 #include "alloc.h"
 
-#define _GNU_SOURCE
 #include <string.h>
 #include <strings.h>
 #include <stdlib.h>
 
-#ifdef CRUNSHED
+#ifdef TRE_COMPILED_CRUNSHED
 #define TRE_IMAGE_FORMAT_VERSION    -1
 #else
 #define TRE_IMAGE_FORMAT_VERSION    1
