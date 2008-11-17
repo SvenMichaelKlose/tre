@@ -94,21 +94,3 @@ trealien_builtin_call (treptr args)
     ret = (* fun) ();
     return treatom_number_get ((double) ret, TRENUMTYPE_INTEGER);
 }
-
-/* Call C function without arguments. */
-treptr
-trealien_builtin_call_1 (treptr args)
-{
-    long    ret;
-    treptr  ptr;
-    treptr  arg;
-    long    (* fun) (long);
-
-    trearg_get2 (&ptr, &arg, args);
-    while (TREPTR_IS_NUMBER(ptr) == FALSE)
-        ptr = treerror (ptr, "number expected");
-
-    fun = (void *) (long) TRENUMBER_VAL(ptr);
-    ret = (* fun) (arg);
-	return treatom_number_get ((double) ret, TRENUMTYPE_INTEGER);
-}
