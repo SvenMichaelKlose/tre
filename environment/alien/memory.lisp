@@ -17,7 +17,17 @@
   (value-bytes val 4))
 
 (defun qword-bytes (val)
-  (value-bytes val 9))
+  (value-bytes val 8))
+
+(defun print-hex-digit (x)
+  (princ
+	(code-char (if (< x 10)
+	  (+ #\0 x)
+	  (+ #\A -10 x)))))
+
+(defun print-hexbyte (x)
+  (print-hex-digit (>> x 4))
+  (print-hex-digit (mod x 16)))
 
 (defun %put-char (ptr val)
   "Write byte to address."
@@ -69,6 +79,15 @@
   (with (n (%put-list ptr (mapcan #'dword-bytes x)))
 	(if null-terminated
 		(%put-dword n 0)
+		n)))
+
+(defun %put-pointer-list (ptr x &key (null-terminated nil))
+  "Write list of dwords to memory. Returns following address."
+  (with (n (%put-list ptr (mapcan #'((y)
+									   (value-bytes y *pointer-size*))
+								  x)))
+	(if null-terminated
+		(%put-list n (value-bytes 0 *pointer-size*))
 		n)))
 
 (defun %put-string (ptr str &key (null-terminated nil))

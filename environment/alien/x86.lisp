@@ -33,7 +33,7 @@
   (append (x86-add-esp-const (* 4 num-args)) 
     	  (x86-ret)))
 
-(defun make-alien-target ()
+(defun make-c-call-target-x86 ()
   (make-c-call-target
 	:put-arg	#'x86-c-call-put-arg
 	:call		#'x86-c-call

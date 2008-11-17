@@ -36,7 +36,8 @@
           (x86-call-eax)))
 
 (defun amd64-c-call-epilogue (num-args)
-  (append (amd64-add-rsp-const-d (* 8 num-args))
+  (append (when (< 6 num-args)
+		    (amd64-add-rsp-const-d (* 8 (- num-args 6))))
           (x86-ret)))
 
 ;;;; CONFIGURATION
@@ -44,16 +45,17 @@
 (defun amd64-arg-regval (argnum)
   (amd64-regval (elt *AMD64-REG-ARGUMENTS* argnum)))
 
+; XXX stack arguments untested
 (defun amd64-c-call-put-arg (p val argnum)
-  (if (< argnum 7)
+  (if (< argnum 6)
 	  (%put-list p
 				 (if (< argnum 4)
 		  			 (amd64-mov-reg-const-q (amd64-arg-regval argnum) val)
 		  			 (amd64-mov-reg-const-q (+ argnum 4) val)))
-      (%put-list (%put-list p (x86-push-const-d val))
-			     (x86-push-const-d (>> val 32)))))
+      (%put-list (%put-list p (x86-push-const-dword val))
+			     (x86-push-const-dword (>> val 32)))))
 
-(defun make-alien-target ()
+(defun make-c-call-target-amd64 ()
   (make-c-call-target
     :put-arg    #'amd64-c-call-put-arg
     :call       #'amd64-c-call

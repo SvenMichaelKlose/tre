@@ -31,14 +31,14 @@ Return a status integer. See UNIX man page wait (2)."
 
 (defun execve (path (&rest args) &optional (environment nil))
   "Overlays current process with a new program at 'path'.
-'args' is a list of argument strings.
+'args' is a list of argument strings. Keep in mind that the first argument
+entry is usually the path to the executable.
 'environment' may be an associative list of variable/value string pairs.
 Returns NIL."
   (with (libc		(alien-dlopen *LIBC-PATH*)
          cexecve	(alien-dlsym libc "execve")
          cperror	(alien-dlsym libc "perror")
 		 cpath		(%malloc-string path :null-terminated t)
-	     args		(cons path args)
 		 argptrs	(mapcar #'((x)
 								 (%malloc-string x :null-terminated t))
 						    args)
@@ -52,9 +52,9 @@ Returns NIL."
 												   :null-terminated t))
 						      environment)))
 
-	(%put-dword-list argv argptrs :null-terminated t)
+	(%put-pointer-list argv argptrs :null-terminated t)
 	(when environment
-	  (%put-dword-list environv envptrs :null-terminated t))
+	  (%put-pointer-list environv envptrs :null-terminated t))
 
 	(when (= 0 (fork))
       (with (cc (make-c-call :funptr cexecve))
@@ -78,4 +78,5 @@ Returns NIL."
 
 ; XXX
 ;(execve "/usr/bin/mplayer" ("/usr/bin/mplayer", "-quiet", "test.mp3"))
+;(execve "/bin/mkdir" ("/bin/mkdir", "new_dir"))
 ;(wait)

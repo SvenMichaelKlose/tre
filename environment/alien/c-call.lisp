@@ -30,7 +30,13 @@
   (with (args (c-call-args cc)
 		 code (%malloc-exec 65536) ; XXX
 		 p code
-		 target (make-alien-target))
+		 target (cond
+				  ((or (string= *cpu-type* "i386")
+					   (string= *cpu-type* "i686"))
+				     (make-c-call-target-x86))
+				  ((string= *cpu-type* "amd64")
+				     (make-c-call-target-amd64))
+				  (t (error "unsupported *CPU-TYPE*"))))
 
 	(when (= -1 code)
 	  (error "couldn't allocate trampoline"))

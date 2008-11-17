@@ -82,10 +82,12 @@ crunsh_compile ()
 {
 	rm -f $CRUNSHTMP
 	echo "Compiling crunshed for best optimisation..."
-	echo "Concatenating sources..."
+	echo -n "Concatenating sources:"
 	for f in $FILES; do
+		echo -n " $f"
 		cat interpreter/$f >>$CRUNSHTMP
 	done
+	echo
 	echo "Compiling..."
 	$CC -ldl $CFLAGS $COPTS -o $TRE $CRUNSHTMP
 	rm $CRUNSHTMP
