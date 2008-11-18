@@ -9,6 +9,7 @@
 (env-load "stage4/dollar.lisp")
 (env-load "stage4/enqueue-many.lisp")
 (env-load "stage4/find-tree.lisp")
+(env-load "stage4/force-list.lisp")
 (env-load "stage4/mapatree.lisp")
 (env-load "stage4/maptree.lisp")
 (env-load "stage4/repeat.lisp")
