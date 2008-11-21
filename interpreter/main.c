@@ -231,8 +231,31 @@ tremain_help (void)
             " -h  Print this help message.\n"
             " -i  Load image file before source-file.\n"
             " -n  Make new default image.\n"
+            " -H  Print hard info and exit.\n"
             "\n"
             "See MANUAL for details.\n");
+}
+
+void
+tremain_print_hardinfo (void)
+{
+	printf (TRE_INFO TRE_COPYRIGHT);
+	printf ("Max. cells: %d\n", NUM_LISTNODES);
+	printf ("Max. atoms: %d\n", NUM_ATOMS);
+	printf ("Max. numbers: %d\n", NUM_NUMBERS);
+	printf ("Max. symbol length: %d characters\n", TRE_MAX_SYMLEN);
+	printf ("Max. string length: %d characters\n", TRE_MAX_STRINGLEN);
+	printf ("Max. packages: %d\n", MAX_PACKAGES);
+	printf ("Cells start: %8lX\n", (ulong) &tre_lists);
+	printf ("Cells end:   %8lX\n", (ulong) &tre_lists[NUM_LISTNODES]);
+	printf ("Atoms start: %8lX\n", (ulong) &tre_atoms);
+	printf ("Atoms end:   %8lX\n", (ulong) &tre_atoms[NUM_ATOMS]);
+	printf ("Nums start:  %8lX\n", (ulong) &tre_numbers);
+	printf ("Nums end:    %8lX\n", (ulong) &tre_numbers[NUM_NUMBERS]);
+
+	printf ("Max. files: %d\n", TRE_FILEIO_MAX_FILES);
+	printf ("Max. nested files (interpreter): %d\n", TRE_MAX_NESTED_FILES);
+	exit (0);
 }
 
 void
@@ -253,6 +276,8 @@ tremain_get_args (int argc, char *argv[])
 			tremain_help ();
             exit (0);
         }
+        if (!strcmp ("-H", v))
+			tremain_print_hardinfo ();
         DOTIMES(i, sizeof tremain_args / sizeof (struct tremain_arg)) {
             if (!strcmp (tremain_args[i].option, v)) {
                 * tremain_args[i].value = argv[++p];
