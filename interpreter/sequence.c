@@ -24,21 +24,37 @@
 #include <stdio.h>
 #include <math.h>
 
+struct tre_sequence_type * tre_sequence_types [] = {
+	&trelist_seqtype,	/* #define TRETYPE_CONS        0 */
+	NULL,	/* #define TRETYPE_VARIABLE    1 */
+	NULL,	/* #define TRETYPE_NUMBER      2 */
+	&trestring_seqtype,	/* #define TRETYPE_STRING      3 */
+	&trearray_seqtype,	/* #define TRETYPE_ARRAY       4 */
+	NULL,	/* #define TRETYPE_BUILTIN     5 */
+	NULL,	/* #define TRETYPE_SPECIAL     6 */
+	NULL,	/* #define TRETYPE_MACRO       7 */
+	NULL,	/* #define TRETYPE_FUNCTION    8 */
+	NULL,	/* #define TRETYPE_USERSPECIAL 9 */
+	NULL,	/* #define TRETYPE_PACKAGE     10 */
+};
+	
 struct tre_sequence_type *
 tresequence_get_type (treptr seq)
 {
-    switch (TREPTR_TYPE(seq)) {
-		case TRETYPE_STRING:
-	    	return &trestring_seqtype;
-		case TRETYPE_ARRAY:
-	    	return &trearray_seqtype;
-		case TRETYPE_CONS:
-	    	return &trelist_seqtype;
-		default:
-			treerror_norecover (seq, "not a sequence");
-    }
+	unsigned type = TREPTR_TYPE(seq);
+	struct tre_sequence_type * seqtype;
 
-    return NULL;
+#ifdef TRE_DIAGNOSTICS
+	if (type > TRETYPE_MAXTYPE)
+		treerror_internal (treptr_nil,
+						   "tresequence_get_type: type out of range");
+#endif
+
+	seqtype = tre_sequence_types[type];
+	if (seqtype == NULL)
+		treerror_norecover (seq, "not a sequence");
+	
+    return seqtype;
 }
 
 /*
