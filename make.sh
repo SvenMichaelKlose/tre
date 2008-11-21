@@ -35,6 +35,7 @@ LD=cc
 
 echo
 LIBC_PATH=`ls /lib/libc.so.*`
+LIBDL_PATH=`ls /lib/libdl.so.*`
 KERNEL_IDENT=`uname -i`
 SYSTEM_NAME=`uname -n`
 CPU_TYPE=`uname -m`
@@ -47,13 +48,20 @@ C_DIALECT_FLAGS="-ansi -Wall -Werror"
 
 CFLAGS="-pipe $C_DIALECT_FLAGS $GNU_LIBC_FLAGS $BUILD_MACHINE_INFO -DTRE_BOOT_IMAGE=\"$BOOT_IMAGE\" $ARGS"
 
+LIBFLAGS="-lm"
+
+if [ -f /lib/libdl.so* ]; then
+	LIBFLAGS="$LIBFLAGS -ldl";
+fi
+
 CRUNSHTMP="tmp.c"
 TRE="tre"
 BINDIR="/usr/local/bin/"
 
 echo "libc is '$LIBC_PATH'."
 echo "Compiler: $CC"
-echo "Compiler flags:  $CFLAGS $COPTS"
+echo "Compiler flags: $CFLAGS $COPTS"
+echo "Library flags: $LIBFLAGS"
 
 basic_clean ()
 {
@@ -66,7 +74,7 @@ link ()
 {
 	echo "Linking..."
 	OBJS=`find obj -name \*.o`
-	$LD -lm -ldl -o tre $OBJS
+	$LD $LIBFLAGS -o tre $OBJS
 }
 
 standard_compile ()
@@ -89,7 +97,7 @@ crunsh_compile ()
 	done
 	echo
 	echo "Compiling..."
-	$CC -ldl $CFLAGS $COPTS -o $TRE $CRUNSHTMP
+	$CC $LIBFLAGS $CFLAGS $COPTS -o $TRE $CRUNSHTMP
 	rm $CRUNSHTMP
 }
 
