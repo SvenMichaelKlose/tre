@@ -10,6 +10,7 @@
 
 /* NOTE: You must change %TYPE-ID callers with these. */
 /* NOTE: Keep in sync with error.c:treerror_typename(). */
+/* NOTE: Keep in sync with sequence.c:tre_sequence_types[]. */
 
 #define TRETYPE_CONS		0
 #define TRETYPE_VARIABLE	1
