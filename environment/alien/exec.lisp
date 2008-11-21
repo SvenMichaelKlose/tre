@@ -29,7 +29,7 @@ Return a status integer. See UNIX man page wait (2)."
 	  (%get-dword status)
 	  (%free status))))
 
-(defun execve (path (&rest args) &optional (environment nil))
+(defun execve (path args &optional (environment nil))
   "Overlays current process with a new program at 'path'.
 'args' is a list of argument strings. Keep in mind that the first argument
 entry is usually the path to the executable.
@@ -77,6 +77,6 @@ Returns NIL."
 	nil))
 
 ; XXX
-;(execve "/usr/bin/mplayer" ("/usr/bin/mplayer", "-quiet", "test.mp3"))
-;(execve "/bin/mkdir" ("/bin/mkdir", "new_dir"))
+;(execve "/usr/bin/mplayer" `("/usr/bin/mplayer" "-quiet" "test.mp3"))
+;(execve "/bin/mkdir" `("/bin/mkdir" "new_dir"))
 ;(wait)
