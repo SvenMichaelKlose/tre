@@ -10,6 +10,9 @@
 
 typedef int bool;
 
+#define KILO	1024
+#define MEGA	(1024 * 1024)
+
 #ifndef TRE_INFO
 #define TRE_INFO \
 	"TRE tree processor " TRE_VERSION " (" __DATE__ " " __TIME__ ")\n"
@@ -48,16 +51,16 @@ typedef int bool;
 #define TREDEBUG_MAX_ARGS	16
 #define TREDEBUG_MAX_BREAKPOINTS	16
 
-#ifndef NUM_NUMBERS
-#define NUM_NUMBERS	(16 * 1024)
+#ifndef NUM_ATOMS
+#define NUM_ATOMS	(256 * KILO)
 #endif
 
-#ifndef NUM_ATOMS
-#define NUM_ATOMS	(32 * 1024)
+#ifndef NUM_NUMBERS
+#define NUM_NUMBERS	NUM_ATOMS /* FIXME: bus error if less than atoms */
 #endif
 
 #ifndef NUM_LISTNODES
-#define NUM_LISTNODES	(256 * 1024)
+#define NUM_LISTNODES	(2 * MEGA)
 #endif
 
 #ifndef NULL
