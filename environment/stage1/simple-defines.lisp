@@ -29,5 +29,6 @@
 
 (%set-atom-fun defconstant
   (macro (name &optional (init nil))
-    `(setq *constants* (cons ',name *constants*)
-           ,name ,init)))
+    `(progn
+	   (defvar ,name ,init)
+	   (setq *constants* (cons ',name *constants*)))))
