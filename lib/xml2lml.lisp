@@ -11,8 +11,6 @@
 ;;; Errors.
 
 (defun xml-error (form &rest args)
-  (princ #\*)
-  (terpri)
   (if args
     (error (apply #'format t form args))
     (error (funcall #'format t form))))
@@ -52,7 +50,7 @@
 (defun xml-read-char (in)
   (when (end-of-file in)
     (xml-error-unexpected-eof in))
-  (princ (read-char in)))
+  (read-char in))
 
 (defun xml-peek-char (in)
   (when (end-of-file in)
