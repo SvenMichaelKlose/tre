@@ -103,6 +103,8 @@ crunsh_compile ()
 
 install_it ()
 {
+	echo "Initialising default environment."
+	echo | $TRE -n
 	echo "Installing $TRE to $BINDIR."
 	sudo cp $TRE $BINDIR
 }
@@ -115,6 +117,7 @@ debug)
 	link
 	install_it
 	;;
+
 build)
 	COPTS="$COPTS -O2 -fomit-frame-pointer -ffast-math"
 	basic_clean
@@ -122,6 +125,7 @@ build)
 	link
 	install_it
 	;;
+
 crunsh)
 	CFLAGS="$CFLAGS -DTRE_COMPILED_CRUNSHED -Iinterpreter"
 	COPTS="$COPTS -O3 -fomit-frame-pointer -ffast-math -fwhole-program -lm"
@@ -129,9 +133,11 @@ crunsh)
 	crunsh_compile
 	install_it
 	;;
+
 clean)
 	basic_clean
 	;;
+
 *)
 	echo "Usage: make.sh build|clean|crunsh|debug [args]"
 esac
