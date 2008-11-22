@@ -3,19 +3,16 @@
 
 ;;; Macros and functions that don't belong here.
 
-(defun queue-string (q)
-  (when (and q (queue-list q))
-    (list-string (queue-list q))))
-
 (defmacro with-queue-string-while (q pred &rest body)
   `(with-queue ,q
     (while ,pred (queue-string ,q)
       ,@body)))
 
-
 ;;; Errors.
 
 (defun xml-error (form &rest args)
+  (princ #\*)
+  (terpri)
   (if args
     (error (apply #'format t form args))
     (error (funcall #'format t form))))
@@ -127,7 +124,7 @@
         (progn
 	      (xml-read-char in)
 	      (values ident (xml-parse-unify-identifier in)))
-        (values nil ($ ident)))))
+        (values nil (make-symbol ident *keyword-package*)))))
 
 (defun xml-parse-quoted-string-r (in quot)
   (with (c (xml-read-char in))
@@ -173,9 +170,10 @@
 
 (defun xml-parse-version-tag (in)
   (xml-expect-char in #\?)
-  (while (not (= #\? (xml-read-char in))) (progn
-											(xml-expect-char in #\>)
-											(values nil ? 'inline nil))))
+  (while (not (= #\? (xml-read-char in)))
+		 (progn
+		   (xml-expect-char in #\>)
+		   (xml-parse-toplevel in))))
 
 (defun xml-parse-tag (in)
   "Read tag and return xml-node."
@@ -204,21 +202,21 @@
   "Parse block tag (until it's closed) or inline tag."
   `(,name ,@attrs ,@(xml-parse-list in ns name)))
 
-(defun xml-parse-toplevel (in)
-  "Parse top-level block tag."
+(defun xml-parse-cont-std (in)
   (xml-skip-spaces in)
-  (unless (= #\< (xml-read-char in))
-	(error "expected tag instead of text"))
-  (when (= #\? (xml-peek-char in))
-	(xml-parse-version-tag in))
-  (xml-skip-spaces in)
-  (unless (= #\< (xml-read-char in))
-	(error "expected tag instead of text"))
   (with ((ns name type attrs) (xml-parse-standard-tag in))
 	(unless (eq type 'opening)
 	  (xml-error "Opening tag expected instead of ~A." type))
 	(xml-parse-block in ns name attrs)))
 
+(defun xml-parse-toplevel (in)
+  "Parse top-level block tag."
+  (xml-skip-spaces in)
+  (unless (= #\< (xml-read-char in))
+	(error "expected tag instead of text"))
+  (if (= #\? (xml-peek-char in))
+	  (xml-parse-version-tag in)
+	  (xml-parse-cont-std in)))
 
 ;;; Top-level
  
@@ -229,6 +227,3 @@
 (defun xml-parse-file (name)
   (with-open-file in (open name :direction input)
     (xml-parse in)))
-
-(defun xml-test ()
-  (print (xml-parse-file "xschema.xml")))
