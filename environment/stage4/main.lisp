@@ -12,6 +12,7 @@
 (env-load "stage4/force-list.lisp")
 (env-load "stage4/mapatree.lisp")
 (env-load "stage4/maptree.lisp")
+(env-load "stage4/pad.lisp")
 (env-load "stage4/repeat.lisp")
 (env-load "stage4/repeat-while-changes.lisp")
 (env-load "stage4/split.lisp")
