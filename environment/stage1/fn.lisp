@@ -4,5 +4,5 @@
 (defmacro fn (&rest body)
   `#'((_)
 	    ,@(if (consp (car body))
-			  (list body)
-			  body)))
+			  body
+			  (list body))))
