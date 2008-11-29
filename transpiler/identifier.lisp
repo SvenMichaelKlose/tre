@@ -11,37 +11,33 @@
 
 (defun transpiler-symbol-string (tr s)
   (with (encapsulate-char
-		   #'((x)
-				(string-list (string-concat "T" (format nil "~A" (char-code x)))))
+		   (fn string-list (string-concat "T" (format nil "~A" (char-code _))))
 				
 		 convert-camel
-		   #'((x)
-				(when x
-			      (with (c (char-downcase (car x)))
-			        (if (and (in=? c #\* #\-)
-							 (cdr x))
-						(cons (char-upcase (cadr x))
-							  (convert-camel (cddr x)))
-					    (cons c (convert-camel (cdr x)))))))
+		   (fn (when _
+			     (with (c (char-downcase _.))
+			       (if (and (in=? c #\* #\-)
+							._)
+					   (cons (char-upcase (cadr _))
+							 (convert-camel (cddr _)))
+					   (cons c (convert-camel ._))))))
 
 		 convert-special2
-		   #'((x)
-				(when x
-			      (with (c (car x))
-				    (if (transpiler-special-char? tr c)
-					    (append (encapsulate-char c)
-								(convert-special2 (cdr x)))
-					    (cons c (convert-special2 (cdr x)))))))
+		   (fn (when _
+			     (with (c _.)
+				   (if (transpiler-special-char? tr c)
+					   (append (encapsulate-char c)
+							   (convert-special2 ._))
+					   (cons c (convert-special2 ._))))))
 
 		 convert-special
-		   #'((x)
-				(when x
-			      (with (c (car x))
-					; Encapsulate initial char if it's a digit.
-				    (if (digit-char-p c)
-					    (append (encapsulate-char c)
-							    (convert-special2 (cdr x)))
-						(convert-special2 x)))))
+		   (fn (when _
+			     (with (c _.)
+				   ; Encapsulate initial char if it's a digit.
+				   (if (digit-char-p c)
+					   (append (encapsulate-char c)
+							   (convert-special2 ._))
+					   (convert-special2 _)))))
 
 		 str (string s)
 	     l (length str))
@@ -54,21 +50,22 @@
             (if (and (< 2 (length str)) ; Make *GLOBAL* upcase.
 			         (= (elt str 0) #\*)
 			         (= (elt str (1- l)) #\*))
-		        (remove-if #'((x)
-						        (= x #\-))
+		        (remove-if (fn = _ #\-)
 					       (string-list (string-upcase (subseq str 1 (1- l)))))
     	        (convert-camel (string-list str))))))))
 
 (defun transpiler-to-string (tr x)
   (maptree #'((e)
 				(cond
-				  ((consp e)   (if (eq (car e) '%transpiler-string)
-								   (string-concat "\"" (cadr e) "\"")
-								   (if (in? (car e) '%transpiler-native '%no-expex)
-									   (transpiler-to-string tr (cdr e))
-									   e)))
-				  ((stringp e) e)
-				  (t		   (aif (assoc e (transpiler-symbol-translations tr))
-								   (cdr !)
-								   (string-concat (transpiler-symbol-string tr e) " ")))))
+				  ((consp e)
+					 (if (eq e. '%transpiler-string)
+					     (string-concat "\"" (cadr e) "\"")
+						 (if (in? e. '%transpiler-native '%no-expex)
+							 (transpiler-to-string tr .e)
+							 e)))
+				  ((stringp e)
+					 e)
+				  (t (aif (assoc e (transpiler-symbol-translations tr))
+						  .!
+						  (string-concat (transpiler-symbol-string tr e) " ")))))
 		   x))

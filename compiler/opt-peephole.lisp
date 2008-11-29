@@ -4,8 +4,8 @@
 ;;;;; Peephole-optimizer for expression-expanded code.
 
 (defun opt-peephole-rec (x into)
-  (cons `(%setq ,(second (car x)) ,(copy-recurse-into-lambda (third (car x)) into))
-        (funcall into (cdr x))))
+  (cons `(%setq ,(second x.) ,(copy-recurse-into-lambda (third x.) into))
+        (funcall into .x)))
 
 (defmacro opt-peephole-fun (fun &rest body)
   `(when x
@@ -67,9 +67,9 @@
 	   find-next-tag
 		 #'((x)
 			  (when x
-				(if (atom (car x))
+				(if (atom x.)
 					x
-					(find-next-tag (cdr x)))))
+					(find-next-tag .x))))
 
 	   ; Remove unreached code or code that does nothing.
 	   remove-void
@@ -81,39 +81,39 @@
 				   (remove-void d))
 
 				((and (%setq? a)
-				      (consp d) (%setq? (car d))
-					  (eq (second a) (third (car d)))
-					  (eq (second (car d)) (third a)))
+				      (consp d) (%setq? d.)
+					  (eq (second a) (third d.))
+					  (eq (second d.) (third a)))
 				   ; Remove second of (setf x y y x).
-				   (cons a (remove-void (cdr d))))
+				   (cons a (remove-void .d)))
 
 				((and (consp a)
-					  (eq 'vm-go (first a))
-					  d (atom (car d))
-					  (eq (second a) (car d)))
+					  (eq 'vm-go a.)
+					  d (atom d.)
+					  (eq (second a) d.))
 				   ; Remove jump to following tag.
 				   (remove-void d))
 
 				((and (consp a)
-					  (eq 'vm-go (first a)))
+					  (eq 'vm-go a.))
 				   ; Remove code after label until next tag.
 				   (cons a (remove-void (find-next-tag d))))
 
-				((and (%setq? a) (%setq? (car d))
+				((and (%setq? a) (%setq? d.)
 				      (expex-sym? (second a))
-					  (eq (second a) (third (car d))))
+					  (eq (second a) (third d.)))
 				   ; Shorten (%setq expexsym sth) (%setq sth expexsym).
-				   (cons `(%setq ,(second (car d)) ,(third a))
-						 (remove-void (cdr d))))))
+				   (cons `(%setq ,(second d.) ,(third a))
+						 (remove-void .d)))))
 
 	   will-be-set-again?
 		 #'((x v)
 			  (if x
-			      (or (and (%setq? (car x))
-					       (eq v (second (car x))))
-		              (unless (or (vm-jump? (car x)) ; We don't know what happens after a jump.
-				                  (find-tree (car x) v)) ; Variable will be used.
-				        (will-be-set-again? (cdr x) v)))
+			      (or (and (%setq? x.)
+					       (eq v (second x.)))
+		              (unless (or (vm-jump? x.) ; We don't know what happens after a jump.
+				                  (find-tree x. v)) ; Variable will be used.
+				        (will-be-set-again? .x v)))
 				  (and (atom v) ; End of block, EXPEX-sym not used.
 					   (expex-sym? v))))
 
@@ -133,12 +133,11 @@
 	   reduce-tags
 		 #'((x)
 			  (opt-peephole-fun #'reduce-tags
-    		    ((and a (car d)
+    		    ((and a d.
 					  (atom a)
-			 		  (atom (car d)))
+			 		  (atom d.))
 				   ; Remove first of two subsequent tags.
-				   (awhen (find-if #'((y)
-					 				    (eq a (cdr y)))
+				   (awhen (find-if (fn eq a (cdr _))
 								   removed-tags)
 					 (rplacd ! (second x)))
 				   (acons! a (second x) removed-tags)
@@ -148,7 +147,7 @@
 		 #'((x)
 			  (maptree #'((x)
 			                (aif (assoc x removed-tags)
-				                 (cdr !)
+				                 .!
 					             x))
 					   (funcall
 						 (compose #'reduce-tags

@@ -6,15 +6,15 @@
 (defvar *transpiler-obfuscation-counter* 0)
 
 (defun transpiler-obfuscated-sym ()
-  (with (digit #'((n)
-				    (if (< n 24)
-					    (+ #\a n)
-						(+ (- #\0 24) n)))
-		 rec #'((x)
-				  (unless (= 0 x)
-					(with (m (mod x 34))
-					  (cons (digit m)
-							(rec (/ (- x m) 34)))))))
+  (with (digit
+		  (fn (if (< _ 24)
+				  (+ #\a _)
+				  (+ (- #\0 24) _)))
+		 rec
+		   (fn (unless (= 0 _)
+				 (with (m (mod _ 34))
+				   (cons (digit m)
+						 (rec (/ (- _ m) 34)))))))
 	(incf *transpiler-obfuscation-counter*)
 	(make-symbol (list-string (cons #\_ (rec *transpiler-obfuscation-counter*))))))
 
@@ -26,14 +26,13 @@
 
 (defun transpiler-obfuscate (tr x)
   (if (transpiler-obfuscate? tr)
-      (maptree #'((x)
-					(when (expex-sym? x)
-					  (transpiler-obfuscate-symbol tr x))
-			        (if (or (variablep x)
-						    (functionp x))
-					    (aif (gethash x (transpiler-obfuscations tr))
-						     !
-					    	 x)
-						x))
+      (maptree (fn (when (expex-sym? _)
+					 (transpiler-obfuscate-symbol tr _))
+			       (if (or (variablep _)
+						   (functionp _))
+					   (aif (gethash _ (transpiler-obfuscations tr))
+						    !
+					    	_)
+					   _))
 		       x)
 	  x))

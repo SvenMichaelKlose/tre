@@ -90,15 +90,11 @@
 
 ;;; LAMBDA export
 
-(defun make-varblock-inits (fi fv)
-  (mapcar #'((v)
-			  `(%set-vec ,s ,(position v fv) ,(make-stackop v fi)))
-		  fv))
+(defun make-varblock-inits (s fi fv)
+  (mapcar (fn `(%set-vec ,s ,(position _ fv) ,(make-stackop _ fi))) fv))
 
-(defun make-varblock-exits (fi fv)
-  (mapcar #'((v)
-			  `(%get-vec ,s ,(make-stackop v fi) ,(position v fv)))
-		  fv))
+(defun make-varblock-exits (s fi fv)
+  (mapcar (fn `(%get-vec ,s ,(make-stackop _ fi) ,(position _ fv))) fv))
 
 (defun make-call-to-exported (name fi)
   (with (f	    (symbol-function name)
@@ -111,9 +107,9 @@
           (with (s (make-stackop g fi))
             `(vm-scope
                (%setq ,s (make-array ,(length fv)))
-			   ,@(make-varblock-inits fi fv)
+			   ,@(make-varblock-inits s fi fv)
                (%funref ,name ,s)
-			   ,@(make-varblock-exits fi fv))))
+			   ,@(make-varblock-exits s fi fv))))
 		`(%funref ,name nil))))
 
 (defun lambda-export (x fi)

@@ -17,24 +17,26 @@
 (defun argument-exp-sort (def)
   (with (; Copy &KEY definitions.
 		 rec2
-		   #'((x)
-		        (when x
-				  (if (argument-keyword? (first x))
-					  (rec x)
-					  ; Turn keyword definition into ACONS.
-					  (and (setf argument-exp-sort-key (cons (if (consp (first x))
-											   (cons (first (first x)) (second (first x))) ; with default value
-											   (list (first x))) ; without default value
-										   argument-exp-sort-key))
-						   (rec2 (cdr x))))))
+		   (fn
+		     (when _
+			   (if (argument-keyword? _.)
+				   (rec _)
+				   ; Turn keyword definition into ACONS.
+				   (and (setf argument-exp-sort-key
+							  (cons (if (consp _.)
+										(cons (first _.)
+											  (second _.)) ; with default value
+										(list _.)) ; without default value
+									argument-exp-sort-key))
+						(rec2 ._)))))
 
 		 ; Copy argument definition until &KEY.
 		 rec
-		   #'((x)
-		        (when x
-		          (if (eq '&key (first x))
-					  (rec2 (cdr x))
-					  (cons (first x) (rec (cdr x)))))))
+		   (fn
+		     (when _
+		       (if (eq '&key _.)
+				   (rec2 ._)
+				   (cons _. (rec ._))))))
 
 	(setf argument-exp-sort-key nil)
 	(values (rec def) (reverse argument-exp-sort-key))))
@@ -63,22 +65,22 @@
 					   args))
 		 get-name
 		   #'((def)
-				(if (consp (first def))
-					(first (first def))
-					(first def)))
+				(if (consp def.)
+					(first def.)
+					def.))
 
 		 get-default
 		   #'((def)
-				(when (consp (first def))
-				  (second (first def))))
+				(when (consp def.)
+				  (second def.)))
 
 		 get-value
 		   #'((def vals)
 				(if (consp vals)
-					(first vals)
-					(if (consp (first def))
-						(second (first def))
-						(first def))))
+					vals.
+					(if (consp def.)
+						(second def.)
+						def.)))
 
 		 check-val
 		   #'((vals)
@@ -90,23 +92,23 @@
 			    (when no-static
 				  (err "static argument definition after ~A" no-static))
 				(check-val vals)
-				(cons (cons (first def) (first vals))
-					  (exp-main (cdr def) (cdr vals))))
+				(cons (cons def. vals.)
+					  (exp-main .def .vals)))
 
 		 exp-optional
 		   #'((def vals)
-				(when (argument-keyword? (first def))
-				  (err "Keyword ~A after &OPTIONAL" (first def)))
+				(when (argument-keyword? def.)
+				  (err "Keyword ~A after &OPTIONAL" def.))
 				(setf no-static '&optional)
 				(cons (cons (get-name def) (get-value def vals))
 					  (if (argument-list-keyword? (second def))
-					  	  (exp-main (cdr def) (cdr vals))
-						  (when (cdr def)
-						    (exp-optional (cdr def) (cdr vals))))))
+					  	  (exp-main .def .vals)
+						  (when .def
+						    (exp-optional .def .vals)))))
 
 		 exp-key
 		   #'((def vals)
-			    (with  (w (make-symbol (symbol-name (first vals)))
+			    (with  (w (make-symbol (symbol-name vals.))
 			    		k (assoc w key-args))
 				  (if k
 			          (progn
@@ -125,19 +127,19 @@
 
          exp-optional-rest
 		   #'((def vals)
-  			      (case (first def)
-				    ('&rest		(exp-rest (cdr def) vals))
-				    ('&body		(exp-rest (cdr def) vals))
-				    ('&optional	(exp-optional (cdr def) vals))))
+  			      (case def.
+				    ('&rest		(exp-rest .def vals))
+				    ('&body		(exp-rest .def vals))
+				    ('&optional	(exp-optional .def vals))))
 
 		 exp-sub
 		   #'((def vals)
 			    (when no-static
 				  (err "static sublevel argument definition after ~A" no-static))
-				(and apply-values (not (consp (first vals)))
+				(and apply-values (not (consp vals.))
 					 (err "sublist expected for argument ~A" num))
-				(nconc (argument-expand2 fun (first def) (first vals) apply-values)
-					   (exp-main (cdr def) (cdr vals))))
+				(nconc (argument-expand2 fun def. vals. apply-values)
+					   (exp-main .def .vals)))
 
 		 exp-check-too-many
            #'((def vals)
@@ -148,16 +150,16 @@
 		 exp-main-non-key
 		   #'((def vals)
 				(exp-check-too-many def vals)
-				(if (argument-keyword? (first def))
+				(if (argument-keyword? def.)
 				    (exp-optional-rest def vals)
-				    (if (consp (first def))
+				    (if (consp def.)
 				        (exp-sub def vals)
 				        (exp-static def vals))))
 
          exp-main
 		   #'((def vals)
 			    (incf num)
-			    (if (keywordp (first vals))
+			    (if (keywordp vals.)
 				    (exp-key def vals)
 					(or (exp-check-too-many def vals)
 			        	(when def
@@ -181,14 +183,14 @@
 
 (defun %argument-expand-rest (args)
   (when args
-    `(cons ,(car args)
-           ,(%argument-expand-rest (cdr args)))))
+    `(cons ,args.
+           ,(%argument-expand-rest .args))))
 
 (defun argument-expand-compiled-values (fun def vals)
   (mapcar #'((x)
                (if (and (consp x)
-                        (eq '&rest (car x)))
-                   (%argument-expand-rest (cdr x))
+                        (eq '&rest x.))
+                   (%argument-expand-rest .x)
                    x))
           (cdrlist (argument-expand fun def vals t))))
 

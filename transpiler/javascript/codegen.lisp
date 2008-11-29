@@ -72,8 +72,7 @@
 
 (define-js-macro aref (arr &rest idx)
   `(%transpiler-native ,arr
-    ,@(mapcar #'(lambda (x)
-                  `("[" ,x "]"))
+    ,@(mapcar (fn `("[" ,_ "]"))
               idx)))
 
 (define-js-macro %%usetf-aref (val &rest x)
@@ -85,18 +84,17 @@
 (define-js-macro make-hash-table (&rest args)
   `("{"
     ,@(when args
-	    (mapcan #'((x)
-					 (list (first x) ":" (second x) ","))
+	    (mapcan (fn (list (first _) ":" (second _) ","))
 			    (butlast (group args 2))))
     ,@(when args
 		(with (x (car (last (group args 2))))
-		  (list (first x) ":" (second x))))
+		  (list x. ":" (second x))))
    "}"))
 
 (define-js-macro %new (&rest x)
   `(%transpiler-native "new "
-				       ,(first x)
-					   "(" ,@(transpiler-binary-expand "," (cdr x))
+				       ,x.
+					   "(" ,@(transpiler-binary-expand "," .x)
  					   ")"))
 
 (define-js-macro vm-go (tag)

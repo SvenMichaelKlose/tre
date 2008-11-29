@@ -12,8 +12,7 @@
 (defvar *expexsym-counter* 0)
 
 (defstruct expex
-  (function? #'((x)
-				  (functionp (symbol-value x))))
+  (function? (fn functionp (symbol-value _)))
   (function-arguments #'function-arguments)
   (function-collector #'((fun args))))
 
@@ -27,7 +26,7 @@
 ;; Declines atoms and expressions with meta-forms.
 (defun expex-able? (ex x)
   (not (or (atom x)
-           (in? (car x) '%stack ;'%quote
+           (in? x. '%stack ;'%quote
 						'vm-go 'vm-go-nil
 						'%transpiler-native '%transpiler-string
 						'%var
@@ -38,13 +37,13 @@
 ;; These expressions are not moved out, but their arguments are expanded.
 (defun expex-inline? (ex x)
   (and (consp x)
-       (in? (car x) '%slot-value)))
+       (in? x. '%slot-value)))
 
 ;; Check if an expression has a return value.
 (defun expex-returnable? (ex x)
   (not (or (vm-jump? x)
 		   (and (consp x)
-				(eq '%var (car x))))))
+				(eq '%var x.)))))
 
 ;; Transform moved expression to one which assigns its return
 ;; value to a gensym.
@@ -53,9 +52,9 @@
 ;; the replacement symbol for the parent in CDR.
 (defun expex-assignment (ex x)
   (if (expex-inline? ex x)
-	  (with ((p a) (expex-args ex (cdr x)))
+	  (with ((p a) (expex-args ex .x))
 		(cons p
-			  (cons (car x) a)))
+			  (cons x. a)))
 	  (if (not (expex-able? ex x))
 	      (cons nil x)
   	      (with (s (expex-sym))
@@ -68,7 +67,7 @@
   	            (with ((head tail) (expex-expr ex x))
     	          (cons (append `((%var ,s))
 								head
-								(if (expex-returnable? ex (car tail))
+								(if (expex-returnable? ex tail.)
 							        `((%setq ,s ,@tail))
 								    tail))
 		  	            s)))))))
@@ -78,9 +77,7 @@
 ;; Returns the head of moved expressions and a new parent with
 ;; replaced arguments.
 (defun expex-args (ex x)
-  (with ((pre main) (assoc-splice (mapcar #'((x)
-											   (expex-assignment ex x))
-										  x)))
+  (with ((pre main) (assoc-splice (mapcar (fn expex-assignment ex _) x)))
     (values (apply #'append pre)
 			main)))
 
@@ -98,8 +95,8 @@
 ;;
 ;; The arguments are replaced by gensyms.
 (defun expex-std-expr (ex x)
-  (with (argexp (expex-argexpand ex (car x) (cdr x))
-		 (pre newargs) (expex-args ex (cons (car x) argexp)))
+  (with (argexp (expex-argexpand ex x. .x)
+		 (pre newargs) (expex-args ex (cons x. argexp)))
     (values pre (list newargs))))
 
 ;; Expand expression depending on type.
@@ -113,7 +110,7 @@
       (if (not (expex-able? ex x))
 	      (values nil (list x))
   	      (if (vm-scope? x)
-	          (values nil (expex-body ex (cdr x)))
+	          (values nil (expex-body ex .x))
 	          (expex-std-expr ex x)))))
 
 ;; Entry point.
@@ -122,15 +119,15 @@
 ;; expansions in a body.
 (defun expex-list (ex x)
   (when x
-	(if (expex-able? ex (car x))
-        (with ((head tail) (expex-expr ex (car x)))
-          (append head tail (expex-list ex (cdr x))))
-		(cons (car x) (expex-list ex (cdr x))))))
+	(if (expex-able? ex x.)
+        (with ((head tail) (expex-expr ex x.))
+          (append head tail (expex-list ex .x)))
+		(cons x. (expex-list ex .x)))))
 
 (defun expex-make-return-value (ex e s)
   (with (b  (butlast e)
 		 l  (last e)
-		 la (car l))
+		 la l.)
    	(if (expex-returnable? ex la)
 		(append b (if (%setq? la)
 					  (if (eq s (second la))

@@ -3,16 +3,13 @@
 
 (defun dot-expand (x)
   (with (starts-with-dot?
-		    #'((x)
-			     (= #\. (elt x 0)))
+		   (fn = #\. (elt _ 0))
 
   		 dot-position
-		    #'((x)
-			     (position #\. x :test #'=))
+		   (fn position #\. _ :test #'=)
 
   		 list-symbol
-		    #'((x)
-			     (make-symbol (list-string x)))
+		   (fn make-symbol (list-string _))
 
 		 conv
 			#'((x)
@@ -37,10 +34,9 @@
 						   ,(conv (list-symbol (subseq sl (1+ p)))))))))
 
 		 label?
-			#'((x)
-				 (not (or (consp x)
-						  (numberp x)
-				          (stringp x)))))
+		   (fn (not (or (consp _)
+						(numberp _)
+				        (stringp _)))))
     (when x
 	  ; Combine expression and next symbol to %SLOT-VALUE if symbol
 	  ; starts with a dot.

@@ -10,12 +10,12 @@
   (with (e `(function ,@x))
     (when (and x
 			   (= 1 (length x))
-			   (atom (car x)))
-	  (transpiler-add-wanted-function *js-transpiler* (car x)))
+			   (atom x.))
+	  (transpiler-add-wanted-function *js-transpiler* x.))
     (unless x
       (error "FUNCTION expects arguments"))
-    (if (atom (car x))
-	    `(function ,(car x))
+    (if (atom x.)
+	    `(function ,x.)
 
 	    (dolist (i (argument-expand 'unnamed-js-function (lambda-args e) nil nil)
 				 `(function (,(lambda-args e)
@@ -33,8 +33,8 @@
 	   (%setq ,name
 		      #'(,args
     		       ,@(if (and (not *assert*)
-			    	          (stringp (first body)))
-					     (cdr body)
+			    	          (stringp body.))
+					     .body
 					     body))))))
 
 (define-js-std-macro defmacro (name args &rest body)
@@ -69,23 +69,22 @@
 ;; Make object if first argument is not a keyword, or string.
 (define-js-std-macro new (&rest x)
   (if (and (consp x)
-		   (or (keywordp (first x))
-			   (stringp (first x))))
+		   (or (keywordp x.)
+			   (stringp x.)))
 	  `(make-hash-table
-		 ,@(mapcan #'((x)
-						(list (if (and (not (stringp (first x)))
-									   (eq :class (first x)))
-								  "class" ; IE6 wants this.
-								  (first x))
-							  (second x)))
+		 ,@(mapcan (fn (list (if (and (not (stringp _.))
+									  (eq :class _.))
+								 "class" ; IE6 wants this.
+								 _.)
+							 (second _)))
 				   (group x 2)))
-	  `(%new ,(first x)
-			 ,@(if (transpiler-function-arguments? *js-transpiler* (first x))
+	  `(%new ,x.
+			 ,@(if (transpiler-function-arguments? *js-transpiler* x.)
 			       (argument-expand-compiled-values
-				       (first x)
-				       (transpiler-function-arguments *js-transpiler* (first x))
-				       (cdr x))
-				   (cdr x)))))
+				       x.
+				       (transpiler-function-arguments *js-transpiler* x.)
+				       .x)
+				   .x))))
 
 (define-js-std-macro doeach ((var seq &rest result) &rest body)
   (with-gensym (evald-seq idx)

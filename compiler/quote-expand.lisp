@@ -10,7 +10,7 @@
 (defun quasiquote-subexpand (typ e sublevel)
       `(cons (cons ',typ
                    ,(quote-expand-0 (cdar e) (1- sublevel)))
-             ,(quote-expand-1 (cdr e) sublevel)))
+             ,(quote-expand-1 .e sublevel)))
 
 ;; Expand QUASIQUOTE.
 (defun quote-expand-quasiquote (e sublevel)
@@ -18,7 +18,7 @@
       ; No sublevel. Insert evaluated QUASIQUOTE value.
       ((= sublevel 0)
           `(cons ,(cadar e)
-                 ,(quote-expand-1 (cdr e) sublevel)))
+                 ,(quote-expand-1 .e sublevel)))
 
       (t  (quasiquote-subexpand 'QUASIQUOTE e sublevel))))
 
@@ -28,7 +28,7 @@
       ; No sublevel. Splice evaluated QUASIQUOTE-SPLICE expression.
       ((= sublevel 0)
           `(append ,(cadar e)
-                   ,(quote-expand-1 (cdr e) sublevel)))
+                   ,(quote-expand-1 .e sublevel)))
 
       (t  (quasiquote-subexpand 'QUASIQUOTE-SPLICE e sublevel))))
 
@@ -42,9 +42,9 @@
           `(%quote ,e))
 
       ; Return element if it's not a cons.
-      ((atom (car e))
-          `(cons (%quote ,(car e))
-                ,(quote-expand-1 (cdr e) sublevel)))
+      ((atom e.)
+          `(cons (%quote ,e.)
+                ,(quote-expand-1 .e sublevel)))
 
       ; Do QUASIQUOTE expansion.
       ((eq (caar e) 'QUASIQUOTE)
@@ -55,8 +55,8 @@
           (quote-expand-quasiquote-splice e sublevel))
 
       ; Expand sublist and rest.
-      (t  `(cons ,(quote-expand-0 (car e) sublevel)
-                 ,(quote-expand-1 (cdr e) sublevel)))))
+      (t  `(cons ,(quote-expand-0 e. sublevel)
+                 ,(quote-expand-1 .e sublevel)))))
 
 ;; Expand BACKQUOTE, check for nested BACKQUOTE (and increment sublevel) first.
 (defun quote-expand-0 (e sublevel)
@@ -66,8 +66,8 @@
           `(%quote e))
 
       ; Enter new backquote level.
-      ((eq (car e) 'BACKQUOTE)
-          (quote-expand-0 (cdr e) (1+ sublevel)))
+      ((eq e. 'BACKQUOTE)
+          (quote-expand-0 .e (1+ sublevel)))
 
       ; No new backquote level, continue normally.
       (t  (quote-expand-1 e sublevel))))
@@ -82,8 +82,8 @@
 		(if (not (or (stringp x) (numberp x)))
 			`(%quote ,x)
 			x)
-		`(cons ,(simple-quote-expand (car x))
-		       ,(simple-quote-expand (cdr x))))))
+		`(cons ,(simple-quote-expand x.)
+		       ,(simple-quote-expand .x)))))
 
 (defun backquote-expand (l)
   (tree-walk l
@@ -94,5 +94,5 @@
 				   '(%quote %stack)
 			   	   (simple-quote-expand (cadr x)))
 		   	   (if (backquote? x)
-			  	   (quote-expand (cdr x))
+			  	   (quote-expand .x)
 			       x)))))
