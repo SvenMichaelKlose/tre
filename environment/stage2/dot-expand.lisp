@@ -25,9 +25,11 @@
 						 x)
 
 					 ((= (1+ p) l)
-						 `(car ,(list-symbol (subseq sl 0 l))))
+						 `(car ,(list-symbol (subseq sl 0 (1- l)))))
 
 					 ((= 0 p)
+						 (when (= #\. (elt sl (1- l)))
+						   (error "symbol ~A must either start or end with a dot" (symbol-name x)))
 						 `(cdr ,(list-symbol (subseq sl 1))))
 
 					 (t `(%slot-value
@@ -40,26 +42,25 @@
 						  (numberp x)
 				          (stringp x)))))
     (when x
-	  ; Combine expression and next symbol to %SLOT-VALUE if the symbol and
+	  ; Combine expression and next symbol to %SLOT-VALUE if symbol
 	  ; starts with a dot.
       (cond
-		((and (consp x)
-			  (consp (cdr x))
-			  (label? (second x))
-			  (< 1 (length (symbol-name (second x))))
-			  (starts-with-dot? (symbol-name (second x))))
-		  	(cons `(%slot-value ,(dot-expand (first x))
-							    ,(conv (make-symbol (subseq (symbol-name (second x))
-														    1))))
-			      (dot-expand (cddr x))))
+;		((and (consp x)
+;			  (consp (cdr x))
+;			  (label? (second x))
+;			  (< 1 (length (symbol-name (second x))))
+;			  (starts-with-dot? (symbol-name (second x))))
+;		  	(cons `(%slot-value ,(dot-expand (first x))
+;							    ,(conv (make-symbol (subseq (symbol-name (second x))
+;														    1))))
+;			      (dot-expand (cddr x))))
 		((label? x)
-			(conv x))
+		   (conv x))
 
 		((consp x)
-		    (cons (dot-expand (car x))
-				  (dot-expand (cdr x))))
+		   (cons (dot-expand (car x))
+				 (dot-expand (cdr x))))
 
-      	(t
-			x)))))
+      	(t x)))))
 
 (%set-atom-fun *DOTEXPAND-HOOK* #'dot-expand)
