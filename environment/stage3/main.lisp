@@ -21,7 +21,6 @@
 (env-load "stage3/loop.lisp")
 (env-load "stage3/with-struct.lisp")
 (env-load "stage3/group.lisp")
-(env-load "stage3/subseq.lisp")
 (env-load "stage3/collected-errors.lisp")
 (env-load "stage3/random.lisp")
 (env-load "stage3/argument-expand.lisp")

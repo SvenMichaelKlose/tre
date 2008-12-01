@@ -1,14 +1,17 @@
-;;;;; nix operating system project
-;;;;; Copyright (c) 2007 Sven Klose <pixel@copei.de>
+;;;;; TRE environment
+;;;;; Copyright (c) 2007-2008 Sven Klose <pixel@copei.de>
+;;;;;
+;;;;; Subsequences
 
 (defun subseq-list (seq start end)
   (labels ((copy (lst len)
              (when (and lst (< 0 len))
-                 (cons (car lst) (copy (cdr lst) (1- len))))))
-  (when seq
-    (when (> start end)
-      (xchg start end))
-    (copy (nthcdr start seq) (- end start)))))
+               (cons (car lst)
+					 (copy (cdr lst) (1- len))))))
+    (when seq
+      (when (> start end)
+        (xchg start end))
+      (copy (nthcdr start seq) (- end start)))))
 
 (defun subseq-sequence (maker seq start end)
   (when (> start end)
@@ -24,13 +27,14 @@
 
 (defun subseq (seq start &optional (end 99999))
   (when seq
-	(if (consp seq)
-		(subseq-list seq start end)
-		(if (stringp seq)
-			(subseq-sequence #'make-string seq start end)
-			(if (arrayp seq)
-				(subseq-sequence #'make-array seq start end)
-				(error "type not supported"))))))
+	(cond
+	  ((consp seq)
+		 (subseq-list seq start end))
+	  ((stringp seq)
+		 (subseq-sequence #'make-string seq start end))
+	  ((arrayp seq)
+		 (subseq-sequence #'make-array seq start end))
+	  (t (error "type not supported")))))
 
 (define-test "SUBSEQ basically works"
   ((subseq '(1 2 3 4) 1 3))
