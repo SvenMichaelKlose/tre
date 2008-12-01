@@ -77,6 +77,9 @@ Returns NIL."
 	(when wait
 	  (wait))))
 
+(defun exec (bin args)
+  (execve bin (cons bin args) nil))
+
 ; XXX
 ;(execve "/usr/bin/mplayer" `("/usr/bin/mplayer" "-quiet" "test.mp3"))
 ;(execve "/bin/mkdir" `("/bin/mkdir" "new_dir"))
