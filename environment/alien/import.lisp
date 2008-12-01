@@ -3,24 +3,8 @@
 ;;;;
 ;;;; Alien interface.
 
-(defun unix-sh-rm (file)
-  (execve "/bin/rm" `("/bin/rm" ,file)))
-
 (defconstant *alien-xml-tmp* "__alien.tmp")
 (defconstant *gccxml-path* "/usr/bin/gccxml")
-
-(defun lml-get-childs (x)
-  (when (consp x)
-	(if (consp (car x))
-		x
-		(lml-get-childs (cdr x)))))
-
-(defun lml-get-attribute (x name)
-  (when x
-	(unless (consp (car x))
-	  (if (eq name (car x))
-		  (second x)
-		  (lml-get-attribute (cdr x) name)))))
 
 (defvar *alien-imported-functions* (make-hash-table :test #'string=))
 (defvar *alien-structs* (make-hash-table :test #'string=))
@@ -68,7 +52,7 @@
 	  (with (fun-name (lml-get-attribute x :name))
 	    (unless (gethash fun-name *alien-imported-functions*)
 		  (format t "Function ~A (" (lml-get-attribute x :name))
-		  (awhen (lml-get-childs x)
+		  (awhen (lml-get-children x)
 		    (dolist (a !)
 		      (when (eq (car a) :argument)
 			    (format t " (~A) ~A"
@@ -89,7 +73,7 @@
 	        (setf (gethash ! h) x)))))))
 
 (defun alien-import-process-xml (descr)
-  (with (d (lml-get-childs descr))
+  (with (d (lml-get-children descr))
     (alien-import-print d (alien-import-descr-hash d))))
 
 (defun alien-import (header-path)
