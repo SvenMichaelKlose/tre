@@ -11,6 +11,7 @@
 (env-load "stage2/queue-utils.lisp")
 (env-load "stage2/assoc.lisp")
 (env-load "stage2/pairlis.lisp")
+(env-load "stage2/range.lisp")
 (env-load "stage2/char.lisp")
 (env-load "stage2/string.lisp")
 (env-load "stage2/in.lisp")

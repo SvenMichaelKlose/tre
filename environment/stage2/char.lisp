@@ -1,11 +1,7 @@
-;;;; nix operating system project
-;;;; list processor environment
-;;;; Copyright (C) 2005-2006 Sven Klose <pixel@copei.de>
+;;;; TRE environment
+;;;; Copyright (C) 2005-2006,2008 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Character functions
-
-(defun range-p (x bottom top)
-  (and (>= x bottom) (<= x top)))
 
 (defun lower-case-p (c)
   "Return T if character is lower case."
@@ -38,10 +34,10 @@
              (range-p c #\0 #\9))
            (digit-alpha-p (start)
              (range-p c start (+ start (- base 10)))))
-    (or
-      (digit-p)
-      (and base
-        (or (digit-alpha-p #\a) (digit-alpha-p #\A))))))
+   	(or (digit-p)
+      	(and base
+        	 (or (digit-alpha-p #\a)
+				 (digit-alpha-p #\A))))))
 
 (defun alphanumericp (c)
   "Return T if character is alphabetical."
