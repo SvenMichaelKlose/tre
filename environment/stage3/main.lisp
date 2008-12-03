@@ -25,3 +25,4 @@
 (env-load "stage3/random.lisp")
 (env-load "stage3/argument-expand.lisp")
 (env-load "stage3/read.lisp")
+(env-load "stage3/string-integer.lisp")
