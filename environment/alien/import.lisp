@@ -12,14 +12,6 @@
 (defun alien-import-get-type-desc (hash desc)
   (gethash (lml-get-attribute desc :type) hash))
 
-(defun alien-import-get-immediate-type (hash typedesc)
-  (case (car typedesc)
-    (:pointertype
-       (string-concat (alien-import-get-type-from-desc hash typedesc) " *"))
-	(t (aif (lml-get-attribute typedesc :name)
-       !
-	   (alien-import-get-type-from-desc hash typedesc)))))
-
 (defun alien-import-add-struct (hash desc)
   (with (struct-name (lml-get-attribute desc :name))
 	(prog1
@@ -29,18 +21,34 @@
 	    (format t "[")
 		(dolist (x (split #\ (trim #\ (lml-get-attribute desc :members))))
 		  (with (field (gethash x hash))
-			(when (eq :field (car field))
-		      (format t " ~A" (alien-import-get-type-from-desc hash field)))))
+			(if (eq :field field.)
+		        (format t " ~A \"~A\""
+					    (alien-import-get-type-from-desc hash field)
+					    (lml-get-attribute field :name))
+			    (unless (eq :constructor field.)
+				    (and (print 'XXX)
+				         (print field))))))
 	    (format t "]")))))
 
 (defun alien-import-get-type (hash tp)
-  (case (car tp)
+  (case tp.
     (:typedef	; Transcend typedefs.
 	   (alien-import-get-type-from-desc hash tp))
+    (:pointertype
+       (string-concat (alien-import-get-type-from-desc hash tp) " *"))
     (:struct
 	   (alien-import-add-struct hash tp)
        (string-concat "struct " (lml-get-attribute tp :name)))
-    (t (alien-import-get-immediate-type hash tp))))
+    (:arraytype
+       (format nil " ~A[~A]"
+               (alien-import-get-type-from-desc hash tp)
+               (1+ (string-integer (lml-get-attribute tp :max)))))
+	(t (aif (lml-get-attribute tp :name)
+       		!
+			(if (eq :CVQUALIFIEDTYPE tp.)
+	   		    (alien-import-get-type-from-desc hash tp)
+			    (and (print tp)
+				     "???"))))))
 
 (defun alien-import-get-type-from-desc (hash a)
   (when a	; XXX
@@ -48,13 +56,17 @@
 
 (defun alien-import-print (descr hash)
   (dolist (x descr)
-    (when (eq (car x) :function)
+    (when (eq x. :function)
 	  (with (fun-name (lml-get-attribute x :name))
 	    (unless (gethash fun-name *alien-imported-functions*)
-		  (format t "Function ~A (" (lml-get-attribute x :name))
+		  (format t "Function ~A ~A ("
+				  (lml-get-attribute x :name)
+				  (alien-import-get-type
+					hash
+					(gethash (lml-get-attribute x :returns) hash)))
 		  (awhen (lml-get-children x)
 		    (dolist (a !)
-		      (when (eq (car a) :argument)
+		      (when (eq a. :argument)
 			    (format t " (~A) ~A"
 						(alien-import-get-type-from-desc hash a)
 						(or (lml-get-attribute a :name)
@@ -66,7 +78,7 @@
   (with (hash (make-hash-table :test #'string=))
     (dolist (x descr hash)
       (awhen (lml-get-attribute x :id)
-	    (with (h (case (car x)
+	    (with (h (case x.
 				   (:namespace)
 				   (t hash)))
 		  (when h
