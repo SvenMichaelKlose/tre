@@ -100,6 +100,8 @@
 (defun transpiler-preexpand-compose (tr)
   (compose #'list
 
+		   #'dot-expand
+
 		   ; Alternative standard-macros.
 		   ; Some macros in this pass just rename expression to bypass the
 		   ; standard macro-expansion.
