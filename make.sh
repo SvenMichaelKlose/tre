@@ -55,7 +55,7 @@ if [ -f /lib/libdl.so* ]; then
 fi
 
 CRUNSHTMP="tmp.c"
-TRE="tre"
+TRE="./tre"
 BINDIR="/usr/local/bin/"
 
 echo "libc is '$LIBC_PATH'."
