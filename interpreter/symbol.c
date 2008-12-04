@@ -73,7 +73,7 @@ tresymbolpage_set_package (ulong i, treptr package)
 void
 tresymbolpage_add_rec (struct tresymbol_page * p, char * name, treptr atom, char * np)
 {
-	ulong x = (ulong) *np;
+	ulong x = (ulong) (unsigned char) *np;
 
 	p->num_entries++; /* This node is occupied by one more symbol. */
 
@@ -112,7 +112,7 @@ tresymbolpage_add (treptr atom)
 treptr
 tresymbolpage_find_rec (struct tresymbol_page * p, char * np)
 {
-	ulong x = (ulong) *np;
+	ulong x = (ulong) (unsigned char) *np;
 
 	if (x && p->entries[x] == NULL)
 		return treptr_invalid; /* Symbol doesn't exist. */
@@ -136,7 +136,7 @@ tresymbolpage_find (char * name, treptr package)
 ulong
 tresymbolpage_remove_rec (struct tresymbol_page * p, char * np)
 {
-	ulong x = (ulong) *np;
+	ulong x = (ulong) (unsigned char) *np;
 
 	if (x) {
 		/* Remove from children first. */

@@ -1,5 +1,5 @@
 /*
- * TRE tre processor
+ * TRE tree processor
  * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Reading TRE expressions.
@@ -10,11 +10,11 @@
 #include "list.h"
 #include "io.h"
 #include "read.h"
-#include "error.h"
 #include "string2.h"
 #include "gc.h"
 #include "thread.h"
 #include "number.h"
+#include "error.h"
 
 #include <ctype.h>
 #include <string.h>
@@ -45,10 +45,11 @@
  * Check if the next incoming character would be legal part of a symbol.
  */
 bool
-is_symchar (char c)
+is_symchar (unsigned char c)
 {
     return (c > ' ' && c != '(' && c != ')' && c != '\'' && 
-			c != '`' && c != ',' && c != '"' && c != ';' &&c != '#');
+			c != '`' && c != ',' && c != '"' && c != ';' &&
+			c != '#' && c != 255);
 }
 
 /*

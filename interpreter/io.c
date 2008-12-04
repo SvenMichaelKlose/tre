@@ -114,11 +114,11 @@ treio_getline (struct tre_stream * str, char * s, ulong maxlen)
 void
 treio_skip_spaces (struct tre_stream * s)
 {
-    char c;
+    unsigned char c;
 
     while ((c = treio_getc (s)) != 0)
-	if (c > ' ' || c == -1)
-	    break;
+		if (c > ' ' || c == 255)
+	    	break;
 
     treio_putback (s);
 }
