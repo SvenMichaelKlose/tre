@@ -107,7 +107,7 @@
         (setf (gethash s *xml-unified-strings*) s))))
 
 (defun xml-parse-unify-identifier (in)
-  (let ((i (string-upcase (xml-parse-identifier in))))
+  (let i (string-upcase (xml-parse-identifier in))
     (xml-unify-string i)))
 
 (defun xml-parse-text (in)

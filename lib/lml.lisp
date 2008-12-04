@@ -87,6 +87,6 @@
 ;    (if (consp tpl.)
 ;	    (mapcar #'eval-lml-template tpl.)
 ;	    (with-lml-expr (name attrs childs) tpl
-;	      (eval `(let (,@(append (map-attrs-to-vars attrs)
-;				                 `(!childs (eval-lml-template ,childs))))
+;	      (eval `(let* (,@(append (map-attrs-to-vars attrs)
+;				                  `(!childs (eval-lml-template ,childs))))
 ;		           ,tpl))))))

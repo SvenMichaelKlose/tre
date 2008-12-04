@@ -55,7 +55,7 @@
 
 (defun tree-transform-conversion-args (trn)
   "Make key argument list for call to conversion function."
-  (let ((args (make-queue)))
+  (let args (make-queue)
     ; Make list of keyword/value pairs.
     (dolist (i (tree-transform-placeholders trn) (queue-list args))
       (enqueue args (list (intern (symbol-name i) "") (assoc i (tree-transform-clips trn)))))))
@@ -64,10 +64,10 @@
   "Match tree-transform against expression and return first toplevel cons after
    match."
   ; Match cons.
-  (let ((form (make-queue)))
+  (let form (make-queue)
     (do ((m match (cdr m)))
         ((endp m) (queue-list form))
-      (let ((mcar (car m)))
+      (let mcar (car m)
         (cond
           ((eq mcar '*rest)	; Rest of current list.
             (enqueue form
@@ -105,7 +105,7 @@
 (defun tree-transform-compile (trn)
   "Match a pattern and return first toplevel cons after match."
   (setf (tree-transform-clips trn) nil)
-  (let ((form (tree-transform-compile-r (tree-transform-match trn) trn)))
+  (let form (tree-transform-compile-r (tree-transform-match trn) trn)
     (setf (tree-transform-compiled-match trn)
       (eval (car (macroexpand `#'((e trn)
         (and
