@@ -29,8 +29,9 @@
        (eq (car x) 'function)
        (consp (cdr x))
        (consp (cadr x))
-	   (let ((l (past-lambda (cadr x))))
-		 (and l (consp l) (listp (car l))))))
+	   (let l (past-lambda (cadr x))
+		 (and l (consp l)
+				(listp (car l))))))
 
 (define-test "IS-LAMBDA? works"
   ((is-lambda? '#'((x) x)))

@@ -5,9 +5,10 @@
 
 (defun string= (sa sb)
   "Return T if two strings match."
-  (if (and (stringp sa) (stringp sb))
-    (let ((la (length sa))
-	  (lb (length sb)))
+  (if (and (stringp sa)
+		   (stringp sb))
+    (let* ((la (length sa))
+	       (lb (length sb)))
       (when (= la lb)
         (dotimes (i la t)
           (when (neql (elt sa i) (elt sb i))
@@ -43,8 +44,8 @@
 
 (defun string-list (x)
   "Make list of characters from string."
-  (let ((l (length x))
-		(s))
+  (let* ((l (length x))
+		 (s))
     (do ((i (1- l) (1- i)))
 		((< i 0))
       (setf s (push (elt x i) s)))
@@ -65,8 +66,8 @@
            (s (make-string n)))
       (do ((i 0 (1+ i)))
           ((= i n) s)
-        (let ((c (elt str i)))
-            (setf (elt s i) (char-upcase c)))))))
+        (let c (elt str i)
+          (setf (elt s i) (char-upcase c)))))))
 
 (define-test "STRING-UPCASE works"
   ((string= (string-upcase "lisp")
@@ -80,8 +81,8 @@
            (s (make-string n)))
       (do ((i 0 (1+ i)))
           ((= i n) s)
-        (let ((c (elt str i)))
-            (setf (elt s i) (char-downcase c)))))))
+        (let c (elt str i)
+          (setf (elt s i) (char-downcase c)))))))
 
 (define-test "STRING-DOWNCASE works"
   ((string= (string-downcase "LISP")

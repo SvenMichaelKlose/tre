@@ -11,7 +11,7 @@
 (defun %princ-number (c str)
   (labels 
     ((rec (out n)
-      (let ((m (mod n 10)))
+      (let m (mod n 10)
         (push m out)
         (if (> n 9)
           (rec out (/ (- n m) 10))

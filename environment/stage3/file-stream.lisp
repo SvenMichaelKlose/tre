@@ -1,5 +1,4 @@
-;;;; nix operating system project
-;;;; list processor
+;;;; TRE environment
 ;;;; Copyright (c) 2005-2006,2008 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; File streams
@@ -23,7 +22,7 @@
 
 (defmacro with-open-file (var file &rest body)
   (with-gensym g
-    `(let ((,var ,file))
+    `(let ,var ,file
        (unless ,var
          (%error "couldn't open file"))
        (with (,g (progn ,@body))

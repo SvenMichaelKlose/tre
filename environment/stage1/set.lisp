@@ -27,11 +27,11 @@
 	         (setfun (%setf-make-symbol fun))
 	         (funat (eval `(function ,setfun))))
         (if (functionp funat)
-	        (let ((g (gensym)))
+	        (let g (gensym)
 			   (if (member (car args) *constants*)
 		    	   (%error "cannot set constant"))
               `(progn
-	             (let ((,g ,val))
+	             (let ,g ,val
 	               (,setfun ,g ,@args)
 	               ,g)))
             (progn

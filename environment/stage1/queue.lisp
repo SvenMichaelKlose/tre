@@ -12,10 +12,10 @@
 
 (defmacro enqueue (queue obj)
   "Append element to end of queue."
-  (let ((q (gensym))
-	(o (gensym)))
-  `(let ((,q ,queue)
-	 (,o ,obj))
+  (let* ((q (gensym))
+	     (o (gensym)))
+  `(let* ((,q ,queue)
+	      (,o ,obj))
      (if (car ,q)
        (setf (car ,q) (setf (cdar ,q) (list ,o)))
        (setf (car ,q) (setf (cdr ,q) (list ,o))))
@@ -23,8 +23,8 @@
 
 (defmacro queue-pop (queue)
   "Pop first element off a queue and return it."
-  (let ((q (gensym)))
-    `(let ((,q ,queue))
+  (let q (gensym)
+    `(let ,q ,queue
        (prog1
 	     (second ,q)
 	     (setf (cdr ,q) (cddr ,q))))))
@@ -33,7 +33,7 @@
   `(cdr ,queue))
 
 (define-test "ENQUEUE and QUEUE-LIST work"
-  ((let ((q (make-queue)))
+  ((let q (make-queue)
      (enqueue q 'a)
      (enqueue q 'b)
      (queue-list q)))

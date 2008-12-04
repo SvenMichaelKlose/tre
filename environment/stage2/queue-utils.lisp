@@ -1,14 +1,13 @@
-;;;; nix operating system project
-;;;; list processor environment
-;;;; Copyright (C) 2005-2006 Sven Klose <pixel@copei.de>
+;;;; TRE environment
+;;;; Copyright (C) 2005-2006,2008 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Queue utilities
 
 (defmacro with-queue (q &rest body)
-  `(let (,@(mapcar #'((x) `(,x (make-queue))) 
-		           (if (consp q)
-					   q
-					   (list q))))
+  `(let* (,@(mapcar #'((x) `(,x (make-queue))) 
+		            (if (consp q)
+					    q
+					    (list q))))
      ,@body))
 
 (defmacro dolist-queue (q dlargs &rest body)

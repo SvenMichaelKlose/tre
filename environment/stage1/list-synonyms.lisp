@@ -12,8 +12,8 @@
 
 (defmacro %make-list-synonyms ()
   `(block nil
-     ,@(let ((l nil)
-			 (i 0))
+     ,@(let* ((l nil)
+			  (i 0))
          (mapcar #'((name)
            		   (push `(defun ,name (x)
 	                        (car ,(%make-cdr i)))

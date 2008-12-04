@@ -22,8 +22,8 @@
 (%defun compiler-or (x)
   (cond
     ((cdr x)
-      (let ((g (gensym)))
-        `(let ((,g ,(car x)))
+      (let g (gensym)
+        `(let ,g ,(car x)
           (cond
             ((not ,g) ,(compiler-or (cdr x)))
             (t ,g)))))

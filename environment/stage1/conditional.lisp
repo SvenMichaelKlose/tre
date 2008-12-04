@@ -16,8 +16,8 @@
   `(when (not ,predicate) ,@expr))
 
 (defmacro case (val &rest cases)
-  (let ((g (gensym)))
-    `(let ((,g ,val))
+  (let g (gensym)
+    `(let ,g ,val
       (cond 
         ,@(%simple-mapcar
             #'((x)

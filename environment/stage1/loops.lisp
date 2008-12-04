@@ -5,9 +5,9 @@
 ;;;; Loop macros
 
 (defmacro do (binds (test &rest result) &rest body)
-  (let ((tag (gensym)))
+  (let tag (gensym)
     `(block nil
-       (let ,(mapcar #'((b)
+       (let* ,(mapcar #'((b)
 						  `(,(first b) ,(second b)))
 					 binds)
          (tagbody

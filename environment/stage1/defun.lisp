@@ -6,13 +6,14 @@
 
 ; Check and return keyword argument or NIL.
 (%defun %defun-arg-keyword (args)
-  (let ((a (car args))
-        (d (and (cdr args) (cadr args))))
-    (if (%arg-keyword? a)
-        (if d
-            (if (%arg-keyword? d)
-                (%error "keyword following keyword"))
-            (%error "end after keyword")))))
+  (let a (car args)
+	(let d (and (cdr args)
+				(cadr args))
+      (if (%arg-keyword? a)
+          (if d
+              (if (%arg-keyword? d)
+                  (%error "keyword following keyword"))
+              (%error "end after keyword"))))))
 
 ; Check and return argument list.
 (%defun %defun-args (args)
@@ -33,7 +34,7 @@
 
 (defmacro defun (name args &rest body)
   "Define a function."
-  (let ((name (%defun-name name)))
+  (let name (%defun-name name)
     `(block nil
        (setq *universe* (cons ',name *universe*)
 			 *defun-name* name)

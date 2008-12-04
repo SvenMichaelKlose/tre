@@ -9,7 +9,7 @@
   (if (not (cdr lsts))
     (copy-list (car lsts))
 	(if (car lsts)
-   	    (let ((n (copy-list (car lsts))))
+   	    (let n (copy-list (car lsts))
           (rplacd (last n) (apply #'append (cdr lsts)))
           n)
 		(apply #'append (cdr lsts)))))
@@ -27,7 +27,7 @@
   '(i l i k e l i s p))
 
 (define-test "APPEND copies last"
-  ((let ((tmp '(s)))
+  ((let tmp '(s)
      (eq tmp (cdr (append '(l) tmp)))))
   nil)
 
@@ -65,7 +65,7 @@
 
 (defun reverse (lst)
   "Return new reversed list with same elements."
-  (let ((nl nil))
+  (let nl nil
     (dolist (i lst nl)
       (push i nl))))
 

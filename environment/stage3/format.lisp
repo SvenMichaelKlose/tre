@@ -5,7 +5,7 @@
 ;;;; FORMAT function
 
 (defun %format-directive (str l i txt args)
-   (let ((el (char-upcase (elt txt i))))
+   (let el (char-upcase (elt txt i))
      (cond
        ((= el #\%)  (terpri str)
                     (%format str l (1+ i) txt args))

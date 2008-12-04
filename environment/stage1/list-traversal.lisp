@@ -8,8 +8,8 @@
   "Copy heads of lists into returned list.
    Destructively removes heads from lists."
   (block nil
-    (let ((i lists)		; List iterator.
-          (nl (make-queue)))	; Argument list.
+    (let* ((i lists)	; List iterator.
+           (nl (make-queue)))	; Argument list.
       (tagbody
         start
         (if (endp i)	; Stop at end of lists.
@@ -25,7 +25,7 @@
   "Calls function for all head CARs in lists. Then call with next elements.
    If a list runs out of elements, the function stops.
    Returns NIL."
-  (let ((args (%map func lists)))
+  (let args (%map func lists)
     (when args
       (apply func args)
 	  (apply #'map func lists)))
@@ -35,7 +35,7 @@
   "Calls function for all head CARs in lists. Then call with next elements.
    If a list runs out of elements, the function stops.
 Returns a list of all return values of the function."
-  (let ((args (%map func lists)))
+  (let args (%map func lists)
     (when args
       (cons (apply func args) (apply #'mapcar func lists)))))
 
@@ -45,12 +45,12 @@ Returns a list of all return values of the function."
 
 (defmacro dolist ((iter lst &rest result) &rest body)
   "Iterate over list."
-  (let ((starttag (gensym))
-        (endtag (gensym))
-	(tmplst (gensym)))
+  (let* ((starttag (gensym))
+         (endtag (gensym))
+	     (tmplst (gensym)))
     `(block nil
-      (let ((,tmplst ,lst)
-	    (,iter nil))
+      (let* ((,tmplst ,lst)
+	         (,iter nil))
         (tagbody
           ,starttag
           (if (eq ,tmplst nil)

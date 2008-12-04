@@ -8,7 +8,7 @@
 	     (name (first fun))
 	     (args (second fun))
 	     (body (cddr fun)))
-    `(let ((,name))
+    `(let ,name nil
        (%set-atom-fun ,name
 	     #'(,args
 	         (block ,name

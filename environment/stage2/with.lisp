@@ -6,23 +6,26 @@
   ; Make new WITH for rest of assignment list.
   (labels ((sub ()
              (if (cddr alst)
-                 `((with ,(cddr alst) ,@body))
+                 `((with ,(cddr alst)
+					 ,@body))
                  body)))
 
 	; Get first pair.
-    (let ((plc (first alst))
-          (val (second alst)))
+    (let* ((plc (first alst))
+           (val (second alst)))
+      (cond
+	    ; MULTIPLE-VALUE-BIND if place is a cons.
+	    ((consp plc)
+            `(multiple-value-bind ,plc ,val
+			   ,@(sub)))
 
-	  ; MULTIPLE-VALUE-BIND if place is a cons.
-      (if (consp plc)
-          `(multiple-value-bind ,plc ,val
-			 ,@(sub))
+	    ; Place function is set of value is a function.
+		((is-lambda? val)
+			`(labels ((,plc ,@(past-lambda (second val))))
+			   ,@(sub)))
 
-		  ; Place function is set of value is a function.
-		  (if (is-lambda? val)
-			  `(labels ((,plc ,@(past-lambda (second val))))
-				 ,@(sub))
+		; Value assignment to variable.
+        (t `(let ,plc ,val
+			  ,@(sub)))))))
 
-			  ; Value assignment to variable.
-          	  `(let ((,plc ,val))
-				 ,@(sub)))))))
+; XXX tests missing

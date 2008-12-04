@@ -40,7 +40,7 @@
 	(append exp1 exp2)))
 
 (defmacro loop (&rest body)
-  (let ((tag (gensym)))
+  (let tag (gensym)
     `(tagbody
        ,tag
        ,@body

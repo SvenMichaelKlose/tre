@@ -11,7 +11,7 @@
   (apply fun args))
 
 (defmacro prog1 (&rest body)
-  (let ((g (gensym)))
-    `(let ((,g ,(car body)))
+  (let g (gensym)
+    `(let ,g ,(car body)
       ,@(cdr body)
       ,g)))

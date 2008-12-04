@@ -1,19 +1,27 @@
 ;;;; nix operating system project
 ;;;; list processor environment
-;;;; Copyright (C) 2005-2006 Sven Klose <pixel@copei.de>
+;;;; Copyright (C) 2005-2006,2008 Sven Klose <pixel@copei.de>
 
-(defmacro aif (test then &optional else)
-  `(let ((! ,test))
-    (if ! ,then , else)))
+(defmacro aif (predicate consequence &optional alternative)
+  `(let ! ,predicate
+     (if !
+		 ,consequence
+		 ,alternative)))
 
-(defmacro awhen (test &rest body)
-  `(let ((! ,test))
-    (when ! ,@body)))
+(defmacro awhen (predicate &rest body)
+  `(let ! ,predicate
+     (when !
+	   ,@body)))
 
-(defmacro anif (name test then &optional else)
-  `(let ((,name ,test))
-    (if ,name ,then , else)))
+(defmacro anif (name predicate consequence &optional alternative)
+  `(let ,name ,predicate
+     (if ,name
+		 ,consequence
+		 ,alternative)))
 
-(defmacro anwhen (name test &rest body)
-  `(let ((,name ,test))
-    (when ,name ,@body)))
+(defmacro anwhen (name predicate &rest body)
+  `(let ,name ,predicate
+     (when ,name
+	   ,@body)))
+
+; XXX tests missing

@@ -19,9 +19,11 @@
 (env-load "stage1/count.lisp")
 (env-load "stage1/simple-mapcar.lisp")
 (env-load "stage1/let.lisp")
+(env-load "stage1/let-many.lisp")
 (env-load "stage1/math.lisp")
 (env-load "stage1/basic-conditional.lisp")
 
+(env-load "stage1/arg-keyword-p.lisp")
 (env-load "stage1/defun.lisp")
 (env-load "stage1/fn.lisp")
 (env-load "stage1/predicates.lisp")

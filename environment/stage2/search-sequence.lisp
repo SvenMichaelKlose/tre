@@ -12,8 +12,8 @@
 	   ,b ,g)))
 
 (defun find-if (pred seq &key (start nil) (end nil) (from-end nil) (with-index nil))
-  (let ((e (or end (1- (length seq))))
-	 	(s (or start 0)))
+  (let* ((e (or end (1- (length seq))))
+	 	 (s (or start 0)))
     ; Make sure the start and end indices are sane.
     (when (or (and (> s e) (not from-end))
               (and (< s e) from-end))
@@ -24,7 +24,7 @@
         ((if from-end
 	         (< i e)
 			 (> i e)))
-	  (let ((elm (elt seq i)))
+	  (let elm (elt seq i)
         (when (apply pred `(,elm ,@(when with-index
 									 (list i))))
 		  (return elm))))))
@@ -60,7 +60,7 @@
   5)
 
 (defun position (obj seq &key (start nil) (end nil) (from-end nil) (test #'eql))
-  (let ((idx nil))
+  (let idx nil
     (find-if #'((x i)
 				  (when (funcall test x obj)
 					(setf idx i)))
