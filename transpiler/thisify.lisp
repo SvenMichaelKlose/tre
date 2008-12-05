@@ -20,7 +20,7 @@
 		     #'((x exclusions)
 			      (if (atom x)
 	                  (thisify-symbol x exclusions)
-					  (if (is-lambda? x)
+					  (if (lambda? x)
 						  `#'(,(lambda-args x)
 							   ,@(rec (lambda-body x) (append exclusions (lambda-args x))))
 	                      (cons (if (%slot-value? x.)

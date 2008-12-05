@@ -104,7 +104,7 @@
 ;; Recurses into LAMBDA-expressions and VM-SCOPEs.
 ;; VM-SCOPES are removed.
 (defun expex-expr (ex x)
-  (if (is-lambda? x)
+  (if (lambda? x)
       (values nil (list `#'(lambda ,(lambda-args x)
 						     ,@(expex-body ex (lambda-body x)))))
       (if (not (expex-able? ex x))

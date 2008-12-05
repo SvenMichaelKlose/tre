@@ -17,7 +17,7 @@
     (with-open-file f (open outfile :direction 'output)
 	    (with (user (transpiler-transpile *c-transpiler* x))
 	      (format t "Emitting code to '~A'...~%" outfile)
-		  (format f "~A~A" ;base
+		  (format f "~A" ;~A" base
 						   user)))))
 
 ;; XXX defunct

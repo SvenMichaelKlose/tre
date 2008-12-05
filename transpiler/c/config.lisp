@@ -16,8 +16,8 @@
 		  	  (and (>= x #\0) (<= x #\9))
 			  (in=? x #\_ #\. #\$ #\#)))
 	:make-label
-	  #'((x)
-		   (format nil "~A:" (transpiler-symbol-string *c-transpiler* a)))))
+	  (fn (format nil "l~A:" (transpiler-symbol-string *c-transpiler* _)))
+	:named-functions? t))
 
 (defvar *c-transpiler* (make-c-transpiler))
 (defvar *c-separator* (transpiler-separator *c-transpiler*))

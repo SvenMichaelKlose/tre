@@ -56,10 +56,10 @@
   (tree-walk body
 	:dont-ascend-after-if #'((x)
 							   (or (%slot-value? x)
-								   (is-lambda? x)))
+								   (lambda? x)))
     :ascending
       #'((e)
-		   (if (is-lambda? e) ; Add variables to ignore in subfunctions.
+		   (if (lambda? e) ; Add variables to ignore in subfunctions.
 			   (vars-to-stackops e fi (append locals (lambda-args e)))
 			   (if (%slot-value? e)
 				   `(%slot-value ,(vars-to-stackops (second e) fi) ,(third e))
@@ -126,10 +126,10 @@
       (tree-walk body
       	  :ascending
         	  #'((x)
-             	 (if (is-lambda-call? x)
+             	 (if (lambda-call? x)
                  	 (lambda-call-embed x fi export-lambdas)
                  	 (if (and export-lambdas
-							  (is-lambda? x))
+							  (lambda? x))
                    	  	 (lambda-export x fi)
 				   	  	 x))))
 	  fi))

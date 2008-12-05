@@ -12,7 +12,7 @@
 	 (with-cons a d x
 	   ; Recurse into LAMBDA.
 	   (if (and (%setq? a)
-		        (is-lambda? (third a)))
+		        (lambda? (third a)))
 		   (opt-peephole-rec x ,fun)
 	   	   (cond
 			 ,@body
@@ -44,7 +44,7 @@
 										  (setf acc (push a acc)))
 						                (rec d))
 				  	                  (if (and (%setq? a)
-					       	                   (is-lambda? (third a)))
+					       	                   (lambda? (third a)))
 						                  (cons `(%setq ,(second a)
 												        ,(copy-recurse-into-lambda (third a) #'accumulate-vars))
 												(rec d))

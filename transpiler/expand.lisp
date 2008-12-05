@@ -41,7 +41,7 @@
 (defun transpiler-macroexpand (x)
   (repeat-while-changes (fn *macroexpand-hook* _) x))
 
-;;;; EXPANSION OF ALTERNATE STANDARD MACROS
+;;;; EXPANSION OF ALTERNATIVE STANDARD MACROS
 
 (defmacro define-transpiler-std-macro (tr name args body)
   (with (tre (eval tr))
@@ -60,7 +60,9 @@
 ;;;; TOPLEVEL
 
 (defun transpiler-expand-compose (tr)
-  (compose ; Peephole-optimization.
+  (compose (fn (transpiler-make-named-functions tr _))
+
+		   ; Peephole-optimization.
 		   ; Removes some unused code.
 		   #'opt-peephole
 
@@ -108,7 +110,9 @@
 	       (fn expander-expand (transpiler-std-macro-expander tr) _)
 
 		   ; Convert dot-notation to %SLOT-VALUE expressions.
-		   #'transpiler-make-slot-values))
+		   #'transpiler-make-slot-values
+
+		   (fn funcall (transpiler-preprocessor tr) _)))
 
 (defun transpiler-preexpand (tr forms)
   (transpiler-obfuscate-symbol tr '~%ret)

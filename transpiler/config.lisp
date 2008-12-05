@@ -18,7 +18,9 @@
   (obfuscate? nil)
   (obfuscations nil)
   (obfuscation-exceptions nil)
-  (make-label #'identity))
+  (make-label #'identity)
+  (preprocessor #'identity)
+  (named-functions? nil))
 
 (defun transpiler-function-arguments? (tr fun)
   (assoc fun (transpiler-function-args tr)))

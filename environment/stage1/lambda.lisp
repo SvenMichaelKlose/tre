@@ -23,7 +23,7 @@
   "Get arguments to local function call (used to introduce local symbols)."
   (cdr x))
 
-(defun is-lambda? (x)
+(defun lambda? (x)
   "Checks if expression is a function/LAMBDA expression."
   (and (consp x)
        (eq (car x) 'function)
@@ -34,21 +34,21 @@
 				(listp (car l))))))
 
 (define-test "IS-LAMBDA? works"
-  ((is-lambda? '#'((x) x)))
+  ((lambda? '#'((x) x)))
   t)
 
 (define-test "IS-LAMBDA? works with LAMBDA"
-  ((is-lambda? '#'(lambda (x) x)))
+  ((lambda? '#'(lambda (x) x)))
   t)
 
-(defun is-lambda-call? (x)
+(defun lambda-call? (x)
   "Checks if expression is a local function call."
   (and (consp x)
 	   (cdr x)
-       (is-lambda? (car x))))
+       (lambda? (car x))))
 
 (define-test "IS-LAMBDA-CALL? works"
-  ((is-lambda-call? '(#'((x) x) nil)))
+  ((lambda-call? '(#'((x) x) nil)))
   t)
 
 (defun function-arguments (fun)
@@ -60,6 +60,5 @@
   (cdr (symbol-value fun)))
 
 (defun copy-recurse-into-lambda (x body-fun)
-  `#'(lambda ,(lambda-args x)
+  `#'(,(lambda-args x)
        ,@(funcall body-fun (lambda-body x))))
- 

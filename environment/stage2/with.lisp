@@ -20,7 +20,7 @@
 			   ,@(sub)))
 
 	    ; Place function is set of value is a function.
-		((is-lambda? val)
+		((lambda? val)
 			`(labels ((,plc ,@(past-lambda (second val))))
 			   ,@(sub)))
 

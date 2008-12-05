@@ -43,7 +43,8 @@
 		   separator  (transpiler-separator tr)
 		   ret (transpiler-obfuscate tr '~%ret))
 	  (cond
-		((eq a nil) ; ???
+		((not a)
+		   ; Ignore top-level NIL.
 		   (transpiler-finalize-sexprs tr .x))
 
 	  	((atom a) 
@@ -52,7 +53,7 @@
 		         (transpiler-finalize-sexprs tr .x)))
 
         ((and (%setq? a)
-			  (is-lambda? (%setq-value a)))
+			  (lambda? (%setq-value a)))
 		   ; Recurse into function.
 	       (cons `(%setq ,(%setq-place a)
 				    ,(copy-recurse-into-lambda
@@ -60,6 +61,15 @@
 					   #'((body)
 						    (transpiler-finalize-sexprs tr body))))
 			     (cons separator
+				       (transpiler-finalize-sexprs tr .x))))
+
+		((eq 'function a.)
+		   ; Recurse into named top-level function.
+		   (cons `(function
+					,(second a) ; name
+					(,(first (third a))
+				        ,(transpiler-finalize-sexprs tr (cdr (third a)))))
+				 (cons separator
 				       (transpiler-finalize-sexprs tr .x))))
 
 	    ((and (identity? a)

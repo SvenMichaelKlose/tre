@@ -8,10 +8,10 @@
 
 (define-c-std-macro defun (name args &rest body)
   (progn
-	 (unless (in? name 'apply)
-	   (acons! name args (transpiler-function-args tr)))
+	(unless (in? name 'apply)
+	  (acons! name args (transpiler-function-args tr)))
     `(%setq ,name
-		    #'(lambda ,args
+		    #'(,args
     		    ,@body))))
 
 (define-c-std-macro defmacro (name args &rest body)
@@ -20,4 +20,4 @@
     nil))
 
 (define-c-std-macro defvar (name val)
-  `(%setq ,name  ,val))
+  `(%setq ,name ,val))
