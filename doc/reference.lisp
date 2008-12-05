@@ -30,16 +30,7 @@ TERMINOLOGY
 
 	<para>
     	Only floating point numbers are supported.
-	</para>
-
-	<cmd name="INTEGER" type="bt">
-		<args>
-			<arg name="number"/>
-		<args>
-		<para>
-			Same as CHAR for integers.
-		</para>
-	</cmd>
+			</para>
 </section>
 
 <section>

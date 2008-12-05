@@ -1,5 +1,5 @@
 /*
- * nix operating system project tre interpreter
+ * TRE interpreter
  * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Number atom related section.
@@ -75,22 +75,25 @@ treptr
 trenumber_builtin_code_char (treptr args)
 {
     treptr  arg = trenumber_arg_get (args);
-    char tmp;
+    char	tmp;
 
     tmp = (char) TRENUMBER_VAL(arg);
     return treatom_number_get ((double) tmp, TRENUMTYPE_CHAR);
 }
 
-/*
- * (INTEGER number)
- *
- * Returns 'number' converted to integer or the original 'number'.
+/*tredoc
+    (cmd :name "INTEGER" :type "bt"
+        (args
+            (arg :name "number"))
+        (description
+ 			"Returns 'number' converted to integer or the original 'number'."
+            "This is the same as CHAR for integers."))
  */
 treptr
 trenumber_builtin_integer (treptr args)
 {
     treptr  arg = trenumber_arg_get (args);
-    long  tmp = (long) TRENUMBER_VAL(arg);
+    long    tmp = (long) TRENUMBER_VAL(arg);
 
     return treatom_number_get ((double) tmp, TRENUMTYPE_INTEGER);
 }
@@ -98,63 +101,30 @@ trenumber_builtin_integer (treptr args)
 /*
  * (BIT-OR number number)
  */
-treptr
-trenumber_builtin_bit_or (treptr args)
+		void
+trenumber_arg_bit_op (ulong * ix, ulong * iy, treptr args)
 {
-	treptr x;
-	treptr y;
+	treptr  x;
+	treptr  y;
 
     trenumber_arg_get2 (&x, &y, args);
-    long  ix = (long) TRENUMBER_VAL(x);
-    long  iy = (long) TRENUMBER_VAL(y);
-
-    return treatom_number_get ((double) (ix | iy), TRENUMTYPE_INTEGER);
+    *ix = (ulong) TRENUMBER_VAL(x);
+	*iy = (ulong) TRENUMBER_VAL(y);
 }
 
-/*
- * (BIT-AND number number)
- */
-treptr
-trenumber_builtin_bit_and (treptr args)
-{
-	treptr x;
-	treptr y;
+#define TRENUMBER_DEF_BITOP(name, op) \
+	treptr	\
+	name (treptr args)	\
+	{	\
+		ulong	ix;	\
+		ulong	iy;	\
+	\
+    	trenumber_arg_bit_op (&ix, &iy, args);	\
+    	return treatom_number_get ((double) (ix op iy),	\
+								   TRENUMTYPE_INTEGER);	\
+	}
 
-    trenumber_arg_get2 (&x, &y, args);
-    long  ix = (long) TRENUMBER_VAL(x);
-    long  iy = (long) TRENUMBER_VAL(y);
-
-    return treatom_number_get ((double) (ix & iy), TRENUMTYPE_INTEGER);
-}
-
-/*
- * (<< number bits)
- */
-treptr
-trenumber_builtin_bit_shift_left (treptr args)
-{
-	treptr x;
-	treptr y;
-
-    trenumber_arg_get2 (&x, &y, args);
-    ulong  ix = (ulong) TRENUMBER_VAL(x);
-    ulong  iy = (ulong) TRENUMBER_VAL(y);
-
-    return treatom_number_get ((double) (ix << iy), TRENUMTYPE_INTEGER);
-}
-
-/*
- * (>> number bits)
- */
-treptr
-trenumber_builtin_bit_shift_right (treptr args)
-{
-	treptr x;
-	treptr y;
-
-    trenumber_arg_get2 (&x, &y, args);
-    ulong  ix = (ulong) TRENUMBER_VAL(x);
-    ulong  iy = (ulong) TRENUMBER_VAL(y);
-
-    return treatom_number_get ((double) (ix >> iy), TRENUMTYPE_INTEGER);
-}
+TRENUMBER_DEF_BITOP(trenumber_builtin_bit_or, |);
+TRENUMBER_DEF_BITOP(trenumber_builtin_bit_and, &);
+TRENUMBER_DEF_BITOP(trenumber_builtin_bit_shift_left, <<);
+TRENUMBER_DEF_BITOP(trenumber_builtin_bit_shift_right, >>);
