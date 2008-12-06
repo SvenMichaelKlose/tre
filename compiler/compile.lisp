@@ -9,8 +9,7 @@
 (defun atomic-expand-lambda (fun mex &optional (parent-env nil))
   (with ((lex fi) (lambda-expand fun (backquote-expand mex) parent-env))
     (tree-expand fi (opt-peephole (expression-expand (make-expex) lex)))
-fi
-))
+    fi))
     ;(setf (cdr (assoc fun *expanded-functions*)) fi)
  
 (defun atomic-expand-fun (fun)
@@ -18,7 +17,7 @@ fi
     (format t "(Processing ~A ~A)~%"
 			  (cond
 				((functionp fun)	"function")
-				((macrop fun)	"macro"))
+				((macrop fun)		"macro"))
               (if (eq (first (car body)) 'block)
                   (symbol-name (second (car body)))
                   ""))

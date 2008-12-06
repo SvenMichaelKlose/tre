@@ -4,20 +4,10 @@
 ;;;;;
 ;;;;; LAMBDA expansion.
 ;;;;;
-;;;;; This pass embeds or exports functions from functions and allocates
-;;;;; stack slots for arguments and free-variable bindings, to enable the
-;;;;; following expression expansion.
-;;;;;
-;;;;; Expressions of the following form are inlined:
-;;;;;
-;;;;;   ((#'lambda (x) x) y)
-;;;;;
-;;;;; Functions with free variables are exported:
-;;;;;
-;;;;;   #'(lambda (x) y)
-;;;;;
-;;;;; Executed unnamed toplevel functions don't a stack but a resident
-;;;;; memory block is allocated.
+;;;;; This pass embeds functions which introduce local variables, allocating
+;;;;; stack slots for the arguments of the embedded function.
+;;;;; It also exports functions and creates function references with pointers
+;;;;; to memory blocks of free variables.
 
 (defmacro with-lambda-call ((args vals body call) &rest exec-body)
   "Bind local function call components to variables for exec-body."
@@ -91,10 +81,15 @@
 ;;; LAMBDA export
 
 (defun make-varblock-inits (s fi fv)
-  (mapcar (fn `(%set-vec ,s ,(position _ fv) ,(make-stackop _ fi))) fv))
+  (mapcar (fn `(%set-vec ,s
+						 ,(position _ fv)
+						 ,(make-stackop _ fi)))
+		  fv))
 
 (defun make-varblock-exits (s fi fv)
-  (mapcar (fn `(%get-vec ,s ,(make-stackop _ fi) ,(position _ fv))) fv))
+  (mapcar (fn `(%setq ,(make-stackop _ fi)
+					  (%get-vec ,s ,(position _ fv))))
+		  fv))
 
 (defun make-call-to-exported (name fi)
   (with (f	    (symbol-function name)
@@ -113,7 +108,7 @@
 		`(%funref ,name nil))))
 
 (defun lambda-export (x fi)
-  "Export and expand LAMBDA expression out of a function."
+  "Export and expand function."
   (with-gensym g
     (eval `(%set-atom-fun ,g ,x)) ; Create new function.
     (make-call-to-exported g fi)))
@@ -121,7 +116,7 @@
 ;;; Toplevel
 
 (defun lambda-embed-or-export (body fi export-lambdas)
-  "Merge LAMBDA expressions and replace variables by stack operations."
+  "Perform LAMBDA expansion on expression."
   (vars-to-stackops
       (tree-walk body
       	  :ascending
@@ -135,7 +130,8 @@
 	  fi))
 
 (defun lambda-expand (fun body &optional (parent-env nil) (export-lambdas t))
-  "Convert native function to stack function."
-  (with (forms  (argument-expand 'lambda-expansion (function-arguments fun) nil nil)
+  "Perform LAMBDA expansion on function."
+  (with (forms  (argument-expand-names 'lambda-expansion
+									   (function-arguments fun))
          fi     (make-funinfo :env (list forms parent-env)))
     (values (lambda-embed-or-export body fi export-lambdas) fi)))

@@ -52,15 +52,32 @@
 
 ;;;; LAMBDA EXPANSION
 
-(defun transpiler-lambda-expand (x)
-  (with ((forms inits)  (values nil nil) ; (copy-tree (function-arguments fun)))
-         fi             (make-funinfo :env (list forms nil)))
-    (lambda-embed-or-export x fi nil)))
+(defun transpiler-lambda-expand (tr x)
+  "Expand top-level LAMBDA expressions."
+  (if (consp x)
+	  (cons (if (consp x.)
+			    (if (lambda? x.)
+				    (let forms (when (transpiler-stack-arguments? tr)
+								 (argument-expand-names
+							       'transpiler-lambda-expand
+							       (lambda-args x.)))
+			          `#'(,(lambda-args x.)
+    			             ,@(lambda-embed-or-export
+					             (lambda-body x.)
+         			             (make-funinfo :env (list forms nil))
+					             (transpiler-lambda-export? tr))))
+				    (transpiler-lambda-expand tr x.))
+			    (transpiler-lambda-expand tr x.))
+		    (transpiler-lambda-expand tr .x))
+	  x))
 
 ;;;; TOPLEVEL
 
 (defun transpiler-expand-compose (tr)
-  (compose (fn (transpiler-make-named-functions tr _))
+  (compose
+		   ; Add names to top-level functions for those target languages
+		   ; that require it.
+		   (fn (transpiler-make-named-functions tr _))
 
 		   ; Peephole-optimization.
 		   ; Removes some unused code.
@@ -74,9 +91,10 @@
 		   ; Give context to member symbols.
 	       (fn thisify (transpiler-thisify-classes tr) _)
 
+#'print
 		   ; Inline local function calls.
 		   ; Gives local variables stack slots.
-	       #'transpiler-lambda-expand
+	       (fn transpiler-lambda-expand tr _)
 
 		   ; Convert backquote-expressions into consing run-time expressions.
 	       #'backquote-expand

@@ -20,7 +20,9 @@
   (obfuscation-exceptions nil)
   (make-label #'identity)
   (preprocessor #'identity)
-  (named-functions? nil))
+  (named-functions? nil)
+  (lambda-export? nil)
+  (stack-arguments? nil))
 
 (defun transpiler-function-arguments? (tr fun)
   (assoc fun (transpiler-function-args tr)))

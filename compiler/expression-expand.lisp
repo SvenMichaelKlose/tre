@@ -27,10 +27,10 @@
 (defun expex-able? (ex x)
   (not (or (atom x)
            (in? x. '%stack ;'%quote
-						'vm-go 'vm-go-nil
-						'%transpiler-native '%transpiler-string
-						'%var
-						'%funref '%no-expex))))
+				   'vm-go 'vm-go-nil
+				   '%transpiler-native '%transpiler-string
+				   '%var
+				   '%no-expex))))
 
 ;; Check if an expression is inline.
 ;;

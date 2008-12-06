@@ -37,8 +37,8 @@
 
 ;;;; Symbol replacement definitions.
 
-;(transpiler-translate-symbol *c-transpiler* nil "null")
-;(transpiler-translate-symbol *c-transpiler* t "true")
+(transpiler-translate-symbol *c-transpiler* nil "treptr_nil")
+(transpiler-translate-symbol *c-transpiler* t "treptr_t")
 
 ;;; Numbers, arithmetic and comparison.
 
@@ -61,3 +61,9 @@
 
 (define-c-macro %quote (x)
   `("T37quote(\"" ,(symbol-name x) "\")"))
+
+(define-c-macro %set-vec (vec index value)
+  `("((treptr *)" ,vec ")[(unsigned long)" ,index "] = " ,value))
+
+(define-c-macro %get-vec (vec index)
+  `("((treptr *)" ,vec ")[(unsigned long)" ,index "]"))

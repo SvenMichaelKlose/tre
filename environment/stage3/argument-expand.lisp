@@ -52,7 +52,8 @@
 ;;
 ;; When apply-values is NIL, only the expanded argument definition is
 ;; returned.
-
+;;
+;; 'fun' is only used for error messages.
 (defun argument-expand2 (fun adef alst apply-values &optional no-static argdefs key-args num rest-arg)
   (with (err
 		   #'((msg &rest args)
@@ -180,6 +181,9 @@
 			   #'identity
 			   #'carlist)
 		   (argument-expand2 fun def vals apply-values)))
+
+(defun argument-expand-names (fun def)
+  (argument-expand fun def nil nil))
 
 (defun %argument-expand-rest (args)
   (when args
