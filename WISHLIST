@@ -6,20 +6,20 @@
 
 - Setting NIL is ignored. Saves dummy vars. Or change argument orders.
 
-(defmacro name (arg (eval arg)) ...) optional evaluation to save gensym expressions.
-&KEY after &REST
+- (defmacro name (arg (eval arg)) ...) optional evaluation to save gensym expressions.
+- &KEY after &REST
 
-Argument definition:
+- Argument definition:
 
 	(defun something ((form #'some-filter)))
 
-- 4TH-CELL is a whole symbol
+- 4TH-CELL is a whole symbol, regardless of it starting with a number
 - TYPEDEF - make cons another type.
 
 - rename imported symbol (alias)
 - : is IN-SCOPE. Allows `(,pack:sym)
 
-- M-V-B/WITH: assignment to NIL  is ignored.
+- M-V-B/WITH: assignment to NIL is ignored.
 
 - =: Many arguments.
 
@@ -31,16 +31,16 @@ Argument definition:
 
 - Obligatory &KEY arguments.
 
-- &SELF-OPTIONAL: Only valid when self-called.
+- &SELF-OPTIONAL: Only usable when self-called.
 
 - . alias for CONS
 
-- QUASIQUOTE escape for macro macros.
+- ??? QUASIQUOTE escape for macro macros.
 
-- . for &REST (implies rgument definition without () == (&rest arg))
+- . for &REST (implies argument definition without () == (&rest arg))
 
-- Argument macros
+- Argument macros, inlined macros
 
-- TREScript: DEFMETHOD - save 'this', have argument expansion.
+- TREScript: DEFMETHOD - have argument expansion.
 
 - Nested DEFSTRUCT.
