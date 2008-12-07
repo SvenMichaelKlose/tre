@@ -26,13 +26,13 @@
   ;
   ; Tells, where arguments must be placed on the stack or if they must be
   ; placed on a rest list. This is used to insert argument passing instructions.
-  (argument-places nil)
+  ;(argument-places nil)
 
   ; Called functions.
-  (callees nil)
+  ;(callees nil)
 
   ; Total size of stack with arguments and local variables.
-  (stack-size nil)
+  ;(stack-size nil)
 
   ; List of variables defined outside the function.
   (free-vars  (make-queue))
