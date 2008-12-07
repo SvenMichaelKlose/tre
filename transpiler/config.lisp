@@ -8,21 +8,23 @@
   macro-expander
   separator
   unwanted-functions
-  expanded-functions
-  (identifier-char? nil)
-  (thisify-classes nil)
-  (symbol-translations nil)
+  (identifier-char?
+	(fn error "structure 'transpiler': IDENTIFIER-CHAR? is not initialised"))
   (expex nil)
-  (function-args nil)
   (wanted-functions nil)
   (obfuscate? nil)
-  (obfuscations nil)
   (obfuscation-exceptions nil)
   (make-label #'identity)
   (preprocessor #'identity)
   (named-functions? nil)
   (lambda-export? nil)
-  (stack-arguments? nil))
+  (stack-arguments? nil)
+
+  ; You shouldn't have to tweak these at construction-time:
+  (thisify-classes nil)	; thisified classes.
+  (function-args nil)
+  (symbol-translations nil)
+  (obfuscations (make-hash-table)))
 
 (defun transpiler-function-arguments? (tr fun)
   (assoc fun (transpiler-function-args tr)))

@@ -91,7 +91,6 @@
 		   ; Give context to member symbols.
 	       (fn thisify (transpiler-thisify-classes tr) _)
 
-#'print
 		   ; Inline local function calls.
 		   ; Gives local variables stack slots.
 	       (fn transpiler-lambda-expand tr _)

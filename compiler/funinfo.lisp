@@ -64,6 +64,10 @@
   (setf (car (funinfo-env fi)) (append (car (funinfo-env fi)) args))
   nil)
 
+(defun funinfo-env-add-arg (fi arg)
+  "Add variables to the current environment."
+  (funinfo-env-add-args fi (list arg)))
+
 (defun funinfo-free-var-pos (fi var)
   "Get index of free variable in environment vector."
   (position var (queue-list (funinfo-free-vars fi))))

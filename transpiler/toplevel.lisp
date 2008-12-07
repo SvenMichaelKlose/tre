@@ -31,19 +31,6 @@
 	     `(setf (cdr !) ,v)
 	     `(setf ,alist (acons ,k ,v ,alist)))))
 
-;(defun transpiler-sight (tr funlist)
-;  (with (out nil)
-;    (dolist (x funlist (reverse out))
-;	  (with (fun (symbol-function x))
-;	    (when (functionp fun)
-;		  (if fun
-;			  (assoc-update x
-;		  	  				(expanded (funcall #'transpiler-expand
-;;							 				   tr `((defun ,x ,(function-arguments fun)
-;							                          ,@(function-body fun)))))
-;							(transpiler-expanded-functions tr))
-;			  (error "Unknown function ~A~%" (symbol-name x))))))))
-
 (defun transpiler-collect-wanted (tr pass funlist)
   (with (out nil)
     (dolist (x funlist (reverse out))

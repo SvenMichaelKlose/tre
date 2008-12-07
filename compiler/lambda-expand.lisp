@@ -1,6 +1,5 @@
-;;;;; nix operating system project
-;;;;; lisp compiler
-;;;;; Copyright (C) 2005-2007 Sven Klose <pixel@copei.de>
+;;;;; TRE compiler
+;;;;; Copyright (C) 2005-2008 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; LAMBDA expansion.
 ;;;;;
@@ -11,61 +10,60 @@
 
 (defmacro with-lambda-call ((args vals body call) &rest exec-body)
   "Bind local function call components to variables for exec-body."
-  (with-gensym (tmp l)
-    `(let* ((,tmp ,call)
-                    (,l (second (car ,tmp)))
-            (,args (lambda-args ,l))
-            (,vals (lambda-call-vals ,tmp))
-            (,body (lambda-body ,l)))
+  (with-gensym (tmp fun)
+    `(with (,tmp ,call
+            ,fun (second (car ,tmp))
+            ,args (lambda-args ,fun)
+            ,vals (lambda-call-vals ,tmp)
+            ,body (lambda-body ,fun))
        ,@exec-body)))
 
 ;;; Stack setup
 
-(defun make-stackop (var fi)
-  "Make stack operation. If the variable is not in the current environment,
+(defun make-stackplace (fi var )
+  "Make stack-place. If the variable is not in the current environment,
    it is returned as is and added to the free-variable list of the funinfo."
   (aif (funinfo-env-pos fi var)
-    `(%stack ,!)
-    `(%vec (%stack 0) ,(or (funinfo-free-var-pos fi var)
-                           (progn
-                             (funinfo-add-free-var fi var)
-                             (funinfo-free-var-pos fi var))))))
+       `(%stack ,!)
+       `(%vec (%stack 0) ,(or (funinfo-free-var-pos fi var)
+                              (progn
+                                (funinfo-add-free-var fi var)
+                                (funinfo-free-var-pos fi var))))))
 
 (defun is-stackvar? (var fi locals)
   "Check if a variable is on the stack."
   (and (atom var)
-    (dolist (sl (funinfo-env fi))
-      (when (and sl
-				 (find var sl)
+    (dolist (stack-places (funinfo-env fi))
+      (when (and stack-places
+				 (find var stack-places)
 				 (not (find var locals)))
         (return t)))))
 
-(defun vars-to-stackops (body fi &optional (locals nil))
+(defun vars-to-stackplaces (body fi &optional (locals nil))
   "Replaces variables by stack operations. Returns modified body.
    Free variables are added to free-vars of the funinfo."
   (tree-walk body
-	:dont-ascend-after-if #'((x)
-							   (or (%slot-value? x)
-								   (lambda? x)))
+	:dont-ascend-after-if
+	  (fn (or (%slot-value? _)
+			  (lambda? _)))
     :ascending
-      #'((e)
-		   (if (lambda? e) ; Add variables to ignore in subfunctions.
-			   (vars-to-stackops e fi (append locals (lambda-args e)))
-			   (if (%slot-value? e)
-				   `(%slot-value ,(vars-to-stackops (second e) fi) ,(third e))
-           	       (if (is-stackvar? e fi locals)
-               	       (make-stackop e fi)
-			   	       e))))))
+      (fn (if (lambda? _) ; Add variables to ignore in subfunctions.
+			  (vars-to-stackplaces _ fi (append locals (lambda-args _)))
+			  (if (%slot-value? _)
+				  `(%slot-value ,(vars-to-stackplaces (second _) fi) ,(third _))
+           	      (if (is-stackvar? _ fi locals)
+               	      (make-stackplace fi _)
+			   	      _))))))
 
 ;;; LAMBDA inlining
 
-(defun make-inline-body (args vals body)
+(defun make-inline-body (stack-places values body)
   "Make body with stack variable initialisers."
   `(vm-scope
-	 ,@(mapcan #'((a v)
-				  `((%var ,a)
-					(%setq ,a ,v)))
-			   args vals)
+	 ,@(mapcan #'((stack-place init-value)
+				  `((%var ,stack-place)
+					(%setq ,stack-place ,init-value)))
+			   stack-places values)
      ,@body))
 
 (defun lambda-call-embed (lambda-call fi export-lambdas)
@@ -74,37 +72,40 @@
     (with ((a v) (assoc-splice (argument-expand 'local-var-fun args vals t)))
       (with-funinfo-env-temporary fi args
         (make-inline-body
-			(vars-to-stackops a fi)
+			(vars-to-stackplaces a fi)
       		v
 			(lambda-embed-or-export body fi export-lambdas))))))
 
 ;;; LAMBDA export
 
-(defun make-varblock-inits (s fi fv)
+(defun make-varblock-inits (s fi free-vars)
   (mapcar (fn `(%set-vec ,s
-						 ,(position _ fv)
-						 ,(make-stackop _ fi)))
-		  fv))
+						 ,(position _ free-vars)
+						 ,(make-stackplace fi _)))
+		  free-vars))
 
-(defun make-varblock-exits (s fi fv)
-  (mapcar (fn `(%setq ,(make-stackop _ fi)
-					  (%get-vec ,s ,(position _ fv))))
-		  fv))
+(defun make-varblock-exits (s fi free-vars)
+  (mapcar (fn `(%setq ,(make-stackplace fi _)
+					  (%get-vec ,s ,(position _ free-vars))))
+		  free-vars))
 
 (defun make-call-to-exported (name fi)
-  (with (f	    (symbol-function name)
-		 exp-fi	(atomic-expand-lambda f (function-body f) (funinfo-env-this fi))
-         fv     (queue-list (funinfo-free-vars exp-fi)))
-    (if fv
-        (with-gensym g
-		  ; XXX move past SSA.
-          (funinfo-env-add-args fi (list g))
-          (with (s (make-stackop g fi))
+  (with (f			(symbol-function name)
+		 exp-fi     (atomic-expand-lambda
+					  f
+					  (function-body f)
+					  (funinfo-env-this fi))
+         free-vars  (queue-list (funinfo-free-vars exp-fi)))
+    (if free-vars
+        (with-gensym free-vars-vec-argument
+          (funinfo-env-add-arg fi free-vars-vec-argument)
+          (with (free-vars-vec (make-stackplace fi free-vars-vec-argument))
             `(vm-scope
-               (%setq ,s (make-array ,(length fv)))
-			   ,@(make-varblock-inits s fi fv)
-               (%funref ,name ,s)
-			   ,@(make-varblock-exits s fi fv))))
+               (%setq ,free-vars-vec (make-array ,(length free-vars)))
+			   ,@(make-varblock-inits free-vars-vec fi free-vars)
+               (%funref ,name ,free-vars-vec)
+			   ,@(make-varblock-exits free-vars-vec fi free-vars))))
+		; Function reference without free variables.
 		`(%funref ,name nil))))
 
 (defun lambda-export (x fi)
@@ -117,16 +118,15 @@
 
 (defun lambda-embed-or-export (body fi export-lambdas)
   "Perform LAMBDA expansion on expression."
-  (vars-to-stackops
-      (tree-walk body
-      	  :ascending
-        	  #'((x)
-             	 (if (lambda-call? x)
-                 	 (lambda-call-embed x fi export-lambdas)
-                 	 (if (and export-lambdas
-							  (lambda? x))
-                   	  	 (lambda-export x fi)
-				   	  	 x))))
+  (vars-to-stackplaces
+    (tree-walk body
+      :ascending
+         (fn (if (lambda-call? _)
+                 (lambda-call-embed _ fi export-lambdas)
+                 (if (and export-lambdas
+						  (lambda? _))
+                   	 (lambda-export _ fi)
+				   	 _))))
 	  fi))
 
 (defun lambda-expand (fun body &optional (parent-env nil) (export-lambdas t))

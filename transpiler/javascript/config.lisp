@@ -14,9 +14,7 @@
 	:unwanted-functions '($ cons car cdr make-hash-table map error
 						  new %new ; environment/oo/ducktype.lisp
 						 )
-	:thisify-classes nil
 	:obfuscate? nil
-	:obfuscations (make-hash-table)
 
 	:obfuscation-exceptions
 	  '(caroshi-start
