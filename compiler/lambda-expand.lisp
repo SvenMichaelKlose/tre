@@ -13,7 +13,7 @@
   (with-gensym (tmp fun)
     `(with (,tmp ,call
             ,fun (second (car ,tmp))
-            ,args (lambda-args ,fun)
+            ,args (lambda-args-expanded ,fun)
             ,vals (lambda-call-vals ,tmp)
             ,body (lambda-body ,fun))
        ,@exec-body)))
@@ -30,14 +30,14 @@
                                 (funinfo-add-free-var fi var)
                                 (funinfo-free-var-pos fi var))))))
 
-(defun is-stackvar? (var fi locals)
-  "Check if a variable is on the stack."
+(defun is-env-var? (var fi locals)
+  "Check if symbol is a varable in the current environment."
   (and (atom var)
-    (dolist (stack-places (funinfo-env fi))
-      (when (and stack-places
-				 (find var stack-places)
-				 (not (find var locals)))
-        (return t)))))
+       (dolist (stack-places (funinfo-env fi))
+         (when (and stack-places
+				    (find var stack-places)
+				    (not (find var locals)))
+           (return t)))))
 
 (defun vars-to-stackplaces (body fi &optional (locals nil))
   "Replaces variables by stack operations. Returns modified body.
@@ -48,10 +48,11 @@
 			  (lambda? _)))
     :ascending
       (fn (if (lambda? _) ; Add variables to ignore in subfunctions.
-			  (vars-to-stackplaces _ fi (append locals (lambda-args _)))
+			  (vars-to-stackplaces _ fi (append locals
+												(lambda-args-expanded _)))
 			  (if (%slot-value? _)
 				  `(%slot-value ,(vars-to-stackplaces (second _) fi) ,(third _))
-           	      (if (is-stackvar? _ fi locals)
+           	      (if (is-env-var? _ fi locals)
                	      (make-stackplace fi _)
 			   	      _))))))
 
@@ -84,18 +85,14 @@
 						 ,(make-stackplace fi _)))
 		  free-vars))
 
-(defun make-varblock-exits (s fi free-vars)
-  (mapcar (fn `(%setq ,(make-stackplace fi _)
-					  (%get-vec ,s ,(position _ free-vars))))
-		  free-vars))
-
 (defun make-call-to-exported (name fi)
-  (with (f			(symbol-function name)
-		 exp-fi     (atomic-expand-lambda
-					  f
-					  (function-body f)
-					  (funinfo-env-this fi))
-         free-vars  (queue-list (funinfo-free-vars exp-fi)))
+  (with (f  (symbol-function name)
+		 ; Expand exported function to get its free variables.
+		 fi-exported  (atomic-expand-lambda
+					    f
+					    (function-body f)
+					    (funinfo-env-this fi))
+         free-vars  (queue-list (funinfo-free-vars fi-exported)))
     (if free-vars
         (with-gensym free-vars-vec-argument
           (funinfo-env-add-arg fi free-vars-vec-argument)
@@ -103,8 +100,7 @@
             `(vm-scope
                (%setq ,free-vars-vec (make-array ,(length free-vars)))
 			   ,@(make-varblock-inits free-vars-vec fi free-vars)
-               (%funref ,name ,free-vars-vec)
-			   ,@(make-varblock-exits free-vars-vec fi free-vars))))
+               (%funref ,name ,free-vars-vec))))
 		; Function reference without free variables.
 		`(%funref ,name nil))))
 
@@ -118,7 +114,7 @@
 
 (defun lambda-embed-or-export (body fi export-lambdas)
   "Perform LAMBDA expansion on expression."
-  (vars-to-stackplaces
+  (vars-to-stackplaces ; Convert function arguments to stackplaces.
     (tree-walk body
       :ascending
          (fn (if (lambda-call? _)
