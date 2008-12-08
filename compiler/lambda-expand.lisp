@@ -30,16 +30,14 @@
                                 (funinfo-add-free-var fi var)
                                 (funinfo-free-var-pos fi var))))))
 
-(defun is-env-var? (fi var locals)
+(defun is-env-var? (fi var)
   "Check if symbol is a varable in the current environment."
-  (and (atom var)
-       (dolist (stack-places (funinfo-env fi))
-         (when (and stack-places
-				    (find var stack-places)
-				    (not (find var locals)))
-           (return t)))))
+  (when (atom var)
+    (dolist (stack-places (funinfo-env fi))
+      (when (find var stack-places)
+        (return t)))))
 
-(defun vars-to-stackplaces (fi body &optional (locals nil))
+(defun vars-to-stackplaces (fi body)
   "Replaces variables by stack operations. Returns modified body.
    Free variables are added to free-vars of the funinfo."
   (tree-walk body
@@ -49,11 +47,10 @@
     :ascending
       (fn (cond
 		    ((lambda? _) ; Add variables to ignore in subfunctions.
-			   (vars-to-stackplaces fi _ (append locals
-												 (lambda-args-expanded _))))
+			   (vars-to-stackplaces fi _ ))
 			((%slot-value? _)
 			   `(%slot-value ,(vars-to-stackplaces fi (second _)) ,(third _)))
-           	((is-env-var? fi _ locals)
+           	((is-env-var? fi _)
                (make-stackplace fi _))
 			(t _)))))
 
@@ -71,7 +68,7 @@
 (defun lambda-call-embed (fi lambda-call export-lambdas)
   "Replace local LAMBDA expression by its body using stack variables."
   (with-lambda-call (args vals body lambda-call)
-    (with ((a v) (assoc-splice (argument-expand 'local-var-fun args vals t)))
+    (with ((a v) (assoc-splice (argument-expand 'local-var-fun args vals)))
       (with-funinfo-env-temporary fi args
         (make-inline-body
 			(vars-to-stackplaces fi a)

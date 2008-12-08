@@ -176,7 +176,7 @@
 			 key-args
 			 rest-arg))))
 
-(defun argument-expand (fun def vals apply-values)
+(defun argument-expand (fun def vals &optional (apply-values t))
   (funcall (if apply-values
 			   #'identity
 			   #'carlist)
