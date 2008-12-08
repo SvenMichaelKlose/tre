@@ -30,7 +30,7 @@
                                 (funinfo-add-free-var fi var)
                                 (funinfo-free-var-pos fi var))))))
 
-(defun is-env-var? (var fi locals)
+(defun is-env-var? (fi var locals)
   "Check if symbol is a varable in the current environment."
   (and (atom var)
        (dolist (stack-places (funinfo-env fi))
@@ -39,7 +39,7 @@
 				    (not (find var locals)))
            (return t)))))
 
-(defun vars-to-stackplaces (body fi &optional (locals nil))
+(defun vars-to-stackplaces (fi body &optional (locals nil))
   "Replaces variables by stack operations. Returns modified body.
    Free variables are added to free-vars of the funinfo."
   (tree-walk body
@@ -47,14 +47,15 @@
 	  (fn (or (%slot-value? _)
 			  (lambda? _)))
     :ascending
-      (fn (if (lambda? _) ; Add variables to ignore in subfunctions.
-			  (vars-to-stackplaces _ fi (append locals
-												(lambda-args-expanded _)))
-			  (if (%slot-value? _)
-				  `(%slot-value ,(vars-to-stackplaces (second _) fi) ,(third _))
-           	      (if (is-env-var? _ fi locals)
-               	      (make-stackplace fi _)
-			   	      _))))))
+      (fn (cond
+		    ((lambda? _) ; Add variables to ignore in subfunctions.
+			   (vars-to-stackplaces fi _ (append locals
+												 (lambda-args-expanded _))))
+			((%slot-value? _)
+			   `(%slot-value ,(vars-to-stackplaces fi (second _)) ,(third _)))
+           	((is-env-var? fi _ locals)
+               (make-stackplace fi _))
+			(t _)))))
 
 ;;; LAMBDA inlining
 
@@ -67,25 +68,25 @@
 			   stack-places values)
      ,@body))
 
-(defun lambda-call-embed (lambda-call fi export-lambdas)
+(defun lambda-call-embed (fi lambda-call export-lambdas)
   "Replace local LAMBDA expression by its body using stack variables."
   (with-lambda-call (args vals body lambda-call)
     (with ((a v) (assoc-splice (argument-expand 'local-var-fun args vals t)))
       (with-funinfo-env-temporary fi args
         (make-inline-body
-			(vars-to-stackplaces a fi)
+			(vars-to-stackplaces fi a)
       		v
-			(lambda-embed-or-export body fi export-lambdas))))))
+			(lambda-embed-or-export fi body export-lambdas))))))
 
 ;;; LAMBDA export
 
-(defun make-varblock-inits (s fi free-vars)
+(defun make-varblock-inits (fi s free-vars)
   (mapcar (fn `(%set-vec ,s
 						 ,(position _ free-vars)
 						 ,(make-stackplace fi _)))
 		  free-vars))
 
-(defun make-call-to-exported (name fi)
+(defun make-call-to-exported (fi name)
   (with (f  (symbol-function name)
 		 ; Expand exported function to get its free variables.
 		 fi-exported  (atomic-expand-lambda
@@ -99,35 +100,36 @@
           (with (free-vars-vec (make-stackplace fi free-vars-vec-argument))
             `(vm-scope
                (%setq ,free-vars-vec (make-array ,(length free-vars)))
-			   ,@(make-varblock-inits free-vars-vec fi free-vars)
+			   ,@(make-varblock-inits fi free-vars-vec free-vars)
                (%funref ,name ,free-vars-vec))))
 		; Function reference without free variables.
 		`(%funref ,name nil))))
 
-(defun lambda-export (x fi)
+(defun lambda-export (fi x)
   "Export and expand function."
-  (with-gensym g
-    (eval `(%set-atom-fun ,g ,x)) ; Create new function.
-    (make-call-to-exported g fi)))
+  (with-gensym exported-fun
+    (eval `(%set-atom-fun ,exported-fun ,x)) ; Create new function.
+    (make-call-to-exported fi exported-fun)))
 
 ;;; Toplevel
 
-(defun lambda-embed-or-export (body fi export-lambdas)
+(defun lambda-embed-or-export (fi body export-lambdas)
   "Perform LAMBDA expansion on expression."
   (vars-to-stackplaces ; Convert function arguments to stackplaces.
+	fi
     (tree-walk body
       :ascending
-         (fn (if (lambda-call? _)
-                 (lambda-call-embed _ fi export-lambdas)
-                 (if (and export-lambdas
-						  (lambda? _))
-                   	 (lambda-export _ fi)
-				   	 _))))
-	  fi))
+         (fn (cond
+			   ((lambda-call? _)
+                  (lambda-call-embed fi _ export-lambdas))
+               ((and export-lambdas
+					 (lambda? _))
+                  (lambda-export fi _))
+			   (t _))))))
 
 (defun lambda-expand (fun body &optional (parent-env nil) (export-lambdas t))
   "Perform LAMBDA expansion on function."
   (with (forms  (argument-expand-names 'lambda-expansion
 									   (function-arguments fun))
          fi     (make-funinfo :env (list forms parent-env)))
-    (values (lambda-embed-or-export body fi export-lambdas) fi)))
+    (values (lambda-embed-or-export fi body export-lambdas) fi)))

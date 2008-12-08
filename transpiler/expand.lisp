@@ -63,8 +63,8 @@
 							       (lambda-args x.)))
 			          `#'(,(lambda-args x.)
     			             ,@(lambda-embed-or-export
-					             (lambda-body x.)
          			             (make-funinfo :env (list forms nil))
+					             (lambda-body x.)
 					             (transpiler-lambda-export? tr))))
 				    (transpiler-lambda-expand tr x.))
 			    (transpiler-lambda-expand tr x.))
