@@ -12,7 +12,6 @@
 ;;;;
 ;;;; Transforms toplevel expressions into virtual code.
 (env-load "../compiler/quote-expand.lisp")
-(env-load "../compiler/define-expander.lisp")
 (env-load "../compiler/compiler-macros.lisp")
 
 (env-load "../lib/tree-walk.lisp")

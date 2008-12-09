@@ -29,7 +29,7 @@
 					  (fn expression-expand (make-expex) _))
 			 lambda-expansion)
     ;(setf (cdr (assoc fun *expanded-functions*)) fi)
-    (print fi)))
+    fi))
 
 (defun compile (fun)
   (print-compiler-status fun)

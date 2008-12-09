@@ -8,6 +8,7 @@
 (env-load "stage4/compose.lisp")
 (env-load "stage4/dollar.lisp")
 (env-load "stage4/enqueue-many.lisp")
+(env-load "stage4/expander.lisp")
 (env-load "stage4/find-tree.lisp")
 (env-load "stage4/force-list.lisp")
 (env-load "stage4/mapatree.lisp")
@@ -20,4 +21,3 @@
 (env-load "stage4/tree-list.lisp")
 (env-load "stage4/trim.lisp")
 (env-load "stage4/with-cons.lisp")
-(env-load "stage4/with-temporary.lisp")
