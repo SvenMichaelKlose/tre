@@ -33,9 +33,7 @@
 (defun is-env-var? (fi var)
   "Check if symbol is a varable in the current environment."
   (when (atom var)
-    (dolist (stack-places (funinfo-env fi))
-      (when (find var stack-places)
-        (return t)))))
+    (find var (apply #'append (funinfo-env fi)))))
 
 (defun vars-to-stackplaces (fi body)
   "Replaces variables by stack operations. Returns modified body.
@@ -69,6 +67,9 @@
   "Replace local LAMBDA expression by its body using stack variables."
   (with-lambda-call (args vals body lambda-call)
     (with ((a v) (assoc-splice (argument-expand 'local-var-fun args vals)))
+	  ; Add lambda-call arguments to the parent function's arguments
+	  ; temporarily to make stack-places; so the stack-places can be
+	  ; reused by the next lambda-call on the same level.
       (with-funinfo-env-temporary fi args
         (make-inline-body
 			(vars-to-stackplaces fi a)
@@ -88,9 +89,8 @@
 		 ; Expand exported function to get its free variables.
 		 fi-exported  (atomic-expand-lambda
 					    f
-					    (function-body f)
 					    (funinfo-env-this fi))
-         free-vars  (queue-list (funinfo-free-vars fi-exported)))
+         free-vars  (reverse (funinfo-free-vars fi-exported)))
     (if free-vars
         (with-gensym free-vars-vec-argument
           (funinfo-env-add-arg fi free-vars-vec-argument)

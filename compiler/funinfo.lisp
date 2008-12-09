@@ -1,16 +1,5 @@
-;;;; nix operating system project
-;;;; lisp compiler
+;;;; TRE compiler
 ;;;; Copyright (C) 2006-2007 Sven Klose <pixel@copei.de>
-
-(defstruct argument-place
-  ; Object pointer?
-  (is-object nil)
-
-  ; Stack position.
-  (stack-position nil)
-
-  ; Rest list argument to which to append this argument.
-  (restlist nil))
 
 ;;; Function information.
 ;;;
@@ -35,14 +24,14 @@
   ;(stack-size nil)
 
   ; List of variables defined outside the function.
-  (free-vars  (make-queue))
+  (free-vars  nil)
 
   ; Function code. The format depends on the compilation pass.
   first-cblock)
 
 (defun funinfo-add-free-var (fi var)
   "Add free variable."
-  (enqueue (funinfo-free-vars fi) var)
+  (push (funinfo-free-vars fi) var)
   nil)
 
 (defun funinfo-env-this (fi)
@@ -70,7 +59,7 @@
 
 (defun funinfo-free-var-pos (fi var)
   "Get index of free variable in environment vector."
-  (position var (queue-list (funinfo-free-vars fi))))
+  (position var (reverse (funinfo-free-vars fi))))
 
 (defun funinfo-env-pos (fi var)
   "Get index of variable on the stack."

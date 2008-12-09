@@ -2,9 +2,7 @@
 ;;;;; list processor environment
 ;;;;; Copyright (c) 2006-2008 Sven Klose <pixel@copei.de>
 ;;;;;
-;;;;; Quote expansion.
-;;;;;
-;;;;; In this pass BACKQUOTE expressions are converted to native code.
+;;;;; Convert BACKQUOTE-expressions into run-time consing code.
 
 ;; BACKQUOTE-expand argument list with decremented sublevel.
 (defun quasiquote-subexpand (typ e sublevel)

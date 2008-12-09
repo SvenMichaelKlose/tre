@@ -79,8 +79,7 @@
 		   ; that require it.
 		   (fn (transpiler-make-named-functions tr _))
 
-		   ; Peephole-optimization.
-		   ; Removes some unused code.
+		   ; Peephole-optimization. Removes some unused code.
 		   #'opt-peephole
 
 		   ; Break up nested expressions.
@@ -95,14 +94,10 @@
 		   ; Gives local variables stack slots.
 	       (fn transpiler-lambda-expand tr _)
 
-		   ; Convert backquote-expressions into consing run-time expressions.
-	       #'backquote-expand
+		   ; Expand BACKQUOTEs and compiler-macros.
+		   #'special-form-expand
 
-		   ; Converts built-in control-forms into simpler meta-code.
-		   ; The resulting code uses only (un)conditional jumps to
-		   ; labels.
-	       #'compiler-macroexpand
-
+		   ; Convert object-dot-member symbols to %SLOT-VALUE expressions.
 		   #'transpiler-make-slot-values
 
 		   ; Do standard macro-expansion

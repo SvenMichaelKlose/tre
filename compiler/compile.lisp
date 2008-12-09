@@ -1,49 +1,45 @@
-;;;; nix operating system project
-;;;; lisp compiler
+;;;; TRE compiler
 ;;;; Copyright (C) 2005-2008 Sven Klose <pixel@copei.de>
 ;;;;
-;;;; Compiler toplevel
+;;;; Toplevel
 
 (defvar *expanded-functions* nil)
 
-(defun atomic-expand-lambda (fun mex &optional (parent-env nil))
-  (with ((lex fi) (lambda-expand fun (backquote-expand mex) parent-env))
-    (tree-expand fi (opt-peephole (expression-expand (make-expex) lex)))
-    fi))
-    ;(setf (cdr (assoc fun *expanded-functions*)) fi)
- 
-(defun atomic-expand-fun (fun)
-  (with (body (function-body fun))
+(defun print-compiler-status (fun)
+  (let body (function-body fun)
     (format t "(Processing ~A ~A)~%"
-			  (cond
-				((functionp fun)	"function")
+		      (cond
+			    ((functionp fun)	"function")
 				((macrop fun)		"macro"))
-              (if (eq (first (car body)) 'block)
+              (if (eq 'block (first (car body)))
                   (symbol-name (second (car body)))
-                  ""))
-    (atomic-expand-lambda fun (compiler-macroexpand body))))
+                  ""))))
 
-(defun compilable? (x)
-  (or (functionp x) (macrop x)))
- 
-; Replace function by optimized version.
-(defun atomic-expand (fun)
-  (when (second (symbol-value fun))
-    (if (compilable? fun)
-        (atomic-expand-fun fun)
-        (error "function expected"))))
+(defun special-form-expand (x)
+  (backquote-expand (compiler-macroexpand x)))
+
+(defun atomic-expand-lambda (fun &optional (parent-env nil))
+  (with ((lambda-expansion fi)
+	   	   (funcall (compose (fn lambda-expand fun _ parent-env)
+						     #'special-form-expand
+							 #'function-body)
+					fun))
+	(funcall (compose (fn tree-expand fi _)
+					  #'opt-peephole
+					  (fn expression-expand (make-expex) _))
+			 lambda-expansion)
+    ;(setf (cdr (assoc fun *expanded-functions*)) fi)
+    (print fi)))
 
 (defun compile (fun)
-  (atomic-expand fun))
-
-(defun atomic-expand-all ()
-  (dolist (i (reverse *universe*))
-    (awhen (symbol-function i)
-      (when (compilable? !)
-        (atomic-expand !))
-      ;(do-tests *tests*)
-)))
+  (print-compiler-status fun)
+  (if (compilable? fun)
+      (and (atomic-expand-lambda fun)
+		    nil)
+      (error "function expected")))
 
 (defun compile-all ()
-  (atomic-expand-all)
-  nil)
+  (dolist (i (reverse *universe*) nil)
+    (awhen (symbol-function i)
+      (when (compilable? !)
+        (compile !)))))
