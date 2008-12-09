@@ -85,10 +85,10 @@
 		  free-vars))
 
 (defun make-call-to-exported (fi name)
-  (with (f  (symbol-function name)
+  (with (exported-name  (symbol-function name)
 		 ; Expand exported function to get its free variables.
 		 fi-exported  (atomic-expand-lambda
-					    f
+					    exported-name
 					    (funinfo-env-this fi))
          free-vars  (reverse (funinfo-free-vars fi-exported)))
     (if free-vars
