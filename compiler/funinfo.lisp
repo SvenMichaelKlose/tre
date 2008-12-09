@@ -11,18 +11,6 @@
   ; List of arguments.
   (args       nil)
 
-  ; Argument expansion description.
-  ;
-  ; Tells, where arguments must be placed on the stack or if they must be
-  ; placed on a rest list. This is used to insert argument passing instructions.
-  ;(argument-places nil)
-
-  ; Called functions.
-  ;(callees nil)
-
-  ; Total size of stack with arguments and local variables.
-  ;(stack-size nil)
-
   ; List of variables defined outside the function.
   (free-vars  nil)
 
@@ -32,7 +20,7 @@
 (defun funinfo-add-free-var (fi var)
   "Add free variable."
   (push (funinfo-free-vars fi) var)
-  nil)
+  var)
 
 (defun funinfo-env-this (fi)
   "Get current environment description."
@@ -40,18 +28,16 @@
 
 (defun funinfo-push-env (fi forms)
   "Open new environment."
-  (push forms (funinfo-env fi))
-  nil)
+  (push forms (funinfo-env fi)))
  
 (defun funinfo-pop-env (fi)
   "Close environment."
-  (pop (funinfo-env fi))
-  nil)
+  (pop (funinfo-env fi)))
 
 (defun funinfo-env-add-args (fi args)
   "Add variables to the current environment."
   (setf (car (funinfo-env fi)) (append (car (funinfo-env fi)) args))
-  nil)
+  args)
 
 (defun funinfo-env-add-arg (fi arg)
   "Add variables to the current environment."
