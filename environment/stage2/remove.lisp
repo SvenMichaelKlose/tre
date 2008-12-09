@@ -1,4 +1,4 @@
-;;;; list processor
+;;;; TRE environment
 ;;;; Copyright (c) 2007-2008 Sven Klose <pixel@copei.de>
 
 (defun remove-if (fun x)
@@ -9,11 +9,9 @@
 			  (remove-if fun (cdr x))))))
 
 (defun remove-if-not (fun x)
-  (remove-if #'((x)
-				  (not (funcall fun x)))
+  (remove-if (fn not (funcall fun _))
 			 x))
 
-(defun remove (elm lst &optional (test #'eq))
-  (remove-if #'((x)
-				  (funcall test elm x))
-			 lst))
+(defun remove (elm x &optional (test #'eq))
+  (remove-if (fn funcall test elm _)
+			 x))

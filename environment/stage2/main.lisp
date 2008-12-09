@@ -25,4 +25,5 @@
 (env-load "stage2/butlast.lisp")
 (env-load "stage2/math.lisp")
 (env-load "stage2/rplac-cons.lisp")
+(env-load "stage2/traverse.lisp")
 (env-load "stage2/remove.lisp")
