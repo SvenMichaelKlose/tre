@@ -14,6 +14,9 @@
   ; List of variables defined outside the function.
   (free-vars  nil)
 
+  ; List of exported functions.
+  (exported-functions nil)
+
   ; Function code. The format depends on the compilation pass.
   first-cblock)
 

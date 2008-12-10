@@ -84,7 +84,7 @@
 						 ,(make-stackplace fi _)))
 		  free-vars))
 
-(defun make-call-to-exported (fi name)
+(defun lambda-expand-exported (fi name)
   (with (exported-name  (symbol-function name)
 		 ; Expand exported function to get its free variables.
 		 fi-exported  (atomic-expand-lambda
@@ -94,9 +94,10 @@
     (if free-vars
         (with-gensym free-vars-vec-argument
           (funinfo-env-add-arg fi free-vars-vec-argument)
-          (with (free-vars-vec (make-stackplace fi free-vars-vec-argument))
+          (let free-vars-vec (make-stackplace fi free-vars-vec-argument)
             `(vm-scope
-               (%setq ,free-vars-vec (make-array ,(length free-vars)))
+               (%setq ,free-vars-vec
+					  (make-array ,(length free-vars)))
 			   ,@(make-varblock-inits fi free-vars-vec free-vars)
                (%funref ,name ,free-vars-vec))))
 		; Function reference without free variables.
@@ -106,7 +107,8 @@
   "Export and expand function."
   (with-gensym exported-fun
     (eval `(%set-atom-fun ,exported-fun ,x)) ; Create new function.
-    (make-call-to-exported fi exported-fun)))
+    (push exported-fun (funinfo-exported-functions fi))
+    (lambda-expand-exported fi exported-fun)))
 
 ;;; Toplevel
 
@@ -114,7 +116,8 @@
   "Perform LAMBDA expansion on expression."
   (vars-to-stackplaces ; Convert function arguments to stackplaces.
 	fi
-    (tree-walk body
+    (tree-walk
+	  body
       :ascending
          (fn (cond
 			   ((lambda-call? _)
