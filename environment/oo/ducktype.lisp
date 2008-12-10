@@ -18,27 +18,30 @@
 (defun ducktyped-slothash-name (objname)
   ($ '%%DUCKTYPED-SLOTS- objname))
 
+(defun %ducktype-inherit (cname bases)
+  (with (base-members nil
+	     base-methods nil)
+   	(dolist (base bases)
+	  (let bclass (gethash base *ducktyped-classes*)
+		(nconc base-members (ducktyped-class-members bclass))
+		(nconc base-methods (ducktyped-class-methods bclass))))
+	(make-ducktyped-class :members base-members
+				     	  :methods base-methods)))
+
 (defun %ducktype-make-class (cname bases)
   (when (gethash cname *ducktyped-classes*)
     (error "Class ~A already defined." cname))
   (setf (gethash cname *ducktyped-classes*)
-		(if bases
-			(with (base-members nil
-				   base-methods nil)
-    		  (dolist (base bases)
-				(with (bclass (gethash base *ducktyped-classes*))
-				  (nconc base-members (ducktyped-class-members bclass))
-				  (nconc base-methods (ducktyped-class-methods bclass))))
-			  (make-ducktyped-class :members base-members
-							     	:methods base-methods))
+   		(if bases
+			(%ducktype-inherit cname bases)
 			(make-ducktyped-class))))
 
 (defmacro defclass (class-name args &rest body)
   (with (cname (if (consp class-name)
-				   (first class-name)
+				   class-name.
 				   class-name)
 		 bases (and (consp class-name)
-				    (cdr class-name)))
+				    .class-name))
 	(%ducktype-make-class cname bases)
 	(with (slothash (ducktyped-slothash-name cname))
 	  `(progn
@@ -88,13 +91,13 @@
   (setf (gethash slot (ducktyped-obj-members obj)) value))
 
 (defun %new (name &rest args)
-  (with (members (make-hash-table))
+  (let members (make-hash-table)
 	(dolist (i (gethash name *ducktype-members*))
-	  (setf (gethash i members) nil))
-	(with (this (make-ducktyped-obj
-				  :class name
-				  :slots (gethash name *ducktype-slothashes*)
-				  :members members))
+	  (clr (gethash i members)))
+	(let this (make-ducktyped-obj
+				:class name
+				:slots (gethash name *ducktype-slothashes*)
+				:members members)
 	  (apply (symbol-function name) this args))))
 
 (defmacro new (name &rest args)
