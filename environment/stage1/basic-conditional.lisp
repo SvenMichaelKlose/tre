@@ -4,11 +4,6 @@
 ;;;;
 ;;;; Basic conditional operators
 
-(defmacro if (predicate consequent &optional (alternative nil))
-  `(cond
-     (,predicate ,consequent)
-     (t ,alternative)))
-
 (%defun compiler-and (x)
   (cond
     ((cdr x)

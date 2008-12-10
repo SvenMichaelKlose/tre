@@ -115,3 +115,8 @@
   `(vm-scope ,@(mapcar #'((x)
 						    `(%setq ,(first x) ,(second x)))
                        (group args 2))))
+
+(define-compiler-macro if (predicate consequent &optional (alternative nil))
+  `(cond
+     (,predicate ,consequent)
+     (t ,alternative)))

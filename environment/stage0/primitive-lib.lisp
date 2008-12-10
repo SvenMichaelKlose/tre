@@ -24,26 +24,24 @@
 
 (%set-atom-fun not
   #'((x)
-	   (cond
-		 (x nil)
-		 (t t))))
+	   (if x
+		   nil
+		   t)))
 
 (%set-atom-fun copy-tree
   #'((x)
-    (cond
-      (x (cond
-           ((atom x)
-               x)
-           (t  (cons (copy-tree (car x))
-                     (copy-tree (cdr x)))))))))
+    (if x
+		(if (atom x)
+            x
+        	(cons (copy-tree (car x))
+              	  (copy-tree (cdr x)))))))
 
 (%set-atom-fun last
   #'((x)
-    (cond
-      (x  (cond
-            ((cdr x)
-                (last (cdr x)))
-            (t  x))))))
+    (if x
+		(if (cdr x)
+            (last (cdr x))
+            x))))
 
 (%set-atom-fun %nconc
   #'((a b)

@@ -164,6 +164,31 @@ trespecial_cond (treptr p)
     return treptr_nil;
 }
 
+treptr
+trespecial_if (treptr p)
+{
+    treptr test;
+    treptr body;
+
+    if (TREPTR_IS_ATOM(p))
+        return treerror (p, "expression expected");
+
+    while (p != treptr_nil) {
+        test = CAR(p);
+        p = CDR(p);
+        if (p == treptr_nil)
+            return treeval (test);
+
+        body = CAR(p);
+        if (treeval (test) != treptr_nil)
+            return treeval (body);
+
+        p = CDR(p);
+    }
+
+    return treptr_nil;
+}
+
 /*
  * (QUOTE expression)
  *
@@ -410,7 +435,7 @@ char *tre_special_names[] = {
 
     "MACRO", "SPECIAL",
 
-    "COND",
+    "COND", "IF",
 
     "QUOTE",
 
@@ -431,6 +456,7 @@ treevalfunc_t treeval_xlat_spec[] = {
     trespecial_macro,
     trespecial_special,
     trespecial_cond,
+    trespecial_if,
     trespecial_quote,
     trespecial_progn,
     trespecial_block,
