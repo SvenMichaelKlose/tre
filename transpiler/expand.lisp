@@ -19,22 +19,21 @@
     (when x
 	  ; Combine expression and next symbol to %SLOT-VALUE if the symbol and starts with
 	  ; a dot.
-      (cond
-		((and (consp x)
-			  (consp .x)
-			  (label? (second x))
-			  (= #\. (elt (symbol-name (second x)) 0)))
-		  	(cons `(%slot-value ,(transpiler-make-slot-values x.)
-							    ,(conv (make-symbol (subseq (symbol-name (second x))
-														    1))))
-			      (transpiler-make-slot-values (cddr x))))
-		((label? x)
-			(conv x))
-		((consp x)
-		    (cons (transpiler-make-slot-values x.)
-				  (transpiler-make-slot-values .x)))
-      	(t
-			x)))))
+      (if
+		(and (consp x)
+			 (consp .x)
+			 (label? (second x))
+			 (= #\. (elt (symbol-name (second x)) 0)))
+		  (cons `(%slot-value ,(transpiler-make-slot-values x.)
+							  ,(conv (make-symbol (subseq (symbol-name (second x))
+														  1))))
+			      (transpiler-make-slot-values (cddr x)))
+		(label? x)
+		  (conv x)
+		(consp x)
+		  (cons (transpiler-make-slot-values x.)
+				(transpiler-make-slot-values .x))
+		x))))
 
 ;;;; STANDARD MACRO EXPANSION
 

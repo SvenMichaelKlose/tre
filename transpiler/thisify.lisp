@@ -18,20 +18,20 @@
 					   x))
   	       rec
 		     #'((x exclusions)
-			      (cond
-					((atom x)
-	                   (thisify-symbol x exclusions))
-					((lambda? x)
-					   `#'(,(lambda-args x)
-							  ,@(rec (lambda-body x)
-									 (append exclusions
-											 (lambda-args x)))))
-	                (t (cons (if (%slot-value? x.)
-							     `(%slot-value ,(rec (second x.)
-													 exclusions)
-									           ,(third x.))
-		                	     (rec x. exclusions))
-			                  (rec .x exclusions))))))
+			      (if
+					(atom x)
+	                  (thisify-symbol x exclusions)
+					(lambda? x)
+					  `#'(,(lambda-args x)
+							 ,@(rec (lambda-body x)
+									(append exclusions
+											(lambda-args x))))
+	                (cons (if (%slot-value? x.)
+							  `(%slot-value ,(rec (second x.)
+												  exclusions)
+									        ,(third x.))
+		                	  (rec x. exclusions))
+			              (rec .x exclusions)))))
       (rec x nil)))
 
 (defun %thisify? (x)
@@ -40,13 +40,13 @@
 	  
 (defun thisify (classes x)
   (with (find-them
-		   (fn (cond
-				 ((atom _)
-				    _)
-				 ((%thisify? _.)
-					(append (thisify-list classes
-										  (cddr _.)
-										  (second _.))
-							(find-them ._)))
-				 (t (traverse #'find-them _)))))
+		   (fn (if
+				 (atom _)
+				   _
+				 (%thisify? _.)
+				   (append (thisify-list classes
+										 (cddr _.)
+										 (second _.))
+						   (find-them ._))
+				 (traverse #'find-them _))))
     (find-them x)))

@@ -13,19 +13,19 @@
 	; Get first pair.
     (let* ((plc (first alst))
            (val (second alst)))
-      (cond
+      (if
 	    ; MULTIPLE-VALUE-BIND if place is a cons.
-	    ((consp plc)
+	    (consp plc)
             `(multiple-value-bind ,plc ,val
-			   ,@(sub)))
+			   ,@(sub))
 
 	    ; Place function is set of value is a function.
-		((lambda? val)
+		(lambda? val)
 			`(labels ((,plc ,@(past-lambda (second val))))
-			   ,@(sub)))
+			   ,@(sub))
 
 		; Value assignment to variable.
-        (t `(let ,plc ,val
-			  ,@(sub)))))))
+        `(let ,plc ,val
+		   ,@(sub))))))
 
 ; XXX tests missing

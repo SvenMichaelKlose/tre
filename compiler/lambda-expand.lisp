@@ -43,14 +43,14 @@
 	  (fn (or (%slot-value? _)
 			  (lambda? _)))
     :ascending
-      (fn (cond
-		    ((lambda? _) ; Add variables to ignore in subfunctions.
-			   (vars-to-stackplaces fi _ ))
-			((%slot-value? _)
-			   `(%slot-value ,(vars-to-stackplaces fi (second _)) ,(third _)))
-           	((is-env-var? fi _)
-               (make-stackplace fi _))
-			(t _)))))
+      (fn (if
+		    (lambda? _) ; Add variables to ignore in subfunctions.
+			  (vars-to-stackplaces fi _ )
+			(%slot-value? _)
+			  `(%slot-value ,(vars-to-stackplaces fi (second _)) ,(third _))
+           	(is-env-var? fi _)
+              (make-stackplace fi _)
+			_))))
 
 ;;; LAMBDA inlining
 
@@ -119,13 +119,13 @@
     (tree-walk
 	  body
       :ascending
-         (fn (cond
-			   ((lambda-call? _)
-                  (lambda-call-embed fi _ export-lambdas))
-               ((and export-lambdas
-					 (lambda? _))
-                  (lambda-export fi _))
-			   (t _))))))
+         (fn (if
+			   (lambda-call? _)
+                  (lambda-call-embed fi _ export-lambdas)
+               (and export-lambdas
+					(lambda? _))
+                  (lambda-export fi _)
+			   _)))))
 
 (defun lambda-expand (fun body &optional (parent-env nil) (export-lambdas t))
   "Perform LAMBDA expansion on function."

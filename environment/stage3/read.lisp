@@ -126,11 +126,13 @@
   (unless token
 	(error "missing closing bracket"))
   (unless (eq 'bracket-close token)
-    (cons (cond
-			((token-is-quote? token)	(read-quote str token))
-			((eq 'bracket-open token)	(with ((token pkg sym) (read-token str))
-										  (read-list str token pkg sym)))
-			(t							(read-atom str token pkg sym)))
+    (cons (if
+			(token-is-quote? token)
+			  (read-quote str token)
+			(eq 'bracket-open token)
+			  (with ((token pkg sym) (read-token str))
+				(read-list str token pkg sym))
+			(read-atom str token pkg sym))
 		  (with ((token pkg sym) (read-token str))
 		    (case token
 			  ('dot		(with (x (read-expr str)

@@ -1,10 +1,9 @@
 ;;;;; TRE environment
-;;;;; Copyright (C) 2008 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
 
 (%defun count (x lst &optional (init 0))
-  (cond
-	(lst (cond
-		   ((eq x (car lst))
-		      (count x (cdr lst) (+ 1 init)))
-		   (t (count x (cdr lst) init))))
-	(t init)))
+  (if lst
+	  (if (eq x (car lst))
+		  (count x (cdr lst) (+ 1 init))
+		  (count x (cdr lst) init))
+	  init))

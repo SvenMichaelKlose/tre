@@ -5,12 +5,11 @@
 ;;;; Conditional evaluation
 
 (defmacro when (predicate &rest expr)
-  `(and
-    ,predicate
-    ; Encapsulate multiple expressions into PROGN.
-    ,(if (cdr expr)
-	`(progn ,@expr)
-	(car expr))))
+  `(and ,predicate
+        ; Encapsulate multiple expressions into PROGN.
+        ,(if (cdr expr)
+	         `(progn ,@expr)
+	         (car expr))))
 
 (defmacro unless (predicate &rest expr)
   `(when (not ,predicate) ,@expr))

@@ -1,8 +1,7 @@
-;;;; nix operating system project
-;;;; list processor environment
-;;;; Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
-;;;;
-;;;; Simple printing
+;;;;; TRE environment
+;;;;; Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+;;;;;
+;;;;; Simple printing
 
 (defun %princ-character (c str)
   (setf (stream-last-char str) c)
@@ -26,11 +25,11 @@
 
 (defun princ (obj &optional (str *standard-output*))
   "Print object in human readable format."
-  (cond
-    ((stringp obj) (%princ-string obj str))
-    ((characterp obj) (%princ-character obj str))
-    ((numberp obj) (%princ-number obj str))
-    ((symbolp obj) (%princ-string (symbol-name obj) str))))
+  (if
+    (stringp obj) (%princ-string obj str)
+    (characterp obj) (%princ-character obj str)
+    (numberp obj) (%princ-number obj str)
+    (symbolp obj) (%princ-string (symbol-name obj) str)))
 
 (defun terpri (&optional (str *standard-output*))
   "Open a new line."
@@ -70,10 +69,10 @@
   (princ #\" str))
 
 (defun %print-atom (x str)
-  (cond
-	((numberp x) (princ x str))
-	((stringp x) (%print-string x str))
-	(t			 (princ (symbol-name x) str))))
+  (if
+	(numberp x) (princ x str)
+	(stringp x) (%print-string x str)
+	(princ (symbol-name x) str)))
 
 (defun print (x &optional (str *standard-output*))
   (if (consp x)

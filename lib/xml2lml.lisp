@@ -160,10 +160,10 @@
       (xml-error "end of tag expected instead of char '~A'" (stream-last-char in)))
 	;(xml-issue-collected-errors)
     (values ns name
-			(cond
-			  (closing	'closing)
-			  (inline	'inline)
-			  (t		'opening))
+			(if
+			  closing	'closing
+			  inline	'inline
+			  			'opening)
 			attrs)))
 
 (defun xml-parse-version-tag (in)

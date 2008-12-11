@@ -5,33 +5,29 @@
 ;;;; Local variables
 
 (%defun %chk-place (x)
-  (cond
-	((%arg-keyword? x)
+  (if (%arg-keyword? x)
+	  (progn
 		(print x)
 	    (%error "place is an argument keyword"))))
 
 (%defun %error-if-not-unique (x)
   (%simple-map #'((i)
-					(cond
-					  ((< 1 (count i x))
-	  				     (print i)
-	    				 (%error "place not unique"))))
+					(if (< 1 (count i x))
+						(progn
+	  				      (print i)
+	    				  (%error "place not unique"))))
 			   x))
 
 (%defun %let-places (x)
   (%simple-mapcar #'car x))
 
 (%defun %let-chk-places (x)
-  (cond
-    ((atom x)
-       (print x)
-       (%error "assignment list expected instead of an atom")))
+  (if (atom x)
+	  (progn
+        (print x)
+        (%error "assignment list expected instead of an atom")))
   (%simple-map #'%chk-place x)
-  (%simple-map #'((p)
-  					(cond
-					  ((%error-if-not-unique (%let-places x))
-						 (print x)
-						 (%error "place is not unique"))))
+  (%simple-map #'((p) (%error-if-not-unique (%let-places x)))
 			   x))
 
 ;; Create new local variables.
@@ -39,17 +35,19 @@
 ;; Multiple arguments are nested so init expressions can use formerly
 ;; defined variables inside the assignment list.
 (defmacro let* (alst &rest body)
-  (cond
-    ((not alst)
-	   `(progn
-		  ,@body))
+  (if
+    (not alst)
+	  `(progn
+		 ,@body)
 
-    ((not (cdr alst))
-       (%let-chk-places alst)
-       `(let ,(caar alst) ,(cadar alst)
-		   ,@body))
+    (not (cdr alst))
+	  (progn
+         (%let-chk-places alst)
+         `(let ,(caar alst) ,(cadar alst)
+		    ,@body))
 
-    (t (%let-chk-places alst)
-	   `(let ,(caar alst) ,(cadar alst)
-		  (let* ,(cdr alst)
-			,@body)))))
+    (progn
+	  (%let-chk-places alst)
+	  `(let ,(caar alst) ,(cadar alst)
+		 (let* ,(cdr alst)
+		   ,@body)))))

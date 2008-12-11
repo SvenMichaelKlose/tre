@@ -1,5 +1,4 @@
-;;;;; nix operating system project
-;;;;; lisp compiler
+;;;;; TRE compiler
 ;;;;; Copyright (c) 2006-2008 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Compiler-macro expansion.
@@ -116,7 +115,11 @@
 						    `(%setq ,(first x) ,(second x)))
                        (group args 2))))
 
-(define-compiler-macro if (predicate consequent &optional (alternative nil))
-  `(cond
-     (,predicate ,consequent)
-     (t ,alternative)))
+(define-compiler-macro if (&rest body)
+  (with (tests (group body 2)
+		 end   (car (last tests)))
+    `(cond
+        ,@(if (= 1 (length end))
+			  (append (butlast tests)
+					  (list (cons t end)))
+			  tests))))

@@ -27,14 +27,14 @@
 
 (defun subseq (seq start &optional (end 99999))
   (when seq
-	(cond
-	  ((consp seq)
-		 (subseq-list seq start end))
-	  ((stringp seq)
-		 (subseq-sequence #'make-string seq start end))
-	  ((arrayp seq)
-		 (subseq-sequence #'make-array seq start end))
-	  (t (error "type not supported")))))
+	(if
+	  (consp seq)
+		(subseq-list seq start end)
+	  (stringp seq)
+		(subseq-sequence #'make-string seq start end)
+	  (arrayp seq)
+		(subseq-sequence #'make-array seq start end)
+	  (error "type not supported"))))
 
 (define-test "SUBSEQ basically works"
   ((subseq '(1 2 3 4) 1 3))

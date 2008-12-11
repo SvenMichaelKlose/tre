@@ -56,16 +56,16 @@
 
 (defun transpiler-to-string (tr x)
   (maptree #'((e)
-				(cond
-				  ((consp e)
-					 (if (eq e. '%transpiler-string)
-					     (string-concat "\"" (cadr e) "\"")
-						 (if (in? e. '%transpiler-native '%no-expex)
-							 (transpiler-to-string tr .e)
-							 e)))
-				  ((stringp e)
-					 e)
-				  (t (aif (assoc e (transpiler-symbol-translations tr))
-						  .!
-						  (string-concat (transpiler-symbol-string tr e) " ")))))
+				(if
+				  (consp e)
+					(if (eq e. '%transpiler-string)
+					    (string-concat "\"" (cadr e) "\"")
+						(if (in? e. '%transpiler-native '%no-expex)
+							(transpiler-to-string tr .e)
+							e))
+				  (stringp e)
+					e
+				  (aif (assoc e (transpiler-symbol-translations tr))
+						.!
+						(string-concat (transpiler-symbol-string tr e) " "))))
 		   x))

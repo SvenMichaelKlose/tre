@@ -1,18 +1,18 @@
-;;;; nix operating system project
-;;;; list processor environment
-;;;; Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
-;;;;
-;;;; Macro definition
+;;;;; TRE environment
+;;;;; Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+;;;;;
+;;;;; Macro definition
 
 (defvar *documentation* nil)
 
 (%defun %add-documentation (name body)
-  (cond
-    ((stringp (car body))
+  (if (stringp (car body))
       (progn
-        (setq *documentation* (cons (cons name (car body)) *documentation*))
-        (cdr body)))
-    (t body)))
+        (setq *documentation* (cons (cons name
+										  (car body))
+									*documentation*))
+        (cdr body))
+      body))
 
 (setq *universe* (cons 'defmacro *universe*))
 
