@@ -4,6 +4,8 @@
 ;;;;
 ;;;; SETF macro
 
+(defvar *setf-immediate-slot-value* nil)
+
 ;; Assign evaluated value of argument y to variable x.
 (defmacro set (x y)
   `(setq ,(eval x) ,y))
@@ -17,7 +19,8 @@
 
 (defun %setf-complement (p val)
   (if (or (atom p)
-		  (%slot-value? p))
+		  (and *setf-immediate-slot-value*
+			   (%slot-value? p)))
 	  (progn
 		(if (member p *constants*)
 		    (%error "cannot set constant"))
@@ -51,7 +54,8 @@
     (%error "arguments expected")
     (if (= 1 (length args))
       `(%%defunsetf ,(car args)) ; Keep for DEFUN argument name.
-      `(progn ,@(%setf args)))))
+      `(progn
+		 ,@(%setf args)))))
 
 (defun (setf symbol-function) (fun sym)
   (%set-atom-fun sym fun))
