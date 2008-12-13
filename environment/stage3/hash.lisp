@@ -65,4 +65,4 @@
 (defun hashkeys (h)
   (with (keys nil)
 	(dotimes (i (length (%hash-table-hash h)) keys)
-	  (setf keys (append (carlist (aref %hash-table-hash h) keys))))))
+	  (setf keys (append (carlist (aref (%hash-table-hash h) i)) keys)))))
