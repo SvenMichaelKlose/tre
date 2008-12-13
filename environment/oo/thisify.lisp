@@ -4,9 +4,9 @@
 ;;;;; Wrap local method calls into SLOT-VALUEs.
 
 (defun thisify-list (classes x cls)
-  (with (clsdesc (cdr (assoc cls classes))
-  		 classdef (append (js-class-methods clsdesc)
-						  (js-class-members clsdesc))
+  (with (clsdesc (gethash cls classes)
+  		 classdef (append (class-methods clsdesc)
+						  (class-members clsdesc))
     	 thisify-symbol
 		     #'((x exclusions)
                   (aif (and classdef
@@ -39,7 +39,7 @@
 	   (eq '%THISIFY (first x))))
 	  
 (defun thisify (classes x)
-  (with (find-them
+  (with (find-%thisify-exprs
 		   (fn (if
 				 (atom _)
 				   _
@@ -47,6 +47,6 @@
 				   (append (thisify-list classes
 										 (cddr _.)
 										 (second _.))
-						   (find-them ._))
-				 (traverse #'find-them _))))
-    (find-them x)))
+						   (find-%thisify-exprs ._))
+				 (traverse #'find-%thisify-exprs _))))
+    (find-%thisify-exprs x)))

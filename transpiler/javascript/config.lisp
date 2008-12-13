@@ -12,7 +12,7 @@
 	:macro-expander 'javascript
 	:separator (format nil ";~%")
 	:unwanted-functions '($ cons car cdr make-hash-table map error
-						  new %new ; environment/oo/ducktype.lisp
+						  new %new %slot-value %%usetf-%slot-value ; environment/oo/ducktype.lisp
 						 )
 	:obfuscate? nil
 
@@ -103,7 +103,7 @@
 		cancel-bubble return-value)
 
 	:identifier-char?
-	  #'(lambda (x)
+	  #'((x)
 		  (or (and (>= x #\a) (<= x #\z))
 		  	  (and (>= x #\A) (<= x #\Z))
 		  	  (and (>= x #\0) (<= x #\9))

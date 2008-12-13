@@ -108,7 +108,8 @@
 	  (setf e (append e (list (funcall fun x)))))))
 
 (defun transpiler-expand (tr forms)
-  (transpiler-process-forms tr (transpiler-expand-compose tr) forms))
+  (with-temporary *setf-immediate-slot-value* t
+    (transpiler-process-forms tr (transpiler-expand-compose tr) forms)))
 
 (defun transpiler-preexpand-compose (tr)
   (compose #'list

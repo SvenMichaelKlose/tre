@@ -17,9 +17,12 @@
 (env-load "stage3/main.lisp")
 (env-load "stage4/main.lisp")
 (env-load "math/main.lisp")
-(env-load "alien/main.lisp")
+;(env-load "alien/main.lisp")
+(env-load "oo/class.lisp")
+(env-load "oo/thisify.lisp")
 (env-load "oo/ducktype.lisp")
-(env-load "editor/main.lisp")
+(env-load "oo/ducktype-test.lisp")
+;(env-load "editor/main.lisp")
 
 ; Test lexical scoping.
 (unless (eq %scope-toplevel-test 'some-test-value)

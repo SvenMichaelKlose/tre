@@ -1,6 +1,5 @@
-;;;; nix operating system project
-;;;; list processor environment
-;;;; Copyright (C) 2005-2006,2008 Sven Klose <pixel@copei.de>
+;;;;; TRE environment
+;;;;; Copyright (C) 2005-2006,2008 Sven Klose <pixel@copei.de>
 
 (defun %member-r (elm lst)
   (if lst

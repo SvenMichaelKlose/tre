@@ -1,10 +1,9 @@
-;;;; TRE environment
+;;;; TRE transpiler
 ;;;; Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
 
 (env-load "../transpiler/utils.lisp")
 (env-load "../transpiler/config.lisp")
 (env-load "../transpiler/identifier.lisp")
-(env-load "../transpiler/thisify.lisp")
 (env-load "../transpiler/named-functions.lisp")
 (env-load "../transpiler/expand.lisp")
 (env-load "../transpiler/codegen.lisp")
