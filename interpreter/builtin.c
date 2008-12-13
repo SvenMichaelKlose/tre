@@ -143,8 +143,10 @@ trebuiltin_load (treptr expr)
 #endif
 
     stream = treiostd_open_file (fname);
-    if (stream == NULL)
-        return treerror (treptr_invalid, "couldn't load file %s", fname);
+    if (stream == NULL) {
+        treerror_norecover (treptr_invalid, "couldn't load file %s", fname);
+		return treptr_nil;
+	}
 
     treiostd_divert (stream);
     tre_main ();

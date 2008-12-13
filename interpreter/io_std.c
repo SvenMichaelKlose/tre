@@ -52,9 +52,7 @@ treiostd_open_file (char * name)
     if (fd == NULL) {
         fprintf (stderr, "File '%s':\n", name);
 		treio_free_stream (s);
-		perror ("couldn't open file");
-        treerror_internal (treptr_invalid, "file error");
-		/*NOTREACHED*/
+		return NULL;
     }
 
     s->detail_in = fd;
