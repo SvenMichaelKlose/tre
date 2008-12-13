@@ -12,10 +12,10 @@
 #include "config.h"
 #include "atom.h"
 #include "list.h"
-#include "builtin.h"
 #include "number.h"
 #include "error.h"
 #include "eval.h"
+#include "builtin.h"
 #include "special.h"
 #include "gc.h"
 #include "print.h"
@@ -30,6 +30,7 @@
 #include <stdio.h>
 
 treptr treopt_verbose_eval;
+treptr treeval_slot_value;
 
 /*
  * Execute user-defined function.
@@ -148,6 +149,9 @@ treeval_expr (treptr x)
 {
     treptr  fun;
     treptr  v;
+    treptr  slot_obj;
+	bool	copied_expr = FALSE;
+
     fun = CAR(x);
     v = treptr_nil;
 
@@ -157,7 +161,17 @@ treeval_expr (treptr x)
 	/* Get function value of variable immediately. */
     if (TREPTR_IS_VARIABLE(fun))
          fun = TREATOM_FUN(fun);
-    else /* if (TREPTR_IS_CONS(fun)) */
+    else if (TREPTR_IS_CONS(fun) &&
+			 CAR(fun) == treeval_slot_value) {
+		slot_obj = CAR(CDR(fun));
+        fun = treeval (fun);
+    	tregc_push (fun);
+		x = CONS(CAR(x),
+				 CONS(slot_obj,
+					  trelist_copy (CDR(x))));
+		tregc_push (x);
+		copied_expr = TRUE;
+	} else
         fun = treeval (fun);
 
     tregc_push (fun);
@@ -187,6 +201,11 @@ treeval_expr (treptr x)
     tredebug_chk_next ();
 
     tregc_pop ();
+	if (copied_expr) {
+    	tregc_pop ();
+    	tregc_pop ();
+	}
+
     return v;
 }
 
@@ -301,6 +320,10 @@ treeval_args (treptr x)
 void
 treeval_init ()
 {
+    treeval_slot_value = treatom_get ("%SLOT-VALUE", TRECONTEXT_PACKAGE());
+	EXPAND_UNIVERSE(treeval_slot_value);
+
     treopt_verbose_eval = treatom_get ("*VERBOSE-EVAL*", TRECONTEXT_PACKAGE());
     treatom_set_value (treopt_verbose_eval, treptr_nil);
+	EXPAND_UNIVERSE(treopt_verbose_eval);
 }
