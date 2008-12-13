@@ -103,8 +103,8 @@
 (defun xml-unify-string (s)
   "Unify string."
   (when s
-    (or (gethash s *xml-unified-strings*)
-        (setf (gethash s *xml-unified-strings*) s))))
+    (or (href s *xml-unified-strings*)
+        (setf (href s *xml-unified-strings*) s))))
 
 (defun xml-parse-unify-identifier (in)
   (let i (string-upcase (xml-parse-identifier in))

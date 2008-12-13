@@ -4,7 +4,7 @@
 ;;;;; Wrap local method calls into SLOT-VALUEs.
 
 (defun thisify-list (classes x cls)
-  (with (clsdesc (gethash cls classes)
+  (with (clsdesc (href cls classes)
   		 classdef (append (class-methods clsdesc)
 						  (class-members clsdesc))
     	 thisify-symbol

@@ -21,8 +21,8 @@
 (defun transpiler-obfuscate-symbol (tr x)
   (when (transpiler-obfuscate? tr)
     (unless (or (find x (transpiler-obfuscation-exceptions tr))
-			    (gethash x (transpiler-obfuscations tr)))
-      (setf (gethash x (transpiler-obfuscations tr)) (transpiler-obfuscated-sym)))))
+			    (href x (transpiler-obfuscations tr)))
+      (setf (href x (transpiler-obfuscations tr)) (transpiler-obfuscated-sym)))))
 
 (defun transpiler-obfuscate (tr x)
   (if (transpiler-obfuscate? tr)
@@ -30,7 +30,7 @@
 					 (transpiler-obfuscate-symbol tr _))
 			       (if (or (variablep _)
 						   (functionp _))
-					   (aif (gethash _ (transpiler-obfuscations tr))
+					   (aif (href _ (transpiler-obfuscations tr))
 						    !
 					    	_)
 					   _))

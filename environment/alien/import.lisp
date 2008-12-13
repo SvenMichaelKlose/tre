@@ -10,17 +10,17 @@
 (defvar *alien-structs* (make-hash-table :test #'string=))
 
 (defun alien-import-get-type-desc (hash desc)
-  (gethash (lml-get-attribute desc :type) hash))
+  (href (lml-get-attribute desc :type) hash))
 
 (defun alien-import-add-struct (hash desc)
   (with (struct-name (lml-get-attribute desc :name))
 	(prog1
 	  struct-name
-  	  (unless (gethash struct-name *alien-structs*)
-  	    (setf (gethash struct-name *alien-structs*) t)
+  	  (unless (href struct-name *alien-structs*)
+  	    (setf (href struct-name *alien-structs*) t)
 	    (format t "[")
 		(dolist (x (split #\ (trim #\ (lml-get-attribute desc :members))))
-		  (with (field (gethash x hash))
+		  (with (field (href x hash))
 			(if (eq :field field.)
 		        (format t " ~A \"~A\""
 					    (alien-import-get-type-from-desc hash field)
@@ -58,12 +58,12 @@
   (dolist (x descr)
     (when (eq x. :function)
 	  (with (fun-name (lml-get-attribute x :name))
-	    (unless (gethash fun-name *alien-imported-functions*)
+	    (unless (href fun-name *alien-imported-functions*)
 		  (format t "Function ~A ~A ("
 				  (lml-get-attribute x :name)
 				  (alien-import-get-type
 					hash
-					(gethash (lml-get-attribute x :returns) hash)))
+					(href (lml-get-attribute x :returns) hash)))
 		  (awhen (lml-get-children x)
 		    (dolist (a !)
 		      (when (eq a. :argument)
@@ -72,7 +72,7 @@
 						(or (lml-get-attribute a :name)
 							"unnamed")))))
 		  (format t ")~%")
-		  (setf (gethash fun-name *alien-imported-functions*) t))))))
+		  (setf (href fun-name *alien-imported-functions*) t))))))
 
 (defun alien-import-descr-hash (descr)
   (with (hash (make-hash-table :test #'string=))
@@ -82,7 +82,7 @@
 				   (:namespace)
 				   (t hash)))
 		  (when h
-	        (setf (gethash ! h) x)))))))
+	        (setf (href ! h) x)))))))
 
 (defun alien-import-process-xml (descr)
   (with (d (lml-get-children descr))

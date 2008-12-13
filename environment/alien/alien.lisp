@@ -4,6 +4,6 @@
 (defvar *dl-libs* (make-hash-table :test #'string=))
 
 (defun alien-import-lib (name)
-  (or (gethash name *dl-libs*)
-	  (setf (gethash name *dl-libs*)
+  (or (href name *dl-libs*)
+	  (setf (href name *dl-libs*)
 	        (or (alien-dlopen (string-concat name))))))

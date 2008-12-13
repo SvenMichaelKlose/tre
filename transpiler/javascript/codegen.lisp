@@ -75,7 +75,15 @@
     ,@(mapcar (fn `("[" ,_ "]"))
               idx)))
 
+(define-js-macro href (arr &rest idx)
+  `(%transpiler-native ,arr
+    ,@(mapcar (fn `("[" ,_ "]"))
+              idx)))
+
 (define-js-macro %%usetf-aref (val &rest x)
+  `(%transpiler-native (aref ,@x) "=" ,val))
+
+(define-js-macro %%usetf-href (val &rest x)
   `(%transpiler-native (aref ,@x) "=" ,val))
 
 (define-js-macro make-string (&optional size)
