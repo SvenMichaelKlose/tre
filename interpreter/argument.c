@@ -1,5 +1,5 @@
 /*
- * nix operating system project tre interpreter
+ * TRE interpreter
  * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Arguement related section
@@ -8,10 +8,10 @@
 #include "config.h"
 #include "atom.h"
 #include "list.h"
+#include "eval.h"
 #include "builtin.h"
 #include "number.h"
 #include "error.h"
-#include "eval.h"
 #include "special.h"
 #include "gc.h"
 #include "print.h"
@@ -217,10 +217,11 @@ trearg_expand (treptr *rvars, treptr *rvals, treptr iargdef, treptr args,
 
 	        	_ADDF(dvars, CONS(form, treptr_nil));
 
-				svals = (args != treptr_nil) ? CAR(args) : init;
-
-	        	if (do_argeval)
-		    		svals = treeval (svals);
+				svals = (args != treptr_nil) ?
+								 do_argeval ?
+								 	treeval (CAR(args)) :
+								 	CAR(args) :
+								 treeval (init);
 
 	        	/* Add argument as a list. */
 	        	_ADDF(dvals, CONS(svals, treptr_nil));
@@ -259,12 +260,12 @@ trearg_expand (treptr *rvars, treptr *rvals, treptr iargdef, treptr args,
 	    	        	RPLACD(args, CONS(treerror (args, "missing argument after keyword"), treptr_nil));
 		    		args = trelist_delete (kpos, args);
 		    		args = trelist_delete (kpos, args);
-				} else
-		    		svals = init;
 
-				/* Evaluate value. */
-  				if (do_argeval)
-		    		svals = treeval (svals);
+					/* Evaluate value. */
+  					if (do_argeval)
+		    			svals = treeval (svals);
+				} else
+		    		svals = treeval (init);
 
 				tregc_push (svals);
 				_ADDF(dvars, CONS(key, treptr_nil));
