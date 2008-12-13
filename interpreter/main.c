@@ -118,12 +118,12 @@ tre_main_line (struct tre_stream *stream)
 	TREATOM_VALUE(tremain_history) = expr;
 */
 
-    /* Expand macros. */
-    expr = tremacro_builtin_macroexpand (expr);
-
 	/* Dot expansion. */
 	tregc_push (expr);
 	expr = tredot_expand (expr);
+
+    /* Expand macros. */
+    expr = tremacro_builtin_macroexpand (expr);
 
 	/* QUASIQUOTE expansion. */
 	tregc_push (expr);

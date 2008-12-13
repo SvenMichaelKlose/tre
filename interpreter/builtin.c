@@ -102,90 +102,6 @@ trebuiltin_eval (treptr list)
     return treeval (trearg_get (list));
 }
 
-/*
- * Convert APPLY arguments into simple list
- *
- * The last element of the list must be a list which is copied and
- * appended to the second last element. The last list is copied because
- * it'd be removed as a part of the temporary argument list.
- */
-treptr
-trebuiltin_apply_args (treptr list)
-{
-    treptr i;
-
-    RETURN_NIL(list); /* No arguments. */
-
-    /* Handle single argument. */
-    if (CDR(list) == treptr_nil) {
-		RETURN_NIL(CAR(list));
-        if (TREPTR_IS_ATOM(CAR(list)))
-            goto error;
-        return trelist_copy (CAR(list));
-    }
-
-    /* Handle two or more arguments. */
-    DOLIST(i, list) {
-        if (CDDR(i) != treptr_nil)
-            continue;
-        if (CADR(i) == treptr_nil)
-	    	break;
-        if (TREPTR_IS_ATOM(CADR(i)))
-            goto error;
-
-        RPLACD(i, trelist_copy (CADR(i)));
-        break;
-    }
-
-    return list;
-
-error:
-    return treerror (list, "last argument must be a list "
-                            "(waiting for new argument list)");
-}
-
-/*
- * (APPLY function args... )
- *
- * Call function with argument list.
- */
-treptr
-trebuiltin_apply (treptr list)
-{
-    treptr  func;
-    treptr  args;
-    treptr  fake;
-    treptr  efunc;
-    treptr  res;
-
-    if (list == treptr_nil)
-		return treerror (list, "arguments expected");
-
-    func = CAR(list);
-    args = trebuiltin_apply_args (trelist_copy (CDR(list)));
-
-    fake = CONS(func, args);
-    tregc_push (fake);
-
-    efunc = treeval (func);
-    RPLACA(fake, efunc);
-
-    /* Avoid re-evaluation of arguments. */
-    if (TREPTR_IS_FUNCTION(efunc))
-        res = treeval_funcall (efunc, fake, FALSE);
-    else if (TREPTR_IS_BUILTIN(efunc))
-        res = treeval_xlat_function (treeval_xlat_builtin, efunc, fake, FALSE);
-    else if (TREPTR_IS_SPECIAL(efunc))
-        res = trespecial (efunc, fake);
-    else
-        res = treerror (func, "function expected");
-
-    tregc_pop ();
-    TRELIST_FREE_EARLY(fake);
-
-    return res;
-}
-
 treptr
 trebuiltin_macrocall (treptr list)
 {
@@ -379,7 +295,7 @@ char *tre_builtin_names[] = {
 
     "CAR", "CDR", "RPLACA", "RPLACD",
 
-    "EVAL", "APPLY", "%MACROCALL",
+    "EVAL", "%MACROCALL",
 
     "MAKE-SYMBOL", "ATOM", "SYMBOL-VALUE", "%TYPE-ID",
 	"SYMBOL-FUNCTION", "SYMBOL-PACKAGE",
@@ -461,7 +377,6 @@ treevalfunc_t treeval_xlat_builtin[] = {
     trelist_builtin_rplacd,
 
     trebuiltin_eval,
-    trebuiltin_apply,
     trebuiltin_macrocall,
 
     treatom_builtin_make_symbol,
