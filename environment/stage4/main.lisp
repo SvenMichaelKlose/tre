@@ -21,3 +21,4 @@
 (env-load "stage4/tree-list.lisp")
 (env-load "stage4/trim.lisp")
 (env-load "stage4/with-cons.lisp")
+(env-load "stage4/null-stream.lisp")
