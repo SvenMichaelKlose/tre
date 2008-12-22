@@ -167,3 +167,8 @@
            (reverse x)
       (awhen (read str)
         (push ! x)))))
+
+(defun read-file (name)
+  "Read one expression from file."
+  (with-open-file in (open name :direction 'input)
+	(read in)))
