@@ -14,6 +14,9 @@
           n)
 		(apply #'append (cdr lsts)))))
 
+(defmacro append! (place &rest args)
+  `(setf ,place (append ,place ,@args)))
+
 (define-test "APPEND works with two lists"
   ((append '(l i) '(s p)))
   '(l i s p))
