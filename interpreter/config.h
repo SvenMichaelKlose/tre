@@ -39,8 +39,8 @@ typedef int bool;
 #define TRE_EXIT_ON_STDIO_SIGINT /* Exit on SIGINT in stdio prompt. */
 #endif
 
-#define TRE_MAX_SYMLEN		(4 * 1024)
-#define TRE_MAX_STRINGLEN	(64 * 1024)
+#define TRE_MAX_SYMLEN		(4 * KILO)
+#define TRE_MAX_STRINGLEN	(64 * KILO)
 
 #define TRE_MAX_NESTED_FILES	16
 #define TRE_FILEIO_MAX_FILES   16
@@ -51,16 +51,16 @@ typedef int bool;
 #define TREDEBUG_MAX_ARGS	16
 #define TREDEBUG_MAX_BREAKPOINTS	16
 
+#ifndef NUM_LISTNODES
+#define NUM_LISTNODES	(16 * MEGA)
+#endif
+
 #ifndef NUM_ATOMS
-#define NUM_ATOMS	(256 * KILO)
+#define NUM_ATOMS	(NUM_LISTNODES / 8)
 #endif
 
 #ifndef NUM_NUMBERS
 #define NUM_NUMBERS	NUM_ATOMS /* FIXME: bus error if less than atoms */
-#endif
-
-#ifndef NUM_LISTNODES
-#define NUM_LISTNODES	(2 * MEGA)
 #endif
 
 #ifndef NULL
