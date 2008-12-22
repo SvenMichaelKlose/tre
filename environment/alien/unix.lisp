@@ -9,6 +9,11 @@
 (defun unix-sh-mv (from to)
   (exec "/bin/mv" (list from to)))
 
+(defun unix-sh-cp (from to &key (recursively? nil))
+  (exec "/bin/cp" (append (when recursively?
+							   (list "-r"))
+							 (list from to))))
+
 (defun unix-sh-mkdir (path &key (parents nil))
   (exec "/bin/mkdir" (append (when parents
 							   (list "-p"))
