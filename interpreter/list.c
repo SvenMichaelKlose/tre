@@ -136,15 +136,18 @@ trelist_free_toplevel (treptr node)
     }
 }
 
+#define TRELIST_GC_P() \
+	(trelist_num_used < NUM_LISTNODES - 16)
+
 void
 trelist_gc ()
 {
-    if (trelist_num_used < NUM_LISTNODES - 16)
+    if (TRELIST_GC_P())
 	    return;
 
 	/* Collect garbage and try again, */
 	tregc_force ();
-    if (!(trelist_num_used < NUM_LISTNODES - 16))
+    if (!TRELIST_GC_P())
     	treerror_internal (treptr_invalid, "no more free list elements");
 }
 

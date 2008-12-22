@@ -1,5 +1,5 @@
 /*
- * nix operating system project tre interpreter
+ * TRE interpreter
  * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  *
  * Macro-expansion wrappers calling TRE function, if defined.
@@ -29,6 +29,7 @@ tremacro_builtin_macroexpand_1 (treptr list)
     if (treatom_macroexpand_hook->fun == treptr_nil)
         return list;
 
+	/* Call *MACROEXPAND-HOOK*. */
     fake = CONS(treptr_macroexpand_hook, CONS(list, treptr_nil));
     tregc_push (fake);
     ret = treeval_funcall (treatom_macroexpand_hook->fun, fake, FALSE);
