@@ -39,7 +39,6 @@
   (when %LAUNCHFILE
     (load %LAUNCHFILE)))
 
-(gc)
 (format t "Dump to image '~A': " *BOOT-IMAGE*)(force-output)
 (sys-image-create *BOOT-IMAGE* #'%load-launchfile)
 (format t "OK~%")
