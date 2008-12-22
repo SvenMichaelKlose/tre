@@ -150,17 +150,19 @@ treprint_atom (treptr atom, ulong indent)
 		case TRETYPE_FUNCTION:
             name = TREATOM_NAME(atom);
             if (name == NULL) {
-	        	printf ("#<FUNCTION>(");
+	        	printf ("#'(");
 	        	treprint_indent (TREATOM_VALUE(atom), indent, TRUE, "");
+	        	printf ("#')");
             } else
-                printf (name);
+                printf ("#'%s", name);
 	    	break;
 
 		case TRETYPE_MACRO:
             name = TREATOM_NAME(atom);
             if (name == NULL) {
-	        	printf ("#<user-defined macro>");
+	        	printf ("(macro");
 	        	treprint_r (TREATOM_VALUE(atom));
+	        	printf ("#')");
             } else
                 printf (name);
 	    	break;
@@ -168,8 +170,9 @@ treprint_atom (treptr atom, ulong indent)
 		case TRETYPE_USERSPECIAL:
             name = TREATOM_NAME(atom);
             if (name == NULL) {
-	        	printf ("#<user-defined special form>");
+	        	printf ("(special");
 	        	treprint_r (TREATOM_VALUE(atom));
+	        	printf ("#')");
             } else
                 printf (name);
 	    	break;
