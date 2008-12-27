@@ -25,7 +25,8 @@
 (%defun %defun-name (name)
   (if (atom name)
       name
-      (if (eq (car name) '%%defunsetf)
+      (if (or (eq (car name) '%%defunsetf)
+			  (eq (car name) 'SETF))
           (make-symbol (string-concat "%%USETF-" (string (cadr name))))
           (%error "illegal function name"))))
 
