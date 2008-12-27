@@ -1,6 +1,5 @@
-;;;; nix operating system project
-;;;; list processor environment
-;;;; Copyright (C) 2006-2008 Sven Klose <pixel@copei.de>
+;;;; TRE environment
+;;;; Copyright (c) 2006-2008 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; FORMAT function
 
@@ -15,7 +14,9 @@
 		 (progn
 		   (if (consp (car args))
                (print (car args)) ; XXX
-               (princ (car args) str))
+			   (if args
+                 (princ (car args) str)
+				 (error "argument specified in format is missing")))
            (%format str l (1+ i) txt (cdr args)))
        (progn
 		 (princ #\~ str)
@@ -35,7 +36,7 @@
     (%format nstr (length txt) 0 txt args)))
 
 (defun error (&rest args)
-  (%error (apply #'format t args)))
+  (%error (apply #'format nil args)))
 
 (defun warn (&rest args)
   (apply #'format t (string-concat "WARNING: " (first args)) (cdr args)))
