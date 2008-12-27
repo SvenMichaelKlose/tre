@@ -11,22 +11,36 @@ FILES="alien_dl.c alloc.c argument.c array.c atom.c
 	builtin.c
 	builtin_arith.c builtin_array.c builtin_atom.c
 	builtin_debug.c
+	builtin_error.c
 	builtin_fileio.c
 	builtin_image.c
 	builtin_list.c
 	builtin_number.c
-	builtin_stream.c builtin_string.c
+	builtin_sequence.c
+	builtin_stream.c
+	builtin_string.c
 
-	debug.c diag.c dot.c
-	error.c env.c eval.c
+	debug.c
+	diag.c
+	dot.c
+	error.c
+	env.c
+	eval.c
 	gc.c
-	image.c io.c io_std.c
+	image.c
+	io.c
+	io_std.c
 	list.c
-	macro.c main.c
+	macro.c
+	main.c
 	number.c
 	print.c
 	quasiquote.c
-	read.c sequence.c special.c stream.c string.c symbol.c
+	read.c
+	special.c
+	stream.c
+	string.c
+	symbol.c
 	thread.c
 	util.c"
 
