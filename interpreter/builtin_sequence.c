@@ -1,5 +1,5 @@
 /*
- * nix operating system project tre interpreter
+ * TRE interpreter
  * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Generic sequences.
@@ -14,11 +14,12 @@
 #include "error.h"
 #include "print.h"
 #include "gc.h"
-#include "sequence.h"
+#include "ptr.h"
+#include "builtin_sequence.h"
 #include "argument.h"
-#include "xxx.h"
 #include "array.h"
 #include "diag.h"
+#include "xxx.h"
 
 #include <stdlib.h>
 #include <stdio.h>

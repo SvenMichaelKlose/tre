@@ -1,49 +1,41 @@
 /*
- * nix operating system project tre interpreter
+ * TRE interpreter
  * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
- * Built-in functions.
+ * Built-in functions
  */
 
 #include "config.h"
 #include "atom.h"
 #include "list.h"
+#include "alloc.h"
 #include "number.h"
-#include "sequence.h"
 #include "string2.h"
+#include "argument.h"
 #include "eval.h"
-#include "error.h"
-#include "print.h"
-#include "gc.h"
 #include "macro.h"
-#include "debug.h"
+#include "gc.h"
+#include "print.h"
+#include "error.h"
 #include "io.h"
 #include "io_std.h"
-#include "main.h"
 #include "thread.h"
-#include "stream.h"
-#include "argument.h"
 #include "special.h"
+#include "alien_dl.h"
 #include "builtin_arith.h"
 #include "builtin_array.h"
 #include "builtin_atom.h"
 #include "builtin_debug.h"
+#include "builtin_error.h"
 #include "builtin_fileio.h"
 #include "builtin_image.h"
 #include "builtin_list.h"
 #include "builtin_number.h"
+#include "builtin_sequence.h"
 #include "builtin_stream.h"
 #include "builtin_string.h"
-#include "array.h"
-#include "alien_dl.h"
-#include "xxx.h"
-#include "util.h"
-#include "alloc.h"
+#include "main.h"
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h>
-#include <string.h>
 #include <sys/mman.h>
 
 treevalfunc_t treeval_xlat_builtin[];

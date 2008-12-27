@@ -103,22 +103,6 @@ trewarn (treptr expr, const char *msg, ...)
     tredebug ();
 }
 
-/*
- * (ERROR string)
- *
- * Terminate current read-eval loop and issue an error.
- */
-treptr
-treerror_builtin_error (treptr args)
-{
-    treptr  arg = trearg_get (args);
-
-    if (TREPTR_IS_STRING(arg) == FALSE)
-        treerror (arg, "string expected");
-
-    return treerror (treptr_invalid, TREATOM_STRINGP(arg));
-}
-
 const char *
 treerror_typename (ulong t)
 {
