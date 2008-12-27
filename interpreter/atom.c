@@ -9,7 +9,6 @@
 #include "atom.h"
 #include "number.h"
 #include "list.h"
-#include "sequence.h"
 #include "string2.h"
 #include "eval.h"
 #include "error.h"
@@ -20,17 +19,10 @@
 #include "special.h"
 #include "env.h"
 #include "io.h"
-#include "main.h"
 #include "symbol.h"
-#include "print.h"
 #include "thread.h"
 #include "alloc.h"
 #include "util.h"
-#include "xxx.h"
-
-#include <string.h>
-#include <strings.h>
-#include <stdlib.h>
 
 /*
  * The atom list is a growing table.

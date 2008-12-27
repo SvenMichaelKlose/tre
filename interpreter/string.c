@@ -1,5 +1,5 @@
 /*
- * nix operating system project tre interpreter
+ * TRE interpreter
  * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * String type
@@ -11,15 +11,13 @@
 #include "number.h"
 #include "error.h"
 #include "eval.h"
-#include "sequence.h"
+#include "builtin_sequence.h"
 #include "thread.h"
 #include "string2.h"
 #include "alloc.h"
 
 #include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
-#include <strings.h>
 
 /* Allocate and initialise string. */
 struct tre_string *

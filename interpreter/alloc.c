@@ -1,26 +1,16 @@
 /*
- * nix operating system project tre interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * TRE interpreter
+ * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Memory allocation.
  */
 
 #include "config.h"
-#include "atom.h"
-#include "list.h"
-#include "number.h"
-#include "error.h"
-#include "eval.h"
-#include "sequence.h"
-#include "array.h"
-#include "argument.h"
-#include "util.h"
 #include "xxx.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-
+#include "ptr.h"
 #include "alloc.h"
+
+#include <stdlib.h>
 
 void *
 trealloc (size_t size)

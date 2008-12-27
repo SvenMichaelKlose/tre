@@ -1,6 +1,6 @@
 /*
- * nix operating system project tre interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * TRE interpreter
+ * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Array related section.
  */
@@ -8,14 +8,11 @@
 #include "config.h"
 #include "atom.h"
 #include "list.h"
+#include "alloc.h"
+#include "argument.h"
 #include "number.h"
 #include "error.h"
-#include "eval.h"
-#include "sequence.h"
 #include "array.h"
-#include "argument.h"
-#include "util.h"
-#include "alloc.h"
 
 /*
  * (MAKE-ARRAY n)

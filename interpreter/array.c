@@ -11,7 +11,7 @@
 #include "number.h"
 #include "error.h"
 #include "eval.h"
-#include "sequence.h"
+#include "builtin_sequence.h"
 #include "array.h"
 #include "argument.h"
 #include "util.h"

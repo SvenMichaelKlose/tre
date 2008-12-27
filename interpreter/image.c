@@ -9,7 +9,6 @@
 #include "atom.h"
 #include "number.h"
 #include "list.h"
-#include "sequence.h"
 #include "string2.h"
 #include "eval.h"
 #include "error.h"

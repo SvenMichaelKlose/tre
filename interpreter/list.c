@@ -1,5 +1,5 @@
 /*
- * TRE tree processor
+ * TRE interpreter
  * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * List related section.
@@ -10,15 +10,13 @@
 #include "list.h"
 #include "error.h"
 #include "gc.h"
-#include "sequence.h"
+#include "builtin_sequence.h"
 #include "number.h"
 #include "io.h"
-#include "main.h"
 #include "diag.h"
 #include "xxx.h"
 
 #include <string.h>
-#include <strings.h>
 
 treptr tre_lists_free;
 struct tre_list tre_lists[NUM_LISTNODES];
