@@ -16,7 +16,7 @@
   (function-arguments #'function-arguments)
   (function-collector #'((fun args))))
 
-;; Returns newly created, unique symbol.
+;; Returns new unique symbol.
 (defun expex-sym ()
   (setf *expexsym-counter* (+ 1 *expexsym-counter*))
   (make-symbol (string-concat "~E" (string *expexsym-counter*))))
@@ -141,10 +141,11 @@
 ;; last expression assigned to a gensym which will replace
 ;; it in the parent expression.
 (defun expex-body (ex x &optional (s '~%ret))
-  (when (not x)	; Always return NIL.
+  (when (not x)	; Encapsulate NIL.
 	(setf x '((identity nil))))
   (with (e (expex-list ex x))
    	(expex-make-return-value ex e s)))
 
 (defun expression-expand (ex x)
-  (expex-body ex x))
+  (when x
+    (expex-body ex x)))
