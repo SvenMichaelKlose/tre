@@ -18,7 +18,7 @@
   #'((x)
        (if (consp x)
     	   (if
-	          (eq (car x) 'quasiquote)	     t
+	          (eq (car x) 'quasiquote)	       t
 	          (eq (car x) 'quasiquote-splice)  t))))
 
 (%set-atom-fun %quasiquote-eval
@@ -28,7 +28,7 @@
 ;; Expand QUASIQUOTE.
 (%set-atom-fun %backquote-quasiquote
   #'((%gsbq)
-      (if (not(quasiquote? (car (cdr (car %gsbq)))))
+      (if (not (quasiquote? (car (cdr (car %gsbq)))))
           (cons (copy-tree (%quasiquote-eval %gsbq))
                 (%backquote-1 (cdr %gsbq)))
           (cons (%backquote (car (cdr (car %gsbq))))
@@ -37,7 +37,7 @@
 ;; Expand QUASIQUOTE-SPLICE.
 (%set-atom-fun %backquote-quasiquote-splice
   #'((%gsbq)
-       (if (not(quasiquote? (car (cdr (car %gsbq)))))
+       (if (not (quasiquote? (car (cdr (car %gsbq)))))
            (#'((%gstmp)
                  (if
                    ; Ignore NIL evaluation.
@@ -46,7 +46,7 @@
                    (atom %gstmp)
                      (%error "QUASIQUOTE-SPLICE: list expected")
                    (%nconc (copy-tree %gstmp)
-                      		    (%backquote-1 (cdr %gsbq)))))
+                  		   (%backquote-1 (cdr %gsbq)))))
                 (%quasiquote-eval %gsbq))
 
            (cons (copy-tree (car (cdr (car %gsbq))))

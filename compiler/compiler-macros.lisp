@@ -16,7 +16,7 @@
   (incf *vm-label-counter*))
 
 (defmacro with-compiler-label (l &rest body)
-  `(with (,l (compiler-label))
+  `(let ,l (compiler-label)
      ,@body))
 
 (defun compiler-macroexpand-prepost ()
@@ -25,8 +25,8 @@
 (define-expander 'compiler :pre  #'compiler-macroexpand-prepost
 						   :post #'compiler-macroexpand-prepost)
 
-(defmacro define-compiler-macro (name args body)
-  `(define-expander-macro 'compiler ,name ,args ,body))
+(defmacro define-compiler-macro (&rest x)
+  `(define-expander-macro compiler ,@x))
 
 (defun compiler-macroexpand (x)
   (expander-expand 'compiler x))
@@ -39,15 +39,14 @@
 (define-compiler-macro cond (&rest args)
   (with-compiler-label end-tag
     `(vm-scope
-       ,@(mapcan #'((expr)
-			          (with-compiler-label next
-                        `(,@(unless (t? (first expr))
-                              `((%setq ~%ret ,(first expr))
-                                (vm-go-nil ~%ret ,next)))
-                          ,@(awhen (vars-to-identity (cdr expr))
-							  `((%setq ~%ret (vm-scope ,@!))))
-                          (vm-go ,end-tag)
-                          ,next)))
+       ,@(mapcan (fn (with-compiler-label next
+                       `(,@(unless (t? _.)
+                             `((%setq ~%ret ,_.)
+                               (vm-go-nil ~%ret ,next)))
+                         ,@(awhen (vars-to-identity ._)
+							 `((%setq ~%ret (vm-scope ,@!))))
+                         (vm-go ,end-tag)
+                         ,next)))
 			     args)
        ,end-tag
 	   (identity ~%ret))))
@@ -69,12 +68,11 @@
 
 (define-compiler-macro tagbody (&rest args)
   `(vm-scope
-     ,@(mapcar #'((x)
- 	                (if (consp x)
-		     		    x
-		     			(aif (cdr (assoc x *tagbody-replacements*))
+     ,@(mapcar (fn (if (consp _)
+		     		   _
+		     		   (aif (cdr (assoc _ *tagbody-replacements*))
 		       				!
-		       				x)))
+		       				_)))
                args)
      (identity nil)))
 
@@ -87,7 +85,7 @@
 (defvar *blockname* nil)
 (defvar *blockname-replacement* nil)
 
-(define-expander-macro 'compiler-return return-from (block-name expr)
+(define-expander-macro compiler-return return-from (block-name expr)
   (if (eq block-name *blockname*)
       `(vm-scope
          (%setq ~%ret ,expr)
@@ -104,15 +102,14 @@
                    tail  (last b)
                    ret   `(vm-scope
                             ,@head
-                            ,@(if (vm-jump? (car tail))
+                            ,@(if (vm-jump? tail.)
 						          tail
 						          `((%setq ~%ret ,@tail)))))
               (nconc ret `(,g (identity ~%ret)))))))
     `(identity nil)))
 
 (define-compiler-macro setq (&rest args)
-  `(vm-scope ,@(mapcar #'((x)
-						    `(%setq ,(first x) ,(second x)))
+  `(vm-scope ,@(mapcar (fn `(%setq ,(first _) ,(second _)))
                        (group args 2))))
 
 (define-compiler-macro if (&rest body)

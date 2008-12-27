@@ -17,100 +17,92 @@
 
 (setq *macrop-diversion* nil
       *macrocall-diversion* nil
-      *macroexpand-backquote-diversion* nil
-      *current-macro* nil
-	  *last-macroexpansion* nil)
+      *current-macro* nil)
 
 ;;;; Expand macros in BACKQUOTE expression.
 ;;;;
 ;;;; This algorithm is incomplete - it doesn't handle
 ;;;; nested backquotes.
 (%set-atom-fun %macroexpand-backquote
-  #'((%gsme)
+  #'((%g)
        (if
-         (not %gsme)
-		   nil
+         (atom %g)
+           %g
 
-         (not (consp %gsme))
-           %gsme
+         (atom (car %g))
+	  	   (cons (car %g)
+                 (%macroexpand-backquote (cdr %g)))
 
-         (not (consp (car %gsme)))
-	  	   (cons (car %gsme)
-                 (%macroexpand-backquote (cdr %gsme)))
-
-         (eq (car (car %gsme)) 'QUASIQUOTE)
+         (eq (car (car %g)) 'QUASIQUOTE)
 	  	   (cons (cons 'QUASIQUOTE
-		        	   (%macroexpand (cdr (car %gsme))))
-	             (%macroexpand-backquote (cdr %gsme)))
+		        	   (%macroexpand (cdr (car %g))))
+	             (%macroexpand-backquote (cdr %g)))
 
-         (eq (car (car %gsme)) 'QUASIQUOTE-SPLICE)
+         (eq (car (car %g)) 'QUASIQUOTE-SPLICE)
 	  	   (cons (cons 'QUASIQUOTE-SPLICE
-		        	   (%macroexpand (cdr (car %gsme))))
-	             (%macroexpand-backquote (cdr %gsme)))
+		        	   (%macroexpand (cdr (car %g))))
+	             (%macroexpand-backquote (cdr %g)))
 
-         (cons (%macroexpand-backquote (car %gsme))
-	           (%macroexpand-backquote (cdr %gsme))))))
+         (cons (%macroexpand-backquote (car %g))
+	           (%macroexpand-backquote (cdr %g))))))
 
-(%set-atom-fun %macroexpand-list
-  #'((%gsme)
-       (if
-         (not %gsme)
-		   nil
+(setq *macroexpand-backquote-diversion* #'%macroexpand-backquote)
 
-         (not (consp %gsme))
-           %gsme
+(%set-atom-fun %macroexpand-rest
+  #'((%g)
+       (if (atom %g)
+           %g
+       	   (cons (%macroexpand (car %g))
+                 (%macroexpand-rest (cdr %g))))))
 
-         (cons (%macroexpand (car %gsme))
-               (%macroexpand-list (cdr %gsme))))))
+(%set-atom-fun %macroexpand-xlat
+  #'((%g)
+       (setq *current-macro* (car %g))
+       (#'((%g)
+             (setq *current-macro* nil)
+             %g)
+         (apply *macrocall-diversion* (list %g)))))
 
 (%set-atom-fun %macroexpand-call
-  #'((%gsme)
-       (if
-         (consp (car %gsme))
-           (cons (%macroexpand (car %gsme))
-                   (cdr %gsme))
-
-         (apply *macrop-diversion* (list (car %gsme)))
-		   (progn
-             (setq *current-macro* (car %gsme))
-             (#'((%gsmt)
-                  (setq *current-macro* nil)
-                  %gsmt)
-               (apply *macrocall-diversion* (list (car %gsme) (cdr %gsme)))))
-
-         %gsme)))
+  #'((%g)
+       (if (if (atom (car %g))
+			   (apply *macrop-diversion* (list %g)))
+           (%macroexpand-xlat %g)
+		   %g)))
 
 (%set-atom-fun %macroexpand
-  #'((%gsme)
+  #'((%g)
        (if
-         (not %gsme)
-		   nil
+         (atom %g)
+           %g
 
-         (not (consp %gsme))
-           %gsme
+         (eq (car %g) 'QUOTE)
+           %g
 
-         (eq (car %gsme) 'QUOTE)
-           %gsme
-
-         (eq (car %gsme) 'BACKQUOTE)
+         (eq (car %g) 'BACKQUOTE)
            (cons 'BACKQUOTE
-                 (apply *macroexpand-backquote-diversion* (list (cdr %gsme))))
+                 (apply *macroexpand-backquote-diversion* (list (cdr %g))))
 
-         (%macroexpand-call (cons (car %gsme)
-                                  (%macroexpand-list (cdr %gsme)))))))
+         (%macroexpand-call (%macroexpand-rest %g)))))
 
 (%set-atom-fun %%macrop
-  #'((%gsme)
-       (macrop (symbol-function %gsme))))
+  #'((%g)
+       (macrop (symbol-function (car %g)))))
 
 (%set-atom-fun %%macrocall
-  #'((%gsme %gsmp)
-       (%macrocall (symbol-function %gsme) %gsmp)))
+  #'((%g)
+       (%macrocall (symbol-function (car %g)) (cdr %g))))
 
 (%set-atom-fun *macroexpand-hook*
-  #'((%gsme)
-       (setq *macrop-diversion* #'%%macrop
-             *macrocall-diversion* #'%%macrocall
-             *macroexpand-backquote-diversion* #'%macroexpand-backquote
-             *current-macro* nil
-    	     *last-macroexpansion* (%macroexpand %gsme))))
+  #'((%g)
+	   (#'((%gp %gc %gcm)
+             (setq *macrop-diversion* #'%%macrop
+                   *macrocall-diversion* #'%%macrocall
+                   *current-macro* nil)
+	         (#'((%g)
+                   (setq *macrop-diversion* %gp
+                         *macrocall-diversion* %gc
+                         *current-macro* %gcm)
+				   %g)
+	           (%macroexpand %g)))
+          *macrop-diversion* *macrocall-diversion* *current-macro*)))
