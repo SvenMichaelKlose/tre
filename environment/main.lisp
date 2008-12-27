@@ -1,13 +1,12 @@
-;;;; nix operating system project
-;;;; lisp compiler
+;;;; TRE environment
 ;;;; Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
 ;;;;
-;;;; Environment toplevel
+;;;; Boot up the environment
 
 (setq *UNIVERSE* (cons '%scope-toplevel-test (cons 'env-load *UNIVERSE*))
 	  %scope-toplevel-test 'some-test-value)
 
-(%SET-ATOM-FUN env-load
+(%set-atom-fun env-load
   #'(lambda (path)
       (load (string-concat *ENVIRONMENT-PATH* "/environment/" path))))
 
@@ -39,7 +38,8 @@
   (when %LAUNCHFILE
     (load %LAUNCHFILE)))
 
-(format t "Dump to image '~A': " *BOOT-IMAGE*)(force-output)
+(format t "; Dump to image '~A': " *BOOT-IMAGE*)
+(force-output)
 (sys-image-create *BOOT-IMAGE* #'%load-launchfile)
-(format t "OK~%")
+(format t " OK~%")
 (%load-launchfile)

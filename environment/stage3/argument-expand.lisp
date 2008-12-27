@@ -137,7 +137,7 @@
 		   #'((def vals)
 			    (when no-static
 				  (err "static sublevel argument definition after ~A" no-static))
-				(and apply-values (not (consp vals.))
+				(and apply-values (atom vals.)
 					 (err "sublist expected for argument ~A" num))
 				(nconc (argument-expand2 fun def. vals. apply-values)
 					   (exp-main .def .vals)))

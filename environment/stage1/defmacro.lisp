@@ -6,7 +6,7 @@
 (defvar *documentation* nil)
 
 (%defun %add-documentation (name body)
-  (if (stringp (car body))
+  (if (stringp (car body)) ; XXX incomplete
       (progn
         (setq *documentation* (cons (cons name
 										  (car body))
@@ -22,6 +22,6 @@
     `(block nil
        (setq *universe* (cons ',name *universe*))
        (%set-atom-fun ,name
-         (macro ,args
-	   (block ,name
-	     ,@(%add-documentation name body)))))))
+         			  (macro ,args
+	       			    (block ,name
+	         			  ,@(%add-documentation name body)))))))
