@@ -152,7 +152,7 @@ treprint_atom (treptr atom, ulong indent)
             if (name == NULL) {
 	        	printf ("#'(");
 	        	treprint_indent (TREATOM_VALUE(atom), indent, TRUE, "");
-	        	printf ("#')");
+	        	printf (")");
             } else
                 printf ("#'%s", name);
 	    	break;
@@ -160,9 +160,9 @@ treprint_atom (treptr atom, ulong indent)
 		case TRETYPE_MACRO:
             name = TREATOM_NAME(atom);
             if (name == NULL) {
-	        	printf ("(macro");
+	        	printf ("(MACRO");
 	        	treprint_r (TREATOM_VALUE(atom));
-	        	printf ("#')");
+	        	printf (")");
             } else
                 printf (name);
 	    	break;
@@ -170,9 +170,9 @@ treprint_atom (treptr atom, ulong indent)
 		case TRETYPE_USERSPECIAL:
             name = TREATOM_NAME(atom);
             if (name == NULL) {
-	        	printf ("(special");
+	        	printf ("(SPECIAL");
 	        	treprint_r (TREATOM_VALUE(atom));
-	        	printf ("#')");
+	        	printf (")");
             } else
                 printf (name);
 	    	break;

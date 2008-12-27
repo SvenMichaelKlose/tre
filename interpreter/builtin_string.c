@@ -12,7 +12,6 @@
 #include "number.h"
 #include "error.h"
 #include "eval.h"
-#include "sequence.h"
 #include "thread.h"
 #include "argument.h"
 #include "gc.h"
@@ -112,20 +111,18 @@ trestring_builtin_string (treptr list)
 {
     char    buf[TRE_MAX_STRINGLEN];
     treptr  arg = trearg_get (list);
+   	if (TREPTR_TYPE(arg) == TRETYPE_STRING)
+		return arg;
 
 	while (TRUE) {
-    	switch (TREPTR_TYPE(arg)) {
-        	case TRETYPE_STRING:
-	    		return arg;
-
-        	case TRETYPE_NUMBER:
-				if (TRENUMBER_TYPE(arg) == TRENUMTYPE_CHAR) {
-					buf[0] = TRENUMBER_VAL(arg);
-					buf[1] = 0;
-            		return trestring_get (buf);
-            	}
-            	sprintf (buf, "%G", TRENUMBER_VAL(arg));
-            	return trestring_get (buf);
+       	if (TREPTR_TYPE(arg) == TRETYPE_NUMBER) {
+			if (TRENUMBER_TYPE(arg) == TRENUMTYPE_CHAR) {
+				buf[0] = TRENUMBER_VAL(arg);
+				buf[1] = 0;
+           		return trestring_get (buf);
+           	}
+           	sprintf (buf, "%G", TRENUMBER_VAL(arg));
+           	return trestring_get (buf);
     	}
    		/* Convert atom name to string. */
    		if (TREPTR_IS_ATOM(arg) && TREATOM_NAME(arg)) {
