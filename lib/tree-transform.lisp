@@ -107,9 +107,9 @@
   (setf (tree-transform-clips trn) nil)
   (let form (tree-transform-compile-r (tree-transform-match trn) trn)
     (setf (tree-transform-compiled-match trn)
-      (eval (car (macroexpand `#'((e trn)
+      (eval (macroexpand `#'((e trn)
         (and
-          ,@form))))))))
+          ,@form)))))))
 
 (defun tree-transform! (trn e)
   (when (consp e)
