@@ -4,7 +4,7 @@
 ;;;; OPERATOR EXPANSION
 
 (defmacro define-transpiler-infix (tr name)
-  `(define-expander-macro ',(transpiler-macro-expander (eval tr)) ,name (x y)
+  `(define-expander-macro ,(transpiler-macro-expander (eval tr)) ,name (x y)
 	 `(%transpiler-native ,,x ,(string-downcase (string name)) " " ,,y)))
 
 (defun transpiler-binary-expand (op args)
@@ -13,7 +13,10 @@
 		 (last args)))
 
 (defmacro define-transpiler-binary (tr op repl-op)
-  `(define-expander-macro ',(transpiler-macro-expander (eval tr)) ,op (&rest args)
+  `(define-expander-macro
+	 ,(transpiler-macro-expander (eval tr))
+	 ,op
+	 (&rest args)
      `("(" ,,@(transpiler-binary-expand ,repl-op args) ")")))
 
 ;;;; ENCAPSULATION
@@ -56,12 +59,12 @@
 		     (lambda? (%setq-value a)))
 		  ; Recurse into function.
 	      (cons `(%setq ,(%setq-place a)
-				   ,(copy-recurse-into-lambda
-					  (%setq-value a)
-					  #'((body)
-						   (transpiler-finalize-sexprs tr body))))
-			     (cons separator
-				       (transpiler-finalize-sexprs tr .x)))
+				        ,(copy-recurse-into-lambda
+					       (%setq-value a)
+					       #'((body)
+						        (transpiler-finalize-sexprs tr body))))
+			    (cons separator
+				      (transpiler-finalize-sexprs tr .x)))
 
 		(eq 'function a.)
 		  ; Recurse into named top-level function.
@@ -88,7 +91,8 @@
 
 ;;;; TRANSPILER-MACRO EXPANDER
 ;;;;
-;;;; Expands code-generating macros and converts expressions to C-style function calls.
+;;;; Expands code-generating macros and converts expressions to
+;;;; C-style function calls.
 
 ;; Returns T for every %SETQ expression assigning the value of a function call.
 (defun transpiler-macrop-funcall? (x)
@@ -101,19 +105,19 @@
 (defun transpiler-macrocall-funcall (x)
   `("(" ,@(transpiler-binary-expand "," x) ")"))
 
-(defun transpiler-macrocall (tr fun x)
-  (with (m (cdr (assoc fun
-					   (expander-macros (expander-get (transpiler-macro-expander tr))))))
+(defun transpiler-macrocall (tr x)
+  (with (expander	(expander-get (transpiler-macro-expander tr))
+		 m			(cdr (assoc x. (expander-macros expander))))
     (if m
-        (with (e (apply m x))
-	       (if (transpiler-macrop-funcall? `(,fun ,@x))
+        (let e (apply m .x)
+	       (if (transpiler-macrop-funcall? x)
 				; Make C-style function call.
   		       `(,e. ,(second e) ,(first (third e)) ,@(transpiler-macrocall-funcall (cdr (third e))))
 		       e))
-		`(,fun ,@x))))
+		x)))
 
 (defmacro define-transpiler-macro (tr name args body)
-  `(define-expander-macro ',(transpiler-macro-expander (eval tr)) ,name ,args ,body))
+  `(define-expander-macro ,(transpiler-macro-expander (eval tr)) ,name ,args ,body))
 
 ;;;; TOPLEVEL
 
@@ -134,9 +138,9 @@
 		   ; Obfuscate symbol-names.
 		   (fn transpiler-obfuscate tr _)
 
-		   (fn remove-if #'atom _)))
+		   (fn remove-if #'atom _)
+))
 
-(defun transpiler-generate-code (tr forms)
-  (with (str nil)
-	(dolist (x forms str)
-      (setf str (string-concat str (funcall (transpiler-generate-code-compose tr) x))))))
+(defun transpiler-generate-code (tr x)
+  (mapcar (fn funcall (transpiler-generate-code-compose tr) _)
+		  x))

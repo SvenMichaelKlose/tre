@@ -31,23 +31,27 @@
 		(label? x)
 		  (conv x)
 		(consp x)
-		  (cons (transpiler-make-slot-values x.)
-				(transpiler-make-slot-values .x))
+		  (traverse #'transpiler-make-slot-values x)
 		x))))
+
+(defun transpiler-expand-characters (x)
+  (if (characterp x)
+	  `(code-char ,(char-code x))
+	  (if (consp x)
+		  (traverse #'transpiler-expand-characters x)
+		  x)))
 
 ;;;; STANDARD MACRO EXPANSION
 
 (defun transpiler-macroexpand (x)
-  (repeat-while-changes (fn *macroexpand-hook* _) x))
+ (with-temporary *setf-immediate-slot-value* t
+   (repeat-while-changes (fn *macroexpand-hook* _) x)))
 
 ;;;; EXPANSION OF ALTERNATIVE STANDARD MACROS
 
-(defmacro define-transpiler-std-macro (tr name args body)
-  (with (tre (eval tr))
-    `(define-expander-macro ',(transpiler-std-macro-expander tre)
-							,name
-							,args
-	   ,body)))
+(defmacro define-transpiler-std-macro (tr &rest x)
+  (let tre (eval tr)
+    `(define-expander-macro ,(transpiler-std-macro-expander tre) ,@x)))
 
 ;;;; LAMBDA EXPANSION
 
@@ -70,13 +74,16 @@
 		    (transpiler-lambda-expand tr .x))
 	  x))
 
+(defun transpiler-expression-expand (tr x)
+  (expression-expand (transpiler-expex tr) x))
+
 ;;;; TOPLEVEL
 
 (defun transpiler-expand-compose (tr)
   (compose
 		   ; Add names to top-level functions for those target languages
 		   ; that require it.
-		   (fn (transpiler-make-named-functions tr _))
+		   (fn transpiler-make-named-functions tr _)
 
 		   ; Peephole-optimization. Removes some unused code.
 		   #'opt-peephole
@@ -84,14 +91,23 @@
 		   ; Break up nested expressions.
 		   ; After this pass function arguments may only be literals,
 		   ; constants or variables.
-	       (fn expression-expand (transpiler-expex tr) _)
+		   (fn transpiler-expression-expand tr `(vm-scope ,_))))
 
+(defun transpiler-expand (tr x)
+  (remove-if #'not
+		     (mapcar (fn funcall (transpiler-expand-compose tr) _)
+					 x)))
+
+(defun transpiler-preexpand-compose (tr)
+  (compose
 		   ; Give context to member symbols.
 	       (fn thisify (transpiler-thisify-classes tr) _)
 
 		   ; Inline local function calls.
 		   ; Gives local variables stack slots.
 	       (fn transpiler-lambda-expand tr _)
+
+		   #'transpiler-expand-characters
 
 		   ; Expand BACKQUOTEs and compiler-macros.
 		   #'special-form-expand
@@ -100,19 +116,7 @@
 		   #'transpiler-make-slot-values
 
 		   ; Do standard macro-expansion
-	       #'transpiler-macroexpand))
-
-(defun transpiler-process-forms (tr fun forms)
-  (with (e nil)
-    (dolist (x forms e)
-	  (setf e (append e (list (funcall fun x)))))))
-
-(defun transpiler-expand (tr forms)
-  (with-temporary *setf-immediate-slot-value* t
-    (transpiler-process-forms tr (transpiler-expand-compose tr) forms)))
-
-(defun transpiler-preexpand-compose (tr)
-  (compose #'list
+	       #'transpiler-macroexpand
 
 		   #'dot-expand
 
@@ -126,6 +130,9 @@
 
 		   (fn funcall (transpiler-preprocessor tr) _)))
 
-(defun transpiler-preexpand (tr forms)
+(defun transpiler-preexpand (tr x)
   (transpiler-obfuscate-symbol tr '~%ret)
-  (transpiler-process-forms tr (transpiler-preexpand-compose tr) forms))
+  (funcall (transpiler-preexpand-compose tr) x))
+
+(defun transpiler-preexpand-and-expand (tr forms)
+  (transpiler-expand tr (transpiler-preexpand tr forms)))

@@ -22,6 +22,24 @@
   (or (eq x y)
 	  (= x y)))
 
+;(defun + (&rest x)
+;  (apply #'%%%+ x))
+
+;(defun - (&rest x)
+;  (apply #'%%%- x))
+
+;(defun * (&rest x)
+;  (apply #'%%%* x))
+
+;(defun / (&rest x)
+;  (apply #'%%%/ x))
+
+;(defun = (&rest x)
+;  (apply #'%%%= x))
+
+;(defun < (&rest x)
+;  (apply #'%%%< x))
+
 (defun symbol (x)
   (aif (aref *symbols* x)
 	   !
@@ -86,7 +104,7 @@
   (not (consp x)))
 
 (defun %apply (fun &rest lst)
-  (assert (< 0 arguments.length) "apply requires arguments")
+  (assert (%%%< 0 arguments.length) "apply requires arguments")
   (with (last-arg nil
 		 args (make-array)
 		 last-args (make-array))
@@ -118,4 +136,31 @@
 (defun %bind (obj fun)
   (assert (functionp fun) "BIND requires a function")
   #'(()
-      (fun.apply obj arguments)))))
+      (fun.apply obj arguments)))
+
+(defun %character (x)
+  (setf this.magic '%CHARACTER)
+  (setf this.v x)
+  this)
+
+(defun code-char (x)
+  (new %character x))
+
+(defun char-code (x)
+  x.v)
+
+(defun characterp (x)
+  (and (objectp x)
+	   (eq x.magic '%CHARACTER)))
+
+(defun elt (seq idx)
+  (aref seq idx))
+
+(defun (setf elt) (val seq idx)
+  (setf (aref seq idx) val))
+
+;,(read-file "environment/stage4/null-stream.lisp")
+
+;(defvar *standard-output* (make-null-stream))
+;(defvar *standard-input* (make-null-stream))
+))

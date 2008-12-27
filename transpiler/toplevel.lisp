@@ -4,17 +4,17 @@
 ;;;;; Toplevel
 
 (defun transpiler-add-wanted-function (tr fun)
-  (when (not (or (member fun (transpiler-wanted-functions tr))
-				 (or (eq t (transpiler-unwanted-functions tr))
-					 (member fun (transpiler-unwanted-functions tr)))
-				 (assoc fun (expander-macros (expander-get (transpiler-macro-expander tr))))))
-	(push fun (transpiler-wanted-functions tr))))
-
-(defun transpiler-preexpand-and-expand (tr forms)
-  (transpiler-expand tr (transpiler-preexpand tr forms)))
+  (unless (or (member fun (transpiler-wanted-functions tr))
+			  (or (eq t (transpiler-unwanted-functions tr))
+				  (member fun (transpiler-unwanted-functions tr)))
+			  (assoc fun (expander-macros
+						   (expander-get
+							 (transpiler-macro-expander tr)))))
+	(setf (transpiler-wanted-functions tr)
+		  (nconc (transpiler-wanted-functions tr) (list fun)))))
 
 (defun transpiler-expand-and-generate-code (tr forms)
-  (transpiler-generate-code tr (transpiler-preexpand-and-expand tr forms)))
+  (transpiler-generate-code tr (transpiler-expand tr forms)))
 
 (defmacro with-gensym-assignments ((&rest pairs) &rest body)
   `(with-gensym ,(mapcar #'first (group pairs 2))
@@ -32,38 +32,38 @@
 	     `(setf ,alist (acons ,k ,v ,alist)))))
 
 (defun transpiler-collect-wanted (tr pass funlist)
-  (with (out nil)
-    (dolist (x funlist (reverse out))
-	  (with (fun (symbol-function x))
-	    (when (functionp fun)
-		  (if fun
-		  	  (push (funcall pass tr `((defun ,x ,(function-arguments fun)
-									     ,@(function-body fun))))
-					out)
-			  (error "Unknown function ~A~%" (symbol-name x))))))))
-
-(defun transpiler-sight (tr forms)
-  (transpiler-expand tr (transpiler-preexpand tr forms)))
+  (let out nil
+    (dolist (x funlist out)
+      (unless (member x (transpiler-emitted-wanted-functions tr))
+		(setf (transpiler-emitted-wanted-functions tr)
+			  (push x (transpiler-emitted-wanted-functions tr)))
+	    (let fun (symbol-function x)
+	      (when (functionp fun)
+		    (setf out (nconc out
+						     (funcall pass tr
+								     `((defun ,x ,(function-arguments fun)
+							             ,@(function-body fun))))))))))))
 
 ;; User code must have been sightened by TRANSPILER-SIGHT.
 (defun transpiler-transpile (tr forms)
   (unless (eq t (transpiler-unwanted-functions tr))
-    (format t "Collecting dependencies...~%")
-    (with (w nil
-		   n (transpiler-wanted-functions tr))
-	  (while (not (equal w n))
-			 nil
-        (transpiler-collect-wanted
-		    tr #'((tr x)
-					(transpiler-expand tr (transpiler-preexpand tr x)))
-		    (transpiler-wanted-functions tr))
-	    (setf w n
-			  n (transpiler-wanted-functions tr)))))
+    (format t "; Collecting dependencies...~%")
+    (let wanted-funs (transpiler-collect-wanted tr
+	  				   #'((tr x)
+		   				    (transpiler-preexpand-and-expand tr x))
+	  				   (transpiler-wanted-functions tr))
+  	  (format t "; Generating code...~%")
+  	  (transpiler-concat-string-tree
+		(append (transpiler-generate-code tr (reverse wanted-funs))
+		        (transpiler-expand-and-generate-code tr forms))))))
 
-  (format t "Generating code...~%")
-  (apply #'string-concat
-		(list (transpiler-concat-string-tree
-		    	(transpiler-collect-wanted
-			      tr #'transpiler-expand-and-generate-code
-				  (transpiler-wanted-functions tr)))
-		      (transpiler-generate-code tr forms))))
+(defun transpiler-sighten (tr x)
+  (let tmp (transpiler-preexpand tr x)
+	(transpiler-expression-expand tr tmp)
+	tmp))
+
+(defun transpiler-sighten-files (tr files)
+  (mapcan (fn (format t "; Reading file '~A'...~%" _)
+      		  (with-open-file f (open _ :direction 'input)
+        	    (transpiler-sighten tr (read-many f))))
+		  files))

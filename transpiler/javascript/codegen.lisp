@@ -5,8 +5,8 @@
 
 ;;;; TRANSPILER-MACRO EXPANDER
 
-(defmacro define-js-macro (name args body)
-  `(define-transpiler-macro *js-transpiler* ,name ,args ,body))
+(defmacro define-js-macro (&rest x)
+  `(define-transpiler-macro *js-transpiler* ,@x))
 
 (define-js-macro function (x)
   (if (atom x)
@@ -18,9 +18,9 @@
 						    args) ")"
 	      ,(code-char 10)
 	        "{var " ,ret ,*js-separator*
-	        "var _ = 0" ,*js-separator*
+	        "var _I_ = 0" ,*js-separator*
 	        "while (1) {"
-	          "switch (_) {case 0:"
+	          "switch (_I_) {case 0:"
                 ,@(lambda-body x)
               ("}return " ,ret ,*js-separator*)
 	        "}}"))))
@@ -106,16 +106,16 @@
  					   ")"))
 
 (define-js-macro vm-go (tag)
-  `("_=" ,(transpiler-symbol-string *js-transpiler* tag) "; continue"))
+  `("_I_=" ,(transpiler-symbol-string *js-transpiler* tag) "; continue"))
 
 (define-js-macro vm-go-nil (val tag)
-  `("if (!" ,val ") {_=" ,(transpiler-symbol-string *js-transpiler* tag) "; continue;}"))
+  `("if (!" ,val ") {_I_=" ,(transpiler-symbol-string *js-transpiler* tag) "; continue;}"))
 
 (define-js-macro identity (x)
   x)
 
 (defun js-stack (x)
-  ($ '__S x))
+  ($ '_I_S x))
 
 (define-js-macro %stack (x)
   (js-stack x))

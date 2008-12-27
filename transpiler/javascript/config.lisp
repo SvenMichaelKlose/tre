@@ -6,15 +6,17 @@
 (defun js-transpiler-make-label (x)
   (format nil "case ~A:~%" (transpiler-symbol-string *js-transpiler* x)))
 
-(defun make-javascript-transpiler ()
+(defun make-javascript-transpiler (obfuscate?)
   (create-transpiler
 	:std-macro-expander 'js-alternate-std
 	:macro-expander 'javascript
 	:separator (format nil ";~%")
 	:unwanted-functions '($ cons car cdr make-hash-table map error
+						  href %%usetf-href
+						  wait
 						  new %new %slot-value %%usetf-%slot-value ; environment/oo/ducktype.lisp
 						 )
-	:obfuscate? nil
+	:obfuscate? obfuscate?
 
 	:obfuscation-exceptions
 	  '(caroshi-start
@@ -96,9 +98,13 @@
 
 		; Event
 		client-x client-y
-		add-event-listener attach-event
-		remove-event-listener detach-event
-		prevent-default stop-propagation
+		add-event-listener
+		attach-event
+		dispatch-event
+		remove-event-listener
+		detach-event
+		prevent-default
+		stop-propagation
 		type button char-code key-code target
 		cancel-bubble return-value)
 
@@ -111,5 +117,5 @@
 	:make-label
 	  #'js-transpiler-make-label))
 
-(defvar *js-transpiler* (make-javascript-transpiler))
+(defvar *js-transpiler* (make-javascript-transpiler nil))
 (defvar *js-separator* (transpiler-separator *js-transpiler*))

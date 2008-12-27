@@ -16,7 +16,7 @@
 
 (define-c-std-macro defmacro (name args &rest body)
   (progn
-	(eval (car (macroexpand `(define-c-std-macro ,name ,args ,@body))))
+	(eval (macroexpand `(define-c-std-macro ,name ,args ,@body)))
     nil))
 
 (define-c-std-macro defvar (name val)

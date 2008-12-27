@@ -21,10 +21,21 @@
   (stack-arguments? nil)
 
   ; You shouldn't have to tweak these at construction-time:
-  (thisify-classes (make-hash-table))	; thisified classes.
-  (function-args nil)
   (symbol-translations nil)
-  (obfuscations (make-hash-table)))
+  thisify-classes
+  function-args
+  emitted-wanted-functions
+  obfuscations)
+
+(defun transpiler-reset (tr)
+  (setf (transpiler-thisify-classes tr) (make-hash-table)	; thisified classes.
+  		(transpiler-function-args tr) nil
+  		(transpiler-emitted-wanted-functions tr) nil
+  		(transpiler-obfuscations tr) (make-hash-table)))
+
+(defun transpiler-switch-obfuscator (tr on?)
+  (setf  (transpiler-obfuscations tr) (make-hash-table)
+		 (transpiler-obfuscate? tr) on?))
 
 (defun transpiler-function-arguments? (tr fun)
   (assoc fun (transpiler-function-args tr)))
@@ -35,10 +46,11 @@
 (defun create-transpiler (&rest args)
   (with (tr (apply #'make-transpiler args)
 		 ex (make-expex))
+	(transpiler-reset tr)
     (define-expander (transpiler-std-macro-expander tr))
 	(define-expander (transpiler-macro-expander tr)
-					 :call #'((fun x)
-							   (transpiler-macrocall tr fun x)))
+					 :call #'((x)
+							   (transpiler-macrocall tr x)))
     (setf (expex-function-collector ex)
 		  #'((fun args)
 			   (transpiler-add-wanted-function tr fun))

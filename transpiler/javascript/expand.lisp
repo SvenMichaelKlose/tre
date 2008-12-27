@@ -3,53 +3,53 @@
 ;;;;;
 ;;;;; Expansion of alternative standard macros.
 
-(defmacro define-js-std-macro (name args body)
-  `(define-transpiler-std-macro *js-transpiler* ,name ,args ,body))
+;; Define macro that is expanded _before_ standard macros.
+(defmacro define-js-std-macro (&rest x)
+  `(define-transpiler-std-macro *js-transpiler* ,@x))
 
-(define-js-std-macro function (&rest x)
-  (with (e `(function ,@x))
-    (when (and x
-			   (= 1 (length x))
-			   (atom x.))
-	  (transpiler-add-wanted-function *js-transpiler* x.))
-    (unless x
-      (error "FUNCTION expects arguments"))
-    (if (atom x.)
-	    `(function ,x.)
+(defun transpiler-obfuscate-arguments (tr x)
+  (dolist (i (argument-expand 'unnamed-js-function x nil nil))
+    (transpiler-obfuscate-symbol *js-transpiler* i)))
 
-	    (dolist (i (argument-expand 'unnamed-js-function (lambda-args e) nil nil)
-				 `(function (,(lambda-args e)
-				    ,@(lambda-body e))))
-		  (transpiler-obfuscate-symbol *js-transpiler* i)))))
+(define-js-std-macro function (x)
+  (unless x
+    (error "FUNCTION expects a symbol or form"))
+  (when (atom x)
+	(transpiler-add-wanted-function *js-transpiler* x))
+  (when (consp x)
+    (transpiler-obfuscate-arguments *js-transpiler* .x))
+  `(function ,x))
 
 (define-js-std-macro defun (name args &rest body)
-  (progn
-	(print `(defun ,name))
-    (transpiler-obfuscate-symbol *js-transpiler* name)
-	(unless (in? name 'apply)
-	  (acons! name args (transpiler-function-args tr)))
+  (print `(defun ,name))
+  (let n (%defun-name name)
+    (transpiler-obfuscate-symbol *js-transpiler* n)
+    (unless (in? n 'apply)
+      (acons! n args (transpiler-function-args tr)))
     `(progn
-	   (%var ,name)
-	   (%setq ,name
-		      #'(,args
-    		       ,@(if (and (not *assert*)
-			    	          (stringp body.))
-					     .body
-					     body))))))
+       (%var ,n)
+       (%setq ,n
+	          #'(,args
+   		           ,@(if (and (not *assert*)
+		    	              (stringp body.))
+				         .body
+				         body))))))
 
-(define-js-std-macro defmacro (name args &rest body)
-  (progn
-	(print `(defmacro ,name ))
-	(eval (car (macroexpand `(define-js-std-macro ,name ,args ,@body))))
-    nil))
+(define-js-std-macro defmacro (name &rest x)
+  (print `(defmacro ,name ))
+  (macroexpand `(define-js-std-macro ,name ,@x))
+  nil)
 
 (define-js-std-macro defvar (name val)
-  (progn
-	(print `(defvar ,name))
-    (transpiler-obfuscate-symbol *js-transpiler* name)
-    `(progn
-	   (%var ,name)
-	   (%setq ,name  ,val))))
+  (print `(defvar ,name))
+  (transpiler-obfuscate-symbol *js-transpiler* name)
+  `(progn
+     (%var ,name)
+	 (%setq ,name ,val)))
+
+(define-js-std-macro dont-obfuscate (&rest symbols)
+  (append! (transpiler-obfuscation-exceptions tr) symbols)
+  nil)
 
 (define-js-std-macro funcall (fun &rest x)
   `(,fun ,@x))
@@ -61,30 +61,35 @@
   `(%slot-value ,place ,(second slot)))
 
 (define-js-std-macro bind (fun &rest args)
-  (progn
-    (unless (%slot-value? fun)
-      (error "function must be a SLOT-VALUE"))
-    `(%bind ,(second fun) ,fun)))
+  (unless (%slot-value? fun)
+    (error "function must be a SLOT-VALUE"))
+  `(%bind ,(second fun) ,fun))
+
+(defun js-transpiler-make-new-hash (x)
+  `(make-hash-table
+	 ,@(mapcan (fn (list (if (and (not (stringp _.))
+								  (eq :class _.))
+							 "class" ; IE6 wants this.
+							 _.)
+						 (second _)))
+			   (group x 2))))
+
+(defun js-transpiler-make-new-object (x)
+  `(%new ,x.
+		 ,@(if (transpiler-function-arguments? *js-transpiler* x.)
+		       (argument-expand-compiled-values
+			       x.
+			       (transpiler-function-arguments *js-transpiler* x.)
+			       .x)
+			   .x)))
 
 ;; Make object if first argument is not a keyword, or string.
 (define-js-std-macro new (&rest x)
   (if (and (consp x)
 		   (or (keywordp x.)
 			   (stringp x.)))
-	  `(make-hash-table
-		 ,@(mapcan (fn (list (if (and (not (stringp _.))
-									  (eq :class _.))
-								 "class" ; IE6 wants this.
-								 _.)
-							 (second _)))
-				   (group x 2)))
-	  `(%new ,x.
-			 ,@(if (transpiler-function-arguments? *js-transpiler* x.)
-			       (argument-expand-compiled-values
-				       x.
-				       (transpiler-function-arguments *js-transpiler* x.)
-				       .x)
-				   .x))))
+	  (js-transpiler-make-new-hash x)
+	  (js-transpiler-make-new-object x)))
 
 (define-js-std-macro doeach ((var seq &rest result) &rest body)
   (with-gensym (evald-seq idx)
