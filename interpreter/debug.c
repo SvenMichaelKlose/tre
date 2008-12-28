@@ -584,7 +584,7 @@ tredebug (void)
 			continue;
 
 	    case 'h':
-			printf (tredebug_help);
+			printf ("%s", tredebug_help);
 			continue;
 
 	    case 't':

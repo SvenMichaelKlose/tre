@@ -164,7 +164,7 @@ treprint_atom (treptr atom, ulong indent)
 	        	treprint_r (TREATOM_VALUE(atom));
 	        	printf (")");
             } else
-                printf (name);
+                printf ("%s", name);
 	    	break;
 
 		case TRETYPE_USERSPECIAL:
@@ -174,7 +174,7 @@ treprint_atom (treptr atom, ulong indent)
 	        	treprint_r (TREATOM_VALUE(atom));
 	        	printf (")");
             } else
-                printf (name);
+                printf ("%s", name);
 	    	break;
 
 		case TRETYPE_CONS:
@@ -229,7 +229,7 @@ treprint_cons (treptr * p, ulong * indent, int * postatom, char ** prepend)
     } else if (TREPTR_IS_CONS(car)) {
     	treprint_indent (car, *indent + *postatom, FALSE, *prepend);
 	} else {
-        printf (*prepend);
+        printf ("%s", *prepend);
         treprint_atom (car, *indent + *postatom);
     }
 

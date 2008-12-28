@@ -34,11 +34,11 @@ trestream_builtin_princ (treptr args)
 
     switch (TREPTR_TYPE(obj)) {
 		case TRETYPE_STRING:
-	    	fprintf (str, TREATOM_STRINGP(obj));
+	    	fprintf (str, "%s", TREATOM_STRINGP(obj));
 	    	break;
 
 		case TRETYPE_VARIABLE:
-	    	fprintf (str, TREATOM_NAME(obj));
+	    	fprintf (str, "%s", TREATOM_NAME(obj));
 	    	break;
 
 		case TRETYPE_NUMBER:
