@@ -14,10 +14,9 @@
 (define-js-std-macro function (x)
   (unless x
     (error "FUNCTION expects a symbol or form"))
-  (when (atom x)
-	(transpiler-add-wanted-function *js-transpiler* x))
-  (when (consp x)
-    (transpiler-obfuscate-arguments *js-transpiler* .x))
+  (if (atom x)
+	  (transpiler-add-wanted-function *js-transpiler* x)
+      (transpiler-obfuscate-arguments *js-transpiler* x.))
   `(function ,x))
 
 (define-js-std-macro defun (name args &rest body)
