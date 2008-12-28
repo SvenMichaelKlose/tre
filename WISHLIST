@@ -44,3 +44,6 @@
 - TREScript: DEFMETHOD - have argument expansion.
 
 - Nested DEFSTRUCT.
+
+- (defun bla (x y z)
+   x..) ; x + rest
