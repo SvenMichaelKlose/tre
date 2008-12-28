@@ -61,7 +61,7 @@
 
 (define-js-std-macro bind (fun &rest args)
   (unless (%slot-value? fun)
-    (error "function must be a SLOT-VALUE"))
+    (error "function must be a SLOT-VALUE, got ~A" fun))
   `(%bind ,(second fun) ,fun))
 
 (defun js-transpiler-make-new-hash (x)
@@ -93,7 +93,7 @@
 (define-js-std-macro doeach ((var seq &rest result) &rest body)
   (with-gensym (evald-seq idx)
     `(with (,evald-seq ,seq)
-	   (dotimes (,idx (slot-value ,evald-seq 'length) ,@result)
+	   (dotimes (,idx (%slot-value ,evald-seq length) ,@result)
 	     (with (,var (aref ,evald-seq ,idx))
            ,@body)))))
 
