@@ -18,7 +18,7 @@
 
 (defvar *tre-has-math* t)
 (defvar *tre-has-alien* t)
-(defvar *tre-has-class* nil)
+(defvar *tre-has-class* t)
 (defvar *tre-has-editor* nil)
 (defvar *tre-has-compiler* t)
 (defvar *tre-has-transpiler* t)
