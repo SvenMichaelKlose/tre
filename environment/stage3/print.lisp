@@ -44,7 +44,7 @@
     t))
 
 (defun %print-rest (c str)
-  (newprint (car c) str)
+  (late-print (car c) str)
   (with (x (cdr c))
     (if x
         (if (consp x)
@@ -74,7 +74,7 @@
 	(stringp x) (%print-string x str)
 	(princ (symbol-name x) str)))
 
-(defun print (x &optional (str *standard-output*))
+(defun late-print (x &optional (str *standard-output*))
   (if (consp x)
 	  (%print-cons x str)
 	  (%print-atom x str)))

@@ -12,12 +12,12 @@
            (%format str l (1+ i) txt args))
        (= el #\A)
 		 (progn
-		   (if (consp (car args))
-               (print (car args)) ; XXX
-			   (if args
-                 (princ (car args) str)
-				 (error "argument specified in format is missing")))
-           (%format str l (1+ i) txt (cdr args)))
+		   (if args
+		       (if (consp args.)
+				   (late-print args. str) ; XXX
+                   (princ args. str))
+			   (error "argument specified in format is missing"))
+           (%format str l (1+ i) txt .args))
        (progn
 		 (princ #\~ str)
          (%format str l i txt args)))))
