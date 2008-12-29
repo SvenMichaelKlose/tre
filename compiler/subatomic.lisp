@@ -19,10 +19,6 @@
 (defun vm-scope-body (x)
   (cdr x))
 
-(defun expex-sym? (x)
-  (and (atom x)
-	   (string= "~E" (subseq (symbol-name x) 0 2))))
-
 (defun %stack? (x)
   (and (consp x)
 	   (eq '%STACK (car x))))

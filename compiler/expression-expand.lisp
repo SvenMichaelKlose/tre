@@ -21,6 +21,10 @@
   (setf *expexsym-counter* (+ 1 *expexsym-counter*))
   (make-symbol (string-concat "~E" (string *expexsym-counter*))))
 
+(defun expex-sym? (x)
+  (and (atom x)
+       (string= "~E" (subseq (symbol-name x) 0 2))))
+
 ;; Check if an expression is expandable.
 ;;
 ;; Declines atoms and expressions with meta-forms.
