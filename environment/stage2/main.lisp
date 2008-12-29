@@ -1,8 +1,7 @@
-;;;; nix operating system project
-;;;; list processor environment
+;;;; TRE environment
 ;;;; Copyright (C) 2005-2008 Sven Klose <pixel@copei.de>
 ;;;;
-;;;; Second environment stage
+;;;; Second stage
 
 (env-load "stage2/with-gensym.lisp")
 (env-load "stage2/list-manipulation.lisp")
