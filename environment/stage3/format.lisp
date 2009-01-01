@@ -13,7 +13,8 @@
        (= el #\A)
 		 (progn
 		   (if args
-		       (if (consp args.)
+		       (if (or (consp args.)
+					   (variablep args.))
 				   (late-print args. str) ; XXX
                    (princ args. str))
 			   (error "argument specified in format is missing"))
