@@ -1,5 +1,4 @@
-;;;; nix operating system project
-;;;; list processor environment
+;;;; TRE  environment
 ;;;; Copyright (C) 2005-2006,2008 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Associative lists
@@ -23,8 +22,8 @@
     (dolist (i lst)
       (if (consp i)
 		  (if (funcall (or test eql) key (car i))
-	  	  (return i))
-	(%error "not a pair")))))
+	  	      (return i))
+		  (%error "not a pair")))))
 
 (defun %setf-assoc (new-value key x &key test)
   (if (listp x)
@@ -45,8 +44,7 @@
   "Destructively prepend key/value pair to associative list."
   `(setf ,place (acons ,key ,val ,place)))
 
-(defun copy-alist (lst)
+(defun copy-alist (x)
   "Copy associative list."
-  (mapcar #'((x y)
-			   (cons x y))
-		  lst))
+  (mapcar (fn cons _. ._)
+		  x))

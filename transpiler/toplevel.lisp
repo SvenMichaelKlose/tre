@@ -52,10 +52,11 @@
 	  				   #'((tr x)
 		   				    (transpiler-preexpand-and-expand tr x))
 	  				   (transpiler-wanted-functions tr))
-  	  (format t "; Generating code...~%")
+  	  (format t "; ~A top-level expressions.~%"
+			  (+ (length wanted-funs) (length forms)))
   	  (transpiler-concat-string-tree
-		(append (transpiler-generate-code tr (reverse wanted-funs))
-		        (transpiler-expand-and-generate-code tr forms))))))
+		(transpiler-generate-code tr (reverse wanted-funs))
+		(transpiler-expand-and-generate-code tr forms)))))
 
 (defun transpiler-sighten (tr x)
   (let tmp (transpiler-preexpand tr x)
@@ -63,7 +64,7 @@
 	tmp))
 
 (defun transpiler-sighten-files (tr files)
-  (mapcan (fn (format t "; Reading file '~A'...~%" _)
+  (mapcan (fn (format t "(LOAD \"~A\")~%" _)
       		  (with-open-file f (open _ :direction 'input)
         	    (transpiler-sighten tr (read-many f))))
 		  files))

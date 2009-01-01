@@ -64,9 +64,6 @@
 (define-js-binary bit-and "&")
 (define-js-binary bit-or "|")
 
-(define-js-macro instance? (name typestring)
-  `(%transpiler-native ,name instanceof ,typestring))
-
 (define-js-macro make-array (&rest elements)
   `(%transpiler-native "[" ,@(transpiler-binary-expand "," elements) "]"))
 
@@ -84,7 +81,7 @@
   `(%transpiler-native (aref ,@x) "=" ,val))
 
 (define-js-macro %%usetf-href (val &rest x)
-  `(%transpiler-native (aref ,@x) "=" ,val))
+  `(%%usetf-aref ,val ,@x))
 
 (define-js-macro make-string (&optional size)
   `(%transpiler-string ""))
@@ -123,8 +120,13 @@
 (define-js-macro %quote (x)
   `("symbol(\"" ,(symbol-name x) "\")"))
 
+;  `("symbol(" (%transpiler-string ,(symbol-name x)) ")"))
+
 (define-js-macro %set-atom-fun (plc val)
   `(%transpiler-native ,plc "=" ,val))
 
 (define-js-macro %slot-value (x y)
   ($ x "." y))
+
+(define-js-macro %js-typeof (x)
+  `(%transpiler-native "typeof " ,x))

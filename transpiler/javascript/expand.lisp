@@ -102,3 +102,8 @@
      (((%transpiler-native "for (" ,key " in " ,seq ")")
 	    (%no-expex (with (,var (aref ,seq ,key))
           ,@body))))))
+
+(define-js-std-macro js-type-predicate (name type)
+  `(defun ,name (x)
+     (= (%js-typeof x)
+        ,(string-downcase (symbol-name (transpiler-obfuscate-symbol *js-transpiler* type))))))

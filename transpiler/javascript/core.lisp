@@ -4,12 +4,7 @@
 ;;;;; This are the low-level transpiler definitions of
 ;;;;; basic functions to simulate basic data types.
 
-(defun def-js-type-predicate (name typestring)
-  `(defun ,name (x)
-     (instanceof x (%no-expex (%transpiler-native ,typestring)))))
-
 (defvar *js-base* `(
-; IDENTITY - use native
 
 ;;; Symbols
 ;;;
@@ -48,17 +43,10 @@
         	 this.f nil
 			 (aref *symbols* x) this)))
 
-(defun symbol-name (x)
-  x.n)
-
-(defun symbol-value (x)
-  x.v)
-
-(defun symbol-function (x)
-  x.f)
-
-(defun make-symbol (x)
-  (symbol x))
+(defun symbol-name (x) x.n)
+(defun symbol-value (x) x.v)
+(defun symbol-function (x) x.f)
+(defun make-symbol (x) (symbol x))
 
 (defun %quote (s)
   (aif (aref *symbols* s)
@@ -70,47 +58,60 @@
 ;;; Conses are objects containing a pair.
 
 (defun %cons (x y)
+  (setf this.__class "cons")
   (setf this._ x)
   (setf this.__ y)
   this)
 
-(defun cons (x y)
-  (new %cons x y))
+(defun cons (x y) (new %cons x y))
+(defun car (x) x._)
+(defun cdr (x) x.__)
 
-(defun car (x)
-  x._)
+(defun rplaca (x val) (setf x._ val))
+(defun rplacd (x val) (setf x.__ val))
 
-(defun cdr (x)
-  x.__)
+(defun list (&rest x) x)
 
-(defun rplaca (x val)
-  (setf x._ val))
+(js-type-predicate symbolp symbol)
+(js-type-predicate numberp number)
+(js-type-predicate stringp string)
+(js-type-predicate functionp function)
+(js-type-predicate objectp object)
 
-(defun rplacd (x val)
-  (setf x.__ val))
+(defun consp (x)
+  (and (objectp x)
+	   x.__class
+	   (= "cons" x.__class)))
 
-(defun list (&rest x)
-  x)
+(defun arrayp (x)
+  (instanceof x -array))
 
-,(def-js-type-predicate symbolp "symbol")
-,(def-js-type-predicate consp '%cons)
-,(def-js-type-predicate numberp "Number")
-,(def-js-type-predicate arrayp "Array")
-,(def-js-type-predicate stringp "String")
-,(def-js-type-predicate functionp "Function")
-,(def-js-type-predicate objectp "Object")
+(when-debug
+  (defun js-core-test ()
+    (unless (arrayp (new *array))
+	  (alert "ARRAYP test"))
+    (unless (consp (cons nil nil))
+	  (alert "CONSP test"))
+    (unless (numberp 23)
+	  (alert "NUMBERP test"))
+    (unless (stringp "23")
+	  (alert "STRINGP test"))
+    (unless (functionp #'(()))
+	  (alert "FUNCTIONP test"))
+    (unless (objectp (new *object))
+	  (alert "FUNCTIONP test")))
+  (js-core-test))
 
-(defun atom (x)
-  (not (consp x)))
+(defun atom (x) (not (consp x)))
 
 (defun %apply (fun &rest lst)
-  (assert (%%%< 0 arguments.length) "apply requires arguments")
+  (assert (< 0 arguments.length) "apply requires arguments")
   (with (last-arg nil
 		 args (make-array)
 		 last-args (make-array))
-    (do ((i args (cdr i)))
-		((not (cdr i))
-		 (setf last-args (car i)))
+    (do ((i args .i))
+		((not .i)
+		 (setf last-args i.))
       (args.push (aref arguments i)))
 
     (dolist (i last-args)
@@ -119,7 +120,7 @@
 
 (defun %list-length (x &optional (n 0))
   (if (consp x)
-	  (%list-length (cdr x) (1+ n))
+	  (%list-length .x (1+ n))
 	  n))
   
 (defun length (x)
@@ -139,25 +140,21 @@
       (fun.apply obj arguments)))
 
 (defun %character (x)
-  (setf this.magic '%CHARACTER)
-  (setf this.v x)
+  (setf this.magic '%CHARACTER
+  		this.v x)
   this)
 
-(defun code-char (x)
-  (new %character x))
-
-(defun char-code (x)
-  x.v)
+(defun code-char (x) (new %character x))
+(defun char-code (x) x.v)
 
 (defun characterp (x)
   (and (objectp x)
 	   (eq x.magic '%CHARACTER)))
 
-(defun elt (seq idx)
-  (aref seq idx))
+(defun elt (seq idx) (aref seq idx))
+(defun (setf elt) (val seq idx) (setf (aref seq idx) val))
 
-(defun (setf elt) (val seq idx)
-  (setf (aref seq idx) val))
+(defun numberp (x) (not (stringp x))) ; XXX fscks up on FF3.
 
 ;,(read-file "environment/stage4/null-stream.lisp")
 

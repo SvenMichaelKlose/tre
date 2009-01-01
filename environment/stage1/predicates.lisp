@@ -1,8 +1,7 @@
-;;;; nix operating system project
-;;;; list processor environment
-;;;; Copyright (c) 2005-2006,2008 Sven Klose <pixel@copei.de>
-;;;;
-;;;; Predicate functions
+;;;;; TRE environment
+;;;;; Copyright (c) 2005-2006,2008 Sven Klose <pixel@copei.de>
+;;;;;
+;;;;; Predicate functions
 
 (defun zerop (x)
   "Return T if the argument value is 0."
@@ -44,5 +43,3 @@
 (define-test "NOT works with T"
   ((not t))
   nil)
-~
-~

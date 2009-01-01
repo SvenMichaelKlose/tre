@@ -107,7 +107,7 @@
 
 (defun transpiler-macrocall (tr x)
   (with (expander	(expander-get (transpiler-macro-expander tr))
-		 m			(cdr (assoc x. (expander-macros expander))))
+		 m			(assoc-value x. (expander-macros expander)))
     (if m
         (let e (apply m .x)
 	       (if (transpiler-macrop-funcall? x)
@@ -117,7 +117,8 @@
 		x)))
 
 (defmacro define-transpiler-macro (tr name args body)
-  `(define-expander-macro ,(transpiler-macro-expander (eval tr)) ,name ,args ,body))
+  `(define-expander-macro ,(transpiler-macro-expander (eval tr)) ,name ,args
+	 ,body))
 
 ;;;; TOPLEVEL
 
@@ -128,15 +129,21 @@
 
 		   ; Expand expressions to strings.
 		   (fn expander-expand (transpiler-macro-expander tr) _)
+;		   (fn (format t "; Expanding code...~%") _)
 
 		   ; Expand top-level symbols, add expression separators.
 		   (fn transpiler-finalize-sexprs tr _)
+;		   (fn (format t "; Finalizing expressions...~%") _)
 
 		   ; Wrap strings in %TRANSPILER-STRING expressions.
 		   #'transpiler-encapsulate-strings
+;		   (fn (format t "; Encapsulating strings...~%") _)
 
 		   ; Obfuscate symbol-names.
 		   (fn transpiler-obfuscate tr _)
+;		   (fn (when (transpiler-obfuscate? tr)
+;				 (format t "; Obfuscating...~%"))
+;			   _)
 
 		   (fn remove-if #'atom _)
 ))

@@ -48,17 +48,21 @@
 
 (defun transpiler-expand-compose (tr)
   (compose
-		   ; Add names to top-level functions for those target languages
-		   ; that require it.
-		   (fn transpiler-make-named-functions tr _)
+    ; Add names to top-level functions for those target languages
+    ; that require it.
+    (fn transpiler-make-named-functions tr _)
+;    (fn (format t "Making named functions...~%") _)
 
-		   ; Peephole-optimization. Removes some unused code.
-		   #'opt-peephole
+    ; Peephole-optimization. Removes some unused code.
+    #'opt-peephole
+;   (fn (format t "Optimising...~%") _)
 
-		   ; Break up nested expressions.
-		   ; After this pass function arguments may only be literals,
-		   ; constants or variables.
-		   (fn transpiler-expression-expand tr `(vm-scope ,_))))
+    ; Break up nested expressions.
+    ; After this pass function arguments may only be literals,
+    ; constants or variables.
+    (fn transpiler-expression-expand tr `(vm-scope ,_))
+;    (fn (format t "Expanding expressions...~%") _)
+))
 
 (defun transpiler-expand (tr x)
   (remove-if #'not
@@ -67,30 +71,31 @@
 
 (defun transpiler-preexpand-compose (tr)
   (compose
-		   ; Give context to member symbols.
-	       (fn thisify (transpiler-thisify-classes tr) _)
+    ; Inline local function calls.
+    ; Gives local variables stack slots.
+    ;
+    ; Give context to member symbols.
+    (fn thisify (transpiler-thisify-classes tr) _)
 
-		   ; Inline local function calls.
-		   ; Gives local variables stack slots.
-	       (fn transpiler-lambda-expand tr _)
+    (fn transpiler-lambda-expand tr _)
 
-		   #'transpiler-expand-characters
+     #'transpiler-expand-characters
 
-		   ; Expand BACKQUOTEs and compiler-macros.
-		   #'special-form-expand
+    ; Expand BACKQUOTEs and compiler-macros.
+    #'special-form-expand
 
-		   ; Do standard macro-expansion
-	       #'transpiler-macroexpand
+    ; Do standard macro-expansion
+    #'transpiler-macroexpand
 
-		   ; Alternative standard-macros.
-		   ; Some macros in this pass just rename expression to bypass the
-		   ; standard macro-expansion.
-	       (fn expander-expand (transpiler-std-macro-expander tr) _)
+    ; Alternative standard-macros.
+    ; Some macros in this pass just rename expression to bypass the
+    ; standard macro-expansion.
+    (fn expander-expand (transpiler-std-macro-expander tr) _)
 
-		   ; Convert object-dot-member symbols to %SLOT-VALUE expressions.
-		   #'dot-expand
+    ; Convert object-dot-member symbols to %SLOT-VALUE expressions.
+    #'dot-expand
 
-		   (fn funcall (transpiler-preprocessor tr) _)))
+    (fn funcall (transpiler-preprocessor tr) _)))
 
 (defun transpiler-preexpand (tr x)
   (transpiler-obfuscate-symbol tr '~%ret)
