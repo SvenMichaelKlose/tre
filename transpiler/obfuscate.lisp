@@ -1,4 +1,4 @@
-;;;;; TRE tree processor transpiler
+;;;;; TRE transpiler
 ;;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Obfuscation
@@ -19,10 +19,13 @@
 	(make-symbol (list-string (cons #\_ (rec *transpiler-obfuscation-counter*))))))
 
 (defun transpiler-obfuscate-symbol (tr x)
-  (when (transpiler-obfuscate? tr)
-    (unless (or (find x (transpiler-obfuscation-exceptions tr))
-			    (href x (transpiler-obfuscations tr)))
-      (setf (href x (transpiler-obfuscations tr)) (transpiler-obfuscated-sym)))))
+  (if (transpiler-obfuscate? tr)
+      (if (or (find x (transpiler-obfuscation-exceptions tr))
+		      (href x (transpiler-obfuscations tr)))
+          (setf (href x (transpiler-obfuscations tr))
+			    (transpiler-obfuscated-sym))
+	      x)
+	  x))
 
 (defun transpiler-obfuscate (tr x)
   (if (transpiler-obfuscate? tr)
