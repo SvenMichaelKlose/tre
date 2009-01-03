@@ -6,6 +6,8 @@
 
 (defvar *js-base* `(
 
+(defvar ~%ret nil)
+
 ;;; Symbols
 ;;;
 ;;; These are string encapsulated in an object to make
@@ -36,12 +38,11 @@
 ;  (apply #'%%%< x))
 
 (defun symbol (x)
-  (aif (aref *symbols* x)
-	   !
-  	   (setf this.n x
-        	 this.v nil
-        	 this.f nil
-			 (aref *symbols* x) this)))
+  (or (aref *symbols* x)
+  	  (setf this.n x
+        	this.v nil
+        	this.f nil
+			(aref *symbols* x) this)))
 
 (defun symbol-name (x) x.n)
 (defun symbol-value (x) x.v)
@@ -49,9 +50,8 @@
 (defun make-symbol (x) (symbol x))
 
 (defun %quote (s)
-  (aif (aref *symbols* s)
-	   !
-	   (symbol s)))
+  (or (aref *symbols* s)
+	  (symbol s)))
 
 ;;; CONSES
 ;;;
@@ -66,10 +66,8 @@
 (defun cons (x y) (new %cons x y))
 (defun car (x) x._)
 (defun cdr (x) x.__)
-
 (defun rplaca (x val) (setf x._ val))
 (defun rplacd (x val) (setf x.__ val))
-
 (defun list (&rest x) x)
 
 (js-type-predicate symbolp symbol)
@@ -83,26 +81,25 @@
 	   x.__class
 	   (= "cons" x.__class)))
 
-(defun arrayp (x)
-  (instanceof x -array))
-
-(when-debug
-  (defun js-core-test ()
-    (unless (arrayp (new *array))
-	  (alert "ARRAYP test"))
-    (unless (consp (cons nil nil))
-	  (alert "CONSP test"))
-    (unless (numberp 23)
-	  (alert "NUMBERP test"))
-    (unless (stringp "23")
-	  (alert "STRINGP test"))
-    (unless (functionp #'(()))
-	  (alert "FUNCTIONP test"))
-    (unless (objectp (new *object))
-	  (alert "FUNCTIONP test")))
-  (js-core-test))
-
 (defun atom (x) (not (consp x)))
+(defun arrayp (x) (instanceof x -array))
+
+;,(when *assert*
+;  `(progn
+;(defun js-core-test ()
+; (unless (arrayp (new *array))
+;(alert "ARRAYP test"))
+; (unless (consp (cons nil nil))
+;(alert "CONSP test"))
+; (unless (numberp 23)
+;(alert "NUMBERP test"))
+; (unless (stringp "23")
+;(alert "STRINGP test"))
+; (unless (functionp #'(()))
+;(alert "FUNCTIONP test"))
+; (unless (objectp (new *object))
+;(alert "OBJECTP test")))
+;(js-core-test)
 
 (defun %apply (fun &rest lst)
   (assert (< 0 arguments.length) "apply requires arguments")
@@ -129,6 +126,8 @@
 	    (%list-length x)
 	    x.length)))
 
+(dont-obfuscate fun hash)
+
 (defun map (fun hash)
   (%transpiler-native "null;for (i in hash) fun (i)"))
 
@@ -148,13 +147,10 @@
 (defun char-code (x) x.v)
 
 (defun characterp (x)
-  (and (objectp x)
-	   (eq x.magic '%CHARACTER)))
+  (numberp x))
 
 (defun elt (seq idx) (aref seq idx))
 (defun (setf elt) (val seq idx) (setf (aref seq idx) val))
-
-(defun numberp (x) (not (stringp x))) ; XXX fscks up on FF3.
 
 ;,(read-file "environment/stage4/null-stream.lisp")
 
