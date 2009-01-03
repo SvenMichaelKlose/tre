@@ -1,7 +1,11 @@
 ;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Configuration
+
+(defun js-setf-functionp (x)
+  (or (%setf-functionp x)
+      (assoc x (transpiler-function-args *js-transpiler*))))
 
 (defun js-transpiler-make-label (x)
   (format nil "case ~A:~%" (transpiler-symbol-string *js-transpiler* x)))
@@ -10,6 +14,7 @@
   (create-transpiler
 	:std-macro-expander 'js-alternate-std
 	:macro-expander 'javascript
+	:setf-functionp #'js-setf-functionp
 	:separator (format nil ";~%")
 	:unwanted-functions '($ cons car cdr make-hash-table map error
 						  href %%usetf-href
@@ -19,7 +24,7 @@
 	:obfuscate? obfuscate?
 
 	:obfuscation-exceptions
-	  '(caroshi-start
+	  '(function
 		fun hash class
 
 		; JavaScript core

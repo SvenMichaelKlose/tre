@@ -1,10 +1,13 @@
-;;;; nix operating system project
-;;;; list processor environment
-;;;; Copyright (C) 2005-2008 Sven Klose <pixel@copei.de>
+;;;; TRE environment
+;;;; Copyright (C) 2005-2009 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; SETF macro
 
+(defun %setf-functionp (x)
+  (functionp (eval `(function ,x))))
+
 (defvar *setf-immediate-slot-value* nil)
+(defvar *setf-functionp* #'%setf-functionp)
 
 ;; Assign evaluated value of argument y to variable x.
 (defmacro set (x y)
@@ -27,9 +30,8 @@
       	(list 'setq p val))
       (let* ((fun (car p))
 	         (args (cdr p))
-	         (setfun (%setf-make-symbol fun))
-	         (funat (eval `(function ,setfun))))
-        (if (functionp funat)
+	         (setfun (%setf-make-symbol fun)))
+        (if (funcall *setf-functionp* setfun)
 	        (let g (gensym)
 			   (if (member (car args) *constants*)
 		    	   (%error "cannot set constant"))
