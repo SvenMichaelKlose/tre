@@ -1,5 +1,5 @@
 ;;;; TRE environment
-;;;; Copyright (C) 2005-2008 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Structures
 
@@ -69,10 +69,10 @@
 (defun %struct-sort-fields (fields-and-options)
   "Split list into fields and options."
   (with-queue (f o)
-    (mapcar #'((x)
-	             (if (and (consp x) (%struct-option-keyword (car x)))
-	                 (enqueue o x)
-	                 (enqueue f x)))
+    (mapcar (fn (if (and (consp _)
+						 (%struct-option-keyword (car _)))
+	                (enqueue o _)
+	                (enqueue f _)))
 	        fields-and-options)
     (values (queue-list f) (queue-list o))))
 
@@ -94,7 +94,7 @@
     (dolist (i (%struct-def name) (queue-list form))
       (enqueue form (car i)))))
 
-(defmacro defstruct (name &rest fields-and-options)
+(defun %defstruct-expander (name &rest fields-and-options)
   "Define new structure."
   (multiple-value-bind (flds opts) (%struct-sort-fields fields-and-options)
     (%struct-add-def name flds)
@@ -104,3 +104,6 @@
       ,@(%struct-getters name flds)
       (defmacro ,(make-symbol (string-concat "WITH-" (symbol-name name))) (s &rest body)
 		 `(with-struct ,name ,,s ,,@body)))))
+
+(defmacro defstruct (name &rest fields-and-options)
+  (apply #'%defstruct-expander name fields-and-options))
