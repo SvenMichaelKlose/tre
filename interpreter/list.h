@@ -1,6 +1,6 @@
 /*
- * nix operating system project tre interpreter
- * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+ * TRE interpreter
+ * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
  *
  * List-related section.
  */
@@ -32,6 +32,7 @@ struct tre_list {
 #define CAAR(x) 	CAR(CAR(x))
 #define CDDR(x) 	CDR(CDR(x))
 #define CADDR(x) 	CAR(CDR(CDR(x)))
+#define CDDDR(x) 	CDR(CDR(CDR(x)))
 
 #define RPLACA(x,v) 	(trelist_rplaca (x, v))
 #define RPLACD(x,v) 	(trelist_rplacd (x, v))

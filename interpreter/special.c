@@ -1,6 +1,6 @@
 /*
- * TRE tree processor
- * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+ * TRE interpreter
+ * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
  *
  * Built-in special forms.
  */
@@ -118,22 +118,22 @@ trespecial_apply (treptr list)
 
 /* Test if expression is an evaluated RETURN-FROM. */
 bool
-treeval_is_return (treptr p)
+treeval_is_return (treptr x)
 {
-    if (TREPTR_IS_ATOM(p))
-		return FALSE;
-
-    return CAR(p) == tre_atom_evaluated_return_from;
+	return !(TREPTR_IS_ATOM(x)
+    		 || CAR(x) != tre_atom_evaluated_return_from
+			 || TREPTR_IS_ATOM(CDR(x))
+			 || TREPTR_IS_ATOM(CDDR(x))
+			 || CDDDR(x) != treptr_nil);
 }
 
 /* Test if expression is an evaluated GO. */
 bool
-treeval_is_go (treptr p)
+treeval_is_go (treptr x)
 {
-    if (TREPTR_IS_ATOM(p))
-		return FALSE;
-
-    return CAR(p) == tre_atom_evaluated_go;
+	return !(TREPTR_IS_ATOM(x)
+    		 || CAR(x) != tre_atom_evaluated_go
+			 || TREPTR_IS_CONS(CDR(x)));
 }
 
 /* Test if expression is an evaluated GO or RETURN-FROM. */
@@ -332,8 +332,7 @@ trespecial_block (treptr args)
 		return treerror (tag, "tag expected instead of an expression");
 
     p = CDR(args);
-    if (p == treptr_nil)
-		return treptr_nil;
+    RETURN_NIL(p);
 
     while (p != treptr_nil) {
 		last = treeval (CAR(p));
@@ -524,23 +523,14 @@ trespecial_function (treptr fun)
 
 char *tre_special_names[] = {
     "APPLY",
-
     "SETQ",
-
     "MACRO", "SPECIAL",
-
     "COND", "IF",
-
     "QUOTE",
-
     "PROGN",
-
     "BLOCK", "RETURN-FROM", "TAGBODY", "GO",
-
     "FUNCTION",
-
     "%SET-ATOM-FUN",
-
     "SET-BREAKPOINT", "REMOVE-BREAKPOINT",
     NULL
 };
@@ -579,10 +569,13 @@ trespecial_init ()
 {
     tre_atom_evaluated_go
         = treatom_get ("%%EVALD-GO", TRECONTEXT_PACKAGE());
+	EXPAND_UNIVERSE(tre_atom_evaluated_go);
+
     tre_atom_evaluated_return_from
         = treatom_get ("%%EVALD-RETURN-FROM", TRECONTEXT_PACKAGE());
+    EXPAND_UNIVERSE(tre_atom_evaluated_return_from);
+
     treatom_lambda
         = treatom_get ("LAMBDA", TRECONTEXT_PACKAGE());
-
     EXPAND_UNIVERSE(treatom_lambda);
 }
