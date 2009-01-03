@@ -30,14 +30,12 @@
       (setf (expander-call e)
 			(fn (apply (cdr (assoc _. (expander-macros e))) ._))))))
 
-(defmacro define-expander-macro (expander-name name args &rest body)
+(defmacro define-expander-macro (expander-name name &rest x)
   (when (consp name)
     (error "Atom expected instead of ~A for expander ~A." name expander-name))
-  (acons! name
-		  (eval `#'(,args
-			   		  ,@(apply #'macroexpand body)))
-		  (expander-macros (expander-get expander-name)))
-  nil)
+  `(acons! ',name
+		   #'(,@x)
+		   (expander-macros (expander-get ',expander-name))))
 
 (defun expander-expand (expander-name expr)
   (let e  (expander-get expander-name)
