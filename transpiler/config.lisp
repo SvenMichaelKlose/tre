@@ -1,11 +1,12 @@
 ;;;;; TRE tree processor transpiler
-;;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Configuration
 
 (defstruct transpiler
   std-macro-expander
   macro-expander
+  setf-functionp
   separator
   unwanted-functions
   (identifier-char?
@@ -49,8 +50,7 @@
 	(transpiler-reset tr)
     (define-expander (transpiler-std-macro-expander tr))
 	(define-expander (transpiler-macro-expander tr)
-					 :call #'((x)
-							   (transpiler-macrocall tr x)))
+					 :call (fn transpiler-macrocall tr _))
     (setf (expex-function-collector ex)
 		  #'((fun args)
 			   (transpiler-add-wanted-function tr fun))
