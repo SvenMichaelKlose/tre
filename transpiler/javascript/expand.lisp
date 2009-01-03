@@ -1,5 +1,5 @@
 ;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Expansion of alternative standard macros.
 
@@ -36,7 +36,7 @@
 
 (define-js-std-macro defmacro (name &rest x)
   (print `(defmacro ,name ))
-  (macroexpand `(define-js-std-macro ,name ,@x))
+  (eval (macroexpand `(define-js-std-macro ,name ,@x)))
   nil)
 
 (define-js-std-macro defvar (name val)
@@ -45,6 +45,9 @@
   `(progn
      (%var ,name)
 	 (%setq ,name ,val)))
+
+(define-js-std-macro defstruct (name &rest fields-and-options)
+  (apply #'%defstruct-expander name fields-and-options))
 
 (define-js-std-macro dont-obfuscate (&rest symbols)
   (append! (transpiler-obfuscation-exceptions tr) symbols)
