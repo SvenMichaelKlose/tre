@@ -1,5 +1,5 @@
 ;;;;; TRE tree processor transpiler
-;;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
 
 (defun transpiler-expand-characters (x)
   (if (characterp x)
@@ -51,18 +51,14 @@
     ; Add names to top-level functions for those target languages
     ; that require it.
     (fn transpiler-make-named-functions tr _)
-;    (fn (format t "Making named functions...~%") _)
 
     ; Peephole-optimization. Removes some unused code.
     #'opt-peephole
-;   (fn (format t "Optimising...~%") _)
 
     ; Break up nested expressions.
     ; After this pass function arguments may only be literals,
     ; constants or variables.
-    (fn transpiler-expression-expand tr `(vm-scope ,_))
-;    (fn (format t "Expanding expressions...~%") _)
-))
+    (fn transpiler-expression-expand tr `(vm-scope ,_))))
 
 (defun transpiler-expand (tr x)
   (remove-if #'not
@@ -81,11 +77,12 @@
 
      #'transpiler-expand-characters
 
-    ; Expand BACKQUOTEs and compiler-macros.
+    ; Expand BACKQUOTEs, QUASIQUOTEs and compiler-macros.
     #'special-form-expand
 
     ; Do standard macro-expansion
-    #'transpiler-macroexpand
+    (fn (with-temporary *setf-functionp* (transpiler-setf-functionp tr)
+          (transpiler-macroexpand _)))
 
     ; Alternative standard-macros.
     ; Some macros in this pass just rename expression to bypass the

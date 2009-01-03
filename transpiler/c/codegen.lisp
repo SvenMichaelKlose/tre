@@ -5,8 +5,8 @@
 
 ;;;; TRANSPILER-MACRO EXPANDER
 
-(defmacro define-c-macro (name args body)
-  `(define-transpiler-macro *c-transpiler* ,name ,args ,body))
+(defmacro define-c-macro (&rest x)
+  `(define-transpiler-macro *c-transpiler* ,@x))
 
 (define-c-macro function (name x)
   (if (atom x)

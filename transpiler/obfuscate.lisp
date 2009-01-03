@@ -19,13 +19,13 @@
 	(make-symbol (list-string (cons #\_ (rec *transpiler-obfuscation-counter*))))))
 
 (defun transpiler-obfuscate-symbol (tr x)
-  (if (transpiler-obfuscate? tr)
-      (if (or (find x (transpiler-obfuscation-exceptions tr))
-		      (href x (transpiler-obfuscations tr)))
-          (setf (href x (transpiler-obfuscations tr))
-			    (transpiler-obfuscated-sym))
-	      x)
-	  x))
+  (if (or (not (transpiler-obfuscate? tr))
+          (find x (transpiler-obfuscation-exceptions tr)))
+	  x
+      (aif (href x (transpiler-obfuscations tr))
+		   !
+           (setf (href x (transpiler-obfuscations tr))
+		         (transpiler-obfuscated-sym)))))
 
 (defun transpiler-obfuscate (tr x)
   (if (transpiler-obfuscate? tr)

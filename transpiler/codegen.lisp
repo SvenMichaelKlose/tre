@@ -129,24 +129,17 @@
 
 		   ; Expand expressions to strings.
 		   (fn expander-expand (transpiler-macro-expander tr) _)
-;		   (fn (format t "; Expanding code...~%") _)
 
 		   ; Expand top-level symbols, add expression separators.
 		   (fn transpiler-finalize-sexprs tr _)
-;		   (fn (format t "; Finalizing expressions...~%") _)
 
 		   ; Wrap strings in %TRANSPILER-STRING expressions.
 		   #'transpiler-encapsulate-strings
-;		   (fn (format t "; Encapsulating strings...~%") _)
 
 		   ; Obfuscate symbol-names.
 		   (fn transpiler-obfuscate tr _)
-;		   (fn (when (transpiler-obfuscate? tr)
-;				 (format t "; Obfuscating...~%"))
-;			   _)
 
-		   (fn remove-if #'atom _)
-))
+		   (fn remove-if #'atom _)))
 
 (defun transpiler-generate-code (tr x)
   (mapcar (fn funcall (transpiler-generate-code-compose tr) _)
