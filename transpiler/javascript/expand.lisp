@@ -36,7 +36,8 @@
 
 (define-js-std-macro defmacro (name &rest x)
   (print `(defmacro ,name ))
-  (eval (car (macroexpand `(define-js-std-macro ,name ,@x))))
+  (eval (transpiler-macroexpand *js-transpiler*
+									 `(define-js-std-macro ,name ,@x)))
   nil)
 
 (define-js-std-macro defvar (name val)
