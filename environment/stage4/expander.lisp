@@ -1,5 +1,5 @@
 ;;;;; TRE environment
-;;;;; Copyright (c) 2006-2008 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2006-2009 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; User-defineable expansion.
 
@@ -28,7 +28,8 @@
 			(fn (cdr (assoc _. (expander-macros e))))))
     (unless call
       (setf (expander-call e)
-			(fn (apply (cdr (assoc _. (expander-macros e))) ._))))))
+			(fn (apply (cdr (assoc _. (expander-macros e))) ._))))
+	e))
 
 (defmacro define-expander-macro (expander-name name &rest x)
   (when (consp name)

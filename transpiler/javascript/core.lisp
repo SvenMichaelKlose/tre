@@ -47,7 +47,7 @@
 (defun symbol-name (x) x.n)
 (defun symbol-value (x) x.v)
 (defun symbol-function (x) x.f)
-(defun make-symbol (x) (symbol x))
+(defun make-symbol (x &optional pkg) (symbol x))
 
 (defun %quote (s)
   (or (aref *symbols* s)

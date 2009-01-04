@@ -10,9 +10,12 @@
 
 ;;;; STANDARD MACRO EXPANSION
 
-(defun transpiler-macroexpand (x)
- (with-temporary *setf-immediate-slot-value* t
-   (repeat-while-changes (fn *macroexpand-hook* _) x)))
+(defun transpiler-macroexpand (tr x)
+  (with-temporary *setf-immediate-slot-value* t
+    (with-temporary *setf-functionp* (transpiler-setf-functionp tr)
+      (repeat-while-changes
+	    (fn expander-expand (transpiler-std-macro-expander tr) _)
+		x))))
 
 ;;;; EXPANSION OF ALTERNATIVE STANDARD MACROS
 
@@ -75,19 +78,16 @@
 
     (fn transpiler-lambda-expand tr _)
 
-     #'transpiler-expand-characters
+	; Make CHARACTER objects.
+    #'transpiler-expand-characters
 
     ; Expand BACKQUOTEs, QUASIQUOTEs and compiler-macros.
     #'special-form-expand
 
-    ; Do standard macro-expansion
-    (fn (with-temporary *setf-functionp* (transpiler-setf-functionp tr)
-          (transpiler-macroexpand _)))
-
     ; Alternative standard-macros.
     ; Some macros in this pass just rename expression to bypass the
     ; standard macro-expansion.
-    (fn expander-expand (transpiler-std-macro-expander tr) _)
+    (fn transpiler-macroexpand tr _)
 
     ; Convert object-dot-member symbols to %SLOT-VALUE expressions.
     #'dot-expand

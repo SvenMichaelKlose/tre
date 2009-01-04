@@ -44,14 +44,32 @@
 (defun transpiler-function-arguments (tr fun)
   (cdr (assoc fun (transpiler-function-args tr))))
 
-(defun create-transpiler (&rest args)
-  (with (tr (apply #'make-transpiler args)
-		 ex (make-expex))
-	(transpiler-reset tr)
-    (define-expander (transpiler-std-macro-expander tr))
-	(define-expander (transpiler-macro-expander tr)
-					 :call (fn transpiler-macrocall tr _))
-    (setf (expex-function-collector ex)
+(defvar mypred nil)
+(defvar mycall nil)
+;; Make expander for standard macro which picks macros of the same
+;; name in der user-defined expander first.
+(defun make-overlayed-std-macro-expander (expander-name)
+ (with (e (define-expander expander-name))
+   (setf mypred (expander-pred e)
+		 mycall (expander-call e))
+   (setf (expander-pred e) (fn (or (funcall mypred _)
+				 				   (%%macrop _)))
+   		 (expander-call e) (fn (if (funcall mypred _)
+				 				   (funcall mycall _)
+				 				   (%%macrocall _))))))
+
+(defun transpiler-make-std-macro-expander (tr)
+ (make-overlayed-std-macro-expander (transpiler-std-macro-expander tr)))
+
+(defun transpiler-make-code-expander (tr)
+  (define-expander (transpiler-macro-expander tr)
+				   :call (fn transpiler-macrocall tr _)))
+
+(defun transpiler-make-expex (tr)
+  (let ex (make-expex)
+    (setf (transpiler-expex tr) ex
+
+		  (expex-function-collector ex)
 		  #'((fun args)
 			   (transpiler-add-wanted-function tr fun))
 
@@ -65,7 +83,13 @@
 		  (expex-function-arguments ex)
 		  #'((fun)
 			   (or (transpiler-function-arguments tr fun)
-				   (function-arguments (symbol-function fun))))
+				   (function-arguments (symbol-function fun)))))
+	ex))
 
-		  (transpiler-expex tr) ex)
+(defun create-transpiler (&rest args)
+  (let tr (apply #'make-transpiler args)
+	(transpiler-reset tr)
+	(transpiler-make-std-macro-expander tr)
+	(transpiler-make-code-expander tr)
+	(transpiler-make-expex tr)
 	tr))
