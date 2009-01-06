@@ -1,6 +1,6 @@
 /*
  * TRE tree processor
- * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
  *
  * Array related section.
  */
@@ -22,7 +22,7 @@
 treptr *
 trearray_get_raw (ulong size)
 {
-    treptr  *array;
+    treptr  * array;
 
     array = trealloc (sizeof (treptr) * size);
     if (array == NULL)
@@ -41,7 +41,7 @@ trearray_get_size (treptr sizes)
 {
     treptr  a;
     treptr  car;
-    ulong      size = 1;
+    ulong   size = 1;
 
     _DOLIST(a, sizes) {
 		car = _CAR(a);
@@ -57,8 +57,8 @@ trearray_get_size (treptr sizes)
 treptr
 trearray_get (treptr sizes)
 {
-    treptr   a;
-    ulong  size = trearray_get_size (sizes);
+    treptr  a;
+    ulong   size = trearray_get_size (sizes);
 
     a = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_ARRAY, treptr_nil);
     treatom_set_value (a, trelist_copy (sizes));
@@ -83,9 +83,9 @@ trearray_free (treptr array)
 treptr
 trearray_t_get (treptr array, ulong idx)
 {
-    treptr    adef = TREATOM_VALUE(array);
-    ulong  size = CAR(adef);
-    treptr    * a = (treptr *) TREATOM_DETAIL(array);
+    treptr  adef = TREATOM_VALUE(array);
+    ulong 	size = CAR(adef);
+    treptr  * a = (treptr *) TREATOM_DETAIL(array);
 
     if (size <= idx)
         return treerror (array, "index %d out of range", idx);
@@ -106,9 +106,9 @@ trearray_set (treptr *a, ulong idx, treptr val)
 void
 trearray_t_set (treptr array, ulong idx, treptr val)
 {
-    treptr   adef = TREATOM_VALUE(array);
-    ulong  size = CAR(adef);
-    treptr   *a = (treptr *) TREATOM_DETAIL(array);
+    treptr  adef = TREATOM_VALUE(array);
+    ulong   size = CAR(adef);
+    treptr  * a = (treptr *) TREATOM_DETAIL(array);
 
     if (size <= idx) {
         treerror (array, "index %d out of range", idx);
