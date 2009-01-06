@@ -33,5 +33,8 @@
 
 (%set-atom-fun %nconc
   #'((a b)
-    (rplacd (last a) b)
-    a))
+    (if a
+        (progn
+		  (rplacd (last a) b)
+    	  a)
+		b)))
