@@ -1,5 +1,5 @@
 ;;;;; TRE environment
-;;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
 
 (defvar *tests* nil)
 
@@ -39,9 +39,21 @@
                       *tests*))
   (do-test (car *tests*)))
 
+(define-test "EQ-SYMBOL"
+  ((eq 'x 'x))
+  t)
+
+(define-test "EQL-SYMBOL"
+  ((eq 'x 'x))
+  t)
+
+(define-test "EQL-NUMBER"
+  ((eql 1 1))
+  t)
+
 (define-test "BACKQUOTE"
   (`(1 2 3))
-  '(1 2 3))
+  `(1 2 3))
 
 (define-test "QUASIQUOTE"
   (`(1 ,2 ,,3 ,,4))
