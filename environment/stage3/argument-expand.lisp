@@ -1,8 +1,10 @@
-;;;; nix operating system project
-;;;; list processor environment
-;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
-;;;;
-;;;; Argument expander.
+;;;;; TRE environment
+;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;;
+;;;;; Argument expander.
+;;;;;
+;;;;; This is required for APPLY in compiled code, so APPLY *MUST NOT*
+;;;;; be used while expanding without errors.
 
 (defun argument-keyword? (x)
   (in? x '&rest '&body '&optional '&key))
@@ -139,8 +141,8 @@
 				  (err "static sublevel argument definition after ~A" no-static))
 				(and apply-values (atom vals.)
 					 (err "sublist expected for argument ~A" num))
-				(nconc (argument-expand2 fun def. vals. apply-values)
-					   (exp-main .def .vals)))
+				(%nconc (argument-expand2 fun def. vals. apply-values)
+					    (exp-main .def .vals)))
 
 		 exp-check-too-many
            #'((def vals)
@@ -172,15 +174,14 @@
 		   num 0
 		   no-static nil
 		   rest-arg nil)
-	 (nconc (exp-main argdefs alst)
-			 key-args
-			 rest-arg))))
+	 (%nconc (exp-main argdefs alst)
+			 (%nconc key-args
+			 		 rest-arg)))))
 
 (defun argument-expand (fun def vals &optional (apply-values t))
-  (funcall (if apply-values
-			   #'identity
-			   #'carlist)
-		   (argument-expand2 fun def vals apply-values)))
+  (if apply-values
+	  (argument-expand2 fun def vals apply-values)
+	  (carlist (argument-expand2 fun def vals apply-values))))
 
 (defun argument-expand-names (fun def)
   (argument-expand fun def nil nil))
