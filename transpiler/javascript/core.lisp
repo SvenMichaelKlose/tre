@@ -1,5 +1,5 @@
 ;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; This are the low-level transpiler definitions of
 ;;;;; basic functions to simulate basic data types.
@@ -16,6 +16,10 @@
 (defvar *symbols* (make-hash-table))
 
 (defun eql (x y)
+  (unless x			; Convert falsity to 'null'.
+	(setq x nil))
+  (unless y
+	(setq y nil))
   (or (eq x y)
 	  (= x y)))
 
@@ -64,14 +68,20 @@
   this)
 
 (defun cons (x y) (new %cons x y))
-(defun car (x) x._)
-(defun cdr (x) x.__)
-(defun rplaca (x val) (setf x._ val))
-(defun rplacd (x val) (setf x.__ val))
 (defun list (&rest x) x)
+(defun car (x) (when x x._))
+(defun cdr (x) (when x x.__))
+
+(defun rplaca (x val)
+  (setf x._ val)
+  x)
+
+(defun rplacd (x val)
+  (setf x.__ val)
+  x)
 
 (js-type-predicate symbolp symbol)
-(js-type-predicate numberp number)
+(js-type-predicate %numberp number)
 (js-type-predicate stringp string)
 (js-type-predicate functionp function)
 (js-type-predicate objectp object)
@@ -81,7 +91,7 @@
 	   x.__class
 	   (= "cons" x.__class)))
 
-(defun atom (x) (not (consp x)))
+(defun atom (x) (or (not x) (not (consp x))))
 (defun arrayp (x) (instanceof x -array))
 
 ;,(when *assert*
@@ -132,28 +142,51 @@
   (%transpiler-native "null;for (i in hash) fun (i)"))
 
 ;; Bind function to an object.
-;; See also macro BIND in 'core.lisp'.
+;; See also macro BIND in 'expand.lisp'.
 (defun %bind (obj fun)
   (assert (functionp fun) "BIND requires a function")
   #'(()
       (fun.apply obj arguments)))
 
+(defvar *characters* (make-hash-table))
+
 (defun %character (x)
-  (setf this.magic '%CHARACTER
-  		this.v x)
-  this)
+  (or (aref *characters* x)
+  	  (setf this.magic '%CHARACTER
+  		    this.v x
+		    (aref *characters* x) this)))
 
 (defun code-char (x) (new %character x))
 (defun char-code (x) x.v)
 
 (defun characterp (x)
-  (numberp x))
+  (and (objectp x)
+	   x.magic
+	   (eq '%CHARACTER x.magic)))
+
+(defun numberp (x)
+  (or (%numberp x)
+	  (characterp x)))
 
 (defun elt (seq idx) (aref seq idx))
 (defun (setf elt) (val seq idx) (setf (aref seq idx) val))
 
-;,(read-file "environment/stage4/null-stream.lisp")
+(defun string-concat (&rest strings)
+  (let ret (make-string)
+	(dolist (i strings)
+	  (setf ret (+ ret i)))))
 
-;(defvar *standard-output* (make-null-stream))
-;(defvar *standard-input* (make-null-stream))
+,(read-file "environment/stage4/null-stream.lisp")
+
+(defvar *standard-output* (make-null-stream))
+(defvar *standard-input* (make-null-stream))
+
+(defun environment-tests ()
+  ,@(mapcar (fn `(progn
+				   (document.writeln (+ ,(first _) "</br>"))
+(unless (equal ,(third _) ,(second _))
+				   (alert (+ "Test '" ,(first _) "' failed")))))
+		  (reverse *tests*)))
+(environment-tests)
+
 ))

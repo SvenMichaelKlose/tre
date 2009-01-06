@@ -60,7 +60,6 @@
 (define-js-binary mod "%")
 (define-js-binary logxor "^")
 (define-js-binary eq "===")
-(define-js-binary eql "==")
 (define-js-binary bit-and "&")
 (define-js-binary bit-or "|")
 
@@ -118,9 +117,9 @@
   (js-stack x))
 
 (define-js-macro %quote (x)
-  `("symbol(\"" ,(symbol-name x) "\")"))
-
-;  `("symbol(" (%transpiler-string ,(symbol-name x)) ")"))
+  (if (not (string= "" (symbol-name x)))
+  	  `("symbol(\"" ,(symbol-name x) "\")")
+	  x))
 
 (define-js-macro %set-atom-fun (plc val)
   `(%transpiler-native ,plc "=" ,val))
