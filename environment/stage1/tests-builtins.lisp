@@ -1,8 +1,7 @@
-;;;; nix operating system project
-;;;; list processor environment
-;;;; Copyright (C) 2006 Sven Klose <pixel@copei.de>
-;;;;
-;;;; Early built-in function tests
+;;;;; TRE environment
+;;;;; Copyright (C) 2006,2009 Sven Klose <pixel@copei.de>
+;;;;;
+;;;;; Early built-in function tests
 
 (define-test "CAR accepts NIL"
   ((car nil))
@@ -32,9 +31,9 @@
   ((functionp #'car))
   t)
 
-(define-test "FUNCTIONP doesn't recognize built-in special forms"
-  ((functionp #'block))
-  nil)
+;(define-test "FUNCTIONP doesn't recognize built-in special forms"
+;  ((functionp #'block))
+;  nil)
 
 (define-test "NUMBERP recognizes numbers"
   ((numberp 42))
@@ -61,7 +60,8 @@
   #\A)
 
 (define-test "SETQ returns the last value set"
-  ((setq a 23 b 5 c 42))
+  ((#'((a b c)
+	 (setq a 23 b 5 c 42)) nil nil nil))
   42)
 
 (define-test "RPLACA returns cons"
