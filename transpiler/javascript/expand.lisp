@@ -109,5 +109,6 @@
 
 (define-js-std-macro js-type-predicate (name type)
   `(defun ,name (x)
-     (= (%js-typeof x)
-        ,(string-downcase (symbol-name (transpiler-obfuscate-symbol *js-transpiler* type))))))
+	 (when x
+       (= (%js-typeof x)
+          ,(string-downcase (symbol-name (transpiler-obfuscate-symbol *js-transpiler* type)))))))
