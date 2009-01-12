@@ -1,6 +1,6 @@
 /*
  * TRE interpreter
- * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
  *
  * Number atom related section.
  */
@@ -16,10 +16,12 @@
 
 #include <ctype.h>
 
-/*
- * (NUMBERP obj)
- *
- * Returns T if the argument is a number. NIL otherwise.
+/*tredoc
+  (cmd name "NUMBERP" type "bt"
+    (args
+      (arg name "obj"))
+    (description
+ 	  "Returns T if the argument is a number. NIL otherwise."))
  */
 treptr
 trenumber_builtin_numberp (treptr list)
@@ -53,10 +55,12 @@ trenumber_arg_get2 (treptr * first, treptr * second, treptr args)
 	*second = trearg_typed (2, TRETYPE_NUMBER, *second, NULL);
 }
 
-/*
- * (CHARACTERP obj)
- *
- * Returns the character corresponding to code 'integer'.
+/*tredoc
+  (cmd name "CHARACTERP" type "bt"
+    (args
+      (arg name "obj"))
+    (description
+ 	  "Returns the character corresponding to code 'integer'."))
  */
 treptr
 trenumber_builtin_characterp (treptr args)
@@ -66,10 +70,12 @@ trenumber_builtin_characterp (treptr args)
     return TREPTR_TRUTH(TREPTR_IS_NUMBER(arg) && (TRENUMBER_TYPE(arg) == TRENUMTYPE_CHAR));
 }
 
-/*
- * (CODE-CHAR integer)
- *
- * Returns the character corresponding to code 'integer'.
+/*tredoc
+  (cmd name "CODE-CHAR" type "bt"
+    (args
+      (arg name "num" type "integer"))
+    (description
+	  "Returns the character corresponding to code 'integer'."))
  */
 treptr
 trenumber_builtin_code_char (treptr args)
@@ -82,12 +88,12 @@ trenumber_builtin_code_char (treptr args)
 }
 
 /*tredoc
-    (cmd :name "INTEGER" :type "bt"
-        (args
-            (arg :name "number"))
-        (description
- 			"Returns 'number' converted to integer or the original 'number'."
-            "This is the same as CHAR for integers."))
+  (cmd name "INTEGER" type "bt"
+    (args
+      (arg name "number"))
+    (description
+	  "Returns 'number' converted to integer or the original 'number'."
+      "This is the same as CHAR for integers."))
  */
 treptr
 trenumber_builtin_integer (treptr args)
@@ -98,10 +104,36 @@ trenumber_builtin_integer (treptr args)
     return treatom_number_get ((double) tmp, TRENUMTYPE_INTEGER);
 }
 
-/*
- * (BIT-OR number number)
+/*tredoc
+  (cmd name "BIT-OR" type "bt"
+    (args
+      (arg name "number")
+      (arg name "number"))
+    (description
+	  "Returns integers ORed bit-wise."))
+
+  (cmd name "BIT-AND" type "bt"
+    (args
+      (arg name "number")
+      (arg name "number"))
+    (description
+	  "Returns integers ANDed bit-wise."))
+
+  (cmd name "<<" type "bt"
+    (args
+      (arg name "number")
+      (arg name "num-bits")
+    (description
+	  "Shifts number left one or more bits."))
+
+  (cmd name ">>" type "bt"
+    (args
+      (arg name "number")
+      (arg name "num-bits")
+    (description
+	  "Shifts number right one or more bits."))
  */
-		void
+void
 trenumber_arg_bit_op (ulong * ix, ulong * iy, treptr args)
 {
 	treptr  x;
