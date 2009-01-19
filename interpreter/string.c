@@ -1,6 +1,6 @@
 /*
  * TRE interpreter
- * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
  *
  * String type
  */
@@ -79,25 +79,6 @@ trestring_t_get (treptr str, ulong idx)
     return treatom_number_get ((double) (&s->str)[idx], TRENUMTYPE_CHAR);
 }
 
-/* Sequence: replace character at index. */
-void
-trestring_t_set (treptr str, ulong idx, treptr val)
-{
-    struct tre_string *s = TREATOM_STRING(str);
-
-    if (s->len < idx) {
-        treerror (TRECONTEXT_CURRENT(), "index out of range");
-		return;
-    }
-
-    if (TREPTR_IS_NUMBER(val) == FALSE) {
-        treerror (val, "can only assign numbers");
-        return;
-    }
-
-    (&s->str)[idx] = TRENUMBER_VAL(val);
-}
-
 /* Sequence: Return length of string. */
 ulong
 trestring_t_length (treptr str)
@@ -109,7 +90,7 @@ trestring_t_length (treptr str)
 
 /* Sequence type configuration. */
 struct tre_sequence_type trestring_seqtype = {
-	trestring_t_set,
+	NULL,
 	trestring_t_get,
 	trestring_t_length
 };
