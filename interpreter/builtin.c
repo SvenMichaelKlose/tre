@@ -1,6 +1,6 @@
 /*
  * TRE interpreter
- * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
  *
  * Built-in functions
  */
@@ -40,16 +40,22 @@
 
 treevalfunc_t treeval_xlat_builtin[];
 
+/*tredoc
+  (cmd name "IDENTITY"
+	(arg name "obj")
+	(description
+	  "Returns argument untouched."))
+  */
 treptr
 trebuiltin_identity (treptr args)
 {
     return trearg_get (args);
 }
 
-/*
- * (QUIT)
- *
- * Terminate the interpreter.
+/*tredoc
+  (cmd name "QUIT" type "bt"
+    (description
+	  "Terminate the interpreter."))
  */
 treptr
 trebuiltin_quit (treptr args)
@@ -70,10 +76,11 @@ trebuiltin_quit (treptr args)
     return treptr_nil;
 }
 
-/*
- * (PRINT obj)
- *
- * Print object in TRE notation. Returns the printed object.
+/*tredoc
+  (cmd name "PRINT"
+	(description
+ 	  "Print object in TRE notation. Returns the printed object.")
+	(arg name "obj"))
  */
 treptr
 trebuiltin_print (treptr expr)
@@ -83,10 +90,13 @@ trebuiltin_print (treptr expr)
     return expr;
 }
 
-/*
- * (EVAL expression)
- *
- * Evaluates expression and returns its result.
+/*tredoc
+  (cmd name "EVAL" type "bt"
+ 	(description
+	  "Evaluates object.")
+    (arg name "obj")
+    (returns
+	  "Result of evaluation."))
  */
 treptr
 trebuiltin_eval (treptr list)
@@ -94,6 +104,14 @@ trebuiltin_eval (treptr list)
     return treeval (trearg_get (list));
 }
 
+/*tredoc
+   (cmd name "%MACROCALL" type "bt"
+	 (description
+	   "Executes a macro with arguments.")
+	 (args
+	   (arg name "macro")
+	   (arg name "arguments" type "CONS")))
+  */
 treptr
 trebuiltin_macrocall (treptr list)
 {
@@ -119,6 +137,12 @@ trebuiltin_macrocall (treptr list)
     return res;
 }
 
+/*tredoc
+  (cmd name "LOAD" type "bt"
+	(description
+	  "Loads and evaluates a file."_)
+    (arg name "file-path"))
+  */
 treptr
 trebuiltin_load (treptr expr)
 {
@@ -147,8 +171,10 @@ trebuiltin_load (treptr expr)
     return treptr_nil;
 }
 
-/*
- * Force garbage collection.
+/*tredoc
+  (cmd name "GC" type "bt"
+	(description
+	  "Force garbage collection."))
  */
 treptr
 trebuiltin_gc (treptr no_args)
@@ -158,6 +184,16 @@ trebuiltin_gc (treptr no_args)
     return treptr_nil;
 }
 
+/*tredoc
+  (cmd name "INTERN" type "bt"
+	(description
+	  "Create a symbol in a package.")
+	(args
+	  (arg name "symbol-name" type "string")
+	  (optional
+		(arg name "package-name" type "string")))
+	(see-also "MAKE-SYMBOL"))
+  */
 treptr
 trebuiltin_intern (treptr args)
 {
@@ -187,6 +223,17 @@ trebuiltin_intern (treptr args)
     return treatom_get (n, p);
 }
 
+/*tredoc
+  (cmd name "%MALLOC" type "bt"
+    (description
+	  "Allocates a block of memory.")
+	(arg name "num-bytes" type "INTEGER")
+	(returns type "INTEGER" nil "t"
+	  "Address of allocated memory block or NIL.")
+    (see-also
+	  "%MALLOC-EXEC"
+	  "%FREE"))
+  */
 treptr
 trebuiltin_malloc (treptr args)
 {
@@ -201,6 +248,14 @@ trebuiltin_malloc (treptr args)
 	return treatom_number_get ((double) (long) ret, TRENUMTYPE_INTEGER);
 }
 
+/*tredoc
+  (cmd name "%MALLOC" type "bt"
+    (description
+	  "Allocates a block of executable memory.")
+	(arg name "num-bytes" type "INTEGER")
+	(returns type "INTEGER" nil "t"
+	  "Address of allocated memory block or NIL."))
+  */
 treptr
 trebuiltin_malloc_exec (treptr args)
 {
@@ -218,6 +273,14 @@ trebuiltin_malloc_exec (treptr args)
 	return treatom_number_get ((double) (long) ret, TRENUMTYPE_INTEGER);
 }
 
+/*tredoc
+  (cmd name "%FREE" type "bt"
+    (description
+	  "Deallocates a block of memory.")
+	(arg name "address" type "INTEGER"
+	  "Address of allocated memory block.")
+	(returns nil))
+  */
 treptr
 trebuiltin_free (treptr args)
 {
@@ -231,6 +294,14 @@ trebuiltin_free (treptr args)
 	return treptr_nil;
 }
 
+/*tredoc
+  (cmd name "%FREE-EXEC" type "bt"
+    (description
+	  "Deallocates a block of executable memory.")
+	(arg name "address" type "INTEGER"
+	  "Address of allocated memory block.")
+	(returns nil))
+  */
 treptr
 trebuiltin_free_exec (treptr args)
 {
@@ -246,6 +317,15 @@ trebuiltin_free_exec (treptr args)
 	return treptr_nil;
 }
 
+/*tredoc
+  (cmd name "%%SET" type "bt"
+    (description
+	  "Sets byte in memory.")
+	(args
+	  (arg name "address" type "integer")
+	  (arg name "byte" type "character"))
+	(returns nil))
+  */
 treptr
 trebuiltin_set (treptr args)
 {
@@ -266,6 +346,14 @@ trebuiltin_set (treptr args)
     return val;
 }
 
+/*tredoc
+  (cmd name "%%GET" type "bt"
+    (description
+	  "Reads byte from memory.")
+	(arg name "address" type "integer")
+	(returns type "character"
+	  "Value of byte at address."))
+  */
 treptr
 trebuiltin_get (treptr args)
 {
@@ -282,7 +370,7 @@ trebuiltin_get (treptr args)
 
 char *tre_builtin_names[] = {
     "IDENTITY",
-    "QUIT", "%ERROR", "+", "-", "*", "/", "MOD",
+    "QUIT", "%ERROR", "NUMBER+", "NUMBER-", "*", "/", "MOD",
     "LOGXOR",
     "EQ", "EQL", "CONS", "LIST",
     "PRINT",
@@ -307,6 +395,7 @@ char *tre_builtin_names[] = {
     "CHARACTERP",
 
     "MAKE-STRING", "STRING-CONCAT", "STRING", "SYMBOL-NAME",
+	"LIST-STRING",
 
     "MAKE-ARRAY", "ARRAYP", "AREF", "%SET-AREF",
 
@@ -336,6 +425,13 @@ char *tre_builtin_names[] = {
     NULL
 };
 
+/*tredoc
+  (cmd name "DEBUG" type "bt"
+	(description
+	  "Prints a message. Used as a breakpoint when debugging "
+	  "the interpreter.")
+	(returns nil))
+  */
 treptr
 trebuiltin_debug (treptr no_args)
 {
@@ -412,6 +508,7 @@ treevalfunc_t treeval_xlat_builtin[] = {
     trestring_builtin_concat,
     trestring_builtin_string,
     trestring_builtin_symbol_name,
+    trestring_builtin_list_string,
 
     /* array functions */
     trearray_builtin_make,
