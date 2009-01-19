@@ -117,9 +117,13 @@
 		x)))
 
 (defmacro define-transpiler-macro (tr &rest x)
-  (when (expander-has-macro? (transpiler-macro-expander (eval tr)) (first x))
-    (error "Code-generator macro ~A already defined as standard macro." (first x)))
-  `(define-expander-macro ,(transpiler-macro-expander (eval tr)) ,@x))
+  (with (tre (eval tr)
+		 name (first x))
+    (when (expander-has-macro? (transpiler-macro-expander tre) name)
+      (error "Code-generator macro ~A already defined as standard macro."
+			 name))
+    (transpiler-add-unwanted-function tre name)
+    `(define-expander-macro ,(transpiler-macro-expander tre) ,@x)))
 
 ;;;; TOPLEVEL
 

@@ -36,9 +36,11 @@
 ;;;; EXPANSION OF ALTERNATIVE STANDARD MACROS
 
 (defmacro define-transpiler-std-macro (tr &rest x)
-  (let tre (eval tr)
-	(when (expander-has-macro? (transpiler-macro-expander tre) (first x))
-	  (error "Macro ~A already defined in code-generator." (first x)))
+  (with (tre (eval tr)
+		 name (first x))
+	(when (expander-has-macro? (transpiler-macro-expander tre) name)
+	  (error "Macro ~A already defined in code-generator." name))
+	(transpiler-add-unwanted-function tre name)
     `(define-expander-macro ,(transpiler-std-macro-expander tre) ,@x)))
 
 ;;;; LAMBDA EXPANSION

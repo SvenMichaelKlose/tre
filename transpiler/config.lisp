@@ -68,12 +68,15 @@
 (defun transpiler-function-arguments (tr fun)
   (cdr (assoc fun (transpiler-function-args tr))))
 
+(define-slot-setter-push! transpiler-add-unwanted-function tr
+  (transpiler-unwanted-functions tr))
+
 (defvar mypred nil)
 (defvar mycall nil)
 ;; Make expander for standard macro which picks macros of the same
 ;; name in der user-defined expander first.
 (defun make-overlayed-std-macro-expander (expander-name)
- (with (e (define-expander expander-name))
+ (let e (define-expander expander-name)
    (setf mypred (expander-pred e)
 		 mycall (expander-call e))
    (setf (expander-pred e) (fn (or (funcall mypred _)
