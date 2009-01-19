@@ -8,9 +8,13 @@
   `(define-transpiler-std-macro *js-transpiler* ,@x))
 
 (defun transpiler-obfuscate-arguments (tr x)
-  (dolist (i (argument-expand 'unnamed-js-function x nil nil))
-    (transpiler-obfuscate-symbol *js-transpiler* i)))
+  (dolist (i (argument-expand 'anonymous-function x nil nil))
+    (transpiler-obfuscate-symbol tr i)))
 
+;; (FUNCTION symbol | lambda-expression)
+;; Add symbol to list of wanted functions or obfuscate arguments of
+;; LAMBDA-expression.
+;; XXX Wouldn't this obfuscate the arguments over and over again?
 (define-js-std-macro function (x)
   (unless x
     (error "FUNCTION expects a symbol or form"))
@@ -19,12 +23,17 @@
       (transpiler-obfuscate-arguments *js-transpiler* x.))
   `(function ,x))
 
-(define-js-std-macro defun (name args &rest body)
+;; (DEFUN ...)
+;;
+;; Assign function to global variable.
+;; XXX This could be generic if there wasn't *JS-TRANSPILER*.
+;; XXX Reunite with DEFUN macro.
+(define-js-std-macro js-defun (name args &rest body)
   (print `(defun ,name))
   (let n (%defun-name name)
     (transpiler-obfuscate-symbol *js-transpiler* n)
-    (unless (in? n 'apply)
-      (acons! n args (transpiler-function-args tr)))
+    (acons! n args (transpiler-function-args *js-transpiler*))
+	(push! n (transpiler-defined-functions *js-transpiler*))
     `(progn
        (%var ,n)
        (%setq ,n
@@ -34,10 +43,15 @@
 				         .body
 				         body))))))
 
+(define-js-std-macro defun (name args &rest body)
+  `(progn
+     (js-defun ,name ,args ,@body)
+	 (%setq (%slot-value ,(%defun-name name) tre-args) ',args)))
+
 (define-js-std-macro defmacro (name &rest x)
   (print `(defmacro ,name ))
   (eval (transpiler-macroexpand *js-transpiler*
-									 `(define-js-std-macro ,name ,@x)))
+								`(define-js-std-macro ,name ,@x)))
   nil)
 
 (define-js-std-macro defvar (name val)
@@ -47,27 +61,28 @@
      (%var ,name)
 	 (%setq ,name ,val)))
 
+(define-js-std-macro make-string (&optional len)
+  `"")
+
+;; XXX This is the same like it is in the environment.
+;; XXX Try to get along without it.
 (define-js-std-macro defstruct (name &rest fields-and-options)
   (apply #'%defstruct-expander name fields-and-options))
-
-(define-js-std-macro dont-obfuscate (&rest symbols)
-  (append! (transpiler-obfuscation-exceptions tr) symbols)
-  nil)
 
 (define-js-std-macro funcall (fun &rest x)
   `(,fun ,@x))
 
-(define-js-std-macro apply (&rest x)
-  `(%apply ,@x))
-
+;; XXX Isn't this already in the environment?
 (define-js-std-macro slot-value (place slot)
   `(%slot-value ,place ,(second slot)))
 
+;; XXX Can't we do this in one macro?
 (define-js-std-macro bind (fun &rest args)
   (unless (%slot-value? fun)
     (error "function must be a SLOT-VALUE, got ~A" fun))
   `(%bind ,(second fun) ,fun))
 
+;; X-browser MAKE-HASH-TABLE.
 (defun js-transpiler-make-new-hash (x)
   `(make-hash-table
 	 ,@(mapcan (fn (list (if (and (not (stringp _.))
@@ -77,6 +92,7 @@
 						 (second _)))
 			   (group x 2))))
 
+;; Translate arguments for call to native 'new' operator.
 (defun js-transpiler-make-new-object (x)
   `(%new ,x.
 		 ,@(if (transpiler-function-arguments? *js-transpiler* x.)
@@ -94,6 +110,7 @@
 	  (js-transpiler-make-new-hash x)
 	  (js-transpiler-make-new-object x)))
 
+;; Iterate over array.
 (define-js-std-macro doeach ((var seq &rest result) &rest body)
   (with-gensym (evald-seq idx)
     `(with (,evald-seq ,seq)
@@ -101,14 +118,20 @@
 	     (with (,var (aref ,evald-seq ,idx))
            ,@body)))))
 
+;; Iterate over keys of object.
 (define-js-std-macro dohash ((key val hash &rest result) &rest body)
   `(block nil
      (((%transpiler-native "for (" ,key " in " ,seq ")")
 	    (%no-expex (with (,var (aref ,seq ,key))
           ,@body))))))
 
+;; Make type predicate function.
 (define-js-std-macro js-type-predicate (name type)
   `(defun ,name (x)
-	 (when x
-       (= (%js-typeof x)
+     (when x
+       (%%%= (%js-typeof x)
           ,(string-downcase (symbol-name (transpiler-obfuscate-symbol *js-transpiler* type)))))))
+
+(define-js-std-macro dont-obfuscate (&rest symbols)
+  (append! (transpiler-obfuscation-exceptions *js-transpiler*) symbols)
+  nil)
