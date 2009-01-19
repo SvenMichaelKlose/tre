@@ -1,5 +1,5 @@
 ;;;; TRE environment
-;;;; Copyright (C) 2005-2008 Sven Klose <pixel@copei.de>
+;;;; Copyright (C) 2005-2009 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Third stage
 
@@ -19,7 +19,6 @@
 (env-load "stage3/assert.lisp")
 (env-load "stage3/loop.lisp")
 (env-load "stage3/with-struct.lisp")
-(env-load "stage3/group.lisp")
 (env-load "stage3/collected-errors.lisp")
 (env-load "stage3/random.lisp")
 (env-load "stage3/argument-expand.lisp")
