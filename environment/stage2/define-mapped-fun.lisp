@@ -1,8 +1,7 @@
-;;;; nix operating system project
-;;;; list processor environment
-;;;; Copyright (C) 2006 Sven Klose <pixel@copei.de>
-;;;;
-;;;; Mapping utilities
+;;;;; TRE environment
+;;;;; Copyright (C) 2006,2009 Sven Klose <pixel@copei.de>
+;;;;;
+;;;;; Mapping utilities
 
 (defmacro define-mapped-fun (mapfun name &rest fun)
   (with-gensym g
@@ -15,5 +14,7 @@
 (define-mapcar-fun carlist (a)
   (car a))
 
-(define-mapcar-fun cdrlist (a)
-  (cdr a))
+(defun cdrlist (x)
+  (when x
+    (cons (cdr (car x))
+		  (cdrlist (cdr x)))))
