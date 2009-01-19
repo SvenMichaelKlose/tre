@@ -56,7 +56,7 @@
 ;; returned.
 ;;
 ;; 'fun' is only used for error messages.
-(defun argument-expand2 (fun adef alst apply-values &optional no-static argdefs key-args num rest-arg)
+(defun argument-expand2 (fun adef alst apply-values &optional (no-static nil) (argdefs nil) (key-args nil) (num nil) (rest-arg nil))
   (with (err
 		   #'((msg &rest args)
 				(apply #'error
@@ -186,17 +186,29 @@
 (defun argument-expand-names (fun def)
   (argument-expand fun def nil nil))
 
+(defun argument-expand-values-r (x)
+  (when x
+    (let a x.
+	  (cons (if (and (consp a)
+           		     (eq '&rest a.))
+      		    .a
+      		    a)
+		    (argument-expand-values-r .x)))))
+ 
+(defun argument-expand-values (fun def vals)
+  (argument-expand-values-r
+    (cdrlist (argument-expand fun def vals t))))
+
 (defun %argument-expand-rest (args)
   (when args
     `(cons ,args.
            ,(%argument-expand-rest .args))))
 
 (defun argument-expand-compiled-values (fun def vals)
-  (mapcar #'((x)
-               (if (and (consp x)
-                        (eq '&rest x.))
-                   (%argument-expand-rest .x)
-                   x))
+  (mapcar (fn (if (and (consp _)
+                       (eq '&rest _.))
+                  (%argument-expand-rest ._)
+                  _))
           (cdrlist (argument-expand fun def vals t))))
 
 ;;; Tests
