@@ -1,15 +1,14 @@
-;;;; nix operating system project
-;;;; list processor environment
-;;;; Copyright (C) 2005-2006,2008 Sven Klose <pixel@copei.de>
+;;;; TRE environment
+;;;; Copyright (C) 2005-2006,2008-2009 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Searching sequences
 
 (defmacro xchg (a b)
   "Swaps values of the arguments."
   (with-gensym g
-    `(setf ,g ,a
-	   ,a ,b
-	   ,b ,g)))
+    `(let ,g ,a
+	   (setf ,a ,b
+	   		 ,b ,g))))
 
 (defun find-if (pred seq &key (start nil) (end nil) (from-end nil) (with-index nil))
   (let* ((e (or end (1- (length seq))))
