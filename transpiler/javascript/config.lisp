@@ -16,8 +16,11 @@
 	:macro-expander 'javascript
 	:setf-functionp #'js-setf-functionp
 	:separator (format nil ";~%")
-	:unwanted-functions '($ cons car cdr make-hash-table map error
-						  href %%usetf-href
+	:unwanted-functions '(cons car cdr make-hash-table map symbolp ;error
+						  string-concat
+						  number+ + number- -
+						  ;$
+						  href %%usetf-href %%usetf-elt
 						  wait
 						  new %new %slot-value %%usetf-%slot-value ; environment/oo/ducktype.lisp
 						 )

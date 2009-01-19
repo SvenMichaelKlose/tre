@@ -4,70 +4,94 @@
 ;;;;; This are the low-level transpiler definitions of
 ;;;;; basic functions to simulate basic data types.
 
+;;;; First part of the core functions
+;;;;
+;;;; It contains the essential functions needed to store argument
+;;;; definitions for APPLY.
 (defvar *js-base* `(
 
+;; The global variable for return values of expressions.
 (defvar ~%ret nil)
 
 ;;; Symbols
-;;;
-;;; These are string encapsulated in an object to make
-;;; them a distinguished type.
 
-(defvar *symbols* (make-hash-table))
+;; All symbols are stored in this array for reuse.
+(defvar *symbols* (make-array))
 
-(defun eql (x y)
-  (unless x			; Convert falsity to 'null'.
-	(setq x nil))
-  (unless y
-	(setq y nil))
-  (or (eq x y)
-	  (= x y)))
+;; Symbol constructor
+;;
+;; It has a function field but that isn't used yet.
+(js-defun %symbol (name pkg)
+  (setf this.__class "symbol"
+		this.n name	; name
+     	this.v nil	; value
+      	this.f nil	; function
+		this.p (or pkg nil))	; package
+  this)
 
-;(defun + (&rest x)
-;  (apply #'%%%+ x))
+;; Find symbol by name or create a new one.
+;;
+;; Wraps the 'new'-operator.
+;; XXX rename to %QUOTE ?
+(js-defun %lookup-symbol (name pkg)
+  ; Make package if missing.
+  (or (aref *symbols* pkg)
+	  (setf (aref *symbols* pkg) (make-array)))
+  ; Get or make symbol.
+  (or (aref (aref *symbols* pkg) name)
+	  (setf (aref (aref *symbols* pkg) name) (new %symbol name pkg))))
 
-;(defun - (&rest x)
-;  (apply #'%%%- x))
+(js-defun symbol (name pkg)
+  (%lookup-symbol name pkg))
 
-;(defun * (&rest x)
-;  (apply #'%%%* x))
+;; Cell object constructor.
+(js-defun %cons (a d)
+  (setf this.__class "cons"
+        this._ a
+  		this.__ d)
+  this)
 
-;(defun / (&rest x)
-;  (apply #'%%%/ x))
+;; Cell constructor
+;;
+;; Wraps the 'new'-operator.
+(js-defun cons (x y) (new %cons x y))
 
-;(defun = (&rest x)
-;  (apply #'%%%= x))
+))
 
-;(defun < (&rest x)
-;  (apply #'%%%< x))
+;;;; Second part of the core functions
+;;;;
+;;;; Functions required by imported environment functions.
+(defvar *js-base2* `(
 
-(defun symbol (x)
-  (or (aref *symbols* x)
-  	  (setf this.n x
-        	this.v nil
-        	this.f nil
-			(aref *symbols* x) this)))
+;; Set argument definitions for functions in the first part.
+(setf symbol.tre-args '(name))
+(setf cons.tre-args '(x y))
 
-(defun symbol-name (x) x.n)
-(defun symbol-value (x) x.v)
-(defun symbol-function (x) x.f)
-(defun make-symbol (x &optional pkg) (symbol x))
+(defvar *keyword-package* t)
 
-(defun %quote (s)
-  (or (aref *symbols* s)
-	  (symbol s)))
+;; XXX a workaround because we cannot import DEFVARs from the
+;; environment yet.
+(defvar argument-exp-sort-key nil)
+
+;; Make symbol in particular package.
+(defun make-symbol (x &optional (pkg nil))
+  (%lookup-symbol x pkg ))
+
+(defun symbol-name (x)
+  (if x
+  	  x.n
+	  "NIL"))
+
+(defun symbol-value (x) (when x x.v))
+(defun symbol-function (x) (when x x.f))
+(defun symbol-package (x) (when x x.p))
+
+(defun identity (x) x)
 
 ;;; CONSES
 ;;;
 ;;; Conses are objects containing a pair.
 
-(defun %cons (x y)
-  (setf this.__class "cons")
-  (setf this._ x)
-  (setf this.__ y)
-  this)
-
-(defun cons (x y) (new %cons x y))
 (defun list (&rest x) x)
 (defun car (x) (when x x._))
 (defun cdr (x) (when x x.__))
@@ -80,50 +104,139 @@
   (setf x.__ val)
   x)
 
-(js-type-predicate symbolp symbol)
 (js-type-predicate %numberp number)
 (js-type-predicate stringp string)
 (js-type-predicate functionp function)
 (js-type-predicate objectp object)
 
+(defun symbolp (x)
+  (and (objectp x)
+	   x.__class
+	   (%%%= x.__class "symbol")))
+
 (defun consp (x)
   (and (objectp x)
 	   x.__class
-	   (= "cons" x.__class)))
+	   (%%%= x.__class "cons")))
 
-(defun atom (x) (or (not x) (not (consp x))))
-(defun arrayp (x) (instanceof x -array))
+(defun atom (x)
+  (or (not x) ; XXX needed?
+	  (not (consp x))))
 
-;,(when *assert*
-;  `(progn
-;(defun js-core-test ()
-; (unless (arrayp (new *array))
-;(alert "ARRAYP test"))
-; (unless (consp (cons nil nil))
-;(alert "CONSP test"))
-; (unless (numberp 23)
-;(alert "NUMBERP test"))
-; (unless (stringp "23")
-;(alert "STRINGP test"))
-; (unless (functionp #'(()))
-;(alert "FUNCTIONP test"))
-; (unless (objectp (new *object))
-;(alert "OBJECTP test")))
-;(js-core-test)
+(defun arrayp (x) (instanceof x *array))
 
-(defun %apply (fun &rest lst)
-  (assert (< 0 arguments.length) "apply requires arguments")
-  (with (last-arg nil
-		 args (make-array)
-		 last-args (make-array))
-    (do ((i args .i))
-		((not .i)
-		 (setf last-args i.))
-      (args.push (aref arguments i)))
+(defun eq (x y)
+  (%%%eq x y))
 
-    (dolist (i last-args)
-      (args.push (aref last-args i)))
-	(fun.apply nil args)))
+(defun %wrap-char-number (x)
+  (if (characterp x)
+	  (char-code x)
+	  x))
+
+(defun number+ (&rest x)
+  (let n (%wrap-char-number x.)
+	(dolist (i .x n)
+	  (setf n (%%%+ n (%wrap-char-number i))))))
+
+(defun + (&rest x)
+  (let n (%wrap-char-number x.)
+	(dolist (i .x n)
+	  (setf n (%%%+ n (%wrap-char-number i))))))
+
+(defun number- (&rest x)
+  (let n (%wrap-char-number x.)
+	(dolist (i .x n)
+	  (setf n (%%%- n (%wrap-char-number i))))))
+
+(defun - (&rest x)
+  (let n (%wrap-char-number x.)
+	(dolist (i .x n)
+	  (setf n (%%%- n (%wrap-char-number i))))))
+
+(defun = (x y)
+  (with (xn (%wrap-char-number x)
+		 yn (%wrap-char-number y))
+	(%%%= xn yn)))
+
+(defun < (x y)
+  (with (xn (%wrap-char-number x)
+		 yn (%wrap-char-number y))
+	(%%%< xn yn)))
+
+(defun > (x y)
+  (with (xn (%wrap-char-number x)
+		 yn (%wrap-char-number y))
+	(%%%> xn yn)))
+
+(defun eql (x y)
+  (unless x			; Convert falsity to 'null'.
+	(setq x nil))
+  (unless y
+	(setq y nil))
+  (or (eq x y)
+	  (%%%= x y)))
+
+(defun string-concat (&rest x)
+  (apply #'+ x))
+
+(defun js-print-cons-r (x)
+  (when x
+    (js-print x.)
+    (if (consp .x)
+	    (js-print-cons-r .x)
+	    (when .x
+		  (document.write " . ")
+		  (document.write .x)))))
+
+(defun js-print-cons (x)
+  (document.write "(")
+  (js-print-cons-r x)
+  (document.write ")"))
+
+(defun js-print (x)
+  (if
+	(consp x)
+	  (js-print-cons x)
+	(document.write
+	  (+ (if
+		   (symbolp x)
+	         (symbol-name x)
+	       (characterp x)
+		     (+ "#\\\\" (*string.from-char-code (char-code x)))
+	       (arrayp x)
+	         "{array}"
+	       (stringp x)
+	         (+ "\\\"" x "\\\"")
+		   (when x
+			 (string x)))
+		 " ")))
+  x)
+
+(defun list-array (x)
+  (let a (make-array)
+    (dolist (i x a)
+      (a.push i))))
+
+(defun array-list (x &optional (n 0))
+  (when (< n x.length)
+    (cons (aref x n)
+		  (array-list x (1+ n)))))
+
+(defvar *apply-counter* 0)
+
+(defun apply (fun &rest lst)
+  (setq *apply-counter* (%%%+ *apply-counter* 1))
+  (when (%%%< 20 *apply-counter*)
+	(toomuchapplications))
+  (let args (%nconc (butlast lst)
+				    (car (last lst)))
+    (prog1
+      (fun.apply nil
+	    (list-array
+	      (aif fun.tre-args
+               (argument-expand-values fun ! args)
+			   args)))
+	  (setq *apply-counter* (%%%- *apply-counter* 1)))))
 
 (defun %list-length (x &optional (n 0))
   (if (consp x)
@@ -148,45 +261,105 @@
   #'(()
       (fun.apply obj arguments)))
 
-(defvar *characters* (make-hash-table))
+(defvar *characters* (make-array))
 
 (defun %character (x)
   (or (aref *characters* x)
-  	  (setf this.magic '%CHARACTER
+  	  (setf this.__class "%character"
   		    this.v x
 		    (aref *characters* x) this)))
 
 (defun code-char (x) (new %character x))
 (defun char-code (x) x.v)
+(defun char-string (x) (*string.from-char-code (char-code x)))
 
 (defun characterp (x)
   (and (objectp x)
-	   x.magic
-	   (eq '%CHARACTER x.magic)))
+	   x.__class
+	   (%%%= x.__class "%character")))
 
 (defun numberp (x)
   (or (%numberp x)
 	  (characterp x)))
 
-(defun elt (seq idx) (aref seq idx))
-(defun (setf elt) (val seq idx) (setf (aref seq idx) val))
+(defun %elt-string (seq idx)
+  (code-char (seq.char-code-at idx)))
 
-(defun string-concat (&rest strings)
-  (let ret (make-string)
-	(dolist (i strings)
-	  (setf ret (+ ret i)))))
+(defun elt (seq idx)
+  (if
+    (stringp seq)
+	  (%elt-string seq idx)
+    (consp seq)
+	  (nth idx seq)
+  	(aref seq idx)))
 
-,(read-file "environment/stage4/null-stream.lisp")
+(defun %setf-elt-string (val seq idx)
+  (assert (characterp val)
+    (error "can only write CHARACTER to string"))
+  (setf (aref seq idx) (*string.from-char-code (char-code val))))
 
-(defvar *standard-output* (make-null-stream))
-(defvar *standard-input* (make-null-stream))
+(defun (setf elt) (val seq idx)
+  (if (stringp seq)
+	  (error "strings cannot be modified")
+  	  (setf (aref seq idx) val)))
 
-(defun environment-tests ()
-  ,@(mapcar (fn `(progn
-				   (document.writeln (+ ,(first _) "</br>"))
-(unless (equal ,(third _) ,(second _))
-				   (alert (+ "Test '" ,(first _) "' failed")))))
-		  (reverse *tests*)))
-(environment-tests)
+(defun string (x)
+  (if
+	(stringp x)
+	  x
+	(characterp x)
+      (char-string x)
+    (symbolp x)
+	  (symbol-name x)
+   	(x.to-string)))
+
+(defun %force-output (&optional strm))
+
+(defun %error (msg)
+  (log msg))
+
+(defun integer (x)
+  (assert (numberp x)
+	(error "number expected"))
+  (if (characterp x)
+	  (char-code x)
+	  x))
+
+(defun list-string (lst)
+  "Convert list of characters to string."
+  (when lst
+    (let* ((n (length lst))
+           (s (make-string 0)))
+      (do ((i 0 (1+ i))
+           (l lst (cdr l)))
+          ((>= i n) s)
+        (setf s (+ s (string (car l))))))))
+
+;,(read-file "environment/stage4/null-stream.lisp")
+
+;(defvar *standard-output* (make-null-stream))
+;(defvar *standard-input* (make-null-stream))
+
+,@(when (eq *have-environment-tests* t)
+	(with (names nil
+		 num 0
+  		 funs (mapcar
+				(fn
+				  (let n ($ 'test- num)
+					(setf num (1+ num))
+					(setf names (push n names))
+				    `(defun ,n ()
+				       (document.writeln (+ "Test " (string ,num) ": "
+											,(first _) "</br>"))
+				       (unless (equal ,(third _) ,(second _))
+				         (document.writeln (+ "Test '"
+											  ,(first _)
+											  "' failed</br>"))
+						 (js-print ,(second _))
+						 (document.writeln "</br>")))))
+		    	(reverse *tests*)))
+	`(,@funs
+	  (defun environment-tests ()
+		,@(mapcar #'list (reverse names))))))
 
 ))
