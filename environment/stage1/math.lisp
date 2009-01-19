@@ -1,11 +1,18 @@
-;;;; nix operating system project
-;;;; list processor environment
-;;;; Copyright (C) 2005 Sven Klose <pixel@copei.de>
+;;;; TRE environment
+;;;; Copyright (c) 2005,2009 Sven Klose <pixel@copei.de>
 ;;;;
-;;;; Mathematical functions
+;;;; Increment/decrement
 
 (%defun 1+ (x)
   (+ x 1))
 
 (%defun 1- (x)
   (- x 1))
+
+(define-test "1+"
+  ((1+ 1))
+  2)
+
+(define-test "1-"
+  ((1- 2))
+  1)
