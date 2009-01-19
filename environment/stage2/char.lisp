@@ -1,5 +1,5 @@
 ;;;; TRE environment
-;;;; Copyright (C) 2005-2006,2008 Sven Klose <pixel@copei.de>
+;;;; Copyright (C) 2005-2006,2008-2009 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Character functions
 
@@ -18,15 +18,15 @@
 
 (defun char-upcase (c)
   "Return upper case equivalent of lower case character."
-  (if (lower-case-p c)
-    (+ c (- #\A #\a))
-    c))
+  (code-char (if (lower-case-p c)
+    			 (+ c (- #\A #\a))
+    			 c)))
 
 (defun char-downcase (c)
   "Return upper case equivalent of upper case character."
-  (if (upper-case-p c)
-    (+ c (- #\a #\A))
-    c))
+  (code-char (if (upper-case-p c)
+    			 (+ c (- #\a #\A))
+    			 c)))
 
 (defun digit-char-p (c &optional base)
   "Return T if character is a digit."
