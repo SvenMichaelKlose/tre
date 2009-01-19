@@ -1,5 +1,5 @@
 ;;;;; TRE environment
-;;;;; Copyright (c) 2005-2006,2008 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2005-2006,2008-2009 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Predicate functions
 
@@ -21,14 +21,15 @@
 
 (defun symbolp (x)
   "Tests if variable points to itself."
-  (and (atom x)
-	   (not (symbol-function x))
-	   (eq x (symbol-value x))))
+  (if (and (atom x)
+		   (not (= 0 (length (symbol-name x)))))
+	  t))
 
 (defun variablep (x)
   (and (atom x)
 	   (not (or (stringp x)
 				(numberp x)))))
+; XXX ARRAYP ?
 
 (defun keywordp (x)
   "Tests if symbol is in the keyword package."
@@ -42,4 +43,12 @@
 
 (define-test "NOT works with T"
   ((not t))
+  nil)
+
+(define-test "KEYWORDP recognizes keyword-packaged symbols"
+  ((keywordp :lisp))
+  t)
+
+(define-test "KEYWORDP works with standard symbols"
+  ((keywordp 'lisp))
   nil)
