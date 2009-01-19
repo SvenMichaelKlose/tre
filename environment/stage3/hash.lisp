@@ -47,12 +47,12 @@
 	      ,bucket (aref (%hash-table-hash ,h) ,idx))
     ,@body))
 
-(defun href (key h &optional default)
+(defun href (key h)
   "Get hash value by key."
   (%with-hash-bucket b i h key
     (cdr (assoc key b :test (%hash-table-test h)))))
 
-(defun (setf href) (new-value key h &optional default)
+(defun (setf href) (new-value key h)
   (with (tst (%hash-table-test h))
     (%with-hash-bucket b i h key
       (if (assoc key b :test tst)
