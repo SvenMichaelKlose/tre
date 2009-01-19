@@ -1,5 +1,5 @@
 ;;;;; TRE environment
-;;;;; Copyright (C) 2005-2008 Sven Klose <pixel@copei.de>
+;;;;; Copyright (C) 2005-2009 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; First stage
 
@@ -9,7 +9,6 @@
 (env-load "stage1/gensym.lisp")
 (env-load "stage1/defmacro.lisp")
 (env-load "stage1/define-test.lisp")
-(env-load "stage1/tests-builtins.lisp")
 
 (env-load "stage1/listp.lisp")
 (env-load "stage1/count.lisp")
@@ -23,6 +22,8 @@
 (env-load "stage1/defun.lisp")
 (env-load "stage1/fn.lisp")
 (env-load "stage1/predicates.lisp")
+(env-load "stage1/tests-builtins.lisp")
+(env-load "stage1/tests-stage0.lisp")
 (env-load "stage1/anaphoric.lisp")
 (env-load "stage1/comparison.lisp")
 (env-load "stage1/member.lisp")
