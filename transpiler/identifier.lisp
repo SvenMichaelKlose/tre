@@ -1,5 +1,5 @@
-;;;;; TRE tree processor transpiler
-;;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
+;;;;; TRE transpiler
+;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Identifier style conversion
 
@@ -9,7 +9,7 @@
 (defun transpiler-special-char? (tr x)
   (not (funcall (transpiler-identifier-char? tr) x)))
 
-(defun transpiler-symbol-string (tr s)
+(defun transpiler-symbol-string-r (tr s)
   (with (encapsulate-char
 		   (fn string-list (string-concat "T" (format nil "~A" (char-code _))))
 				
@@ -37,29 +37,36 @@
 				   (if (digit-char-p c)
 					   (append (encapsulate-char c)
 							   (convert-special2 ._))
-					   (convert-special2 _)))))
-
-		 str (string s)
-	     l (length str))
-
+					   (convert-special2 _))))))
 	(if (or (stringp s)
 			(numberp s))
-		str
-        (list-string
-	      (convert-special
-            (if (and (< 2 (length str)) ; Make *GLOBAL* upcase.
-			         (= (elt str 0) #\*)
-			         (= (elt str (1- l)) #\*))
-		        (remove-if (fn = _ #\-)
-					       (string-list (string-upcase (subseq str 1 (1- l)))))
-    	        (convert-camel (string-list str))))))))
+		(string s)
+		(with (str (string s)
+	     	   l (length str))
+          (list-string
+	        (convert-special
+              (if (and (< 2 (length str)) ; Make *GLOBAL* upcase.
+			           (= (elt str 0) #\*)
+			           (= (elt str (1- l)) #\*))
+		          (remove-if (fn = _ #\-)
+					         (string-list (string-upcase (subseq str 1 (1- l)))))
+    	          (convert-camel (string-list str)))))))))
+
+(defun transpiler-symbol-string (tr s)
+  (let sl (string-list (string s))
+    (if (position #\. sl)
+	    (apply #'string-concat
+			   (pad (mapcar (fn transpiler-symbol-string-r tr (make-symbol (list-string _)))
+			  				(split #\. sl))
+					"."))
+	    (transpiler-symbol-string-r tr s))))
 
 (defun transpiler-to-string (tr x)
   (maptree #'((e)
 				(if
 				  (consp e)
 					(if (eq e. '%transpiler-string)
-					    (string-concat "\"" (cadr e) "\"")
+						(funcall (transpiler-gen-string tr) tr (cadr e))
 						(if (in? e. '%transpiler-native '%no-expex)
 							(transpiler-to-string tr .e)
 							e))
