@@ -1,5 +1,5 @@
-;;;;; TRE tree processor transpiler
-;;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
+;;;;; TRE transpiler
+;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Toplevel
 
@@ -22,7 +22,6 @@
 					      (list 'QUASIQUOTE x))
 					 pairs)
 	    ,(list 'QUASIQUOTE-SPLICE (cons 'QUOTE body)))))
-;,,@.'body)))))
 
 (defmacro assoc-update (key value alist)
   (with-gensym-assignments (k key
@@ -34,29 +33,30 @@
 (defun transpiler-collect-wanted (tr pass funlist)
   (let out nil
     (dolist (x funlist out)
-      (unless (member x (transpiler-emitted-wanted-functions tr))
-		(setf (transpiler-emitted-wanted-functions tr)
-			  (push x (transpiler-emitted-wanted-functions tr)))
+      (unless (or (member x (transpiler-emitted-wanted-functions tr))
+				  (transpiler-function-arguments tr x))
+	    (push! x (transpiler-emitted-wanted-functions tr))
 	    (let fun (symbol-function x)
 	      (when (functionp fun)
 		    (setf out (nconc out
 						     (funcall pass tr
-								     `((defun ,x ,(function-arguments fun)
-							             ,@(function-body fun))))))))))))
+								      `((defun ,x ,(function-arguments fun)
+							              ,@(function-body fun))))))))))))
+
+(defun transpiler-get-wanted-functions (tr)
+  (format t "; Collecting dependencies...~%")
+  (transpiler-collect-wanted tr
+	#'((tr x)
+	     (transpiler-preexpand-and-expand tr x))
+    (transpiler-wanted-functions tr)))
+ 
+(defun transpiler-transpile-wanted-functions (tr)
+  (transpiler-generate-code tr (transpiler-get-wanted-functions tr)))
 
 ;; User code must have been sightened by TRANSPILER-SIGHT.
 (defun transpiler-transpile (tr forms)
   (unless (eq t (transpiler-unwanted-functions tr))
-    (format t "; Collecting dependencies...~%")
-    (let wanted-funs (transpiler-collect-wanted tr
-	  				   #'((tr x)
-		   				    (transpiler-preexpand-and-expand tr x))
-	  				   (transpiler-wanted-functions tr))
-  	  (format t "; ~A top-level expressions.~%"
-			  (+ (length wanted-funs) (length forms)))
-  	  (transpiler-concat-string-tree
-		(transpiler-generate-code tr (reverse wanted-funs))
-		(transpiler-expand-and-generate-code tr forms)))))
+	(transpiler-expand-and-generate-code tr forms)))
 
 (defun transpiler-sighten (tr x)
   (let tmp (transpiler-preexpand tr x)
