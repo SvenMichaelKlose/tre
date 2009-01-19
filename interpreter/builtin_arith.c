@@ -49,16 +49,11 @@ double treeval_op_logxor (double a, double b) { return (ulong) a ^ (ulong) b; }
 
 /** section numbers **/
 
-/**
-    <cmd name="+" essential="yes">
-        <args>
-            <rest name="args"/>
-        <args>
-        <para>
-            Returns the sum of args.
-        </para>
-    </cmd>
- */
+/*tredoc
+  (cmd name "NUMBER+" type "bt" essential "yes"
+	(arg name "args" occurrence "rest")
+	(para "Returns the sum of its arguments."))
+*/
 treptr
 trenumber_builtin_plus (treptr list)
 {
@@ -67,16 +62,12 @@ trenumber_builtin_plus (treptr list)
     return treeval_exprop (list, treeval_op_plus);
 }
 
-/**
-     <cmd name="-" essential="yes">
-        <args>
-            <rest name="args"/>
-        <args>
-        <para>
-            When called with one argument, returns -nl. When called with
-            additional arguments, they're substracted from nl.
-        </para>
-    </cmd>
+/*tredoc
+  (cmd name "NUMBER-" type "bt" essential "yes"
+	(arg name "args" occurrence "rest")
+	(para
+      "When called with one argument, returns -nl. When called with"
+      "additional arguments, they're substracted from nl."))
 */
 treptr
 trenumber_builtin_difference (treptr list)
@@ -85,21 +76,18 @@ trenumber_builtin_difference (treptr list)
 		return treerror (treptr_nil, "Argument expected");
 
     if (CDR(list) == treptr_nil)
-		return treatom_number_get (-TREATOM_VALUE(CAR(list)), TRENUMTYPE_FLOAT);
+		return treatom_number_get (-TREATOM_VALUE(CAR(list)),
+								   TRENUMTYPE_FLOAT);
 
     return treeval_exprop (list, treeval_op_difference);
 }
 
-/**
-    <cmd name="*" essential="yes">
-        <args>
-            <rest name="args"/>
-        <args>
-        <para>
-            When called without arguments, 1 is returned. Otherwise returns
-            the product of the arguments.
-        </para>
-    </cmd>
+/*tredoc
+  (cmd name "*" type "bt" essential "yes"
+	(arg name "args" occurrence "rest")
+	(para
+      "When called without arguments, 1 is returned. Otherwise returns"
+      "the product of the arguments."))
  */
 treptr
 trenumber_builtin_times (treptr list)
@@ -109,16 +97,12 @@ trenumber_builtin_times (treptr list)
     return treeval_exprop (list, treeval_op_times);
 }
 
-/**
-    <cmd name="/" essential="yes">
-        <args>
-            <rest name="args"/>
-        <args>
-        <para>
-            When called with one argument, 0 is returned. Otherwise returns
-            the first argument divided by the rest.
-        </para>
-    </cmd>
+/*tredoc
+  (cmd name "/" type "bt" essential "yes"
+	(arg name "args" occurrence "rest")
+	(para
+      "When called with one argument, 0 is returned. Otherwise returns"
+      "the first argument divided by the rest."))
  */
 treptr
 trenumber_builtin_quotient (treptr list)
@@ -142,16 +126,12 @@ trenumber_builtin_args (treptr *car, treptr *cdr, treptr list)
 	*cdr = trearg_typed (2, TRETYPE_NUMBER, *cdr, descr);
 }
 
-/**
-    <cmd name="MOD" essential="yes">
-        <args>
-            <arg name="x"/>
-            <arg name="y"/>
-        <args>
-        <para>
-            Returns the remainder of x divided by y.
-        </para>
-    </cmd>
+/*tredoc
+  (cmd name "MOD" essential "yes"
+	(args
+	  (arg name "x")
+	  (arg name "y"))
+	  (para "Returns the remainder of x divided by y."))
  */
 treptr
 trenumber_builtin_mod (treptr list)
@@ -164,15 +144,10 @@ trenumber_builtin_mod (treptr list)
     return treatom_number_get (val, TRENUMTYPE_FLOAT);
 }
 
-/** section "Logical operators"
-    <cmd name="LOGXOR">
-        <args>
-            <rest name="args"/>
-        <args>
-        <para>
-            Exclusive OR numbers.
-        </para>
-    </cmd>
+/*tredoc
+  (cmd name "LOGXOR" type "bt"
+	(arg name "args" occurrence "rest")
+	(para "Exclusive OR numbers."))
  */
 treptr
 trenumber_builtin_logxor (treptr list)
@@ -182,18 +157,12 @@ trenumber_builtin_logxor (treptr list)
     return treeval_exprop (list, treeval_op_logxor);
 }
 
-/** section "Comparison" */
-
-/**
-    <cmd name="=" essential="yes>
-        <args>
-            <arg name="x"/>
-            <arg name="y"/>
-        <args>
-        <para>
-            Returns T if the values of x and y match.
-        </para>
-    </cmd>
+/*tredoc
+  (cmd name "=" essential "yes"
+	(args
+	  (arg name "x")
+	  (arg name "y"))
+    (para "Returns T if the values of x and y match."))
  */
 treptr
 trenumber_builtin_number_equal (treptr list)
@@ -206,16 +175,12 @@ trenumber_builtin_number_equal (treptr list)
     return treptr_nil;
 }
 
-/**
-    <cmd name="<" essential="yes">
-        <args>
-            <arg name="x"/>
-            <arg name="y"/>
-        <args>
-        <para>
-            Returns T if number x is less than number y.
-        </para>
-    </cmd>
+/*tredoc
+  (cmd name "<" essential "yes"
+	(args
+	  (arg name "x")
+	  (arg name "y"))
+    (para "Returns T if number x is less than number y."))
  */
 treptr
 trenumber_builtin_lessp (treptr list)
@@ -228,16 +193,12 @@ trenumber_builtin_lessp (treptr list)
     return treptr_nil;
 }
 
-/**
-    <cmd name=">">
-        <args>
-            <arg name="x"/>
-            <arg name="y"/>
-        <args>
-        <para>
-    Returns T if number x is greater than number y.
-        </para>
-    </cmd>
+/*tredoc
+  (cmd name ">"
+	(args
+	  (arg name "x")
+	  (arg name "y"))
+	(para "Returns T if number x is greater than number y."))
  */
 treptr
 trenumber_builtin_greaterp (treptr list)
