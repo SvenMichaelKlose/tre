@@ -1,6 +1,6 @@
 /*
- * TRE tre processor
- * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+ * TRE processor
+ * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
  *
  * Built-in string functions
  */
@@ -52,6 +52,52 @@ trestring_builtin_make (treptr list)
     TREATOM_SET_STRING(atom, str);
     return atom;
 }
+
+/*
+ * (LIST-STRING string*)
+ */
+treptr
+trestring_builtin_list_string (treptr list)
+{
+    struct tre_string * news;
+    treptr    p;
+    treptr    atom;
+    char      *newp;
+    ulong  len = 0;
+	int		  i;
+
+	treptr arg;
+
+    /* Sum up length of all elements in the list. */
+	arg = trearg_get (list);
+	len = trelist_length (arg);
+
+    /* Copy elements to new string. */
+    news = trestring_get_raw (len);
+    if (news == NULL) {
+		tregc_force ();
+    	news = trestring_get_raw (len);
+    	if (news == NULL)
+			treerror_norecover (treptr_invalid, "out of memory");
+	}
+    newp = &news->str;
+
+	i = 0;
+    DOLIST(p, arg) {
+		if (CAR(p) == treptr_nil)
+			continue;
+		if (TREPTR_IS_NUMBER(CAR(p)) == FALSE)
+			treerror_norecover (CAR(p), "number expected");
+		newp[i++] = (unsigned char) TRENUMBER_VAL(CAR(p));
+	}
+
+    /* Return new string atom. */
+    atom = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_STRING, treptr_nil);
+    TREATOM_SET_STRING(atom, news);
+
+    return atom;
+}
+
 
 /*
  * (STRING-CONCAT string*)
