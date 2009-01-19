@@ -1,6 +1,6 @@
 /*
- * TRE tree processor
- * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+ * TRE interpreter
+ * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
  *
  * Number atom related section.
  */
@@ -36,7 +36,7 @@ trenumber_is_value (char *symbol)
 	ulong	len = 0;	/* Length of symbol. */
     char    c;        	/* Last read character. */
 
-    if (*symbol == '-')
+    if (*symbol == '-' && symbol[1] != 0)
 		symbol++;
 
     while ((c = *symbol++) != 0) {
