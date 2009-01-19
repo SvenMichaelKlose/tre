@@ -1,5 +1,5 @@
-;;;;; TRE tree processor transpiler
-;;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
+;;;;; TRE transpiler
+;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
 
 ;;;; OPERATOR EXPANSION
 
@@ -44,7 +44,7 @@
   (when x
 	(with (a          x.
 		   separator  (transpiler-separator tr)
-		   ret (transpiler-obfuscate tr '~%ret))
+		   ret		  (transpiler-obfuscate tr '~%ret))
 	  (if
 		(not a)
 		  ; Ignore top-level NIL.
@@ -116,14 +116,19 @@
 		       e))
 		x)))
 
-(defmacro define-transpiler-macro (tr name args body)
-  `(define-expander-macro ,(transpiler-macro-expander (eval tr)) ,name ,args
-	 ,body))
+(defmacro define-transpiler-macro (tr &rest x)
+  (when (expander-has-macro? (transpiler-macro-expander (eval tr)) (first x))
+    (error "Code-generator macro ~A already defined as standard macro." (first x)))
+  `(define-expander-macro ,(transpiler-macro-expander (eval tr)) ,@x))
 
 ;;;; TOPLEVEL
 
 (defun transpiler-generate-code-compose (tr)
-  (compose #'transpiler-concat-string-tree
+  (compose (fn (princ #\.)
+			   (force-output)
+			   _)
+
+		   #'transpiler-concat-string-tree
 
 		   (fn transpiler-to-string tr _)
 
