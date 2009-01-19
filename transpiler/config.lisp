@@ -8,17 +8,41 @@
   macro-expander
   setf-functionp
   separator
+
+  ; List of functions that must not be imported from the environment.
   unwanted-functions
+
+  ; Predicate that tells if a character is legal in an identifier.
   (identifier-char?
 	(fn error "structure 'transpiler': IDENTIFIER-CHAR? is not initialised"))
+
   (expex nil)
+
+  ; Functions defined in transpiled code, not in the environment.
+  (defined-functions nil)
+
+  ; functinos required by transpiled code. It is imported from the
+  ; environment.
   (wanted-functions nil)
+
+  ; Tells if target required named top-level functions (like C).
+  (named-functions? nil)
+
   (obfuscate? nil)
+
+  ; List of symbols that must not be obfuscated.
   (obfuscation-exceptions nil)
+
   (make-label #'identity)
   (preprocessor #'identity)
-  (named-functions? nil)
+
+  ; Generator for literal strings.
+  (gen-string #'((tr str) (string-concat "\"" str "\"")))
+
+  ; Tells if functions must be moved out of functions.
   (lambda-export? nil)
+
+  ; Tells if arguments are passed by stack.
   (stack-arguments? nil)
 
   ; You shouldn't have to tweak these at construction-time:
