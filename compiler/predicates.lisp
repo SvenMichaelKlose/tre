@@ -11,6 +11,10 @@
   (and (consp x)
 	   (eq 'QUOTE x.)))
 
+(defun %quote? (x)
+  (and (consp x)
+	   (eq '%QUOTE x.)))
+
 (defun backquote? (x)
   (and (consp x)
 	   (eq 'BACKQUOTE x.)))

@@ -1,12 +1,28 @@
-;;;;; TRE tree processor transpiler
+;;;;; TRE transpiler
 ;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
 
 (defun transpiler-expand-characters (x)
-  (if (characterp x)
+  (if
+	(characterp x)
 	  `(code-char ,(char-code x))
-	  (if (consp x)
-		  (traverse #'transpiler-expand-characters x)
-		  x)))
+    (consp x)
+	  (traverse #'transpiler-expand-characters x)
+	x))
+
+;; Put keywords into %QUOTE-expressions, so they can be recognized
+;; as symbols during code-generation.
+(defun transpiler-quote-keywords (x)
+  (if
+	(%quote? x)
+	  x
+    (and (consp x)
+	     (eq 'make-hash-table (car x)))
+	  x
+    (keywordp x)
+	  `(%quote ,x)
+	(consp x)
+	  (traverse #'transpiler-quote-keywords x)
+	x))
 
 ;;;; STANDARD MACRO EXPANSION
 
@@ -21,6 +37,8 @@
 
 (defmacro define-transpiler-std-macro (tr &rest x)
   (let tre (eval tr)
+	(when (expander-has-macro? (transpiler-macro-expander tre) (first x))
+	  (error "Macro ~A already defined in code-generator." (first x)))
     `(define-expander-macro ,(transpiler-std-macro-expander tre) ,@x)))
 
 ;;;; LAMBDA EXPANSION
@@ -57,6 +75,9 @@
 
     ; Peephole-optimization. Removes some unused code.
     #'opt-peephole
+
+	; Quote keywords.
+    #'transpiler-quote-keywords
 
     ; Break up nested expressions.
     ; After this pass function arguments may only be literals,
