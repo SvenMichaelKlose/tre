@@ -99,10 +99,10 @@
  					   ")"))
 
 (define-js-macro vm-go (tag)
-  `("_I_=" ,(transpiler-symbol-string *js-transpiler* tag) "; continue"))
+  `("_I_=" ,tag "; continue"))
 
 (define-js-macro vm-go-nil (val tag)
-  `("if (" ,val " === null || " ,val " === false || " ,val " === undefined) {_I_=" ,(transpiler-symbol-string *js-transpiler* tag) "; continue;}"))
+  `("if (" ,val " === null || " ,val " === false || " ,val " === undefined) {_I_=" ,tag "; continue;}"))
 
 (define-js-macro identity (x)
   x)
@@ -115,7 +115,7 @@
 
 (define-js-macro %quote (x)
   (if (not (string= "" (symbol-name x)))
-  	  `("symbol(\"" ,(symbol-name x) "\", " ,(when (keywordp x) "true") ")")
+  	  `(,(transpiler-symbol-string tr (transpiler-obfuscate tr 'symbol)) "(\"" ,(symbol-name x) "\", " ,(when (keywordp x) "true") ")")
 	  x))
 
 (define-js-macro %set-atom-fun (plc val)
