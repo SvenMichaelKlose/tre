@@ -1,7 +1,7 @@
 ;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
 ;;;;;
-;;;;; Code generation
+;;;;; Generating code
 
 ;;;; TRANSPILER-MACRO EXPANDER
 
@@ -48,18 +48,18 @@
 (defmacro define-js-binary (op repl-op)
   `(define-transpiler-binary *js-transpiler* ,op ,repl-op))
 
-(define-js-binary + "+")
-(define-js-binary - "-")
+(define-js-binary %%%+ "+")
+(define-js-binary %%%- "-")
 (define-js-binary / "/")
 (define-js-binary * "*")
-(define-js-binary = "==")
-(define-js-binary < "<")
-(define-js-binary > ">")
+(define-js-binary %%%= "==")
+(define-js-binary %%%< "<")
+(define-js-binary %%%> ">")
 (define-js-binary >> ">>")
 (define-js-binary << "<<")
 (define-js-binary mod "%")
 (define-js-binary logxor "^")
-(define-js-binary eq "===")
+(define-js-binary %%%eq "===")
 (define-js-binary bit-and "&")
 (define-js-binary bit-or "|")
 
@@ -82,9 +82,6 @@
 (define-js-macro %%usetf-href (val &rest x)
   `(%%usetf-aref ,val ,@x))
 
-(define-js-macro make-string (&optional size)
-  `(%transpiler-string ""))
-
 (define-js-macro make-hash-table (&rest args)
   `("{"
     ,@(when args
@@ -105,7 +102,7 @@
   `("_I_=" ,(transpiler-symbol-string *js-transpiler* tag) "; continue"))
 
 (define-js-macro vm-go-nil (val tag)
-  `("if (!" ,val ") {_I_=" ,(transpiler-symbol-string *js-transpiler* tag) "; continue;}"))
+  `("if (" ,val " === null || " ,val " === false || " ,val " === undefined) {_I_=" ,(transpiler-symbol-string *js-transpiler* tag) "; continue;}"))
 
 (define-js-macro identity (x)
   x)
@@ -118,7 +115,7 @@
 
 (define-js-macro %quote (x)
   (if (not (string= "" (symbol-name x)))
-  	  `("symbol(\"" ,(symbol-name x) "\")")
+  	  `("symbol(\"" ,(symbol-name x) "\", " ,(when (keywordp x) "true") ")")
 	  x))
 
 (define-js-macro %set-atom-fun (plc val)
