@@ -1,19 +1,14 @@
-;;;; TRE environment
-;;;; Copyright (C) 2005-2006,2008 Sven Klose <pixel@copei.de>
-;;;;
-;;;; Local recursive functions
+;;;;; TRE environment
+;;;;; Copyright (C) 2005-2006,2008-2009 Sven Klose <pixel@copei.de>
+;;;;;
+;;;;; Local functions
 
-(defmacro labels (fdefs &rest main-body)
-  (let* ((fun (first fdefs))
-	     (name (first fun))
-	     (args (second fun))
-	     (body (cddr fun)))
-    `(let ,name nil
-       (%set-atom-fun ,name
-	     #'(,args
-	         (block ,name
-	           ,@body)))
-       ,@(if (cdr fdefs)
-	         `((labels ,(cdr fdefs)
-	             ,@main-body))
-	         main-body))))
+(defmacro labels (fdefs &rest body)
+  `(#'(,(mapcar #'first fdefs)
+	   ,@(mapcar (fn `(%set-atom-fun ,(first _)
+	       				#'(,(second _)
+	           				(block ,(first _)
+	             			  ,@(cddr _)))))
+				   fdefs)
+	   ,@body)
+	  ,@(mapcar (fn) fdefs)))
