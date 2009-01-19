@@ -1,10 +1,10 @@
 ;;;;; TRE environment
-;;;;; Copyright (C) 2005, 2008 Sven Klose <pixel@copei.de>
+;;;;; Copyright (C) 2005, 2008-2009 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Increment/decrement functions
 
 (defmacro incf (place &optional (n 1))
-  `(setf ,place (+ ,place ,n)))
+  `(setf ,place (number+ ,place ,n)))
 
 (defmacro decf (place &optional (n 1))
   `(setf ,place (- ,place ,n)))
