@@ -1,6 +1,6 @@
 /*
- * nix operating system project tre interpreter
- * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+ * TRE interpreter
+ * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
  *
  * Printing expressions.
  */
@@ -139,8 +139,12 @@ treprint_atom (treptr atom, ulong indent)
 	    	if (TRENUMBER_TYPE(atom) == TRENUMTYPE_CHAR) {
 				printf ("#\\");
 	        	putchar ((int) TRENUMBER_VAL(atom));
-	    	} else
+	    	} else if (TRENUMBER_TYPE(atom) == TRENUMTYPE_INTEGER) {
                 printf ("%G", TRENUMBER_VAL(atom));
+			} else if (TRENUMBER_TYPE(atom) == TRENUMTYPE_FLOAT) {
+                printf ("%.1f", TRENUMBER_VAL(atom));
+			} else
+				treerror_internal (atom, "unknown number type");
 	    	break;
 
 		case TRETYPE_STRING:
