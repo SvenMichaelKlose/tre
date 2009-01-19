@@ -1,5 +1,5 @@
 ;;;;; TRE environment
-;;;;; Copyright (C) 2005,2008 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2005,2008-2009 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Simple map functions.
 
@@ -16,3 +16,7 @@
       (if (consp lst)
           (cons (apply func (list (car lst)))
                 (%simple-mapcar func (cdr lst))))))
+
+(define-test "%SIMPLE-MAPCAR"
+  ((%simple-mapcar #'identity '(1 2 3)))
+  '(1 2 3))
