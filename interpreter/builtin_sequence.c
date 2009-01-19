@@ -1,6 +1,6 @@
 /*
  * TRE interpreter
- * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
  *
  * Generic sequences.
  */
@@ -78,6 +78,8 @@ tresequence_builtin_set_elt (treptr args)
     if (t == NULL)
         return treerror (treptr_invalid, "sequence expected");
 
+    if (t->set == NULL)
+        return treerror (seq, "sequence cannot be modified");
     (*t->set) (seq, (ulong) TRENUMBER_VAL(idx), val);
 
     return val;
