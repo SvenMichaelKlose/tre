@@ -271,8 +271,10 @@ treatom_get (char * symbol, treptr package)
 		if (sscanf (symbol, "%ld", &ivalue) == 1)
 			dvalue = (double) ivalue;
 		else
-			if (sscanf (symbol, "%lF", &dvalue) != 1)
+			if (sscanf (symbol, "%lF", &dvalue) != 1) {
+				printf ("Illegal number: '%s'", symbol);
 				treerror (treptr_nil, "illegal number format");
+			}
         return treatom_number_get (dvalue, TRENUMTYPE_FLOAT);
 	}
 
