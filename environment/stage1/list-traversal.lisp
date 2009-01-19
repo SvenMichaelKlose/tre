@@ -1,6 +1,5 @@
-;;;; nix operating system project
-;;;; list processor environment
-;;;; Copyright (C) 2005-2008 Sven Klose <pixel@copei.de>
+;;;; TRE environment
+;;;; Copyright (C) 2005-2009 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; List traversal
 
@@ -53,7 +52,7 @@ Returns a list of all return values of the function."
 	         (,iter nil))
         (tagbody
           ,starttag
-          (if (eq ,tmplst nil)
+          (if (not ,tmplst)
             (go ,endtag))
           (setq ,iter (car ,tmplst))
           ,@body
