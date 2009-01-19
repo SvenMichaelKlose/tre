@@ -11,6 +11,14 @@
   ((car nil))
   nil)
 
+(define-test "RPLACA returns cons"
+  ((rplaca (cons nil nil) 42))
+  (cons 42 nil))
+
+(define-test "RPLACD returns cons"
+  ((rplacd (cons nil nil) 42))
+  (cons nil 42))
+
 (define-test "ATOM recognizes atoms"
   ((atom nil))
   t)
@@ -19,9 +27,97 @@
   ((atom (cons 23 42)))
   nil)
 
+(define-test "CONSP"
+  ((consp (cons 1 1)))
+  t)
+
+(define-test "CONSP fails on atoms"
+  ((consp 'a))
+  nil)
+
+(define-test "CONSP fails on numbers"
+  ((consp 1))
+  nil)
+
+(define-test "CONSP fails on characters"
+  ((consp #\1))
+  nil)
+
+(define-test "CONSP fails on strings"
+  ((consp "1"))
+  nil)
+
+(define-test "CONSP fails on arrays"
+  ((consp (make-array 1)))
+  nil)
+
+(define-test "SYMBOLP"
+  ((symbolp 'a))
+  t)
+
+(define-test "SYMBOLP fails on cells"
+  ((symbolp (list 'a)))
+  nil)
+
+(define-test "SYMBOLP fails on numbers"
+  ((symbolp 1))
+  nil)
+
+(define-test "SYMBOLP fails on characters"
+  ((symbolp #\1))
+  nil)
+
+(define-test "SYMBOLP fails on strings"
+  ((symbolp "1"))
+  nil)
+
+(define-test "SYMBOLP fails on arrays"
+  ((symbolp (make-array 1)))
+  nil)
+
+(define-test "NUMBERP recognizes numbers"
+  ((numberp 42))
+  t)
+
+(define-test "NUMBERP recognizes characters"
+  ((numberp #\a))
+  t)
+
+(define-test "NUMBERP fails on arrays"
+  ((numberp (make-array 1)))
+  nil)
+
+(define-test "NUMBERP fails on symbols"
+  ((numberp 'a))
+  nil)
+
 (define-test "CHARACTERP recognizes characters"
   ((characterp #\a))
   t)
+
+(define-test "CHARACTERP fails on symbols"
+  ((characterp 'a))
+  nil)
+
+(define-test "CHARACTERP fails on cells"
+  ((characterp (list 1)))
+  nil)
+
+(define-test "CHARACTERP fails on numbers"
+  ((characterp 1))
+  nil)
+
+(define-test "CHARACTERP fails on arrays"
+  ((characterp (make-array 1)))
+  nil)
+
+(define-test "CHARACTERP fails on strings"
+  ((characterp "1"))
+  nil)
+
+(define-test "EQL wants same type of numbers"
+  ((eql 65 #\A))
+  nil)
 
 (define-test "FUNCTIONP recognizes functions"
   ((functionp #'%backquote))
@@ -35,20 +131,16 @@
 ;  ((functionp #'block))
 ;  nil)
 
-(define-test "NUMBERP recognizes numbers"
-  ((numberp 42))
-  t)
-
-(define-test "NUMBERP recognizes characters"
-  ((numberp #\a))
-  t)
-
 (define-test "STRINGP recognizes strings"
   ((stringp "some string"))
   t)
 
-(define-test "EQL wants same type of numbers"
-  ((eql 65 #\A))
+(define-test "STRINGP fails on numbers"
+  ((stringp 1))
+  nil)
+
+(define-test "STRINGP fails on symbols"
+  ((stringp 'a))
   nil)
 
 (define-test "CODE-CHAR converts number to char"
@@ -64,13 +156,9 @@
 	 (setq a 23 b 5 c 42)) nil nil nil))
   42)
 
-(define-test "RPLACA returns cons"
-  ((rplaca (cons nil nil) 42))
-  (cons 42 nil))
-
-(define-test "RPLACD returns cons"
-  ((rplacd (cons nil nil) 42))
-  (cons nil 42))
+(define-test "IDENTITY"
+  ((identity t))
+  t)
 
 (define-test "LAST works"
   ((last '(1 2 3)))
@@ -79,3 +167,14 @@
 (define-test "LAST return NIL for empty list"
   ((last nil))
   nil)
+
+
+; + - * / MOD
+; LOGXOR
+; MAKE-SYMBOL ATOM SYMBOL-VALUE %TYPE-ID
+; SYMBOL-FUNCTION SYMBOL-PACKAGE
+; BOUNDP FBOUNDP
+; MACROP STRINGP
+; = < >
+; BIT-OR BIT-AND
+; << >>
