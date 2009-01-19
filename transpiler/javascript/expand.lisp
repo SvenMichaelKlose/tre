@@ -132,6 +132,9 @@
        (%%%= (%js-typeof x)
           ,(string-downcase (symbol-name (transpiler-obfuscate-symbol *js-transpiler* type)))))))
 
+(define-js-std-macro href (hash key)
+  `(aref ,hash ,key))
+
 (define-js-std-macro dont-obfuscate (&rest symbols)
   (append! (transpiler-obfuscation-exceptions *js-transpiler*) symbols)
   nil)
