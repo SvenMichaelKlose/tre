@@ -30,28 +30,22 @@
 	     `(setf (cdr !) ,v)
 	     `(setf ,alist (acons ,k ,v ,alist)))))
 
-(defun transpiler-collect-wanted (tr pass funlist)
+(defun transpiler-collect-wanted-functions (tr)
   (let out nil
-    (dolist (x funlist out)
+    (dolist (x (transpiler-wanted-functions tr) out)
       (unless (or (member x (transpiler-emitted-wanted-functions tr))
 				  (transpiler-function-arguments tr x))
 	    (push! x (transpiler-emitted-wanted-functions tr))
 	    (let fun (symbol-function x)
 	      (when (functionp fun)
 		    (setf out (nconc out
-						     (funcall pass tr
-								      `((defun ,x ,(function-arguments fun)
-							              ,@(function-body fun))))))))))))
+						     (transpiler-preexpand-and-expand tr
+							   `((defun ,x ,(function-arguments fun)
+							       ,@(function-body fun))))))))))))
 
-(defun transpiler-get-wanted-functions (tr)
-  (format t "; Collecting dependencies...~%")
-  (transpiler-collect-wanted tr
-	#'((tr x)
-	     (transpiler-preexpand-and-expand tr x))
-    (transpiler-wanted-functions tr)))
- 
 (defun transpiler-transpile-wanted-functions (tr)
-  (transpiler-generate-code tr (transpiler-get-wanted-functions tr)))
+  (transpiler-generate-code tr
+	(transpiler-collect-wanted-functions tr)))
 
 ;; User code must have been sightened by TRANSPILER-SIGHT.
 (defun transpiler-transpile (tr forms)

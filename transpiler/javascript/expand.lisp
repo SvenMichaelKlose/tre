@@ -27,7 +27,6 @@
 ;;
 ;; Assign function to global variable.
 ;; XXX This could be generic if there wasn't *JS-TRANSPILER*.
-;; XXX Reunite with DEFUN macro.
 (define-js-std-macro js-defun (name args &rest body)
   (print `(defun ,name))
   (let n (%defun-name name)
@@ -64,15 +63,10 @@
 (define-js-std-macro make-string (&optional len)
   `"")
 
-;; XXX This is the same like it is in the environment.
-;; XXX Try to get along without it.
-(define-js-std-macro defstruct (name &rest fields-and-options)
-  (apply #'%defstruct-expander name fields-and-options))
-
 (define-js-std-macro funcall (fun &rest x)
   `(,fun ,@x))
 
-;; XXX Isn't this already in the environment?
+;; Translate SLOT-VALUE to unquoted variant.
 (define-js-std-macro slot-value (place slot)
   `(%slot-value ,place ,(second slot)))
 
