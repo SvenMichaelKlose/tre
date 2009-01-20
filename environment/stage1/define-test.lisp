@@ -51,15 +51,23 @@
   ((apply #'list 1 2 '(3)))
   '(1 2 3))
 
-(define-test "EQ-SYMBOL"
+(define-test "EQ with symbols"
   ((eq 'x 'x))
   t)
 
-(define-test "EQL-SYMBOL"
-  ((eq 'x 'x))
+(define-test "EQ with three symbols"
+  ((eq 'x 'x 'x))
   t)
 
-(define-test "EQL-NUMBER"
+(define-test "EQL with symbols"
+  ((eql 'x 'x))
+  t)
+
+(define-test "EQL with three symbols"
+  ((eql 'x 'x 'x))
+  t)
+
+(define-test "EQL with numbers"
   ((eql 1 1))
   t)
 
