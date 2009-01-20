@@ -1,6 +1,6 @@
 /*
- * nix operating system project tre interpreter
- * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+ * TRE interpreter
+ * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
  *
  * Built-in atom-related functions
  */
@@ -15,47 +15,69 @@
 #include "builtin_atom.h"
 #include "string2.h"
 #include "thread.h"
+#include "xxx.h"
 
-/*
- * (EQ o1 o2)
- *
- * Return T if the two objects are identical, NIL otherwise.
+/*tredoc
+ (cmd :name EQ :essential T
+	(arg :occurrence rest x)
+	(returns :type boolean)
+ 	(param "Test if arguments are identical."))
  */
 treptr
 treatom_builtin_eq (treptr list)
 {
-    TRELIST_DEFREGS();
-    trearg_get2 (&car, &cdr, list);
+	treptr first;
+	treptr x;
 
-    return TREPTR_TRUTH(car == cdr);
+    first = CAR(list);
+	list = CDR(list);
+	do {
+		x = CAR(list);
+    	RETURN_NIL(TREPTR_TRUTH(first == x));
+		list = CDR(list);
+	} while (list != treptr_nil);
+
+	return treptr_t;
 }
 
-/*
- * (EQL o1 o2)
- *
- * Return T if the two objects are identical, or numbers with the same value.
+/*tredoc
+ (cmd :name EQL
+	(args x y)
+	(returns :type boolean)
+ 	(para
+	  "Return T if the two objects are identical, or numbers with the "
+	  "same value."))
  */
 treptr
 treatom_builtin_eql (treptr list)
 {
-    TRELIST_DEFREGS();
-    trearg_get2 (&car, &cdr, list);
+	treptr first;
+	treptr x;
 
-    if (TREPTR_IS_NUMBER(car)) {
-        if (TREPTR_IS_NUMBER(cdr) == FALSE)
-	    	return treptr_nil;
-        if (TRENUMBER_TYPE(car) != TRENUMBER_TYPE(cdr))
-	    	return treptr_nil;
-        return TREPTR_TRUTH(TRENUMBER_VAL(car) == TRENUMBER_VAL(cdr));
-    }
+    first = CAR(list);
+	list = CDR(list);
+	do {
+		x = CAR(list);
+    	if (TREPTR_IS_NUMBER(first)) {
+        	if (TREPTR_IS_NUMBER(x) == FALSE)
+	    		return treptr_nil;
+        	if (TRENUMBER_TYPE(first) != TRENUMBER_TYPE(x))
+	    		return treptr_nil;
+        	RETURN_NIL(TREPTR_TRUTH(TRENUMBER_VAL(first) == TRENUMBER_VAL(x)));
+    	} else
+    		RETURN_NIL(TREPTR_TRUTH(first == x));
+		list = CDR(list);
+	} while (list != treptr_nil);
 
-    return TREPTR_TRUTH(car == cdr);
+	return treptr_t;
 }
 
-/*
- * (MAKE-SYMBOL string)
- *
- * Returns newly created self-referencing atom.
+/*tredoc
+  (cmd :name MAKE-SYMBOL
+	(arg :type string)
+	(returns :type symbol)
+	(para
+ 	  "Returns newly created self-referencing atom."))
  */
 treptr
 treatom_builtin_make_symbol (treptr args)
@@ -75,10 +97,11 @@ treatom_builtin_make_symbol (treptr args)
     return treatom_get (TREATOM_STRINGP(name), package);
 }
 
-/*
- * (ATOM obj)
- *
- * Returns T if obj is not a cons.
+/*tredoc
+  (cmd :name ATOM
+	(arg obj)
+	(returns :type boolean)
+	(para "Returns T if obj is not a cons."))
  */
 treptr
 treatom_builtin_atom (treptr list)
@@ -97,10 +120,10 @@ treatom_builtin_arg (treptr list)
     return trearg_typed (1, TRETYPE_ATOM, trearg_get (list), NULL);
 }
 
-/*
- * (SYMBOL-VALUE obj)
- *
- * Returns value bound to atom.
+/*tredoc
+  (cmd :name SYMBOL-VALUE
+	(arg :type symbol x)
+	(descr "Returns value bound to atom."))
  */
 treptr
 treatom_builtin_symbol_value (treptr list)
@@ -109,10 +132,10 @@ treatom_builtin_symbol_value (treptr list)
     return TREATOM_VALUE(arg);
 }
 
-/*
- * (SYMBOL-FUNCTION  obj)
- *
- * Returns function bound to atom.
+/*tredoc
+  (cmd :name SYMBOL-FUNCTION
+	(arg obj)
+    (para "Returns function bound to atom."))
  */
 treptr
 treatom_builtin_symbol_function (treptr list)
@@ -122,9 +145,9 @@ treatom_builtin_symbol_function (treptr list)
 }
 
 /*
- * (SYMBOL-PACKAGE obj)
- *
- * Returns function bound to atom.
+  (cmd :name SYMBOL-PACKAGE
+	(arg obj)
+    (para "Returns function bound to atom."))
  */
 treptr
 treatom_builtin_symbol_package (treptr list)
@@ -133,10 +156,11 @@ treatom_builtin_symbol_package (treptr list)
     return TREATOM_PACKAGE(arg);
 }
 
-/*
- * (%SET-ATOM-FUN obj)
- *
- * Set function of atom.
+/*tredoc
+  (cmd :name %SET-ATOM-FUN
+	(arg :name obj :type atom)
+	(arg :name value :type obj)
+    (para "Set function of atom."))
  */
 treptr
 treatom_builtin_set_atom_fun (treptr list)
@@ -150,10 +174,10 @@ treatom_builtin_set_atom_fun (treptr list)
     return cdr;
 }
 
-/*
- * (FUNCTIONP obj)
- *
- * Returns T if the argument is a number. NIL otherwise.
+/*tredoc
+  (cmd :name FUNCTIONP
+	(arg :name obj)
+	(para "Returns T if the argument is a number. NIL otherwise."))
  */
 treptr
 treatom_builtin_functionp (treptr list)
@@ -163,10 +187,10 @@ treatom_builtin_functionp (treptr list)
     return TREPTR_TRUTH(TREPTR_IS_FUNCTION(arg) || TREPTR_IS_BUILTIN(arg));
 }
 
-/*
- * (BOUNDP obj)
- *
- * Returns T if global symbol is bound to a variable.
+/*tredoc
+  (cmd :name BOUNDP
+	(arg obj)
+	(para "Returns T if global symbol is bound to a variable."))
  */
 treptr
 treatom_builtin_boundp (treptr list)
@@ -176,10 +200,10 @@ treatom_builtin_boundp (treptr list)
     return TREPTR_TRUTH(TREATOM_VALUE(arg) != arg);
 }
 
-/*
- * (FBOUNDP obj)
- *
- * Returns T if global symbol is bound to a function.
+/*tredoc
+ (cmd :name FBOUNDP
+	(arg obj)
+ 	(para "Check on function."))
  */
 treptr
 treatom_builtin_fboundp (treptr list)
@@ -189,8 +213,10 @@ treatom_builtin_fboundp (treptr list)
     return TREPTR_TRUTH(TREATOM_FUN(arg) != treptr_nil);
 }
 
-/*
- * (MACROP obj)
+/*tredoc
+  (cmd :name MACROP
+	(arg obj)
+	(para "Check on macro."))
  */
 treptr
 treatom_builtin_macrop (treptr list)
@@ -216,6 +242,10 @@ treatom_builtin_atom_list_s (treptr ret)
     return ret;
 }
 
+/*tredoc
+  (cmd :name %ATOM-LIST
+	(para "Returns list of all atoms."))
+ */
 treptr
 treatom_builtin_atom_list (treptr no_args)
 {
