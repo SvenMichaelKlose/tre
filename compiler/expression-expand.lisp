@@ -1,6 +1,5 @@
-;;;;; nix operating system project
-;;;;; lisp compiler
-;;;;; Copyright (c) 2006-2008 Sven Klose <pixel@copei.de>
+;;;;; TRE compiler
+;;;;; Copyright (c) 2006-2009 Sven Klose <pixel@copei.de>
 ;;;;; 
 ;;;;; Breaks up nested expressions into lists of assignments.
 ;;;;; Assign return values to gensyms.
@@ -152,4 +151,6 @@
 
 (defun expression-expand (ex x)
   (when x
-    (expex-body ex x)))
+    (expex-body ex (if (vm-scope? x)
+					   (vm-scope-body x)
+					   x))))
