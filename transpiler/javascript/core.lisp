@@ -340,13 +340,15 @@
 ;(defvar *standard-output* (make-null-stream))
 ;(defvar *standard-input* (make-null-stream))
 
-,@(when (eq *have-environment-tests* t)
-	(with (names nil
+))
+
+(defun make-environment-tests ()
+  (with (names nil
 		 num 0
   		 funs (mapcar
 				(fn
+				  (setf num (1+ num))
 				  (let n ($ 'test- num)
-					(setf num (1+ num))
 					(setf names (push n names))
 				    `(defun ,n ()
 				       (document.writeln (+ "Test " (string ,num) ": "
@@ -359,7 +361,5 @@
 						 (document.writeln "</br>")))))
 		    	(reverse *tests*)))
 	`(,@funs
-	  (defun environment-tests ()
-		,@(mapcar #'list (reverse names))))))
-
-))
+	    (defun environment-tests ()
+		  ,@(mapcar #'list names)))))

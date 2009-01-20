@@ -15,15 +15,20 @@
   (format f " * caroshi ECMAScript obfuscator~%")
   (format f " */~%")
   (with (tr *js-transpiler*
+		 ; Expand.
 		 base (transpiler-sighten tr *js-base*)
     	 base2 (transpiler-sighten tr *js-base2*)
+		 tests (when (eq t *have-environment-tests*)
+				 (transpiler-sighten tr (make-environment-tests)))
 	 	 user (transpiler-sighten-files tr files)
 		 deps (transpiler-transpile-wanted-functions tr))
+	; Generate.
     (princ (transpiler-concat-string-tree
- 		   (transpiler-transpile tr base)
-		   deps
- 		   (transpiler-transpile tr base2)
- 		   (transpiler-transpile tr user))
+ 		     (transpiler-transpile tr base)
+		     deps
+ 		     (transpiler-transpile tr base2)
+			 (transpiler-transpile tr tests)
+ 		     (transpiler-transpile tr user))
 	       f)))
 
 (defun js-transpile (out files &key (obfuscate? nil))
