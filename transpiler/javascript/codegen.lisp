@@ -102,7 +102,7 @@
   `("_I_=" ,tag "; continue"))
 
 (define-js-macro vm-go-nil (val tag)
-  `("if (" ,val " === null || " ,val " === false || " ,val " === undefined) {_I_=" ,tag "; continue;}"))
+  `("if (!" ,val ") {_I_=" ,tag "; continue;}"))
 
 (define-js-macro identity (x)
   x)
