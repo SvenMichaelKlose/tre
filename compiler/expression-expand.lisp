@@ -30,7 +30,7 @@
 ;; Declines atoms and expressions with meta-forms.
 (defun expex-able? (ex x)
   (not (or (atom x)
-           (in? x. '%stack ;'%quote
+           (in? x. '%stack
 				   'vm-go 'vm-go-nil
 				   '%transpiler-native '%transpiler-string
 				   '%var
@@ -114,7 +114,7 @@
       (if (not (expex-able? ex x))
 	      (values nil (list x))
   	      (if (vm-scope? x)
-	          (values nil (expex-body ex .x))
+	          (values nil (expex-body ex (vm-scope-body x)))
 	          (expex-std-expr ex x)))))
 
 ;; Entry point.
