@@ -48,7 +48,8 @@
 (defun transpiler-lambda-expand (tr x)
   "Expand top-level LAMBDA expressions."
   (if (consp x)
-	  (cons (if (consp x.)
+	  (cons (if (atom x.)
+			    (transpiler-lambda-expand tr x.)
 			    (if (lambda? x.)
 				    (let forms (when (transpiler-stack-arguments? tr)
 								 (argument-expand-names
@@ -59,8 +60,7 @@
          			             (make-funinfo :env (list forms nil))
 					             (lambda-body x.)
 					             (transpiler-lambda-export? tr))))
-				    (transpiler-lambda-expand tr x.))
-			    (transpiler-lambda-expand tr x.))
+				    (transpiler-lambda-expand tr x.)))
 		    (transpiler-lambda-expand tr .x))
 	  x))
 
