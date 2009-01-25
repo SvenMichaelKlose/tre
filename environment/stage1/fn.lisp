@@ -3,6 +3,7 @@
 
 (defmacro fn (&rest body)
   `#'((_)
-	    ,@(if (consp (car body))
+	    ,@(if (and (consp (car body))
+				   (not (eq '%slot-value (car (car body)))))
 			  body
 			  (list body))))
