@@ -14,6 +14,7 @@
   (format f " *~%")
   (format f " * caroshi ECMAScript obfuscator~%")
   (format f " */~%")
+  (format f "var _I_ = 0; while (1) {switch (_I_) {case 0: ~%")
   (with (tr *js-transpiler*
 		 ; Expand.
 		 base (transpiler-sighten tr *js-base*)
@@ -29,7 +30,8 @@
  		     (transpiler-transpile tr base2)
 			 (transpiler-transpile tr tests)
  		     (transpiler-transpile tr user))
-	       f)))
+	       f))
+  (format f "}break;}~%"))
 
 (defun js-transpile (out files &key (obfuscate? nil))
   (transpiler-reset *js-transpiler*)
