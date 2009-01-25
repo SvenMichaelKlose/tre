@@ -269,14 +269,18 @@
   		    this.v x
 		    (aref *characters* x) this)))
 
-(defun code-char (x) (new %character x))
-(defun char-code (x) x.v)
-(defun char-string (x) (*string.from-char-code (char-code x)))
-
 (defun characterp (x)
   (and (objectp x)
 	   x.__class
 	   (%%%= x.__class "%character")))
+
+(defun code-char (x)
+  (if (characterp x)
+	  x
+	  (new %character x)))
+
+(defun char-code (x) x.v)
+(defun char-string (x) (*string.from-char-code (char-code x)))
 
 (defun numberp (x)
   (or (%numberp x)
