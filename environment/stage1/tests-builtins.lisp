@@ -168,6 +168,14 @@
   ((last nil))
   nil)
 
+(define-test "= works with floats"
+  ((= 1 1))
+  t)
+
+(define-test "= works with characters"
+  ((= #\A #\A))
+  t)
+
 
 ; + - * / MOD
 ; LOGXOR
