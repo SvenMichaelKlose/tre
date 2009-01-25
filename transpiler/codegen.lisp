@@ -146,9 +146,7 @@
 		   #'transpiler-encapsulate-strings
 
 		   ; Obfuscate symbol-names.
-		   (fn transpiler-obfuscate tr _)
-
-		   (fn remove-if #'atom _)))
+		   (fn transpiler-obfuscate tr _)))
 
 (defun transpiler-generate-code (tr x)
   (mapcar (fn funcall (transpiler-generate-code-compose tr) _)
