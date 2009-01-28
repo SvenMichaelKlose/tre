@@ -16,6 +16,8 @@
 (env-load "stage3/main.lisp")
 (env-load "stage4/main.lisp")
 
+(env-load "../lib/main.lisp")
+
 (defvar *tre-has-math* t)
 (defvar *tre-has-alien* t)
 (defvar *tre-has-class* t)

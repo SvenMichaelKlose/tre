@@ -11,7 +11,5 @@
 (env-load "alien/c-call.lisp")
 (env-load "alien/alien.lisp")
 (env-load "alien/exec.lisp")
-(env-load "../lib/xml2lml.lisp")
-(env-load "../lib/lml.lisp")
 (env-load "alien/unix.lisp")
 (env-load "alien/import.lisp")

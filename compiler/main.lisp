@@ -14,7 +14,6 @@
 (env-load "../compiler/quote-expand.lisp")
 (env-load "../compiler/compiler-macros.lisp")
 
-(env-load "../lib/tree-walk.lisp")
 (env-load "../compiler/funinfo.lisp")
 (env-load "../compiler/subatomic.lisp")
 (env-load "../compiler/lambda-expand.lisp")
