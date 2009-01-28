@@ -3,9 +3,6 @@
 ;;;;;
 ;;;;; LML-to-XML conversion
 
-(defun lml-attr-string (x)
-  (string-downcase (symbol-name x)))
-
 (defun lml-attr? (x)
   (and (consp x) (consp .x)
        (atom x.) (atom (second x))))
