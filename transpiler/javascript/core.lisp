@@ -18,10 +18,32 @@
 ;; All symbols are stored in this array for reuse.
 (defvar *symbols* (make-array))
 
+(defun not (x)
+  no-args
+  (if x
+	  nil
+	  t))
+
+;; Cell object constructor.
+(defun %cons (a d)
+  no-args
+  (setf this.__class "cons"
+        this._ a
+  		this.__ d)
+  this)
+
+;; Cell constructor
+;;
+;; Wraps the 'new'-operator.
+(defun cons (x y)
+  no-args
+  (new %cons x y))
+
 ;; Symbol constructor
 ;;
 ;; It has a function field but that isn't used yet.
-(js-defun %symbol (name pkg)
+(defun %symbol (name pkg)
+  no-args
   (setf this.__class "symbol"
 		this.n name	; name
      	this.v nil	; value
@@ -33,7 +55,8 @@
 ;;
 ;; Wraps the 'new'-operator.
 ;; XXX rename to %QUOTE ?
-(js-defun %lookup-symbol (name pkg)
+(defun %lookup-symbol (name pkg)
+  no-args
   ; Make package if missing.
   (or (aref *symbols* pkg)
 	  (setf (aref *symbols* pkg) (make-array)))
@@ -41,21 +64,9 @@
   (or (aref (aref *symbols* pkg) name)
 	  (setf (aref (aref *symbols* pkg) name) (new %symbol name pkg))))
 
-(js-defun symbol (name pkg)
+(defun symbol (name pkg)
+  no-args
   (%lookup-symbol name pkg))
-
-;; Cell object constructor.
-(js-defun %cons (a d)
-  (setf this.__class "cons"
-        this._ a
-  		this.__ d)
-  this)
-
-;; Cell constructor
-;;
-;; Wraps the 'new'-operator.
-(js-defun cons (x y) (new %cons x y))
-
 ))
 
 ;;;; Second part of the core functions
@@ -64,8 +75,9 @@
 (defvar *js-base2* `(
 
 ;; Set argument definitions for functions in the first part.
-(setf symbol.tre-args '(name))
+(setf not.tre-args '(x))
 (setf cons.tre-args '(x y))
+(setf symbol.tre-args '(name))
 
 (defvar *keyword-package* t)
 
@@ -366,4 +378,4 @@
 		    	(reverse *tests*)))
 	`(,@funs
 	    (defun environment-tests ()
-		  ,@(mapcar #'list names)))))
+		  ,@(mapcar #'list (reverse names))))))

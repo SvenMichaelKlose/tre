@@ -27,7 +27,7 @@
 ;;
 ;; Assign function to global variable.
 ;; XXX This could be generic if there wasn't *JS-TRANSPILER*.
-(define-js-std-macro js-defun (name args &rest body)
+(define-js-std-macro defun (name args &rest body)
   (print `(defun ,name))
   (let n (%defun-name name)
     (transpiler-obfuscate-symbol *js-transpiler* n)
@@ -41,11 +41,6 @@
 		    	              (stringp body.))
 				         .body
 				         body))))))
-
-(define-js-std-macro defun (name args &rest body)
-  `(progn
-     (js-defun ,name ,args ,@body)
-	 (%setq (%slot-value ,(%defun-name name) tre-args) ',args)))
 
 (define-js-std-macro defmacro (name &rest x)
   (print `(defmacro ,name ))
