@@ -21,10 +21,19 @@
 
 ;;;; ENCAPSULATION
 
+(defun transpiler-escape-string (x)
+  (when x
+	(if (in=? x. #\\ #\")
+		(cons #\\
+			  (cons x.
+					(transpiler-escape-string .x)))
+		(cons x.
+			  (transpiler-escape-string .x)))))
+
 (defun transpiler-encapsulate-strings (x)
   (if (atom x)
       (if (stringp x)
-          (list '%transpiler-string x)
+          (list '%transpiler-string (list-string (transpiler-escape-string (string-list x))))
 		  x)
 	  (if (eq '%transpiler-native x.)
 		  x
@@ -112,7 +121,8 @@
         (let e (apply m .x)
 	       (if (transpiler-macrop-funcall? x)
 				; Make C-style function call.
-  		       `(,e. ,(second e) ,(first (third e)) ,@(transpiler-macrocall-funcall (cdr (third e))))
+  		       `(,e. ,(second e) ,(first (third e))
+				  ,@(transpiler-macrocall-funcall (cdr (third e))))
 		       e))
 		x)))
 
