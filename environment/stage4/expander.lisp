@@ -32,8 +32,10 @@
 	e))
 
 (defmacro define-expander-macro (expander-name name &rest x)
-  (when (consp name)
-    (error "Atom expected instead of ~A for expander ~A." name expander-name))
+  (unless (atom expander-name)
+    (error "Atom expected as expander-name instead of ~A." expander-name))
+  (unless (atom name)
+    (error "Atom expected as macro-name instead of ~A for expander ~A." name expander-name))
   `(progn
 	 (when (expander-has-macro? ',expander-name ',name)
 	   (error "Macro ~A already defined." ',name))
