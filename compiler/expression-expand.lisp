@@ -86,7 +86,9 @@
 
 (defun expex-argexpand-do (ex fun args)
   (funcall (expex-function-collector ex) fun args)
-  (argument-expand-compiled-values fun (funcall (expex-function-arguments ex) fun) args))
+  (argument-expand-compiled-values fun
+								   (funcall (expex-function-arguments ex) fun)
+								   args))
 
 (defun expex-argexpand (ex fun args)
   (if (and (atom fun)
