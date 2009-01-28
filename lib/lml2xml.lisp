@@ -3,8 +3,8 @@
 ;;;;;
 ;;;;; LML-to-XML conversion
 
-(defun symbol-string (x)
-  (string-downcase (string (symbol-name x))))
+(defun lml-attr-string (x)
+  (string-downcase (symbol-name x)))
 
 (defun lml-attr? (x)
   (and (consp x) (consp .x)
@@ -17,18 +17,20 @@
   (format s "/>"))
 
 (defun lml2xml-open (s x)
-  (format s "<~A" (symbol-string x.)))
+  (format s "<~A" (lml-attr-string x.)))
 
 (defun lml2xml-close (s x)
-  (format s "</~A>" (symbol-string x.)))
+  (format s "</~A>" (lml-attr-string x.)))
 
 (defun lml2xml-atom (s x)
   (format s "~A" x))
 
 (defun lml2xml-attr (s x)
-  (format s " ~A=\"~A\"" (symbol-string x.) (if (stringp (second x))
-												(second x)
-												(symbol-string (second x))))
+  (format s " ~A=\"~A\""
+			(lml-attr-string x.)
+			(if (stringp (second x))
+				(second x)
+				(lml-attr-string (second x))))
   (lml2xml-attr-or-body s (cddr x)))
 
 (defun lml2xml-body (s x)

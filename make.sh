@@ -1,7 +1,7 @@
 #!/bin/sh
 
 echo "TRE programming language"
-echo "Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>"
+echo "Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>"
 
 ARGS="$2 $3 $4 $5 $6 $7 $8 $9"
 

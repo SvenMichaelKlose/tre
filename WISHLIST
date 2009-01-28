@@ -12,6 +12,7 @@
 - Argument definition:
 
 	(defun something ((form #'some-filter)))
+	(a 'b c) <- b is passed unevaluated
 
 - 4TH-CELL is a whole symbol, regardless of it starting with a number
 - TYPEDEF - make cons another type.
