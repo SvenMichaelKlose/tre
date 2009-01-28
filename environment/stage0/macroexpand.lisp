@@ -18,6 +18,10 @@
 (setq *macrop-diversion* nil
       *macrocall-diversion* nil
       *current-macro* nil)
+(setq *variables* (cons (cons '*macrop-diversion* nil)
+      			  (cons (cons '*macrocall-diversion* nil)
+      			  (cons (cons '*current-macro* nil)
+				  *variables*))))
 
 ;;;; Expand macros in BACKQUOTE expression.
 ;;;;

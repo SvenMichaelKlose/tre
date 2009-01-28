@@ -22,13 +22,21 @@
 
 (%set-atom-fun defvar
   (macro (name &optional (init nil))
-    `(setq *universe* (cons ',name *universe*)
-           ,name ,init)))
+    `(progn
+	   (if *show-definitions*
+	       (print `(defvar ,name)))
+	   (setq *universe* (cons ',name *universe*)
+		     *variables* (cons (cons ',name
+								     ',init)
+							   *variables*)
+             ,name ,init))))
 
 (defvar *constants* nil)
 
 (%set-atom-fun defconstant
   (macro (name &optional (init nil))
     `(progn
+	   (if *show-definitions*
+	       (print `(defconstant ,name)))
 	   (defvar ,name ,init)
 	   (setq *constants* (cons ',name *constants*)))))

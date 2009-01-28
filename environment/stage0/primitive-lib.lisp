@@ -6,7 +6,11 @@
 (setq *universe* (cons 'not
                  (cons 'last
                  (cons '%nconc
-                 (cons 'copy-tree *universe*)))))
+                 (cons 'copy-tree
+				 (cons '*variables* *universe*))))))
+
+(setq *variables* (cons (cons '*show-definitions* nil)
+						nil))
 
 ;;; Helper functions (helping us to stay sane).
 
