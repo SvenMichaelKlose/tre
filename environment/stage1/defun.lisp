@@ -37,6 +37,8 @@
   "Define a function."
   (let name (%defun-name name)
     `(block nil
+	   (if *show-definitions*
+	       (print `(defun ,name)))
        (setq *universe* (cons ',name *universe*)
 			 *defun-name* name)
        (%set-atom-fun ,name

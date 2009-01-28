@@ -20,6 +20,8 @@
 (%set-atom-fun defmacro
   (macro (name args &rest body)
     `(block nil
+	   (if *show-definitions*
+           (print `(defmacro ,name)))
        (setq *universe* (cons ',name *universe*))
        (%set-atom-fun ,name
          			  (macro ,args
