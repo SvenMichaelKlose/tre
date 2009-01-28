@@ -50,6 +50,9 @@
 
 (define-js-std-macro defvar (name val)
   (print `(defvar ,name))
+  (when (member name (transpiler-defined-variables *js-transpiler*))
+    (error "variable ~A already defined" name))
+  (push! name (transpiler-defined-variables *js-transpiler*))
   (transpiler-obfuscate-symbol *js-transpiler* name)
   `(progn
      (%var ,name)

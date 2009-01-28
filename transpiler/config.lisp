@@ -25,6 +25,9 @@
   ; environment.
   (wanted-functions nil)
 
+  (wanted-variables nil)
+  (defined-variables nil)
+
   ; Tells if target required named top-level functions (like C).
   (named-functions? nil)
 
@@ -99,6 +102,10 @@
 		  (expex-function-collector ex)
 		  #'((fun args)
 			   (transpiler-add-wanted-function tr fun))
+
+		  (expex-variable-collector ex)
+		  #'((var)
+			   (transpiler-add-wanted-variable tr var))
 
 		  (expex-function? ex)
 		  #'((fun)

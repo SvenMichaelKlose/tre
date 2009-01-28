@@ -13,6 +13,11 @@
 	(setf (transpiler-wanted-functions tr)
 		  (nconc (transpiler-wanted-functions tr) (list fun)))))
 
+(defun transpiler-add-wanted-variable (tr var)
+  (when (and (not (member var (transpiler-defined-variables tr)))
+			 (assoc var *variables*))
+    (adjoin! var (transpiler-wanted-variables tr))))
+
 (defun transpiler-expand-and-generate-code (tr forms)
   (transpiler-generate-code tr (transpiler-expand tr forms)))
 
@@ -34,7 +39,8 @@
   (let out nil
     (dolist (x (transpiler-wanted-functions tr) out)
       (unless (or (member x (transpiler-emitted-wanted-functions tr))
-				  (transpiler-function-arguments tr x))
+				  (transpiler-function-arguments tr x)
+				  (member x (transpiler-defined-functions tr)))
 	    (push! x (transpiler-emitted-wanted-functions tr))
 	    (let fun (symbol-function x)
 	      (when (functionp fun)
@@ -43,9 +49,16 @@
 							   `((defun ,x ,(function-arguments fun)
 							       ,@(function-body fun))))))))))))
 
+(defun transpiler-collect-wanted-variables (tr)
+  (transpiler-preexpand-and-expand tr
+    (mapcar (fn (let v (assoc-value _ *variables*)
+				  `(defvar ,_ ,v)))
+		    (transpiler-wanted-variables tr))))
+
 (defun transpiler-transpile-wanted-functions (tr)
   (transpiler-generate-code tr
-	(transpiler-collect-wanted-functions tr)))
+	(append (transpiler-collect-wanted-functions tr)
+			(transpiler-collect-wanted-variables tr))))
 
 ;; User code must have been sightened by TRANSPILER-SIGHT.
 (defun transpiler-transpile (tr forms)
