@@ -1,5 +1,5 @@
 ;;;;; TRE environment
-;;;;; Copyright (c) 2007-2008 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2007-2009 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; LML-to-XML conversion
 
@@ -7,55 +7,57 @@
   (string-downcase (string (symbol-name x))))
 
 (defun lml-attr? (x)
-  (and (consp x) (consp (cdr x))
-       (atom (first x)) (atom (second x))))
+  (and (consp x) (consp .x)
+       (atom x.) (atom (second x))))
 
-(defun lml2xml-end ()
-  (format t ">"))
+(defun lml2xml-end (s)
+  (format s ">"))
 
-(defun lml2xml-end-inline ()
-  (format t "/>"))
+(defun lml2xml-end-inline (s)
+  (format s "/>"))
 
-(defun lml2xml-open (x)
-  (format t "<~A" (symbol-string (first x))))
+(defun lml2xml-open (s x)
+  (format s "<~A" (symbol-string x.)))
 
-(defun lml2xml-close (x)
-  (format t "</~A>" (symbol-string (first x))))
+(defun lml2xml-close (s x)
+  (format s "</~A>" (symbol-string x.)))
 
-(defun lml2xml-atom (x)
-  (format t "~A" x))
+(defun lml2xml-atom (s x)
+  (format s "~A" x))
 
-(defun lml2xml-attr (x)
-  (format t " ~A=\"~A\"" (symbol-string (first x)) (symbol-string (second x)))
-  (lml2xml-attr-or-body (cddr x)))
+(defun lml2xml-attr (s x)
+  (format s " ~A=\"~A\"" (symbol-string x.) (if (stringp (second x))
+												(second x)
+												(symbol-string (second x))))
+  (lml2xml-attr-or-body s (cddr x)))
 
-(defun lml2xml-body (x)
-  (lml2xml-end)
-  (mapcar #'lml2xml x))
+(defun lml2xml-body (s x)
+  (lml2xml-end s)
+  (mapcar (fn lml2xml s _) x))
 
-(defun lml2xml-attr-or-body (x)
+(defun lml2xml-attr-or-body (s x)
   (when x
     (if (lml-attr? x)
-        (lml2xml-attr x)
-        (lml2xml-body x))))
+        (lml2xml-attr s x)
+        (lml2xml-body s x))))
 
-(defun lml2xml-block (x)
-  (lml2xml-attr-or-body (cdr x))
-  (lml2xml-close x))
+(defun lml2xml-block (s x)
+  (lml2xml-attr-or-body s .x)
+  (lml2xml-close s x))
 
 (defun lml2xml-error-tagname (x)
   (error "First element is not a tag name: ~A" x))
 
-(defun lml2xml-expr (x)
-  (unless (atom (first x))
+(defun lml2xml-expr (s x)
+  (unless (atom x.)
     (lml2xml-error-tagname x))
-  (lml2xml-open x)
+  (lml2xml-open s x)
   (if (cdr x)
-      (lml2xml-block x)
-      (lml2xml-end-inline)))
+      (lml2xml-block s x)
+      (lml2xml-end-inline s)))
 
-(defun lml2xml (x)
+(defun lml2xml (s x)
   (when x
     (if (consp x)
-		(lml2xml-expr x)
-		(lml2xml-atom x))))
+		(lml2xml-expr s x)
+		(lml2xml-atom s x))))
