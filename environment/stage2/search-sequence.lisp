@@ -82,12 +82,12 @@
 ;; XXX FIND-IF version if compiler can optimize it.
 (defun every (pred &rest seqs)
   "AND predicate over list elements."
-  (dolist (seq seqs)
-    (dotimes (i (length seq) t)
+  (dolist (seq seqs t)
+    (dotimes (i (length seq))
       (unless (funcall pred (elt seq i))
         (return-from every nil)))))
 
 (define-test "EVERY works"
-  ((and (every #'numberp '(1 2 3)))
-        (not (every #'numberp '(1 2 a))))
+  ((and (every #'numberp '(1 2 3))
+        (not (every #'numberp '(1 2 a)))))
   t)
