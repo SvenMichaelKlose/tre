@@ -1,6 +1,5 @@
-;;;; nix operating system project
-;;;; list processor environment
-;;;; Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+;;;; TRE environment
+;;;; Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; List manipulation functions.
 
@@ -57,6 +56,9 @@
   (if (apply #'member obj lst args)
     lst
     (cons obj lst)))
+
+(defmacro adjoin! (obj place)
+  `(setf ,place (adjoin ,obj ,place)))
 
 (define-test "ADJOIN works returns with member"
   ((adjoin 'i '(l i s p)))
