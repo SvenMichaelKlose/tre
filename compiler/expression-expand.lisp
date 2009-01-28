@@ -13,7 +13,8 @@
 (defstruct expex
   (function? (fn functionp (symbol-value _)))
   (function-arguments #'function-arguments)
-  (function-collector #'((fun args))))
+  (function-collector #'((fun args)))
+  (variable-collector #'((var))))
 
 ;; Returns new unique symbol.
 (defun expex-sym ()
@@ -91,6 +92,9 @@
 								   args))
 
 (defun expex-argexpand (ex fun args)
+  (mapcar (fn (when (symbolp _)
+				(funcall (expex-variable-collector ex) _)))
+		  args)
   (if (and (atom fun)
 		   (funcall (expex-function? ex) fun))
 	  (expex-argexpand-do ex fun args)
