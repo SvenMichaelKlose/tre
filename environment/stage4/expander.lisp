@@ -10,7 +10,8 @@
   pred
   call
   pre
-  post)
+  post
+  user) ; For external use.
 
 (defun expander-get (name)
   (cdr (assoc name *expanders*)))
