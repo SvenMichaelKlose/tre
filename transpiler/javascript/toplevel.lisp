@@ -22,8 +22,12 @@
 		 tests (when (eq t *have-environment-tests*)
 				 (transpiler-sighten tr (make-environment-tests)))
 	 	 user (transpiler-sighten-files tr files)
-		 deps (transpiler-transpile-wanted-functions tr))
+		 deps (progn
+				(format t "; Collecting dependencies...~%")
+				(transpiler-transpile-wanted-functions tr)))
 	; Generate.
+	(format t "; Let me think")
+	(force-output)
     (princ (transpiler-concat-string-tree
  		     (transpiler-transpile tr base)
 		     deps
@@ -31,7 +35,8 @@
 			 (transpiler-transpile tr tests)
  		     (transpiler-transpile tr user))
 	       f))
-  (format f "}break;}~%"))
+  (format f "}break;}~%")
+  (format t "~%; Everything OK. Done.~%"l))
 
 (defun js-transpile (out files &key (obfuscate? nil))
   (transpiler-reset *js-transpiler*)
