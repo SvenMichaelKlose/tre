@@ -61,6 +61,9 @@
   		(transpiler-emitted-wanted-functions tr) nil
   		(transpiler-obfuscations tr) (make-hash-table)))
 
+(defun transpiler-defined-function (tr name)
+  (member name (transpiler-defined-functions tr)))
+
 (defun transpiler-switch-obfuscator (tr on?)
   (setf  (transpiler-obfuscations tr) (make-hash-table)
 		 (transpiler-obfuscate? tr) on?))

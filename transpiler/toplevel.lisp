@@ -3,62 +3,49 @@
 ;;;;;
 ;;;;; Toplevel
 
+(defun transpiler-should-add-wanted-function? (tr fun)
+  (or (eq t (transpiler-unwanted-functions tr))
+	  (member fun (transpiler-wanted-functions tr))
+	  (member fun (transpiler-unwanted-functions tr))
+	  (assoc fun (expander-macros
+				   (expander-get
+					 (transpiler-macro-expander tr))))))
+	
 (defun transpiler-add-wanted-function (tr fun)
-  (unless (or (member fun (transpiler-wanted-functions tr))
-			  (or (eq t (transpiler-unwanted-functions tr))
-				  (member fun (transpiler-unwanted-functions tr)))
-			  (assoc fun (expander-macros
-						   (expander-get
-							 (transpiler-macro-expander tr)))))
-	(setf (transpiler-wanted-functions tr)
-		  (nconc (transpiler-wanted-functions tr) (list fun)))))
+  (unless (transpiler-should-add-wanted-function? tr fun)
+	(nconc! (transpiler-wanted-functions tr)
+			(list fun))))
 
 (defun transpiler-add-wanted-variable (tr var)
   (when (and (not (member var (transpiler-defined-variables tr)))
 			 (assoc var *variables*))
     (adjoin! var (transpiler-wanted-variables tr))))
 
-(defun transpiler-expand-and-generate-code (tr forms)
-  (transpiler-generate-code tr (transpiler-expand tr forms)))
+(defun transpiler-import-wanted-functions (tr)
+  (mapcan (fn (unless (transpiler-defined-function tr _)
+    	        (push! _ (transpiler-emitted-wanted-functions tr))
+	    	    (let fun (symbol-function _)
+	              (when (functionp fun)
+				    (transpiler-sighten tr
+				      `((defun ,_ ,(function-arguments fun)
+						             ,@(function-body fun))))))))
+    	  (transpiler-wanted-functions tr)))
 
-(defmacro with-gensym-assignments ((&rest pairs) &rest body)
-  `(with-gensym ,(mapcar #'first (group pairs 2))
-	 `(with ,(mapcar #'((x)
-					      (list 'QUASIQUOTE x))
-					 pairs)
-	    ,(list 'QUASIQUOTE-SPLICE (cons 'QUOTE body)))))
-
-(defmacro assoc-update (key value alist)
-  (with-gensym-assignments (k key
-							v value)
-    `(aif (assoc ,k ,alist)
-	     `(setf (cdr !) ,v)
-	     `(setf ,alist (acons ,k ,v ,alist)))))
-
-(defun transpiler-collect-wanted-functions (tr)
-  (let out nil
-    (dolist (x (transpiler-wanted-functions tr) out)
-      (unless (or (member x (transpiler-emitted-wanted-functions tr))
-				  (transpiler-function-arguments tr x)
-				  (member x (transpiler-defined-functions tr)))
-	    (push! x (transpiler-emitted-wanted-functions tr))
-	    (let fun (symbol-function x)
-	      (when (functionp fun)
-		    (setf out (nconc out
-						     (transpiler-preexpand-and-expand tr
-							   `((defun ,x ,(function-arguments fun)
-							       ,@(function-body fun))))))))))))
-
-(defun transpiler-collect-wanted-variables (tr)
-  (transpiler-preexpand-and-expand tr
+(defun transpiler-import-wanted-variables (tr)
+  (transpiler-sighten tr
     (mapcar (fn (let v (assoc-value _ *variables*)
 				  `(defvar ,_ ,v)))
 		    (transpiler-wanted-variables tr))))
 
-(defun transpiler-transpile-wanted-functions (tr)
+(defun transpiler-import-wanted-from-environment (tr)
+  (append (transpiler-import-wanted-functions tr)
+		  (transpiler-import-wanted-variables tr)))
+
+(defun transpiler-expand-and-generate-code (tr forms)
   (transpiler-generate-code tr
-	(append (transpiler-collect-wanted-functions tr)
-			(transpiler-collect-wanted-variables tr))))
+	(transpiler-expand tr forms)))
+
+;;; PUBLIC
 
 ;; User code must have been sightened by TRANSPILER-SIGHT.
 (defun transpiler-transpile (tr forms)
@@ -67,6 +54,9 @@
 
 (defun transpiler-sighten (tr x)
   (let tmp (transpiler-preexpand tr x)
+	; Do an expression expand to collect the names of required
+	; functions and variables. It is done again later when all
+	; definitions are visible.
 	(transpiler-expression-expand tr tmp)
 	tmp))
 

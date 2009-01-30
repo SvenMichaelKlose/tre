@@ -24,13 +24,13 @@
 	 	 user (transpiler-sighten-files tr files)
 		 deps (progn
 				(format t "; Collecting dependencies...~%")
-				(transpiler-transpile-wanted-functions tr)))
+				(transpiler-import-wanted-from-environment tr)))
 	; Generate.
-	(format t "; Let me think")
+	(format t "; Let me think. Hmm")
 	(force-output)
     (princ (transpiler-concat-string-tree
  		     (transpiler-transpile tr base)
-		     deps
+		     (transpiler-transpile tr deps)
  		     (transpiler-transpile tr base2)
 			 (transpiler-transpile tr tests)
  		     (transpiler-transpile tr user))
