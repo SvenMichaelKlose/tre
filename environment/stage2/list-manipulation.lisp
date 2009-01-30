@@ -50,6 +50,9 @@
   ((nconc nil (copy-list '(l i)) nil (copy-list '(s p)) nil))
   '(l i s p))
 
+(defmacro nconc! (place &rest lsts)
+  `(setf ,place (nconc ,place ,@lsts)))
+
 (defun adjoin (obj lst &rest args)
   "Returns LST if OBJ is a member of LST or ARGS or returns new head of
    list containing OBJ."
@@ -57,6 +60,7 @@
     lst
     (cons obj lst)))
 
+; XXX Have &REST ?
 (defmacro adjoin! (obj place)
   `(setf ,place (adjoin ,obj ,place)))
 
