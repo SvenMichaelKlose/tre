@@ -20,6 +20,7 @@
 (env-load "stage4/pad.lisp")
 (env-load "stage4/repeat.lisp")
 (env-load "stage4/repeat-while-changes.lisp")
+(env-load "stage4/return-from-when.lisp")
 (env-load "stage4/split.lisp")
 (env-load "stage4/t.lisp")
 (env-load "stage4/tree-list.lisp")
