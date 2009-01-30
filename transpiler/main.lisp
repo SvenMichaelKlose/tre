@@ -8,6 +8,7 @@
 (env-load "../transpiler/expand.lisp")
 (env-load "../transpiler/codegen.lisp")
 (env-load "../transpiler/obfuscate.lisp")
+(env-load "../transpiler/import.lisp")
 (env-load "../transpiler/toplevel.lisp")
 (env-load "../transpiler/javascript/config.lisp")
 (env-load "../transpiler/javascript/expand.lisp")

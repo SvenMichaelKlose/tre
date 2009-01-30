@@ -64,6 +64,9 @@
 (defun transpiler-defined-function (tr name)
   (member name (transpiler-defined-functions tr)))
 
+(defun transpiler-defined-variable (tr name)
+  (member name (transpiler-defined-variables tr)))
+
 (defun transpiler-switch-obfuscator (tr on?)
   (setf  (transpiler-obfuscations tr) (make-hash-table)
 		 (transpiler-obfuscate? tr) on?))
