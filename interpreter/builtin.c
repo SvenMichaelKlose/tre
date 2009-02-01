@@ -379,7 +379,7 @@ char *tre_builtin_names[] = {
 
     "EVAL", "%MACROCALL",
 
-    "MAKE-SYMBOL", "ATOM", "SYMBOL-VALUE", "%TYPE-ID",
+    "MAKE-SYMBOL", "ATOM", "SYMBOL-VALUE", "%TYPE-ID", "%ID",
 	"SYMBOL-FUNCTION", "SYMBOL-PACKAGE",
     "CONSP", "NUMBERP", "FUNCTIONP",
     "BOUNDP", "FBOUNDP",
@@ -474,6 +474,7 @@ treevalfunc_t treeval_xlat_builtin[] = {
     treatom_builtin_atom,
     treatom_builtin_symbol_value,
     treatom_builtin_type_id,
+    treatom_builtin_id,
     treatom_builtin_symbol_function,
     treatom_builtin_symbol_package,
     trelist_builtin_consp,

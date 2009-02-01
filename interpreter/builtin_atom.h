@@ -23,5 +23,6 @@ extern treptr treatom_builtin_fboundp (treptr);
 extern treptr treatom_builtin_macrop (treptr);
 extern treptr treatom_builtin_atom_list (treptr);
 extern treptr treatom_builtin_type_id (treptr);
+extern treptr treatom_builtin_id (treptr);
 
 #endif	/* #ifndef TRE_BUILTIN_ATOM_H */

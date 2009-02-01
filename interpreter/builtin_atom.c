@@ -263,3 +263,11 @@ treatom_builtin_type_id (treptr args)
 		return treatom_number_get (0, TRENUMTYPE_INTEGER);
     return treatom_number_get (TREATOM_TYPE(arg), TRENUMTYPE_INTEGER);
 }
+
+treptr
+treatom_builtin_id (treptr args)
+{
+    treptr arg = trearg_get (args);
+
+    return treatom_number_get (arg, TRENUMTYPE_INTEGER);
+}
