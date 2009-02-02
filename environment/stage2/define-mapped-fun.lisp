@@ -11,6 +11,9 @@
 (defmacro define-mapcar-fun (name &rest fun)
   `(define-mapped-fun mapcar ,name ,@fun))
 
+(defmacro define-mapcan-fun (name &rest fun)
+  `(define-mapped-fun mapcan ,name ,@fun))
+
 (define-mapcar-fun carlist (a)
   (car a))
 
