@@ -45,24 +45,25 @@
 
 ;;;; LAMBDA EXPANSION
 
+(defun transpiler-lambda-expand-one (tr x)
+  (let forms (when (transpiler-stack-arguments? tr)
+			   (argument-expand-names
+			     'transpiler-lambda-expand
+			     (lambda-args x.)))
+    `#'(,(lambda-args x.)
+           ,@(lambda-embed-or-export
+               (make-funinfo :env (list forms nil))
+               (lambda-body x.)
+               (transpiler-lambda-export? tr)))))
+
 (defun transpiler-lambda-expand (tr x)
   "Expand top-level LAMBDA expressions."
-  (if (consp x)
-	  (cons (if (atom x.)
-			    (transpiler-lambda-expand tr x.)
-			    (if (lambda? x.)
-				    (let forms (when (transpiler-stack-arguments? tr)
-								 (argument-expand-names
-							       'transpiler-lambda-expand
-							       (lambda-args x.)))
-			          `#'(,(lambda-args x.)
-    			             ,@(lambda-embed-or-export
-         			             (make-funinfo :env (list forms nil))
-					             (lambda-body x.)
-					             (transpiler-lambda-export? tr))))
-				    (transpiler-lambda-expand tr x.)))
-		    (transpiler-lambda-expand tr .x))
-	  x))
+  (if (atom x)
+	  x
+	  (cons (if (lambda? x.)
+				(transpiler-lambda-expand-one tr x)
+				(transpiler-lambda-expand tr x.))
+		    (transpiler-lambda-expand tr .x))))
 
 (defun transpiler-expression-expand (tr x)
   (expression-expand (transpiler-expex tr) x))
@@ -108,6 +109,10 @@
 
 (defun transpiler-expand-compose (tr)
   (compose
+	(fn (princ #\.)
+		(force-output)
+		_)
+
     ; Add names to top-level functions for those target languages
     ; that require it.
     (fn transpiler-make-named-functions tr _)
@@ -124,10 +129,9 @@
     (fn transpiler-expression-expand tr `(vm-scope ,_))
 
 	#'transpiler-restore-funs
-	#'((x)
-         (repeat-while-changes
-	       (fn expander-expand 'TRANSPILER-FUNPROP _)
-		   x))
+	(fn (repeat-while-changes
+	     (fn expander-expand 'TRANSPILER-FUNPROP _)
+		 _))
 ))
 
 (defun transpiler-expand (tr x)

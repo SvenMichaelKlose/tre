@@ -15,6 +15,7 @@
   (format f " * caroshi ECMAScript obfuscator~%")
   (format f " */~%")
   (format f "var _I_ = 0; while (1) {switch (_I_) {case 0: ~%")
+  ;(setf (transpiler-wanted-functions *js-transpiler*) *defined-functions*)
   (with (tr *js-transpiler*
 		 ; Expand.
 		 base (transpiler-sighten tr *js-base*)
@@ -24,7 +25,7 @@
 	 	 user (transpiler-sighten-files tr files)
 		 deps (progn
 				(format t "; Collecting dependencies...~%")
-				(transpiler-import-wanted-from-environment tr)))
+				(transpiler-import-from-environment tr)))
 	; Generate.
 	(format t "; Let me think. Hmm")
 	(force-output)

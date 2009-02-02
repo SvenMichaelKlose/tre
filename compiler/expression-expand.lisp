@@ -11,9 +11,16 @@
 (defvar *expexsym-counter* 0)
 
 (defstruct expex
+  ; Callback to check if an object is a function.
   (function? (fn functionp (symbol-value _)))
+
+  ; Callback to get the argument definition of a function.
   (function-arguments #'function-arguments)
+
+  ; Callback to collect used functions.
   (function-collector #'((fun args)))
+
+  ; Callback to collect used variables.
   (variable-collector #'((var))))
 
 ;; Returns new unique symbol.
@@ -24,6 +31,11 @@
 (defun expex-sym? (x)
   (and (atom x)
        (string= "~E" (subseq (symbol-name x) 0 2))))
+
+(defun expex-collect-variables (ex lst)
+  (mapcar (fn (when (symbolp _)
+				(funcall (expex-variable-collector ex) _)))
+		  lst))
 
 ;; Check if an expression is expandable.
 ;;
@@ -55,26 +67,27 @@
 ;; Returns a CONS with the new head expressions in CAR and
 ;; the replacement symbol for the parent in CDR.
 (defun expex-assignment (ex x)
-  (if (expex-inline? ex x)
+  (if
+	(expex-inline? ex x)
 	  (with ((p a) (expex-args ex .x))
 		(cons p
 			  (cons x. a)))
-	  (if (not (expex-able? ex x))
-	      (cons nil x)
-  	      (with (s (expex-sym))
-  	        (if (vm-scope? x)
-				(aif (vm-scope-body x)
-	                 (cons (append `((%var ,s))
-						             (expex-body ex ! s))
-						   s)
-					 (cons nil nil))
-  	            (with ((head tail) (expex-expr ex x))
-    	          (cons (append `((%var ,s))
-								head
-								(if (expex-returnable? ex tail.)
-							        `((%setq ,s ,@tail))
-								    tail))
-		  	            s)))))))
+	(not (expex-able? ex x))
+      (cons nil x)
+    (with (s (expex-sym))
+      (if (vm-scope? x)
+		  (aif (vm-scope-body x)
+	           (cons (append `((%var ,s))
+				             (expex-body ex ! s))
+				     s)
+			   (cons nil nil))
+          (with ((head tail) (expex-expr ex x))
+            (cons (append `((%var ,s))
+						  head
+						  (if (expex-returnable? ex tail.)
+						      `((%setq ,s ,@tail))
+						      tail))
+  	              s))))))
 
 ;; Move subexpressions out of a parent.
 ;;
@@ -92,9 +105,6 @@
 								   args))
 
 (defun expex-argexpand (ex fun args)
-  (mapcar (fn (when (symbolp _)
-				(funcall (expex-variable-collector ex) _)))
-		  args)
   (if (and (atom fun)
 		   (funcall (expex-function? ex) fun))
 	  (expex-argexpand-do ex fun args)
@@ -106,6 +116,7 @@
 (defun expex-std-expr (ex x)
   (with (argexp (expex-argexpand ex x. .x)
 		 (pre newargs) (expex-args ex (cons x. argexp)))
+    (expex-collect-variables ex x)
     (values pre (list newargs))))
 
 ;; Expand expression depending on type.

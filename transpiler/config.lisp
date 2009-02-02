@@ -20,18 +20,24 @@
 
   ; Functions defined in transpiled code, not in the environment.
   (defined-functions nil)
+  (defined-functions-hash (make-hash-table))
 
   ; functinos required by transpiled code. It is imported from the
   ; environment.
   (wanted-functions nil)
+  (wanted-functions-hash (make-hash-table))
 
   (wanted-variables nil)
+  (wanted-variables-hash (make-hash-table))
+
   (defined-variables nil)
+  (defined-variables-hash (make-hash-table))
 
   ; Tells if target required named top-level functions (like C).
   (named-functions? nil)
 
   (obfuscate? nil)
+  (import-from-environment? t)
 
   ; List of symbols that must not be obfuscated.
   (obfuscation-exceptions nil)
@@ -59,26 +65,61 @@
   (setf (transpiler-thisify-classes tr) (make-hash-table)	; thisified classes.
   		(transpiler-function-args tr) nil
   		(transpiler-emitted-wanted-functions tr) nil
+  		(transpiler-wanted-functions tr) nil
+  		(transpiler-wanted-functions-hash tr) (make-hash-table)
+  		(transpiler-wanted-variables tr) nil
+  		(transpiler-wanted-variables-hash tr) (make-hash-table)
+  		(transpiler-defined-functions tr) nil
+  		(transpiler-defined-functions-hash tr) (make-hash-table)
+  		(transpiler-defined-variables tr) nil
+  		(transpiler-defined-variables-hash tr) (make-hash-table)
   		(transpiler-obfuscations tr) (make-hash-table)))
 
 (defun transpiler-defined-function (tr name)
-  (member name (transpiler-defined-functions tr)))
+  (href name (transpiler-defined-functions-hash tr)))
+
+(defun transpiler-add-defined-function (tr name)
+  (push! name (transpiler-defined-functions tr))
+  (setf (href name (transpiler-defined-functions-hash tr)) t)
+  name)
 
 (defun transpiler-defined-variable (tr name)
-  (member name (transpiler-defined-variables tr)))
+  (href name (transpiler-defined-variables-hash tr)))
+
+(defun transpiler-add-defined-variable (tr name)
+  (push! name (transpiler-defined-variables tr))
+  (setf (href name (transpiler-defined-variables-hash tr)) t)
+  name)
 
 (defun transpiler-switch-obfuscator (tr on?)
   (setf  (transpiler-obfuscations tr) (make-hash-table)
 		 (transpiler-obfuscate? tr) on?))
 
-(defun transpiler-function-arguments? (tr fun)
-  (assoc fun (transpiler-function-args tr)))
-
 (defun transpiler-function-arguments (tr fun)
-  (cdr (assoc fun (transpiler-function-args tr))))
+  (assoc-value fun (transpiler-function-args tr)))
+
+(define-slot-setter-acons! transpiler-add-function-args tr
+  (transpiler-function-args tr))
 
 (define-slot-setter-push! transpiler-add-unwanted-function tr
   (transpiler-unwanted-functions tr))
+
+(define-slot-setter-push! transpiler-add-emitted-wanted-function tr
+  (transpiler-emitted-wanted-functions tr))
+
+(defun transpiler-wanted-function? (tr fun)
+  (href fun (transpiler-wanted-functions-hash tr)))
+
+(defun transpiler-wanted-variable? (tr name)
+  (href fun (transpiler-wanted-variables-hash tr)))
+
+(defun transpiler-unwanted-function? (tr fun)
+  (member fun (transpiler-unwanted-functions tr)))
+
+(defun transpiler-macro (tr name)
+  (assoc name (expander-macros
+                (expander-get
+                  (transpiler-macro-expander tr)))))
 
 (defvar mypred nil)
 (defvar mycall nil)
@@ -115,9 +156,8 @@
 
 		  (expex-function? ex)
 		  #'((fun)
-			   (or (assoc fun (transpiler-function-args tr))
-				   (and (or (eq t (transpiler-unwanted-functions tr))
-						    (not (member fun (transpiler-unwanted-functions tr))))
+			   (or (transpiler-function-arguments tr fun)
+				   (and (not (transpiler-unwanted-function? tr fun))
 						(functionp (symbol-function fun)))))
 
 		  (expex-function-arguments ex)

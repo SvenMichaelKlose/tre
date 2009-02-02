@@ -29,10 +29,11 @@
 ;; XXX This could be generic if there wasn't *JS-TRANSPILER*.
 (define-js-std-macro defun (name args &rest body)
   (print `(defun ,name))
-  (let n (%defun-name name)
-    (transpiler-obfuscate-symbol *js-transpiler* n)
-    (acons! n args (transpiler-function-args *js-transpiler*))
-	(push! n (transpiler-defined-functions *js-transpiler*))
+  (with (n (%defun-name name)
+		 tr *js-transpiler*)
+    (transpiler-obfuscate-symbol tr n)
+    (transpiler-add-function-args tr n args)
+	(transpiler-add-defined-function tr n)
     `(progn
        (%var ,n)
        (%setq ,n
@@ -49,14 +50,15 @@
   nil)
 
 (define-js-std-macro defvar (name val)
-  (print `(defvar ,name))
-  (when (member name (transpiler-defined-variables *js-transpiler*))
-    (error "variable ~A already defined" name))
-  (push! name (transpiler-defined-variables *js-transpiler*))
-  (transpiler-obfuscate-symbol *js-transpiler* name)
-  `(progn
-     (%var ,name)
-	 (%setq ,name ,val)))
+  (let tr *js-transpiler*
+    (print `(defvar ,name))
+    (when (transpiler-defined-variable tr name)
+      (error "variable ~A already defined" name))
+    (transpiler-add-defined-variable tr name)
+    (transpiler-obfuscate-symbol tr name)
+    `(progn
+       (%var ,name)
+	   (%setq ,name ,val))))
 
 (define-js-std-macro make-string (&optional len)
   `"")
@@ -87,11 +89,8 @@
 ;; Translate arguments for call to native 'new' operator.
 (defun js-transpiler-make-new-object (x)
   `(%new ,x.
-		 ,@(if (transpiler-function-arguments? *js-transpiler* x.)
-		       (argument-expand-compiled-values
-			       x.
-			       (transpiler-function-arguments *js-transpiler* x.)
-			       .x)
+		 ,@(aif (transpiler-function-arguments *js-transpiler* x.)
+		       (argument-expand-compiled-values x. ! .x)
 			   .x)))
 
 ;; Make object if first argument is not a keyword, or string.
@@ -127,6 +126,7 @@
 (define-js-std-macro href (hash key)
   `(aref ,hash ,key))
 
+; XXX generic function instead of append!
 (define-js-std-macro dont-obfuscate (&rest symbols)
   (append! (transpiler-obfuscation-exceptions *js-transpiler*) symbols)
   nil)

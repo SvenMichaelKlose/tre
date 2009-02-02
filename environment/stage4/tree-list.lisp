@@ -4,8 +4,8 @@
 (defun tree-list (x)
   (if (atom x)
 	  x
-      (if (consp (car x))
-	      (nconc (tree-list (car x))
-			     (tree-list (cdr x)))
-	      (cons (car x)
-			    (tree-list (cdr x))))))
+      (if (consp x.)
+	      (nconc (tree-list x.)
+			     (tree-list .x))
+	      (cons x.
+			    (tree-list .x)))))

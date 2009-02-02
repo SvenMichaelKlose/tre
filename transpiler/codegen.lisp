@@ -138,7 +138,7 @@
 ;;;; TOPLEVEL
 
 (defun transpiler-generate-code-compose (tr)
-  (compose (fn (princ #\.)
+  (compose (fn (princ #\o)
 			   (force-output)
 			   _)
 

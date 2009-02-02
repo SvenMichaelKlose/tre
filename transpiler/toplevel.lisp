@@ -12,7 +12,9 @@
 ;; User code must have been sightened by TRANSPILER-SIGHT.
 (defun transpiler-transpile (tr forms)
   (unless (eq t (transpiler-unwanted-functions tr))
-	(transpiler-expand-and-generate-code tr forms)))
+	; Switch off checks for things to import.
+	(with-temporary (transpiler-import-from-environment? tr) nil
+	  (transpiler-expand-and-generate-code tr forms))))
 
 (defun transpiler-sighten (tr x)
   (let tmp (transpiler-preexpand tr x)
