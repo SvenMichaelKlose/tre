@@ -37,9 +37,7 @@
       (%make-hash-index-num h key)
     (stringp key)
       (%make-hash-index-string h key)
-    (< 0 (length (symbol-name key)))
-      (%make-hash-index-string h (symbol-name key))
-    (%error "key type unsupported")))
+    (%make-hash-index-num h (>> (%id key) 2))))
 
 ; Get bucket list and its index.
 (defmacro %with-hash-bucket (bucket idx h key &rest body)
