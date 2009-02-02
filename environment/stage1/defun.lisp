@@ -32,6 +32,7 @@
 
 (defvar *compiler-hook* nil)
 (defvar *defun-name* nil)
+(defvar *defined-functions* nil)
 
 (defmacro defun (name args &rest body)
   "Define a function."
@@ -40,6 +41,7 @@
 	   (if *show-definitions*
 	       (print `(defun ,name)))
        (setq *universe* (cons ',name *universe*)
+       		 *defined-functions* (cons ',name *defined-functions*)
 			 *defun-name* name)
        (%set-atom-fun ,name
          #'(,(%defun-args args)
