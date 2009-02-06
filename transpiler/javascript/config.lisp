@@ -5,7 +5,7 @@
 
 (defun js-setf-functionp (x)
   (or (%setf-functionp x)
-      (assoc x (transpiler-function-args *js-transpiler*))))
+      (transpiler-function-arguments *js-transpiler* x)))
 
 (defun js-transpiler-make-label (x)
   (format nil "case ~A:~%" (transpiler-symbol-string *js-transpiler* x)))
@@ -110,11 +110,10 @@
 		cancel-bubble return-value)
 
 	:identifier-char?
-	  #'((x)
-		  (or (and (>= x #\a) (<= x #\z))
-		  	  (and (>= x #\A) (<= x #\Z))
-		  	  (and (>= x #\0) (<= x #\9))
-			  (in=? x #\_ #\. #\$ #\#)))
+	  (fn (or (and (>= _ #\a) (<= _ #\z))
+		  	  (and (>= _ #\A) (<= _ #\Z))
+		  	  (and (>= _ #\0) (<= _ #\9))
+			  (in=? _ #\_ #\. #\$ #\#)))
 	:make-label
 	  #'js-transpiler-make-label))
 

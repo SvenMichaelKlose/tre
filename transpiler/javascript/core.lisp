@@ -132,8 +132,7 @@
 	   (%%%= x.__class "cons")))
 
 (defun atom (x)
-  (or (not x) ; XXX needed?
-	  (not (consp x))))
+  (not (consp x)))
 
 (defun arrayp (x) (instanceof x *array))
 
@@ -351,6 +350,14 @@
           ((>= i n) s)
         (setf s (+ s (string (car l))))))))
 
+(defun string= (x y)
+  (%%%= x y))
+
+(defun error (fmt &rest args)
+  (format *standard-log* "<b>Error:</b>")
+  (apply #'format *standard-log* fmt args)
+  (a-function-that-doesnt-exist-to-stop-everything))
+
 ;,(read-file "environment/stage4/null-stream.lisp")
 
 ;(defvar *standard-output* (make-null-stream))
@@ -375,7 +382,7 @@
 											  "' failed</br>"))
 						 (js-print ,(second _))
 						 (document.writeln "</br>")))))
-		    	(reverse *tests*)))
+		    	*tests*))
 	`(,@funs
 	    (defun environment-tests ()
 		  ,@(mapcar #'list (reverse names))))))

@@ -57,7 +57,7 @@
   ; You shouldn't have to tweak these at construction-time:
   (symbol-translations nil)
   thisify-classes
-  function-args
+  (function-args (make-hash-table))
   emitted-wanted-functions
   obfuscations)
 
@@ -73,6 +73,7 @@
   		(transpiler-defined-functions-hash tr) (make-hash-table)
   		(transpiler-defined-variables tr) nil
   		(transpiler-defined-variables-hash tr) (make-hash-table)
+  		(transpiler-function-args tr) (make-hash-table)
   		(transpiler-obfuscations tr) (make-hash-table)))
 
 (defun transpiler-defined-function (tr name)
@@ -96,10 +97,10 @@
 		 (transpiler-obfuscate? tr) on?))
 
 (defun transpiler-function-arguments (tr fun)
-  (assoc-value fun (transpiler-function-args tr)))
+  (href fun (transpiler-function-args tr)))
 
-(define-slot-setter-acons! transpiler-add-function-args tr
-  (transpiler-function-args tr))
+(defun transpiler-add-function-args (tr fun args)
+  (setf (href fun (transpiler-function-args tr)) args))
 
 (define-slot-setter-push! transpiler-add-unwanted-function tr
   (transpiler-unwanted-functions tr))
