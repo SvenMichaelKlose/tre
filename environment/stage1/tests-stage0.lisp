@@ -7,6 +7,10 @@
 ;  ((%nconc '(1 2) '(3 4)))
 ;  '(1 2 3 4))
 
+(define-test "NOT 0 is NIL"
+  ((not 0))
+  nil)
+
 (define-test "%NCONC with NIL first"
   ((%nconc nil '(3 4)))
   '(3 4))
