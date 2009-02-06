@@ -11,7 +11,7 @@
 	       (lb (length sb)))
       (when (= la lb)
         (dotimes (i la t)
-          (when (neql (elt sa i) (elt sb i))
+          (unless (eql (elt sa i) (elt sb i))
             (return nil)))))
     (eql sa sb)))
 

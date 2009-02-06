@@ -56,12 +56,18 @@
 ;; returned.
 ;;
 ;; 'fun' is only used for error messages.
-(defun argument-expand2 (fun adef alst apply-values &optional (no-static nil) (argdefs nil) (key-args nil) (num nil) (rest-arg nil))
+(defun argument-expand2 (fun adef alst apply-values
+						 &optional (no-static nil)
+								   (argdefs nil)
+								   (key-args nil)
+								   (num nil)
+								   (rest-arg nil))
   (with (err
 		   #'((msg &rest args)
 				(apply #'error
 					   (string-concat
-						 (format nil "Call of function ~A:~%" (symbol-name fun))
+						 (format nil "Call of function ~A:~%"
+									 (symbol-name fun))
 						 (format nil "Argument definition: ~A~%" adef)
 						 (format nil "Given arguments: ~A~%" alst)
 						 msg)
@@ -79,11 +85,12 @@
 
 		 get-value
 		   #'((def vals)
-				(if (consp vals)
+				(if
+				  (consp vals)
 					vals.
-					(if (consp def.)
-						(second def.)
-						def.)))
+				  (consp def.)
+					(second def.)
+				  def.))
 
 		 check-val
 		   #'((vals)
@@ -95,7 +102,8 @@
 			    (when no-static
 				  (err "static argument definition after ~A" no-static))
 				(check-val vals)
-				(cons (cons def. vals.)
+				(cons (cons def.
+							vals.)
 					  (exp-main .def .vals)))
 
 		 exp-optional
@@ -103,11 +111,13 @@
 				(when (argument-keyword? def.)
 				  (err "Keyword ~A after &OPTIONAL" def.))
 				(setf no-static '&optional)
-				(cons (cons (get-name def) (get-value def vals))
-					  (if (argument-list-keyword? (second def))
+				(cons (cons (get-name def)
+							(get-value def vals))
+					  (if
+						(argument-list-keyword? (second def))
 					  	  (exp-main .def .vals)
-						  (when .def
-						    (exp-optional .def .vals)))))
+						.def
+						  (exp-optional .def .vals))))
 
 		 exp-key
 		   #'((def vals)
@@ -138,7 +148,8 @@
 		 exp-sub
 		   #'((def vals)
 			    (when no-static
-				  (err "static sublevel argument definition after ~A" no-static))
+				  (err "static sublevel argument definition after ~A"
+					   no-static))
 				(and apply-values (atom vals.)
 					 (err "sublist expected for argument ~A" num))
 				(%nconc (argument-expand2 fun def. vals. apply-values)
@@ -148,16 +159,17 @@
            #'((def vals)
 			    (and (not def) vals
 				     (err "too many arguments. ~A max, but ~A more given"
-						    (length argdefs) (length vals))))
+						  (length argdefs) (length vals))))
 
 		 exp-main-non-key
 		   #'((def vals)
 				(exp-check-too-many def vals)
-				(if (argument-keyword? def.)
+				(if
+				  (argument-keyword? def.)
 				    (exp-optional-rest def vals)
-				    (if (consp def.)
-				        (exp-sub def vals)
-				        (exp-static def vals))))
+				  (consp def.)
+				    (exp-sub def vals)
+				  (exp-static def vals)))
 
          exp-main
 		   #'((def vals)
@@ -225,62 +237,62 @@
 
 (define-test "argument expansion can handle nested lists"
   ((equal (argument-expand 'test '(a (b c) d) '(23 (2 3) 42) t)
-	    '((a . 23) (b . 2) (c . 3) (d . 42))))
+	      '((a . 23) (b . 2) (c . 3) (d . 42))))
   t)
 
 (define-test "argument expansion can handle nested lists without apply-values"
   ((equal (argument-expand 'test '(a (b c) d) nil nil)
-	    '(a b c d)))
+	      '(a b c d)))
   t)
 
 (define-test "argument expansion can handle &REST keyword"
   ((equal (argument-expand 'test '(a b &rest c) '(23 5 42 65) t)
-	  '((a . 23) (b . 5) (c &rest 42 65))))
+		  '((a . 23) (b . 5) (c &rest 42 65))))
   t)
 
 (define-test "argument expansion can handle &REST keyword without apply-values"
   ((equal (argument-expand 'test '(a b c &rest d) nil nil)
-	    '(a b c d)))
+		  '(a b c d)))
   t)
 
 (define-test "argument expansion can handle missing &REST"
   ((equal (argument-expand 'test '(a b &rest c) '(23 5) t)
-	  '((a . 23) (b . 5) (c &rest))))
+		  '((a . 23) (b . 5) (c &rest))))
   t)
 
 (define-test "argument expansion can handle missing &REST without apply-values"
   ((equal (argument-expand 'test '(a b &rest c) '(23 5) nil)
-	  '(a b c)))
+		  '(a b c)))
   t)
 
 (define-test "argument expansion can handle &OPTIONAL keyword"
   ((equal (argument-expand 'test '(a b &optional c d) '(23 2 3 42) t)
-	  '((a . 23) (b . 2) (c . 3) (d . 42))))
+		  '((a . 23) (b . 2) (c . 3) (d . 42))))
   t)
 
 (define-test "argument expansion can handle &OPTIONAL keyword without apply-values"
   ((equal (argument-expand 'test '(a b &optional c d) nil nil)
-	    '(a b c d)))
+		  '(a b c d)))
   t)
 
 (define-test "argument expansion can handle &OPTIONAL keyword with init forms"
   ((equal (argument-expand 'test '(a b &optional (c 3) (d 42)) '(23 2) t)
-	  '((a . 23) (b . 2) (c . 3) (d . 42))))
+		  '((a . 23) (b . 2) (c . 3) (d . 42))))
   t)
 
 (define-test "argument expansion can handle &OPTIONAL keyword with init forms without apply-values"
   ((equal (argument-expand 'test '(a b &optional (c 3) (d 42)) nil nil)
-	    '(a b c d)))
+		  '(a b c d)))
   t)
 
 (define-test "argument expansion can handle &KEY keyword"
   ((equal (argument-expand 'test '(a b &key c d) '(23 2 :c 3 :d 42) t)
-	  '((a . 23) (b . 2) (c . 3) (d . 42))))
+		  '((a . 23) (b . 2) (c . 3) (d . 42))))
   t)
 
 (define-test "argument expansion can handle &KEY keyword without apply-values"
   ((equal (argument-expand 'test '(a b &key c d) nil nil)
-	    '(a b c d)))
+		  '(a b c d)))
   t)
 
 ;(define-test "argument expansion can handle &KEY keyword with init forms"
