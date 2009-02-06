@@ -176,6 +176,9 @@
   ((= #\A #\A))
   t)
 
+(define-test "if 0 is a boolean 'true'"
+  ((if 0 t))
+  t)
 
 ; + - * / MOD
 ; LOGXOR
