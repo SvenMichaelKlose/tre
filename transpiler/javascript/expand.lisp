@@ -27,7 +27,7 @@
 ;;
 ;; Assign function to global variable.
 ;; XXX This could be generic if there wasn't *JS-TRANSPILER*.
-(define-js-std-macro defun (name args &rest body)
+(defun js-essential-defun (name args &rest body)
   (print `(defun ,name))
   (with (n (%defun-name name)
 		 tr *js-transpiler*)
@@ -42,6 +42,18 @@
 		    	              (stringp body.))
 				         .body
 				         body))))))
+
+(define-js-std-macro define-native-js-fun (name args &rest body)
+  (apply #'js-essential-defun name args body))
+
+(define-js-std-macro defun (name args &rest body)
+  (with-gensym g
+	(let n (%defun-name name)
+      `(progn
+		 (%var ,g)
+	     (%setq ,g (%lookup-symbol ,(symbol-name n) nil))
+	     ,(apply #'js-essential-defun name args body)
+		 (setf (symbol-function ,g) ,n)))))
 
 (define-js-std-macro defmacro (name &rest x)
   (print `(defmacro ,name ))
@@ -61,7 +73,7 @@
 	   (%setq ,name ,val))))
 
 (define-js-std-macro make-string (&optional len)
-  `"")
+  "")
 
 (define-js-std-macro funcall (fun &rest x)
   `(,fun ,@x))

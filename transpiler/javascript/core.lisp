@@ -18,14 +18,14 @@
 ;; All symbols are stored in this array for reuse.
 (defvar *symbols* (make-array))
 
-(defun not (x)
-  no-args
+(define-native-js-fun not (x)
+  no-args ; Tells transpiler not to store argument definitions.
   (if x
 	  nil
 	  t))
 
 ;; Cell object constructor.
-(defun %cons (a d)
+(define-native-js-fun %cons (a d)
   no-args
   (setf this.__class "cons"
         this._ a
@@ -35,14 +35,14 @@
 ;; Cell constructor
 ;;
 ;; Wraps the 'new'-operator.
-(defun cons (x y)
+(define-native-js-fun cons (x y)
   no-args
   (new %cons x y))
 
 ;; Symbol constructor
 ;;
 ;; It has a function field but that isn't used yet.
-(defun %symbol (name pkg)
+(define-native-js-fun %symbol (name pkg)
   no-args
   (setf this.__class "symbol"
 		this.n name	; name
@@ -55,7 +55,7 @@
 ;;
 ;; Wraps the 'new'-operator.
 ;; XXX rename to %QUOTE ?
-(defun %lookup-symbol (name pkg)
+(define-native-js-fun %lookup-symbol (name pkg)
   no-args
   ; Make package if missing.
   (or (aref *symbols* pkg)
@@ -64,9 +64,13 @@
   (or (aref (aref *symbols* pkg) name)
 	  (setf (aref (aref *symbols* pkg) name) (new %symbol name pkg))))
 
-(defun symbol (name pkg)
+(define-native-js-fun symbol (name pkg)
   no-args
   (%lookup-symbol name pkg))
+
+(define-native-js-fun %%usetf-symbol-function (v x)
+  no-args
+  (setq x.f v))
 ))
 
 ;;;; Second part of the core functions
