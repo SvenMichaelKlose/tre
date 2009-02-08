@@ -21,10 +21,13 @@
 
 FILE* tre_fileio_handles[TRE_FILEIO_MAX_FILES];
 
-/*
- * (> x y) - builtin function
- *
- * Returns T if number x is greater than number y.
+/*tredoc
+  (cmd :name <
+	(args
+	  (arg :name path-name :type string)
+	  (arg :name access-mode :type string))
+	(descr "Opens file and creates an interpreter-stream.")
+	(returns "Internal stream handle."))
  */
 treptr
 trestream_builtin_fopen (treptr list)

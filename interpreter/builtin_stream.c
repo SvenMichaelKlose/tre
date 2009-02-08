@@ -1,6 +1,6 @@
 /*
- * nix operating system project tre interpreter
- * Copyright (c) 2006-2008 Sven Klose <pixel@copei.de>
+ * TRE interpreter
+ * Copyright (c) 2006-2009 Sven Klose <pixel@copei.de>
  *
  * Streams
  */
@@ -19,6 +19,13 @@
 
 #include <stdlib.h>
 
+/*tredoc
+  (cmd :name %PRINC
+	(arg :name obj :type (variable number string))
+	(arg :type interpreter-stream-handle)
+	(descr "Prints object through interpreter-stream.")
+	(returns-argument obj))
+ */
 treptr
 trestream_builtin_princ (treptr args)
 {
@@ -75,6 +82,12 @@ trestream_builtin_get_handle (treptr args, FILE * default_stream)
  		   default_stream;
 }
 
+/*tredoc
+  (cmd :name %FORCE-OUTPUT
+	(arg :type interpreter-stream-handle)
+	(descr "Flushes all pending output of a stream.")
+	(see-also-manpage fflush))
+ */
 treptr
 trestream_builtin_force_output (treptr args)
 {
@@ -84,6 +97,12 @@ trestream_builtin_force_output (treptr args)
     return treptr_nil;
 }
 
+/*tredoc
+  (cmd :name %FEOF
+	(arg :type interpreter-stream-handle)
+	(descr "Checks if stream reached the end of its input,")
+	(returns boolean))
+ */
 treptr
 trestream_builtin_feof (treptr args)
 {
@@ -92,6 +111,11 @@ trestream_builtin_feof (treptr args)
     return TREPTR_TRUTH(feof (str));
 }
 
+/*tredoc
+  (cmd :name %FCLOSE
+	(arg :type interpreter-stream-handle)
+	(descr "Closes interpreter-stream,"))
+ */
 treptr
 trestream_builtin_fclose (treptr args)
 {
@@ -100,6 +124,12 @@ trestream_builtin_fclose (treptr args)
     return TREPTR_TRUTH(trestream_fclose (str));
 }
 
+/*tredoc
+  (cmd :name %READ-CHAR
+	(arg :type interpreter-stream-handle)
+	(descr "Reads character from interpreter-stream,")
+	(returns character))
+ */
 treptr
 trestream_builtin_read_char (treptr args)
 {
@@ -114,6 +144,10 @@ trestream_builtin_read_char (treptr args)
 #include <unistd.h>
 #include <termios.h>
 
+/*tredoc
+  (cmd :name %TERMINAL-RAW
+	(descr "Switches current terminal to raw I/O."))
+ */
 treptr
 trestream_builtin_terminal_raw (treptr dummy)
 {
@@ -130,6 +164,10 @@ trestream_builtin_terminal_raw (treptr dummy)
 	return treptr_nil;
 }
 
+/*tredoc
+  (cmd :name %TERMINAL-NORMAL
+	(descr "Switches current terminal to buffered I/O."))
+ */
 treptr
 trestream_builtin_terminal_normal (treptr dummy)
 {

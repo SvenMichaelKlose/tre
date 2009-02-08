@@ -50,8 +50,8 @@ double treeval_op_logxor (double a, double b) { return (ulong) a ^ (ulong) b; }
 /** section numbers **/
 
 /*tredoc
-  (cmd name "NUMBER+" type "bt" essential "yes"
-	(arg name "args" occurrence "rest")
+  (cmd :name "NUMBER+" ::essential t
+	(arg :name "args" :occurrence "rest")
 	(para "Returns the sum of its arguments."))
 */
 treptr
@@ -63,8 +63,8 @@ trenumber_builtin_plus (treptr list)
 }
 
 /*tredoc
-  (cmd name "NUMBER-" type "bt" essential "yes"
-	(arg name "args" occurrence "rest")
+  (cmd :name "NUMBER-" ::essential t
+	(arg :name "args" :occurrence "rest")
 	(para
       "When called with one argument, returns -nl. When called with"
       "additional arguments, they're substracted from nl."))
@@ -83,8 +83,8 @@ trenumber_builtin_difference (treptr list)
 }
 
 /*tredoc
-  (cmd name "*" type "bt" essential "yes"
-	(arg name "args" occurrence "rest")
+  (cmd :name "*" :essential t
+	(arg :name "args" :occurrence "rest")
 	(para
       "When called without arguments, 1 is returned. Otherwise returns"
       "the product of the arguments."))
@@ -98,8 +98,8 @@ trenumber_builtin_times (treptr list)
 }
 
 /*tredoc
-  (cmd name "/" type "bt" essential "yes"
-	(arg name "args" occurrence "rest")
+  (cmd :name "/" :essential t
+	(arg :name "args" :occurrence "rest")
 	(para
       "When called with one argument, 0 is returned. Otherwise returns"
       "the first argument divided by the rest."))
@@ -127,10 +127,10 @@ trenumber_builtin_args (treptr *car, treptr *cdr, treptr list)
 }
 
 /*tredoc
-  (cmd name "MOD" essential "yes"
+  (cmd :name "MOD" :essential t
 	(args
-	  (arg name "x")
-	  (arg name "y"))
+	  (arg :name "x")
+	  (arg :name "y"))
 	  (para "Returns the remainder of x divided by y."))
  */
 treptr
@@ -145,8 +145,8 @@ trenumber_builtin_mod (treptr list)
 }
 
 /*tredoc
-  (cmd name "LOGXOR" type "bt"
-	(arg name "args" occurrence "rest")
+  (cmd :name "LOGXOR"
+	(arg :name "args" :occurrence "rest")
 	(para "Exclusive OR numbers."))
  */
 treptr
@@ -158,10 +158,10 @@ trenumber_builtin_logxor (treptr list)
 }
 
 /*tredoc
-  (cmd name "=" essential "yes"
+  (cmd :name "=" :essential t
 	(args
-	  (arg name "x")
-	  (arg name "y"))
+	  (arg :name "x")
+	  (arg :name "y"))
     (para "Returns T if the values of x and y match."))
  */
 treptr
@@ -176,10 +176,10 @@ trenumber_builtin_number_equal (treptr list)
 }
 
 /*tredoc
-  (cmd name "<" essential "yes"
+  (cmd :name "<" :essential t
 	(args
-	  (arg name "x")
-	  (arg name "y"))
+	  (arg :name "x")
+	  (arg :name "y"))
     (para "Returns T if number x is less than number y."))
  */
 treptr
@@ -194,10 +194,10 @@ trenumber_builtin_lessp (treptr list)
 }
 
 /*tredoc
-  (cmd name ">"
+  (cmd :name ">"
 	(args
-	  (arg name "x")
-	  (arg name "y"))
+	  (arg :name "x")
+	  (arg :name "y"))
 	(para "Returns T if number x is greater than number y."))
  */
 treptr

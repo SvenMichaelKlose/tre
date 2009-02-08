@@ -17,8 +17,11 @@
 
 #include <stdio.h>
 
-/*
- * (SYS-IMAGE-CREATE path) - builtin function
+/*tredoc
+  (cmd :name SYS-IMAGE-CREATE
+	(arg :name path :type string)
+	(arg :name init-fun :type function :occurrence optional)
+	(descr "Dumps current environment to image file."))
  */
 treptr
 treimage_builtin_create (treptr list)
@@ -45,8 +48,10 @@ treimage_builtin_create (treptr list)
     return treptr_nil;
 }
 
-/*
- * (SYS-IMAGE-LOAD path) - builtin function
+/*tredoc
+  (cmd :name SYS-IMAGE-LOAD :never-returns t
+	(arg :name path :type string)
+	(descr "Replaces current environment by image."))
  */
 treptr
 treimage_builtin_load (treptr list)

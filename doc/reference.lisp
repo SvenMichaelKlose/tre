@@ -36,51 +36,6 @@ TERMINOLOGY
 <section>
 	<title>Comparison</title>
 
-	<cmd name=">=" type="bt">
-		<args>
-			<arg name="x"/>
-			<arg name="y"/>
-		<args>
-		<para>
-	Return T if x is greater than or equal to y.
-		</para>
-	</cmd>
-
-	<cmd name="<=" type="bt">
-		<args>
-			<arg name="x"/>
-			<arg name="y"/>
-		<args>
-		<para>
-	Return T if x is less than or equal to y.
-		</para>
-	</cmd>
-
-
-	<cmd name="EQ" type="bt" essential="yes">
-		<args>
-			<arg name="x"/>
-			<arg name="y"/>
-		<args>
-		<para>
-	Return T if the two objects are identical.
-		</para>
-	</cmd>
-
-
-	<cmd name="EQL" type="bt">
-		<args>
-			<arg name="x"/>
-			<arg name="y"/>
-		<args>
-		<para>
-	Return T if the two objects are identical, or if they are numbers
-        or characters that have the same value. EQL is the default testing
-	predicate.
-		</para>
-	</cmd>
-
-
 	<cmd name="EVENP" type="f">
 		<args>
 			<arg name="x"/>
@@ -137,46 +92,12 @@ TERMINOLOGY
 <section>
 	<title>TYPES</title>
 
-    (ATOM obj) - built-in function (r)
-        Returns T if obj is not a cons.
-
-    (CHARACTERP obj) - built-in function
-	Returns T if the argument is a character.
-
-    (FUNCTIONP obj) - built-in function
-	Returns T if the argument is a function.
-
-    (NUMBERP obj) - built-in function
-	Returns T if the argument is a number.
-
-    (STRINGP obj) - built-in function
-	Returns T if the argument is a string.
-
     (ZEROP x) - function
 	Returns T if x contains the number 0.
 
 CHARACTERS
 
-    (CODE-CHAR number) - built-in function
-        Returns new character object with converted value of 'number'.
-
 SYMBOLS
-
-    (INTERN symbol-name &OPTIONAL package-name) - built-in function
-        Returns already existing or new symbol in package.
-
-    (MAKE-SYMBOL string) - built-in function
-        Returns newly created self-referencing atom. Already existing
-	atoms are reused.
-
-    (SYMBOL-FUNCTION var) - Built-in function/place
-	Get function assigned to variable.
-
-    (SYMBOL-NAME obj) - built-in function
-	Returns the symbol name of 'obj' as a string.
-
-    (SYMBOL-VALUE var) - Built-in function
-	Get value assigned to variable.
 
 	($ &REST args) - non-standard macro
 	Converts all arguments to strings, concatenates them and makes a symbol.
@@ -212,10 +133,6 @@ VARIABLES
 
     (SET symbol value) - macro
 	Give symbol an evaluated value.
-
-    (SETQ {symbol value}*) - built-in special form (r)
-	Gives each symbol a new value. The former value is lost.
-	Returns the last value set.
 
     (SETF {place value}*) - macro
 	Gives 'place' a new unevaluated value. If place is a getter
@@ -268,28 +185,9 @@ BIT OPERATIONS
 
 CONS
 
-    (CONS car cdr) - built-in function (r)
-	Returns a cons containing the first argument as the CAR
-	and the second argument as the CDR.
-
-    (CONSP obj) - built-in function (r)
-	Returns T if the argument is a cons.
-
-    (CAR cons) - built-in function (r)
-	Returns the CAR of a cons. Returns NIL if the cons is NIL.
-
-    (CDR cons) - built-in function (r)
-	Returns the CDR of a cons. Returns NIL if the cons is NIL.
-
     (FIRST | SECOND | THIRD | FOURTH | FIFTH | SIXTH | SEVENTH | EIGHTH |
      NINTH | TENTH list) - function
 	These functions return the first, up to the tenth, element of a list.
-
-    (RPLACA cons value) - built-in function (r)
-	Set adress register of 'cons' to new value. Return 'cons'.
-
-    (RPLACD cons value) - built-in function (r)
-	Set decrement register of 'cons' to new value. Returns 'cons'.
 
     (RPLAC-CONS cons cons-new) - non-standard function
 	Replaces the values of cons by the values of cons-new.
@@ -298,9 +196,6 @@ LISTS
 
     (APPEND &REST lists) - function
 	Returns 'lists' concatenated. All lists are copied.
-
-    (BUTLAST list) - built-in function
-	Returns last without last element.
 
     (CAAR list) - function
 	Like (CAR (CAR list)).
@@ -325,9 +220,6 @@ LISTS
 
     (LAST list) - function
 	Returns last cons of a list.
-
-    (LIST element*) - built-in function
-	Returns a new list containing the arguments.
 
     (LISTP x) - function
 	Returns T if x is a cons or NIL.
@@ -389,11 +281,6 @@ LIST TRAVERSAL
 
 FUNCTIONS
 
-    (APPLY func &REST args) - built-in function (r)
-	Apply arguments args to function func. The last element of args
-        must be a list which is appended to the former args. The last
-	argument is ignored if NIL.
-
     (DEFUN name args documentation-string body) - macro
 	Defines a global function. The body is placed in a BLOCK named
 	NIL and a TAGBODY.
@@ -406,16 +293,7 @@ FUNCTIONS
     (DOCUMENTATION funcname) - function
 	Returns documentation string of function.
 
-    (FUNCTION (LAMBDA argument-list body)) - built-in special form (r)
-    (FUNCTION argument-list body)
-    (FUNCTION symbol)
 	Create new function or return function bound to variable.
-
-    (MACRO argument-list body) - built-in special form
-	Same as LAMBDA but returns a macro.
-
-    (SPECIAL argument-list body) - built-in special form
-	Returns a function whose arguments are not evaluated when called.
 
 MACROS
 
@@ -431,19 +309,6 @@ MACROS
     (GENSYM) - function
 	Returns new generic symbol.
 
-    (MACRO argument-list body) - built-in special form
-	Returns unnamed macro-expansion for use before evaluation.
-        Calls to macro-expansions are replaced by their return value
-	when executed the first time.
-
-    (MACROEXPAND-1 form) - built-in function
-	Expand macro calls in form. Does not expand nested macros.
-	The TRE function assigned to *MACROEXPAND-HOOK* is used for
-	expansion. If *MACROEXPAND-HOOK* is NIL, nothing is done.
-
-    (MACROEXPAND form) - built-in function
-	Expand all macro calls in form.
-
     (MACROLET ((function_name argument_list body)*) exprs) - not implemented
 	Like LET* for LABELS.
 
@@ -456,17 +321,8 @@ EVALUATION
 	Evalates QUASIQUOTE and QUASIQOTE-SPLICE in expression and
 	returns it. The short form is "`expression".
 
-    (EVAL expression) - built-in function
-	Evaluates expression and returns its result.
-
     (FUNCALL function &REST args) - function
         Calls function with arguments.
-
-    (IDENTITY object) - built-in function
-	Returns object.
-
-    (LOAD path) - built-in function
-	Loads file at 'path' and evaluates it.
 
     (QUASIQUOTE expression) - keyword
 	Evaluate expression within a BACKQUOTE and insert it into the point
@@ -476,9 +332,6 @@ EVALUATION
 	Evaluate expression within a BACKQUOTE. The return value of the
 	expression must be a list which is spliced into the point of return.
         The short form is ",@expression".
-
-    (QUOTE expression) - built-in special form
-	Returns expression unevaluated. The short form is "'expression".
 
 COMPILATION
 
@@ -494,9 +347,6 @@ CONTROL FLOW
     (AIF test-expression true-body [false-body]) - non-standard macro
 	Like IF but assigning the value of 'test' to variable '!'.
 
-    (AND expression*) - built-in special form
-	Evaluate expressions until a NIL value is returned.
-
     (ANIF name test-expression true-body [false-body]) - non-standard macro
 	Like IF but assigning the value of 'test' to variable 'name'.
 
@@ -506,48 +356,12 @@ CONTROL FLOW
     (AWHEN test expressions*) - non-standard macro
 	Like WHEN but assigning the value of 'test' to variable '!'.
 
-    (BLOCK symbol expression*) - built-in special form
-	Evaluates expression by expression and returns the last.
-	On evaluation of RETURN-FROM inside the body, evaluation of the
-        block is terminated.
-
     (CASE value (match expression?)*) - macro
         Evaluates first expression whose 'match' is EQUAL to 'value'.
 		Expression is optional,
 
-    (COND (test expression)*) - built-in special form (r)
-	Evaluates test-expression pairs in order. If a test returns non-NIL,
-        the expression is evaluated and returned. If no test matches NIL is
-	returned.
-
-    (GO tag) - built-in special form
-	Inside a TAGBODY, continue evaluation at tag.
-
-    (IF test-expression true-body [false-body]) - built-in special form
-	If test-expression returns T, true-body is evaluated, false-body
-	is evaluated otherwise. The result of the evaluated body is returned.
-	If false-body is not given, NIL is returned.
-
-    (OR expression*) - built-in special form
-	Evaluate expressions until a non-NIL value is returned.
-
     (PROG1 expression*) - macro
 	Evaluates expressions and returns the value of the first.
-
-    (PROGN expression*) - built-in special form
-	Evaluates expressions and returns the value of the last.
-
-    (QUIT) - built-in function
-	Terminates the application.
-
-    (RETURN-FROM tag expression) - built-in special form
-	Exit BLOCK named tag and return the evaluated expression.
-
-    (TAGBODY {tag | expression} *) - built-in special form
-	Evaluates expression by expression and returns NIL. Tags are
-	ignored.
-	On evaluation of GO inside the body, evaluation is continued
-	after the tag specified.
 
     (UNLESS test expression*) - macro
 	Same as (WHEN (NOT test) expression*).
@@ -560,9 +374,6 @@ CONTROL FLOW
 	Loops over body unless test evaluates to NIL and returns result.
 
 ERRORS
-
-    (%ERROR string) - built-in function
-	Print string and enter debugging mode.
 
     (ERROR format &rest format-args) - function
 	Print format string and enter debugging mode.
@@ -666,36 +477,16 @@ STRINGS
     (LIST-STRING string) - non-standard function
 	Makes string from list of numbers. If string is NIL, NIL is returned.
     
-    (MAKE-STRING n) - built-in function
-	Makes new string consisting of n elements.
-
-    (STRING-CONCAT string*) - built-in function
-	Concatenates arguments to new string.
-
     (STRING-DOWNCASE string) - function
 	Return new string with lower case characters.
 
     (STRING-UPCASE string) - function
 	Return new string with upper case characters.
 
-    (STRING obj) - built-in function
-	Returns obj converted to a string. Non-character numbers are printed
-	in decimal notation. Characters are converted to one-character-strings.
-    For all other data types the symbol name is used.
-
     (STRING= str1 str2) - function
 	Returns T if strings match.
 
 ARRAYS
-
-    (MAKE-ARRAY size*) - built-in function
-	Returns newly created array of one ore more dimensions.
-	The number and size of dimensions is limited by construction.
-	Indices may not be negative.
-
-    (AREF array index*) - built-in function/place
-	Return element of array. The number of indices must match the
-	number of dimensions of the array.
 
 HASH TABLES
 
@@ -739,10 +530,6 @@ SEQUENCES
     (SOME predicate &REST sequences) - function
 	Returns T if 'predicate' returns T for any element of 'sequences'.
 
-    (ELT sequence index) - built-in function/place
-	Returns zero-indexed element from sequence. The sequence may be NIL
-	(returning NIL), a list, an array or a string.
-
     (EVERY predicate &REST sequences) - function
 	Returns T if 'predicate' returns T for all elements of 'sequences'.
 
@@ -766,9 +553,6 @@ SEQUENCES
 	(IN=? element &rest list) - function
 	Checks if element is = to any list element. Will be obsoleted if TEST
 	keyword can follow &REST.
-
-    (LENGTH sequence) - built-in function
-	Returns number of elements in sequence.
 
     (POSITION value sequence &KEY start end from-end test test-not) - function
 	Like FIND, but returning the position of the element found
@@ -857,29 +641,12 @@ STREAMS
  
 PRINTING
 
-    (PRINT obj)	- built-in function
-	Print object in TRE notation. Returns the printed object.
-
 	(FORMAT stream format &rest format-args) - function
 	Prints format to stream. Inside the format string "~A"s are replaced
 	by format-argument elements in the same order. "~%" is replaced by
 	newlines.
 	When stream is t, FORMAT prints to *standard-output*. If it is NIL,
 	a string is returned.
-
-DEBUGGING
-
-    (INVOKE-DEBUGGER) - built-in function
-	Launches the debugger.
-
-    (SET-BREAKPOINT variable) - built-in special operator
-	Set breakpoint for function in variable.
-
-    (REMOVE-BREAKPOINT variable) - built-in special operator
-	Remove breakpoint for function in variable.
-
-    (END-DEBUG) - non-standard built-in function
-        Return to global environment.
 
 ARGUMENTS
 
@@ -890,18 +657,6 @@ ARGUMENTS
 
 EXECUTABLES AND IMAGES
 
-    (SYS-IMAGE-CREATE filepath &OPTIONAL init-fun) - built-in function
-        Creates or replaces machine snapshot at 'filepath'.
-        The snapshot can is executable if the interpreter is in the
-        search path.
-        'init-fun' is an optional function that is evaluated after
-        the image is loaded.
-
-    (SYS-IMAGE-LOAD filepath) - built-in function
-        Replaces the running environment by an image.  If an initialisation
-        function was specified at the time the image was dumped, it is
-        evaluated.
- 
 PROCESSES
 
 	(EXEC path (&REST args) &OPTIONAL (environment nil)) - function
@@ -922,31 +677,7 @@ ALIEN INTERFACE
     The alien interface allows to link shared libraries and to call C
     functions.
 
-    (ALIEN-DLOPEN path) - built-in function
-	Expects a path to an object file.
-	The object file is dynamically linked to the environment.
- 	Returns a numeric handle.
-
-    (ALIEN-DLCLOSE handle) - built-in function
-	Unlinks an object file from the environment.
-
-    (ALIEN-DLSYM handle symbol_string) - built-in function
-	Returns the numeric address of a symbol in the linked object
-	file specified by 'handle'.
-
-    (ALIEN-CALL ptr) - built-in function
-	Calls a C function at 'ptr' (an integer probably returned by ALIEN-DLSYM.
-	Returns the return value of the function as an integer.
-
-    (ALIEN-CALL-1 ptr long) - built-in function
-	Calls a C function at 'ptr' with argument of C type 'long'.
-	Returns the return value of the function as an integer.
-
 MISCELLANEOUS
-
-    (GC) - built-in function
-	Triggers garbage collection. Prints statistics if compile-time
-	option TRE_VERBOSE_GC is set. Returns NIL.
 
 INTERNAL FUNCTIONS
 
@@ -956,48 +687,6 @@ INTERNAL FUNCTIONS
     %SET-ELT
     %SET-AREF
 	SETF setters for built-in functions.
-
-    (%MACROCALL macro arguments) - Built-in function
-	Call macro. 'arguments' is supposed to be a list.
-
-    (%SET-ATOM-FUN var fun) - Built-in special form
-	Assign new function to a variable's function slot.
-
-    (%FOPEN file mode) - Built-in function
-	Opens a file using fopen() (see Standard-C library documentation
- 	for details). Returns a numeric handle.
-
-    (%PRINC handle char) - Built-in function
-	Print character in internal file stream opened with %FOPEN.
-	'char' is required to be a number.
-
-    (%FORCE-OUTPUT) - Built-in function
-	Flush output buffers on all streams.
-
-    (%READ-CHAR handle) - Built-in function
-	Read character from internal file stream. Returns a number.
-
-    (%FEOF handle) - Built-in function
-	Test end-of-file on internal stream.
-
-    (%ATOM-LIST) - Built-in function
-	Returns list of all atoms defined.
-
-	(%%SET address char) - Built-in finction
-	Writes a byte to memory.
-
-	(%%GET address) - Built-in finction
-	Reads a byte from memory.
-
-	(%MALLOC bytes) - Built-in finction
-	Allocated 'bytes' bytes and returns an integer pointer.
-
-	(%FREE ptr) - built-in function
-	Frees MALLOCd memory.
-
-	(%TYPE-ID obj) - built-in function
-	Return internal type-ID of object. See interpreter/type.h for
-	returned values.
 
 ### VIRTUAL FUNCTIONS #######################################################
 

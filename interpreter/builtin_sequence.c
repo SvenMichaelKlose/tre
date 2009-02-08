@@ -58,10 +58,13 @@ tresequence_get_type (treptr seq)
     return seqtype;
 }
 
-/*
- * (ELT index sequence)
- *
- * Return element of sequence (zero-indexed).
+/*tredoc
+  (cmd :name %%USEFT-ELT
+	(arg :name value)
+	(arg :name index :type unsigned-integer)
+	(arg :type sequence)
+	(descr "Set element at index of sequence to new value.")
+	(returns-argument value))
  */
 treptr
 tresequence_builtin_set_elt (treptr args)
@@ -85,10 +88,12 @@ tresequence_builtin_set_elt (treptr args)
     return val;
 }
 
-/*
- * (ELT index sequence)
- *
- * Return element of sequence (zero-indexed).
+/*tredoc
+  (cmd :name -ELT
+	(arg :name value)
+	(arg :name index :type unsigned-integer)
+	(arg :type sequence)
+	(returns "Element at index of sequence."))
  */
 treptr
 tresequence_builtin_elt (treptr args)
@@ -110,10 +115,11 @@ tresequence_builtin_elt (treptr args)
     return (*t->get) (seq, (ulong) TRENUMBER_VAL(idx));
 }
 
-/*
- * (LENGTH sequence)
- *
- * Return number of elements in sequence.
+/*tredoc
+  (cmd :name LENGTH
+	(arg :type sequence)
+	(returns :type unsigned-integer
+			 "Return number of elements in sequence."))
  */
 treptr
 tresequence_builtin_length (treptr args)

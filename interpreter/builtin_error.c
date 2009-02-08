@@ -15,10 +15,9 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-/*
- * (ERROR string)
- *
- * Terminate current read-eval loop and issue an error.
+/*tredoc
+ (cmd :name %ERROR
+   (descr "Terminate current read-eval loop and issue an error."))
  */
 treptr
 treerror_builtin_error (treptr args)

@@ -84,9 +84,10 @@
 
 ;; XXX Can't we do this in one macro?
 (define-js-std-macro bind (fun &rest args)
-  (unless (%slot-value? fun)
-    (error "function must be a SLOT-VALUE, got ~A" fun))
-  `(%bind ,(second fun) ,fun))
+  `(%bind ,(if (%slot-value? fun)
+ 			 (second fun)
+    		 (error "function must be a SLOT-VALUE, got ~A" fun))
+		  ,fun))
 
 ;; X-browser MAKE-HASH-TABLE.
 (defun js-transpiler-make-new-hash (x)

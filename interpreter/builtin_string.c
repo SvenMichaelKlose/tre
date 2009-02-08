@@ -22,10 +22,11 @@
 #include <string.h>
 #include <strings.h>
 
-/*
- * (STRINGP obj)
- *
- * Returns T if the argument is a string. NIL otherwise. 
+/*tredoc
+  (cmd :name STRINGP
+	(arg)
+	(descr "Checks if argument is a string.")
+	(returns boolean))
  */
 treptr
 trestring_builtin_stringp (treptr list)
@@ -35,10 +36,11 @@ trestring_builtin_stringp (treptr list)
     return TREPTR_TRUTH(TREPTR_IS_STRING(arg));
 }
 
-/*
- * (MAKE-STRING n)
- *
- * Makes new string consisting of n elements.
+/*tredoc
+  (cmd :name MAKE-STRING
+	(arg :type integer)
+	(descr "Makes new string consisting of n characters.")
+	(returns string))
  */
 treptr
 trestring_builtin_make (treptr list)
@@ -53,8 +55,11 @@ trestring_builtin_make (treptr list)
     return atom;
 }
 
-/*
- * (LIST-STRING string*)
+/*tredoc
+  (cmd :name LIST-STRING
+	(args :type string)
+	(descr "Converts string to list of characters.")
+	(returns character-list))
  */
 treptr
 trestring_builtin_list_string (treptr list)
@@ -99,10 +104,11 @@ trestring_builtin_list_string (treptr list)
 }
 
 
-/*
- * (STRING-CONCAT string*)
- *
- * Concatenates string arguments in order as a new string.
+/*tredoc
+  (cmd :name STRING-CONCAT
+	(args :type string)
+	(descr "Concatenates strings.")
+	(returns string))
  */
 treptr
 trestring_builtin_concat (treptr list)
@@ -146,11 +152,11 @@ trestring_builtin_concat (treptr list)
     return atom;
 }
 
-/*
- * (STRING obj)
- *
- * Returns a copy of 'obj' of type string. If 'obj' is already a string,
- * returns the original.
+/*tredoc
+  (cmd :name STRING
+	(arg :type (number symbol string))
+	(descr "Argument converted to string.
+		   "If argument is already a string returns the original."))
  */
 treptr
 trestring_builtin_string (treptr list)
@@ -182,10 +188,11 @@ trestring_builtin_string (treptr list)
 	return treptr_invalid;
 }
 
-/*
- * (SYMBOL-NAME obj)
- *
- * Returns the symbol name of obj as a string.
+/*tredoc
+  (cmd :name SYMBOL-NAME
+	(arg :type symbol)
+ 	(descr "Gets the name of a symbol.")
+	(returns :type string))
  */
 treptr
 trestring_builtin_symbol_name (treptr list)

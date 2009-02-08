@@ -75,10 +75,12 @@ error:
                            "(waiting for new argument list)");
 }
 
-/*
- * (APPLY function args... )
- *
- * Call function with argument list.
+/*tredoc
+  (cmd :name APPLY
+	(arg :type function)
+	(args :type any)
+	(descr "Call function with argument list.")
+	(returns "Whatever the called function returns."))
  */
 treptr
 trespecial_apply (treptr list)
@@ -143,10 +145,13 @@ treeval_is_jump (treptr p)
     return treeval_is_return (p) || treeval_is_go (p);
 }
 
-/*
- * (SETQ {symbol value}*)
- *
- * Assign quoted value to variable.
+/*tredoc
+  (cmd :name SETQ
+	(args :occurrence *
+	  (arg :type symbol)
+	  (arg :name value))
+	(descr "Assign quoted value to variable.")
+	(returns "The last value assigned."))
  */
 treptr
 trespecial_setq (treptr list)
@@ -187,10 +192,12 @@ trespecial_setq (treptr list)
     return cdr;
 }
 
-/*
- * (MACRO symbol-list body)
- *
- * Return user defined special form.
+/*tredoc
+  (cmd :name MACRO
+	(arg :type argument-definition)
+	(arg :type expression-list)
+	(descr "Create a macro.")
+	(returns macro))
  */
 treptr
 trespecial_macro (treptr list)
@@ -206,10 +213,12 @@ trespecial_macro (treptr list)
     return f;
 }
 
-/*
- * (MACRO symbol-list body)
- *
- * Return user defined special form.
+/*tredoc
+  (cmd :name SPECIAL
+	(arg :type argument-definition)
+	(arg :type expression-list)
+	(descr "Create a special function whose arguments are not evaluated.")
+	(returns special))
  */
 treptr
 trespecial_special (treptr list)
@@ -225,7 +234,7 @@ trespecial_special (treptr list)
     return ret;
 }
 
-/*
+/*XXX deprecated
  *  (COND (test expression-list)*)
  *
  *  Evaluates test-expression pairs in order. If a test returns non-NIL,

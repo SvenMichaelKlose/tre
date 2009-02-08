@@ -17,11 +17,10 @@
 #include <ctype.h>
 
 /*tredoc
-  (cmd name "NUMBERP" type "bt"
-    (args
-      (arg name "obj"))
-    (description
- 	  "Returns T if the argument is a number. NIL otherwise."))
+  (cmd :name NUMBERP
+    (arg :type obj)
+    (descr "Checks if argument is a number.")
+	(returns boolean))
  */
 treptr
 trenumber_builtin_numberp (treptr list)
@@ -56,11 +55,10 @@ trenumber_arg_get2 (treptr * first, treptr * second, treptr args)
 }
 
 /*tredoc
-  (cmd name "CHARACTERP" type "bt"
-    (args
-      (arg name "obj"))
-    (description
- 	  "Returns the character corresponding to code 'integer'."))
+  (cmd :name CHARACTERP
+    (arg :type obj)
+    (descr "Checks if argument is a character.")
+	(returns boolean))
  */
 treptr
 trenumber_builtin_characterp (treptr args)
@@ -71,11 +69,10 @@ trenumber_builtin_characterp (treptr args)
 }
 
 /*tredoc
-  (cmd name "CODE-CHAR" type "bt"
-    (args
-      (arg name "num" type "integer"))
-    (description
-	  "Returns the character corresponding to code 'integer'."))
+  (cmd :name CODE-CHAR
+    (arg :type integer)
+    (descr "Converts integer number to character.")
+	(returns character))
  */
 treptr
 trenumber_builtin_code_char (treptr args)
@@ -88,12 +85,11 @@ trenumber_builtin_code_char (treptr args)
 }
 
 /*tredoc
-  (cmd name "INTEGER" type "bt"
-    (args
-      (arg name "number"))
-    (description
-	  "Returns 'number' converted to integer or the original 'number'."
-      "This is the same as CHAR for integers."))
+  (cmd :name INTEGER
+    (arg :type number)
+    (descr "Converts any number to integer. "
+		   "Always returns a new number.")
+	(returns integer))
  */
 treptr
 trenumber_builtin_integer (treptr args)
@@ -105,33 +101,27 @@ trenumber_builtin_integer (treptr args)
 }
 
 /*tredoc
-  (cmd name "BIT-OR" type "bt"
-    (args
-      (arg name "number")
-      (arg name "number"))
-    (description
-	  "Returns integers ORed bit-wise."))
+  (cmd :name BIT-OR
+    (arg :type number)
+    (arg :type number)
+    (descr "OR bit-wise."))
 
-  (cmd name "BIT-AND" type "bt"
-    (args
-      (arg name "number")
-      (arg name "number"))
-    (description
-	  "Returns integers ANDed bit-wise."))
+  (cmd :name BIT-AND
+    (arg :name "number")
+    (arg :name "number")
+    (descr "AND bit-wise."))
 
-  (cmd name "<<" type "bt"
-    (args
-      (arg name "number")
-      (arg name "num-bits")
-    (description
-	  "Shifts number left one or more bits."))
+  (cmd :name <<
+    (arg :type number)
+    (arg :name "num-bits" :type integer)
+    (descr "Shifts number left one or more bits.")
+	(returns integer))
 
-  (cmd name ">>" type "bt"
-    (args
-      (arg name "number")
-      (arg name "num-bits")
-    (description
-	  "Shifts number right one or more bits."))
+  (cmd :name >>
+    (arg :type number)
+    (arg :name "num-bits")
+    (descr "Shifts number right one or more bits.")
+	(returns integer))
  */
 void
 trenumber_arg_bit_op (ulong * ix, ulong * iy, treptr args)
