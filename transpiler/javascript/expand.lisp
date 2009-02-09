@@ -14,7 +14,6 @@
 ;; (FUNCTION symbol | lambda-expression)
 ;; Add symbol to list of wanted functions or obfuscate arguments of
 ;; LAMBDA-expression.
-;; XXX Wouldn't this obfuscate the arguments over and over again?
 (define-js-std-macro function (x)
   (unless x
     (error "FUNCTION expects a symbol or form"))

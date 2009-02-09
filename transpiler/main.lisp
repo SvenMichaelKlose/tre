@@ -14,6 +14,7 @@
 (env-load "../transpiler/javascript/expand.lisp")
 (env-load "../transpiler/javascript/codegen.lisp")
 (env-load "../transpiler/javascript/core.lisp")
+(env-load "../transpiler/javascript/tests.lisp")
 (env-load "../transpiler/javascript/toplevel.lisp")
 ;(env-load "../transpiler/c/config.lisp")
 ;(env-load "../transpiler/c/expand.lisp")
