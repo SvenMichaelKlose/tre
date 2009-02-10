@@ -26,6 +26,7 @@
 
 (defun list-string (lst)
   "Convert list of characters to string."
+  (declare type cons lst)
   (when lst
     (let* ((n (length lst))
            (s (make-string 0)))

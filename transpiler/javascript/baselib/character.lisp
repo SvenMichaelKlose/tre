@@ -4,6 +4,9 @@
 (defvar *characters* (make-array))
 
 (defun %character (x)
+  (declare type number x)
+  (assert (not (characterp x))
+		  (error "%CHARACTER: argument already a character"))
   (or (aref *characters* x)
   	  (setf this.__class "%character"
   		    this.v x
@@ -15,9 +18,15 @@
 	   (%%%= x.__class "%character")))
 
 (defun code-char (x)
+  (declare type number x)
   (if (characterp x)
 	  x
 	  (new %character x)))
 
-(defun char-code (x) x.v)
-(defun char-string (x) (*string.from-char-code (char-code x)))
+(defun char-code (x)
+  (declare type number x)
+  x.v)
+
+(defun char-string (x)
+  (declare type character x)
+  (*string.from-char-code (char-code x)))

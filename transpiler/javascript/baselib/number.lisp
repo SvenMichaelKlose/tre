@@ -48,8 +48,7 @@
 	  (characterp x)))
 
 (defun integer (x)
-  (assert (numberp x)
-    (error "number expected"))
+  (declare type number x)
   (if (characterp x)
       (char-code x)
       x))

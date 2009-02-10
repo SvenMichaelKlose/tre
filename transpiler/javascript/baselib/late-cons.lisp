@@ -12,10 +12,12 @@
 (defun cdr (x) (when x x.__))
 
 (defun rplaca (x val)
+  (declare type cons x)
   (setf x._ val)
   x)
 
 (defun rplacd (x val)
+  (declare type cons x)
   (setf x.__ val)
   x)
 

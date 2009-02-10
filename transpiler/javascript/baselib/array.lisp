@@ -4,11 +4,13 @@
 (defun arrayp (x) (instanceof x *array))
 
 (defun list-array (x)
+  (declare type cons x)
   (let a (make-array)
     (dolist (i x a)
       (a.push i))))
 
 (defun array-list (x &optional (n 0))
+  (declare type array x)
   (when (< n x.length)
     (cons (aref x n)
 		  (array-list x (1+ n)))))
