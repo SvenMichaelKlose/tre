@@ -26,6 +26,5 @@
 
 (defun transpiler-sighten-files (tr files)
   (mapcan (fn (format t "(LOAD \"~A\")~%" _)
-      		  (with-open-file f (open _ :direction 'input)
-        	    (transpiler-sighten tr (read-many f))))
+        	  (transpiler-sighten tr (read-file-all _)))
 		  files))
