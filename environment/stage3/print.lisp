@@ -1,5 +1,5 @@
 ;;;;; TRE environment
-;;;;; Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Simple printing
 
@@ -68,13 +68,19 @@
 		(princ c str)))
   (princ #\" str))
 
+(defun %print-symbol (x str)
+  (when (keywordp x)
+	(princ #\: str))
+  (princ (symbol-name x) str))
+
 (defun %print-atom (x str)
   (if
 	(numberp x) (princ x str)
 	(stringp x) (%print-string x str)
-	(princ (symbol-name x) str)))
+	(%print-symbol x str)))
 
 (defun late-print (x &optional (str *standard-output*))
-  (if (consp x)
-	  (%print-cons x str)
-	  (%print-atom x str)))
+  (with-default-stream s str
+    (if (consp x)
+	    (%print-cons x str)
+	    (%print-atom x str))))
