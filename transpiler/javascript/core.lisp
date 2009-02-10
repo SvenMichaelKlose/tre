@@ -7,7 +7,7 @@
 (defun js-load-base (&rest files)
   (mapcan (fn (let f (+ "transpiler/javascript/baselib/" _)
 				(format t  "(js-load-base \"~A\")~%" f)
-  				(read-file-many f)))
+  				(read-file-all f)))
 		  files))
 
 ;;;; First part of the core functions
