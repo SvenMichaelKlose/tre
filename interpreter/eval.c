@@ -1,6 +1,6 @@
 /*
- * nix operating system project tre interpreter
- * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+ * TRE interpreter
+ * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
  *
  * Evaluation related section.
  *
@@ -31,6 +31,7 @@
 
 treptr treopt_verbose_eval;
 treptr treeval_slot_value;
+treptr treeval_function_symbol;
 
 /*
  * Execute user-defined function.
@@ -94,6 +95,45 @@ treeval_funcall (treptr func, treptr expr, bool do_argeval)
 
     return ret;
 }
+
+treptr
+treeval_function (treptr expr)
+{
+    treptr  args;		/* Arguments; second to last expression element. */
+    treptr  funcdef;	/* Function definition tree. */
+    treptr  expforms;	/* Expanded argument forms. */
+    treptr  expvals;    /* Expanded argument values. */
+    treptr  ret;		/* Function return value. */
+    treptr  forms;		/* Unexpanded argument definition. */
+    treptr  body;		/* Function body. */
+
+    args = CDR(expr);
+    funcdef = CADAR(expr);
+    forms = CAR(funcdef);
+    body = CDR(funcdef);
+
+    /* Expand argument keywords. */
+    trearg_expand (&expforms, &expvals, forms, args, TRUE);
+    tregc_push (CONS(expforms, expvals));
+
+    /* Bind arguments. */
+    treenv_bind (expforms, expvals);
+
+    /* Evaluate body. */
+    ret = treeval_list (body);
+    tregc_retval (ret);
+
+	/* Restore argument symbol values. */
+    treenv_unbind (expforms);
+
+    /* Free argument list. */
+    tregc_pop ();
+    TRELIST_FREE_TOPLEVEL_EARLY(expvals);
+    TRELIST_FREE_TOPLEVEL_EARLY(expforms);
+
+    return ret;
+}
+
 
 /*
  * Execute built-in function.
@@ -159,20 +199,31 @@ treeval_expr (treptr x)
 	TREDEBUG_STEP();
 
 	/* Get function value of variable immediately. */
-    if (TREPTR_IS_VARIABLE(fun))
-         fun = TREATOM_FUN(fun);
-    else if (TREPTR_IS_CONS(fun) &&
-			 CAR(fun) == treeval_slot_value) {
-		slot_obj = CAR(CDR(fun));
-        fun = treeval (fun);
-    	tregc_push (fun);
-		x = CONS(CAR(x),
-				 CONS(slot_obj,
-					  trelist_copy (CDR(x))));
-		tregc_push (x);
-		copied_expr = TRUE;
-	} else
-        fun = treeval (fun);
+	switch (TREPTR_TYPE(fun)) {
+		case TRETYPE_VARIABLE:
+        	fun = TREATOM_FUN(fun);
+			break;
+
+		case TRETYPE_CONS:
+			if (CAR(fun) == treeval_slot_value) {
+				slot_obj = CAR(CDR(fun));
+       			fun = treeval (fun);
+   				tregc_push (fun);
+				x = CONS(CAR(x),
+			 			CONS(slot_obj,
+				  			trelist_copy (CDR(x))));
+				tregc_push (x);
+				copied_expr = TRUE;
+				break;
+			} else if (CAR(fun) == treeval_function_symbol
+						&& TREPTR_IS_CONS(CDR(fun))
+						&& TREPTR_IS_CONS(CADR(fun))
+						&& CDDR(fun) == treptr_nil)
+				return treeval_function (x);
+
+		default:
+        	fun = treeval (fun);
+	}
 
     tregc_push (fun);
 
@@ -322,6 +373,8 @@ treeval_init ()
 {
     treeval_slot_value = treatom_get ("%SLOT-VALUE", TRECONTEXT_PACKAGE());
 	EXPAND_UNIVERSE(treeval_slot_value);
+    treeval_function_symbol = treatom_get ("FUNCTION", TRECONTEXT_PACKAGE());
+	EXPAND_UNIVERSE(treeval_function_symbol);
 
     treopt_verbose_eval = treatom_get ("*VERBOSE-EVAL*", TRECONTEXT_PACKAGE());
     treatom_set_value (treopt_verbose_eval, treptr_nil);
