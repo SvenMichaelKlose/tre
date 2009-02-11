@@ -30,7 +30,6 @@ typedef int bool;
 #define TRE_GC_DEBUG		/* Run garbage collector everywhere. */
 #define TRE_VERBOSE_GC 		/* Print statistics after GC. Implies TRE_VERBOSE_SYMBOL_GC. */
 #define TRE_VERBOSE_SYMBOL_GC 	/* Print statistics after GC. */
-#define TRE_VERBOSE_LOAD	/* Print what files are loaded. */
 #define TRE_VERBOSE_EVAL	/* Print what is evaluated. */
 #define TRE_VERBOSE_READ    /* Print READ expressions in read-eval loop. */
 #define TRE_PRINT_MACROEXPANSIONS /* Print macroexpansions in read-eval loop. */
@@ -39,15 +38,18 @@ typedef int bool;
 #define TRE_EXIT_ON_STDIO_SIGINT /* Exit on SIGINT in stdio prompt. */
 #endif
 
+#ifndef TRE_QUIET_LOAD
+#define TRE_VERBOSE_LOAD	/* Print what files are loaded. */
+#endif
+
 #define TRE_MAX_SYMLEN		(4 * KILO)
-#define TRE_MAX_STRINGLEN	(64 * KILO)
+#define TRE_MAX_STRINGLEN	(4 * KILO)
 
 #define TRE_MAX_NESTED_FILES	16
 #define TRE_FILEIO_MAX_FILES   16
 
 #define MAX_PACKAGES		2
 
-#define TREDEBUG_NAMESTACKSIZE	25600
 #define TREDEBUG_MAX_ARGS	16
 #define TREDEBUG_MAX_BREAKPOINTS	16
 
