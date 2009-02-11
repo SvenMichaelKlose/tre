@@ -11,6 +11,9 @@
 #include "alloc.h"
 
 #include <stdlib.h>
+#ifdef TRE_DIAGNOSTICS
+	#include <stdio.h>
+#endif
 
 void *
 trealloc (size_t size)
