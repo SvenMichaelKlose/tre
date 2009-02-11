@@ -97,7 +97,7 @@ after_pname:
             len++;
 	    	if (len > TRE_MAX_SYMLEN)
 				treerror_internal (treptr_invalid,
-			   					   "symbols must be no longer than %d chars",
+			   					   "literal symbols must be no longer than %d chars",
 			   					   TRE_MAX_SYMLEN);
             continue;
         }
@@ -198,7 +198,7 @@ treread_string (struct tre_stream *stream)
 	   	*i++ = c;
 	   	if (++l > TRE_MAX_STRINGLEN)
 			return treerror (treptr_invalid,
-                       	 	 "string must be no longer than %d chars",
+                       	 	 "literal strings must be no longer than %d chars",
 		             	 	 TRE_MAX_STRINGLEN);
 	}
 	*i = 0;
