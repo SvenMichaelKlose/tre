@@ -31,8 +31,15 @@ struct tre_list {
 #define CADR(x) 	CAR(CDR(x))
 #define CAAR(x) 	CAR(CAR(x))
 #define CDDR(x) 	CDR(CDR(x))
+#define CDAR(x) 	CDR(CAR(x))
+#define CADAR(x) 	CAR(CDR(CAR(x)))
 #define CADDR(x) 	CAR(CDR(CDR(x)))
+#define CDDAR(x) 	CDR(CDR(CDR(x)))
 #define CDDDR(x) 	CDR(CDR(CDR(x)))
+
+#define FIRST(x) 	CAR(x)
+#define SECOND(x) 	CADR(x)
+#define THIRD(x) 	CADDR(x)
 
 #define RPLACA(x,v) 	(trelist_rplaca (x, v))
 #define RPLACD(x,v) 	(trelist_rplacd (x, v))
