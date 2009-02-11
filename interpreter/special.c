@@ -467,67 +467,78 @@ trespecial_go (treptr args)
     return CONS(tre_atom_evaluated_go, trearg_get (args));
 }
 
+treptr
+trespecial_past_lambda (treptr x)
+{
+	/* Jump past optional LAMBDA keyword. */
+	return (TREPTR_IS_ATOM(FIRST(x)) && FIRST(x) == treatom_lambda)
+			? CDR(x)
+			: x;
+}
+
 /*
+ * Make function atom of LAMBDA expression.
  */
 treptr
 trespecial_function_from_expr (treptr expr)
 {
-    treptr past_lambda;
     treptr f;
+    treptr x = trespecial_past_lambda (expr);
 
-	/* Jump past optional LAMBDA keyword. */
-	past_lambda = (TREPTR_IS_ATOM(CAR(expr)) && CAR(expr) == treatom_lambda)
-					  ? CDR(expr)
-					  : expr;
-
-    if (past_lambda == treptr_nil)
+    if (x == treptr_nil)
         return treerror (expr, "argument list and body missing");
-    if (TREPTR_IS_ATOM(CAR(past_lambda)) && CAR(past_lambda) != treptr_nil)
+    if (TREPTR_IS_ATOM(CAR(x)) && CAR(x) != treptr_nil)
         return treerror (expr, "argument list expected instead of atom");
 
-    past_lambda = trelist_copy (past_lambda);
-    tregc_push (past_lambda);
-    f = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_FUNCTION, past_lambda);
+	/* Copy arguments and body for the new atom. */
+    x = trelist_copy (x);
+    tregc_push (x);
+    f = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_FUNCTION, x);
+    tregc_pop ();
     tregc_push (f);
     treenv_create (f);
-    tregc_pop ();
 
     tregc_pop ();
     return f;
 }
 
-/*
- * (FUNCTION var | lambda-expression)
- *
- * Return function atom referred to by a variable's function pointer or
- * create one from a LAMBDA expression.
+/*tredoc
+  (spacial :name FUNCTION
+	(or
+	  (arg :type symbol)
+	  (arg :type lambda-expression))
+	(descr "Make function.")
+	(returns function))
  */
 treptr
-trespecial_function (treptr fun)
+trespecial_function (treptr args)
 {
-    treptr car;
+    treptr arg;
 
-    if (fun == treptr_nil)
-		return treerror (fun, "function name expected");
-    if (CDR(fun) != treptr_nil)
-		return treerror (fun, "single argument expected");
+    if (args == treptr_nil)
+		return treerror (args, "function name expected");
+    if (CDR(args) != treptr_nil)
+		return treerror (args, "single argument expected");
 
-    car = CAR(fun);
+    arg = FIRST(args);
 
-    switch (TREPTR_TYPE(car)) {
+    switch (TREPTR_TYPE(arg)) {
         case TRETYPE_CONS:
-			return trespecial_function_from_expr (car);
+			return trespecial_function_from_expr (arg);
 
         case TRETYPE_VARIABLE:
-            return TREATOM_FUN(car);
+            return TREATOM_FUN(arg);
 
         case TRETYPE_FUNCTION:
         case TRETYPE_BUILTIN:
         case TRETYPE_SPECIAL:
-	    	return car;
+			return arg;
+
+		default:
+			return treerror (arg, "FUNCTION expects a variable, function, special-form or LAMBDA expression");
     }
 
-    return treerror (car, "function or argument/body pair expected");
+    return treerror (arg, "function or argument/body pair expected");
 }
 
 char *tre_special_names[] = {
