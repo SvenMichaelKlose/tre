@@ -336,11 +336,10 @@ tregc_print_stats ()
             c[(ulong) tre_atoms[i].type]++;
         }
 
-    printf (": %ld cons, %ld atoms "
+    printf (": %ld cons, %ld atoms. %ld syms, "
             "(%ld var, %ld num, %ld arr, %ld str, "
             "%ld fun, %ld mac, %ld usr, %ld pkg, %ld blt, %ld spc).\n",
-            trelist_num_used,
-            atoms,
+            trelist_num_used, atoms, num_symbols,
             c[TRETYPE_VARIABLE], c[TRETYPE_NUMBER], c[TRETYPE_ARRAY], c[TRETYPE_STRING],
             c[TRETYPE_FUNCTION], c[TRETYPE_MACRO], c[TRETYPE_USERSPECIAL],
             c[TRETYPE_PACKAGE], c[TRETYPE_BUILTIN], c[TRETYPE_SPECIAL]);
