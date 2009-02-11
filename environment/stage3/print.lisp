@@ -19,9 +19,11 @@
       (%princ-character (code-char (+ i #\0)) str))))
 
 (defun %princ-string (obj str)
-  (do ((i 0 (1+ i)))
-      ((>= i (length obj)))
-    (%princ-character (elt obj i) str)))
+  (%princ-character obj str))
+; XXX move to alternative section
+;  (do ((i 0 (1+ i)))
+;      ((>= i (length obj)))
+;    (%princ-character (elt obj i) str)))
 
 (defun princ (obj &optional (str *standard-output*))
   "Print object in human readable format."
