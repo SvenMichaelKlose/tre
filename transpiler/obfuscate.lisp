@@ -1,22 +1,11 @@
 ;;;;; TRE transpiler
-;;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Obfuscation
+;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
 
 (defvar *transpiler-obfuscation-counter* 0)
 
 (defun transpiler-obfuscated-sym ()
-  (with (digit
-		  (fn (if (< _ 24)
-				  (+ #\a _)
-				  (+ (- #\0 24) _)))
-		 rec
-		   (fn (unless (= 0 _)
-				 (with (m (mod _ 34))
-				   (cons (digit m)
-						 (rec (/ (- _ m) 34)))))))
 	(incf *transpiler-obfuscation-counter*)
-	(make-symbol (list-string (cons #\_ (rec *transpiler-obfuscation-counter*))))))
+	(number-sym *transpiler-obfuscation-counter*))
 
 (defun transpiler-obfuscate-symbol (tr x)
   (if (or (not (transpiler-obfuscate? tr))
