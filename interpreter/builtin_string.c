@@ -173,12 +173,12 @@ trestring_builtin_string (treptr list)
 				buf[1] = 0;
            		return trestring_get (buf);
            	}
-           	sprintf (buf, "%G", TRENUMBER_VAL(arg));
+           	snprintf (buf, TRE_MAX_STRINGLEN, "%G", TRENUMBER_VAL(arg));
            	return trestring_get (buf);
     	}
    		/* Convert atom name to string. */
    		if (TREPTR_IS_ATOM(arg) && TREATOM_NAME(arg)) {
-   			strcpy (buf, TREATOM_NAME(arg));
+   			strncpy (buf, TREATOM_NAME(arg), TRE_MAX_STRINGLEN);
        		return trestring_get (buf);
 		}
     	arg = treerror (arg, "string, number or named atom expected");
