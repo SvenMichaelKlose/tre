@@ -4,7 +4,6 @@
 (defun arrayp (x) (instanceof x *array))
 
 (defun list-array (x)
-  (declare type cons x)
   (let a (make-array)
     (dolist (i x a)
       (a.push i))))
