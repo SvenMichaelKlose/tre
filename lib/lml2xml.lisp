@@ -55,8 +55,9 @@
       (lml2xml-block s x)
       (lml2xml-end-inline s)))
 
-(defun lml2xml (s x)
-  (when x
-    (if (consp x)
-		(lml2xml-expr s x)
-		(lml2xml-atom s x))))
+(defun lml2xml (str x)
+  (with-default-stream s str
+    (when x
+      (if (consp x)
+		  (lml2xml-expr s x)
+		  (lml2xml-atom s x)))))

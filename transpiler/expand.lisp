@@ -141,12 +141,10 @@
 
 (defun transpiler-preexpand-compose (tr)
   (compose
-    ; Inline local function calls.
-    ; Gives local variables stack slots.
-    ;
-    ; Give context to member symbols.
+    ; Make (SLOT-VALUE this ...) expressions for class members.
     (fn thisify (transpiler-thisify-classes tr) _)
 
+	; Inline local functions and export constant LAMBDA expressions.
     (fn transpiler-lambda-expand tr _)
 
 	; Make CHARACTER objects.
@@ -166,7 +164,6 @@
     (fn funcall (transpiler-preprocessor tr) _)))
 
 (defun transpiler-preexpand (tr x)
-  (transpiler-obfuscate-symbol tr '~%ret)
   (funcall (transpiler-preexpand-compose tr) x))
 
 (defun transpiler-preexpand-and-expand (tr forms)
