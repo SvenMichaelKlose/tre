@@ -74,9 +74,6 @@
 (define-js-std-macro make-string (&optional len)
   "")
 
-(define-js-std-macro funcall (fun &rest x)
-  `(,fun ,@x))
-
 ;; Translate SLOT-VALUE to unquoted variant.
 (define-js-std-macro slot-value (place slot)
   `(%slot-value ,place ,(second slot)))
