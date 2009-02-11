@@ -30,3 +30,4 @@
 (env-load "stage4/with-string-stream.lisp")
 (env-load "stage4/define-with.lisp")
 (env-load "stage4/define-slot-setter.lisp")
+(env-load "stage4/number-symbol.lisp")
