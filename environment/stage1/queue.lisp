@@ -32,6 +32,10 @@
 (defmacro queue-list (queue)
   `(cdr ,queue))
 
+(defun enqueue-list (queue x)
+  (setf (cdr queue) (nconc (cdr queue) x)
+		(car queue) (last x)))
+
 (define-test "ENQUEUE and QUEUE-LIST work"
   ((let q (make-queue)
      (enqueue q 'a)
