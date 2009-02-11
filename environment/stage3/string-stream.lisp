@@ -11,8 +11,11 @@
     :user-detail  (make-queue)
     :fun-in       #'((str)
                        (queue-pop (stream-user-detail str)))
-    :fun-out      #'((c str)
-                       (enqueue (stream-user-detail str) c))
+    :fun-out      #'((x str)
+					   (if (stringp x)
+						   (enqueue-list (stream-user-detail str)
+										 (string-list x))
+                       	   (enqueue (stream-user-detail str) x)))
 	:fun-eof	  #'((str)
 					   (eq (stream-user-detail str) nil))))
 
