@@ -37,3 +37,9 @@
 
 (defun string= (x y)
   (%%%= x y))
+
+(defun string-upcase (x)
+  (x.to-upper-case))
+
+(defun string-downcase (x)
+  (x.to-lower-case))
