@@ -81,21 +81,21 @@ void
 trediag_chkptr (treptr x)
 {
     if (TREPTR_TYPE(x) > TRETYPE_MAXTYPE) {
-		fprintf (stderr, "Type %d\n", TREPTR_INDEX(x));
+		fprintf (stderr, "Type %ld\n", TREPTR_INDEX(x));
         treerror_internal (treptr_nil, "illegal type in ptr");
 	}
 	if (TREPTR_IS_CONS(x)) {
 		if (TREPTR_INDEX(x) > NUM_LISTNODES) {
-			fprintf (stderr, "Index %d\n", TREPTR_INDEX(x));
+			fprintf (stderr, "Index %ld\n", TREPTR_INDEX(x));
             treerror_internal (treptr_nil, "illegal cons index");
 		}
 	} else {
 		if (TREPTR_INDEX(x) > NUM_ATOMS) {
-			fprintf (stderr, "Index %d\n", TREPTR_INDEX(x));
+			fprintf (stderr, "Index %ld\n", TREPTR_INDEX(x));
             treerror_internal (treptr_nil, "illegal atom index");
 		}
 		if (tre_atoms[TREPTR_INDEX(x)].type == TRETYPE_UNUSED) {
-			fprintf (stderr, "Index %d\n", TREPTR_INDEX(x));
+			fprintf (stderr, "Index %ld\n", TREPTR_INDEX(x));
             treerror_internal (treptr_nil, "accessing unused atom");
 		}
     }
