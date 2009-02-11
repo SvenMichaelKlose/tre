@@ -26,7 +26,9 @@
     (acons! expander-name e *expanders*)
     (unless pred
       (setf (expander-pred e)
-			(fn (cdr (assoc _. (expander-macros e))))))
+			(fn (and (atom _.)
+					 (< 0 (length (symbol-name _.)))
+					 (cdr (assoc _. (expander-macros e)))))))
     (unless call
       (setf (expander-call e)
 			(fn (apply (cdr (assoc _. (expander-macros e))) ._))))
