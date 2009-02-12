@@ -137,6 +137,8 @@
 
 (defun read-all (str)
   "Read many toplevel expressions from stream."
-  (unless (end-of-file str)
+  (unless (progn
+			(skip-spaces str)
+			(end-of-file str))
     (cons (read str)
 		  (read-all str))))
