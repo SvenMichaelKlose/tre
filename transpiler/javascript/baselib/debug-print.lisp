@@ -7,19 +7,19 @@
     (if (consp .x)
 	    (js-print-cons-r .x)
 	    (when .x
-		  (document.write " . ")
-		  (document.write .x)))))
+		  (logwindow.document.write " . ")
+		  (logwindow.document.write .x)))))
 
 (defun js-print-cons (x)
-  (document.write "(")
+  (logwindow.document.write "(")
   (js-print-cons-r x)
-  (document.write ")"))
+  (logwindow.document.write ")"))
 
 (defun js-print (x)
   (if
 	(consp x)
 	  (js-print-cons x)
-	(document.write
+	(logwindow.document.write
 	  (+ (if
 		   (symbolp x)
 	         (symbol-name x)
