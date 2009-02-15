@@ -34,6 +34,13 @@
 			(fn (apply (cdr (assoc _. (expander-macros e))) ._))))
 	e))
 
+(defun set-expander-macro (expander-name name args-and-body)
+  (when (expander-has-macro? expander-name name)
+    (error "Macro ~A already defined." name))
+  (acons! name
+	      args-and-body
+		  (expander-macros (expander-get expander-name))))
+
 (defmacro define-expander-macro (expander-name name &rest x)
   (unless (atom expander-name)
     (error "Atom expected as expander-name instead of ~A." expander-name))
@@ -43,7 +50,7 @@
 	 (when (expander-has-macro? ',expander-name ',name)
 	   (error "Macro ~A already defined." ',name))
 	 (acons! ',name
-		     #'(,@x) ; XXX ,x?
+		     #',x
 		     (expander-macros (expander-get ',expander-name)))))
 
 (defun expander-expand (expander-name expr)
