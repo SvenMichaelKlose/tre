@@ -45,7 +45,8 @@
 
 (defun transpiler-import-wanted-variables (tr)
   (transpiler-sighten tr
-    (mapcar (fn `(defvar ,_ ,(assoc-value _ *variables*)))
+    (mapcar (fn (unless (transpiler-defined-variable tr _)
+				  `(defvar ,_ ,(assoc-value _ *variables*))))
 		    (transpiler-wanted-variables tr))))
 
 (defun transpiler-import-from-environment (tr)
