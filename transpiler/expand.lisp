@@ -153,6 +153,9 @@
     ; Expand BACKQUOTEs, QUASIQUOTEs and compiler-macros.
     #'special-form-expand
 
+    (fn transpiler-macroexpand tr _)
+	#'quasiquote-expand
+
     ; Alternative standard-macros.
     ; Some macros in this pass just rename expression to bypass the
     ; standard macro-expansion.
