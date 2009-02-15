@@ -13,11 +13,13 @@
 		 (last args)))
 
 (defmacro define-transpiler-binary (tr op repl-op)
-  `(define-expander-macro
-	 ,(transpiler-macro-expander (eval tr))
-	 ,op
-	 (&rest args)
-     `("(" ,,@(transpiler-binary-expand ,repl-op args) ")")))
+  (transpiler-add-plain-arg-fun (eval tr) op)
+  `(progn
+	 (define-expander-macro
+	   ,(transpiler-macro-expander (eval tr))
+	   ,op
+	   (&rest args)
+       `("(" ,,@(transpiler-binary-expand ,repl-op args) ")"))))
 
 ;;;; ENCAPSULATION
 

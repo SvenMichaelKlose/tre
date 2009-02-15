@@ -59,7 +59,8 @@
   thisify-classes
   (function-args (make-hash-table))
   emitted-wanted-functions
-  obfuscations)
+  obfuscations
+  plain-arg-funs)
 
 (defun transpiler-reset (tr)
   (setf (transpiler-thisify-classes tr) (make-hash-table)	; thisified classes.
@@ -117,6 +118,12 @@
 (defun transpiler-unwanted-function? (tr fun)
   (member fun (transpiler-unwanted-functions tr)))
 
+(define-slot-setter-push! transpiler-add-plain-arg-fun tr
+  (transpiler-plain-arg-funs tr))
+
+(defun transpiler-plain-arg-fun? (tr fun)
+  (member fun (transpiler-plain-arg-funs tr)))
+
 (defun transpiler-macro (tr name)
   (assoc name (expander-macros
                 (expander-get
@@ -164,7 +171,11 @@
 		  (expex-function-arguments ex)
 		  #'((fun)
 			   (or (transpiler-function-arguments tr fun)
-				   (function-arguments (symbol-function fun)))))
+				   (function-arguments (symbol-function fun))))
+
+		  (expex-plain-arg-fun? ex)
+		  #'((fun)
+			   (transpiler-plain-arg-fun? tr fun)))
 	ex))
 
 (defun create-transpiler (&rest args)

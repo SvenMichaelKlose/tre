@@ -21,7 +21,9 @@
   (function-collector #'((fun args)))
 
   ; Callback to collect used variables.
-  (variable-collector #'((var))))
+  (variable-collector #'((var)))
+
+  (plain-arg-fun? #'((var))))
 
 ;; Returns new unique symbol.
 (defun expex-sym ()
@@ -100,9 +102,12 @@
 
 (defun expex-argexpand-do (ex fun args)
   (funcall (expex-function-collector ex) fun args)
-  (argument-expand-compiled-values fun
-								   (funcall (expex-function-arguments ex) fun)
-								   args))
+  (if (funcall (expex-plain-arg-fun? ex) fun)
+	  args
+      (argument-expand-compiled-values fun
+								       (funcall (expex-function-arguments ex)
+												fun)
+								       args)))
 
 (defun expex-argexpand (ex fun args)
   (if (and (atom fun)
@@ -122,7 +127,7 @@
 ;; Expand expression depending on type.
 ;;
 ;; Recurses into LAMBDA-expressions and VM-SCOPEs.
-;; VM-SCOPES are removed.
+;; Removes VM-SCOPEs.
 (defun expex-expr (ex x)
   (if (lambda? x)
       (values nil (list `#'(lambda ,(lambda-args x)
