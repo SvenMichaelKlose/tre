@@ -1,6 +1,6 @@
 /*
- * TRE tree processor
- * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+ * TRE interpreter
+ * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
  *
  * Debugger
  */
@@ -19,6 +19,7 @@
 #include "builtin_debug.h"
 #include "builtin_stream.h"
 #include "xxx.h"
+#include "gc.h"
 
 #include <stdarg.h>
 #include <ctype.h>
@@ -441,6 +442,7 @@ tredebug_trace (void)
 
     printf ("Function-call backtrace:\n");
     DOLIST(i, st) {
+		fflush (stdout);
 		x = CAR(i);
 
 		switch (TREPTR_TYPE(x)) {
@@ -539,6 +541,7 @@ tredebug (void)
     if (f_print)
         tredebug_print ();
     f_print = FALSE;
+	tregc_force ();
 
     tredebug_mode = 0;
     tredebug_level++;
