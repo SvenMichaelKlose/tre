@@ -15,9 +15,9 @@
 (defun make-hash-table (&key test size rehash-size rehash-threshold)
   "Create a new hash table."
   (make-%hash-table
-    :test (or test #'eq) :size 157
+    :test (or test #'eq) :size 4096
     :rehash-size rehash-size :rehash-threshold rehash-threshold
-    :hash (make-array 157)))
+    :hash (make-array 4096)))
 
 (defun %make-hash-index-num (h k)
   "Make hash index from number."
@@ -28,8 +28,10 @@
   (with (k 0
 	     l (length str))
     (do ((i 0 (1+ i)))
-        ((or (= i l) (> i 7)) (mod k (%hash-table-size h)))
-      (setf k (+ k (elt str i))))))
+        ((or (< 4 i)
+			 (= i l))
+		 (mod k (%hash-table-size h)))
+      (setf k (+ (<< k 4) (elt str i))))))
 
 (defun %make-hash-index (h key)
   (if
