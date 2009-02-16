@@ -4,6 +4,7 @@
 ;;;;; Macro definition
 
 (defvar *documentation* nil)
+(defvar *macros* nil)
 
 (%defun %add-documentation (name body)
   (if (stringp (car body)) ; XXX incomplete
@@ -23,6 +24,7 @@
 	   (if *show-definitions*
            (print `(defmacro ,name)))
        (setq *universe* (cons ',name *universe*))
+       (setq *macros* (cons ',name *macros*))
        (%set-atom-fun ,name
          			  (macro ,args
 	       			    (block ,name
