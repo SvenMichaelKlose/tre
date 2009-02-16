@@ -7,4 +7,5 @@
 (defun error (fmt &rest args)
   (format *standard-log* "<b>Error:</b>")
   (apply #'format *standard-log* fmt args)
-  (a-function-that-doesnt-exist-to-stop-everything))
+  (terpri *standard-log*)
+  (inoke-native-debugger))
