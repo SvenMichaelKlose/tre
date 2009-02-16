@@ -11,8 +11,11 @@
 (define-js-macro function (x)
   (if (atom x)
 	  x
-      (with (args (argument-expand 'unnamed-js-function (lambda-args x) nil nil)
+      (with (args (argument-expand-names 'unnamed-js-function
+										 (lambda-args x))
 			 ret (transpiler-obfuscate *js-transpiler* '~%ret))
+		(map (fn transpiler-obfuscate *js-transpiler* _)
+			 args)
         `("function (" ,@(transpiler-binary-expand
 				            ","
 						    args) ")"
@@ -89,14 +92,15 @@
   `(%%usetf-aref ,val ,@x))
 
 (define-js-macro make-hash-table (&rest args)
-  `("{"
-    ,@(when args
-	    (mapcan (fn (list (first _) ":" (second _) ","))
-			    (butlast (group args 2))))
-    ,@(when args
-		(with (x (car (last (group args 2))))
-		  (list x. ":" (second x))))
-   "}"))
+  (let pairs (group args 2)
+    `("{"
+      ,@(when args
+	      (mapcan (fn (list (first _) ":" (second _) ","))
+			      (butlast pairs)))
+      ,@(when args
+		  (with (x (car (last pairs)))
+		    (list x. ":" (second x))))
+     "}")))
 
 (define-js-macro %new (&rest x)
   `(%transpiler-native "new "
@@ -121,7 +125,8 @@
 
 (define-js-macro %quote (x)
   (if (not (string= "" (symbol-name x)))
-  	  `(,(transpiler-symbol-string tr (transpiler-obfuscate tr 'symbol)) "(\"" ,(symbol-name x) "\", " ,(when (keywordp x) "true") ")")
+  	  `(,(transpiler-symbol-string tr (transpiler-obfuscate tr 'symbol))
+		   "(\"" ,(symbol-name x) "\", " ,(when (keywordp x) "true") ")")
 	  x))
 
 (define-js-macro %set-atom-fun (plc val)

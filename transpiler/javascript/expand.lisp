@@ -7,19 +7,14 @@
 (defmacro define-js-std-macro (&rest x)
   `(define-transpiler-std-macro *js-transpiler* ,@x))
 
-(defun transpiler-obfuscate-arguments (tr x)
-  (dolist (i (argument-expand 'anonymous-function x nil nil))
-    (transpiler-obfuscate-symbol tr i)))
-
 ;; (FUNCTION symbol | lambda-expression)
 ;; Add symbol to list of wanted functions or obfuscate arguments of
 ;; LAMBDA-expression.
 (define-js-std-macro function (x)
   (unless x
     (error "FUNCTION expects a symbol or form"))
-  (if (atom x)
-	  (transpiler-add-wanted-function *js-transpiler* x)
-      (transpiler-obfuscate-arguments *js-transpiler* x.))
+  (when (atom x)
+	(transpiler-add-wanted-function *js-transpiler* x))
   `(function ,x))
 
 ;; (DEFUN ...)
