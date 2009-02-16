@@ -154,6 +154,7 @@
     #'special-form-expand
 
     (fn transpiler-macroexpand tr _)
+
 	#'quasiquote-expand
 
     ; Alternative standard-macros.
@@ -167,7 +168,8 @@
     (fn funcall (transpiler-preprocessor tr) _)))
 
 (defun transpiler-preexpand (tr x)
-  (funcall (transpiler-preexpand-compose tr) x))
+  (mapcan (fn (funcall (transpiler-preexpand-compose tr) (list _)))
+		  x))
 
 (defun transpiler-preexpand-and-expand (tr forms)
   (transpiler-expand tr (transpiler-preexpand tr forms)))
