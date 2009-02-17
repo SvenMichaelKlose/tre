@@ -25,15 +25,15 @@
    it is returned as is and added to the free-variable list of the funinfo."
   (aif (funinfo-env-pos fi var)
        `(%stack ,!)
-       `(%vec (%stack 0) ,(or (funinfo-free-var-pos fi var)
-                              (progn
-                                (funinfo-add-free-var fi var)
-                                (funinfo-free-var-pos fi var))))))
+       `(%vec %ghost ,(or (funinfo-free-var-pos fi var)
+                          (progn
+                            (funinfo-add-free-var fi var)
+                            (funinfo-free-var-pos fi var))))))
 
 (defun is-env-var? (fi var)
   "Check if symbol is a varable in the current environment."
   (when (atom var)
-    (find var (apply #'append (funinfo-env fi)))))
+    (member var (apply #'append (funinfo-env fi)))))
 
 (defun vars-to-stackplaces (fi body)
   "Replaces variables by stack operations. Returns modified body.
@@ -106,7 +106,9 @@
 (defun lambda-export (fi x)
   "Export and expand function."
   (with-gensym exported-fun
-    (eval `(%set-atom-fun ,exported-fun ,x)) ; Create new function.
+    (eval `(%set-atom-fun ,exported-fun
+						  ,`#'(,(cons '%ghost (lambda-args x))
+								 ,@(lambda-body x)))) ; Create new function.
     (push exported-fun (funinfo-exported-functions fi))
     (lambda-expand-exported fi exported-fun)))
 
