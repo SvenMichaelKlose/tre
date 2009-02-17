@@ -22,7 +22,7 @@
 
 (defun funinfo-add-free-var (fi var)
   "Add free variable."
-  (push (funinfo-free-vars fi) var)
+  (push! var (funinfo-free-vars fi))
   var)
 
 (defun funinfo-env-this (fi)
