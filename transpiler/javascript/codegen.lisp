@@ -51,26 +51,12 @@
 (defmacro define-js-binary (op repl-op)
   `(define-transpiler-binary *js-transpiler* ,op ,repl-op))
 
-(define-js-binary + "+")
-(define-js-binary - "-")
 (define-js-binary %%%+ "+")
 (define-js-binary %%%- "-")
-(define-js-binary / "/")
-(define-js-binary * "*")
-(define-js-binary = "==")
-(define-js-binary < "<")
-(define-js-binary > ">")
 (define-js-binary %%%= "==")
 (define-js-binary %%%< "<")
 (define-js-binary %%%> ">")
-(define-js-binary >> ">>")
-(define-js-binary << "<<")
-(define-js-binary mod "%")
-(define-js-binary logxor "^")
-(define-js-binary eq "===")
 (define-js-binary %%%eq "===")
-(define-js-binary bit-and "&")
-(define-js-binary bit-or "|")
 
 (define-js-macro make-array (&rest elements)
   `(%transpiler-native "[" ,@(transpiler-binary-expand "," elements) "]"))
@@ -113,9 +99,6 @@
 
 (define-js-macro vm-go-nil (val tag)
   `("if (!" ,val "&&" ,val "!==0) {_I_=" ,tag "; continue;}"))
-
-(define-js-macro identity (x)
-  x)
 
 (defun js-stack (x)
   ($ '_I_S x))
