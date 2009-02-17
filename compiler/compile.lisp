@@ -22,10 +22,8 @@
 
 (defun atomic-expand-lambda (fun &optional (parent-env nil))
   (with ((lambda-expansion fi)
-	   	   (funcall (compose (fn lambda-expand fun _ parent-env)
-						     #'special-form-expand
-							 #'function-body)
-					fun))
+	   	   (lambda-expand fun (special-form-expand (function-body fun))
+						  parent-env))
 	(funcall (compose (fn tree-expand fi _)
 					  #'opt-peephole
 					  (fn expression-expand (make-expex) _))
