@@ -9,7 +9,7 @@
 
 (defun transpiler-obfuscate-symbol (tr x)
   (if (or (not (transpiler-obfuscate? tr))
-          (find x (transpiler-obfuscation-exceptions tr)))
+          (member x (transpiler-obfuscation-exceptions tr)))
 	  x
       (aif (href x (transpiler-obfuscations tr))
 		   !

@@ -77,6 +77,14 @@
 (define-js-macro %%usetf-href (val &rest x)
   `(%%usetf-aref ,val ,@x))
 
+;; Experimental for lambda-export.
+(define-js-macro %vec (v i)
+  `(aref ,v ,i))
+
+;; Experimental for lambda-export.
+(define-js-macro %set-vec (v i x)
+  `(%%usetf-aref ,x ,v ,i))
+
 (define-js-macro make-hash-table (&rest args)
   (let pairs (group args 2)
     `("{"

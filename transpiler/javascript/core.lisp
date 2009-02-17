@@ -5,7 +5,7 @@
 ;;;;; basic functions to simulate basic data types.
 
 (defun js-load-base (&rest files)
-  (mapcan (fn (let f (+ "transpiler/javascript/baselib/" _)
+  (mapcan (fn (let f (+ "transpiler/baselib/" _)
 				(format t  "(js-load-base \"~A\")~%" f)
   				(read-file-all f)))
 		  files))
