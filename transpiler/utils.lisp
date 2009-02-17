@@ -9,6 +9,3 @@
 (defun copy-recurse-into-setq-lambda (x fun)
   `(%setq ,(%setq-place x)
 		  ,(copy-recurse-into-lambda (%setq-value x) fun)))
-
-(defmacro push! (value place)
-  `(setf ,place (push ,value ,place)))
