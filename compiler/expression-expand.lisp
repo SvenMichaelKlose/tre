@@ -63,6 +63,29 @@
 		   (and (consp x)
 				(eq '%var x.)))))
 
+(defun expex-assignment-inline (ex x)
+  (with ((p a) (expex-args ex .x))
+	(cons p
+		  (cons x. a))))
+
+(defun expex-assignment-vm-scope (ex x)
+  (let s (expex-sym)
+    (aif (vm-scope-body x)
+         (cons (append `((%var ,s))
+		               (expex-body ex ! s))
+		       s)
+	     (cons nil nil))))
+
+(defun expex-assignment-std (ex x)
+  (let s (expex-sym)
+    (with ((head tail) (expex-expr ex x))
+      (cons (append `((%var ,s))
+					head
+		    		(if (expex-returnable? ex tail.)
+		        		`((%setq ,s ,@tail))
+			    		tail))
+  	        s))))
+
 ;; Transform moved expression to one which assigns its return
 ;; value to a gensym.
 ;;
@@ -71,25 +94,12 @@
 (defun expex-assignment (ex x)
   (if
 	(expex-inline? ex x)
-	  (with ((p a) (expex-args ex .x))
-		(cons p
-			  (cons x. a)))
+	  (expex-assignment-inline ex x)
 	(not (expex-able? ex x))
       (cons nil x)
-    (with (s (expex-sym))
-      (if (vm-scope? x)
-		  (aif (vm-scope-body x)
-	           (cons (append `((%var ,s))
-				             (expex-body ex ! s))
-				     s)
-			   (cons nil nil))
-          (with ((head tail) (expex-expr ex x))
-            (cons (append `((%var ,s))
-						  head
-						  (if (expex-returnable? ex tail.)
-						      `((%setq ,s ,@tail))
-						      tail))
-  	              s))))))
+    (vm-scope? x)
+	  (expex-assignment-vm-scope ex x)
+	(expex-assignment-std ex x)))
 
 ;; Move subexpressions out of a parent.
 ;;
@@ -100,14 +110,18 @@
     (values (apply #'append pre)
 			main)))
 
+(defun expex-expandable-args? (ex fun argdef)
+  (or (eq '%%no-argexp argdef)
+	  (funcall (expex-plain-arg-fun? ex) fun)))
+
 (defun expex-argexpand-do (ex fun args)
   (funcall (expex-function-collector ex) fun args)
-  (if (funcall (expex-plain-arg-fun? ex) fun)
-	  args
-      (argument-expand-compiled-values fun
-								       (funcall (expex-function-arguments ex)
-												fun)
-								       args)))
+  (let argdef (funcall (expex-function-arguments ex) fun)
+    (if (expex-expandable-args? ex fun argdef)
+	    args
+        (argument-expand-compiled-values fun
+										 argdef
+								         args))))
 
 (defun expex-argexpand (ex fun args)
   (if (and (atom fun)
@@ -129,14 +143,15 @@
 ;; Recurses into LAMBDA-expressions and VM-SCOPEs.
 ;; Removes VM-SCOPEs.
 (defun expex-expr (ex x)
-  (if (lambda? x)
+  (if
+	(lambda? x)
       (values nil (list `#'(lambda ,(lambda-args x)
 						     ,@(expex-body ex (lambda-body x)))))
-      (if (not (expex-able? ex x))
-	      (values nil (list x))
-  	      (if (vm-scope? x)
-	          (values nil (expex-body ex (vm-scope-body x)))
-	          (expex-std-expr ex x)))))
+    (not (expex-able? ex x))
+      (values nil (list x))
+    (vm-scope? x)
+	  (values nil (expex-body ex (vm-scope-body x)))
+    (expex-std-expr ex x)))
 
 ;; Entry point.
 ;;
@@ -166,7 +181,7 @@
 ;; last expression assigned to a gensym which will replace
 ;; it in the parent expression.
 (defun expex-body (ex x &optional (s '~%ret))
-  (when (not x)	; Encapsulate NIL.
+  (unless x	; Encapsulate NIL.
 	(setf x '((identity nil))))
   (with (e (expex-list ex x))
    	(expex-make-return-value ex e s)))
