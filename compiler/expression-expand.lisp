@@ -50,18 +50,37 @@
 				   '%var
 				   '%no-expex))))
 
+;; Check if an expression has a return value.
+(defun expex-returnable? (ex x)
+  (not (or (vm-jump? x)
+		   (and (consp x)
+				(eq '%var x.)))))
+
+(defun expex-expandable-args? (ex fun argdef)
+  (or (eq '%%no-argexp argdef)
+	  (funcall (expex-plain-arg-fun? ex) fun)))
+
+(defun expex-argexpand-do (ex fun args)
+  (funcall (expex-function-collector ex) fun args)
+  (let argdef (funcall (expex-function-arguments ex) fun)
+    (if (expex-expandable-args? ex fun argdef)
+	    args
+        (argument-expand-compiled-values fun
+										 argdef
+								         args))))
+
+(defun expex-argexpand (ex fun args)
+  (if (and (atom fun)
+		   (funcall (expex-function? ex) fun))
+	  (expex-argexpand-do ex fun args)
+	  args))
+
 ;; Check if an expression is inline.
 ;;
 ;; These expressions are not moved out, but their arguments are expanded.
 (defun expex-inline? (ex x)
   (and (consp x)
        (in? x. '%slot-value)))
-
-;; Check if an expression has a return value.
-(defun expex-returnable? (ex x)
-  (not (or (vm-jump? x)
-		   (and (consp x)
-				(eq '%var x.)))))
 
 (defun expex-assignment-inline (ex x)
   (with ((p a) (expex-args ex .x))
@@ -106,37 +125,29 @@
 ;; Returns the head of moved expressions and a new parent with
 ;; replaced arguments.
 (defun expex-args (ex x)
-  (with ((pre main) (assoc-splice (mapcar (fn expex-assignment ex _) x)))
+  (with ((pre main) (assoc-splice (mapcar (fn expex-assignment ex _)
+										  x)))
     (values (apply #'append pre)
 			main)))
-
-(defun expex-expandable-args? (ex fun argdef)
-  (or (eq '%%no-argexp argdef)
-	  (funcall (expex-plain-arg-fun? ex) fun)))
-
-(defun expex-argexpand-do (ex fun args)
-  (funcall (expex-function-collector ex) fun args)
-  (let argdef (funcall (expex-function-arguments ex) fun)
-    (if (expex-expandable-args? ex fun argdef)
-	    args
-        (argument-expand-compiled-values fun
-										 argdef
-								         args))))
-
-(defun expex-argexpand (ex fun args)
-  (if (and (atom fun)
-		   (funcall (expex-function? ex) fun))
-	  (expex-argexpand-do ex fun args)
-	  args))
-
+;;
 ;; Expands standard expression.
 ;;
 ;; The arguments are replaced by gensyms.
 (defun expex-std-expr (ex x)
   (with (argexp (expex-argexpand ex x. .x)
-		 (pre newargs) (expex-args ex (cons x. argexp)))
+		 (pre newargs) (expex-args ex (cons x.
+											argexp)))
     (expex-collect-variables ex x)
     (values pre (list newargs))))
+
+;; Expand %SETQ expression.
+;;
+;; The place to set must not be expanded.
+(defun expex-expr-setq (ex x)
+  (expex-collect-variables ex x)
+  (with ((head replacement) (expex-args ex (cddr x)))
+	(values head
+		    `((%setq ,(second x) ,@replacement)))))
 
 ;; Expand expression depending on type.
 ;;
@@ -151,6 +162,8 @@
       (values nil (list x))
     (vm-scope? x)
 	  (values nil (expex-body ex (vm-scope-body x)))
+    (%setq? x)
+      (expex-expr-setq ex x)
     (expex-std-expr ex x)))
 
 ;; Entry point.
@@ -162,7 +175,8 @@
 	(if (expex-able? ex x.)
         (with ((head tail) (expex-expr ex x.))
           (append head tail (expex-list ex .x)))
-		(cons x. (expex-list ex .x)))))
+		(cons x.
+			  (expex-list ex .x)))))
 
 (defun expex-make-return-value (ex e s)
   (with (b  (butlast e)
