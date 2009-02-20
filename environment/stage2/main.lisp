@@ -9,6 +9,7 @@
 (env-load "stage2/define-mapped-fun.lisp")
 (env-load "stage2/queue-utils.lisp")
 (env-load "stage2/assoc.lisp")
+(env-load "stage2/assoc-value.lisp")
 (env-load "stage2/pairlis.lisp")
 (env-load "stage2/range.lisp")
 (env-load "stage2/char.lisp")

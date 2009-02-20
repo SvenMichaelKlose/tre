@@ -4,11 +4,9 @@
 ;;;; Fourth stage
 
 (env-load "stage4/assoc-splice.lisp")
-(env-load "stage4/assoc-value.lisp")
 (env-load "stage4/clr.lisp")
 (env-load "stage4/compose.lisp")
 (env-load "stage4/declare.lisp")
-(env-load "stage4/dollar.lisp")
 (env-load "stage4/enqueue-many.lisp")
 (env-load "stage4/expander.lisp")
 (env-load "stage4/find-tree.lisp")
