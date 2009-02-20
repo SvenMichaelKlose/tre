@@ -20,6 +20,12 @@
 (defun special-form-expand (x)
   (backquote-expand (compiler-macroexpand x)))
 
+(defun atomic-lambda (fun &optional (parent-env nil))
+  (with ((lambda-expansion fi)
+	   	   (lambda-expand fun (special-form-expand (function-body fun))
+						  parent-env))
+    fi))
+
 (defun atomic-expand-lambda (fun &optional (parent-env nil))
   (with ((lambda-expansion fi)
 	   	   (lambda-expand fun (special-form-expand (function-body fun))
@@ -29,7 +35,7 @@
 					  (fn expression-expand (make-expex) _))
 			 lambda-expansion)
     ;(setf (cdr (assoc fun *expanded-functions*)) fi)
-    fi))
+    (print fi)))
 
 (defun compile (fun)
   (print-compiler-status fun)

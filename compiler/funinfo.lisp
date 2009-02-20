@@ -15,19 +15,29 @@
   (free-vars  nil)
 
   ; List of exported functions.
-  (exported-functions nil)
+  (exported-funs nil)
+
+  ; List of lexical variables exported to child functions.
+  (lexicals nil)
+
+  ; Copy of parent function's lexicals.
+  (parent-lexicals nil)
 
   ; Function code. The format depends on the compilation pass.
   first-cblock)
 
 (defun funinfo-add-free-var (fi var)
   "Add free variable."
-  (push! var (funinfo-free-vars fi))
+  (setf (funinfo-free-vars fi) (nconc (funinfo-free-vars fi) (list var)))
   var)
 
 (defun funinfo-env-this (fi)
   "Get current environment description."
   (car (funinfo-env fi)))
+
+(defun funinfo-env-parent (fi)
+  "Get current environment description."
+  (cdr (funinfo-env fi)))
 
 (defun funinfo-push-env (fi forms)
   "Open new environment."
@@ -42,17 +52,25 @@
   (setf (car (funinfo-env fi)) (append (car (funinfo-env fi)) args))
   args)
 
-(defun funinfo-env-add-arg (fi arg)
+(defun funinfo-env-add (fi arg)
   "Add variables to the current environment."
   (funinfo-env-add-args fi (list arg)))
 
 (defun funinfo-free-var-pos (fi var)
   "Get index of free variable in environment vector."
-  (position var (reverse (funinfo-free-vars fi))))
+  (position var (funinfo-free-vars fi)))
 
 (defun funinfo-env-pos (fi var)
   "Get index of variable on the stack."
   (position var (funinfo-env-this fi)))
+
+(defun funinfo-lexicals-pos (fi var)
+  "Get index of variable on the stack."
+  (position var (funinfo-lexicals fi)))
+
+(defun funinfo-parent-lexicals-pos (fi var)
+  "Get index of variable on the stack."
+  (position var (funinfo-parent-lexicals fi)))
 
 (defmacro with-funinfo-env-temporary (fi args &rest body)
   "Execute body with new environment, containing 'args'."

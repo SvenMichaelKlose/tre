@@ -60,7 +60,9 @@
   (function-args (make-hash-table))
   emitted-wanted-functions
   obfuscations
-  plain-arg-funs)
+  plain-arg-funs
+  (currently-imported-lambda nil)
+  (exported-lambdas nil))
 
 (defun transpiler-reset (tr)
   (setf (transpiler-thisify-classes tr) (make-hash-table)	; thisified classes.
@@ -75,6 +77,7 @@
   		(transpiler-defined-variables tr) nil
   		(transpiler-defined-variables-hash tr) (make-hash-table)
   		(transpiler-function-args tr) (make-hash-table)
+  		(transpiler-exported-lambdas tr) nil
   		(transpiler-obfuscations tr) (make-hash-table)))
 
 (defun transpiler-defined-function (tr name)
@@ -94,8 +97,8 @@
   name)
 
 (defun transpiler-switch-obfuscator (tr on?)
-  (setf  (transpiler-obfuscations tr) (make-hash-table)
-		 (transpiler-obfuscate? tr) on?))
+  (setf (transpiler-obfuscations tr) (make-hash-table)
+		(transpiler-obfuscate? tr) on?))
 
 (defun transpiler-function-arguments (tr fun)
   (href fun (transpiler-function-args tr)))
@@ -120,6 +123,19 @@
 
 (define-slot-setter-push! transpiler-add-plain-arg-fun tr
   (transpiler-plain-arg-funs tr))
+
+(define-slot-setter-acons! transpiler-add-exported-lambda tr
+  (transpiler-exported-lambdas tr))
+
+;; Needed for lambda-expansion of exported lambdas.
+(defun transpiler-current-funinfo (tr)
+  (assoc-value (transpiler-currently-imported-lambda tr)
+	   		   (transpiler-exported-lambdas tr)))
+
+;; Needed for lambda-expansion of exported lambdas.
+(defun transpiler-current-env (tr)
+  (awhen (transpiler-current-funinfo tr)
+	(funinfo-env !)))
 
 (defun transpiler-plain-arg-fun? (tr fun)
   (member fun (transpiler-plain-arg-funs tr)))

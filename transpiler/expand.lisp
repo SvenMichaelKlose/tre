@@ -46,15 +46,20 @@
 ;;;; LAMBDA EXPANSION
 
 (defun transpiler-lambda-expand-one (tr x)
-  (let forms (when (transpiler-stack-arguments? tr)
-			   (argument-expand-names
-			     'transpiler-lambda-expand
-			     (lambda-args x.)))
-    `#'(,(lambda-args x.)
-           ,@(lambda-embed-or-export
-               (make-funinfo :env (list forms nil))
-               (lambda-body x.)
-               (transpiler-lambda-export? tr)))))
+  (with (forms (when (transpiler-stack-arguments? tr)
+			     (argument-expand-names
+			       'transpiler-lambda-expand
+			       (lambda-args x.)))
+         fi	(make-funinfo :env (list forms nil)))
+    (prog1
+	  `#'(,(lambda-args x.)
+             ,@(lambda-embed-or-export
+				 fi
+                 (lambda-body x.)
+                 (transpiler-lambda-export? tr)))
+          (dolist (e (funinfo-exported-funs fi))
+            (transpiler-add-exported-lambda tr e. .e)
+            (transpiler-add-wanted-function tr e.)))))
 
 (defun transpiler-lambda-expand (tr x)
   "Expand top-level LAMBDA expressions."

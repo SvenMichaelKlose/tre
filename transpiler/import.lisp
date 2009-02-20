@@ -32,12 +32,15 @@
 
 (defun transpiler-import-wanted-function (tr x)
   (unless (transpiler-defined-function tr x)
-    (transpiler-add-emitted-wanted-function tr x)
-    (let fun (symbol-function x)
-      (when (functionp fun)
-	    (transpiler-sighten tr
-      	  `((defun ,x ,(function-arguments fun)
-		      ,@(function-body fun))))))))
+	(with-temporary (transpiler-currently-imported-lambda tr)
+					(when (assoc x (transpiler-exported-lambdas tr))
+					  x)
+      (transpiler-add-emitted-wanted-function tr x)
+      (let fun (symbol-function x)
+        (when (functionp fun)
+	      (transpiler-sighten tr
+      	    `((defun ,x ,(function-arguments fun)
+		        ,@(function-body fun)))))))))
 
 (defun transpiler-import-wanted-functions (tr)
   (mapcan (fn transpiler-import-wanted-function tr _)

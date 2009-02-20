@@ -63,13 +63,13 @@
 
 (define-js-macro aref (arr &rest idx)
   `(%transpiler-native ,arr
-    ,@(mapcar (fn `("[" ,_ "]"))
-              idx)))
+     ,@(mapcar (fn `("[" ,_ "]"))
+               idx)))
 
 (define-js-macro href (arr &rest idx)
   `(%transpiler-native ,arr
-    ,@(mapcar (fn `("[" ,_ "]"))
-              idx)))
+     ,@(mapcar (fn `("[" ,_ "]"))
+               idx)))
 
 (define-js-macro %%usetf-aref (val &rest x)
   `(%transpiler-native (aref ,@x) "=" ,val))
@@ -79,11 +79,11 @@
 
 ;; Experimental for lambda-export.
 (define-js-macro %vec (v i)
-  `(aref ,v ,i))
+  `(%transpiler-native ,v "[" ,i "]"))
 
 ;; Experimental for lambda-export.
 (define-js-macro %set-vec (v i x)
-  `(%%usetf-aref ,x ,v ,i))
+  `(%transpiler-native (aref ,v ,i) "=" ,x))
 
 (define-js-macro make-hash-table (&rest args)
   (let pairs (group args 2)
