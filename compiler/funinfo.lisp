@@ -15,7 +15,9 @@
   (free-vars  nil)
 
   ; List of exported functions.
-  (exported-funs nil)
+  (closures nil)
+
+  (gathered-closure-infos nil)
 
   ; List of lexical variables exported to child functions.
   (lexicals nil)
@@ -64,6 +66,13 @@
   "Get index of variable on the stack."
   (position var (funinfo-env-this fi)))
 
+(defun funinfo-add-closure (fi name fi-closure)
+  (format t "Add closure ~A~%" name)
+  (acons! name fi-closure (funinfo-closures fi)))
+
+(defun funinfo-add-gathered-closure-info (fi fi-closure)
+  (nconc! (funinfo-gathered-closure-infos fi) (list fi-closure)))
+
 (defun funinfo-lexicals-pos (fi var)
   "Get index of variable on the stack."
   (position var (funinfo-lexicals fi)))
@@ -71,6 +80,10 @@
 (defun funinfo-parent-lexicals-pos (fi var)
   "Get index of variable on the stack."
   (position var (funinfo-parent-lexicals fi)))
+
+(defun funinfo-get-child-funinfo (fi)
+  (format t "Fetching memorized FUNINFO~%")
+  (pop (funinfo-gathered-closure-infos fi)))
 
 (defmacro with-funinfo-env-temporary (fi args &rest body)
   "Execute body with new environment, containing 'args'."

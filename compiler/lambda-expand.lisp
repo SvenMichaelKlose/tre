@@ -35,6 +35,14 @@
   (when (atom var)
     (member var (apply #'append (funinfo-env fi)))))
 
+(defun make-lexical-place (fi var)
+  (if (or (not var)
+		  (eq '%%lexical var))
+	  var
+  	  (aif (funinfo-lexicals-pos fi var)
+	       `(aref %%lexical ,!)
+	       var)))
+
 (defun vars-to-stackplaces (fi body)
   "Replaces variables by stack operations. Returns modified body.
    Free variables are added to free-vars of the funinfo."
@@ -76,16 +84,7 @@
 ;       (member var
 ;			  (apply #'append (funinfo-free-vars fi)
 ;		   					  (funinfo-env fi)))))
-;
-;(defun make-lexical-place (fi var )
-;  var)
-;  (if (or (not var)
-;		  (eq '%%lexical var))
-;	  var
-;  	  (aif (funinfo-lexicals-pos fi var)
-;	       `(aref %%lexical ,!)
-;	       var)))
-;
+
 ;(defun vars-to-stackplaces (fi body)
 ;  "Replaces variables by stack operations. Returns modified body.
 ;   Free variables are added to free-vars of the funinfo."
@@ -127,7 +126,7 @@
       		v
 			(lambda-embed-or-export fi body export-lambdas))))))
 
-;;; LAMBDA export
+;;; Export
 
 (defun make-varblock-inits (fi)
   (let lexicals (funinfo-lexicals fi)
@@ -147,85 +146,88 @@
         ,@(make-varblock-inits fi)
 	    ,@body))))
 
-;;; Export transformation
-
-(defun lambda-expand-transform-child (fi name x)
-  (with (fi-child (funinfo-get-child-funinfo fi)
-	     lambda-expansion (lambda-embed-or-export fi-child
-			   				  					  (lambda-body x)
-			   				  					  t)
-         free-vars  (funinfo-free-vars fi-child))
-    (values `(%funref ,name (when free-vars
-							  '%%lexical))
-		    fi-exported
-		    lambda-expansion)))
+(defun lambda-export-make-exported (fi fi-child x)
+  (with-gensym name
+    (format t "Exporting ~A~%" name)
+    (eval `(%set-atom-fun ,name
+						  ,`#'(,(funinfo-args fi-child)
+								  ,@(lambda-expand-transform
+							   		    fi-child
+			   				   		    (lambda-body x)
+										t))))
+	(funinfo-add-closure fi name fi-child)
+	name))
 
 (defun lambda-export-transform (fi x)
-  "Export and expand function."
-  (with-gensym exported-fun
-    (format t "Exporting ~A~%" exported-fun)
-    (format t "In environment ~A~%" (funinfo-env fi))
-    (format t "Environment args ~A~%" (funinfo-args fi))
-	(with ((body fi-child lambda-expansion)
-			 (lambda-expand-transform-child fi exported-fun x))
-      (eval `(%set-atom-fun ,exported-fun
-						    ,`#'(,(funinfo-args fi-child)
-									,@lambda-expansion)))
-	  body)))
+  (format t "In environment ~A~%" (funinfo-env fi))
+  (format t "Environment args ~A~%" (funinfo-args fi))
+  (let fi-child (funinfo-get-child-funinfo fi)
+    `(%funref ,(lambda-export-make-exported fi fi-child x)
+			  ,(when (funinfo-free-vars fi-child)
+				 '%%lexical))))
 
 ;;; Export gathering
 
-(defun lambda-export-gather-lexicals-from-child (fi exp-fi)
+(defun lambda-export-gather-lexicals-from-child (fi fi-child)
   (map (fn adjoin! _ (funinfo-lexicals fi))
-	   (funinfo-free-vars exp-fi)))
+	   (funinfo-free-vars fi-child)))
 
 (defun lambda-export-funinfo-link-to-child (fi fi-child)
-  (funinfo-add-closure fi exp-fi)
+  (format t "Gathered closure info.~%")
+  (funinfo-add-gathered-closure-info fi fi-child)
   (lambda-export-gather-lexicals-from-child fi fi-child))
 
-(defun lambda-expand-gather-child-make-funinfo (fi fi-child)
+(defun lambda-export-gather-child-make-funinfo (fi)
   (let args	(cons '%ghost (lambda-args x))
 	 (make-funinfo :env (cons args
 			  				  (copy-tree (funinfo-env fi)))
 				   :args args
 				   :parent-lexicals (funinfo-lexicals fi))))
 
-; Do a gathering expansion to get the environment lists in place.
-(defun lambda-expand-gather (fi name x)
-  (let fi-child (lambda-expand-gather-child-make-funinfo fi)
-    (lambda-embed-or-export fi-child
-	  					    (lambda-body x)
-			   				t)
-	(lambda-export-funinfo-link-to-child fi fi-child)))
+;; Do a gathering expansion to initialize FUNINFO tree which
+;; reflects the structure of a function and all functions
+;; created in it.
+(defun lambda-export-gather (fi x)
+  (let fi-child (lambda-export-gather-child-make-funinfo fi)
+    (lambda-expand-gather fi-child
+	  				      (lambda-body x)
+			   			  t)
+	(lambda-export-funinfo-link-to-child fi fi-child))
+  nil)
 
-;;; Toplevel
+;;;; Toplevel
 
-(defun lambda-embed-or-export-branch (fi x export-lambdas)
+(defun lambda-expand-branch (fi x export-lambdas gather)
   (if
     (lambda-call? x)
       (lambda-call-embed fi x export-lambdas)
     (and export-lambdas
 		 (lambda? x))
-      (lambda-export fi x)
+	  (if gather
+          (lambda-export-gather fi x)
+          (lambda-export-transform fi x))
 	x))
 
-(defun lambda-embed-or-export-tree (fi body export-lambdas)
+(defun lambda-expand-tree (fi body export-lambdas gather)
   (tree-walk body
 			 :ascending
-			   (fn lambda-embed-or-export-branch fi _ export-lambdas)))
+			   (fn lambda-expand-branch fi _ export-lambdas gather)))
 
+(defun lambda-expand-transform (fi body export-lambdas)
+  "Perform LAMBDA expansion on expression."
+  (let body (lambda-expand-tree fi body export-lambdas nil)
+    (vars-to-stackplaces fi body)))
+
+(defun lambda-expand-gather (fi body export-lambdas)
+  "Perform LAMBDA expansion on expression."
+  (lambda-expand-tree fi body export-lambdas t))
+
+;; XXX (defun lambda-expand-0 (fi body export-lambdas)
 (defun lambda-embed-or-export (fi body export-lambdas)
   "Perform LAMBDA expansion on expression."
-  ; Do an environment-gathering run.
-  ;(format t "Top-level lambda gathering~%")
-  ;(lambda-embed-or-export-tree fi body export-lambdas)
-  ; Now just once again with appropriate funinfo.
-  ;(format t "Top-level lambda expansion~%")
-  (let body (lambda-embed-or-export-tree fi body export-lambdas)
-    (vars-to-stackplaces fi
-	    (if export-lambdas
-	  		(make-lexical-body fi body)
-			body))))
+  (when export-lambdas
+    (lambda-expand-tree fi body export-lambdas t))
+  (lambda-expand-transform fi body export-lambdas))
 
 (defun lambda-expand (fun body &optional (parent-env nil) (export-lambdas t))
   "Perform LAMBDA expansion on function."

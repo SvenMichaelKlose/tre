@@ -37,7 +37,7 @@
 
 (defmacro define-transpiler-std-macro (tr &rest x)
   (with (tre (eval tr)
-		 name (first x))
+		 name x.)
 	(when (expander-has-macro? (transpiler-macro-expander tre) name)
 	  (error "Macro ~A already defined in code-generator." name))
 	(transpiler-add-unwanted-function tre name)
@@ -50,15 +50,17 @@
 			     (argument-expand-names
 			       'transpiler-lambda-expand
 			       (lambda-args x.)))
-         fi	(make-funinfo :env (list forms nil)))
+         fi	(aif (transpiler-current-funinfo tr)
+				!
+				(make-funinfo :env (list forms nil))))
     (prog1
 	  `#'(,(lambda-args x.)
              ,@(lambda-embed-or-export
 				 fi
                  (lambda-body x.)
                  (transpiler-lambda-export? tr)))
-          (dolist (e (funinfo-exported-funs fi))
-            (transpiler-add-exported-lambda tr e. .e)
+          (dolist (e (funinfo-closures fi))
+            (transpiler-add-exported-closure tr e. .e)
             (transpiler-add-wanted-function tr e.)))))
 
 (defun transpiler-lambda-expand (tr x)

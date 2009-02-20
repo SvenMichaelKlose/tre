@@ -70,8 +70,7 @@
 								         args))))
 
 (defun expex-argexpand (ex fun args)
-  (if (and (atom fun)
-		   (funcall (expex-function? ex) fun))
+  (if (funcall (expex-function? ex) fun)
 	  (expex-argexpand-do ex fun args)
 	  args))
 
@@ -137,14 +136,14 @@
   (with (argexp (expex-argexpand ex x. .x)
 		 (pre newargs) (expex-args ex (cons x.
 											argexp)))
-    (expex-collect-variables ex x)
+    (expex-collect-variables ex newargs)
     (values pre (list newargs))))
 
 ;; Expand %SETQ expression.
 ;;
 ;; The place to set must not be expanded.
 (defun expex-expr-setq (ex x)
-  (expex-collect-variables ex x)
+  (expex-collect-variables ex .x)
   (with ((head replacement) (expex-args ex (cddr x)))
 	(values head
 		    `((%setq ,(second x) ,@replacement)))))

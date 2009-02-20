@@ -33,7 +33,7 @@
 (defun transpiler-import-wanted-function (tr x)
   (unless (transpiler-defined-function tr x)
 	(with-temporary (transpiler-currently-imported-lambda tr)
-					(when (assoc x (transpiler-exported-lambdas tr))
+					(when (assoc x (transpiler-exported-closures tr))
 					  x)
       (transpiler-add-emitted-wanted-function tr x)
       (let fun (symbol-function x)
