@@ -41,21 +41,22 @@
   "Get current environment description."
   (cdr (funinfo-env fi)))
 
-(defun funinfo-push-env (fi forms)
-  "Open new environment."
-  (push forms (funinfo-env fi)))
+;(defun funinfo-push-env (fi forms)
+;  "Open new environment."
+;  (push forms (funinfo-env fi)))
  
-(defun funinfo-pop-env (fi)
-  "Close environment."
-  (pop (funinfo-env fi)))
+;(defun funinfo-pop-env (fi)
+;  "Close environment."
+;  (pop (funinfo-env fi)))
 
 (defun funinfo-env-add-args (fi args)
-  "Add variables to the current environment."
   (setf (car (funinfo-env fi)) (append (car (funinfo-env fi)) args))
   args)
 
+(defun funinfo-arg? (fi var)
+  (member var (funinfo-args fi)))
+
 (defun funinfo-env-add (fi arg)
-  "Add variables to the current environment."
   (funinfo-env-add-args fi (list arg)))
 
 (defun funinfo-free-var-pos (fi var)
@@ -73,12 +74,14 @@
 (defun funinfo-add-gathered-closure-info (fi fi-closure)
   (nconc! (funinfo-gathered-closure-infos fi) (list fi-closure)))
 
-(defun funinfo-lexicals-pos (fi var)
-  "Get index of variable on the stack."
+(defun funinfo-add-lexical (fi name)
+  (format t "Add lexical ~A~%" name)
+  (push! name (funinfo-lexicals fi)))
+
+(defun funinfo-lexical-pos (fi var)
   (position var (funinfo-lexicals fi)))
 
 (defun funinfo-parent-lexicals-pos (fi var)
-  "Get index of variable on the stack."
   (position var (funinfo-parent-lexicals fi)))
 
 (defun funinfo-get-child-funinfo (fi)

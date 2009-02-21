@@ -46,19 +46,21 @@
 ;;;; LAMBDA EXPANSION
 
 (defun transpiler-lambda-expand-one (tr x)
-  (with (forms (when (transpiler-stack-arguments? tr)
-			     (argument-expand-names
+  (with (forms (argument-expand-names
 			       'transpiler-lambda-expand
-			       (lambda-args x.)))
-         fi	(aif (transpiler-current-funinfo tr)
-				!
-				(make-funinfo :env (list forms nil))))
+			       (lambda-args x.))
+         imported	(transpiler-current-funinfo tr)
+         fi			(or imported
+						(make-funinfo :env (list forms nil)
+							  		  :args forms)))
     (prog1
 	  `#'(,(lambda-args x.)
-             ,@(lambda-embed-or-export
-				 fi
-                 (lambda-body x.)
-                 (transpiler-lambda-export? tr)))
+             ,@(funcall (if imported
+						    #'lambda-expand-transform
+						    #'lambda-embed-or-export)
+				   fi
+                   (lambda-body x.)
+                   (transpiler-lambda-export? tr)))
           (dolist (e (funinfo-closures fi))
             (transpiler-add-exported-closure tr e. .e)
             (transpiler-add-wanted-function tr e.)))))
