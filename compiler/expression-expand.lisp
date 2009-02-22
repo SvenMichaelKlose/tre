@@ -44,6 +44,7 @@
 ;; Declines atoms and expressions with meta-forms.
 (defun expex-able? (ex x)
   (not (or (atom x)
+		   (function-ref-expr? x)
            (in? x. '%stack
 				   'vm-go 'vm-go-nil
 				   '%transpiler-native '%transpiler-string
