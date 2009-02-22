@@ -56,7 +56,7 @@
     (prog1
 	  `#'(,(lambda-args x.)
              ,@(funcall (if imported
-						    #'lambda-expand-transform
+						    #'lambda-embed-or-export-transform
 						    #'lambda-embed-or-export)
 				   fi
                    (lambda-body x.)

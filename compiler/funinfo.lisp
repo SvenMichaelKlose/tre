@@ -1,5 +1,5 @@
 ;;;; TRE compiler
-;;;; Copyright (C) 2006-2007 Sven Klose <pixel@copei.de>
+;;;; Copyright (C) 2006-2007,2009 Sven Klose <pixel@copei.de>
 
 ;;; Function information.
 ;;;
@@ -25,20 +25,18 @@
   ; Copy of parent function's lexicals.
   (parent-lexicals nil)
 
+  (parent niL)
   ; Function code. The format depends on the compilation pass.
   first-cblock)
 
 (defun funinfo-add-free-var (fi var)
-  "Add free variable."
   (setf (funinfo-free-vars fi) (nconc (funinfo-free-vars fi) (list var)))
   var)
 
 (defun funinfo-env-this (fi)
-  "Get current environment description."
   (car (funinfo-env fi)))
 
 (defun funinfo-env-parent (fi)
-  "Get current environment description."
   (cdr (funinfo-env fi)))
 
 ;(defun funinfo-push-env (fi forms)
@@ -60,23 +58,19 @@
   (funinfo-env-add-args fi (list arg)))
 
 (defun funinfo-free-var-pos (fi var)
-  "Get index of free variable in environment vector."
   (position var (funinfo-free-vars fi)))
 
 (defun funinfo-env-pos (fi var)
-  "Get index of variable on the stack."
   (position var (funinfo-env-this fi)))
 
 (defun funinfo-add-closure (fi name fi-closure)
-  (format t "Add closure ~A~%" name)
   (acons! name fi-closure (funinfo-closures fi)))
 
 (defun funinfo-add-gathered-closure-info (fi fi-closure)
   (nconc! (funinfo-gathered-closure-infos fi) (list fi-closure)))
 
 (defun funinfo-add-lexical (fi name)
-  (format t "Add lexical ~A~%" name)
-  (push! name (funinfo-lexicals fi)))
+  (nconc! (funinfo-lexicals fi) (list name)))
 
 (defun funinfo-lexical-pos (fi var)
   (position var (funinfo-lexicals fi)))
@@ -85,7 +79,6 @@
   (position var (funinfo-parent-lexicals fi)))
 
 (defun funinfo-get-child-funinfo (fi)
-  (format t "Fetching memorized FUNINFO~%")
   (pop (funinfo-gathered-closure-infos fi)))
 
 (defmacro with-funinfo-env-temporary (fi args &rest body)

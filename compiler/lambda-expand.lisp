@@ -97,36 +97,36 @@
 ;;; Export
 
 (defun make-env-inits (fi)
-  (mapcan (fn (unless (or (funinfo-arg? fi _)
-						  (funinfo-lexical-pos fi _))
-				`((%var ,_))))
-	      (funinfo-env-this fi)))
+  (vars-to-stackplaces fi
+    (mapcan (fn (unless (or (funinfo-arg? fi _)
+						    (funinfo-lexical-pos fi _))
+				  `((%var ,_))))
+	        (funinfo-env-this fi))))
 
 (defun make-varblock-inits (fi)
-  (let lexicals (funinfo-lexicals fi)
-    (mapcan (fn (when (funinfo-lexical-pos fi _)
-				  `((%%usetf-aref ,_
-							      %%lexical
-						 	      ,(position _ lexicals)))))
-		    (funinfo-args fi))))
+  (with (lexicals (funinfo-lexicals fi)
+		 lex-sym (vars-to-stackplaces fi '%%lexical))
+    `((%setq ,lex-sym
+	         (make-array ,(length lexicals)))
+      ,@(mapcan (fn (awhen (funinfo-lexical-pos fi _)
+				  	  `((%%usetf-aref ,_
+							      	  ,lex-sym
+						 	      	  ,!))))
+				(funinfo-args fi)))))
 
 (defun make-lexical-inits (fi body)
   (let lexicals (funinfo-lexicals fi)
-    (format t "Lexical scope with ~A entries.~%" (length lexicals))
     `(,@(when (atom body.)
 	      (list body.))
 	  ,@(make-env-inits fi)
 	  ,@(when lexicals
-          `((%setq %%lexical
-	               (make-array ,(length lexicals)))
-   	  ,@(make-varblock-inits fi)))
+   	  	  (make-varblock-inits fi))
       ,@(if (atom body.)
 		    .body
 		    body))))
 
 (defun lambda-export-make-exported (fi fi-child x)
   (with-gensym name
-    (format t "Exporting ~A with args ~A~%" name (funinfo-args fi-child))
     (eval `(%set-atom-fun ,name
 						  ,`#'(,(funinfo-args fi-child)
 								  ,@(lambda-body x))))
@@ -150,7 +150,6 @@
     (funinfo-env-add fi '%%lexical)))
 
 (defun lambda-export-funinfo-link-to-child (fi fi-child)
-  (format t "Gathered closure info.~%")
   (funinfo-add-gathered-closure-info fi fi-child)
   (lambda-export-gather-lexicals-from-child fi fi-child))
 
@@ -159,7 +158,8 @@
 	 (make-funinfo :env (cons args
 			  				  (copy-tree (funinfo-env fi)))
 				   :args args
-				   :parent-lexicals (funinfo-lexicals fi))))
+				   :parent-lexicals (funinfo-lexicals fi)
+				   :parent fi)))
 
 ;; Do a gathering expansion to initialize FUNINFO tree which
 ;; reflects the structure of a function and all functions
@@ -201,13 +201,16 @@
       (lambda-expand-gather fi body export-lambdas)
       (lambda-expand-transform fi body export-lambdas)))
 
+(defun lambda-embed-or-export-transform (fi body export-lambdas)
+   (make-lexical-inits fi
+       (lambda-expand-transform fi body export-lambdas)))
+
 ;; XXX (defun lambda-expand-0 (fi body export-lambdas)
 (defun lambda-embed-or-export (fi body export-lambdas)
   (when export-lambdas
     (lambda-expand-tree fi body export-lambdas t))
-  (vars-to-stackplaces fi
-     (make-lexical-inits fi
-         (lambda-expand-transform fi body export-lambdas))))
+   (make-lexical-inits fi
+       (lambda-expand-transform fi body export-lambdas)))
 
 (defun lambda-expand (fun body &optional (parent-env nil) (export-lambdas t))
   (with (forms  (argument-expand-names 'lambda-expansion

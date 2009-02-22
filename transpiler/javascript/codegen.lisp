@@ -124,7 +124,11 @@
   `(%transpiler-native ,plc "=" ,val))
 
 (define-js-macro %slot-value (x y)
-  ($ x "." y))
+  (if (consp x)
+	  (if (eq '%transpiler-native x.)
+		  `(%transpiler-native ,@x "." ,y)
+		  (error "%TRANSPILER-NATIVE expected"))
+  	  ($ x "." y)))
 
 (define-js-macro %js-typeof (x)
   `(%transpiler-native "typeof " ,x))
