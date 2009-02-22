@@ -1,6 +1,6 @@
 /*
  * TRE interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
  *
  * Macro-expansion wrappers calling TRE function, if defined.
  */
@@ -14,6 +14,7 @@
 #include "error.h"
 #include "thread.h"
 #include "debug.h"
+#include "argument.h"
 
 treptr treptr_macroexpand_hook;
 struct tre_atom *treatom_macroexpand_hook;
@@ -45,11 +46,11 @@ tremacro_builtin_macroexpand_1 (treptr list)
  */
 treptr
 tremacro_builtin_macroexpand (treptr list)
-{   
-    treptr  n = list;
+{
+    treptr  n = CONS(trearg_get (list), treptr_nil);
 
     if (treatom_macroexpand_hook->fun == treptr_nil)
-        return list;
+        return CAR(n);
 
     do {
 		list = n;
@@ -58,7 +59,7 @@ tremacro_builtin_macroexpand (treptr list)
 		tregc_pop ();
     } while (!trelist_equal (list, n));
 
-    return n;
+    return CAR(n);
 }            
 
 void

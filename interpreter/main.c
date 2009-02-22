@@ -1,6 +1,6 @@
 /*
- * nix operating system project tre interpreter
- * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+ * TRE interpreter
+ * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
  *
  * Top-level control
  */
@@ -123,7 +123,7 @@ tre_main_line (struct tre_stream *stream)
 	expr = tredot_expand (expr);
 
     /* Expand macros. */
-    expr = tremacro_builtin_macroexpand (expr);
+    expr = tremacro_builtin_macroexpand (CONS(expr, treptr_nil));
 
 	/* QUASIQUOTE expansion. */
 	tregc_push (expr);

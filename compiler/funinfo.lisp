@@ -57,14 +57,14 @@
 	  (awhen (funinfo-parent fi)
 		(funinfo-in-this-or-parent-env? ! var))))
 
-,(car (macroexpand
+,(macroexpand
 	`(progn
 	  ,@(mapcar (fn `(defun ,($ 'funinfo- (first _)) (fi var)
 				   	    (position var (,($ 'funinfo- (second _)) fi))))
 		    (group `(free-var-pos free-vars
 					 env-pos env
 					 lexical-pos lexicals)
-				   2)))))
+				   2))))
 
 (define-slot-setter-acons! funinfo-add-closure fi
   (funinfo-closures fi))
