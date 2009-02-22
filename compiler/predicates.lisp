@@ -22,3 +22,8 @@
 (defun identity? (x)
   (and (consp x)
        (eq 'IDENTITY x.)))
+
+(defun function-ref-expr? (x)
+  (and (consp x)
+       (eq 'FUNCTION x.)
+	   (atom (second x))))
