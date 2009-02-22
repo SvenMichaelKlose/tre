@@ -51,7 +51,7 @@
 			       (lambda-args x.))
          imported	(transpiler-current-funinfo tr)
          fi			(or imported
-						(make-funinfo :env (list forms nil)
+						(make-funinfo :env forms
 							  		  :args forms)))
     (prog1
 	  `#'(,(lambda-args x.)
@@ -153,6 +153,7 @@
     ; Make (SLOT-VALUE this ...) expressions for class members.
     (fn thisify (transpiler-thisify-classes tr) _)
 
+#'print
 	; Inline local functions and export constant LAMBDA expressions.
     (fn transpiler-lambda-expand tr _)
 

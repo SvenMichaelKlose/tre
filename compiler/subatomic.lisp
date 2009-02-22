@@ -1,6 +1,6 @@
 ;;;; nix operating system project
 ;;;; lisp compiler
-;;;; Copyright (c) 2006-2007 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2006-2009 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Subatomic expression utilities.
 

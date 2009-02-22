@@ -20,16 +20,14 @@
 (defun special-form-expand (x)
   (backquote-expand (compiler-macroexpand x)))
 
-(defun atomic-lambda (fun &optional (parent-env nil))
+(defun atomic-lambda (fun)
   (with ((lambda-expansion fi)
-	   	   (lambda-expand fun (special-form-expand (function-body fun))
-						  parent-env))
+	   	   (lambda-expand fun (special-form-expand (function-body fun))))
     fi))
 
-(defun atomic-expand-lambda (fun &optional (parent-env nil))
+(defun atomic-expand-lambda (fun)
   (with ((lambda-expansion fi)
-	   	   (lambda-expand fun (special-form-expand (function-body fun))
-						  parent-env))
+	   	   (lambda-expand fun (special-form-expand (function-body fun))))
 	(funcall (compose (fn tree-expand fi _)
 					  #'opt-peephole
 					  (fn expression-expand (make-expex) _))
