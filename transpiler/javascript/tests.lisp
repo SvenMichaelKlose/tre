@@ -18,7 +18,7 @@
 											  "' failed</br>"))
 						 (js-print ,(second _))
 						 (document.writeln "</br>")))))
-		    	(subseq *tests* 0 9)))
+		    	*tests*))
 	`(,@funs
 	    (defun environment-tests ()
 		  ,@(mapcar #'list (reverse names))))))
