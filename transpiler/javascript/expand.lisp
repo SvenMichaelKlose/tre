@@ -22,7 +22,8 @@
 ;; Assign function to global variable.
 ;; XXX This could be generic if there wasn't *JS-TRANSPILER*.
 (defun js-essential-defun (name args &rest body)
-  (print `(defun ,name))
+  (when *show-definitions*
+    (print `(defun ,name)))
   (with (n (%defun-name name)
 		 tr *js-transpiler*)
     (transpiler-obfuscate-symbol tr n)
@@ -50,14 +51,16 @@
 		 (setf (symbol-function ,g) ,n)))))
 
 (define-js-std-macro defmacro (name &rest x)
-  (print `(defmacro ,name ))
+  (when *show-definitions*
+    (print `(defmacro ,name )))
   (eval (transpiler-macroexpand *js-transpiler*
 								`(define-js-std-macro ,name ,@x)))
   nil)
 
 (define-js-std-macro defvar (name val)
   (let tr *js-transpiler*
-    (print `(defvar ,name))
+    (when *show-definitions*
+      (print `(defvar ,name)))
     (when (transpiler-defined-variable tr name)
       (error "variable ~A already defined" name))
     (transpiler-add-defined-variable tr name)
