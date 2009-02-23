@@ -33,6 +33,8 @@ treptr treopt_verbose_eval;
 treptr treeval_slot_value;
 treptr treeval_function_symbol;
 
+unsigned treeval_recursions;
+
 /*
  * Execute user-defined function.
  *
@@ -195,6 +197,8 @@ treeval_expr (treptr x)
     fun = CAR(x);
     v = treptr_nil;
 
+	if (treeval_recursions++ == TRE_MAX_RECURSIONS)
+		trewarn (treptr_nil, "%d recursions reached", TRE_MAX_RECURSIONS);
     tredebug_chk_breakpoints (x);
 	TREDEBUG_STEP();
 
@@ -218,8 +222,10 @@ treeval_expr (treptr x)
 			} else if (CAR(fun) == treeval_function_symbol
 						&& TREPTR_IS_CONS(CDR(fun))
 						&& TREPTR_IS_CONS(CADR(fun))
-						&& CDDR(fun) == treptr_nil)
+						&& CDDR(fun) == treptr_nil) {
+				treeval_recursions--;
 				return treeval_function (x);
+			}
 
 		default:
         	fun = treeval (fun);
@@ -245,6 +251,7 @@ treeval_expr (treptr x)
             break;
 
         default:
+			treeval_recursions--;
             return treerror (CAR(x), "function expected instead of %s",
                              treerror_typename (TREPTR_TYPE(CAR(x))));
     }
@@ -257,6 +264,7 @@ treeval_expr (treptr x)
     	tregc_pop ();
 	}
 
+	treeval_recursions--;
     return v;
 }
 
@@ -371,6 +379,8 @@ treeval_args (treptr x)
 void
 treeval_init ()
 {
+	treeval_recursions = 0;
+
     treeval_slot_value = treatom_get ("%SLOT-VALUE", TRECONTEXT_PACKAGE());
 	EXPAND_UNIVERSE(treeval_slot_value);
     treeval_function_symbol = treatom_get ("FUNCTION", TRECONTEXT_PACKAGE());
