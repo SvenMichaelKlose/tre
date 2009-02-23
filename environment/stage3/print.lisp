@@ -9,13 +9,13 @@
 
 (defun %princ-number (c str)
   (labels 
-    ((rec (out n)
+    ((recp (out n) ; XXX: REC will bugs the expression-expander.
       (let m (mod n 10)
         (push m out)
         (if (> n 9)
-          (rec out (/ (- n m) 10))
+          (recp out (/ (- n m) 10))
           out))))
-    (dolist (i (rec nil c))
+    (dolist (i (recp nil c))
       (%princ-character (code-char (+ i #\0)) str))))
 
 (defun %princ-string (obj str)

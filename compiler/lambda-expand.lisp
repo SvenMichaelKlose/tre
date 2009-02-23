@@ -2,14 +2,8 @@
 ;;;;; Copyright (C) 2005-2009 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; LAMBDA expansion.
-;;;;;
-;;;;; This pass embeds functions which introduce local variables, allocating
-;;;;; stack slots for the arguments of the embedded function.
-;;;;; It also exports functions and creates function references with pointers
-;;;;; to memory blocks of free variables.
 
 (defmacro with-lambda-call ((args vals body call) &rest exec-body)
-  "Bind local function call components to variables for exec-body."
   (with-gensym (tmp fun)
     `(with (,tmp ,call
             ,fun (second (car ,tmp))
@@ -18,67 +12,98 @@
             ,body (lambda-body ,fun))
        ,@exec-body)))
 
-;;; Stack setup
-(defun funinfo-find-lexical (fi fi-child var)
-  (if fi
-      (aif (funinfo-lexical-pos fi var)
-		   (values (funinfo-lexical fi)
-			       !)
-	       (funinfo-find-lexical (funinfo-parent fi)
-							     fi
-							     var))
-	  (values nil -1))) ; dummy in gathering pass.
+;;;; FUNINFO manipulators
 
-(defun lambda-export-find-lexical (fi fi-child var)
-  (unless (funinfo-free-var-pos fi-child var)
-    (funinfo-add-free-var fi-child var))
-  (with ((lex pos) (funinfo-find-lexical fi fi-child var))
-    (if (eq lex (funinfo-lexical fi))
-		(values (funinfo-ghost fi-child) pos)
-		(values lex pos))))
+(defun funinfo-make-lexical (fi)
+  (unless (funinfo-lexical fi)
+    (let lexical (gensym)
+	  (setf (funinfo-lexical fi) lexical)
+	  (funinfo-env-add fi lexical))))
 
-(defun make-stackplace (fi var)
-  (if (funinfo-arg? fi var)
-	  var
-      (aif (funinfo-env-pos fi var)
-           `(%stack ,!)
-	       (with ((ghost pos) (lambda-export-find-lexical (funinfo-parent fi)
-														  fi var))
-             `(%vec ,(vars-to-stackplaces-atom fi ghost) ,pos)))))
+(defun funinfo-make-ghost (fi)
+  (unless (funinfo-ghost fi)
+    (let ghost (gensym)
+	  (setf (funinfo-ghost fi) ghost)
+	  (setf (funinfo-args fi)
+		    (cons ghost (funinfo-args fi)))
+	  (funinfo-env-add fi ghost))))
 
-(defun is-env-var? (fi var)
-  (when (and (atom var)
-			 (not (member var (funinfo-args fi))))
-    (funinfo-in-this-or-parent-env? fi var)))
+(defun funinfo-link-lexically (fi fi-child)
+  (funinfo-make-lexical fi)
+  (funinfo-make-ghost fi-child))
 
-(defun make-lexical-place (fi var)
-  (if (or (not var)
-		  (consp var))
-	  var
-  	  (aif (funinfo-lexical-pos fi var)
-	       `(aref ,(funinfo-lexical fi) ,!)
-	       var)))
+;; Make lexical path to desired variable.
+(defun funinfo-setup-lexical-links (fi fi-child var)
+  (unless fi
+	(error "couldn't find ~A in environment" var))
+  (funinfo-add-free-var fi-child var)
+  (funinfo-link-lexically fi fi-child)
+  (if (funinfo-env-pos fi var)
+	  (funinfo-add-lexical fi var)
+      (funinfo-setup-lexical-links (funinfo-parent fi) fi var)))
+
+;;; Pass lexical up one step through ghost.
+
+(defun make-lexical-place-expr (fi fi-child var)
+  `(%vec ,(funinfo-ghost fi-child)
+		 ,(funinfo-lexical-pos fi var)))
+
+(defun make-lexical-1 (fi fi-child var)
+  (if (funinfo-env-pos fi var)
+	  (make-lexical-place-expr fi fi-child var)
+	  (make-lexical-1 (funinfo-parent fi) fi var)))
+
+(defun make-lexical-0 (fi fi-child x)
+  (funinfo-setup-lexical-links fi fi-child x)
+  (let ret (make-lexical-1 fi fi-child x)
+	`(%vec ,(make-lexical fi fi-child (second ret)) ,(third ret))))
+
+(defun make-stackplace (fi fi-child x)
+  (if (funinfo-env-pos fi x)
+      `(%stack ,(funinfo-env-pos fi x))
+	  x))
+
+(defun make-lexical (fi fi-child x)
+  (if (eq (funinfo-ghost fi-child) x)
+	  (vars-to-stackplaces-atom fi x) ;(make-stackplace fi x)
+	  (make-lexical-0 fi fi-child x)))
 
 (defun vars-to-stackplaces-atom (fi x)
-  (if
-    (lambda? x) ; Add variables to ignore in subfunctions.
-	  `#'(,(lambda-args x)
-			 ,@(vars-to-stackplaces fi (lambda-body x)))
-	(%slot-value? x)
-	  `(%slot-value ,(vars-to-stackplaces fi (second x)) ,(third x))
-   	(is-env-var? fi x)
-   	  (make-stackplace fi x)
-	x))
+  (when x
+    (if
+      (lambda? x) ; Add variables to ignore in subfunctions.
+	    `#'(,(lambda-args x)
+			   ,@(vars-to-stackplaces fi (lambda-body x)))
+	  (%slot-value? x)
+	    `(%slot-value ,(vars-to-stackplaces fi (second x)) ,(third x))
+	  ; Skip item, if it's not in the environment.
+   	  (not (funinfo-in-this-or-parent-env? fi x))
+		x
+	  ; Emit lexical place, except the lexical array itself (it can
+	  ; self-reference).
+      (and (not (eq (funinfo-lexical fi) x))
+		   (funinfo-lexical-pos fi x))
+        `(%vec ,(vars-to-stackplaces-atom fi (funinfo-lexical fi))
+			   ,(funinfo-lexical-pos fi x))
+	  ; Emit argumet instead of its stack-place.
+      (and (not (funinfo-lexical-pos fi x))
+		   (funinfo-arg? fi x))
+		x
+	  ; Emit stack place.
+      (funinfo-env-pos fi x)
+        `(%stack ,(funinfo-env-pos fi x))
+	  ; Emit lexical place (outside the function).
+	  (make-lexical (funinfo-parent fi) fi x))))
 
-(defun vars-to-stackplaces (fi body)
-  (tree-walk body
-	:dont-ascend-after-if
-	  (fn (or (%slot-value? _)
-			  (lambda? _)))
-    :ascending
-      (fn vars-to-stackplaces-atom fi (make-lexical-place fi _))))
+(defvar *gathering* nil)
 
-;;; LAMBDA inlining
+(defun vars-to-stackplaces (fi x)
+  (if (consp x)
+	  (cons (vars-to-stackplaces fi x.)
+			(vars-to-stackplaces fi .x))
+	  (vars-to-stackplaces-atom fi x)))
+
+;;;; LAMBDA inlining
 
 (defun make-inline-body (stack-places values body)
   `(vm-scope
@@ -102,45 +127,36 @@
       	  v
 		  (lambda-expand-gather-or-transform fi body export-lambdas gather)))));)
 
-(defun print-funinfo (fi)
-  (format t "Arguments: ~A~%" (funinfo-args fi))
-  (format t "Lexicals:  ~A~%" (funinfo-lexicals fi))
-  (format t "Free vars: ~A~%" (funinfo-free-vars fi))
-  (format t "Env:       ~A~%" (funinf-env fi))
-  (format t "Lexical sym: ~A~%" (funinfo-lexical fi))
-  (format t "Ghost sym:   ~A~%" (funinfo-ghost fi))
-  fi)
-
 ;;; Export
 
-(defun make-env-inits (fi)
+(defun make-var-declarations (fi)
   (vars-to-stackplaces fi
-    (mapcan (fn (unless (or (funinfo-arg? fi _)
-						    (funinfo-lexical-pos fi _))
+    (mapcan (fn (unless (and (not (eq (funinfo-lexical fi) _))
+						 	 (or (funinfo-arg? fi _)
+						    	 (funinfo-lexical-pos fi _)))
 				  `((%var ,_))))
 	        (funinfo-env fi))))
 
-(defun make-varblock-inits (fi)
-  (with (lexicals (funinfo-lexicals fi)
-		 lex-sym (vars-to-stackplaces fi (funinfo-lexical fi)))
-    `((%setq ,lex-sym
-	         (make-array ,(length lexicals)))
-      ,@(mapcan (fn (awhen (funinfo-lexical-pos fi _)
-				  	  `((%%usetf-aref ,_
-							      	  ,lex-sym
-						 	      	  ,!))))
-				(funinfo-args fi)))))
-
-(defun make-lexical-inits (fi body)
+(defun make-copiers-to-lexicals (fi)
   (let lexicals (funinfo-lexicals fi)
-    `(,@(when (atom body.)
-	      (list body.))
-	  ,@(make-env-inits fi)
-	  ,@(when lexicals
-   	  	  (make-varblock-inits fi))
-      ,@(if (atom body.)
-		    .body
-		    body))))
+	(when lexicals
+	  (let lex-sym (vars-to-stackplaces fi (funinfo-lexical fi))
+    	`((%setq ,lex-sym (make-array ,(length lexicals)))
+          ,@(mapcan (fn (awhen (funinfo-lexical-pos fi _)
+				  	      `((%set-vec ,lex-sym
+						 	      	  ,!
+								  	  ,_))))
+					(append (list (funinfo-lexical fi))
+						    (funinfo-args fi))))))))
+
+(defun make-function-epilogue (fi body)
+  `(,@(when (atom body.) ; Preserve first atom.
+	    (list body.))
+	,@(make-var-declarations fi)
+	,@(make-copiers-to-lexicals fi)
+    ,@(if (atom body.)
+		  .body
+		  body)))
 
 (defun lambda-export-make-exported (fi fi-child x)
   (with-gensym name
@@ -151,46 +167,27 @@
 	name))
 
 (defun lambda-export-transform (fi x)
-  (let fi-child (funinfo-get-child-funinfo fi)
-    `(%funref ,(lambda-export-make-exported fi fi-child x)
-			  ,(when (funinfo-free-vars fi-child)
-				 (funinfo-lexical fi)))))
+  (with (fi-child (funinfo-get-child-funinfo fi)
+		 exported (lambda-export-make-exported fi fi-child x))
+	 (if (funinfo-ghost fi-child)
+    	 `(%funref ,exported ,(funinfo-lexical fi))
+		 exported)))
 
 ;;; Export gathering
 
-(defun lambda-export-gather-lexicals-from-child (fi fi-child)
-  (map (fn (if (funinfo-env-pos fi _)
-		       (funinfo-add-lexical fi _)
-		       (funinfo-add-free-var fi _)))
-	   (funinfo-free-vars fi-child))
-  (when (funinfo-free-vars fi-child)
-	(with-gensym lexical
-	  (setf (funinfo-lexical fi) lexical)
-      (funinfo-env-add fi lexical))))
-
-(defun lambda-export-funinfo-link-to-child (fi fi-child)
-  (funinfo-add-gathered-closure-info fi fi-child)
-  (lambda-export-gather-lexicals-from-child fi fi-child))
-
 (defun lambda-export-gather-child-make-funinfo (fi)
-  (with-gensym ghost
-    (let args (cons ghost
-				    (lambda-args x))
-	   (make-funinfo :env args
-				     :args args
-				     :parent-lexicals (funinfo-lexicals fi)
-				     :parent fi
-					 :ghost ghost))))
+  (let args (lambda-args x)
+    (make-funinfo :env args
+			      :args args
+			      :parent fi)))
 
-;; Do a gathering expansion to initialize FUNINFO tree which
-;; reflects the structure of a function and all functions
-;; created in it.
+;; Do a gathering expansion. Builds FUNINFO tree.
 (defun lambda-export-gather (fi x)
   (let fi-child (lambda-export-gather-child-make-funinfo fi)
     (lambda-expand-gather fi-child
 	  				      (lambda-body x)
 			   			  t)
-	(lambda-export-funinfo-link-to-child fi fi-child))
+    (funinfo-add-gathered-closure-info fi fi-child))
   nil)
 
 ;;;; Toplevel
@@ -223,15 +220,16 @@
       (lambda-expand-transform fi body export-lambdas)))
 
 (defun lambda-embed-or-export-transform (fi body export-lambdas)
-   (make-lexical-inits fi
-       (lambda-expand-transform fi body export-lambdas)))
+  (make-function-epilogue fi
+      (lambda-expand-transform fi body export-lambdas)))
 
 ;; XXX (defun lambda-expand-0 (fi body export-lambdas)
 (defun lambda-embed-or-export (fi body export-lambdas)
   (when export-lambdas
     (lambda-expand-tree fi body export-lambdas t))
-   (make-lexical-inits fi
-       (lambda-expand-transform fi body export-lambdas)))
+(with-temporary *gathering* t
+  (lambda-embed-or-export-transform fi body export-lambdas))
+)
 
 (defun lambda-expand (fun body &optional (export-lambdas t))
   (with (forms  (argument-expand-names 'lambda-expansion

@@ -30,8 +30,12 @@
   ; Function code. The format depends on the compilation pass.
   first-cblock)
 
+(defun funinfo-free-var? (fi var)
+  (member var (funinfo-free-vars fi)))
+
 (defun funinfo-add-free-var (fi var)
-  (nconc! (funinfo-free-vars fi) (list var))
+  (unless (funinfo-free-var? fi var)
+    (nconc! (funinfo-free-vars fi) (list var)))
   var)
 
 (defun funinfo-env-parent (fi)
@@ -50,10 +54,11 @@
 		  (funinfo-env-all !))))
 
 (defun funinfo-env-add (fi arg)
-  (funinfo-env-add-args fi (list arg)))
+  (unless (funinfo-env-pos fi arg)
+    (funinfo-env-add-args fi (list arg))))
 
 (defun funinfo-in-this-or-parent-env? (fi var)
-  (or (member var (funinfo-env fi))
+  (or (funinfo-env-pos fi var)
 	  (awhen (funinfo-parent fi)
 		(funinfo-in-this-or-parent-env? ! var))))
 
@@ -73,13 +78,13 @@
   (nconc! (funinfo-gathered-closure-infos fi) (list fi-closure)))
 
 (defun funinfo-add-lexical (fi name)
-  (nconc! (funinfo-lexicals fi) (list name)))
+  (unless (funinfo-lexical-pos fi name)
+    (nconc! (funinfo-lexicals fi) (list name))))
 
 (defun funinfo-get-child-funinfo (fi)
   (pop (funinfo-gathered-closure-infos fi)))
 
 (defmacro with-funinfo-env-temporary (fi args &rest body)
-  "Execute body with new environment, containing 'args'."
   (with-gensym old-env
     `(let ,old-env (copy-tree (funinfo-env ,fi))
        (funinfo-env-add-args ,fi ,args)
@@ -87,3 +92,19 @@
          (progn
            ,@body)
 	     (setf (funinfo-env ,fi) ,old-env)))))
+
+(defun print-funinfo (fi)
+  (format t "Arguments: ~A~%" (funinfo-args fi))
+  (format t "Ghost sym:   ~A~%" (funinfo-ghost fi))
+  (format t "Stack:       ~A~%" (funinfo-env fi))
+  (format t "Lexicals:  ~A~%" (funinfo-lexicals fi))
+  (format t "Lexical sym: ~A~%" (funinfo-lexical fi))
+  (format t "Free vars: ~A~%" (funinfo-free-vars fi))
+  (format t "-~%")
+  fi)
+
+(defun print-funinfo-stack (fi)
+  (when fi
+    (print-funinfo fi)
+    (print-funinfo-stack (funinfo-parent fi)))
+  fi)
