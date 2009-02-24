@@ -116,7 +116,7 @@
 			  (in=? _ #\_ #\. #\$ #\#)))
 	:make-label
 	  #'js-transpiler-make-label
-	:lambda-export? nil))
+	:lambda-export? t))
 
 (defvar *js-transpiler* (make-javascript-transpiler nil))
 (defvar *js-separator* (transpiler-separator *js-transpiler*))

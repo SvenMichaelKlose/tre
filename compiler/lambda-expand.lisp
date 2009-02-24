@@ -1,5 +1,5 @@
 ;;;;; TRE compiler
-;;;;; Copyright (C) 2005-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; LAMBDA expansion.
 
@@ -65,13 +65,12 @@
 
 (defun make-lexical (fi fi-child x)
   (if (eq (funinfo-ghost fi-child) x)
-	  (vars-to-stackplaces-atom fi x) ;(make-stackplace fi x)
+	  (vars-to-stackplaces-atom fi x)
 	  (make-lexical-0 fi fi-child x)))
 
 (defun vars-to-stackplaces-atom (fi x)
   (when x
     (if
-
 	  ; Skip item, if it's not in the environment.
    	  (not (funinfo-in-this-or-parent-env? fi x))
 		x
@@ -90,8 +89,6 @@
         `(%stack ,(funinfo-env-pos fi x))
 	  ; Emit lexical place (outside the function).
 	  (make-lexical (funinfo-parent fi) fi x))))
-
-(defvar *gathering* nil)
 
 (defun vars-to-stackplaces (fi x)
   (if (consp x)
@@ -229,9 +226,7 @@
 (defun lambda-embed-or-export (fi body export-lambdas)
   (when export-lambdas
     (lambda-expand-tree fi body export-lambdas t))
-(with-temporary *gathering* t
   (lambda-embed-or-export-transform fi body export-lambdas))
-)
 
 (defun lambda-expand (fun body &optional (export-lambdas t))
   (with (forms  (argument-expand-names 'lambda-expansion

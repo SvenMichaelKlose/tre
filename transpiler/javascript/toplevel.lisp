@@ -14,7 +14,8 @@
   (format f " *~%")
   (format f " * caroshi ECMAScript obfuscator~%")
   (format f " */~%")
-  (format f "function T37funref (f, g) { var r=function () { var a = arrayCopy (arguments); a.unshift (g); return f.apply (null, a); }; r.treArgs = cdr (f.treArgs); return r; }~%")
+  (when (transpiler-lambda-export? *js-transpiler*)
+    (format f "function T37funref (f, g) { var r=function () { var a = arrayCopy (arguments); a.unshift (g); return f.apply (null, a); }; r.treArgs = cdr (f.treArgs); return r; }~%"))
   (format f "var _I_ = 0; while (1) {switch (_I_) {case 0: ~%")
   (with (tr *js-transpiler*
 		 ; Expand.
