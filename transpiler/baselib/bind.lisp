@@ -6,4 +6,9 @@
 (defun %bind (obj fun)
   (assert (functionp fun) "BIND requires a function")
   #'(()
-      (fun.apply obj arguments)))
+	  ,(if *exported-lambdas*
+		   ; Get rid of the ghost argument.
+		   '(let a (array-copy arguments)
+			  (a.shift)
+    		  (fun.apply obj a))
+      	   '(fun.apply obj arguments))))

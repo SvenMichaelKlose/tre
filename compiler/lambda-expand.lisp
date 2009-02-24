@@ -71,11 +71,7 @@
 (defun vars-to-stackplaces-atom (fi x)
   (when x
     (if
-      (lambda? x) ; Add variables to ignore in subfunctions.
-	    `#'(,(lambda-args x)
-			   ,@(vars-to-stackplaces fi (lambda-body x)))
-	  (%slot-value? x)
-	    `(%slot-value ,(vars-to-stackplaces fi (second x)) ,(third x))
+
 	  ; Skip item, if it's not in the environment.
    	  (not (funinfo-in-this-or-parent-env? fi x))
 		x
@@ -99,8 +95,14 @@
 
 (defun vars-to-stackplaces (fi x)
   (if (consp x)
-	  (cons (vars-to-stackplaces fi x.)
-			(vars-to-stackplaces fi .x))
+      (if
+		(lambda? x) ; Add variables to ignore in subfunctions.
+	      `#'(,(lambda-args x)
+			     ,@(vars-to-stackplaces fi (lambda-body x)))
+	    (%slot-value? x)
+	      `(%slot-value ,(vars-to-stackplaces fi (second x)) ,(third x))
+	    (cons (vars-to-stackplaces fi x.)
+			  (vars-to-stackplaces fi .x)))
 	  (vars-to-stackplaces-atom fi x)))
 
 ;;;; LAMBDA inlining

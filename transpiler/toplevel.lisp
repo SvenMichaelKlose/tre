@@ -7,6 +7,8 @@
   (transpiler-generate-code tr
 	(transpiler-expand tr forms)))
 
+(defvar *exported-lambdas* nil)
+
 ;;; PUBLIC
 
 ;; User code must have been sightened by TRANSPILER-SIGHT.
@@ -17,6 +19,8 @@
 	  (transpiler-expand-and-generate-code tr forms))))
 
 (defun transpiler-sighten (tr x)
+  (when (transpiler-lambda-export? tr)
+	(setf *exported-lambdas* t))
   (let tmp (transpiler-preexpand tr x)
 	; Do an expression expand to collect the names of required
 	; functions and variables. It is done again later when all
