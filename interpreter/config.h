@@ -39,7 +39,7 @@ typedef int bool;
 #endif
 
 #ifndef TRE_MAX_RECURSIONS
-#define TRE_MAX_RECURSIONS	(16 * KILO)
+#define TRE_MAX_RECURSIONS	(32 * KILO)
 #endif
 
 #ifndef TRE_QUIET_LOAD
