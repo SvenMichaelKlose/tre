@@ -61,24 +61,19 @@
 					"."))
 	    (transpiler-symbol-string-r tr s))))
 
-;; Allow nested %TRANSPILER-NATIVEs.
-(defun transpiler-collapse-native (x)
-  (remove '%transpiler-native
-		  (tree-list x)))
-
 (defun transpiler-to-string (tr x)
   (maptree #'((e)
 				(if
 				  (consp e)
-					(if (eq e. '%transpiler-string)
+					(if
+					  (eq e. '%transpiler-string)
 						(funcall (transpiler-gen-string tr) tr (cadr e))
-						(if (in? e. '%transpiler-native '%no-expex)
-							(transpiler-to-string tr
-												  (transpiler-collapse-native e))
-							e))
+					  (in? e. '%transpiler-native '%no-expex)
+						(transpiler-to-string tr .e)
+					  e)
 				  (stringp e)
 					e
-				  (aif (assoc e (transpiler-symbol-translations tr))
-						.!
+				  (aif (assoc-value e (transpiler-symbol-translations tr))
+						!
 						(string-concat (transpiler-symbol-string tr e) " "))))
 		   x))

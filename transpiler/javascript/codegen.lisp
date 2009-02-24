@@ -126,7 +126,7 @@
 (define-js-macro %slot-value (x y)
   (if (consp x)
 	  (if (eq '%transpiler-native x.)
-		  `(%transpiler-native ,@x "." ,y)
+		  `(%transpiler-native ,x "." ,y)
 		  (error "%TRANSPILER-NATIVE expected"))
   	  ($ x "." y)))
 
