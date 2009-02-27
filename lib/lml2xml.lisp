@@ -7,6 +7,12 @@
   (and (consp x) (consp .x)
        (atom x.) (atom (second x))))
 
+(defun lml-body (x)
+  (when x
+	(if (lml-attr? x)
+		(lml-body (cddr x))
+		x)))
+
 (defun lml2xml-end (s)
   (format s ">"))
 
@@ -44,6 +50,10 @@
   (lml2xml-attr-or-body s .x)
   (lml2xml-close s x))
 
+(defun lml2xml-inline (s x)
+  (lml2xml-attr-or-body s .x)
+  (lml2xml-end-inline s))
+
 (defun lml2xml-error-tagname (x)
   (error "First element is not a tag name: ~A" x))
 
@@ -51,9 +61,9 @@
   (unless (atom x.)
     (lml2xml-error-tagname x))
   (lml2xml-open s x)
-  (if (cdr x)
+  (if (lml-body .x)
       (lml2xml-block s x)
-      (lml2xml-end-inline s)))
+      (lml2xml-inline s x)))
 
 (defun lml2xml (str x)
   (with-default-stream s str
