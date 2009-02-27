@@ -1,4 +1,4 @@
-;;;;; nix operating system project ;;;;; lisp compiler
+;;;;; TRE compiler
 ;;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Peephole-optimizer for expression-expanded code.

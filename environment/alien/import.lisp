@@ -98,7 +98,7 @@
 			,header-path)
 		  '(("PATH" . "/sbin:/bin:/usr/sbin:/usr/bin:/usr/games:/usr/local/sbin:/usr/local/bin:/usr/local/X11R6/bin")))
   (format t "Reading metadata...~%")
-  (with (descr (xml-parse-file *alien-xml-tmp*))
+  (with (descr (xml2lml-file *alien-xml-tmp*))
   	(format t "Building wrapper...~%")
 	(alien-import-process-xml descr)
     (unix-sh-rm *alien-xml-tmp*)))

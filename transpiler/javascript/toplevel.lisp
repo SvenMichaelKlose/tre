@@ -14,8 +14,6 @@
   (format f " *~%")
   (format f " * caroshi ECMAScript obfuscator~%")
   (format f " */~%")
-  (when (transpiler-lambda-export? *js-transpiler*)
-    (format f "function T37funref (f, g) { var r=function () { var a = arrayCopy (arguments); a.unshift (g); return f.apply (null, a); }; r.treArgs = cdr (f.treArgs); return r; }~%"))
   (format f "var _I_ = 0; while (1) {switch (_I_) {case 0: ~%")
   (with (tr *js-transpiler*
 		 ; Expand.
@@ -27,18 +25,20 @@
 		 deps (progn
 				(format t "; Collecting dependencies...~%")
 				(transpiler-import-from-environment tr)))
-	; Generate.
-	(format t "; Let me think. Hmm")
-	(force-output)
-    (princ (transpiler-concat-string-tree
- 		     (transpiler-transpile tr base)
-		     (transpiler-transpile tr deps)
- 		     (transpiler-transpile tr base2)
-			 (transpiler-transpile tr tests)
- 		     (transpiler-transpile tr user))
-	       f))
-  (format f "}break;}~%")
-  (format t "~%; Everything OK. Done.~%"l))
+      (when (transpiler-lambda-export? *js-transpiler*)
+        (format f (+ "function T37funref (f, g) { var r=function () { var a = arrayCopy (arguments); a.unshift (g); return f.apply (null, a); }; r.treArgs = cdr (f.treArgs); return r; }~%")))
+	  ; Generate.
+	  (format t "; Let me think. Hmm")
+	  (force-output)
+      (princ (transpiler-concat-string-tree
+ 		       (transpiler-transpile tr base)
+		       (transpiler-transpile tr deps)
+ 		       (transpiler-transpile tr base2)
+			   (transpiler-transpile tr tests)
+ 		       (transpiler-transpile tr user))
+	         f))
+    (format f "}break;}~%")
+    (format t "~%; Everything OK. Done.~%"l))
 
 (defun js-transpile (out files &key (obfuscate? nil))
   (transpiler-reset *js-transpiler*)

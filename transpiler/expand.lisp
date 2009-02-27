@@ -139,7 +139,7 @@
     (fn transpiler-make-named-functions tr _)
 
     ; Peephole-optimization. Removes some unused code.
-    ;#'opt-peephole
+    #'opt-peephole
 
 	; Quote keywords.
     #'transpiler-quote-keywords
@@ -152,8 +152,7 @@
 	#'transpiler-restore-funs
 	(fn (repeat-while-changes
 	     (fn expander-expand 'TRANSPILER-FUNPROP _)
-		 _))
-))
+		 _))))
 
 (defun transpiler-expand (tr x)
   (remove-if #'not

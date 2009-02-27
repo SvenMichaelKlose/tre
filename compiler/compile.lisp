@@ -13,8 +13,8 @@
 				  "function"
 				(macrop fun)
 				  "macro")
-              (if (eq 'block (first (car body)))
-                  (symbol-name (second (car body)))
+              (if (eq 'block (first body.))
+                  (symbol-name (second body.))
                   ""))))
 
 (defun special-form-expand (x)
@@ -27,13 +27,13 @@
 
 (defun atomic-expand-lambda (fun)
   (with ((lambda-expansion fi)
-	   	   (lambda-expand fun (special-form-expand (function-body fun))))
+   	       (lambda-expand fun (special-form-expand (function-body fun))))
 	(funcall (compose (fn tree-expand fi _)
 					  #'opt-peephole
 					  (fn expression-expand (make-expex) _))
 			 lambda-expansion)
     ;(setf (cdr (assoc fun *expanded-functions*)) fi)
-    (print fi)))
+    fi))
 
 (defun compile (fun)
   (print-compiler-status fun)
