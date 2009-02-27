@@ -5,7 +5,6 @@
   (log msg))
 
 (defun error (fmt &rest args)
-  (format *standard-log* "<b>Error:</b>")
-  (apply #'format *standard-log* fmt args)
+  (alert (+ "Error :" (apply #'format nil fmt args)))
   (terpri *standard-log*)
   (inoke-native-debugger))
