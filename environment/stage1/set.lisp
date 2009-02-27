@@ -18,7 +18,8 @@
 
 (defun %slot-value? (x)
   (and (consp x)
-	   (eq '%SLOT-VALUE (car x))))
+	   (eq '%SLOT-VALUE (car x))
+	   (consp (cdr x))))
 
 (defun %setf-complement (p val)
   (if (or (atom p)
