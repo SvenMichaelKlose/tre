@@ -10,7 +10,7 @@
 
 ;;; Errors.
 
-(defvar *xml2lmlr-read* nil)
+(defvar *xml2lml-read* nil)
 
 (defun xml-error (form &rest args)
   (princ (list-string (reverse *xml2lmlr-read*)))
@@ -21,7 +21,6 @@
 (defun xml-error-unexpected-eof (in)
   (xml-error "unexpected end of file"))
 
-
 ;;; Character functions.
 
 (defun xml-special-char? (x)
@@ -31,12 +30,11 @@
   (and (< x 33) (> x 0)))
 
 (defun xml-text-char? (x)
-  (not (xml-special-char? x)))
+  (not (= #\< x)))
 
 (defun xml-identifier-char? (x)
   (not (or (xml-special-char? x)
 		   (xml-whitespace? x))))
-
 
 ;;; String functions
 
@@ -53,7 +51,7 @@
   (when (end-of-file in)
     (xml-error-unexpected-eof in))
   (let c (read-char in)
-	(push! c *xml2lmlr-read*)
+	(push! c *xml2lml-read*)
 	c))
 
 (defun xml-peek-char (in)
@@ -186,9 +184,7 @@
   (xml-expect-char in #\?)
   (while (not (and (= #\? (xml-read-char in))
 				   (= #\> (xml-read-char in))))
-		 (progn
-		   (xml-expect-char in #\>)
-		   (xml2lml-toplevel in))))
+	     (xml2lml-toplevel in)))
 
 (defun xml-skip-decl (in)
   (while (not (= #\> (xml-read-char in)))
