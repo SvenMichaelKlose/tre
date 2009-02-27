@@ -8,6 +8,7 @@
 (env-load "stage4/compose.lisp")
 (env-load "stage4/declare.lisp")
 (env-load "stage4/enqueue-many.lisp")
+(env-load "stage4/escape-string.lisp")
 (env-load "stage4/expander.lisp")
 (env-load "stage4/find-tree.lisp")
 (env-load "stage4/force-list.lisp")

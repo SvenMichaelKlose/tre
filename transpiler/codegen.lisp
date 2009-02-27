@@ -23,19 +23,10 @@
 
 ;;;; ENCAPSULATION
 
-(defun transpiler-escape-string (x)
-  (when x
-	(if (in=? x. #\\ #\")
-		(cons #\\
-			  (cons x.
-					(transpiler-escape-string .x)))
-		(cons x.
-			  (transpiler-escape-string .x)))))
-
 (defun transpiler-encapsulate-strings (x)
   (if (atom x)
       (if (stringp x)
-          (list '%transpiler-string (list-string (transpiler-escape-string (string-list x))))
+          (list '%transpiler-string (escape-string x))
 		  x)
 	  (if (eq '%transpiler-native x.)
 		  x
