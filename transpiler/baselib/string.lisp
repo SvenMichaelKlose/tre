@@ -22,6 +22,8 @@
       (char-string x)
     (symbolp x)
 	  (symbol-name x)
+	(not x)
+	  "NIL"
    	(x.to-string)))
 
 (defun list-string (lst)
