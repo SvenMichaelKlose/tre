@@ -11,7 +11,7 @@
   (format nil "case ~A:~%" (transpiler-symbol-string *js-transpiler* x)))
 
 (defun make-javascript-transpiler (obfuscate?)
-  (create-transpiler
+  (let tr (create-transpiler
 	:std-macro-expander 'js-alternate-std
 	:macro-expander 'javascript
 	:setf-functionp #'js-setf-functionp
@@ -116,7 +116,9 @@
 			  (in=? _ #\_ #\. #\$ #\#)))
 	:make-label
 	  #'js-transpiler-make-label
-	:lambda-export? t))
+	:lambda-export? nil)
+    (setf (expex-inline? (transpiler-expex tr)) #'%slot-value?)
+	tr))
 
 (defvar *js-transpiler* (make-javascript-transpiler nil))
 (defvar *js-separator* (transpiler-separator *js-transpiler*))

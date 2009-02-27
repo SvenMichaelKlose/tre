@@ -23,7 +23,9 @@
   ; Callback to collect used variables.
   (variable-collector #'((var)))
 
-  (plain-arg-fun? #'((var))))
+  (plain-arg-fun? #'((var)))
+
+  (inline? #'((x))))
 
 ;; Returns new unique symbol.
 (defun expex-sym ()
@@ -75,13 +77,6 @@
 	  (expex-argexpand-do ex fun args)
 	  args))
 
-;; Check if an expression is inline.
-;;
-;; These expressions are not moved out, but their arguments are expanded.
-(defun expex-inline? (ex x)
-  (and (consp x)
-       (in? x. '%slot-value)))
-
 (defun expex-assignment-inline (ex x)
   (with ((p a) (expex-args ex .x))
 	(cons p
@@ -112,7 +107,7 @@
 ;; the replacement symbol for the parent in CDR.
 (defun expex-assignment (ex x)
   (if
-	(expex-inline? ex x)
+	(funcall (expex-inline? ex) x)
 	  (expex-assignment-inline ex x)
 	(not (expex-able? ex x))
       (cons nil x)
