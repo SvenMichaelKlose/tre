@@ -84,5 +84,5 @@
 (defun late-print (x &optional (str *standard-output*))
   (with-default-stream s str
     (if (consp x)
-	    (%print-cons x str)
-	    (%print-atom x str))))
+	    (%print-cons x s)
+	    (%print-atom x s))))
