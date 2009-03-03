@@ -20,11 +20,17 @@
 	:obfuscate? obfuscate?
 
 	:obfuscation-exceptions
-	  '(function
+	  `(t this
+		%transpiler-native %transpiler-string
+		lambda function &key &optional &rest prototype
+		table tbody td tr ul li hr img div p html head body a href src
 		fun hash class
+
+		navigator user-agent index-of
 
 		; JavaScript core
 		apply length push shift unshift
+		split object *array *string == === + - * /
 
 		; DOM
 		document cursor style element 

@@ -11,7 +11,7 @@
   		 args (%nconc (butlast lst)
 					  l.))
 	(when-debug
-	  (unless (consp l)
+	  (unless (listp l)
 		(error "APPLY: last argument is not a cell")))
     (fun.apply nil
 	  (list-array

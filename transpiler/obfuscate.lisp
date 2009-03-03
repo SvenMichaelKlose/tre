@@ -8,23 +8,21 @@
 	(number-sym *transpiler-obfuscation-counter*))
 
 (defun transpiler-obfuscate-symbol (tr x)
-  (if (or (not (transpiler-obfuscate? tr))
-          (member x (transpiler-obfuscation-exceptions tr)))
-	  x
-      (aif (href x (transpiler-obfuscations tr))
-		   !
-           (setf (href x (transpiler-obfuscations tr))
-		         (transpiler-obfuscated-sym)))))
+  (when x
+    (if (or (not (transpiler-obfuscate? tr))
+            (member x (transpiler-obfuscation-exceptions tr)))
+	    x
+        (aif (href x (transpiler-obfuscations tr))
+		     !
+             (setf (href x (transpiler-obfuscations tr))
+		           (make-symbol (symbol-name (transpiler-obfuscated-sym))
+								(symbol-package x)))))))
 
 (defun transpiler-obfuscate (tr x)
-  (if (transpiler-obfuscate? tr)
-      (maptree (fn (when (expex-sym? _)
-					 (transpiler-obfuscate-symbol tr _))
-			       (if (or (variablep _)
-						   (functionp _))
-					   (aif (href _ (transpiler-obfuscations tr))
-						    !
-					    	_)
-					   _))
-		       x)
-	  x))
+  (if (atom x)
+      (if (or (variablep x)
+		      (functionp x))
+	 	  (transpiler-obfuscate-symbol tr x)
+	      x)
+	  (cons (transpiler-obfuscate tr x.)
+			(transpiler-obfuscate tr .x))))

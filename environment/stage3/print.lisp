@@ -9,7 +9,7 @@
 
 (defun %princ-number (c str)
   (labels 
-    ((recp (out n) ; XXX: REC will bugs the expression-expander.
+    ((recp (out n) ; XXX: REC will bug the expression-expander.
       (let m (mod n 10)
         (push m out)
         (if (> n 9)

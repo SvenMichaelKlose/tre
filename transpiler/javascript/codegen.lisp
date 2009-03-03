@@ -6,7 +6,9 @@
 ;;;; TRANSPILER-MACRO EXPANDER
 
 (defmacro define-js-macro (&rest x)
-  `(define-transpiler-macro *js-transpiler* ,@x))
+  `(progn
+	 (nconc! (transpiler-obfuscation-exceptions *js-transpiler*) (list ',x.))
+	 (define-transpiler-macro *js-transpiler* ,@x)))
 
 (define-js-macro function (x)
   (if (atom x)
@@ -117,7 +119,7 @@
 (define-js-macro %quote (x)
   (if (not (string= "" (symbol-name x)))
   	  `(,(transpiler-symbol-string tr (transpiler-obfuscate tr 'symbol))
-		   "(\"" ,(symbol-name x) "\", " ,(when (keywordp x) "true") ")")
+		   "(\"" ,(symbol-name (transpiler-obfuscate-symbol tr x)) "\", " ,(when (keywordp x) "true") ")")
 	  x))
 
 (define-js-macro %set-atom-fun (plc val)
