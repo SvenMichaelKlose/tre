@@ -3,11 +3,25 @@
 
 (env-load "../transpiler/utils.lisp")
 (env-load "../transpiler/config.lisp")
-(env-load "../transpiler/identifier.lisp")
-(env-load "../transpiler/named-functions.lisp")
-(env-load "../transpiler/expand.lisp")
-(env-load "../transpiler/codegen.lisp")
-(env-load "../transpiler/obfuscate.lisp")
+
+(env-load "../transpiler/codegen/identifier.lisp")
+(env-load "../transpiler/codegen/finalize.lisp")
+(env-load "../transpiler/codegen/operators.lisp")
+(env-load "../transpiler/codegen/macros.lisp")
+(env-load "../transpiler/codegen/string-encapsulation.lisp")
+(env-load "../transpiler/codegen/obfuscate.lisp")
+(env-load "../transpiler/codegen/toplevel.lisp")
+
+(env-load "../transpiler/expand/named-functions.lisp")
+(env-load "../transpiler/expand/expression-expand.lisp")
+(env-load "../transpiler/expand/argument-definitions.lisp")
+(env-load "../transpiler/expand/lambda-expand.lisp")
+(env-load "../transpiler/expand/literals.lisp")
+(env-load "../transpiler/expand/quote-keywords.lisp")
+(env-load "../transpiler/expand/macros.lisp")
+(env-load "../transpiler/expand/standard-macros.lisp")
+(env-load "../transpiler/expand/toplevel.lisp")
+
 (env-load "../transpiler/import.lisp")
 (env-load "../transpiler/toplevel.lisp")
 
