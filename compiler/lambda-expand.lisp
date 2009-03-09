@@ -94,7 +94,8 @@
   (if (consp x)
       (if
 		(lambda? x) ; Add variables to ignore in subfunctions.
-	      `#'(,(lambda-args x)
+	      `#'(,@(make-lambda-funinfo fi)
+			  ,(lambda-args x)
 			     ,@(vars-to-stackplaces fi (lambda-body x)))
 	    (%slot-value? x)
 	      `(%slot-value ,(vars-to-stackplaces fi (second x)) ,(third x))
@@ -160,7 +161,8 @@
 (defun lambda-export-make-exported (fi fi-child x)
   (with-gensym name
     (eval `(%set-atom-fun ,name
-						  ,`#'(,(funinfo-args fi-child)
+						  ,`#'(,@(make-lambda-funinfo fi)
+							   ,(funinfo-args fi-child)
 								  ,@(lambda-body x))))
 	(funinfo-add-closure fi name fi-child)
 	name))

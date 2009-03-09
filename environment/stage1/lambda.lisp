@@ -3,13 +3,32 @@
 ;;;;
 ;;;; LAMBDA-related utilities.
 
-(defun past-lambda (x)
-  "Get cons after optional LAMBDA keyword in function expression."
-  (when (eq (first x) 'function)
-      (setf x (second x)))
+(defun past-lambda-1 (x)
   (if (eq (first x) 'lambda)
 	(cdr x)
 	x))
+
+(defun past-function (x)
+  (if (eq (first x) 'function)
+      (second x)
+	  x))
+
+(defun past-lambda (x)
+  "Get cons after optional LAMBDA keyword in function expression."
+  (let p (past-lambda-1 (past-function x))
+	(if (eq '%funinfo (first p))
+	  (cddr p)
+	  p)))
+
+(defun lambda-funinfo (x)
+  (let p (past-lambda-1 (past-function x))
+	(when (eq '%funinfo (first p))
+	  (second p))))
+
+(defun lambda-funinfo-expr (x)
+  (let p (past-lambda-1 (past-function x))
+	(when (eq '%funinfo (first p))
+	  (list '%funinfo (second p)))))
 
 (defun lambda-args (x)
   "Get arguments of function expression."

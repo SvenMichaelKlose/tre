@@ -19,14 +19,17 @@
 ;; ;; Add symbol to list of wanted functions or obfuscate arguments of
 ;; ;; LAMBDA-expression.
 ;; ;; XXX Wouldn't this obfuscate the arguments over and over again?
-(define-expander-macro TRANSPILER-FUNPROP function (x)
-  (unless x
+(define-expander-macro TRANSPILER-FUNPROP function (l)
+  (unless l
     (error "FUNCTION expects a symbol or form"))
-  (if (atom x)
-      (js-expanded-funref x)
+  (if (or (atom l)
+		  (%slot-value? l))
+      (js-expanded-funref l)
+  (let x (past-lambda l)
       (if (eq 'no-args (second x))
-	      `(%function ,(cons (first x) (cddr x)))
-          (js-expanded-fun x))))
+	      `(%function ,(nconc (lambda-funinfo-expr l) (cons (first x)
+							 (cddr x))))
+          (js-expanded-fun x)))))
 
 ;; Must be done as a macro, or quoted %FUNCTION symbols will be lost.
 (defun transpiler-restore-funs (x)

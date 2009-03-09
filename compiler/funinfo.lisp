@@ -93,6 +93,16 @@
            ,@body)
 	     (setf (funinfo-env ,fi) ,old-env)))))
 
+(defvar *funinfos* (make-hash-table))
+
+(defun make-lambda-funinfo (fi)
+  (with-gensym g
+	(setf (href g *funinfos*) fi)
+	`(%funinfo ,g)))
+
+(defun get-lambda-funinfo (x)
+  (href x *funinfos*))
+
 (defun print-funinfo (fi)
   (format t "Arguments: ~A~%" (funinfo-args fi))
   (format t "Ghost sym:   ~A~%" (funinfo-ghost fi))

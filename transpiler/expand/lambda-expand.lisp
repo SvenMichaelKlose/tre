@@ -16,7 +16,8 @@
 						(make-funinfo :env forms
 							  		  :args forms)))
     (prog1
-	  `#'(,(lambda-args x.)
+	  `#'(,@(make-lambda-funinfo fi)
+		  ,(lambda-args x.)
              ,@(funcall (if imported
 						    #'lambda-embed-or-export-transform
 						    #'lambda-embed-or-export)
