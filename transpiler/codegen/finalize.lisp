@@ -16,18 +16,18 @@
 		   separator  (transpiler-separator tr)
 		   ret		  (transpiler-obfuscate tr '~%ret))
 	  (if
+		; Ignore top-level NIL.
 		(not a)
-		  ; Ignore top-level NIL.
 		  (transpiler-finalize-sexprs tr .x)
 
+		; Make jump label.
 	  	(atom a) 
-		  ; Make jump label.
 		  (cons (funcall (transpiler-make-label tr) a)
 		        (transpiler-finalize-sexprs tr .x))
 
+		; Recurse into function.
         (and (%setq? a)
 		     (lambda? (%setq-value a)))
-		  ; Recurse into function.
 	      (cons `(%setq ,(%setq-place a)
 				        ,(copy-recurse-into-lambda
 					       (%setq-value a)
@@ -36,18 +36,19 @@
 			    (cons separator
 				      (transpiler-finalize-sexprs tr .x)))
 
+		; Recurse into named top-level function.
 		(eq 'function a.)
-		  ; Recurse into named top-level function.
 		  (cons `(function
 				   ,(second a) ; name
-				   (,(first (third a))
-				       ,(transpiler-finalize-sexprs tr (cdr (third a)))))
+				   (,(lambda-args (third a))
+				       ,(transpiler-finalize-sexprs tr
+						    (lambda-body (third a)))))
 				 (cons separator
 				       (transpiler-finalize-sexprs tr .x)))
 
+		; Ignore (IDENTITY ~%RET).
 	    (and (identity? a)
 		     (eq ret (second a)))
-		  ; Ignore (IDENTITY ~%RET).
 		  (transpiler-finalize-sexprs tr .x)
 
 	    ; Just copy with separator. Make return-value assignment if missing.

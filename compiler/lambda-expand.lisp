@@ -161,8 +161,7 @@
 (defun lambda-export-make-exported (fi fi-child x)
   (with-gensym name
     (eval `(%set-atom-fun ,name
-						  ,`#'(,@(make-lambda-funinfo fi)
-							   ,(funinfo-args fi-child)
+						  ,`#'(,(funinfo-args fi-child)
 								  ,@(lambda-body x))))
 	(funinfo-add-closure fi name fi-child)
 	name))

@@ -74,7 +74,6 @@
 					  e)
 				  (stringp e)
 					e
-				  (aif (assoc-value e (transpiler-symbol-translations tr))
-						!
-						(string-concat (transpiler-symbol-string tr e) " "))))
+				  (or (assoc-value e (transpiler-symbol-translations tr))
+					  (string-concat (transpiler-symbol-string tr e) " "))))
 		   x))

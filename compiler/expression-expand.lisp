@@ -88,7 +88,7 @@
          (cons (append `((%var ,s))
 		               (expex-body ex ! s))
 		       s)
-	     (cons nil nil))))
+	     (cons nil nil)))) ; XXX Skip NIL in ASSOC-SPLICE.
 
 (defun expex-assignment-std (ex x)
   (let s (expex-sym)
@@ -120,20 +120,21 @@
 ;; Returns the head of moved expressions and a new parent with
 ;; replaced arguments.
 (defun expex-args (ex x)
-  (with ((pre main) (assoc-splice (mapcar (fn expex-assignment ex _)
-										  x)))
-    (values (apply #'append pre)
-			main)))
+  (with ((moved new-expr) (assoc-splice (mapcar (fn expex-assignment ex _)
+										        x)))
+    (values (apply #'append moved)
+			new-expr)))
 ;;
 ;; Expands standard expression.
 ;;
 ;; The arguments are replaced by gensyms.
+;; XXX argument conversion by guest.
 (defun expex-std-expr (ex x)
   (with (argexp (expex-argexpand ex x. .x)
-		 (pre newargs) (expex-args ex (cons x.
-											argexp)))
-    (expex-collect-variables ex newargs)
-    (values pre (list newargs))))
+		 (moved new-expr) (expex-args ex (cons x.
+											   argexp)))
+    (expex-collect-variables ex new-expr)
+    (values moved (list new-expr))))
 
 ;; Expand %SETQ expression.
 ;;
@@ -192,7 +193,7 @@
 (defun expex-body (ex x &optional (s '~%ret))
   (unless x	; Encapsulate NIL.
 	(setf x '((identity nil))))
-  (with (e (expex-list ex x))
+  (let e (expex-list ex x)
    	(expex-make-return-value ex e s)))
 
 (defun expression-expand (ex x)
