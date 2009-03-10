@@ -16,6 +16,9 @@
   (identifier-char?
 	(fn error "structure 'transpiler': IDENTIFIER-CHAR? is not initialised"))
 
+  (literal-conversion
+	(fn error "structure 'transpiler': LITERAL-CONVERSION is not initialised"))
+
   (expex nil)
 
   ; Functions defined in transpiled code, not in the environment.
@@ -53,6 +56,8 @@
 
   ; Tells if arguments are passed by stack.
   (stack-arguments? nil)
+
+  (apply-argdefs? nil)
 
   ; You shouldn't have to tweak these at construction-time:
   (symbol-translations nil)

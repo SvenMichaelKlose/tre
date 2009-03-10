@@ -18,6 +18,8 @@
 	:separator (format nil ";~%")
 	:unwanted-functions '(wait)
 	:obfuscate? obfuscate?
+	:apply-argdefs? t
+	:literal-conversion #'transpiler-expand-characters
 
 	:obfuscation-exceptions
 	  `(t this

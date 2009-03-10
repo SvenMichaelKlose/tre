@@ -40,3 +40,11 @@
 			x)
 	   (cons (transpiler-restore-funs x.)
 			 (transpiler-restore-funs .x)))))
+
+(defun transpiler-argument-definitions (tr x)
+  (if (transpiler-apply-argdefs? tr)
+      (transpiler-restore-funs
+        (repeat-while-changes
+            (fn expander-expand 'TRANSPILER-FUNPROP _)
+            x))
+	  x))

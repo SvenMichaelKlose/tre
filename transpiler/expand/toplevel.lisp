@@ -24,10 +24,7 @@
     ; constants or variables.
     (fn transpiler-expression-expand tr `(vm-scope ,_))
 
-	#'transpiler-restore-funs
-	(fn (repeat-while-changes
-	     (fn expander-expand 'TRANSPILER-FUNPROP _)
-		 _))))
+	(fn transpiler-argument-definitions tr _)))
 
 (defun transpiler-expand (tr x)
   (remove-if #'not
@@ -42,8 +39,7 @@
 	; Inline local functions and export constant LAMBDA expressions.
     (fn transpiler-lambda-expand tr _)
 
-	; Make CHARACTER objects.
-    #'transpiler-expand-characters
+    (fn funcall (transpiler-literal-conversion tr) _)
 
     ; Expand BACKQUOTEs and compiler-macros.
     #'special-form-expand
