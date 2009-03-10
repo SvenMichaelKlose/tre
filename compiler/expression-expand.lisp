@@ -63,7 +63,7 @@
   (or (eq '%%no-argexp argdef)
 	  (funcall (expex-plain-arg-fun? ex) fun)))
 
-(defun expex-argexpand-do (ex fun args)
+(defun expex-argexpand-0 (ex fun args)
   (funcall (expex-function-collector ex) fun args)
   (let argdef (funcall (expex-function-arguments ex) fun)
     (if (expex-expandable-args? ex fun argdef)
@@ -74,7 +74,7 @@
 
 (defun expex-argexpand (ex fun args)
   (if (funcall (expex-function? ex) fun)
-	  (expex-argexpand-do ex fun args)
+	  (expex-argexpand-0 ex fun args)
 	  args))
 
 (defun expex-assignment-inline (ex x)
@@ -122,6 +122,7 @@
 (defun expex-args (ex x)
   (with ((moved new-expr) (assoc-splice (mapcar (fn expex-assignment ex _)
 										        x)))
+    (expex-collect-variables ex new-expr)
     (values (apply #'append moved)
 			new-expr)))
 ;;
@@ -133,16 +134,16 @@
   (with (argexp (expex-argexpand ex x. .x)
 		 (moved new-expr) (expex-args ex (cons x.
 											   argexp)))
-    (expex-collect-variables ex new-expr)
+    ;(expex-collect-variables ex new-expr)
     (values moved (list new-expr))))
 
 ;; Expand %SETQ expression.
 ;;
 ;; The place to set must not be expanded.
 (defun expex-expr-setq (ex x)
-  (expex-collect-variables ex .x)
-  (with ((head replacement) (expex-args ex (cddr x)))
-	(values head
+  ;(expex-collect-variables ex .x)
+  (with ((moved replacement) (expex-args ex (cddr x)))
+	(values moved
 		    `((%setq ,(second x) ,@replacement)))))
 
 ;; Expand expression depending on type.
