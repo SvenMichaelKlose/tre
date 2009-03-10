@@ -16,6 +16,7 @@
 			  (in=? _ #\_ #\. #\$ #\#)))
 	:make-label
 	  (fn (format nil "l~A:" (transpiler-symbol-string *c-transpiler* _)))
+	:literal-conversion #'c-expand-literals
 	:named-functions? t
 	:lambda-export? t
 	:stack-arguments? t))

@@ -1,5 +1,5 @@
 ;;;;; TRE to C transpiler
-;;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Code generation
 
@@ -8,14 +8,18 @@
 (defmacro define-c-macro (&rest x)
   `(define-transpiler-macro *c-transpiler* ,@x))
 
+(defun c-transpiler-function-name (name)
+  ($ 'compiled- name))
+
 (define-c-macro function (name x)
   (if (atom x)
 	  x
-      `("treptr "
-		,name "(" ,@(transpiler-binary-expand ","
-	                (mapcar (fn `("treptr " ,_))
-						    (argument-expand 'unnamed-c-function
-							      		     (lambda-args x) nil nil)))
+      `(,(code-char 10)
+		"treptr " ,(c-transpiler-function-name name) "("
+		    ,@(transpiler-binary-expand ","
+	              (mapcar (fn `("treptr " ,_))
+					      (argument-expand-names 'unnamed-c-function
+						      		     	     (lambda-args x))))
 		")" ,(code-char 10)
 	    "{treptr " ,'~%ret ,*c-separator*
            ,@(lambda-body x)
@@ -65,5 +69,5 @@
 (define-c-macro %set-vec (vec index value)
   `("((treptr *)" ,vec ")[(unsigned long)" ,index "] = " ,value))
 
-(define-c-macro %get-vec (vec index)
+(define-c-macro %vec (vec index)
   `("((treptr *)" ,vec ")[(unsigned long)" ,index "]"))
