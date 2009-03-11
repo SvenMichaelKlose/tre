@@ -1,12 +1,10 @@
 ;;;;; TRE compiler
 ;;;;; Copyright (c) 2006-2009 Sven Klose <pixel@copei.de>
 ;;;;; 
-;;;;; Breaks up nested expressions into lists of assignments.
-;;;;; Assign return values to gensyms.
-;;;;; 
-;;;;; Expressions inside expressions are moved in front of the parent
-;;;;; expression, resulting in a head (the moved expressions) and a
-;;;;; tail (the parent expression).
+;;;;; Expression-expander
+;;;;;
+;;;;; Breaks up nested expressions. The result is a pure list of
+;;;;; assignments to temporary variables.
 
 (defvar *expexsym-counter* 0)
 
@@ -36,10 +34,12 @@
   (and (atom x)
        (string= "~E" (subseq (symbol-name x) 0 2))))
 
-(defun expex-filter-arguments (ex lst)
-  (mapcar (fn (when (symbolp _)
-				(funcall (expex-argument-filter ex) _)))
-		  lst))
+;; Have guest filter the arguments for whatever reason.
+(defun expex-filter-arguments (ex x)
+  (mapcar (fn (if (symbolp _)
+				  (funcall (expex-argument-filter ex) _)
+				  _))
+		  x))
 
 ;; Check if an expression is expandable.
 ;;
@@ -56,22 +56,22 @@
 ;; Check if an expression has a return value.
 (defun expex-returnable? (ex x)
   (not (or (vm-jump? x)
-		   (and (consp x)
-				(eq '%var x.)))))
+		   (%var? x))))
 
+;; Check if arguments to a function should be expanded.
 (defun expex-expandable-args? (ex fun argdef)
-  (or (eq '%%no-argexp argdef)
-	  (funcall (expex-plain-arg-fun? ex) fun)))
+  (not (or (eq '%%no-argexp argdef)
+	  	   (funcall (expex-plain-arg-fun? ex) fun))))
 
+;; Expand arguments to function.
 (defun expex-argexpand-0 (ex fun args)
   (funcall (expex-function-collector ex) fun args)
   (let argdef (funcall (expex-function-arguments ex) fun)
     (if (expex-expandable-args? ex fun argdef)
-	    args
-        (argument-expand-compiled-values fun
-										 argdef
-								         args))))
+        (argument-expand-compiled-values fun argdef args)
+	    args)))
 
+;; Expand arguments if they are passed to a function.
 (defun expex-argexpand (ex fun args)
   (if (funcall (expex-function? ex) fun)
 	  (expex-argexpand-0 ex fun args)
@@ -191,8 +191,9 @@
 (defun expex-body (ex x &optional (s '~%ret))
   (unless x	; Encapsulate NIL.
 	(setf x '((identity nil))))
-  (let e (expex-list ex x)
-   	(expex-make-return-value ex e s)))
+  (expex-make-return-value ex
+						   (expex-list ex x)
+ 						   s))
 
 (defun expression-expand (ex x)
   (when x
