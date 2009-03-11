@@ -14,7 +14,7 @@
     (fn transpiler-make-named-functions tr _)
 
     ; Peephole-optimization. Removes some unused code.
-    ;#'opt-peephole
+    #'opt-peephole
 
 	; Quote keywords.
     #'transpiler-quote-keywords

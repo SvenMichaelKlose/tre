@@ -21,7 +21,7 @@
   (function-collector #'((fun args)))
 
   ; Callback to collect used variables.
-  (variable-collector #'((var)))
+  (argument-filter #'((var)))
 
   (plain-arg-fun? #'((var)))
 
@@ -36,9 +36,9 @@
   (and (atom x)
        (string= "~E" (subseq (symbol-name x) 0 2))))
 
-(defun expex-collect-variables (ex lst)
+(defun expex-filter-arguments (ex lst)
   (mapcar (fn (when (symbolp _)
-				(funcall (expex-variable-collector ex) _)))
+				(funcall (expex-argument-filter ex) _)))
 		  lst))
 
 ;; Check if an expression is expandable.
@@ -122,10 +122,9 @@
 (defun expex-args (ex x)
   (with ((moved new-expr) (assoc-splice (mapcar (fn expex-assignment ex _)
 										        x)))
-    (expex-collect-variables ex new-expr)
     (values (apply #'append moved)
-			new-expr)))
-;;
+  			(expex-filter-arguments ex new-expr))))
+
 ;; Expands standard expression.
 ;;
 ;; The arguments are replaced by gensyms.
@@ -134,17 +133,15 @@
   (with (argexp (expex-argexpand ex x. .x)
 		 (moved new-expr) (expex-args ex (cons x.
 											   argexp)))
-    ;(expex-collect-variables ex new-expr)
     (values moved (list new-expr))))
 
 ;; Expand %SETQ expression.
 ;;
 ;; The place to set must not be expanded.
 (defun expex-expr-setq (ex x)
-  ;(expex-collect-variables ex .x)
-  (with ((moved replacement) (expex-args ex (cddr x)))
+  (with ((moved new-expr) (expex-args ex (cddr x)))
 	(values moved
-		    `((%setq ,(second x) ,@replacement)))))
+		    `((%setq ,(second x) ,@new-expr)))))
 
 ;; Expand expression depending on type.
 ;;
@@ -153,8 +150,8 @@
 (defun expex-expr (ex x)
   (if
 	(lambda? x)
-      (values nil (list `#'(lambda ,(lambda-args x)
-						     ,@(expex-body ex (lambda-body x)))))
+      (values nil (list `#'(,(lambda-args x)
+						       ,@(expex-body ex (lambda-body x)))))
     (not (expex-able? ex x))
       (values nil (list x))
     (vm-scope? x)

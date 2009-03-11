@@ -179,7 +179,7 @@
 		  #'((fun args)
 			   (transpiler-add-wanted-function tr fun))
 
-		  (expex-variable-collector ex)
+		  (expex-argument-filter ex)
 		  #'((var)
 			   (transpiler-add-wanted-variable tr var))
 

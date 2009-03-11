@@ -28,7 +28,8 @@
 (defun transpiler-add-wanted-variable (tr var)
   (when (transpiler-should-add-wanted-variable? tr var)
 	(setf (href var (transpiler-wanted-variables-hash tr)) t)
-    (adjoin! var (transpiler-wanted-variables tr))))
+    (adjoin! var (transpiler-wanted-variables tr)))
+  var)
 
 (defun transpiler-import-wanted-function (tr x)
   (unless (transpiler-defined-function tr x)
