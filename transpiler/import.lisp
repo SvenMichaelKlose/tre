@@ -12,14 +12,16 @@
 	  (transpiler-macro tr name)))
 
 (defun transpiler-can-import? (tr name)
-  (and (transpiler-import-from-environment? tr)
+  (and (symbolp name)
+	   (transpiler-import-from-environment? tr)
   	   (not (transpiler-defined? tr name))))
 	
 (defun transpiler-add-wanted-function (tr fun)
   (when (transpiler-can-import? tr fun)
 	(setf (href fun (transpiler-wanted-functions-hash tr)) t)
 	(nconc! (transpiler-wanted-functions tr)
-			(list fun))))
+			(list fun)))
+  fun)
 
 (defun transpiler-should-add-wanted-variable? (tr var)
   (and (transpiler-can-import? tr var)
