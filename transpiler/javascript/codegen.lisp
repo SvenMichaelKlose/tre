@@ -15,7 +15,11 @@
 	  x
       (with (args (argument-expand-names 'unnamed-js-function
 										 (lambda-args x))
-			 ret (transpiler-obfuscate *js-transpiler* '~%ret))
+			 ret (transpiler-obfuscate *js-transpiler* '~%ret)
+			 fi (get-lambda-funinfo x)
+			 no-tags (if fi
+					     (= 0 (funinfo-num-tags fi))
+						 nil))
 		(map (fn transpiler-obfuscate *js-transpiler* _)
 			 args)
         `("function (" ,@(transpiler-binary-expand
@@ -24,11 +28,14 @@
 	      ,(code-char 10)
 	        "{var " ,ret ,*js-separator*
 	        "var _I_ = 0" ,*js-separator*
-	        "while (1) {"
-	          "switch (_I_) {case 0:"
-                ,@(lambda-body x)
-              ("}return " ,ret ,*js-separator*)
-	        "}}"))))
+			,@(if no-tags
+				  `(,@(lambda-body x)
+                    ("return " ,ret ,*js-separator*))
+	        	  `("while (1) {switch (_I_) {case 0:"
+                    ,@(lambda-body x)
+                    ("}return " ,ret ,*js-separator*)
+	        	    "}"))
+			"}"))))
 
 (define-js-macro %setq (dest val)
   `((%transpiler-native ,dest) "=" ,val))
