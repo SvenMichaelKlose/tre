@@ -7,6 +7,7 @@
 ;;;;; assignments to temporary variables.
 
 (defvar *expexsym-counter* 0)
+(defvar *expex-funinfo* nil)
 
 (defstruct expex
   ; Callback to check if an object is a function.
@@ -36,9 +37,7 @@
 
 ;; Have guest filter the arguments for whatever reason.
 (defun expex-filter-arguments (ex x)
-  (mapcar (fn (if (symbolp _)
-				  (funcall (expex-argument-filter ex) _)
-				  _))
+  (mapcar (fn (funcall (expex-argument-filter ex) _))
 		  x))
 
 ;; Check if an expression is expandable.
@@ -82,8 +81,14 @@
 	(cons p
 		  (cons x. a))))
 
-(defun expex-assignment-vm-scope (ex x)
+(defun expex-funinfo-env-add ()
   (let s (expex-sym)
+    (awhen *expex-funinfo*
+      (funinfo-env-add ! s))
+	s))
+
+(defun expex-assignment-vm-scope (ex x)
+  (let s (expex-funinfo-env-add)
     (aif (vm-scope-body x)
          (cons (append `((%var ,s))
 		               (expex-body ex ! s))
@@ -91,7 +96,7 @@
 	     (cons nil nil)))) ; XXX Skip NIL in ASSOC-SPLICE.
 
 (defun expex-assignment-std (ex x)
-  (let s (expex-sym)
+  (let s (expex-funinfo-env-add)
     (with ((head tail) (expex-expr ex x))
       (cons (append `((%var ,s))
 					head
@@ -115,21 +120,24 @@
 	  (expex-assignment-vm-scope ex x)
 	(expex-assignment-std ex x)))
 
+(defun expex-assignments (ex x)
+  (assoc-splice (mapcar (fn expex-assignment ex _)
+				        (expex-filter-arguments ex x))))
+
 ;; Move subexpressions out of a parent.
 ;;
 ;; Returns the head of moved expressions and a new parent with
 ;; replaced arguments.
 (defun expex-args (ex x)
-  (with ((moved new-expr) (assoc-splice (mapcar (fn expex-assignment ex _)
-										        x)))
+  (with ((moved new-expr) (expex-assignments ex x))
     (values (apply #'append moved)
-  			(expex-filter-arguments ex new-expr))))
+			new-expr)))
 
 ;; Expands standard expression.
 ;;
 ;; The arguments are replaced by gensyms.
 ;; XXX argument conversion by guest.
-(defun expex-std-expr (ex x)
+(defun expex-expr-std (ex x)
   (with (argexp (expex-argexpand ex x. .x)
 		 (moved new-expr) (expex-args ex (cons x.
 											   argexp)))
@@ -143,6 +151,13 @@
 	(values moved
 		    `((%setq ,(second x) ,@new-expr)))))
 
+(defun expex-lambda (ex x)
+  (with-temporary *expex-funinfo* (get-lambda-funinfo x)
+    (values nil
+		    (list `#'(,@(lambda-funinfo-expr x)
+					  ,(lambda-args x)
+				         ,@(expex-body ex (lambda-body x)))))))
+
 ;; Expand expression depending on type.
 ;;
 ;; Recurses into LAMBDA-expressions and VM-SCOPEs.
@@ -150,15 +165,14 @@
 (defun expex-expr (ex x)
   (if
 	(lambda? x)
-      (values nil (list `#'(,(lambda-args x)
-						       ,@(expex-body ex (lambda-body x)))))
+	  (expex-lambda ex x)
     (not (expex-able? ex x))
       (values nil (list x))
     (vm-scope? x)
 	  (values nil (expex-body ex (vm-scope-body x)))
     (%setq? x)
       (expex-expr-setq ex x)
-    (expex-std-expr ex x)))
+    (expex-expr-std ex x)))
 
 ;; Entry point.
 ;;
