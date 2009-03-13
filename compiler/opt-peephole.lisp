@@ -7,6 +7,43 @@
   (cons `(%setq ,(second x.) ,(copy-recurse-into-lambda (third x.) into))
         (funcall into .x)))
 
+(defun find-all-if (pred x)
+  (mapcan (fn (when (funcall pred _)
+				(list _)))
+		  x))
+
+(defun find-all (elm x)
+  (find-all-if (fn (eq elm _))
+				x))
+
+(defun opt-peephole-has-not-jumps-to (x tag)
+  (dolist (i x t)
+	(when (vm-jump? i)
+	  (when (eq (vm-jump-tag i) tag)
+		(return nil)))))
+
+(defun opt-peephole-tags-lambda (x)
+  (with (body x
+		 spare-tags (find-all-if (fn (opt-peephole-has-not-jumps-to body _))
+		  				         (find-all-if #'numberp x)))
+    (remove-if (fn (member _ spare-tags))
+			   x)))
+
+(defun opt-peephole-remove-spare-tags (x)
+  (when x
+	(cons (if
+	  		(and (%setq? x.)
+	  	   		 (lambda? (third x.)))
+			  (let l (third x.)
+	      	    `(%setq ,(second x.)
+			  	        #'(,@(lambda-funinfo-expr l)
+		    		       ,(lambda-args l)
+	  	       		          ,@(opt-peephole-remove-spare-tags
+									(opt-peephole-tags-lambda
+								        (lambda-body l))))))
+			x.)
+		  (opt-peephole-remove-spare-tags .x))))
+
 (defmacro opt-peephole-fun (fun &rest body)
   `(when x
 	 (with-cons a d x
@@ -156,5 +193,6 @@
 						 x))))
 
 	(accumulate-vars
-	  (repeat-while-changes #'rec (accumulate-vars
-									(remove-identity x))))))
+	    (repeat-while-changes #'rec (accumulate-vars
+	  								    (opt-peephole-remove-spare-tags
+									        (remove-identity x)))))))
