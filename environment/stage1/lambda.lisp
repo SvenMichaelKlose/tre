@@ -79,5 +79,6 @@
   (cdr (symbol-value fun)))
 
 (defun copy-recurse-into-lambda (x body-fun)
-  `#'(,(lambda-args x)
-       ,@(funcall body-fun (lambda-body x))))
+  `#'(,@(lambda-funinfo-expr x)
+	  ,(lambda-args x)
+         ,@(funcall body-fun (lambda-body x))))
