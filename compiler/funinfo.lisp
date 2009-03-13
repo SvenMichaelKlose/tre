@@ -27,6 +27,9 @@
   (ghost niL)
   (lexical niL)
 
+  ; Number of jump tags in body.
+  (num-tags 0)
+
   ; Function code. The format depends on the compilation pass.
   first-cblock)
 
@@ -101,7 +104,7 @@
 	`(%funinfo ,g)))
 
 (defun get-lambda-funinfo (x)
-  (href x *funinfos*))
+  (href (lambda-funinfo x) *funinfos*))
 
 (defun print-funinfo (fi)
   (format t "Arguments: ~A~%" (funinfo-args fi))
