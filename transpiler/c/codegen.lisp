@@ -9,7 +9,7 @@
   `(define-transpiler-macro *c-transpiler* ,@x))
 
 (defun c-transpiler-function-name (name)
-  ($ 'compiled- name))
+  ($ 'trecompiled_ name))
 
 (define-c-macro function (name x)
   (if (atom x)

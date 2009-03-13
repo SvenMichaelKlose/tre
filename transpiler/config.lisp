@@ -180,8 +180,8 @@
 			   (transpiler-add-wanted-function tr fun))
 
 		  (expex-argument-filter ex)
-		  #'((var)
-			   (transpiler-add-wanted-variable tr var))
+		    #'((var)
+			     (transpiler-add-wanted-variable tr var))
 
 		  (expex-function? ex)
 		  #'((fun)
