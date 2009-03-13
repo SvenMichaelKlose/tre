@@ -1,6 +1,24 @@
 ;;;;; TRE transpiler
 ;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
 
+(defun transpiler-update-funinfo-lambda (x)
+  (with (fi (get-lambda-funinfo x)
+		 body (lambda-body x))
+    (if fi
+	  (setf (funinfo-num-tags fi) (count-if #'numberp body)))
+	`#'(,@(lambda-funinfo-expr x)
+		,(lambda-args x)
+		,@(transpiler-update-funinfo body))))
+
+(defun transpiler-update-funinfo (x)
+  (if
+	(atom x)
+	  x
+	(lambda? x)
+	  (transpiler-update-funinfo-lambda x)
+	(cons (transpiler-update-funinfo x.)
+		  (transpiler-update-funinfo .x))))
+
 ;;;; TOPLEVEL
 
 (defun transpiler-expand-compose (tr)
@@ -12,6 +30,8 @@
     ; Add names to top-level functions for those target languages
     ; that require it.
     (fn transpiler-make-named-functions tr _)
+
+    #'transpiler-update-funinfo
 
     ; Peephole-optimization. Removes some unused code.
     #'opt-peephole
