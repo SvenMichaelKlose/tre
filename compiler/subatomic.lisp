@@ -5,16 +5,27 @@
 ;;;; Subatomic expression utilities.
 
 (defun vm-scope? (e)
-  (and (consp e) (eq 'VM-SCOPE (car e))))
+  (and (consp e)
+	   (eq 'VM-SCOPE (car e))))
 
 (defun vm-go? (e)
-  (and (consp e) (eq 'VM-GO (car e))))
+  (and (consp e)
+	   (eq 'VM-GO (car e))))
 
 (defun vm-go-nil? (e)
-  (and (consp e) (eq 'VM-GO-NIL (car e))))
+  (and (consp e)
+	   (eq 'VM-GO-NIL (car e))))
 
 (defun vm-jump? (e)
-  (and (consp e) (in? (car e) 'VM-GO 'VM-GO-NIL)))
+  (and (consp e)
+	   (in? (car e) 'VM-GO 'VM-GO-NIL)))
+
+(defun vm-jump-tag (x)
+  (if
+	(vm-go? x)
+	  (second x)
+	(vm-go-nil? x)
+	  (third x)))
 
 (defun vm-scope-body (x)
   (cdr x))
