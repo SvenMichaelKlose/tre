@@ -6,6 +6,7 @@
 (env-load "stage4/assoc-splice.lisp")
 (env-load "stage4/clr.lisp")
 (env-load "stage4/compose.lisp")
+(env-load "stage4/count-if.lisp")
 (env-load "stage4/declare.lisp")
 (env-load "stage4/enqueue-many.lisp")
 (env-load "stage4/escape-string.lisp")
