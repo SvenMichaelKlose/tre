@@ -15,7 +15,7 @@
 		  	  		    (and (>= _ #\0) (<= _ #\9))
 			  		    (in=? _ #\_ #\. #\$ #\#)))
 			:make-label
-	  		    (fn (format nil "l~A:"
+	  		    (fn (format nil "l~A:~%"
 							    (transpiler-symbol-string *c-transpiler* _)))
 			:named-functions? t
 			:lambda-export? t

@@ -21,16 +21,17 @@
 					      (argument-expand-names 'unnamed-c-function
 						      		     	     (lambda-args x))))
 		")" ,(code-char 10)
-	    "{treptr " ,'~%ret ,*c-separator*
+	    "{" ,(code-char 10)
+		   "    treptr " ,'~%ret ,*c-separator*
            ,@(lambda-body x)
-        ("return " ,'~%ret ,*c-separator*)
+        ("    return " ,'~%ret ,*c-separator*)
 	    "}")))
 
 (define-c-macro %setq (dest val)
-  `((%transpiler-native ,dest) "=" ,val))
+  `((%transpiler-native "    " ,dest) "=" ,val))
 
 (define-c-macro %var (name)
-  `(%transpiler-native "treptr " ,name))
+  `(%transpiler-native "    treptr " ,name))
 
 ;;; TYPE PREDICATES
 
@@ -52,10 +53,11 @@
 (define-c-binary eq "=")
 
 (define-c-macro vm-go (tag)
-  `("goto l" ,(transpiler-symbol-string *c-transpiler* tag)))
+  `("    goto l" ,(transpiler-symbol-string *c-transpiler* tag)))
 
 (define-c-macro vm-go-nil (val tag)
-  `("if (" ,val " == treptr_nil) goto l" ,(transpiler-symbol-string *c-transpiler* tag)))
+  `("    if (" ,val " == treptr_nil)" ,(code-char 10)
+	"        goto l" ,(transpiler-symbol-string *c-transpiler* tag)))
 
 (defun c-stack (x)
   ($ '__S x))
