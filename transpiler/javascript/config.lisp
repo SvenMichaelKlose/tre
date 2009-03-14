@@ -125,7 +125,9 @@
 	:make-label
 	  #'js-transpiler-make-label
 	:lambda-export? nil)
-    (setf (expex-inline? (transpiler-expex tr)) #'%slot-value?)
+    (let ex (transpiler-expex tr)
+      (setf (expex-inline? ex) #'%slot-value?)
+      (setf (expex-setter-filter ex) (fn (js-setter-filter tr _))))
 	tr))
 
 (defvar *js-transpiler* (make-javascript-transpiler nil))
