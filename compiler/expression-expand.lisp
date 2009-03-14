@@ -20,7 +20,9 @@
   (function-collector #'((fun args)))
 
   ; Callback to collect used variables.
-  (argument-filter #'((var)))
+  (argument-filter #'((var) var))
+
+  (setter-filter #'((var) var))
 
   (plain-arg-fun? #'((var)))
 
@@ -35,7 +37,9 @@
   (and (atom x)
        (string= "~E" (subseq (symbol-name x) 0 2))))
 
-;; Have guest filter the arguments for whatever reason.
+(defun expex-filter-setter (ex x)
+  (funcall (expex-setter-filter ex) x))
+
 (defun expex-filter-arguments (ex x)
   (mapcar (fn (funcall (expex-argument-filter ex) _))
 		  x))
@@ -149,7 +153,7 @@
 (defun expex-expr-setq (ex x)
   (with ((moved new-expr) (expex-args ex (cddr x)))
 	(values moved
-		    `((%setq ,(second x) ,@new-expr)))))
+			(list (expex-filter-setter ex `(%setq ,(second x) ,@new-expr))))))
 
 (defun expex-lambda (ex x)
   (with-temporary *expex-funinfo* (get-lambda-funinfo x)
