@@ -22,7 +22,8 @@
 			:stack-arguments? t
 			:literal-conversion #'((x) x))
 	(let ex (transpiler-expex tr)
-	  (setf (expex-argument-filter ex) #'c-expand-literals))
+	  (setf (expex-argument-filter ex) #'c-expand-literals
+			(expex-setter-filter ex) #'c-setter-filter))
 	tr))
 
 (defvar *c-transpiler* (make-c-transpiler))
