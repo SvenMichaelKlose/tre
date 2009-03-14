@@ -61,9 +61,10 @@
     (funinfo-env-add-args fi (list arg))))
 
 (defun funinfo-in-this-or-parent-env? (fi var)
-  (or (funinfo-env-pos fi var)
-	  (awhen (funinfo-parent fi)
-		(funinfo-in-this-or-parent-env? ! var))))
+  (when fi
+    (or (funinfo-env-pos fi var)
+	    (awhen (funinfo-parent fi)
+		  (funinfo-in-this-or-parent-env? ! var)))))
 
 ,(macroexpand
 	`(progn
@@ -74,7 +75,7 @@
 					 lexical-pos lexicals)
 				   2))))
 
-(define-slot-setter-acons! funinfo-add-closure fi
+(define-slot-setter-push! funinfo-add-closure fi
   (funinfo-closures fi))
 
 (defun funinfo-add-gathered-closure-info (fi fi-closure)

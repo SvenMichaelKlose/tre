@@ -27,12 +27,19 @@
   (when *show-definitions*
     (print `(defun ,name)))
   (with (n (%defun-name name)
-		 tr *c-transpiler*)
+		 tr *c-transpiler*
+		 fi-sym (when (eq '%FUNINFO args.)
+				  (second args))
+		 a (if fi-sym
+			   (cddr args)
+			   args))
     (transpiler-obfuscate-symbol tr n)
-    (transpiler-add-function-args tr n args)
+    (transpiler-add-function-args tr n a)
 	(transpiler-add-defined-function tr n)
     `(%setq ,n
-	        #'(,args
+	        #'(,@(awhen fi-sym
+				   `(%funinfo ,!))
+			   ,a
    		         ,@(if (and (not *assert*)
 		    	            (stringp body.))
 				       .body

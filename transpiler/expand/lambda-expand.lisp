@@ -3,15 +3,11 @@
 
 ;;;; LAMBDA EXPANSION
 
-; XXX remove this
-(defvar *is-imported-funinfo* nil)
-
 (defun transpiler-lambda-expand-one (tr x)
   (with (forms (argument-expand-names
 			       'transpiler-lambda-expand
 			       (lambda-args x.))
-         imported	(unless *is-imported-funinfo* ; XXX
-					  (transpiler-current-funinfo tr))
+         imported	(get-lambda-funinfo x.)
          fi			(or imported
 						(make-funinfo :env forms
 							  		  :args forms)))
@@ -24,13 +20,8 @@
 				   fi
                    (lambda-body x.)
                    (transpiler-lambda-export? tr)))
-		  ; XXX not so good....
-		  ; Avoid prepared FUNINFO from lambda-expansion.
-          (when imported
-			(setf *is-imported-funinfo* t))
-          (dolist (e (funinfo-closures fi))
-            (transpiler-add-exported-closure tr e. .e)
-            (transpiler-add-wanted-function tr e.)))))
+	  (dolist (i (funinfo-closures fi))
+		(transpiler-add-exported-closure tr i)))))
 
 (defun transpiler-lambda-expand-0 (tr x)
   "Expand top-level LAMBDA expressions."
