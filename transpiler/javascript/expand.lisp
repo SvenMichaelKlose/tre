@@ -25,14 +25,21 @@
   (when *show-definitions*
     (print `(defun ,name)))
   (with (n (%defun-name name)
-		 tr *js-transpiler*)
+		 tr *js-transpiler*
+		 fi-sym (when (eq '%funinfo args.)
+				  (second args))
+		 a (if fi-sym
+			   (cddr args)
+			   args))
     (transpiler-obfuscate-symbol tr n)
-    (transpiler-add-function-args tr n args)
+    (transpiler-add-function-args tr n a)
 	(transpiler-add-defined-function tr n)
     `(progn
        (%var ,n)
        (%setq ,n
-	          #'(,args
+	          #'(,@(awhen fi-sym
+					 `(%funinfo ,!))
+				 ,a
    		           ,@(if (and (not *assert*)
 		    	              (stringp body.))
 				         .body
