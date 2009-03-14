@@ -66,7 +66,6 @@
   emitted-wanted-functions
   obfuscations
   plain-arg-funs
-  (currently-imported-lambda nil)
   (exported-closures nil))
 
 (defun transpiler-reset (tr)
@@ -129,18 +128,8 @@
 (define-slot-setter-push! transpiler-add-plain-arg-fun tr
   (transpiler-plain-arg-funs tr))
 
-(define-slot-setter-acons! transpiler-add-exported-closure tr
+(define-slot-setter-push! transpiler-add-exported-closure tr
   (transpiler-exported-closures tr))
-
-;; Needed for lambda-expansion of exported lambdas.
-(defun transpiler-current-funinfo (tr)
-  (assoc-value (transpiler-currently-imported-lambda tr)
-	   		   (transpiler-exported-closures tr)))
-
-;; Needed for lambda-expansion of exported lambdas.
-(defun transpiler-current-env (tr)
-  (awhen (transpiler-current-funinfo tr)
-	(funinfo-env !)))
 
 (defun transpiler-plain-arg-fun? (tr fun)
   (member fun (transpiler-plain-arg-funs tr)))
