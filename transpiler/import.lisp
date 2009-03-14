@@ -12,8 +12,8 @@
 	  (transpiler-macro tr name)))
 
 (defun transpiler-can-import? (tr name)
-  (and (symbolp name)
-	   (transpiler-import-from-environment? tr)
+  (and (transpiler-import-from-environment? tr)
+ 	   (symbolp name)
   	   (not (transpiler-defined? tr name))))
 	
 (defun transpiler-add-wanted-function (tr fun)
@@ -33,21 +33,28 @@
     (adjoin! var (transpiler-wanted-variables tr)))
   var)
 
+(defun transpiler-import-exported-closures (tr)
+  (awhen (transpiler-exported-closures tr)
+	(prog1
+	  (transpiler-sighten tr !)
+	  (setf (transpiler-exported-closures tr) nil))))
+
 (defun transpiler-import-wanted-function (tr x)
-  (unless (transpiler-defined-function tr x)
-	(with-temporary (transpiler-currently-imported-lambda tr)
-					(when (assoc x (transpiler-exported-closures tr))
-					  x)
-      (transpiler-add-emitted-wanted-function tr x)
-      (let fun (symbol-function x)
-        (when (functionp fun)
-	      (transpiler-sighten tr
-      	    `((defun ,x ,(function-arguments fun)
-		        ,@(function-body fun)))))))))
+  (append 
+      (transpiler-import-exported-closures tr)
+      (unless (transpiler-defined-function tr x)
+        (transpiler-add-emitted-wanted-function tr x)
+        (let fun (symbol-function x)
+          (when (functionp fun)
+            (transpiler-sighten tr
+      	        `((defun ,x ,(function-arguments fun)
+	                ,@(function-body fun)))))))))
 
 (defun transpiler-import-wanted-functions (tr)
-  (mapcan (fn transpiler-import-wanted-function tr _)
-    	  (transpiler-wanted-functions tr)))
+  (append
+      (mapcan (fn transpiler-import-wanted-function tr _)
+    	      (transpiler-wanted-functions tr))
+      (transpiler-import-exported-closures tr)))
 
 (defun transpiler-import-wanted-variables (tr)
   (transpiler-sighten tr
