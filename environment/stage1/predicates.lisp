@@ -21,9 +21,8 @@
 
 (defun symbolp (x)
   "Tests if variable points to itself."
-  (if (and (atom x)
-		   (not (= 0 (length (symbol-name x)))))
-	  t))
+  (and (atom x)
+       (not (= 0 (length (symbol-name x))))))
 
 (defun variablep (x)
   (and (atom x)

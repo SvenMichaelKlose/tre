@@ -22,13 +22,18 @@
 						      		     	     (lambda-args x))))
 		")" ,(code-char 10)
 	    "{" ,(code-char 10)
-		   "    treptr " ,'~%ret ,*c-separator*
+		   "   treptr " ,'~%ret ,*c-separator*
            ,@(lambda-body x)
         ("    return " ,'~%ret ,*c-separator*)
 	    "}")))
 
 (define-c-macro %setq (dest val)
   `((%transpiler-native "    " ,dest) "=" ,val))
+
+(define-c-macro %setq-atom (dest val)
+  `(%transpiler-native "    treatom_set_value (" ,dest " ,"
+		,val
+		")"))
 
 (define-c-macro %var (name)
   `(%transpiler-native "    treptr " ,name))
