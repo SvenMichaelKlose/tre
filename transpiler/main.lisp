@@ -42,6 +42,7 @@
 
 (env-load "../transpiler/c/config.lisp")
 (env-load "../transpiler/c/expand.lisp")
+(env-load "../transpiler/c/builtin.lisp")
 (env-load "../transpiler/c/codegen.lisp")
 (env-load "../transpiler/c/core.lisp")
 (env-load "../transpiler/c/toplevel.lisp")

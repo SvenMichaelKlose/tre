@@ -370,30 +370,42 @@ trebuiltin_get (treptr args)
 
 char *tre_builtin_names[] = {
     "IDENTITY",
-    "QUIT", "%ERROR", "NUMBER+", "NUMBER-", "*", "/", "MOD",
-    "LOGXOR",
-    "EQ", "EQL", "CONS", "LIST",
-    "PRINT",
-
-    "CAR", "CDR", "RPLACA", "RPLACD",
-
+    "QUIT",
+    "LOAD",
     "EVAL", "%MACROCALL",
+    "PRINT",
+    "GC",
+    "DEBUG",
+    "INTERN",
+	"%MALLOC", "%MALLOC-EXEC", "%FREE", "%FREE-EXEC",
+	"%%SET", "%%GET",
 
-    "MAKE-SYMBOL", "ATOM", "SYMBOL-VALUE", "%TYPE-ID", "%ID",
-	"SYMBOL-FUNCTION", "SYMBOL-PACKAGE",
-    "CONSP", "NUMBERP", "FUNCTIONP",
-    "BOUNDP", "FBOUNDP",
-    "MACROP", "STRINGP",
+	"%ERROR",
+
+	"NUMBER+", "NUMBER-", "*", "/", "MOD",
+    "LOGXOR", "NUMBERP",
     "=", "<", ">",
 	"BIT-OR", "BIT-AND",
 	"<<", ">>",
+    "CODE-CHAR", "INTEGER",
+    "CHARACTERP",
+
+    "EQ", "EQL",
+    "MAKE-SYMBOL", "ATOM", "SYMBOL-VALUE", "%TYPE-ID", "%ID",
+	"SYMBOL-FUNCTION", "SYMBOL-PACKAGE",
+	"FUNCTIONP",
+    "BOUNDP", "FBOUNDP",
+    "MACROP",
+    "%ATOM-LIST",
+
+	"CONS", "LIST",
+    "CAR", "CDR", "RPLACA", "RPLACD",
+
+    "CONSP",
 
     "ELT", "%SET-ELT", "LENGTH",
 
-    "CODE-CHAR", "INTEGER",
-
-    "CHARACTERP",
-
+	"STRINGP",
     "MAKE-STRING", "STRING-CONCAT", "STRING", "SYMBOL-NAME",
 	"LIST-STRING",
 
@@ -401,26 +413,15 @@ char *tre_builtin_names[] = {
 
     "MACROEXPAND-1", "MACROEXPAND",
 
-    "LOAD",
-
     "%PRINC", "%FORCE-OUTPUT", "%READ-CHAR",
     "%FOPEN", "%FEOF", "%FCLOSE", "%TERMINAL-RAW", "%TERMINAL-NORMAL",
 
-    "GC", "END-DEBUG", "INVOKE-DEBUGGER",
-
-    "%ATOM-LIST",
+	"END-DEBUG", "INVOKE-DEBUGGER",
 
     "ALIEN-DLOPEN", "ALIEN-DLCLOSE", "ALIEN-DLSYM",
     "ALIEN-CALL",
 
-    "DEBUG",
-
-    "INTERN",
-
     "SYS-IMAGE-CREATE", "SYS-IMAGE-LOAD",
-
-	"%MALLOC", "%MALLOC-EXEC", "%FREE", "%FREE-EXEC",
-	"%%SET", "%%GET",
 
     NULL
 };
@@ -444,6 +445,20 @@ trebuiltin_debug (treptr no_args)
 treevalfunc_t treeval_xlat_builtin[] = {
     trebuiltin_identity,
     trebuiltin_quit,
+    trebuiltin_load,
+    trebuiltin_eval,
+    trebuiltin_macrocall,
+    trebuiltin_print,
+    trebuiltin_gc,
+    trebuiltin_debug,
+    trebuiltin_intern,
+	trebuiltin_malloc,
+	trebuiltin_malloc_exec,
+	trebuiltin_free,
+	trebuiltin_free_exec,
+	trebuiltin_set,
+	trebuiltin_get,
+
     treerror_builtin_error,
 
     trenumber_builtin_plus,
@@ -452,39 +467,7 @@ treevalfunc_t treeval_xlat_builtin[] = {
     trenumber_builtin_quotient,
     trenumber_builtin_mod,
     trenumber_builtin_logxor,
-
-    treatom_builtin_eq,
-    treatom_builtin_eql,
-
-    trelist_builtin_cons,
-    trelist_builtin_list,
-
-    trebuiltin_print,
-
-    trelist_builtin_car,
-    trelist_builtin_cdr,
-    trelist_builtin_rplaca,
-    trelist_builtin_rplacd,
-
-    trebuiltin_eval,
-    trebuiltin_macrocall,
-
-    treatom_builtin_make_symbol,
-
-    treatom_builtin_atom,
-    treatom_builtin_symbol_value,
-    treatom_builtin_type_id,
-    treatom_builtin_id,
-    treatom_builtin_symbol_function,
-    treatom_builtin_symbol_package,
-    trelist_builtin_consp,
     trenumber_builtin_numberp,
-    treatom_builtin_functionp,
-    treatom_builtin_boundp,
-    treatom_builtin_fboundp,
-    treatom_builtin_macrop,
-    trestring_builtin_stringp,
-
     trenumber_builtin_number_equal,
     trenumber_builtin_lessp,
     trenumber_builtin_greaterp,
@@ -492,19 +475,39 @@ treevalfunc_t treeval_xlat_builtin[] = {
     trenumber_builtin_bit_and,
     trenumber_builtin_bit_shift_left,
     trenumber_builtin_bit_shift_right,
+    trenumber_builtin_code_char,
+    trenumber_builtin_integer,
+    trenumber_builtin_characterp,
+
+    treatom_builtin_eq,
+    treatom_builtin_eql,
+    treatom_builtin_make_symbol,
+    treatom_builtin_atom,
+    treatom_builtin_symbol_value,
+    treatom_builtin_type_id,
+    treatom_builtin_id,
+    treatom_builtin_symbol_function,
+    treatom_builtin_symbol_package,
+    treatom_builtin_functionp,
+    treatom_builtin_boundp,
+    treatom_builtin_fboundp,
+    treatom_builtin_macrop,
+    treatom_builtin_atom_list,
+
+    trelist_builtin_cons,
+    trelist_builtin_list,
+    trelist_builtin_car,
+    trelist_builtin_cdr,
+    trelist_builtin_rplaca,
+    trelist_builtin_rplacd,
+    trelist_builtin_consp,
 
     tresequence_builtin_elt,
     tresequence_builtin_set_elt,
     tresequence_builtin_length,
 
-    /* type conversion */
-    trenumber_builtin_code_char,
-    trenumber_builtin_integer,
-
-    /* type checking */
-    trenumber_builtin_characterp,
-
     /* string functions */
+    trestring_builtin_stringp,
     trestring_builtin_make,
     trestring_builtin_concat,
     trestring_builtin_string,
@@ -520,43 +523,25 @@ treevalfunc_t treeval_xlat_builtin[] = {
     tremacro_builtin_macroexpand_1,
     tremacro_builtin_macroexpand,
 
-    trebuiltin_load,
-
     trestream_builtin_princ,
     trestream_builtin_force_output,
     trestream_builtin_read_char,
-
     trestream_builtin_fopen,
     trestream_builtin_feof,
     trestream_builtin_fclose,
     trestream_builtin_terminal_raw,
     trestream_builtin_terminal_normal,
 
-    trebuiltin_gc,
-
     tredebug_builtin_end_debug,
     tredebug_builtin_invoke_debugger,
-
-    treatom_builtin_atom_list,
 
     trealien_builtin_dlopen,
     trealien_builtin_dlclose,
     trealien_builtin_dlsym,
     trealien_builtin_call,
 
-    trebuiltin_debug,
-    trebuiltin_intern,
-
     treimage_builtin_create,
     treimage_builtin_load,
-
-	trebuiltin_malloc,
-	trebuiltin_malloc_exec,
-	trebuiltin_free,
-	trebuiltin_free_exec,
-
-	trebuiltin_set,
-	trebuiltin_get,
 
     NULL
 };

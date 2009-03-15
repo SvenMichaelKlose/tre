@@ -30,8 +30,10 @@
 		x)))
 
 (defmacro define-transpiler-macro (tr &rest x)
+  (when *show-definitions*
+	(print `(define-transpiler-macro ,tr ,x.)))
   (with (tre (eval tr)
-		 name (first x))
+		 name x.)
     (when (expander-has-macro? (transpiler-macro-expander tre) name)
       (error "Code-generator macro ~A already defined as standard macro."
 			 name))
