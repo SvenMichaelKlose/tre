@@ -10,8 +10,9 @@
 				 (cons '*variables* *universe*))))))
 
 (setq *variables* (cons (cons '*variables* nil)
+				  (cons (cons '*keyword-package* nil)
 				  (cons (cons '*show-definitions* nil)
-						nil)))
+						nil))))
 
 ;;; Helper functions (helping us to stay sane).
 
