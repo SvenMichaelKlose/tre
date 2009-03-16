@@ -7,24 +7,34 @@
   (in? e :constructor))
 
 (defun %struct-make-symbol (name options)
-  (aif (cdr (assoc :constructor options))
-     (car !)
+  (aif (assoc-value :constructor options)
+     !.
      (make-symbol (string-concat "MAKE-" (symbol-name name)))))
 
 (defun %struct-p-symbol (name)
   (make-symbol (string-concat (symbol-name name) "-P")))
 
+(defun %struct-field-name (field)
+  (if (consp field)
+      field.
+      field))
+
 (defun %struct-make-args (fields)
-  `(&key ,@fields))
+  `(&key ,@(mapcar (fn (let n (%struct-field-name _)
+						 `(,n ',n)))
+				   fields)))
 
 (defun %struct-make-init (fields g)
-  (with (form (make-queue))
-    (do ((i fields (cdr i))
+  (let form (make-queue)
+    (do ((i fields .i)
 	     (idx 1 (1+ idx)))
         ((endp i) (queue-list form))
-      (if (consp (car i))
-        (enqueue form `(setf (elt ,g ,idx) ,(caar i)))
-        (enqueue form `(setf (elt ,g ,idx) ,(car i)))))))
+      (let argname (%struct-field-name i.)
+        (enqueue form `(setf (elt ,g ,idx)
+							 (if (eq ,argname ',argname)
+								 ,(when (consp i.)
+									(second i.))
+								 ,argname)))))))
 
 (defun %struct-make (name fields options)
   (with (sym (%struct-make-symbol name options)
@@ -32,7 +42,7 @@
          user-init (%struct-make-init fields g)
 	     type-init `((setf (elt ,g 0) ',name)))
     `(defun ,sym ,(%struct-make-args fields)
-       (with (,g (make-array ,(1+ (length fields))))
+       (let ,g (make-array ,(1+ (length fields)))
          ,@(if user-init
 	           (nconc type-init user-init)
 	           type-init)
@@ -41,13 +51,8 @@
 (defun %struct-getter-symbol (name field)
   (make-symbol (string-concat (symbol-name name) "-" (symbol-name field))))
 
-(defun %struct-field-name (field)
-  (if (consp field)
-      (car field)
-      field))
-
 (defun %struct-single-get (name field index)
-  (with (sym (%struct-getter-symbol name field))
+  (let sym (%struct-getter-symbol name field)
     `(progn
       (defun ,sym (arr)
         (elt arr ,index))
@@ -56,13 +61,14 @@
 
 (defun %struct-getters (name fields)
   (with-queue form
-    (do ((i fields (cdr i))
+    (do ((i fields .i)
 	     (index 1 (1+ index)))
 	    ((endp i) (queue-list form))
-      (enqueue form (%struct-single-get name (%struct-field-name (car i)) index)))))
+      (enqueue form
+			   (%struct-single-get name (%struct-field-name i.) index)))))
 
 (defun %struct-p (name)
-  (with (sym (%struct-p-symbol name))
+  (let sym (%struct-p-symbol name)
     `(defun ,sym (arr)
        (and (arrayp arr) (eq (elt arr 0) ,name)))))
 
@@ -70,7 +76,7 @@
   "Split list into fields and options."
   (with-queue (f o)
     (mapcar (fn (if (and (consp _)
-						 (%struct-option-keyword (car _)))
+						 (%struct-option-keyword _.))
 	                (enqueue o _)
 	                (enqueue f _)))
 	        fields-and-options)
@@ -82,7 +88,7 @@
   (acons! name def *struct-defs*))
 
 (defun %struct-def (name)
-  (cdr (assoc name *struct-defs*)))
+  (assoc-value name *struct-defs*))
 
 (defun %struct-name (obj)
   (if (not (arrayp obj))
@@ -92,7 +98,7 @@
 (defun %struct-fields (name)
   (with-queue form
     (dolist (i (%struct-def name) (queue-list form))
-      (enqueue form (car i)))))
+      (enqueue form i.))))
 
 (defun %defstruct-expander (name &rest fields-and-options)
   "Define new structure."
