@@ -13,7 +13,7 @@
 (defvar *xml2lml-read* nil)
 
 (defun xml-error (form &rest args)
-  (princ (list-string (reverse *xml2lmlr-read*)))
+  (princ (list-string (reverse *xml2lml-read*)))
   (if args
       (error (apply #'format t form args))
       (error (funcall #'format t form))))
@@ -97,11 +97,11 @@
     (when (xml-identifier-char? (xml-peek-char in))
       (enqueue q (xml-read-char in)))))
 
-(setq *xml-unified-strings* nil)
+(defvar *xml-unified-strings* nil)
 
 (defun xml-init-tables ()
   (setq *xml-unified-strings* (make-hash-table :test #'string=))
-  (setq *xml2lmlr-read* nil))
+  (setq *xml2lml-read* nil))
 
 (defun xml-unify-string (s)
   "Unify string."
