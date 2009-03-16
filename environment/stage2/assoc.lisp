@@ -1,5 +1,5 @@
 ;;;; TRE  environment
-;;;; Copyright (C) 2005-2006,2008 Sven Klose <pixel@copei.de>
+;;;; Copyright (C) 2005-2006,2009 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Associative lists
 
@@ -10,7 +10,7 @@
 	  (%error "list expected"))
     (dolist (i lst)
       (if (consp i)
-		  (if (funcall (or test eql) key (car i))
+		  (if (funcall (or test #'eql) key (car i))
 	  	  	  (return i))
 		  (and (print i)
 			   (%error "not a pair"))))))
@@ -21,14 +21,14 @@
 	  (%error "list expected"))
     (dolist (i lst)
       (if (consp i)
-		  (if (funcall (or test eql) key (car i))
+		  (if (funcall (or test #'eql) key (car i))
 	  	      (return i))
 		  (%error "not a pair")))))
 
 (defun %setf-assoc (new-value key x &key test)
   (if (listp x)
       (when x
-		(if (funcall (or test eql) key (car x))
+		(if (funcall (or test #'eql) key (car x))
             (rplaca lst new-value)
 			(%setf-assoc new-value key (cdr x) :test test)))
 	  (%error "not a pair")))
