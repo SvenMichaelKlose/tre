@@ -14,6 +14,7 @@
 (env-load "stage4/find-tree.lisp")
 (env-load "stage4/force-list.lisp")
 (env-load "stage4/force-tree.lisp")
+(env-load "stage4/global-variable.lisp")
 (env-load "stage4/list-unless.lisp")
 (env-load "stage4/mapatree.lisp")
 (env-load "stage4/maptree.lisp")
