@@ -7,7 +7,10 @@
 (defvar *gensym-counter* 0)
 
 ;; Returns newly created, unique symbol.
+(%defun gensym-number ()
+  (setq *gensym-counter* (+ 1 *gensym-counter*)))
+
+;; Returns newly created, unique symbol.
 (%defun gensym ()
   (progn
-    (setq *gensym-counter* (+ 1 *gensym-counter*))
-    (make-symbol (string-concat "~G" (string *gensym-counter*)))))
+    (make-symbol (string-concat "~G" (string (gensym-number))))))
