@@ -21,7 +21,7 @@
 
 (defun %make-hash-index-num (h k)
   "Make hash index from number."
-  (mod k (%hash-table-size h)))
+  (mod (abs k) (%hash-table-size h)))
 
 (defun %make-hash-index-string (h str)
   "Make hash index from string."
