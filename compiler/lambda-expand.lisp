@@ -12,36 +12,6 @@
             ,body (lambda-body ,fun))
        ,@exec-body)))
 
-;;;; FUNINFO manipulators
-
-(defun funinfo-make-lexical (fi)
-  (unless (funinfo-lexical fi)
-    (let lexical (gensym)
-	  (setf (funinfo-lexical fi) lexical)
-	  (funinfo-env-add fi lexical))))
-
-(defun funinfo-make-ghost (fi)
-  (unless (funinfo-ghost fi)
-    (let ghost (gensym)
-	  (setf (funinfo-ghost fi) ghost)
-	  (setf (funinfo-args fi)
-		    (cons ghost (funinfo-args fi)))
-	  (funinfo-env-add fi ghost))))
-
-(defun funinfo-link-lexically (fi fi-child)
-  (funinfo-make-lexical fi)
-  (funinfo-make-ghost fi-child))
-
-;; Make lexical path to desired variable.
-(defun funinfo-setup-lexical-links (fi fi-child var)
-  (unless fi
-	(error "couldn't find ~A in environment" var))
-  (funinfo-add-free-var fi-child var)
-  (funinfo-link-lexically fi fi-child)
-  (if (funinfo-env-pos fi var)
-	  (funinfo-add-lexical fi var)
-      (funinfo-setup-lexical-links (funinfo-parent fi) fi var)))
-
 ;;; Pass lexical up one step through ghost.
 
 (defun make-lexical-place-expr (fi fi-child var)
@@ -93,6 +63,8 @@
 (defun vars-to-stackplaces (fi x)
   (if (consp x)
       (if
+		(%quote? x)
+		  x
 		(lambda? x) ; Add variables to ignore in subfunctions.
 	      `#'(,@(make-lambda-funinfo fi)
 			  ,(lambda-args x)
@@ -176,7 +148,9 @@
 ;;; Export gathering
 
 (defun lambda-export-gather-child-make-funinfo (fi)
-  (let args (lambda-args x)
+  (with ((args exported-closures) (lambda-expand (lambda-args x)
+												 t))
+	(append! (funinfo-closures fi) exported-closures)
     (make-funinfo :env args
 			      :args args
 			      :parent fi)))
@@ -229,9 +203,40 @@
     (lambda-expand-tree fi body export-lambdas t))
   (lambda-embed-or-export-transform fi body export-lambdas))
 
-(defun lambda-expand (fun body &optional (export-lambdas t))
-  (with (forms  (argument-expand-names 'lambda-expansion
-									   (function-arguments fun))
-         fi     (make-funinfo :env forms
-							  :args forms))
-    (values (lambda-embed-or-export fi body export-lambdas) fi)))
+(defun lambda-expand-0 (x export-lambdas)
+  (with (forms (argument-expand-names
+			       'transpiler-lambda-expand
+			       (lambda-args x.))
+         imported	(get-lambda-funinfo x.)
+         fi			(or imported
+						(make-funinfo :env forms
+							  		  :args forms)))
+    (values
+	    `#'(,@(make-lambda-funinfo fi)
+		    ,(lambda-args x.)
+            ,@(funcall (if imported
+						   #'lambda-embed-or-export-transform
+						   #'lambda-embed-or-export)
+				       fi
+                       (lambda-body x.)
+				       export-lambdas))
+	    (funinfo-closures fi))))
+
+(defun lambda-expand (x export-lambdas)
+  "Expand top-level LAMBDA expressions."
+  (with (exported-closures nil
+		 lambda-exp-r
+  		     #'((x)
+				  (if (atom x)
+	  				  x
+	  				  (cons (if (lambda? x.)
+							    (with ((new-x new-exported-closures)
+						   			       (lambda-expand-0 x
+															export-lambdas))
+				  				  (append! exported-closures
+										   new-exported-closures)
+								  new-x)
+								(lambda-exp-r x.))
+		    				(lambda-exp-r .x)))))
+	(values (lambda-exp-r x)
+			exported-closures)))
