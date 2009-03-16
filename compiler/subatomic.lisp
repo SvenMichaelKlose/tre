@@ -34,6 +34,10 @@
   (and (consp x)
 	   (eq '%STACK (car x))))
 
+(defun %vec? (x)
+  (and (consp x)
+	   (eq '%vec (car x))))
+
 (defun %var? (x)
   (and (consp x)
 	   (eq '%VAR (car x))
