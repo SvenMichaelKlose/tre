@@ -8,13 +8,12 @@
   (funcall (stream-fun-out str) c str))
 
 (defun %princ-number (c str)
-  (labels 
-    ((recp (out n) ; XXX: REC will bug the expression-expander.
-      (let m (mod n 10)
-        (push m out)
-        (if (> n 9)
-          (recp out (/ (- n m) 10))
-          out))))
+  (with (recp #'((out n) ; XXX: REC will bug the expression-expander.
+      			   (let m (mod n 10)
+        			 (push m out)
+        			 (if (> n 9)
+          				 (recp out (/ (- n m) 10))
+          				  out))))
     (dolist (i (recp nil c))
       (%princ-character (code-char (+ i #\0)) str))))
 
