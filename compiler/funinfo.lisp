@@ -107,6 +107,34 @@
 (defun get-lambda-funinfo (x)
   (href (lambda-funinfo x) *funinfos*))
 
+(defun funinfo-make-lexical (fi)
+  (unless (funinfo-lexical fi)
+    (let lexical (gensym)
+	  (setf (funinfo-lexical fi) lexical)
+	  (funinfo-env-add fi lexical))))
+
+(defun funinfo-make-ghost (fi)
+  (unless (funinfo-ghost fi)
+    (let ghost (gensym)
+	  (setf (funinfo-ghost fi) ghost)
+	  (setf (funinfo-args fi)
+		    (cons ghost (funinfo-args fi)))
+	  (funinfo-env-add fi ghost))))
+
+(defun funinfo-link-lexically (fi fi-child)
+  (funinfo-make-lexical fi)
+  (funinfo-make-ghost fi-child))
+
+;; Make lexical path to desired variable.
+(defun funinfo-setup-lexical-links (fi fi-child var)
+  (unless fi
+	(error "couldn't find ~A in environment" var))
+  (funinfo-add-free-var fi-child var)
+  (funinfo-link-lexically fi fi-child)
+  (if (funinfo-env-pos fi var)
+	  (funinfo-add-lexical fi var)
+      (funinfo-setup-lexical-links (funinfo-parent fi) fi var)))
+
 (defun print-funinfo (fi)
   (format t "Arguments: ~A~%" (funinfo-args fi))
   (format t "Ghost sym:   ~A~%" (funinfo-ghost fi))

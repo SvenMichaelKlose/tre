@@ -25,7 +25,16 @@
 (env-load "../transpiler/import.lisp")
 (env-load "../transpiler/toplevel.lisp")
 
+(env-load "../transpiler/c/config.lisp")
+(env-load "../transpiler/c/expex.lisp")
+(env-load "../transpiler/c/expand.lisp")
+(env-load "../transpiler/c/builtin.lisp")
+(env-load "../transpiler/c/codegen.lisp")
+(env-load "../transpiler/c/core.lisp")
+(env-load "../transpiler/c/toplevel.lisp")
+
 (env-load "../transpiler/javascript/config.lisp")
+(env-load "../transpiler/javascript/expex.lisp")
 (env-load "../transpiler/javascript/expand.lisp")
 (env-load "../transpiler/javascript/codegen.lisp")
 (env-load "../transpiler/javascript/codegen-inline.lisp")
@@ -39,10 +48,3 @@
 ;(env-load "../transpiler/php/codegen-inline.lisp")
 ;(env-load "../transpiler/php/core.lisp")
 ;(env-load "../transpiler/php/toplevel.lisp")
-
-(env-load "../transpiler/c/config.lisp")
-(env-load "../transpiler/c/expand.lisp")
-(env-load "../transpiler/c/builtin.lisp")
-(env-load "../transpiler/c/codegen.lisp")
-(env-load "../transpiler/c/core.lisp")
-(env-load "../transpiler/c/toplevel.lisp")

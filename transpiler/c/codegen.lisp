@@ -9,29 +9,43 @@
   `(define-transpiler-macro *c-transpiler* ,@x))
 
 (defun c-transpiler-function-name (name)
-  ($ 'trecompiled_ name))
+  name)
 
 (define-c-macro function (name x)
   (if (atom x)
 	  x
-      `(,(code-char 10)
-		"treptr " ,(c-transpiler-function-name name) "("
-		    ,@(transpiler-binary-expand ","
-	              (mapcar (fn `("treptr " ,_))
-					      (argument-expand-names 'unnamed-c-function
-						      		     	     (lambda-args x))))
-		")" ,(code-char 10)
-	    "{" ,(code-char 10)
-		   "   treptr " ,'~%ret ,*c-separator*
-           ,@(lambda-body x)
-        ("    return " ,'~%ret ,*c-separator*)
-	    "}")))
+	  (let args (argument-expand-names 'unnamed-c-function
+			      		     	       (lambda-args x))
+	    (push! (transpiler-concat-string-tree
+				   "extern treptr "
+				   (transpiler-symbol-string *c-transpiler*
+					   (c-transpiler-function-name name))
+				   "("
+				   (if args
+				       (transpiler-concat-string-tree
+	  	    		       (transpiler-binary-expand ","
+	               			   (mapcar (fn `("treptr " ,(transpiler-symbol-string *c-transpiler* _)))
+				    				   args)))
+					  "")
+				   ");" (string (code-char 10)))
+			   *c-declarations*)
+        `(,(code-char 10)
+		  "treptr " ,(c-transpiler-function-name name) "("
+	  	    ,@(transpiler-binary-expand ","
+	                (mapcar (fn `("treptr " ,_))
+						    args))
+		  ")" ,(code-char 10)
+	      "{" ,(code-char 10)
+		     "   treptr " ,'~%ret ,*c-separator*
+             ,@(lambda-body x)
+          ("    return " ,'~%ret ,*c-separator*)
+	      "}"))))
 
 (define-c-macro %setq (dest val)
   `((%transpiler-native "    " ,dest) "=" ,val))
 
 (define-c-macro %setq-atom (dest val)
-  `(%transpiler-native "    treatom_set_value (" ,dest " ,"
+  `(%transpiler-native "    treatom_sym_set_value (" ,dest " ,"
 		,val
 		")"))
 
@@ -71,7 +85,7 @@
   (c-stack x))
 
 (define-c-macro %quote (x)
-  `("T37quote(\"" ,(symbol-name x) "\")"))
+  (c-compiled-symbol x))
 
 (define-c-macro %set-vec (vec index value)
   `("((treptr *)" ,vec ")[(unsigned long)" ,index "] = " ,value))

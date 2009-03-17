@@ -16,7 +16,7 @@
   (if (atom x)
 	  (progn
 		(transpiler-add-wanted-function *c-transpiler* x)
-		`(symbol-function ,x))
+		`(symbol-function ',x))
   	  `(function ,x)))
 
 ;; (DEFUN ...)
@@ -67,3 +67,6 @@
     `(progn
        (%var ,name)
 	   (%setq ,name ,val))))
+
+(define-c-std-macro cons (a d)
+  `(trelist_get ,a ,d))

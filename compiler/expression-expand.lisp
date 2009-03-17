@@ -9,6 +9,15 @@
 (defvar *expexsym-counter* 0)
 (defvar *expex-funinfo* nil)
 
+(defun expex-in-env? (x)
+  (when (atom x)
+    (funinfo-in-this-or-parent-env? *expex-funinfo* x)))
+
+(defun expex-global-variable? (x)
+  (and (atom x)
+       (not (expex-in-env? x))
+       (global-variable? x)))
+
 (defstruct expex
   ; Callback to check if an object is a function.
   (function? (fn functionp (symbol-value _)))
@@ -74,10 +83,19 @@
         (argument-expand-compiled-values fun argdef args)
 	    args)))
 
+;; XXX this sucks blood out of stones. Should have proper macro expansion
+;; instead.
+(defun expex-convert-quotes (x)
+  (mapcar (fn (if (quote? _)
+				  `(%quote ,(second _))
+				  _))
+		  x))
+
 ;; Expand arguments if they are passed to a function.
 (defun expex-argexpand (ex fun args)
   (if (funcall (expex-function? ex) fun)
-	  (expex-argexpand-0 ex fun args)
+	  (expex-convert-quotes
+		  (expex-argexpand-0 ex fun args))
 	  args))
 
 (defun expex-assignment-inline (ex x)
