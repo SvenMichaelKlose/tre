@@ -12,7 +12,8 @@
     `(vm-scope
 	   (%var ,g)
        (%setq ,g (%function ,x))
-       (%setq (%slot-value ,g tre-args) ,(simple-quote-expand x.))
+       (%setq (%slot-value ,g tre-args)
+			      ,(simple-quote-expand (lambda-args x)))
        (%setq ~%ret ,g))))
 
 ;; (FUNCTION symbol | lambda-expression)
@@ -25,11 +26,12 @@
   (if (or (atom l)
 		  (%slot-value? l))
       (js-expanded-funref l)
-  (let x (past-lambda l)
-      (if (eq 'no-args (second x))
-	      `(%function ,(nconc (lambda-funinfo-expr l) (cons (first x)
-							 (cddr x))))
-          (js-expanded-fun x)))))
+      (if (eq 'no-args (first (lambda-body l)))
+          `(%function
+		     (,@(lambda-funinfo-expr l)
+			  ,(lambda-args l)
+			  ,@(cdr (lambda-body l))))
+          (js-expanded-fun (past-lambda-before-funinfo l)))))
 
 ;; Must be done as a macro, or quoted %FUNCTION symbols will be lost.
 (defun transpiler-restore-funs (x)

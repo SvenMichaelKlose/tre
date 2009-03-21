@@ -3,6 +3,14 @@
 ;;;;;
 ;;;;; LAMBDA expansion.
 
+(defvar *lambda-exported-closures* nil)
+
+(defun lambda-expand-add-closures (x)
+  (nconc! *lambda-exported-closures* x))
+
+(defun lambda-expand-add-closure (x)
+  (lambda-expand-add-closures (list x)))
+
 (defmacro with-lambda-call ((args vals body call) &rest exec-body)
   (with-gensym (tmp fun)
     `(with (,tmp ,call
@@ -66,7 +74,7 @@
 		(%quote? x)
 		  x
 		(lambda? x) ; Add variables to ignore in subfunctions.
-	      `#'(,@(make-lambda-funinfo fi)
+	      `#'(,@(lambda-funinfo-expr x)
 			  ,(lambda-args x)
 			     ,@(vars-to-stackplaces fi (lambda-body x)))
 	    (%slot-value? x)
@@ -132,10 +140,10 @@
 
 (defun lambda-export-make-exported (fi fi-child x)
   (with-gensym name
-	(funinfo-add-closure fi
-        `(defun ,name ,(append (make-lambda-funinfo fi-child)
-							   (funinfo-args fi-child))
-		   ,@(lambda-body x)))
+	(lambda-expand-add-closure
+        `((defun ,name ,(append (make-lambda-funinfo fi-child)
+							    (funinfo-args fi-child))
+		    ,@(lambda-body x))))
 	name))
 
 (defun lambda-export-transform (fi x)
@@ -150,7 +158,7 @@
 (defun lambda-export-gather-child-make-funinfo (fi)
   (with ((args exported-closures) (lambda-expand (lambda-args x)
 												 t))
-	(append! (funinfo-closures fi) exported-closures)
+	(lambda-expand-add-closures exported-closures)
     (make-funinfo :env args
 			      :args args
 			      :parent fi)))
@@ -170,11 +178,17 @@
   (if
     (lambda-call? x)
       (lambda-call-embed fi x export-lambdas gather)
-    (and export-lambdas
-		 (lambda? x))
-	  (if gather
-          (lambda-export-gather fi x)
-          (lambda-export-transform fi x))
+    (lambda? x)
+	  (if export-lambdas
+	  	  (if gather
+              (lambda-export-gather fi x)
+              (lambda-export-transform fi x))
+		  `#'(,@(make-lambda-funinfo-if-missing x
+				  (make-funinfo :env (lambda-args x)
+								:args (lambda-args x)
+								:parent fi))
+			  ,(lambda-args x)
+			  ,@(lambda-body x)))
 	x))
 
 (defun lambda-expand-tree (fi body export-lambdas gather)
@@ -197,7 +211,6 @@
   (make-function-epilogue fi
       (lambda-expand-transform fi body export-lambdas)))
 
-;; XXX (defun lambda-expand-0 (fi body export-lambdas)
 (defun lambda-embed-or-export (fi body export-lambdas)
   (when export-lambdas
     (lambda-expand-tree fi body export-lambdas t))
@@ -212,7 +225,7 @@
 						(make-funinfo :env forms
 							  		  :args forms)))
     (values
-	    `#'(,@(make-lambda-funinfo fi)
+	    `#'(,@(make-lambda-funinfo-if-missing x. fi)
 		    ,(lambda-args x.)
             ,@(funcall (if imported
 						   #'lambda-embed-or-export-transform
@@ -220,7 +233,7 @@
 				       fi
                        (lambda-body x.)
 				       export-lambdas))
-	    (funinfo-closures fi))))
+		*lambda-exported-closures*)))
 
 (defun lambda-expand (x export-lambdas)
   "Expand top-level LAMBDA expressions."

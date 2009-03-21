@@ -4,8 +4,13 @@
 (defun transpiler-update-funinfo-lambda (x)
   (with (fi (get-lambda-funinfo x)
 		 body (lambda-body x))
-    (if fi
-	  (setf (funinfo-num-tags fi) (count-if #'numberp body)))
+    (awhen (funinfo-num-tags fi)
+	  (print fi)
+	  (error "funfinfo ~A: num-tags already set to ~A. new num:~A"
+		     (lambda-funinfo x)
+		     (funinfo-num-tags fi)
+	  	     (count-if #'numberp body)))
+    (setf (funinfo-num-tags fi) (count-if #'numberp body))
 	`#'(,@(lambda-funinfo-expr x)
 		,(lambda-args x)
 		,@(transpiler-update-funinfo body))))
@@ -43,6 +48,7 @@
     ; After this pass function arguments may only be literals,
     ; constants or variables.
     (fn transpiler-expression-expand tr `(vm-scope ,_))
+#'print
 
 	(fn transpiler-argument-definitions tr _)))
 
@@ -53,7 +59,7 @@
 
 (defun transpiler-preexpand-compose (tr)
   (compose
-    ; Make (SLOT-VALUE this ...) expressions for class members.
+    ; Make (%SLOT-VALUE this ...) expressions for class members.
     (fn thisify (transpiler-thisify-classes tr) _)
 
 	; Inline local functions and export constant LAMBDA expressions.

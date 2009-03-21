@@ -12,7 +12,7 @@
   #'(()
 	  ,(if *exported-lambdas*
 		   ; Get rid of the ghost argument.
-		   '(let a (array-copy arguments)
+		   '(let a (__manual-array-copy arguments)
 			  (a.shift)
     		  (fun.apply obj a))
       	   '(fun.apply obj arguments))))

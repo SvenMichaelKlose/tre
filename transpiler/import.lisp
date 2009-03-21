@@ -34,10 +34,9 @@
   var)
 
 (defun transpiler-import-exported-closures (tr)
-  (awhen (transpiler-exported-closures tr)
-	(prog1
-	  (transpiler-sighten tr !)
-	  (setf (transpiler-exported-closures tr) nil))))
+  (when *lambda-exported-closures*
+	(append (transpiler-sighten tr (list (pop *lambda-exported-closures*)))
+		    (transpiler-import-exported-closures tr))))
 
 (defun transpiler-import-wanted-function (tr x)
   (append 

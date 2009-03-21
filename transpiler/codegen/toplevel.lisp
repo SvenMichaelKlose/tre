@@ -3,6 +3,14 @@
 ;;;;;
 ;;;;; Code-generation top-level
 
+(defun fuck (x)
+  (awhen (get-lambda-funinfo `#'(%funinfo ~g3009))
+	(when (numberp (funinfo-num-tags !))
+	  (unless (= 2 (funinfo-num-tags !))
+	    (print (funinfo-num-tags !))
+	    (error "fuckup"))))
+  x)
+
 (defun transpiler-generate-code-compose (tr)
   (compose (fn (princ #\o)
 			   (force-output)

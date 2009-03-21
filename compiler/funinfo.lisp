@@ -28,8 +28,9 @@
   (lexical niL)
 
   ; Number of jump tags in body.
-  (num-tags 0)
+  (num-tags nil)
 
+  (sym nil)
   ; Function code. The format depends on the compilation pass.
   first-cblock)
 
@@ -97,16 +98,6 @@
            ,@body)
 	     (setf (funinfo-env ,fi) ,old-env)))))
 
-(defvar *funinfos* (make-hash-table))
-
-(defun make-lambda-funinfo (fi)
-  (with-gensym g
-	(setf (href g *funinfos*) fi)
-	`(%funinfo ,g)))
-
-(defun get-lambda-funinfo (x)
-  (href (lambda-funinfo x) *funinfos*))
-
 (defun funinfo-make-lexical (fi)
   (unless (funinfo-lexical fi)
     (let lexical (gensym)
@@ -135,6 +126,13 @@
 	  (funinfo-add-lexical fi var)
       (funinfo-setup-lexical-links (funinfo-parent fi) fi var)))
 
+(defun funinfo-topmost (fi)
+  (aif (funinfo-parent fi)
+	   (funinfo-topmost !)
+	   fi))
+
+;;;; DEBUG PRINTERS
+
 (defun print-funinfo (fi)
   (format t "Arguments: ~A~%" (funinfo-args fi))
   (format t "Ghost sym:   ~A~%" (funinfo-ghost fi))
@@ -150,3 +148,37 @@
     (print-funinfo fi)
     (print-funinfo-stack (funinfo-parent fi)))
   fi)
+
+;;;; LAMBDA FUNINFO
+
+(defvar *funinfos* (make-hash-table))
+(defvar *funinfos-reverse* (make-hash-table))
+
+(defun make-lambda-funinfo (fi)
+  (when (href fi *funinfos-reverse*)
+	(error "funinfo already memorized"))
+  (setf (href fi *funinfos-reverse*) t)
+  (with-gensym g
+	(setf (funinfo-sym fi) g)
+	(setf (href g *funinfos*) fi)
+	`(%funinfo ,g)))
+
+(defun replace-lambda-funinfo (fi)
+  (setf (href fi *funinfos-reverse*) t)
+  (with-gensym g
+	(setf (funinfo-sym fi) g)
+	(setf (href g *funinfos*) fi)
+	`(%funinfo ,g)))
+
+(defun make-lambda-funinfo-if-missing (x fi)
+  (or (lambda-funinfo-expr x)
+	  (make-lambda-funinfo fi)))
+
+(defun get-lambda-funinfo (x)
+  (let fi (href (lambda-funinfo x) *funinfos*)
+    (when (not (eq (funinfo-sym fi)
+				   (lambda-funinfo x)))
+	  (print fi)
+	  (print (lambda-funinfo x))
+	  (error "foo"))
+	fi))

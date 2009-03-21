@@ -15,6 +15,8 @@
   (format f " * caroshi ECMAScript obfuscator~%")
   (format f " */~%")
   (format f "var _I_ = 0; while (1) {switch (_I_) {case 0: ~%")
+   (when (transpiler-lambda-export? *js-transpiler*)
+	 (transpiler-add-wanted-function *js-transpiler* 'array-copy))
   (with (tr *js-transpiler*
 		 ; Expand.
 		 base (transpiler-sighten tr *js-base*)
@@ -26,7 +28,21 @@
 				(format t "; Collecting dependencies...~%")
 				(transpiler-import-from-environment tr)))
       (when (transpiler-lambda-export? *js-transpiler*)
-        (format f (+ "function T37funref (f, g) { var r=function () { var a = arrayCopy (arguments); a.unshift (g); return f.apply (null, a); }; r.treArgs = cdr (f.treArgs); return r; }~%")))
+        (format f (+ "function __manualArrayCopy (x) { "
+					 "var a = [];"
+					 "for (var i = 0; i < x.length; i++)"
+						"a[i] = x[i];"
+					 "return a;"
+					 "}"
+					 "function T37funref (f, g) { "
+						"var r=function () {"
+							"var a = __manualArrayCopy (arguments);"
+							"a.unshift (g);"
+							"return f.apply (null, a);"
+							"};"
+						"r.treArgs = cdr (f.treArgs);"
+						"return r;"
+					 "}~%")))
 	  ; Generate.
 	  (format t "; Let me think. Hmm")
 	  (force-output)
