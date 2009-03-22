@@ -35,7 +35,7 @@
 
 (defun transpiler-import-exported-closures (tr)
   (when *lambda-exported-closures*
-	(append (transpiler-sighten tr (list (pop *lambda-exported-closures*)))
+	(append (transpiler-sighten tr (pop *lambda-exported-closures*))
 		    (transpiler-import-exported-closures tr))))
 
 (defun transpiler-import-wanted-function (tr x)
