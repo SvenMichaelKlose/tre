@@ -13,9 +13,12 @@
       (second x)
 	  x))
 
+(defun past-lambda-before-funinfo (x)
+  (past-lambda-1 (past-function x)))
+
 (defun past-lambda (x)
   "Get cons after optional LAMBDA keyword in function expression."
-  (let p (past-lambda-1 (past-function x))
+  (let p (past-lambda-before-funinfo x)
 	(if (eq '%funinfo (first p))
 	  (cddr p)
 	  p)))
