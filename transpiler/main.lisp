@@ -12,6 +12,7 @@
 (env-load "../transpiler/codegen/obfuscate.lisp")
 (env-load "../transpiler/codegen/toplevel.lisp")
 
+(env-load "../transpiler/expand/update-funinfos.lisp")
 (env-load "../transpiler/expand/named-functions.lisp")
 (env-load "../transpiler/expand/expression-expand.lisp")
 (env-load "../transpiler/expand/argument-definitions.lisp")
