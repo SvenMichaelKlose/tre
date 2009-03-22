@@ -22,7 +22,8 @@
 					(atom x)
 	                  (thisify-symbol x exclusions)
 					(lambda? x)
-					  `#'(,(lambda-args x)
+					  `#'(,@(lambda-funinfo-expr x)
+						  ,(lambda-args x)
 							 ,@(rec (lambda-body x)
 									(append exclusions
 											(lambda-args x))))
