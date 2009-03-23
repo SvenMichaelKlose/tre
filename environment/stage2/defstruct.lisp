@@ -70,7 +70,7 @@
 (defun %struct-p (name)
   (let sym (%struct-p-symbol name)
     `(defun ,sym (arr)
-       (and (arrayp arr) (eq (elt arr 0) ,name)))))
+       (and (arrayp arr) (eq (elt arr 0) ',name)))))
 
 (defun %struct-sort-fields (fields-and-options)
   "Split list into fields and options."
