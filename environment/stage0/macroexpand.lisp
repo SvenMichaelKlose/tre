@@ -1,5 +1,5 @@
 ;;;;; TRE environment
-;;;;; Copyright (c) 2006-2008 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2006-2009 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Macro expansion.
 ;;;;;
@@ -21,7 +21,8 @@
 (setq *variables* (cons (cons '*macrop-diversion* nil)
       			  (cons (cons '*macrocall-diversion* nil)
       			  (cons (cons '*current-macro* nil)
-				  *variables*))))
+                  (cons (cons '*macroexpand-backquote-diversion* nil)
+				  *variables*)))))
 
 ;;;; Expand macros in BACKQUOTE expression.
 ;;;;
