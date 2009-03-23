@@ -10,9 +10,16 @@
 				 (cons '*variables* *universe*))))))
 
 (setq *variables* (cons (cons '*variables* nil)
+				  (cons (cons '*universe* nil)
 				  (cons (cons '*keyword-package* nil)
 				  (cons (cons '*show-definitions* nil)
-						nil))))
+				  (cons (cons '*environment-path* nil)
+				  (cons (cons '*endianess* nil)
+				  (cons (cons '*pointer-size* nil)
+				  (cons (cons '*cpu-type* nil)
+				  (cons (cons '*libc-path* nil)
+				  (cons (cons '*have-environment-tests* nil)
+						nil)))))))))))
 
 ;;; Helper functions (helping us to stay sane).
 
