@@ -1,7 +1,7 @@
 ;;;; TRE environment
-;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
 
-(defun litte-endianess? (&optional (endianess *endianess*))
+(defun little-endianess? (&optional (endianess *endianess*))
   (eq endianess 'little))
 
 (defun big-endianess? (&optional (endianess *endianess*))
@@ -58,12 +58,12 @@
 
 (defun %put-dword (ptr x &key (endianess *endianess*))
   "Write 32 bit integer to address. Regards *ENDIANESS*."
-  (when (litte-endianess? endianess)
+  (when (little-endianess? endianess)
     (setf val (rotate-int-byte-left x)))
 
   (dotimes (dummy 4 ptr)
 	(setf ptr (%put-char ptr (bit-and x #xff))
-		  x (if (litte-endianess? endianess)
+		  x (if (little-endianess? endianess)
 				(rotate-dword-byte-left x)
 				(>> x 8)))))
 
