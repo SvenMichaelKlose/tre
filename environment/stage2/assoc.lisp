@@ -29,7 +29,7 @@
   (if (listp x)
       (when x
 		(if (funcall (or test #'eql) key (car x))
-            (rplaca lst new-value)
+            (rplaca x new-value)
 			(%setf-assoc new-value key (cdr x) :test test)))
 	  (%error "not a pair")))
 
