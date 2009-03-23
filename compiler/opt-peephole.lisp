@@ -55,94 +55,90 @@
 			 ,@body
 			 (t	(cons a (funcall ,fun d))))))))
 
+(defun opt-peephole-var-double? (x name)
+  (with-cons a d x
+    (or (and (%var? a)
+             (eq name (second a)))
+        (opt-peephole-var-double? d name))))
+
+(defun opt-peephole-accumulate-vars (x)
+  (with (acc nil
+         rec #'((x)
+                  (with-cons a d x
+                    (if (and (%var? a)
+                             (not (cddr a)))
+                        (progn
+                          (when (and (not (opt-peephole-var-double? d (second a)))
+                                     (find-tree d (second a)))
+                            (setf acc (push a acc)))
+                          (rec d))
+                        (if (and (%setq? a)
+                                 (lambda? (third a)))
+                            (cons `(%setq ,(second a)
+                                          ,(copy-recurse-into-lambda
+                                               (third a)
+                                               #'opt-peephole-accumulate-vars))
+                                  (rec d))
+                            (cons a
+                                  (rec d)))))))
+    (with (ret (rec x))
+      (append acc ret))))
+
+;; Remove IDENTITY expressions to unify code.
+;; Remove IDENTITY from %SETQ value.
+(defun opt-peephole-remove-identity (x)
+  (opt-peephole-fun #'opt-peephole-remove-identity
+      ((and (%setq? a)
+		    (consp (third a))
+			(identity? (third a)))
+	     (cons `(%setq ,(second a) ,(second (third a)))
+			   (opt-peephole-remove-identity d)))))
+
+(defun opt-peephole-find-next-tag (x)
+  (when x
+	(if (atom x.)
+		x
+		(opt-peephole-find-next-tag .x))))
+
+;; Remove unreached code or code that does nothing.
+(defun opt-peephole-remove-void (x)
+  (opt-peephole-fun #'opt-peephole-remove-void
+	  ; Remove void assigment.
+	  ((and (%setq? a)
+		    (eq (second a) (third a)))
+	     (opt-peephole-remove-void d))
+
+      ; Remove second of (setf x y y x).
+	  ((and (%setq? a)
+	     	(consp d)
+			(%setq? d.)
+			(eq (second a) (third d.))
+			(eq (second d.) (third a)))
+	     (cons a (opt-peephole-remove-void .d)))
+
+	  ; Remove jump to following tag.
+	  ((and (consp a)
+			(eq 'vm-go a.)
+			d
+			(atom d.)
+		    (eq (second a) d.))
+	     (opt-peephole-remove-void d))
+
+	  ; Remove code after label until next tag.
+	  ((and (consp a)
+			(eq 'vm-go a.))
+		 (cons a (opt-peephole-remove-void (opt-peephole-find-next-tag d))))
+
+	  ; Shorten (%setq expexsym sth) (%setq sth expexsym).
+	  ((and (%setq? a) (%setq? d.)
+	        (expex-sym? (second a))
+		    (eq (second a) (third d.)))
+	     (cons `(%setq ,(second d.) ,(third a))
+			   (opt-peephole-remove-void .d)))))
+
 (defun opt-peephole (x)
   (with
 	  (removed-tags nil
-
-	   var-double?
-		 #'((x name)
-			  (when x
-                (with-cons a d x
-				  (or (and (%var? a)
-						   (eq name (second a)))
-					  (var-double? d name)))))
-
-	   accumulate-vars
-		 #'((x)
-			  (with (acc nil
-					 rec #'((x)
-			                  (when x
-				                (with-cons a d x
-				                  (if (and (%var? a)
-										   (not (cddr a)))
-					                  (progn
-										(when (and (not (var-double? d (second a)))
-												   (find-tree d (second a)))
-										  (setf acc (push a acc)))
-						                (rec d))
-				  	                  (if (and (%setq? a)
-					       	                   (lambda? (third a)))
-						                  (cons `(%setq ,(second a)
-												        ,(copy-recurse-into-lambda (third a) #'accumulate-vars))
-												(rec d))
-						                  (cons a
-								                (rec d))))))))
-				(with (ret (rec x))
-				  (append acc ret))))
-
-	   ; Remove IDENTITY expressions to unify code.
-	   remove-identity
-	     #'((x)
-		      (opt-peephole-fun #'remove-identity
-			    ((and (%setq? a)
-				      (consp (third a))
-					  (identity? (third a)))
-			 	   ; Remove IDENTITY from %SETQ value.
-				   (cons `(%setq ,(second a) ,(second (third a)))
-						 (remove-identity d)))))
-
-	   find-next-tag
-		 #'((x)
-			  (when x
-				(if (atom x.)
-					x
-					(find-next-tag .x))))
-
-	   ; Remove unreached code or code that does nothing.
-	   remove-void
-		 #'((x)
-			  (opt-peephole-fun #'remove-void
-				((and (%setq? a)
-					  (eq (second a) (third a)))
-				   ; Remove void assigment.
-				   (remove-void d))
-
-				((and (%setq? a)
-				      (consp d) (%setq? d.)
-					  (eq (second a) (third d.))
-					  (eq (second d.) (third a)))
-				   ; Remove second of (setf x y y x).
-				   (cons a (remove-void .d)))
-
-				((and (consp a)
-					  (eq 'vm-go a.)
-					  d (atom d.)
-					  (eq (second a) d.))
-				   ; Remove jump to following tag.
-				   (remove-void d))
-
-				((and (consp a)
-					  (eq 'vm-go a.))
-				   ; Remove code after label until next tag.
-				   (cons a (remove-void (find-next-tag d))))
-
-				((and (%setq? a) (%setq? d.)
-				      (expex-sym? (second a))
-					  (eq (second a) (third d.)))
-				   ; Shorten (%setq expexsym sth) (%setq sth expexsym).
-				   (cons `(%setq ,(second d.) ,(third a))
-						 (remove-void .d)))))
-
 	   will-be-set-again?
 		 #'((x v)
 			  (if x
@@ -189,10 +185,9 @@
 					   (funcall
 						 (compose #'reduce-tags
 								  #'remove-code
-								  #'remove-void)
+								  #'opt-peephole-remove-void)
 						 x))))
 
-	(accumulate-vars
-	    (repeat-while-changes #'rec (accumulate-vars
+	    (repeat-while-changes #'rec (opt-peephole-accumulate-vars
 	  								    (opt-peephole-remove-spare-tags
-									        (remove-identity x)))))))
+									        (opt-peephole-remove-identity x))))))
