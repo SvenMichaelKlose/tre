@@ -1,5 +1,5 @@
 ;;;;; nix lisp compiler
-;;;;; Copyright (c) 2007 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2007,2009 Sven Klose <pixel@copei.de>
 
 (defvar *verbose-compiler* t)
 
@@ -8,5 +8,5 @@
     (apply #'format t msg args)))
 
 (defun verbose-flush ()
-  (when *verbose-compier*
+  (when *verbose-compiler*
     (force-output)))
