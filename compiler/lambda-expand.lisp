@@ -4,6 +4,7 @@
 ;;;;; LAMBDA expansion.
 
 (defvar *lambda-exported-closures* nil)
+(defvar *lambda-expand-always-have-funref* nil)
 
 (defun lambda-expand-add-closures (x)
   (nconc! *lambda-exported-closures* x))
@@ -149,9 +150,12 @@
 (defun lambda-export-transform (fi x)
   (with (fi-child (funinfo-get-child-funinfo fi)
 		 exported (lambda-export-make-exported fi fi-child x))
-	 (if (funinfo-ghost fi-child)
-    	 `(%funref ,exported ,(funinfo-lexical fi))
-		 exported)))
+	 (if
+		(funinfo-ghost fi-child)
+    	  `(%funref ,exported ,(funinfo-lexical fi))
+		*lambda-expand-always-have-funref*
+    	  `(%funref ,exported nil)
+		exported)))
 
 ;;; Export gathering
 
