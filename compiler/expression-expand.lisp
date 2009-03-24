@@ -139,7 +139,8 @@
       (cons (append `((%var ,s))
 					moved
 		    		(if (expex-returnable? ex new-expr.)
-		        		`((%setq ,s ,@new-expr))
+		        		(list (expex-guest-filter-setter ex
+								  `(%setq ,s ,@new-expr)))
 			    		new-expr))
   	        s)))
 
@@ -235,7 +236,7 @@
   (if (eq s (second x.))
       x
       `(,x.
-	    (%setq ,s ,(second x.)))))
+	    ,(expex-guest-filter-setter ex `(%setq ,s ,(second x.))))))
 
 ;; Make return-value assignment of last expression in body.
 (defun expex-make-return-value (ex x s)
@@ -244,8 +245,9 @@
 		(append (butlast x)
 				(if (%setq? last.)
 					(expex-make-setq-copy ex last s)
-				    `((%setq ,s ,@(or last
-									  '(nil))))))
+				    (list (expex-guest-filter-setter ex
+							  `(%setq ,s ,@(or last
+									  		   '(nil)))))))
 		x)))
 
 ;; Expand VM-SCOPE body and have the return value of the last expression
