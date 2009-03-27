@@ -117,7 +117,8 @@
 						(argument-list-keyword? (second def))
 					  	  (exp-main .def .vals)
 						.def
-						  (exp-optional .def .vals))))
+						  (exp-optional .def .vals)
+					  	(exp-main .def .vals))))
 
 		 exp-key
 		   #'((def vals)
@@ -231,7 +232,7 @@
   t)
 
 (define-test "argument expansion basically works without apply-values"
-  ((equal (argument-expand 'test '(a b) nil nil)
+  ((equal (argument-expand-names 'test '(a b))
 	      '(a b)))
   t)
 
@@ -241,7 +242,7 @@
   t)
 
 (define-test "argument expansion can handle nested lists without apply-values"
-  ((equal (argument-expand 'test '(a (b c) d) nil nil)
+  ((equal (argument-expand-names 'test '(a (b c) d))
 	      '(a b c d)))
   t)
 
@@ -251,7 +252,7 @@
   t)
 
 (define-test "argument expansion can handle &REST keyword without apply-values"
-  ((equal (argument-expand 'test '(a b c &rest d) nil nil)
+  ((equal (argument-expand-names 'test '(a b c &rest d))
 		  '(a b c d)))
   t)
 
@@ -261,7 +262,7 @@
   t)
 
 (define-test "argument expansion can handle missing &REST without apply-values"
-  ((equal (argument-expand 'test '(a b &rest c) '(23 5) nil)
+  ((equal (argument-expand-names 'test '(a b &rest c))
 		  '(a b c)))
   t)
 
@@ -271,7 +272,7 @@
   t)
 
 (define-test "argument expansion can handle &OPTIONAL keyword without apply-values"
-  ((equal (argument-expand 'test '(a b &optional c d) nil nil)
+  ((equal (argument-expand-names 'test '(a b &optional c d))
 		  '(a b c d)))
   t)
 
@@ -281,18 +282,36 @@
   t)
 
 (define-test "argument expansion can handle &OPTIONAL keyword with init forms without apply-values"
-  ((equal (argument-expand 'test '(a b &optional (c 3) (d 42)) nil nil)
+  ((equal (argument-expand-names 'test '(a b &optional (c 3) (d 42)))
 		  '(a b c d)))
   t)
 
 (define-test "argument expansion can handle &KEY keyword"
-  ((equal (argument-expand 'test '(a b &key c d) '(23 2 :c 3 :d 42) t)
+  ((equal (argument-expand 'test '(a b &key c d)
+								 '(23 2 :c 3 :d 42) t)
 		  '((a . 23) (b . 2) (c . 3) (d . 42))))
   t)
 
+(define-test "argument expansion can handle &KEY keyword with overloaded init forms"
+  ((equal (argument-expand 'test '(a b &key (c 3) (d 42))
+								 '(23 2 :c 5 :d 65) t)
+		  '((a . 23) (b . 2) (c . 5) (d . 65))))
+  t)
+
 (define-test "argument expansion can handle &KEY keyword without apply-values"
-  ((equal (argument-expand 'test '(a b &key c d) nil nil)
+  ((equal (argument-expand-names 'test '(a b &key c d))
 		  '(a b c d)))
+  t)
+
+(define-test "argument expansion can handle &OPTIONAL and &KEY keyword with init forms without apply-values"
+  ((equal (argument-expand-names 'test '(a b &optional (c 3) &key (d 42)))
+		  '(a b c d)))
+  t)
+
+(define-test "argument expansion can handle &OPTIONAL and &KEY keyword with init forms with apply-values"
+  ((equal (argument-expand 'test '(a b &optional (c 3) &key (d 42))
+								 '(23 2 3 :d 65) t)
+		  '((a . 23) (b . 2) (c . 3) (d . 65))))
   t)
 
 ;(define-test "argument expansion can handle &KEY keyword with init forms"
