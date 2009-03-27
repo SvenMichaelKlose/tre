@@ -93,14 +93,6 @@
 
 ;;;; ARGUMENT EXPANSION
 
-;; Expand arguments to function.
-(defun expex-argexpand-0 (ex fun args)
-  (funcall (expex-function-collector ex) fun args)
-  (let argdef (funcall (expex-function-arguments ex) fun)
-    (if (expex-expandable-args? ex fun argdef)
-        (argument-expand-compiled-values fun argdef args)
-	    args)))
-
 ;; XXX this sucks blood out of stones. Should have proper macro expansion
 ;; instead.
 (defun expex-convert-quotes (x)
@@ -109,12 +101,29 @@
 				  _))
 		  x))
 
+;; Expand arguments to function.
+(defun expex-argexpand-0 (ex fun args)
+  (funcall (expex-function-collector ex) fun args)
+  (let argdef (funcall (expex-function-arguments ex) fun)
+    (if (expex-expandable-args? ex fun argdef)
+        (argument-expand-compiled-values fun argdef args)
+	    args)))
+
 ;; Expand arguments if they are passed to a function.
-(defun expex-argexpand (ex fun args)
-  (if (funcall (expex-function? ex) fun)
-	  (expex-convert-quotes
-		  (expex-argexpand-0 ex fun args))
-	  args))
+(defun expex-argexpand (ex x)
+  (with (new? (%new? x)
+		 fun (if new?
+				 (second x)
+				 x.)
+		 args (if new?
+				  (cddr x)
+				  .x))
+	`(,@(when new? (list '%new))
+	  ,fun
+    	  ,@(if (funcall (expex-function? ex) fun)
+	    	    (expex-convert-quotes
+		    	    (expex-argexpand-0 ex fun args))
+	    	    args))))
 
 ;;;;; ARGUMENT VALUE EXPANSION
 
@@ -163,7 +172,6 @@
 ;;
 ;; Returns the head of moved expressions and a new parent with
 ;; replaced arguments.
-
 (defun expex-move-args (ex x)
   (with ((moved new-expr)
 			 (assoc-splice (mapcar (fn expex-move-arg ex _)
@@ -179,8 +187,7 @@
 ;; XXX argument conversion by guest.
 (defun expex-expr-std (ex x)
   (with ((moved new-expr) (expex-move-args ex
-							  (cons x.
-									(expex-argexpand ex x. .x))))
+										   (expex-argexpand ex x)))
     (values moved
 			(list new-expr))))
 
