@@ -30,7 +30,7 @@
   (and (< x 33) (> x 0)))
 
 (defun xml-text-char? (x)
-  (not (= #\< x)))
+  (not (in=? x #\< #\&)))
 
 (defun xml-identifier-char? (x)
   (not (or (xml-special-char? x)
@@ -113,10 +113,31 @@
   (let i (string-upcase (xml2lml-identifier in))
     (xml-unify-string i)))
 
+(defvar *xml-entities*
+		'(("auml" . "344")
+		  ("Auml" . "304")
+		  ("ouml" . "366")
+		  ("Ouml" . "326")
+		  ("uuml" . "374")
+		  ("Uuml" . "334")
+		  ("szlig" . "337")))
+
+(defun xml2lml-entity (in)
+  (xml-read-char in) ; #\&
+  (let e (xml-read-while in (fn (not (= _ #\;))))
+	(prog1
+	  (+ "\\" (assoc-value e *xml-entities* :test #'string=))
+	  (xml-read-char in))))
+
 (defun xml2lml-text (in)
   "Read plain text until next tag or end of stream."
   (xml-skip-spaces in)
-  (xml-read-while in #'xml-text-char?))
+  (let txt (xml-read-while in #'xml-text-char?)
+	(if (= #\& (xml-peek-char in))
+		(+ txt
+		   (xml2lml-entity in)
+		   (xml2lml-text in))
+	    txt)))
 
 (defun xml2lml-name (in &optional (pkg nil))
   "Parse name with optional namespace."
