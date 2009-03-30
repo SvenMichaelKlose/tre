@@ -4,8 +4,6 @@
 ;;;; EXPANSION OF ALTERNATIVE STANDARD MACROS
 
 (defmacro define-transpiler-std-macro (tr &rest x)
-  (when *show-definitions*
-	(print `(define-transpiler-std-macro ,tr ,x.)))
   (with (tre (eval tr)
 		 name x.)
 	(when (expander-has-macro? (transpiler-macro-expander tre) name)
