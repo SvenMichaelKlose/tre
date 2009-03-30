@@ -3,7 +3,9 @@
 
 (defun escape-charlist (x)
   (when x
-    (if (in=? x. #\\ #\")
+    (if (or (= #\" x.)
+			(and (= #\\ x.)
+				 (not (digit-char-p (second x)))))
         (cons #\\
               (cons x.
                     (escape-charlist .x)))
