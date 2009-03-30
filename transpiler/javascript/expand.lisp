@@ -102,10 +102,7 @@
 
 ;; Translate arguments for call to native 'new' operator.
 (defun js-transpiler-make-new-object (x)
-  `(%new ,x.
-		 ,@(aif (transpiler-function-arguments *js-transpiler* x.)
-		       (argument-expand-compiled-values x. ! .x)
-			   .x)))
+  `(%new ,@x))
 
 ;; Make object if first argument is not a keyword, or string.
 (define-js-std-macro new (&rest x)
