@@ -5,7 +5,7 @@
 
 (defun js-transpile-0 (f files)
   (format f "/*~%")
-  (format f " * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>~%")
+  (format f " * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>~%")
   (format f " *~%")
   (format f " * Softwarearchitekturbuero Sven Klose~%")
   (format f " * Westermuehlstrasse 31~%")
@@ -54,7 +54,7 @@
  		       (transpiler-transpile tr user))
 	         f))
     (format f "}break;}~%")
-    (format t "~%; Everything OK. Done.~%"l))
+    (format t "~%; Everything OK. Done.~%"))
 
 (defun js-transpile (out files &key (obfuscate? nil))
   (transpiler-reset *js-transpiler*)
