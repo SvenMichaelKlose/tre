@@ -3,6 +3,23 @@
 ;;;;
 ;;;; Searching sequences
 
+(defvar *mem-elt-seq* nil)
+(defvar *mem-elt-seq-tmp* nil)
+(defvar *mem-elt-idx* nil)
+
+(defun memorized-elt (seq i)
+  (if (consp seq)
+      (if (and (eq seq *mem-elt-seq*)
+			   *mem-elt-seq-tmp*
+		       (= i (1+! *mem-elt-idx*)))
+	      (car (setf *mem-elt-seq-tmp* (cdr *mem-elt-seq-tmp*)))
+	      (progn
+		    (setf *mem-elt-seq* seq
+				  *mem-elt-seq-tmp* (nthcdr i seq)
+			      *mem-elt-idx* i)
+		    (car *mem-elt-seq-tmp*)))
+	  (elt seq i)))
+  
 (defmacro xchg (a b)
   "Swaps values of the arguments."
   (with-gensym g
@@ -10,12 +27,15 @@
 	   (setf ,a ,b
 	   		 ,b ,g))))
 
-(defun find-if (pred seq &key (start nil) (end nil) (from-end nil) (with-index nil))
+(defun find-if (pred seq &key (start nil) (end nil)
+							  (from-end nil) (with-index nil))
   (let* ((e (or end (1- (length seq))))
 	 	 (s (or start 0)))
     ; Make sure the start and end indices are sane.
-    (when (or (and (> s e) (not from-end))
-              (and (< s e) from-end))
+    (when (or (and (> s e)
+				   (not from-end))
+              (and (< s e)
+				   from-end))
       (xchg s e))
     (do ((i s (if from-end
 				  (1- i)
@@ -23,16 +43,19 @@
         ((if from-end
 	         (< i e)
 			 (> i e)))
-	  (let elm (elt seq i)
-        (when (apply pred `(,elm ,@(when with-index
-									 (list i))))
+	  (let elm (memorized-elt seq i)
+        (when (apply pred (cons ,elm (when with-index
+									   (list i))))
 		  (return elm))))))
  
-(defun find (obj seq &key (start nil) (end nil) (from-end nil) (test #'eql))
+(defun find (obj seq &key (start nil) (end nil)
+						  (from-end nil) (test #'eql))
   "Return element in sequence."
-  (find-if #'((x)
-				(funcall test x obj))
-		   seq :start start :end end :from-end from-end))
+  (find-if (fn funcall test _ obj)
+		   seq
+		   :start start
+		   :end end
+		   :from-end from-end))
 
 (define-test "FIND finds elements"
   ((find 's '(l i s p)))
@@ -58,17 +81,26 @@
   ((find-if #'numberp '(l i 5 p)))
   5)
 
-(defun position (obj seq &key (start nil) (end nil) (from-end nil) (test #'eql))
+(defun position (obj seq &key (start nil) (end nil)
+							  (from-end nil) (test #'eql))
   (let idx nil
     (find-if #'((x i)
 				  (when (funcall test x obj)
 					(setf idx i)))
-			 seq :start start :end end :from-end from-end :with-index t)
+			 seq
+			 :start start
+			 :end end
+			 :from-end from-end
+			 :with-index t)
 	idx))
 
-(define-test "POSITION works"
+(define-test "POSITION works with character list"
   ((position 's '(l i s p)))
   2)
+
+(define-test "POSITION works with strings"
+  ((position #\/ "lisp/foo/bar"))
+  4)
 
 (defun some (pred &rest seqs)
   "OR predicate over list elements."
@@ -84,7 +116,7 @@
   "AND predicate over list elements."
   (dolist (seq seqs t)
     (dotimes (i (length seq))
-      (unless (funcall pred (elt seq i))
+      (unless (funcall pred (memorized-elt seq i))
         (return-from every nil)))))
 
 (define-test "EVERY works"
