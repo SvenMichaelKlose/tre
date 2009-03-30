@@ -136,19 +136,19 @@
 	     (cons `(%setq ,(second d.) ,(third a))
 			   (opt-peephole-remove-void .d)))))
 
+(defun opt-peephole-will-be-set-again? (x v)
+  (if x
+      (or (and (%setq? x.)
+	      	   (eq v (second x.)))
+		  (unless (or (vm-jump? x.) ; We don't know what happens after a jump.
+		    		  (find-tree x. v)) ; Variable used?
+	        (opt-peephole-will-be-set-again? .x v)))
+	  (and (atom v) ; End of block, EXPEX-sym not used.
+	  	   (expex-sym? v))))
+
 (defun opt-peephole (x)
   (with
 	  (removed-tags nil
-	   will-be-set-again?
-		 #'((x v)
-			  (if x
-			      (or (and (%setq? x.)
-					       (eq v (second x.)))
-		              (unless (or (vm-jump? x.) ; We don't know what happens after a jump.
-				                  (find-tree x. v)) ; Variable will be used.
-				        (will-be-set-again? .x v)))
-				  (and (atom v) ; End of block, EXPEX-sym not used.
-					   (expex-sym? v))))
 
 	   ; Remove code without side-effects whose result won't be used.
 	   remove-code
@@ -159,7 +159,7 @@
 					  (or (atom (third a))
 						  (%slot-value? (third a))
 						  (%stack? (third a)))
-					  (will-be-set-again? d (second a)))
+					  (opt-peephole-will-be-set-again? d (second a)))
 				  	  ; Don't set variable that will be modified anyway.
 					  (remove-code d))))
 
@@ -188,6 +188,6 @@
 								  #'opt-peephole-remove-void)
 						 x))))
 
-	    (repeat-while-changes #'rec (opt-peephole-accumulate-vars
+	    (repeat-while-changes #'rec (opt-peephole-remove-identity
 	  								    (opt-peephole-remove-spare-tags
-									        (opt-peephole-remove-identity x))))))
+											(opt-peephole-accumulate-vars x))))))
