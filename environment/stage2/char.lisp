@@ -28,16 +28,18 @@
     			 (+ c (- #\a #\A))
     			 c)))
 
-(defun digit-char-p (c &optional base)
+;XXX error on c-transpiler call if base has no init.
+(defun digit-char-p (c &optional (base 10))
   "Return T if character is a digit."
   (labels ((digit-p ()
              (range-p c #\0 #\9))
            (digit-alpha-p (start)
              (range-p c start (+ start (- base 10)))))
-   	(or (digit-p)
-      	(and base
-        	 (or (digit-alpha-p #\a)
-				 (digit-alpha-p #\A))))))
+	(and (characterp c)
+   	     (or (digit-p)
+      	     (and (< 10 base)
+        	      (or (digit-alpha-p #\a)
+				      (digit-alpha-p #\A)))))))
 
 (defun alphanumericp (c)
   "Return T if character is alphabetical."
