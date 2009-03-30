@@ -180,6 +180,10 @@
   ((if 0 t))
   t)
 
+(define-test "ELT returns CHARACTER of STRING"
+  ((characterp (elt "fnord" 0)))
+  t)
+
 ; + - * / MOD
 ; LOGXOR
 ; MAKE-SYMBOL ATOM SYMBOL-VALUE %TYPE-ID

@@ -58,3 +58,11 @@
 (define-test "SUBSEQ works without end"
   ((subseq '(1 2 3 4) 2))
   '(3 4))
+
+(define-test "SUBSEQ returns NIL when totally out of range"
+  ((subseq "lisp" 10))
+  nil)
+
+(define-test "SUBSEQ returns empty string when start and end are the same"
+  ((string= "" (subseq "lisp" 1 1)))
+  t)
