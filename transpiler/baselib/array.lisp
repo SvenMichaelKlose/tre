@@ -10,6 +10,6 @@
 
 (defun array-list (x &optional (n 0))
   (declare type array x)
-  (when (< n x.length)
+  (when (%%%< n x.length)
     (cons (aref x n)
 		  (array-list x (1+ n)))))
