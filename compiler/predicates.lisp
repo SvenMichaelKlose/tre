@@ -27,3 +27,7 @@
   (and (consp x)
        (eq 'FUNCTION x.)
 	   (atom (second x))))
+
+(defun %new? (x)
+  (and (consp x)
+	   (eq '%NEW x.)))
