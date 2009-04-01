@@ -19,6 +19,7 @@
 
 (defun %princ-string (obj str)
   (%princ-character obj str))
+; Streams can handle characters and strings.
 ; XXX move to alternative section
 ;  (do ((i 0 (1+ i)))
 ;      ((>= i (length obj)))
@@ -26,23 +27,27 @@
 
 (defun princ (obj &optional (str *standard-output*))
   "Print object in human readable format."
-  (if
-    (stringp obj) (%princ-string obj str)
-    (characterp obj) (%princ-character obj str)
-    (numberp obj) (%princ-number obj str)
-    (symbolp obj) (%princ-string (symbol-name obj) str)))
+  (with-default-stream s str
+    (if
+      (stringp obj) (%princ-string obj s)
+      (characterp obj) (%princ-character obj s)
+      (numberp obj) (%princ-number obj s)
+      (symbolp obj) (%princ-string (symbol-name obj) s))
+	obj))
 
 (defun terpri (&optional (str *standard-output*))
   "Open a new line."
-  (%princ-character (code-char 10) str)
-  (force-output str)
-  nil)
+  (with-default-stream s str
+    (%princ-character (code-char 10) s)
+    (force-output s)
+    nil))
 
 (defun fresh-line (&optional (str *standard-output*))
   "Open a new line if not already opened."
-  (unless (fresh-line? str)
-    (terpri str)
-    t))
+  (with-default-stream s str
+    (unless (fresh-line? s)
+      (terpri s)
+      t)))
 
 (defun %print-rest (c str)
   (late-print (car c) str)
