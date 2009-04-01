@@ -9,10 +9,6 @@
 (defvar *setf-immediate-slot-value* nil)
 (defvar *setf-functionp* #'%setf-functionp)
 
-;; Assign evaluated value of argument y to variable x.
-(defmacro set (x y)
-  `(setq ,(eval x) ,y))
-
 (defun %setf-make-symbol (fun)
   (make-symbol (string-concat "%%USETF-" (symbol-name fun))))
 
