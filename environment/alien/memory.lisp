@@ -19,16 +19,6 @@
 (defun qword-bytes (val)
   (value-bytes val 8))
 
-(defun print-hex-digit (x)
-  (princ
-	(code-char (if (< x 10)
-	  (+ #\0 x)
-	  (+ #\A -10 x)))))
-
-(defun print-hexbyte (x)
-  (print-hex-digit (>> x 4))
-  (print-hex-digit (mod x 16)))
-
 (defun %put-char (ptr val)
   "Write byte to address."
   (%%set ptr val)
