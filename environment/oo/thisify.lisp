@@ -3,10 +3,15 @@
 ;;;;;
 ;;;;; Wrap local method calls into SLOT-VALUEs.
 
+(defun thisify-collect-methods-and-members (clsdesc)
+  (append (class-methods clsdesc)
+		  (class-members clsdesc)
+		  (awhen (class-parent clsdesc)
+			(thisify-collect-methods-and-members !))))
+
 (defun thisify-list (classes x cls)
   (with (clsdesc (href cls classes)
-  		 classdef (append (class-methods clsdesc)
-						  (class-members clsdesc))
+  		 classdef (thisify-collect-methods-and-members clsdesc)
     	 thisify-symbol
 		     #'((x exclusions)
                   (aif (and classdef

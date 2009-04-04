@@ -3,4 +3,5 @@
 
 (defstruct class
   (members nil)
-  (methods nil))
+  (methods nil)
+  (parent nil))
