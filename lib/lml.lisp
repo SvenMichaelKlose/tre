@@ -25,4 +25,6 @@
   (string-or-cons? expr))
 
 (defun lml-attr-string (x)
-  (string-downcase (string x)))
+  (string-downcase (if x
+					   (string x)
+					   "")))
