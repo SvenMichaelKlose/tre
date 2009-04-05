@@ -70,3 +70,11 @@
 
 (define-c-std-macro cons (a d)
   `(trelist_get ,a ,d))
+
+;; Translate FUNCTION-expr functions.
+(define-c-std-macro %setq (&rest x)
+  (if (and (consp (second x))
+		   (function-expr? (first (second x))))
+	  `(%setq ,x. (,(second (second x))
+				   ,@(cdr (second x))))
+	  `(%setq ,@x)))

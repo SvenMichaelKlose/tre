@@ -45,17 +45,37 @@
 	  `(treatom_get_value (%no-expex ,(symbol-name x)))
     x))
 
-(defun c-local-fun-filter (x)
+(defun function-expr? (x)
+  (and (consp x)
+	   (eq 'FUNCTION x.)))
+
+(defun c-function-filter (x)
   (if (and (consp (third x))
-		   (%vec? (first (third x))))
-	  `(%setq ,(second x) (funcall ,(first (third x))
-								   ,(compiled-list (cdr (third x)))))
-	  x))
+		   (function-expr? (first (third x))))
+	  (print x))
+  x)
+
+(defun c-make-%setq-funcall (x f)
+  `(%setq ,(second x) (funcall ,f
+						       ,(compiled-list (cdr (third x))))))
+
+(defun c-local-fun-filter (x)
+  (if (consp (third x))
+	  (if
+	 	 (consp (first (third x)))
+	  	   (c-make-%setq-funcall x (first (third x)))
+		 (expex-in-env? (first (third x)))
+	  	   (c-make-%setq-funcall x (first (third x)))
+		 (transpiler-defined-function *c-transpiler* (first (third x)))
+	  	   `(%setq ,(second x) (,(c-transpiler-function-name (first (third x)))
+						        ,@(cdr (third x))))
+		 x)
+	x))
 
 (defun c-setter-filter (y)
-  (let x (c-local-fun-filter y)
+  (let x (c-local-fun-filter (c-function-filter y))
     (if
 	  (expex-global-variable? (second x))
 	    `(%setq-atom (%no-expex ,(symbol-name (second x)))
 				     ,@(cddr x))
-	    x)))
+	  x)))

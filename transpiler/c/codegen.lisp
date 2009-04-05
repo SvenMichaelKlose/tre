@@ -8,12 +8,15 @@
 (defmacro define-c-macro (&rest x)
   `(define-transpiler-macro *c-transpiler* ,@x))
 
-(defun c-transpiler-function-name (name)
-  name)
+(defun c-transpiler-function-name (x)
+  ($ 'compiled_ x))
+
+(defun c-atomic-function (x)
+  (c-transpiler-function-name (second x)))
 
 (define-c-macro function (name x)
   (if (atom x)
-	  x
+	  (error "codegen: arguments and body expected: ~A" x)
 	  (let args (argument-expand-names 'unnamed-c-function
 			      		     	       (lambda-args x))
 	    (push! (transpiler-concat-string-tree
@@ -92,3 +95,9 @@
 
 (define-c-macro %vec (vec index)
   `("((treptr *)" ,vec ")[(unsigned long)" ,index "]"))
+
+(define-c-macro cons (a, d)
+  `("_trelist_get (" ,a "," ,d ")"))
+
+(define-c-macro %funref (fun, lex)
+  `(%%funref ,(c-transpiler-function-name fun) ,lex))

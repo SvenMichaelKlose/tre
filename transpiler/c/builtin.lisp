@@ -5,7 +5,7 @@
 
 (defvar *c-builtins-descr*
 	'((trebuiltin_
-		(IDENTITY)
+;		(IDENTITY)
 		(QUIT)
 		(LOAD)
 		(EVAL)
