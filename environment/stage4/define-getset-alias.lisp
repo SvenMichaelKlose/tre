@@ -6,6 +6,10 @@
 	  `(defmethod ,class)
 	  '(defun)))
 
+(defmacro define-alias (alias real &key (class nil))
+  `(,@(get-definer class) ,alias ()
+      ,real))
+
 (defmacro define-get-alias (alias real &key (class nil))
   `(,@(get-definer class) ,($ 'get- alias) ()
       ,real))
