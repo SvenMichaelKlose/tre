@@ -1,6 +1,5 @@
-;;;; nix operating system project
-;;;; list processor environment
-;;;; Copyright (C) 2006 Sven Klose <pixel@copei.de>
+;;;; TRE environment
+;;;; Copyright (c) 2006 Sven Klose <pixel@copei.de>
 
 (defun butlast (plist)
   "Return list without its last element."

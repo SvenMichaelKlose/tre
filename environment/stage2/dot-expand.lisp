@@ -1,6 +1,32 @@
 ;;;;; TRE tree processor
 ;;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
 
+(defun dot-expand-make-expr (which num x)
+  (if (< 0 num)
+	  `(,which ,(dot-expand-make-expr which (1- num) x))
+	  x))
+
+(defun dot-expand-count-start (x &optional (num 0))
+  (if (= #\. (car x))
+	  (dot-expand-count-start (cdr x) (1+ num))
+	  (values num x)))
+
+(defun dot-expand-count-end (x &optional (num 0))
+  (if (= #\. (car (last x)))
+	  (dot-expand-count-end (butlast x) (1+ num))
+	  (values num x)))
+
+(defun dot-expand-list (x &optional (num 0))
+  (with ((num-cdrs without-start) (dot-expand-count-start x)
+		 (num-cars without-end) (dot-expand-count-end without-start))
+	(dot-expand-make-expr
+		'car
+	  	num-cars
+		(dot-expand-make-expr
+			'cdr
+		  	num-cdrs
+		  	(dot-expand (list-symbol without-end))))))
+
 (defun dot-expand (x)
   (with (starts-with-dot?
 		   (fn = #\. (elt _ 0))
@@ -18,11 +44,9 @@
 						 (not p))
 						x
 
-					 (= 0 p)
-						`(cdr ,(dot-expand (list-symbol (subseq sl 1))))
-
-					 (= (1+ p) l)
-						`(car ,(list-symbol (subseq sl 0 (1- l))))
+					 (or (= #\. (car sl))
+					 	 (= #\. (car (last sl))))
+						(dot-expand-list sl)
 
 					 `(%slot-value
 					 	,(list-symbol (subseq sl 0 p))
