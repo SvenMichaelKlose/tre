@@ -20,6 +20,7 @@
 (env-load "stage2/group.lisp")
 (env-load "stage2/with.lisp")
 (env-load "stage2/subseq.lisp")
+(env-load "stage2/list-symbol.lisp")
 (env-load "stage2/dot-expand.lisp")
 (env-load "stage2/defstruct.lisp")
 (env-load "stage2/while.lisp")

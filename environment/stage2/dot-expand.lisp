@@ -8,9 +8,6 @@
   		 dot-position
 		   (fn position #\. _ :test #'=)
 
-  		 list-symbol
-		   (fn make-symbol (list-string _))
-
 		 conv
 			#'((x)
 				 (with (sl (string-list (symbol-name x))
@@ -21,13 +18,11 @@
 						 (not p))
 						x
 
+					 (= 0 p)
+						`(cdr ,(dot-expand (list-symbol (subseq sl 1))))
+
 					 (= (1+ p) l)
 						`(car ,(list-symbol (subseq sl 0 (1- l))))
-
-					 (= 0 p)
-						(if (= #\. (elt sl (1- l)))
-						    (error "symbol ~A must either start or end with a dot" (symbol-name x))
-						    `(cdr ,(list-symbol (subseq sl 1))))
 
 					 `(%slot-value
 					 	,(list-symbol (subseq sl 0 p))
