@@ -50,7 +50,7 @@
 (defun href (key h)
   "Get hash value by key."
   (%with-hash-bucket b i h key
-    (cdr (assoc key b :test (%hash-table-test h)))))
+    (assoc-value key b :test (%hash-table-test h))))
 
 (defun (setf href) (new-value key h)
   (with (tst (%hash-table-test h))
@@ -61,6 +61,13 @@
         ; Add new value/key pair.
         (setf (aref (%hash-table-hash h) i) (acons key new-value b)))))
   new-value)
+
+(defun hremove (key h)
+  "Get hash value by key."
+  (%with-hash-bucket b i h key
+    (setf (aref (%hash-table-hash h) i)
+		      (remove (assoc key b :test (%hash-table-test h))
+				      b))))
 
 (defun hashkeys (h)
   (with (keys nil)
