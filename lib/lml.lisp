@@ -28,3 +28,10 @@
   (string-downcase (if x
 					   (string x)
 					   "")))
+
+(defun lml-attr-value-string (x)
+  (if (stringp x)
+	  x
+  	  (string-downcase (if x
+					   	   (string x)
+					   	   ""))))
