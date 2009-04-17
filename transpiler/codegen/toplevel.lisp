@@ -16,7 +16,7 @@
 			   (force-output)
 			   _)
 
-		   #'transpiler-concat-string-tree
+		   #'concat-stringtree
 
 		   (fn transpiler-to-string tr _)
 

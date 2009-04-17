@@ -58,7 +58,7 @@
  					    (transpiler-sighten tr
 				            `((defun c-init ()
 					            ,@*c-init*)))))
-          (princ (transpiler-concat-string-tree
+          (princ (concat-stringtree
 				     *c-declarations*
 				     init
 				     code)

@@ -19,13 +19,13 @@
 	  (error "codegen: arguments and body expected: ~A" x)
 	  (let args (argument-expand-names 'unnamed-c-function
 			      		     	       (lambda-args x))
-	    (push! (transpiler-concat-string-tree
+	    (push! (concat-stringtree
 				   "extern treptr "
 				   (transpiler-symbol-string *c-transpiler*
 					   (c-transpiler-function-name name))
 				   "("
 				   (if args
-				       (transpiler-concat-string-tree
+				       (concat-stringtree
 	  	    		       (transpiler-binary-expand ","
 	               			   (mapcar (fn `("treptr " ,(transpiler-symbol-string *c-transpiler* _)))
 				    				   args)))
