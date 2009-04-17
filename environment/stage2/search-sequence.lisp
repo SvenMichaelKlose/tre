@@ -102,6 +102,20 @@
   ((position #\/ "lisp/foo/bar"))
   4)
 
+;; XXX tests!
+(defun position-if (test seq &key (start nil) (end nil)
+							      (from-end nil))
+  (let idx nil
+    (find-if #'((x i)
+				  (when (funcall test x)
+					(setf idx i)))
+			 seq
+			 :start start
+			 :end end
+			 :from-end from-end
+			 :with-index t)
+	idx))
+
 (defun some (pred &rest seqs)
   "OR predicate over list elements."
   (find-if pred (apply #'append seqs)))
