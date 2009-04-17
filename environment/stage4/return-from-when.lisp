@@ -4,3 +4,7 @@
 (defmacro return-from-when (block-name x)
   `(awhen ,x
 	 (return-from ,block-name !)))
+
+(defmacro return-when (x)
+  `(awhen ,x
+	 (return !)))
