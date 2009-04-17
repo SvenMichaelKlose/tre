@@ -9,7 +9,7 @@
       (a.push i))))
 
 (defun array-list (x &optional (n 0))
-  (declare type array x)
+  ;(declare type array x) ; fscks up with *h-t-m-l-collection
   (when (%%%< n x.length)
     (cons (aref x n)
 		  (array-list x (1+ n)))))
