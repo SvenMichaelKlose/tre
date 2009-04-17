@@ -24,7 +24,8 @@
   (unless l
     (error "FUNCTION expects a symbol or form"))
   (if (or (atom l)
-		  (%slot-value? l))
+		  (%slot-value? l)
+		  (%stack? l))
       (js-expanded-funref l)
       (if (eq 'no-args (first (lambda-body l)))
           `(%function
