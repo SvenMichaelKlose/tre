@@ -11,7 +11,8 @@
 	 (define-transpiler-macro *js-transpiler* ,@x)))
 
 (define-js-macro function (x)
-  (if (atom x)
+  (if (or (atom x)
+		  (%stack? x))
 	  x
       (with (args (argument-expand-names 'unnamed-js-function
 										 (lambda-args x))
@@ -82,8 +83,8 @@
 (define-js-macro %%usetf-aref (val &rest x)
   `(%transpiler-native (aref ,@x) "=" ,val))
 
-(define-js-macro %%usetf-href (val &rest x)
-  `(%%usetf-aref ,val ,@x))
+(define-js-macro hremove (key h)
+  `(%transpiler-native "delete " ,h "[" ,key "]"))
 
 ;; Experimental for lambda-export.
 (define-js-macro %vec (v i)
