@@ -22,5 +22,7 @@
             #'((x)
                   (if (eq t (car x))
 	      	          `(t ,@(cdr x))
-                      `((equal ,g ,(car x)) ,@(cdr x))))
+                      `((equal ,g ,(car x)) ,@(if (cdr x)
+												  (cdr x)
+												  `(nil)))))
             cases)))))
