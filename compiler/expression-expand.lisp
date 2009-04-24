@@ -231,10 +231,21 @@
 ;;;; BODY EXPANSION
 
 ;; Simply concatenates the results of all expression expansions in a body.
+(defun expex-force-%setq (ex x)
+  (if (or (atom x)
+		  (%setq? x)
+		  (vm-jump? x)
+		  (%var? x))
+	  x
+	  (expex-guest-filter-setter ex `(%setq ~%ret ,x))))
+
+;; Simply concatenates the results of all expression expansions in a body.
 (defun expex-list (ex x)
   (when x
     (with ((moved new-expr) (expex-expr ex x.))
-      (append moved new-expr
+      (append moved
+			  (mapcar (fn (expex-force-%setq ex _))
+					  new-expr)
 			  (expex-list ex .x)))))
 
 ;; Make second, following %SETQ expression that assigns to the
@@ -243,7 +254,8 @@
   (if (eq s (second x.))
       x
       `(,x.
-	    ,(expex-guest-filter-setter ex `(%setq ,s ,(second x.))))))
+	    ,(expex-guest-filter-setter ex
+									`(%setq ,s ,(second x.))))))
 
 ;; Make return-value assignment of last expression in body.
 (defun expex-make-return-value (ex x s)
