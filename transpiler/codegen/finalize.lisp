@@ -3,17 +3,12 @@
 
 ;;;; EXPRESSION FINALIZATION
 
-;; Add separators.
-;;   Separators cannot be added later, because the expression bounds will
-;;   disappear when everything is expanded to target-language strings in
-;;   the next pass.
 ;; Make jump labels.
 ;; Remove (IDENTITY ~%RET)  expressions.
 ;; Add %VAR declarations for expex symbols.
 (defun transpiler-finalize-sexprs (tr x)
   (when x
 	(with (a          x.
-		   separator  (transpiler-separator tr)
 		   ret		  (transpiler-obfuscate tr '~%ret))
 	  (if
 		; Ignore top-level NIL.
@@ -33,8 +28,7 @@
 					       (%setq-value a)
 					       #'((body)
 						        (transpiler-finalize-sexprs tr body))))
-			    (cons separator
-				      (transpiler-finalize-sexprs tr .x)))
+				(transpiler-finalize-sexprs tr .x))
 
 		; Recurse into named top-level function.
 		(eq 'function a.)
@@ -43,8 +37,7 @@
 				   (,(lambda-args (third a))
 				       ,(transpiler-finalize-sexprs tr
 						    (lambda-body (third a)))))
-				 (cons separator
-				       (transpiler-finalize-sexprs tr .x)))
+				 (transpiler-finalize-sexprs tr .x))
 
 		; Ignore (IDENTITY ~%RET).
 	    (and (identity? a)
@@ -57,5 +50,4 @@
 					  (in? a. '%var '%transpiler-native))
 				  a
 				  `(%setq ,ret ,a))
-			  (cons separator
-				    (transpiler-finalize-sexprs tr .x)))))))
+			  (transpiler-finalize-sexprs tr .x))))))

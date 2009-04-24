@@ -157,8 +157,7 @@
  (make-overlayed-std-macro-expander (transpiler-std-macro-expander tr)))
 
 (defun transpiler-make-code-expander (tr)
-  (define-expander (transpiler-macro-expander tr)
-				   :call (fn transpiler-macrocall tr _)))
+  (define-expander (transpiler-macro-expander tr)))
 
 (defun transpiler-make-expex (tr)
   (let ex (make-expex)
