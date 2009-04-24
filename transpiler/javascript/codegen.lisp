@@ -10,6 +10,15 @@
 	 (nconc! (transpiler-obfuscation-exceptions *js-transpiler*) (list ',x.))
 	 (define-transpiler-macro *js-transpiler* ,@x)))
 
+(define-js-macro vm-go (tag)
+  `("_I_=" ,tag "; continue" ,*js-separator*))
+
+(define-js-macro vm-go-nil (val tag)
+  `("if (!" ,val "&&" ,val "!==0) {_I_=" ,tag "; continue;}" ,*js-newline*))
+
+(define-js-macro %set-atom-fun (plc val)
+  `(%transpiler-native ,plc "=" ,val ,*js-separator*))
+
 (define-js-macro function (x)
   (if (or (atom x)
 		  (%stack? x))
@@ -31,17 +40,24 @@
 				  `(,@(lambda-body x)
                     ("return " ,ret ,*js-separator*))
 	        	  `("var _I_ = 0" ,*js-separator*
-					"while (1) {switch (_I_) {case 0:"
+					"while (1) {switch (_I_) {case 0:" ,*js-separator*
                     ,@(lambda-body x)
                     ("}return " ,ret ,*js-separator*)
 	        	    "}"))
 			"}"))))
 
 (define-js-macro %setq (dest val)
-  `((%transpiler-native ,dest) "=" ,val))
+  `((%transpiler-native ,dest) "="
+        ,(if (and (consp val)
+	   			  (not (stringp val.))
+	   			  (not (in? val.
+							'%transpiler-string '%transpiler-native)))
+			 `(,val. ,@(transpiler-macrocall-funcall .val))
+			 val)
+    ,*js-separator*))
 
 (define-js-macro %var (name)
-  `(%transpiler-native "var " ,name))
+  `(%transpiler-native "var " ,name ,*js-separator*))
 
 ;;; TYPE PREDICATES
 
@@ -92,7 +108,7 @@
 
 ;; Experimental for lambda-export.
 (define-js-macro %set-vec (v i x)
-  `(%transpiler-native (aref ,v ,i) "=" ,x))
+  `(%transpiler-native (aref ,v ,i) "=" ,x ,*js-separator*))
 
 (define-js-macro make-hash-table (&rest args)
   (let pairs (group args 2)
@@ -111,12 +127,6 @@
 					   "(" ,@(transpiler-binary-expand "," .x)
  					   ")"))
 
-(define-js-macro vm-go (tag)
-  `("_I_=" ,tag "; continue"))
-
-(define-js-macro vm-go-nil (val tag)
-  `("if (!" ,val "&&" ,val "!==0) {_I_=" ,tag "; continue;}"))
-
 (defun js-stack (x)
   ($ '_I_S x))
 
@@ -128,9 +138,6 @@
   	  `(,(transpiler-symbol-string tr (transpiler-obfuscate tr 'symbol))
 		   "(\"" ,(symbol-name (transpiler-obfuscate-symbol tr x)) "\", " ,(when (keywordp x) "true") ")")
 	  x))
-
-(define-js-macro %set-atom-fun (plc val)
-  `(%transpiler-native ,plc "=" ,val))
 
 (define-js-macro %slot-value (x y)
   (if (consp x)

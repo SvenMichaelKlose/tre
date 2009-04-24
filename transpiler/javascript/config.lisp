@@ -15,7 +15,6 @@
 	:std-macro-expander 'js-alternate-std
 	:macro-expander 'javascript
 	:setf-functionp #'js-setf-functionp
-	:separator (format nil ";~%")
 	:unwanted-functions '(wait)
 	:obfuscate? obfuscate?
 	:apply-argdefs? t
@@ -131,4 +130,5 @@
 	tr))
 
 (defvar *js-transpiler* (make-javascript-transpiler nil))
-(defvar *js-separator* (transpiler-separator *js-transpiler*))
+(defvar *js-newline* (format nil "~%"))
+(defvar *js-separator* (format nil ";~%"))
