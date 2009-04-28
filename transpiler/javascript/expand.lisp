@@ -17,6 +17,41 @@
 	(transpiler-add-wanted-function *js-transpiler* x))
   `(function ,x))
 
+(defun head-if (predicate x &key (butlast nil))
+  (when x
+	(if (and (funcall predicate x.)
+			 (or (not keep-last)
+				 .x))
+		(cons x.
+			  (head-if predicate .x :butlast butlast)))))
+
+(defun head-atoms (x &key (butlast nil))
+  (head-if #'atom x :butlast butlast))
+
+(defun tail-after-if (predicate x &key (keep-last nil))
+  (when x
+	(if (and (funcall predicate x.)
+			 (or (not keep-last)
+				 .x))
+		(tail-after-if predicate .x :keep-last keep-last)
+		x)))
+
+(defun tail-after-atoms (x &key (keep-last nil))
+  (tail-after-if #'atom x :keep-last keep-last))
+
+(defun transpiler-assign-current-defun-name (tr x n)
+  (if (transpiler-assign-current-defun-name? tr)
+  	  (append (head-atoms x :butlast t)
+	      	  `((setf *current-function* ,(symbol-name n)))
+	      	  (tail-after-atoms x :keep-last t))
+	  x))
+
+(defun js-assert-body (x)
+  (if (and (not *assert*)
+           (stringp body.))
+      .body
+      body))
+
 ;; (DEFUN ...)
 ;;
 ;; Assign function to global variable.
@@ -40,10 +75,10 @@
 	          #'(,@(awhen fi-sym
 					 `(%funinfo ,!))
 				 ,a
-   		           ,@(if (and (not *assert*)
-		    	              (stringp body.))
-				         .body
-				         body))))))
+   		           ,@(transpiler-assign-current-defun-name
+						 tr
+						(js-assert-body body)
+						n))))))
 
 (define-js-std-macro define-native-js-fun (name args &rest body)
   (apply #'js-essential-defun name args body))
@@ -136,6 +171,9 @@
 
 (define-js-std-macro href (hash key)
   `(aref ,hash ,key))
+
+(define-js-std-macro undefined? (x)
+  `(= "undefined" (%js-typeof ,x)))
 
 ; XXX generic function instead of append!
 (define-js-std-macro dont-obfuscate (&rest symbols)

@@ -59,6 +59,9 @@
 
   (apply-argdefs? nil)
 
+  ; Assign function name to *CURRENT-FUNCTION*.
+  (assign-current-defun-name? nil)
+
   ; You shouldn't have to tweak these at construction-time:
   (symbol-translations nil)
   thisify-classes
@@ -124,6 +127,9 @@
 
 (defun transpiler-unwanted-function? (tr fun)
   (member fun (transpiler-unwanted-functions tr)))
+
+(define-slot-setter-push! transpiler-add-obfuscation-exception tr
+  (transpiler-obfuscation-exceptions tr))
 
 (define-slot-setter-push! transpiler-add-plain-arg-fun tr
   (transpiler-plain-arg-funs tr))

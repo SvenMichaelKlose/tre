@@ -15,8 +15,14 @@
   (format f " * caroshi ECMAScript obfuscator~%")
   (format f " */~%")
   (format f "var _I_ = 0; while (1) {switch (_I_) {case 0: ~%")
+  (format f "var CURRENTFUNCTION;~%")
   (when (transpiler-lambda-export? *js-transpiler*)
-	(transpiler-add-wanted-function *js-transpiler* 'array-copy))
+	(transpiler-add-wanted-function *js-transpiler* 'array-copy)
+	(princ ,(concat-stringtree
+			    (with-open-file i (open "transpiler/javascript/funref.js"
+							 			:direction 'input)
+			  	  (read-all-lines i)))
+		   f))
   (with (tr *js-transpiler*
 		 ; Expand.
 		 base (transpiler-sighten tr *js-base*)
@@ -27,22 +33,18 @@
 		 deps (progn
 				(format t "; Collecting dependencies...~%")
 				(transpiler-import-from-environment tr)))
-      (when (transpiler-lambda-export? *js-transpiler*)
-		(map (fn format f _)
-			 (with-open-file i (open "transpiler/javascript/funref.js")
-				(read-all-lines i))))
-	  ; Generate.
-	  (format t "; Let me think. Hmm")
-	  (force-output)
-      (princ (concat-stringtree
- 		       (transpiler-transpile tr base)
-		       (transpiler-transpile tr deps)
- 		       (transpiler-transpile tr base2)
-			   (transpiler-transpile tr tests)
- 		       (transpiler-transpile tr user))
-	         f))
-    (format f "}break;}~%")
-    (format t "~%; Everything OK. Done.~%"))
+	; Generate.
+	(format t "; Let me think. Hmm")
+	(force-output)
+    (princ (concat-stringtree
+ 		     (transpiler-transpile tr base)
+		     (transpiler-transpile tr deps)
+ 		     (transpiler-transpile tr base2)
+			 (transpiler-transpile tr tests)
+ 		     (transpiler-transpile tr user))
+	       f))
+  (format f "}break;}~%")
+  (format t "~%; Everything OK. Done.~%"))
 
 (defun js-transpile (out files &key (obfuscate? nil))
   (transpiler-reset *js-transpiler*)

@@ -3,9 +3,6 @@
 ;;;;;
 ;;;;; Code-generating set of macros
 
-(defun transpiler-macrocall-funcall (x)
-  `("(" ,@(transpiler-binary-expand "," x) ")"))
-
 (defmacro define-transpiler-macro (tr &rest x)
   (when *show-definitions*
 	(print `(define-transpiler-macro ,tr ,x.)))

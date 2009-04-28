@@ -52,7 +52,7 @@
 	   			  (not (stringp val.))
 	   			  (not (in? val.
 							'%transpiler-string '%transpiler-native)))
-			 `(,val. ,@(transpiler-macrocall-funcall .val))
+			 `(,val. ,@(parenthized-comma-separated-list .val))
 			 val)
     ,*js-separator*))
 
