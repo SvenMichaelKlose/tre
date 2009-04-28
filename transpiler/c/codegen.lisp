@@ -39,21 +39,30 @@
 						    args))
 		  ")" ,(code-char 10)
 	      "{" ,(code-char 10)
-		     "   treptr " ,'~%ret ,*c-separator*
+		     ,*c-indent* "treptr " ,'~%ret ,*c-separator*
              ,@(lambda-body x)
-          ("    return " ,'~%ret ,*c-separator*)
-	      "}"))))
+          	 (,*c-indent* "return " ,'~%ret ,*c-separator*)
+	      "}" ,*c-newline*))))
 
+;; XXX same in js-transpiler
 (define-c-macro %setq (dest val)
-  `((%transpiler-native "    " ,dest) "=" ,val))
+  `("    "
+	(%transpiler-native ,dest) "="
+        ,(if (and (consp val)
+                  (not (stringp val.))
+                  (not (in? val.
+                            '%transpiler-string '%transpiler-native)))
+             `(,val. ,@(parenthized-comma-separated-list .val))
+             val)
+    ,*c-separator*))
 
 (define-c-macro %setq-atom (dest val)
-  `(%transpiler-native "    treatom_sym_set_value (" ,dest " ,"
+  `(%transpiler-native ,*c-indent* "treatom_sym_set_value (" ,dest " ,"
 		,val
-		")"))
+		")" ,*c-separator*))
 
 (define-c-macro %var (name)
-  `(%transpiler-native "    treptr " ,name))
+  `(%transpiler-native ,*c-indent* "treptr " ,name ,*c-separator*))
 
 ;;; TYPE PREDICATES
 
@@ -75,11 +84,14 @@
 (define-c-binary eq "=")
 
 (define-c-macro vm-go (tag)
-  `("    goto l" ,(transpiler-symbol-string *c-transpiler* tag)))
+  `(,*c-indent* "goto l" ,(transpiler-symbol-string *c-transpiler* tag)
+	,*c-separator*))
 
 (define-c-macro vm-go-nil (val tag)
-  `("    if (" ,val " == treptr_nil)" ,(code-char 10)
-	"        goto l" ,(transpiler-symbol-string *c-transpiler* tag)))
+  `(,*c-indent* "if (" ,val " == treptr_nil)" ,(code-char 10)
+	,*c-indent* ,*indent*
+		"goto l" ,(transpiler-symbol-string *c-transpiler* tag)
+	,*c-separator*))
 
 (defun c-stack (x)
   ($ '__S x))
