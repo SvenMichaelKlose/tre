@@ -159,6 +159,7 @@
 	(error "funinfo already memorized"))
   (setf (href fi *funinfos-reverse*) t)
   (with-gensym g
+	(transpiler-add-obfuscation-exception *js-transpiler* g)
 	(setf (funinfo-sym fi) g)
 	(setf (href g *funinfos*) fi)
 	`(%funinfo ,g)))
