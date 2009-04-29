@@ -61,27 +61,69 @@
              (eq name (second a)))
         (opt-peephole-var-double? d name))))
 
-(defun opt-peephole-accumulate-vars (x)
+(defun opt-peephole-move-vars-to-front (x)
   (with (acc nil
          rec #'((x)
                   (with-cons a d x
                     (if (and (%var? a)
-                             (not (cddr a)))
+                             (not ..a))
                         (progn
-                          (when (and (not (opt-peephole-var-double? d (second a)))
-                                     (find-tree d (second a)))
-                            (setf acc (push a acc)))
+                          (setf acc (push a acc))
                           (rec d))
                         (if (and (%setq? a)
-                                 (lambda? (third a)))
-                            (cons `(%setq ,(second a)
+                                 (lambda? ..a.))
+                            (cons `(%setq ,.a.
                                           ,(copy-recurse-into-lambda
-                                               (third a)
-                                               #'opt-peephole-accumulate-vars))
+                                               ..a.
+                                               #'opt-peephole-move-vars-to-front))
                                   (rec d))
                             (cons a
                                   (rec d)))))))
-    (with (ret (rec x))
+    (let ret (rec x)
+      (append acc ret))))
+
+(defun opt-peephole-past-vars (x)
+  (if (%var? x.)
+	  (opt-peephole-past-vars .x)
+	  x))
+
+(defun opt-peephole-collect-syms-0 (h x)
+  (when x
+    (if (atom x)
+	    (setf (href x h) t)
+	    (progn
+		  (opt-peephole-collect-syms-0 h x.)
+	      (opt-peephole-collect-syms-0 h .x)))))
+
+(defun opt-peephole-collect-syms (x)
+  (let h (make-hash-table)
+	(opt-peephole-collect-syms-0 h x)
+	h))
+
+(defun opt-peephole-remove-unused-vars (x)
+  (with (acc nil
+		 syms (opt-peephole-collect-syms
+				  (opt-peephole-past-vars x))
+         rec #'((x)
+                  (with-cons a d x
+                    (if (and (%var? a)
+                             (not ..a))
+                        (progn
+                          (when (if (atom .a.)
+									(href .a. syms) ;(not (opt-peephole-var-double? d .a.))
+									(find-tree d .a.))
+                            (setf acc (push a acc)))
+                          (rec d))
+                        (if (and (%setq? a)
+                                 (lambda? ..a.))
+                            (cons `(%setq ,.a.
+                                          ,(copy-recurse-into-lambda
+                                               ..a.
+                                               #'opt-peephole-remove-unused-vars))
+                                  (rec d))
+                            (cons a
+                                  (rec d)))))))
+    (let ret (rec x)
       (append acc ret))))
 
 ;; Remove IDENTITY expressions to unify code.
@@ -188,6 +230,7 @@
 								  #'opt-peephole-remove-void)
 						 x))))
 
-	    (repeat-while-changes #'rec (opt-peephole-remove-identity
-	  								    (opt-peephole-remove-spare-tags
-											(opt-peephole-accumulate-vars x))))))
+		(opt-peephole-remove-unused-vars
+	    	(repeat-while-changes #'rec (opt-peephole-remove-identity
+	  								    	(opt-peephole-remove-spare-tags
+												(opt-peephole-move-vars-to-front x)))))))
