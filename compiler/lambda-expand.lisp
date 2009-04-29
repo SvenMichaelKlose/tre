@@ -30,17 +30,17 @@
 (defun make-lexical-1 (fi fi-child var)
   (if (funinfo-env-pos fi var)
 	  (make-lexical-place-expr fi fi-child var)
-	  (make-lexical-1 (funinfo-parent fi) fi var)))
+	  (make-lexical-1 (funinfo-parent fi)
+					  fi
+					  var)))
 
 (defun make-lexical-0 (fi fi-child x)
   (funinfo-setup-lexical-links fi fi-child x)
   (let ret (make-lexical-1 fi fi-child x)
-	`(%vec ,(make-lexical fi fi-child (second ret)) ,(third ret))))
-
-(defun make-stackplace (fi fi-child x)
-  (if (funinfo-env-pos fi x)
-      `(%stack ,(funinfo-env-pos fi x))
-	  x))
+	`(%vec ,(make-lexical fi
+						  fi-child
+						  (second ret))
+		   ,(third ret))))
 
 (defun make-lexical (fi fi-child x)
   (if (eq (funinfo-ghost fi-child) x)
@@ -54,10 +54,12 @@
    	  (not (funinfo-in-this-or-parent-env? fi x))
 		x
 	  ; Emit lexical place, except the lexical array itself (it can
-	  ; self-reference).
-      (and (not (eq (funinfo-lexical fi) x))
+	  ; self-reference for child functions).
+      (and (not (eq (funinfo-lexical fi)
+					 x))
 		   (funinfo-lexical-pos fi x))
-        `(%vec ,(vars-to-stackplaces-atom fi (funinfo-lexical fi))
+        `(%vec ,(vars-to-stackplaces-atom fi
+										  (funinfo-lexical fi))
 			   ,(funinfo-lexical-pos fi x))
 	  ; Emit argumet instead of its stack-place.
       (and (not (funinfo-lexical-pos fi x))
@@ -67,7 +69,9 @@
       (funinfo-env-pos fi x)
         `(%stack ,(funinfo-env-pos fi x))
 	  ; Emit lexical place (outside the function).
-	  (make-lexical (funinfo-parent fi) fi x))))
+	  (make-lexical (funinfo-parent fi)
+					fi
+					x))))
 
 (defun vars-to-stackplaces (fi x)
   (if (consp x)
@@ -77,9 +81,12 @@
 		(lambda? x) ; Add variables to ignore in subfunctions.
 	      `#'(,@(lambda-funinfo-expr x)
 			  ,(lambda-args x)
-			     ,@(vars-to-stackplaces fi (lambda-body x)))
+			     ,@(vars-to-stackplaces fi
+										(lambda-body x)))
 	    (%slot-value? x)
-	      `(%slot-value ,(vars-to-stackplaces fi (second x)) ,(third x))
+	      `(%slot-value ,(vars-to-stackplaces fi
+											  (second x))
+						,(third x))
 	    (cons (vars-to-stackplaces fi x.)
 			  (vars-to-stackplaces fi .x)))
 	  (vars-to-stackplaces-atom fi x)))
@@ -112,7 +119,8 @@
 
 (defun make-var-declarations (fi)
   (vars-to-stackplaces fi
-    (mapcan (fn (unless (and (not (eq (funinfo-lexical fi) _))
+    (mapcan (fn (unless (and (not (eq (funinfo-lexical fi)
+									  _))
 						 	 (or (funinfo-arg? fi _)
 						    	 (funinfo-lexical-pos fi _)))
 				  `((%var ,_))))

@@ -76,7 +76,7 @@
 (defun expex-able? (ex x)
   (not (or (atom x)
 		   (function-ref-expr? x)
-           (in? x. '%stack %vec %set-vec
+           (in? x. '%stack '%vec '%set-vec
 				   'vm-go 'vm-go-nil
 				   '%transpiler-native '%transpiler-string
 				   '%var

@@ -61,6 +61,10 @@
   (unless (funinfo-env-pos fi arg)
     (funinfo-env-add-args fi (list arg))))
 
+(defun funinfo-make-stackplace (fi fi-child x)
+  (funinfo-env-add fi x)
+  `(%stack ,(funinfo-env-pos fi x)))
+
 (defun funinfo-in-this-or-parent-env? (fi var)
   (when fi
     (or (funinfo-env-pos fi var)
