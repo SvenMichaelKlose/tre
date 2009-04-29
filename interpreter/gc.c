@@ -236,7 +236,8 @@ tregc_sweep (void)
 		DOTIMES(j, 8) {
 	    	if (tregc_atommarks[i] & c) {
 	        	idx = (i << 3) + j;
-                if (TREPTR_TO_ATOM(idx).type != TRETYPE_UNUSED)
+                if (TREPTR_TO_ATOM(idx).type != TRETYPE_UNUSED
+					&& TREPTR_TO_ATOM(idx).compiled_fun == NULL)
 	           	    treatom_remove (TREATOM_TO_PTR(idx));
             }
 

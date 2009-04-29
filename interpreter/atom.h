@@ -1,6 +1,6 @@
 /*
- * nix operating system project tre interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * TRE interpreter
+ * Copyright (c) 2005-2007,2009 Sven Klose <pixel@copei.de>
  *
  * Atom-related section.
  */
@@ -16,6 +16,7 @@ struct tre_atom {
     char	type;
     treptr	value;
     treptr	fun;
+    void	* compiled_fun;
     treptr	binding;
     treptr	package;
     void 	*detail;
@@ -33,6 +34,7 @@ extern treptr tre_package_keyword;
 	tre_atoms[index].name = nam;	\
 	tre_atoms[index].value = treptr_nil;	\
 	tre_atoms[index].fun = treptr_nil;	\
+	tre_atoms[index].compiled_fun = NULL;	\
 	tre_atoms[index].binding = treptr_nil;	\
 	tre_atoms[index].package = pack;	\
 	tre_atoms[index].type = typ;	\
@@ -65,14 +67,21 @@ extern treptr treatom_get (char *, treptr package);
 /* Create new number atom for computational values. */
 extern treptr treatom_number_get (double, int type);
 
+/* for compiled code */
+extern treptr trenumber_get (double);
+extern treptr trechar_get (double);
+extern treptr treatom_get_value (treptr atom);
+extern treptr treatom_register_compiled_function (treptr sym, void * fun);
+
 extern treptr treatom_alloc (char *symbol, treptr package, int type, treptr value);
 extern void treatom_free (treptr);
 
 extern void treatom_remove (treptr);
 
-extern void treatom_set_value (treptr atom, treptr value);
-extern void treatom_set_function (treptr atom, treptr value);
-extern void treatom_set_binding (treptr atom, treptr value);
+extern treptr treatom_set_value (treptr atom, treptr value);
+extern treptr treatom_sym_set_value (char * symbol, treptr value);
+extern treptr treatom_set_function (treptr atom, treptr value);
+extern treptr treatom_set_binding (treptr atom, treptr value);
 
 /* Lookup variable that points to function containing body. */
 extern treptr treatom_body_to_var (treptr body);

@@ -1,6 +1,6 @@
 /*
- * nix operating system project tre interpreter
- * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+ * TRE interpreter
+ * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
  *
  * Object pointers.
  */
@@ -31,6 +31,7 @@ typedef ulong treptr;
 #define TREATOM_TYPE(ptr)		(TREPTR_TO_ATOM(ptr).type)
 #define TREATOM_VALUE(ptr)		(TREPTR_TO_ATOM(ptr).value)
 #define TREATOM_FUN(ptr)		(TREPTR_TO_ATOM(ptr).fun)
+#define TREATOM_COMPILED_FUN(ptr)		(TREPTR_TO_ATOM(ptr).compiled_fun)
 #define TREATOM_BINDING(ptr)	(TREPTR_TO_ATOM(ptr).binding)
 #define TREATOM_PACKAGE(ptr)	(TREPTR_TO_ATOM(ptr).package)
 #define TREATOM_DETAIL(ptr)		(TREPTR_TO_ATOM(ptr).detail)

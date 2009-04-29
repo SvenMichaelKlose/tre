@@ -6,6 +6,14 @@
 (defvar *c-declarations* nil)
 (defvar *c-init* nil)
 
+(defun c-transpiler-register-functions (inits)
+	(append inits
+			(mapcar (fn `(%setq ~%ret
+								(treatom_register_compiled_function
+								,(c-compiled-symbol _)
+								,(c-transpiler-function-name _))))
+					(transpiler-defined-functions *c-transpiler*))))
+
 (defun c-transpile-0 (f files)
   (with-temporary *lambda-expand-always-have-funref* t
     (format f "/*~%")
@@ -35,7 +43,9 @@
 		   "builtin_number.h"
 		   "builtin_sequence.h"
 		   "builtin_stream.h"
-		   "builtin_string.h"))
+		   "builtin_string.h"
+		   "special.h"
+		   "string2.h"))
 ;    (dolist (i (reverse *universe*))
 ;  	  (when (functionp (symbol-function i))
 ;  	    (transpiler-add-wanted-function *c-transpiler* i)))
@@ -57,9 +67,9 @@
 		 	   init (transpiler-transpile tr
  					    (transpiler-sighten tr
 				            `((defun c-init ()
-					            ,@*c-init*)))))
+					            ,@(c-transpiler-register-functions *c-init*))))))
           (princ (concat-stringtree
-				     *c-declarations*
+		  			 *c-declarations*
 				     init
 				     code)
 	             f)))

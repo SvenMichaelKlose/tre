@@ -15,8 +15,8 @@
     (error "FUNCTION expects a symbol or form"))
   (if (atom x)
 	  (progn
-		(transpiler-add-wanted-function *c-transpiler* x)
-		`(symbol-function ',x))
+	    (transpiler-add-wanted-function *c-transpiler* x)
+		`(symbol-function (%quote ,x)))
   	  `(function ,x)))
 
 ;; (DEFUN ...)
@@ -47,7 +47,7 @@
 
 (define-c-std-macro defun (name args &rest body)
   (with-gensym g
-   (apply #'c-essential-defun name args body)))
+    (apply #'c-essential-defun name args body)))
 
 (define-c-std-macro defmacro (name &rest x)
   (when *show-definitions*
@@ -69,7 +69,7 @@
 	   (%setq ,name ,val))))
 
 (define-c-std-macro cons (a d)
-  `(trelist_get ,a ,d))
+  `(_trelist_get ,a ,d))
 
 ;; Translate FUNCTION-expr functions.
 (define-c-std-macro %setq (&rest x)

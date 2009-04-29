@@ -1,6 +1,6 @@
 /*
  * TRE tree processor
- * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
  *
  * Atom related section.
  */
@@ -144,24 +144,37 @@ treatom_set_name (treptr atom, char *name)
     TREATOM_NAME(atom) = name;
 }
 
-void
+treptr
 treatom_set_value (treptr atom, treptr value)
 {
-    TREATOM_VALUE(atom) = value;
+    return TREATOM_VALUE(atom) = value;
 }
 
-void
+treptr
+treatom_register_compiled_function (treptr sym, void * fun)
+{
+    TREATOM_COMPILED_FUN(sym) = fun;
+	return treptr_nil;
+}
+
+treptr
+treatom_get_value (treptr atom)
+{
+    return TREATOM_VALUE(atom);
+}
+
+treptr
 treatom_set_function (treptr atom, treptr value)
 {
 	if (TREATOM_FUN(atom) != treptr_nil && TREATOM_BINDING(atom) == treptr_nil)
 		trewarn (atom, "redefining function of %s '%s'", treerror_typename (TREPTR_TYPE(atom)), TREATOM_NAME(atom));
-    TREATOM_FUN(atom) = value;
+    return TREATOM_FUN(atom) = value;
 }
 
-void
+treptr
 treatom_set_binding (treptr atom, treptr value)
 {
-    TREATOM_BINDING(atom) = value;
+    return TREATOM_BINDING(atom) = value;
 }
 
 /* Allocate an atom. */
@@ -240,6 +253,18 @@ CHKPTR(atom);
 CHKPTR(atom);
 
     return atom;
+}
+
+treptr
+trenumber_get (double value)
+{
+    return treatom_number_get (value, TRENUMTYPE_FLOAT);
+}
+
+treptr
+trechar_get (double value)
+{
+    return treatom_number_get (value, TRENUMTYPE_CHAR);
 }
 
 /* Seek symbolic atom. */

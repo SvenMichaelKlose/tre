@@ -21,7 +21,10 @@
 		(%%SET set)
 		(%%GET get))
 
-	(treerror_
+	(trespecial_
+		(APPLY apply))
+
+	(treerror_builtin_
 		(%ERROR error))
 
 	(trenumber_builtin_

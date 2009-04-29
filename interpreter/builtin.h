@@ -13,4 +13,7 @@ extern treevalfunc_t treeval_xlat_builtin[];
 
 extern treptr trebuiltin (treptr func, treptr expr);
 
+/* for compiled code */
+extern treptr trebuiltin_print (treptr);
+
 #endif	/* #ifndef TRE_BUILTIN_H */

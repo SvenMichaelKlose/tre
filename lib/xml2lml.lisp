@@ -373,5 +373,5 @@
   (xml2lml-toplevel in))
 
 (defun xml2lml-file (name)
-  (with-open-file in (open name :direction input)
+  (with-open-file in (open name :direction 'input)
     (xml2lml in)))

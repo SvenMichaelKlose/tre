@@ -31,6 +31,10 @@
 #include "dot.h"
 #include "quasiquote.h"
 
+#ifdef TRE_HAVE_COMPILED_ENV
+	treptr compiled_cInit (void);
+#endif
+
 #include <setjmp.h>
 #include <stdlib.h>
 #include <string.h>
@@ -206,6 +210,10 @@ tre_init (void)
     tre_restart_fun = treptr_nil;
 
 	signal (SIGINT, tre_signal);
+
+#ifdef TRE_HAVE_COMPILED_ENV
+	(void) compiled_cInit ();
+#endif
 
     tre_is_initialized = TRUE;
     tre_interrupt_debugger = TRUE;

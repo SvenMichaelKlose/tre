@@ -33,6 +33,7 @@
 				  'trepackage_keyword
 				  'treptr_nil)))
 
+;; An EXPEX-ARGUMENT-FILTER.
 (defun c-expand-literals (x)
   (if
     (characterp x)
@@ -42,22 +43,17 @@
     (stringp x)
 	  (c-compiled-string x)
 	(expex-global-variable? x)
-	  `(treatom_get_value (%no-expex ,(symbol-name x)))
+	  `(treatom_get_value ,(c-compiled-symbol x))
     x))
 
 (defun function-expr? (x)
   (and (consp x)
 	   (eq 'FUNCTION x.)))
 
-(defun c-function-filter (x)
-  (if (and (consp (third x))
-		   (function-expr? (first (third x))))
-	  (print x))
-  x)
-
 (defun c-make-%setq-funcall (x f)
-  `(%setq ,(second x) (funcall ,f
-						       ,(compiled-list (cdr (third x))))))
+  `(%setq ,(second x) (trespecial_apply
+						       ,(compiled-list (append (list f)
+													   (cdr (third x)))))))
 
 (defun c-local-fun-filter (x)
   (if (consp (third x))
@@ -72,10 +68,11 @@
 		 x)
 	x))
 
+;; An EXPEX-SETTER-FILTER.
 (defun c-setter-filter (y)
-  (let x (c-local-fun-filter (c-function-filter y))
+  (let x (c-local-fun-filter y)
     (if
 	  (expex-global-variable? (second x))
-	    `(%setq-atom (%no-expex ,(symbol-name (second x)))
+	    `(%setq-atom ,(second x)
 				     ,@(cddr x))
 	  x)))

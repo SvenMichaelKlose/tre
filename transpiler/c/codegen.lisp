@@ -57,7 +57,12 @@
     ,*c-separator*))
 
 (define-c-macro %setq-atom (dest val)
-  `(%transpiler-native ,*c-indent* "treatom_sym_set_value (" ,dest " ,"
+  `(%transpiler-native ,*c-indent* "treatom_set_value (" ,(c-compiled-symbol dest) " ,"
+		,val
+		")" ,*c-separator*))
+
+(define-c-macro %set-atom-fun (dest val)
+  `(%transpiler-native ,*c-indent* "treatom_set_function (" ,dest " ,"
 		,val
 		")" ,*c-separator*))
 
@@ -89,7 +94,7 @@
 
 (define-c-macro vm-go-nil (val tag)
   `(,*c-indent* "if (" ,val " == treptr_nil)" ,(code-char 10)
-	,*c-indent* ,*indent*
+	,*c-indent* ,*c-indent*
 		"goto l" ,(transpiler-symbol-string *c-transpiler* tag)
 	,*c-separator*))
 
@@ -98,6 +103,9 @@
 
 (define-c-macro %stack (x)
   (c-stack x))
+
+(define-c-macro quote (x)
+  (c-compiled-symbol x))
 
 (define-c-macro %quote (x)
   (c-compiled-symbol x))
@@ -108,8 +116,13 @@
 (define-c-macro %vec (vec index)
   `("((treptr *)" ,vec ")[(unsigned long)" ,index "]"))
 
-(define-c-macro cons (a, d)
+(define-c-macro cons (a d)
   `("_trelist_get (" ,a "," ,d ")"))
 
-(define-c-macro %funref (fun, lex)
-  `(%%funref ,(c-transpiler-function-name fun) ,lex))
+(define-c-macro %funref (fun lex)
+  `("_trelist_get (" ,(c-compiled-symbol '%%funref) ", "
+		"_trelist_get (" ,(c-compiled-symbol fun) "," ,lex "))"))
+
+;; Lexical scope
+(define-c-macro make-array (size)
+  `("trearray_get (_trelist_get (" ,(c-compiled-number size) ", treptr_nil))"))
