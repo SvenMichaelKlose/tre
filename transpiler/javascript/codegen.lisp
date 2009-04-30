@@ -7,7 +7,7 @@
 
 (defmacro define-js-macro (&rest x)
   `(progn
-	 (nconc! (transpiler-obfuscation-exceptions *js-transpiler*) (list ',x.))
+	 (transpiler-add-obfuscation-exceptions *js-transpiler* ',x.)
 	 (define-transpiler-macro *js-transpiler* ,@x)))
 
 (define-js-macro vm-go (tag)
@@ -29,8 +29,6 @@
 			 fi (get-lambda-funinfo x)
 			 no-tags (when fi
 					   (= 0 (funinfo-num-tags fi))))
-		(map (fn transpiler-obfuscate *js-transpiler* _)
-			 args)
         `("function (" ,@(transpiler-binary-expand
 				            ","
 						    args) ")"
@@ -136,7 +134,7 @@
 (define-js-macro %quote (x)
   (if (not (string= "" (symbol-name x)))
   	  `(,(transpiler-symbol-string tr (transpiler-obfuscate tr 'symbol))
-		   "(\"" ,(symbol-name (transpiler-obfuscate-symbol tr x)) "\", " ,(when (keywordp x) "true") ")")
+		   "(\"" ,(symbol-name x) "\", " ,(when (keywordp x) "true") ")")
 	  x))
 
 (define-js-macro %slot-value (x y)

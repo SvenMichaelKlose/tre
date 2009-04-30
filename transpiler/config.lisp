@@ -43,7 +43,7 @@
   (import-from-environment? t)
 
   ; List of symbols that must not be obfuscated.
-  (obfuscation-exceptions nil)
+  (obfuscation-exceptions (make-hash-table))
 
   (make-label #'identity)
   (preprocessor #'identity)
@@ -128,8 +128,9 @@
 (defun transpiler-unwanted-function? (tr fun)
   (member fun (transpiler-unwanted-functions tr)))
 
-(define-slot-setter-push! transpiler-add-obfuscation-exception tr
-  (transpiler-obfuscation-exceptions tr))
+(defun transpiler-add-obfuscation-exceptions (tr &rest x)
+  (dolist (i x)
+	(setf (href i (transpiler-obfuscation-exceptions tr)) t)))
 
 (define-slot-setter-push! transpiler-add-plain-arg-fun tr
   (transpiler-plain-arg-funs tr))

@@ -7,15 +7,27 @@
   (incf *transpiler-obfuscation-counter*)
   (number-sym *transpiler-obfuscation-counter*))
 
+(defun transpiler-obfuscate-symbol-unpackaged (tr x)
+  (if (or (not (transpiler-obfuscate? tr))
+          (href x (transpiler-obfuscation-exceptions tr)))
+      x
+	  (let obs (transpiler-obfuscations tr)
+        (or (href x obs)
+            (setf (href x obs)
+	              (transpiler-obfuscated-sym))))))
+
 (defun transpiler-obfuscate-symbol (tr x)
   (when x
-    (if (or (not (transpiler-obfuscate? tr))
-            (member x (transpiler-obfuscation-exceptions tr)))
-	    x
-        (or (href x (transpiler-obfuscations tr))
-            (setf (href x (transpiler-obfuscations tr))
-		          (make-symbol (symbol-name (transpiler-obfuscated-sym))
-							   (symbol-package x)))))))
+    (with (pack (symbol-package x)
+		   n (transpiler-obfuscate-symbol-unpackaged
+			     tr
+			     (if pack
+			   	     (make-symbol (symbol-name x))
+				     x)))
+	  (if pack
+    	  (make-symbol (symbol-name n)
+		     		   pack)
+		  n))))
 
 (defun transpiler-obfuscate (tr x)
   (if (atom x)

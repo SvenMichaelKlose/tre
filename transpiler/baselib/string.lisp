@@ -7,16 +7,22 @@
 (defun string-concat (&rest x)
   (apply #'+ x))
 
+(dont-obfuscate char-code-at)
+
 ;; XXX ECMAScript only.
 (defun %elt-string (seq idx)
   (when (%%%< idx seq.length)
     (code-char (seq.char-code-at idx))))
+
+(dont-obfuscate from-char-code)
 
 ;; XXX ECMAScript only.
 (defun %setf-elt-string (val seq idx)
   (assert (characterp val)
     (error "can only write CHARACTER to string"))
   (setf (aref seq idx) (*string.from-char-code (char-code val))))
+
+(dont-obfuscate to-string)
 
 ;; XXX ECMAScript only.
 (defun string (x)
@@ -46,13 +52,19 @@
 (defun string= (x y)
   (%%%= x y))
 
+(dont-obfuscate to-upper-case)
+
 ;; XXX ECMAScript only.
 (defun string-upcase (x)
   (x.to-upper-case))
 
+(dont-obfuscate to-lower-case)
+
 ;; XXX ECMAScript only.
 (defun string-downcase (x)
   (x.to-lower-case))
+
+(dont-obfuscate substr length)
 
 ;; XXX ECMAScript only.
 (defun %subseq-string (seq start end)

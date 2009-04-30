@@ -15,7 +15,11 @@
   (format f " * caroshi ECMAScript obfuscator~%")
   (format f " */~%")
   (format f "var _I_ = 0; while (1) {switch (_I_) {case 0: ~%")
-  (format f "var CURRENTFUNCTION;~%")
+  (format f "var ~A;~%" (transpiler-symbol-string
+							*js-transpiler*
+							 (transpiler-obfuscate-symbol
+								 *js-transpiler*
+								 '*CURRENT-FUNCTION*)))
   (when (transpiler-lambda-export? *js-transpiler*)
 	(transpiler-add-wanted-function *js-transpiler* 'array-copy)
 	(princ ,(concat-stringtree
@@ -44,7 +48,12 @@
  		     (transpiler-transpile tr user))
 	       f))
   (format f "}break;}~%")
-  (format t "~%; Everything OK. Done.~%"))
+  (format t "~%; Everything OK. Done.~%")
+(dolist (k (hashkeys (transpiler-obfuscations *js-transpiler*)))
+  (unless (= (elt (symbol-name k) 0) #\~)
+	(format t "~A -> ~A~%" (symbol-name k)
+						   (href k (transpiler-obfuscations *js-transpiler*)))))
+)
 
 (defun js-transpile (out files &key (obfuscate? nil))
   (transpiler-reset *js-transpiler*)

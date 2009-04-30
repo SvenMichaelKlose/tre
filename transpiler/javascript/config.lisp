@@ -18,20 +18,6 @@
 	:unwanted-functions '(wait)
 	:apply-argdefs? t
 	:literal-conversion #'transpiler-expand-characters
-
-	:obfuscation-exceptions
-	  `(t this %funinfo false
-		%transpiler-native %transpiler-string
-		lambda function &key &optional &rest prototype
-		table tbody td tr ul li hr img div p html head body a href src
-		fun hash class
-
-		navigator user-agent index-of
-
-		; JavaScript core
-		apply length push shift unshift
-		split object *array *string == === + - * /)
-
 	:identifier-char?
 	  (fn (or (and (>= _ #\a) (<= _ #\z))
 		  	  (and (>= _ #\A) (<= _ #\Z))
@@ -46,6 +32,21 @@
     	 ex (transpiler-expex tr))
     (setf (expex-inline? ex) #'%slot-value?)
     (setf (expex-setter-filter ex) (fn (js-setter-filter tr _)))
+
+	(apply #'transpiler-add-obfuscation-exceptions
+		tr
+	    '(t this %funinfo false
+		  %transpiler-native %transpiler-string
+		  lambda function &key &optional &rest prototype
+		  table tbody td tr ul li hr img div p html head body a href src
+		  fun hash class
+
+		  navigator user-agent index-of
+
+		  ; JavaScript core
+		  apply length push shift unshift
+		  split object *array *string == === + - * /))
+
 	tr))
 
 (defvar *js-transpiler* (make-javascript-transpiler))

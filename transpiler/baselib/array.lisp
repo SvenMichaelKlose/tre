@@ -3,6 +3,8 @@
 
 (defun arrayp (x) (instanceof x *array))
 
+(dont-obfuscate push)
+
 (defun list-array (x)
   (let a (make-array)
     (dolist (i x a)

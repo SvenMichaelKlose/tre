@@ -27,6 +27,8 @@
   (declare type number x)
   x.v)
 
+(dont-obfuscate from-char-code)
+
 (defun char-string (x)
   (declare type character x)
   (*string.from-char-code (char-code x)))

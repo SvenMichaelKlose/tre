@@ -66,7 +66,6 @@
 		 a (if fi-sym
 			   (cddr args)
 			   args))
-    (transpiler-obfuscate-symbol tr n)
     (transpiler-add-function-args tr n a)
 	(transpiler-add-defined-function tr n)
     `(progn
@@ -106,7 +105,6 @@
     (when (transpiler-defined-variable tr name)
       (error "variable ~A already defined" name))
     (transpiler-add-defined-variable tr name)
-    (transpiler-obfuscate-symbol tr name)
     `(progn
        (%var ,name)
 	   (%setq ,name ,val))))
@@ -177,5 +175,5 @@
 
 ; XXX generic function instead of append!
 (define-js-std-macro dont-obfuscate (&rest symbols)
-  (append! (transpiler-obfuscation-exceptions *js-transpiler*) symbols)
+  (apply #'transpiler-add-obfuscation-exceptions *js-transpiler* symbols)
   nil)
