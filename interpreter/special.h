@@ -1,6 +1,6 @@
 /*
- * nix operating system project tre interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * TRE interpreter
+ * Copyright (c) 2005-2007,2009 Sven Klose <pixel@copei.de>
  *
  * Built-in special forms.
  */
@@ -19,5 +19,8 @@ extern treptr tre_atom_evaluated_return_from;
 
 extern treptr trespecial (treptr func, treptr expr);
 extern void trespecial_init (void);
+
+/* for compiled code */
+extern treptr trespecial_apply (treptr);
 
 #endif	/* #ifndef TRE_SPECIAL_H */
