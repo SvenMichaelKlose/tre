@@ -29,6 +29,7 @@
 	     '(
 		   "ptr.h"
 		   "list.h"
+		   "array.h"
 		   "atom.h"
 		   "eval.h"
 		   "builtin_arith.h"
