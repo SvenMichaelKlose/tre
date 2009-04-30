@@ -67,7 +67,7 @@
 		x
 	  ; Emit stack place.
       (funinfo-env-pos fi x)
-        `(%stack ,(funinfo-env-pos fi x))
+		`(%stack ,(funinfo-env-pos fi x))
 	  ; Emit lexical place (outside the function).
 	  (make-lexical (funinfo-parent fi)
 					fi
@@ -158,12 +158,12 @@
 (defun lambda-export-transform (fi x)
   (with (fi-child (funinfo-get-child-funinfo fi)
 		 exported (lambda-export-make-exported fi fi-child x))
-	 (if
-		(funinfo-ghost fi-child)
-    	  `(%funref ,exported ,(funinfo-lexical fi))
-		*lambda-expand-always-have-funref*
-    	  `(%funref ,exported nil)
-		exported)))
+	(if
+	  (funinfo-ghost fi-child)
+    	`(%funref ,exported ,(funinfo-lexical fi))
+	  *lambda-expand-always-have-funref*
+    	`(%funref ,exported nil)
+	  exported)))
 
 ;;; Export gathering
 

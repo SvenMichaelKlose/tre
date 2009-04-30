@@ -1,9 +1,12 @@
-;;;; TRE compiler
-;;;; Copyright (C) 2006-2007,2009 Sven Klose <pixel@copei.de>
+;;;;; TRE compiler
+;;;;; Copyright (C) 2006-2007,2009 Sven Klose <pixel@copei.de>
+;;;;;
+;;;;; METACODE FUNCTION INFORMATION
+;;;;;
+;;;;; This structure contains all information required to generate
+;;;;; a native function. They're referenced by %FUNINFO-expressions in
+;;;;; metacode-functions.
 
-;;; Function information.
-;;;
-;;; This structure contains all information required to generate a native function.
 (defstruct funinfo
   ; Lists of stack variables. The rest contains the parent environments.
   (env        (cons nil nil))
@@ -34,6 +37,18 @@
   ; Function code. The format depends on the compilation pass.
   first-cblock)
 
+(defun funinfo-topmost (fi)
+  (aif (funinfo-parent fi)
+	   (funinfo-topmost !)
+	   fi))
+
+;;;; ARGUMENTS
+
+(defun funinfo-arg? (fi var)
+  (member var (funinfo-args fi)))
+
+;;;; FREE VARIABLES
+
 (defun funinfo-free-var? (fi var)
   (member var (funinfo-free-vars fi)))
 
@@ -42,15 +57,14 @@
     (nconc! (funinfo-free-vars fi) (list var)))
   var)
 
+;;;; ENVIRONMENT
+
 (defun funinfo-env-parent (fi)
   (funinfo-env (funinfo-parent fi)))
 
 (defun funinfo-env-add-args (fi args)
   (setf (funinfo-env fi) (append (funinfo-env fi) args))
   args)
-
-(defun funinfo-arg? (fi var)
-  (member var (funinfo-args fi)))
 
 (defun funinfo-env-all (fi)
   (cons (funinfo-env fi)
@@ -71,6 +85,15 @@
 	    (awhen (funinfo-parent fi)
 		  (funinfo-in-this-or-parent-env? ! var)))))
 
+(defmacro with-funinfo-env-temporary (fi args &rest body)
+  (with-gensym old-env
+    `(let ,old-env (copy-tree (funinfo-env ,fi))
+       (funinfo-env-add-args ,fi ,args)
+       (prog1
+         (progn
+           ,@body)
+	     (setf (funinfo-env ,fi) ,old-env)))))
+
 ,(macroexpand
 	`(progn
 	  ,@(mapcar (fn `(defun ,($ 'funinfo- (first _)) (fi var)
@@ -80,27 +103,23 @@
 					 lexical-pos lexicals)
 				   2))))
 
+;;;; CLOSURES
+
 (define-slot-setter-push! funinfo-add-closure fi
   (funinfo-closures fi))
 
 (defun funinfo-add-gathered-closure-info (fi fi-closure)
   (nconc! (funinfo-gathered-closure-infos fi) (list fi-closure)))
 
-(defun funinfo-add-lexical (fi name)
-  (unless (funinfo-lexical-pos fi name)
-    (nconc! (funinfo-lexicals fi) (list name))))
-
+;; XXX not POP! ?
 (defun funinfo-get-child-funinfo (fi)
   (pop (funinfo-gathered-closure-infos fi)))
 
-(defmacro with-funinfo-env-temporary (fi args &rest body)
-  (with-gensym old-env
-    `(let ,old-env (copy-tree (funinfo-env ,fi))
-       (funinfo-env-add-args ,fi ,args)
-       (prog1
-         (progn
-           ,@body)
-	     (setf (funinfo-env ,fi) ,old-env)))))
+;;;; LEXICALS AND GHOST ARGUMENTS
+
+(defun funinfo-add-lexical (fi name)
+  (unless (funinfo-lexical-pos fi name)
+    (nconc! (funinfo-lexicals fi) (list name))))
 
 (defun funinfo-make-lexical (fi)
   (unless (funinfo-lexical fi)
@@ -113,7 +132,8 @@
     (let ghost (gensym)
 	  (setf (funinfo-ghost fi) ghost)
 	  (setf (funinfo-args fi)
-		    (cons ghost (funinfo-args fi)))
+		    (cons ghost
+				  (funinfo-args fi)))
 	  (funinfo-env-add fi ghost))))
 
 (defun funinfo-link-lexically (fi fi-child)
@@ -128,30 +148,9 @@
   (funinfo-link-lexically fi fi-child)
   (if (funinfo-env-pos fi var)
 	  (funinfo-add-lexical fi var)
-      (funinfo-setup-lexical-links (funinfo-parent fi) fi var)))
-
-(defun funinfo-topmost (fi)
-  (aif (funinfo-parent fi)
-	   (funinfo-topmost !)
-	   fi))
-
-;;;; DEBUG PRINTERS
-
-(defun print-funinfo (fi)
-  (format t "Arguments: ~A~%" (funinfo-args fi))
-  (format t "Ghost sym:   ~A~%" (funinfo-ghost fi))
-  (format t "Stack:       ~A~%" (funinfo-env fi))
-  (format t "Lexicals:  ~A~%" (funinfo-lexicals fi))
-  (format t "Lexical sym: ~A~%" (funinfo-lexical fi))
-  (format t "Free vars: ~A~%" (funinfo-free-vars fi))
-  (format t "-~%")
-  fi)
-
-(defun print-funinfo-stack (fi)
-  (when fi
-    (print-funinfo fi)
-    (print-funinfo-stack (funinfo-parent fi)))
-  fi)
+      (funinfo-setup-lexical-links (funinfo-parent fi)
+								   fi
+								   var)))
 
 ;;;; LAMBDA FUNINFO
 
@@ -163,7 +162,7 @@
 	(error "funinfo already memorized"))
   (setf (href fi *funinfos-reverse*) t)
   (with-gensym g
-	(transpiler-add-obfuscation-exception *js-transpiler* g)
+	(transpiler-add-obfuscation-exceptions *js-transpiler* g)
 	(setf (funinfo-sym fi) g)
 	(setf (href g *funinfos*) fi)
 	`(%funinfo ,g)))
@@ -187,3 +186,21 @@
 	  (print (lambda-funinfo x))
 	  (error "foo"))
 	fi))
+
+;;;; DEBUG PRINTERS
+
+(defun print-funinfo (fi)
+  (format t "Arguments: ~A~%" (funinfo-args fi))
+  (format t "Ghost sym:   ~A~%" (funinfo-ghost fi))
+  (format t "Stack:       ~A~%" (funinfo-env fi))
+  (format t "Lexicals:  ~A~%" (funinfo-lexicals fi))
+  (format t "Lexical sym: ~A~%" (funinfo-lexical fi))
+  (format t "Free vars: ~A~%" (funinfo-free-vars fi))
+  (format t "-~%")
+  fi)
+
+(defun print-funinfo-stack (fi)
+  (when fi
+    (print-funinfo fi)
+    (print-funinfo-stack (funinfo-parent fi)))
+  fi)
