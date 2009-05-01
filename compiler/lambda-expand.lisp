@@ -74,7 +74,8 @@
 					x))))
 
 (defun vars-to-stackplaces (fi x)
-  (if (consp x)
+  (if (atom x)
+	  (vars-to-stackplaces-atom fi x)
       (if
 		(%quote? x)
 		  x
@@ -88,8 +89,7 @@
 											  (second x))
 						,(third x))
 	    (cons (vars-to-stackplaces fi x.)
-			  (vars-to-stackplaces fi .x)))
-	  (vars-to-stackplaces-atom fi x)))
+			  (vars-to-stackplaces fi .x)))))
 
 ;;;; LAMBDA inlining
 
