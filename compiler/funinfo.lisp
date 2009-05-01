@@ -75,7 +75,7 @@
   (unless (funinfo-env-pos fi arg)
     (funinfo-env-add-args fi (list arg))))
 
-(defun funinfo-make-stackplace (fi fi-child x)
+(defun funinfo-make-stackplace (fi x)
   (funinfo-env-add fi x)
   `(%stack ,(funinfo-env-pos fi x)))
 
