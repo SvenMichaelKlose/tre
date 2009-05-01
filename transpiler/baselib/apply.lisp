@@ -1,6 +1,8 @@
 ;;;;; Transpiler: TRE to JavaScript
 ;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
 
+(dont-obfuscate apply)
+
 ;; Call function with expanded arguments.
 ;;
 ;; Get arguments as a list, call the default argument expander
