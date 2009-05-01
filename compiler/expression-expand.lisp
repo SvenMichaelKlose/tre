@@ -68,6 +68,11 @@
       (funinfo-env-add ! s))
 	s))
 
+;(defun expex-funinfo-env-add ()
+  ;(aif *expex-funinfo*
+      ;(funinfo-make-stackplace ! (expex-sym))
+  	  ;(expex-sym)))
+
 ;;;; PREDICATES
 
 ;; Check if an expression is expandable.
@@ -263,7 +268,9 @@
    	(if (expex-returnable? ex last.)
 		(append (butlast x)
 				(if (%setq? last.)
-					(expex-make-setq-copy ex last s)
+					(if (eq s (second last.))
+				        (list (expex-guest-filter-setter ex last.))
+						(expex-make-setq-copy ex last s))
 				    (list (expex-guest-filter-setter ex
 							  `(%setq ,s ,@(or last
 									  		   '(nil)))))))
