@@ -1,5 +1,4 @@
 // Copyright (c) 2009 Sven Klose <pixel@copei.de>
-
 function __manualArrayCopy (x)
 {
 	var a = [];
@@ -7,7 +6,6 @@ function __manualArrayCopy (x)
 		a[i] = x[i];
 		return a;
 }
-
 function T37funref (f, g)
 {
 	var r = function () {
