@@ -9,13 +9,13 @@
 
 (defstruct funinfo
   ; Lists of stack variables. The rest contains the parent environments.
-  (env        (cons nil nil))
+  (env (cons nil nil))
 
   ; List of arguments.
-  (args       nil)
+  (args nil)
 
   ; List of variables defined outside the function.
-  (free-vars  nil)
+  (free-vars nil)
 
   ; List of exported functions.
   (closures nil)
@@ -96,8 +96,8 @@
 
 ,(macroexpand
 	`(progn
-	  ,@(mapcar (fn `(defun ,($ 'funinfo- (first _)) (fi var)
-				   	    (position var (,($ 'funinfo- (second _)) fi))))
+	  ,@(mapcar (fn `(defun ,($ 'funinfo- _.) (fi var)
+				   	    (position var (,($ 'funinfo- ._.) fi))))
 		    (group `(free-var-pos free-vars
 					 env-pos env
 					 lexical-pos lexicals)
@@ -136,21 +136,20 @@
 				  (funinfo-args fi)))
 	  (funinfo-env-add fi ghost))))
 
-(defun funinfo-link-lexically (fi fi-child)
-  (funinfo-make-lexical fi)
-  (funinfo-make-ghost fi-child))
+(defun funinfo-link-lexically (fi)
+  (funinfo-make-lexical (funinfo-parent fi))
+  (funinfo-make-ghost fi))
 
 ;; Make lexical path to desired variable.
-(defun funinfo-setup-lexical-links (fi fi-child var)
-  (unless fi
-	(error "couldn't find ~A in environment" var))
-  (funinfo-add-free-var fi-child var)
-  (funinfo-link-lexically fi fi-child)
-  (if (funinfo-env-pos fi var)
-	  (funinfo-add-lexical fi var)
-      (funinfo-setup-lexical-links (funinfo-parent fi)
-								   fi
-								   var)))
+(defun funinfo-setup-lexical-links (fi var)
+  (let fi-parent (funinfo-parent fi)
+    (unless fi-parent
+	  (error "couldn't find ~A in environment" var))
+    (funinfo-add-free-var fi var)
+    (funinfo-link-lexically fi)
+    (if (funinfo-env-pos fi-parent var)
+	    (funinfo-add-lexical fi-parent var)
+        (funinfo-setup-lexical-links fi-parent var))))
 
 ;;;; LAMBDA FUNINFO
 

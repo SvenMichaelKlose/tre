@@ -69,9 +69,9 @@
 	s))
 
 ;(defun expex-funinfo-env-add ()
-  ;(aif *expex-funinfo*
-      ;(funinfo-make-stackplace ! (expex-sym))
-  	  ;(expex-sym)))
+;  (aif *expex-funinfo*
+;      (funinfo-make-stackplace ! (expex-sym))
+;  	  (expex-sym)))
 
 ;;;; PREDICATES
 
@@ -102,7 +102,7 @@
 ;; instead.
 (defun expex-convert-quotes (x)
   (mapcar (fn (if (quote? _)
-				  `(%quote ,(second _))
+				  `(%quote ,._.)
 				  _))
 		  x))
 
@@ -118,12 +118,13 @@
 (defun expex-argexpand (ex x)
   (with (new? (%new? x)
 		 fun (if new?
-				 (second x)
+				 .x.
 				 x.)
 		 args (if new?
-				  (cddr x)
+				  ..x
 				  .x))
-	`(,@(when new? (list '%new))
+	`(,@(when new?
+		  (list '%new))
 	  ,fun
     	  ,@(if (funcall (expex-function? ex) fun)
 	    	    (expex-convert-quotes
@@ -200,10 +201,10 @@
 ;;
 ;; The place to set must not be expanded.
 (defun expex-expr-setq (ex x)
-  (with ((moved new-expr) (expex-move-args ex (cddr x)))
+  (with ((moved new-expr) (expex-move-args ex ..x))
 	(values moved
 			(list (expex-guest-filter-setter ex
-				      `(%setq ,(second x) ,@new-expr))))))
+				      `(%setq ,.x. ,@new-expr))))))
 
 ;; Expand LAMBDA
 ;;
