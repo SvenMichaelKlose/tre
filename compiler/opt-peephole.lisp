@@ -49,7 +49,7 @@
 	 (with-cons a d x
 	   ; Recurse into LAMBDA.
 	   (if (and (%setq? a)
-		        (lambda? (third a)))
+		        (lambda? ..a.))
 		   (opt-peephole-rec x ,fun)
 	   	   (cond
 			 ,@body
@@ -58,7 +58,7 @@
 (defun opt-peephole-var-double? (x name)
   (with-cons a d x
     (or (and (%var? a)
-             (eq name (second a)))
+             (eq name .a.))
         (opt-peephole-var-double? d name))))
 
 (defun opt-peephole-move-vars-to-front (x)
@@ -131,9 +131,9 @@
 (defun opt-peephole-remove-identity (x)
   (opt-peephole-fun #'opt-peephole-remove-identity
       ((and (%setq? a)
-		    (consp (third a))
-			(identity? (third a)))
-	     (cons `(%setq ,(second a) ,(second (third a)))
+		    (consp ..a.)
+			(identity? ..a.))
+	     (cons `(%setq ,.a. ,(second ..a.))
 			   (opt-peephole-remove-identity d)))))
 
 (defun opt-peephole-find-next-tag (x)
@@ -147,15 +147,15 @@
   (opt-peephole-fun #'opt-peephole-remove-void
 	  ; Remove void assigment.
 	  ((and (%setq? a)
-		    (eq (second a) (third a)))
+		    (eq .a. ..a.))
 	     (opt-peephole-remove-void d))
 
       ; Remove second of (setf x y y x).
 	  ((and (%setq? a)
 	     	(consp d)
 			(%setq? d.)
-			(eq (second a) (third d.))
-			(eq (second d.) (third a)))
+			(eq .a. (third d.))
+			(eq (second d.) ..a.))
 	     (cons a (opt-peephole-remove-void .d)))
 
 	  ; Remove jump to following tag.
@@ -163,7 +163,7 @@
 			(eq 'vm-go a.)
 			d
 			(atom d.)
-		    (eq (second a) d.))
+		    (eq .a. d.))
 	     (opt-peephole-remove-void d))
 
 	  ; Remove code after label until next tag.
@@ -173,9 +173,9 @@
 
 	  ; Shorten (%setq expexsym sth) (%setq sth expexsym).
 	  ((and (%setq? a) (%setq? d.)
-	        (expex-sym? (second a))
-		    (eq (second a) (third d.)))
-	     (cons `(%setq ,(second d.) ,(third a))
+	        (expex-sym? .a.)
+		    (eq .a. (third d.)))
+	     (cons `(%setq ,(second d.) ,..a.)
 			   (opt-peephole-remove-void .d)))))
 
 (defun opt-peephole-will-be-set-again? (x v)
@@ -197,11 +197,11 @@
 	     #'((x)
 			  (opt-peephole-fun #'remove-code
 				((and (%setq? a)
-					  (atom (second a))
-					  (or (atom (third a))
-						  (%slot-value? (third a))
-						  (%stack? (third a)))
-					  (opt-peephole-will-be-set-again? d (second a)))
+					  (atom .a.)
+					  (or (atom ..a.)
+						  (%slot-value? ..a.)
+						  (%stack? ..a.))
+					  (opt-peephole-will-be-set-again? d .a.))
 				  	  ; Don't set variable that will be modified anyway.
 					  (remove-code d))))
 
@@ -212,10 +212,10 @@
 					  (atom a)
 			 		  (atom d.))
 				   ; Remove first of two subsequent tags.
-				   (awhen (find-if (fn eq a (cdr _))
+				   (awhen (find-if (fn eq a ._)
 								   removed-tags)
-					 (rplacd ! (second x)))
-				   (acons! a (second x) removed-tags)
+					 (rplacd ! .x.))
+				   (acons! a .x. removed-tags)
 				   (reduce-tags d))))
 
 	   rec

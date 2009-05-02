@@ -5,18 +5,18 @@
 
 ;; Expand QUASIQUOTE.
 (defun backquote-cons-quasiquote (x)
-  (if (quasiquote? (cadar x))
-      `(cons ,(backquote-cons (cadar x))
+  (if (quasiquote? (second x.))
+      `(cons ,(backquote-cons (second x.))
              ,(backquote-cons-1 .x))
-      `(cons ,(copy-tree (cadar x))
+      `(cons ,(copy-tree (second x.))
              ,(backquote-cons-1 .x))))
 
 ;; Expand QUASIQUOTE-SPLICE.
 (defun backquote-cons-quasiquote-splice (x)
-  (if (quasiquote? (cadar x))
-      `(cons ,(copy-tree (cadar x))
+  (if (quasiquote? (second x.))
+      `(cons ,(copy-tree (second x.))
              ,(backquote-cons-1 .x))
-      `(%nconc ,(copy-tree (cadar x))
+      `(%nconc ,(copy-tree (second x.))
        		   ,(backquote-cons-1 .x))))
 
 (defun backquote-cons-atom (x)
@@ -38,11 +38,11 @@
              ,(backquote-cons-1 .x))
 
     ; Do QUASIQUOTE expansion.
-    (eq (caar x) 'QUASIQUOTE)
+    (eq x.. 'QUASIQUOTE)
       (backquote-cons-quasiquote x)
 
     ; Do QUASIQUOTE-SPLICE expansion.
-    (eq (caar x) 'QUASIQUOTE-SPLICE)
+    (eq x.. 'QUASIQUOTE-SPLICE)
       (backquote-cons-quasiquote-splice x)
 
     ; Expand sublist and rest.
@@ -80,9 +80,9 @@
 	  #'((x)
 		   (if
 			 (quote? x)
-			   (if (eq '%stack (cadr x))
+			   (if (eq '%stack .x.)
 				   '(%quote %stack)
-			   	   (simple-quote-expand (cadr x)))
+			   	   (simple-quote-expand .x.))
 		   	 (backquote? x)
-			   (backquote-cons (second x))
+			   (backquote-cons .x.)
 			 x))))

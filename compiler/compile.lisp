@@ -1,5 +1,5 @@
 ;;;; TRE compiler
-;;;; Copyright (C) 2005-2008 Sven Klose <pixel@copei.de>
+;;;; Copyright (C) 2005-2009 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Toplevel
 
@@ -39,11 +39,11 @@
   (print-compiler-status fun)
   (if (compilable? fun)
       (and (atomic-expand-lambda fun)
-		    nil)
+		   nil)
       (error "function expected")))
 
 (defun compile-all ()
-  (dolist (i (reverse *universe*) nil)
+  (dolist (i (reverse *universe*))
     (awhen (symbol-function i)
       (when (compilable? !)
         (compile !)))))

@@ -3,6 +3,10 @@
 ;;;;;
 ;;;;; LAMBDA expansion.
 
+;;;; XXX clean-up plan
+;;;; Make this functions a layer of FUNINFO to get rid of the first
+;;;; FI argument as well as the FUNINFO prefixes.
+
 (defvar *lambda-exported-closures* nil)
 (defvar *lambda-expand-always-have-funref* nil)
 
@@ -23,29 +27,25 @@
 
 ;;; Pass lexical up one step through ghost.
 
-(defun make-lexical-place-expr (fi fi-child var)
-  `(%vec ,(funinfo-ghost fi-child)
-		 ,(funinfo-lexical-pos fi var)))
+(defun make-lexical-place-expr (fi var)
+  `(%vec ,(funinfo-ghost fi)
+		 ,(funinfo-lexical-pos (funinfo-parent fi) var)))
 
-(defun make-lexical-1 (fi fi-child var)
-  (if (funinfo-env-pos fi var)
-	  (make-lexical-place-expr fi fi-child var)
-	  (make-lexical-1 (funinfo-parent fi)
-					  fi
-					  var)))
+(defun make-lexical-1 (fi var)
+  (if (funinfo-env-pos (funinfo-parent fi) var)
+	  (make-lexical-place-expr fi var)
+	  (make-lexical-1 (funinfo-parent fi) var)))
 
-(defun make-lexical-0 (fi fi-child x)
-  (funinfo-setup-lexical-links fi fi-child x)
-  (let ret (make-lexical-1 fi fi-child x)
-	`(%vec ,(make-lexical fi
-						  fi-child
-						  (second ret))
-		   ,(third ret))))
+(defun make-lexical-0 (fi x)
+  (funinfo-setup-lexical-links (funinfo-parent fi) fi x)
+  (let ret (make-lexical-1  fi x)
+	`(%vec ,(make-lexical fi .ret.)
+		   ,..ret.)))
 
-(defun make-lexical (fi fi-child x)
-  (if (eq (funinfo-ghost fi-child) x)
-	  (vars-to-stackplaces-atom fi x)
-	  (make-lexical-0 fi fi-child x)))
+(defun make-lexical (fi x)
+  (if (eq (funinfo-ghost fi) x)
+	  (vars-to-stackplaces-atom (funinfo-parent fi) x)
+	  (make-lexical-0 fi x)))
 
 (defun vars-to-stackplaces-atom (fi x)
   (when x
@@ -69,9 +69,7 @@
       (funinfo-env-pos fi x)
 		`(%stack ,(funinfo-env-pos fi x))
 	  ; Emit lexical place (outside the function).
-	  (make-lexical (funinfo-parent fi)
-					fi
-					x))))
+	  (make-lexical fi x))))
 
 (defun vars-to-stackplaces (fi x)
   (if (atom x)
@@ -82,12 +80,10 @@
 		(lambda? x) ; Add variables to ignore in subfunctions.
 	      `#'(,@(lambda-funinfo-expr x)
 			  ,(lambda-args x)
-			     ,@(vars-to-stackplaces fi
-										(lambda-body x)))
+			     ,@(vars-to-stackplaces fi (lambda-body x)))
 	    (%slot-value? x)
-	      `(%slot-value ,(vars-to-stackplaces fi
-											  (second x))
-						,(third x))
+	      `(%slot-value ,(vars-to-stackplaces fi .x.)
+						,..x.)
 	    (cons (vars-to-stackplaces fi x.)
 			  (vars-to-stackplaces fi .x)))))
 
@@ -96,7 +92,7 @@
 (defun make-inline-body (stack-places values body)
   `(vm-scope
 	 ,@(mapcar #'((stack-place init-value)
-				  `(%setq ,stack-place ,init-value))
+				    `(%setq ,stack-place ,init-value))
 			   stack-places values)
      ,@body))
 
@@ -132,9 +128,7 @@
 	  (let lex-sym (vars-to-stackplaces fi (funinfo-lexical fi))
     	`((%setq ,lex-sym (make-array ,(length lexicals)))
           ,@(mapcan (fn (awhen (funinfo-lexical-pos fi _)
-				  	      `((%set-vec ,lex-sym
-						 	      	  ,!
-								  	  ,_))))
+				  	      `((%set-vec ,lex-sym ,! ,_))))
 					(append (list (funinfo-lexical fi))
 						    (funinfo-args fi))))))))
 
@@ -256,8 +250,7 @@
 	  				  x
 	  				  (cons (if (lambda? x.)
 							    (with ((new-x new-exported-closures)
-						   			       (lambda-expand-0 x
-															export-lambdas))
+						   			       (lambda-expand-0 x export-lambdas))
 				  				  (append! exported-closures
 										   new-exported-closures)
 								  new-x)

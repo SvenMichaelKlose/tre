@@ -1,5 +1,5 @@
 ;;;;; TRE compiler
-;;;;; Copyright (c) 2006-2008 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2006-2009 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Compiler-macro expansion.
 ;;;;;
@@ -109,7 +109,7 @@
     `(identity nil)))
 
 (define-compiler-macro setq (&rest args)
-  `(vm-scope ,@(mapcar (fn `(%setq ,(first _) ,(second _)))
+  `(vm-scope ,@(mapcar (fn `(%setq ,_. ,._.))
                        (group args 2))))
 
 (define-compiler-macro if (&rest body)
