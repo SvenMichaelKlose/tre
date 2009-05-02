@@ -50,7 +50,7 @@
   (format f "}break;}~%")
   (format t "~%; Everything OK. Done.~%")
 (dolist (k (hashkeys (transpiler-obfuscations *js-transpiler*)))
-  (unless (= (elt (symbol-name k) 0) #\~)
+  (unless (in=? (elt (symbol-name k) 0) #\~ #\_ #\%)
 	(format t "~A -> ~A~%" (symbol-name k)
 						   (href k (transpiler-obfuscations *js-transpiler*)))))
 )
