@@ -97,6 +97,32 @@ tre_restart (treptr fun)
 }
 
 treptr
+tremain_expand (treptr expr)
+{
+	treptr old;
+
+    do {
+		old = expr;
+
+		/* Dot expansion. */
+		tregc_push (expr);
+		expr = tredot_expand (expr);
+
+    	/* Expand macros. */
+    	expr = tremacro_builtin_macroexpand (CONS(expr, treptr_nil));
+
+		/* QUASIQUOTE expansion. */
+		tregc_push (expr);
+		expr = trequasiquote_expand (expr);
+
+		tregc_pop ();
+		tregc_pop ();
+    } while (!trelist_equal (expr, old));
+
+    return expr;
+}
+
+treptr
 tre_main_line (struct tre_stream *stream)
 {
     treptr  expr;
@@ -122,16 +148,8 @@ tre_main_line (struct tre_stream *stream)
 	TREATOM_VALUE(tremain_history) = expr;
 */
 
-	/* Dot expansion. */
 	tregc_push (expr);
-	expr = tredot_expand (expr);
-
-    /* Expand macros. */
-    expr = tremacro_builtin_macroexpand (CONS(expr, treptr_nil));
-
-	/* QUASIQUOTE expansion. */
-	tregc_push (expr);
-	expr = trequasiquote_expand (expr);
+	expr = tremain_expand (expr);
 
 #ifdef TRE_PRINT_MACROEXPANSIONS
     treprint (expr);
@@ -142,7 +160,6 @@ tre_main_line (struct tre_stream *stream)
 	trethread_push_call (tremain_history);
     expr = treeval (expr);
 	trethread_pop_call ();
-    tregc_pop ();
     tregc_pop ();
     tregc_pop ();
     tregc_pop ();
