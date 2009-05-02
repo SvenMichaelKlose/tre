@@ -4,56 +4,37 @@
 ;;;;
 ;;;; Subatomic expression utilities.
 
-(defun vm-scope? (e)
-  (and (consp e)
-	   (eq 'VM-SCOPE (car e))))
-
-(defun vm-go? (e)
-  (and (consp e)
-	   (eq 'VM-GO (car e))))
-
-(defun vm-go-nil? (e)
-  (and (consp e)
-	   (eq 'VM-GO-NIL (car e))))
+(mapcar-macro x
+	'(vm-scope vm-go vm-go-nil
+	  %stack %vec %setq)
+  `(def-head-predicate ,x))
 
 (defun vm-jump? (e)
   (and (consp e)
-	   (in? (car e) 'VM-GO 'VM-GO-NIL)))
+	   (in? e. 'VM-GO 'VM-GO-NIL)))
 
 (defun vm-jump-tag (x)
   (if
 	(vm-go? x)
-	  (second x)
+	  .x.
 	(vm-go-nil? x)
-	  (third x)))
+	  ..x.))
 
 (defun vm-scope-body (x)
-  (cdr x))
-
-(defun %stack? (x)
-  (and (consp x)
-	   (eq '%STACK (car x))))
-
-(defun %vec? (x)
-  (and (consp x)
-	   (eq '%vec (car x))))
+  .x)
 
 (defun %var? (x)
   (and (consp x)
-	   (eq '%VAR (car x))
-	   (eq nil (cddr x))))
-
-(defun %setq? (x)
-  (and (consp x)
-	   (eq '%SETQ (car x))))
+	   (eq '%VAR x.)
+	   (eq nil ..x)))
 
 (defun %setqret? (x)
   (and (consp x)
-	   (eq '%SETQ (first x))
-	   (eq '~%RET (second x))))
+	   (eq '%SETQ x.)
+	   (eq '~%RET .x.)))
 
 (defun %setq-place (x)
-  (second x))
+  .x.)
 
 (defun %setq-value (x)
-  (third x))
+  ..x.)
