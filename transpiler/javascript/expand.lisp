@@ -39,13 +39,6 @@
 (defun tail-after-atoms (x &key (keep-last nil))
   (tail-after-if #'atom x :keep-last keep-last))
 
-(defun transpiler-assign-current-defun-name (tr x n)
-  (if (transpiler-assign-current-defun-name? tr)
-  	  (append (head-atoms x :butlast t)
-	      	  `((setf *current-function* ,(symbol-name n)))
-	      	  (tail-after-atoms x :keep-last t))
-	  x))
-
 (defun js-assert-body (x)
   (if (and (not *assert*)
            (stringp body.))
@@ -70,14 +63,10 @@
 	(transpiler-add-defined-function tr n)
     `(progn
        (%var ,n)
-       (%setq ,n
-	          #'(,@(awhen fi-sym
-					 `(%funinfo ,!))
-				 ,a
-   		           ,@(transpiler-assign-current-defun-name
-						 tr
-						(js-assert-body body)
-						n))))))
+       (%setq ,n #'(,@(awhen fi-sym
+						`(%funinfo ,!))
+					,a
+   		              ,@(js-assert-body body))))))
 
 (define-js-std-macro define-native-js-fun (name args &rest body)
   (apply #'js-essential-defun name args body))
