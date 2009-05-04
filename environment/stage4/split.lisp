@@ -14,7 +14,7 @@
 
 (define-test "SPLIT works on string"
   ((let x (split #\/ "foo/bar")
-	 (and (string= "foo" (first x))
-	 	  (string= "bar" (second x))
-		  (not (cddr x)))))
+	 (and (string= "foo" x.)
+	 	  (string= "bar" .x.)
+		  (not ..x))))
   t)

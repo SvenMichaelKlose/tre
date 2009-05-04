@@ -1,5 +1,5 @@
 ;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
 
 (defvar *type-predicates*
   '((cons . consp)
@@ -19,7 +19,7 @@
   `(,(if typ
          (or (type-predicate typ)
              (error "expected variable type but got ~A. Use one of ~A instead"
-                    (second typ) (carlist *type-predicates*)))
+                    .typ. (carlist *type-predicates*)))
 	     'not) ,x))
 
 (defun %declare-statement-type-or (typ x)

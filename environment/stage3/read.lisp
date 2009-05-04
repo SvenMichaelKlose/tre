@@ -62,8 +62,8 @@
 (defun read-token (str)
   (with ((pkg sym) (get-symbol-and-package str))
 	(values (if (and sym
-					 (not (cdr sym))
-			         (= #\. (car sym)))
+					 (not .sym)
+			         (= #\. sym.))
 		        'dot
 		        (if sym
 			        'symbol

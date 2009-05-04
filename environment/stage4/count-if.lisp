@@ -3,10 +3,10 @@
 
 (defun count-if (pred lst &optional (init 0))
   (if lst
-	  (count-if pred (cdr lst) (+ (if (funcall pred (car lst))
-								      1
-								      0)
- 							      init))
+	  (count-if pred .lst (+ (if (funcall pred lst.)
+								 1
+								 0)
+ 							 init))
 	  init))
 
 (define-test "COUNT-IF"

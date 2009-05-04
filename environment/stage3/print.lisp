@@ -50,8 +50,8 @@
       t)))
 
 (defun %print-rest (c str)
-  (late-print (car c) str)
-  (with (x (cdr c))
+  (late-print c. str)
+  (with (x .c)
     (if x
         (if (consp x)
             (progn
