@@ -11,6 +11,7 @@
   call
   pre
   post
+  lookup
   user) ; For external use.
 
 (defun expander-get (name)
@@ -32,6 +33,9 @@
     (unless call
       (setf (expander-call e)
 			(fn (apply (cdr (assoc _. (expander-macros e))) ._))))
+    (setf (expander-lookup e)
+          #'((expander name)
+			  (cdr (assoc name (expander-macros expander)))))
 	e))
 
 (defun set-expander-macro (expander-name name args-and-body)
