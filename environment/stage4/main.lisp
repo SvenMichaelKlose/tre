@@ -29,6 +29,7 @@
 (env-load "stage4/print-octal.lisp")
 (env-load "stage4/repeat.lisp")
 (env-load "stage4/repeat-while-changes.lisp")
+(env-load "stage4/replace.lisp")
 (env-load "stage4/return-from-when.lisp")
 (env-load "stage4/split.lisp")
 (env-load "stage4/t.lisp")
