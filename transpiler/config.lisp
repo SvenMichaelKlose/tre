@@ -59,9 +59,6 @@
 
   (apply-argdefs? nil)
 
-  ; Assign function name to *CURRENT-FUNCTION*.
-  (assign-current-defun-name? nil)
-
   ; You shouldn't have to tweak these at construction-time:
   (symbol-translations nil)
   thisify-classes
@@ -142,9 +139,10 @@
   (member fun (transpiler-plain-arg-funs tr)))
 
 (defun transpiler-macro (tr name)
-  (assoc name (expander-macros
-                (expander-get
-                  (transpiler-macro-expander tr)))))
+  (let expander (expander-get (transpiler-macro-expander tr))
+    (funcall (expander-lookup expander)
+			 expander
+		     name)))
 
 (defvar mypred nil)
 (defvar mycall nil)
