@@ -18,7 +18,7 @@
 	
 (defun transpiler-add-wanted-function (tr fun)
   (when (transpiler-can-import? tr fun)
-	(setf (href fun (transpiler-wanted-functions-hash tr)) t)
+	(setf (href (transpiler-wanted-functions-hash tr) fun) t)
 	(nconc! (transpiler-wanted-functions tr)
 			(list fun)))
   fun)
@@ -29,7 +29,7 @@
 
 (defun transpiler-add-wanted-variable (tr var)
   (when (transpiler-should-add-wanted-variable? tr var)
-	(setf (href var (transpiler-wanted-variables-hash tr)) t)
+	(setf (href (transpiler-wanted-variables-hash tr) var) t)
     (adjoin! var (transpiler-wanted-variables tr)))
   var)
 

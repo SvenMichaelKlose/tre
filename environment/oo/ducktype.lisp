@@ -1,12 +1,12 @@
 ;;;;; TRE environment
-;;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Ducktyped objects
 
 (defconstant *ducktype-magic* '%%QUACK-QUACK!)
-(defconstant *ducktype-classes* (make-hash-table))
-(defconstant *ducktype-slothashes* (make-hash-table))
-(defconstant *ducktype-members* (make-hash-table))
+(defvar *ducktype-classes* (make-hash-table))
+(defvar *ducktype-slothashes* (make-hash-table))
+(defvar *ducktype-members* (make-hash-table))
 
 (defstruct ducktype-obj
   (magic *ducktype-magic*)
@@ -21,16 +21,16 @@
   (with (base-members nil
 	     base-methods nil)
    	(dolist (base bases)
-	  (let bclass (href base *ducktype-classes*)
+	  (let bclass (href *ducktype-classes* base)
 		(nconc base-members (class-members bclass))
 		(nconc base-methods (class-methods bclass))))
 	(make-ducktype-class :members base-members
 				     	  :methods base-methods)))
 
 (defun %ducktype-make-class (cname bases)
-  (when (href cname *ducktype-classes*)
+  (when (href *ducktype-classes* cname)
     (error "Class ~A already defined." cname))
-  (setf (href cname *ducktype-classes*)
+  (setf (href *ducktype-classes* cname)
    		(if bases
 			(%ducktype-inherit cname bases)
 			(make-class))))
@@ -45,13 +45,13 @@
 	(with (slothash (ducktype-slothash-name cname))
 	  `(progn
 	     (defvar ,slothash (make-hash-table))
-	     (setf (href '__class ,slothash) ',cname)
-		 (setf (href ',cname *ducktype-slothashes*) ,slothash)
+	     (setf (href ,slothash '__class) ',cname)
+		 (setf (href *ducktype-slothashes* ',cname) ,slothash)
 	     ; Inherit base class slots.
 	     ,@(mapcar (fn (with (baseslots (ducktype-slothash-name _))
 	   				     `(dolist (i (hashkeys ,baseslots))
-						    (setf (href i ,slothash)
-								  (href i ,baseslots)))))
+						    (setf (href ,slothash i)
+								  (href ,baseslots i)))))
 				   bases)
 		 ,(thisify
 		    *ducktype-classes*
@@ -60,14 +60,14 @@
 		          ,@body)))))))
 
 (defun %ducktype-assert-definition (what name class-name)
-  (unless (href class-name *ducktype-classes*)
+  (unless (href *ducktype-classes* class-name)
 	(error "Definition of ~A ~A: class ~A is not defined."
 		   what name class-name)))
 
 (defmacro defmethod (class-name name args &rest body)
   (progn
     (%ducktype-assert-definition "method" name class-name)
-    (setf (href name (href class-name *ducktype-slothashes*))
+    (setf (href (href *ducktype-slothashes* class-name) name)
 		  (eval `(function ,(thisify
 		    				  *ducktype-classes*
 							  `((this ,@args)
@@ -78,8 +78,8 @@
 (defmacro defmember (class-name &rest names)
   (progn
     (%ducktype-assert-definition "member" class-name class-name)
-    (setf (href class-name *ducktype-members*)
-		  (append (href class-name *ducktype-members*) names))
+    (setf (href *ducktype-members* class-name )
+		  (append (href *ducktype-members* class-name) names))
     nil))
 
 (defun %ducktype-assert (obj)
@@ -90,20 +90,20 @@
 
 (defun %slot-value (obj slot)
   (%ducktype-assert obj)
-  (or (href slot (ducktype-obj-slots obj))
-	  (href slot (ducktype-obj-members obj))))
+  (or (href (ducktype-obj-slots obj) slot)
+	  (href (ducktype-obj-members obj) slot)))
 
 (defun (setf %slot-value) (value obj slot)
   (%ducktype-assert obj)
-  (setf (href slot (ducktype-obj-members obj)) value))
+  (setf (href (ducktype-obj-members obj) slot) value))
 
 (defun %new (name &rest args)
   (let members (make-hash-table)
-	(dolist (i (href name *ducktype-members*))
-	  (clr (href i members)))
+	(dolist (i (href *ducktype-members* name))
+	  (clr (href members i)))
 	(let this (make-ducktype-obj
 				:class name
-				:slots (href name *ducktype-slothashes*)
+				:slots (href *ducktype-slothashes* name)
 				:members members)
 	  (apply (symbol-function name) this args)
 	  this)))

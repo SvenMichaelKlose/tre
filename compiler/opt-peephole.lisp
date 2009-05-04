@@ -90,7 +90,7 @@
 (defun opt-peephole-collect-syms-0 (h x)
   (when x
     (if (atom x)
-	    (setf (href x h) t)
+	    (setf (href h x) t)
 	    (progn
 		  (opt-peephole-collect-syms-0 h x.)
 	      (opt-peephole-collect-syms-0 h .x)))))
@@ -110,7 +110,7 @@
                              (not ..a))
                         (progn
                           (when (if (atom .a.)
-									(href .a. syms) ;(not (opt-peephole-var-double? d .a.))
+									(href syms .a.) ;(not (opt-peephole-var-double? d .a.))
 									(find-tree d .a.))
                             (setf acc (push a acc)))
                           (rec d))

@@ -4,4 +4,4 @@
 (defun assoc-hash (x &key (test nil))
   (let h (make-hash-table :test test)
 	(dolist (i x h)
-	  (setf (href i. h) .i))))
+	  (setf (href h i.) .i))))

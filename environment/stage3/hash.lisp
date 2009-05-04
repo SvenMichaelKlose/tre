@@ -1,5 +1,5 @@
 ;;;; TRE environment
-;;;; Copyright (c) 2005-2006,2008 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2005-2006,2008-2009 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Generalized hash-table
 
@@ -47,12 +47,12 @@
 	      ,bucket (aref (%hash-table-hash ,h) ,idx))
     ,@body))
 
-(defun href (key h)
+(defun href (h key)
   "Get hash value by key."
   (%with-hash-bucket b i h key
     (assoc-value key b :test (%hash-table-test h))))
 
-(defun (setf href) (new-value key h)
+(defun (setf href) (new-value h key)
   (with (tst (%hash-table-test h))
     (%with-hash-bucket b i h key
       (if (assoc key b :test tst)
@@ -62,7 +62,7 @@
         (setf (aref (%hash-table-hash h) i) (acons key new-value b)))))
   new-value)
 
-(defun hremove (key h)
+(defun hremove (h key)
   "Get hash value by key."
   (%with-hash-bucket b i h key
     (setf (aref (%hash-table-hash h) i)

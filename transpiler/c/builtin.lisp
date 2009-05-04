@@ -124,13 +124,13 @@
 	(dolist (grp *c-builtins-descr* h)
 	  (let head (string-downcase (symbol-name grp.))
 		(dolist (f .grp)
-		  (setf (href f. h)
+		  (setf (href h f.)
 				(+ head (aif .f
 				     (string-downcase (symbol-name !.))
 					 (string-downcase (symbol-name f.))))))))))
 
 (defun c-builtin-name (x)
-  (href x *c-builtins*))
+  (href *c-builtins* x))
 
 ;; Make transpiler standard macros that convert arguments to built-in functions
 ;; to consed lists.

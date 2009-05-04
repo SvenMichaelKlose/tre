@@ -5,14 +5,14 @@
   `(progn
 	 (defvar ,table (make-hash-table :test #'eql))
      (defun ,name (,x)
-       (or (href ,x ,table)
+       (or (href ,table ,x)
 	   	   (let n ,maker
 	      	 (push! (format nil "treptr ~A;~%"
 							  	(string-downcase (symbol-name n)))
 			        *c-declarations*)
 	       	 (push! `(setf ,,n ,setter)
 			      	*c-init*)
-	       	 (setf (href ,x ,table) n))))))
+	       	 (setf (href ,table ,x) n))))))
 
 (c-define-compiled-literal c-compiled-number (x *c-compiled-numbers*)
   ($ 'trenumber_compiled_ (gensym-number))

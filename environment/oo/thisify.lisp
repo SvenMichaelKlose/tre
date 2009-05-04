@@ -1,5 +1,5 @@
 ;;;;; TRE tree processor transpiler
-;;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Wrap local method calls into SLOT-VALUEs.
 
@@ -10,7 +10,7 @@
 			(thisify-collect-methods-and-members !))))
 
 (defun thisify-list (classes x cls)
-  (with (clsdesc (href cls classes)
+  (with (clsdesc (href classes cls)
   		 classdef (thisify-collect-methods-and-members clsdesc)
     	 thisify-symbol
 		     #'((x exclusions)

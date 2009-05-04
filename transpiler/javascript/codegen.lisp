@@ -97,7 +97,7 @@
 (define-js-macro %%usetf-aref (val &rest x)
   `(%transpiler-native (aref ,@x) "=" ,val))
 
-(define-js-macro hremove (key h)
+(define-js-macro hremove (h key)
   `(%transpiler-native "delete " ,h "[" ,key "]"))
 
 ;; Experimental for lambda-export.

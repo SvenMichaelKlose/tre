@@ -106,8 +106,8 @@
 (defun xml-unify-string (s)
   "Unify string."
   (when s
-    (or (href s *xml-unified-strings*)
-        (setf (href s *xml-unified-strings*) s))))
+    (or (href *xml-unified-strings* s)
+        (setf (href *xml-unified-strings* s) s))))
 
 (defun xml2lml-unify-identifier (in)
   (let i (string-upcase (xml2lml-identifier in))
@@ -221,7 +221,7 @@
   (xml-read-char in) ; #\&
   (let e (xml-read-while in (fn (not (= _ #\;))))
 	(prog1
-	  (+ "\\" (print-octal (href e *xml-entities-hash*)
+	  (+ "\\" (print-octal (href *xml-entities-hash* e)
 					 	   nil))
 	  (xml-read-char in))))
 

@@ -9,11 +9,11 @@
 
 (defun transpiler-obfuscate-symbol-unpackaged (tr x)
   (if (or (not (transpiler-obfuscate? tr))
-          (href x (transpiler-obfuscation-exceptions tr)))
+          (href (transpiler-obfuscation-exceptions tr) x))
       x
 	  (let obs (transpiler-obfuscations tr)
-        (or (href x obs)
-            (setf (href x obs)
+        (or (href obs x)
+            (setf (href obs x)
 	              (transpiler-obfuscated-sym))))))
 
 (defun transpiler-obfuscate-symbol (tr x)

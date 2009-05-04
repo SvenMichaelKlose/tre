@@ -52,7 +52,7 @@
 (dolist (k (hashkeys (transpiler-obfuscations *js-transpiler*)))
   (unless (in=? (elt (symbol-name k) 0) #\~ #\_ #\%)
 	(format t "~A -> ~A~%" (symbol-name k)
-						   (href k (transpiler-obfuscations *js-transpiler*)))))
+						   (href (transpiler-obfuscations *js-transpiler*) k))))
 )
 
 (defun js-transpile (out files &key (obfuscate? nil))

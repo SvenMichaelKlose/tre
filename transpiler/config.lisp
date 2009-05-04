@@ -85,19 +85,19 @@
   		(transpiler-obfuscations tr) (make-hash-table)))
 
 (defun transpiler-defined-function (tr name)
-  (href name (transpiler-defined-functions-hash tr)))
+  (href (transpiler-defined-functions-hash tr) name))
 
 (defun transpiler-add-defined-function (tr name)
   (push! name (transpiler-defined-functions tr))
-  (setf (href name (transpiler-defined-functions-hash tr)) t)
+  (setf (href (transpiler-defined-functions-hash tr) name) t)
   name)
 
 (defun transpiler-defined-variable (tr name)
-  (href name (transpiler-defined-variables-hash tr)))
+  (href (transpiler-defined-variables-hash tr) name))
 
 (defun transpiler-add-defined-variable (tr name)
   (push! name (transpiler-defined-variables tr))
-  (setf (href name (transpiler-defined-variables-hash tr)) t)
+  (setf (href (transpiler-defined-variables-hash tr) name) t)
   name)
 
 (defun transpiler-switch-obfuscator (tr on?)
@@ -105,10 +105,10 @@
 		(transpiler-obfuscate? tr) on?))
 
 (defun transpiler-function-arguments (tr fun)
-  (href fun (transpiler-function-args tr)))
+  (href (transpiler-function-args tr) fun))
 
 (defun transpiler-add-function-args (tr fun args)
-  (setf (href fun (transpiler-function-args tr)) args))
+  (setf (href (transpiler-function-args tr) fun) args))
 
 (define-slot-setter-push! transpiler-add-unwanted-function tr
   (transpiler-unwanted-functions tr))
@@ -117,17 +117,17 @@
   (transpiler-emitted-wanted-functions tr))
 
 (defun transpiler-wanted-function? (tr fun)
-  (href fun (transpiler-wanted-functions-hash tr)))
+  (href (transpiler-wanted-functions-hash tr) fun))
 
 (defun transpiler-wanted-variable? (tr name)
-  (href fun (transpiler-wanted-variables-hash tr)))
+  (href (transpiler-wanted-variables-hash tr) fun))
 
 (defun transpiler-unwanted-function? (tr fun)
   (member fun (transpiler-unwanted-functions tr)))
 
 (defun transpiler-add-obfuscation-exceptions (tr &rest x)
   (dolist (i x)
-	(setf (href i (transpiler-obfuscation-exceptions tr)) t)))
+	(setf (href (transpiler-obfuscation-exceptions tr) i) t)))
 
 (define-slot-setter-push! transpiler-add-plain-arg-fun tr
   (transpiler-plain-arg-funs tr))

@@ -1,5 +1,5 @@
 ;;;; TRE environment
-;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Alien interface.
 
@@ -10,17 +10,17 @@
 (defvar *alien-structs* (make-hash-table :test #'string=))
 
 (defun alien-import-get-type-desc (hash desc)
-  (href (lml-get-attribute desc :type) hash))
+  (href hash (lml-get-attribute desc :type)))
 
 (defun alien-import-add-struct (hash desc)
   (with (struct-name (lml-get-attribute desc :name))
 	(prog1
 	  struct-name
-  	  (unless (href struct-name *alien-structs*)
-  	    (setf (href struct-name *alien-structs*) t)
+  	  (unless (href *alien-structs* struct-name)
+  	    (setf (href *alien-structs* struct-name) t)
 	    (format t "[")
 		(dolist (x (split #\ (trim #\ (lml-get-attribute desc :members))))
-		  (with (field (href x hash))
+		  (with (field (href hash x))
 			(if (eq :field field.)
 		        (format t " ~A \"~A\""
 					    (alien-import-get-type-from-desc hash field)
@@ -58,12 +58,12 @@
   (dolist (x descr)
     (when (eq x. :function)
 	  (with (fun-name (lml-get-attribute x :name))
-	    (unless (href fun-name *alien-imported-functions*)
+	    (unless (href *alien-imported-functions* fun-name)
 		  (format t "Function ~A ~A ("
 				  (lml-get-attribute x :name)
 				  (alien-import-get-type
 					hash
-					(href (lml-get-attribute x :returns) hash)))
+					(href hash (lml-get-attribute x :returns))))
 		  (awhen (lml-get-children x)
 		    (dolist (a !)
 		      (when (eq a. :argument)
@@ -72,7 +72,7 @@
 						(or (lml-get-attribute a :name)
 							"unnamed")))))
 		  (format t ")~%")
-		  (setf (href fun-name *alien-imported-functions*) t))))))
+		  (setf (href *alien-imported-functions* fun-name) t))))))
 
 (defun alien-import-descr-hash (descr)
   (with (hash (make-hash-table :test #'string=))
@@ -82,7 +82,7 @@
 				   (:namespace)
 				   (t hash)))
 		  (when h
-	        (setf (href ! h) x)))))))
+	        (setf (href h !) x)))))))
 
 (defun alien-import-process-xml (descr)
   (with (d (lml-get-children descr))

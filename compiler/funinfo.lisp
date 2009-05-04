@@ -157,20 +157,20 @@
 (defvar *funinfos-reverse* (make-hash-table))
 
 (defun make-lambda-funinfo (fi)
-  (when (href fi *funinfos-reverse*)
+  (when (href *funinfos-reverse* fi)
 	(error "funinfo already memorized"))
-  (setf (href fi *funinfos-reverse*) t)
+  (setf (href *funinfos-reverse* fi) t)
   (with-gensym g
 	(transpiler-add-obfuscation-exceptions *js-transpiler* g)
 	(setf (funinfo-sym fi) g)
-	(setf (href g *funinfos*) fi)
+	(setf (href *funinfos* g) fi)
 	`(%funinfo ,g)))
 
 (defun replace-lambda-funinfo (fi)
-  (setf (href fi *funinfos-reverse*) t)
+  (setf (href *funinfos-reverse* fi) t)
   (with-gensym g
 	(setf (funinfo-sym fi) g)
-	(setf (href g *funinfos*) fi)
+	(setf (href *funinfos* g) fi)
 	`(%funinfo ,g)))
 
 (defun make-lambda-funinfo-if-missing (x fi)
@@ -178,7 +178,7 @@
 	  (make-lambda-funinfo fi)))
 
 (defun get-lambda-funinfo (x)
-  (let fi (href (lambda-funinfo x) *funinfos*)
+  (let fi (href *funinfos* (lambda-funinfo x))
     (when (not (eq (funinfo-sym fi)
 				   (lambda-funinfo x)))
 	  (print fi)
