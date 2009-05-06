@@ -9,10 +9,12 @@
 
 (defstruct funinfo
   ; Lists of stack variables. The rest contains the parent environments.
-  (env (cons nil nil))
+  (env nil)
 
   ; List of arguments.
   (args nil)
+
+  (renamed-vars nil)
 
   ; List of variables defined outside the function.
   (free-vars nil)
@@ -57,33 +59,19 @@
     (nconc! (funinfo-free-vars fi) (list var)))
   var)
 
-;;;; ENVIRONMENT
+;;;; ARGUMENTS & ENVIRONMENT
 
-(defun funinfo-env-parent (fi)
-  (funinfo-env (funinfo-parent fi)))
-
-(defun funinfo-env-add-args (fi args)
-  (setf (funinfo-env fi) (append (funinfo-env fi) args))
-  args)
-
-(defun funinfo-env-all (fi)
-  (cons (funinfo-env fi)
-		(awhen (funinfo-parent fi)
-		  (funinfo-env-all !))))
-
-(defun funinfo-env-add (fi arg)
-  (unless (funinfo-env-pos fi arg)
-    (funinfo-env-add-args fi (list arg))))
-
-(defun funinfo-make-stackplace (fi x)
-  (funinfo-env-add fi x)
-  `(%stack ,(funinfo-env-pos fi x)))
+(defun funinfo-in-args-or-env? (fi x)
+  (or (funinfo-arg? fi x)
+	  (funinfo-env-pos fi x)))
 
 (defun funinfo-in-this-or-parent-env? (fi var)
   (when fi
-    (or (funinfo-env-pos fi var)
+    (or (funinfo-in-args-or-env? fi var)
 	    (awhen (funinfo-parent fi)
 		  (funinfo-in-this-or-parent-env? ! var)))))
+
+;;;; ENVIRONMENT
 
 (defmacro with-funinfo-env-temporary (fi args &rest body)
   (with-gensym old-env
@@ -102,6 +90,22 @@
 					 env-pos env
 					 lexical-pos lexicals)
 				   2))))
+
+(defun funinfo-env-parent (fi)
+  (funinfo-env (funinfo-parent fi)))
+
+(defun funinfo-env-add (fi arg)
+  (unless (funinfo-env-pos fi arg)
+	  ;(error "double definition of ~A in ~A" arg (funinfo-env fi))
+      (append! (funinfo-env fi) (list arg))))
+
+(defun funinfo-env-add-many (fi arg)
+  (dolist (x arg)
+	(funinfo-env-add fi x)))
+
+(defun funinfo-make-stackplace (fi x)
+  (funinfo-env-add fi x)
+  `(%stack ,(funinfo-env-pos fi x)))
 
 ;;;; CLOSURES
 
