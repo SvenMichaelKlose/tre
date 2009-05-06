@@ -11,6 +11,8 @@
 ;;;; CONFIGURATION
 
 (defstruct expex
+  (transpiler nil)
+
   ; Callback to check if an object is a function.
   (function? (fn functionp (symbol-value _)))
 
@@ -62,16 +64,29 @@
        (not (expex-in-env? x))
        (global-variable? x)))
 
-(defun expex-funinfo-env-add ()
+(defun expex-funinfo-env-add-var ()
   (let s (expex-sym)
     (awhen *expex-funinfo*
       (funinfo-env-add ! s))
 	s))
 
-;(defun expex-funinfo-env-add ()
-;  (aif *expex-funinfo*
-;      (funinfo-make-stackplace ! (expex-sym))
-;  	  (expex-sym)))
+(defun expex-funinfo-env-add-stack ()
+  (aif *expex-funinfo*
+      (funinfo-make-stackplace ! (expex-sym))
+  	  (expex-sym)))
+
+(defun expex-stack-locals? (ex)
+  (and *expex-funinfo* ; Is set if we're inside a function.
+	   (transpiler-stack-locals? (expex-transpiler ex))))
+
+(defun expex-funinfo-env-add (ex)
+  (if (expex-stack-locals? ex)
+	  (expex-funinfo-env-add-stack)
+	  (expex-funinfo-env-add-var)))
+
+(defun expex-local-decl (ex s)
+  (unless (expex-stack-locals? ex)
+	`((%var ,s))))
 
 ;;;; PREDICATES
 
@@ -84,7 +99,7 @@
            (in? x. '%stack '%vec '%set-vec
 				   'vm-go 'vm-go-nil
 				   '%transpiler-native '%transpiler-string
-				   '%var
+				   '%var '%quote
 				   '%no-expex))))
 
 ;; Check if an expression has a return value.
@@ -141,17 +156,17 @@
 
 ;; Move out VM-SCOPE if it contains something. Otherwise keep NIL.
 (defun expex-move-arg-vm-scope (ex x)
-  (let s (expex-funinfo-env-add)
+  (let s (expex-funinfo-env-add ex)
     (aif (vm-scope-body x)
-         (cons (append `((%var ,s))
+         (cons (append (expex-local-decl ex s)
 		               (expex-body ex ! s))
 		       s)
 	     (cons nil nil))))
 
 (defun expex-move-arg-std (ex x)
-  (with (s (expex-funinfo-env-add)
+  (with (s (expex-funinfo-env-add ex)
     	 (moved new-expr) (expex-expr ex x))
-      (cons (append `((%var ,s))
+      (cons (append (expex-local-decl ex s)
 					moved
 		    		(if (expex-returnable? ex new-expr.)
 		        		(list (expex-guest-filter-setter ex
