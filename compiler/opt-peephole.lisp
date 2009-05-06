@@ -1,5 +1,5 @@
 ;;;;; TRE compiler
-;;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Peephole-optimizer for expression-expanded code.
 
@@ -65,20 +65,21 @@
   (with (acc nil
          rec #'((x)
                   (with-cons a d x
-                    (if (and (%var? a)
-                             (not ..a))
+                    (if
+					  (and (%var? a)
+                           (not ..a))
                         (progn
                           (setf acc (push a acc))
                           (rec d))
-                        (if (and (%setq? a)
-                                 (lambda? ..a.))
-                            (cons `(%setq ,.a.
-                                          ,(copy-recurse-into-lambda
-                                               ..a.
-                                               #'opt-peephole-move-vars-to-front))
-                                  (rec d))
-                            (cons a
-                                  (rec d)))))))
+                      (and (%setq? a)
+                           (lambda? ..a.))
+                        (cons `(%setq ,.a.
+                                 ,(copy-recurse-into-lambda
+                                      ..a.
+                                      #'opt-peephole-move-vars-to-front))
+                              (rec d))
+                      (cons a
+                            (rec d))))))
     (let ret (rec x)
       (append acc ret))))
 
@@ -225,7 +226,7 @@
 				                 .!
 					             x))
 					   (funcall
-						 (compose #'reduce-tags
+						 (compose ;#'reduce-tags
 								  #'remove-code
 								  #'opt-peephole-remove-void)
 						 x))))
