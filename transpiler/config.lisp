@@ -3,6 +3,9 @@
 ;;;;;
 ;;;;; Configuration
 
+;; Set this when starting up your transpiler run.
+(defvar *current-transpiler* nil)
+
 (defstruct transpiler
   std-macro-expander
   macro-expander
@@ -56,6 +59,9 @@
 
   ; Tells if arguments are passed by stack.
   (stack-arguments? nil)
+
+  ; Tells if local variables are on the stack.
+  (stack-locals? nil)
 
   (apply-argdefs? nil)
 
