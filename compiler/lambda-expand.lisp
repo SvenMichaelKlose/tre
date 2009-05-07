@@ -172,7 +172,7 @@
 ;;; XXX as far as I now understand a gathering pass is not required
 ;;; anymore since we can build the tree at once.
 
-(defun lambda-export-gather-child-make-funinfo (fi)
+(defun lambda-export-gather-child-make-funinfo (fi x)
   (with ((args exported-closures) (lambda-expand (lambda-args x)
 												 t))
 	(lambda-expand-add-closures exported-closures)
@@ -181,7 +181,7 @@
 
 ;; Do a gathering expansion. Builds FUNINFO tree.
 (defun lambda-export-gather (fi x)
-  (let fi-child (lambda-export-gather-child-make-funinfo fi)
+  (let fi-child (lambda-export-gather-child-make-funinfo fi x)
     (lambda-expand-gather fi-child
 	  				      (lambda-body x)
 			   			  t)
