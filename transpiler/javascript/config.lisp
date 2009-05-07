@@ -25,11 +25,13 @@
 			  (in=? _ #\_ #\. #\$ #\#)))
 	:make-label
 	  #'js-transpiler-make-label
-	:lambda-export? nil))
+	:lambda-export? t
+	:stack-locals? nil))
 
 (defun make-javascript-transpiler ()
   (with (tr (make-javascript-transpiler-0)
     	 ex (transpiler-expex tr))
+    (setf (expex-transpiler ex) tr)
     (setf (expex-inline? ex) #'%slot-value?)
     (setf (expex-setter-filter ex) (fn (js-setter-filter tr _)))
 

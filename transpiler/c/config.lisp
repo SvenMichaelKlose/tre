@@ -20,9 +20,11 @@
 			:named-functions? t
 			:lambda-export? t
 			:stack-arguments? t
+			:stack-locals? t
 			:literal-conversion #'((x) x))
 	(let ex (transpiler-expex tr)
-	  (setf (expex-argument-filter ex) #'c-expand-literals
+	  (setf (expex-transpiler ex) tr
+			(expex-argument-filter ex) #'c-expand-literals
 			(expex-setter-filter ex) #'c-setter-filter))
 	tr))
 
