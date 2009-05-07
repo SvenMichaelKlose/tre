@@ -141,7 +141,10 @@ treptr
 treatom_builtin_symbol_function (treptr list)
 {
     treptr arg = treatom_builtin_arg (list);
-    return TREATOM_FUN(arg);
+	if (TREPTR_IS_BUILTIN(arg))
+		return arg;
+	else
+    	return TREATOM_FUN(arg);
 }
 
 /*
