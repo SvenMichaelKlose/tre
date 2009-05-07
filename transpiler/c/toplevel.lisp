@@ -12,18 +12,11 @@
 								(treatom_register_compiled_function
 								,(c-compiled-symbol _)
 								,(c-transpiler-function-name _))))
-					(transpiler-defined-functions *c-transpiler*))))
+					(transpiler-defined-functions *c-transpiler*))
+			'((say-hello))))
 
 (defun c-transpile-0 (f files)
   (with-temporary *lambda-expand-always-have-funref* t
-    (format f "/*~%")
-    (format f " * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>~%")
-    (format f " *~%")
-    (format f " * Softwarearchitekturbuero Sven Klose~%")
-    (format f " * Westermuehlstrasse 31~%")
-    (format f " * D-80469 Muenchen~%")
-    (format f " * Tel.: ++49 / 89 / 57 08 22 38~%")
-    (format f " */~%")
     (format f "#define cons _trelist_get~%")
     (map (fn (format f "#include \"~A\"~%" _))
 	     '(
@@ -32,6 +25,7 @@
 		   "array.h"
 		   "atom.h"
 		   "eval.h"
+		   "gc.h"
 		   "builtin_arith.h"
 		   "builtin_array.h"
 		   "builtin_atom.h"
@@ -77,6 +71,7 @@
       (format t "~%; Everything OK. Done.~%")))
 
 (defun c-transpile (out files &key (obfuscate? nil))
+  (setf *current-transpiler* *c-transpiler*)
   (transpiler-reset *c-transpiler*)
   (transpiler-switch-obfuscator *c-transpiler* obfuscate?)
   (c-transpile-0 out files))

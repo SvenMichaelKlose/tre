@@ -4,16 +4,6 @@
 ;;;;; Toplevel
 
 (defun js-transpile-0 (f files)
-  (format f "/*~%")
-  (format f " * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>~%")
-  (format f " *~%")
-  (format f " * Softwarearchitekturbuero Sven Klose~%")
-  (format f " * Westermuehlstrasse 31~%")
-  (format f " * D-80469 Muenchen~%")
-  (format f " * Tel.: ++49 / 89 / 57 08 22 38~%")
-  (format f " *~%")
-  (format f " * caroshi ECMAScript obfuscator~%")
-  (format f " */~%")
   (format f "var _I_ = 0; while (1) {switch (_I_) {case 0: ~%")
   (format f "var ~A;~%" (transpiler-symbol-string
 							*js-transpiler*
@@ -56,6 +46,7 @@
 )
 
 (defun js-transpile (out files &key (obfuscate? nil))
+  (setf *current-transpiler* *js-transpiler*)
   (transpiler-reset *js-transpiler*)
   (transpiler-switch-obfuscator *js-transpiler* obfuscate?)
   (js-transpile-0 out files))
