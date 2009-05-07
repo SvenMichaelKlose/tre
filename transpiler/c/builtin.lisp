@@ -22,7 +22,7 @@
 		(%%GET get))
 
 	(trespecial_
-		(APPLY apply))
+		(APPLY apply_compiled))
 
 	(treerror_builtin_
 		(%ERROR error))
