@@ -33,6 +33,10 @@
 	(when (eq '%funinfo (first p))
 	  (list '%funinfo (second p)))))
 
+(defun lambda-funinfo-and-args (x)
+  (append (lambda-funinfo-expr x)
+		  (list (lambda-args x))))
+
 (defun lambda-args (x)
   "Get arguments of function expression."
   (car (past-lambda x)))
