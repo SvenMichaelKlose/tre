@@ -17,8 +17,10 @@
 (define-c-macro function (name x)
   (if (atom x)
 	  (error "codegen: arguments and body expected: ~A" x)
-	  (let args (argument-expand-names 'unnamed-c-function
-			      		     	       (lambda-args x))
+	  (with (args (argument-expand-names 'unnamed-c-function
+			      		     	         (lambda-args x))
+			 fi (get-lambda-funinfo x)
+			 num-locals (length (funinfo-env fi)))
 	    (push! (concat-stringtree
 				   "extern treptr "
 				   (transpiler-symbol-string *c-transpiler*
@@ -40,7 +42,17 @@
 		  ")" ,(code-char 10)
 	      "{" ,(code-char 10)
 		     ,*c-indent* "treptr " ,'~%ret ,*c-separator*
+			 ,@(when (< 0 num-locals)
+			     `(,*c-indent* ,"treptr _local_array = trearray_make ("
+							      ,num-locals
+			  				      ");" ,*c-separator*
+			       ,*c-indent* "tregc_push (_local_array);" ,*c-separator*
+			 	   ,*c-indent* ,"treptr * _locals = (treptr *) "
+											  	    "TREATOM_DETAIL(_local_array)"
+											  	    ,*c-separator*))
              ,@(lambda-body x)
+			 ,@(when (< 0 num-locals)
+			     `(,*c-indent* "tregc_pop ();" ,*c-separator*))
           	 (,*c-indent* "return " ,'~%ret ,*c-separator*)
 	      "}" ,*c-newline*))))
 
@@ -99,7 +111,7 @@
 	,*c-separator*))
 
 (defun c-stack (x)
-  ($ '__S x))
+  `("((treptr *) _locals)[(unsigned long)" ,x "]"))
 
 (define-c-macro %stack (x)
   (c-stack x))

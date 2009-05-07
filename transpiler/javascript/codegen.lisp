@@ -34,6 +34,8 @@
 						    args) ")"
 	      ,(code-char 10)
 	        "{var " ,ret ,*js-separator*
+			,@(when (transpiler-stack-locals? *js-transpiler*)
+				`(,*c-indent* "var _locals = []" ,*js-separator*))
 			,@(if no-tags
 				  `(,@(lambda-body x)
                     ("return " ,ret ,*js-separator*))
@@ -129,7 +131,9 @@
   ($ '_I_S x))
 
 (define-js-macro %stack (x)
-  (js-stack x))
+  (if (transpiler-stack-locals? *js-transpiler*)
+  	  `(%transpiler-native "_locals[" ,x "]")
+      (js-stack x)))
 
 (define-js-macro %quote (x)
   (if (not (string= "" (symbol-name x)))
