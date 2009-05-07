@@ -42,8 +42,14 @@
       (c-compiled-number x)
     (stringp x)
 	  (c-compiled-string x)
-	(expex-global-variable? x)
-	  `(treatom_get_value ,(c-compiled-symbol x))
+	(atom x)
+ 	  (if
+	    (funinfo-arg? *expex-funinfo* x)
+		  x
+		(or (funinfo-env-pos *expex-funinfo* x)
+		    (expex-global-variable? x))
+	  	  `(treatom_get_value ,(c-compiled-symbol x))
+		x)
     x))
 
 (defun function-expr? (x)
