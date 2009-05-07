@@ -228,10 +228,6 @@ tre_init (void)
 
 	signal (SIGINT, tre_signal);
 
-#ifdef TRE_HAVE_COMPILED_ENV
-	(void) compiled_cInit ();
-#endif
-
     tre_is_initialized = TRUE;
     tre_interrupt_debugger = TRUE;
 }
@@ -343,6 +339,7 @@ boot:
     c = 1;
     treiostd_divert (treiostd_open_file (TRE_BOOTFILE));
     tremain_init_after_image_loaded ();
+
     tre_main ();
 
 load_error:
@@ -350,6 +347,9 @@ load_error:
     treiostd_undivert ();
 
 user:
+#ifdef TRE_HAVE_COMPILED_ENV
+	(void) compiled_cInit ();
+#endif
 	/* Call init function. */
     if (tre_restart_fun != treptr_nil) {
         treeval (CONS(tre_restart_fun, treptr_nil));
