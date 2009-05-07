@@ -4,6 +4,7 @@
 ;;;; Fourth stage
 
 (env-load "stage4/assoc-hash.lisp")
+(env-load "stage4/assoc-replace.lisp")
 (env-load "stage4/assoc-splice.lisp")
 (env-load "stage4/clr.lisp")
 (env-load "stage4/collect-symbols.lisp")

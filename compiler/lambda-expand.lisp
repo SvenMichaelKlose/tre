@@ -103,21 +103,6 @@
 	(cons (cons doubles. (gensym))
 	  	  (lambda-call-embed-rename-doubles .doubles))))
 
-(defun assoc-replace (x alst)
-  (or (assoc-value x alst)
-	   x))
-
-(defun assoc-replace-many (x alst)
-  (when x
-	 (cons (assoc-replace x. alst)
-		   (assoc-replace-many .x alst))))
-
-(defun funinfo-rename (fi x)
-  (assoc-replace x (funinfo-renamed-vars fi)))
-
-(defun funinfo-rename-many (fi x)
-  (assoc-replace-many x (funinfo-renamed-vars fi)))
-
 (defun lambda-call-embed (fi lambda-call export-lambdas gather)
   (with-lambda-call (args vals body lambda-call)
     (with ((a v) (assoc-splice (argument-expand 'local-var-fun args vals)))

@@ -72,6 +72,12 @@
 	    (awhen (funinfo-parent fi)
 		  (funinfo-in-this-or-parent-env? ! var)))))
 
+(defun funinfo-rename (fi x)
+  (assoc-replace x (funinfo-renamed-vars fi)))
+
+(defun funinfo-rename-many (fi x)
+  (assoc-replace-many x (funinfo-renamed-vars fi)))
+
 ;;;; ENVIRONMENT
 
 (defmacro with-funinfo-env-temporary (fi args &rest body)
