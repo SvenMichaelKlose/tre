@@ -32,13 +32,13 @@
 		 ,(funinfo-lexical-pos (funinfo-parent fi) var)))
 
 (defun make-lexical-1 (fi var)
-  (if (funinfo-env-pos (funinfo-parent fi) var)
+  (if (funinfo-in-args-or-env? (funinfo-parent fi) var)
 	  (make-lexical-place-expr fi var)
 	  (make-lexical-1 (funinfo-parent fi) var)))
 
 (defun make-lexical-0 (fi x)
-  (funinfo-setup-lexical-links (funinfo-parent fi) fi x)
-  (let ret (make-lexical-1  fi x)
+  (funinfo-setup-lexical-links fi x)
+  (let ret (make-lexical-1 fi x)
 	`(%vec ,(make-lexical fi .ret.)
 		   ,..ret.)))
 
@@ -48,44 +48,39 @@
 	  (make-lexical-0 fi x)))
 
 (defun vars-to-stackplaces-atom (fi x)
-  (when x
-    (if
-	  ; Skip item, if it's not in the environment.
-   	  (not (funinfo-in-this-or-parent-env? fi x))
-		x
-	  ; Emit lexical place, except the lexical array itself (it can
-	  ; self-reference for child functions).
-      (and (not (eq (funinfo-lexical fi)
-					 x))
-		   (funinfo-lexical-pos fi x))
-        `(%vec ,(vars-to-stackplaces-atom fi
-										  (funinfo-lexical fi))
-			   ,(funinfo-lexical-pos fi x))
-	  ; Emit argumet instead of its stack-place.
-      (and (not (funinfo-lexical-pos fi x))
-		   (funinfo-arg? fi x))
-		x
-	  ; Emit stack place.
-      (funinfo-env-pos fi x)
-		`(%stack ,(funinfo-env-pos fi x))
-	  ; Emit lexical place (outside the function).
-	  (make-lexical fi x))))
+  (if
+	(or (not x)
+		(not (funinfo-in-this-or-parent-env? fi x)))
+	  x
+	; Emit lexical place, except the lexical array itself (it can
+	; self-reference for child functions).
+	(and (not (eq x (funinfo-lexical fi)))
+		 (funinfo-lexical-pos fi x))
+	  `(%vec ,(vars-to-stackplaces-atom fi (funinfo-lexical fi))
+			 ,(funinfo-lexical-pos fi x))
+	(funinfo-arg? fi x)
+	  x
+	; Emit stack place.
+	(funinfo-env-pos fi x)
+	  `(%stack ,(funinfo-env-pos fi x))
+	; Emit lexical place (outside the function).
+	(make-lexical fi x)))
 
 (defun vars-to-stackplaces (fi x)
-  (if (atom x)
-	  (vars-to-stackplaces-atom fi x)
-      (if
-		(%quote? x)
-		  x
-		(lambda? x) ; Add variables to ignore in subfunctions.
-	      `#'(,@(lambda-funinfo-expr x)
-			  ,(lambda-args x)
-			     ,@(vars-to-stackplaces fi (lambda-body x)))
-	    (%slot-value? x)
-	      `(%slot-value ,(vars-to-stackplaces fi .x.)
-						,..x.)
-	    (cons (vars-to-stackplaces fi x.)
-			  (vars-to-stackplaces fi .x)))))
+  (if
+	(atom x)
+	  (vars-to-stackplaces-atom fi x) ;(funinfo-rename fi x))
+	(%quote? x)
+	  x
+	(lambda? x) ; XXX Add variables to ignore in subfunctions.
+      `#'(,@(lambda-funinfo-expr x)
+		  ,(lambda-args x)
+		     ,@(vars-to-stackplaces fi (lambda-body x)))
+    (%slot-value? x)
+      `(%slot-value ,(vars-to-stackplaces fi .x.)
+					,..x.)
+    (cons (vars-to-stackplaces fi x.)
+		  (vars-to-stackplaces fi .x))))
 
 ;;;; LAMBDA inlining
 
@@ -96,6 +91,33 @@
 			   stack-places values)
      ,@body))
 
+(defun lambda-call-embed-find-doubles (fi x)
+  (when x
+    (if (funinfo-in-args-or-env? fi x.)
+	    (cons x.
+			  (lambda-call-embed-find-doubles fi .x))
+	    (lambda-call-embed-find-doubles fi .x))))
+
+(defun lambda-call-embed-rename-doubles (doubles)
+  (when doubles
+	(cons (cons doubles. (gensym))
+	  	  (lambda-call-embed-rename-doubles .doubles))))
+
+(defun assoc-replace (x alst)
+  (or (assoc-value x alst)
+	   x))
+
+(defun assoc-replace-many (x alst)
+  (when x
+	 (cons (assoc-replace x. alst)
+		   (assoc-replace-many .x alst))))
+
+(defun funinfo-rename (fi x)
+  (assoc-replace x (funinfo-renamed-vars fi)))
+
+(defun funinfo-rename-many (fi x)
+  (assoc-replace-many x (funinfo-renamed-vars fi)))
+
 (defun lambda-call-embed (fi lambda-call export-lambdas gather)
   (with-lambda-call (args vals body lambda-call)
     (with ((a v) (assoc-splice (argument-expand 'local-var-fun args vals)))
@@ -103,22 +125,23 @@
 	  ; temporarily to make stack-places; so the stack-places can be
 	  ; reused by the next lambda-call on the same level.
       ;(with-funinfo-env-temporary fi args
-      (dolist (i a)
-		(unless (funinfo-env-pos fi i)
-		  (funinfo-env-add fi i)))
-      (make-inline-body
-		  (vars-to-stackplaces fi a)
-      	  v
-		  (lambda-expand-gather-or-transform fi body export-lambdas gather)))));)
+;      (with-temporary (funinfo-renamed-vars fi)
+;      				  (append (lambda-call-embed-rename-doubles
+;          				  		  (lambda-call-embed-find-doubles fi a))
+;							  (funinfo-renamed-vars fi))
+	    (funinfo-env-add-many fi a) ;(funinfo-rename-many fi a))
+        (make-inline-body
+		    (vars-to-stackplaces fi a)
+      	    v
+		    (lambda-expand-gather-or-transform fi body export-lambdas gather))))););)
 
 ;;; Export
 
 (defun make-var-declarations (fi)
   (vars-to-stackplaces fi
-    (mapcan (fn (unless (and (not (eq (funinfo-lexical fi)
-									  _))
-						 	 (or (funinfo-arg? fi _)
-						    	 (funinfo-lexical-pos fi _)))
+    (mapcan (fn (unless (or (transpiler-stack-locals? *current-transpiler*)
+ 							(and (not (eq _ (funinfo-lexical fi)))
+								 (funinfo-lexical-pos fi _)))
 				  `((%var ,_))))
 	        (funinfo-env fi))))
 
@@ -160,13 +183,15 @@
 	  exported)))
 
 ;;; Export gathering
+;;;
+;;; XXX as far as I now understand a gathering pass is not required
+;;; anymore since we can build the tree at once.
 
 (defun lambda-export-gather-child-make-funinfo (fi)
   (with ((args exported-closures) (lambda-expand (lambda-args x)
 												 t))
 	(lambda-expand-add-closures exported-closures)
-    (make-funinfo :env args
-			      :args args
+    (make-funinfo :args args
 			      :parent fi)))
 
 ;; Do a gathering expansion. Builds FUNINFO tree.
@@ -190,8 +215,7 @@
               (lambda-export-gather fi x)
               (lambda-export-transform fi x))
 		  `#'(,@(make-lambda-funinfo-if-missing x
-				  (make-funinfo :env (lambda-args x)
-								:args (lambda-args x)
+				  (make-funinfo :args (lambda-args x)
 								:parent fi))
 			  ,(lambda-args x)
 			  ,@(lambda-body x)))
@@ -228,8 +252,7 @@
 			       (lambda-args x.))
          imported	(get-lambda-funinfo x.)
          fi			(or imported
-						(make-funinfo :env forms
-							  		  :args forms)))
+						(make-funinfo :args forms)))
     (values
 	    `#'(,@(make-lambda-funinfo-if-missing x. fi)
 		    ,(lambda-args x.)
