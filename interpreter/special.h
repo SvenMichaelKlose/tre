@@ -21,6 +21,6 @@ extern treptr trespecial (treptr func, treptr expr);
 extern void trespecial_init (void);
 
 /* for compiled code */
-extern treptr trespecial_apply (treptr);
+extern treptr trespecial_apply_compiled (treptr);
 
 #endif	/* #ifndef TRE_SPECIAL_H */

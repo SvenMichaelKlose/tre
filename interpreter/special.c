@@ -118,6 +118,95 @@ trespecial_apply (treptr list)
     return res;
 }
 
+/*
+ * Convert APPLY arguments into simple list
+ *
+ * The last element of the list must be a list which is copied and
+ * appended to the second last element. The last list is copied because
+ * it'd be removed as a part of the temporary argument list.
+ */
+treptr
+trespecial_apply_compiled_args (treptr list)
+{
+    treptr i;
+    treptr last;
+
+    RETURN_NIL(list); /* No arguments. */
+
+    /* Handle single argument. */
+    if (CDR(list) == treptr_nil) {
+        list = CAR(list);
+        if (TREPTR_IS_ATOM(list) && list != treptr_nil)
+            goto error;
+		return list;
+    }
+
+    /* Handle two or more arguments. */
+    DOLIST(i, list) {
+        if (CDDR(i) != treptr_nil)
+            continue;
+        if (CADR(i) == treptr_nil)
+	    	break;
+
+		RPLACA(i, CAR(i));
+        last = CADR(i);
+        if (TREPTR_IS_ATOM(last) && last != treptr_nil)
+            goto error;
+
+        RPLACD(i, last);
+        break;
+    }
+
+    return list;
+
+error:
+    return treerror (list, "last argument must be a list "
+                           "(waiting for new argument list)");
+}
+
+/*tredoc
+  (cmd :name APPLY
+	(arg :type function)
+	(args :type any)
+	(descr "Call function with argument list.")
+	(returns "Whatever the called function returns."))
+ */
+treptr
+trespecial_apply_compiled (treptr list)
+{
+    treptr  func;
+    treptr  args;
+    treptr  fake;
+    treptr  efunc;
+    treptr  res;
+
+    if (list == treptr_nil)
+		return treerror (list, "arguments expected");
+
+    func = CAR(list);
+    args = trespecial_apply_compiled_args (trelist_copy (CDR(list)));
+
+    fake = CONS(func, args);
+    tregc_push (fake);
+
+    efunc = treeval (func);
+    RPLACA(fake, efunc);
+
+    if (TREPTR_IS_FUNCTION(efunc))
+        res = treeval_funcall (efunc, fake, FALSE);
+    else if (TREPTR_IS_BUILTIN(efunc))
+        res = treeval_xlat_function (treeval_xlat_builtin, efunc, fake, FALSE);
+    else if (TREPTR_IS_SPECIAL(efunc))
+        res = trespecial (efunc, fake);
+    else
+        res = treerror (func, "function expected");
+
+    tregc_pop ();
+    TRELIST_FREE_EARLY(fake);
+
+    return res;
+}
+
 /* Test if expression is an evaluated RETURN-FROM. */
 bool
 treeval_is_return (treptr x)
