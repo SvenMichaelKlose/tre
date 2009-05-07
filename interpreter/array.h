@@ -1,6 +1,6 @@
 /*
- * nix operating system project tre interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * TRE interpreter
+ * Copyright (c) 2005-2007,2009 Sven Klose <pixel@copei.de>
  *
  * Array-related section.
  */
@@ -15,6 +15,9 @@ extern void trearray_free (treptr);
 extern ulong trearray_get_size (treptr sizes);
 
 extern struct tre_sequence_type trearray_seqtype;
+
+/* for compiled code */
+extern treptr trearray_make (ulong size);
 
 #define TREARRAY_SIZE(arr) (trearray_get_size (TREATOM_VALUE(arr)))
 

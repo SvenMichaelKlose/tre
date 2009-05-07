@@ -68,6 +68,27 @@ trearray_get (treptr sizes)
     return a;
 }
 
+#include "gc.h"
+
+/* Create a one-dimensional array for compiled code. */
+treptr
+trearray_make (ulong size)
+{
+	treptr n;
+	treptr s;
+	treptr ret;
+
+	n = trenumber_get ((double) size);
+	tregc_push (n);
+	s = CONS(n, treptr_nil);
+	tregc_push (s);
+	ret = trearray_get (s);
+	tregc_pop ();
+	tregc_pop ();
+
+    return ret;
+}
+
 /*
  * Free array.
  *
