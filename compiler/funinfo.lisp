@@ -29,8 +29,9 @@
 
   (parent niL)
 
-  (ghost niL)
+  ; Array of local variables passed to child function via ghost argument.
   (lexical niL)
+  (ghost niL)
 
   ; Number of jump tags in body.
   (num-tags nil)
@@ -151,7 +152,7 @@
 	  (error "couldn't find ~A in environment" var))
     (funinfo-add-free-var fi var)
     (funinfo-link-lexically fi)
-    (if (funinfo-env-pos fi-parent var)
+    (if (funinfo-in-args-or-env? fi-parent var)
 	    (funinfo-add-lexical fi-parent var)
         (funinfo-setup-lexical-links fi-parent var))))
 
