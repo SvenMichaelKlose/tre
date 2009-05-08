@@ -57,7 +57,7 @@
 	   (eq 'FUNCTION x.)))
 
 (defun c-make-%setq-funcall (x f)
-  `(%setq ,(second x) (trespecial_apply
+  `(%setq ,(second x) (trespecial_apply_compiled
 						       ,(compiled-list (append (list f)
 													   (cdr (third x)))))))
 
