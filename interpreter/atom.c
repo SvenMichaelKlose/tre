@@ -164,6 +164,12 @@ treatom_get_value (treptr atom)
 }
 
 treptr
+treatom_get_function (treptr atom)
+{
+    return TREATOM_FUN(atom);
+}
+
+treptr
 treatom_set_function (treptr atom, treptr value)
 {
 	if (TREATOM_FUN(atom) != treptr_nil && TREATOM_BINDING(atom) == treptr_nil)

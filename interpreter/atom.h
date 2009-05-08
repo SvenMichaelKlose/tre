@@ -71,6 +71,7 @@ extern treptr treatom_number_get (double, int type);
 extern treptr trenumber_get (double);
 extern treptr trechar_get (double);
 extern treptr treatom_get_value (treptr atom);
+extern treptr treatom_get_function (treptr atom);
 extern treptr treatom_register_compiled_function (treptr sym, void * fun);
 
 extern treptr treatom_alloc (char *symbol, treptr package, int type, treptr value);
