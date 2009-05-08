@@ -125,9 +125,11 @@
 (defun expex-argexpand-0 (ex fun args)
   (funcall (expex-function-collector ex) fun args)
   (let argdef (funcall (expex-function-arguments ex) fun)
-    (if (expex-expandable-args? ex fun argdef)
-        (argument-expand-compiled-values fun argdef args)
-	    args)))
+	(if (eq argdef 'builtin)
+		args
+  	    (if (expex-expandable-args? ex fun argdef)
+      	    (argument-expand-compiled-values fun argdef args)
+    	    args))))
 
 ;; Expand arguments if they are passed to a function.
 (defun expex-argexpand (ex x)
