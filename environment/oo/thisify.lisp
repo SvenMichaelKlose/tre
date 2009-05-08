@@ -9,50 +9,52 @@
 		  (awhen (class-parent clsdesc)
 			(thisify-collect-methods-and-members !))))
 
-(defun thisify-list (classes x cls)
-  (with (clsdesc (href classes cls)
-  		 classdef (thisify-collect-methods-and-members clsdesc)
-    	 thisify-symbol
-		     #'((x exclusions)
-                  (aif (and classdef
-               				(not (or (numberp x)
-                           			 (stringp x)))
-							(not (find x exclusions))
-						    (assoc x classdef))
-                       `(%slot-value this ,x)
-					   x))
-  	       rec
-		     #'((x exclusions)
-			      (if
-					(atom x)
-	                  (thisify-symbol x exclusions)
-					(lambda? x)
-					  `#'(,@(lambda-funinfo-expr x)
-						  ,(lambda-args x)
-							 ,@(rec (lambda-body x)
-									(append exclusions
-											(lambda-args x))))
-	                (cons (if (%slot-value? x.)
-							  `(%slot-value ,(rec (second x.)
-												  exclusions)
-									        ,(third x.))
-		                	  (rec x. exclusions))
-			              (rec .x exclusions)))))
-      (rec x nil)))
+(defun thisify-symbol (classdef x exclusions)
+  (aif (and classdef
+			(not (or (numberp x)
+           			 (stringp x)))
+			(not (find x exclusions))
+		    (assoc x classdef))
+       `(%slot-value this ,x)
+	   x))
 
-(defun %thisify? (x)
-  (and (consp x)
-	   (eq '%THISIFY (first x))))
-	  
+(defun thisify-list-0 (classdef x exclusions)
+  (if
+	(atom x)
+      (thisify-symbol classdef x exclusions)
+	(lambda? x)
+	  `#'(,@(lambda-funinfo-expr x)
+		  ,(lambda-args x)
+		  ,@(thisify-list-0 classdef
+				 		   (lambda-body x)
+				 		   (append exclusions
+								   (lambda-args x))))
+    (cons (if (%slot-value? x.)
+			  `(%slot-value ,(thisify-list-0 classdef
+								 			 (second x.)
+								  			 exclusions)
+					        ,(third x.))
+			  (thisify-list-0 classdef x. exclusions))
+		  (thisify-list-0 classdef .x exclusions))))
+
+;; Thisify class members inside found %THISIFY.
+(defun thisify-list (classes x cls)
+  (thisify-list-0 (thisify-collect-methods-and-members
+				      (href classes cls))
+				      x
+				      nil))
+
+(def-head-predicate %thisify)
+
+;; Search %THISIFY-expressions and treat them accordingly.
 (defun thisify (classes x)
-  (with (find-%thisify-exprs
-		   (fn (if
-				 (atom _)
-				   _
-				 (%thisify? _.)
-				   (append (thisify-list classes
-										 (cddr _.)
-										 (second _.))
-						   (find-%thisify-exprs ._))
-				 (traverse #'find-%thisify-exprs _))))
-    (find-%thisify-exprs x)))
+  (if
+	 (atom x)
+	   x
+	 (%thisify? x.)
+	   (append (thisify-list classes
+							 (cddr x.)
+							 (second x.))
+			   (thisify classes .x))
+	 (cons (thisify classes x.)
+	 	   (thisify classes .x))))
