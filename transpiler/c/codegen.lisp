@@ -57,15 +57,18 @@
 	      "}" ,*c-newline*))))
 
 ;; XXX same in js-transpiler
-(define-c-macro %setq (dest val)
-  `("    "
-	(%transpiler-native ,dest) "="
+(defun codegen-%setq (dest val)
+  `((%transpiler-native ,dest) "="
         ,(if (and (consp val)
                   (not (stringp val.))
                   (not (in? val.
                             '%transpiler-string '%transpiler-native)))
              `(,val. ,@(parenthized-comma-separated-list .val))
-             val)
+             val)))
+
+(define-c-macro %setq (dest val)
+  `(,*c-indent*
+	,@(codegen-%setq dest val)
     ,*c-separator*))
 
 (define-c-macro %setq-atom (dest val)
@@ -73,10 +76,13 @@
 		,val
 		")" ,*c-separator*))
 
+;; XXX used for local functions
 (define-c-macro %set-atom-fun (dest val)
-  `(%transpiler-native ,*c-indent* "treatom_set_function (" ,dest " ,"
-		,val
-		")" ,*c-separator*))
+  `(%transpiler-native ,dest "=" ,val))
+
+;  `(%transpiler-native "treatom_set_function (" ,dest " ,"
+;		,val
+;		")" ,*c-separator*))
 
 (define-c-macro %var (name)
   `(%transpiler-native ,*c-indent* "treptr " ,name ,*c-separator*))
@@ -138,3 +144,6 @@
 ;; Lexical scope
 (define-c-macro make-array (size)
   `("trearray_get (_trelist_get (" ,(c-compiled-number size) ", treptr_nil))"))
+
+(define-c-macro symbol-function (x)
+  `("treatom_get_function (" ,x ")"))
