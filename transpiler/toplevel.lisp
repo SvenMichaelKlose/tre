@@ -25,8 +25,6 @@
 	; Do an expression expand to collect the names of required
 	; functions and variables. It is done again later when all
 	; definitions are visible.
-;(format t "Gathering expression expansion~%")
-;(print tmp)
 	(transpiler-expression-expand tr tmp)
 	tmp))
 
