@@ -15,5 +15,6 @@ extern treptr trebuiltin (treptr func, treptr expr);
 
 /* for compiled code */
 extern treptr trebuiltin_print (treptr);
+extern treptr trebuiltin_eval (treptr);
 
 #endif	/* #ifndef TRE_BUILTIN_H */
