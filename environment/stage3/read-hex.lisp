@@ -3,8 +3,8 @@
 
 (defun hex-digit-char-p (x)
   (or (digit-char-p x)
-      (and (>= c #\A) (<= c #\F))
-      (and (>= c #\a) (<= c #\f))))
+      (and (>= x #\A) (<= x #\F))
+      (and (>= x #\a) (<= x #\f))))
 
 (defun read-hex (str)
   (with (rec #'((&optional (v 0) (n 0))
