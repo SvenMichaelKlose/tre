@@ -50,10 +50,3 @@
   (transpiler-reset *js-transpiler*)
   (transpiler-switch-obfuscator *js-transpiler* obfuscate?)
   (js-transpile-0 out files))
-
-;; XXX defunct
-(defun js-machine (outfile)
-  (with-open-file f (open outfile :direction 'output)
-    (format f "~A"
-			(transpiler-concat-strings
-			  (transpiler-wanted *js-transpiler* #'transpiler-expand-and-generate-code (reverse *UNIVERSE*))))))
