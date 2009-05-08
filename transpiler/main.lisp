@@ -34,8 +34,8 @@
 (env-load "../transpiler/c/core.lisp")
 (env-load "../transpiler/c/toplevel.lisp")
 
-(env-load "../transpiler/javascript/config.lisp")
 (env-load "../transpiler/javascript/expex.lisp")
+(env-load "../transpiler/javascript/config.lisp")
 (env-load "../transpiler/javascript/expand.lisp")
 (env-load "../transpiler/javascript/codegen.lisp")
 (env-load "../transpiler/javascript/codegen-inline.lisp")
