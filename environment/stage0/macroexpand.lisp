@@ -9,16 +9,14 @@
                  (cons '*macroexpand-backquote-diversion*
                  (cons '*macrocall-diversion*
 				 (cons '%macroexpand
-				 (cons '*expanded-macro?*
 				 (cons %macroexpand-backquote
 				 (cons %%macrop
 				 (cons %%macrocall
 				 (cons %macroexpand-list
-				 (cons %macroexpand-call *universe*)))))))))))
+				 (cons %macroexpand-call *universe*))))))))))
 
 (setq *macrop-diversion* nil
       *macrocall-diversion* nil
-      *expanded-macro?* nil
       *current-macro* nil)
 (setq *variables* (cons (cons '*macrop-diversion* nil)
       			  (cons (cons '*macrocall-diversion* nil)
@@ -64,7 +62,6 @@
 
 (%set-atom-fun %macroexpand-xlat
   #'((%g)
-       (setq *expanded-macro?* t)
        (setq *current-macro* (car %g))
        (#'((%g)
              (setq *current-macro* nil)
