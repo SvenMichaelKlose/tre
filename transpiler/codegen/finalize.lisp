@@ -6,7 +6,7 @@
 ;; Make jump labels.
 ;; Remove (IDENTITY ~%RET)  expressions.
 ;; Add %VAR declarations for expex symbols.
-(defun transpiler-finalize-sexprs (tr x)
+(defun transpiler-finalize-sexprs (tr x &optional (toplevel t))
   (when x
 	(with (a          x.
 		   ret		  (transpiler-obfuscate tr '~%ret))
@@ -31,12 +31,14 @@
 				(transpiler-finalize-sexprs tr .x))
 
 		; Recurse into named top-level function.
-		(eq 'function a.)
+		(and toplevel
+			 (eq 'function a.))
 		  (cons `(function
 				   ,(second a) ; name
 				   (,@(lambda-funinfo-and-args (third a))
 				       ,(transpiler-finalize-sexprs tr
-						    (lambda-body (third a)))))
+						    (lambda-body (third a))
+							nil)))
 				 (transpiler-finalize-sexprs tr .x))
 
 		; Ignore (IDENTITY ~%RET).
