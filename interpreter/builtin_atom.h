@@ -1,6 +1,6 @@
 /*
- * nix operating system project tre interpreter
- * Copyright (c) 2005-2006, 2008 Sven Klose <pixel@copei.de>
+ * TRE interpreter
+ * Copyright (c) 2005-2006, 2008-2009 Sven Klose <pixel@copei.de>
  *
  * Built-in functions
  */
@@ -18,6 +18,7 @@ extern treptr treatom_builtin_symbol_package (treptr);
 extern treptr treatom_builtin_set_symbol_package (treptr);
 extern treptr treatom_builtin_set_atom_fun (treptr);
 extern treptr treatom_builtin_functionp (treptr);
+extern treptr treatom_builtin_builtinp (treptr);
 extern treptr treatom_builtin_boundp (treptr);
 extern treptr treatom_builtin_fboundp (treptr);
 extern treptr treatom_builtin_macrop (treptr);
