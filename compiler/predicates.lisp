@@ -7,11 +7,6 @@
   (or (functionp x)
       (macrop x)))
 
-(defmacro def-head-predicate (sym)
-  `(defun ,($ sym '?) (x)
-     (and (consp x)
-	      (eq ',sym x.))))
-
 (mapcar-macro x
 	'(quote %quote backquote identity %new)
   `(def-head-predicate ,x))
