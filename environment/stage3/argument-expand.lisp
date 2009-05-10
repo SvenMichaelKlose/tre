@@ -56,7 +56,7 @@
 ;; returned.
 ;;
 ;; 'fun' is only used for error messages.
-(defun argument-expand2 (fun adef alst apply-values
+(defun argument-expand-0 (fun adef alst apply-values
 						 &optional (no-static nil)
 								   (argdefs nil)
 								   (key-args nil)
@@ -153,7 +153,7 @@
 					   no-static))
 				(and apply-values (atom vals.)
 					 (err "sublist expected for argument ~A" num))
-				(%nconc (argument-expand2 fun def. vals. apply-values)
+				(%nconc (argument-expand-0 fun def. vals. apply-values)
 					    (exp-main .def .vals)))
 
 		 exp-check-too-many
@@ -193,8 +193,8 @@
 
 (defun argument-expand (fun def vals &optional (apply-values t))
   (if apply-values
-	  (argument-expand2 fun def vals apply-values)
-	  (carlist (argument-expand2 fun def vals apply-values))))
+	  (argument-expand-0 fun def vals apply-values)
+	  (carlist (argument-expand-0 fun def vals apply-values))))
 
 (defun argument-expand-names (fun def)
   (argument-expand fun def nil nil))
