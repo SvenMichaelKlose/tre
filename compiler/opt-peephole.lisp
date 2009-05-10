@@ -153,7 +153,6 @@
 
       ; Remove second of (setf x y y x).
 	  ((and (%setq? a)
-	     	(consp d)
 			(%setq? d.)
 			(eq .a. (third d.))
 			(eq (second d.) ..a.))
@@ -170,14 +169,7 @@
 	  ; Remove code after label until next tag.
 	  ((and (consp a)
 			(eq 'vm-go a.))
-		 (cons a (opt-peephole-remove-void (opt-peephole-find-next-tag d))))
-
-	  ; Shorten (%setq expexsym sth) (%setq sth expexsym).
-	  ((and (%setq? a) (%setq? d.)
-	        (expex-sym? .a.)
-		    (eq .a. (third d.)))
-	     (cons `(%setq ,(second d.) ,..a.)
-			   (opt-peephole-remove-void .d)))))
+		 (cons a (opt-peephole-remove-void (opt-peephole-find-next-tag d))))))
 
 (defun opt-peephole-will-be-set-again? (x v)
   (if x
@@ -227,7 +219,7 @@
 					             x))
 					   (funcall
 						 (compose ;#'reduce-tags
-								  #'remove-code
+								  ;#'remove-code
 								  #'opt-peephole-remove-void)
 						 x))))
 
