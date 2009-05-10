@@ -17,28 +17,6 @@
 	(transpiler-add-wanted-function *js-transpiler* x))
   `(function ,x))
 
-(defun head-if (predicate x &key (butlast nil))
-  (when x
-	(if (and (funcall predicate x.)
-			 (or (not keep-last)
-				 .x))
-		(cons x.
-			  (head-if predicate .x :butlast butlast)))))
-
-(defun head-atoms (x &key (butlast nil))
-  (head-if #'atom x :butlast butlast))
-
-(defun tail-after-if (predicate x &key (keep-last nil))
-  (when x
-	(if (and (funcall predicate x.)
-			 (or (not keep-last)
-				 .x))
-		(tail-after-if predicate .x :keep-last keep-last)
-		x)))
-
-(defun tail-after-atoms (x &key (keep-last nil))
-  (tail-after-if #'atom x :keep-last keep-last))
-
 (defun js-assert-body (x)
   (if (and (not *assert*)
            (stringp body.))
