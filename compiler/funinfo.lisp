@@ -114,6 +114,11 @@
   (funinfo-env-add fi x)
   `(%stack ,(funinfo-env-pos fi x)))
 
+(defun funinfo-env-all (fi)
+  (append (funinfo-env fi)
+		  (awhen (funinfo-parent fi)
+			(funinfo-env-all !))))
+
 ;;;; CLOSURES
 
 (define-slot-setter-push! funinfo-add-closure fi
