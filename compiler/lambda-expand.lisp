@@ -69,7 +69,7 @@
 (defun vars-to-stackplaces (fi x)
   (if
 	(atom x)
-	  (vars-to-stackplaces-atom fi x) ;(funinfo-rename fi x))
+	  (vars-to-stackplaces-atom fi (funinfo-rename fi x))
 	(%quote? x)
 	  x
 	(lambda? x) ; XXX Add variables to ignore in subfunctions.
@@ -91,17 +91,17 @@
 			   stack-places values)
      ,@body))
 
-(defun lambda-call-embed-find-doubles (fi x)
+(defun funinfo-find-doubles (fi x)
   (when x
     (if (funinfo-in-args-or-env? fi x.)
-	    (cons x.
-			  (lambda-call-embed-find-doubles fi .x))
-	    (lambda-call-embed-find-doubles fi .x))))
+	    (cons (print x.)
+			  (funinfo-find-doubles fi .x))
+	    (funinfo-find-doubles fi .x))))
 
-(defun lambda-call-embed-rename-doubles (doubles)
+(defun funinfo-rename-doubles (doubles)
   (when doubles
 	(cons (cons doubles. (gensym))
-	  	  (lambda-call-embed-rename-doubles .doubles))))
+	  	  (funinfo-rename-doubles .doubles))))
 
 (defun lambda-call-embed (fi lambda-call export-lambdas gather)
   (with-lambda-call (args vals body lambda-call)
@@ -110,15 +110,15 @@
 	  ; temporarily to make stack-places; so the stack-places can be
 	  ; reused by the next lambda-call on the same level.
       ;(with-funinfo-env-temporary fi args
-;      (with-temporary (funinfo-renamed-vars fi)
-;      				  (append (lambda-call-embed-rename-doubles
-;          				  		  (lambda-call-embed-find-doubles fi a))
-;							  (funinfo-renamed-vars fi))
-	    (funinfo-env-add-many fi a) ;(funinfo-rename-many fi a))
+      (with-temporary (funinfo-renamed-vars fi)
+      				  (append (funinfo-rename-doubles
+          				  		  (funinfo-find-doubles fi a))
+							  (funinfo-renamed-vars fi))
+	    (funinfo-env-add-many fi (funinfo-rename-many fi a))
         (make-inline-body
 		    (vars-to-stackplaces fi a)
       	    v
-		    (lambda-expand-gather-or-transform fi body export-lambdas gather))))););)
+		    (lambda-expand-gather-or-transform fi body export-lambdas gather))))));)
 
 ;;; Export
 
@@ -149,8 +149,17 @@
 		  .body
 		  body)))
 
+(defun lambda-export-rename (fi fi-child)
+  (setf (funinfo-renamed-vars fi-child)
+		(append (funinfo-renamed-vars fi)
+		  		(funinfo-rename-doubles
+					(funinfo-find-doubles fi (funinfo-args fi-child)))))
+  (setf (funinfo-args fi-child)
+		(funinfo-rename-many fi-child (funinfo-args fi-child))))
+
 (defun lambda-export-make-exported (fi fi-child x)
   (with-gensym name
+	(lambda-export-rename fi fi-child)
 	(lambda-expand-add-closure
         `((defun ,name ,(append (make-lambda-funinfo fi-child)
 							    (funinfo-args fi-child))
