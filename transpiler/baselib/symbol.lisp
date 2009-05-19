@@ -22,12 +22,14 @@
 ;; XXX rename to %QUOTE ?
 (define-native-js-fun %lookup-symbol (name pkg)
   no-args
-  ; Make package if missing.
-  (or (aref *symbols* pkg)
-	  (setf (aref *symbols* pkg) (make-array)))
-  ; Get or make symbol.
-  (or (aref (aref *symbols* pkg) name)
-	  (setf (aref (aref *symbols* pkg) name) (new %symbol name pkg))))
+  (unless (and (%%%= "NIL" name)
+			   (not pkg))
+    ; Make package if missing.
+    (or (aref *symbols* pkg)
+	    (setf (aref *symbols* pkg) (make-array)))
+    ; Get or make symbol.
+    (or (aref (aref *symbols* pkg) name)
+	    (setf (aref (aref *symbols* pkg) name) (new %symbol name pkg)))))
 
 (define-native-js-fun symbol (name pkg)
   no-args
