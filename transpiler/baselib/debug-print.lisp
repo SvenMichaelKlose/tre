@@ -1,35 +1,43 @@
 ;;;;; Transpiler: TRE to JavaScript
 ;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
 
-(defun js-print-cons-r (x)
+(defun js-print-cons-r (x doc)
   (when x
-    (js-print x.)
+    (js-print x. doc)
     (if (consp .x)
-	    (js-print-cons-r .x)
+	    (js-print-cons-r .x doc)
 	    (when .x
-		  (logwindow.document.write " . ")
-		  (logwindow.document.write .x)))))
+		  (doc.write " . ")
+		  (js-print-atom .x doc)))))
 
-(defun js-print-cons (x)
-  (logwindow.document.write "(")
-  (js-print-cons-r x)
-  (logwindow.document.write ")"))
+(defun js-print-cons (x doc)
+  (doc.write "(")
+  (js-print-cons-r x doc)
+  (doc.write ")"))
 
-(defun js-print (x)
-  (if
-	(consp x)
-	  (js-print-cons x)
-	(logwindow.document.write
-	  (+ (if
-		   (symbolp x)
-	         (symbol-name x)
-	       (characterp x)
-		     (+ "#\\\\" (*string.from-char-code (char-code x)))
-	       (arrayp x)
-	         "{array}"
-	       (stringp x)
-	         (+ "\\\"" x "\\\"")
-		   (when x
-			 (string x)))
-		 " ")))
+(defun js-print-symbol (x)
+  (+ (if (keywordp x)
+		 ":"
+		 "")
+	 (symbol-name x)))
+
+(defun js-print-atom (x doc)
+  (doc.write
+    (+ (if
+	     (symbolp x)
+	       (js-print-symbol x)
+	     (characterp x)
+		   (+ "#\\" (*string.from-char-code (char-code x)))
+	     (arrayp x)
+	       "{array}"
+	     (stringp x)
+	       (+ "\"" x "\"")
+		 (when x
+		   (string x)))
+	   " ")))
+
+(defun js-print (x &optional (doc logwindow.document))
+  (if (consp x)
+	  (js-print-cons x doc)
+	  (js-print-atom x doc))
   x)
