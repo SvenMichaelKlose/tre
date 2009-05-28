@@ -18,10 +18,10 @@
   `(function ,x))
 
 (defun js-assert-body (x)
-  (if (and (not *assert*)
-           (stringp body.))
-      .body
-      body))
+  (if (and (not *transpiler-assert*)
+           (stringp x.))
+      .x
+      x))
 
 ;; (DEFUN ...)
 ;;
@@ -29,7 +29,7 @@
 ;; XXX This could be generic if there wasn't *JS-TRANSPILER*.
 (defun js-essential-defun (name args &rest body)
   (when *show-definitions*
-    (print `(defun ,name)))
+    (late-print `(defun ,name ,args)))
   (with (n (%defun-name name)
 		 tr *js-transpiler*
 		 fi-sym (when (eq '%funinfo args.)
@@ -60,7 +60,7 @@
 
 (define-js-std-macro defmacro (name &rest x)
   (when *show-definitions*
-    (print `(defmacro ,name )))
+    (late-print `(defmacro ,name ,x.)))
   (eval (transpiler-macroexpand *js-transpiler*
 								`(define-js-std-macro ,name ,@x)))
   nil)
@@ -68,7 +68,7 @@
 (define-js-std-macro defvar (name val)
   (let tr *js-transpiler*
     (when *show-definitions*
-      (print `(defvar ,name)))
+      (late-print `(defvar ,name)))
     (when (transpiler-defined-variable tr name)
       (error "variable ~A already defined" name))
     (transpiler-add-defined-variable tr name)
@@ -106,9 +106,10 @@
 
 ;; Make object if first argument is not a keyword, or string.
 (define-js-std-macro new (&rest x)
-  (if (and (consp x)
-		   (or (keywordp x.)
-			   (stringp x.)))
+  (unless x
+	(error "NEW expects arguments"))
+  (if (or (keywordp x.)
+		  (stringp x.))
 	  (js-transpiler-make-new-hash x)
 	  (js-transpiler-make-new-object x)))
 
@@ -144,3 +145,11 @@
 (define-js-std-macro dont-obfuscate (&rest symbols)
   (apply #'transpiler-add-obfuscation-exceptions *js-transpiler* symbols)
   nil)
+
+(define-js-std-macro assert (x &optional (txt nil) &rest args)
+  (when *transpiler-assert*
+    (make-assertion x txt args)))
+
+(define-js-std-macro declare (&rest x)
+  (when *transpiler-assert*
+    `(declare ,@x)))

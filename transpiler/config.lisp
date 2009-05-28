@@ -6,6 +6,8 @@
 ;; Set this when starting up your transpiler run.
 (defvar *current-transpiler* nil)
 
+(defvar *transpiler-assert* nil)
+
 (defstruct transpiler
   std-macro-expander
   macro-expander
@@ -64,6 +66,8 @@
   (stack-locals? nil)
 
   (apply-argdefs? nil)
+
+  (inject-function-names? nil)
 
   ; You shouldn't have to tweak these at construction-time:
   (symbol-translations nil)
