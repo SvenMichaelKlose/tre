@@ -8,6 +8,9 @@
 ;;
 ;; See also macro BIND in 'expand.lisp'.
 (defun %bind (obj fun)
+  (when-debug
+	(unless (functionp fun)
+	  (js-print fun logwindow.document)))
   (assert (functionp fun) "BIND requires a function")
   #'(()
 	  ,(if *exported-lambdas*
