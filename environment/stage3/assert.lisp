@@ -5,7 +5,10 @@
 
 (defvar *assert* t)
 
+(defun make-assertion (x &optional (txt nil) (args nil))
+  `(unless ,x
+	 (error (+ "assertion failed: " ,txt) ,@args)))
+
 (defmacro assert (x &optional (txt nil) &rest args)
   (when *assert*
-    `(unless ,x
-	   (error (+ "assertion failed: " ,txt) ,@args))))
+	(make-assertion x txt args)))
