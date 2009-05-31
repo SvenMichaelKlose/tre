@@ -9,6 +9,11 @@
 	  %stack %vec %setq)
   `(def-head-predicate ,x))
 
+(defun atomic? (x)
+  (or (atom x)
+	  (%stack? x)
+	  (%slot-value? x)))
+
 (defun vm-jump? (e)
   (and (consp e)
 	   (in? e. 'VM-GO 'VM-GO-NIL)))
