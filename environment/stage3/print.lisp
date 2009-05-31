@@ -50,8 +50,8 @@
       t)))
 
 (defun %print-rest (c str)
-  (late-print c. str)
-  (with (x .c)
+  (%late-print c. str)
+  (let x .c
     (if x
         (if (consp x)
             (progn
@@ -60,7 +60,7 @@
 	        (progn
 			  (format str " . ")
               (%print-atom x str)))
-        (format str ")~%"))))
+        (format str ")"))))
 
 (defun %print-cons (x str)
   (princ #\( str)
@@ -85,8 +85,12 @@
 	(stringp x) (%print-string x str)
 	(%print-symbol x str)))
 
+(defun %late-print (x str)
+  (if (consp x)
+      (%print-cons x str)
+	  (%print-atom x str)))
+
 (defun late-print (x &optional (str *standard-output*))
   (with-default-stream s str
-    (if (consp x)
-	    (%print-cons x s)
-	    (%print-atom x s))))
+    (%late-print x s)
+	(terpri s)))
