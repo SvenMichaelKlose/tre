@@ -3,8 +3,12 @@
 ;;;;
 ;;;; UN*X shell commands
 
-(defun unix-sh-rm (file)
-  (exec "/bin/rm" (list file)))
+(defun unix-sh-rm (file &key (recursively? nil) (force? nil))
+  (exec "/bin/rm" (append (when recursively?
+							   (list "-r"))
+						  (when force?
+							   (list "-f"))
+						  (list file))))
 
 (defun unix-sh-mv (from to)
   (exec "/bin/mv" (list from to)))
