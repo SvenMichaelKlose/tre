@@ -3,9 +3,13 @@
 ;;;;;
 ;;;;; LML-to-XML conversion
 
+(def-head-predicate %exec)
+
 (defun lml-attr? (x)
   (and (consp x) (consp .x)
-       (atom x.) (atom (second x))))
+       (atom x.)
+	   (or (atom (second x))
+		   (%exec? (second x)))))
 
 (defun lml-body (x)
   (when x
