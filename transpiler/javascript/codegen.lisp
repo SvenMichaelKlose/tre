@@ -19,6 +19,8 @@
 (define-js-macro %set-atom-fun (plc val)
   `(%transpiler-native ,plc "=" ,val ,*js-separator*))
 
+(defvar *js-codegen-funinfo* nil)
+
 (define-js-macro function (x)
   (if (or (atom x)
 		  (%stack? x))
@@ -29,6 +31,7 @@
 			 fi (get-lambda-funinfo x)
 			 no-tags (when fi
 					   (= 0 (funinfo-num-tags fi))))
+		(setf *js-codegen-funinfo* fi)
         `("function (" ,@(transpiler-binary-expand
 				            ","
 						    args) ")"
@@ -150,3 +153,18 @@
 
 (define-js-macro %js-typeof (x)
   `(%transpiler-native "typeof " ,x))
+
+(define-js-macro %%funref (name fi-sym fi-child-sym)
+  (with (fi (get-lambda-funinfo fi-sym)
+		 fi-child-sym (get-lambda-funinfo fi-child-sym))
+    (if (funinfo-ghost fi-child)
+  	  `(%funref ,name ,(funinfo-lexical fi))
+	  name)))
+
+(define-js-macro %unobfuscated-lookup-symbol (name pkg)
+  `(,(transpiler-obfuscate-symbol *js-transpiler*
+								  '%lookup-symbol)
+	   (%transpiler-string
+		   ,(symbol-name (transpiler-obfuscate-symbol
+						 *js-transpiler* (make-symbol .name.))))
+		   ,pkg))

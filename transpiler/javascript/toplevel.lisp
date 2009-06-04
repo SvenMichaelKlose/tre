@@ -3,6 +3,14 @@
 ;;;;;
 ;;;;; Toplevel
 
+(defvar *nil-symbol-name* nil)
+
+(defun transpiler-print-obfuscations (tr)
+  (dolist (k (hashkeys (transpiler-obfuscations tr)))
+    (unless (in=? (elt (symbol-name k) 0) #\~) ; #\_)
+	  (format t "~A -> ~A~%" (symbol-name k)
+						     (href (transpiler-obfuscations tr) k)))))
+
 (defun js-transpile-0 (f files)
   (format f "var _I_ = 0; while (1) {switch (_I_) {case 0: ~%")
   (format f "var ~A;~%" (transpiler-symbol-string
@@ -38,15 +46,13 @@
  		     (transpiler-transpile tr user))
 	       f))
   (format f "}break;}~%")
-  (format t "~%; Everything OK. Done.~%")
-(dolist (k (hashkeys (transpiler-obfuscations *js-transpiler*)))
-  (unless (in=? (elt (symbol-name k) 0) #\~ #\_ #\%)
-	(format t "~A -> ~A~%" (symbol-name k)
-						   (href (transpiler-obfuscations *js-transpiler*) k))))
-)
+  (format t "~%; Everything OK. Done.~%"))
+  ;(transpiler-print-obfuscations *js-transpiler*))
 
 (defun js-transpile (out files &key (obfuscate? nil))
   (setf *current-transpiler* *js-transpiler*)
   (transpiler-reset *js-transpiler*)
   (transpiler-switch-obfuscator *js-transpiler* obfuscate?)
+  (setf *nil-symbol-name*
+		(symbol-name (transpiler-obfuscate-symbol-0 *js-transpiler* nil)))
   (js-transpile-0 out files))

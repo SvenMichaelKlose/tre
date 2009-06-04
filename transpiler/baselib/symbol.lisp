@@ -22,7 +22,7 @@
 ;; XXX rename to %QUOTE ?
 (define-native-js-fun %lookup-symbol (name pkg)
   no-args
-  (unless (and (%%%= "NIL" name)
+  (unless (and (%%%= ,*nil-symbol-name* name)
 			   (not pkg))
     ; Make package if missing.
     (or (aref *symbols* pkg)

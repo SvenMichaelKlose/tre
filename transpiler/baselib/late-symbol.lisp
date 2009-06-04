@@ -10,7 +10,7 @@
 (defun symbol-name (x)
   (if x
   	  x.n
-	  "NIL"))
+	  ,*nil-symbol-name*))
 
 (defun symbol-value (x) (when x x.v))
 (defun symbol-function (x) (when x x.f))

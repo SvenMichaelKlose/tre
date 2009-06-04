@@ -54,7 +54,9 @@
 	(let n (%defun-name name)
       `(progn
 		 (%var ,g)
-	     (%setq ,g (%lookup-symbol ,(symbol-name n) nil))
+	     (%setq ,g (%unobfuscated-lookup-symbol
+					   ,(symbol-name n)
+					   nil))
 	     ,(apply #'js-essential-defun name args body)
 		 (setf (symbol-function ,g) ,n)))))
 
@@ -121,19 +123,12 @@
 	     (with (,var (aref ,evald-seq ,idx))
            ,@body)))))
 
-;; Iterate over keys of object.
-(define-js-std-macro dohash ((key val hash &rest result) &rest body)
-  `(block nil
-     (((%transpiler-native "for (" ,key " in " ,seq ")")
-	    (%no-expex (with (,var (aref ,seq ,key))
-          ,@body))))))
-
 ;; Make type predicate function.
 (define-js-std-macro js-type-predicate (name type)
   `(defun ,name (x)
      (when x
        (%%%= (%js-typeof x)
-          ,(string-downcase (symbol-name (transpiler-obfuscate-symbol *js-transpiler* type)))))))
+          ,(string-downcase (symbol-name type))))))
 
 (define-js-std-macro href (hash key)
   `(aref ,hash ,key))

@@ -40,7 +40,7 @@
 	        #'(,@(awhen fi-sym
 				   `(%funinfo ,!))
 			   ,a
-   		         ,@(if (and (not *assert*)
+   		         ,@(if (and (not *transpiler-assert*)
 		    	            (stringp body.))
 				       .body
 				       body)))))

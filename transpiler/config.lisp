@@ -47,9 +47,6 @@
   (obfuscate? nil)
   (import-from-environment? t)
 
-  ; List of symbols that must not be obfuscated.
-  (obfuscation-exceptions (make-hash-table))
-
   (make-label #'identity)
   (preprocessor #'identity)
 
@@ -74,7 +71,7 @@
   thisify-classes
   (function-args (make-hash-table))
   emitted-wanted-functions
-  obfuscations
+  (obfuscations (make-hash-table))
   plain-arg-funs
   (exported-closures nil))
 
@@ -91,8 +88,7 @@
   		(transpiler-defined-variables tr) nil
   		(transpiler-defined-variables-hash tr) (make-hash-table)
   		(transpiler-function-args tr) (make-hash-table)
-  		(transpiler-exported-closures tr) nil
-  		(transpiler-obfuscations tr) (make-hash-table)))
+  		(transpiler-exported-closures tr) nil))
 
 (defun transpiler-defined-function (tr name)
   (href (transpiler-defined-functions-hash tr) name))
@@ -111,8 +107,7 @@
   name)
 
 (defun transpiler-switch-obfuscator (tr on?)
-  (setf (transpiler-obfuscations tr) (make-hash-table)
-		(transpiler-obfuscate? tr) on?))
+  (setf (transpiler-obfuscate? tr) on?))
 
 (defun transpiler-function-arguments (tr fun)
   (href (transpiler-function-args tr) fun))
@@ -137,7 +132,7 @@
 
 (defun transpiler-add-obfuscation-exceptions (tr &rest x)
   (dolist (i x)
-	(setf (href (transpiler-obfuscation-exceptions tr) i) t)))
+	(setf (href (transpiler-obfuscations tr) i) t)))
 
 (define-slot-setter-push! transpiler-add-plain-arg-fun tr
   (transpiler-plain-arg-funs tr))

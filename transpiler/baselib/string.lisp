@@ -34,7 +34,7 @@
     (symbolp x)
 	  (symbol-name x)
 	(not x)
-	  "NIL"
+	  ,*nil-symbol-name*
    	(x.to-string)))
 
 (defun list-string (lst)
