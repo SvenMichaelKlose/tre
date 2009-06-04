@@ -26,6 +26,8 @@
 						   :post #'compiler-macroexpand-prepost)
 
 (defmacro define-compiler-macro (&rest x)
+  (when *show-definitions*
+	(late-print `(define-compiler-macro ,x.)))
   `(define-expander-macro compiler ,@x))
 
 (defun compiler-macroexpand (x)
