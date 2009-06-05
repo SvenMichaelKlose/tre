@@ -39,4 +39,5 @@
 	"number.lisp"
 	"sequence.lisp"
 	"stream.lisp"
-	"string.lisp"))
+	"string.lisp"
+	"assoc.lisp"))
