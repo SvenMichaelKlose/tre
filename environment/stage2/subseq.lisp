@@ -27,16 +27,17 @@
 
 ;; XXX unify with SUBSEQ-SEQUENCE
 (defun %subseq-string (seq start end)
-  (when (> start end)
-    (xchg start end))
-  (with (seqlen  (length seq))
-  	(when (< start seqlen)
-	  (when (>= end seqlen)
-	    (setf end seqlen))
-  	  (with (l (- end start)
-		     s (make-string 0))
-        (dotimes (x l s)
-	  	  (setf s (+ s (string (elt seq (+ start x))))))))))
+  (unless (= start end)
+    (when (> start end)
+      (xchg start end))
+    (with (seqlen  (length seq))
+  	  (when (< start seqlen)
+	    (when (>= end seqlen)
+	      (setf end seqlen))
+  	    (with (l (- end start)
+		       s (make-string 0))
+          (dotimes (x l s)
+	  	    (setf s (+ s (string (elt seq (+ start x)))))))))))
 
 (defun subseq (seq start &optional (end 99999))
   (when seq
@@ -63,6 +64,6 @@
   ((subseq "lisp" 10))
   nil)
 
-(define-test "SUBSEQ returns empty string when start and end are the same"
-  ((string= "" (subseq "lisp" 1 1)))
-  t)
+(define-test "SUBSEQ returns NIL when start and end are the same"
+  ((subseq "lisp" 1 1))
+  nil)
