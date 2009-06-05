@@ -79,7 +79,9 @@
 
 (defun function-arguments (fun)
   "Returns arguments of a function."
-  (first (symbol-value fun)))
+  (if (builtinp fun)
+	  '(&rest args-to-builtin)
+      (first (symbol-value fun))))
 
 (defun function-body (fun)
   "Returns body of a function."
