@@ -34,6 +34,7 @@ struct tre_list {
 #define CDAR(x) 	CDR(CAR(x))
 #define CADAR(x) 	CAR(CDR(CAR(x)))
 #define CADDR(x) 	CAR(CDR(CDR(x)))
+#define CADDDR(x) 	CAR(CDR(CDR(CDR(x))))
 #define CDDAR(x) 	CDR(CDR(CDR(x)))
 #define CDDDR(x) 	CDR(CDR(CDR(x)))
 
