@@ -40,6 +40,22 @@ treatom_builtin_eq (treptr list)
 	return treptr_t;
 }
 
+treptr
+treatom_eql (treptr x, treptr y)
+{
+
+   	if (TREPTR_IS_NUMBER(x)) {
+       	if (TREPTR_IS_NUMBER(y) == FALSE)
+    		return treptr_nil;
+       	if (TRENUMBER_TYPE(x) != TRENUMBER_TYPE(y))
+    		return treptr_nil;
+       	RETURN_NIL(TREPTR_TRUTH(TRENUMBER_VAL(x) == TRENUMBER_VAL(y)));
+   	} else
+   		RETURN_NIL(TREPTR_TRUTH(x == y));
+
+	return treptr_t;
+}
+
 /*tredoc
  (cmd :name EQL
 	(args x y)
@@ -58,14 +74,7 @@ treatom_builtin_eql (treptr list)
 	list = CDR(list);
 	do {
 		x = CAR(list);
-    	if (TREPTR_IS_NUMBER(first)) {
-        	if (TREPTR_IS_NUMBER(x) == FALSE)
-	    		return treptr_nil;
-        	if (TRENUMBER_TYPE(first) != TRENUMBER_TYPE(x))
-	    		return treptr_nil;
-        	RETURN_NIL(TREPTR_TRUTH(TRENUMBER_VAL(first) == TRENUMBER_VAL(x)));
-    	} else
-    		RETURN_NIL(TREPTR_TRUTH(first == x));
+		RETURN_NIL(treatom_eql (first, x));
 		list = CDR(list);
 	} while (list != treptr_nil);
 

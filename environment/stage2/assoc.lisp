@@ -3,17 +3,26 @@
 ;;;;
 ;;;; Associative lists
 
-(defun assoc (key lst &key (test nil))
-  "Search value for key in associative list."
-  (when lst
-	(unless (consp lst)
-	  (%error "list expected"))
-    (dolist (i lst)
-      (if (consp i)
-		  (if (funcall (or test #'eql) key (car i))
-	  	  	  (return i))
-		  (and (print i)
-			   (%error "not a pair"))))))
+(unless *BUILTIN-ASSOC*
+  (defun assoc (key lst &key (test nil))
+    "Search value for key in associative list."
+    (when lst
+	  (unless (consp lst)
+	    (%error "list expected"))
+      (dolist (i lst)
+        (if (consp i)
+		    (if (funcall (or test #'eql) key (car i))
+	  	  	    (return i))
+		    (and (print i)
+			     (%error "not a pair")))))))
+
+(let lst '((a . d) (b . e) (c . f))
+  (unless (eq 'e (cdr (print (assoc 'b lst))))
+	(%error "ASSOC doesn't work with symbols")))
+
+(let lst '((1 . a) (2 . b) (3 . c))
+  (unless (eq 'b (cdr (assoc 2 lst)))
+	(%error "ASSOC doesn't work with numbers")))
 
 (defun assoc-cons (key lst &key test)
   (when lst

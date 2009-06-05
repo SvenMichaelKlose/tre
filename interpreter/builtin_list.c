@@ -16,6 +16,12 @@
 #include "builtin_list.h"
 #include "xxx.h"
 
+#include "gc.h"
+#include "thread.h"
+#include "builtin_atom.h"
+
+treptr trelist_builtin_eq_symbol;
+
 /*tredoc
   (cmd :name CONS
 	(arg :name a)
@@ -130,4 +136,52 @@ trelist_builtin_consp (treptr list)
         if (TREPTR_IS_ATOM(CAR(x)))
 		    return treptr_nil;
     return treptr_t;
+}
+
+treptr
+trelist_builtin_assoc (treptr args)
+{
+	treptr key;
+	treptr list;
+	treptr test;
+	treptr res;
+	treptr fake;
+	treptr car;
+	treptr elm;
+
+	key = CAR(args);
+	list = CADR(args);
+	test = CDDR(args) != treptr_nil ?
+			CADDDR(args) :
+			treptr_nil;
+
+	while (list != treptr_nil) {
+		elm = CAR(list);
+		car = CAR(elm);
+		if (test == trelist_builtin_eq_symbol && car == key)
+			return elm;
+		if (test == treptr_nil) {
+			if (treatom_eql (car, key) != treptr_nil)
+				return elm;
+		} else {
+    		fake = CONS(test, CONS(key, CONS(car, treptr_nil)));
+    		tregc_push (fake);
+
+    		res = treeval (fake);
+
+    		tregc_pop ();
+    		TRELIST_FREE_EARLY(fake);
+			if (res != treptr_nil)
+				return elm;
+		}
+
+		list = CDR(list);
+	}
+	return treptr_nil;
+}
+
+void
+trelist_builtin_init ()
+{
+	trelist_builtin_eq_symbol = treatom_get ("EQ", treptr_nil);
 }

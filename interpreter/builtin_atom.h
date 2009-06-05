@@ -9,6 +9,7 @@
 #define TRE_BUILTIN_ATOM_H
 
 extern treptr treatom_builtin_eq (treptr);
+extern treptr treatom_eql (treptr, treptr);
 extern treptr treatom_builtin_eql (treptr);
 extern treptr treatom_builtin_make_symbol (treptr);
 extern treptr treatom_builtin_atom (treptr);

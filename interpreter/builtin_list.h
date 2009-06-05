@@ -1,6 +1,6 @@
 /*
- * nix operating system project tre interpreter
- * Copyright (c) 2005-2006 Sven Klose <pixel@copei.de>
+ * TRE interpreter
+ * Copyright (c) 2005-2006,2009 Sven Klose <pixel@copei.de>
  *
  * Built-in list functions
  */
@@ -15,5 +15,7 @@ extern treptr trelist_builtin_cdr (treptr);
 extern treptr trelist_builtin_rplaca (treptr);
 extern treptr trelist_builtin_rplacd (treptr);
 extern treptr trelist_builtin_consp (treptr);
+extern treptr trelist_builtin_assoc (treptr);
+extern void trelist_builtin_init ();
 
 #endif	/* #ifndef TRE_BUILTIN_LIST_H */

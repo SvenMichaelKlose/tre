@@ -30,6 +30,7 @@
 #include "diag.h"
 #include "dot.h"
 #include "quasiquote.h"
+#include "builtin_list.h"
 
 #ifdef TRE_HAVE_COMPILED_ENV
 	treptr compiled_cInit (void);
@@ -206,6 +207,7 @@ tre_init (void)
     tredot_init ();
     trespecial_init ();
     treimage_init ();
+    trelist_builtin_init ();
 
     MAKE_VAR("*KERNEL-IDENT*", trestring_get (TRE_KERNEL_IDENT));
     MAKE_VAR("*SYSTEM-NAME*", trestring_get (TRE_SYSTEM_NAME));
