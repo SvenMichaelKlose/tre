@@ -28,7 +28,7 @@
     (unless pred
       (setf (expander-pred e)
 			(fn (and (atom _.)
-					 (< 0 (length (symbol-name _.)))
+					 (symbol-name _.)
 					 (cdr (assoc _. (expander-macros e)))))))
     (unless call
       (setf (expander-call e)
