@@ -85,7 +85,7 @@ echo "Library flags: $LIBFLAGS"
 basic_clean ()
 {
 	echo "Cleaning..."
-	rm -f *.core
+	rm -f *.core interpreter/_compiled-env.c
 	rm -rf obj
 }
 
@@ -147,7 +147,7 @@ build)
 
 crunsh)
 	CFLAGS="$CFLAGS -DTRE_COMPILED_CRUNSHED -Iinterpreter"
-	COPTS="$COPTS -O3 -fomit-frame-pointer -ffast-math -fwhole-program -lm"
+	COPTS="$COPTS -O3 -fomit-frame-pointer -ffast-math -fwhole-program -lm --whole-program"
 	basic_clean
 	crunsh_compile
 	install_it
