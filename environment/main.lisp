@@ -12,10 +12,14 @@
 
 (env-load "stage0/main.lisp")
 
+(setq *show-definitions* t)
 (if (eq *show-definitions* '*show-definitions*)
     (setq *show-definitions* nil))
 
 (env-load "stage1/main.lisp")
+
+(defvar *builtin-assoc* t)
+
 (env-load "stage2/main.lisp")
 (env-load "stage3/main.lisp")
 (env-load "stage4/main.lisp")
