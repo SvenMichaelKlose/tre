@@ -15,6 +15,7 @@
   (args nil)
 
   (renamed-vars nil)
+  (ignorance nil)
 
   ; List of variables defined outside the function.
   (free-vars nil)
@@ -78,6 +79,9 @@
 (defun funinfo-rename-many (fi x)
   (assoc-replace-many x (funinfo-renamed-vars fi)))
 
+(defun funinfo-ignore? (fi var)
+  (member var (funinfo-ignorance fi)))
+
 ;;;; ENVIRONMENT
 
 (defmacro with-funinfo-env-temporary (fi args &rest body)
@@ -118,18 +122,6 @@
   (append (funinfo-env fi)
 		  (awhen (funinfo-parent fi)
 			(funinfo-env-all !))))
-
-;;;; CLOSURES
-
-(define-slot-setter-push! funinfo-add-closure fi
-  (funinfo-closures fi))
-
-(defun funinfo-add-gathered-closure-info (fi fi-closure)
-  (nconc! (funinfo-gathered-closure-infos fi) (list fi-closure)))
-
-;; XXX not POP! ?
-(defun funinfo-get-child-funinfo (fi)
-  (pop (funinfo-gathered-closure-infos fi)))
 
 ;;;; LEXICALS AND GHOST ARGUMENTS
 
