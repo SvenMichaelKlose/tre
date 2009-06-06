@@ -94,7 +94,7 @@
 (defun funinfo-find-doubles (fi x)
   (when x
     (if (funinfo-in-args-or-env? fi x.)
-	    (cons (print x.)
+	    (cons x.
 			  (funinfo-find-doubles fi .x))
 	    (funinfo-find-doubles fi .x))))
 
@@ -103,7 +103,7 @@
 	(cons (cons doubles. (gensym))
 	  	  (funinfo-rename-doubles .doubles))))
 
-(defun lambda-call-embed (fi lambda-call export-lambdas gather)
+(defun lambda-call-embed (fi lambda-call export-lambdas)
   (with-lambda-call (args vals body lambda-call)
     (with ((a v) (assoc-splice (argument-expand 'local-var-fun args vals)))
 	  ; Add lambda-call arguments to the parent function's arguments
@@ -118,7 +118,7 @@
         (make-inline-body
 		    (vars-to-stackplaces fi a)
       	    v
-		    (lambda-expand-gather-or-transform fi body export-lambdas gather))))));)
+		    (lambda-expand-transform fi body export-lambdas))))));)
 
 ;;; Export
 
@@ -157,57 +157,32 @@
   (setf (funinfo-args fi-child)
 		(funinfo-rename-many fi-child (funinfo-args fi-child))))
 
-(defun lambda-export-make-exported (fi fi-child x)
+(defun lambda-export-make-exported (fi x)
   (with-gensym name
-	(lambda-export-rename fi fi-child)
-	(lambda-expand-add-closure
-        `((defun ,name ,(append (make-lambda-funinfo fi-child)
-							    (funinfo-args fi-child))
-		    ,@(lambda-body x))))
-	name))
+    (let fi-child (make-funinfo :parent fi
+								:args (lambda-args x))
+	  (lambda-export-rename fi fi-child)
+	  (lambda-expand-add-closure
+          `((defun ,name ,(append (make-lambda-funinfo fi-child)
+							      (lambda-args x))
+		      ,@(lambda-body x))))
+	  (values name fi-child))))
 
-(defun lambda-export-transform (fi x)
-  (with (fi-child (funinfo-get-child-funinfo fi)
-		 exported (lambda-export-make-exported fi fi-child x))
-	(if
-	  (funinfo-ghost fi-child)
-    	`(%funref ,exported ,(funinfo-lexical fi))
-	  *lambda-expand-always-have-funref*
-    	`(%funref ,exported nil)
-	  exported)))
-
-;;; Export gathering
-;;;
-;;; XXX as far as I now understand a gathering pass is not required
-;;; anymore since we can build the tree at once.
-
-(defun lambda-export-gather-child-make-funinfo (fi x)
-  (with ((args exported-closures) (lambda-expand (lambda-args x)
-												 t))
-	(lambda-expand-add-closures exported-closures)
-    (make-funinfo :args args
-			      :parent fi)))
-
-;; Do a gathering expansion. Builds FUNINFO tree.
-(defun lambda-export-gather (fi x)
-  (let fi-child (lambda-export-gather-child-make-funinfo fi x)
-    (lambda-expand-gather fi-child
-	  				      (lambda-body x)
-			   			  t)
-    (funinfo-add-gathered-closure-info fi fi-child))
-  nil)
+(defun lambda-export (fi x)
+  (with ((exported fi-child) (lambda-export-make-exported fi x))
+    `(%%funref ,exported
+               ,(funinfo-sym fi)
+               ,(funinfo-sym fi-child))))
 
 ;;;; Toplevel
 
-(defun lambda-expand-branch (fi x export-lambdas gather)
+(defun lambda-expand-branch (fi x export-lambdas)
   (if
     (lambda-call? x)
-      (lambda-call-embed fi x export-lambdas gather)
+      (lambda-call-embed fi x export-lambdas)
     (lambda? x)
 	  (if export-lambdas
-	  	  (if gather
-              (lambda-export-gather fi x)
-              (lambda-export-transform fi x))
+          (lambda-export fi x)
 		  `#'(,@(make-lambda-funinfo-if-missing x
 				  (make-funinfo :args (lambda-args x)
 								:parent fi))
@@ -215,21 +190,13 @@
 			  ,@(lambda-body x)))
 	x))
 
-(defun lambda-expand-tree (fi body export-lambdas gather)
+(defun lambda-expand-tree (fi body export-lambdas)
   (tree-walk body
 			 :ascending
-			   (fn lambda-expand-branch fi _ export-lambdas gather)))
+			   (fn lambda-expand-branch fi _ export-lambdas)))
 
 (defun lambda-expand-transform (fi body export-lambdas)
-  (vars-to-stackplaces fi (lambda-expand-tree fi body export-lambdas nil)))
-
-(defun lambda-expand-gather (fi body export-lambdas)
-  (vars-to-stackplaces fi (lambda-expand-tree fi body export-lambdas t)))
-
-(defun lambda-expand-gather-or-transform (fi body export-lambdas gather)
-  (if gather
-      (lambda-expand-gather fi body export-lambdas)
-      (lambda-expand-transform fi body export-lambdas)))
+  (vars-to-stackplaces fi (lambda-expand-tree fi body export-lambdas)))
 
 (defun lambda-embed-or-export-transform (fi body export-lambdas)
   (make-function-epilogue fi
@@ -237,7 +204,7 @@
 
 (defun lambda-embed-or-export (fi body export-lambdas)
   (when export-lambdas
-    (lambda-expand-tree fi body export-lambdas t))
+    (lambda-expand-tree fi body export-lambdas))
   (lambda-embed-or-export-transform fi body export-lambdas))
 
 (defun lambda-expand-0 (x export-lambdas)
