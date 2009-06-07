@@ -64,11 +64,11 @@
 (defmacro adjoin! (obj place)
   `(setf ,place (adjoin ,obj ,place)))
 
-(define-test "ADJOIN works returns with member"
+(define-test "ADJOIN doesn't add known member"
   ((adjoin 'i '(l i s p)))
   '(l i s p))
 
-(define-test "ADJOIN works adds new member"
+(define-test "ADJOIN adds new member"
   ((adjoin 'a '(l i s p)))
   '(a l i s p))
 
