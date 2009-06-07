@@ -27,20 +27,20 @@
 
 ;; XXX unify with SUBSEQ-SEQUENCE
 (defun %subseq-string (seq start end)
-  (unless (= start end)
-    (when (> start end)
-      (xchg start end))
-    (with (seqlen  (length seq))
-  	  (when (< start seqlen)
-	    (when (>= end seqlen)
-	      (setf end seqlen))
-  	    (with (l (- end start)
-		       s (make-string 0))
-          (dotimes (x l s)
-	  	    (setf s (+ s (string (elt seq (+ start x)))))))))))
+  (with (seqlen  (length seq))
+    (when (< start seqlen)
+      (when (>= end seqlen)
+	    (setf end seqlen))
+  	  (with (l (- end start)
+	         s (make-string 0))
+        (dotimes (x l s)
+	  	  (setf s (+ s (string (elt seq (+ start x))))))))))
 
 (defun subseq (seq start &optional (end 99999))
-  (when seq
+  (when (and seq
+			 (not (= start end)))
+    (when (> start end)
+      (xchg start end))
 	(if
 	  (consp seq)
 		(subseq-list seq start end)
