@@ -40,4 +40,5 @@
 	"sequence.lisp"
 	"stream.lisp"
 	"string.lisp"
-	"assoc.lisp"))
+	"assoc.lisp"
+	"member.lisp"))
