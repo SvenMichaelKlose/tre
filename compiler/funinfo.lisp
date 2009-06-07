@@ -10,6 +10,7 @@
 (defstruct funinfo
   ; Lists of stack variables. The rest contains the parent environments.
   (env nil)
+  (locals nil)
 
   ; List of arguments.
   (args nil)
@@ -40,6 +41,15 @@
   (sym nil)
   ; Function code. The format depends on the compilation pass.
   first-cblock)
+
+(defun funinfo-make-local (fi pos)
+  (with-gensym n
+    (acons! pos n (funinfo-locals fi))
+	n))
+
+(defun funinfo-get-local (fi pos)
+  (or (assoc-value pos (funinfo-locals fi) :test #'=)
+	  (funinfo-make-local fi pos)))
 
 (defun funinfo-topmost (fi)
   (aif (funinfo-parent fi)

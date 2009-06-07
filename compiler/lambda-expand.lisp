@@ -62,7 +62,7 @@
 	  x
 	; Emit stack place.
 	(funinfo-env-pos fi x)
-	  `(%stack ,(funinfo-env-pos fi x))
+	  (funinfo-get-local fi (funinfo-env-pos fi x)) ;`(%stack ,(funinfo-env-pos fi x))
 	; Emit lexical place (outside the function).
 	(make-lexical fi x)))
 
