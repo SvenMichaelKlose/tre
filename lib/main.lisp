@@ -6,4 +6,5 @@
 (env-load "../lib/mime.lisp")
 ;(env-load "../lib/tree-transform.lisp")
 (env-load "../lib/tree-walk.lisp")
+(env-load "../lib/xml-entities.lisp")
 (env-load "../lib/xml2lml.lisp")
