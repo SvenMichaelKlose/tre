@@ -38,9 +38,8 @@
    	(x.to-string)))
 
 (defun list-string (lst)
-  "Convert list of characters to string."
-  (declare type cons lst)
   (when lst
+    (declare type cons lst)
     (let* ((n (length lst))
            (s (make-string 0)))
       (do ((i 0 (1+ i))
