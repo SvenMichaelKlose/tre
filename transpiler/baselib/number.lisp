@@ -8,40 +8,22 @@
 	  (char-code x)
 	  x))
 
-(defun number+ (&rest x)
-  (let n (%wrap-char-number x.)
-	(dolist (i .x n)
-	  (setf n (%%%+ n (%wrap-char-number i))))))
+(mapcan-macro _
+	'((number+ %%%+)
+	  (+ %%%+)
+	  (number- %%%-)
+	  (- %%%-))
+  `((defun ,_. (&rest x)
+      (let n (%wrap-char-number x.)
+	    (dolist (i .x n)
+	      (setf n (,._. n (%wrap-char-number i))))))))
 
-(defun + (&rest x)
-  (let n (%wrap-char-number x.)
-	(dolist (i .x n)
-	  (setf n (%%%+ n (%wrap-char-number i))))))
-
-(defun number- (&rest x)
-  (let n (%wrap-char-number x.)
-	(dolist (i .x n)
-	  (setf n (%%%- n (%wrap-char-number i))))))
-
-(defun - (&rest x)
-  (let n (%wrap-char-number x.)
-	(dolist (i .x n)
-	  (setf n (%%%- n (%wrap-char-number i))))))
-
-(defun = (x y)
-  (with (xn (%wrap-char-number x)
-		 yn (%wrap-char-number y))
-	(%%%= xn yn)))
-
-(defun < (x y)
-  (with (xn (%wrap-char-number x)
-		 yn (%wrap-char-number y))
-	(%%%< xn yn)))
-
-(defun > (x y)
-  (with (xn (%wrap-char-number x)
-		 yn (%wrap-char-number y))
-	(%%%> xn yn)))
+(mapcan-macro _
+	'(= < >)
+  `((defun ,_ (x y)
+      (with (xn (%wrap-char-number x)
+		     yn (%wrap-char-number y))
+	    (,($ '%%% _) xn yn)))))
 
 (defun numberp (x)
   (or (%numberp x)
