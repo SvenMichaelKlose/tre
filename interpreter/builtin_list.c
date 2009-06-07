@@ -21,6 +21,7 @@
 #include "builtin_atom.h"
 
 treptr trelist_builtin_eq_symbol;
+treptr trelist_builtin_test_symbol;
 
 /*tredoc
   (cmd :name CONS
@@ -180,8 +181,58 @@ trelist_builtin_assoc (treptr args)
 	return treptr_nil;
 }
 
+treptr
+trelist_builtin_member (treptr args)
+{
+	treptr key = CAR(args);
+	treptr list = CDR(args);
+	treptr sublist;
+	treptr test = treptr_nil;
+	treptr l;
+	treptr car;
+	treptr fake;
+	treptr res;
+
+	l = list;
+	while (l != treptr_nil) {
+		car = CAR(l);
+		if (car == trelist_builtin_test_symbol) {
+			test = CADR(l);
+			break;
+		}
+		l = CDR(l);
+	}
+
+	while (list != treptr_nil) {
+		sublist = CAR(list);
+		if (sublist == trelist_builtin_test_symbol)
+			break;
+		while (sublist != treptr_nil) {
+			if (test == treptr_nil) {
+				if (treatom_eql (CAR(sublist), key) != treptr_nil)
+					return treptr_t;
+			} else {
+    			fake = CONS(test, CONS(key, CONS(car, treptr_nil)));
+    			tregc_push (fake);
+
+    			res = treeval (fake);
+
+    			tregc_pop ();
+    			TRELIST_FREE_EARLY(fake);
+				if (res != treptr_nil)
+					return treptr_t;
+			}
+
+			sublist = CDR(sublist);
+		}
+		list = CDR(list);
+	}
+	return treptr_nil;
+}
+
 void
 trelist_builtin_init ()
 {
 	trelist_builtin_eq_symbol = treatom_get ("EQ", treptr_nil);
+	trelist_builtin_test_symbol = treatom_get ("TEST", tre_package_keyword);
 }

@@ -12,10 +12,10 @@
       (if (cdr lsts)
           (apply #'member elm (cdr lsts)))))
 
-(define-test "MEMBER finds elements"
-  ((member 's '(i) '(l i k e) '(l i s p)))
-  t)
+;(define-test "MEMBER finds elements"
+;  ((member 's '(i) '(l i k e) '(l i s p)))
+;  t)
 
-(define-test "MEMBER detects foureign elements"
-  ((member 'A '(l i s p)))
-  nil)
+;(define-test "MEMBER detects foureign elements"
+;  ((member 'A '(l i s p)))
+;  nil)
