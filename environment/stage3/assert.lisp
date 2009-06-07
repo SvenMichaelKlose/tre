@@ -3,8 +3,6 @@
 ;;;;
 ;;;; Assertions
 
-(defvar *assert* t)
-
 (defun make-assertion (x &optional (txt nil) (args nil))
   `(unless ,x
 	 (error (+ "assertion failed: " ,txt) ,@args)))
