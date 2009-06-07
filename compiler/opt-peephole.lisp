@@ -191,12 +191,10 @@
 			  (opt-peephole-fun #'remove-code
 				((and (%setq? a)
 					  (atom .a.)
-					  (or (atom ..a.)
-						  (%slot-value? ..a.)
-						  (%stack? ..a.))
-					  (opt-peephole-will-be-set-again? d .a.))
-				  	  ; Don't set variable that will be modified anyway.
-					  (remove-code d))))
+					  (atomic? ..a.)
+				      (opt-peephole-will-be-set-again? d .a.))
+			  	  ; Don't set variable that will be modified anyway.
+				  (remove-code d))))
 
 	   reduce-tags
 		 #'((x)
@@ -218,7 +216,7 @@
 				                 .!
 					             x))
 					   (funcall
-						 (compose ;#'reduce-tags
+						 (compose #'reduce-tags
 								  ;#'remove-code
 								  #'opt-peephole-remove-void)
 						 x))))
