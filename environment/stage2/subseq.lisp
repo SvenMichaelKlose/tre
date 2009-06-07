@@ -4,41 +4,42 @@
 ;;;;; Subsequences
 
 (defun subseq-list (seq start end)
-  (labels ((copy (lst len)
-             (when (and lst (< 0 len))
-               (cons (car lst)
-					 (copy (cdr lst) (1- len))))))
-    (when seq
-      (when (> start end)
-        (xchg start end))
-      (copy (nthcdr start seq) (- end start)))))
+  (unless (= start end)
+    (labels ((copy (lst len)
+               (when (and lst (< 0 len))
+                 (cons (car lst)
+					   (copy (cdr lst) (1- len))))))
+      (when seq
+        (when (> start end)
+          (xchg start end))
+        (copy (nthcdr start seq) (- end start))))))
 
 (defun %subseq-sequence (maker seq start end)
-  (when (> start end)
-    (xchg start end))
-  (with (seqlen  (length seq))
-  	(when (< start seqlen)
-	  (when (>= end seqlen)
-	    (setf end seqlen))
-  	  (with (l (- end start)
-		     s (funcall maker l))
-        (dotimes (x l s)
-	  	  (setf (elt s x) (elt seq (+ start x))))))))
+  (unless (= start end)
+    (with (seqlen  (length seq))
+  	  (when (< start seqlen)
+	    (when (>= end seqlen)
+	      (setf end seqlen))
+  	    (with (l (- end start)
+		       s (funcall maker l))
+          (dotimes (x l s)
+	  	    (setf (elt s x) (elt seq (+ start x)))))))))
 
 ;; XXX unify with SUBSEQ-SEQUENCE
 (defun %subseq-string (seq start end)
-  (with (seqlen  (length seq))
-    (when (< start seqlen)
-      (when (>= end seqlen)
-	    (setf end seqlen))
-  	  (with (l (- end start)
-	         s (make-string 0))
-        (dotimes (x l s)
-	  	  (setf s (+ s (string (elt seq (+ start x))))))))))
+  (if (= start end)
+	  ""
+      (with (seqlen  (length seq))
+        (when (< start seqlen)
+          (when (>= end seqlen)
+	        (setf end seqlen))
+  	      (with (l (- end start)
+	             s (make-string 0))
+            (dotimes (x l s)
+	  	      (setf s (+ s (string (elt seq (+ start x)))))))))))
 
 (defun subseq (seq start &optional (end 99999))
-  (when (and seq
-			 (not (= start end)))
+  (when seq
     (when (> start end)
       (xchg start end))
 	(if
@@ -64,6 +65,6 @@
   ((subseq "lisp" 10))
   nil)
 
-(define-test "SUBSEQ returns NIL when start and end are the same"
-  ((subseq "lisp" 1 1))
-  nil)
+(define-test "SUBSEQ returns empty string when start and end are the same"
+  ((string= "" (subseq "lisp" 1 1)))
+  t)
