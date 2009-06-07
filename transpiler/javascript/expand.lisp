@@ -144,7 +144,3 @@
 (define-js-std-macro assert (x &optional (txt nil) &rest args)
   (when *transpiler-assert*
     (make-assertion x txt args)))
-
-(define-js-std-macro declare (&rest x)
-  (when *transpiler-assert*
-    `(declare ,@x)))
