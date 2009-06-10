@@ -112,7 +112,9 @@
 		(aif (position #\; .x :test #'=)
 			 (let n (href *xml-entities-hash* (list-string (subseq .x 0 !)))
 			   (if n
-			 	   (cons (mapcar #'code-char (force-list n))
+			 	   (cons (if (consp n)
+							 (decode-utf8 (list-string (mapcar #'code-char (force-list n))))
+							 (code-char n))
 						 (xml-entities-to-utf8-0 (nthcdr (1+ !) .x)))
 			 	   (cons x. (xml-entities-to-utf8-0 .x))))
 			 (cons x. (xml-entities-to-utf8-0 .x)))
