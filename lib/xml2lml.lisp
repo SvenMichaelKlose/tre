@@ -30,7 +30,7 @@
   (and (< x 33) (> x 0)))
 
 (defun xml-text-char? (x)
-  (not (in=? x #\< #\&)))
+  (not (in=? x #\<))); #\&)))
 
 (defun xml-identifier-char? (x)
   (not (or (xml-special-char? x)
@@ -113,24 +113,27 @@
   (let i (string-upcase (xml2lml-identifier in))
     (xml-unify-string i)))
 
+(defun charlist-to-octalstring (x)
+  (concat-stringtree
+	  (mapcar (fn (+ "\\" (print-octal _ nil)))
+			  (force-list x))))
+
 (defun xml2lml-entity (in)
   (xml-read-char in) ; #\&
   (let e (xml-read-while in (fn (not (= _ #\;))))
 	(prog1
-	  (concat-stringtree
-		  (mapcar (fn (+ "\\" (print-octal _ nil)))
-				  (force-list (href *xml-entities-hash* e))))
+	  (charlist-to-octalstring (href *xml-entities-hash* e))
 	  (xml-read-char in))))
 
 (defun xml2lml-text (in)
   "Read plain text until next tag or end of stream."
   (xml-skip-spaces in)
   (let txt (xml-read-while in #'xml-text-char?)
-	(if (= #\& (xml-peek-char in))
-		(+ txt
-		   (xml2lml-entity in)
-		   (xml2lml-text in))
-	    txt)))
+;	(if (= #\& (xml-peek-char in))
+;		(+ txt
+;		   (xml2lml-entity in)
+;		   (xml2lml-text in))
+	    txt));)
 
 (defun xml2lml-name (in &optional (pkg nil))
   "Parse name with optional namespace."
