@@ -6,6 +6,7 @@
 		  ("quot" . 24)
 		  ("lt" . 60)
 		  ("gt" . 62)
+		  ("euro" #xE2 #x82 #xAC)
 		  ("nbsp" . 160)
 		  ("iexcl" . 161)
 		  ("cent" . 162)
@@ -104,3 +105,18 @@
 		  ("yuml" . 255)))
 
 (defvar *xml-entities-hash* (assoc-hash *xml-entities* :test #'string=))
+
+(defun xml-entities-to-utf8-0 (x)
+  (when x
+	(if (= #\& x.)
+		(aif (position #\; .x :test #'=)
+			 (let n (href *xml-entities-hash* (list-string (subseq .x 0 !)))
+			   (if n
+			 	   (cons (mapcar #'code-char (force-list n))
+						 (xml-entities-to-utf8-0 (nthcdr (1+ !) .x)))
+			 	   (cons x. (xml-entities-to-utf8-0 .x))))
+			 (cons x. (xml-entities-to-utf8-0 .x)))
+		(cons x. (xml-entities-to-utf8-0 .x)))))
+
+(defun xml-entities-to-utf8 (str)
+  (list-string (tree-list (xml-entities-to-utf8-0 (string-list str)))))

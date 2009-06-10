@@ -117,8 +117,9 @@
   (xml-read-char in) ; #\&
   (let e (xml-read-while in (fn (not (= _ #\;))))
 	(prog1
-	  (+ "\\" (print-octal (href *xml-entities-hash* e)
-					 	   nil))
+	  (concat-stringtree
+		  (mapcar (fn (+ "\\" (print-octal _ nil)))
+				  (force-list (href *xml-entities-hash* e))))
 	  (xml-read-char in))))
 
 (defun xml2lml-text (in)
