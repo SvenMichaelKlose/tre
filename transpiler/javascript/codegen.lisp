@@ -102,6 +102,9 @@
 (define-js-macro %%usetf-aref (val &rest x)
   `(%transpiler-native (aref ,@x) "=" ,val))
 
+(define-js-macro %%usetf-href (val &rest x)
+  `(%transpiler-native (aref ,@x) "=" ,val))
+
 (define-js-macro hremove (h key)
   `(%transpiler-native "delete " ,h "[" ,key "]"))
 

@@ -35,6 +35,8 @@
     (setf (expex-inline? ex) #'%slot-value?)
     (setf (expex-setter-filter ex) (fn (js-setter-filter tr _)))
     (setf (expex-function-arguments ex) #'js-function-arguments)
+    (setf (expex-argument-filter ex)
+		  (fn (transpiler-add-wanted-variable *js-transpiler* _)))
 
 	(apply #'transpiler-add-obfuscation-exceptions
 		tr

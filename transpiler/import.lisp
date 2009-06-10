@@ -28,15 +28,21 @@
 	   (assoc var *variables*)))
 
 (defun transpiler-add-wanted-variable (tr var)
-  (when (transpiler-should-add-wanted-variable? tr var)
-	(setf (href (transpiler-wanted-variables-hash tr) var) t)
-    (adjoin! var (transpiler-wanted-variables tr)))
+  (when (atom var)
+    (when (and (transpiler-should-add-wanted-variable? tr var)
+			   (not (href (transpiler-wanted-variables-hash tr) var)))
+	  (setf (href (transpiler-wanted-variables-hash tr) var) t)
+      (nconc! (transpiler-wanted-variables tr)
+			  (list var))))
   var)
 
 (defun transpiler-import-exported-closures (tr)
   (when *lambda-exported-closures*
 	(append (transpiler-sighten tr (pop *lambda-exported-closures*))
 		    (transpiler-import-exported-closures tr))))
+
+(defvar *imported-something* nil)
+(defvar *delayed-var-inits* nil)
 
 (defun transpiler-import-wanted-function (tr x)
   (append 
@@ -45,6 +51,7 @@
         (transpiler-add-emitted-wanted-function tr x)
         (let fun (symbol-function x)
           (when (functionp fun)
+		    (setf *imported-something* t)
             (transpiler-sighten tr
       	        `((defun ,x ,(function-arguments fun)
 	                ,@(function-body fun)))))))))
@@ -58,9 +65,18 @@
 (defun transpiler-import-wanted-variables (tr)
   (transpiler-sighten tr
     (mapcar (fn (unless (transpiler-defined-variable tr _)
-				  `(defvar ,_ ,(assoc-value _ *variables*))))
+				  (setf *imported-something* t)
+				  (setf *delayed-var-inits*
+						(append (transpiler-sighten tr
+								    `((setf ,_ ,(assoc-value _ *variables*))))
+ 							    *delayed-var-inits*))
+				  `(defvar ,_ nil)))
 		    (transpiler-wanted-variables tr))))
 
 (defun transpiler-import-from-environment (tr)
-  (append (transpiler-import-wanted-functions tr)
-		  (transpiler-import-wanted-variables tr)))
+  (clr *imported-something*)
+  (with (funs (transpiler-import-wanted-functions tr)
+		 vars (transpiler-import-wanted-variables tr))
+	(if *imported-something*
+	    (append funs vars (transpiler-import-from-environment tr))
+	    *delayed-var-inits*)))
