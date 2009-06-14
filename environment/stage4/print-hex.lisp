@@ -12,3 +12,10 @@
   (with-default-stream s str
     (print-hex-digit (>> x 4) s)
     (print-hex-digit (mod x 16) s)))
+
+(defun print-hexword (x &optional (str *standard-output*))
+  (with-default-stream s str
+    (print-hex-digit (mod (>> x 12) 16) s)
+    (print-hex-digit (mod (>> x 8) 16) s)
+    (print-hex-digit (mod (>> x 4) 16) s)
+    (print-hex-digit (mod x 16) s)))
