@@ -115,7 +115,9 @@
 
 (defun charlist-to-octalstring (x)
   (concat-stringtree
-	  (mapcar (fn (+ "\\" (print-octal _ nil)))
+	  (mapcar (fn (if (< _ 256)
+					  (+ "\\" (print-octal _ nil))
+					  (+ "\\u" (print-hexword _ nil))))
 			  (force-list x))))
 
 (defun xml2lml-entity (in)
