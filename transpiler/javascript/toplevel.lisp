@@ -46,7 +46,8 @@
  		     (transpiler-transpile tr user))
 	       f))
   (format f "}break;}~%")
-  (format t "~%; Everything OK. Done.~%"))
+  (format t "~%; Everything OK. ~A instructions. Done.~%"
+			*codegen-num-instructions*))
   ;(transpiler-print-obfuscations *js-transpiler*))
 
 (defun js-transpile (out files &key (obfuscate? nil))

@@ -3,6 +3,8 @@
 
 ;;;; EXPRESSION FINALIZATION
 
+(defvar *codegen-num-instructions* 0)
+
 ;; Make jump labels.
 ;; Remove (IDENTITY ~%RET)  expressions.
 ;; Add %VAR declarations for expex symbols.
@@ -47,9 +49,11 @@
 		  (transpiler-finalize-sexprs tr .x)
 
 	    ; Just copy with separator. Make return-value assignment if missing.
-		(cons (if (or (vm-jump? a)
-					  (%setq? a)
-					  (in? a. '%var '%transpiler-native))
-				  a
-				  `(%setq ,ret ,a))
-			  (transpiler-finalize-sexprs tr .x))))))
+	    (progn
+		  (1+! *codegen-num-instructions*)
+		  (cons (if (or (vm-jump? a)
+					    (%setq? a)
+					    (in? a. '%var '%transpiler-native))
+				    a
+				    `(%setq ,ret ,a))
+			    (transpiler-finalize-sexprs tr .x)))))))
