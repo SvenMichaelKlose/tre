@@ -216,7 +216,7 @@
 				                 .!
 					             x))
 					   (funcall
-						 (compose #'reduce-tags
+						 (compose ;#'reduce-tags
 								  ;#'remove-code
 								  #'opt-peephole-remove-void)
 						 x))))
