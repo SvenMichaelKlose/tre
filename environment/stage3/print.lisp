@@ -70,7 +70,7 @@
   (princ #\" str)
   (dolist (c (string-list x))
 	(if (= c #\")
-		(format str "\\\"")
+		(format str "\"")
 		(princ c str)))
   (princ #\" str))
 

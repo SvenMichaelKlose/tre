@@ -27,7 +27,7 @@
 	     (symbolp x)
 	       (js-print-symbol x)
 	     (characterp x)
-		   (+ "#\\" (*string.from-char-code (char-code x)))
+		   (+ "#\\\\" (*string.from-char-code (char-code x)))
 	     (arrayp x)
 	       "{array}"
 	     (stringp x)
