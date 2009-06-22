@@ -26,6 +26,5 @@
 (env-load "stage2/defstruct.lisp")
 (env-load "stage2/while.lisp")
 (env-load "stage2/math.lisp")
-(env-load "stage2/rplac-cons.lisp")
 (env-load "stage2/traverse.lisp")
 (env-load "stage2/remove.lisp")
