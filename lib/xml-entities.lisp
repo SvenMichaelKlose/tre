@@ -6,7 +6,7 @@
 		  ("quot" . 24)
 		  ("lt" . 60)
 		  ("gt" . 62)
-		  ("euro" . 8364) ;#xE2 #x82 #xAC)
+		  ("euro" . 8364)
 		  ("nbsp" . 160)
 		  ("iexcl" . 161)
 		  ("cent" . 162)
@@ -106,20 +106,15 @@
 
 (defvar *xml-entities-hash* (assoc-hash *xml-entities* :test #'string=))
 
-(defun xml-entities-to-utf8-unicode-0 (x)
-  (utf8-unicode (list-string (mapcar #'code-char (force-list x)))))
-
-(defun xml-entities-to-utf8-0 (x)
+(defun xml-entities-to-unicode-0 (x)
   (when x
     (when (= #\& x.)
 	  (awhen (position #\; .x :test #'=)
 	    (let-when n (href *xml-entities-hash* (list-string (subseq .x 0 !)))
-	      (return-from xml-entities-to-utf8-0
-					   (cons (if (consp n)
-					 	  	     (xml-entities-to-utf8-unicode-0 n)
-					 		     (code-char n))
-						     (xml-entities-to-utf8-0 (nthcdr (1+ !) .x)))))))
-    (cons x. (xml-entities-to-utf8-0 .x))))
+	      (return-from xml-entities-to-unicode-0
+					   (cons (code-char n)
+						     (xml-entities-to-unicode-0 (nthcdr (1+ !) .x)))))))
+    (cons x. (xml-entities-to-unicode-0 .x))))
 
-(defun xml-entities-to-utf8 (str)
-  (list-string (tree-list (xml-entities-to-utf8-0 (string-list str)))))
+(defun xml-entities-to-unicode (str)
+  (list-string (tree-list (xml-entities-to-unicode-0 (string-list str)))))
