@@ -10,6 +10,8 @@
 		  (doc.write " . ")
 		  (js-print-atom .x doc)))))
 
+(dont-obfuscate write)
+
 (defun js-print-cons (x doc)
   (doc.write "(")
   (js-print-cons-r x doc)

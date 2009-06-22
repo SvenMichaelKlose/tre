@@ -24,7 +24,7 @@
   x)
 
 (define-js-macro car (x)
-  `("(" ,x " ? " ,x "._ : null)"))
+  `("(" ,x " ? " ,x "." ,(symbol-name (transpiler-obfuscate-symbol *js-transpiler* '_)) " : null)"))
 
 (define-js-macro cdr (x)
-  `("(" ,x " ? " ,x ".__ : null)"))
+  `("(" ,x " ? " ,x "." ,(symbol-name (transpiler-obfuscate-symbol *js-transpiler* '__)) " : null)"))

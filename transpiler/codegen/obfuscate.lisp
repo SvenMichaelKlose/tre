@@ -5,7 +5,9 @@
 
 (defun transpiler-obfuscated-sym ()
   (incf *transpiler-obfuscation-counter*)
-  (number-sym *transpiler-obfuscation-counter*))
+  (let x (number-sym *transpiler-obfuscation-counter*)
+    (transpiler-add-obfuscation-exceptions *current-transpiler* x)
+	x))
 
 (defun %transpiler-obfuscate-symbol-unpackaged (tr x)
   (let obs (transpiler-obfuscations tr)
@@ -20,13 +22,13 @@
 		       (if pack
 		   	       (make-symbol (symbol-name x))
 			       x)))
-  (if pack
-      (make-symbol (symbol-name n) pack)
-	  n)))
+    (if pack
+        (make-symbol (symbol-name n) pack)
+	    n)))
 
 (defun transpiler-obfuscate-symbol-0 (tr x)
   (if (or (not (transpiler-obfuscate? tr))
-          (eq t (href (transpiler-obfuscations tr) x)))
+          (eq t (href (transpiler-obfuscations tr) (make-symbol (symbol-name x)))))
       x
 	  (%transpiler-obfuscate-symbol-1 tr x)))
 

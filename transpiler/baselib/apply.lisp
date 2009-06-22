@@ -1,7 +1,7 @@
 ;;;;; Transpiler: TRE to JavaScript
 ;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
 
-(dont-obfuscate apply)
+(dont-obfuscate apply call)
 
 ;; Call function with expanded arguments.
 ;;
@@ -16,7 +16,7 @@
 	  (unless (listp l)
 		(error "APPLY: last argument is not a cell")))
     (fun.apply nil
-	  (list-array
-	    (aif fun.tre-args
-             (argument-expand-values fun ! args)
-			 args)))))
+	  		   (list-array
+	    		   (aif fun.tre-args
+             		    (argument-expand-values fun ! args)
+			 		    args)))))

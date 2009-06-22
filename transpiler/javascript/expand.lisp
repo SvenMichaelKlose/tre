@@ -33,9 +33,9 @@
   (with (n (%defun-name name)
 		 tr *js-transpiler*
 		 fi-sym (when (eq '%funinfo args.)
-				  (second args))
+				  .args.)
 		 a (if fi-sym
-			   (cddr args)
+			   ..args
 			   args))
     (transpiler-add-function-args tr n a)
 	(transpiler-add-defined-function tr n)
