@@ -35,9 +35,3 @@
   "Print formatted string."
   (with-default-stream nstr str
     (%format nstr (length txt) 0 txt args)))
-
-(defun error (&rest args)
-  (%error (apply #'format nil args)))
-
-(defun warn (&rest args)
-  (apply #'format t (string-concat "WARNING: " (first args)) (cdr args)))
