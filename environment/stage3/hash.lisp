@@ -3,6 +3,8 @@
 ;;;;
 ;;;; Generalized hash-table
 
+(defvar *default-hash-size* 2048)
+
 (defstruct %hash-table
   test              ; Function for equality test of keys.
   size              ; Initial hash table size.
@@ -15,9 +17,9 @@
 (defun make-hash-table (&key test size rehash-size rehash-threshold)
   "Create a new hash table."
   (make-%hash-table
-    :test (or test #'eq) :size 4096
+    :test (or test #'eq) :size *default-hash-size*
     :rehash-size rehash-size :rehash-threshold rehash-threshold
-    :hash (make-array 4096)))
+    :hash (make-array *default-hash-size*)))
 
 (defun %make-hash-index-num (h k)
   "Make hash index from number."
@@ -70,6 +72,8 @@
 				      b))))
 
 (defun hashkeys (h)
-  (with (keys nil)
+  (let keys nil
 	(dotimes (i (length (%hash-table-hash h)) keys)
-	  (setf keys (append (carlist (aref (%hash-table-hash h) i)) keys)))))
+	  (push! (carlist (aref (%hash-table-hash h) i))
+			 keys))
+    (apply #'nconc keys)))
