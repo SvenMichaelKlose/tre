@@ -64,7 +64,7 @@
 
   (apply-argdefs? nil)
 
-  (inject-function-names? t)
+  (inject-function-names? nil)
 
   ; You shouldn't have to tweak these at construction-time:
   (symbol-translations nil)

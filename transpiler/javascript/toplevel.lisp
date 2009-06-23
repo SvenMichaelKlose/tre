@@ -6,11 +6,10 @@
 (defvar *nil-symbol-name* nil)
 
 (defun transpiler-print-obfuscations (tr)
-(print 'pr)
-  (dolist (k (print (hashkeys (transpiler-obfuscations tr))))
-    ;(unless (in=? (elt (symbol-name k) 0) #\~) ; #\_)
+  (dolist (k (hashkeys (transpiler-obfuscations tr)))
+    (unless (in=? (elt (symbol-name k) 0) #\~) ; #\_)
 	  (format t "~A -> ~A~%" (symbol-name k)
-						     (href (transpiler-obfuscations tr) k))));)
+						     (href (transpiler-obfuscations tr) k)))))
 
 (defun js-transpile-0 (f files)
   (format f "var _I_ = 0; while (1) {switch (_I_) {case 0: ~%")

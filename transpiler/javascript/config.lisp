@@ -42,7 +42,9 @@
 		tr
 	    '(t this %funinfo false
 		  %transpiler-native %transpiler-string
-		  lambda function &key &optional &rest prototype
+		  ;lambda function
+		  &key &optional &rest
+		  prototype
 		  table tbody td tr ul li hr img div p html head body a href src
 		  h1 h2 h3 h4 h5 h6 h7 h8 h9
 		  fun hash class
