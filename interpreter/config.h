@@ -111,4 +111,9 @@ typedef int bool;
 #define TRE_VERBOSE_SYMBOL_GC
 #endif
 
+#ifndef TRE_NO_BUILTIN_SEARCH
+#define TRE_BUILTIN_ASSOC
+#define TRE_BUILTIN_MEMBER
+#endif
+
 #endif /* #ifndef TRE_TRE_H */

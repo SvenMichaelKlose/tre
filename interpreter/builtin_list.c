@@ -139,6 +139,8 @@ trelist_builtin_consp (treptr list)
     return treptr_t;
 }
 
+#ifdef TRE_BUILTIN_ASSOC
+
 treptr
 trelist_builtin_assoc (treptr args)
 {
@@ -180,6 +182,9 @@ trelist_builtin_assoc (treptr args)
 	}
 	return treptr_nil;
 }
+#endif /* #ifdef TRE_BUILTIN_ASSOC */
+
+#ifdef TRE_BUILTIN_MEMBER
 
 treptr
 trelist_builtin_member (treptr args)
@@ -189,14 +194,12 @@ trelist_builtin_member (treptr args)
 	treptr sublist;
 	treptr test = treptr_nil;
 	treptr l;
-	treptr car;
 	treptr fake;
 	treptr res;
 
 	l = list;
 	while (l != treptr_nil) {
-		car = CAR(l);
-		if (car == trelist_builtin_test_symbol) {
+		if (CAR(l) == trelist_builtin_test_symbol) {
 			test = CADR(l);
 			break;
 		}
@@ -212,7 +215,7 @@ trelist_builtin_member (treptr args)
 				if (treatom_eql (CAR(sublist), key) != treptr_nil)
 					return treptr_t;
 			} else {
-    			fake = CONS(test, CONS(key, CONS(car, treptr_nil)));
+    			fake = CONS(test, CONS(key, CONS(CAR(sublist), treptr_nil)));
     			tregc_push (fake);
 
     			res = treeval (fake);
@@ -229,6 +232,8 @@ trelist_builtin_member (treptr args)
 	}
 	return treptr_nil;
 }
+
+#endif /* #ifdef TRE_BUILTIN_MEMBER */
 
 void
 trelist_builtin_init ()
