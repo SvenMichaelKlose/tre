@@ -5,13 +5,12 @@
 
 (defun append (&rest lsts)
   "Concatenate lists. All lists are copied."
-  (if (not (cdr lsts))
-    (copy-list (car lsts))
-	(if (car lsts)
+  (when lsts
+	(if (not (car lsts)) ; Ignore empty lists.
+		(apply #'append (cdr lsts))
    	    (let n (copy-list (car lsts))
           (rplacd (last n) (apply #'append (cdr lsts)))
-          n)
-		(apply #'append (cdr lsts)))))
+          n))))
 
 (defmacro append! (place &rest args)
   `(setf ,place (append ,place ,@args)))
