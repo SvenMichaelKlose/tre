@@ -19,7 +19,6 @@
 (env-load "stage1/main.lisp")
 
 (defvar *assert* nil)
-(defvar *builtin-assoc* t)
 
 (env-load "stage2/main.lisp")
 (env-load "stage3/main.lisp")

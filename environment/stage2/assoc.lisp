@@ -3,7 +3,7 @@
 ;;;;
 ;;;; Associative lists
 
-(unless *BUILTIN-ASSOC*
+(unless (eq t *BUILTIN-ASSOC*)
   (defun assoc (key lst &key (test nil))
     "Search value for key in associative list."
     (when lst

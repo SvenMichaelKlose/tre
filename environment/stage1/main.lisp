@@ -26,7 +26,7 @@
 (env-load "stage1/tests-stage0.lisp")
 (env-load "stage1/anaphoric.lisp")
 (env-load "stage1/comparison.lisp")
-;(env-load "stage1/member.lisp")
+(env-load "stage1/member.lisp")
 (env-load "stage1/set.lisp")
 (env-load "stage1/setf-builtin.lisp")
 (env-load "stage1/incdec.lisp")
