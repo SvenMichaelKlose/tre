@@ -159,6 +159,8 @@ _trelist_get (treptr car, treptr cdr)
 
     CHKPTR(car);
     CHKPTR(cdr);
+	tregc_car = car;
+	tregc_car = cdr;
 
     ret = tre_lists_free;
 

@@ -206,6 +206,9 @@ tregc_mark (void)
 
     tregc_trace_expr_toplevel (TRECONTEXT_FUNSTACK());
 
+    tregc_trace_object (tregc_car);
+    tregc_trace_object (tregc_cdr);
+
     /* Mark temporarily untraceable objects. */
     tregc_trace_object (tregc_save);
     tregc_trace_object (tregc_save_stack);
