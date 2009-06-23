@@ -49,3 +49,6 @@
 - (defun bla (x y z)
    x..) ; x + rest
 x + y + z
+
+- symbol construction syntax
+	'prefix-,name'-tail
