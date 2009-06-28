@@ -315,11 +315,12 @@ treprint_r (treptr p)
     treprint_no_nl = FALSE;
 }
 
-void
+treptr
 treprint (treptr p)
 {
 	CHKPTR(p);
     treprint_wipe_marks ();
     treprint_r (p);
     printnl ();
+	return p;
 }
