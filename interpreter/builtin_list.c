@@ -149,25 +149,28 @@ trelist_builtin_assoc (treptr args)
 	treptr test;
 	treptr res;
 	treptr fake;
-	treptr car;
 	treptr elm;
+	treptr elmkey;
 
 	key = CAR(args);
-	list = CADR(args);
-	test = CDDR(args) != treptr_nil ?
-			CADDDR(args) :
-			treptr_nil;
+	test = treptr_nil;
+	if (CDDR(args) != treptr_nil) {
+	    if (CADDR(args) != trelist_builtin_test_symbol)
+			treerror_norecover (args, "ASSOC: too many args");
+		test = CADDDR(args);
+	}
 
+	list = CADR(args);
 	while (list != treptr_nil) {
 		elm = CAR(list);
-		car = CAR(elm);
-		if (test == trelist_builtin_eq_symbol && car == key)
+		elmkey = CAR(elm);
+		if (test == trelist_builtin_eq_symbol && elmkey == key)
 			return elm;
 		if (test == treptr_nil) {
-			if (treatom_eql (car, key) != treptr_nil)
+			if (treatom_eql (elmkey, key) != treptr_nil)
 				return elm;
 		} else {
-    		fake = CONS(test, CONS(key, CONS(car, treptr_nil)));
+    		fake = CONS(test, CONS(key, CONS(elmkey, treptr_nil)));
     		tregc_push (fake);
 
     		res = treeval (fake);
@@ -191,6 +194,7 @@ trelist_builtin_member (treptr args)
 {
 	treptr key = CAR(args);
 	treptr list = CDR(args);
+	treptr listend;
 	treptr sublist;
 	treptr test = treptr_nil;
 	treptr l;
@@ -198,15 +202,17 @@ trelist_builtin_member (treptr args)
 	treptr res;
 
 	l = list;
+	listend = treptr_nil;
 	while (l != treptr_nil) {
 		if (CAR(l) == trelist_builtin_test_symbol) {
 			test = CADR(l);
+			listend = l;
 			break;
 		}
 		l = CDR(l);
 	}
 
-	while (list != treptr_nil) {
+	while (list != treptr_nil && list != listend) {
 		sublist = CAR(list);
 		if (sublist == trelist_builtin_test_symbol)
 			break;
