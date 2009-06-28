@@ -18,3 +18,8 @@
 	 	  (string= "bar" .x.)
 		  (not ..x))))
   t)
+
+(define-test "SPLIT works on string with gaps"
+  ((let x (split #\/ "file:///home/pixel/foo//bar")
+	 t))
+  t)

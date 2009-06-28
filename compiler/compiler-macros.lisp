@@ -62,7 +62,7 @@
 ;;; is expanded.
 
 (define-compiler-macro go (label)
-  (aif (cdr (assoc label *tagbody-replacements*))
+  (aif (cdr (assoc label *tagbody-replacements* :test #'eq))
     `(vm-go ,!)
     (with-compiler-label g
       (acons! label g *tagbody-replacements*)
@@ -72,7 +72,7 @@
   `(vm-scope
      ,@(mapcar (fn (if (consp _)
 		     		   _
-		     		   (aif (cdr (assoc _ *tagbody-replacements*))
+		     		   (aif (cdr (assoc _ *tagbody-replacements* :test #'eq))
 		       				!
 		       				_)))
                args)

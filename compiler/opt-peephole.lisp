@@ -212,13 +212,14 @@
 	   rec
 		 #'((x)
 			  (maptree #'((x)
-			                (aif (assoc x removed-tags)
+			                (aif (assoc x removed-tags :test #'eq)
 				                 .!
 					             x))
 					   (funcall
 						 (compose #'reduce-tags
-								  #'remove-code
-								  #'opt-peephole-remove-void)
+								  ;#'remove-code
+								  ;#'opt-peephole-remove-void
+								  )
 						 x))))
 
 		(opt-peephole-remove-unused-vars

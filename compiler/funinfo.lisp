@@ -84,10 +84,12 @@
 		  (funinfo-in-this-or-parent-env? ! var)))))
 
 (defun funinfo-rename (fi x)
-  (assoc-replace x (funinfo-renamed-vars fi)))
+  (assoc-replace x (funinfo-renamed-vars fi)
+				 :test #'eq))
 
 (defun funinfo-rename-many (fi x)
-  (assoc-replace-many x (funinfo-renamed-vars fi)))
+  (assoc-replace-many x (funinfo-renamed-vars fi)
+					  :test #'eq))
 
 (defun funinfo-ignore? (fi var)
   (member var (funinfo-ignorance fi)))

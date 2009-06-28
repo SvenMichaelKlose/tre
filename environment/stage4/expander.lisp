@@ -15,7 +15,7 @@
   user) ; For external use.
 
 (defun expander-get (name)
-  (cdr (assoc name *expanders*)))
+  (cdr (assoc name *expanders* :test #'eq)))
 
 (defun define-expander (expander-name &key (pre nil) (post nil)
 										   (pred nil) (call nil))
@@ -29,13 +29,13 @@
       (setf (expander-pred e)
 			(fn (and (atom _.)
 					 (symbol-name _.)
-					 (cdr (assoc _. (expander-macros e)))))))
+					 (cdr (assoc _. (expander-macros e) :test #'eq))))))
     (unless call
       (setf (expander-call e)
-			(fn (apply (cdr (assoc _. (expander-macros e))) ._))))
+			(fn (apply (cdr (assoc _. (expander-macros e) :test #'eq)) ._))))
     (setf (expander-lookup e)
           #'((expander name)
-			  (cdr (assoc name (expander-macros expander)))))
+			  (cdr (assoc name (expander-macros expander) :test #'eq))))
 	e))
 
 (defun set-expander-macro (expander-name name args-and-body)
@@ -69,4 +69,5 @@
       (funcall (expander-post e)))))
 
 (defun expander-has-macro? (expander-name macro-name)
-  (cdr (assoc macro-name (expander-macros (expander-get expander-name)))))
+  (cdr (assoc macro-name (expander-macros (expander-get expander-name))
+			  :test #'eq)))
