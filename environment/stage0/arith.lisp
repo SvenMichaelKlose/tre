@@ -3,6 +3,11 @@
 
 (setq *universe* (cons '+ *universe*))
 
+;tredoc
+; (arg :type (number string)
+;  	   :occurence rest)
+; "Adds numbers or concatenated strings."
+; (returns :type (number string))
 (%set-atom-fun +
   #'((&rest x)
 	   (if (stringp (car x))
@@ -10,6 +15,10 @@
 		   (apply #'number+ x))))
 
 ;; NUMBER- should be NON-CHARACTER-
+;tredoc
+; (arg :type number)
+; "Substract rest of arguments from first."
+; (returns :type number)
 (%set-atom-fun -
   #'((&rest x)
 	   (apply #'number- x)))

@@ -1,7 +1,9 @@
 ;;;;; TRE environment
-;;;;; Copyright (C) 2005-2006,2008 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2005-2006,2008-2009 Sven Klose <pixel@copei.de>
 
-;; Check if atom is an argument keyword.
+;tredoc
+; (predicate)
+; "Checks if atom is an argument keyword."
 (%defun %arg-keyword? (x)
   (if
     (eq x '&rest) t

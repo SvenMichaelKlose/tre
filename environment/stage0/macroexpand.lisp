@@ -2,8 +2,6 @@
 ;;;;; Copyright (c) 2006-2009 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Macro expansion.
-;;;;;
-;;;;; Macros are expanded from the leaves to the root.
 
 (setq *universe* (cons '*macrop-diversion*
                  (cons '*macroexpand-backquote-diversion*
@@ -24,10 +22,6 @@
                   (cons (cons '*macroexpand-backquote-diversion* nil)
 				  *variables*)))))
 
-;;;; Expand macros in BACKQUOTE expression.
-;;;;
-;;;; This algorithm is incomplete - it doesn't handle
-;;;; nested backquotes.
 (%set-atom-fun %macroexpand-backquote
   #'((%g)
        (if

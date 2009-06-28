@@ -3,23 +3,6 @@
 ;;;;
 ;;;; Searching sequences
 
-(defvar *mem-elt-seq* nil)
-(defvar *mem-elt-seq-tmp* nil)
-(defvar *mem-elt-idx* nil)
-
-(defun memorized-elt (seq i)
-  (if (consp seq)
-      (if (and (eq seq *mem-elt-seq*)
-			   *mem-elt-seq-tmp*
-		       (= i (1+! *mem-elt-idx*)))
-	      (car (setf *mem-elt-seq-tmp* (cdr *mem-elt-seq-tmp*)))
-	      (progn
-		    (setf *mem-elt-seq* seq
-				  *mem-elt-seq-tmp* (nthcdr i seq)
-			      *mem-elt-idx* i)
-		    (car *mem-elt-seq-tmp*)))
-	  (elt seq i)))
-  
 (defmacro xchg (a b)
   "Swaps values of the arguments."
   (with-gensym g
@@ -44,8 +27,8 @@
 	         (< i e)
 			 (> i e)))
 	  (let elm (memorized-elt seq i)
-        (when (apply pred (cons ,elm (when with-index
-									   (list i))))
+        (when (apply pred (cons elm (when with-index
+									  (list i))))
 		  (return elm))))))
  
 (defun find (obj seq &key (start nil) (end nil)

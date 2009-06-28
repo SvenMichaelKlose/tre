@@ -1,5 +1,5 @@
 ;;;; TRE environment
-;;;; Copyright (c) 2006-2008 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2006-2009 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; BACKQUOTE expansion
 ;;;;
@@ -9,11 +9,16 @@
 (setq *UNIVERSE* (cons 'quasiquote?
 				 (cons '%quasiquote-eval
 				 (cons '%backquote-quasiquote
-				 (cons %backquote-quasiquote-splice
-				 (cons %backquote-1
-				 (cons %backquote
-				 (cons backquote *UNIVERSE*))))))))
+				 (cons '%backquote-quasiquote-splice
+				 (cons '%backquote-1
+				 (cons '%backquote
+				 (cons 'backquote
+				 (cons 'quasiquote
+				 (cons 'quasiquote-splice *UNIVERSE*))))))))))
 
+;tredoc
+; "Tests if argument is a QUASIQUOTE or QUASIQUOTE-SPLICE expression."
+; (returns :type boolean)
 (%set-atom-fun quasiquote?
   #'((x)
        (if (consp x)
@@ -96,3 +101,11 @@
 ;; Initialise expansion.
 (%set-atom-fun backquote
   (special (%gsbq) (%backquote %gsbq)))
+
+(%set-atom-fun quasiquote
+  #'((x)
+	   (%error "',' outside backquote")))
+
+(%set-atom-fun quasiquote-splice
+  #'((x)
+	   (%error "',@' outside backquote")))
