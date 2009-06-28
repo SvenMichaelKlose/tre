@@ -28,18 +28,18 @@
 
   ; Functions defined in transpiled code, not in the environment.
   (defined-functions nil)
-  (defined-functions-hash (make-hash-table))
+  (defined-functions-hash (make-hash-table :test #'eq))
 
   ; functinos required by transpiled code. It is imported from the
   ; environment.
   (wanted-functions nil)
-  (wanted-functions-hash (make-hash-table))
+  (wanted-functions-hash (make-hash-table :test #'eq))
 
   (wanted-variables nil)
-  (wanted-variables-hash (make-hash-table))
+  (wanted-variables-hash (make-hash-table :test #'eq))
 
   (defined-variables nil)
-  (defined-variables-hash (make-hash-table))
+  (defined-variables-hash (make-hash-table :test #'eq))
 
   ; Tells if target required named top-level functions (like C).
   (named-functions? nil)
@@ -69,9 +69,9 @@
   ; You shouldn't have to tweak these at construction-time:
   (symbol-translations nil)
   thisify-classes
-  (function-args (make-hash-table))
+  (function-args (make-hash-table :test #'eq))
   emitted-wanted-functions
-  (obfuscations (make-hash-table))
+  (obfuscations (make-hash-table :test #'eq))
   plain-arg-funs
   (exported-closures nil))
 
@@ -80,14 +80,14 @@
   		(transpiler-function-args tr) nil
   		(transpiler-emitted-wanted-functions tr) nil
   		(transpiler-wanted-functions tr) nil
-  		(transpiler-wanted-functions-hash tr) (make-hash-table)
+  		(transpiler-wanted-functions-hash tr) (make-hash-table :test #'eq)
   		(transpiler-wanted-variables tr) nil
-  		(transpiler-wanted-variables-hash tr) (make-hash-table)
+  		(transpiler-wanted-variables-hash tr) (make-hash-table :test #'eq)
   		(transpiler-defined-functions tr) nil
-  		(transpiler-defined-functions-hash tr) (make-hash-table)
+  		(transpiler-defined-functions-hash tr) (make-hash-table :test #'eq)
   		(transpiler-defined-variables tr) nil
-  		(transpiler-defined-variables-hash tr) (make-hash-table)
-  		(transpiler-function-args tr) (make-hash-table)
+  		(transpiler-defined-variables-hash tr) (make-hash-table :test #'eq)
+  		(transpiler-function-args tr) (make-hash-table :test #'eq)
   		(transpiler-exported-closures tr) nil))
 
 (defun transpiler-defined-function (tr name)
@@ -204,4 +204,5 @@
 	(transpiler-make-std-macro-expander tr)
 	(transpiler-make-code-expander tr)
 	(transpiler-make-expex tr)
+	(transpiler-obfuscate-symbol tr nil)
 	tr))
