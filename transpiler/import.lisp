@@ -25,7 +25,7 @@
 
 (defun transpiler-should-add-wanted-variable? (tr var)
   (and (transpiler-can-import? tr var)
-	   (assoc var *variables*)))
+	   (assoc var *variables* :test #'eq)))
 
 (defun transpiler-add-wanted-variable (tr var)
   (when (atom var)
@@ -68,7 +68,8 @@
 				  (setf *imported-something* t)
 				  (setf *delayed-var-inits*
 						(append (transpiler-sighten tr
-								    `((setf ,_ ,(assoc-value _ *variables*))))
+								    `((setf ,_ ,(assoc-value _ *variables*
+															 :test #'eq))))
  							    *delayed-var-inits*))
 				  `(defvar ,_ nil)))
 		    (transpiler-wanted-variables tr))))
