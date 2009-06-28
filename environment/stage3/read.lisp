@@ -59,6 +59,12 @@
 			               (rec))))))
 	(list-string (rec))))
 
+(defun read-comment-block (str)
+  (loop
+	(if (and (= #\| (read-char str))
+			 (= #\# (read-char str)))
+		(read-token str))))
+
 (defun read-token (str)
   (with ((pkg sym) (get-symbol-and-package str))
 	(values (if (and sym
@@ -81,6 +87,7 @@
 					          (#\\	'char)
 					          (#\x	'hexnum)
 					          (#\'	'function)
+					          (#\|	(read-comment-block str))
 					          (t	(error "invalid character after '#'"))))
 			          (-1	'eof))))
 		     pkg sym)))
