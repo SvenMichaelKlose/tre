@@ -1,7 +1,7 @@
 ;;;;; Transpiler: TRE to JavaScript
 ;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
 
-(js-type-predicate %numberp number)
+(js-type-predicate %numberp "number")
 
 (defun %wrap-char-number (x)
   (if (characterp x)

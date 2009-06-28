@@ -54,9 +54,7 @@
 	(let n (%defun-name name)
       `(progn
 		 (%var ,g)
-	     (%setq ,g (%unobfuscated-lookup-symbol
-					   ,(symbol-name n)
-					   nil))
+		 (%setq ,g (%unobfuscated-lookup-symbol ,(symbol-name n) nil))
 	     ,(apply #'js-essential-defun name args body)
 		 (setf (symbol-function ,g) ,n)))))
 
@@ -124,11 +122,13 @@
            ,@body)))))
 
 ;; Make type predicate function.
-(define-js-std-macro js-type-predicate (name type)
+(define-js-std-macro js-type-predicate (name &rest types)
   `(defun ,name (x)
      (when x
-       (%%%= (%js-typeof x)
-          ,(string-downcase (symbol-name type))))))
+	   ,(if (< 1 (length types))
+       		`(or ,@(mapcar (fn `(%%%= (%js-typeof x) ,_))
+						   types))
+            `(%%%= (%js-typeof x) ,types.)))))
 
 (define-js-std-macro href (hash key)
   `(aref ,hash ,key))

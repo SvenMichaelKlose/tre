@@ -1,7 +1,11 @@
 ;;;;; Transpiler: TRE to JavaScript
 ;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
 
-(js-type-predicate stringp string)
+(js-type-predicate %stringp "string")
+
+(defun stringp (x)
+  (or (%stringp x)
+	  (instanceof x (%transpiler-native "String"))))
 
 ;; XXX must be optional.
 (defun string-concat (&rest x)
