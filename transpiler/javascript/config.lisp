@@ -42,7 +42,7 @@
 		tr
 	    '(t this %funinfo false
 		  %transpiler-native %transpiler-string
-		  ;lambda function
+		  lambda function
 		  &key &optional &rest
 		  prototype
 		  table tbody td tr ul li hr img div p html head body a href src
