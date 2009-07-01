@@ -139,6 +139,19 @@ trelist_builtin_consp (treptr list)
     return treptr_t;
 }
 
+treptr
+treeval_noargs (treptr efunc, treptr fake)
+{
+    if (TREPTR_IS_FUNCTION(efunc))
+        return treeval_funcall (efunc, fake, FALSE);
+    else if (TREPTR_IS_BUILTIN(efunc))
+        return treeval_xlat_function (treeval_xlat_builtin, efunc, fake, FALSE);
+    else if (TREPTR_IS_SPECIAL(efunc))
+        return trespecial (efunc, fake);
+    else
+        return treerror (efunc, "function expected");
+}
+
 #ifdef TRE_BUILTIN_ASSOC
 
 treptr
@@ -147,6 +160,7 @@ trelist_builtin_assoc (treptr args)
 	treptr key;
 	treptr list;
 	treptr test;
+	treptr etest;
 	treptr res;
 	treptr fake;
 	treptr elm;
@@ -160,30 +174,38 @@ trelist_builtin_assoc (treptr args)
 		test = CADDDR(args);
 	}
 
+	etest = treeval (test);
+	tregc_push (etest);
 	list = CADR(args);
 	while (list != treptr_nil) {
 		elm = CAR(list);
 		elmkey = CAR(elm);
 		if (test == trelist_builtin_eq_symbol && elmkey == key)
-			return elm;
+			goto got_it;
 		if (test == treptr_nil) {
 			if (treatom_eql (elmkey, key) != treptr_nil)
-				return elm;
+				goto got_it;
 		} else {
-    		fake = CONS(test, CONS(key, CONS(elmkey, treptr_nil)));
+    		fake = CONS(etest, CONS(key, CONS(elmkey, treptr_nil)));
     		tregc_push (fake);
 
-    		res = treeval (fake);
+			res = treeval_noargs (etest, fake);
 
     		tregc_pop ();
     		TRELIST_FREE_EARLY(fake);
 			if (res != treptr_nil)
-				return elm;
+				goto got_it;
 		}
 
 		list = CDR(list);
 	}
+
+	tregc_pop ();
 	return treptr_nil;
+
+got_it:
+	tregc_pop ();
+	return elm;
 }
 #endif /* #ifdef TRE_BUILTIN_ASSOC */
 
@@ -197,6 +219,7 @@ trelist_builtin_member (treptr args)
 	treptr listend;
 	treptr sublist;
 	treptr test = treptr_nil;
+	treptr etest;
 	treptr l;
 	treptr fake;
 	treptr res;
@@ -212,6 +235,8 @@ trelist_builtin_member (treptr args)
 		l = CDR(l);
 	}
 
+	etest = treeval (test);
+	tregc_push (etest);
 	while (list != treptr_nil && list != listend) {
 		sublist = CAR(list);
 		if (sublist == trelist_builtin_test_symbol)
@@ -219,24 +244,30 @@ trelist_builtin_member (treptr args)
 		while (sublist != treptr_nil) {
 			if (test == treptr_nil) {
 				if (treatom_eql (CAR(sublist), key) != treptr_nil)
-					return treptr_t;
+					goto got_t;
 			} else {
-    			fake = CONS(test, CONS(key, CONS(CAR(sublist), treptr_nil)));
+    			fake = CONS(etest, CONS(key, CONS(CAR(sublist), treptr_nil)));
     			tregc_push (fake);
 
-    			res = treeval (fake);
+				res = treeval_noargs (etest, fake);
 
     			tregc_pop ();
     			TRELIST_FREE_EARLY(fake);
 				if (res != treptr_nil)
-					return treptr_t;
+					goto got_t;
 			}
 
 			sublist = CDR(sublist);
 		}
 		list = CDR(list);
 	}
+
+	tregc_pop ();
 	return treptr_nil;
+
+got_t:
+	tregc_pop ();
+	return treptr_t;
 }
 
 #endif /* #ifdef TRE_BUILTIN_MEMBER */
