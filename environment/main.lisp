@@ -12,7 +12,7 @@
 
 (env-load "stage0/main.lisp")
 
-(setq *show-definitions* t)
+(setq *show-definitions* nil)
 (if (eq *show-definitions* '*show-definitions*)
     (setq *show-definitions* nil))
 
