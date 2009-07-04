@@ -3,12 +3,19 @@
 
 (defun escape-charlist (x)
   (when x
-    (if (= #\" x.)
+    (if
+	  (= #\" x.)
         (cons #\\
               (cons x.
                     (escape-charlist .x)))
-        (cons x.
-              (escape-charlist .x)))))
+	  (= #\\ x.)
+        (cons #\\
+			  (if (and .x (digit-char-p .x.))
+                  (escape-charlist .x)
+                  (cons #\\
+                        (escape-charlist .x))))
+      (cons x.
+            (escape-charlist .x)))))
 
 (defun escape-string (x)
   (list-string (escape-charlist (string-list x))))
