@@ -17,7 +17,7 @@
 			     (%error "not a pair")))))))
 
 (let lst '((a . d) (b . e) (c . f))
-  (unless (eq 'e (cdr (print (assoc 'b lst))))
+  (unless (eq 'e (cdr (assoc 'b lst)))
 	(%error "ASSOC doesn't work with symbols")))
 
 (let lst '((1 . a) (2 . b) (3 . c))
