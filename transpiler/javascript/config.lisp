@@ -40,7 +40,7 @@
 
 	(apply #'transpiler-add-obfuscation-exceptions
 		tr
-	    '(t this %funinfo false
+	    '(t this %funinfo false true null
 		  %transpiler-native %transpiler-string
 		  lambda function
 		  &key &optional &rest
