@@ -41,4 +41,5 @@
 	"stream.lisp"
 	"string.lisp"
 	"assoc.lisp"
-	"member.lisp"))
+	"member.lisp"
+	"hash.lisp"))
