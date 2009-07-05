@@ -14,7 +14,7 @@
 
 (defun find-all (elm x)
   (find-all-if (fn (eq elm _))
-				x))
+			   x))
 
 (defun opt-peephole-has-not-jumps-to (x tag)
   (dolist (i x t)
@@ -154,6 +154,7 @@
       ; Remove second of (setf x y y x).
 	  ((and (%setq? a)
 			(%setq? d.)
+			(atomic? .a.)
 			(eq .a. (third d.))
 			(eq (second d.) ..a.))
 	     (cons a (opt-peephole-remove-void .d)))
@@ -217,8 +218,8 @@
 					             x))
 					   (funcall
 						 (compose #'reduce-tags
-								  ;#'remove-code
-								  ;#'opt-peephole-remove-void
+								  #'remove-code
+								  #'opt-peephole-remove-void
 								  )
 						 x))))
 
