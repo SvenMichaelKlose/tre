@@ -28,6 +28,7 @@
 (env-load "stage4/maptree.lisp")
 (env-load "stage4/mapped-macro.lisp")
 (env-load "stage4/pad.lisp")
+(env-load "stage4/pair.lisp")
 (env-load "stage4/print-hex.lisp")
 (env-load "stage4/print-octal.lisp")
 (env-load "stage4/repeat.lisp")
