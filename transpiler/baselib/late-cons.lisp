@@ -24,7 +24,7 @@
 (defun consp (x)
   (and (objectp x)
 	   x.__class
-	   (%%%= x.__class "cons")))
+	   (%%%= x.__class ,(transpiler-symbol-string *js-transpiler* 'cons))))
 
 (defun atom (x)
   (not (consp x)))

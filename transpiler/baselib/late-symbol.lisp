@@ -19,4 +19,4 @@
 (defun symbolp (x)
   (and (objectp x)
 	   x.__class
-	   (%%%= x.__class "symbol")))
+       (%%%= x.__class ,(transpiler-symbol-string *js-transpiler* 'symbol))))
