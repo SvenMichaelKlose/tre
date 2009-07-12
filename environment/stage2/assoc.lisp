@@ -43,7 +43,8 @@
 	  (%error "not a pair")))
 
 (defun (setf assoc) (new-value key lst &key test)
-  (%setf-assoc new-value key lst :test test))
+  (%setf-assoc new-value key lst :test test)
+  new-value)
 
 (defun acons (key val lst)
   "Prepend key/value pair to associative list."

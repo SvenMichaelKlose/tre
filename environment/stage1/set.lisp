@@ -29,13 +29,9 @@
 	         (args (cdr p))
 	         (setfun (%setf-make-symbol fun)))
         (if (funcall *setf-functionp* setfun)
-	        (let g (gensym)
-			   (if (member (car args) *constants*)
-		    	   (%error "cannot set constant"))
-              `(progn
-	             (let ,g ,val
-	               (,setfun ,g ,@args)
-	               ,g)))
+			(if (member (car args) *constants*)
+		    	(%error "cannot set constant")
+	            `(,setfun ,val ,@args))
             (progn
               (print p)
 	          (%error "place not settable"))))))
@@ -57,4 +53,5 @@
 		 ,@(%setf args)))))
 
 (defun (setf symbol-function) (fun sym)
-  (%set-atom-fun sym fun))
+  (%set-atom-fun sym fun)
+  fun)

@@ -18,7 +18,8 @@
     (setf (text-container-lines txt)
 	      (nconc (subseq lines 0 y)
 			     (list val)
-			     (subseq lines (1+ y))))))
+			     (subseq lines (1+ y)))))
+  val)
 
 (defun text-container-up (txt &optional (n 1))
   (with (y	(text-container-y txt))

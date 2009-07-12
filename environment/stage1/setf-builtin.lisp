@@ -1,14 +1,15 @@
-;;;; nix operating system project
-;;;; list processor environment
-;;;; Copyright (C) 2006 Sven Klose <pixel@copei.de>
-;;;;
-;;;; SETF setters for builtin functions
+;;;;; TRE environment
+;;;;; Copyright (C) 2006,2009 Sven Klose <pixel@copei.de>
+;;;;;
+;;;;; SETF setters for builtin functions
 
 (defun (setf car) (val lst)
-  (rplaca lst val))
+  (rplaca lst val)
+  val)
 
 (defun (setf cdr) (val lst)
-  (rplacd lst val))
+  (rplacd lst val)
+  val)
 
 (defun (setf elt) (val seq idx)
   (%set-elt val seq idx))
@@ -18,13 +19,17 @@
 
 ;;; This will go somewhere else.
 (defun (setf caar) (val lst)
-  (rplaca (car lst) val))
+  (rplaca (car lst) val)
+  val)
 
 (defun (setf cadr) (val lst)
-  (rplaca (cdr lst) val))
+  (rplaca (cdr lst) val)
+  val)
 
 (defun (setf cdar) (val lst)
-  (rplacd (car lst) val))
+  (rplacd (car lst) val)
+  val)
 
 (defun (setf cddr) (val lst)
-  (rplacd (cdr lst) val))
+  (rplacd (cdr lst) val)
+  val)
