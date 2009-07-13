@@ -8,10 +8,10 @@
 (define-js-binary - "-")
 (define-js-binary / "/")
 (define-js-binary * "*")
-(define-js-binary = "==")
+;(define-js-binary = "==") ; XXX these will give us trouble with chars.
+;(define-js-binary < "<")
+;(define-js-binary > ">")
 (define-js-binary string= "==")
-(define-js-binary < "<")
-(define-js-binary > ">")
 (define-js-binary >> ">>")
 (define-js-binary << "<<")
 (define-js-binary mod "%")
