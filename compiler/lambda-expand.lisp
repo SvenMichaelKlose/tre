@@ -25,63 +25,6 @@
             ,body (lambda-body ,fun))
        ,@exec-body)))
 
-;;; Pass lexical up one step through ghost.
-
-(defun make-lexical-place-expr (fi var)
-  `(%vec ,(funinfo-ghost fi)
-		 ,(funinfo-lexical-pos (funinfo-parent fi) var)))
-
-(defun make-lexical-1 (fi var)
-  (if (funinfo-in-args-or-env? (funinfo-parent fi) var)
-	  (make-lexical-place-expr fi var)
-	  (make-lexical-1 (funinfo-parent fi) var)))
-
-(defun make-lexical-0 (fi x)
-  (funinfo-setup-lexical-links fi x)
-  (let ret (make-lexical-1 fi x)
-	`(%vec ,(make-lexical fi .ret.)
-		   ,..ret.)))
-
-(defun make-lexical (fi x)
-  (if (eq (funinfo-ghost fi) x)
-	  (vars-to-stackplaces-atom (funinfo-parent fi) x)
-	  (make-lexical-0 fi x)))
-
-(defun vars-to-stackplaces-atom (fi x)
-  (if
-	(or (not x)
-		(not (funinfo-in-this-or-parent-env? fi x)))
-	  x
-	; Emit lexical place, except the lexical array itself (it can
-	; self-reference for child functions).
-	(and (not (eq x (funinfo-lexical fi)))
-		 (funinfo-lexical-pos fi x))
-	  `(%vec ,(vars-to-stackplaces-atom fi (funinfo-lexical fi))
-			 ,(funinfo-lexical-pos fi x))
-	(funinfo-arg? fi x)
-	  x
-	; Emit stack place.
-	(funinfo-env-pos fi x)
-	  (funinfo-get-local fi (funinfo-env-pos fi x)) ;`(%stack ,(funinfo-env-pos fi x))
-	; Emit lexical place (outside the function).
-	(make-lexical fi x)))
-
-(defun vars-to-stackplaces (fi x)
-  (if
-	(atom x)
-	  (vars-to-stackplaces-atom fi (funinfo-rename fi x))
-	(%quote? x)
-	  x
-	(lambda? x) ; XXX Add variables to ignore in subfunctions.
-      `#'(,@(lambda-funinfo-expr x)
-		  ,(lambda-args x)
-		     ,@(vars-to-stackplaces fi (lambda-body x)))
-    (%slot-value? x)
-      `(%slot-value ,(vars-to-stackplaces fi .x.)
-					,..x.)
-    (cons (vars-to-stackplaces fi x.)
-		  (vars-to-stackplaces fi .x))))
-
 ;;;; LAMBDA inlining
 
 (defun make-inline-body (stack-places values body)
@@ -116,14 +59,14 @@
 							  (funinfo-renamed-vars fi))
 	    (funinfo-env-add-many fi (funinfo-rename-many fi a))
         (make-inline-body
-		    (vars-to-stackplaces fi a)
+		    (place-expand fi a)
       	    v
 		    (lambda-expand-transform fi body export-lambdas))))));)
 
 ;;; Export
 
 (defun make-var-declarations (fi)
-  (vars-to-stackplaces fi
+  (place-expand fi
     (mapcan (fn (unless (or (transpiler-stack-locals? *current-transpiler*)
  							(and (not (eq _ (funinfo-lexical fi)))
 								 (funinfo-lexical-pos fi _)))
@@ -133,7 +76,7 @@
 (defun make-copiers-to-lexicals (fi)
   (let lexicals (funinfo-lexicals fi)
 	(when lexicals
-	  (let lex-sym (vars-to-stackplaces fi (funinfo-lexical fi))
+	  (let lex-sym (place-expand fi (funinfo-lexical fi))
     	`((%setq ,lex-sym (make-array ,(length lexicals)))
           ,@(mapcan (fn (awhen (funinfo-lexical-pos fi _)
 				  	      `((%set-vec ,lex-sym ,! ,_))))
@@ -196,7 +139,7 @@
 			   (fn lambda-expand-branch fi _ export-lambdas)))
 
 (defun lambda-expand-transform (fi body export-lambdas)
-  (vars-to-stackplaces fi (lambda-expand-tree fi body export-lambdas)))
+  (place-expand fi (lambda-expand-tree fi body export-lambdas)))
 
 (defun lambda-embed-or-export-transform (fi body export-lambdas)
   (make-function-epilogue fi
