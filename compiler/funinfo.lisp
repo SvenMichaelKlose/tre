@@ -12,8 +12,11 @@
   (env nil)
   (locals nil)
 
-  ; List of arguments.
-  (args nil)
+  (args nil) ; List of arguments.
+
+  (sym (gensym)) ; Symbol of this funinfo used in LAMBDA-expressions.
+
+  (parent niL)
 
   (renamed-vars nil)
   (ignorance nil)
@@ -21,24 +24,17 @@
   ; List of variables defined outside the function.
   (free-vars nil)
 
-  ; List of exported functions.
-  (closures nil)
-
-  (gathered-closure-infos nil)
-
-  ; List of lexical variables exported to child functions.
-  (lexicals nil)
-
-  (parent niL)
-
   ; Array of local variables passed to child function via ghost argument.
   (lexical niL)
   (ghost niL)
 
+  ; List of symbols exported to child functions
+  ; via LEXICAL.
+  (lexicals nil)
+
   ; Number of jump tags in body.
   (num-tags nil)
 
-  (sym nil)
   ; Function code. The format depends on the compilation pass.
   first-cblock)
 
@@ -180,9 +176,8 @@
   (when (href *funinfos-reverse* fi)
 	(error "funinfo already memorized"))
   (setf (href *funinfos-reverse* fi) t)
-  (with-gensym g
+  (let g (funinfo-sym fi)
 	(transpiler-add-obfuscation-exceptions *js-transpiler* g)
-	(setf (funinfo-sym fi) g)
 	(setf (href *funinfos* g) fi)
 	`(%funinfo ,g)))
 
@@ -190,10 +185,18 @@
   (or (lambda-funinfo-expr x)
 	  (make-lambda-funinfo fi)))
 
+(defun make-missing-lambda-funinfo (x fi)
+  (when (lambda-funinfo-expr x)
+	(error "already has funinfo expression"))
+  (make-lambda-funinfo fi))
+
+(defun get-lambda-funinfo-by-sym (x)
+  (href *funinfos* x))
+
 (defun get-lambda-funinfo (x)
-  (let fi (href *funinfos* (lambda-funinfo x))
-    (unless (eq (funinfo-sym fi)
-			    (lambda-funinfo x))
+  (with (fi-sym (lambda-funinfo x)
+         fi	    (get-lambda-funinfo-by-sym fi-sym))
+    (unless (eq fi-sym (funinfo-sym fi))
 	  (print fi)
 	  (print x)
 	  (print (lambda-funinfo x))

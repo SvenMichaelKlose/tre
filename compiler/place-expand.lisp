@@ -34,11 +34,12 @@
 		 (funinfo-lexical-pos fi x))
 	  `(%vec ,(place-expand-atom fi (funinfo-lexical fi))
 			 ,(funinfo-lexical-pos fi x))
-	(funinfo-arg? fi x)
+	(or (funinfo-arg? fi x)
+		(eq x (funinfo-lexical fi)))
 	  x
 	; Emit stack place.
 	(funinfo-env-pos fi x)
-	  (funinfo-get-local fi (funinfo-env-pos fi x)) ;`(%stack ,(funinfo-env-pos fi x))
+	  x;(funinfo-get-local fi (funinfo-env-pos fi x)) ;`(%stack ,(funinfo-env-pos fi x))
 	; Emit lexical place (outside the function).
 	(make-lexical fi x)))
 

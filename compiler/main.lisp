@@ -16,6 +16,7 @@
 
 (env-load "../compiler/funinfo.lisp")
 (env-load "../compiler/subatomic.lisp")
+(env-load "../compiler/place-expand.lisp")
 (env-load "../compiler/lambda-expand.lisp")
 
 (env-load "../compiler/expression-expand.lisp")

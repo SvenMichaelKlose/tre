@@ -57,25 +57,25 @@
       				  (append (funinfo-rename-doubles
           				  		  (funinfo-find-doubles fi a))
 							  (funinfo-renamed-vars fi))
-	    (funinfo-env-add-many fi (funinfo-rename-many fi a))
-        (make-inline-body
-		    (place-expand fi a)
-      	    v
-		    (lambda-expand-transform fi body export-lambdas))))));)
+	    (let renamed-args (place-expand fi (funinfo-rename-many fi a))
+	      (funinfo-env-add-many fi renamed-args)
+          (make-inline-body
+		      renamed-args ;(place-expand fi a)
+      	      v
+		      (lambda-expand-tree fi body export-lambdas)))))));)
 
 ;;; Export
 
 (defun make-var-declarations (fi)
-  (place-expand fi
     (mapcan (fn (unless (or (transpiler-stack-locals? *current-transpiler*)
- 							(and (not (eq _ (funinfo-lexical fi)))
-								 (funinfo-lexical-pos fi _)))
+ 							);(and (not (eq _ (funinfo-lexical fi)))
+							; (funinfo-lexical-pos fi _)))
 				  `((%var ,_))))
-	        (funinfo-env fi))))
+	        (funinfo-env fi)))
 
 (defun make-copiers-to-lexicals (fi)
   (let-when lexicals (funinfo-lexicals fi)
-	(let lex-sym (print (place-expand fi (print (funinfo-lexical fi))))
+	(let lex-sym (funinfo-lexical fi)
       `((%setq ,lex-sym (make-array ,(length lexicals)))
         ,@(mapcan (fn (awhen (funinfo-lexical-pos fi _)
 				  	    `((%set-vec ,lex-sym ,! ,_))))
@@ -100,20 +100,22 @@
 		(funinfo-rename-many fi-child (funinfo-args fi-child))))
 
 (defun lambda-export-make-exported (fi x)
-  (with-gensym name
+  (with-gensym exported-name
     (let fi-child (make-funinfo :parent fi
 								:args (lambda-args x))
 ;	  (lambda-export-rename fi fi-child)
+	(lambda-expand-tree fi-child (lambda-body x) t)
 	  (lambda-expand-add-closure
-          `((defun ,name ,(append (make-lambda-funinfo fi-child)
-							      (lambda-args x))
+          `((defun ,exported-name ,(append (make-lambda-funinfo fi-child)
+							      		   (append (awhen (funinfo-ghost fi-child)
+													   (list !))
+												   (lambda-args x)))
 		      ,@(lambda-body x))))
-	  (values name fi-child))))
+	  (values exported-name fi-child))))
 
 (defun lambda-export (fi x)
-  (with ((exported fi-child) (lambda-export-make-exported fi x))
-    `(%%funref ,exported
-               ,(funinfo-sym fi)
+  (with ((exported-name fi-child) (lambda-export-make-exported fi x))
+    `(%%funref ,exported-name
                ,(funinfo-sym fi-child))))
 
 ;;;; Toplevel
@@ -133,16 +135,14 @@
 	x))
 
 (defun lambda-expand-tree (fi body export-lambdas)
-  (tree-walk body
-			 :ascending
-			   (fn lambda-expand-branch fi _ export-lambdas)))
-
-(defun lambda-expand-transform (fi body export-lambdas)
-  (place-expand fi (lambda-expand-tree fi body export-lambdas)))
+  (place-expand fi
+      (tree-walk body
+			     :ascending
+			         (fn lambda-expand-branch fi _ export-lambdas))))
 
 (defun lambda-embed-or-export-transform (fi body export-lambdas)
   (make-function-epilogue fi
-      (lambda-expand-transform fi body export-lambdas)))
+      (lambda-expand-tree fi body export-lambdas)))
 
 (defun lambda-expand-0 (x export-lambdas)
   (with (forms (argument-expand-names
