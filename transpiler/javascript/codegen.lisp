@@ -141,10 +141,13 @@
   	  `(%transpiler-native "_locals[" ,x "]")
       (js-stack x)))
 
+(defun codegen-symbol-constructor (tr x)
+  `(,(transpiler-symbol-string tr (transpiler-obfuscate tr 'symbol))
+        "(\"" ,(symbol-name x) "\", " ,(when (keywordp x) "true") ")"))
+
 (define-js-macro %quote (x)
   (if (not (string= "" (symbol-name x)))
-  	  `(,(transpiler-symbol-string tr (transpiler-obfuscate tr 'symbol))
-		   "(\"" ,(symbol-name x) "\", " ,(when (keywordp x) "true") ")")
+	  (codegen-symbol-constructor *js-transpiler* x)
 	  x))
 
 (define-js-macro %slot-value (x y)
@@ -157,12 +160,13 @@
 (define-js-macro %js-typeof (x)
   `(%transpiler-native "typeof " ,x))
 
-(define-js-macro %%funref (name fi-sym fi-child-sym)
-  (with (fi (get-lambda-funinfo fi-sym)
-		 fi-child-sym (get-lambda-funinfo fi-child-sym))
-    (if (funinfo-ghost fi-child)
-  	  `(%funref ,name ,(funinfo-lexical fi))
-	  name)))
+(define-js-macro %%funref (name fi-sym)
+  (let fi (get-lambda-funinfo-by-sym fi-sym)
+    (if (funinfo-ghost fi)
+	    (aif (funinfo-lexical (funinfo-parent fi))
+  	  		 `(%funref ,name ,!)
+			 (error "no lexical for ghost"))
+	    name)))
 
 (define-js-macro %unobfuscated-lookup-symbol (name pkg)
   `(,(transpiler-obfuscate-symbol *js-transpiler*
