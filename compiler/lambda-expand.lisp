@@ -74,14 +74,13 @@
 	        (funinfo-env fi))))
 
 (defun make-copiers-to-lexicals (fi)
-  (let lexicals (funinfo-lexicals fi)
-	(when lexicals
-	  (let lex-sym (place-expand fi (funinfo-lexical fi))
-    	`((%setq ,lex-sym (make-array ,(length lexicals)))
-          ,@(mapcan (fn (awhen (funinfo-lexical-pos fi _)
-				  	      `((%set-vec ,lex-sym ,! ,_))))
-					(append (list (funinfo-lexical fi))
-						    (funinfo-args fi))))))))
+  (let-when lexicals (funinfo-lexicals fi)
+	(let lex-sym (print (place-expand fi (print (funinfo-lexical fi))))
+      `((%setq ,lex-sym (make-array ,(length lexicals)))
+        ,@(mapcan (fn (awhen (funinfo-lexical-pos fi _)
+				  	    `((%set-vec ,lex-sym ,! ,_))))
+				  (append (list (funinfo-lexical fi))
+						  (funinfo-args fi)))))))
 
 (defun make-function-epilogue (fi body)
   `(,@(when (atom body.) ; Preserve first atom.
@@ -104,7 +103,7 @@
   (with-gensym name
     (let fi-child (make-funinfo :parent fi
 								:args (lambda-args x))
-	  (lambda-export-rename fi fi-child)
+;	  (lambda-export-rename fi fi-child)
 	  (lambda-expand-add-closure
           `((defun ,name ,(append (make-lambda-funinfo fi-child)
 							      (lambda-args x))
@@ -145,11 +144,6 @@
   (make-function-epilogue fi
       (lambda-expand-transform fi body export-lambdas)))
 
-(defun lambda-embed-or-export (fi body export-lambdas)
-  (when export-lambdas
-    (lambda-expand-tree fi body export-lambdas))
-  (lambda-embed-or-export-transform fi body export-lambdas))
-
 (defun lambda-expand-0 (x export-lambdas)
   (with (forms (argument-expand-names
 			       'transpiler-lambda-expand
@@ -160,9 +154,7 @@
     (values
 	    `#'(,@(make-lambda-funinfo-if-missing x. fi)
 		    ,(lambda-args x.)
-            ,@(funcall (if imported
-						   #'lambda-embed-or-export-transform
-						   #'lambda-embed-or-export)
+            ,@(lambda-embed-or-export-transform
 				       fi
                        (lambda-body x.)
 				       export-lambdas))
