@@ -63,7 +63,7 @@
 (defun place-expand (fi x)
   (if
 	(atom x)
-	  (place-expand-atom fi (funinfo-rename fi x))
+	  (place-expand-atom fi x)
 	(%quote? x)
 	  x
 	(lambda? x) ; XXX Add variables to ignore in subfunctions.

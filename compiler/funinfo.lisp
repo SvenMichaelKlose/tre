@@ -18,7 +18,6 @@
 
   (parent niL)
 
-  (renamed-vars nil)
   (ignorance nil)
 
   ; List of variables defined outside the function.
@@ -80,14 +79,6 @@
 	    (awhen (funinfo-parent fi)
 		  (funinfo-in-this-or-parent-env? ! var)))))
 
-(defun funinfo-rename (fi x)
-  (assoc-replace x (funinfo-renamed-vars fi)
-				 :test #'eq))
-
-(defun funinfo-rename-many (fi x)
-  (assoc-replace-many x (funinfo-renamed-vars fi)
-					  :test #'eq))
-
 (defun funinfo-ignore? (fi var)
   (member var (funinfo-ignorance fi)))
 
@@ -131,18 +122,6 @@
   (append (funinfo-env fi)
 		  (awhen (funinfo-parent fi)
 			(funinfo-env-all !))))
-
-(defun funinfo-find-doubles (fi x)
-  (when x
-    (if (funinfo-in-args-or-env? fi x.)
-        (cons x.
-              (funinfo-find-doubles fi .x))
-        (funinfo-find-doubles fi .x))))
-
-(defun funinfo-rename-doubles (doubles)
-  (when doubles
-    (cons (cons doubles. (gensym))
-          (funinfo-rename-doubles .doubles))))
 
 ;;;; LEXICALS AND GHOST ARGUMENTS
 

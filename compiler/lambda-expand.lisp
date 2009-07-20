@@ -31,14 +31,9 @@
 	  ; temporarily to make stack-places; so the stack-places can be
 	  ; reused by the next lambda-call on the same level.
       ;(with-funinfo-env-temporary fi args
-      (with-temporary (funinfo-renamed-vars fi)
-      				  (append (funinfo-rename-doubles
-          				  		  (funinfo-find-doubles fi a))
-							  (funinfo-renamed-vars fi))
-	    (let renamed-args (funinfo-rename-many fi a)
-	      (funinfo-env-add-many fi renamed-args)
-          (make-inline-body renamed-args v
-		      (lambda-expand-tree fi body export-lambdas)))))));)
+	  (funinfo-env-add-many fi a)
+      (make-inline-body a v
+	      (lambda-expand-tree fi body export-lambdas)))));)
 
 ;;; Export
 
@@ -64,14 +59,6 @@
     ,@(if (atom body.)
 		  .body
 		  body)))
-
-(defun lambda-export-rename (fi fi-child)
-  (setf (funinfo-renamed-vars fi-child)
-		(append (funinfo-renamed-vars fi)
-		  		(funinfo-rename-doubles
-					(funinfo-find-doubles fi (funinfo-args fi-child)))))
-  (setf (funinfo-args fi-child)
-		(funinfo-rename-many fi-child (funinfo-args fi-child))))
 
 (defun lambda-export-make-exported (fi x)
   (with-gensym exported-name
