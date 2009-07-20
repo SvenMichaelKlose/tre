@@ -35,6 +35,7 @@
 (env-load "stage1/conditional.lisp")
 (env-load "stage1/stack.lisp")
 (env-load "stage1/list-traversal.lisp")
+(env-load "stage1/tests-scope.lisp")
 (env-load "stage1/list-synonyms.lisp")
 (env-load "stage1/lambda.lisp")
 (env-load "stage1/loops.lisp")
