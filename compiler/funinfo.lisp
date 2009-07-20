@@ -43,6 +43,7 @@
     (acons! pos n (funinfo-locals fi))
 	n))
 
+;; Associate position with a gensym.
 (defun funinfo-get-local (fi pos)
   (or (assoc-value pos (funinfo-locals fi) :test #'=)
 	  (funinfo-make-local fi pos)))
@@ -130,6 +131,18 @@
   (append (funinfo-env fi)
 		  (awhen (funinfo-parent fi)
 			(funinfo-env-all !))))
+
+(defun funinfo-find-doubles (fi x)
+  (when x
+    (if (funinfo-in-args-or-env? fi x.)
+        (cons x.
+              (funinfo-find-doubles fi .x))
+        (funinfo-find-doubles fi .x))))
+
+(defun funinfo-rename-doubles (doubles)
+  (when doubles
+    (cons (cons doubles. (gensym))
+          (funinfo-rename-doubles .doubles))))
 
 ;;;; LEXICALS AND GHOST ARGUMENTS
 

@@ -8,22 +8,12 @@
 ;;;; FI argument as well as the FUNINFO prefixes.
 
 (defvar *lambda-exported-closures* nil)
-(defvar *lambda-expand-always-have-funref* nil)
 
 (defun lambda-expand-add-closures (x)
   (nconc! *lambda-exported-closures* x))
 
 (defun lambda-expand-add-closure (x)
   (lambda-expand-add-closures (list x)))
-
-(defmacro with-lambda-call ((args vals body call) &rest exec-body)
-  (with-gensym (tmp fun)
-    `(with (,tmp ,call
-            ,fun (second (car ,tmp))
-            ,args (lambda-args-expanded ,fun)
-            ,vals (lambda-call-vals ,tmp)
-            ,body (lambda-body ,fun))
-       ,@exec-body)))
 
 ;;;; LAMBDA inlining
 
@@ -33,18 +23,6 @@
 				    `(%setq ,stack-place ,init-value))
 			   stack-places values)
      ,@body))
-
-(defun funinfo-find-doubles (fi x)
-  (when x
-    (if (funinfo-in-args-or-env? fi x.)
-	    (cons x.
-			  (funinfo-find-doubles fi .x))
-	    (funinfo-find-doubles fi .x))))
-
-(defun funinfo-rename-doubles (doubles)
-  (when doubles
-	(cons (cons doubles. (gensym))
-	  	  (funinfo-rename-doubles .doubles))))
 
 (defun lambda-call-embed (fi lambda-call export-lambdas)
   (with-lambda-call (args vals body lambda-call)
@@ -57,21 +35,17 @@
       				  (append (funinfo-rename-doubles
           				  		  (funinfo-find-doubles fi a))
 							  (funinfo-renamed-vars fi))
-	    (let renamed-args (place-expand fi (funinfo-rename-many fi a))
+	    (let renamed-args (funinfo-rename-many fi a)
 	      (funinfo-env-add-many fi renamed-args)
-          (make-inline-body
-		      renamed-args ;(place-expand fi a)
-      	      v
+          (make-inline-body renamed-args v
 		      (lambda-expand-tree fi body export-lambdas)))))));)
 
 ;;; Export
 
 (defun make-var-declarations (fi)
-    (mapcan (fn (unless (or (transpiler-stack-locals? *current-transpiler*)
- 							);(and (not (eq _ (funinfo-lexical fi)))
-							; (funinfo-lexical-pos fi _)))
-				  `((%var ,_))))
-	        (funinfo-env fi)))
+  (unless (transpiler-stack-locals? *current-transpiler*)
+    (mapcar (fn `(%var ,_))
+	        (funinfo-env fi))))
 
 (defun make-copiers-to-lexicals (fi)
   (let-when lexicals (funinfo-lexicals fi)
@@ -86,7 +60,7 @@
   `(,@(when (atom body.) ; Preserve first atom.
 	    (list body.))
 	,@(make-var-declarations fi)
-	,@(make-copiers-to-lexicals fi)
+	,@(make-copiers-to-lexicals fi) ; place-expand for C transpiler
     ,@(if (atom body.)
 		  .body
 		  body)))
@@ -103,12 +77,11 @@
   (with-gensym exported-name
     (let fi-child (make-funinfo :parent fi
 								:args (lambda-args x))
-;	  (lambda-export-rename fi fi-child)
-	(lambda-expand-tree fi-child (lambda-body x) t)
-	  (lambda-expand-add-closure
+	  (lambda-expand-tree fi-child (lambda-body x) t)
+      (lambda-expand-add-closure
           `((defun ,exported-name ,(append (make-lambda-funinfo fi-child)
 							      		   (append (awhen (funinfo-ghost fi-child)
-													   (list !))
+													 (list !))
 												   (lambda-args x)))
 		      ,@(lambda-body x))))
 	  (values exported-name fi-child))))

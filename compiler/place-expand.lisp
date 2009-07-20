@@ -23,23 +23,40 @@
 	  (place-expand-atom (funinfo-parent fi) x)
 	  (make-lexical-0 fi x)))
 
+(defun place-expand-emit-stackplace (fi x)
+  (if (transpiler-stack-locals? *current-transpiler*)
+  	  ;(funinfo-get-local fi (funinfo-env-pos fi x)) ;`(%stack ,(funinfo-env-pos fi x))
+  	  `(%stack ,(funinfo-env-pos fi x))
+	  x))
+
 (defun place-expand-atom (fi x)
   (if
 	(or (not x)
+		(numberp x)
+		(stringp x)
 		(not (funinfo-in-this-or-parent-env? fi x)))
 	  x
+
+	(and (transpiler-stack-locals? *current-transpiler*)
+		 (eq x (funinfo-lexical fi)))
+	  (place-expand-emit-stackplace fi x)
+
 	; Emit lexical place, except the lexical array itself (it can
 	; self-reference for child functions).
 	(and (not (eq x (funinfo-lexical fi)))
 		 (funinfo-lexical-pos fi x))
 	  `(%vec ,(place-expand-atom fi (funinfo-lexical fi))
 			 ,(funinfo-lexical-pos fi x))
+
 	(or (funinfo-arg? fi x)
-		(eq x (funinfo-lexical fi)))
+	    (and (not (transpiler-stack-locals? *current-transpiler*))
+			 (eq x (funinfo-lexical fi))))
 	  x
+
 	; Emit stack place.
 	(funinfo-env-pos fi x)
-	  x;(funinfo-get-local fi (funinfo-env-pos fi x)) ;`(%stack ,(funinfo-env-pos fi x))
+	  (place-expand-emit-stackplace fi x)
+
 	; Emit lexical place (outside the function).
 	(make-lexical fi x)))
 
