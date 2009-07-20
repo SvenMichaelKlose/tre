@@ -3,6 +3,14 @@
 ;;;;
 ;;;; String functions
 
+(define-test "ELT on string returns char"
+  ((characterp (elt "LISP" 0)))
+  t)
+
+(define-test "ELT on string returns right char"
+  ((= #\L (elt "LISP" 0)))
+  t)
+
 (defun string= (sa sb)
   "Return T if two strings match."
   (if (and (stringp sa)
