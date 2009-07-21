@@ -41,6 +41,8 @@
 	; Inline local functions and export constant LAMBDA expressions.
     (fn transpiler-lambda-expand tr _)
 
+	#'rename-double-function-args
+
     (fn funcall (transpiler-literal-conversion tr) _)
 
     ; Expand BACKQUOTEs and compiler-macros.

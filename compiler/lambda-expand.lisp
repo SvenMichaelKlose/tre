@@ -55,7 +55,7 @@
   `(,@(when (atom body.) ; Preserve first atom.
 	    (list body.))
 	,@(make-var-declarations fi)
-	,@(make-copiers-to-lexicals fi) ; place-expand for C transpiler
+	,@(place-expand fi (make-copiers-to-lexicals fi)) ; place-expand for C transpiler
     ,@(if (atom body.)
 		  .body
 		  body)))
