@@ -62,7 +62,7 @@ C_DIALECT_FLAGS="-ansi -Wall " #-Werror"
 
 CFLAGS="-pipe $C_DIALECT_FLAGS $GNU_LIBC_FLAGS $BUILD_MACHINE_INFO -DTRE_BOOT_IMAGE=\"$BOOT_IMAGE\" $ARGS"
 
-LIBFLAGS="-lm"
+LIBFLAGS="-lm -lffi"
 
 if [ -f /lib/libdl.so* ]; then
 	LIBFLAGS="$LIBFLAGS -ldl";
@@ -131,7 +131,6 @@ install_it ()
 case $1 in
 debug)
 	COPTS="$COPTS -O0 -g"
-	basic_clean
 	standard_compile
 	link
 	install_it
@@ -139,7 +138,6 @@ debug)
 
 build)
 	COPTS="$COPTS -O2 -fomit-frame-pointer -ffast-math"
-	basic_clean
 	standard_compile
 	link
 	install_it
@@ -148,7 +146,6 @@ build)
 crunsh)
 	CFLAGS="$CFLAGS -DTRE_COMPILED_CRUNSHED -Iinterpreter"
 	COPTS="$COPTS -O3 -fomit-frame-pointer -ffast-math -fwhole-program -lm --whole-program"
-	basic_clean
 	crunsh_compile
 	install_it
 	;;
