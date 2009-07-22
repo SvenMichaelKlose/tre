@@ -45,9 +45,8 @@
 				       .body
 				       body)))))
 
-(define-c-std-macro defun (name args &rest body)
-  (with-gensym g
-    (apply #'c-essential-defun name args body)))
+(define-c-std-macro defun (&rest x)
+  (apply #'c-essential-defun x))
 
 (define-c-std-macro defmacro (name &rest x)
   (when *show-definitions*
@@ -72,9 +71,9 @@
   `(_trelist_get ,a ,d))
 
 ;; Translate FUNCTION-expr functions.
-(define-c-std-macro %setq (&rest x)
-  (if (and (consp (second x))
-		   (function-expr? (first (second x))))
-	  `(%setq ,x. (,(second (second x))
-				   ,@(cdr (second x))))
-	  `(%setq ,@x)))
+;(define-c-std-macro %setq (&rest x)
+;  (if (and (consp (second x))
+;		   (function-expr? (first (second x))))
+;	  `(%setq ,x. (,(second (second x))
+;				   ,@(cdr (second x))))
+;	  `(%setq ,@x)))

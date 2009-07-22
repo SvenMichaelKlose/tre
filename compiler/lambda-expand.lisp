@@ -48,14 +48,16 @@
       `((%setq ,lex-sym (make-array ,(length lexicals)))
         ,@(mapcan (fn (awhen (funinfo-lexical-pos fi _)
 				  	    `((%set-vec ,lex-sym ,! ,_))))
-				  (append (list (funinfo-lexical fi))
-						  (funinfo-args fi)))))))
+				  (list (funinfo-lexical fi)))
+        ,@(mapcan (fn (awhen (funinfo-lexical-pos fi _)
+				  	    `((%set-vec ,lex-sym ,! (%transpiler-native ,_)))))
+				  (funinfo-args fi))))))
 
 (defun make-function-epilogue (fi body)
   `(,@(when (atom body.) ; Preserve first atom.
 	    (list body.))
 	,@(make-var-declarations fi)
-	,@(place-expand fi (make-copiers-to-lexicals fi)) ; place-expand for C transpiler
+	,@(make-copiers-to-lexicals fi)
     ,@(if (atom body.)
 		  .body
 		  body)))
@@ -65,13 +67,15 @@
     (let fi-child (make-funinfo :parent fi
 								:args (lambda-args x))
 	  (lambda-expand-tree fi-child (lambda-body x) t)
-      (lambda-expand-add-closure
-          `((defun ,exported-name ,(append (make-lambda-funinfo fi-child)
-							      		   (append (awhen (funinfo-ghost fi-child)
-													 (list !))
-												   (lambda-args x)))
-		      ,@(lambda-body x))))
-	  (values exported-name fi-child))))
+      (let argdef (append (awhen (funinfo-ghost fi-child)
+						    (list !))
+						  (lambda-args x))
+		(push (cons exported-name argdef) *closure-argdefs*)
+        (lambda-expand-add-closure
+            `((defun ,exported-name ,(append (make-lambda-funinfo fi-child)
+											 argdef)
+		        ,@(lambda-body x))))
+	  (values exported-name fi-child)))))
 
 (defun lambda-export (fi x)
   (with ((exported-name fi-child) (lambda-export-make-exported fi x))
@@ -94,17 +98,20 @@
 			  ,@(lambda-body x)))
 	x))
 
-(defun lambda-expand-tree (fi body export-lambdas)
+(defun lambda-expand-tree-0 (fi body export-lambdas?)
+  (tree-walk body
+		     :ascending
+		         (fn lambda-expand-branch fi _ export-lambdas?)))
+
+(defun lambda-expand-tree (fi body export-lambdas?)
+  (place-expand fi (lambda-expand-tree-0 fi body export-lambdas?)))
+
+(defun lambda-embed-or-export-transform (fi body export-lambdas?)
   (place-expand fi
-      (tree-walk body
-			     :ascending
-			         (fn lambda-expand-branch fi _ export-lambdas))))
+      (make-function-epilogue fi
+          (lambda-expand-tree-0 fi body export-lambdas?))))
 
-(defun lambda-embed-or-export-transform (fi body export-lambdas)
-  (make-function-epilogue fi
-      (lambda-expand-tree fi body export-lambdas)))
-
-(defun lambda-expand-0 (x export-lambdas)
+(defun lambda-expand-0 (x export-lambdas?)
   (with (forms (argument-expand-names
 			       'transpiler-lambda-expand
 			       (lambda-args x.))
@@ -117,10 +124,10 @@
             ,@(lambda-embed-or-export-transform
 				       fi
                        (lambda-body x.)
-				       export-lambdas))
+				       export-lambdas?))
 		*lambda-exported-closures*)))
 
-(defun lambda-expand (x export-lambdas)
+(defun lambda-expand (x export-lambdas?)
   "Expand top-level LAMBDA expressions."
   (with (exported-closures nil
 		 lambda-exp-r
@@ -129,7 +136,7 @@
 	  				  x
 	  				  (cons (if (lambda? x.)
 							    (with ((new-x new-exported-closures)
-						   			       (lambda-expand-0 x export-lambdas))
+						   			       (lambda-expand-0 x export-lambdas?))
 				  				  (append! exported-closures
 										   new-exported-closures)
 								  new-x)

@@ -17,6 +17,7 @@
 #include "util.h"
 #include "alloc.h"
 #include "thread.h"
+#include "gc.h"
 
 /* Allocate and initialise array. */
 treptr *
@@ -63,8 +64,12 @@ trearray_get (treptr sizes)
     a = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_ARRAY, treptr_nil);
     treatom_set_value (a, trelist_copy (sizes));
     TREATOM_DETAIL(a) = trearray_get_raw (size);
-    if (TREATOM_DETAIL(a) == NULL)
-		return treerror (treptr_invalid, "out of memory");
+    if (TREATOM_DETAIL(a) == NULL) {
+		tregc_force ();
+    	TREATOM_DETAIL(a) = trearray_get_raw (size);
+        if (TREATOM_DETAIL(a) == NULL)
+		    return treerror (treptr_invalid, "out of memory");
+	}
     return a;
 }
 

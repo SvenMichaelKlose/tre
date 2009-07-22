@@ -73,7 +73,15 @@
   emitted-wanted-functions
   (obfuscations (make-hash-table :test #'eq))
   plain-arg-funs
-  (exported-closures nil))
+  (exported-closures nil)
+
+  ; Literals that must be declared or cached before code with them is emitted.
+  (compiled-chars (make-hash-table :test #'eql))
+  (compiled-numbers (make-hash-table :test #'eql))
+  (compiled-strings (make-hash-table :test #'eql))
+  (compiled-symbols (make-hash-table :test #'eql))
+  (compiled-decls nil)
+  (compiled-inits nil))
 
 (defun transpiler-reset (tr)
   (setf (transpiler-thisify-classes tr) (make-hash-table)	; thisified classes.
@@ -125,7 +133,7 @@
   (href (transpiler-wanted-functions-hash tr) fun))
 
 (defun transpiler-wanted-variable? (tr name)
-  (href (transpiler-wanted-variables-hash tr) fun))
+  (href (transpiler-wanted-variables-hash tr) name))
 
 (defun transpiler-unwanted-function? (tr fun)
   (member fun (transpiler-unwanted-functions tr)))

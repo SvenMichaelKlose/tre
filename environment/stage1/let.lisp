@@ -7,6 +7,5 @@
 (defmacro let (place expr &rest body)
   (if (consp place)
 	  (%error "place is not an atom")
-
       `(#'((,place)
 			  ,@body) ,expr)))

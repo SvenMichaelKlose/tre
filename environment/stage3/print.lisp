@@ -13,7 +13,7 @@
         			 (push m out)
         			 (if (> n 9)
           				 (recp out (/ (- n m) 10))
-          				  out))))
+          				 out))))
     (dolist (i (recp nil c))
       (%princ-character (code-char (+ i #\0)) str))))
 

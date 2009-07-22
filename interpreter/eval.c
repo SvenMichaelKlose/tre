@@ -40,6 +40,44 @@ unsigned treeval_recursions;
  *
  * 'func'        Pointer to function atom. Its value is the table index.
  * 'expr'        Expression to evaluate.
+ */
+#if 0
+treptr
+treeval_funcall_compiled_funref (treptr funref, treptr expr)
+{
+    treptr  args;		/* Arguments; second to last expression element. */
+    treptr  funcdef;	/* Function definition tree. */
+    treptr  expforms;	/* Expanded argument forms. */
+    treptr  expvals;    /* Expanded argument values. */
+    treptr  ret;		/* Function return value. */
+    treptr  forms;		/* Unexpanded argument definition. */
+    treptr  body;		/* Function body. */
+    treptr  ghost;
+
+    args = CDR(expr);
+	func = CADDR(funref);
+	ghost = CADDDR(funref);
+    funcdef = TREATOM_VALUE(func);
+    forms = CAR(funcdef);
+    body = CDR(funcdef);
+
+    /* Expand argument keywords. */
+    trearg_expand (&expforms, &expvals, forms, args, do_argeval);
+    tregc_push (CONS(expforms, expvals));
+
+    /* Evaluate body. */
+    ret = treeval_list (body);
+    tregc_retval (ret);
+
+    return ret;
+}
+#endif
+
+/*
+ * Execute user-defined function.
+ *
+ * 'func'        Pointer to function atom. Its value is the table index.
+ * 'expr'        Expression to evaluate.
  * 'do_argeval'  If not 0 all arguments are evaluated.
  */
 treptr
@@ -136,7 +174,6 @@ treeval_function (treptr expr)
     return ret;
 }
 
-
 /*
  * Execute built-in function.
  *
@@ -180,6 +217,37 @@ treeval_xlat_function (treevalfunc_t *xlat, treptr func, treptr expr,
     return ret;
 }
 
+treptr
+treeval_compiled_expr (treptr func, treptr x, bool do_expand)
+{
+    treptr  funcdef;	/* Function definition tree. */
+    treptr  expforms;	/* Expanded argument forms. */
+    treptr  expvals;    /* Expanded argument values. */
+	treptr  forms;
+	treptr  evaluated;
+	treptr  result;
+	treptr  args = CDR(x);
+
+    tregc_push (func);
+    tregc_push (x);
+    funcdef = TREATOM_VALUE(func);
+    forms = CAR(funcdef);
+
+   	/* Expand argument keywords. */
+   	trearg_expand (&expforms, &expvals, forms, args, do_expand);
+   	tregc_push (expvals);
+
+	evaluated = CONS(func, expvals);
+	tregc_push (evaluated);
+	result = trespecial_call_compiled (evaluated);
+	tregc_pop ();
+	tregc_pop ();
+	tregc_pop ();
+	tregc_pop ();
+
+	return result;
+}
+
 /*
  * Evaluate expression
  *
@@ -190,12 +258,11 @@ treptr
 treeval_expr (treptr x)
 {
     treptr  fun;
-    treptr  v;
+    treptr  v = treptr_nil;
     treptr  slot_obj;
 	bool	copied_expr = FALSE;
 
     fun = CAR(x);
-    v = treptr_nil;
 
 	if (treeval_recursions++ == TRE_MAX_RECURSIONS)
 		trewarn (treptr_nil, "%d recursions reached", TRE_MAX_RECURSIONS);
@@ -229,6 +296,15 @@ treeval_expr (treptr x)
 
 		default:
         	fun = treeval (fun);
+	}
+
+
+	if (TREATOM_COMPILED_FUN(fun)) {
+		if (copied_expr) {
+    		tregc_pop ();
+    		tregc_pop ();
+		}
+		return treeval_compiled_expr (fun, x, TRUE);
 	}
 
     tregc_push (fun);

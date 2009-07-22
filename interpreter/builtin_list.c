@@ -15,6 +15,7 @@
 #include "builtin.h"
 #include "builtin_list.h"
 #include "xxx.h"
+#include "special.h"
 
 #include "gc.h"
 #include "thread.h"

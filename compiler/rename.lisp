@@ -8,7 +8,7 @@
 (defun doubles (a b)
   (when b
     (if (member b. a)
-        (cons a. (doubles a .b))
+        (cons b. (doubles a .b))
         (doubles a .b))))
 
 (defun list-aliases (x)

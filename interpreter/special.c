@@ -27,6 +27,8 @@
 treptr tre_atom_evaluated_go;
 treptr tre_atom_evaluated_return_from;
 
+treptr treatom_funref;
+
 /*
  * Convert APPLY arguments into simple list
  *
@@ -75,6 +77,19 @@ error:
                            "(waiting for new argument list)");
 }
 
+treptr
+trespecial_apply_call_fake (treptr func, treptr args)
+{
+	treptr expr = CONS(func, args);
+	treptr result;
+
+	tregc_push (expr);
+	result = treeval_compiled_expr (func, expr, FALSE);
+	tregc_pop ();
+
+	return result;
+}
+
 /*tredoc
   (cmd :name APPLY
 	(arg :type function)
@@ -96,12 +111,17 @@ trespecial_apply (treptr list)
 
     func = CAR(list);
     args = trespecial_apply_args (trelist_copy (CDR(list)));
+	if (TREPTR_IS_ATOM(func) && TREATOM_COMPILED_FUN(func))
+		return trespecial_apply_call_fake (func, args);
 
     fake = CONS(func, args);
     tregc_push (fake);
-
     efunc = treeval (func);
     RPLACA(fake, efunc);
+	if (TREATOM_COMPILED_FUN(efunc)) {
+		tregc_pop ();
+		return trespecial_apply_call_fake (efunc, args);
+	}
 
     if (TREPTR_IS_FUNCTION(efunc))
         res = treeval_funcall (efunc, fake, FALSE);
@@ -116,6 +136,37 @@ trespecial_apply (treptr list)
     TRELIST_FREE_EARLY(fake);
 
     return res;
+}
+
+#include <ffi.h>
+
+treptr
+trespecial_call_compiled (treptr lst)
+{
+	ffi_cif cif;
+	ffi_type *args[128];
+	treptr refs[128];
+	void *values[128];
+	treptr rc;
+	int i;
+	treptr x = CDR(lst);
+	void * fun;
+
+	/* Initialize the argument info vectors */
+	for (i = 0; x != treptr_nil; i++, x = CDR(x)) {
+		args[i] = &ffi_type_ulong;
+		refs[i] = CAR(x);
+		values[i] = &refs[i];
+	}
+
+	/* Initialize the cif */
+	if (ffi_prep_cif(&cif, FFI_DEFAULT_ABI, i, &ffi_type_ulong, args) == FFI_OK)
+	{
+		fun = TREATOM_COMPILED_FUN(CAR(lst));
+		ffi_call(&cif, fun, &rc, values);
+	}
+
+	return rc;
 }
 
 /*
@@ -164,6 +215,50 @@ error:
                            "(waiting for new argument list)");
 }
 
+bool
+trespecial_is_compiled_funcall (treptr x)
+{
+	return TREPTR_IS_CONS(x) && CAR(x) == treatom_funref;
+}
+
+treptr
+trespecial_apply_compiled_call (func, args)
+{
+	treptr result;
+	treptr cargs = CONS(func, args);
+	tregc_push (cargs);
+	result = treeval_compiled_expr (func, cargs, FALSE);
+#if 0
+trespecial_call_compiled (cargs);
+#endif
+	tregc_pop ();
+	return result;
+}
+
+treptr
+trespecial_apply_compiled_call_closure (treptr func, treptr x)
+{
+    treptr  expforms;   /* Expanded argument forms. */
+    treptr  expvals;    /* Expanded argument values. */
+    treptr  evaluated;
+    treptr  result;
+
+    tregc_push (CONS(func, x));
+
+    /* Expand argument keywords. */
+    trearg_expand (&expforms, &expvals, TREATOM_VALUE(func), x, FALSE);
+    tregc_push (expvals);
+
+    evaluated = CONS(func, expvals);
+    tregc_push (evaluated);
+    result = trespecial_call_compiled (evaluated);
+    tregc_pop ();
+    tregc_pop ();
+    tregc_pop ();
+
+	return result;
+}
+
 /*tredoc
   (cmd :name APPLY
 	(arg :type function)
@@ -175,7 +270,7 @@ treptr
 trespecial_apply_compiled (treptr list)
 {
     treptr  func;
-    treptr  args;
+    treptr  args = treptr_nil;
     treptr  fake;
     treptr  efunc;
     treptr  res;
@@ -184,13 +279,32 @@ trespecial_apply_compiled (treptr list)
 		return treerror (list, "arguments expected");
 
     func = CAR(list);
-    args = trespecial_apply_compiled_args (trelist_copy (CDR(list)));
+#if 0
+    args =trespecial_apply_compiled_args (trelist_copy (CDR(list)));
+#endif
+	if (CDR(list))
+    	args = CAR(CDR(list));
+
+	if (trespecial_is_compiled_funcall (func)) {
+		return trespecial_apply_compiled_call_closure (
+			CAR(CDR(func)),
+			CONS(CDR(CDR(func)), args)
+		);
+	}
+
+	if (TREPTR_IS_ATOM(func) && TREATOM_COMPILED_FUN(func))
+		return trespecial_apply_compiled_call (func, args);
 
     fake = CONS(func, args);
     tregc_push (fake);
 
     efunc = treeval (func);
     RPLACA(fake, efunc);
+
+	if (TREPTR_IS_ATOM(efunc) && TREATOM_COMPILED_FUN(efunc)) {
+		tregc_pop ();
+		return trespecial_apply_compiled_call (efunc, args);
+	}
 
     if (TREPTR_IS_FUNCTION(efunc))
         res = treeval_funcall (efunc, fake, FALSE);
@@ -687,4 +801,8 @@ trespecial_init ()
     treatom_lambda
         = treatom_get ("LAMBDA", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treatom_lambda);
+
+    treatom_funref
+        = treatom_get ("%FUNREF", TRECONTEXT_PACKAGE());
+    EXPAND_UNIVERSE(treatom_funref);
 }

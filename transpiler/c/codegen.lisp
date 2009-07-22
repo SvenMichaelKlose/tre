@@ -33,7 +33,7 @@
 				    				   args)))
 					  "")
 				   ");" (string (code-char 10)))
-			   *c-declarations*)
+			   (transpiler-compiled-decls *c-transpiler*))
         `(,(code-char 10)
 		  "treptr " ,(c-transpiler-function-name name) "("
 	  	    ,@(transpiler-binary-expand ","
@@ -46,13 +46,17 @@
 			     `(,*c-indent* ,"treptr _local_array = trearray_make ("
 							      ,num-locals
 			  				      ");" ,*c-separator*
-			       ,*c-indent* "tregc_push (_local_array);" ,*c-separator*
+			       ,*c-indent* "tregc_push (_local_array)" ,*c-separator*
+				   ; Keep registered syms from being garbage collected.
+			       ,@(when (eq 'c-init name)
+					   `(,*c-indent* "tregc_push (_local_array)" ,*c-separator*))
 			 	   ,*c-indent* ,"treptr * _locals = (treptr *) "
 											  	    "TREATOM_DETAIL(_local_array)"
 											  	    ,*c-separator*))
              ,@(lambda-body x)
 			 ,@(when (< 0 num-locals)
 			     `(,*c-indent* "tregc_pop ();" ,*c-separator*))
+;			 	   ,*c-indent* "treatom_remove (_local_array);" ,*c-separator*))
           	 (,*c-indent* "return " ,'~%ret ,*c-separator*)
 	      "}" ,*c-newline*))))
 
@@ -79,6 +83,12 @@
 ;; XXX used for local functions
 (define-c-macro %set-atom-fun (dest val)
   `(%transpiler-native ,dest "=" ,val))
+
+;; XXX used to store argument definitions.
+(define-c-macro %setq-atom-value (dest val)
+  `(%transpiler-native ,*c-indent* "treatom_set_value (" ,(c-compiled-symbol dest) " ,"
+		,val
+		")" ,*c-separator*))
 
 ;  `(%transpiler-native "treatom_set_function (" ,dest " ,"
 ;		,val
@@ -117,7 +127,7 @@
 	,*c-separator*))
 
 (defun c-stack (x)
-  `("((treptr *) _locals)[(unsigned long)" ,x "]"))
+  `("_TRELOCAL(" ,x ")"))
 
 (define-c-macro %stack (x)
   (c-stack x))
@@ -129,21 +139,29 @@
   (c-compiled-symbol x))
 
 (define-c-macro %set-vec (vec index value)
-  `("((treptr *)" ,vec ")[(unsigned long)" ,index "] = " ,value))
+  `("_TREVEC(" ,vec "," ,index ") = " ,value))
 
 (define-c-macro %vec (vec index)
-  `("((treptr *)" ,vec ")[(unsigned long)" ,index "]"))
+  `("_TREVEC(" ,vec "," ,index ")"))
 
 (define-c-macro cons (a d)
   `("_trelist_get (" ,a "," ,d ")"))
 
-(define-c-macro %funref (fun lex)
-  `("_trelist_get (" ,(c-compiled-symbol '%%funref) ", "
-		"_trelist_get (" ,(c-compiled-symbol fun) "," ,lex "))"))
+;; Convert from lambda-expanded funref to one with lexical.
+(define-c-macro %%funref (name fi-sym)
+  (let fi (get-lambda-funinfo-by-sym fi-sym)
+ 	 `("_trelist_get (" ,(c-compiled-symbol '%funref) ", "
+		   "_trelist_get (" ,(c-compiled-symbol name) "," 
+							,(place-expand (funinfo-parent fi)
+										   (funinfo-lexical (funinfo-parent fi)))
+						 "))")))
 
 ;; Lexical scope
 (define-c-macro make-array (size)
-  `("trearray_get (_trelist_get (" ,(c-compiled-number size) ", treptr_nil))"))
+  `("trearray_get (_trelist_get (" ,size ", treptr_nil))"))
 
 (define-c-macro symbol-function (x)
   `("treatom_get_function (" ,x ")"))
+
+(define-c-macro identity (x)
+  x)

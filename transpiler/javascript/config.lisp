@@ -23,8 +23,7 @@
 		  	  (and (>= _ #\A) (<= _ #\Z))
 		  	  (and (>= _ #\0) (<= _ #\9))
 			  (in=? _ #\_ #\. #\$ #\#)))
-	:make-label
-	  #'js-transpiler-make-label
+	:make-label #'js-transpiler-make-label
 	:lambda-export? nil
 	:stack-locals? nil))
 

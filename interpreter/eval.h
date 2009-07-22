@@ -24,4 +24,6 @@ extern void treeval_set_stackplace (treptr plc, treptr val);
 
 extern void treeval_init (void);
 
+extern treptr treeval_compiled_expr (treptr func, treptr expr, bool do_eval);
+
 #endif 	/* #ifndef TRE_EVAL_H */

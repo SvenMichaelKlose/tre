@@ -21,7 +21,7 @@
 			:lambda-export? t
 			:stack-arguments? t
 			:stack-locals? t
-			:literal-conversion #'((x) x))
+			:literal-conversion #'identity)
 	(let ex (transpiler-expex tr)
 	  (setf (expex-transpiler ex) tr
 			(expex-argument-filter ex) #'c-expand-literals

@@ -64,7 +64,8 @@
   (if
 	(atom x)
 	  (place-expand-atom fi x)
-	(%quote? x)
+	(or (%quote? x)
+		(%transpiler-native? x))
 	  x
 	(lambda? x) ; XXX Add variables to ignore in subfunctions.
       `#'(,@(lambda-funinfo-expr x)
