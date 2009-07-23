@@ -71,6 +71,7 @@
 	; Generate.
     (format t "; Let me think. Hmm")
     (force-output)
+	(c-compiled-symbol 'say-hello)
     (with (code (append (transpiler-transpile tr deps)
 		     		    (transpiler-transpile tr tests)
  	         		    (transpiler-transpile tr usr)))
