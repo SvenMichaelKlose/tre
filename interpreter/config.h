@@ -116,4 +116,10 @@ typedef int bool;
 #define TRE_BUILTIN_MEMBER
 #endif
 
+#ifdef TRE_DIAGNOSTICS
+#ifndef TRE_LIST_DIAGNOSTICS
+#define TRE_LIST_DIAGNOSTICS
+#endif
+#endif
+
 #endif /* #ifndef TRE_TRE_H */

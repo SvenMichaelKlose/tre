@@ -20,7 +20,7 @@ struct tre_list {
 
 #define CONS(a,d)	_trelist_get (a, d)
 
-#ifdef TRE_DIAGNOSTICS
+#ifdef TRE_LIST_DIAGNOSTICS
 #define CAR(x) 		(trelist_car (x))
 #define CDR(x) 		(trelist_cdr (x))
 #else
@@ -108,7 +108,7 @@ extern struct tre_sequence_type trelist_seqtype;
 
 extern bool trelist_check_type (treptr, ulong atom_type);
 
-#ifdef TRE_DIAGNOSTICS
+#ifdef TRE_LIST_DIAGNOSTICS
 extern treptr trelist_car (treptr);
 extern treptr trelist_cdr (treptr);
 #endif

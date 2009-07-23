@@ -26,7 +26,7 @@ ulong trelist_num_used;
     (node)->car = car; 	\
     (node)->cdr = cdr;
 
-#ifdef TRE_DIAGNOSTICS
+#ifdef TRE_LIST_DIAGNOSTICS
 treptr
 trelist_car (treptr lst)
 {
@@ -52,7 +52,7 @@ void
 trelist_rplaca (treptr cons, treptr val)
 {
     CHKPTR(val);
-#ifdef TRE_DIAGNOSTICS
+#ifdef TRE_LIST_DIAGNOSTICS
     if (TRE_GETMARK(trediag_listmarks, cons))
 	treerror_internal (cons, "rplaca of free cons");
 #endif
@@ -64,7 +64,7 @@ void
 trelist_rplacd (treptr cons, treptr val)
 {
     CHKPTR(val);
-#ifdef TRE_DIAGNOSTICS
+#ifdef TRE_LIST_DIAGNOSTICS
     if (TRE_GETMARK(trediag_listmarks, cons))
 	treerror_internal (cons, "rplacd of free cons");
 #endif
@@ -86,7 +86,7 @@ if (node == 141 && !--tmpcnt) {
     printf ("X!X!X!X!X!!!!!!!!\n");
     CRASH();
 }
-#ifdef TRE_DIAGNOSTICS
+#ifdef TRE_LIST_DIAGNOSTICS
     if (TREPTR_IS_ATOM(node))
 		treerror_internal (node, "list_free: not a cons");
 
@@ -164,7 +164,7 @@ _trelist_get (treptr car, treptr cdr)
 
     ret = tre_lists_free;
 
-#ifdef TRE_DIAGNOSTICS
+#ifdef TRE_LIST_DIAGNOSTICS
     if (TRE_GETMARK(trediag_listmarks, ret) == FALSE) {
 printf ("%d", ret);
 fflush (stdout);
@@ -377,7 +377,7 @@ trelist_append (treptr *lst, treptr lst2)
     if (lst2 == treptr_nil)
 		return;
 
-#ifdef TRE_DIAGNOSTICS
+#ifdef TRE_LIST_DIAGNOSTICS
     if (TREPTR_IS_ATOM(lst2))
 		treerror_internal (lst2, "trelist_append: can append list only");
 #endif
@@ -419,7 +419,7 @@ trelist_init ()
 
     /* Make a list of all elements. */
     for (i = 0; i < LAST_LISTNODE; i++) {
-#ifdef TRE_DIAGNOSTICS
+#ifdef TRE_LIST_DIAGNOSTICS
 		tre_lists[i].car = (treptr) -5;
 #endif
 		tre_lists[i].cdr = (treptr) i + 1;
