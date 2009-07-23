@@ -296,3 +296,13 @@ treatom_builtin_id (treptr args)
 
     return treatom_number_get (arg, TRENUMTYPE_INTEGER);
 }
+
+treptr
+treatom_builtin_make_ptr (treptr args)
+{
+    treptr arg = trearg_get (args);
+
+	if (TREPTR_IS_NUMBER(arg))
+		return TRENUMBER_VAL(arg);
+	return treptr_nil;
+}
