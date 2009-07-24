@@ -16,7 +16,7 @@
 
 (define-c-macro function (name &optional (x 'only-name))
   (if (eq 'only-name x)
-	  `(function ,name)
+  	  `(treatom_get_function ,name)
   (if (atom x)
 	  (error "codegen: arguments and body expected: ~A" x)
 	  (with (args (argument-expand-names 'unnamed-c-function

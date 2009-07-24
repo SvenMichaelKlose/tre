@@ -44,13 +44,22 @@
 	   (atom .x.)
 	   .x.))
 
+(defun vec-function-expr? (x)
+  (and (consp x)
+	   (eq x. 'function)
+	   (or (%vec? .x.)
+		   (%stack? .x.))
+	   .x.))
+
 (defun c-import-from-function-expr (x)
   (aif (atom-function-expr? x)
 	   (progn
 	     (unless (funinfo-in-this-or-parent-env? *expex-funinfo* !)
-           (transpiler-add-wanted-function *current-transpiler* !))
-		 `(symbol-function (%quote ,!)))
-  	   x))
+		   (transpiler-add-wanted-function *current-transpiler* !)
+		 `(symbol-function (%quote ,!))))
+	   (aif (vec-function-expr? x)
+		   !
+  	   	   x)))
 
 ;; An EXPEX-ARGUMENT-FILTER.
 (defun c-expand-literals (x)
