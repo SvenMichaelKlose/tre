@@ -1,10 +1,6 @@
 ;;;;; TRE compiler
 ;;;;; Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
 
-(defun rename-arg (replacements x)
-  (assoc-replace x replacements
-				 :test #'eq))
-
 (defun doubles (a b)
   (when b
     (if (member b. a)
@@ -16,9 +12,17 @@
     (cons (cons x. (gensym))
           (list-aliases .x))))
 
-(defun find-and-add-renamed-doubles (vars old-replacements args)
-  (append (list-aliases (doubles args vars))
-		  old-replacements))
+(defun find-and-add-renamed-doubles (fi args old-replacements vars)
+  (let argnames (argument-expand-names 'rename-args args)
+    (append (list-aliases (if (transpiler-rename-all-args? *current-transpiler*)
+						  	  (if (and fi (funinfo-ghost fi))
+								  .argnames
+								  argnames)
+							  (doubles argnames vars)))
+		    old-replacements)))
+
+(defun rename-arg (replacements x)
+  (assoc-replace x replacements :test #'eq))
 
 (defun rename-double-function-args (x &optional (replacements nil) (env nil))
   (if
@@ -26,9 +30,10 @@
 	  (rename-arg replacements x)
 	(%quote? x)
 	  x
-	(lambda? x) ; XXX Add variables to ignore in subfunctions.
+	(lambda? x)
 	  (with (args (lambda-args x)
-			 new-replacements (find-and-add-renamed-doubles args
+			 new-replacements (find-and-add-renamed-doubles (get-lambda-funinfo x)
+															args
 														    replacements
 														    env)
         	 renamed-args (rename-double-function-args args new-replacements env))
