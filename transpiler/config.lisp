@@ -74,6 +74,7 @@
   (obfuscations (make-hash-table :test #'eq))
   plain-arg-funs
   (exported-closures nil)
+  (rename-all-args? nil)
 
   ; Literals that must be declared or cached before code with them is emitted.
   (compiled-chars (make-hash-table :test #'=))

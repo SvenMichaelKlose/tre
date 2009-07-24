@@ -14,7 +14,9 @@
 (defun c-atomic-function (x)
   (c-transpiler-function-name (second x)))
 
-(define-c-macro function (name x)
+(define-c-macro function (name &optional (x 'only-name))
+  (if (eq 'only-name x)
+	  `(function ,name)
   (if (atom x)
 	  (error "codegen: arguments and body expected: ~A" x)
 	  (with (args (argument-expand-names 'unnamed-c-function
@@ -58,7 +60,7 @@
 			     `(,*c-indent* "tregc_pop ();" ,*c-separator*))
 ;			 	   ,*c-indent* "treatom_remove (_local_array);" ,*c-separator*))
           	 (,*c-indent* "return " ,'~%ret ,*c-separator*)
-	      "}" ,*c-newline*))))
+	      "}" ,*c-newline*)))))
 
 ;; XXX same in js-transpiler
 (defun codegen-%setq (dest val)

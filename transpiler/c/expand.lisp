@@ -7,18 +7,6 @@
 (defmacro define-c-std-macro (&rest x)
   `(define-transpiler-std-macro *c-transpiler* ,@x))
 
-;; (FUNCTION symbol | lambda-expression)
-;; Add symbol to list of wanted functions or obfuscate arguments of
-;; LAMBDA-expression.
-(define-c-std-macro function (x)
-  (unless x
-    (error "FUNCTION expects a symbol or form"))
-  (if (atom x)
-	  (progn
-	    (transpiler-add-wanted-function *c-transpiler* x)
-		`(symbol-function (%quote ,x)))
-  	  `(function ,x)))
-
 ;; (DEFUN ...)
 ;;
 ;; Assign function to global variable.
@@ -69,11 +57,3 @@
 
 (define-c-std-macro cons (a d)
   `(_trelist_get ,a ,d))
-
-;; Translate FUNCTION-expr functions.
-;(define-c-std-macro %setq (&rest x)
-;  (if (and (consp (second x))
-;		   (function-expr? (first (second x))))
-;	  `(%setq ,x. (,(second (second x))
-;				   ,@(cdr (second x))))
-;	  `(%setq ,@x)))

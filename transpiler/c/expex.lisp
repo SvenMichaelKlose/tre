@@ -38,6 +38,20 @@
 				  'trepackage_keyword
 				  'treptr_nil)))
 
+(defun atom-function-expr? (x)
+  (and (consp x)
+	   (eq x. 'function)
+	   (atom .x.)
+	   .x.))
+
+(defun c-import-from-function-expr (x)
+  (aif (atom-function-expr? x)
+	   (progn
+	     (unless (funinfo-in-this-or-parent-env? *expex-funinfo* !)
+           (transpiler-add-wanted-function *current-transpiler* !))
+		 `(symbol-function (%quote ,!)))
+  	   x))
+
 ;; An EXPEX-ARGUMENT-FILTER.
 (defun c-expand-literals (x)
   (if
@@ -55,7 +69,7 @@
 		    (expex-global-variable? x))
 	  	  `(treatom_get_value ,(c-compiled-symbol x))
 		x)
-    x))
+    (c-import-from-function-expr x)))
 
 (defun function-expr? (x)
   (and (consp x)

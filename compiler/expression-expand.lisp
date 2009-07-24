@@ -27,6 +27,8 @@
 
   (setter-filter #'((var) var))
 
+  (expr-filter #'((var) var))
+
   (plain-arg-fun? #'((var)))
 
   (inline? #'((x))))
@@ -45,6 +47,9 @@
        (string= "~E" (subseq (symbol-name x) 0 2))))
 
 ;;;; GUEST CALLBACKS
+
+(defun expex-guest-filter-expr (ex x)
+  (funcall (expex-expr-filter ex) x))
 
 (defun expex-guest-filter-setter (ex x)
   (funcall (expex-setter-filter ex) x))
@@ -237,19 +242,20 @@
 ;;
 ;; Recurses into LAMBDA-expressions and VM-SCOPEs.
 ;; Removes VM-SCOPEs.
-(defun expex-expr (ex x)
-  (if
-    (not (expex-able? ex x))
-      (values nil
-			  (list x))
-	(lambda? x)
-	  (expex-lambda ex x)
-    (vm-scope? x)
-	  (values nil
-			  (expex-body ex (vm-scope-body x)))
-    (%setq? x)
-      (expex-expr-setq ex x)
-    (expex-expr-std ex x)))
+(defun expex-expr (ex expr)
+  (let x (expex-guest-filter-expr ex expr)
+    (if
+      (not (expex-able? ex x))
+        (values nil
+			    (list x))
+	  (lambda? x)
+	    (expex-lambda ex x)
+      (vm-scope? x)
+	    (values nil
+			    (expex-body ex (vm-scope-body x)))
+      (%setq? x)
+        (expex-expr-setq ex x)
+      (expex-expr-std ex x))))
 
 ;;;; BODY EXPANSION
 

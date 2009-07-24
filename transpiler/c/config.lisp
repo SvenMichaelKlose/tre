@@ -21,11 +21,13 @@
 			:lambda-export? t
 			:stack-arguments? t
 			:stack-locals? t
+			:rename-all-args? t
 			:literal-conversion #'identity)
 	(let ex (transpiler-expex tr)
 	  (setf (expex-transpiler ex) tr
 			(expex-argument-filter ex) #'c-expand-literals
-			(expex-setter-filter ex) #'c-setter-filter))
+			(expex-setter-filter ex) #'c-setter-filter
+			(expex-expr-filter ex) #'c-import-from-function-expr))
 	tr))
 
 (defvar *c-transpiler* (make-c-transpiler))
