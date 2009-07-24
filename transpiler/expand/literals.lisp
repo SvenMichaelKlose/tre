@@ -6,5 +6,6 @@
 	(characterp x)
 	  `(code-char ,(char-code x))
     (consp x)
-	  (traverse #'transpiler-expand-characters x)
+	  (cons (transpiler-expand-characters x.)
+		    (transpiler-expand-characters .x))
 	x))

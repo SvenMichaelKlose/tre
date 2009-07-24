@@ -167,7 +167,9 @@ treatom_get_value (treptr atom)
 treptr
 treatom_get_function (treptr atom)
 {
-    return TREATOM_FUN(atom);
+	if (TREPTR_IS_BUILTIN(atom))
+		return atom;
+    	return TREATOM_FUN(atom);
 }
 
 treptr

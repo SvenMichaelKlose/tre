@@ -226,12 +226,11 @@ trespecial_apply_compiled_call (func, args)
 {
 	treptr result;
 	treptr cargs = CONS(func, args);
+
 	tregc_push (cargs);
 	result = treeval_compiled_expr (func, cargs, FALSE);
-#if 0
-trespecial_call_compiled (cargs);
-#endif
 	tregc_pop ();
+
 	return result;
 }
 
@@ -273,27 +272,37 @@ trespecial_apply_compiled (treptr list)
     treptr  args = treptr_nil;
     treptr  fake;
     treptr  efunc;
-    treptr  res;
+	treptr  res;
+    treptr  lexicals;
 
     if (list == treptr_nil)
 		return treerror (list, "arguments expected");
 
+	tregc_push (list);
     func = CAR(list);
-#if 0
-    args =trespecial_apply_compiled_args (trelist_copy (CDR(list)));
-#endif
-	if (CDR(list))
-    	args = CAR(CDR(list));
+    args = trespecial_apply_compiled_args (trelist_copy (CDR(list)));
 
 	if (trespecial_is_compiled_funcall (func)) {
-		return trespecial_apply_compiled_call_closure (
-			CAR(CDR(func)),
-			CONS(CDR(CDR(func)), args)
+		tregc_push (args);
+	    lexicals = CDR(CDR(func));
+		res = trespecial_apply_compiled_call_closure (
+				  CAR(CDR(func)),
+			      lexicals != treptr_nil ?
+					  CONS(CDR(CDR(func)), args) :
+					  CONS(treptr_nil, args)
 		);
+		tregc_pop ();
+		tregc_pop ();
+		return res;
 	}
 
-	if (TREPTR_IS_ATOM(func) && TREATOM_COMPILED_FUN(func))
-		return trespecial_apply_compiled_call (func, args);
+	if (TREPTR_IS_ATOM(func) && TREATOM_COMPILED_FUN(func)) {
+		tregc_push (args);
+		res = trespecial_apply_compiled_call (func, args);
+		tregc_pop ();
+		tregc_pop ();
+		return res;
+	}
 
     fake = CONS(func, args);
     tregc_push (fake);
@@ -302,8 +311,10 @@ trespecial_apply_compiled (treptr list)
     RPLACA(fake, efunc);
 
 	if (TREPTR_IS_ATOM(efunc) && TREATOM_COMPILED_FUN(efunc)) {
+		res = trespecial_apply_compiled_call (efunc, args);
 		tregc_pop ();
-		return trespecial_apply_compiled_call (efunc, args);
+		tregc_pop ();
+		return res;
 	}
 
     if (TREPTR_IS_FUNCTION(efunc))
@@ -316,6 +327,7 @@ trespecial_apply_compiled (treptr list)
         res = treerror (func, "function expected");
 
     tregc_pop ();
+	tregc_pop ();
     TRELIST_FREE_EARLY(fake);
 
     return res;

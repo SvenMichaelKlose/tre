@@ -264,8 +264,6 @@ treeval_expr (treptr x)
 
     fun = CAR(x);
 
-	if (treeval_recursions++ == TRE_MAX_RECURSIONS)
-		trewarn (treptr_nil, "%d recursions reached", TRE_MAX_RECURSIONS);
     tredebug_chk_breakpoints (x);
 	TREDEBUG_STEP();
 
@@ -297,7 +295,6 @@ treeval_expr (treptr x)
 		default:
         	fun = treeval (fun);
 	}
-
 
 	if (TREATOM_COMPILED_FUN(fun)) {
 		if (copied_expr) {
@@ -340,7 +337,6 @@ treeval_expr (treptr x)
     	tregc_pop ();
 	}
 
-	treeval_recursions--;
     return v;
 }
 

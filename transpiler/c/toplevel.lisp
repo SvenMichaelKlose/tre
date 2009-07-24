@@ -21,7 +21,10 @@
 									,(c-compiled-symbol _)
 									,(c-transpiler-function-name _))))
 					(transpiler-defined-functions *c-transpiler*))
-			(mapcar (fn `(%setq-atom-value ,_. ,(print (compiled-tree (c-transpiler-get-argdef-symbols ._)))))
+			(mapcar (fn `(%setq-atom-value
+							 ,_.
+							 ,(compiled-tree
+								  (c-transpiler-get-argdef-symbols ._))))
 					*closure-argdefs*)
 			'((say-hello))))
 
@@ -52,7 +55,6 @@
 (defvar in-c-init nil)
 
 (defun c-transpile-0 (f files)
-  (format f "#define cons _trelist_get~%")
   (map (fn (format f "#include \"~A\"~%" _))
 	   *c-interpreter-headers*)
 ;    (dolist (i (reverse *universe*))

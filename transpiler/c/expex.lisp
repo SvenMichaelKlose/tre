@@ -32,7 +32,7 @@
   (trestring_get (%transpiler-native (%transpiler-string ,(make-c-newlines (escape-string x))))))
 
 (c-define-compiled-literal c-compiled-symbol (x symbol)
-  ($ 'tresymbol_compiled_ (gensym-number))
+  ($ 'tresymbol_compiled_ (transpiler-symbol-string *current-transpiler* x))
   (treatom_get (%transpiler-native (%transpiler-string ,(escape-string (symbol-name x))))
 			   ,(when (keywordp x)
 				  'trepackage_keyword
@@ -64,7 +64,8 @@
 (defun c-make-%setq-funcall (x f)
   `(%setq ,(second x)
 		  (trespecial_apply_compiled
-			  (cons ,f ,(compiled-list (cdr (third x)))))))
+			  (cons ,f (cons ,(compiled-list (cdr (third x)))
+							 nil)))))
 
 (defun c-local-fun-filter (x)
   (if

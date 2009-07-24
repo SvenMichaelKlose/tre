@@ -128,12 +128,25 @@ install_it ()
 	sudo cp $TRE $BINDIR
 }
 
+install_it_without_reload ()
+{
+	echo "Installing $TRE to $BINDIR."
+	sudo cp $TRE $BINDIR
+}
+
 case $1 in
 debug)
 	COPTS="$COPTS -O0 -g"
 	standard_compile
 	link
 	install_it
+	;;
+
+debugraw)
+	COPTS="$COPTS -O0 -g"
+	standard_compile
+	link
+	install_it_without_reload
 	;;
 
 build)
@@ -148,6 +161,13 @@ crunsh)
 	COPTS="$COPTS -O3 -fomit-frame-pointer -ffast-math -fwhole-program -lm --whole-program"
 	crunsh_compile
 	install_it
+	;;
+
+crunshraw)
+	CFLAGS="$CFLAGS -DTRE_COMPILED_CRUNSHED -Iinterpreter"
+	COPTS="$COPTS -O3 -fomit-frame-pointer -ffast-math -fwhole-program -lm --whole-program"
+	crunsh_compile
+	install_it_without_reload
 	;;
 
 clean)

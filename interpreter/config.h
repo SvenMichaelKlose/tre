@@ -38,9 +38,7 @@ typedef int bool;
 #define TRE_EXIT_ON_STDIO_SIGINT /* Exit on SIGINT in stdio prompt. */
 #endif
 
-#ifndef TRE_MAX_RECURSIONS
-#define TRE_MAX_RECURSIONS	(512 * KILO)
-#endif
+#define TRE_NO_BUILTIN_SEARCH
 
 #ifndef TRE_QUIET_LOAD
 #define TRE_VERBOSE_LOAD	/* Print what files are loaded. */

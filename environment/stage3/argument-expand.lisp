@@ -22,7 +22,7 @@
 		   (fn
 		     (when _
 			   (if (argument-keyword? _.)
-				   (rec _)
+				   (rec3 _)
 				   ; Turn keyword definition into ACONS.
 				   (and (setf argument-exp-sort-key
 							  (cons (if (consp _.)
@@ -33,15 +33,15 @@
 						(rec2 ._)))))
 
 		 ; Copy argument definition until &KEY.
-		 rec
+		 rec3
 		   (fn
 		     (when _
 		       (if (eq '&key _.)
 				   (rec2 ._)
-				   (cons _. (rec ._))))))
+				   (cons _. (rec3 ._))))))
 
 	(setf argument-exp-sort-key nil)
-	(values (rec def) (reverse argument-exp-sort-key))))
+	(values (rec3 def) (reverse argument-exp-sort-key))))
 
 ;; Expands argument definition and argument list to an associative list
 ;; of argument name/value pairs. Argument rest lists start with the

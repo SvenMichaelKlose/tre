@@ -76,10 +76,10 @@
   (exported-closures nil)
 
   ; Literals that must be declared or cached before code with them is emitted.
-  (compiled-chars (make-hash-table :test #'eql))
-  (compiled-numbers (make-hash-table :test #'eql))
-  (compiled-strings (make-hash-table :test #'eql))
-  (compiled-symbols (make-hash-table :test #'eql))
+  (compiled-chars (make-hash-table :test #'=))
+  (compiled-numbers (make-hash-table :test #'=))
+  (compiled-strings (make-hash-table :test #'eq))
+  (compiled-symbols (make-hash-table :test #'eq))
   (compiled-decls nil)
   (compiled-inits nil))
 

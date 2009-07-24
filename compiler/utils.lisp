@@ -12,14 +12,9 @@
     `(cons ,x.
            ,(compiled-list .x))))
 
-(defun compiled-tree-0 (x)
+(defun compiled-tree (x)
   (when x
 	(if (consp x)
-        `(cons ,(compiled-tree-0 x.)
-               ,(compiled-tree-0 .x))
+        `(cons ,(compiled-tree x.)
+               ,(compiled-tree .x))
 		x)))
-
-(defun compiled-tree (x)
-  (print x)
-  (print (compiled-tree-0 x))
-  (print (compiled-list x)))

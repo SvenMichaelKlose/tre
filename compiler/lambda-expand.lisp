@@ -66,6 +66,8 @@
   (with-gensym exported-name
     (let fi-child (make-funinfo :parent fi
 								:args (lambda-args x))
+	  (when (transpiler-stack-locals? *current-transpiler*)
+		(funinfo-make-ghost fi-child))
 	  (lambda-expand-tree fi-child (lambda-body x) t)
       (let argdef (append (awhen (funinfo-ghost fi-child)
 						    (list !))
