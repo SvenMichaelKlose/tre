@@ -11,7 +11,7 @@
 (defstruct transpiler
   std-macro-expander
   macro-expander
-  setf-functionp
+  (setf-functionp #'identity)
   separator
 
   ; List of functions that must not be imported from the environment.
