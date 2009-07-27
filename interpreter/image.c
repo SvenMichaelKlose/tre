@@ -1,6 +1,6 @@
 /*
  * nix operating system project tre interpreter
- * Copyright (c) 2007-2008 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2007-2009 Sven Klose <pixel@copei.de>
  *
  * Images
  */
@@ -58,7 +58,9 @@ treimage_write (FILE *f, void *p, ulong len)
 void
 treimage_read (FILE *f, void *p, ulong len)
 {
-   fread (p, len, 1, f); 
+   int gcc_warns_if_return_value_is_ignored =
+	   fread (p, len, 1, f); 
+   (void) gcc_warns_if_return_value_is_ignored;
 }
 
 void
