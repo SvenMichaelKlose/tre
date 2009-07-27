@@ -1,6 +1,6 @@
 /*
  * nix operating system project tre interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2007,2009 Sven Klose <pixel@copei.de>
  *
  * Garbage-collection.
  */
@@ -26,6 +26,7 @@ extern void tregc_force_user (void);
 extern void tregc_init (void);
 
 extern void tregc_push (treptr);
+extern treptr tregc_push_compiled (treptr);
 extern void tregc_pop (void);
 extern void tregc_retval (treptr);
 
