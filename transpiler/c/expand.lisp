@@ -13,7 +13,7 @@
 ;; XXX This could be generic if there wasn't *JS-TRANSPILER*.
 (defun c-essential-defun (name args &rest body)
   (when *show-definitions*
-    (print `(defun ,name)))
+    (late-print `(defun ,name ,@args)))
   (with (n (%defun-name name)
 		 tr *c-transpiler*
 		 fi-sym (when (eq '%FUNINFO args.)
@@ -38,7 +38,7 @@
 
 (define-c-std-macro defmacro (name &rest x)
   (when *show-definitions*
-    (print `(defmacro ,name )))
+    (late-print `(defmacro ,name ,@x.)))
   (eval (transpiler-macroexpand *c-transpiler*
 								`(define-c-std-macro ,name ,@x)))
   nil)
@@ -46,7 +46,7 @@
 (define-c-std-macro defvar (name val)
   (let tr *c-transpiler*
     (when *show-definitions*
-      (print `(defvar ,name)))
+      (late-print `(defvar ,name)))
     (when (transpiler-defined-variable tr name)
       (error "variable ~A already defined" name))
     (transpiler-add-defined-variable tr name)
