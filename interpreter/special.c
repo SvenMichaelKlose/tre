@@ -111,14 +111,14 @@ trespecial_apply (treptr list)
 
     func = CAR(list);
     args = trespecial_apply_args (trelist_copy (CDR(list)));
-	if (TREPTR_IS_ATOM(func) && TREATOM_COMPILED_FUN(func))
+	if (TREPTR_IS_FUNCTION(func) && TREATOM_COMPILED_FUN(func))
 		return trespecial_apply_call_fake (func, args);
 
     fake = CONS(func, args);
     tregc_push (fake);
     efunc = treeval (func);
     RPLACA(fake, efunc);
-	if (TREATOM_COMPILED_FUN(efunc)) {
+	if (TREPTR_IS_FUNCTION(efunc) && TREATOM_COMPILED_FUN(efunc)) {
 		tregc_pop ();
 		return trespecial_apply_call_fake (efunc, args);
 	}
@@ -296,7 +296,7 @@ trespecial_apply_compiled (treptr list)
 		return res;
 	}
 
-	if (TREPTR_IS_ATOM(func) && TREATOM_COMPILED_FUN(func)) {
+	if (TREPTR_IS_FUNCTION(func) && TREATOM_COMPILED_FUN(func)) {
 		tregc_push (args);
 		res = trespecial_apply_compiled_call (func, args);
 		tregc_pop ();
@@ -310,7 +310,7 @@ trespecial_apply_compiled (treptr list)
     efunc = treeval (func);
     RPLACA(fake, efunc);
 
-	if (TREPTR_IS_ATOM(efunc) && TREATOM_COMPILED_FUN(efunc)) {
+	if (TREPTR_IS_FUNCTION(efunc) && TREATOM_COMPILED_FUN(efunc)) {
 		res = trespecial_apply_compiled_call (efunc, args);
 		tregc_pop ();
 		tregc_pop ();

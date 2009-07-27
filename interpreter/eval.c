@@ -230,6 +230,7 @@ treeval_compiled_expr (treptr func, treptr x, bool do_expand)
 
     tregc_push (func);
     tregc_push (x);
+
     funcdef = TREATOM_VALUE(func);
     forms = CAR(funcdef);
 
@@ -296,7 +297,7 @@ treeval_expr (treptr x)
         	fun = treeval (fun);
 	}
 
-	if (TREATOM_COMPILED_FUN(fun)) {
+	if (TREATOM_COMPILED_FUN(fun) && TREPTR_IS_BUILTIN(fun) == FALSE) {
 		if (copied_expr) {
     		tregc_pop ();
     		tregc_pop ();
