@@ -1,8 +1,5 @@
 #!/bin/sh
 
-echo "TRE programming language"
-echo "Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>"
-
 ARGS="$2 $3 $4 $5 $6 $7 $8 $9"
 
 BOOT_IMAGE=`echo ~/.tre.image`
@@ -163,10 +160,33 @@ crunsh)
 	install_it
 	;;
 
+boot0)
+	CFLAGS="$CFLAGS -DTRE_COMPILED_CRUNSHED -Iinterpreter"
+	COPTS="$COPTS -O3 -fomit-frame-pointer -ffast-math -fwhole-program -lm --whole-program"
+	crunsh_compile
+	;;
+
 crunshraw)
 	CFLAGS="$CFLAGS -DTRE_COMPILED_CRUNSHED -Iinterpreter"
 	COPTS="$COPTS -O3 -fomit-frame-pointer -ffast-math -fwhole-program -lm --whole-program"
 	crunsh_compile
+	install_it_without_reload
+	;;
+
+boot)
+	basic_clean
+	./make.sh crunsh
+	./tre make-compiled.lisp
+	./make.sh crunshraw
+	;;
+
+bootunclean)
+	./make.sh boot0
+	./tre make-compiled.lisp
+	./make.sh crunshraw
+	;;
+
+install)
 	install_it_without_reload
 	;;
 
