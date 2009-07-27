@@ -173,14 +173,10 @@
 		 (cons a (opt-peephole-remove-void (opt-peephole-find-next-tag d))))))
 
 (defun opt-peephole-will-be-set-again? (x v)
-  (if x
-      (or (and (%setq? x.)
-	      	   (eq v (second x.)))
-		  (unless (or (vm-jump? x.) ; We don't know what happens after a jump.
-		    		  (find-tree x. v)) ; Variable used?
-	        (opt-peephole-will-be-set-again? .x v)))
-	  (and (atom v) ; End of block, EXPEX-sym not used.
-	  	   (expex-sym? v))))
+  (when x
+    (or (vm-jump? x.) ; We don't know what happens after a jump.
+	    (find-tree x. v) ; Variable used?
+        (opt-peephole-will-be-set-again? .x v))))
 
 (defun opt-peephole (x)
   (with
@@ -191,9 +187,9 @@
 	     #'((x)
 			  (opt-peephole-fun #'remove-code
 				((and (%setq? a)
-					  (atom .a.)
+					  (expex-sym? .a.)
 					  (atomic? ..a.)
-				      (opt-peephole-will-be-set-again? d .a.))
+				      (not (opt-peephole-will-be-set-again? d .a.)))
 			  	  ; Don't set variable that will be modified anyway.
 				  (remove-code d))))
 
@@ -218,7 +214,7 @@
 					             x))
 					   (funcall
 						 (compose #'reduce-tags
-								  ;#'remove-code
+								  #'remove-code
 								  #'opt-peephole-remove-void
 								  )
 						 x))))
