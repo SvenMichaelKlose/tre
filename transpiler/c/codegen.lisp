@@ -52,9 +52,10 @@
 				   ; Keep registered syms from being garbage collected.
 			       ,@(when (eq 'c-init name)
 					   `(,*c-indent* "tregc_push (_local_array)" ,*c-separator*))
-			 	   ,*c-indent* ,"treptr * _locals = (treptr *) "
-											  	    "TREATOM_DETAIL(_local_array)"
-											  	    ,*c-separator*))
+			 	   ,*c-indent*
+				   ,"const treptr * _locals = (treptr *) "
+									  	      "TREATOM_DETAIL(_local_array)"
+											  ,*c-separator*))
              ,@(lambda-body x)
 			 ,@(when (< 0 num-locals)
 			     `(,*c-indent* "tregc_pop ();" ,*c-separator*))

@@ -81,3 +81,13 @@
 	(if *imported-something*
 	    (append funs vars (transpiler-import-from-environment tr))
 	    *delayed-var-inits*)))
+
+(defun transpiler-import-from-expex (x)
+  (aif (atom-function-expr? x)
+       (progn
+         (unless (funinfo-in-this-or-parent-env? *expex-funinfo* !)
+           (transpiler-add-wanted-function *current-transpiler* !)
+         `(symbol-function (%quote ,!))))
+       (aif (vec-function-expr? x)
+           !
+           x)))

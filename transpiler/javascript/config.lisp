@@ -30,12 +30,14 @@
 (defun make-javascript-transpiler ()
   (with (tr (make-javascript-transpiler-0)
     	 ex (transpiler-expex tr))
-    (setf (expex-transpiler ex) tr)
-    (setf (expex-inline? ex) #'%slot-value?)
-    (setf (expex-setter-filter ex) (fn (js-setter-filter tr _)))
-    (setf (expex-function-arguments ex) #'js-function-arguments)
-    (setf (expex-argument-filter ex)
-		  (fn (transpiler-add-wanted-variable *js-transpiler* _)))
+    (setf (expex-inline? ex)
+			  #'%slot-value?
+    	  (expex-setter-filter ex)
+			  (fn (js-setter-filter tr _))
+    	  (expex-function-arguments ex)
+			  #'js-function-arguments
+    	  (expex-argument-filter ex)
+		      (fn (transpiler-add-wanted-variable *js-transpiler* _)))
 
 	(apply #'transpiler-add-obfuscation-exceptions
 		tr

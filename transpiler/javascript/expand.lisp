@@ -138,7 +138,8 @@
 
 ; XXX generic function instead of append!
 (define-js-std-macro dont-obfuscate (&rest symbols)
-  (apply #'transpiler-add-obfuscation-exceptions *js-transpiler* symbols)
+  (apply #'transpiler-add-obfuscation-exceptions
+		 *js-transpiler* symbols)
   nil)
 
 (define-js-std-macro assert (x &optional (txt nil) &rest args)

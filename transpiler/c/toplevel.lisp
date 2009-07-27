@@ -52,7 +52,20 @@
 		   "string2.h"
 		   "compiled.h"))
 
-(defvar in-c-init nil)
+(defun c-transpiler-make-init (tr)
+  (let init-funs nil
+    (append
+      (mapcar (fn (with-gensym g
+				    (let name ($ 'c-init- g)
+				      (push! name init-funs)
+				      `(defun ,name ()
+						 (tregc_push_compiled _local_array)
+					     ,@_))))
+              (group (c-transpiler-register-functions
+			      	     (transpiler-compiled-inits tr))
+					 20))
+      `((defun c-init ()
+		  ,@(mapcar #'list (reverse init-funs)))))))
 
 (defun c-transpile-0 (f files)
   (map (fn (format f "#include \"~A\"~%" _))
@@ -79,17 +92,15 @@
  	         		    (transpiler-transpile tr usr)))
 	  (mapcar (fn c-transpiler-get-argdef-symbols _)
 			  *closure-argdefs*)
-(setf in-c-init t)
 	  (with (init (transpiler-transpile tr
  					(transpiler-sighten tr
-				        `((defun c-init ()
-					        ,@(c-transpiler-register-functions
-								  (transpiler-compiled-inits tr)))))))
-	  (princ (concat-stringtree
-				 (transpiler-compiled-decls tr)
-			     init
-			     code)
-	         f))))
+						(c-transpiler-make-init tr))))
+
+	    (princ (concat-stringtree
+				   (transpiler-compiled-decls tr)
+			       init
+			       code)
+	           f))))
   (format t "~%; Everything OK. Done.~%"))
 
 (defun c-transpile (out files &key (obfuscate? nil))

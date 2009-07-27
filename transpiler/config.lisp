@@ -182,29 +182,34 @@
   (let ex (make-expex)
     (setf (transpiler-expex tr) ex
 
+		  (expex-transpiler ex)
+			tr
+
 		  (expex-function-collector ex)
-		  #'((fun args)
-			   (transpiler-add-wanted-function tr fun))
+		    #'((fun args)
+			     (transpiler-add-wanted-function tr fun))
 
 		  (expex-argument-filter ex)
 		    #'((var)
 			     (transpiler-add-wanted-variable tr var))
 
 		  (expex-function? ex)
-		  #'((fun)
-			   (and (atom fun)
-			        (or (transpiler-function-arguments tr fun)
-				        (and (not (transpiler-unwanted-function? tr fun))
-						     (functionp (symbol-function fun))))))
+		    #'((fun)
+			     (when (atom fun)
+			       (or (transpiler-function-arguments tr fun)
+				       (and (not (transpiler-unwanted-function? tr fun))
+					        (functionp (symbol-function fun))))))
 
 		  (expex-function-arguments ex)
-		  #'((fun)
-			   (or (transpiler-function-arguments tr fun)
-				   (function-arguments (symbol-function fun))))
+		    #'((fun)
+			     (or (transpiler-function-arguments tr fun)
+				     (function-arguments (symbol-function fun))))
 
 		  (expex-plain-arg-fun? ex)
-		  #'((fun)
-			   (transpiler-plain-arg-fun? tr fun)))
+		    #'((fun)
+			     (transpiler-plain-arg-fun? tr fun))
+		  (expex-expr-filter ex)
+			#'transpiler-import-from-expex)
 	ex))
 
 (defun create-transpiler (&rest args)

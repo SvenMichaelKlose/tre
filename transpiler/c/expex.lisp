@@ -32,11 +32,15 @@
   (trestring_get (%transpiler-native (%transpiler-string ,(make-c-newlines (escape-string x))))))
 
 (c-define-compiled-literal c-compiled-symbol (x symbol)
-  ($ 'tresymbol_compiled_ (transpiler-symbol-string *current-transpiler* x))
+  ($ 'tresymbol_compiled_
+	 (transpiler-symbol-string *current-transpiler* x)
+	 (if (keywordp x)
+	     '_keyword
+		 ""))
   (treatom_get (%transpiler-native (%transpiler-string ,(escape-string (symbol-name x))))
-			   ,(when (keywordp x)
-				  'trepackage_keyword
-				  'treptr_nil)))
+			   ,(if (keywordp x)
+				    'tre_package_keyword
+				    'treptr_nil)))
 
 (defun atom-function-expr? (x)
   (and (consp x)
@@ -50,16 +54,6 @@
 	   (or (%vec? .x.)
 		   (%stack? .x.))
 	   .x.))
-
-(defun c-import-from-function-expr (x)
-  (aif (atom-function-expr? x)
-	   (progn
-	     (unless (funinfo-in-this-or-parent-env? *expex-funinfo* !)
-		   (transpiler-add-wanted-function *current-transpiler* !)
-		 `(symbol-function (%quote ,!))))
-	   (aif (vec-function-expr? x)
-		   !
-  	   	   x)))
 
 ;; An EXPEX-ARGUMENT-FILTER.
 (defun c-expand-literals (x)
@@ -78,7 +72,7 @@
 		    (expex-global-variable? x))
 	  	  `(treatom_get_value ,(c-compiled-symbol x))
 		x)
-    (c-import-from-function-expr x)))
+    (transpiler-import-from-expex x)))
 
 (defun function-expr? (x)
   (and (consp x)
