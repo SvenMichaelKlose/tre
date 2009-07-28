@@ -5,7 +5,7 @@
   (with-gensym (tmp fun)
     `(with (,tmp ,call
             ,fun (second (car ,tmp))
-            ,args (lambda-args-expanded ,fun)
+            ,args (lambda-args ,fun)
             ,vals (lambda-call-vals ,tmp)
             ,body (lambda-body ,fun))
        ,@exec-body)))
