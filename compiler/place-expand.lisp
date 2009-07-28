@@ -31,6 +31,9 @@
 
 (defun place-expand-atom (fi x)
   (if
+	(not fi)
+	  x
+
 	(or (not x)
 		(numberp x)
 		(stringp x)
@@ -68,8 +71,7 @@
 		(%transpiler-native? x))
 	  x
 	(lambda? x) ; XXX Add variables to ignore in subfunctions.
-      `#'(,@(lambda-funinfo-expr x)
-		  ,(lambda-args x)
+      `#'(,@(lambda-funinfo-and-args x)
 		     ,@(place-expand fi (lambda-body x)))
     (%slot-value? x)
       `(%slot-value ,(place-expand fi .x.)
