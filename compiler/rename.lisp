@@ -24,7 +24,7 @@
 (defun rename-arg (replacements x)
   (assoc-replace x replacements :test #'eq))
 
-(defun rename-double-function-args (x &optional (replacements nil) (env nil))
+(defun rename-double-function-args-0 (x &optional (replacements nil) (env nil))
   (if
 	(atom x)
 	  (rename-arg replacements x)
@@ -36,14 +36,26 @@
 															args
 														    replacements
 														    env)
-        	 renamed-args (rename-double-function-args args new-replacements env))
+        	 renamed-args (rename-double-function-args-0 args new-replacements env))
         `#'(,@(lambda-funinfo-expr x)
 			,renamed-args
-		    ,@(rename-double-function-args (lambda-body x)
-										   new-replacements
-			 							   (append renamed-args env))))
+		    ,@(rename-double-function-args-0 (lambda-body x)
+										     new-replacements
+			 							     (append renamed-args env))))
     (%slot-value? x)
-      `(%slot-value ,(rename-double-function-args .x. replacements env)
+      `(%slot-value ,(rename-double-function-args-0 .x. replacements env)
 					,..x.)
-    (cons (rename-double-function-args x. replacements env)
-		  (rename-double-function-args .x replacements env))))
+    (cons (rename-double-function-args-0 x. replacements env)
+		  (rename-double-function-args-0 .x replacements env))))
+
+(defun rename-double-function-args (x)
+  (when x
+    (if (and (%setq? x.)
+             (lambda? (third x.)))
+		(let fun (third x.)
+          (cons `(%setq ,(second x.)
+				    #'(,@(lambda-funinfo-and-args fun)
+						  ,@(rename-double-function-args-0 (lambda-body fun))))
+				(rename-double-function-args .x)))
+        (cons x.
+              (rename-double-function-args .x)))))
