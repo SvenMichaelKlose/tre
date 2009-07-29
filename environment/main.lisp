@@ -12,16 +12,44 @@
 
 (env-load "stage0/main.lisp")
 
-(setq *show-definitions* nil)
+(setq *show-definitions* t)
 (if (eq *show-definitions* '*show-definitions*)
     (setq *show-definitions* nil))
 
 (env-load "stage1/main.lisp")
 
-(defvar *assert* nil)
+(defvar *universe-after-stage-1* (copy-list *universe*))
+(defvar *functions-after-stage-1*
+		(%simple-mapcar (fn (when (and (symbolp _)
+                                       (not (builtinp _))
+                                       (symbol-function _))
+                              `(function ,_)))
+                *universe*))
 
+(defvar *assert* nil)
 (env-load "stage2/main.lisp")
+
+(defvar *universe-after-stage-2* (copy-list *universe*))
+(defvar *functions-after-stage-2*
+		(%simple-mapcar (fn (when (and (symbolp _)
+                                       (not (builtinp _))
+                                       (symbol-function _))
+                              `(function ,_)))
+                *universe*))
+
 (env-load "stage3/main.lisp")
+(defvar *universe-after-stage-3* (copy-list *universe*))
+(defvar *functions-after-stage-3*
+		(%simple-mapcar (fn (when (and (symbolp _)
+                                       (not (builtinp _))
+                                       (symbol-function _))
+                      		  `(function ,_)))
+                *universe*))
+
+(setf *functions-after-stage-1* (reverse *functions-after-stage-1* ))
+(setf *functions-after-stage-2* (reverse *functions-after-stage-2* ))
+(setf *functions-after-stage-3* (reverse *functions-after-stage-3* ))
+
 (env-load "stage4/main.lisp")
 
 (env-load "../lib/main.lisp")

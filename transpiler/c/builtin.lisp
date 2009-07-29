@@ -47,7 +47,7 @@
 		(CHARACTERP))
 
 	(treatom_builtin_
-		(EQ)
+;		(EQ)
 		(EQL)
 		(MAKE-SYMBOL make_symbol)
 		(ATOM)
@@ -58,6 +58,7 @@
 		(SYMBOL-FUNCTION symbol_function)
 		(SYMBOL-PACKAGE symbol_package)
 		(FUNCTIONP)
+		(BUILTINP)
 		(BOUNDP)
 		(FBOUNDP)
 		(MACROP)
@@ -66,8 +67,8 @@
 	(trelist_builtin_
 		;(CONS)
 		(LIST)
-    	(CAR)
-		(CDR)
+;    	(CAR)
+;		(CDR)
 		(RPLACA)
 		(RPLACD)
     	(CONSP))

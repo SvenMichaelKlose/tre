@@ -1,16 +1,7 @@
 ;;;;; TRE compiler
 ;;;;; Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
-
-(defun doubles (a b)
-  (when b
-    (if (member b. a)
-        (cons b. (doubles a .b))
-        (doubles a .b))))
-
-(defun list-aliases (x)
-  (when x
-    (cons (cons x. (gensym))
-          (list-aliases .x))))
+;;;;;
+;;;;; Apply this only to expanded arguments or keywords are renamed, too.
 
 (defun find-and-add-renamed-doubles (fi args old-replacements vars)
   (let argnames (argument-expand-names 'rename-args args)
@@ -24,7 +15,7 @@
 (defun rename-arg (replacements x)
   (assoc-replace x replacements :test #'eq))
 
-(defun rename-double-function-args-0 (x &optional (replacements nil) (env nil))
+(defun rename-function-arguments-0 (x &optional (replacements nil) (env nil))
   (if
 	(atom x)
 	  (rename-arg replacements x)
@@ -36,26 +27,26 @@
 															args
 														    replacements
 														    env)
-        	 renamed-args (rename-double-function-args-0 args new-replacements env))
+        	 renamed-args (rename-function-arguments-0 args new-replacements env))
         `#'(,@(lambda-funinfo-expr x)
 			,renamed-args
-		    ,@(rename-double-function-args-0 (lambda-body x)
+		    ,@(rename-function-arguments-0 (lambda-body x)
 										     new-replacements
 			 							     (append renamed-args env))))
     (%slot-value? x)
-      `(%slot-value ,(rename-double-function-args-0 .x. replacements env)
+      `(%slot-value ,(rename-function-arguments-0 .x. replacements env)
 					,..x.)
-    (cons (rename-double-function-args-0 x. replacements env)
-		  (rename-double-function-args-0 .x replacements env))))
+    (cons (rename-function-arguments-0 x. replacements env)
+		  (rename-function-arguments-0 .x replacements env))))
 
-(defun rename-double-function-args (x)
+(defun rename-function-arguments (x)
   (when x
     (if (and (%setq? x.)
              (lambda? (third x.)))
 		(let fun (third x.)
           (cons `(%setq ,(second x.)
 				    #'(,@(lambda-funinfo-and-args fun)
-						  ,@(rename-double-function-args-0 (lambda-body fun))))
-				(rename-double-function-args .x)))
+						  ,@(rename-function-arguments-0 (lambda-body fun))))
+				(rename-function-arguments .x)))
         (cons x.
-              (rename-double-function-args .x)))))
+              (rename-function-arguments .x)))))

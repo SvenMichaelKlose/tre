@@ -168,3 +168,12 @@
 
 (define-c-macro identity (x)
   x)
+
+(define-c-macro %car (x)
+  `("(" ,x " == treptr_nil ? treptr_nil : tre_lists[" ,x "].car)"))
+
+(define-c-macro %cdr (x)
+  `("(" ,x " == treptr_nil ? treptr_nil : tre_lists[" ,x "].cdr)"))
+
+(define-c-macro %eq (a b)
+  `("(" ,a " == " ,b " ? treptr_t : treptr_nil)"))

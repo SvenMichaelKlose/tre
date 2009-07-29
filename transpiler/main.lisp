@@ -15,7 +15,7 @@
 (env-load "../transpiler/expand/update-funinfos.lisp")
 (env-load "../transpiler/expand/named-functions.lisp")
 (env-load "../transpiler/expand/expression-expand.lisp")
-(env-load "../transpiler/expand/argument-definitions.lisp")
+(env-load "../transpiler/expand/prepare-runtime-argexps.lisp")
 (env-load "../transpiler/expand/lambda-expand.lisp")
 (env-load "../transpiler/expand/literals.lisp")
 (env-load "../transpiler/expand/quote-keywords.lisp")

@@ -1,8 +1,11 @@
 ;;;;; TRE transpiler
 ;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;;
+;;;;; Wrap code around functions to save their argument definitions
+;;;;; for run-time argument-expansions.
 
 ; XXX introduce metacode-macros and move this to javascript/.
-(define-expander 'TRANSPILER-FUNPROP)
+(define-expander 'TRANSPILER-PREPARE-RUNTIME-ARGUMENTEXPANSIONS)
 
 (defun js-expanded-funref (x)
   `(%function ,x))
@@ -20,7 +23,7 @@
 ;; ;; Add symbol to list of wanted functions or obfuscate arguments of
 ;; ;; LAMBDA-expression.
 ;; ;; XXX Wouldn't this obfuscate the arguments over and over again?
-(define-expander-macro TRANSPILER-FUNPROP function (l)
+(define-expander-macro TRANSPILER-PREPARE-RUNTIME-ARGUMENTEXPANSIONS function (l)
   (unless l
     (error "FUNCTION expects a symbol or form"))
   (if (or (atom l)
@@ -29,8 +32,7 @@
       (js-expanded-funref l)
       (if (eq 'no-args (first (lambda-body l)))
           `(%function
-		     (,@(lambda-funinfo-expr l)
-			  ,(lambda-args l)
+		     (,@(lambda-funinfo-and-args l)
 			  ,@(cdr (lambda-body l))))
           (js-expanded-fun (past-lambda-before-funinfo l)))))
 
@@ -44,8 +46,8 @@
 	   (cons (transpiler-restore-funs x.)
 			 (transpiler-restore-funs .x)))))
 
-(defun transpiler-argument-definitions (tr x)
+(defun transpiler-prepare-runtime-argument-expansions (tr x)
   (if (transpiler-apply-argdefs? tr)
       (transpiler-restore-funs
-         (expander-expand 'TRANSPILER-FUNPROP x))
+         (expander-expand 'TRANSPILER-PREPARE-RUNTIME-ARGUMENTEXPANSIONS x))
 	  x))

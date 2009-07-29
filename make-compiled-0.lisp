@@ -2,17 +2,14 @@
 
 (defun fnord ()
 ;#'c-transpile
+  ,@*functions-after-stage-3*
   #'reverse #'append #'tree-list #'find #'assoc #'href #'%macroexpand #'position #'mapcan
   #'argument-expand #'lambda-expand #'expression--expand #'place-expand
   #'opt-peephole
-;  #'transpiler-make-named-functions
-;  #'transpiler-update-funinfo
+  #'opt-inline
   #'transpiler-quote-keywords
-;  #'transpiler-expression-expand
-;  #'transpiler-argument-definitions
   #'thisify
-  #'rename-double-function-args
-;  #'special-form-expand
+  #'rename-function-arguments
   #'quasiquote-expand
   #'backquote-expand
   #'simple-quote-expand
@@ -23,6 +20,8 @@
   #'transpiler-encapsulate-strings
   #'transpiler-obfuscate
   #'read
+  #'late-print
+)
 ;  #'transpiler-add-wanted-variable
 ;  #'transpiler-add-wanted-function
 ;  #'transpiler-import-exported-closures
@@ -31,4 +30,8 @@
 ;  #'transpiler-import-from-environment
 ;  #'transpiler-import-from-expex
 ;  #'transpiler-make-expex
-)
+;  #'transpiler-make-named-functions
+;  #'transpiler-update-funinfo
+;  #'transpiler-expression-expand
+;  #'transpiler-argument-definitions
+;  #'special-form-expand

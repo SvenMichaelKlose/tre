@@ -176,6 +176,12 @@ crunshraw)
 boot)
 	basic_clean
 	./make.sh crunsh
+	./tre make-compiled1.lisp
+	./make.sh crunshraw
+	./tre make-compiled2.lisp
+	./make.sh crunshraw
+	./tre make-compiled3.lisp
+	./make.sh crunshraw
 	./tre make-compiled.lisp
 	./make.sh crunshraw
 	;;

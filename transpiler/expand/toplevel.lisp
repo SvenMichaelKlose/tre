@@ -1,69 +1,65 @@
 ;;;;; TRE transpiler
 ;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
 
-;;;; TOPLEVEL
+(defun transpiler-expand-print-dot (x)
+  (princ #\.)
+  (force-output)
+  x)
 
 (defun transpiler-expand-compose (tr)
   (compose
-	(fn (princ #\.)
-		(force-output)
-		_)
-
-    ; Add names to top-level functions for those target languages
-    ; that require it.
+	#'transpiler-expand-print-dot
     (fn transpiler-make-named-functions tr _)
-
     #'transpiler-update-funinfo
-
-    ; Peephole-optimization. Removes some unused code.
     #'opt-peephole
-
-	; Quote keywords.
     #'transpiler-quote-keywords
-
-    ; Break up nested expressions.
-    ; After this pass function arguments may only be literals,
-    ; constants or variables.
     (fn transpiler-expression-expand tr `(vm-scope ,_))
-
-	(fn transpiler-argument-definitions tr _)))
+	(fn transpiler-prepare-runtime-argument-expansions tr _)))
 
 (defun transpiler-expand (tr x)
   (remove-if #'not
 		     (mapcar (fn funcall (transpiler-expand-compose tr) _)
 					 x)))
 
+;; After this pass
+;; - Nested functions are merged.
+;; - Optional: Anonymous functions were exported.
+;; - FUNINFO objects were built for all functions.
+(defvar *opt-inline?* t)
+
 (defun transpiler-preexpand-compose (tr)
   (compose
-    ; Make (%SLOT-VALUE this ...) expressions for class members.
     (fn thisify (transpiler-thisify-classes tr) _)
-
-	; Inline local functions and export constant LAMBDA expressions.
     (fn transpiler-lambda-expand tr _)
-
-	#'rename-double-function-args
-
-    (fn funcall (transpiler-literal-conversion tr) _)
-
-    ; Expand BACKQUOTEs and compiler-macros.
-    #'special-form-expand
-
-    (fn transpiler-macroexpand tr _)
-
-	#'quasiquote-expand
-
-    ; Alternative standard-macros.
-    ; Some macros in this pass just rename expression to bypass the
-    ; standard macro-expansion.
-    (fn transpiler-macroexpand tr _)
-
-    ; Convert object-dot-member symbols to %SLOT-VALUE expressions.
-    #'dot-expand
-
-    (fn funcall (transpiler-preprocessor tr) _)))
+	#'rename-function-arguments
+	(fn (if *opt-inline?*
+			(opt-inline tr _)
+			_))
+    (fn funcall (transpiler-simple-expand-compose tr) _)))
 
 (defun transpiler-preexpand (tr x)
   (mapcan (fn (funcall (transpiler-preexpand-compose tr) (list _)))
+		  x))
+
+;; After this pass
+;; - All macros are expanded.
+;; - Expression blocks are kept in VM-SCOPE expressions, which is a mix
+;;   of BLOCK and TAGBODY.
+;; - Conditionals are implemented with VM-GO and VM-GO-NIL.
+;; - Quoting is done by %QUOTE (same as QUOTE).
+(defun transpiler-simple-expand-compose (tr)
+  (compose
+    (fn funcall (transpiler-literal-conversion tr) _)
+    #'backquote-expand
+    #'compiler-macroexpand
+    (fn transpiler-macroexpand tr _)
+	#'quasiquote-expand
+    (fn transpiler-macroexpand tr _)
+    #'dot-expand
+    (fn funcall (transpiler-preprocessor tr) _)))
+
+(defun transpiler-simple-expand (tr x)
+  (mapcan (fn (funcall (transpiler-simple-expand-compose tr) (list _)))
 		  x))
 
 (defun transpiler-preexpand-and-expand (tr forms)

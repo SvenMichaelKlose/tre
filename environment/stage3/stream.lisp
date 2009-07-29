@@ -1,5 +1,4 @@
-;;;; nix operating system project
-;;;; list processor environment
+;;;; TRE environment
 ;;;; Copyright (C) 2005-2006 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Streams

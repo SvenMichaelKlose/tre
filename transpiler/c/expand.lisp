@@ -55,5 +55,7 @@
        (%var ,name)
 	   (%setq ,name ,val))))
 
-(define-c-std-macro cons (a d)
-  `(_trelist_get ,a ,d))
+(define-c-std-macro cons (a d) `(_trelist_get ,a ,d))
+(define-c-std-macro car (x) `(%car ,x))
+(define-c-std-macro cdr (x) `(%cdr ,x))
+(define-c-std-macro eq (a b) `(%eq ,a ,b))

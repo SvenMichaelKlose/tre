@@ -25,8 +25,7 @@
 							 ,_.
 							 ,(compiled-tree
 								  (c-transpiler-get-argdef-symbols ._))))
-					*closure-argdefs*)
-			'((say-hello))))
+					*closure-argdefs*)))
 
 (defvar *c-interpreter-headers*
 	     '("ptr.h"
@@ -92,6 +91,7 @@
  	         		    (transpiler-transpile tr usr)))
 	  (mapcar (fn c-transpiler-get-argdef-symbols _)
 			  *closure-argdefs*)
+	  (setf *opt-inline?* nil)
 	  (with (init (transpiler-transpile tr
  					(transpiler-sighten tr
 						(c-transpiler-make-init tr))))
