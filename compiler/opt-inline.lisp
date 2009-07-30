@@ -3,8 +3,8 @@
 
 (defvar *opt-inline-max-levels* 2)
 (defvar *opt-inline-min-size* 32)
-(defvar *opt-inline-max-size* 256)
-(defvar *opt-inline-max-repetitions* 0)
+(defvar *opt-inline-max-size* 64)
+(defvar *opt-inline-max-repetitions* 1)
 
 (defun tree-size (x &optional (n 0))
   (if (consp x)

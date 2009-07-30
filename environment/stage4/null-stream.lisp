@@ -6,5 +6,5 @@
 (defun make-null-stream ()
   (make-stream
     :fun-in       #'((str))
-    :fun-out      #'((c str) (logwindow.document.write str))
+    :fun-out      #'((c str))
 	:fun-eof	  #'((str))))

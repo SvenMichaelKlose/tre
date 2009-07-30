@@ -52,3 +52,5 @@ x + y + z
 
 - symbol construction syntax
 	'prefix-,name'-tail
+
+- (fun1+fun2 ...) => (fun1 ...) (fun2 ...)

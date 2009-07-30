@@ -24,7 +24,7 @@
                                        (not (builtinp _))
                                        (symbol-function _))
                               `(function ,_)))
-                *universe*))
+                		*universe*))
 
 (defvar *assert* nil)
 (env-load "stage2/main.lisp")
@@ -35,7 +35,7 @@
                                        (not (builtinp _))
                                        (symbol-function _))
                               `(function ,_)))
-                *universe*))
+                		*universe*))
 
 (env-load "stage3/main.lisp")
 (defvar *universe-after-stage-3* (copy-list *universe*))
@@ -44,7 +44,7 @@
                                        (not (builtinp _))
                                        (symbol-function _))
                       		  `(function ,_)))
-                *universe*))
+                		*universe*))
 
 (setf *functions-after-stage-1* (reverse *functions-after-stage-1* ))
 (setf *functions-after-stage-2* (reverse *functions-after-stage-2* ))
@@ -91,6 +91,13 @@
 
 ; Keep tests for reuse in definition order.
 (setq *tests* (reverse *tests*))
+
+(defvar *universe-functions*
+		(%simple-mapcar (fn (when (and (symbolp _)
+                                       (not (builtinp _))
+                                       (symbol-function _))
+                              `(function ,_)))
+                		(reverse *universe*)))
 
 ; Load file specified on command-line or loaded image.
 (defun %load-launchfile ()

@@ -163,14 +163,16 @@
 ;; Make expander for standard macro which picks macros of the same
 ;; name in der user-defined expander first.
 (defun make-overlayed-std-macro-expander (expander-name)
- (let e (define-expander expander-name)
-   (setf mypred (expander-pred e)
-		 mycall (expander-call e))
-   (setf (expander-pred e) (fn (or (funcall mypred _)
-				 				   (%%macrop _)))
-   		 (expander-call e) (fn (if (funcall mypred _)
-				 				   (funcall mycall _)
-				 				   (%%macrocall _))))))
+  #'%%macrop
+  #'%%macrocall
+  (let e (define-expander expander-name)
+    (setf mypred (expander-pred e)
+		  mycall (expander-call e))
+    (setf (expander-pred e) (eval+macroexpand `(fn (or (funcall ,mypred _)
+				 				    (%%macrop _))))
+   		  (expander-call e) (eval+macroexpand `(fn (if (funcall ,mypred _)
+				 				    (funcall ,mycall _)
+				 				    (%%macrocall _)))))))
 
 (defun transpiler-make-std-macro-expander (tr)
  (make-overlayed-std-macro-expander (transpiler-std-macro-expander tr)))
@@ -179,6 +181,9 @@
   (define-expander (transpiler-macro-expander tr)))
 
 (defun transpiler-make-expex (tr)
+  #'transpiler-add-wanted-function
+  #'transpiler-add-wanted-variable
+  #'transpiler-plain-arg-fun?
   (let ex (make-expex)
     (setf (transpiler-expex tr) ex
 
@@ -186,28 +191,28 @@
 			tr
 
 		  (expex-function-collector ex)
-		    #'((fun args)
-			     (transpiler-add-wanted-function tr fun))
+		    (eval+macroexpand `#'((fun args)
+			     (transpiler-add-wanted-function ,tr fun)))
 
 		  (expex-argument-filter ex)
-		    #'((var)
-			     (transpiler-add-wanted-variable tr var))
+		    (eval+macroexpand `#'((var)
+			     (transpiler-add-wanted-variable ,tr var)))
 
 		  (expex-function? ex)
-		    #'((fun)
+		    (eval+macroexpand `#'((fun)
 			     (when (atom fun)
-			       (or (transpiler-function-arguments tr fun)
-				       (and (not (transpiler-unwanted-function? tr fun))
-					        (functionp (symbol-function fun))))))
+			       (or (transpiler-function-arguments ,tr fun)
+				       (and (not (transpiler-unwanted-function? ,tr fun))
+					        (functionp (symbol-function fun)))))))
 
 		  (expex-function-arguments ex)
-		    #'((fun)
-			     (or (transpiler-function-arguments tr fun)
-				     (function-arguments (symbol-function fun))))
+		    (eval+macroexpand `#'((fun)
+			     (or (transpiler-function-arguments ,tr fun)
+				     (function-arguments (symbol-function fun)))))
 
 		  (expex-plain-arg-fun? ex)
-		    #'((fun)
-			     (transpiler-plain-arg-fun? tr fun))
+		    (eval+macroexpand `#'((fun)
+			     (transpiler-plain-arg-fun? ,tr fun)))
 		  (expex-expr-filter ex)
 			#'transpiler-import-from-expex)
 	ex))

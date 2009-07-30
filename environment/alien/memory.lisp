@@ -40,7 +40,7 @@
 	  (%put-char ptr lo))))
 
 (defun shift-dword-byte-left (x)
-  (bit-or (<< (bit-and x #x00ffffff) 8)))
+  (bit-or (<< (bit-and x (+ (* 255 #x10000) #xffff)) 8)))
 
 (defun rotate-dword-byte-left (x)
   (bit-or (<< (shift-dword-byte-left x))
@@ -48,14 +48,14 @@
 
 (defun %put-dword (ptr x &key (endianess *endianess*))
   "Write 32 bit integer to address. Regards *ENDIANESS*."
-  (when (little-endianess? endianess)
-    (setf val (rotate-int-byte-left x)))
+;  (when (little-endianess? endianess)
+;    (setf x (rotate-int-byte-left x)))
 
   (dotimes (dummy 4 ptr)
 	(setf ptr (%put-char ptr (bit-and x #xff))
-		  x (if (little-endianess? endianess)
-				(rotate-dword-byte-left x)
-				(>> x 8)))))
+		  x ;(if (little-endianess? endianess)
+				;(rotate-dword-byte-left x)
+				(>> x 8))));)
 
 (defun %get-dword (ptr)
   (with (v 0)

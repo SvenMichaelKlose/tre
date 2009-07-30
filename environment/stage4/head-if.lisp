@@ -1,13 +1,13 @@
 ;;;;; TRE environment
 ;;;;; Copyright (c) 2009 Sven Klose <pixel@copei.de>
 
-(defun head-if (predicate x &key (butlast nil))
+(defun head-if (predicate x &key (but-last nil))
   (when x
 	(if (and (funcall predicate x.)
-			 (or (not keep-last)
+			 (or (not but-last)
 				 .x))
 		(cons x.
-			  (head-if predicate .x :butlast butlast)))))
+			  (head-if predicate .x :but-last but-last)))))
 
-(defun head-atoms (x &key (butlast nil))
-  (head-if #'atom x :butlast butlast))
+(defun head-atoms (x &key (but-last nil))
+  (head-if #'atom x :but-last but-last))

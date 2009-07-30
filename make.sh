@@ -180,8 +180,8 @@ boot)
 	./make.sh crunshraw
 	./tre make-compiled2.lisp
 	./make.sh crunshraw
-	./tre make-compiled3.lisp
-	./make.sh crunshraw
+#	./tre make-compiled3.lisp
+#	./make.sh crunshraw
 	./tre make-compiled.lisp
 	./make.sh crunshraw
 	;;

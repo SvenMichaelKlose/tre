@@ -33,7 +33,7 @@
     (setf (expex-inline? ex)
 			  #'%slot-value?
     	  (expex-setter-filter ex)
-			  (fn (js-setter-filter tr _))
+			  (fn (js-setter-filter *js-transpiler* _))
     	  (expex-function-arguments ex)
 			  #'js-function-arguments
     	  (expex-argument-filter ex)

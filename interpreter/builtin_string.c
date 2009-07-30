@@ -173,7 +173,7 @@ trestring_builtin_string (treptr list)
 				buf[1] = 0;
            		return trestring_get (buf);
            	}
-           	snprintf (buf, TRE_MAX_STRINGLEN, "%G", TRENUMBER_VAL(arg));
+           	snprintf (buf, TRE_MAX_STRINGLEN, "%g", TRENUMBER_VAL(arg));
            	return trestring_get (buf);
     	}
    		/* Convert atom name to string. */

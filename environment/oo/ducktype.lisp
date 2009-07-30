@@ -24,15 +24,15 @@
 	  (let bclass (href *ducktype-classes* base)
 		(nconc base-members (class-members bclass))
 		(nconc base-methods (class-methods bclass))))
-	(make-ducktype-class :members base-members
-				     	  :methods base-methods)))
+	(make-ducktype-obj :members base-members
+				       :slots base-methods)))
 
 (defun %ducktype-make-class (cname bases)
   (when (href *ducktype-classes* cname)
     (error "Class ~A already defined." cname))
   (setf (href *ducktype-classes* cname)
    		(if bases
-			(%ducktype-inherit cname bases)
+			nil ;(%ducktype-inherit cname bases) XXX
 			(make-class))))
 
 (defmacro defclass (class-name args &rest body)
