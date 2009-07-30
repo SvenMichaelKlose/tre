@@ -4,7 +4,6 @@
 #'c-transpile
 #'js-transpile
 ;  ,@*universe-functions*
-;  ,@*functions-after-stage-3*
 ;  #'reverse #'append #'tree-list #'find #'assoc #'href #'%macroexpand #'position #'mapcan
 ;  #'argument-expand #'lambda-expand #'expression--expand #'place-expand
 ;  #'opt-peephole

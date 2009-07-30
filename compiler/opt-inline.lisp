@@ -4,7 +4,8 @@
 (defvar *opt-inline-max-levels* 2)
 (defvar *opt-inline-min-size* 32)
 (defvar *opt-inline-max-size* 64)
-(defvar *opt-inline-max-repetitions* 1)
+(defvar *opt-inline-max-repetitions* 0)
+(defvar *opt-inline-max-small-repetitions* 2)
 
 (defun tree-size (x &optional (n 0))
   (if (consp x)
@@ -31,10 +32,12 @@
 					(function-arguments fun))
 	     body (function-body fun))
 	(if
+	  (< (tree-size body) *opt-inline-min-size*)
+	    (if (< *opt-inline-max-small-repetitions* (count x. parent))
+			x
+			(opt-inline-import tr x argdef body level current parent))
 	  (< *opt-inline-max-repetitions* (count x. parent))
 		x
-	  (< (tree-size body) *opt-inline-min-size*)
-		(opt-inline-import tr x argdef body level current parent)
   	  (< *opt-inline-max-levels* level)
   	    x
 	  (< (tree-size body) *opt-inline-max-size*)

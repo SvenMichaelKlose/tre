@@ -59,3 +59,4 @@
 (define-c-std-macro car (x) `(%car ,x))
 (define-c-std-macro cdr (x) `(%cdr ,x))
 (define-c-std-macro eq (a b) `(%eq ,a ,b))
+(define-c-std-macro not (x) `(%not ,x))

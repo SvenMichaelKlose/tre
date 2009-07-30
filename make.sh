@@ -175,15 +175,15 @@ crunshraw)
 
 boot)
 	basic_clean
-	./make.sh crunsh
+	./make.sh crunsh $ARGS
 	./tre make-compiled1.lisp
-	./make.sh crunshraw
+	./make.sh crunshraw $ARGS
 	./tre make-compiled2.lisp
-	./make.sh crunshraw
+	./make.sh crunshraw $ARGS
 #	./tre make-compiled3.lisp
-#	./make.sh crunshraw
+#	./make.sh crunshraw $ARGS
 	./tre make-compiled.lisp
-	./make.sh crunshraw
+	./make.sh crunshraw $ARGS
 	;;
 
 bootunclean)

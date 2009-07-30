@@ -38,8 +38,6 @@ typedef int bool;
 #define TRE_EXIT_ON_STDIO_SIGINT /* Exit on SIGINT in stdio prompt. */
 #endif
 
-#define TRE_NO_BUILTIN_SEARCH
-
 #ifndef TRE_QUIET_LOAD
 #define TRE_VERBOSE_LOAD	/* Print what files are loaded. */
 #endif

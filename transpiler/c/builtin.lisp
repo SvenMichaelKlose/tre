@@ -71,7 +71,9 @@
 ;		(CDR)
 		(RPLACA)
 		(RPLACD)
-    	(CONSP))
+    	(CONSP)
+		(ASSOC)
+		(MEMBER))
 
 	(tresequence_builtin_
     	(ELT)

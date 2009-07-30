@@ -177,3 +177,6 @@
 
 (define-c-macro %eq (a b)
   `("(" ,a " == " ,b " ? treptr_t : treptr_nil)"))
+
+(define-c-macro %not (x)
+  `("(" ,x " == treptr_nil ? treptr_t : treptr_nil)"))
