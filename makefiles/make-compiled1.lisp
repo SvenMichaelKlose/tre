@@ -6,5 +6,5 @@
 
 (with-open-file out (open "interpreter/_compiled-env.c" :direction 'output)
   (c-transpile out
-    '("make-compiled1-0.lisp")))
+    '("makefiles/make-compiled1-0.lisp")))
 (quit)

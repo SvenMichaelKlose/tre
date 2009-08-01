@@ -176,9 +176,9 @@ crunshraw)
 boot)
 	basic_clean
 	./make.sh crunsh $ARGS
-	./tre make-compiled1.lisp
+	./tre makefiles/make-compiled1.lisp
 	./make.sh crunshraw $ARGS
-	./tre make-compiled.lisp
+	./tre makefiles/make-compiled.lisp
 	./make.sh crunshraw $ARGS
 	;;
 
