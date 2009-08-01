@@ -1,11 +1,11 @@
 ;;;;; TRE environment
 ;;;;; Copyright (c) 2009 Sven Klose <pixel@copei.de>
+;;;;;
+;;;;; Create function with lexical values. %LX can be redefined in
+;;;;; transpilers to use native lexical scoping.
 
 (defun %lx (lexicals fun-expr)
   (eval (macroexpand fun-expr)))
 
-;; Simulate lexical scoping in the interpreter.
-;; Checks type of scoping at run-time to share code between
-;; interpreter and compiler.
 (defmacro lx (lexicals fun)
-  (print `(%lx ',lexicals `,fun)))
+  `(%lx ',lexicals `,fun))

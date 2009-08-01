@@ -15,7 +15,7 @@
 ;;;; It contains the essential functions needed to store argument
 ;;;; definitions for APPLY.
 (defvar *js-base*
-	(js-load-base "transpiler/javascript/environment/"
+	(js-load-base "environment/transpiler/javascript/environment/"
 		"return-value.lisp"
 		"not.lisp"
 		"cons.lisp"
@@ -26,10 +26,10 @@
 ;;;; Functions required by imported environment functions.
 (defvar *js-base2*
 	(append
-		(js-load-base "transpiler/environment/"
+		(js-load-base "environment/transpiler/environment/"
 			"assoc.lisp"
 			"atom.lisp")
-		(js-load-base "transpiler/javascript/environment/"
+		(js-load-base "environment/transpiler/javascript/environment/"
 			"apply.lisp"
 			"array.lisp"
 			"atom.lisp"

@@ -21,7 +21,7 @@
   (when (transpiler-lambda-export? *js-transpiler*)
 	(transpiler-add-wanted-function *js-transpiler* 'array-copy)
 	(princ ,(concat-stringtree
-			    (with-open-file i (open "transpiler/javascript/funref.js"
+			    (with-open-file i (open "environment/transpiler/javascript/funref.js"
 							 			:direction 'input)
 			  	  (read-all-lines i)))
 		   f))

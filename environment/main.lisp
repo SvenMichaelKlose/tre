@@ -52,7 +52,7 @@
 
 (env-load "stage4/main.lisp")
 
-(env-load "../lib/main.lisp")
+(env-load "lib/main.lisp")
 
 (defvar *tre-has-math* t)
 (defvar *tre-has-alien* t)
@@ -91,10 +91,10 @@
 (setq *UNIVERSE* (cdr *UNIVERSE*))
 
 (when *tre-has-compiler*
-  (env-load "../compiler/main.lisp"))
+  (env-load "compiler/main.lisp"))
 
 (when *tre-has-transpiler*
-  (env-load "../transpiler/main.lisp"))
+  (env-load "transpiler/main.lisp"))
 
 ; Keep tests for reuse in definition order.
 (setq *tests* (reverse *tests*))
