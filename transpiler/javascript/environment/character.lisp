@@ -9,7 +9,7 @@
 		  (error "%CHARACTER: argument already a character"))
   (or (aref *characters* x)
   	  (setf this.__class (%%%= x.__class ,(transpiler-obfuscated-symbol-string
-											  *js-transpiler*
+											  *current-transpiler*
 											  '%character"))
   		    this.v x
 		    (aref *characters* x) this)))
@@ -17,7 +17,7 @@
 (defun characterp (x)
   (and (objectp x)
 	   x.__class
-	   (%%%= x.__class ,(transpiler-obfuscated-symbol-string *js-transpiler*
+	   (%%%= x.__class ,(transpiler-obfuscated-symbol-string *current-transpiler*
 															 '%character"))))
 
 (defun code-char (x)

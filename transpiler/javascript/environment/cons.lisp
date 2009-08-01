@@ -4,7 +4,7 @@
 ;; Cell object constructor.
 (define-native-js-fun %cons (a d)
   no-args
-  (setf this.__class ,(transpiler-obfuscated-symbol-string *js-transpiler* 'cons)
+  (setf this.__class ,(transpiler-obfuscated-symbol-string *current-transpiler* 'cons)
         this._ a
   		this.__ d)
   this)
