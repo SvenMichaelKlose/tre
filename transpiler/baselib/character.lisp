@@ -8,14 +8,17 @@
   (assert (not (characterp x))
 		  (error "%CHARACTER: argument already a character"))
   (or (aref *characters* x)
-  	  (setf this.__class "%character"
+  	  (setf this.__class (%%%= x.__class ,(transpiler-obfuscated-symbol-string
+											  *js-transpiler*
+											  '%character"))
   		    this.v x
 		    (aref *characters* x) this)))
 
 (defun characterp (x)
   (and (objectp x)
 	   x.__class
-	   (%%%= x.__class "%character")))
+	   (%%%= x.__class ,(transpiler-obfuscated-symbol-string *js-transpiler*
+															 '%character"))))
 
 (defun code-char (x)
   (declare type number x)

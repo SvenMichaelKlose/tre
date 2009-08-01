@@ -9,7 +9,8 @@
 ;; It has a function field but that isn't used yet.
 (define-native-js-fun %symbol (name pkg)
   no-args
-  (setf this.__class ,(transpiler-symbol-string *js-transpiler* 'symbol)
+  (setf this.__class ,(transpiler-obfuscated-symbol-string *js-transpiler*
+														  'symbol)
 		this.n name	; name
      	this.v nil	; value
       	this.f nil	; function

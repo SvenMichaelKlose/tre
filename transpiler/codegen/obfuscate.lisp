@@ -44,3 +44,7 @@
 	      (cons (transpiler-obfuscate tr x.)
 			    (transpiler-obfuscate tr .x)))
 	  x))
+
+(defun transpiler-obfuscated-symbol-string (tr x)
+  (transpiler-symbol-string tr
+	  (transpiler-obfuscate-symbol tr x)))
