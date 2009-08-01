@@ -145,3 +145,7 @@
 (define-js-std-macro assert (x &optional (txt nil) &rest args)
   (when *transpiler-assert*
     (make-assertion x txt args)))
+
+(define-js-std-macro %lx (lexicals fun)
+  (eval (macroexpand `(with ,(mapcan (fn `(,_ ',_)) .lexicals.)
+                        ,fun))))

@@ -63,6 +63,13 @@
 
 (when *tre-has-math*
   (env-load "math/main.lisp"))
+(defvar *universe-after-math* (copy-list *universe*))
+(defvar *functions-after-math*
+		(%simple-mapcar (fn (when (and (symbolp _)
+                                       (not (builtinp _))
+                                       (symbol-function _))
+                      		  `(function ,_)))
+                		*universe*))
 
 (when *tre-has-alien*
   (env-load "alien/main.lisp"))

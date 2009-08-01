@@ -1,6 +1,5 @@
-(defun say-hello ())
-
 (defun fnord ()
+,@*functions-after-math*
 #'c-transpile
 #'js-transpile
 ;  ,@*universe-functions*

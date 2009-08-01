@@ -4,7 +4,7 @@
 (setf *show-definitions* t)
 (setf *opt-inline?* t)
 
-(with-open-file out (open "interpreter/_compiled-env.c" :direction 'output)
-  (c-transpile out
-    '("make-compiled2-0.lisp")))
+;(with-open-file out (open "interpreter/_compiled-env.c" :direction 'output)
+;  (c-transpile out
+;    '("make-compiled2-0.lisp")))
 (quit)

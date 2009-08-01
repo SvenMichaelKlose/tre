@@ -39,7 +39,7 @@
 
 (defun transpiler-preexpand (tr x)
   (mapcan (fn (funcall (transpiler-preexpand-compose tr) (list _)))
-		  x))
+	      x))
 
 ;; After this pass
 ;; - All macros are expanded.

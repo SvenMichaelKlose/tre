@@ -60,3 +60,7 @@
 (define-c-std-macro cdr (x) `(%cdr ,x))
 (define-c-std-macro eq (a b) `(%eq ,a ,b))
 (define-c-std-macro not (x) `(%not ,x))
+
+;(define-c-std-macro %lx (lexicals fun)
+;  (eval (macroexpand `(with ,(mapcan (fn `(,_ ',_)) .lexicals.)
+;                        ,fun))))

@@ -21,6 +21,7 @@
 (env-load "stage1/arg-keyword-p.lisp")
 (env-load "stage1/defun.lisp")
 (env-load "stage1/fn.lisp")
+(env-load "stage1/lx.lisp")
 (env-load "stage1/predicates.lisp")
 (env-load "stage1/tests-builtins.lisp")
 (env-load "stage1/tests-stage0.lisp")

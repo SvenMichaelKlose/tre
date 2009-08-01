@@ -5,9 +5,6 @@
 
 (defvar *expanders* nil)
 
-(defun eval+macroexpand (x)
-  (eval (macroexpand x)))
-
 (defstruct expander
   macros
   pred
@@ -30,12 +27,14 @@
     (acons! expander-name e *expanders*)
     (unless pred
       (setf (expander-pred e)
-			(eval+macroexpand `(fn (and (atom _.)
-					 (symbol-name _.)
-					 (cdr (assoc _. (expander-macros ,e) :test #'eq)))))))
+			(lx (e)
+				(fn (and (atom _.)
+					 	 (symbol-name _.)
+					 	 (cdr (assoc _. (expander-macros ,e) :test #'eq)))))))
     (unless call
       (setf (expander-call e)
-			(eval+macroexpand `(fn (apply (cdr (assoc _. (expander-macros ,e) :test #'eq)) ._)))))
+			(lx (e)
+				(fn (apply (cdr (assoc _. (expander-macros ,e) :test #'eq)) ._)))))
     (setf (expander-lookup e)
           #'((expander name)
 			  (cdr (assoc name (expander-macros expander) :test #'eq))))
@@ -61,13 +60,14 @@
 		     (expander-macros (expander-get ',expander-name)))))
 
 (defun expander-expand (expander-name expr)
-  (let e  (expander-get expander-name)
+  (let e (expander-get expander-name)
 	(funcall (expander-pre e))
     (prog1
 	  (repeat-while-changes
-        (eval+macroexpand `(fn (with-temporary *macrop-diversion* (expander-pred ,e)
-              (with-temporary *macrocall-diversion* (expander-call ,e)
-				(%macroexpand _)))))
+        (lx (e)
+			(fn (with-temporary *macrop-diversion* (expander-pred ,e)
+                  (with-temporary *macrocall-diversion* (expander-call ,e)
+				    (%macroexpand _)))))
 		expr)
       (funcall (expander-post e)))))
 
