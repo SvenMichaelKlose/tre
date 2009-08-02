@@ -26,13 +26,13 @@
 ;;;; Functions required by imported environment functions.
 (defvar *js-base2*
 	(append
-		(js-load-base "environment/transpiler/environment/"
-			"assoc.lisp"
-			"atom.lisp")
 		(js-load-base "environment/transpiler/javascript/environment/"
 			"apply.lisp"
 			"array.lisp"
-			"atom.lisp"
+			"atom.lisp")
+		(js-load-base "environment/transpiler/environment/"
+			"atom.lisp")
+		(js-load-base "environment/transpiler/javascript/environment/"
 			"bind.lisp"
 			"character.lisp"
 			"debug-print.lisp"
@@ -47,4 +47,6 @@
 			"stream.lisp"
 			"string.lisp"
 			"member.lisp"
-			"hash.lisp")))
+			"hash.lisp")
+		(js-load-base "environment/transpiler/environment/"
+			"assoc.lisp")))
