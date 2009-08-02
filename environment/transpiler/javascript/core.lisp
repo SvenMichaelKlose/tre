@@ -21,6 +21,10 @@
 		"cons.lisp"
 		"symbol.lisp"))
 
+(defvar *js-base-debug-print*
+		(js-load-base "environment/transpiler/javascript/environment/"
+			"debug-print.lisp"))
+
 ;;;; Second part of the core functions
 ;;;;
 ;;;; Functions required by imported environment functions.
@@ -35,7 +39,6 @@
 		(js-load-base "environment/transpiler/javascript/environment/"
 			"bind.lisp"
 			"character.lisp"
-			"debug-print.lisp"
 			"equality.lisp"
 			"error.lisp"
 			"late-argdefs.lisp"

@@ -28,6 +28,8 @@
   (with (tr *js-transpiler*
 		 ; Expand.
 		 base (transpiler-sighten tr *js-base*)
+		 base-debug (when *transpiler-assert*
+					  (transpiler-sighten tr *js-base-debug-print*))
     	 base2 (transpiler-sighten tr *js-base2*)
 		 tests (when (eq t *have-environment-tests*)
 				 (transpiler-sighten tr (make-environment-tests)))
@@ -42,6 +44,8 @@
  		     (transpiler-transpile tr base)
 		     (transpiler-transpile tr deps)
  		     (transpiler-transpile tr base2)
+			 (when *transpiler-assert*
+ 		       (transpiler-transpile tr base-debug))
 			 (transpiler-transpile tr tests)
  		     (transpiler-transpile tr user))
 	       f))
