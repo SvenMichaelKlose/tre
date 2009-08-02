@@ -35,7 +35,9 @@
 	     (stringp x)
 	       (+ "\"" x "\"")
 		 (when x
-		   (string x)))
+	       (if (objectp x)
+			   (+ "{Object \"" x.__class "\"}")
+		   	   (string x))))
 	   " ")))
 
 (defun js-print (x &optional (doc logwindow.document))
