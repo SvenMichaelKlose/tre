@@ -8,6 +8,7 @@
 (defun lml-attr? (x)
   (and (consp x) (consp .x)
        (atom x.)
+	   (keywordp x.)
 	   (or (atom (second x))
 		   (%exec? (second x)))))
 
