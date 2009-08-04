@@ -19,6 +19,7 @@
 (env-load "stage4/escape-string.lisp")
 (env-load "stage4/expander.lisp")
 (env-load "stage4/find-tree.lisp")
+(env-load "stage4/force-downcase-string.lisp")
 (env-load "stage4/force-list.lisp")
 (env-load "stage4/force-tree.lisp")
 (env-load "stage4/global-variable.lisp")
