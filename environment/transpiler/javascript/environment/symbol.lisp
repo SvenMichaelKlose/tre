@@ -2,7 +2,7 @@
 ;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
 
 ;; All symbols are stored in this array for reuse.
-(defvar *symbols* (make-array))
+(defvar *symbols* (make-hash-table))
 
 ;; Symbol constructor
 ;;
@@ -26,11 +26,11 @@
   (unless (and (%%%= ,*nil-symbol-name* name)
 			   (not pkg))
     ; Make package if missing.
-    (or (aref *symbols* pkg)
-	    (setf (aref *symbols* pkg) (make-array)))
-    ; Get or make symbol.
-    (or (aref (aref *symbols* pkg) name)
-	    (setf (aref (aref *symbols* pkg) name) (new %symbol name pkg)))))
+    (let symbol-table (or (href *symbols* pkg)
+	    				  (setf (href *symbols* pkg) (make-hash-table)))
+      ; Get or make symbol.
+      (or (href symbol-table name)
+	      (setf (href symbol-table name) (new %symbol name pkg))))))
 
 (define-native-js-fun symbol (name pkg)
   no-args
