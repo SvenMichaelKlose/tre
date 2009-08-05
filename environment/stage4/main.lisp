@@ -3,6 +3,7 @@
 ;;;;
 ;;;; Fourth stage
 
+(env-load "stage4/append-atom.lisp")
 (env-load "stage4/assoc-hash.lisp")
 (env-load "stage4/assoc-replace.lisp")
 (env-load "stage4/assoc-splice.lisp")
@@ -21,6 +22,7 @@
 (env-load "stage4/find-tree.lisp")
 (env-load "stage4/force-downcase-string.lisp")
 (env-load "stage4/force-list.lisp")
+(env-load "stage4/force-string.lisp")
 (env-load "stage4/force-tree.lisp")
 (env-load "stage4/global-variable.lisp")
 (env-load "stage4/head-if.lisp")
