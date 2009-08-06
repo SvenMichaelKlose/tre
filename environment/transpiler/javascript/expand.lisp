@@ -29,7 +29,7 @@
 ;; XXX This could be generic if there wasn't *JS-TRANSPILER*.
 (defun js-essential-defun (name args &rest body)
   (when *show-definitions*
-    (late-print `(defun ,name ,args)))
+    (late-print `(defun ,name ,@(awhen args (list !)))))
   (with (n (%defun-name name)
 		 tr *js-transpiler*
 		 fi-sym (when (eq '%funinfo args.)
@@ -60,7 +60,7 @@
 
 (define-js-std-macro defmacro (name &rest x)
   (when *show-definitions*
-    (late-print `(defmacro ,name ,x.)))
+    (late-print `(defmacro ,name ,(awhen x. (list !)))))
   (eval (transpiler-macroexpand *js-transpiler*
 								`(define-js-std-macro ,name ,@x)))
   nil)
