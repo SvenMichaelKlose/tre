@@ -4,16 +4,15 @@
 ;;;; Editor state.
 
 (defstruct editor-state
-  x
-  y
-  line-offset
-  column-offset
-  name
-  text
-  quit
-  mode)
-
-(defvar *editor-state*)
+  (x 0)
+  (y 0)
+  (line-offset 0)
+  (column-offset 0)
+  (name nil)
+  (text nil)
+  (quit? nil)
+  (mode nil)
+  terminal)
 
 (defun editor-io-line (n)
   (when (= 0 (mod n 10))
@@ -22,16 +21,9 @@
   	(princ n)
   	(force-output)))
 
-(defvar *text*)
-
-(defun editor-state-create (name)
-  (setf *text*
-			(make-text-container
-			  :x 0 :y 0
-		      :lines (and name (editor-read name)))
-		*editor-state*
-        	(make-editor-state
-          	  :x 0 :y 0 :line-offset 0 :column-offset 0 :name name
-		      :quit nil :mode nil
-		      :text *text*)
-		(editor-state-quit *editor-state*) nil))
+(defun editor-state-create (name terminal)
+  (make-editor-state
+	  :name name
+	  :text (make-text-container
+		        :lines (and name (editor-read name)))
+	  :terminal terminal))

@@ -4,16 +4,15 @@
 ;;;;; Toplevel.
 
 (defun ed (&optional name)
-  (when (or name (not *editor-state*))
-    (editor-state-create name))
-  (create-terminal)
-  (editor-redraw)
-  (loop
-    (editor-cmd)
-    (awhen (editor-state-quit *editor-state*)
-	  (editor-clear-bottom)
-      (ansi-position 0 (1- (terminal-height *terminal*)))
-	  (format t "Quitting...~%")
-	  (%terminal-normal)
-	  (return-from editor nil))
+  (with (terminal (create-terminal)
+         instance (editor-state-create name terminal))
+    (editor-redraw instance)
+    (while (not (editor-state-quit? instance))
+		   nil
+      (editor-cmd instance)
+	  (force-output))
+    (editor-clear-bottom instance)
+    (ansi-position 0 (1- (terminal-height terminal)))
+    (format t "Quitting...~%")
+    (%terminal-normal)
 	(force-output)))

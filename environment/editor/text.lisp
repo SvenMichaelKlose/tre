@@ -4,9 +4,9 @@
 ;;;;; Text container.
 
 (defstruct text-container
-  x
-  y
-  lines)
+  (x 0)
+  (y 0)
+  (lines nil))
 
 (defun text-container-line (txt &optional (n nil))
   (elt (text-container-lines txt)

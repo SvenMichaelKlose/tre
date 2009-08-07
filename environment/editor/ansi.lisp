@@ -94,7 +94,7 @@
 	   (ansi-underline-on "Print underlined characters." "21")
 	   (ansi-normal "Print normal characters." "22")))
 
-(defconstant *ansi-color-names* '(black red green yellow blue magenta cyan white))
+(defvar *ansi-color-names* '(black red green yellow blue magenta cyan white))
 
 (defun ansi-color (name &optional (high nil))
   "Translates symbol to ANSI color number."

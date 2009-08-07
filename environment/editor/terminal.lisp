@@ -7,11 +7,8 @@
   width
   height)
 
-(defvar *terminal*)
-
 (defun create-terminal ()
   (ansi-reset)
   (with ((w h) (ansi-dimensions))
     (%terminal-raw)
-    (setf *terminal* (make-terminal :width w :height h)))
-  (editor-redraw))
+    (make-terminal :width w :height h)))
