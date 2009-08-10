@@ -9,5 +9,5 @@
 	       :fun-out #'((c str) (%princ c nil))
 	       :fun-eof #'((str) (%feof nil))))
 
-(defconstant *standard-output* (make-standard-stream))
-(defconstant *standard-input* (make-standard-stream))
+(defvar *standard-output* (make-standard-stream))
+(defvar *standard-input* (make-standard-stream))

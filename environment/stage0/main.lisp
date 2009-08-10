@@ -8,3 +8,4 @@
 (env-load "stage0/macroexpand.lisp")
 (env-load "stage0/quasiquote.lisp")
 (env-load "stage0/arith.lisp")
+(env-load "stage0/simple-defines.lisp")

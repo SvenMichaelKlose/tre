@@ -69,9 +69,6 @@
 (defun c-transpile-0 (f files)
   (map (fn (format f "#include \"~A\"~%" _))
 	   *c-interpreter-headers*)
-;    (dolist (i (reverse *universe*))
-;  	  (when (functionp (symbol-function i))
-;  	    (transpiler-add-wanted-function *c-transpiler* i)))
   (with (tr *c-transpiler*
 		 ; Expand.
 		 tests (when (eq t *have-environment-tests*)

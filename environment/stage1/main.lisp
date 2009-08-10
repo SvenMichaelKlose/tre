@@ -3,7 +3,6 @@
 ;;;;;
 ;;;;; First stage
 
-(env-load "stage1/simple-defines.lisp")
 (env-load "stage1/basic-list.lisp")
 (env-load "stage1/cons.lisp")
 (env-load "stage1/gensym.lisp")

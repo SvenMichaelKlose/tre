@@ -1,5 +1,5 @@
 (defun fnord ()
-,@*functions-after-math*
+,@(reverse (symbols-function-exprs *functions-after-math*))
 #'c-transpile
 #'js-transpile
 ;  ,@*universe-functions*

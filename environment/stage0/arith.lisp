@@ -1,7 +1,11 @@
 ;;;; TRE environment
 ;;;; Copyright (c) 2009 Sven Klose <pixel@copei.de>
 
-(setq *universe* (cons '+ *universe*))
+(setq
+	*universe*
+	(cons '+
+	(cons '-
+		  *universe*)))
 
 ;tredoc
 ; (arg :type (number string)

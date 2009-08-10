@@ -6,15 +6,30 @@
 ;;;; The funny argument names are used to avoid collisions with symbols
 ;;;; in the caller's environment during evaluation.
 
-(setq *UNIVERSE* (cons 'quasiquote?
-				 (cons '%quasiquote-eval
-				 (cons '%backquote-quasiquote
-				 (cons '%backquote-quasiquote-splice
-				 (cons '%backquote-1
-				 (cons '%backquote
-				 (cons 'backquote
-				 (cons 'quasiquote
-				 (cons 'quasiquote-splice *UNIVERSE*))))))))))
+(setq
+	*UNIVERSE*
+	(cons 'quasiquote?
+    (cons '%quasiquote-eval
+    (cons '%backquote-quasiquote
+	(cons '%backquote-quasiquote-splice
+	(cons '%backquote-1
+	(cons '%backquote
+	(cons 'backquote
+	(cons 'quasiquote
+	(cons 'quasiquote-splice
+		  *UNIVERSE*))))))))))
+
+(setq
+	*defined-functions*
+	(cons 'quasiquote?
+    (cons '%quasiquote-eval
+    (cons '%backquote-quasiquote
+	(cons '%backquote-quasiquote-splice
+	(cons '%backquote-1
+	(cons '%backquote
+	(cons 'quasiquote
+	(cons 'quasiquote-splice
+		  *defined-functions*)))))))))
 
 ;tredoc
 ; "Tests if argument is a QUASIQUOTE or QUASIQUOTE-SPLICE expression."

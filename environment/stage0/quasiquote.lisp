@@ -1,13 +1,21 @@
 ;;;; TRE environment
-;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; QUASIQUOTE expansion
 ;;;;
 ;;;; This expansion takes place after macro expansion to allow
 ;;;; inlining generated code without need to define macros.
 
-(setq *UNIVERSE* (cons 'quasiquote-expand
-				 	   *UNIVERSE*))
+(setq
+	*UNIVERSE*
+	(cons 'quasiquote-expand
+	 	  *UNIVERSE*))
+
+(setq
+	*defined-functions*
+	(cons '%quasiquote-expand
+	(cons 'quasiquote-expand
+	 	  *defined-functions*)))
 
 (%set-atom-fun %quasiquote-expand
   #'((x)

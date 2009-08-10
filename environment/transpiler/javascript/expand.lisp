@@ -13,8 +13,8 @@
 (define-js-std-macro function (x)
   (unless x
     (error "FUNCTION expects a symbol or form"))
-  (when (atom x)
-	(transpiler-add-wanted-function *js-transpiler* x))
+  ;(when (atom x)
+	;(transpiler-add-wanted-function *js-transpiler* x))
   `(function ,x))
 
 (defun js-assert-body (x)

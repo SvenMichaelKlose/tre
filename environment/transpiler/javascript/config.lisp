@@ -25,7 +25,8 @@
 			  (in=? _ #\_ #\. #\$ #\#)))
 	:make-label #'js-transpiler-make-label
 	:lambda-export? nil
-	:stack-locals? nil))
+	:stack-locals? nil
+	:rename-all-args? t))
 
 (defun make-javascript-transpiler ()
   (with (tr (make-javascript-transpiler-0)
@@ -33,11 +34,11 @@
     (setf (expex-inline? ex)
 			  #'%slot-value?
     	  (expex-setter-filter ex)
-			  (fn (js-setter-filter *js-transpiler* _))
+			  (fn js-setter-filter *js-transpiler* _)
     	  (expex-function-arguments ex)
 			  #'js-function-arguments
     	  (expex-argument-filter ex)
-		      (fn (transpiler-add-wanted-variable *js-transpiler* _)))
+		      (fn js-expand-literals _))
 
 	(apply #'transpiler-add-obfuscation-exceptions
 		tr

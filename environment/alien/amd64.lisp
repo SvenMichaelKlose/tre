@@ -5,13 +5,13 @@
 
 ;;;; MACHINE INSTRUCTIONS
 
-(defconstant *AMD64-REGS-DWORD*
+(defvar *AMD64-REGS-DWORD*
   `(EAX ECX EDX EBX ESP EBP ESI EDI))
 
-(defconstant *AMD64-REGS-QWORD*
+(defvar *AMD64-REGS-QWORD*
   `(RAX RCX RDX RBX RSP RBP RSI RDI))
 
-(defconstant *AMD64-REG-ARGUMENTS*
+(defvar *AMD64-REG-ARGUMENTS*
   '(RDI RSI RDX RCX))
 
 (defun amd64-regval (x)

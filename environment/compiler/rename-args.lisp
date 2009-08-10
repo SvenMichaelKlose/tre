@@ -39,6 +39,8 @@
     (cons (rename-function-arguments-0 x. replacements env)
 		  (rename-function-arguments-0 .x replacements env))))
 
+;; Rename arguments of functions. Leaves top-level functions untouched
+;; to keep public keyword argument names.
 (defun rename-function-arguments (x)
   (when x
     (if (and (%setq? x.)

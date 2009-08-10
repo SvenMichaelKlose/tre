@@ -50,6 +50,8 @@
 			"stream.lisp"
 			"string.lisp"
 			"member.lisp"
-			"hash.lisp")
+			"hash.lisp"
+			;"file.lisp"
+)
 		(js-load-base "environment/transpiler/environment/"
 			"assoc.lisp")))

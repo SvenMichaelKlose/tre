@@ -3,7 +3,7 @@
 ;;;;;
 ;;;;; Ducktyped objects
 
-(defconstant *ducktype-magic* '%%QUACK-QUACK!)
+(defvar *ducktype-magic* '%%QUACK-QUACK!)
 (defvar *ducktype-classes* (make-hash-table))
 (defvar *ducktype-slothashes* (make-hash-table))
 (defvar *ducktype-members* (make-hash-table))

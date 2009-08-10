@@ -1,3 +1,3 @@
 ,`(defun fnord ()
-	,@*functions-after-math*
+	,@(reverse (symbols-function-exprs *functions-after-math*))
     #'c-transpile)

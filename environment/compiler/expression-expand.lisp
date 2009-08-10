@@ -130,7 +130,8 @@
 (defun expex-argexpand-0 (ex fun args)
   (funcall (expex-function-collector ex) fun args)
   (let argdef (funcall (expex-function-arguments ex) fun)
-	(if (eq argdef 'builtin)
+	(if (or (funinfo-in-this-or-parent-env? *expex-funinfo* fun)
+			(eq argdef 'builtin))
 		args
   	    (if (expex-expandable-args? ex fun argdef)
       	    (argument-expand-compiled-values fun argdef args)

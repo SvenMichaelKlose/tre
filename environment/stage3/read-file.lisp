@@ -3,10 +3,10 @@
 
 (defun read-file (name)
   "Read one expression from file."
-  (with-open-file in (open name :direction 'input)
-	(read in)))
+  (with-open-file in-stream (open name :direction 'input)
+	(read in-stream)))
 
 (defun read-file-all (name)
   "Read one expression from file."
-  (with-open-file in (open name :direction 'input)
-	(read-all in)))
+  (with-open-file in-stream (open name :direction 'input)
+	(read-all in-stream)))

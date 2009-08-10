@@ -3,23 +3,37 @@
 ;;;;
 ;;;; Primitive functions directly assigned to atoms without.
 
-(setq *universe* (cons 'not
-                 (cons 'last
-                 (cons '%nconc
-                 (cons 'copy-tree
-				 (cons '*variables* *universe*))))))
+(setq
+	*universe*
+	(cons 'not
+	(cons 'last
+	(cons '%nconc
+	(cons 'copy-tree
+	(cons '*variables*
+		  *universe*))))))
 
-(setq *variables* (cons (cons '*variables* nil)
-				  (cons (cons '*universe* nil)
-				  (cons (cons '*keyword-package* nil)
-				  (cons (cons '*show-definitions* nil)
-				  (cons (cons '*environment-path* nil)
-				  (cons (cons '*endianess* nil)
-				  (cons (cons '*pointer-size* nil)
-				  (cons (cons '*cpu-type* nil)
-				  (cons (cons '*libc-path* nil)
-				  (cons (cons '*have-environment-tests* nil)
-						nil)))))))))))
+(setq
+	*defined-functions*
+	(cons (cons 'not nil)
+	(cons (cons 'copy-tree nil)
+	(cons (cons 'last nil)
+	(cons (cons '%nconc nil)
+		  nil)))))
+
+(setq
+	*variables*
+	(cons (cons '*variables* nil)
+	(cons (cons '*defined-functions* nil)
+	(cons (cons '*universe* nil)
+	(cons (cons '*keyword-package* nil)
+	(cons (cons '*show-definitions* nil)
+	(cons (cons '*environment-path* nil)
+	(cons (cons '*endianess* nil)
+	(cons (cons '*pointer-size* nil)
+	(cons (cons '*cpu-type* nil)
+	(cons (cons '*libc-path* nil)
+	(cons (cons '*have-environment-tests* nil)
+		  *variables*))))))))))))
 
 ;;; Helper functions (helping us to stay sane).
 

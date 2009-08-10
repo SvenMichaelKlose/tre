@@ -12,12 +12,12 @@
 	(array . arrayp)
  	(string . stringp)))
 
-(defun type-predicate (typ)
+(defun %declare-type-predicate (typ)
   (assoc-value typ *type-predicates*))
 
 (defun %declare-statement-type-predicate-1 (typ x)
   `(,(if typ
-         (or (type-predicate typ)
+         (or (%declare-type-predicate typ)
              (error "expected variable type but got ~A. Use one of ~A instead"
                     .typ. (carlist *type-predicates*)))
 	     'not) ,x))
@@ -44,7 +44,7 @@
 	 ,@(mapcar (fn %declare-statement-type-1 x. _)
 			   .x)))
 
-(defconstant *declare-statement-classes*
+(defvar *declare-statement-classes*
   '((type .	%declare-statement-type)))
 
 (defun %declare-statement (x)

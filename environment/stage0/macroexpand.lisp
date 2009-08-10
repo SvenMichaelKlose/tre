@@ -3,24 +3,39 @@
 ;;;;;
 ;;;;; Macro expansion.
 
-(setq *universe* (cons '*macrop-diversion*
-                 (cons '*macroexpand-backquote-diversion*
-                 (cons '*macrocall-diversion*
-				 (cons '%macroexpand
-				 (cons %macroexpand-backquote
-				 (cons %%macrop
-				 (cons %%macrocall
-				 (cons %macroexpand-list
-				 (cons %macroexpand-call *universe*))))))))))
+(setq
+	*universe*
+	(cons '*macrop-diversion*
+	(cons '*macroexpand-backquote-diversion*
+	(cons '*macrocall-diversion*
+	(cons '%macroexpand
+	(cons %macroexpand-backquote
+	(cons %%macrop
+	(cons %%macrocall
+	(cons %macroexpand-list
+	(cons %macroexpand-call
+		  *universe*))))))))))
+
+(setq
+	*defined-functions*
+	(cons '%macroexpand
+	(cons %macroexpand-backquote
+	(cons %%macrop
+	(cons %%macrocall
+	(cons %macroexpand-list
+	(cons %macroexpand-call
+		  *defined-functions*)))))))
 
 (setq *macrop-diversion* nil
       *macrocall-diversion* nil
       *current-macro* nil)
-(setq *variables* (cons (cons '*macrop-diversion* nil)
-      			  (cons (cons '*macrocall-diversion* nil)
-      			  (cons (cons '*current-macro* nil)
-                  (cons (cons '*macroexpand-backquote-diversion* nil)
-				  *variables*)))))
+(setq
+	*variables*
+	(cons (cons '*macrop-diversion* nil)
+	(cons (cons '*macrocall-diversion* nil)
+	(cons (cons '*current-macro* nil)
+	(cons (cons '*macroexpand-backquote-diversion* nil)
+				*variables*)))))
 
 (%set-atom-fun %macroexpand-backquote
   #'((%g)

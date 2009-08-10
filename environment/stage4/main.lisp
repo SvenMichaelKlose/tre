@@ -41,6 +41,7 @@
 (env-load "stage4/replace.lisp")
 (env-load "stage4/return-from-when.lisp")
 (env-load "stage4/split.lisp")
+(env-load "stage4/symbols-function-exprs.lisp")
 (env-load "stage4/t.lisp")
 (env-load "stage4/tail-after-if.lisp")
 (env-load "stage4/tree-list.lisp")

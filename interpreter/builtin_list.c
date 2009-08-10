@@ -179,7 +179,11 @@ trelist_builtin_assoc (treptr args)
 	tregc_push (etest);
 	list = CADR(args);
 	while (list != treptr_nil) {
+		while (TREPTR_IS_CONS(list) == FALSE)
+			list = treerror (list, "ASSOC: cons or NIL expected");
 		elm = CAR(list);
+		while (TREPTR_IS_CONS(elm) == FALSE)
+			elm = treerror (elm, "ASSOC: cons with pair expected");
 		elmkey = CAR(elm);
 		if (test == trelist_builtin_eq_symbol && elmkey == key)
 			goto got_it;

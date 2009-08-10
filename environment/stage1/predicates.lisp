@@ -11,9 +11,9 @@
   "Return T if x is an even number."
   (= 0 (mod x 2)))
 
-(defun null (x)
-  "Return T if argument is non-atomic."
-  (listp x))
+;(defun null (x)
+;  "Return T if argument is non-atomic."
+;  (listp x))
 
 (defun endp (x)
   "Tests on end of a list (NIL)."
