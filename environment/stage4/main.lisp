@@ -52,3 +52,4 @@
 (env-load "stage4/define-with.lisp")
 (env-load "stage4/define-slot-setter.lisp")
 (env-load "stage4/number-sym.lisp")
+(env-load "stage4/when-debug.lisp")
