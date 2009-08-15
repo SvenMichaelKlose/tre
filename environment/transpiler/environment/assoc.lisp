@@ -9,7 +9,7 @@
 	    (%error "list expected"))))
   (dolist (i lst)
     (when-debug
-	  (when (consp i)
+	  (when (atom i)
 		(print i)
 		(%error "not a pair")))
     (when (funcall (or test #'eql) key i.)
