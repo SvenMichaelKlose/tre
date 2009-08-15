@@ -72,15 +72,17 @@
     (transpiler-switch-obfuscator tr obfuscate?)
     (setf *nil-symbol-name*
 		  (symbol-name (transpiler-obfuscate-symbol-0 tr nil)))
-    (when (or (not *transpiler-assert*)
-			   env?)
-      (js-transpile-print-prologue out tr))
-    (when (and *transpiler-assert*
-			   (not env?))
-	  (clr (transpiler-import-from-environment? tr)))
+;    (when (or env?
+;			  (not *transpiler-assert*))
+      (js-transpile-print-prologue out tr)
+;)
+;    (when (and *transpiler-assert*
+;			   (not env?))
+;	  (clr (transpiler-import-from-environment? tr)))
     (js-transpile-prepare tr out :import-universe? nil)
-    (js-transpile-0 out files :base? (or (not *transpiler-assert*)
-										 env?))
-    (unless env?
-      (js-transpile-print-epilogue out))
+    (js-transpile-0 out files :base? t); :base? (or (not *transpiler-assert*)
+								;		 env?))
+;    (unless env?
+      (js-transpile-print-epilogue out)
+;)
 	(js-transpile-ok)))
