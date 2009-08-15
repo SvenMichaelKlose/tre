@@ -50,5 +50,7 @@
 				    #'(,@(lambda-funinfo-and-args fun)
 						  ,@(rename-function-arguments-0 (lambda-body fun))))
 				(rename-function-arguments .x)))
-        (cons x.
+        (cons (if (consp x.)
+				  (rename-function-arguments x.)
+				  x.)
               (rename-function-arguments .x)))))
