@@ -13,6 +13,8 @@
   		 args (%nconc (butlast lst)
 					  l.))
 	(when-debug
+	  (unless (functionp fun)
+		(error "APPLY: first argument is not a function"))
 	  (unless (listp l)
 		(error "APPLY: last argument is not a cell")))
     (fun.apply nil
