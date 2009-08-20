@@ -23,6 +23,12 @@
 		 "")
 	 (symbol-name x)))
 
+(defun js-print-object (x)
+  (+ "{"
+     (apply #'+ (map (fn (+ _ " => " (href x _) "<br/>"))
+				     x))
+	"}<br/>"))
+
 (defun js-print-atom (x doc)
   (doc.write
     (+ (if
@@ -36,7 +42,7 @@
 	       (+ "\"" x "\"")
 		 (when x
 	       (if (objectp x)
-			   (+ "{Object \"" x.__class "\"}")
+			   (js-print-object x)
 		   	   (string x))))
 	   " ")))
 

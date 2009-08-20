@@ -136,6 +136,9 @@
 (define-js-std-macro undefined? (x)
   `(= "undefined" (%js-typeof ,x)))
 
+(define-js-std-macro defined? (x)
+  (not `(= "undefined" (%js-typeof ,x))))
+
 ; XXX generic function instead of append!
 (define-js-std-macro dont-obfuscate (&rest symbols)
   (apply #'transpiler-add-obfuscation-exceptions
