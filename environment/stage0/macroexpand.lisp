@@ -8,13 +8,14 @@
 	(cons '*macrop-diversion*
 	(cons '*macroexpand-backquote-diversion*
 	(cons '*macrocall-diversion*
+	(cons '*current-macro*
 	(cons '%macroexpand
 	(cons %macroexpand-backquote
 	(cons %%macrop
 	(cons %%macrocall
 	(cons %macroexpand-list
 	(cons %macroexpand-call
-		  *universe*))))))))))
+		  *universe*)))))))))))
 
 (setq
 	*defined-functions*
