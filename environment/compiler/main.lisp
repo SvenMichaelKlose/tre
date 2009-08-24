@@ -8,7 +8,11 @@
 (env-load "compiler/subatomic.lisp")
 (env-load "compiler/verbose.lisp")
 
-(env-load "compiler/funinfo.lisp")
+(env-load "compiler/funinfo/tree.lisp")
+(env-load "compiler/funinfo/environment.lisp")
+(env-load "compiler/funinfo/lexical.lisp")
+(env-load "compiler/funinfo/lambda.lisp")
+(env-load "compiler/funinfo/debug.lisp")
 (env-load "compiler/rename-args.lisp")
 (env-load "compiler/rename-tags.lisp")
 (env-load "compiler/with-lambda-call.lisp")

@@ -25,7 +25,6 @@
 
 (defun place-expand-emit-stackplace (fi x)
   (if (transpiler-stack-locals? *current-transpiler*)
-  	  ;(funinfo-get-local fi (funinfo-env-pos fi x)) ;`(%stack ,(funinfo-env-pos fi x))
   	  `(%stack ,(funinfo-env-pos fi x))
 	  x))
 
