@@ -74,10 +74,6 @@
 		x)
     (transpiler-import-from-expex x)))
 
-(defun function-expr? (x)
-  (and (consp x)
-	   (eq 'FUNCTION x.)))
-
 (defun c-make-%setq-funcall (x f)
   `(%setq ,(second x)
 		  (trespecial_apply_compiled

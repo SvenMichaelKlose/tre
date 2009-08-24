@@ -1,37 +1,43 @@
 ;;;; TRE environment
-;;;; Copyright (c) 2006-2008  Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2006-2009 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; LAMBDA-related utilities.
 
+;;;; TRE accepts the LAMBDA notation for anonymous functions also
+;;;; without the LAMBDA symbol. PAST-LAMBDA gets you past the
+;;;; LAMBDA symbol, if it's there.
+
 (defun past-lambda-1 (x)
-  (if (eq (first x) 'lambda)
+  (if (eq (car x) 'lambda)
 	(cdr x)
 	x))
 
 (defun past-function (x)
-  (if (eq (first x) 'function)
-      (second x)
+  (if (eq (car x) 'function)
+      (cadr x)
 	  x))
 
+;; The compiler stores function information before the arguments of
+;; a LAMBDA-expression.
 (defun past-lambda-before-funinfo (x)
   (past-lambda-1 (past-function x)))
 
 (defun past-lambda (x)
   "Get cons after optional LAMBDA keyword in function expression."
   (let p (past-lambda-before-funinfo x)
-	(if (eq '%funinfo (first p))
+	(if (eq '%funinfo (car p))
 	  (cddr p)
 	  p)))
 
 (defun lambda-funinfo (x)
   (let p (past-lambda-1 (past-function x))
-	(when (eq '%funinfo (first p))
-	  (second p))))
+	(when (eq '%funinfo (car p))
+	  (cadr p))))
 
 (defun lambda-funinfo-expr (x)
   (let p (past-lambda-1 (past-function x))
-	(when (eq '%funinfo (first p))
-	  (list '%funinfo (second p)))))
+	(when (eq '%funinfo (car p))
+	  (list '%funinfo (cadr p)))))
 
 (defun lambda-funinfo-and-args (x)
   (append (lambda-funinfo-expr x)
@@ -49,12 +55,18 @@
   "Get arguments to local function call (used to introduce local symbols)."
   (cdr x))
 
+(defun function-expr? (x)
+  (and (consp x)
+       (eq 'FUNCTION (car x))))
+
+(defun lambda-expr? (x)
+  (and (function-expr? x)
+       (consp (cdr x))
+       (consp (cadr x))))
+
 (defun lambda? (x)
   "Checks if expression is a function/LAMBDA expression."
-  (and (consp x)
-       (eq (car x) 'function)
-       (consp (cdr x))
-       (consp (cadr x))
+  (and (lambda-expr? x)
 	   (let l (past-lambda (cadr x))
 		 (and l (consp l)
 				(listp (car l))))))
@@ -81,7 +93,7 @@
   "Returns arguments of a function."
   (if (builtinp fun)
 	  '(&rest args-to-builtin)
-      (first (symbol-value fun))))
+      (car (symbol-value fun))))
 
 (defun function-body (fun)
   "Returns body of a function."

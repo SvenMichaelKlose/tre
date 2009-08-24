@@ -6,6 +6,12 @@
   (force-output)
   x)
 
+;; After this pass
+;; - Functions are assigned run-time argument definitions
+;; - VM-SCOPEs are removed. All code is flat with jump tags.
+;; - Peephole-optimisations were performed.
+;; - FUNINFOs were updated with number of jump tags in function.
+;; - FUNCTION expression contain the names of top-level functions.
 (defun transpiler-expand-compose (tr)
   (compose
 	#'transpiler-expand-print-dot
@@ -22,9 +28,11 @@
 					 x)))
 
 ;; After this pass
+;; - Functions were inlined.
 ;; - Nested functions are merged.
 ;; - Optional: Anonymous functions were exported.
 ;; - FUNINFO objects were built for all functions.
+;; - Accesses to the object in a method are thisified.
 (defvar *opt-inline?* t)
 
 (defun transpiler-preexpand-compose (tr)
@@ -46,7 +54,7 @@
 ;; - Expression blocks are kept in VM-SCOPE expressions, which is a mix
 ;;   of BLOCK and TAGBODY.
 ;; - Conditionals are implemented with VM-GO and VM-GO-NIL.
-;; - Quoting is done by %QUOTE (same as QUOTE).
+;; - Quoting is done by %QUOTE (same as QUOTE) exclusively.
 (defun transpiler-simple-expand-compose (tr)
   (compose
     (fn funcall (transpiler-literal-conversion tr) _)
