@@ -17,10 +17,16 @@
 	   (eq '%SLOT-VALUE (car x))
 	   (consp (cdr x))))
 
+(defun slot-value? (x)
+  (and (consp x)
+	   (eq 'SLOT-VALUE (car x))
+	   (consp (cdr x))))
+
 (defun %setf-complement (p val)
   (if (or (atom p)
 		  (and *setf-immediate-slot-value*
-			   (%slot-value? p)))
+			   (or (%slot-value? p)
+				   (slot-value? p))))
 	  (progn
 		(if (member p *constants*)
 		    (%error "cannot set constant"))
