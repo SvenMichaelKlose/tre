@@ -32,7 +32,6 @@
 
 (defvar *compiler-hook* nil)
 (defvar *defun-name* nil)
-(defvar *defined-functions* nil)
 
 (defmacro defun (name args &rest body)
   "Define a function."

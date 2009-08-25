@@ -7,6 +7,12 @@
 	(cons '-
 		  *universe*)))
 
+(setq
+	*defined-functions*
+	(cons '+
+	(cons '-
+		  *defined-functions*)))
+
 ;tredoc
 ; (arg :type (number string)
 ;  	   :occurence rest)

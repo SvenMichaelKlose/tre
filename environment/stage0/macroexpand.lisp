@@ -10,21 +10,21 @@
 	(cons '*macrocall-diversion*
 	(cons '*current-macro*
 	(cons '%macroexpand
-	(cons %macroexpand-backquote
-	(cons %%macrop
-	(cons %%macrocall
-	(cons %macroexpand-list
-	(cons %macroexpand-call
+	(cons '%macroexpand-backquote
+	(cons '%%macrop
+	(cons '%%macrocall
+	(cons '%macroexpand-list
+	(cons '%macroexpand-call
 		  *universe*)))))))))))
 
 (setq
 	*defined-functions*
 	(cons '%macroexpand
-	(cons %macroexpand-backquote
-	(cons %%macrop
-	(cons %%macrocall
-	(cons %macroexpand-list
-	(cons %macroexpand-call
+	(cons '%macroexpand-backquote
+	(cons '%%macrop
+	(cons '%%macrocall
+	(cons '%macroexpand-list
+	(cons '%macroexpand-call
 		  *defined-functions*)))))))
 
 (setq *macrop-diversion* nil

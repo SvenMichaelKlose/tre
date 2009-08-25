@@ -14,10 +14,10 @@
 
 (setq
 	*defined-functions*
-	(cons (cons 'not nil)
-	(cons (cons 'copy-tree nil)
-	(cons (cons 'last nil)
-	(cons (cons '%nconc nil)
+	(cons 'not
+	(cons 'copy-tree
+	(cons 'last
+	(cons '%nconc
 		  nil)))))
 
 (setq
