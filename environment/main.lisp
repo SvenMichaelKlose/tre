@@ -15,7 +15,9 @@
 (setq *variables*
 	  (cons (cons '*environment-filenames* nil)
 	  (cons (cons '*show-definitions* nil)
-	        nil)))
+	  (cons (cons '*boot-image* nil)
+	  (cons (cons '%launchfile nil)
+	        nil)))))
 
 (setq *environment-filenames* nil)
 
@@ -78,7 +80,8 @@
     (env-load "oo/thisify.lisp"))
   (env-load "oo/class.lisp")
   (env-load "oo/ducktype.lisp")
-  (env-load "oo/ducktype-test.lisp"))
+;  (env-load "oo/ducktype-test.lisp")
+)
 
 (when *tre-has-editor*
   (env-load "editor/main.lisp"))
@@ -97,8 +100,6 @@
 ; Keep tests for reuse in definition order.
 (setq *tests* (reverse *tests*))
 
-(defvar *universe-functions* (currently-defined-functions))
-
 ; Load file specified on command-line or loaded image.
 (defun %load-launchfile ()
   (when %LAUNCHFILE
@@ -110,6 +111,8 @@
   (force-output)
   (sys-image-create *boot-image* #'%load-launchfile)
   (format t " OK~%"))
+
+(defvar *universe-functions* (currently-defined-functions))
 
 (dump-system)
 (%load-launchfile)
