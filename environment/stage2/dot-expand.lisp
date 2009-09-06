@@ -48,9 +48,9 @@
 					 	 (= #\. (car (last sl))))
 						(dot-expand-list sl)
 
-					 `(slot-value
+					 `(%slot-value
 					 	,(list-symbol (subseq sl 0 p))
-						(quote ,(conv (list-symbol (subseq sl (1+ p)))))))))
+						,(conv (list-symbol (subseq sl (1+ p))))))))
 
 		 label?
 		   (fn (not (or (consp _)
@@ -65,7 +65,7 @@
 ;			  (label? (second x))
 ;			  (< 1 (length (symbol-name (second x))))
 ;			  (starts-with-dot? (symbol-name (second x))))
-;		  	(cons `(slot-value ,(dot-expand (first x))
+;		  	(cons `(%slot-value ,(dot-expand (first x))
 ;							    ,(conv (make-symbol (subseq (symbol-name (second x))
 ;														    1))))
 ;			      (dot-expand (cddr x))))
