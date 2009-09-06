@@ -16,10 +16,6 @@
  	   (symbolp name)
   	   (not (transpiler-defined? tr name))))
 	
-(defun starts-with (x head)
-  (let s (force-string x)
-    (string= head (subseq s 0 (length head)))))
-
 (defun transpiler-add-wanted-function (tr x)
   (unless (and (symbolp x)
 			   (not (builtinp x))
