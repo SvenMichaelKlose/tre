@@ -155,8 +155,7 @@
   (let fi (get-lambda-funinfo-by-sym fi-sym)
  	 `("_trelist_get (" ,(c-compiled-symbol '%funref) ", "
 		   "_trelist_get (" ,(c-compiled-symbol name) "," 
-							,(place-expand (funinfo-parent fi)
-										   (funinfo-lexical (funinfo-parent fi)))
+							,(place-assign (place-expand-funref-lexical fi))
 						 "))")))
 
 ;; Lexical scope

@@ -17,6 +17,7 @@
 	#'transpiler-expand-print-dot
     (fn transpiler-make-named-functions tr _)
     #'transpiler-update-funinfo
+	#'place-assign
     #'opt-peephole
     #'transpiler-quote-keywords
     (fn transpiler-expression-expand tr `(vm-scope ,_))

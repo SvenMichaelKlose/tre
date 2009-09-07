@@ -5,7 +5,8 @@
 
 (defun make-lexical-place-expr (fi var)
   `(%vec ,(funinfo-ghost fi)
-		 ,(funinfo-lexical-pos (funinfo-parent fi) var)))
+         ,(funinfo-sym (funinfo-parent fi))
+         ,var))
 
 (defun make-lexical-1 (fi var)
   (if (funinfo-in-args-or-env? (funinfo-parent fi) var)
@@ -16,7 +17,8 @@
   (funinfo-setup-lexical-links fi x)
   (let ret (make-lexical-1 fi x)
 	`(%vec ,(make-lexical fi .ret.)
-		   ,..ret.)))
+		   ,..ret.
+		   ,...ret.)))
 
 (defun make-lexical (fi x)
   (if (eq (funinfo-ghost fi) x)
@@ -25,7 +27,8 @@
 
 (defun place-expand-emit-stackplace (fi x)
   (if (transpiler-stack-locals? *current-transpiler*)
-  	  `(%stack ,(funinfo-env-pos fi x))
+  	  `(%stack ,(funinfo-sym fi)
+			   ,x)
 	  x))
 
 (defun place-expand-atom (fi x)
@@ -48,7 +51,8 @@
 	(and (not (eq x (funinfo-lexical fi)))
 		 (funinfo-lexical-pos fi x))
 	  `(%vec ,(place-expand-atom fi (funinfo-lexical fi))
-			 ,(funinfo-lexical-pos fi x))
+			 ,(funinfo-sym fi)
+			 ,x)
 
 	(or (funinfo-arg? fi x)
 	    (and (not (transpiler-stack-locals? *current-transpiler*))
@@ -66,14 +70,24 @@
   (if
 	(atom x)
 	  (place-expand-atom fi x)
+
 	(or (%quote? x)
-		(%transpiler-native? x))
+		(%transpiler-native? x)
+		(%stack? x)
+		(%vec? x))
 	  x
+
 	(lambda? x) ; XXX Add variables to ignore in subfunctions.
       `#'(,@(lambda-funinfo-and-args x)
 		     ,@(place-expand fi (lambda-body x)))
+
     (%slot-value? x)
       `(%slot-value ,(place-expand fi .x.)
 					,..x.)
+
     (cons (place-expand fi x.)
 		  (place-expand fi .x))))
+
+(defun place-expand-funref-lexical (fi)
+  (place-expand (funinfo-parent fi)
+                (funinfo-lexical (funinfo-parent fi))))

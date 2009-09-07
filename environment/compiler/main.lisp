@@ -20,6 +20,7 @@
 (env-load "compiler/compiler-macros.lisp")
 (env-load "compiler/quote-expand.lisp")
 (env-load "compiler/place-expand.lisp")
+(env-load "compiler/place-assign.lisp")
 (env-load "compiler/lambda-expand.lisp")
 (env-load "compiler/expression-expand.lisp")
 
