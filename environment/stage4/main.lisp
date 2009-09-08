@@ -38,6 +38,7 @@
 (env-load "stage4/pair.lisp")
 (env-load "stage4/print-hex.lisp")
 (env-load "stage4/print-octal.lisp")
+(env-load "stage4/remove.lisp")
 (env-load "stage4/repeat.lisp")
 (env-load "stage4/repeat-while-changes.lisp")
 (env-load "stage4/replace.lisp")
