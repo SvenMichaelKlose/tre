@@ -65,12 +65,8 @@
 ;  (eval (macroexpand `(with ,(mapcan (fn `(,_ ',_)) .lexicals.)
 ;                        ,fun))))
 
-(define-c-std-macro %slot-value (obj slot)
-  `(%slot-value ,obj ,(if (%quote? slot)
-                          slot
-                          `(%quote ,slot))))
+(define-c-std-macro slot-value (obj slot)
+  `(%slot-value ,obj (%quote ,slot)))
 
-(define-c-std-macro %%usetf-%slot-value (val obj slot)
-  `(%%userf-%slot-value ,val ,obj ,(if (%quote? slot)
-                          			   slot
-                          			   `(%quote ,slot))))
+(define-c-std-macro %%usetf-slot-value (val obj slot)
+  `(%%usetf-%slot-value ,val ,obj (%quote ,slot)))
