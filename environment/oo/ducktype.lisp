@@ -93,9 +93,18 @@
   (or (href (ducktype-obj-slots obj) slot)
 	  (href (ducktype-obj-members obj) slot)))
 
+(defun slot-value (obj slot)
+  (%ducktype-assert obj)
+  (or (href (ducktype-obj-slots obj) slot)
+	  (href (ducktype-obj-members obj) .slot.)))
+
 (defun (setf %slot-value) (value obj slot)
   (%ducktype-assert obj)
   (setf (href (ducktype-obj-members obj) slot) value))
+
+(defun (setf slot-value) (value obj slot)
+  (%ducktype-assert obj)
+  (setf (href (ducktype-obj-members obj) .slot.) value))
 
 (defun %new (name &rest args)
   (let members (make-hash-table)
