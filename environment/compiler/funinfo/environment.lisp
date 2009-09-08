@@ -65,9 +65,12 @@
 
 (defun funinfo-make-stackplace (fi x)
   (funinfo-env-add fi x)
-  `(%stack ,(funinfo-env-pos fi x)))
+  `(%stack ,(funinfo-sym fi) ,x))
 
 (defun funinfo-env-all (fi)
   (append (funinfo-env fi)
 		  (awhen (funinfo-parent fi)
 			(funinfo-env-all !))))
+
+(defun funinfo-add-used-local (fi x)
+  (adjoin! x (funinfo-used-locals fi)))
