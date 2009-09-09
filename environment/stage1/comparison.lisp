@@ -30,7 +30,3 @@
 (defun <= (x y)
   (or (= x y)
       (< x y)))
-
-(defun neql (&rest args)
-  "Return (not (eql ...)."
-  (not (apply #'eql args)))
