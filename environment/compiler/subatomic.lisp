@@ -12,6 +12,7 @@
 (defun atomic? (x)
   (or (atom x)
 	  (%stack? x)
+	  (%vec? x)
 	  (%slot-value? x)))
 
 (defun vm-jump? (e)

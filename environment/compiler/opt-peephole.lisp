@@ -12,10 +12,6 @@
 				(list _)))
 		  x))
 
-(defun find-all (elm x)
-  (find-all-if (fn (eq elm _))
-			   x))
-
 (defun opt-peephole-has-not-jumps-to (x tag)
   (dolist (i x t)
 	(when (vm-jump? i)
@@ -148,15 +144,15 @@
   (opt-peephole-fun #'opt-peephole-remove-void
 	  ; Remove void assigment.
 	  ((and (%setq? a)
-		    (eq .a. ..a.))
+		    (equal .a. ..a.))
 	     (opt-peephole-remove-void d))
 
       ; Remove second of (setf x y y x).
 	  ((and (%setq? a)
 			(%setq? d.)
 			(atomic? .a.)
-			(eq .a. (third d.))
-			(eq (second d.) ..a.))
+			(equal .a. (third d.))
+			(equal (second d.) ..a.))
 	     (cons a (opt-peephole-remove-void .d)))
 
 	  ; Remove jump to following tag.
