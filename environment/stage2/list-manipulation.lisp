@@ -60,8 +60,8 @@
     (cons obj lst)))
 
 ; XXX Have &REST ?
-(defmacro adjoin! (obj place)
-  `(setf ,place (adjoin ,obj ,place)))
+(defmacro adjoin! (obj &rest place)
+  `(setf ,(car place) (adjoin ,obj ,@place)))
 
 (define-test "ADJOIN doesn't add known member"
   ((adjoin 'i '(l i s p)))
