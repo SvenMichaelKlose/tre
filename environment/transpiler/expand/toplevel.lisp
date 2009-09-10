@@ -14,14 +14,14 @@
 ;; - FUNCTION expression contain the names of top-level functions.
 (defun transpiler-expand-compose (tr)
   (compose
-	#'transpiler-expand-print-dot
-    (fn transpiler-make-named-functions tr _)
-    #'transpiler-update-funinfo
-	#'place-assign
-    #'opt-peephole
-    #'transpiler-quote-keywords
-    (fn transpiler-expression-expand tr `(vm-scope ,_))
-	(fn transpiler-prepare-runtime-argument-expansions tr _)))
+	  #'transpiler-expand-print-dot
+      (fn transpiler-make-named-functions tr _)
+      #'transpiler-update-funinfo
+      #'opt-places-find-used
+      #'opt-peephole
+      #'transpiler-quote-keywords
+      (fn transpiler-expression-expand tr `(vm-scope ,_))
+	  (fn transpiler-prepare-runtime-argument-expansions tr _)))
 
 (defun transpiler-expand (tr x)
   (remove-if #'not
@@ -38,13 +38,13 @@
 
 (defun transpiler-preexpand-compose (tr)
   (compose
-    (fn thisify (transpiler-thisify-classes tr) _)
-    (fn transpiler-lambda-expand tr _)
-	#'rename-function-arguments
-	(fn (if *opt-inline?*
-			(opt-inline tr _)
-			_))
-    (fn funcall (transpiler-simple-expand-compose tr) _)))
+      (fn thisify (transpiler-thisify-classes tr) _)
+      (fn transpiler-lambda-expand tr _)
+	  #'rename-function-arguments
+	  (fn (if *opt-inline?*
+			  (opt-inline tr _)
+			  _))
+      (fn funcall (transpiler-simple-expand-compose tr) _)))
 
 (defun transpiler-preexpand (tr x)
   (mapcan (fn (funcall (transpiler-preexpand-compose tr) (list _)))
@@ -58,14 +58,14 @@
 ;; - Quoting is done by %QUOTE (same as QUOTE) exclusively.
 (defun transpiler-simple-expand-compose (tr)
   (compose
-    (fn funcall (transpiler-literal-conversion tr) _)
-    #'backquote-expand
-    #'compiler-macroexpand
-    (fn transpiler-macroexpand tr _)
-	#'quasiquote-expand
-    (fn transpiler-macroexpand tr _)
-    #'dot-expand
-    (fn funcall (transpiler-preprocessor tr) _)))
+      (fn funcall (transpiler-literal-conversion tr) _)
+      #'backquote-expand
+      #'compiler-macroexpand
+      (fn transpiler-macroexpand tr _)
+	  #'quasiquote-expand
+      (fn transpiler-macroexpand tr _)
+      #'dot-expand
+      (fn funcall (transpiler-preprocessor tr) _)))
 
 (defun transpiler-simple-expand (tr x)
   (mapcan (fn (funcall (transpiler-simple-expand-compose tr) (list _)))

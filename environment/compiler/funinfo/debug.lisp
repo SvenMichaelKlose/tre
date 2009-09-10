@@ -4,13 +4,15 @@
 ;;;; DEBUG PRINTERS
 
 (defun print-funinfo (fi)
-  (format t "Arguments: ~A~%" (funinfo-args fi))
-  (format t "Ghost sym:   ~A~%" (funinfo-ghost fi))
-  (format t "Stack:       ~A~%" (funinfo-env fi))
-  (format t "Lexicals:  ~A~%" (funinfo-lexicals fi))
-  (format t "Lexical sym: ~A~%" (funinfo-lexical fi))
-  (format t "Free vars: ~A~%" (funinfo-free-vars fi))
-  (format t "-~%")
+  (with-funinfo fi
+    (format t "Arguments: ~A~%" args)
+    (format t "Ghost sym: ~A~%" ghost)
+    (format t "Env        ~A~%" env)
+    (format t "Lexicals:  ~A~%" lexicals)
+    (format t "Lexical sym: ~A~%" lexical)
+    (format t "Free vars: ~A~%" free-vars)
+    (format t "Used vars: ~A~%" used-env)
+    (format t "-~%"))
   fi)
 
 (defun print-funinfo-stack (fi)

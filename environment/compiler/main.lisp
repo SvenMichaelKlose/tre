@@ -26,3 +26,4 @@
 
 (env-load "compiler/opt-peephole.lisp")
 (env-load "compiler/opt-inline.lisp")
+(env-load "compiler/opt-places.lisp")

@@ -72,5 +72,5 @@
 		  (awhen (funinfo-parent fi)
 			(funinfo-env-all !))))
 
-(defun funinfo-add-used-local (fi x)
-  (adjoin! x (funinfo-used-locals fi)))
+(defun funinfo-add-used-env (fi x)
+  (adjoin! x (funinfo-used-env fi) :test #'eq))

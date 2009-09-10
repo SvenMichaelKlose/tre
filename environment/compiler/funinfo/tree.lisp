@@ -10,7 +10,9 @@
 (defstruct funinfo
   ; Lists of stack variables. The rest contains the parent environments.
   (env nil)
-  (locals nil)
+  (used-env nil)
+
+  (name nil)
 
   (args nil) ; List of arguments.
 

@@ -17,7 +17,9 @@
 	  (fn expander-expand (transpiler-macro-expander tr) _)
 	  (fn transpiler-finalize-sexprs tr _)
 	  #'transpiler-encapsulate-strings
-	  (fn transpiler-obfuscate tr _)))
+	  (fn transpiler-obfuscate tr _)
+	  #'place-assign
+	  #'opt-places-remove-unused))
 
 (defun transpiler-generate-code (tr x)
   (mapcar (fn funcall (transpiler-generate-code-compose tr) _)
