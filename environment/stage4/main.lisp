@@ -49,6 +49,7 @@
 (env-load "stage4/t.lisp")
 (env-load "stage4/tail-after-if.lisp")
 (env-load "stage4/tree-list.lisp")
+(env-load "stage4/tree-size.lisp")
 (env-load "stage4/trim.lisp")
 (env-load "stage4/with-cons.lisp")
 (env-load "stage4/null-stream.lisp")
