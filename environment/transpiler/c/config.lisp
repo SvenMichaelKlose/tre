@@ -8,7 +8,7 @@
 			:std-macro-expander 'c-alternate-std
 			:macro-expander 'c
 			:separator (format nil ";~%")
-			;:unwanted-functions  ; Don't compile dependencies.
+			:inline-exceptions (list 'c-init)
 			:identifier-char?
 	  		    (fn (or (and (>= _ #\a) (<= _ #\z))
 		  	  		    (and (>= _ #\A) (<= _ #\Z))

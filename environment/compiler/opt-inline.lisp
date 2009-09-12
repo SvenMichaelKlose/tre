@@ -1,4 +1,4 @@
-;;;;; TRE to C transpiler
+;;;;; TRE transpiler
 ;;;;; Copyright (c) 2009 Sven Klose <pixel@copei.de>
 
 (defvar *opt-inline-max-levels* 2)
@@ -6,12 +6,6 @@
 (defvar *opt-inline-max-size* 64)
 (defvar *opt-inline-max-repetitions* 0)
 (defvar *opt-inline-max-small-repetitions* 2)
-
-(defun tree-size (x &optional (n 0))
-  (if (consp x)
-	  (+ 1 n (tree-size x.)
-		     (tree-size .x))
-	  n))
 
 (defun opt-inline-import (tr x argdef body level current parent)
   (format t "; Inlining function ~A" x.)
@@ -69,17 +63,20 @@
 				(opt-inline-0 tr level current parent (cdr x.)))
 		  (opt-inline-0 tr level current parent .x))))
 
+(defun inlineable-expr? (x)
+  (and (%setq? x)
+       (lambda? (third x))
+       (not (transpiler-inline-exception? tr (second x)))
+	   (not (let-when fi (get-lambda-funinfo (third x))
+			  (funinfo-ghost fi)))))
+
 (defun opt-inline (tr x)
   (when x
-    (if (and (%setq? x.)
-             (lambda? (third x.))
-			 (not (eq 'c-init (second x.)))
-			 (not (let fi (get-lambda-funinfo (third x.))
-					(and fi (funinfo-ghost fi)))))
-		(let fun (third x.)
-          (cons `(%setq ,(second x.)
+	(cons (if (inlineable-expr? x.)
+              (let fun (third x.)
+				`(%setq ,(second x.)
 				    #'(,@(lambda-funinfo-and-args fun)
-						  ,@(opt-inline-0 tr 0 (second x.) nil (lambda-body fun))))
-				(opt-inline tr .x)))
-        (cons x.
-              (opt-inline tr .x)))))
+						  ,@(opt-inline-0 tr 0 (second x.) nil
+								(lambda-body fun)))))
+        	  x.)
+          (opt-inline tr .x))))

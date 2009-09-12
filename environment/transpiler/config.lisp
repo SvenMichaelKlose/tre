@@ -44,6 +44,8 @@
   ; Tells if target required named top-level functions (like C).
   (named-functions? nil)
 
+  (inline-exceptions nil)
+
   (obfuscate? nil)
   (import-from-environment? t)
 
@@ -138,6 +140,9 @@
 
 (defun transpiler-unwanted-function? (tr fun)
   (member fun (transpiler-unwanted-functions tr)))
+
+(defun transpiler-inline-exception? (tr fun)
+  (member fun (transpiler-inline-exceptions tr) :test #'eq))
 
 (defun transpiler-add-obfuscation-exceptions (tr &rest x)
   (dolist (i x)
