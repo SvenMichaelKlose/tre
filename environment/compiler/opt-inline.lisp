@@ -63,7 +63,7 @@
 				(opt-inline-0 tr level current parent (cdr x.)))
 		  (opt-inline-0 tr level current parent .x))))
 
-(defun inlineable-expr? (x)
+(defun inlineable-expr? (tr x)
   (and (%setq? x)
        (lambda? (third x))
        (not (transpiler-inline-exception? tr (second x)))
@@ -72,7 +72,7 @@
 
 (defun opt-inline (tr x)
   (when x
-	(cons (if (inlineable-expr? x.)
+	(cons (if (inlineable-expr? tr x.)
               (let fun (third x.)
 				`(%setq ,(second x.)
 				    #'(,@(lambda-funinfo-and-args fun)
