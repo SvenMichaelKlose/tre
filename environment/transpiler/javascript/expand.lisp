@@ -117,9 +117,10 @@
 (define-js-std-macro doeach ((var seq &rest result) &rest body)
   (with-gensym (evald-seq idx)
     `(with (,evald-seq ,seq)
-	   (dotimes (,idx (%slot-value ,evald-seq length) ,@result)
-	     (with (,var (aref ,evald-seq ,idx))
-           ,@body)))))
+	   (when ,evald-seq
+	     (dotimes (,idx (%slot-value ,evald-seq length) ,@result)
+	       (with (,var (aref ,evald-seq ,idx))
+             ,@body))))))
 
 ;; Make type predicate function.
 (define-js-std-macro js-type-predicate (name &rest types)
