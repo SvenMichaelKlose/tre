@@ -80,8 +80,7 @@
     (env-load "oo/thisify.lisp"))
   (env-load "oo/class.lisp")
   (env-load "oo/ducktype.lisp")
-;  (env-load "oo/ducktype-test.lisp")
-)
+  (env-load "oo/ducktype-test.lisp"))
 
 (when *tre-has-editor*
   (env-load "editor/main.lisp"))
@@ -113,6 +112,8 @@
   (format t " OK~%"))
 
 (defvar *universe-functions* (currently-defined-functions))
+
+(env-load "version.lisp")
 
 (dump-system)
 (%load-launchfile)
