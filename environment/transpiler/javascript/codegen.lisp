@@ -133,6 +133,9 @@
 					   "(" ,@(transpiler-binary-expand "," .x)
  					   ")"))
 
+(define-js-macro delete-object (x)
+  `(%transpiler-native "delete " ,x))
+
 (defun js-stack (x)
   ($ '_I_S x))
 
