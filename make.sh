@@ -1,5 +1,7 @@
 #!/bin/sh
 
+svnversion -n >_current-version
+
 ARGS="$2 $3 $4 $5 $6 $7 $8 $9"
 
 BOOT_IMAGE=`echo ~/.tre.image`
