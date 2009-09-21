@@ -138,7 +138,7 @@
   `(= "undefined" (%js-typeof ,x)))
 
 (define-js-std-macro defined? (x)
-  (not `(= "undefined" (%js-typeof ,x))))
+  `(not (= "undefined" (%js-typeof ,x))))
 
 ; XXX generic function instead of append!
 (define-js-std-macro dont-obfuscate (&rest symbols)
