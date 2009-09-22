@@ -48,6 +48,7 @@
 			"number.lisp"
 			"sequence.lisp"
 			"stream.lisp"
+			"print.lisp"
 			"string.lisp"
 			"member.lisp"
 			"hash.lisp"

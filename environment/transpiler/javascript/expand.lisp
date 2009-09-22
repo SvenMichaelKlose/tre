@@ -31,6 +31,7 @@
   (when *show-definitions*
     (late-print `(defun ,name ,@(awhen args (list !)))))
   (with (n (%defun-name name)
+		 asserted-body (js-assert-body body)
 		 tr *js-transpiler*
 		 fi-sym (when (eq '%funinfo args.)
 				  .args.)
@@ -38,13 +39,16 @@
 			   ..args
 			   args))
     (transpiler-add-function-args tr n a)
+    (transpiler-add-function-body tr n (remove 'no-args
+											   asserted-body
+											   :test #'eq))
 	(transpiler-add-defined-function tr n)
     `(progn
        (%var ,n)
        (%setq ,n #'(,@(awhen fi-sym
 						`(%funinfo ,!))
 					,a
-   		              ,@(js-assert-body body))))))
+   		              ,@asserted-body)))))
 
 (define-js-std-macro define-native-js-fun (name args &rest body)
   (apply #'js-essential-defun name args body))
@@ -144,6 +148,10 @@
 (define-js-std-macro dont-obfuscate (&rest symbols)
   (apply #'transpiler-add-obfuscation-exceptions
 		 *js-transpiler* symbols)
+  nil)
+
+(define-js-std-macro dont-inline (x)
+  (transpiler-add-inline-exception *js-transpiler* x)
   nil)
 
 (define-js-std-macro assert (x &optional (txt nil) &rest args)

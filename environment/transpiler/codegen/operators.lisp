@@ -8,6 +8,7 @@
 	(print `(define-transpiler-infix ,tr ,name)))
   (let tre (eval tr)
     (transpiler-add-obfuscation-exceptions tre name)
+    (transpiler-add-inline-exception tre name)
     `(define-expander-macro ,(transpiler-macro-expander tre) ,name (x y)
 	   `(%transpiler-native ,,x ,(string-downcase (string name)) " " ,,y))))
 
@@ -21,6 +22,7 @@
 	(print `(define-transpiler-binary ,tr ,op)))
   (let tre (eval tr)
     (transpiler-add-obfuscation-exceptions tre op repl-op)
+    (transpiler-add-inline-exception tre op)
     (transpiler-add-plain-arg-fun tre op)
     `(define-expander-macro
 	   ,(transpiler-macro-expander tre)

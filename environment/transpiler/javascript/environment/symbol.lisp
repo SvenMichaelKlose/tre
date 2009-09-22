@@ -4,6 +4,8 @@
 ;; All symbols are stored in this array for reuse.
 (defvar *symbols* (make-hash-table))
 
+(dont-inline %symbol)
+
 ;; Symbol constructor
 ;;
 ;; It has a function field but that isn't used yet.

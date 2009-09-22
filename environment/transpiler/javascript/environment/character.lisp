@@ -3,6 +3,8 @@
 
 (defvar *characters* (make-array))
 
+(dont-inline %character)
+
 (defun %character (x)
   (declare type number x)
   (assert (not (characterp x))

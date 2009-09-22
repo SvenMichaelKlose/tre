@@ -74,3 +74,6 @@
 (defun expander-has-macro? (expander-name macro-name)
   (cdr (assoc macro-name (expander-macros (expander-get expander-name))
 			  :test #'eq)))
+
+(defun expander-macro-names (expander-name)
+  (carlist (expander-macros (expander-get expander-name))))

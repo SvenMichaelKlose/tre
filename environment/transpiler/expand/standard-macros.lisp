@@ -9,4 +9,5 @@
 	(when (expander-has-macro? (transpiler-macro-expander tre) name)
 	  (error "Macro ~A already defined in code-generator." name))
 	;(transpiler-add-unwanted-function tre name)
+	(transpiler-add-inline-exception tre name)
     `(define-expander-macro ,(transpiler-std-macro-expander tre) ,@x)))

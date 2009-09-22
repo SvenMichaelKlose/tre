@@ -5,24 +5,25 @@
 
 (defun make-c-transpiler ()
   (let tr (create-transpiler
-			:std-macro-expander 'c-alternate-std
-			:macro-expander 'c
-			:separator (format nil ";~%")
-			:inline-exceptions (list 'c-init)
-			:identifier-char?
-	  		    (fn (or (and (>= _ #\a) (<= _ #\z))
-		  	  		    (and (>= _ #\A) (<= _ #\Z))
-		  	  		    (and (>= _ #\0) (<= _ #\9))
-			  		    (in=? _ #\_ #\. #\$ #\#)))
-			:make-label
-	  		    (fn (format nil "l~A:~%"
-							    (transpiler-symbol-string *c-transpiler* _)))
-			:named-functions? t
-			:lambda-export? t
-			:stack-arguments? t
-			:stack-locals? t
-			:rename-all-args? t
-			:literal-conversion #'identity)
+			  :std-macro-expander 'c-alternate-std
+			  :macro-expander 'c
+			  :separator (format nil ";~%")
+			  :inline-exceptions (list 'c-init)
+			  :identifier-char?
+	  		      (fn (or (and (>= _ #\a) (<= _ #\z))
+		  	  		      (and (>= _ #\A) (<= _ #\Z))
+		  	  		      (and (>= _ #\0) (<= _ #\9))
+			  		      (in=? _ #\_ #\. #\$ #\#)))
+			  :make-label
+	  		      (fn (format nil "l~A:~%"
+							      (transpiler-symbol-string *c-transpiler* _)))
+			  :named-functions? t
+			  :lambda-export? t
+			  :stack-arguments? t
+			  :stack-locals? t
+			  :rename-all-args? t
+			  :literal-conversion #'identity)
+	(setf (transpiler-inline-exceptions tr) '(error format identity))
 	(let ex (transpiler-expex tr)
 	  (setf (expex-argument-filter ex) #'c-expand-literals
 			(expex-setter-filter ex) #'c-setter-filter))

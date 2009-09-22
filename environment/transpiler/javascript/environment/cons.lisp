@@ -1,6 +1,8 @@
 ;;;;; Transpiler: TRE to JavaScript
 ;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
 
+(dont-inline %cons)
+
 ;; Cell object constructor.
 (define-native-js-fun %cons (a d)
   no-args

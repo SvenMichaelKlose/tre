@@ -2,6 +2,7 @@
 ;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
 
 (dont-obfuscate arguments)
+(dont-inline %bind)
 
 ;; Bind function to an object.
 ;;

@@ -72,6 +72,7 @@
   (symbol-translations nil)
   thisify-classes
   (function-args (make-hash-table :test #'eq))
+  (function-bodies (make-hash-table :test #'eq))
   emitted-wanted-functions
   (obfuscations (make-hash-table :test #'eq))
   plain-arg-funs
@@ -123,8 +124,14 @@
 (defun transpiler-function-arguments (tr fun)
   (href (transpiler-function-args tr) fun))
 
+(defun transpiler-function-body (tr fun)
+  (href (transpiler-function-bodies tr) fun))
+
 (defun transpiler-add-function-args (tr fun args)
   (setf (href (transpiler-function-args tr) fun) args))
+
+(defun transpiler-add-function-body (tr fun args)
+  (setf (href (transpiler-function-bodies tr) fun) args))
 
 (define-slot-setter-push! transpiler-add-unwanted-function tr
   (transpiler-unwanted-functions tr))
@@ -143,6 +150,9 @@
 
 (defun transpiler-inline-exception? (tr fun)
   (member fun (transpiler-inline-exceptions tr) :test #'eq))
+
+(define-slot-setter-push! transpiler-add-inline-exception tr
+  (transpiler-inline-exceptions tr))
 
 (defun transpiler-add-obfuscation-exceptions (tr &rest x)
   (dolist (i x)

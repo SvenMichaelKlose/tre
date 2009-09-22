@@ -12,21 +12,22 @@
 
 (defun make-javascript-transpiler-0 ()
   (create-transpiler
-	:std-macro-expander 'js-alternate-std
-	:macro-expander 'javascript
-	:setf-functionp #'js-setf-functionp
-	:unwanted-functions '(wait)
-	:apply-argdefs? t
-	:literal-conversion #'transpiler-expand-characters
-	:identifier-char?
-	  (fn (or (and (>= _ #\a) (<= _ #\z))
-		  	  (and (>= _ #\A) (<= _ #\Z))
-		  	  (and (>= _ #\0) (<= _ #\9))
-			  (in=? _ #\_ #\. #\$ #\#)))
-	:make-label #'js-transpiler-make-label
-	:lambda-export? nil
-	:stack-locals? nil
-	:rename-all-args? t))
+	  :std-macro-expander 'js-alternate-std
+	  :macro-expander 'javascript
+	  :setf-functionp #'js-setf-functionp
+	  :unwanted-functions '(wait)
+	  :apply-argdefs? t
+	  :literal-conversion #'transpiler-expand-characters
+	  :identifier-char?
+	    (fn (or (and (>= _ #\a) (<= _ #\z))
+		  	    (and (>= _ #\A) (<= _ #\Z))
+		  	    (and (>= _ #\0) (<= _ #\9))
+			    (in=? _ #\_ #\. #\$ #\#)))
+	  :make-label #'js-transpiler-make-label
+	  :lambda-export? nil
+	  :stack-locals? nil
+	  :rename-all-args? t
+	  :inline-exceptions '(%slot-value error format identity %bind)))
 
 (defun make-javascript-transpiler ()
   (with (tr (make-javascript-transpiler-0)
@@ -58,7 +59,6 @@
 		  split object *array *string == === + - * /
 
 		  alert))
-
 	tr))
 
 (defvar *js-transpiler* (make-javascript-transpiler))

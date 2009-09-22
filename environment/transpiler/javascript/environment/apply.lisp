@@ -19,6 +19,8 @@
 		(error "APPLY: last argument is not a cell")))
     (fun.apply nil
 	  		   (list-array
-	    		   (aif fun.tre-args
-             		    (argument-expand-values fun ! args)
-			 		    args)))))
+				   ; XXX Should check if defined or not but somewhere it
+				   ; XXX it set to NIL instead.
+	    		   (if fun.tre-args
+             		   (argument-expand-values fun fun.tre-args args)
+			 		   args)))))

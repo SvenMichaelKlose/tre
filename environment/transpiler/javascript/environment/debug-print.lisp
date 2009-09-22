@@ -46,6 +46,8 @@
 		   	   (string x))))
 	   " ")))
 
+(dont-inline js-print)
+
 (defun js-print (x &optional (doc logwindow.document))
   (if (consp x)
 	  (js-print-cons x doc)
