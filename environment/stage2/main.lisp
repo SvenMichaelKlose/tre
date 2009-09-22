@@ -6,7 +6,6 @@
 (env-load "stage2/with-gensym.lisp")
 (env-load "stage2/list-manipulation.lisp")
 (env-load "stage2/nthcdr.lisp")
-(env-load "stage2/memorized-elt.lisp")
 (env-load "stage2/search-sequence.lisp")
 (env-load "stage2/define-mapped-fun.lisp")
 (env-load "stage2/queue-utils.lisp")

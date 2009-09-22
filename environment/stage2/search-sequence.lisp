@@ -26,7 +26,7 @@
         ((if from-end
 	         (< i e)
 			 (> i e)))
-	  (let elm (memorized-elt seq i)
+	  (let elm (elt seq i)
         (when (apply pred (cons elm (when with-index
 									  (list i))))
 		  (return elm))))))
@@ -113,7 +113,7 @@
   "AND predicate over list elements."
   (dolist (seq seqs t)
     (dotimes (i (length seq))
-      (unless (funcall pred (memorized-elt seq i))
+      (unless (funcall pred (elt seq i))
         (return-from every nil)))))
 
 (define-test "EVERY works"
