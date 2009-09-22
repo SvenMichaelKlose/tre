@@ -44,8 +44,11 @@
   (if
 	(atom x)
 	  x
-	(atom x.)
-	  (cons x. (opt-inline-0 tr level current parent .x))
+	(or (atom x.)
+		(%quote? x.))
+	  (cons x.
+			(opt-inline-0 tr level current parent .x))
+
 	(let f (first x.)
 	  (and (not (eq current f))
 		   (not (transpiler-inline-exception? tr f))
@@ -58,9 +61,6 @@
 	(lambda? x.)
 	  (cons `#'(,@(lambda-funinfo-and-args x.)
 				   ,@(opt-inline-0 tr level current parent (lambda-body x.)))
-		    (opt-inline-0 tr level current parent .x))
-	(%quote? x.)
-	  (cons x.
 		    (opt-inline-0 tr level current parent .x))
 	(cons (cons (first x.)
 				(opt-inline-0 tr level current parent (cdr x.)))
