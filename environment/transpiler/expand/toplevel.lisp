@@ -38,12 +38,12 @@
 
 (defun transpiler-preexpand-compose (tr)
   (compose
-      (fn thisify (transpiler-thisify-classes tr) _)
       (fn transpiler-lambda-expand tr _)
 	  #'rename-function-arguments
 	  (fn (if *opt-inline?*
 			  (opt-inline tr _)
 			  _))
+      (fn thisify (transpiler-thisify-classes tr) _)
       (fn funcall (transpiler-simple-expand-compose tr) _)))
 
 (defun transpiler-preexpand (tr x)
