@@ -16,6 +16,7 @@
 (env-load "stage4/def-head-predicate.lisp")
 (env-load "stage4/define-getset-alias.lisp")
 (env-load "stage4/doubles.lisp")
+(env-load "stage4/empty-string.lisp")
 (env-load "stage4/enqueue-many.lisp")
 (env-load "stage4/ends-with.lisp")
 (env-load "stage4/escape-string.lisp")
