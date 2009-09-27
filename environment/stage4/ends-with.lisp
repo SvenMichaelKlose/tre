@@ -1,7 +1,9 @@
 ;;;;; TRE environment
 ;;;;; Copyright (c) 2009 Sven Klose <pixel@copei.de>
 
-(defun ends-with (x tail)
-  (let s (force-string x)
-    (string= tail (subseq s (- (length s)
-							   (length tail))))))
+(defun ends-with? (x tail &key (ignore-case? nil))
+  (with (s (force-string x)
+         x-tail (subseq s (- (length s)
+						     (length tail)))A)
+    (string= (optional-string-downcase tail :convert? ignore-case?)
+    		 (optional-string-downcase x-tail :convert? ignore-case?))))
