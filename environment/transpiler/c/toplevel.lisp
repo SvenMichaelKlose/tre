@@ -14,6 +14,18 @@
 		(cons (c-transpiler-get-argdef-symbols x.)
 		  	  (c-transpiler-get-argdef-symbols .x)))))
 
+(defun c-transpiler-spot-argdef-symbols (x)
+  (when x
+	(if (atom x)
+		(when (symbol-name x)
+		  (c-compiled-symbol x))
+		(progn
+		  (c-transpiler-spot-argdef-symbols x.)
+		  (c-transpiler-spot-argdef-symbols .x)))))
+
+(defun c-transpiler-make-closure-argdef-symbols ()
+  (c-transpiler-spot-argdef-symbols *closure-argdefs*))
+
 (defun c-transpiler-register-functions (inits)
 	(append inits
 			(mapcar (fn `(%setq ~%ret
@@ -54,17 +66,16 @@
 (defun c-transpiler-make-init (tr)
   (let init-funs nil
     (append
-      (mapcar (fn (with-gensym g
-				    (let name ($ 'c-init- g)
-				      (push! name init-funs)
-				      `(defun ,name ()
-						 (tregc_push_compiled _local_array)
-					     ,@_))))
-              (group (c-transpiler-register-functions
-			      	     (transpiler-compiled-inits tr))
-					 20))
-      `((defun c-init ()
-		  ,@(mapcar #'list (reverse init-funs)))))))
+        (mapcar (fn (with-gensym g
+				      (let name ($ 'c-init- g)
+				        (push! name init-funs)
+				        `(defun ,name ()
+						   (tregc_push_compiled _local_array)
+					       ,@_))))
+			    (group (c-transpiler-register-functions (transpiler-compiled-inits tr))
+				  	   20))
+        `((defun c-init ()
+		    ,@(mapcar #'list (reverse init-funs)))))))
 
 (defun c-transpile-0 (f files)
   (map (fn (format f "#include \"~A\"~%" _))
@@ -81,23 +92,19 @@
 				   (transpiler-compiled-decls tr)))
 	; Generate.
     (format t "; Let me think. Hmm")
-    (force-output)
-	(c-compiled-symbol 'say-hello)
-    (with (code (append (transpiler-transpile tr deps)
-		     		    (transpiler-transpile tr tests)
- 	         		    (transpiler-transpile tr usr)))
-	  (mapcar (fn c-transpiler-get-argdef-symbols _)
-			  *closure-argdefs*)
+    (let code (concat-stringtree
+				  (concat-stringtree (transpiler-transpile tr deps))
+		     	  (concat-stringtree (transpiler-transpile tr tests))
+ 	         	  (concat-stringtree (transpiler-transpile tr usr)))
+	  (c-transpiler-make-closure-argdef-symbols)
 	  (setf *opt-inline?* nil)
-	  (with (init (transpiler-transpile tr
- 					(transpiler-sighten tr
-						(c-transpiler-make-init tr))))
-
+	  (let cinit (c-transpiler-make-init tr)
+	    (let init (transpiler-transpile tr (transpiler-sighten tr cinit))
 	    (princ (concat-stringtree
 				   (transpiler-compiled-decls tr)
 			       init
 			       code)
-	           f))))
+	           f)))))
   (format t "~%; Everything OK. Done.~%"))
 
 (defun c-transpile (out files &key (obfuscate? nil))
