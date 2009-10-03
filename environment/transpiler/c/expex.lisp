@@ -1,25 +1,25 @@
 ;;;;; TRE transpiler
 ;;;;; Copyright (c) 2009 Sven Klose <pixel@copei.de>
 
-(defmacro c-define-compiled-literal (name (x table) maker setter)
+(defmacro c-define-compiled-literal (name (x table) &key maker setter)
   (let slot `(,($ 'transpiler-compiled- table 's) *current-transpiler*)
     `(defun ,name (,x)
        (or (href ,slot ,x)
 	 	   (let n ,maker
 	         (push! (format nil "treptr ~A;~%"
-							  	(string-downcase (symbol-name n)))
+							  	(transpiler-symbol-string *current-transpiler* n))
   					(transpiler-compiled-decls *current-transpiler*))
 	       	 (push! `(setf ,,n ,setter)
   					(transpiler-compiled-inits *current-transpiler*))
 	       	 (setf (href ,slot ,x) n))))))
 
 (c-define-compiled-literal c-compiled-number (x number)
-  ($ 'trenumber_compiled_ (gensym-number))
-  (trenumber_get (%transpiler-native ,x)))
+  :maker ($ 'trenumber_compiled_ (gensym-number))
+  :setter (trenumber_get (%transpiler-native ,x)))
 
 (c-define-compiled-literal c-compiled-char (x char)
-  ($ 'trechar_compiled_ (char-code x))
-  (trechar_get (%transpiler-native ,(char-code x))))
+  :maker ($ 'trechar_compiled_ (char-code x))
+  :setter (trechar_get (%transpiler-native ,(char-code x))))
 
 (defun make-c-newlines (x)
   (list-string (tree-list (mapcar (fn (if (= 10 _)
@@ -28,20 +28,24 @@
 								  (string-list x)))))
 
 (c-define-compiled-literal c-compiled-string (x string)
-  ($ 'trestring_compiled_ (gensym-number))
-  (trestring_get (%transpiler-native (%transpiler-string ,(make-c-newlines (escape-string x))))))
+  :maker ($ 'trestring_compiled_ (gensym-number))
+  :setter (trestring_get
+			  (%transpiler-native
+				  (%transpiler-string
+					  ,(make-c-newlines (escape-string x))))))
 
 (c-define-compiled-literal c-compiled-symbol (x symbol)
-  ($ 'tresymbol_compiled_
-	 (transpiler-symbol-string *current-transpiler* x)
-	 (if (keywordp x)
-	     '_keyword
-		 ""))
-  (treatom_get (%transpiler-native (%transpiler-string ,(escape-string (symbol-name x))))
+  :maker ($ 'tresymbol_compiled_ x (if (keywordp x)
+	     						'_keyword
+		 						""))
+  :setter (treatom_get
+			  (%transpiler-native
+				  (%transpiler-string ,(escape-string (symbol-name x))))
 			   ,(if (keywordp x)
 				    'tre_package_keyword
 				    'treptr_nil)))
 
+;; XXX move to environment/transpiler/import.lisp
 (defun atom-function-expr? (x)
   (and (consp x)
 	   (eq x. 'function)
