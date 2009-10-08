@@ -14,15 +14,18 @@
 ;;;;
 ;;;; It contains the essential functions needed to store argument
 ;;;; definitions for APPLY.
+
+(defvar *js-env-path* "environment/transpiler/backends/javascript/environment/")
+
 (defvar *js-base*
-	(js-load-base "environment/transpiler/javascript/environment/"
+	(js-load-base *js-env-path*
 		"return-value.lisp"
 		"not.lisp"
 		"cons.lisp"
 		"symbol.lisp"))
 
 (defvar *js-base-debug-print*
-		(js-load-base "environment/transpiler/javascript/environment/"
+		(js-load-base *js-env-path*
 			"debug-print.lisp"))
 
 ;;;; Second part of the core functions
@@ -30,13 +33,13 @@
 ;;;; Functions required by imported environment functions.
 (defvar *js-base2*
 	(append
-		(js-load-base "environment/transpiler/javascript/environment/"
+		(js-load-base *js-env-path*
 			"apply.lisp"
 			"array.lisp"
 			"atom.lisp")
 		(js-load-base "environment/transpiler/environment/"
 			"atom.lisp")
-		(js-load-base "environment/transpiler/javascript/environment/"
+		(js-load-base *js-env-path*
 			"bind.lisp"
 			"character.lisp"
 			"equality.lisp"

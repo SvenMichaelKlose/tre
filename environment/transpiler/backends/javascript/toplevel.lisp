@@ -21,7 +21,7 @@
 
 (defun js-gen-funref-wrapper (out)
   (princ ,(concat-stringtree
-		      (with-open-file i (open "environment/transpiler/javascript/funref.js"
+		      (with-open-file i (open "environment/transpiler/backends/javascript/funref.js"
 							 		  :direction 'input)
 			  	(read-all-lines i)))
 		 out))
