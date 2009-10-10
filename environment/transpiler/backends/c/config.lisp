@@ -25,8 +25,9 @@
 			  :literal-conversion #'identity)
 	(setf (transpiler-inline-exceptions tr) '(error format identity))
 	(let ex (transpiler-expex tr)
-	  (setf (expex-argument-filter ex) #'c-expand-literals
-			(expex-setter-filter ex) #'c-setter-filter))
+	  (setf (expex-argument-filter ex) #'c-expex-literal
+			(expex-setter-filter ex) (compose #'expex-set-global-variable-value
+										      #'expex-compiled-funcall)))
 	tr))
 
 (defvar *c-transpiler* (make-c-transpiler))

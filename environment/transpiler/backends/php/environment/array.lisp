@@ -1,7 +1,7 @@
 ;;;;; Transpiler: TRE to JavaScript
 ;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
 
-(defun arrayp (x) (instanceof x *array))
+(defun arrayp (x) (is_array x))
 
 (dont-obfuscate push)
 

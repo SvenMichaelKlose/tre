@@ -8,11 +8,8 @@
 (defmacro define-c-macro (&rest x)
   `(define-transpiler-macro *c-transpiler* ,@x))
 
-(defun c-transpiler-function-name (x)
-  ($ 'compiled_ x))
-
 (defun c-atomic-function (x)
-  (c-transpiler-function-name (second x)))
+  (compiled-function-name (second x)))
 
 (define-c-macro function (name &optional (x 'only-name))
   (if (eq 'only-name x)
@@ -26,7 +23,7 @@
 	    (push! (concat-stringtree
 				   "extern treptr "
 				   (transpiler-symbol-string *c-transpiler*
-					   (c-transpiler-function-name name))
+					   (compiled-function-name name))
 				   "("
 				   (if args
 				       (concat-stringtree
@@ -37,7 +34,7 @@
 				   ");" (string (code-char 10)))
 			   (transpiler-compiled-decls *c-transpiler*))
         `(,(code-char 10)
-		  "treptr " ,(c-transpiler-function-name name) "("
+		  "treptr " ,(compiled-function-name name) "("
 	  	    ,@(transpiler-binary-expand ","
 	                (mapcar (fn `("treptr " ,_))
 						    args))

@@ -44,3 +44,6 @@
 
 (defun %setq-value (x)
   ..x.)
+
+(defun %setq-value-atom? (x)
+    (atom (%setq-value x)))

@@ -15,8 +15,7 @@
     `(vm-scope
 	   (%var ,g)
        (%setq ,g (%function ,x))
-       (%setq (%slot-value ,g tre-args)
-			      ,(simple-quote-expand (lambda-args x)))
+	   (%assign-function-arguments ,g ,(simple-quote-expand (lambda-args x)))
        (%setq ~%ret ,g))))
 
 ;; (FUNCTION symbol | lambda-expression)

@@ -144,13 +144,13 @@
   	  `(%transpiler-native "_locals[" ,x "]")
       (js-stack x)))
 
-(defun codegen-symbol-constructor (tr x)
+(defun js-codegen-symbol-constructor (tr x)
   `(,(transpiler-symbol-string tr (transpiler-obfuscate tr 'symbol))
         "(\"" ,(symbol-name x) "\", " ,(when (keywordp x) "true") ")"))
 
 (define-js-macro %quote (x)
   (if (not (string= "" (symbol-name x)))
-	  (codegen-symbol-constructor *js-transpiler* x)
+	  (js-codegen-symbol-constructor *js-transpiler* x)
 	  x))
 
 (define-js-macro %slot-value (x y)
@@ -178,3 +178,7 @@
 		   ,(symbol-name (transpiler-obfuscate-symbol
 						 *js-transpiler* (make-symbol .name.))))
 		   ,pkg))
+
+(define-js-macro %assign-function-arguments (name args)
+  `(%transpiler-native
+	   ,name "." ,(transpiler-obfuscate-symbol *js-transpiler* 'tre-args) "=" ,args))

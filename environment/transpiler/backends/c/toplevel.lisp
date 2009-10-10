@@ -26,12 +26,12 @@
 (defun c-transpiler-make-closure-argdef-symbols ()
   (c-transpiler-spot-argdef-symbols *closure-argdefs*))
 
-(defun c-transpiler-register-functions (inits)
-	(append inits
+(defun c-transpiler-register-functions ()
+	(append (transpiler-compiled-inits *c-transpiler*)
 			(mapcar (fn `(%setq ~%ret
 								(treatom_register_compiled_function
 									,(c-compiled-symbol _)
-									,(c-transpiler-function-name _))))
+									,(compiled-function-name _))))
 					(transpiler-defined-functions *c-transpiler*))
 			(mapcar (fn `(%setq-atom-value
 							 ,_.
@@ -72,14 +72,14 @@
 				        `(defun ,name ()
 						   (tregc_push_compiled _local_array)
 					       ,@_))))
-			    (group (c-transpiler-register-functions (transpiler-compiled-inits tr))
-				  	   20))
+			    (group (c-transpiler-register-functions) 20))
         `((defun c-init ()
 		    ,@(mapcar #'list (reverse init-funs)))))))
 
 (defun c-transpile-0 (f files)
   (map (fn (format f "#include \"~A\"~%" _))
 	   *c-interpreter-headers*)
+  (format f "#define compiled_apply trespecial_apply_compiled~%")
   (with (tr *c-transpiler*
 		 ; Expand.
 		 tests (when (eq t *have-environment-tests*)
@@ -100,10 +100,9 @@
 	  (setf *opt-inline?* nil)
 	  (let cinit (c-transpiler-make-init tr)
 	    (let init (transpiler-transpile tr (transpiler-sighten tr cinit))
-	    (princ (concat-stringtree
-				   (transpiler-compiled-decls tr)
-			       init
-			       code)
+	    (princ (concat-stringtree (transpiler-compiled-decls tr)
+			       				  init
+								  code)
 	           f)))))
   (format t "~%; Everything OK. Done.~%"))
 

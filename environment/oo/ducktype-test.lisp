@@ -10,10 +10,10 @@
 
 (defmethod caroshi-element some-member-function ())
 
-(defun ducktype-test ()
-  (let o (new caroshi-element)
-    (o.some-member-function)
-    (setf o.some-member 'fnord)
-    o.some-member))
+;(defun ducktype-test ()
+;  (let o (new caroshi-element)
+;    (o.some-member-function)
+;    (setf o.some-member 'fnord)
+;    o.some-member))
 
-(ducktype-test)
+;(ducktype-test)

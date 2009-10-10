@@ -15,3 +15,5 @@
   (when (%%%< n x.length)
     (cons (aref x n)
 		  (array-list x (1+ n)))))
+
+(dont-obfuscate *array)

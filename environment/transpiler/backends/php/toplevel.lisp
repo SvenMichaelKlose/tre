@@ -15,9 +15,10 @@
 (defun php-transpile-prepare (tr out &key (import-universe? nil))
   (when import-universe?
     (transpiler-import-universe tr))
-  (when (transpiler-lambda-export? tr)
-    (transpiler-add-wanted-function tr 'array-copy)
-    (php-gen-funref-wrapper out)))
+  (transpiler-add-wanted-function tr 'array-copy)
+  (format out "<?php~%$NULL=NULL;~%$t=True;~%")
+  (format out "function & __w ($x) { return $x; }~%")
+  (php-gen-funref-wrapper out))
 
 (defun php-transpile-0 (f files &key (base? nil))
   (with (tr *php-transpiler*

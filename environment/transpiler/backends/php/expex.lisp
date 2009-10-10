@@ -1,20 +1,17 @@
 ;;;;; TRE transpiler
 ;;;;; Copyright (c) 2009 Sven Klose <pixel@copei.de>
 
-(defun php-setter-filter (tr x)
-  (transpiler-add-wanted-variable tr (second x))
-  x)
-
-(defun php-expand-literals (x)
+(defun php-local-fun-filter (x)
   (if
-    (atom x)
-     (if (expex-global-variable? x)
-	     (transpiler-add-wanted-variable *php-transpiler* x)
-         x)
-	(transpiler-import-from-expex x)))
+    (not (consp (third x)))
+      x
+    (transpiler-defined-function *php-transpiler* (first (third x)))
+      `(%setq ,(second x)
+       		  (,(compiled-function-name (first (third x)))
+	                ,@(cdr (third x))))
+    x))
 
-(defun php-function-arguments (x)
-  (or (href (transpiler-function-args *php-transpiler*) x)
-	  (if (builtinp x)
-		  'builtin
-		  (function-arguments (symbol-function x)))))
+(defun php-setter-filter (tr x)
+  (let w/-filtered-function (php-local-fun-filter x)
+    (transpiler-add-wanted-variable tr (second w/-filtered-function))
+    w/-filtered-function))

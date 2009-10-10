@@ -13,7 +13,7 @@
 (dont-inline map) ; XXX make it MAPHASH.
 
 (defun map (fun hash)
-  (%transpiler-native "null;for (i in hash) fun (i)"))
+  (%transpiler-native "NULL;foreach ($hash as $i => $dummy) funcall ($i)"))
 
 (defun elt (seq idx)
   (if

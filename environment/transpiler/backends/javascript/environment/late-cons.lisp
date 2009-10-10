@@ -26,6 +26,3 @@
 	   x.__class
 	   (%%%= x.__class ,(transpiler-obfuscated-symbol-string
 							*current-transpiler* 'cons))))
-
-(defun atom (x)
-  (not (consp x)))

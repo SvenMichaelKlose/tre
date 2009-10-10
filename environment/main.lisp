@@ -72,6 +72,8 @@
 (when *tre-has-alien*
   (env-load "alien/main.lisp"))
 
+(defvar *functions-after-alien* (currently-defined-functions))
+
 (when *tre-has-transpiler*
   (env-load "oo/thisify.lisp"))
 

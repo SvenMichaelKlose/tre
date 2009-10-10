@@ -43,24 +43,16 @@
 											   asserted-body
 											   :test #'eq))
 	(transpiler-add-defined-function tr n)
-    `(progn
-       (%var ,n)
-       (%setq ,n #'(,@(awhen fi-sym
-						`(%funinfo ,!))
+    `(%setq ,n #'(,@(awhen fi-sym
+					   `(%funinfo ,!))
 					,a
-   		              ,@asserted-body)))))
+   		              ,@asserted-body))))
 
 (define-php-std-macro define-native-php-fun (name args &rest body)
   (apply #'php-essential-defun name args body))
 
-(define-php-std-macro defun (name args &rest body)
-  (with-gensym g
-	(let n (%defun-name name)
-      `(progn
-		 (%var ,g)
-		 (%setq ,g (%unobfuscated-lookup-symbol ,(symbol-name n) nil))
-	     ,(apply #'php-essential-defun name args body)
-		 (setf (symbol-function ,g) ,n)))))
+(define-php-std-macro defun (&rest args)
+  (apply #'php-essential-defun args))
 
 (define-php-std-macro defmacro (name &rest x)
   (when *show-definitions*

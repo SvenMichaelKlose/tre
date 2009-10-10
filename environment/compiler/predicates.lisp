@@ -8,7 +8,9 @@
       (macrop x)))
 
 (mapcar-macro x
-	'(quote %quote backquote identity %new %transpiler-native)
+	'(quote %quote backquote
+	  identity %new
+	  %transpiler-native %transpiler-string)
   `(def-head-predicate ,x))
 
 (defun function-ref-expr? (x)

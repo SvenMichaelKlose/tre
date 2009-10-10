@@ -3,12 +3,18 @@
 ;;;;;
 ;;;;; Configuration
 
+(defvar *php-version* 502)
+
 (defun php-setf-functionp (x)
   (or (%setf-functionp x)
       (transpiler-function-arguments *php-transpiler* x)))
 
 (defun php-transpiler-make-label (x)
-  (format nil "_I_~A:~%" (transpiler-symbol-string *php-transpiler* x)))
+  (format nil "~A_I_~A:~%"
+		  (if (< *php-version* 503)
+			  "case "
+			  "")
+		  (transpiler-symbol-string *php-transpiler* x)))
 
 (defun make-php-transpiler-0 ()
   (create-transpiler
@@ -16,14 +22,15 @@
 	  :macro-expander 'php
 	  :setf-functionp #'php-setf-functionp
 	  :unwanted-functions '(wait)
-	  :apply-argdefs? t
+	  :apply-argdefs? nil
 	  :literal-conversion #'transpiler-expand-characters
 	  :identifier-char?
 	    (fn (or (and (>= _ #\a) (<= _ #\z))
 		  	    (and (>= _ #\A) (<= _ #\Z))
 		  	    (and (>= _ #\0) (<= _ #\9))
-			    (in=? _ #\_ #\. #\$ #\#)))
+			    (in=? _ #\_ #\. #\#)))
 	  :make-label #'php-transpiler-make-label
+	  :gen-string #'((tr x) (string-concat "\'" x "\'"))
 	  :lambda-export? t
 	  :stack-locals? nil
 	  :rename-all-args? t
@@ -40,7 +47,7 @@
     	  (expex-function-arguments ex)
 			  #'php-function-arguments
     	  (expex-argument-filter ex)
-		      (fn php-expand-literals _))
+		      #'php-expand-literals)
 
 	(apply #'transpiler-add-obfuscation-exceptions
 		tr
@@ -64,3 +71,4 @@
 (defvar *php-transpiler* (make-php-transpiler))
 (defvar *php-newline* (format nil "~%"))
 (defvar *php-separator* (format nil ";~%"))
+(defvar *php-indent* "    ")

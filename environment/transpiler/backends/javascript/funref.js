@@ -13,6 +13,6 @@ function T37funref (f, g)
 		a.unshift (g);
 		return f.apply (null, a);
 	};
-	r.treArgs = cdr (f.treArgs);
+	r.treArgs = cdr (f.treArgs); // TRE-ARGS can be obfuscated.
 	return r;
 }
