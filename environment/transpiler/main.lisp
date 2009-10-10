@@ -16,6 +16,7 @@
 (env-load "transpiler/expand/newlines.lisp")
 (env-load "transpiler/expand/update-funinfos.lisp")
 (env-load "transpiler/expand/named-functions.lisp")
+(env-load "transpiler/expand/function-arguments.lisp")
 (env-load "transpiler/expand/expression-expand.lisp")
 (env-load "transpiler/expand/expex-funcalls.lisp")
 (env-load "transpiler/expand/expex-funinfo.lisp")
@@ -38,7 +39,6 @@
 (env-load "transpiler/backends/c/codegen.lisp")
 (env-load "transpiler/backends/c/toplevel.lisp")
 
-(env-load "transpiler/backends/javascript/expex.lisp")
 (env-load "transpiler/backends/javascript/config.lisp")
 (env-load "transpiler/backends/javascript/expand.lisp")
 (env-load "transpiler/backends/javascript/codegen.lisp")

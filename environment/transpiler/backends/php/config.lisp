@@ -45,9 +45,9 @@
     	  (expex-setter-filter ex)
 			  (fn php-setter-filter *php-transpiler* _)
     	  (expex-function-arguments ex)
-			  #'php-function-arguments
+			  #'current-transpiler-function-arguments-w/o-builtins
     	  (expex-argument-filter ex)
-		      #'php-expand-literals)
+		      #'php-expex-literal)
 
 	(apply #'transpiler-add-obfuscation-exceptions
 		tr
