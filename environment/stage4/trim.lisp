@@ -7,8 +7,8 @@
     (if (funcall test obj (elt seq 0))
 		(trim obj (subseq seq 1) :test test)
 		(with (len (length seq))
-          (if (funcall test obj (elt seq (1- len)))
-		      (trim obj (subseq seq 0 (1- len)) :test test)
+          (if (funcall test obj (elt seq (integer-1- len)))
+		      (trim obj (subseq seq 0 (integer-1- len)) :test test)
 			  seq)))))
 
 ; XXX tests missing

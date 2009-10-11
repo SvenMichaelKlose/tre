@@ -8,15 +8,22 @@
 	  (char-code x)
 	  x))
 
-(mapcan-macro _
-	'((number+ %%%+)
-	  (+ %%%+)
-	  (number- %%%-)
-	  (- %%%-))
-  `((defun ,_. (&rest x)
-      (let n (%wrap-char-number x.)
+(mapcan-macro gen
+	'(+ -)
+  (with (num ($ 'number gen)
+		 int ($ 'integer gen)
+		 op  ($ '%%% gen)
+         gen-body `(let n (%wrap-char-number x.)
+	    			 (dolist (i .x n)
+	      			   (setf n (,op n (%wrap-char-number i))))))
+  `((defun ,gen (&rest x)
+	  ,gen-body)
+	(defun ,num (&rest x)
+	  ,gen-body)
+    (defun ,int (&rest x)
+      (let n x.
 	    (dolist (i .x n)
-	      (setf n (,._. n (%wrap-char-number i))))))))
+	      (setf n (,op n i))))))))
 
 (mapcan-macro _
 	'(= < >)
@@ -34,3 +41,11 @@
   (if (characterp x)
       (char-code x)
       x))
+
+(defmacro + (&rest x)
+  (if
+	(some #'stringp x)
+      `(string-concat ,@x)
+	(every #'stringp x)
+	  (apply #'string-concat x)
+    `(+ ,@x)))

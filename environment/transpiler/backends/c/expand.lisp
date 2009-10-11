@@ -70,3 +70,6 @@
 
 (define-c-std-macro %%usetf-slot-value (val obj slot)
   `(%%usetf-%slot-value ,val ,obj (%quote ,slot)))
+
+(define-c-std-macro %%usetf-aref (&rest x)
+  `(%set-aref ,@x))

@@ -8,7 +8,7 @@
 	     (if pos
 		     (cons (subseq seq 0 pos)
 			       (split obj
-						  (subseq seq (1+ pos))
+						  (subseq seq (integer-1+ pos))
 					      :test test))
 		     (list seq)))))
 

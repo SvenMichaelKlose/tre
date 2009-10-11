@@ -3,7 +3,7 @@
 
 (defun ends-with? (x tail &key (ignore-case? nil))
   (with (s (force-string x)
-         x-tail (subseq s (- (length s)
-						     (length tail)))A)
+         x-tail (subseq s (integer- (length s)
+						     		(length tail))))
     (string= (optional-string-downcase tail :convert? ignore-case?)
     		 (optional-string-downcase x-tail :convert? ignore-case?))))

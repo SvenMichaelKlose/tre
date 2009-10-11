@@ -30,7 +30,7 @@
 	     (idx 1 (1+ idx)))
         ((endp i) (queue-list form))
       (let argname (%struct-field-name i.)
-        (enqueue form `(setf (elt ,g ,idx)
+        (enqueue form `(setf (aref ,g ,idx)
 							 (if (eq ,argname ',argname)
 								 ,(when (consp i.)
 									(second i.))
@@ -40,7 +40,7 @@
   (with (sym (%struct-make-symbol name options)
 		 g (gensym)
          user-init (%struct-make-init fields g)
-	     type-init `((setf (elt ,g 0) ',name)))
+	     type-init `((setf (aref ,g 0) ',name)))
     `(defun ,sym ,(%struct-make-args fields)
        (let ,g (make-array ,(1+ (length fields)))
          ,@(if user-init
@@ -55,9 +55,9 @@
   (let sym (%struct-getter-symbol name field)
     `(progn
       (defun ,sym (arr)
-        (elt arr ,index))
+        (aref arr ,index))
       (defun (setf ,sym) (val arr)
-        (setf (elt arr ,index) val)))))
+        (setf (aref arr ,index) val)))))
 
 (defun %struct-getters (name fields)
   (with-queue form
@@ -70,7 +70,7 @@
 (defun %struct-p (name)
   (let sym (%struct-p-symbol name)
     `(defun ,sym (arr)
-       (and (arrayp arr) (eq (elt arr 0) ',name)))))
+       (and (arrayp arr) (eq (aref arr 0) ',name)))))
 
 (defun %struct-sort-fields (fields-and-options)
   "Split list into fields and options."
@@ -89,11 +89,6 @@
 
 (defun %struct-def (name)
   (assoc-value name *struct-defs*))
-
-(defun %struct-name (obj)
-  (if (not (arrayp obj))
-      (%error "object is not a struct")
-      (elt 0 obj)))
 
 (defun %struct-fields (name)
   (with-queue form

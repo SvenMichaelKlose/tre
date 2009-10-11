@@ -46,9 +46,9 @@
     (declare type cons lst)
     (let* ((n (length lst))
            (s (make-string 0)))
-      (do ((i 0 (1+ i))
+      (do ((i 0 (integer-1+ i))
            (l lst .l))
-          ((>= i n) s)
+          ((integer>= i n) s)
         (setf s (+ s (string l.)))))))
 
 ;; XXX must be optional.

@@ -23,7 +23,7 @@
 ;;
 ;; Wraps the 'new'-operator.
 ;; XXX rename to %QUOTE ?
-(define-native-js-fun %lookup-symbol (name pkg)
+(define-native-js-fun symbol (name pkg)
   no-args
   (unless (and (%%%= ,*nil-symbol-name* name)
 			   (not pkg))
@@ -34,9 +34,9 @@
       (or (href symbol-table name)
 	      (setf (href symbol-table name) (new %symbol name pkg))))))
 
-(define-native-js-fun symbol (name pkg)
-  no-args
-  (%lookup-symbol name pkg))
+;(define-native-js-fun symbol (name pkg)
+; no-args
+; (%lookup-symbol name pkg))
 
 (define-native-js-fun %%usetf-symbol-function (v x)
   no-args

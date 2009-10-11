@@ -3,9 +3,9 @@
 
 (defun count-if (pred lst &optional (init 0))
   (if lst
-	  (count-if pred .lst (+ (if (funcall pred lst.)
-								 1
-								 0)
+	  (count-if pred .lst (integer+ (if (funcall pred lst.)
+								 		1
+								 		0)
  							 init))
 	  init))
 

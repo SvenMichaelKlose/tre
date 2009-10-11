@@ -45,6 +45,7 @@
   (named-functions? nil)
 
   (inline-exceptions nil)
+  (dont-inline nil)
 
   (obfuscate? nil)
   (import-from-environment? t)
@@ -166,6 +167,9 @@
 
 (defun transpiler-plain-arg-fun? (tr fun)
   (member fun (transpiler-plain-arg-funs tr)))
+
+(defun transpiler-dont-inline? (tr fun)
+  (member fun (transpiler-dont-inline tr)))
 
 (defun transpiler-macro (tr name)
   (let expander (expander-get (transpiler-macro-expander tr))

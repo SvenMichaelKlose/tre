@@ -50,7 +50,11 @@
    x..) ; x + rest
 x + y + z
 
-- symbol construction syntax
-	'prefix-,name'-tail
+- symbol construction syntax, alternative to $.
+	'head-,name'-tail
 
 - (fun1+fun2 ...) => (fun1 ...) (fun2 ...)
+
+- Arithmetic functions ignore NIL.
+
+- &REQUIRED-KEY

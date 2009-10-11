@@ -23,6 +23,6 @@
            (go ,tag))))))
 
 (defmacro dotimes ((iter times &rest result) &rest body)
-  `(do ((,iter 0 (+ 1 ,iter)))
+  `(do ((,iter 0 (integer+ 1 ,iter)))
 	   ((not (< ,iter ,times)) ,@result)
 	 ,@body))

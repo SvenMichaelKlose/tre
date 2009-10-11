@@ -54,8 +54,8 @@
   "Make list of characters from string."
   (let* ((l (length x))
 		 (s))
-    (do ((i (1- l) (1- i)))
-		((< i 0))
+    (do ((i (integer-1- l) (integer-1- i)))
+		((integer< i 0))
       (setf s (push (elt x i) s)))
 	s))
 
@@ -72,8 +72,8 @@
   (when str
     (let* ((n (length str))
            (s (make-string 0)))
-      (do ((i 0 (1+ i)))
-          ((= i n) s)
+      (do ((i 0 (integer-1+ i)))
+          ((integer= i n) s)
         (setf s (+ s (string (char-upcase (elt str i)))))))))
 
 (define-test "STRING-UPCASE works"
@@ -86,8 +86,8 @@
   (when str
     (let* ((n (length str))
            (s (make-string 0)))
-      (do ((i 0 (1+ i)))
-          ((= i n) s)
+      (do ((i 0 (integer-1+ i)))
+          ((integer= i n) s)
         (setf s (+ s (string (char-downcase (elt str i)))))))))
 
 (define-test "STRING-DOWNCASE works"

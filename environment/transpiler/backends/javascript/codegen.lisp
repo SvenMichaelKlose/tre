@@ -84,6 +84,8 @@
 (define-js-binary %%%= "==")
 (define-js-binary %%%< "<")
 (define-js-binary %%%> ">")
+(define-js-binary %%%<= "<=")
+(define-js-binary %%%>= ">=")
 (define-js-binary %%%eq "===")
 
 (define-js-macro make-array (&rest elements)
@@ -173,7 +175,7 @@
 
 (define-js-macro %unobfuscated-lookup-symbol (name pkg)
   `(,(transpiler-obfuscate-symbol *js-transpiler*
-								  '%lookup-symbol)
+								  'symbol)
 	   (%transpiler-string
 		   ,(symbol-name (transpiler-obfuscate-symbol
 						 *js-transpiler* (make-symbol .name.))))

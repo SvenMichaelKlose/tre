@@ -29,11 +29,11 @@
   "Make hash index from string."
   (with (k 0
 	     l (length str))
-    (do ((i 0 (1+ i)))
-        ((or (< 4 i)
-			 (= i l))
+    (do ((i 0 (integer-1+ i)))
+        ((or (integer< 4 i)
+			 (integer= i l))
 		 (mod k (%hash-table-size h)))
-      (setf k (+ (<< k 4) (elt str i))))))
+      (setf k (integer+ (<< k 4) (elt str i))))))
 
 (defun %make-hash-index (h key)
   (if

@@ -1,11 +1,11 @@
 ;;;;; TRE transpiler
 ;;;;; Copyright (c) 2009 Sven Klose <pixel@copei.de>
 
-(defvar *opt-inline-max-levels* 2)
+(defvar *opt-inline-max-levels* 3)
 (defvar *opt-inline-min-size* 32)
 (defvar *opt-inline-max-size* 64)
 (defvar *opt-inline-max-repetitions* 0)
-(defvar *opt-inline-max-small-repetitions* 2)
+(defvar *opt-inline-max-small-repetitions* 0)
 
 (defun opt-inline-import (tr x argdef body level current parent)
   (format t "; Inlining function ~A" x.)
@@ -40,6 +40,12 @@
 		(opt-inline-import tr x argdef body (1+ level) current parent)
 	  x)))
 
+(defun inlineable? (tr x)
+		 (expander-has-macro? (transpiler-macro-expander tr) x)
+		 )
+;  (not ;(or
+;		   (transpiler-dont-inline? tr x)));)
+
 (defun opt-inline-0 (tr level current parent x)
   (if
 	(atom x)
@@ -51,7 +57,7 @@
 
 	(let f (first x.)
 	  (and (not (eq current f))
-		   (not (transpiler-inline-exception? tr f))
+		   (not (inlineable? tr f))
 		   (or (transpiler-defined-function tr f)
 			   (and (atom f)
 					(functionp (symbol-function f))

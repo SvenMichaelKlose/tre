@@ -5,7 +5,7 @@
 
 ;; Make symbol in particular package.
 (defun make-symbol (x &optional (pkg nil))
-  (%lookup-symbol x pkg ))
+  (symbol x pkg ))
 
 (defun symbol-name (x)
   (if x

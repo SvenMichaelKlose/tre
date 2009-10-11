@@ -26,18 +26,26 @@
 (defun c-transpiler-make-closure-argdef-symbols ()
   (c-transpiler-spot-argdef-symbols *closure-argdefs*))
 
+(defun c-transpiler-compiled-inits ()
+  (transpiler-compiled-inits *c-transpiler*))
+
+(defun c-transpiler-closure-argument-definitions ()
+  (mapcar (fn `(%setq-atom-value
+				   ,_.
+				   ,(compiled-tree (c-transpiler-get-argdef-symbols ._))))
+		  *closure-argdefs*))
+
 (defun c-transpiler-register-functions ()
-	(append (transpiler-compiled-inits *c-transpiler*)
-			(mapcar (fn `(%setq ~%ret
-								(treatom_register_compiled_function
-									,(c-compiled-symbol _)
-									,(compiled-function-name _))))
-					(transpiler-defined-functions *c-transpiler*))
-			(mapcar (fn `(%setq-atom-value
-							 ,_.
-							 ,(compiled-tree
-								  (c-transpiler-get-argdef-symbols ._))))
-					*closure-argdefs*)))
+  (mapcar (fn `(%setq ~%ret
+					  (treatom_register_compiled_function
+						  ,(c-compiled-symbol _)
+						  ,(compiled-function-name _))))
+		  (transpiler-defined-functions *c-transpiler*)))
+
+(defun c-transpiler-declarations-and-initialisations ()
+  (append (c-transpiler-compiled-inits)
+		  (c-transpiler-closure-argument-definitions)
+		  (c-transpiler-register-functions)))
 
 (defvar *c-interpreter-headers*
 	     '("ptr.h"
@@ -72,7 +80,7 @@
 				        `(defun ,name ()
 						   (tregc_push_compiled _local_array)
 					       ,@_))))
-			    (group (c-transpiler-register-functions) 20))
+			    (group (c-transpiler-declarations-and-initialisations) 20))
         `((defun c-init ()
 		    ,@(mapcar #'list (reverse init-funs)))))))
 

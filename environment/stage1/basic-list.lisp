@@ -5,8 +5,8 @@
 
 (%defun nth (i c)
   (if c
-	  (if (> i 0)
-		  (nth (number- i 1) (cdr c))
+	  (if (integer> i 0)
+		  (nth (integer- i 1) (cdr c))
           (car c))))
 
 (%defun copy-list (c)

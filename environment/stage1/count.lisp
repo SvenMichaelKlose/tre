@@ -4,7 +4,7 @@
 (%defun count (x lst &optional (init 0))
   (if lst
 	  (if (eq x (car lst))
-		  (count x (cdr lst) (+ 1 init))
+		  (count x (cdr lst) (integer+ 1 init))
 		  (count x (cdr lst) init))
 	  init))
 

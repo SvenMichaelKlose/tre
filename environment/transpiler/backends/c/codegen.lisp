@@ -141,6 +141,29 @@
 (define-c-macro %set-vec (vec index value)
   `("_TREVEC(" ,vec "," ,index ") = " ,value))
 
+(defun c-make-aref (arr idx)
+  `("((treptr *) TREATOM_DETAIL(" ,arr "))["
+	    ,(if (numberp idx)
+		  	 idx
+			 `("(ulong)TRENUMBER_VAL(" ,idx ")"))
+		"]"))
+
+(define-c-macro aref (arr &rest idx)
+  (if (= 1 (length idx))
+	  (c-make-aref arr idx.)
+	  (prog1
+	  `(trearray_builtin_aref ,val ,arr ,@idx)
+		(print idx)
+	  )))
+
+(define-c-macro %set-aref (val arr &rest idx)
+  (if (= 1 (length idx))
+	  (append (c-make-aref arr idx.)
+			  `("=" ,val))
+	  (prog1
+		`(trearray_builtin_set_aref ,val ,arr ,@idx)
+		(print idx))))
+
 (define-c-macro %vec (vec index)
   `("_TREVEC(" ,vec "," ,index ")"))
 

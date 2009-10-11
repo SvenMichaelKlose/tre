@@ -3,9 +3,9 @@
 
 (defun nthcdr (idx lst)
   (when lst
-    (if (= 0 idx)
+    (if (integer= 0 idx)
         lst
-        (nthcdr (1- idx) (cdr lst)))))
+        (nthcdr (integer-1- idx) (cdr lst)))))
 
 (define-test "NTHCDR basically works"
   ((nthcdr 1 '(1 2 3 4)))

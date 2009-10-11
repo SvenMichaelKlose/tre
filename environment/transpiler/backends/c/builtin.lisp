@@ -30,6 +30,10 @@
 	(trenumber_builtin_
 		(NUMBER+ plus)
 		(NUMBER- difference)
+		(INTEGER+ plus)
+		(INTEGER- difference)
+		(CHARACTER+ plus)
+		(CHARACTER- difference)
 		(* times)
 		(/ quotient)
 		(MOD)
@@ -38,6 +42,15 @@
 		(= number_equal)
 		(< lessp)
 		(> greaterp)
+		(NUMBER= number_equal)
+		(NUMBER< lessp)
+		(NUMBER> greaterp)
+		(INTEGER= number_equal)
+		(INTEGER< lessp)
+		(INTEGER> greaterp)
+		(CHARACTER= number_equal)
+		(CHARACTER< lessp)
+		(CHARACTER> greaterp)
 		(BIT-OR bit_or)
 		(BIT-AND bit_and)
 		(<< bit_shift_left)
@@ -90,9 +103,9 @@
 
 	(trearray_builtin_
     	(MAKE-ARRAY make)
-		(ARRAYP p)
-		(AREF)
-		(%SET-AREF set_aref))
+		(ARRAYP p))
+;		(AREF)
+;		(%SET-AREF set_aref))
 
 	(tremacro_builtin_
     	(MACROEXPAND-1 macroexpand_1)

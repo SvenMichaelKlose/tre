@@ -3,6 +3,6 @@
 
 (defun remove-tail (x tail)
   (if (ends-with? x tail)
-      (subseq x 0 (- (length x)
-                     (length tail)))
+      (subseq x 0 (integer- (length x)
+                     		(length tail)))
       x))

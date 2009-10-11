@@ -37,7 +37,7 @@
     	  (expex-setter-filter ex)
 			  #'expex-collect-wanted-variable
     	  (expex-function-arguments ex)
-			  #'current-transpiler-function-arguments-w/o-bultins
+			  #'current-transpiler-function-arguments-w/o-builtins
     	  (expex-argument-filter ex)
 		      #'expex-%setq-collect-wanted-global-variable)
 

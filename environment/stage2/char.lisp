@@ -19,13 +19,13 @@
 (defun char-upcase (c)
   "Return upper case equivalent of lower case character."
   (code-char (if (lower-case-p c)
-    			 (+ c (- #\A #\a))
+    			 (character+ c (character- #\A #\a))
     			 c)))
 
 (defun char-downcase (c)
   "Return upper case equivalent of upper case character."
   (code-char (if (upper-case-p c)
-    			 (+ c (- #\a #\A))
+    			 (character+ c (character- #\a #\A))
     			 c)))
 
 ;XXX error on c-transpiler call if base has no init.
@@ -34,7 +34,7 @@
   (labels ((digit-p ()
              (range-p c #\0 #\9))
            (digit-alpha-p (start)
-             (range-p c start (+ start (- base 10)))))
+             (range-p c start (character+ start (character- base 10)))))
 	(and (characterp c)
    	     (or (digit-p)
       	     (and (< 10 base)
