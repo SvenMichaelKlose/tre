@@ -36,6 +36,10 @@
 	   (eq (symbol-package x)
 		   *keyword-package*)))
 
+(defun integerp (x)
+  (and (numberp x)
+	   (not (characterp x))))
+
 (define-test "NOT works with NIL"
   ((not nil))
   t)
