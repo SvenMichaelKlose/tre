@@ -34,6 +34,8 @@
 (defvar *js-base2*
 	(append
 		(js-load-base *js-env-path*
+			"character.lisp"
+			"number.lisp"
 			"apply.lisp"
 			"array.lisp"
 			"atom.lisp")
@@ -41,14 +43,12 @@
 			"atom.lisp")
 		(js-load-base *js-env-path*
 			"bind.lisp"
-			"character.lisp"
 			"equality.lisp"
 			"error.lisp"
 			"late-argdefs.lisp"
 			"late-cons.lisp"
 			"late-symbol.lisp"
 			"list.lisp"
-			"number.lisp"
 			"sequence.lisp"
 			"stream.lisp"
 			"print.lisp"

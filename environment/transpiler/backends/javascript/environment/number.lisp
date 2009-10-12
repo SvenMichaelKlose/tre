@@ -3,6 +3,40 @@
 
 (js-type-predicate %numberp "number")
 
+(defmacro + (&rest x)
+  (if
+	(some #'stringp x)
+      `(string-concat ,@x)
+	(every #'stringp x)
+	  (apply #'string-concat x)
+	(and (some #'characterp x)
+		 (not (some #'integerp x)))
+      `(character+ ,@x)
+	(and (some #'integerp x)
+		 (not (some #'characterp x)))
+      `(integer+ ,@x)
+    `(+ ,@x)))
+
+(mapcan-macro _
+    '(- = < > <= >=)
+  `((defmacro ,_ (&rest x)
+  	  (if
+		(some #'stringp x)
+      	  `(,($ 'string _) ,,@x)
+	    (and (some #'characterp x)
+		     (not (some #'integerp x)))
+      	  `(,($ 'character _) ,,@x)
+	    (and (some #'integerp x)
+		     (not (some #'characterp x)))
+      	  `(,($ 'integer _) ,,@x)
+        `(,_ ,,@x)))))
+
+(mapcan-macro _
+     '(= < > <= >=)
+  `((defmacro ,($ 'character _) (x y)
+      `(,($ '%%% _) (slot-value ,,x 'v)
+					(slot-value ,,y 'v)))))
+
 (defun %wrap-char-number (x)
   (if (characterp x)
 	  (char-code x)
@@ -26,11 +60,15 @@
 	      (setf n (,op n i))))))))
 
 (mapcan-macro _
-	'(= < >)
+	'(= < > <= >=)
   `((defun ,_ (x y)
       (with (xn (%wrap-char-number x)
 		     yn (%wrap-char-number y))
-	    (,($ '%%% _) xn yn)))))
+	    (,($ '%%% _) xn yn)))
+	(defun ,($ 'integer _) (x y)
+	  (,_ x y))
+	(defun ,($ 'character _) (x y)
+	  (,_ x.v y.v))))
 
 (defun numberp (x)
   (or (%numberp x)
@@ -41,11 +79,3 @@
   (if (characterp x)
       (char-code x)
       x))
-
-(defmacro + (&rest x)
-  (if
-	(some #'stringp x)
-      `(string-concat ,@x)
-	(every #'stringp x)
-	  (apply #'string-concat x)
-    `(+ ,@x)))
