@@ -8,6 +8,7 @@
 (define-js-binary string-concat "+")
 (define-js-binary / "/")
 (define-js-binary * "*")
+(define-js-binary integer= "=")
 (define-js-binary integer+ "+")
 (define-js-binary integer- "-")
 (define-js-binary integer< "<")
