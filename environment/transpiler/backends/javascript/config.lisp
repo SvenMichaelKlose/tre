@@ -27,7 +27,8 @@
 	  :lambda-export? nil
 	  :stack-locals? nil
 	  :rename-all-args? t
-	  :inline-exceptions '(%slot-value error format identity %bind)))
+	  :inline-exceptions '(%slot-value error format identity %bind)
+	  :dont-inline '(map)))
 
 (defun make-javascript-transpiler ()
   (with (tr (make-javascript-transpiler-0)

@@ -41,10 +41,8 @@
 	  x)))
 
 (defun inlineable? (tr x)
-		 (expander-has-macro? (transpiler-macro-expander tr) x)
-		 )
-;  (not ;(or
-;		   (transpiler-dont-inline? tr x)));)
+  (not (or (expander-has-macro? (transpiler-macro-expander tr) x)
+		   (transpiler-dont-inline? tr x))))
 
 (defun opt-inline-0 (tr level current parent x)
   (if
@@ -57,7 +55,7 @@
 
 	(let f (first x.)
 	  (and (not (eq current f))
-		   (not (inlineable? tr f))
+		   (inlineable? tr f)
 		   (or (transpiler-defined-function tr f)
 			   (and (atom f)
 					(functionp (symbol-function f))
