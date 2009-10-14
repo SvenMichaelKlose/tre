@@ -56,6 +56,8 @@
 (define-js-std-macro defun (name args &rest body)
   (with-gensym g
 	(let n (%defun-name name)
+	  (when (transpiler-defined-function *js-transpiler* n)
+		(error "Function ~A already defined" name))
       `(progn
 		 (%var ,g)
 		 (%setq ,g (%unobfuscated-lookup-symbol ,(symbol-name n) nil))

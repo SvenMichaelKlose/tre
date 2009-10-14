@@ -37,17 +37,17 @@
   (declare type character x)
   (*string.from-char-code (char-code x)))
 
-(defun character+ (&rest x)
-  (let n 0
-	(dolist (i x (new %character n))
-	  (setf n (%%%+ n i.v)))))
+;(defun character+ (&rest x)
+;  (let n 0
+;	(dolist (i x (new %character n))
+;	  (setf n (%%%+ n i.v)))))
 
-(defun character- (&rest x)
-  (let n 0
-	(dolist (i x (new %character n))
-	  (setf n (%%%- n i.v)))))
+;(defun character- (&rest x)
+;  (let n 0
+;	(dolist (i x (new %character n))
+;	  (setf n (%%%- n i.v)))))
 
-(mapcan-macro _
-    `(= < > <= >=)
-  `((defun ,($ 'character _) (x y)
-      (,($ '%%% _) x.v y.v))))
+;(mapcan-macro _
+;    `(= < > <= >=)
+;  `((defun ,($ 'character _) (x y)
+;      (,($ '%%% _) x.v y.v))))

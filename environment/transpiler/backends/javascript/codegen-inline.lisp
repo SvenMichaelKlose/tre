@@ -3,18 +3,33 @@
 ;;;;;
 ;;;;; Extra code-generating macros to avoid costly function calls.
 
-;(define-js-binary + "+")
-;(define-js-binary - "-")
+;(mapcan-macro _
+;    '(+ = < > <= >=)
+;  (with (charname ($ 'character _)
+;		 op ($ '%%% _))
+;    `((define-js-macro ,charname (&rest x)
+;	    (if nil ;(= 2 (length x))
+;            `(,op (%slot-value ,,x. v)
+;                  (%slot-value ,,.x. v))
+;		    `(,charname ,,@x)))
+;      (define-js-binary ,($ 'integer _) ,(string (if (eq '= _)
+;												     '==
+;													 _))))))
+
+;(define-js-macro integer- (&rest x)
+;  (if (= 1 (length x))
+;	  `(%transpiler-native "-" ,x.)
+;      `(%%%- ,@x)))
+
+;(define-js-macro character- (&rest x)
+;  (if (= 1 (length x))
+;	  `(%transpiler-native "-" (%slot-value ,x. v))
+;      `(%%%- ,@(mapcar (fn `(%slot-value ,_ v))
+;					   x))))
+
 (define-js-binary string-concat "+")
 (define-js-binary / "/")
 (define-js-binary * "*")
-(define-js-binary integer= "=")
-(define-js-binary integer+ "+")
-(define-js-binary integer- "-")
-(define-js-binary integer< "<")
-(define-js-binary integer> ">")
-(define-js-binary integer<= "<=")
-(define-js-binary integer>= ">=")
 (define-js-binary string= "==")
 (define-js-binary >> ">>")
 (define-js-binary << "<<")
@@ -24,24 +39,15 @@
 (define-js-binary bit-and "&")
 (define-js-binary bit-or "|")
 
-(define-js-macro identity (x)
-  x)
+(define-js-macro identity (x) x)
 
-(define-js-macro car (x)
-  `("(" ,x " === null ? null : " ,x "." ,(symbol-name (transpiler-obfuscate-symbol *js-transpiler* '_)) ")"))
-
-(define-js-macro cdr (x)
-  `("(" ,x " === null ? null : " ,x "." ,(symbol-name (transpiler-obfuscate-symbol *js-transpiler* '__)) ")"))
+(mapcan-macro p
+	'((car _)
+	  (cdr __))
+  `((define-js-macro ,p. (x)
+      `("(" ,,x " === null ? null : "
+	    ,,x "." ,,(symbol-name (transpiler-obfuscate-symbol *js-transpiler* ,(list 'quote .p.)))
+	    ")"))))
 
 (define-js-macro string-downcase (x) `((%slot-value ,x to-lower-case)))
 (define-js-macro string-upcase (x)   `((%slot-value ,x to-upper-case)))
-
-(mapcan-macro _
-	`(+ -)
-  (let name ($ 'character _)
-    `((define-js-macro ,name (&rest x)
-	    (let l (length x)
-		  (if (= l 2)
-              `(,($ '%%% _) (%slot-value ,,x. v)
-  		             		(%slot-value ,,.x. v))
-			  `(,name ,,@x)))))))

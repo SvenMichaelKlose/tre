@@ -13,6 +13,7 @@
 (env-load "transpiler/codegen/obfuscate.lisp")
 (env-load "transpiler/codegen/toplevel.lisp")
 
+(env-load "transpiler/expand/arith-stubs.lisp")
 (env-load "transpiler/expand/newlines.lisp")
 (env-load "transpiler/expand/update-funinfos.lisp")
 (env-load "transpiler/expand/named-functions.lisp")
