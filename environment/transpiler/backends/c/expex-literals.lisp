@@ -25,8 +25,7 @@
   :maker ($ 'trestring_compiled_ (gensym-number))
   :setter (trestring_get
 			  (%transpiler-native
-				  (%transpiler-string
-					  ,(make-c-newlines (escape-string x))))))
+				  (%transpiler-string ,x))))
 
 (c-define-compiled-literal c-compiled-symbol (x symbol)
   :maker ($ 'tresymbol_compiled_ x (if (keywordp x)
@@ -34,7 +33,7 @@
 		 						""))
   :setter (treatom_get
 			  (%transpiler-native
-				  (%transpiler-string ,(escape-string (symbol-name x))))
+				  (%transpiler-string ,(symbol-name x)))
 			   ,(if (keywordp x)
 				    'tre_package_keyword
 				    'treptr_nil)))

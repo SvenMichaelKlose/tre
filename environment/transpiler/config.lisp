@@ -54,7 +54,7 @@
   (preprocessor #'identity)
 
   ; Generator for literal strings.
-  (gen-string #'((tr str) (string-concat "\"" str "\"")))
+  (gen-string (fn transpiler-make-escaped-string _))
 
   ; Tells if functions must be moved out of functions.
   (lambda-export? nil)

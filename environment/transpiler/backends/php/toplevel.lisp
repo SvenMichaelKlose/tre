@@ -22,7 +22,7 @@
 
 (defun php-transpile-0 (f files &key (base? nil))
   (with (tr *php-transpiler*
-    	 base (transpiler-sighten tr *php-base*)
+    	 base  (transpiler-sighten tr *php-base*)
     	 base2 (transpiler-sighten tr *php-base2*)
 		 base-debug (when *transpiler-assert*
 				      (transpiler-sighten tr *php-base-debug-print*))
@@ -31,10 +31,12 @@
 	 	 user (transpiler-sighten-files tr files)
 		 deps (progn
 				(format t "; Collecting dependencies...~%")
-				(transpiler-import-from-environment tr)))
+				(transpiler-import-from-environment tr))
+		 inits (print (transpiler-sighten tr (print (transpiler-compiled-inits tr)))))
 	; Generate.
     (format t "; Let me think. Hmm")
     (princ (concat-stringtree
+ 	           (transpiler-transpile tr inits)
 			   (when base?
  	             (transpiler-transpile tr base))
 			   (when base?

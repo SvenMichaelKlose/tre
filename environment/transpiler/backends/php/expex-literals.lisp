@@ -9,16 +9,15 @@
 
 (php-define-compiled-literal php-compiled-number (x number)
   :maker ($ 'trenumber_compiled_ (gensym-number))
-  :setter (trenumber_get (%transpiler-native ,x)))
+  :setter (%transpiler-native ,x))
 
 (php-define-compiled-literal php-compiled-char (x char)
   :maker ($ 'trechar_compiled_ (char-code x))
-  :setter (trechar_get (%transpiler-native ,(char-code x))))
+  :setter (%transpiler-native "new __trechar (" ,(char-code x) ")"))
 
 (php-define-compiled-literal php-compiled-string (x string)
   :maker ($ 'trestring_compiled_ (gensym-number))
-  :setter (%transpiler-string
-		      ,(make-c-newlines (escape-string x))))
+  :setter (%transpiler-native (%transpiler-string ,x)))
 
 (php-define-compiled-literal php-compiled-symbol (x symbol)
   :maker ($ 'tresymbol_compiled_
@@ -26,8 +25,12 @@
 			(if (keywordp x)
 	     	    '_keyword
 		 	    ""))
-  :setter (symbol (%transpiler-string ,(escape-string (symbol-name x)))
-			   	  ,(keywordp x)))
+  :setter (%transpiler-native
+			  "new __tresym ("
+			  	  (%transpiler-string ,(symbol-name x))
+				  ","
+			   	  ,(keywordp x)
+				  ")"))
 
 ;; An EXPEX-ARGUMENT-FILTER.
 (defun php-expex-literal (x)

@@ -4,6 +4,7 @@
 (env-load "transpiler/utils.lisp")
 (env-load "transpiler/config.lisp")
 
+(env-load "transpiler/codegen/escaped-string.lisp")
 (env-load "transpiler/codegen/identifier.lisp")
 (env-load "transpiler/codegen/finalize.lisp")
 (env-load "transpiler/codegen/function-name.lisp")
