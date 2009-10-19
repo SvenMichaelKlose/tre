@@ -1,6 +1,6 @@
 /*
  * nix operating system project tre interpreter
- * Copyright (c) 2005-2006 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2006,2009 Sven Klose <pixel@copei.de>
  *
  * Built-in functions.
  */
@@ -16,5 +16,11 @@ extern treptr trebuiltin (treptr func, treptr expr);
 /* for compiled code */
 extern treptr trebuiltin_print (treptr);
 extern treptr trebuiltin_eval (treptr);
+extern treptr trebuiltin_macrocall (treptr);
+extern treptr trebuiltin_get (treptr);
+extern treptr trebuiltin_set (treptr);
+extern treptr trebuiltin_malloc (treptr);
+extern treptr trebuiltin_free (treptr);
+extern treptr trebuiltin_load (treptr);
 
 #endif	/* #ifndef TRE_BUILTIN_H */
