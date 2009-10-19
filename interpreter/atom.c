@@ -167,16 +167,17 @@ treatom_get_value (treptr atom)
 treptr
 treatom_get_function (treptr atom)
 {
-	if (TREPTR_IS_BUILTIN(atom))
-		return atom;
-    	return TREATOM_FUN(atom);
+	return (TREPTR_IS_BUILTIN(atom)) ?
+			atom :
+    		TREATOM_FUN(atom);
 }
 
 treptr
 treatom_set_function (treptr atom, treptr value)
 {
 	if (TREATOM_FUN(atom) != treptr_nil && TREATOM_BINDING(atom) == treptr_nil)
-		trewarn (atom, "redefining function of %s '%s'", treerror_typename (TREPTR_TYPE(atom)), TREATOM_NAME(atom));
+		trewarn (atom, "redefining function of %s '%s'",
+					   treerror_typename (TREPTR_TYPE(atom)), TREATOM_NAME(atom));
     return TREATOM_FUN(atom) = value;
 }
 
@@ -224,13 +225,6 @@ treatom_alloc (char * symbol, treptr package, int type, treptr value)
 void
 treatom_free (treptr x)
 {
-/*
-if (TREPTR_INDEX(x) == 49023) {
-    printf ("atom free %d. index %d\n", x, TREPTR_INDEX(x));
-    printf ("gcret %d\n", TREPTR_INDEX(tregc_retval_current));
-    CRASH();
-}
-*/
     TREATOM_TYPE(x) = TRETYPE_UNUSED;
 
     /* Release symbol string. */
@@ -256,10 +250,10 @@ treatom_number_get (double value, int type)
     ulong  num;
 
     atom = treatom_alloc (NULL, treptr_nil, TRETYPE_NUMBER, treptr_nil);
-CHKPTR(atom);
+	CHKPTR(atom);
     num = trenumber_alloc (value, type);
     TREATOM_SET_DETAIL(atom, num);
-CHKPTR(atom);
+	CHKPTR(atom);
 
     return atom;
 }
