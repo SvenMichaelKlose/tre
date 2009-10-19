@@ -36,6 +36,7 @@ typedef int bool;
 #define TRE_READ_ECHO		/* Echo what is READ. */
 #define TRE_NO_MANUAL_FREE	/* Don't free internal garbage manually. */
 #define TRE_EXIT_ON_STDIO_SIGINT /* Exit on SIGINT in stdio prompt. */
+#define TRE_COUNT_LISTNODES /* For debugging. */
 #endif
 
 #ifndef TRE_QUIET_LOAD
