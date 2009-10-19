@@ -38,7 +38,7 @@
 		(/ quotient)
 		(MOD)
 		(LOGXOR)
-		(NUMBERP)
+;		(NUMBERP)
 		(= number_equal)
 		(< lessp)
 		(> greaterp)
@@ -63,15 +63,15 @@
 ;		(EQ)
 		(EQL)
 		(MAKE-SYMBOL make_symbol)
-		(ATOM)
+;		(ATOM)
 		(SYMBOL-VALUE)
 		(%TYPE-ID type_id)
 		(%ID id)
 		(SYMBOL-VALUE symbol_value)
 		(SYMBOL-FUNCTION symbol_function)
 		(SYMBOL-PACKAGE symbol_package)
-		(FUNCTIONP)
-		(BUILTINP)
+;		(FUNCTIONP)
+;		(BUILTINP)
 		(BOUNDP)
 		(FBOUNDP)
 		(MACROP)
@@ -84,7 +84,7 @@
 ;		(CDR)
 		(RPLACA)
 		(RPLACD)
-    	(CONSP)
+;    	(CONSP)
 		(ASSOC)
 		(MEMBER))
 
@@ -94,7 +94,7 @@
 		(LENGTH))
 
 	(trestring_builtin_
-		(STRINGP)
+;		(STRINGP)
     	(MAKE-STRING make)
 		(STRING-CONCAT concat)
 		(STRING)
@@ -102,8 +102,8 @@
 		(LIST-STRING list_string))
 
 	(trearray_builtin_
-    	(MAKE-ARRAY make)
-		(ARRAYP p))
+    	(MAKE-ARRAY make))
+;		(ARRAYP p))
 ;		(AREF)
 ;		(%SET-AREF set_aref))
 

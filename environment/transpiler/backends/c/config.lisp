@@ -9,6 +9,7 @@
 			  :macro-expander 'c
 			  :separator (format nil ";~%")
 			  :inline-exceptions (list 'c-init)
+			  :dont-inline '(error format)
 			  :identifier-char?
 	  		      (fn (or (and (>= _ #\a) (<= _ #\z))
 		  	  		      (and (>= _ #\A) (<= _ #\Z))

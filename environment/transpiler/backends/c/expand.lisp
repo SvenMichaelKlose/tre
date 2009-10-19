@@ -56,10 +56,13 @@
 	   (%setq ,name ,val))))
 
 (define-c-std-macro cons (a d) `(_trelist_get ,a ,d))
-(define-c-std-macro car (x) `(%car ,x))
-(define-c-std-macro cdr (x) `(%cdr ,x))
 (define-c-std-macro eq (a b) `(%eq ,a ,b))
-(define-c-std-macro not (x) `(%not ,x))
+
+(mapcan-macro _
+    '(car cdr not
+	  consp atom numberp stringp arrayp functionp builtinp)
+  `((define-c-std-macro ,_ (x)
+	  `(,($ '% _) ,,x))))
 
 ;(define-c-std-macro %lx (lexicals fun)
 ;  (eval (macroexpand `(with ,(mapcan (fn `(,_ ',_)) .lexicals.)

@@ -195,7 +195,22 @@
   `("(" ,x " == treptr_nil ? treptr_nil : tre_lists[" ,x "].cdr)"))
 
 (define-c-macro %eq (a b)
-  `("(" ,a " == " ,b " ? treptr_t : treptr_nil)"))
+  `("TREPTR_TRUTH(" ,a " == " ,b ")"))
 
 (define-c-macro %not (x)
   `("(" ,x " == treptr_nil ? treptr_t : treptr_nil)"))
+
+(mapcan-macro _
+	'((consp "CONS")
+	  (atom  "ATOM")
+	  (numberp  "NUMBER")
+	  (stringp  "STRING")
+	  (arrayp  "ARRAY")
+	  (functionp  "FUNCTION")
+	  (builtinp   "BUILTIN"))
+  `((define-c-macro ,($ '% _.) (x)
+      `(,(+ "TREPTR_TRUTH(TREPTR_IS_" ._.) "(" ,,x "))"))))
+
+;#define TREPTR_IS_VARIABLE(ptr) (TREPTR_TYPE(ptr) == TRETYPE_VARIABLE)
+;#define TREPTR_IS_SYMBOL(ptr)   (TREPTR_IS_VARIABLE(ptr) && TREATOM_VALUE(ptr) == ptr)
+;macro

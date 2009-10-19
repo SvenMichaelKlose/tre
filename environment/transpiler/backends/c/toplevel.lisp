@@ -67,6 +67,8 @@
 		   "builtin_sequence.h"
 		   "builtin_stream.h"
 		   "builtin_string.h"
+		   "macro.h"
+		   "number.h"
 		   "special.h"
 		   "string2.h"
 		   "compiled.h"))
