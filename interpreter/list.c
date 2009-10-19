@@ -1,6 +1,6 @@
 /*
  * TRE interpreter
- * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
  *
  * List related section.
  */
@@ -54,7 +54,7 @@ trelist_rplaca (treptr cons, treptr val)
     CHKPTR(val);
 #ifdef TRE_LIST_DIAGNOSTICS
     if (TRE_GETMARK(trediag_listmarks, cons))
-	treerror_internal (cons, "rplaca of free cons");
+		treerror_internal (cons, "rplaca of free cons");
 #endif
 
     _CAR(cons) = val;
@@ -66,13 +66,11 @@ trelist_rplacd (treptr cons, treptr val)
     CHKPTR(val);
 #ifdef TRE_LIST_DIAGNOSTICS
     if (TRE_GETMARK(trediag_listmarks, cons))
-	treerror_internal (cons, "rplacd of free cons");
+		treerror_internal (cons, "rplacd of free cons");
 #endif
 
     _CDR(cons) = val;
 }
-
-ulong tmpcnt = -1;
 
 /*
  * Free single list element.
@@ -82,10 +80,6 @@ trelist_free (treptr node)
 {
     CHKPTR(node);
 
-if (node == 141 && !--tmpcnt) {
-    printf ("X!X!X!X!X!!!!!!!!\n");
-    CRASH();
-}
 #ifdef TRE_LIST_DIAGNOSTICS
     if (TREPTR_IS_ATOM(node))
 		treerror_internal (node, "list_free: not a cons");
@@ -100,7 +94,9 @@ if (node == 141 && !--tmpcnt) {
 
     _CDR(node) = tre_lists_free;
     tre_lists_free = node;
+#ifdef TRE_COUNT_LISTNODES
     trelist_num_used--;
+#endif
 }
 
 /*
@@ -134,18 +130,12 @@ trelist_free_toplevel (treptr node)
     }
 }
 
-#define TRELIST_GC_P() \
-	(trelist_num_used < NUM_LISTNODES - 16)
-
+/* Collect garbage and try again, */
 void
 trelist_gc ()
 {
-    if (TRELIST_GC_P())
-	    return;
-
-	/* Collect garbage and try again, */
 	tregc_force ();
-    if (!TRELIST_GC_P())
+   	if (tre_lists_free == treptr_nil)
     	treerror_internal (treptr_invalid, "no more free list elements");
 }
 
@@ -162,26 +152,22 @@ _trelist_get (treptr car, treptr cdr)
 	tregc_car = car;
 	tregc_car = cdr;
 
+	if (tre_lists_free == treptr_nil)
+		tregc_force ();
     ret = tre_lists_free;
-
-#ifdef TRE_LIST_DIAGNOSTICS
-    if (TRE_GETMARK(trediag_listmarks, ret) == FALSE) {
-printf ("%d", ret);
-fflush (stdout);
-CRASH();
-        treerror_internal (ret, "trelist_get(): already allocd cons");
-	}
-#endif
-
-    TREDIAG_ALLOC_CONS(ret);
 
     tre_lists_free = _CDR(ret);
     TRELIST_SET(ret, car, cdr);
-    trelist_num_used++;
     tregc_retval (ret);
 
-	trelist_gc ();
-
+#ifdef TRE_COUNT_LISTNODES
+    trelist_num_used++;
+#endif
+#ifdef TRE_LIST_DIAGNOSTICS
+    if (TRE_GETMARK(trediag_listmarks, ret) == FALSE)
+        treerror_internal (ret, "trelist_get(): already allocd cons");
+#endif
+    TREDIAG_ALLOC_CONS(ret);
 #ifdef TRE_GC_DEBUG
     if (tre_is_initialized)
         tregc_force ();
