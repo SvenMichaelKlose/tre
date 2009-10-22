@@ -237,8 +237,8 @@
 	      ('inline
 	  	       `((,name ,@attrs) ,@(xml2lml-list in this-ns this-name)))
 	      ('closing
-	           (unless (and (string= ns this-ns)
-				            (string= name this-name))
+	           (unless (and (equal ns this-ns)
+				            (equal name this-name))
                  (xml-error "closing tag for ~A:~A where ~A:~A was expected"
 			                ns name this-ns this-name)))
 	      (t
