@@ -115,7 +115,7 @@ crunsh_compile ()
 	done
 	echo
 	echo "Compiling..."
-	$CC $LIBFLAGS $CFLAGS $COPTS -o $TRE $CRUNSHTMP
+	$CC $LIBFLAGS $CFLAGS -fwhole-program $COPTS -o $TRE $CRUNSHTMP
 	rm $CRUNSHTMP
 }
 
