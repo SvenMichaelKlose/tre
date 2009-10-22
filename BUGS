@@ -7,3 +7,5 @@ interpreter/MACROEXPAND-1: - CAR required?
 Find illegal keyword arguments.
 
 Segmentation fault * (mapcar #'builtinp *universe*)
+
+Literal characters as argument default values.

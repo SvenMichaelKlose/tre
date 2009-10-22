@@ -16,6 +16,7 @@
 	  :macro-expander 'javascript
 	  :setf-functionp #'js-setf-functionp
 	  :unwanted-functions '(wait)
+	  :named-functions? nil
 	  :apply-argdefs? t
 	  :literal-conversion #'transpiler-expand-characters
 	  :identifier-char?
@@ -28,7 +29,7 @@
 	  :stack-locals? nil
 	  :rename-all-args? t
 	  :inline-exceptions '(%slot-value error format identity %bind)
-	  :dont-inline '(map)))
+	  :dont-inline '(%slot-value error format identity %bind map apply)))
 
 (defun make-javascript-transpiler ()
   (with (tr (make-javascript-transpiler-0)

@@ -49,5 +49,12 @@
 	    ,,x "." ,,(symbol-name (transpiler-obfuscate-symbol *js-transpiler* ,(list 'quote .p.)))
 	    ")"))))
 
-(define-js-macro string-downcase (x) `((%slot-value ,x to-lower-case)))
-(define-js-macro string-upcase (x)   `((%slot-value ,x to-upper-case)))
+(define-js-macro string-downcase (x)
+  (if (%transpiler-string? x)
+	  `(%transpiler-string ,(string-downcase .x.))
+      `((%slot-value ,x to-lower-case))))
+
+(define-js-macro string-upcase (x)
+  (if (%transpiler-string? x)
+	  `(%transpiler-string ,(string-upcase .x.))
+      `((%slot-value ,x to-upper-case))))

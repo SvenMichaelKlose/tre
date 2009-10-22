@@ -1,23 +1,28 @@
 ;;;;; TRE transpiler
 ;;;;; Copyright (c) 2009 Sven Klose <pixel@copei.de>
 
-(defvar *opt-inline-max-levels* 3)
-(defvar *opt-inline-min-size* 32)
-(defvar *opt-inline-max-size* 64)
+(defvar *show-inlines?* nil)
+(defvar *opt-inline-max-levels* 1)
+(defvar *opt-inline-min-size* 16)
+(defvar *opt-inline-max-size* 32)
 (defvar *opt-inline-max-repetitions* 0)
 (defvar *opt-inline-max-small-repetitions* 0)
 
 (defun opt-inline-import (tr x argdef body level current parent)
-  (format t "; Inlining function ~A" x.)
-  `(#'(,(argument-expand-names 'opt-inline argdef)
-	   ,@(opt-inline-0 tr
-					   level
-					   current
-					   (cons x. parent)
-					   (rename-body-tags
-					       (transpiler-simple-expand tr body))))
-      ,@(transpiler-simple-expand tr
-			(argument-expand-compiled-values 'opt-inline argdef .x))))
+  (when (and (not argdef) .x)
+	(print (symbol-name x.))
+	(warn "REMINDER: no argument definition for function ~A" argdef))
+  (when (eq t *show-inlines?*)
+    (format t "; Inlining function ~A" x.))
+  `(#'(,(argument-expand-names 'opt-inline-import-argexp argdef)
+	   ,@(opt-inline-0 tr level current (cons x. parent)
+		     (rename-body-tags
+			     (transpiler-simple-expand tr body))))
+          ,@(opt-inline-0 tr level current parent
+		        (transpiler-simple-expand tr
+  					(if (and (not argdef) .x)
+					  	.x
+			            (argument-expand-compiled-values 'opt-inline argdef .x))))))
 
 (defun opt-inline-1 (tr level current parent x)
   (with (fun (symbol-function x.)
@@ -28,10 +33,15 @@
 				  (function-body fun)
 				  (error "no body for function ~A" x.)))
 	(if
+	  ; XXX Need local function info, but we don't yet have any function info
+	  ; where they could be looked up.
+	  ; Problem: We can't just move the inliner past LAMBDA-EXPAND.
+	  (not argdef)
+	  	x
 	  (< (tree-size body) *opt-inline-min-size*)
-	    (if (< *opt-inline-max-small-repetitions* (count x. parent))
-			x
-			(opt-inline-import tr x argdef body level current parent))
+	     (if (< *opt-inline-max-small-repetitions* (count x. parent))
+			 x
+			 (opt-inline-import tr x argdef body level current parent))
 	  (< *opt-inline-max-repetitions* (count x. parent))
 		x
   	  (< *opt-inline-max-levels* level)
@@ -46,10 +56,10 @@
 
 (defun opt-inline-0 (tr level current parent x)
   (if
-	(atom x)
+	(atom-or-quote? x)
 	  x
-	(or (atom x.)
-		(%quote? x.))
+
+	(atom-or-quote? x.)
 	  (cons x.
 			(opt-inline-0 tr level current parent .x))
 
@@ -63,29 +73,33 @@
 	  (cons (opt-inline-1 tr level current parent x.)
 		    (opt-inline-0 tr level current parent .x))
 	(lambda? x.)
-	  (cons `#'(,@(lambda-funinfo-and-args x.)
+	  (cons `#'(,@(lambda-funinfo-expr x.)
+				 ,(lambda-args x.) ;,(opt-inline-0 tr level current parent (print (lambda-args x.)))
 				   ,@(opt-inline-0 tr level current parent (lambda-body x.)))
 		    (opt-inline-0 tr level current parent .x))
-	(cons (cons (first x.)
-				(opt-inline-0 tr level current parent (cdr x.)))
+	(cons (opt-inline-0 tr level current parent x.)
 		  (opt-inline-0 tr level current parent .x))))
 
 (defun inlineable-expr? (tr x)
-  (not (or (transpiler-inline-exception? tr (second x))
-           (let-when fi (get-lambda-funinfo (third x))
-		     (funinfo-ghost fi)))))
+  (not (let-when fi (get-lambda-funinfo x)
+	     (funinfo-ghost fi))))
 
-(defun opt-inline (tr x)
+; Only inline inside named top-level functions.
+(defun opt-inline-lambda (tr x)
+  `#'(,@(lambda-funinfo-and-args x)
+            ,@(opt-inline-0 tr 0 'no-parent nil (lambda-body x))))
+
+; Only inline inside named top-level functions.
+(defun opt-inline-r (tr x)
   (if (atom x)
 	  x
-	  (cons (if (and (%setq? x.)
-       				 (lambda? (third x.)))
-				(if (inlineable-expr? tr x.)
-                    (let fun (third x.)
-				      `(%setq ,(second x.)
-				          #'(,@(lambda-funinfo-and-args fun)
-						        ,@(opt-inline-0 tr 0 (second x.) nil
-								      (lambda-body fun)))))
-        	      	x.)
-			    (opt-inline tr x.))
-            (opt-inline tr .x))))
+	  (cons (if (and (lambda? x.)
+					 (inlineable-expr? tr x.))
+			    (opt-inline-lambda tr x.)
+			    (opt-inline-r tr x.))
+            (opt-inline-r tr .x))))
+
+(defun opt-inline (tr x)
+;  (if (transpiler-named-functions? tr)
+	  (opt-inline-r tr x))
+;	  (opt-inline-0 tr 0 nil nil x)))

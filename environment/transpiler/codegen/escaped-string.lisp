@@ -3,7 +3,7 @@
 ;;;;;
 ;;;;; Code-generation top-level
 
-(defun transpiler-make-escaped-string (x &key (quote-char #\"))
+(defun transpiler-make-escaped-string (x quote-char)
   (string-concat (string quote-char)
-				 (make-c-newlines (escape-string x :quote-char quote-char))
+				 (make-c-newlines (escape-string x quote-char))
 				 (string quote-char)))

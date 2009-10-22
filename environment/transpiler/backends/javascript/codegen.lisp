@@ -160,7 +160,9 @@
   (if (consp x)
 	  (if (eq '%transpiler-native x.)
 		  `(%transpiler-native ,x "." ,y)
-		  (error "%TRANSPILER-NATIVE expected"))
+		  (progn
+			(print x)
+			(error "%TRANSPILER-NATIVE expected")))
   	  ($ x "." y)))
 
 (define-js-macro %js-typeof (x)

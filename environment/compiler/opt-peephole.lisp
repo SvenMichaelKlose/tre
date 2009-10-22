@@ -49,7 +49,7 @@
 		   (opt-peephole-rec x ,fun)
 	   	   (cond
 			 ,@body
-			 (t	(cons a (funcall ,fun d))))))))
+			 (t (cons a (funcall ,fun d))))))))
 
 (defun opt-peephole-var-double? (x name)
   (with-cons a d x
@@ -108,7 +108,7 @@
                         (progn
                           (when (if (atom .a.)
 									(href syms .a.) ;(not (opt-peephole-var-double? d .a.))
-									(find-tree d .a.))
+									(find-tree d .a. :test #'eq))
                             (setf acc (push a acc)))
                           (rec d))
                         (if (and (%setq? a)
@@ -168,13 +168,16 @@
 			(eq 'vm-go a.))
 		 (cons a (opt-peephole-remove-void (opt-peephole-find-next-tag d))))))
 
-(defun opt-peephole-will-be-set-again? (x v)
-  (when x
-    (or (vm-jump? x.) ; We don't know what happens after a jump.
-	    (find-tree x. v) ; Variable used?
-        (opt-peephole-will-be-set-again? .x v))))
+(defun opt-peephole-will-be-used-again? (x v)
+  (if x
+      (or (vm-jump? x.) ; We don't know what happens after a jump.
+		  (unless (and (%setq? x.)
+			 		   (eq v (%setq-place x.)))
+	        (or (find-tree x. v :test #'equal) ; Variable used?
+          	    (opt-peephole-will-be-used-again? .x v))))
+	  (~%ret? v)))
 
-(defun opt-peephole (x)
+(defun opt-peephole (statements)
   (with
 	  (removed-tags nil
 
@@ -183,11 +186,29 @@
 	     #'((x)
 			  (opt-peephole-fun #'remove-code
 				((and (%setq? a)
-					  (expex-sym? .a.)
-					  (atomic? ..a.)
-				      (not (opt-peephole-will-be-set-again? d .a.)))
-			  	  ; Don't set variable that will be modified anyway.
-				  (remove-code d))))
+				   	  (not (opt-peephole-will-be-used-again? d (%setq-place a))))
+				   (let p (%setq-place a)
+					 (if
+				       (and (atomic? (%setq-value a))
+				            (or (~%ret? p)
+				  		 	    (expex-sym? p)))
+						 (remove-code d)
+				       (or (~%ret? p)
+					       (expex-sym? p))
+				         (cons `(%setq ~%ret ,(%setq-value a))
+					 	       (remove-code d))
+;					   (and d .d
+;							(%setq? d)
+;							(%setq? .d)
+;							(eq (%setq-place a)
+;								(%setq-value d))
+;							(atomic? ( %setq-place d))
+;				   	  		(not (opt-peephole-will-be-used-again? .d (%setq-place a))))
+;;				      		(integer= 3 (count-tree (%setq-place a) statements :max 3
+;;													:test #'equal)))
+;					     (cons `(%setq ,(%setq-place d) ,(%setq-value a))
+;							   (remove-code .d))
+					   (cons a (remove-code d)))))))
 
 	   reduce-tags
 		 #'((x)
@@ -210,12 +231,12 @@
 					             x))
 					   (funcall
 						 (compose #'reduce-tags
-								  #'remove-code
-								  #'opt-peephole-remove-void
-								  )
+;								  #'remove-code
+								  #'opt-peephole-remove-void)
 						 x))))
 
 		(opt-peephole-remove-unused-vars
 	    	(repeat-while-changes #'rec (opt-peephole-remove-identity
 	  								    	(opt-peephole-remove-spare-tags
-												(opt-peephole-move-vars-to-front x)))))))
+												(opt-peephole-move-vars-to-front
+												    statements)))))))

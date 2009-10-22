@@ -32,7 +32,7 @@
 		 deps (progn
 				(format t "; Collecting dependencies...~%")
 				(transpiler-import-from-environment tr))
-		 inits (print (transpiler-sighten tr (print (transpiler-compiled-inits tr)))))
+		 inits (transpiler-sighten tr (transpiler-compiled-inits tr)))
 	; Generate.
     (format t "; Let me think. Hmm")
     (princ (concat-stringtree

@@ -47,3 +47,12 @@
 
 (defun %setq-value-atom? (x)
     (atom (%setq-value x)))
+
+(defun %slot-value-obj (x)
+  .x.)
+
+(defun %slot-value-slot (x)
+  ..x.)
+
+(defun ~%ret? (x)
+  (eq '~%ret x))

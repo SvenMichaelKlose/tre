@@ -30,7 +30,7 @@
 		  	    (and (>= _ #\0) (<= _ #\9))
 			    (in=? _ #\_ #\. #\#)))
 	  :make-label #'php-transpiler-make-label
-	  :gen-string (fn transpiler-make-escaped-string _ :quote-char #\')
+	  :gen-string (fn transpiler-make-escaped-string _ #\')
 	  :lambda-export? t
 	  :stack-locals? nil
 	  :rename-all-args? t

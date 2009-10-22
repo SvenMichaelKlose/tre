@@ -26,7 +26,7 @@
 
 (defun lambda-call-embed (fi lambda-call export-lambdas)
   (with-lambda-call (args vals body lambda-call)
-    (with ((a v) (assoc-splice (argument-expand 'local-var-fun args vals)))
+    (with ((a v) (assoc-splice (argument-expand 'dummy-in-lambda-call-embed args vals)))
 	  ; Add lambda-call arguments to the parent function's arguments
 	  ; temporarily to make stack-places; so the stack-places can be
 	  ; reused by the next lambda-call on the same level.

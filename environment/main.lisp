@@ -40,20 +40,18 @@
 (defun currently-defined-functions ()
   (copy-list *defined-functions*))
 
-(defvar *universe-after-stage-1* (copy-list *universe*))
 (defvar *functions-after-stage-1* (currently-defined-functions))
 
 (defvar *assert* nil)
 (env-load "stage2/main.lisp")
 
-(defvar *universe-after-stage-2* (copy-list *universe*))
 (defvar *functions-after-stage-2* (currently-defined-functions))
 
 (env-load "stage3/main.lisp")
-(defvar *universe-after-stage-3* (copy-list *universe*))
 (defvar *functions-after-stage-3* (currently-defined-functions))
 
 (env-load "stage4/main.lisp")
+(defvar *functions-after-stage-4* (currently-defined-functions))
 
 (env-load "lib/main.lisp")
 

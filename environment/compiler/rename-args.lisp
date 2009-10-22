@@ -13,8 +13,11 @@
 		    old-replacements)))
 
 (defun rename-arg (replacements x)
-  (assoc-replace x replacements :test #'eq))
+;  (if (eq t (href (transpiler-obfuscations *current-transpiler*) x))
+;  	  (print x)
+  	  (assoc-replace x replacements :test #'eq));)
 
+;;; XXX renames top-level keyword arguments?
 (defun rename-function-arguments-0 (x &optional (replacements nil) (env nil))
   (if
 	(atom x)
@@ -24,9 +27,7 @@
 	(lambda? x)
 	  (with (args (lambda-args x)
 			 new-replacements (find-and-add-renamed-doubles (get-lambda-funinfo x)
-															args
-														    replacements
-														    env)
+															args replacements env)
         	 renamed-args (rename-function-arguments-0 args new-replacements env))
         `#'(,@(lambda-funinfo-expr x)
 			,renamed-args
@@ -39,18 +40,35 @@
     (cons (rename-function-arguments-0 x. replacements env)
 		  (rename-function-arguments-0 .x replacements env))))
 
-;; Rename arguments of functions. Leaves top-level functions untouched
-;; to keep public keyword argument names.
+;(defun rename-function-arguments-named-function (x)
+;  (let fun (%setq-value x)
+;	`(%setq ,(%setq-place x) #'(,@(lambda-funinfo-and-args fun)
+;				     				  ,@(rename-function-arguments-0 (lambda-body fun))))))
+
+(defun rename-function-arguments-named-function (x)
+  `#'(,@(lambda-funinfo-and-args x)
+			,@(rename-function-arguments-0 (lambda-body x))))
+
+;(defun rename-function-arguments-inside-named-toplevel-functions (x)
+;  (when x
+;    (cons (if
+;			(%setq-lambda? x.)
+;			  (rename-function-arguments-named-function x.)
+;        	(consp x.)
+;			  (rename-function-arguments-inside-named-toplevel-functions x.)
+;			x.)
+;          (rename-function-arguments-inside-named-toplevel-functions .x))))
+
+(defun rename-function-arguments-inside-named-toplevel-functions (x)
+  (if (atom x)
+	x
+    (cons (if (lambda? x.) (rename-function-arguments-named-function x.)
+        	  (consp x.)   (rename-function-arguments-inside-named-toplevel-functions x.)
+			  x.)
+          (rename-function-arguments-inside-named-toplevel-functions .x))))
+
 (defun rename-function-arguments (x)
-  (when x
-    (if (and (%setq? x.)
-             (lambda? (third x.)))
-		(let fun (third x.)
-          (cons `(%setq ,(second x.)
-				    #'(,@(lambda-funinfo-and-args fun)
-						  ,@(rename-function-arguments-0 (lambda-body fun))))
-				(rename-function-arguments .x)))
-        (cons (if (consp x.)
-				  (rename-function-arguments x.)
-				  x.)
-              (rename-function-arguments .x)))))
+;  (if (transpiler-named-functions? *current-transpiler*)
+	  (rename-function-arguments-inside-named-toplevel-functions x)
+	  )
+;	  (rename-function-arguments-0 x)))

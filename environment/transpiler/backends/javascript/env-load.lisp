@@ -36,6 +36,7 @@
 		(js-load-base *js-env-path*
 			"character.lisp"
 			"number.lisp"
+			"number-typing.lisp"
 			"apply.lisp"
 			"array.lisp"
 			"atom.lisp")
