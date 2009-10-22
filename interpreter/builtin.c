@@ -420,7 +420,7 @@ char *tre_builtin_names[] = {
     "ELT", "%SET-ELT", "LENGTH",
 
 	"STRINGP",
-    "MAKE-STRING", "STRING-CONCAT", "STRING", "SYMBOL-NAME",
+    "MAKE-STRING", "STRING=", "STRING-CONCAT", "STRING", "SYMBOL-NAME",
 	"LIST-STRING",
 
     "MAKE-ARRAY", "ARRAYP", "AREF", "%SET-AREF",
@@ -544,6 +544,7 @@ treevalfunc_t treeval_xlat_builtin[] = {
     /* string functions */
     trestring_builtin_stringp,
     trestring_builtin_make,
+    trestring_builtin_compare,
     trestring_builtin_concat,
     trestring_builtin_string,
     trestring_builtin_symbol_name,

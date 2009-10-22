@@ -10,6 +10,7 @@
 
 extern treptr trestring_builtin_stringp (treptr);
 extern treptr trestring_builtin_list_string (treptr);
+extern treptr trestring_builtin_compare (treptr);
 extern treptr trestring_builtin_concat (treptr);
 extern treptr trestring_builtin_make (treptr);
 

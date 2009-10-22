@@ -11,17 +11,17 @@
   ((= #\L (elt "LISP" 0)))
   t)
 
-(defun string= (sa sb)
-  "Return T if two strings match."
-  (if (and (stringp sa)
-		   (stringp sb))
-    (let* ((la (length sa))
-	       (lb (length sb)))
-      (when (= la lb)
-        (dotimes (i la t)
-          (unless (eql (elt sa i) (elt sb i))
-            (return nil)))))
-    (eql sa sb)))
+;(defun string= (sa sb)
+;  "Return T if two strings match."
+;  (if (and (stringp sa)
+;		   (stringp sb))
+;    (let* ((la (length sa))
+;	       (lb (length sb)))
+;      (when (= la lb)
+;        (dotimes (i la t)
+;          (unless (eql (elt sa i) (elt sb i))
+;            (return nil)))))
+;    (eql sa sb)))
 
 (define-test "STRING= works"
   ((and (string= "abc" "abc")
@@ -30,11 +30,11 @@
         (not (string= "abcd" "abc"))))
   t)
 
-(define-test "STRING= is safe"
-  ((and (string= nil nil)
-        (string= 1 1)
-	(string= #'eq #'eq)))
-  t)
+;(define-test "STRING= is safe"
+;  ((and (string= nil nil)
+;        (string= 1 1)
+;	(string= #'eq #'eq)))
+;  t)
 
 ;(defun list-string (lst)
 ;  "Convert list of characters to string."

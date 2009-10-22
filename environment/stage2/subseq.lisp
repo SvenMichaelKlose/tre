@@ -30,7 +30,7 @@
   (if (integer= start end)
 	  ""
       (with (seqlen  (length seq))
-        (when (integer< start seqlen)
+        (when (integer< start seqlen) ; XXX return NIl when out of range for JavaScript.
           (when (integer>= end seqlen)
 	        (setf end seqlen))
   	      (with (l (integer- end start)

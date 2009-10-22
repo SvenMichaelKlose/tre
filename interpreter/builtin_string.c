@@ -105,6 +105,43 @@ trestring_builtin_list_string (treptr list)
 
 
 /*tredoc
+  (cmd :name STRING=
+	(args :type string)
+	(descr "Compare strings.")
+	(returns string))
+ */
+treptr
+trestring_builtin_compare (treptr list)
+{
+	char   * x;
+	char   * y;
+	treptr p;
+	treptr car;
+	unsigned len;
+
+	if (TREPTR_IS_STRING(CAR(list)) == FALSE)
+		treerror_norecover (list, "string expected as first argument");
+
+	x = TREATOM_STRINGP(CAR(list));
+	len = strlen (x);
+    DOLIST(p, CDR(list)) {
+		car = CAR(p);
+		if (TREPTR_IS_STRING(car) == FALSE)
+			treerror_norecover (list, "string expected");
+		if (car == treptr_nil)
+			continue;
+		y = TREATOM_STRINGP(car);
+		if (len != strlen (y))
+			return treptr_nil;
+		if (strcmp (x, y))
+			return treptr_nil;
+	}
+
+    return treptr_t;
+}
+
+
+/*tredoc
   (cmd :name STRING-CONCAT
 	(args :type string)
 	(descr "Concatenates strings.")

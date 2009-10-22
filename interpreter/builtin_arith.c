@@ -1,6 +1,6 @@
 /*
  * nix operating system project tre interpreter
- * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
  *
  * Built-in number-related functions
  */
@@ -14,6 +14,7 @@
 #include "argument.h"
 #include "builtin.h"
 #include "builtin_number.h"
+#include "builtin_string.h"
 
 #include <math.h>
 
@@ -168,10 +169,15 @@ treptr
 trenumber_builtin_number_equal (treptr list)
 {
     TRELIST_DEFREGS();
-    trenumber_builtin_args (&car, &cdr, list);
 
+	trearg_get2 (&car, &cdr, list);
+    if (TREPTR_IS_STRING(car) || TREPTR_IS_STRING(cdr))
+		return trestring_builtin_compare (list);
+
+    trenumber_builtin_args (&car, &cdr, list);
     if (TRENUMBER_VAL(car) == TRENUMBER_VAL(cdr))
         return treptr_t;
+
     return treptr_nil;
 }
 
