@@ -4,10 +4,12 @@
 (defun empty-string? (x)
   "Tells if string is empty or contains just spaces."
   (when x
-    (= "" (trim #\  x))))
+   	(aif (trim #\  x)
+   	     (string= "" !)
+		 t)))
 
 ; XXX Needs TRIM first.
-;(define-test "EMPTY-STRING? works"
-;  ((and (empty-string? "  ")
-;		(empty-string? "")))
-;  t)
+(define-test "EMPTY-STRING? works"
+  ((and (empty-string? "  ")
+		(empty-string? "")))
+  t)
