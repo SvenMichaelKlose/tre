@@ -24,6 +24,7 @@
 (env-load "stage1/predicates.lisp")
 (env-load "stage1/tests-builtins.lisp")
 (env-load "stage1/tests-stage0.lisp")
+(env-load "stage1/tests-arith.lisp")
 (env-load "stage1/anaphoric.lisp")
 (env-load "stage1/comparison.lisp")
 (env-load "stage1/member.lisp")
