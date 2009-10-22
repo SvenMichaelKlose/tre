@@ -14,8 +14,10 @@
 	(cons '%%macrop
 	(cons '%%macrocall
 	(cons '%macroexpand-list
+	(cons '%macroexpand-rest
+	(cons '%macroexpand-xlat
 	(cons '%macroexpand-call
-		  *universe*)))))))))))
+		  *universe*)))))))))))))
 
 (setq
 	*defined-functions*
@@ -24,8 +26,10 @@
 	(cons '%%macrop
 	(cons '%%macrocall
 	(cons '%macroexpand-list
+	(cons '%macroexpand-rest
+	(cons '%macroexpand-xlat
 	(cons '%macroexpand-call
-		  *defined-functions*)))))))
+		  *defined-functions*)))))))))
 
 (setq *macrop-diversion* nil
       *macrocall-diversion* nil
