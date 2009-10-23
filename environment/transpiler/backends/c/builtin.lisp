@@ -96,6 +96,7 @@
 	(trestring_builtin_
 ;		(STRINGP)
     	(MAKE-STRING make)
+		(STRING= compare)
 		(STRING-CONCAT concat)
 		(STRING)
 		(SYMBOL-NAME symbol_name)
