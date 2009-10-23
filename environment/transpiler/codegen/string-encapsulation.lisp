@@ -6,7 +6,10 @@
       (if (stringp x)
           (list '%transpiler-string x)
 		  x)
-	  (if (eq '%transpiler-native x.)
+	  (if
+		(%quote? x)
 		  x
-		  (cons (transpiler-encapsulate-strings x.)
-		  		(transpiler-encapsulate-strings .x)))))
+		(eq '%transpiler-native x.)
+		  x
+		(cons (transpiler-encapsulate-strings x.)
+		  	  (transpiler-encapsulate-strings .x)))))
