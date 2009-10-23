@@ -197,17 +197,17 @@
 					       (expex-sym? p))
 				         (cons `(%setq ~%ret ,(%setq-value a))
 					 	       (remove-code d))
-;					   (and d .d
-;							(%setq? d)
-;							(%setq? .d)
-;							(eq (%setq-place a)
-;								(%setq-value d))
-;							(atomic? ( %setq-place d))
-;				   	  		(not (opt-peephole-will-be-used-again? .d (%setq-place a))))
-;;				      		(integer= 3 (count-tree (%setq-place a) statements :max 3
-;;													:test #'equal)))
-;					     (cons `(%setq ,(%setq-place d) ,(%setq-value a))
-;							   (remove-code .d))
+					   (and d .d
+							(%setq? d)
+							(%setq? .d)
+							(eq (%setq-place a)
+								(%setq-value d))
+							(atomic? ( %setq-place d))
+				   	  		(not (opt-peephole-will-be-used-again? .d (%setq-place a))))
+;				      		(integer= 3 (count-tree (%setq-place a) statements :max 3
+;													:test #'equal)))
+					     (cons `(%setq ,(%setq-place d) ,(%setq-value a))
+							   (remove-code .d))
 					   (cons a (remove-code d)))))))
 
 	   reduce-tags
@@ -231,7 +231,7 @@
 					             x))
 					   (funcall
 						 (compose #'reduce-tags
-;								  #'remove-code
+								  #'remove-code
 								  #'opt-peephole-remove-void)
 						 x))))
 
