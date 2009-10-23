@@ -68,7 +68,7 @@
 (defun alien-import-print (descr hash)
   (dolist (x descr)
     (when (eq x. 'function)
-	  (with (fun-name (lml-get-attribute x :name))
+	  (let fun-name (string (lml-get-attribute x :name))
 	    (unless (href *alien-imported-functions* fun-name)
 		  (format t "Function ~A ~A ("
 				  (force-string (lml-get-attribute x :name))
