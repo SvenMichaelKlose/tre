@@ -9,12 +9,12 @@
       `(string-concat ,@x)
 	(every #'stringp x)
 	  (apply #'string-concat x)
-;	(and (some #'characterp x) ; XXX would still mix with other types in vars
-;		 (not (some #'integerp x)))
-;      `(character+ ,@x)
-;	(and (some #'integerp x)
-;		 (not (some #'characterp x)))
-;      `(integer+ ,@x)
+	(and (some #'characterp x) ; XXX would still mix with other types in vars
+		 (not (some #'integerp x)))
+      `(character+ ,@x)
+	(and (some #'integerp x)
+		 (not (some #'characterp x)))
+      `(integer+ ,@x)
     `(+ ,@x)))
 
 (mapcan-macro _
@@ -30,14 +30,6 @@
 		     (not (some #'characterp x)))
       	  `(,($ 'integer _) ,,@x)
         `(,_ ,,@x)))))
-
-(mapcan-macro _
-     '(+ - = < > <= >=)
-  `((defmacro ,($ 'character _) (x y)
-      `(,($ '%%% _) (slot-value ,,x 'v)
-					(slot-value ,,y 'v)))
-    (defmacro ,($ 'integer _) (x y)
-      `(,($ '%%% _) ,,x ,,y))))
 
 ;; Make inliners for CHARACTER arithmetics.
 (mapcan-macro _
