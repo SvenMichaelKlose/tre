@@ -55,9 +55,8 @@
   `(progn
 	 (when (expander-has-macro? ',expander-name ',name)
 	   (error "Macro ~A already defined." ',name))
-	 (acons! ',name
-		     #',x
-		     (expander-macros (expander-get ',expander-name)))))
+	 ; XXX (acons! ',name x (expander-unserialize (expander-get ',expander-name)))
+	 (acons! ',name #',x (expander-macros (expander-get ',expander-name)))))
 
 (defun expander-expand (expander-name expr)
   (let e (expander-get expander-name)
