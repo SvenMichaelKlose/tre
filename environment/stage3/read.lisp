@@ -74,32 +74,32 @@
 		        (if sym
 			        'symbol
 			        (case (read-char str)
-			          (#\(	'bracket-open)
-			          (#\)	'bracket-close)
-			          (#\'	'quote)
-			          (#\`	'backquote)
-			          (#\"	'dblquote)
-			          (#\,	(if (= #\@ (peek-char str))
+			          #\(	'bracket-open
+			          #\)	'bracket-close
+			          #\'	'quote
+			          #\`	'backquote
+			          #\"	'dblquote
+			          #\,	(if (= #\@ (peek-char str))
 						        (and (read-char str)
 							         'quasiquote-splice)
-						        'quasiquote))
-			          (#\#	(case (read-char str)
-					          (#\\	'char)
-					          (#\x	'hexnum)
-					          (#\'	'function)
-					          (#\|	(read-comment-block str))
-					          (t	(error "invalid character after '#'"))))
-			          (-1	'eof))))
+						        'quasiquote)
+			          #\#	(case (read-char str)
+					          #\\	'char
+					          #\x	'hexnum
+					          #\'	'function
+					          #\|	(read-comment-block str)
+					          t	(error "invalid character after '#'"))
+			          -1	'eof)))
 		     pkg sym)))
 
 (defun read-atom (str token pkg sym)
   (case token
-    ('dblquote (get-string str))
-    ('char     (code-char (read-char str)))
-    ('hexnum   (read-hex str))
-	('function `(function ,(read-expr str)))
-    ('symbol   (make-symbol (list-string sym) (and pkg *keyword-package*)))
-	(t		   (error "syntax error: token ~A, sym ~A" token sym))))
+    'dblquote (get-string str)
+    'char     (code-char (read-char str))
+    'hexnum   (read-hex str)
+	'function `(function ,(read-expr str))
+    'symbol   (make-symbol (list-string sym) (and pkg *keyword-package*))
+	t		   (error "syntax error: token ~A, sym ~A" token sym)))
 
 (defun read-quote (str token)
   (list token (read-expr str)))
@@ -117,12 +117,12 @@
 			(read-atom str token pkg sym))
 		  (with ((token pkg sym) (read-token str))
 		    (case token
-			  ('dot		(with (x (read-expr str)
+			  'dot		(with (x (read-expr str)
 							   (token pkg sym) (read-token str))
 					      (unless (eq 'bracket-close token)
 						    (error "only one value allowed after dotted cons"))
-					      x))
-			  (t		(read-list str token pkg sym)))))))
+					      x)
+			  t		(read-list str token pkg sym))))))
 			
 (defun read-expr (str)
   (with ((token pkg sym) (read-token str))

@@ -142,9 +142,9 @@
          exp-optional-rest
 		   #'((def vals)
 		        (case def.
-				  ('&rest		(exp-rest .def vals))
-				  ('&body		(exp-rest .def vals))
-				  ('&optional	(exp-optional .def vals))))
+				  '&rest		(exp-rest .def vals)
+				  '&body		(exp-rest .def vals)
+				  '&optional	(exp-optional .def vals)))
 
 		 exp-sub
 		   #'((def vals)

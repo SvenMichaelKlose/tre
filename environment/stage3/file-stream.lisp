@@ -5,9 +5,9 @@
 
 (defun %fopen-direction (direction)
   (case direction
-    ('input   "r")
-    ('output  "w")
-    (t	      (%error ":direction not specified"))))
+    'input   "r"
+    'output  "w"
+    t	      (%error ":direction not specified")))
 
 (defun open (path &key direction)
   "Open a file and return a stream object."

@@ -43,23 +43,23 @@
 (defun alien-import-get-type (hash tp)
   (force-string
     (case tp.
-      ('typedef	; Transcend typedefs.
-	     (alien-import-get-type-from-desc hash tp))
-      ('pointertype
-         (string-concat (alien-import-get-type-from-desc hash tp) " *"))
-      ('struct
+      'typedef	; Transcend typedefs.
+	     (alien-import-get-type-from-desc hash tp)
+      'pointertype
+         (string-concat (alien-import-get-type-from-desc hash tp) " *")
+      'struct
 	     (alien-import-add-struct hash tp)
-         (string-concat "struct " (force-string (lml-get-attribute tp :name))))
-      ('arraytype
+         (string-concat "struct " (force-string (lml-get-attribute tp :name)))
+      'arraytype
          (format nil " ~A[~A]"
                  (alien-import-get-type-from-desc hash tp)
-                 (1+ (string-integer (force-string (lml-get-attribute tp :max))))))
-	  (t (aif (lml-get-attribute tp :name)
+                 (1+ (string-integer (force-string (lml-get-attribute tp :max)))))
+	  t (aif (lml-get-attribute tp :name)
        		  !
 			  (if (eq 'CVQUALIFIEDTYPE tp.)
 	   		      (alien-import-get-type-from-desc hash tp)
 			      (and (print tp)
-				       "???")))))))
+				       "???"))))))
 
 (defun alien-import-get-type-from-desc (hash a)
   (when a	; XXX
@@ -92,8 +92,8 @@
     (dolist (x descr hash)
       (awhen (lml-get-attribute x :id)
 	    (with (h (case x.
-				   ('namespace)
-				   (t hash)))
+				   'namespace nil
+				   t hash))
 		  (when h
 	        (setf (href h !) x)))))))
 

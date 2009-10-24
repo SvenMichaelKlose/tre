@@ -1,8 +1,5 @@
-;;;; nix operating system project
-;;;; list processor environment
-;;;; Copyright (C) 2005-2006,2008 Sven Klose <pixel@copei.de>
-;;;;
-;;;; Local variables
+;;;;; Common LISP flavor for TRE
+;;;;; Copyright (C) 2005-2006,2008 Sven Klose <pixel@copei.de>
 
 (%defun %ltest (test lst)
   (cond

@@ -14,15 +14,17 @@
 (defmacro unless (predicate &rest expr)
   `(when (not ,predicate) ,@expr))
 
+(defun group2 (x)
+  (if x
+    (cons (list (car x) (cadr x))
+	      (group2 (cddr x)))))
+
 (defmacro case (val &rest cases)
   (let g (gensym)
     `(let ,g ,val
-      (cond 
-        ,@(%simple-mapcar
-            #'((x)
-                  (if (eq t (car x))
-	      	          `(t ,@(cdr x))
-                      `((equal ,g ,(car x)) ,@(if (cdr x)
-												  (cdr x)
-												  `(nil)))))
-            cases)))))
+      (if 
+        ,@(apply #'append (%simple-mapcar #'((x)
+                  					   (if (eq t (car x))
+	      	          					   `(t ,(cadr x))
+                      					   `((equal ,g ,(car x)) ,(cadr x))))
+            					   (print (group2 (print cases)))))))))
