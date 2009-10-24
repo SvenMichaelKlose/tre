@@ -193,22 +193,23 @@
 				            (or (~%ret? p)
 				  		 	    (expex-sym? p)))
 						 (remove-code d)
-				       (or (~%ret? p)
-					       (expex-sym? p))
-				         (cons `(%setq ~%ret ,(%setq-value a))
-					 	       (remove-code d))
-					   (and d .d
-							(%setq? d)
-							(%setq? .d)
-							(eq (%setq-place a)
-								(%setq-value d))
-							(atomic? ( %setq-place d))
-				   	  		(not (opt-peephole-will-be-used-again? .d (%setq-place a))))
-;				      		(integer= 3 (count-tree (%setq-place a) statements :max 3
-;													:test #'equal)))
-					     (cons `(%setq ,(%setq-place d) ,(%setq-value a))
-							   (remove-code .d))
+;				       (or (~%ret? p)
+;					       (expex-sym? p))
+;				         (cons `(%setq ~%ret ,(%setq-value a))
+;					 	       (remove-code d))
 					   (cons a (remove-code d)))))))
+
+	   remove-assignments
+	     #'((x)
+			  (opt-peephole-fun #'remove-assignments
+			    ((and d
+					  (%setq? a)
+					  (%setq? d.)
+					  (expex-sym? (%setq-place a))
+					  (eq (%setq-place a)
+						  (%setq-value d.)))
+				  (cons `(%setq ,(%setq-place d.) ,(%setq-value a))
+					    (remove-assignments .d)))))
 
 	   reduce-tags
 		 #'((x)
@@ -232,6 +233,7 @@
 					   (funcall
 						 (compose #'reduce-tags
 								  #'remove-code
+								  #'remove-assignments
 								  #'opt-peephole-remove-void)
 						 x))))
 
@@ -240,3 +242,10 @@
 	  								    	(opt-peephole-remove-spare-tags
 												(opt-peephole-move-vars-to-front
 												    statements)))))))
+
+(defun opt-test ()
+  (let src '((%setq ~e123 (fnord))
+			 (%setq bla fmord))
+	(print src)
+	(print '---)
+	(print (opt-peephole src))))
