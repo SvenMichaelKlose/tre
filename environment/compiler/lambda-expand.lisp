@@ -24,7 +24,7 @@
 			   stack-places values)
      ,@body))
 
-(defun lambda-call-embed (fi lambda-call export-lambdas)
+(defun lambda-call-embed (fi lambda-call export-lambdas?)
   (with-lambda-call (args vals body lambda-call)
     (with ((a v) (assoc-splice (argument-expand 'dummy-in-lambda-call-embed args vals)))
 	  ; Add lambda-call arguments to the parent function's arguments
@@ -33,7 +33,7 @@
       ;(with-funinfo-env-temporary fi args
 	  (funinfo-env-add-many fi a)
       (make-inline-body a v
-	      (lambda-expand-tree fi body export-lambdas)))));)
+	      (lambda-expand-tree fi body export-lambdas?)))));)
 
 ;;; Export
 
@@ -86,12 +86,12 @@
 
 ;;;; Toplevel
 
-(defun lambda-expand-branch (fi x export-lambdas)
+(defun lambda-expand-branch (fi x export-lambdas?)
   (if
     (lambda-call? x)
-      (lambda-call-embed fi x export-lambdas)
+      (lambda-call-embed fi x export-lambdas?)
     (lambda? x)
-	  (if export-lambdas
+	  (if export-lambdas?
           (lambda-export fi x)
 		  `#'(,@(make-lambda-funinfo-if-missing x
 				  (make-funinfo :args (lambda-args x)
