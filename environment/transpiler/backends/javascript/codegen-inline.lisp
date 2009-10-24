@@ -44,10 +44,13 @@
 (mapcan-macro p
 	'((car _)
 	  (cdr __))
-  `((define-js-macro ,p. (x)
-      `("(" ,,x " === null ? null : "
-	    ,,x "." ,,(symbol-name (transpiler-obfuscate-symbol *js-transpiler* ,(list 'quote .p.)))
-	    ")"))))
+  (let slotname (symbol-name (transpiler-obfuscate-symbol *js-transpiler* .p.))
+    `((define-js-macro ,p. (x)
+        `("(" ,,x " === null ? null : "
+	      ,,x "." ,slotname
+	      ")"))
+      (define-js-macro ,($ '%%usetf- p.) (v x)
+        `(%transpiler-native ,,x "." ,slotname "=" ,,v)))))
 
 (define-js-macro string-downcase (x)
   (if (%transpiler-string? x)
