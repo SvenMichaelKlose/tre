@@ -86,13 +86,13 @@
 							   ptr))
     (setf ptr (%put-char ptr (elt str x)))))
 
-(defun bool (x)
+(defun binary-truth (x)
   (if x
 	  1
 	  0))
 
 (defun %malloc-string (x &key (null-terminated nil))
-  (with (m (%malloc (+ (length x) (bool null-terminated))))
+  (with (m (%malloc (+ (length x) (binary-truth null-terminated))))
     (%put-string m x :null-terminated null-terminated)
     m))
 
