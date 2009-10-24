@@ -190,6 +190,12 @@ bootunclean)
 	./make.sh crunshraw
 	;;
 
+recompile)
+	echo "(quit)" | tre -n
+	tre makefiles/make-compiled.lisp
+	./make.sh crunshraw
+	;;
+
 install)
 	install_it_without_reload
 	;;
