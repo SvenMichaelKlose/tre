@@ -27,4 +27,4 @@
                   					   (if (eq t (car x))
 	      	          					   `(t ,(cadr x))
                       					   `((equal ,g ,(car x)) ,(cadr x))))
-            					   (print (group2 (print cases)))))))))
+            					   (group2 cases)))))))
