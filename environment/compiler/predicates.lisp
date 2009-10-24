@@ -8,20 +8,10 @@
       (macrop x)))
 
 (mapcar-macro x
-	'(quote %quote backquote
-	  identity %new
-	  %transpiler-native %transpiler-string)
+	'(quote backquote identity)
   `(def-head-predicate ,x))
 
 (defun function-ref-expr? (x)
   (and (consp x)
        (eq 'FUNCTION x.)
 	   (atom (second x))))
-
-(defun %setq-lambda? (x)
-  (and (%setq? x)
-       (lambda? (third x))))
-
-(defun atom-or-quote? (x)
-  (or (atom x)
-	  (%quote? x)))

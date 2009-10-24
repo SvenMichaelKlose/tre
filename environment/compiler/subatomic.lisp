@@ -1,12 +1,13 @@
-;;;; nix operating system project
-;;;; lisp compiler
+;;;; TRE compiler
 ;;;; Copyright (c) 2006-2009 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Subatomic expression utilities.
 
 (mapcar-macro x
-	'(vm-scope vm-go vm-go-nil
-	  %stack %vec %setq)
+	'(%quote %new
+	  vm-scope vm-go vm-go-nil
+	  %stack %vec %setq
+	  %transpiler-native %transpiler-string)
   `(def-head-predicate ,x))
 
 (defun atomic? (x)
@@ -56,3 +57,11 @@
 
 (defun ~%ret? (x)
   (eq '~%ret x))
+
+(defun %setq-lambda? (x)
+  (and (%setq? x)
+	   (lambda? (third x))))
+
+(defun atom-or-quote? (x)
+  (or (atom x)
+	  (%quote? x)))
