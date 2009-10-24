@@ -90,9 +90,6 @@
   (error "scope-toplevel test"))
 (setq *UNIVERSE* (cdr *UNIVERSE*))
 
-(when *tre-has-compiler*
-  (env-load "compiler/main.lisp"))
-
 (when *tre-has-transpiler*
   (env-load "transpiler/main.lisp"))
 

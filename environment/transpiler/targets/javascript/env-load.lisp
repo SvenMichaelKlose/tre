@@ -15,7 +15,7 @@
 ;;;; It contains the essential functions needed to store argument
 ;;;; definitions for APPLY.
 
-(defvar *js-env-path* "environment/transpiler/backends/javascript/environment/")
+(defvar *js-env-path* "environment/transpiler/targets/javascript/environment/")
 
 (defvar *js-base*
 	(js-load-base *js-env-path*

@@ -7,7 +7,7 @@
 
 (defun php-gen-funref-wrapper (out)
   (princ ,(concat-stringtree
-		      (with-open-file i (open "environment/transpiler/backends/php/funref.php"
+		      (with-open-file i (open "environment/transpiler/targets/php/funref.php"
 							 		  :direction 'input)
 			  	(read-all-lines i)))
 		 out))

@@ -10,7 +10,7 @@
   				(read-file-all f)))
 		  files))
 
-(defvar *php-env-path* "environment/transpiler/backends/php/environment/")
+(defvar *php-env-path* "environment/transpiler/targets/php/environment/")
 
 ;;;; First part of the core functions
 ;;;;

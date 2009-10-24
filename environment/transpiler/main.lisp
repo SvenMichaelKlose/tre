@@ -1,6 +1,7 @@
 ;;;; TRE transpiler
 ;;;; Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
 
+(env-load "transpiler/middle-end/main.lisp")
 (env-load "transpiler/config.lisp")
 
 (env-load "transpiler/back-end/escaped-string.lisp")
@@ -28,20 +29,20 @@
 (env-load "transpiler/front-end/quote-keywords.lisp")
 (env-load "transpiler/front-end/macros.lisp")
 (env-load "transpiler/front-end/standard-macros.lisp")
+(env-load "transpiler/front-end/import.lisp")
 (env-load "transpiler/front-end/toplevel.lisp")
 
-(env-load "transpiler/import.lisp")
 (env-load "transpiler/toplevel.lisp")
 
 (env-load "transpiler/targets/c/expex-literals.lisp")
 (env-load "transpiler/targets/c/config.lisp")
-(env-load "transpiler/targets/c/front-end.lisp")
+(env-load "transpiler/targets/c/expand.lisp")
 (env-load "transpiler/targets/c/builtin.lisp")
 (env-load "transpiler/targets/c/codegen.lisp")
 (env-load "transpiler/targets/c/toplevel.lisp")
 
 (env-load "transpiler/targets/javascript/config.lisp")
-(env-load "transpiler/targets/javascript/front-end.lisp")
+(env-load "transpiler/targets/javascript/expand.lisp")
 (env-load "transpiler/targets/javascript/codegen.lisp")
 (env-load "transpiler/targets/javascript/codegen-inline.lisp")
 (env-load "transpiler/targets/javascript/env-load.lisp")
@@ -51,7 +52,7 @@
 (env-load "transpiler/targets/php/expex.lisp")
 (env-load "transpiler/targets/php/expex-literals.lisp")
 (env-load "transpiler/targets/php/config.lisp")
-(env-load "transpiler/targets/php/front-end.lisp")
+(env-load "transpiler/targets/php/expand.lisp")
 (env-load "transpiler/targets/php/codegen.lisp")
 (env-load "transpiler/targets/php/codegen-inline.lisp")
 (env-load "transpiler/targets/php/core.lisp")
