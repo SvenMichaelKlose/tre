@@ -1,6 +1,7 @@
 ;;;; TRE transpiler
 ;;;; Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
 
+(env-load "transpiler/lib/main.lisp")
 (env-load "transpiler/middle-end/main.lisp")
 (env-load "transpiler/config.lisp")
 
@@ -19,6 +20,7 @@
 (env-load "transpiler/front-end/update-funinfos.lisp")
 (env-load "transpiler/front-end/named-functions.lisp")
 (env-load "transpiler/front-end/function-arguments.lisp")
+(env-load "transpiler/front-end/backquote-expand.lisp")
 (env-load "transpiler/front-end/expression-expand.lisp")
 (env-load "transpiler/front-end/expex-funcalls.lisp")
 (env-load "transpiler/front-end/expex-funinfo.lisp")
