@@ -6,7 +6,11 @@
 (env-load "transpiler/middle-end/place-expand.lisp")
 (env-load "transpiler/middle-end/place-assign.lisp")
 (env-load "transpiler/middle-end/lambda-expand.lisp")
+
 (env-load "transpiler/middle-end/expression-expand.lisp")
+(env-load "transpiler/middle-end/expex-funcalls.lisp")
+(env-load "transpiler/middle-end/expex-funinfo.lisp")
+(env-load "transpiler/middle-end/expex-global-variables.lisp")
 
 (env-load "transpiler/middle-end/opt-peephole.lisp")
 (env-load "transpiler/middle-end/opt-inline.lisp")

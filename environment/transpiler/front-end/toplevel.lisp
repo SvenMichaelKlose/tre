@@ -23,4 +23,4 @@
 		  x))
 
 (defun transpiler-preexpand-and-expand (tr forms)
-  (transpiler-expand tr (transpiler-preexpand tr (transpiler-simple-expand tr forms))))
+  (transpiler-expand tr (transpiler-preexpand tr (transpiler-simple-expand tr (print forms)))))

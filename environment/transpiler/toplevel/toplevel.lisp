@@ -21,7 +21,7 @@
 (defun transpiler-sighten (tr x)
   (when (transpiler-lambda-export? tr)
 	(setf *exported-lambdas* t))
-  (let tmp (transpiler-preexpand tr x)
+  (let tmp (transpiler-preexpand tr (transpiler-simple-expand tr x))
 	; Do an expression expand to collect the names of required
 	; functions and variables. It is done again later when all
 	; definitions are visible.
