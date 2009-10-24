@@ -55,8 +55,6 @@
 			"print.lisp"
 			"string.lisp"
 			"member.lisp"
-			"hash.lisp"
-			;"file.lisp"
-)
+			"hash.lisp")
 		(js-load-base "environment/transpiler/environment/"
 			"assoc.lisp")))

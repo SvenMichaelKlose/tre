@@ -53,8 +53,6 @@
 			"print.lisp"
 			"string.lisp"
 			"member.lisp"
-			"hash.lisp"
-			;"file.lisp"
-)
+			"hash.lisp")
 		(php-load-base "environment/transpiler/environment/"
 			"assoc.lisp")))
