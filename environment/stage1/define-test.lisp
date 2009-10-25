@@ -31,7 +31,8 @@
 
 ;; Add test to global list.
 (%defspecial define-test (description expr result)
-  (print (list 'define-test description))
+  (if *show-definitions*
+      (print (list 'define-test description)))
   (setq *tests* (cons (cons description
 		    				(cons (cons (quote block)
 								        (cons nil

@@ -86,6 +86,14 @@
 
 ;;;; Toplevel
 
+(defun lambda-head-w/-missing-funinfo (x fi)
+  `(,@(make-lambda-funinfo-if-missing x fi)
+    ,(lambda-args x)))
+
+(defun lambda-w/-missing-funinfo (x fi)
+  `#'(,@(lambda-head-w/-missing-funinfo x fi)
+	  ,@(lambda-body x)))
+
 (defun lambda-expand-branch (fi x export-lambdas?)
   (if
     (lambda-call? x)
@@ -93,11 +101,8 @@
     (lambda? x)
 	  (if export-lambdas?
           (lambda-export fi x)
-		  `#'(,@(make-lambda-funinfo-if-missing x
-				  (make-funinfo :args (lambda-args x)
-								:parent fi))
-			  ,(lambda-args x)
-			  ,@(lambda-body x)))
+		  (lamda-w/-missing-funinfo x (make-funinfo :args (lambda-args x)
+												    :parent fi)))
 	x))
 
 (defun lambda-expand-tree-0 (fi body export-lambdas?)
@@ -121,8 +126,7 @@
          fi			(or imported
 						(make-funinfo :args forms)))
     (values
-	    `#'(,@(make-lambda-funinfo-if-missing x. fi)
-		    ,(lambda-args x.)
+	    `#'(,@(lambda-head-w/-missing-funinfo x. fi)
             ,@(lambda-embed-or-export-transform
 				       fi
                        (lambda-body x.)

@@ -6,7 +6,8 @@
 ;;;; TRANSPILER-MACRO EXPANDER
 
 (defmacro define-js-macro (&rest x)
-  (print `(define-js-macro ,x.))
+  (when *show-definitions*
+    (print `(define-js-macro ,x.)))
   `(progn
 	 (transpiler-add-obfuscation-exceptions *js-transpiler* ',x.)
 	 (define-transpiler-macro *js-transpiler* ,@x)))
