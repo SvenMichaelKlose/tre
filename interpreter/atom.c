@@ -195,10 +195,10 @@ treatom_alloc (char * symbol, treptr package, int type, treptr value)
     treptr   ret;
 	void     * item;
 
-	item = trealloc_item (&tre_atoms_free, &tre_atoms, &tre_atoms[NUM_ATOMS]);
+	item = trealloc_item (&tre_atoms_free);
 	if (!item) {
         tregc_force ();
-		item = trealloc_item (&tre_atoms_free, &tre_atoms, &tre_atoms[NUM_ATOMS]);
+		item = trealloc_item (&tre_atoms_free);
     	if (!item)
 	    	return treerror (treptr_invalid, "atom table full");
     }
@@ -234,8 +234,7 @@ treatom_free (treptr x)
     	TREATOM_NAME(x) = NULL;
     }
 
-	trealloc_free_item (&tre_atoms_free, &tre_atoms[TREPTR_INDEX(x)],
-						&tre_atoms, &tre_atoms[NUM_ATOMS]);
+	trealloc_free_item (&tre_atoms_free, &tre_atoms[TREPTR_INDEX(x)]);
 }
 
 /*

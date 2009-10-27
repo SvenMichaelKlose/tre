@@ -18,8 +18,8 @@ extern treptr trealloc_unused;
 extern void *trealloc (size_t);
 extern void trealloc_free (void *);
 
-extern void * trealloc_item (void * handle, void * map, void * end);
-extern void trealloc_free_item (void * handle, void * item, void * map, void * end);
+extern void * trealloc_item (void * handle);
+extern void trealloc_free_item (void * handle, void * item);
 extern void * trealloc_item_init (void * map, ulong num_items, ulong item_size);
 
 #endif

@@ -63,13 +63,11 @@ trenumber_alloc (double value, int type)
 {
 	ulong idx;
 
-    void * i = trealloc_item (&tre_numbers_free,
-                        &tre_numbers, &tre_numbers[NUM_NUMBERS]);
+    void * i = trealloc_item (&tre_numbers_free);
 
     if (!i) {
         tregc_force ();
-    	i = trealloc_item (&tre_numbers_free,
-                     	   &tre_numbers, &tre_numbers[NUM_NUMBERS]);
+    	i = trealloc_item (&tre_numbers_free);
         if (!i)
 	    	treerror_internal (treptr_nil, "out of numbers");
     }
@@ -89,8 +87,7 @@ trenumber_free (treptr n)
 		treerror_internal (n, "trenumber_free(): not a number");
 #endif
 
-	trealloc_free_item (&tre_numbers_free, &tre_numbers[TRENUMBER_INDEX(n)],
-                        &tre_numbers, &tre_numbers[NUM_NUMBERS]);
+	trealloc_free_item (&tre_numbers_free, &tre_numbers[TRENUMBER_INDEX(n)]);
 }
 
 /* Initialise this section. */
