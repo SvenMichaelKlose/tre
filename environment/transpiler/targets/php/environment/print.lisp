@@ -9,5 +9,5 @@
 
 (dont-inline force-output)
 
-(defun force-output (x &optional (str *standard-output*))
+(defun force-output (&optional (str *standard-output*))
   nil)
