@@ -101,7 +101,7 @@
     (lambda? x)
 	  (if export-lambdas?
           (lambda-export fi x)
-		  (lamda-w/-missing-funinfo x (make-funinfo :args (lambda-args x)
+		  (lambda-w/-missing-funinfo x (make-funinfo :args (lambda-args x)
 												    :parent fi)))
 	x))
 
