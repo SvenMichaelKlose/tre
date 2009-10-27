@@ -1,6 +1,6 @@
 /*
- * nix operating system project tre interpreter
- * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+ * TRE interpreter
+ * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
  *
  * Memory allocation.
  */
