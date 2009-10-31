@@ -30,9 +30,10 @@
 					(transpiler-function-arguments tr x.)
 					(function-arguments fun))
 	     body (or (transpiler-function-body tr x.)
-				  (function-body fun)
-				  (error "no body for function ~A" x.)))
+				  (function-body fun)))
 	(if
+	  (not body)
+	    nil
 	  ; XXX Need local function info, but we don't yet have any function info
 	  ; where they could be looked up.
 	  ; Problem: We can't just move the inliner past LAMBDA-EXPAND.
