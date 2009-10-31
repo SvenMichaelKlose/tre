@@ -193,10 +193,6 @@
 				            (or (~%ret? p)
 				  		 	    (expex-sym? p)))
 						 (remove-code d)
-;				       (or (~%ret? p)
-;					       (expex-sym? p))
-;				         (cons `(%setq ~%ret ,(%setq-value a))
-;					 	       (remove-code d))
 					   (cons a (remove-code d)))))))
 
 	   remove-assignments
