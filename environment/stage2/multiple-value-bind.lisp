@@ -1,19 +1,26 @@
 ;;;; TRE environment
-u;;; Copyright (c) 2005-2006,2009 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2005-2006,2009 Sven Klose <pixel@copei.de>
 
-(defun multiple-value-bind-0 (forms gl i body)
+(defun multiple-value-bind-0 (forms gl body)
   (if forms
-      `((let* ((,(car forms) (nth ,i ,gl)))
-	      ,@(multiple-value-bind-0 (cdr forms) gl (1+ i) body)))
+	  (with-gensym gn
+        `((let* ((,(car forms) (car ,gl))
+			     ,@(when (cdr forms)
+				     `((,gn ,(if *assert*
+							   `(or (cdr ,gl)
+							  	    (%error "not enough VALUES"))
+							   `(cdr ,gl))))))
+	        ,@(multiple-value-bind-0 (cdr forms) gn body))))
 	  body))
 
 (defmacro multiple-value-bind (forms expr &rest body)
   (with-gensym (g gl)
     `(let* ((,g ,expr)
 	        (,gl (cdr ,g)))
-       (if (eq (car ,g) 'VALUES)
-           ,@(multiple-value-bind-0 forms gl 0 body)
-           (%error "VALUES expected")))))
+	   ,@(when *assert*
+           `((unless (eq (car ,g) 'VALUES)
+         	   (%error "VALUES expected"))))
+       ,@(multiple-value-bind-0 forms gl body))))
 
 (defun values (&rest vals)
   (cons 'VALUES vals))
