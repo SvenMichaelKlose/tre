@@ -5,12 +5,6 @@
 
 (defvar *nil-symbol-name* nil)
 
-(defun transpiler-print-obfuscations (tr)
-  (dolist (k (hashkeys (transpiler-obfuscations tr)))
-    (unless (in=? (elt (symbol-name k) 0) #\~) ; #\_)
-	  (format t "~A -> ~A~%" (symbol-name k)
-						     (href (transpiler-obfuscations tr) k)))))
-
 (defun js-transpile-print-prologue (out tr)
   (format out "var _I_ = 0; while (1) {switch (_I_) {case 0: ~%")
   (format out "var ~A;~%" (transpiler-symbol-string tr

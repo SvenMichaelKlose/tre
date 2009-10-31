@@ -48,3 +48,9 @@
 (defun transpiler-obfuscated-symbol-string (tr x)
   (transpiler-symbol-string tr
 	  (transpiler-obfuscate-symbol tr x)))
+
+(defun transpiler-print-obfuscations (tr)
+  (dolist (k (hashkeys (transpiler-obfuscations tr)))
+    (unless (in=? (elt (symbol-name k) 0) #\~) ; #\_)
+	  (format t "~A -> ~A" (symbol-name k)
+						     (href (transpiler-obfuscations tr) k)))))
