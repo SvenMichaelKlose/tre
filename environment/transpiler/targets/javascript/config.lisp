@@ -45,7 +45,7 @@
 
 	(apply #'transpiler-add-obfuscation-exceptions
 		tr
-	    '(t this %funinfo false true null
+	    '(t this %funinfo false true null delete
 		  %transpiler-native %transpiler-string
 		  lambda function
 		  &key &optional &rest
