@@ -7,6 +7,7 @@
 
 (defun hash-assoc (x)
   (let lst nil
-    (map (fn (nconc! lst (list (cons _ (href x _)))))
-         x)
-    lst))
+    (maphash #'((k v)
+				  (push! (cons k v) lst))
+         	 x)
+    (reverse lst)))

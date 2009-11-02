@@ -1,4 +1,3 @@
-<?php
 function &T37funref_exec ($f, $g)
 {
 	$a = func_get_args ();
@@ -13,7 +12,7 @@ function &T37funref ($f, $g)
 }
 
 // All symbols are stored in this array for reuse.
-SYMBOLS = Array ();
+$SYMBOLS = Array ();
 
 class _tresym {
 	public function __construct ($name, &$pkg)

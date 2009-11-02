@@ -12,8 +12,8 @@
 (dont-obfuscate fun hash)
 (dont-inline map) ; XXX make it MAPHASH.
 
-(defun map (fun hash)
-  (%transpiler-native "null;for (i in hash) fun (i)"))
+(defun maphash (fun hash)
+  (%transpiler-native "null;for (i in hash) fun (i, hash[i])"))
 
 (defun elt (seq idx)
   (if

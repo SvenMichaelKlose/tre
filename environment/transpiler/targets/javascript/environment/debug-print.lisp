@@ -29,8 +29,8 @@
 
 (defun js-print-object (x)
   (+ "{"
-     (apply #'+ (map (fn (+ _ " => " (href x _) "<br/>"))
-				     x))
+     (apply #'+ (maphash #'((k v) (+ k " => " v "<br/>"))
+				         x))
 	"}<br/>"))
 
 (defun js-print-atom (x doc)
