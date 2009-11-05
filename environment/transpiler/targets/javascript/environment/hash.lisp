@@ -11,3 +11,9 @@
 				  (push! (cons k v) lst))
          	 x)
     (reverse lst)))
+
+;; XXX test is ignored.
+(defun assoc-hash (x &key (test nil))
+  (let h (make-hash-table)
+    (dolist (i x h)
+      (setf (href h i.) .i))))
