@@ -76,3 +76,10 @@
 
 (define-c-std-macro %%usetf-aref (&rest x)
   `(%set-aref ,@x))
+
+; Convert MAPCAR to faster FILTER if possible.
+(define-c-std-macro mapcar (fun &rest lsts)
+  `(,(if (= 1 (length lsts))
+         'filter
+         'mapcar)
+        ,fun ,@lsts))

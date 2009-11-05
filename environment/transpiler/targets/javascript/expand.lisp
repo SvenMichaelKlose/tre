@@ -163,3 +163,10 @@
 (define-js-std-macro %lx (lexicals fun)
   (eval (macroexpand `(with ,(mapcan (fn `(,_ ',_)) .lexicals.)
                         ,fun))))
+
+;; Convert MAPCAR to faster FILTER if possible.
+(define-js-std-macro mapcar (fun &rest lsts)
+  `(,(if (= 1 (length lsts))
+	   'filter
+	   'mapcar)
+    ,fun ,@lsts))

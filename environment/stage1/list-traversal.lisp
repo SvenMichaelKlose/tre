@@ -60,3 +60,15 @@ Returns a list of all return values of the function."
           (go ,starttag)
           ,endtag
           (return (progn ,@result)))))))
+
+(defun filter (func lst)
+  "Calls function for all elements in list and returns a
+list of all return values."
+  (when lst
+	(cons (funcall func (car lst))
+		  (filter func (cdr lst)))))
+
+(defun filter-concat (func lst)
+  "Calls function for all elements in list and returns a concatenated
+list of all return values."
+  (funcall #'nconc func lst))
