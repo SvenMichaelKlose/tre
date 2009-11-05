@@ -3,30 +3,6 @@
 ;;;;;
 ;;;;; Extra code-generating macros to avoid costly function calls.
 
-;(mapcan-macro _
-;    '(+ = < > <= >=)
-;  (with (charname ($ 'character _)
-;		 op ($ '%%% _))
-;    `((define-js-macro ,charname (&rest x)
-;	    (if nil ;(= 2 (length x))
-;            `(,op (%slot-value ,,x. v)
-;                  (%slot-value ,,.x. v))
-;		    `(,charname ,,@x)))
-;      (define-js-binary ,($ 'integer _) ,(string (if (eq '= _)
-;												     '==
-;													 _))))))
-
-;(define-js-macro integer- (&rest x)
-;  (if (= 1 (length x))
-;	  `(%transpiler-native "-" ,x.)
-;      `(%%%- ,@x)))
-
-;(define-js-macro character- (&rest x)
-;  (if (= 1 (length x))
-;	  `(%transpiler-native "-" (%slot-value ,x. v))
-;      `(%%%- ,@(mapcar (fn `(%slot-value ,_ v))
-;					   x))))
-
 (define-js-binary string-concat "+")
 (define-js-binary / "/")
 (define-js-binary * "*")
@@ -44,13 +20,13 @@
 (mapcan-macro p
 	'((car _)
 	  (cdr __))
-  (let slotname (symbol-name (transpiler-obfuscate-symbol *js-transpiler* .p.))
+  (let slotname .p.
     `((define-js-macro ,p. (x)
         `("(" ,,x " === null ? null : "
-	      ,,x "." ,slotname
+	      ,,x "." ,,(symbol-name (transpiler-obfuscate *js-transpiler* ,(list 'quote slotname)))
 	      ")"))
       (define-js-macro ,($ '%%usetf- p.) (v x)
-        `(%transpiler-native ,,x "." ,slotname "=" ,,v)))))
+        `(%transpiler-native ,,x "." ,,(symbol-name (transpiler-obfuscate *js-transpiler* ,(list 'quote slotname))) "=" ,,v)))))
 
 (define-js-macro string-downcase (x)
   (if (%transpiler-string? x)
