@@ -305,17 +305,26 @@ trelist_length (treptr p)
     return len;
 }
 
-/* Return cons pointing to the nth element. */
+/* Return nth cons. */
 treptr
-trelist_nth (treptr l, ulong idx)
+trelist_nthcdr (treptr l, ulong idx)
 {
     while (l != treptr_nil) {
 		if (TREPTR_IS_ATOM(l))
-			treerror_norecover (l, "NTH: cons expected");
+			treerror_norecover (l, "internal NTHCDR: cons expected");
 		if (!idx--)
 			break;
         l = CDR(l);
 	}
+
+	return l;
+}
+
+/* Return nth element. */
+treptr
+trelist_nth (treptr l, ulong idx)
+{
+	l = trelist_nthcdr (l, idx);
 
     if (l == treptr_nil)
 		return l;
@@ -326,8 +335,7 @@ trelist_nth (treptr l, ulong idx)
 void
 trelist_t_set (treptr s, ulong idx, treptr val)
 {
-    s = trelist_nth (s, idx);
-    RPLACA(s, val);
+    RPLACA(trelist_nthcdr (s, idx), val);
 }
 
 /* Sequence type: return element at index. */
