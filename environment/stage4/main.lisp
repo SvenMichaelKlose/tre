@@ -28,6 +28,7 @@
 (env-load "stage4/force-tree.lisp")
 (env-load "stage4/global-variable.lisp")
 (env-load "stage4/head-if.lisp")
+(env-load "stage4/less-or-equal-list.lisp")
 (env-load "stage4/let-if.lisp")
 (env-load "stage4/let-when.lisp")
 (env-load "stage4/list-aliases.lisp")
