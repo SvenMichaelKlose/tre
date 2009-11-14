@@ -28,7 +28,7 @@
 
 (defun js-print-character (x doc)
   (js-print-write (+ "#\\\\" (*string.from-char-code (char-code x)))
-				  x))
+				  doc))
 
 (defun js-print-string (x doc)
   (js-print-write (+ "\"" x "\"") doc))
