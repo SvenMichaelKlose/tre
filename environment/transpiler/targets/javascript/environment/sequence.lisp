@@ -24,6 +24,10 @@
   	(aref seq idx)))
 
 (defun (setf elt) (val seq idx)
-  (if (stringp seq)
+  (if
+	(stringp seq)
 	  (error "strings cannot be modified")
-  	  (setf (aref seq idx) val)))
+	(arrayp seq)
+  	  (setf (aref seq idx) val)
+	(consp seq)
+	  (rplaca (nthcdr idx seq) val)))
