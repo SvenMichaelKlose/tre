@@ -12,15 +12,15 @@
 				(list _)))
 		  x))
 
-(defun opt-peephole-has-not-jumps-to (x tag)
+(defun opt-peephole-has-no-jumps-to (x tag)
   (dolist (i x t)
 	(when (vm-jump? i)
-	  (when (eq (vm-jump-tag i) tag)
+	  (when (= (vm-jump-tag i) tag)
 		(return nil)))))
 
 (defun opt-peephole-tags-lambda (x)
   (with (body x
-		 spare-tags (find-all-if (fn (opt-peephole-has-not-jumps-to body _))
+		 spare-tags (find-all-if (fn (opt-peephole-has-no-jumps-to body _))
 		  				         (find-all-if #'numberp x)))
     (remove-if (fn (member _ spare-tags))
 			   x)))
@@ -228,6 +228,7 @@
 					             x))
 					   (funcall
 						 (compose #'reduce-tags
+								  #'opt-peephole-remove-spare-tags
 								  #'remove-code
 								  #'remove-assignments
 								  #'opt-peephole-remove-void)
@@ -235,9 +236,8 @@
 
 		(opt-peephole-remove-unused-vars
 	    	(repeat-while-changes #'rec (opt-peephole-remove-identity
-	  								    	(opt-peephole-remove-spare-tags
-												(opt-peephole-move-vars-to-front
-												    statements)))))))
+											(opt-peephole-move-vars-to-front
+											    statements))))))
 
 (defun opt-test ()
   (let src '((%setq ~e123 (fnord))
