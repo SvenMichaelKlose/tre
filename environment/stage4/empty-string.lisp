@@ -13,3 +13,7 @@
   ((and (empty-string? "  ")
 		(empty-string? "")))
   t)
+
+(defun empty-string-or-nil? (x)
+  (or (not x)
+	  (empty-string? x)))
