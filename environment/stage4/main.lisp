@@ -39,6 +39,7 @@
 (env-load "stage4/optional-string-downcase.lisp")
 (env-load "stage4/pad.lisp")
 (env-load "stage4/pair.lisp")
+(env-load "stage4/permutate.lisp")
 (env-load "stage4/print-hex.lisp")
 (env-load "stage4/print-octal.lisp")
 (env-load "stage4/remove.lisp")
