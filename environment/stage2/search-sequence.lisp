@@ -12,24 +12,25 @@
 
 (defun find-if (pred seq &key (start nil) (end nil)
 							  (from-end nil) (with-index nil))
-  (let* ((e (or end (integer-1- (length seq))))
-	 	 (s (or start 0)))
-    ; Make sure the start and end indices are sane.
-    (when (or (and (integer> s e)
-				   (not from-end))
-              (and (integer< s e)
-				   from-end))
-      (xchg s e))
-    (do ((i s (if from-end
-				  (integer-1- i)
-				  (integer-1+ i))))
-        ((if from-end
-	         (integer< i e)
-			 (integer> i e)))
-	  (let elm (elt seq i)
-        (when (apply pred (cons elm (when with-index
-									  (list i))))
-		  (return elm))))))
+  (when seq
+    (let* ((e (or end (integer-1- (length seq))))
+	 	   (s (or start 0)))
+      ; Make sure the start and end indices are sane.
+      (when (or (and (integer> s e)
+				     (not from-end))
+                (and (integer< s e)
+				     from-end))
+        (xchg s e))
+      (do ((i s (if from-end
+				    (integer-1- i)
+				    (integer-1+ i))))
+          ((if from-end
+	           (integer< i e)
+			   (integer> i e)))
+	    (let elm (elt seq i)
+          (when (apply pred (cons elm (when with-index
+									    (list i))))
+		    (return elm)))))))
  
 (defun find (obj seq &key (start nil) (end nil)
 						  (from-end nil) (test #'eql))
