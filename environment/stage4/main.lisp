@@ -29,6 +29,7 @@
 (env-load "stage4/global-variable.lisp")
 (env-load "stage4/head-if.lisp")
 (env-load "stage4/less-or-equal-list.lisp")
+(env-load "stage4/less-or-equal-string.lisp")
 (env-load "stage4/let-if.lisp")
 (env-load "stage4/let-when.lisp")
 (env-load "stage4/list-aliases.lisp")
@@ -64,4 +65,5 @@
 (env-load "stage4/define-with.lisp")
 (env-load "stage4/define-slot-setter.lisp")
 (env-load "stage4/number-sym.lisp")
+(env-load "stage4/unique.lisp")
 (env-load "stage4/when-debug.lisp")
