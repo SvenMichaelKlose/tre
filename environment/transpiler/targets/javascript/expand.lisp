@@ -19,7 +19,8 @@
 
 (defun js-assert-body (x)
   (if (and (not *transpiler-assert*)
-           (stringp x.))
+           (stringp x.)
+		   .x)
       .x
       x))
 
