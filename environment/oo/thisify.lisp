@@ -22,6 +22,8 @@
   (if
 	(atom x)
       (thisify-symbol classdef x exclusions)
+	(%quote? x)
+	  x
 	(lambda? x)
 	  `#'(,@(lambda-funinfo-expr x)
 		  ,(lambda-args x)
