@@ -15,7 +15,12 @@
     `(vm-scope
 	   (%var ,g)
        (%setq ,g (%function ,x))
-	   (%assign-function-arguments ,g ,(simple-quote-expand (lambda-args x)))
+	   ,(let args (lambda-args x)
+	      (when (or *transpiler-assert*
+					(some (fn or (consp _)
+						     	 (arg-keyword? _))
+					  	  args))
+	        `(%assign-function-arguments ,g ,(simple-quote-expand (lambda-args x)))))
        (%setq ~%ret ,g))))
 
 ;; (FUNCTION symbol | lambda-expression)
