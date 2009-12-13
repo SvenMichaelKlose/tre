@@ -16,7 +16,7 @@
 				         (document.writeln (+ "Test '"
 											  ,(first _)
 											  "' failed</br>"))
-						 (js-print ,(second _))
+						 (js-print ,(second _) document)
 						 (document.writeln "</br>")))))
 		    	*tests*))
 	`(,@funs
