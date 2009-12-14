@@ -232,7 +232,10 @@ treeval_compiled_expr (treptr func, treptr x, bool do_expand)
     tregc_push (x);
 
     funcdef = TREATOM_VALUE(func);
-    forms = CAR(funcdef);
+    forms = (funcdef != treptr_nil) ?
+		CAR(funcdef) :
+		treptr_nil;
+
 
    	/* Expand argument keywords. */
    	trearg_expand (&expforms, &expvals, forms, args, do_expand);

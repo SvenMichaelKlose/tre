@@ -75,7 +75,7 @@
 		    (opt-inline-0 tr level current parent .x))
 	(lambda? x.)
 	  (cons `#'(,@(lambda-funinfo-expr x.)
-				 ,(lambda-args x.) ;,(opt-inline-0 tr level current parent (print (lambda-args x.)))
+				 ,(opt-inline-0 tr level current parent (lambda-args x.))
 				   ,@(opt-inline-0 tr level current parent (lambda-body x.)))
 		    (opt-inline-0 tr level current parent .x))
 	(cons (opt-inline-0 tr level current parent x.)
@@ -87,7 +87,7 @@
 
 ; Only inline inside named top-level functions.
 (defun opt-inline-lambda (tr x)
-  `#'(,@(lambda-funinfo-and-args x)
+  `#'(,@(lambda-head x)
             ,@(opt-inline-0 tr 0 'no-parent nil (lambda-body x))))
 
 ; Only inline inside named top-level functions.

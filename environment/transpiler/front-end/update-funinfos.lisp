@@ -10,9 +10,8 @@
 	  (error "funfinfo ~A: num-tags already set to ~A. new num:~A"
 		     (lambda-funinfo x) (funinfo-num-tags fi) num-tags))
     (setf (funinfo-num-tags fi) num-tags)
-	`#'(,@(lambda-funinfo-expr x)
-		,(lambda-args x)
-		,@(transpiler-update-funinfo body))))
+	`#'(,@(lambda-head x)
+		    ,@(transpiler-update-funinfo body))))
 
 (defun transpiler-update-funinfo (x)
   (if

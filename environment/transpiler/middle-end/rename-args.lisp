@@ -39,7 +39,7 @@
 		  (rename-function-arguments-0 .x replacements env))))
 
 (defun rename-function-arguments-named-function (x)
-  `#'(,@(lambda-funinfo-and-args x)
+  `#'(,@(lambda-head x)
 			,@(rename-function-arguments-0 (lambda-body x))))
 
 (defun rename-function-arguments-inside-named-toplevel-functions (x)

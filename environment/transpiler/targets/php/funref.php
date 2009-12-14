@@ -71,11 +71,15 @@ function & compiled_symbol ($name, $pkg)
 	if ($name == "NIL" && !$pkg)
 		return NULL;
 	$tab =& $SYMBOLS[$pkg];
-	if (!$tab)
-		$tab =& $SYMBOLS[$pkg] = Array ();
+	if (!$tab) {
+		$tab = Array ();
+		$SYMBOLS[$pkg] =& $tab;
+	}
 	$s =& $tab[$name];
-	if (!$s)
-		$s =& $tab[$name] = T37symbol ($name, $pkg);
+	if (!$s) {
+		$s =& T37symbol ($name, $pkg);
+		$tab[$name] = $s;
+	}
 	return $s;
 }
 

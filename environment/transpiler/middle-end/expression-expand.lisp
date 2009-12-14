@@ -235,8 +235,7 @@
 (defun expex-lambda (ex x)
   (with-temporary *expex-funinfo* (get-lambda-funinfo x)
     (values nil
-		    (list `#'(,@(lambda-funinfo-expr x)
-					  ,(lambda-args x)
+		    (list `#'(,@(lambda-head x)
 				         ,@(expex-body ex (lambda-body x)))))))
 
 ;; Expand expression depending on type.

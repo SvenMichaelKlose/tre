@@ -38,7 +38,7 @@
 	(%quote? x)		x
 	(vm-go? x)		(error "VM-GO in argument list")
 	(vm-go-nil? x)  (error "VM-GO-NIL in argument list")
-	(lambda? x)		`#'(,@(lambda-funinfo-and-args x)
+	(lambda? x)		`#'(,@(lambda-head x)
 				            ,@(rename-body-tags-set (lambda-body x) renamed))
 	(vm-scope? x)  `(vm-scope ,@(rename-body-tags-set .x renamed))
 	(rename-body-tags-set-expr x renamed)))
@@ -59,7 +59,7 @@
 	(vm-go-nil? x)  `(vm-go-nil ,.x.
 				   	 	  		,(or (assoc-value ..x. renamed :test #'=)
 						       		 (error "didn't gather tag ~A VM-GO-NIL" x)))
-	(lambda? x) 	`#'(,@(lambda-funinfo-and-args x)
+	(lambda? x) 	`#'(,@(lambda-head x)
 				  			,@(rename-body-tags-set (lambda-body x) renamed))
 	(vm-scope? x)   `(vm-scope ,@(rename-body-tags-set .x renamed))
 	(rename-body-tags-set-expr x renamed)))

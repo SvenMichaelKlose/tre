@@ -20,7 +20,7 @@
 					(error "can't find index in lexicals")))
 
 	(lambda? x) ; XXX Add variables to ignore in subfunctions.
-      `#'(,@(lambda-funinfo-and-args x)
+      `#'(,@(lambda-head x)
 		     ,@(place-assign (lambda-body x)))
 
     (%slot-value? x)

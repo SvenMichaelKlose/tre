@@ -37,7 +37,7 @@
 			 (eq 'function a.))
 		  (cons `(function
 				   ,(second a) ; name
-				   (,@(lambda-funinfo-and-args (third a))
+				   (,@(lambda-head (third a))
 				       ,(transpiler-finalize-sexprs tr
 						    (lambda-body (third a))
 							nil)))

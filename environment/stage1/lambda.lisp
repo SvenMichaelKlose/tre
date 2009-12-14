@@ -39,7 +39,7 @@
 	(when (eq '%funinfo (car p))
 	  (list '%funinfo (cadr p)))))
 
-(defun lambda-funinfo-and-args (x)
+(defun lambda-head (x)
   (append (lambda-funinfo-expr x)
 		  (list (lambda-args x))))
 
@@ -100,6 +100,5 @@
   (cdr (symbol-value fun)))
 
 (defun copy-recurse-into-lambda (x body-fun)
-  `#'(,@(lambda-funinfo-expr x)
-	  ,(lambda-args x)
+  `#'(,@(lambda-head x)
          ,@(funcall body-fun (lambda-body x))))

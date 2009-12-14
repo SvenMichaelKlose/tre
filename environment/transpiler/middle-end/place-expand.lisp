@@ -78,7 +78,7 @@
 	  x
 
 	(lambda? x) ; XXX Add variables to ignore in subfunctions.
-      `#'(,@(lambda-funinfo-and-args x)
+      `#'(,@(lambda-head x)
 		     ,@(place-expand fi (lambda-body x)))
 
     (%slot-value? x)

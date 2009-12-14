@@ -36,7 +36,7 @@
       (js-expanded-funref l)
       (if (eq 'no-args (first (lambda-body l)))
           `(%function
-		     (,@(lambda-funinfo-and-args l)
+		     (,@(lambda-head l)
 			  ,@(cdr (lambda-body l))))
           (js-expanded-fun (past-lambda-before-funinfo l)))))
 

@@ -20,9 +20,9 @@
 
 (defun opt-peephole-tags-lambda (x)
   (with (body x
-		 spare-tags (find-all-if (fn (opt-peephole-has-no-jumps-to body _))
+		 spare-tags (find-all-if (fn opt-peephole-has-no-jumps-to body _)
 		  				         (find-all-if #'numberp x)))
-    (remove-if (fn (member _ spare-tags))
+    (remove-if (fn member _ spare-tags)
 			   x)))
 
 (defun opt-peephole-remove-spare-tags (x)
@@ -32,8 +32,7 @@
 	  	   		 (lambda? (third x.)))
 			  (let l (third x.)
 	      	    `(%setq ,(second x.)
-			  	        #'(,@(lambda-funinfo-expr l)
-		    		       ,(lambda-args l)
+			  	        #'(,@(lambda-head l)
 	  	       		          ,@(opt-peephole-remove-spare-tags
 									(opt-peephole-tags-lambda
 								        (lambda-body l))))))
