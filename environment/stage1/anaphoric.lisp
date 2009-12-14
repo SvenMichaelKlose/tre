@@ -5,11 +5,13 @@
 ; "Like IF but stores the result of the predicate in new local variable !."
 ; (courtesy-of onlisp)
 ; (see-also if)
-(defmacro aif (predicate consequence &optional alternative)
-  `(let ! ,predicate
-     (if !
-		 ,consequence
-		 ,alternative)))
+(defmacro aif (predicate &rest alternatives)
+  (if alternatives
+   `(let ! ,predicate
+      (if !
+		  ,(car alternatives)
+		  (aif ,@(cdr alternatives))))
+   predicate))
 
 ; "Like WHEN but stores the result of the predicate in new local variable !."
 ; (courtesy-of onlisp)
