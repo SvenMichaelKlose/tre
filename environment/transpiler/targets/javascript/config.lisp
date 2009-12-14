@@ -29,7 +29,7 @@
 	  :stack-locals? nil
 	  :rename-all-args? t
 	  :inline-exceptions '(%slot-value error format identity %bind)
-	  :dont-inline '(%slot-value error format identity %bind map apply)))
+	  :dont-inline '(%slot-value error format identity %bind map apply maphash)))
 
 (defun make-javascript-transpiler ()
   (with (tr (make-javascript-transpiler-0)
