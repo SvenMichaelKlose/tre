@@ -13,9 +13,7 @@
 	   `(%transpiler-native ,,x ,(string-downcase (string name)) " " ,,y))))
 
 (defun transpiler-binary-expand (op args)
-  (nconc (mapcan (fn `(,_ ,op))
-				 (butlast args))
-		 (last args)))
+  (pad args op))
 
 (defmacro define-transpiler-binary (tr op repl-op)
   (when *show-definitions*
@@ -29,9 +27,6 @@
 	   ,op
 	   (&rest args)
        `("(" ,,@(transpiler-binary-expand ,repl-op args) ")"))))
-
-(defun comma-separated-list (x)
-  (transpiler-binary-expand "," x))
 
 (defun parenthized-comma-separated-list (x)
   `("(" ,@(comma-separated-list x) ")"))

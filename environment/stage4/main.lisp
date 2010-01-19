@@ -1,5 +1,5 @@
 ;;;; TRE environment
-;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Fourth stage
 

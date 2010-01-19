@@ -1,5 +1,5 @@
 ;;;; TRE environment
-;;;; Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Boot up the environment
 
@@ -52,6 +52,9 @@
 
 (env-load "stage4/main.lisp")
 (defvar *functions-after-stage-4* (currently-defined-functions))
+
+(env-load "stage5/main.lisp")
+(defvar *functions-after-stage-5* (currently-defined-functions))
 
 (env-load "lib/main.lisp")
 
