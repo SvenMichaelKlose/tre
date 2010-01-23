@@ -17,7 +17,7 @@
 
 ;;;; LAMBDA inlining
 
-(defun make-inline-body (stack-places values body)
+(defun lambda-expand-make-inline-body (stack-places values body)
   `(vm-scope
 	 ,@(mapcar #'((stack-place init-value)
 				    `(%setq ,stack-place ,init-value))
@@ -32,17 +32,17 @@
 	  ; reused by the next lambda-call on the same level.
       ;(with-funinfo-env-temporary fi args
 	  (funinfo-env-add-many fi a)
-      (make-inline-body a v
+      (lambda-expand-make-inline-body a v
 	      (lambda-expand-tree fi body export-lambdas?)))));)
 
 ;;; Export
 
-(defun make-var-declarations (fi)
+(defun lambda-expand-make-var-declarations (fi)
   (unless (transpiler-stack-locals? *current-transpiler*)
     (mapcar (fn `(%var ,_))
 	        (funinfo-env fi))))
 
-(defun make-copiers-to-lexicals (fi)
+(defun lambda-expand-make-copiers-to-lexicals (fi)
   (let-when lexicals (funinfo-lexicals fi)
 	(let lex-sym (funinfo-lexical fi)
       `((%setq ,lex-sym (make-array ,(length lexicals)))
@@ -53,11 +53,11 @@
 				  	    `((%set-vec ,lex-sym ,! (%transpiler-native ,_)))))
 				  (funinfo-args fi))))))
 
-(defun make-function-epilogue (fi body)
+(defun lambda-expand-make-function-epilogue (fi body)
   `(,@(when (atom body.) ; Preserve first atom.
 	    (list body.))
-	,@(make-var-declarations fi)
-	,@(make-copiers-to-lexicals fi)
+	,@(lambda-expand-make-var-declarations fi)
+	,@(lambda-expand-make-copiers-to-lexicals fi)
     ,@(if (atom body.)
 		  .body
 		  body)))
@@ -115,7 +115,7 @@
 
 (defun lambda-embed-or-export-transform (fi body export-lambdas?)
   (place-expand fi
-      (make-function-epilogue fi
+      (lambda-expand-make-function-epilogue fi
           (lambda-expand-tree-0 fi body export-lambdas?))))
 
 (defun lambda-expand-0 (x export-lambdas?)
