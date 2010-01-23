@@ -158,9 +158,8 @@
 
 ;; Keep expression in argument but expand its arguments.
 (defun expex-move-arg-inline (ex x)
-  (with ((p a) (expex-move-args ex .x))
-	(cons p
-		  (cons x. a))))
+  (with ((p a) (expex-move-args ex x))
+	(cons p a)))
 
 ;; Move out VM-SCOPE if it contains something. Otherwise keep NIL.
 (defun expex-move-arg-vm-scope (ex x)
