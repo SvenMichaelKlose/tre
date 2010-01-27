@@ -1,5 +1,5 @@
 ;;;;; TRE transpiler
-;;;;; Copyright (c) 2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2010 Sven Klose <pixel@copei.de>
 
 (defun number-sym (x)
   (with (digit
@@ -11,4 +11,5 @@
 				 (with (m (mod _ 34))
 				   (cons (digit m)
 						 (rec (/ (- _ m) 34)))))))
-	(make-symbol (list-string (cons #\_ (rec x))))))
+	(make-symbol (list-string (nconc (rec x)
+									 (list #\_))))))
