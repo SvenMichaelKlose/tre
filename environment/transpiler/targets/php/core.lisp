@@ -21,7 +21,7 @@
 		"return-value.lisp"
 		"not.lisp"
 		"cons.lisp"
-		"symbol.lisp"))
+		));"symbol.lisp"))
 
 (defvar *php-base-debug-print*
 		(php-load-base *php-env-path*

@@ -28,7 +28,7 @@
   :setter (%transpiler-native
 			  "new __tresym ("
 			  	  (%transpiler-string ,(symbol-name x))
-				  ","
+				  ",$"
 			   	  ,(keywordp x)
 				  ")"))
 
@@ -42,7 +42,15 @@
     (stringp x)
 	  (php-compiled-string x)
 	(atom x)
-     (if (expex-global-variable? x)
-	     (transpiler-add-wanted-variable *php-transpiler* x)
-         x)
+      (if
+		(expex-global-variable? x)
+	      (transpiler-add-wanted-variable *php-transpiler* x)
+        (and *expex-funinfo*
+			 (funinfo-arg? *expex-funinfo* x))
+          x
+		(or (and *expex-funinfo*
+		  		 (expex-funinfo-defined-variable? x))
+		    (transpiler-defined-function *php-transpiler* x))
+		  x
+	  	(php-compiled-symbol x))
     (transpiler-import-from-expex x)))

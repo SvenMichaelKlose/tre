@@ -11,10 +11,18 @@ function &T37funref ($f, $g)
 	return $r;
 }
 
+class T37cons {
+	public function __construct (&$a, &$b)
+	{
+		$this->a =& $a;
+		$this->b =& $a;
+	}
+}
+
 // All symbols are stored in this array for reuse.
 $SYMBOLS = Array ();
 
-class _tresym {
+class __tresym {
 	public function __construct ($name, &$pkg)
 	{
 		$this->n =& $name;
@@ -59,7 +67,7 @@ class _tresym {
 // It has a function field but that isn't used yet.
 function & T37symbol ($name, &$pkg)
 {
-	return new _tresym ($name, $pkg);
+	return new __tresym ($name, $pkg);
 }
 
 // Find symbol by name or create a new one.

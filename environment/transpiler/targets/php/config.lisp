@@ -66,6 +66,8 @@
 		  split object *array *string == === + - * /
 
 		  alert))
+	(transpiler-add-defined-function tr '%cons)
+	(transpiler-add-function-args tr '%cons '(a b))
 	tr))
 
 (defvar *php-transpiler* (make-php-transpiler))
