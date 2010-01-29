@@ -155,6 +155,7 @@
 
 (define-js-std-macro dont-inline (x)
   (transpiler-add-inline-exception *js-transpiler* x)
+  (transpiler-add-dont-inline *js-transpiler* x)
   nil)
 
 (define-js-std-macro assert (x &optional (txt nil) &rest args)
