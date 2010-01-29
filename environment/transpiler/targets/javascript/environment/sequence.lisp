@@ -1,5 +1,5 @@
 ;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 
 (dont-obfuscate length)
 
@@ -11,6 +11,9 @@
 
 (dont-obfuscate fun hash)
 (dont-inline map) ; XXX make it MAPHASH.
+
+(defun maparray (fun hash)
+  (%transpiler-native "null;for (i = 0; i < hash.length; i++) fun (hash[i])"))
 
 (defun maphash (fun hash)
   (%transpiler-native "null;for (i in hash) fun (i, hash[i])"))
