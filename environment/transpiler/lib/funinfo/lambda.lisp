@@ -3,8 +3,8 @@
 
 ;;;;; LAMBDA FUNINFO
 
-(defvar *funinfos* (make-hash-table))
-(defvar *funinfos-reverse* (make-hash-table))
+(defvar *funinfos* (make-hash-table :test #'eq))
+(defvar *funinfos-reverse* (make-hash-table :test #'eq))
 
 (defun make-lambda-funinfo (fi)
   (when (href *funinfos-reverse* fi)
