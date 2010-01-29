@@ -18,9 +18,18 @@
 
 ;;;; ARGUMENTS & ENVIRONMENT
 
+(defun funinfo-in-env? (fi x)
+  (href (funinfo-env-hash fi) x))
+
 (defun funinfo-in-args-or-env? (fi x)
   (or (funinfo-arg? fi x)
-	  (funinfo-env-pos fi x)))
+	  (funinfo-in-env? fi x)))
+
+(defun funinfo-in-parent-env? (fi var)
+  (when fi
+    (awhen (funinfo-parent fi)
+      (or (funinfo-in-args-or-env? ! var)
+		  (funinfo-in-parent-env? ! var)))))
 
 (defun funinfo-in-this-or-parent-env? (fi var)
   (when fi
@@ -54,14 +63,15 @@
 (defun funinfo-env-parent (fi)
   (funinfo-env (funinfo-parent fi)))
 
-(defun funinfo-env-add (fi arg)
-  (unless (funinfo-env-pos fi arg)
-	  ;(error "double definition of ~A in ~A" arg (funinfo-env fi))
-      (append! (funinfo-env fi) (list arg))))
+(defun funinfo-env-add (fi x)
+  (unless (funinfo-in-env? fi x)
+	  ; XXX (error "double definition of ~A in ~A" x (funinfo-env fi))
+  	  (setf (href (funinfo-env-hash fi) x) t)
+      (append! (funinfo-env fi) (list x))))
 
-(defun funinfo-env-add-many (fi arg)
-  (dolist (x arg)
-	(funinfo-env-add fi x)))
+(defun funinfo-env-add-many (fi x)
+  (dolist (i x)
+	(funinfo-env-add fi i)))
 
 (defun funinfo-make-stackplace (fi x)
   (funinfo-env-add fi x)

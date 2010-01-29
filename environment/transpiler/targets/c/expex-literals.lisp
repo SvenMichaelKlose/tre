@@ -49,10 +49,12 @@
     (stringp x)
 	  (c-compiled-string x)
 	(atom x)
- 	  (if
-	    (funinfo-arg? *expex-funinfo* x)
-		  x
-		(expex-funinfo-defined-variable? x)
-	  	  `(treatom_get_value ,(c-compiled-symbol x))
+	  (if *expex-funinfo*
+ 	      (if
+			(funinfo-arg? *expex-funinfo* x)
+		      x
+			(expex-funinfo-defined-variable? x)
+	  	  	  `(treatom_get_value ,(c-compiled-symbol x))
+			x)
 		x)
     (transpiler-import-from-expex x)))

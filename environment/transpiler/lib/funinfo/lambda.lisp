@@ -1,5 +1,5 @@
 ;;;;; TRE compiler
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 
 ;;;;; LAMBDA FUNINFO
 
@@ -11,7 +11,7 @@
 	(error "funinfo already memorized"))
   (setf (href *funinfos-reverse* fi) t)
   (let g (funinfo-sym fi)
-	(transpiler-add-obfuscation-exceptions *js-transpiler* g)
+	(transpiler-add-obfuscation-exceptions *current-transpiler* g)
 	(setf (href *funinfos* g) fi)
 	`(%funinfo ,g)))
 

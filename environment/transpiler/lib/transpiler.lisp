@@ -153,6 +153,9 @@
 (define-slot-setter-push! transpiler-add-inline-exception tr
   (transpiler-inline-exceptions tr))
 
+(define-slot-setter-push! transpiler-add-dont-inline tr
+  (transpiler-dont-inline tr))
+
 (defun transpiler-add-obfuscation-exceptions (tr &rest x)
   (dolist (i x)
 	(setf (href (transpiler-obfuscations tr) i) t)))

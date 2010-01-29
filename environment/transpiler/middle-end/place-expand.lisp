@@ -60,7 +60,7 @@
 	  x
 
 	; Emit stack place.
-	(funinfo-env-pos fi x)
+	(funinfo-in-env? fi x)
 	  (place-expand-emit-stackplace fi x)
 
 	; Emit lexical place (outside the function).

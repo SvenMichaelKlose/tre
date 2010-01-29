@@ -120,4 +120,5 @@
   (setf *current-transpiler* *c-transpiler*)
   (transpiler-reset *c-transpiler*)
   (transpiler-switch-obfuscator *c-transpiler* obfuscate?)
+  (make-global-funinfo)
   (c-transpile-0 out files))

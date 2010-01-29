@@ -10,6 +10,7 @@
 (defstruct funinfo
   ; Lists of stack variables. The rest contains the parent environments.
   (env nil)
+  (env-hash (make-hash-table :test #'eq))
   (used-env nil)
 
   (name nil)
@@ -26,7 +27,7 @@
   (free-vars nil)
 
   ; Array of local variables passed to child function via ghost argument.
-  (lexical niL)
+  (lexical nil)
   (ghost niL)
 
   ; List of symbols exported to child functions

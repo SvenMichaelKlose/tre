@@ -1,5 +1,5 @@
 ;;;;; TRE compiler
-;;;;; Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; LAMBDA expansion.
 
@@ -124,7 +124,8 @@
 			       (lambda-args x.))
          imported	(get-lambda-funinfo x.)
          fi			(or imported
-						(make-funinfo :args forms)))
+						(make-funinfo :parent *global-funinfo*
+									  :args forms)))
     (values
 	    `#'(,@(lambda-head-w/-missing-funinfo x. fi)
             ,@(lambda-embed-or-export-transform

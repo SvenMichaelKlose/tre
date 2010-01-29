@@ -1,11 +1,17 @@
 ;;;;; TRE compiler
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Peephole-optimizer for expression-expanded code.
 
+(defvar *opt-peephole-funinfo* nil)
+
 (defun opt-peephole-rec (x into)
-  (cons `(%setq ,(second x.) ,(copy-recurse-into-lambda (third x.) into))
-        (funcall into .x)))
+  (with (old-funinfo *opt-peephole-funinfo*
+		 *opt-peephole-funinfo* (get-lambda-funinfo (third x.)))
+	(prog1
+      (cons `(%setq ,(second x.) ,(copy-recurse-into-lambda (third x.) into))
+            (funcall into .x))
+	  (setf *opt-peephole-funinfo* old-funinfo))))
 
 (defun find-all-if (pred x)
   (mapcan (fn (when (funcall pred _)
@@ -167,14 +173,25 @@
 			(eq 'vm-go a.))
 		 (cons a (opt-peephole-remove-void (opt-peephole-find-next-tag d))))))
 
-(defun opt-peephole-will-be-used-again? (x v)
+(defun opt-peephole-will-be-used-again-0? (x v &key (ignore-lambda? nil))
   (if x
-      (or (vm-jump? x.) ; We don't know what happens after a jump.
-		  (unless (and (%setq? x.)
-			 		   (eq v (%setq-place x.)))
-	        (or (find-tree x. v :test #'equal) ; Variable used?
-          	    (opt-peephole-will-be-used-again? .x v))))
+	  (if (and ignore-lambda?
+			   (lambda? x.))
+  	      (opt-peephole-will-be-used-again-0? .x v :ignore-lambda? ignore-lambda?)
+          (or (vm-jump? x.) ; We don't know what happens after a jump.
+		      (unless (and (%setq? x.)
+			 		  (equal v (%setq-place x.)))
+	            (or (find-tree x. v :test #'equal) ; Variable used?
+          	        (opt-peephole-will-be-used-again-0? .x v :ignore-lambda? ignore-lambda?)))))
 	  (~%ret? v)))
+
+(defun opt-peephole-will-be-used-again? (x v)
+  (aif *opt-peephole-funinfo*
+	   (or (not (funinfo-in-this-or-parent-env? ! v)) ; Don't optimize globals away.
+		   (funinfo-in-parent-env? ! v)
+	  	   (funinfo-lexical-pos ! v)
+	  	   (opt-peephole-will-be-used-again-0? x v :ignore-lambda? t))
+	   (opt-peephole-will-be-used-again-0? x v :ignore-lambda? nil)))
 
 (defun opt-peephole (statements)
   (with
@@ -185,12 +202,11 @@
 	     #'((x)
 			  (opt-peephole-fun #'remove-code
 				((and (%setq? a)
+				      (atom (%setq-value a))
 				   	  (not (opt-peephole-will-be-used-again? d (%setq-place a))))
 				   (let p (%setq-place a)
-					 (if
-				       (and (atomic? (%setq-value a))
-				            (or (~%ret? p)
-				  		 	    (expex-sym? p)))
+					 (if (or (~%ret? p)
+				  		     (expex-sym? p))
 						 (remove-code d)
 					   (cons a (remove-code d)))))))
 
@@ -201,8 +217,9 @@
 					  (%setq? a)
 					  (%setq? d.)
 					  (expex-sym? (%setq-place a))
-					  (eq (%setq-place a)
-						  (%setq-value d.)))
+					  (equal (%setq-place a)
+						  	 (%setq-value d.))
+				   	  (not (opt-peephole-will-be-used-again? .d (%setq-place a))))
 				  (cons `(%setq ,(%setq-place d.) ,(%setq-value a))
 					    (remove-assignments .d)))))
 
@@ -237,10 +254,3 @@
 	    	(repeat-while-changes #'rec (opt-peephole-remove-identity
 											(opt-peephole-move-vars-to-front
 											    statements))))))
-
-(defun opt-test ()
-  (let src '((%setq ~e123 (fnord))
-			 (%setq bla fmord))
-	(print src)
-	(print '---)
-	(print (opt-peephole src))))

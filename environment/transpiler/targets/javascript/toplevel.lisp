@@ -64,6 +64,7 @@
     (setf *current-transpiler* tr)
     (transpiler-reset tr)
     (transpiler-switch-obfuscator tr obfuscate?)
+	(make-global-funinfo)
     (setf *nil-symbol-name*
 		  (symbol-name (transpiler-obfuscate-symbol-0 tr nil)))
 ;    (when (or env?

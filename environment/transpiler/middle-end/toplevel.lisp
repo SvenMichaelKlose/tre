@@ -32,10 +32,10 @@
 					 x)))
 
 ;; After this pass
-;; - Functions were inlined.
+;; - Functions are inlined.
 ;; - Nested functions are merged.
 ;; - Optional: Anonymous functions were exported.
-;; - FUNINFO objects were built for all functions.
+;; - FUNINFO objects are built for all functions.
 ;; - Accesses to the object in a method are thisified.
 (defvar *opt-inline?* t)
 
