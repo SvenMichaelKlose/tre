@@ -4,4 +4,5 @@
 (defvar *global-funinfo* nil)
 
 (defun make-global-funinfo ()
-  (setf *global-funinfo* (make-funinfo)))
+  (make-lambda-funinfo
+	  (setf *global-funinfo* (make-funinfo))))
