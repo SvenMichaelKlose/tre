@@ -1,7 +1,7 @@
 ;;;;; TRE transpiler
-;;;;; Copyright (c) 2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2009-2010 Sven Klose <pixel@copei.de>
 
-(defvar *show-inlines?* t)
+(defvar *show-inlines?* nil)
 (defvar *opt-inline-max-levels* 1)
 (defvar *opt-inline-min-size* 16)
 (defvar *opt-inline-max-size* 32)
