@@ -1,5 +1,5 @@
 ;;;;; TRE transpiler
-;;;;; Copyright (c) 2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2009-2010 Sven Klose <pixel@copei.de>
 
 (defun c-make-decl (name)
   (format nil "treptr ~A;~%"
@@ -51,7 +51,7 @@
 	(atom x)
 	  (if *expex-funinfo*
  	      (if
-			(funinfo-arg? *expex-funinfo* x)
+			(funinfo-in-this-or-parent-env? *expex-funinfo* x)
 		      x
 			(expex-funinfo-defined-variable? x)
 	  	  	  `(treatom_get_value ,(c-compiled-symbol x))

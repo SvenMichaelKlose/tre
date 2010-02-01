@@ -1,5 +1,5 @@
 ;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Toplevel
 
@@ -80,8 +80,8 @@
 				      (let name ($ 'c-init- g)
 				        (push! name init-funs)
 				        `(defun ,name ()
-						   (tregc_push_compiled _local_array)
-					       ,@_))))
+						   ,@(mapcar (fn `(tregc_push_compiled ,_))
+					       			 _)))))
 			    (group (c-transpiler-declarations-and-initialisations) 20))
         `((defun c-init ()
 		    ,@(mapcar #'list (reverse init-funs)))))))

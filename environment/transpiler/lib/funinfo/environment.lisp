@@ -1,5 +1,5 @@
 ;;;;; TRE compiler
-;;;;; Copyright (C) 2006-2007,2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (C) 2006-2007,2009-2010 Sven Klose <pixel@copei.de>
 
 ;;;; ARGUMENTS
 
@@ -65,22 +65,18 @@
 
 (defun funinfo-env-add (fi x)
   (unless (funinfo-in-env? fi x)
-	  ; XXX (error "double definition of ~A in ~A" x (funinfo-env fi))
-  	  (setf (href (funinfo-env-hash fi) x) t)
-      (append! (funinfo-env fi) (list x))))
+	; XXX (error "double definition of ~A in ~A" x (funinfo-env fi))
+  	(setf (href (funinfo-env-hash fi) x) t)
+    (push! x (funinfo-env fi)))
+  x)
 
 (defun funinfo-env-add-many (fi x)
   (dolist (i x)
 	(funinfo-env-add fi i)))
 
-(defun funinfo-make-stackplace (fi x)
-  (funinfo-env-add fi x)
-  `(%stack ,(funinfo-sym fi) ,x))
-
-(defun funinfo-env-all (fi)
-  (append (funinfo-env fi)
-		  (awhen (funinfo-parent fi)
-			(funinfo-env-all !))))
+(defun funinfo-env-reset (fi)
+  (setf (funinfo-env fi) nil)
+  (setf (funinfo-env-hash fi) (make-hash-table :test #'eq)))
 
 (defun funinfo-add-used-env (fi x)
   (adjoin! x (funinfo-used-env fi) :test #'eq))

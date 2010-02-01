@@ -1,5 +1,5 @@
 ;;;;; TRE compiler
-;;;;; Copyright (c) 2006-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2006-2010 Sven Klose <pixel@copei.de>
 ;;;;; 
 ;;;;; Expression-expander
 ;;;;;
@@ -69,25 +69,15 @@
        (not (expex-in-env? x))
        (global-variable? x)))
 
-(defun expex-funinfo-env-add-var ()
+(defun expex-funinfo-env-add ()
   (let s (expex-sym)
     (awhen *expex-funinfo*
       (funinfo-env-add ! s))
 	s))
 
-(defun expex-funinfo-env-add-stack ()
-  (aif *expex-funinfo*
-      (funinfo-make-stackplace ! (expex-sym))
-  	  (expex-sym)))
-
 (defun expex-stack-locals? (ex)
   (and *expex-funinfo* ; Is set if we're inside a function.
 	   (transpiler-stack-locals? (expex-transpiler ex))))
-
-(defun expex-funinfo-env-add (ex)
-  (if (expex-stack-locals? ex)
-	  (expex-funinfo-env-add-stack)
-	  (expex-funinfo-env-add-var)))
 
 (defun expex-local-decl (ex s)
   (unless (expex-stack-locals? ex)
@@ -163,7 +153,7 @@
 
 ;; Move out VM-SCOPE if it contains something. Otherwise keep NIL.
 (defun expex-move-arg-vm-scope (ex x)
-  (let s (expex-funinfo-env-add ex)
+  (let s (expex-funinfo-env-add)
     (aif (vm-scope-body x)
          (cons (append (expex-local-decl ex s)
 		               (expex-body ex ! s))
@@ -171,7 +161,7 @@
 	     (cons nil nil))))
 
 (defun expex-move-arg-std (ex x)
-  (with (s (expex-funinfo-env-add ex)
+  (with (s (expex-funinfo-env-add)
     	 (moved new-expr) (expex-expr ex x))
       (cons (append (expex-local-decl ex s)
 					moved

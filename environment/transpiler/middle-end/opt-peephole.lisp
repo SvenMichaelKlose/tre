@@ -218,8 +218,8 @@
 					  (%setq? d.)
 					  (expex-sym? (%setq-place a))
 					  (equal (%setq-place a)
-						  	 (%setq-value d.))
-				   	  (not (opt-peephole-will-be-used-again? .d (%setq-place a))))
+						  	 (%setq-value d.)))
+				   	  ;(not (opt-peephole-will-be-used-again? .d (%setq-place a))))
 				  (cons `(%setq ,(%setq-place d.) ,(%setq-value a))
 					    (remove-assignments .d)))))
 

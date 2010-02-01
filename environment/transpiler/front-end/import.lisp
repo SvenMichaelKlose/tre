@@ -1,5 +1,5 @@
 ;;;;; TRE transpiler
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Import functions and variable from the environment.
 
@@ -117,10 +117,11 @@
 
 (defun transpiler-import-from-expex (x)
   (aif (atom-function-expr? x)
-       (progn
-         (unless (funinfo-in-this-or-parent-env? *expex-funinfo* !)
-           (transpiler-add-wanted-function *current-transpiler* !))
-         `(symbol-function (%quote ,!)))
+       (if (funinfo-in-this-or-parent-env? *expex-funinfo* !)
+		   x
+           (progn
+			 (transpiler-add-wanted-function *current-transpiler* !))
+             `(symbol-function (%quote ,!)))
        (aif (vec-function-expr? x)
            !
            x)))

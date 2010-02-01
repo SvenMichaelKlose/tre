@@ -1,5 +1,5 @@
 ;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Expansion of alternative standard macros.
 
@@ -74,9 +74,20 @@
 (define-c-std-macro %%usetf-slot-value (val obj slot)
   `(%%usetf-%slot-value ,val ,obj (%quote ,slot)))
 
-(define-c-std-macro %%usetf-aref (&rest x)
-  `(%set-aref ,@x))
+(define-c-std-macro %%usetf-aref (val arr &rest idx)
+  (if (and (= 1 (length idx))
+		   (not (%transpiler-native? idx.))
+		   (numberp idx.))
+    `(%set-aref ,val ,arr (%transpiler-native ,idx.))
+    `(%set-aref ,val ,arr ,@idx)))
 
+(define-c-std-macro aref (arr &rest idx)
+  (if (and (= 1 (length idx))
+		   (not (%transpiler-native? idx.))
+		   (numberp idx.))
+	  `(aref ,arr (%transpiler-native ,idx.))
+	  `(aref ,arr ,@idx)))
+	  
 ; Convert MAPCAR to faster FILTER if possible.
 (define-c-std-macro mapcar (fun &rest lsts)
   `(,(if (= 1 (length lsts))

@@ -1,5 +1,5 @@
 ;;;;; TRE to C transpiler
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Code generation
 
@@ -12,53 +12,50 @@
   (compiled-function-name (second x)))
 
 (define-c-macro function (name &optional (x 'only-name))
-  (if (eq 'only-name x)
-  	  `(treatom_get_function ,name)
-  (if (atom x)
+  (if
+	(eq 'only-name x)
+  	  name
+    (atom x)
 	  (error "codegen: arguments and body expected: ~A" x)
-	  (with (args (argument-expand-names 'unnamed-c-function
-			      		     	         (lambda-args x))
-			 fi (get-lambda-funinfo x)
-			 num-locals (length (funinfo-env fi)))
-	    (push! (concat-stringtree
-				   "extern treptr "
-				   (transpiler-symbol-string *c-transpiler*
-					   (compiled-function-name name))
-				   "("
-				   (if args
-				       (concat-stringtree
-	  	    		       (transpiler-binary-expand ","
-	               			   (mapcar (fn `("treptr " ,(transpiler-symbol-string *c-transpiler* _)))
-				    				   args)))
-					  "")
-				   ");" (string (code-char 10)))
-			   (transpiler-compiled-decls *c-transpiler*))
-        `(,(code-char 10)
-		  "treptr " ,(compiled-function-name name) "("
-	  	    ,@(transpiler-binary-expand ","
-	                (mapcar (fn `("treptr " ,_))
-						    args))
-		  ")" ,(code-char 10)
-	      "{" ,(code-char 10)
-		     ,*c-indent* "treptr " ,'~%ret ,*c-separator*
-			 ,@(when (< 0 num-locals)
-			     `(,*c-indent* ,"treptr _local_array = trearray_make ("
-							      ,num-locals
-			  				      ");" ,*c-separator*
-			       ,*c-indent* "tregc_push (_local_array)" ,*c-separator*
-				   ; Keep registered syms from being garbage collected.
-			       ,@(when (eq 'c-init name)
-					   `(,*c-indent* "tregc_push (_local_array)" ,*c-separator*))
-			 	   ,*c-indent*
-				   ,"const treptr * _locals = (treptr *) "
-									  	      "TREATOM_DETAIL(_local_array)"
-											  ,*c-separator*))
-             ,@(lambda-body x)
-			 ,@(when (< 0 num-locals)
-			     `(,*c-indent* "tregc_pop ();" ,*c-separator*))
-;			 	   ,*c-indent* "treatom_remove (_local_array);" ,*c-separator*))
-          	 (,*c-indent* "return " ,'~%ret ,*c-separator*)
-	      "}" ,*c-newline*)))))
+	(with (args (argument-expand-names 'unnamed-c-function
+			      		     	       (lambda-args x))
+		   fi (get-lambda-funinfo x)
+		   num-locals (length (funinfo-env fi)))
+	  (push! (concat-stringtree
+				 "extern treptr "
+				 (transpiler-symbol-string *c-transpiler*
+					 (compiled-function-name name))
+				 "("
+				 (if args
+				     (concat-stringtree
+	  	    		     (transpiler-binary-expand ","
+	               			 (mapcar (fn `("treptr " ,(transpiler-symbol-string *c-transpiler* _)))
+				    				 args)))
+					"")
+				 ");" (string (code-char 10)))
+			 (transpiler-compiled-decls *c-transpiler*))
+      `(,(code-char 10)
+		"treptr " ,(compiled-function-name name) "("
+	  	  ,@(transpiler-binary-expand ","
+	              (mapcar (fn `("treptr " ,_))
+						  args))
+		")" ,(code-char 10)
+	    "{" ,(code-char 10)
+		   ,*c-indent* "treptr " ,'~%ret ,*c-separator*
+		   ,@(when (< 0 num-locals)
+			   `(,*c-indent* ,"treptr _local_array = trearray_make ("
+							    ,num-locals
+			  				    ");" ,*c-separator*
+			     ,*c-indent* "tregc_push (_local_array)" ,*c-separator*
+			 	 ,*c-indent*
+				 ,"const treptr * _locals = (treptr *) "
+									  	    "TREATOM_DETAIL(_local_array)"
+											,*c-separator*))
+           ,@(lambda-body x)
+		   ,@(when (< 0 num-locals)
+			   `(,*c-indent* "tregc_pop ();" ,*c-separator*))
+           (,*c-indent* "return " ,'~%ret ,*c-separator*)
+	    "}" ,*c-newline*))))
 
 ;; XXX same in js-transpiler
 (defun codegen-%setq (dest val)
@@ -143,7 +140,8 @@
 
 (defun c-make-aref (arr idx)
   `("((treptr *) TREATOM_DETAIL(" ,arr "))["
-	    ,(if (numberp idx)
+	    ,(if (or (numberp idx)
+				 (%transpiler-native? idx))
 		  	 idx
 			 `("(ulong)TRENUMBER_VAL(" ,idx ")"))
 		"]"))
@@ -173,10 +171,10 @@
 ;; Convert from lambda-expanded funref to one with lexical.
 (define-c-macro %%funref (name fi-sym)
   (let fi (get-lambda-funinfo-by-sym fi-sym)
- 	 `("_trelist_get (" ,(c-compiled-symbol '%funref) ", "
-		   "_trelist_get (" ,(c-compiled-symbol name) "," 
-							,(place-assign (place-expand-funref-lexical fi))
-						 "))")))
+ 	`("_trelist_get (" ,(c-compiled-symbol '%funref) ", "
+		  "_trelist_get (" ,(c-compiled-symbol name) "," 
+						   ,(place-assign (place-expand-funref-lexical fi))
+						"))")))
 
 ;; Lexical scope
 (define-c-macro make-array (size)

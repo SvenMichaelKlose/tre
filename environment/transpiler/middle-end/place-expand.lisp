@@ -1,5 +1,5 @@
 ;;;;; TRE compiler
-;;;;; Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
 
 ;;; Pass lexical up one step through ghost.
 
@@ -34,7 +34,7 @@
 (defun place-expand-atom (fi x)
   (if
 	(not fi)
-	  x
+	  (error "place-assign: no funinfo for ~A" x)
 
 	(or (not x)
 		(numberp x)
@@ -66,7 +66,7 @@
 	; Emit lexical place (outside the function).
 	(make-lexical fi x)))
 
-(defun place-expand (fi x)
+(defun place-expand-0 (fi x)
   (if
 	(atom x)
 	  (place-expand-atom fi x)
@@ -74,20 +74,40 @@
 	(or (%quote? x)
 		(%transpiler-native? x)
 		(%stack? x)
-		(%vec? x))
+		(%vec? x)
+		(%var? x))
 	  x
 
 	(lambda? x) ; XXX Add variables to ignore in subfunctions.
       `#'(,@(lambda-head x)
-		     ,@(place-expand fi (lambda-body x)))
+		     ,@(place-expand-0 (get-lambda-funinfo x)
+							   (lambda-body x)))
 
     (%slot-value? x)
-      `(%slot-value ,(place-expand fi .x.)
+      `(%slot-value ,(place-expand-0 fi .x.)
 					,..x.)
 
-    (cons (place-expand fi x.)
-		  (place-expand fi .x))))
+    (cons (place-expand-0 fi x.)
+		  (place-expand-0 fi .x))))
+
+(defun place-expand (x)
+  (if
+	(atom x)
+	  x
+
+	(named-function-expr? x)
+	  `(function ,.x.
+	  			 (,@(lambda-head ..x.)
+	          	 	  ,@(place-expand-0 (get-lambda-funinfo ..x.)
+									    (lambda-body ..x.))))
+
+	(lambda? x)
+	  `#'(,@(lambda-head x)
+	          ,@(place-expand-0 (get-lambda-funinfo x)
+								(lambda-body x)))
+	(cons (place-expand x.)
+		  (place-expand .x))))
 
 (defun place-expand-funref-lexical (fi)
-  (place-expand (funinfo-parent fi)
-                (funinfo-lexical (funinfo-parent fi))))
+  (place-expand-0 (funinfo-parent fi)
+                  (funinfo-lexical (funinfo-parent fi))))

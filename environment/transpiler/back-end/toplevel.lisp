@@ -1,5 +1,5 @@
 ;;;;; TRE transpiler
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Code-generation top-level
 
@@ -18,7 +18,9 @@
 	  (fn transpiler-finalize-sexprs tr _)
 	  #'transpiler-encapsulate-strings
 	  (fn transpiler-obfuscate tr _)
-	  #'place-assign
+	  (fn (if (transpiler-lambda-export? tr)
+			  (place-assign (place-expand _))
+			  _))
 	  #'opt-places-remove-unused))
 
 (defun transpiler-generate-code (tr x)

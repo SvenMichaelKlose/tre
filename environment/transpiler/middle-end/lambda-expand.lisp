@@ -46,9 +46,8 @@
   (let-when lexicals (funinfo-lexicals fi)
 	(let lex-sym (funinfo-lexical fi)
       `((%setq ,lex-sym (make-array ,(length lexicals)))
-        ,@(mapcan (fn (awhen (funinfo-lexical-pos fi _)
-				  	    `((%set-vec ,lex-sym ,! ,_))))
-				  (list (funinfo-lexical fi)))
+        ,@(awhen (funinfo-lexical-pos fi lex-sym)
+		    `((%set-vec ,lex-sym ,! ,lex-sym)))
         ,@(mapcan (fn (awhen (funinfo-lexical-pos fi _)
 				  	    `((%set-vec ,lex-sym ,! (%transpiler-native ,_)))))
 				  (funinfo-args fi))))))
@@ -111,12 +110,15 @@
 		         (fn lambda-expand-branch fi _ export-lambdas?)))
 
 (defun lambda-expand-tree (fi body export-lambdas?)
-  (place-expand fi (lambda-expand-tree-0 fi body export-lambdas?)))
+  (let expanded-body (lambda-expand-tree-0 fi body export-lambdas?)
+    (place-expand-0 fi expanded-body)
+	expanded-body))
 
 (defun lambda-embed-or-export-transform (fi body export-lambdas?)
-  (place-expand fi
-      (lambda-expand-make-function-epilogue fi
-          (lambda-expand-tree-0 fi body export-lambdas?))))
+  (let expanded-body (lambda-expand-make-function-epilogue fi
+    				     (lambda-expand-tree-0 fi body export-lambdas?))
+    (place-expand-0 fi expanded-body)
+	expanded-body))
 
 (defun lambda-expand-0 (x export-lambdas?)
   (with (forms (argument-expand-names
