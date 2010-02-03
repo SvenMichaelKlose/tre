@@ -7,6 +7,8 @@
       `(string-concat ,@x)
 	(every #'stringp x)
 	  (apply #'string-concat x)
+	(not (= 2 (length x)))
+      `(+ ,@x)
 	(and (some #'characterp x) ; XXX would still mix with other types in vars
 		 (not (some #'integerp x)))
       `(character+ ,@x)
