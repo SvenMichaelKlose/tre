@@ -149,15 +149,15 @@
   (opt-peephole-fun #'opt-peephole-remove-void
 	  ; Remove void assigment.
 	  ((and (%setq? a)
-		    (equal .a. ..a.))
+		    (eq .a. ..a.))
 	     (opt-peephole-remove-void d))
 
       ; Remove second of (setf x y y x).
 	  ((and (%setq? a)
 			(%setq? d.)
 			(atomic? .a.)
-			(equal .a. (third d.))
-			(equal (second d.) ..a.))
+			(eq .a. (third d.))
+			(eq (second d.) ..a.))
 	     (cons a (opt-peephole-remove-void .d)))
 
 	  ; Remove jump to following tag.
@@ -180,8 +180,8 @@
   	      (opt-peephole-will-be-used-again-0? .x v :ignore-lambda? ignore-lambda?)
           (or (vm-jump? x.) ; We don't know what happens after a jump.
 		      (unless (and (%setq? x.)
-			 		  (equal v (%setq-place x.)))
-	            (or (find-tree x. v :test #'equal) ; Variable used?
+			 		  (eq v (%setq-place x.)))
+	            (or (find-tree x. v :test #'eq) ; Variable used?
           	        (opt-peephole-will-be-used-again-0? .x v :ignore-lambda? ignore-lambda?)))))
 	  (~%ret? v)))
 
@@ -217,8 +217,8 @@
 					  (%setq? a)
 					  (%setq? d.)
 					  (expex-sym? (%setq-place a))
-					  (equal (%setq-place a)
-						  	 (%setq-value d.)))
+					  (eq (%setq-place a)
+						  (%setq-value d.)))
 				   	  ;(not (opt-peephole-will-be-used-again? .d (%setq-place a))))
 				  (cons `(%setq ,(%setq-place d.) ,(%setq-value a))
 					    (remove-assignments .d)))))

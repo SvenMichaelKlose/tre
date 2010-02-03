@@ -49,7 +49,7 @@
 	; Emit lexical place, except the lexical array itself (it can
 	; self-reference for child functions).
 	(and (not (eq x (funinfo-lexical fi)))
-		 (funinfo-lexical-pos fi x))
+		 (funinfo-lexical? fi x))
 	  `(%vec ,(place-expand-atom fi (funinfo-lexical fi))
 			 ,(funinfo-sym fi)
 			 ,x)

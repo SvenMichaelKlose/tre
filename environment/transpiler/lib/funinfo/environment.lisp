@@ -60,6 +60,9 @@
 					 lexical-pos lexicals)
 				   2))))
 
+(defun funinfo-lexical? (fi x)
+  (member x (funinfo-lexicals fi)))
+
 (defun funinfo-env-parent (fi)
   (funinfo-env (funinfo-parent fi)))
 
