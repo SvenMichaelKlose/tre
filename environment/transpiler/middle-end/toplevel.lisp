@@ -14,6 +14,7 @@
   (compose
       (fn transpiler-make-named-functions tr _)
       #'transpiler-update-funinfo
+      #'opt-places-remove-unused
       #'opt-places-find-used
       #'opt-peephole
       #'transpiler-quote-keywords

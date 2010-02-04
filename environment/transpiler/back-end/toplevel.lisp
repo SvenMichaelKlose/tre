@@ -31,7 +31,6 @@
 	  (fn (if (transpiler-lambda-export? tr)
 			  (place-assign (place-expand _))
 			  _))
-	  #'opt-places-remove-unused
 	  #'make-function-prologues))
 
 (defun transpiler-backend (tr x)

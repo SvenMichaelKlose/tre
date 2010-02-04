@@ -90,7 +90,7 @@
 		   (function-ref-expr? x)
            (in? x. 'vm-go 'vm-go-nil
 				   '%transpiler-native '%transpiler-string
-				   '%quote '%var))))
+				   '%quote))))
 
 ;; Check if an expression has a return value.
 (defun expex-returnable? (ex x)
