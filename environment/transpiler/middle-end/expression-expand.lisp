@@ -291,6 +291,4 @@
 (defun expression-expand (ex x)
   (when x
 	(with-temporary *expex-funinfo* *global-funinfo*
-      (expex-body ex (if (vm-scope? x)
-					     (vm-scope-body x)
-					     x)))))
+      (expex-body ex x))))

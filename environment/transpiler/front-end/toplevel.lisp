@@ -1,5 +1,5 @@
 ;;;;; TRE transpiler
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 
 ;; After this pass
 ;; - All macros are expanded.
@@ -18,9 +18,5 @@
       #'dot-expand
       (fn funcall (transpiler-preprocessor tr) _)))
 
-(defun transpiler-simple-expand (tr x)
-  (mapcan (fn (funcall (transpiler-simple-expand-compose tr) (list _)))
-		  x))
-
-(defun transpiler-preexpand-and-expand (tr forms)
-  (transpiler-expand tr (transpiler-preexpand tr (transpiler-simple-expand tr (print forms)))))
+(defun transpiler-front-end (tr x)
+  (funcall (transpiler-simple-expand-compose tr) x))

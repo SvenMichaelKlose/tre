@@ -17,9 +17,9 @@
   `(#'(,(argument-expand-names 'opt-inline-import-argexp argdef)
 	   ,@(opt-inline-0 tr level current (cons x. parent)
 		     (rename-body-tags
-			     (transpiler-simple-expand tr body))))
+			     (transpiler-front-end tr body))))
           ,@(opt-inline-0 tr level current parent
-		        (transpiler-simple-expand tr
+		        (transpiler-front-end tr
   					(if (and (not argdef) .x)
 					  	.x
 			            (argument-expand-compiled-values 'opt-inline argdef .x))))))

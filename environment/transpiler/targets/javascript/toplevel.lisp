@@ -44,16 +44,17 @@
     (let no-decls 
 	  (concat-stringtree
 		  (when base?
- 	        (concat-stringtree (transpiler-transpile tr base)))
+ 	        (transpiler-transpile tr base))
 		  (when base?
- 	        (concat-stringtree (transpiler-transpile tr base2)))
- 	      (concat-stringtree (transpiler-transpile tr deps))
+ 	        (transpiler-transpile tr base2))
+ 	      (transpiler-transpile tr deps)
 		  (when (and base? *transpiler-assert*)
- 		    (concat-stringtree (transpiler-transpile tr base-debug)))
- 	      (concat-stringtree (transpiler-transpile tr tests))
- 	      (concat-stringtree (transpiler-transpile tr user)))
+ 		    (transpiler-transpile tr base-debug))
+ 	      (transpiler-transpile tr tests)
+ 	      (transpiler-transpile tr user))
 	  (princ (concat-stringtree
-			     (transpiler-emit-code tr (list (print (funinfo-var-declarations *global-funinfo*)))))
+			     (mapcar (fn transpiler-emit-code tr (list _))
+						 (funinfo-var-declarations *global-funinfo*)))
 	         f)
 	  (princ no-decls f))
     (transpiler-print-obfuscations tr)))

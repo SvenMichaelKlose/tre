@@ -103,9 +103,9 @@
 	; Generate.
     (format t "; Let me think. Hmm")
     (let code (concat-stringtree
-				  (concat-stringtree (transpiler-transpile tr deps))
-		     	  (concat-stringtree (transpiler-transpile tr tests))
- 	         	  (concat-stringtree (transpiler-transpile tr usr)))
+				  (transpiler-transpile tr deps)
+		     	  (transpiler-transpile tr tests)
+ 	         	  (transpiler-transpile tr usr))
 	  (c-transpiler-make-closure-argdef-symbols)
 	  (setf *opt-inline?* nil)
 	  (let cinit (c-transpiler-make-init tr)

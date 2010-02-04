@@ -1,11 +1,6 @@
 ;;;;; TRE transpiler
 ;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 
-(defun transpiler-expand-print-dot (x)
-  (princ #\.)
-  (force-output)
-  x)
-
 (defun transpiler-expression-expand (tr x)
     (expression-expand (transpiler-expex tr) x))
 
@@ -17,19 +12,17 @@
 ;; - FUNCTION expression contain the names of top-level functions.
 (defun transpiler-expand-compose (tr)
   (compose
-	  #'transpiler-expand-print-dot
       (fn transpiler-make-named-functions tr _)
       #'transpiler-update-funinfo
       #'opt-places-find-used
       #'opt-peephole
       #'transpiler-quote-keywords
-      (fn transpiler-expression-expand tr `(vm-scope ,_))
+      (fn transpiler-expression-expand tr _)
 	  (fn transpiler-prepare-runtime-argument-expansions tr _)))
 
-(defun transpiler-expand (tr x)
+(defun transpiler-middleend-2 (tr x)
   (remove-if #'not
-		     (mapcar (fn funcall (transpiler-expand-compose tr) _)
-					 x)))
+		     (funcall (transpiler-expand-compose tr) x)))
 
 ;; After this pass
 ;; - Functions are inlined.
@@ -41,6 +34,8 @@
 
 (defun transpiler-preexpand-compose (tr)
   (compose
+	  (fn (transpiler-expression-expand tr _)
+		  _)
       (fn transpiler-lambda-expand tr _)
 	  #'rename-function-arguments
 	  (fn (if *opt-inline?*
@@ -48,6 +43,5 @@
 			  _))
       (fn thisify (transpiler-thisify-classes tr) _)))
 
-(defun transpiler-preexpand (tr x)
-  (mapcan (fn (funcall (transpiler-preexpand-compose tr) (list _)))
-	      x))
+(defun transpiler-middleend-1 (tr x)
+  (funcall (transpiler-preexpand-compose tr) x))

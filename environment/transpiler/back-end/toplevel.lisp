@@ -9,7 +9,7 @@
 ;; - Expressions are expanded via code generating macros.
 ;; - Everything is converted to strings and concatenated.
 (defun transpiler-emit-code-compose (tr)
-  (compose (fn (princ #\o)
+  (compose (fn (princ #\.)
 			   (force-output)
 			   _)
 	  #'concat-stringtree
@@ -20,9 +20,7 @@
 	  (fn transpiler-obfuscate tr _)))
 
 (defun transpiler-emit-code (tr x)
-  (let fun (transpiler-emit-code-compose tr)
-    (mapcar (fn funcall fun _)
-		    x)))
+  (funcall (transpiler-emit-code-compose tr) x))
 
 ;; After this pass:
 ;; - Function prologues are generated.
@@ -36,8 +34,7 @@
 	  #'opt-places-remove-unused
 	  #'make-function-prologues))
 
-(defun transpiler-generate-code (tr x)
-  (with (emit (transpiler-emit-code-compose tr)
-         gen (transpiler-generate-code-compose tr))
-    (mapcar (fn funcall emit (funcall gen _))
-		    x)))
+(defun transpiler-backend (tr x)
+  (funcall (transpiler-emit-code-compose tr)
+  		   (funcall (transpiler-generate-code-compose tr)
+					x)))
