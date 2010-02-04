@@ -37,31 +37,6 @@
 
 ;;; Export
 
-(defun lambda-expand-make-var-declarations (fi)
-  (unless (transpiler-stack-locals? *current-transpiler*)
-    (mapcar (fn `(%var ,_))
-	        (funinfo-env fi))))
-
-(defun lambda-expand-make-copiers-to-lexicals (fi)
-  (let-when lexicals (funinfo-lexicals fi)
-	(let lex-sym (funinfo-lexical fi)
-      `((%setq ,lex-sym (make-array ,(length lexicals)))
-        ,@(awhen (funinfo-lexical? fi lex-sym)
-		    `((%set-vec ,lex-sym ,! ,lex-sym)))
-        ,@(mapcan (fn (awhen (funinfo-lexical? fi _)
-				  	    `((%setq ,_ (%transpiler-native ,_)))))
-				  	    ;`((%set-vec ,lex-sym ,! (%transpiler-native ,_)))))
-				  (funinfo-args fi))))))
-
-(defun lambda-expand-make-function-epilogue (fi body)
-  `(,@(when (atom body.) ; Preserve first atom.
-	    (list body.))
-	,@(lambda-expand-make-var-declarations fi)
-	,@(lambda-expand-make-copiers-to-lexicals fi)
-    ,@(if (atom body.)
-		  .body
-		  body)))
-
 (defun lambda-export-make-exported (fi x)
   (with-gensym exported-name
     (let fi-child (make-funinfo :parent fi
@@ -86,14 +61,6 @@
 
 ;;;; Toplevel
 
-(defun lambda-head-w/-missing-funinfo (x fi)
-  `(,@(make-lambda-funinfo-if-missing x fi)
-    ,(lambda-args x)))
-
-(defun lambda-w/-missing-funinfo (x fi)
-  `#'(,@(lambda-head-w/-missing-funinfo x fi)
-	  ,@(lambda-body x)))
-
 (defun lambda-expand-branch (fi x export-lambdas?)
   (if
     (lambda-call? x)
@@ -116,8 +83,7 @@
 	expanded-body))
 
 (defun lambda-embed-or-export-transform (fi body export-lambdas?)
-  (let expanded-body (lambda-expand-make-function-epilogue fi
-    				     (lambda-expand-tree-0 fi body export-lambdas?))
+  (let expanded-body (lambda-expand-tree-0 fi body export-lambdas?)
     (place-expand-0 fi expanded-body)
 	expanded-body))
 
@@ -131,10 +97,9 @@
 									  :args forms)))
     (values
 	    `#'(,@(lambda-head-w/-missing-funinfo x. fi)
-            ,@(lambda-embed-or-export-transform
-				       fi
-                       (lambda-body x.)
-				       export-lambdas?))
+            ,@(lambda-embed-or-export-transform fi
+                       							(lambda-body x.)
+				       							export-lambdas?))
 		*lambda-exported-closures*)))
 
 (defun lambda-expand (x export-lambdas?)
@@ -145,10 +110,9 @@
 				  (if (atom x)
 	  				  x
 	  				  (cons (if (lambda? x.)
-							    (with ((new-x new-exported-closures)
-						   			       (lambda-expand-0 x export-lambdas?))
-				  				  (append! exported-closures
-										   new-exported-closures)
+  							    (with ((new-x new-exported-closures) (lambda-expand-0 x export-lambdas?))
+    							  (append! exported-closures
+		     							   new-exported-closures)
 								  new-x)
 								(lambda-exp-r x.))
 		    				(lambda-exp-r .x)))))

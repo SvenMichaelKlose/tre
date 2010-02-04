@@ -34,7 +34,9 @@
 (defun place-expand-atom (fi x)
   (if
 	(not fi)
-	  (error "place-assign: no funinfo for ~A" x)
+	  (progn
+		(print x)
+	    (error "place-expand-atom: no funinfo"))
 
 	(or (not x)
 		(numberp x)
@@ -66,22 +68,35 @@
 	; Emit lexical place (outside the function).
 	(make-lexical fi x)))
 
+(defun place-expand-fun (fi name fun-expr)
+  (let fi (get-lambda-funinfo fun-expr)
+	(unless fi
+	  (print fun-expr)
+	  (error "place-expand-fun: no funinfo"))
+    `(function
+	   ,@(awhen name
+		   (list !))
+	   (,@(lambda-head fun-expr)
+  	        ,@(place-expand-0 fi (lambda-body fun-expr))))))
+
 (defun place-expand-0 (fi x)
+  (unless fi
+	(print x)
+	(error "place-expand-0: no funinfo"))
   (if
 	(atom x)
 	  (place-expand-atom fi x)
 
 	(or (%quote? x)
 		(%transpiler-native? x)
-		(%stack? x)
-		(%vec? x)
 		(%var? x))
 	  x
 
 	(lambda? x) ; XXX Add variables to ignore in subfunctions.
-      `#'(,@(lambda-head x)
-		     ,@(place-expand-0 (get-lambda-funinfo x)
-							   (lambda-body x)))
+      (place-expand-fun fi nil x)
+
+	(named-function-expr? x)
+      (place-expand-fun fi .x. ..x.)
 
     (%slot-value? x)
       `(%slot-value ,(place-expand-0 fi .x.)
@@ -91,22 +106,7 @@
 		  (place-expand-0 fi .x))))
 
 (defun place-expand (x)
-  (if
-	(atom x)
-	  x
-
-	(named-function-expr? x)
-	  `(function ,.x.
-	  			 (,@(lambda-head ..x.)
-	          	 	  ,@(place-expand-0 (get-lambda-funinfo ..x.)
-									    (lambda-body ..x.))))
-
-	(lambda? x)
-	  `#'(,@(lambda-head x)
-	          ,@(place-expand-0 (get-lambda-funinfo x)
-								(lambda-body x)))
-	(cons (place-expand x.)
-		  (place-expand .x))))
+  (place-expand-0 *global-funinfo* x))
 
 (defun place-expand-funref-lexical (fi)
   (place-expand-0 (funinfo-parent fi)

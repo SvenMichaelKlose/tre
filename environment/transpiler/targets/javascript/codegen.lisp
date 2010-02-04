@@ -13,13 +13,13 @@
 	 (define-transpiler-macro *js-transpiler* ,@x)))
 
 (define-js-macro vm-go (tag)
-  `("_I_=" ,tag "; continue" ,*js-separator*))
+  `(,*js-indent* "_I_=" ,tag "; continue" ,*js-separator*))
 
 (define-js-macro vm-go-nil (val tag)
-  `("if (!" ,val "&&" ,val "!==0) {_I_=" ,tag "; continue;}" ,*js-newline*))
+  `(,*js-indent* "if (!" ,val "&&" ,val "!==0) {_I_=" ,tag "; continue;}" ,*js-newline*))
 
 (define-js-macro %set-atom-fun (plc val)
-  `(%transpiler-native ,plc "=" ,val ,*js-separator*))
+  `(%transpiler-native ,*js-indent* ,plc "=" ,val ,*js-separator*))
 
 (defvar *js-codegen-funinfo* nil)
 
@@ -38,21 +38,24 @@
 				            ","
 						    args) ")"
 	      ,(code-char 10)
-	        "{var " ,ret ,*js-separator*
+	        "{"
+			,*js-indent* "var " ,ret ,*js-separator*
 			,@(when (transpiler-stack-locals? *js-transpiler*)
-				`(,*c-indent* "var _locals = []" ,*js-separator*))
+				`(,*js-indent* "var _locals = []" ,*js-separator*))
 			,@(if no-tags
 				  `(,@(lambda-body x)
-                    ("return " ,ret ,*js-separator*))
-	        	  `("var _I_ = 0" ,*js-separator*
-					"while (1) {switch (_I_) {case 0:" ,*js-separator*
+                    (,*js-indent* "return " ,ret ,*js-separator*))
+	        	  `(,*js-indent* "var _I_ = 0" ,*js-separator*
+					,*js-indent* "while (1) {" ,*js-separator*
+					,*js-indent* "switch (_I_) {case 0:" ,*js-separator*
                     ,@(lambda-body x)
-                    ("}return " ,ret ,*js-separator*)
-	        	    "}"))
+                    (,*js-indent* "}" ,*js-separator*
+					 ,*js-indent* "return " ,ret ,*js-separator*)
+	        	     ,*js-indent* "}"))
 			"}"))))
 
 (define-js-macro %setq (dest val)
-  `((%transpiler-native ,dest) "="
+  `(,*js-indent* (%transpiler-native ,dest) "="
         ,(if (and (consp val)
 	   			  (not (stringp val.))
 	   			  (not (in? val.
@@ -62,7 +65,7 @@
     ,*js-separator*))
 
 (define-js-macro %var (name)
-  `(%transpiler-native "var " ,name ,*js-separator*))
+  `(%transpiler-native ,*js-indent* "var " ,name ,*js-separator*))
 
 ;;; TYPE PREDICATES
 

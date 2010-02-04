@@ -1,5 +1,5 @@
 ;;;;; TRE compiler
-;;;;; Copyright (c) 2006-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2006-2010 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Convert BACKQUOTE-expressions into run-time consing code.
 
@@ -80,9 +80,7 @@
 	  #'((x)
 		   (if
 			 (quote? x)
-			   (if (eq '%stack .x.)
-				   '(%quote %stack)
-			   	   (simple-quote-expand .x.))
+			   (simple-quote-expand .x.)
 		   	 (backquote? x)
 			   (backquote-cons .x.)
 			 x))))

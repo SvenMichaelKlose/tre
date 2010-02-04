@@ -6,6 +6,11 @@
 	   ..x
 	   t))
 
+(defun opt-places-find-used-fun (fi body)
+  (awhen (funinfo-lexical fi)
+    (funinfo-add-used-env fi !))
+  (opt-places-find-used-0 fi body))
+
 (defun opt-places-find-used-0 (fi x)
   (if
 	(%quote? x)
@@ -16,12 +21,12 @@
       (funinfo-add-used-env fi x)
 
 	(lambda? x)
-	  (opt-places-find-used-0 (get-lambda-funinfo x)
-							  (lambda-body x))
+	  (opt-places-find-used-fun (get-lambda-funinfo x)
+							    (lambda-body x))
 
 	(named-function-expr? x)
-	  (opt-places-find-used-0 (get-lambda-funinfo (third x))
-							  (lambda-body (third x)))
+	  (opt-places-find-used-fun (get-lambda-funinfo (third x))
+							    (lambda-body (third x)))
 
 	(consp x)
 	  (opt-places-find-used-0 fi x.))

@@ -24,6 +24,14 @@
 	(error "already has funinfo expression"))
   (make-lambda-funinfo fi))
 
+(defun lambda-head-w/-missing-funinfo (x fi)
+  `(,@(make-lambda-funinfo-if-missing x fi)
+	,(lambda-args x)))
+
+(defun lambda-w/-missing-funinfo (x fi)
+  `#'(,@(lambda-head-w/-missing-funinfo x fi)
+		  ,@(lambda-body x)))
+
 (defun get-lambda-funinfo-by-sym (x)
   (href *funinfos* x))
 

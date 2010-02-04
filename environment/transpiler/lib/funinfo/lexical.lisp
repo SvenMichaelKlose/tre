@@ -4,7 +4,7 @@
 ;;;; LEXICALS AND GHOST ARGUMENTS
 
 (defun funinfo-add-lexical (fi name)
-  (unless (funinfo-lexical-pos fi name)
+  (unless (funinfo-lexical? fi name)
     (nconc! (funinfo-lexicals fi) (list name))))
 
 (defun funinfo-make-lexical (fi)

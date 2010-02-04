@@ -61,8 +61,8 @@
 ;;;; FUNINFO HELPERS FOR GUEST
 
 (defun expex-in-env? (x)
-  (when (atom x)
-    (funinfo-in-this-or-parent-env? *expex-funinfo* x)))
+  (and (atom x)
+       (funinfo-in-this-or-parent-env? *expex-funinfo* x)))
 
 (defun expex-global-variable? (x)
   (and (atom x)
@@ -71,17 +71,14 @@
 
 (defun expex-funinfo-env-add ()
   (let s (expex-sym)
-    (awhen *expex-funinfo*
-      (funinfo-env-add ! s))
+    (aif *expex-funinfo*
+      (funinfo-env-add ! s)
+	  (error "expression-expander: FUNINFO missing. Cannot make GENSYM"))
 	s))
 
 (defun expex-stack-locals? (ex)
   (and *expex-funinfo* ; Is set if we're inside a function.
 	   (transpiler-stack-locals? (expex-transpiler ex))))
-
-(defun expex-local-decl (ex s)
-  (unless (expex-stack-locals? ex)
-	`((%var ,s))))
 
 ;;;; PREDICATES
 
@@ -91,11 +88,9 @@
 (defun expex-able? (ex x)
   (not (or (atom x)
 		   (function-ref-expr? x)
-           (in? x. '%stack '%vec '%set-vec
-				   'vm-go 'vm-go-nil
+           (in? x. 'vm-go 'vm-go-nil
 				   '%transpiler-native '%transpiler-string
-				   '%var '%quote
-				   '%no-expex))))
+				   '%quote '%var))))
 
 ;; Check if an expression has a return value.
 (defun expex-returnable? (ex x)
@@ -120,8 +115,7 @@
 (defun expex-argexpand-0 (ex fun args)
   (funcall (expex-function-collector ex) fun args)
   (let argdef (funcall (expex-function-arguments ex) fun)
-	(if (or (funinfo-in-this-or-parent-env? *expex-funinfo* fun)
-			(eq argdef 'builtin))
+	(if (eq argdef 'builtin)
 		args
   	    (if (expex-expandable-args? ex fun argdef)
       	    (argument-expand-compiled-values fun argdef args)
@@ -155,16 +149,14 @@
 (defun expex-move-arg-vm-scope (ex x)
   (let s (expex-funinfo-env-add)
     (aif (vm-scope-body x)
-         (cons (append (expex-local-decl ex s)
-		               (expex-body ex ! s))
+         (cons (expex-body ex ! s)
 		       s)
 	     (cons nil nil))))
 
 (defun expex-move-arg-std (ex x)
   (with (s (expex-funinfo-env-add)
     	 (moved new-expr) (expex-expr ex x))
-      (cons (append (expex-local-decl ex s)
-					moved
+      (cons (append moved
 		    		(if (expex-returnable? ex new-expr.)
 		        		(list (expex-guest-filter-setter ex
 								  `(%setq ,s ,@new-expr)))
@@ -178,12 +170,9 @@
 ;; the replacement symbol for the parent in CDR.
 (defun expex-move-arg (ex x)
   (if
-	(not (expex-able? ex x))
-      (cons nil x)
-	(funcall (expex-inline? ex) x)
-	  (expex-move-arg-inline ex x)
-    (vm-scope? x)
-	  (expex-move-arg-vm-scope ex x)
+	(not (expex-able? ex x))		(cons nil x)
+	(funcall (expex-inline? ex) x)	(expex-move-arg-inline ex x)
+    (vm-scope? x)					(expex-move-arg-vm-scope ex x)
 	(expex-move-arg-std ex x)))
 
 ;; Move subexpressions out of a parent.
@@ -227,6 +216,11 @@
 		    (list `#'(,@(lambda-head x)
 				         ,@(expex-body ex (lambda-body x)))))))
 
+; Remove %VAR expression and register new FUNINFO variable.
+(defun expex-var (x)
+  (funinfo-env-add *expex-funinfo* .x.)
+  (values nil nil))
+
 ;; Expand expression depending on type.
 ;;
 ;; Recurses into LAMBDA-expressions and VM-SCOPEs.
@@ -234,16 +228,11 @@
 (defun expex-expr (ex expr)
   (let x (expex-guest-filter-expr ex expr)
     (if
-      (not (expex-able? ex x))
-        (values nil
-			    (list x))
-	  (lambda? x)
-	    (expex-lambda ex x)
-      (vm-scope? x)
-	    (values nil
-			    (expex-body ex (vm-scope-body x)))
-      (%setq? x)
-        (expex-expr-setq ex x)
+	  (%var? x)						(expex-var x)
+      (not (expex-able? ex x))		(values nil (list x))
+	  (lambda? x)					(expex-lambda ex x)
+      (vm-scope? x)					(values nil (expex-body ex (vm-scope-body x)))
+      (%setq? x)					(expex-expr-setq ex x)
       (expex-expr-std ex x))))
 
 ;;;; BODY EXPANSION

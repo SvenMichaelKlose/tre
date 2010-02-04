@@ -37,6 +37,13 @@
 	    (awhen (funinfo-parent fi)
 		  (funinfo-in-this-or-parent-env? ! var)))))
 
+(defun funinfo-in-this-or-parent-env-but-not-toplevel? (fi var)
+  (when (and fi
+			 (funinfo-parent fi))
+    (or (funinfo-in-args-or-env? fi var)
+	    (awhen (funinfo-parent fi)
+		  (funinfo-in-this-or-parent-env? ! var)))))
+
 (defun funinfo-ignore? (fi var)
   (member var (funinfo-ignorance fi)))
 

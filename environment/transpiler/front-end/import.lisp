@@ -13,8 +13,7 @@
 (defun vec-function-expr? (x)
   (and (consp x)
        (eq x. 'function)
-       (or (%vec? .x.)
-           (%stack? .x.))
+       (%vec? .x.)
        .x.))
 
 (defun transpiler-defined? (tr name)

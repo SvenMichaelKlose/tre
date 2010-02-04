@@ -1,22 +1,21 @@
 ;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Toplevel
 
 (defvar *nil-symbol-name* nil)
 
 (defun js-transpile-print-prologue (out tr)
-  (format out "var _I_ = 0; while (1) {switch (_I_) {case 0: ~%")
-  (format out "var ~A;~%" (transpiler-symbol-string tr
+  (format out "    var _I_ = 0; while (1) {switch (_I_) {case 0: ~%")
+  (format out "    var ~A;~%" (transpiler-symbol-string tr
 							  (transpiler-obfuscate-symbol tr '*CURRENT-FUNCTION*))))
 
 (defun js-transpile-print-epilogue (out)
-  (format out "}break;}~%"))
+  (format out "    }break;}~%"))
 
 (defun js-gen-funref-wrapper (out)
   (princ ,(concat-stringtree
-		      (with-open-file i (open "environment/transpiler/targets/javascript/funref.js"
-							 		  :direction 'input)
+		      (with-open-file i (open "environment/transpiler/targets/javascript/funref.js" :direction 'input)
 			  	(read-all-lines i)))
 		 out))
 
@@ -42,17 +41,21 @@
 	; Generate.
     (format t "; Let me think. Hmm")
   	(force-output)
-    (princ (concat-stringtree
-			   (when base?
- 	             (transpiler-transpile tr base))
-			   (when base?
- 	             (transpiler-transpile tr base2))
- 	           (transpiler-transpile tr deps)
-			   (when (and base? *transpiler-assert*)
- 		         (transpiler-transpile tr base-debug))
- 	           (transpiler-transpile tr tests)
- 	           (transpiler-transpile tr user))
-	       f)
+    (let no-decls 
+	  (concat-stringtree
+		  (when base?
+ 	        (concat-stringtree (transpiler-transpile tr base)))
+		  (when base?
+ 	        (concat-stringtree (transpiler-transpile tr base2)))
+ 	      (concat-stringtree (transpiler-transpile tr deps))
+		  (when (and base? *transpiler-assert*)
+ 		    (concat-stringtree (transpiler-transpile tr base-debug)))
+ 	      (concat-stringtree (transpiler-transpile tr tests))
+ 	      (concat-stringtree (transpiler-transpile tr user)))
+	  (princ (concat-stringtree
+			     (transpiler-emit-code tr (list (print (funinfo-var-declarations *global-funinfo*)))))
+	         f)
+	  (princ no-decls f))
     (transpiler-print-obfuscations tr)))
 
 (defun js-transpile-ok ()

@@ -8,7 +8,7 @@
 ;; - Strings are encapsulated.
 ;; - Expressions are expanded via code generating macros.
 ;; - Everything is converted to strings and concatenated.
-(defun transpiler-generate-code-compose (tr)
+(defun transpiler-emit-code-compose (tr)
   (compose (fn (princ #\o)
 			   (force-output)
 			   _)
@@ -17,12 +17,27 @@
 	  (fn expander-expand (transpiler-macro-expander tr) _)
 	  (fn transpiler-finalize-sexprs tr _)
 	  #'transpiler-encapsulate-strings
-	  (fn transpiler-obfuscate tr _)
+	  (fn transpiler-obfuscate tr _)))
+
+(defun transpiler-emit-code (tr x)
+  (let fun (transpiler-emit-code-compose tr)
+    (mapcar (fn funcall fun _)
+		    x)))
+
+;; After this pass:
+;; - Function prologues are generated.
+;; - Unused places are removed.
+;; - Places are transpated into vector ops.
+(defun transpiler-generate-code-compose (tr)
+  (compose
 	  (fn (if (transpiler-lambda-export? tr)
 			  (place-assign (place-expand _))
 			  _))
-	  #'opt-places-remove-unused))
+	  #'opt-places-remove-unused
+	  #'make-function-prologues))
 
 (defun transpiler-generate-code (tr x)
-  (mapcar (fn funcall (transpiler-generate-code-compose tr) _)
-		  x))
+  (with (emit (transpiler-emit-code-compose tr)
+         gen (transpiler-generate-code-compose tr))
+    (mapcar (fn funcall emit (funcall gen _))
+		    x)))

@@ -56,39 +56,6 @@
 			 ,@body
 			 (t (cons a (funcall ,fun d))))))))
 
-(defun opt-peephole-var-double? (x name)
-  (with-cons a d x
-    (or (and (%var? a)
-             (eq name .a.))
-        (opt-peephole-var-double? d name))))
-
-(defun opt-peephole-move-vars-to-front (x)
-  (with (acc nil
-         rec #'((x)
-                  (with-cons a d x
-                    (if
-					  (and (%var? a)
-                           (not ..a))
-                        (progn
-                          (setf acc (push a acc))
-                          (rec d))
-                      (and (%setq? a)
-                           (lambda? ..a.))
-                        (cons `(%setq ,.a.
-                                 ,(copy-recurse-into-lambda
-                                      ..a.
-                                      #'opt-peephole-move-vars-to-front))
-                              (rec d))
-                      (cons a
-                            (rec d))))))
-    (let ret (rec x)
-      (append acc ret))))
-
-(defun opt-peephole-past-vars (x)
-  (if (%var? x.)
-	  (opt-peephole-past-vars .x)
-	  x))
-
 (defun opt-peephole-collect-syms-0 (h x)
   (when x
     (if (atom x)
@@ -101,32 +68,6 @@
   (let h (make-hash-table)
 	(opt-peephole-collect-syms-0 h x)
 	h))
-
-(defun opt-peephole-remove-unused-vars (x)
-  (with (acc nil
-		 syms (opt-peephole-collect-syms
-				  (opt-peephole-past-vars x))
-         rec #'((x)
-                  (with-cons a d x
-                    (if (and (%var? a)
-                             (not ..a))
-                        (progn
-                          (when (if (atom .a.)
-									(href syms .a.) ;(not (opt-peephole-var-double? d .a.))
-									(find-tree d .a. :test #'eq))
-                            (setf acc (push a acc)))
-                          (rec d))
-                        (if (and (%setq? a)
-                                 (lambda? ..a.))
-                            (cons `(%setq ,.a.
-                                          ,(copy-recurse-into-lambda
-                                               ..a.
-                                               #'opt-peephole-remove-unused-vars))
-                                  (rec d))
-                            (cons a
-                                  (rec d)))))))
-    (let ret (rec x)
-      (append acc ret))))
 
 ;; Remove IDENTITY expressions to unify code.
 ;; Remove IDENTITY from %SETQ value.
@@ -250,7 +191,5 @@
 								  #'opt-peephole-remove-void)
 						 x))))
 
-		(opt-peephole-remove-unused-vars
-	    	(repeat-while-changes #'rec (opt-peephole-remove-identity
-											(opt-peephole-move-vars-to-front
-											    statements))))))
+	    (repeat-while-changes #'rec
+			(opt-peephole-remove-identity statements))))

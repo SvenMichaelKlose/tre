@@ -178,7 +178,9 @@
 
 ;; Lexical scope
 (define-c-macro make-array (size)
-  `("trearray_get (_trelist_get (" ,size ", treptr_nil))"))
+  (if (numberp size)
+      `("trearray_make (" (%transpiler-native ,size) ")")
+      `("trearray_get (_trelist_get (" ,size ", treptr_nil))")))
 
 (define-c-macro symbol-function (x)
   `("treatom_get_function (" ,x ")"))

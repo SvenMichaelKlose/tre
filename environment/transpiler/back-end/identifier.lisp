@@ -69,7 +69,7 @@
 					  (%transpiler-string? e)
 						(funcall (transpiler-gen-string tr) (cadr e))
 					  ; XXX ???
-					  (in? e. '%transpiler-native '%no-expex)
+					  (eq '%transpiler-native e.)
 						(transpiler-to-string tr .e)
 					  e)
 				  (stringp e)

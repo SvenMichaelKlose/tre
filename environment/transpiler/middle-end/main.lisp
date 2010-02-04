@@ -5,7 +5,6 @@
 (env-load "transpiler/middle-end/named-functions.lisp")
 (env-load "transpiler/middle-end/rename-args.lisp")
 (env-load "transpiler/middle-end/rename-tags.lisp")
-(env-load "transpiler/middle-end/place-expand.lisp")
 (env-load "transpiler/middle-end/lambda-expand.lisp")
 
 (env-load "transpiler/middle-end/expression-expand.lisp")

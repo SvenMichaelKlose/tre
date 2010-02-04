@@ -1,5 +1,5 @@
 ;;;;; TRE transpiler
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Wrap code around functions to save their argument definitions
 ;;;;; for run-time argument-expansions.
@@ -31,10 +31,9 @@
   (unless l
     (error "FUNCTION expects a symbol or form"))
   (if (or (atom l)
-		  (%slot-value? l)
-		  (%stack? l))
+		  (%slot-value? l))
       (js-expanded-funref l)
-      (if (eq 'no-args (first (lambda-body l)))
+      (if (eq 'no-args (car (lambda-body l)))
           `(%function
 		     (,@(lambda-head l)
 			  ,@(cdr (lambda-body l))))

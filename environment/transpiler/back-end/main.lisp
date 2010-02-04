@@ -9,5 +9,7 @@
 (env-load "transpiler/back-end/macros.lisp")
 (env-load "transpiler/back-end/string-encapsulation.lisp")
 (env-load "transpiler/back-end/place-assign.lisp")
+(env-load "transpiler/back-end/place-expand.lisp")
+(env-load "transpiler/back-end/function-prologues.lisp")
 (env-load "transpiler/back-end/obfuscate.lisp")
 (env-load "transpiler/back-end/toplevel.lisp")
