@@ -7,6 +7,7 @@
 ;;;;; assignments to temporary variables.
 
 (defvar *expex-funinfo* nil)
+(defvar *expex-warn?* nil)
 
 ;;;; CONFIGURATION
 
@@ -80,6 +81,19 @@
   (and *expex-funinfo* ; Is set if we're inside a function.
 	   (transpiler-stack-locals? (expex-transpiler ex))))
 
+(defun expex-warn (x)
+  (and *expex-warn?*
+	   (symbolp x)
+	   (not (or (functionp x)
+				(keywordp x)
+				(in? x nil t '~%ret 'this)
+	   			(funinfo-in-this-or-parent-env? *expex-funinfo* x)
+				(assoc x *variables*)
+	       		(expander-has-macro? (transpiler-std-macro-expander *current-transpiler*) x)
+		       	(expander-has-macro? (transpiler-macro-expander *current-transpiler*) x)))
+	   (warn "symbol ~A is not defined in function ~A.~%"
+			 (symbol-name x) (funinfo-get-name *expex-funinfo*))))
+
 ;;;; PREDICATES
 
 ;; Check if an expression is expandable.
@@ -113,6 +127,8 @@
 
 ;; Expand arguments to function.
 (defun expex-argexpand-0 (ex fun args)
+  (dolist (i args)
+	(expex-warn i))
   (funcall (expex-function-collector ex) fun args)
   (let argdef (funcall (expex-function-arguments ex) fun)
 	(if (eq argdef 'builtin)
