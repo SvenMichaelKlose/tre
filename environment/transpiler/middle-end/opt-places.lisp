@@ -3,8 +3,7 @@
 
 (defun named-function-expr? (x)
   (and (function-expr? x)
-	   ..x
-	   t))
+	   ..x))
 
 (defun opt-places-find-used-fun (x)
   (let fi (get-lambda-funinfo x)
@@ -28,14 +27,15 @@
   (opt-places-find-used-0 *global-funinfo* x)
   x)
 
-(defun opt-places-funinfo-opt (fi)
+(defun opt-places-correct-funinfo (fi)
   (funinfo-env-reset fi)
-  (dolist (i (funinfo-used-env fi))
+  (dolist (i (append (funinfo-used-env fi)
+					 (funinfo-lexicals fi)))
     (funinfo-env-add fi i)))
 
 (defun opt-places-remove-unused-body (x)
   (let fi (get-lambda-funinfo x)
-    (opt-places-funinfo-opt fi)
+    (opt-places-correct-funinfo fi)
     (opt-places-remove-unused-0 fi (lambda-body x))))
 
 (defun opt-places-remove-unused-0 (fi x)
