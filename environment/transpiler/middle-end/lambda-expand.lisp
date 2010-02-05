@@ -87,19 +87,21 @@
     (place-expand-0 fi expanded-body)
 	expanded-body))
 
-(defun lambda-expand-0 (x export-lambdas?)
+(defun lambda-expand-0 (x export-lambdas? &key (function-name nil))
   (with (forms (argument-expand-names
 			       'transpiler-lambda-expand
-			       (lambda-args x.))
-         imported	(get-lambda-funinfo x.)
+			       (lambda-args x))
+         imported	(get-lambda-funinfo x)
          fi			(or imported
 						(make-funinfo :parent *global-funinfo*
 									  :args forms)))
     (values
-	    `#'(,@(lambda-head-w/-missing-funinfo x. fi)
-            ,@(lambda-embed-or-export-transform fi
-                       							(lambda-body x.)
-				       							export-lambdas?))
+	    `(function ,@(awhen function-name
+					   (setf (funinfo-name fi) !)
+					   (list !))
+	       ,(append (lambda-head-w/-missing-funinfo x fi)
+                    (lambda-embed-or-export-transform fi (lambda-body x)
+												      export-lambdas?)))
 		*lambda-exported-closures*)))
 
 (defun lambda-expand (x export-lambdas?)
@@ -107,14 +109,22 @@
   (with (exported-closures nil
 		 lambda-exp-r
   		     #'((x)
-				  (if (atom x)
+				  (if
+					(atom x)
 	  				  x
-	  				  (cons (if (lambda? x.)
-  							    (with ((new-x new-exported-closures) (lambda-expand-0 x export-lambdas?))
-    							  (append! exported-closures
-		     							   new-exported-closures)
-								  new-x)
-								(lambda-exp-r x.))
-		    				(lambda-exp-r .x)))))
+				    (named-function-expr? x)
+					  (with ((new-x new-exported-closures) (lambda-expand-0 ..x. export-lambdas?
+																			:function-name .x.))
+    					(append! exported-closures
+		     			         new-exported-closures)
+						new-x)
+					    
+	  				(lambda? x)
+  					  (with ((new-x new-exported-closures) (lambda-expand-0 x export-lambdas?))
+    				    (append! exported-closures
+		     			     	 new-exported-closures)
+						new-x)
+					(cons (lambda-exp-r x.)
+		    			  (lambda-exp-r .x)))))
 	(values (lambda-exp-r x)
 			exported-closures)))
