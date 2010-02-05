@@ -19,8 +19,10 @@
 (defun funinfo-function-prologue (fi body)
   `(,@(when (atom body.) ; Preserve first atom.
 	    (list body.))
-	,@(funinfo-var-declarations fi)
-	,@(funinfo-copiers-to-lexicals fi)
+	,@(when (transpiler-needs-var-declarations? *current-transpiler*)
+	    (funinfo-var-declarations fi))
+	,@(when (transpiler-lambda-export? *current-transpiler*)
+		(funinfo-copiers-to-lexicals fi))
     ,@(if (atom body.)
 		  .body
 		  body)))

@@ -45,7 +45,7 @@
 		   ,@(when (< 0 num-locals)
 			   `(,*c-indent* ,"treptr _local_array = trearray_make ("
 							    ,num-locals
-			  				    ");" ,*c-separator*
+			  				    ")" ,*c-separator*
 			     ,*c-indent* "tregc_push (_local_array)" ,*c-separator*
 			 	 ,*c-indent*
 				 ,"const treptr * _locals = (treptr *) "
@@ -53,7 +53,7 @@
 											,*c-separator*))
            ,@(lambda-body x)
 		   ,@(when (< 0 num-locals)
-			   `(,*c-indent* "tregc_pop ();" ,*c-separator*))
+			   `(,*c-indent* "tregc_pop ()" ,*c-separator*))
            (,*c-indent* "return " ,'~%ret ,*c-separator*)
 	    "}" ,*c-newline*))))
 

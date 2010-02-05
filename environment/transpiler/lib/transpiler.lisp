@@ -1,5 +1,5 @@
 ;;;;; TRE tree processor transpiler
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 
 ;; Set this when starting up your transpiler run.
 (defvar *current-transpiler* nil)
@@ -59,6 +59,8 @@
 
   ; Tells if arguments are passed by stack.
   (stack-arguments? nil)
+
+  (needs-var-declarations? nil)
 
   ; Tells if local variables are on the stack.
   (stack-locals? nil)

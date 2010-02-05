@@ -9,7 +9,7 @@
 ;; - Expressions are expanded via code generating macros.
 ;; - Everything is converted to strings and concatenated.
 (defun transpiler-emit-code-compose (tr)
-  (compose (fn (princ #\.)
+  (compose (fn (princ #\o)
 			   (force-output)
 			   _)
 	  #'concat-stringtree
@@ -24,16 +24,12 @@
 
 ;; After this pass:
 ;; - Function prologues are generated.
-;; - Unused places are removed.
-;; - Places are transpated into vector ops.
-(defun transpiler-generate-code-compose (tr)
-  (compose
-	  (fn (if (transpiler-lambda-export? tr)
-			  (place-assign (place-expand _))
-			  _))
-	  #'make-function-prologues))
+;; - Places are translated into vector ops.
+(defun transpiler-generate-code (tr x)
+  (if (transpiler-lambda-export? tr)
+	  (place-assign (place-expand (make-function-prologues x)))
+	  (make-function-prologues x)))
 
 (defun transpiler-backend (tr x)
   (funcall (transpiler-emit-code-compose tr)
-  		   (funcall (transpiler-generate-code-compose tr)
-					x)))
+  		   (transpiler-generate-code tr x)))

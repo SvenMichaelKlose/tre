@@ -90,3 +90,8 @@
 
 (defun funinfo-add-used-env (fi x)
   (adjoin! x (funinfo-used-env fi) :test #'eq))
+
+(defun funinfo-get-name (fi)
+  (when fi
+    (or (funinfo-name fi)
+		(funinfo-get-name (funinfo-parent fi)))))

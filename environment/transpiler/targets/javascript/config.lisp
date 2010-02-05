@@ -26,6 +26,7 @@
 			    (in=? _ #\_ #\. #\$ #\#)))
 	  :make-label #'js-transpiler-make-label
 	  :lambda-export? nil
+	  :needs-var-declarations? t
 	  :stack-locals? nil
 	  :rename-all-args? t
 	  :inline-exceptions '(%slot-value error format identity %bind)
@@ -65,5 +66,5 @@
 
 (defvar *js-transpiler* (make-javascript-transpiler))
 (defvar *js-newline* (format nil "~%"))
-(defvar *js-separator* (format nil ";~%"))
-(defvar *js-indent* "    ")
+(defvar *js-separator* (format nil ";"))
+(defvar *js-indent* "")

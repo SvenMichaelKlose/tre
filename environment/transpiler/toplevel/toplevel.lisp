@@ -11,8 +11,9 @@
   (unless (eq t (transpiler-unwanted-functions tr))
 	; Switch off checks for things to import.
 	(with-temporary (transpiler-import-from-environment? tr) nil
-	  (mapcar (fn transpiler-backend tr (transpiler-middleend-2 tr _))
-			  forms))))
+	  (mapcar (fn transpiler-backend tr _)
+			  (mapcar (fn transpiler-middleend-2 tr _)
+			  		  forms)))))
 
 (defun transpiler-sighten (tr x)
   (when (transpiler-lambda-export? tr)

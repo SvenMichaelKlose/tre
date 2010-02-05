@@ -12,6 +12,9 @@
 ;; - FUNCTION expression contain the names of top-level functions.
 (defun transpiler-expand-compose (tr)
   (compose
+	  (fn (princ #\.)
+		  (force-output)
+		  _)
       (fn transpiler-make-named-functions tr _)
       #'transpiler-update-funinfo
       #'opt-places-remove-unused
@@ -35,8 +38,9 @@
 
 (defun transpiler-preexpand-compose (tr)
   (compose
-	  (fn (transpiler-expression-expand tr _)
-		  _)
+	  (fn with-temporary *expex-warn?* t
+		   (transpiler-expression-expand tr _)
+		   _)
       (fn transpiler-lambda-expand tr _)
 	  #'rename-function-arguments
 	  (fn (if *opt-inline?*
