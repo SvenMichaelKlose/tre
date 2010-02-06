@@ -66,5 +66,5 @@
 
 (defvar *js-transpiler* (make-javascript-transpiler))
 (defvar *js-newline* (format nil "~%"))
-(defvar *js-separator* (format nil ";"))
+(defvar *js-separator* (format nil ";~%"))
 (defvar *js-indent* "")
