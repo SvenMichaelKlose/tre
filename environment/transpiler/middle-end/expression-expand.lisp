@@ -281,7 +281,7 @@
 									`(%setq ,s ,(second x.))))))
 
 ;; Make return-value assignment of last expression in body.
-(defun expex-make-return-value (ex x s)
+(defun expex-make-return-value (ex s x)
   (let last (last x)
    	(if (expex-returnable? ex last.)
 		(append (butlast x)
@@ -294,13 +294,20 @@
 									  		   '(nil)))))))
 		x)))
 
+(defun expex-save-atoms (x)
+  (mapcar (fn if (and (atom _)
+					  (not (numberp _)))
+				 `(identity ,_)
+				 _)
+		  (or x
+			  (list nil))))
+
 ;; Expand VM-SCOPE body and have the return value of the last expression
 ;; assigned to a gensym which will replace it in the parent expression.
 (defun expex-body (ex x &optional (s '~%ret))
-  (expex-make-return-value ex
-						   (expex-list ex (or x
-											  '((identity nil))))
- 						   s))
+  (expex-make-return-value ex s
+						   (expex-list ex
+									   (expex-save-atoms x))))
 
 ;;;; TOPLEVEL
 
