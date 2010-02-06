@@ -28,10 +28,7 @@
 	        #'(,@(awhen fi-sym
 				   `(%funinfo ,!))
 			   ,a
-   		         ,@(if (and (not *transpiler-assert*)
-		    	            (stringp body.))
-				       .body
-				       body)))))
+   		         ,@body))))
 
 (define-c-std-macro defun (&rest x)
   (apply #'c-essential-defun x))

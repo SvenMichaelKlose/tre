@@ -17,12 +17,13 @@
 	;(transpiler-add-wanted-function *js-transpiler* x))
   `(function ,x))
 
-(defun js-assert-body (x)
-  (if (and (not *transpiler-assert*)
-           (stringp x.)
-		   .x)
-      .x
-      x))
+(defun split-funinfo-and-args (x)
+  (let fi-sym (and (eq '%funinfo x.)
+		    	   .x.)
+    (values fi-sym
+			(if fi-sym
+			   ..x
+			   x))))
 
 ;; (DEFUN ...)
 ;;
@@ -32,24 +33,17 @@
   (when *show-definitions*
     (late-print `(defun ,name ,@(awhen args (list !)))))
   (with (n (%defun-name name)
-		 asserted-body (js-assert-body body)
 		 tr *js-transpiler*
-		 fi-sym (when (eq '%funinfo args.)
-				  .args.)
-		 a (if fi-sym
-			   ..args
-			   args))
+		 (fi-sym a) (split-funinfo-and-args args))
     (transpiler-add-function-args tr n a)
-    (transpiler-add-function-body tr n (remove 'no-args
-											   asserted-body
-											   :test #'eq))
+    (transpiler-add-function-body tr n (remove 'no-args body :test #'eq))
 	(transpiler-add-defined-function tr n)
     `(progn
        (%var ,n)
        (%setq ,n #'(,@(awhen fi-sym
 						`(%funinfo ,!))
 					,a
-   		              ,@asserted-body)))))
+   		              ,@body)))))
 
 (define-js-std-macro define-native-js-fun (name args &rest body)
   (apply #'js-essential-defun name args body))
