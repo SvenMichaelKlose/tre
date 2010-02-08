@@ -1,5 +1,5 @@
 ;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 
 (dont-obfuscate arguments)
 (dont-inline %bind)
@@ -16,7 +16,7 @@
 	  (js-print fun logwindow.document)))
   (assert (functionp fun) "BIND requires a function")
   #'(()
-	  ,(if *exported-lambdas*
+	  ,(if (transpiler-lambda-export? *php-transpiler*)
 		   ; Get rid of the ghost argument.
 		   '(let a (__manual-array-copy arguments)
 			  (a.shift)

@@ -3,7 +3,8 @@
 
 (defun funinfo-var-declarations (fi)
   (unless (transpiler-stack-locals? *current-transpiler*)
-    (mapcar (fn `(%var ,_))
+    (mapcan (fn unless (funinfo-arg? fi _)
+				  `((%var ,_)))
 	        (funinfo-env fi))))
 
 (defun funinfo-copiers-to-lexicals (fi)
@@ -17,15 +18,17 @@
 				  (funinfo-args fi))))))
 
 (defun funinfo-function-prologue (fi body)
-  `(,@(when (atom body.) ; Preserve first atom.
-	    (list body.))
-	,@(when (transpiler-needs-var-declarations? *current-transpiler*)
-	    (funinfo-var-declarations fi))
-	,@(when (transpiler-lambda-export? *current-transpiler*)
-		(funinfo-copiers-to-lexicals fi))
-    ,@(if (atom body.)
-		  .body
-		  body)))
+  (let tags? (< 0 (funinfo-num-tags fi))
+    `(,@(when (transpiler-needs-var-declarations? *current-transpiler*)
+	      (funinfo-var-declarations fi))
+	  ,@(when tags?
+		  '((%function-prologue)))
+	  ,@(when (transpiler-lambda-export? *current-transpiler*)
+		  (funinfo-copiers-to-lexicals fi))
+      ,@body
+	  ,(if tags?
+		 '(%function-epilogue)
+		 '(%function-return)))))
 
 (defun make-function-prologues-fun (name fun-expr)
   (let fi (get-lambda-funinfo fun-expr)

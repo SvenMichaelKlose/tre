@@ -43,6 +43,8 @@
 			  #'current-transpiler-function-arguments-w/o-builtins
     	  (expex-argument-filter ex)
 		      #'expex-%setq-collect-wanted-global-variable)
+;		  (expex-inline? ex)
+;		  	  (fn in? _ 'cons 'car 'cdr 'aref 'href' '%vec))
 
 	(apply #'transpiler-add-obfuscation-exceptions
 		tr

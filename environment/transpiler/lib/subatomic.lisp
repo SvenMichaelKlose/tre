@@ -7,7 +7,10 @@
 	'(%quote %new
 	  vm-scope vm-go vm-go-nil
 	  %stack %vec %setq
-	  %transpiler-native %transpiler-string)
+	  %transpiler-native %transpiler-string
+	  %function-prologue
+	  %function-epilogue
+	  %function-return)
   `(def-head-predicate ,x))
 
 (defun atomic? (x)

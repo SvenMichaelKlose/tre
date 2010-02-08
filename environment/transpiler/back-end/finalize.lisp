@@ -1,5 +1,5 @@
 ;;;;; TRE transpiler
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 
 ;;;; EXPRESSION FINALIZATION
 
@@ -48,12 +48,7 @@
 		     (eq ret (second a)))
 		  (transpiler-finalize-sexprs tr .x)
 
-	    ; Just copy with separator. Make return-value assignment if missing.
 	    (progn
 		  (1+! *codegen-num-instructions*)
-		  (cons (if (or (vm-jump? a)
-					    (%setq? a)
-					    (in? a. '%var '%transpiler-native))
-				    a
-				    `(%setq ,ret ,a))
+		  (cons a
 			    (transpiler-finalize-sexprs tr .x)))))))

@@ -3,13 +3,23 @@
 ;;;;;
 ;;;;; Code generation
 
-;;;; TRANSPILER-MACRO EXPANDER
-
 (defmacro define-c-macro (&rest x)
   `(define-transpiler-macro *c-transpiler* ,@x))
 
 (defun c-atomic-function (x)
   (compiled-function-name (second x)))
+
+(defun c-make-function-declaration (name args)
+  (push! (concat-stringtree
+			 "extern treptr "
+			 (transpiler-symbol-string *c-transpiler*
+				 (compiled-function-name name))
+			 (concat-stringtree
+  	    	     (parenthized-comma-separated-list
+            		 (mapcar (fn `("treptr " ,(transpiler-symbol-string *c-transpiler* _)))
+			   				 args)))
+			 ";" (string (code-char 10)))
+		(transpiler-compiled-decls *c-transpiler*)))
 
 (define-c-macro function (name &optional (x 'only-name))
   (if
@@ -21,51 +31,44 @@
 			      		     	       (lambda-args x))
 		   fi (get-lambda-funinfo x)
 		   num-locals (length (funinfo-env fi)))
-	  (push! (concat-stringtree
-				 "extern treptr "
-				 (transpiler-symbol-string *c-transpiler*
-					 (compiled-function-name name))
-				 "("
-				 (if args
-				     (concat-stringtree
-	  	    		     (transpiler-binary-expand ","
-	               			 (mapcar (fn `("treptr " ,(transpiler-symbol-string *c-transpiler* _)))
-				    				 args)))
-					"")
-				 ");" (string (code-char 10)))
-			 (transpiler-compiled-decls *c-transpiler*))
+	  (c-make-function-declaration name args)
       `(,(code-char 10)
-		"treptr " ,(compiled-function-name name) "("
-	  	  ,@(transpiler-binary-expand ","
-	              (mapcar (fn `("treptr " ,_))
-						  args))
-		")" ,(code-char 10)
+		"treptr " ,(compiled-function-name name)
+	  	  ,@(parenthized-comma-separated-list (mapcar (fn `("treptr " ,_)) args))
+		,(code-char 10)
 	    "{" ,(code-char 10)
 		   ,*c-indent* "treptr " ,'~%ret ,*c-separator*
 		   ,@(when (< 0 num-locals)
-			   `(,*c-indent* ,"treptr _local_array = trearray_make ("
-							    ,num-locals
-			  				    ")" ,*c-separator*
+			   `(,*c-indent* ,"treptr _local_array = trearray_make (" ,num-locals ")" ,*c-separator*
 			     ,*c-indent* "tregc_push (_local_array)" ,*c-separator*
-			 	 ,*c-indent*
-				 ,"const treptr * _locals = (treptr *) "
-									  	    "TREATOM_DETAIL(_local_array)"
-											,*c-separator*))
+			 	 ,*c-indent* ,"const treptr * _locals = (treptr *) " "TREATOM_DETAIL(_local_array)" ,*c-separator*))
            ,@(lambda-body x)
 		   ,@(when (< 0 num-locals)
 			   `(,*c-indent* "tregc_pop ()" ,*c-separator*))
            (,*c-indent* "return " ,'~%ret ,*c-separator*)
 	    "}" ,*c-newline*))))
 
-;; XXX same in js-transpiler
+(define-c-macro %function-prologue () '(%transpiler-native ""))
+(define-c-macro %function-epilogue () '(%transpiler-native ""))
+(define-c-macro %function-return () '(%transpiler-native ""))
+
+;; XXX fix macros instead?
+(defun codegen-expr? (x)
+  (and (consp x)
+       (or (stringp x.)
+       	   (in? x. '%transpiler-string '%transpiler-native))))
+
 (defun codegen-%setq (dest val)
-  `((%transpiler-native ,dest) "="
-        ,(if (and (consp val)
-                  (not (stringp val.))
-                  (not (in? val.
-                            '%transpiler-string '%transpiler-native)))
-             `(,val. ,@(parenthized-comma-separated-list .val))
-             val)))
+  `((%transpiler-native 
+	  ,@(if (eq dest (transpiler-obfuscate-symbol *c-transpiler* nil))
+		    (if (codegen-expr? val)
+			  '("")
+		      '("(void) "))
+		    `(,dest " = ")))
+    ,(if (or (atom val)
+			 (codegen-expr? val))
+         val
+         `(,val. ,@(parenthized-comma-separated-list .val)))))
 
 (define-c-macro %setq (dest val)
   `(,*c-indent*
@@ -77,19 +80,17 @@
 		,val
 		")" ,*c-separator*))
 
-;; XXX used for local functions
 (define-c-macro %set-atom-fun (dest val)
-  `(%transpiler-native ,dest "=" ,val))
+  `(%transpiler-native ,dest "=" ,val ,*c-separator*))
+;  `(%transpiler-native ,*c-indent* "treatom_set_function (" ,dest " ,"
+;		,val
+;		")" ,*c-separator*))
 
 ;; XXX used to store argument definitions.
 (define-c-macro %setq-atom-value (dest val)
   `(%transpiler-native ,*c-indent* "treatom_set_value (" ,(c-compiled-symbol dest) " ,"
 		,val
 		")" ,*c-separator*))
-
-;  `(%transpiler-native "treatom_set_function (" ,dest " ,"
-;		,val
-;		")" ,*c-separator*))
 
 (define-c-macro %var (name)
   `(%transpiler-native ,*c-indent* "treptr " ,name ,*c-separator*))
@@ -149,18 +150,13 @@
 (define-c-macro aref (arr &rest idx)
   (if (= 1 (length idx))
 	  (c-make-aref arr idx.)
-	  (prog1
-	  `(trearray_builtin_aref ,val ,arr ,@idx)
-		(print idx)
-	  )))
+	  `(trearray_builtin_aref ,val ,arr ,@idx)))
 
 (define-c-macro %set-aref (val arr &rest idx)
   (if (= 1 (length idx))
 	  (append (c-make-aref arr idx.)
 			  `("=" ,val))
-	  (prog1
-		`(trearray_builtin_set_aref ,val ,arr ,@idx)
-		(print idx))))
+	  `(trearray_builtin_set_aref ,val ,arr ,@idx)))
 
 (define-c-macro %vec (vec index)
   `("_TREVEC(" ,vec "," ,index ")"))

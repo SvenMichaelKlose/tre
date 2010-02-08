@@ -41,22 +41,22 @@
 	; Generate.
     (format t "; Let me think. Hmm")
   	(force-output)
-    (let no-decls 
-	  (concat-stringtree
-		  (when base?
- 	        (transpiler-transpile tr base))
-		  (when base?
- 	        (transpiler-transpile tr base2))
- 	      (transpiler-transpile tr deps)
-		  (when (and base? *transpiler-assert*)
- 		    (transpiler-transpile tr base-debug))
- 	      (transpiler-transpile tr tests)
- 	      (transpiler-transpile tr user))
-	  (princ (concat-stringtree
-			     (mapcar (fn transpiler-emit-code tr (list _))
-						 (funinfo-var-declarations *global-funinfo*)))
-	         f)
-	  (princ no-decls f))
+	(let no-decls (concat-stringtree
+					  (transpiler-transpile tr
+                      	  (append
+							  (when base?
+                                base)
+                              (when base?
+                                base2)
+	                          deps
+                              (when (and base? *transpiler-assert*)
+ 	                            base-debug)
+                              tests
+ 	                          user)))
+       (dolist (i (funinfo-env *global-funinfo*))
+         (princ (transpiler-emit-code tr (list `(%var ,i)))
+				f))
+       (princ no-decls f))
     (transpiler-print-obfuscations tr)))
 
 (defun js-transpile-ok ()

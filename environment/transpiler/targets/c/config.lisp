@@ -28,7 +28,8 @@
 	(let ex (transpiler-expex tr)
 	  (setf (expex-argument-filter ex) #'c-expex-literal
 			(expex-setter-filter ex) (compose #'expex-set-global-variable-value
-										      #'expex-compiled-funcall)))
+										      #'expex-compiled-funcall)
+			(expex-inline? ex) (fn in? _ 'aref '%vec '%car '%cdr '%eq '%not)))
 	tr))
 
 (defvar *c-transpiler* (make-c-transpiler))

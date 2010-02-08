@@ -98,7 +98,7 @@
 
 ;; Check if an expression is expandable.
 ;;
-;; Declines atoms and expressions with meta-forms.
+;; Rejects atoms and expressions with meta-forms.
 (defun expex-able? (ex x)
   (not (or (atom x)
 		   (function-ref-expr? x)
@@ -209,8 +209,8 @@
 ;; The arguments are replaced by gensyms.
 ;; XXX argument conversion by guest.
 (defun expex-expr-std (ex x)
-  (with ((moved new-expr) (expex-move-args ex
-										   (expex-argexpand ex x)))
+  (with ((moved new-expr)
+		     (expex-move-args ex (expex-argexpand ex x)))
     (values moved
 			(list new-expr))))
 
@@ -248,7 +248,10 @@
       (not (expex-able? ex x))		(values nil (list x))
 	  (lambda? x)					(expex-lambda ex x)
       (vm-scope? x)					(values nil (expex-body ex (vm-scope-body x)))
-      (%setq? x)					(expex-expr-setq ex x)
+      (%setq? x)					(if (identity? (%setq-value x))
+									    (expex-expr-setq ex `(%setq ,(%setq-place x)
+																	,(second (%setq-value x))))
+									    (expex-expr-setq ex x))
       (expex-expr-std ex x))))
 
 ;;;; BODY EXPANSION
@@ -260,7 +263,9 @@
 		  (vm-jump? x)
 		  (%var? x))
 	  x
-	  (expex-guest-filter-setter ex `(%setq ~%ret ,x))))
+	  (expex-guest-filter-setter ex `(%setq ~%ret ,(if (identity? x)
+													   (second x)
+													   x)))))
 
 ;; Simply concatenates the results of all expression expansions in a body.
 (defun expex-list (ex x)
