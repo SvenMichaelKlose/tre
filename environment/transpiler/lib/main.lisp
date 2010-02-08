@@ -1,5 +1,5 @@
 ;;;;; TRE transpiler/lib
-;;;;; (c) 2005-2009 Sven Klose <pixel@copei.de>
+;;;;; (c) 2005-2010 Sven Klose <pixel@copei.de>
 
 (env-load "transpiler/lib/predicates.lisp")
 (env-load "transpiler/lib/subatomic.lisp")
@@ -13,3 +13,5 @@
 (env-load "transpiler/lib/funinfo/lexical.lisp")
 (env-load "transpiler/lib/funinfo/lambda.lisp")
 (env-load "transpiler/lib/funinfo/debug.lisp")
+
+(env-load "transpiler/lib/metacode-walker.lisp")

@@ -6,29 +6,8 @@
 (defvar *opt-peephole-funinfo* nil)
 (defvar *opt-peephole-symbols* (make-hash-table))
 
-(defmacro walk-metacode-list (name args &key (if-atom nil)
-						  	    		     (if-symbol nil)
-										     (if-function nil))
-  (with-cons x r args
-    `(defun ,name ,args
-       (if (atom ,x)
-	       (if (not ,x) nil
-	           ,@(awhen if-symbol `((symbolp ,x) ,!))
-	           ,@(awhen if-atom `((atom ,x) ,!)))
-	      (if
-			(named-function-expr? ,x)
-			  (progn
-				,@(awhen if-function (list !))
-	            (,name (cdr ,x) ,@r))
-	        (lambda? x)
-			  (progn
-				,@(awhen if-function (list !))
-	            (,name (cdr ,x) ,@r))
-	        (progn
-	          (,name (car ,x) ,@r)
-	          (,name (cdr ,x) ,@r)))))))
-
-(walk-metacode-list opt-peephole-collect-syms-0 (x h)
+(metacode-walker opt-peephole-collect-syms-0 (x h)
+	:traverse?	t
     :if-symbol	(setf (href h x) (1+ (or (href h x)
 								 		 0)))
 	:if-atom	nil
@@ -39,7 +18,8 @@
 	(opt-peephole-collect-syms-0 x h)
 	h))
 
-(walk-metacode-list opt-peephole-uncollect-syms-0 (x)
+(metacode-walker opt-peephole-uncollect-syms-0 (x)
+	:traverse?	t
     :if-symbol	(setf (href *opt-peephole-symbols* x)
 					  (1- (or (href *opt-peephole-symbols* x)
 							  0)))
