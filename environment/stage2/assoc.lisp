@@ -1,17 +1,17 @@
 ;;;; TRE  environment
-;;;; Copyright (C) 2005-2006,2009 Sven Klose <pixel@copei.de>
+;;;; Copyright (C) 2005-2006,2009-2010 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Associative lists
 
 (unless (eq t *BUILTIN-ASSOC*)
-  (defun assoc (key lst &key (test nil))
+  (defun assoc (key lst &key (test #'eql))
     "Search value for key in associative list."
     (when lst
 	  (unless (consp lst)
 	    (%error "list expected"))
       (dolist (i lst)
         (if (consp i)
-		    (if (funcall (or test #'eql) key (car i))
+		    (if (funcall test key (car i))
 	  	  	    (return i))
 		    (and (print i)
 			     (%error "not a pair")))))))
@@ -24,25 +24,25 @@
   (unless (eq 'b (cdr (assoc 2 lst)))
 	(%error "ASSOC doesn't work with numbers")))
 
-(defun assoc-cons (key lst &key test)
+(defun assoc-cons (key lst &key (test #'eql))
   (when lst
 	(unless (consp lst)
 	  (%error "list expected"))
     (dolist (i lst)
       (if (consp i)
-		  (if (funcall (or test #'eql) key (car i))
+		  (if (funcall test key (car i))
 	  	      (return i))
 		  (%error "not a pair")))))
 
-(defun %setf-assoc (new-value key x &key test)
+(defun %setf-assoc (new-value key x &key (test #'eql))
   (if (listp x)
       (when x
-		(if (funcall (or test #'eql) key (car x))
+		(if (funcall test key (car x))
             (rplaca x new-value)
 			(%setf-assoc new-value key (cdr x) :test test)))
 	  (%error "not a pair")))
 
-(defun (setf assoc) (new-value key lst &key test)
+(defun (setf assoc) (new-value key lst &key (test #'eql))
   (%setf-assoc new-value key lst :test test)
   new-value)
 
