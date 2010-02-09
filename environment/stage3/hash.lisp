@@ -1,5 +1,5 @@
 ;;;; TRE environment
-;;;; Copyright (c) 2005-2006,2008-2009 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2005-2006,2008-2010 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Generalized hash-table
 
@@ -8,18 +8,15 @@
 (defstruct %hash-table
   test              ; Function for equality test of keys.
   size              ; Initial hash table size.
-  rehash-size       ; Minimum amount of elements to grow.
-  rehash-threshold  ; Maximum table size until it must grow.
   hash              ; Internal hash table.
   count             ; Number of elements stored in the table.
   )
 
-(defun make-hash-table (&key test size rehash-size rehash-threshold)
+(defun make-hash-table (&key (test #'eq)
+							 (size *default-hash-size*))
   "Create a new hash table."
-  (make-%hash-table
-    :test (or test #'eq) :size *default-hash-size*
-    :rehash-size rehash-size :rehash-threshold rehash-threshold
-    :hash (make-array *default-hash-size*)))
+  (make-%hash-table :test test :size size
+    				:hash (make-array *default-hash-size*)))
 
 (defun %make-hash-index-num (h k)
   "Make hash index from number."
