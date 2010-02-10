@@ -15,3 +15,4 @@
 (env-load "transpiler/lib/funinfo/debug.lisp")
 
 (env-load "transpiler/lib/metacode-walker.lisp")
+(env-load "transpiler/lib/compile-argument-expansion.lisp")
