@@ -1,5 +1,5 @@
 ;;;;; TRE to ECMAScript transpiler
-;;;;; Copyright (c) 2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2009-2010 Sven Klose <pixel@copei.de>
 
 (defun hash-table? (x)
   (and (objectp x)
@@ -13,7 +13,7 @@
     (reverse lst)))
 
 ;; XXX test is ignored.
-(defun assoc-hash (x &key (test nil))
-  (let h (make-hash-table)
+(defun assoc-hash (x &key (test #'eql))
+  (let h (make-hash-table :test test)
     (dolist (i x h)
       (setf (href h i.) .i))))
