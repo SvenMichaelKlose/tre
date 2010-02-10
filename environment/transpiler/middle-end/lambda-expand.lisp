@@ -7,6 +7,12 @@
 ;;;; Make this functions a layer of FUNINFO to get rid of the first
 ;;;; FI argument as well as the FUNINFO prefixes.
 
+(defun lambda-make-funinfo (args parent)
+  (let fi (make-funinfo :args args
+					    :parent parent)
+	(funinfo-env-add fi '~%ret)
+	fi))
+
 (defvar *lambda-exported-closures* nil)
 
 (defun lambda-expand-add-closures (x)
@@ -39,8 +45,7 @@
 
 (defun lambda-export-make-exported (fi x)
   (with-gensym exported-name
-    (let fi-child (make-funinfo :parent fi
-								:args (lambda-args x))
+    (let fi-child (lambda-make-funinfo (lambda-args x) fi)
 	  (when (transpiler-stack-locals? *current-transpiler*)
 		(funinfo-make-ghost fi-child))
 	  (lambda-expand-tree fi-child (lambda-body x) t)
@@ -68,8 +73,7 @@
     (lambda? x)
 	  (if export-lambdas?
           (lambda-export fi x)
-		  (lambda-w/-missing-funinfo x (make-funinfo :args (lambda-args x)
-												    :parent fi)))
+		  (lambda-w/-missing-funinfo x (lambda-make-funinfo (lambda-args x) fi)))
 	x))
 
 (defun lambda-expand-tree-0 (fi body export-lambdas?)
@@ -93,8 +97,7 @@
 			       (lambda-args x))
          imported	(get-lambda-funinfo x)
          fi			(or imported
-						(make-funinfo :parent *global-funinfo*
-									  :args forms)))
+						(lambda-make-funinfo forms *global-funinfo*)))
     (values
 	    `(function ,@(awhen function-name
 					   (setf (funinfo-name fi) !)
