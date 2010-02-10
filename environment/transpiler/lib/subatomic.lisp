@@ -1,5 +1,5 @@
 ;;;; TRE compiler
-;;;; Copyright (c) 2006-2009 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2006-2010 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Subatomic expression utilities.
 
@@ -15,9 +15,12 @@
 
 (defun atomic? (x)
   (or (atom x)
-	  (%stack? x)
-	  (%vec? x)
-	  (%slot-value? x)))
+	  (in? x. '%stack '%vec '%slot-value)))
+
+(defun atomic-or-without-side-effects? (x)
+  (or (atomic? x)
+	  (and (consp x)
+	  	   (in? x. '%quote 'car '%car 'cdr '%cdr))))
 
 (defun vm-jump? (e)
   (and (consp e)

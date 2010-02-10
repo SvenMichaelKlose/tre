@@ -163,7 +163,7 @@
     (when (and v (atom v))
 	  (or (~%ret? v)
 	      (not (or (eq v (funinfo-lexical fi))
-	    	       (not (funinfo-in-env? fi v))
+	    	       (not (funinfo-in-args-or-env? fi v))
 	    	       (funinfo-lexical? fi v)))))))
 
 (defun opt-peephole (statements)
@@ -180,7 +180,7 @@
 					  (or (and (not (~%ret? (%setq-place a)))
 							   (integer= 1 (opt-peephole-count (%setq-place a))))
 					      (not (opt-peephole-will-be-used-again? d (%setq-place a)))))
-				   (if (atom (%setq-value a))
+				   (if (atomic-or-without-side-effects? (%setq-value a))
 			  		   (opt-peephole-uncollect-syms a
 						   (remove-code d))
 			  		   (opt-peephole-uncollect-syms (%setq-place a)
