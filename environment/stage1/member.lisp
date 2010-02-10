@@ -1,5 +1,5 @@
 ;;;;; TRE environment
-;;;;; Copyright (C) 2005-2006,2008 Sven Klose <pixel@copei.de>
+;;;;; Copyright (C) 2005-2006,2008,2010 Sven Klose <pixel@copei.de>
 
 (if (not (eq t *BUILTIN-MEMBER*))
   (progn
@@ -25,3 +25,14 @@
 (define-test "MEMBER detects foureign elements"
   ((member 'A '(l i s p)))
   nil)
+
+(defun %member-if-r (pred lst)
+  (if lst
+      (or (funcall pred (car lst))
+          (%member-if-r pred (cdr lst)))))
+
+(defun member-if (pred &rest lsts)
+  "Test if predicate is true for any member of any of the pure lists."
+  (or (%member-if-r pred (car lsts))
+      (if (cdr lsts)
+          (apply #'member-if pred (cdr lsts)))))
