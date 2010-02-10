@@ -25,6 +25,13 @@
 			   ..x
 			   x))))
 
+(defun simple-argument-list? (x)
+  (if x
+      (not (member-if (fn or (consp _)
+				          (argument-keyword? _))
+			       x))
+	  t))
+
 ;; (DEFUN ...)
 ;;
 ;; Assign function to global variable.
@@ -43,7 +50,11 @@
        (%setq ,n #'(,@(awhen fi-sym
 						`(%funinfo ,!))
 					,a
-   		              ,@body)))))
+   		              ,@body))
+	   ,@(unless (or (simple-argument-list? args)
+					 (eq 'no-args body.))
+		   `((%setq (slot-value ,n 'tre-exp)
+			  		,(compile-argument-expansion n args)))))))
 
 (define-js-std-macro define-native-js-fun (name args &rest body)
   (apply #'js-essential-defun name args body))
