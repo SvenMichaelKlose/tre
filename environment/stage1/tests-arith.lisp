@@ -17,9 +17,9 @@
   ((= 66 (integer+ 65 1)))
   t)
 
-(define-test "+ INTEGER and CHARACTER"
-  ((= 66 (+ 65 (code-char 1))))
-  t)
+;(define-test "+ INTEGER and CHARACTER"
+;  ((= 66 (+ 65 (code-char 1))))
+;  t)
 
 (define-test "= empty string"
   ((let s ""
