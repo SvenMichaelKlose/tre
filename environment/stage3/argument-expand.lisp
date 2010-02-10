@@ -1,5 +1,5 @@
 ;;;;; TRE environment
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Argument expander.
 ;;;;;
@@ -26,9 +26,10 @@
 				   ; Turn keyword definition into ACONS.
 				   (and (setf argument-exp-sort-key
 							  (cons (if (consp _.)
-										(cons (first _.)
+										(cons (car _.)
 											  (second _.)) ; with default value
-										(list _.)) ; without default value
+										(cons _.
+											  _.)) ; without itself
 									argument-exp-sort-key))
 						(rec2 ._)))))
 
@@ -80,8 +81,9 @@
 
 		 get-default
 		   #'((def)
-				(when (consp def.)
-				  (second def.)))
+				(if (consp def.)
+				    (second def.)
+					(list '%quote def.)))
 
 		 get-value
 		   #'((def vals)
@@ -133,10 +135,9 @@
 		 exp-rest
 		   #'((def vals)
 				(setf no-static '&rest)
-  			    (setf rest-arg (list (cons (get-name def)
+  			    (setf rest-arg (list (cons def.
 										   (cons '&rest
-												 (or vals
-													 (get-default def))))))
+												 vals))))
 			    nil)
 
          exp-optional-rest
