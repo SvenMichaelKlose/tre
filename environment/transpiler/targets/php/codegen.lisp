@@ -73,6 +73,10 @@
 		  (error "codegen: arguments and body expected: ~A" x)
 	  	  (codegen-php-function name x))))
 
+(define-php-macro %function-prologue () '(%transpiler-native ""))
+(define-php-macro %function-epilogue () '(%transpiler-native ""))
+(define-php-macro %function-return () '(%transpiler-native ""))
+
 (defun php-codegen-argument-filter (x)
   (if (or (nsymbolp x)
 		  (%transpiler-string? x))

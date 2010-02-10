@@ -18,17 +18,14 @@
 				  (funinfo-args fi))))))
 
 (defun funinfo-function-prologue (fi body)
-  (let tags? (< 0 (funinfo-num-tags fi))
+  (let fi-sym (funinfo-sym fi)
     `(,@(when (transpiler-needs-var-declarations? *current-transpiler*)
 	      (funinfo-var-declarations fi))
-	  ,@(when tags?
-		  '((%function-prologue)))
+	  (%function-prologue ,fi-sym)
 	  ,@(when (transpiler-lambda-export? *current-transpiler*)
 		  (funinfo-copiers-to-lexicals fi))
       ,@body
-	  ,(if tags?
-		 '(%function-epilogue)
-		 '(%function-return)))))
+	  (%function-epilogue ,fi-sym))))
 
 (defun make-function-prologues-fun (name fun-expr)
   (let fi (get-lambda-funinfo fun-expr)

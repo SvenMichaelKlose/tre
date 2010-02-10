@@ -26,7 +26,7 @@
   `(,*js-indent* "_I_=" ,tag "; continue" ,*js-separator*))
 
 (define-js-macro vm-go-nil (val tag)
-  `(,*js-indent* "if (!" ,val "&&" ,val "!==0) {_I_=" ,tag "; continue;}" ,*js-newline*))
+  `(,*js-indent* "if (!" ,val "&&" ,val "!==0&&" ,val "!=='') {_I_=" ,tag "; continue;}" ,*js-newline*))
 
 (define-js-macro %set-atom-fun (plc val)
   `(%transpiler-native ,*js-indent* ,plc "=" ,val ,*js-separator*))
@@ -41,24 +41,29 @@
       					  (argument-expand-names 'unnamed-js-function (lambda-args x)))
 		  			,(code-char 10)
 	    "{" ,(code-char 10)
-			,*js-indent* "var " ,(transpiler-obfuscate *js-transpiler* '~%ret) ,*js-separator*
-			,@(when (transpiler-stack-locals? *js-transpiler*)
-				`(,*js-indent* "var _locals = []" ,*js-separator*))
 			,@(lambda-body x)
 	    "}" ,(code-char 10))))
 
-(define-js-macro %function-prologue ()
-  `(,*js-indent* "var _I_ = 0" ,*js-separator*
-	,*js-indent* "while (1) {" ,*js-separator*
-	,*js-indent* "switch (_I_) {case 0:" ,*js-separator*))
+(define-js-macro %function-prologue (fi-sym)
+  `(%transpiler-native ""
+	   ,@(when (transpiler-stack-locals? *js-transpiler*)
+	       `(,*js-indent* "var _locals = []" ,*js-separator*))
+	   ,@(when (< 0 (funinfo-num-tags (get-lambda-funinfo-by-sym fi-sym)))
+	       `(,*js-indent* "var _I_ = 0" ,*js-separator*
+		     ,*js-indent* "while (1) {" ,*js-separator*
+		     ,*js-indent* "switch (_I_) {case 0:" ,*js-separator*))))
 
-(define-js-macro %function-return ()
-  `(,*js-indent* "return " ,(transpiler-obfuscate *js-transpiler* '~%ret) ,*js-separator*))
+(define-js-macro %function-return (fi-sym)
+  (let fi (get-lambda-funinfo-by-sym fi-sym)
+    `(,*js-indent* "return " ,(transpiler-obfuscate *js-transpiler* (place-assign (place-expand-0 fi '~%ret))) ,*js-separator*)))
 
-(define-js-macro %function-epilogue ()
-  `(,*js-indent* "}" ,*js-separator*
-	(%function-return)
-	,*js-indent* "}"))
+(define-js-macro %function-epilogue (fi-sym)
+  (let fi (get-lambda-funinfo-by-sym fi-sym)
+    `(,@(when (< 0 (funinfo-num-tags fi))
+	      `(,*js-indent* "}" ,*js-separator*))
+	  (%function-return ,fi-sym)
+	  ,@(when (< 0 (funinfo-num-tags fi))
+	      `(,*js-indent* "}")))))
 
 (define-js-macro %assign-function-arguments (name args)
   `(%transpiler-native

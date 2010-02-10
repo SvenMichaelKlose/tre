@@ -23,34 +23,37 @@
 
 (define-c-macro function (name &optional (x 'only-name))
   (if
-	(eq 'only-name x)
-  	  name
-    (atom x)
-	  (error "codegen: arguments and body expected: ~A" x)
-	(with (args (argument-expand-names 'unnamed-c-function
-			      		     	       (lambda-args x))
-		   fi (get-lambda-funinfo x)
-		   num-locals (length (funinfo-env fi)))
+	(eq 'only-name x)	name
+    (atom x)			(error "codegen: arguments and body expected: ~A" x)
+	(let args (argument-expand-names 'unnamed-c-function (lambda-args x))
 	  (c-make-function-declaration name args)
       `(,(code-char 10)
 		"treptr " ,(compiled-function-name name)
 	  	  ,@(parenthized-comma-separated-list (mapcar (fn `("treptr " ,_)) args))
 		,(code-char 10)
 	    "{" ,(code-char 10)
-		   ,*c-indent* "treptr " ,'~%ret ,*c-separator*
-		   ,@(when (< 0 num-locals)
-			   `(,*c-indent* ,"treptr _local_array = trearray_make (" ,num-locals ")" ,*c-separator*
-			     ,*c-indent* "tregc_push (_local_array)" ,*c-separator*
-			 	 ,*c-indent* ,"const treptr * _locals = (treptr *) " "TREATOM_DETAIL(_local_array)" ,*c-separator*))
            ,@(lambda-body x)
-		   ,@(when (< 0 num-locals)
-			   `(,*c-indent* "tregc_pop ()" ,*c-separator*))
-           (,*c-indent* "return " ,'~%ret ,*c-separator*)
 	    "}" ,*c-newline*))))
 
-(define-c-macro %function-prologue () '(%transpiler-native ""))
-(define-c-macro %function-epilogue () '(%transpiler-native ""))
-(define-c-macro %function-return () '(%transpiler-native ""))
+(define-c-macro %function-prologue (fi-sym)
+  (with (fi (get-lambda-funinfo-by-sym fi-sym)
+    	 num-vars (length (funinfo-env fi)))
+	(if (< 0 num-vars)
+        `(,*c-indent* ,"treptr _local_array = trearray_make (" ,num-vars ")" ,*c-separator*
+          ,*c-indent* "tregc_push (_local_array)" ,*c-separator*
+          ,*c-indent* ,"const treptr * _locals = (treptr *) " "TREATOM_DETAIL(_local_array)" ,*c-separator*)
+		'(%transpiler-native ""))))
+
+(define-c-macro %function-return (fi-sym)
+  (let fi (get-lambda-funinfo-by-sym fi-sym)
+    `(%transpiler-native ,*c-indent* "return " ,(place-assign (place-expand-0 fi '~%ret)) ,*c-separator*)))
+
+(define-c-macro %function-epilogue (fi-sym)
+  (with (fi (get-lambda-funinfo-by-sym fi-sym)
+    	 num-vars (length (funinfo-env fi)))
+    `(,@(when (< 0 num-vars)
+		  `((,*c-indent* "tregc_pop ()" ,*c-separator*)))
+      (%function-return ,fi-sym))))
 
 ;; XXX fix macros instead?
 (defun codegen-expr? (x)
