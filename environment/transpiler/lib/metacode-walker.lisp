@@ -14,21 +14,18 @@
     `(defun ,name ,args
        (if (atom ,x)
 	       (if (not ,x) nil
-	           ,@(awhen if-symbol
-				   `((symbolp ,x) ,!))
-	           ,@(awhen if-atom
-				   `((atom ,x) ,!)))
+	           ,@(awhen if-symbol	`((symbolp ,x) ,!))
+	           ,@(awhen if-atom		`((atom ,x) ,!))
+			   ,@(unless traverse?
+				   (list x)))
 	      (if
+			,@(awhen if-slot-value	`((%slot-value? ,x)	,!))
+			,@(awhen if-stack		`((%stack? ,x)		,!))
+			,@(awhen if-vec			`((%vec? ,x)		,!))
 			(in? (car ,x) '%quote '%var '%transpiler-native)
-				,x
-	         ,@(awhen if-symbol
-				 `((symbolp ,x) ,!))
-			,@(awhen if-slot-value
-				`((%slot-value? ,x)	,!))
-			,@(awhen if-stack
-				`((%stack? ,x)		,!))
-			,@(awhen if-vec
-				`((%vec? ,x)		,!))
+			   ,(if traverse?
+				     nil
+				     x)
 			(named-function-expr? ,x)
 			  (progn
 				,@(awhen (or if-named-function if-function)
