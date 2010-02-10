@@ -87,11 +87,11 @@
   4)
 
 ;; XXX tests!
-(defun position-if (test seq &key (start nil) (end nil)
+(defun position-if (pred seq &key (start nil) (end nil)
 							      (from-end nil))
   (let idx nil
     (find-if #'((x i)
-				  (when (funcall test x)
+				  (when (funcall pred x)
 					(setf idx i)))
 			 seq
 			 :start start
