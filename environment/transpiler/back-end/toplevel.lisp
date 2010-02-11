@@ -15,7 +15,7 @@
 	  #'concat-stringtree
 	  (fn transpiler-to-string tr _)
 	  (fn expander-expand (transpiler-macro-expander tr) _)
-	  (fn transpiler-finalize-sexprs tr _)
+	  #'transpiler-finalize-sexprs
 	  #'transpiler-encapsulate-strings
 	  (fn transpiler-obfuscate tr _)))
 

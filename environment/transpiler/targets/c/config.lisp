@@ -1,5 +1,5 @@
 ;;;;; TRE to C transpiler
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Configuration
 
@@ -15,9 +15,6 @@
 		  	  		      (and (>= _ #\A) (<= _ #\Z))
 		  	  		      (and (>= _ #\0) (<= _ #\9))
 			  		      (in=? _ #\_ #\. #\$ #\#)))
-			  :make-label
-	  		      (fn (format nil "l~A:~%"
-							      (transpiler-symbol-string *c-transpiler* _)))
 			  :named-functions? t
 			  :lambda-export? t
 			  :stack-arguments? t

@@ -1,5 +1,5 @@
 ;;;;; Transpiler: TRE to PHP
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Configuration
 
@@ -8,13 +8,6 @@
 (defun php-setf-functionp (x)
   (or (%setf-functionp x)
       (transpiler-function-arguments *php-transpiler* x)))
-
-(defun php-transpiler-make-label (x)
-  (format nil "~A_I_~A:~%"
-		  (if (< *php-version* 503)
-			  "case "
-			  "")
-		  (transpiler-symbol-string *php-transpiler* x)))
 
 (defun make-php-transpiler-0 ()
   (create-transpiler
@@ -29,7 +22,6 @@
 		  	    (and (>= _ #\A) (<= _ #\Z))
 		  	    (and (>= _ #\0) (<= _ #\9))
 			    (in=? _ #\_ #\. #\#)))
-	  :make-label #'php-transpiler-make-label
 	  :gen-string (fn transpiler-make-escaped-string _ #\')
 	  :lambda-export? t
 	  :stack-locals? nil

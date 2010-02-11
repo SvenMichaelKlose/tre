@@ -22,6 +22,9 @@
 
 ;;;; CONTROL FLOW
 
+(define-js-macro %%tag (tag)
+  `(%transpiler-native "case " ,tag ":" ,*js-newline*))
+
 (define-js-macro vm-go (tag)
   `(,*js-indent* "_I_=" ,tag "; continue" ,*js-separator*))
 
@@ -59,11 +62,11 @@
 
 (define-js-macro %function-epilogue (fi-sym)
   (let fi (get-lambda-funinfo-by-sym fi-sym)
-    `(,@(when (< 0 (funinfo-num-tags fi))
-	      `(,*js-indent* "}" ,*js-separator*))
-	  (%function-return ,fi-sym)
+    `((%function-return ,fi-sym)
 	  ,@(when (< 0 (funinfo-num-tags fi))
-	      `(,*js-indent* "}")))))
+	      `(,*js-indent* "}" ,*js-newline*))
+	  ,@(when (< 0 (funinfo-num-tags fi))
+	      `(,*js-indent* "}" ,*js-newline*)))))
 
 (define-js-macro %assign-function-arguments (name args)
   `(%transpiler-native

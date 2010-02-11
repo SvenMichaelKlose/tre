@@ -66,7 +66,11 @@
 
 (defun %setq-lambda? (x)
   (and (%setq? x)
-	   (lambda? (third x))))
+	   (lambda? (%setq-value x))))
+
+(defun %setq-named-function? (x)
+  (and (%setq? x)
+	   (named-function-expr? (%setq-value x))))
 
 (defun atom-or-quote? (x)
   (or (atom x)

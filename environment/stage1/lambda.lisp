@@ -12,9 +12,18 @@
 	(cdr x)
 	x))
 
+;; Get name of FUNCTION.
+(defun function-name (x)
+  (if (eq (car x) 'function)
+	  (if (cdr (cdr x))
+		  (cadr x))))
+
+;; Get LAMBDA of FUNCTION.
 (defun past-function (x)
   (if (eq (car x) 'function)
-      (cadr x)
+	  (if (cdr (cdr x))
+		  (caddr x)	; (FUNCTION name lambda-expression)
+      	  (cadr x)) ; (FUNCTION lambda-expression)
 	  x))
 
 ;; The compiler stores function information before the arguments of

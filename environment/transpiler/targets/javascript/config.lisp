@@ -7,9 +7,6 @@
   (or (%setf-functionp x)
       (transpiler-function-arguments *js-transpiler* x)))
 
-(defun js-transpiler-make-label (x)
-  (format nil "case ~A:~%" (transpiler-symbol-string *js-transpiler* x)))
-
 (defun make-javascript-transpiler-0 ()
   (create-transpiler
 	  :std-macro-expander 'js-alternate-std
@@ -24,7 +21,6 @@
 		  	    (and (>= _ #\A) (<= _ #\Z))
 		  	    (and (>= _ #\0) (<= _ #\9))
 			    (in=? _ #\_ #\. #\$ #\#)))
-	  :make-label #'js-transpiler-make-label
 	  :lambda-export? nil
 	  :needs-var-declarations? t
 	  :stack-locals? nil

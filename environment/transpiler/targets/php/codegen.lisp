@@ -26,6 +26,13 @@
 	 (transpiler-add-obfuscation-exceptions *php-transpiler* ',x.)
 	 (define-transpiler-macro *php-transpiler* ,@x)))
 
+(define-php-macro %%tag (tag)
+  `(%transpiler-native 
+	   ,(if (< *php-version* 503)
+	        "case "
+	        "")
+       "_I_" ,tag ":" ,*php-separator*))
+
 (define-php-macro vm-go (tag)
   (if (<= 503 *php-version*)
       `(, *php-indent* "goto _I_" ,tag ,*php-separator*)

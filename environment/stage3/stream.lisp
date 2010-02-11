@@ -1,14 +1,16 @@
 ;;;; TRE environment
-;;;; Copyright (C) 2005-2006 Sven Klose <pixel@copei.de>
+;;;; Copyright (C) 2005-2006,2010 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Streams
 
 (defstruct stream
-  handle       ; Interpreter file handle.
+  (handle nil) ; Interpreter file handle.
+
   fun-in       ; User-defined input function.
   fun-out
   fun-eof
-  user-detail
 
-  last-char
-  peeked-char)
+  (last-char	nil)
+  (peeked-char	nil)
+
+  (user-detail nil))

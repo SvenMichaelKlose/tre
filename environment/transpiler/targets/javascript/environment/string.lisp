@@ -9,7 +9,8 @@
 
 ;; XXX must be optional.
 (defun string-concat (&rest x)
-  (apply #'+ x))
+  (apply #'+ (mapcar (fn or _ "")
+					 x)))
 
 (dont-obfuscate char-code-at)
 

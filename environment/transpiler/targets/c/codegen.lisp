@@ -117,6 +117,9 @@
 
 (define-c-binary eq "=")
 
+(define-c-macro %%tag (tag)
+  `(%transpiler-native "l" ,tag ":" ,*c-separator*))
+ 
 (define-c-macro vm-go (tag)
   `(,*c-indent* "goto l" ,(transpiler-symbol-string *c-transpiler* tag)
 	,*c-separator*))

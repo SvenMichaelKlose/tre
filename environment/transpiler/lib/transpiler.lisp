@@ -48,7 +48,6 @@
   (obfuscate? nil)
   (import-from-environment? t)
 
-  (make-label #'identity)
   (preprocessor #'identity)
 
   ; Generator for literal strings.
