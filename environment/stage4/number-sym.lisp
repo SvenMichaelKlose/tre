@@ -1,15 +1,12 @@
 ;;;;; TRE transpiler
 ;;;;; Copyright (c) 2010 Sven Klose <pixel@copei.de>
 
+(defun number-sym-0 (x)
+  (unless (= 0 x)
+	(let m (mod x 24)
+	  (cons (+ #\a m)
+			(number-sym-0 (/ (- x m) 24))))))
+
 (defun number-sym (x)
-  (with (digit
-		  (fn (if (< _ 24)
-				  (+ #\a _)
-				  (+ (- #\0 24) _)))
-		 rec
-		   (fn (unless (= 0 _)
-				 (with (m (mod _ 34))
-				   (cons (digit m)
-						 (rec (/ (- _ m) 34)))))))
-	(make-symbol (list-string (nconc (rec x)
-									 (list #\_))))))
+  (make-symbol (list-string (nconc (number-sym-0 x)
+								   (list #\_)))))
