@@ -1,7 +1,7 @@
-;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Transpiler: TRE to PHP
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 ;;;;;
-;;;;; Generating code
+;;;;; Code generation macros
 
 (defun php-codegen-symbol-constructor (tr x)
     `(,(transpiler-symbol-string tr
@@ -13,13 +13,6 @@
 		   (symbolp x))
 	  `("$" ,x)
 	  x))
-
-(defun nsymbolp (x)
-  (or (not (atom x))
-	  (and (atom x) ; XXX fix SYMBOLP
-		   (not (symbolp x)))))
-
-;;;; TRANSPILER-MACRO EXPANDER
 
 (defmacro define-php-macro (&rest x)
   `(progn
@@ -80,34 +73,30 @@
 		  (error "codegen: arguments and body expected: ~A" x)
 	  	  (codegen-php-function name x))))
 
-(define-php-macro %function-prologue () '(%transpiler-native ""))
-(define-php-macro %function-epilogue () '(%transpiler-native ""))
-(define-php-macro %function-return () '(%transpiler-native ""))
+(define-php-macro %function-prologue (fi-sym) '(%transpiler-native ""))
+(define-php-macro %function-epilogue (fi-sym) '(%transpiler-native ""))
+(define-php-macro %function-return (fi-sym) '(%transpiler-native ""))
 
 (defun php-codegen-argument-filter (x)
-  (if (or (nsymbolp x)
-		  (%transpiler-string? x))
-	  `("__w (" ,x ")")
-	  (php-dollarize x)))
+  (php-dollarize x))
 
 (define-php-macro %setq (dest val)
   `((%transpiler-native
 	    ,*php-indent*
-		"$" ,dest)
-		,(if (and val
-				  (if (atom val)
-				  	  (symbolp val)
-					  (%transpiler-native? val.)))
-		   "=&"
-		   "=")
+	    ,@(if (eq dest (transpiler-obfuscate-symbol *php-transpiler* nil))
+	          '("")
+			  (if (and (atom val)
+				  	   (symbolp val))
+	              `("$" ,dest "=&")
+	           	  `("$" ,dest "=")))
         ,@(if
-		    (and (consp val)
-	   			 (not (stringp val.))
-	   			 (not (in? val. '%transpiler-string '%transpiler-native)))
-			  `((,val. ,@(parenthized-comma-separated-list
-						    (mapcar #'php-codegen-argument-filter .val))))
-		      (list (php-dollarize val)))
-    ,*php-separator*))
+			(atom val)
+		      (list "$" val)
+			(codegen-expr? val)
+		      (list val)
+		    `((,val. ,@(parenthized-comma-separated-list
+					       (mapcar #'php-codegen-argument-filter .val)))))
+    ,*php-separator*)))
 
 (define-php-macro %var (name)
   '(%transpiler-native ""))
@@ -135,7 +124,8 @@
 (define-php-binary %%%eq "===")
 
 (define-php-macro make-array (&rest elements)
-  `("Array (" ,@(transpiler-binary-expand "," elements) ")"))
+  `("Array (" ,@(transpiler-binary-expand ","
+					(mapcar #'php-dollarize elements)) ")"))
 
 (define-php-macro aref (arr &rest idx)
   `(%transpiler-native "$" ,arr
@@ -196,9 +186,7 @@
       (php-stack x)))
 
 (define-php-macro %quote (x)
-  (if (not (string= "" (symbol-name x)))
-	  (php-codegen-symbol-constructor *php-transpiler* x)
-	  x))
+  (php-compiled-symbol x))
 
 (define-php-macro %slot-value (x y)
   (if (consp x)

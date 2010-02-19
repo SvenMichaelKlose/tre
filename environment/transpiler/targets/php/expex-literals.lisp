@@ -52,5 +52,11 @@
 		  		 (expex-funinfo-defined-variable? x))
 		    (transpiler-defined-function *php-transpiler* x))
 		  x
-	  	(php-compiled-symbol x))
+		(not x)
+		  nil
+		(not (or (get-lambda-funinfo-by-sym x)
+				 (expander-has-macro? (transpiler-macro-expander *php-transpiler*)
+								  x)))
+	  	  (php-compiled-symbol x)
+		x)
     (transpiler-import-from-expex x)))
