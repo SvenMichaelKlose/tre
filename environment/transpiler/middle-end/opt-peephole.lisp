@@ -67,11 +67,6 @@
 		   ,@body
 		   (t (cons a (funcall ,fun d))))))))
 
-(defun find-all-if (pred x)
-  (mapcan (fn (when (funcall pred _)
-				(list _)))
-		  x))
-
 (defun opt-peephole-has-no-jumps-to (x tag)
   (dolist (i x t)
 	(when (vm-jump? i)
