@@ -25,8 +25,10 @@
 		  nil
         (%setq? x.)
 	      (let val (%setq-value x.)
-	        (if (lambda? val)
+	        (if (function-expr? val)
 	            (test-meta-code-0 (lambda-body val))))
+	    (function-expr? x.)
+	      (test-meta-code-0 (lambda-body x.))
 		(progn
 		  (print x)
 		  (error "meta-code: SETQ-expression expected")))
