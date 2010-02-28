@@ -1,6 +1,6 @@
 /*
  * TRE interpreter
- * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
  *
  * Built-in list functions.
  */
@@ -248,8 +248,10 @@ trelist_builtin_member (treptr args)
 			break;
 		while (sublist != treptr_nil) {
 			if (test == treptr_nil) {
-				if (treatom_eql (CAR(sublist), key) != treptr_nil)
+				if (treatom_eql (CAR(sublist), key) != treptr_nil) {
+					res = sublist;
 					goto got_t;
+				}
 			} else {
     			fake = CONS(etest, CONS(key, CONS(CAR(sublist), treptr_nil)));
     			tregc_push (fake);
@@ -258,8 +260,10 @@ trelist_builtin_member (treptr args)
 
     			tregc_pop ();
     			TRELIST_FREE_EARLY(fake);
-				if (res != treptr_nil)
+				if (res != treptr_nil) {
+					res = sublist;
 					goto got_t;
+				}
 			}
 
 			sublist = CDR(sublist);
@@ -272,7 +276,7 @@ trelist_builtin_member (treptr args)
 
 got_t:
 	tregc_pop ();
-	return treptr_t;
+	return res;
 }
 
 #endif /* #ifdef TRE_BUILTIN_MEMBER */
