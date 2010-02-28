@@ -36,7 +36,10 @@
 
 ;;;; FUNCTIONS
 
-(define-js-macro function (x)
+(define-js-macro function (&rest x)
+  (when ..x
+	(error "an optional function name followed by the head/body expected"))
+  (setf x (if .x .x. x.))
   (if (or (atom x)
 		  (%stack? x))
 	  x

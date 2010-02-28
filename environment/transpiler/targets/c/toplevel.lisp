@@ -82,7 +82,7 @@
 				        `(defun ,name ()
 						   ,@(mapcar (fn `(tregc_push_compiled ,_))
 					       			 _)))))
-			    (group (c-transpiler-declarations-and-initialisations) 20))
+			    (group (c-transpiler-declarations-and-initialisations) 40))
         `((defun c-init ()
 		    ,@(mapcar #'list (reverse init-funs)))))))
 
@@ -98,8 +98,7 @@
 		 deps (progn
 				(format t "; Collecting dependencies...~%")
 				(transpiler-import-from-environment tr))
-		 decls (transpiler-sighten tr
-				   (transpiler-compiled-decls tr)))
+		 decls (transpiler-sighten tr (transpiler-compiled-decls tr)))
 	; Generate.
     (format t "; Let me think. Hmm")
     (let code (concat-stringtree

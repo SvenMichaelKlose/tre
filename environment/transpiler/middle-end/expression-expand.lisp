@@ -229,8 +229,11 @@
 (defun expex-lambda (ex x)
   (with-temporary *expex-funinfo* (get-lambda-funinfo x)
     (values nil
-		    (list `#'(,@(lambda-head x)
-				         ,@(expex-body ex (lambda-body x)))))))
+		    (list `(function
+					   ,@(awhen (function-name x)
+						   (list !))
+					   (,@(lambda-head x)
+				        ,@(expex-body ex (lambda-body x))))))))
 
 ; Remove %VAR expression and register new FUNINFO variable.
 (defun expex-var (x)
@@ -246,7 +249,8 @@
     (if
 	  (%var? x)						(expex-var x)
       (not (expex-able? ex x))		(values nil (list x))
-	  (lambda? x)					(expex-lambda ex x)
+	  (or (lambda? x)
+		  (named-function-expr? x))	(expex-lambda ex x)
       (vm-scope? x)					(values nil (expex-body ex (vm-scope-body x)))
       (%setq? x)					(if (identity? (%setq-value x))
 									    (expex-expr-setq ex `(%setq ,(%setq-place x)

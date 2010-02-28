@@ -34,34 +34,41 @@
   (or (href *opt-peephole-symbols* x)
 	  0))
 
-(defun opt-peephole-rec (a d val fun name collect-symbols)
-  (with (plc (%setq-place a)
+(defun opt-peephole-rec (a d val fun name collect-symbols &optional (setq? nil))
+  (with (plc (when (%setq? a)
+			   (%setq-place a))
 		 body (lambda-body val))
 	(with-temporary *opt-peephole-funinfo* (get-lambda-funinfo val)
 	  (with-temporary *opt-peephole-symbols* (if collect-symbols
 										      (opt-peephole-collect-syms body)
 											  *opt-peephole-symbols*)
-	    (cons `(%setq ,plc
-		              (function ,@(awhen name
-								    (list !))
-					            (,@(lambda-head val)
-					             ,@(funcall fun body))))
-		      (funcall fun d))))))
+        (let f `(function ,@(awhen name
+							  (list !))
+					(,@(lambda-head val)
+					 ,@(funcall fun body)))
+	      (cons (if setq?
+				    `(%setq ,plc ,f)
+					f)
+		        (funcall fun d)))))))
 
 (defmacro opt-peephole-fun ((fun &key (collect-symbols nil)) &rest body)
   `(when x
 	 (with-cons a d x
 	   ; Recurse into LAMBDA.
 	   (if
+		 (named-function-expr? a)
+		   (opt-peephole-rec a d (third a) ,fun
+							 (second a) ,collect-symbols)
+
 		 (and (%setq? a)
 			  (named-function-expr? (%setq-value a)))
 		   (opt-peephole-rec a d (third (%setq-value a)) ,fun
-							 (second (%setq-value a)) ,collect-symbols)
+							 (second (%setq-value a)) ,collect-symbols t)
 
 		 (and (%setq? a)
 			  (lambda? (%setq-value a)))
 		   (opt-peephole-rec a d (%setq-value a) ,fun
-							 nil ,collect-symbols)
+							 nil ,collect-symbols t)
 
 	   	 (cond
 		   ,@body
@@ -83,6 +90,13 @@
 (defun opt-peephole-remove-spare-tags (x)
   (when x
 	(cons (if
+	  		(named-function-expr? x.)
+	      	  `(function ,(function-name x.)
+				 (,@(lambda-head x.)
+	  	       	  ,@(opt-peephole-remove-spare-tags
+						(opt-peephole-tags-lambda
+					        (lambda-body x.)))))
+
 	  		(and (%setq? x.)
 	  	   		 (lambda? (third x.)))
 			  (let l (third x.)
@@ -91,6 +105,7 @@
 	  	       		          ,@(opt-peephole-remove-spare-tags
 									(opt-peephole-tags-lambda
 								        (lambda-body l))))))
+
 			x.)
 		  (opt-peephole-remove-spare-tags .x))))
 

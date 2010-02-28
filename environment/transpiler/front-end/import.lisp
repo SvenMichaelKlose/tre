@@ -43,8 +43,6 @@
 			   	   (starts-with? x "XML")
 			   	   (starts-with? x "FORK")
 			   	   (starts-with? x "GET-DEFINER")
-				   (and (eq *current-transpiler* *js-transpiler*)
-						(eq 'open x))
 				   (eq 'random x)
 				   (eq 'rec x))
 			  (not (in? x 'XML-ENTITIES-TO-UNICODE-0

@@ -16,6 +16,7 @@
 (env-load "transpiler/middle-end/opt-peephole.lisp")
 (env-load "transpiler/middle-end/opt-inline.lisp")
 (env-load "transpiler/middle-end/opt-places.lisp")
+(env-load "transpiler/middle-end/opt-tailcall.lisp")
 (env-load "transpiler/middle-end/update-funinfos.lisp")
 
 (env-load "transpiler/middle-end/toplevel.lisp")

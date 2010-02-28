@@ -10,12 +10,10 @@
 ;; (FUNCTION symbol | lambda-expression)
 ;; Add symbol to list of wanted functions or obfuscate arguments of
 ;; LAMBDA-expression.
-(define-js-std-macro function (x)
+(define-js-std-macro function (&rest x)
   (unless x
     (error "FUNCTION expects a symbol or form"))
-  ;(when (atom x)
-	;(transpiler-add-wanted-function *js-transpiler* x))
-  `(function ,x))
+  `(function ,@x))
 
 (defun split-funinfo-and-args (x)
   (let fi-sym (and (eq '%funinfo x.)
@@ -24,13 +22,6 @@
 			(if fi-sym
 			   ..x
 			   x))))
-
-(defun simple-argument-list? (x)
-  (if x
-      (not (member-if (fn or (consp _)
-				          (argument-keyword? _))
-			       x))
-	  t))
 
 ;; (DEFUN ...)
 ;;
@@ -47,10 +38,11 @@
 	(transpiler-add-defined-function tr n)
     `(progn
        (%var ,n)
-       (%setq ,n #'(,@(awhen fi-sym
-						`(%funinfo ,!))
-					,a
-   		              ,@body))
+       (%setq ,n (function ;,n
+					 (,@(awhen fi-sym
+						  `(%funinfo ,!))
+					  ,a
+   		              ,@body)))
 	   ,@(unless (or (simple-argument-list? args)
 					 (eq 'no-args body.))
 		   `((%setq (slot-value ,n 'tre-exp)
@@ -72,7 +64,7 @@
 
 (define-js-std-macro defmacro (name &rest x)
   (when *show-definitions*
-    (late-print `(defmacro ,name ,(awhen x. (list !)))))
+    (late-print `(defmacro ,name ,x.)))
   (eval (transpiler-macroexpand *js-transpiler*
 								`(define-js-std-macro ,name ,@x)))
   nil)

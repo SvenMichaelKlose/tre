@@ -15,12 +15,15 @@
 	  (fn (princ #\.)
 		  (force-output)
 		  _)
-      (fn transpiler-make-named-functions tr _)
       #'transpiler-update-funinfo
       #'opt-places-remove-unused
       #'opt-places-find-used
       #'opt-peephole
+      #'opt-tailcall
+      #'opt-peephole
+      (fn transpiler-make-named-functions tr _)
       #'transpiler-quote-keywords
+#'print
       (fn transpiler-expression-expand tr _)
 	  (fn transpiler-prepare-runtime-argument-expansions tr _)))
 

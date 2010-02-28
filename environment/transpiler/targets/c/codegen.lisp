@@ -156,7 +156,7 @@
 (define-c-macro aref (arr &rest idx)
   (if (= 1 (length idx))
 	  (c-make-aref arr idx.)
-	  `(trearray_builtin_aref ,val ,arr ,@idx)))
+	  `(trearray_builtin_aref ,arr ,@idx)))
 
 (define-c-macro %set-aref (val arr &rest idx)
   (if (= 1 (length idx))
@@ -212,7 +212,3 @@
 	  (builtinp   "BUILTIN"))
   `((define-c-macro ,($ '% _.) (x)
       `(,(+ "TREPTR_TRUTH(TREPTR_IS_" ._.) "(" ,,x "))"))))
-
-;#define TREPTR_IS_VARIABLE(ptr) (TREPTR_TYPE(ptr) == TRETYPE_VARIABLE)
-;#define TREPTR_IS_SYMBOL(ptr)   (TREPTR_IS_VARIABLE(ptr) && TREATOM_VALUE(ptr) == ptr)
-;macro

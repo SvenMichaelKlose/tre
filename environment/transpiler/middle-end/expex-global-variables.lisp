@@ -1,5 +1,5 @@
 ;;;;; TRE transpiler
-;;;;; Copyright (c) 2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2009-2010 Sven Klose <pixel@copei.de>
 
 (defun expex-set-global-variable-value (x)
   (let place (%setq-place x)
@@ -15,6 +15,6 @@
   (if
     (atom x)
       (if (expex-global-variable? x)
-	      (transpiler-add-wanted-variable *js-transpiler* x)
+	      (transpiler-add-wanted-variable *current-transpiler* x)
 	      x)
 	(transpiler-import-from-expex x)))

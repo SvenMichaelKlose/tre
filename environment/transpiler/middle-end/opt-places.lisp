@@ -23,7 +23,7 @@
       (opt-places-find-used-0 fi .x))))
 
 (defun opt-places-find-used (x)
-  (test-meta-code x)
+;  (test-meta-code x)
   (opt-places-find-used-0 *global-funinfo* x)
   x)
 

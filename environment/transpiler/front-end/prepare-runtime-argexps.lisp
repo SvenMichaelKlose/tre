@@ -4,6 +4,13 @@
 ;;;;; Wrap code around functions to save their argument definitions
 ;;;;; for run-time argument-expansions.
 
+(defun simple-argument-list? (x)
+  (if x
+      (not (member-if (fn or (consp _)
+	                         (argument-keyword? _))
+				      x))
+	  t))
+
 ; XXX introduce metacode-macros or lambda-expansion hooks and move this to javascript/.
 (define-expander 'TRANSPILER-PREPARE-RUNTIME-ARGUMENTEXPANSIONS)
 
@@ -26,22 +33,26 @@
 ;; (FUNCTION symbol | lambda-expression)
 ;; ;; Add symbol to list of wanted functions or obfuscate arguments of
 ;; ;; LAMBDA-expression.
-(define-expander-macro TRANSPILER-PREPARE-RUNTIME-ARGUMENTEXPANSIONS function (l)
-  (unless l
-    (error "FUNCTION expects a symbol or form"))
-  (if (or (atom l)
-		  (%slot-value? l))
-      (js-expanded-funref l)
-      (if
-		(eq 'no-args (car (lambda-body l)))
-          `(%function
-		     (,@(lambda-head l)
-			  ,@(cdr (lambda-body l))))
-	    (simple-argument-list? (lambda-args l))
-		  `(%function
-		     (,@(lambda-head l)
-			  ,@(lambda-body l)))
-        (js-expanded-fun (past-lambda-before-funinfo l)))))
+(define-expander-macro TRANSPILER-PREPARE-RUNTIME-ARGUMENTEXPANSIONS function (&rest x)
+  (when ..x
+    (error "FUNCTION expects an optional name and a head/body"))
+  (with (l (if .x .x. x.)
+		 name (if .x x.))
+    (if (or (atom l)
+		    (%slot-value? l))
+        (js-expanded-funref l)
+        (if
+		  (eq 'no-args (car (lambda-body l)))
+            `(%function
+			   ,@(awhen name (list !))
+		       (,@(lambda-head l)
+			    ,@(cdr (lambda-body l))))
+	      (simple-argument-list? (lambda-args l))
+		    `(%function
+			   ,@(awhen name (list !))
+		       (,@(lambda-head l)
+			    ,@(lambda-body l)))
+          (js-expanded-fun (past-lambda-before-funinfo l))))))
 
 ;; Must be done as a macro, or quoted %FUNCTION symbols will be lost.
 (defun transpiler-restore-funs (x)
