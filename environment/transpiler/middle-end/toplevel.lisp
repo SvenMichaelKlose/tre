@@ -23,7 +23,6 @@
       #'opt-peephole
       (fn transpiler-make-named-functions tr _)
       #'transpiler-quote-keywords
-#'print
       (fn transpiler-expression-expand tr _)
 	  (fn transpiler-prepare-runtime-argument-expansions tr _)))
 
