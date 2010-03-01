@@ -80,10 +80,10 @@
 (defun php-codegen-argument-filter (x)
   (php-dollarize x))
 
-(define-php-macro %setq (dest val)
+(defun php-%setq-0 (dest val)
   `((%transpiler-native
 	    ,*php-indent*
-	    ,@(if (eq dest (transpiler-obfuscate-symbol *php-transpiler* nil))
+	    ,@(if (transpiler-not dest)
 	          '("")
 			  (if (and (atom val)
 				  	   (symbolp val))
@@ -97,6 +97,12 @@
 		    `((,val. ,@(parenthized-comma-separated-list
 					       (mapcar #'php-codegen-argument-filter .val)))))
     ,*php-separator*)))
+
+(define-php-macro %setq (dest val)
+  (if (and (transpiler-not dest)
+		   (atom val))
+  	  '(%transpiler-native "")
+	  (php-%setq-0 dest val)))
 
 (define-php-macro %var (name)
   '(%transpiler-native ""))

@@ -61,9 +61,9 @@
        (or (stringp x.)
        	   (in? x. '%transpiler-string '%transpiler-native))))
 
-(defun codegen-%setq (dest val)
+(defun codegen-%setq-0 (dest val)
   `((%transpiler-native 
-	  ,@(if (eq dest (transpiler-obfuscate-symbol *c-transpiler* nil))
+	  ,@(if (transpiler-not dest)
 		    (if (codegen-expr? val)
 			  '("")
 		      '("(void) "))
@@ -72,6 +72,12 @@
 			 (codegen-expr? val))
          val
          `(,val. ,@(parenthized-comma-separated-list .val)))))
+
+(defun codegen-%setq (dest val)
+  (if (and (transpiler-not dest)
+		   (atom val))
+	  `(%transpiler-native "")
+	  (codegen-%setq-0 dest val)))
 
 (define-c-macro %setq (dest val)
   `(,*c-indent*

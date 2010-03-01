@@ -77,10 +77,10 @@
 
 ;;;; ASSIGNMENT
 
-(define-js-macro %setq (dest val)
+(defun js-%setq-0 (dest val)
   `(,*js-indent*
 	(%transpiler-native
-        ,@(if (eq dest (transpiler-obfuscate-symbol *js-transpiler* nil))
+        ,@(if (transpiler-not dest)
 		      '("")
 		      `(,dest "=")))
 	,(if (or (atom val)
@@ -88,6 +88,12 @@
 		 val
 		 (js-call val))
     ,*js-separator*))
+
+(define-js-macro %setq (dest val)
+  (if (and (transpiler-not dest)
+		   (atom val))
+	  '(%transpiler-native "")
+	  (js-%setq-0 dest val)))
 
 ;;;; VARIABLE DECLARATIONS
 

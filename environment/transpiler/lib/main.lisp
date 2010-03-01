@@ -16,4 +16,5 @@
 
 (env-load "transpiler/lib/copy-lambda.lisp")
 (env-load "transpiler/lib/metacode-walker.lisp")
+(env-load "transpiler/lib/meta-code-test.lisp")
 (env-load "transpiler/lib/compile-argument-expansion.lisp")

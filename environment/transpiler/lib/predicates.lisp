@@ -1,5 +1,5 @@
 ;;;; TRE compiler
-;;;; Copyright (c) 2006-2009 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2006-2010 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Miscellaneous predicates
 
@@ -15,3 +15,9 @@
   (and (consp x)
        (eq 'FUNCTION x.)
 	   (atom (second x))))
+
+(defun atom-function-expr? (x)
+  (and (consp x)
+       (eq x. 'function)
+	   (atom .x.)
+	   .x.))

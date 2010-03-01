@@ -1,6 +1,7 @@
 ;;;; TRE transpiler
 ;;;; Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
 
+(env-load "transpiler/back-end/transpiler-not.lisp")
 (env-load "transpiler/back-end/escaped-string.lisp")
 (env-load "transpiler/back-end/identifier.lisp")
 (env-load "transpiler/back-end/finalize.lisp")

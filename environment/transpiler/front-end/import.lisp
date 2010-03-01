@@ -3,13 +3,6 @@
 ;;;;;
 ;;;;; Import functions and variable from the environment.
 
-;; XXX move to environment/transpiler/import.lisp
-(defun atom-function-expr? (x)
-  (and (consp x)
-       (eq x. 'function)
-       (atom .x.)
-       .x.))
-
 (defun vec-function-expr? (x)
   (and (consp x)
        (eq x. 'function)
