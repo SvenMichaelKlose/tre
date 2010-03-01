@@ -2,7 +2,7 @@
 ;;;;; Copyright (c) 2010 Sven Klose <pixel@copei.de>
 
 (defun opt-tailcall-fun-0 (fi args x name front-tag)
-  (format t "Tail recurision resolved for function '~A'~%" (symbol-name name))
+  (format t "Tailcall resolved for function '~A'~%" (symbol-name name))
   (append (mapcar #'((arg val)
 					   `(%setq ,arg ,val))
 				  (argument-expand-names name args)
@@ -48,11 +48,11 @@
 	:if-named-function
 	   (let front-tag (gensym-number)
 	     `(function
-             ,(function-name x)
+             ,(lambda-name x)
 		     (,@(lambda-head x)
 			   	  ,front-tag
 		          ,@(opt-tailcall-fun (get-lambda-funinfo x)
 									  (lambda-args x)
 									  (lambda-body x)
-								      (function-name x)
+								      (lambda-name x)
 									  front-tag)))))

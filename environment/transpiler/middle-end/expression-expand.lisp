@@ -230,7 +230,7 @@
   (with-temporary *expex-funinfo* (get-lambda-funinfo x)
     (values nil
 		    (list `(function
-					   ,@(awhen (function-name x)
+					   ,@(awhen (lambda-name x)
 						   (list !))
 					   (,@(lambda-head x)
 				        ,@(expex-body ex (lambda-body x))))))))

@@ -1,5 +1,5 @@
 ;;;;; TRE transpiler
-;;;;; Copyright (c) 2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2009-2010 Sven Klose <pixel@copei.de>
 
 (defun transpiler-update-funinfo-lambda (x)
   (with (fi		  (get-lambda-funinfo x)
@@ -10,8 +10,8 @@
 	  (error "funfinfo ~A: num-tags already set to ~A. new num:~A"
 		     (lambda-funinfo x) (funinfo-num-tags fi) num-tags))
     (setf (funinfo-num-tags fi) num-tags)
-	`#'(,@(lambda-head x)
-		    ,@(transpiler-update-funinfo body))))
+	(copy-lambda x
+		:body (transpiler-update-funinfo body))))
 
 (defun transpiler-update-funinfo (x)
   (if

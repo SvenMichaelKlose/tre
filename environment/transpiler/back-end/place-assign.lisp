@@ -1,5 +1,5 @@
 ;;;;; TRE compiler
-;;;;; Copyright (c) 2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2009-2010 Sven Klose <pixel@copei.de>
 
 (defun place-assign (x)
   (if
@@ -20,8 +20,7 @@
 					(error "can't find index in lexicals")))
 
 	(lambda? x) ; XXX Add variables to ignore in subfunctions.
-      `#'(,@(lambda-head x)
-		     ,@(place-assign (lambda-body x)))
+      (copy-lambda x :body (place-assign (lambda-body x)))
 
     (%slot-value? x)
       `(%slot-value ,(place-assign .x.)

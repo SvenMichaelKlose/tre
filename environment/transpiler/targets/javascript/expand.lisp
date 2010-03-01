@@ -15,18 +15,10 @@
     (error "FUNCTION expects a symbol or form"))
   `(function ,@x))
 
-(defun split-funinfo-and-args (x)
-  (let fi-sym (and (eq '%funinfo x.)
-		    	   .x.)
-    (values fi-sym
-			(if fi-sym
-			   ..x
-			   x))))
-
 ;; (DEFUN ...)
 ;;
 ;; Assign function to global variable.
-;; XXX This could be generic if there wasn't *JS-TRANSPILER*.
+;; XXX This could be generic.
 (defun js-essential-defun (name args &rest body)
   (when *show-definitions*
     (late-print `(defun ,name ,@(awhen args (list !)))))

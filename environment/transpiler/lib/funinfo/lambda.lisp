@@ -47,3 +47,11 @@
 	  (print (lambda-funinfo x))
 	  (error "couldn't get funinfo"))
 	fi))
+
+(defun split-funinfo-and-args (x)
+  (let fi-sym (and (eq '%funinfo x.)
+                   .x.)
+    (values fi-sym
+            (if fi-sym
+                ..x
+				x))))

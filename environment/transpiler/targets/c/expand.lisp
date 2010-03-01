@@ -16,11 +16,7 @@
     (late-print `(defun ,name ,@args)))
   (with (n (%defun-name name)
 		 tr *c-transpiler*
-		 fi-sym (when (eq '%FUNINFO args.)
-				  (second args))
-		 a (if fi-sym
-			   (cddr args)
-			   args))
+		 (fi-sym a) (split-funinfo-and-args args))
     (transpiler-obfuscate-symbol tr n)
     (transpiler-add-function-args tr n a)
 	(transpiler-add-defined-function tr n)

@@ -1,5 +1,5 @@
 ;;;;; TRE compiler
-;;;;; Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Apply this only to expanded arguments or keywords are renamed, too.
 
@@ -27,11 +27,11 @@
 			 new-replacements (find-and-add-renamed-doubles (get-lambda-funinfo x)
 															args replacements env)
         	 renamed-args (rename-function-arguments-0 args new-replacements env))
-        `#'(,@(lambda-funinfo-expr x)
-			,renamed-args
-		    ,@(rename-function-arguments-0 (lambda-body x)
-										     new-replacements
-			 							     (append renamed-args env))))
+		(copy-lambda x
+			:args renamed-args
+			:body (rename-function-arguments-0 (lambda-body x)
+										       new-replacements
+			 							       (append renamed-args env))))
     (%slot-value? x)
       `(%slot-value ,(rename-function-arguments-0 .x. replacements env)
 					,..x.)
@@ -39,14 +39,16 @@
 		  (rename-function-arguments-0 .x replacements env))))
 
 (defun rename-function-arguments-named-function (x)
-  `#'(,@(lambda-head x)
-			,@(rename-function-arguments-0 (lambda-body x))))
+  (copy-lambda x
+	  :body (rename-function-arguments-0 (lambda-body x))))
 
 (defun rename-function-arguments-inside-named-toplevel-functions (x)
   (if (atom x)
 	x
-    (cons (if (lambda? x.) (rename-function-arguments-named-function x.)
-        	  (consp x.)   (rename-function-arguments-inside-named-toplevel-functions x.)
+    (cons (if (lambda? x.)
+				(rename-function-arguments-named-function x.)
+        	  (consp x.)
+			    (rename-function-arguments-inside-named-toplevel-functions x.)
 			  x.)
           (rename-function-arguments-inside-named-toplevel-functions .x))))
 

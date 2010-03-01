@@ -91,7 +91,7 @@
     (place-expand-0 fi expanded-body)
 	expanded-body))
 
-(defun lambda-expand-0 (x export-lambdas? &key (function-name nil))
+(defun lambda-expand-0 (x export-lambdas? &key (lambda-name nil))
   (with (forms (argument-expand-names
 			       'transpiler-lambda-expand
 			       (lambda-args x))
@@ -99,12 +99,11 @@
          fi			(or imported
 						(lambda-make-funinfo forms *global-funinfo*)))
     (values
-	    `(function ,@(awhen function-name
-					   (setf (funinfo-name fi) !)
-					   (list !))
-	       ,(append (lambda-head-w/-missing-funinfo x fi)
-                    (lambda-embed-or-export-transform fi (lambda-body x)
-												      export-lambdas?)))
+	    (copy-lambda x
+		    :name lambda-name
+			:info fi
+			:body (lambda-embed-or-export-transform fi (lambda-body x)
+												    export-lambdas?))
 		*lambda-exported-closures*)))
 
 (defun lambda-expand (x export-lambdas?)
@@ -117,7 +116,7 @@
 	  				  x
 				    (named-function-expr? x)
 					  (with ((new-x new-exported-closures) (lambda-expand-0 ..x. export-lambdas?
-																			:function-name .x.))
+																			:lambda-name .x.))
     					(append! exported-closures
 		     			         new-exported-closures)
 						new-x)

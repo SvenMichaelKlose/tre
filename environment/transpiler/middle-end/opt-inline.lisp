@@ -8,21 +8,26 @@
 (defvar *opt-inline-max-repetitions* 0)
 (defvar *opt-inline-max-small-repetitions* 0)
 
+(defun opt-inline-inlined-fun (tr x argdef body level current parent)
+  `#'(,(argument-expand-names 'opt-inline-import-argexp argdef)
+	  ,@(opt-inline-0 tr level current (cons x. parent)
+		     (rename-body-tags (transpiler-front-end tr body)))))
+
+(defun opt-inline-args-to-inlined-fun (tr x argdef body level current parent)
+  (opt-inline-0 tr level current parent
+	  (transpiler-front-end tr
+  		  (if (and (not argdef) .x)
+			  .x
+			  (argument-expand-compiled-values 'opt-inline argdef .x)))))
+
 (defun opt-inline-import (tr x argdef body level current parent)
   (when (and (not argdef) .x)
 	(print (symbol-name x.))
 	(warn "REMINDER: no argument definition for function ~A" argdef))
   (when (eq t *show-inlines?*)
     (format t "; Inlining function ~A" x.))
-  `(#'(,(argument-expand-names 'opt-inline-import-argexp argdef)
-	   ,@(opt-inline-0 tr level current (cons x. parent)
-		     (rename-body-tags
-			     (transpiler-front-end tr body))))
-          ,@(opt-inline-0 tr level current parent
-		        (transpiler-front-end tr
-  					(if (and (not argdef) .x)
-					  	.x
-			            (argument-expand-compiled-values 'opt-inline argdef .x))))))
+  `(,(opt-inline-inlined-fun tr x argdef body level current parent)
+	,@(opt-inline-args-to-inlined-fun tr x argdef body level current parent)))
 
 (defun opt-inline-1 (tr level current parent x)
   (with (fun (symbol-function x.)
@@ -74,9 +79,9 @@
 	  (cons (opt-inline-1 tr level current parent x.)
 		    (opt-inline-0 tr level current parent .x))
 	(lambda? x.)
-	  (cons `#'(,@(lambda-funinfo-expr x.)
-				 ,(opt-inline-0 tr level current parent (lambda-args x.))
-				   ,@(opt-inline-0 tr level current parent (lambda-body x.)))
+	  (cons (copy-lambda x.
+				:args (opt-inline-0 tr level current parent (lambda-args x.))
+				:body (opt-inline-0 tr level current parent (lambda-body x.)))
 		    (opt-inline-0 tr level current parent .x))
 	(cons (opt-inline-0 tr level current parent x.)
 		  (opt-inline-0 tr level current parent .x))))
@@ -87,8 +92,8 @@
 
 ; Only inline inside named top-level functions.
 (defun opt-inline-lambda (tr x)
-  `#'(,@(lambda-head x)
-            ,@(opt-inline-0 tr 0 'no-parent nil (lambda-body x))))
+  (copy-lambda x
+      :body (opt-inline-0 tr 0 'no-parent nil (lambda-body x))))
 
 ; Only inline inside named top-level functions.
 (defun opt-inline-r (tr x)

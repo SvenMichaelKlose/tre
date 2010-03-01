@@ -42,10 +42,7 @@
 	  (with-temporary *opt-peephole-symbols* (if collect-symbols
 										      (opt-peephole-collect-syms body)
 											  *opt-peephole-symbols*)
-        (let f `(function ,@(awhen name
-							  (list !))
-					(,@(lambda-head val)
-					 ,@(funcall fun body)))
+        (let f (copy-lambda val :name name :body (funcall fun body))
 	      (cons (if setq?
 				    `(%setq ,plc ,f)
 					f)
@@ -87,24 +84,21 @@
     (remove-if (fn member _ spare-tags)
 			   x)))
 
+(defun opt-peephole-remove-spare-tags-body (x)
+  (copy-lambda x
+      :body (opt-peephole-remove-spare-tags
+			    (opt-peephole-tags-lambda (lambda-body x)))))
+
 (defun opt-peephole-remove-spare-tags (x)
   (when x
 	(cons (if
 	  		(named-function-expr? x.)
-	      	  `(function ,(function-name x.)
-				 (,@(lambda-head x.)
-	  	       	  ,@(opt-peephole-remove-spare-tags
-						(opt-peephole-tags-lambda
-					        (lambda-body x.)))))
+			  (opt-peephole-remove-spare-tags-body x.)
 
 	  		(and (%setq? x.)
 	  	   		 (lambda? (third x.)))
-			  (let l (third x.)
-	      	    `(%setq ,(second x.)
-			  	        #'(,@(lambda-head l)
-	  	       		          ,@(opt-peephole-remove-spare-tags
-									(opt-peephole-tags-lambda
-								        (lambda-body l))))))
+	      	  `(%setq ,(second x.)
+					  ,(opt-peephole-remove-spare-tags-body (third x.)))
 
 			x.)
 		  (opt-peephole-remove-spare-tags .x))))

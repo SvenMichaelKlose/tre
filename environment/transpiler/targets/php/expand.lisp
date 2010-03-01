@@ -1,5 +1,5 @@
 ;;;;; Transpiler: TRE to PHP
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Expansion of alternative standard macros.
 
@@ -18,7 +18,7 @@
   `(function ,x))
 
 (defun php-assert-body (x)
-  (if (and (not *transpiler-assert*)
+  (if (and (not *transpiler-assert*) ; XXX should be removed by optimizer anyway
            (stringp x.))
       .x
       x))
@@ -33,11 +33,7 @@
   (with (n (%defun-name name)
 		 asserted-body (php-assert-body body)
 		 tr *php-transpiler*
-		 fi-sym (when (eq '%funinfo args.)
-				  .args.)
-		 a (if fi-sym
-			   ..args
-			   args))
+		 (fi-sym a) (split-funinfo-and-args args))
     (transpiler-add-function-args tr n a)
     (transpiler-add-function-body tr n (remove 'no-args
 											   asserted-body

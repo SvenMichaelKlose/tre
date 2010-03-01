@@ -1,5 +1,5 @@
 ;;;;; TRE to C transpiler
-;;;;; Copyright (c) 2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2009-2010 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Renaming body tags after lambda-expansion
 
@@ -38,8 +38,8 @@
 	(%quote? x)		x
 	(vm-go? x)		(error "VM-GO in argument list")
 	(vm-go-nil? x)  (error "VM-GO-NIL in argument list")
-	(lambda? x)		`#'(,@(lambda-head x)
-				            ,@(rename-body-tags-set (lambda-body x) renamed))
+	(lambda? x)		(copy-lambda x
+				        :body (rename-body-tags-set (lambda-body x) renamed))
 	(vm-scope? x)  `(vm-scope ,@(rename-body-tags-set .x renamed))
 	(rename-body-tags-set-expr x renamed)))
 
@@ -59,8 +59,8 @@
 	(vm-go-nil? x)  `(vm-go-nil ,.x.
 				   	 	  		,(or (assoc-value ..x. renamed :test #'=)
 						       		 (error "didn't gather tag ~A VM-GO-NIL" x)))
-	(lambda? x) 	`#'(,@(lambda-head x)
-				  			,@(rename-body-tags-set (lambda-body x) renamed))
+	(lambda? x) 	(copy-lambda x
+				  		:body (rename-body-tags-set (lambda-body x) renamed))
 	(vm-scope? x)   `(vm-scope ,@(rename-body-tags-set .x renamed))
 	(rename-body-tags-set-expr x renamed)))
 

@@ -1,11 +1,7 @@
 ;;;; TRE environment
-;;;; Copyright (c) 2006-2009 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2006-2010 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; LAMBDA-related utilities.
-
-;;;; TRE accepts the LAMBDA notation for anonymous functions also
-;;;; without the LAMBDA symbol. PAST-LAMBDA gets you past the
-;;;; LAMBDA symbol, if it's there.
 
 (defun past-lambda-1 (x)
   (if (eq (car x) 'lambda)
@@ -13,7 +9,7 @@
 	x))
 
 ;; Get name of FUNCTION.
-(defun function-name (x)
+(defun lambda-name (x)
   (if (eq (car x) 'function)
 	  (if (cdr (cdr x))
 		  (cadr x))))
@@ -31,6 +27,9 @@
 (defun past-lambda-before-funinfo (x)
   (past-lambda-1 (past-function x)))
 
+;;;; Tré accepts the LAMBDA notation for anonymous functions also
+;;;; without the LAMBDA symbol. PAST-LAMBDA gets you past the
+;;;; LAMBDA symbol, if it's there.
 (defun past-lambda (x)
   "Get cons after optional LAMBDA keyword in function expression."
   (let p (past-lambda-before-funinfo x)
