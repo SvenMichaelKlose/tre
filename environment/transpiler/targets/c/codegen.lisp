@@ -9,44 +9,60 @@
 (defun c-atomic-function (x)
   (compiled-function-name (second x)))
 
+(defun c-codegen-var-decl (name)
+  `("treptr " ,(transpiler-symbol-string *c-transpiler* name)))
+
 (defun c-make-function-declaration (name args)
   (push! (concat-stringtree
 			 "extern treptr "
 			 (transpiler-symbol-string *c-transpiler*
 				 (compiled-function-name name))
-			 (concat-stringtree
-  	    	     (parenthized-comma-separated-list
-            		 (mapcar (fn `("treptr " ,(transpiler-symbol-string *c-transpiler* _)))
-			   				 args)))
+  	    	 (parenthized-comma-separated-list
+            	 (mapcar #'c-codegen-var-decl args))
 			 ";" (string (code-char 10)))
 		(transpiler-compiled-decls *c-transpiler*)))
+
+(defun c-codegen-function (name x)
+  (let args (argument-expand-names 'unnamed-c-function (lambda-args x))
+    (c-make-function-declaration name args)
+    `(,(code-char 10)
+	  "treptr " ,(compiled-function-name name)
+	  ,@(parenthized-comma-separated-list (mapcar (fn `("treptr " ,_)) args))
+	  ,(code-char 10)
+	  "{" ,(code-char 10)
+          ,@(lambda-body x)
+	  "}" ,*c-newline*)))
 
 (define-c-macro function (name &optional (x 'only-name))
   (if
 	(eq 'only-name x)	name
     (atom x)			(error "codegen: arguments and body expected: ~A" x)
-	(let args (argument-expand-names 'unnamed-c-function (lambda-args x))
-	  (c-make-function-declaration name args)
-      `(,(code-char 10)
-		"treptr " ,(compiled-function-name name)
-	  	  ,@(parenthized-comma-separated-list (mapcar (fn `("treptr " ,_)) args))
-		,(code-char 10)
-	    "{" ,(code-char 10)
-           ,@(lambda-body x)
-	    "}" ,*c-newline*))))
+	(c-codegen-function name x)))
+
+(defun c-codegen-function-prologue-for-local-variables (num-vars)
+  `(,*c-indent*
+    ,"treptr _local_array = trearray_make (" ,num-vars ")"
+	,*c-separator*
+    ,*c-indent*
+    "tregc_push (_local_array)"
+	,*c-separator*
+    ,*c-indent*
+    ,"const treptr * _locals = (treptr *) " "TREATOM_DETAIL(_local_array)"
+	,*c-separator*)
 
 (define-c-macro %function-prologue (fi-sym)
   (with (fi (get-lambda-funinfo-by-sym fi-sym)
     	 num-vars (length (funinfo-env fi)))
 	(if (< 0 num-vars)
-        `(,*c-indent* ,"treptr _local_array = trearray_make (" ,num-vars ")" ,*c-separator*
-          ,*c-indent* "tregc_push (_local_array)" ,*c-separator*
-          ,*c-indent* ,"const treptr * _locals = (treptr *) " "TREATOM_DETAIL(_local_array)" ,*c-separator*)
+		(c-codegen-function-prologue-for-local-variables num-vars)
 		'(%transpiler-native ""))))
 
 (define-c-macro %function-return (fi-sym)
   (let fi (get-lambda-funinfo-by-sym fi-sym)
-    `(%transpiler-native ,*c-indent* "return " ,(place-assign (place-expand-0 fi '~%ret)) ,*c-separator*)))
+    `(%transpiler-native
+	   ,*c-indent*
+	   "return " ,(place-assign (place-expand-0 fi '~%ret))
+	   ,*c-separator*)))
 
 (define-c-macro %function-epilogue (fi-sym)
   (with (fi (get-lambda-funinfo-by-sym fi-sym)
@@ -84,10 +100,18 @@
 	,@(codegen-%setq dest val)
     ,*c-separator*))
 
+(defun c-codegen-set-atom-value (dest val)
+  `(%transpiler-native
+	   ,*c-indent*
+	   "treatom_set_value (" ,(c-compiled-symbol dest) " ," ,val ")"
+	   ,*c-separator*))
+
 (define-c-macro %setq-atom (dest val)
-  `(%transpiler-native ,*c-indent* "treatom_set_value (" ,(c-compiled-symbol dest) " ,"
-		,val
-		")" ,*c-separator*))
+  (c-codegen-set-atom-value dest val))
+
+;; XXX used to store argument definitions.
+(define-c-macro %setq-atom-value (dest val)
+  (c-codegen-set-atom-value dest val))
 
 (define-c-macro %set-atom-fun (dest val)
   `(%transpiler-native ,dest "=" ,val ,*c-separator*))
@@ -95,14 +119,8 @@
 ;		,val
 ;		")" ,*c-separator*))
 
-;; XXX used to store argument definitions.
-(define-c-macro %setq-atom-value (dest val)
-  `(%transpiler-native ,*c-indent* "treatom_set_value (" ,(c-compiled-symbol dest) " ,"
-		,val
-		")" ,*c-separator*))
-
 (define-c-macro %var (name)
-  `(%transpiler-native ,*c-indent* "treptr " ,name ,*c-separator*))
+  (c-codegen-var-declaration name))
 
 ;;; TYPE PREDICATES
 
@@ -127,7 +145,8 @@
   `(%transpiler-native "l" ,tag ":" ,*c-separator*))
  
 (define-c-macro vm-go (tag)
-  `(,*c-indent* "goto l" ,(transpiler-symbol-string *c-transpiler* tag)
+  `(,*c-indent*
+	    "goto l" ,(transpiler-symbol-string *c-transpiler* tag)
 	,*c-separator*))
 
 (define-c-macro vm-go-nil (val tag)
