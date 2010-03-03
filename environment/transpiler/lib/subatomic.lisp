@@ -8,6 +8,7 @@
 	  vm-scope vm-go vm-go-nil
 	  %stack %vec %setq
 	  %transpiler-native %transpiler-string
+	  %inline
 	  %function-prologue
 	  %function-epilogue
 	  %function-return)

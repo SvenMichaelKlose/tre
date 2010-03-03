@@ -34,6 +34,11 @@
 
   (inline? #'((x))))
 
+(defun peel-%inline (x)
+  (if (%inline? x)
+	  .x.
+	  x))
+
 ;;;; SYMBOLS
 
 (defvar *expexsym-counter* 0)
@@ -53,7 +58,9 @@
   (funcall (expex-expr-filter ex) x))
 
 (defun expex-guest-filter-setter (ex x)
-  (funcall (expex-setter-filter ex) x))
+  (funcall (expex-setter-filter ex)
+		   `(%setq ,(%setq-place x)
+				   ,(peel-%inline (%setq-value x)))))
 
 (defun expex-guest-filter-arguments (ex x)
   (mapcar (fn (funcall (expex-argument-filter ex) _))
@@ -187,7 +194,8 @@
 (defun expex-move-arg (ex x)
   (if
 	(not (expex-able? ex x))		(cons nil x)
-	(funcall (expex-inline? ex) x)	(expex-move-arg-inline ex x)
+	(or (%inline? x)
+	    (funcall (expex-inline? ex) x))	(expex-move-arg-inline ex (peel-%inline x))
     (vm-scope? x)					(expex-move-arg-vm-scope ex x)
 	(expex-move-arg-std ex x)))
 
@@ -218,7 +226,7 @@
 ;;
 ;; The place to set must not be expanded.
 (defun expex-expr-setq (ex x)
-  (with ((moved new-expr) (expex-move-args ex ..x))
+  (with ((moved new-expr) (expex-move-args ex (peel-%inline ..x)))
 	(values moved
 			(list (expex-guest-filter-setter ex
 				      `(%setq ,.x. ,@new-expr))))))
@@ -247,15 +255,20 @@
 (defun expex-expr (ex expr)
   (let x (expex-guest-filter-expr ex expr)
     (if
-	  (%var? x)						(expex-var x)
-      (not (expex-able? ex x))		(values nil (list x))
+	  (%var? x)
+	    (expex-var x)
+      (not (expex-able? ex x))
+	    (values nil (list x))
 	  (or (lambda? x)
-		  (named-function-expr? x))	(expex-lambda ex x)
-      (vm-scope? x)					(values nil (expex-body ex (vm-scope-body x)))
-      (%setq? x)					(if (identity? (%setq-value x))
-									    (expex-expr-setq ex `(%setq ,(%setq-place x)
-																	,(second (%setq-value x))))
-									    (expex-expr-setq ex x))
+		  (named-function-expr? x))
+	    (expex-lambda ex x)
+      (vm-scope? x)
+	    (values nil (expex-body ex (vm-scope-body x)))
+      (%setq? x)
+	    (if (identity? (%setq-value x))
+		    (expex-expr-setq ex `(%setq ,(%setq-place x)
+										,(second (peel-%inline (%setq-value x)))))
+		    (expex-expr-setq ex x))
       (expex-expr-std ex x))))
 
 ;;;; BODY EXPANSION
@@ -287,7 +300,7 @@
       x
       `(,x.
 	    ,(expex-guest-filter-setter ex
-									`(%setq ,s ,(second x.))))))
+									`(%setq ,s ,(peel-%inline (second x.)))))))
 
 ;; Make return-value assignment of last expression in body.
 (defun expex-make-return-value (ex s x)

@@ -3,6 +3,19 @@
 ;;;;;
 ;;;;; Code generation
 
+;; XXX fix macros instead?
+(defun codegen-expr? (x)
+  (and (consp x)
+       (or (stringp x.)
+       	   (in? x. '%transpiler-string '%transpiler-native))))
+
+;;;; GENERAL CODE GENERATION
+
+(defun c-line (&rest x)
+  `(,*c-indent*
+    ,@x
+	,*c-separator*))
+
 (defmacro define-c-macro (&rest x)
   `(define-transpiler-macro *c-transpiler* ,@x))
 
@@ -11,6 +24,19 @@
 
 (defun c-codegen-var-decl (name)
   `("treptr " ,(transpiler-symbol-string *c-transpiler* name)))
+
+(defmacro define-c-binary (op repl-op)
+  `(define-transpiler-binary *c-transpiler* ,op ,repl-op))
+
+(defmacro define-c-infix (name)
+  `(define-transpiler-infix *c-transpiler* ,name))
+
+;;;; SYMBOL TRANSLATIONS
+
+(transpiler-translate-symbol *c-transpiler* nil "treptr_nil")
+(transpiler-translate-symbol *c-transpiler* t "treptr_t")
+
+;;;; FUNCTIONS
 
 (defun c-make-function-declaration (name args)
   (push! (concat-stringtree
@@ -40,15 +66,9 @@
 	(c-codegen-function name x)))
 
 (defun c-codegen-function-prologue-for-local-variables (num-vars)
-  `(,*c-indent*
-    ,"treptr _local_array = trearray_make (" ,num-vars ")"
-	,*c-separator*
-    ,*c-indent*
-    "tregc_push (_local_array)"
-	,*c-separator*
-    ,*c-indent*
-    ,"const treptr * _locals = (treptr *) " "TREATOM_DETAIL(_local_array)"
-	,*c-separator*)
+  `(,@(c-line "treptr _local_array = trearray_make (" num-vars ")")
+    ,@(c-line "tregc_push (_local_array)")
+    ,@(c-line "const treptr * _locals = (treptr *) TREATOM_DETAIL(_local_array)")))
 
 (define-c-macro %function-prologue (fi-sym)
   (with (fi (get-lambda-funinfo-by-sym fi-sym)
@@ -60,22 +80,26 @@
 (define-c-macro %function-return (fi-sym)
   (let fi (get-lambda-funinfo-by-sym fi-sym)
     `(%transpiler-native
-	   ,*c-indent*
-	   "return " ,(place-assign (place-expand-0 fi '~%ret))
-	   ,*c-separator*)))
+         ,@(c-line "return " (place-assign (place-expand-0 fi '~%ret))))))
 
 (define-c-macro %function-epilogue (fi-sym)
   (with (fi (get-lambda-funinfo-by-sym fi-sym)
     	 num-vars (length (funinfo-env fi)))
     `(,@(when (< 0 num-vars)
-		  `((,*c-indent* "tregc_pop ()" ,*c-separator*)))
+		  `(,(c-line "tregc_pop ()")))
       (%function-return ,fi-sym))))
 
-;; XXX fix macros instead?
-(defun codegen-expr? (x)
-  (and (consp x)
-       (or (stringp x.)
-       	   (in? x. '%transpiler-string '%transpiler-native))))
+;;;; FUNCTION REFERENCE
+
+;; Convert from lambda-expanded funref to one with lexical.
+(define-c-macro %%funref (name fi-sym)
+  (let fi (get-lambda-funinfo-by-sym fi-sym)
+ 	`("_trelist_get (" ,(c-compiled-symbol '%funref) ", "
+		  "_trelist_get (" ,(c-compiled-symbol name) "," 
+						   ,(place-assign (place-expand-funref-lexical fi))
+						"))")))
+
+;;;; ASSIGNMENT
 
 (defun codegen-%setq-0 (dest val)
   `((%transpiler-native 
@@ -96,15 +120,11 @@
 	  (codegen-%setq-0 dest val)))
 
 (define-c-macro %setq (dest val)
-  `(,*c-indent*
-	,@(codegen-%setq dest val)
-    ,*c-separator*))
+  (c-line (codegen-%setq dest val)))
 
 (defun c-codegen-set-atom-value (dest val)
   `(%transpiler-native
-	   ,*c-indent*
-	   "treatom_set_value (" ,(c-compiled-symbol dest) " ," ,val ")"
-	   ,*c-separator*))
+       ,@(c-line "treatom_set_value (" (c-compiled-symbol dest) " ," val ")")))
 
 (define-c-macro %setq-atom (dest val)
   (c-codegen-set-atom-value dest val))
@@ -119,41 +139,10 @@
 ;		,val
 ;		")" ,*c-separator*))
 
+;;;; VARIABLES
+
 (define-c-macro %var (name)
   (c-codegen-var-declaration name))
-
-;;; TYPE PREDICATES
-
-(defmacro define-c-infix (name)
-  `(define-transpiler-infix *c-transpiler* ,name))
-
-;(define-c-infix instanceof)
-
-;;;; Symbol replacement definitions.
-
-(transpiler-translate-symbol *c-transpiler* nil "treptr_nil")
-(transpiler-translate-symbol *c-transpiler* t "treptr_t")
-
-;;; Numbers, arithmetic and comparison.
-
-(defmacro define-c-binary (op repl-op)
-  `(define-transpiler-binary *c-transpiler* ,op ,repl-op))
-
-(define-c-binary eq "=")
-
-(define-c-macro %%tag (tag)
-  `(%transpiler-native "l" ,tag ":" ,*c-separator*))
- 
-(define-c-macro vm-go (tag)
-  `(,*c-indent*
-	    "goto l" ,(transpiler-symbol-string *c-transpiler* tag)
-	,*c-separator*))
-
-(define-c-macro vm-go-nil (val tag)
-  `(,*c-indent* "if (" ,val " == treptr_nil)" ,(code-char 10)
-	,*c-indent* ,*c-indent*
-		"goto l" ,(transpiler-symbol-string *c-transpiler* tag)
-	,*c-separator*))
 
 (defun c-stack (x)
   `("_TRELOCAL(" ,x ")"))
@@ -161,14 +150,60 @@
 (define-c-macro %stack (x)
   (c-stack x))
 
+;;;; LEXICALS
+
+(define-c-macro %vec (vec index)
+  `("_TREVEC(" ,vec "," ,index ")"))
+
+(define-c-macro %set-vec (vec index value)
+  `("_TREVEC(" ,vec "," ,index ") = " ,value))
+
+;;;; COMPARISON
+
+(define-c-binary eq "=")
+
+(define-c-macro %eq (a b)
+  `("TREPTR_TRUTH(" ,a " == " ,b ")"))
+
+(define-c-macro %not (x)
+  `("(" ,x " == treptr_nil ? treptr_t : treptr_nil)"))
+
+;;;; CONTROL FLOW
+
+(define-c-macro %%tag (tag)
+  `(%transpiler-native "l" ,tag ":" ,*c-separator*))
+ 
+(define-c-macro vm-go (tag)
+  (c-line "goto l" (transpiler-symbol-string *c-transpiler* tag)))
+
+(define-c-macro vm-go-nil (val tag)
+  `(,*c-indent* "if (" ,val " == treptr_nil)" ,(code-char 10)
+	,*c-indent*
+	,@(c-line "goto l" (transpiler-symbol-string *c-transpiler* tag))))
+
+;;;; SYMBOLS
+
 (define-c-macro quote (x)
   (c-compiled-symbol x))
 
 (define-c-macro %quote (x)
   (c-compiled-symbol x))
 
-(define-c-macro %set-vec (vec index value)
-  `("_TREVEC(" ,vec "," ,index ") = " ,value))
+(define-c-macro symbol-function (x)
+  `("treatom_get_function (" ,x ")"))
+
+;;;; CONSES
+
+(define-c-macro cons (a d)
+  `("_trelist_get (" ,a "," ,d ")"))
+
+(define-c-macro %car (x)
+  `("(" ,x " == treptr_nil ? treptr_nil : tre_lists[" ,x "].car)"))
+
+(define-c-macro %cdr (x)
+  `("(" ,x " == treptr_nil ? treptr_nil : tre_lists[" ,x "].cdr)"))
+
+;;;; ARRAYS
 
 (defun c-make-aref (arr idx)
   `("((treptr *) TREATOM_DETAIL(" ,arr "))["
@@ -189,43 +224,13 @@
 			  `("=" ,val))
 	  `(trearray_builtin_set_aref ,val ,arr ,@idx)))
 
-(define-c-macro %vec (vec index)
-  `("_TREVEC(" ,vec "," ,index ")"))
-
-(define-c-macro cons (a d)
-  `("_trelist_get (" ,a "," ,d ")"))
-
-;; Convert from lambda-expanded funref to one with lexical.
-(define-c-macro %%funref (name fi-sym)
-  (let fi (get-lambda-funinfo-by-sym fi-sym)
- 	`("_trelist_get (" ,(c-compiled-symbol '%funref) ", "
-		  "_trelist_get (" ,(c-compiled-symbol name) "," 
-						   ,(place-assign (place-expand-funref-lexical fi))
-						"))")))
-
 ;; Lexical scope
 (define-c-macro make-array (size)
   (if (numberp size)
       `("trearray_make (" (%transpiler-native ,size) ")")
       `("trearray_get (_trelist_get (" ,size ", treptr_nil))")))
 
-(define-c-macro symbol-function (x)
-  `("treatom_get_function (" ,x ")"))
-
-(define-c-macro identity (x)
-  x)
-
-(define-c-macro %car (x)
-  `("(" ,x " == treptr_nil ? treptr_nil : tre_lists[" ,x "].car)"))
-
-(define-c-macro %cdr (x)
-  `("(" ,x " == treptr_nil ? treptr_nil : tre_lists[" ,x "].cdr)"))
-
-(define-c-macro %eq (a b)
-  `("TREPTR_TRUTH(" ,a " == " ,b ")"))
-
-(define-c-macro %not (x)
-  `("(" ,x " == treptr_nil ? treptr_t : treptr_nil)"))
+;;;; TYPE PREDICATES
 
 (mapcan-macro _
 	'((consp "CONS")
@@ -237,3 +242,8 @@
 	  (builtinp   "BUILTIN"))
   `((define-c-macro ,($ '% _.) (x)
       `(,(+ "TREPTR_TRUTH(TREPTR_IS_" ._.) "(" ,,x "))"))))
+
+;;;; MISCELLANEOUS
+
+(define-c-macro identity (x)
+  x)

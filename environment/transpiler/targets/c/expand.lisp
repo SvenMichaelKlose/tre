@@ -55,7 +55,7 @@
     '(car cdr not
 	  consp atom numberp stringp arrayp functionp builtinp)
   `((define-c-std-macro ,_ (x)
-	  `(,($ '% _) ,,x))))
+	  `(%inline (,($ '% _) ,,x)))))
 
 ;(define-c-std-macro %lx (lexicals fun)
 ;  (eval (macroexpand `(with ,(mapcan (fn `(,_ ',_)) .lexicals.)
