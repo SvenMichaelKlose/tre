@@ -1,5 +1,5 @@
-;;;;; TRE tree processor transpiler
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; TRE transpiler
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Wrap local method calls into SLOT-VALUEs.
 
@@ -15,7 +15,7 @@
            			 (stringp x)))
 			(not (find x exclusions))
 		    (assoc x classdef))
-       `(%slot-value this ,x)
+       `(%slot-value ~%this ,x)
 	   x))
 
 (defun thisify-list-0 (classdef x exclusions)
