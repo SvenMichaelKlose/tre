@@ -1,6 +1,6 @@
 /*
  * TRE interpreter
- * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
  *
  * Built-in functions
  */
@@ -397,7 +397,8 @@ char *tre_builtin_names[] = {
     "CHARACTERP",
 
     "EQ", "EQL",
-    "MAKE-SYMBOL", "ATOM", "SYMBOL-VALUE", "%TYPE-ID", "%ID", "%MAKE-PTR",
+    "MAKE-SYMBOL", "MAKE-PACKAGE",
+	"ATOM", "SYMBOL-VALUE", "%TYPE-ID", "%ID", "%MAKE-PTR",
 	"SYMBOL-FUNCTION", "SYMBOL-PACKAGE",
 	"FUNCTIONP", "BUILTINP",
     "BOUNDP", "FBOUNDP",
@@ -509,6 +510,7 @@ treevalfunc_t treeval_xlat_builtin[] = {
     treatom_builtin_eq,
     treatom_builtin_eql,
     treatom_builtin_make_symbol,
+    treatom_builtin_make_package,
     treatom_builtin_atom,
     treatom_builtin_symbol_value,
     treatom_builtin_type_id,

@@ -1,6 +1,6 @@
 /*
  * TRE interpreter
- * Copyright (c) 2005-2006, 2008-2009 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2006, 2008-2010 Sven Klose <pixel@copei.de>
  *
  * Built-in functions
  */
@@ -12,6 +12,7 @@ extern treptr treatom_builtin_eq (treptr);
 extern treptr treatom_eql (treptr, treptr);
 extern treptr treatom_builtin_eql (treptr);
 extern treptr treatom_builtin_make_symbol (treptr);
+extern treptr treatom_builtin_make_package (treptr);
 extern treptr treatom_builtin_atom (treptr);
 extern treptr treatom_builtin_symbol_value (treptr);
 extern treptr treatom_builtin_symbol_function (treptr);

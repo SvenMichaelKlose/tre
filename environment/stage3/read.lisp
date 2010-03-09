@@ -1,5 +1,5 @@
-;;;; TRE tree processor environment
-;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de?
+;;;; TRE environment
+;;;; Copyright (c) 2008,2010 Sven Klose <pixel@copei.de>
 
 (defun token-is-quote? (x)
   (in? x 'quote 'backquote 'quasiquote 'quasiquote-splice))
@@ -45,8 +45,10 @@
   (skip-spaces str)
   (with (sym (get-symbol str))
 	(if (= (peek-char str) #\:)
-		(values (string-list "keyword") (and (read-char str)
-											 (get-symbol str)))
+		(values (or sym
+					t)
+				(and (read-char str)
+					 (get-symbol str)))
 		(values nil sym))))
 
 (defun get-string (str)
@@ -98,7 +100,11 @@
     'char     (code-char (read-char str))
     'hexnum   (read-hex str)
 	'function `(function ,(read-expr str))
-    'symbol   (make-symbol (list-string sym) (and pkg *keyword-package*))
+    'symbol   (make-symbol (list-string sym)
+						   (if
+							 (not pkg)	nil
+							 (eq t pkg)	*keyword-package*
+							 (make-package (list-string pkg))))
 	t		   (error "syntax error: token ~A, sym ~A" token sym)))
 
 (defun read-quote (str token)

@@ -1,6 +1,6 @@
 /*
  * TRE interpreter
- * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2008,2010 Sven Klose <pixel@copei.de>
  *
  * Symbol database.
  */
@@ -58,6 +58,12 @@ tresymbolpage_find_root (treptr package)
 	for (i = 0; i < MAX_PACKAGES; i++)
 		if (tresymbol_roots[i].package == package)
 			return tresymbol_roots[i].root;
+
+	for (i = 0; i < MAX_PACKAGES; i++)
+		if (tresymbol_roots[i].package == 0) {
+			tresymbol_roots[i].package = package;
+			return tresymbol_roots[i].root;
+		}
 
 	return NULL;
 }

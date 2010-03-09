@@ -49,7 +49,7 @@ typedef int bool;
 #define TRE_MAX_NESTED_FILES	16
 #define TRE_FILEIO_MAX_FILES   16
 
-#define MAX_PACKAGES		2
+#define MAX_PACKAGES		128
 
 #define TREDEBUG_MAX_ARGS	16
 #define TREDEBUG_MAX_BREAKPOINTS	16

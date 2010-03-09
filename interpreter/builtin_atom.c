@@ -1,6 +1,6 @@
 /*
  * TRE interpreter
- * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
  *
  * Built-in atom-related functions
  */
@@ -16,6 +16,8 @@
 #include "string2.h"
 #include "thread.h"
 #include "xxx.h"
+
+#include <string.h>
 
 /*tredoc
  (cmd :name EQ :essential T
@@ -104,6 +106,30 @@ treatom_builtin_make_symbol (treptr args)
 			  TRECONTEXT_PACKAGE();
 
     return treatom_get (TREATOM_STRINGP(name), package);
+}
+
+
+/*tredoc
+  (cmd :name MAKE-PACKAGE
+	(arg :type string)
+	(returns :type package)
+	(para
+ 	  "Turns symbol into a package."))
+ */
+treptr
+treatom_builtin_make_package (treptr args)
+{
+	treptr name = trearg_get (args);
+	treptr atom;
+
+    name = trearg_typed (1, TRETYPE_STRING, name, "symbol name");
+
+	if (strlen (TREATOM_STRINGP(name)) == 0)
+		return tre_package_keyword;
+
+    atom = treatom_get (TREATOM_STRINGP(name), TRECONTEXT_PACKAGE());
+	TREATOM_SET_TYPE(atom, TRETYPE_PACKAGE);
+	return atom;
 }
 
 /*tredoc

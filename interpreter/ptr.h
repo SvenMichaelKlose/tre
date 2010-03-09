@@ -1,6 +1,6 @@
 /*
  * TRE interpreter
- * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
  *
  * Object pointers.
  */
@@ -39,6 +39,7 @@ typedef ulong treptr;
 #define TREATOM_STRINGP(ptr)	((char *) &(TREATOM_STRING(ptr)->str))
 #define TREATOM_SET_DETAIL(ptr, val)	(TREPTR_TO_ATOM(ptr).detail = (void *) val)
 #define TREATOM_SET_STRING(ptr, val)	(TREATOM_DETAIL(ptr) = (struct tre_string *) val)
+#define TREATOM_SET_TYPE(ptr, val)	(TREATOM_TYPE(ptr) = val)
 
 #define TREPTR_TYPE(ptr)		(ptr >> TREPTR_INDEX_WIDTH)
 #define TREPTR_INDEX(ptr)		(ptr & ~TREPTR_FLAGS)
