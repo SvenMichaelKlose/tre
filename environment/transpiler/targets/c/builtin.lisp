@@ -1,5 +1,5 @@
 ;;;;; TRE to C transpiler
-;;;;; Copyright (c) 2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2009-2010 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Built-in interpreter functions
 
@@ -63,6 +63,7 @@
 ;		(EQ)
 		(EQL)
 		(MAKE-SYMBOL make_symbol)
+		(MAKE-PACKAGE make_package)
 ;		(ATOM)
 		(SYMBOL-VALUE)
 		(%TYPE-ID type_id)

@@ -1,7 +1,12 @@
 ;;;;; Transpiler: TRE to PHP
 ;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 ;;;;;
-;;;;; Code generation macros
+;;;;; Code generation
+
+;;;; GENERAL
+
+(defun php-line (&rest x)
+  `(,*php-indent* ,@x ,*php-separator*))
 
 (defun php-codegen-symbol-constructor (tr x)
     `(,(transpiler-symbol-string tr
@@ -19,6 +24,24 @@
 	 (transpiler-add-obfuscation-exceptions *php-transpiler* ',x.)
 	 (define-transpiler-macro *php-transpiler* ,@x)))
 
+(defmacro define-php-infix (name)
+  `(define-transpiler-infix *php-transpiler* ,name))
+
+;;;; SYMBOLS
+
+(transpiler-translate-symbol *php-transpiler* nil "NULL")
+(transpiler-translate-symbol *php-transpiler* t "true")
+
+(define-php-macro %unobfuscated-lookup-symbol (name pkg)
+  `(,(transpiler-obfuscate-symbol *php-transpiler*
+								  '%lookup-symbol)
+	   (%transpiler-string
+		   ,(symbol-name (transpiler-obfuscate-symbol
+						 *php-transpiler* (make-symbol .name.))))
+		   ,pkg))
+
+;;;; CONTROL FLOW
+
 (define-php-macro %%tag (tag)
   `(%transpiler-native 
 	   ,(if (< *php-version* 503)
@@ -28,17 +51,15 @@
 
 (define-php-macro vm-go (tag)
   (if (<= 503 *php-version*)
-      `(, *php-indent* "goto _I_" ,tag ,*php-separator*)
-      `(, *php-indent* "$_I_=" ,tag ,*php-separator* "continue" ,*php-separator*)))
+	  (php-line "goto _I_" tag)
+      (php-line "$_I_=" tag *php-separator* "continue")))
 
 (define-php-macro vm-go-nil (val tag)
   (if (<= 503 *php-version*)
-      `(, *php-indent* "if (!$" ,val "&&$" ,val "!==0) goto _I_" ,tag ,*php-separator*)
-      `(, *php-indent* "if (!$" ,val "&&$" ,val "!==0) { $_I_=" ,tag "; continue; }" ,*php-newline*)))
+      (php-line "if (!$" val "&&$" val "!==0) goto _I_" tag)
+      (php-line "if (!$" val "&&$" val "!==0) { $_I_=" tag "; continue; }")))
 
-(define-php-macro %set-atom-fun (plc val)
-  `(%transpiler-native "$" ,val ,*php-separator*
-  					   ,(php-dollarize plc) "=&$" ,val ,*php-separator*))
+;;;; FUNCTIONS
 
 (defvar *php-codegen-funinfo* nil)
 
@@ -55,13 +76,13 @@
 	      ")" ,(code-char 10)
       "{" ,(code-char 10)
 	     ,@(when (< *php-version* 503)
-			 `(,*php-indent* "$_I_=0; while (1) { switch ($_I_) { case 0:" ,*php-separator*))
+			 (php-line "$_I_=0; while (1) { switch ($_I_) { case 0:"))
 		 ,@(when (< 0 num-locals)
-		     `(,*php-indent* ,"$_local_array = Array ()" ,*php-separator*))
+		     (php-line "$_local_array = Array ()"))
          ,@(lambda-body x)
 	     ,@(when (< *php-version* 503)
 			 `(,*php-indent* "}" ,*php-newline*))
-       	 (,*php-indent* "return $" ,'~%ret ,*php-separator*)
+       	 ,(php-line "return $" '~%ret)
 	     ,@(when (< *php-version* 503)
 			 `("}" ,*php-newline*))
       "}" ,*php-newline*)))
@@ -79,6 +100,24 @@
 
 (defun php-codegen-argument-filter (x)
   (php-dollarize x))
+
+(define-php-macro %assign-function-arguments (name args)
+  `(%transpiler-native
+	   "$" ,args ,*php-separator*
+       "$" ,(transpiler-obfuscate-symbol *php-transpiler* '__tre-args)
+	       "[\"" ,name "\"]=&$" ,args))
+
+;;;; FUNCTION REFERENCE
+
+(define-php-macro %%funref (name fi-sym)
+  (let fi (get-lambda-funinfo-by-sym fi-sym)
+    (if (funinfo-ghost fi)
+	    (aif (funinfo-lexical (funinfo-parent fi))
+  	  		 `(%funref ,name ,!)
+			 (error "no lexical for ghost"))
+	    name)))
+
+;;;; ASSIGNMENT
 
 (defun php-%setq-0 (dest val)
   `((%transpiler-native
@@ -104,20 +143,33 @@
   	  '(%transpiler-native "")
 	  (php-%setq-0 dest val)))
 
+(define-php-macro %set-atom-fun (plc val)
+  `(%transpiler-native "$" ,val ,*php-separator*
+  					   ,(php-dollarize plc) "=&$" ,val ,*php-separator*))
+
+;;;; VARIABLES
+
 (define-php-macro %var (name)
   '(%transpiler-native ""))
 
-;;; TYPE PREDICATES
+(defun php-stack (x)
+  ($ '_I_S x))
 
-(defmacro define-php-infix (name)
-  `(define-transpiler-infix *php-transpiler* ,name))
+(define-php-macro %stack (x)
+  (if (transpiler-stack-locals? *php-transpiler*)
+  	  `(%transpiler-native "_locals[" ,x "]")
+      (php-stack x)))
 
-;;;; Symbol replacement definitions.
+;; Experimental for lambda-export.
+(define-php-macro %vec (v i)
+  `(%transpiler-native "$" ,v "[" ,(php-dollarize i) "]"))
 
-(transpiler-translate-symbol *php-transpiler* nil "NULL")
-(transpiler-translate-symbol *php-transpiler* t "true")
+;; Experimental for lambda-export.
+(define-php-macro %set-vec (v i x)
+  `(%transpiler-native "$" ,x ,*php-separator*
+					   (aref ,v ,i) "=&$" ,x ,*php-separator*))
 
-;;; Numbers, arithmetic and comparison.
+;;;; NUMBERS, ARITHMETIC, COMPARISON
 
 (defmacro define-php-binary (op repl-op)
   `(define-transpiler-binary *php-transpiler* ,op ,repl-op))
@@ -129,6 +181,8 @@
 (define-php-binary %%%> ">")
 (define-php-binary %%%eq "===")
 
+;;;; ARRAYS
+
 (define-php-macro make-array (&rest elements)
   `("Array (" ,@(transpiler-binary-expand ","
 					(mapcar #'php-dollarize elements)) ")"))
@@ -138,14 +192,16 @@
      ,@(mapcar (fn `("[" ,(php-dollarize _) "]"))
                idx)))
 
+(define-php-macro %%usetf-aref (val &rest x)
+  `(%transpiler-native "$" ,val ,*php-separator*
+  					   (aref ,@x) "=&$" ,val))
+
+;;;; HASH TABLE
+
 (define-php-macro href (arr &rest idx)
   `(%transpiler-native "$" ,arr
      ,@(mapcar (fn `("[" ,(php-dollarize _) "]"))
                idx)))
-
-(define-php-macro %%usetf-aref (val &rest x)
-  `(%transpiler-native "$" ,val ,*php-separator*
-  					   (aref ,@x) "=&$" ,val))
 
 (define-php-macro %%usetf-href (val &rest x)
   `(%transpiler-native "$" ,val ,*php-separator*
@@ -153,15 +209,6 @@
 
 (define-php-macro hremove (h key)
   `(%transpiler-native "unset $" ,h "[" ,(php-dollarize key) "]"))
-
-;; Experimental for lambda-export.
-(define-php-macro %vec (v i)
-  `(%transpiler-native "$" ,v "[" ,(php-dollarize i) "]"))
-
-;; Experimental for lambda-export.
-(define-php-macro %set-vec (v i x)
-  `(%transpiler-native "$" ,x ,*php-separator*
-					   (aref ,v ,i) "=&$" ,x ,*php-separator*))
 
 (define-php-macro make-hash-table (&rest args)
   (let pairs (group args 2)
@@ -174,25 +221,17 @@
 		        (list x. "=>" (second x))))
          ")")))
 
+;;;; OBJECTS
+
 (define-php-macro %new (&rest x)
   `(%transpiler-native "new "
 				       ,x.
-					   "(" ,@(transpiler-binary-expand "," (mapcar #'php-dollarize .x))
+					   "(" ,@(transpiler-binary-expand ","
+								 (mapcar #'php-dollarize .x))
  					   ")"))
 
 (define-php-macro delete-object (x)
   `(%transpiler-native "unset " ,x))
-
-(defun php-stack (x)
-  ($ '_I_S x))
-
-(define-php-macro %stack (x)
-  (if (transpiler-stack-locals? *php-transpiler*)
-  	  `(%transpiler-native "_locals[" ,x "]")
-      (php-stack x)))
-
-(define-php-macro %quote (x)
-  (php-compiled-symbol x))
 
 (define-php-macro %slot-value (x y)
   (if (consp x)
@@ -201,24 +240,7 @@
 		  (error "%TRANSPILER-NATIVE expected"))
 	  `(%transpiler-native "$" ,x "->" ,y)))
 
-(define-php-macro %%funref (name fi-sym)
-  (let fi (get-lambda-funinfo-by-sym fi-sym)
-    (if (funinfo-ghost fi)
-	    (aif (funinfo-lexical (funinfo-parent fi))
-  	  		 `(%funref ,name ,!)
-			 (error "no lexical for ghost"))
-	    name)))
+;;;; MISCELLANEOUS
 
-(define-php-macro %unobfuscated-lookup-symbol (name pkg)
-  `(,(transpiler-obfuscate-symbol *php-transpiler*
-								  '%lookup-symbol)
-	   (%transpiler-string
-		   ,(symbol-name (transpiler-obfuscate-symbol
-						 *php-transpiler* (make-symbol .name.))))
-		   ,pkg))
-
-(define-php-macro %assign-function-arguments (name args)
-  `(%transpiler-native
-	   "$" ,args ,*php-separator*
-       "$" ,(transpiler-obfuscate-symbol *php-transpiler* '__tre-args)
-	       "[\"" ,name "\"]=&$" ,args))
+(define-php-macro %quote (x)
+  (php-compiled-symbol x))
