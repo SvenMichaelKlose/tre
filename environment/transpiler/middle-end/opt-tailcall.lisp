@@ -3,8 +3,11 @@
 
 (defun opt-tailcall-fun-0 (fi args x name front-tag)
   (format t "Tailcall resolved for function '~A'~%" (symbol-name name))
-  (append (mapcar #'((arg val)
-					   `(%setq ,arg ,val))
+  (append (mapcan #'((arg val)
+					   (with-gensym g
+						 (funinfo-env-add fi g)
+					     `((%setq ,g ,val) ; Avoid accidential GC.
+					       (%setq ,arg ,val))))
 				  (argument-expand-names name args)
 				  (cdr (%setq-value x.)))
 		  `((vm-go ,front-tag))
