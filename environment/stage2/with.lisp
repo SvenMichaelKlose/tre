@@ -1,5 +1,5 @@
 ;;;;; TRE environment
-;;;;; Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
 
 (defun copy-head-if (pred x)
   (when (and x
@@ -30,6 +30,8 @@
 		  (find-cons (fn (not (funcall pred _))) x)))
 
 (defmacro with (alst &rest body)
+  (unless body
+	(error "body expected"))
   ; Make new WITH for rest of assignment list.
   (labels ((sub (x)
              (if (cddr x)

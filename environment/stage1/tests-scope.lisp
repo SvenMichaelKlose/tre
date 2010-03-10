@@ -1,9 +1,10 @@
 ;;;;; TRE environment
-;;;;; Copyright (C) 2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (C) 2009-2010 Sven Klose <pixel@copei.de>
 
 (define-test "can handle nested functions with double argument names"
   ((let x 'y
-	 (let x 'z)
+	 (let x 'z
+	   nil)
 	 x))
   'y)
 
