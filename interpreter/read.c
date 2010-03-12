@@ -64,6 +64,7 @@ get_symbol (struct tre_stream *str, char *s, char *p)
     ulong  len = 0;
     char   * os = s;
     char   c;
+	bool   got_package = FALSE;
 
     *s = 0;
     *p = -1;
@@ -85,11 +86,12 @@ after_pname:
         if (is_symchar (c)) {
 	    	/* Take read symbol as package name. */
             if (c == ':') {
-				if (*p != -1)
+				if (got_package)
 		    		treerror (treptr_invalid, "double package name");
 				strcpy (p, os);
 				len = 0;
 				s = os;
+				got_package = TRUE;
 				goto after_pname;
 	    	}
 
