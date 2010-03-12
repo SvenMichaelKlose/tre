@@ -1,10 +1,10 @@
 ;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 
 ;; All symbols are stored in this array for reuse.
 (defvar *symbols* (make-hash-table))
 
-(dont-inline %symbol)
+(dont-inline %symbol) ; XXX remove this one?
 
 ;; Symbol constructor
 ;;
@@ -20,23 +20,18 @@
   this)
 
 ;; Find symbol by name or create a new one.
-;;
-;; Wraps the 'new'-operator.
-;; XXX rename to %QUOTE ?
 (define-native-js-fun symbol (name pkg)
   no-args
-  (unless (and (%%%= ,*nil-symbol-name* name)
-			   (not pkg))
-    ; Make package if missing.
-    (let symbol-table (or (href *symbols* pkg)
-	    				  (setf (href *symbols* pkg) (make-hash-table)))
-      ; Get or make symbol.
-      (or (href symbol-table name)
-	      (setf (href symbol-table name) (new %symbol name pkg))))))
-
-;(define-native-js-fun symbol (name pkg)
-; no-args
-; (%lookup-symbol name pkg))
+  (unless (%%%= ,*nil-symbol-name* name)
+	(let pkg-name (if pkg
+					  pkg.n
+					  ,*nil-symbol-name*)
+      ; Make package if missing.
+      (let symbol-table (or (href *symbols* pkg-name)
+	    				    (setf (href *symbols* pkg-name) (make-hash-table)))
+        ; Get or make symbol.
+        (or (href symbol-table name)
+	        (setf (href symbol-table name) (new %symbol name pkg)))))))
 
 (define-native-js-fun %%usetf-symbol-function (v x)
   no-args

@@ -1,11 +1,15 @@
 ;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
-
-(defvar *keyword-package* t)
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 
 ;; Make symbol in particular package.
 (defun make-symbol (x &optional (pkg nil))
-  (symbol x pkg ))
+  (symbol x pkg))
+
+;; Make package (which is just a symbol).
+(defun make-package (x)
+  (symbol x nil))
+
+(defvar *keyword-package* (make-package ""))
 
 (defun symbol-name (x)
   (if x

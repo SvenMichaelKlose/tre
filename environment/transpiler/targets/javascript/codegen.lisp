@@ -10,8 +10,12 @@
   ($ '_I_S x))
 
 (defun js-codegen-symbol-constructor (tr x)
-  `(,(transpiler-symbol-string tr (transpiler-obfuscate tr 'symbol))
-        "(\"" ,(symbol-name x) "\", " ,(when (keywordp x) "true") ")"))
+  (let s (transpiler-symbol-string tr (transpiler-obfuscate tr 'symbol))
+    `(,s "(\"" ,(symbol-name x) "\", "
+		 ,@(list (if (symbol-package x)
+		   		   `(,s "(\"" ,(symbol-name (symbol-package x)) "\", null)")
+			       "null"))
+		 ")")))
 
 (defmacro define-js-macro (&rest x)
   (when *show-definitions*
