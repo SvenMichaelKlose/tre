@@ -15,6 +15,10 @@
 (defmacro append! (place &rest args)
   `(setf ,place (append ,place ,@args)))
 
+(define-test "COPY-LIST works"
+  ((copy-list '(l i s p)))
+  '(l i s p))
+
 (define-test "APPEND works with two lists"
   ((append '(l i) '(s p)))
   '(l i s p))
