@@ -75,10 +75,6 @@
 	  ,@(when (< 0 (funinfo-num-tags fi))
 	      `(,*js-indent* "}" ,*js-newline*)))))
 
-(define-js-macro %assign-function-arguments (name args)
-  `(%transpiler-native
-	   ,name "." ,(transpiler-obfuscate-symbol *js-transpiler* 'tre-args) "=" ,args))
-
 ;;;; ASSIGNMENT
 
 (defun js-%setq-0 (dest val)

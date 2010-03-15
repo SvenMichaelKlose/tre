@@ -101,12 +101,6 @@
 (defun php-codegen-argument-filter (x)
   (php-dollarize x))
 
-(define-php-macro %assign-function-arguments (name args)
-  `(%transpiler-native
-	   "$" ,args ,*php-separator*
-       "$" ,(transpiler-obfuscate-symbol *php-transpiler* '__tre-args)
-	       "[\"" ,name "\"]=&$" ,args))
-
 ;;;; FUNCTION REFERENCE
 
 (define-php-macro %%funref (name fi-sym)

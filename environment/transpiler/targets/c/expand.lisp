@@ -32,8 +32,7 @@
 (define-c-std-macro defmacro (name &rest x)
   (when *show-definitions*
     (late-print `(defmacro ,name ,@x.)))
-  (eval (transpiler-macroexpand *c-transpiler*
-								`(define-c-std-macro ,name ,@x)))
+  (eval (macroexpand `(define-c-std-macro ,name ,@x)))
   nil)
 
 (define-c-std-macro defvar (name val)

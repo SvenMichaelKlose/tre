@@ -32,14 +32,12 @@
 
 (defun lambda-call-embed (fi lambda-call export-lambdas?)
   (with-lambda-call (args vals body lambda-call)
-    (with ((a v) (assoc-splice (argument-expand 'dummy-in-lambda-call-embed args vals)))
-	  ; Add lambda-call arguments to the parent function's arguments
-	  ; temporarily to make stack-places; so the stack-places can be
-	  ; reused by the next lambda-call on the same level.
-      ;(with-funinfo-env-temporary fi args
+    (with ((a v) (assoc-splice (argument-expand 'dummy-in-lambda-call-embed
+												args vals)))
 	  (funinfo-env-add-many fi a)
-      (lambda-expand-make-inline-body a v
-	      (lambda-expand-tree fi body export-lambdas?)))));)
+	  (lambda-expand-tree fi
+          (lambda-expand-make-inline-body a v body)
+		  export-lambdas?))))
 
 ;;; Export
 
@@ -66,28 +64,36 @@
 
 ;;;; Toplevel
 
-(defun lambda-expand-branch (fi x export-lambdas?)
+(defun lambda-expand-tree-unexported-lambda (fi x)
+  (with (new-fi (or (when (lambda-funinfo x)
+					  (get-lambda-funinfo x))
+					(lambda-make-funinfo (lambda-args x) fi))
+		 body (lambda-expand-tree-0 new-fi (lambda-body x) nil))
+	(copy-lambda x :info new-fi
+				   :body body)))
+
+(defun lambda-expand-tree-cons (fi x export-lambdas?)
   (if
     (lambda-call? x)
       (lambda-call-embed fi x export-lambdas?)
     (lambda? x)
 	  (if export-lambdas?
           (lambda-export fi x)
-		  (lambda-w/-missing-funinfo x (lambda-make-funinfo (lambda-args x) fi)))
-	x))
+		  (lambda-expand-tree-unexported-lambda fi x))
+	(lambda-expand-tree-0 fi x export-lambdas?)))
 
-(defun lambda-expand-tree-0 (fi body export-lambdas?)
-  (tree-walk body
-		     :ascending
-		         (fn lambda-expand-branch fi _ export-lambdas?)))
+(defun lambda-expand-tree-0 (fi x export-lambdas?)
+  (if
+	(atom x)
+	  x
+	(atom x.)
+	  (cons x.
+			(lambda-expand-tree-0 fi .x export-lambdas?))
+	(cons (lambda-expand-tree-cons fi x. export-lambdas?)
+		  (lambda-expand-tree-0 fi .x export-lambdas?))))
 
-(defun lambda-expand-tree (fi body export-lambdas?)
-  (let expanded-body (lambda-expand-tree-0 fi body export-lambdas?)
-    (place-expand-0 fi expanded-body)
-	expanded-body))
-
-(defun lambda-embed-or-export-transform (fi body export-lambdas?)
-  (let expanded-body (lambda-expand-tree-0 fi body export-lambdas?)
+(defun lambda-expand-tree (fi x export-lambdas?)
+  (let expanded-body (lambda-expand-tree-0 fi x export-lambdas?)
     (place-expand-0 fi expanded-body)
 	expanded-body))
 
@@ -102,8 +108,7 @@
 	    (copy-lambda x
 		    :name lambda-name
 			:info fi
-			:body (lambda-embed-or-export-transform fi (lambda-body x)
-												    export-lambdas?))
+			:body (lambda-expand-tree fi (lambda-body x) export-lambdas?))
 		*lambda-exported-closures*)))
 
 (defun lambda-expand (x export-lambdas?)

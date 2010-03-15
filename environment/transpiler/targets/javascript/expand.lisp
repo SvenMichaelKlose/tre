@@ -13,7 +13,21 @@
 (define-js-std-macro function (&rest x)
   (unless x
     (error "FUNCTION expects a symbol or form"))
-  `(function ,@x))
+  (if (and (or (consp x.)
+			   (consp .x)))
+	  (let frm (if .x .x. x.)
+		(if (and (not (simple-argument-list? frm.))
+			     (not (eq 'no-args .frm.)))
+		    (with-gensym g
+		   	  `(#'((,g)
+			         (setf ,g (function ,@(when .x
+										    (list x.))
+						          (,frm. no-args ,@.frm)))
+			         (setf (slot-value ,g 'tre-exp)
+					       ,(compile-argument-expansion g frm.))
+				     ,g) nil))
+  			`(function ,@x)))
+  	  `(function ,@x)))
 
 ;; (DEFUN ...)
 ;;
@@ -34,11 +48,7 @@
 					 (,@(awhen fi-sym
 						  `(%funinfo ,!))
 					  ,a
-   		              ,@body)))
-	   ,@(unless (or (simple-argument-list? args)
-					 (eq 'no-args body.))
-		   `((%setq (slot-value ,n 'tre-exp)
-			  		,(compile-argument-expansion n args)))))))
+   		              ,@body))))))
 
 (define-js-std-macro define-native-js-fun (name args &rest body)
   (apply #'js-essential-defun name args body))
@@ -57,8 +67,8 @@
 (define-js-std-macro defmacro (name &rest x)
   (when *show-definitions*
     (late-print `(defmacro ,name ,x.)))
-  (eval (transpiler-macroexpand *js-transpiler*
-								`(define-js-std-macro ,name ,@x)))
+  (eval (macroexpand `(define-js-std-macro ,name ,@x)))
+		  ;(transpiler-macroexpand *js-transpiler*
   nil)
 
 (define-js-std-macro defvar (name val)

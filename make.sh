@@ -149,7 +149,7 @@ debugraw)
 	;;
 
 build)
-	COPTS="$COPTS -O2 -fomit-frame-pointer -ffast-math"
+	COPTS="$COPTS -O3 -fomit-frame-pointer -ffast-math"
 	standard_compile
 	link
 	install_it

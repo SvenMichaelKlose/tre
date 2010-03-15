@@ -130,7 +130,7 @@
       ; Remove second of (setf x y y x).
 	  ((and (%setq? a)
 			(%setq? d.)
-			(atomic? .a.)
+			(atom .a.)
 			(eq .a. (third d.))
 			(eq (second d.) ..a.))
 	     (cons a (opt-peephole-remove-void .d)))
@@ -166,8 +166,8 @@
   (let fi *opt-peephole-funinfo*
     (when (and v (atom v))
 	  (or (~%ret? v)
-	      (not (or (eq v (funinfo-lexical fi))
-	    	       (not (funinfo-in-args-or-env? fi v))
+	      (not (or (not (funinfo-in-args-or-env? fi v))
+ 				   (eq v (funinfo-lexical fi))
 	    	       (funinfo-lexical? fi v)))))))
 
 (defun opt-peephole (statements)
@@ -200,9 +200,9 @@
 					  (let plc (%setq-place a)
 						(and (eq plc (%setq-value d.))
  							 (removable-place? plc)
-							 (or (not (opt-peephole-will-be-used-again? .d plc))
-								 (and (integer= 2 (opt-peephole-count plc))
-								 	  (not (~%ret? plc)))))))
+							 (or (and (integer= 2 (opt-peephole-count plc))
+								 	  (not (~%ret? plc)))
+							     (not (opt-peephole-will-be-used-again? .d plc))))))
 				  (let plc (%setq-place a)
 				    (opt-peephole-uncollect-syms plc
 						  (opt-peephole-uncollect-syms plc

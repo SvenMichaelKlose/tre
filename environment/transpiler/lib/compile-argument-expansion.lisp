@@ -94,12 +94,14 @@
 		        (compile-argument-expansion-defaults key-args)))))
 
 (defun compile-argument-expansion (fun-name adef)
-  (with-gensym p
-    (let names (argument-expand-names 'compile-argument-expansion adef)
-	  (if names
-          `#'((,p)
-		        (with ,(mapcan (fn `(,_ ,(list 'quote _)))
-						       names)
-	              ,@(compile-argument-expansion-0 adef p)
-			      ((%transpiler-native ,fun-name) ,@names)))
-		  (list 'function fun-name)))))
+  (if (and (= 2 (length adef))
+		   (eq '&rest adef.))
+	  (list 'function fun-name)
+      (let-if names (argument-expand-names 'compile-argument-expansion adef)
+          (with-gensym p
+            `#'((,p)
+		          (with ,(mapcan (fn `(,_ ,(list 'quote _)))
+					             names)
+	                ,@(compile-argument-expansion-0 adef p)
+		            ((%transpiler-native ,fun-name) ,@names))))
+	      (list 'function fun-name))))

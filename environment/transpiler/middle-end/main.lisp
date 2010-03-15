@@ -3,7 +3,6 @@
 
 (env-load "transpiler/middle-end/global-funinfo.lisp")
 (env-load "transpiler/middle-end/named-functions.lisp")
-(env-load "transpiler/middle-end/prepare-runtime-argexps.lisp")
 
 (env-load "transpiler/middle-end/opt-peephole.lisp")
 (env-load "transpiler/middle-end/opt-places.lisp")

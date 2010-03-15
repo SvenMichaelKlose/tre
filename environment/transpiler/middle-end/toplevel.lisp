@@ -23,8 +23,7 @@
       #'opt-peephole
       (fn transpiler-make-named-functions tr _)
       #'transpiler-quote-keywords
-      (fn transpiler-expression-expand tr _)
-	  (fn transpiler-prepare-runtime-argument-expansions tr _)))
+      (fn transpiler-expression-expand tr _)))
 
 (defun transpiler-middleend-2 (tr x)
   (remove-if #'not

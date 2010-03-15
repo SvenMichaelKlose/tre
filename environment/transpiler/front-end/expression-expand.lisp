@@ -328,8 +328,11 @@
 ;; assigned to a gensym which will replace it in the parent expression.
 (defun expex-body (ex x &optional (s '~%ret))
   (expex-make-return-value ex s
-						   (expex-list ex
-									   (expex-save-atoms x))))
+      (expex-list ex
+	      (expex-save-atoms
+		      (if (eq 'no-args x.)
+				  .x
+				  x)))))
 
 ;;;; TOPLEVEL
 

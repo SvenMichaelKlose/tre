@@ -53,8 +53,7 @@
 (define-php-std-macro defmacro (name &rest x)
   (when *show-definitions*
     (late-print `(defmacro ,name ,(awhen x. (list !)))))
-  (eval (transpiler-macroexpand *php-transpiler*
-								`(define-php-std-macro ,name ,@x)))
+  (eval (macroexpand `(define-php-std-macro ,name ,@x)))
   nil)
 
 (define-php-std-macro defvar (name val)

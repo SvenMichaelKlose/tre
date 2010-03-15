@@ -15,6 +15,19 @@
 (defun rename-arg (replacements x)
   (assoc-replace x replacements :test #'eq))
 
+(defun rename-function-arguments-r (x replacements env)
+  (with (args (lambda-args x)
+		 new-replacements
+		   (find-and-add-renamed-doubles (get-lambda-funinfo x)
+										 args replacements env)
+       	 renamed-args
+		   (rename-function-arguments-0 args new-replacements env))
+	(copy-lambda x
+		:args renamed-args
+		:body (rename-function-arguments-0 (lambda-body x)
+									       new-replacements
+		 							       (append renamed-args env)))))
+
 ;;; XXX renames top-level keyword arguments?
 (defun rename-function-arguments-0 (x &optional (replacements nil) (env nil))
   (if
@@ -23,15 +36,7 @@
 	(%quote? x)
 	  x
 	(lambda? x)
-	  (with (args (lambda-args x)
-			 new-replacements (find-and-add-renamed-doubles (get-lambda-funinfo x)
-															args replacements env)
-        	 renamed-args (rename-function-arguments-0 args new-replacements env))
-		(copy-lambda x
-			:args renamed-args
-			:body (rename-function-arguments-0 (lambda-body x)
-										       new-replacements
-			 							       (append renamed-args env))))
+	  (rename-function-arguments-r x replacements env)
     (%slot-value? x)
       `(%slot-value ,(rename-function-arguments-0 .x. replacements env)
 					,..x.)

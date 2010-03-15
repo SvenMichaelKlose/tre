@@ -29,9 +29,9 @@
 (defun js-transpile-0 (f files &key (base? nil))
   (with (tr *js-transpiler*
     	 base (transpiler-sighten tr *js-base*)
-    	 base2 (transpiler-sighten tr *js-base2*)
 		 base-debug (when *transpiler-assert*
 				      (transpiler-sighten tr *js-base-debug-print*))
+    	 base2 (transpiler-sighten tr *js-base2*)
 		 tests (when (eq t *have-environment-tests*)
 				 (transpiler-sighten tr (make-environment-tests)))
 	 	 user (transpiler-sighten-files tr files)
@@ -48,9 +48,9 @@
                                 base)
                               (when base?
                                 base2)
-	                          deps
                               (when (and base? *transpiler-assert*)
  	                            base-debug)
+	                          deps
                               tests
  	                          user)))
        (dolist (i (funinfo-env *global-funinfo*))
