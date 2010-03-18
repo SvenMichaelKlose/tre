@@ -151,6 +151,7 @@
 (defun opt-peephole-will-be-used-again? (x v)
   (if
 	(not (funinfo-parent *opt-peephole-funinfo*))	t
+	(funinfo-immutable? *opt-peephole-funinfo* x)	t
 	(not x)			(~%ret? v)	; End of block always returns ~%RET.
 	(atom x)		(error "illegal meta-code: statement expected")
 	(lambda? x.)	(opt-peephole-will-be-used-again? .x v) ; Skip LAMBDA-expressions.

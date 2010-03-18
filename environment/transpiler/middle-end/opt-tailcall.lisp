@@ -6,6 +6,7 @@
   (append (mapcan #'((arg val)
 					   (with-gensym g
 						 (funinfo-env-add fi g)
+						 (funinfo-add-immutable fi g)
 					     `((%setq ,g ,val) ; Avoid accidential GC.
 					       (%setq ,arg ,val))))
 				  (argument-expand-names name args)

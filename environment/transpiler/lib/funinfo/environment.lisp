@@ -44,9 +44,6 @@
 	    (awhen (funinfo-parent fi)
 		  (funinfo-in-this-or-parent-env? ! var)))))
 
-(defun funinfo-ignore? (fi var)
-  (member var (funinfo-ignorance fi)))
-
 ;;;; ENVIRONMENT
 
 (defmacro with-funinfo-env-temporary (fi args &rest body)
@@ -95,3 +92,9 @@
   (when fi
     (or (funinfo-name fi)
 		(funinfo-get-name (funinfo-parent fi)))))
+
+(defun funinfo-immutable? (fi x)
+  (member x (funinfo-immutables fi)))
+
+(defun funinfo-add-immutable (fi x)
+  (adjoin! x (funinfo-immutables fi)))
