@@ -143,9 +143,6 @@
 
 ;;;; VARIABLES
 
-(define-php-macro %var (name)
-  '(%transpiler-native ""))
-
 (defun php-stack (x)
   ($ '_I_S x))
 
