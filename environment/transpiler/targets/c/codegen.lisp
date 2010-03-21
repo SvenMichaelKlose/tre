@@ -141,9 +141,6 @@
 
 ;;;; VARIABLES
 
-(define-c-macro %var (name)
-  (c-codegen-var-declaration name))
-
 (defun c-stack (x)
   `("_TRELOCAL(" ,x ")"))
 
