@@ -52,11 +52,13 @@
     (error "Atom expected as expander-name instead of ~A." expander-name))
   (unless (atom name)
     (error "Atom expected as macro-name instead of ~A for expander ~A." name expander-name))
-  `(progn
-	 (when (expander-has-macro? ',expander-name ',name)
-	   (error "Macro ~A already defined." ',name))
-	 ; XXX (acons! ',name x (expander-unserialize (expander-get ',expander-name)))
-	 (acons! ',name #',x (expander-macros (expander-get ',expander-name)))))
+  (with-gensym g
+    `(progn
+	   (when (expander-has-macro? ',expander-name ',name)
+	     (error "Macro ~A already defined." ',name))
+	   ; XXX (acons! ',name x (expander-unserialize (expander-get ',expander-name)))
+	   (defun ,g ,@x)
+	   (acons! ',name #',g (expander-macros (expander-get ',expander-name))))))
 
 (defun expander-expand (expander-name expr)
   (let e (expander-get expander-name)
