@@ -9,30 +9,28 @@
 								   (cons ,(compiled-list (cdr (third x)))
 							 			 nil)))))
 
-(defun %setq-make-immediate-function-call (x)
+(defun %setq-make-immediate-function-call (x f)
   (let expr (%setq-value x)
     `(%setq ,(%setq-place x)
-			(,(compiled-function-name expr.) ,@.expr))))
-
-(defun expex-local-funcall (x)
-  (if (%setq-value-atom? x)
-	  x
-      (let fun (first (%setq-value x))
-	    (if (or (consp fun)
-		        (expex-in-env? fun))
-  	        (%setq-make-call-to-local-function x fun)
-	        x))))
+			(,(compiled-function-name f) ,@.expr))))
 
 (defun expex-compiled-funcall (x)
   "To be called by expex: APPLY calls to local functions and make
    immediate global function calls."
   (if (%setq-value-atom? x)
-	    x
+	  x
       (let fun (first (%setq-value x))
 	    (if
-		  (or (consp fun)
-		      (expex-in-env? fun))
+		  (function-ref-expr? fun)
+      	    (if (and (transpiler-defined-function *current-transpiler* .fun.)
+					 (not (expex-in-env? .fun.)))
+		        `(%setq ,(%setq-place x)
+					    (,.fun. ,@(cdr (%setq-value x))))
+  	        	(%setq-make-call-to-local-function x fun))
+		  (consp fun)
   	        (%setq-make-call-to-local-function x fun)
-      	  (transpiler-defined-function *current-transpiler* (first (%setq-value x)))
-	    	(%setq-make-immediate-function-call x)
-			x))))
+		  (expex-in-env? fun)
+  	        (%setq-make-call-to-local-function x fun)
+      	  (transpiler-defined-function *current-transpiler* fun)
+		    (%setq-make-immediate-function-call x fun)
+	  	  x))))
