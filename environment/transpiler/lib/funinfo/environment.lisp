@@ -37,12 +37,12 @@
 	    (awhen (funinfo-parent fi)
 		  (funinfo-in-this-or-parent-env? ! var)))))
 
-(defun funinfo-in-this-or-parent-env-but-not-toplevel? (fi var)
+(defun funinfo-in-env-or-lexical? (fi var)
   (when (and fi
 			 (funinfo-parent fi))
     (or (funinfo-in-args-or-env? fi var)
 	    (awhen (funinfo-parent fi)
-		  (funinfo-in-this-or-parent-env? ! var)))))
+		  (funinfo-in-env-or-lexical? ! var)))))
 
 ;;;; ENVIRONMENT
 

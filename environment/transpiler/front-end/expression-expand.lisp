@@ -70,7 +70,7 @@
 
 (defun expex-in-env? (x)
   (and (atom x)
-       (funinfo-in-this-or-parent-env? *expex-funinfo* x)))
+       (funinfo-in-env-or-lexical? *expex-funinfo* x)))
 
 (defun expex-global-variable? (x)
   (and (atom x)
@@ -273,7 +273,6 @@
 
 ;;;; BODY EXPANSION
 
-;; Simply concatenates the results of all expression expansions in a body.
 (defun expex-force-%setq (ex x)
   (if (or (atom x)
 		  (%setq? x)

@@ -22,11 +22,10 @@
       (let fun (first (%setq-value x))
 	    (if
 		  (function-ref-expr? fun)
-      	    (if (and (transpiler-defined-function *current-transpiler* .fun.)
-					 (not (expex-in-env? .fun.)))
-		        `(%setq ,(%setq-place x)
-					    (,.fun. ,@(cdr (%setq-value x))))
-  	        	(%setq-make-call-to-local-function x fun))
+      	    (if
+			  (expex-in-env? .fun.)
+  	        	(%setq-make-call-to-local-function x .fun.)
+		      (%setq-make-immediate-function-call x .fun.))
 		  (consp fun)
   	        (%setq-make-call-to-local-function x fun)
 		  (expex-in-env? fun)
