@@ -116,7 +116,8 @@
 ;; Check if an expression has a return value.
 (defun expex-returnable? (ex x)
   (not (or (vm-jump? x)
-		   (%var? x))))
+		   (%var? x)
+		   (named-function-expr? x))))
 
 ;; Check if arguments to a function should be expanded.
 (defun expex-expandable-args? (ex fun argdef)
@@ -199,16 +200,28 @@
     (vm-scope? x)					(expex-move-arg-vm-scope ex x)
 	(expex-move-arg-std ex x)))
 
-;; Move subexpressions out of a parent.
-;;
-;; Returns the head of moved expressions and a new parent with
-;; replaced arguments.
-(defun expex-move-args (ex x)
+(defun expex-move-slot-value (ex x)
+  (with ((moved new-expr)
+			 (assoc-splice (mapcar (fn expex-move-arg ex _)
+				        		   (expex-guest-filter-arguments ex (list .x.)))))
+    (values (apply #'append moved)
+			`(%slot-value ,new-expr. ,..x.))))
+
+(defun expex-move-args-0 (ex x)
   (with ((moved new-expr)
 			 (assoc-splice (mapcar (fn expex-move-arg ex _)
 				        		   (expex-guest-filter-arguments ex x))))
     (values (apply #'append moved)
 			new-expr)))
+
+;; Move subexpressions out of a parent.
+;;
+;; Returns the head of moved expressions and a new parent with
+;; replaced arguments.
+(defun expex-move-args (ex x)
+  (if (%slot-value? x)
+	  (expex-move-slot-value ex x)
+	  (expex-move-args-0 ex x)))
 
 ;;;; EXPRESSION EXPANSION
 
@@ -253,15 +266,17 @@
 ;; Recurses into LAMBDA-expressions and VM-SCOPEs.
 ;; Removes VM-SCOPEs.
 (defun expex-expr (ex expr)
-  (let x (expex-guest-filter-expr ex expr)
+  (let x (if (named-function-expr? expr)
+		     expr
+			 (expex-guest-filter-expr ex expr))
     (if
 	  (%var? x)
 	    (expex-var x)
-      (not (expex-able? ex x))
-	    (values nil (list x))
 	  (or (lambda? x)
 		  (named-function-expr? x))
 	    (expex-lambda ex x)
+      (not (expex-able? ex x))
+	    (values nil (list x))
       (vm-scope? x)
 	    (values nil (expex-body ex (vm-scope-body x)))
       (%setq? x)
@@ -277,7 +292,8 @@
   (if (or (atom x)
 		  (%setq? x)
 		  (vm-jump? x)
-		  (%var? x))
+		  (%var? x)
+		  (named-function-expr? x))
 	  x
 	  (expex-guest-filter-setter ex `(%setq ~%ret ,(if (identity? x)
 													   (second x)
