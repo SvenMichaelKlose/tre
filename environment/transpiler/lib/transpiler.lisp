@@ -48,8 +48,6 @@
   (obfuscate? nil)
   (import-from-environment? t)
 
-  (preprocessor #'identity)
-
   ; Generator for literal strings.
   (gen-string (fn transpiler-make-escaped-string _ #\"))
 
