@@ -1,5 +1,5 @@
 ;;;;; TRE transpiler
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 
 (defvar *transpiler-obfuscation-counter* 0)
 
@@ -7,26 +7,18 @@
   (incf *transpiler-obfuscation-counter*)
   (number-sym *transpiler-obfuscation-counter*))
 
-(defun %transpiler-obfuscate-symbol-unpackaged (tr x)
+(defun %transpiler-obfuscate-symbol-1 (tr x)
   (let obs (transpiler-obfuscations tr)
     (or (href obs x)
         (setf (href obs x)
-              (transpiler-obfuscated-sym)))))
-
-(defun %transpiler-obfuscate-symbol-1 (tr x)
-  (with (pack (symbol-package x)
-	     n (%transpiler-obfuscate-symbol-unpackaged
-		       tr
-		       (if pack
-		   	       (make-symbol (symbol-name x))
-			       x)))
-    (if pack
-        (make-symbol (symbol-name n) pack)
-	    n)))
+			  (aif (symbol-package x)
+    		       (make-symbol (symbol-name (transpiler-obfuscated-sym))
+						        !)
+    		       (transpiler-obfuscated-sym))))))
 
 (defun transpiler-obfuscate-symbol-0 (tr x)
   (if (or (not (transpiler-obfuscate? tr))
-          (eq t (href (transpiler-obfuscations tr) (make-symbol (symbol-name x)))))
+          (eq t (href (transpiler-obfuscations tr) x)))
       x
 	  (%transpiler-obfuscate-symbol-1 tr x)))
 
@@ -53,4 +45,4 @@
   (dolist (k (hashkeys (transpiler-obfuscations tr)))
     (unless (in=? (elt (symbol-name k) 0) #\~) ; #\_)
 	  (format t "~A -> ~A" (symbol-name k)
-						     (href (transpiler-obfuscations tr) k)))))
+						   (href (transpiler-obfuscations tr) k)))))
