@@ -113,15 +113,35 @@
 
 ;;;; ASSIGNMENT
 
+(defun php-class-fun (x)
+  (and (consp x)
+	   (if
+		 (eq x. 'tresymbol_compiled_%class-head)
+		   `("class " ,.x. " { " ,*php-newline*)
+		 (eq x. 'tresymbol_compiled_%class-tail)
+		   `("}" ,*php-newline*)
+		 (eq x. 'tresymbol_compiled_%separator)
+		   `("," ,*php-newline*))))
+
+(defun php-assignment-operator (val)
+  (if (or (and (atom val)
+		  	   (symbolp val))
+		  (and (consp val)
+			   (or (not (%transpiler-native? val))
+			   	   (and (stringp .val.)
+						(not (string= "" .val.))))))
+   	  "=&"
+  	  "="))
+ 
 (defun php-%setq-0 (dest val)
   `((%transpiler-native
 	    ,*php-indent*
 	    ,@(if (transpiler-not dest)
 	          '("")
-			  (if (and (atom val)
-				  	   (symbolp val))
-	              `("$" ,dest "=&")
-	           	  `("$" ,dest "=")))
+			  `(,@(when (atom dest)
+				    (list "$"))
+				,dest
+			    ,(php-assignment-operator val)))
         ,@(if
 			(atom val)
 		      (list "$" val)
@@ -132,14 +152,17 @@
     ,*php-separator*)))
 
 (define-php-macro %setq (dest val)
-  (if (and (transpiler-not dest)
-		   (atom val))
-  	  '(%transpiler-native "")
-	  (php-%setq-0 dest val)))
+  (or (php-class-fun val)
+      (if (and (transpiler-not dest)
+		       (atom val))
+  	      '(%transpiler-native "")
+	      (php-%setq-0 dest val))))
 
 (define-php-macro %set-atom-fun (plc val)
   `(%transpiler-native "$" ,val ,*php-separator*
-  					   ,(php-dollarize plc) "=&$" ,val ,*php-separator*))
+  					   ,(php-dollarize plc)
+					   ,(php-assignment-operator val)
+					   "$" ,val ,*php-separator*))
 
 ;;;; VARIABLES
 
@@ -158,12 +181,26 @@
 ;; Experimental for lambda-export.
 (define-php-macro %set-vec (v i x)
   `(%transpiler-native "$" ,x ,*php-separator*
-					   (aref ,v ,i) "=&$" ,x ,*php-separator*))
+					   (aref ,v ,i)
+					   ,(php-assignment-operator x)
+					   "$" ,x ,*php-separator*))
 
 ;;;; NUMBERS, ARITHMETIC, COMPARISON
 
-(defmacro define-php-binary (op repl-op)
-  `(define-transpiler-binary *php-transpiler* ,op ,repl-op))
+(defmacro define-php-binary (op replacement-op)
+    (when *show-definitions*
+	  (print `(define-php-binary ,op ,replacement-op)))
+	(let tre *php-transpiler*
+	  (transpiler-add-obfuscation-exceptions tre op replacement-op)
+	  (transpiler-add-inline-exception tre op)
+	  (transpiler-add-plain-arg-fun tre op)
+	  `(define-expander-macro
+	       ,(transpiler-macro-expander tre)
+	       ,op
+	       (&rest args)
+	     `(%transpiler-native
+			,,@(transpiler-binary-expand ,replacement-op
+				   (mapcar #'php-dollarize args))))))
 
 (define-php-binary %%%+ "+")
 (define-php-binary %%%- "-")
@@ -175,8 +212,8 @@
 ;;;; ARRAYS
 
 (define-php-macro make-array (&rest elements)
-  `("Array (" ,@(transpiler-binary-expand ","
-					(mapcar #'php-dollarize elements)) ")"))
+  `(%transpiler-native "" ; Tell %SETQ not to make reference assignment.
+					   "Array ()"))
 
 (define-php-macro aref (arr &rest idx)
   `(%transpiler-native "$" ,arr
@@ -185,7 +222,9 @@
 
 (define-php-macro %%usetf-aref (val &rest x)
   `(%transpiler-native "$" ,val ,*php-separator*
-  					   (aref ,@x) "=&$" ,val))
+  					   (aref ,@x)
+					   ,(php-assignment-operator val)
+					   "$" ,val))
 
 ;;;; HASH TABLE
 
@@ -196,21 +235,25 @@
 
 (define-php-macro %%usetf-href (val &rest x)
   `(%transpiler-native "$" ,val ,*php-separator*
-  					   (aref ,@x) "=&$" ,val))
+  					   (aref ,@x)
+					   ,(php-assignment-operator val)
+					   "$" ,val))
 
 (define-php-macro hremove (h key)
   `(%transpiler-native "unset $" ,h "[" ,(php-dollarize key) "]"))
 
 (define-php-macro make-hash-table (&rest args)
   (let pairs (group args 2)
-    `("Array ("
-          ,@(when args
-	          (mapcan (fn (list (first _) "=>" (second _) ","))
-			          (butlast pairs)))
-          ,@(when args
-		      (with (x (car (last pairs)))
-		        (list x. "=>" (second x))))
-         ")")))
+    `(%transpiler-native
+	   "" ; Tell %SETQ to make no reference assignment.
+	   "Array ("
+           ,@(when args
+	           (mapcan (fn (list (first _) "=>" (second _) ","))
+			           (butlast pairs)))
+           ,@(when args
+		       (with (x (car (last pairs)))
+		         (list x. "=>" (second x))))
+          ")")))
 
 ;;;; OBJECTS
 
@@ -227,7 +270,7 @@
 (define-php-macro %slot-value (x y)
   (if (consp x)
 	  (if (eq '%transpiler-native x.)
-		  `(%transpiler-native "$" ,x "->" ,y)
+		  `(%transpiler-native ,(php-dollarize x) "->" ,y)
 		  (error "%TRANSPILER-NATIVE expected"))
 	  `(%transpiler-native "$" ,x "->" ,y)))
 

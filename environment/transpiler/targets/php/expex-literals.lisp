@@ -9,7 +9,8 @@
 
 (php-define-compiled-literal php-compiled-number (x number)
   :maker ($ 'trenumber_compiled_ (gensym-number))
-  :setter (%transpiler-native ,x))
+  :setter (%transpiler-native "" ; Tell %SETQ not to make reference assignment.
+							  ,x))
 
 (php-define-compiled-literal php-compiled-char (x char)
   :maker ($ 'trechar_compiled_ (char-code x))
@@ -17,7 +18,8 @@
 
 (php-define-compiled-literal php-compiled-string (x string)
   :maker ($ 'trestring_compiled_ (gensym-number))
-  :setter (%transpiler-native (%transpiler-string ,x)))
+  :setter (%transpiler-native ""
+							  (%transpiler-string ,x)))
 
 (php-define-compiled-literal php-compiled-symbol (x symbol)
   :maker ($ 'tresymbol_compiled_
@@ -56,7 +58,8 @@
 		  nil
 		(not (or (get-lambda-funinfo-by-sym x)
 				 (expander-has-macro? (transpiler-macro-expander *php-transpiler*)
-								  x)))
+								  x)
+				 (eq 'this x)))
 	  	  (php-compiled-symbol x)
 		x)
     (transpiler-import-from-expex x)))

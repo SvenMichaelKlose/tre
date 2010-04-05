@@ -10,12 +10,9 @@
 ;; (FUNCTION symbol | lambda-expression)
 ;; Add symbol to list of wanted functions or obfuscate arguments of
 ;; LAMBDA-expression.
-(define-php-std-macro function (x)
-  (unless x
-    (error "FUNCTION expects a symbol or form"))
-  ;(when (atom x)
-	;(transpiler-add-wanted-function *php-transpiler* x))
-  `(function ,x))
+(define-php-std-macro function (name &optional (x 'only-name))
+  `(function ,name ,@(unless (eq 'only-name x)
+					   (list x))))
 
 (defun php-assert-body (x)
   (if (and (not *transpiler-assert*) ; XXX should be removed by optimizer anyway
@@ -25,8 +22,8 @@
 
 ;; (DEFUN ...)
 ;;
-;; Assign function to global variable.
-;; XXX This could be generic if there wasn't *JS-TRANSPILER*.
+;; XXX Assign function to symbol
+;; XXX This could be generic.
 (defun php-essential-defun (name args &rest body)
   (when *show-definitions*
     (late-print `(defun ,name ,@(awhen args (list !)))))
@@ -39,10 +36,10 @@
 											   asserted-body
 											   :test #'eq))
 	(transpiler-add-defined-function tr n)
-    `(%setq ,n #'(,@(awhen fi-sym
+    `(function ,n (,@(awhen fi-sym
 					   `(%funinfo ,!))
-					,a
-   		              ,@asserted-body))))
+				   ,a
+   		           ,@asserted-body))))
 
 (define-php-std-macro define-native-php-fun (name args &rest body)
   (apply #'php-essential-defun name args body))
@@ -93,7 +90,7 @@
 
 ;; Translate arguments for call to native 'new' operator.
 (defun php-transpiler-make-new-object (x)
-  `(%new ,@x))
+  `(%new (%transpiler-native ,x.) ,@.x))
 
 ;; Make object if first argument is not a keyword, or string.
 (define-php-std-macro new (&rest x)

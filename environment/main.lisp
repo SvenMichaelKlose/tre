@@ -82,8 +82,9 @@
   (unless *tre-has-transpiler*
     (env-load "oo/thisify.lisp"))
   (env-load "oo/class.lisp")
-  (env-load "oo/ducktype.lisp")
-  (env-load "oo/ducktype-test.lisp"))
+;  (env-load "oo/ducktype.lisp")
+;  (env-load "oo/ducktype-test.lisp")
+  (env-load "oo/transpiler.lisp"))
 
 (when *tre-has-editor*
   (env-load "editor/main.lisp"))

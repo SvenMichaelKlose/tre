@@ -1,7 +1,11 @@
-;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Transpiler: TRE to PHP
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 
-(defun arrayp (x) (is_array x))
+(defun arrayp (x)
+  (is_array x))
+
+(defun %array-length (x)
+  ((%transpiler-native count) x))
 
 (dont-obfuscate push)
 
@@ -12,6 +16,6 @@
 
 (defun array-list (x &optional (n 0))
   ;(declare type array x) ; fscks up with *h-t-m-l-collection
-  (when (%%%< n x.length)
+  (when (%%%< n (array-length x))
     (cons (aref x n)
 		  (array-list x (1+ n)))))

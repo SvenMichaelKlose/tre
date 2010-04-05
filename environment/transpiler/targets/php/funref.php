@@ -7,7 +7,7 @@ function &T37funref_exec ($f, $g)
 
 function &T37funref ($f, $g)
 {
-	$r->treArgs = cdr ($f->treArgs);
+	$r->treArgs = compiled_cdr ($f->treArgs);
 	return $r;
 }
 

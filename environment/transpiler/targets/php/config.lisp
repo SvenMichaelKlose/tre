@@ -57,7 +57,7 @@
 		  apply length push shift unshift
 		  split object *array *string == === + - * /
 
-		  alert))
+		  __construct))
 	(transpiler-add-defined-function tr '%cons)
 	(transpiler-add-function-args tr '%cons '(a b))
 	tr))
