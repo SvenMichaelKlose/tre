@@ -4,11 +4,11 @@
 (defun opt-tailcall-fun-0 (fi args x name front-tag)
   (format t "Tailcall resolved for function '~A'~%" (symbol-name name))
   (append (mapcan #'((arg val)
-					   (with-gensym g
+					   (with-gensym g ; Avoid accidential GC.
 						 (funinfo-env-add fi g)
 						 (funinfo-add-immutable fi g)
-					     `((%setq ,g ,val) ; Avoid accidential GC.
-					       (%setq ,arg ,val))))
+					     `((%setq ,arg ,val)
+					       (%setq ,g ,arg))))
 				  (argument-expand-names name args)
 				  (cdr (%setq-value x.)))
 		  `((vm-go ,front-tag))
