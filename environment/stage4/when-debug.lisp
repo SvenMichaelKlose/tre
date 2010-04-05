@@ -12,3 +12,8 @@
   (unless *transpiler-assert*
 	`(progn
 	   ,@x)))
+
+(defmacro if-debug (consequence alternative)
+  (if *transpiler-assert*
+	  consequence
+	  alternative))
