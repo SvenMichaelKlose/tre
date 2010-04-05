@@ -167,7 +167,8 @@
   (let fi *opt-peephole-funinfo*
     (when (and v (atom v))
 	  (or (~%ret? v)
-	      (not (or (not (funinfo-in-args-or-env? fi v))
+	      (not (or (funinfo-immutable? fi v)
+				   (not (funinfo-in-args-or-env? fi v))
  				   (eq v (funinfo-lexical fi))
 	    	       (funinfo-lexical? fi v)))))))
 
