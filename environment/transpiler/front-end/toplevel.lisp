@@ -14,9 +14,9 @@
       #'compiler-macroexpand
       (fn transpiler-macroexpand tr _)
 	  #'quasiquote-expand
+	  #'transpiler-splice
       (fn transpiler-macroexpand tr _)
-      #'dot-expand
-      (fn funcall (transpiler-preprocessor tr) _)))
+      #'dot-expand))
 
 (defun transpiler-front-end (tr x)
   (funcall (transpiler-simple-expand-compose tr) x))
