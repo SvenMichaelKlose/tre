@@ -29,7 +29,7 @@
 (defun js-transpile-0 (f files &key (base? nil))
   (with (tr *js-transpiler*
     	 base (transpiler-sighten tr *js-base*)
-		 base-debug (when *transpiler-assert*
+		 base-debug (when *transpiler-log*
 				      (transpiler-sighten tr *js-base-debug-print*))
     	 base2 (transpiler-sighten tr *js-base2*)
 		 tests (when (eq t *have-environment-tests*)
@@ -48,7 +48,7 @@
                                 base)
                               (when base?
                                 base2)
-                              (when (and base? *transpiler-assert*)
+                              (when (and base? *transpiler-log*)
  	                            base-debug)
 	                          deps
                               tests
