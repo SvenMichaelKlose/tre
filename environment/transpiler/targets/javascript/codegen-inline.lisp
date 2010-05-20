@@ -22,7 +22,7 @@
 	  (cdr __))
   (let slotname .p.
     `((define-js-macro ,p. (x)
-        `("(" ,,x " === null ? null : "
+        `("(" ,,x " == null ? null : "
 	      ,,x "." ,,(symbol-name (transpiler-obfuscate *js-transpiler* ,(list 'quote slotname)))
 	      ")"))
       (define-js-macro ,($ '%%usetf- p.) (v x)
