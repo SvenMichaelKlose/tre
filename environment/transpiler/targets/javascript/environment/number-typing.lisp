@@ -4,7 +4,10 @@
 (defmacro + (&rest x)
   (if
 	(some #'stringp x)
-      `(string-concat ,@x)
+      (let args (string-concat-successive-literals x)
+		(if (= 1 (length args))
+	  		args.
+      	    `(string-concat ,@args)))
 	(every #'stringp x)
 	  (apply #'string-concat x)
 	(not (= 2 (length x)))
