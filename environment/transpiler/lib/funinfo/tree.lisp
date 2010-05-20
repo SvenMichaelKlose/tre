@@ -35,9 +35,13 @@
   (immutables nil)
 
   ; Number of jump tags in body.
-  (num-tags nil))
+  (num-tags nil)
+  
+  (globals nil))
 
 (defun funinfo-topmost (fi)
-  (aif (funinfo-parent fi)
-	   (funinfo-topmost !)
-	   fi))
+  (let p (funinfo-parent fi)
+    (if (and p
+			 (funinfo-parent p))
+	   (funinfo-topmost p)
+	   fi)))

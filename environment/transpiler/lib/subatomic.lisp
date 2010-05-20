@@ -54,7 +54,13 @@
   ..x.)
 
 (defun %setq-value-atom? (x)
-    (atom (%setq-value x)))
+  (atom (%setq-value x)))
+
+(defun %setq-args (x)
+  (let v (%setq-value x)
+    (if (consp v)
+	    .v
+	    (list v))))
 
 (defun %slot-value-obj (x)
   .x.)

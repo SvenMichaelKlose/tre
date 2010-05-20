@@ -24,6 +24,7 @@
 			    (in=? _ #\_ #\. #\#)))
 	  :gen-string (fn transpiler-make-escaped-string _ #\')
 	  :lambda-export? t
+	  :stack-arguments? nil
 	  :stack-locals? nil
 	  :rename-all-args? t
 	  :inline-exceptions '(%slot-value error format identity %bind)

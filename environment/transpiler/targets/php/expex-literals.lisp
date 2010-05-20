@@ -34,15 +34,20 @@
 			   	  ,(keywordp x)
 				  ")"))
 
+(defun php-memorize-expex-literal (x)
+  (let fi (funinfo-topmost *expex-funinfo*)
+	(adjoin! x (funinfo-globals fi))
+	x))
+
 ;; An EXPEX-ARGUMENT-FILTER.
 (defun php-expex-literal (x)
   (if
     (characterp x)
-      (php-compiled-char x)
+      (php-memorize-expex-literal (php-compiled-char x))
     (numberp x)
-	  (php-compiled-number x)
+	  (php-memorize-expex-literal (php-compiled-number x))
     (stringp x)
-	  (php-compiled-string x)
+	  (php-memorize-expex-literal (php-compiled-string x))
 	(atom x)
       (if
 		(expex-global-variable? x)
@@ -60,6 +65,6 @@
 				 (expander-has-macro? (transpiler-macro-expander *php-transpiler*)
 								  x)
 				 (eq 'this x)))
-	  	  (php-compiled-symbol x)
+	  	  (php-memorize-expex-literal (php-compiled-symbol x))
 		x)
     (transpiler-import-from-expex x)))

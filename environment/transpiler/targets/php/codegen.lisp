@@ -75,6 +75,10 @@
 					    args))
 	      ")" ,(code-char 10)
       "{" ,(code-char 10)
+	     ,@(awhen (funinfo-globals fi)
+			 `((,*php-indent* global
+					,@(comma-separated-list (mapcar #'php-dollarize !))
+					   ";" ,*php-newline*)))
 	     ,@(when (< *php-version* 503)
 			 (php-line "$_I_=0; while (1) { switch ($_I_) { case 0:"))
 		 ,@(when (< 0 num-locals)
@@ -106,9 +110,7 @@
 (define-php-macro %%funref (name fi-sym)
   (let fi (get-lambda-funinfo-by-sym fi-sym)
     (if (funinfo-ghost fi)
-	    (aif (funinfo-lexical (funinfo-parent fi))
-  	  		 `(%funref ,name ,!)
-			 (error "no lexical for ghost"))
+  	  	`(%funref ,name ,(funinfo-lexical (funinfo-parent fi)))
 	    name)))
 
 ;;;; ASSIGNMENT
@@ -143,7 +145,10 @@
 				,dest
 			    ,(php-assignment-operator val)))
         ,@(if
-			(atom val)
+			(or (atom val)
+				(and (%transpiler-native? val)
+					 (atom .val.)
+					 (not ..val)))
 		      (list "$" val)
 			(codegen-expr? val)
 		      (list val)
