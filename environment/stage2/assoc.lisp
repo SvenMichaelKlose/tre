@@ -56,5 +56,16 @@
 
 (defun copy-alist (x)
   "Copy associative list."
-  (mapcar (fn cons _. ._)
+  (mapcar (fn cons (car _) (cdr _))
 		  x))
+
+(defun aremove (obj lst &key (test #'eql))
+  (when lst
+    (if (funcall test obj (caar lst))
+	    (aremove obj (cdr lst) :test test)
+		(cons (cons (car lst.)
+					(cdr lst.))
+			  (aremove obj (cdr lst) :test test)))))
+
+(defmacro aremove! (obj place &key (test #'eql))
+  `(setf ,place (aremove ,obj ,place :test ,test)))
