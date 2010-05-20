@@ -1,10 +1,13 @@
 ;;;;; TRE tree processor transpiler
 ;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 
+(defvar *show-definitions?* nil)
+
 ;; Set this when starting up your transpiler run.
 (defvar *current-transpiler* nil)
 
 (defvar *transpiler-assert* nil)
+(defvar *transpiler-log* nil)
 
 (defstruct transpiler
   std-macro-expander
@@ -166,10 +169,10 @@
   (transpiler-exported-closures tr))
 
 (defun transpiler-plain-arg-fun? (tr fun)
-  (member fun (transpiler-plain-arg-funs tr)))
+  (member fun (transpiler-plain-arg-funs tr) :test #'eq))
 
 (defun transpiler-dont-inline? (tr fun)
-  (member fun (transpiler-dont-inline tr)))
+  (member fun (transpiler-dont-inline tr) :test #'eq))
 
 (defun transpiler-macro (tr name)
   (let expander (expander-get (transpiler-macro-expander tr))
