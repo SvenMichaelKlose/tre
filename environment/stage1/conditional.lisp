@@ -16,15 +16,18 @@
 
 (defun group2 (x)
   (if x
-    (cons (list (car x) (cadr x))
-	      (group2 (cddr x)))))
+      (cons (if (cdr x)
+	  		    (list (car x) (cadr x))
+	  		    (list (car x)))
+	        (group2 (cddr x)))))
 
 (defmacro case (val &rest cases)
   (let g (gensym)
     `(let ,g ,val
-      (if 
-        ,@(apply #'append (%simple-mapcar #'((x)
-                  					   (if (eq t (car x))
-	      	          					   `(t ,(cadr x))
-                      					   `((equal ,g ,(car x)) ,(cadr x))))
-            					   (group2 cases)))))))
+       (if 
+         ,@(apply #'append (%simple-mapcar
+						      #'((x)
+              				      (if (cdr x)
+                   				      `((equal ,g ,(car x)) ,(cadr x))
+	   	          				      (list (car x))))
+       				       (group2 cases)))))))

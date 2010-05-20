@@ -241,7 +241,7 @@
 				            (equal name this-name))
                  (xml-error "closing tag for ~A:~A where ~A:~A was expected"
 			                ns name this-ns this-name))
-	      t `(,(xml2lml-block in ns name attrs) ,@(xml2lml-list in this-ns this-name))))
+	      `(,(xml2lml-block in ns name attrs) ,@(xml2lml-list in this-ns this-name))))
 	  `(,(xml2lml-text in) ,@(xml2lml-list in this-ns this-name))))
 
 (defun xml2lml-block (in ns name attrs)

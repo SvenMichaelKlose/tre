@@ -7,9 +7,6 @@
 (defmacro define-js-std-macro (&rest x)
   `(define-transpiler-std-macro *js-transpiler* ,@x))
 
-;; (FUNCTION symbol | lambda-expression)
-;; Add symbol to list of wanted functions or obfuscate arguments of
-;; LAMBDA-expression.
 (define-js-std-macro function (&rest x)
   (unless x
     (error "FUNCTION expects a symbol or form"))
@@ -22,16 +19,13 @@
 		   	  `(#'((,g)
 			         (setf ,g (function ,@(when .x
 										    (list x.))
-						          (,frm. no-args ,@.frm)))
+						        (,frm. no-args ,@.frm)))
 			         (setf (slot-value ,g 'tre-exp)
 					       ,(compile-argument-expansion g frm.))
 				     ,g) nil))
   			`(function ,@x)))
   	  `(function ,@x)))
 
-;; (DEFUN ...)
-;;
-;; Assign function to global variable.
 ;; XXX This could be generic.
 (defun js-essential-defun (name args &rest body)
   (when *show-definitions*
@@ -45,10 +39,10 @@
     `(progn
        (%var ,n)
        (%setq ,n (function ;,n
-					 (,@(awhen fi-sym
-						  `(%funinfo ,!))
-					  ,a
-   		              ,@body))))))
+				   (,@(awhen fi-sym
+						`(%funinfo ,!))
+					,a
+   		            ,@body))))))
 
 (define-js-std-macro define-native-js-fun (name args &rest body)
   (apply #'js-essential-defun name args body))
@@ -170,6 +164,6 @@
 ;; Convert MAPCAR to faster FILTER if possible.
 (define-js-std-macro mapcar (fun &rest lsts)
   `(,(if (= 1 (length lsts))
-	   'filter
-	   'mapcar)
+	     'filter
+	     'mapcar)
     ,fun ,@lsts))

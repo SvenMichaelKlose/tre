@@ -1,5 +1,5 @@
 ;;;; TRE environment
-;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Alien interface.
 
@@ -54,12 +54,11 @@
          (format nil " ~A[~A]"
                  (alien-import-get-type-from-desc hash tp)
                  (1+ (string-integer (force-string (lml-get-attribute tp :max)))))
-	  t (aif (lml-get-attribute tp :name)
-       		  !
-			  (if (eq 'CVQUALIFIEDTYPE tp.)
-	   		      (alien-import-get-type-from-desc hash tp)
-			      (and (print tp)
-				       "???"))))))
+	  (if (lml-get-attribute tp :name)
+		  (if (eq 'CVQUALIFIEDTYPE tp.)
+	   	      (alien-import-get-type-from-desc hash tp)
+		      (and (print tp)
+			       "???"))))))
 
 (defun alien-import-get-type-from-desc (hash a)
   (when a	; XXX
@@ -93,7 +92,7 @@
       (awhen (lml-get-attribute x :id)
 	    (with (h (case x.
 				   'namespace nil
-				   t hash))
+				   hash))
 		  (when h
 	        (setf (href h !) x)))))))
 

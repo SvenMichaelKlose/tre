@@ -106,7 +106,7 @@
 	    11		(editor-cmd-up ed)
 	    12		(editor-cmd-right ed)
 	    127	(editor-cmd-delete-char ed)
-	    t		(editor-cmd-insert-char ed c))
+	    (editor-cmd-insert-char ed c))
 	  (editor-input-char ed))))
 
 (defun editor-cmd-input (ed)

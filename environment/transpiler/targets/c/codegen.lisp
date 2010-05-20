@@ -168,7 +168,7 @@
 ;;;; CONTROL FLOW
 
 (define-c-macro %%tag (tag)
-  `(%transpiler-native "l" ,tag ":" ,*c-separator*))
+  `(%transpiler-native "l" ,tag ":" ,*c-newline*))
  
 (define-c-macro vm-go (tag)
   (c-line "goto l" (transpiler-symbol-string *c-transpiler* tag)))

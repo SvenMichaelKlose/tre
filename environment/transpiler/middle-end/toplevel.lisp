@@ -16,6 +16,7 @@
 		  (force-output)
 		  _)
       #'transpiler-update-funinfo
+;	  (fn metacode-fblock _)
       #'opt-places-remove-unused
       #'opt-places-find-used
       #'opt-peephole

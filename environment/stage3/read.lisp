@@ -90,7 +90,7 @@
 					          #\x	'hexnum
 					          #\'	'function
 					          #\|	(read-comment-block str)
-					          t	(error "invalid character after '#'"))
+					          (error "invalid character after '#'"))
 			          -1	'eof)))
 		     pkg sym)))
 
@@ -105,7 +105,7 @@
 							 (not pkg)	nil
 							 (eq t pkg)	*keyword-package*
 							 (make-package (list-string pkg))))
-	t		   (error "syntax error: token ~A, sym ~A" token sym)))
+	(error "syntax error: token ~A, sym ~A" token sym)))
 
 (defun read-quote (str token)
   (list token (read-expr str)))
@@ -128,7 +128,7 @@
 					      (unless (eq 'bracket-close token)
 						    (error "only one value allowed after dotted cons"))
 					      x)
-			  t		(read-list str token pkg sym))))))
+			  (read-list str token pkg sym))))))
 			
 (defun read-expr (str)
   (with ((token pkg sym) (read-token str))

@@ -9,4 +9,8 @@
 (env-load "transpiler/middle-end/opt-tailcall.lisp")
 (env-load "transpiler/middle-end/update-funinfos.lisp")
 
+(env-load "transpiler/middle-end/cblock.lisp")
+(env-load "transpiler/middle-end/metacode-fblock.lisp")
+(env-load "transpiler/middle-end/fblock-metacode.lisp")
+
 (env-load "transpiler/middle-end/toplevel.lisp")
