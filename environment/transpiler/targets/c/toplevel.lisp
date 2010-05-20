@@ -4,6 +4,7 @@
 ;;;;; Toplevel
 
 (defvar *closure-argdefs* nil)
+(defvar *c-init-group-size* 64)
 
 (defun c-transpiler-get-argdef-symbols (x)
   (when x
@@ -82,7 +83,8 @@
 				        `(defun ,name ()
 						   ,@(mapcar (fn `(tregc_push_compiled ,_))
 					       			 _)))))
-			    (group (c-transpiler-declarations-and-initialisations) 40))
+			    (group (c-transpiler-declarations-and-initialisations)
+					   *c-init-group-size*))
         `((defun c-init ()
 		    ,@(mapcar #'list (reverse init-funs)))))))
 
