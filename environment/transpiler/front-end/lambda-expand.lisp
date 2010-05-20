@@ -8,7 +8,7 @@
 ;;;; FI argument as well as the FUNINFO prefixes.
 
 (defun lambda-make-funinfo (args parent)
-  (let fi (make-funinfo :args args
+  (let fi (make-funinfo :args (argument-expand-names 'lambda-expand args)
 					    :parent parent)
 	(funinfo-env-add fi '~%ret)
 	fi))
