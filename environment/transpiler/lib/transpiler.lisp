@@ -88,21 +88,6 @@
   (compiled-decls nil)
   (compiled-inits nil))
 
-(defun transpiler-reset (tr)
-  (setf (transpiler-thisify-classes tr) (make-hash-table)	; thisified classes.
-  		(transpiler-function-args tr) nil
-  		(transpiler-emitted-wanted-functions tr) nil
-  		(transpiler-wanted-functions tr) nil
-  		(transpiler-wanted-functions-hash tr) (make-hash-table :test #'eq)
-  		(transpiler-wanted-variables tr) nil
-  		(transpiler-wanted-variables-hash tr) (make-hash-table :test #'eq)
-  		(transpiler-defined-functions tr) nil
-  		(transpiler-defined-functions-hash tr) (make-hash-table :test #'eq)
-  		(transpiler-defined-variables tr) nil
-  		(transpiler-defined-variables-hash tr) (make-hash-table :test #'eq)
-  		(transpiler-function-args tr) (make-hash-table :test #'eq)
-  		(transpiler-exported-closures tr) nil))
-
 (defun transpiler-defined-function (tr name)
   (href (transpiler-defined-functions-hash tr) name))
 
@@ -160,7 +145,8 @@
 
 (defun transpiler-add-obfuscation-exceptions (tr &rest x)
   (dolist (i x)
-	(setf (href (transpiler-obfuscations tr) i) t)))
+	(setf (href (transpiler-obfuscations tr) (make-symbol (symbol-name i)))
+		  t)))
 
 (define-slot-setter-push! transpiler-add-plain-arg-fun tr
   (transpiler-plain-arg-funs tr))
@@ -179,3 +165,20 @@
     (funcall (expander-lookup expander)
 			 expander
 		     name)))
+
+(defun transpiler-reset (tr)
+  (setf (transpiler-thisify-classes tr) (make-hash-table)	; thisified classes.
+  		(transpiler-function-args tr) nil
+  		(transpiler-emitted-wanted-functions tr) nil
+  		(transpiler-wanted-functions tr) nil
+  		(transpiler-wanted-functions-hash tr) (make-hash-table :test #'eq)
+  		(transpiler-wanted-variables tr) nil
+  		(transpiler-wanted-variables-hash tr) (make-hash-table :test #'eq)
+  		(transpiler-defined-functions tr) nil
+  		(transpiler-defined-functions-hash tr) (make-hash-table :test #'eq)
+  		(transpiler-defined-variables tr) nil
+  		(transpiler-defined-variables-hash tr) (make-hash-table :test #'eq)
+  		(transpiler-function-args tr) (make-hash-table :test #'eq)
+  		(transpiler-exported-closures tr) nil)
+  (transpiler-add-obfuscation-exceptions tr (make-symbol ""))
+  tr)
