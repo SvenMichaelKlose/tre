@@ -21,7 +21,13 @@
 (defun atomic-or-without-side-effects? (x)
   (or (atomic? x)
 	  (and (consp x)
-	  	   (in? x. '%quote 'car '%car 'cdr '%cdr))))
+	  	   (in? x. '%quote 'car '%car 'cdr '%cdr '%slot-value
+				   '%vec '%stack
+				   'cons 'list 'aref 'href 'car 'cdr 'list
+				   'eq 'not '= '< '> '<= '>=
+				   '%%%+ '%%%- '%%%= '%%%< '%%%> '%%%<= '%%%>= '%%%eq
+				   '+ '-
+				   'member 'append))))
 
 (defun vm-jump? (e)
   (and (consp e)
