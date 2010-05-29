@@ -60,17 +60,18 @@
   (not (or (expander-has-macro? (transpiler-macro-expander tr) x)
 		   (transpiler-dont-inline? tr x))))
 
-(defun opt-inline-0 (tr level current parent x)
+(defun opt-inline-0 (tr level current parent x &key (tail? nil))
   (if
 	(atom-or-quote? x)
 	  x
 
 	(atom-or-quote? x.)
 	  (cons x.
-			(opt-inline-0 tr level current parent .x))
+			(opt-inline-0 tr level current parent .x :tail? tail?))
 
 	(let f (first x.)
-	  (and (not (eq current f))
+	  (and (not tail?)
+		   (not (eq current f))
 		   (inlineable? tr f)
 		   (or (transpiler-defined-function tr f)
 			   (and (atom f)
@@ -80,11 +81,11 @@
 		    (opt-inline-0 tr level current parent .x))
 	(lambda? x.)
 	  (cons (copy-lambda x.
-				:args (opt-inline-0 tr level current parent (lambda-args x.))
+				:args (opt-inline-0 tr level current parent (lambda-args x.) :tail? t)
 				:body (opt-inline-0 tr level current parent (lambda-body x.)))
 		    (opt-inline-0 tr level current parent .x))
 	(cons (opt-inline-0 tr level current parent x.)
-		  (opt-inline-0 tr level current parent .x))))
+		  (opt-inline-0 tr level current parent .x :tail? tail?))))
 
 (defun inlineable-expr? (tr x)
   (not (let-when fi (get-lambda-funinfo x)
