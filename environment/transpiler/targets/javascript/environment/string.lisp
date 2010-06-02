@@ -1,5 +1,5 @@
 ;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 
 (js-type-predicate %stringp "string")
 
@@ -45,8 +45,8 @@
 (defun list-string (lst)
   (when lst
     (declare type cons lst)
-    (let* ((n (length lst))
-           (s (make-string 0)))
+    (with (n (length lst)
+           s (make-string 0))
       (do ((i 0 (integer-1+ i))
            (l lst .l))
           ((integer>= i n) s)
