@@ -155,7 +155,7 @@ treatom_register_compiled_function (treptr sym, void * fun)
 {
     TREATOM_COMPILED_FUN(sym) = fun;
     TREATOM_COMPILED_FUN(TREATOM_FUN(sym)) = fun;
-	return treptr_nil;
+	return sym;
 }
 
 treptr
