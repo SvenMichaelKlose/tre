@@ -195,6 +195,21 @@ treatom_builtin_symbol_package (treptr list)
 }
 
 /*tredoc
+  (cmd :name SYMBOL-COMPILED-FUNCTION
+	(arg obj)
+    (para "Returns function bound to atom."))
+ */
+treptr
+treatom_builtin_symbol_compiled_function (treptr list)
+{
+    treptr arg = treatom_builtin_arg (list);
+	if (TREATOM_COMPILED_FUN(arg))
+		return trenumber_get ((double) (int) TREATOM_COMPILED_FUN(arg));
+	else
+    	return treptr_nil;
+}
+
+/*tredoc
   (cmd :name %SET-ATOM-FUN
 	(arg :name obj :type atom)
 	(arg :name value :type obj)
