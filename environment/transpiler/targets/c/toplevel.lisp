@@ -41,7 +41,8 @@
 					  (treatom_register_compiled_function
 						  ,(c-compiled-symbol _)
 						  ,(compiled-function-name _))))
-		  (transpiler-defined-functions *c-transpiler*)))
+		  (remove-if #'builtinp
+					 (transpiler-defined-functions *c-transpiler*))))
 
 (defun c-transpiler-declarations-and-initialisations ()
   (append (c-transpiler-compiled-inits)
@@ -72,6 +73,9 @@
 		   "number.h"
 		   "special.h"
 		   "string2.h"
+		   "io.h"
+		   "main.h"
+		   "xxx.h"
 		   "compiled.h"))
 
 (defun c-transpiler-make-init (tr)
@@ -92,6 +96,7 @@
   (map (fn (format f "#include \"~A\"~%" _))
 	   *c-interpreter-headers*)
   (format f "#define compiled_apply trespecial_apply_compiled~%")
+  (c-compiled-symbol 'fnord)
   (with (tr *c-transpiler*
 		 ; Expand.
 		 tests (when (eq t *have-environment-tests*)
@@ -111,15 +116,14 @@
 	  (setf *opt-inline?* nil)
 	  (let cinit (c-transpiler-make-init tr)
 	    (let init (transpiler-transpile tr (transpiler-sighten tr cinit))
-	    (princ (concat-stringtree (transpiler-compiled-decls tr)
-			       				  init
-								  code)
-	           f)))))
+	      (princ (concat-stringtree (transpiler-compiled-decls tr)
+			       				    init code)
+	             f)))))
   (format t "~%; Everything OK. Done.~%"))
 
 (defun c-transpile (out files &key (obfuscate? nil))
-  (setf *current-transpiler* *c-transpiler*)
-  (transpiler-reset *c-transpiler*)
-  (transpiler-switch-obfuscator *c-transpiler* obfuscate?)
-  (make-global-funinfo)
-  (c-transpile-0 out files))
+  (with-temporary *current-transpiler* *c-transpiler*
+    (transpiler-reset *c-transpiler*)
+    (transpiler-switch-obfuscator *c-transpiler* obfuscate?)
+    (make-global-funinfo)
+    (c-transpile-0 out files)))

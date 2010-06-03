@@ -236,7 +236,6 @@ treeval_compiled_expr (treptr func, treptr x, bool do_expand)
 		CAR(funcdef) :
 		treptr_nil;
 
-
    	/* Expand argument keywords. */
    	trearg_expand (&expforms, &expvals, forms, args, do_expand);
    	tregc_push (expvals);

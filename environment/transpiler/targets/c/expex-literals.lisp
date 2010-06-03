@@ -15,46 +15,43 @@
 
 (c-define-compiled-literal c-compiled-number (x number)
   :maker ($ 'trenumber_compiled_ (gensym-number))
-  :setter (trenumber_get (%transpiler-native ,x)))
+  :setter (tregc_push_compiled (trenumber_get (%transpiler-native ,x))))
 
 (c-define-compiled-literal c-compiled-char (x char)
   :maker ($ 'trechar_compiled_ (char-code x))
-  :setter (trechar_get (%transpiler-native ,(char-code x))))
+  :setter (tregc_push_compiled (trechar_get (%transpiler-native ,(char-code x)))))
 
 (c-define-compiled-literal c-compiled-string (x string)
   :maker ($ 'trestring_compiled_ (gensym-number))
-  :setter (trestring_get
-			  (%transpiler-native
-				  (%transpiler-string ,x))))
+  :setter (tregc_push_compiled (trestring_get (%transpiler-native
+									     (%transpiler-string ,x)))))
 
 (c-define-compiled-literal c-compiled-symbol (x symbol)
   :maker ($ 'tresymbol_compiled_ x (if (keywordp x)
 	     						'_keyword
 		 						""))
-  :setter (treatom_get
-			  (%transpiler-native
-				  (%transpiler-string ,(symbol-name x)))
-			   ,(if (keywordp x)
-				    'tre_package_keyword
-				    'treptr_nil)))
+  :setter (tregc_push_compiled
+			  (treatom_get
+			      (%transpiler-native
+				      (%transpiler-string ,(symbol-name x)))
+			       ,(if (keywordp x)
+				        'tre_package_keyword
+				        'treptr_nil))))
 
 ;; An EXPEX-ARGUMENT-FILTER.
 ;; Just a type dispatcher.
 (defun c-expex-literal (x)
   (if
+	(consp x)
+      (transpiler-import-from-expex x)
     (characterp x)
       (c-compiled-char x)
     (numberp x)
 	  (c-compiled-number x)
     (stringp x)
 	  (c-compiled-string x)
-	(atom x)
-	  (if *expex-funinfo*
- 	      (if
-			(funinfo-in-this-or-parent-env? *expex-funinfo* x)
-		      x
-			(expex-funinfo-defined-variable? x)
-	  	  	  `(treatom_get_value ,(c-compiled-symbol x))
-			x)
-		x)
-    (transpiler-import-from-expex x)))
+	(funinfo-in-this-or-parent-env? *expex-funinfo* x)
+	  x
+	(expex-funinfo-defined-variable? x)
+  	  `(treatom_get_value ,(c-compiled-symbol x))
+	  x))

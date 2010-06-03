@@ -1,12 +1,16 @@
 /*
  * TRE interpreter
- * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
  *
  * Top-level.
  */
 
 #ifndef TRE_MAIN_H
 #define TRE_MAIN_H
+
+extern treptr * trestack;
+extern treptr * trestack_top;
+extern treptr * trestack_ptr;
 
 extern treptr treeval_toplevel_current;
 extern bool tre_is_initialized;

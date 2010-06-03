@@ -65,29 +65,53 @@
     (atom x)			(error "codegen: arguments and body expected: ~A" x)
 	(c-codegen-function name x)))
 
-(defun c-codegen-function-prologue-for-local-variables (num-vars)
+;(defun c-codegen-function-prologue-for-local-variables (fi num-vars)
+;  `(,@(c-line "treptr __ret")
+;    ,@(c-line "treptr * __old = trestack_ptr")
+;    ,@(when (< 1 num-vars)
+;	   `(("int __c; for (__c = " ,num-vars "; __c > 0; __c--)")))
+;    ,@(c-line "    *--trestack_ptr = treptr_nil")
+;	,@(when (transpiler-stack-locals? *current-transpiler*)
+;		(mapcar (fn `(%setq ,(place-assign (place-expand-0 fi _))
+;						    ,_))
+;			    (funinfo-local-args fi)))))
+
+(defun c-codegen-function-prologue-for-local-variables (fi num-vars)
   `(,@(c-line "treptr _local_array = trearray_make (" num-vars ")")
     ,@(c-line "tregc_push (_local_array)")
-    ,@(c-line "const treptr * _locals = (treptr *) TREATOM_DETAIL(_local_array)")))
+    ,@(c-line "const treptr * _locals = (treptr *) TREATOM_DETAIL(_local_array)")
+	,@(when (transpiler-stack-locals? *current-transpiler*)
+	(mapcar (fn `(%setq ,(place-assign (place-expand-0 fi _))
+						    ,_))
+			    (funinfo-local-args fi)))))
 
 (define-c-macro %function-prologue (fi-sym)
   (with (fi (get-lambda-funinfo-by-sym fi-sym)
     	 num-vars (length (funinfo-env fi)))
 	(if (< 0 num-vars)
-		(c-codegen-function-prologue-for-local-variables num-vars)
+		(c-codegen-function-prologue-for-local-variables fi num-vars)
 		'(%transpiler-native ""))))
+
+(define-c-macro %function-epilogue (fi-sym)
+  (with (fi (get-lambda-funinfo-by-sym fi-sym)
+    	 num-vars (length (funinfo-env fi)))
+    `(,@(when (< 0 num-vars)
+	  	  `(,(c-line "tregc_pop ()")))
+;    `((%setq "__ret" ,(place-assign (place-expand-0 fi '~%ret)))
+;      ,@(when (< 0 num-vars)
+;		  `(,(c-line "trestack_ptr += " num-vars)))
+;	  ("if (trestack_ptr != __old) { printf (\"MUH!\\n\"); CRASH(); }")
+      (%function-return ,fi-sym))))
 
 (define-c-macro %function-return (fi-sym)
   (let fi (get-lambda-funinfo-by-sym fi-sym)
     `(%transpiler-native
          ,@(c-line "return " (place-assign (place-expand-0 fi '~%ret))))))
 
-(define-c-macro %function-epilogue (fi-sym)
-  (with (fi (get-lambda-funinfo-by-sym fi-sym)
-    	 num-vars (length (funinfo-env fi)))
-    `(,@(when (< 0 num-vars)
-		  `(,(c-line "tregc_pop ()")))
-      (%function-return ,fi-sym))))
+;(define-c-macro %function-return (fi-sym)
+;  (let fi (get-lambda-funinfo-by-sym fi-sym)
+;    `(%transpiler-native
+;         ,@(c-line "return __ret"))))
 
 ;;;; FUNCTION REFERENCE
 
@@ -95,7 +119,8 @@
 (define-c-macro %%funref (name fi-sym)
   (let fi (get-lambda-funinfo-by-sym fi-sym)
  	`("_trelist_get (" ,(c-compiled-symbol '%funref) ", "
-		  "_trelist_get (" ,(c-compiled-symbol name) "," 
+		  "_trelist_get (" ,(c-compiled-symbol name)
+		  				   "," 
 						   ,(place-assign (place-expand-funref-lexical fi))
 						"))")))
 
@@ -124,7 +149,8 @@
 
 (defun c-codegen-set-atom-value (dest val)
   `(%transpiler-native
-       ,@(c-line "treatom_set_value (" (c-compiled-symbol dest) " ," val ")")))
+       ,@(c-line "treatom_set_value (" (c-compiled-symbol dest)
+				 					   " ," val ")")))
 
 (define-c-macro %setq-atom (dest val)
   (c-codegen-set-atom-value dest val))
@@ -142,6 +168,7 @@
 ;;;; VARIABLES
 
 (defun c-stack (x)
+;  `("trestack_ptr[" ,x "]"))
   `("_TRELOCAL(" ,x ")"))
 
 (define-c-macro %stack (x)

@@ -18,6 +18,10 @@
 
 ;;;; ARGUMENTS & ENVIRONMENT
 
+(defun funinfo-local-args (fi)
+  (remove-if (fn funinfo-lexical? fi _)
+			 (funinfo-args fi)))
+
 (defun funinfo-in-env? (fi x)
   (href (funinfo-env-hash fi) x))
 

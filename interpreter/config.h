@@ -119,4 +119,6 @@ typedef int bool;
 #endif
 #endif
 
+#define TRESTACK_SIZE		(16 * MEGA)
+
 #endif /* #ifndef TRE_TRE_H */

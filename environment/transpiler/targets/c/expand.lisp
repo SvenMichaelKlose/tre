@@ -47,7 +47,7 @@
        (%var ,name)
 	   (%setq ,name ,val))))
 
-(define-c-std-macro cons (a d) `(_trelist_get ,a ,d))
+;(define-c-std-macro cons (a d) `(_trelist_get ,a ,d))
 (define-c-std-macro eq (a b) `(%eq ,a ,b))
 
 (mapcan-macro _

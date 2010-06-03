@@ -10,6 +10,8 @@
 (defun lambda-make-funinfo (args parent)
   (let fi (make-funinfo :args (argument-expand-names 'lambda-expand args)
 					    :parent parent)
+	(when (transpiler-stack-locals? *current-transpiler*)
+      (funinfo-env-add-many fi (argument-expand-names 'lambda-expand args)))
 	(funinfo-env-add fi '~%ret)
 	fi))
 

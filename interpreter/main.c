@@ -180,12 +180,19 @@ tre_main (void)
 	    	break;
 }
 
+treptr * trestack;
+treptr * trestack_top;
+treptr * trestack_ptr;
+
 /* Initialise everything. */
 void
 tre_init (void)
 {
     tre_is_initialized = FALSE;
     tre_interrupt_debugger = FALSE;
+
+	trestack = malloc (sizeof (treptr) * TRESTACK_SIZE);
+	trestack_top = trestack_ptr = &trestack[TRESTACK_SIZE];
 
     treio_init ();
     tredebug_init ();

@@ -1,6 +1,6 @@
 /*
- * nix operating system project tre interpreter
- * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
+ * TRE interpreter
+ * Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
  *
  * Garbage collection.
  */
@@ -23,6 +23,9 @@
 #include "xxx.h"
 #include "special.h"
 #include "image.h"
+
+#include "io.h"
+#include "main.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -71,7 +74,7 @@ treptr
 tregc_push_compiled (treptr expr)
 {
 	tregc_push (expr);
-	return treptr_nil;
+	return expr;
 }
 
 void
@@ -209,6 +212,11 @@ tregc_mark_non_internal ()
 void
 tregc_mark (void)
 {
+	treptr * s;
+	printf ("%d on stack\n", (int) (trestack_top - trestack_ptr));
+	for (s = trestack_ptr; s != trestack_top; s++)
+		tregc_trace_object (*s);
+
     tregc_mark_non_internal ();
 
     tregc_trace_expr_toplevel (TRECONTEXT_FUNSTACK());

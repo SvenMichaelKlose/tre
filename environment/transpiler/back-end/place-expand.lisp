@@ -56,17 +56,18 @@
 			 ,(funinfo-sym fi)
 			 ,x)
 
-	(or (funinfo-arg? fi x)
-	    (and (not (transpiler-stack-locals? *current-transpiler*))
-			 (eq x (funinfo-lexical fi))))
-	  x
+	(not (transpiler-stack-locals? *current-transpiler*))
+	  	x
 
 	; Emit stack place.
-	(funinfo-in-env? fi x)
-	  (place-expand-emit-stackplace fi x)
+    (funinfo-in-env? fi x)
+      (place-expand-emit-stackplace fi x)
 
-	; Emit lexical place (outside the function).
-	(make-lexical fi x)))
+    (funinfo-arg? fi x)
+	  x
+
+    ; Emit lexical place (outside the function).
+    (make-lexical fi x)))
 
 (defun place-expand-fun (fi name fun-expr)
   (let fi (get-lambda-funinfo fun-expr)
