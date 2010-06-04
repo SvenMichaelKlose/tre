@@ -60,13 +60,15 @@
 
 ;; XXX ECMAScript only.
 (defun string-upcase (x)
-  (x.to-upper-case))
+  (when x
+    (x.to-upper-case)))
 
 (dont-obfuscate to-lower-case)
 
 ;; XXX ECMAScript only.
 (defun string-downcase (x)
-  (x.to-lower-case))
+  (when x
+    (x.to-lower-case)))
 
 (dont-obfuscate substr length)
 
