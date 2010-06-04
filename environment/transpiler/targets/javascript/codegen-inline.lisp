@@ -1,5 +1,5 @@
 ;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Extra code-generating macros to avoid costly function calls.
 
@@ -23,17 +23,13 @@
   (let slotname .p.
     `((define-js-macro ,p. (x)
         `("(" ,,x " == null ? null : "
-	      ,,x "." ,,(symbol-name (transpiler-obfuscate *js-transpiler* ,(list 'quote slotname)))
+	      ,,x "." ,,(symbol-name
+					    (transpiler-obfuscate *js-transpiler*
+											  ,(list 'quote slotname)))
 	      ")"))
       (define-js-macro ,($ '%%usetf- p.) (v x)
-        `(%transpiler-native ,,x "." ,,(symbol-name (transpiler-obfuscate *js-transpiler* ,(list 'quote slotname))) "=" ,,v)))))
-
-(define-js-macro string-downcase (x)
-  (if (%transpiler-string? x)
-	  `(%transpiler-string ,(string-downcase .x.))
-      `((%slot-value ,x to-lower-case))))
-
-(define-js-macro string-upcase (x)
-  (if (%transpiler-string? x)
-	  `(%transpiler-string ,(string-upcase .x.))
-      `((%slot-value ,x to-upper-case))))
+        `(%transpiler-native ,,x "." ,,(symbol-name
+										   (transpiler-obfuscate
+											   *js-transpiler*
+											   ,(list 'quote slotname)))
+							 "=" ,,v)))))
