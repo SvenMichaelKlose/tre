@@ -118,8 +118,7 @@
 			(token-is-quote? token)
 			  (read-quote str token)
 			(eq 'bracket-open token)
-			  (with ((token pkg sym) (read-token str))
-				(read-list str token pkg sym))
+			  (read-cons-slot str)
 			(read-atom str token pkg sym))
 		  (with ((token pkg sym) (read-token str))
 		    (case token
@@ -129,18 +128,29 @@
 						    (error "only one value allowed after dotted cons"))
 					      x)
 			  (read-list str token pkg sym))))))
-			
+
+(defun read-cons (str)
+  (with ((token pkg sym) (read-token str))
+    (unless (eq 'bracket-close token)
+	  (read-list str token pkg sym))))
+
+(defun read-cons-slot (str)
+  (let l (read-cons str)
+	(if (= #\. (peek-char str))
+	   (progn
+		 (read-char str)
+		 `(slot-value ,l (quote ,(read-expr str))))
+	   l)))
+
 (defun read-expr (str)
   (with ((token pkg sym) (read-token str))
 	(unless (or (not token)
 				(eq 'eof token))
 	  (if (token-is-quote? token)
 		  (read-quote str token)
-		  (if (not (eq 'bracket-open token))
-			  (read-atom str token pkg sym)
-			  (with ((token pkg sym) (read-token str))
-			    (unless (eq 'bracket-close token)
-				  (read-list str token pkg sym))))))))
+		  (if (eq 'bracket-open token)
+			  (read-cons-slot str)
+			  (read-atom str token pkg sym))))))
 
 (defun read (&optional (str *standard-input*))
   "Read expression from stream."
