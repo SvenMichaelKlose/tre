@@ -14,7 +14,7 @@
 		 get-name
 		   #'((def)
 				(if (consp def.)
-					(car def.)
+				    def..
 					def.))
 
 		 get-default
@@ -44,7 +44,10 @@
 					  ,@(when (consp def.)
 					      `((setf ,(get-name def)
 								  ,(get-default def)))))
-				  ,@(compexp-main .def)))
+				  ,@(when .def
+					  (if (argument-keyword? .def.)
+				  		  (compexp-main .def)
+					      (compexp-optional .def)))))
 
 		 compexp-rest
 		   #'((def)
