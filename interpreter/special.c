@@ -1,6 +1,6 @@
 /*
  * TRE interpreter
- * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
  *
  * Built-in special forms.
  */
@@ -105,20 +105,28 @@ trespecial_apply (treptr list)
     treptr  fake;
     treptr  efunc;
     treptr  res;
+    treptr  tmp;
 
     if (list == treptr_nil)
 		return treerror (list, "arguments expected");
 
     func = CAR(list);
-    args = trespecial_apply_args (trelist_copy (CDR(list)));
-	if (TREPTR_IS_FUNCTION(func) && TREATOM_COMPILED_FUN(func))
-		return trespecial_apply_call_fake (func, args);
-
+    tmp = trelist_copy (CDR(list));
+	tregc_push (tmp);
+    args = trespecial_apply_args (tmp);
     fake = CONS(func, args);
     tregc_push (fake);
+	if (TREPTR_IS_FUNCTION(func) && TREATOM_COMPILED_FUN(func)) {
+		tmp = trespecial_apply_call_fake (func, args);
+		tregc_pop ();
+		tregc_pop ();
+		return tmp;
+	}
+
     efunc = treeval (func);
     RPLACA(fake, efunc);
 	if (TREPTR_IS_FUNCTION(efunc) && TREATOM_COMPILED_FUN(efunc)) {
+		tregc_pop ();
 		tregc_pop ();
 		return trespecial_apply_call_fake (efunc, args);
 	}
@@ -133,6 +141,7 @@ trespecial_apply (treptr list)
         res = treerror (func, "function expected");
 
     tregc_pop ();
+	tregc_pop ();
     TRELIST_FREE_EARLY(fake);
 
     return res;

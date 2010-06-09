@@ -213,7 +213,6 @@ void
 tregc_mark (void)
 {
 	treptr * s;
-	printf ("%d on stack\n", (int) (trestack_top - trestack_ptr));
 	for (s = trestack_ptr; s != trestack_top; s++)
 		tregc_trace_object (*s);
 

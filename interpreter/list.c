@@ -213,12 +213,6 @@ trelist_copy_tree (treptr l)
     return ret;
 }
 
-/*
- * Copy tree.
- *
- * Will run garbage collection when out of list elements. The argument is
- * saved. Use tregc_save_push() for other unbound lists.
- */
 treptr
 trelist_copy (treptr l)
 {
