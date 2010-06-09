@@ -27,7 +27,9 @@
       (if (or (eq (car name) '%%defunsetf)
 			  (eq (car name) 'SETF))
           (make-symbol (string-concat "%%USETF-" (string (cadr name))))
-          (%error "illegal function name"))))
+          (progn
+			(print name)
+			(%error "illegal function name")))))
 
 (defmacro defun (name args &rest body)
   "Define a function."
