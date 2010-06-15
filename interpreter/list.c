@@ -216,10 +216,17 @@ trelist_copy_tree (treptr l)
 treptr
 trelist_copy (treptr l)
 {
+	treptr cdr;
+	treptr ret;
+
     if (TREPTR_IS_ATOM(l))
 		return l;
 
-    return CONS(CAR(l), trelist_copy (CDR(l)));
+    cdr = trelist_copy (CDR(l));
+	tregc_push (cdr);
+    ret = CONS(CAR(l), cdr);
+	tregc_pop ();
+    return ret;
 }
 
 /*

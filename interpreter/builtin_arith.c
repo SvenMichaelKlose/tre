@@ -1,5 +1,5 @@
 /*
- * nix operating system project tre interpreter
+ * TRE interpreter
  * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
  *
  * Built-in number-related functions
@@ -51,7 +51,7 @@ double treeval_op_logxor (double a, double b) { return (ulong) a ^ (ulong) b; }
 /** section numbers **/
 
 /*tredoc
-  (cmd :name "NUMBER+" ::essential t
+  (cmd :name "NUMBER+" :essential t
 	(arg :name "args" :occurrence "rest")
 	(para "Returns the sum of its arguments."))
 */
