@@ -31,7 +31,9 @@
   (funinfo-env-reset fi)
   (dolist (i (append (funinfo-used-env fi)
 					 (funinfo-lexicals fi)))
-    (funinfo-env-add fi i)))
+    (funinfo-env-add fi i))
+  (when (transpiler-stack-locals? *current-transpiler*)
+    (funinfo-env-add-many fi (funinfo-args fi))))
 
 (defun opt-places-remove-unused-body (x)
   (let fi (get-lambda-funinfo x)
