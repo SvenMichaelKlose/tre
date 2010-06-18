@@ -5,11 +5,11 @@
 
 (defun %error (msg)
   (alert msg)
-  (inoke-native-debugger))
+  (invoke-native-debugger))
 
 (dont-inline error)
 
 (defun error (fmt &rest args)
   (alert (+ "Error :" (apply #'format nil fmt args)))
   (terpri *standard-log*)
-  (inoke-native-debugger))
+  (invoke-native-debugger))
