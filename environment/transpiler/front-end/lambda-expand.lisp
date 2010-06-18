@@ -122,14 +122,15 @@
 					(atom x)
 	  				  x
 				    (named-function-expr? x)
-					  (with ((new-x new-exported-closures) (lambda-expand-0 ..x. export-lambdas?
-																			:lambda-name .x.))
+					  (with ((new-x new-exported-closures)
+							     (lambda-expand-0 ..x. export-lambdas?
+												  :lambda-name .x.))
     					(append! exported-closures
 		     			         new-exported-closures)
 						new-x)
-					    
 	  				(lambda? x)
-  					  (with ((new-x new-exported-closures) (lambda-expand-0 x export-lambdas?))
+  					  (with ((new-x new-exported-closures)
+							     (lambda-expand-0 x export-lambdas?))
     				    (append! exported-closures
 		     			     	 new-exported-closures)
 						new-x)
