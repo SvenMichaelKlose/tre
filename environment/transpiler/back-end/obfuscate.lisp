@@ -22,6 +22,10 @@
 	   (not (eq t (href (transpiler-obfuscations tr)
 						(make-symbol (symbol-name x)))))))
 
+(defun transpiler-obfuscate-nil (tr)
+  (when (transpiler-obfuscate? tr)
+	(transpiler-obfuscate-symbol-0 tr nil)))
+
 (defun transpiler-obfuscate-symbol (tr x)
   (if (must-obfuscate-symbol? tr x)
 	  (transpiler-obfuscate-symbol-0 tr x)
