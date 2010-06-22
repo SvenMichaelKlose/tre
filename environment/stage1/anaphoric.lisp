@@ -1,10 +1,6 @@
 ;;;; TRE environment
-;;;; Copyright (c) 2005-2006,2008-2009 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2005-2006,2008-2010 Sven Klose <pixel@copei.de>
 
-;tredoc
-; "Like IF but stores the result of the predicate in new local variable !."
-; (courtesy-of onlisp)
-; (see-also if)
 (defmacro aif (predicate &rest alternatives)
   (if alternatives
    `(let ! ,predicate
@@ -13,31 +9,18 @@
 		  (aif ,@(cdr alternatives))))
    predicate))
 
-; "Like WHEN but stores the result of the predicate in new local variable !."
-; (courtesy-of onlisp)
-; (see-also when)
 (defmacro awhen (predicate &rest body)
   `(let ! ,predicate
      (when !
 	   ,@body)))
 
-; "Like IF but stores the result of the predicate in a new local variable."
-; (arg name "Name of the new local variable.")
-; (courtesy-of onlisp)
-; (see-also if)
-(defmacro anif (name predicate consequence &optional alternative)
-  `(let ,name ,predicate
-     (if ,name
-		 ,consequence
-		 ,alternative)))
+(defmacro alet (obj &rest body)
+  `(let ! ,obj
+	 ,@body))
 
-; "Like WHEN but stores the result of the predicate in a new local variable."
-; (arg name "Name of the new local variable.")
-; (courtesy-of onlisp)
-; (see-also when)
-(defmacro anwhen (name predicate &rest body)
-  `(let ,name ,predicate
-     (when ,name
-	   ,@body)))
+(defmacro aprog1 (obj &rest body)
+  `(let ! ,obj
+	 ,@body
+	 !))
 
 ; XXX tests missing
