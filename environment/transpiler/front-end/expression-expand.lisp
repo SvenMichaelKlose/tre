@@ -93,13 +93,15 @@
 	   (symbolp x)
 	   (not (or (functionp x)
 				(keywordp x)
+				(member x (transpiler-predefined-symbols *current-transpiler*)
+						:test #'eq)
 				(in? x nil t '~%ret 'this)
 	   			(funinfo-in-this-or-parent-env? *expex-funinfo* x)
 				(assoc x *variables*)
 	       		(expander-has-macro? (transpiler-std-macro-expander *current-transpiler*) x)
 		       	(expander-has-macro? (transpiler-macro-expander *current-transpiler*) x)))
-	   (warn "symbol ~A is not defined in function ~A.~%"
-			 (symbol-name x) (funinfo-get-name *expex-funinfo*))))
+	   (error "symbol ~A is not defined in function ~A.~%"
+			  (symbol-name x) (funinfo-get-name *expex-funinfo*))))
 
 ;;;; PREDICATES
 

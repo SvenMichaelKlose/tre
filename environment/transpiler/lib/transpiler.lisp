@@ -80,6 +80,8 @@
   (exported-closures nil)
   (rename-all-args? nil)
 
+  (predefined-symbols nil)
+
   ; Literals that must be declared or cached before code with them is emitted.
   (compiled-chars (make-hash-table :test #'=))
   (compiled-numbers (make-hash-table :test #'=))
