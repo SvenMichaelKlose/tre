@@ -12,6 +12,9 @@
   count             ; Number of elements stored in the table.
   )
 
+(defun hash-table? (x)
+  (%hash-table-p x))
+
 (defun make-hash-table (&key (test #'eq)
 							 (size *default-hash-size*))
   "Create a new hash table."
