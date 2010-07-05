@@ -1,5 +1,5 @@
 ;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 
 (defun arrayp (x) (instanceof x *array))
 
@@ -11,8 +11,8 @@
       (a.push i))))
 
 (defun array-list (x &optional (n 0))
-  ;(declare type array x) ; fscks up with *h-t-m-l-collection
-  (when (%%%< n x.length)
+  (when (and x
+			 (%%%< n x.length))
     (cons (aref x n)
 		  (array-list x (1+ n)))))
 
