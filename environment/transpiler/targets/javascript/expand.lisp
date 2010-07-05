@@ -116,10 +116,10 @@
 ;; Iterate over array.
 (define-js-std-macro doeach ((var seq &rest result) &rest body)
   (with-gensym (evald-seq idx)
-    `(with (,evald-seq ,seq)
+    `(let ,evald-seq ,seq
 	   (when ,evald-seq
 	     (dotimes (,idx (%slot-value ,evald-seq length) ,@result)
-	       (with (,var (aref ,evald-seq ,idx))
+	       (let ,var (aref ,evald-seq ,idx)
              ,@body))))))
 
 ;; Make type predicate function.
