@@ -1,13 +1,9 @@
 ;;;;; TRE environment
-;;;;; Copyright (c) 2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2010 Sven Klose <pixel@copei.de>
 
-(defun unique-0 (head tail)
-  (when head
-	(if (= head tail.)
-	  (unique-0 head .tail)
-	  (cons head
-			(unique-0 tail. .tail)))))
-
-(defun unique (x &key (test #'<=))
-  (let sorted (sort x :test test)
-    (unique-0 sorted. .sorted)))
+(defun unique (x &key (test #'eql))
+  (when x
+	(if (member x. .x :test test)
+	    (unique .x :test test)
+		(cons x.
+	    	  (unique .x :test test)))))
