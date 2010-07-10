@@ -4,13 +4,13 @@
 (defun %member-r (elm lst)
   (dolist (i lst)
     (when (equal elm i)
-	  (return t))))
+	  (return i))))
 
 (defun member (elm &rest lsts)
   "Test if object is a member of any of the pure lists."
   (dolist (i lsts)
-    (when (%member-r elm i)
-	  (return t))))
+    (awhen (%member-r elm i)
+	  (return !))))
 
 ;(define-test "MEMBER finds elements"
 ;  ((member 's '(i) '(l i k e) '(l i s p)))
