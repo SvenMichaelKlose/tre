@@ -31,7 +31,7 @@
 (defun %member-if-r (pred lst)
   (if lst
       (if (funcall pred (car lst))
-		  lst
+		  (car lst)
           (%member-if-r pred (cdr lst)))))
 
 (defun member-if (pred &rest lsts)
