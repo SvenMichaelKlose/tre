@@ -40,6 +40,44 @@ unsigned treeval_recursions;
  *
  * 'func'        Pointer to function atom. Its value is the table index.
  * 'expr'        Expression to evaluate.
+ */
+#if 0
+treptr
+treeval_funcall_compiled_funref (treptr funref, treptr expr)
+{
+    treptr  args;		/* Arguments; second to last expression element. */
+    treptr  funcdef;	/* Function definition tree. */
+    treptr  expforms;	/* Expanded argument forms. */
+    treptr  expvals;    /* Expanded argument values. */
+    treptr  ret;		/* Function return value. */
+    treptr  forms;		/* Unexpanded argument definition. */
+    treptr  body;		/* Function body. */
+    treptr  ghost;
+
+    args = CDR(expr);
+	func = CADDR(funref);
+	ghost = CADDDR(funref);
+    funcdef = TREATOM_VALUE(func);
+    forms = CAR(funcdef);
+    body = CDR(funcdef);
+
+    /* Expand argument keywords. */
+    trearg_expand (&expforms, &expvals, forms, args, do_argeval);
+    tregc_push (CONS(expforms, expvals));
+
+    /* Evaluate body. */
+    ret = treeval_list (body);
+    tregc_retval (ret);
+
+    return ret;
+}
+#endif
+
+/*
+ * Execute user-defined function.
+ *
+ * 'func'        Pointer to function atom. Its value is the table index.
+ * 'expr'        Expression to evaluate.
  * 'do_argeval'  If not 0 all arguments are evaluated.
  */
 treptr
@@ -314,7 +352,7 @@ treeval (treptr x)
     treptr val = x;
 
 	CHKPTR(x);
-#ifdef TRE_DIAGNOSTICS_GC_STACK
+#ifdef TRE_DIAGNOSTICS
     treptr gcss = tregc_save_stack;
 #endif
 
@@ -361,7 +399,7 @@ treeval (treptr x)
     trethread_pop_call ();
     tregc_pop ();
 
-#ifdef TRE_DIAGNOSTICS_GC_STACK
+#ifdef TRE_DIAGNOSTICS
     if (gcss != tregc_save_stack)
 		treerror_internal (x, "GC stack corrupted");
 #endif

@@ -249,7 +249,7 @@ trebuiltin_malloc (treptr args)
 }
 
 /*tredoc
-  (cmd name "%MALLOC-EXEC" type "bt"
+  (cmd name "%MALLOC" type "bt"
     (description
 	  "Allocates a block of executable memory.")
 	(arg name "num-bytes" type "INTEGER")

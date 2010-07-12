@@ -1,6 +1,6 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
+ * TRE tree processor
+ * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
  *
  * Array related section.
  */
@@ -62,7 +62,6 @@ trearray_get (treptr sizes)
     ulong   size = trearray_get_size (sizes);
 
     a = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_ARRAY, treptr_nil);
-	tregc_push (a);
     treatom_set_value (a, trelist_copy (sizes));
     TREATOM_DETAIL(a) = trearray_get_raw (size);
     if (TREATOM_DETAIL(a) == NULL) {
@@ -71,7 +70,6 @@ trearray_get (treptr sizes)
         if (TREATOM_DETAIL(a) == NULL)
 		    return treerror (treptr_invalid, "out of memory");
 	}
-	tregc_pop ();
     return a;
 }
 

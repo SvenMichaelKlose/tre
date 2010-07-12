@@ -279,7 +279,6 @@ trespecial_apply_compiled (treptr list)
 {
     treptr  func;
     treptr  args = treptr_nil;
-    treptr  copied_args;
     treptr  fake;
     treptr  efunc;
 	treptr  res;
@@ -290,9 +289,7 @@ trespecial_apply_compiled (treptr list)
 
 	tregc_push (list);
     func = CAR(list);
-    copied_args = trelist_copy (CDR(list));
-	tregc_push (copied_args);
-    args = trespecial_apply_compiled_args (copied_args);
+    args = trespecial_apply_compiled_args (trelist_copy (CDR(list)));
 
 	if (trespecial_is_compiled_funcall (func)) {
 		tregc_push (args);
@@ -305,14 +302,12 @@ trespecial_apply_compiled (treptr list)
 		);
 		tregc_pop ();
 		tregc_pop ();
-		tregc_pop ();
 		return res;
 	}
 
 	if (TREPTR_IS_FUNCTION(func) && TREATOM_COMPILED_FUN(func)) {
 		tregc_push (args);
 		res = trespecial_apply_compiled_call (func, args);
-		tregc_pop ();
 		tregc_pop ();
 		tregc_pop ();
 		return res;
@@ -328,7 +323,6 @@ trespecial_apply_compiled (treptr list)
 		res = trespecial_apply_compiled_call (efunc, args);
 		tregc_pop ();
 		tregc_pop ();
-		tregc_pop ();
 		return res;
 	}
 
@@ -342,7 +336,6 @@ trespecial_apply_compiled (treptr list)
         res = treerror (func, "function expected");
 
     tregc_pop ();
-	tregc_pop ();
 	tregc_pop ();
     TRELIST_FREE_EARLY(fake);
 
@@ -436,11 +429,9 @@ trespecial_macro (treptr list)
     treptr  f;
     treptr  expr = trelist_copy (list);
 
-	tregc_push (expr);
     f = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_MACRO, expr);
 	tregc_push (f);
     treenv_create (f);
-	tregc_pop ();
 	tregc_pop ();
 
     return f;
@@ -456,11 +447,10 @@ trespecial_macro (treptr list)
 treptr
 trespecial_special (treptr list)
 {
+    treptr  expr = trelist_copy (list);
     treptr  ret;
-    treptr  expr;
 
     /* Create macro atom. */
-    expr = trelist_copy (list);
     tregc_push (expr);
     ret = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_USERSPECIAL, expr);
     tregc_pop ();

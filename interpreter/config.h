@@ -27,7 +27,6 @@ typedef int bool;
 
 #if 0
 #define TRE_DIAGNOSTICS		/* Do diagnostic checks. */
-#define TRE_DIAGNOSTICS_GC_STACK
 #define TRE_GC_DEBUG		/* Run garbage collector everywhere. */
 #define TRE_VERBOSE_GC 		/* Print statistics after GC. Implies TRE_VERBOSE_SYMBOL_GC. */
 #define TRE_VERBOSE_SYMBOL_GC 	/* Print statistics after GC. */

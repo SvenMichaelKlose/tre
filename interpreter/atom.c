@@ -1,5 +1,5 @@
 /*
- * TRE interpreter
+ * TRE tree processor
  * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
  *
  * Atom related section.
@@ -140,8 +140,7 @@ void
 treatom_set_name (treptr atom, char *name)
 {
 	if (TREATOM_VALUE(atom) != atom)
-		trewarn (atom, "changing name of %s '%s'",
-				 treerror_typename (TREPTR_TYPE(atom)), TREATOM_NAME(atom));
+		trewarn (atom, "changing name of %s '%s'", treerror_typename (TREPTR_TYPE(atom)), TREATOM_NAME(atom));
     TREATOM_NAME(atom) = name;
 }
 
@@ -178,8 +177,7 @@ treatom_set_function (treptr atom, treptr value)
 {
 	if (TREATOM_FUN(atom) != treptr_nil && TREATOM_BINDING(atom) == treptr_nil)
 		trewarn (atom, "redefining function of %s '%s'",
-					   treerror_typename (TREPTR_TYPE(atom)),
-					   TREATOM_NAME(atom));
+					   treerror_typename (TREPTR_TYPE(atom)), TREATOM_NAME(atom));
     return TREATOM_FUN(atom) = value;
 }
 
@@ -343,8 +341,7 @@ treatom_body_to_var (treptr body)
 	treptr    tmp;
 
     for (a = 0; a < NUM_ATOMS; a++) {
-        if (tre_atoms[a].type != TRETYPE_FUNCTION
-				&& tre_atoms[a].type != TRETYPE_MACRO)
+        if (tre_atoms[a].type != TRETYPE_FUNCTION && tre_atoms[a].type != TRETYPE_MACRO)
 	    	continue;
 
         tmp = CDR(tre_atoms[a].value);
