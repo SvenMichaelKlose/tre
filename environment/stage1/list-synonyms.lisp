@@ -1,6 +1,5 @@
-;;;; nix operating system project
-;;;; list processor environment
-;;;; Copyright (c) 2006-2008 Sven Klose <pixel@copei.de>
+;;;; TRE environment
+;;;; Copyright (c) 2006-2008,2010 Sven Klose <pixel@copei.de>
 
 (defconstant *first-to-tenth*
   '(first second third fourth fifth sixth seventh eighth ninth tenth))
@@ -15,8 +14,11 @@
      ,@(let* ((l nil)
 			  (i 0))
          (mapcar #'((name)
-           		   (push `(defun ,name (x)
-	                        (car ,(%make-cdr i)))
+           		   (push `(block nil
+							(defun ,name (x)
+	                          (car ,(%make-cdr i)))
+						    (defun (setf ,name) (v x)
+							  (rplaca ,(%make-cdr i) v)))
 						 l)
 				   (incf i))
 			 *first-to-tenth*)
