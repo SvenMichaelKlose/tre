@@ -12,7 +12,8 @@
 
 (defun find-if (pred seq &key (start nil) (end nil)
 							  (from-end nil) (with-index nil))
-  (when seq
+  (when (and seq
+			 (integer< 0 (length seq)))
     (let* ((e (or end (integer-1- (length seq))))
 	 	   (s (or start 0)))
       ; Make sure the start and end indices are sane.
