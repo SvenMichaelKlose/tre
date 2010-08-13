@@ -3,3 +3,6 @@
 
 (defmacro +! (place &rest vals)
   `(setf ,place (+ ,place ,@vals)))
+
+(defmacro integer+! (place &rest vals)
+  `(setf ,place (integer+ ,place ,@vals)))
