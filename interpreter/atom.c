@@ -286,7 +286,6 @@ treatom_get (char * symbol, treptr package)
 {   
     treptr  atom;
 	double  dvalue;
-	long	ivalue;
 
     /* Reuse existing atom. */
     atom = treatom_seek (symbol, package);
@@ -295,13 +294,10 @@ treatom_get (char * symbol, treptr package)
 
     /* Create number. */
     if (trenumber_is_value (symbol)) {
-		if (sscanf (symbol, "%ld", &ivalue) == 1)
-			dvalue = (double) ivalue;
-		else
-			if (sscanf (symbol, "%lF", &dvalue) != 1) {
-				printf ("Illegal number: '%s'", symbol);
-				treerror (treptr_nil, "illegal number format");
-			}
+		if (sscanf (symbol, "%lf", &dvalue) != 1) {
+			printf ("Illegal number: '%s'", symbol);
+			treerror (treptr_nil, "illegal number format");
+		}
         return treatom_number_get (dvalue, TRENUMTYPE_FLOAT);
 	}
 
