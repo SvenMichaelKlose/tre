@@ -74,6 +74,6 @@
 
 ;; XXX ECMAScript only.
 (defun %subseq-string (seq start end)
-  (if (= start end)
+  (if (integer= start end)
 	  ""
       (seq.substr start end)))

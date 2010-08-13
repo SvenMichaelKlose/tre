@@ -67,12 +67,17 @@
 
 ;(defun c-codegen-function-prologue-for-local-variables (fi num-vars)
 ;  `(,@(c-line "treptr __ret")
-;    ,@(c-line "treptr * __old = trestack_ptr")
+;    ;,@(c-line "treptr * __old = trestack_ptr")
 ;    ,@(when (< 1 num-vars)
 ;	   `(("int __c; for (__c = " ,num-vars "; __c > 0; __c--)")))
 ;    ,@(c-line "    *--trestack_ptr = treptr_nil")
 ;	,@(when (transpiler-stack-locals? *current-transpiler*)
-;		(mapcar (fn `(%setq ,(place-assign (place-expand-0 fi _))
+;		(mapcar (fn
+;				  (when (eq (place-assign (place-expand-0 fi _)) _)
+;					(print '===========================)
+;					(print _)
+;					(print-funinfo fi))
+;				  `(%setq ,(place-assign (place-expand-0 fi _))
 ;						    ,_))
 ;			    (funinfo-local-args fi)))))
 
@@ -100,7 +105,7 @@
 ;    `((%setq "__ret" ,(place-assign (place-expand-0 fi '~%ret)))
 ;      ,@(when (< 0 num-vars)
 ;		  `(,(c-line "trestack_ptr += " num-vars)))
-;	  ("if (trestack_ptr != __old) { printf (\"MUH!\\n\"); CRASH(); }")
+;;	  ("if (trestack_ptr != __old) { printf (\"MUH!\\n\"); CRASH(); }")
       (%function-return ,fi-sym))))
 
 (define-c-macro %function-return (fi-sym)

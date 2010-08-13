@@ -24,8 +24,8 @@
   (with (tr *php-transpiler*
     	 base  (transpiler-sighten tr *php-base*)
     	 base2 (transpiler-sighten tr *php-base2*)
-		 base-debug (when *transpiler-assert*
-				      (transpiler-sighten tr *php-base-debug-print*))
+;		 base-debug (when *transpiler-assert*
+;				      (transpiler-sighten tr *php-base-debug-print*))
 		 tests (when (eq t *have-environment-tests*)
 				 (transpiler-sighten tr (make-environment-tests)))
 	 	 user (transpiler-sighten-files tr files)
@@ -42,8 +42,8 @@
 			   (when base?
  	             (transpiler-transpile tr base2))
  	           (transpiler-transpile tr deps)
-			   (when (and base? *transpiler-assert*)
- 		         (transpiler-transpile tr base-debug))
+;			   (when (and base? *transpiler-assert*)
+; 		         (transpiler-transpile tr base-debug))
  	           (transpiler-transpile tr tests)
  	           (transpiler-transpile tr user))
 	       f)

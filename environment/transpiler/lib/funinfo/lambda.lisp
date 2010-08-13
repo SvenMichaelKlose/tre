@@ -55,3 +55,12 @@
             (if fi-sym
                 ..x
 				x))))
+
+(defun function-form-body-args-and-body (x)
+  (if .x
+	  .x.
+      x.))
+
+(defun function-form-body-funinfo-sym (x)
+  (when .x
+	x.))

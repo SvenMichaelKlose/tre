@@ -20,9 +20,10 @@
 	   t))
   t)
 
-;(define-test "MEMBER finds elements with user predicate"
-;  ((member "lisp" '("tre" "lisp") :test #'string=))
-;  t)
+(define-test "MEMBER finds elements with user predicate"
+  ((if (member "lisp" '("tre" "lisp") :test #'string=)
+	  t))
+  t)
 
 (define-test "MEMBER detects foureign elements"
   ((member 'A '(l i s p)))

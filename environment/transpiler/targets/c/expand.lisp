@@ -1,16 +1,11 @@
 ;;;;; Transpiler: TRE to JavaScript
 ;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 ;;;;;
-;;;;; Expansion of alternative standard macros.
+;;;;; Override alternative standard macros.
 
-;; Define macro that is expanded _before_ standard macros.
 (defmacro define-c-std-macro (&rest x)
   `(define-transpiler-std-macro *c-transpiler* ,@x))
 
-;; (DEFUN ...)
-;;
-;; Assign function to global variable.
-;; XXX This could be generic if there wasn't *JS-TRANSPILER*.
 (defun c-essential-defun (name args &rest body)
   (when *show-definitions*
     (late-print `(defun ,name ,@args)))
@@ -47,7 +42,6 @@
        (%var ,name)
 	   (%setq ,name ,val))))
 
-;(define-c-std-macro cons (a d) `(_trelist_get ,a ,d))
 (define-c-std-macro eq (a b) `(%eq ,a ,b))
 
 (mapcan-macro _
@@ -55,10 +49,6 @@
 	  consp atom numberp stringp arrayp functionp builtinp)
   `((define-c-std-macro ,_ (x)
 	  `(%inline (,($ '% _) ,,x)))))
-
-;(define-c-std-macro %lx (lexicals fun)
-;  (eval (macroexpand `(with ,(mapcan (fn `(,_ ',_)) .lexicals.)
-;                        ,fun))))
 
 (define-c-std-macro slot-value (obj slot)
   `(%slot-value ,obj (%quote ,slot)))
@@ -80,7 +70,6 @@
 	  `(aref ,arr (%transpiler-native ,idx.))
 	  `(aref ,arr ,@idx)))
 	  
-; Convert MAPCAR to faster FILTER if possible.
 (define-c-std-macro mapcar (fun &rest lsts)
   `(,(if (= 1 (length lsts))
          'filter

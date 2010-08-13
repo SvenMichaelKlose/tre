@@ -75,6 +75,9 @@
   (funinfo-env (funinfo-parent fi)))
 
 (defun funinfo-env-add (fi x)
+  (unless (atom x)
+	(print x)
+	(error "atom expected"))
   (unless (funinfo-in-env? fi x)
 	; XXX (error "double definition of ~A in ~A" x (funinfo-env fi))
   	(setf (href (funinfo-env-hash fi) x) t)

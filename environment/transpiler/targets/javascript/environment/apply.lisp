@@ -11,6 +11,8 @@
 		(error "APPLY: first argument is not a function: ~A" fun))
 	  (unless (listp l)
 		(error "APPLY: last argument is not a cell")))
+;	(awhen fun.tre-args
+;		(argument-expand 'runtime-argexp ! args))
 	(aif fun.tre-exp
 		 (!.apply nil (%transpiler-native "[" args "]"))
     	 (fun.apply nil (list-array args)))))

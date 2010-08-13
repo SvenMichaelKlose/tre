@@ -68,16 +68,15 @@
 (defvar *delayed-var-inits* nil)
 
 (defun transpiler-import-wanted-function (tr x)
-  (append 
-      (transpiler-import-exported-closures tr)
-      (unless (transpiler-defined-function tr x)
-        (transpiler-add-emitted-wanted-function tr x)
-        (let fun (symbol-function x)
-          (when (functionp fun)
-		    (setf *imported-something* t)
-            (transpiler-sighten tr
-      	        `((defun ,x ,(function-arguments fun)
-	                ,@(function-body fun)))))))))
+  (append (transpiler-import-exported-closures tr)
+      	  (unless (transpiler-defined-function tr x)
+        	(transpiler-add-emitted-wanted-function tr x)
+            (let fun (symbol-function x)
+              (when (functionp fun)
+		        (setf *imported-something* t)
+                (transpiler-sighten tr
+      	            `((defun ,x ,(function-arguments fun)
+	                    ,@(function-body fun)))))))))
 
 (defun transpiler-import-wanted-functions (tr)
   (append

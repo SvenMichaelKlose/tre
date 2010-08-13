@@ -10,14 +10,14 @@
       	    `(string-concat ,@args)))
 	(every #'stringp x)
 	  (apply #'string-concat x)
-	(not (= 2 (length x)))
-      `(+ ,@x)
-	(and (some #'characterp x) ; XXX would still mix with other types in vars
-		 (not (some #'integerp x)))
-      `(character+ ,@x)
-	(and (some #'integerp x)
-		 (not (some #'characterp x)))
-      `(integer+ ,@x)
+;	(not (= 2 (length x)))
+;      `(+ ,@x)
+;	(and (some #'characterp x) ; XXX would still mix with other types in vars
+;		 (not (some #'integerp x)))
+;      `(character+ ,@x)
+;	(and (some #'integerp x)
+;		 (not (some #'characterp x)))
+;      `(integer+ ,@x)
     `(+ ,@x)))
 
 (mapcan-macro _

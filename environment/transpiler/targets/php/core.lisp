@@ -1,5 +1,5 @@
 ;;;;; Transpiler: TRE to PHP
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; This are the low-level transpiler definitions of
 ;;;;; basic functions to simulate basic data types.
@@ -23,9 +23,9 @@
 		"cons.lisp"
 		));"symbol.lisp"))
 
-(defvar *php-base-debug-print*
-		(php-load-base *php-env-path*
-			"debug-print.lisp"))
+;(defvar *php-base-debug-print*
+;		(php-load-base *php-env-path*
+;			"debug-print.lisp"))
 
 ;;;; Second part of the core functions
 ;;;;
@@ -42,7 +42,7 @@
 			"bind.lisp"
 			"character.lisp"
 			"equality.lisp"
-			"error.lisp"
+			"../../../environment/error.lisp"
 			"late-argdefs.lisp"
 			"late-cons.lisp"
 			"late-symbol.lisp"

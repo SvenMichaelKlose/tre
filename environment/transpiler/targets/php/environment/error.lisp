@@ -11,5 +11,4 @@
 
 (defun error (fmt &rest args)
   (alert (+ "Error :" (apply #'format nil fmt args)))
-  (terpri *standard-log*)
   (invoke-native-debugger))

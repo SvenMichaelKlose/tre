@@ -218,8 +218,7 @@
 					  (atom a)
 			 		  (atom d.))
 				   ; Remove first of two subsequent tags.
-				   (awhen (find-if (fn eq a ._)
-								   removed-tags)
+				   (awhen (member (fn eq a ._) removed-tags)
 					 (rplacd ! .x.))
 				   (acons! a .x. removed-tags)
 				   (reduce-tags d))))
