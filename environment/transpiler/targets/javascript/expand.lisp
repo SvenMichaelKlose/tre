@@ -3,6 +3,12 @@
 ;;;;;
 ;;;;; Overriding standard macros.
 
+(defvar *log-functions?* nil)
+
+(defmacro log-functions (x)
+  (setf *log-functions?* x)
+  nil)
+
 (defmacro define-js-std-macro (&rest x)
   `(define-transpiler-std-macro *js-transpiler* ,@x))
 
@@ -49,6 +55,8 @@
 				   (,@(awhen fi-sym
 						`(%funinfo ,!))
 					,a
+		 			,(when *log-functions?*
+					   `(log ,(symbol-name n)))
    		            ,@body))))))
 
 (define-js-std-macro define-native-js-fun (name args &rest body)
@@ -140,7 +148,7 @@
   `(not (= "undefined" (%js-typeof ,x))))
 
 (define-js-std-macro dont-obfuscate (&rest symbols)
-  (when *show-definitions?*
+  (when *show-definitions*
     (late-print `(dont-obfuscate ,@symbols)))
   (apply #'transpiler-add-obfuscation-exceptions
 		 *js-transpiler* symbols)
