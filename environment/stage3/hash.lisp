@@ -32,7 +32,7 @@
     (do ((i 0 (integer-1+ i)))
         ((or (integer< 4 i)
 			 (integer= i l))
-		 (mod k (%hash-table-size h)))
+		 (mod (abs k) (%hash-table-size h)))
       (setf k (integer+ (<< k 4) (elt str i))))))
 
 (defun %make-hash-index (h key)
