@@ -3,14 +3,13 @@
 ;;;;;
 ;;;;; Overriding standard macros.
 
-(defvar *log-functions?* nil)
-
-(defmacro log-functions (x)
-  (setf *log-functions?* x)
-  nil)
-
 (defmacro define-js-std-macro (&rest x)
   `(define-transpiler-std-macro *js-transpiler* ,@x))
+
+(define-js-std-macro %defsetq (&rest x)
+  `(progn
+	 (%var ,x.)
+	 (%setq ,@x)))
 
 (defun body-with-noargs-tag (x)
   `(,x. no-args ,@.x))
@@ -40,27 +39,8 @@
   			`(function ,@x)))
   	  `(function ,@x)))
 
-(defun js-essential-defun (name args &rest body)
-  (when *show-definitions*
-    (late-print `(defun ,name ,@(awhen args (list !)))))
-  (with (n (%defun-name name)
-		 tr *js-transpiler*
-		 (fi-sym a) (split-funinfo-and-args args))
-    (transpiler-add-function-args tr n a)
-    (transpiler-add-function-body tr n (remove 'no-args body :test #'eq))
-	(transpiler-add-defined-function tr n)
-    `(progn
-       (%var ,n)
-       (%setq ,n (function
-				   (,@(awhen fi-sym
-						`(%funinfo ,!))
-					,a
-		 			,(when *log-functions?*
-					   `(log ,(symbol-name n)))
-   		            ,@body))))))
-
 (define-js-std-macro define-native-js-fun (name args &rest body)
-  (apply #'js-essential-defun name args body))
+  (apply #'shared-essential-defun name args body))
 
 (define-js-std-macro defun (name args &rest body)
   (with-gensym g
@@ -70,14 +50,11 @@
       `(progn
 		 (%var ,g)
 		 (%setq ,g (%unobfuscated-lookup-symbol ,(symbol-name n) nil))
-	     ,(apply #'js-essential-defun name args body)
+	     ,(apply #'shared-essential-defun name args body)
 		 (setf (symbol-function ,g) ,n)))))
 
-(define-js-std-macro defmacro (name &rest x)
-  (when *show-definitions*
-    (late-print `(defmacro ,name ,x.)))
-  (eval (macroexpand `(define-js-std-macro ,name ,@x)))
-  nil)
+(define-js-std-macro defmacro (&rest x)
+  (apply #'shared-defmacro '*js-transpiler* x))
 
 (define-js-std-macro defvar (name val)
   (let tr *js-transpiler*
@@ -168,7 +145,4 @@
                         ,fun))))
 
 (define-js-std-macro mapcar (fun &rest lsts)
-  `(,(if (= 1 (length lsts))
-	     'filter
-	     'mapcar)
-    ,fun ,@lsts))
+  (apply #'shared-mapcar fun lsts))

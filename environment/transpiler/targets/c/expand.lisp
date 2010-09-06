@@ -6,29 +6,14 @@
 (defmacro define-c-std-macro (&rest x)
   `(define-transpiler-std-macro *c-transpiler* ,@x))
 
-(defun c-essential-defun (name args &rest body)
-  (when *show-definitions*
-    (late-print `(defun ,name ,@args)))
-  (with (n (%defun-name name)
-		 tr *c-transpiler*
-		 (fi-sym a) (split-funinfo-and-args args))
-    (transpiler-obfuscate-symbol tr n)
-    (transpiler-add-function-args tr n a)
-	(transpiler-add-defined-function tr n)
-    `(%setq ,n
-	        #'(,@(awhen fi-sym
-				   `(%funinfo ,!))
-			   ,a
-   		         ,@body))))
+(define-c-std-macro %defsetq (&rest x)
+  `(%setq ,@x))
 
 (define-c-std-macro defun (&rest x)
-  (apply #'c-essential-defun x))
+  (apply #'shared-essential-defun x))
 
-(define-c-std-macro defmacro (name &rest x)
-  (when *show-definitions*
-    (late-print `(defmacro ,name ,@x.)))
-  (eval (macroexpand `(define-c-std-macro ,name ,@x)))
-  nil)
+(define-c-std-macro defmacro (&rest x)
+  (apply #'shared-defmacro '*c-transpiler* x))
 
 (define-c-std-macro defvar (name val)
   (let tr *c-transpiler*
@@ -71,7 +56,4 @@
 	  `(aref ,arr ,@idx)))
 	  
 (define-c-std-macro mapcar (fun &rest lsts)
-  `(,(if (= 1 (length lsts))
-         'filter
-         'mapcar)
-        ,fun ,@lsts))
+  (apply #'shared-mapcar fun lsts))

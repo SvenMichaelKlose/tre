@@ -7,6 +7,9 @@
 (defmacro define-php-std-macro (&rest x)
   `(define-transpiler-std-macro *php-transpiler* ,@x))
 
+(define-php-std-macro %defsetq (&rest x)
+  `(%setq ,@x))
+
 ;; (FUNCTION symbol | lambda-expression)
 ;; Add symbol to list of wanted functions or obfuscate arguments of
 ;; LAMBDA-expression.
@@ -14,44 +17,14 @@
   `(function ,name ,@(unless (eq 'only-name x)
 					   (list x))))
 
-(defun php-assert-body (x)
-  (if (and (not *transpiler-assert*) ; XXX should be removed by optimizer anyway
-           (stringp x.))
-      .x
-      x))
-
-;; (DEFUN ...)
-;;
-;; XXX Assign function to symbol
-;; XXX This could be generic.
-(defun php-essential-defun (name args &rest body)
-  (when *show-definitions*
-    (late-print `(defun ,name ,@(awhen args (list !)))))
-  (with (n (%defun-name name)
-		 asserted-body (php-assert-body body)
-		 tr *php-transpiler*
-		 (fi-sym a) (split-funinfo-and-args args))
-    (transpiler-add-function-args tr n a)
-    (transpiler-add-function-body tr n (remove 'no-args
-											   asserted-body
-											   :test #'eq))
-	(transpiler-add-defined-function tr n)
-    `(function ,n (,@(awhen fi-sym
-					   `(%funinfo ,!))
-				   ,a
-   		           ,@asserted-body))))
-
 (define-php-std-macro define-native-php-fun (name args &rest body)
-  (apply #'php-essential-defun name args body))
+  (apply #'shared-essential-defun name args body))
 
 (define-php-std-macro defun (&rest args)
-  (apply #'php-essential-defun args))
+  (apply #'shared-essential-defun args))
 
-(define-php-std-macro defmacro (name &rest x)
-  (when *show-definitions*
-    (late-print `(defmacro ,name ,(awhen x. (list !)))))
-  (eval (macroexpand `(define-php-std-macro ,name ,@x)))
-  nil)
+(define-php-std-macro defmacro (&rest x)
+  (apply #'shared-defmacro '*php-transpiler* x))
 
 (define-php-std-macro defvar (name val)
   (let tr *php-transpiler*
