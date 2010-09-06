@@ -65,58 +65,12 @@
     (atom x)			(error "codegen: arguments and body expected: ~A" x)
 	(c-codegen-function name x)))
 
-;(defun c-codegen-function-prologue-for-local-variables (fi num-vars)
-;  `(,@(c-line "treptr __ret")
-;    ;,@(c-line "treptr * __old = trestack_ptr")
-;    ,@(when (< 1 num-vars)
-;	   `(("int __c; for (__c = " ,num-vars "; __c > 0; __c--)")))
-;    ,@(c-line "    *--trestack_ptr = treptr_nil")
-;	,@(when (transpiler-stack-locals? *current-transpiler*)
-;		(mapcar (fn
-;				  (when (eq (place-assign (place-expand-0 fi _)) _)
-;					(print '===========================)
-;					(print _)
-;					(print-funinfo fi))
-;				  `(%setq ,(place-assign (place-expand-0 fi _))
-;						    ,_))
-;			    (funinfo-local-args fi)))))
-
-(defun c-codegen-function-prologue-for-local-variables (fi num-vars)
-  `(,@(c-line "treptr _local_array = trearray_make (" num-vars ")")
-    ,@(c-line "tregc_push (_local_array)")
-    ,@(c-line "const treptr * _locals = (treptr *) TREATOM_DETAIL(_local_array)")
-	,@(when (transpiler-stack-locals? *current-transpiler*)
-	(mapcar (fn `(%setq ,(place-assign (place-expand-0 fi _))
-						    ,_))
-			    (funinfo-local-args fi)))))
-
 (define-c-macro %function-prologue (fi-sym)
   (with (fi (get-lambda-funinfo-by-sym fi-sym)
     	 num-vars (length (funinfo-env fi)))
 	(if (< 0 num-vars)
 		(c-codegen-function-prologue-for-local-variables fi num-vars)
 		'(%transpiler-native ""))))
-
-(define-c-macro %function-epilogue (fi-sym)
-  (with (fi (get-lambda-funinfo-by-sym fi-sym)
-    	 num-vars (length (funinfo-env fi)))
-    `(,@(when (< 0 num-vars)
-	  	  `(,(c-line "tregc_pop ()")))
-;    `((%setq "__ret" ,(place-assign (place-expand-0 fi '~%ret)))
-;      ,@(when (< 0 num-vars)
-;		  `(,(c-line "trestack_ptr += " num-vars)))
-;;	  ("if (trestack_ptr != __old) { printf (\"MUH!\\n\"); CRASH(); }")
-      (%function-return ,fi-sym))))
-
-(define-c-macro %function-return (fi-sym)
-  (let fi (get-lambda-funinfo-by-sym fi-sym)
-    `(%transpiler-native
-         ,@(c-line "return " (place-assign (place-expand-0 fi '~%ret))))))
-
-;(define-c-macro %function-return (fi-sym)
-;  (let fi (get-lambda-funinfo-by-sym fi-sym)
-;    `(%transpiler-native
-;         ,@(c-line "return __ret"))))
 
 ;;;; FUNCTION REFERENCE
 
@@ -131,22 +85,28 @@
 
 ;;;; ASSIGNMENT
 
+(defun codegen-%setq-0-place (dest val)
+  (if (transpiler-not dest)
+	  (if (codegen-expr? val)
+		  '("")
+	      '("(void) "))
+	  `(,dest " = ")))
+
+(defun codegen-%setq-0-value (val)
+   (if (or (atom val)
+		   (codegen-expr? val))
+       val
+       `(,val. ,@(parenthized-comma-separated-list .val))))
+
 (defun codegen-%setq-0 (dest val)
   `((%transpiler-native 
-	  ,@(if (transpiler-not dest)
-		    (if (codegen-expr? val)
-			  '("")
-		      '("(void) "))
-		    `(,dest " = ")))
-    ,(if (or (atom val)
-			 (codegen-expr? val))
-         val
-         `(,val. ,@(parenthized-comma-separated-list .val)))))
+	    ,@(codegen-%setq-0-place dest val))
+	    ,(codegen-%setq-0-value val)))
 
 (defun codegen-%setq (dest val)
   (if (and (transpiler-not dest)
 		   (atom val))
-	  `(%transpiler-native "")
+	  `(%transpiler-native "")	; XXX should be optimised away before.
 	  (codegen-%setq-0 dest val)))
 
 (define-c-macro %setq (dest val)
