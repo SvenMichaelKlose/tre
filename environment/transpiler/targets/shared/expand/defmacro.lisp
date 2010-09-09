@@ -3,6 +3,6 @@
 
 (defun shared-defmacro (tr-name &rest x)
   (when *show-definitions*
-    (late-print `(defmacro ,@x.)))
+    (late-print `(defmacro ,@x)))
   (eval (macroexpand `(define-transpiler-std-macro ,tr-name ,@x)))
   nil)

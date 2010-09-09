@@ -40,17 +40,18 @@
   	  `(function ,@x)))
 
 (define-js-std-macro define-native-js-fun (name args &rest body)
-  (apply #'shared-essential-defun name args body))
+  (apply #'shared-essential-defun name (compiled-function-name (%defun-name name)) args body))
 
 (define-js-std-macro defun (name args &rest body)
   (with-gensym g
-	(let n (%defun-name name)
+	(with (dname (%defun-name name)
+		   n (compiled-function-name dname))
 	  (when (transpiler-defined-function *js-transpiler* n)
 		(error "Function ~A already defined" name))
       `(progn
 		 (%var ,g)
-		 (%setq ,g (%unobfuscated-lookup-symbol ,(symbol-name n) nil))
-	     ,(apply #'shared-essential-defun name args body)
+		 (%setq ,g (%unobfuscated-lookup-symbol ,(symbol-name dname) nil))
+	     ,(apply #'shared-essential-defun dname n args body)
 		 (setf (symbol-function ,g) ,n)))))
 
 (define-js-std-macro defmacro (&rest x)

@@ -24,6 +24,7 @@
 	  statement))
 
 (defmacro metacode-walker-statements (name args &key (if-atom nil)
+										  			 (if-cons nil)
 										  			 (if-function nil)
 										  			 (if-lambda nil)
 										  			 (if-named-function nil)
@@ -34,6 +35,12 @@
 	   (with (rec
 				#'((x)
                      (if
+					   (and (%setq? ,x)
+							(consp (%setq-value ,x))
+							(eq '%%tag (car (%setq-value ,x))))
+					     (progn
+						   (print ,x)
+						   (error "illegal tag, not in toplevel"))
 		               (not ,x)		nil
 		               ,@(awhen if-atom `((atom ,x)	,!))
 
@@ -47,7 +54,9 @@
 			               `((%setq-lambda? ,x)
 			    			   ,(metacode-walker-copier x ! :%setq? t :copy? copy-function-heads?)))
 
-		               (not (or (in? (car ,x) '%setq '%var '%function-prologue '%function-epilogue '%function-return)
+		               ,@(awhen if-cons `((consp ,x) ,!))
+
+		               (not (or (in? (car ,x) '%setq '%var '%function-prologue '%function-epilogue '%function-return '%%tag)
 								(vm-jump? ,x)))
 		                 (progn
 			               (print ,x)

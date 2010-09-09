@@ -10,7 +10,7 @@
   ($ '_I_S x))
 
 (defun js-codegen-symbol-constructor (tr x)
-  (let s (transpiler-symbol-string tr (transpiler-obfuscate tr 'symbol))
+  (let s (transpiler-symbol-string tr (transpiler-obfuscate tr (compiled-function-name 'symbol)))
     `(,s "(\"" ,(symbol-name x) "\", "
 		 ,@(if (symbol-package x)
 		   	   `((,s "(\"" ,(symbol-name (symbol-package x)) "\", null)"))
@@ -169,7 +169,7 @@
 
 (define-js-macro %new (&rest x)
   `(%transpiler-native "new "
-				       ,x.
+				       ,(compiled-function-name x.)
 					   "(" ,@(transpiler-binary-expand "," .x)
  					   ")"))
 
@@ -218,8 +218,9 @@
 
 (define-js-macro %unobfuscated-lookup-symbol (name pkg)
   `(,(transpiler-obfuscate-symbol *js-transpiler*
-								  'symbol)
+								  (compiled-function-name 'symbol))
 	   (%transpiler-string
-		   ,(symbol-name (transpiler-obfuscate-symbol
-						 *js-transpiler* (make-symbol .name.))))
+		   ,(symbol-name
+			    (transpiler-obfuscate-symbol
+					*js-transpiler* (make-symbol .name.))))
 		   ,pkg))

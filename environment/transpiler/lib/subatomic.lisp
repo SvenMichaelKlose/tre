@@ -85,6 +85,10 @@
   (and (%setq? x)
 	   (named-function-expr? (%setq-value x))))
 
+(defun %setq-funcall? (x)
+  (and (%setq? x)
+	   (consp (%setq-value x))))
+
 (defun atom-or-quote? (x)
   (or (atom x)
 	  (%quote? x)))

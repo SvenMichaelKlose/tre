@@ -2,6 +2,7 @@
 ;;;;; Copyright (c) 2009-2010 Sven Klose <pixel@copei.de>
 
 (defun compiled-function-name (x)
-  (if (%transpiler-native? x)
+  (if (or (%transpiler-native? x)
+		  (not (transpiler-defined-function *current-transpiler* x)))
 	  x
       ($ 'compiled_ x)))

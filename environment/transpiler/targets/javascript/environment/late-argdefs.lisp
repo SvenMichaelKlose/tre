@@ -1,8 +1,7 @@
 ;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
-;;;;;
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 
 ;; Set argument definitions for functions in the first part.
-(setf not.tre-args '(x))
-(setf cons.tre-args '(x y))
-(setf symbol.tre-args '(name))
+(setf (slot-value ,(compiled-function-name not) 'tre-args) '(x))
+(setf (slot-value ,(compiled-function-name cons) 'tre-args) '(x y))
+(setf (slot-value ,(compiled-function-name symbol) 'tre-args) '(name))

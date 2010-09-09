@@ -13,4 +13,5 @@
 (env-load "transpiler/back-end/place-expand.lisp")
 (env-load "transpiler/back-end/function-prologues.lisp")
 (env-load "transpiler/back-end/obfuscate.lisp")
+(env-load "transpiler/back-end/translate-function-names.lisp")
 (env-load "transpiler/back-end/toplevel.lisp")

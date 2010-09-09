@@ -19,9 +19,6 @@
 (defmacro define-c-macro (&rest x)
   `(define-transpiler-macro *c-transpiler* ,@x))
 
-(defun c-atomic-function (x)
-  (compiled-function-name (second x)))
-
 (defun c-codegen-var-decl (name)
   `("treptr " ,(transpiler-symbol-string *c-transpiler* name)))
 
@@ -41,8 +38,7 @@
 (defun c-make-function-declaration (name args)
   (push! (concat-stringtree
 			 "extern treptr "
-			 (transpiler-symbol-string *c-transpiler*
-				 (compiled-function-name name))
+			 (transpiler-symbol-string *c-transpiler* name)
   	    	 (parenthized-comma-separated-list
             	 (mapcar #'c-codegen-var-decl args))
 			 ";" (string (code-char 10)))
@@ -52,7 +48,7 @@
   (let args (argument-expand-names 'unnamed-c-function (lambda-args x))
     (c-make-function-declaration name args)
     `(,(code-char 10)
-	  "treptr " ,(compiled-function-name name)
+	  "treptr " ,name
 	  ,@(parenthized-comma-separated-list (mapcar (fn `("treptr " ,_)) args))
 	  ,(code-char 10)
 	  "{" ,(code-char 10)
