@@ -3,7 +3,7 @@
 
 (defun %setq-make-call-to-local-function (x f)
   `(%setq ,(second x)
-		  (compiled_apply
+		  (userfun_apply
 			   (cons ,f
 					 (cons ,(compiled-list (cdr (third x)))
 						   nil)))))

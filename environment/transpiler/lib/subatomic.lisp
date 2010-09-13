@@ -9,6 +9,8 @@
 	  %stack %vec %setq
 	  %transpiler-native %transpiler-string
 	  %inline
+	  %%funref
+	  %setq-atom-value
 	  %function-prologue
 	  %function-epilogue
 	  %function-return)

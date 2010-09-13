@@ -40,7 +40,7 @@
   	  `(function ,@x)))
 
 (define-js-std-macro define-native-js-fun (name args &rest body)
-  (apply #'shared-essential-defun name (compiled-function-name (%defun-name name)) args body))
+  (apply #'shared-essential-defun name (%defun-name name) args body))
 
 (define-js-std-macro defun (name args &rest body)
   (with-gensym g

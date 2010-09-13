@@ -1,5 +1,5 @@
 /*
- * nix operating system project tre interpreter
+ * TRE interpreter
  * Copyright (c) 2005-2006 Sven Klose <pixel@copei.de>
  *
  * Utility functions

@@ -4,6 +4,7 @@
 ;;;;; User-defineable expansion.
 
 (defvar *expanders* nil)
+(defvar *current-expander* nil)
 
 (defstruct expander
   macros
@@ -27,14 +28,12 @@
     (acons! expander-name e *expanders*)
     (unless pred
       (setf (expander-pred e)
-			(lx (e)
-				(fn (and (atom _.)
-					 	 (symbol-name _.)
-					 	 (cdr (assoc _. (expander-macros ,e) :test #'eq)))))))
+			(fn (and (atom _.)
+				 	 (symbol-name _.)
+				 	 (cdr (assoc _. (expander-macros *current-expander*) :test #'eq))))))
     (unless call
       (setf (expander-call e)
-			(lx (e)
-				(fn (apply (cdr (assoc _. (expander-macros ,e) :test #'eq)) ._)))))
+			(fn (apply (cdr (assoc _. (expander-macros *current-expander*) :test #'eq)) ._))))
     (setf (expander-lookup e)
           #'((expander name)
 			  (cdr (assoc name (expander-macros expander) :test #'eq))))
@@ -64,10 +63,10 @@
 	(funcall (expander-pre e))
     (prog1
 	  (repeat-while-changes
-        (lx (e)
-			(fn (with-temporary *macrop-diversion* (expander-pred ,e)
-                  (with-temporary *macrocall-diversion* (expander-call ,e)
-				    (%macroexpand _)))))
+		(fn (with-temporary *current-expander* e
+			  (with-temporary *macrop-diversion* (expander-pred e)
+                (with-temporary *macrocall-diversion* (expander-call e)
+			      (%macroexpand _)))))
 		expr)
       (funcall (expander-post e)))))
 

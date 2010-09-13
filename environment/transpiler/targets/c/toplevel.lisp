@@ -1,4 +1,4 @@
-;;;;; Transpiler: TRE to JavaScript
+;;;;; Transpiler: TRE to C
 ;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Toplevel
@@ -40,7 +40,7 @@
   (mapcar (fn `(%setq ~%ret
 					  (treatom_register_compiled_function
 						  ,(c-compiled-symbol _)
-						  ,(compiled-function-name _))))
+						  ,_)))
 		  (remove-if #'builtinp
 					 (transpiler-defined-functions *c-transpiler*))))
 
@@ -95,8 +95,7 @@
 (defun c-transpile-0 (f files)
   (map (fn (format f "#include \"~A\"~%" _))
 	   *c-interpreter-headers*)
-  (format f "#define compiled_apply trespecial_apply_compiled~%")
-  (c-compiled-symbol 'fnord)
+  (format f "#define userfun_apply trespecial_apply_compiled~%")
   (with (tr *c-transpiler*
 		 ; Expand.
 		 tests (when (eq t *have-environment-tests*)

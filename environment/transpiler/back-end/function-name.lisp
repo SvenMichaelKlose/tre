@@ -5,4 +5,4 @@
   (if (or (%transpiler-native? x)
 		  (not (transpiler-defined-function *current-transpiler* x)))
 	  x
-      ($ 'compiled_ x)))
+      ($ 'userfun_ x)))

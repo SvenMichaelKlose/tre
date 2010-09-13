@@ -6,7 +6,4 @@ interpreter/MACROEXPAND-1: - CAR required?
 
 Find illegal keyword arguments.
 
-Segmentation fault * (mapcar #'builtinp *universe*)
-Segmentation fault * (assoc key rec #'bug)
-
 Literal characters as argument default values.

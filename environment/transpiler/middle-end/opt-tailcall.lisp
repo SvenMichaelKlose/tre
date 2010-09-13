@@ -20,8 +20,7 @@
 
 (defun call-of-function? (expr name)
   (and (%setq-function-call? expr)
-	   (or (eq name (car (%setq-value expr)))
-	       (eq (compiled-function-name name) (car (%setq-value expr))))))
+	   (eq name (car (%setq-value expr)))))
 
 (defun sets-non-local? (fi x)
   (and (%setq? x)

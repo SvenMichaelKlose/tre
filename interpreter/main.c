@@ -33,7 +33,7 @@
 #include "builtin_list.h"
 
 #ifdef TRE_HAVE_COMPILED_ENV
-	treptr compiled_cInit (void);
+	treptr userfun_cInit (void);
 #endif
 
 #include <setjmp.h>
@@ -364,7 +364,7 @@ load_error:
 
 user:
 #ifdef TRE_HAVE_COMPILED_ENV
-	(void) compiled_cInit ();
+	(void) userfun_cInit ();
 #endif
 	/* Call init function. */
     if (tre_restart_fun != treptr_nil) {
