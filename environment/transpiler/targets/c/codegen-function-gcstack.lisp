@@ -22,8 +22,6 @@
 (define-c-macro %function-epilogue (fi-sym)
   (with (fi (get-lambda-funinfo-by-sym fi-sym)
     	 num-vars (length (funinfo-env fi)))
-    `(,@(when (< 0 num-vars)
-	  	  `(,(c-line "tregc_pop ()")))
     `((%setq "__ret" ,(place-assign (place-expand-0 fi '~%ret)))
       ,@(when (< 0 num-vars)
 		  `(,(c-line "trestack_ptr += " num-vars)))
@@ -34,3 +32,6 @@
   (let fi (get-lambda-funinfo-by-sym fi-sym)
     `(%transpiler-native
          ,@(c-line "return __ret"))))
+
+(defun c-stack (x)
+  `("trestack_ptr[" ,x "]"))

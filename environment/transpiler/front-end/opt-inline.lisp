@@ -11,11 +11,11 @@
 (defun opt-inline-inlined-fun (tr x argdef body level current parent)
   `#'(,(argument-expand-names 'opt-inline-import-argexp argdef)
 	  ,@(opt-inline-0 tr level current (cons x. parent)
-		     (rename-body-tags (transpiler-front-end tr body)))))
+		     (rename-body-tags (transpiler-frontend-1 tr body)))))
 
 (defun opt-inline-args-to-inlined-fun (tr x argdef body level current parent)
   (opt-inline-0 tr level current parent
-	  (transpiler-front-end tr
+	  (transpiler-frontend-1 tr
   		  (if (and (not argdef) .x)
 			  .x
 			  (argument-expand-compiled-values 'opt-inline argdef .x)))))
@@ -62,10 +62,10 @@
 
 (defun opt-inline-0 (tr level current parent x &key (tail? nil))
   (if
-	(atom-or-quote? x)
+	(atom-or-%quote? x)
 	  x
 
-	(atom-or-quote? x.)
+	(atom-or-%quote? x.)
 	  (cons x.
 			(opt-inline-0 tr level current parent .x :tail? tail?))
 

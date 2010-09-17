@@ -17,8 +17,8 @@
 	  (fn expander-expand (transpiler-macro-expander tr) _)
 	  #'transpiler-finalize-sexprs
 	  #'transpiler-encapsulate-strings
-	  #'translate-function-names
-	  (fn transpiler-obfuscate tr _)))
+	  (fn transpiler-obfuscate tr _)
+	  (fn translate-function-names nil _)))
 
 (defun transpiler-emit-code (tr x)
   (funcall (transpiler-emit-code-compose tr) x))

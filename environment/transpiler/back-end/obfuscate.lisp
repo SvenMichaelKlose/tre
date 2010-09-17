@@ -31,15 +31,10 @@
 	  (transpiler-obfuscate-symbol-0 tr x)
 	  x))
 
-(defun transpiler-obfuscate (tr x)
-  (if
-	(consp x)
-	  (cons (transpiler-obfuscate tr x.)
-		    (transpiler-obfuscate tr .x))
-    (and (or (variablep x)
-	         (functionp x)))
-	  (transpiler-obfuscate-symbol tr x)
-	x))
+(define-tree-filter transpiler-obfuscate (tr x)
+  (or (variablep x)
+      (functionp x))
+	(transpiler-obfuscate-symbol tr x))
 
 (defun transpiler-obfuscated-symbol-string (tr x)
   (transpiler-symbol-string tr
@@ -50,3 +45,6 @@
     (unless (in=? (elt (symbol-name k) 0) #\~) ; #\_)
 	  (format t "~A -> ~A" (symbol-name k)
 						   (href (transpiler-obfuscations tr) k)))))
+
+(defun transpiler-obfuscated-nil? (x)
+  (eq x (transpiler-obfuscate-symbol *current-transpiler* nil)))

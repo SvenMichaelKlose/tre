@@ -22,7 +22,7 @@
 		  	    (and (>= _ #\A) (<= _ #\Z))
 		  	    (and (>= _ #\0) (<= _ #\9))
 			    (in=? _ #\_ #\. #\#)))
-	  :gen-string (fn transpiler-make-escaped-string _ #\')
+	  :gen-string (fn c-literal-string _ #\')
 	  :lambda-export? t
 	  :stack-arguments? nil
 	  :stack-locals? nil

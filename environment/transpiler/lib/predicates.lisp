@@ -8,7 +8,7 @@
       (macrop x)))
 
 (mapcar-macro x
-	'(quote backquote identity %transpiler-splice)
+	'(identity quote backquote quasiquote quasiquote-splice)
   `(def-head-predicate ,x))
 
 (defun function-ref-expr? (x)
@@ -20,4 +20,14 @@
   (and (consp x)
        (eq x. 'function)
 	   (atom .x.)
+	   .x.))
+
+(defun named-lambda? (x)
+  (and (function-expr? x)
+	   ..x))
+
+(defun vec-function-expr? (x)
+  (and (consp x)
+	   (eq x. 'function)
+	   (%vec? .x.)
 	   .x.))

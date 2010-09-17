@@ -47,7 +47,7 @@
 		               ,@(awhen (or if-named-function if-function)
 			               `((%setq-named-function? ,x)
 			    			   ,(metacode-walker-copier x ! :%setq? t :copy? copy-function-heads?)
-			                 (named-function-expr? ,x)
+			                 (named-lambda? ,x)
 			    			   ,(metacode-walker-copier x ! :copy? copy-function-heads?)))
 
 		               ,@(awhen (or if-lambda if-function)
@@ -95,7 +95,7 @@
 			     x)
 
 		,@(awhen (or if-named-function if-function)
-			`((named-function-expr? ,x)
+			`((named-lambda? ,x)
 			    ,(metacode-walker-copier x ! :copy? copy-function-heads?)))
 
 		,@(awhen (or if-lambda if-function)
@@ -108,8 +108,6 @@
 	        (,name (car ,x) ,@r)
 	        (,name (cdr ,x) ,@r))))))
 
-;; Replace macro by more specific macro with differing argument definition.
-;; Leaves argument checking to environment.
 (defmacro metacode-walker (name args &rest config)
   (let p (position :only-statements? config)
 	(if (and p (elt config (1+ p)))

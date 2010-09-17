@@ -1,5 +1,4 @@
-;;;; nix operating system project
-;;;; lisp compiler
+;;;; TRE environment
 ;;;; Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
 
 ;; Replace elements in tree.

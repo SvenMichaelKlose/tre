@@ -16,8 +16,7 @@
     ,@x
 	,*c-separator*))
 
-(defmacro define-c-macro (&rest x)
-  `(define-transpiler-macro *c-transpiler* ,@x))
+(define-codegen-macro-definer define-c-macro *c-transpiler*)
 
 (defun c-codegen-var-decl (name)
   `("treptr " ,(transpiler-symbol-string *c-transpiler* name)))
@@ -82,7 +81,7 @@
 ;;;; ASSIGNMENT
 
 (defun codegen-%setq-0-place (dest val)
-  (if (transpiler-not dest)
+  (if (transpiler-obfuscated-nil? dest)
 	  (if (codegen-expr? val)
 		  '("")
 	      '("(void) "))
@@ -100,7 +99,7 @@
 	    ,(codegen-%setq-0-value val)))
 
 (defun codegen-%setq (dest val)
-  (if (and (transpiler-not dest)
+  (if (and (transpiler-obfuscated-nil? dest)
 		   (atom val))
 	  `(%transpiler-native "")	; XXX should be optimised away before.
 	  (codegen-%setq-0 dest val)))
@@ -127,10 +126,6 @@
 ;		")" ,*c-separator*))
 
 ;;;; VARIABLES
-
-(defun c-stack (x)
-;  `("trestack_ptr[" ,x "]"))
-  `("_TRELOCAL(" ,x ")"))
 
 (define-c-macro %stack (x)
   (c-stack x))

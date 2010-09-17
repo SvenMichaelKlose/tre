@@ -4,3 +4,4 @@
 ;;;; Fifth stage
 
 (env-load "stage5/comma-separated-list.lisp")
+(env-load "stage5/string-has-whitespace-p.lisp")

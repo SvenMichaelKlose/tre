@@ -29,26 +29,3 @@
 (defun transpiler-middleend-2 (tr x)
   (remove-if #'not
 		     (funcall (transpiler-expand-compose tr) x)))
-
-;; After this pass
-;; - Functions are inlined.
-;; - Nested functions are merged.
-;; - Optional: Anonymous functions were exported.
-;; - FUNINFO objects are built for all functions.
-;; - Accesses to the object in a method are thisified.
-(defvar *opt-inline?* t)
-
-(defun transpiler-preexpand-compose (tr)
-  (compose
-	  (fn with-temporary *expex-warn?* t
-		   (transpiler-expression-expand tr _)
-		   _)
-      (fn transpiler-lambda-expand tr _)
-	  #'rename-function-arguments
-	  (fn (if *opt-inline?*
-			  (opt-inline tr _)
-			  _))
-      (fn thisify (transpiler-thisify-classes tr) _)))
-
-(defun transpiler-middleend-1 (tr x)
-  (funcall (transpiler-preexpand-compose tr) x))

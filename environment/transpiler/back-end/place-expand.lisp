@@ -80,31 +80,22 @@
 	   (,@(lambda-head fun-expr)
   	        ,@(place-expand-0 fi (lambda-body fun-expr))))))
 
-(defun place-expand-0 (fi x)
-  (unless fi
-	(print x)
-	(error "place-expand-0: no funinfo"))
-  (if
-	(atom x)
-	  (place-expand-atom fi x)
-
-	(or (%quote? x)
-		(%transpiler-native? x)
-		(%var? x))
-	  x
-
-	(lambda? x) ; XXX Add variables to ignore in subfunctions.
-      (place-expand-fun fi nil x)
-
-	(named-function-expr? x)
-      (place-expand-fun fi .x. ..x.)
-
-    (%slot-value? x)
-      `(%slot-value ,(place-expand-0 fi .x.)
-					,..x.)
-
-    (cons (place-expand-0 fi x.)
-		  (place-expand-0 fi .x))))
+(define-tree-filter place-expand-0 (fi x)
+  (not fi)
+	(error "place-expand-0: no funinfo")
+  (atom x)
+    (place-expand-atom fi x)
+  (or (%quote? x)
+	  (%transpiler-native? x)
+	  (%var? x))
+	x
+  (named-lambda? x)
+    (place-expand-fun fi .x. ..x.)
+  (lambda? x) ; XXX Add variables to ignore in subfunctions.
+    (place-expand-fun fi nil x)
+  (%slot-value? x)
+    `(%slot-value ,(place-expand-0 fi .x.)
+				  ,..x.))
 
 (defun place-expand (x)
   (place-expand-0 *global-funinfo* x))

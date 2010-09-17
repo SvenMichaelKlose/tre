@@ -1,15 +1,9 @@
 ;;;;; TRE transpiler
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 
-(defun transpiler-encapsulate-strings (x)
-  (if (atom x)
-      (if (stringp x)
-          (list '%transpiler-string x)
-		  x)
-	  (if
-		(%quote? x)
-		  x
-		(eq '%transpiler-native x.)
-		  x
-		(cons (transpiler-encapsulate-strings x.)
-		  	  (transpiler-encapsulate-strings .x)))))
+(define-tree-filter transpiler-encapsulate-strings (x)
+  (stringp x)
+    `(%transpiler-string ,x)
+  (or (%quote? x)
+	  (%transpiler-native? x))
+    x)

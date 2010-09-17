@@ -10,4 +10,4 @@
 (env-load "transpiler/targets/shared/main.lisp")
 (env-load "transpiler/targets/c/main.lisp")
 (env-load "transpiler/targets/javascript/main.lisp")
-(env-load "transpiler/targets/php/main.lisp")
+;(env-load "transpiler/targets/php/main.lisp")

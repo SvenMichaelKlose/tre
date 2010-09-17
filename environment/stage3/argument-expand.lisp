@@ -27,9 +27,9 @@
 				   (and (setf argument-exp-sort-key
 							  (cons (if (consp _.)
 										(cons (car _.)
-											  (second _.)) ; with default value
+											  (cadr _.)) ; with default value
 										(cons _.
-											  _.)) ; without itself
+											  _.)) ; with itself
 									argument-exp-sort-key))
 						(rec2 ._)))))
 
@@ -76,13 +76,13 @@
 		 get-name
 		   #'((def)
 				(if (consp def.)
-					(first def.)
+					def..
 					def.))
 
 		 get-default
 		   #'((def)
 				(if (consp def.)
-				    (second def.)
+				    (cadr def.)
 					(list '%quote def.)))
 
 		 get-value
@@ -91,7 +91,7 @@
 				  (consp vals)
 					vals.
 				  (consp def.)
-					(second def.)
+					(cadr def.)
 				  def.))
 
 		 check-val
@@ -116,7 +116,7 @@
 				(cons (cons (get-name def)
 							(get-value def vals))
 					  (if
-						(argument-list-keyword? (second def))
+						(argument-list-keyword? (cadr def))
 					  	  (exp-main .def .vals)
 						.def
 						  (exp-optional .def .vals)
@@ -128,7 +128,7 @@
 			    		k (assoc w key-args))
 				  (if k
 			          (progn
-						(rplacd k (second vals)) ; check if key-value exists.
+						(rplacd k (cadr vals)) ; check if key-value exists.
 						(exp-main def (cddr vals)))
 					  (exp-main-non-key def vals))))
 

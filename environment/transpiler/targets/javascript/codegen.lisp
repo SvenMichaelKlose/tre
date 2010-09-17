@@ -17,12 +17,7 @@
 			   '(("null")))
 		 ")")))
 
-(defmacro define-js-macro (&rest x)
-  (when *show-definitions*
-    (print `(define-js-macro ,x.)))
-  `(progn
-	 (transpiler-add-obfuscation-exceptions *js-transpiler* ',x.)
-	 (define-transpiler-macro *js-transpiler* ,@x)))
+(define-codegen-macro-definer define-js-macro *js-transpiler*)
 
 ;;;; CONTROL FLOW
 
@@ -80,7 +75,7 @@
 (defun js-%setq-0 (dest val)
   `(,*js-indent*
 	(%transpiler-native
-        ,@(if (transpiler-not dest)
+        ,@(if (transpiler-obfuscated-nil? dest)
 		      '("")
 		      `(,dest "=")))
 	,(if (or (atom val)
@@ -90,7 +85,7 @@
     ,*js-separator*))
 
 (define-js-macro %setq (dest val)
-  (if (and (transpiler-not dest)
+  (if (and (transpiler-obfuscated-nil? dest)
 		   (atom val))
 	  '(%transpiler-native "")
 	  (js-%setq-0 dest val)))

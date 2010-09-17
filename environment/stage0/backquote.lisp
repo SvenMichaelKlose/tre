@@ -1,14 +1,9 @@
 ;;;; TRE environment
-;;;; Copyright (c) 2006-2009 Sven Klose <pixel@copei.de>
-;;;;
-;;;; BACKQUOTE expansion
-;;;;
-;;;; The funny argument names are used to avoid collisions with symbols
-;;;; in the caller's environment during evaluation.
+;;;; Copyright (c) 2006-2010 Sven Klose <pixel@copei.de>
 
 (setq
 	*UNIVERSE*
-	(cons 'quasiquote?
+	(cons 'any-quasiquote?
     (cons '%quasiquote-eval
     (cons '%backquote-quasiquote
 	(cons '%backquote-quasiquote-splice
@@ -21,7 +16,7 @@
 
 (setq
 	*defined-functions*
-	(cons 'quasiquote?
+	(cons 'any-quasiquote?
     (cons '%quasiquote-eval
     (cons '%backquote-quasiquote
 	(cons '%backquote-quasiquote-splice
@@ -31,10 +26,7 @@
 	(cons 'quasiquote-splice
 		  *defined-functions*)))))))))
 
-;tredoc
-; "Tests if argument is a QUASIQUOTE or QUASIQUOTE-SPLICE expression."
-; (returns :type boolean)
-(%set-atom-fun quasiquote?
+(%set-atom-fun any-quasiquote?
   #'((x)
        (if (consp x)
     	   (if
@@ -45,22 +37,19 @@
   #'((%gsbq)
        (eval (car (cdr (car %gsbq))))))
 
-;; Expand QUASIQUOTE.
 (%set-atom-fun %backquote-quasiquote
   #'((%gsbq)
-      (if (not (quasiquote? (car (cdr (car %gsbq)))))
+      (if (not (any-quasiquote? (car (cdr (car %gsbq)))))
           (cons (copy-tree (%quasiquote-eval %gsbq))
                 (%backquote-1 (cdr %gsbq)))
           (cons (%backquote (car (cdr (car %gsbq))))
                 (%backquote-1 (cdr %gsbq))))))
 
-;; Expand QUASIQUOTE-SPLICE.
 (%set-atom-fun %backquote-quasiquote-splice
   #'((%gsbq)
-       (if (not (quasiquote? (car (cdr (car %gsbq)))))
+       (if (not (any-quasiquote? (car (cdr (car %gsbq)))))
            (#'((%gstmp)
                  (if
-                   ; Ignore NIL evaluation.
                    (not %gstmp)
                      (%backquote (cdr %gsbq))
                    (atom %gstmp)

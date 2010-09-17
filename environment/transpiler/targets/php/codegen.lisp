@@ -19,10 +19,7 @@
 	  `("$" ,x)
 	  x))
 
-(defmacro define-php-macro (&rest x)
-  `(progn
-	 (transpiler-add-obfuscation-exceptions *php-transpiler* ',x.)
-	 (define-transpiler-macro *php-transpiler* ,@x)))
+(define-codegen-macro-definer define-php-macro *php-transpiler*)
 
 (defmacro define-php-infix (name)
   `(define-transpiler-infix *php-transpiler* ,name))
@@ -138,7 +135,7 @@
 (defun php-%setq-0 (dest val)
   `((%transpiler-native
 	    ,*php-indent*
-	    ,@(if (transpiler-not dest)
+	    ,@(if (transpiler-obfuscated-nil? dest)
 	          '("")
 			  `(,@(when (atom dest)
 				    (list "$"))
@@ -158,7 +155,7 @@
 
 (define-php-macro %setq (dest val)
   (or (php-class-fun val)
-      (if (and (transpiler-not dest)
+      (if (and (transpiler-obfuscated-nil? dest)
 		       (atom val))
   	      '(%transpiler-native "")
 	      (php-%setq-0 dest val))))

@@ -17,11 +17,8 @@
 
 (defvar *lambda-exported-closures* nil)
 
-(defun lambda-expand-add-closures (x)
-  (nconc! *lambda-exported-closures* x))
-
 (defun lambda-expand-add-closure (x)
-  (lambda-expand-add-closures (list x)))
+  (push! x  *lambda-exported-closures*))
 
 ;;;; LAMBDA inlining
 
@@ -121,7 +118,7 @@
 				  (if
 					(atom x)
 	  				  x
-				    (named-function-expr? x)
+				    (named-lambda? x)
 					  (with ((new-x new-exported-closures)
 							     (lambda-expand-0 ..x. export-lambdas?
 												  :lambda-name .x.))

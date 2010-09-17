@@ -3,7 +3,7 @@
 ;;;;;
 ;;;;; Code-generating set of macros
 
-(defmacro define-transpiler-macro (tr &rest x)
+(defmacro define-codegen-macro (tr &rest x)
   (when *show-definitions*
 	(print `(define-transpiler-macro ,tr ,x.)))
   (with (tre (eval tr)

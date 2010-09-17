@@ -1,0 +1,17 @@
+;;;;; TRE transpiler
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+
+(defmacro define-transpiler-std-macro (tr &rest x)
+  (with (tre (eval tr)
+		 name x.)
+	(when (expander-has-macro? (transpiler-std-macro-expander tre) name)
+	  (error "Macro ~A already defined as a standard macro." name))
+	(when (expander-has-macro? (transpiler-macro-expander tre) name)
+	  (error "Macro ~A already defined in code-generator." name))
+	(transpiler-add-inline-exception tre name)
+    `(define-expander-macro ,(transpiler-std-macro-expander tre) ,@x)))
+
+(defun transpiler-macroexpand (tr x)
+  (with-temporary *setf-immediate-slot-value* t
+    (with-temporary *setf-functionp* (transpiler-setf-functionp tr)
+	  (expander-expand (transpiler-std-macro-expander tr) x))))

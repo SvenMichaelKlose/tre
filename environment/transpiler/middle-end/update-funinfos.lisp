@@ -10,12 +10,8 @@
 	  (error "funfinfo ~A: num-tags already set to ~A. new num:~A"
 		     (lambda-funinfo x) (funinfo-num-tags fi) num-tags))
     (setf (funinfo-num-tags fi) num-tags)
-	(copy-lambda x
-		:body (transpiler-update-funinfo body))))
+	(copy-lambda x :body (transpiler-update-funinfo body))))
 
-(defun transpiler-update-funinfo (x)
-  (if
-	(atom x)	x
-	(lambda? x) (transpiler-update-funinfo-lambda x)
-	(cons (transpiler-update-funinfo x.)
-		  (transpiler-update-funinfo .x))))
+(define-tree-filter transpiler-update-funinfo (x)
+  (lambda? x)
+    (transpiler-update-funinfo-lambda x))

@@ -1,16 +1,9 @@
 ;;;;; TRE transpiler
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 
-(defun transpiler-expand-characters (x)
-  "Wrap characters in CODE-CHAR expressions for languages that
-   don't support literal characters."
-  (if
-	(characterp x)
-	  `(code-char ,(char-code x))
-    (consp x)
-	  (cons (transpiler-expand-characters x.)
-		    (transpiler-expand-characters .x))
-	x))
+(define-tree-filter transpiler-expand-characters (x)
+  (characterp x)
+	`(code-char ,(char-code x)))
 
 (defmacro define-compiled-literal (name (x table) &key maker setter decl-maker)
   "Define collector for declarations and initialisations for a certain

@@ -39,22 +39,16 @@
   	    ,@(make-function-prologues-0 fi
 	          (funinfo-function-prologue fi (lambda-body fun-expr)))))))
 
-(defun make-function-prologues-0 (fi x)
-  (if
-	(or (atom x)
-	    (%quote? x)
-		(%transpiler-native? x)
-		(%var? x))
-	  x
-
-	(lambda? x) ; XXX Add variables to ignore in subfunctions.
-      (make-function-prologues-fun nil x)
-
-	(named-function-expr? x)
-      (make-function-prologues-fun .x. ..x.)
-
-    (cons (make-function-prologues-0 fi x.)
-		  (make-function-prologues-0 fi .x))))
+(define-tree-filter make-function-prologues-0 (fi x)
+  (or (atom x)
+	  (%quote? x)
+	  (%transpiler-native? x)
+	  (%var? x))
+    x
+  (named-lambda? x)
+    (make-function-prologues-fun .x. ..x.)
+  (lambda? x) ; XXX Add variables to ignore in subfunctions.
+    (make-function-prologues-fun nil x))
 
 (defun make-function-prologues (x)
   (make-function-prologues-0 *global-funinfo* x))

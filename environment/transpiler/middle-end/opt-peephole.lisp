@@ -53,12 +53,12 @@
 	 (with-cons a d x
 	   ; Recurse into LAMBDA.
 	   (if
-		 (named-function-expr? a)
+		 (named-lambda? a)
 		   (opt-peephole-rec a d (third a) ,fun
 							 (second a) ,collect-symbols)
 
 		 (and (%setq? a)
-			  (named-function-expr? (%setq-value a)))
+			  (named-lambda? (%setq-value a)))
 		   (opt-peephole-rec a d (third (%setq-value a)) ,fun
 							 (second (%setq-value a)) ,collect-symbols t)
 
@@ -92,7 +92,7 @@
 (defun opt-peephole-remove-spare-tags (x)
   (when x
 	(cons (if
-	  		(named-function-expr? x.)
+	  		(named-lambda? x.)
 			  (opt-peephole-remove-spare-tags-body x.)
 
 	  		(and (%setq? x.)

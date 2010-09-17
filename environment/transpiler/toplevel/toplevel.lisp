@@ -13,7 +13,7 @@
 			  		      forms))))))
 
 (defun transpiler-sighten (tr x)
-  (mapcar (fn transpiler-middleend-1 tr (transpiler-front-end tr (list _)))
+  (mapcar (fn transpiler-frontend tr (list _))
 		  x))
 
 (defun transpiler-sighten-files (tr files)

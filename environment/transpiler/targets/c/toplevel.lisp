@@ -6,14 +6,12 @@
 (defvar *closure-argdefs* nil)
 (defvar *c-init-group-size* 64)
 
-(defun c-transpiler-get-argdef-symbols (x)
-  (when x
-	(if (atom x)
-		(if (symbol-name x)
-		    (c-compiled-symbol x)
-			x)
-		(cons (c-transpiler-get-argdef-symbols x.)
-		  	  (c-transpiler-get-argdef-symbols .x)))))
+(define-tree-filter c-transpiler-get-argdef-symbols (x)
+  (not x)
+    x
+  (and (atom x)
+	   (symbol-name x))
+    (c-compiled-symbol x))
 
 (defun c-transpiler-spot-argdef-symbols (x)
   (when x

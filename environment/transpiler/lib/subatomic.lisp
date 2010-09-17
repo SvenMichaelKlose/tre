@@ -85,12 +85,12 @@
 
 (defun %setq-named-function? (x)
   (and (%setq? x)
-	   (named-function-expr? (%setq-value x))))
+	   (named-lambda? (%setq-value x))))
 
 (defun %setq-funcall? (x)
   (and (%setq? x)
 	   (consp (%setq-value x))))
 
-(defun atom-or-quote? (x)
+(defun atom-or-%quote? (x)
   (or (atom x)
 	  (%quote? x)))

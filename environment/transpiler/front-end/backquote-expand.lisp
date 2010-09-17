@@ -5,7 +5,7 @@
 
 ;; Expand QUASIQUOTE.
 (defun backquote-cons-quasiquote (x)
-  (if (quasiquote? (second x.))
+  (if (any-quasiquote? (second x.))
       `(cons ,(backquote-cons (second x.))
              ,(backquote-cons-1 .x))
       `(cons ,(copy-tree (second x.))
@@ -13,7 +13,7 @@
 
 ;; Expand QUASIQUOTE-SPLICE.
 (defun backquote-cons-quasiquote-splice (x)
-  (if (quasiquote? (second x.))
+  (if (any-quasiquote? (second x.))
       `(cons ,(copy-tree (second x.))
              ,(backquote-cons-1 .x))
       `(%nconc ,(copy-tree (second x.))
@@ -38,11 +38,11 @@
              ,(backquote-cons-1 .x))
 
     ; Do QUASIQUOTE expansion.
-    (eq x.. 'QUASIQUOTE)
+    (quasiquote? x.)
       (backquote-cons-quasiquote x)
 
     ; Do QUASIQUOTE-SPLICE expansion.
-    (eq x.. 'QUASIQUOTE-SPLICE)
+    (quasiquote-splice? x.)
       (backquote-cons-quasiquote-splice x)
 
     ; Expand sublist and rest.
@@ -57,7 +57,7 @@
 	  (backquote-cons-atom x)
 
     ; Enter new backquote level.
-    (eq x. 'BACKQUOTE)
+    (backquote? x)
 	  `(cons 'BACKQUOTE
              ,(backquote-cons .x))
 
