@@ -3,76 +3,47 @@
 ;;;;;
 ;;;;; Toplevel
 
-(defvar *nil-symbol-name* nil)
+(defun js-transpile-prologue (tr)
+  (format nil (+ "    var _I_ = 0; while (1) {switch (_I_) {case 0: ~%"
+  			     "    var ~A;~%")
+			  (transpiler-symbol-string tr
+				  (transpiler-obfuscate-symbol tr '*CURRENT-FUNCTION*))))
 
-(defun js-transpile-print-prologue (out tr)
-  (format out "    var _I_ = 0; while (1) {switch (_I_) {case 0: ~%")
-  (format out "    var ~A;~%" (transpiler-symbol-string tr
-							  (transpiler-obfuscate-symbol tr '*CURRENT-FUNCTION*))))
+(defun js-transpile-epilogue ()
+  (format nil "    }break;}~%"))
 
-(defun js-transpile-print-epilogue (out)
-  (format out "    }break;}~%"))
+(defun js-gen-funref-wrapper ()
+  ,(concat-stringtree
+      (with-open-file i
+		  (open "environment/transpiler/targets/javascript/funref.js"
+				:direction 'input)
+	  	(read-all-lines i))))
 
-(defun js-gen-funref-wrapper (out)
-  (princ ,(concat-stringtree
-		      (with-open-file i (open "environment/transpiler/targets/javascript/funref.js" :direction 'input)
-			  	(read-all-lines i)))
-		 out))
-
-(defun js-transpile-prepare (tr out &key (import-universe? nil))
-  (when import-universe?
-    (transpiler-import-universe tr))
-  (when (transpiler-lambda-export? tr)
-    (transpiler-add-wanted-function tr 'array-copy)
-    (js-gen-funref-wrapper out)))
-
-(defun js-transpile-0 (f files &key (base? nil))
-  (with (tr *js-transpiler*
-    	 base (transpiler-sighten tr *js-base*)
-		 base-debug (when *transpiler-log*
-				      (transpiler-sighten tr *js-base-debug-print*))
-    	 base2 (transpiler-sighten tr *js-base2*)
-		 tests (when (eq t *have-environment-tests*)
-				 (transpiler-sighten tr (make-environment-tests)))
-	 	 user (transpiler-sighten-files tr files)
-		 deps (progn
-				(format t "; Collecting dependencies...~%")
-				(transpiler-import-from-environment tr)))
-	; Generate.
-    (format t "; Let me think. Hmm")
-  	(force-output)
-	(let no-decls (concat-stringtree
-					  (transpiler-transpile tr
-                      	  (append
-							  (when base?
-                                base)
-                              (when base?
-                                base2)
-                              (when (and base? *transpiler-log*)
- 	                            base-debug)
-	                          deps
-                              tests
- 	                          user)))
-       (dolist (i (funinfo-env *global-funinfo*))
-         (princ (transpiler-emit-code tr (list `(%var ,i)))
-				f))
-       (princ no-decls f))
-    (transpiler-print-obfuscations tr)))
-
-(defun js-transpile-ok ()
-  (format t "~%; Everything OK. ~A instructions. Done.~%"
-			*codegen-num-instructions*))
-
-(defun js-transpile (out files &key (obfuscate? nil) (env? nil))
+(defun js-transpile (files &key (obfuscate? nil) (env? nil))
   (let tr *js-transpiler*
-    (setf *current-transpiler* tr)
     (transpiler-reset tr)
-    (transpiler-switch-obfuscator tr obfuscate?)
-	(make-global-funinfo)
-    (setf *nil-symbol-name*
-		  (symbol-name (transpiler-obfuscate-nil tr)))
-    (js-transpile-print-prologue out tr)
-    (js-transpile-prepare tr out :import-universe? nil)
-    (js-transpile-0 out files :base? t)
-    (js-transpile-print-epilogue out)
-	(js-transpile-ok)))
+    (target-transpile-setup tr :obfuscate? obfuscate?)
+    (when (transpiler-lambda-export? tr)
+      (transpiler-add-wanted-function tr 'array-copy))
+	(concat-stringtree
+    	(js-transpile-prologue tr)
+    	(when (transpiler-lambda-export? tr)
+    	  (js-gen-funref-wrapper))
+    	(target-transpile tr
+    	 	:files-before-deps
+			    (append (list (cons 'text *js-base*))
+		 		 		(when *transpiler-log*
+				   	  	(list (cons 'text *js-base-debug-print*)))
+				 		(list (cons 'text *js-base2*)))
+		  	:files
+				(append (when (eq t *have-environment-tests*)
+				   	  	  (list (cons 'text (make-environment-tests))))
+		 		 		(mapcar (fn cons 'file _) files))
+		 	:dep-gen
+		     	#'(()
+				  	(transpiler-import-from-environment tr))
+			:decl-gen
+		     	#'(()
+       				(mapcar (fn transpiler-emit-code tr (list `(%var ,_)))
+					  		(funinfo-env *global-funinfo*))))
+    	(js-transpile-epilogue))))

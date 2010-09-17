@@ -90,37 +90,25 @@
         `((defun c-init ()
 		    ,@(mapcar #'list (reverse init-funs)))))))
 
-(defun c-transpile-0 (f files)
-  (map (fn (format f "#include \"~A\"~%" _))
-	   *c-interpreter-headers*)
-  (format f "#define userfun_apply trespecial_apply_compiled~%")
-  (with (tr *c-transpiler*
-		 ; Expand.
-		 tests (when (eq t *have-environment-tests*)
-				 (transpiler-sighten tr (make-environment-tests)))
-	 	 usr (transpiler-sighten-files tr files)
-		 deps (progn
-				(format t "; Collecting dependencies...~%")
-				(transpiler-import-from-environment tr))
-		 decls (transpiler-sighten tr (transpiler-compiled-decls tr)))
-	; Generate.
-    (format t "; Let me think. Hmm")
-    (let code (concat-stringtree
-				  (transpiler-transpile tr deps)
-		     	  (transpiler-transpile tr tests)
- 	         	  (transpiler-transpile tr usr))
-	  (c-transpiler-make-closure-argdef-symbols)
-	  (setf *opt-inline?* nil)
-	  (let cinit (c-transpiler-make-init tr)
-	    (let init (transpiler-transpile tr (transpiler-sighten tr cinit))
-	      (princ (concat-stringtree (transpiler-compiled-decls tr)
-			       				    init code)
-	             f)))))
-  (format t "~%; Everything OK. Done.~%"))
-
-(defun c-transpile (out files &key (obfuscate? nil))
-  (with-temporary *current-transpiler* *c-transpiler*
-    (transpiler-reset *c-transpiler*)
-    (transpiler-switch-obfuscator *c-transpiler* obfuscate?)
-    (make-global-funinfo)
-    (c-transpile-0 out files)))
+(defun c-transpile (files &key (obfuscate? nil))
+  (let tr *c-transpiler*
+	(with-temporary *current-transpiler* tr
+    (transpiler-reset tr)
+    (target-transpile-setup tr :obfuscate? obfuscate?)
+    (concat-stringtree
+	    (mapcar (fn format nil "#include \"~A\"~%" _)
+	   	        *c-interpreter-headers*)
+  	    (format nil "#define userfun_apply trespecial_apply_compiled~%")
+  	    (target-transpile *c-transpiler*
+	  	    :files (mapcar (fn cons 'file _) files)
+	        :dep-gen
+		        #'(()
+			         (transpiler-import-from-environment tr))
+	        :decl-gen
+	  	        #'(()
+			         (c-transpiler-make-closure-argdef-symbols)
+			         (let init (transpiler-transpile tr
+							       (transpiler-sighten tr
+			     				    (c-transpiler-make-init tr)))
+		   	           (concat-stringtree (transpiler-compiled-decls tr)
+								          init))))))))
