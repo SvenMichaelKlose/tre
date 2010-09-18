@@ -100,7 +100,8 @@
 	   	        *c-interpreter-headers*)
   	    (format nil "#define userfun_apply trespecial_apply_compiled~%")
   	    (target-transpile *c-transpiler*
-	  	    :files (mapcar (fn cons 'file _) files)
+	  	    :files-after-deps
+			    (mapcar (fn list _) files)
 	        :dep-gen
 		        #'(()
 			         (transpiler-import-from-environment tr))
@@ -109,6 +110,6 @@
 			         (c-transpiler-make-closure-argdef-symbols)
 			         (let init (transpiler-transpile tr
 							       (transpiler-sighten tr
-			     				    (c-transpiler-make-init tr)))
+			     				       (c-transpiler-make-init tr)))
 		   	           (concat-stringtree (transpiler-compiled-decls tr)
 								          init))))))))

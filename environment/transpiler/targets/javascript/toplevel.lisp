@@ -19,7 +19,9 @@
 				:direction 'input)
 	  	(read-all-lines i))))
 
-(defun js-transpile (files &key (obfuscate? nil) (env? nil))
+(defun js-transpile (files &key (obfuscate? nil)
+						        (files-to-update nil)
+						   		(make-updater nil))
   (let tr *js-transpiler*
     (transpiler-reset tr)
     (target-transpile-setup tr :obfuscate? obfuscate?)
@@ -35,15 +37,17 @@
 		 		 		(when *transpiler-log*
 				   	  	(list (cons 'text *js-base-debug-print*)))
 				 		(list (cons 'text *js-base2*)))
-		  	:files
+		  	:files-after-deps
 				(append (when (eq t *have-environment-tests*)
 				   	  	  (list (cons 'text (make-environment-tests))))
-		 		 		(mapcar (fn cons 'file _) files))
+		 		 		(mapcar (fn list _) files))
 		 	:dep-gen
 		     	#'(()
 				  	(transpiler-import-from-environment tr))
 			:decl-gen
 		     	#'(()
        				(mapcar (fn transpiler-emit-code tr (list `(%var ,_)))
-					  		(funinfo-env *global-funinfo*))))
+					  		(funinfo-env *global-funinfo*)))
+			:files-to-update files-to-update
+			:make-updater make-updater)
     	(js-transpile-epilogue))))

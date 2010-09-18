@@ -90,7 +90,20 @@
   (compiled-strings (make-hash-table :test #'eq))
   (compiled-symbols (make-hash-table :test #'eq))
   (compiled-decls nil)
-  (compiled-inits nil))
+  (compiled-inits nil)
+
+  ; Generated code.
+  (compiled-front nil)
+  (compiled-back nil)
+  (re-files-after-deps nil)
+  (re-files-before-deps nil)
+  (re-front-after-deps nil)
+  (re-front-before-deps nil)
+  (re-back-after-deps nil)
+  (re-back-before-deps nil)
+  (re-dep-gen nil)
+  (re-decl-gen nil)
+  (re-make-updater nil))
 
 (defun transpiler-defined-function (tr name)
   (href (transpiler-defined-functions-hash tr) name))
