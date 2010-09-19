@@ -1,5 +1,5 @@
 /*
- * nix operating system project tre interpreter
+ * TRE interpreter
  * Copyright (c) 2007 Sven Klose <pixel@copei.de>
  *
  * Built-in file I/O functions

@@ -1,17 +1,8 @@
 /*
- * nix operating system project tre interpreter
+ * TRE interpreter
  * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  *
  * Environment
- *
- * The interpreter uses lexical scoping. Dynamic scoping is
- * a subset of lexical scoping and implemented by binding the atoms of
- * arguments to new values until the function returns. Each atom has a
- * stack of bound values for this purpose (symbols and bindings).
- *
- * For lexical scoping the bindings of a function call are stored in
- * the function atoms detail field. Additionally, the environments of the
- * lexically parent functions are bound before the argument.
  */
 
 #include "config.h"

@@ -1,5 +1,5 @@
 /*
- * nix operating system project tre interpreter
+ * TRE interpreter
  * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de
  *
  * Dynamic linker support
