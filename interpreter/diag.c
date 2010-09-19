@@ -104,8 +104,16 @@ trediag_chkptr (treptr x)
 void
 trediag_init ()
 {
+	if (sizeof trediag_listmarks != sizeof tregc_listmarks)
+		treerror_internal (treptr_nil, "Sizes if listmarks in diag and gc differ");
+	if (sizeof trediag_atommarks != sizeof tregc_atommarks)
+		treerror_internal (treptr_nil, "Sizes of atommarks in diag and gc differ");
+	memcpy (trediag_listmarks, tregc_listmarks, sizeof trediag_listmarks);
+	memcpy (trediag_atommarks, tregc_atommarks, sizeof trediag_atommarks);
+/*
     memset (trediag_listmarks, -1, sizeof (trediag_listmarks));
     memset (trediag_atommarks, -1, sizeof (trediag_atommarks));
+*/
 }
 
 #endif /* #ifdef TRE_DIAGNOSTICS */

@@ -203,20 +203,24 @@ tregc_init_maps ()
 void
 tregc_mark_non_internal ()
 {
-	tregc_init_maps ();
-
     tregc_trace_object (treptr_universe);
     tregc_trace_object (treimage_initfun);
 }
 
 void
-tregc_mark (void)
+tregc_mark_stack (void)
 {
 	treptr * s;
 	for (s = trestack_ptr; s != trestack_top; s++)
 		tregc_trace_object (*s);
+}
 
+void
+tregc_mark (void)
+{
+	tregc_init_maps ();
     tregc_mark_non_internal ();
+    tregc_mark_stack ();
 
     tregc_trace_expr_toplevel (TRECONTEXT_FUNSTACK());
 
@@ -294,20 +298,6 @@ tregc_force ()
     if (tregc_running)
 		return;
 
-/*
-	gc_run++;
-    printf ("GC run %ld\n", gc_run);
-	if (tre_atoms[3921].type != TRETYPE_UNUSED) {
-    	printf ("dump\n");
-		treprint (TREATOM_INDEX_TO_PTR(3921));
-	}
- 	if (gc_run == 167)
-		CRASH();
-    if (_CAR(141) != -5) {
-    	treprint (141);
-	}
-*/
-
 #if TRE_VERBOSE_GC
     printf ("before gc");
     tregc_print_stats ();
@@ -373,6 +363,4 @@ tregc_init ()
     tregc_retval_current = treptr_nil;
     tregc_car = treptr_nil;
     tregc_cdr = treptr_nil;
-
-	tregc_init_maps ();
 }

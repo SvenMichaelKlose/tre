@@ -267,8 +267,8 @@ tremain_help (void)
             "\n"
             " -h  Print this help message.\n"
             " -i  Load image file before source-file.\n"
-            " -n  Make new default image.\n"
-            " -H  Print hard info and exit.\n"
+            " -n  Load default environment and make a new default image.\n"
+            " -H  Print info about hard-coded limits and exit.\n"
             "\n"
             "See MANUAL for details.\n");
 }
@@ -281,7 +281,7 @@ tremain_print_hardinfo (void)
 	printf ("Max. atoms: %d\n", NUM_ATOMS);
 	printf ("Max. numbers: %d\n", NUM_NUMBERS);
 	printf ("Max. symbol length: %d characters\n", TRE_MAX_SYMLEN);
-	printf ("Max. string length: %d characters\n", TRE_MAX_STRINGLEN);
+	printf ("Max. literal string length: %d characters\n", TRE_MAX_STRINGLEN);
 	printf ("Max. packages: %d\n", MAX_PACKAGES);
 	printf ("Cells start: %8lX\n", (ulong) &tre_lists);
 	printf ("Cells end:   %8lX\n", (ulong) &tre_lists[NUM_LISTNODES]);
@@ -349,6 +349,10 @@ main (int argc, char *argv[])
     c = 2;
     treimage_load (tremain_imagelaunch ? tremain_imagelaunch : TRE_BOOT_IMAGE);
     tremain_imagelaunch = NULL;
+#ifdef TRE_DIAGNOSTICS
+	tregc_force ();
+    trediag_init ();
+#endif
 
 boot:
     /* Execute boot code. */
@@ -365,6 +369,10 @@ load_error:
 user:
 #ifdef TRE_HAVE_COMPILED_ENV
 	(void) userfun_cInit ();
+#endif
+#ifdef TRE_DIAGNOSTICS
+	tregc_force ();
+    trediag_init ();
 #endif
 	/* Call init function. */
     if (tre_restart_fun != treptr_nil) {
