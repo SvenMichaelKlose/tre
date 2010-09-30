@@ -18,11 +18,13 @@
 (defvar *js-env-path* "environment/transpiler/targets/javascript/environment/")
 
 (defvar *js-base*
-	(js-load-base *js-env-path*
-		"return-value.lisp"
-		"not.lisp"
-		"cons.lisp"
-		"symbol.lisp"))
+	(append (js-load-base "environment/transpiler/environment/"
+                "cps-disable.lisp")
+	        (js-load-base *js-env-path*
+		        "return-value.lisp"
+		        "not.lisp"
+		        "cons.lisp"
+		        "symbol.lisp")))
 
 (defvar *js-base-debug-print*
 		(js-load-base *js-env-path*
@@ -57,4 +59,5 @@
 			"member.lisp"
 			"hash.lisp")
 		(js-load-base "environment/transpiler/environment/"
-			"assoc.lisp")))
+			"assoc.lisp"
+            "cps-enable.lisp")))

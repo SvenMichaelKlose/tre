@@ -39,13 +39,27 @@
   			`(function ,@x)))
   	  `(function ,@x)))
 
+(defun js-cps-exception (x)
+  (when (and (transpiler-continuation-passing-style? *js-transpiler*)
+             *transpiler-except-cps?*)
+    (print `(excepting ,(%defun-name x)))
+    (transpiler-add-cps-exception *js-transpiler* (%defun-name x))))
+
 (define-js-std-macro define-native-js-fun (name args &rest body)
+  (js-cps-exception name)
   (apply #'shared-essential-defun name (%defun-name name) args body))
+
+(define-js-std-macro cps-exception (x)
+  (when *show-definitions*
+    (print `(cps-exception ,x)))
+  (setf *transpiler-except-cps?* x)
+  nil)
 
 (define-js-std-macro defun (name args &rest body)
   (with-gensym g
 	(with (dname (%defun-name name)
 		   n (compiled-function-name dname))
+      (js-cps-exception name)
 	  (when (transpiler-defined-function *js-transpiler* n)
 		(error "Function ~A already defined" name))
       `(progn

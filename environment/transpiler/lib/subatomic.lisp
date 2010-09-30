@@ -5,8 +5,8 @@
 
 (mapcar-macro x
 	'(%quote %new
-	  vm-scope vm-go vm-go-nil
-	  %stack %vec %setq
+	  vm-scope vm-go vm-go-nil vm-call-nil
+	  %stack %vec %setq %tag
 	  %transpiler-native %transpiler-string
 	  %inline
 	  %%funref

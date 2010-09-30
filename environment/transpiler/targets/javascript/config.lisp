@@ -1,4 +1,4 @@
-;;;;; Transpiler: TRE to JavaScript
+;;;;; Transpiler: TRE to ECMAScript
 ;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Configuration
@@ -22,6 +22,7 @@
 		  	    (and (>= _ #\0) (<= _ #\9))
 			    (in=? _ #\_ #\. #\$ #\#)))
 	  :lambda-export? nil
+	  :continuation-passing-style? nil
 	  :needs-var-declarations? t
 	  :stack-locals? nil
 	  :rename-all-args? t

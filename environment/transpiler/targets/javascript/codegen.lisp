@@ -30,6 +30,11 @@
 (define-js-macro vm-go-nil (val tag)
   `(,*js-indent* "if (!" ,val "&&" ,val "!==0&&" ,val "!=='') {_I_=" ,tag "; continue;}" ,*js-newline*))
 
+(define-js-macro vm-call-nil (val consequence alternative)
+  `(,*js-indent* "if (!" ,val "&&" ,val "!==0&&" ,val "!=='') "
+                    ,consequence"();"
+                    "else " ,alternative "();" ,*js-newline*))
+
 (define-js-macro %set-atom-fun (plc val)
   `(%transpiler-native ,*js-indent* ,plc "=" ,val ,*js-separator*))
 
@@ -64,11 +69,13 @@
 
 (define-js-macro %function-epilogue (fi-sym)
   (let fi (get-lambda-funinfo-by-sym fi-sym)
-    `((%function-return ,fi-sym)
-	  ,@(when (< 0 (funinfo-num-tags fi))
-	      `(,*js-indent* "}" ,*js-newline*))
-	  ,@(when (< 0 (funinfo-num-tags fi))
-	      `(,*js-indent* "}" ,*js-newline*)))))
+    (or `(,@(unless (transpiler-continuation-passing-style? *js-transpiler*)
+              `((%function-return ,fi-sym)))
+	      ,@(when (< 0 (funinfo-num-tags fi))
+	          `(,*js-indent* "}" ,*js-newline*))
+	      ,@(when (< 0 (funinfo-num-tags fi))
+	          `(,*js-indent* "}" ,*js-newline*)))
+        "")))
 
 ;;;; ASSIGNMENT
 
@@ -214,6 +221,9 @@
 (define-js-macro %unobfuscated-lookup-symbol (name pkg)
   `(,(transpiler-obfuscate-symbol *js-transpiler*
 								  (compiled-function-name 'symbol))
+       ,@(when (and (transpiler-continuation-passing-style? *js-transpiler*)
+                    (not (transpiler-cps-exception? *js-transpiler* 'symbol)))
+           `(#'(())))
 	   (%transpiler-string
 		   ,(symbol-name
 			    (transpiler-obfuscate-symbol

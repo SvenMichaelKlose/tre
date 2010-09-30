@@ -10,6 +10,8 @@
 (defvar *transpiler-assert* nil)
 (defvar *transpiler-log* nil)
 
+(defvar *transpiler-except-cps?* nil)
+
 (defstruct transpiler
   std-macro-expander
   macro-expander
@@ -69,6 +71,9 @@
   (apply-argdefs? nil)
 
   (inject-function-names? nil)
+
+  (continuation-passing-style? nil)
+  (cps-exceptions nil)
 
   ; You shouldn't have to tweak these at construction-time:
   (symbol-translations nil)
@@ -154,11 +159,17 @@
 (defun transpiler-inline-exception? (tr fun)
   (member fun (transpiler-inline-exceptions tr) :test #'eq))
 
+(defun transpiler-cps-exception? (tr fun)
+  (member fun (transpiler-cps-exceptions tr) :test #'eq))
+
 (define-slot-setter-push! transpiler-add-inline-exception tr
   (transpiler-inline-exceptions tr))
 
 (define-slot-setter-push! transpiler-add-dont-inline tr
   (transpiler-dont-inline-list tr))
+
+(define-slot-setter-push! transpiler-add-cps-exception tr
+  (transpiler-cps-exceptions tr))
 
 (defun transpiler-add-obfuscation-exceptions (tr &rest x)
   (dolist (i x)

@@ -7,13 +7,14 @@
   (and (not (eq 'text file.))
 	   (member file. files-to-update :test #'string=)))
 
-(defun target-transpile-recompile-2 (tr processed compiled-files files-to-update)
-  (mapcar #'((proc comp)
+(defun target-transpile-recompile-2 (tr new old files-to-update)
+  (mapcar #'((n o)
+			   (format t "Recompiling backend file ~A~%" n.)
 			   (concat-stringtree
-			       (if (recompile-file? comp files-to-update)
-				       (transpiler-transpile tr .proc)
-					   .comp)))
-		  processed compiled-files))
+			       (if (recompile-file? n files-to-update)
+				       (transpiler-transpile tr .n)
+					   o)))
+		  new old))
 
 (defun target-transpile-2 (tr files)
   (mapcar (fn concat-stringtree (transpiler-transpile tr ._))
@@ -22,6 +23,7 @@
 (defun target-transpile-recompile-1 (tr compiled-files files-to-update)
   (let sightened-code nil
 	(dolist (i compiled-files sightened-code)
+  	  (format t "Recompiling frontend file ~A~%" i.)
 	  (append! sightened-code
 			   (list (if (recompile-file? i files-to-update)
 						 (cons i.
@@ -157,7 +159,7 @@
 	  (target-transpile-ok)
 	  (awhen make-updater
 	    (setf *updater*
-			  #'((tr files-to-update)
+			  #'((tr &rest files-to-update)
 	  			   (target-transpile-recompile-0 tr
 					   :files-after-deps
 					       (transpiler-re-files-after-deps tr)

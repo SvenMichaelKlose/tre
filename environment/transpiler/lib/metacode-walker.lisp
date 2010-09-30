@@ -57,7 +57,8 @@
 		               ,@(awhen if-cons `((consp ,x) ,!))
 
 		               (not (or (in? (car ,x) '%setq '%var '%function-prologue '%function-epilogue '%function-return '%%tag)
-								(vm-jump? ,x)))
+								(vm-jump? ,x)
+                                (vm-call-nil? ,x)))
 		                 (progn
 			               (print ,x)
 			               (error "metacode statement expected instead"))

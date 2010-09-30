@@ -37,7 +37,8 @@
   ; Number of jump tags in body.
   (num-tags nil)
   
-  (globals nil))
+  (globals nil)
+  (needs-cps? (not *transpiler-except-cps?*)))
 
 (defun funinfo-topmost (fi)
   (let p (funinfo-parent fi)

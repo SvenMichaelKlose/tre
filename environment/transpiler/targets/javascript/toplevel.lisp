@@ -19,6 +19,15 @@
 				:direction 'input)
 	  	(read-all-lines i))))
 
+(defun js-transpile-pre (tr)
+  (concat-stringtree
+      (js-transpile-prologue tr)
+      (when (transpiler-lambda-export? tr)
+        (js-gen-funref-wrapper))))
+
+(defun js-transpile-post ()
+  (js-transpile-epilogue))
+
 (defun js-transpile (files &key (obfuscate? nil)
 						        (files-to-update nil)
 						   		(make-updater nil))
@@ -28,15 +37,13 @@
     (when (transpiler-lambda-export? tr)
       (transpiler-add-wanted-function tr 'array-copy))
 	(concat-stringtree
-    	(js-transpile-prologue tr)
-    	(when (transpiler-lambda-export? tr)
-    	  (js-gen-funref-wrapper))
+		(js-transpile-pre tr)
     	(target-transpile tr
     	 	:files-before-deps
 			    (append (list (cons 'text *js-base*))
-		 		 		(when *transpiler-log*
-				   	  	(list (cons 'text *js-base-debug-print*)))
-				 		(list (cons 'text *js-base2*)))
+		 		  		(when *transpiler-log*
+				   	  	  (list (cons 'text *js-base-debug-print*)))
+				  	    (list (cons 'text *js-base2*)))
 		  	:files-after-deps
 				(append (when (eq t *have-environment-tests*)
 				   	  	  (list (cons 'text (make-environment-tests))))
@@ -50,4 +57,10 @@
 					  		(funinfo-env *global-funinfo*)))
 			:files-to-update files-to-update
 			:make-updater make-updater)
-    	(js-transpile-epilogue))))
+    	(js-transpile-post))))
+
+(defun js-retranspile (files-to-update)
+  (let tr *js-transpiler*
+	(concat-stringtree (js-transpile-pre tr)
+    				   (funcall *updater* tr files-to-update)
+    				   (js-transpile-post))))

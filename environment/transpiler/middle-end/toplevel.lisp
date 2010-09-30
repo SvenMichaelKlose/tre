@@ -4,6 +4,7 @@
 (defun transpiler-expression-expand (tr x)
     (expression-expand (transpiler-expex tr) x))
 
+(defvar fnord 3)
 ;; After this pass
 ;; - Functions are assigned run-time argument definitions
 ;; - VM-SCOPEs are removed. All code is flat with jump tags.
@@ -17,6 +18,9 @@
 		  _)
       #'transpiler-update-funinfo
 ;	  (fn metacode-fblock _)
+      (fn if (transpiler-continuation-passing-style? tr)
+             (cps _)
+             _)
       #'opt-places-remove-unused
       #'opt-places-find-used
       #'opt-peephole
