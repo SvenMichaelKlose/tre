@@ -25,7 +25,9 @@
 	  ,@(when (transpiler-lambda-export? *current-transpiler*)
 		  (funinfo-copiers-to-lexicals fi))
       ,@body
-	  (%function-epilogue ,fi-sym))))
+	  ,@(unless (and (transpiler-continuation-passing-style? *current-transpiler*)
+                     (funinfo-needs-cps? fi))
+          `((%function-epilogue ,fi-sym))))))
 
 (defun make-function-prologues-fun (name fun-expr)
   (let fi (get-lambda-funinfo fun-expr)

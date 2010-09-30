@@ -63,10 +63,11 @@
 		 after-deps (funcall front-after))
 	(format t "; Importing dependencies....~%")
   	(force-output)
-	(awhen dep-gen
-      (push! (cons 'text
-				   (funcall !))
-		     after-deps))
+    (with-temporary *transpiler-except-cps?* t
+	  (awhen dep-gen
+        (push! (cons 'text
+				     (funcall !))
+		       after-deps)))
     (format t "; Let me think. Hmm")
   	(force-output)
     (setf (transpiler-re-front-after-deps tr) after-deps)

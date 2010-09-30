@@ -42,7 +42,6 @@
 (defun js-cps-exception (x)
   (when (and (transpiler-continuation-passing-style? *js-transpiler*)
              *transpiler-except-cps?*)
-    (print `(excepting ,(%defun-name x)))
     (transpiler-add-cps-exception *js-transpiler* (%defun-name x))))
 
 (define-js-std-macro define-native-js-fun (name args &rest body)

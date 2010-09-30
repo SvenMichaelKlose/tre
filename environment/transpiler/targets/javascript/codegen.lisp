@@ -69,7 +69,8 @@
 
 (define-js-macro %function-epilogue (fi-sym)
   (let fi (get-lambda-funinfo-by-sym fi-sym)
-    (or `(,@(unless (transpiler-continuation-passing-style? *js-transpiler*)
+    (or `(,@(unless (and (transpiler-continuation-passing-style? *js-transpiler*)
+                         (funinfo-needs-cps? fi))
               `((%function-return ,fi-sym)))
 	      ,@(when (< 0 (funinfo-num-tags fi))
 	          `(,*js-indent* "}" ,*js-newline*))
