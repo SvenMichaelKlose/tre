@@ -29,12 +29,9 @@
 			(cons path *environment-filenames*))
       (load (string-concat *environment-path* "/environment/" path))))
 
+(env-load "stage0/config-early.lisp")
 (env-load "stage0/main.lisp")
-
-(setq *show-definitions* t)
-(if (eq *show-definitions* '*show-definitions*)
-    (setq *show-definitions* nil))
-
+(env-load "stage0/config.lisp")
 (env-load "stage1/main.lisp")
 
 (defun currently-defined-functions ()
@@ -42,7 +39,6 @@
 
 (defvar *functions-after-stage-1* (currently-defined-functions))
 
-(defvar *assert* nil)
 (env-load "stage2/main.lisp")
 
 (defvar *functions-after-stage-2* (currently-defined-functions))
@@ -57,13 +53,6 @@
 (defvar *functions-after-stage-5* (currently-defined-functions))
 
 (env-load "lib/main.lisp")
-
-(defvar *tre-has-math* t)
-(defvar *tre-has-alien* t)
-(defvar *tre-has-class* t)
-(defvar *tre-has-editor* nil)
-(defvar *tre-has-compiler* t)
-(defvar *tre-has-transpiler* t)
 
 (when *tre-has-math*
   (env-load "math/main.lisp"))
