@@ -51,8 +51,7 @@
     (transpiler-print-obfuscations tr)))
 
 (defun php-transpile-ok ()
-  (format t "~%; Everything OK. ~A instructions. Done.~%"
-			*codegen-num-instructions*))
+  (format t "~%; Everything OK. Done.~%"))
 
 (defun php-transpile (out files &key (obfuscate? nil) (env? nil))
   (let tr *php-transpiler*

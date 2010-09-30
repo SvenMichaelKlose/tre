@@ -3,8 +3,6 @@
 ;;;;;
 ;;;;; Convert tags into %%TAG-expressions
 
-(defvar *codegen-num-instructions* 0)
-
 (defun transpiler-finalize-sexprs-fun (x)
   (transpiler-finalize-sexprs (lambda-body x)))
 

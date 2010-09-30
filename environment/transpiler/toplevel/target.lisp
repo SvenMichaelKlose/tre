@@ -55,7 +55,8 @@
 							  	   		 (back-before nil)
 							  	   		 (back-after nil)
 								   		 (dep-gen nil)
-							 	   		 (decl-gen nil))
+							 	   		 (decl-gen nil)
+                                         (print-obfuscations? nil))
   (setf (transpiler-re-files-after-deps tr) files-after-deps)
   (setf (transpiler-re-files-before-deps tr) files-before-deps)
   (with (before-deps (funcall front-before)
@@ -82,7 +83,8 @@
 									       :files-after-deps compiled-after
 										   :dep-gen dep-gen
 										   :decl-gen decl-gen)
-        (transpiler-print-obfuscations tr)))))
+        (when print-obfuscations?
+          (transpiler-print-obfuscations tr))))))
 
 (defun target-transpile-recompile-0 (tr &key (files-after-deps nil)
 							  	   			 (files-before-deps nil)
@@ -119,7 +121,8 @@
 (defun target-transpile-0 (tr &key (files-after-deps nil)
 							  	   (files-before-deps nil)
 								   (dep-gen nil)
-							 	   (decl-gen nil))
+							 	   (decl-gen nil)
+                                   (print-obfuscations? nil))
   (target-transpile-generic tr
 	  :files-before-deps files-before-deps
 	  :files-after-deps files-after-deps
@@ -136,11 +139,11 @@
   		  #'((processed)
 	  		   (target-transpile-2 tr processed))
 	  :dep-gen dep-gen
-	  :decl-gen decl-gen))
+	  :decl-gen decl-gen
+      :print-obfuscations? print-obfuscations?))
 
 (defun target-transpile-ok ()
-  (format t "~%; Everything OK. ~A instructions. Done.~%"
-			*codegen-num-instructions*))
+  (format t "~%; Everything OK. Done.~%"))
 
 (defvar *updater* nil)
 
@@ -149,7 +152,8 @@
 								 (files-to-update nil)
 								 (dep-gen nil)
 								 (decl-gen nil)
-								 (make-updater nil))
+								 (make-updater nil)
+                                 (print-obfuscations? nil))
   (with-temporary *current-transpiler* tr
     (prog1
 	  (target-transpile-0 tr :files-after-deps files-after-deps
