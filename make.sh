@@ -1,11 +1,19 @@
 #!/bin/sh
+# TRE programming language
+# Build script
+# Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
 
 svnversion -n >_current-version
 
 ARGS="$2 $3 $4 $5 $6 $7 $8 $9"
 
 BOOT_IMAGE=`echo ~/.tre.image`
-FILES="alien_dl.c alloc.c argument.c array.c atom.c
+FILES="
+    alien_dl.c
+    alloc.c
+    argument.c
+    array.c
+    atom.c
 
 	builtin.c
 	builtin_arith.c builtin_array.c builtin_atom.c
@@ -60,6 +68,11 @@ GNU_LIBC_FLAGS="-D_GNU_SOURCE -D_BSD_SOURCE -D_SVID_SOURCE"
 C_DIALECT_FLAGS="-ansi -Wall " #-Werror"
 
 CFLAGS="-pipe $C_DIALECT_FLAGS $GNU_LIBC_FLAGS $BUILD_MACHINE_INFO -DTRE_BOOT_IMAGE=\"$BOOT_IMAGE\" $ARGS"
+
+DEBUGOPTS="-O0 -g"
+BUILDOPTS="-O3 -fomit-frame-pointer -ffast-math"
+CRUNSHOPTS="-O3 -fomit-frame-pointer -ffast-math -fwhole-program -lm --whole-program"
+CRUNSHFLAGS="-DTRE_COMPILED_CRUNSHED -Iinterpreter"
 
 LIBFLAGS="-lm -lffi"
 
@@ -135,42 +148,42 @@ install_it_without_reload ()
 
 case $1 in
 debug)
-	COPTS="$COPTS -O0 -g"
+	COPTS="$COPTS $DEBUGOPTS"
 	standard_compile
 	link
 	install_it
 	;;
 
 debugraw)
-	COPTS="$COPTS -O0 -g"
+	COPTS="$COPTS $DEBUGOPTS"
 	standard_compile
 	link
 	install_it_without_reload
 	;;
 
 build)
-	COPTS="$COPTS -O3 -fomit-frame-pointer -ffast-math"
+	COPTS="$COPTS $BUILDOPTS"
 	standard_compile
 	link
 	install_it
 	;;
 
 crunsh)
-	CFLAGS="$CFLAGS -DTRE_COMPILED_CRUNSHED -Iinterpreter"
-	COPTS="$COPTS -O3 -fomit-frame-pointer -ffast-math -fwhole-program -lm --whole-program"
+	CFLAGS="$CFLAGS $CRUNSHFLAGS"
+	COPTS="$COPTS $CRUNSHOPTS"
 	crunsh_compile
 	install_it
 	;;
 
 boot0)
-	CFLAGS="$CFLAGS -DTRE_COMPILED_CRUNSHED -Iinterpreter"
-	COPTS="$COPTS -O3 -fomit-frame-pointer -ffast-math -fwhole-program -lm --whole-program"
+	CFLAGS="$CFLAGS $CRUNSHFLAGS"
+	COPTS="$COPTS $CRUNSHOPTS"
 	crunsh_compile
 	;;
 
 crunshraw)
-	CFLAGS="$CFLAGS -DTRE_COMPILED_CRUNSHED -Iinterpreter"
-	COPTS="$COPTS -O3 -fomit-frame-pointer -ffast-math -fwhole-program -lm --whole-program"
+	CFLAGS="$CFLAGS $CRUNSHFLAGS"
+	COPTS="$COPTS $CRUNSHOPTS"
 	crunsh_compile
 	install_it_without_reload
 	;;
@@ -207,4 +220,3 @@ clean)
 *)
 	echo "Usage: make.sh build|clean|crunsh|debug [args]"
 esac
-
