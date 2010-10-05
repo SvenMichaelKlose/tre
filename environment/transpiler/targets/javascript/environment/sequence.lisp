@@ -13,10 +13,12 @@
 (dont-inline map) ; XXX make it MAPHASH.
 
 (defun maparray (fun hash)
-  (%transpiler-native "null;for (i = 0; i < hash.length; i++) fun (hash[i])"))
+  (dotimes (i (length hash))
+    (funcall fun (aref hash i))))
 
 (defun maphash (fun hash)
-  (%transpiler-native "null;for (i in hash) fun (i, hash[i])"))
+  (dolist (i (%property-list hash))
+    (funcall fun i. .i)))
 
 (defun elt (seq idx)
   (if

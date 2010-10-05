@@ -24,7 +24,10 @@
 		        "return-value.lisp"
 		        "not.lisp"
 		        "cons.lisp"
-		        "symbol.lisp")))
+		        "symbol.lisp"
+		        "propertylist.lisp")
+		    (js-load-base "environment/transpiler/environment/"
+                "cps-enable.lisp")))
 
 (defvar *js-base-debug-print*
 		(js-load-base *js-env-path*
@@ -59,5 +62,4 @@
 			"member.lisp"
 			"hash.lisp")
 		(js-load-base "environment/transpiler/environment/"
-			"assoc.lisp"
-            "cps-enable.lisp")))
+			"assoc.lisp")))
