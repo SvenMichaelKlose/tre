@@ -169,6 +169,9 @@
 (defun expex-move-arg-std (ex x)
   (with (s (expex-funinfo-env-add)
     	 (moved new-expr) (expex-expr ex x))
+      (when (and (lambda-expr? x)
+                 (funinfo-needs-cps? (get-lambda-funinfo x)))
+        (transpiler-add-cps-function *current-transpiler* s))
       (cons (append moved
 		    		(if (expex-returnable? ex new-expr.)
 		        		(list (expex-guest-filter-setter ex
@@ -249,6 +252,9 @@
 (defun expex-var (x)
   (funinfo-env-add *expex-funinfo* .x.)
   (values nil nil))
+
+(defun list-without-noargs-tag (x)
+  (remove 'no-args x))
 
 ;; Expand expression depending on type.
 ;;
@@ -333,10 +339,7 @@
 (defun expex-body (ex x &optional (s '~%ret))
   (expex-make-return-value ex s
       (expex-list ex
-	      (expex-save-atoms
-		      (if (eq 'no-args x.)
-				  .x
-				  x)))))
+	      (expex-save-atoms (list-without-noargs-tag x)))))
 
 ;;;; TOPLEVEL
 

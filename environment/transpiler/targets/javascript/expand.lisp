@@ -24,9 +24,6 @@
 						,(body-with-noargs-tag frm)))
 		     (setf (slot-value ,g 'tre-exp)
 			       ,(compile-argument-expansion g frm.))
-		     ,@(when (and (transpiler-continuation-passing-style? *js-transpiler*)
-                          (not *transpiler-except-cps?*))
-                 `((setf (slot-value ,g 'tre-cps) t)))
 		     ,g)
 		 nil))))
 
@@ -39,7 +36,7 @@
 		(if (and (not (simple-argument-list? frm.))
 			     (not (eq 'no-args .frm.)))
 			(js-make-function-with-compiled-argument-expansion x)
-  			`(function ,@x)))
+  		    `(function ,@x)))
   	  `(function ,@x)))
 
 (defun js-cps-exception (x)

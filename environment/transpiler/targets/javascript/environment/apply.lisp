@@ -31,3 +31,11 @@
 	      (aif fun.tre-exp
 		       (!.apply nil (%transpiler-native "[" args "]"))
     	       (fun.apply nil (list-array args))))))
+
+(cps-exception nil)
+
+(defun funcall (fun &rest args)
+  (apply fun args))
+
+(cps-exception t)
+

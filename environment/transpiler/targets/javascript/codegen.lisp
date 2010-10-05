@@ -28,7 +28,7 @@
   `(,*js-indent* "_I_=" ,tag "; continue" ,*js-separator*))
 
 (define-js-macro vm-go-nil (val tag)
-  `(,*js-indent* "if (!" ,val "&&" ,val "!==0&&" ,val "!=='') {_I_=" ,tag "; continue;}" ,*js-newline*))
+  `(,*js-indent* "if (typeof ",val"=='undefined'||!" ,val "&&" ,val "!==0&&" ,val "!=='') {_I_=" ,tag "; continue;}" ,*js-newline*))
 
 (define-js-macro vm-call-nil (val consequence alternative)
   `(,*js-indent* "if (!" ,val "&&" ,val "!==0&&" ,val "!=='') "
@@ -67,10 +67,18 @@
   (let fi (get-lambda-funinfo-by-sym fi-sym)
     `(,*js-indent* "return " ,(transpiler-obfuscate *js-transpiler* (place-assign (place-expand-0 fi '~%ret))) ,*js-separator*)))
 
+(define-js-macro %function-return-cps (fi-sym)
+  (let fi (get-lambda-funinfo-by-sym fi-sym)
+    (if (and (funinfo-num-tags fi)
+             (< 0 (funinfo-num-tags fi)))
+        `(,*js-indent*  "return" ,*js-separator*)
+        "")))
+
 (define-js-macro %function-epilogue (fi-sym)
   (let fi (get-lambda-funinfo-by-sym fi-sym)
-    (or `(,@(unless (and (transpiler-continuation-passing-style? *js-transpiler*)
-                         (funinfo-needs-cps? fi))
+    (or `(,@(if (and (transpiler-continuation-passing-style? *js-transpiler*)
+                     (funinfo-needs-cps? fi))
+              `((%function-return-cps ,fi-sym))
               `((%function-return ,fi-sym)))
 	      ,@(when (< 0 (funinfo-num-tags fi))
 	          `(,*js-indent* "}" ,*js-newline*))

@@ -74,6 +74,7 @@
 
   (continuation-passing-style? nil)
   (cps-exceptions nil)
+  (cps-functions nil)
 
   ; You shouldn't have to tweak these at construction-time:
   (symbol-translations nil)
@@ -162,6 +163,9 @@
 (defun transpiler-cps-exception? (tr fun)
   (member fun (transpiler-cps-exceptions tr) :test #'eq))
 
+(defun transpiler-cps-function? (tr fun)
+  (member fun (transpiler-cps-functions tr) :test #'eq))
+
 (define-slot-setter-push! transpiler-add-inline-exception tr
   (transpiler-inline-exceptions tr))
 
@@ -181,6 +185,9 @@
 
 (define-slot-setter-push! transpiler-add-exported-closure tr
   (transpiler-exported-closures tr))
+
+(define-slot-setter-push! transpiler-add-cps-function tr
+  (transpiler-cps-functions tr))
 
 (defun transpiler-plain-arg-fun? (tr fun)
   (member fun (transpiler-plain-arg-funs tr) :test #'eq))
