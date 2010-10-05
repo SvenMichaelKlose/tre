@@ -22,7 +22,7 @@
 		  	    (and (>= _ #\0) (<= _ #\9))
 			    (in=? _ #\_ #\. #\$ #\#)))
 	  :lambda-export? nil
-	  :continuation-passing-style? t
+	  :continuation-passing-style? nil
 	  :needs-var-declarations? t
 	  :stack-locals? nil
 	  :rename-all-args? t

@@ -2,9 +2,8 @@
 ;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 
 (defun transpiler-expression-expand (tr x)
-    (expression-expand (transpiler-expex tr) x))
+  (expression-expand (transpiler-expex tr) x))
 
-(defvar fnord 3)
 ;; After this pass
 ;; - Functions are assigned run-time argument definitions
 ;; - VM-SCOPEs are removed. All code is flat with jump tags.

@@ -24,6 +24,9 @@
 						,(body-with-noargs-tag frm)))
 		     (setf (slot-value ,g 'tre-exp)
 			       ,(compile-argument-expansion g frm.))
+		     ,@(when (and (transpiler-continuation-passing-style? *js-transpiler*)
+                          (not *transpiler-except-cps?*))
+                 `((setf (slot-value ,g 'tre-cps) t)))
 		     ,g)
 		 nil))))
 

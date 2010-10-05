@@ -18,26 +18,76 @@
        (not (expander-has-macro? (transpiler-macro-expander *current-transpiler*)
                                  (compiled-function-name (car (%setq-value x)))))))
 
+(defun cps-apply? (x)
+  (and (%setq-funcall? x)
+       (eq 'apply (car (%setq-value x)))))
+
+(defun cps-methodcall? (x)
+  (and (%setq? x)
+       (consp (%setq-value x))
+       (%slot-value? (car (%setq-value x)))))
+
+(defun cps-split-funcall-0 (fi x xlats args)
+  `((%setq nil (,(car (%setq-value x.))
+                ,@args))))
+
+(defun cps-split-make-continuer (fi x xlats)
+  (aif (%setq-place x.)
+       (copy-lambda
+           `#'((_)
+                (%setq ,(%setq-place x.) _)
+                (%setq nil (,(cps-cons-function-name .x xlats))))
+           :args '(_)
+           :info (make-funinfo :args '(_)
+           :parent fi))
+       (cps-cons-function-name .x xlats)))
+
+(defun cps-split-funcall (fi x xlats)
+  (cps-split-funcall-0 fi x xlats
+      `(,(cps-split-make-continuer fi x xlats)
+        ,@(cdr (%setq-value x.)))))
+
+(defun cps-split-apply (fi x xlats)
+  (print 'apply)
+  (with-gensym g
+    `((%setq ,g (cons ,(cps-split-make-continuer fi x xlats)
+                      ,@(cdr (%setq-value x.))))
+      ,@(cps-split-funcall-0 fi x xlats (list g)))))
+
+(defun cps-split-methodcall (fi x xlats)
+  (with (method (car (%setq-value x.))
+         tag-no-cps (gensym-number)
+         tag-end (gensym-number))
+    (with-gensym g
+      `((vm-go-nil (%slot-value ,method tre-cps) ,tag-no-cps)
+        ,@(cps-split-funcall fi x xlats)
+        (vm-go ,tag-end)
+        ,tag-no-cps
+        ,x.
+        (%setq nil (,(cps-cons-function-name .x xlats)))
+        ,tag-end))))
+
 (defun cps-split (fi x xlats tag-xlats &key (first? t))
   (if
+    (cps-apply? x.)
+      (cps-split-apply fi x xlats)
+    (cps-methodcall? x.)
+      (cps-split-methodcall fi x xlats)
     (cps-funcall? x.)
-      `((%setq nil (,(car (%setq-value x.))
-                    ,(aif (%setq-place x.)
-                          (copy-lambda
-                              `#'((_)
-                                   (%setq ,(%setq-place x.) _)
-                                   (%setq nil (,(cps-cons-function-name .x xlats))))
-                              :args '(_)
-                              :info (make-funinfo :args '(_)
-                                                  :parent fi))
-                          (cps-cons-function-name .x xlats))
-                    ,@(cdr (%setq-value x.)))))
+      (cps-split-funcall fi x xlats)
     (vm-go? x.)
       `((%setq nil (,(cps-tag-function-name (second x.) xlats tag-xlats))))
     (vm-go-nil? x.)
       `((vm-call-nil ,(second x.)
                      ,(cps-tag-function-name (third x.) xlats tag-xlats)
                      ,(cps-cons-function-name .x xlats)))))
+
+(defun cps-splitpoint-expr? (x)
+  (or (cps-apply? x)
+      (cps-funcall? x)
+      (cps-methodcall? x)
+      (vm-go? x)
+      (vm-go-nil? x)))
 
 (defun cps-body (fi continuer x xlats tag-xlats &key (first? t))
   (if
@@ -51,9 +101,7 @@
                 nil))
           (append `((%setq nil (,(cps-cons-function-name x xlats))))
                   (list (list x))))
-    (or (cps-funcall? x.)
-        (vm-go? x.)
-        (vm-go-nil? x.))
+    (cps-splitpoint-expr? x.)
       (append (cps-split fi x xlats tag-xlats :first? first?)
               (list (list .x)))
     (not .x)
@@ -81,9 +129,7 @@
       (numberp x.)
         (cons (cons x (gensym))
               (cps-get-xlats .x :first? nil))
-      (or (cps-funcall? x.)
-          (vm-go? x.)
-          (vm-go-nil? x.))
+      (cps-splitpoint-expr? x.)
         (if first?
             (cons (cons x (gensym))
                   (cons (cons .x (gensym))
