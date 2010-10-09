@@ -1,7 +1,5 @@
-;;;; nix operating system project
+;;;; TRE environment
 ;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
-;;;;
-;;;; Test lexical scope.
 
 (defun lexical2 ()
   (labels ((x () 2))

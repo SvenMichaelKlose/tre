@@ -1,8 +1,5 @@
-;;;; nix operating system project
-;;;; list processor environment
-;;;; Copyright (C) 2005,2008 Sven Klose <pixel@copei.de>
-;;;;
-;;;; Mathematical functions
+;;;; TRE environment
+;;;; Copyright (c) 2005,2008 Sven Klose <pixel@copei.de>
 
 (defun abs (x)
   (if (< x 0)

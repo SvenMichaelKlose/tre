@@ -1,8 +1,5 @@
-;;;; nix operating system project
-;;;; list processor environment
-;;;; Copyright (C) 2005-2006,2008 Sven Klose <pixel@copei.de>
-;;;;
-;;;; Evaluation
+;;;; TRE environment
+;;;; Copyright (c) 2005-2006,2008 Sven Klose <pixel@copei.de>
 
 (defmacro return (&optional (expr nil))
   `(return-from nil ,expr))

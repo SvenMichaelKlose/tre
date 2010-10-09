@@ -1,12 +1,8 @@
-;;;; nix operating system project
-;;;; list processor environment
-;;;; Copyright (C) 2005-2008 Sven Klose <pixel@copei.de>
-;;;;
-;;;; Conditional evaluation
+;;;; TRE environment
+;;;; Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
 
 (defmacro when (predicate &rest expr)
   `(and ,predicate
-        ; Encapsulate multiple expressions into PROGN.
         ,(if (cdr expr)
 	         `(progn ,@expr)
 	         (car expr))))

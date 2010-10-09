@@ -1,4 +1,4 @@
-;;;;; nix lisp compiler
+;;;;; TRE compiler
 ;;;;; Copyright (c) 2007,2009 Sven Klose <pixel@copei.de>
 
 (defvar *verbose-compiler* t)

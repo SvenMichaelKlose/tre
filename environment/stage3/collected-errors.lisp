@@ -1,6 +1,5 @@
-;;;; nix operating system project
-;;;; tree processor environment
-;;;; Copyright (C) 2008 Sven Klose <pixel@copei.de>
+;;;; TRE environment
+;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
 
 (defvar *collected-errors* nil)
 

@@ -1,8 +1,5 @@
-;;;; nix operating system project
-;;;; list processor environment
-;;;; Copyright (C) 2005-2006 Sven Klose <pixel@copei.de>
-;;;;
-;;;; Standard streams
+;;;; TRE environment
+;;;; Copyright (c) 2005-2006 Sven Klose <pixel@copei.de>
 
 (defun make-standard-stream ()
   (make-stream :fun-in #'((str) (%read-char nil))
