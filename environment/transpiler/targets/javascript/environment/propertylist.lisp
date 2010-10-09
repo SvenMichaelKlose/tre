@@ -8,6 +8,9 @@
 (defun %property-list-0 (key val)
   (push! (cons key val) *%property-list-tmp*))
 
+(dont-inline %property-list)
+(dont-obfuscate fun i hash %property-list-0)
+
 (defun %property-list (hash )
   (setf *%property-list-tmp* nil)
   (%transpiler-native

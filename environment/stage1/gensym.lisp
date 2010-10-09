@@ -11,5 +11,4 @@
 
 ;; Returns newly created, unique symbol.
 (%defun gensym ()
-  (progn
-    (make-symbol (string-concat "~G" (string (gensym-number))))))
+  (make-symbol (string-concat "~G" (string (gensym-number)))))

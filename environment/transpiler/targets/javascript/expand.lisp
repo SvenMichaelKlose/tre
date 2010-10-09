@@ -17,6 +17,8 @@
 (defun js-make-function-with-compiled-argument-expansion (x)
   (let frm (function-form-body-args-and-body x)
     (with-gensym g
+      (when (in-cps-mode?)
+        (transpiler-add-cps-function *js-transpiler* g))
 	  `(#'((,g)
 	         (setf ,g (function
 						,@(awhen (function-form-body-funinfo-sym x)
@@ -40,8 +42,7 @@
   	  `(function ,@x)))
 
 (defun js-cps-exception (x)
-  (when (and (transpiler-continuation-passing-style? *js-transpiler*)
-             *transpiler-except-cps?*)
+  (unless (in-cps-mode?)
     (transpiler-add-cps-exception *js-transpiler* (%defun-name x))))
 
 (define-js-std-macro define-native-js-fun (name args &rest body)
@@ -59,6 +60,8 @@
 	(with (dname (%defun-name name)
 		   n (compiled-function-name dname))
       (js-cps-exception name)
+      (when (in-cps-mode?)
+        (transpiler-add-cps-function *js-transpiler* dname))
 	  (when (transpiler-defined-function *js-transpiler* n)
 		(error "Function ~A already defined" name))
       `(progn

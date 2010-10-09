@@ -9,9 +9,6 @@
 	    (%list-length x)
 	    x.length)))
 
-(dont-obfuscate fun hash)
-(dont-inline map) ; XXX make it MAPHASH.
-
 (defun maparray (fun hash)
   (dotimes (i (length hash))
     (funcall fun (aref hash i))))

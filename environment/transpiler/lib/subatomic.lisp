@@ -11,6 +11,7 @@
 	  %inline
 	  %%funref
 	  %setq-atom-value
+	  %set-atom-fun
 	  %function-prologue
 	  %function-epilogue
 	  %function-return)

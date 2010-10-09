@@ -256,6 +256,14 @@
 (defun list-without-noargs-tag (x)
   (remove 'no-args x))
 
+(defun expex-cps (x)
+  (when (or (%setq? x)
+            (%set-atom-fun? x))
+    (let v (%setq-value x)
+      (when (and (lambda-expr? v)
+                 (funinfo-needs-cps? (get-lambda-funinfo v)))
+        (transpiler-add-cps-function *current-transpiler* (%setq-place x))))))
+
 ;; Expand expression depending on type.
 ;;
 ;; Recurses into LAMBDA-expressions and VM-SCOPEs.
@@ -264,6 +272,7 @@
   (let x (if (named-lambda? expr)
 		     expr
 			 (expex-guest-filter-expr ex expr))
+    (expex-cps x)
     (if
 	  (%var? x)
 	    (expex-var x)

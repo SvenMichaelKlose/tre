@@ -96,15 +96,23 @@
         (append (compexp-main argdefs)
 		        (compile-argument-expansion-defaults key-args)))))
 
+(defun compile-argument-expansion-function-body (fun-name adef p toplevel-continuer names)
+  `(with ,(mapcan (fn `(,_ ,(list 'quote _)))
+	              names)
+     ,@(compile-argument-expansion-0 adef p)
+     ((%transpiler-native ,fun-name) ,@toplevel-continuer ,@names)))
+
 (defun compile-argument-expansion (fun-name adef)
   (if (and (= 2 (length adef))
 		   (eq '&rest adef.))
 	  (list 'function fun-name)
       (let-if names (argument-expand-names 'compile-argument-expansion adef)
           (with-gensym p
-            `#'((,p)
-		          (with ,(mapcan (fn `(,_ ,(list 'quote _)))
-					             names)
-	                ,@(compile-argument-expansion-0 adef p)
-		            ((%transpiler-native ,fun-name) ,@names))))
+            (if (in-cps-mode?)
+                (with-gensym toplevel-continuer
+                  (print `#'((,p)
+                       (let ,toplevel-continuer ~%continuer
+                         ,(compile-argument-expansion-function-body fun-name adef p (list toplevel-continuer) names)))))
+                `#'((,p)
+                     ,(compile-argument-expansion-function-body fun-name adef p nil names))))
 	      (list 'function fun-name))))

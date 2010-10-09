@@ -38,10 +38,15 @@
 ;;;; Functions required by imported environment functions.
 (defvar *js-base2*
 	(append
+	    (js-load-base "environment/transpiler/environment/"
+            "cps-disable.lisp")
 		(js-load-base *js-env-path*
 			"character.lisp"
 			"number.lisp"
-			"number-typing.lisp"
+			"number-typing.lisp")
+		(js-load-base "environment/transpiler/environment/"
+            "cps-enable.lisp")
+		(js-load-base *js-env-path*
 			"apply.lisp"
 			"array.lisp"
 			"atom.lisp")
