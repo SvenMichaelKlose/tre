@@ -9,14 +9,15 @@
   (push! (cons key val) *%property-list-tmp*))
 
 (dont-inline %property-list)
-(dont-obfuscate fun i hash %property-list-0)
+(dont-obfuscate fun i hash)
 
 (defun %property-list (hash )
   (setf *%property-list-tmp* nil)
   (%transpiler-native
       "null;for (i in hash) "
-      ,(transpiler-obfuscate *js-transpiler*
-                             (compiled-function-name '%property-list-0))
+      ,(symbol-name
+           (transpiler-obfuscate *js-transpiler*
+               (compiled-function-name '%property-list-0)))
       "(i, hash[i]);")
   (reverse *%property-list-tmp*))
 
