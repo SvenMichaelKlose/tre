@@ -159,7 +159,8 @@
 	  (target-transpile-0 tr :files-after-deps files-after-deps
 						  	 :files-before-deps files-before-deps
 						     :dep-gen dep-gen
-							 :decl-gen decl-gen)
+							 :decl-gen decl-gen
+                             :print-obfuscations? print-obfuscations?)
 	  (target-transpile-ok)
 	  (awhen make-updater
 	    (setf *updater*

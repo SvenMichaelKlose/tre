@@ -29,7 +29,8 @@
   (js-transpile-epilogue))
 
 (defun js-transpile (files &key (obfuscate? nil)
-						        (files-to-update nil)
+                                (print-obfuscations? nil)
+                                (files-to-update nil)
 						   		(make-updater nil))
   (let tr *js-transpiler*
     (transpiler-reset tr)
@@ -56,7 +57,8 @@
        				(mapcar (fn transpiler-emit-code tr (list `(%var ,_)))
 					  		(funinfo-env *global-funinfo*)))
 			:files-to-update files-to-update
-			:make-updater make-updater)
+			:make-updater make-updater
+			:print-obfuscations? print-obfuscations?)
     	(js-transpile-post))))
 
 (defun js-retranspile (files-to-update)
