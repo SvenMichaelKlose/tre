@@ -15,9 +15,8 @@
   (setf *%property-list-tmp* nil)
   (%transpiler-native
       "null;for (i in hash) "
-      ,(transpiler-symbol-string *js-transpiler*
-           (transpiler-obfuscate *js-transpiler*
-               (compiled-function-name '%property-list-0)))
+      ,(transpiler-obfuscated-symbol-string *js-transpiler*
+           (compiled-function-name '%property-list-0))
       "(i, hash[i]);")
   (reverse *%property-list-tmp*))
 

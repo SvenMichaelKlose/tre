@@ -10,7 +10,7 @@
   ($ '_I_S x))
 
 (defun js-codegen-symbol-constructor (tr x)
-  (let s (transpiler-symbol-string tr (transpiler-obfuscate tr (compiled-function-name 'symbol)))
+  (let s (transpiler-obfuscated-symbol-string tr (compiled-function-name 'symbol))
     `(,s "(\"" ,(symbol-name x) "\", "
 		 ,@(if (symbol-package x)
 		   	   `((,s "(\"" ,(symbol-name (symbol-package x)) "\", null)"))
