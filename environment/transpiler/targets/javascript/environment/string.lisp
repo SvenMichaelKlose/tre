@@ -76,4 +76,4 @@
 (defun %subseq-string (seq start end)
   (if (integer= start end)
 	  ""
-      (seq.substr start end)))
+      (seq.substr start (- end start))))
