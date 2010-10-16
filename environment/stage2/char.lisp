@@ -1,20 +1,5 @@
 ;;;; TRE environment
-;;;; Copyright (C) 2005-2006,2008-2009 Sven Klose <pixel@copei.de>
-;;;;
-;;;; Character functions
-
-(defun lower-case-p (c)
-  "Return T if character is lower case."
-  (range-p c #\a #\z))
-
-(defun upper-case-p (c)
-  "Return T if character is upper case."
-  (range-p c #\A #\Z))
-
-(defun alpha-char-p (c)
-  "Return T if argument is an alphabetic character."
-  (or (lower-case-p c)
-      (upper-case-p c)))
+;;;; Copyright (C) 2005-2006,2008-2010 Sven Klose <pixel@copei.de>
 
 (defun char-upcase (c)
   "Return upper case equivalent of lower case character."
@@ -28,9 +13,25 @@
     			 (character+ c (character- #\a #\A))
     			 c)))
 
-;XXX error on c-transpiler call if base has no init.
-(defun digit-char-p (c &optional (base 10))
-  "Return T if character is a digit."
+
+(defmacro def-rest-predicate (name iter args test-expr)
+  (with-gensym x
+    `(defun ,name (&rest ,x ,@args)
+       (dolist (,iter ,x t)
+         (unless ,test-expr
+           (return nil))))))
+
+(def-rest-predicate lower-case-p c ()
+  (range-p c #\a #\z))
+
+(def-rest-predicate upper-case-p c ()
+  (range-p c #\A #\Z))
+
+(def-rest-predicate alpha-char-p c ()
+  (or (lower-case-p c)
+      (upper-case-p c)))
+
+(def-rest-predicate digit-char-p c (&key (base 10))
   (labels ((digit-p ()
              (range-p c #\0 #\9))
            (digit-alpha-p (start)
@@ -41,7 +42,6 @@
         	      (or (digit-alpha-p #\a)
 				      (digit-alpha-p #\A)))))))
 
-(defun alphanumericp (c)
-  "Return T if character is alphabetical."
+(def-rest-predicate alphanumericp c ()
   (or (alpha-char-p c)
       (digit-char-p c)))
