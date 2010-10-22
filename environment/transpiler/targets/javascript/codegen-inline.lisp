@@ -12,8 +12,8 @@
 (define-js-binary mod "%")
 ;(define-js-binary logxor "^")
 (define-js-binary userfun_eq "===")
-;(define-js-binary bit-and "&")
-;(define-js-binary bit-or "|")
+(define-js-binary bit-and "&")
+(define-js-binary bit-or "|")
 
 (define-js-macro userfun_identity (x) x)
 
