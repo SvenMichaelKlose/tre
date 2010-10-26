@@ -4,10 +4,11 @@
 (dont-obfuscate length)
 
 (defun length (x)
-  (when x
-    (if (consp x)
-	    (%list-length x)
-	    x.length)))
+  (if x
+      (if (consp x)
+	      (%list-length x)
+	      x.length)
+      0))
 
 (defun maparray (fun hash)
   (dotimes (i (length hash))
