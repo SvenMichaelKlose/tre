@@ -1,7 +1,5 @@
 ;;;;; Transpiler: TRE to PHP
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Toplevel
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 
 (defvar *nil-symbol-name* nil)
 
@@ -12,55 +10,48 @@
 			  	(read-all-lines i)))
 		 out))
 
-(defun php-transpile-prepare (tr out &key (import-universe? nil))
-  (when import-universe?
-    (transpiler-import-universe tr))
-  (transpiler-add-wanted-function tr 'array-copy)
-  (format out "<?php~%$NULL=NULL;~%$t=True;~%")
-  (format out "function & __w ($x) { return $x; }~%")
-  (php-gen-funref-wrapper out))
+(defun php-transpile-prepare (tr &key (import-universe? nil))
+  (with-string-stream out
+    (when import-universe?
+      (transpiler-import-universe tr))
+    (transpiler-add-wanted-function tr 'array-copy)
+    (format out "<?php~%$NULL=NULL;~%$t=True;~%")
+    (format out "function & __w ($x) { return $x; }~%")
+    (php-gen-funref-wrapper out)))
 
-(defun php-transpile-0 (f files &key (base? nil))
-  (with (tr *php-transpiler*
-    	 base  (transpiler-sighten tr *php-base*)
-    	 base2 (transpiler-sighten tr *php-base2*)
-;		 base-debug (when *transpiler-assert*
-;				      (transpiler-sighten tr *php-base-debug-print*))
-		 tests (when (eq t *have-environment-tests*)
-				 (transpiler-sighten tr (make-environment-tests)))
-	 	 user (transpiler-sighten-files tr files)
-		 deps (progn
-				(format t "; Collecting dependencies...~%")
-				(transpiler-import-from-environment tr))
-		 inits (transpiler-sighten tr (transpiler-compiled-inits tr)))
-	; Generate.
-    (format t "; Let me think. Hmm")
-    (princ (concat-stringtree
- 	           (transpiler-transpile tr inits)
-			   (when base?
- 	             (transpiler-transpile tr base))
-			   (when base?
- 	             (transpiler-transpile tr base2))
- 	           (transpiler-transpile tr deps)
-;			   (when (and base? *transpiler-assert*)
-; 		         (transpiler-transpile tr base-debug))
- 	           (transpiler-transpile tr tests)
- 	           (transpiler-transpile tr user))
-	       f)
-	(princ "?>" f)
-    (transpiler-print-obfuscations tr)))
-
-(defun php-transpile-ok ()
-  (format t "~%; Everything OK. Done.~%"))
-
-(defun php-transpile (out files &key (obfuscate? nil) (env? nil))
+(defun php-transpile (files &key (obfuscate? nil)
+                                (print-obfuscations? nil)
+                                (files-to-update nil)
+						   		(make-updater nil))
   (let tr *php-transpiler*
-    (setf *current-transpiler* tr)
     (transpiler-reset tr)
-    (transpiler-switch-obfuscator tr obfuscate?)
-	(make-global-funinfo)
-    (setf *nil-symbol-name*
-		  (symbol-name (transpiler-obfuscate-symbol-0 tr nil)))
-    (php-transpile-prepare tr out :import-universe? nil)
-    (php-transpile-0 out files :base? t)
-	(php-transpile-ok)))
+    (target-transpile-setup tr :obfuscate? obfuscate?)
+    (when (transpiler-lambda-export? tr)
+      (transpiler-add-wanted-function tr 'array-copy))
+	(concat-stringtree
+		(php-transpile-prepare tr)
+    	(target-transpile tr
+    	 	:files-before-deps
+			    (append (list (cons 'text *php-base*))
+;		 		  		(when *transpiler-log*
+;				   	  	  (list (cons 'text *php-base-debug-print*)))
+				  	    (list (cons 'text *php-base2*)))
+		  	:files-after-deps
+				(append (when (eq t *have-environment-tests*)
+				   	  	  (list (cons 'text (make-environment-tests))))
+		 		 		(mapcar (fn list _) files))
+		 	:dep-gen
+		     	#'(()
+				  	(transpiler-import-from-environment tr))
+			:decl-gen
+		     	#'(()
+       				(mapcar (fn transpiler-emit-code tr (list `(%var ,_)))
+					  		(funinfo-env *global-funinfo*)))
+			:files-to-update files-to-update
+			:make-updater make-updater
+			:print-obfuscations? print-obfuscations?))))
+
+;(defun php-retranspile (files-to-update)
+;  (let tr *php-transpiler*
+;	(concat-stringtree (php-transpile-prepare tr)
+;    				   (funcall *updater* tr files-to-update))))

@@ -78,6 +78,7 @@
 		    (awhen decl-gen
 		      (funcall !))
 			compiled-before
+            (reverse (transpiler-raw-decls tr))
 			compiled-after)
 	    (target-transpile-save-compiled tr :files-before-deps compiled-before
 									       :files-after-deps compiled-after

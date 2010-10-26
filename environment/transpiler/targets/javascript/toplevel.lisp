@@ -1,7 +1,5 @@
 ;;;;; Transpiler: TRE to JavaScript
 ;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Toplevel
 
 (defun js-transpile-prologue (tr)
   (format nil (+ "    var _I_ = 0; while (1) {switch (_I_) {case 0: ~%"

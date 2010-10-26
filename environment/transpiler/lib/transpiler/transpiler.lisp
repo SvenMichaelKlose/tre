@@ -109,7 +109,9 @@
   (re-back-before-deps nil)
   (re-dep-gen nil)
   (re-decl-gen nil)
-  (re-make-updater nil))
+  (re-make-updater nil)
+  
+  (raw-decls nil))
 
 (defun transpiler-defined-function (tr name)
   (href (transpiler-defined-functions-hash tr) name))

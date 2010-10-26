@@ -9,13 +9,26 @@
 (defun js-stack (x)
   ($ '_I_S x))
 
-(defun js-codegen-symbol-constructor (tr x)
+(defvar *js-compiled-symbols* (make-hash-table :test #'eq))
+
+(defun js-codegen-symbol-constructor-expr (tr x)
   (let s (transpiler-obfuscated-symbol-string tr (compiled-function-name 'symbol))
     `(,s "(\"" ,(symbol-name x) "\", "
-		 ,@(if (symbol-package x)
-		   	   `((,s "(\"" ,(symbol-name (symbol-package x)) "\", null)"))
-			   '(("null")))
-		 ")")))
+	           ,@(if (symbol-package x)
+	                 `((,s "(\"" ,(symbol-name (symbol-package x)) "\", null)"))
+	                 '(("null")))
+	     ")")))
+
+(defun js-codegen-symbol-constructor (tr x)
+  (or (href *js-compiled-symbols* x)
+      (setf (href *js-compiled-symbols* x)
+            (with (g (gensym) ;XXX hogs the browser: ($ 'compiled_symbol_ x)
+                   gs (transpiler-obfuscate-symbol tr g))
+              (push! `("var " ,(transpiler-obfuscated-symbol-string tr g)
+                              "=" ,@(js-codegen-symbol-constructor-expr tr x)
+		                      ,*js-separator*)
+                     (transpiler-raw-decls tr))
+              gs))))
 
 (define-codegen-macro-definer define-js-macro *js-transpiler*)
 
