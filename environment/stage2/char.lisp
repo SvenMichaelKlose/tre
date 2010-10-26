@@ -31,7 +31,7 @@
   (or (lower-case-p c)
       (upper-case-p c)))
 
-(def-rest-predicate digit-char-p c (&key (base 10))
+(defun digit-char-p (c &key (base 10))
   (labels ((digit-p ()
              (range-p c #\0 #\9))
            (digit-alpha-p (start)
