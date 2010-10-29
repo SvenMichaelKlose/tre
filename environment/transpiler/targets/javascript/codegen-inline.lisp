@@ -17,6 +17,10 @@
 
 (define-js-macro userfun_identity (x) x)
 
+(define-js-macro userfun_cons (x y)
+  `("new " ,(transpiler-obfuscated-symbol-string *js-transpiler* 'userfun_%cons)
+           "(" ,x "," ,y ")"))
+
 (mapcan-macro p
 	'((userfun_car _)
 	  (userfun_cdr __))
