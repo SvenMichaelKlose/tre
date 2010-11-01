@@ -1,5 +1,5 @@
 ;;;; TRE environment
-;;;; Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2005-2008,2010 Sven Klose <pixel@copei.de>
 
 (defun fresh-line? (&optional (str *standard-output*))
   "Test if stream is at the beginning of a line."
@@ -11,12 +11,13 @@
 
 (defun read-char (&optional (str *standard-input*))
   "Read character from stream."
-  (unless (end-of-file str)
-    (if (eq (stream-peeked-char str) nil)
-      (setf (stream-last-char str) (funcall (stream-fun-in str) str))
+  (if
+    (stream-peeked-char str)
       (prog1
         (stream-peeked-char str)
-        (setf (stream-peeked-char str) nil)))))
+        (setf (stream-peeked-char str) nil))
+    (not (end-of-file str))
+      (setf (stream-last-char str) (funcall (stream-fun-in str) str))))
 
 (defun peek-char (&optional (str *standard-input*))
   "Read character without stepping to next."
