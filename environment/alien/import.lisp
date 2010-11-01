@@ -1,7 +1,5 @@
 ;;;; TRE environment
 ;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
-;;;;
-;;;; Alien interface.
 
 (defconstant *alien-xml-tmp* "__alien.tmp")
 (defconstant *gccxml-path* "/usr/bin/gccxml")
@@ -48,12 +46,13 @@
       'pointertype
          (string-concat (alien-import-get-type-from-desc hash tp) " *")
       'struct
-	     (alien-import-add-struct hash tp)
-         (string-concat "struct " (force-string (lml-get-attribute tp :name)))
+         (progn
+	       (alien-import-add-struct hash tp)
+           (string-concat "struct " (force-string (lml-get-attribute tp :name))))
       'arraytype
          (format nil " ~A[~A]"
                  (alien-import-get-type-from-desc hash tp)
-                 (1+ (string-integer (force-string (lml-get-attribute tp :max)))))
+                 (1+ (string-integer (force-string (lml-get-attribute tp :size)))))
 	  (if (lml-get-attribute tp :name)
 		  (if (eq 'CVQUALIFIEDTYPE tp.)
 	   	      (alien-import-get-type-from-desc hash tp)
