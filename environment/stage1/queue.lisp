@@ -15,11 +15,12 @@
 		(car queue) (last x)))
 
 (defun queue-pop (queue)
-  (let q queue
-    (let v (cdr q)
-	  (if v
-	      (setf (cdr q) (cddr q))
-		  v.))))
+  (let v (cadr queue)
+    (if (eq (car queue) (cdr queue))
+        (setf (car queue) nil))
+    (if (cdr queue)
+        (setf (cdr queue) (cdddr queue)))
+    v))
 
 (defun queue-list (queue)
   (cdr queue))
