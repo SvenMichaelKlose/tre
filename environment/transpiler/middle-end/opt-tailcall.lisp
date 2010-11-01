@@ -2,7 +2,6 @@
 ;;;;; Copyright (c) 2010 Sven Klose <pixel@copei.de>
 
 (defun opt-tailcall-fun-0 (fi args x name front-tag)
-  (format t "Tailcall resolved for function '~A'~%" (symbol-name name))
   (append (mapcan #'((arg val)
 					   (with-gensym g ; Avoid accidential GC.
 						 (funinfo-env-add fi g)
