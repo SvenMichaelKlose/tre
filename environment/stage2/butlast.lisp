@@ -2,7 +2,6 @@
 ;;;; Copyright (c) 2006 Sven Klose <pixel@copei.de>
 
 (defun butlast (plist)
-  "Return list without its last element."
   (if (cdr plist)
       (cons (car plist) (butlast (cdr plist)))))
 

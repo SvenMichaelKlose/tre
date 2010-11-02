@@ -1,7 +1,5 @@
 ;;;;; TRE environment
 ;;;;; Copyright (c) 2007-2009 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Subsequences
 
 (defun subseq-list (seq start end)
   (unless (integer= start end)

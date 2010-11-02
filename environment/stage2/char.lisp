@@ -1,14 +1,12 @@
 ;;;; TRE environment
-;;;; Copyright (C) 2005-2006,2008-2010 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2005-2006,2008-2010 Sven Klose <pixel@copei.de>
 
 (defun char-upcase (c)
-  "Return upper case equivalent of lower case character."
   (code-char (if (lower-case-p c)
     			 (character+ c (character- #\A #\a))
     			 c)))
 
 (defun char-downcase (c)
-  "Return upper case equivalent of upper case character."
   (code-char (if (upper-case-p c)
     			 (character+ c (character- #\a #\A))
     			 c)))

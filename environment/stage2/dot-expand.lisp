@@ -57,18 +57,7 @@
 						(numberp _)
 				        (stringp _)))))
     (when x
-	  ; Combine expression and next symbol to %SLOT-VALUE if symbol
-	  ; starts with a dot.
       (if
-;		((and (consp x)
-;			  (consp (cdr x))
-;			  (label? (second x))
-;			  (< 1 (length (symbol-name (second x))))
-;			  (starts-with-dot? (symbol-name (second x))))
-;		  	(cons `(%slot-value ,(dot-expand (first x))
-;							    ,(conv (make-symbol (subseq (symbol-name (second x))
-;														    1))))
-;			      (dot-expand (cddr x))))
 		(label? x)
 		  (conv x)
 

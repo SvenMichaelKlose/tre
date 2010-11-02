@@ -1,10 +1,7 @@
 ;;;; TRE environment
 ;;;; Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
-;;;;
-;;;; List manipulation functions.
 
 (defun append (&rest lsts)
-  "Concatenate lists. All lists are copied."
   (when lsts
 	(if (not (car lsts)) ; Ignore empty lists.
 		(apply #'append (cdr lsts))
@@ -37,7 +34,6 @@
   nil)
 
 (defun nconc (&rest lsts)
-  "Concatenate list arguments destructively."
   (when lsts
     (aif (car lsts)
 	    (progn
@@ -57,8 +53,6 @@
   `(setf ,place (nconc ,place ,@lsts)))
 
 (defun adjoin (obj lst &rest args)
-  "Returns LST if OBJ is a member of LST or ARGS or returns new head of
-   list containing OBJ."
   (if (apply #'member obj lst args)
     lst
     (cons obj lst)))
@@ -76,7 +70,6 @@
   '(a l i s p))
 
 (defun reverse (lst)
-  "Return new reversed list with same elements."
   (let nl nil
     (dolist (i lst nl)
       (push i nl))))

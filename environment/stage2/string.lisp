@@ -1,7 +1,5 @@
 ;;;; TRE environment
 ;;;; Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
-;;;;
-;;;; String functions
 
 (define-test "ELT on string returns char"
   ((characterp (elt "LISP" 0)))
@@ -51,7 +49,6 @@
   t)
 
 (defun string-list (x)
-  "Make list of characters from string."
   (let* ((l (length x))
 		 (s))
     (do ((i (integer-1- l) (integer-1- i)))
@@ -64,11 +61,9 @@
   t)
 
 (defun queue-string (x)
-  "Convert queue of characters to string."
   (list-string (queue-list x)))
 
 (defun string-upcase (str)
-  "Return new string with characters converted to upper case."
   (when str
     (let* ((n (length str))
            (s (make-string 0)))
@@ -82,7 +77,6 @@
   t)
 
 (defun string-downcase (str)
-  "Return new string with characters converted to lower case."
   (when str
     (let* ((n (length str))
            (s (make-string 0)))

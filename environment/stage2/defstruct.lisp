@@ -1,7 +1,5 @@
 ;;;; TRE environment
 ;;;; Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
-;;;;
-;;;; Structures
 
 (defun %struct-option-keyword (e)
   (in? e :constructor))
@@ -73,14 +71,13 @@
        (and (arrayp arr) (eq (aref arr 0) ',name)))))
 
 (defun %struct-sort-fields (fields-and-options)
-  "Split list into fields and options."
-  (with-queue (f o)
+  (with-queue (fields options)
     (mapcar (fn (if (and (consp _)
 						 (%struct-option-keyword _.))
-	                (enqueue o _)
-	                (enqueue f _)))
+	                (enqueue options _)
+	                (enqueue fields _)))
 	        fields-and-options)
-    (values (queue-list f) (queue-list o))))
+    (values (queue-list fields) (queue-list options))))
 
 (defvar *struct-defs*)
 
@@ -96,7 +93,6 @@
       (enqueue form i.))))
 
 (defun %defstruct-expander (name &rest fields-and-options)
-  "Define new structure."
   (multiple-value-bind (flds opts) (%struct-sort-fields fields-and-options)
     (%struct-add-def name flds)
     `(progn

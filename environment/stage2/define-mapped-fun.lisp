@@ -1,7 +1,5 @@
 ;;;;; TRE environment
-;;;;; Copyright (C) 2006,2009 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Mapping utilities
+;;;;; Copyright (c) 2006,2009 Sven Klose <pixel@copei.de>
 
 (defmacro define-mapped-fun (mapfun name &rest fun)
   (with-gensym g

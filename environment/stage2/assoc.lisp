@@ -1,11 +1,8 @@
 ;;;; TRE  environment
-;;;; Copyright (C) 2005-2006,2009-2010 Sven Klose <pixel@copei.de>
-;;;;
-;;;; Associative lists
+;;;; Copyright (c) 2005-2006,2009-2010 Sven Klose <pixel@copei.de>
 
 (unless (eq t *BUILTIN-ASSOC*)
   (defun assoc (key lst &key (test #'eql))
-    "Search value for key in associative list."
     (when lst
 	  (unless (consp lst)
 	    (%error "list expected"))
@@ -47,15 +44,12 @@
   new-value)
 
 (defun acons (key val lst)
-  "Prepend key/value pair to associative list."
   (cons (cons key val) lst))
 
 (defmacro acons! (key val place)
-  "Destructively prepend key/value pair to associative list."
   `(setf ,place (acons ,key ,val ,place)))
 
 (defun copy-alist (x)
-  "Copy associative list."
   (mapcar (fn cons (car _) (cdr _))
 		  x))
 

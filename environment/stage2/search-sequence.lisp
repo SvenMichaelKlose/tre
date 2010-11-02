@@ -1,10 +1,7 @@
 ;;;; TRE environment
-;;;; Copyright (C) 2005-2006,2008-2009 Sven Klose <pixel@copei.de>
-;;;;
-;;;; Searching sequences
+;;;; Copyright (c) 2005-2006,2008-2009 Sven Klose <pixel@copei.de>
 
 (defmacro xchg (a b)
-  "Swaps values of the arguments."
   (with-gensym g
     `(let ,g ,a
 	   (setf ,a ,b
@@ -35,7 +32,6 @@
  
 (defun find (obj seq &key (start nil) (end nil)
 						  (from-end nil) (test #'eql))
-  "Return element in sequence."
   (find-if (fn funcall test _ obj)
 		   seq
 		   :start start
@@ -102,7 +98,6 @@
 	idx))
 
 (defun some (pred &rest seqs)
-  "OR predicate over list elements."
   (find-if pred (apply #'append seqs)))
 
 (define-test "SOME works"
@@ -110,9 +105,7 @@
         (not (some #'numberp '(a b c))))
   t)
 
-;; XXX FIND-IF version if compiler can optimize it.
 (defun every (pred &rest seqs)
-  "AND predicate over list elements."
   (dolist (seq seqs t)
     (dotimes (i (length seq))
       (unless (funcall pred (elt seq i))
