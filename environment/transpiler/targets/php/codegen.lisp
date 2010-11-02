@@ -41,10 +41,10 @@
 
 (define-php-macro %%tag (tag)
   `(%transpiler-native 
-	   ,(if (< *php-version* 503)
-	        "case "
-	        "")
-       "_I_" ,tag ":" ,*php-separator*))
+	   ,@(if (< *php-version* 503)
+	         `("case " ,tag ":")
+             `("_I_" ,tag ":"))
+       ,*php-separator*))
 
 (define-php-macro vm-go (tag)
   (if (<= 503 *php-version*)
