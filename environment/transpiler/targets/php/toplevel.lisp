@@ -44,9 +44,7 @@
 		     	#'(()
 				  	(transpiler-import-from-environment tr))
 			:decl-gen
-		     	#'(()
-       				(mapcar (fn transpiler-emit-code tr (list `(%var ,_)))
-					  		(funinfo-env *global-funinfo*)))
+		     	#'(())
 			:files-to-update files-to-update
 			:make-updater make-updater
 			:print-obfuscations? print-obfuscations?))))
