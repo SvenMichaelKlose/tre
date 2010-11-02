@@ -18,10 +18,10 @@
 					   (list x))))
 
 (define-php-std-macro define-native-php-fun (name args &rest body)
-  (apply #'shared-essential-defun name args body))
+  (apply #'shared-essential-defun name (%defun-name name) args body))
 
-(define-php-std-macro defun (&rest args)
-  (apply #'shared-essential-defun args))
+(define-php-std-macro defun (name &rest args)
+  (apply #'shared-essential-defun name (%defun-name name) args))
 
 (define-php-std-macro defmacro (&rest x)
   (apply #'shared-defmacro '*php-transpiler* x))
