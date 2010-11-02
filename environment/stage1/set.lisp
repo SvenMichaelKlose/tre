@@ -1,7 +1,5 @@
 ;;;; TRE environment
 ;;;; Copyright (C) 2005-2009 Sven Klose <pixel@copei.de>
-;;;;
-;;;; SETF macro
 
 (defun %setf-functionp (x)
   (functionp (eval `(function ,x))))
@@ -11,16 +9,6 @@
 
 (defun %setf-make-symbol (fun)
   (make-symbol (string-concat "%%USETF-" (symbol-name fun))))
-
-(defun %slot-value? (x)
-  (and (consp x)
-	   (eq '%SLOT-VALUE (car x))
-	   (consp (cdr x))))
-
-(defun slot-value? (x)
-  (and (consp x)
-	   (eq 'SLOT-VALUE (car x))
-	   (consp (cdr x))))
 
 (defun %setf-complement (p val)
   (if (or (atom p)
@@ -54,7 +42,7 @@
   (if (not args)
     (%error "arguments expected")
     (if (= 1 (length args))
-      `(%%defunsetf ,(car args)) ; Keep for DEFUN argument name.
+      `(setf ,(car args)) ; Keep for DEFUN argument name.
       `(progn
 		 ,@(%setf args)))))
 

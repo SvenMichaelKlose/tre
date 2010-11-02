@@ -24,7 +24,6 @@
 		   (apply #'string-concat x)
 		   (apply #'number+ x))))
 
-;; NUMBER- should be NON-CHARACTER-
 ;tredoc
 ; (arg :type number)
 ; "Substract rest of arguments from first."

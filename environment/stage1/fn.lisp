@@ -1,5 +1,5 @@
 ;;;;; TRE environment
-;;;;; Copyright (C) 2008 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
 
 (defmacro fn (&rest body)
   `#'((_)

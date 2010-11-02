@@ -1,7 +1,5 @@
 ;;;;; TRE environment
 ;;;;; Copyright (c) 2006-2009 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Macro expansion.
 
 (setq
 	*universe*

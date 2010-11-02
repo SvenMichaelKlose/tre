@@ -1,7 +1,5 @@
 ;;;;; TRE environment
-;;;;; Copyright (C) 2006,2009 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; SETF setters for builtin functions
+;;;;; Copyright (c) 2006,2009 Sven Klose <pixel@copei.de>
 
 (defun (setf car) (val lst)
   (rplaca lst val)
@@ -17,7 +15,6 @@
 (defun (setf aref) (val arr idx)
   (%set-aref val arr idx))
 
-;;; This will go somewhere else.
 (defun (setf caar) (val lst)
   (rplaca (car lst) val)
   val)

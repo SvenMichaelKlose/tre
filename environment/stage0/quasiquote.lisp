@@ -1,8 +1,6 @@
 ;;;; TRE environment
 ;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
 ;;;;
-;;;; QUASIQUOTE expansion
-;;;;
 ;;;; This expansion takes place after macro expansion to allow
 ;;;; inlining generated code without need to define macros.
 

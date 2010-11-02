@@ -1,5 +1,5 @@
 ;;;;; TRE environment
-;;;;; Copyright (C) 2005-2006,2008,2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2005-2006,2008,2010 Sven Klose <pixel@copei.de>
 
 (if (not (eq t *BUILTIN-MEMBER*))
   (progn
@@ -10,7 +10,6 @@
               (%member-r elm (cdr lst)))))
 
     (defun member (elm &rest lsts)
-      "Test if object is a member of any of the pure lists."
       (or (%member-r elm (car lsts))
           (if (cdr lsts)
               (apply #'member elm (cdr lsts)))))))
@@ -36,7 +35,6 @@
           (%member-if-r pred (cdr lst)))))
 
 (defun member-if (pred &rest lsts)
-  "Test if predicate is true for any member of any of the pure lists."
   (or (%member-if-r pred (car lsts))
       (if (cdr lsts)
           (apply #'member-if pred (cdr lsts)))))

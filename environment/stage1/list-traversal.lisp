@@ -1,11 +1,7 @@
 ;;;; TRE environment
-;;;; Copyright (C) 2005-2009 Sven Klose <pixel@copei.de>
-;;;;
-;;;; List traversal
+;;;; Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
 
 (defun %map (func lists)
-  "Copy heads of lists into returned list.
-   Destructively removes heads from lists."
   (block nil
     (let* ((i lists)	; List iterator.
            (nl (make-queue)))	; Argument list.
@@ -21,9 +17,6 @@
         (go start)))))
 
 (defun map (func &rest lists)
-  "Calls function for all head CARs in lists. Then call with next elements.
-   If a list runs out of elements, the function stops.
-   Returns NIL."
   (let args (%map func lists)
     (when args
       (apply func args)
@@ -31,19 +24,14 @@
   nil)
 
 (defun mapcar (func &rest lists)
-  "Calls function for all head CARs in lists. Then call with next elements.
-   If a list runs out of elements, the function stops.
-Returns a list of all return values of the function."
   (let args (%map func lists)
     (when args
       (cons (apply func args) (apply #'mapcar func lists)))))
 
 (defun mapcan (func &rest lists)
-  "Like MAPCAR but concatenate the resulting lists."
   (apply #'nconc (apply #'mapcar func lists)))
 
 (defmacro dolist ((iter lst &rest result) &rest body)
-  "Iterate over list."
   (let* ((starttag (gensym))
          (endtag (gensym))
 	     (tmplst (gensym)))
@@ -62,13 +50,9 @@ Returns a list of all return values of the function."
           (return (progn ,@result)))))))
 
 (defun filter (func lst)
-  "Calls function for all elements in list and returns a
-list of all return values."
   (when lst
 	(cons (funcall func (car lst))
 		  (filter func (cdr lst)))))
 
 (defun filter-concat (func lst)
-  "Calls function for all elements in list and returns a concatenated
-list of all return values."
   (funcall #'nconc func lst))

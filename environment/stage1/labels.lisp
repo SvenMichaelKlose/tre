@@ -1,7 +1,5 @@
 ;;;;; TRE environment
-;;;;; Copyright (C) 2005-2006,2008-2009 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Local functions
+;;;;; Copyright (c) 2005-2006,2008-2009 Sven Klose <pixel@copei.de>
 
 (defmacro labels (fdefs &rest body)
   `(#'(,(mapcar #'first fdefs)

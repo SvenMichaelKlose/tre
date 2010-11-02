@@ -1,10 +1,7 @@
 ;;;;; TRE environment
-;;;;; Copyright (C) 2005-2006,2008-2009 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Comparison
+;;;;; Copyright (c) 2005-2006,2008-2009 Sven Klose <pixel@copei.de>
 
 (defun equal (x y)
-  "Return T if arguments are the same or have the same value."
   (if
 	(or (atom x)
 		(atom y))

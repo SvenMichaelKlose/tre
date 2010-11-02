@@ -27,5 +27,4 @@
 (%make-list-synonyms)
 
 (defun rest (x)
-  "Returns rest of list. Equal to function CDR."
   (cdr x))

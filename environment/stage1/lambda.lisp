@@ -1,7 +1,5 @@
 ;;;; TRE environment
 ;;;; Copyright (c) 2006-2010 Sven Klose <pixel@copei.de>
-;;;;
-;;;; LAMBDA-related utilities.
 
 (defun past-lambda-1 (x)
   (if (eq (car x) 'lambda)
@@ -31,7 +29,6 @@
 ;;;; without the LAMBDA symbol. PAST-LAMBDA gets you past the
 ;;;; LAMBDA symbol, if it's there.
 (defun past-lambda (x)
-  "Get cons after optional LAMBDA keyword in function expression."
   (let p (past-lambda-before-funinfo x)
 	(if (eq '%funinfo (car p))
 	  (cddr p)
@@ -52,15 +49,12 @@
 		  (list (lambda-args x))))
 
 (defun lambda-args (x)
-  "Get arguments of function expression."
   (car (past-lambda x)))
 
 (defun lambda-body (x)
-  "Get body of function expression."
   (cdr (past-lambda x)))
 
 (defun lambda-call-vals (x)
-  "Get arguments to local function call (used to introduce local symbols)."
   (cdr x))
 
 (defun function-expr? (x)
@@ -73,7 +67,6 @@
        (consp (cadr x))))
 
 (defun lambda? (x)
-  "Checks if expression is a function/LAMBDA expression."
   (and (lambda-expr? x)
 	   (let l (past-lambda (cadr x))
 		 (and l (consp l)
@@ -88,7 +81,6 @@
   t)
 
 (defun lambda-call? (x)
-  "Checks if expression is a local function call."
   (and (consp x)
 	   (cdr x)
        (lambda? (car x))))
@@ -98,13 +90,11 @@
   t)
 
 (defun function-arguments (fun)
-  "Returns arguments of a function."
   (if (builtinp fun)
 	  '(&rest args-to-builtin)
       (car (symbol-value fun))))
 
 (defun function-body (fun)
-  "Returns body of a function."
   (cdr (symbol-value fun)))
 
 (defun copy-recurse-into-lambda (x body-fun)

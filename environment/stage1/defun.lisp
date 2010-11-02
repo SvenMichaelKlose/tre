@@ -1,7 +1,5 @@
 ;;;; TRE environment
 ;;;; Copyright (c) 2005-2008,2010 Sven Klose <pixel@copei.de>
-;;;;
-;;;; Function definition
 
 ; Check and return keyword argument or NIL.
 (%defun %defun-arg-keyword (args)
@@ -24,15 +22,13 @@
 (%defun %defun-name (name)
   (if (atom name)
       name
-      (if (or (eq (car name) '%%defunsetf)
-			  (eq (car name) 'SETF))
+      (if (eq (car name) 'SETF)
           (make-symbol (string-concat "%%USETF-" (string (cadr name))))
           (progn
 			(print name)
 			(%error "illegal function name")))))
 
 (defmacro defun (name args &rest body)
-  "Define a function."
   (let name (%defun-name name)
     `(block nil
 	   (if *show-definitions*
