@@ -1,7 +1,5 @@
 ;;;; TRE environment
-;;;; Copyright (C) 2005-2006,2010 Sven Klose <pixel@copei.de>
-;;;;
-;;;; Streams
+;;;; Copyright (c) 2005-2006,2010 Sven Klose <pixel@copei.de>
 
 (defstruct stream
   (handle nil) ; Interpreter file handle.

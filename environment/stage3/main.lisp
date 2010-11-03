@@ -26,6 +26,5 @@
 (env-load "stage3/collected-errors.lisp")
 (env-load "stage3/random.lisp")
 (env-load "stage3/argument-expand.lisp")
-(env-load "stage3/lambda-args-expanded.lisp")
 (env-load "stage3/string-integer.lisp")
 (env-load "stage3/with-temporary.lisp")
