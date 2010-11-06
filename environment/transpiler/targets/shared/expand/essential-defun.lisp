@@ -15,6 +15,9 @@
 	           #'(,@(awhen fi-sym
 				      `(%funinfo ,!))
 			      ,a
-                  ,@(when *log-functions?*
-                      `((log ,(symbol-name n))))
-   		          ,@body))))
+                  (block ,(if (consp name)
+                              (second name)
+                              name)
+                    ,@(when *log-functions?*
+                        `((log ,(symbol-name n))))
+   		            ,@body)))))
