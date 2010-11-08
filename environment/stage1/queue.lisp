@@ -19,7 +19,7 @@
     (if (eq (car queue) (cdr queue))
         (setf (car queue) nil))
     (if (cdr queue)
-        (setf (cdr queue) (cdddr queue)))
+        (setf (cdr queue) (cddr queue)))
     v))
 
 (defun queue-list (queue)
