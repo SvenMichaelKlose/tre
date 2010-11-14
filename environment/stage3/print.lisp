@@ -1,7 +1,5 @@
 ;;;;; TRE environment
-;;;;; Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Simple printing
+;;;;; Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
 
 (defun %princ-character (c str)
   (setf (stream-last-char str) c)
@@ -93,4 +91,5 @@
 (defun late-print (x &optional (str *standard-output*))
   (with-default-stream s str
     (%late-print x s)
-	(terpri s)))
+	(terpri s))
+  x)
