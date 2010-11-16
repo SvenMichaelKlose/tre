@@ -1,8 +1,9 @@
-;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; TRE environment
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 
 (defvar *type-predicates*
   '((cons . consp)
+	(list . listp)
 	(atom . atom)
 	(function . functionp)
 	(number . numberp)
@@ -10,7 +11,8 @@
 	(float . numberp)
 	(character . characterp)
 	(array . arrayp)
- 	(string . stringp)))
+ 	(string . stringp)
+    (hash-table . hash-table?)))
 
 (defun %declare-type-predicate (typ)
   (assoc-value typ *type-predicates*))
@@ -49,14 +51,13 @@
 
 (defun %declare-statement (x)
   (funcall
-    (symbol-function
-	  (or (assoc-value x. *declare-statement-classes*)
-	      (error "unknown declaration class ~A. Choose one of ~A instead"
-			     x. (carlist *declare-statement-classes*))))
-    .x))
+      (symbol-function
+	      (or (assoc-value x. *declare-statement-classes*)
+	          (error "unknown declaration class ~A. Choose one of ~A instead"
+			         x. (carlist *declare-statement-classes*))))
+      .x))
 
 (defmacro declare (&rest x)
-  "Declare type of a variable. Generates ASSERT expression."
   (unless x
 	(error "arguments expected"))
   (let body (mapcar #'%declare-statement (force-tree x))

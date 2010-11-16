@@ -7,7 +7,7 @@
 ;; Set this when starting up your transpiler run.
 (defvar *current-transpiler* nil)
 
-(defvar *transpiler-assert* nil)
+(defvar *transpiler-assert* t)
 (defvar *transpiler-log* nil)
 
 (defvar *transpiler-except-cps?* nil)
