@@ -2,9 +2,11 @@
 ;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 
 (defvar *type-predicates*
-  '((cons . consp)
+  '((nil . not)
+    (cons . consp)
 	(list . listp)
 	(atom . atom)
+	(symbol . symbolp)
 	(function . functionp)
 	(number . numberp)
 	(integer . numberp)
@@ -17,27 +19,17 @@
 (defun %declare-type-predicate (typ)
   (assoc-value typ *type-predicates*))
 
-(defun %declare-statement-type-predicate-1 (typ x)
-  `(,(if typ
-         (or (%declare-type-predicate typ)
-             (error "expected variable type but got ~A. Use one of ~A instead"
-                    .typ. (carlist *type-predicates*)))
-	     'not) ,x))
-
-(defun %declare-statement-type-or (typ x)
-  `(or ,@(mapcar (fn %declare-statement-type-predicate-1 _ x)
-				 typ)))
-
 (defun %declare-statement-type-predicate (typ x)
-  (if (atom typ)
-	  (%declare-statement-type-predicate-1 typ x)
-	  (%declare-statement-type-or typ x)))
+  `(,(or (%declare-type-predicate typ)
+         ($ typ '?))
+     ,x))
 
 (defun %declare-statement-type-1 (typ x)
   (unless (variablep x)
 	(error "Variable expected but got ~A to declare as of type ~A" x typ))
-  `(unless ,(%declare-statement-type-predicate typ x)
-	 (error "~A is not of type ~A" ,(symbol-name x) ,(when (atom typ) (symbol-name typ)))))
+  `(unless (or ,@(mapcar (fn %declare-statement-type-predicate _ x)
+                         (force-list typ)))
+	 (error "~A is not of type ~A" ,(symbol-name x) (quote ,typ))))
 
 (defun %declare-statement-type (x)
   (unless (<= 2 (length x))
