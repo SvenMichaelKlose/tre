@@ -15,31 +15,24 @@
   `(,x. no-args ,@.x))
 
 (defun js-make-function-with-compiled-argument-expansion (x)
-  (let frm (function-form-body-args-and-body x)
-    (with-gensym g
-      (when (in-cps-mode?)
-        (transpiler-add-cps-function *js-transpiler* g))
-	  `(#'((,g)
-	         (setf ,g (function
-						,@(awhen (function-form-body-funinfo-sym x)
-							(list !))
-						,(body-with-noargs-tag frm)))
-		     (setf (slot-value ,g 'tre-exp)
-			       ,(compile-argument-expansion g frm.))
-		     ,g)
-		 nil))))
+  (with-gensym g
+    (when (in-cps-mode?)
+      (transpiler-add-cps-function *js-transpiler* g))
+    `(#'((,g)
+	      (setf ,g (function
+					   ,(body-with-noargs-tag x)))
+		  (setf (slot-value ,g 'tre-exp)
+			    ,(compile-argument-expansion g x.))
+		  ,g)
+		 nil)))
 
-(define-js-std-macro function (&rest x)
-  (unless x
-    (error "FUNCTION expects a symbol or form"))
-  (if (and (or (consp x.)
-			   (consp .x)))
-	  (let frm (function-form-body-args-and-body x)
-		(if (and (not (simple-argument-list? frm.))
-			     (not (eq 'no-args .frm.)))
-			(js-make-function-with-compiled-argument-expansion x)
-  		    `(function ,@x)))
-  	  `(function ,@x)))
+(define-js-std-macro function (x)
+  (if (consp x)
+	  (if (and (not (simple-argument-list? x.))
+			   (not (eq 'no-args .x.)))
+		  (js-make-function-with-compiled-argument-expansion x)
+  		  `(function ,x))
+  	  `(function ,x)))
 
 (defun js-cps-exception (x)
   (unless (in-cps-mode?)

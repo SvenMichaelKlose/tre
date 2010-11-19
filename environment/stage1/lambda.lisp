@@ -25,14 +25,16 @@
 (defun past-lambda-before-funinfo (x)
   (past-lambda-1 (past-function x)))
 
+(defun args-past-funinfo (x)
+  (if (eq '%funinfo (car x))
+	  (cddr x)
+	  x))
+
 ;;;; Tré accepts the LAMBDA notation for anonymous functions also
 ;;;; without the LAMBDA symbol. PAST-LAMBDA gets you past the
 ;;;; LAMBDA symbol, if it's there.
 (defun past-lambda (x)
-  (let p (past-lambda-before-funinfo x)
-	(if (eq '%funinfo (car p))
-	  (cddr p)
-	  p)))
+  (args-past-funinfo (past-lambda-before-funinfo x)))
 
 (defun lambda-funinfo (x)
   (let p (past-lambda-1 (past-function x))

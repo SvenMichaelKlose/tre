@@ -1,8 +1,6 @@
 ;;;;; TRE compiler
 ;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 
-;;;;; LAMBDA FUNINFO
-
 (defvar *funinfos* (make-hash-table :test #'eq))
 (defvar *funinfos-reverse* (make-hash-table :test #'eq))
 
@@ -55,12 +53,3 @@
             (if fi-sym
                 ..x
 				x))))
-
-(defun function-form-body-args-and-body (x)
-  (if .x
-	  .x.
-      x.))
-
-(defun function-form-body-funinfo-sym (x)
-  (when .x
-	x.))
