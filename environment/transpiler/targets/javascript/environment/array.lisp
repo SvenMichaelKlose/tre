@@ -1,7 +1,13 @@
 ;;;;; Transpiler: TRE to JavaScript
 ;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 
-(defun arrayp (x) (instanceof x *array))
+(dont-obfuscate constructor)
+
+(defvar *%array-constructor* (make-array).constructor)
+
+(defun arrayp (x)
+  (when x
+    (eq *%array-constructor* x.constructor)))
 
 (dont-obfuscate push)
 
