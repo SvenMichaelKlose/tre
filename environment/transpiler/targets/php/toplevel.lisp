@@ -48,8 +48,3 @@
 			:files-to-update files-to-update
 			:make-updater make-updater
 			:print-obfuscations? print-obfuscations?))))
-
-;(defun php-retranspile (files-to-update)
-;  (let tr *php-transpiler*
-;	(concat-stringtree (php-transpile-prepare tr)
-;    				   (funcall *updater* tr files-to-update))))

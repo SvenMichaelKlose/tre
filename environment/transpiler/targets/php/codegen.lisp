@@ -44,17 +44,17 @@
 	   ,@(if (< *php-version* 503)
 	         `("case " ,tag ":")
              `("_I_" ,tag ":"))
-       ,*php-separator*))
+       ,*php-newline*))
 
 (define-php-macro vm-go (tag)
-  (if (<= 503 *php-version*)
-	  (php-line "goto _I_" tag)
-      (php-line "$_I_=" tag *php-separator* "continue")))
+  (if (< 503 *php-version*)
+      (php-line "$_I_=" tag *php-separator* "continue")
+	  (php-line "goto _I_" tag)))
 
 (define-php-macro vm-go-nil (val tag)
-  (if (<= 503 *php-version*)
-      (php-line "if (!$" val "&&$" val "!==0) goto _I_" tag)
-      (php-line "if (!$" val "&&$" val "!==0) { $_I_=" tag "; continue; }")))
+  (if (< 503 *php-version*)
+      (php-line "if (!$" val "&&$" val "!==0) { $_I_=" tag "; continue; }")
+      (php-line "if (!$" val "&&$" val "!==0) goto _I_" tag)))
 
 ;;;; FUNCTIONS
 

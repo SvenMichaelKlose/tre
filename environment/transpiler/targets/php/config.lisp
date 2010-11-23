@@ -3,7 +3,7 @@
 ;;;;;
 ;;;;; Configuration
 
-(defvar *php-version* 502)
+(defvar *php-version* 503)
 
 (defun php-setf-functionp (x)
   (or (%setf-functionp x)
