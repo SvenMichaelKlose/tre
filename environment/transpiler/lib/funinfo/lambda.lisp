@@ -46,9 +46,12 @@
 	  (error "couldn't get funinfo"))
 	fi))
 
+(defun funinfo-expr-symbol (x)
+  (and (eq '%funinfo x.)
+       .x.))
+
 (defun split-funinfo-and-args (x)
-  (let fi-sym (and (eq '%funinfo x.)
-                   .x.)
+  (let fi-sym (funinfo-expr-symbol x)
     (values fi-sym
             (if fi-sym
                 ..x
