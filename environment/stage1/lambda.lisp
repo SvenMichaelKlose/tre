@@ -71,8 +71,8 @@
 (defun lambda? (x)
   (and (lambda-expr? x)
 	   (let l (past-lambda (cadr x))
-		 (and l (consp l)
-				(listp (car l))))))
+		 (and (consp l)
+			  (listp (car l))))))
 
 (define-test "IS-LAMBDA? works"
   ((lambda? '#'((x) x)))
