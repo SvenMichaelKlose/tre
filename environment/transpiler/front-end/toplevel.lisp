@@ -8,16 +8,16 @@
 ;; - FUNINFO objects are built for all functions.
 ;; - Accesses to the object in a method are thisified.
 (defun transpiler-preexpand-compose (tr)
-  (compose
-	  (fn with-temporary *expex-warn?* t
-		   (transpiler-expression-expand tr _)
-		   _)
-      (fn transpiler-lambda-expand tr _)
-	  #'rename-function-arguments
-	  (fn (if *opt-inline?*
-			  (opt-inline tr _)
-			  _))
-      (fn thisify (transpiler-thisify-classes tr) _)))
+  (transpiler-pass
+	  fake-expression-expand (fn with-temporary *expex-warn?* t
+		                           (transpiler-expression-expand tr _)
+		                           _)
+      lambda-expand (fn transpiler-lambda-expand tr _)
+	  rename-function-arguments #'rename-function-arguments
+	  opt-inline (fn if *opt-inline?*
+	                    (opt-inline tr _)
+		                _)
+      thisify (fn thisify (transpiler-thisify-classes tr) _)))
 
 (defun transpiler-frontend-2 (tr x)
   (funcall (transpiler-preexpand-compose tr) x))
@@ -29,14 +29,14 @@
 ;; - Conditionals are implemented with VM-GO and VM-GO-NIL.
 ;; - Quoting is done by %QUOTE (same as QUOTE) exclusively.
 (defun transpiler-simple-expand-compose (tr)
-  (compose
-      (fn funcall (transpiler-literal-conversion tr) _)
-      #'backquote-expand
-      #'compiler-macroexpand
-      (fn transpiler-macroexpand tr _)
-	  #'quasiquote-expand
-      (fn transpiler-macroexpand tr _)
-      #'dot-expand))
+  (transpiler-pass
+      literal-conversion (fn funcall (transpiler-literal-conversion tr) _)
+      backquote-expand #'backquote-expand
+      compiler-macroexpand #'compiler-macroexpand
+      transpiler-macroexpand-2 (fn transpiler-macroexpand tr _)
+      quasiquote-expand #'quasiquote-expand
+      transpiler-macroexpand-1 (fn transpiler-macroexpand tr _)
+      dot-expand #'dot-expand))
 
 (defun transpiler-frontend-1 (tr x)
   (funcall (transpiler-simple-expand-compose tr) x))

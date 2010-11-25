@@ -11,23 +11,23 @@
 ;; - FUNINFOs were updated with number of jump tags in function.
 ;; - FUNCTION expression contain the names of top-level functions.
 (defun transpiler-expand-compose (tr)
-  (compose
-	  (fn (princ #\.)
-		  (force-output)
-		  _)
-      #'transpiler-update-funinfo
+  (transpiler-pass
+	  print-dot (fn (princ #\.)
+		            (force-output)
+		            _)
+      update-funinfo #'transpiler-update-funinfo
 ;	  (fn metacode-fblock _)
-      (fn if (transpiler-continuation-passing-style? tr)
-             (cps _)
-             _)
-      #'opt-places-remove-unused
-      #'opt-places-find-used
-      #'opt-peephole
-      #'opt-tailcall
-      #'opt-peephole
-      (fn transpiler-make-named-functions tr _)
-      #'transpiler-quote-keywords
-      (fn transpiler-expression-expand tr _)))
+      cps (fn if (transpiler-continuation-passing-style? tr)
+                 (cps _)
+                 _)
+      opt-remove-unused-places #'opt-places-remove-unused
+      opt-find-unused-places #'opt-places-find-used
+      opt-peephole #'opt-peephole
+      opt-tailcall #'opt-tailcall
+      opt-peephole #'opt-peephole
+      make-named-functions (fn transpiler-make-named-functions tr _)
+      quote-keywords #'transpiler-quote-keywords
+      expression-expand (fn transpiler-expression-expand tr _)))
 
 (defun transpiler-middleend-2 (tr x)
   (remove-if #'not
