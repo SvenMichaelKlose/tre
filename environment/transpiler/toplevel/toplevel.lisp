@@ -1,7 +1,5 @@
 ;;;;; TRE transpiler
 ;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Toplevel
 
 (defun transpiler-transpile (tr forms)
   (unless (eq t (transpiler-unwanted-functions tr))
