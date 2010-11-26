@@ -11,27 +11,32 @@
 	 (%var ,x.)
 	 (%setq ,@x)))
 
-(defun body-with-noargs-tag (x)
-  `(,x. no-args ,@.x))
+(defun body-with-noargs-tag (body)
+  `(no-args ,@body))
+
+(defun body-has-noargs-tag? (body)
+  (eq 'no-args body.))
 
 (defun js-make-function-with-compiled-argument-expansion (x)
   (with-gensym g
     (when (in-cps-mode?)
       (transpiler-add-cps-function *js-transpiler* g))
-    `(#'((,g)
-	      (setf ,g (function
-					   ,(body-with-noargs-tag x)))
-		  (setf (slot-value ,g 'tre-exp)
-			    ,(compile-argument-expansion g x.))
-		  ,g)
-		 nil)))
+    (with-lambda-content x fi args body
+      `(#'((,g)
+	        (setf ,g ,(copy-lambda `(function ,x)
+					               :body (body-with-noargs-tag body)))
+		    (setf (slot-value ,g 'tre-exp)
+                  ,(compile-argument-expansion g args))
+		    ,g)
+		  nil))))
 
 (define-js-std-macro function (x)
   (if (consp x)
-	  (if (and (not (simple-argument-list? x.))
-			   (not (eq 'no-args .x.)))
-		  (js-make-function-with-compiled-argument-expansion x)
-  		  `(function ,x))
+      (with-lambda-content x fi args body
+	    (if (or (body-has-noargs-tag? body)
+                (simple-argument-list? args))
+  		    `(function ,x)
+		    (js-make-function-with-compiled-argument-expansion x)))
   	  `(function ,x)))
 
 (defun js-cps-exception (x)

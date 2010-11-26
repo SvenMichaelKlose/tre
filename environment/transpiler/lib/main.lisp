@@ -8,7 +8,7 @@
 (env-load "transpiler/lib/verbose.lisp")
 (env-load "transpiler/lib/compiled-list.lisp")
 (env-load "transpiler/lib/with-lambda-call.lisp")
-(env-load "transpiler/lib/with-lambda-form.lisp")
+(env-load "transpiler/lib/with-lambda-content.lisp")
 (env-load "transpiler/lib/function-arguments.lisp")
 (env-load "transpiler/lib/simple-argument-list-p.lisp")
 (env-load "transpiler/lib/pass.lisp")
