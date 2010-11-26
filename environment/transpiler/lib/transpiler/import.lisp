@@ -1,7 +1,5 @@
 ;;;;; TRE transpiler
 ;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Import functions and variable from the environment.
 
 (defun transpiler-defined? (tr name)
   (or (transpiler-defined-function tr name)
@@ -54,8 +52,8 @@
   var)
 
 (defun transpiler-import-exported-closures (tr)
-  (when *lambda-exported-closures*
-	(append (transpiler-sighten tr (pop *lambda-exported-closures*))
+  (when (transpiler-exported-closures tr)
+	(append (transpiler-sighten tr (pop (transpiler-exported-closures tr)))
 		    (transpiler-import-exported-closures tr))))
 
 (defvar *imported-something* nil)
@@ -73,10 +71,9 @@
 	                    ,@(function-body fun)))))))))
 
 (defun transpiler-import-wanted-functions (tr)
-  (append
-      (mapcan (fn transpiler-import-wanted-function tr _)
-    	      (transpiler-wanted-functions tr))
-      (transpiler-import-exported-closures tr)))
+  (append (mapcan (fn transpiler-import-wanted-function tr _)
+    	          (transpiler-wanted-functions tr))
+          (transpiler-import-exported-closures tr)))
 
 (defun transpiler-import-wanted-variables (tr)
   (transpiler-sighten tr
@@ -105,13 +102,12 @@
            (progn
 			 (transpiler-add-wanted-function *current-transpiler* !))
              `(symbol-function (%quote ,!)))
-       (aif (vec-function-expr? x)
-           !
+       (or (vec-function-expr? x)
            x)))
 
 (defun transpiler-import-universe (tr)
   (dolist (i (reverse *defined-functions*))
-	(when (and (symbolp i)
-			   (not (builtinp i))
-			   (symbol-function i))
-	  (transpiler-add-wanted-function tr i))))
+	(and (symbolp i)
+		 (not (builtinp i))
+		 (symbol-function i))
+	     (transpiler-add-wanted-function tr i)))

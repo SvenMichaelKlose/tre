@@ -1,7 +1,5 @@
 ;;;;; TRE compiler
 ;;;;; Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; LAMBDA expansion.
 
 ;;;; XXX clean-up plan
 ;;;; Make this functions a layer of FUNINFO to get rid of the first
@@ -14,11 +12,6 @@
       (funinfo-env-add-many fi (argument-expand-names 'lambda-expand args)))
 	(funinfo-env-add fi '~%ret)
 	fi))
-
-(defvar *lambda-exported-closures* nil)
-
-(defun lambda-expand-add-closure (x)
-  (push! x  *lambda-exported-closures*))
 
 ;;;; LAMBDA inlining
 
@@ -50,7 +43,7 @@
 						    (list !))
 						  (lambda-args x))
 		(push (cons exported-name argdef) *closure-argdefs*)
-        (lambda-expand-add-closure
+	    (transpiler-add-exported-closure *current-transpiler*
             `((defun ,exported-name ,(append (make-lambda-funinfo fi-child)
 											 argdef)
 		        ,@(lambda-body x))))
@@ -97,48 +90,29 @@
 	expanded-body))
 
 (defun lambda-expand-0 (x export-lambdas? &key (lambda-name nil))
-  (with (forms (argument-expand-names
-			       'transpiler-lambda-expand
-			       (lambda-args x))
+  (with (forms (argument-expand-names 'transpiler-lambda-expand
+			                          (lambda-args x))
          imported	(get-lambda-funinfo x)
          fi			(or imported
 						(lambda-make-funinfo forms *global-funinfo*)))
-    (values
-	    (copy-lambda x
-		    :name lambda-name
-			:info fi
-			:body (lambda-expand-tree fi (lambda-body x) export-lambdas?))
-		*lambda-exported-closures*)))
+    (copy-lambda x
+	    :name lambda-name
+		:info fi
+		:body (lambda-expand-tree fi (lambda-body x) export-lambdas?))))
 
 (defun lambda-expand (x export-lambdas?)
-  "Expand top-level LAMBDA expressions."
-  (with (exported-closures nil
-		 lambda-exp-r
+  (with (lambda-exp-r
   		     #'((x)
 				  (if
 					(atom x)
 	  				  x
 				    (named-lambda? x)
-					  (with ((new-x new-exported-closures)
-							     (lambda-expand-0 ..x. export-lambdas?
-												  :lambda-name .x.))
-    					(append! exported-closures
-		     			         new-exported-closures)
-						new-x)
+					  (lambda-expand-0 ..x. export-lambdas?  :lambda-name .x.)
 	  				(lambda? x)
-  					  (with ((new-x new-exported-closures)
-							     (lambda-expand-0 x export-lambdas?))
-    				    (append! exported-closures
-		     			     	 new-exported-closures)
-						new-x)
+				      (lambda-expand-0 x export-lambdas?)
 					(cons (lambda-exp-r x.)
 		    			  (lambda-exp-r .x)))))
-	(values (lambda-exp-r x)
-			exported-closures)))
+	(lambda-exp-r x)))
 
 (defun transpiler-lambda-expand (tr x)
-  (with ((new-x exported-closures)
-		     (lambda-expand x
-						    (transpiler-lambda-export? tr)))
-    (dolist (i exported-closures new-x)
-	  (transpiler-add-exported-closure tr i))))
+  (lambda-expand x (transpiler-lambda-export? tr)))
