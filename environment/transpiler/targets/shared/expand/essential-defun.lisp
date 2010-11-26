@@ -3,21 +3,23 @@
 
 (defun shared-essential-defun (name compiled-name args &rest body)
   (when *show-definitions*
-    (late-print `(defun ,name ,@args)))
+    (late-print `(defun ,name ,args)))
   (with (n (%defun-name name)
 		 tr *current-transpiler*
 		 (fi-sym a) (split-funinfo-and-args args))
     (transpiler-obfuscate-symbol tr n)
     (transpiler-add-function-args tr n a)
-	(transpiler-add-function-body tr n (remove 'no-args body :test #'eq))
+	(transpiler-add-function-body tr n body)
 	(transpiler-add-defined-function tr n)
 	`(%defsetq ,compiled-name
 	           #'(,@(awhen fi-sym
 				      `(%funinfo ,!))
 			      ,a
+                  ,@(when (body-has-noargs-tag? body)
+                      '(no-args))
                   (block ,(if (consp name)
                               (second name)
                               name)
                     ,@(when *log-functions?*
                         `((log ,(symbol-name n))))
-   		            ,@body)))))
+   		            ,@(body-without-noargs-tag body))))))

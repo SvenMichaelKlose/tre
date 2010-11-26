@@ -10,7 +10,6 @@
 ;;
 ;; It has a function field but that isn't used yet.
 (define-native-php-fun %symbol (name pkg)
-  no-args
   (setf this.__class ,(transpiler-obfuscated-symbol-string
 						  *current-transpiler* 'symbol)
 		this.n name	; name
@@ -24,7 +23,6 @@
 ;; Wraps the 'new'-operator.
 ;; XXX rename to %QUOTE ?
 (define-native-php-fun %lookup-symbol (name pkg)
-  no-args
   (unless (and (%%%= ,*nil-symbol-name* name)
 			   (not pkg))
     ; Make package if missing.
@@ -35,9 +33,7 @@
 	      (setf (href symbol-table name) (new %symbol name pkg))))))
 
 (define-native-php-fun symbol (name pkg)
-  no-args
   (%lookup-symbol name pkg))
 
 (define-native-php-fun %%usetf-symbol-function (v x)
-  no-args
   (setq x.f v))

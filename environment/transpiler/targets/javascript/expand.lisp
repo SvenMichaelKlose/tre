@@ -1,7 +1,5 @@
 ;;;;; Transpiler: TRE to JavaScript
 ;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Overriding standard macros.
 
 (defmacro define-js-std-macro (&rest x)
   `(define-transpiler-std-macro *js-transpiler* ,@x))
@@ -10,12 +8,6 @@
   `(progn
 	 (%var ,x.)
 	 (%setq ,@x)))
-
-(defun body-with-noargs-tag (body)
-  `(no-args ,@body))
-
-(defun body-has-noargs-tag? (body)
-  (eq 'no-args body.))
 
 (defun js-make-function-with-compiled-argument-expansion (x)
   (with-gensym g
@@ -45,7 +37,7 @@
 
 (define-js-std-macro define-native-js-fun (name args &rest body)
   (js-cps-exception name)
-  (apply #'shared-essential-defun name (%defun-name name) args body))
+  (apply #'shared-essential-defun name (%defun-name name) args (body-with-noargs-tag body)))
 
 (define-js-std-macro cps-exception (x)
   (when *show-definitions*

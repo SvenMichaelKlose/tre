@@ -5,7 +5,6 @@
 
 ;; Cell object constructor.
 (define-native-js-fun %cons (a d)
-  no-args
   (setf this.__class ,(transpiler-obfuscated-symbol-string *current-transpiler* 'cons)
         this._ a
   		this.__ d)
@@ -15,5 +14,4 @@
 ;;
 ;; Wraps the 'new'-operator.
 (define-native-js-fun cons (x y)
-  no-args
   (new %cons x y))

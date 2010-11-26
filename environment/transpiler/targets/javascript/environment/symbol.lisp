@@ -10,7 +10,6 @@
 ;;
 ;; It has a function field but that isn't used yet.
 (define-native-js-fun %symbol (name pkg)
-  no-args
   (setf this.__class ,(transpiler-obfuscated-symbol-string
 						  *current-transpiler* 'symbol)
 		this.n name	; name
@@ -21,7 +20,6 @@
 
 ;; Find symbol by name or create a new one.
 (define-native-js-fun symbol (name pkg)
-  no-args
   (unless (%%%= ,*nil-symbol-name* name)
 	(let pkg-name (if pkg
 					  pkg.n
@@ -35,5 +33,4 @@
 	        (setf (href symbol-table name) (new %symbol name pkg)))))))
 
 (define-native-js-fun %%usetf-symbol-function (v x)
-  no-args
   (setq x.f v))

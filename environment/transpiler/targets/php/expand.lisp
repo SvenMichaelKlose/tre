@@ -1,7 +1,5 @@
 ;;;;; Transpiler: TRE to PHP
 ;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Expansion of alternative standard macros.
 
 ;; Define macro that is expanded _before_ standard macros.
 (defmacro define-php-std-macro (&rest x)
@@ -18,7 +16,7 @@
 					   (list x))))
 
 (define-php-std-macro define-native-php-fun (name args &rest body)
-  (apply #'shared-essential-defun name (%defun-name name) args body))
+  (apply #'shared-essential-defun name (%defun-name name) args (body-with-noargs-tag body)))
 
 (define-php-std-macro defun (name &rest args)
   (apply #'shared-essential-defun name (%defun-name name) args))
