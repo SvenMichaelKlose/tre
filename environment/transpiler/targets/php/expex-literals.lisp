@@ -33,37 +33,23 @@
 			   	      ,(keywordp x)
 				      ")"))
 
-(defun php-memorize-expex-literal (x)
-  (let fi (funinfo-topmost *expex-funinfo*)
-	(adjoin! x (funinfo-globals fi))
-	x))
+(defun php-expex-add-global (x)
+  (adjoin! x (funinfo-globals *expex-funinfo*))
+  x)
 
-;; An EXPEX-ARGUMENT-FILTER.
 (defun php-expex-literal (x)
   (if
     (characterp x)
-      (php-memorize-expex-literal (php-compiled-char x))
+      (php-expex-add-global (php-compiled-char x))
     (numberp x)
-	  (php-memorize-expex-literal (php-compiled-number x))
+	  (php-expex-add-global (php-compiled-number x))
     (stringp x)
-	  (php-memorize-expex-literal (php-compiled-string x))
+	  (php-expex-add-global (php-compiled-string x))
 	(atom x)
       (if
 		(expex-global-variable? x)
-	      (transpiler-add-wanted-variable *php-transpiler* x)
-;        (and *expex-funinfo*
-;			 (funinfo-arg? *expex-funinfo* x))
-          x
-;		(or (and *expex-funinfo*
-;		  		 (expex-funinfo-defined-variable? x))
-;		    (transpiler-defined-function *php-transpiler* x))
-		  x
-;		(not x)
-;		  nil
-;		(not (or (get-lambda-funinfo-by-sym x)
-;				 (expander-has-macro? (transpiler-macro-expander *php-transpiler*)
-;								  x)
-;				 (eq 'this x)))
-;	  	  (php-memorize-expex-literal (php-compiled-symbol x))
+	      (progn
+            (transpiler-add-wanted-variable *php-transpiler* x)
+            (php-expex-add-global x))
 		x)
     (transpiler-import-from-expex x)))
