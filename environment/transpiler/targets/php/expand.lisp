@@ -8,13 +8,6 @@
 (define-php-std-macro %defsetq (&rest x)
   `(%setq ,@x))
 
-;; (FUNCTION symbol | lambda-expression)
-;; Add symbol to list of wanted functions or obfuscate arguments of
-;; LAMBDA-expression.
-(define-php-std-macro function (name &optional (x 'only-name))
-  `(function ,name ,@(unless (eq 'only-name x)
-					   (list x))))
-
 (define-php-std-macro define-native-php-fun (name args &rest body)
   (apply #'shared-essential-defun name (%defun-name name) args (body-with-noargs-tag body)))
 
@@ -31,9 +24,7 @@
     (when (transpiler-defined-variable tr name)
       (error "variable ~A already defined" name))
     (transpiler-add-defined-variable tr name)
-    `(progn
-       (%var ,name)
-	   (%setq ,name ,val))))
+    `(%setq ,name ,val)))
 
 (define-php-std-macro make-string (&optional len)
   "")
