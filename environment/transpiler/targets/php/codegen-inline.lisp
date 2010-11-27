@@ -16,7 +16,7 @@
 (define-php-binary << "<<")
 (define-php-binary mod "%")
 (define-php-binary logxor "^")
-(define-php-binary eq "===")
+(define-php-binary userfun_eq "===")
 (define-php-binary bit-and "&")
 (define-php-binary bit-or "|")
 
