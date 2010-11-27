@@ -1,3 +1,6 @@
+// TRE to PHP transpiler
+// Copyright (c) 2010 Sven Klose <pixel@copei.de>
+
 function &T37funref_exec ($f, $g)
 {
 	$a = func_get_args ();
@@ -7,7 +10,7 @@ function &T37funref_exec ($f, $g)
 
 function &T37funref ($f, $g)
 {
-	$r->treArgs = compiled_cdr ($f->treArgs);
+	$r->treArgs = userfun_cdr ($f->treArgs);
 	return $r;
 }
 
@@ -74,7 +77,7 @@ function & T37symbol ($name, &$pkg)
 //
 // Wraps the 'new'-operator.
 // XXX rename to %QUOTE ?
-function & compiled_symbol ($name, $pkg)
+function & userfun_symbol ($name, $pkg)
 {
 	if ($name == "NIL" && !$pkg)
 		return NULL;
@@ -91,7 +94,7 @@ function & compiled_symbol ($name, $pkg)
 	return $s;
 }
 
-function & compiled_T37T37usetfSymbolFunction ($v, $x)
+function & userfun_T37T37usetfSymbolFunction ($v, $x)
 {
 	return $x->setFunction ($v);
 }
