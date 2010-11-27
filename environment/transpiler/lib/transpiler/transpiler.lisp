@@ -60,9 +60,6 @@
   ; Tells if functions must be moved out of functions.
   (lambda-export? nil)
 
-  ; Tells if arguments are passed by stack.
-  (stack-arguments? nil)
-
   (needs-var-declarations? nil)
 
   ; Tells if local variables are on the stack.

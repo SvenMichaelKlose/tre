@@ -20,7 +20,7 @@
 
 (defun rename-body-tags-get-0 (x)
   (if
-	(numberp x)    (list (cons x (gensym-number)))
+	(numberp x)    (list (cons x (make-compiler-tag)))
 	(lambda? x)    (rename-body-tags-get (lambda-body x))
 	(vm-scope? x)  (rename-body-tags-get .x)
 	(%quote? x)    nil

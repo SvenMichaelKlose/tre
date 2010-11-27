@@ -5,6 +5,7 @@
 (env-load "transpiler/lib/c-literal-string.lisp")
 (env-load "transpiler/lib/predicates.lisp")
 (env-load "transpiler/lib/subatomic.lisp")
+(env-load "transpiler/lib/tag.lisp")
 (env-load "transpiler/lib/verbose.lisp")
 (env-load "transpiler/lib/compiled-list.lisp")
 (env-load "transpiler/lib/with-lambda-call.lisp")

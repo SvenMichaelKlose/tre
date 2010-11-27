@@ -47,7 +47,7 @@
 (metacode-walker opt-tailcall (x)
 	:traverse? nil
 	:if-named-function
-	   (let front-tag (compiler-label)
+	   (let front-tag (make-compiler-tag)
 	     `(function
              ,(lambda-name x)
 		     (,@(lambda-head x)

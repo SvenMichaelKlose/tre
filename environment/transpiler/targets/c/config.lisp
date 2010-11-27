@@ -17,7 +17,6 @@
 			  		      (in=? _ #\_ #\. #\$ #\#)))
 			  :named-functions? t
 			  :lambda-export? t
-			  :stack-arguments? t
 			  :stack-locals? t
 			  :rename-all-args? t
 			  :literal-conversion #'identity)

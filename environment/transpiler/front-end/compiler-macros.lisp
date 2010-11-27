@@ -1,23 +1,15 @@
 ;;;;; TRE compiler
-;;;;; Copyright (c) 2006-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2006-2010 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Compiler-macro expansion.
 ;;;;;
 ;;;;; Converts control-flow functions into jumps.
-;;;;; VM-GO unconditionally jumps to a label.
-;;;;; VM-GO-NIL jumps to a label if the first argument is NIL.
+;;;;; VM-GO unconditionally jumps to a tag.
+;;;;; VM-GO-NIL jumps to a tag if the first argument is NIL.
 ;;;;; Both jump types are removed when tree-expanding.
-;;;;; VM-SCOPE holds a list of expresions and labels. They are nerged in the next pass.
+;;;;; VM-SCOPE holds a list of expresions and tags. They are nerged in the next pass.
 
 (defvar *tagbody-replacements*)
-(defvar *vm-label-counter* 1)
-
-(defun compiler-label ()
-  (incf *vm-label-counter*))
-
-(defmacro with-compiler-label (l &rest body)
-  `(let ,l (compiler-label)
-     ,@body))
 
 (defun compiler-macroexpand-prepost ()
   (setq *tagbody-replacements* nil))
@@ -39,9 +31,9 @@
       x))
 
 (define-compiler-macro cond (&rest args)
-  (with-compiler-label end-tag
+  (with-compiler-tag end-tag
     `(vm-scope
-       ,@(mapcan (fn (with-compiler-label next
+       ,@(mapcan (fn (with-compiler-tag next
                        `(,@(unless (t? _.)
                              `((%setq ~%ret ,_.)
                                (vm-go-nil ~%ret ,next)))
@@ -55,17 +47,17 @@
 
 ;;; TAGBODY tag replacement
 ;;;
-;;; All labels of a tagbody are replaced by compiler-labels to avoid name-clashes
+;;; All tags of a tagbody are replaced by compiler-tags to avoid name-clashes
 ;;; when TAGBODYs are removed. GOs are expanded beforehand
 ;;; (because macro expansion is done from leave to root), and the
-;;; new labels are added to *tagbody-replacements* and used when TAGBODY
+;;; new tags are added to *tagbody-replacements* and used when TAGBODY
 ;;; is expanded.
 
-(define-compiler-macro go (label)
-  (aif (cdr (assoc label *tagbody-replacements* :test #'eq))
+(define-compiler-macro go (tag)
+  (aif (cdr (assoc tag *tagbody-replacements* :test #'eq))
     `(vm-go ,!)
-    (with-compiler-label g
-      (acons! label g *tagbody-replacements*)
+    (with-compiler-tag g
+      (acons! tag g *tagbody-replacements*)
       `(vm-go ,g))))
 
 (define-compiler-macro tagbody (&rest args)
@@ -96,7 +88,7 @@
 
 (define-compiler-macro block (block-name &rest body)
   (if body
-	  (with-compiler-label g
+	  (with-compiler-tag g
 		(with-temporary *blockname* block-name
 		  (with-temporary *blockname-replacement* g
             (with (b	 (expander-expand 'compiler-return body)

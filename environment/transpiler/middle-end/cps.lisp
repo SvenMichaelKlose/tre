@@ -145,8 +145,8 @@
 
 (defun cps-split-methodcall (fi x xlats)
   (with (method (car (%setq-value x.))
-         tag-no-cps (gensym-number)
-         tag-end (gensym-number))
+         tag-no-cps (make-compiler-tag)
+         tag-end (make-compiler-tag))
     (with-gensym g
       `((vm-go-nil (%slot-value ,method tre-cps) ,tag-no-cps)
         ,@(cps-split-funcall fi x xlats)
@@ -292,8 +292,8 @@
 
 (defun cps-toplevel-constructorcall (x)
   (with (constructor (cadr (%setq-value x))
-         tag-no-cps (gensym-number)
-         tag-end (gensym-number))
+         tag-no-cps (make-compiler-tag)
+         tag-end (make-compiler-tag))
     (with-gensym g
       `((vm-go-nil (%slot-value ,constructor tre-cps) ,tag-no-cps)
         ,@(cps-split-constructorcall-0 *global-funinfo* (list x)
@@ -310,8 +310,8 @@
 
 (defun cps-toplevel-methodcall (x)
   (with (method (car (%setq-value x))
-         tag-no-cps (gensym-number)
-         tag-end (gensym-number))
+         tag-no-cps (make-compiler-tag)
+         tag-end (make-compiler-tag))
     (with-gensym g
       `((vm-go-nil (%slot-value ,method tre-cps) ,tag-no-cps)
         ,@(cps-toplevel-funcall x)
