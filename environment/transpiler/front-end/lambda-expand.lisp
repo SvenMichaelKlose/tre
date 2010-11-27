@@ -1,15 +1,12 @@
 ;;;;; TRE compiler
 ;;;;; Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
 
-;;;; XXX clean-up plan
-;;;; Make this functions a layer of FUNINFO to get rid of the first
-;;;; FI argument as well as the FUNINFO prefixes.
-
 (defun lambda-make-funinfo (args parent)
-  (let fi (make-funinfo :args (argument-expand-names 'lambda-expand args)
-					    :parent parent)
+  (with (argnames (argument-expand-names 'lambda-expand args)
+         fi (make-funinfo :args argnames
+					      :parent parent))
 	(when (transpiler-stack-locals? *current-transpiler*)
-      (funinfo-env-add-many fi (argument-expand-names 'lambda-expand args)))
+      (funinfo-env-add-many fi argnames))
 	(funinfo-env-add fi '~%ret)
 	fi))
 
@@ -28,16 +25,15 @@
 												args vals)))
 	  (funinfo-env-add-many fi a)
 	  (lambda-expand-tree fi
-          (lambda-expand-make-inline-body a v body)
-		  export-lambdas?))))
+                          (lambda-expand-make-inline-body a v body)
+		                  export-lambdas?))))
 
 ;;; Export
 
 (defun lambda-export-make-exported (fi x)
   (with-gensym exported-name
     (let fi-child (lambda-make-funinfo (lambda-args x) fi)
-	  (when (transpiler-stack-locals? *current-transpiler*)
-		(funinfo-make-ghost fi-child))
+	  (funinfo-make-ghost fi-child)
 	  (lambda-expand-tree fi-child (lambda-body x) t)
       (let argdef (append (awhen (funinfo-ghost fi-child)
 						    (list !))
@@ -96,9 +92,9 @@
          fi			(or imported
 						(lambda-make-funinfo forms *global-funinfo*)))
     (copy-lambda x
-	    :name lambda-name
-		:info fi
-		:body (lambda-expand-tree fi (lambda-body x) export-lambdas?))))
+	             :name lambda-name
+		         :info fi
+		         :body (lambda-expand-tree fi (lambda-body x) export-lambdas?))))
 
 (defun lambda-expand (x export-lambdas?)
   (with (lambda-exp-r
