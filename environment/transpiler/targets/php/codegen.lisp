@@ -1,7 +1,5 @@
 ;;;;; Transpiler: TRE to PHP
 ;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Code generation
 
 ;;;; GENERAL
 
@@ -53,8 +51,8 @@
 
 (define-php-macro vm-go-nil (val tag)
   (if (< 503 *php-version*)
-      (php-line "if (!$" val "&&$" val "!==0) { $_I_=" tag "; continue; }")
-      (php-line "if (!$" val "&&$" val "!==0) goto _I_" tag)))
+      (php-line "if (!$" val "&&$" val "!=0) { $_I_=" tag "; continue; }")
+      (php-line "if (!$" val "&&$" val "!=0) goto _I_" tag)))
 
 ;;;; FUNCTIONS
 
@@ -68,18 +66,14 @@
     `(,(code-char 10)
 	  "function &" ,(compiled-function-name name) "("
   	      ,@(transpiler-binary-expand ","
-                (mapcar (fn `("&$" ,_))
-					    args))
+                (mapcar (fn `("&$" ,_)) args))
 	      ")" ,(code-char 10)
       "{" ,(code-char 10)
-	     ,@(awhen (funinfo-globals fi)
-			 `((,*php-indent* global
-					,@(comma-separated-list (mapcar #'php-dollarize !))
-					   ";" ,*php-newline*)))
+		 ,(php-line "global "
+					(comma-separated-list (mapcar #'php-dollarize
+                                                  (cons "$NULL" (funinfo-globals fi)))))
 	     ,@(when (< *php-version* 503)
 			 (php-line "$_I_=0; while (1) { switch ($_I_) { case 0:"))
-		 ,@(when (< 0 num-locals)
-		     (php-line "$_local_array = Array ()"))
          ,@(lambda-body x)
 	     ,@(when (< *php-version* 503)
 			 `(,*php-indent* "}" ,*php-newline*))
@@ -107,7 +101,7 @@
 (define-php-macro %%funref (name fi-sym)
   (let fi (get-lambda-funinfo-by-sym fi-sym)
     (if (funinfo-ghost fi)
-  	  	`(%funref ,name ,(funinfo-lexical (funinfo-parent fi)))
+  	  	`(%funref (%transpiler-string ,(symbol-name name)) ,(funinfo-lexical (funinfo-parent fi)))
 	    name)))
 
 ;;;; ASSIGNMENT
@@ -167,14 +161,6 @@
 					   "$" ,val ,*php-separator*))
 
 ;;;; VARIABLES
-
-(defun php-stack (x)
-  ($ '_I_S x))
-
-(define-php-macro %stack (x)
-  (if (transpiler-stack-locals? *php-transpiler*)
-  	  `(%transpiler-native "_locals[" ,x "]")
-      (php-stack x)))
 
 ;; Experimental for lambda-export.
 (define-php-macro %vec (v i)
