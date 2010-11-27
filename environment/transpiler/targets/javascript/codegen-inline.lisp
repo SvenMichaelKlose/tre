@@ -3,10 +3,9 @@
 ;;;;;
 ;;;;; Extra code-generating macros to avoid costly function calls.
 
-;(define-js-binary userfun_string-concat "+")
 (define-js-binary / "/")
 (define-js-binary * "*")
-;(define-js-binary userfun_string= "==")
+(define-js-binary userfun_string= "==")
 ;(define-js-binary >> ">>")
 ;(define-js-binary << "<<")
 (define-js-binary mod "%")

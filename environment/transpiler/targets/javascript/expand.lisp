@@ -153,3 +153,6 @@
 
 (define-js-std-macro mapcar (fun &rest lsts)
   (apply #'shared-mapcar fun lsts))
+
+(define-js-std-macro string-concat (&rest x)
+  `(%%%+ ,@x))
