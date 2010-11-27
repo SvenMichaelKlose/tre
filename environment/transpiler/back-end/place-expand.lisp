@@ -56,14 +56,15 @@
 			 ,(funinfo-sym fi)
 			 ,x)
 
-	(not (transpiler-stack-locals? *current-transpiler*))
-	  	x
+	(not (transpiler-lambda-export? *current-transpiler*))
+      x
 
 	; Emit stack place.
-    (funinfo-in-env? fi x)
+	(and (transpiler-stack-locals? *current-transpiler*)
+         (funinfo-in-env? fi x))
       (place-expand-emit-stackplace fi x)
 
-    (funinfo-arg? fi x)
+    (funinfo-in-args-or-env? fi x)
 	  x
 
     ; Emit lexical place (outside the function).
