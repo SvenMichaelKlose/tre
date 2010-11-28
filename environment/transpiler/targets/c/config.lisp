@@ -16,6 +16,7 @@
 		  	  		      (and (>= _ #\0) (<= _ #\9))
 			  		      (in=? _ #\_ #\. #\$ #\#)))
 			  :named-functions? t
+			  :named-function-next #'cdddr
 			  :lambda-export? t
 			  :stack-locals? t
 			  :rename-all-args? t

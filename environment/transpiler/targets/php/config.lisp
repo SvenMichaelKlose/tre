@@ -1,7 +1,5 @@
 ;;;;; Transpiler: TRE to PHP
 ;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Configuration
 
 (defvar *php-version* 503)
 
@@ -27,7 +25,8 @@
 	  :stack-locals? nil
 	  :rename-all-args? t
 	  :inline-exceptions '(%slot-value error format identity %bind)
-	  :named-functions? t))
+	  :named-functions? t
+	  :named-function-next #'cddr))
 
 (defun make-php-transpiler ()
   (with (tr (make-php-transpiler-0)
