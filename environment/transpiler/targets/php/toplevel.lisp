@@ -43,8 +43,11 @@
 		 	:dep-gen
 		     	#'(()
 				  	(transpiler-import-from-environment tr))
-			:decl-gen
-		     	#'(())
+            :decl-gen
+                #'(()
+                     (transpiler-transpile tr                                                                       
+                         (transpiler-sighten tr
+                             (transpiler-compiled-inits tr))))
 			:files-to-update files-to-update
 			:make-updater make-updater
 			:print-obfuscations? print-obfuscations?))))
