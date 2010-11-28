@@ -1,4 +1,4 @@
-;;;;; Transpiler: TRE to JavaScript
+;;;;; TRE transpiler environment
 ;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
 
 (defun atom (x)

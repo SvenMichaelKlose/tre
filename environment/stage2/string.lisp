@@ -34,18 +34,9 @@
 ;	(string= #'eq #'eq)))
 ;  t)
 
-;(defun list-string (lst)
-;  "Convert list of characters to string."
-;  (let* ((n (length lst))
-;         (s (make-string 0)))
-;    (do ((i 0 (1+ i))
-;         (l lst (cdr l)))
-;        ((>= i n) s)
-;      (setf s (+ s (string (car l)))))))
-
 (define-test "LIST-STRING works"
   ((string= (list-string '(#\L #\I #\S #\P))
-	    "LISP"))
+	        "LISP"))
   t)
 
 (defun string-list (x)

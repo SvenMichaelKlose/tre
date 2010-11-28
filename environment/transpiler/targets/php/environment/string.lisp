@@ -38,15 +38,15 @@
 	  ,*nil-symbol-name*
    	(x.to-string)))
 
-(defun list-string (lst)
-  (when lst
-    (declare type cons lst)
-    (let* ((n (length lst))
-           (s (make-string 0)))
-      (do ((i 0 (1+ i))
-           (l lst .l))
-          ((>= i n) s)
-        (setf s (+ s (string l.)))))))
+;(defun list-string (lst)
+;  (when lst
+;    (declare type cons lst)
+;    (let* ((n (length lst))
+;           (s (make-string 0)))
+;      (do ((i 0 (1+ i))
+;           (l lst .l))
+;          ((>= i n) s)
+;        (setf s (+ s (string l.)))))))
 
 ;; XXX must be optional.
 (defun string= (x y)

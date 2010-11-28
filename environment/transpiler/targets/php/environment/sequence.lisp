@@ -14,16 +14,3 @@
 
 (defun map (fun hash)
   (%transpiler-native "$NULL;foreach ($hash as $i => $dummy) funcall ($i)"))
-
-(defun elt (seq idx)
-  (if
-    (stringp seq)
-	  (%elt-string seq idx)
-    (consp seq)
-	  (nth idx seq)
-  	(aref seq idx)))
-
-(defun (setf elt) (val seq idx)
-  (if (stringp seq)
-	  (error "strings cannot be modified")
-  	  (setf (aref seq idx) val)))

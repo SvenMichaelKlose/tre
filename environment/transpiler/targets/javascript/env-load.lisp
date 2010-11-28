@@ -36,6 +36,7 @@
 ;;;; Second part of the core functions
 ;;;;
 ;;;; Functions required by imported environment functions.
+
 (defvar *js-base2*
 	(append
 	    (js-load-base "environment/transpiler/environment/"
@@ -43,7 +44,8 @@
 		(js-load-base *js-env-path*
 			"character.lisp"
 			"number.lisp"
-			"number-typing.lisp")
+			"../../../environment/number.lisp"
+			"../../../environment/number-typing.lisp")
 		(js-load-base "environment/transpiler/environment/"
             "cps-enable.lisp")
 		(js-load-base *js-env-path*
@@ -54,16 +56,18 @@
 			"atom.lisp")
 		(js-load-base *js-env-path*
 			"bind.lisp"
-			"equality.lisp"
-			"../../../environment/error.lisp"
+			"../../../environment/equality.lisp"
+			"error.lisp"
 			"late-cons.lisp"
 			"late-symbol.lisp"
 			"../../../environment/list.lisp"
+			"../../../environment/sequence.lisp"
 			"sequence.lisp"
 			"stream.lisp"
-			"print.lisp"
+			"../../../environment/print.lisp"
+			"../../../environment/list-string.lisp"
 			"string.lisp"
-			"member.lisp"
+			"../../../environment/member.lisp"
 			"hash.lisp")
 		(js-load-base "environment/transpiler/environment/"
 			"assoc.lisp")))

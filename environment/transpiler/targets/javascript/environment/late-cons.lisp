@@ -1,12 +1,5 @@
 ;;;;; Transpiler: TRE to JavaScript
 ;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; This are the low-level transpiler definitions of
-;;;;; basic functions to simulate basic data types.
-
-;;; CONSES
-;;;
-;;; Conses are objects containing a pair.
 
 (defun car (x) (when x x._))
 (defun cdr (x) (when x x.__))
