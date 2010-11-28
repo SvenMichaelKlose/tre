@@ -47,6 +47,7 @@
 
   ; Tells if target required named top-level functions (like C).
   (named-functions? nil)
+  (named-function-next nil)
 
   (inline-exceptions nil)
   (dont-inline-list nil)
