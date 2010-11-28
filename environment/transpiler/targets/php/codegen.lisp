@@ -101,7 +101,10 @@
 (define-php-macro %%funref (name fi-sym)
   (let fi (get-lambda-funinfo-by-sym fi-sym)
     (if (funinfo-ghost fi)
-  	  	`(%funref (%transpiler-string ,(symbol-name name)) ,(funinfo-lexical (funinfo-parent fi)))
+  	  	`("new __funref ("
+              (%transpiler-string ,(transpiler-symbol-string *php-transpiler* name))
+              ",$" ,(funinfo-lexical (funinfo-parent fi))
+              ")")
 	    name)))
 
 ;;;; ASSIGNMENT
