@@ -1,17 +1,31 @@
 // TRE to PHP transpiler
 // Copyright (c) 2010 Sven Klose <pixel@copei.de>
 
+$TRE_FUNCTION_ARGS = Array ();
+
+class __funref {
+	public function __construct ($name, &$ghost)
+	{
+		$this->n =& $name;
+		$this->g =& $ghost;
+	}
+
+	public function & getName ()
+	{
+		return $this->n;
+	}
+
+	public function & getGhost ()
+	{
+		return $this->v;
+	}
+}
+
 function &T37funref_exec ($f, $g)
 {
 	$a = func_get_args ();
 	array_unshift ($a, $g);
 	return call_user_func_array ($f, $a);
-}
-
-function &T37funref ($f, $g)
-{
-	$r->treArgs = userfun_cdr ($f->treArgs);
-	return $r;
 }
 
 class T37cons {
