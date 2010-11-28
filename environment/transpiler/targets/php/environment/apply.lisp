@@ -1,26 +1,24 @@
 ;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 
-(dont-obfuscate apply call)
+(dont-obfuscate apply call function_exists user_call_function)
 
-;; Call function with expanded arguments.
-;;
-;; Get arguments as a list, call the default argument expander
-;; and copies the result into a new ECMAScript array to call
-;; the native apply().
-(defun apply (fun &rest lst)
-  (with (l (last lst)
-  		 args (%nconc (butlast lst)
-					  l.))
-	(when-debug
-	  (unless (functionp fun)
-		(error "APPLY: first argument is not a function"))
+(defun apply (&rest lst)
+  (with (fun lst.
+         l (last .lst)
+         args (%nconc (butlast .lst) l.)
+         expander-name (+ "treexp_" fun))
+    (when-debug
+      (unless (functionp fun)
+        (error "APPLY: first argument is not a function: ~A" fun))
 	  (unless (listp l)
-		(error "APPLY: last argument is not a cell")))
-    (fun.apply nil
-	  		   (list-array
-				   ; XXX Should check if defined or not but somewhere it
-				   ; XXX it set to NIL instead.
-	    		   (if fun.tre-args
-             		   (argument-expand-values fun fun.tre-args args)
-			 		   args)))))
+	    (error "APPLY: last argument is not a cell")))
+	(aif (function_exists expander-name)
+	     (user_call_function expander-name (%transpiler-native "[" args "]"))
+         (user_call_function fun (list-array args)))))
+
+(defmacro cps-wrap (x) x)
+(defun cps-return-dummy (&rest x))
+
+(defun funcall (fun &rest args)
+  (apply fun args))
