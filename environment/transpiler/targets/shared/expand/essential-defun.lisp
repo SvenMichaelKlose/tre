@@ -1,7 +1,7 @@
 ;;;;; TRE transpiler
 ;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 
-(defun shared-essential-defun (name compiled-name args &rest body)
+(defun shared-essential-defun (name args &rest body)
   (when *show-definitions*
     (late-print `(defun ,name ,args)))
   (with (n (%defun-name name)
@@ -11,7 +11,7 @@
     (transpiler-add-function-args tr n a)
 	(transpiler-add-function-body tr n body)
 	(transpiler-add-defined-function tr n)
-	`(%defsetq ,compiled-name
+	`(%defsetq ,name
 	           #'(,@(awhen fi-sym
 				      `(%funinfo ,!))
 			      ,a

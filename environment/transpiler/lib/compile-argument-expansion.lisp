@@ -100,7 +100,7 @@
   `(with ,(mapcan (fn `(,_ ,(list 'quote _)))
 	              names)
      ,@(compile-argument-expansion-0 adef p)
-     ((%transpiler-native ,fun-name) ,@toplevel-continuer ,@names)))
+     ((%transpiler-native ,(compiled-function-name fun-name)) ,@toplevel-continuer ,@names)))
 
 (defun compile-argument-expansion (fun-name adef)
   (if (and (= 2 (length adef))

@@ -37,7 +37,7 @@
 
 (define-js-std-macro define-native-js-fun (name args &rest body)
   (js-cps-exception name)
-  (apply #'shared-essential-defun name (%defun-name name) args (body-with-noargs-tag body)))
+  (apply #'shared-essential-defun (%defun-name name) args (body-with-noargs-tag body)))
 
 (define-js-std-macro cps-exception (x)
   (when *show-definitions*
@@ -47,18 +47,17 @@
 
 (define-js-std-macro defun (name args &rest body)
   (with-gensym g
-	(with (dname (%defun-name name)
-		   n (compiled-function-name dname))
+	(let dname (%defun-name name)
       (js-cps-exception name)
       (when (in-cps-mode?)
         (transpiler-add-cps-function *js-transpiler* dname))
-	  (when (transpiler-defined-function *js-transpiler* n)
+	  (when (transpiler-defined-function *js-transpiler* dname)
 		(error "Function ~A already defined" name))
       `(progn
 		 (%var ,g)
 		 (%setq ,g (%unobfuscated-lookup-symbol ,(symbol-name dname) nil))
-	     ,(apply #'shared-essential-defun dname n args body)
-		 (setf (symbol-function ,g) ,n)))))
+	     ,(apply #'shared-essential-defun dname args body)
+		 (setf (symbol-function ,g) ,dname)))))
 
 (define-js-std-macro defmacro (&rest x)
   (apply #'shared-defmacro '*js-transpiler* x))

@@ -9,10 +9,19 @@
   `(%setq ,@x))
 
 (define-php-std-macro define-native-php-fun (name args &rest body)
-  (apply #'shared-essential-defun name (%defun-name name) args (body-with-noargs-tag body)))
+  (apply #'shared-essential-defun (%defun-name name) args (body-with-noargs-tag body)))
 
 (define-php-std-macro defun (name &rest args)
-  (apply #'shared-essential-defun name (%defun-name name) args))
+  (with ((fi-sym adef) (split-funinfo-and-args args.)
+         fun-name (%defun-name name))
+    `(vm-scope
+       ,(apply #'shared-essential-defun fun-name args)
+       ,@(unless (simple-argument-list? adef)
+           (with-gensym p
+             `((defun ,($ treexp_ fun-name) (,p)
+                 ,(compile-argument-expansion-function-body
+                      fun-name adef p nil
+                      (argument-expand-names 'compile-argument-expansion adef)))))))))
 
 (define-php-std-macro defmacro (&rest x)
   (apply #'shared-defmacro '*php-transpiler* x))

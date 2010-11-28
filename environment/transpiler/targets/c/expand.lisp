@@ -10,7 +10,7 @@
   `(%setq ,@x))
 
 (define-c-std-macro defun (name args &rest body)
-  (apply #'shared-essential-defun name name args body))
+  (apply #'shared-essential-defun name args body))
 
 (define-c-std-macro defmacro (&rest x)
   (apply #'shared-defmacro '*c-transpiler* x))
