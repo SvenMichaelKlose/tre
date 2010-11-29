@@ -1,6 +1,8 @@
 ;;;;; Transpiler: TRE to JavaScript
 ;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
 
+(dont-obfuscate is_string)
+
 (defun stringp (x)
   (is_string x))
 
@@ -8,22 +10,20 @@
 (defun string-concat (&rest x)
   (apply #'+ x))
 
-(dont-obfuscate char-code-at)
+(dont-obfuscate ord strlen substr)
 
 ;; XXX ECMAScript only.
 (defun %elt-string (seq idx)
-  (when (%%%< idx seq.length)
-    (code-char (seq.char-code-at idx))))
+  (when (%%%< idx (strlen seq))
+    (ord (substr seq idx 1))))
 
 (dont-obfuscate from-char-code)
 
 ;; XXX ECMAScript only.
 (defun %setf-elt-string (val seq idx)
-  (assert (characterp val)
-    (error "can only write CHARACTER to string"))
-  (setf (aref seq idx) (*string.from-char-code (char-code val))))
+  (error "cannot modify strings"))
 
-(dont-obfuscate to-string)
+(dont-obfuscate strval)
 
 ;; XXX ECMAScript only.
 (defun string (x)
@@ -36,38 +36,28 @@
 	  (symbol-name x)
 	(not x)
 	  ,*nil-symbol-name*
-   	(x.to-string)))
-
-;(defun list-string (lst)
-;  (when lst
-;    (declare type cons lst)
-;    (let* ((n (length lst))
-;           (s (make-string 0)))
-;      (do ((i 0 (1+ i))
-;           (l lst .l))
-;          ((>= i n) s)
-;        (setf s (+ s (string l.)))))))
+   	(strval x)))
 
 ;; XXX must be optional.
 (defun string= (x y)
   (%%%= x y))
 
-(dont-obfuscate to-upper-case)
+(dont-obfuscate strtoupper)
 
 ;; XXX ECMAScript only.
 (defun string-upcase (x)
-  (x.to-upper-case))
+  (strtoupper x))
 
-(dont-obfuscate to-lower-case)
+(dont-obfuscate strtolower)
 
 ;; XXX ECMAScript only.
 (defun string-downcase (x)
-  (x.to-lower-case))
+  (strtolower x))
 
-(dont-obfuscate substr length)
+(dont-obfuscate substr)
 
 ;; XXX ECMAScript only.
 (defun %subseq-string (seq start end)
   (if (= start end)
 	  ""
-      (seq.substr start end)))
+      (substr seq start (- end start))))

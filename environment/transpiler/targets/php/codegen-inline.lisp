@@ -3,9 +3,9 @@
 ;;;;;
 ;;;;; Extra code-generating macros to avoid costly function calls.
 
-(define-php-binary + "+")
+;(define-php-binary + "+")
 (define-php-binary string-concat "+")
-(define-php-binary - "-")
+;(define-php-binary - "-")
 (define-php-binary / "/")
 (define-php-binary * "*")
 ;(define-php-binary = "==") ; XXX these will give us trouble with chars.
@@ -23,8 +23,12 @@
 (define-php-macro identity (x)
   x)
 
-(define-php-macro car (x)
-  `("(" ,x " === null ? null : " ,x "." ,(symbol-name (transpiler-obfuscate-symbol *php-transpiler* '_)) ")"))
+(define-php-macro userfun_cons (x y)
+  `("new " ,(transpiler-obfuscated-symbol-string *php-transpiler* '__cons)
+               "(" ,x "," ,y ")"))
 
-(define-php-macro cdr (x)
-  `("(" ,x " === null ? null : " ,x "." ,(symbol-name (transpiler-obfuscate-symbol *php-transpiler* '__)) ")"))
+;(define-php-macro userfun_car (x)
+;  `("(" ,x " === null ? null : " ,x ".getCar())"))
+
+;(define-php-macro userfun_cdr (x)
+;  `("(" ,x " === null ? null : " ,x ".getCdr())"))

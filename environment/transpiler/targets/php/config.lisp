@@ -34,7 +34,8 @@
     (setf (expex-inline? ex)
 			  #'%slot-value?
     	  (expex-setter-filter ex)
-			  (fn php-setter-filter *php-transpiler* _)
+			  (compose (fn php-setter-filter *php-transpiler* _)
+                       #'expex-compiled-funcall)
     	  (expex-function-arguments ex)
 			  #'current-transpiler-function-arguments-w/o-builtins
     	  (expex-argument-filter ex)

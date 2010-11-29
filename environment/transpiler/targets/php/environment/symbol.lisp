@@ -1,39 +1,22 @@
-;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Transpiler: TRE to PHP
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 
-;; All symbols are stored in this array for reuse.
 (defvar *symbols* (make-hash-table))
 
-(dont-inline %symbol)
-
-;; Symbol constructor
-;;
-;; It has a function field but that isn't used yet.
-(define-native-php-fun %symbol (name pkg)
-  (setf this.__class ,(transpiler-obfuscated-symbol-string
-						  *current-transpiler* 'symbol)
-		this.n name	; name
-     	this.v nil	; value
-      	this.f nil	; function
-		this.p (or pkg nil))	; package
-  this)
-
-;; Find symbol by name or create a new one.
-;;
-;; Wraps the 'new'-operator.
-;; XXX rename to %QUOTE ?
-(define-native-php-fun %lookup-symbol (name pkg)
-  (unless (and (%%%= ,*nil-symbol-name* name)
-			   (not pkg))
-    ; Make package if missing.
-    (let symbol-table (or (href *symbols* pkg)
-	    				  (setf (href *symbols* pkg) (make-hash-table)))
-      ; Get or make symbol.
-      (or (href symbol-table name)
-	      (setf (href symbol-table name) (new %symbol name pkg))))))
+(dont-obfuscate __symbol
+                get-name get-package get-value get-function
+                set-value set-function)
 
 (define-native-php-fun symbol (name pkg)
-  (%lookup-symbol name pkg))
+  (unless (%%%= ,*nil-symbol-name* name)
+	(let pkg-name (if pkg
+					  (pkg.get-name)
+					  ,*nil-symbol-name*)
+      (let symbol-table (or (href *symbols* pkg-name)
+	    				    (setf (href *symbols* pkg-name)
+								  (make-hash-table)))
+        (or (href symbol-table name)
+	        (setf (href symbol-table name) (new __symbol name pkg)))))))
 
 (define-native-php-fun %%usetf-symbol-function (v x)
-  (setq x.f v))
+  (x.set-function v))

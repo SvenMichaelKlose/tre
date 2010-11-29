@@ -14,7 +14,7 @@
 	  (unless (listp l)
 	    (error "APPLY: last argument is not a cell")))
 	(aif (function_exists expander-name)
-	     (user_call_function expander-name (%transpiler-native "[" args "]"))
+	     (user_call_function expander-name (%transpiler-native "array (" args ")"))
          (user_call_function fun (list-array args)))))
 
 (defmacro cps-wrap (x) x)

@@ -14,7 +14,7 @@
 
 (php-define-compiled-literal php-compiled-char (x char)
   :maker ($ 'trechar_compiled_ (char-code x))
-  :init-maker (%transpiler-native "new __trechar (" ,(char-code x) ")"))
+  :init-maker (%transpiler-native "new __character (" ,(char-code x) ")"))
 
 (php-define-compiled-literal php-compiled-string (x string)
   :maker ($ 'trestring_compiled_ (gensym-number))
@@ -27,7 +27,7 @@
 	     	    '_keyword
 		 	    ""))
   :init-maker (%transpiler-native
-			      "new __tresym ("
+			      "new __symbol ("
 			  	      (%transpiler-string ,(symbol-name x))
 				      ",$"
 			   	      ,(keywordp x)

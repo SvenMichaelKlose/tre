@@ -1,21 +1,23 @@
-;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Transpiler: TRE to PHP
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 
-(defun car (x) (when x x._))
-(defun cdr (x) (when x x.__))
+(defun car (x)
+  (when x
+    (x.get-car)))
+
+(defun cdr (x)
+  (when x
+    (x.get-cdr)))
 
 (defun rplaca (x val)
   (declare type cons x)
-  (setf x._ val)
+  (x.set-car val)
   x)
 
 (defun rplacd (x val)
   (declare type cons x)
-  (setf x.__ val)
+  (x.set-cdr val)
   x)
 
 (defun consp (x)
-  (and (objectp x)
-	   x.__class
-	   (%%%= x.__class ,(transpiler-obfuscated-symbol-string
-							*current-transpiler* 'cons))))
+  (is_a x "__cons"))

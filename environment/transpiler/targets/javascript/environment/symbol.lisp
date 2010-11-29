@@ -1,7 +1,6 @@
 ;;;;; Transpiler: TRE to JavaScript
 ;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 
-;; All symbols are stored in this array for reuse.
 (defvar *symbols* (make-hash-table))
 
 (dont-inline %symbol) ; XXX remove this one?

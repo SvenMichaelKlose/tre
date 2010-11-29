@@ -23,9 +23,7 @@
 
 ;; XXX ECMAScript only.
 (defun %setf-elt-string (val seq idx)
-  (assert (characterp val)
-    (error "can only write CHARACTER to string"))
-  (setf (aref seq idx) (*string.from-char-code (char-code val))))
+  (error "cannot modify strings"))
 
 (dont-obfuscate to-string)
 

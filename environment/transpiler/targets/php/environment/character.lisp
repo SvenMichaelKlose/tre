@@ -1,38 +1,27 @@
-;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Transpiler: TRE to PHP
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 
 (defvar *characters* (make-array))
 
-(dont-inline %character)
-
-(defun %character (x)
-  (declare type number x)
-  (assert (not (characterp x))
-		  (error "%CHARACTER: argument already a character"))
-  (or (aref *characters* x)
-  	  (setf this.__class ,(transpiler-obfuscated-symbol-string *current-transpiler*
-											  				   '%character)
-  		    this.v x
-		    (aref *characters* x) this)))
+(dont-obfuscate __character)
 
 (defun characterp (x)
-  (and (objectp x)
-	   x.__class
-	   (%%%= x.__class ,(transpiler-obfuscated-symbol-string *current-transpiler*
-															 '%character))))
+  (is_a x "__character"))
 
 (defun code-char (x)
   (declare type number x)
   (if (characterp x)
 	  x
-	  (new %character x)))
+	  (new __character x)))
+
+(dont-obfuscate get-code)
 
 (defun char-code (x)
   (declare type number x)
-  x.v)
+  (x.get-code))
 
-(dont-obfuscate from-char-code)
+(dont-obfuscate from-char-code chr)
 
 (defun char-string (x)
   (declare type character x)
-  (*string.from-char-code (char-code x)))
+  (chr (char-code x)))

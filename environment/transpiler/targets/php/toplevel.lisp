@@ -3,11 +3,13 @@
 
 (defvar *nil-symbol-name* nil)
 
-(defun php-gen-funref-wrapper (out)
+(defun php-print-native-environment (out)
   (princ ,(concat-stringtree
-		      (with-open-file i (open "environment/transpiler/targets/php/funref.php"
-							 		  :direction 'input)
-			  	(read-all-lines i)))
+              (mapcar (fn with-open-file i (open (+ "environment/transpiler/targets/php/environment/native/"
+                                                    _ ".php")
+						 	                     :direction 'input)
+			  	           (read-all-lines i))
+                      '("character" "cons" "funref" "symbol")))
 		 out))
 
 (defun php-transpile-prepare (tr &key (import-universe? nil))
@@ -15,9 +17,8 @@
     (when import-universe?
       (transpiler-import-universe tr))
     (transpiler-add-wanted-function tr 'array-copy)
-    (format out "<?php~%$NULL=NULL;~%$t=True;~%")
-    (format out "function & __w ($x) { return $x; }~%")
-    (php-gen-funref-wrapper out)))
+    (format out "<?php~%$NULL=NULL;~%")
+    (php-print-native-environment out)))
 
 (defun php-transpile (files &key (obfuscate? nil)
                                 (print-obfuscations? nil)
