@@ -4,7 +4,7 @@
 ;;;;; Expression-expander
 ;;;;;
 ;;;;; Breaks up nested expressions. The result is a pure list of
-;;;;; assignments to temporary variables.
+;;;;; assignments (%SETQ expressions) mixed with jumps and tags.
 
 (defvar *expex-funinfo* nil)
 (defvar *expex-warn?* nil)
@@ -75,18 +75,21 @@
 	  (error "expression-expander: FUNINFO missing. Cannot make GENSYM"))
 	s))
 
+(defun expex-symbol-defined? (x)
+  (let tr *current-transpiler*
+    (or (functionp x)
+	    (keywordp x)
+	    (member x (transpiler-predefined-symbols tr) :test #'eq)
+	    (in? x nil t '~%ret 'this)
+	    (funinfo-in-this-or-parent-env? *expex-funinfo* x)
+	    (transpiler-imported-variable? tr x)
+	    (expander-has-macro? (transpiler-std-macro-expander tr) x)
+   	    (expander-has-macro? (transpiler-macro-expander tr) x))))
+
 (defun expex-warn (x)
   (and *expex-warn?*
 	   (symbolp x)
-	   (not (or (functionp x)
-				(keywordp x)
-				(member x (transpiler-predefined-symbols *current-transpiler*)
-						:test #'eq)
-				(in? x nil t '~%ret 'this)
-	   			(funinfo-in-this-or-parent-env? *expex-funinfo* x)
-				(assoc x *variables*)
-	       		(expander-has-macro? (transpiler-std-macro-expander *current-transpiler*) x)
-		       	(expander-has-macro? (transpiler-macro-expander *current-transpiler*) x)))
+	   (not (expex-symbol-defined? x))
 	   (error "symbol ~A is not defined in function ~A.~%"
 			  (symbol-name x) (funinfo-get-name *expex-funinfo*))))
 
