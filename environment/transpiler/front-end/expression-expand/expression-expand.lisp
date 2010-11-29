@@ -174,8 +174,7 @@
         (transpiler-add-cps-function *current-transpiler* s))
       (cons (append moved
 		    		(if (expex-returnable? ex new-expr.)
-		        		(list (expex-guest-filter-setter ex
-								  `(%setq ,s ,@new-expr)))
+		        		(list (expex-guest-filter-setter ex `(%setq ,s ,@new-expr)))
 			    		new-expr))
   	        s)))
 
@@ -192,17 +191,17 @@
     (vm-scope? x)					(expex-move-arg-vm-scope ex x)
 	(expex-move-arg-std ex x)))
 
+(defun expex-filter-and-move-args (ex x)
+  (assoc-splice (mapcar (fn expex-move-arg ex _)
+   		                (expex-guest-filter-arguments ex x))))
+
 (defun expex-move-slot-value (ex x)
-  (with ((moved new-expr)
-			 (assoc-splice (mapcar (fn expex-move-arg ex _)
-				        		   (expex-guest-filter-arguments ex (list .x.)))))
+  (with ((moved new-expr) (expex-filter-and-move-args ex (list .x.)))
     (values (apply #'append moved)
 			`(%slot-value ,new-expr. ,..x.))))
 
 (defun expex-move-args-0 (ex x)
-  (with ((moved new-expr)
-			 (assoc-splice (mapcar (fn expex-move-arg ex _)
-				        		   (expex-guest-filter-arguments ex x))))
+  (with ((moved new-expr) (expex-filter-and-move-args ex x))
     (values (apply #'append moved)
 			new-expr)))
 
@@ -222,8 +221,7 @@
 ;; The arguments are replaced by gensyms.
 ;; XXX argument conversion by guest.
 (defun expex-expr-std (ex x)
-  (with ((moved new-expr)
-		     (expex-move-args ex (expex-argexpand ex x)))
+  (with ((moved new-expr) (expex-move-args ex (expex-argexpand ex x)))
     (values moved
 			(list new-expr))))
 
@@ -233,8 +231,7 @@
 (defun expex-expr-setq (ex x)
   (with ((moved new-expr) (expex-move-args ex (peel-%inline ..x)))
 	(values moved
-			(list (expex-guest-filter-setter ex
-				      `(%setq ,.x. ,@new-expr))))))
+			(list (expex-guest-filter-setter ex `(%setq ,.x. ,@new-expr))))))
 
 ;; Expand LAMBDA
 ;;
@@ -318,8 +315,7 @@
   (if (eq s (second x.))
       x
       `(,x.
-	    ,(expex-guest-filter-setter ex
-									`(%setq ,s ,(peel-%inline (second x.)))))))
+	    ,(expex-guest-filter-setter ex `(%setq ,s ,(peel-%inline (second x.)))))))
 
 ;; Make return-value assignment of last expression in body.
 (defun expex-make-return-value (ex s x)
@@ -330,9 +326,7 @@
 					(if (eq s (second last.))
 				        (list (expex-guest-filter-setter ex last.))
 						(expex-make-setq-copy ex last s))
-				    (list (expex-guest-filter-setter ex
-							  `(%setq ,s ,@(or last
-									  		   '(nil)))))))
+				    (list (expex-guest-filter-setter ex `(%setq ,s ,@(or last '(nil)))))))
 		x)))
 
 (defun expex-save-atoms (x)
