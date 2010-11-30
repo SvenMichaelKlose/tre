@@ -7,4 +7,5 @@
 (env-load "transpiler/targets/c/builtin.lisp")
 (env-load "transpiler/targets/c/codegen.lisp")
 (env-load "transpiler/targets/c/codegen-function-gcstack.lisp")
+(env-load "transpiler/targets/c/codegen-inline.lisp")
 (env-load "transpiler/targets/c/toplevel.lisp")

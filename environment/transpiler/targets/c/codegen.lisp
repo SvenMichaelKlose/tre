@@ -3,12 +3,6 @@
 ;;;;;
 ;;;;; Code generation
 
-;; XXX fix macros instead?
-(defun codegen-expr? (x)
-  (and (consp x)
-       (or (stringp x.)
-       	   (in? x. '%transpiler-string '%transpiler-native))))
-
 ;;;; GENERAL CODE GENERATION
 
 (defun c-line (&rest x)
@@ -142,12 +136,6 @@
 
 (define-c-binary eq "=")
 
-(define-c-macro %eq (a b)
-  `("TREPTR_TRUTH(" ,a " == " ,b ")"))
-
-(define-c-macro %not (x)
-  `("(" ,x " == treptr_nil ? treptr_t : treptr_nil)"))
-
 ;;;; CONTROL FLOW
 
 (define-c-macro %%tag (tag)
@@ -171,17 +159,6 @@
 
 (define-c-macro symbol-function (x)
   `("treatom_get_function (" ,x ")"))
-
-;;;; CONSES
-
-(define-c-macro cons (a d)
-  `("_trelist_get (" ,a "," ,d ")"))
-
-(define-c-macro %car (x)
-  `("(" ,x " == treptr_nil ? treptr_nil : tre_lists[" ,x "].car)"))
-
-(define-c-macro %cdr (x)
-  `("(" ,x " == treptr_nil ? treptr_nil : tre_lists[" ,x "].cdr)"))
 
 ;;;; ARRAYS
 
@@ -209,21 +186,3 @@
   (if (numberp size)
       `("trearray_make (" (%transpiler-native ,size) ")")
       `("trearray_get (_trelist_get (" ,size ", treptr_nil))")))
-
-;;;; TYPE PREDICATES
-
-(mapcan-macro _
-	'((consp "CONS")
-	  (atom  "ATOM")
-	  (numberp  "NUMBER")
-	  (stringp  "STRING")
-	  (arrayp  "ARRAY")
-	  (functionp  "FUNCTION")
-	  (builtinp   "BUILTIN"))
-  `((define-c-macro ,($ '% _.) (x)
-      `(,(+ "TREPTR_TRUTH(TREPTR_IS_" ._.) "(" ,,x "))"))))
-
-;;;; MISCELLANEOUS
-
-(define-c-macro identity (x)
-  x)
