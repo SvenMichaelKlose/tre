@@ -1,22 +1,17 @@
 ;;;;; Transpiler: TRE to PHP
 ;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 
-(defun car (x)
-  (when x
-    (x.get-car)))
-
-(defun cdr (x)
-  (when x
-    (x.get-cdr)))
+(defun car (x) (when x x.car))
+(defun cdr (x) (when x x.cdr))
 
 (defun rplaca (x val)
   (declare type cons x)
-  (x.set-car val)
+  (setq x.car val)
   x)
 
 (defun rplacd (x val)
   (declare type cons x)
-  (x.set-cdr val)
+  (set x.cdr val)
   x)
 
 (defun consp (x)

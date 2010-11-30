@@ -23,9 +23,9 @@
 (define-php-macro identity (x)
   x)
 
-(define-php-macro userfun_cons (x y)
-  `("new " ,(transpiler-obfuscated-symbol-string *php-transpiler* '__cons)
-               "(" ,x "," ,y ")"))
+;(define-php-macro userfun_cons (x y)
+;  `("new " ,(transpiler-obfuscated-symbol-string *php-transpiler* '__cons)
+;               "(" ,x "," ,y ")"))
 
 ;(define-php-macro userfun_car (x)
 ;  `("(" ,x " === null ? null : " ,x ".getCar())"))
