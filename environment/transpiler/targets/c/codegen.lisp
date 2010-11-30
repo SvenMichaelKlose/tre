@@ -151,9 +151,6 @@
 
 ;;;; SYMBOLS
 
-(define-c-macro quote (x)
-  (c-compiled-symbol x))
-
 (define-c-macro %quote (x)
   (c-compiled-symbol x))
 

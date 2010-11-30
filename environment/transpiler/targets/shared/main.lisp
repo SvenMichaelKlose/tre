@@ -7,3 +7,4 @@
 (env-load "transpiler/targets/shared/expand/defmacro.lisp")
 (env-load "transpiler/targets/shared/expand/mapcar.lisp")
 (env-load "transpiler/targets/shared/codegen/define-macro-definer.lisp")
+(env-load "transpiler/targets/shared/codegen/codegen-expr-p.lisp")
