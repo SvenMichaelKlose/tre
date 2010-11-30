@@ -74,52 +74,32 @@
 
 ;;;; ASSIGNMENT
 
-(defun codegen-%setq-0-place (dest val)
+(defun codegen-%setq-place (dest val)
   (if (transpiler-obfuscated-nil? dest)
 	  (if (codegen-expr? val)
 		  '("")
 	      '("(void) "))
 	  `(,dest " = ")))
 
-(defun codegen-%setq-0-value (val)
+(defun codegen-%setq-value (val)
    (if (or (atom val)
 		   (codegen-expr? val))
        val
        `(,val. ,@(parenthized-comma-separated-list .val))))
 
-(defun codegen-%setq-0 (dest val)
-  `((%transpiler-native 
-	    ,@(codegen-%setq-0-place dest val))
-	    ,(codegen-%setq-0-value val)))
-
-(defun codegen-%setq (dest val)
-  (if (and (transpiler-obfuscated-nil? dest)
-		   (atom val))
-	  `(%transpiler-native "")	; XXX should be optimised away before.
-	  (codegen-%setq-0 dest val)))
-
 (define-c-macro %setq (dest val)
-  (c-line (codegen-%setq dest val)))
+  (c-line `((%transpiler-native ,@(codegen-%setq-place dest val))
+	                            ,(codegen-%setq-value val))))
 
-(defun c-codegen-set-atom-value (dest val)
+(define-c-macro %setq-atom-value (dest val)
   `(%transpiler-native
        ,@(c-line "treatom_set_value (" (c-compiled-symbol dest)
 				 					   " ," val ")")))
 
-(define-c-macro %setq-atom (dest val)
-  (c-codegen-set-atom-value dest val))
-
-;; XXX used to store argument definitions.
-(define-c-macro %setq-atom-value (dest val)
-  (c-codegen-set-atom-value dest val))
-
 (define-c-macro %set-atom-fun (dest val)
   `(%transpiler-native ,dest "=" ,val ,*c-separator*))
-;  `(%transpiler-native ,*c-indent* "treatom_set_function (" ,dest " ,"
-;		,val
-;		")" ,*c-separator*))
 
-;;;; VARIABLES
+;;;; STACK
 
 (define-c-macro %stack (x)
   (c-stack x))
@@ -178,7 +158,6 @@
 			  `("=" ,val))
 	  `(trearray_builtin_set_aref ,val ,arr ,@idx)))
 
-;; Lexical scope
 (define-c-macro make-array (size)
   (if (numberp size)
       `("trearray_make (" (%transpiler-native ,size) ")")

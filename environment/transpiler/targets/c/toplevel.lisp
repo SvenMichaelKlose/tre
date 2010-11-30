@@ -39,8 +39,7 @@
 					  (treatom_register_compiled_function
 						  ,(c-compiled-symbol _)
 						  ,_)))
-		  (remove-if #'builtinp
-					 (transpiler-defined-functions *c-transpiler*))))
+		  (transpiler-defined-functions-without-builtins *c-transpiler*)))
 
 (defun c-transpiler-declarations-and-initialisations ()
   (append (c-transpiler-compiled-inits)

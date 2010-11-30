@@ -5,7 +5,7 @@
   (list
     (let place (%setq-place x)
       (if (expex-global-variable? place)
-	      `(%setq-atom ,place ,(%setq-value x))
+	      `(%setq-atom-value ,place ,(%setq-value x))
 	      x))))
 
 (defun expex-collect-wanted-variable (x)

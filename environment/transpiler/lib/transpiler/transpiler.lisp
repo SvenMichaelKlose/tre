@@ -114,6 +114,9 @@
 (defun transpiler-defined-function (tr name)
   (href (transpiler-defined-functions-hash tr) name))
 
+(defun transpiler-defined-functions-without-builtins (tr)
+  (remove-if #'builtinp (transpiler-defined-functions tr)))
+
 (defun transpiler-add-defined-function (tr name)
   (push! name (transpiler-defined-functions tr))
   (setf (href (transpiler-defined-functions-hash tr) name) t)
