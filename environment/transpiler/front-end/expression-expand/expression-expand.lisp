@@ -35,11 +35,6 @@
 
   (inline? #'((x))))
 
-(defun peel-%inline (x)
-  (if (%inline? x)
-	  .x.
-	  x))
-
 ;;;; SYMBOLS
 
 (defvar *expexsym-counter* 0)
@@ -59,9 +54,7 @@
   (funcall (expex-expr-filter ex) x))
 
 (defun expex-guest-filter-setter (ex x)
-  (funcall (expex-setter-filter ex)
-		   `(%setq ,(%setq-place x)
-				   ,(peel-%inline (%setq-value x)))))
+  (funcall (expex-setter-filter ex) x))
 
 (defun expex-guest-filter-arguments (ex x)
   (mapcar (fn (funcall (expex-argument-filter ex) _)) x))
@@ -187,9 +180,8 @@
   (if
 	(not (expex-able? ex x))
       (cons nil x)
-	(or (%inline? x)
-	    (funcall (expex-inline? ex) x))
-      (expex-move-arg-inline ex (peel-%inline x))
+	(funcall (expex-inline? ex) x)
+      (expex-move-arg-inline ex x)
     (vm-scope? x)
       (expex-move-arg-vm-scope ex x)
 	(expex-move-arg-std ex x)))
@@ -225,16 +217,14 @@
 ;; XXX argument conversion by guest.
 (defun expex-expr-std (ex x)
   (with ((moved new-expr) (expex-move-args ex (expex-argexpand ex x)))
-    (values moved
-			(list new-expr))))
+    (values moved (list new-expr))))
 
 ;; Expand %SETQ expression.
 ;;
 ;; The place to set must not be expanded.
 (defun expex-expr-setq (ex x)
-  (with ((moved new-expr) (expex-move-args ex (peel-%inline ..x)))
-	(values moved
-			(expex-guest-filter-setter ex `(%setq ,.x. ,@new-expr)))))
+  (with ((moved new-expr) (expex-move-args ex ..x))
+	(values moved (expex-guest-filter-setter ex `(%setq ,.x. ,@new-expr)))))
 
 ;; Expand LAMBDA
 ;;
@@ -281,7 +271,7 @@
       (%setq? x)
 	    (if (identity? (%setq-value x))
 		    (expex-expr-setq ex `(%setq ,(%setq-place x)
-										,(second (peel-%inline (%setq-value x)))))
+										,(second (%setq-value x))))
 		    (expex-expr-setq ex x))
       (expex-expr-std ex x))))
 
@@ -308,7 +298,7 @@
   (if (eq s (second x.))
       x
       `(,x.
-	    ,@(expex-guest-filter-setter ex `(%setq ,s ,(peel-%inline (second x.)))))))
+	    ,@(expex-guest-filter-setter ex `(%setq ,s ,(second x.))))))
 
 ;; Make return-value assignment of last expression in body.
 (defun expex-make-return-value (ex s x)

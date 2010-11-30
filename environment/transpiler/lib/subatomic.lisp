@@ -8,7 +8,6 @@
 	  vm-scope vm-go vm-go-nil vm-call-nil
 	  %stack %vec %setq %tag
 	  %transpiler-native %transpiler-string
-	  %inline
 	  %%funref
 	  %setq-atom-value
 	  %set-atom-fun

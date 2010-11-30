@@ -33,7 +33,7 @@
     '(car cdr not
 	  consp atom numberp stringp arrayp functionp builtinp)
   `((define-c-std-macro ,_ (x)
-	  `(%inline (,($ '% _) ,,x)))))
+	  `(,($ '% _) ,,x))))
 
 (define-c-std-macro slot-value (obj slot)
   `(%slot-value ,obj (%quote ,slot)))
