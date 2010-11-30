@@ -7,7 +7,7 @@
              (lambda? (third x.)))
         (cons `(function ,(second (second x)) ,(second (third x.)))
               (transpiler-make-named-functions-0 tr (funcall (transpiler-named-function-next tr) x)))
-        (cons (if (vm-scope? x.)
+        (cons (if (%%vm-scope? x.)
 	              (transpiler-make-named-functions-0 tr x.)
                   x.)
 			  (transpiler-make-named-functions-0 tr .x)))))

@@ -10,7 +10,7 @@
 					       (%setq ,g ,arg))))
 				  (argument-expand-names name args)
 				  (cdr (%setq-value x.)))
-		  `((vm-go ,front-tag))
+		  `((%%vm-go ,front-tag))
 		  (opt-tailcall-fun fi args .x name front-tag)))
 
 (defun %setq-function-call? (x)
@@ -29,7 +29,7 @@
   (if
 	(not x)
 	  t
-	(vm-go? x.)
+	(%%vm-go? x.)
 	  (when (member (second x.) .x :test #'eq)
 		(function-will-exit? fi .x))
 	(or (vm-jump? x.)

@@ -148,9 +148,9 @@
          tag-no-cps (make-compiler-tag)
          tag-end (make-compiler-tag))
     (with-gensym g
-      `((vm-go-nil (%slot-value ,method tre-cps) ,tag-no-cps)
+      `((%%vm-go-nil (%slot-value ,method tre-cps) ,tag-no-cps)
         ,@(cps-split-funcall fi x xlats)
-        (vm-go ,tag-end)
+        (%%vm-go ,tag-end)
         ,tag-no-cps
         ,x.
         ,(cps-make-call-to-next x xlats)
@@ -176,12 +176,12 @@
       (cps-split-funcall fi x xlats)
     (cps-foureign-funcall? x.)
       (cps-foureign-funcall fi x.)
-    (vm-go? x.)
+    (%%vm-go? x.)
       `((%setq nil (,(cps-tag-function-name (second x.) xlats tag-xlats))))
-    (vm-go-nil? x.)
-      `((vm-call-nil ,(second x.)
-                     ,(cps-tag-function-name (third x.) xlats tag-xlats)
-                     ,(cps-cons-function-name .x xlats)))))
+    (%%vm-go-nil? x.)
+      `((%%vm-call-nil ,(second x.)
+                       ,(cps-tag-function-name (third x.) xlats tag-xlats)
+                       ,(cps-cons-function-name .x xlats)))))
 
 (defun cps-splitpoint-expr? (x)
   (or (cps-apply? x)
@@ -189,8 +189,8 @@
       (cps-foureign-funcall? x)
       (cps-methodcall? x)
       (cps-constructorcall? x)
-      (vm-go? x)
-      (vm-go-nil? x)))
+      (%%vm-go? x)
+      (%%vm-go-nil? x)))
 
 (defun cps-body (fi continuer x xlats tag-xlats &key (first? t))
   (if
@@ -295,10 +295,10 @@
          tag-no-cps (make-compiler-tag)
          tag-end (make-compiler-tag))
     (with-gensym g
-      `((vm-go-nil (%slot-value ,constructor tre-cps) ,tag-no-cps)
+      `((%%vm-go-nil (%slot-value ,constructor tre-cps) ,tag-no-cps)
         ,@(cps-split-constructorcall-0 *global-funinfo* (list x)
               (cps-make-dummy-continuer (%setq-place x) *global-funinfo*))
-        (vm-go ,tag-end)
+        (%%vm-go ,tag-end)
         ,tag-no-cps
         ,x
         ,tag-end))))
@@ -313,9 +313,9 @@
          tag-no-cps (make-compiler-tag)
          tag-end (make-compiler-tag))
     (with-gensym g
-      `((vm-go-nil (%slot-value ,method tre-cps) ,tag-no-cps)
+      `((%%vm-go-nil (%slot-value ,method tre-cps) ,tag-no-cps)
         ,@(cps-toplevel-funcall x)
-        (vm-go ,tag-end)
+        (%%vm-go ,tag-end)
         ,tag-no-cps
         ,x
         ,tag-end))))

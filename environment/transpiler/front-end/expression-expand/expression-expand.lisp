@@ -94,7 +94,7 @@
 (defun expex-able? (ex x)
   (not (or (atom x)
 		   (function-ref-expr? x)
-           (in? x. 'vm-go 'vm-go-nil
+           (in? x. '%%vm-go '%%vm-go-nil
 				   '%transpiler-native '%transpiler-string
 				   '%quote))))
 
@@ -152,7 +152,7 @@
 ;; Move out VM-SCOPE if it contains something. Otherwise keep NIL.
 (defun expex-move-arg-vm-scope (ex x)
   (let s (expex-funinfo-env-add)
-    (aif (vm-scope-body x)
+    (aif (%%vm-scope-body x)
          (cons (expex-body ex ! s) s)
 	     (cons nil nil))))
 
@@ -182,7 +182,7 @@
       (cons nil x)
 	(funcall (expex-inline? ex) x)
       (expex-move-arg-inline ex x)
-    (vm-scope? x)
+    (%%vm-scope? x)
       (expex-move-arg-vm-scope ex x)
 	(expex-move-arg-std ex x)))
 
@@ -266,8 +266,8 @@
 	    (expex-lambda ex x)
       (not (expex-able? ex x))
 	    (values nil (list x))
-      (vm-scope? x)
-	    (values nil (expex-body ex (vm-scope-body x)))
+      (%%vm-scope? x)
+	    (values nil (expex-body ex (%%vm-scope-body x)))
       (%setq? x)
 	    (if (identity? (%setq-value x))
 		    (expex-expr-setq ex `(%setq ,(%setq-place x)

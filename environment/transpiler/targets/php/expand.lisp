@@ -14,7 +14,7 @@
 (define-php-std-macro defun (name &rest args)
   (with ((fi-sym adef) (split-funinfo-and-args args.)
          fun-name (%defun-name name))
-    `(vm-scope
+    `(%%vm-scope
        ,(apply #'shared-essential-defun fun-name args)
        ,@(unless (simple-argument-list? adef)
            (with-gensym p

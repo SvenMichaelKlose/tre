@@ -1,7 +1,5 @@
 ;;;;; TRE to C transpiler
 ;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Code generation
 
 ;;;; GENERAL CODE GENERATION
 
@@ -121,10 +119,10 @@
 (define-c-macro %%tag (tag)
   `(%transpiler-native "l" ,tag ":" ,*c-newline*))
  
-(define-c-macro vm-go (tag)
+(define-c-macro %%vm-go (tag)
   (c-line "goto l" (transpiler-symbol-string *c-transpiler* tag)))
 
-(define-c-macro vm-go-nil (val tag)
+(define-c-macro %%vm-go-nil (val tag)
   `(,*c-indent* "if (" ,val " == treptr_nil)" ,(code-char 10)
 	,*c-indent*
 	,@(c-line "goto l" (transpiler-symbol-string *c-transpiler* tag))))

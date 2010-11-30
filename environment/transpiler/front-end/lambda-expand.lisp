@@ -13,7 +13,7 @@
 ;;;; LAMBDA inlining
 
 (defun lambda-expand-make-inline-body (stack-places values body)
-  `(vm-scope
+  `(%%vm-scope
 	 ,@(mapcar #'((stack-place init-value)
 				    `(%setq ,stack-place ,init-value))
 			   stack-places values)

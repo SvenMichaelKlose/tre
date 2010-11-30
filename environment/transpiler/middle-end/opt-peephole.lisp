@@ -137,7 +137,7 @@
 
 	  ; Remove jump to following tag.
 	  ((and (consp a)
-			(eq 'vm-go a.)
+			(eq '%%vm-go a.)
 			d
 			(atom d.)
 		    (eq .a. d.))
@@ -145,7 +145,7 @@
 
 	  ; Remove code after label until next tag.
 	  ((and (consp a)
-			(eq 'vm-go a.))
+			(eq '%%vm-go a.))
 		 (cons a (opt-peephole-remove-void (opt-peephole-find-next-tag d))))))
 
 (defun opt-peephole-will-be-used-again? (x v)

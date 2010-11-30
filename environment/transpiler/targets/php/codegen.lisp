@@ -44,12 +44,12 @@
              `("_I_" ,tag ":"))
        ,*php-newline*))
 
-(define-php-macro vm-go (tag)
+(define-php-macro %%vm-go (tag)
   (if (< 503 *php-version*)
       (php-line "$_I_=" tag *php-separator* "continue")
 	  (php-line "goto _I_" tag)))
 
-(define-php-macro vm-go-nil (val tag)
+(define-php-macro %%vm-go-nil (val tag)
   (if (< 503 *php-version*)
       (php-line "if (!$" val "&&$" val "!=0) { $_I_=" tag "; continue; }")
       (php-line "if (!$" val "&&$" val "!=0) goto _I_" tag)))
