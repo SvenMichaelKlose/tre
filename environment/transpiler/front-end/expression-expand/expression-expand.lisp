@@ -6,6 +6,7 @@
 ;;;;; Breaks up nested expressions. The result is a pure list of
 ;;;;; assignments (%SETQ expressions) mixed with jumps and tags.
 
+(defvar *current-expex* nil)
 (defvar *expex-funinfo* nil)
 (defvar *expex-warn?* nil)
 
@@ -338,5 +339,6 @@
 
 (defun expression-expand (ex x)
   (when x
-	(with-temporary *expex-funinfo* *global-funinfo*
-      (expex-body ex x))))
+	(with-temporary *current-expex* ex
+	  (with-temporary *expex-funinfo* *global-funinfo*
+        (expex-body ex x)))))
