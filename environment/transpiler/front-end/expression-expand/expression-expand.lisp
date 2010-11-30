@@ -63,16 +63,15 @@
 				   ,(peel-%inline (%setq-value x)))))
 
 (defun expex-guest-filter-arguments (ex x)
-  (mapcar (fn (funcall (expex-argument-filter ex) _))
-		  x))
+  (mapcar (fn (funcall (expex-argument-filter ex) _)) x))
 
 ;;;; UTILS
 
 (defun expex-funinfo-env-add ()
   (let s (expex-sym)
     (aif *expex-funinfo*
-      (funinfo-env-add ! s)
-	  (error "expression-expander: FUNINFO missing. Cannot make GENSYM"))
+         (funinfo-env-add ! s)
+	     (error "expression-expander: FUNINFO missing. Cannot make GENSYM"))
 	s))
 
 (defun expex-symbol-defined? (x)
@@ -140,18 +139,13 @@
 ;; Expand arguments if they are passed to a function.
 (defun expex-argexpand (ex x)
   (with (new? (%new? x)
-		 fun (if new?
-				 .x.
-				 x.)
-		 args (if new?
-				  ..x
-				  .x))
+		 fun (if new? .x.  x.)
+		 args (if new? ..x .x))
 	`(,@(when new?
 		  (list '%new))
 	  ,fun
     	  ,@(if (funcall (expex-function? ex) fun)
-	    	    (expex-convert-quotes
-		    	    (expex-argexpand-0 ex fun args))
+	    	    (expex-convert-quotes (expex-argexpand-0 ex fun args))
 	    	    args))))
 
 ;;;;; ARGUMENT VALUE EXPANSION
@@ -165,15 +159,17 @@
 (defun expex-move-arg-vm-scope (ex x)
   (let s (expex-funinfo-env-add)
     (aif (vm-scope-body x)
-         (cons (expex-body ex ! s)
-		       s)
+         (cons (expex-body ex ! s) s)
 	     (cons nil nil))))
+
+(defun lambda-expression-needing-cps? (x)
+  (and (lambda-expr? x)
+       (funinfo-needs-cps? (get-lambda-funinfo x))))
 
 (defun expex-move-arg-std (ex x)
   (with (s (expex-funinfo-env-add)
     	 (moved new-expr) (expex-expr ex x))
-      (when (and (lambda-expr? x)
-                 (funinfo-needs-cps? (get-lambda-funinfo x)))
+      (when (lambda-expression-needing-cps? x)
         (transpiler-add-cps-function *current-transpiler* s))
       (cons (append moved
 		    		(if (expex-returnable? ex new-expr.)
@@ -188,10 +184,13 @@
 ;; the replacement symbol for the parent in CDR.
 (defun expex-move-arg (ex x)
   (if
-	(not (expex-able? ex x))		(cons nil x)
+	(not (expex-able? ex x))
+      (cons nil x)
 	(or (%inline? x)
-	    (funcall (expex-inline? ex) x))	(expex-move-arg-inline ex (peel-%inline x))
-    (vm-scope? x)					(expex-move-arg-vm-scope ex x)
+	    (funcall (expex-inline? ex) x))
+      (expex-move-arg-inline ex (peel-%inline x))
+    (vm-scope? x)
+      (expex-move-arg-vm-scope ex x)
 	(expex-move-arg-std ex x)))
 
 (defun expex-filter-and-move-args (ex x)
@@ -253,16 +252,11 @@
   (funinfo-env-add *expex-funinfo* .x.)
   (values nil nil))
 
-(defun list-without-noargs-tag (x)
-  (remove 'no-args x))
-
 (defun expex-cps (x)
   (when (or (%setq? x)
             (%set-atom-fun? x))
-    (let v (%setq-value x)
-      (when (and (lambda-expr? v)
-                 (funinfo-needs-cps? (get-lambda-funinfo v)))
-        (transpiler-add-cps-function *current-transpiler* (%setq-place x))))))
+    (when (lambda-expression-needing-cps? (%setq-value x))
+      (transpiler-add-cps-function *current-transpiler* (%setq-place x)))))
 
 ;; Expand expression depending on type.
 ;;
@@ -293,12 +287,7 @@
 ;;;; BODY EXPANSION
 
 (defun expex-force-%setq (ex x)
-  (if (or (atom x)
-		  (%setq? x)
-		  (vm-jump? x)
-		  (%var? x)
-		  (named-lambda? x))
-	  x
+  (or (metacode-expression-only x)
 	  (expex-guest-filter-setter ex `(%setq ~%ret ,(if (identity? x)
 													   (second x)
 													   x)))))
@@ -308,8 +297,7 @@
   (when x
     (with ((moved new-expr) (expex-expr ex x.))
       (append moved
-			  (mapcar (fn (expex-force-%setq ex _))
-					  new-expr)
+			  (mapcar (fn (expex-force-%setq ex _)) new-expr)
 			  (expex-list ex .x)))))
 
 ;; Make second, following %SETQ expression that assigns to the
@@ -337,15 +325,13 @@
 					  (not (numberp _)))
 				 `(identity ,_)
 				 _)
-		  (or x
-			  (list nil))))
+		  (or x (list nil))))
 
 ;; Expand VM-SCOPE body and have the return value of the last expression
 ;; assigned to a gensym which will replace it in the parent expression.
 (defun expex-body (ex x &optional (s '~%ret))
   (expex-make-return-value ex s
-      (expex-list ex
-	      (expex-save-atoms (list-without-noargs-tag x)))))
+      (expex-list ex (expex-save-atoms (list-without-noargs-tag x)))))
 
 ;;;; TOPLEVEL
 

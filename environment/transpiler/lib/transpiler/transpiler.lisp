@@ -154,6 +154,10 @@
 (defun transpiler-wanted-variable? (tr name)
   (href (transpiler-wanted-variables-hash tr) name))
 
+(defun transpiler-imported-variable? (tr x)
+  (and (transpiler-import-from-environment? tr)
+       (assoc x *variables* :test #'eq)))
+
 (defun transpiler-unwanted-function? (tr fun)
   (member fun (transpiler-unwanted-functions tr)))
 
