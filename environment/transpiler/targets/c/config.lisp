@@ -24,7 +24,7 @@
 	(setf (transpiler-inline-exceptions tr) '(error format identity))
 	(let ex (transpiler-expex tr)
 	  (setf (expex-argument-filter ex) #'c-expex-literal
-			(expex-setter-filter ex) (compose #'expex-set-global-variable-value
+			(expex-setter-filter ex) (compose (fn mapcan (fn expex-set-global-variable-value _) _)
 										      #'expex-compiled-funcall)
 			));(expex-inline? ex) (fn in? _ 'aref '%vec '%car '%cdr '%eq '%not)))
 	tr))

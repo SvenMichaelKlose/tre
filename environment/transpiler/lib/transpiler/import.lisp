@@ -29,7 +29,8 @@
     x)
 
 (defun transpiler-should-add-wanted-variable? (tr var)
-  (and (transpiler-can-import? tr var)
+  (and (symbolp var)
+       (transpiler-import-from-environment? tr)
 	   (assoc var *variables* :test #'eq)))
 
 (defun transpiler-add-wanted-variable (tr var)

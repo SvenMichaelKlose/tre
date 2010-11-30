@@ -173,7 +173,7 @@
         (transpiler-add-cps-function *current-transpiler* s))
       (cons (append moved
 		    		(if (expex-returnable? ex new-expr.)
-		        		(list (expex-guest-filter-setter ex `(%setq ,s ,@new-expr)))
+		        		(expex-guest-filter-setter ex `(%setq ,s ,@new-expr))
 			    		new-expr))
   	        s)))
 
@@ -233,7 +233,7 @@
 (defun expex-expr-setq (ex x)
   (with ((moved new-expr) (expex-move-args ex (peel-%inline ..x)))
 	(values moved
-			(list (expex-guest-filter-setter ex `(%setq ,.x. ,@new-expr))))))
+			(expex-guest-filter-setter ex `(%setq ,.x. ,@new-expr)))))
 
 ;; Expand LAMBDA
 ;;
@@ -287,7 +287,8 @@
 ;;;; BODY EXPANSION
 
 (defun expex-force-%setq (ex x)
-  (or (metacode-expression-only x)
+  (or (when (metacode-expression-only x)
+        (list x))
 	  (expex-guest-filter-setter ex `(%setq ~%ret ,(if (identity? x)
 													   (second x)
 													   x)))))
@@ -297,7 +298,7 @@
   (when x
     (with ((moved new-expr) (expex-expr ex x.))
       (append moved
-			  (mapcar (fn (expex-force-%setq ex _)) new-expr)
+			  (mapcan (fn expex-force-%setq ex _) new-expr)
 			  (expex-list ex .x)))))
 
 ;; Make second, following %SETQ expression that assigns to the
@@ -306,7 +307,7 @@
   (if (eq s (second x.))
       x
       `(,x.
-	    ,(expex-guest-filter-setter ex `(%setq ,s ,(peel-%inline (second x.)))))))
+	    ,@(expex-guest-filter-setter ex `(%setq ,s ,(peel-%inline (second x.)))))))
 
 ;; Make return-value assignment of last expression in body.
 (defun expex-make-return-value (ex s x)
@@ -315,9 +316,9 @@
 		(append (butlast x)
 				(if (%setq? last.)
 					(if (eq s (second last.))
-				        (list (expex-guest-filter-setter ex last.))
+				        (expex-guest-filter-setter ex last.)
 						(expex-make-setq-copy ex last s))
-				    (list (expex-guest-filter-setter ex `(%setq ,s ,@(or last '(nil)))))))
+				    (expex-guest-filter-setter ex `(%setq ,s ,@(or last '(nil))))))
 		x)))
 
 (defun expex-save-atoms (x)
