@@ -21,16 +21,6 @@
   (unless (eq 'b (cdr (assoc 2 lst)))
 	(%error "ASSOC doesn't work with numbers")))
 
-(defun assoc-cons (key lst &key (test #'eql))
-  (when lst
-	(unless (consp lst)
-	  (%error "list expected"))
-    (dolist (i lst)
-      (if (consp i)
-		  (if (funcall test key (car i))
-	  	      (return i))
-		  (%error "not a pair")))))
-
 (defun %setf-assoc (new-value key x &key (test #'eql))
   (if (listp x)
       (when x

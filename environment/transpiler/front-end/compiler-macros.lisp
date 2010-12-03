@@ -33,14 +33,14 @@
 (define-compiler-macro cond (&rest args)
   (with-compiler-tag end-tag
     `(%%vm-scope
-       ,@(mapcan (fn (with-compiler-tag next
-                       `(,@(unless (t? _.)
-                             `((%setq ~%ret ,_.)
-                               (%%vm-go-nil ~%ret ,next)))
-                         ,@(awhen (vars-to-identity ._)
-							 `((%setq ~%ret (%%vm-scope ,@!))))
-                         (%%vm-go ,end-tag)
-                         ,next)))
+       ,@(mapcan (fn with-compiler-tag next
+                      `(,@(unless (t? _.)
+                            `((%setq ~%ret ,_.)
+                              (%%vm-go-nil ~%ret ,next)))
+                        ,@(awhen (vars-to-identity ._)
+						    `((%setq ~%ret (%%vm-scope ,@!))))
+                       (%%vm-go ,end-tag)
+                       ,next))
 			     args)
        ,end-tag
 	   (identity ~%ret))))

@@ -19,6 +19,7 @@
 (env-load "stage2/multiple-value-bind.lisp")
 (env-load "stage2/while.lisp")
 (env-load "stage2/group.lisp")
+(env-load "stage2/remove.lisp")
 (env-load "stage2/with.lisp")
 (env-load "stage2/subseq.lisp")
 (env-load "stage2/list-symbol.lisp")
@@ -27,4 +28,3 @@
 (env-load "stage2/defstruct.lisp")
 (env-load "stage2/abs.lisp")
 (env-load "stage2/traverse.lisp")
-(env-load "stage2/remove.lisp")

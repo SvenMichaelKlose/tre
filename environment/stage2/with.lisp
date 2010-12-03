@@ -1,33 +1,18 @@
 ;;;;; TRE environment
 ;;;;; Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
 
-(defun copy-head-if (pred x)
-  (when (and x
-			 (funcall pred (car x)))
+(defun copy-while (pred x)
+  (when (and x (funcall pred (car x)))
 	(cons (car x)
-		  (copy-head-if pred (cdr x)))))
+		  (copy-while pred (cdr x)))))
 
-(define-test "COPY-HEAD-IF"
-  ((copy-head-if #'numberp '(1 2 3 a)))
+(define-test "COPY-WHILE"
+  ((copy-while #'numberp '(1 2 3 a)))
   '(1 2 3))
 
-(defun find-cons (fcpred x)
-  (when x
-    (if (funcall fcpred (car x))
-	    x
-	    (find-cons fcpred (cdr x)))))
-
-(define-test "FIND-CONS"
-  ((find-cons #'numberp '(a b 1 2)))
-  '(1 2))
-
-(define-test "FIND-CONS with FN"
-  ((find-cons (fn (not (numberp _))) '(1 2 a b 1 2)))
-  '(a b 1 2))
-
 (defun collect (pred x)
-  (values (copy-head-if pred x)
-		  (find-cons (fn (not (funcall pred _))) x)))
+  (values (copy-while pred x)
+		  (remove-if pred x)))
 
 (defmacro with (alst &rest body)
   (unless body
