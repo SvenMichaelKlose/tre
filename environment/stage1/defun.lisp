@@ -12,12 +12,11 @@
                   (%error "keyword following keyword"))
               (%error "end after keyword"))))))
 
-; Check and return argument list.
-(%defun %defun-args (args)
+(%defun %defun-checked-args (args)
   (if args
       (or (%defun-arg-keyword args)
           (cons (car args)
-				(%defun-args (cdr args))))))
+				(%defun-checked-args (cdr args))))))
 
 (%defun %defun-name (name)
   (if (atom name)
@@ -36,7 +35,7 @@
        (setq *universe* (cons ',name *universe*)
        		 *defined-functions* (cons ',name *defined-functions*))
        (%set-atom-fun ,name
-           #'(,(%defun-args args)
+           #'(,(%defun-checked-args args)
                (block ,name
                  ,@(%add-documentation name body))))
 	   (return-from nil ',name))))

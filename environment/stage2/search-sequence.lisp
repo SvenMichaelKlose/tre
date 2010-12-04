@@ -83,7 +83,6 @@
   ((position #\/ "lisp/foo/bar"))
   4)
 
-;; XXX tests!
 (defun position-if (pred seq &key (start nil) (end nil)
 							      (from-end nil))
   (let idx nil

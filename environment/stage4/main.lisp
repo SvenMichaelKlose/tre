@@ -1,9 +1,6 @@
 ;;;; TRE environment
 ;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
-;;;;
-;;;; Fourth stage
 
-(env-load "stage4/append-atom.lisp")
 (env-load "stage4/assoc-hash.lisp")
 (env-load "stage4/assoc-replace.lisp")
 (env-load "stage4/assoc-splice.lisp")

@@ -13,5 +13,4 @@
 
 (defun permutate (x)
   "Returns all combinations of elements in lists."
-  (and x
-       (permutate-1 x. (permutate .x))))
+  (and x (permutate-1 x. (permutate .x))))

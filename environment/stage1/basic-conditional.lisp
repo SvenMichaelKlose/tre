@@ -1,7 +1,5 @@
 ;;;;; TRE environment
 ;;;;; Copyright (c) 2005,2008 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Basic conditional operators
 
 (%defun compiler-and (x)
   (if (cdr x)
@@ -21,5 +19,5 @@
               ,g)))
       (car x)))
 
-(defmacro or (&rest exprs)
-  (compiler-or exprs))
+(defmacro or (&rest x)
+  (compiler-or x))

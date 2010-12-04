@@ -57,7 +57,6 @@
     lst
     (cons obj lst)))
 
-; XXX Have &REST ?
 (defmacro adjoin! (obj &rest place)
   `(setf ,(car place) (adjoin ,obj ,@place)))
 

@@ -1,7 +1,5 @@
 ;;;;; TRE environment
 ;;;;; Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Macro definition
 
 (defvar *documentation* nil)
 (defvar *macros* nil)
@@ -17,7 +15,6 @@
 
 (setq *universe* (cons 'defmacro *universe*))
 
-;; Define a special form 'macro' surrogate.
 (%set-atom-fun defmacro
   (macro (name args &rest body)
     `(block nil
