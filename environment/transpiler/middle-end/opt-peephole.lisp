@@ -172,6 +172,29 @@
  				   (eq v (funinfo-lexical fi))
 	    	       (funinfo-lexical? fi v)))))))
 
+(defun assignment-to-unused-place (a d)
+  (and (%setq? a)
+       (removable-place? (%setq-place a))
+	   (or (and (not (~%ret? (%setq-place a)))
+			    (integer= 1 (opt-peephole-count (%setq-place a))))
+	       (not (opt-peephole-will-be-used-again? d (%setq-place a))))))
+
+(defun assignment-to-unneccessary-temoporary? (a d)
+  (and d
+	   (%setq? a)
+	   (%setq? d.)
+	   (let plc (%setq-place a)
+		 (and (eq plc (%setq-value d.))
+ 			  (removable-place? plc)
+			  (or (and (integer= 2 (opt-peephole-count plc))
+				 	   (not (~%ret? plc)))
+				  (not (opt-peephole-will-be-used-again? .d plc)))))))
+
+(defun two-subsequent-tags? (a d)
+  (and a d.
+	   (atom a)
+	   (atom d.)))
+
 (defun opt-peephole (statements)
   (with
 	  (fnord nil
@@ -181,11 +204,7 @@
 	   remove-code
 	     #'((x)
 			  (opt-peephole-fun (#'remove-code :collect-symbols t)
-				((and (%setq? a)
-				      (removable-place? (%setq-place a))
-					  (or (and (not (~%ret? (%setq-place a)))
-							   (integer= 1 (opt-peephole-count (%setq-place a))))
-					      (not (opt-peephole-will-be-used-again? d (%setq-place a)))))
+				((assignment-to-unused-place a d)
 				   (if (atomic-or-without-side-effects? (%setq-value a))
 			  		   (opt-peephole-uncollect-syms a
 						   (remove-code d))
@@ -196,28 +215,17 @@
 	   remove-assignments
 	     #'((x)
 			  (opt-peephole-fun (#'remove-assignments :collect-symbols t)
-			    ((and d
-					  (%setq? a)
-					  (%setq? d.)
-					  (let plc (%setq-place a)
-						(and (eq plc (%setq-value d.))
- 							 (removable-place? plc)
-							 (or (and (integer= 2 (opt-peephole-count plc))
-								 	  (not (~%ret? plc)))
-							     (not (opt-peephole-will-be-used-again? .d plc))))))
-				  (let plc (%setq-place a)
-				    (opt-peephole-uncollect-syms plc
-						  (opt-peephole-uncollect-syms plc
-							  (cons `(%setq ,(%setq-place d.) ,(%setq-value a))
-								    (remove-assignments .d))))))))
+			    ((assignment-to-unneccessary-temoporary? a d)
+				   (let plc (%setq-place a)
+				     (opt-peephole-uncollect-syms plc
+						   (opt-peephole-uncollect-syms plc
+							   (cons `(%setq ,(%setq-place d.) ,(%setq-value a))
+								     (remove-assignments .d))))))))
 
 	   reduce-tags
 		 #'((x)
 			  (opt-peephole-fun (#'reduce-tags)
-    		    ((and a d.
-					  (atom a)
-			 		  (atom d.))
-				   ; Remove first of two subsequent tags.
+    		    ((two-subsequent-tags? a d)
 				   (awhen (member (fn eq a ._) removed-tags)
 					 (rplacd ! .x.))
 				   (acons! a .x. removed-tags)
