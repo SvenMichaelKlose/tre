@@ -103,13 +103,13 @@
 			x.)
 		  (opt-peephole-remove-spare-tags .x))))
 
-;; Remove IDENTITY expressions to unify code.
-;; Remove IDENTITY from %SETQ value.
+(defun assignment-of-identity? (a)
+  (and (%setq? a)
+	   (identity? ..a.)))
+
 (defun opt-peephole-remove-identity (x)
   (opt-peephole-fun (#'opt-peephole-remove-identity)
-      ((and (%setq? a)
-		    (consp ..a.)
-			(identity? ..a.))
+      ((assignment-of-identity? a)
 	     (cons `(%setq ,.a. ,(second ..a.))
 			   (opt-peephole-remove-identity d)))))
 
@@ -119,33 +119,37 @@
 		x
 		(opt-peephole-find-next-tag .x))))
 
+(defun void-assignment? (a)
+  (and (%setq? a)
+	   (eq .a. ..a.)))
+
+(defun reversed-assignments? (a d)
+  (and (%setq? a)
+	   (%setq? d.)
+	   (atom .a.)
+	   (eq .a. (third d.))
+	   (eq (second d.) ..a.)))
+
+(defun jump-to-following-tag? (a d)
+  (and (%%vm-go? a)
+	   d
+	   (atom d.)
+	   (eq .a. d.)))
+
 ;; Remove unreached code or code that does nothing.
 (defun opt-peephole-remove-void (x)
   (opt-peephole-fun (#'opt-peephole-remove-void)
-	  ; Remove void assigment.
-	  ((and (%setq? a)
-		    (eq .a. ..a.))
+	  ((void-assignment? a)
 	     (opt-peephole-remove-void d))
 
-      ; Remove second of (setf x y y x).
-	  ((and (%setq? a)
-			(%setq? d.)
-			(atom .a.)
-			(eq .a. (third d.))
-			(eq (second d.) ..a.))
+	  ((reversed-assignments? a d)
 	     (cons a (opt-peephole-remove-void .d)))
 
-	  ; Remove jump to following tag.
-	  ((and (consp a)
-			(eq '%%vm-go a.)
-			d
-			(atom d.)
-		    (eq .a. d.))
+	  ((jump-to-following-tag? a d)
 	     (opt-peephole-remove-void d))
 
 	  ; Remove code after label until next tag.
-	  ((and (consp a)
-			(eq '%%vm-go a.))
+	  ((%%vm-go? a)
 		 (cons a (opt-peephole-remove-void (opt-peephole-find-next-tag d))))))
 
 (defun opt-peephole-will-be-used-again? (x v)

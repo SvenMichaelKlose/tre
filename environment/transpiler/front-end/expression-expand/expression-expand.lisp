@@ -29,7 +29,7 @@
 
   (setter-filter #'((var) var))
 
-  (expr-filter #'((var) var))
+  (expr-filter #'transpiler-import-from-expex)
 
   (plain-arg-fun? #'((var)))
 

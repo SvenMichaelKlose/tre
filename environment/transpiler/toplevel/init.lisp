@@ -24,9 +24,6 @@
   (define-expander (transpiler-macro-expander tr)))
 
 (defun transpiler-make-expex (tr)
-  #'transpiler-add-wanted-function
-  #'transpiler-add-wanted-variable
-  #'transpiler-plain-arg-fun?
   (let ex (make-expex)
     (setf (transpiler-expex tr) ex
 
@@ -60,9 +57,7 @@
 		  (expex-plain-arg-fun? ex)
 		    (lx (tr)
 				#'((fun)
-			         (transpiler-plain-arg-fun? ,tr fun)))
-		  (expex-expr-filter ex)
-			#'transpiler-import-from-expex)
+			         (transpiler-plain-arg-fun? ,tr fun))))
 	ex))
 
 (defun create-transpiler (&rest args)
