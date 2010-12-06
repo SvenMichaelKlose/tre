@@ -31,8 +31,6 @@
 
   (expr-filter #'transpiler-import-from-expex)
 
-  (plain-arg-fun? #'((var)))
-
   (inline? #'((x))))
 
 ;;;; SYMBOLS
@@ -100,10 +98,6 @@
 		   (%var? x)
 		   (named-lambda? x))))
 
-;; Check if arguments to a function should be expanded.
-(defun expex-expandable-args? (ex fun argdef)
-  (not (funcall (expex-plain-arg-fun? ex) fun)))
-
 ;;;; ARGUMENT EXPANSION
 
 ;; XXX this sucks blood out of stones. Should have proper macro expansion
@@ -122,9 +116,7 @@
   (let argdef (funcall (expex-function-arguments ex) fun)
 	(if (eq argdef 'builtin)
 		args
-  	    (if (expex-expandable-args? ex fun argdef)
-      	    (argument-expand-compiled-values fun argdef args)
-    	    args))))
+      	(argument-expand-compiled-values fun argdef args))))
 
 ;; Expand arguments if they are passed to a function.
 (defun expex-argexpand (ex x)

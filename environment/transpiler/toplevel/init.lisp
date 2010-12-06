@@ -52,12 +52,7 @@
 		    (lx (tr)
 				#'((fun)
 			         (or (transpiler-function-arguments ,tr fun)
-				         (function-arguments (symbol-function fun)))))
-
-		  (expex-plain-arg-fun? ex)
-		    (lx (tr)
-				#'((fun)
-			         (transpiler-plain-arg-fun? ,tr fun))))
+				         (function-arguments (symbol-function fun))))))
 	ex))
 
 (defun create-transpiler (&rest args)

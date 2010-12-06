@@ -81,7 +81,6 @@
   (function-bodies (make-hash-table :test #'eq))
   emitted-wanted-functions
   (obfuscations (make-hash-table :test #'eq))
-  plain-arg-funs
   (exported-closures nil)
   (rename-all-args? nil)
   (rename-toplevel-function-args? nil)
@@ -187,17 +186,11 @@
 	(setf (href (transpiler-obfuscations tr) (make-symbol (symbol-name i)))
 		  t)))
 
-(define-slot-setter-push! transpiler-add-plain-arg-fun tr
-  (transpiler-plain-arg-funs tr))
-
 (define-slot-setter-push! transpiler-add-exported-closure tr
   (transpiler-exported-closures tr))
 
 (define-slot-setter-push! transpiler-add-cps-function tr
   (transpiler-cps-functions tr))
-
-(defun transpiler-plain-arg-fun? (tr fun)
-  (member fun (transpiler-plain-arg-funs tr) :test #'eq))
 
 (defun transpiler-dont-inline? (tr fun)
   (member fun (transpiler-dont-inline-list tr) :test #'eq))
