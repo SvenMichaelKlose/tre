@@ -14,7 +14,7 @@
 (defun function-ref-expr? (x)
   (and (consp x)
        (eq 'FUNCTION x.)
-	   (atom (second x))))
+	   (atom .x.)))
 
 (defun atom-function-expr? (x)
   (and (consp x)
