@@ -21,6 +21,7 @@
   (let tre (eval tr)
     (transpiler-add-obfuscation-exceptions tre op repl-op)
     (transpiler-add-inline-exception tre op)
+    (transpiler-add-plain-arg-fun tre op)
     `(define-expander-macro
 	   ,(transpiler-macro-expander tre)
 	   ,op

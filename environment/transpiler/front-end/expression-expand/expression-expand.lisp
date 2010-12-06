@@ -31,6 +31,8 @@
 
   (expr-filter #'transpiler-import-from-expex)
 
+  (plain-arg-fun? #'((var)))
+
   (inline? #'((x))))
 
 ;;;; SYMBOLS
@@ -98,6 +100,10 @@
 		   (%var? x)
 		   (named-lambda? x))))
 
+;; Check if arguments to a function should be expanded.
+(defun expex-expandable-args? (ex fun argdef)
+  (not (funcall (expex-plain-arg-fun? ex) fun)))
+
 ;;;; ARGUMENT EXPANSION
 
 ;; XXX this sucks blood out of stones. Should have proper macro expansion
@@ -110,13 +116,13 @@
 
 ;; Expand arguments to function.
 (defun expex-argexpand-0 (ex fun args)
-  (dolist (i args)
-	(expex-warn i))
+  (map #'expex-warn args)
   (funcall (expex-function-collector ex) fun args)
   (let argdef (funcall (expex-function-arguments ex) fun)
-	(if (eq argdef 'builtin)
+	(if (or (eq argdef 'builtin)
+  	        (not (expex-expandable-args? ex fun argdef)))
 		args
-      	(argument-expand-compiled-values fun argdef args))))
+   	    (argument-expand-compiled-values fun argdef args))))
 
 ;; Expand arguments if they are passed to a function.
 (defun expex-argexpand (ex x)
@@ -139,10 +145,10 @@
 
 ;; Move out VM-SCOPE if it contains something. Otherwise keep NIL.
 (defun expex-move-arg-vm-scope (ex x)
-  (let s (expex-funinfo-env-add)
-    (aif (%%vm-scope-body x)
-         (cons (expex-body ex ! s) s)
-	     (cons nil nil))))
+  (aif (%%vm-scope-body x)
+       (let s (expex-funinfo-env-add)
+         (cons (expex-body ex ! s) s))
+	   (cons nil nil)))
 
 (defun lambda-expression-needing-cps? (x)
   (and (lambda-expr? x)
