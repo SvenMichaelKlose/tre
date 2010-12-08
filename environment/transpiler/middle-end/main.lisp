@@ -3,6 +3,7 @@
 
 (env-load "transpiler/middle-end/global-funinfo.lisp")
 
+(env-load "transpiler/middle-end/graph/metacode-to-cblock.lisp")
 (env-load "transpiler/middle-end/update-funinfos.lisp")
 (env-load "transpiler/middle-end/opt-places.lisp")
 (env-load "transpiler/middle-end/opt-peephole.lisp")
