@@ -9,7 +9,7 @@
 						  	  (if (and fi (funinfo-ghost fi))
 								  .argnames
 								  argnames)
-							  (doubles argnames vars)))
+							  (intersect argnames vars)))
 		    old-replacements)))
 
 (defun rename-arg (replacements x)
