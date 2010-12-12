@@ -1,6 +1,14 @@
 ;;;;; TRE transpiler
 ;;;;; Copyright (c) 2010 Sven Klose <pixel@copei.de>
 
+(defmacro cblock-traverse-next (fun cb visited-blocks)
+  (with-gensym visited-and-this
+    `(let ,visited-and-this (cons ,cb ,visited-blocks)
+       (awhen (cblock-next ,cb)
+         (,fun ! ,visited-and-this))
+       (awhen (cblock-conditional-next ,cb)
+         (,fun ! ,visited-and-this)))))
+
 (defun copy-until-cblock-end (x)
   (let result (make-queue)
     (while (and x
@@ -41,7 +49,8 @@
           (setf (cblock-next cb) (assoc-value .l. tags :test #'=))
         (%%vm-go-nil? l)
           (setf (cblock-conditional-next cb) (assoc-value ..l. tags :test #'=)
-                (cblock-conditional-place cb) .l.)
+                (cblock-conditional-place cb) .l.
+                (cblock-next cb) .x.)
         (setf (cblock-next cb) .x.))
       (when (vm-jump? l)
         (setf (cblock-code cb) (butlast (cblock-code cb))))
@@ -71,16 +80,15 @@
   (adjoin! v (cblock-ins cb)))
 
 (defun cblock-distribute-var (cb v)
-  (with (visit #'((cb visited-blocks)
+  (with (global-visited nil
+         visit #'((cb visited-blocks)
                     (unless (member cb visited-blocks :test #'eq)
                       (if (and visited-blocks
                                (member v (cblock-ins cb) :test #'eq))
                           (cblock-distribute-update cb visited-blocks v)
-                          (let visited-and-this (cons cb visited-blocks)
-                            (awhen (cblock-conditional-next cb)
-                              (visit ! visited-and-this))
-                            (awhen (cblock-next cb)
-                              (visit ! visited-and-this)))))))
+                          (unless (member cb global-visited :test #'eq)
+                            (push! cb global-visited)
+                            (cblock-traverse-next visit cb visited-blocks))))))
     (visit cb nil)))
 
 (defun cblock-distribute-ins-and-outs (cb fi)
@@ -94,3 +102,15 @@
 
 (defun cblocks-distribute-ins-and-outs (blks fi)
   (map (fn cblock-distribute-ins-and-outs _ fi) blks))
+
+(defun cblocks-merge-joins (cb)
+  (with (global-visited nil
+         visit #'((cb visited-blocks)
+                      (if (and visited-blocks
+                               (member cb visited-blocks :test #'eq))
+                          (setf (cblock-merged-ins cb) (intersect (cblock-ins cb)
+                                                                  (cblock-outs visited-blocks.)))
+                          (unless (member cb global-visited :test #'eq)
+                            (push! cb global-visited)
+                            (cblock-traverse-next visit cb visited-blocks)))))
+    (visit cb nil)))

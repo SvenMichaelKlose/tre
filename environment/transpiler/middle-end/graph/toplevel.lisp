@@ -5,15 +5,14 @@
   (with (fi (get-lambda-funinfo x)
          blks (metacode-to-cblocks (lambda-body x) fi))
     (make-cblock-links blks (make-cblock-taglist blks))
-      (cblock-collect-ins blks fi)
-      (cblocks-distribute-ins-and-outs blks fi)
-      (print-cblocks blks)
-      (cblock-to-metacode blks)))
+    (cblock-collect-ins blks fi)
+    (cblocks-distribute-ins-and-outs blks fi)
+    (cblocks-merge-joins blks.)
+;    (print-cblocks blks)
+    (cblock-to-metacode blks)))
 
 (define-tree-filter middleend-graph (x)
   (named-lambda? x)
-	(copy-lambda x
-				 :body (middleend-graph-0 x))
+	(copy-lambda x :body (middleend-graph-0 x))
   (lambda? x)
-	(copy-lambda x
-				 :body (middleend-graph-0 x)))
+	(copy-lambda x :body (middleend-graph-0 x)))

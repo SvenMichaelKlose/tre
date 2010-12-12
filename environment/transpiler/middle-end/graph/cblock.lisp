@@ -7,4 +7,5 @@
   (conditional-next nil)
   (conditional-place nil)
   (ins nil)
-  (outs nil))
+  (outs nil)
+  (merged-ins nil))
