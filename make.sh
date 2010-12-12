@@ -71,7 +71,7 @@ CFLAGS="-pipe $C_DIALECT_FLAGS $GNU_LIBC_FLAGS $BUILD_MACHINE_INFO -DTRE_BOOT_IM
 
 DEBUGOPTS="-O0 -g"
 BUILDOPTS="-O3 -fomit-frame-pointer -ffast-math"
-CRUNSHOPTS="-O3 -fomit-frame-pointer -ffast-math -fwhole-program -lm --whole-program"
+CRUNSHOPTS="-O3 -fomit-frame-pointer -fno-stack-protector -mfpmath=sse -mssse3 -ffast-math -fwhole-program -lm --whole-program"
 CRUNSHFLAGS="-DTRE_COMPILED_CRUNSHED -Iinterpreter"
 
 LIBFLAGS="-lm -lffi"
