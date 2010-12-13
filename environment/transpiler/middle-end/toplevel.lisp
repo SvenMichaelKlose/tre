@@ -18,7 +18,6 @@
       update-funinfo #'transpiler-update-funinfo
       opt-peephole #'opt-peephole
       middleend-graph #'middleend-graph
-;	  (fn metacode-fblock _)
       cps (fn if (transpiler-continuation-passing-style? tr)
                  (cps _)
                  _)

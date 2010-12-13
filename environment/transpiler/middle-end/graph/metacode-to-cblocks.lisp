@@ -18,7 +18,7 @@
                            (when x
                              (list x.)))
                    .x)
-      (enqueue result x.)
+      (enqueue result (copy-tree x.))
       (setf x .x))))
 
 (defun metacode-to-cblocks-0 (x)
@@ -110,6 +110,75 @@
                                (member cb visited-blocks :test #'eq))
                           (setf (cblock-merged-ins cb) (intersect (cblock-ins cb)
                                                                   (cblock-outs visited-blocks.)))
+                          (unless (member cb global-visited :test #'eq)
+                            (push! cb global-visited)
+                            (cblock-traverse-next visit cb visited-blocks)))))
+    (visit cb nil)))
+
+(defun cblock-rename-value (lst x)
+  (or (assoc-value x lst :test #'eq)
+      x))
+
+(defun cblock-rename-statement (lst x)
+  (if (%quote? (%setq-value x))
+      x
+      (let v (%setq-value x)
+        `(%setq ,(cblock-rename-value lst (%setq-place x))
+                ,(if (atom v)
+                     (cblock-rename-value lst v)
+                     (cons v.
+                           (mapcar (fn cblock-rename-value lst _) .v)))))))
+
+(defun cblock-rename-merged (cb)
+  (setf (cblock-aliases cb) (mapcar (fn cons _ (gensym)) (cblock-merged-ins cb)))
+  (setf (cblock-realnames cb) (pairlist (cdrlist (cblock-aliases cb))
+                                        (carlist (cblock-aliases cb))))
+  (setf (cblock-code cb) (mapcar (fn cblock-rename-statement (cblock-aliases cb) _) (cblock-code cb))))
+
+(defun cblocks-rename-merged (cb)
+  (with (global-visited nil
+         visit #'((cb visited-blocks)
+                      (if (and visited-blocks
+                               (member cb visited-blocks :test #'eq))
+                          (cblock-rename-merged cb)
+                          (unless (member cb global-visited :test #'eq)
+                            (push! cb global-visited)
+                            (cblock-traverse-next visit cb visited-blocks)))))
+    (visit cb nil)))
+
+(defun cblocks-remove-doubles-1 (blks original x)
+  (if x
+      (if (equal (%setq-value original)
+                 (%setq-value x.))
+          (progn
+            (setf (third x.) (%setq-place original))
+            (print x.)
+            (cblocks-remove-doubles-1 blks original .x))
+          (cblocks-remove-doubles-1 blks original .x))
+      (awhen .blks
+        (cblocks-remove-doubles-1 ! original (cblock-code !.)))))
+
+(defun cblocks-remove-doubles-0 (blks x)
+  (if x
+      (if (and (consp (%setq-value x.))
+               (member (car (%setq-value x.)) '(%car %cdr) :test #'eq))
+          (cblocks-remove-doubles-1 blks x. .x)
+          (cblocks-remove-doubles-0 blks .x))
+      (awhen .blks
+        (cblocks-remove-doubles-0 ! (cblock-code !.)))))
+
+(defun cblocks-remove-doubles (blks)
+  (cblocks-remove-doubles-0 blks (cblock-code blks.)))
+
+(defun cblock-unname-merged (cb)
+  (setf (cblock-code cb) (mapcar (fn cblock-rename-statement (cblock-realnames cb) _) (cblock-code cb))))
+
+(defun cblocks-unname-merged (cb)
+  (with (global-visited nil
+         visit #'((cb visited-blocks)
+                      (if (and visited-blocks
+                               (member cb visited-blocks :test #'eq))
+                          (cblock-unname-merged cb)
                           (unless (member cb global-visited :test #'eq)
                             (push! cb global-visited)
                             (cblock-traverse-next visit cb visited-blocks)))))

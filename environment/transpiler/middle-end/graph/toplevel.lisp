@@ -8,7 +8,10 @@
     (cblock-collect-ins blks fi)
     (cblocks-distribute-ins-and-outs blks fi)
     (cblocks-merge-joins blks.)
-;    (print-cblocks blks)
+    (cblocks-rename-merged blks.)
+    (cblocks-remove-doubles blks)
+    (cblocks-unname-merged blks.)
+    ;(print-cblocks blks)
     (cblock-to-metacode blks)))
 
 (define-tree-filter middleend-graph (x)

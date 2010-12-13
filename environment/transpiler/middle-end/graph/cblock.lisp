@@ -8,4 +8,6 @@
   (conditional-place nil)
   (ins nil)
   (outs nil)
-  (merged-ins nil))
+  (merged-ins nil)
+  (aliases nil)
+  (realnames nil))
