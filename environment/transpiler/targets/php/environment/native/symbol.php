@@ -4,9 +4,10 @@
 class __symbol {
 	public function __construct ($name, &$pkg)
 	{
+        global $NULL;
 		$this->n =& $name;
-		$this->v = NULL;
-		$this->f = NULL;
+		$this->v =& $NULL;
+		$this->f =& $NULL;
 		$this->p =& $pkg;
 	}
 

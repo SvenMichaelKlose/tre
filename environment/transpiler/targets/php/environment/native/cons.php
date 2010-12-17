@@ -7,4 +7,8 @@ class __cons {
 		$this->car =& $car;
 		$this->cdr =& $cdr;
 	}
+   public function __toString ()
+    {
+        return "(" . $this->car . "." . $this->cdr . ")";
+    }
 }

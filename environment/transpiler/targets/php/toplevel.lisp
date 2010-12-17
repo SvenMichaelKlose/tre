@@ -9,7 +9,7 @@
                                                     _ ".php")
 						 	                     :direction 'input)
 			  	           (read-all-lines i))
-                      '("character" "cons" "funref" "symbol")))
+                      '("reference" "character" "cons" "funref" "symbol")))
 		 out))
 
 (defun php-transpile-prepare (tr &key (import-universe? nil))
@@ -17,7 +17,7 @@
     (when import-universe?
       (transpiler-import-universe tr))
     (transpiler-add-wanted-function tr 'array-copy)
-    (format out "<?php~%$NULL=NULL;~%")
+    (format out "<?php~%$NULL = NULL; $T = true;~%")
     (php-print-native-environment out)))
 
 (defun php-transpile (files &key (obfuscate? nil)

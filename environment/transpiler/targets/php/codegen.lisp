@@ -20,7 +20,7 @@
 (define-codegen-macro-definer define-php-macro *php-transpiler*)
 
 (defmacro define-php-infix (name)
-  `(define-transpiler-infix *php-transpiler* ,name))
+  `("__w (" (define-transpiler-infix *php-transpiler* ,name) ")"))
 
 ;;;; SYMBOLS
 
@@ -51,8 +51,8 @@
 
 (define-php-macro %%vm-go-nil (val tag)
   (if (< 503 *php-version*)
-      (php-line "if (!$" val "&&$" val "!=0) { $_I_=" tag "; continue; }")
-      (php-line "if (!$" val "&&$" val "!=0) goto _I_" tag)))
+      (php-line "if (!$" val "&&!is_string ($" val ")&&!is_numeric ($" val ")) { $_I_=" tag "; continue; }")
+      (php-line "if (!$" val "&&!is_string ($" val ")&&!is_numeric ($" val ")) goto _I_" tag)))
 
 ;;;; FUNCTIONS
 
@@ -190,8 +190,10 @@
 	       ,op
 	       (&rest args)
 	     `(%transpiler-native
+            "__w ("
 			,,@(transpiler-binary-expand ,replacement-op
-				   (mapcar #'php-dollarize args))))))
+				   (mapcar #'php-dollarize args))
+            ")"))))
 
 (define-php-binary %%%+ "+")
 (define-php-binary %%%- "-")
@@ -199,6 +201,7 @@
 (define-php-binary %%%< "<")
 (define-php-binary %%%> ">")
 (define-php-binary %%%eq "===")
+(define-php-binary %%%string+ ".")
 
 ;;;; ARRAYS
 
