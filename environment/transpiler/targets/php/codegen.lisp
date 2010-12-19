@@ -9,7 +9,7 @@
 (defun php-codegen-symbol-constructor (tr x)
     `(,(transpiler-symbol-string tr
 	       (transpiler-obfuscate tr (compiled-function-name 'symbol)))
-	       "(\"" ,(symbol-name x) "\", " ,(when (keywordp x) "true") ")"))
+	       "(\"" ,(symbol-name x) "\", " ,(when (keywordp x) "$T") ")"))
 
 (defun php-dollarize (x)
   (if (and (atom x)
@@ -25,7 +25,7 @@
 ;;;; SYMBOLS
 
 (transpiler-translate-symbol *php-transpiler* nil "NULL")
-(transpiler-translate-symbol *php-transpiler* t "true")
+(transpiler-translate-symbol *php-transpiler* t "T")
 
 (define-php-macro %unobfuscated-lookup-symbol (name pkg)
   `(,(transpiler-obfuscate-symbol *php-transpiler*
@@ -71,7 +71,7 @@
       "{" ,(code-char 10)
 		 ,(php-line "global "
 					(comma-separated-list (mapcar #'php-dollarize
-                                                  (cons "$NULL" (funinfo-globals fi)))))
+                                                  (cons "$NULL" (cons "$T" (funinfo-globals fi))))))
 	     ,@(when (< *php-version* 503)
 			 (php-line "$_I_=0; while (1) { switch ($_I_) { case 0:"))
          ,@(lambda-body x)
@@ -84,7 +84,9 @@
 
 (define-php-macro function (name &optional (x 'only-name))
   (if (eq 'only-name x)
-      name
+      `("__w ("
+        (%transpiler-string ,(transpiler-symbol-string tr (transpiler-obfuscate tr (compiled-function-name name))))
+        ")")
   	  (if (atom x)
 		  (error "codegen: arguments and body expected: ~A" x)
 	  	  (codegen-php-function name x))))

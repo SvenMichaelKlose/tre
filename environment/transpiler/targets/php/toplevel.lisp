@@ -16,7 +16,6 @@
   (with-string-stream out
     (when import-universe?
       (transpiler-import-universe tr))
-    (transpiler-add-wanted-function tr 'array-copy)
     (format out "<?php~%$NULL = NULL; $T = true;~%")
     (php-print-native-environment out)))
 
@@ -27,8 +26,6 @@
   (let tr *php-transpiler*
     (transpiler-reset tr)
     (target-transpile-setup tr :obfuscate? obfuscate?)
-    (when (transpiler-lambda-export? tr)
-      (transpiler-add-wanted-function tr 'array-copy))
 	(concat-stringtree
 		(php-transpile-prepare tr)
     	(target-transpile tr

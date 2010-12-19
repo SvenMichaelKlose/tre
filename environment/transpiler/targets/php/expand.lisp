@@ -5,8 +5,10 @@
 (defmacro define-php-std-macro (&rest x)
   `(define-transpiler-std-macro *php-transpiler* ,@x))
 
-(define-php-std-macro %defsetq (&rest x)
-  `(%setq ,@x))
+(define-php-std-macro %defsetq (place &rest x)
+  `(progn
+     (%var ,place)
+     (%setq ,place ,@x)))
 
 (define-php-std-macro define-native-php-fun (name args &rest body)
   (apply #'shared-essential-defun (%defun-name name) args (body-with-noargs-tag body)))
