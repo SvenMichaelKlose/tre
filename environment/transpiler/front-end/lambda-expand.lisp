@@ -10,7 +10,7 @@
 	(funinfo-env-add fi '~%ret)
 	fi))
 
-;;;; LAMBDA inlining
+;;;; Inlining
 
 (defun lambda-expand-make-inline-body (stack-places values body)
   `(%%vm-scope
@@ -32,23 +32,23 @@
 
 (defun lambda-export-make-exported (fi x)
   (with-gensym exported-name
-    (let fi-child (lambda-make-funinfo (lambda-args x) fi)
-	  (funinfo-make-ghost fi-child)
-	  (lambda-expand-tree fi-child (lambda-body x) t)
-      (let argdef (append (awhen (funinfo-ghost fi-child)
+    (let fi-exported (lambda-make-funinfo (lambda-args x) fi)
+	  (funinfo-make-ghost fi-exported)
+	  (lambda-expand-tree fi-exported (lambda-body x) t)
+      (let argdef (append (awhen (funinfo-ghost fi-exported)
 						    (list !))
 						  (lambda-args x))
 		(push (cons exported-name argdef) *closure-argdefs*)
 	    (transpiler-add-exported-closure *current-transpiler*
-            `((defun ,exported-name ,(append (make-lambda-funinfo fi-child)
+            `((defun ,exported-name ,(append (make-lambda-funinfo fi-exported)
 											 argdef)
 		        ,@(lambda-body x))))
-	  (values exported-name fi-child)))))
+	  (values exported-name fi-exported)))))
 
 (defun lambda-export (fi x)
-  (with ((exported-name fi-child) (lambda-export-make-exported fi x))
+  (with ((exported-name fi-exported) (lambda-export-make-exported fi x))
     `(%%funref ,exported-name
-               ,(funinfo-sym fi-child))))
+               ,(funinfo-sym fi-exported))))
 
 ;;;; Toplevel
 
@@ -86,15 +86,12 @@
 	expanded-body))
 
 (defun lambda-expand-0 (x export-lambdas? &key (lambda-name nil))
-  (with (forms (argument-expand-names 'transpiler-lambda-expand
-			                          (lambda-args x))
-         imported	(get-lambda-funinfo x)
-         fi			(or imported
-						(lambda-make-funinfo forms *global-funinfo*)))
+  (let fi (or (get-lambda-funinfo x)
+		      (lambda-make-funinfo (argument-expand-names 'transpiler-lambda-expand (lambda-args x))
+                                   *global-funinfo*))
     (copy-lambda x
-	             :name lambda-name
 		         :info fi
-		         :body (lambda-expand-tree fi (lambda-body x) export-lambdas?))))
+	             :body (lambda-expand-tree fi (lambda-body x) export-lambdas?))))
 
 (defun lambda-expand (x export-lambdas?)
   (with (lambda-exp-r
