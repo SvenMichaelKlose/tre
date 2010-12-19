@@ -3,8 +3,6 @@
 ;;;;;
 ;;;;; Extra code-generating macros to avoid costly function calls.
 
-;(define-php-binary + "+")
-(define-php-binary string-concat "+")
 ;(define-php-binary - "-")
 (define-php-binary / "/")
 (define-php-binary * "*")

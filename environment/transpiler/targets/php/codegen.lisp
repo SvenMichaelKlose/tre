@@ -84,7 +84,7 @@
 
 (define-php-macro function (name &optional (x 'only-name))
   (if (eq 'only-name x)
-      `("symbol_function (" ,name ")")
+      name
   	  (if (atom x)
 		  (error "codegen: arguments and body expected: ~A" x)
 	  	  (codegen-php-function name x))))

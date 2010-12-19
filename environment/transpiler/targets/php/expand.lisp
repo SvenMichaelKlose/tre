@@ -81,7 +81,6 @@
 	       (with (,var (aref ,evald-seq ,idx))
              ,@body))))))
 
-;; Make type predicate function.
 (define-php-std-macro php-type-predicate (name &rest types)
   `(defun ,name (x)
      (when x

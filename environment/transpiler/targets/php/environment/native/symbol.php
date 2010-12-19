@@ -11,9 +11,9 @@ class __symbol {
 		$this->p =& $pkg;
 	}
 
-	public function & setName ($x)
+	public function & setName (&$x)
 	{
-		return $this->n = $x;
+		return $this->n =& $x;
 	}
 
 	public function & getName ()
@@ -21,9 +21,9 @@ class __symbol {
 		return $this->n;
 	}
 
-	public function & setValue ($x)
+	public function & setValue (&$x)
 	{
-		return $this->v = $x;
+		return $this->v =& $x;
 	}
 
 	public function & getValue ()
@@ -31,9 +31,9 @@ class __symbol {
 		return $this->v;
 	}
 
-	public function & setFunction ($x)
+	public function & setFunction (&$x)
 	{
-		return $this->f = $x;
+		return $this->f =& $x;
 	}
 
 	public function & getFunction ()
