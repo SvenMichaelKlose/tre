@@ -64,7 +64,9 @@
          (funinfo-in-env? fi x))
       (place-expand-emit-stackplace fi x)
 
-    (funinfo-in-args-or-env? fi x)
+    (or (funinfo-in-args-or-env? fi x)
+        (and (transpiler-place-expand-ignore-toplevel-funinfo? *current-transpiler*)
+             (funinfo-in-toplevel-env? fi x)))
 	  x
 
     ; Emit lexical place (outside the function).

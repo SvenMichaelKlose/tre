@@ -66,6 +66,8 @@
   ; Tells if local variables are on the stack.
   (stack-locals? nil)
 
+  (place-expand-ignore-toplevel-funinfo? nil)
+
   (apply-argdefs? nil)
 
   (inject-function-names? nil)

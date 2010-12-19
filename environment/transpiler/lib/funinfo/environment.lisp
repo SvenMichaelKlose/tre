@@ -48,6 +48,13 @@
 	    (awhen (funinfo-parent fi)
 		  (funinfo-in-env-or-lexical? ! var)))))
 
+(defun funinfo-in-toplevel-env? (fi var)
+  (when fi
+    (or (and (funinfo-in-args-or-env? fi var)
+             (not (funinfo-parent fi)))
+	    (awhen (funinfo-parent fi)
+		  (funinfo-in-this-or-parent-env? ! var)))))
+
 ;;;; ENVIRONMENT
 
 (defmacro with-funinfo-env-temporary (fi args &rest body)

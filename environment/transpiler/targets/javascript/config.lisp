@@ -29,7 +29,8 @@
 	  :rename-toplevel-function-args? nil ; XXX fix MAPHASH for this.
 	  :predefined-symbols '(window document true)
 	  :inline-exceptions '(%slot-value error format identity %bind)
-	  :dont-inline-list '(%slot-value error format identity %bind map apply maphash)))
+	  :dont-inline-list '(%slot-value error format identity %bind map apply maphash)
+      :place-expand-ignore-toplevel-funinfo? t))
 
 (defun make-javascript-transpiler ()
   (with (tr (make-javascript-transpiler-0)

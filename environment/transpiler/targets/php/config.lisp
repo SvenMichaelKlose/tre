@@ -26,7 +26,8 @@
 	  :rename-all-args? t
 	  :inline-exceptions '(%slot-value error format identity %bind)
 	  :named-functions? t
-	  :named-function-next #'cddr))
+	  :named-function-next #'cddr
+      :place-expand-ignore-toplevel-funinfo? t))
 
 (defun make-php-transpiler ()
   (with (tr (make-php-transpiler-0)
