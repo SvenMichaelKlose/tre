@@ -64,9 +64,7 @@
 	(format t "; Importing dependencies....~%")
   	(force-output)
 	(awhen dep-gen
-      (push! (cons 'text
-				   (funcall !))
-		     after-deps))
+      (acons! 'text (funcall !) after-deps))
     (format t "; Let me think. Hmm")
   	(force-output)
     (setf (transpiler-re-front-after-deps tr) after-deps)

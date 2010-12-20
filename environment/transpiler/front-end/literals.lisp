@@ -13,8 +13,8 @@
        (or (href ,slot ,x)
 	 	   (let n ,maker
 	         ,@(when decl-maker
-                 `((push! (funcall ,decl-maker n)
-  					      (transpiler-compiled-decls *current-transpiler*))))
-	       	 (push! `(setf ,,n ,init-maker)
-  					(transpiler-compiled-inits *current-transpiler*))
+                 `((push (funcall ,decl-maker n)
+  					     (transpiler-compiled-decls *current-transpiler*))))
+	       	 (push `(setf ,,n ,init-maker)
+  				   (transpiler-compiled-inits *current-transpiler*))
 	       	 (setf (href ,slot ,x) n))))))

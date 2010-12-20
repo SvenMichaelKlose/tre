@@ -27,13 +27,13 @@
 ;;;; FUNCTIONS
 
 (defun c-make-function-declaration (name args)
-  (push! (concat-stringtree
-			 "extern treptr "
-			 (transpiler-symbol-string *c-transpiler* name)
-  	    	 (parenthized-comma-separated-list
-            	 (mapcar #'c-codegen-var-decl args))
-			 ";" (string (code-char 10)))
-		(transpiler-compiled-decls *c-transpiler*)))
+  (push (concat-stringtree
+			"extern treptr "
+			(transpiler-symbol-string *c-transpiler* name)
+  	    	(parenthized-comma-separated-list
+            	(mapcar #'c-codegen-var-decl args))
+			";" (string (code-char 10)))
+	    (transpiler-compiled-decls *c-transpiler*)))
 
 (defun c-codegen-function (name x)
   (let args (argument-expand-names 'unnamed-c-function (lambda-args x))

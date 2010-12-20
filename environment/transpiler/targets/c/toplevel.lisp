@@ -80,7 +80,7 @@
     (append
         (mapcar (fn (with-gensym g
 				      (let name ($ 'c-init- g)
-				        (push! name init-funs)
+				        (push name init-funs)
 				        `(defun ,name ()
 						   ,@(mapcar (fn `(tregc_push_compiled ,_))
 					       			 _)))))

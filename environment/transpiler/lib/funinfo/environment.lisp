@@ -88,7 +88,7 @@
   (unless (funinfo-in-env? fi x)
 	; XXX (error "double definition of ~A in ~A" x (funinfo-env fi))
   	(setf (href (funinfo-env-hash fi) x) t)
-    (push! x (funinfo-env fi)))
+    (push x (funinfo-env fi)))
   x)
 
 (defun funinfo-env-add-many (fi x)
