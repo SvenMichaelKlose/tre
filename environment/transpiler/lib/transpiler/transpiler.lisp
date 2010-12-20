@@ -120,7 +120,7 @@
   (remove-if #'builtinp (transpiler-defined-functions tr)))
 
 (defun transpiler-add-defined-function (tr name)
-  (push! name (transpiler-defined-functions tr))
+  (push name (transpiler-defined-functions tr))
   (setf (href (transpiler-defined-functions-hash tr) name) t)
   name)
 
@@ -128,7 +128,7 @@
   (href (transpiler-defined-variables-hash tr) name))
 
 (defun transpiler-add-defined-variable (tr name)
-  (push! name (transpiler-defined-variables tr))
+  (push name (transpiler-defined-variables tr))
   (setf (href (transpiler-defined-variables-hash tr) name) t)
   name)
 
@@ -147,10 +147,10 @@
 (defun transpiler-add-function-body (tr fun args)
   (setf (href (transpiler-function-bodies tr) fun) args))
 
-(define-slot-setter-push! transpiler-add-unwanted-function tr
+(define-slot-setter-push transpiler-add-unwanted-function tr
   (transpiler-unwanted-functions tr))
 
-(define-slot-setter-push! transpiler-add-emitted-wanted-function tr
+(define-slot-setter-push transpiler-add-emitted-wanted-function tr
   (transpiler-emitted-wanted-functions tr))
 
 (defun transpiler-wanted-function? (tr fun)
@@ -175,13 +175,13 @@
 (defun transpiler-cps-function? (tr fun)
   (member fun (transpiler-cps-functions tr) :test #'eq))
 
-(define-slot-setter-push! transpiler-add-inline-exception tr
+(define-slot-setter-push transpiler-add-inline-exception tr
   (transpiler-inline-exceptions tr))
 
-(define-slot-setter-push! transpiler-add-dont-inline tr
+(define-slot-setter-push transpiler-add-dont-inline tr
   (transpiler-dont-inline-list tr))
 
-(define-slot-setter-push! transpiler-add-cps-exception tr
+(define-slot-setter-push transpiler-add-cps-exception tr
   (transpiler-cps-exceptions tr))
 
 (defun transpiler-add-obfuscation-exceptions (tr &rest x)
@@ -189,13 +189,13 @@
 	(setf (href (transpiler-obfuscations tr) (make-symbol (symbol-name i)))
 		  t)))
 
-(define-slot-setter-push! transpiler-add-plain-arg-fun tr
+(define-slot-setter-push transpiler-add-plain-arg-fun tr
   (transpiler-plain-arg-funs tr))
 
-(define-slot-setter-push! transpiler-add-exported-closure tr
+(define-slot-setter-push transpiler-add-exported-closure tr
   (transpiler-exported-closures tr))
 
-(define-slot-setter-push! transpiler-add-cps-function tr
+(define-slot-setter-push transpiler-add-cps-function tr
   (transpiler-cps-functions tr))
 
 (defun transpiler-plain-arg-fun? (tr fun)

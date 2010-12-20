@@ -8,5 +8,5 @@
 		    ,,slot))))
 
 (define-slot-setter-macro define-slot-setter-acons! acons! key value)
-(define-slot-setter-macro define-slot-setter-push! push! value)
+(define-slot-setter-macro define-slot-setter-push push value)
 (define-slot-setter-macro define-slot-setter-append append params)
