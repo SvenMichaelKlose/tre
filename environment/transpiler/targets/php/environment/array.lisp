@@ -9,12 +9,14 @@
 (defun %array-length (x)
   ((%transpiler-native count) x))
 
-(dont-obfuscate array_push)
+(defun array-push (arr x)
+  (%setq (%transpiler-native "$" arr "[]") x)
+  x)
 
 (defun list-array (x)
   (let a (make-array)
     (dolist (i x a)
-      (array_push a i))))
+      (%setq (%transpiler-native "$" a "[]") i))))
 
 (dont-obfuscate sizeof)
 

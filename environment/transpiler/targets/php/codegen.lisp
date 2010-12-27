@@ -85,7 +85,9 @@
 (define-php-macro function (name &optional (x 'only-name))
   (if (eq 'only-name x)
       `("__w ("
-        (%transpiler-string ,(transpiler-symbol-string tr (transpiler-obfuscate tr (compiled-function-name name))))
+        (%transpiler-string
+            ,(transpiler-symbol-string *php-transpiler*
+                                       (transpiler-obfuscate *php-transpiler* (compiled-function-name name))))
         ")")
   	  (if (atom x)
 		  (error "codegen: arguments and body expected: ~A" x)
