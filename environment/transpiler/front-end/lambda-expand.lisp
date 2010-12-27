@@ -40,10 +40,9 @@
 						  (lambda-args x))
 		(push (cons exported-name argdef) *closure-argdefs*)
 	    (transpiler-add-exported-closure *current-transpiler*
-            `((defun ,exported-name ,(append (make-lambda-funinfo fi-exported)
-											 argdef)
-		        ,@(lambda-body x))))
-	  (values exported-name fi-exported)))))
+            `((defun ,exported-name ,(append (make-lambda-funinfo fi-exported) argdef)
+		        ,@(lambda-body x)))))
+	  (values exported-name fi-exported))))
 
 (defun lambda-export (fi x)
   (with ((exported-name fi-exported) (lambda-export-make-exported fi x))
@@ -99,8 +98,6 @@
 				  (if
 					(atom x)
 	  				  x
-				    (named-lambda? x)
-					  (lambda-expand-0 ..x. export-lambdas?  :lambda-name .x.)
 	  				(lambda? x)
 				      (lambda-expand-0 x export-lambdas?)
 					(cons (lambda-exp-r x.)
