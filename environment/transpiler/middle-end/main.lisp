@@ -1,12 +1,14 @@
 ;;;;; TRE transpiler/middle-end
 ;;;;; (c) 2005-2010 Sven Klose <pixel@copei.de>
 
-(env-load "transpiler/middle-end/global-funinfo.lisp")
-
 (env-load "transpiler/middle-end/graph/cblock.lisp")
+(env-load "transpiler/middle-end/graph/traverse.lisp")
 (env-load "transpiler/middle-end/graph/print.lisp")
 (env-load "transpiler/middle-end/graph/metacode-to-cblocks.lisp")
 (env-load "transpiler/middle-end/graph/cblocks-to-metacode.lisp")
+(env-load "transpiler/middle-end/graph/dataflow.lisp")
+(env-load "transpiler/middle-end/graph/ssa.lisp")
+(env-load "transpiler/middle-end/graph/opt-remove-doubles.lisp")
 (env-load "transpiler/middle-end/graph/toplevel.lisp")
 
 (env-load "transpiler/middle-end/update-funinfos.lisp")
