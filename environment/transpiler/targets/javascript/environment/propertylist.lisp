@@ -6,7 +6,7 @@
 (defvar *%property-list-tmp* nil)
 
 (defun %property-list-0 (key val)
-  (push! (cons key val) *%property-list-tmp*))
+  (acons! key val *%property-list-tmp*))
 
 (dont-inline %property-list)
 (dont-obfuscate fun i hash)

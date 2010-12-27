@@ -8,6 +8,6 @@
 (defun hash-assoc (x)
   (let lst nil
     (maphash #'((k v)
-				  (push! (cons k v) lst))
+				  (acons! k v lst))
          	 x)
     (reverse lst)))

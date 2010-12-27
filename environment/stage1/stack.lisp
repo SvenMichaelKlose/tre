@@ -14,6 +14,3 @@
     (setf (car args) (cadr args)
           (cdr args) (cddr args))
     ret))
-
-(defmacro push! (value place)
-  `(setf ,place (push ,value ,place)))

@@ -51,7 +51,7 @@
   (when (end-of-file in)
     (xml-error-unexpected-eof in))
   (let c (read-char in)
-	(push! c *xml2lml-read*)
+	(push c *xml2lml-read*)
 	c))
 
 (defun xml-peek-char (in)
