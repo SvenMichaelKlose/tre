@@ -18,6 +18,8 @@
 (defun expander-get (name)
   (cdr (assoc name *expanders* :test #'eq)))
 
+(defvar *expander-print* nil)
+
 (defun define-expander (expander-name &key (pre nil) (post nil)
 										   (pred nil) (call nil))
   (let e  (make-expander :macros nil
@@ -33,7 +35,9 @@
 				 	 (cdr (assoc _. (expander-macros *current-expander*) :test #'eq))))))
     (unless call
       (setf (expander-call e)
-			(fn (apply (cdr (assoc _. (expander-macros *current-expander*) :test #'eq)) ._))))
+			(fn (when *expander-print*
+                  (print _))
+                (apply (cdr (assoc _. (expander-macros *current-expander*) :test #'eq)) ._))))
     (setf (expander-lookup e)
           #'((expander name)
 			  (cdr (assoc name (expander-macros expander) :test #'eq))))
