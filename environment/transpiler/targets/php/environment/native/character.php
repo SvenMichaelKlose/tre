@@ -4,11 +4,16 @@
 class __character {
 	public function __construct ($num)
 	{
-		$this->n =& $num;
+		$this->v =& $num;
 	}
 
 	public function & getCode ()
 	{
-		return $this->n;
+		return $this->v;
+	}
+
+	public function __toString ()
+	{
+        return "#\\" . chr ($this->v) . " ";
 	}
 }

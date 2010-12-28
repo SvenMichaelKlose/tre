@@ -199,12 +199,17 @@
 				   (mapcar #'php-dollarize args))
             ")"))))
 
-(define-php-binary %%%+ "+")
-(define-php-binary %%%- "-")
-(define-php-binary %%%= "==")
-(define-php-binary %%%< "<")
-(define-php-binary %%%> ">")
-(define-php-binary %%%eq "===")
+(mapcar-macro x
+    '((%%%+ "+")
+      (%%%- "-")
+      (%%%= "==")
+      (%%%< "<")
+      (%%%> ">")
+      (%%%<= "<=")
+      (%%%>= ">=")
+      (%%%eq "==="))
+  `(define-php-binary ,@x))
+
 (define-php-binary %%%string+ ".")
 
 ;;;; ARRAYS

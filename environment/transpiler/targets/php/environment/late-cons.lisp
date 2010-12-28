@@ -11,7 +11,7 @@
 
 (defun rplacd (x val)
   (declare type cons x)
-  (set x.cdr val)
+  (setq x.cdr val)
   x)
 
 (defun consp (x)

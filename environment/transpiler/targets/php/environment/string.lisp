@@ -15,7 +15,7 @@
 ;; XXX ECMAScript only.
 (defun %elt-string (seq idx)
   (when (%%%< idx (strlen seq))
-    (ord (substr seq idx 1))))
+    (code-char (ord (substr seq idx 1)))))
 
 (dont-obfuscate from-char-code)
 
