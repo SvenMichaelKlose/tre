@@ -12,9 +12,12 @@
 (defvar *keyword-package* (make-package ""))
 
 (defun symbol-name (x)
-  (if x
+  (if
+    (eq t x)
+      "T"
+    x
   	  x.n
-	  ,*nil-symbol-name*))
+    ,*nil-symbol-name*))
 
 (defun symbol-value (x) (when x x.v))
 (defun symbol-function (x) (when x x.f))
