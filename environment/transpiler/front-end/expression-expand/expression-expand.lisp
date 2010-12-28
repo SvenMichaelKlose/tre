@@ -72,6 +72,7 @@
 	    (in? x nil t '~%ret 'this)
 	    (funinfo-in-this-or-parent-env? *expex-funinfo* x)
 	    (transpiler-imported-variable? tr x)
+	    (transpiler-defined-variable tr x)
 	    (expander-has-macro? (transpiler-std-macro-expander tr) x)
    	    (expander-has-macro? (transpiler-macro-expander tr) x))))
 
