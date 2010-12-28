@@ -96,6 +96,10 @@
     (place-expand-fun fi .x. ..x.)
   (lambda? x) ; XXX Add variables to ignore in subfunctions.
     (place-expand-fun fi nil x)
+  (%%funref? x)
+    `(%%funref ,.x. ,(place-expand-0 fi ..x.))
+  (%setq-atom-value? x)
+    `(%setq-atom-value ,.x. ,(place-expand-0 fi ..x.))
   (%slot-value? x)
     `(%slot-value ,(place-expand-0 fi .x.)
 				  ,..x.))
