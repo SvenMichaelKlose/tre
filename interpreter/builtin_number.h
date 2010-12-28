@@ -1,6 +1,6 @@
 /*
  * TRE interpreter
- * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2008,2010 Sven Klose <pixel@copei.de>
  *
  * Number-related section.
  */
@@ -9,6 +9,7 @@
 #define TRE_BUILTIN_NUMBER_H
 
 extern treptr trenumber_builtin_numberp (treptr);
+extern treptr trenumber_code_char (treptr);
 extern treptr trenumber_builtin_code_char (treptr);
 extern treptr trenumber_builtin_integer (treptr);
 extern treptr trenumber_builtin_characterp (treptr);

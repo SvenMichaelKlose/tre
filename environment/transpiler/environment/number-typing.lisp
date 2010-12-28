@@ -36,7 +36,7 @@
 
 ;; Make inliners for CHARACTER arithmetics.
 (mapcan-macro _
-    '(+ = < > <= >=)
+    '(= < > <= >=)
   (with (charname ($ 'character _)
          op		  ($ '%%% _))
     `((defmacro ,charname (&rest x)
@@ -47,13 +47,22 @@
       (defmacro ,($ 'integer _) (&rest x)
 		`(,op ,,@x)))))
 
+(defmacro character+ (&rest x)
+  (if (= 2 (length x))
+      `(code-char (%%%+ (%slot-value ,x. v)
+                        (%slot-value ,.x. v)))
+      `(character+ ,@x)))
+
+(defmacro integer+ (&rest x)
+  `(%%%+ ,@x))
+
 (defmacro character- (&rest x)
   (if (= 1 (length x))
-     `(%transpiler-native "(-" (%slot-value ,x. v) ")")
-     `(%%%- ,@(mapcar (fn (if (integerp _)
-							  _
-							  `(%slot-value ,_ v)))
-                      x))))
+     `(code-char (%transpiler-native "(-" (%slot-value ,x. v) ")"))
+     `(code-char (%%%- ,@(mapcar (fn (if (integerp _)
+							             _
+							             `(%slot-value ,_ v)))
+                                 x)))))
 
 (defmacro integer- (&rest x)
   (if (= 1 (length x))

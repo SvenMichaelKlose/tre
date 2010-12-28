@@ -1,6 +1,6 @@
 /*
  * TRE interpreter
- * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
  *
  * Number atom related section.
  */
@@ -68,6 +68,15 @@ trenumber_builtin_characterp (treptr args)
     return TREPTR_TRUTH(TREPTR_IS_NUMBER(arg) && (TRENUMBER_TYPE(arg) == TRENUMTYPE_CHAR));
 }
 
+treptr
+trenumber_code_char (treptr x)
+{
+    char	tmp;
+
+    tmp = (char) TRENUMBER_VAL(x);
+    return treatom_number_get ((double) tmp, TRENUMTYPE_CHAR);
+}
+
 /*tredoc
   (cmd :name CODE-CHAR
     (arg :type integer)
@@ -77,11 +86,7 @@ trenumber_builtin_characterp (treptr args)
 treptr
 trenumber_builtin_code_char (treptr args)
 {
-    treptr  arg = trenumber_arg_get (args);
-    char	tmp;
-
-    tmp = (char) TRENUMBER_VAL(arg);
-    return treatom_number_get ((double) tmp, TRENUMTYPE_CHAR);
+    return trenumber_code_char (trenumber_arg_get (args));
 }
 
 /*tredoc

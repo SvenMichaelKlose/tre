@@ -2,15 +2,14 @@
 ;;;; Copyright (c) 2005-2006,2008-2010 Sven Klose <pixel@copei.de>
 
 (defun char-upcase (c)
-  (code-char (if (lower-case-p c)
-    			 (character+ c (character- #\A #\a))
-    			 c)))
+  (if (lower-case-p c)
+  	  (character+ c (character- #\A #\a))
+      c))
 
 (defun char-downcase (c)
-  (code-char (if (upper-case-p c)
-    			 (character+ c (character- #\a #\A))
-    			 c)))
-
+  (if (upper-case-p c)
+   	  (character+ c (character- #\a #\A))
+	  c))
 
 (defmacro def-rest-predicate (name iter args test-expr)
   (with-gensym x

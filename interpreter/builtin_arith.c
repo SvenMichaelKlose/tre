@@ -1,6 +1,6 @@
 /*
  * TRE interpreter
- * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
  *
  * Built-in number-related functions
  */
@@ -63,6 +63,12 @@ trenumber_builtin_plus (treptr list)
     return treeval_exprop (list, treeval_op_plus);
 }
 
+treptr
+trenumber_builtin_character_plus (treptr list)
+{
+    return trenumber_code_char (trenumber_builtin_plus (list));
+}
+
 /*tredoc
   (cmd :name "NUMBER-" ::essential t
 	(arg :name "args" :occurrence "rest")
@@ -81,6 +87,12 @@ trenumber_builtin_difference (treptr list)
 								   TRENUMTYPE_FLOAT);
 
     return treeval_exprop (list, treeval_op_difference);
+}
+
+treptr
+trenumber_builtin_character_difference (treptr list)
+{
+    return trenumber_code_char (trenumber_builtin_difference (list));
 }
 
 /*tredoc
