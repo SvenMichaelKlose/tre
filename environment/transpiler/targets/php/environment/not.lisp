@@ -1,7 +1,7 @@
 ;;;;; Transpiler: TRE to PHP
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (define-native-php-fun not (x)
-  (if (%%%eq x nil)
-      t
-      nil))
+  (if x
+      nil
+      t))

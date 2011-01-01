@@ -1,5 +1,5 @@
 ;;;;; TRE transpiler
-;;;;; Copyright (c) 2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2009-2011 Sven Klose <pixel@copei.de>
 
 (defmacro php-define-compiled-literal (name (x table) &key maker init-maker)
   `(define-compiled-literal ,name (,x ,table)

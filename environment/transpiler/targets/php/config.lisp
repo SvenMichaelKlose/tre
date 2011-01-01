@@ -14,7 +14,7 @@
 	  :setf-functionp #'php-setf-functionp
 	  :unwanted-functions '(wait)
 	  :apply-argdefs? nil
-	  :literal-conversion #'transpiler-expand-characters
+	  :literal-conversion #'identity
 	  :identifier-char?
 	    (fn (or (and (>= _ #\a) (<= _ #\z))
 		  	    (and (>= _ #\A) (<= _ #\Z))
