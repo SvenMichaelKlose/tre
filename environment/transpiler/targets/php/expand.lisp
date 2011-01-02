@@ -13,14 +13,17 @@
 (define-php-std-macro define-native-php-fun (name args &rest body)
   (apply #'shared-essential-defun (%defun-name name) args (body-with-noargs-tag body)))
 
-(define-php-std-macro defun (name &rest args)
-  (with ((fi-sym adef) (split-funinfo-and-args args.)
+(define-php-std-macro defun (name args &rest body)
+  (with ((fi-sym adef) (split-funinfo-and-args args)
          fun-name (%defun-name name))
     `(%%vm-scope
-       ,(apply #'shared-essential-defun fun-name args)
+       ,(apply #'shared-essential-defun fun-name args body)
+;               `((%transpiler-native "echo \"" ,(string-concat (symbol-name fun-name)
+;                                                                 *php-newline*) "\"")
+;                 nil ,@body))
        ,@(unless (simple-argument-list? adef)
            (with-gensym p
-             `((defun ,($ treexp_ fun-name) (,p)
+             `((defun ,($ fun-name '_treexp) (,p)
                  ,(compile-argument-expansion-function-body
                       fun-name adef p nil
                       (argument-expand-names 'compile-argument-expansion adef)))))))))
@@ -47,8 +50,8 @@
 ;; XXX Can't we do this in one macro?
 (define-php-std-macro bind (fun &rest args)
   `(%bind ,(if (%slot-value? fun)
- 			 (second fun)
-    		 (error "function must be a SLOT-VALUE, got ~A" fun))
+ 			   (second fun)
+    		   (error "function must be a SLOT-VALUE, got ~A" fun))
 		  ,fun))
 
 ;; X-browser MAKE-HASH-TABLE.
