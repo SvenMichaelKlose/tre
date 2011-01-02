@@ -1,5 +1,5 @@
 ;;;;; TRE environment
-;;;;; Copyright (c) 2007-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2007-2009,2011 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; LML-to-XML conversion
 
@@ -9,41 +9,44 @@
   (and (consp x) (consp .x)
        (atom x.)
 	   (keywordp x.)
-	   (or (atom (second x))
-		   (%exec? (second x)))))
+	   (or (atom .x.)
+		   (%exec? .x.))))
 
 (defun lml-body (x)
   (when x
 	(if (lml-attr? x)
-		(lml-body (cddr x))
+		(lml-body ..x)
 		x)))
 
 (defun lml2xml-end (s)
-  (format s ">"))
+  (princ ">" s))
 
 (defun lml2xml-end-inline (s)
-  (format s "/>"))
+  (princ "/>" s))
 
 (defun lml2xml-open (s x)
-  (format s "<~A" (lml-attr-string x.)))
+  (princ (string-concat "<" (lml-attr-string x.)) s))
 
 (defun lml2xml-close (s x)
-  (format s "</~A>" (lml-attr-string x.)))
+  (princ (string-concat "</" (lml-attr-string x.) ">") s))
 
 (defun lml2xml-atom (s x)
-  (format s "~A" x))
+  (princ x s))
 
 (defun lml2xml-attr (s x)
-  (format s " ~A=\"~A\""
-			(lml-attr-string x.)
-			(if (stringp (second x))
-				(second x)
-				(lml-attr-string (second x))))
-  (lml2xml-attr-or-body s (cddr x)))
+  (princ (string-concat " "
+			            (lml-attr-string x.)
+                        "=\""
+			            (if (stringp .x.)
+                            .x.
+				            (lml-attr-string .x.))
+                        "\"")
+         s)
+  (lml2xml-attr-or-body s ..x))
 
 (defun lml2xml-body (s x)
   (lml2xml-end s)
-  (mapcar (fn lml2xml s _) x))
+  (mapcar (fn lml2xml-0 s _) x))
 
 (defun lml2xml-attr-or-body (s x)
   (when x
@@ -70,9 +73,12 @@
       (lml2xml-block s x)
       (lml2xml-inline s x)))
 
-(defun lml2xml (str x)
+(defun lml2xml-0 (s x)
+  (when x
+    (if (consp x)
+		(lml2xml-expr s x)
+		(lml2xml-atom s x))))
+
+(defun lml2xml (x &optional (str nil))
   (with-default-stream s str
-    (when x
-      (if (consp x)
-		  (lml2xml-expr s x)
-		  (lml2xml-atom s x)))))
+	(lml2xml-0 s x)))
