@@ -1,5 +1,5 @@
 // TRE to PHP transpiler
-// Copyright (c) 2010 Sven Klose <pixel@copei.de>
+// Copyright (c) 2010-2011 Sven Klose <pixel@copei.de>
 
 class __symbol {
 	public function __construct ($name, &$pkg)
@@ -41,3 +41,5 @@ class __symbol {
 		return $this->f;
 	}
 }
+
+$KEYWORDPACKAGE = new __symbol ("", __w(NULL));

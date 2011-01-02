@@ -9,8 +9,6 @@
 (defun make-package (x)
   (new __symbol x nil))
 
-(defvar *keyword-package* (make-package ""))
-
 (defun symbol-name (x)
   (if
     (eq t x)
@@ -21,7 +19,13 @@
 
 (defun symbol-value (x) (when x x.v))
 (defun symbol-function (x) (when x x.f))
-(defun symbol-package (x) (when x x.p))
+
+(defun symbol-package (x)
+  (if
+    (eq t x)
+      nil
+    x
+      x.p))
 
 (dont-obfuscate is_a)
 
