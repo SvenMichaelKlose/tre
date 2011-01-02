@@ -50,10 +50,11 @@
 
 (defun funinfo-in-toplevel-env? (fi var)
   (when fi
-    (or (and (funinfo-in-args-or-env? fi var)
-             (not (funinfo-parent fi)))
-	    (awhen (funinfo-parent fi)
-		  (funinfo-in-this-or-parent-env? ! var)))))
+    (unless (and (funinfo-in-args-or-env? fi var)
+                 (funinfo-parent fi))
+      (aif (funinfo-parent fi)
+		   (funinfo-in-toplevel-env? ! var)
+           (funinfo-in-args-or-env? fi var)))))
 
 ;;;; ENVIRONMENT
 
