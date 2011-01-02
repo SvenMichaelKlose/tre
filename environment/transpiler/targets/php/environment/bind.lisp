@@ -1,4 +1,4 @@
-;;;;; Transpiler: TRE to JavaScript
+;;;;; Transpiler: TRE to PHP
 ;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 
 (dont-obfuscate arguments array_shift)

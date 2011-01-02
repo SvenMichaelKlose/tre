@@ -1,11 +1,9 @@
-;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; Transpiler: TRE to PHP
+;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
-;; Make symbol in particular package.
 (defun make-symbol (x &optional (pkg nil))
   (new __symbol x pkg))
 
-;; Make package (which is just a symbol).
 (defun make-package (x)
   (new __symbol x nil))
 

@@ -1,4 +1,4 @@
-;;;;; TRE to ECMAScript transpiler
+;;;;; TRE to PHP transpiler
 ;;;;; Copyright (c) 2009 Sven Klose <pixel@copei.de>
 
 (defun hash-table? (x)
