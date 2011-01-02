@@ -16,7 +16,7 @@
   (with-string-stream out
     (when import-universe?
       (transpiler-import-universe tr))
-    (format out "<?php~%$NULL = NULL; $T = true;~%")
+    (format out "<?php~%")
     (php-print-native-environment out)))
 
 (defun php-transpile (files &key (obfuscate? nil)

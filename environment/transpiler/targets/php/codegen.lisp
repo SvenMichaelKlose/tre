@@ -6,15 +6,15 @@
 (defun php-line (&rest x)
   `(,*php-indent* ,@x ,*php-separator*))
 
-(defun php-codegen-symbol-constructor (tr x)
-    `(,(transpiler-symbol-string tr
-	       (transpiler-obfuscate tr (compiled-function-name 'symbol)))
-	       "(\"" ,(symbol-name x) "\", " ,(when (keywordp x) "$T") ")"))
-
 (defun php-dollarize (x)
   (if (and (atom x)
 		   (symbolp x))
-	  `("$" ,x)
+      (if
+        (not x)
+          "__w(NULL)"
+        (eq t x)
+          "__w(TRUE)"
+	    `("$" ,x))
 	  x))
 
 (define-codegen-macro-definer define-php-macro *php-transpiler*)
@@ -24,8 +24,8 @@
 
 ;;;; SYMBOLS
 
-(transpiler-translate-symbol *php-transpiler* nil "NULL")
-(transpiler-translate-symbol *php-transpiler* t "T")
+(transpiler-translate-symbol *php-transpiler* nil "__w(NULL)")
+(transpiler-translate-symbol *php-transpiler* t "__w(TRUE)")
 
 (define-php-macro %unobfuscated-lookup-symbol (name pkg)
   `(,(transpiler-obfuscate-symbol *php-transpiler*
@@ -38,21 +38,13 @@
 ;;;; CONTROL FLOW
 
 (define-php-macro %%tag (tag)
-  `(%transpiler-native 
-	   ,@(if (< *php-version* 503)
-	         `("case " ,tag ":")
-             `("_I_" ,tag ":"))
-       ,*php-newline*))
+  `(%transpiler-native "_I_" ,tag ":" ,*php-newline*))
 
 (define-php-macro %%vm-go (tag)
-  (if (< 503 *php-version*)
-      (php-line "$_I_=" tag *php-separator* "continue")
-	  (php-line "goto _I_" tag)))
+  (php-line "goto _I_" tag))
 
 (define-php-macro %%vm-go-nil (val tag)
-  (if (< 503 *php-version*)
-      (php-line "if (!$" val "&&!is_string ($" val ")&&!is_numeric ($" val ")) { $_I_=" tag "; continue; }")
-      (php-line "if (!$" val "&&!is_string ($" val ")&&!is_numeric ($" val ")) goto _I_" tag)))
+  (php-line "if (!$" val "&&!is_string($" val ")&&!is_numeric($" val ")) goto _I_" tag))
 
 ;;;; FUNCTIONS
 
@@ -69,17 +61,10 @@
                 (mapcar (fn `("&$" ,_)) args))
 	      ")" ,(code-char 10)
       "{" ,(code-char 10)
-		 ,(php-line "global "
-					(comma-separated-list (mapcar #'php-dollarize
-                                                  (cons "$NULL" (cons "$T" (funinfo-globals fi))))))
-	     ,@(when (< *php-version* 503)
-			 (php-line "$_I_=0; while (1) { switch ($_I_) { case 0:"))
+		 ,@(awhen (funinfo-globals fi)
+             (php-line "global " (comma-separated-list (mapcar #'php-dollarize !))))
          ,@(lambda-body x)
-	     ,@(when (< *php-version* 503)
-			 `(,*php-indent* "}" ,*php-newline*))
        	 ,(php-line "return $" '~%ret)
-	     ,@(when (< *php-version* 503)
-			 `("}" ,*php-newline*))
       "}" ,*php-newline*)))
 
 (define-php-macro function (name &optional (x 'only-name))
@@ -107,7 +92,7 @@
     (if (funinfo-ghost fi)
   	  	`("new __funref ("
               (%transpiler-string ,(transpiler-symbol-string *php-transpiler* name))
-              ",$" ,(funinfo-lexical (funinfo-parent fi))
+              "," ,(php-dollarize (funinfo-lexical (funinfo-parent fi)))
               ")")
 	    name)))
 
@@ -143,6 +128,9 @@
 				,dest
 			    ,(php-assignment-operator val)))
         ,@(if
+            (or (not val)
+                (eq t val))
+              (list val)
 			(or (atom val)
 				(and (%transpiler-native? val)
 					 (atom .val.)

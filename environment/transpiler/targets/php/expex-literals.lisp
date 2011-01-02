@@ -29,9 +29,11 @@
   :init-maker (%transpiler-native
 			      "new __symbol ("
 			  	      (%transpiler-string ,(symbol-name x))
-				      ",$"
-			   	      ,(keywordp x)
-				      ")"))
+				      ",__w("
+			   	      ,(if (keywordp x)
+                           "TRUE"
+                           "NULL")
+				      "))"))
 
 (defun php-expex-add-global (x)
   (adjoin! x (funinfo-globals *expex-funinfo*))
