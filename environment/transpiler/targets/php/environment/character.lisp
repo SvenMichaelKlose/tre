@@ -14,14 +14,12 @@
 	  x
 	  (new __character x)))
 
-(dont-obfuscate get-code)
-
 (defun char-code (x)
   (declare type number x)
-  (x.get-code))
+  x.v)
 
 (dont-obfuscate from-char-code chr)
 
 (defun char-string (x)
   (declare type character x)
-  (chr (char-code x)))
+  (chr x.v))

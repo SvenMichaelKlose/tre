@@ -3,14 +3,12 @@
 
 (defvar *symbols* (make-hash-table))
 
-(dont-obfuscate __symbol
-                get-name get-package get-value get-function
-                set-value set-function)
+(dont-obfuscate __symbol)
 
 (define-native-php-fun symbol (name pkg)
   (unless (%%%= ,*nil-symbol-name* name)
 	(let pkg-name (if pkg
-					  (pkg.get-name)
+					  pkg.n
 					  ,*nil-symbol-name*)
       (let symbol-table (or (href *symbols* pkg-name)
 	    				    (setf (href *symbols* pkg-name)
@@ -19,4 +17,4 @@
 	        (setf (href symbol-table name) (new __symbol name pkg)))))))
 
 (define-native-php-fun %%usetf-symbol-function (v x)
-  (x.set-function v))
+  (setf x.f v))
