@@ -1,7 +1,5 @@
 ;;;;; Transpiler: TRE to ECMAScript
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Configuration
+;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (defun js-setf-functionp (x)
   (or (%setf-functionp x)
@@ -26,7 +24,7 @@
 	  :needs-var-declarations? t
 	  :stack-locals? nil
 	  :rename-all-args? t
-	  :rename-toplevel-function-args? nil ; XXX fix MAPHASH for this.
+	  :rename-toplevel-function-args? nil ; XXX Fix %PROPERTY-LIST for this.
 	  :predefined-symbols '(window document true)
 	  :inline-exceptions '(%slot-value error format identity %bind)
 	  :dont-inline-list '(%slot-value error format identity %bind map apply maphash)
@@ -43,11 +41,7 @@
 			  #'current-transpiler-function-arguments-w/o-builtins
     	  (expex-argument-filter ex)
 		      #'expex-%setq-collect-wanted-global-variable)
-;		  (expex-inline? ex)
-;		  	  (fn in? _ 'cons 'car 'cdr 'aref 'href' '%vec))
-
-	(apply #'transpiler-add-obfuscation-exceptions
-		tr
+	(apply #'transpiler-add-obfuscation-exceptions tr
 	    '(t this %funinfo false true null delete
 		  %transpiler-native %transpiler-string
 		  lambda function
