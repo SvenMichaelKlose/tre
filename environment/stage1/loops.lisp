@@ -21,10 +21,10 @@
 
 (defmacro dotimes ((iter times &rest result) &rest body)
   `(do ((,iter 0 (integer+ 1 ,iter)))
-	   ((not (< ,iter ,times)) ,@result)
+	   ((not (integer< ,iter ,times)) ,@result)
 	 ,@body))
 
 (defmacro dotimes-step ((iter times step &rest result) &rest body)
   `(do ((,iter 0 (integer+ ,step ,iter)))
-	   ((not (< ,iter ,times)) ,@result)
+	   ((not (integer< ,iter ,times)) ,@result)
 	 ,@body))
