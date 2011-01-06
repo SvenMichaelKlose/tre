@@ -1,5 +1,5 @@
 ;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (defmacro define-js-std-macro (&rest x)
   `(define-transpiler-std-macro *js-transpiler* ,@x))
@@ -137,9 +137,10 @@
 		 *js-transpiler* symbols)
   nil)
 
-(define-js-std-macro dont-inline (x)
-  (transpiler-add-inline-exception *js-transpiler* x)
-  (transpiler-add-dont-inline *js-transpiler* x)
+(define-js-std-macro dont-inline (&rest x)
+  (dolist (i x)
+    (transpiler-add-inline-exception *js-transpiler* i)
+    (transpiler-add-dont-inline *js-transpiler* i))
   nil)
 
 (define-js-std-macro assert (x &optional (txt nil) &rest args)

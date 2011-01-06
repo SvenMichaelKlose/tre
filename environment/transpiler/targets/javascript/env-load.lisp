@@ -21,6 +21,7 @@
 	(append (js-load-base "environment/transpiler/environment/"
                 "cps-disable.lisp")
 	        (js-load-base *js-env-path*
+                "opt-inline.lisp"
 		        "return-value.lisp"
 		        "not.lisp"
 		        "cons.lisp"

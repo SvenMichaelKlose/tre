@@ -5,7 +5,19 @@
 
 (define-js-binary / "/")
 (define-js-binary * "*")
+
+(define-js-binary userfun_integer+ "+")
+(define-js-binary userfun_integer- "-")
+(define-js-binary userfun_integer/ "/")
+(define-js-binary userfun_integer* "*")
+(define-js-binary userfun_integer= "==")
+(define-js-binary userfun_integer< "<")
+(define-js-binary userfun_integer> ">")
+(define-js-binary userfun_integer<= "<=")
+(define-js-binary userfun_integer>= ">=")
+
 (define-js-binary userfun_string= "==")
+
 ;(define-js-binary >> ">>")
 ;(define-js-binary << "<<")
 (define-js-binary mod "%")
