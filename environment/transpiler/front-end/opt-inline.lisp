@@ -1,5 +1,5 @@
 ;;;;; TRE transpiler
-;;;;; Copyright (c) 2009-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2009-2011 Sven Klose <pixel@copei.de>
 
 (defvar *show-inlines?* nil)
 (defvar *opt-inline-max-levels* 1)
@@ -39,9 +39,6 @@
 	(if
 	  (not body)
 	    nil
-	  ; XXX Need local function info, but we don't yet have any function info
-	  ; where they could be looked up.
-	  ; Problem: We can't just move the inliner past LAMBDA-EXPAND.
 	  (not argdef)
 	  	x
 	  (< (tree-size body) *opt-inline-min-size*)
@@ -91,22 +88,15 @@
   (not (let-when fi (get-lambda-funinfo x)
 	     (funinfo-ghost fi))))
 
-; Only inline inside named top-level functions.
 (defun opt-inline-lambda (tr x)
   (copy-lambda x
       :body (opt-inline-0 tr 0 'no-parent nil (lambda-body x))))
 
-; Only inline inside named top-level functions.
-(defun opt-inline-r (tr x)
+(defun opt-inline (tr x)
   (if (atom x)
 	  x
 	  (cons (if (and (lambda? x.)
 					 (inlineable-expr? tr x.))
 			    (opt-inline-lambda tr x.)
-			    (opt-inline-r tr x.))
-            (opt-inline-r tr .x))))
-
-(defun opt-inline (tr x)
-;  (if (transpiler-named-functions? tr)
-	  (opt-inline-r tr x))
-;	  (opt-inline-0 tr 0 nil nil x)))
+			    (opt-inline tr x.))
+            (opt-inline tr .x))))
