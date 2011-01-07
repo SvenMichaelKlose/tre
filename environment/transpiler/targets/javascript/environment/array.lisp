@@ -1,5 +1,5 @@
 ;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (dont-obfuscate constructor)
 
@@ -23,3 +23,10 @@
 		  (array-list x (1+ n)))))
 
 (dont-obfuscate *array)
+
+(dont-inline array-find)
+
+(defun array-find (arr obj)
+  (declare type array arr)
+  (%setq nil (%transpiler-native "return " arr ".indexOf (" obj ") != -1;"))
+  nil)
