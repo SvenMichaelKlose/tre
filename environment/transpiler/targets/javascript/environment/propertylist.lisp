@@ -1,5 +1,5 @@
 ;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2011 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2010-2011 Sven Klose <pixel@copei.de>
 
 (cps-exception t)
 
@@ -13,7 +13,7 @@
 (defun %property-list (hash)
   (setf *%property-list-tmp* nil)
   (%transpiler-native
-      "null;for (" i " in " hash ") "
+      "for (" i " in " hash ") "
           ,(transpiler-obfuscated-symbol-string *js-transpiler* (compiled-function-name '%property-list-0))
                "(" i ", " hash "[" i "]);")
   (reverse *%property-list-tmp*))
