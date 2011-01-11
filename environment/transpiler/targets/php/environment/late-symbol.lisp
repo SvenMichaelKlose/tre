@@ -20,7 +20,8 @@
 
 (defun symbol-package (x)
   (if
-    (eq t x)
+    (or (not x)
+        (eq t x))
       nil
     x
       x.p))
