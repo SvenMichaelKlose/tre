@@ -83,15 +83,14 @@
 					     (while (keywordp (setf v (car ,p)))
 								nil
 						   (if
-						     ,@(mapcan (fn `((eq v ,(make-symbol (symbol-name _)
-														         *keyword-package*))
+						     ,@(mapcan (fn `((eq v ,(make-symbol (symbol-name _) *keyword-package*))
 											 (setf ,p (cdr ,p)
 												   ,_ (car ,p)
 												   ,p (cdr ,p))))
 									   (carlist key-args)))))))
-           ,@(if argdefs
-			     (compexp-main argdefs)
-				 (compexp-key))
+           ,@(when argdefs
+			   (compexp-main argdefs))
+		   ,@(compexp-key)
 		   ,@(compile-argument-expansion-defaults key-args)))
         (append (compexp-main argdefs)
 		        (compile-argument-expansion-defaults key-args)))))
