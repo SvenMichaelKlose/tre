@@ -9,6 +9,10 @@ class __symbol {
 		$this->f = NULL;
 		$this->p =& $pkg;
 	}
+    public function __toString ()
+    {
+        return (($this->p) ? ":" : "") . $this->n;
+    }
 }
 
 $KEYWORDPACKAGE = new __symbol ("", __w(NULL));
