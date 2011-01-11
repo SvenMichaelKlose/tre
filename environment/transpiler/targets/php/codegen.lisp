@@ -69,7 +69,7 @@
 
 (define-php-macro function (name &optional (x 'only-name))
   (if (eq 'only-name x)
-      `("__w ("
+      `(%transpiler-native "__w ("
         (%transpiler-string
             ,(transpiler-symbol-string *php-transpiler*
                                        (transpiler-obfuscate *php-transpiler* (compiled-function-name name))))
@@ -140,7 +140,10 @@
 		      (list val)
 		    `((,val. ,@(parenthized-comma-separated-list
 					       (mapcar #'php-codegen-argument-filter .val)))))
-    ,*php-separator*)))
+    ,@(unless (and (not dest)
+                   (%transpiler-native? val)
+                   (not ..val))
+        (list *php-separator*)))))
 
 (define-php-macro %setq (dest val)
   (or (php-class-fun val)
@@ -153,15 +156,13 @@
   `(%transpiler-native "$" ,val ,*php-separator*
   					   ,(php-dollarize plc)
 					   ,(php-assignment-operator val)
-					   "$" ,val ,*php-separator*))
+					   ,(php-dollarize val) ,*php-separator*))
 
 ;;;; VARIABLES
 
-;; Experimental for lambda-export.
 (define-php-macro %vec (v i)
   `(%transpiler-native "$" ,v "[" ,(php-dollarize i) "]"))
 
-;; Experimental for lambda-export.
 (define-php-macro %set-vec (v i x)
   `(%transpiler-native "$" ,x ,*php-separator*
 					   (aref ,v ,i)
@@ -212,10 +213,10 @@
                idx)))
 
 (define-php-macro %%usetf-aref (val &rest x)
-  `(%transpiler-native "$" ,val ,*php-separator*
+  `(%transpiler-native ,(php-dollarize val) ,*php-separator*
   					   (aref ,@x)
 					   ,(php-assignment-operator val)
-					   "$" ,val))
+					   ,(php-dollarize val)))
 
 ;;;; HASH TABLE
 
@@ -225,7 +226,7 @@
                idx)))
 
 (define-php-macro %%usetf-href (val &rest x)
-  `(%transpiler-native "$" ,val ,*php-separator*
+  `(%transpiler-native ,(php-dollarize val) ,*php-separator*
   					   (aref ,@x)
 					   ,(php-assignment-operator val)
 					   "$" ,val))
@@ -269,3 +270,12 @@
 
 (define-php-macro %quote (x)
   (php-compiled-symbol x))
+
+(define-php-macro %php-class-head (name)
+  `(%transpiler-native "class " ,name "{"))
+
+(define-php-macro %php-class-tail ()
+  `(%transpiler-native "}" ""))
+
+(define-php-macro %php-method-head ()
+  `(%transpiler-native "public " ""))
