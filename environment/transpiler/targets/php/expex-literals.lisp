@@ -49,6 +49,8 @@
 	  (php-expex-add-global (php-compiled-string x))
     (%quote? x)
 	  (php-expex-add-global (php-compiled-symbol .x.))
+    (keywordp x)
+	  (php-expex-add-global (php-compiled-symbol x))
 	(atom x)
       (if
 		(expex-global-variable? x)
