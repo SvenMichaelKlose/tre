@@ -12,10 +12,10 @@
 
 (defun %property-list (hash)
   (setf *%property-list-tmp* nil)
-  (%transpiler-native
+  (%setq nil (%transpiler-native
       "for (" i " in " hash ") "
           ,(transpiler-obfuscated-symbol-string *js-transpiler* (compiled-function-name '%property-list-0))
-               "(" i ", " hash "[" i "]);")
+               "(" i ", " hash "[" i "]);"))
   (reverse *%property-list-tmp*))
 
 (cps-exception nil)
