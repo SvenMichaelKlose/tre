@@ -1,7 +1,5 @@
 ;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Generating code
+;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (defun js-call (x)
   `(,x. ,@(parenthized-comma-separated-list .x)))
@@ -143,6 +141,7 @@
 
 (mapcar-macro x
 	'((%%%+ "+")
+	  (%%%string+ "+")
 	  (%%%- "-")
 	  (%%%= "==")
 	  (%%%< "<")
