@@ -1,5 +1,5 @@
 ;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (dont-inline %error)
 
@@ -10,5 +10,4 @@
 (dont-inline error)
 
 (defun error (fmt &rest args)
-  (alert (+ "Error :" (apply #'format nil fmt args)))
-  (invoke-native-debugger))
+  (%error (+ "Error :" (apply #'format nil fmt args))))
