@@ -17,10 +17,12 @@
   (with ((fi-sym adef) (split-funinfo-and-args args)
          fun-name (%defun-name name))
     `(%%vm-scope
-       ,(apply #'shared-essential-defun fun-name args body)
-;               `((%transpiler-native "echo \"" ,(string-concat (symbol-name fun-name)
-;                                                                 *php-newline*) "\"")
-;                 nil ,@body))
+       ,(apply #'shared-essential-defun fun-name args
+               (if *exec-log*
+                   `((%transpiler-native "echo \"" ,(string-concat (symbol-name fun-name)
+                                                                   *php-newline*) "\"")
+                       nil ,@body)
+                   body))
        ,@(unless (simple-argument-list? adef)
            (with-gensym p
              `((defun ,($ fun-name '_treexp) (,p)
