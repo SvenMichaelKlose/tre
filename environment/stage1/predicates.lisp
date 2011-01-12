@@ -1,5 +1,5 @@
 ;;;;; TRE environment
-;;;;; Copyright (c) 2005-2006,2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2005-2006,2008-2009,2011 Sven Klose <pixel@copei.de>
 
 (defun zerop (x)
   (eq x 0))
@@ -20,7 +20,7 @@
 				(numberp x)))))
 
 (defun keywordp (x)
-  (and (atom x)
+  (and (symbolp x)
 	   (eq (symbol-package x)
 		   *keyword-package*)))
 
