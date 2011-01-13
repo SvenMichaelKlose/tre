@@ -20,13 +20,12 @@
 (defun js-codegen-symbol-constructor (tr x)
   (or (href *js-compiled-symbols* x)
       (setf (href *js-compiled-symbols* x)
-            (with (g (gensym) ;XXX hogs the browser: ($ 'compiled_symbol_ x)
-                   gs (transpiler-obfuscate-symbol tr g))
+            (with-gensym g ;XXX hogs the browser: ($ 'compiled_symbol_ x)
               (push `("var " ,(transpiler-obfuscated-symbol-string tr g)
                              "=" ,@(js-codegen-symbol-constructor-expr tr x)
 		                     ,*js-separator*)
                     (transpiler-raw-decls tr))
-              gs))))
+              g))))
 
 (define-codegen-macro-definer define-js-macro *js-transpiler*)
 
@@ -76,7 +75,7 @@
 
 (define-js-macro %function-return (fi-sym)
   (let fi (get-lambda-funinfo-by-sym fi-sym)
-    `(,*js-indent* "return " ,(transpiler-obfuscate *js-transpiler* (place-assign (place-expand-0 fi '~%ret))) ,*js-separator*)))
+    `(,*js-indent* "return " ,(place-assign (place-expand-0 fi '~%ret)) ,*js-separator*)))
 
 (define-js-macro %function-return-cps (fi-sym)
   (let fi (get-lambda-funinfo-by-sym fi-sym)
@@ -102,9 +101,9 @@
 (defun js-%setq-0 (dest val)
   `(,*js-indent*
 	(%transpiler-native
-        ,@(if (transpiler-obfuscated-nil? dest)
-		      '("")
-		      `(,dest "=")))
+        ,@(if dest
+		      `(,dest "=")
+		      '("")))
 	,(if (or (atom val)
 			 (codegen-expr? val))
 		 val
@@ -112,7 +111,7 @@
     ,*js-separator*))
 
 (define-js-macro %setq (dest val)
-  (if (and (transpiler-obfuscated-nil? dest)
+  (if (and (not dest)
 		   (atom val))
 	  '(%transpiler-native "")
 	  (js-%setq-0 dest val)))
@@ -207,9 +206,13 @@
 	  x))
 
 (define-js-macro %slot-value (x y)
-  (if (consp x)
-	  `(%transpiler-native ,x "." ,y)
-  	  ($ x "." y)))
+  `(%transpiler-native ,(if (consp x)
+                            x
+                            (transpiler-obfuscated-symbol-string *js-transpiler* x))
+                       "."
+                       ,(if (consp y)
+                            y
+                            (transpiler-obfuscated-symbol-string *js-transpiler* y))))
 
 ;;;; BACK-END META-CODES
 
@@ -240,13 +243,9 @@
 ;;;; FRONT-END PASS-THROUGH
 
 (define-js-macro %unobfuscated-lookup-symbol (name pkg)
-  `(,(transpiler-obfuscate-symbol *js-transpiler*
-								  (compiled-function-name 'symbol))
-       ,@(when (and (transpiler-continuation-passing-style? *js-transpiler*)
-                    (not (transpiler-cps-exception? *js-transpiler* 'symbol)))
-           `(#'(())))
-	   (%transpiler-string
-		   ,(symbol-name
-			    (transpiler-obfuscate-symbol
-					*js-transpiler* (make-symbol .name.))))
-		   ,pkg))
+  `(,(compiled-function-name 'symbol)
+         ,@(when (and (transpiler-continuation-passing-style? *js-transpiler*)
+                      (not (transpiler-cps-exception? *js-transpiler* 'symbol)))
+             `(#'(())))
+         (%transpiler-string ,(transpiler-obfuscated-symbol-name *js-transpiler* (make-symbol .name.)))
+         ,pkg))

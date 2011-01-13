@@ -1,5 +1,5 @@
 ;;;;; TRE transpiler
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (defun shared-essential-defun (name args &rest body)
   (when *show-definitions*
@@ -7,7 +7,6 @@
   (with (n (%defun-name name)
 		 tr *current-transpiler*
 		 (fi-sym a) (split-funinfo-and-args args))
-    (transpiler-obfuscate-symbol tr n)
     (transpiler-add-function-args tr n a)
 	(transpiler-add-function-body tr n body)
 	(transpiler-add-defined-function tr n)

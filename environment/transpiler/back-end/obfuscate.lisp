@@ -1,5 +1,5 @@
 ;;;;; TRE transpiler
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (defvar *transpiler-obfuscation-counter* 0)
 
@@ -12,15 +12,17 @@
     (or (href obs x)
         (setf (href obs x)
 			  (aif (symbol-package x)
-    		       (make-symbol (symbol-name (transpiler-obfuscated-sym))
-						        !)
+    		       (make-symbol (symbol-name (transpiler-obfuscated-sym)) !)
     		       (transpiler-obfuscated-sym))))))
+
+(defun obfuscateable-symbol? (tr x)
+  (not (eq t (href (transpiler-obfuscations tr)
+				   (make-symbol (symbol-name x))))))
 
 (defun must-obfuscate-symbol? (tr x)
   (and x
 	   (transpiler-obfuscate? tr)
-	   (not (eq t (href (transpiler-obfuscations tr)
-						(make-symbol (symbol-name x)))))))
+       (obfuscateable-symbol? tr x)))
 
 (defun transpiler-obfuscate-nil (tr)
   (when (transpiler-obfuscate? tr)
@@ -36,9 +38,11 @@
       (functionp x))
 	(transpiler-obfuscate-symbol tr x))
 
+(defun transpiler-obfuscated-symbol-name (tr x)
+  (symbol-name (transpiler-obfuscate-symbol tr x)))
+
 (defun transpiler-obfuscated-symbol-string (tr x)
-  (transpiler-symbol-string tr
-	  (transpiler-obfuscate-symbol tr x)))
+  (transpiler-symbol-string tr (transpiler-obfuscate-symbol tr x)))
 
 (defun transpiler-print-obfuscations (tr)
   (dolist (k (hashkeys (transpiler-obfuscations tr)))

@@ -27,14 +27,6 @@
 (transpiler-translate-symbol *php-transpiler* nil "__w(NULL)")
 (transpiler-translate-symbol *php-transpiler* t "__w(TRUE)")
 
-(define-php-macro %unobfuscated-lookup-symbol (name pkg)
-  `(,(transpiler-obfuscate-symbol *php-transpiler*
-								  '%lookup-symbol)
-	   (%transpiler-string
-		   ,(symbol-name (transpiler-obfuscate-symbol
-						 *php-transpiler* (make-symbol .name.))))
-		   ,pkg))
-
 ;;;; CONTROL FLOW
 
 (define-php-macro %%tag (tag)

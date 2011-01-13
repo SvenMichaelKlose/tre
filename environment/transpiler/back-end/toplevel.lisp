@@ -1,5 +1,5 @@
-;;;;; TRE transpiler
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; TRE transpile1
+;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 ;; After this pass:
 ;; - Symbols are obfuscated.
@@ -13,10 +13,10 @@
 			      _)
 	  concat-stringtree #'concat-stringtree
 	  to-string (fn transpiler-to-string tr _)
+	  obfuscate (fn transpiler-obfuscate tr _)
 	  codegen-expander (fn expander-expand (transpiler-macro-expander tr) _)
 	  finalize-sexprs #'transpiler-finalize-sexprs
 	  encapsulate-strings #'transpiler-encapsulate-strings
-	  obfuscate (fn transpiler-obfuscate tr _)
 	  function-names (fn translate-function-names nil _)))
 
 (defun transpiler-emit-code (tr x)
