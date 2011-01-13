@@ -39,4 +39,4 @@
     `((define-js-macro ,p. (x)
         `("(" ,,x " == null ? null : " ,,x "." ,slotname ")"))
       (define-js-macro ,($ '%%usetf- p.) (v x)
-        `(%transpiler-native ,,x "." ,slotname "=" ,,v)))))
+        `(,,x "." ,slotname "=" ,,v)))))

@@ -32,7 +32,7 @@
 ;;;; CONTROL FLOW
 
 (define-js-macro %%tag (tag)
-  `(%transpiler-native "case " ,tag ":" ,*js-newline*))
+  `("case " ,tag ":" ,*js-newline*))
 
 (define-js-macro %%vm-go (tag)
   `(,*js-indent* "_I_=" ,tag "; continue" ,*js-separator*))
@@ -46,7 +46,7 @@
                     "else " ,alternative "();" ,*js-newline*))
 
 (define-js-macro %set-atom-fun (plc val)
-  `(%transpiler-native ,*js-indent* ,plc "=" ,val ,*js-separator*))
+  `(,*js-indent* ,plc "=" ,val ,*js-separator*))
 
 ;;;; FUNCTIONS
 
@@ -65,13 +65,12 @@
 	    "}" ,(code-char 10))))
 
 (define-js-macro %function-prologue (fi-sym)
-  `(%transpiler-native ""
-	   ,@(when (transpiler-stack-locals? *js-transpiler*)
-	       `(,*js-indent* "var _locals = []" ,*js-separator*))
-	   ,@(when (< 0 (funinfo-num-tags (get-lambda-funinfo-by-sym fi-sym)))
-	       `(,*js-indent* "var _I_ = 0" ,*js-separator*
-		     ,*js-indent* "while (1) {" ,*js-separator*
-		     ,*js-indent* "switch (_I_) {case 0:" ,*js-separator*))))
+  `(,@(when (transpiler-stack-locals? *js-transpiler*)
+	    `(,*js-indent* "var _locals = []" ,*js-separator*))
+	,@(when (< 0 (funinfo-num-tags (get-lambda-funinfo-by-sym fi-sym)))
+	    `(,*js-indent* "var _I_ = 0" ,*js-separator*
+		  ,*js-indent* "while (1) {" ,*js-separator*
+		  ,*js-indent* "switch (_I_) {case 0:" ,*js-separator*))))
 
 (define-js-macro %function-return (fi-sym)
   (let fi (get-lambda-funinfo-by-sym fi-sym)
@@ -100,10 +99,9 @@
 
 (defun js-%setq-0 (dest val)
   `(,*js-indent*
-	(%transpiler-native
-        ,@(if dest
-		      `(,dest "=")
-		      '("")))
+    ,@(if dest
+	      `(,dest "=")
+	      '("")))
 	,(if (or (atom val)
 			 (codegen-expr? val))
 		 val
@@ -113,13 +111,13 @@
 (define-js-macro %setq (dest val)
   (if (and (not dest)
 		   (atom val))
-	  '(%transpiler-native "")
+	  ""
 	  (js-%setq-0 dest val)))
 
 ;;;; VARIABLE DECLARATIONS
 
 (define-js-macro %var (name)
-  `(%transpiler-native ,*js-indent* "var " ,name ,*js-separator*))
+  `(,*js-indent* "var " ,name ,*js-separator*))
 
 ;;;; TYPE PREDICATES
 
@@ -153,15 +151,13 @@
 ;;;; ARRAYS
 
 (define-js-macro make-array (&rest elements)
-  `(%transpiler-native "[" ,@(transpiler-binary-expand "," elements) "]"))
+  `("[" ,@(transpiler-binary-expand "," elements) "]"))
 
 (define-js-macro aref (arr &rest idx)
-  `(%transpiler-native ,arr
-     ,@(mapcar (fn `("[" ,_ "]"))
-               idx)))
+  `(,arr ,@(mapcar (fn `("[" ,_ "]")) idx)))
 
 (define-js-macro %%usetf-aref (val &rest x)
-  `(%transpiler-native (aref ,@x) "=" ,val))
+  `(aref ,@x) "=" ,val)
 
 ;;;; HASH TABLES
 
@@ -177,26 +173,21 @@
      "}")))
 
 (define-js-macro href (arr &rest idx)
-  `(%transpiler-native ,arr
-     ,@(mapcar (fn `("[" ,_ "]"))
-               idx)))
+  `(,arr ,@(mapcar (fn `("[" ,_ "]")) idx)))
 
 (define-js-macro %%usetf-href (val &rest x)
-  `(%transpiler-native (aref ,@x) "=" ,val))
+  `(aref ,@x) "=" ,val)
 
 (define-js-macro hremove (h key)
-  `(%transpiler-native "delete " ,h "[" ,key "]"))
+  `("delete " ,h "[" ,key "]"))
 
 ;;;; OBJECTS
 
 (define-js-macro %new (&rest x)
-  `(%transpiler-native "new "
-				       ,(compiled-function-name x.)
-					   "(" ,@(transpiler-binary-expand "," .x)
- 					   ")"))
+  `("new " ,(compiled-function-name x.) "(" ,@(transpiler-binary-expand "," .x) ")"))
 
 (define-js-macro delete-object (x)
-  `(%transpiler-native "delete " ,x))
+  `("delete " ,x))
 
 ;;;; META-CODES
 
@@ -206,31 +197,31 @@
 	  x))
 
 (define-js-macro %slot-value (x y)
-  `(%transpiler-native ,(if (consp x)
-                            x
-                            (transpiler-obfuscated-symbol-string *js-transpiler* x))
-                       "."
-                       ,(if (consp y)
-                            y
-                            (transpiler-obfuscated-symbol-string *js-transpiler* y))))
+  `(,(if (consp x)
+         x
+         (transpiler-obfuscated-symbol-string *js-transpiler* x))
+    "."
+    ,(if (consp y)
+         y
+         (transpiler-obfuscated-symbol-string *js-transpiler* y))))
 
 ;;;; BACK-END META-CODES
 
 (define-js-macro %stack (x)
   (if (transpiler-stack-locals? *js-transpiler*)
-  	  `(%transpiler-native "_locals[" ,x "]")
+  	  `("_locals[" ,x "]")
       (js-stack x)))
 
 ;; Experimental for lambda-export.
 (define-js-macro %vec (v i)
-  `(%transpiler-native ,v "[" ,i "]"))
+  `(,v "[" ,i "]"))
 
 ;; Experimental for lambda-export.
 (define-js-macro %set-vec (v i x)
-  `(%transpiler-native (aref ,v ,i) "=" ,x ,*js-separator*))
+  `(aref ,v ,i) "=" ,x ,*js-separator*)
 
 (define-js-macro %js-typeof (x)
-  `(%transpiler-native "typeof " ,x))
+  `("typeof " ,x))
 
 (define-js-macro %%funref (name fi-sym)
   (let fi (get-lambda-funinfo-by-sym fi-sym)
