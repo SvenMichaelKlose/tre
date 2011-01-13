@@ -105,10 +105,8 @@
 (define-php-std-macro defined? (x)
   `(not (= "undefined" (%php-typeof ,x))))
 
-; XXX generic function instead of append!
 (define-php-std-macro dont-obfuscate (&rest symbols)
-  (apply #'transpiler-add-obfuscation-exceptions
-		 *php-transpiler* symbols)
+  (apply #'transpiler-add-obfuscation-exceptions *php-transpiler* symbols)
   nil)
 
 (define-php-std-macro dont-inline (x)

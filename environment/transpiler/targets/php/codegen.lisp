@@ -167,7 +167,6 @@
     (when *show-definitions*
 	  (print `(define-php-binary ,op ,replacement-op)))
 	(let tre *php-transpiler*
-	  (transpiler-add-obfuscation-exceptions tre op replacement-op)
 	  (transpiler-add-inline-exception tre op)
 	  (transpiler-add-plain-arg-fun tre op)
 	  `(define-expander-macro

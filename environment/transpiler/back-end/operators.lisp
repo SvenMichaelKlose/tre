@@ -1,13 +1,10 @@
 ;;;;; TRE transpiler
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
-
-;;;; OPERATOR EXPANSION
+;;;;; Copyright (c) 2008-2009,2011 Sven Klose <pixel@copei.de>
 
 (defmacro define-transpiler-infix (tr name)
   (when *show-definitions*
 	(print `(define-transpiler-infix ,tr ,name)))
   (let tre (eval tr)
-    (transpiler-add-obfuscation-exceptions tre name)
     (transpiler-add-inline-exception tre name)
     `(define-expander-macro ,(transpiler-macro-expander tre) ,name (x y)
 	   `(%transpiler-native ,,x ,(string-downcase (string name)) " " ,,y))))
@@ -19,7 +16,6 @@
   (when *show-definitions*
 	(print `(define-transpiler-binary ,tr ,op)))
   (let tre (eval tr)
-    (transpiler-add-obfuscation-exceptions tre op repl-op)
     (transpiler-add-inline-exception tre op)
     (transpiler-add-plain-arg-fun tre op)
     `(define-expander-macro

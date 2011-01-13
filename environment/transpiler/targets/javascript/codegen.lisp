@@ -11,7 +11,7 @@
 
 (defun js-codegen-symbol-constructor-expr (tr x)
   (let s (transpiler-obfuscated-symbol-string tr (compiled-function-name 'symbol))
-    `(,s "(\"" ,(symbol-name x) "\", "
+    `(,s "(\"" ,(transpiler-obfuscated-symbol-name tr x) "\", "
 	           ,@(if (symbol-package x)
 	                 `((,s "(\"" ,(symbol-name (symbol-package x)) "\", null)"))
 	                 '(("null")))
@@ -239,13 +239,3 @@
   	  		 `(%funref ,name ,!)
 			 (error "no lexical for ghost"))
 	    name)))
-
-;;;; FRONT-END PASS-THROUGH
-
-(define-js-macro %unobfuscated-lookup-symbol (name pkg)
-  `(,(compiled-function-name 'symbol)
-         ,@(when (and (transpiler-continuation-passing-style? *js-transpiler*)
-                      (not (transpiler-cps-exception? *js-transpiler* 'symbol)))
-             `(#'(())))
-         (%transpiler-string ,(transpiler-obfuscated-symbol-name *js-transpiler* (make-symbol .name.)))
-         ,pkg))

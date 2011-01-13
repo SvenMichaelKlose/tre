@@ -55,7 +55,7 @@
 		(error "Function ~A already defined" name))
       `(progn
 		 (%var ,g)
-		 (%setq ,g (%unobfuscated-lookup-symbol ,(symbol-name dname) nil))
+		 (%setq ,g (symbol ,(transpiler-obfuscated-symbol-name *js-transpiler* dname) nil))
 	     ,(apply #'shared-essential-defun dname args body)
 		 (setf (symbol-function ,g) ,dname)))))
 
@@ -133,8 +133,7 @@
 (define-js-std-macro dont-obfuscate (&rest symbols)
   (when *show-definitions*
     (late-print `(dont-obfuscate ,@symbols)))
-  (apply #'transpiler-add-obfuscation-exceptions
-		 *js-transpiler* symbols)
+  (apply #'transpiler-add-obfuscation-exceptions *js-transpiler* symbols)
   nil)
 
 (define-js-std-macro dont-inline (&rest x)

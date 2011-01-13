@@ -13,5 +13,4 @@
 			 name))
     (transpiler-add-unwanted-function tre name)
     (transpiler-add-inline-exception tre name)
-	(transpiler-add-obfuscation-exceptions tre name)
     `(define-expander-macro ,(transpiler-macro-expander tre) ,@x)))
