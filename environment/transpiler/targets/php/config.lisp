@@ -40,7 +40,7 @@
     	  (expex-function-arguments ex)
 			  #'current-transpiler-function-arguments-w/o-builtins
     	  (expex-argument-filter ex)
-		      #'php-expex-literal)
+		      #'php-expex-filter)
 
 	(apply #'transpiler-add-obfuscation-exceptions
 		tr

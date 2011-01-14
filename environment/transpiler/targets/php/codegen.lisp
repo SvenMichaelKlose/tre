@@ -90,16 +90,6 @@
 
 ;;;; ASSIGNMENT
 
-(defun php-class-fun (x)
-  (and (consp x)
-	   (if
-		 (eq x. 'tresymbol_compiled_%class-head)
-		   `("class " ,.x. " { " ,*php-newline*)
-		 (eq x. 'tresymbol_compiled_%class-tail)
-		   `("}" ,*php-newline*)
-		 (eq x. 'tresymbol_compiled_%separator)
-		   `("," ,*php-newline*))))
-
 (defun php-assignment-operator (val)
   (if (or (and (atom val)
 		  	   (symbolp val))
@@ -138,11 +128,10 @@
         (list *php-separator*)))))
 
 (define-php-macro %setq (dest val)
-  (or (php-class-fun val)
-      (if (and (transpiler-obfuscated-nil? dest)
-		       (atom val))
-  	      '(%transpiler-native "")
-	      (php-%setq-0 dest val))))
+  (? (and (transpiler-obfuscated-nil? dest)
+	      (atom val))
+     '(%transpiler-native "")
+     (php-%setq-0 dest val)))
 
 (define-php-macro %set-atom-fun (plc val)
   `(%transpiler-native "$" ,val ,*php-separator*
@@ -199,7 +188,7 @@
 					   "Array ()"))
 
 (define-php-macro aref (arr &rest idx)
-  `(%transpiler-native "$" ,arr
+  `(%transpiler-native ,(php-dollarize arr)
      ,@(mapcar (fn `("[" ,(php-dollarize _) "]"))
                idx)))
 
@@ -212,7 +201,7 @@
 ;;;; HASH TABLE
 
 (define-php-macro href (arr &rest idx)
-  `(%transpiler-native "$" ,arr
+  `(%transpiler-native ,(php-dollarize arr)
      ,@(mapcar (fn `("[" ,(php-dollarize _) "]"))
                idx)))
 
