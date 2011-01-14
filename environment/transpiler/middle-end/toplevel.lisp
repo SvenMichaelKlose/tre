@@ -1,5 +1,5 @@
 ;;;;; TRE transpiler
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (defun transpiler-expression-expand (tr x)
   (expression-expand (transpiler-expex tr) x))
@@ -12,9 +12,9 @@
 ;; - FUNCTION expression contain the names of top-level functions.
 (defun transpiler-expand-compose (tr)
   (transpiler-pass
-	  print-dot (fn (princ #\.)
-		            (force-output)
-		            _)
+;	  print-dot (fn (princ #\.)
+;		            (force-output)
+;		            _)
       update-funinfo #'transpiler-update-funinfo
       opt-peephole #'opt-peephole
       middleend-graph #'middleend-graph

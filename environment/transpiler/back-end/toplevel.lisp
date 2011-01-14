@@ -8,9 +8,9 @@
 ;; - Everything is converted to strings and concatenated.
 (defun transpiler-emit-code-compose (tr)
   (transpiler-pass
-      print-o (fn (princ #\o)
-			      (force-output)
-			      _)
+;      print-o (fn (princ #\o)
+;			      (force-output)
+;			      _)
 	  concat-stringtree #'concat-stringtree
 	  to-string (fn transpiler-to-string tr _)
 	  obfuscate (fn transpiler-obfuscate tr _)
