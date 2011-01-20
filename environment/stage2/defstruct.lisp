@@ -6,8 +6,8 @@
 
 (defun %struct-make-symbol (name options)
   (aif (assoc-value :constructor options)
-     !.
-     (make-symbol (string-concat "MAKE-" (symbol-name name)))))
+       !.
+       (make-symbol (string-concat "MAKE-" (symbol-name name)))))
 
 (defun %struct-p-symbol (name)
   (make-symbol (string-concat (symbol-name name) "-P")))
@@ -100,7 +100,10 @@
       ,(%struct-p name)
       ,@(%struct-getters name flds)
       (defmacro ,(make-symbol (string-concat "WITH-" (symbol-name name))) (s &rest body)
-		 `(with-struct ,name ,,s ,,@body)))))
+		 `(with-struct ,name ,,s ,,@body))
+      (defmacro ,(make-symbol (string-concat "DEF-" (symbol-name name))) (name args &rest body)
+		 `(defun ,,name ,,args
+            (with-struct ,name ,name ,,@body))))))
 
 (defmacro defstruct (name &rest fields-and-options)
   (apply #'%defstruct-expander name fields-and-options))
