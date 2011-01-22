@@ -32,15 +32,15 @@
       (setf (expander-pred e)
 			(fn (and (atom _.)
 				 	 (symbol-name _.)
-				 	 (assoc-value _. (expander-macros *current-expander*) :test #'eq)))))
+				 	 (cdr (assoc _. (expander-macros *current-expander*) :test #'eq))))))
     (unless call
       (setf (expander-call e)
 			(fn (when *expander-print*
                   (print _))
-                (apply (assoc-value _. (expander-macros *current-expander*) :test #'eq)) ._)))
+                (apply (cdr (assoc _. (expander-macros *current-expander*) :test #'eq)) ._))))
     (setf (expander-lookup e)
           #'((expander name)
-			  (assoc-value name (expander-macros expander) :test #'eq)))
+			  (cdr (assoc name (expander-macros expander) :test #'eq))))
 	e))
 
 (defun set-expander-macro (expander-name name args-and-body)
