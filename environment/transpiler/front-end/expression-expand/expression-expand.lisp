@@ -73,7 +73,7 @@
 	    (funinfo-in-this-or-parent-env? *expex-funinfo* x)
 	    (transpiler-imported-variable? tr x)
 	    (transpiler-defined-variable tr x)
-	    (transpoler-macro? tr x))))
+	    (transpiler-macro? tr x))))
 
 (defun expex-warn (x)
   (and *expex-warn?*
