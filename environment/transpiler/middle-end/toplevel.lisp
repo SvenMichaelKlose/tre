@@ -12,9 +12,9 @@
 ;; - FUNCTION expression contain the names of top-level functions.
 (defun transpiler-expand-compose (tr)
   (transpiler-pass
-;	  print-dot (fn (princ #\.)
-;		            (force-output)
-;		            _)
+	  print-dot (fn (princ #\.)
+		            (force-output)
+		            _)
       update-funinfo #'transpiler-update-funinfo
       opt-peephole #'opt-peephole
       middleend-graph #'middleend-graph
