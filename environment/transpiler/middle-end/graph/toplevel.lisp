@@ -9,7 +9,7 @@
     (cblocks-distribute-ins-and-outs blks fi)
     (cblocks-merge-joins blks.)
     (cblocks-rename-merged blks.)
-    (cblocks-remove-doubles blks)
+;    (cblocks-remove-doubles fi blks)
     (cblocks-unname-merged blks.)
     ;(print-cblocks blks)
     (cblock-to-metacode blks)))
