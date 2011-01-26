@@ -6,23 +6,44 @@
 (defvar *opt-peephole-funinfo* nil)
 (defvar *opt-peephole-symbols* (make-hash-table :test #'eq))
 
-(metacode-walker opt-peephole-collect-syms-0 (x h)
-	:traverse?	t
-    :if-symbol	(setf (href h x) (1+ (or (href h x) 0)))
-	:if-function (opt-peephole-collect-syms-0 (%setq-place x) h))
+(defun opt-peephole-collect-syms-0 (x h)
+  (?
+    (symbolp x)
+      (setf (href h x) (1+ (or (href h x) 0)))
+    (atom x)
+      nil
+    (progn
+      (opt-peephole-collect-syms-0 x. h)
+      (opt-peephole-collect-syms-0 .x h))))
+
+;(metacode-walker opt-peephole-collect-syms-0 (x h)
+;:traverse?	t
+;   :if-symbol	(setf (href h x) (1+ (or (href h x) 0)))
+;:if-function (opt-peephole-collect-syms-0 (%setq-place x) h))
 
 (defun opt-peephole-collect-syms (x)
   (let h (make-hash-table :test #'eq)
 	(opt-peephole-collect-syms-0 x h)
 	h))
 
-(metacode-walker opt-peephole-uncollect-syms-0 (x num)
-	:traverse?	t
-    :if-symbol	(setf (href *opt-peephole-symbols* x) (- (href *opt-peephole-symbols* x) 1))
-	:if-function (opt-peephole-uncollect-syms-0 (%setq-place x) num))
+(defun opt-peephole-uncollect-syms-0 (x num h)
+  (?
+    (symbolp x)
+      (when (href h x)
+        (setf (href h x) (- (href h x) num)))
+    (atom x)
+      nil
+    (progn
+      (opt-peephole-uncollect-syms-0 x. num h)
+      (opt-peephole-uncollect-syms-0 .x num h))))
+
+;(metacode-walker opt-peephole-uncollect-syms-0 (x num)
+;	:traverse?	t
+;    :if-symbol	(setf (href *opt-peephole-symbols* x) (- (href *opt-peephole-symbols* x) 1))
+;	:if-function (opt-peephole-uncollect-syms-0 (%setq-place x) num))
 
 (defun opt-peephole-uncollect-syms (x ret num)
-  (opt-peephole-uncollect-syms-0 x num)
+  (opt-peephole-uncollect-syms-0 x num *opt-peephole-symbols*)
   ret)
 
 (defun opt-peephole-count (x)
