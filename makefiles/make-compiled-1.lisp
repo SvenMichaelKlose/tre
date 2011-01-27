@@ -1,0 +1,2 @@
+(defun fnord ()
+  #'c-transpile)

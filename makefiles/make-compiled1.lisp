@@ -9,7 +9,7 @@
 (setf *opt-inline-max-repetitions* 0)
 (setf *opt-inline-max-small-repetitions* 0)
 
-(let code (c-transpile '("makefiles/make-compiled-0.lisp"))
+(let code (c-transpile '("makefiles/make-compiled-1.lisp"))
   (with-open-file out (open "interpreter/_compiled-env.c" :direction 'output)
     (princ code out)))
 (quit)
