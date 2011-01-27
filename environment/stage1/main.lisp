@@ -19,6 +19,7 @@
 
 (env-load "stage1/arg-keyword-p.lisp")
 (env-load "stage1/defun.lisp")
+(env-load "stage1/terse-if.lisp")
 (env-load "stage1/fn.lisp")
 (env-load "stage1/lx.lisp")
 (env-load "stage1/predicates.lisp")
@@ -26,7 +27,7 @@
 (env-load "stage1/tests-stage0.lisp")
 (env-load "stage1/tests-arith.lisp")
 (env-load "stage1/anaphoric.lisp")
-(env-load "stage1/terse-if.lisp")
+(env-load "stage1/force-list.lisp")
 (env-load "stage1/comparison.lisp")
 (env-load "stage1/member.lisp")
 (env-load "stage1/slot-value-p.lisp")

@@ -41,7 +41,7 @@
     (when (integer> start end)
       (xchg start end))
 	(?
-	  (consp seq)
+	  (cons? seq)
 		(subseq-list seq start end)
 	  (string? seq)
 		(%subseq-string seq start end)

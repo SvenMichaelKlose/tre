@@ -37,7 +37,7 @@
 				#'((x)
                      (if
 					   (and (%setq? ,x)
-							(consp (%setq-value ,x))
+							(cons? (%setq-value ,x))
 							(eq '%%tag (car (%setq-value ,x))))
 					     (progn
 						   (print ,x)
@@ -56,7 +56,7 @@
 			               `((%setq-lambda? ,x)
 			    			   ,(metacode-walker-copier x ! :%setq? t :copy? copy-function-heads?)))
 
-		               ,@(awhen if-cons `((consp ,x) ,!))
+		               ,@(awhen if-cons `((cons? ,x) ,!))
 
 		               (not (or (in? (car ,x) '%setq '%var '%function-prologue '%function-epilogue '%function-return '%%tag)
 								(vm-jump? ,x)

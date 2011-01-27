@@ -41,13 +41,13 @@
 					 `(%slot-value ,(list-symbol (subseq sl 0 p))
 						           ,(conv (list-symbol (subseq sl (1+ p))))))))
 		 label?
-		   (fn (not (or (consp _)
+		   (fn (not (or (cons? _)
 						(number? _)
 				        (string? _)))))
     (when x
       (?
 		(label? x) (conv x)
-		(consp x) (cons (dot-expand (car x))
+		(cons? x) (cons (dot-expand (car x))
 			            (dot-expand (cdr x)))
       	x))))
 

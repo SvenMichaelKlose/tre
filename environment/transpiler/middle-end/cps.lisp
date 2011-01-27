@@ -52,7 +52,7 @@
 
 (defun cps-methodcall? (x)
   (and (%setq? x)
-       (consp (%setq-value x))
+       (cons? (%setq-value x))
        (%slot-value? (car (%setq-value x)))))
 
 ;(defun cps-foureign-funcall? (x)

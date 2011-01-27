@@ -19,7 +19,7 @@
   `("(" ,x " == treptr_nil ? treptr_nil : tre_lists[" ,x "].cdr)"))
 
 (mapcan-macro _
-	'((consp "CONS")
+	'((cons? "CONS")
 	  (atom  "ATOM")
 	  (number?  "NUMBER")
 	  (string?  "STRING")

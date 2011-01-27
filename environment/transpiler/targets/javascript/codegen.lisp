@@ -206,11 +206,11 @@
 	  x))
 
 (define-js-macro %slot-value (x y)
-  `(%transpiler-native ,(if (consp x)
+  `(%transpiler-native ,(if (cons? x)
                             x
                             (transpiler-obfuscated-symbol-string *js-transpiler* x))
                        "."
-                       ,(if (consp y)
+                       ,(if (cons? y)
                             y
                             (transpiler-obfuscated-symbol-string *js-transpiler* y))))
 

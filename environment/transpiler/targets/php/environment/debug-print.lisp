@@ -8,7 +8,7 @@
 (defun debug-print-cons-r (x doc)
   (when x
     (debug-print x. doc)
-    (? (consp .x)
+    (? (cons? .x)
 	   (debug-print-cons-r .x doc)
 	   (when .x
 		 (debug-print-write " . " doc)
@@ -51,7 +51,7 @@
 (dont-inline debug-print)
 
 (defun debug-print (x &optional (doc logwindow.document))
-  (? (consp x)
+  (? (cons? x)
 	 (debug-print-cons x doc)
 	 (debug-print-atom x doc))
   x)

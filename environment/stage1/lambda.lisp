@@ -1,5 +1,5 @@
 ;;;; TRE environment
-;;;; Copyright (c) 2006-2010 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2006-2011 Sven Klose <pixel@copei.de>
 
 (defun past-lambda-1 (x)
   (if (eq (car x) 'lambda)
@@ -60,18 +60,18 @@
   (cdr x))
 
 (defun function-expr? (x)
-  (and (consp x)
+  (and (cons? x)
        (eq 'FUNCTION (car x))))
 
 (defun lambda-expr? (x)
   (and (function-expr? x)
-       (consp (cdr x))
-       (consp (cadr x))))
+       (cons? (cdr x))
+       (cons? (cadr x))))
 
 (defun lambda? (x)
   (and (lambda-expr? x)
 	   (let l (past-lambda (cadr x))
-		 (and (consp l)
+		 (and (cons? l)
 			  (listp (car l))))))
 
 (define-test "IS-LAMBDA? works"
@@ -83,7 +83,7 @@
   t)
 
 (defun lambda-call? (x)
-  (and (consp x)
+  (and (cons? x)
 	   (cdr x)
        (lambda? (car x))))
 

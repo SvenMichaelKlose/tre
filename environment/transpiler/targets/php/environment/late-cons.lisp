@@ -1,5 +1,5 @@
 ;;;;; Transpiler: TRE to PHP
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (defun car (x) (when x x.car))
 (defun cdr (x) (when x x.cdr))
@@ -14,5 +14,5 @@
   (setq x.cdr val)
   x)
 
-(defun consp (x)
+(defun cons? (x)
   (is_a x "__cons"))

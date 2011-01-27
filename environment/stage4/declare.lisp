@@ -3,7 +3,7 @@
 
 (defvar *type-predicates*
   '((nil . not)
-    (cons . consp)
+    (cons . cons?)
 	(list . listp)
 	(atom . atom)
 	(symbol . symbolp)

@@ -13,10 +13,10 @@
 (defvar *delayed-constructors* nil)
 
 (defun transpiler_defclass (constructor-maker class-name args &rest body)
-  (with (cname (? (consp class-name)
+  (with (cname (? (cons? class-name)
 				  (first class-name)
 				  class-name)
-		 bases (and (consp class-name)
+		 bases (and (cons? class-name)
 				    (cdr class-name))
 		classes (transpiler-thisify-classes *current-transpiler*))
 	(when *show-definitions*

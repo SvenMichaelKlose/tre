@@ -4,19 +4,19 @@
 ;;;;; LML function library
 
 (defun string-or-cons? (expr)
-  (or (string? expr) (consp expr)))
+  (or (string? expr) (cons? expr)))
 
 ;;;; LML utilities
 
 (defun lml-get-children (x)
-  (when (consp x)
-    (? (consp x.)
+  (when (cons? x)
+    (? (cons? x.)
        x
        (lml-get-children .x))))
 
 (defun lml-get-attribute (x name)
   (when x
-    (unless (consp x.)
+    (unless (cons? x.)
       (if (eq name x.)
           (second x)
           (lml-get-attribute .x name)))))

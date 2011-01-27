@@ -408,7 +408,7 @@ char *tre_builtin_names[] = {
 	"CONS", "LIST",
     "CAR", "CDR", "RPLACA", "RPLACD",
 
-    "CONSP",
+    "CONS?",
 
 #ifdef TRE_BUILTIN_ASSOC
 	"ASSOC",

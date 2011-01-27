@@ -1,5 +1,5 @@
 ;;;;; TRE compiler
-;;;;; Copyright (c) 2006-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2006-2011 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Compiler-macro expansion.
 ;;;;;
@@ -26,9 +26,9 @@
   (expander-expand 'compiler x))
 
 (define-mapcar-fun vars-to-identity (x)
-  (if (atom x)
-      `(identity ,x)
-      x))
+  (? (atom x)
+     `(identity ,x)
+     x))
 
 (define-compiler-macro cond (&rest args)
   (with-compiler-tag end-tag
@@ -62,44 +62,42 @@
 
 (define-compiler-macro tagbody (&rest args)
   `(%%vm-scope
-     ,@(mapcar (fn (if (consp _)
-		     		   _
-		     		   (aif (cdr (assoc _ *tagbody-replacements* :test #'eq))
-		       				!
-		       				_)))
+     ,@(mapcar (fn (? (cons? _)
+		     		  _
+		     		  (or (assoc-value _ *tagbody-replacements* :test #'eq)
+		       			  _)))
                args)
      (identity nil)))
 
 (define-compiler-macro progn (&rest body)
-  `(%%vm-scope ,@(aif (vars-to-identity body) ; XXX fscking workaround
-					!
-					'((identity nil)))))
+  `(%%vm-scope ,@(or (vars-to-identity body) ; XXX fscking workaround
+					 '((identity nil)))))
 
 (define-expander 'compiler-return)
 (defvar *blockname* nil)
 (defvar *blockname-replacement* nil)
 
 (define-expander-macro compiler-return return-from (block-name expr)
-  (if (eq block-name *blockname*)
-      `(%%vm-scope
-         (%setq ~%ret ,expr)
-         (%%vm-go ,*blockname-replacement*))
-	  `(return-from ,block-name ,expr)))
+  (? (eq block-name *blockname*)
+     `(%%vm-scope
+        (%setq ~%ret ,expr)
+        (%%vm-go ,*blockname-replacement*))
+	 `(return-from ,block-name ,expr)))
 
 (define-compiler-macro block (block-name &rest body)
-  (if body
-	  (with-compiler-tag g
-		(with-temporary *blockname* block-name
-		  (with-temporary *blockname-replacement* g
-            (with (b	 (expander-expand 'compiler-return body)
-			       head  (butlast b)
-                   tail  (last b)
-                   ret   `(%%vm-scope
-                            ,@head
-                            ,@(if (vm-jump? tail.)
-						          tail
-						          `((%setq ~%ret ,@tail)))))
-              (nconc ret `(,g (identity ~%ret)))))))
+  (? body
+	 (with-compiler-tag g
+	   (with-temporary *blockname* block-name
+		 (with-temporary *blockname-replacement* g
+           (with (b	 (expander-expand 'compiler-return body)
+			      head  (butlast b)
+                  tail  (last b)
+                  ret   `(%%vm-scope
+                           ,@head
+                           ,@(? (vm-jump? tail.)
+						        tail
+						        `((%setq ~%ret ,@tail)))))
+            (nconc ret `(,g (identity ~%ret)))))))
     `(identity nil)))
 
 (define-compiler-macro setq (&rest args)
@@ -110,7 +108,7 @@
   (with (tests (group body 2)
 		 end   (car (last tests)))
     `(cond
-        ,@(if (= 1 (length end))
-			  (append (butlast tests)
-					  (list (cons t end)))
-			  tests))))
+        ,@(? (= 1 (length end))
+			 (append (butlast tests)
+					 (list (cons t end)))
+			 tests))))

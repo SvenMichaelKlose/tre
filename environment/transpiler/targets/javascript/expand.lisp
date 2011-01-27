@@ -23,7 +23,7 @@
 		  nil))))
 
 (define-js-std-macro function (x)
-  (if (consp x)
+  (if (cons? x)
       (with-lambda-content x fi args body
 	    (if (or (body-has-noargs-tag? body)
                 (simple-argument-list? args))

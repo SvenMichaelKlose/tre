@@ -23,7 +23,6 @@
 (env-load "stage4/find-all-if.lisp")
 (env-load "stage4/find-tree.lisp")
 (env-load "stage4/force-downcase-string.lisp")
-(env-load "stage4/force-list.lisp")
 (env-load "stage4/force-string.lisp")
 (env-load "stage4/force-tree.lisp")
 (env-load "stage4/global-variable.lisp")

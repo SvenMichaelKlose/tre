@@ -1,5 +1,5 @@
 ;;;;; TRE compiler
-;;;;; Copyright (c) 2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2010-2011 Sven Klose <pixel@copei.de>
 
 (defun opt-tailcall-fun-0 (fi args x name front-tag)
   (append (mapcan #'((arg val)
@@ -15,7 +15,7 @@
 
 (defun %setq-function-call? (x)
   (and (%setq? x)
-	   (consp (%setq-value x))))
+	   (cons? (%setq-value x))))
 
 (defun call-of-function? (expr name)
   (and (%setq-function-call? expr)
@@ -26,7 +26,7 @@
 	   (not (funinfo-in-env? fi (%setq-place x)))))
 
 (defun function-will-exit? (fi x)
-  (if
+  (?
 	(not x)
 	  t
 	(%%vm-go? x.)
@@ -39,10 +39,10 @@
 
 (defun opt-tailcall-fun (fi args x name front-tag)
   (when x
-    (if (and (call-of-function? x. name)
-  		     (function-will-exit? fi .x))
-	    (opt-tailcall-fun-0 fi args x name front-tag)
-	    (cons x. (opt-tailcall-fun fi args .x name front-tag)))))
+    (? (and (call-of-function? x. name)
+  		    (function-will-exit? fi .x))
+	   (opt-tailcall-fun-0 fi args x name front-tag)
+	   (cons x. (opt-tailcall-fun fi args .x name front-tag)))))
 
 (metacode-walker opt-tailcall (x)
 	:traverse? nil

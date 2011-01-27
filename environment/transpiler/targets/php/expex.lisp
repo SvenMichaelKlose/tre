@@ -4,7 +4,7 @@
 (defun php-local-fun-filter (x)
   `(%setq ,(php-expex-filter .x.)
           ,(let val ..x.
-             (? (and (consp val)
+             (? (and (cons? val)
                      (transpiler-defined-function *php-transpiler* val.))
                 `(,(compiled-function-name val.) ,@.val))
                 val)))

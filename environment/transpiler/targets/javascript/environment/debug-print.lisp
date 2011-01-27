@@ -8,7 +8,7 @@
 (defun js-print-cons-r (x doc)
   (when x
     (js-print x. doc)
-    (? (consp .x)
+    (? (cons? .x)
 	   (js-print-cons-r .x doc)
 	   (when .x
 		 (js-print-write " . " doc)
@@ -56,7 +56,7 @@
 (dont-inline js-print)
 
 (defun js-print (x &optional (doc logwindow.document))
-  (? (consp x)
+  (? (cons? x)
 	 (js-print-cons x doc)
 	 (js-print-atom x doc))
   x)

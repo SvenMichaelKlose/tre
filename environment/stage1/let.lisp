@@ -1,5 +1,5 @@
 ;;;;; TRE environment
-;;;;; Copyright (c) 2005-2006,2008,2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2005-2006,2008,2010-2011 Sven Klose <pixel@copei.de>
 
 ;; Create new local variable.
 (defmacro let (place expr &rest body)
@@ -10,7 +10,7 @@
 		(print expr)
 		(print body)
 	    (%error "body expected"))
-    (consp place)
+    (cons? place)
 	  (%error "place is not an atom")
       `(#'((,place)
 			  ,@body) ,expr)))

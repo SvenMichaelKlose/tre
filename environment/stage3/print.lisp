@@ -51,7 +51,7 @@
   (%late-print c. str)
   (let x .c
     (? x
-       (? (consp x)
+       (? (cons? x)
           (progn
 	        (princ #\  str)
             (%print-rest x str))
@@ -84,7 +84,7 @@
 	(%print-symbol x str)))
 
 (defun %late-print (x str)
-  (? (consp x)
+  (? (cons? x)
       (%print-cons x str)
 	  (%print-atom x str)))
 

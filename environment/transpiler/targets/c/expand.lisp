@@ -31,7 +31,7 @@
 
 (mapcan-macro _
     '(car cdr not
-	  consp atom number? string? arrayp functionp builtinp)
+	  cons? atom number? string? arrayp functionp builtinp)
   `((define-c-std-macro ,_ (x)
 	  `(,($ '% _) ,,x))))
 

@@ -1,5 +1,5 @@
 ;;;;; TRE environment
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Argument expander.
 ;;;;;
@@ -21,25 +21,25 @@
 		 rec2
 		   (fn
 		     (when _
-			   (if (argument-keyword? _.)
-				   (rec3 _)
-				   ; Turn keyword definition into ACONS.
-				   (and (setf argument-exp-sort-key
-							  (cons (if (consp _.)
-										(cons (car _.)
-											  (cadr _.)) ; with default value
-										(cons _.
-											  _.)) ; with itself
+			   (? (argument-keyword? _.)
+				  (rec3 _)
+				  ; Turn keyword definition into ACONS.
+				  (and (setf argument-exp-sort-key
+							 (cons (? (cons? _.)
+									  (cons (car _.)
+										    (cadr _.)) ; with default value
+									(cons _.
+										  _.)) ; with itself
 									argument-exp-sort-key))
-						(rec2 ._)))))
+					   (rec2 ._)))))
 
 		 ; Copy argument definition until &KEY.
 		 rec3
 		   (fn
 		     (when _
-		       (if (eq '&key _.)
-				   (rec2 ._)
-				   (cons _. (rec3 ._))))))
+		       (? (eq '&key _.)
+				  (rec2 ._)
+				  (cons _. (rec3 ._))))))
 
 	(setf argument-exp-sort-key nil)
 	(values (rec3 def) (reverse argument-exp-sort-key))))
@@ -75,22 +75,22 @@
 					   args))
 		 get-name
 		   #'((def)
-				(if (consp def.)
-					def..
-					def.))
+				(? (cons? def.)
+				   def..
+				   def.))
 
 		 get-default
 		   #'((def)
-				(if (consp def.)
-				    (cadr def.)
-					(list '%quote def.)))
+				(? (cons? def.)
+				   (cadr def.)
+				   (list '%quote def.)))
 
 		 get-value
 		   #'((def vals)
-				(if
-				  (consp vals)
+				(?
+				  (cons? vals)
 					vals.
-				  (consp def.)
+				  (cons? def.)
 					(cadr def.)
 				  def.))
 
@@ -115,7 +115,7 @@
 				(setf no-static '&optional)
 				(cons (cons (get-name def)
 							(get-value def vals))
-					  (if
+					  (?
 						(argument-list-keyword? (cadr def))
 					  	  (exp-main .def .vals)
 						.def
@@ -126,11 +126,11 @@
 		   #'((def vals)
 			    (with  (w (make-symbol (symbol-name vals.))
 			    		k (assoc w key-args))
-				  (if k
-			          (progn
-						(rplacd k (cadr vals)) ; check if key-value exists.
-						(exp-main def (cddr vals)))
-					  (exp-main-non-key def vals))))
+				  (? k
+			         (progn
+					   (rplacd k (cadr vals)) ; check if key-value exists.
+					   (exp-main def (cddr vals)))
+					 (exp-main-non-key def vals))))
 
 		 exp-rest
 		   #'((def vals)
@@ -166,21 +166,21 @@
 		 exp-main-non-key
 		   #'((def vals)
 				(exp-check-too-many def vals)
-				(if
+				(?
 				  (argument-keyword? def.)
 				    (exp-optional-rest def vals)
-				  (consp def.)
+				  (cons? def.)
 				    (exp-sub def vals)
 				  (exp-static def vals)))
 
          exp-main
 		   #'((def vals)
 			    (incf num)
-			    (if (keywordp vals.)
-				    (exp-key def vals)
-					(or (exp-check-too-many def vals)
-			        	(when def
-					      (exp-main-non-key def vals))))))
+			    (? (keywordp vals.)
+				   (exp-key def vals)
+				   (or (exp-check-too-many def vals)
+			           (when def
+					     (exp-main-non-key def vals))))))
 
   (with ((a k) (argument-exp-sort adef))
 	 (setf argdefs a
@@ -193,9 +193,9 @@
 			 		 rest-arg)))))
 
 (defun argument-expand (fun def vals &optional (apply-values t))
-  (if apply-values
-	  (argument-expand-0 fun def vals apply-values)
-	  (carlist (argument-expand-0 fun def vals apply-values))))
+  (? apply-values
+	 (argument-expand-0 fun def vals apply-values)
+	 (carlist (argument-expand-0 fun def vals apply-values))))
 
 (defun argument-expand-names (fun def)
   (argument-expand fun def nil nil))
@@ -203,10 +203,10 @@
 (defun argument-expand-values-r (x)
   (when x
     (let a x.
-	  (cons (if (and (consp a)
-           		     (eq '&rest a.))
-      		    .a
-      		    a)
+	  (cons (? (and (cons? a)
+           		    (eq '&rest a.))
+      		   .a
+      		   a)
 		    (argument-expand-values-r .x)))))
  
 (defun argument-expand-values (fun def vals)
@@ -219,10 +219,10 @@
            ,(%argument-expand-rest .args))))
 
 (defun argument-expand-compiled-values (fun def vals)
-  (mapcar (fn (if (and (consp _)
-                       (eq '&rest _.))
-                  (%argument-expand-rest ._)
-                  _))
+  (mapcar (fn (? (and (cons? _)
+                      (eq '&rest _.))
+                 (%argument-expand-rest ._)
+                 _))
           (cdrlist (argument-expand fun def vals t))))
 
 ;;; Tests

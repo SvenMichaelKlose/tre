@@ -6,7 +6,7 @@
 (defmacro define-template-macro (name head &optional tail)
    "Define simple head/tail template."
   `(defmacro ,name (n args &rest b)
- 	 (with (description (and b (consp b) (string? (first b)) (first b))
+ 	 (with (description (and b (cons? b) (string? (first b)) (first b))
 			body (if description (cdr b) b))
        `(defun ,,n ,,args
 		  ,,@(list description)

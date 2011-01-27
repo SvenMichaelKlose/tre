@@ -1,5 +1,5 @@
 ;;;; TRE compiler
-;;;; Copyright (c) 2006-2010 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2006-2011 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Subatomic expression utilities.
 
@@ -22,7 +22,7 @@
 
 (defun atomic-or-without-side-effects? (x)
   (or (atomic? x)
-	  (and (consp x)
+	  (and (cons? x)
 	  	   (in? x. '%quote 'car '%car 'cdr '%cdr '%slot-value
 				   '%vec '%stack
 				   'cons 'list 'aref 'href 'car 'cdr 'list
@@ -32,26 +32,24 @@
 				   'member 'append))))
 
 (defun vm-jump? (e)
-  (and (consp e)
+  (and (cons? e)
 	   (in? e. '%%vm-go '%%vm-go-nil)))
 
 (defun vm-jump-tag (x)
-  (if
-	(%%vm-go? x)
-	  .x.
-	(%%vm-go-nil? x)
-	  ..x.))
+  (?
+	(%%vm-go? x) .x.
+	(%%vm-go-nil? x) ..x.))
 
 (defun %%vm-scope-body (x)
   .x)
 
 (defun %var? (x)
-  (and (consp x)
+  (and (cons? x)
 	   (eq '%VAR x.)
 	   (eq nil ..x)))
 
 (defun %setqret? (x)
-  (and (consp x)
+  (and (cons? x)
 	   (eq '%SETQ x.)
 	   (eq '~%RET .x.)))
 
@@ -66,9 +64,9 @@
 
 (defun %setq-args (x)
   (let v (%setq-value x)
-    (if (consp v)
-	    .v
-	    (list v))))
+    (? (cons? v)
+	   .v
+	   (list v))))
 
 (defun %slot-value-obj (x)
   .x.)
@@ -89,7 +87,7 @@
 
 (defun %setq-funcall? (x)
   (and (%setq? x)
-	   (consp (%setq-value x))))
+	   (cons? (%setq-value x))))
 
 (defun atom-or-%quote? (x)
   (or (atom x)

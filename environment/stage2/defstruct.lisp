@@ -13,7 +13,7 @@
   (make-symbol (string-concat (symbol-name name) "?")))
 
 (defun %struct-field-name (field)
-  (? (consp field)
+  (? (cons? field)
      field.
      field))
 
@@ -27,7 +27,7 @@
     (mapcar (fn let argname (%struct-field-name _)
                  `(setf (aref ,g ,(1+! index))
 						(? (eq ,argname ',argname)
-						   ,(and (consp _)
+						   ,(and (cons? _)
 							     (cadr _))
 						  ,argname)))
             fields)))
@@ -67,7 +67,7 @@
 
 (defun %struct-sort-fields (fields-and-options)
   (with-queue (fields options)
-    (map (fn (? (and (consp _)
+    (map (fn (? (and (cons? _)
 					 (%struct-option-keyword _.))
 	            (enqueue options _)
 	            (enqueue fields _)))

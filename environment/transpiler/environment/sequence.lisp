@@ -13,7 +13,7 @@
   (if
     (string? seq)
 	  (%elt-string seq idx)
-    (consp seq)
+    (cons? seq)
 	  (nth idx seq)
   	(aref seq idx)))
 
@@ -23,5 +23,5 @@
 	  (error "strings cannot be modified")
 	(arrayp seq)
   	  (setf (aref seq idx) val)
-	(consp seq)
+	(cons? seq)
 	  (rplaca (nthcdr idx seq) val)))

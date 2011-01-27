@@ -242,7 +242,7 @@
   `(%transpiler-native "unset " ,x))
 
 (define-php-macro %slot-value (x y)
-  (? (consp x)
+  (? (cons? x)
 	 (? (eq '%transpiler-native x.)
 		`(%transpiler-native ,(php-dollarize x) "->" ,y)
 		(error "%TRANSPILER-NATIVE expected"))

@@ -16,9 +16,9 @@
 			      ,a
                   ,@(when (body-has-noargs-tag? body)
                       '(no-args))
-                  (block ,(if (consp name)
-                              (second name)
-                              name)
+                  (block ,(? (cons? name)
+                             (second name)
+                             name)
                     ,@(when *log-functions?*
                         `((log ,(symbol-name n))))
    		            ,@(body-without-noargs-tag body))))))

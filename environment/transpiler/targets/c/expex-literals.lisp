@@ -35,7 +35,7 @@
 ;; Just a type dispatcher.
 (defun c-expex-literal (x)
   (?
-	(consp x) (transpiler-import-from-expex x)
+	(cons? x) (transpiler-import-from-expex x)
     (characterp x) (c-compiled-char x)
     (number? x) (c-compiled-number x)
     (string? x) (c-compiled-string x)

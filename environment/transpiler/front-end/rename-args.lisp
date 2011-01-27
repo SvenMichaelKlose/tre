@@ -1,15 +1,15 @@
 ;;;;; TRE compiler
-;;;;; Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Apply this only to expanded arguments or keywords are renamed, too.
 
 (defun find-and-add-renamed-doubles (fi old-replacements vars args)
   (let argnames (argument-expand-names 'rename-args args)
-    (append (list-aliases (if (transpiler-rename-all-args? *current-transpiler*)
-						  	  (if (and fi (funinfo-ghost fi))
-								  .argnames
-								  argnames)
-							  (intersect argnames vars)))
+    (append (list-aliases (? (transpiler-rename-all-args? *current-transpiler*)
+						  	 (? (and fi (funinfo-ghost fi))
+								 .argnames
+								 argnames)
+							 (intersect argnames vars)))
 		    old-replacements)))
 
 (defun rename-arg (replacements x)
@@ -45,16 +45,16 @@
 	  :body (rename-function-arguments-0 nil nil (lambda-body x))))
 
 (defun rename-function-arguments-inside-named-toplevel-functions (x)
-  (if (atom x)
-	x
-    (cons (if (lambda? x.)
-			    (if (transpiler-rename-toplevel-function-args? *current-transpiler*)
-					(rename-function-arguments-r nil nil x.)
-					(rename-function-arguments-named-function x.))
-        	  (consp x.)
+  (? (atom x)
+	 x
+     (cons (? (lambda? x.)
+			  (? (transpiler-rename-toplevel-function-args? *current-transpiler*)
+				 (rename-function-arguments-r nil nil x.)
+				 (rename-function-arguments-named-function x.))
+        	  (cons? x.)
 			    (rename-function-arguments-inside-named-toplevel-functions x.)
 			  x.)
-          (rename-function-arguments-inside-named-toplevel-functions .x))))
+           (rename-function-arguments-inside-named-toplevel-functions .x))))
 
 (defun rename-function-arguments (x)
   (rename-function-arguments-inside-named-toplevel-functions x))

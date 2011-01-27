@@ -63,7 +63,7 @@
 (defun transpiler-to-string (tr x)
   (maptree #'((e)
 				(?
-				  (consp e)
+				  (cons? e)
 					(?
 					  (%transpiler-string? e)
 						(funcall (transpiler-gen-string tr) (cadr e))

@@ -1,5 +1,5 @@
 ;;;; TRE environment
-;;;; Copyright (c) 2006-2010 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2006-2011 Sven Klose <pixel@copei.de>
 
 (setq
 	*UNIVERSE*
@@ -26,7 +26,7 @@
 
 (%set-atom-fun any-quasiquote?
   #'((x)
-       (if (consp x)
+       (if (cons? x)
     	   (if
 	          (eq (car x) 'quasiquote)	       t
 	          (eq (car x) 'quasiquote-splice)  t))))

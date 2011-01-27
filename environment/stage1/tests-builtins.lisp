@@ -28,27 +28,27 @@
   nil)
 
 (define-test "CONSP"
-  ((consp (cons 1 1)))
+  ((cons? (cons 1 1)))
   t)
 
 (define-test "CONSP fails on atoms"
-  ((consp 'a))
+  ((cons? 'a))
   nil)
 
 (define-test "CONSP fails on numbers"
-  ((consp 1))
+  ((cons? 1))
   nil)
 
 (define-test "CONSP fails on characters"
-  ((consp #\1))
+  ((cons? #\1))
   nil)
 
 (define-test "CONSP fails on strings"
-  ((consp "1"))
+  ((cons? "1"))
   nil)
 
 (define-test "CONSP fails on arrays"
-  ((consp (make-array 1)))
+  ((cons? (make-array 1)))
   nil)
 
 (define-test "SYMBOLP"

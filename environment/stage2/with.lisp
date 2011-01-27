@@ -29,7 +29,7 @@
            (val (second alst)))
       (?
 	    ; MULTIPLE-VALUE-BIND if place is a cons.
-	    (consp plc)
+	    (cons? plc)
           `(multiple-value-bind ,plc ,val
 		     ,@(sub alst))
 

@@ -6,7 +6,7 @@
 (defun length (x)
   (when x
     (?
-      (consp x)
+      (cons? x)
 	    (%list-length x)
       (string? x)
 	    (strlen x)

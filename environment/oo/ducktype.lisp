@@ -1,5 +1,5 @@
 ;;;;; TRE environment
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2009,2011 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Ducktyped objects
 
@@ -36,10 +36,10 @@
 			(make-class))))
 
 (defmacro defclass (class-name args &rest body)
-  (with (cname (if (consp class-name)
+  (with (cname (if (cons? class-name)
 				   class-name.
 				   class-name)
-		 bases (and (consp class-name)
+		 bases (and (cons? class-name)
 				    .class-name))
 	(%ducktype-make-class cname bases)
 	(with (slothash (ducktype-slothash-name cname))

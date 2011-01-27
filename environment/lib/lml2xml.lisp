@@ -6,7 +6,7 @@
 (def-head-predicate %exec)
 
 (defun lml-attr? (x)
-  (and (consp x) (consp .x)
+  (and (cons? x) (cons? .x)
        (atom x.)
 	   (keywordp x.)
 	   (or (atom .x.)
@@ -75,7 +75,7 @@
 
 (defun lml2xml-0 (s x)
   (when x
-    (? (consp x)
+    (? (cons? x)
 	   (lml2xml-expr s x)
 	   (lml2xml-atom s x))))
 

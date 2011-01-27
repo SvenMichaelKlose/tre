@@ -1,6 +1,6 @@
 ;;;; nix operating system project
 ;;;; lisp compiler
-;;;; (c) 2005 Sven Klose <pixel@copei.de>
+;;;; (c) 2005,2011 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Tree transformation
 ;;;;
@@ -82,9 +82,9 @@
 
           (t
             ; If any of the elements is a cons, the match fails.
-            (? (consp mcar)
+            (? (cons? mcar)
               (awhen (tree-transform-compile-r mcar trn)
-                (enqueue form '(consp (car e)))
+                (enqueue form '(cons? (car e)))
                 (enqueue form `(#'((e) (block nil (and ,@!))) (car e))))
               (? (number? mcar)
                 (enqueue form `(= (car e) ,mcar))
@@ -112,7 +112,7 @@
           ,@form)))))))
 
 (defun tree-transform! (trn e)
-  (when (consp e)
+  (when (cons? e)
     (setf (tree-transform-clips trn) nil)
     ; If expression matches, get toplevel cons after match.
     (awhen (funcall (tree-transform-compiled-match trn) e trn)
