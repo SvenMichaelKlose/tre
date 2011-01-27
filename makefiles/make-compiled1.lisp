@@ -2,7 +2,7 @@
 ;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 
 (setf *show-definitions* t)
-(setf *opt-inline?* nil)
+(setf *opt-inline?* t)
 (setf *opt-inline-max-levels* 3)
 (setf *opt-inline-min-size* 0)
 (setf *opt-inline-max-size* 16)
