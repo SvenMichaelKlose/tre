@@ -87,6 +87,7 @@
   (exported-closures nil)
   (rename-all-args? nil)
   (rename-toplevel-function-args? nil)
+  (dot-expand? t)
 
   (predefined-symbols nil)
 

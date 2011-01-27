@@ -1,5 +1,5 @@
 ;;;;; TRE transpiler
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 ;; After this pass
 ;; - Functions are inlined.
@@ -7,17 +7,16 @@
 ;; - Optional: Anonymous functions were exported.
 ;; - FUNINFO objects are built for all functions.
 ;; - Accesses to the object in a method are thisified.
-(defun transpiler-preexpand-compose (tr)
-  (transpiler-pass
-	  fake-expression-expand (fn with-temporary *expex-warn?* t
-		                           (transpiler-expression-expand tr _)
-		                           _)
-      lambda-expand (fn transpiler-lambda-expand tr _)
-	  rename-function-arguments #'rename-function-arguments
-	  opt-inline (fn if *opt-inline?*
-	                    (opt-inline tr _)
-		                _)
-      thisify (fn thisify (transpiler-thisify-classes tr) _)))
+(transpiler-pass transpiler-preexpand-compose (tr)
+    fake-expression-expand (fn with-temporary *expex-warn?* t
+		                         (transpiler-expression-expand tr _)
+		                         _)
+    lambda-expand (fn transpiler-lambda-expand tr _)
+    rename-function-arguments #'rename-function-arguments
+    opt-inline (fn ? *opt-inline?*
+                     (opt-inline tr _)
+	                 _)
+    thisify (fn thisify (transpiler-thisify-classes tr) _))
 
 (defun transpiler-frontend-2 (tr x)
   (funcall (transpiler-preexpand-compose tr) x))
@@ -28,15 +27,18 @@
 ;;   of BLOCK and TAGBODY.
 ;; - Conditionals are implemented with VM-GO and VM-GO-NIL.
 ;; - Quoting is done by %QUOTE (same as QUOTE) exclusively.
-(defun transpiler-simple-expand-compose (tr)
-  (transpiler-pass
-      literal-conversion (fn funcall (transpiler-literal-conversion tr) _)
-      backquote-expand #'backquote-expand
-      compiler-macroexpand #'compiler-macroexpand
-      transpiler-macroexpand-2 (fn transpiler-macroexpand tr _)
-      quasiquote-expand #'quasiquote-expand
-      transpiler-macroexpand-1 (fn transpiler-macroexpand tr _)
-      dot-expand #'dot-expand))
+(transpiler-pass transpiler-simple-expand-compose (tr)
+    literal-conversion (fn funcall (transpiler-literal-conversion tr) _)
+    backquote-expand #'backquote-expand
+    compiler-macroexpand #'compiler-macroexpand
+    transpiler-macroexpand-2 (fn transpiler-macroexpand tr _)
+    quasiquote-expand #'quasiquote-expand
+    transpiler-macroexpand-1 (fn ? (transpiler-dot-expand? tr)
+                                   (transpiler-macroexpand tr _)
+                                   _)
+    dot-expand (fn ? (transpiler-dot-expand? tr)
+                     (dot-expand _)
+                     _))
 
 (defun transpiler-frontend-1 (tr x)
   (funcall (transpiler-simple-expand-compose tr) x))
