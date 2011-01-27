@@ -1,16 +1,15 @@
 ;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
-(js-type-predicate %stringp "string")
+(js-type-predicate %string? "string")
 
-(defun stringp (x)
-  (or (%stringp x)
+(defun string? (x)
+  (or (%string? x)
 	  (instanceof x (%transpiler-native "String"))))
 
 ;; XXX must be optional.
 (defun string-concat (&rest x)
-  (apply #'+ (mapcar (fn or _ "")
-					 x)))
+  (apply #'+ (mapcar (fn or _ "") x)))
 
 (dont-obfuscate char-code-at)
 
@@ -29,8 +28,8 @@
 
 ;; XXX ECMAScript only.
 (defun string (x)
-  (if
-	(stringp x)
+  (?
+	(string? x)
 	  x
 	(characterp x)
       (char-string x)
@@ -72,6 +71,6 @@
 
 ;; XXX ECMAScript only.
 (defun %subseq-string (seq start end)
-  (if (integer= start end)
-	  ""
-      (seq.substr start (- end start))))
+  (? (integer= start end)
+	 ""
+     (seq.substr start (- end start))))

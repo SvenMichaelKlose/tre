@@ -1,5 +1,5 @@
 ;;;; TRE environment
-;;;; Copyright (c) 2009 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2009,2011 Sven Klose <pixel@copei.de>
 
 (setq
 	*universe*
@@ -20,7 +20,7 @@
 ; (returns :type (number string))
 (%set-atom-fun +
   #'((&rest x)
-	   (if (stringp (car x))
+	   (if (string? (car x))
 		   (apply #'string-concat x)
 		   (apply #'number+ x))))
 

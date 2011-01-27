@@ -43,7 +43,7 @@
 		 label?
 		   (fn (not (or (consp _)
 						(number? _)
-				        (stringp _)))))
+				        (string? _)))))
     (when x
       (?
 		(label? x) (conv x)

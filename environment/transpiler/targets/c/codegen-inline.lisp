@@ -1,5 +1,5 @@
 ;;;;; TRE to C transpiler
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 ;;;; COMPARISON
 
@@ -22,7 +22,7 @@
 	'((consp "CONS")
 	  (atom  "ATOM")
 	  (number?  "NUMBER")
-	  (stringp  "STRING")
+	  (string?  "STRING")
 	  (arrayp  "ARRAY")
 	  (functionp  "FUNCTION")
 	  (builtinp   "BUILTIN"))

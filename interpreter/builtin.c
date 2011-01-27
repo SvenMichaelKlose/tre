@@ -1,6 +1,6 @@
 /*
  * TRE interpreter
- * Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
  *
  * Built-in functions
  */
@@ -420,7 +420,7 @@ char *tre_builtin_names[] = {
 
     "ELT", "%SET-ELT", "LENGTH",
 
-	"STRINGP",
+	"STRING?",
     "MAKE-STRING", "STRING=", "STRING-CONCAT", "STRING", "SYMBOL-NAME",
 	"LIST-STRING",
 

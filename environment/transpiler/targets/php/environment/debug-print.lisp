@@ -8,11 +8,11 @@
 (defun debug-print-cons-r (x doc)
   (when x
     (debug-print x. doc)
-    (if (consp .x)
-	    (debug-print-cons-r .x doc)
-	    (when .x
-		  (debug-print-write " . " doc)
-		  (debug-print-atom .x doc)))))
+    (? (consp .x)
+	   (debug-print-cons-r .x doc)
+	   (when .x
+		 (debug-print-write " . " doc)
+		 (debug-print-atom .x doc)))))
 
 (dont-obfuscate write)
 
@@ -22,30 +22,27 @@
   (debug-print-write ")" doc))
 
 (defun debug-print-symbol (x)
-  (+ (if (keywordp x)
-		 ":"
-		 "")
+  (+ (? (keywordp x) ":" "")
 	 (symbol-name x)))
 
 (defun debug-print-object (x)
   (+ "{"
-     (apply #'+ (map (fn (+ _ " => " (href x _) "<br/>"))
-				     x))
+     (apply #'+ (map (fn (+ _ " => " (href x _) "<br/>")) x))
 	"}<br/>"))
 
 (defun debug-print-atom (x doc)
   (debug-print-write
-      (+ (if
+      (+ (?
 	       (symbolp x)
 	         (debug-print-symbol x)
 	       (characterp x)
 		     (+ "#\\\\" (*string.from-char-code (char-code x)))
 	       (arrayp x)
 	         "{array}"
-	       (stringp x)
+	       (string? x)
 	         (+ "\"" x "\"")
 		   (when x
-	         (if (objectp x)
+	         (? (objectp x)
 			     (debug-print-object x)
 		   	     (string x))))
 	     " ")
@@ -54,7 +51,7 @@
 (dont-inline debug-print)
 
 (defun debug-print (x &optional (doc logwindow.document))
-  (if (consp x)
-	  (debug-print-cons x doc)
-	  (debug-print-atom x doc))
+  (? (consp x)
+	 (debug-print-cons x doc)
+	 (debug-print-atom x doc))
   x)

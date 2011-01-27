@@ -14,9 +14,9 @@
 
 (defun lml-body (x)
   (when x
-	(if (lml-attr? x)
-		(lml-body ..x)
-		x)))
+	(? (lml-attr? x)
+	   (lml-body ..x)
+	   x)))
 
 (defun lml2xml-end (s)
   (princ ">" s))
@@ -37,9 +37,9 @@
   (princ (string-concat " "
 			            (lml-attr-string x.)
                         "=\""
-			            (if (stringp .x.)
-                            .x.
-				            (lml-attr-string .x.))
+			            (? (string? .x.)
+                           .x.
+				           (lml-attr-string .x.))
                         "\"")
          s)
   (lml2xml-attr-or-body s ..x))
@@ -50,9 +50,9 @@
 
 (defun lml2xml-attr-or-body (s x)
   (when x
-    (if (lml-attr? x)
-        (lml2xml-attr s x)
-        (lml2xml-body s x))))
+    (? (lml-attr? x)
+       (lml2xml-attr s x)
+       (lml2xml-body s x))))
 
 (defun lml2xml-block (s x)
   (lml2xml-attr-or-body s .x)
@@ -69,15 +69,15 @@
   (unless (atom x.)
     (lml2xml-error-tagname x))
   (lml2xml-open s x)
-  (if (lml-body .x)
-      (lml2xml-block s x)
-      (lml2xml-inline s x)))
+  (? (lml-body .x)
+     (lml2xml-block s x)
+     (lml2xml-inline s x)))
 
 (defun lml2xml-0 (s x)
   (when x
-    (if (consp x)
-		(lml2xml-expr s x)
-		(lml2xml-atom s x))))
+    (? (consp x)
+	   (lml2xml-expr s x)
+	   (lml2xml-atom s x))))
 
 (defun lml2xml (x &optional (str nil))
   (with-default-stream s str

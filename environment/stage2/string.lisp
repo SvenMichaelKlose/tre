@@ -1,5 +1,5 @@
 ;;;; TRE environment
-;;;; Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2005-2009,2011 Sven Klose <pixel@copei.de>
 
 (define-test "ELT on string returns char"
   ((characterp (elt "LISP" 0)))
@@ -11,8 +11,8 @@
 
 ;(defun string= (sa sb)
 ;  "Return T if two strings match."
-;  (if (and (stringp sa)
-;		   (stringp sb))
+;  (if (and (string? sa)
+;		   (string? sb))
 ;    (let* ((la (length sa))
 ;	       (lb (length sb)))
 ;      (when (= la lb)

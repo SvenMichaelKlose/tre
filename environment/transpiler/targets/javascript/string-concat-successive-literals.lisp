@@ -1,5 +1,5 @@
 ;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2010-2011 Sven Klose <pixel@copei.de>
 
 (defun string-concat-successive-literals-0 (x y)
   (if
@@ -8,7 +8,7 @@
 	    (list !))
 	(not x.)
 	  (string-concat-successive-literals-0 .x nil)
-	(stringp x.)
+	(string? x.)
    	  (if y
 		  (string-concat-successive-literals-0 .x (string-concat y x.))
    	  	  (string-concat-successive-literals-0 .x x.))

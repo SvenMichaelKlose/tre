@@ -1,5 +1,5 @@
 ;;;;; Transpiler: TRE to PHP
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 ;; Define macro that is expanded _before_ standard macros.
 (defmacro define-php-std-macro (&rest x)
@@ -18,11 +18,11 @@
          fun-name (%defun-name name))
     `(%%vm-scope
        ,(apply #'shared-essential-defun fun-name args
-               (if *exec-log*
-                   `((%transpiler-native "echo \"" ,(string-concat (symbol-name fun-name)
-                                                                   *php-newline*) "\"")
+               (? *exec-log*
+                  `((%transpiler-native "echo \"" ,(string-concat (symbol-name fun-name)
+                                                                  *php-newline*) "\"")
                        nil ,@body)
-                   body))
+                  body))
        ,@(unless (simple-argument-list? adef)
            (with-gensym p
              `((defun ,($ fun-name '_treexp) (,p)
@@ -51,18 +51,18 @@
 
 ;; XXX Can't we do this in one macro?
 (define-php-std-macro bind (fun &rest args)
-  `(%bind ,(if (%slot-value? fun)
- 			   (second fun)
-    		   (error "function must be a SLOT-VALUE, got ~A" fun))
+  `(%bind ,(? (%slot-value? fun)
+ 			  .fun.
+    		  (error "function must be a SLOT-VALUE, got ~A" fun))
 		  ,fun))
 
 ;; X-browser MAKE-HASH-TABLE.
 (defun php-transpiler-make-new-hash (x)
   `(make-hash-table
-	 ,@(mapcan (fn (list (if (and (not (stringp _.))
-								  (eq :class _.))
-							 "class" ; IE6 wants this.
-							 _.)
+	 ,@(mapcan (fn (list (? (and (not (string? _.))
+								 (eq :class _.))
+						    "class" ; IE6 wants this.
+							_.)
 						 (second _)))
 			   (group x 2))))
 
@@ -74,10 +74,10 @@
 (define-php-std-macro new (&rest x)
   (unless x
 	(error "NEW expects arguments"))
-  (if (or (keywordp x.)
-		  (stringp x.))
-	  (php-transpiler-make-new-hash x)
-	  (php-transpiler-make-new-object x)))
+  (? (or (keywordp x.)
+		 (string? x.))
+	 (php-transpiler-make-new-hash x)
+	 (php-transpiler-make-new-object x)))
 
 ;; Iterate over array.
 (define-php-std-macro doeach ((var seq &rest result) &rest body)
@@ -91,10 +91,9 @@
 (define-php-std-macro php-type-predicate (name &rest types)
   `(defun ,name (x)
      (when x
-	   ,(if (< 1 (length types))
-       		`(or ,@(mapcar (fn `(%%%= (%php-typeof x) ,_))
-						   types))
-            `(%%%= (%php-typeof x) ,types.)))))
+	   ,(? (< 1 (length types))
+       	   `(or ,@(mapcar (fn `(%%%= (%php-typeof x) ,_)) types))
+           `(%%%= (%php-typeof x) ,types.)))))
 
 (define-php-std-macro href (hash key)
   `(aref ,hash ,key))

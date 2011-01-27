@@ -16,7 +16,7 @@
 
 (defun variablep (x)
   (and (atom x)
-	   (not (or (stringp x)
+	   (not (or (string? x)
 				(number? x)))))
 
 (defun keywordp (x)

@@ -1,14 +1,14 @@
 ;;;;; Transpiler: TRE to PHP
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (dont-obfuscate sizeof strlen)
 
 (defun length (x)
   (when x
-    (if
+    (?
       (consp x)
 	    (%list-length x)
-      (stringp x)
+      (string? x)
 	    (strlen x)
       (sizeof x))))
 

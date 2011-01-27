@@ -7,15 +7,15 @@
   `(,*php-indent* ,@x ,*php-separator*))
 
 (defun php-dollarize (x)
-  (if (and (atom x)
-		   (symbolp x))
-      (if
-        (not x)
-          "__w(NULL)"
-        (eq t x)
-          "__w(TRUE)"
-	    `("$" ,x))
-	  x))
+  (? (and (atom x)
+		  (symbolp x))
+     (?
+       (not x)
+         "__w(NULL)"
+       (eq t x)
+         "__w(TRUE)"
+	   `("$" ,x))
+	 x))
 
 (define-codegen-macro-definer define-php-macro *php-transpiler*)
 
@@ -60,15 +60,15 @@
       "}" ,*php-newline*)))
 
 (define-php-macro function (name &optional (x 'only-name))
-  (if (eq 'only-name x)
-      `(%transpiler-native "__w ("
-        (%transpiler-string
-            ,(transpiler-symbol-string *php-transpiler*
-                                       (transpiler-obfuscate *php-transpiler* (compiled-function-name name))))
-        ")")
-  	  (if (atom x)
-		  (error "codegen: arguments and body expected: ~A" x)
-	  	  (codegen-php-function name x))))
+  (? (eq 'only-name x)
+     `(%transpiler-native "__w ("
+          (%transpiler-string
+              ,(transpiler-symbol-string *php-transpiler*
+                                         (transpiler-obfuscate *php-transpiler* (compiled-function-name name))))
+          ")")
+  	 (? (atom x)
+		(error "codegen: arguments and body expected: ~A" x)
+	  	(codegen-php-function name x))))
 
 (define-php-macro %function-prologue (fi-sym) '(%transpiler-native ""))
 (define-php-macro %function-epilogue (fi-sym) '(%transpiler-native ""))
@@ -81,18 +81,18 @@
 
 (define-php-macro %%funref (name fi-sym)
   (let fi (get-lambda-funinfo-by-sym fi-sym)
-    (if (funinfo-ghost fi)
-  	  	`("new __funref ("
-              (%transpiler-string ,(transpiler-symbol-string *php-transpiler* name))
-              "," ,(php-dollarize (funinfo-lexical (funinfo-parent fi)))
-              ")")
-	    name)))
+    (? (funinfo-ghost fi)
+  	   `("new __funref ("
+             (%transpiler-string ,(transpiler-symbol-string *php-transpiler* name))
+             "," ,(php-dollarize (funinfo-lexical (funinfo-parent fi)))
+             ")")
+	   name)))
 
 ;;;; ASSIGNMENT
 
 (defun %transpiler-native-without-reference? (val)
   (and (%transpiler-native? val)
-	   (stringp .val.)
+	   (string? .val.)
 	   (string= "" .val.)))
 
 (defun php-assignment-operator (val)
@@ -105,13 +105,13 @@
 (defun php-%setq-0 (dest val)
   `((%transpiler-native
 	    ,*php-indent*
-	    ,@(if (transpiler-obfuscated-nil? dest)
-	          '("")
-			  `(,@(when (atom dest)
-				    (list "$"))
-				,dest
-			    ,(php-assignment-operator val)))
-        ,@(if
+	    ,@(? (transpiler-obfuscated-nil? dest)
+	         '("")
+			 `(,@(when (atom dest)
+				   (list "$"))
+			   ,dest
+			   ,(php-assignment-operator val)))
+        ,@(?
             (or (not val)
                 (eq t val))
               (list val)
@@ -242,11 +242,11 @@
   `(%transpiler-native "unset " ,x))
 
 (define-php-macro %slot-value (x y)
-  (if (consp x)
-	  (if (eq '%transpiler-native x.)
-		  `(%transpiler-native ,(php-dollarize x) "->" ,y)
-		  (error "%TRANSPILER-NATIVE expected"))
-	  `(%transpiler-native "$" ,x "->" ,y)))
+  (? (consp x)
+	 (? (eq '%transpiler-native x.)
+		`(%transpiler-native ,(php-dollarize x) "->" ,y)
+		(error "%TRANSPILER-NATIVE expected"))
+	 `(%transpiler-native "$" ,x "->" ,y)))
 
 ;;;; MISCELLANEOUS
 

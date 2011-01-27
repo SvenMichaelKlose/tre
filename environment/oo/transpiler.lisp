@@ -1,21 +1,21 @@
 ;;;;; TRE environment
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Classes
 
 (defun ignore-body-doc (body)
-  (if (and (not *transpiler-assert*)
-		   (stringp body.)
-		   .body)
-	  .body
-	  body))
+  (? (and (not *transpiler-assert*)
+		  (string? body.)
+		  .body)
+	 .body
+	 body))
 
 (defvar *delayed-constructors* nil)
 
 (defun transpiler_defclass (constructor-maker class-name args &rest body)
-  (with (cname (if (consp class-name)
-				   (first class-name)
-				   class-name)
+  (with (cname (? (consp class-name)
+				  (first class-name)
+				  class-name)
 		 bases (and (consp class-name)
 				    (cdr class-name))
 		classes (transpiler-thisify-classes *current-transpiler*))
@@ -24,11 +24,11 @@
     (when (href classes cname)
 	  (error "Class ~A already defined." cname))
 	(setf (href classes cname)
-		  (if bases
-    		  (with (bc (href classes (first bases)))
-			    (make-class :members (class-members bc)
-					        :parent bc));:methods (class-methods bc)))
-			  (make-class)))
+		  (? bases
+    		 (with (bc (href classes (first bases)))
+			   (make-class :members (class-members bc)
+					       :parent bc));:methods (class-methods bc)))
+			 (make-class)))
 	(acons! cname
 			(funcall constructor-maker cname bases args body)
 		    *delayed-constructors*)
@@ -39,18 +39,18 @@
 	(when *show-definitions*
       (late-print `(defmethod ,class-name ,name ,@(awhen args (list !)))))
     (aif (href classes class-name )
-		 (if (assoc name (class-methods !))
-			 (error "In class '~A': member '~A' already defined." class-name name)
-             (setf (class-methods !)
-		           (push (list name args
-						  	   (append (head-atoms body :but-last t)
-									   (when (transpiler-inject-function-names?  *current-transpiler*)
-										 `((setf *current-function*
-											     ,(+ (symbol-name class-name)
-												     "."
-													 (symbol-name name)))))
-									   (tail-after-atoms body :keep-last t)))
-					     (class-methods !))))
+		 (? (assoc name (class-methods !))
+			(error "In class '~A': member '~A' already defined." class-name name)
+            (setf (class-methods !)
+		          (push (list name args
+						  	  (append (head-atoms body :but-last t)
+									  (when (transpiler-inject-function-names?  *current-transpiler*)
+										`((setf *current-function*
+											    ,(+ (symbol-name class-name)
+												    "."
+													(symbol-name name)))))
+									  (tail-after-atoms body :keep-last t)))
+					    (class-methods !))))
 	    (error "Defiinition of method ~A: class ~A is not defined."
 			   name class-name)))
   nil)

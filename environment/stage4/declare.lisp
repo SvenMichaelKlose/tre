@@ -13,7 +13,7 @@
 	(float . number?)
 	(character . characterp)
 	(array . arrayp)
- 	(string . stringp)
+ 	(string . string?)
     (hash-table . hash-table?)))
 
 (defun %declare-type-predicate (typ)

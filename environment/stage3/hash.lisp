@@ -30,10 +30,10 @@
       (setf k (integer+ (<< k 4) (elt str i))))))
 
 (defun %make-hash-index (h key)
-  (if
+  (?
     (number? key)
       (%make-hash-index-num h key)
-    (stringp key)
+    (string? key)
       (%make-hash-index-string h key)
     (%make-hash-index-num h (>> (%id key) 2))))
 
@@ -49,20 +49,18 @@
 (defun (setf href) (new-value h key)
   (let tst (%hash-table-test h)
     (%with-hash-bucket b i h key
-      (if (assoc key b :test tst)
-          (setf (cdr (assoc key b :test tst)) new-value)
-          (setf (aref (%hash-table-hash h) i) (acons key new-value b)))))
+      (? (assoc key b :test tst)
+         (setf (cdr (assoc key b :test tst)) new-value)
+         (setf (aref (%hash-table-hash h) i) (acons key new-value b)))))
   new-value)
 
 (defun hremove (h key)
   (%with-hash-bucket b i h key
     (setf (aref (%hash-table-hash h) i)
-		  (remove (assoc key b :test (%hash-table-test h))
-				  b))))
+		  (remove (assoc key b :test (%hash-table-test h)) b))))
 
 (defun hashkeys (h)
   (let keys nil
 	(dotimes (i (length (%hash-table-hash h)) keys)
-	  (push (carlist (aref (%hash-table-hash h) i))
-		    keys))
+	  (push (carlist (aref (%hash-table-hash h) i)) keys))
     (apply #'nconc keys)))

@@ -38,7 +38,7 @@
 	(consp x) (transpiler-import-from-expex x)
     (characterp x) (c-compiled-char x)
     (number? x) (c-compiled-number x)
-    (stringp x) (c-compiled-string x)
+    (string? x) (c-compiled-string x)
 	(funinfo-in-this-or-parent-env? *expex-funinfo* x) x
 	(expex-funinfo-defined-variable? x) `(treatom_get_value ,(c-compiled-symbol x))
 	x))

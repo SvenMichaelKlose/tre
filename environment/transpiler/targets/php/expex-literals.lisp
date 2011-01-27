@@ -28,9 +28,9 @@
 			      "new __symbol ("
 			  	      (%transpiler-string ,(symbol-name x))
                       ","
-			   	      ,(if (keywordp x)
-                           "$KEYWORDPACKAGE"
-                           "__w(NULL)")
+			   	      ,(? (keywordp x)
+                          "$KEYWORDPACKAGE"
+                          "__w(NULL)")
 				      ")"))
 
 (defun php-expex-add-global (x)
@@ -43,7 +43,7 @@
       (php-expex-add-global (php-compiled-char x))
     (number? x)
 	  (php-expex-add-global (php-compiled-number x))
-    (stringp x)
+    (string? x)
 	  (php-expex-add-global (php-compiled-string x))
     (%quote? x)
 	  (php-expex-add-global (php-compiled-symbol .x.))

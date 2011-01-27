@@ -1,5 +1,5 @@
 ;;;;; TRE compiler
-;;;;; Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
 
 ;;; Pass lexical up one step through ghost.
 
@@ -40,7 +40,7 @@
 
 	(or (not x)
 		(number? x)
-		(stringp x)
+		(string? x)
 		(not (funinfo-in-this-or-parent-env? fi x)))
 	  x
 

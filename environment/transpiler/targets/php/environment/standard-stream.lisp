@@ -1,5 +1,5 @@
 ;;;;; TRE environment
-;;;;; Copyright (c) 2009-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2009-2011 Sven Klose <pixel@copei.de>
 
 (dont-obfuscate echo)
 
@@ -7,9 +7,7 @@
   (make-stream
       :fun-in       #'((str))
       :fun-out      #'((c str)
-                         (%setq nil (echo (if (stringp c)
-											  c
-											  (char-string c))))
+                         (%setq nil (echo (? (string? c) c (char-string c))))
                          nil)
 	  :fun-eof	  #'((str) t)))
 

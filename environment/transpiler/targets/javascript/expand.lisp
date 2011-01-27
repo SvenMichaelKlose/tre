@@ -87,7 +87,7 @@
 
 (defun js-transpiler-make-new-hash (x)
   `(make-hash-table
-	 ,@(mapcan (fn (list (if (and (not (stringp _.))
+	 ,@(mapcan (fn (list (if (and (not (string? _.))
 								  (eq :class _.))
 							 "class" ; IE6 wants this.
 							 _.)
@@ -101,7 +101,7 @@
   (unless x
 	(error "NEW expects arguments"))
   (if (or (keywordp x.)
-		  (stringp x.))
+		  (string? x.))
 	  (js-transpiler-make-new-hash x)
 	  (js-transpiler-make-new-object x)))
 

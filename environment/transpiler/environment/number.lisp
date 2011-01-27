@@ -9,7 +9,7 @@
 (defun + (&rest x)
   (let n (%wrap-char-number x.)
 	(dolist (i .x n)
-      (setf n (? (stringp i)
+      (setf n (? (string? i)
 	             (%%%string+ (string n) (string i))
 	             (%%%+ n (%wrap-char-number i)))))))
 

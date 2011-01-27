@@ -1,18 +1,18 @@
 ;;;;; TRE environment
-;;;;; Copyright (C) 2006-2008 Sven Klose <pixel@copei.de>
+;;;;; Copyright (C) 2006-2008,2011 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; LML function library
 
 (defun string-or-cons? (expr)
-  (or (stringp expr) (consp expr)))
+  (or (string? expr) (consp expr)))
 
 ;;;; LML utilities
 
 (defun lml-get-children (x)
   (when (consp x)
-    (if (consp x.)
-        x
-        (lml-get-children .x))))
+    (? (consp x.)
+       x
+       (lml-get-children .x))))
 
 (defun lml-get-attribute (x name)
   (when x
@@ -30,8 +30,6 @@
 					   "")))
 
 (defun lml-attr-value-string (x)
-  (if (stringp x)
-	  x
-  	  (string-downcase (if x
-					   	   (string x)
-					   	   ""))))
+  (? (string? x)
+	 x
+  	 (string-downcase (if x (string x) ""))))

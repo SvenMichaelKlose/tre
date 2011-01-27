@@ -1,11 +1,11 @@
 ;;;;; TRE environment
-;;;;; Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2005-2008,2011 Sven Klose <pixel@copei.de>
 
 (defvar *documentation* nil)
 (defvar *macros* nil)
 
 (%defun %add-documentation (name body)
-  (if (stringp (car body)) ; XXX incomplete
+  (if (string? (car body)) ; XXX incomplete
       (progn
         (setq *documentation* (cons (cons name
 										  (car body))

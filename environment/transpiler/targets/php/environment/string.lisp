@@ -3,7 +3,7 @@
 
 (dont-obfuscate is_string)
 
-(defun stringp (x)
+(defun string? (x)
   (is_string x))
 
 (defun string-concat (&rest x)
@@ -25,8 +25,8 @@
 (dont-obfuscate strval)
 
 (defun string (x)
-  (if
-	(stringp x)
+  (?
+	(string? x)
 	  x
 	(characterp x)
       (char-string x)
@@ -52,6 +52,6 @@
 (dont-obfuscate substr)
 
 (defun %subseq-string (seq start end)
-  (if (= start end)
-	  ""
-      (substr seq start (- end start))))
+  (? (= start end)
+	 ""
+     (substr seq start (- end start))))

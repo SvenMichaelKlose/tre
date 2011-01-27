@@ -27,7 +27,7 @@
   "Print object in human readable format."
   (with-default-stream s str
     (?
-      (stringp obj) (%princ-string obj s)
+      (string? obj) (%princ-string obj s)
       (characterp obj) (%princ-character obj s)
       (number? obj) (%princ-number obj s)
       (symbolp obj) (%princ-string (symbol-name obj) s))
@@ -80,7 +80,7 @@
 (defun %print-atom (x str)
   (?
 	(number? x) (princ x str)
-	(stringp x) (%print-string x str)
+	(string? x) (%print-string x str)
 	(%print-symbol x str)))
 
 (defun %late-print (x str)

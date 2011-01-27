@@ -132,15 +132,15 @@
 ;  nil)
 
 (define-test "STRINGP recognizes strings"
-  ((stringp "some string"))
+  ((string? "some string"))
   t)
 
 (define-test "STRINGP fails on numbers"
-  ((stringp 1))
+  ((string? 1))
   nil)
 
 (define-test "STRINGP fails on symbols"
-  ((stringp 'a))
+  ((string? 'a))
   nil)
 
 (define-test "CODE-CHAR converts number to char"
