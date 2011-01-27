@@ -1,5 +1,5 @@
 ;;;;; TRE environment
-;;;;; Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
 
 (defun %princ-character (c str)
   (setf (stream-last-char str) c)
@@ -9,9 +9,9 @@
   (with (recp #'((out n) ; XXX: REC will bug the expression-expander.
       			   (let m (mod n 10)
         			 (push m out)
-        			 (if (> n 9)
-          				 (recp out (/ (- n m) 10))
-          				 out))))
+        			 (? (> n 9)
+          				(recp out (/ (- n m) 10))
+          				out))))
     (dolist (i (recp nil c))
       (%princ-character (code-char (+ i #\0)) str))))
 
@@ -26,10 +26,10 @@
 (defun princ (obj &optional (str *standard-output*))
   "Print object in human readable format."
   (with-default-stream s str
-    (if
+    (?
       (stringp obj) (%princ-string obj s)
       (characterp obj) (%princ-character obj s)
-      (numberp obj) (%princ-number obj s)
+      (number? obj) (%princ-number obj s)
       (symbolp obj) (%princ-string (symbol-name obj) s))
 	obj))
 
@@ -50,15 +50,15 @@
 (defun %print-rest (c str)
   (%late-print c. str)
   (let x .c
-    (if x
-        (if (consp x)
-            (progn
-	          (princ #\  str)
-              (%print-rest x str))
-	        (progn
-			  (format str " . ")
-              (%print-atom x str)))
-        (format str ")"))))
+    (? x
+       (? (consp x)
+          (progn
+	        (princ #\  str)
+            (%print-rest x str))
+	      (progn
+			(format str " . ")
+            (%print-atom x str)))
+       (format str ")"))))
 
 (defun %print-cons (x str)
   (princ #\( str)
@@ -67,9 +67,9 @@
 (defun %print-string (x str)
   (princ #\" str)
   (dolist (c (string-list x))
-	(if (= c #\")
-		(format str "\"")
-		(princ c str)))
+	(? (= c #\")
+	   (format str "\"")
+	   (princ c str)))
   (princ #\" str))
 
 (defun %print-symbol (x str)
@@ -78,13 +78,13 @@
   (princ (symbol-name x) str))
 
 (defun %print-atom (x str)
-  (if
-	(numberp x) (princ x str)
+  (?
+	(number? x) (princ x str)
 	(stringp x) (%print-string x str)
 	(%print-symbol x str)))
 
 (defun %late-print (x str)
-  (if (consp x)
+  (? (consp x)
       (%print-cons x str)
 	  (%print-atom x str)))
 

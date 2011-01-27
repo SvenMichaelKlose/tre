@@ -1,5 +1,5 @@
 ;;;; TRE environment
-;;;; Copyright (C) 2005-2009 Sven Klose <pixel@copei.de>
+;;;; Copyright (C) 2005-2011 Sven Klose <pixel@copei.de>
 ;;;;
 ;;;; Second stage
 
@@ -11,6 +11,7 @@
 (env-load "stage2/queue-utils.lisp")
 (env-load "stage2/assoc.lisp")
 (env-load "stage2/assoc-value.lisp")
+(env-load "stage2/assoc-splice.lisp")
 (env-load "stage2/pairlist.lisp")
 (env-load "stage2/range.lisp")
 (env-load "stage2/char.lisp")

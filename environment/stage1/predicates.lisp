@@ -17,7 +17,7 @@
 (defun variablep (x)
   (and (atom x)
 	   (not (or (stringp x)
-				(numberp x)))))
+				(number? x)))))
 
 (defun keywordp (x)
   (and (symbolp x)
@@ -25,7 +25,7 @@
 		   *keyword-package*)))
 
 (defun integerp (x)
-  (and (numberp x)
+  (and (number? x)
 	   (not (characterp x))))
 
 (define-test "NOT works with NIL"

@@ -92,7 +92,7 @@
 (defun opt-peephole-tags-lambda (x)
   (with (body x
 		 spare-tags (find-all-if (fn opt-peephole-has-no-jumps-to body _)
-		  				         (find-all-if #'numberp x)))
+		  				         (find-all-if #'number? x)))
     (remove-if (fn member _ spare-tags) x)))
 
 (defun opt-peephole-remove-spare-tags-body (x)

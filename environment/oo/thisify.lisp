@@ -1,5 +1,5 @@
 ;;;;; TRE transpiler
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Wrap local method calls into SLOT-VALUEs.
 
@@ -11,7 +11,7 @@
 
 (defun thisify-symbol (classdef x exclusions)
   (aif (and classdef
-			(not (or (numberp x)
+			(not (or (number? x)
            			 (stringp x)))
 			(not (find x exclusions))
 		    (assoc x classdef))
@@ -19,7 +19,7 @@
 	   x))
 
 (defun thisify-list-0 (classdef x exclusions)
-  (if
+  (?
 	(atom x)
       (thisify-symbol classdef x exclusions)
 	(%quote? x)
@@ -31,12 +31,10 @@
 				 		   (lambda-body x)
 				 		   (append exclusions
 								   (lambda-args x))))
-    (cons (if (%slot-value? x.)
-			  `(%slot-value ,(thisify-list-0 classdef
-								 			 (second x.)
-								  			 exclusions)
+    (cons (? (%slot-value? x.)
+			 `(%slot-value ,(thisify-list-0 classdef (second x.) exclusions)
 					        ,(third x.))
-			  (thisify-list-0 classdef x. exclusions))
+			 (thisify-list-0 classdef x. exclusions))
 		  (thisify-list-0 classdef .x exclusions))))
 
 ;; Thisify class members inside found %THISIFY.
@@ -50,7 +48,7 @@
 
 ;; Search %THISIFY-expressions and treat them accordingly.
 (defun thisify (classes x)
-  (if
+  (?
 	 (atom x)
 	   x
 	 (%thisify? x.)

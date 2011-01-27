@@ -1,5 +1,5 @@
 ;;;;; TRE transpiler
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2009,2011 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Identifier style conversion
 
@@ -39,7 +39,7 @@
 							   (convert-special2 ._))
 					   (convert-special2 _))))))
 	(if (or (stringp s)
-			(numberp s))
+			(number? s))
 		(string s)
 		(with (str (string s)
 	     	   l (length str))

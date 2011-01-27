@@ -1,5 +1,5 @@
 ;;;; TRE environment
-;;;; Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2005-2009,2011 Sven Klose <pixel@copei.de>
 
 (defun %struct-option-keyword (e)
   (in? e :constructor))
@@ -9,13 +9,13 @@
        !.
        (make-symbol (string-concat "MAKE-" (symbol-name name)))))
 
-(defun %struct-p-symbol (name)
-  (make-symbol (string-concat (symbol-name name) "-P")))
+(defun %struct?-symbol (name)
+  (make-symbol (string-concat (symbol-name name) "?")))
 
 (defun %struct-field-name (field)
-  (if (consp field)
-      field.
-      field))
+  (? (consp field)
+     field.
+     field))
 
 (defun %struct-make-args (fields)
   `(&key ,@(mapcar (fn (let n (%struct-field-name _)
@@ -23,16 +23,14 @@
 				   fields)))
 
 (defun %struct-make-init (fields g)
-  (let form (make-queue)
-    (do ((i fields .i)
-	     (idx 1 (1+ idx)))
-        ((endp i) (queue-list form))
-      (let argname (%struct-field-name i.)
-        (enqueue form `(setf (aref ,g ,idx)
-							 (if (eq ,argname ',argname)
-								 ,(when (consp i.)
-									(second i.))
-								 ,argname)))))))
+  (let index 0
+    (mapcar (fn let argname (%struct-field-name _)
+                 `(setf (aref ,g ,(1+! index))
+						(? (eq ,argname ',argname)
+						   ,(and (consp _)
+							     (cadr _))
+						  ,argname)))
+            fields)))
 
 (defun %struct-make (name fields options)
   (with (sym (%struct-make-symbol name options)
@@ -41,9 +39,9 @@
 	     type-init `((setf (aref ,g 0) ',name)))
     `(defun ,sym ,(%struct-make-args fields)
        (let ,g (make-array ,(1+ (length fields)))
-         ,@(if user-init
-	           (nconc type-init user-init)
-	           type-init)
+         ,@(? user-init
+	          (nconc type-init user-init)
+	          type-init)
 	     ,g))))
 
 (defun %struct-getter-symbol (name field)
@@ -58,25 +56,22 @@
         (setf (aref arr ,index) val)))))
 
 (defun %struct-getters (name fields)
-  (with-queue form
-    (do ((i fields .i)
-	     (index 1 (1+ index)))
-	    ((endp i) (queue-list form))
-      (enqueue form
-			   (%struct-single-get name (%struct-field-name i.) index)))))
+  (let index 0
+    (mapcar (fn %struct-single-get name (%struct-field-name _) (1+! index)) fields)))
 
-(defun %struct-p (name)
-  (let sym (%struct-p-symbol name)
+(defun %struct? (name)
+  (let sym (%struct?-symbol name)
     `(defun ,sym (arr)
-       (and (arrayp arr) (eq (aref arr 0) ',name)))))
+       (and (arrayp arr)
+            (eq ',name (aref arr 0))))))
 
 (defun %struct-sort-fields (fields-and-options)
   (with-queue (fields options)
-    (mapcar (fn (if (and (consp _)
-						 (%struct-option-keyword _.))
-	                (enqueue options _)
-	                (enqueue fields _)))
-	        fields-and-options)
+    (map (fn (? (and (consp _)
+					 (%struct-option-keyword _.))
+	            (enqueue options _)
+	            (enqueue fields _)))
+	     fields-and-options)
     (values (queue-list fields) (queue-list options))))
 
 (defvar *struct-defs*)
@@ -88,16 +83,14 @@
   (assoc-value name *struct-defs*))
 
 (defun %struct-fields (name)
-  (with-queue form
-    (dolist (i (%struct-def name) (queue-list form))
-      (enqueue form i.))))
+  (carlist (%struct-def name)))
 
 (defun %defstruct-expander (name &rest fields-and-options)
   (multiple-value-bind (flds opts) (%struct-sort-fields fields-and-options)
     (%struct-add-def name flds)
     `(progn
       ,(%struct-make name flds opts)
-      ,(%struct-p name)
+      ,(%struct? name)
       ,@(%struct-getters name flds)
       (defmacro ,(make-symbol (string-concat "WITH-" (symbol-name name))) (s &rest body)
 		 `(with-struct ,name ,,s ,,@body))

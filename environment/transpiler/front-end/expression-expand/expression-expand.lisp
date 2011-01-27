@@ -1,5 +1,5 @@
 ;;;;; TRE compiler
-;;;;; Copyright (c) 2006-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2006-2011 Sven Klose <pixel@copei.de>
 ;;;;; 
 ;;;;; Expression-expander
 ;;;;;
@@ -243,6 +243,11 @@
     (when (lambda-expression-needing-cps? (%setq-value x))
       (transpiler-add-cps-function *current-transpiler* (%setq-place x)))))
 
+(defun expex-vm-go-nil (ex x)
+  (with ((moved new-expr) (expex-filter-and-move-args ex (list .x.)))
+    (values (apply #'append moved)
+            `((%%vm-go-nil ,@new-expr ,..x.)))))
+
 ;; Expand expression depending on type.
 ;;
 ;; Recurses into LAMBDA-expressions and VM-SCOPEs.
@@ -253,6 +258,8 @@
 			 (expex-guest-filter-expr ex expr))
     (expex-cps x)
     (if
+      (%%vm-go-nil? x)
+        (expex-vm-go-nil ex x)
 	  (%var? x)
 	    (expex-var x)
 	  (or (lambda? x)
@@ -308,7 +315,7 @@
 
 (defun expex-save-atoms (x)
   (mapcar (fn if (and (atom _)
-					  (not (numberp _)))
+					  (not (number? _)))
 				 `(identity ,_)
 				 _)
 		  (or x (list nil))))

@@ -1,7 +1,7 @@
 ;;;;; Transpiler: TRE to JavaScript
 ;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
-(js-type-predicate %numberp "number")
+(js-type-predicate %number? "number")
 
 (dont-obfuscate parse-int)
 

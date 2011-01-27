@@ -90,15 +90,17 @@
 
 ;;;; ASSIGNMENT
 
+(defun %transpiler-native-without-reference? (val)
+  (and (%transpiler-native? val)
+	   (stringp .val.)
+	   (string= "" .val.)))
+
 (defun php-assignment-operator (val)
-  (if (or (and (atom val)
-		  	   (symbolp val))
-		  (and (consp val)
-			   (or (not (%transpiler-native? val))
-			   	   (and (stringp .val.)
-						(not (string= "" .val.))))))
-   	  "=&"
-  	  "="))
+  (? (or (and (atom val)
+		  	  (symbolp val))
+		 (not (%transpiler-native-without-reference? val)))
+   	 "=&"
+  	 "="))
  
 (defun php-%setq-0 (dest val)
   `((%transpiler-native

@@ -1,5 +1,5 @@
 ;;;;; TRE compiler
-;;;;; Copyright (c) 2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2010-2011 Sven Klose <pixel@copei.de>
 
 (defun in-cps-mode? ()
   (and (transpiler-continuation-passing-style? *current-transpiler*)                                              
@@ -16,9 +16,9 @@
         (error "no CPS function name"))))
 
 (defun cps-make-call-to-next (x xlats)
-  (if .x
-      `(%setq nil (,(cps-cons-function-name .x xlats)))
-      `(%setq nil (~%continuer ~%ret))))
+  `(%setq nil ,(? .x
+                  `(,(cps-cons-function-name .x xlats))
+                  '(~%continuer ~%ret))))
 
 (defun cps-function-assignment? (x)
   (and (%setq? x)
@@ -29,7 +29,7 @@
 (defun cps-funcall? (x)
   (and (%setq-funcall? x)
        (with (n (car (%setq-value x)))
-              ;n (if (%transpiler-native? v.)
+              ;n (? (%transpiler-native? v.)
                  ;   (cadr v.)
                   ;  v.))
          (and (not (expander-has-macro? (transpiler-macro-expander *current-transpiler*)
@@ -75,7 +75,7 @@
 ;(defun cps-foureign-funcall (fi x)
 ;  (with (replacements nil
 ;         some-replaced? nil
-;         new-args (mapcar (fn (if (transpiler-cps-function? *current-transpiler* _)
+;         new-args (mapcar (fn (? (transpiler-cps-function? *current-transpiler* _)
 ;                                  (with-gensym (g arg v1 v2)
 ;                                    (setq some-replaced? t)
 ;                                    (funinfo-env-add fi g)
@@ -165,7 +165,7 @@
   (cps-split-constructorcall-0 fi x (cps-split-make-continuer fi x xlats)))
 
 (defun cps-split (fi x xlats tag-xlats &key (first? t))
-  (if
+  (?
     (cps-apply? x.)
       (cps-split-apply fi x xlats)
     (cps-methodcall? x.)
@@ -193,17 +193,17 @@
       (%%vm-go-nil? x)))
 
 (defun cps-body (fi continuer x xlats tag-xlats &key (first? t))
-  (if
+  (?
     (not x)
       (cons nil nil)
-    (numberp x.)
-      (if first?
-          (if .x
-              (cps-body fi continuer .x xlats tag-xlats :first? nil)
-              `((%setq nil (,continuer ~%ret))
-                nil))
-          (append `((%setq nil (,(cps-cons-function-name x xlats))))
-                  (list (list x))))
+    (number? x.)
+      (? first?
+         (? .x
+            (cps-body fi continuer .x xlats tag-xlats :first? nil)
+            `((%setq nil (,continuer ~%ret))
+              nil))
+         (append `((%setq nil (,(cps-cons-function-name x xlats))))
+                 (list (list x))))
     (cps-splitpoint-expr? x.)
       (append (cps-split fi x xlats tag-xlats :first? first?)
               (list (list .x)))
@@ -228,17 +228,17 @@
 
 (defun cps-get-xlats (x &key (first? t))
   (when x
-    (if
-      (numberp x.)
+    (?
+      (number? x.)
         (cons (cons x (gensym))
               (cps-get-xlats .x :first? nil))
       (cps-splitpoint-expr? x.)
-        (if first?
-            (cons (cons x (gensym))
-                  (cons (cons .x (gensym))
-                        (cps-get-xlats .x :first? nil)))
-            (cons (cons .x (gensym))
-                  (cps-get-xlats .x :first? nil)))
+        (? first?
+           (cons (cons x (gensym))
+                 (cons (cons .x (gensym))
+                       (cps-get-xlats .x :first? nil)))
+           (cons (cons .x (gensym))
+                 (cps-get-xlats .x :first? nil)))
       first?
         (cons (cons x (gensym))
               (cps-get-xlats .x :first? nil))
@@ -246,10 +246,10 @@
 
 (defun cps-get-tag-xlats (x)
   (when x
-    (if (numberp x.)
-        (cons (cons x. x)
-              (cps-get-tag-xlats .x))
-        (cps-get-tag-xlats .x))))
+    (? (number? x.)
+       (cons (cons x. x)
+             (cps-get-tag-xlats .x))
+       (cps-get-tag-xlats .x))))
 
 (defun cps-function (x)
   (with (continuer '~%continuer

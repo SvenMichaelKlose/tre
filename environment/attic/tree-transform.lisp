@@ -82,21 +82,21 @@
 
           (t
             ; If any of the elements is a cons, the match fails.
-            (if (consp mcar)
+            (? (consp mcar)
               (awhen (tree-transform-compile-r mcar trn)
                 (enqueue form '(consp (car e)))
                 (enqueue form `(#'((e) (block nil (and ,@!))) (car e))))
-              (if (numberp mcar)
+              (? (number? mcar)
                 (enqueue form `(= (car e) ,mcar))
                 (enqueue form `(eq (car e) ',mcar))))))
 
         ; If next is an any match, return its first element or T.
         (when (and (cdr m) (eq (cadr m) '*any))
-          (enqueue form '(if (cdr e) (cdr e) t))
+          (enqueue form '(? (cdr e) (cdr e) t))
           (return-from tree-transform-compile-r (queue-list form)))
 
         ; Return T if end of lists match.
-        (if (not (cdr m))
+        (? (not (cdr m))
           (progn
             (enqueue form '(not (cdr e)))
             (return-from tree-transform-compile-r (queue-list form)))

@@ -9,9 +9,9 @@
          ,var))
 
 (defun make-lexical-1 (fi var)
-  (if (funinfo-in-args-or-env? (funinfo-parent fi) var)
-	  (make-lexical-place-expr fi var)
-	  (make-lexical-1 (funinfo-parent fi) var)))
+  (? (funinfo-in-args-or-env? (funinfo-parent fi) var)
+	 (make-lexical-place-expr fi var)
+	 (make-lexical-1 (funinfo-parent fi) var)))
 
 (defun make-lexical-0 (fi x)
   (funinfo-setup-lexical-links fi x)
@@ -21,25 +21,25 @@
 		   ,...ret.)))
 
 (defun make-lexical (fi x)
-  (if (eq (funinfo-ghost fi) x)
-	  (place-expand-atom (funinfo-parent fi) x)
-	  (make-lexical-0 fi x)))
+  (? (eq (funinfo-ghost fi) x)
+	 (place-expand-atom (funinfo-parent fi) x)
+	 (make-lexical-0 fi x)))
 
 (defun place-expand-emit-stackplace (fi x)
-  (if (transpiler-stack-locals? *current-transpiler*)
-  	  `(%stack ,(funinfo-sym fi)
-			   ,x)
-	  x))
+  (? (transpiler-stack-locals? *current-transpiler*)
+  	 `(%stack ,(funinfo-sym fi)
+			  ,x)
+	 x))
 
 (defun place-expand-atom (fi x)
-  (if
+  (?
 	(not fi)
 	  (progn
 		(print x)
 	    (error "place-expand-atom: no funinfo"))
 
 	(or (not x)
-		(numberp x)
+		(number? x)
 		(stringp x)
 		(not (funinfo-in-this-or-parent-env? fi x)))
 	  x

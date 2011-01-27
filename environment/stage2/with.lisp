@@ -1,5 +1,5 @@
 ;;;;; TRE environment
-;;;;; Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
 
 (defun copy-while (pred x)
   (when (and x (funcall pred (car x)))
@@ -7,7 +7,7 @@
 		  (copy-while pred (cdr x)))))
 
 (define-test "COPY-WHILE"
-  ((copy-while #'numberp '(1 2 3 a)))
+  ((copy-while #'number? '(1 2 3 a)))
   '(1 2 3))
 
 (defun collect (pred x)
@@ -19,15 +19,15 @@
 	(error "body expected"))
   ; Make new WITH for rest of assignment list.
   (labels ((sub (x)
-             (if (cddr x)
-                 `((with ,(cddr x)
-					 ,@body))
-                 body)))
+             (? (cddr x)
+                `((with ,(cddr x)
+					,@body))
+                body)))
 
 	; Get first pair.
     (let* ((plc (first alst))
            (val (second alst)))
-      (if
+      (?
 	    ; MULTIPLE-VALUE-BIND if place is a cons.
 	    (consp plc)
           `(multiple-value-bind ,plc ,val

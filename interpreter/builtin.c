@@ -386,7 +386,7 @@ char *tre_builtin_names[] = {
 	"INTEGER+", "INTEGER-",
 	"CHARACTER+", "CHARACTER-",
 	"*", "/", "MOD",
-    "LOGXOR", "NUMBERP",
+    "LOGXOR", "NUMBER?",
     "=", "<", ">",
     "NUMBER=", "NUMBER<", "NUMBER>",
     "INTEGER=", "INTEGER<", "INTEGER>",

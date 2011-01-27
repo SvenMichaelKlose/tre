@@ -3,7 +3,7 @@
 
 (dont-obfuscate is_int is_float)
 
-(defun %numberp (x)
+(defun %number? (x)
   (or (is_int x)
       (is_float x)))
 

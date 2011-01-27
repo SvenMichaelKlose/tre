@@ -1,5 +1,5 @@
 ;;;;; TRE to C transpiler
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 ;;;; GENERAL CODE GENERATION
 
@@ -47,7 +47,7 @@
 	  "}" ,*c-newline*)))
 
 (define-c-macro function (name &optional (x 'only-name))
-  (if
+  (?
 	(eq 'only-name x)	name
     (atom x)			(error "codegen: arguments and body expected: ~A" x)
 	(c-codegen-function name x)))
@@ -55,9 +55,9 @@
 (define-c-macro %function-prologue (fi-sym)
   (with (fi (get-lambda-funinfo-by-sym fi-sym)
     	 num-vars (length (funinfo-env fi)))
-	(if (< 0 num-vars)
-		(c-codegen-function-prologue-for-local-variables fi num-vars)
-		'(%transpiler-native ""))))
+	(? (< 0 num-vars)
+	   (c-codegen-function-prologue-for-local-variables fi num-vars)
+	   '(%transpiler-native ""))))
 
 ;;;; FUNCTION REFERENCE
 
@@ -73,17 +73,17 @@
 ;;;; ASSIGNMENT
 
 (defun codegen-%setq-place (dest val)
-  (if (transpiler-obfuscated-nil? dest)
-	  (if (codegen-expr? val)
-		  '("")
-	      '("(void) "))
-	  `(,dest " = ")))
+  (? (transpiler-obfuscated-nil? dest)
+	 (? (codegen-expr? val)
+		'("")
+	    '("(void) "))
+	 `(,dest " = ")))
 
 (defun codegen-%setq-value (val)
-   (if (or (atom val)
-		   (codegen-expr? val))
-       val
-       `(,val. ,@(parenthized-comma-separated-list .val))))
+   (? (or (atom val)
+		  (codegen-expr? val))
+      val
+      `(,val. ,@(parenthized-comma-separated-list .val))))
 
 (define-c-macro %setq (dest val)
   (c-line `((%transpiler-native ,@(codegen-%setq-place dest val))
@@ -139,24 +139,24 @@
 
 (defun c-make-aref (arr idx)
   `("((treptr *) TREATOM_DETAIL(" ,arr "))["
-	    ,(if (or (numberp idx)
-				 (%transpiler-native? idx))
-		  	 idx
-			 `("(ulong)TRENUMBER_VAL(" ,idx ")"))
+	    ,(? (or (number? idx)
+				(%transpiler-native? idx))
+		  	idx
+			`("(ulong)TRENUMBER_VAL(" ,idx ")"))
 		"]"))
 
 (define-c-macro aref (arr &rest idx)
-  (if (= 1 (length idx))
-	  (c-make-aref arr idx.)
-	  `(trearray_builtin_aref ,arr ,@idx)))
+  (? (= 1 (length idx))
+	 (c-make-aref arr idx.)
+	 `(trearray_builtin_aref ,arr ,@idx)))
 
 (define-c-macro %set-aref (val arr &rest idx)
-  (if (= 1 (length idx))
-	  (append (c-make-aref arr idx.)
-			  `("=" ,val))
-	  `(trearray_builtin_set_aref ,val ,arr ,@idx)))
+  (? (= 1 (length idx))
+	 (append (c-make-aref arr idx.)
+			 `("=" ,val))
+	 `(trearray_builtin_set_aref ,val ,arr ,@idx)))
 
 (define-c-macro make-array (size)
-  (if (numberp size)
-      `("trearray_make (" (%transpiler-native ,size) ")")
-      `("trearray_get (_trelist_get (" ,size ", treptr_nil))")))
+  (? (number? size)
+     `("trearray_make (" (%transpiler-native ,size) ")")
+     `("trearray_get (_trelist_get (" ,size ", treptr_nil))")))

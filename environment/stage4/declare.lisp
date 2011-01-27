@@ -1,5 +1,5 @@
 ;;;;; TRE environment
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (defvar *type-predicates*
   '((nil . not)
@@ -8,9 +8,9 @@
 	(atom . atom)
 	(symbol . symbolp)
 	(function . functionp)
-	(number . numberp)
-	(integer . numberp)
-	(float . numberp)
+	(number . number?)
+	(integer . number?)
+	(float . number?)
 	(character . characterp)
 	(array . arrayp)
  	(string . stringp)

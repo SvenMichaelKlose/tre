@@ -1,9 +1,8 @@
 ;;;;; TRE transpiler
-;;;;; Copyright (c) 2009-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2009-2011 Sven Klose <pixel@copei.de>
 
 (defun c-make-decl (name)
-  (format nil "treptr ~A;~%"
-  	      (transpiler-symbol-string *current-transpiler* name)))
+  (format nil "treptr ~A;~%" (transpiler-symbol-string *current-transpiler* name)))
 
 ;;;;; Make declarations, initialisations and references to literals.
 
@@ -23,35 +22,23 @@
 
 (c-define-compiled-literal c-compiled-string (x string)
   :maker ($ 'trestring_compiled_ (gensym-number))
-  :init-maker (tregc_push_compiled (trestring_get (%transpiler-native
-									     (%transpiler-string ,x)))))
+  :init-maker (tregc_push_compiled (trestring_get (%transpiler-native (%transpiler-string ,x)))))
 
 (c-define-compiled-literal c-compiled-symbol (x symbol)
-  :maker ($ 'tresymbol_compiled_ x (if (keywordp x)
-	     						'_keyword
-		 						""))
-  :init-maker (tregc_push_compiled
-			      (treatom_get
-			          (%transpiler-native
-				          (%transpiler-string ,(symbol-name x)))
-			           ,(if (keywordp x)
-				            'tre_package_keyword
-				            'treptr_nil))))
+  :maker ($ 'tresymbol_compiled_ x (? (keywordp x) '_keyword ""))
+  :init-maker (tregc_push_compiled (treatom_get (%transpiler-native (%transpiler-string ,(symbol-name x)))
+			                                    ,(? (keywordp x)
+				                                    'tre_package_keyword
+				                                    'treptr_nil))))
 
 ;; An EXPEX-ARGUMENT-FILTER.
 ;; Just a type dispatcher.
 (defun c-expex-literal (x)
-  (if
-	(consp x)
-      (transpiler-import-from-expex x)
-    (characterp x)
-      (c-compiled-char x)
-    (numberp x)
-	  (c-compiled-number x)
-    (stringp x)
-	  (c-compiled-string x)
-	(funinfo-in-this-or-parent-env? *expex-funinfo* x)
-	  x
-	(expex-funinfo-defined-variable? x)
-  	  `(treatom_get_value ,(c-compiled-symbol x))
-	  x))
+  (?
+	(consp x) (transpiler-import-from-expex x)
+    (characterp x) (c-compiled-char x)
+    (number? x) (c-compiled-number x)
+    (stringp x) (c-compiled-string x)
+	(funinfo-in-this-or-parent-env? *expex-funinfo* x) x
+	(expex-funinfo-defined-variable? x) `(treatom_get_value ,(c-compiled-symbol x))
+	x))

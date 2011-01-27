@@ -1,5 +1,5 @@
 ;;;;; TRE transpiler
-;;;;; Copyright (c) 2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2010-2011 Sven Klose <pixel@copei.de>
 
 (defun reassignment? (fi x)
   (and (%setq? x)
@@ -9,7 +9,7 @@
   (let result (make-queue)
     (while (and x
                 (not (vm-jump? x.))
-                (not (numberp .x.))
+                (not (number? .x.))
                 (not (reassignment? fi x.)))
            (progn
              (when (reassignment? fi x.)
@@ -37,7 +37,7 @@
   (let tags nil
     (dolist (i x tags)
       (let f (car (cblock-code i))
-        (when (numberp f)
+        (when (number? f)
           (acons! f i tags)
           (setf (cblock-code i) (cdr (cblock-code i))))))))
 
@@ -45,7 +45,7 @@
   (when x
     (with (cb x.
            l (car (last (cblock-code cb))))
-      (if
+      (?
         (%%vm-go? l)
           (setf (cblock-next cb) (assoc-value .l. tags :test #'=))
         (%%vm-go-nil? l)

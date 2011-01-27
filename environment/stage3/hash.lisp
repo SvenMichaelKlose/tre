@@ -1,5 +1,5 @@
 ;;;; TRE environment
-;;;; Copyright (c) 2005-2006,2008-2010 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2005-2006,2008-2011 Sven Klose <pixel@copei.de>
 
 (defvar *default-hash-size* 2048)
 
@@ -10,7 +10,7 @@
   count)            ; Number of elements stored in the table.
 
 (defun hash-table? (x)
-  (%hash-table-p x))
+  (%hash-table? x))
 
 (defun make-hash-table (&key (test #'eq)
 							 (size *default-hash-size*))
@@ -31,7 +31,7 @@
 
 (defun %make-hash-index (h key)
   (if
-    (numberp key)
+    (number? key)
       (%make-hash-index-num h key)
     (stringp key)
       (%make-hash-index-string h key)

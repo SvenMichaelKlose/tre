@@ -1,5 +1,5 @@
 ;;;;; TRE to C transpiler
-;;;;; Copyright (c) 2009-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2009-2011 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Renaming body tags after lambda-expansion
 
@@ -20,7 +20,7 @@
 
 (defun rename-body-tags-get-0 (x)
   (if
-	(numberp x)     (list (cons x (make-compiler-tag)))
+	(number? x)     (list (cons x (make-compiler-tag)))
 	(lambda? x)     (rename-body-tags-get (lambda-body x))
 	(%%vm-scope? x) (rename-body-tags-get .x)
 	(%quote? x)     nil
@@ -50,7 +50,7 @@
 
 (defun rename-body-tags-set-0 (x renamed)
   (if
-	(numberp x)	      (or (assoc-value x renamed :test #'=)
+	(number? x)	      (or (assoc-value x renamed :test #'=)
 				  	  	(error "didn't gather tag ~A" x.))
 	(%quote? x)       x
 	(%%vm-go? x)      `(%%vm-go ,(or (assoc-value .x. renamed :test #'=)

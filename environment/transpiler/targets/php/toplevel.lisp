@@ -9,7 +9,7 @@
                                                     _ ".php")
 						 	                     :direction 'input)
 			  	           (read-all-lines i))
-                      '("reference" "character" "cons" "funref" "symbol")))
+                      '("settings" "reference" "character" "cons" "funref" "symbol")))
 		 out))
 
 (defun php-transpile-prepare (tr &key (import-universe? nil))

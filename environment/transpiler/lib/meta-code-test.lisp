@@ -1,9 +1,9 @@
 ;;;;; TRE compiler
-;;;;; Copyright (c) 2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2010-2011 Sven Klose <pixel@copei.de>
 
 (defun test-meta-code-0 (x)
   "Check code between expression- and place-expansions."
-  (if
+  (?
 	(not x)
 	  nil
 	(atom x)
@@ -11,10 +11,10 @@
 	    (print x)
 	    (error "meta-code: illegal atom. Expression expected"))
     (progn
-	  (if
+	  (?
 	    (atom x.)
 	      (unless (or (not x.)
-					  (numberp x.))
+					  (number? x.))
 		    (print x)
 		    (error "meta-code: illegal atom. Number, jump, SETQ- or function expression expected"))			   
 	    (%var? x.)
@@ -25,8 +25,8 @@
 		  nil
         (%setq? x.)
 	      (let val (%setq-value x.)
-	        (if (function-expr? val)
-	            (test-meta-code-0 (lambda-body val))))
+	        (when (function-expr? val)
+	          (test-meta-code-0 (lambda-body val))))
 	    (function-expr? x.)
 	      (test-meta-code-0 (lambda-body x.))
 		(progn

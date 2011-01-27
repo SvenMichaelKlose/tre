@@ -21,7 +21,7 @@
 (mapcan-macro _
 	'((consp "CONS")
 	  (atom  "ATOM")
-	  (numberp  "NUMBER")
+	  (number?  "NUMBER")
 	  (stringp  "STRING")
 	  (arrayp  "ARRAY")
 	  (functionp  "FUNCTION")

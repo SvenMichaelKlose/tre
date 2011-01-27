@@ -1,5 +1,5 @@
 ;;;;; TRE environment
-;;;;; Copyright (C) 2006,2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (C) 2006,2009,2011 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Early built-in function tests
 
@@ -76,19 +76,19 @@
   nil)
 
 (define-test "NUMBERP recognizes numbers"
-  ((numberp 42))
+  ((number? 42))
   t)
 
 (define-test "NUMBERP recognizes characters"
-  ((numberp #\a))
+  ((number? #\a))
   t)
 
 (define-test "NUMBERP fails on arrays"
-  ((numberp (make-array 1)))
+  ((number? (make-array 1)))
   nil)
 
 (define-test "NUMBERP fails on symbols"
-  ((numberp 'a))
+  ((number? 'a))
   nil)
 
 (define-test "CHARACTERP recognizes characters"

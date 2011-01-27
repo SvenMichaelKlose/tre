@@ -1,5 +1,5 @@
 ;;;;; TRE environment
-;;;;; Copyright (C) 2005-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (C) 2005-2011 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; First stage
 
@@ -26,6 +26,7 @@
 (env-load "stage1/tests-stage0.lisp")
 (env-load "stage1/tests-arith.lisp")
 (env-load "stage1/anaphoric.lisp")
+(env-load "stage1/terse-if.lisp")
 (env-load "stage1/comparison.lisp")
 (env-load "stage1/member.lisp")
 (env-load "stage1/slot-value-p.lisp")

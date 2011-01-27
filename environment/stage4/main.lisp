@@ -1,9 +1,8 @@
 ;;;; TRE environment
-;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (env-load "stage4/assoc-hash.lisp")
 (env-load "stage4/assoc-replace.lisp")
-(env-load "stage4/assoc-splice.lisp")
 (env-load "stage4/cache.lisp")
 (env-load "stage4/clr.lisp")
 (env-load "stage4/collect-symbols.lisp")
@@ -59,7 +58,6 @@
 (env-load "stage4/symbols-function-exprs.lisp")
 (env-load "stage4/t.lisp")
 (env-load "stage4/tail-after-if.lisp")
-(env-load "stage4/terse-if.lisp")
 (env-load "stage4/tree-list.lisp")
 (env-load "stage4/tree-size.lisp")
 (env-load "stage4/trim.lisp")

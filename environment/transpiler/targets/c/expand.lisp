@@ -1,5 +1,5 @@
 ;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Override alternative standard macros.
 
@@ -31,7 +31,7 @@
 
 (mapcan-macro _
     '(car cdr not
-	  consp atom numberp stringp arrayp functionp builtinp)
+	  consp atom number? stringp arrayp functionp builtinp)
   `((define-c-std-macro ,_ (x)
 	  `(,($ '% _) ,,x))))
 
@@ -44,14 +44,14 @@
 (define-c-std-macro %%usetf-aref (val arr &rest idx)
   (if (and (= 1 (length idx))
 		   (not (%transpiler-native? idx.))
-		   (numberp idx.))
+		   (number? idx.))
     `(%set-aref ,val ,arr (%transpiler-native ,idx.))
     `(%set-aref ,val ,arr ,@idx)))
 
 (define-c-std-macro aref (arr &rest idx)
   (if (and (= 1 (length idx))
 		   (not (%transpiler-native? idx.))
-		   (numberp idx.))
+		   (number? idx.))
 	  `(aref ,arr (%transpiler-native ,idx.))
 	  `(aref ,arr ,@idx)))
 	  

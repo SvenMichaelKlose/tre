@@ -2,16 +2,16 @@
 ;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (defun %wrap-char-number (x)
-  (if (characterp x)
-	  (char-code x)
-	  x))
+  (? (characterp x)
+	 (char-code x)
+	 x))
 
 (defun + (&rest x)
   (let n (%wrap-char-number x.)
 	(dolist (i .x n)
-      (if (stringp i)
-	      (setf n (%%%string+ (string n) (string i)))
-	      (setf n (%%%+ n (%wrap-char-number i)))))))
+      (setf n (? (stringp i)
+	             (%%%string+ (string n) (string i))
+	             (%%%+ n (%wrap-char-number i)))))))
 
 (defun number+ (&rest x)
   (let n (%wrap-char-number x.)
@@ -62,12 +62,12 @@
 	  (defun ,($ 'character _) (x y)
 	    (,op x.v y.v)))))
 
-(defun numberp (x)
-  (or (%numberp x)
+(defun number? (x)
+  (or (%number? x)
 	  (characterp x)))
 
 (defun integer (x)
   (declare type number x)
-  (if (characterp x)
-      (char-code x)
-      x))
+  (? (characterp x)
+     (char-code x)
+     x))
