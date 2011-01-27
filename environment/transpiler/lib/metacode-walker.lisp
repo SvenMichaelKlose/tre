@@ -1,5 +1,5 @@
 ;;;;; TRE compiler
-;;;;; Copyright (c) 2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2010-2011 Sven Klose <pixel@copei.de>
 
 (defun function-copier-0 (x body-statements)
   `(function ,,@(awhen (lambda-name ,x) (list !))
@@ -25,6 +25,7 @@
 
 (defmacro metacode-walker-statements (name args &key (if-atom nil)
 										  			 (if-cons nil)
+										  			 (if-slot-value nil)
 										  			 (if-function nil)
 										  			 (if-lambda nil)
 										  			 (if-named-function nil)
@@ -43,6 +44,7 @@
 						   (error "illegal tag, not in toplevel"))
 		               (not ,x)		nil
 		               ,@(awhen if-atom `((atom ,x)	,!))
+		               ,@(awhen if-slot-value `((%slot-value? ,x) ,!))
 
 		               ,@(awhen (or if-named-function if-function)
 			               `((%setq-named-function? ,x)
