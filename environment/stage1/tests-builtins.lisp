@@ -52,27 +52,27 @@
   nil)
 
 (define-test "SYMBOLP"
-  ((symbolp 'a))
+  ((symbol? 'a))
   t)
 
 (define-test "SYMBOLP fails on cells"
-  ((symbolp (list 'a)))
+  ((symbol? (list 'a)))
   nil)
 
 (define-test "SYMBOLP fails on numbers"
-  ((symbolp 1))
+  ((symbol? 1))
   nil)
 
 (define-test "SYMBOLP fails on characters"
-  ((symbolp #\1))
+  ((symbol? #\1))
   nil)
 
 (define-test "SYMBOLP fails on strings"
-  ((symbolp "1"))
+  ((symbol? "1"))
   nil)
 
 (define-test "SYMBOLP fails on arrays"
-  ((symbolp (make-array 1)))
+  ((symbol? (make-array 1)))
   nil)
 
 (define-test "NUMBERP recognizes numbers"

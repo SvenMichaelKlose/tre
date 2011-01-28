@@ -30,7 +30,7 @@
       (string? obj) (%princ-string obj s)
       (characterp obj) (%princ-character obj s)
       (number? obj) (%princ-number obj s)
-      (symbolp obj) (%princ-string (symbol-name obj) s))
+      (symbol? obj) (%princ-string (symbol-name obj) s))
 	obj))
 
 (defun terpri (&optional (str *standard-output*))

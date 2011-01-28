@@ -8,7 +8,7 @@
 
 (defun opt-peephole-collect-syms-0 (x h)
   (?
-    (symbolp x)
+    (symbol? x)
       (setf (href h x) (1+ (or (href h x) 0)))
     (atom x)
       nil
@@ -28,7 +28,7 @@
 
 (defun opt-peephole-uncollect-syms-0 (x num h)
   (?
-    (symbolp x)
+    (symbol? x)
       (when (href h x)
         (setf (href h x) (- (href h x) num)))
     (atom x)

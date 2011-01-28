@@ -10,7 +10,7 @@
 (defun endp (x)
   (eq x nil))
 
-(defun symbolp (x)
+(defun symbol? (x)
   (and (atom x)
        (not (= 0 (length (symbol-name x))))))
 
@@ -20,7 +20,7 @@
 				(number? x)))))
 
 (defun keywordp (x)
-  (and (symbolp x)
+  (and (symbol? x)
 	   (eq (symbol-package x)
 		   *keyword-package*)))
 

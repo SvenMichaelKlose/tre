@@ -8,7 +8,7 @@
 
 (defun php-dollarize (x)
   (? (and (atom x)
-		  (symbolp x))
+		  (symbol? x))
      (?
        (not x)
          "__w(NULL)"
@@ -97,7 +97,7 @@
 
 (defun php-assignment-operator (val)
   (? (or (and (atom val)
-		  	  (symbolp val))
+		  	  (symbol? val))
 		 (not (%transpiler-native-without-reference? val)))
    	 "=&"
   	 "="))

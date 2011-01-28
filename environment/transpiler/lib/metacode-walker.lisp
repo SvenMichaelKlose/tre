@@ -84,7 +84,7 @@
        (if
 		 (atom ,x)
 	       (if (not ,x) nil
-	           ,@(awhen if-symbol	`((symbolp ,x) ,!))
+	           ,@(awhen if-symbol	`((symbol? ,x) ,!))
 	           ,@(awhen if-atom		`((atom ,x) ,!))
 			   ,@(unless traverse?
 				   (list x)))

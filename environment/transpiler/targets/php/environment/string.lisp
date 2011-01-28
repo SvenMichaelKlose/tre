@@ -30,7 +30,7 @@
 	  x
 	(characterp x)
       (char-string x)
-    (symbolp x)
+    (symbol? x)
 	  (symbol-name x)
 	(not x)
 	  ,*nil-symbol-name*

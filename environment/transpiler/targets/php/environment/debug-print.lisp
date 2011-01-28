@@ -33,7 +33,7 @@
 (defun debug-print-atom (x doc)
   (debug-print-write
       (+ (?
-	       (symbolp x)
+	       (symbol? x)
 	         (debug-print-symbol x)
 	       (characterp x)
 		     (+ "#\\\\" (*string.from-char-code (char-code x)))

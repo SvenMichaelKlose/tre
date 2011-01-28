@@ -6,7 +6,7 @@
     (cons . cons?)
 	(list . listp)
 	(atom . atom)
-	(symbol . symbolp)
+	(symbol . symbol?)
 	(function . functionp)
 	(number . number?)
 	(integer . number?)

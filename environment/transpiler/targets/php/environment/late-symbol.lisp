@@ -28,5 +28,5 @@
 
 (dont-obfuscate is_a)
 
-(defun symbolp (x)
+(defun symbol? (x)
   (is_a x "__symbol"))

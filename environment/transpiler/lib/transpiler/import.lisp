@@ -1,5 +1,5 @@
 ;;;;; TRE transpiler
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (defun transpiler-defined? (tr name)
   (or (transpiler-defined-function tr name)
@@ -11,7 +11,7 @@
 
 (defun transpiler-can-import? (tr name)
   (and (transpiler-import-from-environment? tr)
- 	   (symbolp name)
+ 	   (symbol? name)
   	   (not (transpiler-defined? tr name))))
 	
 (defun transpiler-add-wanted-function (tr x)
@@ -29,7 +29,7 @@
     x)
 
 (defun transpiler-should-add-wanted-variable? (tr var)
-  (and (symbolp var)
+  (and (symbol? var)
        (transpiler-import-from-environment? tr)
 	   (assoc var *variables* :test #'eq)))
 
@@ -98,7 +98,7 @@
 
 (defun transpiler-import-universe (tr)
   (dolist (i (reverse *defined-functions*))
-	(and (symbolp i)
+	(and (symbol? i)
 		 (not (builtinp i))
 		 (symbol-function i))
 	     (transpiler-add-wanted-function tr i)))

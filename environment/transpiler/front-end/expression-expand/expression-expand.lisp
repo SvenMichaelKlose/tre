@@ -77,7 +77,7 @@
 
 (defun expex-warn (x)
   (and *expex-warn?*
-	   (symbolp x)
+	   (symbol? x)
 	   (not (expex-symbol-defined? x))
 	   (error "symbol ~A is not defined in function ~A.~%"
 			  (symbol-name x) (funinfo-get-name *expex-funinfo*))))
