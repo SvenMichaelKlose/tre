@@ -4,7 +4,7 @@
 (define-tree-filter transpiler-quote-keywords (x)
   (or (%quote? x)
    	  (and (cons? x)
-     	   (eq 'make-hash-table (car x))))
+     	   (eq 'make-hash-table x.)))
 	x
-  (keywordp x) 
+  (keyword? x) 
     `(%quote ,x))

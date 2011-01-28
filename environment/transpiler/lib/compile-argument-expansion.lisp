@@ -76,7 +76,7 @@
       `((with (compexp-keywords
 				  #'(()
 				      (let v nil
-					    (while (keywordp (setf v (car ,p)))
+					    (while (keyword? (setf v (car ,p)))
 							   nil
 						  (?
 						    ,@(mapcan (fn `((eq v ,(make-symbol (symbol-name _) *keyword-package*))

@@ -67,7 +67,7 @@
 (defun expex-symbol-defined? (x)
   (let tr *current-transpiler*
     (or (functionp x)
-	    (keywordp x)
+	    (keyword? x)
 	    (member x (transpiler-predefined-symbols tr) :test #'eq)
 	    (in? x nil t '~%ret 'this)
 	    (funinfo-in-this-or-parent-env? *expex-funinfo* x)

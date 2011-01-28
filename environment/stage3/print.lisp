@@ -73,7 +73,7 @@
   (princ #\" str))
 
 (defun %print-symbol (x str)
-  (when (keywordp x)
+  (when (keyword? x)
 	(princ #\: str))
   (princ (symbol-name x) str))
 

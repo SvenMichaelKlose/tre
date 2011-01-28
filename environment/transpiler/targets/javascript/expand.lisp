@@ -100,7 +100,7 @@
 (define-js-std-macro new (&rest x)
   (unless x
 	(error "NEW expects arguments"))
-  (if (or (keywordp x.)
+  (if (or (keyword? x.)
 		  (string? x.))
 	  (js-transpiler-make-new-hash x)
 	  (js-transpiler-make-new-object x)))

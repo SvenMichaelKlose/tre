@@ -74,7 +74,7 @@
 (define-php-std-macro new (&rest x)
   (unless x
 	(error "NEW expects arguments"))
-  (? (or (keywordp x.)
+  (? (or (keyword? x.)
 		 (string? x.))
 	 (php-transpiler-make-new-hash x)
 	 (php-transpiler-make-new-object x)))

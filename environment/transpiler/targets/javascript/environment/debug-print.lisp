@@ -22,7 +22,7 @@
   (js-print-write ")" doc))
 
 (defun js-print-symbol (x doc)
-  (when (keywordp x)
+  (when (keyword? x)
 	(js-print-write ":" doc))
   (js-print-write (+ (symbol-name x) " ") doc))
 

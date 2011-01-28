@@ -19,7 +19,7 @@
 	   (not (or (string? x)
 				(number? x)))))
 
-(defun keywordp (x)
+(defun keyword? (x)
   (and (symbol? x)
 	   (eq (symbol-package x)
 		   *keyword-package*)))
@@ -37,9 +37,9 @@
   nil)
 
 (define-test "KEYWORDP recognizes keyword-packaged symbols"
-  ((keywordp :lisp))
+  ((keyword? :lisp))
   t)
 
 (define-test "KEYWORDP works with standard symbols"
-  ((keywordp 'lisp))
+  ((keyword? 'lisp))
   nil)

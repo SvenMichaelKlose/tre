@@ -11,7 +11,7 @@
 
 (defun argument-list-keyword? (x)
   (or (argument-keyword? x)
-      (keywordp x)))
+      (keyword? x)))
 
 ;; We want keywords to be legal all across a level.
 ;; Make an extra keyword definition list, so they can be found.
@@ -176,7 +176,7 @@
          exp-main
 		   #'((def vals)
 			    (incf num)
-			    (? (keywordp vals.)
+			    (? (keyword? vals.)
 				   (exp-key def vals)
 				   (or (exp-check-too-many def vals)
 			           (when def

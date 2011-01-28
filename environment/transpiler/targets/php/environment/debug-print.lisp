@@ -22,7 +22,7 @@
   (debug-print-write ")" doc))
 
 (defun debug-print-symbol (x)
-  (+ (? (keywordp x) ":" "")
+  (+ (? (keyword? x) ":" "")
 	 (symbol-name x)))
 
 (defun debug-print-object (x)

@@ -23,12 +23,12 @@
 (php-define-compiled-literal php-compiled-symbol (x symbol)
   :maker ($ 'tresymbol_compiled_
 			x
-			(? (keywordp x) '_keyword ""))
+			(? (keyword? x) '_keyword ""))
   :init-maker (%transpiler-native
 			      "new __symbol ("
 			  	      (%transpiler-string ,(symbol-name x))
                       ","
-			   	      ,(? (keywordp x)
+			   	      ,(? (keyword? x)
                           "$KEYWORDPACKAGE"
                           "__w(NULL)")
 				      ")"))
@@ -47,7 +47,7 @@
 	  (php-expex-add-global (php-compiled-string x))
     (%quote? x)
 	  (php-expex-add-global (php-compiled-symbol .x.))
-    (keywordp x)
+    (keyword? x)
 	  (php-expex-add-global (php-compiled-symbol x))
 	(atom x)
       (?

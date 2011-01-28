@@ -25,9 +25,9 @@
   :init-maker (tregc_push_compiled (trestring_get (%transpiler-native (%transpiler-string ,x)))))
 
 (c-define-compiled-literal c-compiled-symbol (x symbol)
-  :maker ($ 'tresymbol_compiled_ x (? (keywordp x) '_keyword ""))
+  :maker ($ 'tresymbol_compiled_ x (? (keyword? x) '_keyword ""))
   :init-maker (tregc_push_compiled (treatom_get (%transpiler-native (%transpiler-string ,(symbol-name x)))
-			                                    ,(? (keywordp x)
+			                                    ,(? (keyword? x)
 				                                    'tre_package_keyword
 				                                    'treptr_nil))))
 
