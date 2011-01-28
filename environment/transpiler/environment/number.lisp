@@ -2,7 +2,7 @@
 ;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (defun %wrap-char-number (x)
-  (? (characterp x)
+  (? (character? x)
 	 (char-code x)
 	 x))
 
@@ -64,10 +64,10 @@
 
 (defun number? (x)
   (or (%number? x)
-	  (characterp x)))
+	  (character? x)))
 
 (defun integer (x)
   (declare type number x)
-  (? (characterp x)
+  (? (character? x)
      (char-code x)
      x))

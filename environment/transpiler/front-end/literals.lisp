@@ -1,8 +1,8 @@
 ;;;;; TRE transpiler
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (define-tree-filter transpiler-expand-characters (x)
-  (characterp x)
+  (character? x)
 	`(code-char ,(char-code x)))
 
 (defmacro define-compiled-literal (name (x table) &key maker init-maker decl-maker)

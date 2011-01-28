@@ -92,27 +92,27 @@
   nil)
 
 (define-test "CHARACTERP recognizes characters"
-  ((characterp #\a))
+  ((character? #\a))
   t)
 
 (define-test "CHARACTERP fails on symbols"
-  ((characterp 'a))
+  ((character? 'a))
   nil)
 
 (define-test "CHARACTERP fails on cells"
-  ((characterp (list 1)))
+  ((character? (list 1)))
   nil)
 
 (define-test "CHARACTERP fails on numbers"
-  ((characterp 1))
+  ((character? 1))
   nil)
 
 (define-test "CHARACTERP fails on arrays"
-  ((characterp (make-array 1)))
+  ((character? (make-array 1)))
   nil)
 
 (define-test "CHARACTERP fails on strings"
-  ((characterp "1"))
+  ((character? "1"))
   nil)
 
 (define-test "EQL wants same type of numbers"
@@ -181,7 +181,7 @@
   t)
 
 (define-test "ELT returns CHARACTER of STRING"
-  ((characterp (elt "fnord" 0)))
+  ((character? (elt "fnord" 0)))
   t)
 
 ; + - * / MOD

@@ -12,11 +12,11 @@
 	  (apply #'string-concat x)
 ;	(not (= 2 (length x)))
 ;      `(+ ,@x)
-;	(and (some #'characterp x) ; XXX would still mix with other types in vars
+;	(and (some #'character? x) ; XXX would still mix with other types in vars
 ;		 (not (some #'integerp x)))
 ;      `(character+ ,@x)
 ;	(and (some #'integerp x)
-;		 (not (some #'characterp x)))
+;		 (not (some #'character? x)))
 ;      `(integer+ ,@x)
     `(+ ,@x)))
 
@@ -26,11 +26,11 @@
   	  (?
 		(some #'string? x)
       	  `(,($ 'string _) ,,@x)
-	    (and (some #'characterp x) ; XXX would still mix with other types in vars
+	    (and (some #'character? x) ; XXX would still mix with other types in vars
 		     (not (some #'integerp x)))
       	  `(,($ 'character _) ,,@x)
 	    (and (some #'integerp x)
-		     (not (some #'characterp x)))
+		     (not (some #'character? x)))
       	  `(,($ 'integer _) ,,@x)
         `(,_ ,,@x)))))
 

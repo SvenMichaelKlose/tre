@@ -31,7 +31,7 @@
   (?
 	(string? x)
 	  x
-	(characterp x)
+	(character? x)
       (char-string x)
     (symbolp x)
 	  (symbol-name x)

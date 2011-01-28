@@ -26,7 +26,7 @@
 
 (defun integerp (x)
   (and (number? x)
-	   (not (characterp x))))
+	   (not (character? x))))
 
 (define-test "NOT works with NIL"
   ((not nil))

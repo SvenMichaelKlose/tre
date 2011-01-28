@@ -28,7 +28,7 @@
   (with-default-stream s str
     (?
       (string? obj) (%princ-string obj s)
-      (characterp obj) (%princ-character obj s)
+      (character? obj) (%princ-character obj s)
       (number? obj) (%princ-number obj s)
       (symbol? obj) (%princ-string (symbol-name obj) s))
 	obj))

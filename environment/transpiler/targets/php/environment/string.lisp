@@ -28,7 +28,7 @@
   (?
 	(string? x)
 	  x
-	(characterp x)
+	(character? x)
       (char-string x)
     (symbol? x)
 	  (symbol-name x)

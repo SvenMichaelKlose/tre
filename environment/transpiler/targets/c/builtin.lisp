@@ -1,5 +1,5 @@
 ;;;;; TRE to C transpiler
-;;;;; Copyright (c) 2009-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2009-2011 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Built-in interpreter functions
 
@@ -38,7 +38,7 @@
 		(/ quotient)
 		(MOD)
 		(LOGXOR)
-;		(NUMBERP)
+;		(NUMBER?)
 		(= number_equal)
 		(< lessp)
 		(> greaterp)
@@ -57,7 +57,7 @@
 		(>> bit_shift_right)
 		(CODE-CHAR code_char)
 		(INTEGER)
-		(CHARACTERP))
+		(CHARACTER? characterp))
 
 	(treatom_builtin_
 ;		(EQ)
@@ -85,7 +85,7 @@
 ;		(CDR)
 		(RPLACA)
 		(RPLACD)
-;    	(CONSP)
+;    	(CONS?)
 		(ASSOC)
 		(MEMBER))
 

@@ -39,7 +39,7 @@
 
 (defun php-expex-literal (x)
   (?
-    (characterp x)
+    (character? x)
       (php-expex-add-global (php-compiled-char x))
     (number? x)
 	  (php-expex-add-global (php-compiled-number x))

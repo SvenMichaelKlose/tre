@@ -11,7 +11,7 @@
 	(number . number?)
 	(integer . number?)
 	(float . number?)
-	(character . characterp)
+	(character . character?)
 	(array . arrayp)
  	(string . string?)
     (hash-table . hash-table?)))

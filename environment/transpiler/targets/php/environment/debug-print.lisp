@@ -35,7 +35,7 @@
       (+ (?
 	       (symbol? x)
 	         (debug-print-symbol x)
-	       (characterp x)
+	       (character? x)
 		     (+ "#\\\\" (*string.from-char-code (char-code x)))
 	       (arrayp x)
 	         "{array}"

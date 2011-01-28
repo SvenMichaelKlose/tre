@@ -394,7 +394,7 @@ char *tre_builtin_names[] = {
 	"BIT-OR", "BIT-AND",
 	"<<", ">>",
     "CODE-CHAR", "INTEGER",
-    "CHARACTERP",
+    "CHARACTER?",
 
     "EQ", "EQL",
     "MAKE-SYMBOL", "MAKE-PACKAGE",

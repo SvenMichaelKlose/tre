@@ -1,5 +1,5 @@
 ;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2009,2011 Sven Klose <pixel@copei.de>
 
 (defvar *characters* (make-array))
 
@@ -7,7 +7,7 @@
 
 (defun %character (x)
   (declare type number x)
-  (assert (not (characterp x))
+  (assert (not (character? x))
 		  (error "%CHARACTER: argument already a character"))
   (or (aref *characters* x)
   	  (setf this.__class ,(transpiler-obfuscated-symbol-string *current-transpiler*
@@ -15,7 +15,7 @@
   		    this.v x
 		    (aref *characters* x) this)))
 
-(defun characterp (x)
+(defun character? (x)
   (and (objectp x)
 	   x.__class
 	   (%%%= x.__class ,(transpiler-obfuscated-symbol-string *current-transpiler*
@@ -23,9 +23,9 @@
 
 (defun code-char (x)
   (declare type number x)
-  (if (characterp x)
-	  x
-	  (new %character x)))
+  (? (character? x)
+	 x
+	 (new %character x)))
 
 (defun char-code (x)
   (declare type number x)

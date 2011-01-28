@@ -2,7 +2,7 @@
 ;;;; Copyright (c) 2005-2009,2011 Sven Klose <pixel@copei.de>
 
 (define-test "ELT on string returns char"
-  ((characterp (elt "LISP" 0)))
+  ((character? (elt "LISP" 0)))
   t)
 
 (define-test "ELT on string returns right char"
