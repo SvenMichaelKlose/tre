@@ -55,7 +55,7 @@
       	  (unless (transpiler-defined-function tr x)
         	(transpiler-add-emitted-wanted-function tr x)
             (let fun (symbol-function x)
-              (when (functionp fun)
+              (when (function? fun)
 		        (setf *imported-something* t)
                 (transpiler-sighten tr
       	            `((defun ,x ,(function-arguments fun)

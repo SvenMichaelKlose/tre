@@ -35,7 +35,7 @@
 
 (define-tree-filter transpiler-obfuscate (tr x)
   (or (variablep x)
-      (functionp x))
+      (function? x))
 	(transpiler-obfuscate-symbol tr x))
 
 (defun transpiler-obfuscated-symbol-name (tr x)

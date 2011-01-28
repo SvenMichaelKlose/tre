@@ -8,5 +8,5 @@
 
 (dont-obfuscate function_exists)
 
-(defun functionp (x)
+(defun function? (x)
   (function_exists x))

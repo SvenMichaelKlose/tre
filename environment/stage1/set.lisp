@@ -1,11 +1,11 @@
 ;;;; TRE environment
-;;;; Copyright (C) 2005-2009 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2005-2009,2011 Sven Klose <pixel@copei.de>
 
-(defun %setf-functionp (x)
-  (functionp (eval `(function ,x))))
+(defun %setf-function? (x)
+  (function? (eval `(function ,x))))
 
 (defvar *setf-immediate-slot-value* nil)
-(defvar *setf-functionp* #'%setf-functionp)
+(defvar *setf-function?* #'%setf-function?)
 
 (defun %setf-make-symbol (fun)
   (make-symbol (string-concat "%%USETF-" (symbol-name fun))))
@@ -22,7 +22,7 @@
       (let* ((fun (car p))
 	         (args (cdr p))
 	         (setfun (%setf-make-symbol fun)))
-        (if (funcall *setf-functionp* setfun)
+        (if (funcall *setf-function?* setfun)
 			(if (member (car args) *constants*)
 		    	(%error "cannot set constant")
 	            `(,setfun ,val ,@args))

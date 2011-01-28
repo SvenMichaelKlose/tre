@@ -1,15 +1,15 @@
 ;;;;; Transpiler: TRE to ECMAScript
 ;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
-(defun js-setf-functionp (x)
-  (or (%setf-functionp x)
+(defun js-setf-function? (x)
+  (or (%setf-function? x)
       (transpiler-function-arguments *js-transpiler* x)))
 
 (defun make-javascript-transpiler-0 ()
   (create-transpiler
 	  :std-macro-expander 'js-alternate-std
 	  :macro-expander 'javascript
-	  :setf-functionp #'js-setf-functionp
+	  :setf-function? #'js-setf-function?
 	  :unwanted-functions '(wait)
 	  :named-functions? nil
 	  :apply-argdefs? t

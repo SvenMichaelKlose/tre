@@ -120,15 +120,15 @@
   nil)
 
 (define-test "FUNCTIONP recognizes functions"
-  ((functionp #'%backquote))
+  ((function? #'%backquote))
   t)
 
 (define-test "FUNCTIONP recognizes built-in functions"
-  ((functionp #'car))
+  ((function? #'car))
   t)
 
 ;(define-test "FUNCTIONP doesn't recognize built-in special forms"
-;  ((functionp #'block))
+;  ((function? #'block))
 ;  nil)
 
 (define-test "STRINGP recognizes strings"
