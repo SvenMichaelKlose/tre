@@ -1,5 +1,5 @@
 ;;;;; TRE tree processor transpiler
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 
 (defvar *show-definitions?* nil)
 (defvar *opt-inline?* nil)
@@ -15,7 +15,7 @@
 (defstruct transpiler
   std-macro-expander
   macro-expander
-  (setf-function? #'identity)
+  (setf-functionp #'identity)
   separator
 
   ; List of functions that must not be imported from the environment.

@@ -4,7 +4,7 @@
 ;;;; Miscellaneous predicates
 
 (defun compilable? (x)
-  (or (function? x)
+  (or (functionp x)
       (macrop x)))
 
 (mapcar-macro x

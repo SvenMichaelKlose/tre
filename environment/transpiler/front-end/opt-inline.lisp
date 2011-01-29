@@ -72,7 +72,7 @@
 		   (inlineable? tr f)
 		   (or (transpiler-defined-function tr f)
 			   (and (atom f)
-					(function? (symbol-function f))
+					(functionp (symbol-function f))
 			 	    (not (builtinp f))))))
 	  (cons (opt-inline-1 tr level current parent x.)
 		    (opt-inline-0 tr level current parent .x))

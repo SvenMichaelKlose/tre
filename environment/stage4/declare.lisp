@@ -7,7 +7,7 @@
 	(list . listp)
 	(atom . atom)
 	(symbol . symbol?)
-	(function . function?)
+	(function . functionp)
 	(number . number?)
 	(integer . number?)
 	(float . number?)

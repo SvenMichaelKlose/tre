@@ -1,17 +1,17 @@
 ;;;;; Transpiler: TRE to PHP
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 
 (defvar *php-version* 503)
 
-(defun php-setf-function? (x)
-  (or (%setf-function? x)
+(defun php-setf-functionp (x)
+  (or (%setf-functionp x)
       (transpiler-function-arguments *php-transpiler* x)))
 
 (defun make-php-transpiler-0 ()
   (create-transpiler
 	  :std-macro-expander 'php-alternate-std
 	  :macro-expander 'php
-	  :setf-function? #'php-setf-function?
+	  :setf-functionp #'php-setf-functionp
 	  :unwanted-functions '(wait)
 	  :apply-argdefs? nil
 	  :literal-conversion #'identity

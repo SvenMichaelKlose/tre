@@ -1,5 +1,5 @@
 ;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 
 (dont-obfuscate apply call)
 
@@ -21,7 +21,7 @@
                l (last .lst)
                args (%nconc (butlast .lst) l.))
 	      (when-debug
-	        (unless (function? fun)
+	        (unless (functionp fun)
 		      (error "APPLY: first argument is not a function: ~A" fun))
 	        (unless (listp l)
 		      (error "APPLY: last argument is not a cell")))

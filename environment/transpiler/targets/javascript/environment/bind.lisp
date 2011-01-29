@@ -1,5 +1,5 @@
 ;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 
 (dont-obfuscate arguments)
 (dont-inline %bind)
@@ -12,9 +12,9 @@
 ;; See also macro BIND in 'expand.lisp'.
 (defun %bind (obj fun)
   (when-debug
-	(unless (function? fun)
+	(unless (functionp fun)
 	  (js-print fun logwindow.document)))
-  (assert (function? fun) "BIND requires a function")
+  (assert (functionp fun) "BIND requires a function")
   #'(()
 	  ,(if (transpiler-lambda-export? *js-transpiler*)
 		   ; Get rid of the ghost argument.
