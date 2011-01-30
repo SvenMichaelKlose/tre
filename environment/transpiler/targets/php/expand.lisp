@@ -20,7 +20,7 @@
        ,(apply #'shared-essential-defun fun-name args
                (? *exec-log*
                   `((%transpiler-native "echo \"" ,(string-concat (symbol-name fun-name)
-                                                                  *php-newline*) "\"")
+                                                                  *php-newline*) "<br>\"")
                        nil ,@body)
                   body))
        ,@(unless (simple-argument-list? adef)
