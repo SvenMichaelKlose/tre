@@ -1,12 +1,13 @@
 ;;;;; TRE transpiler
 ;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
-;; After this pass
-;; - Functions are inlined.
-;; - Nested functions are merged.
-;; - Optional: Anonymous functions were exported.
-;; - FUNINFO objects are built for all functions.
+;; In this pass
 ;; - Accesses to the object in a method are thisified.
+;; - Functions are inlined.
+;; - Function arguments are renamed.
+;; - Nested functions are merged.
+;; - Anonymous functions are exported.
+;; - FUNINFO objects are built for all functions.
 (transpiler-pass transpiler-preexpand-compose (tr)
     fake-expression-expand (fn with-temporary *expex-warn?* t
 		                         (transpiler-expression-expand tr _)
@@ -21,12 +22,13 @@
 (defun transpiler-frontend-2 (tr x)
   (funcall (transpiler-preexpand-compose tr) x))
 
-;; After this pass
+;; In this pass
 ;; - All macros are expanded.
-;; - Expression blocks are kept in VM-SCOPE expressions, which is a mix
-;;   of BLOCK and TAGBODY.
+;; - Expression blocks are kept in VM-SCOPE expressions, which is a mix of BLOCK and TAGBODY.
 ;; - Conditionals are implemented with VM-GO and VM-GO-NIL.
 ;; - Quoting is done by %QUOTE (same as QUOTE) exclusively.
+;; - Backquotes are implemented with CONS and APPEND.
+;; - Literal characters are converted (ECMAScript).
 (transpiler-pass transpiler-simple-expand-compose (tr)
     literal-conversion (fn funcall (transpiler-literal-conversion tr) _)
     backquote-expand #'backquote-expand
