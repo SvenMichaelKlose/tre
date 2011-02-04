@@ -14,7 +14,7 @@
 
 (define-format #\% (str l i txt args)
   (terpri str)
-  (values (integer-1+ i) args))
+  (values i args))
 
 (define-format #\A (str l i txt args)
   (? args
@@ -23,16 +23,27 @@
 		(late-print args. str) ; XXX
         (princ args. str))
 	 (error "argument specified in format is missing"))
-  (values (integer-1+ i) .args))
+  (values i .args))
 
 (defun %format-directive (str l i txt args)
-  (let el (char-upcase (elt txt i))
-    (aif (assoc-value el *format-handlers* :test #'character=)
-         (with ((new-index next-args) (funcall ! str l (integer-1+ i) txt args))
-           (%format str l new-index txt next-args))
-         (progn
-		   (princ #\~ str)
-           (%format str l (integer-1+ i) txt args)))))
+   (let el (char-upcase (elt txt i))
+     (?
+       (character= el #\%)
+		 (progn
+		   (terpri str)
+           (%format str l (integer-1+ i) txt args))
+       (character= el #\A)
+		 (progn
+		   (? args
+		      (? (or (cons? args.)
+					  (variablep args.))
+				 (late-print args. str) ; XXX
+                 (princ args. str))
+			  (error "argument specified in format is missing"))
+           (%format str l (integer-1+ i) txt .args))
+       (progn
+		 (princ #\~ str)
+         (%format str l i txt args)))))
 
 (defun %format (str l i txt args)
   (when (integer< i l)

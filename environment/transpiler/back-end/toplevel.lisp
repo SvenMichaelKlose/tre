@@ -1,11 +1,10 @@
 ;;;;; TRE transpiler
 ;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
-;; In this pass:
-;; - Function names are translated.
+;; After this pass:
+;; - Symbols are obfuscated.
 ;; - Strings are encapsulated.
 ;; - Expressions are expanded via code generating macros.
-;; - Symbols are obfuscated.
 ;; - Everything is converted to strings and concatenated.
 (transpiler-pass transpiler-emit-code-compose (tr)
     print-o (fn (princ #\o)
@@ -27,7 +26,7 @@
     place-expand #'place-expand
     make-function-prologues #'make-function-prologues)
 
-;; In this pass:
+;; After this pass:
 ;; - Function prologues are generated.
 ;; - Places are translated into vector ops.
 (defun transpiler-generate-code (tr x)

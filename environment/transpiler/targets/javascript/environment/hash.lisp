@@ -13,6 +13,7 @@
     (reverse lst)))
 
 (defun hash-merge (a b)
+  (declare type (hash-table nil) a b)
   (when (or a b)
     (unless a
       (setf a (make-hash-table)))

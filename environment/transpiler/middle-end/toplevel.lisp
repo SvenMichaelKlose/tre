@@ -4,16 +4,12 @@
 (defun transpiler-expression-expand (tr x)
   (expression-expand (transpiler-expex tr) x))
 
-;; In this pass
-;; - Nested expressions are sequentialized.
-;; - No more %VM-SCOPE forms.
-;; - Keywords are quoted.
-;; - Named functions get a special form if desired.
-;; - Peephole-optimisations are performed.
-;; - Tail-calls are resolved.
-;; - Unused places are removed from functions.
-;; - Continuation-passing-style transformations are performed.
-;; - FUNINFOs are updated with number of jump tags in function.
+;; After this pass
+;; - Functions are assigned run-time argument definitions
+;; - VM-SCOPEs are removed. All code is flat with jump tags.
+;; - Peephole-optimisations were performed.
+;; - FUNINFOs were updated with number of jump tags in function.
+;; - FUNCTION expression contain the names of top-level functions.
 (transpiler-pass transpiler-expand-compose (tr)
     print-dot (fn (princ #\.)
 		          (force-output)
