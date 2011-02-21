@@ -19,8 +19,7 @@
     `(%%vm-scope
        ,(apply #'shared-essential-defun fun-name args
                (? *exec-log*
-                  `((%transpiler-native "echo \"" ,(string-concat (symbol-name fun-name)
-                                                                  *php-newline*) "\"")
+                  `((%transpiler-native "error_log (\"" ,(symbol-name fun-name) "\")")
                        nil ,@body)
                   body))
        ,@(unless (simple-argument-list? adef)
@@ -99,10 +98,10 @@
   `(aref ,hash ,key))
 
 (define-php-std-macro undefined? (x)
-  `(= "undefined" (%php-typeof ,x)))
+  `(isset ,x))
 
 (define-php-std-macro defined? (x)
-  `(not (= "undefined" (%php-typeof ,x))))
+  `(not (undefined? x)))
 
 (define-php-std-macro dont-obfuscate (&rest symbols)
   (apply #'transpiler-add-obfuscation-exceptions *php-transpiler* symbols)

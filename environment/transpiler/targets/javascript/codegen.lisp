@@ -11,10 +11,10 @@
 
 (defun js-codegen-symbol-constructor-expr (tr x)
   (let s (transpiler-obfuscated-symbol-string tr (compiled-function-name 'symbol))
-    `(,s "(\"" ,(transpiler-obfuscated-symbol-name tr x) "\", "
-	           ,@(if (symbol-package x)
-	                 `((,s "(\"" ,(symbol-name (symbol-package x)) "\", null)"))
-	                 '(("null")))
+    `(,s "(\"" ,(transpiler-obfuscated-symbol-name tr x) "\","
+	           ,@(? (symbol-package x)
+	                `((,s "(\"" ,(symbol-name (symbol-package x)) "\",null)"))
+	                '(("null")))
 	     ")")))
 
 (defun js-codegen-symbol-constructor (tr x)
@@ -35,14 +35,14 @@
   `(%transpiler-native "case " ,tag ":" ,*js-newline*))
 
 (define-js-macro %%vm-go (tag)
-  `(,*js-indent* "_I_=" ,tag "; continue" ,*js-separator*))
+  `(,*js-indent* "_I_=" ,tag ";continue" ,*js-separator*))
 
 (define-js-macro %%vm-go-nil (val tag)
-  `(,*js-indent* "if (typeof ",val"=='undefined'||!" ,val "&&" ,val "!==0&&" ,val "!=='') {_I_=" ,tag "; continue;}" ,*js-newline*))
+  `(,*js-indent* "if(typeof ",val"=='undefined'||!" ,val "&&" ,val "!==0&&" ,val "!==''){_I_=" ,tag ";continue;}" ,*js-newline*))
 
 (define-js-macro %%vm-call-nil (val consequence alternative)
-  `(,*js-indent* "if (!" ,val "&&" ,val "!==0&&" ,val "!=='') "
-                    ,consequence"();"
+  `(,*js-indent* "if(!" ,val "&&" ,val "!==0&&" ,val "!=='')"
+                    ,consequence "();"
                     "else " ,alternative "();" ,*js-newline*))
 
 (define-js-macro %set-atom-fun (plc val)
@@ -53,25 +53,24 @@
 (define-js-macro function (&rest x)
   (when ..x
 	(error "an optional function name followed by the head/body expected"))
-  (setf x (if .x .x. x.))
-  (if (or (atom x)
-		  (%stack? x))
-	  x
-      `("function " ,@(parenthized-comma-separated-list
-      					  (argument-expand-names 'unnamed-js-function (lambda-args x)))
-		  			,(code-char 10)
-	    "{" ,(code-char 10)
-			,@(lambda-body x)
-	    "}" ,(code-char 10))))
+  (setf x (? .x .x. x.))
+  (? (or (atom x)
+		 (%stack? x))
+	 x
+     `("function " ,@(parenthized-comma-separated-list (argument-expand-names 'unnamed-js-function (lambda-args x)))
+		  		,(code-char 10)
+	   "{" ,(code-char 10)
+		   ,@(lambda-body x)
+	   "}")))
 
 (define-js-macro %function-prologue (fi-sym)
   `(%transpiler-native ""
 	   ,@(when (transpiler-stack-locals? *js-transpiler*)
-	       `(,*js-indent* "var _locals = []" ,*js-separator*))
+	       `(,*js-indent* "var _locals=[]" ,*js-separator*))
 	   ,@(when (< 0 (funinfo-num-tags (get-lambda-funinfo-by-sym fi-sym)))
-	       `(,*js-indent* "var _I_ = 0" ,*js-separator*
-		     ,*js-indent* "while (1) {" ,*js-separator*
-		     ,*js-indent* "switch (_I_) {case 0:" ,*js-separator*))))
+	       `(,*js-indent* "var _I_=0" ,*js-separator*
+		     ,*js-indent* "while(1){" ,*js-separator*
+		     ,*js-indent* "switch(_I_){case 0:" ,*js-separator*))))
 
 (define-js-macro %function-return (fi-sym)
   (let fi (get-lambda-funinfo-by-sym fi-sym)
@@ -91,9 +90,9 @@
               `((%function-return-cps ,fi-sym))
               `((%function-return ,fi-sym)))
 	      ,@(when (< 0 (funinfo-num-tags fi))
-	          `(,*js-indent* "}" ,*js-newline*))
+	          `("}"))
 	      ,@(when (< 0 (funinfo-num-tags fi))
-	          `(,*js-indent* "}" ,*js-newline*)))
+	          `("}")))
         "")))
 
 ;;;; ASSIGNMENT
@@ -101,20 +100,20 @@
 (defun js-%setq-0 (dest val)
   `(,*js-indent*
 	(%transpiler-native
-        ,@(if dest
-		      `(,dest "=")
-		      '("")))
-	,(if (or (atom val)
-			 (codegen-expr? val))
-		 val
-		 (js-call val))
+        ,@(? dest
+		     `(,dest "=")
+		     '("")))
+	,(? (or (atom val)
+			(codegen-expr? val))
+		val
+		(js-call val))
     ,*js-separator*))
 
 (define-js-macro %setq (dest val)
-  (if (and (not dest)
-		   (atom val))
-	  '(%transpiler-native "")
-	  (js-%setq-0 dest val)))
+  (? (and (not dest)
+		  (atom val))
+	 '(%transpiler-native "")
+	 (js-%setq-0 dest val)))
 
 ;;;; VARIABLE DECLARATIONS
 
@@ -201,25 +200,25 @@
 ;;;; META-CODES
 
 (define-js-macro %quote (x)
-  (if (not (string= "" (symbol-name x)))
-	  (js-codegen-symbol-constructor *js-transpiler* x)
-	  x))
+  (? (not (string= "" (symbol-name x)))
+	 (js-codegen-symbol-constructor *js-transpiler* x)
+	 x))
 
 (define-js-macro %slot-value (x y)
-  `(%transpiler-native ,(if (cons? x)
-                            x
-                            (transpiler-obfuscated-symbol-string *js-transpiler* x))
+  `(%transpiler-native ,(? (cons? x)
+                           x
+                           (transpiler-obfuscated-symbol-string *js-transpiler* x))
                        "."
-                       ,(if (cons? y)
-                            y
-                            (transpiler-obfuscated-symbol-string *js-transpiler* y))))
+                       ,(? (cons? y)
+                           y
+                           (transpiler-obfuscated-symbol-string *js-transpiler* y))))
 
 ;;;; BACK-END META-CODES
 
 (define-js-macro %stack (x)
-  (if (transpiler-stack-locals? *js-transpiler*)
-  	  `(%transpiler-native "_locals[" ,x "]")
-      (js-stack x)))
+  (? (transpiler-stack-locals? *js-transpiler*)
+  	 `(%transpiler-native "_locals[" ,x "]")
+     (js-stack x)))
 
 ;; Experimental for lambda-export.
 (define-js-macro %vec (v i)
@@ -234,8 +233,8 @@
 
 (define-js-macro %%funref (name fi-sym)
   (let fi (get-lambda-funinfo-by-sym fi-sym)
-    (if (funinfo-ghost fi)
-	    (aif (funinfo-lexical (funinfo-parent fi))
-  	  		 `(%funref ,name ,!)
-			 (error "no lexical for ghost"))
-	    name)))
+    (? (funinfo-ghost fi)
+	   (aif (funinfo-lexical (funinfo-parent fi))
+  	  		`(%funref ,name ,!)
+			(error "no lexical for ghost"))
+	   name)))

@@ -9,7 +9,7 @@ class __cons {
         return $this;
 	}
 
-    public function &__toString ()
+    public function __toString ()
     {
         return "(" . $this->car . "." . $this->cdr . ")";
     }

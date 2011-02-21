@@ -4,6 +4,8 @@
 (dont-obfuscate exit)
 
 (defun invoke-native-debugger ()
+  (header "HTTP/1.0 404")
+  (print_r *_request*)
   (princ "<p>No native debugger - program exits.</p>")
   (%setq nil (exit))
   nil)

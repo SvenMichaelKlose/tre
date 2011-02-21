@@ -1,9 +1,8 @@
 ;;;;; TRE to PHP transpiler
-;;;;; Copyright (c) 2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2009,2011 Sven Klose <pixel@copei.de>
 
 (defun hash-table? (x)
-  (and (objectp x)
-       (undefined? x.__class)))
+  (arrayp x))
 
 (defun hash-assoc (x)
   (let lst nil

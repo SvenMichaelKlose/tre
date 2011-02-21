@@ -16,15 +16,14 @@
 		 convert-camel
 		   (fn (when _
 			     (with (c (char-downcase _.))
-			       (? (and (in=? c #\* #\-)
-						   ._)
+			       (? (and ._ (in=? c #\* #\-))
 					  (cons (char-upcase (cadr _))
 						    (convert-camel (cddr _)))
 					  (cons c (convert-camel ._))))))
 
 		 convert-special2
 		   (fn (when _
-			     (with (c _.)
+			     (let c _.
 				   (? (transpiler-special-char? tr c)
 					  (append (encapsulate-char c)
 							  (convert-special2 ._))
@@ -44,20 +43,21 @@
 	   (with (str (string s)
 	     	  l (length str))
          (list-string
-	       (convert-special
-             (? (and (< 2 (length str)) ; Make *GLOBAL* upcase.
-			         (= (elt str 0) #\*)
-			         (= (elt str (1- l)) #\*))
-		        (remove-if (fn = _ #\-) (string-list (string-upcase (subseq str 1 (1- l)))))
-    	        (convert-camel (string-list str)))))))))
+	       (convert-special (? (and (< 2 (length str)) ; Make *GLOBAL* upcase.
+			                        (= (elt str 0) #\*)
+			                        (= (elt str (1- l)) #\*))
+		                       (remove-if (fn = _ #\-) (string-list (string-upcase (subseq str 1 (1- l)))))
+    	                       (convert-camel (string-list str)))))))))
+
+(defun transpiler-dot-symbol-string (tr sl)
+  (apply #'string-concat (pad (mapcar (fn transpiler-symbol-string-r tr (make-symbol (list-string _)))
+		                              (split #\. sl))
+                              ".")))
 
 (defun transpiler-symbol-string (tr s)
   (let sl (string-list (string s))
     (? (position #\. sl)
-	   (apply #'string-concat
-			  (pad (mapcar (fn transpiler-symbol-string-r tr (make-symbol (list-string _)))
-			  			   (split #\. sl))
-				   "."))
+	   (transpiler-dot-symbol-string tr sl)
 	   (transpiler-symbol-string-r tr s))))
 
 (defun transpiler-to-string (tr x)
@@ -67,13 +67,11 @@
 					(?
 					  (%transpiler-string? e)
 						(funcall (transpiler-gen-string tr) (cadr e))
-					  ; XXX ???
 					  (eq '%transpiler-native e.)
 						(transpiler-to-string tr .e)
 					  e)
 				  (string? e)
 					e
-				  (or (assoc-value e (transpiler-symbol-translations tr)
-								   :test #'eq)
-					  (string-concat (transpiler-symbol-string tr e) " "))))
+				  (or (assoc-value e (transpiler-symbol-translations tr) :test #'eq)
+					  (string-concat (transpiler-symbol-string tr e)))))
 		   x))

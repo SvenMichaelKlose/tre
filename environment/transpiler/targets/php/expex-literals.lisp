@@ -9,8 +9,7 @@
 
 (php-define-compiled-literal php-compiled-number (x number)
   :maker ($ 'trenumber_compiled_ (gensym-number))
-  :init-maker (%transpiler-native "" ; Tell %SETQ not to make reference assignment.
-							      ,x))
+  :init-maker (%transpiler-native "__w(" ,x ")"))
 
 (php-define-compiled-literal php-compiled-char (x char)
   :maker ($ 'trechar_compiled_ (char-code x))
@@ -18,7 +17,7 @@
 
 (php-define-compiled-literal php-compiled-string (x string)
   :maker ($ 'trestring_compiled_ (gensym-number))
-  :init-maker (%transpiler-native "" (%transpiler-string ,x)))
+  :init-maker (%transpiler-native "__w(" (%transpiler-string ,x) ")"))
 
 (php-define-compiled-literal php-compiled-symbol (x symbol)
   :maker ($ 'tresymbol_compiled_

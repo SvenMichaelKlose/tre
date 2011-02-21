@@ -7,7 +7,7 @@
   (let tre (eval tr)
     (transpiler-add-inline-exception tre name)
     `(define-expander-macro ,(transpiler-macro-expander tre) ,name (x y)
-	   `(%transpiler-native ,,x ,(string-downcase (string name)) " " ,,y))))
+	   `(%transpiler-native ,,x " " ,(string-downcase (string name)) " " ,,y))))
 
 (defun transpiler-binary-expand (op args)
   (pad args op))

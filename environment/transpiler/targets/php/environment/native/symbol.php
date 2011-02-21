@@ -5,16 +5,16 @@ class __symbol {
 	public function &__construct ($name, &$pkg)
 	{
 		$this->n =& $name;
-		$this->v = NULL;
-		$this->f = NULL;
+		$this->v =& __w(NULL);
+		$this->f =& __w(NULL);
 		$this->p =& $pkg;
         return $this;
 	}
 
-    public function &__toString ()
+    public function __toString ()
     {
         return (($this->p) ? ":" : "") . $this->n;
     }
 }
 
-$KEYWORDPACKAGE = new __symbol ("", __w(NULL));
+$KEYWORDPACKAGE =& new __symbol ("", __w(NULL));

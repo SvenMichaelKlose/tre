@@ -20,7 +20,7 @@
 (define-codegen-macro-definer define-php-macro *php-transpiler*)
 
 (defmacro define-php-infix (name)
-  `("__w (" (define-transpiler-infix *php-transpiler* ,name) ")"))
+  `("__w(" (define-transpiler-infix *php-transpiler* ,name) ")"))
 
 ;;;; SYMBOLS
 
@@ -36,7 +36,7 @@
   (php-line "goto _I_" tag))
 
 (define-php-macro %%vm-go-nil (val tag)
-  (php-line "if (!$" val "&&!is_string($" val ")&&!is_numeric($" val ")) goto _I_" tag))
+  (php-line "if(!$" val "&&!is_string($" val ")&&!is_numeric($" val ")) goto _I_" tag))
 
 ;;;; FUNCTIONS
 
@@ -51,7 +51,7 @@
 	  "function &" ,(compiled-function-name name) "("
   	      ,@(transpiler-binary-expand ","
                 (mapcar (fn `("&$" ,_)) args))
-	      ")" ,(code-char 10)
+	      ")"
       "{" ,(code-char 10)
 		 ,@(awhen (funinfo-globals fi)
              (php-line "global " (comma-separated-list (mapcar #'php-dollarize !))))
@@ -61,7 +61,7 @@
 
 (define-php-macro function (name &optional (x 'only-name))
   (? (eq 'only-name x)
-     `(%transpiler-native "__w ("
+     `(%transpiler-native "__w("
           (%transpiler-string
               ,(transpiler-symbol-string *php-transpiler*
                                          (transpiler-obfuscate *php-transpiler* (compiled-function-name name))))
@@ -82,7 +82,7 @@
 (define-php-macro %%funref (name fi-sym)
   (let fi (get-lambda-funinfo-by-sym fi-sym)
     (? (funinfo-ghost fi)
-  	   `("new __funref ("
+  	   `(%transpiler-native "new __funref("
              (%transpiler-string ,(transpiler-symbol-string *php-transpiler* name))
              "," ,(php-dollarize (funinfo-lexical (funinfo-parent fi)))
              ")")
@@ -165,7 +165,7 @@
 	       ,op
 	       (&rest args)
 	     `(%transpiler-native
-            "__w ("
+            "__w("
 			,,@(transpiler-binary-expand ,replacement-op
 				   (mapcar #'php-dollarize args))
             ")"))))
@@ -186,8 +186,7 @@
 ;;;; ARRAYS
 
 (define-php-macro make-array (&rest elements)
-  `(%transpiler-native "" ; Tell %SETQ not to make reference assignment.
-					   "Array ()"))
+  `(%transpiler-native "__w(Array())" ""))
 
 (define-php-macro aref (arr &rest idx)
   `(%transpiler-native ,(php-dollarize arr)
@@ -219,15 +218,14 @@
 (define-php-macro make-hash-table (&rest args)
   (let pairs (group args 2)
     `(%transpiler-native
-	   "" ; Tell %SETQ to make no reference assignment.
-	   "Array ("
+	   "__w(Array ("
            ,@(when args
 	           (mapcan (fn (list (first _) "=>" (second _) ","))
 			           (butlast pairs)))
            ,@(when args
 		       (with (x (car (last pairs)))
 		         (list x. "=>" (second x))))
-          ")")))
+          "))")))
 
 ;;;; OBJECTS
 

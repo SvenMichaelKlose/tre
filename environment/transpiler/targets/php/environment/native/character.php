@@ -8,7 +8,7 @@ class __character {
         return $this;
 	}
 
-	public function &__toString ()
+	public function __toString ()
 	{
         return "#\\" . chr ($this->v) . " ";
 	}
