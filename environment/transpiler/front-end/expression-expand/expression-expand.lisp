@@ -54,7 +54,7 @@
   (funcall (expex-setter-filter ex) x))
 
 (defun expex-guest-filter-arguments (ex x)
-  (mapcar (fn (funcall (expex-argument-filter ex) _)) x))
+  (mapcar (fn funcall (expex-argument-filter ex) _) x))
 
 ;;;; UTILS
 
@@ -114,9 +114,9 @@
 ;; XXX this sucks blood out of stones. Should have proper macro expansion
 ;; instead.
 (defun expex-convert-quotes (x)
-  (mapcar (fn (if (quote? _)
-				  `(%quote ,._.)
-				  _))
+  (mapcar (fn ? (quote? _)
+			    `(%quote ,._.)
+			    _)
 		  x))
 
 ;; Expand arguments to function.
@@ -124,22 +124,22 @@
   (map #'expex-warn args)
   (funcall (expex-function-collector ex) fun args)
   (let argdef (funcall (expex-function-arguments ex) fun)
-	(if (or (eq argdef 'builtin)
-  	        (not (expex-expandable-args? ex fun argdef)))
-		args
-   	    (argument-expand-compiled-values fun argdef args))))
+	(? (or (eq argdef 'builtin)
+  	       (not (expex-expandable-args? ex fun argdef)))
+	   args
+   	   (argument-expand-compiled-values fun argdef args))))
 
 ;; Expand arguments if they are passed to a function.
 (defun expex-argexpand (ex x)
   (with (new? (%new? x)
-		 fun (if new? .x.  x.)
-		 args (if new? ..x .x))
+		 fun (? new? .x.  x.)
+		 args (? new? ..x .x))
 	`(,@(when new?
 		  (list '%new))
 	  ,fun
-    	  ,@(if (funcall (expex-function? ex) fun)
-	    	    (expex-convert-quotes (expex-argexpand-0 ex fun args))
-	    	    args))))
+    	  ,@(? (funcall (expex-function? ex) fun)
+	    	   (expex-convert-quotes (expex-argexpand-0 ex fun args))
+	    	   args))))
 
 ;;;;; ARGUMENT VALUE EXPANSION
 
@@ -187,26 +187,25 @@
 	(expex-move-arg-std ex x)))
 
 (defun expex-filter-and-move-args (ex x)
-  (assoc-splice (mapcar (fn expex-move-arg ex _) (expex-guest-filter-arguments ex x))))
+  (with ((moved new-expr) (assoc-splice (mapcar (fn expex-move-arg ex _) (expex-guest-filter-arguments ex x))))
+    (values (apply #'append moved) new-expr)))
 
 (defun expex-move-slot-value (ex x)
   (with ((moved new-expr) (expex-filter-and-move-args ex (list .x.)))
-    (values (apply #'append moved)
-			`(%slot-value ,new-expr. ,..x.))))
+    (values moved `(%slot-value ,new-expr. ,..x.))))
 
 (defun expex-move-args-0 (ex x)
   (with ((moved new-expr) (expex-filter-and-move-args ex x))
-    (values (apply #'append moved)
-			new-expr)))
+    (values moved new-expr)))
 
 ;; Move subexpressions out of a parent.
 ;;
 ;; Returns the head of moved expressions and a new parent with
 ;; replaced arguments.
 (defun expex-move-args (ex x)
-  (if (%slot-value? x)
-	  (expex-move-slot-value ex x)
-	  (expex-move-args-0 ex x)))
+  (? (%slot-value? x)
+	 (expex-move-slot-value ex x)
+	 (expex-move-args-0 ex x)))
 
 ;;;; EXPRESSION EXPANSION
 
@@ -239,8 +238,7 @@
 
 (defun expex-vm-go-nil (ex x)
   (with ((moved new-expr) (expex-filter-and-move-args ex (list .x.)))
-    (values (apply #'append moved)
-            `((%%vm-go-nil ,@new-expr ,..x.)))))
+    (values moved `((%%vm-go-nil ,@new-expr ,..x.)))))
 
 (defun peel-identity (x)
   (? (identity? x)
@@ -248,11 +246,11 @@
      x))
 
 (defun expex-expr (ex expr)
-  (let x (if (named-lambda? expr) ; XXX remove?
-		     expr
-			 (expex-guest-filter-expr ex expr))
+  (let x (? (named-lambda? expr) ; XXX remove?
+		    expr
+		    (expex-guest-filter-expr ex expr))
     (expex-cps x)
-    (if
+    (?
       (%%vm-go-nil? x)
         (expex-vm-go-nil ex x)
 	  (%var? x)
@@ -283,13 +281,13 @@
 
 (defun expex-make-return-value (ex s x)
   (let last (last x)
-   	(if (expex-returnable? ex last.)
-		(append (butlast x)
-				(if (%setq? last.)
-					(if (eq s (second last.))
-				        (expex-guest-filter-setter ex last.)
-						(expex-make-setq-copy ex last s))
-				    (expex-make-%setq ex s last.)))
+   	(? (expex-returnable? ex last.)
+	   (append (butlast x)
+			   (? (%setq? last.)
+				  (? (eq s (second last.))
+				     (expex-guest-filter-setter ex last.)
+				     (expex-make-setq-copy ex last s))
+				  (expex-make-%setq ex s last.)))
 		x)))
 
 (defun expex-atom-to-identity-expr (x)
