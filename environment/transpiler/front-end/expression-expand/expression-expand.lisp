@@ -106,7 +106,8 @@
 
 ;; Check if arguments to a function should be expanded.
 (defun expex-expandable-args? (ex fun argdef)
-  (not (funcall (expex-plain-arg-fun? ex) fun)))
+  (not (or (eq argdef 'builtin)
+           (funcall (expex-plain-arg-fun? ex) fun))))
 
 ;;;; ARGUMENT EXPANSION
 
@@ -123,10 +124,9 @@
   (map #'expex-warn args)
   (funcall (expex-function-collector ex) fun args)
   (let argdef (funcall (expex-function-arguments ex) fun)
-	(? (or (eq argdef 'builtin)
-  	       (not (expex-expandable-args? ex fun argdef)))
-	   args
-   	   (argument-expand-compiled-values fun argdef args))))
+	(? (expex-expandable-args? ex fun argdef)
+   	   (argument-expand-compiled-values fun argdef args)
+	   args)))
 
 ;; Expand arguments if they are passed to a function.
 (defun expex-argexpand (ex x)
@@ -142,12 +142,10 @@
 
 ;;;;; ARGUMENT VALUE EXPANSION
 
-;; Keep expression in argument but expand its arguments.
 (defun expex-move-arg-inline (ex x)
   (with ((p a) (expex-move-args ex x))
 	(cons p a)))
 
-;; Move out VM-SCOPE if it contains something. Otherwise keep NIL.
 (defun expex-move-arg-vm-scope (ex x)
   (aif (%%vm-scope-body x)
        (let s (expex-funinfo-env-add)
@@ -175,14 +173,10 @@
 
 (defun expex-move-arg (ex x)
   (?
-	(not (expex-able? ex x))
-      (cons nil x)
-    (atom x)
-      (expex-move-arg-atom ex x)
-	(funcall (expex-inline? ex) x)
-      (expex-move-arg-inline ex x)
-    (%%vm-scope? x)
-      (expex-move-arg-vm-scope ex x)
+	(not (expex-able? ex x)) (cons nil x)
+    (atom x) (expex-move-arg-atom ex x)
+	(funcall (expex-inline? ex) x) (expex-move-arg-inline ex x)
+    (%%vm-scope? x) (expex-move-arg-vm-scope ex x)
 	(expex-move-arg-std ex x)))
 
 (defun expex-filter-and-move-args (ex x)
