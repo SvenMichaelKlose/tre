@@ -58,6 +58,9 @@
 
 ;;;; UTILS
 
+(defun expex-make-%setq (ex plc val)
+  (expex-guest-filter-setter ex `(%setq ,plc ,(peel-identity val))))
+
 (defun expex-funinfo-env-add ()
   (let s (expex-sym)
     (aif *expex-funinfo*
@@ -162,15 +165,14 @@
       (when (lambda-expression-needing-cps? x)
         (transpiler-add-cps-function *current-transpiler* s))
       (cons (append moved
-		    		(if (expex-returnable? ex new-expr.)
-		        		(expex-guest-filter-setter ex `(%setq ,s ,@new-expr))
-			    		new-expr))
+		    		(? (expex-returnable? ex new-expr.)
+		        	   (expex-make-%setq ex s new-expr.)
+			    	   new-expr))
   	        s)))
 
 (defun expex-move-arg-atom (ex x)
   (let s (expex-funinfo-env-add)
-    (cons (expex-guest-filter-setter ex `((%setq ,s ,x)))
-          s)))
+    (cons (expex-make-%setq ex s x) s)))
 
 (defun expex-move-arg (ex x)
   (?
@@ -214,7 +216,7 @@
 
 (defun expex-expr-setq (ex x)
   (with ((moved new-expr) (expex-move-args ex ..x))
-	(values moved (expex-guest-filter-setter ex `(%setq ,.x. ,@new-expr)))))
+	(values moved (expex-make-%setq ex .x. new-expr.))))
 
 (defun expex-lambda (ex x)
   (with-temporary *expex-funinfo* (get-lambda-funinfo x)
@@ -271,13 +273,13 @@
 (defun expex-force-%setq (ex x)
   (or (when (metacode-expression-only x)
         (list x))
-	  (expex-guest-filter-setter ex `(%setq ~%ret ,(peel-identity x)))))
+	  (expex-make-%setq ex '~%ret x)))
 
 (defun expex-make-setq-copy (ex x s)
-  (if (eq s (second x.))
-      x
-      `(,x.
-	    ,@(expex-guest-filter-setter ex `(%setq ,s ,(second x.))))))
+  (? (eq s (second x.))
+     x
+     `(,x.
+	   ,@(expex-make-%setq ex s (second x.)))))
 
 (defun expex-make-return-value (ex s x)
   (let last (last x)
@@ -287,22 +289,22 @@
 					(if (eq s (second last.))
 				        (expex-guest-filter-setter ex last.)
 						(expex-make-setq-copy ex last s))
-				    (expex-guest-filter-setter ex `(%setq ,s ,@(or last '(nil))))))
+				    (expex-make-%setq ex s last.)))
 		x)))
 
+(defun expex-atom-to-identity-expr (x)
+  (? (and (atom x)
+	      (not (number? x)))
+	 `(identity ,x)
+	 x))
+
 (defun expex-save-atoms (x)
-  (mapcar (fn if (and (atom _)
-					  (not (number? _)))
-				 `(identity ,_)
-				 _)
-		  (or x (list nil))))
+  (mapcar #'expex-atom-to-identity-expr x))
 
 (defun expex-list (ex x)
-  (when x
-    (with ((moved new-expr) (expex-expr ex x.))
-      (append moved
-			  (mapcan (fn expex-force-%setq ex _) new-expr)
-			  (expex-list ex .x)))))
+  (mapcan (fn with ((moved new-expr) (expex-expr ex _))
+               (append moved (mapcan (fn expex-force-%setq ex _) new-expr)))
+          x))
 
 (defun expex-body (ex x &optional (s '~%ret))
   (expex-make-return-value ex s (expex-list ex (expex-save-atoms (list-without-noargs-tag x)))))
