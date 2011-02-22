@@ -102,8 +102,7 @@
 ;; Check if an expression has a return value.
 (defun expex-returnable? (ex x)
   (not (or (vm-jump? x)
-		   (%var? x)
-		   (named-lambda? x))))
+		   (%var? x))))
 
 ;; Check if arguments to a function should be expanded.
 (defun expex-expandable-args? (ex fun argdef)
@@ -246,24 +245,15 @@
      x))
 
 (defun expex-expr (ex expr)
-  (let x (? (named-lambda? expr) ; XXX remove?
-		    expr
-		    (expex-guest-filter-expr ex expr))
+  (let x (expex-guest-filter-expr ex expr)
     (expex-cps x)
     (?
-      (%%vm-go-nil? x)
-        (expex-vm-go-nil ex x)
-	  (%var? x)
-	    (expex-var x)
-	  (or (lambda? x)
-		  (named-lambda? x))
-	    (expex-lambda ex x)
-      (not (expex-able? ex x))
-	    (values nil (list x))
-      (%%vm-scope? x)
-	    (values nil (expex-body ex (%%vm-scope-body x)))
-      (%setq? x)
-	    (expex-expr-setq ex `(%setq ,(%setq-place x) ,(peel-identity (%setq-value x))))
+      (%%vm-go-nil? x) (expex-vm-go-nil ex x)
+	  (%var? x) (expex-var x)
+	  (lambda? x) (expex-lambda ex x)
+      (not (expex-able? ex x)) (values nil (list x))
+      (%%vm-scope? x) (values nil (expex-body ex (%%vm-scope-body x)))
+      (%setq? x) (expex-expr-setq ex `(%setq ,(%setq-place x) ,(peel-identity (%setq-value x))))
       (expex-expr-std ex x))))
 
 ;;;; BODY EXPANSION
