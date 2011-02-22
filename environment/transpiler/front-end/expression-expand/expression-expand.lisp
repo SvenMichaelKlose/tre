@@ -33,7 +33,8 @@
 
   (plain-arg-fun? #'((var)))
 
-  (inline? #'((x))))
+  (inline? #'((x)))
+  (move-lexicals? nil))
 
 ;;;; SYMBOLS
 
@@ -88,11 +89,12 @@
 ;;
 ;; Rejects atoms and expressions with meta-forms.
 (defun expex-able? (ex x)
-  (not (or (atom x)
-		   (function-ref-expr? x)
-           (in? x. '%%vm-go '%%vm-go-nil
-				   '%transpiler-native '%transpiler-string
-				   '%quote))))
+  (or (and (expex-move-lexicals? ex)
+           (symbol? x)
+           (not (funinfo-in-args-or-env? *expex-funinfo* x)))
+      (not (or (atom x)
+		       (function-ref-expr? x)
+               (in? x. '%%vm-go '%%vm-go-nil '%transpiler-native '%transpiler-string '%quote)))))
 
 ;; Check if an expression has a return value.
 (defun expex-returnable? (ex x)
@@ -165,15 +167,17 @@
 			    		new-expr))
   	        s)))
 
-;; Transform moved expression to one which assigns its return
-;; value to a gensym.
-;;
-;; Returns a CONS with the new head expressions in CAR and
-;; the replacement symbol for the parent in CDR.
+(defun expex-move-arg-atom (ex x)
+  (let s (expex-funinfo-env-add)
+    (cons (expex-guest-filter-setter ex `((%setq ,s ,x)))
+          s)))
+
 (defun expex-move-arg (ex x)
-  (if
+  (?
 	(not (expex-able? ex x))
       (cons nil x)
+    (atom x)
+      (expex-move-arg-atom ex x)
 	(funcall (expex-inline? ex) x)
       (expex-move-arg-inline ex x)
     (%%vm-scope? x)
@@ -181,8 +185,7 @@
 	(expex-move-arg-std ex x)))
 
 (defun expex-filter-and-move-args (ex x)
-  (assoc-splice (mapcar (fn expex-move-arg ex _)
-   		                (expex-guest-filter-arguments ex x))))
+  (assoc-splice (mapcar (fn expex-move-arg ex _) (expex-guest-filter-arguments ex x))))
 
 (defun expex-move-slot-value (ex x)
   (with ((moved new-expr) (expex-filter-and-move-args ex (list .x.)))
@@ -205,24 +208,14 @@
 
 ;;;; EXPRESSION EXPANSION
 
-;; Expands standard expression.
-;;
-;; The arguments are replaced by gensyms.
-;; XXX argument conversion by guest.
 (defun expex-expr-std (ex x)
   (with ((moved new-expr) (expex-move-args ex (expex-argexpand ex x)))
     (values moved (list new-expr))))
 
-;; Expand %SETQ expression.
-;;
-;; The place to set must not be expanded.
 (defun expex-expr-setq (ex x)
   (with ((moved new-expr) (expex-move-args ex ..x))
 	(values moved (expex-guest-filter-setter ex `(%setq ,.x. ,@new-expr)))))
 
-;; Expand LAMBDA
-;;
-;; Saves its FUNINFO for the guest.
 (defun expex-lambda (ex x)
   (with-temporary *expex-funinfo* (get-lambda-funinfo x)
     (values nil
@@ -232,7 +225,6 @@
 					   (,@(lambda-head x)
 				        ,@(expex-body ex (lambda-body x))))))))
 
-; Remove %VAR expression and register new FUNINFO variable.
 (defun expex-var (x)
   (funinfo-env-add *expex-funinfo* .x.)
   (values nil nil))
@@ -248,12 +240,13 @@
     (values (apply #'append moved)
             `((%%vm-go-nil ,@new-expr ,..x.)))))
 
-;; Expand expression depending on type.
-;;
-;; Recurses into LAMBDA-expressions and VM-SCOPEs.
-;; Removes VM-SCOPEs.
+(defun peel-identity (x)
+  (? (identity? x)
+     .x.
+     x))
+
 (defun expex-expr (ex expr)
-  (let x (if (named-lambda? expr)
+  (let x (if (named-lambda? expr) ; XXX remove?
 		     expr
 			 (expex-guest-filter-expr ex expr))
     (expex-cps x)
@@ -270,10 +263,7 @@
       (%%vm-scope? x)
 	    (values nil (expex-body ex (%%vm-scope-body x)))
       (%setq? x)
-	    (if (identity? (%setq-value x))
-		    (expex-expr-setq ex `(%setq ,(%setq-place x)
-										,(second (%setq-value x))))
-		    (expex-expr-setq ex x))
+	    (expex-expr-setq ex `(%setq ,(%setq-place x) ,(peel-identity (%setq-value x))))
       (expex-expr-std ex x))))
 
 ;;;; BODY EXPANSION
@@ -281,27 +271,14 @@
 (defun expex-force-%setq (ex x)
   (or (when (metacode-expression-only x)
         (list x))
-	  (expex-guest-filter-setter ex `(%setq ~%ret ,(if (identity? x)
-													   (second x)
-													   x)))))
+	  (expex-guest-filter-setter ex `(%setq ~%ret ,(peel-identity x)))))
 
-;; Simply concatenates the results of all expression expansions in a body.
-(defun expex-list (ex x)
-  (when x
-    (with ((moved new-expr) (expex-expr ex x.))
-      (append moved
-			  (mapcan (fn expex-force-%setq ex _) new-expr)
-			  (expex-list ex .x)))))
-
-;; Make second, following %SETQ expression that assigns to the
-;; desired return-place.
 (defun expex-make-setq-copy (ex x s)
   (if (eq s (second x.))
       x
       `(,x.
 	    ,@(expex-guest-filter-setter ex `(%setq ,s ,(second x.))))))
 
-;; Make return-value assignment of last expression in body.
 (defun expex-make-return-value (ex s x)
   (let last (last x)
    	(if (expex-returnable? ex last.)
@@ -320,11 +297,15 @@
 				 _)
 		  (or x (list nil))))
 
-;; Expand VM-SCOPE body and have the return value of the last expression
-;; assigned to a gensym which will replace it in the parent expression.
+(defun expex-list (ex x)
+  (when x
+    (with ((moved new-expr) (expex-expr ex x.))
+      (append moved
+			  (mapcan (fn expex-force-%setq ex _) new-expr)
+			  (expex-list ex .x)))))
+
 (defun expex-body (ex x &optional (s '~%ret))
-  (expex-make-return-value ex s
-      (expex-list ex (expex-save-atoms (list-without-noargs-tag x)))))
+  (expex-make-return-value ex s (expex-list ex (expex-save-atoms (list-without-noargs-tag x)))))
 
 ;;;; TOPLEVEL
 
