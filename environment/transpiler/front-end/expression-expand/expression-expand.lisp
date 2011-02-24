@@ -175,7 +175,7 @@
 
 (defun expex-move-arg-atom (ex x)
   (let s (expex-funinfo-env-add)
-    (cons (print (expex-make-%setq ex s x)) s)))
+    (cons (expex-make-%setq ex s x) s)))
 
 (defun expex-move-arg (ex x)
   (?
