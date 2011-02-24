@@ -27,12 +27,9 @@
 ;;;; FUNCTIONS
 
 (defun c-make-function-declaration (name args)
-  (push (concat-stringtree
-			"extern treptr "
-			(transpiler-symbol-string *c-transpiler* name)
-  	    	(parenthized-comma-separated-list
-            	(mapcar #'c-codegen-var-decl args))
-			";" (string (code-char 10)))
+  (push (concat-stringtree "extern treptr " (transpiler-symbol-string *c-transpiler* name)
+  	    	               (parenthized-comma-separated-list (mapcar #'c-codegen-var-decl args))
+			               ";" (string (code-char 10)))
 	    (transpiler-compiled-decls *c-transpiler*)))
 
 (defun c-codegen-function (name x)
@@ -53,7 +50,7 @@
 	(c-codegen-function name x)))
 
 (define-c-macro %function-prologue (fi-sym)
-  (with (fi (get-lambda-funinfo-by-sym fi-sym)
+  (with (fi (get-funinfo-by-sym fi-sym)
     	 num-vars (length (funinfo-env fi)))
 	(? (< 0 num-vars)
 	   (c-codegen-function-prologue-for-local-variables fi num-vars)
@@ -63,12 +60,9 @@
 
 ;; Convert from lambda-expanded funref to one with lexical.
 (define-c-macro %%funref (name fi-sym)
-  (let fi (get-lambda-funinfo-by-sym fi-sym)
+  (let fi (get-funinfo-by-sym fi-sym)
  	`("_trelist_get (" ,(c-compiled-symbol '%funref) ", "
-		  "_trelist_get (" ,(c-compiled-symbol name)
-		  				   "," 
-						   ,(place-assign (place-expand-funref-lexical fi))
-						"))")))
+		  "_trelist_get (" ,(c-compiled-symbol name) "," ,(place-assign (place-expand-funref-lexical fi)) "))")))
 
 ;;;; ASSIGNMENT
 
@@ -86,13 +80,10 @@
       `(,val. ,@(parenthized-comma-separated-list .val))))
 
 (define-c-macro %setq (dest val)
-  (c-line `((%transpiler-native ,@(codegen-%setq-place dest val))
-	                            ,(codegen-%setq-value val))))
+  (c-line `((%transpiler-native ,@(codegen-%setq-place dest val)) ,(codegen-%setq-value val))))
 
 (define-c-macro %setq-atom-value (dest val)
-  `(%transpiler-native
-       ,@(c-line "treatom_set_value (" (c-compiled-symbol dest)
-				 					   " ," val ")")))
+  `(%transpiler-native ,@(c-line "treatom_set_value (" (c-compiled-symbol dest) " ," val ")")))
 
 (define-c-macro %set-atom-fun (dest val)
   `(%transpiler-native ,dest "=" ,val ,*c-separator*))
@@ -104,11 +95,14 @@
 
 ;;;; LEXICALS
 
+(define-c-macro %make-lexical-array (size)
+  (c-make-array size))
+
 (define-c-macro %vec (vec index)
   `("_TREVEC(" ,vec "," ,index ")"))
 
 (define-c-macro %set-vec (vec index value)
-  `("_TREVEC(" ,vec "," ,index ") = " ,value))
+  (c-line `(%transpiler-native "_TREVEC(" ,vec "," ,index ") = " ,(codegen-%setq-value value))))
 
 ;;;; COMPARISON
 
@@ -156,7 +150,10 @@
 			 `("=" ,val))
 	 `(trearray_builtin_set_aref ,val ,arr ,@idx)))
 
-(define-c-macro make-array (size)
+(defun c-make-array (size)
   (? (number? size)
      `("trearray_make (" (%transpiler-native ,size) ")")
      `("trearray_get (_trelist_get (" ,size ", treptr_nil))")))
+
+(define-c-macro make-array (size)
+  (c-make-array size))

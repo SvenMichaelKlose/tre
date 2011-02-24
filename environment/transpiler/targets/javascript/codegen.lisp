@@ -67,24 +67,24 @@
   `(%transpiler-native ""
 	   ,@(when (transpiler-stack-locals? *js-transpiler*)
 	       `(,*js-indent* "var _locals=[]" ,*js-separator*))
-	   ,@(when (< 0 (funinfo-num-tags (get-lambda-funinfo-by-sym fi-sym)))
+	   ,@(when (< 0 (funinfo-num-tags (get-funinfo-by-sym fi-sym)))
 	       `(,*js-indent* "var _I_=0" ,*js-separator*
 		     ,*js-indent* "while(1){" ,*js-separator*
 		     ,*js-indent* "switch(_I_){case 0:" ,*js-separator*))))
 
 (define-js-macro %function-return (fi-sym)
-  (let fi (get-lambda-funinfo-by-sym fi-sym)
+  (let fi (get-funinfo-by-sym fi-sym)
     `(,*js-indent* "return " ,(place-assign (place-expand-0 fi '~%ret)) ,*js-separator*)))
 
 (define-js-macro %function-return-cps (fi-sym)
-  (let fi (get-lambda-funinfo-by-sym fi-sym)
+  (let fi (get-funinfo-by-sym fi-sym)
     (if (and (funinfo-num-tags fi)
              (< 0 (funinfo-num-tags fi)))
         `(,*js-indent*  "return" ,*js-separator*)
         "")))
 
 (define-js-macro %function-epilogue (fi-sym)
-  (let fi (get-lambda-funinfo-by-sym fi-sym)
+  (let fi (get-funinfo-by-sym fi-sym)
     (or `(,@(if (and (transpiler-continuation-passing-style? *js-transpiler*)
                      (funinfo-needs-cps? fi))
               `((%function-return-cps ,fi-sym))
@@ -232,7 +232,7 @@
   `(%transpiler-native "typeof " ,x))
 
 (define-js-macro %%funref (name fi-sym)
-  (let fi (get-lambda-funinfo-by-sym fi-sym)
+  (let fi (get-funinfo-by-sym fi-sym)
     (? (funinfo-ghost fi)
 	   (aif (funinfo-lexical (funinfo-parent fi))
   	  		`(%funref ,name ,!)

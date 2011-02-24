@@ -10,7 +10,7 @@
 (defun funinfo-copiers-to-lexicals (fi)
   (let-when lexicals (funinfo-lexicals fi)
 	(let lex-sym (funinfo-lexical fi)
-      `((%setq ,lex-sym (make-array ,(length lexicals)))
+      `((%setq ,lex-sym (%make-lexical-array ,(length lexicals)))
         ,@(awhen (funinfo-lexical? fi lex-sym)
 		    `((%set-vec ,lex-sym ,! ,lex-sym)))
         ,@(mapcan (fn when (funinfo-lexical? fi _)

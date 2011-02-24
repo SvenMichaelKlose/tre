@@ -10,22 +10,22 @@
   (? (and (atom x)
 		  (symbol? x))
      (?
-       (not x)
-         "__w(NULL)"
-       (eq t x)
-         "__w(TRUE)"
+       (not x) "NULL"
+       (eq t x) "TRUE"
+       (number? x) x
+       (string? x) x
 	   `("$" ,x))
 	 x))
 
 (define-codegen-macro-definer define-php-macro *php-transpiler*)
 
 (defmacro define-php-infix (name)
-  `("__w(" (define-transpiler-infix *php-transpiler* ,name) ")"))
+  `(define-transpiler-infix *php-transpiler* ,name))
 
 ;;;; SYMBOLS
 
-(transpiler-translate-symbol *php-transpiler* nil "__w(NULL)")
-(transpiler-translate-symbol *php-transpiler* t "__w(TRUE)")
+(transpiler-translate-symbol *php-transpiler* nil "NULL")
+(transpiler-translate-symbol *php-transpiler* t "TRUE")
 
 ;;;; CONTROL FLOW
 
@@ -48,10 +48,7 @@
 		 fi (get-lambda-funinfo x)
 		 num-locals (length (funinfo-env fi)))
     `(,(code-char 10)
-	  "function &" ,(compiled-function-name name) "("
-  	      ,@(transpiler-binary-expand ","
-                (mapcar (fn `("&$" ,_)) args))
-	      ")"
+	  "function " ,(compiled-function-name name) "(" ,@(transpiler-binary-expand "," (mapcar (fn `("$" ,_)) args)) ")"
       "{" ,(code-char 10)
 		 ,@(awhen (funinfo-globals fi)
              (php-line "global " (comma-separated-list (mapcar #'php-dollarize !))))
@@ -61,11 +58,10 @@
 
 (define-php-macro function (name &optional (x 'only-name))
   (? (eq 'only-name x)
-     `(%transpiler-native "__w("
+     `(%transpiler-native
           (%transpiler-string
               ,(transpiler-symbol-string *php-transpiler*
-                                         (transpiler-obfuscate *php-transpiler* (compiled-function-name name))))
-          ")")
+                                         (transpiler-obfuscate *php-transpiler* (compiled-function-name name)))))
   	 (? (atom x)
 		(error "codegen: arguments and body expected: ~A" x)
 	  	(codegen-php-function name x))))
@@ -80,7 +76,7 @@
 ;;;; FUNCTION REFERENCE
 
 (define-php-macro %%funref (name fi-sym)
-  (let fi (get-lambda-funinfo-by-sym fi-sym)
+  (let fi (get-funinfo-by-sym fi-sym)
     (? (funinfo-ghost fi)
   	   `(%transpiler-native "new __funref("
              (%transpiler-string ,(transpiler-symbol-string *php-transpiler* name))
@@ -99,35 +95,39 @@
   (? (or (and (atom val)
 		  	  (symbol? val))
 		 (not (%transpiler-native-without-reference? val)))
-   	 "=&"
+   	 "=" ;"=&"
   	 "="))
  
+(defun php-%setq-value (val)
+  (?
+    (or (not val)
+        (eq t val)
+        (number? val)
+        (string? val))
+      (list val)
+	(or (atom val)
+	    (and (%transpiler-native? val)
+		     (atom .val.)
+		     (not ..val)))
+      (list "$" val)
+	(codegen-expr? val)
+	  (list val)
+    `((,val. ,@(parenthized-comma-separated-list (mapcar #'php-codegen-argument-filter .val))))))
+
 (defun php-%setq-0 (dest val)
   `((%transpiler-native
 	    ,*php-indent*
-	    ,@(? (transpiler-obfuscated-nil? dest)
-	         '("")
+	    ,@(? dest
 			 `(,@(when (atom dest)
 				   (list "$"))
 			   ,dest
-			   ,(php-assignment-operator val)))
-        ,@(?
-            (or (not val)
-                (eq t val))
-              (list val)
-			(or (atom val)
-				(and (%transpiler-native? val)
-					 (atom .val.)
-					 (not ..val)))
-		      (list "$" val)
-			(codegen-expr? val)
-		      (list val)
-		    `((,val. ,@(parenthized-comma-separated-list
-					       (mapcar #'php-codegen-argument-filter .val)))))
-    ,@(unless (and (not dest)
-                   (%transpiler-native? val)
-                   (not ..val))
-        (list *php-separator*)))))
+			   ,(php-assignment-operator val))
+	         '(""))
+        ,@(php-%setq-value val)
+        ,@(unless (and (not dest)
+                       (%transpiler-native? val)
+                       (not ..val))
+            (list *php-separator*)))))
 
 (define-php-macro %setq (dest val)
   (? (and (transpiler-obfuscated-nil? dest)
@@ -136,39 +136,31 @@
      (php-%setq-0 dest val)))
 
 (define-php-macro %set-atom-fun (plc val)
-  `(%transpiler-native "$" ,val ,*php-separator*
-  					   ,(php-dollarize plc)
+  `(%transpiler-native ,(php-dollarize plc)
 					   ,(php-assignment-operator val)
 					   ,(php-dollarize val) ,*php-separator*))
 
 ;;;; VARIABLES
 
+(define-php-macro %make-lexical-array (&rest elements)
+  `(%transpiler-native "new __l()" ""))
+
 (define-php-macro %vec (v i)
-  `(%transpiler-native "$" ,v "[" ,(php-dollarize i) "]"))
+  `(%transpiler-native "$" ,v "->g(" ,(php-dollarize i) ")"))
 
 (define-php-macro %set-vec (v i x)
-  `(%transpiler-native "$" ,x ,*php-separator*
-					   (aref ,v ,i)
-					   ,(php-assignment-operator x)
-					   "$" ,x ,*php-separator*))
+  `(%transpiler-native ,*php-indent* "$" ,v "->s(" ,(php-dollarize i) "," ,(php-%setq-value x) ")",*php-separator*))
 
 ;;;; NUMBERS, ARITHMETIC, COMPARISON
 
 (defmacro define-php-binary (op replacement-op)
-    (when *show-definitions*
-	  (print `(define-php-binary ,op ,replacement-op)))
-	(let tre *php-transpiler*
-	  (transpiler-add-inline-exception tre op)
-	  (transpiler-add-plain-arg-fun tre op)
-	  `(define-expander-macro
-	       ,(transpiler-macro-expander tre)
-	       ,op
-	       (&rest args)
-	     `(%transpiler-native
-            "__w("
-			,,@(transpiler-binary-expand ,replacement-op
-				   (mapcar #'php-dollarize args))
-            ")"))))
+  (when *show-definitions*
+	(print `(define-php-binary ,op ,replacement-op)))
+  (let tre *php-transpiler*
+	(transpiler-add-inline-exception tre op)
+	(transpiler-add-plain-arg-fun tre op)
+	`(define-expander-macro ,(transpiler-macro-expander tre) ,op (&rest args)
+	   `(%transpiler-native ,,@(transpiler-binary-expand ,replacement-op (mapcar #'php-dollarize args))))))
 
 (mapcar-macro x
     '((%%%+ "+")
@@ -186,12 +178,12 @@
 ;;;; ARRAYS
 
 (define-php-macro make-array (&rest elements)
-  `(%transpiler-native "__w(Array())" ""))
+  `(%transpiler-native "Array()" ""))
 
 (define-php-macro aref (arr &rest idx)
-  `(%transpiler-native ,(php-dollarize arr)
-     ,@(mapcar (fn `("[" ,(php-dollarize _) "]"))
-               idx)))
+  `(%transpiler-native
+       ,(php-dollarize arr)
+       ,@(mapcar (fn `("[" ,(php-dollarize _) "]")) idx)))
 
 (define-php-macro %%usetf-aref (val &rest x)
   `(%transpiler-native ,(php-dollarize val) ,*php-separator*
@@ -201,16 +193,11 @@
 
 ;;;; HASH TABLE
 
-(define-php-macro href (arr &rest idx)
-  `(%transpiler-native ,(php-dollarize arr)
-     ,@(mapcar (fn `("[" ,(php-dollarize _) "]"))
-               idx)))
+(define-php-macro href (&rest x)
+  `(aref ,@x))
 
 (define-php-macro %%usetf-href (val &rest x)
-  `(%transpiler-native ,(php-dollarize val) ,*php-separator*
-  					   (aref ,@x)
-					   ,(php-assignment-operator val)
-					   "$" ,val))
+  `(%%usetf-aref ,@x))
 
 (define-php-macro hremove (h key)
   `(%transpiler-native "unset $" ,h "[" ,(php-dollarize key) "]"))
@@ -218,14 +205,14 @@
 (define-php-macro make-hash-table (&rest args)
   (let pairs (group args 2)
     `(%transpiler-native
-	   "__w(Array ("
+	   "Array ("
            ,@(when args
 	           (mapcan (fn (list (first _) "=>" (second _) ","))
 			           (butlast pairs)))
            ,@(when args
 		       (with (x (car (last pairs)))
 		         (list x. "=>" (second x))))
-          "))")))
+          ")")))
 
 ;;;; OBJECTS
 

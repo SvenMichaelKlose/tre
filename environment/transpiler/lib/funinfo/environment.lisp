@@ -76,8 +76,14 @@
 					 lexical-pos lexicals)
 				   2))))
 
+(defun funinfosym-env-pos (fi-sym x)
+  (funinfo-env-pos (get-funinfo-by-sym fi-sym) x))
+
+(defun funinfosym-lexical-pos (fi-sym x)
+  (funinfo-lexical-pos (get-funinfo-by-sym fi-sym) x))
+
 (defun funinfo-lexical? (fi x)
-  (member x (funinfo-lexicals fi)))
+  (member x (funinfo-lexicals fi) :test #'eq))
 
 (defun funinfo-env-parent (fi)
   (funinfo-env (funinfo-parent fi)))

@@ -8,4 +8,4 @@
       (is_float x)))
 
 (defun number (x)
-  (%transpiler-native "__w((float)" x ")"))
+  (%transpiler-native "(float)" x))

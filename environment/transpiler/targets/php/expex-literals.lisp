@@ -7,17 +7,9 @@
 	   :init-maker ,init-maker
 	   :decl-maker (fn identity nil))) ; APPLY doesn't ignore NIL.
 
-(php-define-compiled-literal php-compiled-number (x number)
-  :maker ($ 'trenumber_compiled_ (gensym-number))
-  :init-maker (%transpiler-native "__w(" ,x ")"))
-
 (php-define-compiled-literal php-compiled-char (x char)
   :maker ($ 'trechar_compiled_ (char-code x))
   :init-maker (%transpiler-native "new __character (" ,(char-code x) ")"))
-
-(php-define-compiled-literal php-compiled-string (x string)
-  :maker ($ 'trestring_compiled_ (gensym-number))
-  :init-maker (%transpiler-native "__w(" (%transpiler-string ,x) ")"))
 
 (php-define-compiled-literal php-compiled-symbol (x symbol)
   :maker ($ 'tresymbol_compiled_
@@ -29,7 +21,7 @@
                       ","
 			   	      ,(? (keyword? x)
                           "$KEYWORDPACKAGE"
-                          "__w(NULL)")
+                          "NULL")
 				      ")"))
 
 (defun php-expex-add-global (x)
@@ -40,10 +32,6 @@
   (?
     (character? x)
       (php-expex-add-global (php-compiled-char x))
-    (number? x)
-	  (php-expex-add-global (php-compiled-number x))
-    (string? x)
-	  (php-expex-add-global (php-compiled-string x))
     (%quote? x)
 	  (php-expex-add-global (php-compiled-symbol .x.))
     (keyword? x)

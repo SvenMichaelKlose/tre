@@ -2,12 +2,17 @@
 // Copyright (c) 2010-2011 Sven Klose <pixel@copei.de>
 
 class __symbol {
-	public function &__construct ($name, &$pkg)
+    var $n;
+    var $v;
+    var $f;
+    var $p;
+
+	public function __construct ($name, $pkg)
 	{
-		$this->n =& $name;
-		$this->v =& __w(NULL);
-		$this->f =& __w(NULL);
-		$this->p =& $pkg;
+		$this->n = $name;
+		$this->v = NULL;
+		$this->f = NULL;
+		$this->p = $pkg;
         return $this;
 	}
 
@@ -17,4 +22,4 @@ class __symbol {
     }
 }
 
-$KEYWORDPACKAGE =& new __symbol ("", __w(NULL));
+$KEYWORDPACKAGE = new __symbol ("", NULL);

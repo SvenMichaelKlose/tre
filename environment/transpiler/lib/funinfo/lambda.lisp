@@ -29,12 +29,12 @@
   `#'(,@(lambda-head-w/-missing-funinfo x fi)
 		  ,@(lambda-body x)))
 
-(defun get-lambda-funinfo-by-sym (x)
+(defun get-funinfo-by-sym (x)
   (href *funinfos* x))
 
 (defun get-lambda-funinfo (x)
   (with (fi-sym (lambda-funinfo x)
-         fi	    (get-lambda-funinfo-by-sym fi-sym))
+         fi	    (get-funinfo-by-sym fi-sym))
     (unless (or (and (not fi)
 					 (not fi-sym))
 				(and fi

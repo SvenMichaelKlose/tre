@@ -1,5 +1,5 @@
 ;;;;; TRE to C transpiler
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Functions with purely malloc'ed GC.
 
@@ -13,14 +13,14 @@
 		    (funinfo-local-args fi)))))
 
 (define-c-macro %function-epilogue (fi-sym)
-  (with (fi (get-lambda-funinfo-by-sym fi-sym)
+  (with (fi (get-funinfo-by-sym fi-sym)
     	 num-vars (length (funinfo-env fi)))
     `(,@(when (< 0 num-vars)
 	  	  `(,(c-line "tregc_pop ()")))
       (%function-return ,fi-sym))))
 
 (define-c-macro %function-return (fi-sym)
-  (let fi (get-lambda-funinfo-by-sym fi-sym)
+  (let fi (get-funinfo-by-sym fi-sym)
     `(%transpiler-native
          ,@(c-line "return " (place-assign (place-expand-0 fi '~%ret))))))
 

@@ -32,15 +32,12 @@
 (defun make-php-transpiler ()
   (with (tr (make-php-transpiler-0)
     	 ex (transpiler-expex tr))
-    (setf (expex-inline? ex)
-			  #'%slot-value?
-    	  (expex-setter-filter ex)
-			  (compose (fn mapcar (fn php-setter-filter *php-transpiler* _) _)
-                       #'expex-compiled-funcall)
-    	  (expex-function-arguments ex)
-			  #'current-transpiler-function-arguments-w/o-builtins
-    	  (expex-argument-filter ex)
-		      #'php-expex-filter)
+    (setf (expex-inline? ex) #'%slot-value?
+          (expex-move-lexicals? ex) t
+    	  (expex-setter-filter ex) (compose (fn mapcar (fn php-setter-filter *php-transpiler* _) _)
+                                            #'expex-compiled-funcall)
+    	  (expex-function-arguments ex) #'current-transpiler-function-arguments-w/o-builtins
+    	  (expex-argument-filter ex) #'php-expex-filter)
 
 	(apply #'transpiler-add-obfuscation-exceptions
 		tr

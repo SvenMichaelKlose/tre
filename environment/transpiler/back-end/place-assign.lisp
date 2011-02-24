@@ -1,5 +1,5 @@
 ;;;;; TRE compiler
-;;;;; Copyright (c) 2009-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2009-2011 Sven Klose <pixel@copei.de>
 
 (define-tree-filter place-assign (x)
   (or (%quote? x)
@@ -7,15 +7,19 @@
 	x
   (and (%stack? x)
 	   ..x)
-    `(%stack ,(funinfo-env-pos (get-lambda-funinfo-by-sym .x.) ..x.))
+    `(%stack ,(funinfosym-env-pos .x. ..x.))
   (and (%vec? x)
 	   ...x)
 	`(%vec ,(place-assign .x.)
-		   ,(or (funinfo-lexical-pos (get-lambda-funinfo-by-sym ..x.)
-									 ...x.)
+		   ,(or (funinfosym-lexical-pos ..x. ...x.)
 				(error "can't find index in lexicals")))
+  (and (%set-vec? x)
+	   ....x)
+	`(%set-vec ,(place-assign .x.)
+		       ,(or (funinfosym-lexical-pos ..x. ...x.)
+				    (error "can't find index in lexicals"))
+               ,(place-assign ....x.))
   (lambda? x)
     (copy-lambda x :body (place-assign (lambda-body x)))
   (%slot-value? x)
-    `(%slot-value ,(place-assign .x.)
-				  ,..x.))
+    `(%slot-value ,(place-assign .x.) ,..x.))

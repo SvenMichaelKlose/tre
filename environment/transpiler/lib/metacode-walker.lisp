@@ -58,7 +58,7 @@
 
 		               ,@(awhen if-cons `((cons? ,x) ,!))
 
-		               (not (or (in? (car ,x) '%setq '%var '%function-prologue '%function-epilogue '%function-return '%%tag)
+		               (not (or (in? (car ,x) '%setq '%set-vec '%var '%function-prologue '%function-epilogue '%function-return '%%tag)
 								(vm-jump? ,x)
                                 (%%vm-call-nil? ,x)))
 		                 (progn

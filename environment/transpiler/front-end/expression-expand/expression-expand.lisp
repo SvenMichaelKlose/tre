@@ -68,16 +68,20 @@
 	     (error "expression-expander: FUNINFO missing. Cannot make GENSYM"))
 	s))
 
-(defun expex-symbol-defined? (x)
+(defun expex-internal-symbol? (x)
   (let tr *current-transpiler*
     (or (functionp x)
 	    (keyword? x)
 	    (member x (transpiler-predefined-symbols tr) :test #'eq)
 	    (in? x nil t '~%ret 'this)
-	    (funinfo-in-this-or-parent-env? *expex-funinfo* x)
 	    (transpiler-imported-variable? tr x)
 	    (transpiler-defined-variable tr x)
 	    (transpiler-macro? tr x))))
+
+(defun expex-symbol-defined? (x)
+  (let tr *current-transpiler*
+    (or (funinfo-in-this-or-parent-env? *expex-funinfo* x)
+        (expex-internal-symbol? x))))
 
 (defun expex-warn (x)
   (and *expex-warn?*
@@ -93,8 +97,10 @@
 ;; Rejects atoms and expressions with meta-forms.
 (defun expex-able? (ex x)
   (or (and (expex-move-lexicals? ex)
-           (symbol? x)
-           (not (funinfo-in-args-or-env? *expex-funinfo* x)))
+           (atom x)
+           (not (in? x '~%ret))
+           (funinfo-in-parent-env? *expex-funinfo* x)
+           (not (funinfo-in-toplevel-env? *expex-funinfo* x)))
       (not (or (atom x)
 		       (function-ref-expr? x)
                (in? x. '%%vm-go '%%vm-go-nil '%transpiler-native '%transpiler-string '%quote)))))
@@ -169,7 +175,7 @@
 
 (defun expex-move-arg-atom (ex x)
   (let s (expex-funinfo-env-add)
-    (cons (expex-make-%setq ex s x) s)))
+    (cons (print (expex-make-%setq ex s x)) s)))
 
 (defun expex-move-arg (ex x)
   (?
@@ -224,19 +230,17 @@
   (values nil nil))
 
 (defun expex-cps (x)
-  (when (or (%setq? x)
+  (and (or (%setq? x)
             (%set-atom-fun? x))
-    (when (lambda-expression-needing-cps? (%setq-value x))
-      (transpiler-add-cps-function *current-transpiler* (%setq-place x)))))
+       (lambda-expression-needing-cps? (%setq-value x))
+       (transpiler-add-cps-function *current-transpiler* (%setq-place x))))
 
 (defun expex-vm-go-nil (ex x)
   (with ((moved new-expr) (expex-filter-and-move-args ex (list .x.)))
     (values moved `((%%vm-go-nil ,@new-expr ,..x.)))))
 
 (defun peel-identity (x)
-  (? (identity? x)
-     .x.
-     x))
+  (? (identity? x) .x. x))
 
 (defun expex-expr (ex expr)
   (let x (expex-guest-filter-expr ex expr)

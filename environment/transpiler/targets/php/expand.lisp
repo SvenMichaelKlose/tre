@@ -11,7 +11,9 @@
      (%setq ,place ,@x)))
 
 (define-php-std-macro define-native-php-fun (name args &rest body)
-  (apply #'shared-essential-defun (%defun-name name) args (body-with-noargs-tag body)))
+  `(%%vm-scope
+     ,(apply #'shared-essential-defun (%defun-name name) args (body-with-noargs-tag body))
+     (%setq ~%ret nil)))
 
 (define-php-std-macro defun (name args &rest body)
   (with ((fi-sym adef) (split-funinfo-and-args args)
@@ -22,12 +24,14 @@
                   `((%transpiler-native "error_log (\"" ,(symbol-name fun-name) "\")")
                        nil ,@body)
                   body))
+       (%setq ~%ret nil)
        ,@(unless (simple-argument-list? adef)
            (with-gensym p
              `((defun ,($ fun-name '_treexp) (,p)
                  ,(compile-argument-expansion-function-body
                       fun-name adef p nil
-                      (argument-expand-names 'compile-argument-expansion adef)))))))))
+                      (argument-expand-names 'compile-argument-expansion adef))))))
+       (%setq ~%ret nil))))
 
 (define-php-std-macro defmacro (&rest x)
   (apply #'shared-defmacro '*php-transpiler* x))
