@@ -138,7 +138,7 @@
 (define-php-macro %set-atom-fun (plc val)
   `(%transpiler-native ,(php-dollarize plc)
 					   ,(php-assignment-operator val)
-					   ,(php-dollarize val) ,*php-separator*))
+					   ,(php-dollarize val)))
 
 ;;;; VARIABLES
 
