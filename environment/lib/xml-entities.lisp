@@ -106,15 +106,15 @@
 
 (defvar *xml-entities-hash* (assoc-hash *xml-entities* :test #'string=))
 
-(defun xml-entities-to-unicode-0 (x)
+(defun xml-entities-charlist-to-unicode (x)
   (when x
     (when (= #\& x.)
 	  (awhen (position #\; .x :test #'=)
 	    (let-when n (href *xml-entities-hash* (list-string (subseq .x 0 !)))
-	      (return-from xml-entities-to-unicode-0
+	      (return-from xml-entities-charlist-to-unicode
 					   (cons (code-char n)
-						     (xml-entities-to-unicode-0 (nthcdr (1+ !) .x)))))))
-    (cons x. (xml-entities-to-unicode-0 .x))))
+						     (xml-entities-charlist-to-unicode (nthcdr (1+ !) .x)))))))
+    (cons x. (xml-entities-charlist-to-unicode .x))))
 
 (defun xml-entities-to-unicode (str)
-  (list-string (tree-list (xml-entities-to-unicode-0 (string-list str)))))
+  (list-string (xml-entities-charlist-to-unicode (string-list str))))
