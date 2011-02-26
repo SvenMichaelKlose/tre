@@ -60,8 +60,7 @@
   (? (eq 'only-name x)
      `(%transpiler-native
           (%transpiler-string
-              ,(transpiler-symbol-string *php-transpiler*
-                                         (transpiler-obfuscate *php-transpiler* (compiled-function-name name)))))
+              ,(transpiler-symbol-string *php-transpiler* (transpiler-obfuscate *php-transpiler* (compiled-function-name name)))))
   	 (? (atom x)
 		(error "codegen: arguments and body expected: ~A" x)
 	  	(codegen-php-function name x))))
@@ -146,10 +145,10 @@
   `(%transpiler-native "new __l()" ""))
 
 (define-php-macro %vec (v i)
-  `(%transpiler-native "$" ,v "->g(" ,(php-dollarize i) ")"))
+  `(%transpiler-native ,(php-dollarize v) "->g(" ,(php-dollarize i) ")"))
 
 (define-php-macro %set-vec (v i x)
-  `(%transpiler-native ,*php-indent* "$" ,v "->s(" ,(php-dollarize i) "," ,(php-%setq-value x) ")",*php-separator*))
+  `(%transpiler-native ,*php-indent* ,(php-dollarize v) "->s(" ,(php-dollarize i) "," ,(php-%setq-value x) ")",*php-separator*))
 
 ;;;; NUMBERS, ARITHMETIC, COMPARISON
 
@@ -217,11 +216,7 @@
 ;;;; OBJECTS
 
 (define-php-macro %new (&rest x)
-  `(%transpiler-native "new "
-				       ,x.
-					   "(" ,@(transpiler-binary-expand ","
-								 (mapcar #'php-dollarize .x))
- 					   ")"))
+  `(%transpiler-native "new " ,x.  "(" ,@(transpiler-binary-expand "," (mapcar #'php-dollarize .x)) ")"))
 
 (define-php-macro delete-object (x)
   `(%transpiler-native "unset " ,x))

@@ -88,6 +88,7 @@
   (rename-all-args? nil)
   (rename-toplevel-function-args? nil)
   (dot-expand? t)
+  (raw-constructor-names? nil)
 
   (predefined-symbols nil)
 

@@ -71,7 +71,7 @@
 
 ;; Translate arguments for call to native 'new' operator.
 (defun php-transpiler-make-new-object (x)
-  `(%new (%transpiler-native ,x.) ,@.x))
+  `(%new ,x. ,@.x))
 
 ;; Make object if first argument is not a keyword, or string.
 (define-php-std-macro new (&rest x)

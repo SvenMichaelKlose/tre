@@ -16,7 +16,7 @@
     codegen-expander (fn expander-expand (transpiler-macro-expander tr) _)
     finalize-sexprs #'transpiler-finalize-sexprs
     encapsulate-strings #'transpiler-encapsulate-strings
-    function-names (fn translate-function-names nil _))
+    function-names (fn translate-function-names tr nil _))
 
 (defun transpiler-emit-code (tr x)
   (funcall (transpiler-emit-code-compose tr) x))
