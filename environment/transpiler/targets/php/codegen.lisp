@@ -205,12 +205,7 @@
   (let pairs (group args 2)
     `(%transpiler-native
 	   "Array ("
-           ,@(when args
-	           (mapcan (fn (list (first _) "=>" (second _) ","))
-			           (butlast pairs)))
-           ,@(when args
-		       (with (x (car (last pairs)))
-		         (list x. "=>" (second x))))
+           ,@(comma-separated-list (mapcar (fn list (php-dollarize _.) "=>" (php-dollarize ._.)) pairs))
           ")")))
 
 ;;;; OBJECTS
