@@ -1,6 +1,6 @@
 /*
  * TRE interpreter
- * Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
  *
  * Compile-time configuration.
  */
@@ -20,7 +20,7 @@ typedef int bool;
 
 #ifndef TRE_COPYRIGHT
 #define TRE_COPYRIGHT \
-	"Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>\n"
+	"Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>\n"
 #endif
 
 #define TRE_VERSION	"current"

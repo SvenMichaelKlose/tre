@@ -61,13 +61,7 @@
 
 ;; X-browser MAKE-HASH-TABLE.
 (defun php-transpiler-make-new-hash (x)
-  `(make-hash-table
-	 ,@(mapcan (fn (list (? (and (not (string? _.))
-								 (eq :class _.))
-						    "class" ; IE6 wants this.
-							_.)
-						 (second _)))
-			   (group x 2))))
+  `(%make-hash-table ,@(mapcan (fn list _. ._.) (group x 2))))
 
 ;; Translate arguments for call to native 'new' operator.
 (defun php-transpiler-make-new-object (x)

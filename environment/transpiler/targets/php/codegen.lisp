@@ -7,8 +7,7 @@
   `(,*php-indent* ,@x ,*php-separator*))
 
 (defun php-dollarize (x)
-  (? (and (atom x)
-		  (symbol? x))
+  (? (symbol? x)
      (?
        (not x) "NULL"
        (eq t x) "TRUE"
@@ -79,7 +78,8 @@
     (? (funinfo-ghost fi)
   	   `(%transpiler-native "new __funref("
              (%transpiler-string ,(transpiler-symbol-string *php-transpiler* name))
-             "," ,(php-dollarize (funinfo-lexical (funinfo-parent fi)))
+             ","
+             ,(php-dollarize (funinfo-lexical (funinfo-parent fi)))
              ")")
 	   name)))
 
@@ -179,14 +179,14 @@
 (define-php-macro make-array (&rest elements)
   `(%transpiler-native "Array()" ""))
 
-(define-php-macro aref (arr &rest idx)
-  `(%transpiler-native
-       ,(php-dollarize arr)
-       ,@(mapcar (fn `("[" ,(php-dollarize _) "]")) idx)))
+(defun php-array-subscript (indexes)
+  (mapcar (fn `("[" ,(php-dollarize _) "]")) indexes))
+
+(define-php-macro aref (arr &rest indexes)
+  `(%transpiler-native ,(php-dollarize arr) ,@(php-array-subscript indexes)))
 
 (define-php-macro %%usetf-aref (val &rest x)
-  `(%transpiler-native ,(php-dollarize val) ,*php-separator*
-  					   (aref ,@x)
+  `(%transpiler-native (aref ,@x)
 					   ,(php-assignment-operator val)
 					   ,(php-dollarize val)))
 
@@ -195,17 +195,20 @@
 (define-php-macro href (&rest x)
   `(aref ,@x))
 
-(define-php-macro %%usetf-href (val &rest x)
+(define-php-macro %%usetf-href (&rest x)
   `(%%usetf-aref ,@x))
 
 (define-php-macro hremove (h key)
   `(%transpiler-native "unset $" ,h "[" ,(php-dollarize key) "]"))
 
-(define-php-macro make-hash-table (&rest args)
+(define-php-macro make-hash-table (&rest ignored-args)
+  `(%transpiler-native "Array()" ""))
+
+(define-php-macro %make-hash-table (&rest args)
   (let pairs (group args 2)
     `(%transpiler-native
-	   "Array ("
-           ,@(comma-separated-list (mapcar (fn list (php-dollarize _.) "=>" (php-dollarize ._.)) pairs))
+	   "Array("
+              ,@(comma-separated-list (mapcar (fn list (php-dollarize _.) "=>" (php-dollarize ._.)) pairs))
           ")")))
 
 ;;;; OBJECTS
