@@ -107,6 +107,8 @@
 (define-compiler-macro if (&rest body)
   (with (tests (group body 2)
 		 end   (car (last tests)))
+    (unless body
+      (error "IF: Body missing"))
     `(cond
         ,@(? (= 1 (length end))
 			 (append (butlast tests)
