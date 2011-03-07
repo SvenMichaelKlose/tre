@@ -8,3 +8,4 @@
 (env-load "stage5/stringlist-skip-spaces.lisp")
 (env-load "stage5/trim-double-spaces.lisp")
 (env-load "stage5/without-head.lisp")
+(env-load "stage5/without-tail.lisp")
