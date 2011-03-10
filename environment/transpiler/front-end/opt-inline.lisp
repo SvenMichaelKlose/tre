@@ -2,11 +2,9 @@
 ;;;;; Copyright (c) 2009-2011 Sven Klose <pixel@copei.de>
 
 (defvar *show-inlines?* nil)
-(defvar *opt-inline-max-levels* 1)
-(defvar *opt-inline-min-size* 16)
+(defvar *opt-inline-max-levels* 16)
 (defvar *opt-inline-max-size* 32)
-(defvar *opt-inline-max-repetitions* 0)
-(defvar *opt-inline-max-small-repetitions* 0)
+(defvar *opt-inline-max-repetitions* 2)
 
 (defun opt-inline-inlined-fun (tr x argdef body level current parent)
   `#'(,(argument-expand-names 'opt-inline-import-argexp argdef)
@@ -41,10 +39,6 @@
 	    nil
 	  (not argdef)
 	  	x
-	  (< (tree-size body) *opt-inline-min-size*)
-	     (if (< *opt-inline-max-small-repetitions* (count x. parent))
-			 x
-			 (opt-inline-import tr x argdef body level current parent))
 	  (< *opt-inline-max-repetitions* (count x. parent))
 		x
   	  (< *opt-inline-max-levels* level)
