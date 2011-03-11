@@ -31,6 +31,15 @@
 		    (js-make-function-with-compiled-argument-expansion x)))
   	  `(function ,x)))
 
+(define-js-std-macro funcall (fun &rest args)
+  (with-gensym (f e a)
+    `(with (,f ,fun
+            ,expander (slot-value ,f 'tre-exp))
+       (? expander
+          (let ,a (list ,@args)
+            ((slot-value ,expander 'apply) nil (%transpiler-native "[" ,a "]")))
+          (,f ,@args)))))
+
 (defun js-cps-exception (x)
   (unless (in-cps-mode?)
     (transpiler-add-cps-exception *js-transpiler* (%defun-name x))))
