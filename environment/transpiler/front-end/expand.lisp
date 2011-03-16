@@ -22,6 +22,7 @@
 
 (defmacro transpiler-wrap-invariant-to-binary (definer op len repl-op combiner)
   `(,definer ,op (&rest x)
+     (transpiler-add-inline-exception *current-transpiler* ,repl-op)
      (? (< ,len (length x))
         (cons ',combiner (mapcar (fn `(,repl-op ,,@(subseq x 0 ,(1- len)) ,_)) (subseq x ,(1- len))))
         (cons ',repl-op x))))

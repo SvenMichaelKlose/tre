@@ -4,7 +4,7 @@
 (defvar *show-inlines?* nil)
 (defvar *opt-inline-max-levels* 16)
 (defvar *opt-inline-max-size* 32)
-(defvar *opt-inline-max-repetitions* 2)
+(defvar *opt-inline-max-repetitions* 0)
 
 (defun opt-inline-inlined-fun (tr x argdef body level current parent)
   `#'(,(argument-expand-names 'opt-inline-import-argexp argdef)
@@ -63,7 +63,7 @@
 	  (cons (opt-inline-1 tr level current parent x.)
 		    (opt-inline-0 tr level current parent .x))
 	(lambda? x.)
-	  (cons (copy-lambda x. :args (opt-inline-0 tr level current parent (lambda-args x.) :tail? t)
+	  (cons (copy-lambda x. :args (lambda-args x.)
 				            :body (opt-inline-0 tr level current parent (lambda-body x.)))
 		    (opt-inline-0 tr level current parent .x))
 	(cons (opt-inline-0 tr level current parent x.)
