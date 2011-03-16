@@ -43,7 +43,7 @@
 	  x)))
 
 (defun inlineable? (tr x)
-  (not (or (expander-has-macro? (transpiler-macro-expander tr) x)
+  (not (or (transpiler-macro? tr x)
 		   (transpiler-dont-inline? tr x))))
 
 (defun opt-inline-0 (tr level current parent x &key (tail? nil))
