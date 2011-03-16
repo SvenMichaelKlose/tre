@@ -1,7 +1,5 @@
 ;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2009,2011 Sven Klose <pixel@copei.de>
 
 (define-native-js-fun not (x)
-  (if x
-	  nil
-	  t))
+  (? x nil t))

@@ -3,11 +3,11 @@
 
 ;;;; COMPARISON
 
-(define-c-macro %eq (a b)
-  `("TREPTR_TRUTH(" ,a " == " ,b ")"))
+(define-c-macro %eq (&rest x)
+  `("TREPTR_TRUTH(" ,(pad x "==") ")"))
 
-(define-c-macro %not (x)
-  `("(" ,x " == treptr_nil ? treptr_t : treptr_nil)"))
+(define-c-macro %not (&rest x)
+  `(eq nil ,@x))
 
 (define-c-macro cons (a d)
   `("_trelist_get (" ,a "," ,d ")"))

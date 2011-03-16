@@ -3,20 +3,18 @@
 
 (setq
 	*universe*
-	(cons 'not
 	(cons 'last
 	(cons '%nconc
 	(cons 'copy-tree
 	(cons '*variables*
-		  *universe*))))))
+		  *universe*)))))
 
 (setq
 	*defined-functions*
-	(cons 'not
 	(cons 'copy-tree
 	(cons 'last
 	(cons '%nconc
-		  nil)))))
+		  nil))))
 
 (setq
 	*variables*
@@ -32,12 +30,6 @@
 	(cons (cons '*libc-path* nil)
 	(cons (cons '*have-environment-tests* nil)
 		  *variables*))))))))))))
-
-(%set-atom-fun not
-  #'((x)
-	   (if x
-		   nil
-		   t)))
 
 (%set-atom-fun copy-tree
   #'((x)

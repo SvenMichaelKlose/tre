@@ -1,6 +1,6 @@
 /*
  * TRE interpreter
- * Copyright (c) 2005-2006, 2008-2010 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2006, 2008-2011 Sven Klose <pixel@copei.de>
  *
  * Built-in functions
  */
@@ -8,6 +8,7 @@
 #ifndef TRE_BUILTIN_ATOM_H
 #define TRE_BUILTIN_ATOM_H
 
+extern treptr treatom_builtin_not (treptr);
 extern treptr treatom_builtin_eq (treptr);
 extern treptr treatom_eql (treptr, treptr);
 extern treptr treatom_builtin_eql (treptr);

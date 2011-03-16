@@ -1,6 +1,6 @@
 /*
  * TRE interpreter
- * Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
  *
  * Built-in atom-related functions
  */
@@ -18,6 +18,27 @@
 #include "xxx.h"
 
 #include <string.h>
+
+/*tredoc
+ (cmd :name NOT :essential T
+	(arg :occurrence rest x)
+	(returns :type boolean)
+ 	(param "Test if arguments are NIL."))
+ */
+treptr
+treatom_builtin_not (treptr list)
+{
+	treptr x;
+
+	do {
+		x = CAR(list);
+    	if (x != treptr_nil)
+            return treptr_nil;
+		list = CDR(list);
+	} while (list != treptr_nil);
+
+	return treptr_t;
+}
 
 /*tredoc
  (cmd :name EQ :essential T

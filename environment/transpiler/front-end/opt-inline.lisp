@@ -60,7 +60,7 @@
 	  (cons x.
 			(opt-inline-0 tr level current parent .x :tail? tail?))
 
-	(let f (first x.)
+	(let f x..
 	  (and (not tail?)
 		   (not (eq current f))
 		   (inlineable? tr f)
@@ -71,9 +71,8 @@
 	  (cons (opt-inline-1 tr level current parent x.)
 		    (opt-inline-0 tr level current parent .x))
 	(lambda? x.)
-	  (cons (copy-lambda x.
-				:args (opt-inline-0 tr level current parent (lambda-args x.) :tail? t)
-				:body (opt-inline-0 tr level current parent (lambda-body x.)))
+	  (cons (copy-lambda x. :args (opt-inline-0 tr level current parent (lambda-args x.) :tail? t)
+				            :body (opt-inline-0 tr level current parent (lambda-body x.)))
 		    (opt-inline-0 tr level current parent .x))
 	(cons (opt-inline-0 tr level current parent x.)
 		  (opt-inline-0 tr level current parent .x :tail? tail?))))

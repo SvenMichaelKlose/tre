@@ -396,7 +396,7 @@ char *tre_builtin_names[] = {
     "CODE-CHAR", "INTEGER",
     "CHARACTER?",
 
-    "EQ", "EQL",
+    "NOT", "EQ", "EQL",
     "MAKE-SYMBOL", "MAKE-PACKAGE",
 	"ATOM", "SYMBOL-VALUE", "%TYPE-ID", "%ID", "%MAKE-PTR",
 	"SYMBOL-FUNCTION", "SYMBOL-PACKAGE", "SYMBOL-COMPILED-FUNCTION",
@@ -507,6 +507,7 @@ treevalfunc_t treeval_xlat_builtin[] = {
     trenumber_builtin_integer,
     trenumber_builtin_characterp,
 
+    treatom_builtin_not,
     treatom_builtin_eq,
     treatom_builtin_eql,
     treatom_builtin_make_symbol,

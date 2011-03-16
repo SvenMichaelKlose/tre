@@ -78,15 +78,15 @@
 
 (define-js-macro %function-return-cps (fi-sym)
   (let fi (get-funinfo-by-sym fi-sym)
-    (if (and (funinfo-num-tags fi)
-             (< 0 (funinfo-num-tags fi)))
-        `(,*js-indent*  "return" ,*js-separator*)
-        "")))
+    (? (and (funinfo-num-tags fi)
+            (< 0 (funinfo-num-tags fi)))
+       `(,*js-indent*  "return" ,*js-separator*)
+       "")))
 
 (define-js-macro %function-epilogue (fi-sym)
   (let fi (get-funinfo-by-sym fi-sym)
-    (or `(,@(if (and (transpiler-continuation-passing-style? *js-transpiler*)
-                     (funinfo-needs-cps? fi))
+    (or `(,@(? (and (transpiler-continuation-passing-style? *js-transpiler*)
+                    (funinfo-needs-cps? fi))
               `((%function-return-cps ,fi-sym))
               `((%function-return ,fi-sym)))
 	      ,@(when (< 0 (funinfo-num-tags fi))
@@ -152,12 +152,11 @@
 ;;;; ARRAYS
 
 (define-js-macro make-array (&rest elements)
-  `(%transpiler-native "[" ,@(transpiler-binary-expand "," elements) "]"))
+  `(%transpiler-native "[" ,@(pad elements ",") "]"))
 
 (define-js-macro aref (arr &rest idx)
   `(%transpiler-native ,arr
-     ,@(mapcar (fn `("[" ,_ "]"))
-               idx)))
+     ,@(mapcar (fn `("[" ,_ "]")) idx)))
 
 (define-js-macro %%usetf-aref (val &rest x)
   `(%transpiler-native (aref ,@x) "=" ,val))
@@ -168,17 +167,15 @@
   (let pairs (group args 2)
     `("{"
       ,@(when args
-	      (mapcan (fn (list (first _) ":" (second _) ","))
-			      (butlast pairs)))
+	      (mapcan (fn `( ,_. ":" ,._. ",")) (butlast pairs)))
       ,@(when args
 		  (with (x (car (last pairs)))
-		    (list x. ":" (second x))))
+		    `(,x. ":" ,.x.)))
      "}")))
 
 (define-js-macro href (arr &rest idx)
   `(%transpiler-native ,arr
-     ,@(mapcar (fn `("[" ,_ "]"))
-               idx)))
+     ,@(mapcar (fn `("[" ,_ "]")) idx)))
 
 (define-js-macro %%usetf-href (val &rest x)
   `(%transpiler-native (aref ,@x) "=" ,val))
@@ -189,10 +186,7 @@
 ;;;; OBJECTS
 
 (define-js-macro %new (&rest x)
-  `(%transpiler-native "new "
-				       ,(compiled-function-name x.)
-					   "(" ,@(transpiler-binary-expand "," .x)
- 					   ")"))
+  `(%transpiler-native "new " ,(compiled-function-name x.) "(" ,@(pad .x ",") ")"))
 
 (define-js-macro delete-object (x)
   `(%transpiler-native "delete " ,x))
@@ -200,7 +194,7 @@
 ;;;; META-CODES
 
 (define-js-macro %quote (x)
-  (? (not (string= "" (symbol-name x)))
+  (? (not (string= "" (symbol-name x))) ;XXX
 	 (js-codegen-symbol-constructor *js-transpiler* x)
 	 x))
 

@@ -13,12 +13,6 @@
 (defun c-codegen-var-decl (name)
   `("treptr " ,(transpiler-symbol-string *c-transpiler* name)))
 
-(defmacro define-c-binary (op repl-op)
-  `(define-transpiler-binary *c-transpiler* ,op ,repl-op))
-
-(defmacro define-c-infix (name)
-  `(define-transpiler-infix *c-transpiler* ,name))
-
 ;;;; SYMBOL TRANSLATIONS
 
 (transpiler-translate-symbol *c-transpiler* nil "treptr_nil")
@@ -42,6 +36,9 @@
 	  "{" ,(code-char 10)
           ,@(lambda-body x)
 	  "}" ,*c-newline*)))
+
+(define-c-macro eq (&rest x)
+  `(%eq ,@x))
 
 (define-c-macro function (name &optional (x 'only-name))
   (?
@@ -103,10 +100,6 @@
 
 (define-c-macro %set-vec (vec index value)
   (c-line `(%transpiler-native "_TREVEC(" ,vec "," ,index ") = " ,(codegen-%setq-value value))))
-
-;;;; COMPARISON
-
-(define-c-binary eq "=")
 
 ;;;; CONTROL FLOW
 
