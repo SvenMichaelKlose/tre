@@ -4,12 +4,12 @@
 ;;;; ARGUMENTS
 
 (defun funinfo-arg? (fi var)
-  (member var (funinfo-args fi)))
+  (member var (funinfo-args fi) :test #'eq))
 
 ;;;; FREE VARIABLES
 
 (defun funinfo-free-var? (fi var)
-  (member var (funinfo-free-vars fi)))
+  (member var (funinfo-free-vars fi) :test #'eq))
 
 (defun funinfo-add-free-var (fi var)
   (unless (funinfo-free-var? fi var)
@@ -42,8 +42,7 @@
 		  (funinfo-in-this-or-parent-env? ! var)))))
 
 (defun funinfo-in-env-or-lexical? (fi var)
-  (when (and fi
-			 (funinfo-parent fi))
+  (when (and fi (funinfo-parent fi))
     (or (funinfo-in-args-or-env? fi var)
 	    (awhen (funinfo-parent fi)
 		  (funinfo-in-env-or-lexical? ! var)))))
@@ -69,12 +68,9 @@
 
 ,(macroexpand
 	`(progn
-	  ,@(mapcar (fn `(defun ,($ 'funinfo- _.) (fi var)
-				   	    (position var (,($ 'funinfo- ._.) fi))))
-		    (group `(free-var-pos free-vars
-					 env-pos env
-					 lexical-pos lexicals)
-				   2))))
+	   ,@(mapcar (fn `(defun ,($ 'funinfo- _.) (fi var)
+				   	    (position var (,($ 'funinfo- ._.) fi) :test #'eq)))
+		         (group `(free-var-pos free-vars env-pos env lexical-pos lexicals) 2))))
 
 (defun funinfosym-env-pos (fi-sym x)
   (funinfo-env-pos (get-funinfo-by-sym fi-sym) x))
@@ -115,7 +111,7 @@
 		(funinfo-get-name (funinfo-parent fi)))))
 
 (defun funinfo-immutable? (fi x)
-  (member x (funinfo-immutables fi)))
+  (member x (funinfo-immutables fi) :test #'eq))
 
 (defun funinfo-add-immutable (fi x)
-  (adjoin! x (funinfo-immutables fi)))
+  (adjoin! x (funinfo-immutables fi) :test #'eq))

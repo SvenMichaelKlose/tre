@@ -46,12 +46,8 @@
 	fi))
 
 (defun funinfo-expr-symbol (x)
-  (and (eq '%funinfo x.)
-       .x.))
+  (and (eq '%funinfo x.) .x.))
 
 (defun split-funinfo-and-args (x)
   (let fi-sym (funinfo-expr-symbol x)
-    (values fi-sym
-            (if fi-sym
-                ..x
-				x))))
+    (values fi-sym (? fi-sym ..x x))))
