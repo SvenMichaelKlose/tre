@@ -17,7 +17,7 @@
                   ,@(when (body-has-noargs-tag? body)
                       '(no-args))
                   (block ,(? (cons? name)
-                             (second name)
+                             .name.
                              name)
                     ,@(when *log-functions?*
                         `((log ,(symbol-name n))))

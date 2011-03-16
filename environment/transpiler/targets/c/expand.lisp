@@ -29,11 +29,11 @@
        (%var ,name)
 	   (%setq ,name ,val))))
 
-(define-c-std-macro eq (a b) `(%eq ,a ,b))
+(transpiler-wrap-invariant-to-binary define-c-std-macro eq 2 %eq and)
+(transpiler-wrap-invariant-to-binary define-c-std-macro not 1 %not and)
 
 (mapcan-macro _
-    '(car cdr not
-	  cons? atom number? string? arrayp functionp builtinp)
+    '(car cdr cons? atom number? string? arrayp functionp builtinp)
   `((define-c-std-macro ,_ (x)
 	  `(,($ '% _) ,,x))))
 

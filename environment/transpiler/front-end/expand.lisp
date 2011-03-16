@@ -1,5 +1,5 @@
 ;;;;; TRE transpiler
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (defun transpiler-macro? (tr name)
   (or (expander-has-macro? (transpiler-std-macro-expander tr) name)
@@ -19,3 +19,9 @@
   (with-temporary *setf-immediate-slot-value* t
     (with-temporary *setf-functionp* (transpiler-setf-functionp tr)
 	  (expander-expand (transpiler-std-macro-expander tr) x))))
+
+(defmacro transpiler-wrap-invariant-to-binary (definer op len repl-op combiner)
+  `(,definer ,op (&rest x)
+     (? (< ,len (length x))
+        (cons ',combiner (mapcar (fn `(,repl-op ,,@(subseq x 0 ,(1- len)) ,_)) (subseq x ,(1- len))))
+        (cons ',repl-op x))))

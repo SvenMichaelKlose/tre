@@ -22,6 +22,13 @@
 		    ,g)
 		  nil))))
 
+(transpiler-wrap-invariant-to-binary define-js-std-macro eq 2 eq and)
+
+(define-js-std-macro not (&rest x)
+  (? .x
+     `(%not (list ,@x))
+     `(? ,x. nil t)))
+
 (define-js-std-macro function (x)
   (if (cons? x)
       (with-lambda-content x fi args body

@@ -15,6 +15,13 @@
      ,(apply #'shared-essential-defun (%defun-name name) args (body-with-noargs-tag body))
      (%setq ~%ret nil)))
 
+(transpiler-wrap-invariant-to-binary define-php-std-macro eq 2 eq and)
+
+(define-php-std-macro not (&rest x)
+  (? .x
+     `(%not (list ,@x))
+     `(? ,x. nil t)))
+
 (define-php-std-macro defun (name args &rest body)
   (with ((fi-sym adef) (split-funinfo-and-args args)
          fun-name (%defun-name name))

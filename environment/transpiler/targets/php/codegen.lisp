@@ -16,6 +16,12 @@
 	   `("$" ,x))
 	 x))
 
+(defun php-list (x)
+  (pad (mapcar #'php-dollarize x) ","))
+
+(defun php-argument-list (x)
+  `("(" ,@(pad (mapcar #'php-dollarize x) ",") ")"))
+
 (define-codegen-macro-definer define-php-macro *php-transpiler*)
 
 (defmacro define-php-infix (name)
@@ -47,10 +53,10 @@
 		 fi (get-lambda-funinfo x)
 		 num-locals (length (funinfo-env fi)))
     `(,(code-char 10)
-	  "function " ,(compiled-function-name name) "(" ,@(transpiler-binary-expand "," (mapcar (fn `("$" ,_)) args)) ")"
+	  "function " ,(compiled-function-name name) ,@(php-argument-list args)
       "{" ,(code-char 10)
 		 ,@(awhen (funinfo-globals fi)
-             (php-line "global " (comma-separated-list (mapcar #'php-dollarize !))))
+             (php-line "global " (php-list !)))
          ,@(lambda-body x)
        	 ,(php-line "return $" '~%ret)
       "}" ,*php-newline*)))
@@ -159,7 +165,7 @@
 	(transpiler-add-inline-exception tre op)
 	(transpiler-add-plain-arg-fun tre op)
 	`(define-expander-macro ,(transpiler-macro-expander tre) ,op (&rest args)
-	   `(%transpiler-native ,,@(transpiler-binary-expand ,replacement-op (mapcar #'php-dollarize args))))))
+	   `(%transpiler-native ,,@(pad (mapcar #'php-dollarize args) ,replacement-op)))))
 
 (mapcar-macro x
     '((%%%+ "+")
@@ -204,17 +210,19 @@
 (define-php-macro make-hash-table (&rest ignored-args)
   `(%transpiler-native "Array()" ""))
 
+(defun php-literal-array-element (x)
+  (list (php-dollarize x.) "=>" (php-dollarize .x.)))
+
+(defun php-literal-array-elements (x)
+  (pad (mapcar #'php-literal-array-element x) ","))
+
 (define-php-macro %make-hash-table (&rest args)
-  (let pairs (group args 2)
-    `(%transpiler-native
-	   "Array("
-              ,@(comma-separated-list (mapcar (fn list (php-dollarize _.) "=>" (php-dollarize ._.)) pairs))
-          ")")))
+  `(%transpiler-native "Array(" ,@(php-literal-array-elements (group args 2)) ")"))
 
 ;;;; OBJECTS
 
 (define-php-macro %new (&rest x)
-  `(%transpiler-native "new " ,x.  "(" ,@(transpiler-binary-expand "," (mapcar #'php-dollarize .x)) ")"))
+  `(%transpiler-native "new " ,x. ,@(php-argument-list .x)))
 
 (define-php-macro delete-object (x)
   `(%transpiler-native "unset " ,x))

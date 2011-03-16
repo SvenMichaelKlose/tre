@@ -35,8 +35,7 @@
 (defun get-lambda-funinfo (x)
   (with (fi-sym (lambda-funinfo x)
          fi	    (get-funinfo-by-sym fi-sym))
-    (unless (or (and (not fi)
-					 (not fi-sym))
+    (unless (or (not fi fi-sym)
 				(and fi
 				 	 (eq fi-sym (funinfo-sym fi))))
 	  (print fi)
