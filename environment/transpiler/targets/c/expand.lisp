@@ -15,7 +15,9 @@
 (define-c-std-macro defmacro (&rest x)
   (apply #'shared-defmacro '*c-transpiler* x))
 
-(define-c-std-macro defvar (name val)
+(define-c-std-macro defvar (name &optional (val '%%no-value))
+  (when (eq '%%no-value val)
+    (setf name `',name))
   (let tr *c-transpiler*
     (when *show-definitions*
       (late-print `(defvar ,name)))

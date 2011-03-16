@@ -71,7 +71,9 @@
 (define-js-std-macro defmacro (&rest x)
   (apply #'shared-defmacro '*js-transpiler* x))
 
-(define-js-std-macro defvar (name val)
+(define-js-std-macro defvar (name &optional (val '%%no-value))
+  (when (eq '%%no-value val)
+    (setf val `',name))
   (let tr *js-transpiler*
     (when *show-definitions*
       (late-print `(defvar ,name)))

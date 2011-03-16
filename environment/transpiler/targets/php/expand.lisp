@@ -36,7 +36,9 @@
 (define-php-std-macro defmacro (&rest x)
   (apply #'shared-defmacro '*php-transpiler* x))
 
-(define-php-std-macro defvar (name val)
+(define-php-std-macro defvar (name &optional (val '%%no-value))
+  (when (eq '%%no-value val)
+    (setf val `',name))
   (let tr *php-transpiler*
     (when *show-definitions*
       (late-print `(defvar ,name)))
