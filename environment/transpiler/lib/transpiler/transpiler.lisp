@@ -92,6 +92,8 @@
 
   (predefined-symbols nil)
 
+  (global-funinfo nil)
+
   ; Literals that must be declared or cached before code with them is emitted.
   (compiled-chars (make-hash-table :test #'=))
   (compiled-numbers (make-hash-table :test #'=))
@@ -228,3 +230,6 @@
   		(transpiler-exported-closures tr) nil)
   (transpiler-add-obfuscation-exceptions tr (make-symbol ""))
   tr)
+
+(defun make-global-funinfo (tr)
+  (make-lambda-funinfo (setf (transpiler-global-funinfo tr) (make-funinfo))))

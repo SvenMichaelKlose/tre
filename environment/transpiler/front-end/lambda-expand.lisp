@@ -1,5 +1,5 @@
 ;;;;; TRE compiler
-;;;;; Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
 
 (defun lambda-make-funinfo (args parent)
   (with (argnames (argument-expand-names 'lambda-expand args)
@@ -78,7 +78,7 @@
 
 (defun lambda-expand-0 (x export-lambdas? &key (lambda-name nil))
   (let fi (or (get-lambda-funinfo x)
-		      (lambda-make-funinfo (lambda-args x) *global-funinfo*))
+		      (lambda-make-funinfo (lambda-args x) (transpiler-global-funinfo *current-transpiler*)))
     (copy-lambda x :info fi :body (lambda-expand-tree fi (lambda-body x) export-lambdas?))))
 
 (defun lambda-expand (x export-lambdas?)

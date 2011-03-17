@@ -247,6 +247,6 @@
 								  #'remove-assignments
 								  #'opt-peephole-remove-void)
 						 x))))
-	  (with-temporary *opt-peephole-funinfo* *global-funinfo*
+	  (with-temporary *opt-peephole-funinfo* (transpiler-global-funinfo *current-transpiler*)
 	    (repeat-while-changes #'rec
 		  (opt-peephole-remove-identity statements)))))

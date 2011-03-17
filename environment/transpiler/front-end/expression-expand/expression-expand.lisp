@@ -300,5 +300,5 @@
 (defun expression-expand (ex x)
   (when x
 	(with-temporary *current-expex* ex
-	  (with-temporary *expex-funinfo* *global-funinfo*
+	  (with-temporary *expex-funinfo* (transpiler-global-funinfo *current-transpiler*)
         (expex-body ex x)))))

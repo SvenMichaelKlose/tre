@@ -296,8 +296,8 @@
          tag-end (make-compiler-tag))
     (with-gensym g
       `((%%vm-go-nil (%slot-value ,constructor tre-cps) ,tag-no-cps)
-        ,@(cps-split-constructorcall-0 *global-funinfo* (list x)
-              (cps-make-dummy-continuer (%setq-place x) *global-funinfo*))
+        ,@(cps-split-constructorcall-0 (transpiler-global-funinfo *current-transpiler*) (list x)
+              (cps-make-dummy-continuer (%setq-place x) (transpiler-global-funinfo *current-transpiler*)))
         (%%vm-go ,tag-end)
         ,tag-no-cps
         ,x
@@ -305,7 +305,7 @@
 
 (defun cps-toplevel-funcall (x)
   `((%setq nil (,(car (%setq-value x))
-                ,(cps-make-dummy-continuer (%setq-place x) *global-funinfo*)
+                ,(cps-make-dummy-continuer (%setq-place x) (transpiler-global-funinfo *current-transpiler*))
                 ,@(cdr (%setq-value x))))))
 
 (defun cps-toplevel-methodcall (x)
@@ -334,7 +334,7 @@
   (cps-function-assignment? x)
     (cps-function-assignment x)
   (cps-foureign-funcall? x)
-    (cps-foureign-funcall *global-funinfo* x))
+    (cps-foureign-funcall (transpiler-global-funinfo *current-transpiler*) x))
 
 (defun cps (x)
   (cps-toplevel x))

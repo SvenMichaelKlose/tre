@@ -1,5 +1,5 @@
 ;;;;; TRE compiler
-;;;;; Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
 
 (defun funinfo-var-declarations (fi)
   (unless (transpiler-stack-locals? *current-transpiler*)
@@ -51,4 +51,4 @@
     (make-function-prologues-fun nil x))
 
 (defun make-function-prologues (x)
-  (make-function-prologues-0 *global-funinfo* x))
+  (make-function-prologues-0 (transpiler-global-funinfo *current-transpiler*) x))

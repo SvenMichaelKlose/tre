@@ -114,7 +114,7 @@
     `(%slot-value ,(place-expand-0 fi .x.) ,..x.))
 
 (defun place-expand (x)
-  (place-expand-0 *global-funinfo* x))
+  (place-expand-0 (transpiler-global-funinfo *current-transpiler*) x))
 
 (defun place-expand-funref-lexical (fi)
   (place-expand-0 (funinfo-parent fi)

@@ -1,5 +1,5 @@
 ;;;;; TRE transpiler
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (defvar *nil-symbol-name* nil)
 
@@ -176,5 +176,5 @@
 (defun target-transpile-setup (tr &key (obfuscate? nil))
   (with-temporary *current-transpiler* tr
     (transpiler-switch-obfuscator tr obfuscate?)
-	(make-global-funinfo)
+	(make-global-funinfo tr)
     (setf *nil-symbol-name* (symbol-name (transpiler-obfuscate-nil tr)))))

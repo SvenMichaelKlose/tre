@@ -1,5 +1,5 @@
 ;;;;; TRE compiler
-;;;;; Copyright (c) 2009-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2009-2011 Sven Klose <pixel@copei.de>
 
 (defun opt-places-find-used-fun (x)
   (let fi (get-lambda-funinfo x)
@@ -19,7 +19,7 @@
       (opt-places-find-used-0 fi .x))))
 
 (defun opt-places-find-used (x)
-  (opt-places-find-used-0 *global-funinfo* x)
+  (opt-places-find-used-0 (transpiler-global-funinfo *current-transpiler*) x)
   x)
 
 (defun opt-places-correct-funinfo (fi)
@@ -45,5 +45,5 @@
       (opt-places-remove-unused-0 fi .x))))
 
 (defun opt-places-remove-unused (x)
-  (opt-places-remove-unused-0 *global-funinfo* x)
+  (opt-places-remove-unused-0 (transpiler-global-funinfo *current-transpiler*) x)
   x)
