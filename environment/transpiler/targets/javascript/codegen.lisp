@@ -38,7 +38,7 @@
   `(,*js-indent* "_I_=" ,tag ";continue" ,*js-separator*))
 
 (define-js-macro %%vm-go-nil (val tag)
-  `(,*js-indent* "if(typeof ",val"=='undefined'||!" ,val "&&" ,val "!==0&&" ,val "!==''){_I_=" ,tag ";continue;}" ,*js-newline*))
+  `(,*js-indent* "if(!" ,val "&&" ,val "!==0&&" ,val "!==''){_I_=" ,tag ";continue;}" ,*js-newline*))
 
 (define-js-macro %%vm-call-nil (val consequence alternative)
   `(,*js-indent* "if(!" ,val "&&" ,val "!==0&&" ,val "!=='')"
