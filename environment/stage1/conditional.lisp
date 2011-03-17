@@ -1,5 +1,5 @@
 ;;;; TRE environment
-;;;; Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2005-2008,2011 Sven Klose <pixel@copei.de>
 
 (defmacro when (predicate &rest expr)
   `(and ,predicate
@@ -17,13 +17,21 @@
 	  		    (list (car x)))
 	        (group2 (cddr x)))))
 
-(defmacro case (val &rest cases)
+(defmacro case (&rest cases)
   (let g (gensym)
-    `(let ,g ,val
-       (if 
-         ,@(apply #'append (%simple-mapcar
-						      #'((x)
-              				      (if (cdr x)
-                   				      `((equal ,g ,(car x)) ,(cadr x))
-	   	          				      (list (car x))))
-       				       (group2 cases)))))))
+    (let op (if (eq :test (car cases))
+                (cadr cases)
+                'equal)
+      (let v (if (eq :test (car cases))
+                 (caddr cases)
+                 (car cases))
+        `(let ,g ,v
+           (if 
+             ,@(apply #'append (%simple-mapcar
+						          #'((x)
+              				          (if (cdr x)
+                   				          `((,op ,g ,(car x)) ,(cadr x))
+	   	          				          (list (car x))))
+       				           (group2 (if (eq :test (car cases))
+                                           (cdddr cases)
+                                           (cdr cases)))))))))))
