@@ -1,5 +1,5 @@
 ;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (defun js-transpile-prologue (tr)
   (format nil (+ "    var _I_ = 0; while (1) {switch (_I_) {case 0: ~%"
@@ -53,7 +53,7 @@
 			:decl-gen
 		     	#'(()
        				(mapcar (fn transpiler-emit-code tr (list `(%var ,_)))
-					  		(funinfo-env *global-funinfo*)))
+					  		(funinfo-env (transpiler-global-funinfo tr))))
 			:files-to-update files-to-update
 			:make-updater make-updater
 			:print-obfuscations? print-obfuscations?)
