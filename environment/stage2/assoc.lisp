@@ -46,8 +46,8 @@
   (when lst
     (? (funcall test obj (caar lst))
 	   (aremove obj (cdr lst) :test test)
-	   (cons (cons (car lst.)
-				   (cdr lst.))
+	   (cons (cons (caar lst)
+				   (cdar lst))
 			 (aremove obj (cdr lst) :test test)))))
 
 (defmacro aremove! (obj place &key (test #'eql))
