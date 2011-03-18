@@ -37,6 +37,6 @@
 	  (userfun_cdr __))
   (let slotname .p.
     `((define-js-macro ,p. (x)
-        `("(" ,,x "===null?null:" ,,x "." ,slotname ")"))
+        `("(" ,,x "==null?null:" ,,x "." ,slotname ")"))
       (define-js-macro ,($ '%%usetf- p.) (v x)
         `(,,x "." ,slotname "=" ,,v)))))
