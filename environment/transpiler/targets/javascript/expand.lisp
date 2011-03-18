@@ -15,10 +15,8 @@
       (transpiler-add-cps-function *js-transpiler* g))
     (with-lambda-content x fi args body
       `(#'((,g)
-	        (setf ,g ,(copy-lambda `(function ,x)
-					               :body (body-with-noargs-tag body)))
-		    (setf (slot-value ,g 'tre-exp)
-                  ,(compile-argument-expansion g args))
+	        (setf ,g ,(copy-lambda `(function ,x) :body (body-with-noargs-tag body)))
+		    (setf (slot-value ,g 'tre-exp) ,(compile-argument-expansion g args))
 		    ,g)
 		  nil))))
 
@@ -30,21 +28,21 @@
      `(? ,x. nil t)))
 
 (define-js-std-macro function (x)
-  (if (cons? x)
-      (with-lambda-content x fi args body
-	    (if (or (body-has-noargs-tag? body)
-                (simple-argument-list? args))
-  		    `(function ,x)
-		    (js-make-function-with-compiled-argument-expansion x)))
-  	  `(function ,x)))
+  (? (cons? x)
+     (with-lambda-content x fi args body
+	   (? (or (body-has-noargs-tag? body)
+              (simple-argument-list? args))
+  	      `(function ,x)
+		  (js-make-function-with-compiled-argument-expansion x)))
+  	 `(function ,x)))
 
 (define-js-std-macro funcall (fun &rest args)
   (with-gensym (f e a)
     `(with (,f ,fun
-            ,expander (slot-value ,f 'tre-exp))
-       (? expander
+            ,e (slot-value ,f 'tre-exp))
+       (? e
           (let ,a (list ,@args)
-            ((slot-value ,expander 'apply) nil (%transpiler-native "[" ,a "]")))
+            ((slot-value ,e 'apply) nil (%transpiler-native "[" ,a "]")))
           (,f ,@args)))))
 
 (defun js-cps-exception (x)
@@ -98,18 +96,18 @@
   `(%slot-value ,place ,(second slot)))
 
 (define-js-std-macro bind (fun &rest args)
-  `(%bind ,(if (%slot-value? fun)
- 			 (second fun)
-    		 (error "function must be a SLOT-VALUE, got ~A" fun))
+  `(%bind ,(? (%slot-value? fun)
+ 			  .fun.
+    		  (error "function must be a SLOT-VALUE, got ~A" fun))
 		  ,fun))
 
 (defun js-transpiler-make-new-hash (x)
   `(make-hash-table
-	 ,@(mapcan (fn (list (if (and (not (string? _.))
-								  (eq :class _.))
-							 "class" ; IE6 wants this.
-							 _.)
-						 (second _)))
+	 ,@(mapcan (fn list (? (and (not (string? _.))
+							    (eq :class _.))
+						   "class" ; IE6 wants this.
+						   _.)
+						._.)
 			   (group x 2))))
 
 (defun js-transpiler-make-new-object (x)
@@ -118,10 +116,10 @@
 (define-js-std-macro new (&rest x)
   (unless x
 	(error "NEW expects arguments"))
-  (if (or (keyword? x.)
-		  (string? x.))
-	  (js-transpiler-make-new-hash x)
-	  (js-transpiler-make-new-object x)))
+  (? (or (keyword? x.)
+		 (string? x.))
+	 (js-transpiler-make-new-hash x)
+	 (js-transpiler-make-new-object x)))
 
 (define-js-std-macro doeach ((var seq &rest result) &rest body)
   (with-gensym (evald-seq idx)
@@ -134,10 +132,9 @@
 (define-js-std-macro js-type-predicate (name &rest types)
   `(defun ,name (x)
      (when x
-	   ,(if (< 1 (length types))
-       		`(or ,@(mapcar (fn `(%%%= (%js-typeof x) ,_))
-						   types))
-            `(%%%= (%js-typeof x) ,types.)))))
+	   ,(? (< 1 (length types))
+       	   `(or ,@(mapcar (fn `(%%%= (%js-typeof x) ,_)) types))
+           `(%%%= (%js-typeof x) ,types.)))))
 
 (define-js-std-macro href (hash key)
   `(aref ,hash ,key))
