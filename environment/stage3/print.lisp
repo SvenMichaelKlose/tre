@@ -47,22 +47,26 @@
       (terpri s)
       t)))
 
-(defun %print-rest (c str)
-  (%late-print c. str)
-  (let x .c
-    (? x
-       (? (cons? x)
-          (progn
-	        (princ #\  str)
-            (%print-rest x str))
-	      (progn
-			(format str " . ")
-            (%print-atom x str)))
-       (format str ")"))))
+(defun %print-rest (c str visited)
+  (? (href visited c)
+     (princ "*circular*" str)
+     (progn
+       (setf (href visited c) t)
+       (%late-print c. str visited)
+       (let x .c
+         (? x
+            (? (cons? x)
+               (progn
+	             (princ #\  str)
+                 (%print-rest x str visited))
+	           (progn
+			     (format str " . ")
+                 (%print-atom x str visited)))
+            (format str ")"))))))
 
-(defun %print-cons (x str)
+(defun %print-cons (x str visited)
   (princ #\( str)
-  (%print-rest x str))
+  (%print-rest x str visited))
 
 (defun %print-string (x str)
   (princ #\" str)
@@ -77,19 +81,31 @@
 	(princ #\: str))
   (princ (symbol-name x) str))
 
-(defun %print-atom (x str)
-  (?
-	(number? x) (princ x str)
-	(string? x) (%print-string x str)
-	(%print-symbol x str)))
+(defun %print-array (x str visited)
+  (? (href visited x)
+     (princ "*circular*" str)
+     (progn
+       (setf (href visited x) t)
+       (princ "#(" str)
+       (dotimes (i (length x))
+         (%late-print (aref x i) str visited)
+         (princ " " str))
+       (princ ")" str))))
 
-(defun %late-print (x str)
+(defun %print-atom (x str visited)
+  (?
+    (number? x) (princ x str)
+    (string? x) (%print-string x str)
+    (arrayp x) (%print-array x str visited)
+    (%print-symbol x str)))
+
+(defun %late-print (x str visited)
   (? (cons? x)
-      (%print-cons x str)
-	  (%print-atom x str)))
+     (%print-cons x str visited)
+     (%print-atom x str visited)))
 
 (defun late-print (x &optional (str *standard-output*))
   (with-default-stream s str
-    (%late-print x s)
+    (%late-print x s (make-hash-table :test #'eq))
 	(terpri s))
   x)
