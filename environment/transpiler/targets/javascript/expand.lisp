@@ -40,7 +40,7 @@
   (with-gensym (f e a)
     `(with (,f ,fun
             ,e (slot-value ,f 'tre-exp))
-       (? e
+       (? ,e
           (let ,a (list ,@args)
             ((slot-value ,e 'apply) nil (%transpiler-native "[" ,a "]")))
           (,f ,@args)))))
