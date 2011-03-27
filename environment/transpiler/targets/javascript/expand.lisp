@@ -65,8 +65,6 @@
       (js-cps-exception name)
       (when (in-cps-mode?)
         (transpiler-add-cps-function *js-transpiler* dname))
-	  (when (transpiler-defined-function *js-transpiler* dname)
-		(error "Function ~A already defined" name))
       `(progn
 		 (%var ,g)
 		 (%setq ,g (symbol ,(transpiler-obfuscated-symbol-name *js-transpiler* dname) nil))
@@ -83,7 +81,7 @@
     (when *show-definitions*
       (late-print `(defvar ,name)))
     (when (transpiler-defined-variable tr name)
-      (error "variable ~A already defined" name))
+      (warn "redefinition of variable ~A" name))
     (transpiler-add-defined-variable tr name)
     `(progn
        (%var ,name)

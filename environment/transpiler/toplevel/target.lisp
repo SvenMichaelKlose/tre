@@ -10,34 +10,30 @@
 (defun target-transpile-recompile-2 (tr new old files-to-update)
   (mapcar #'((n o)
 			   (format t "Recompiling backend file ~A~%" n.)
-			   (concat-stringtree
-			       (if (recompile-file? n files-to-update)
-				       (transpiler-transpile tr .n)
-					   o)))
+			   (concat-stringtree (? (recompile-file? n files-to-update)
+				                     (transpiler-transpile tr .n)
+					                 o)))
 		  new old))
 
 (defun target-transpile-2 (tr files)
-  (mapcar (fn concat-stringtree (transpiler-transpile tr ._))
-		  files))
+  (mapcar (fn concat-stringtree (transpiler-transpile tr ._)) files))
 
 (defun target-transpile-recompile-1 (tr compiled-files files-to-update)
   (let sightened-code nil
 	(dolist (i compiled-files sightened-code)
   	  (format t "Recompiling frontend file ~A~%" i.)
 	  (append! sightened-code
-			   (list (if (recompile-file? i files-to-update)
-						 (cons i.
-		  				       (transpiler-sighten-files tr (list i.)))
-		  				 i))))))
+			   (list (? (recompile-file? i files-to-update)
+						(cons i. (transpiler-sighten-files tr (list i.)))
+		  				i))))))
 
 (defun target-transpile-1 (tr files)
   (let sightened-code nil
 	(dolist (i files sightened-code)
 	  (append! sightened-code
-			   (list (cons i.
-	  				       (if (eq 'text i.)
-		  				       (transpiler-sighten tr .i)
-		  				       (transpiler-sighten-files tr (list i.)))))))))
+			   (list (cons i. (? (eq 'text i.)
+		  				         (transpiler-sighten tr .i)
+		  				         (transpiler-sighten-files tr (list i.)))))))))
 
 (defun target-transpile-save-compiled (tr &key (files-after-deps nil)
 							  	   			   (files-before-deps nil)
@@ -70,12 +66,11 @@
 	(with (compiled-before (funcall back-before before-deps)
 		   compiled-after (funcall back-after after-deps))
 	  (prog1
-	    (concat-stringtree
-		    (awhen decl-gen
-		      (funcall !))
-			compiled-before
-            (reverse (transpiler-raw-decls tr))
-			compiled-after)
+	    (concat-stringtree (awhen decl-gen
+		                     (funcall !))
+			               compiled-before
+                           (reverse (transpiler-raw-decls tr))
+			               compiled-after)
 	    (target-transpile-save-compiled tr :files-before-deps compiled-before
 									       :files-after-deps compiled-after
 										   :dep-gen dep-gen
@@ -92,26 +87,16 @@
   (target-transpile-generic tr
 	  :front-before
   		  #'(()
-			   (target-transpile-recompile-1 tr
-				   (transpiler-re-front-before-deps tr)
-				   files-to-update))
+			   (target-transpile-recompile-1 tr (transpiler-re-front-before-deps tr) files-to-update))
 	  :front-after
   		  #'(()
-			   (target-transpile-recompile-1 tr
-				   (transpiler-re-front-after-deps tr)
-				   files-to-update))
+			   (target-transpile-recompile-1 tr (transpiler-re-front-after-deps tr) files-to-update))
 	  :back-after
   		  #'((processed)
-	  		   (target-transpile-recompile-2 tr
-				   processed
-				   (transpiler-re-back-after-deps tr)
-				   files-to-update))
+	  		   (target-transpile-recompile-2 tr processed (transpiler-re-back-after-deps tr) files-to-update))
 	  :back-before
   		  #'((processed)
-	  		   (target-transpile-recompile-2 tr
-				   processed
-				   (transpiler-re-back-before-deps tr)
-				   files-to-update))
+	  		   (target-transpile-recompile-2 tr processed (transpiler-re-back-before-deps tr) files-to-update))
 	  :dep-gen dep-gen
 	  :decl-gen decl-gen))
 
@@ -123,18 +108,14 @@
   (target-transpile-generic tr
 	  :files-before-deps files-before-deps
 	  :files-after-deps files-after-deps
-	  :front-before
-  		  #'(()
-  			   (target-transpile-1 tr files-before-deps))
-	  :front-after
-  		  #'(()
-		 	   (target-transpile-1 tr files-after-deps))
-	  :back-after
-  		  #'((processed)
-			   (target-transpile-2 tr processed))
-	  :back-before
-  		  #'((processed)
-	  		   (target-transpile-2 tr processed))
+	  :front-before #'(()
+  			            (target-transpile-1 tr files-before-deps))
+	  :front-after #'(()
+		 	           (target-transpile-1 tr files-after-deps))
+	  :back-after #'((processed)
+			          (target-transpile-2 tr processed))
+	  :back-before #'((processed)
+	  		           (target-transpile-2 tr processed))
 	  :dep-gen dep-gen
 	  :decl-gen decl-gen
       :print-obfuscations? print-obfuscations?))
@@ -163,14 +144,10 @@
 	    (setf *updater*
 			  #'((tr &rest files-to-update)
 	  			   (target-transpile-recompile-0 tr
-					   :files-after-deps
-					       (transpiler-re-files-after-deps tr)
-					   :files-before-deps
-					   	   (transpiler-re-files-before-deps tr)
-					   :dep-gen
-					       (transpiler-re-dep-gen tr)
-					   :decl-gen
-					   	   (transpiler-re-decl-gen tr))))
+					   :files-after-deps (transpiler-re-files-after-deps tr)
+					   :files-before-deps (transpiler-re-files-before-deps tr)
+					   :dep-gen (transpiler-re-dep-gen tr)
+					   :decl-gen (transpiler-re-decl-gen tr))))
 		(sys-image-create ! #'(()))))))
 
 (defun target-transpile-setup (tr &key (obfuscate? nil))

@@ -4,6 +4,8 @@
 (defun shared-essential-defun (name args &rest body)
   (when *show-definitions*
     (late-print `(defun ,name ,args)))
+  (when (transpiler-defined-function tr name)
+    (warn "Redefinition of function ~A" name))
   (with (n (%defun-name name)
 		 tr *current-transpiler*
 		 (fi-sym a) (split-funinfo-and-args args))

@@ -1,5 +1,5 @@
 ;;;;; TRE tree processor transpiler
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (defvar *show-definitions?* nil)
 (defvar *opt-inline?* nil)
@@ -124,6 +124,7 @@
   (remove-if #'builtinp (transpiler-defined-functions tr)))
 
 (defun transpiler-add-defined-function (tr name)
+  (remove! name (transpiler-defined-functions tr) :test #'eq)
   (push name (transpiler-defined-functions tr))
   (setf (href (transpiler-defined-functions-hash tr) name) t)
   name)
@@ -132,6 +133,7 @@
   (href (transpiler-defined-variables-hash tr) name))
 
 (defun transpiler-add-defined-variable (tr name)
+  (remove! name (transpiler-defined-variables tr) :test #'eq)
   (push name (transpiler-defined-variables tr))
   (setf (href (transpiler-defined-variables-hash tr) name) t)
   name)
