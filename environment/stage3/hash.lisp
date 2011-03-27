@@ -35,7 +35,7 @@
       (%make-hash-index-num h key)
     (string? key)
       (%make-hash-index-string h key)
-    (%make-hash-index-num h (>> (%id key) 2))))
+    (%make-hash-index-num h (>> (%%id key) 2))))
 
 (defmacro %with-hash-bucket (bucket idx h key &rest body)
   `(with (,idx (%make-hash-index ,h ,key)
@@ -64,3 +64,9 @@
 	(dotimes (i (length (%hash-table-hash h)) keys)
 	  (push (carlist (aref (%hash-table-hash h) i)) keys))
     (apply #'nconc keys)))
+
+(defun copy-hash-table (x)
+  (with (tst (%hash-table-test h)
+         n (make-hash-table :test tst))
+    (dolist (i (hashkeys h) n)
+      (setf (href n i) (href x i)))))
