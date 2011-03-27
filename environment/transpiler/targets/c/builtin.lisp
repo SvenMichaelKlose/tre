@@ -67,7 +67,7 @@
 ;		(ATOM)
 		(SYMBOL-VALUE)
 		(%TYPE-ID type_id)
-		(%ID id)
+		(%%ID id)
 		(SYMBOL-VALUE symbol_value)
 		(SYMBOL-FUNCTION symbol_function)
 		(SYMBOL-PACKAGE symbol_package)
