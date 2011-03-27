@@ -10,6 +10,8 @@
 (env-load "stage3/file-stream.lisp")
 (env-load "stage3/string-stream.lisp")
 (env-load "stage3/with-default-stream.lisp")
+(env-load "stage3/princ.lisp")
+(env-load "stage3/print-tracer.lisp")
 (env-load "stage3/print.lisp")
 (env-load "stage3/read-char.lisp")
 (env-load "stage3/read-hex.lisp")
