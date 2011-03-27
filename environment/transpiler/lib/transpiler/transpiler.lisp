@@ -105,15 +105,6 @@
   ; Generated code.
   (compiled-front nil)
   (compiled-back nil)
-  (re-files-after-deps nil)
-  (re-files-before-deps nil)
-  (re-front-after-deps nil)
-  (re-front-before-deps nil)
-  (re-back-after-deps nil)
-  (re-back-before-deps nil)
-  (re-dep-gen nil)
-  (re-decl-gen nil)
-  (re-make-updater nil)
   
   (raw-decls nil))
 
