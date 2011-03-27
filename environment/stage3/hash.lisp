@@ -66,7 +66,7 @@
     (apply #'nconc keys)))
 
 (defun copy-hash-table (x)
-  (with (tst (%hash-table-test h)
+  (with (tst (%hash-table-test x)
          n (make-hash-table :test tst))
-    (dolist (i (hashkeys h) n)
+    (dolist (i (hashkeys x) n)
       (setf (href n i) (href x i)))))
