@@ -39,14 +39,15 @@
 		(js-transpile-pre tr)
     	(target-transpile tr
     	 	:files-before-deps
-			    (append (list (cons 'text *js-base*))
-		 		  		(when *transpiler-log*
-				   	  	  (list (cons 'text *js-base-debug-print*)))
-				  	    (list (cons 'text *js-base2*)))
+                (with-gensym (t1 t2 t3 t4)
+			      (append (list (cons t1 *js-base*))
+		 		  		  (when *transpiler-log*
+				   	  	    (list (cons t2 *js-base-debug-print*)))
+				  	      (list (cons t3 *js-base2*))
+				          (when (eq t *have-environment-tests*)
+				   	  	    (list (cons t4 (make-environment-tests))))))
 		  	:files-after-deps
-				(append (when (eq t *have-environment-tests*)
-				   	  	  (list (cons 'text (make-environment-tests))))
-		 		 		(mapcar (fn list _) files))
+		 		(mapcar #'list files)
 		 	:dep-gen
 		     	#'(()
 				  	(transpiler-import-from-environment tr))
