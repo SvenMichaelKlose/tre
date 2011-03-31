@@ -205,7 +205,7 @@
   `(%%usetf-aref ,@x))
 
 (define-php-macro hremove (h key)
-  `(%transpiler-native "unset $" ,h "[" ,(php-dollarize key) "]"))
+  `(%transpiler-native "unset ($" ,h "[" ,(php-dollarize key) "])"))
 
 (define-php-macro make-hash-table (&rest ignored-args)
   `(%transpiler-native "Array()" ""))
