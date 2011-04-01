@@ -10,18 +10,14 @@
     (funcall fun i. .i)))
 
 (defun elt (seq idx)
-  (if
-    (string? seq)
-	  (%elt-string seq idx)
-    (cons? seq)
-	  (nth idx seq)
+  (?
+    (string? seq) (%elt-string seq idx)
+    (cons? seq) (nth idx seq)
   	(aref seq idx)))
 
 (defun (setf elt) (val seq idx)
-  (if
-	(string? seq)
-	  (error "strings cannot be modified")
-	(arrayp seq)
-  	  (setf (aref seq idx) val)
-	(cons? seq)
-	  (rplaca (nthcdr idx seq) val)))
+  (?
+	,@(when *transpiler-assert*
+        '((string? seq) (error "strings cannot be modified")))
+	(arrayp seq) (setf (aref seq idx) val)
+	(cons? seq) (rplaca (nthcdr idx seq) val)))

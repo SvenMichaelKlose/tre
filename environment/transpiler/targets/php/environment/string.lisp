@@ -19,21 +19,18 @@
 
 (dont-obfuscate from-char-code)
 
-(defun %setf-elt-string (val seq idx)
-  (error "cannot modify strings"))
+,(when *transpiler-assert*
+   '(defun %setf-elt-string (val seq idx)
+      (error "cannot modify strings")))
 
 (dont-obfuscate strval)
 
 (defun string (x)
   (?
-	(string? x)
-	  x
-	(character? x)
-      (char-string x)
-    (symbol? x)
-	  (symbol-name x)
-	(not x)
-	  ,*nil-symbol-name*
+	(string? x) x
+	(character? x) (char-string x)
+    (symbol? x) (symbol-name x)
+	(not x) ,*nil-symbol-name*
    	(strval x)))
 
 (defun string= (x y)

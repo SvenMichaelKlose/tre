@@ -20,23 +20,19 @@
 
 (dont-obfuscate from-char-code)
 
-;; XXX ECMAScript only.
-(defun %setf-elt-string (val seq idx)
-  (error "cannot modify strings"))
+,(when *transpiler-assert*
+   '(defun %setf-elt-string (val seq idx)
+      (error "cannot modify strings")))
 
 (dont-obfuscate to-string)
 
 ;; XXX ECMAScript only.
 (defun string (x)
   (?
-	(string? x)
-	  x
-	(character? x)
-      (char-string x)
-    (symbolp x)
-	  (symbol-name x)
-	(not x)
-	  ,*nil-symbol-name*
+	(string? x) x
+	(character? x) (char-string x)
+    (symbolp x) (symbol-name x)
+	(not x) ,*nil-symbol-name*
    	(x.to-string)))
 
 ;(defun list-string (lst)
