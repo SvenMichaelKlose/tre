@@ -33,7 +33,7 @@
 (transpiler-wrap-invariant-to-binary define-c-std-macro not 1 %not and)
 
 (mapcan-macro _
-    '(car cdr cons? atom number? string? arrayp functionp builtinp)
+    '(car cdr cons? atom number? string? array? functionp builtinp)
   `((define-c-std-macro ,_ (x)
 	  `(,($ '% _) ,,x))))
 

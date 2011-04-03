@@ -5,7 +5,7 @@
 
 (defvar *%array-constructor* (make-array).constructor)
 
-(defun arrayp (x)
+(defun array? (x)
   (when x
     (eq *%array-constructor* x.constructor)))
 
@@ -17,8 +17,7 @@
       (a.push i))))
 
 (defun array-list (x &optional (n 0))
-  (when (and x
-			 (%%%< n x.length))
+  (when (and x (%%%< n x.length))
     (cons (aref x n)
 		  (array-list x (1+ n)))))
 

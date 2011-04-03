@@ -12,7 +12,7 @@
 	(integer . number?)
 	(float . number?)
 	(character . character?)
-	(array . arrayp)
+	(array . array?)
  	(string . string?)
     (hash-table . hash-table?)))
 

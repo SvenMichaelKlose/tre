@@ -33,14 +33,10 @@
 (defun debug-print-atom (x doc)
   (debug-print-write
       (+ (?
-	       (symbol? x)
-	         (debug-print-symbol x)
-	       (character? x)
-		     (+ "#\\\\" (*string.from-char-code (char-code x)))
-	       (arrayp x)
-	         "{array}"
-	       (string? x)
-	         (+ "\"" x "\"")
+	       (symbol? x) (debug-print-symbol x)
+	       (character? x) (+ "#\\\\" (*string.from-char-code (char-code x)))
+	       (array? x) "{array}"
+	       (string? x) (+ "\"" x "\"")
 		   (when x
 	         (? (objectp x)
 			     (debug-print-object x)

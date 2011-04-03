@@ -105,7 +105,7 @@
 
 	(trearray_builtin_
     	(MAKE-ARRAY make))
-;		(ARRAYP p))
+;		(ARRAY? p))
 ;		(AREF)
 ;		(%SET-AREF set_aref))
 

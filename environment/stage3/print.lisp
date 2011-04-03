@@ -87,7 +87,7 @@
   (?
     (number? x) (princ x str)
     (string? x) (%print-string x str)
-    (arrayp x) (%print-array x str info)
+    (array? x) (%print-array x str info)
     (functionp x) (%print-function x str info)
     (%print-symbol x str)))
 

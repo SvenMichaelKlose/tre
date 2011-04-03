@@ -21,7 +21,7 @@
     (%print-trace (aref x i) info)))
 
 (defun %print-trace-atom (x info)
-  (when (arrayp x)
+  (when (array? x)
     (unless (%print-trace-update x info)
       (%print-trace-array x info))))
 

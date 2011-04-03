@@ -41,12 +41,9 @@
     (when (integer> start end)
       (xchg start end))
 	(?
-	  (cons? seq)
-		(subseq-list seq start end)
-	  (string? seq)
-		(%subseq-string seq start end)
-	  (arrayp seq)
-		(%subseq-sequence #'make-array seq start end)
+	  (cons? seq) (subseq-list seq start end)
+	  (string? seq) (%subseq-string seq start end)
+	  (array? seq) (%subseq-sequence #'make-array seq start end)
 	  (progn
 		(print seq)
 		(%error "type not supported")))))

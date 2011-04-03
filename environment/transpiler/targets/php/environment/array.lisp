@@ -3,7 +3,7 @@
 
 (dont-obfuscate is_array)
 
-(defun arrayp (x)
+(defun array? (x)
   (is_array x))
 
 (defun %array-length (x)

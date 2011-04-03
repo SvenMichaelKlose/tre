@@ -83,7 +83,7 @@
     nil))
 
 (defun %ducktype-assert (obj)
-  (unless (arrayp obj)
+  (unless (array? obj)
     (error "ducktype object expected - not even an array"))
   (unless (eq *ducktype-magic* (ducktype-obj-magic obj))
     (error "ducktype object expected")))

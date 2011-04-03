@@ -19,5 +19,5 @@
   (?
 	,@(when *transpiler-assert*
         '((string? seq) (error "strings cannot be modified")))
-	(arrayp seq) (setf (aref seq idx) val)
+	(array? seq) (setf (aref seq idx) val)
 	(cons? seq) (rplaca (nthcdr idx seq) val)))

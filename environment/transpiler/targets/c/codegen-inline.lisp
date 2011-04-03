@@ -23,7 +23,7 @@
 	  (atom  "ATOM")
 	  (number?  "NUMBER")
 	  (string?  "STRING")
-	  (arrayp  "ARRAY")
+	  (array?  "ARRAY")
 	  (functionp  "FUNCTION")
 	  (builtinp   "BUILTIN"))
   `((define-c-macro ,($ '% _.) (x)

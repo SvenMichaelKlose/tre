@@ -62,7 +62,7 @@
 (defun %struct? (name)
   (let sym (%struct?-symbol name)
     `(defun ,sym (arr)
-       (and (arrayp arr)
+       (and (array? arr)
             (eq ',name (aref arr 0))))))
 
 (defun %struct-sort-fields (fields-and-options)
