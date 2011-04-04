@@ -7,10 +7,9 @@
 
 (defun copy-until-cblock-end (cb fi x)
   (let result (make-queue)
-    (while (and x
-                (not (vm-jump? x.))
-                (not (number? .x.))
-                (not (reassignment? fi x.)))
+    (while (and x (not (vm-jump? x.)
+                       (number? .x.)
+                       (reassignment? fi x.)))
            (progn
              (when (reassignment? fi x.)
                (adjoin! (%setq-place x.) (cblock-merged-ins cb)))

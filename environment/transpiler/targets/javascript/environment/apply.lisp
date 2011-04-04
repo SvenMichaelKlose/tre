@@ -21,7 +21,7 @@
                l (last .lst)
                args (%nconc (butlast .lst) l.))
 	      (when-debug
-	        (unless (functionp fun)
+	        (unless (function? fun)
 		      (error "APPLY: first argument is not a function: ~A" fun))
 	        (unless (listp l)
 		      (error "APPLY: last argument is not a cell")))

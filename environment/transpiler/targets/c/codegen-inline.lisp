@@ -24,8 +24,8 @@
 	  (number?  "NUMBER")
 	  (string?  "STRING")
 	  (array?  "ARRAY")
-	  (functionp  "FUNCTION")
-	  (builtinp   "BUILTIN"))
+	  (function?  "FUNCTION")
+	  (builtin?   "BUILTIN"))
   `((define-c-macro ,($ '% _.) (x)
       `(,(+ "TREPTR_TRUTH(TREPTR_IS_" ._.) "(" ,,x "))"))))
 

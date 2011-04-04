@@ -12,9 +12,9 @@
 ;; See also macro BIND in 'expand.lisp'.
 (defun %bind (obj fun)
   (when-debug
-	(unless (functionp fun)
+	(unless (function? fun)
 	  (js-print fun logwindow.document)))
-  (assert (functionp fun) "BIND requires a function")
+  (assert (function? fun) "BIND requires a function")
   #'(()
 	  ,(if (transpiler-lambda-export? *js-transpiler*)
 		   ; Get rid of the ghost argument.

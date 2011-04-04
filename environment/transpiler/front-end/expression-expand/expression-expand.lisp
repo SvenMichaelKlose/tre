@@ -16,7 +16,7 @@
   (transpiler nil)
 
   ; Callback to check if an object is a function.
-  (function? (fn functionp (symbol-value _)))
+  (functionp (fn function? (symbol-value _)))
 
   ; Callback to get the argument definition of a function.
   (function-arguments #'function-arguments)
@@ -70,7 +70,7 @@
 
 (defun expex-internal-symbol? (x)
   (let tr *current-transpiler*
-    (or (functionp x)
+    (or (function? x)
 	    (keyword? x)
 	    (member x (transpiler-predefined-symbols tr) :test #'eq)
 	    (in? x nil t '~%ret 'this)
@@ -142,7 +142,7 @@
 	`(,@(when new?
 		  (list '%new))
 	  ,fun
-    	  ,@(? (funcall (expex-function? ex) fun)
+    	  ,@(? (funcall (expex-functionp ex) fun)
 	    	   (expex-convert-quotes (expex-argexpand-0 ex fun args))
 	    	   args))))
 

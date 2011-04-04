@@ -15,7 +15,5 @@
     (cblock-to-metacode blks)))
 
 (define-tree-filter middleend-graph (x)
-  (named-lambda? x)
-	(copy-lambda x :body (middleend-graph-0 x))
-  (lambda? x)
-	(copy-lambda x :body (middleend-graph-0 x)))
+  (named-lambda? x) (copy-lambda x :body (middleend-graph-0 x))
+  (lambda? x) (copy-lambda x :body (middleend-graph-0 x)))

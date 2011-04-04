@@ -30,5 +30,4 @@
     expression-expand (fn transpiler-expression-expand tr _))
 
 (defun transpiler-middleend-2 (tr x)
-  (remove-if #'not
-		     (funcall (transpiler-expand-compose tr) x)))
+  (remove-if #'not (funcall (transpiler-expand-compose tr) x)))

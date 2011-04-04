@@ -15,7 +15,7 @@
 (defstruct transpiler
   std-macro-expander
   macro-expander
-  (setf-functionp #'identity)
+  (setf-function? #'identity)
   separator
 
   ; List of functions that must not be imported from the environment.
@@ -112,7 +112,7 @@
   (href (transpiler-defined-functions-hash tr) name))
 
 (defun transpiler-defined-functions-without-builtins (tr)
-  (remove-if #'builtinp (transpiler-defined-functions tr)))
+  (remove-if #'builtin? (transpiler-defined-functions tr)))
 
 (defun transpiler-add-defined-function (tr name)
   (remove! name (transpiler-defined-functions tr) :test #'eq)

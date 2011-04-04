@@ -27,91 +27,91 @@
   ((atom (cons 23 42)))
   nil)
 
-(define-test "CONSP"
+(define-test "CONS?"
   ((cons? (cons 1 1)))
   t)
 
-(define-test "CONSP fails on atoms"
+(define-test "CONS? fails on atoms"
   ((cons? 'a))
   nil)
 
-(define-test "CONSP fails on numbers"
+(define-test "CONS? fails on numbers"
   ((cons? 1))
   nil)
 
-(define-test "CONSP fails on characters"
+(define-test "CONS? fails on characters"
   ((cons? #\1))
   nil)
 
-(define-test "CONSP fails on strings"
+(define-test "CONS? fails on strings"
   ((cons? "1"))
   nil)
 
-(define-test "CONSP fails on arrays"
+(define-test "CONS? fails on arrays"
   ((cons? (make-array 1)))
   nil)
 
-(define-test "SYMBOLP"
+(define-test "SYMBOL?"
   ((symbol? 'a))
   t)
 
-(define-test "SYMBOLP fails on cells"
+(define-test "SYMBOL? fails on cells"
   ((symbol? (list 'a)))
   nil)
 
-(define-test "SYMBOLP fails on numbers"
+(define-test "SYMBOL? fails on numbers"
   ((symbol? 1))
   nil)
 
-(define-test "SYMBOLP fails on characters"
+(define-test "SYMBOL? fails on characters"
   ((symbol? #\1))
   nil)
 
-(define-test "SYMBOLP fails on strings"
+(define-test "SYMBOL? fails on strings"
   ((symbol? "1"))
   nil)
 
-(define-test "SYMBOLP fails on arrays"
+(define-test "SYMBOL? fails on arrays"
   ((symbol? (make-array 1)))
   nil)
 
-(define-test "NUMBERP recognizes numbers"
+(define-test "NUMBER? recognizes numbers"
   ((number? 42))
   t)
 
-(define-test "NUMBERP recognizes characters"
+(define-test "NUMBER? recognizes characters"
   ((number? #\a))
   t)
 
-(define-test "NUMBERP fails on arrays"
+(define-test "NUMBER? fails on arrays"
   ((number? (make-array 1)))
   nil)
 
-(define-test "NUMBERP fails on symbols"
+(define-test "NUMBER? fails on symbols"
   ((number? 'a))
   nil)
 
-(define-test "CHARACTERP recognizes characters"
+(define-test "CHARACTER? recognizes characters"
   ((character? #\a))
   t)
 
-(define-test "CHARACTERP fails on symbols"
+(define-test "CHARACTER? fails on symbols"
   ((character? 'a))
   nil)
 
-(define-test "CHARACTERP fails on cells"
+(define-test "CHARACTER? fails on cells"
   ((character? (list 1)))
   nil)
 
-(define-test "CHARACTERP fails on numbers"
+(define-test "CHARACTER? fails on numbers"
   ((character? 1))
   nil)
 
-(define-test "CHARACTERP fails on arrays"
+(define-test "CHARACTER? fails on arrays"
   ((character? (make-array 1)))
   nil)
 
-(define-test "CHARACTERP fails on strings"
+(define-test "CHARACTER? fails on strings"
   ((character? "1"))
   nil)
 
@@ -119,16 +119,16 @@
   ((eql 65 #\A))
   nil)
 
-(define-test "FUNCTIONP recognizes functions"
-  ((functionp #'%backquote))
+(define-test "FUNCTION? recognizes functions"
+  ((function? #'%backquote))
   t)
 
-(define-test "FUNCTIONP recognizes built-in functions"
-  ((functionp #'car))
+(define-test "FUNCTION? recognizes built-in functions"
+  ((function? #'car))
   t)
 
-;(define-test "FUNCTIONP doesn't recognize built-in special forms"
-;  ((functionp #'block))
+;(define-test "FUNCTION? doesn't recognize built-in special forms"
+;  ((function? #'block))
 ;  nil)
 
 (define-test "STRINGP recognizes strings"

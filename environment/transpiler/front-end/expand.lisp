@@ -17,7 +17,7 @@
 
 (defun transpiler-macroexpand (tr x)
   (with-temporary *setf-immediate-slot-value* t
-    (with-temporary *setf-functionp* (transpiler-setf-functionp tr)
+    (with-temporary *setf-function?* (transpiler-setf-function? tr)
 	  (expander-expand (transpiler-std-macro-expander tr) x))))
 
 (defmacro transpiler-wrap-invariant-to-binary (definer op len repl-op combiner)

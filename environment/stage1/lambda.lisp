@@ -92,7 +92,7 @@
   t)
 
 (defun function-arguments (fun)
-  (if (builtinp fun)
+  (if (builtin? fun)
 	  '(&rest args-to-builtin)
       (car (symbol-value fun))))
 

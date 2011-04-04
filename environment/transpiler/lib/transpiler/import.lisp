@@ -15,7 +15,7 @@
   	   (not (transpiler-defined? tr name))))
 	
 (defun transpiler-add-wanted-function (tr x)
-  (unless (or (builtinp x)
+  (unless (or (builtin? x)
 			  (starts-with? x "ALIEN-")
 			  (starts-with? x "UNIX")
 			  (starts-with? x "C-CALL")
@@ -55,7 +55,7 @@
       	  (unless (transpiler-defined-function tr x)
         	(transpiler-add-emitted-wanted-function tr x)
             (let fun (symbol-function x)
-              (when (functionp fun)
+              (when (function? fun)
 		        (setf *imported-something* t)
                 (transpiler-sighten tr
       	            `((defun ,x ,(function-arguments fun)
@@ -99,6 +99,6 @@
 (defun transpiler-import-universe (tr)
   (dolist (i (reverse *defined-functions*))
 	(and (symbol? i)
-		 (not (builtinp i))
+		 (not (builtin? i))
 		 (symbol-function i))
 	     (transpiler-add-wanted-function tr i)))

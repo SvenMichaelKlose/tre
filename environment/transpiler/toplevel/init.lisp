@@ -1,5 +1,5 @@
 ;;;;; TRE tree processor transpiler
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 ;; Make expander for standard macro which picks macros of the same
 ;; name in der user-defined expander first.
@@ -40,13 +40,13 @@
 		    	#'((var)
 			         (transpiler-add-wanted-variable ,tr var)))
 
-		  (expex-function? ex)
+		  (expex-functionp ex)
 		    (lx (tr)
 				#'((fun)
 			         (when (atom fun)
 			           (or (transpiler-function-arguments ,tr fun)
 				           (and (not (transpiler-unwanted-function? ,tr fun))
-					            (functionp (symbol-function fun)))))))
+					            (function? (symbol-function fun)))))))
 
 		  (expex-function-arguments ex)
 		    (lx (tr)

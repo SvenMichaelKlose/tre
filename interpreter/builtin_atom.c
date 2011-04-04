@@ -249,7 +249,7 @@ treatom_builtin_set_atom_fun (treptr list)
 }
 
 /*tredoc
-  (cmd :name FUNCTIONP
+  (cmd :name FUNCTION?
 	(arg :name obj)
 	(para "Returns T if the argument is a number. NIL otherwise."))
  */
@@ -262,7 +262,7 @@ treatom_builtin_functionp (treptr list)
 }
 
 /*tredoc
-  (cmd :name BUILTINP
+  (cmd :name BUILTIN?
 	(arg :name obj)
 	(para "Returns T if the argument is a number. NIL otherwise."))
  */

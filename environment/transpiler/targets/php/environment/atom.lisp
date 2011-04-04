@@ -6,5 +6,5 @@
 (defun objectp (x)
   (is_object x))
 
-(defun functionp (x)
+(defun function? (x)
   (function_exists x))

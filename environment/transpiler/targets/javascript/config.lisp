@@ -1,15 +1,15 @@
 ;;;;; Transpiler: TRE to ECMAScript
 ;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
-(defun js-setf-functionp (x)
-  (or (%setf-functionp x)
+(defun js-setf-function? (x)
+  (or (%setf-function? x)
       (transpiler-function-arguments *js-transpiler* x)))
 
 (defun make-javascript-transpiler-0 ()
   (create-transpiler
 	  :std-macro-expander 'js-alternate-std
 	  :macro-expander 'javascript
-	  :setf-functionp #'js-setf-functionp
+	  :setf-function? #'js-setf-function?
 	  :unwanted-functions '(wait)
 	  :named-functions? nil
 	  :apply-argdefs? t
@@ -33,14 +33,10 @@
 (defun make-javascript-transpiler ()
   (with (tr (make-javascript-transpiler-0)
     	 ex (transpiler-expex tr))
-    (setf (expex-inline? ex)
-			  #'%slot-value?
-    	  (expex-setter-filter ex)
-			  #'expex-collect-wanted-variable
-    	  (expex-function-arguments ex)
-			  #'current-transpiler-function-arguments-w/o-builtins
-    	  (expex-argument-filter ex)
-		      #'expex-%setq-collect-wanted-global-variable)
+    (setf (expex-inline? ex) #'%slot-value?
+    	  (expex-setter-filter ex) #'expex-collect-wanted-variable
+    	  (expex-function-arguments ex) #'current-transpiler-function-arguments-w/o-builtins
+    	  (expex-argument-filter ex) #'expex-%setq-collect-wanted-global-variable)
 	(apply #'transpiler-add-obfuscation-exceptions tr
 	    '(t this %funinfo false true null delete
 		  %transpiler-native %transpiler-string

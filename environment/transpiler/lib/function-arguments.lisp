@@ -3,6 +3,6 @@
 
 (defun current-transpiler-function-arguments-w/o-builtins (x)
   (or (href (transpiler-function-args *current-transpiler*) x)
-	  (if (builtinp x)
-		  'builtin
-		  (function-arguments (symbol-function x)))))
+	  (? (builtin? x)
+		 'builtin
+		 (function-arguments (symbol-function x)))))

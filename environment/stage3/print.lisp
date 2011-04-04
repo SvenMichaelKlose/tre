@@ -88,7 +88,7 @@
     (number? x) (princ x str)
     (string? x) (%print-string x str)
     (array? x) (%print-array x str info)
-    (functionp x) (%print-function x str info)
+    (function? x) (%print-function x str info)
     (%print-symbol x str)))
 
 (defun %late-print (x str info)
