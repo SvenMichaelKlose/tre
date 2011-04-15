@@ -8,23 +8,17 @@
   (new __symbol x nil))
 
 (defun symbol-name (x)
-  (if
-    (eq t x)
-      "T"
-    x
-  	  x.n
+  (?
+    (%%%eq t x) "T"
+    x x.n
     ,*nil-symbol-name*))
 
 (defun symbol-value (x) (when x x.v))
 (defun symbol-function (x) (when x x.f))
 
 (defun symbol-package (x)
-  (if
-    (or (not x)
-        (eq t x))
-      nil
-    x
-      x.p))
+  (unless (or (not x) (%%%eq t x))
+    x.p))
 
 (dont-obfuscate is_a)
 

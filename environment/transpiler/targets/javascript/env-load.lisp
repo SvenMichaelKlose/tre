@@ -57,6 +57,7 @@
 			"atom.lisp")
 		(js-load-base *js-env-path*
 			"bind.lisp"
+			"../../../environment/eq.lisp"
 			"../../../environment/equality.lisp"
 			"error.lisp"
 			"late-cons.lisp"
