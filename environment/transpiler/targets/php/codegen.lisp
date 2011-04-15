@@ -3,6 +3,8 @@
 
 ;;;; GENERAL
 
+(defvar *php-by-reference?* nil)
+
 (defun php-line (&rest x)
   `(,*php-indent* ,@x ,*php-separator*))
 
@@ -100,7 +102,9 @@
   (? (or (and (atom val)
 		  	  (symbol? val))
 		 (not (%transpiler-native-without-reference? val)))
-   	 "=" ;"=&"
+     (? *php-by-reference?*
+   	    "=&"
+        "=")
   	 "="))
  
 (defun php-%setq-value (val)
@@ -198,11 +202,11 @@
 
 ;;;; HASH TABLE
 
-(define-php-macro href (&rest x)
-  `(aref ,@x))
+(define-php-macro href (x &rest a)
+  `(%transpiler-native "(is_array (" ,(php-dollarize x) ") ? " ,(php-dollarize x) "[" ,(php-dollarize a.) "] : " ,(php-dollarize x) "->g(" ,(php-dollarize a.) "))"))
 
-(define-php-macro %%usetf-href (&rest x)
-  `(%%usetf-aref ,@x))
+(define-php-macro %%usetf-href (v x &rest a)
+  `(%transpiler-native "(is_array (" ,(php-dollarize x) ") ? " ,(php-dollarize x) "[" ,(php-dollarize a.) "] = " ,(php-dollarize v) " : " ,(php-dollarize x) "->s(" ,(php-dollarize a.) "," ,(php-dollarize v) "))"))
 
 (define-php-macro hremove (h key)
   `(%transpiler-native "unset ($" ,h "[" ,(php-dollarize key) "])"))

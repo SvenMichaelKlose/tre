@@ -1,7 +1,6 @@
 ;;;;; Transpiler: TRE to PHP
 ;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
-;; Define macro that is expanded _before_ standard macros.
 (defmacro define-php-std-macro (&rest x)
   `(define-transpiler-std-macro *php-transpiler* ,@x))
 
@@ -100,9 +99,6 @@
 	   ,(? (< 1 (length types))
        	   `(or ,@(mapcar (fn `(%%%= (%php-typeof x) ,_)) types))
            `(%%%= (%php-typeof x) ,types.)))))
-
-(define-php-std-macro href (hash key)
-  `(aref ,hash ,key))
 
 (define-php-std-macro undefined? (x)
   `(isset ,x))

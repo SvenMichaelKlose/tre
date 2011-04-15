@@ -12,9 +12,9 @@
 (defvar *keyword-package* (make-package ""))
 
 (defun symbol-name (x)
-  (if x
-  	  x.n
-	  ,*nil-symbol-name*))
+  (? x
+  	 x.n
+	 ,*nil-symbol-name*))
 
 (defun symbol-value (x) (when x x.v))
 (defun symbol-function (x) (when x x.f))
@@ -23,5 +23,4 @@
 (defun symbolp (x)
   (and (objectp x)
 	   x.__class
-       (%%%= x.__class ,(transpiler-obfuscated-symbol-string
-							*current-transpiler* 'symbol))))
+       (%%%= x.__class ,(transpiler-obfuscated-symbol-string *current-transpiler* 'symbol))))

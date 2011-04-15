@@ -25,8 +25,7 @@
 					  ,*nil-symbol-name*)
       ; Make package if missing.
       (let symbol-table (or (href *symbols* pkg-name)
-	    				    (setf (href *symbols* pkg-name)
-								  (make-hash-table)))
+	    				    (setf (href *symbols* pkg-name) (make-hash-table)))
         ; Get or make symbol.
         (or (href symbol-table name)
 	        (setf (href symbol-table name) (new %symbol name pkg)))))))
