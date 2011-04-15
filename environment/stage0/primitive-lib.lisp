@@ -33,23 +33,23 @@
 
 (%set-atom-fun copy-tree
   #'((x)
-    (if x
-		(if (atom x)
-            x
-        	(cons (copy-tree (car x))
-              	  (copy-tree (cdr x)))))))
+      (if x
+		  (if (atom x)
+              x
+        	  (cons (copy-tree (car x))
+              	    (copy-tree (cdr x)))))))
 
 (%set-atom-fun last
   #'((x)
-    (if x
-		(if (cdr x)
-            (last (cdr x))
-            x))))
+      (if x
+		  (if (cdr x)
+              (last (cdr x))
+              x))))
 
 (%set-atom-fun %nconc
   #'((a b)
-    (if a
-        (progn
-		  (rplacd (last a) b)
-    	  a)
-		b)))
+      (if a
+          (progn
+		    (rplacd (last a) b)
+    	    a)
+		  b)))
