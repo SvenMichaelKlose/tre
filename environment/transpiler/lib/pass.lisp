@@ -8,8 +8,12 @@
     `(progn
        (defvar ,cache-var nil)
        (defun ,name ,args
-         (setf ,cache-var (compose ,@(mapcan (fn ? *transpiler-debug-dump*
-                                                   `((fn (print ',($ '*************************** _.))
-                                                         (print (funcall ,._. _))))
-                                                    `(,._.))
-                                             (group x 2))))))))
+         #'((init)
+             (setf ,cache-var init)
+             (dolist (i (list ,@(mapcan (fn ? *transpiler-debug-dump*
+                                            `((fn (print ',($ '*************************** _.))
+                                                  (print (funcall ,._. _))))
+                                            `(,._.))
+                                        (reverse (group x 2))))
+                    ,cache-var)
+             (setf ,cache-var (funcall i ,cache-var))))))))
