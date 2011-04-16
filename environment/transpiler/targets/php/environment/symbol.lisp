@@ -11,8 +11,7 @@
 					  pkg.n
 					  ,*nil-symbol-name*)
       (let symbol-table (or (href *symbols* pkg-name)
-	    				    (setf (href *symbols* pkg-name)
-								  (make-hash-table)))
+	    				    (setf (href *symbols* pkg-name) (make-hash-table)))
         (or (href symbol-table name)
 	        (setf (href symbol-table name) (new __symbol name pkg)))))))
 

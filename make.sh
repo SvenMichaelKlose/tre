@@ -70,8 +70,8 @@ C_DIALECT_FLAGS="-ansi -Wall " #-Werror"
 CFLAGS="-pipe $C_DIALECT_FLAGS $GNU_LIBC_FLAGS $BUILD_MACHINE_INFO -DTRE_BOOT_IMAGE=\"$BOOT_IMAGE\" $ARGS"
 
 DEBUGOPTS="-O0 -g"
-BUILDOPTS="-O3 -fomit-frame-pointer -ffast-math"
-CRUNSHOPTS="-O3 -fomit-frame-pointer -fno-stack-protector -mfpmath=sse -mssse3 -ffast-math -fwhole-program -lm --whole-program"
+BUILDOPTS="-O3 -findirect-inlining -ftree-switch-conversion -fomit-frame-pointer -ffast-math"
+CRUNSHOPTS="-O3 -findirect-inlining -ftree-switch-conversion -fomit-frame-pointer -fno-stack-protector -mfpmath=sse -mssse3 -ffast-math -fwhole-program -lm --whole-program"
 CRUNSHFLAGS="-DTRE_COMPILED_CRUNSHED -Iinterpreter"
 
 LIBFLAGS="-lm -lffi"

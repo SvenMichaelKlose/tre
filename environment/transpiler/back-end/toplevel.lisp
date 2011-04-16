@@ -30,10 +30,9 @@
 ;; - Function prologues are generated.
 ;; - Places are translated into vector ops.
 (defun transpiler-generate-code (tr x)
-  (if (transpiler-lambda-export? tr)
-      (funcall (transpiler-make-places-compose) x)
-	  (make-function-prologues x)))
+  (? (transpiler-lambda-export? tr)
+     (funcall (transpiler-make-places-compose) x)
+	 (make-function-prologues x)))
 
 (defun transpiler-backend (tr x)
-  (funcall (transpiler-emit-code-compose tr)
-  		   (transpiler-generate-code tr x)))
+  (funcall (transpiler-emit-code-compose tr) (transpiler-generate-code tr x)))
