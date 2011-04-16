@@ -16,7 +16,22 @@
   (with-string-stream out
     (when import-universe?
       (transpiler-import-universe tr))
-    (format out "<?php~%")
+    (format out (+ "<?php~%"
+                   "if (get_magic_quotes_gpc ()) {~%"
+                   "    $process = array (&$_GET, &$_POST, &$_COOKIE, &$_REQUEST);~%"
+                   "    while (list ($key, $val) = each ($process)) {~%"
+                   "        foreach ($val as $k => $v) {~%"
+                   "            unset ($process[$key][$k]);~%"
+                   "            $sk = stripslashes ($k);~%"
+                   "            if (is_array ($v)) {~%"
+                   "                $process[$key][$sk] = $v;~%"
+                   "                $process[] = &$process[$key][$sk];~%"
+                   "            } else~%"
+                   "                $process[$key][$sk] = stripslashes ($v);~%"
+                   "        }~%"
+                   "    }~%"
+                   "    unset ($process);~%"
+                   "}~%"))
     (php-print-native-environment out)))
 
 (defun php-transpile (files &key (obfuscate? nil)
