@@ -2,10 +2,10 @@
 ;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (defun make-symbol (x &optional (pkg nil))
-  (new __symbol x pkg))
+  (symbol x pkg))
 
 (defun make-package (x)
-  (new __symbol x nil))
+  (symbol x nil))
 
 (defun symbol-name (x)
   (?
