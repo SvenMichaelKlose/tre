@@ -24,7 +24,7 @@
 	  :needs-var-declarations? t
 	  :stack-locals? nil
 	  :rename-all-args? t
-	  :rename-toplevel-function-args? nil ; XXX Fix %PROPERTY-LIST for this.
+	  :rename-toplevel-function-args? t
 	  :predefined-symbols '(window document true)
 	  :inline-exceptions '(%slot-value error format identity %bind)
 	  :dont-inline-list '(%slot-value error format identity %bind map apply maphash)
