@@ -1,5 +1,5 @@
 ;;;; TRE environment
-;;;; Copyright (c) 2005-2006,2008-2010 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2005-2006,2008-2011 Sven Klose <pixel@copei.de>
 
 (defmacro aif (predicate &rest alternatives)
   (if alternatives
@@ -22,5 +22,9 @@
   `(let ! ,obj
 	 ,@body
 	 !))
+
+(defmacro adolist ((seq &optional (result nil)) &rest body)
+  `(dolist (! ,seq ,result)
+     ,@body))
 
 ; XXX tests missing
