@@ -76,7 +76,8 @@
 	    (in? x nil t '~%ret 'this)
 	    (transpiler-imported-variable? tr x)
 	    (transpiler-defined-variable tr x)
-	    (transpiler-macro? tr x))))
+	    (transpiler-macro? tr x)
+        (assoc x *variables* :test #'eq))))
 
 (defun expex-symbol-defined? (x)
   (let tr *current-transpiler*
@@ -127,7 +128,8 @@
 
 ;; Expand arguments to function.
 (defun expex-argexpand-0 (ex fun args)
-  (map #'expex-warn args)
+  (dolist (i args)
+    (expex-warn i))
   (funcall (expex-function-collector ex) fun args)
   (let argdef (funcall (expex-function-arguments ex) fun)
 	(? (expex-expandable-args? ex fun argdef)
