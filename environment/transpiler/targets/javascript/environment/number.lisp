@@ -3,7 +3,10 @@
 
 (js-type-predicate %number? "number")
 
-(dont-obfuscate parse-int)
+(dont-obfuscate parse-float parse-int)
 
 (defun number (x)
+  (parse-float x 10))
+
+(defun string-integer (x)
   (parse-int x 10))
