@@ -55,8 +55,8 @@ CC=cc
 LD=cc
 
 echo
-LIBC_PATH=`ls /lib/libc.so.*`
-LIBDL_PATH=`ls /lib/libdl.so.*`
+LIBC_PATH=`ls /lib/i386-linux-gnu/libc.so.*`
+LIBDL_PATH=`ls /lib/i386-linux-gnu/libdl.so.*`
 KERNEL_IDENT=`uname -i`
 SYSTEM_NAME=`uname -n`
 CPU_TYPE=`uname -m`
@@ -76,7 +76,7 @@ CRUNSHFLAGS="-DTRE_COMPILED_CRUNSHED -Iinterpreter"
 
 LIBFLAGS="-lm -lffi"
 
-if [ -f /lib/libdl.so* ]; then
+if [ -f /lib/i386-linux-gnu/libdl.so* ]; then
 	LIBFLAGS="$LIBFLAGS -ldl";
 fi
 
