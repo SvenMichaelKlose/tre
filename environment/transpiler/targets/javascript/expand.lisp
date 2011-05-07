@@ -91,7 +91,7 @@
   "")
 
 (define-js-std-macro slot-value (place slot)
-  `(%slot-value ,place ,(second slot)))
+  `(%slot-value ,place ,.slot.))
 
 (define-js-std-macro bind (fun &rest args)
   `(%bind ,(? (%slot-value? fun)

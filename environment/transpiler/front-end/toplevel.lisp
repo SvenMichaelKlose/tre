@@ -8,7 +8,7 @@
 ;; - FUNINFO objects are built for all functions.
 ;; - Accesses to the object in a method are thisified.
 (transpiler-pass transpiler-preexpand-compose (tr)
-    fake-expression-expand (fn with-temporary *expex-warn?* t
+    fake-expression-expand (fn with-temporary *expex-warn?* nil
 		                         (transpiler-expression-expand tr _)
 		                         _)
     lambda-expand (fn transpiler-lambda-expand tr _)

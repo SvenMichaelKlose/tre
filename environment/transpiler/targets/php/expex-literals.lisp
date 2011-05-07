@@ -12,9 +12,7 @@
   :init-maker (%transpiler-native "new __character (" ,(char-code x) ")"))
 
 (php-define-compiled-literal php-compiled-symbol (x symbol)
-  :maker ($ 'tresymbol_compiled_
-			x
-			(? (keyword? x) '_keyword ""))
+  :maker ($ 'tresymbol_compiled_ x (? (keyword? x) '_keyword ""))
   :init-maker (%transpiler-native
 			      "new __symbol ("
 			  	      (%transpiler-string ,(symbol-name x))
@@ -30,17 +28,12 @@
 
 (defun php-expex-literal (x)
   (?
-    (character? x)
-      (php-expex-add-global (php-compiled-char x))
-    (%quote? x)
-	  (php-expex-add-global (php-compiled-symbol .x.))
-    (keyword? x)
-	  (php-expex-add-global (php-compiled-symbol x))
-	(atom x)
-      (?
-		(expex-global-variable? x)
-	      (progn
-            (transpiler-add-wanted-variable *php-transpiler* x)
-            (php-expex-add-global x))
-		x)
+    (character? x) (php-expex-add-global (php-compiled-char x))
+    (%quote? x) (php-expex-add-global (php-compiled-symbol .x.))
+    (keyword? x) (php-expex-add-global (php-compiled-symbol x))
+	(atom x) (?  (expex-global-variable? x)
+	             (progn
+                   (transpiler-add-wanted-variable *php-transpiler* x)
+                   (php-expex-add-global x))
+		         x)
     (transpiler-import-from-expex x)))
