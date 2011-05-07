@@ -157,14 +157,14 @@ treimage_write_strings (FILE *f, ulong num)
 {
     ulong  i;
     ulong  j;
-    struct tre_string *s;
-    ulong  *lens = trealloc (sizeof (ulong) * num);
+    char   * s;
+    ulong  * lens = trealloc (sizeof (ulong) * num);
 
     /* Make and write length index. */
     j = 0;
     DOTIMES(i, NUM_ATOMS)
         if (tre_atoms[i].type == TRETYPE_STRING)
-            lens[j++] = TREATOM_STRING(i)->len;
+            lens[j++] = TRESTRING_LEN(TREATOM_STRING(i));
     treimage_write (f, lens, sizeof (ulong) * num);
 
     /* Write strings. */
@@ -172,7 +172,7 @@ treimage_write_strings (FILE *f, ulong num)
         if (tre_atoms[i].type != TRETYPE_STRING)
             continue;
         s = TREATOM_STRING(i);
-        treimage_write (f, &s->str, s->len);
+        treimage_write (f, TRESTRING_DATA(s), TRESTRING_LEN(s));
     }
 
     trealloc_free (lens);
@@ -402,12 +402,12 @@ treimage_read_arrays (FILE *f)
 void
 treimage_read_strings (FILE *f, struct treimage_header *h)
 {
-    struct tre_string *s;
+    char   * s;
     ulong  i;
     ulong  j;
     ulong  l;
     ulong  lenlen = sizeof (ulong) * h->num_strings;
-    ulong  *lens = trealloc (lenlen);
+    ulong  * lens = trealloc (lenlen);
 
     treimage_read (f, lens, lenlen);
 
@@ -417,11 +417,11 @@ treimage_read_strings (FILE *f, struct treimage_header *h)
             continue;
 
         l = lens[j++];
-        s = trealloc (l + sizeof (struct tre_string));
-        s->len = l;
+        s = trealloc (l + 1 + sizeof (ulong));
+        TRESTRING_LEN(s) = l;
         TREATOM_SET_STRING(i, s);
-        treimage_read (f, &s->str, l);
-        (&s->str)[l] = 0;
+        treimage_read (f, TRESTRING_DATA(s), l);
+        (TRESTRING_DATA(s))[l] = 0;
     }
 
     trealloc_free (lens);

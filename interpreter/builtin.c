@@ -214,9 +214,9 @@ trebuiltin_intern (treptr args)
     if (package != treptr_nil)
 		package = trearg_typed (1, TRETYPE_STRING, package, "package name");
 
-    n = &TREATOM_STRING(name)->str;
+    n = TRESTRING_DATA(TREATOM_STRING(name));
     if (package != treptr_nil)
-        p = treatom_get (&TREATOM_STRING(package)->str, treptr_nil);
+        p = treatom_get (TRESTRING_DATA(TREATOM_STRING(package)), treptr_nil);
     else
         p = treptr_nil;
 

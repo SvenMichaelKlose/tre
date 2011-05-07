@@ -1,6 +1,6 @@
 /*
  * TRE interpreter
- * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2008,2011 Sven Klose <pixel@copei.de>
  *
  * String-type related section.
  */
@@ -8,15 +8,13 @@
 #ifndef TRE_STRING_H
 #define TRE_STRING_H
 
-struct tre_string {
-    ulong	len;
-    char	str;
-};
+#define TRESTRING_LEN(x) (*(ulong*)x)
+#define TRESTRING_DATA(x) (((char*) x) + sizeof (ulong))
 
 extern treptr tre_strings;
 extern treptr trestring_get (const char *string);
 extern void trestring_free (treptr);
-extern struct tre_string *trestring_get_raw (ulong len);
+extern char *trestring_get_raw (ulong len);
 
 extern struct tre_sequence_type trestring_seqtype;
 

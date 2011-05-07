@@ -45,7 +45,7 @@ trestring_builtin_stringp (treptr list)
 treptr
 trestring_builtin_make (treptr list)
 {
-    struct tre_string * str;
+    char * str;
     treptr  arg = trearg_typed (1, TRETYPE_NUMBER, trearg_get (list), "length");
     treptr  atom;
 
@@ -64,7 +64,7 @@ trestring_builtin_make (treptr list)
 treptr
 trestring_builtin_list_string (treptr list)
 {
-    struct tre_string * news;
+    char * news;
     treptr    p;
     treptr    atom;
     char      *newp;
@@ -85,7 +85,7 @@ trestring_builtin_list_string (treptr list)
     	if (news == NULL)
 			treerror_norecover (treptr_invalid, "out of memory");
 	}
-    newp = &news->str;
+    newp = TRESTRING_DATA(news);
 
 	i = 0;
     DOLIST(p, arg) {
@@ -150,13 +150,13 @@ trestring_builtin_compare (treptr list)
 treptr
 trestring_builtin_concat (treptr list)
 {
-    struct tre_string * news;
-    treptr    p;
-    treptr    car;
-    treptr    atom;
-    char      *newp;
-    ulong  len = 0;
-	int		  argnum = 1;
+    char    * news;
+    treptr  p;
+    treptr  car;
+    treptr  atom;
+    char    * newp;
+    ulong   len = 0;
+	int	    argnum = 1;
 
     /* Sum up length of all elements in the list. */
     DOLIST(p, list) {
@@ -174,7 +174,7 @@ trestring_builtin_concat (treptr list)
     	if (news == NULL)
 			treerror_norecover (treptr_invalid, "out of memory");
 	}
-    newp = &news->str;
+    newp = TRESTRING_DATA(news);
 
     DOLIST(p, list) {
 		if (CAR(p) == treptr_nil)

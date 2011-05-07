@@ -20,37 +20,37 @@
 #include <string.h>
 
 /* Allocate and initialise string. */
-struct tre_string *
+char *
 trestring_get_raw (ulong len)
 {
-    ulong  l = len + sizeof (struct tre_string);
-    struct tre_string * nstr = trealloc (l);
+    ulong  l = len + sizeof (ulong) + 1;
+    char * nstr = trealloc (l);
 
     if (nstr == NULL)
 		return nstr;
 
-    nstr->len = len;
-    bzero (&nstr->str, len + 1);
+    TRESTRING_LEN(nstr) = len;
+    bzero (TRESTRING_DATA(nstr), len + 1);
     return nstr;
 }
 
 void
 trestring_copy (char *to, treptr str)
 {
-    struct tre_string *s = TREATOM_STRING(str);
-    strncpy (to, &s->str, s->len + 1);
+    char *s = TREATOM_STRING(str);
+    strncpy (to, TRESTRING_DATA(s), TRESTRING_LEN(s) + 1);
 }
 
 /* Create string atom. */
 treptr
 trestring_get (const char *str)
 {
-    struct tre_string *nstr = trestring_get_raw (strlen (str));
+    char *nstr = trestring_get_raw (strlen (str));
     treptr  atom;
 
     if (nstr == NULL)
         return treerror (treptr_invalid, "out of memory");
-    strcpy (&nstr->str, str);
+    strcpy (TRESTRING_DATA(nstr), str);
     atom = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_STRING, treptr_nil);
     TREATOM_SET_STRING(atom, nstr);
     return atom;
@@ -60,7 +60,7 @@ trestring_get (const char *str)
 void
 trestring_free (treptr str)
 {
-    struct tre_string *s = TREATOM_STRING(str);
+    char *s = TREATOM_STRING(str);
 
     trealloc_free (s);
 }
@@ -69,23 +69,23 @@ trestring_free (treptr str)
 treptr
 trestring_t_get (treptr str, ulong idx)
 {
-    struct tre_string *s = TREATOM_STRING(str);
+    char *s = TREATOM_STRING(str);
 
-    if (s->len < idx) {
+    if (TRESTRING_LEN(s)< idx) {
         trewarn (TRECONTEXT_CURRENT(), "index out of range");
 		return treptr_nil;
     }
 
-    return treatom_number_get ((double) (&s->str)[idx], TRENUMTYPE_CHAR);
+    return treatom_number_get ((double) TRESTRING_DATA(s)[idx], TRENUMTYPE_CHAR);
 }
 
 /* Sequence: Return length of string. */
 ulong
 trestring_t_length (treptr str)
 {
-    struct tre_string *s = TREATOM_STRING(str);
+    char *s = TREATOM_STRING(str);
 
-    return strlen (&s->str);
+    return TRESTRING_LEN(s);
 }
 
 /* Sequence type configuration. */

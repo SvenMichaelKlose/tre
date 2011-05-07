@@ -1,6 +1,6 @@
 /*
  * TRE interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2007,2011 Sven Klose <pixel@copei.de>
  *
  * Built-in file-I/O functions
  */
@@ -39,7 +39,7 @@ treimage_builtin_create (treptr list)
 	while (TRUE) {
 		file = trearg_typed (1, TRETYPE_STRING, file, "pathname");
 
-    	if (treimage_create (&TREATOM_STRING(file)->str, init_fun) == FALSE)
+    	if (treimage_create (TRESTRING_DATA(TREATOM_STRING(file)), init_fun) == FALSE)
 			break;
 
        	file = treerror (file, "cannot create image - tell new pathname");
@@ -61,7 +61,7 @@ treimage_builtin_load (treptr list)
 
 	while (TRUE) {
     	file = trearg_typed (1, TRETYPE_STRING, file, "pathname");
-    	r = treimage_load (&TREATOM_STRING(file)->str);
+    	r = treimage_load (TRESTRING_DATA(TREATOM_STRING(file)));
     	if (r == -2)
         	file = treerror (file, "incompatible image format - tell new pathname");
     	if (r)
