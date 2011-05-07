@@ -12,8 +12,10 @@
   (? (any-quasiquote? (cadr x.))
      `(cons ,(copy-tree (cadr x.))
             ,(backquote-cons-1 .x))
-     `(%nconc ,(copy-tree (cadr x.))
-      		  ,(backquote-cons-1 .x))))
+     (aif (backquote-cons-1 .x)
+          `(%nconc ,(copy-tree (cadr x.))
+      		       ,(backquote-cons-1 .x))
+          (copy-tree (cadr x.)))))
 
 (defun backquote-cons-atom (x)
   (when x
