@@ -25,8 +25,8 @@
                 body)))
 
 	; Get first pair.
-    (let* ((plc (first alst))
-           (val (second alst)))
+    (let* ((plc (car alst))
+           (val (cadr alst)))
       (?
 	    ; MULTIPLE-VALUE-BIND if place is a cons.
 	    (cons? plc)
@@ -35,11 +35,8 @@
 
 	    ; Place function is set of value is a function.
 		(lambda? val)
-		  (multiple-value-bind (funs followers)
-							   (collect (fn (lambda? (second _)))
-									    (group alst 2))
-		    `(labels ,(mapcar (fn `(,(first _) ,@(past-lambda (second _))))
-							  funs)
+		  (multiple-value-bind (funs followers) (collect (fn lambda? (cadr _)) (group alst 2))
+		    `(labels ,(mapcar (fn `(,(car _) ,@(past-lambda (cadr _)))) funs)
 			   ,@(sub (apply #'append followers))))
 
 		; Value assignment to variable.
