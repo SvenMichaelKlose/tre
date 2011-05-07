@@ -37,6 +37,12 @@
           ,@(lambda-body x)
 	  "}" ,*c-newline*)))
 
+(defun %eq (&rest x)
+  (apply #'eq x))
+
+(defun %not (&rest x)
+  (apply #'not x))
+
 (define-c-macro eq (&rest x)
   `(%eq ,@x))
 
