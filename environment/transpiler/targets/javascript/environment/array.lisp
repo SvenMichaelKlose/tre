@@ -16,13 +16,7 @@
     (dolist (i x a)
       (a.push i))))
 
-(defun array-list (x &optional (n 0))
-  (when (and x (%%%< n x.length))
-    (cons (aref x n)
-		  (array-list x (1+ n)))))
-
 (dont-obfuscate *array)
-
 (dont-inline array-find)
 
 (defun array-find (arr obj)

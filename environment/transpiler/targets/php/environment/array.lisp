@@ -17,10 +17,3 @@
   (let a (make-array)
     (dolist (i x a)
       (%setq (%transpiler-native "$" a "[]") i))))
-
-(dont-obfuscate sizeof)
-
-(defun array-list (x &optional (n 0))
-  (when (%%%< n (%array-length x))
-    (cons (aref x n)
-		  (array-list x (1+ n)))))
