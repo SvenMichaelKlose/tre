@@ -47,7 +47,7 @@
   (when (expander-has-macro? expander-name name)
     (error "Macro ~A already defined." name))
   (acons! name
-	      args-and-body
+	      (eval `#',args-and-body)
 		  (expander-macros (expander-get expander-name))))
 
 (defmacro define-expander-macro (expander-name name &rest x)
