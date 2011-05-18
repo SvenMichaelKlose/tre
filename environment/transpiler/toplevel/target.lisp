@@ -3,26 +3,41 @@
 
 (defvar *nil-symbol-name* nil)
 
-(defun recompile-file? (file files-to-update)
-  (and (not (symbol? file.))
-	   (member file. files-to-update :test #'string=)))
+(defun eq-string= (x y)
+  (? (or (symbol? x)
+         (symbol? y))
+     (eq x y)
+     (string= x y)))
 
-(defun target-transpile-2 (tr files)
-  (mapcar (fn concat-stringtree (transpiler-transpile tr ._))
-		  files))
+(defun compile-file? (file processed-files files-to-update)
+  (or (member file files-to-update :test #'eq-string=)
+      (not (assoc-value file processed-files :test #'eq-string=))))
+
+(defun target-transpile-2 (tr files files-to-update)
+  (let compiled-code (make-queue)
+	(dolist (i files (queue-list compiled-code))
+      (let code (? (compile-file? i. (transpiler-compiled-files tr) files-to-update)
+                   (concat-stringtree (transpiler-transpile tr .i))
+                   (assoc-value i. (transpiler-compiled-files tr) :test #'eq-string=))
+        (? (assoc-value i. (transpiler-compiled-files tr) :test #'eq-string=)
+           (setf (assoc-value i. (transpiler-compiled-files tr) :test #'eq-string=) code)
+           (acons! i. code (transpiler-compiled-files tr)))
+	    (enqueue compiled-code code)))))
 
 (defun target-transpile-1 (tr files files-to-update)
-  (let sightened-code nil
-	(dolist (i files sightened-code)
-	  (append! sightened-code
-			   (list (cons i.
-	  				       (if (symbol? i.)
-		  				       (transpiler-sighten tr .i)
-		  				       (transpiler-sighten-files tr (list i.)))))))))
+  (let sightened-code (make-queue)
+	(dolist (i files (queue-list sightened-code))
+      (let code (? (compile-file? i. (transpiler-sightened-files tr) files-to-update)
+                   (? (symbol? i.)
+		  			  (transpiler-sighten tr .i)
+		  			  (transpiler-sighten-files tr (list i.)))
+                   (assoc-value i. (transpiler-sightened-files tr) :test #'eq-string=))
+        (? (assoc-value i. (transpiler-sightened-files tr) :test #'eq-string=)
+           (setf (assoc-value i. (transpiler-sightened-files tr) :test #'eq-string=) code)
+           (acons! i. code (transpiler-sightened-files tr)))
+	    (enqueue sightened-code (cons i. code))))))
 
-(defun target-transpile-generic (tr &key (files-before-deps nil)
-										 (files-after-deps nil)
-										 (front-before nil)
+(defun target-transpile-generic (tr &key (front-before nil)
 							  	   		 (front-after nil)
 							  	   		 (back-before nil)
 							  	   		 (back-after nil)
@@ -54,8 +69,6 @@
                                    (files-to-update nil)
                                    (print-obfuscations? nil))
   (target-transpile-generic tr
-	  :files-before-deps files-before-deps
-	  :files-after-deps files-after-deps
 	  :front-before
   		  #'(()
   			   (target-transpile-1 tr files-before-deps files-to-update))
@@ -64,10 +77,10 @@
 		 	   (target-transpile-1 tr files-after-deps files-to-update))
 	  :back-after
   		  #'((processed)
-			   (target-transpile-2 tr processed))
+			   (target-transpile-2 tr processed files-to-update))
 	  :back-before
   		  #'((processed)
-	  		   (target-transpile-2 tr processed))
+	  		   (target-transpile-2 tr processed files-to-update))
 	  :dep-gen dep-gen
 	  :decl-gen decl-gen
       :print-obfuscations? print-obfuscations?))
@@ -82,8 +95,8 @@
 								 (files-to-update nil)
 								 (dep-gen nil)
 								 (decl-gen nil)
-								 (make-updater nil)
                                  (print-obfuscations? nil))
+  (setf *recompiling?* (? files-to-update t))
   (with-temporary *current-transpiler* tr
     (prog1
 	  (target-transpile-0 tr :files-after-deps files-after-deps
@@ -92,9 +105,7 @@
 						     :dep-gen dep-gen
 							 :decl-gen decl-gen
                              :print-obfuscations? print-obfuscations?)
-	  (target-transpile-ok)
-	  (awhen make-updater
-		(sys-image-create ! #'(nil))))))
+	  (target-transpile-ok))))
 
 (defun target-transpile-setup (tr &key (obfuscate? nil))
   (with-temporary *current-transpiler* tr

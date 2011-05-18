@@ -5,7 +5,8 @@
   (with (fi		  (get-lambda-funinfo x)
 		 body	  (lambda-body x)
          num-tags (count-if #'number? body))
-    (when (funinfo-num-tags fi)
+    (when (and (not *recompiling?*)
+               (funinfo-num-tags fi))
 	  (print fi)
 	  (error "funfinfo ~A: num-tags already set to ~A. new num:~A"
 		     (lambda-funinfo x) (funinfo-num-tags fi) num-tags))

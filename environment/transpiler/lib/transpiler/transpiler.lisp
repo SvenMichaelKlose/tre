@@ -3,6 +3,7 @@
 
 (defvar *show-definitions?* nil)
 (defvar *opt-inline?* nil)
+(defvar *recompiling?* nil)
 
 ;; Set this when starting up your transpiler run.
 (defvar *current-transpiler* nil)
@@ -106,7 +107,11 @@
   (compiled-front nil)
   (compiled-back nil)
   
-  (raw-decls nil))
+  (raw-decls nil)
+
+  ; Recompiling
+  (sightened-files)
+  (compiled-files))
 
 (defun transpiler-defined-function (tr name)
   (href (transpiler-defined-functions-hash tr) name))

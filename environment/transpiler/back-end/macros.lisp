@@ -9,8 +9,7 @@
   (with (tre (eval tr)
 		 name x.)
     (when (expander-has-macro? (transpiler-macro-expander tre) name)
-      (error "Code-generator macro ~A already defined as standard macro."
-			 name))
+      (error "Code-generator macro ~A already defined as standard macro." name))
     (transpiler-add-unwanted-function tre name)
     (transpiler-add-inline-exception tre name)
     `(define-expander-macro ,(transpiler-macro-expander tre) ,@x)))

@@ -24,23 +24,22 @@
 
 (defun js-transpile (files &key (obfuscate? nil)
                                 (print-obfuscations? nil)
-                                (files-to-update nil)
-						   		(make-updater nil))
+                                (files-to-update nil))
   (let tr *js-transpiler*
-    (transpiler-reset tr)
-    (target-transpile-setup tr :obfuscate? obfuscate?)
+    (unless files-to-update
+      (transpiler-reset tr)
+      (target-transpile-setup tr :obfuscate? obfuscate?))
     (when (transpiler-lambda-export? tr)
       (transpiler-add-wanted-function tr 'array-copy))
 	(concat-stringtree
 		(js-transpile-pre tr)
     	(target-transpile tr :files-before-deps
-                                 (with-gensym (t1 t2 t3 t4)
-			                     (append (list (cons t1 *js-base*))
+			                     (append (list (cons 't1 *js-base*))
 		 		  		                 (when *transpiler-log*
-				   	  	                   (list (cons t2 *js-base-debug-print*)))
-				  	                     (list (cons t3 *js-base2*))
+				   	  	                   (list (cons 't2 *js-base-debug-print*)))
+				  	                     (list (cons 't3 *js-base2*))
 				                         (when (eq t *have-environment-tests*)
-				   	  	                   (list (cons t4 (make-environment-tests))))))
+				   	  	                   (list (cons 't4 (make-environment-tests)))))
 		  	                 :files-after-deps
 		 		                 (mapcar #'list files)
 		 	                 :dep-gen #'(()
@@ -49,12 +48,5 @@
        				                       (mapcar (fn transpiler-emit-code tr (list `(%var ,_)))
 					  		                       (funinfo-env (transpiler-global-funinfo tr))))
 			                 :files-to-update files-to-update
-			                 :make-updater make-updater
 			                 :print-obfuscations? print-obfuscations?)
     	(js-transpile-post))))
-
-(defun js-retranspile (files-to-update)
-  (let tr *js-transpiler*
-	(concat-stringtree (js-transpile-pre tr)
-    				   (funcall *updater* tr files-to-update)
-    				   (js-transpile-post))))

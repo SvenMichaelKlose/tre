@@ -1,6 +1,7 @@
 ;;;;; TRE compiler
 ;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
+(defvar *opt-peephole?* t)
 (defvar *opt-peephole-funinfo* nil)
 (defvar *opt-peephole-symbols* (make-hash-table :test #'eq))
 
@@ -259,6 +260,8 @@
 								  #'remove-assignments
 								  #'opt-peephole-remove-void)
 						 x))))
-	  (with-temporary *opt-peephole-funinfo* (transpiler-global-funinfo *current-transpiler*)
-	    (repeat-while-changes #'rec
-		  (opt-peephole-remove-identity statements)))))
+      (? *opt-peephole?*
+	     (with-temporary *opt-peephole-funinfo* (transpiler-global-funinfo *current-transpiler*)
+	       (repeat-while-changes #'rec
+		     (opt-peephole-remove-identity statements)))
+         statements)))

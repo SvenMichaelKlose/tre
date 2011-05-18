@@ -35,12 +35,12 @@
     (php-print-native-environment out)))
 
 (defun php-transpile (files &key (obfuscate? nil)
-                                (print-obfuscations? nil)
-                                (files-to-update nil)
-						   		(make-updater nil))
+                                 (print-obfuscations? nil)
+                                 (files-to-update nil))
   (let tr *php-transpiler*
-    (transpiler-reset tr)
-    (target-transpile-setup tr :obfuscate? obfuscate?)
+    (unless files-to-update
+      (transpiler-reset tr)
+      (target-transpile-setup tr :obfuscate? obfuscate?))
     (transpiler-add-defined-variable tr '*KEYWORD-PACKAGE*)
 	(concat-stringtree
 		(php-transpile-prepare tr)
@@ -63,5 +63,4 @@
                          (transpiler-sighten tr
                              (transpiler-compiled-inits tr))))
 			:files-to-update files-to-update
-			:make-updater make-updater
 			:print-obfuscations? print-obfuscations?))))

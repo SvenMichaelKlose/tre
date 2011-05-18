@@ -45,7 +45,9 @@
 
 (defun set-expander-macro (expander-name name args-and-body)
   (when (expander-has-macro? expander-name name)
-    (error "Macro ~A already defined." name))
+    (warn "Macro ~A already defined." name))
+  (setf (expander-macros (expander-get expander-name))
+		(aremove name (expander-macros (expander-get expander-name))))
   (acons! name
 	      (eval `#',args-and-body)
 		  (expander-macros (expander-get expander-name))))
@@ -58,7 +60,9 @@
   (with-gensym g
     `(progn
 	   (when (expander-has-macro? ',expander-name ',name)
-	     (error "Macro ~A already defined." ',name))
+	     (warn "Macro ~A already defined." ',name))
+       (setf (expander-macros (expander-get ',expander-name))
+		     (aremove ',name (expander-macros (expander-get ',expander-name))))
 	   ;(defun ,g ,@x)
 	   (acons! ',name #',x (expander-macros (expander-get ',expander-name))))))
 
