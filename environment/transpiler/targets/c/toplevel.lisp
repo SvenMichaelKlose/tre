@@ -1,7 +1,5 @@
 ;;;;; Transpiler: TRE to C
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Toplevel
+;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (defvar *closure-argdefs* nil)
 (defvar *c-init-group-size* 64)
@@ -85,8 +83,7 @@
 						   ,@(mapcar #'((x)
                                          `(tregc_push_compiled ,x))
                                      _)))))
-			    (group (print (c-transpiler-declarations-and-initialisations))
-					   *c-init-group-size*))
+			    (group (c-transpiler-declarations-and-initialisations) *c-init-group-size*))
         `((defun c-init ()
 		    ,@(mapcar #'list (reverse init-funs)))))))
 
@@ -103,9 +100,7 @@
 	          :dep-gen #'(()
 			               (transpiler-import-from-environment tr))
 	          :decl-gen #'(()
-                           (print 'make-closure-argdef-syms)
 			                (c-transpiler-make-closure-argdef-symbols)
-                           (print 'make-init)
 			                (let init (transpiler-transpile tr (transpiler-sighten tr (c-transpiler-make-init tr)))
 		   	                  (concat-stringtree (transpiler-compiled-decls tr)
 								                 init))))))))

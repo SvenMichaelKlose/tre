@@ -49,7 +49,7 @@
 	(format t "; Importing dependencies...~%")
 	(awhen dep-gen
       (acons! 'imported-deps (funcall !) after-deps))
-    (format t "; Let me think. Hmm...~%")
+    (format t "; Let me think. Hmm...")
 	(with (compiled-before (funcall back-before before-deps)
 		   compiled-after (funcall back-after after-deps))
 	  (prog1
@@ -86,7 +86,7 @@
       :print-obfuscations? print-obfuscations?))
 
 (defun target-transpile-ok ()
-  (format t "~%; Everything OK. Done.~%"))
+  (format t "~%; Code has been generated.~%"))
 
 (defvar *updater* nil)
 
