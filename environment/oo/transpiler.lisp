@@ -20,7 +20,7 @@
 	(when *show-definitions*
 	  (late-print `(defclass ,class-name ,@(awhen args (list !)))))
     (when (href classes cname)
-	  (error "Class ~A already defined." cname))
+	  (warn "Class ~A already defined." cname))
 	(setf (href classes cname)
 		  (? bases
     		 (with (bc (href classes (first bases)))
@@ -37,14 +37,16 @@
 	(when *show-definitions*
       (late-print `(defmethod ,class-name ,name ,@(awhen args (list !)))))
     (aif (href classes class-name )
-		 (? (assoc name (class-methods !))
-			(error "In class '~A': member '~A' already defined." class-name name)
-		    (push (list name args
-				  	    (append (head-atoms body :but-last t)
-							    (when (transpiler-inject-function-names?  *current-transpiler*)
-								  `((setf *current-function* ,(+ (symbol-name class-name) "." (symbol-name name)))))
+		 (let code (list args
+				  	     (append (head-atoms body :but-last t)
+							     (when (transpiler-inject-function-names?  *current-transpiler*)
+								   `((setf *current-function* ,(+ (symbol-name class-name) "." (symbol-name name)))))
 							     (tail-after-atoms body :keep-last t)))
-			      (class-methods !)))
+		   (? (assoc name (class-methods !))
+              (progn
+                (setf (assoc-value name (class-methods !)) code)
+			    (warn "In class '~A': member '~A' already defined." class-name name))
+		      (push (cons name code) (class-methods !))))
 	    (error "Defiinition of method ~A: class ~A is not defined." name class-name)))
   nil)
 
