@@ -1,7 +1,5 @@
 ;;;;; TRE environment
 ;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Classes
 
 (defun ignore-body-doc (body)
   (? (and (not *transpiler-assert*)
@@ -41,18 +39,13 @@
     (aif (href classes class-name )
 		 (? (assoc name (class-methods !))
 			(error "In class '~A': member '~A' already defined." class-name name)
-            (setf (class-methods !)
-		          (push (list name args
-						  	  (append (head-atoms body :but-last t)
-									  (when (transpiler-inject-function-names?  *current-transpiler*)
-										`((setf *current-function*
-											    ,(+ (symbol-name class-name)
-												    "."
-													(symbol-name name)))))
-									  (tail-after-atoms body :keep-last t)))
-					    (class-methods !))))
-	    (error "Defiinition of method ~A: class ~A is not defined."
-			   name class-name)))
+		    (push (list name args
+				  	    (append (head-atoms body :but-last t)
+							    (when (transpiler-inject-function-names?  *current-transpiler*)
+								  `((setf *current-function* ,(+ (symbol-name class-name) "." (symbol-name name)))))
+							     (tail-after-atoms body :keep-last t)))
+			      (class-methods !)))
+	    (error "Defiinition of method ~A: class ~A is not defined." name class-name)))
   nil)
 
 (defun transpiler_defmember (class-name &rest names)
@@ -61,8 +54,5 @@
   (let classes (transpiler-thisify-classes *current-transpiler*)
     (dolist (name names)
       (aif (href classes class-name)
-           (setf (class-members !)
-		         (push (list name t)
-				       (class-members !)))
-	      (error "Defiinition of member ~A: class ~A is not defined."
-			     name class-name)))))
+           (push (list name t) (class-members !))
+	       (error "Defiinition of member ~A: class ~A is not defined." name class-name)))))
