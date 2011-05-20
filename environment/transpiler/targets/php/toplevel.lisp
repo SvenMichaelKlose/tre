@@ -18,19 +18,19 @@
       (transpiler-import-universe tr))
     (format out (+ "<?php~%"
                    "if (get_magic_quotes_gpc ()) {~%"
-                   "    $process = array (&$_GET, &$_POST, &$_COOKIE, &$_REQUEST);~%"
-                   "    while (list ($key, $val) = each ($process)) {~%"
+                   "    $vars = array (&$_GET, &$_POST, &$_COOKIE, &$_REQUEST);~%"
+                   "    while (list ($key, $val) = each ($vars)) {~%"
                    "        foreach ($val as $k => $v) {~%"
-                   "            unset ($process[$key][$k]);~%"
+                   "            unset ($vars[$key][$k]);~%"
                    "            $sk = stripslashes ($k);~%"
                    "            if (is_array ($v)) {~%"
-                   "                $process[$key][$sk] = $v;~%"
-                   "                $process[] = &$process[$key][$sk];~%"
+                   "                $vars[$key][$sk] = $v;~%"
+                   "                $vars[] = &$vars[$key][$sk];~%"
                    "            } else~%"
-                   "                $process[$key][$sk] = stripslashes ($v);~%"
+                   "                $vars[$key][$sk] = stripslashes ($v);~%"
                    "        }~%"
                    "    }~%"
-                   "    unset ($process);~%"
+                   "    unset ($vars);~%"
                    "}~%"))
     (php-print-native-environment out)))
 
@@ -46,13 +46,13 @@
 		(php-transpile-prepare tr)
     	(target-transpile tr
     	 	:files-before-deps
-			    (append (list (cons 'text *php-base*))
+			    (append (list (cons 'base1 *php-base*))
 ;		 		  		(when *transpiler-log*
 ;				   	  	  (list (cons 'text *php-base-debug-print*)))
-				  	    (list (cons 'text *php-base2*)))
+				  	    (list (cons 'base2 *php-base2*)))
 		  	:files-after-deps
 				(append (when (eq t *have-environment-tests*)
-				   	  	  (list (cons 'text (make-environment-tests))))
+				   	  	  (list (cons 'env-tests (make-environment-tests))))
 		 		 		(mapcar (fn list _) files))
 		 	:dep-gen
 		     	#'(()
