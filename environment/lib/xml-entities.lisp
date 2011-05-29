@@ -1,9 +1,9 @@
 ;;;; XML parser
-;;;; Copyright (c) 2009 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2009,2011 Sven Klose <pixel@copei.de>
 
 (defvar *xml-entities*
 		'(("amp" . 38)
-		  ("quot" . 24)
+		  ("quot" . 34)
 		  ("lt" . 60)
 		  ("gt" . 62)
 		  ("euro" . 8364)
@@ -102,7 +102,19 @@
 		  ("uuml" . 252)
 		  ("yacute" . 253)
 		  ("thorn" . 254)
-		  ("yuml" . 255)))
+		  ("yuml" . 255)
+
+          ("laquo" . 171)
+          ("raquo" . 187)
+          ("lsquo" . 8216)
+          ("rsquo" . 8217)
+          ("sbquo" . 8218)
+          ("ldquo" . 8220)
+          ("rdquo" . 8221)
+          ("bdquo" . 8222)
+          ("bdquo" . 8222)
+          ("lsaquo" . 8249)
+          ("rsaquo" . 8250)))
 
 (defvar *xml-entities-hash* (assoc-hash *xml-entities* :test #'string=))
 
