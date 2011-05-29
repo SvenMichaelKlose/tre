@@ -112,7 +112,6 @@
           ("ldquo" . 8220)
           ("rdquo" . 8221)
           ("bdquo" . 8222)
-          ("bdquo" . 8222)
           ("lsaquo" . 8249)
           ("rsaquo" . 8250)))
 
