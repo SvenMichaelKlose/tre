@@ -1,5 +1,5 @@
 ;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; This are the low-level transpiler definitions of
 ;;;;; basic functions to simulate basic data types.
@@ -70,6 +70,7 @@
 			"../../../environment/list-string.lisp"
 			"string.lisp"
 			"../../../environment/member.lisp"
-			"hash.lisp")
+			"hash.lisp"
+            "base64.lisp")
 		(js-load-base "environment/transpiler/environment/"
 			"assoc.lisp")))
