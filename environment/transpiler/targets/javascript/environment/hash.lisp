@@ -17,5 +17,5 @@
   (when (or a b)
     (unless a
       (setf a (make-hash-table)))
-    (%transpiler-native "for (var " k " in " b ") " a "[" k "]=" b "[" k "];")
+    (%setq nil (%transpiler-native "for (var " k " in " b ") " a "[" k "]=" b "[" k "];"))
     a))

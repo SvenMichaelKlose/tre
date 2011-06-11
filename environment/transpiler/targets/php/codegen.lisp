@@ -213,7 +213,7 @@
                        ,(php-dollarize x) "[" ,(php-dollarize y) "] = " ,(php-dollarize v) ")"))
 
 (define-php-macro hremove (h key)
-  `(%transpiler-native "unset ($" ,h "[" ,(php-dollarize key) "])"))
+  `(%transpiler-native "null; unset ($" ,h "[" ,(php-dollarize key) "])"))
 
 (define-php-macro make-hash-table (&rest ignored-args)
   `(%transpiler-native "Array()" ""))
@@ -233,7 +233,7 @@
   `(%transpiler-native "new " ,x. ,@(php-argument-list .x)))
 
 (define-php-macro delete-object (x)
-  `(%transpiler-native "unset " ,x))
+  `(%transpiler-native "null; unset " ,x))
 
 (define-php-macro %slot-value (x y)
   (? (cons? x)

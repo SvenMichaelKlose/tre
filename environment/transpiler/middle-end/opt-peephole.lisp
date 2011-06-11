@@ -153,18 +153,32 @@
 	  ((%%vm-go? a) (cons a (opt-peephole-remove-void (opt-peephole-find-next-tag d))))))
 
 (defun opt-peephole-will-be-used-again? (x v)
+;  (when (and (%setq? a) (eq '~%ret (%setq-place a)))
+;    (print
+;      (?
+;        (and (not (~%ret? v))
+;             (transpiler-defined-variable *current-transpiler* v)) 'VAR
+;	    (funinfo-immutable? *opt-peephole-funinfo* v)	'IMMUT
+;	    (not x)			(progn (print 'ret) (~%ret? v))
+;	    (lambda? x.)	'L
+;        (vm-jump? x.)   'JUMP
+;        (? (and (%setq? x.) (eq v (%setq-place x.)))
+;           (progn
+;               (print 'find)
+;	       (print (find-tree (%setq-value x.) v :test #'eq))
+;       )))))
   (?
-	(not (funinfo-parent *opt-peephole-funinfo*))	t
-	(funinfo-immutable? *opt-peephole-funinfo* x)	t
+    (and (not (~%ret? v))
+         (transpiler-defined-variable *current-transpiler* v)) t
+	(funinfo-immutable? *opt-peephole-funinfo* v)	t
 	(not x)			(~%ret? v)	; End of block always returns ~%RET.
 	(atom x)		(error "illegal meta-code: statement expected")
-	(lambda? x.)	(opt-peephole-will-be-used-again? .x v) ; Skip LAMBDA-expressions.
-    (or (vm-jump? x.)				; We don't know what happens after a jump.
-	    (? (and (%setq? x.)
-		 		(eq v (%setq-place x.)))
-		   (find-tree (%setq-value x.) v :test #'eq)
-           (or (find-tree x. v :test #'eq) ; Place used in statement?
-   	           (opt-peephole-will-be-used-again? .x v))))))
+	(lambda? x.)	(opt-peephole-will-be-used-again? .x v)
+    (vm-jump? x.)   t
+    (? (and (%setq? x.) (eq v (%setq-place x.)))
+	   (find-tree (%setq-value x.) v :test #'eq)
+       (or (find-tree x. v :test #'eq) ; Place used in statement?
+           (opt-peephole-will-be-used-again? .x v)))))
 
 (defun removable-place? (v)
   (let fi *opt-peephole-funinfo*
@@ -181,7 +195,7 @@
        (removable-place? (%setq-place a))
 	   (or (and (not (~%ret? (%setq-place a)))
 			    (integer= 1 (opt-peephole-count (%setq-place a))))
-	       (not (opt-peephole-will-be-used-again? d (%setq-place a))))))
+           (not (opt-peephole-will-be-used-again? d (%setq-place a))))))
 
 (defun assignment-to-unneccessary-temoporary? (a d)
   (and d

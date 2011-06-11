@@ -7,6 +7,5 @@
 	(read in-stream)))
 
 (defun read-file-all (name)
-  "Read one expression from file."
   (with-open-file in-stream (open name :direction 'input)
 	(read-all in-stream)))
