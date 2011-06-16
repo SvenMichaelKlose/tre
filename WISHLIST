@@ -1,3 +1,4 @@
+- free mix of &OPTIONAL, &REST and &KEY arguments.
 - deftype
 - defgeneric/defmethod
 - reverse execution
@@ -30,7 +31,7 @@
 
 - History: Call tree.
 
-- Obligatory &KEY arguments.
+- &REQUIRED-KEY
 
 - &SELF-OPTIONAL: Only usable when self-called.
 
@@ -54,7 +55,6 @@ x + y + z
 	'head-,name'-tail
 
 - (fun1+fun2 ...) => (fun1 ...) (fun2 ...)
+- take list of functions
 
 - Arithmetic functions ignore NIL.
-
-- &REQUIRED-KEY
