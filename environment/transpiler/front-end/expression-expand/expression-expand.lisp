@@ -38,12 +38,11 @@
 
 ;;;; SYMBOLS
 
-(defvar *expexsym-counter* 0)
+(defvar *expexsym-counter* nil)
 
 ;; Returns new unique symbol.
 (defun expex-sym ()
-  (setf *expexsym-counter* (+ 1 *expexsym-counter*))
-  (make-symbol (string-concat "~E" (string *expexsym-counter*))))
+  ($ '~E (1+! *expexsym-counter*)))
 
 ;;;; GUEST CALLBACKS
 
@@ -263,7 +262,7 @@
         (list x))
 	  (expex-make-%setq ex '~%ret x)))
 
-(defun expex-make-setq-copy (ex x s)
+(defun expex-copy-%setq (ex x s)
   (? (eq s (second x.))
      x
      `(,x.
@@ -276,7 +275,7 @@
 			   (? (%setq? last.)
 				  (? (eq s (second last.))
 				     (expex-guest-filter-setter ex last.)
-				     (expex-make-setq-copy ex last s))
+				     (expex-copy-%setq ex last s))
 				  (expex-make-%setq ex s last.)))
 		x)))
 
@@ -301,6 +300,7 @@
 
 (defun expression-expand (ex x)
   (when x
-	(with-temporary *current-expex* ex
-	  (with-temporary *expex-funinfo* (transpiler-global-funinfo *current-transpiler*)
-        (expex-body ex x)))))
+    (with-temporary *expexsym-counter* 0
+	  (with-temporary *current-expex* ex
+	    (with-temporary *expex-funinfo* (transpiler-global-funinfo *current-transpiler*)
+          (expex-body ex x))))))
