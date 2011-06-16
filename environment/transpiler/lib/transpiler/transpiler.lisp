@@ -1,9 +1,10 @@
-;;;;; TRE tree processor transpiler
+;;;;; TRE transpiler
 ;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (defvar *show-definitions?* nil)
 (defvar *opt-inline?* nil)
 (defvar *recompiling?* nil)
+(defvar *force-cps?* nil)
 
 ;; Set this when starting up your transpiler run.
 (defvar *current-transpiler* nil)
@@ -226,6 +227,8 @@
   		(transpiler-defined-variables-hash tr) (make-hash-table :test #'eq)
   		(transpiler-function-args tr) (make-hash-table :test #'eq)
   		(transpiler-exported-closures tr) nil)
+  (when *force-cps?*
+    (setf (transpiler-continuation-passing-style? tr) t))
   (transpiler-add-obfuscation-exceptions tr (make-symbol ""))
   tr)
 
