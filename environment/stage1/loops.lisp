@@ -1,11 +1,11 @@
 ;;;; TRE environment
-;;;; Copyright (c) 2005-2008,2010 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2005-2008,2010-2011 Sven Klose <pixel@copei.de>
 
 (defmacro do (binds (test &rest result) &rest body)
   (let tag (gensym)
     `(block nil
        (let* ,(mapcar #'((b)
-						  `(,(first b) ,(second b)))
+						  `(,(car b) ,(cadr b)))
 					 binds)
          (tagbody
            ,tag
@@ -14,8 +14,8 @@
 						 ,@result)))
            ,@body
            ,@(mapcar #'((b)
-						  (and (third b)
-							   `(setq ,(first b) ,(third b))))
+						  (and (caddr b)
+							   `(setq ,(car b) ,(caddr b))))
 					 binds)
            (go ,tag))))))
 

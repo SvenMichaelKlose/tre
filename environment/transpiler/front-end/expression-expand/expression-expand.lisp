@@ -263,18 +263,16 @@
 	  (expex-make-%setq ex '~%ret x)))
 
 (defun expex-copy-%setq (ex x s)
-  (? (eq s (second x.))
-     x
-     `(,x.
-	   ,@(expex-make-%setq ex s (second x.)))))
+  `(,x.
+    ,@(expex-make-%setq ex s (cadr x.))))
 
 (defun expex-make-return-value (ex s x)
   (let last (last x)
    	(? (expex-returnable? ex last.)
 	   (append (butlast x)
 			   (? (%setq? last.)
-				  (? (eq s (second last.))
-				     (expex-guest-filter-setter ex last.)
+				  (? (eq s (cadr last.))
+                     (expex-guest-filter-setter ex last.)
 				     (expex-copy-%setq ex last s))
 				  (expex-make-%setq ex s last.)))
 		x)))

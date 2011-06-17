@@ -12,7 +12,7 @@
 
 (defun transpiler_defclass (constructor-maker class-name args &rest body)
   (with (cname (? (cons? class-name)
-				  (first class-name)
+				  (car class-name)
 				  class-name)
 		 bases (and (cons? class-name)
 				    (cdr class-name))
@@ -23,7 +23,7 @@
 	  (warn "Class ~A already defined." cname))
 	(setf (href classes cname)
 		  (? bases
-    		 (with (bc (href classes (first bases)))
+    		 (with (bc (href classes (car bases)))
 			   (make-class :members (class-members bc)
 					       :parent bc));:methods (class-methods bc)))
 			 (make-class)))

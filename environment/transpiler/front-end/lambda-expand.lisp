@@ -27,8 +27,10 @@
 
 ;;; Export
 
+(defvar *lexical-sym-counter* 0)
+
 (defun lambda-export-make-exported (fi x)
-  (with-gensym exported-name
+  (let exported-name ($ '~LEXICAL- (1+! *lexical-sym-counter*))
     (let fi-exported (lambda-make-funinfo (lambda-args x) fi)
 	  (funinfo-make-ghost fi-exported)
 	  (lambda-expand-tree fi-exported (lambda-body x) t)

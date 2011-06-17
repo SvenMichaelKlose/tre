@@ -1,5 +1,5 @@
 ;;;;; TRE compiler
-;;;;; Copyright (C) 2006-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (C) 2006-2011 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; METACODE FUNCTION INFORMATION
 ;;;;;
@@ -11,10 +11,12 @@
 ;;;;;	(function (%FUNINFO <symbol-associated-with-funinfo>
 ;;;;;			   argument-list . body))
 
+(defvar *funinfo-sym-counter* 0)
+
 (defstruct funinfo
   (parent nil)
   (name nil) ; Name of the function.
-  (sym (gensym)) ; Symbol of this funinfo used in LAMBDA-expressions.
+  (sym ($ '~FUNINFO- (1+! *funinfo-sym-counter*))) ; Symbol of this funinfo used in LAMBDA-expressions.
 
   (args nil) ; List of arguments.
 

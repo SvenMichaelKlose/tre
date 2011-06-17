@@ -30,7 +30,7 @@
 	(not x)
 	  t
 	(%%vm-go? x.)
-	  (when (member (second x.) .x :test #'eq)
+	  (when (member (cadr x.) .x :test #'eq)
 		(function-will-exit? fi .x))
 	(or (vm-jump? x.)
 		(%setq? x.))

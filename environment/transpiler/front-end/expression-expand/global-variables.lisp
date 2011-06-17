@@ -1,22 +1,21 @@
 ;;;;; TRE transpiler
-;;;;; Copyright (c) 2009-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2009-2011 Sven Klose <pixel@copei.de>
 
 (defun expex-set-global-variable-value (x)
   (list
     (let place (%setq-place x)
-      (if (expex-global-variable? place)
-	      `(%setq-atom-value ,place ,(%setq-value x))
-	      x))))
+      (? (expex-global-variable? place)
+	     `(%setq-atom-value ,place ,(%setq-value x))
+	     x))))
 
 (defun expex-collect-wanted-variable (x)
-  (when (expex-global-variable? (second x))
-    (transpiler-add-wanted-variable *current-transpiler* (second x)))
+  (when (expex-global-variable? (cadr x))
+    (transpiler-add-wanted-variable *current-transpiler* (cadr x)))
   (list x))
 
 (defun expex-%setq-collect-wanted-global-variable (x)
-  (if
-    (atom x)
-      (if (expex-global-variable? x)
-	      (transpiler-add-wanted-variable *current-transpiler* x)
-	      x)
-	(transpiler-import-from-expex x)))
+  (? (atom x)
+     (? (expex-global-variable? x)
+	     (transpiler-add-wanted-variable *current-transpiler* x)
+	     x)
+	 (transpiler-import-from-expex x)))

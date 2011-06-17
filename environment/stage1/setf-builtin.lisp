@@ -1,5 +1,5 @@
 ;;;;; TRE environment
-;;;;; Copyright (c) 2006,2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2006,2009,2011 Sven Klose <pixel@copei.de>
 
 (defun (setf car) (val lst)
   (rplaca lst val)
@@ -29,4 +29,8 @@
 
 (defun (setf cddr) (val lst)
   (rplacd (cdr lst) val)
+  val)
+
+(defun (setf caddr) (val lst)
+  (rplaca (cddr lst) val)
   val)

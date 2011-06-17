@@ -68,11 +68,11 @@
 	   ; Recurse into LAMBDA.
 	   (?
 		 (named-lambda? a)
-		   (opt-peephole-rec a d (third a) ,fun (second a) ,collect-symbols)
+		   (opt-peephole-rec a d ..a. ,fun .a. ,collect-symbols)
 
 		 (and (%setq? a)
 			  (named-lambda? (%setq-value a)))
-		   (opt-peephole-rec a d (third (%setq-value a)) ,fun (second (%setq-value a)) ,collect-symbols t)
+		   (opt-peephole-rec a d (caddr (%setq-value a)) ,fun (cadr (%setq-value a)) ,collect-symbols t)
 
 		 (and (%setq? a)
 			  (lambda? (%setq-value a)))
@@ -104,8 +104,8 @@
 			  (opt-peephole-remove-spare-tags-body x.)
 
 	  		(and (%setq? x.)
-	  	   		 (lambda? (third x.)))
-	      	  `(%setq ,(second x.) ,(opt-peephole-remove-spare-tags-body (third x.)))
+	  	   		 (lambda? (caddr x.)))
+	      	  `(%setq ,(cadr x.) ,(opt-peephole-remove-spare-tags-body (caddr x.)))
 
 			x.)
 		  (opt-peephole-remove-spare-tags .x))))
@@ -117,7 +117,7 @@
 (defun opt-peephole-remove-identity (x)
   (opt-peephole-fun (#'opt-peephole-remove-identity)
       ((assignment-of-identity? a)
-	     (cons `(%setq ,.a. ,(second ..a.))
+	     (cons `(%setq ,.a. ,(cadr ..a.))
 			   (opt-peephole-remove-identity d)))))
 
 (defun opt-peephole-find-next-tag (x)
@@ -133,9 +133,10 @@
 (defun reversed-assignments? (a d)
   (and (%setq? a)
 	   (%setq? d.)
+       .a.
 	   (atom .a.)
-	   (eq .a. (third d.))
-	   (eq (second d.) ..a.)))
+	   (eq .a. (caddr d.))
+	   (eq (cadr d.) ..a.)))
 
 (defun jump-to-following-tag? (a d)
   (and (%%vm-go? a)
@@ -202,7 +203,7 @@
 	   (%setq? a)
 	   (%setq? d.)
 	   (let plc (%setq-place a)
-		 (and (eq plc (%setq-value d.))
+		 (and plc (eq plc (%setq-value d.))
  			  (removable-place? plc)
 			  (or (and (integer= 2 (opt-peephole-count plc))
                        (not (~%ret? plc)))

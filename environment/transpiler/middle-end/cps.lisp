@@ -32,8 +32,7 @@
               ;n (? (%transpiler-native? v.)
                  ;   (cadr v.)
                   ;  v.))
-         (and (not (expander-has-macro? (transpiler-macro-expander *current-transpiler*)
-                                                                   (compiled-function-name n)))
+         (and (not (expander-has-macro? (transpiler-macro-expander *current-transpiler*) (compiled-function-name n)))
               (or (transpiler-cps-function? *current-transpiler* n)
                   (and (transpiler-defined-function *current-transpiler* n)
                        (not (transpiler-cps-exception? *current-transpiler* n))))))))
@@ -55,6 +54,10 @@
        (cons? (%setq-value x))
        (%slot-value? (car (%setq-value x)))))
 
+(defun cps-foureign-funcall? (x)
+  (and (%setq-funcall? x)
+       (eq 'cps-wrap (car (%setq-value x)))))
+
 ;(defun cps-foureign-funcall? (x)
 ;  (and (%setq-funcall? x)
 ;       (let n (car (%setq-value x))
@@ -67,10 +70,6 @@
 ;                  (and (%slot-value? n)
 ;                       (eq 'window .n.)
 ;                       (print n)))))))
-
-(defun cps-foureign-funcall? (x)
-  (and (%setq-funcall? x)
-       (eq 'cps-wrap (car (%setq-value x)))))
 
 ;(defun cps-foureign-funcall (fi x)
 ;  (with (replacements nil
@@ -166,22 +165,15 @@
 
 (defun cps-split (fi x xlats tag-xlats &key (first? t))
   (?
-    (cps-apply? x.)
-      (cps-split-apply fi x xlats)
-    (cps-methodcall? x.)
-      (cps-split-methodcall fi x xlats)
-    (cps-constructorcall? x.)
-      (cps-split-constructorcall fi x xlats)
-    (cps-funcall? x.)
-      (cps-split-funcall fi x xlats)
-    (cps-foureign-funcall? x.)
-      (cps-foureign-funcall fi x.)
-    (%%vm-go? x.)
-      `((%setq nil (,(cps-tag-function-name (second x.) xlats tag-xlats))))
-    (%%vm-go-nil? x.)
-      `((%%vm-call-nil ,(second x.)
-                       ,(cps-tag-function-name (third x.) xlats tag-xlats)
-                       ,(cps-cons-function-name .x xlats)))))
+    (cps-apply? x.) (cps-split-apply fi x xlats)
+    (cps-methodcall? x.) (cps-split-methodcall fi x xlats)
+    (cps-constructorcall? x.) (cps-split-constructorcall fi x xlats)
+    (cps-funcall? x.) (cps-split-funcall fi x xlats)
+    (cps-foureign-funcall? x.) (cps-foureign-funcall fi x.)
+    (%%vm-go? x.) `((%setq nil (,(cps-tag-function-name (cadr x.) xlats tag-xlats))))
+    (%%vm-go-nil? x.) `((%%vm-call-nil ,(cadr x.)
+                                       ,(cps-tag-function-name (caddr x.) xlats tag-xlats)
+                                       ,(cps-cons-function-name .x xlats)))))
 
 (defun cps-splitpoint-expr? (x)
   (or (cps-apply? x)
@@ -194,25 +186,20 @@
 
 (defun cps-body (fi continuer x xlats tag-xlats &key (first? t))
   (?
-    (not x)
-      (cons nil nil)
-    (number? x.)
-      (? first?
-         (? .x
-            (cps-body fi continuer .x xlats tag-xlats :first? nil)
-            `((%setq nil (,continuer ~%ret))
-              nil))
-         (append `((%setq nil (,(cps-cons-function-name x xlats))))
-                 (list (list x))))
-    (cps-splitpoint-expr? x.)
-      (append (cps-split fi x xlats tag-xlats :first? first?)
-              (list (list .x)))
-    (not .x)
-       `(,x.
-         (%setq nil (,continuer ~%ret))
-         nil)
-    (cons x.
-          (cps-body fi continuer .x xlats tag-xlats :first? nil))))
+    (not x) (cons nil nil)
+    (number? x.) (? first?
+                    (? .x
+                       (cps-body fi continuer .x xlats tag-xlats :first? nil)
+                       `((%setq nil (,continuer ~%ret))
+                         nil))
+                    (append `((%setq nil (,(cps-cons-function-name x xlats))))
+                            (list (list x))))
+    (cps-splitpoint-expr? x.) (append (cps-split fi x xlats tag-xlats :first? first?)
+                                      (list (list .x)))
+    (not .x) `(,x.
+               (%setq nil (,continuer ~%ret))
+               nil)
+    (cons x. (cps-body fi continuer .x xlats tag-xlats :first? nil))))
 
 (defun cps-make-functions (fi continuer x xlats tag-xlats)
   (when x
@@ -229,26 +216,22 @@
 (defun cps-get-xlats (x &key (first? t))
   (when x
     (?
-      (number? x.)
-        (cons (cons x (gensym))
-              (cps-get-xlats .x :first? nil))
-      (cps-splitpoint-expr? x.)
-        (? first?
-           (cons (cons x (gensym))
-                 (cons (cons .x (gensym))
-                       (cps-get-xlats .x :first? nil)))
-           (cons (cons .x (gensym))
-                 (cps-get-xlats .x :first? nil)))
-      first?
-        (cons (cons x (gensym))
-              (cps-get-xlats .x :first? nil))
+      (number? x.) (cons (cons x (gensym))
+                         (cps-get-xlats .x :first? nil))
+      (cps-splitpoint-expr? x.) (? first?
+                                   (cons (cons x (gensym))
+                                         (cons (cons .x (gensym))
+                                               (cps-get-xlats .x :first? nil)))
+                                   (cons (cons .x (gensym))
+                                         (cps-get-xlats .x :first? nil)))
+      first?  (cons (cons x (gensym))
+                    (cps-get-xlats .x :first? nil))
       (cps-get-xlats .x :first? nil))))
 
 (defun cps-get-tag-xlats (x)
   (when x
     (? (number? x.)
-       (cons (cons x. x)
-             (cps-get-tag-xlats .x))
+       (cons (cons x. x) (cps-get-tag-xlats .x))
        (cps-get-tag-xlats .x))))
 
 (defun cps-function (x)
@@ -273,15 +256,15 @@
            ,(cps-function (%setq-value x)))
     (%setq (%slot-value ,(%setq-place x) tre-cps) t)))
 
-(define-concat-tree-filter cps-filter (x)
+(defun %quote-%transpiler-native-or-%var? (x)
   (or (%quote? x)
       (%transpiler-native? x)
-      (%var? x))
-    (list x)
-  (eq 'this x)
-    (list '~%cps-this)
-  (cps-function-assignment? x)
-    (cps-function-assignment x))
+      (%var? x)))
+
+(define-concat-tree-filter cps-filter (x)
+  (%quote-%transpiler-native-or-%var? x) (list x)
+  (eq 'this x) (list '~%cps-this)
+  (cps-function-assignment? x) (cps-function-assignment x))
 
 (defun cps-make-dummy-continuer (place parent-fi)
   (copy-lambda `#'((_)
@@ -321,20 +304,12 @@
         ,tag-end))))
 
 (define-concat-tree-filter cps-toplevel (x)
-  (or (%quote? x)
-      (%transpiler-native? x)
-      (%var? x))
-    (list x)
-  (cps-methodcall? x)
-    (cps-toplevel-methodcall x)
-  (cps-constructorcall? x)
-    (cps-toplevel-constructorcall x)
-  (cps-funcall? x)
-    (cps-toplevel-funcall x)
-  (cps-function-assignment? x)
-    (cps-function-assignment x)
-  (cps-foureign-funcall? x)
-    (cps-foureign-funcall (transpiler-global-funinfo *current-transpiler*) x))
+  (%quote-%transpiler-native-or-%var? x) (list x)
+  (cps-methodcall? x) (cps-toplevel-methodcall x)
+  (cps-constructorcall? x) (cps-toplevel-constructorcall x)
+  (cps-funcall? x) (cps-toplevel-funcall x)
+  (cps-function-assignment? x) (cps-function-assignment x)
+  (cps-foureign-funcall? x) (cps-foureign-funcall (transpiler-global-funinfo *current-transpiler*) x))
 
 (defun cps (x)
   (cps-toplevel x))

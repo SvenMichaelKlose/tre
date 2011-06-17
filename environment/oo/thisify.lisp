@@ -29,8 +29,8 @@
 		  ,(lambda-args x)
 		  ,@(thisify-list-0 classdef (lambda-body x) (append exclusions (lambda-args x))))
     (cons (? (%slot-value? x.)
-			 `(%slot-value ,(thisify-list-0 classdef (second x.) exclusions)
-					        ,(third x.))
+			 `(%slot-value ,(thisify-list-0 classdef (cadr x.) exclusions)
+					        ,(caddr x.))
 			 (thisify-list-0 classdef x. exclusions))
 		  (thisify-list-0 classdef .x exclusions))))
 
@@ -46,7 +46,7 @@
 	 (atom x)
 	   x
 	 (%thisify? x.)
-	   (append (thisify-list classes (cddr x.) (second x.))
+	   (append (thisify-list classes (cddr x.) (cadr x.))
 			   (thisify classes .x))
 	 (cons (thisify classes x.)
 	 	   (thisify classes .x))))

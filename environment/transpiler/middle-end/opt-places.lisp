@@ -8,12 +8,12 @@
     (opt-places-find-used-0 fi (lambda-body x))))
 
 (defun opt-places-find-used-0 (fi x)
-  (if
+  (?
     (atom x)			(when (funinfo-in-env? fi x)
 						  (funinfo-add-used-env fi x))
 	(%quote? x)			nil
 	(lambda? x)			(opt-places-find-used-fun x)
-	(named-lambda? x)	(opt-places-find-used-fun (third x))
+	(named-lambda? x)	(opt-places-find-used-fun (caddr x))
 	(progn
 	  (opt-places-find-used-0 fi x.)
       (opt-places-find-used-0 fi .x))))
@@ -36,10 +36,10 @@
     (opt-places-remove-unused-0 fi (lambda-body x))))
 
 (defun opt-places-remove-unused-0 (fi x)
-  (if
+  (?
     (atom x)			nil
 	(lambda? x)			(opt-places-remove-unused-body x)
-	(named-lambda? x)	(opt-places-remove-unused-body (third x))
+	(named-lambda? x)	(opt-places-remove-unused-body (caddr x))
 	(progn
 	  (opt-places-remove-unused-0 fi x.)
       (opt-places-remove-unused-0 fi .x))))

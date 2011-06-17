@@ -1,5 +1,5 @@
 ;;;;; Tré transpiler
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2009,2011 Sven Klose <pixel@copei.de>
 
 (defun make-environment-tests ()
   (with (names nil
@@ -11,12 +11,12 @@
 					(setf names (push n names))
 				    `(defun ,n ()
 				       (document.writeln (+ "Test " (string ,num) ": "
-											,(first _) "</br>"))
-				       (unless (equal ,(third _) ,(second _))
+											,(car _) "</br>"))
+				       (unless (equal ,(caddr _) ,(cadr _))
 				         (document.writeln (+ "Test '"
-											  ,(first _)
+											  ,(car _)
 											  "' failed</br>"))
-						 (js-print ,(second _) document)
+						 (js-print ,(cadr _) document)
 						 (document.writeln "</br>")))))
 		    	*tests*))
 	`(,@funs

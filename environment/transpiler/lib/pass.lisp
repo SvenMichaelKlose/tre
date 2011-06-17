@@ -10,10 +10,11 @@
        (defun ,name ,args
          #'((init)
              (setf ,cache-var init)
-             (dolist (i (list ,@(mapcan (fn ? *transpiler-debug-dump*
-                                            `((fn (print ',($ '*************************** _.))
-                                                  (print (funcall ,._. _))))
-                                            `(,._.))
+             (dolist (i (list ,@(mapcan (fn `((? *transpiler-debug-dump*
+                                                 #'((x)
+                                                     (print ',($ '*************************** _.))
+                                                     (print (funcall ,._. x)))
+                                                 ,._.)))
                                         (reverse (group x 2))))
-                    ,cache-var)
+                      ,cache-var)
              (setf ,cache-var (funcall i ,cache-var))))))))

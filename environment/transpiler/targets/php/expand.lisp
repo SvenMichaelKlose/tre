@@ -58,7 +58,7 @@
 
 ;; Translate SLOT-VALUE to unquoted variant.
 (define-php-std-macro slot-value (place slot)
-  `(%slot-value ,place ,(second slot)))
+  `(%slot-value ,place ,(cadr slot)))
 
 ;; XXX Can't we do this in one macro?
 (define-php-std-macro bind (fun &rest args)
