@@ -23,7 +23,9 @@
 			 (funinfo-args fi)))
 
 (defun funinfo-in-env? (fi x)
-  (href (funinfo-env-hash fi) x))
+  (? (funinfo-parent fi)
+     (member x (funinfo-env fi) :test #'eq)
+     (href (funinfo-env-hash fi) x)))
 
 (defun funinfo-in-args-or-env? (fi x)
   (or (funinfo-arg? fi x)
@@ -90,7 +92,10 @@
 	(error "atom expected"))
   (unless (funinfo-in-env? fi x)
 	; XXX (error "double definition of ~A in ~A" x (funinfo-env fi))
-  	(setf (href (funinfo-env-hash fi) x) t)
+    (unless (funinfo-parent fi)
+  	  (unless (funinfo-env-hash fi)
+  	    (setf (funinfo-env-hash fi) (make-hash-table :test #'eq)))
+  	  (setf (href (funinfo-env-hash fi) x) t))
     (push x (funinfo-env fi)))
   x)
 
@@ -100,7 +105,8 @@
 
 (defun funinfo-env-reset (fi)
   (setf (funinfo-env fi) nil)
-  (setf (funinfo-env-hash fi) (make-hash-table :test #'eq)))
+  (unless (funinfo-parent fi)
+    (setf (funinfo-env-hash fi) (make-hash-table :test #'eq))))
 
 (defun funinfo-add-used-env (fi x)
   (adjoin! x (funinfo-used-env fi) :test #'eq))
