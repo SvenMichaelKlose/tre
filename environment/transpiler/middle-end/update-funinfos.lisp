@@ -14,5 +14,4 @@
 	(copy-lambda x :body (transpiler-update-funinfo body))))
 
 (define-tree-filter transpiler-update-funinfo (x)
-  (lambda? x)
-    (transpiler-update-funinfo-lambda x))
+  (lambda? x) (transpiler-update-funinfo-lambda x))

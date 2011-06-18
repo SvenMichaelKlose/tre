@@ -7,10 +7,8 @@
 
 (defun opt-peephole-collect-syms-0 (x h)
   (?
-    (symbol? x)
-      (setf (href h x) (1+ (or (href h x) 0)))
-    (atom x)
-      nil
+    (symbol? x) (setf (href h x) (1+ (or (href h x) 0)))
+    (atom x) nil
     (progn
       (opt-peephole-collect-syms-0 x. h)
       (opt-peephole-collect-syms-0 .x h))))
@@ -27,11 +25,9 @@
 
 (defun opt-peephole-uncollect-syms-0 (x num h)
   (?
-    (symbol? x)
-      (when (href h x)
-        (setf (href h x) (- (href h x) num)))
-    (atom x)
-      nil
+    (symbol? x) (when (href h x)
+                  (setf (href h x) (- (href h x) num)))
+    (atom x) nil
     (progn
       (opt-peephole-uncollect-syms-0 x. num h)
       (opt-peephole-uncollect-syms-0 .x num h))))
@@ -67,8 +63,7 @@
 	 (with-cons a d x
 	   ; Recurse into LAMBDA.
 	   (?
-		 (named-lambda? a)
-		   (opt-peephole-rec a d ..a. ,fun .a. ,collect-symbols)
+		 (named-lambda? a) (opt-peephole-rec a d ..a. ,fun .a. ,collect-symbols)
 
 		 (and (%setq? a)
 			  (named-lambda? (%setq-value a)))
@@ -154,20 +149,6 @@
 	  ((%%vm-go? a) (cons a (opt-peephole-remove-void (opt-peephole-find-next-tag d))))))
 
 (defun opt-peephole-will-be-used-again? (x v)
-;  (when (and (%setq? a) (eq '~%ret (%setq-place a)))
-;    (print
-;      (?
-;        (and (not (~%ret? v))
-;             (transpiler-defined-variable *current-transpiler* v)) 'VAR
-;	    (funinfo-immutable? *opt-peephole-funinfo* v)	'IMMUT
-;	    (not x)			(progn (print 'ret) (~%ret? v))
-;	    (lambda? x.)	'L
-;        (vm-jump? x.)   'JUMP
-;        (? (and (%setq? x.) (eq v (%setq-place x.)))
-;           (progn
-;               (print 'find)
-;	       (print (find-tree (%setq-value x.) v :test #'eq))
-;       )))))
   (?
     (and (not (~%ret? v))
          (transpiler-defined-variable *current-transpiler* v)) t
@@ -183,13 +164,12 @@
 
 (defun removable-place? (v)
   (let fi *opt-peephole-funinfo*
-    (when (and v (atom v))
-	  (or (~%ret? v)
-	      (not (or (funinfo-immutable? fi v)
-				   (not (funinfo-in-env? fi v))
-				   (funinfo-in-parent-env? fi v)
- 				   (eq v (funinfo-lexical fi))
-	    	       (funinfo-lexical? fi v)))))))
+    (and v (atom v)
+         (funinfo-in-env? fi v)
+	     (or (~%ret? v)
+	         (not (or (funinfo-immutable? fi v)
+ 				      (eq v (funinfo-lexical fi))
+	    	          (funinfo-lexical? fi v)))))))
 
 (defun assignment-to-unused-place (a d)
   (and (%setq? a)
