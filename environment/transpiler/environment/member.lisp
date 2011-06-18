@@ -4,7 +4,7 @@
 (defun %member-r (elm lst)
   (while lst
          nil
-    (when (equal elm lst.)
+    (when (eql elm lst.)
 	  (return lst))
     (setf lst .lst)))
 
