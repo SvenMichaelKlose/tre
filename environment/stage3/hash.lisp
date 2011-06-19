@@ -1,7 +1,7 @@
 ;;;; TRE environment
 ;;;; Copyright (c) 2005-2006,2008-2011 Sven Klose <pixel@copei.de>
 
-(defvar *default-hash-size* 2048)
+(defvar *default-hash-size* 2039)
 
 (defstruct %hash-table
   test              ; Function for equality test of keys.
