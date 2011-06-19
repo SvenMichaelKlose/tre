@@ -226,6 +226,9 @@
 (define-js-macro %js-typeof (x)
   `(%transpiler-native "typeof " ,x))
 
+(define-js-macro %defined? (x)
+  `(%transpiler-native "\"undefined\" != typeof " ,x))
+
 (define-js-macro %%funref (name fi-sym)
   (let fi (get-funinfo-by-sym fi-sym)
     (? (funinfo-ghost fi)

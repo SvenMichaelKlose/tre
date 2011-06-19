@@ -17,7 +17,7 @@
     update-funinfo #'transpiler-update-funinfo
     opt-peephole #'opt-peephole
 ;    middleend-graph #'middleend-graph
-    cps (fn ? (transpiler-continuation-passing-style? tr)
+    cps (fn ? (in-cps-mode?)
               (cps _)
               _)
     opt-remove-unused-places #'opt-places-remove-unused

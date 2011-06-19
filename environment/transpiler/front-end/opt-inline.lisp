@@ -2,7 +2,7 @@
 ;;;;; Copyright (c) 2009-2011 Sven Klose <pixel@copei.de>
 
 (defvar *show-inlines?* nil)
-(defvar *opt-inline-max-levels* 16)
+(defvar *opt-inline-max-levels* 8)
 (defvar *opt-inline-max-size* 32)
 (defvar *opt-inline-max-repetitions* 0)
 

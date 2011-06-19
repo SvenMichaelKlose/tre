@@ -27,8 +27,9 @@
 		        "cons.lisp"
 		        "symbol.lisp"
 		        "propertylist.lisp")
-		    (js-load-base "environment/transpiler/environment/"
-                "cps-enable.lisp")))
+		    ;(js-load-base "environment/transpiler/environment/"
+                ;"cps-enable.lisp")))
+                ))
 
 (defvar *js-base-debug-print*
 		(js-load-base *js-env-path*
@@ -47,8 +48,8 @@
 			"number.lisp"
 			"../../../environment/number.lisp"
 			"../../../environment/number-typing.lisp")
-		(js-load-base "environment/transpiler/environment/"
-            "cps-enable.lisp")
+;		(js-load-base "environment/transpiler/environment/"
+;            "cps-enable.lisp")
 		(js-load-base *js-env-path*
 			"apply.lisp"
 			"array.lisp"

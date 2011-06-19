@@ -94,7 +94,7 @@
 	; XXX (error "double definition of ~A in ~A" x (funinfo-env fi))
     (unless (funinfo-parent fi)
   	  (unless (funinfo-env-hash fi)
-  	    (setf (funinfo-env-hash fi) (make-hash-table :test #'eq)))
+  	    (setf (funinfo-env-hash fi) (make-hash-table :size 65521 :test #'eq)))
   	  (setf (href (funinfo-env-hash fi) x) t))
     (push x (funinfo-env fi)))
   x)

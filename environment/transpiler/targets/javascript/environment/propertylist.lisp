@@ -1,7 +1,7 @@
 ;;;;; Transpiler: TRE to JavaScript
 ;;;;; Copyright (c) 2010-2011 Sven Klose <pixel@copei.de>
 
-(cps-exception t)
+;(cps-exception t)
 
 (defvar *%property-list-tmp* nil)
 
@@ -18,4 +18,4 @@
                "(" i ", " hash "[" i "]);"))
   (reverse *%property-list-tmp*))
 
-(cps-exception nil)
+;(cps-exception nil)

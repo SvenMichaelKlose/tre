@@ -35,7 +35,7 @@
 		(js-transpile-pre tr)
     	(target-transpile tr :files-before-deps
 			                     (append (list (cons 't1 *js-base*))
-		 		  		                 (when *transpiler-log*
+		 		  		                 (when *transpiler-assert*
 				   	  	                   (list (cons 't2 *js-base-debug-print*)))
 				  	                     (list (cons 't3 *js-base2*))
 				                         (when (eq t *have-environment-tests*)

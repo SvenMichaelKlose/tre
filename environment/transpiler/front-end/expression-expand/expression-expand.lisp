@@ -252,6 +252,12 @@
 	  (lambda? x) (expex-lambda ex x)
       (not (expex-able? ex x)) (values nil (list x))
       (%%vm-scope? x) (values nil (expex-body ex (%%vm-scope-body x)))
+      (and (%setq? x)
+           (eq '%cps-mode (%setq-place x))) (progn
+                                              (setf *transpiler-except-cps?* (not (%setq-value x)))
+                                              (print 'CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC)
+                                              (print *transpiler-except-cps?*)
+                                              (values nil nil))
       (%setq? x) (expex-expr-setq ex `(%setq ,(%setq-place x) ,(peel-identity (%setq-value x))))
       (expex-expr-std ex x))))
 

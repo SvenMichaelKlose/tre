@@ -57,7 +57,7 @@
   (when *show-definitions*
     (print `(cps-exception ,x)))
   (setf *transpiler-except-cps?* x)
-  nil)
+  `(%setq %cps-mode ,(not x)))
 
 (define-js-std-macro defun (name args &rest body)
   (with-gensym g

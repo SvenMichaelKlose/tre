@@ -1,18 +1,16 @@
 ;;;;; TRE transpiler
 ;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
-(defvar *show-definitions?* nil)
-(defvar *opt-inline?* nil)
-(defvar *recompiling?* nil)
-(defvar *force-cps?* nil)
-
 ;; Set this when starting up your transpiler run.
 (defvar *current-transpiler* nil)
 
 (defvar *transpiler-assert* nil)
 (defvar *transpiler-log* nil)
 
-(defvar *transpiler-except-cps?* nil)
+(defvar *transpiler-except-cps?* t)
+(defvar *show-definitions?* nil)
+(defvar *opt-inline?* nil)
+(defvar *recompiling?* nil)
 
 (defstruct transpiler
   std-macro-expander
@@ -227,8 +225,6 @@
   		(transpiler-defined-variables-hash tr) (make-hash-table :test #'eq)
   		(transpiler-function-args tr) (make-hash-table :test #'eq)
   		(transpiler-exported-closures tr) nil)
-  (when *force-cps?*
-    (setf (transpiler-continuation-passing-style? tr) t))
   (transpiler-add-obfuscation-exceptions tr (make-symbol ""))
   tr)
 
