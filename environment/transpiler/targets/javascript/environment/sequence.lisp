@@ -13,8 +13,7 @@
 (defun split (obj seq &key (test #'eql))
   (? (and (eq #'eql test)
           (string? seq))
-     (?
-       (character? obj) (array-list (seq.split (char-string obj)))
-       (string? obj) (array-list (seq.split obj))
-       (generic-split obj seq))
+     (array-list (seq.split (? (character? obj)
+                               (char-string obj)
+                               obj)))
      (generic-split obj seq)))
