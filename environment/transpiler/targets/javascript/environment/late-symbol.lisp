@@ -20,7 +20,7 @@
 (defun symbol-function (x) (when x x.f))
 (defun symbol-package (x) (when x x.p))
 
-(defun symbolp (x)
+(defun symbol? (x)
   (and (objectp x)
 	   x.__class
        (%%%= x.__class ,(transpiler-obfuscated-symbol-string *current-transpiler* 'symbol))))

@@ -31,7 +31,7 @@
   (?
 	(string? x) x
 	(character? x) (char-string x)
-    (symbolp x) (symbol-name x)
+    (symbol? x) (symbol-name x)
 	(not x) ,*nil-symbol-name*
    	(x.to-string)))
 

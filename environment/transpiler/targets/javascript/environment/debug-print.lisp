@@ -46,7 +46,7 @@
 (defun js-print-atom (x doc)
   (?
     (not x)		   (js-print-write "NIL" doc)
-    (symbolp x)	   (js-print-symbol x doc)
+    (symbol? x)	   (js-print-symbol x doc)
     (character? x) (js-print-character x doc)
     (string? x)	   (js-print-string x doc)
     (objectp x)	   (js-print-object x doc)
