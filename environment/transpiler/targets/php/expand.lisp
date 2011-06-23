@@ -121,3 +121,6 @@
 (define-php-std-macro %lx (lexicals fun)
   (eval (macroexpand `(with ,(mapcan (fn `(,_ ',_)) .lexicals.)
                         ,fun))))
+
+(define-php-std-macro mapcar (fun &rest lsts)
+  (apply #'shared-mapcar fun lsts))
