@@ -58,6 +58,7 @@
 			"../../../environment/list-string.lisp"
 			"string.lisp"
 			"../../../environment/member.lisp"
-			"hash.lisp")
+			"hash.lisp"
+            "base64.lisp")
 		(php-load-base "environment/transpiler/environment/"
 			"assoc.lisp")))
