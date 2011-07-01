@@ -10,6 +10,8 @@
 	     x.length)
      0))
 
+(dont-obfuscate split)
+
 (defun split (obj seq &key (test #'eql))
   (? (and (eq #'eql test)
           (string? seq))
