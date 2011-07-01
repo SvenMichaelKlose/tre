@@ -18,7 +18,13 @@
     				:hash (make-array *default-hash-size*)))
 
 (defun %make-hash-index-num (h k)
-  (mod (abs k) (%hash-table-size h)))
+  (let i k
+    (setf k (>> k 8))
+    (setf i (logxor i k))
+    (setf k (>> k 8))
+    (setf i (logxor i k))
+    (setf k (>> k 8))
+    (mod (logxor i k) (%hash-table-size h))))
 
 (defun %make-hash-index-string (h str)
   (with (k 0
@@ -27,14 +33,12 @@
         ((or (integer< 4 i)
 			 (integer= i l))
 		 (mod (abs k) (%hash-table-size h)))
-      (setf k (integer+ (<< k 4) (elt str i))))))
+      (setf k (logxor k (elt str i))))))
 
 (defun %make-hash-index (h key)
   (?
-    (number? key)
-      (%make-hash-index-num h key)
-    (string? key)
-      (%make-hash-index-string h key)
+    (number? key) (%make-hash-index-num h key)
+    (string? key) (%make-hash-index-string h key)
     (%make-hash-index-num h (>> (%%id key) 2))))
 
 (defmacro %with-hash-bucket (bucket idx h key &rest body)
