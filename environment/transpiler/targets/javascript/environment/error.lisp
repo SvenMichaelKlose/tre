@@ -9,5 +9,7 @@
 
 (dont-inline error)
 
-(defun error (fmt &rest args)
-  (%error (+ "Error :" (apply #'format nil fmt args))))
+,(? *transpiler-log*
+    '(defun error (fmt &rest args)
+       (%error (+ "Error :" (apply #'format nil fmt args))))
+    '(defun error (&rest args)))
