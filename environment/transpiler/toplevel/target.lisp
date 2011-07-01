@@ -111,4 +111,4 @@
   (with-temporary *current-transpiler* tr
     (transpiler-switch-obfuscator tr obfuscate?)
 	(make-global-funinfo tr)
-    (setf *nil-symbol-name* (symbol-name (transpiler-obfuscate-nil tr)))))
+    (setf *nil-symbol-name* "NIL")))

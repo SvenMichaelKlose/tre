@@ -225,7 +225,7 @@
   		(transpiler-defined-variables-hash tr) (make-hash-table :test #'eq)
   		(transpiler-function-args tr) (make-hash-table :test #'eq)
   		(transpiler-exported-closures tr) nil)
-  (transpiler-add-obfuscation-exceptions tr (make-symbol ""))
+  (transpiler-add-obfuscation-exceptions tr nil (make-symbol ""))
   tr)
 
 (defun make-global-funinfo (tr)
