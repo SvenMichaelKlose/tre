@@ -29,7 +29,7 @@ treptr trelist_builtin_test_symbol;
 	(arg :name a)
 	(arg :name d)
 	(Returns "A new cell containing the first argument as the CAR "
-		   *and the second argument as the CDR.")
+		     "and the second argument as the CDR.")
 	(see-also CAR CDR))
  */
 treptr
