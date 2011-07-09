@@ -1,6 +1,11 @@
 ;;;;; TRE transpiler
 ;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
+(defvar *allow-redefinitions?* nil)
+
+(defun redef-warn (&rest args)
+  (apply (? *allow-redefinitions?* #'warn #'error) args))
+
 (defun shared-essential-defun (name args &rest body)
   (when *show-definitions*
     (late-print `(defun ,name ,args)))
@@ -8,7 +13,7 @@
          tr *current-transpiler*
 		 (fi-sym a) (split-funinfo-and-args args))
     (when (transpiler-defined-function tr name)
-      (warn "Redefinition of function ~A" name))
+      (redef-warn "redefinition of function ~A" name))
 	(transpiler-add-defined-function tr n)
     (transpiler-add-function-args tr n a)
 	(transpiler-add-function-body tr n body)

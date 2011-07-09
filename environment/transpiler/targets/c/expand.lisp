@@ -22,7 +22,7 @@
     (when *show-definitions*
       (late-print `(defvar ,name)))
     (when (transpiler-defined-variable tr name)
-      (warn "redefinition of variable ~A" name))
+      (redef-warn "redefinition of variable ~A" name))
     (transpiler-add-defined-variable tr name)
     (transpiler-obfuscate-symbol tr name)
     `(progn
