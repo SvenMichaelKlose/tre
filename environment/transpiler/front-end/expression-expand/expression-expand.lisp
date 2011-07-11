@@ -258,7 +258,13 @@
                                               (print 'CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC)
                                               (print *transpiler-except-cps?*)
                                               (values nil nil))
-      (%setq? x) (expex-expr-setq ex `(%setq ,(%setq-place x) ,(peel-identity (%setq-value x))))
+      (%setq? x) (with (plc (%setq-place x)
+                        val (peel-identity (%setq-value x)))
+                   (let-when fun (and (cons? val) val.)
+                     (unless (or (symbol? fun)
+                                 (cons? fun))
+                       (error "function must be a symbol or expression: misplaced ~A~%" x)))
+                   (expex-expr-setq ex `(%setq ,plc ,val)))
       (expex-expr-std ex x))))
 
 ;;;; BODY EXPANSION
