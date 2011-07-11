@@ -11,6 +11,6 @@
 
 ,(? *transpiler-assert*
     '(defun error (fmt &rest args)
-       (%error (+ "Error :" (apply #'format nil fmt args))))
+       (%error (+ "Error: " (apply #'format nil fmt args))))
     '(defun error (&rest args)
        (%error "Error.")))
