@@ -6,6 +6,7 @@
 
 (defvar *transpiler-assert* nil)
 (defvar *transpiler-log* nil)
+(defvar *transpiler-no-stream?* nil)
 
 (defvar *transpiler-except-cps?* t)
 (defvar *show-definitions?* nil)

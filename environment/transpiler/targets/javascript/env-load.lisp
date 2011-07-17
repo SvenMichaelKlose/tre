@@ -60,14 +60,11 @@
 			"bind.lisp"
 			"../../../environment/eq.lisp"
 			"../../../environment/equality.lisp"
-			"error.lisp"
 			"late-cons.lisp"
 			"late-symbol.lisp"
 			"../../../environment/list.lisp"
 			"../../../environment/sequence.lisp"
 			"sequence.lisp"
-			"stream.lisp"
-			"../../../environment/print.lisp"
 			"../../../environment/list-string.lisp"
 			"string.lisp"
 			"../../../environment/member.lisp"
@@ -75,3 +72,10 @@
             "base64.lisp")
 		(js-load-base "environment/transpiler/environment/"
 			"assoc.lisp")))
+
+(defvar *js-base-stream*
+	(append
+		(js-load-base *js-env-path*
+			"error.lisp"
+			"stream.lisp"
+			"../../../environment/print.lisp")))

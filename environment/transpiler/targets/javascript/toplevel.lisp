@@ -22,9 +22,7 @@
 (defun js-transpile-post ()
   (js-transpile-epilogue))
 
-(defun js-transpile (files &key (obfuscate? nil)
-                                (print-obfuscations? nil)
-                                (files-to-update nil))
+(defun js-transpile (files &key (obfuscate? nil) (print-obfuscations? nil) (files-to-update nil))
   (let tr *js-transpiler*
     (unless files-to-update
       (transpiler-reset tr)
@@ -38,15 +36,18 @@
 		 		  		                 (when *transpiler-assert*
 				   	  	                   (list (cons 't2 *js-base-debug-print*)))
 				  	                     (list (cons 't3 *js-base2*))
+                                         (unless *transpiler-no-stream?*
+				  	                       (list (cons 't4 *js-base-stream*)))
 				                         (when (eq t *have-environment-tests*)
-				   	  	                   (list (cons 't4 (make-environment-tests)))))
+				   	  	                   (list (cons 't5 (make-environment-tests)))))
 		  	                 :files-after-deps
 		 		                 (mapcar #'list files)
 		 	                 :dep-gen #'(()
 				  	                      (transpiler-import-from-environment tr))
 			                 :decl-gen #'(()
-       				                       (mapcar (fn transpiler-emit-code tr (list `(%var ,_)))
-					  		                       (funinfo-env (transpiler-global-funinfo tr))))
+                                           (let decls (make-queue)
+					  		                 (dolist (i (funinfo-env (transpiler-global-funinfo tr)) (queue-list decls))
+       				                           (enqueue decls (transpiler-emit-code tr (list `(%var ,i)))))))
 			                 :files-to-update files-to-update
 			                 :print-obfuscations? print-obfuscations?)
     	(js-transpile-post))))
