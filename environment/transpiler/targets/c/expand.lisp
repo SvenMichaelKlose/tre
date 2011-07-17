@@ -34,8 +34,10 @@
 
 (mapcan-macro _
     '(car cdr cons? atom number? string? array? function? builtin?)
-  `((define-c-std-macro ,_ (x)
-	  `(,($ '% _) ,,x))))
+  (let n ($ '% _)
+  `((functional ,n)
+    (define-c-std-macro ,_ (x)
+	  `(,n ,,x)))))
 
 (define-c-std-macro slot-value (obj slot)
   `(%slot-value ,obj (%quote ,slot)))
@@ -44,18 +46,18 @@
   `(%%usetf-%slot-value ,val ,obj (%quote ,slot)))
 
 (define-c-std-macro %%usetf-aref (val arr &rest idx)
-  (if (and (= 1 (length idx))
-		   (not (%transpiler-native? idx.))
-		   (number? idx.))
+  (? (and (= 1 (length idx))
+	      (not (%transpiler-native? idx.))
+		  (number? idx.))
     `(%set-aref ,val ,arr (%transpiler-native ,idx.))
     `(%set-aref ,val ,arr ,@idx)))
 
 (define-c-std-macro aref (arr &rest idx)
-  (if (and (= 1 (length idx))
-		   (not (%transpiler-native? idx.))
-		   (number? idx.))
-	  `(aref ,arr (%transpiler-native ,idx.))
-	  `(aref ,arr ,@idx)))
+  (? (and (= 1 (length idx))
+		  (not (%transpiler-native? idx.))
+		  (number? idx.))
+	 `(aref ,arr (%transpiler-native ,idx.))
+	 `(aref ,arr ,@idx)))
 	  
 (define-c-std-macro mapcar (fun &rest lsts)
   (apply #'shared-mapcar fun lsts))

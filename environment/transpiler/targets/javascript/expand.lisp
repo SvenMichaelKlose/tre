@@ -22,6 +22,8 @@
 
 (transpiler-wrap-invariant-to-binary define-js-std-macro eq 2 eq and)
 
+(functional %not)
+
 (define-js-std-macro not (&rest x)
   (? .x
      `(%not (list ,@x))
@@ -171,6 +173,6 @@
 
 (define-js-std-macro functional (&rest x)
   (when *show-definitions*
-    `(late-print `(functional ,@x)))
+    (late-print `(functional ,@x)))
   (setf *functionals* (nconc x *functionals*))
   nil)

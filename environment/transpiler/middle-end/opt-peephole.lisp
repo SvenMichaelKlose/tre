@@ -190,9 +190,8 @@
 				  (not (opt-peephole-will-be-used-again? .d plc)))))))
 
 (defun two-subsequent-tags? (a d)
-  (and a d.
-	   (atom a)
-	   (atom d.)))
+  (and a (atom a)
+       d. (atom d.)))
 
 (defun opt-peephole (statements)
   (with

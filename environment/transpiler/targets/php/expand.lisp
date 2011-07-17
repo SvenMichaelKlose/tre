@@ -127,6 +127,6 @@
 
 (define-php-std-macro functional (&rest x)
   (when *show-definitions*
-    `(late-print `(functional ,@x)))
+    (late-print `(functional ,@x)))
   (setf *functionals* (nconc x *functionals*))
   nil)

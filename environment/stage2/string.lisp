@@ -1,7 +1,7 @@
 ;;;; TRE environment
 ;;;; Copyright (c) 2005-2009,2011 Sven Klose <pixel@copei.de>
 
-(functional string= string-upcase string-downcase list-string string-list queue-string)
+(functional string-concat string= string-upcase string-downcase list-string string-list queue-string)
 
 (define-test "ELT on string returns char"
   ((character? (elt "LISP" 0)))
