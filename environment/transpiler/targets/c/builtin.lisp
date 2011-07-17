@@ -154,7 +154,9 @@
 ;; Make transpiler standard macros that convert arguments to built-in functions
 ;; to consed lists.
 ,`(progn
-	,@(macroexpand (mapcar (fn `(define-c-std-macro ,_ (&rest x)
-					 			  `(,(make-symbol (c-builtin-name _))
-						 			    ,,(compiled-list x))))
+	,@(macroexpand (mapcar (fn let n (make-symbol (c-builtin-name _))
+                                (when (functional? _)
+                                  (cons n *functionals*))
+                               `(define-c-std-macro ,_ (&rest x)
+					 			  `(,n ,,(compiled-list x))))
 			  			   (hashkeys *c-builtins*))))

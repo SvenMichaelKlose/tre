@@ -1,5 +1,7 @@
 ;;;;; TRE environment
-;;;;; Copyright (c) 2007 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2007,2011 Sven Klose <pixel@copei.de>
+
+(functional nthcdr)
 
 (defun nthcdr (idx lst)
   (when lst

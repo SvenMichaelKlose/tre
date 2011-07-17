@@ -1,5 +1,7 @@
 ;;;;; TRE environment
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+
+(functional count)
 
 (%defun count-r (x lst init)
   (if lst

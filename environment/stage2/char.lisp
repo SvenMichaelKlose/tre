@@ -1,6 +1,9 @@
 ;;;; TRE environment
 ;;;; Copyright (c) 2005-2006,2008-2011 Sven Klose <pixel@copei.de>
 
+(functional char-upcase char-downcase lower-case-p upper-case-p alpha-char-p digit-char-p alphanumericp
+            char-code code-char)
+
 (defun char-upcase (c)
   (if (lower-case-p c)
   	  (character+ c (character- #\A #\a))

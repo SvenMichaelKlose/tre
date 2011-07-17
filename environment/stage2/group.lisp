@@ -1,6 +1,8 @@
 ;;;;; TRE environment
 ;;;;; Copyright (c) 2007,2011 Sven Klose <pixel@copei.de>
 
+(functional group-head group-tail group)
+
 (defun group-head (l size)
   (let result (make-queue)
     (while (and l (< 0 size))

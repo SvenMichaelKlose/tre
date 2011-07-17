@@ -124,3 +124,9 @@
 
 (define-php-std-macro mapcar (fun &rest lsts)
   (apply #'shared-mapcar fun lsts))
+
+(define-php-std-macro functional (&rest x)
+  (when *show-definitions*
+    `(late-print `(functional ,@x)))
+  (setf *functionals* (nconc x *functionals*))
+  nil)

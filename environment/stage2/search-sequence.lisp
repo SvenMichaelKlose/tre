@@ -1,6 +1,8 @@
 ;;;;; TRE environment
 ;;;;; Copyright (c) 2005-2006,2008-2009,2011 Sven Klose <pixel@copei.de>
 
+(functional find position)
+
 (defmacro xchg (a b)
   (with-gensym g
     `(let ,g ,a

@@ -22,6 +22,8 @@
         (setf (cdr queue) (cddr queue)))
     v))
 
+(functional queue-list queue-front)
+
 (defun queue-list (queue)
   (cdr queue))
 

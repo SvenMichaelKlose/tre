@@ -1,7 +1,7 @@
 ;;;; TRE environment
-;;;; Copyright (c) 2005,2009 Sven Klose <pixel@copei.de>
-;;;;
-;;;; Increment/decrement
+;;;; Copyright (c) 2005,2009,2011 Sven Klose <pixel@copei.de>
+
+(functional 1+ 1- integer-1+ integer-1-)
 
 (%defun 1+ (x)
   (number+ x 1))

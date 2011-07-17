@@ -206,8 +206,12 @@
 				((assignment-to-unused-place a d)
 				   (? (atomic-or-without-side-effects? (%setq-value a))
 			  		  (opt-peephole-uncollect-syms a (remove-code d) 1)
-			  		  (opt-peephole-uncollect-syms (%setq-place a) (cons `(%setq nil ,(%setq-value a))
-							                                              (remove-code d))
+			  		  (opt-peephole-uncollect-syms (%setq-place a) (let v (%setq-value a)
+                                                                     (? (or (atom v)
+                                                                            (functional? v.))
+                                                                         (remove-code d)
+                                                                         (cons `(%setq nil ,v)
+							                                                   (remove-code d))))
                                                    1)))))
 
 	   remove-assignments

@@ -50,10 +50,11 @@
 (defun %struct-single-get (name field index)
   (let sym (%struct-getter-symbol name field)
     `(progn
-      (defun ,sym (arr)
-        (aref arr ,index))
-      (defun (setf ,sym) (val arr)
-        (setf (aref arr ,index) val)))))
+       (functional ,sym)
+       (defun ,sym (arr)
+         (aref arr ,index))
+       (defun (setf ,sym) (val arr)
+         (setf (aref arr ,index) val)))))
 
 (defun %struct-getters (name fields)
   (let index 0

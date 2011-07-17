@@ -1,6 +1,8 @@
 ;;;; TRE environment
 ;;;; Copyright (c) 2006 Sven Klose <pixel@copei.de>
 
+(functional butlast)
+
 (defun butlast (plist)
   (if (cdr plist)
       (cons (car plist) (butlast (cdr plist)))))

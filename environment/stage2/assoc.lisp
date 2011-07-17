@@ -1,6 +1,8 @@
 ;;;; TRE  environment
 ;;;; Copyright (c) 2005-2006,2009-2011 Sven Klose <pixel@copei.de>
 
+(functional assoc acons copy-alist)
+
 (unless (eq t *BUILTIN-ASSOC*)
   (defun assoc (key lst &key (test #'eql))
     (when lst

@@ -1,5 +1,7 @@
 ;;;; TRE environment
-;;;; Copyright (c) 2005-2006,2008 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2005-2006,2008,2011 Sven Klose <pixel@copei.de>
+
+(functional range-p)
 
 (defun range-p (x bottom top)
   (and (>= x bottom)

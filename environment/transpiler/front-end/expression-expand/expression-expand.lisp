@@ -132,7 +132,10 @@
   (funcall (expex-function-collector ex) fun args)
   (let argdef (funcall (expex-function-arguments ex) fun)
 	(? (expex-expandable-args? ex fun argdef)
-   	   (argument-expand-compiled-values fun argdef args)
+   	   (argument-expand-compiled-values fun argdef (? (and (not (in-cps-mode?))
+                                                           (transpiler-cps-function? *current-transpiler* fun))
+                                                      .args
+                                                      args))
 	   args)))
 
 ;; Expand arguments if they are passed to a function.

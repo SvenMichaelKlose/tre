@@ -1,19 +1,19 @@
 ;;;; TRE environment
-;;;; Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+;;;; Copyright (c) 2005-2008,2011 Sven Klose <pixel@copei.de>
 
-(setq
-	*universe*
-	(cons '%defun
-	(cons '%defspecial
-	(cons 'defvar
-	(cons 'defconstant
-		  *universe*)))))
+(setq *universe*
+	  (cons '%defun
+	  (cons '%defspecial
+	  (cons 'defvar
+	  (cons 'defconstant
+	  (cons 'functional
+		    *universe*))))))
 
-(setq
-	*defined-functions*
-	(cons '%defun
-	(cons '%defspecial
-		  *defined-functions*)))
+(setq *defined-functions*
+	  (cons '%defun
+	  (cons '%defspecial
+	  (cons 'functional?
+		    *defined-functions*))))
 
 (%set-atom-fun %defun
   (macro (name args &rest body)
@@ -49,3 +49,18 @@
     `(progn
 	   (defvar ,name ,init)
 	   (setq *constants* (cons ',name *constants*)))))
+
+(defvar *functionals* nil)
+
+(%set-atom-fun functional
+  (macro (&rest name)
+	(if *show-definitions*
+	    (print `(functional ,name)))
+    `(progn
+	   (setq *functionals* (%nconc ',name *functionals*)))))
+
+(%set-atom-fun functional?
+  (function ((name)
+	(member name *functionals* :test #'eq))))
+
+(functional car cdr eq + - aref href cons list slot-value %slot-value)

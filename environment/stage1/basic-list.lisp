@@ -1,7 +1,9 @@
 ;;;;; TRE environment
-;;;;; Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2005-2009,2011 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Basic list functions.
+
+(functional nth copy-list)
 
 (%defun nth (i c)
   (if c

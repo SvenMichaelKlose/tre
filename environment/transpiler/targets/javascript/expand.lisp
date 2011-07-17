@@ -168,3 +168,9 @@
 
 (define-js-std-macro string-concat (&rest x)
   `(%%%+ ,@x))
+
+(define-js-std-macro functional (&rest x)
+  (when *show-definitions*
+    `(late-print `(functional ,@x)))
+  (setf *functionals* (nconc x *functionals*))
+  nil)

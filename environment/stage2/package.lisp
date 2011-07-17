@@ -1,9 +1,5 @@
 ;;;;; TRE tree processor
 ;;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Package section
-;;;;;
-;;;;; XXX experimental
 
 (defun make-package (name)
   (unless (package? name)

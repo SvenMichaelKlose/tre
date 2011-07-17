@@ -9,6 +9,8 @@
 (%defun gensym-number ()
   (setq *gensym-counter* (+ 1 *gensym-counter*)))
 
+(functional gensym)
+
 ;; Returns newly created, unique symbol.
 (%defun gensym ()
   (make-symbol (string-concat "~G" (string (gensym-number)))))
