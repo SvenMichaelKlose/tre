@@ -1,6 +1,6 @@
 /*
  * TRE interpreter
- * Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
  *
  * Garbage collection.
  */
@@ -38,18 +38,6 @@ char tregc_atommarks[NUM_ATOMS >> 3];
 #define _TREGC_ALLOC_CONS(index)	TRE_UNMARK(tregc_listmarks, index)
 #define _TREGC_FREE_ATOM(index)	TRE_MARK(tregc_atommarks, index)
 #define _TREGC_FREE_CONS(index)	TRE_MARK(tregc_listmarks, index)
-
-#ifdef TRE_DIAGNOSTICS
-#	define TREGC_ALLOC_ATOM(index)	_TREGC_ALLOC_ATOM(index)
-#	define TREGC_ALLOC_CONS(index)	_TREGC_ALLOC_CONS(index)
-#	define TREGC_FREE_ATOM(index)	_TREGC_FREE_ATOM(index)
-#	define TREGC_FREE_CONS(index)	_TREGC_FREE_CONS(index)
-#else
-#	define TREGC_ALLOC_ATOM(index)
-#	define TREGC_ALLOC_CONS(index)
-#	define TREGC_FREE_ATOM(index)
-#	define TREGC_FREE_CONS(index)
-#endif
 
 treptr tregc_car;
 treptr tregc_cdr;
@@ -90,7 +78,7 @@ tregc_pop ()
 }
 
 /*
- * Save value during GC. One at a time.
+ * Save current return value during GC.
  */
 void
 tregc_retval (treptr retval)
@@ -100,11 +88,8 @@ tregc_retval (treptr retval)
     tregc_retval_current = retval;
 }
 
-/*
- * Mark expression. Ignore CAR elements.
- */
 void
-tregc_trace_expr_toplevel (treptr expr)
+tregc_trace_list (treptr expr)
 {
     while (expr != treptr_nil) {
         _TREGC_ALLOC_CONS(expr);
@@ -114,11 +99,8 @@ tregc_trace_expr_toplevel (treptr expr)
 
 void tregc_trace_atom (treptr);
 
-/*
- * Mark expression or tree.
- */
 void
-tregc_trace_expr (treptr p)
+tregc_trace_tree (treptr p)
 {
     treptr i;
 
@@ -138,17 +120,15 @@ tregc_trace_expr (treptr p)
     }
 }
 
-/* Mark object. */
 void
 tregc_trace_object (treptr p)
 {
     if (TREPTR_IS_CONS(p))
-        tregc_trace_expr (p);
+        tregc_trace_tree (p);
     else
         tregc_trace_atom (p);
 }
 
-/* Mark array. */
 void
 tregc_trace_array (treptr arr)
 {
@@ -156,14 +136,13 @@ tregc_trace_array (treptr arr)
     ulong  size = TREARRAY_SIZE(arr);
 
     /* Mark dimension list. */
-    tregc_trace_expr (TREATOM_VALUE(arr));
+    tregc_trace_tree (TREATOM_VALUE(arr));
 
     /* Mark elements in array. */
     while (size--)
 		tregc_trace_object (*i++);
 }
 
-/* Mark expressions bound to atoms. */
 void
 tregc_trace_atom (treptr a)
 {
@@ -195,7 +174,6 @@ tregc_trace_atom (treptr a)
 void
 tregc_init_maps ()
 {
-    /* Initialise mark map, */
     memset (tregc_listmarks, -1, sizeof (tregc_listmarks));
     memset (tregc_atommarks, -1, sizeof (tregc_atommarks));
 }
@@ -222,24 +200,21 @@ tregc_mark (void)
     tregc_mark_non_internal ();
     tregc_mark_stack ();
 
-    tregc_trace_expr_toplevel (TRECONTEXT_FUNSTACK());
+    tregc_trace_list (TRECONTEXT_FUNSTACK());
 
     tregc_trace_object (tregc_car);
     tregc_trace_object (tregc_cdr);
 
-    /* Mark temporarily untraceable objects. */
     tregc_trace_object (tregc_save);
     tregc_trace_object (tregc_save_stack);
     tregc_trace_object (tregc_retval_current);
 
-    /* Mark bookkeeping lists. */
-    tregc_trace_expr_toplevel (tre_lists_free);
+    tregc_trace_list (tre_lists_free);
 
     tregc_trace_atom (tre_atom_evaluated_go);
     tregc_trace_atom (tre_atom_evaluated_return_from);
 }
  
-/* Remove all unmarked cons. */
 void
 tregc_sweep (void)
 {
