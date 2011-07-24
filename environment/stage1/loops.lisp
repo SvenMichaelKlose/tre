@@ -20,9 +20,11 @@
            (go ,tag))))))
 
 (defmacro dotimes ((iter times &rest result) &rest body)
-  `(do ((,iter 0 (integer+ 1 ,iter)))
-	   ((not (integer< ,iter ,times)) ,@result)
-	 ,@body))
+  (let g (gensym)
+    `(let ,g ,times
+       (do ((,iter 0 (integer+ 1 ,iter)))
+	       ((integer= ,iter ,times) ,@result)
+	     ,@body))))
 
 (defmacro dotimes-step ((iter times step &rest result) &rest body)
   `(do ((,iter 0 (integer+ ,step ,iter)))
