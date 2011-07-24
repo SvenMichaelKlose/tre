@@ -1,5 +1,5 @@
 ;;;;; TRE environment
-;;;;; Copyright (c) 2005,2008 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2005,2008,2011 Sven Klose <pixel@copei.de>
 
 (%defun compiler-and (x)
   (if (cdr x)
@@ -14,9 +14,9 @@
   (if (cdr x)
       (let g (gensym)
         `(let ,g ,(car x)
-          (if (not ,g)
-			  ,(compiler-or (cdr x))
-              ,g)))
+           (if ,g
+               ,g
+			   ,(compiler-or (cdr x)))))
       (car x)))
 
 (defmacro or (&rest x)
