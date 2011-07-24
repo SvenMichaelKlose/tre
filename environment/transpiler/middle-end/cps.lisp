@@ -186,28 +186,42 @@
 
 (defun cps-check-funcall (fi x xlats))
 
+(defun cps-body-tag (fi continuer x xlats tag-xlats first? exit-tag)
+  (? first?
+     (? .x
+        (cps-body fi continuer .x xlats tag-xlats :first? nil :exit-tag exit-tag)
+        `((%setq nil (,continuer ~%ret))
+          ,exit-tag
+          nil))
+     (append `((%setq nil (,(cps-cons-function-name x xlats))))
+              (list (list x)))))
+
+(defun cps-body-splitpoint (fi x xlats tag-xlats first?)
+  (append (cps-split fi x xlats tag-xlats :first? first?)
+          (list (list .x))))
+
+(defun cps-body-exit (fi continuer x xlats tag-xlats first? exit-tag)
+  `(,x.
+    (%%vm-go ,exit-tag)
+    ,@(cps-body fi continuer .x xlats tag-xlats :first? first? :exit-tag exit-tag)))
+
+(defun cps-body-epilogue (continuer x exit-tag)
+  `(,x.
+    (%setq nil (,continuer ~%ret))
+    ,exit-tag
+    nil))
+
+(defun cps-funcall-with-literal-continuer? (x)
+  (and (%setq-funcall? x.)
+       (member '~%continuer (cdr (%setq-value x.)) :test #'eq)))
+
 (defun cps-body (fi continuer x xlats tag-xlats &key (first? t) exit-tag)
   (?
     (not x) (cons nil nil)
-    (number? x.) (? first?
-                    (? .x
-                       (cps-body fi continuer .x xlats tag-xlats :first? nil :exit-tag exit-tag)
-                       `((%setq nil (,continuer ~%ret))
-                         ,exit-tag
-                         nil))
-                    (append `((%setq nil (,(cps-cons-function-name x xlats))))
-                            (list (list x))))
-    (cps-splitpoint-expr? x.) (append (cps-split fi x xlats tag-xlats :first? first?)
-                                      (list (list .x)))
-    (and (%setq-funcall? x.)
-         (member '~%continuer (cdr (%setq-value x.)) :test #'eq))
-            `(,x.
-              (%%vm-go ,exit-tag)
-              ,@(cps-body fi continuer .x xlats tag-xlats :first? first? :exit-tag exit-tag))
-    (not .x) `(,x.
-               (%setq nil (,continuer ~%ret))
-               ,exit-tag
-               nil)
+    (number? x.) (cps-body-tag fi continuer x xlats tag-xlats first? exit-tag)
+    (cps-splitpoint-expr? x.) (cps-body-splitpoint fi x xlats tag-xlats first?)
+    (cps-funcall-with-literal-continuer? x) (cps-body-exit fi continuer x xlats tag-xlats first? exit-tag)
+    (not .x) (cps-body-epilogue continuer x exit-tag)
     (cons x. (cps-body fi continuer .x xlats tag-xlats :first? nil :exit-tag exit-tag))))
 
 (defun cps-make-functions (fi continuer x xlats tag-xlats)
@@ -215,26 +229,29 @@
     (with (chunk (cps-body fi continuer x xlats tag-xlats :exit-tag (gensym-number))
            body (butlast chunk)
            next (caar (last chunk)))
-      `((%setq ,(assoc-value x xlats)
-               ,(copy-lambda `#'(()
-                                  ,@body)
-                             :info (make-funinfo :parent fi
-                                                 :args nil)))
+      `((%setq ,(assoc-value x xlats) ,(copy-lambda `#'(()
+                                                         ,@body)
+                                                    :info (make-funinfo :parent fi :args nil)))
         ,@(cps-make-functions fi continuer next xlats tag-xlats)))))
+
+(defun cps-get-xlat-simple (x)
+  (cons (cons x (gensym))
+        (cps-get-xlats .x :first? nil)))
+
+(defun cps-get-xlat-expr (x first?)
+  (? first?
+     (cons (cons x (gensym))
+           (cons (cons .x (gensym))
+                 (cps-get-xlats .x :first? nil)))
+     (cons (cons .x (gensym))
+           (cps-get-xlats .x :first? nil))))
 
 (defun cps-get-xlats (x &key (first? t))
   (when x
     (?
-      (number? x.) (cons (cons x (gensym))
-                         (cps-get-xlats .x :first? nil))
-      (cps-splitpoint-expr? x.) (? first?
-                                   (cons (cons x (gensym))
-                                         (cons (cons .x (gensym))
-                                               (cps-get-xlats .x :first? nil)))
-                                   (cons (cons .x (gensym))
-                                         (cps-get-xlats .x :first? nil)))
-      first?  (cons (cons x (gensym))
-                    (cps-get-xlats .x :first? nil))
+      (number? x.) (cps-get-xlat-simple x)
+      (cps-splitpoint-expr? x.) (cps-get-xlat-expr x first?)
+      first? (cps-get-xlat-simple x)
       (cps-get-xlats .x :first? nil))))
 
 (defun cps-get-tag-xlats (x)
