@@ -27,7 +27,9 @@
 (define-js-std-macro not (&rest x)
   (? .x
      `(%not (list ,@x))
-     `(? ,x. nil t)))
+     `(let ,*not-gensym* t
+        (? ,x. (setf ,*not-gensym* nil))
+        ,*not-gensym*)))
 
 (define-js-std-macro function (x)
   (? (cons? x)

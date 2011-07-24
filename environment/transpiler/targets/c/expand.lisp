@@ -9,6 +9,13 @@
 (define-c-std-macro %defsetq (&rest x)
   `(%setq ,@x))
 
+(define-c-std-macro not (&rest x)
+  (? .x
+     `(%not2 ,@x)
+     `(let ,*not-gensym* t
+        (? ,x. (setf ,*not-gensym* nil))
+        ,*not-gensym*)))
+
 (define-c-std-macro defun (name args &rest body)
   (apply #'shared-essential-defun name args body))
 
@@ -30,7 +37,7 @@
 	   (%setq ,name ,val))))
 
 (transpiler-wrap-invariant-to-binary define-c-std-macro eq 2 %eq and)
-(transpiler-wrap-invariant-to-binary define-c-std-macro not 1 %not and)
+(transpiler-wrap-invariant-to-binary define-c-std-macro %not2 1 %not and)
 
 (mapcan-macro _
     '(car cdr cons? atom number? string? array? function? builtin?)

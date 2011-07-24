@@ -19,7 +19,9 @@
 (define-php-std-macro not (&rest x)
   (? .x
      `(%not (list ,@x))
-     `(? ,x. nil t)))
+      `(let ,*not-gensym* t
+         (? ,x. (setf ,*not-gensym* nil))
+         ,*not-gensym*)))
 
 (define-php-std-macro defun (name args &rest body)
   (with ((fi-sym adef) (split-funinfo-and-args args)
