@@ -157,18 +157,19 @@
 
 (defun opt-peephole-will-be-used-again? (x v)
   (with (traversed-tags nil
+         traverse-tag #'((tag v)
+                          (aif (member tag *opt-peephole-body* :test #'eq)
+                               (unless (member tag traversed-tags :test #'eq)
+                                 (progn
+                                   (push tag traversed-tags)
+                                   (rec .! v)))
+                               t))
          rec #'((x v)
                  (?
 	               (not x) (~%ret? v)	; End of block always returns ~%RET.
 	               (atom x)	(error "illegal meta-code: statement expected")
 	               (lambda? x.)	(rec .x v)
-                   (%%vm-go? x.) (let tag (cadr x.)
-                                   (aif (member tag *opt-peephole-body* :test #'eq)
-                                        (unless (member tag traversed-tags :test #'eq)
-                                            (progn
-                                              (push tag traversed-tags)
-                                              (rec .! v)))
-                                        t));(error "tag missing")))
+                   (%%vm-go? x.) (traverse-tag (cadr x.) v)
                    (%setq-on? x. v) (find-tree (%setq-value x.) v :test #'eq)
                    (find-tree x. v :test #'eq) t
                    (vm-jump? x.) t
@@ -266,27 +267,29 @@
 		 #'((x)
 			  (opt-peephole-fun (#'reduce-tags)
     		    ((two-subsequent-tags? a d)
-				   (add-removed-tag a .x.)
+				   (add-removed-tag a d.)
 				   (reduce-tags d))
     		    ((and (number? a)
-                      (%%vm-go? .x.))
+                      (%%vm-go? d.))
                    (add-removed-tag a (cadr d.))
 				   (reduce-tags d))))
 
+       translate-tags
+		 #'((x)
+    		 (maptree (fn aif (assoc _ removed-tags :test #'eq)
+                              .!
+                              _)
+                      x))
 	   rec
 		 #'((x)
-			  (maptree #'((x)
-			                (aif (assoc x removed-tags :test #'eq)
-				                 .!
-					             x))
-					   (funcall
-						 (compose ;#'remove-vm-go-nil-heads
-                                  #'reduce-tags
-								  #'opt-peephole-remove-spare-tags
-								  #'remove-code
-								  #'remove-assignments
-								  #'opt-peephole-remove-void)
-						 x))))
+             (funcall (compose ;#'remove-vm-go-nil-heads
+                               #'translate-tags
+                               #'reduce-tags
+			                   #'opt-peephole-remove-spare-tags
+				               #'remove-code
+				               #'remove-assignments
+				               #'opt-peephole-remove-void)
+				      x)))
       (? *opt-peephole?*
 	     (with-temporary *opt-peephole-funinfo* (transpiler-global-funinfo *current-transpiler*)
 	       (repeat-while-changes #'rec
