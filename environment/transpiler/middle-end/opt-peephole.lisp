@@ -164,11 +164,11 @@
 	               (lambda? x.)	(rec .x v)
                    (%%vm-go? x.) (let tag (cadr x.)
                                    (aif (member tag *opt-peephole-body* :test #'eq)
-                                        (or (member tag traversed-tags :test #'eq)
+                                        (unless (member tag traversed-tags :test #'eq)
                                             (progn
                                               (push tag traversed-tags)
                                               (rec .! v)))
-                                        t))
+                                        t));(error "tag missing")))
                    (%setq-on? x. v) (find-tree (%setq-value x.) v :test #'eq)
                    (find-tree x. v :test #'eq) t
                    (vm-jump? x.) t
