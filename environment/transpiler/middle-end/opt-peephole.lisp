@@ -216,10 +216,36 @@
        (%%vm-go-nil? d.)
        (eq '~%ret (cadr d.))))
 
+(defun assignment-to-symbol? (x)
+  (and (%setq? x)
+       (let plc (%setq-place x)
+         (and plc (atom plc)))))
+
 (defun opt-peephole (statements)
   (with
 	  (fnord nil
 	   removed-tags nil
+
+       rename-temporaries
+         #'((x)
+             (opt-peephole-fun (#'rename-temporaries :collect-symbols t)
+               ((and (assignment-to-symbol? a)
+                     (%setq? d.)
+                     (with (plc (%setq-place a)
+                            val (%setq-value d.))
+                       (and (cons? val)
+                            (removable-place? plc)
+                            (= 2 (opt-peephole-count plc))
+                            (member plc (cdr (%setq-value d.)) :test #'eq))))
+                  (with (plc (%setq-place a)
+                         val (%setq-value d.)
+                         fi *opt-peephole-funinfo*)
+                    (unless (funinfo-in-env? fi '~%tmp)
+                      (funinfo-env-add fi '~%tmp))
+			  		(opt-peephole-uncollect-syms a `((%setq ~%tmp ,(%setq-value a))
+                                                     (%setq ,(%setq-place d.) ,(replace plc '~%tmp val :test #'eq))
+                                                     ,@(rename-temporaries .d))
+                                                 2)))))
 
 	   ; Remove code without side-effects whose result won't be used.
 	   remove-code
@@ -245,12 +271,13 @@
 								                            (remove-assignments .d))
                                                   2)))))
 
-	   remove-vm-go-nil-heads
-	     #'((x)
-			  (opt-peephole-fun (#'remove-vm-go-nil-heads)
-			    ((vm-go-nil-head? a d)
-				   (cons `(%%vm-go-nil ,(%setq-value a) ,(caddr d.))
-				          (remove-vm-go-nil-heads .d)))))
+;	   remove-vm-go-nil-heads
+;	     #'((x)
+;			  (opt-peephole-fun (#'remove-vm-go-nil-heads)
+;			    ((vm-go-nil-head? a d)
+;				   (opt-peephole-uncollect-syms .a. (cons `(%%vm-go-nil ,(%setq-value a) ,(caddr d.))
+;				                                          (remove-vm-go-nil-heads .d))
+;                                                2))))
 
        replace-tag
          #'((old-dest new-dest)
@@ -284,6 +311,7 @@
 	   rec
 		 #'((x)
              (funcall (compose ;#'remove-vm-go-nil-heads
+                               #'rename-temporaries
                                #'translate-tags
                                #'reduce-tags
 			                   #'opt-peephole-remove-spare-tags
