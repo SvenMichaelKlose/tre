@@ -64,7 +64,6 @@
 (defmacro opt-peephole-fun ((fun &key (collect-symbols nil)) &rest body)
   `(when x
 	 (with-cons a d x
-	   ; Recurse into LAMBDA.
 	   (?
 		 (named-lambda? a) (opt-peephole-rec a d ..a. ,fun .a. ,collect-symbols)
 
@@ -179,14 +178,11 @@
                    (rec .x v))))
     (rec x v)))
 
-(defun removable-place? (v)
-  (let fi *opt-peephole-funinfo*
-    (and v (atom v)
-         (funinfo-in-env? fi v)
-	     (or (~%ret? v)
-	         (not (or (funinfo-immutable? fi v)
- 				      (eq v (funinfo-lexical fi))
-	    	          (funinfo-lexical? fi v)))))))
+(defun removable-place? (x)
+  (and x (atom x)
+       (funinfo-in-env? *opt-peephole-funinfo* x)
+       (not (eq x (funinfo-lexical *opt-peephole-funinfo*)))
+       (not (funinfo-lexical? *opt-peephole-funinfo* x))))
 
 (defun assignment-to-unused-place (a d)
   (and (%setq? a)
