@@ -172,7 +172,8 @@
                    (%%vm-go? x.) (traverse-tag (cadr x.) v)
                    (%setq-on? x. v) (find-tree (%setq-value x.) v :test #'eq)
                    (find-tree x. v :test #'eq) t
-                   (vm-jump? x.) t
+                   (%%vm-go-nil? x.) (or (traverse-tag (cadr x.) v)
+                                         (rec .x v))
                    (rec .x v))))
     (or (and (not (~%ret? v))
              (transpiler-defined-variable *current-transpiler* v))
