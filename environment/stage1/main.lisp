@@ -14,6 +14,7 @@
 (env-load "stage1/simple-mapcar.lisp")
 (env-load "stage1/let.lisp")
 (env-load "stage1/let-many.lisp")
+(env-load "stage1/cons-r.lisp")
 (env-load "stage1/math.lisp")
 (env-load "stage1/basic-conditional.lisp")
 
