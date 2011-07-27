@@ -15,13 +15,12 @@
 		          (force-output)
 		          _)
     update-funinfo #'transpiler-update-funinfo
-    opt-peephole #'opt-peephole
+    opt-remove-unused-places #'opt-places-remove-unused
+    opt-find-unused-places #'opt-places-find-used
 ;    middleend-graph #'middleend-graph
     cps (fn ? (in-cps-mode?)
               (cps _)
               _)
-    opt-remove-unused-places #'opt-places-remove-unused
-    opt-find-unused-places #'opt-places-find-used
     opt-peephole #'opt-peephole
     opt-tailcall #'opt-tailcall
     opt-peephole #'opt-peephole

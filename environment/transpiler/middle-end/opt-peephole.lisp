@@ -3,78 +3,29 @@
 
 (defvar *opt-peephole?* t)
 (defvar *opt-peephole-funinfo* nil)
-(defvar *opt-peephole-symbols* (make-hash-table :test #'eq))
-
-(defun opt-peephole-collect-syms-0 (x h)
-  (?
-    (symbol? x) (setf (href h x) (1+ (or (href h x) 0)))
-    (atom x) nil
-    (progn
-      (opt-peephole-collect-syms-0 x. h)
-      (opt-peephole-collect-syms-0 .x h))))
-
-;(metacode-walker opt-peephole-collect-syms-0 (x h)
-;:traverse?	t
-;   :if-symbol	(setf (href h x) (1+ (or (href h x) 0)))
-;:if-function (opt-peephole-collect-syms-0 (%setq-place x) h))
-
-(defun opt-peephole-collect-syms (x)
-  (let h (make-hash-table :test #'eq)
-	(opt-peephole-collect-syms-0 x h)
-	h))
-
-(defun opt-peephole-uncollect-syms-0 (x num h)
-  (?
-    (symbol? x) (when (href h x)
-                  (setf (href h x) (- (href h x) num)))
-    (atom x) nil
-    (progn
-      (opt-peephole-uncollect-syms-0 x. num h)
-      (opt-peephole-uncollect-syms-0 .x num h))))
-
-;(metacode-walker opt-peephole-uncollect-syms-0 (x num)
-;	:traverse?	t
-;    :if-symbol	(setf (href *opt-peephole-symbols* x) (- (href *opt-peephole-symbols* x) 1))
-;	:if-function (opt-peephole-uncollect-syms-0 (%setq-place x) num))
-
-(defun opt-peephole-uncollect-syms (x ret num)
-  (opt-peephole-uncollect-syms-0 x num *opt-peephole-symbols*)
-  ret)
-
-(defun opt-peephole-count (x)
-  (or (href *opt-peephole-symbols* x) 0))
-
 (defvar *opt-peephole-body* nil)
 
-(defun opt-peephole-rec (a d val fun name collect-symbols &optional (setq? nil))
+(defun opt-peephole-rec (a d val fun name &optional (setq? nil))
   (with (plc (when (%setq? a)
 			   (%setq-place a))
 		 body (lambda-body val))
-	(with-temporary *opt-peephole-body* body
-	  (with-temporary *opt-peephole-funinfo* (get-lambda-funinfo val)
-	    (with-temporary *opt-peephole-symbols* (? collect-symbols
-									              (opt-peephole-collect-syms body)
-										          *opt-peephole-symbols*)
-          (let f (copy-lambda val :name name :body (funcall fun body))
-	        (cons (? setq?
-				     `(%setq ,plc ,f)
-				     f)
-		          (funcall fun d))))))))
+    (let f (copy-lambda val
+                        :name name
+                        :body (with-temporary *opt-peephole-body* body
+                                (with-temporary *opt-peephole-funinfo* (get-lambda-funinfo val)
+                                  (funcall fun body))))
+      (cons (? setq?
+	           `(%setq ,plc ,f)
+			   f)
+		    (funcall fun d)))))
 
-(defmacro opt-peephole-fun ((fun &key (collect-symbols nil)) &rest body)
+(defmacro opt-peephole-fun ((fun) &rest body)
   `(when x
 	 (with-cons a d x
 	   (?
-		 (named-lambda? a) (opt-peephole-rec a d ..a. ,fun .a. ,collect-symbols)
-
-		 (and (%setq? a)
-			  (named-lambda? (%setq-value a)))
-		   (opt-peephole-rec a d (caddr (%setq-value a)) ,fun (cadr (%setq-value a)) ,collect-symbols t)
-
-		 (and (%setq? a)
-			  (lambda? (%setq-value a)))
-		   (opt-peephole-rec a d (%setq-value a) ,fun nil ,collect-symbols t)
-
+		 (named-lambda? a) (opt-peephole-rec a d ..a. ,fun .a.)
+		 (%setq-named-lambda? a) (opt-peephole-rec a d (caddr (%setq-value a)) ,fun (cadr (%setq-value a)) t)
+		 (%setq-lambda? a) (opt-peephole-rec a d (%setq-value a) ,fun nil t)
 	   	 (cond
 		   ,@body
 		   (t (cons a (funcall ,fun d))))))))
@@ -97,13 +48,9 @@
 (defun opt-peephole-remove-spare-tags (x)
   (when x
 	(cons (?
-	  		(named-lambda? x.)
-			  (opt-peephole-remove-spare-tags-body x.)
-
+	  		(named-lambda? x.) (opt-peephole-remove-spare-tags-body x.)
 	  		(and (%setq? x.)
-	  	   		 (lambda? (caddr x.)))
-	      	  `(%setq ,(cadr x.) ,(opt-peephole-remove-spare-tags-body (caddr x.)))
-
+	  	   		 (lambda? (caddr x.))) `(%setq ,(cadr x.) ,(opt-peephole-remove-spare-tags-body (caddr x.)))
 			x.)
 		  (opt-peephole-remove-spare-tags .x))))
 
@@ -160,22 +107,27 @@
          traverse-tag #'((tag v)
                           (aif (member tag *opt-peephole-body* :test #'eq)
                                (unless (member tag traversed-tags :test #'eq)
-                                 (progn
-                                   (push tag traversed-tags)
-                                   (rec .! v)))
-                               t))
+                                 (push tag traversed-tags)
+                                 (rec .! v))
+                               (progn
+                                 (print *opt-peephole-body*)
+                                 (print tag)
+                                 (error "no tag"))))
          rec #'((x v)
-                 (?
-	               (not x) (~%ret? v)	; End of block always returns ~%RET.
-	               (atom x)	(error "illegal meta-code: statement expected")
-	               (lambda? x.)	(rec .x v)
-                   (%%vm-go? x.) (traverse-tag (cadr x.) v)
-                   (%setq-on? x. v) (find-tree (%setq-value x.) v :test #'eq)
-                   (find-tree x. v :test #'eq) t
-                   (%%vm-go-nil? x.) (or (traverse-tag (cadr x.) v)
-                                         (rec .x v))
-                   (rec .x v))))
-    (or (and (not (~%ret? v))
+                 (with (a x.
+                        d .x)
+                   (?
+	                 (not x) (~%ret? v)
+	                 (atom x) (error "illegal meta-code: statement expected")
+	                 (lambda? a) (rec d v)
+                     (%%vm-go? a) (traverse-tag .a. v)
+                     (%setq-on? a v) (find-tree (%setq-value a) v :test #'eq)
+                     (find-tree a v :test #'eq) t
+                     (%%vm-go-nil? a) (or (traverse-tag ..a. v)
+                                          (rec d v))
+                     (rec d v)))))
+    (or (eq *opt-peephole-funinfo* (transpiler-global-funinfo *current-transpiler*))
+        (and (not (~%ret? v))
              (transpiler-defined-variable *current-transpiler* v))
         (funinfo-immutable? *opt-peephole-funinfo* v)
         (rec x v))))
@@ -186,23 +138,19 @@
        (not (eq x (funinfo-lexical *opt-peephole-funinfo*)))
        (not (funinfo-lexical? *opt-peephole-funinfo* x))))
 
-(defun assignment-to-unused-place (a d)
+(defun assignment-to-unused-place? (a d)
   (and (%setq? a)
        (removable-place? (%setq-place a))
-	   (or (and (not (~%ret? (%setq-place a)))
-			    (integer= 1 (opt-peephole-count (%setq-place a))))
-           (not (opt-peephole-will-be-used-again? d (%setq-place a))))))
+       (not (opt-peephole-will-be-used-again? d (%setq-place a)))))
 
 (defun assignment-to-unneccessary-temoporary? (a d)
   (and d
 	   (%setq? a)
 	   (%setq? d.)
-	   (let plc (%setq-place a)
-		 (and plc (eq plc (%setq-value d.))
+	   (let-when plc (%setq-place a)
+		 (and (eq plc (%setq-value d.))
  			  (removable-place? plc)
-			  (or (and (integer= 2 (opt-peephole-count plc))
-                       (not (~%ret? plc)))
-				  (not (opt-peephole-will-be-used-again? .d plc)))))))
+			  (not (opt-peephole-will-be-used-again? .d plc))))))
 
 (defun two-subsequent-tags? (a d)
   (and a (atom a)
@@ -218,58 +166,52 @@
 
 (defun assignment-to-symbol? (x)
   (and (%setq? x)
-       (let plc (%setq-place x)
-         (and plc (atom plc)))))
+       (awhen (%setq-place x)
+         (atom !))))
 
 (defun opt-peephole (statements)
   (with
-	  (fnord nil
-	   removed-tags nil
+	  (removed-tags nil
 
        rename-temporaries
          #'((x)
-             (opt-peephole-fun (#'rename-temporaries :collect-symbols t)
+             (opt-peephole-fun (#'rename-temporaries)
                ((and (assignment-to-symbol? a)
                      (%setq? d.)
                      (with (plc (%setq-place a)
                             val (%setq-value d.))
-                       (and (cons? val)
+                       (and (not (in? plc '~%ret '~%tmp))
+                            (cons? val)
                             (removable-place? plc)
-                            (= 2 (opt-peephole-count plc))
-                            (member plc (cdr (%setq-value d.)) :test #'eq))))
+                            (find-tree .val plc :test #'eq)
+                            (or (eq (%setq-place d.) plc)
+                                (not (opt-peephole-will-be-used-again? .d plc))))))
                   (with (plc (%setq-place a)
                          val (%setq-value d.)
                          fi *opt-peephole-funinfo*)
                     (unless (funinfo-in-env? fi '~%tmp)
                       (funinfo-env-add fi '~%tmp))
-			  		(opt-peephole-uncollect-syms a `((%setq ~%tmp ,(%setq-value a))
-                                                     (%setq ,(%setq-place d.) ,(replace plc '~%tmp val :test #'eq))
-                                                     ,@(rename-temporaries .d))
-                                                 2)))))
+			  		`((%setq ~%tmp ,(%setq-value a))
+                      (%setq ,(%setq-place d.) ,(replace-tree plc '~%tmp val :test #'eq))
+                      ,@(rename-temporaries .d))))))
 
 	   ; Remove code without side-effects whose result won't be used.
 	   remove-code
 	     #'((x)
-			  (opt-peephole-fun (#'remove-code :collect-symbols t)
-				((assignment-to-unused-place a d)
-				   (? (atomic-or-without-side-effects? (%setq-value a))
-			  		  (opt-peephole-uncollect-syms a (remove-code d) 1)
-			  		  (opt-peephole-uncollect-syms (%setq-place a) (let v (%setq-value a)
-                                                                     (? (or (atom v)
-                                                                            (functional? v.))
-                                                                         (remove-code d)
-                                                                         (cons `(%setq nil ,v)
-							                                                   (remove-code d))))
-                                                   1)))))
+			  (opt-peephole-fun (#'remove-code)
+				((assignment-to-unused-place? a d)
+				   (? (atomic-or-functional? (%setq-value a))
+			  		  (remove-code d)
+			  		  (cons `(%setq nil ,(%setq-value a))
+					         (remove-code d))))))
 
 	   remove-assignments
 	     #'((x)
-			  (opt-peephole-fun (#'remove-assignments :collect-symbols t)
+			  (opt-peephole-fun (#'remove-assignments)
 			    ((assignment-to-unneccessary-temoporary? a d)
 				   (let plc (%setq-place a)
-				     (opt-peephole-uncollect-syms plc (cons `(%setq ,(%setq-place d.) ,(%setq-value a))
-								                            (remove-assignments .d))
-                                                  2)))))
+				     (cons `(%setq ,(%setq-place d.) ,(%setq-value a))
+					        (remove-assignments .d))))))
 
 ;	   remove-vm-go-nil-heads
 ;	     #'((x)
@@ -311,16 +253,26 @@
 	   rec
 		 #'((x)
              (funcall (compose ;#'remove-vm-go-nil-heads
+;                (fn (print 'done) (print _))
                                #'rename-temporaries
+;                (fn (print 'rename-temps) (print _))
                                #'translate-tags
+;                (fn (print 'translate-tags) (print _))
                                #'reduce-tags
+;                (fn (print 'reduce-tags) (print _))
 			                   #'opt-peephole-remove-spare-tags
+;                (fn (print 'remove-spare) (print _))
 				               #'remove-code
+;                (fn (print 'remove-space) (print _))
 				               #'remove-assignments
-				               #'opt-peephole-remove-void)
+;                (fn (print 'remove-ass) (print _))
+				               #'opt-peephole-remove-void
+;                (fn (print 'remove-void) (print _)))
+)
 				      x)))
       (? *opt-peephole?*
-	     (with-temporary *opt-peephole-funinfo* (transpiler-global-funinfo *current-transpiler*)
-	       (repeat-while-changes #'rec
-		     (opt-peephole-remove-identity statements)))
+	       (with-temporary *opt-peephole-funinfo* (transpiler-global-funinfo *current-transpiler*)
+             (with-temporary *opt-peephole-body* statements
+	           (repeat-while-changes #'rec
+		         (opt-peephole-remove-identity statements))))
          statements)))

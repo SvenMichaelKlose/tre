@@ -37,7 +37,7 @@
       (let argdef (append (awhen (funinfo-ghost fi-exported)
 						    (list !))
 						  (lambda-args x))
-		(push (cons exported-name argdef) *closure-argdefs*)
+		(acons! exported-name argdef *closure-argdefs*)
 	    (transpiler-add-exported-closure *current-transpiler*
             `((defun ,exported-name ,(append (make-lambda-funinfo fi-exported) argdef)
 		        ,@(lambda-body x)))))
@@ -59,12 +59,10 @@
 
 (defun lambda-expand-tree-cons (fi x export-lambdas?)
   (?
-    (lambda-call? x)
-      (lambda-call-embed fi x export-lambdas?)
-    (lambda? x)
-	  (? export-lambdas?
-         (lambda-export fi x)
-		 (lambda-expand-tree-unexported-lambda fi x))
+    (lambda-call? x) (lambda-call-embed fi x export-lambdas?)
+    (lambda? x) (? export-lambdas?
+                   (lambda-export fi x)
+		           (lambda-expand-tree-unexported-lambda fi x))
 	(lambda-expand-tree-0 fi x export-lambdas?)))
 
 (defun lambda-expand-tree-0 (fi x export-lambdas?)
@@ -76,7 +74,8 @@
 
 (defun lambda-expand-tree (fi x export-lambdas?)
   (aprog1 (lambda-expand-tree-0 fi x export-lambdas?)
-    (place-expand-0 fi !)))
+    (with-temporary (transpiler-lambda-export? *current-transpiler*) t
+      (place-expand-0 fi !))))
 
 (defun lambda-expand-0 (x export-lambdas? &key (lambda-name nil))
   (let fi (or (get-lambda-funinfo x)
@@ -89,8 +88,7 @@
 				  (?
 					(atom x) x
 	  				(lambda? x) (lambda-expand-0 x export-lambdas?)
-					(cons (lambda-exp-r x.)
-		    			  (lambda-exp-r .x)))))
+					(cons-r lambda-exp-r x))))
 	(lambda-exp-r x)))
 
 (defun transpiler-lambda-expand (tr x)

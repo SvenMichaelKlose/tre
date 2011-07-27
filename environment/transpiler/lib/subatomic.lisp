@@ -21,16 +21,10 @@
   (or (atom x)
 	  (in? x. '%stack '%vec '%slot-value)))
 
-(defun atomic-or-without-side-effects? (x)
+(defun atomic-or-functional? (x)
   (or (atomic? x)
 	  (and (cons? x)
-	  	   (in? x. '%quote 'car '%car 'cdr '%cdr '%slot-value
-				   '%vec '%stack
-				   'cons 'list 'aref 'href 'car 'cdr 'list
-				   'eq 'not '= '< '> '<= '>=
-				   '%%%+ '%%%- '%%%= '%%%< '%%%> '%%%<= '%%%>= '%%%eq
-				   '+ '-
-				   'member 'append))))
+           (functional? x.))))
 
 (defun vm-jump? (e)
   (and (cons? e)
@@ -81,6 +75,10 @@
 (defun %setq-lambda? (x)
   (and (%setq? x)
 	   (lambda? (%setq-value x))))
+
+(defun %setq-named-lambda? (x)
+  (and (%setq? x)
+	   (named-lambda? (%setq-value x))))
 
 (defun %setq-named-function? (x)
   (and (%setq? x)
