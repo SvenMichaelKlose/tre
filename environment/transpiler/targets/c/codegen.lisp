@@ -30,7 +30,7 @@
   (let args (argument-expand-names 'unnamed-c-function (lambda-args x))
     (c-make-function-declaration name args)
     `(,(code-char 10)
-	  "treptr " ,name
+	  "treptr " ,name " "
 	  ,@(parenthized-comma-separated-list (mapcar (fn `("treptr " ,_)) args))
 	  ,(code-char 10)
 	  "{" ,(code-char 10)
@@ -86,7 +86,7 @@
   (c-line `((%transpiler-native ,@(codegen-%setq-place dest val)) ,(codegen-%setq-value val))))
 
 (define-c-macro %setq-atom-value (dest val)
-  `(%transpiler-native ,@(c-line "treatom_set_value (" (c-compiled-symbol dest) " ," val ")")))
+  `(%transpiler-native "treatom_set_value (" ,(c-compiled-symbol dest) " ," ,val ")"))
 
 (define-c-macro %set-atom-fun (dest val)
   `(%transpiler-native ,dest "=" ,val ,*c-separator*))
