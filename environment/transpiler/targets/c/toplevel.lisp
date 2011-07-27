@@ -2,7 +2,7 @@
 ;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (defvar *closure-argdefs* nil)
-(defvar *c-init-group-size* 64)
+(defvar *c-init-group-size* 16)
 
 (define-tree-filter c-transpiler-get-argdef-symbols (x)
   (not x)
