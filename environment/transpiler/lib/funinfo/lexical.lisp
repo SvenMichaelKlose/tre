@@ -1,11 +1,10 @@
 ;;;;; TRE compiler
-;;;;; Copyright (C) 2006-2007,2009 Sven Klose <pixel@copei.de>
+;;;;; Copyright (C) 2006-2007,2009,2011 Sven Klose <pixel@copei.de>
 
 ;;;; LEXICALS AND GHOST ARGUMENTS
 
 (defun funinfo-add-lexical (fi name)
-  (unless (funinfo-lexical? fi name)
-    (nconc! (funinfo-lexicals fi) (list name))))
+  (adjoin! name (funinfo-lexicals fi)))
 
 (defun funinfo-make-lexical (fi)
   (unless (funinfo-lexical fi)
