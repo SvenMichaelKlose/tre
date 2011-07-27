@@ -5,4 +5,7 @@
   (%error (apply #'format nil args)))
 
 (defun warn (&rest args)
-  (apply #'format t (string-concat "WARNING: " (car args)) (cdr args)))
+  (apply #'format t (string-concat "; WARNING: " (car args)) (cdr args)))
+
+(defun hint (&rest args)
+  (apply #'format t (string-concat "; HINT: " (car args)) (cdr args)))
