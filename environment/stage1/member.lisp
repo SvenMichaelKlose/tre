@@ -1,5 +1,5 @@
 ;;;;; TRE environment
-;;;;; Copyright (c) 2005-2006,2008,2010 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2005-2006,2008,2010-2011 Sven Klose <pixel@copei.de>
 
 (if (not (eq t *BUILTIN-MEMBER*))
   (progn
@@ -31,7 +31,7 @@
 (defun %member-if-r (pred lst)
   (if lst
       (if (funcall pred (car lst))
-		  (car lst)
+		  lst
           (%member-if-r pred (cdr lst)))))
 
 (defun member-if (pred &rest lsts)
