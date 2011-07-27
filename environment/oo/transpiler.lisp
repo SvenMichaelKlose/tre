@@ -46,7 +46,7 @@
               (progn
                 (setf (assoc-value name (class-methods !)) code)
 			    (warn "In class '~A': member '~A' already defined." class-name name))
-		      (push (cons name code) (class-methods !))))
+		      (acons! name code (class-methods !))))
 	    (error "Defiinition of method ~A: class ~A is not defined." name class-name)))
   nil)
 
