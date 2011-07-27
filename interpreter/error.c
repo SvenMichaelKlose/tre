@@ -29,7 +29,7 @@ treerror_msg (treptr expr, const char *prefix, const char *msg, va_list ap)
 	struct tre_stream * s = treio_get_stream ();
 
     fflush (stdout);
-    fprintf (stderr, "*** %s: ", prefix);
+    fprintf (stderr, "; In interpreter: %s: ", prefix);
     vfprintf (stderr, msg, ap);
     fprintf (stderr, ".\n");
 
@@ -39,7 +39,7 @@ treerror_msg (treptr expr, const char *prefix, const char *msg, va_list ap)
 	}
 
     if (expr != treptr_invalid) {
-		fprintf (stderr, "Erroraneous object:\n");
+		fprintf (stderr, "; Erroraneous object:\n");
         treprint (expr);
     }
     fflush (stderr);
@@ -64,7 +64,7 @@ treerror_macroexpansion (void)
     if (c == treptr_nil)
         return;
 
-    fprintf (stderr, "During expansion of macro %s:\n", TREATOM_NAME(c));
+    fprintf (stderr, "; During expansion of macro %s:\n", TREATOM_NAME(c));
 }
 
 treptr
