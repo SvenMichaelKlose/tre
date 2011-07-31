@@ -43,7 +43,10 @@
   (php-line "goto _I_" tag))
 
 (define-php-macro %%vm-go-nil (val tag)
-  (php-line "if(!$" val "&&!is_string($" val ")&&!is_numeric($" val ")) goto _I_" tag))
+  (php-line "if (!$" val "&&!is_string($" val ")&&!is_numeric($" val ")) goto _I_" tag))
+
+(define-php-macro %%vm-go-not-nil (val tag)
+  (php-line "if (!(!$" val "&&!is_string($" val ")&&!is_numeric($" val "))) goto _I_" tag))
 
 ;;;; FUNCTIONS
 

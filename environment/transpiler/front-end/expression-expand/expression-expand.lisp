@@ -103,7 +103,7 @@
            (not (funinfo-in-toplevel-env? *expex-funinfo* x)))
       (not (or (atom x)
 		       (function-ref-expr? x)
-               (in? x. '%%vm-go '%%vm-go-nil '%transpiler-native '%transpiler-string '%quote)))))
+               (in? x. '%%vm-go '%%vm-go-nil '%%vm-go-not-nil '%transpiler-native '%transpiler-string '%quote)))))
 
 ;; Check if an expression has a return value.
 (defun expex-returnable? (ex x)
@@ -243,6 +243,10 @@
   (with ((moved new-expr) (expex-filter-and-move-args ex (list .x.)))
     (values moved `((%%vm-go-nil ,@new-expr ,..x.)))))
 
+(defun expex-vm-go-not-nil (ex x)
+  (with ((moved new-expr) (expex-filter-and-move-args ex (list .x.)))
+    (values moved `((%%vm-go-not-nil ,@new-expr ,..x.)))))
+
 (defun peel-identity (x)
   (? (identity? x) .x. x))
 
@@ -251,6 +255,7 @@
     (expex-cps x)
     (?
       (%%vm-go-nil? x) (expex-vm-go-nil ex x)
+      (%%vm-go-not-nil? x) (expex-vm-go-not-nil ex x)
 	  (%var? x) (expex-var x)
 	  (lambda? x) (expex-lambda ex x)
       (not (expex-able? ex x)) (values nil (list x))

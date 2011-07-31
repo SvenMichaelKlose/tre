@@ -40,10 +40,14 @@
 (define-js-macro %%vm-go-nil (val tag)
   `(,*js-indent* "if(!" ,val "&&" ,val "!==0&&" ,val "!==''){_I_=" ,tag ";continue;}" ,*js-newline*))
 
+(define-js-macro %%vm-go-not-nil (val tag)
+  `(,*js-indent* "if(!(!" ,val "&&" ,val "!==0&&" ,val "!=='')){_I_=" ,tag ";continue;}" ,*js-newline*))
+
 (define-js-macro %%vm-call-nil (val consequence alternative)
   `(,*js-indent* "if(!" ,val "&&" ,val "!==0&&" ,val "!=='')"
-                    ,consequence "();"
-                    "else " ,alternative "();" ,*js-newline*))
+                     ,consequence "();"
+                 "else "
+                     ,alternative "();" ,*js-newline*))
 
 (define-js-macro %set-atom-fun (plc val)
   `(%transpiler-native ,*js-indent* ,plc "=" ,val ,*js-separator*))

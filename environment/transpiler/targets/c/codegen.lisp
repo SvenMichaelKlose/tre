@@ -117,8 +117,11 @@
 
 (define-c-macro %%vm-go-nil (val tag)
   `(,*c-indent* "if (" ,val " == treptr_nil)" ,(code-char 10)
-	,*c-indent*
-	,@(c-line "goto l" (transpiler-symbol-string *c-transpiler* tag))))
+	,*c-indent* ,@(c-line "goto l" (transpiler-symbol-string *c-transpiler* tag))))
+
+(define-c-macro %%vm-go-not-nil (val tag)
+  `(,*c-indent* "if (" ,val " != treptr_nil)" ,(code-char 10)
+	,*c-indent* ,@(c-line "goto l" (transpiler-symbol-string *c-transpiler* tag))))
 
 ;;;; SYMBOLS
 

@@ -1,12 +1,11 @@
 ;;;;; TRE to C transpiler
 ;;;;; Copyright (c) 2009-2011 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Renaming body tags after lambda-expansion
 
 (defun rename-body-tags-get-expr-0 (x)
   (if
     (%%vm-go? x)     (error "VM-GO in argument list")
 	(%%vm-go-nil? x) (error "VM-GO-NIL in argument list")
+	(%%vm-go-not-nil? x) (error "VM-GO-NOT-NIL in argument list")
 	(lambda? x)      (rename-body-tags-get (lambda-body x))
 	(%%vm-scope? x)  (rename-body-tags-get .x)
     (rename-body-tags-get-expr x)))
@@ -38,6 +37,7 @@
 	(%quote? x)		 x
 	(%%vm-go? x)	 (error "VM-GO in argument list")
 	(%%vm-go-nil? x) (error "VM-GO-NIL in argument list")
+	(%%vm-go-not-nil? x) (error "VM-GO-NOT-NIL in argument list")
 	(lambda? x)		 (copy-lambda x :body (rename-body-tags-set (lambda-body x) renamed))
 	(%%vm-scope? x)  `(%%vm-scope ,@(rename-body-tags-set .x renamed))
 	(rename-body-tags-set-expr x renamed)))
@@ -58,6 +58,9 @@
 	(%%vm-go-nil? x)  `(%%vm-go-nil ,.x.
 				   	 	  		    ,(or (assoc-value ..x. renamed :test #'=)
 						       		     (error "didn't gather tag ~A VM-GO-NIL" x)))
+	(%%vm-go-not-nil? x)  `(%%vm-go-not-nil ,.x.
+				   	 	  		            ,(or (assoc-value ..x. renamed :test #'=)
+						       		             (error "didn't gather tag ~A VM-GO-NOT-NIL" x)))
 	(lambda? x) 	  (copy-lambda x
 				  		  :body (rename-body-tags-set (lambda-body x) renamed))
 	(%%vm-scope? x)   `(%%vm-scope ,@(rename-body-tags-set .x renamed))

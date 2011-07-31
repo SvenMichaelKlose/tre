@@ -36,6 +36,7 @@
        (%var ,name)
 	   (%setq ,name ,val))))
 
+(functional %eq %not)
 (transpiler-wrap-invariant-to-binary define-c-std-macro eq 2 %eq and)
 (transpiler-wrap-invariant-to-binary define-c-std-macro %not2 1 %not and)
 

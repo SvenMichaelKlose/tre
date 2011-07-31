@@ -5,7 +5,7 @@
 
 (mapcar-macro x
 	'(%quote %new
-	  %%vm-scope %%vm-go %%vm-go-nil %%vm-call-nil
+	  %%vm-scope %%vm-go %%vm-go-nil %%vm-go-not-nil %%vm-call-nil
 	  %stack %vec %set-vec %setq %tag
 	  %transpiler-native %transpiler-string
 	  %%funref
@@ -28,12 +28,13 @@
 
 (defun vm-jump? (e)
   (and (cons? e)
-	   (in? e. '%%vm-go '%%vm-go-nil)))
+	   (in? e. '%%vm-go '%%vm-go-nil '%%vm-go-not-nil)))
 
 (defun vm-jump-tag (x)
   (?
 	(%%vm-go? x) .x.
-	(%%vm-go-nil? x) ..x.))
+	(or (%%vm-go-nil? x)
+        (%%vm-go-not-nil? x)) ..x.))
 
 (defun %%vm-scope-body (x)
   .x)
