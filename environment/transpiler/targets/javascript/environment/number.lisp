@@ -10,3 +10,9 @@
 
 (defun string-integer (x)
   (parse-int x 10))
+
+(dont-obfuscate *math floor)
+
+(defun number-integer (x)
+  (declare type number x)
+  (*math.floor x))

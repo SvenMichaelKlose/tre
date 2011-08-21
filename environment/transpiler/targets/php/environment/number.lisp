@@ -9,3 +9,6 @@
 
 (defun number (x)
   (%transpiler-native "(float)$" x))
+
+(defun number-integer (x)
+  (%transpiler-native "(int)$" x))

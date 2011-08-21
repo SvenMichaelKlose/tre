@@ -67,10 +67,7 @@
 	  (character? x)))
 
 (defun integer (x)
-  (declare type number x)
   (?
-    (character? x)
-      (char-code x)
-    (string? x)
-      (string-integer x)
-    x))
+    (character? x) (char-code x)
+    (string? x) (string-integer x)
+    (number-integer x)))
