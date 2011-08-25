@@ -169,8 +169,7 @@ trespecial_call_compiled (treptr lst)
 	}
 
 	/* Initialize the cif */
-	if (ffi_prep_cif(&cif, FFI_DEFAULT_ABI, i, &ffi_type_ulong, args) == FFI_OK)
-	{
+	if (ffi_prep_cif(&cif, FFI_DEFAULT_ABI, i, &ffi_type_ulong, args) == FFI_OK) {
 		fun = TREATOM_COMPILED_FUN(CAR(lst));
 		ffi_call(&cif, fun, &rc, values);
 	}
@@ -231,7 +230,7 @@ trespecial_is_compiled_funcall (treptr x)
 }
 
 treptr
-trespecial_apply_compiled_call (func, args)
+trespecial_apply_compiled_call (treptr func, treptr args)
 {
 	treptr result;
 	treptr cargs = CONS(func, args);
@@ -295,10 +294,9 @@ trespecial_apply_compiled (treptr list)
 		tregc_push (args);
 	    lexicals = CDR(CDR(func));
 		res = trespecial_apply_compiled_call_closure (
-				  CAR(CDR(func)),
-			      lexicals != treptr_nil ?
-					  CONS(CDR(CDR(func)), args) :
-					  CONS(treptr_nil, args)
+		    CAR(CDR(func)),
+		    lexicals != treptr_nil ? CONS(CDR(CDR(func)), args) :
+			                         CONS(treptr_nil, args)
 		);
 		tregc_pop ();
 		tregc_pop ();
