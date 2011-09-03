@@ -1,7 +1,4 @@
-;;;; TRE environment
-;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
-;;;;
-;;;; Alien C-calls
+;;;; TRE environment - Copyright (c) 2008,2011 Sven Klose <pixel@copei.de>
 
 (defstruct c-call-target
   put-arg
@@ -30,13 +27,10 @@
   (with (args (c-call-args cc)
 		 code (%malloc-exec 65536) ; XXX
 		 p code
-		 target (cond
-				  ((or (string= *cpu-type* "i386")
-					   (string= *cpu-type* "i686"))
-				     (make-c-call-target-x86))
-				  ((string= *cpu-type* "amd64")
-				     (make-c-call-target-amd64))
-				  (t (error "unsupported *CPU-TYPE*"))))
+		 target (?
+				  (in=? *cpu-type* "i386" "i486" "i586" "i686") (make-c-call-target-x86)
+				  (in=? *cpu-type* "amd64" "x86_64") (make-c-call-target-amd64)
+				  (error "unsupported *CPU-TYPE*")))
 
 	(when (= -1 code)
 	  (error "couldn't allocate trampoline"))

@@ -5,11 +5,11 @@
 
 (defun append (&rest lsts)
   (when lsts
-	(if (not (car lsts)) ; Ignore empty lists.
-		(apply #'append (cdr lsts))
+	(if (car lsts) ; Ignore empty lists.
    	    (let n (copy-list (car lsts))
           (rplacd (last n) (apply #'append (cdr lsts)))
-          n))))
+          n)
+		(apply #'append (cdr lsts)))))
 
 (defmacro append! (place &rest args)
   `(setf ,place (append ,place ,@args)))
