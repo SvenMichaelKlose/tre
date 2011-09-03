@@ -13,7 +13,9 @@
              (dolist (i (list ,@(mapcan (fn `((? *transpiler-debug-dump*
                                                  #'((x)
                                                      (print ',($ '*************************** _.))
-                                                     (print (funcall ,._. x)))
+                                                     (prog1
+                                                       (print (funcall ,._. x))
+                                                       (force-output)))
                                                  ,._.)))
                                         (reverse (group x 2))))
                       ,cache-var)
