@@ -1,6 +1,6 @@
 /*
  * TRE interpreter
- * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2008,2011 Sven Klose <pixel@copei.de>
  *
  * Environment
  */
@@ -25,8 +25,7 @@
 void
 treenv_create (treptr a)
 {
-    TREATOM_DETAIL(a) = (void *) 
-        CONS(TRECONTEXT_ENV_CURRENT(), CONS(treptr_nil, treptr_nil));
+    TREATOM_DETAIL(a) = (void *) (size_t) CONS(TRECONTEXT_ENV_CURRENT(), CONS(treptr_nil, treptr_nil));
 }
 
 /* Update bindings of environment. */

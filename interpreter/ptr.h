@@ -12,7 +12,7 @@
 #include "config.h"
 #include "type.h"
 
-typedef ulong treptr;
+typedef uint treptr;
 
 #define TREPTR_FLAGS	((treptr) -1 << TREPTR_INDEX_WIDTH)
 

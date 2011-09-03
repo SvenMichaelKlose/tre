@@ -156,7 +156,7 @@ tregc_trace_atom (treptr a)
     switch (TREATOM_TYPE(a)) {
         case TRETYPE_FUNCTION:
         case TRETYPE_MACRO:
-	    	tregc_trace_object ((treptr) TREATOM_DETAIL(a));
+	    	tregc_trace_object ((treptr) (size_t) TREATOM_DETAIL(a));
 	    	break;
 
         case TRETYPE_ARRAY:

@@ -225,7 +225,7 @@ treatom_builtin_symbol_compiled_function (treptr list)
 {
     treptr arg = treatom_builtin_arg (list);
 	if (TREATOM_COMPILED_FUN(arg))
-		return trenumber_get ((double) (int) TREATOM_COMPILED_FUN(arg));
+		return trenumber_get ((double) (long) TREATOM_COMPILED_FUN(arg));
 	else
     	return treptr_nil;
 }

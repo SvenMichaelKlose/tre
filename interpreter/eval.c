@@ -1,6 +1,6 @@
 /*
  * TRE interpreter
- * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
+ * Copyright (c) 2005-2009,2011 Sven Klose <pixel@copei.de>
  *
  * Evaluation related section.
  *
@@ -103,7 +103,7 @@ treeval_funcall (treptr func, treptr expr, bool do_argeval)
     body = CDR(funcdef);
 
     /* Switch to new environment. */
-    env = (treptr) TREATOM_DETAIL(func);
+    env = (treptr) (size_t) TREATOM_DETAIL(func);
     env_parent = TRECONTEXT_ENV_CURRENT();
     TRECONTEXT_ENV_CURRENT() = env;
     old_parent = env_parent;
@@ -359,8 +359,8 @@ treeval (treptr x)
     RETURN_NIL(x);
 
 #ifdef TRE_VERBOSE_EVAL
-    if (TREATOM_VALUE(treopt_verbose_eval) != treptr_nil)
-		treprint (x);
+	treprint (x);
+    fflush (stdout);
 #endif
 
     tregc_push (x);

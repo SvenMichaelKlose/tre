@@ -12,14 +12,14 @@
 
 /* Atom table. */
 struct tre_atom {
-    char   	*name;
+    char   	* name;
     char	type;
     treptr	value;
     treptr	fun;
     void	* compiled_fun;
     treptr	binding;
     treptr	package;
-    void 	*detail;
+    void 	* detail;
 };
 
 extern void * tre_atoms_free;

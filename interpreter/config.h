@@ -15,7 +15,7 @@ typedef int bool;
 
 #ifndef TRE_INFO
 #define TRE_INFO \
-	"TRE tree processor " TRE_VERSION " (" __DATE__ " " __TIME__ ")\n"
+	"Tré " TRE_VERSION " (" __DATE__ " " __TIME__ ")\n"
 #endif
 
 #ifndef TRE_COPYRIGHT
@@ -44,7 +44,7 @@ typedef int bool;
 #endif
 
 #define TRE_MAX_SYMLEN		(4 * KILO)
-#define TRE_MAX_STRINGLEN	(4 * KILO)
+#define TRE_MAX_STRINGLEN	(64 * KILO)
 
 #define TRE_MAX_NESTED_FILES	16
 #define TRE_FILEIO_MAX_FILES   16
@@ -55,7 +55,7 @@ typedef int bool;
 #define TREDEBUG_MAX_BREAKPOINTS	16
 
 #ifndef NUM_LISTNODES
-#define NUM_LISTNODES	(8 * MEGA)
+#define NUM_LISTNODES	(48 * MEGA)
 #endif
 
 #ifndef NUM_ATOMS
@@ -119,6 +119,6 @@ typedef int bool;
 #endif
 #endif
 
-#define TRESTACK_SIZE		(1 * MEGA)
+#define TRESTACK_SIZE		(16 * MEGA)
 
 #endif /* #ifndef TRE_TRE_H */
