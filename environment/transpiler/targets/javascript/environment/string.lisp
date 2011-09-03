@@ -35,16 +35,6 @@
 	(not x) ,*nil-symbol-name*
    	(x.to-string)))
 
-;(defun list-string (lst)
-;  (when lst
-;    (declare type cons lst)
-;    (with (n (length lst)
-;           s (make-string 0))
-;      (do ((i 0 (integer-1+ i))
-;           (l lst .l))
-;          ((integer>= i n) s)
-;        (setf s (+ s (string l.)))))))
-
 ;; XXX must be optional.
 (defun string= (x y)
   (%%%= x y))
