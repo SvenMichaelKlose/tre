@@ -1,7 +1,7 @@
 #!/bin/sh
-# TRE programming language
+# tré programming language
 # Build script
-# Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
+# Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
 
 svnversion -n >_current-version
 
@@ -55,8 +55,8 @@ CC=cc
 LD=cc
 
 echo
-LIBC_PATH=`ls /lib/i386-linux-gnu/libc.so.*`
-LIBDL_PATH=`ls /lib/i386-linux-gnu/libdl.so.*`
+LIBC_PATH=`find /lib -name libc.so.*`
+LIBDL_PATH=`find /lib -name libdl.so.*`
 KERNEL_IDENT=`uname -i`
 SYSTEM_NAME=`uname -n`
 CPU_TYPE=`uname -m`
@@ -76,7 +76,7 @@ CRUNSHFLAGS="-DTRE_COMPILED_CRUNSHED -Iinterpreter"
 
 LIBFLAGS="-lm -lffi"
 
-if [ -f /lib/i386-linux-gnu/libdl.so* ]; then
+if [ -f /lib/x86_64-linux-gnu/libdl.so* ]; then
 	LIBFLAGS="$LIBFLAGS -ldl";
 fi
 
@@ -90,6 +90,7 @@ TRE="./tre"
 BINDIR="/usr/local/bin/"
 
 echo "libc is '$LIBC_PATH'."
+echo "libdl is '$LIBDL_PATH'."
 echo "Compiler: $CC"
 echo "Compiler flags: $CFLAGS $COPTS"
 echo "Library flags: $LIBFLAGS"
