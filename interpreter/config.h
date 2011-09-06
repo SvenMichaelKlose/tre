@@ -15,7 +15,7 @@ typedef int bool;
 
 #ifndef TRE_INFO
 #define TRE_INFO \
-	"Tré " TRE_VERSION " (" __DATE__ " " __TIME__ ")\n"
+	"tré " TRE_VERSION " (" __DATE__ " " __TIME__ ")\n"
 #endif
 
 #ifndef TRE_COPYRIGHT
@@ -119,6 +119,6 @@ typedef int bool;
 #endif
 #endif
 
-#define TRESTACK_SIZE		(16 * MEGA)
+#define TRESTACK_SIZE		(1 * MEGA)
 
 #endif /* #ifndef TRE_TRE_H */
