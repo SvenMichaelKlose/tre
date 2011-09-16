@@ -1,0 +1,46 @@
+Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
+
+tré is a compiler for a dialect of the Lisp family of programming
+languages which can produce C, JavaScript and PHP code.
+
+
+BUILD & INSTALL
+
+Make sure you have libdl, libffi and their headers installed.
+Then, simply run the make.sh shell script with the argument
+'boot' and enjoy yourself for a couple of minutes.  The
+interpreter is rather slow.
+
+    # ./make.sh boot
+
+tré will be installed to /usr/local/bin, the environment source
+is copied to /usr/local/share/tre.  The first time a user starts
+tré, it will read the environment and save a system image to your
+home directory. It is read every time you start tré again.
+
+
+COMMAND-LINE
+
+Invoke tré with the -h argument and it tells you all it knows
+about its command-line options and arguments.
+
+
+ABOUT THE INTERPRETER
+
+Opposite to the compiler the interpreter has no lexical scopging
+but surprisingly it copes with the compiler source anyway.
+Hopefully, the interpreter is replaced by the compiler soon.
+
+
+THE DIALECT
+
+The dialect's major core features (excluding macros) are:
+
+  - lexical scoping (expect the interpreter),
+  - a variable, function and package per symbol,
+  - toplevel quote-expansion,
+  - a terse dot-notation for stepping along CONSes,
+  - no LAMBDA symbol required in literal functions
+
+The most detailed documentation if the environment is the code
+itself. Oh, by the way: "tré" is Icelandic for "tree".
