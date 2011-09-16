@@ -4,8 +4,8 @@
 (defun c-codegen-function-prologue-for-local-variables (fi num-vars)
   `(,@(c-line "treptr __ret")
     ,@(when (< 1 num-vars)
-	   `(("int __c; for (__c = " ,num-vars "; __c > 0; __c--)")))
-    ,@(c-line "    *--trestack_ptr = treptr_nil")
+	   `(("    int __c; for (__c = " ,num-vars "; __c > 0; __c--)")))
+    ,@(c-line " *--trestack_ptr = treptr_nil")
 	,@(when (transpiler-stack-locals? *current-transpiler*)
 		(mapcar (fn
 				  (when (eq (place-assign (place-expand-0 fi _)) _)

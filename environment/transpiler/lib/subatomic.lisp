@@ -1,7 +1,4 @@
-;;;; TRE compiler
-;;;; Copyright (c) 2006-2011 Sven Klose <pixel@copei.de>
-;;;;
-;;;; Subatomic expression utilities.
+;;;; tré compiler -- Copyright (c) 2006-2011 Sven Klose <pixel@copei.de>
 
 (mapcar-macro x
 	'(%quote %new
