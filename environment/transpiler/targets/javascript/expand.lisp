@@ -178,3 +178,19 @@
     (late-print `(functional ,@x)))
   (setf *functionals* (nconc x *functionals*))
   nil)
+
+(define-js-std-macro try (&rest x)
+  `(progn
+     (%setq nil (%try))
+     (prog1
+       (progn
+         ,@x)
+       (%setq nil (%closing-bracket)))))
+
+(define-js-std-macro catch ((obj) &rest x)
+  `(progn
+     (%setq nil (%catch ,obj))
+     (prog1
+       (progn
+         ,@x)
+       (%setq nil (%closing-bracket)))))

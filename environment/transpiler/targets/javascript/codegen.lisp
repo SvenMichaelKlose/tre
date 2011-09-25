@@ -215,6 +215,15 @@
                            y
                            (transpiler-obfuscated-symbol-string *js-transpiler* y))))
 
+(define-js-macro %try ()
+  '(%transpiler-native "try {"))
+
+(define-js-macro %closing-bracket ()
+  '(%transpiler-native "}"))
+
+(define-js-macro %catch (x)
+  `(%transpiler-native "catch (" ,x ") {"))
+
 ;;;; BACK-END META-CODES
 
 (define-js-macro %stack (x)
