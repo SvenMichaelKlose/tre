@@ -49,8 +49,13 @@
 		                       (remove-if (fn = _ #\-) (string-list (string-upcase (subseq str 1 (1- l)))))
     	                       (convert-camel (string-list str)))))))))
 
+(defun transpiler-symbol-string-0 (tr s)
+  (aif (symbol-package s)
+       (transpiler-symbol-string-r tr (make-symbol (string-concat (symbol-name !) ":" (symbol-name s))))
+       (transpiler-symbol-string-r tr s)))
+
 (defun transpiler-dot-symbol-string (tr sl)
-  (apply #'string-concat (pad (mapcar (fn transpiler-symbol-string-r tr (make-symbol (list-string _)))
+  (apply #'string-concat (pad (mapcar (fn transpiler-symbol-string-0 tr (make-symbol (list-string _)))
 		                              (split #\. sl))
                               ".")))
 
@@ -58,7 +63,7 @@
   (let sl (string-list (string s))
     (? (position #\. sl)
 	   (transpiler-dot-symbol-string tr sl)
-	   (transpiler-symbol-string-r tr s))))
+	   (transpiler-symbol-string-0 tr s))))
 
 (defun transpiler-to-string (tr x)
   (maptree #'((e)

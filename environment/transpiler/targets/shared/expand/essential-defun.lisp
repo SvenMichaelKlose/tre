@@ -1,5 +1,4 @@
-;;;;; TRE transpiler
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (defvar *allow-redefinitions?* nil)
 
@@ -7,6 +6,8 @@
   (apply (? *allow-redefinitions?* #'warn #'error) args))
 
 (defun shared-essential-defun (name args &rest body)
+  (awhen (transpiler-current-package *current-transpiler*)
+    (setf name (make-symbol (symbol-name name) !)))
   (when *show-definitions*
     (late-print `(defun ,name ,args)))
   (with (n (%defun-name name)

@@ -117,8 +117,7 @@ void
 treread_token (struct tre_stream * stream)
 {
     char   c;
-    ulong  len = get_symbol (stream, TRECONTEXT_TOKEN_NAME(),
-	                        	TRECONTEXT_PACKAGE_NAME());
+    ulong  len = get_symbol (stream, TRECONTEXT_TOKEN_NAME(), TRECONTEXT_PACKAGE_NAME());
 
     if (len == 1 && TRECONTEXT_TOKEN_NAME()[0] == '.') {
     	TRECONTEXT_TOKEN() = TRETOKEN_DOT;

@@ -1,8 +1,7 @@
-;;;;; TRE transpiler
-;;;;; Copyright (c) 2009-2010 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2009-2011 Sven Klose <pixel@copei.de>
 
 (defun compiled-function-name (x)
-  (if (or (%transpiler-native? x)
-		  (not (transpiler-defined-function *current-transpiler* x)))
-	  x
-      ($ 'userfun_ x)))
+  (? (or (%transpiler-native? x)
+	     (not (transpiler-defined-function *current-transpiler* x)))
+	 x
+     (make-symbol (string-concat "USERFUN_" (symbol-name x)) (symbol-package x))))

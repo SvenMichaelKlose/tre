@@ -111,7 +111,9 @@
 
   ; Recompiling
   (sightened-files)
-  (compiled-files))
+  (compiled-files)
+
+  (current-package nil))
 
 (defun transpiler-defined-function (tr name)
   (href (transpiler-defined-functions-hash tr) name))

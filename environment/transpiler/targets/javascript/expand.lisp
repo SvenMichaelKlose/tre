@@ -179,6 +179,10 @@
   (setf *functionals* (nconc x *functionals*))
   nil)
 
+(define-js-std-macro in-package (n)
+  (setf (transpiler-current-package *js-transpiler*) (when n (make-package (symbol-name n))))
+  nil)
+
 (define-js-std-macro try (&rest x)
   `(progn
      (%setq nil (%try))
