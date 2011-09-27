@@ -1,5 +1,4 @@
-;;;;; TRE environment
-;;;;; Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
+;;;;; trè - Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
 
 (defun %print-first-occurence (x str info)
   (hremove (print-info-first-occurences info) x)
@@ -49,7 +48,8 @@
   (princ #\" str))
 
 (defun %print-symbol (x str)
-  (when (keyword? x)
+  (awhen (symbol-package x)
+	(princ (symbol-name !) str)
 	(princ #\: str))
   (princ (symbol-name x) str))
 
