@@ -30,7 +30,6 @@
 (transpiler-pass transpiler-simple-expand-compose (tr)
     literal-conversion (fn funcall (transpiler-literal-conversion tr) _)
     backquote-expand #'backquote-expand
-    make-packages #'make-packages
     compiler-macroexpand #'compiler-macroexpand
     transpiler-macroexpand-2 (fn transpiler-macroexpand tr _)
     quasiquote-expand #'quasiquote-expand

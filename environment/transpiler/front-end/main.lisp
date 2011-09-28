@@ -13,7 +13,6 @@
 (env-load "transpiler/front-end/opt-inline.lisp")
 (env-load "transpiler/front-end/literals.lisp")
 (env-load "transpiler/front-end/backquote-expand.lisp")
-(env-load "transpiler/front-end/package.lisp")
 (env-load "transpiler/front-end/compiler-macros.lisp")
 (env-load "transpiler/front-end/expand.lisp")
 (env-load "transpiler/front-end/toplevel.lisp")

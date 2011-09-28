@@ -27,7 +27,8 @@
     make-named-functions (fn transpiler-make-named-functions tr _)
     quote-keywords #'transpiler-quote-keywords
     expression-expand (fn with-temporary *expex-warn?* nil
-                           (transpiler-expression-expand tr _)))
+                           (transpiler-expression-expand tr _))
+    make-packages #'make-packages)
 
 (defun transpiler-middleend-2 (tr x)
   (remove-if #'not (funcall (transpiler-expand-compose tr) x)))

@@ -18,6 +18,7 @@
 (env-load "transpiler/middle-end/cps.lisp")
 (env-load "transpiler/middle-end/named-functions.lisp")
 (env-load "transpiler/middle-end/quote-keywords.lisp")
+(env-load "transpiler/middle-end/package.lisp")
 
 ;(env-load "transpiler/middle-end/cblock.lisp")
 ;(env-load "transpiler/middle-end/metacode-fblock.lisp")

@@ -1,5 +1,4 @@
-;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (defmacro define-js-std-macro (&rest x)
   `(define-transpiler-std-macro *js-transpiler* ,@x))
@@ -65,13 +64,15 @@
 
 (define-js-std-macro defun (name args &rest body)
   (with-gensym g
-	(let dname (%defun-name name)
+	(let dname (transpiler-package-symbol *js-transpiler* (%defun-name name))
       (js-cps-exception name)
       (when (in-cps-mode?)
         (transpiler-add-cps-function *js-transpiler* dname))
       `(progn
 		 (%var ,g)
-		 (%setq ,g (symbol ,(transpiler-obfuscated-symbol-name *js-transpiler* dname) nil))
+		 (%setq ,g (symbol ,(transpiler-obfuscated-symbol-name *js-transpiler* dname)
+                           ,(awhen (symbol-package dname)
+                              `(make-package ,(symbol-name !)))))
 	     ,(apply #'shared-essential-defun dname args body)
 		 (setf (symbol-function ,g) ,dname)))))
 
@@ -181,7 +182,7 @@
 
 (define-js-std-macro in-package (n)
   (setf (transpiler-current-package *js-transpiler*) (when n (make-package (symbol-name n))))
-  nil)
+  `(%%in-package ,n))
 
 (define-js-std-macro try (&rest x)
   `(progn

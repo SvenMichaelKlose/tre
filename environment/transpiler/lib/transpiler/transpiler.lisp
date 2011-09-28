@@ -233,3 +233,6 @@
 
 (defun make-global-funinfo (tr)
   (make-lambda-funinfo (setf (transpiler-global-funinfo tr) (make-funinfo))))
+
+(defun transpiler-package-symbol (tr x)
+  (make-symbol (symbol-name x) (transpiler-current-package tr)))
