@@ -72,7 +72,7 @@
 		 (%var ,g)
 		 (%setq ,g (symbol ,(transpiler-obfuscated-symbol-name *js-transpiler* dname)
                            ,(awhen (symbol-package dname)
-                              `(make-package ,(symbol-name !)))))
+                              `(make-package ,(transpiler-obfuscated-symbol-name *js-transpiler* !)))))
 	     ,(apply #'shared-essential-defun dname args body)
 		 (setf (symbol-function ,g) ,dname)))))
 

@@ -1,5 +1,4 @@
-;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (defun js-call (x)
   `(,x. ,@(parenthized-comma-separated-list .x)))
@@ -12,8 +11,8 @@
 (defun js-codegen-symbol-constructor-expr (tr x)
   (let s (transpiler-obfuscated-symbol-string tr (compiled-function-name 'symbol))
     `(,s "(\"" ,(transpiler-obfuscated-symbol-name tr x) "\","
-	           ,@(? (symbol-package x)
-	                `((,s "(\"" ,(symbol-name (symbol-package x)) "\",null)"))
+	           ,@(aif (symbol-package x)
+	                `((,s "(\"" ,(transpiler-obfuscated-symbol-name tr !) "\",null)"))
 	                '(("null")))
 	     ")")))
 

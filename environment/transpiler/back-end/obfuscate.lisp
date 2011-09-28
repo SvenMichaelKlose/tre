@@ -12,7 +12,7 @@
     (or (href obs x)
         (setf (href obs x)
 			  (aif (symbol-package x)
-    		       (make-symbol (symbol-name (transpiler-obfuscated-sym)) !)
+    		       (make-symbol (symbol-name (transpiler-obfuscated-sym)) (transpiler-obfuscate-symbol tr !))
     		       (transpiler-obfuscated-sym))))))
 
 (defun obfuscateable-symbol? (tr x)
