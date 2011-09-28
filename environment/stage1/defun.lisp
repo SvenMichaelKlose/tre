@@ -1,5 +1,4 @@
-;;;; TRE environment
-;;;; Copyright (c) 2005-2008,2010 Sven Klose <pixel@copei.de>
+;;;; tré - Copyright (c) 2005-2008,2010-2011 Sven Klose <pixel@copei.de>
 
 ; Check and return keyword argument or NIL.
 (%defun %defun-arg-keyword (args)
@@ -22,7 +21,7 @@
   (if (atom name)
       name
       (if (eq (car name) 'SETF)
-          (make-symbol (string-concat "%%USETF-" (string (cadr name))))
+          (make-symbol (string-concat "%%USETF-" (string (cadr name))) (symbol-package (cadr name)))
           (progn
 			(print name)
 			(%error "illegal function name")))))
