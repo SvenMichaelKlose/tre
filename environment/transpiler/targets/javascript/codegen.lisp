@@ -174,10 +174,10 @@
   (let pairs (group args 2)
     `("{"
       ,@(when args
-	      (mapcan (fn `( ,_. ":" ,._. ",")) (butlast pairs)))
+	      (mapcan (fn `(,(symbol-without-package _.) ":" ,._. ",")) (butlast pairs)))
       ,@(when args
-		  (with (x (car (last pairs)))
-		    `(,x. ":" ,.x.)))
+		  (let x (car (last pairs))
+		    `(,(symbol-without-package x.) ":" ,.x.)))
      "}")))
 
 (define-js-macro href (arr &rest idx)
