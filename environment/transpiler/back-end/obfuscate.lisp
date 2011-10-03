@@ -1,5 +1,4 @@
-;;;;; TRE transpiler
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (defvar *transpiler-obfuscation-counter* 0)
 
@@ -43,8 +42,11 @@
 (defun transpiler-print-obfuscations (tr)
   (dolist (k (hashkeys (transpiler-obfuscations tr)))
     (unless (in=? (elt (symbol-name k) 0) #\~) ; #\_)
-	  (format t "~A -> ~A" (symbol-name k)
-						   (href (transpiler-obfuscations tr) k)))))
+	  (format t "~A~A -> ~A" (aif (symbol-package k)
+                                  (string-concat (symbol-name !) ":")
+                                  "")
+                             (symbol-name k)
+						     (href (transpiler-obfuscations tr) k)))))
 
 (defun transpiler-obfuscated-nil? (x)
   (eq x (transpiler-obfuscate-symbol *current-transpiler* nil)))
