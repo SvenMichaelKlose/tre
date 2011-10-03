@@ -1,5 +1,4 @@
-;;;;; TRE transpiler
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 ;; After this pass
 ;; - Functions are inlined.
@@ -9,7 +8,7 @@
 ;; - Accesses to the object in a method are thisified.
 (transpiler-pass transpiler-preexpand-compose (tr)
     fake-expression-expand (fn with-temporary *expex-warn?* nil
-		                         (transpiler-expression-expand tr _)
+		                         (transpiler-expression-expand tr (make-packages _))
 		                         _)
     lambda-expand (fn transpiler-lambda-expand tr _)
     rename-function-arguments #'rename-function-arguments
