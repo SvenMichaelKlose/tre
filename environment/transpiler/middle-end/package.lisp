@@ -13,7 +13,8 @@
 (defun make-packages-0 (x)
   (?
     (not x) x
-    (symbol? x)
+    (and (symbol? x)
+         (not (symbol-package x)))
       (let packaged-symbol (transpiler-package-symbol *current-transpiler* x)
         (? (transpiler-defined-function *current-transpiler* packaged-symbol)
            packaged-symbol
@@ -22,6 +23,7 @@
     (eq '%%in-package x.)
       (and (setf (transpiler-current-package *current-transpiler*) (make-package (symbol-name .x.)))
            nil)
+    (%slot-value? x) x
     (cons (make-packages-0 x.)
           (make-packages-0 .x))))
 
