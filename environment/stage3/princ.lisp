@@ -1,9 +1,11 @@
-;;;;; TRE environment
-;;;;; Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
 
 (defun %princ-character (c str)
-  (setf (stream-last-char str) c)
-  (funcall (stream-fun-out str) c str))
+  (unless (and (string? c) (= 0 (length c)))
+    (setf (stream-last-char str) (? (string? c)
+                                    (elt c (1- (length c)))
+                                    c))
+    (funcall (stream-fun-out str) c str)))
 
 (defun %princ-number (c str)
   (with (recp #'((out n) ; XXX: REC will bug the expression-expander.
