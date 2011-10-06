@@ -37,7 +37,8 @@
                                    _)
     dot-expand (fn ? (transpiler-dot-expand? tr)
                      (dot-expand _)
-                     _))
+                     _)
+    file-input #'identity)
 
 (defun transpiler-frontend-1 (tr x)
   (funcall (transpiler-simple-expand-compose tr) x))
