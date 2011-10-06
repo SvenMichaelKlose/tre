@@ -16,14 +16,14 @@
 			   (or (%slot-value? p)
 				   (slot-value? p))))
 	  (progn
-		(if (member p *constants*)
+		(if (member p *constants* :test #'eq)
 		    (%error "cannot set constant"))
       	(list 'setq p val))
       (let* ((fun (car p))
 	         (args (cdr p))
 	         (setfun (%setf-make-symbol fun)))
         (if (funcall *setf-function?* setfun)
-			(if (member (car args) *constants*)
+			(if (member (car args) *constants* :test #'eq)
 		    	(%error "cannot set constant")
 	            `(,setfun ,val ,@args))
             (progn
