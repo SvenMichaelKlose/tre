@@ -1,5 +1,4 @@
-;;;;; TRE transpiler
-;;;;; Copyright (c) 2010 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2010 Sven Klose <pixel@copei.de>
 
 (defun print-cblock (cb)
   (format t "Ins: ~A" (cblock-ins cb))
@@ -9,6 +8,7 @@
   (when (cblock-conditional-next cb)
     (format t "Conditional next.~%"))
   (dolist (i (cblock-code cb))
+    (princ "    ")
     (late-print i))
   (format t "Outs: ~A~%" (cblock-outs cb))
   cb)
