@@ -1,5 +1,4 @@
-;;;;; TRE transpiler
-;;;;; Copyright (c) 2010-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2010-2011 Sven Klose <pixel@copei.de>
 
 (defvar *transpiler-debug-dump* nil)
 
@@ -12,9 +11,10 @@
              (setf ,cache-var init)
              (dolist (i (list ,@(mapcan (fn `((? *transpiler-debug-dump*
                                                  #'((x)
-                                                     (print ',($ '*************************** _.))
+                                                     (format t ,(string-concat "******************** before " (symbol-name _.) "~%"))
                                                      (prog1
                                                        (print (funcall ,._. x))
+                                                       (format t ,(string-concat "******************** after " (symbol-name _.) "~%"))
                                                        (force-output)))
                                                  ,._.)))
                                         (reverse (group x 2))))
