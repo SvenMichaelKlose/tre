@@ -1,19 +1,23 @@
-;;;; TRE  environment
-;;;; Copyright (c) 2005-2006,2009-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2005-2006,2009-2011 Sven Klose <pixel@copei.de>
 
-(functional assoc acons copy-alist)
+(functional assoc rassoc acons copy-alist)
+
+(defmacro %define-assoc (name getter-fun-name)
+  `(defun ,name (key lst &key (test #'eql))
+     (when lst
+	   (unless (cons? lst)
+	     (%error "list expected"))
+       (dolist (i lst)
+         (? (cons? i)
+		    (? (funcall test key (,getter-fun-name i))
+	  	  	   (return i))
+		    (and (print i)
+			     (%error "not a pair")))))))
 
 (unless (eq t *BUILTIN-ASSOC*)
-  (defun assoc (key lst &key (test #'eql))
-    (when lst
-	  (unless (cons? lst)
-	    (%error "list expected"))
-      (dolist (i lst)
-        (? (cons? i)
-		   (? (funcall test key (car i))
-	  	  	  (return i))
-		   (and (print i)
-			    (%error "not a pair")))))))
+  (%define-assoc assoc car))
+
+(%define-assoc rassoc cdr)
 
 (let lst '((a . d) (b . e) (c . f))
   (unless (eq 'e (cdr (assoc 'b lst)))
