@@ -124,14 +124,6 @@
 	 (js-transpiler-make-new-hash x)
 	 (js-transpiler-make-new-object x)))
 
-(define-js-std-macro doeach ((var seq &rest result) &rest body)
-  (with-gensym (evald-seq idx)
-    `(let ,evald-seq ,seq
-	   (when ,evald-seq
-	     (dotimes (,idx (%slot-value ,evald-seq length) ,@result)
-	       (let ,var (aref ,evald-seq ,idx)
-             ,@body))))))
-
 (define-js-std-macro js-type-predicate (name &rest types)
   `(defun ,name (x)
      (when x

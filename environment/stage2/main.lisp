@@ -1,7 +1,4 @@
-;;;; TRE environment
-;;;; Copyright (C) 2005-2011 Sven Klose <pixel@copei.de>
-;;;;
-;;;; Second stage
+;;;;; tré - Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
 
 (env-load "stage2/with-gensym.lisp")
 (env-load "stage2/list-manipulation.lisp")
@@ -29,3 +26,4 @@
 (env-load "stage2/defstruct.lisp")
 (env-load "stage2/abs.lisp")
 (env-load "stage2/traverse.lisp")
+(env-load "stage2/doarray.lisp")

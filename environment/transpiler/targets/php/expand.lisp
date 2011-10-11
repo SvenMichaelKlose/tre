@@ -86,15 +86,6 @@
 	 (php-transpiler-make-new-hash x)
 	 (php-transpiler-make-new-object x)))
 
-;; Iterate over array.
-(define-php-std-macro doeach ((var seq &rest result) &rest body)
-  (with-gensym (evald-seq idx)
-    `(with (,evald-seq ,seq)
-	   (when ,evald-seq
-	     (dotimes (,idx (%slot-value ,evald-seq length) ,@result)
-	       (with (,var (aref ,evald-seq ,idx))
-             ,@body))))))
-
 (define-php-std-macro php-type-predicate (name &rest types)
   `(defun ,name (x)
      (when x
