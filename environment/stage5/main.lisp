@@ -4,6 +4,7 @@
 (env-load "stage5/backslash-to-slash.lisp")
 (env-load "stage5/base64.lisp")
 (env-load "stage5/comma-separated-list.lisp")
+(env-load "stage5/doseq.lisp")
 (env-load "stage5/merge-unique.lisp")
 (env-load "stage5/string-has-whitespace-p.lisp")
 (env-load "stage5/stringlist-skip-spaces.lisp")
