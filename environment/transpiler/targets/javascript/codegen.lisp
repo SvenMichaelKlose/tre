@@ -251,3 +251,6 @@
   	  		`(%funref ,name ,!)
 			(error "no lexical for ghost"))
 	   name)))
+
+(define-js-macro %invoke-debugger ()
+  '(%transpiler-native "debugger"))

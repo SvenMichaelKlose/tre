@@ -191,3 +191,6 @@
        (progn
          ,@x)
        (%setq nil (%closing-bracket)))))
+
+(define-js-std-macro invoke-debugger ()
+ `(%setq nil (%invoke-debugger)))
