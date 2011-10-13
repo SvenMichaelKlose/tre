@@ -4,14 +4,14 @@
   (and (%setq? x)
        (funinfo-in-args-or-env? fi (%setq-place x))))
 
-(defun metacode-splitpoint? (statements)
+(defun metacode-splitpoint? (fi x)
   (or (vm-jump? x.)
       (number? .x.)
       (reassignment? fi x.)))
 
 (defun copy-until-cblock-end (cb fi x)
   (let result (make-queue)
-    (while (and x (not (metacode-splitpoint? x)))
+    (while (and x (not (metacode-splitpoint? fi x)))
            (progn
              (when (reassignment? fi x.)
                (adjoin! (%setq-place x.) (cblock-merged-ins cb)))
