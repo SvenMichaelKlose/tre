@@ -1,5 +1,4 @@
-;;;;; TRE environment
-;;;;; Copyright 2006,2008 (c) Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright 2006,2008,2011 (c) Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; XXX experimental - LOOP can only do infinite loops.
 
@@ -41,7 +40,8 @@
 
 (defmacro loop (&rest body)
   (let tag (gensym)
-    `(tagbody
-       ,tag
-       ,@body
-       (go ,tag))))
+    `(block nil
+        (tagbody
+          ,tag
+          ,@body
+          (go ,tag)))))
