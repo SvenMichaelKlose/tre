@@ -1,8 +1,5 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
- *
- * Printing expressions.
+ * tré - Copyright (c) 2005-2009,2011 Sven Klose <pixel@copei.de>
  */
 
 /*
@@ -255,8 +252,6 @@ treprint_cons (treptr * p, ulong * indent, int * postatom, char ** prepend)
 void
 treprint_indent (treptr p, ulong indent, bool nobracket, char * prepend)
 {
-    treptr    car;
-    treptr    cdr;
     int       postatom = 0;
     ulong  i;
 	int		  ret;
@@ -280,9 +275,6 @@ treprint_indent (treptr p, ulong indent, bool nobracket, char * prepend)
 		printf ("cons self-referenced in car");
         _CDR(p) = treptr_nil;
     }
-
-    car = _CAR(p);
-    cdr = _CDR(p);
 
     /* Indent line. */
     if (indent && !nobracket)

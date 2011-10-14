@@ -1,8 +1,5 @@
 /*
- * TRE interpreter
- * Copyright (c) 2006-2009 Sven Klose <pixel@copei.de>
- *
- * Streams
+ * tré - Copyright (c) 2006-2009,2011 Sven Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -152,14 +149,13 @@ treptr
 trestream_builtin_terminal_raw (treptr dummy)
 {
     struct termios settings;
-    long result;
     long desc = STDIN_FILENO;
 
-    result = tcgetattr (desc, &settings);
+    (void) tcgetattr (desc, &settings);
     settings.c_lflag &= ~(ICANON | ECHO);
     settings.c_cc[VMIN] = 1;
     settings.c_cc[VTIME] = 0;
-    result = tcsetattr (desc, TCSANOW, &settings);
+    (void) tcsetattr (desc, TCSANOW, &settings);
 
 	return treptr_nil;
 }
@@ -172,14 +168,13 @@ treptr
 trestream_builtin_terminal_normal (treptr dummy)
 {
     struct termios settings;
-    long result;
     long desc = STDIN_FILENO;
 
-    result = tcgetattr (desc, &settings);
+    (void) tcgetattr (desc, &settings);
     settings.c_lflag |= ICANON | ECHO;
     settings.c_cc[VMIN] = 1;
     settings.c_cc[VTIME] = 0;
-    result = tcsetattr (desc, TCSANOW, &settings);
+    (void) tcsetattr (desc, TCSANOW, &settings);
 
 	return treptr_nil;
 }

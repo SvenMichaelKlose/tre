@@ -1,8 +1,5 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
- *
- * Debugger
+ * tré - Copyright (c) 2005-2009,2011 Sven Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -391,7 +388,6 @@ void
 tredebug_lookup_bodyname (treptr body)
 {
     treptr  var;
-    treptr  tmp;
     static treptr   former_fun = (treptr) 0;
     static ulong  repetitions = 0;
     bool            does_repeat;
@@ -400,7 +396,6 @@ tredebug_lookup_bodyname (treptr body)
     if (var == treptr_nil)
 		return;
 
-    tmp = body;
     does_repeat = (former_fun == var);
 
     if (does_repeat)
