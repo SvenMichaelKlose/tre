@@ -93,9 +93,7 @@
               `((%function-return-cps ,fi-sym))
               `((%function-return ,fi-sym)))
 	      ,@(when (< 0 (funinfo-num-tags fi))
-	          `("}"))
-	      ,@(when (< 0 (funinfo-num-tags fi))
-	          `("}")))
+	          `("}}")))
         "")))
 
 ;;;; ASSIGNMENT
