@@ -49,7 +49,7 @@
     (symbol? x)	   (js-print-symbol x doc)
     (character? x) (js-print-character x doc)
     (string? x)	   (js-print-string x doc)
-    (objectp x)	   (js-print-object x doc)
+    (object? x)	   (js-print-object x doc)
 	(js-print-write (+ "[unknown type: " (string x) "]")
 					doc)))
 

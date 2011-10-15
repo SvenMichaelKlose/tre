@@ -38,7 +38,7 @@
 	       (array? x) "{array}"
 	       (string? x) (+ "\"" x "\"")
 		   (when x
-	         (? (objectp x)
+	         (? (object? x)
 			     (debug-print-object x)
 		   	     (string x))))
 	     " ")

@@ -2,7 +2,7 @@
 ;;;;; Copyright (c) 2009-2011 Sven Klose <pixel@copei.de>
 
 (defun hash-table? (x)
-  (and (objectp x)
+  (and (object? x)
        (undefined? x.__class)))
 
 (defun hash-assoc (x)

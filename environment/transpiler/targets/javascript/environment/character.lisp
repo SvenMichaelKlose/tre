@@ -16,7 +16,7 @@
 		    (aref *characters* x) this)))
 
 (defun character? (x)
-  (and (objectp x)
+  (and (object? x)
 	   x.__class
 	   (%%%= x.__class ,(transpiler-obfuscated-symbol-string *current-transpiler*
 															 '%character))))

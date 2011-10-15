@@ -3,7 +3,7 @@
 
 (dont-obfuscate is_object isset function_exists)
 
-(defun objectp (x)
+(defun object? (x)
   (is_object x))
 
 (defun function? (x)

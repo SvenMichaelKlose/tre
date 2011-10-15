@@ -15,7 +15,7 @@
   x)
 
 (defun cons? (x)
-  (and (objectp x)
+  (and (object? x)
 	   x.__class
 	   (%%%= x.__class ,(transpiler-obfuscated-symbol-string
 							*current-transpiler* 'cons))))
