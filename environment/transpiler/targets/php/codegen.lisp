@@ -1,5 +1,4 @@
-;;;;; Transpiler: TRE to PHP
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 ;;;; GENERAL
 
@@ -37,16 +36,23 @@
 ;;;; CONTROL FLOW
 
 (define-php-macro %%tag (tag)
-  `(%transpiler-native "_I_" ,tag ":" ,*php-newline*))
+  (? *php-goto?*
+     `(%transpiler-native "_I_" ,tag ":" ,*php-newline*)
+     `(%transpiler-native "case " ,tag ":" ,*php-newline*)))
+
+(defun php-jump (tag)
+  (? *php-goto?*
+     `("goto _I_" ,tag ";")
+     `(" $_I_=" ,tag "; break;")))
 
 (define-php-macro %%vm-go (tag)
-  (php-line "goto _I_" tag))
+  (php-line (php-jump tag)))
 
 (define-php-macro %%vm-go-nil (val tag)
-  (php-line "if (!$" val "&&!is_string($" val ")&&!is_numeric($" val ")) goto _I_" tag))
+  (php-line "if (!$" val "&&!is_string($" val ")&&!is_numeric($" val ")) { " (php-jump tag) "}"))
 
 (define-php-macro %%vm-go-not-nil (val tag)
-  (php-line "if (!(!$" val "&&!is_string($" val ")&&!is_numeric($" val "))) goto _I_" tag))
+  (php-line "if (!(!$" val "&&!is_string($" val ")&&!is_numeric($" val "))) { " (php-jump tag) "}"))
 
 ;;;; FUNCTIONS
 
@@ -62,8 +68,12 @@
       "{" ,(code-char 10)
 		 ,@(awhen (funinfo-globals fi)
              (php-line "global " (php-list !)))
+         ,@(unless (and *php-goto?* (< 0 (funinfo-num-tags fi)))
+             (list "    $_I_=0; while (1) { switch ($_I_) { case 0:" *php-newline*))
          ,@(lambda-body x)
        	 ,(php-line "return $" '~%ret)
+         ,@(unless (and *php-goto?* (< 0 (funinfo-num-tags fi)))
+             (list "    }}" *php-newline*))
       "}" ,*php-newline*)))
 
 (define-php-macro function (name &optional (x 'only-name))

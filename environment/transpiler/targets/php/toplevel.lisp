@@ -1,6 +1,6 @@
-;;;;; Transpiler: TRE to PHP
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
+(defvar *php-goto?* t)
 (defvar *nil-symbol-name* nil)
 
 (defun php-print-native-environment (out)
