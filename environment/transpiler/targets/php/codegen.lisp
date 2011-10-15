@@ -68,11 +68,11 @@
       "{" ,(code-char 10)
 		 ,@(awhen (funinfo-globals fi)
              (php-line "global " (php-list !)))
-         ,@(unless (and *php-goto?* (< 0 (funinfo-num-tags fi)))
+         ,@(unless *php-goto?*
              (list "    $_I_=0; while (1) { switch ($_I_) { case 0:" *php-newline*))
          ,@(lambda-body x)
        	 ,(php-line "return $" '~%ret)
-         ,@(unless (and *php-goto?* (< 0 (funinfo-num-tags fi)))
+         ,@(unless *php-goto?*
              (list "    }}" *php-newline*))
       "}" ,*php-newline*)))
 
