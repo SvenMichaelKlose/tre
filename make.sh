@@ -55,8 +55,8 @@ CC=cc
 LD=cc
 
 echo
-LIBC_PATH=`find /lib -name libc.so.*`
-LIBDL_PATH=`find /lib -name libdl.so.*`
+LIBC_PATH=`find /lib -name libc.so.* | head -n 1`
+LIBDL_PATH=`find /lib -name libdl.so.* | head -n 1`
 KERNEL_IDENT=`uname -i`
 SYSTEM_NAME=`uname -n`
 CPU_TYPE=`uname -m`
@@ -106,7 +106,7 @@ link ()
 {
 	echo "Linking..."
 	OBJS=`find obj -name \*.o`
-	$LD $LIBFLAGS -o tre $OBJS
+	$LD -o tre $OBJS $LIBFLAGS
 }
 
 standard_compile ()
