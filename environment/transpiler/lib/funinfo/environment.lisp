@@ -101,6 +101,10 @@
   (dolist (i x)
 	(funinfo-env-add fi i)))
 
+(defun funinfo-env-adjoin (fi x)
+  (unless (funinfo-in-env? fi x)
+    (funinfo-env-add fi x)))
+
 (defun funinfo-env-reset (fi)
   (setf (funinfo-env fi) nil)
   (unless (funinfo-parent fi)
