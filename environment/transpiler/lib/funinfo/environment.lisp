@@ -1,5 +1,4 @@
-;;;;; TRE compiler
-;;;;; Copyright (C) 2006-2007,2009-2010 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (C) 2006-2007,2009-2011 Sven Klose <pixel@copei.de>
 
 ;;;; ARGUMENTS
 
@@ -12,8 +11,7 @@
   (member var (funinfo-free-vars fi) :test #'eq))
 
 (defun funinfo-add-free-var (fi var)
-  (unless (funinfo-free-var? fi var)
-    (nconc! (funinfo-free-vars fi) (list var)))
+  (adjoin! var (funinfo-free-vars fi) :test #'eq)
   var)
 
 ;;;; ARGUMENTS & ENVIRONMENT
