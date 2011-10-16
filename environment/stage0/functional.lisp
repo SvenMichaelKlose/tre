@@ -22,7 +22,11 @@
   (function ((name)
 	(member name *functionals* :test #'eq))))
 
-(functional identity print number+ number- integer+ integer- character+ character- * / mod
+(functional identity
+            + - * / mod
+            number+ number- number* number/
+            integer+ integer- integer* integer/
+            character+ character-
             logxor number? = < >
             number= number< number>
             integer= integer< integer>
