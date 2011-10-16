@@ -11,7 +11,7 @@
 ;    (cblocks-rename-merged blks.)
 ;    (cblocks-remove-doubles fi blks)
 ;    (cblocks-unname-merged blks.)
-    ;(print-cblocks blks)
+    (print-cblocks blks)
     (cblock-to-metacode blks)))
 
 (define-tree-filter middleend-graph (x)
