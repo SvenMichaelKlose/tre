@@ -1,8 +1,5 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
- *
- * Top-level control
+ * tré - Copyright (c) 2005-2009,2011 Sven Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -43,6 +40,7 @@
 
 char * tremain_self = NULL;   /* Path to running executable. */
 char * tremain_imagelaunch = NULL;
+char * tremain_boot_image = NULL;
 char * tremain_launchfile = NULL;
 
 treptr tremain_history;
@@ -184,6 +182,17 @@ treptr * trestack;
 treptr * trestack_top;
 treptr * trestack_ptr;
 
+void
+tre_init_image_path (void)
+{
+    char * p = getenv ("HOME");
+
+    tremain_boot_image = malloc (4096);
+    strcpy (tremain_boot_image, p);
+    strcpy (&tremain_boot_image[strlen (p)], "/.tre.image");
+	MAKE_VAR("*BOOT-IMAGE*", trestring_get (tremain_boot_image));
+}
+
 /* Initialise everything. */
 void
 tre_init (void)
@@ -231,10 +240,10 @@ tre_init (void)
 
     MAKE_VAR("*ENVIRONMENT-PATH*", trestring_get (TRE_ENVIRONMENT));
 
-	MAKE_VAR("*BOOT-IMAGE*", trestring_get (TRE_BOOT_IMAGE));
 	MAKE_VAR("*LIBC-PATH*", trestring_get (LIBC_PATH));
 	MAKE_VAR("*ENDIANESS*", treatom_alloc (TRE_ENDIANESS_STRING, TRECONTEXT_PACKAGE(), TRETYPE_VARIABLE, treptr_invalid));
 	MAKE_VAR("*POINTER-SIZE*", treatom_number_get (sizeof (void *), TRENUMTYPE_INTEGER));
+    tre_init_image_path ();
 
 	MAKE_HOOK_VAR(tremain_history, "_");
 	MAKE_HOOK_VAR(tremain_history_2, "__");
@@ -347,7 +356,7 @@ main (int argc, char *argv[])
 		goto boot;
 
     c = 2;
-    treimage_load (tremain_imagelaunch ? tremain_imagelaunch : TRE_BOOT_IMAGE);
+    treimage_load (tremain_imagelaunch ? tremain_imagelaunch : tremain_boot_image);
     tremain_imagelaunch = NULL;
 #ifdef TRE_DIAGNOSTICS
 	tregc_force ();

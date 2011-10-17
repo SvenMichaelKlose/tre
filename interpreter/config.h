@@ -1,8 +1,5 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
- *
- * Compile-time configuration.
+ * tré - Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
  */
 
 #ifndef TRE_TRE_H
@@ -84,10 +81,6 @@ typedef int bool;
 
 #ifndef TRE_BOOTFILE
 #define TRE_BOOTFILE	"environment/main.lisp"
-#endif
-
-#ifndef TRE_BOOT_IMAGE
-#define TRE_BOOT_IMAGE	"~/.tre.image"
 #endif
 
 #ifndef TRE_IMAGE_HEADER
