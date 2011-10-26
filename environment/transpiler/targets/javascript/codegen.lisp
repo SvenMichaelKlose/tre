@@ -228,11 +228,9 @@
   	 `(%transpiler-native "_locals[" ,x "]")
      (js-stack x)))
 
-;; Experimental for lambda-export.
 (define-js-macro %vec (v i)
   `(%transpiler-native ,v "[" ,i "]"))
 
-;; Experimental for lambda-export.
 (define-js-macro %set-vec (v i x)
   `(%transpiler-native (aref ,v ,i) "=" ,x ,*js-separator*))
 
