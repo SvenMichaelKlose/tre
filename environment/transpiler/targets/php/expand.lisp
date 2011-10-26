@@ -123,3 +123,8 @@
     (late-print `(functional ,@x)))
   (setf *functionals* (nconc x *functionals*))
   nil)
+
+(define-php-std-macro in-package (n)
+  (setf (transpiler-current-package *js-transpiler*) (when n (make-package (symbol-name n))))
+  `(%%in-package ,n))
+
