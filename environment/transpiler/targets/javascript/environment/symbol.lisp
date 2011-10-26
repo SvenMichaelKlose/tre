@@ -1,5 +1,4 @@
-;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (defvar *symbols* (make-hash-table))
 
@@ -24,11 +23,11 @@
 					  pkg.n
 					  ,*nil-symbol-name*)
       ; Make package if missing.
-      (let symbol-table (or (href *symbols* pkg-name)
-	    				    (setf (href *symbols* pkg-name) (make-hash-table)))
+      (let symbol-table (or (%href *symbols* pkg-name)
+	    				    (setf (%href *symbols* pkg-name) (make-hash-table)))
         ; Get or make symbol.
-        (or (href symbol-table name)
-	        (setf (href symbol-table name) (new %symbol name pkg)))))))
+        (or (%href symbol-table name)
+	        (setf (%href symbol-table name) (new %symbol name pkg)))))))
 
 (define-native-js-fun %%usetf-symbol-function (v x)
   (setq x.f v))

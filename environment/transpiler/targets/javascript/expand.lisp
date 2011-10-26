@@ -131,7 +131,7 @@
        	   `(or ,@(mapcar (fn `(%%%= (%js-typeof x) ,_)) types))
            `(%%%= (%js-typeof x) ,types.)))))
 
-(define-js-std-macro href (hash key)
+(define-js-std-macro %href (hash key)
   `(aref ,hash ,key))
 
 (define-js-std-macro undefined? (x)
