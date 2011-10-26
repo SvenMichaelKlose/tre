@@ -1,5 +1,4 @@
-;;;; TRE environment
-;;;; Copyright (c) 2005-2009,2011 Sven Klose <pixel@copei.de>
+;;;; TRE environment - Copyright (c) 2005-2009,2011 Sven Klose <pixel@copei.de>
 
 (defun %struct-option-keyword (e)
   (in? e :constructor))
@@ -47,13 +46,22 @@
 (defun %struct-getter-symbol (name field)
   (make-symbol (string-concat (symbol-name name) "-" (symbol-name field))))
 
+(defun %struct-assertion (name sym)
+  (when *assert*
+    (let tst (%struct?-symbol name)
+      `((unless (,tst arr)
+          (print arr)
+          (error ,(string-concat "In " (symbol-name sym) " illegal struct type")))))))
+
 (defun %struct-single-get (name field index)
   (let sym (%struct-getter-symbol name field)
     `(progn
        (functional ,sym)
        (defun ,sym (arr)
+         ,@(%struct-assertion name sym)
          (aref arr ,index))
        (defun (setf ,sym) (val arr)
+         ,@(%struct-assertion name sym)
          (setf (aref arr ,index) val)))))
 
 (defun %struct-getters (name fields)
