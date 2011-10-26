@@ -1,20 +1,17 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2006, 2008-2011 Sven Klose <pixel@copei.de>
- *
- * Built-in functions
+ * tré - Copyright (c) 2005-2006, 2008-2011 Sven Klose <pixel@copei.de>
  */
 
 #ifndef TRE_BUILTIN_ATOM_H
 #define TRE_BUILTIN_ATOM_H
 
-extern treptr treatom_builtin_not (treptr);
-extern treptr treatom_builtin_eq (treptr);
-extern treptr treatom_eql (treptr, treptr);
-extern treptr treatom_builtin_eql (treptr);
+extern treptr treatom_builtin_not (treptr) __attribute((pure));
+extern treptr treatom_builtin_eq (treptr) __attribute((pure));
+extern treptr treatom_eql (treptr, treptr) __attribute((pure));
+extern treptr treatom_builtin_eql (treptr) __attribute((pure));
 extern treptr treatom_builtin_make_symbol (treptr);
 extern treptr treatom_builtin_make_package (treptr);
-extern treptr treatom_builtin_atom (treptr);
+extern treptr treatom_builtin_atom (treptr) __attribute((pure));
 extern treptr treatom_builtin_symbol_value (treptr);
 extern treptr treatom_builtin_symbol_function (treptr);
 extern treptr treatom_builtin_symbol_package (treptr);

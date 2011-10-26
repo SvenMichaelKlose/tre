@@ -1,8 +1,5 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2008,2010 Sven Klose <pixel@copei.de>
- *
- * Symbol database.
+ * tré - Copyright (c) 2005-2008,2010 Sven Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -114,6 +111,8 @@ tresymbolpage_add (treptr atom)
 	if (name)
 		tresymbolpage_add_rec (tresymbolpage_find_root (TREATOM_PACKAGE(atom)), name, atom, name);
 }
+
+treptr tresymbolpage_find_rec (struct tresymbol_page * p, char * np) __attribute__ ((pure));
 
 treptr
 tresymbolpage_find_rec (struct tresymbol_page * p, char * np)

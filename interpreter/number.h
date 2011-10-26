@@ -1,8 +1,5 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
- *
- * Number-related section.
+ * tré - Copyright (c) 2005-2008,2011 Sven Klose <pixel@copei.de>
  */
 
 #ifndef TRE_NUMBERS_H
@@ -29,7 +26,7 @@ extern void * tre_numbers_free;
 extern struct tre_number tre_numbers[NUM_NUMBERS];
 
 /* Check if string contains a number. */
-extern bool trenumber_is_value (char *);
+extern bool trenumber_is_value (char *) __attribute__((pure));
 
 extern ulong trenumber_alloc (double value, int type);
 extern void trenumber_free (treptr);

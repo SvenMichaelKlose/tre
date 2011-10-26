@@ -42,6 +42,12 @@ treeval_exprop (treptr list, treeval_opfunc_t func)
     return treatom_number_get (val, TRENUMTYPE_FLOAT);
 }
 
+double treeval_op_plus (double a, double b) __attribute__((pure, const));
+double treeval_op_difference (double a, double b) __attribute__((pure, const));
+double treeval_op_times (double a, double b) __attribute__((pure, const));
+double treeval_op_quotient (double a, double b) __attribute__((pure, const));
+double treeval_op_logxor (double a, double b) __attribute__((pure, const));
+
 double treeval_op_plus (double a, double b) { return a + b; }
 double treeval_op_difference (double a, double b) { return a - b; }
 double treeval_op_times (double a, double b) { return a * b; }

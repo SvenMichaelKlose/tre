@@ -1,8 +1,5 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
- *
- * List-related section.
+ * tré - Copyright (c) 2005-2009,2011 Sven Klose <pixel@copei.de>
  */
 
 #ifndef TRE_LIST_H
@@ -89,16 +86,16 @@ extern treptr tre_lists_free;
 extern ulong trelist_num_used;
 
 extern treptr _trelist_get (treptr car, treptr cdr);
-extern treptr trelist_copy (treptr);
-extern treptr trelist_copy_tree (treptr);
+extern treptr trelist_copy (treptr) __attribute__((pure));
+extern treptr trelist_copy_tree (treptr) __attribute__((pure));
 extern treptr trelist_delete (ulong, treptr);
-extern void trelist_append (treptr *lst, treptr lst2);
-extern long trelist_position (treptr elt, treptr lst);
-extern long trelist_position_name (treptr elt, treptr lst);
-extern ulong trelist_length (treptr);
-extern bool trelist_equal (treptr, treptr);
-extern treptr trelist_nth (treptr, ulong);
-extern treptr trelist_last (treptr);
+extern void trelist_append (treptr *lst, treptr lst2) __attribute__((pure));
+extern long trelist_position (treptr elt, treptr lst) __attribute__((pure));
+extern long trelist_position_name (treptr elt, treptr lst) __attribute__ ((pure));
+extern ulong trelist_length (treptr) __attribute__((pure));
+extern bool trelist_equal (treptr, treptr) __attribute__((pure));
+extern treptr trelist_nth (treptr, ulong) __attribute__((pure));
+extern treptr trelist_last (treptr) __attribute__((pure));
 
 extern void trelist_free (treptr);
 extern void trelist_free_expr (treptr);
@@ -106,7 +103,7 @@ extern void trelist_free_toplevel (treptr);
 
 extern struct tre_sequence_type trelist_seqtype;
 
-extern bool trelist_check_type (treptr, ulong atom_type);
+extern bool trelist_check_type (treptr, ulong atom_type) __attribute__((pure));
 
 #ifdef TRE_LIST_DIAGNOSTICS
 extern treptr trelist_car (treptr);

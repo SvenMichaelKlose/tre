@@ -1,8 +1,5 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2007,2009 Sven Klose <pixel@copei.de>
- *
- * Atom-related section.
+ * tré - Copyright (c) 2005-2007,2009,2011 Sven Klose <pixel@copei.de>
  */
 
 #ifndef TRE_ATOM_H
@@ -70,8 +67,8 @@ extern treptr treatom_number_get (double, int type);
 /* for compiled code */
 extern treptr trenumber_get (double);
 extern treptr trechar_get (double);
-extern treptr treatom_get_value (treptr atom);
-extern treptr treatom_get_function (treptr atom);
+extern treptr treatom_get_value (treptr atom) __attribute__((pure));
+extern treptr treatom_get_function (treptr atom) __attribute__((pure));
 extern treptr treatom_register_compiled_function (treptr sym, void * fun);
 
 extern treptr treatom_alloc (char *symbol, treptr package, int type, treptr value);
@@ -85,7 +82,7 @@ extern treptr treatom_set_function (treptr atom, treptr value);
 extern treptr treatom_set_binding (treptr atom, treptr value);
 
 /* Lookup variable that points to function containing body. */
-extern treptr treatom_body_to_var (treptr body);
+extern treptr treatom_body_to_var (treptr body) __attribute__((pure));
 
 /* Return body of function or macro. */
 extern treptr treatom_fun_body (treptr atomp);
