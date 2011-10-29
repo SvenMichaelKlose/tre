@@ -63,8 +63,8 @@
 	     (warn "Macro ~A already defined." ',name))
        (setf (expander-macros (expander-get ',expander-name))
 		     (aremove ',name (expander-macros (expander-get ',expander-name))))
-	   ;(defun ,g ,@x)
-	   (acons! ',name #',x (expander-macros (expander-get ',expander-name))))))
+	   (defun ,g ,@x)
+	   (acons! ',name #',g (expander-macros (expander-get ',expander-name))))))
 
 (defun expander-expand (expander-name expr)
   (let e (expander-get expander-name)
