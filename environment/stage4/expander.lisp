@@ -1,7 +1,4 @@
-;;;;; TRE environment
-;;;;; Copyright (c) 2006-2009 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; User-defineable expansion.
+;;;;; tré - Copyright (c) 2006-2009,2011 Sven Klose <pixel@copei.de>
 
 (defvar *expanders* nil)
 (defvar *current-expander* nil)
