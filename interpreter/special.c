@@ -1,8 +1,5 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
- *
- * Built-in special forms.
+ * tré -  Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -389,7 +386,7 @@ trespecial_setq (treptr list)
 
     do {
         /* Check arguments. */
-		car = trearg_typed (argnum, TRETYPE_VARIABLE, CAR(list), "place");
+		car = trearg_typed (argnum, TRETYPE_VARIABLE, CAR(list), "SETQ place");
 
 		argnum++;
         list = CDR(list);
