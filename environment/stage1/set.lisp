@@ -1,10 +1,9 @@
-;;;; TRE environment
-;;;; Copyright (C) 2005-2009,2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (C) 2005-2009,2011 Sven Klose <pixel@copei.de>
 
 (defun %setf-function? (x)
   (function? (eval `(function ,x))))
 
-(defvar *setf-immediate-slot-value* nil)
+;(defvar *setf-immediate-slot-value* nil)
 (defvar *setf-function?* #'%setf-function?)
 
 (defun %setf-make-symbol (fun)
@@ -12,9 +11,9 @@
 
 (defun %setf-complement (p val)
   (if (or (atom p)
-		  (and *setf-immediate-slot-value*
+		  ;(and *setf-immediate-slot-value*
 			   (or (%slot-value? p)
-				   (slot-value? p))))
+				   (slot-value? p)));)
 	  (progn
 		(if (member p *constants* :test #'eq)
 		    (%error "cannot set constant"))
@@ -45,7 +44,3 @@
       `(setf ,(car args)) ; Keep for DEFUN argument name.
       `(progn
 		 ,@(%setf args)))))
-
-(defun (setf symbol-function) (fun sym)
-  (%set-atom-fun sym fun)
-  fun)

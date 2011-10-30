@@ -2,7 +2,7 @@
 
 (env-load "stage5/array-list.lisp")
 (env-load "stage5/backslash-to-slash.lisp")
-(env-load "stage5/base64.lisp")
+(env-load "stage5/base64.lisp" 'c)
 (env-load "stage5/camelize.lisp")
 (env-load "stage5/comma-separated-list.lisp")
 (env-load "stage5/doseq.lisp")

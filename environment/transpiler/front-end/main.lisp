@@ -1,6 +1,6 @@
 ;;;; tré transpiler - Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
 
-(env-load "transpiler/front-end/arith-wrappers.lisp")
+(env-load "transpiler/front-end/arith-wrappers.lisp" 'c)
 
 (env-load "transpiler/front-end/expression-expand/expression-expand.lisp")
 (env-load "transpiler/front-end/expression-expand/guest-utils.lisp")

@@ -1,5 +1,4 @@
-;;;;; TRE environment
-;;;;; Copyright (c) 2005-2006,2008-2009,2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2005-2006,2008-2009,2011 Sven Klose <pixel@copei.de>
 
 (functional atom cons? symbol? number? string? function? array? zerop evenp endp symbol? keyword? integerp)
 
@@ -11,10 +10,6 @@
 
 (defun endp (x)
   (eq x nil))
-
-(defun symbol? (x)
-  (and (atom x)
-       (not (= 0 (length (symbol-name x))))))
 
 (defun variablep (x)
   (and (atom x)

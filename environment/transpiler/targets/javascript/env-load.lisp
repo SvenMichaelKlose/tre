@@ -1,8 +1,4 @@
-;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; This are the low-level transpiler definitions of
-;;;;; basic functions to simulate basic data types.
+;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (defun js-load-base (dir-path &rest files)
   (mapcan (fn (let f (+ dir-path _)
@@ -68,6 +64,7 @@
 			 "string.lisp"
 			 "../../../environment/member.lisp"
 			 "hash.lisp"
+			 "macro.lisp"
              "base64.lisp")
 		 (js-load-base "environment/transpiler/environment/"
 			 "assoc.lisp"))))

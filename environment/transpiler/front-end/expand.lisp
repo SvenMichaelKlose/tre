@@ -10,14 +10,13 @@
 	(when (expander-has-macro? (transpiler-std-macro-expander tre) name)
 	  (warn "Macro ~A already defined as a standard macro." name))
 	(when (expander-has-macro? (transpiler-macro-expander tre) name)
-	  (error "Macro ~A already defined in code-generator." name))
+	  (warn "Macro ~A already defined in code-generator." name))
 	(transpiler-add-inline-exception tre name)
     `(define-expander-macro ,(transpiler-std-macro-expander tre) ,@x)))
 
 (defun transpiler-macroexpand (tr x)
-  (with-temporary *setf-immediate-slot-value* t
-    (with-temporary *setf-function?* (transpiler-setf-function? tr)
-	  (expander-expand (transpiler-std-macro-expander tr) x))))
+  (with-temporary *setf-function?* (transpiler-setf-function? tr)
+	(expander-expand (transpiler-std-macro-expander tr) x)))
 
 (defmacro transpiler-wrap-invariant-to-binary (definer op len repl-op combiner)
   `(,definer ,op (&rest x)

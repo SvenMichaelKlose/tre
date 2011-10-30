@@ -19,6 +19,8 @@
 		    ,g)
 		  nil))))
 
+(define-js-std-macro define-test (&rest x))
+
 (transpiler-wrap-invariant-to-binary define-js-std-macro eq 2 eq and)
 
 (functional %not)
@@ -74,7 +76,14 @@
                            ,(awhen (symbol-package dname)
                               `(make-package ,(transpiler-obfuscated-symbol-name *js-transpiler* !)))))
 	     ,(apply #'shared-essential-defun dname args body)
-		 (setf (symbol-function ,g) ,dname)))))
+		 (setf (symbol-function ,g) ,dname)
+		 ,@(when *save-compiled-source?*
+             `((setf (slot-value ,g '__source) ,(list 'quote (cons args body)))))))))
+
+(define-js-std-macro %defun (&rest x)
+  `(defun ,@x))
+
+(define-js-std-macro %defspecial (&rest x))
 
 (define-js-std-macro defmacro (&rest x)
   (apply #'shared-defmacro '*js-transpiler* x))

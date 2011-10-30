@@ -1,15 +1,12 @@
-;;;; TRE environment
-;;;; Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
-;;;;
-;;;; Boot up the environment
+;;;;; tré - Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
 
 ;; *UNIVERSE* contains the names of all top-level definitions that
-;; shouldn't be removed by garbage collection.
+;; shouldn't be removed by the garbage collector.
 (setq *universe*
 	  (cons '%scope-toplevel-test
 	  (cons '*environment-filenames*
 	  (cons 'env-load
-	  		*universe*)))) ; Interpreter already added elements.
+	  		*universe*)))) ; The interpreter already added elements.
 
 ;; Associative array of DEFVAR names and their initial forms.
 (setq *variables*
@@ -24,14 +21,14 @@
 (setq %scope-toplevel-test 'some-test-value)
 
 (%set-atom-fun env-load
-  #'(lambda (path)
-	  (setq *environment-filenames*
-			(cons path *environment-filenames*))
+  #'((path &optional (back-end nil))
+	  (setq *environment-filenames* (cons (cons path back-end) *environment-filenames*))
       (load (string-concat *environment-path* "/environment/" path))))
 
-(env-load "stage0/config-early.lisp")
-(env-load "stage0/main.lisp")
-(env-load "stage0/config.lisp")
+(env-load "stage0/config-early.lisp" 'c)
+(env-load "stage0/main.lisp" 'c)
+(env-load "stage0/config.lisp" 'c)
+
 (env-load "stage1/main.lisp")
 
 (defun currently-defined-functions ()
@@ -60,7 +57,7 @@
 (defvar *functions-after-math* (currently-defined-functions))
 
 (when *tre-has-alien*
-  (env-load "alien/main.lisp"))
+  (env-load "alien/main.lisp" 'c))
 
 (defvar *functions-after-alien* (currently-defined-functions))
 
@@ -80,7 +77,7 @@
 
 ; Test lexical scoping.
 (unless (eq %scope-toplevel-test 'some-test-value)
-  (error "scope-toplevel test"))
+  (error "scope toplevel test"))
 (setq *UNIVERSE* (cdr *UNIVERSE*))
 
 (when *tre-has-transpiler*

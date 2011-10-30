@@ -1,5 +1,6 @@
-;;;; TRE transpiler
-;;;; Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
+
+,(clr *save-compiled-source?*)
 
 (env-load "transpiler/lib/main.lisp")
 (env-load "transpiler/back-end/main.lisp")

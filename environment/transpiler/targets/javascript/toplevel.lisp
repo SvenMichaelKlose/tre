@@ -45,7 +45,7 @@
 		 	                 :dep-gen #'(()
 				  	                      (transpiler-import-from-environment tr))
 			                 :decl-gen #'(()
-                                           (let decls (make-queue)
+                                           (with-queue decls
 					  		                 (dolist (i (funinfo-env (transpiler-global-funinfo tr)) (queue-list decls))
        				                           (enqueue decls (transpiler-emit-code tr (list `(%var ,i)))))))
 			                 :files-to-update files-to-update

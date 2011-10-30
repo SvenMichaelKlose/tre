@@ -14,9 +14,6 @@
 		    (and (print i)
 			     (%error "not a pair")))))))
 
-(unless (eq t *BUILTIN-ASSOC*)
-  (%define-assoc assoc car))
-
 (%define-assoc rassoc cdr)
 
 (let lst '((a . d) (b . e) (c . f))

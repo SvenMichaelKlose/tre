@@ -1,5 +1,4 @@
-;;;; TRE environment
-;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (env-load "stage4/make-keyword.lisp")
 (env-load "stage4/assoc-hash.lisp")
@@ -37,7 +36,7 @@
 (env-load "stage4/list-unless.lisp")
 (env-load "stage4/mapatree.lisp")
 (env-load "stage4/maptree.lisp")
-(env-load "stage4/mapped-macro.lisp")
+(env-load "stage4/mapped-macro.lisp" 'c)
 (env-load "stage4/optional-string-downcase.lisp")
 (env-load "stage4/pad.lisp")
 (env-load "stage4/pair.lisp")
@@ -52,7 +51,7 @@
 (env-load "stage4/replace.lisp")
 (env-load "stage4/return-from-when.lisp")
 (env-load "stage4/sort.lisp")
-(env-load "stage4/split.lisp")
+(env-load "stage4/split.lisp" 'c)
 (env-load "stage4/starts-with.lisp")
 (env-load "stage4/single-quoted.lisp")
 (env-load "stage4/symbols-function-exprs.lisp")
