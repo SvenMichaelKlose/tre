@@ -1,5 +1,4 @@
-;;;;; TRE transpiler
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (defvar *nil-symbol-name* nil)
 
@@ -13,15 +12,21 @@
   (or (member file files-to-update :test #'eq-string=)
       (not (assoc-value file processed-files :test #'eq-string=))))
 
+(defmacro acons-or-replace (value key place &key (test #'eql))
+  (with-gensym (gkey gvalue)
+    `(with (,gkey ,key
+            ,gvalue ,value)
+       (? (assoc-value ,gkey ,place :test ,test)
+          (setf (assoc-value ,gkey ,place :test ,test) ,gvalue)
+          (acons! ,gkey ,gvalue ,place)))))
+
 (defun target-transpile-2 (tr files files-to-update)
   (let compiled-code (make-queue)
 	(dolist (i files (queue-list compiled-code))
       (let code (? (compile-file? i. (transpiler-compiled-files tr) files-to-update)
                    (concat-stringtree (transpiler-transpile tr .i))
                    (assoc-value i. (transpiler-compiled-files tr) :test #'eq-string=))
-        (? (assoc-value i. (transpiler-compiled-files tr) :test #'eq-string=)
-           (setf (assoc-value i. (transpiler-compiled-files tr) :test #'eq-string=) code)
-           (acons! i. code (transpiler-compiled-files tr)))
+        (acons-or-replace code i. (transpiler-compiled-files tr) :test #'eq-string=)
 	    (enqueue compiled-code code)))))
 
 (defun target-transpile-1 (tr files files-to-update)
@@ -30,11 +35,9 @@
       (let code (? (compile-file? i. (transpiler-sightened-files tr) files-to-update)
                    (? (symbol? i.)
 		  			  (transpiler-sighten tr .i)
-		  			  (transpiler-sighten-files tr (list i.)))
+		  			  (transpiler-sighten-file tr i.))
                    (assoc-value i. (transpiler-sightened-files tr) :test #'eq-string=))
-        (? (assoc-value i. (transpiler-sightened-files tr) :test #'eq-string=)
-           (setf (assoc-value i. (transpiler-sightened-files tr) :test #'eq-string=) code)
-           (acons! i. code (transpiler-sightened-files tr)))
+        (acons-or-replace code i. (transpiler-sightened-files tr) :test #'eq-string=)
 	    (enqueue sightened-code (cons i. code))))))
 
 (defun target-transpile-generic (tr &key (front-before nil)
@@ -69,18 +72,10 @@
                                    (files-to-update nil)
                                    (print-obfuscations? nil))
   (target-transpile-generic tr
-	  :front-before
-  		  #'(()
-  			   (target-transpile-1 tr files-before-deps files-to-update))
-	  :front-after
-  		  #'(()
-		 	   (target-transpile-1 tr files-after-deps files-to-update))
-	  :back-after
-  		  #'((processed)
-			   (target-transpile-2 tr processed files-to-update))
-	  :back-before
-  		  #'((processed)
-	  		   (target-transpile-2 tr processed files-to-update))
+	  :front-before #'(() (target-transpile-1 tr files-before-deps files-to-update))
+	  :front-after #'(() (target-transpile-1 tr files-after-deps files-to-update))
+	  :back-after #'((processed) (target-transpile-2 tr processed files-to-update))
+	  :back-before #'((processed) (target-transpile-2 tr processed files-to-update))
 	  :dep-gen dep-gen
 	  :decl-gen decl-gen
       :print-obfuscations? print-obfuscations?))
