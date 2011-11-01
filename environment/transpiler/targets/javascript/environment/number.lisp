@@ -19,5 +19,5 @@
 (dont-obfuscate is-na-n)
 
 (defun integer? (x)
-  (and (not (is-na-n x))
+  (and (number? x)
        (%%%= (parse-int x 10) (parse-float x 10))))
