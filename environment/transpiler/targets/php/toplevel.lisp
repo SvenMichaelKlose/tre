@@ -33,9 +33,9 @@
                    "}~%"))
     (php-print-native-environment out)))
 
-(defun php-transpile (files &key (obfuscate? nil)
-                                 (print-obfuscations? nil)
-                                 (files-to-update nil))
+(defun php-transpile-0 (sources &key (obfuscate? nil)
+                                     (print-obfuscations? nil)
+                                     (files-to-update nil))
   (let tr *php-transpiler*
     (unless files-to-update
       (transpiler-reset tr)
@@ -52,7 +52,7 @@
 		  	:files-after-deps
 				(append (when (eq t *have-environment-tests*)
 				   	  	  (list (cons 'env-tests (make-environment-tests))))
-		 		 		(mapcar (fn list _) files))
+                        sources)
 		 	:dep-gen
 		     	#'(()
 				  	(transpiler-import-from-environment tr))
@@ -63,3 +63,11 @@
                              (transpiler-compiled-inits tr))))
 			:files-to-update files-to-update
 			:print-obfuscations? print-obfuscations?))))
+
+(defun php-transpile (files &key (obfuscate? nil)
+                                 (print-obfuscations? nil)
+                                 (files-to-update nil))
+  (php-transpile-0 (mapcar (fn list _) files)
+                   :obfuscate? obfuscate?
+                   :print-obfuscations? print-obfuscations?
+                   :files-to-update files-to-update))
