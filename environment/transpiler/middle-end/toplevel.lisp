@@ -1,5 +1,4 @@
-;;;;; TRE transpiler
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (defun transpiler-expression-expand (tr x)
   (expression-expand (transpiler-expex tr) x))
@@ -17,8 +16,8 @@
     update-funinfo #'transpiler-update-funinfo
     opt-remove-unused-places #'opt-places-remove-unused
     opt-find-unused-places #'opt-places-find-used
-    middleend-graph (fn ;(middleend-graph _)
-                        (identity _))
+;    middleend-graph (fn (middleend-graph _)
+;                        (identity _))
     cps (fn ? (in-cps-mode?)
               (cps _)
               _)

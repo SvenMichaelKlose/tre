@@ -335,11 +335,11 @@
 
 (define-concat-tree-filter cps-toplevel (x)
   (%quote-%transpiler-native-or-%var? x) (list x)
-;  (cps-methodcall? x) (cps-toplevel-methodcall x)
-;  (cps-constructorcall? x) (cps-toplevel-constructorcall x)
+  (cps-methodcall? x) (cps-toplevel-methodcall x)
+  (cps-constructorcall? x) (cps-toplevel-constructorcall x)
   (cps-funcall? x) (cps-toplevel-funcall x)
-  (cps-function-assignment? x) (cps-function-assignment x))
-;  (cps-foureign-funcall? x) (cps-foureign-funcall (transpiler-global-funinfo *current-transpiler*) x))
+  (cps-function-assignment? x) (cps-function-assignment x)
+  (cps-foureign-funcall? x) (cps-foureign-funcall (transpiler-global-funinfo *current-transpiler*) x))
 
 (defun cps (x)
-  (print (cps-toplevel x)))
+  (cps-toplevel x))
