@@ -2,4 +2,5 @@
 
 (defun %force-output (&optional strm))
 
-(defun make-standard-stream ())
+,(when *have-compiler?*
+   '(defun make-standard-stream ()))
