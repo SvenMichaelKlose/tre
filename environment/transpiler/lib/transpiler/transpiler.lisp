@@ -22,12 +22,8 @@
   ; List of functions that must not be imported from the environment.
   unwanted-functions
 
-  ; Predicate that tells if a character is legal in an identifier.
-  (identifier-char?
-	(fn error "structure 'transpiler': IDENTIFIER-CHAR? is not initialised"))
-
-  (literal-conversion
-	(fn error "structure 'transpiler': LITERAL-CONVERSION is not initialised"))
+  (identifier-char? (fn error "structure 'transpiler': IDENTIFIER-CHAR? is not initialised"))
+  (literal-conversion (fn error "structure 'transpiler': LITERAL-CONVERSION is not initialised"))
 
   (expex nil)
 
@@ -35,16 +31,15 @@
   (defined-functions nil)
   (defined-functions-hash (make-hash-table :test #'eq))
 
-  ; functinos required by transpiled code. It is imported from the
-  ; environment.
+  (defined-variables nil)
+  (defined-variables-hash (make-hash-table :test #'eq))
+
+  ; Functions to be imported from the environment.
   (wanted-functions nil)
   (wanted-functions-hash (make-hash-table :test #'eq))
 
   (wanted-variables nil)
   (wanted-variables-hash (make-hash-table :test #'eq))
-
-  (defined-variables nil)
-  (defined-variables-hash (make-hash-table :test #'eq))
 
   ; Tells if target required named top-level functions (like C).
   (named-functions? nil)
@@ -77,7 +72,7 @@
   (cps-exceptions nil)
   (cps-functions nil)
 
-  ; You shouldn't have to tweak these at construction-time:
+  ; You shouldn't have to tweak these.
   (symbol-translations nil)
   thisify-classes
   (function-args (make-hash-table :test #'eq))
