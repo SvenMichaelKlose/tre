@@ -58,11 +58,13 @@
   (js-cps-exception name)
   (apply #'shared-essential-defun (%defun-name name) args (body-with-noargs-tag body)))
 
-(define-js-std-macro cps-exception (x)
+(define-js-std-macro cps-mode (x)
   (when *show-definitions*
-    (print `(cps-exception ,x)))
-  (setf *transpiler-except-cps?* x)
-  `(%setq %cps-mode ,(not x)))
+    (print `(cps-mode ,x)))
+  (unless (in? x nil t)
+    (error "Expected NIL or T is the only argument."))
+  (setf *transpiler-except-cps?* (not x))
+  `(%setq %cps-mode ,x))
 
 (define-js-std-macro defun (name args &rest body)
   (with-gensym g
@@ -113,8 +115,11 @@
     		  (error "function must be a SLOT-VALUE, got ~A" fun))
 		  ,fun))
 
+(define-js-std-macro make-hash-table (&key (test #'eql) (size nil))
+  `(%%%make-hash-table))
+
 (defun js-transpiler-make-new-hash (x)
-  `(make-hash-table
+  `(%%%make-hash-table
 	 ,@(mapcan (fn list (? (and (not (string? _.))
 							    (eq :class _.))
 						   "class" ; IE6 wants this.

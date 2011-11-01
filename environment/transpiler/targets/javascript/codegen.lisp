@@ -168,7 +168,7 @@
 
 ;;;; HASH TABLES
 
-(define-js-macro make-hash-table (&rest args)
+(define-js-macro %%%make-hash-table (&rest args)
   (let pairs (group args 2)
     `("{"
       ,@(when args
