@@ -5,7 +5,7 @@
 
 (defun %href-make-object-key (key)
   (unless (defined? key._caroshi-object-id)
-    (setf key._caroshi-key-object (gensym-number))))
+    (setf key._caroshi-object-id (gensym-number))))
 
 (defun %%usetf-href (value hash key)
   (? (object? key)
@@ -13,7 +13,7 @@
        (%href-make-object-key key)
        (let obj-key (%href-object-key key)
          (setf obj-key._caroshi-key-object key)
-         (setf (aref hash (%href-object-key key)) value)))
+         (setf (aref hash obj-key) value)))
      (setf (aref hash key) value)))
 
 (defun href (hash key)
