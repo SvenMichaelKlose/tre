@@ -1,11 +1,8 @@
-;;;;; TRE tree processor transpiler
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 ;; Make expander for standard macro which picks macros of the same
 ;; name in der user-defined expander first.
 (defun make-overlayed-std-macro-expander (expander-name)
-  #'%%macrop
-  #'%%macrocall
   (with (e (define-expander expander-name)
          mypred (expander-pred e)
 		 mycall (expander-call e))
@@ -13,9 +10,9 @@
 								(fn (or (funcall ,mypred _)
 				 				        (%%macrop _))))
    		  (expander-call e) (lx (mypred mycall)
-								(fn (if (funcall ,mypred _)
-				 				        (funcall ,mycall _)
-				 				        (%%macrocall _)))))))
+								(fn (? (funcall ,mypred _)
+				 				       (funcall ,mycall _)
+				 				       (%%macrocall _)))))))
 
 (defun transpiler-make-std-macro-expander (tr)
  (make-overlayed-std-macro-expander (transpiler-std-macro-expander tr)))
