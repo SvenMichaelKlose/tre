@@ -1,8 +1,5 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
- *
- * Error handling.
+ * tré - Copyright (c) 2005-2007,2011 Sven Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -98,7 +95,7 @@ trewarn (treptr expr, const char *msg, ...)
     va_start(ap, msg);
 
     treerror_macroexpansion ();
-    treerror_msg (treptr_invalid, "WARNING", msg, ap);
+    treerror_msg (expr, "WARNING", msg, ap);
 
     tredebug ();
 }
