@@ -1,5 +1,4 @@
-;;;;; TRE environment
-;;;;; Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
 
 (defun copy-while (pred x)
   (when (and x (funcall pred (car x)))
@@ -10,37 +9,31 @@
   ((copy-while #'number? '(1 2 3 a)))
   '(1 2 3))
 
-(defun collect (pred x)
+(defun separate (pred x)
   (values (copy-while pred x)
 		  (remove-if pred x)))
 
 (defmacro with (alst &rest body)
   (unless body
 	(error "body expected"))
-  ; Make new WITH for rest of assignment list.
   (labels ((sub (x)
-             (? (cddr x)
-                `((with ,(cddr x)
+             (? x
+                `((with ,x
 					,@body))
                 body)))
-
-	; Get first pair.
     (let* ((plc (car alst))
            (val (cadr alst)))
       (?
-	    ; MULTIPLE-VALUE-BIND if place is a cons.
-	    (cons? plc)
-          `(multiple-value-bind ,plc ,val
-		     ,@(sub alst))
+	    (cons? plc) `(multiple-value-bind ,plc ,val
+		               ,@(sub (cddr alst)))
 
-	    ; Place function is set of value is a function.
-		(lambda? val)
-		  (multiple-value-bind (funs followers) (collect (fn lambda? (cadr _)) (group alst 2))
-		    `(labels ,(mapcar (fn `(,(car _) ,@(past-lambda (cadr _)))) funs)
-			   ,@(sub (apply #'append followers))))
+	    ; Accumulate this and all following functions into a LABEL,
+        ; so they can call each other.
+		(lambda? val) (multiple-value-bind (funs others) (separate (fn lambda? (cadr _)) (group alst 2))
+		                `(labels ,(mapcar (fn `(,(car _) ,@(past-lambda (cadr _)))) funs)
+			               ,@(sub (apply #'append others))))
 
-		; Value assignment to variable.
         `(let ,plc ,val
-		   ,@(sub alst))))))
+		   ,@(sub (cddr alst)))))))
 
 ; XXX tests missing
