@@ -21,6 +21,7 @@
 (env-load "transpiler/lib/funinfo/environment.lisp")
 (env-load "transpiler/lib/funinfo/lexical.lisp")
 (env-load "transpiler/lib/funinfo/lambda.lisp")
+(env-load "transpiler/lib/funinfo/local-function-args.lisp")
 (env-load "transpiler/lib/funinfo/debug.lisp")
 
 (env-load "transpiler/lib/copy-lambda.lisp")

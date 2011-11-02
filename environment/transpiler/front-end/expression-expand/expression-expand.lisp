@@ -1,7 +1,4 @@
-;;;;; TRE compiler
-;;;;; Copyright (c) 2006-2011 Sven Klose <pixel@copei.de>
-;;;;; 
-;;;;; Expression-expander
+;;;;; tré - Copyright (c) 2006-2011 Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Breaks up nested expressions. The result is a pure list of
 ;;;;; assignments (%SETQ expressions) mixed with jumps and tags.
@@ -130,7 +127,8 @@
   (dolist (i args)
     (expex-warn i))
   (funcall (expex-function-collector ex) fun args)
-  (let argdef (funcall (expex-function-arguments ex) fun)
+  (let argdef (or (funinfo-get-local-function-args *expex-funinfo* fun)
+                  (funcall (expex-function-arguments ex) fun))
 	(? (expex-expandable-args? ex fun argdef)
    	   (argument-expand-compiled-values fun argdef (? (and (not (in-cps-mode?))
                                                            (transpiler-cps-function? *current-transpiler* fun))

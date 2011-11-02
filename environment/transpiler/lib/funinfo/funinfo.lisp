@@ -31,6 +31,7 @@
   (lexicals nil) ; List of symbols exported to child functions.
   (lexical nil)  ; Name of the array of lexicals.
   (ghost nil)    ; Name of hidden argument with an array of lexicals.
+  (local-function-args nil)
 
   ; List if variables which must not be removed by the optimizer in order
   ; to keep re-assigned arguments out of the GC (see OPT-TAILCALL).

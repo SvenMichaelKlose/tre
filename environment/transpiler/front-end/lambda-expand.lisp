@@ -1,5 +1,4 @@
-;;;;; TRE compiler
-;;;;; Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
 
 (defun lambda-make-funinfo (args parent)
   (with (argnames (argument-expand-names 'lambda-expand args)
@@ -58,6 +57,9 @@
 	(copy-lambda x :info new-fi :body body)))
 
 (defun lambda-expand-tree-cons (fi x export-lambdas?)
+  (when (and (%set-atom-fun? x)
+             (lambda? ..x.))
+    (funinfo-add-local-function-args fi .x. (lambda-args ..x.)))
   (?
     (lambda-call? x) (lambda-call-embed fi x export-lambdas?)
     (lambda? x) (? export-lambdas?
