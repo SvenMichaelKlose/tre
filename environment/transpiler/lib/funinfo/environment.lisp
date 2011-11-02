@@ -3,7 +3,8 @@
 ;;;; ARGUMENTS
 
 (defun funinfo-arg? (fi var)
-  (member var (funinfo-args fi) :test #'eq))
+  (and (member var (funinfo-args fi) :test #'eq)
+       fi))
 
 ;;;; FREE VARIABLES
 
@@ -21,9 +22,10 @@
 			 (funinfo-args fi)))
 
 (defun funinfo-in-env? (fi x)
-  (? (funinfo-parent fi)
-     (member x (funinfo-env fi) :test #'eq)
-     (href (funinfo-env-hash fi) x)))
+  (when (? (funinfo-parent fi)
+           (member x (funinfo-env fi) :test #'eq)
+           (href (funinfo-env-hash fi) x))
+    fi))
 
 (defun funinfo-in-args-or-env? (fi x)
   (or (funinfo-arg? fi x)
@@ -49,8 +51,8 @@
 
 (defun funinfo-in-toplevel-env? (fi var)
   (when fi
-    (unless (and (funinfo-in-args-or-env? fi var)
-                 (funinfo-parent fi))
+    (unless (and (funinfo-parent fi)
+                 (funinfo-in-args-or-env? fi var))
       (aif (funinfo-parent fi)
 		   (funinfo-in-toplevel-env? ! var)
            (funinfo-in-args-or-env? fi var)))))
