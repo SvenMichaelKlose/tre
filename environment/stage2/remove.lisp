@@ -1,7 +1,6 @@
-;;;; TRE environment
-;;;; Copyright (c) 2007-2009,2011 Sven Klose <pixel@copei.de>
+;;;; tré - Copyright (c) 2007-2009,2011 Sven Klose <pixel@copei.de>
 
-(functional remove)
+(functional remove remove-if remove-if-not)
 
 (defun remove-if (fun x)
   (?
