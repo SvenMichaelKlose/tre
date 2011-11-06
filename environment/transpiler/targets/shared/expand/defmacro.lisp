@@ -4,4 +4,5 @@
   (when *show-definitions*
     (late-print `(defmacro ,x. ,.x.)))
   (eval (macroexpand `(define-transpiler-std-macro ,tr-name ,@x)))
-  `(define-std-macro ,@x))
+  (when *have-compiler?*
+    (print `(define-std-macro ,@x))))
