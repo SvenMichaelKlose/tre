@@ -1,9 +1,6 @@
-;;;;; TRE transpiler
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
-;; Set this when starting up your transpiler run.
 (defvar *current-transpiler* nil)
-
 (defvar *transpiler-assert* nil)
 (defvar *transpiler-log* nil)
 (defvar *transpiler-no-stream?* nil)
@@ -136,6 +133,12 @@
 
 (defun transpiler-function-arguments (tr fun)
   (href (transpiler-function-args tr) fun))
+
+(defun current-transpiler-function-arguments-w/o-builtins (x)
+  (or (href (transpiler-function-args *current-transpiler*) x)
+	  (? (builtin? x)
+		 'builtin
+		 (function-arguments (symbol-function x)))))
 
 (defun transpiler-function-body (tr fun)
   (href (transpiler-function-bodies tr) fun))

@@ -1,5 +1,4 @@
-;;;;; TRE compiler
-;;;;; (c) 2005-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - (c) 2005-2011 Sven Klose <pixel@copei.de>
 
 (env-load "transpiler/lib/c-newlines.lisp")
 (env-load "transpiler/lib/c-literal-string.lisp")
@@ -10,7 +9,6 @@
 (env-load "transpiler/lib/compiled-list.lisp")
 (env-load "transpiler/lib/with-lambda-call.lisp")
 (env-load "transpiler/lib/with-lambda-content.lisp")
-(env-load "transpiler/lib/function-arguments.lisp")
 (env-load "transpiler/lib/simple-argument-list-p.lisp")
 (env-load "transpiler/lib/pass.lisp")
 
