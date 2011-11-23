@@ -40,14 +40,15 @@
 			  (cdr (assoc name (expander-macros expander) :test #'eq))))
 	e))
 
-(defun set-expander-macro (expander-name name args-and-body)
+(defun set-expander-macro (expander-name name fun)
   (when (expander-has-macro? expander-name name)
     (warn "Macro ~A already defined." name))
   (setf (expander-macros (expander-get expander-name))
 		(aremove name (expander-macros (expander-get expander-name))))
-  (acons! name
-	      (eval `#',args-and-body)
-		  (expander-macros (expander-get expander-name))))
+  (acons! name fun (expander-macros (expander-get expander-name))))
+
+(defun set-expander-macros (expander-name lst)
+  (map (fn set-expander-macro expander-name _. ._) lst))
 
 (defmacro define-expander-macro (expander-name name &rest x)
   (unless (atom expander-name)
