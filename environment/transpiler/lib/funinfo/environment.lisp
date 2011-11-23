@@ -68,11 +68,12 @@
            ,@body)
 	     (setf (funinfo-env ,fi) ,old-env)))))
 
-,(macroexpand
-	`(progn
-	   ,@(mapcar (fn `(defun ,($ 'funinfo- _.) (fi var)
-				   	    (position var (,($ 'funinfo- ._.) fi) :test #'eq)))
-		         (group `(free-var-pos free-vars env-pos env lexical-pos lexicals) 2))))
+,`(progn
+    ,@(mapcar (fn `(defun ,($ 'funinfo- _.) (fi var)
+			   	     (position var (,($ 'funinfo- ._.) fi) :test #'eq)))
+		      `((free-var-pos free-vars)
+                (env-pos env)
+                (lexical-pos lexicals))))
 
 (defun funinfosym-env-pos (fi-sym x)
   (funinfo-env-pos (get-funinfo-by-sym fi-sym) x))
