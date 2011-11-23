@@ -1,5 +1,4 @@
-;;;;; TRE tree processor
-;;;;; Copyright (c) 2008-2009,2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2009,2011 Sven Klose <pixel@copei.de>
 
 (defun dot-expand-make-expr (which num x)
   (? (< 0 num)
@@ -47,8 +46,7 @@
     (when x
       (?
 		(label? x) (conv x)
-		(cons? x) (cons (dot-expand (car x))
-			            (dot-expand (cdr x)))
+		(cons? x) (cons-r dot-expand x)
       	x))))
 
-(%set-atom-fun *DOTEXPAND-HOOK* #'dot-expand)
+(%set-atom-fun *dotexpand-hook* #'dot-expand)
