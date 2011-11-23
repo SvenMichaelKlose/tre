@@ -39,6 +39,7 @@
 	     (js-load-base "environment/transpiler/environment/"
              "cps-disable.lisp")
 		 (js-load-base *js-env-path*
+			 "macro.lisp"
 			 "character.lisp"
 			 "number.lisp"
 			 "../../../environment/number.lisp"
@@ -64,8 +65,8 @@
 			 "string.lisp"
 			 "../../../environment/member.lisp"
 			 "hash.lisp"
-			 "macro.lisp"
-             "base64.lisp")
+             "base64.lisp"
+             "function-source.lisp")
 		 (js-load-base "environment/transpiler/environment/"
 			 "assoc.lisp"))))
 

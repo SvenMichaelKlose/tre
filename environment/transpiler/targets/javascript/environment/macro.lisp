@@ -5,14 +5,10 @@
 	   (expander-has-macro? 'standard-macros name))
     '(defun macrop (x)))
 
-,(when *have-compiler?*
-   '(defmacro define-std-macro (name &rest args-and-body)
-      (let quoted-name (list 'quote name)
-        `(progn
-           (when (expander-has-macro? 'standard-macros ,quoted-name)
-	         (warn "Macro ~A is already defined." ,quoted-name))
-           (define-expander-macro standard-macros ,name ,@args-and-body)))))
+(defvar *macros* nil)
 
-,(when *have-compiler?*
-  '(defun macroexpand (x)
-     (expander-expand 'standard-macros x)))
+(defmacro define-std-macro (name args &rest body)
+  `(setf *macros* (cons (cons ,(list 'quote name) #'(,args ,@body)) *macros*)))
+
+(defun macroexpand (x)
+  (expander-expand 'standard-macros x))
