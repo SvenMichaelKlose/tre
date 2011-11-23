@@ -44,6 +44,7 @@
 (env-load "stage1/tests-scope.lisp")
 (env-load "stage1/list-synonyms.lisp")
 (env-load "stage1/lambda.lisp")
+(env-load "stage1/function-source.lisp" 'c)
 (env-load "stage1/loops.lisp")
 (env-load "stage1/labels.lisp")
 (env-load "stage1/test-lexical-scope.lisp")

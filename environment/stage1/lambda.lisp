@@ -1,5 +1,4 @@
-;;;; TRE environment
-;;;; Copyright (c) 2006-2011 Sven Klose <pixel@copei.de>
+;;;; tré - Copyright (c) 2006-2011 Sven Klose <pixel@copei.de>
 
 (defun past-lambda-1 (x)
   (if (eq (car x) 'lambda)
@@ -90,14 +89,6 @@
 (define-test "IS-LAMBDA-CALL? works"
   ((lambda-call? '(#'((x) x) nil)))
   t)
-
-(defun function-arguments (fun)
-  (if (builtin? fun)
-	  '(&rest args-to-builtin)
-      (car (symbol-value fun))))
-
-(defun function-body (fun)
-  (cdr (symbol-value fun)))
 
 (defun copy-recurse-into-lambda (x body-fun)
   `#'(,@(lambda-head x)
