@@ -80,7 +80,7 @@
 	     ,(apply #'shared-essential-defun dname args body)
 		 (setf (symbol-function ,g) ,dname)
 		 ,@(when *save-compiled-source?*
-             `((setf (slot-value ,g '__source) ,(list 'quote (cons args body)))))))))
+             `((setf (slot-value (slot-value ,g 'f) '__source) ,(list 'quote (cons args body)))))))))
 
 (define-js-std-macro %defun (&rest x)
   `(defun ,@x))
