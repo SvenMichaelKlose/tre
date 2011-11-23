@@ -66,7 +66,8 @@
 			 "../../../environment/member.lisp"
 			 "hash.lisp"
              "base64.lisp"
-             "function-source.lisp")
+             "function-source.lisp"
+             "dot-expand.lisp")
 		 (js-load-base "environment/transpiler/environment/"
 			 "assoc.lisp"))))
 
