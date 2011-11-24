@@ -1,7 +1,6 @@
-;;;;; TRE compiler
-;;;;; Copyright (c) 2009 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2009,2011 Sven Klose <pixel@copei.de>
 
-(defun list-aliases (x)
+(defun list-aliases (x &key (gensym-generator #'gensym))
   (when x
-    (cons (cons x. (gensym))
+    (cons (cons x. (funcall gensym-generator))
           (list-aliases .x))))
