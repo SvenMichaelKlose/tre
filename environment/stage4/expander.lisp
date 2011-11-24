@@ -19,7 +19,7 @@
 
 (defun define-expander (expander-name &key (pre nil) (post nil)
 										   (pred nil) (call nil))
-  (let e  (make-expander :macros nil
+  (let e  (make-expander :macros (make-hash-table :test #'eq)
 						 :pred pred
 						 :call call
 						 :pre #'(())
@@ -27,25 +27,23 @@
     (acons! expander-name e *expanders*)
     (unless pred
       (setf (expander-pred e)
-			(fn (and (atom _.)
-				 	 (symbol-name _.)
-				 	 (cdr (assoc _. (expander-macros *current-expander*) :test #'eq))))))
+			(fn and (atom _.)
+				 	(symbol-name _.)
+				 	(href (expander-macros *current-expander*) _.))))
     (unless call
       (setf (expander-call e)
 			(fn (when *expander-print*
                   (print _))
-                (apply (cdr (assoc _. (expander-macros *current-expander*) :test #'eq)) ._))))
+                (apply (href (expander-macros *current-expander*) _.) ._))))
     (setf (expander-lookup e)
           #'((expander name)
-			  (cdr (assoc name (expander-macros expander) :test #'eq))))
+              (href (expander-macros expander) name)))
 	e))
 
 (defun set-expander-macro (expander-name name fun)
   (when (expander-has-macro? expander-name name)
     (warn "Macro ~A already defined." name))
-  (setf (expander-macros (expander-get expander-name))
-		(aremove name (expander-macros (expander-get expander-name))))
-  (acons! name fun (expander-macros (expander-get expander-name))))
+  (setf (href (expander-macros (expander-get expander-name)) name) fun))
 
 (defun set-expander-macros (expander-name lst)
   (map (fn set-expander-macro expander-name _. ._) lst))
@@ -59,10 +57,8 @@
     `(progn
 	   (when (expander-has-macro? ',expander-name ',name)
 	     (warn "Macro ~A already defined." ',name))
-       (setf (expander-macros (expander-get ',expander-name))
-		     (aremove ',name (expander-macros (expander-get ',expander-name))))
 	   (defun ,g ,@x)
-	   (acons! ',name #',g (expander-macros (expander-get ',expander-name))))))
+       (setf (href (expander-macros (expander-get ',expander-name)) ',name) #',g))))
 
 (defun expander-expand (expander-name expr)
   (let e (expander-get expander-name)
@@ -77,8 +73,7 @@
       (funcall (expander-post e)))))
 
 (defun expander-has-macro? (expander-name macro-name)
-  (cdr (assoc macro-name (expander-macros (expander-get expander-name))
-			  :test #'eq)))
+  (href (expander-macros (expander-get expander-name)) macro-name))
 
 (defun expander-macro-names (expander-name)
-  (carlist (expander-macros (expander-get expander-name))))
+  (hashkeys (expander-macros (expander-get expander-name))))
