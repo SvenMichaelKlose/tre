@@ -1,5 +1,4 @@
-;;;;; TRE compiler
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (defvar *funinfos* (make-hash-table :test #'eq))
 (defvar *funinfos-reverse* (make-hash-table :test #'eq))
@@ -33,16 +32,7 @@
   (href *funinfos* x))
 
 (defun get-lambda-funinfo (x)
-  (with (fi-sym (lambda-funinfo x)
-         fi	    (get-funinfo-by-sym fi-sym))
-    (unless (or (not fi fi-sym)
-				(and fi
-				 	 (eq fi-sym (funinfo-sym fi))))
-	  (print fi)
-	  (print x)
-	  (print (lambda-funinfo x))
-	  (error "couldn't get funinfo"))
-	fi))
+  (get-funinfo-by-sym (lambda-funinfo x)))
 
 (defun funinfo-expr-symbol (x)
   (and (eq '%funinfo x.) .x.))
