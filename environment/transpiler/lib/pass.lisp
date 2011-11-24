@@ -11,10 +11,10 @@
              (setf ,cache-var init)
              (dolist (i (list ,@(mapcan (fn `((? *transpiler-debug-dump*
                                                  #'((x)
-                                                     (format t ,(string-concat "******************** before " (symbol-name _.) "~%"))
+                                                     (format t ,(string-concat "; **** before " (symbol-name _.) "~%"))
                                                      (prog1
                                                        (print (funcall ,._. x))
-                                                       (format t ,(string-concat "******************** after " (symbol-name _.) "~%"))
+                                                       (format t ,(string-concat "; **** after " (symbol-name _.) "~%"))
                                                        (force-output)))
                                                  ,._.)))
                                         (reverse (group x 2))))
