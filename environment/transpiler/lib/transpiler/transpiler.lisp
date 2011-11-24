@@ -82,6 +82,8 @@
   (rename-toplevel-function-args? nil)
   (dot-expand? t)
   (raw-constructor-names? nil)
+  (memorized-sources nil)
+  (memorize-sources? t)
 
   (predefined-symbols nil)
 
@@ -225,7 +227,9 @@
   		(transpiler-defined-variables tr) nil
   		(transpiler-defined-variables-hash tr) (make-hash-table :test #'eq)
   		(transpiler-function-args tr) (make-hash-table :test #'eq)
-  		(transpiler-exported-closures tr) nil)
+  		(transpiler-exported-closures tr) nil
+        (transpiler-memorized-sources tr) nil
+        (transpiler-memorize-sources? tr) t)
   (transpiler-add-obfuscation-exceptions tr nil (make-symbol ""))
   tr)
 

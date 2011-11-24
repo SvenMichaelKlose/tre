@@ -54,9 +54,21 @@
   (unless (in-cps-mode?)
     (transpiler-add-cps-exception *js-transpiler* (%defun-name x))))
 
+(defvar *late-symbol-function-assignments* nil)
+
+(defun js-make-late-symbol-function-assignment (dname)
+  (push `(setf (slot-value ',dname 'f) ,(compiled-function-name dname))
+        *late-symbol-function-assignments*))
+
+(defun emit-late-symbol-function-assignments ()
+  (reverse *late-symbol-function-assignments*))
+
 (define-js-std-macro define-native-js-fun (name args &rest body)
   (js-cps-exception name)
-  (apply #'shared-essential-defun (%defun-name name) args (body-with-noargs-tag body)))
+  (let dname (%defun-name name)
+    (js-make-late-symbol-function-assignment dname)
+    `(progn
+       ,@(apply #'shared-essential-defun dname args (body-with-noargs-tag body)))))
 
 (define-js-std-macro cps-mode (x)
   (when *show-definitions*
@@ -66,6 +78,12 @@
   (setf *transpiler-except-cps?* (not x))
   `(%setq %cps-mode ,x))
 
+(defun js-make-early-symbol-expr (g sym)
+   `((%var ,g)
+     (%setq ,g (symbol ,(transpiler-obfuscated-symbol-name *js-transpiler* sym)
+                       ,(awhen (symbol-package sym)
+                          `(make-package ,(transpiler-obfuscated-symbol-name *js-transpiler* !)))))))
+
 (define-js-std-macro defun (name args &rest body)
   (with-gensym g
 	(let dname (transpiler-package-symbol *js-transpiler* (%defun-name name))
@@ -73,14 +91,14 @@
       (when (in-cps-mode?)
         (transpiler-add-cps-function *js-transpiler* dname))
       `(progn
-		 (%var ,g)
-		 (%setq ,g (symbol ,(transpiler-obfuscated-symbol-name *js-transpiler* dname)
-                           ,(awhen (symbol-package dname)
-                              `(make-package ,(transpiler-obfuscated-symbol-name *js-transpiler* !)))))
-	     ,(apply #'shared-essential-defun dname args body)
-		 (setf (symbol-function ,g) ,dname)
-		 ,@(when *save-compiled-source?*
-             `((setf (slot-value (slot-value ,g 'f) '__source) ,(list 'quote (cons args body)))))))))
+         ,@(js-make-early-symbol-expr g dname)
+	     ,@(apply #'shared-essential-defun dname args body)
+		 (setf (symbol-function ,g) ,dname)))))
+
+(defun js-emit-memorized-sources ()
+  (clr (transpiler-memorize-sources? *js-transpiler*))
+  (mapcar (fn `(%setq (slot-value ,_. '__source) ,(list 'quote ._)))
+          (transpiler-memorized-sources *js-transpiler*)))
 
 (define-js-std-macro %defun (&rest x)
   `(defun ,@x))

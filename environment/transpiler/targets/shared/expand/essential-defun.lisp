@@ -18,7 +18,7 @@
 	(transpiler-add-defined-function tr n)
     (transpiler-add-function-args tr n a)
 	(transpiler-add-function-body tr n body)
-	`(%defsetq ,name
+	`((%defsetq ,name
 	           #'(,@(awhen fi-sym
 				      `(%funinfo ,!))
 			      ,a
@@ -29,4 +29,9 @@
                              name)
                     ,@(when *log-functions?*
                         `((log ,(symbol-name n))))
-   		            ,@(body-without-noargs-tag body))))))
+   		            ,@(body-without-noargs-tag body))))
+     ,@(when *save-compiled-source?*
+         (? (transpiler-memorize-sources? *current-transpiler*)
+            (and (acons! name (cons args body) (transpiler-memorized-sources *current-transpiler*))
+                 nil)
+            `((%setq (slot-value ,name '__source) ,(list 'quote (cons args body)))))))))

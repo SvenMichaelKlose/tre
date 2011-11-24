@@ -1,5 +1,4 @@
-;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (defun js-transpile-prologue (tr)
   (format nil (+ "    var _I_ = 0; while (1) {switch (_I_) {case 0: ~%"
@@ -41,7 +40,9 @@
 				                         (when (eq t *have-environment-tests*)
 				   	  	                   (list (cons 't5 (make-environment-tests)))))
 		  	                 :files-after-deps
-		 		                 (mapcar #'list files)
+ 		                         (append (list (cons 'late-symbol-function-assignments #'emit-late-symbol-function-assignments)
+ 		                                       (cons 'memorized-source-emitter #'js-emit-memorized-sources))
+                                         (mapcar #'list files))
 		 	                 :dep-gen #'(()
 				  	                      (transpiler-import-from-environment tr))
 			                 :decl-gen #'(()
