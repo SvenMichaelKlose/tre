@@ -9,3 +9,6 @@ Find illegal keyword arguments.
 Literal characters as argument default values.
 
 QUASIQUOTE copies conses. Provide some alternative or make it non-copying.
+
+No recompilation without opt-inline -- c-call functions are missing.
+Check if importer can take all functions.
