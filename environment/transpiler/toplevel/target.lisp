@@ -33,8 +33,9 @@
   (let sightened-code (make-queue)
 	(dolist (i files (queue-list sightened-code))
       (let code (? (compile-file? i. (transpiler-sightened-files tr) files-to-update)
-                   (? (symbol? i.)
-		  			  (transpiler-sighten tr .i)
+                   (? (symbol? i.) (transpiler-sighten tr (? (function? .i)
+                                                             (funcall .i)
+                                                             .i))
 		  			  (transpiler-sighten-file tr i.))
                    (assoc-value i. (transpiler-sightened-files tr) :test #'eq-string=))
         (acons-or-replace code i. (transpiler-sightened-files tr) :test #'eq-string=)
@@ -51,6 +52,8 @@
 		 after-deps (funcall front-after))
 	(format t "; Importing dependencies...~%")
 	(awhen dep-gen
+      (when *have-compiler?*
+        (setf *save-compiled-source?* t))
       (acons! 'imported-deps (funcall !) after-deps))
     (format t "; Let me think. Hmm...")
 	(with (compiled-before (funcall back-before before-deps)
