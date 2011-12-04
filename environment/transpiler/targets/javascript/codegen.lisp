@@ -9,7 +9,7 @@
 (defvar *js-compiled-symbols* (make-hash-table :test #'eq))
 
 (defun js-codegen-symbol-constructor-expr (tr x)
-  (let s (transpiler-obfuscated-symbol-string tr (compiled-function-name 'symbol))
+  (let s (compiled-function-name-string tr 'symbol)
     `(,s "(\"" ,(transpiler-obfuscated-symbol-name tr x) "\","
 	           ,@(aif (symbol-package x)
 	                `((,s "(\"" ,(transpiler-obfuscated-symbol-name tr !) "\",null)"))

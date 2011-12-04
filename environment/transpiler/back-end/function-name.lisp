@@ -5,3 +5,6 @@
 	     (not (transpiler-defined-function *current-transpiler* x)))
 	 x
      (make-symbol (string-concat "USERFUN_" (symbol-name x)) (symbol-package x))))
+
+(defun compiled-function-name-string (tr name)
+  (transpiler-obfuscated-symbol-string tr (compiled-function-name name)))

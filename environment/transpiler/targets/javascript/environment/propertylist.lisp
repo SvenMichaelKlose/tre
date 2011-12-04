@@ -1,7 +1,5 @@
 ;;;;; tré - Copyright (c) 2010-2011 Sven Klose <pixel@copei.de>
 
-;(cps-exception t)
-
 (defvar *%property-list-tmp* nil)
 
 (defun %property-list-0 (key val)
@@ -13,8 +11,6 @@
   (setf *%property-list-tmp* nil)
   (%setq nil (%transpiler-native
       "for (var " i " in " hash ") "
-          ,(transpiler-obfuscated-symbol-string *js-transpiler* (compiled-function-name '%property-list-0))
+          ,(compiled-function-name-string *js-transpiler* '%property-list-0)
                "(" i ", " hash "[" i "]);"))
   (reverse *%property-list-tmp*))
-
-;(cps-exception nil)

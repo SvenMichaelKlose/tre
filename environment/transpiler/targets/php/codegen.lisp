@@ -78,9 +78,7 @@
 
 (define-php-macro function (name &optional (x 'only-name))
   (? (eq 'only-name x)
-     `(%transpiler-native
-          (%transpiler-string
-              ,(transpiler-symbol-string *php-transpiler* (transpiler-obfuscate *php-transpiler* (compiled-function-name name)))))
+     `(%transpiler-native (%transpiler-string ,(compiled-function-name-string *php-transpiler* name)))
   	 (? (atom x)
 		(error "codegen: arguments and body expected: ~A" x)
 	  	(codegen-php-function name x))))
