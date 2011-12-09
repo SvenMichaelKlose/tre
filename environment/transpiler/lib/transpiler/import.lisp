@@ -1,31 +1,23 @@
-;;;;; TRE transpiler
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (defun transpiler-defined? (tr name)
   (or (transpiler-defined-function tr name)
-  	  (transpiler-defined-variable tr name)
-  	  (transpiler-wanted-function? tr name)
+      (transpiler-defined-variable tr name)
+      (transpiler-wanted-function? tr name)
   	  (transpiler-wanted-variable? tr name)
 	  (transpiler-unwanted-function? tr name)
 	  (transpiler-macro tr name)))
 
 (defun transpiler-can-import? (tr name)
   (and (transpiler-import-from-environment? tr)
- 	   (symbol? name)
-  	   (not (transpiler-defined? tr name))))
+       (symbol? name)
+       (not (transpiler-defined? tr name))))
 	
 (defun transpiler-add-wanted-function (tr x)
-  (unless (or (builtin? x)
-			  (starts-with? x "ALIEN-")
-			  (starts-with? x "UNIX")
-			  (starts-with? x "C-CALL")
-			  (starts-with? x "EXEC")
-			  (starts-with? x "WAIT")
-			  (starts-with? x "FORK"))
+  (unless (builtin? x)
     (when (transpiler-can-import? tr x)
-	  (setf (href (transpiler-wanted-functions-hash tr) x) t)
-	  (nconc! (transpiler-wanted-functions tr)
-			  (list x))))
+      (setf (href (transpiler-wanted-functions-hash tr) x) t)
+      (nconc! (transpiler-wanted-functions tr) (list x))))
     x)
 
 (defun transpiler-should-add-wanted-variable? (tr var)
@@ -53,13 +45,12 @@
 (defun transpiler-import-wanted-function (tr x)
   (append (transpiler-import-exported-closures tr)
       	  (unless (transpiler-defined-function tr x)
-        	(transpiler-add-emitted-wanted-function tr x)
+       	    (transpiler-add-emitted-wanted-function tr x)
             (let fun (symbol-function x)
               (when (function? fun)
-		        (setf *imported-something* t)
-                (transpiler-sighten tr
-      	            `((defun ,x ,(function-arguments fun)
-	                    ,@(function-body fun)))))))))
+	            (setf *imported-something* t)
+                (transpiler-sighten tr `((defun ,x ,(function-arguments fun)
+	                                       ,@(function-body fun)))))))))
 
 (defun transpiler-import-wanted-functions (tr)
   (append (mapcan (fn transpiler-import-wanted-function tr _)
@@ -70,35 +61,27 @@
   (transpiler-sighten tr
     (mapcar (fn (unless (transpiler-defined-variable tr _)
 				  (setf *imported-something* t)
-				  (setf *delayed-var-inits*
-						(append (transpiler-sighten tr
-								    `((setf ,_ ,(assoc-value _ *variables*
-															 :test #'eq))))
- 							    *delayed-var-inits*))
-				  `(defvar ,_ nil)))
-		    (transpiler-wanted-variables tr))))
+				  (setf *delayed-var-inits* (append (transpiler-sighten tr `((setf ,_ ,(assoc-value _ *variables* :test #'eq))))
+ 							                        *delayed-var-inits*))
+	              `(defvar ,_ nil)))
+	        (transpiler-wanted-variables tr))))
 
 (defun transpiler-import-from-environment (tr)
   (clr *imported-something*)
   (with (funs (transpiler-import-wanted-functions tr)
-		 vars (transpiler-import-wanted-variables tr))
-	(if *imported-something*
-	    (append funs vars (transpiler-import-from-environment tr))
-	    *delayed-var-inits*)))
+	     vars (transpiler-import-wanted-variables tr))
+    (? *imported-something*
+       (append funs vars (transpiler-import-from-environment tr))
+       *delayed-var-inits*)))
 
 (defun transpiler-import-from-expex (x)
   (aif (atom-function-expr? x)
-       (if (funinfo-in-this-or-parent-env? *expex-funinfo* !)
-		   x
-           (progn
-			 (transpiler-add-wanted-function *current-transpiler* !))
-             `(symbol-function (%quote ,!)))
-       (or (vec-function-expr? x)
-           x)))
+       (? (funinfo-in-this-or-parent-env? *expex-funinfo* !)
+	      x
+          (progn
+	        (transpiler-add-wanted-function *current-transpiler* !))
+            `(symbol-function (%quote ,!)))
+       (or (vec-function-expr? x) x)))
 
 (defun transpiler-import-universe (tr)
-  (dolist (i (reverse *defined-functions*))
-	(and (symbol? i)
-		 (not (builtin? i))
-		 (symbol-function i))
-	     (transpiler-add-wanted-function tr i)))
+  (map (fn transpiler-add-wanted-function tr _) (reverse *defined-functions*)))
