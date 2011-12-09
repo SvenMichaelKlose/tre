@@ -1,10 +1,11 @@
 ;;;;; tré - Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 
 (defun php-load-base (dir-path &rest files)
-  (mapcan (fn (let f (+ dir-path _)
-				(format t  "(php-load-base \"~A\")~%" f)
-  				(read-file-all f)))
-		  files))
+  (with-temporary *have-compiler?* nil
+    (mapcan (fn (let f (+ dir-path _)
+				  (format t  "(php-load-base \"~A\")~%" f)
+  				  (read-file-all f)))
+		    files)))
 
 (defvar *php-env-path* "environment/transpiler/targets/php/environment/")
 

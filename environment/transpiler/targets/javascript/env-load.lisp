@@ -67,9 +67,11 @@
 			 "hash.lisp"
              "base64.lisp"
              "function-source.lisp"
-             "dot-expand.lisp")
+             "dot-expand.lisp"
+             "xtranspiler-symbol-value.lisp")
 		 (js-load-base "environment/transpiler/environment/"
-			 "assoc.lisp"))))
+			 "assoc.lisp"
+             "setf-function-p.lisp"))))
 
 (defvar *js-base-stream*
 	,(list 'quote (append

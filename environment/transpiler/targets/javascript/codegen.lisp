@@ -250,3 +250,6 @@
 
 (define-js-macro %invoke-debugger ()
   '(%transpiler-native "debugger"))
+
+(define-js-macro %%%eval (x)
+  `((%transpiler-native "eval ") ,x))

@@ -31,6 +31,7 @@
 (env-load "stage1/comparison-c.lisp" 'c)
 (env-load "stage1/member.lisp" 'c)
 (env-load "stage1/slot-value-p.lisp")
+(env-load "stage1/setf-function-p.lisp" 'c)
 (env-load "stage1/set.lisp")
 (env-load "stage1/set-c.lisp" 'c)
 (env-load "stage1/setf-builtin.lisp" 'c)
