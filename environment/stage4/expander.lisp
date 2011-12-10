@@ -17,6 +17,12 @@
 
 (defvar *expander-print* nil)
 
+(defun expander-macro-function (expander-name macro-name)
+  (href (expander-macros expander-name) macro-name))
+
+(defun (setf expander-macro-function) (new-function expander-name macro-name)
+  (setf (href (expander-macros expander-name) macro-name) new-function))
+
 (defun define-expander (expander-name &key (pre nil) (post nil)
 										   (pred nil) (call nil))
   (let e  (make-expander :macros (make-hash-table :test #'eq)
@@ -29,12 +35,12 @@
       (setf (expander-pred e)
 			(fn and (atom _.)
 				 	(symbol-name _.)
-				 	(href (expander-macros *current-expander*) _.))))
+				 	(expander-macro-function *current-expander* _.))))
     (unless call
       (setf (expander-call e)
 			(fn (when *expander-print*
                   (print _))
-                (apply (href (expander-macros *current-expander*) _.) ._))))
+                (apply (expander-macro-function *current-expander* _.) ._))))
     (setf (expander-lookup e)
           #'((expander name)
               (href (expander-macros expander) name)))

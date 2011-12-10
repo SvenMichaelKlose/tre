@@ -34,4 +34,5 @@
          (? (transpiler-memorize-sources? *current-transpiler*)
             (and (acons! name (cons args body) (transpiler-memorized-sources *current-transpiler*))
                  nil)
-            `((%setq (slot-value ,name '__source) ,(list 'quote (cons args body)))))))))
+            `((%setq (slot-value ,name '__source) ,(list 'quote (cons args body)))
+              (%setq *defined-functions* (cons ,(list 'quote n) *defined-functions*))))))))

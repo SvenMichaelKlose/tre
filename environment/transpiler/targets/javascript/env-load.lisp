@@ -20,6 +20,7 @@
 	         (js-load-base *js-env-path*
                  "opt-inline.lisp"
 		         "return-value.lisp"
+		         "defined-functions.lisp"
 		         "not.lisp"
 		         "cons.lisp"
 		         "symbol.lisp"

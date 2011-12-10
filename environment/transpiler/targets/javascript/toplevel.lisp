@@ -21,6 +21,15 @@
 (defun js-transpile-post ()
   (js-transpile-epilogue))
 
+(defun js-make-decl-gen (tr)
+  #'(()
+      (with-queue decls
+        (dolist (i (funinfo-env (transpiler-global-funinfo tr)) (queue-list decls))
+          (enqueue decls (transpiler-emit-code tr (list `(%var ,i))))))))
+
+(defun js-emit-early-defined-functions ()
+  (mapcar (fn `(push ,(list 'quote _.) *defined-functions*)) (transpiler-memorized-sources *js-transpiler*)))
+
 (defun js-transpile (files &key (obfuscate? nil) (print-obfuscations? nil) (files-to-update nil))
   (let tr *js-transpiler*
     (unless files-to-update
@@ -41,9 +50,9 @@
 				   	  	                   (list (cons 't5 (make-environment-tests)))))
 		  	                 :files-after-deps
  		                         (append (list (cons 'late-symbol-function-assignments #'emit-late-symbol-function-assignments)
- 		                                       (cons 'memorized-source-emitter #'js-emit-memorized-sources))
-                                               ;(when *have-compiler?*
- 		                                         ;(cons 'eval *js-base-eval*)))
+ 		                                       (cons 'memorized-source-emitter #'js-emit-memorized-sources)
+                                               (when *have-compiler?*
+ 		                                         (cons 'list-of-defined-functions #'js-emit-early-defined-functions)))
                                          (mapcar #'list files))
 		 	                 :dep-gen #'(()
 				  	                      (transpiler-import-from-environment tr))

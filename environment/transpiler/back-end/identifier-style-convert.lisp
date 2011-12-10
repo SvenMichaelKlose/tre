@@ -78,5 +78,5 @@
 				  (string? e)
 					e
 				  (or (assoc-value e (transpiler-symbol-translations tr) :test #'eq)
-					  (string-concat (transpiler-symbol-string tr e)))))
+					  (transpiler-symbol-string tr e))))
 		   x))

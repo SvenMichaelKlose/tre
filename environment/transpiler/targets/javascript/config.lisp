@@ -1,5 +1,4 @@
-;;;;; Transpiler: TRE to ECMAScript
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (defun js-setf-function? (x)
   (or (%setf-function? x)
@@ -27,7 +26,7 @@
 	  :rename-toplevel-function-args? t
 	  :predefined-symbols '(window document true)
 	  :inline-exceptions '(%slot-value error format identity %bind)
-	  :dont-inline-list '(%slot-value error format identity %bind map apply maphash)
+	  :dont-inline-list '(%slot-value error format identity %bind map apply maphash js-eval-transpile)
       :place-expand-ignore-toplevel-funinfo? t))
 
 (defun make-javascript-transpiler ()
