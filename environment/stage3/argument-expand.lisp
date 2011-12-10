@@ -1,10 +1,5 @@
 ;;;;; TRE environment
 ;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Argument expander.
-;;;;;
-;;;;; This is required for APPLY in compiled code, so APPLY *MUST NOT*
-;;;;; be used while expanding without errors.
 
 (defun argument-keyword? (x)
   (in? x '&rest '&body '&optional '&key))

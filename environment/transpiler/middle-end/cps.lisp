@@ -1,5 +1,4 @@
-;;;;; TRE compiler
-;;;;; Copyright (c) 2010-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2010-2011 Sven Klose <pixel@copei.de>
 
 (defun in-cps-mode? ()
   (and (transpiler-continuation-passing-style? *current-transpiler*)                                              
@@ -33,7 +32,7 @@
               ;n (? (%transpiler-native? v.)
                  ;   (cadr v.)
                   ;  v.))
-         (and (not (expander-has-macro? (transpiler-macro-expander tr) (compiled-function-name n)))
+         (and (not (expander-has-macro? (transpiler-macro-expander tr) (compiled-function-name tr n)))
               (or (transpiler-cps-function? tr n)
                   (and (transpiler-defined-function tr n)
                        (not (transpiler-cps-exception? tr n))))))))
@@ -68,7 +67,7 @@
 ;                       (not (transpiler-defined-function *current-transpiler* n)
 ;                            (transpiler-cps-function? *current-transpiler* n)
 ;                            (expander-has-macro? (transpiler-macro-expander *current-transpiler*)
-;                                                 (compiled-function-name n))))
+;                                                 (compiled-function-name *current-transpiler* n))))
 ;                  (and (%slot-value? n)
 ;                       (eq 'window .n.)
 ;                       (print n)))))))

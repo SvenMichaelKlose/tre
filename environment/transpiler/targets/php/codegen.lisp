@@ -64,7 +64,7 @@
 		 fi (get-lambda-funinfo x)
 		 num-locals (length (funinfo-env fi)))
     `(,(code-char 10)
-	  "function " ,(compiled-function-name name) ,@(php-argument-list args)
+	  "function " ,(compiled-function-name *php-transpiler* name) ,@(php-argument-list args)
       "{" ,(code-char 10)
 		 ,@(awhen (funinfo-globals fi)
              (php-line "global " (php-list !)))

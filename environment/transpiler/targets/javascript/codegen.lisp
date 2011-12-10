@@ -53,6 +53,9 @@
 
 ;;;; FUNCTIONS
 
+(defun js-argument-list (debug-section args)
+  (parenthized-comma-separated-list (argument-expand-names debug-section args)))
+
 (define-js-macro function (&rest x)
   (when ..x
 	(error "an optional function name followed by the head/body expected"))
@@ -60,8 +63,7 @@
   (? (or (atom x)
 		 (%stack? x))
 	 x
-     `("function " ,@(parenthized-comma-separated-list (argument-expand-names 'unnamed-js-function (lambda-args x)))
-		  		,(code-char 10)
+     `("function " ,@(js-argument-list 'unnamed-js-function (lambda-args x)) ,(code-char 10)
 	   "{" ,(code-char 10)
 		   ,@(lambda-body x)
 	   "}")))
@@ -191,7 +193,7 @@
 ;;;; OBJECTS
 
 (define-js-macro %new (&rest x)
-  `(%transpiler-native "new " ,(compiled-function-name x.) "(" ,@(pad .x ",") ")"))
+  `(%transpiler-native "new " ,(compiled-function-name *js-transpiler* x.) "(" ,@(pad .x ",") ")"))
 
 (define-js-macro delete-object (x)
   `(%transpiler-native "delete " ,x))

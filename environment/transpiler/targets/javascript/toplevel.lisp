@@ -42,6 +42,8 @@
 		  	                 :files-after-deps
  		                         (append (list (cons 'late-symbol-function-assignments #'emit-late-symbol-function-assignments)
  		                                       (cons 'memorized-source-emitter #'js-emit-memorized-sources))
+                                               ;(when *have-compiler?*
+ 		                                         ;(cons 'eval *js-base-eval*)))
                                          (mapcar #'list files))
 		 	                 :dep-gen #'(()
 				  	                      (transpiler-import-from-environment tr))

@@ -1,16 +1,15 @@
-;;;;; TRE transpiler
-;;;;; Copyright (c) 2010-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2010-2011 Sven Klose <pixel@copei.de>
 
 (defun translate-function-name (funinf x)
   (if (and (transpiler-defined-function *current-transpiler* x)
 		   (or (not funinf)
 			   (not (funinfo-in-env-or-lexical? funinf x))))
-	  (compiled-function-name x)
+	  (compiled-function-name *current-transpiler* x)
 	  x))
 
 (define-tree-filter translate-function-names (tr funinf x)
   (named-lambda? x)
-	(copy-lambda x :name (compiled-function-name .x.)
+	(copy-lambda x :name (compiled-function-name tr .x.)
 				   :body (translate-function-names tr (get-lambda-funinfo x) (lambda-body x)))
   (lambda? x)
 	(copy-lambda x :body (translate-function-names tr (get-lambda-funinfo x) (lambda-body x)))

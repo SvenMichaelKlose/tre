@@ -23,10 +23,7 @@
 		         "not.lisp"
 		         "cons.lisp"
 		         "symbol.lisp"
-		         "propertylist.lisp")
-		     ;(js-load-base "environment/transpiler/environment/"
-                 ;"cps-enable.lisp")))
-                 )))
+		         "propertylist.lisp"))))
 
 (defvar *js-base-debug-print* ,(list 'quote (js-load-base *js-env-path* "debug-print.lisp")))
 
@@ -44,34 +41,34 @@
 			 "number.lisp"
 			 "../../../environment/number.lisp"
 			 "../../../environment/number-typing.lisp")
-;		(js-load-base "environment/transpiler/environment/"
-;            "cps-enable.lisp")
 		 (js-load-base *js-env-path*
 			 "apply.lisp"
 			 "array.lisp"
 			 "atom.lisp")
 		 (js-load-base "environment/transpiler/environment/"
-			 "atom.lisp")
-		 (js-load-base *js-env-path*
-			 "bind.lisp"
-			 "../../../environment/eq.lisp"
-			 "../../../environment/equality.lisp"
-			 "late-cons.lisp"
-			 "late-symbol.lisp"
-			 "../../../environment/list.lisp"
-			 "../../../environment/sequence.lisp"
-			 "sequence.lisp"
-			 "../../../environment/list-string.lisp"
-			 "string.lisp"
-			 "../../../environment/member.lisp"
-			 "hash.lisp"
-             "base64.lisp"
-             "function-source.lisp"
-             "dot-expand.lisp"
-             "xtranspiler-symbol-value.lisp")
-		 (js-load-base "environment/transpiler/environment/"
-			 "assoc.lisp"
-             "setf-function-p.lisp"))))
+			 "atom.lisp"))))
+(setf *js-base2* (append *js-base2*
+		                 ,(list 'quote (js-load-base *js-env-path*
+			                                         "bind.lisp"
+			                                         "../../../environment/eq.lisp"
+			                                         "../../../environment/equality.lisp"
+			                                         "late-cons.lisp"
+			                                         "late-symbol.lisp"
+			                                         "../../../environment/list.lisp"
+			                                         "../../../environment/sequence.lisp"
+			                                         "sequence.lisp"
+			                                         "../../../environment/list-string.lisp"
+			                                         "string.lisp"
+			                                         "../../../environment/member.lisp"
+			                                         "hash.lisp"
+                                                     "base64.lisp"
+                                                     "function-source.lisp"
+                                                     "dot-expand.lisp"
+                                                     "native-eval.lisp"))))
+(setf *js-base2* (append *js-base2*
+		         ,(list 'quote (js-load-base "environment/transpiler/environment/"
+			                                 "assoc.lisp"
+                                             "setf-function-p.lisp"))))
 
 (defvar *js-base-stream*
 	,(list 'quote (append
@@ -79,3 +76,6 @@
 			 "error.lisp"
 			 "stream.lisp"
 			 "../../../environment/print.lisp"))))
+
+(defvar *js-base-eval* ,(list 'quote (js-load-base *js-env-path* "eval.lisp"
+                                                                 "xtranspiler-symbol-value.lisp")))

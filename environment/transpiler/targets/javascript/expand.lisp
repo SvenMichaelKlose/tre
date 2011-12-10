@@ -57,7 +57,7 @@
 (defvar *late-symbol-function-assignments* nil)
 
 (defun js-make-late-symbol-function-assignment (dname)
-  (push `(setf (slot-value ',dname 'f) ,(compiled-function-name dname))
+  (push `(setf (slot-value ',dname 'f) ,(compiled-function-name *js-transpiler* dname))
         *late-symbol-function-assignments*))
 
 (defun emit-late-symbol-function-assignments ()
