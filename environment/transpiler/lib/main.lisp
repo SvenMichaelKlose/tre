@@ -14,7 +14,6 @@
 
 (env-load "transpiler/lib/transpiler/transpiler.lisp")
 (env-load "transpiler/lib/transpiler/import.lisp")
-(env-load "transpiler/lib/transpiler/xtranspiler-symbol-value.lisp" 'c)
 
 (env-load "transpiler/lib/funinfo/funinfo.lisp")
 (env-load "transpiler/lib/funinfo/environment.lisp")

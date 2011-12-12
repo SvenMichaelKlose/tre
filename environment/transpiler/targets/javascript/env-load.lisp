@@ -78,5 +78,4 @@
 			 "stream.lisp"
 			 "../../../environment/print.lisp"))))
 
-(defvar *js-base-eval* ,(list 'quote (js-load-base *js-env-path* "eval.lisp"
-                                                                 "xtranspiler-symbol-value.lisp")))
+(defvar *js-base-eval* ,(list 'quote (js-load-base *js-env-path* "eval.lisp")))
