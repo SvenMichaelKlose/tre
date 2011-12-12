@@ -18,9 +18,9 @@
     	  (js-transpile-post)))))
 
 (defun eval (x)
-  (%%%eval (print (+ (js-eval-transpile x)
+  (%%%eval (+ (js-eval-transpile x)
               (transpiler-obfuscated-symbol-string *js-transpiler* '*native-eval-return-value*)
               " = "
               (transpiler-obfuscated-symbol-string *js-transpiler* '~%ret)
-              ";")))
+              ";"))
   *native-eval-return-value*)

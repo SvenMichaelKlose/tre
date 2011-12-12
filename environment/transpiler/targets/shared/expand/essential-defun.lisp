@@ -30,9 +30,11 @@
                     ,@(when *log-functions?*
                         `((log ,(symbol-name n))))
    		            ,@(body-without-noargs-tag body))))
+     ,@(when (and *have-compiler?*
+                  (not (transpiler-memorize-sources? *current-transpiler*)))
+         `((%setq *defined-functions* (cons ,(list 'quote n) *defined-functions*))))
      ,@(when *save-compiled-source?*
          (? (transpiler-memorize-sources? *current-transpiler*)
             (and (acons! name (cons args body) (transpiler-memorized-sources *current-transpiler*))
                  nil)
-            `((%setq (slot-value ,name '__source) ,(list 'quote (cons args body)))
-              (%setq *defined-functions* (cons ,(list 'quote n) *defined-functions*))))))))
+            `((%setq (slot-value ,name '__source) ,(list 'quote (cons args body)))))))))

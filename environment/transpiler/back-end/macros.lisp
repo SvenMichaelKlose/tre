@@ -9,4 +9,4 @@
          (error "Code generator macro ~A is already defined." ,quoted-name))
        (transpiler-add-unwanted-function ,tr ,quoted-name)
        (transpiler-add-inline-exception ,tr ,quoted-name)
-       (define-expander-macro ,(transpiler-macro-expander (xtranspiler-symbol-value tr)) ,name ,@x))))
+       (define-expander-macro ,(transpiler-macro-expander (eval tr)) ,name ,@x))))

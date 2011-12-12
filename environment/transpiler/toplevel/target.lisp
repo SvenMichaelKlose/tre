@@ -50,12 +50,10 @@
                                          (print-obfuscations? nil))
   (with (before-deps (funcall front-before)
 		 after-deps (funcall front-after))
-	(format t "; Importing dependencies...~%")
 	(awhen dep-gen
       (when *have-compiler?*
         (setf *save-compiled-source?* t))
       (acons! 'imported-deps (funcall !) after-deps))
-    (format t "; Let me think. Hmm...")
 	(with (compiled-before (funcall back-before before-deps)
 		   compiled-after (funcall back-after after-deps))
 	  (prog1
@@ -83,9 +81,6 @@
 	  :decl-gen decl-gen
       :print-obfuscations? print-obfuscations?))
 
-(defun target-transpile-ok ()
-  (format t "~%; Code has been generated.~%"))
-
 (defvar *updater* nil)
 
 (defun target-transpile (tr &key (files-after-deps nil)
@@ -96,14 +91,12 @@
                                  (print-obfuscations? nil))
   (setf *recompiling?* (? files-to-update t))
   (with-temporary *current-transpiler* tr
-    (prog1
-	  (target-transpile-0 tr :files-after-deps files-after-deps
-						  	 :files-before-deps files-before-deps
-                             :files-to-update files-to-update
-						     :dep-gen dep-gen
-							 :decl-gen decl-gen
-                             :print-obfuscations? print-obfuscations?)
-	  (target-transpile-ok))))
+	(target-transpile-0 tr :files-after-deps files-after-deps
+					  	   :files-before-deps files-before-deps
+                           :files-to-update files-to-update
+					       :dep-gen dep-gen
+						   :decl-gen decl-gen
+                           :print-obfuscations? print-obfuscations?)))
 
 (defun target-transpile-setup (tr &key (obfuscate? nil))
   (with-temporary *current-transpiler* tr

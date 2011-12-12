@@ -1,8 +1,7 @@
-;;;;; TRE compiler
-;;;;; Copyright (c) 2010-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2010-2011 Sven Klose <pixel@copei.de>
 
 (defun function-copier-0 (x body-statements)
-  `(function ,,@(awhen (lambda-name ,x) (list !))
+  `(function ,(list 'QUASIQUOTE-SPLICE `(awhen (lambda-name ,x) (list !)))
      (,,@(lambda-head ,x)
       ,(list 'quasiquote-splice body-statements))))
 
@@ -16,12 +15,12 @@
 								     			  ,body-statements)))))
 
 (defun metacode-walker-copier (x statement &key (%setq? nil) (copy? nil))
-  (if copy?
-      (let s statement
-	    (if %setq?
-	        (%setq-function-copier x s)
-	        (function-copier x s)))
-	  statement))
+  (? copy?
+     (let s statement
+	   (? %setq?
+	      (%setq-function-copier x s)
+	      (function-copier x s)))
+	 statement))
 
 (defmacro metacode-walker-statements (name args &key (if-atom nil)
 										  			 (if-cons nil)
@@ -32,10 +31,11 @@
 										      		 (copy-function-heads? nil)
 													 (only-statements? t))
   (with-cons x r args
+             (print
     `(defun ,name ,args
 	   (with (rec
-				#'((x)
-                     (if
+				#'((,x)
+                     (?
 					   (and (%setq? ,x)
 							(cons? (%setq-value ,x))
 							(eq '%%tag (car (%setq-value ,x))))
@@ -65,8 +65,9 @@
 			               (print ,x)
 			               (error "metacode statement expected instead"))
 
-					   (copy-tree x))))
+					   (copy-tree ,x))))
 		(mapcar #'rec ,x)))))
+  )
 
 (defmacro metacode-walker-all (name args &key (if-atom nil)
 					  	    		          (if-symbol nil)
@@ -81,21 +82,19 @@
 										      (only-statements? nil))
   (with-cons x r args
     `(defun ,name ,args
-       (if
+       (?
 		 (atom ,x)
-	       (if (not ,x) nil
-	           ,@(awhen if-symbol	`((symbol? ,x) ,!))
-	           ,@(awhen if-atom		`((atom ,x) ,!))
-			   ,@(unless traverse?
-				   (list x)))
+	       (? (not ,x) nil
+	          ,@(awhen if-symbol	`((symbol? ,x) ,!))
+	          ,@(awhen if-atom		`((atom ,x) ,!))
+			  ,@(unless traverse?
+			      (list x)))
 		,@(awhen if-slot-value	`((%slot-value? ,x)	,!))
 		,@(awhen if-stack		`((%stack? ,x)		,!))
 		,@(awhen if-vec			`((%vec? ,x)		,!))
 
 		(in? (car ,x) '%quote '%var '%transpiler-native)
-		   ,(if traverse?
-			     nil
-			     x)
+		   ,(? traverse? nil x)
 
 		,@(awhen (or if-named-function if-function)
 			`((named-lambda? ,x)
@@ -105,14 +104,12 @@
 			`((lambda? ,x)
 			    ,(metacode-walker-copier x ! :copy? copy-function-heads?)))
 
-	    (,(if traverse?
-			  'progn
-			  'cons)
-	        (,name (car ,x) ,@r)
-	        (,name (cdr ,x) ,@r))))))
+	    (,(? traverse? 'progn 'cons)
+	      (,name (car ,x) ,@r)
+	      (,name (cdr ,x) ,@r))))))
 
 (defmacro metacode-walker (name args &rest config)
   (let p (position :only-statements? config)
-	(if (and p (elt config (1+ p)))
-	    `(metacode-walker-statements ,name ,args ,@config)
-	    `(metacode-walker-all ,name ,args ,@config))))
+	(? (and p (elt config (1+ p)))
+	   `(metacode-walker-statements ,name ,args ,@config)
+	   `(metacode-walker-all ,name ,args ,@config))))

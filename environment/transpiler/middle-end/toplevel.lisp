@@ -10,9 +10,6 @@
 ;; - FUNINFOs were updated with number of jump tags in function.
 ;; - FUNCTION expression contain the names of top-level functions.
 (transpiler-pass transpiler-expand-compose (tr)
-    print-dot (fn (princ #\.)
-		          (force-output)
-		          _)
     update-funinfo #'transpiler-update-funinfo
     opt-remove-unused-places #'opt-places-remove-unused
     opt-find-unused-places #'opt-places-find-used

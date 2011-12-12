@@ -12,7 +12,7 @@
 	   (when (expander-has-macro? (transpiler-macro-expander ,tr) ,quoted-name)
 	     (error "Macro ~A is already defined in code generator." ,quoted-name))
 	   (transpiler-add-inline-exception ,tr ,quoted-name)
-       (define-expander-macro ,(transpiler-std-macro-expander (xtranspiler-symbol-value tr)) ,name ,@args-and-body))))
+       (define-expander-macro ,(transpiler-std-macro-expander (eval tr)) ,name ,@args-and-body))))
 
 (defun transpiler-macroexpand (tr x)
   (with-temporary *setf-function?* (transpiler-setf-function? tr)

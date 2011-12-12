@@ -1,5 +1,4 @@
-;;;;; TRE transpiler
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 ;; After this pass:
 ;; - Symbols are obfuscated.
@@ -7,7 +6,6 @@
 ;; - Expressions are expanded via code generating macros.
 ;; - Everything is converted to strings and concatenated.
 (transpiler-pass transpiler-emit-code-compose (tr)
-    print-o (fn (princ #\o) (force-output) _)
     concat-stringtree #'concat-stringtree
     to-string (fn transpiler-to-string tr _)
     obfuscate (fn transpiler-obfuscate tr _)
