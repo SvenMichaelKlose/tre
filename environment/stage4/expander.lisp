@@ -25,11 +25,11 @@
 
 (defun define-expander (expander-name &key (pre nil) (post nil)
 										   (pred nil) (call nil))
-  (let e  (make-expander :macros (make-hash-table :test #'eq)
-						 :pred pred
-						 :call call
-						 :pre #'(())
-						 :post #'(()))
+  (let e (make-expander :macros (make-hash-table :test #'eq)
+						:pred pred
+						:call call
+						:pre (or pre #'(()))
+						:post (or post #'(())))
     (acons! expander-name e *expanders*)
     (unless pred
       (setf (expander-pred e)
