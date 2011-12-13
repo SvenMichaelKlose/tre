@@ -100,6 +100,14 @@
            (cons 'BACKQUOTE
                  (apply *macroexpand-backquote-diversion* (list (cdr %g))))
 
+         (eq (car %g) 'QUASIQUOTE)
+	  	   (cons 'QUASIQUOTE
+		     	 (%macroexpand (cdr %g)))
+
+         (eq (car %g) 'QUASIQUOTE-SPLICE)
+	  	   (cons 'QUASIQUOTE-SPLICE
+		     	 (%macroexpand (cdr %g)))
+
          (%macroexpand-call (%macroexpand-rest %g)))))
 
 (%set-atom-fun %%macrop

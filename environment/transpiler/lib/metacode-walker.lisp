@@ -1,7 +1,7 @@
 ;;;;; tré - Copyright (c) 2010-2011 Sven Klose <pixel@copei.de>
 
 (defun function-copier-0 (x body-statements)
-  `(function ,(list 'QUASIQUOTE-SPLICE `(awhen (lambda-name ,x) (list !)))
+  `(function ,,@(awhen (lambda-name ,x) (list !))
      (,,@(lambda-head ,x)
       ,(list 'quasiquote-splice body-statements))))
 
