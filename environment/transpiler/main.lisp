@@ -1,6 +1,6 @@
 ;;;;; tré - Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
 
-,(clr *save-compiled-source?*)
+,(setf *save-args-only?* t)
 
 (env-load "transpiler/lib/main.lisp")
 (env-load "transpiler/back-end/main.lisp")
