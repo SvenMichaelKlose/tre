@@ -10,4 +10,6 @@
 (defvar *exec-log* nil)
 (defvar *print-circularities?* nil)
 (defvar *save-compiled-source?* nil)
+(defvar *save-args-only?* nil)
 (defvar *have-compiler?* nil)
+(defvar *have-c-compiler?* t)
