@@ -1,5 +1,8 @@
 ;;;;; tré - Copyright (c) 2011 Sven Klose <pixel@copei.de>
 
+(unless (eq '*native-eval-return-value* *native-eval-return-value*)
+  (defvar *native-eval-return-value* nil))
+
 (defun js-eval-transpile (expression)
   (with-temporary *js-transpiler* (copy-array *js-transpiler* :copy-elements? t)
     (let tr *js-transpiler*
