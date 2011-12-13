@@ -31,7 +31,6 @@
 										      		 (copy-function-heads? nil)
 													 (only-statements? t))
   (with-cons x r args
-             (print
     `(defun ,name ,args
 	   (with (rec
 				#'((,x)
@@ -67,7 +66,6 @@
 
 					   (copy-tree ,x))))
 		(mapcar #'rec ,x)))))
-  )
 
 (defmacro metacode-walker-all (name args &key (if-atom nil)
 					  	    		          (if-symbol nil)

@@ -1,5 +1,4 @@
-;;;;; Transpiler: TRE to C
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (defvar *closure-argdefs* nil)
 (defvar *c-init-group-size* 16)
@@ -87,7 +86,7 @@
         `((defun c-init ()
 		    ,@(mapcar #'list (reverse init-funs)))))))
 
-(defun c-transpile (files &key (obfuscate? nil))
+(defun c-transpile (sources &key (obfuscate? nil))
   (let tr *c-transpiler*
 	(with-temporary *current-transpiler* tr
       (transpiler-reset tr)
@@ -96,7 +95,7 @@
 	      (mapcar (fn format nil "#include \"~A\"~%" _) *c-interpreter-headers*)
   	      (format nil "#define userfun_apply trespecial_apply_compiled~%")
   	      (target-transpile *c-transpiler*
-	  	      :files-after-deps (mapcar #'list files)
+	  	      :files-after-deps sources
 	          :dep-gen #'(()
 			               (transpiler-import-from-environment tr))
 	          :decl-gen #'(()

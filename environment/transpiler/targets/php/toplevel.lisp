@@ -33,9 +33,7 @@
                    "}~%"))
     (php-print-native-environment out)))
 
-(defun php-transpile-0 (sources &key (obfuscate? nil)
-                                     (print-obfuscations? nil)
-                                     (files-to-update nil))
+(defun php-transpile (sources &key (obfuscate? nil) (print-obfuscations? nil) (files-to-update nil))
   (let tr *php-transpiler*
     (unless files-to-update
       (transpiler-reset tr)
@@ -46,8 +44,6 @@
     	(target-transpile tr
     	 	:files-before-deps
 			    (append (list (cons 'base1 *php-base*))
-;		 		  		(when *transpiler-log*
-;				   	  	  (list (cons 'text *php-base-debug-print*)))
 				  	    (list (cons 'base2 *php-base2*)))
 		  	:files-after-deps
 				(append (when (eq t *have-environment-tests*)
@@ -63,11 +59,3 @@
                              (transpiler-compiled-inits tr))))
 			:files-to-update files-to-update
 			:print-obfuscations? print-obfuscations?))))
-
-(defun php-transpile (files &key (obfuscate? nil)
-                                 (print-obfuscations? nil)
-                                 (files-to-update nil))
-  (php-transpile-0 (mapcar (fn list _) files)
-                   :obfuscate? obfuscate?
-                   :print-obfuscations? print-obfuscations?
-                   :files-to-update files-to-update))

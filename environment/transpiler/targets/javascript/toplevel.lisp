@@ -30,7 +30,7 @@
 (defun js-emit-early-defined-functions ()
   (mapcar (fn `(push ,(list 'quote _.) *defined-functions*)) (transpiler-memorized-sources *js-transpiler*)))
 
-(defun js-transpile (files &key (obfuscate? nil) (print-obfuscations? nil) (files-to-update nil))
+(defun js-transpile (sources &key (obfuscate? nil) (print-obfuscations? nil) (files-to-update nil))
   (let tr *js-transpiler*
     (unless files-to-update
       (transpiler-reset tr)
@@ -53,7 +53,7 @@
  		                                       (cons 'memorized-source-emitter #'js-emit-memorized-sources)
                                                (when *have-compiler?*
  		                                         (cons 'list-of-defined-functions #'js-emit-early-defined-functions)))
-                                         (mapcar #'list files))
+                                         sources)
 		 	                 :dep-gen #'(()
 				  	                      (transpiler-import-from-environment tr))
 			                 :decl-gen #'(()
