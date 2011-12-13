@@ -34,7 +34,8 @@
                   (not (transpiler-memorize-sources? *current-transpiler*)))
          `((%setq *defined-functions* (cons ,(list 'quote n) *defined-functions*))))
      ,@(when *save-compiled-source?*
+         (apply #'transpiler-add-obfuscation-exceptions *current-transpiler* (collect-symbols (cons args body)))
          (? (transpiler-memorize-sources? *current-transpiler*)
             (and (acons! name (cons args body) (transpiler-memorized-sources *current-transpiler*))
                  nil)
-            `((%setq (slot-value ,name '__source) ,(list 'quote (cons args body)))))))))
+            `((%setq (slot-value ,name '__source) ,(list 'quote (cons args (unless *save-args-only?* body))))))))))
