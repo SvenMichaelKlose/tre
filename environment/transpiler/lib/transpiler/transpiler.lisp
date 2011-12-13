@@ -137,7 +137,7 @@
   (href (transpiler-function-args tr) fun))
 
 (defun current-transpiler-function-arguments-w/o-builtins (x)
-  (or (href (transpiler-function-args *current-transpiler*) x)
+  (or (transpiler-function-arguments *current-transpiler* x)
 	  (? (builtin? x)
 		 'builtin
 		 (function-arguments (symbol-function x)))))
