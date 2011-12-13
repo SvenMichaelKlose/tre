@@ -64,8 +64,11 @@
 			                                         "hash.lisp"
                                                      "base64.lisp"
                                                      "function-source.lisp"
-                                                     "dot-expand.lisp"
-                                                     "native-eval.lisp"))))
+                                                     "dot-expand.lisp"))))
+
+(when *have-compiler?*
+  (setf *js-base2* (append *js-base2* ,(list 'quote (js-load-base *js-env-path* "native-eval.lisp")))))
+
 (setf *js-base2* (append *js-base2*
 		         ,(list 'quote (js-load-base "environment/transpiler/environment/"
 			                                 "assoc.lisp"
