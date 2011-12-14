@@ -1,15 +1,11 @@
-;;;;; TRE environment
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Argument expansion compiler
+;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (defun compile-argument-expansion-defaults (defaults)
   (mapcar (fn `(when (eq ,_ ,(list 'quote _))
 			     (setf ,_ ,(assoc-value _ defaults))))
 		  (carlist defaults)))
 
-(defun compile-argument-expansion-0 (adef p &optional (argdefs nil)
-								   					  (key-args nil))
+(defun compile-argument-expansion-0 (adef p &optional (argdefs nil) (key-args nil))
   (with ((argdefs key-args) (argument-exp-sort adef)
 		 get-name
 		   #'((def)
@@ -75,15 +71,17 @@
    (? key-args
       `((with (compexp-keywords
 				  #'(()
-				      (let v nil
-					    (while (keyword? (setf v (car ,p)))
-							   nil
-						  (?
-						    ,@(mapcan (fn `((eq v ,(make-symbol (symbol-name _) *keyword-package*))
-											(setf ,p (cdr ,p)
-												  ,_ (car ,p)
-												  ,p (cdr ,p))))
-									  (carlist key-args)))))))
+                      (block compexp
+				        (let v nil
+					      (while (keyword? (setf v (car ,p)))
+							     nil
+						    (?
+						      ,@(mapcan (fn `((eq v ,(make-symbol (symbol-name _) *keyword-package*))
+											  (setf ,p (cdr ,p)
+												    ,_ (car ,p)
+												    ,p (cdr ,p))))
+									    (carlist key-args))
+						      (return-from compexp nil)))))))
           ,@(when argdefs
 			  (compexp-main argdefs))
 		  ,@(compexp-key)
@@ -104,9 +102,9 @@
         (with-gensym p
           (? (in-cps-mode?)
              (with-gensym toplevel-continuer
-                (print `#'((,p)
+                print `#'((,p)
                             (let ,toplevel-continuer ~%continuer
                               ,(compile-argument-expansion-function-body fun-name adef p (list toplevel-continuer) names)))))
              `#'((,p)
-                  ,(compile-argument-expansion-function-body fun-name adef p nil names))))
+                  ,(compile-argument-expansion-function-body fun-name adef p nil names)))
 	    (list 'function fun-name))))
