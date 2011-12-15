@@ -150,13 +150,18 @@ treptr
 trespecial_call_compiled (treptr lst)
 {
 	ffi_cif cif;
-	ffi_type *args[128];
-	treptr refs[128];
-	void *values[128];
+	ffi_type **args;
+	treptr *refs;
+	void **values;
 	treptr rc;
 	int i;
 	treptr x = CDR(lst);
 	void * fun;
+    int len = trelist_length (lst);
+
+    args = trealloc (sizeof (ffi_type *) * len);
+    refs = trealloc (sizeof (treptr) * len);
+    values = trealloc (sizeof (void *) * len);
 
 	/* Initialize the argument info vectors */
 	for (i = 0; x != treptr_nil; i++, x = CDR(x)) {
@@ -171,6 +176,9 @@ trespecial_call_compiled (treptr lst)
 		ffi_call(&cif, fun, &rc, values);
 	}
 
+    trealloc_free (args);
+    trealloc_free (refs);
+    trealloc_free (values);
 	return rc;
 }
 
