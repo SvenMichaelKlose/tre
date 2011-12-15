@@ -1,8 +1,10 @@
 Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
 
-    tré is a compiler for a dialect of the Lisp family of programming
-    languages. It can generate C, JavaScript and PHP code. It compiles
-    itself (except macros).
+    tré is a dialect of the Lisp family of programming languages.
+    The compiler can translate itself to C or JavaScript. A PHP
+    backend is also included for less complicated pieces of
+    software. When compiled to JavaScript, tré can compile to
+    JavaScript and PHP only.
 
 
 BUILD & INSTALL

@@ -14,3 +14,5 @@
 (env-load "transpiler/targets/php/main.lisp")
 
 (env-load "transpiler/compile.lisp")
+
+,(setf *save-args-only?* nil)

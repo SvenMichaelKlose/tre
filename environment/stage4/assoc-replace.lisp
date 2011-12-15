@@ -3,7 +3,7 @@
 
 (defun assoc-replace (x alst &key (test #'eql))
   (or (assoc-value x alst :test test)
-	   x))
+      x))
 
 (defun assoc-replace-many (x alst &key (test #'eql))
   (when x

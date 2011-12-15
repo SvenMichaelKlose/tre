@@ -27,14 +27,21 @@
        (undefined? x.__class)))
 
 (defun hash-assoc (x)
-  (let lst nil
+  (with-queue q
     (maphash #'((k v)
-				  (acons! (? (defined? k._caroshi-key-object)
-                             k._caroshi-key-object
-                             k)
-                          v lst))
+				 (enqueue q (cons (? (defined? k._caroshi-key-object)
+                                       k._caroshi-key-object
+                                       k)
+                                  v)))
          	 x)
-    (reverse lst)))
+    (queue-list q)))
+
+(defun hashkeys (x)
+  (with-queue q
+    (maphash #'((k v)
+				 (enqueue q k))
+             x)
+    (queue-list q)))
 
 (defun hash-merge (a b)
   (declare type (hash-table nil) a b)

@@ -30,7 +30,7 @@
 	(string? x) x
 	(character? x) (char-string x)
     (symbol? x) (symbol-name x)
-	(not x) ,*nil-symbol-name*
+	(not x) "NIL" ;,*nil-symbol-name*
    	(strval x)))
 
 (defun string= (x y)

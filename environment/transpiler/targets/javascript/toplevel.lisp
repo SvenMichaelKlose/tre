@@ -1,9 +1,7 @@
 ;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
-(defun js-transpile-prologue (tr)
-  (format nil (+ "    var _I_ = 0; while (1) {switch (_I_) {case 0: ~%"
-  			     "    var ~A;~%")
-			  (transpiler-symbol-string tr (transpiler-obfuscate-symbol tr '*CURRENT-FUNCTION*))))
+(defun js-transpile-prologue ()
+  (format nil "    var _I_ = 0; while (1) {switch (_I_) {case 0: ~%"))
 
 (defun js-transpile-epilogue ()
   (format nil "    }break;}~%"))
@@ -14,21 +12,24 @@
 	  	(read-all-lines i))))
 
 (defun js-transpile-pre (tr)
-  (concat-stringtree (js-transpile-prologue tr)
-                     (when (transpiler-lambda-export? tr)
+  (concat-stringtree (when (transpiler-lambda-export? tr)
                        (js-gen-funref-wrapper))))
 
 (defun js-transpile-post ()
   (js-transpile-epilogue))
 
+(defun js-emit-early-defined-functions ()
+  (mapcar (fn `(push ,(list 'quote _.) *defined-functions*)) (transpiler-memorized-sources *js-transpiler*)))
+
 (defun js-make-decl-gen (tr)
   #'(()
       (with-queue decls
-        (dolist (i (funinfo-env (transpiler-global-funinfo tr)) (queue-list decls))
-          (enqueue decls (transpiler-emit-code tr (list `(%var ,i))))))))
-
-(defun js-emit-early-defined-functions ()
-  (mapcar (fn `(push ,(list 'quote _.) *defined-functions*)) (transpiler-memorized-sources *js-transpiler*)))
+		(dolist (i (funinfo-env (transpiler-global-funinfo tr)))
+          (unless (transpiler-emitted-decl? tr i)
+       	    (enqueue decls (transpiler-emit-code tr (list `(%var ,i))))
+            (transpiler-add-emitted-decl tr i)))
+        (enqueue decls (js-transpile-prologue))
+	    (queue-list decls))))
 
 (defun js-transpile (sources &key (obfuscate? nil) (print-obfuscations? nil) (files-to-update nil))
   (let tr *js-transpiler*
@@ -57,14 +58,12 @@
                                                    (mapcan (fn unless ._
                                                                 (list (list (string-concat "environment/" _.))))
                                                            (reverse *environment-filenames*))
-                                                   (list (list (+ *js-env-path* "late-macro.lisp")))))
+                                                   (list (list (+ *js-env-path* "late-macro.lisp"))
+                                                         (list (+ *js-env-path* "eval.lisp")))))
                                          sources)
 		 	                 :dep-gen #'(()
 				  	                      (transpiler-import-from-environment tr))
-			                 :decl-gen #'(()
-                                           (with-queue decls
-					  		                 (dolist (i (funinfo-env (transpiler-global-funinfo tr)) (queue-list decls))
-       				                           (enqueue decls (transpiler-emit-code tr (list `(%var ,i)))))))
-			                 :files-to-update files-to-update
+			                 :decl-gen (js-make-decl-gen tr)
+                             :files-to-update files-to-update
 			                 :print-obfuscations? print-obfuscations?)
     	(js-transpile-post))))

@@ -1,8 +1,6 @@
-;;;; TRE environment
-;;;; Copyright (C) 2005 Sven Klose <pixel@copei.de>
-;;;;
-;;;; Generic symbols for use inside macros.
+;;;; TRE environment Copyright (c) 2005,2011 Sven Klose <pixel@copei.de>
 
+(defvar *gensym-prefix* "~G")
 (defvar *gensym-counter* 0)
 
 ;; Returns newly created, unique symbol.
@@ -13,4 +11,4 @@
 
 ;; Returns newly created, unique symbol.
 (%defun gensym ()
-  (make-symbol (string-concat "~G" (string (gensym-number)))))
+  (make-symbol (string-concat *gensym-prefix* (string (gensym-number)))))

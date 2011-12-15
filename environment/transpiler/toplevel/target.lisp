@@ -52,7 +52,8 @@
 		 after-deps (funcall front-after))
 	(awhen dep-gen
       (when *have-compiler?*
-        (setf *save-compiled-source?* t))
+        (setf *save-compiled-source?* t)
+        (clr *save-args-only?*))
       (acons! 'imported-deps (funcall !) after-deps))
 	(with (compiled-before (funcall back-before before-deps)
 		   compiled-after (funcall back-after after-deps))
@@ -63,7 +64,8 @@
 			compiled-before
             (reverse (transpiler-raw-decls tr))
 			compiled-after)
-        (when print-obfuscations?
+        (when (and print-obfuscations?
+                   (transpiler-obfuscate? tr))
           (transpiler-print-obfuscations tr))))))
 
 (defun target-transpile-0 (tr &key (files-after-deps nil)

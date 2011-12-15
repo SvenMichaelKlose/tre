@@ -254,4 +254,4 @@
   '(%transpiler-native "null; debugger"))
 
 (define-js-macro %%%eval (x)
-  `((%transpiler-native "eval ") ,x))
+  `((%transpiler-native "window.eval ") ,x))

@@ -63,8 +63,6 @@
 
   (apply-argdefs? nil)
 
-  (inject-function-names? nil)
-
   (continuation-passing-style? nil)
   (cps-exceptions nil)
   (cps-functions nil)
@@ -96,11 +94,8 @@
   (compiled-symbols (make-hash-table :test #'eq))
   (compiled-decls nil)
   (compiled-inits nil)
+  (emitted-decls nil)
 
-  ; Generated code.
-  (compiled-front nil)
-  (compiled-back nil)
-  
   (raw-decls nil)
 
   ; Recompiling
@@ -238,3 +233,9 @@
 
 (defun transpiler-package-symbol (tr x)
   (make-symbol (symbol-name x) (transpiler-current-package tr)))
+
+(defun transpiler-emitted-decl? (tr x)
+  (member x (transpiler-emitted-decls tr) :test #'eq))
+
+(defun transpiler-add-emitted-decl (tr x)
+  (push x (transpiler-emitted-decls tr)))

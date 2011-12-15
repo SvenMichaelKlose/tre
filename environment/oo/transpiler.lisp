@@ -39,8 +39,6 @@
     (aif (href classes class-name )
 		 (let code (list args
 				  	     (append (head-atoms body :but-last t)
-							     (when (transpiler-inject-function-names?  *current-transpiler*)
-								   `((setf *current-function* ,(+ (symbol-name class-name) "." (symbol-name name)))))
 							     (tail-after-atoms body :keep-last t)))
 		   (? (assoc name (class-methods !))
               (progn
