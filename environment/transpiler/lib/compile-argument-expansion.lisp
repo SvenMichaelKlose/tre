@@ -22,8 +22,7 @@
 
 		 compexp-static
 		   #'((def)
-			    `(,@(compexp-key)
-				  (setf ,def. (car ,p))
+			    `((setf ,def. (car ,p))
 				  (setf ,p (cdr ,p))
 				  ,@(compexp-main .def)))
 
