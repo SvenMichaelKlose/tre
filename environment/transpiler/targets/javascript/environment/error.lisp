@@ -5,7 +5,8 @@
 
 (defun %error (msg)
   (alert msg)
-  (invoke-native-debugger))
+  (invoke-debugger)
+  nil)
 
 (dont-inline error)
 
