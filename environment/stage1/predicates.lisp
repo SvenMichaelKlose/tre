@@ -1,8 +1,8 @@
 ;;;;; tré - Copyright (c) 2005-2006,2008-2009,2011 Sven Klose <pixel@copei.de>
 
-(functional atom cons? symbol? number? string? function? array? zerop evenp endp symbol? keyword? integerp)
+(functional atom cons? symbol? number? string? function? array? zero? evenp endp symbol? keyword? integerp)
 
-(defun zerop (x)
+(defun zero? (x)
   (eq x 0))
 
 (defun evenp (x)
