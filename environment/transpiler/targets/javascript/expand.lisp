@@ -208,21 +208,5 @@
   (setf (transpiler-current-package *js-transpiler*) (when n (make-package (symbol-name n))))
   `(%%in-package ,n))
 
-(define-js-std-macro try (&rest x)
-  `(progn
-     (%setq nil (%try))
-     (prog1
-       (progn
-         ,@x)
-       (%setq nil (%closing-bracket)))))
-
-(define-js-std-macro catch ((obj) &rest x)
-  `(progn
-     (%setq nil (%catch ,obj))
-     (prog1
-       (progn
-         ,@x)
-       (%setq nil (%closing-bracket)))))
-
 (define-js-std-macro invoke-debugger ()
  `(%setq nil (%invoke-debugger)))
