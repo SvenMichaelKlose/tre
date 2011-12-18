@@ -1,7 +1,4 @@
-;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Override alternative standard macros.
+;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (defmacro define-c-std-macro (&rest x)
   `(define-transpiler-std-macro *c-transpiler* ,@x))
@@ -36,7 +33,7 @@
        (%var ,name)
 	   (%setq ,name ,val))))
 
-(functional %eq %not)
+(functional %eq %not %not2)
 (transpiler-wrap-invariant-to-binary define-c-std-macro eq 2 %eq and)
 (transpiler-wrap-invariant-to-binary define-c-std-macro %not2 1 %not and)
 
