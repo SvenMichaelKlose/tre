@@ -51,6 +51,7 @@
 (env-load "stage4/repeat-while-changes.lisp")
 (env-load "stage4/replace.lisp")
 (env-load "stage4/return-from-when.lisp")
+(env-load "stage4/search.lisp")
 (env-load "stage4/sort.lisp")
 (env-load "stage4/split.lisp" 'c)
 (env-load "stage4/starts-with.lisp")
