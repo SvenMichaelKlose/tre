@@ -210,7 +210,7 @@
 		     name)))
 
 (defun transpiler-reset (tr)
-  (setf (transpiler-thisify-classes tr) (make-hash-table)	; thisified classes.
+  (setf (transpiler-thisify-classes tr) (make-hash-table :test #'eq)	; thisified classes.
   		(transpiler-function-args tr) nil
   		(transpiler-emitted-wanted-functions tr) nil
   		(transpiler-wanted-functions tr) nil
