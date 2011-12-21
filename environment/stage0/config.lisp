@@ -13,3 +13,4 @@
 (defvar *save-args-only?* nil)
 (defvar *have-compiler?* nil)
 (defvar *have-c-compiler?* t)
+(defvar *show-compiler-progress?* t)

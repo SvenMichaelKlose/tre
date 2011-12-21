@@ -6,6 +6,10 @@
 ;; - Expressions are expanded via code generating macros.
 ;; - Everything is converted to strings and concatenated.
 (transpiler-pass transpiler-emit-code-compose (tr)
+    print-o (fn (when *show-compiler-progress?*
+                  (princ "o")
+                  (force-output))
+                _)
     concat-stringtree #'concat-stringtree
     to-string (fn transpiler-to-string tr _)
     obfuscate (fn transpiler-obfuscate tr _)
