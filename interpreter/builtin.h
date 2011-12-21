@@ -1,8 +1,5 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2006,2009 Sven Klose <pixel@copei.de>
- *
- * Built-in functions.
+ * tré - Copyright (c) 2005-2006,2009,2011 Sven Klose <pixel@copei.de>
  */
 
 #ifndef TRE_BUILTIN_H
@@ -20,7 +17,10 @@ extern treptr trebuiltin_macrocall (treptr);
 extern treptr trebuiltin_get (treptr);
 extern treptr trebuiltin_set (treptr);
 extern treptr trebuiltin_malloc (treptr);
+extern treptr trebuiltin_malloc_exec (treptr);
 extern treptr trebuiltin_free (treptr);
+extern treptr trebuiltin_free_exec (treptr);
 extern treptr trebuiltin_load (treptr);
+extern treptr trebuiltin_quit (treptr);
 
 #endif	/* #ifndef TRE_BUILTIN_H */

@@ -31,8 +31,7 @@ treerror_msg (treptr expr, const char *prefix, const char *msg, va_list ap)
     fprintf (stderr, ".\n");
 
 	if (treio_readerstreamptr) {
-		fprintf (stderr, "In %s, line %ld, column %ld.\n",
-						 s->file_name, s->line, s->column);
+		fprintf (stderr, "; In %s, line %ld, column %ld.\n", s->file_name, s->line, s->column);
 	}
 
     if (expr != treptr_invalid) {

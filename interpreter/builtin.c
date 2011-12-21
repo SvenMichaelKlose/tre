@@ -1,8 +1,5 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
- *
- * Built-in functions
+ * tré - Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
  */
 
 #include "config.h"

@@ -3,6 +3,8 @@
  */
 
 #include "config.h"
+#include "ptr.h"
+#include "alloc.h"
 #include "atom.h"
 #include "list.h"
 #include "number.h"
