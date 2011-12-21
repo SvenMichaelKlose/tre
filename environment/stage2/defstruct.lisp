@@ -48,10 +48,8 @@
 
 (defun %struct-assertion (name sym)
   (when *assert*
-    (let tst (%struct?-symbol name)
-      `((unless (,tst arr)
-          (print arr)
-          (error ,(string-concat "In " (symbol-name sym) " illegal struct type")))))))
+    `((unless (,(%struct?-symbol name) arr)
+        (error ,(string-concat "In " (symbol-name sym) ": Expected a " (symbol-name name) " structure instead of ~A") arr)))))
 
 (defun %struct-single-get (name field index)
   (let sym (%struct-getter-symbol name field)
