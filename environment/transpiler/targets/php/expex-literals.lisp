@@ -1,5 +1,4 @@
-;;;;; TRE transpiler
-;;;;; Copyright (c) 2009-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2009-2011 Sven Klose <pixel@copei.de>
 
 (defmacro php-define-compiled-literal (name (x table) &key maker init-maker)
   `(define-compiled-literal ,name (,x ,table)
@@ -29,11 +28,11 @@
 (defun php-expex-literal (x)
   (?
     (character? x) (php-expex-add-global (php-compiled-char x))
-    (%quote? x) (php-expex-add-global (php-compiled-symbol .x.))
-    (keyword? x) (php-expex-add-global (php-compiled-symbol x))
-	(atom x) (?  (expex-global-variable? x)
-	             (progn
-                   (transpiler-add-wanted-variable *php-transpiler* x)
-                   (php-expex-add-global x))
-		         x)
+    (%quote? x)    (php-expex-add-global (php-compiled-symbol .x.))
+    (keyword? x)   (php-expex-add-global (php-compiled-symbol x))
+	(atom x)       (? (expex-global-variable? x)
+	                  (progn
+                        (transpiler-add-wanted-variable *php-transpiler* x)
+                        (php-expex-add-global x))
+		              x)
     (transpiler-import-from-expex x)))
