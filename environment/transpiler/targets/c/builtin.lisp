@@ -1,10 +1,7 @@
-;;;;; TRE to C transpiler
-;;;;; Copyright (c) 2009-2011 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Built-in interpreter functions
+;;;;; tré - Copyright (c) 2009-2011 Sven Klose <pixel@copei.de>
 
 (defvar *c-builtins-descr*
-	'((trebuiltin_
+	`((trebuiltin_
 ;		(IDENTITY)
 		(QUIT)
 		(LOAD)
@@ -86,8 +83,10 @@
 		(RPLACA)
 		(RPLACD)
 ;    	(CONS?)
-		(ASSOC)
-		(MEMBER))
+        ,@(when *builtin-assoc*
+		    '((ASSOC)))
+        ,@(when *builtin-member*
+		    '((MEMBER))))
 
 	(tresequence_builtin_
     	(ELT)
