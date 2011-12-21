@@ -68,15 +68,12 @@
     		  (error "function must be a SLOT-VALUE, got ~A" fun))
 		  ,fun))
 
-;; X-browser MAKE-HASH-TABLE.
 (defun php-transpiler-make-new-hash (x)
   `(%make-hash-table ,@(mapcan (fn list _. ._.) (group x 2))))
 
-;; Translate arguments for call to native 'new' operator.
 (defun php-transpiler-make-new-object (x)
   `(%new ,x. ,@.x))
 
-;; Make object if first argument is not a keyword, or string.
 (define-php-std-macro new (&rest x)
   (unless x
 	(error "NEW expects arguments"))

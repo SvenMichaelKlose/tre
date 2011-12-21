@@ -59,8 +59,7 @@
 (defvar *php-codegen-funinfo* nil)
 
 (defun codegen-php-function (name x)
-  (with (args (argument-expand-names 'unnamed-c-function
-		      		     	         (lambda-args x))
+  (with (args (argument-expand-names 'unnamed-c-function (lambda-args x))
 		 fi (get-lambda-funinfo x)
 		 num-locals (length (funinfo-env fi)))
     `(,(code-char 10)
