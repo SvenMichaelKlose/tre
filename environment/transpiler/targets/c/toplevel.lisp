@@ -70,6 +70,7 @@
 		   "io.h"
 		   "main.h"
 		   "xxx.h"
+		   "alien_dl.h"
 		   "compiled.h"))
 
 (defun c-transpiler-make-init (tr)
