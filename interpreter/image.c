@@ -1,8 +1,5 @@
 /*
- * TRE interpreter
- * Copyright (c) 2007-2009 Sven Klose <pixel@copei.de>
- *
- * Images
+ * tré - Copyright (c) 2007-2009,2011 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -463,6 +460,7 @@ treimage_load (char *file)
 
 	tremain_init_after_image_loaded ();
     tre_restart (h.init_fun);
+    return 0;
 
 error:
     fclose (f);

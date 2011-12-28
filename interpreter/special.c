@@ -176,7 +176,8 @@ trespecial_call_compiled (treptr lst)
 	if (ffi_prep_cif(&cif, FFI_DEFAULT_ABI, i, &ffi_type_ulong, args) == FFI_OK) {
 		fun = TREATOM_COMPILED_FUN(CAR(lst));
 		ffi_call(&cif, fun, &rc, values);
-	}
+	} else
+        treerror_norecover (lst, "libffi: cif is not O.K.");
 
     trealloc_free (args);
     trealloc_free (refs);
