@@ -1,5 +1,4 @@
-;;;;; TRE environment
-;;;;; Copyright (c) 2006,2009,2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2006,2009,2011 Sven Klose <pixel@copei.de>
 
 (defun (setf car) (val lst)
   (rplaca lst val)
@@ -12,8 +11,8 @@
 (defun (setf elt) (val seq idx)
   (%set-elt val seq idx))
 
-(defun (setf aref) (val arr idx)
-  (%set-aref val arr idx))
+(defun (setf aref) (val arr &rest idx)
+  (apply #'%set-aref val arr idx))
 
 (defun (setf caar) (val lst)
   (rplaca (car lst) val)
