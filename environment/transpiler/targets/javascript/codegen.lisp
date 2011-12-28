@@ -19,7 +19,7 @@
 (defun js-codegen-symbol-constructor (tr x)
   (or (href *js-compiled-symbols* x)
       (setf (href *js-compiled-symbols* x)
-            (with-gensym g ;XXX hogs the browser: ($ 'compiled_symbol_ x)
+            (let g (compiled-symbol-identifier x)
               (push `("var " ,(transpiler-obfuscated-symbol-string tr g)
                              "=" ,@(js-codegen-symbol-constructor-expr tr x)
 		                     ,*js-separator*)
