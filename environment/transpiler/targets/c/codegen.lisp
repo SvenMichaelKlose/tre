@@ -141,16 +141,20 @@
 			`("(ulong)TRENUMBER_VAL(" ,idx ")"))
 		"]"))
 
-(define-c-macro aref (arr &rest idx)
-  (? (= 1 (length idx))
-	 (c-make-aref arr idx.)
-	 `(trearray_builtin_aref ,arr ,@idx)))
+(functional %immediate-aref %aref)
 
-(define-c-macro %set-aref (val arr &rest idx)
-  (? (= 1 (length idx))
-	 (append (c-make-aref arr idx.)
-			 `("=" ,val))
-	 `(trearray_builtin_set_aref ,val ,arr ,@idx)))
+(define-c-macro %immediate-aref (arr idx)
+  (c-make-aref arr idx))
+
+(define-c-macro %aref (args)
+  `(trearray_builtin_aref ,args))
+
+(define-c-macro %immediate-set-aref (val arr idx)
+  (append (c-make-aref arr idx)
+		  `("=" ,val)))
+
+(define-c-macro %set-aref (args)
+  `(trearray_builtin_set_aref ,args))
 
 (defun c-make-array (size)
   (? (number? size)
