@@ -18,6 +18,7 @@
 #include "string2.h"
 #include "thread.h"
 #include "diag.h"
+#include "array.h"
 
 #include <stdio.h>
 #include <strings.h>
@@ -68,7 +69,7 @@ void
 treprint_array (treptr array)
 {
     treptr  * elts = TREATOM_DETAIL(array);
-    ulong   size = TRENUMBER_VAL(_CAR(TREATOM_VALUE(array)));
+    ulong   size = trearray_get_size (TREATOM_VALUE(array));
     ulong   i;
 
     printf ("#(");
