@@ -31,6 +31,7 @@
 (env-load "stage4/head-if.lisp")
 (env-load "stage4/less-or-equal-list.lisp")
 (env-load "stage4/less-or-equal-string.lisp")
+(env-load "stage4/less-or-equal-symbol.lisp")
 (env-load "stage4/let-if.lisp")
 (env-load "stage4/let-when.lisp")
 (env-load "stage4/list-aliases.lisp")
