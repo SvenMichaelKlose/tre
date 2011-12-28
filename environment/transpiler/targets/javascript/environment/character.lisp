@@ -10,16 +10,14 @@
   (assert (not (character? x))
 		  (error "%CHARACTER: argument already a character"))
   (or (aref *characters* x)
-  	  (setf this.__class ,(transpiler-obfuscated-symbol-string *current-transpiler*
-											  				   '%character)
+  	  (setf this.__class ,(transpiler-obfuscated-symbol-string *current-transpiler* '%character)
   		    this.v x
 		    (aref *characters* x) this)))
 
 (defun character? (x)
   (and (object? x)
 	   x.__class
-	   (%%%= x.__class ,(transpiler-obfuscated-symbol-string *current-transpiler*
-															 '%character))))
+	   (%%%= x.__class ,(transpiler-obfuscated-symbol-string *current-transpiler* '%character))))
 
 (defun code-char (x)
   (declare type number x)
@@ -36,6 +34,9 @@
 (defun char-string (x)
   (declare type character x)
   (*string.from-char-code (char-code x)))
+
+(defun string-char (x)
+  (%elt-string x 0))
 
 ;(defun character+ (&rest x)
 ;  (let n 0
