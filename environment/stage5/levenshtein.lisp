@@ -28,5 +28,5 @@
                      (integer+ (aref m i jc) 1))))))
     m))
 
-(defun levenshtein-distance (row column)
+(defun levenshtein (row column)
   (aref (make-levenshtein row column) (length row) (length column)))
