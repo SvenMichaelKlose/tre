@@ -1,10 +1,10 @@
-;;;; TRE environment
-;;;; Copyright (c) 2005-2006,2008 Sven Klose <pixel@copei.de>
+;;;; tré - Copyright (c) 2005-2006,2008,2011,2011 Sven Klose <pixel@copei.de>
 
 (defun %fopen-direction (direction)
   (case direction
     'input   "r"
     'output  "w"
+    'append  "a"
     (%error ":direction not specified")))
 
 (defun open (path &key direction)
