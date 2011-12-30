@@ -35,9 +35,6 @@
   (declare type character x)
   (*string.from-char-code (char-code x)))
 
-(defun string-char (x)
-  (%elt-string x 0))
-
 ;(defun character+ (&rest x)
 ;  (let n 0
 ;	(dolist (i x (new %character n))

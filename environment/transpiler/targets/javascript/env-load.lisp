@@ -46,7 +46,8 @@
 			 "apply.lisp"
 			 "array.lisp"
 			 "atom.lisp")
-		 (js-load-base "environment/transpiler/environment/"
+	 	 (js-load-base "environment/transpiler/environment/"
+             "character.lisp"
 			 "atom.lisp"))))
 (setf *js-base2* (append *js-base2*
 		                 ,(list 'quote (js-load-base *js-env-path*

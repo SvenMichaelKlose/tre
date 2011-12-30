@@ -49,6 +49,7 @@
 			              "../../../environment/number-typing.lisp"
 			              "sequence.lisp"
 			              "../../../environment/sequence.lisp"
+			              "../../../environment/character.lisp"
 			              "standard-stream.lisp"
 			              "stream.lisp"
 			              "../../../environment/print.lisp"
