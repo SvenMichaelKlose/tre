@@ -57,8 +57,6 @@ trespecial_apply_args (treptr list)
 			RPLACA(i, treeval (CAR(i)));
             continue;
 		}
-        if (CADR(i) == treptr_nil)
-	    	break;
 
 		RPLACA(i, treeval (CAR(i)));
         last = treeval (CADR(i));
@@ -212,10 +210,7 @@ trespecial_apply_compiled_args (treptr list)
     DOLIST(i, list) {
         if (CDDR(i) != treptr_nil)
             continue;
-        if (CADR(i) == treptr_nil)
-	    	break;
 
-		RPLACA(i, CAR(i));
         last = CADR(i);
         if (TREPTR_IS_ATOM(last) && last != treptr_nil)
             goto error;
