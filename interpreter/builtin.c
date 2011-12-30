@@ -27,6 +27,7 @@
 #include "builtin_fileio.h"
 #include "builtin_image.h"
 #include "builtin_list.h"
+#include "builtin_net.h"
 #include "builtin_number.h"
 #include "builtin_sequence.h"
 #include "builtin_stream.h"
@@ -435,6 +436,8 @@ char *tre_builtin_names[] = {
 
     "SYS-IMAGE-CREATE", "SYS-IMAGE-LOAD",
 
+    "OPEN-SOCKET", "LISTEN", "SEND", "CLOSE-CONNECTION", "CLOSE-SOCKET",
+
     NULL
 };
 
@@ -579,6 +582,12 @@ treevalfunc_t treeval_xlat_builtin[] = {
 
     treimage_builtin_create,
     treimage_builtin_load,
+
+    trenet_open_socket,
+    trenet_listen,
+    trenet_send,
+    trenet_close_connection,
+    trenet_close_socket,
 
     NULL
 };

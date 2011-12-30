@@ -14,9 +14,7 @@ extern treptr trearg_get (treptr args);
 extern treptr trearg_correct (ulong argnum, int type, treptr, const char * descr);
 extern treptr trearg_typed (ulong argnum, int type, treptr, const char * descr);
 
-extern void trearg_expand (treptr *rvars, treptr *rvals,
-                            treptr argdef, treptr args,
-                            bool do_argeval);
+extern void trearg_expand (treptr *rvars, treptr *rvals, treptr argdef, treptr args, bool do_argeval);
 
 extern void trearg_init (void);
 

@@ -1,7 +1,5 @@
 #!/bin/sh
-# tré programming language
-# Build script
-# Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
+# tré - Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
 
 svnversion -n >_current-version
 
@@ -21,6 +19,7 @@ FILES="
 	builtin_fileio.c
 	builtin_image.c
 	builtin_list.c
+	builtin_net.c
 	builtin_number.c
 	builtin_sequence.c
 	builtin_stream.c
@@ -42,6 +41,7 @@ FILES="
 	number.c
 	print.c
 	quasiquote.c
+	queue.c
 	read.c
 	special.c
 	stream.c
@@ -61,7 +61,7 @@ SYSTEM_NAME=`uname -n`
 CPU_TYPE=`uname -m`
 OS_RELEASE=`uname -r`
 OS_VERSION="unknown" #`uname -v`
-BUILD_MACHINE_INFO="-DBIG_ENDIAN -DLIBC_PATH=\"$LIBC_PATH\" -DTRE_KERNEL_IDENT=\"$KERNEL_IDENT\" -DTRE_SYSTEM_NAME=\"$SYSTEM_NAME\" -DTRE_CPU_TYPE=\"$CPU_TYPE\" -DTRE_OS_RELEASE=\"$OS_RELEASE\" -DTRE_OS_VERSION=\"$OS_VERSION\""
+BUILD_MACHINE_INFO="-DTRE_BIG_ENDIAN -DLIBC_PATH=\"$LIBC_PATH\" -DTRE_KERNEL_IDENT=\"$KERNEL_IDENT\" -DTRE_SYSTEM_NAME=\"$SYSTEM_NAME\" -DTRE_CPU_TYPE=\"$CPU_TYPE\" -DTRE_OS_RELEASE=\"$OS_RELEASE\" -DTRE_OS_VERSION=\"$OS_VERSION\""
 
 GNU_LIBC_FLAGS="-D_GNU_SOURCE -D_BSD_SOURCE -D_SVID_SOURCE"
 C_DIALECT_FLAGS="-ansi -Wall " #-Werror"

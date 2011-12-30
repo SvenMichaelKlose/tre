@@ -1,8 +1,5 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
- *
- * String type
+ * tré - Copyright (c) 2005-2009,2011 Sven Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -21,10 +18,10 @@
 
 /* Allocate and initialise string. */
 char *
-trestring_get_raw (ulong len)
+trestring_get_raw (size_t len)
 {
-    ulong  l = len + sizeof (ulong) + 1;
-    char * nstr = trealloc (l);
+    size_t  l = len + sizeof (size_t) + 1;
+    char    * nstr = trealloc (l);
 
     if (nstr == NULL)
 		return nstr;
@@ -37,7 +34,7 @@ trestring_get_raw (ulong len)
 void
 trestring_copy (char *to, treptr str)
 {
-    char *s = TREATOM_STRING(str);
+    char * s = TREATOM_STRING(str);
     strncpy (to, TRESTRING_DATA(s), TRESTRING_LEN(s) + 1);
 }
 
@@ -45,7 +42,7 @@ trestring_copy (char *to, treptr str)
 treptr
 trestring_get (const char *str)
 {
-    char *nstr = trestring_get_raw (strlen (str));
+    char    * nstr = trestring_get_raw (strlen (str));
     treptr  atom;
 
     if (nstr == NULL)
@@ -60,16 +57,16 @@ trestring_get (const char *str)
 void
 trestring_free (treptr str)
 {
-    char *s = TREATOM_STRING(str);
+    char * s = TREATOM_STRING(str);
 
     trealloc_free (s);
 }
 
 /* Sequence: Get character at index. */
 treptr
-trestring_t_get (treptr str, ulong idx)
+trestring_t_get (treptr str, size_t idx)
 {
-    char *s = TREATOM_STRING(str);
+    char * s = TREATOM_STRING(str);
 
     if (TRESTRING_LEN(s)< idx) {
         trewarn (TRECONTEXT_CURRENT(), "index out of range");
@@ -80,10 +77,10 @@ trestring_t_get (treptr str, ulong idx)
 }
 
 /* Sequence: Return length of string. */
-ulong
+size_t
 trestring_t_length (treptr str)
 {
-    char *s = TREATOM_STRING(str);
+    char * s = TREATOM_STRING(str);
 
     return TRESTRING_LEN(s);
 }

@@ -89,11 +89,11 @@ typedef int bool;
 
 #define TREPTR_INDEX_WIDTH	(sizeof (treptr) * 8 - TRETYPE_WIDTH)
 
-#ifdef LITTLE_ENDIAN
+#ifdef TRE_LITTLE_ENDIAN
 #define TRE_ENDIANESS_STRING	"LITTLE"
 #endif
 
-#ifdef BIG_ENDIAN
+#ifdef TRE_BIG_ENDIAN
 #define TRE_ENDIANESS_STRING	"BIG"
 #endif
 
