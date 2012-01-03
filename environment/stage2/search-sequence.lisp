@@ -14,10 +14,8 @@
     (let* ((e (or end (integer-1- (length seq))))
 	 	   (s (or start 0)))
       ; Make sure the start and end indices are sane.
-      (when (or (and (integer> s e)
-				     (not from-end))
-                (and (integer< s e)
-				     from-end))
+      (when (or (and (integer> s e) (not from-end))
+                (and (integer< s e) from-end))
         (xchg s e))
       (do ((i s (? from-end
 				   (integer-1- i)
