@@ -134,7 +134,14 @@
 
 	(treimage_builtin_
     	(SYS-IMAGE-CREATE create)
-		(SYS-IMAGE-LOAD load))))
+		(SYS-IMAGE-LOAD load))
+	(trenet_
+        (OPEN-SOCKET open_socket)
+        (ACCEPT accept)
+        (RECV recv)
+        (SEND send)
+        (CLOSE-CONNECTION close_connection)
+        (CLOSE-SOCKET close_socket))))
 
 ;; Build hash table for name conversion.
 (defvar *c-builtins*
