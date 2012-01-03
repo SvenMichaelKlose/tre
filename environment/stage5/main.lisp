@@ -1,4 +1,4 @@
-;;;; tré - Copyright (c) 2010-2011 Sven Klose <pixel@copei.de>
+;;;; tré - Copyright (c) 2010-2012 Sven Klose <pixel@copei.de>
 
 (env-load "stage5/array-list.lisp")
 (env-load "stage5/backslash-to-slash.lisp")
@@ -15,6 +15,7 @@
 (env-load "stage5/symbol-without-package.lisp")
 (env-load "stage5/toggle.lisp")
 (env-load "stage5/trim-double-spaces.lisp")
+(env-load "stage5/trim-crlf.lisp")
 (env-load "stage5/without-head.lisp")
 (env-load "stage5/without-tail.lisp")
 (env-load "stage5/read-binary-file.lisp")
