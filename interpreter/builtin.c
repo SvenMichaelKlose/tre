@@ -1,5 +1,5 @@
 /*
- * tré - Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
+ * tré - Copyright (c) 2005-2012 Sven Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -583,12 +583,12 @@ treevalfunc_t treeval_xlat_builtin[] = {
     treimage_builtin_create,
     treimage_builtin_load,
 
-    trenet_open_socket,
-    trenet_accept,
-    trenet_recv,
-    trenet_send,
-    trenet_close_connection,
-    trenet_close_socket,
+    trebuiltin_net_open_socket,
+    trebuiltin_net_accept,
+    trebuiltin_net_recv,
+    trebuiltin_net_send,
+    trebuiltin_net_close_connection,
+    trebuiltin_net_close_socket,
 
     NULL
 };
