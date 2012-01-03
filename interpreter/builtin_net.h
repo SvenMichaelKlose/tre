@@ -6,7 +6,8 @@
 #define TRE_NET_H
 
 treptr trenet_open_socket (treptr args);
-treptr trenet_listen (treptr args);
+treptr trenet_accept (treptr args);
+treptr trenet_recv (treptr args);
 treptr trenet_send (treptr args);
 treptr trenet_close_connection (treptr args);
 treptr trenet_close_socket (treptr args);

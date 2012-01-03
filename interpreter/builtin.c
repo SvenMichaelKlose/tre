@@ -436,7 +436,7 @@ char *tre_builtin_names[] = {
 
     "SYS-IMAGE-CREATE", "SYS-IMAGE-LOAD",
 
-    "OPEN-SOCKET", "LISTEN", "SEND", "CLOSE-CONNECTION", "CLOSE-SOCKET",
+    "OPEN-SOCKET", "ACCEPT", "RECV", "SEND", "CLOSE-CONNECTION", "CLOSE-SOCKET",
 
     NULL
 };
@@ -584,7 +584,8 @@ treevalfunc_t treeval_xlat_builtin[] = {
     treimage_builtin_load,
 
     trenet_open_socket,
-    trenet_listen,
+    trenet_accept,
+    trenet_recv,
     trenet_send,
     trenet_close_connection,
     trenet_close_socket,

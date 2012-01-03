@@ -47,21 +47,30 @@ trenet_open_socket (treptr args)
     if (listen (trenet_socket, MAX_CLIENTS) == -1)
         treerror_norecover (treptr_nil, "Cannot listen to socket");
 
+    trenet_connection = -1;
     return treptr_nil;
 }
 
 treptr
-trenet_listen (treptr args)
+trenet_accept (treptr args)
 {    
-    char      * data = trealloc (MAX_DATA);
     socklen_t sockaddr_len = sizeof (struct sockaddr_in);
-    treptr    result;
 
     if ((trenet_connection = accept (trenet_socket, (struct sockaddr *) &client, &sockaddr_len)) == -1)
         treerror_norecover (treptr_nil, "Cannot accept connection to socket");
 
-    (void) recv (trenet_connection, data, MAX_DATA, 0);
-    result = trestring_get (data);
+    return treptr_nil;
+}
+
+treptr
+trenet_recv (treptr args)
+{    
+    char      * data = trealloc (MAX_DATA);
+    treptr    result;
+    size_t    len;
+
+    len = recv (trenet_connection, data, MAX_DATA, 0);
+    result = trestring_get_binary (data, len);
     trealloc_free (data);
 
     return result;
@@ -82,6 +91,7 @@ treptr
 trenet_close_connection (treptr args)
 {
     close (trenet_connection);
+    trenet_connection = -1;
     return treptr_nil;
 }
 
