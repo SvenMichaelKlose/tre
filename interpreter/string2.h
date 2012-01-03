@@ -12,6 +12,7 @@
 
 extern treptr tre_strings;
 extern treptr trestring_get (const char *string);
+extern treptr trestring_get_binary (const char *string, size_t len);
 extern void trestring_free (treptr);
 extern char *trestring_get_raw (size_t len);
 

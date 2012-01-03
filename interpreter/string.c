@@ -38,7 +38,6 @@ trestring_copy (char *to, treptr str)
     strncpy (to, TRESTRING_DATA(s), TRESTRING_LEN(s) + 1);
 }
 
-/* Create string atom. */
 treptr
 trestring_get (const char *str)
 {
@@ -48,6 +47,20 @@ trestring_get (const char *str)
     if (nstr == NULL)
         return treerror (treptr_invalid, "out of memory");
     strcpy (TRESTRING_DATA(nstr), str);
+    atom = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_STRING, treptr_nil);
+    TREATOM_SET_STRING(atom, nstr);
+    return atom;
+}
+
+treptr
+trestring_get_binary (const char *str, size_t len)
+{
+    char    * nstr = trestring_get_raw (len);
+    treptr  atom;
+
+    if (nstr == NULL)
+        return treerror (treptr_invalid, "out of memory");
+    bcopy (str, TRESTRING_DATA(nstr), len);
     atom = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_STRING, treptr_nil);
     TREATOM_SET_STRING(atom, nstr);
     return atom;
