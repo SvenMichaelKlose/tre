@@ -5,11 +5,11 @@
 #ifndef TRE_NET_H
 #define TRE_NET_H
 
-treptr trenet_open_socket (treptr args);
-treptr trenet_accept (treptr args);
-treptr trenet_recv (treptr args);
-treptr trenet_send (treptr args);
-treptr trenet_close_connection (treptr args);
-treptr trenet_close_socket (treptr args);
+treptr trebuiltin_net_open_socket (treptr args);
+treptr trebuiltin_net_accept (treptr args);
+treptr trebuiltin_net_recv (treptr args);
+treptr trebuiltin_net_send (treptr args);
+treptr trebuiltin_net_close_connection (treptr args);
+treptr trebuiltin_net_close_socket (treptr args);
 
 #endif /* #ifndef TRE_NET_H */
