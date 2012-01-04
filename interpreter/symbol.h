@@ -1,8 +1,5 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
- *
- * Symbol database.
+ * tré - Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  */
 
 #ifndef TRE_SYMBOL_H

@@ -1,8 +1,5 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2007,2011 Sven Klose <pixel@copei.de>
- *
- * Built-in file-I/O functions
+ * tré - Copyright (c) 2005-2007,2011 Sven Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -62,8 +59,10 @@ treimage_builtin_load (treptr list)
 	while (TRUE) {
     	file = trearg_typed (1, TRETYPE_STRING, file, "pathname");
     	r = treimage_load (TRESTRING_DATA(TREATOM_STRING(file)));
-    	if (r == -2)
+    	if (r == -2) {
         	file = treerror (file, "incompatible image format - tell new pathname");
+            continue;
+        }
     	if (r)
         	file = treerror (file, "can't open image - tell new pathname");
 	}

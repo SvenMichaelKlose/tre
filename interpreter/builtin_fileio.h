@@ -1,8 +1,5 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2006 Sven Klose <pixel@copei.de>
- *
- * Built-in file I/O functions
+ * tré - Copyright (c) 2005-2006 Sven Klose <pixel@copei.de>
  */
 
 #ifndef TRE_BUILTIN_FILEIO_H

@@ -1,8 +1,5 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
- *
- * Built-in list functions.
+ * tré - Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -145,12 +142,11 @@ treeval_noargs (treptr efunc, treptr fake)
 {
     if (TREPTR_IS_FUNCTION(efunc))
         return treeval_funcall (efunc, fake, FALSE);
-    else if (TREPTR_IS_BUILTIN(efunc))
+    if (TREPTR_IS_BUILTIN(efunc))
         return treeval_xlat_function (treeval_xlat_builtin, efunc, fake, FALSE);
-    else if (TREPTR_IS_SPECIAL(efunc))
+    if (TREPTR_IS_SPECIAL(efunc))
         return trespecial (efunc, fake);
-    else
-        return treerror (efunc, "function expected");
+    return treerror (efunc, "function expected");
 }
 
 #ifdef TRE_BUILTIN_ASSOC

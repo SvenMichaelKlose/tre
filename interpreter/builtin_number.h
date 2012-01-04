@@ -1,8 +1,5 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2008,2010 Sven Klose <pixel@copei.de>
- *
- * Number-related section.
+ * tré - Copyright (c) 2005-2008,2010 Sven Klose <pixel@copei.de>
  */
 
 #ifndef TRE_BUILTIN_NUMBER_H

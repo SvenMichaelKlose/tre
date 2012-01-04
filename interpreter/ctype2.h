@@ -1,8 +1,5 @@
 /*
- * TRE tree processor
- * Copyright (c) 2008,2011 Sven Klose <pixel@copei.de>
- *
- * C type abbreviations
+ * tré - Copyright (c) 2008,2011 Sven Klose <pixel@copei.de>
  */
 
 #ifndef TRE_CTYPE_H

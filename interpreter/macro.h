@@ -1,8 +1,5 @@
 /*
- * TRE tree processor
- * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
- *
- * Macro expansion
+ * tré - Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  */
 
 #ifndef TRE_MACRO_H

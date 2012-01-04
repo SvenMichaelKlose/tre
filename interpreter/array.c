@@ -1,8 +1,5 @@
 /*
- * TRE tree processor
- * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
- *
- * Array related section.
+ * tré - Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -145,7 +142,7 @@ trearray_t_set (treptr array, ulong idx, treptr val)
 }
 
 /* Sequence: Return length of array. */
-ulong
+size_t
 trearray_t_length (treptr array)
 {
     return TREARRAY_SIZE(array);

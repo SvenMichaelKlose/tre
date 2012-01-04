@@ -1,8 +1,5 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2006,2009 Sven Klose <pixel@copei.de>
- *
- * String-type related section.
+ * tré - Copyright (c) 2005-2006,2009 Sven Klose <pixel@copei.de>
  */
 
 #ifndef TRE_BUILTIN_STRING_H

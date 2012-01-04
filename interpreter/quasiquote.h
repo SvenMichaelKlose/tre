@@ -1,8 +1,5 @@
 /*
- * TRE tree processor
- * Copyright (c) 2008 Sven Klose <pixel@copei.de>
- *
- * QUASIQUOTE expansion
+ * tré - Copyright (c) 2008 Sven Klose <pixel@copei.de>
  */
 
 #ifndef TRE_QUASIQUOTE_H

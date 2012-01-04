@@ -1,24 +1,19 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de
- *
- * Dynamic linker support
+ * tré - Copyright (c) 2005-2008 Sven Klose <pixel@copei.de
  */
+
+#include <dlfcn.h>
 
 #include "config.h"
 #include "atom.h"
 #include "error.h"
 #include "argument.h"
 #include "number.h"
-#include "alien_dl.h"
+#include "alien.h"
 #include "list.h"
 #include "string2.h"
-
 #include "xxx.h"
 
-#include <dlfcn.h>
-
-/* Open shared object. */
 treptr
 trealien_builtin_dlopen (treptr args)
 {
@@ -38,7 +33,6 @@ retry:
     return treatom_number_get ((double) (long) hdl, TRENUMTYPE_INTEGER);
 }
 
-/* Close shared object. */
 treptr
 trealien_builtin_dlclose (treptr args)
 {
@@ -55,7 +49,6 @@ trealien_builtin_dlclose (treptr args)
     return treatom_number_get ((double) ret, TRENUMTYPE_INTEGER);
 }
 
-/* Get pointer to symbol. */
 treptr
 trealien_builtin_dlsym (treptr args)
 {
@@ -78,7 +71,6 @@ trealien_builtin_dlsym (treptr args)
     return treatom_number_get ((double) (long) ret, TRENUMTYPE_INTEGER);
 }
 
-/* Call C function without arguments. */
 treptr
 trealien_builtin_call (treptr args)
 {

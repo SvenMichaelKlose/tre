@@ -1,8 +1,5 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
- *
- * Built-in atom-related functions
+ * tré - Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -199,8 +196,7 @@ treatom_builtin_symbol_function (treptr list)
     treptr arg = treatom_builtin_arg (list);
 	if (TREPTR_IS_BUILTIN(arg))
 		return arg;
-	else
-    	return TREATOM_FUN(arg);
+   	return TREATOM_FUN(arg);
 }
 
 /*
@@ -226,8 +222,7 @@ treatom_builtin_symbol_compiled_function (treptr list)
     treptr arg = treatom_builtin_arg (list);
 	if (TREATOM_COMPILED_FUN(arg))
 		return trenumber_get ((double) (long) TREATOM_COMPILED_FUN(arg));
-	else
-    	return treptr_nil;
+   	return treptr_nil;
 }
 
 /*tredoc
@@ -320,9 +315,8 @@ treatom_builtin_atom_list_s (treptr ret)
     ulong  n;
 
     for (n = 0; n < NUM_ATOMS; n++) {
-		if (a->type == TRETYPE_FUNCTION) {
+		if (a->type == TRETYPE_FUNCTION)
             TRELIST_PUSH(ret, TRETYPE_INDEX_TO_PTR(TRETYPE_FUNCTION, n));
-		}
 		a++;
     }
               

@@ -1,8 +1,9 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
- *
- * Threading
+ * tré - Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ */
+
+/*
+ * NOTE: There's only a single thread.
  */
 
 #include "config.h"
@@ -10,7 +11,6 @@
 #include "list.h"
 #include "thread.h"
 
-/* Single-thread context. */
 struct tre_thread_context tre_context;
 
 void
@@ -21,14 +21,12 @@ trethread_make ()
     TRECONTEXT_PACKAGE() = treptr_nil;
 }
 
-/* Add body to function stack. */
 void
 trethread_push_call (treptr list)
 {
     TRECONTEXT_FUNSTACK() = CONS(list, TRECONTEXT_FUNSTACK());
 }
 
-/* Destructive pop from function stack. */
 void
 trethread_pop_call ()
 {

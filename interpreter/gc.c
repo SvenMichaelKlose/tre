@@ -129,8 +129,8 @@ tregc_trace_object (treptr p)
 void
 tregc_trace_array (treptr arr)
 {
-    treptr    * i = TREATOM_DETAIL(arr);
-    ulong  size = TREARRAY_SIZE(arr);
+    treptr *  i = TREATOM_DETAIL(arr);
+    size_t    size = TREARRAY_SIZE(arr);
 
     /* Mark dimension list. */
     tregc_trace_tree (TREATOM_VALUE(arr));

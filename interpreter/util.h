@@ -1,8 +1,5 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
- *
- * Utility functions
+ * tré - Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
  */
 
 #ifndef TRE_UTIL_H

@@ -1,8 +1,5 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
- *
- * Generic sequences.
+ * tré - Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -27,16 +24,16 @@
 
 struct tre_sequence_type * tre_sequence_types [] = {
 	&trelist_seqtype,	/* #define TRETYPE_CONS        0 */
-	NULL,	/* #define TRETYPE_VARIABLE    1 */
-	NULL,	/* #define TRETYPE_NUMBER      2 */
+	NULL,	            /* #define TRETYPE_VARIABLE    1 */
+	NULL,	            /* #define TRETYPE_NUMBER      2 */
 	&trestring_seqtype,	/* #define TRETYPE_STRING      3 */
 	&trearray_seqtype,	/* #define TRETYPE_ARRAY       4 */
-	NULL,	/* #define TRETYPE_BUILTIN     5 */
-	NULL,	/* #define TRETYPE_SPECIAL     6 */
-	NULL,	/* #define TRETYPE_MACRO       7 */
-	NULL,	/* #define TRETYPE_FUNCTION    8 */
-	NULL,	/* #define TRETYPE_USERSPECIAL 9 */
-	NULL,	/* #define TRETYPE_PACKAGE     10 */
+	NULL,	            /* #define TRETYPE_BUILTIN     5 */
+	NULL,	            /* #define TRETYPE_SPECIAL     6 */
+	NULL,	            /* #define TRETYPE_MACRO       7 */
+	NULL,	            /* #define TRETYPE_FUNCTION    8 */
+	NULL,	            /* #define TRETYPE_USERSPECIAL 9 */
+	NULL,	            /* #define TRETYPE_PACKAGE     10 */
 };
 	
 struct tre_sequence_type *

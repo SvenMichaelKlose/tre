@@ -1,8 +1,5 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2006,2008 Sven Klose <pixel@copei.de>
- *
- * Streams
+ * tré - Copyright (c) 2005-2006,2008 Sven Klose <pixel@copei.de>
  */
 
 #ifndef TRE_BUILTIN_STREAM_H

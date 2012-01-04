@@ -1,8 +1,5 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
- *
- * Array related section.
+ * tré - Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  */
 
 #include "config.h"

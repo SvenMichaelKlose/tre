@@ -1,9 +1,11 @@
 /*
- * TRE processor
- * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
- *
- * Built-in string functions
+ * tré - Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
  */
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <strings.h>
 
 #include "config.h"
 #include "atom.h"
@@ -16,11 +18,6 @@
 #include "argument.h"
 #include "gc.h"
 #include "builtin_string.h"
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <strings.h>
 
 /*tredoc
   (cmd :name STRINGP
@@ -64,12 +61,12 @@ trestring_builtin_make (treptr list)
 treptr
 trestring_builtin_list_string (treptr list)
 {
-    char * news;
-    treptr    p;
-    treptr    atom;
-    char      *newp;
-    ulong  len = 0;
-	int		  i;
+    char *  news;
+    treptr  p;
+    treptr  atom;
+    char *  newp;
+    ulong   len = 0;
+	int	    i;
 
 	treptr arg;
 
@@ -113,11 +110,11 @@ trestring_builtin_list_string (treptr list)
 treptr
 trestring_builtin_compare (treptr list)
 {
-	char   * x;
-	char   * y;
-	treptr p;
-	treptr car;
-	unsigned len;
+	char *    x;
+	char *    y;
+	treptr    p;
+	treptr    car;
+	unsigned  len;
 
 	if (TREPTR_IS_STRING(CAR(list)) == FALSE)
 		treerror_norecover (list, "string expected as first argument");
@@ -150,11 +147,11 @@ trestring_builtin_compare (treptr list)
 treptr
 trestring_builtin_concat (treptr list)
 {
-    char    * news;
+    char *  news;
     treptr  p;
     treptr  car;
     treptr  atom;
-    char    * newp;
+    char *  newp;
     ulong   len = 0;
 	int	    argnum = 1;
 
@@ -200,6 +197,7 @@ trestring_builtin_string (treptr list)
 {
     char    buf[TRE_MAX_STRINGLEN];
     treptr  arg = trearg_get (list);
+
    	if (TREPTR_TYPE(arg) == TRETYPE_STRING)
 		return arg;
 
@@ -236,7 +234,7 @@ trestring_builtin_symbol_name (treptr list)
 {
     char    buf[TRE_MAX_STRINGLEN];
     treptr  arg = trearg_typed (1, TRETYPE_ATOM, trearg_get (list), NULL);
-    char    * an = TREATOM_NAME(arg);
+    char *  an = TREATOM_NAME(arg);
 
     buf[0] = 0;
     if (an)

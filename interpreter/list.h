@@ -5,6 +5,8 @@
 #ifndef TRE_LIST_H
 #define TRE_LIST_H
 
+#include <stddef.h>
+
 #define LAST_LISTNODE	(NUM_LISTNODES - 1)
 
 struct tre_list {
@@ -83,34 +85,34 @@ extern void trelist_init (void);
 
 extern struct tre_list tre_lists[NUM_LISTNODES];
 extern treptr tre_lists_free;
-extern ulong trelist_num_used;
+extern size_t trelist_num_used;
 
 extern treptr _trelist_get (treptr car, treptr cdr);
 extern treptr trelist_copy (treptr) __attribute__((pure));
 extern treptr trelist_copy_tree (treptr) __attribute__((pure));
 extern treptr trelist_delete (ulong, treptr);
-extern void trelist_append (treptr *lst, treptr lst2) __attribute__((pure));
-extern long trelist_position (treptr elt, treptr lst) __attribute__((pure));
-extern long trelist_position_name (treptr elt, treptr lst) __attribute__ ((pure));
+extern void   trelist_append (treptr *lst, treptr lst2) __attribute__((pure));
+extern long   trelist_position (treptr elt, treptr lst) __attribute__((pure));
+extern long   trelist_position_name (treptr elt, treptr lst) __attribute__ ((pure));
 extern ulong trelist_length (treptr) __attribute__((pure));
-extern bool trelist_equal (treptr, treptr) __attribute__((pure));
+extern bool   trelist_equal (treptr, treptr) __attribute__((pure));
 extern treptr trelist_nth (treptr, ulong) __attribute__((pure));
 extern treptr trelist_last (treptr) __attribute__((pure));
 
-extern void trelist_free (treptr);
-extern void trelist_free_expr (treptr);
-extern void trelist_free_toplevel (treptr);
+extern void   trelist_free (treptr);
+extern void   trelist_free_expr (treptr);
+extern void   trelist_free_toplevel (treptr);
 
 extern struct tre_sequence_type trelist_seqtype;
 
-extern bool trelist_check_type (treptr, ulong atom_type) __attribute__((pure));
+extern bool   trelist_check_type (treptr, ulong atom_type) __attribute__((pure));
 
 #ifdef TRE_LIST_DIAGNOSTICS
 extern treptr trelist_car (treptr);
 extern treptr trelist_cdr (treptr);
 #endif
 
-extern void trelist_rplaca (treptr, treptr);
-extern void trelist_rplacd (treptr, treptr);
+extern void   trelist_rplaca (treptr, treptr);
+extern void   trelist_rplacd (treptr, treptr);
 
 #endif 	/* #ifndef TRE_LIST_H */

@@ -1,9 +1,8 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
- *
- * Number atom related section.
+ * tré - Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
  */
+
+#include <ctype.h>
 
 #include "config.h"
 #include "atom.h"
@@ -13,8 +12,6 @@
 #include "eval.h"
 #include "gc.h"
 #include "argument.h"
-
-#include <ctype.h>
 
 /*tredoc
   (cmd :name NUMBERP

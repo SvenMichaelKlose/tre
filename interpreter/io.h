@@ -1,8 +1,5 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
- *
- * Simple streams
+ * tré - Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  */
 
 #ifndef TRE_IO_H
@@ -22,11 +19,11 @@ struct tre_stream {
 };
 
 struct treio_ops {
-    int (*getc) (void *);
-    void (*putc) (void *, char);
-    int (*eof) (void *);
-    void (*flush) (void *);
-    void (*close) (void *);
+    int   (*getc) (void *);
+    void  (*putc) (void *, char);
+    int   (*eof) (void *);
+    void  (*flush) (void *);
+    void  (*close) (void *);
 };
 
 #define TREIO_OP(s) (s->ops)
@@ -46,13 +43,13 @@ extern struct tre_stream * treio_make_stream (struct treio_ops *, const char * n
 extern void treio_free_stream (struct tre_stream *);
 extern void treio_close_stream (struct tre_stream *);
 
-extern int treio_getc (struct tre_stream *);
-extern int treio_getline (struct tre_stream *,char *s, ulong maxlen);
+extern int  treio_getc (struct tre_stream *);
+extern int  treio_getline (struct tre_stream *,char *s, ulong maxlen);
 extern void treio_putback (struct tre_stream *);
 extern void treio_putc (struct tre_stream *, char);
 extern void treio_flush (struct tre_stream *);
 extern void treio_skip_spaces (struct tre_stream *);
-extern int treio_eof (struct tre_stream *);
+extern int  treio_eof (struct tre_stream *);
 extern void treio_prompt (void);
 
 /* Standard stream diversion for LOAD and related functions. */

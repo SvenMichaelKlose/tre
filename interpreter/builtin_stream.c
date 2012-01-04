@@ -2,6 +2,11 @@
  * tré - Copyright (c) 2006-2009,2011 Sven Klose <pixel@copei.de>
  */
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <termios.h>
+
 #include "config.h"
 #include "atom.h"
 #include "eval.h"
@@ -13,8 +18,6 @@
 #include "stream.h"
 #include "string2.h"
 #include "builtin_stream.h"
-
-#include <stdlib.h>
 
 /*tredoc
   (cmd :name %PRINC
@@ -136,10 +139,6 @@ trestream_builtin_read_char (treptr args)
     c = fgetc (str);
     return treatom_number_get ((double) abs (c), TRENUMTYPE_CHAR);
 }
-
-#include <stdio.h>
-#include <unistd.h>
-#include <termios.h>
 
 /*tredoc
   (cmd :name %TERMINAL-RAW

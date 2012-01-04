@@ -1,8 +1,5 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2007,2009 Sven Klose <pixel@copei.de>
- *
- * Built-in special forms.
+ * tré - Copyright (c) 2005-2007,2009 Sven Klose <pixel@copei.de>
  */
 
 #ifndef TRE_SPECIAL_H

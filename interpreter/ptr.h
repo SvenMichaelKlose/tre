@@ -1,8 +1,5 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
- *
- * Object pointers.
+ * tré - Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
  */
 
 #ifndef TRE_PTR_H

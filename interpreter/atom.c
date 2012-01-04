@@ -1,8 +1,5 @@
 /*
- * TRE tree processor
- * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
- *
- * Atom related section.
+ * tré - Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
  */
 
 #include "config.h"

@@ -28,7 +28,7 @@ struct sockaddr_in server;
 struct sockaddr_in client;
 
 treptr
-trebuiltin_net_open_socket (treptr args)
+trenet_builtin_open_socket (treptr args)
 {
     socklen_t sockaddr_len = sizeof (struct sockaddr_in);
     treptr port = trearg_get (args);
@@ -52,7 +52,7 @@ trebuiltin_net_open_socket (treptr args)
 }
 
 treptr
-trebuiltin_net_accept (treptr args)
+trenet_builtin_accept (treptr args)
 {    
     socklen_t sockaddr_len = sizeof (struct sockaddr_in);
 
@@ -63,7 +63,7 @@ trebuiltin_net_accept (treptr args)
 }
 
 treptr
-trebuiltin_net_recv (treptr args)
+trenet_builtin_recv (treptr args)
 {    
     char      * data = trealloc (MAX_DATA);
     treptr    result;
@@ -77,7 +77,7 @@ trebuiltin_net_recv (treptr args)
 }
 
 treptr
-trebuiltin_net_send (treptr args)
+trenet_builtin_send (treptr args)
 {
     treptr  data = trearg_get (args);
     char    * s = TREATOM_STRING(data);
@@ -88,7 +88,7 @@ trebuiltin_net_send (treptr args)
 }
 
 treptr
-trebuiltin_net_close_connection (treptr args)
+trenet_builtin_close_connection (treptr args)
 {
     close (trenet_connection);
     trenet_connection = -1;
@@ -96,7 +96,7 @@ trebuiltin_net_close_connection (treptr args)
 }
 
 treptr
-trebuiltin_net_close_socket (treptr args)
+trenet_builtin_close_socket (treptr args)
 {
     close (trenet_socket);
     return treptr_nil;

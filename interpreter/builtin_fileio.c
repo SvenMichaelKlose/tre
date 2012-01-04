@@ -1,8 +1,5 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
- *
- * Built-in file-I/O functions
+ * tré - Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -19,16 +16,8 @@
 
 #include <stdio.h>
 
-FILE* tre_fileio_handles[TRE_FILEIO_MAX_FILES];
+FILE * tre_fileio_handles[TRE_FILEIO_MAX_FILES];
 
-/*tredoc
-  (cmd :name <
-	(args
-	  (arg :name path-name :type string)
-	  (arg :name access-mode :type string))
-	(descr "Opens file and creates an interpreter-stream.")
-	(returns "Internal stream handle."))
- */
 treptr
 trestream_builtin_fopen (treptr list)
 {

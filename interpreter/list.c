@@ -286,7 +286,7 @@ trelist_position_name (treptr elt, treptr l)
 }
 
 /* Get length of a pure list. */
-ulong
+size_t
 trelist_length (treptr p)
 {
     ulong len = 0;

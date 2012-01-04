@@ -18,7 +18,7 @@
 #include "io_std.h"
 #include "thread.h"
 #include "special.h"
-#include "alien_dl.h"
+#include "alien.h"
 #include "builtin_arith.h"
 #include "builtin_array.h"
 #include "builtin_atom.h"
@@ -583,12 +583,12 @@ treevalfunc_t treeval_xlat_builtin[] = {
     treimage_builtin_create,
     treimage_builtin_load,
 
-    trebuiltin_net_open_socket,
-    trebuiltin_net_accept,
-    trebuiltin_net_recv,
-    trebuiltin_net_send,
-    trebuiltin_net_close_connection,
-    trebuiltin_net_close_socket,
+    trenet_builtin_open_socket,
+    trenet_builtin_accept,
+    trenet_builtin_recv,
+    trenet_builtin_send,
+    trenet_builtin_close_connection,
+    trenet_builtin_close_socket,
 
     NULL
 };

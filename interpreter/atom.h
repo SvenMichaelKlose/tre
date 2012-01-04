@@ -9,14 +9,14 @@
 
 /* Atom table. */
 struct tre_atom {
-    char   	* name;
+    char *  name;
     char	type;
     treptr	value;
     treptr	fun;
-    void	* compiled_fun;
+    void *  compiled_fun;
     treptr	binding;
     treptr	package;
-    void 	* detail;
+    void *  detail;
 };
 
 extern void * tre_atoms_free;
@@ -72,9 +72,9 @@ extern treptr treatom_get_function (treptr atom) __attribute__((pure));
 extern treptr treatom_register_compiled_function (treptr sym, void * fun);
 
 extern treptr treatom_alloc (char *symbol, treptr package, int type, treptr value);
-extern void treatom_free (treptr);
+extern void   treatom_free (treptr);
 
-extern void treatom_remove (treptr);
+extern void   treatom_remove (treptr);
 
 extern treptr treatom_set_value (treptr atom, treptr value);
 extern treptr treatom_sym_set_value (char * symbol, treptr value);

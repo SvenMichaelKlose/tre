@@ -1,8 +1,5 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2006,2010 Sven Klose <pixel@copei.de>
- *
- * Built-in number-related functions
+ * tré - Copyright (c) 2005-2006,2010 Sven Klose <pixel@copei.de>
  */
 
 #ifndef TRE_BUILTIN_ARITH_H
