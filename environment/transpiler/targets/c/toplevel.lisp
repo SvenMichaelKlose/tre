@@ -59,6 +59,7 @@
 		   "builtin.h"
 		   "builtin_image.h"
 		   "builtin_list.h"
+		   "builtin_net.h"
 		   "builtin_number.h"
 		   "builtin_sequence.h"
 		   "builtin_stream.h"
@@ -70,7 +71,7 @@
 		   "io.h"
 		   "main.h"
 		   "xxx.h"
-		   "alien_dl.h"
+		   "alien.h"
 		   "compiled.h"))
 
 (defun c-transpiler-make-init (tr)

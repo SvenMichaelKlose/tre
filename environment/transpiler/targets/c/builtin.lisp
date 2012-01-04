@@ -135,7 +135,7 @@
 	(treimage_builtin_
     	(SYS-IMAGE-CREATE create)
 		(SYS-IMAGE-LOAD load))
-	(trenet_
+	(trenet_builtin_
         (OPEN-SOCKET open_socket)
         (ACCEPT accept)
         (RECV recv)
