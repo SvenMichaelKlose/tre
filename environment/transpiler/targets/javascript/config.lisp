@@ -52,7 +52,9 @@
 		  apply length push shift unshift
 		  split object *array *string == === + - * /
 
-		  alert))
+		  alert
+          
+          focus disabled))
 	tr))
 
 (defvar *js-transpiler* (make-javascript-transpiler))
