@@ -79,8 +79,10 @@ if [ -f /lib/x86_64-linux-gnu/libdl.so* ]; then
 	LIBFLAGS="$LIBFLAGS -ldl";
 fi
 
-if [ -f interpreter/_compiled-env.c ]; then
-	FILES="$FILES _compiled-env.c";
+COMPILED_ENV=${COMPILED_ENV:-"interpreter/_compiled-env.c"}
+
+if [ -f $COMPILED_ENV ]; then
+	FILES="$FILES ../$COMPILED_ENV";
 	CFLAGS="$CFLAGS -DTRE_HAVE_COMPILED_ENV";
 fi
 
@@ -97,7 +99,7 @@ echo "Library flags: $LIBFLAGS"
 basic_clean ()
 {
 	echo "Cleaning..."
-	rm -f *.core interpreter/_compiled-env.c
+	rm -f *.core $COMPILED_ENV
 	rm -rf obj
 }
 
@@ -105,7 +107,7 @@ link ()
 {
 	echo "Linking..."
 	OBJS=`find obj -name \*.o`
-	$LD -o tre $OBJS $LIBFLAGS
+	$LD -o $TRE $OBJS $LIBFLAGS
 }
 
 standard_compile ()
