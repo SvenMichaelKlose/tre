@@ -9,7 +9,7 @@
 (env-load "stage5/half.lisp")
 (env-load "stage5/levenshtein.lisp")
 (env-load "stage5/merge-unique.lisp")
-(env-load "stage5/string-char.lisp")
+(env-load "stage5/string-char.lisp" 'c)
 (env-load "stage5/string-has-whitespace-p.lisp")
 (env-load "stage5/stringlist-skip-spaces.lisp")
 (env-load "stage5/symbol-without-package.lisp")
