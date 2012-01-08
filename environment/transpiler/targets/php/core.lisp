@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2012 Sven Klose <pixel@copei.de>
 
 (defun php-load-base (dir-path &rest files)
   (with-temporary *have-compiler?* nil

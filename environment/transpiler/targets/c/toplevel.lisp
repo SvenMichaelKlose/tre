@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2012 Sven Klose <pixel@copei.de>
 
 (defvar *closure-argdefs* nil)
 (defvar *c-init-group-size* 16)
@@ -93,15 +93,13 @@
 	(with-temporary *current-transpiler* tr
       (transpiler-reset tr)
       (target-transpile-setup tr :obfuscate? obfuscate?)
-      (concat-stringtree
-	      (mapcar (fn format nil "#include \"~A\"~%" _) *c-interpreter-headers*)
-  	      (format nil "#define userfun_apply trespecial_apply_compiled~%")
-  	      (target-transpile *c-transpiler*
-	  	      :files-after-deps sources
-	          :dep-gen #'(()
-			               (transpiler-import-from-environment tr))
-	          :decl-gen #'(()
-			                (c-transpiler-make-closure-argdef-symbols)
-			                (let init (transpiler-transpile tr (transpiler-sighten tr (c-transpiler-make-init tr)))
-		   	                  (concat-stringtree (transpiler-compiled-decls tr)
-								                 init))))))))
+      (string-concat (apply #'string-concat (mapcar (fn format nil "#include \"~A\"~%" _) *c-interpreter-headers*))
+  	                 (format nil "#define userfun_apply trespecial_apply_compiled~%")
+  	                 (target-transpile *c-transpiler*
+	  	                 :files-after-deps sources
+	                     :dep-gen #'(()
+			                          (transpiler-import-from-environment tr))
+	                     :decl-gen #'(()
+			                          (c-transpiler-make-closure-argdef-symbols)
+			                          (let init (transpiler-transpile tr (transpiler-sighten tr (c-transpiler-make-init tr)))
+		   	                            (concat-stringtree (transpiler-compiled-decls tr) init))))))))

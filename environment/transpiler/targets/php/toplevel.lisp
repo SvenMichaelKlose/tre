@@ -39,7 +39,7 @@
       (transpiler-reset tr)
       (target-transpile-setup tr :obfuscate? obfuscate?))
     (transpiler-add-defined-variable tr '*KEYWORD-PACKAGE*)
-	(concat-stringtree
+	(string-concat
 		(php-transpile-prepare tr)
     	(target-transpile tr
     	 	:files-before-deps

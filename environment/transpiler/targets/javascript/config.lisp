@@ -54,7 +54,7 @@
 
 		  alert
           
-          focus disabled))
+          focus disabled match escape))
 	tr))
 
 (defvar *js-transpiler* (make-javascript-transpiler))

@@ -12,8 +12,8 @@
 	  	(read-all-lines i))))
 
 (defun js-transpile-pre (tr)
-  (concat-stringtree (when (transpiler-lambda-export? tr)
-                       (js-gen-funref-wrapper))))
+  (when (transpiler-lambda-export? tr)
+    (js-gen-funref-wrapper)))
 
 (defun js-transpile-post ()
   (js-transpile-epilogue))
@@ -38,7 +38,7 @@
       (target-transpile-setup tr :obfuscate? obfuscate?))
     (when (transpiler-lambda-export? tr)
       (transpiler-add-wanted-function tr 'array-copy))
-	(concat-stringtree
+	(string-concat
 		(js-transpile-pre tr)
     	(target-transpile tr :files-before-deps
 			                     (append (list (cons 't1 *js-base*))

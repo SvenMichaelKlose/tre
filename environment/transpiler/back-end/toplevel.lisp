@@ -35,4 +35,4 @@
 	 (make-function-prologues x)))
 
 (defun transpiler-backend (tr x)
-  (funcall (transpiler-emit-code-compose tr) (transpiler-generate-code tr x)))
+  (concat-stringtree (funcall (transpiler-emit-code-compose tr) (transpiler-generate-code tr x))))

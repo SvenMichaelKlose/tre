@@ -3,10 +3,10 @@
 (defun transpiler-transpile (tr forms)
   (unless (eq t (transpiler-unwanted-functions tr))
 	(with-temporary (transpiler-import-from-environment? tr) nil
-	  (concat-stringtree
-	      (mapcar (fn transpiler-backend tr _)
-			      (mapcar (fn transpiler-middleend-2 tr _)
-			  		      forms))))))
+	  (apply #'string-concat
+	         (mapcar (fn transpiler-backend tr _)
+			         (mapcar (fn transpiler-middleend-2 tr _)
+			  		         forms))))))
 
 (defun transpiler-sighten (tr x)
   (mapcar (fn transpiler-frontend tr (list _)) x))

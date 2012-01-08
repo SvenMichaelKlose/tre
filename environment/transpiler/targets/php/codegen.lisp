@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2012 Sven Klose <pixel@copei.de>
 
 ;;;; GENERAL
 
@@ -49,10 +49,10 @@
   (php-line (php-jump tag)))
 
 (define-php-macro %%vm-go-nil (val tag)
-  (php-line "if (!$" val "&&!is_string($" val ")&&!is_numeric($" val ")) { " (php-jump tag) "}"))
+  (php-line "if (!" (php-dollarize val) "&&!is_string(" (php-dollarize val) ")&&!is_numeric(" (php-dollarize val) ")) { " (php-jump tag) "}"))
 
 (define-php-macro %%vm-go-not-nil (val tag)
-  (php-line "if (!(!$" val "&&!is_string($" val ")&&!is_numeric($" val "))) { " (php-jump tag) "}"))
+  (php-line "if (!(!" (php-dollarize val) "&&!is_string(" (php-dollarize val) ")&&!is_numeric(" (php-dollarize val) "))) { " (php-jump tag) "}"))
 
 ;;;; FUNCTIONS
 
