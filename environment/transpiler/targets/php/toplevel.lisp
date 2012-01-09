@@ -16,6 +16,7 @@
     (when import-universe?
       (transpiler-import-universe tr))
     (format out (+ "<?php~%"
+                   "mb_internal_encoding ('UTF-8');~%"
                    "if (get_magic_quotes_gpc ()) {~%"
                    "    $vars = array (&$_GET, &$_POST, &$_COOKIE, &$_REQUEST);~%"
                    "    while (list ($key, $val) = each ($vars)) {~%"
