@@ -21,4 +21,5 @@
 (env-load "stage5/without-tail.lisp")
 (env-load "stage5/read-binary-file.lisp")
 (env-load "stage5/read-bmp-array.lisp")
+(env-load "stage5/percent.lisp")
 (env-load "stage5/bmp2cub.lisp")
