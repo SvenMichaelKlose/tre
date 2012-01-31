@@ -1,4 +1,4 @@
-;;;; tré - Copyright (c) 2010-2012 Sven Klose <pixel@copei.de>
+;;;; tré - Copyright (c) 2010-2012 Sven Michael Klose <pixel@copei.de>
 
 (env-load "stage5/array-list.lisp")
 (env-load "stage5/backslash-to-slash.lisp")
@@ -6,6 +6,7 @@
 (env-load "stage5/camelize.lisp")
 (env-load "stage5/comma-separated-list.lisp")
 (env-load "stage5/doseq.lisp")
+(env-load "stage5/english-numbers.lisp")
 (env-load "stage5/half.lisp")
 (env-load "stage5/levenshtein.lisp")
 (env-load "stage5/merge-unique.lisp")
