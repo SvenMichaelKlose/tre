@@ -56,8 +56,8 @@
 
 (defun adjoin (obj lst &rest args)
   (if (apply #'member obj lst args)
-    lst
-    (cons obj lst)))
+      lst
+      (cons obj lst)))
 
 (defmacro adjoin! (obj &rest place)
   `(setf ,(car place) (adjoin ,obj ,@place)))
