@@ -1,4 +1,4 @@
-;;;; TRE environment - Copyright (c) 2005-2009,2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2005-2009,2011-2012 Sven Michael Klose <pixel@copei.de>
 
 (defun %struct-option-keyword (e)
   (in? e :constructor))
@@ -6,10 +6,10 @@
 (defun %struct-make-symbol (name options)
   (aif (assoc-value :constructor options)
        !.
-       (make-symbol (string-concat "MAKE-" (symbol-name name)))))
+       ($ "MAKE-" name)))
 
 (defun %struct?-symbol (name)
-  (make-symbol (string-concat (symbol-name name) "?")))
+  ($ name "?"))
 
 (defun %struct-field-name (field)
   (? (cons? field)
@@ -44,7 +44,7 @@
 	     ,g))))
 
 (defun %struct-getter-symbol (name field)
-  (make-symbol (string-concat (symbol-name name) "-" (symbol-name field))))
+  ($ name "-" field))
 
 (defun %struct-assertion (name sym)
   (when *assert*
@@ -99,9 +99,9 @@
       ,(%struct-make name flds opts)
       ,(%struct? name)
       ,@(%struct-getters name flds)
-      (defmacro ,(make-symbol (string-concat "WITH-" (symbol-name name))) (s &rest body)
+      (defmacro ,($ "WITH-" name) (s &rest body)
 		 `(with-struct ,name ,,s ,,@body))
-      (defmacro ,(make-symbol (string-concat "DEF-" (symbol-name name))) (name args &rest body)
+      (defmacro ,($ "DEF-" name) (name args &rest body)
 		 `(defun ,,name ,,args
             (with-struct ,name ,name ,,@body))))))
 

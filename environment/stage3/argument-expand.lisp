@@ -1,5 +1,4 @@
-;;;;; TRE environment
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
 
 (defun argument-keyword? (x)
   (in? x '&rest '&body '&optional '&key))
@@ -62,8 +61,7 @@
 		   #'((msg &rest args)
 				(apply #'error
 					   (string-concat
-						 (format nil "Call of function ~A:~%"
-									 (symbol-name fun))
+						 (format nil "Call of function ~A:~%" (symbol-name fun))
 						 (format nil "Argument definition: ~A~%" adef)
 						 (format nil "Given arguments: ~A~%" alst)
 						 msg)
@@ -119,7 +117,7 @@
 
 		 exp-key
 		   #'((def vals)
-			    (with  (w (make-symbol (symbol-name vals.))
+			    (with  (w ($ vals.)
 			    		k (assoc w key-args))
 				  (? k
 			         (progn
