@@ -1,5 +1,4 @@
-;;;;; TRE transpiler environment
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
 
 (defun %wrap-char-number (x)
   (? (character? x)
@@ -35,20 +34,26 @@
 		 chr ($ 'character gen)
 		 op  ($ '%%% gen)
          gen-body `(let n (%wrap-char-number x.)
-	    			 (dolist (i .x n)
-	      			   (setf n (,op n (%wrap-char-number i))))))
+                     (? .x
+	    			    (dolist (i .x n)
+	      			      (setf n (,op n (%wrap-char-number i))))
+                        (,op n))))
     `((defun ,gen (&rest x)
 	    ,gen-body)
 	  (defun ,num (&rest x)
 	    ,gen-body)
       (defun ,int (&rest x)
-        (let n x.
-	      (dolist (i .x n)
-	        (setf n (,op n i)))))
+        (? .x
+           (let n x.
+	         (dolist (i .x n)
+	           (setf n (,op n i))))
+           (,op n)))
       (defun ,chr (&rest x)
-        (let n 0
-	   	  (dolist (i .x (code-char n))
-		    (setf n (,op n (%wrap-char-number i)))))))))
+        (let n (%wrap-char-number x.)
+          (? .x
+	   	     (dolist (i .x (code-char n))
+		       (setf n (,op n (%wrap-char-number i))))
+             (code-char (,op n))))))))
 
 (mapcan-macro _
 	'(= < > <= >=)
