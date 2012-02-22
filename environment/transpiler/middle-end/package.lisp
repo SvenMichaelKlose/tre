@@ -1,11 +1,11 @@
-;;;;; tré - Copyright (c) 2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2011-2012 Sven Michael Klose <pixel@copei.de>
 
 (defun process-%%in-package (x)
   (?
     (atom x) x
     (eq '%quote x.) x
     (eq '%%in-package x.)
-      (and (setf (transpiler-current-package *current-transpiler*) (make-package (symbol-name .x.)))
+      (and (setf (transpiler-current-package *current-transpiler*) (and .x. (make-package (symbol-name .x.))))
            nil)
     (cons (process-%%in-package x.)
           (process-%%in-package .x))))
@@ -21,7 +21,7 @@
            x))
     (atom x) x
     (eq '%%in-package x.)
-      (and (setf (transpiler-current-package *current-transpiler*) (make-package (symbol-name .x.)))
+      (and (setf (transpiler-current-package *current-transpiler*) (and .x. (make-package (symbol-name .x.))))
            nil)
     (%slot-value? x) x
     (cons (make-packages-0 x.)
