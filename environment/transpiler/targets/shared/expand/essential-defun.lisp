@@ -24,14 +24,11 @@
 			      ,a
                   ,@(when (body-has-noargs-tag? body)
                       '(no-args))
-                  (block ,(? (cons? name)
-                             .name.
-                             name)
+                  (block ,(? (cons? name) .name. name)
                     ,@(when *log-functions?*
                         `((log ,(symbol-name n))))
    		            ,@(body-without-noargs-tag body))))
-     ,@(when (and *have-compiler?*
-                  (not (transpiler-memorize-sources? *current-transpiler*)))
+     ,@(when (and *have-compiler?* (not (transpiler-memorize-sources? *current-transpiler*)))
          `((%setq *defined-functions* (cons ,(list 'quote n) *defined-functions*))))
      ,@(when *save-compiled-source?*
          (apply #'transpiler-add-obfuscation-exceptions *current-transpiler* (collect-symbols (cons args body)))

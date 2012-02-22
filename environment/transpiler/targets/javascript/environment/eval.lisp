@@ -19,8 +19,7 @@
     (setf *js-eval-transpiler* tr)))
 
 (defun js-eval-transpile (expression)
-  (with-temporary *js-transpiler* (or *js-eval-transpiler*
-                                      (make-js-eval-transpiler))
+  (with-temporary *js-transpiler* (or *js-eval-transpiler* (make-js-eval-transpiler))
     (let tr *js-transpiler*
       (clr (transpiler-sightened-files tr)
            (transpiler-compiled-files tr)
