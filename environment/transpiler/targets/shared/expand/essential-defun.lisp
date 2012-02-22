@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *allow-redefinitions?* nil)
 
@@ -26,7 +26,8 @@
                       '(no-args))
                   (block ,(? (cons? name) .name. name)
                     ,@(when *log-functions?*
-                        `((log ,(symbol-name n))))
+                        `((when (function? log)
+                            (log ,(symbol-name n)))))
    		            ,@(body-without-noargs-tag body))))
      ,@(when (and *have-compiler?* (not (transpiler-memorize-sources? *current-transpiler*)))
          `((%setq *defined-functions* (cons ,(list 'quote n) *defined-functions*))))
