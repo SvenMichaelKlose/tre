@@ -1,5 +1,4 @@
-;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
 
 ;; Make symbol in particular package.
 (defun make-symbol (x &optional (pkg nil))
@@ -21,6 +20,7 @@
 (defun symbol-package (x) (when x x.p))
 
 (defun symbol? (x)
-  (and (object? x)
-	   x.__class
-       (%%%= x.__class ,(transpiler-obfuscated-symbol-string *current-transpiler* 'symbol))))
+  (or (not x)
+      (and (object? x)
+	       x.__class
+           (%%%= x.__class ,(transpiler-obfuscated-symbol-string *current-transpiler* 'symbol)))))

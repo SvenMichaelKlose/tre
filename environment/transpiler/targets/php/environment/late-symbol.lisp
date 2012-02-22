@@ -1,5 +1,4 @@
-;;;;; Transpiler: TRE to PHP
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
 
 (defun make-symbol (x &optional (pkg nil))
   (symbol x pkg))
@@ -23,4 +22,5 @@
 (dont-obfuscate is_a)
 
 (defun symbol? (x)
-  (is_a x "__symbol"))
+  (or (not x)
+      (is_a x "__symbol")))
