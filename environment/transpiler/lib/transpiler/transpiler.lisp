@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *current-transpiler* nil)
 (defvar *transpiler-assert* nil)
@@ -25,10 +25,8 @@
   (expex nil)
 
   ; Functions defined in transpiled code, not in the environment.
-  (defined-functions nil)
   (defined-functions-hash (make-hash-table :test #'eq))
 
-  (defined-variables nil)
   (defined-variables-hash (make-hash-table :test #'eq))
 
   ; Functions to be imported from the environment.
@@ -104,6 +102,9 @@
 
   (current-package nil))
 
+(defun transpiler-defined-functions (tr)
+  (hashkeys (transpiler-defined-functions-hash tr)))
+
 (defun transpiler-defined-function (tr name)
   (href (transpiler-defined-functions-hash tr) name))
 
@@ -111,8 +112,6 @@
   (remove-if #'builtin? (transpiler-defined-functions tr)))
 
 (defun transpiler-add-defined-function (tr name)
-  (remove! name (transpiler-defined-functions tr) :test #'eq)
-  (push name (transpiler-defined-functions tr))
   (setf (href (transpiler-defined-functions-hash tr) name) t)
   name)
 
@@ -120,8 +119,6 @@
   (href (transpiler-defined-variables-hash tr) name))
 
 (defun transpiler-add-defined-variable (tr name)
-  (remove! name (transpiler-defined-variables tr) :test #'eq)
-  (push name (transpiler-defined-variables tr))
   (setf (href (transpiler-defined-variables-hash tr) name) t)
   name)
 
@@ -217,9 +214,7 @@
   		(transpiler-wanted-functions-hash tr) (make-hash-table :test #'eq)
   		(transpiler-wanted-variables tr) nil
   		(transpiler-wanted-variables-hash tr) (make-hash-table :test #'eq)
-  		(transpiler-defined-functions tr) nil
   		(transpiler-defined-functions-hash tr) (make-hash-table :test #'eq)
-  		(transpiler-defined-variables tr) nil
   		(transpiler-defined-variables-hash tr) (make-hash-table :test #'eq)
   		(transpiler-function-args tr) (make-hash-table :test #'eq)
   		(transpiler-exported-closures tr) nil
