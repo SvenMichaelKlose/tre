@@ -1,7 +1,4 @@
-;;;; TRE environment
-;;;; Copyright (c) 2006-2008,2011 Sven Klose <pixel@copei.de>
-;;;;
-;;;; FORMAT function
+;;;;; tré - Copyright (c) 2006-2008,2011-2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *format-handlers* nil)
 
@@ -46,12 +43,13 @@
          (%format str l i txt args)))))
 
 (defun %format (str l i txt args)
-  (when (integer< i l)
+  (while (integer< i l)
+         nil
     (? (character= (elt txt i) #\~)
-       (%format-directive str l (integer-1+ i) txt args)
+       (return (%format-directive str l (integer-1+ i) txt args))
        (progn
          (princ (elt txt i) str)
-         (%format str l (integer-1+ i) txt args)))))
+         (setf i (integer-1+ i))))))
 
 (defun format (str txt &rest args)
   "Print formatted string."
