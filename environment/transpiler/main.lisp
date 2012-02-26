@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2005-2012 Sven Michael Klose <pixel@copei.de>
 
 ,(setf *save-args-only?* t)
 
@@ -14,5 +14,3 @@
 (env-load "transpiler/targets/php/main.lisp")
 
 (env-load "transpiler/compile.lisp")
-
-,(setf *save-args-only?* nil)
