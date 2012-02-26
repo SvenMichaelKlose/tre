@@ -9,7 +9,7 @@
 	 (%setq ,@x)))
 
 (defun js-make-function-with-compiled-argument-expansion (x)
-  (with-gensym g
+  (let g '~%cargs
     (when (in-cps-mode?)
       (transpiler-add-cps-function *js-transpiler* g))
     (with-lambda-content x fi args body
@@ -79,21 +79,22 @@
   `(%setq %cps-mode ,x))
 
 (defun js-make-early-symbol-expr (g sym)
-   `((%var ,g)
+   `(,@(unless (eq g '~%tfun)
+         `((%var ,g)))
      (%setq ,g (symbol ,(transpiler-obfuscated-symbol-name *js-transpiler* sym)
                        ,(awhen (symbol-package sym)
                           `(make-package ,(transpiler-obfuscated-symbol-name *js-transpiler* !)))))))
 
 (define-js-std-macro defun (name args &rest body)
-  (with-gensym g
-	(let dname (transpiler-package-symbol *js-transpiler* (%defun-name name))
-      (js-cps-exception name)
-      (when (in-cps-mode?)
-        (transpiler-add-cps-function *js-transpiler* dname))
+  (let dname (transpiler-package-symbol *js-transpiler* (%defun-name name))
+    (js-cps-exception name)
+    (when (in-cps-mode?)
+      (transpiler-add-cps-function *js-transpiler* dname))
+    (let g '~%tfun
       `(progn
          ,@(js-make-early-symbol-expr g dname)
-	     ,@(apply #'shared-essential-defun dname args body)
-		 (setf (symbol-function ,g) ,dname)))))
+         ,@(apply #'shared-essential-defun dname args body)
+	     (setf (symbol-function ,g) ,dname)))))
 
 (defun js-emit-memorized-sources ()
   (clr (transpiler-memorize-sources? *js-transpiler*))
