@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *php-goto?* t)
 
@@ -15,8 +15,7 @@
   (with-string-stream out
     (when import-universe?
       (transpiler-import-universe tr))
-    (format out (+ "<?php~%"
-                   "mb_internal_encoding ('UTF-8');~%"
+    (format out (+ "mb_internal_encoding ('UTF-8');~%"
                    "if (get_magic_quotes_gpc ()) {~%"
                    "    $vars = array (&$_GET, &$_POST, &$_COOKIE, &$_REQUEST);~%"
                    "    while (list ($key, $val) = each ($vars)) {~%"
@@ -41,6 +40,7 @@
       (target-transpile-setup tr :obfuscate? obfuscate?))
     (transpiler-add-defined-variable tr '*KEYWORD-PACKAGE*)
 	(string-concat
+        "<?php "
 		(php-transpile-prepare tr)
     	(target-transpile tr
     	 	:files-before-deps
@@ -59,4 +59,5 @@
                          (transpiler-sighten tr
                              (transpiler-compiled-inits tr))))
 			:files-to-update files-to-update
-			:print-obfuscations? print-obfuscations?))))
+			:print-obfuscations? print-obfuscations?)
+        "?>")))
