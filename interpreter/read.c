@@ -1,8 +1,5 @@
 /*
- * TRE tree processor
- * Copyright (c) 2005-2008,2010 Sven Klose <pixel@copei.de>
- *
- * Reading TRE expressions.
+ * tré - Copyright (c) 2005-2008,2010,2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -207,7 +204,7 @@ treread_string (struct tre_stream *stream)
 }
 
 bool
-ishex (c)
+ishex (int c)
 {
 	return isdigit (c) ||
 		   (c >= 'A' && c <= 'F') ||

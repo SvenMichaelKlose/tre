@@ -83,7 +83,7 @@ treimage_write_atoms (FILE *f)
 					len = -1;
 				buf.name = (char *) len;
                 treimage_write (f, &buf, sizeof (struct tre_atom));
-				if (len != -1 && len != 0)
+				if (len != (size_t) -1 && len != 0)
                 	treimage_write (f, tre_atoms[idx].name, len);
             }
 
@@ -269,7 +269,7 @@ treimage_read_atoms (FILE *f)
                 idx = (i << 3) + j;
                 treimage_read (f, &tre_atoms[idx], sizeof (struct tre_atom));
 				symlen = (size_t) tre_atoms[idx].name;
-				if (symlen == -1)
+				if (symlen == (size_t) -1)
 					tre_atoms[idx].name = NULL;
 				else {
 					if (symlen > TRE_MAX_SYMLEN)

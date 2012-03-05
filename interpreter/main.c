@@ -1,5 +1,5 @@
 /*
- * tré - Copyright (c) 2005-2009,2011 Sven Klose <pixel@copei.de>
+ * tré - Copyright (c) 2005-2009,2011-2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -103,14 +103,11 @@ tremain_expand (treptr expr)
     do {
 		old = expr;
 
-		/* Dot expansion. */
 		tregc_push (expr);
 		expr = tredot_expand (expr);
 
-    	/* Expand macros. */
     	expr = tremacro_builtin_macroexpand (CONS(expr, treptr_nil));
 
-		/* QUASIQUOTE expansion. */
 		tregc_push (expr);
 		expr = trequasiquote_expand (expr);
 
@@ -126,7 +123,6 @@ tre_main_line (struct tre_stream *stream)
 {
     treptr  expr;
 
-    /* Read expression. */
     expr = treread (stream);
     if (expr == treptr_invalid)  /* End of file. */
         return expr;
@@ -135,7 +131,7 @@ tre_main_line (struct tre_stream *stream)
     treprint (expr);
 #endif
 
-	/* The stdin prompt may have disabled the debugger. */
+	/* XXX The stdin prompt may have disabled the debugger. */
 	tre_interrupt_debugger = TRUE;
 
     tregc_push (expr);
@@ -154,7 +150,6 @@ tre_main_line (struct tre_stream *stream)
     treprint (expr);
 #endif
 
-    /* Evaluate expression. */
     tregc_push (expr);
 	trethread_push_call (tremain_history);
     expr = treeval (expr);
@@ -163,8 +158,7 @@ tre_main_line (struct tre_stream *stream)
     tregc_pop ();
     tregc_pop ();
 
-    /* Print result on stdout if expression was read from stdin. */
-    if (treio_readerstreamptr == 1)
+    if (treio_readerstreamptr == 1) /* Standard input? */
         treprint (expr);
 
     return expr;
@@ -260,7 +254,7 @@ tre_init (void)
 void
 tremain_init_after_image_loaded ()
 {
-    /* Create global %LAUNCHFILE variable containing the application file
+    /* Create global %LAUNCHFILE variable containing the source file
      * to evaluate after the environment is set up. */
     MAKE_VAR("%LAUNCHFILE", (tremain_launchfile ?
                 				trestring_get (tremain_launchfile) :
@@ -336,7 +330,6 @@ next:
     }
 }
 
-/* Program entry point. */
 int
 main (int argc, char *argv[])
 {
@@ -364,7 +357,6 @@ main (int argc, char *argv[])
 #endif
 
 boot:
-    /* Execute boot code. */
     c = 1;
     treiostd_divert (treiostd_open_file (TRE_BOOTFILE));
     tremain_init_after_image_loaded ();
@@ -383,26 +375,12 @@ user:
 	tregc_force ();
     trediag_init ();
 #endif
-	/* Call init function. */
     if (tre_restart_fun != treptr_nil) {
         treeval (CONS(tre_restart_fun, treptr_nil));
         tre_restart_fun = treptr_nil;
     }
 
-    /* Start the toplevel eval loop. */
     tre_main ();
 
     return 0;
-}
-
-void
-tre_fnord2 (long a, long b, long c, long d, long e, long f, long g)
-{
-	exit (0);
-}
-
-void
-tre_fnord ()
-{
-	tre_fnord2 (1, 2, 3,4 ,5, 6, 7);
 }
