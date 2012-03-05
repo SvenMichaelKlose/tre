@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
 
 (defun compile-0 (sources &key (target nil) (obfuscate? nil) (print-obfuscations? nil) (files-to-update nil))
   (?
@@ -12,4 +12,4 @@
   (compile-0 (mapcar #'list files) :target target :obfuscate? obfuscate? :print-obfuscations? print-obfuscations? :files-to-update files-to-update))
 
 (defun compile (expression &key (target nil) (obfuscate? nil) (print-obfuscations? nil) (files-to-update nil))
-  (compile-0 (list expression) :target target :obfuscate? obfuscate? :print-obfuscations? print-obfuscations? :files-to-update files-to-update))
+  (compile-0 (list (cons 'compile (list expression))) :target target :obfuscate? obfuscate? :print-obfuscations? print-obfuscations? :files-to-update files-to-update))
