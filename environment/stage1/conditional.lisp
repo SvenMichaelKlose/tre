@@ -1,5 +1,4 @@
-;;;; TRE environment
-;;;; Copyright (c) 2005-2008,2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2005-2008,2011-2012 Sven Michael Klose <pixel@copei.de>
 
 (defmacro when (predicate &rest expr)
   `(and ,predicate
@@ -20,7 +19,11 @@
 (defmacro case (&rest cases)
   (let g (gensym)
     (let op (if (eq :test (car cases))
-                (cadr cases)
+                (if (atom (cadr cases))
+                    (cadr cases)
+                    (? (eq 'function (caadr cases))
+                       (cadadr cases)
+                       (%error "invalid predicate for TEST: FUNCTION expected")))
                 'equal)
       (let v (if (eq :test (car cases))
                  (caddr cases)
