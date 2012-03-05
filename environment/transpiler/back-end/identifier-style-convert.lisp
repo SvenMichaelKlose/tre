@@ -1,7 +1,4 @@
-;;;;; TRE transpiler
-;;;;; Copyright (c) 2008-2009,2011 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Identifier style conversion
+;;;;; tré - Copyright (c) 2008-2009,2011-2012 Sven Michael Klose <pixel@copei.de>
 
 (defun transpiler-translate-symbol (tr from to)
   (acons! from to (transpiler-symbol-translations tr)))
@@ -14,12 +11,15 @@
 		   (fn string-list (string-concat "T" (format nil "~A" (char-code _))))
 				
 		 convert-camel
-		   (fn (when _
-			     (with (c (char-downcase _.))
-			       (? (and ._ (in=? c #\* #\-))
-					  (cons (char-upcase (cadr _))
-						    (convert-camel (cddr _)))
-					  (cons c (convert-camel ._))))))
+		   #'((x pos)
+                (when x
+			      (let c (char-downcase x.)
+			        (? (and .x (or (character= #\- c)
+                                   (and (= 0 pos)
+                                        (character= #\* c))))
+					   (cons (char-upcase (cadr x))
+						     (convert-camel ..x (1+ pos)))
+					   (cons c (convert-camel .x (1+ pos)))))))
 
 		 convert-special2
 		   (fn (when _
@@ -47,7 +47,7 @@
 			                        (= (elt str 0) #\*)
 			                        (= (elt str (1- l)) #\*))
 		                       (remove-if (fn = _ #\-) (string-list (string-upcase (subseq str 1 (1- l)))))
-    	                       (convert-camel (string-list str)))))))))
+    	                       (convert-camel (string-list str) 0))))))))
 
 (defun transpiler-symbol-string-0 (tr s)
   (aif (symbol-package s)
