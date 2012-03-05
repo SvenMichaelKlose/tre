@@ -1,5 +1,4 @@
-;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
 
 (js-type-predicate %string? "string")
 
@@ -57,6 +56,8 @@
 
 ;; XXX ECMAScript only.
 (defun %subseq-string (seq start end)
-  (? (integer= start end)
-	 ""
-     (seq.substr start (- end start))))
+  ;(unless (< (%%%- (length seq) 1) start end)
+    (?
+      (integer= start end)
+	    ""
+      (seq.substr start (- end start))));)
