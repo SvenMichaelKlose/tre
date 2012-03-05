@@ -12,60 +12,83 @@
 	             (%%%string+ (string n) (string i))
 	             (%%%+ n (%wrap-char-number i)))))))
 
+(defun * (&rest x)
+  (let n (%wrap-char-number x.)
+	(dolist (i .x n)
+      (setf n (%%%* n (%wrap-char-number i))))))
+
+(defun / (&rest x)
+  (let n (%wrap-char-number x.)
+	(dolist (i .x n)
+      (setf n (%%%/ n (%wrap-char-number i))))))
+
+(defun mod (&rest x)
+  (let n (%wrap-char-number x.)
+	(dolist (i .x n)
+      (setf n (%%%mod n (%wrap-char-number i))))))
+
 (defun number+ (&rest x)
   (let n (%wrap-char-number x.)
 	(dolist (i .x n)
 	  (setf n (%%%+ n (%wrap-char-number i))))))
 
-(defun integer+ (&rest x)
-  (let n x.
-    (dolist (i .x n)
-      (setf n (%%%+ n i)))))
+(defun integer+ (n &rest x)
+  (dolist (i x n)
+    (setf n (%%%+ n i))))
 
 (defun character+ (&rest x)
   (let n 0
-	(dolist (i .x (code-char n))
+	(dolist (i x (code-char n))
 	  (setf n (%%%+ n (%wrap-char-number i))))))
 
-(mapcan-macro gen
-	'(-)
-  (with (num ($ 'number gen)
-		 int ($ 'integer gen)
-		 chr ($ 'character gen)
-		 op  ($ '%%% gen)
-         gen-body `(let n (%wrap-char-number x.)
-                     (? .x
-	    			    (dolist (i .x n)
-	      			      (setf n (,op n (%wrap-char-number i))))
-                        (,op n))))
-    `((defun ,gen (&rest x)
-	    ,gen-body)
-	  (defun ,num (&rest x)
-	    ,gen-body)
-      (defun ,int (&rest x)
-        (? .x
-           (let n x.
-	         (dolist (i .x n)
-	           (setf n (,op n i))))
-           (,op n)))
-      (defun ,chr (&rest x)
-        (let n (%wrap-char-number x.)
-          (? .x
-	   	     (dolist (i .x (code-char n))
-		       (setf n (,op n (%wrap-char-number i))))
-             (code-char (,op n))))))))
+(defmacro define-generic-transpiler-minus ()
+  (let gen-body `(? .x
+                    (let n (%wrap-char-number x.)
+	   		          (dolist (i .x n)
+	      		        (setf n (%%%- n (%wrap-char-number i)))))
+                    (%%%- x.))
+    `(progn
+       (defun - (&rest x)
+	     ,gen-body)
+	   (defun number- (&rest x)
+	     ,gen-body)
+       (defun integer- (&rest x)
+         (? .x
+            (let n x.
+	          (dolist (i .x n)
+	            (setf n (%%%- n i))))
+            (%%%- x.)))
+       (defun character- (&rest x)
+         (code-char ,gen-body)))))
 
-(mapcan-macro _
-	'(= < > <= >=)
-  (let op ($ '%%% _)
-    `((defun ,_ (x y)
-        (with (xn (%wrap-char-number x)
-		       yn (%wrap-char-number y))
-	      (,op xn yn)))
-	  (defun ,($ 'integer _) (x y)
-	    (,op x y))
-	  (defun ,($ 'character _) (x y)
-	    (,op x.v y.v)))))
+(define-generic-transpiler-minus)
+
+(defmacro def-generic-transpiler-comparison (name)
+  (let op ($ '%%% name)
+    `(progn
+       (defun ,name (n-wrapped &rest x)
+         (let n (%wrap-char-number n-wrapped)
+           (dolist (i x t)
+             (unless (,op n (%wrap-char-number i))
+               (return nil))
+             (setf n i))))
+	   (defun ,($ 'integer name) (n &rest x)
+         (dolist (i x t)
+           (unless (,op n i)
+             (return nil))
+           (setf n i)))
+	   (defun ,($ 'character name) (n-wrapped &rest x)
+         (let n (%wrap-char-number n-wrapped)
+           (dolist (i x t)
+             (unless (,op n (%wrap-char-number i))
+               (return nil))
+             (setf n i)))))))
+
+(def-generic-transpiler-comparison =)
+(def-generic-transpiler-comparison <)
+(def-generic-transpiler-comparison >)
+(def-generic-transpiler-comparison <=)
+(def-generic-transpiler-comparison >=)
 
 (defun number? (x)
   (or (%number? x)
