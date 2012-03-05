@@ -11,16 +11,29 @@
 (defvar *keyword-package* (make-package ""))
 
 (defun symbol-name (x)
-  (? x
-  	 x.n
-	 ,*nil-symbol-name*))
+  (?
+    (%%%= t x) ,*t-symbol-name*
+    x x.n
+    ,*nil-symbol-name*))
 
-(defun symbol-value (x) (when x x.v))
-(defun symbol-function (x) (when x x.f))
-(defun symbol-package (x) (when x x.p))
+(defun symbol-value (x)
+  (?
+    (%%%= t x) t
+    x x.v))
+
+(defun symbol-function (x)
+  (?
+    (%%%= t x) nil
+    x x.f))
+
+(defun symbol-package (x)
+  (?
+    (%%%= t x) nil
+    x x.p))
 
 (defun symbol? (x)
   (or (not x)
+      (%%%= t x)
       (and (object? x)
 	       x.__class
            (%%%= x.__class ,(transpiler-obfuscated-symbol-string *current-transpiler* 'symbol)))))
