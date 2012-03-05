@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2006-2009,2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2006-2009,2011-2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *expanders* nil)
 (defvar *current-expander* nil)
@@ -71,10 +71,10 @@
 	(funcall (expander-pre e))
     (prog1
 	  (repeat-while-changes
-		(fn (with-temporary *current-expander* e
-			  (with-temporary *macrop-diversion* (expander-pred e)
-                (with-temporary *macrocall-diversion* (expander-call e)
-			      (%macroexpand _)))))
+		(fn (with-temporaries (*current-expander* e
+			                   *macrop-diversion* (expander-pred e)
+                               *macrocall-diversion* (expander-call e))
+	          (%macroexpand _)))
 		expr)
       (funcall (expander-post e)))))
 
