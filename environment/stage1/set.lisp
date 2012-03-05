@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (C) 2005-2009,2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2005-2009,2011-2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *setf-function?* #'%setf-function?)
 
@@ -18,7 +18,7 @@
 	         (setfun (%setf-make-symbol fun)))
         (if (funcall *setf-function?* setfun)
 			(if (member (car args) *constants* :test #'eq)
-		    	(%error "cannot set constant")
+		    	(%error (string-concat "cannot set constant " (symbol-name (car args))))
 	            `(,setfun ,val ,@args))
             (progn
               (print p)
