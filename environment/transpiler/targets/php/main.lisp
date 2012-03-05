@@ -7,6 +7,6 @@
 (env-load "transpiler/targets/php/config.lisp")
 (env-load "transpiler/targets/php/expand.lisp")
 (env-load "transpiler/targets/php/codegen.lisp")
-(env-load "transpiler/targets/php/codegen-inline.lisp")
+;(env-load "transpiler/targets/php/codegen-inline.lisp")
 (env-load "transpiler/targets/php/core.lisp")
 (env-load "transpiler/targets/php/toplevel.lisp")
