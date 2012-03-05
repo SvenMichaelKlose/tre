@@ -1,6 +1,7 @@
 ;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
 
 (defvar *nil-symbol-name* nil)
+(defvar *t-symbol-name* nil)
 
 (defun eq-string= (x y)
   (? (or (symbol? x)
@@ -106,4 +107,5 @@
   (with-temporary *current-transpiler* tr
     (transpiler-switch-obfuscator tr obfuscate?)
 	(make-global-funinfo tr)
-    (setf *nil-symbol-name* "NIL")))
+    (setf *nil-symbol-name* "NIL"
+          *t-symbol-name* "T")))
