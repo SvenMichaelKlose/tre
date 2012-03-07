@@ -1,7 +1,6 @@
-;;;; TRE environment
-;;;; Copyright (c) 2005-2006,2008-2011 Sven Klose <pixel@copei.de>
+;;;; tré - Copyright (c) 2005-2006,2008-2012 Sven Michael Klose <pixel@copei.de>
 
-(defmacro aif (predicate &rest alternatives)
+(defmacro aif (predicate &body alternatives)
   (if alternatives
    `(let ! ,predicate
       (if !
@@ -9,21 +8,21 @@
 		  (aif ,@(cdr alternatives))))
    predicate))
 
-(defmacro awhen (predicate &rest body)
+(defmacro awhen (predicate &body body)
   `(let ! ,predicate
      (when !
 	   ,@body)))
 
-(defmacro alet (obj &rest body)
+(defmacro alet (obj &body body)
   `(let ! ,obj
 	 ,@body))
 
-(defmacro aprog1 (obj &rest body)
+(defmacro aprog1 (obj &body body)
   `(let ! ,obj
 	 ,@body
 	 !))
 
-(defmacro adolist ((seq &optional (result nil)) &rest body)
+(defmacro adolist ((seq &optional (result nil)) &body body)
   `(dolist (! ,seq ,result)
      ,@body))
 

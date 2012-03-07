@@ -1,7 +1,6 @@
-;;;;; TRE transpiler
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2010,2012 Sven Michael Klose <pixel@copei.de>
 
-(defmacro define-tree-filter (name args &rest body)
+(defmacro define-tree-filter (name args &body body)
   (let iter (car (last args))
 	(with-gensym fun
       `(defun ,name ,args
@@ -14,7 +13,7 @@
 				     	          (,fun ,@(butlast args) (cdr ,iter))))))
 	       (,fun ,@args))))))
 
-(defmacro define-concat-tree-filter (name args &rest body)
+(defmacro define-concat-tree-filter (name args &body body)
   (let iter (car (last args))
 	(with-gensym fun
       `(defun ,name ,args

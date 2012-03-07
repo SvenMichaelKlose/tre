@@ -1,12 +1,11 @@
-;;;;; TRE environment
-;;;;; Copyright (c) 2009 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2009,2012 Sven Michael Klose <pixel@copei.de>
 
-(defmacro mapcar-macro (arg param &rest body)
+(defmacro mapcar-macro (arg param &body body)
   `(progn
      ,,@(mapcar #'((,arg) ,@body)
                 ,param)))
 
-(defmacro mapcan-macro (arg param &rest body)
+(defmacro mapcan-macro (arg param &body body)
   `(progn
      ,,@(mapcan #'((,arg) ,@body)
                 ,param)))

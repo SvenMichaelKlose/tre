@@ -1,5 +1,5 @@
 /*
- * tré - Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+ * tré - Copyright (c) 2005-2008,2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #ifndef TRE_ARGUMENTS_H
@@ -16,5 +16,6 @@ extern void   trearg_expand (treptr *rvars, treptr *rvals, treptr argdef, treptr
 extern void   trearg_init (void);
 
 extern treptr tre_atom_rest;
+extern treptr tre_atom_body;
 
 #endif 	/* #ifndef TRE_ARGUMENTS_H */

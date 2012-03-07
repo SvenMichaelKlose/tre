@@ -1,13 +1,13 @@
 ;;;;; tré - Copyright (c) 2005-2008,2011-2012 Sven Michael Klose <pixel@copei.de>
 
-(defmacro when (predicate &rest expr)
+(defmacro when (predicate &body body)
   `(and ,predicate
-        ,(if (cdr expr)
-	         `(progn ,@expr)
-	         (car expr))))
+        ,(if (cdr body)
+	         `(progn ,@body)
+	         (car body))))
 
-(defmacro unless (predicate &rest expr)
-  `(when (not ,predicate) ,@expr))
+(defmacro unless (predicate &body body)
+  `(when (not ,predicate) ,@body))
 
 (defun group2 (x)
   (if x
@@ -16,7 +16,7 @@
 	  		    (list (car x)))
 	        (group2 (cddr x)))))
 
-(defmacro case (&rest cases)
+(defmacro case (&body cases)
   (let g (gensym)
     (let op (if (eq :test (car cases))
                 (if (atom (cadr cases))

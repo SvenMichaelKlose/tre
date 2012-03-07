@@ -1,6 +1,6 @@
 ;;;;; tré - Copyright (c) 2005-2008,2012 Sven Michael Klose <pixel@copei.de>
 
-(defmacro with-temporary (place val &rest body)
+(defmacro with-temporary (place val &body body)
   (with-gensym old-val
     `(with (,old-val ,place)
        (setf ,place ,val)
@@ -9,7 +9,7 @@
            ,@body)
          (setf ,place ,old-val)))))
 
-(defmacro with-temporaries (lst &rest body)
+(defmacro with-temporaries (lst &body body)
   (? lst
      `(with-temporary ,lst. ,.lst.
         ,@(? ..lst

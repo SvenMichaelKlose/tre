@@ -1,12 +1,5 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2009,2011 Sven Klose <pixel@copei.de>
- *
- * Evaluation related section.
- *
- * Function arguments are saved on the GC stack to avoid accidential
- * removal. Functions called from this section must copy argument lists
- * since they're removed if an eval function returns.
+ * tré - Copyright (c) 2005-2009,2011-2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -435,7 +428,7 @@ treeval_args (treptr x)
 
     RETURN_NIL(x);
 
-    if (x == tre_atom_rest)
+    if (x == tre_atom_rest || x == tre_atom_body)
 		return x;
 
     tregc_push (x);

@@ -128,9 +128,7 @@
 		 exp-rest
 		   #'((def vals)
 				(setf no-static '&rest)
-  			    (setf rest-arg (list (cons def.
-										   (cons '&rest
-												 vals))))
+  			    (setf rest-arg (list (cons def. (cons '&rest vals))))
 			    nil)
 
          exp-optional-rest
@@ -197,7 +195,8 @@
   (when x
     (let a x.
 	  (cons (? (and (cons? a)
-           		    (eq '&rest a.))
+           		    (or (eq '&rest a.)
+                        (eq '&body a.)))
       		   .a
       		   a)
 		    (argument-expand-values-r .x)))))
@@ -213,7 +212,8 @@
 
 (defun argument-expand-compiled-values (fun def vals)
   (mapcar (fn (? (and (cons? _)
-                      (eq '&rest _.))
+                      (or (eq '&rest _.)
+                          (eq '&body _.)))
                  (%argument-expand-rest ._)
                  _))
           (cdrlist (argument-expand fun def vals t))))

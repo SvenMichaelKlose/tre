@@ -1,6 +1,6 @@
-;;;;; tré - Copyright (c) 2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2011-2012 Sven Michael Klose <pixel@copei.de>
 
-(defmacro doarray ((var seq &rest result) &rest body)
+(defmacro doarray ((var seq &rest result) &body body)
   (with-gensym (evald-seq idx)
     `(let ,evald-seq ,seq
        (when ,evald-seq

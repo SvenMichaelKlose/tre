@@ -1,7 +1,6 @@
-;;;; TRE environment
-;;;; Copyright (c) 2005-2008,2010-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2005-2008,2010-2012 Sven Michael Klose <pixel@copei.de>
 
-(defmacro do (binds (test &rest result) &rest body)
+(defmacro do (binds (test &rest result) &body body)
   (let tag (gensym)
     `(block nil
        (let* ,(mapcar #'((b)
@@ -19,14 +18,14 @@
 					 binds)
            (go ,tag))))))
 
-(defmacro dotimes ((iter times &rest result) &rest body)
+(defmacro dotimes ((iter times &rest result) &body body)
   (let g (gensym)
     `(let ,g ,times
        (do ((,iter 0 (integer+ 1 ,iter)))
 	       ((integer= ,iter ,times) ,@result)
 	     ,@body))))
 
-(defmacro dotimes-step ((iter times step &rest result) &rest body)
+(defmacro dotimes-step ((iter times step &rest result) &body body)
   `(do ((,iter 0 (integer+ ,step ,iter)))
 	   ((not (integer< ,iter ,times)) ,@result)
 	 ,@body))

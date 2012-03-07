@@ -1,4 +1,4 @@
-;;;; tré - Copyright (c) 2005-2008,2010-2011 Sven Klose <pixel@copei.de>
+;;;; tré - Copyright (c) 2005-2008,2010-2011-2012 Sven Michael Klose <pixel@copei.de>
 
 ; Check and return keyword argument or NIL.
 (%defun %defun-arg-keyword (args)
@@ -26,7 +26,7 @@
 			(print name)
 			(%error "illegal function name")))))
 
-(defmacro defun (name args &rest body)
+(defmacro defun (name args &body body)
   (let name (%defun-name name)
     `(block nil
 	   (if *show-definitions*

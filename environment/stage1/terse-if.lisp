@@ -1,8 +1,7 @@
-;;;;; TRE environment
-;;;;; Copyright (c) 2010 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2010,2012 Sven Michael Klose <pixel@copei.de>
 
-(defmacro ? (&rest x)
-  `(if ,@x))
+(defmacro ? (predicate &body x)
+  `(if ,predicate ,@x))
 
-(defmacro !? (&rest x)
-  `(aif ,@x))
+(defmacro !? (predicate &body x)
+  `(aif ,predicate ,@x))

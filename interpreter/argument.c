@@ -1,5 +1,5 @@
 /*
- * tré - Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+ * tré - Copyright (c) 2005-2008,2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -20,6 +20,7 @@
 #include <stdio.h>
 
 treptr tre_atom_rest;
+treptr tre_atom_body;
 treptr tre_atom_optional;
 treptr tre_atom_key;
 
@@ -179,7 +180,7 @@ trearg_expand (treptr *rvars, treptr *rvals, treptr iargdef, treptr args,
         }
 
         /* Process &REST argument. */
-		if (var == tre_atom_rest) {
+		if (var == tre_atom_rest || var == tre_atom_body) {
 	    	/* Get form after keyword. */
 	    	_ADDF(dvars, trelist_copy (CDR(argdef)));
 
@@ -316,9 +317,11 @@ trearg_init (void)
 {
     /* Create keywords. */
     tre_atom_rest = treatom_get ("&REST", treptr_nil);
+    tre_atom_body = treatom_get ("&BODY", treptr_nil);
     tre_atom_optional = treatom_get ("&OPTIONAL", treptr_nil);
     tre_atom_key = treatom_get ("&KEY", treptr_nil);
     EXPAND_UNIVERSE(tre_atom_rest);
+    EXPAND_UNIVERSE(tre_atom_body);
     EXPAND_UNIVERSE(tre_atom_optional);
     EXPAND_UNIVERSE(tre_atom_key);
 

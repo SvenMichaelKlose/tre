@@ -31,7 +31,7 @@
 (defun mapcan (func &rest lists)
   (apply #'nconc (apply #'mapcar func lists)))
 
-(defmacro dolist ((iter lst &rest result) &rest body)
+(defmacro dolist ((iter lst &rest result) &body body)
   (let* ((starttag (gensym))
          (endtag (gensym))
 	     (tmplst (gensym)))

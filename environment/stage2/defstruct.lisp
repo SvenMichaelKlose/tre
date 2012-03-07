@@ -105,5 +105,5 @@
 		 `(defun ,,name ,,args
             (with-struct ,name ,name ,,@body))))))
 
-(defmacro defstruct (name &rest fields-and-options)
+(defmacro defstruct (name &body fields-and-options)
   (apply #'%defstruct-expander name fields-and-options))

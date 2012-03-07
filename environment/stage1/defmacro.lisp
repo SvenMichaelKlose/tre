@@ -1,22 +1,19 @@
-;;;;; TRE environment
-;;;;; Copyright (c) 2005-2008,2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2005-2008,2011-2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *documentation* nil)
 (defvar *macros* nil)
 
 (%defun %add-documentation (name body)
-  (if (string? (car body)) ; XXX incomplete
+  (if (string? (car body))
       (progn
-        (setq *documentation* (cons (cons name
-										  (car body))
-									*documentation*))
+        (setq *documentation* (cons (cons name (car body)) *documentation*))
         (cdr body))
       body))
 
 (setq *universe* (cons 'defmacro *universe*))
 
 (%set-atom-fun defmacro
-  (macro (name args &rest body)
+  (macro (name args &body body)
     `(block nil
 	   (if *show-definitions*
            (print `(defmacro ,name)))

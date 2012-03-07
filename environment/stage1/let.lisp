@@ -1,8 +1,7 @@
-;;;;; TRE environment
-;;;;; Copyright (c) 2005-2006,2008,2010-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2005-2006,2008,2010-2012 Sven Michael Klose <pixel@copei.de>
 
 ;; Create new local variable.
-(defmacro let (place expr &rest body)
+(defmacro let (place expr &body body)
   (if
 	(not body)
 	  (progn

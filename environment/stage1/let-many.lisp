@@ -1,7 +1,4 @@
-;;;; TRE environment
-;;;; Copyright (c) 2005-2006,2008 Sven Klose <pixel@copei.de>
-;;;;
-;;;; Local variables
+;;;; tré - Copyright (c) 2005-2006,2008,2012 Sven Michael Klose <pixel@copei.de>
 
 (%defun %chk-place (x)
   (if (%arg-keyword? x)
@@ -29,11 +26,7 @@
   (%simple-map #'((p) (%error-if-not-unique (%let-places x)))
 			   x))
 
-;; Create new local variables.
-;;
-;; Multiple arguments are nested so init expressions can use formerly
-;; defined variables inside the assignment list.
-(defmacro let* (alst &rest body)
+(defmacro let* (alst &body body)
   (if
     (not alst)
 	  `(progn
