@@ -99,9 +99,9 @@
       ,(%struct-make name flds opts)
       ,(%struct? name)
       ,@(%struct-getters name flds)
-      (defmacro ,($ "WITH-" name) (s &rest body)
+      (defmacro ,($ "WITH-" name) (s &body body)
 		 `(with-struct ,name ,,s ,,@body))
-      (defmacro ,($ "DEF-" name) (name args &rest body)
+      (defmacro ,($ "DEF-" name) (name args &body body)
 		 `(defun ,,name ,,args
             (with-struct ,name ,name ,,@body))))))
 
