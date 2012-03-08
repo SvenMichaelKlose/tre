@@ -6,6 +6,12 @@
 (defun transpiler-special-char? (tr x)
   (not (funcall (transpiler-identifier-char? tr) x)))
 
+(defun global-variable-notation? (x)
+  (let l (length x)
+    (and (< 2 l)
+         (= (elt x 0) #\*)
+         (= (elt x (1- l)) #\*))))
+
 (defun transpiler-symbol-string-r (tr s)
   (with (encapsulate-char
 		   (fn string-list (string-concat "T" (format nil "~A" (char-code _))))
@@ -36,18 +42,19 @@
 				   (? (digit-char-p c)
 					  (append (encapsulate-char c)
 							  (convert-special2 ._))
-					  (convert-special2 _))))))
+					  (convert-special2 _)))))
+        convert-global
+	       #'((x)
+               (let l (length x)
+                 (remove-if (fn = _ #\-) (string-list (string-upcase (subseq x 1 (1- l))))))))
 	(? (or (string? s)
 		   (number? s))
 	   (string s)
-	   (with (str (string s)
-	     	  l (length str))
-         (list-string
-	       (convert-special (? (and (< 2 (length str)) ; Make *GLOBAL* upcase.
-			                        (= (elt str 0) #\*)
-			                        (= (elt str (1- l)) #\*))
-		                       (remove-if (fn = _ #\-) (string-list (string-upcase (subseq str 1 (1- l)))))
-    	                       (convert-camel (string-list str) 0))))))))
+       (list-string
+           (let str (string s)
+	         (convert-special (? (global-variable-notation? str)
+                                 (convert-global str)
+    	                         (convert-camel (string-list str) 0))))))))
 
 (defun transpiler-symbol-string-0 (tr s)
   (aif (symbol-package s)
@@ -65,18 +72,16 @@
 	   (transpiler-dot-symbol-string tr sl)
 	   (transpiler-symbol-string-0 tr s))))
 
+(defun transpiler-to-string-cons (tr x)
+  (?
+    (%transpiler-string? x)      (funcall (transpiler-gen-string tr) (cadr x))
+    (eq '%transpiler-native x.)  (transpiler-to-string tr .x)
+    x))
+
 (defun transpiler-to-string (tr x)
-  (maptree #'((e)
-				(?
-				  (cons? e)
-					(?
-					  (%transpiler-string? e)
-						(funcall (transpiler-gen-string tr) (cadr e))
-					  (eq '%transpiler-native e.)
-						(transpiler-to-string tr .e)
-					  e)
-				  (string? e)
-					e
-				  (or (assoc-value e (transpiler-symbol-translations tr) :test #'eq)
-					  (transpiler-symbol-string tr e))))
+  (maptree (fn ?
+			    (cons? _)    (transpiler-to-string-cons tr _)
+			    (string? _)  _
+				(or (assoc-value _ (transpiler-symbol-translations tr) :test #'eq)
+					(transpiler-symbol-string tr _)))
 		   x))
