@@ -1,5 +1,4 @@
-;;;; TRE environment
-;;;; Copyright (c) 2008,2010 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008,2010,2012 Sven Michael Klose <pixel@copei.de>
 
 (defun token-is-quote? (x)
   (in? x 'quote 'backquote 'quasiquote 'quasiquote-splice))
@@ -12,14 +11,14 @@
 	   (not (in=? x #\( #\) #\' #\` #\, #\: #\;))))
 
 (defun skip-comment (str)
-  (with (c (read-char str))
-	(if (in=? c 10 -1)
-	    (skip-spaces str)
-	    (skip-comment str))))
+  (let c (read-char str)
+	(? (in=? c 10 -1)
+	   (skip-spaces str)
+	   (skip-comment str))))
 
 (defun skip-spaces (str)
   (unless (end-of-file str)
-    (with (c (peek-char str))
+    (let c (peek-char str)
       (when (= #\; c)
 	    (skip-comment str))
 	  (when (and (< c 33)
@@ -29,82 +28,78 @@
 
 (defun get-symbol (str)
   (with (rec #'(()
-				 (with (c (char-upcase (peek-char str)))
-                   (if (= 59 c) ; #\; - vim syntax highlighting fscks up.
-                       (progn
-						 (skip-comment str)
-						 (rec))
-                       (when (is-symchar? c)
-                         (cons (char-upcase (read-char str))
-                               (rec)))))))
+				 (let c (char-upcase (peek-char str))
+                   (? (= 59 c) ; #\; - vim syntax highlighting fscks up.
+                      (progn
+						(skip-comment str)
+						(rec))
+                      (when (is-symchar? c)
+                        (cons (char-upcase (read-char str))
+                              (rec)))))))
   (unless (or (end-of-file str)
 			  (is-special-char? (peek-char str)))
     (rec))))
 
 (defun get-symbol-and-package (str)
   (skip-spaces str)
-  (with (sym (get-symbol str))
-	(if (= (peek-char str) #\:)
-		(values (or sym
-					t)
-				(and (read-char str)
-					 (get-symbol str)))
-		(values nil sym))))
+  (let sym (get-symbol str)
+	(? (= (peek-char str) #\:)
+	   (values (or sym t)
+			   (and (read-char str)
+				    (get-symbol str)))
+	   (values nil sym))))
 
 (defun get-string (str)
   (with (rec #'(()
-  				 (with (c (read-char str))
+  				 (let c (read-char str)
 	               (unless (= c 34) ; " - vim syntax highlighting fscks up.
-	                 (when (= c #\\)
-		               (setf c (read-char str)))
-	                 (cons c
-			               (rec))))))
+                     (cons (? (= c #\\) (read-char str) c)
+	                       (rec))))))
 	(list-string (rec))))
 
 (defun read-comment-block (str)
-  (loop
-	(if (and (= #\| (read-char str))
-			 (= #\# (read-char str)))
-		(read-token str))))
+  (while (not (and (= #\| (read-char str))
+			       (= #\# (peek-char str))))
+	     (read-char str)
+    nil))
 
 (defun read-token (str)
   (with ((pkg sym) (get-symbol-and-package str))
-	(values (if (and sym
-					 (not .sym)
-			         (= #\. sym.))
-		        'dot
-		        (if sym
-			        'symbol
-			        (case (read-char str)
-			          #\(	'bracket-open
-			          #\)	'bracket-close
-			          #\'	'quote
-			          #\`	'backquote
-			          #\"	'dblquote
-			          #\,	(if (= #\@ (peek-char str))
-						        (and (read-char str)
-							         'quasiquote-splice)
-						        'quasiquote)
-			          #\#	(case (read-char str)
-					          #\\	'char
-					          #\x	'hexnum
-					          #\'	'function
-					          #\|	(read-comment-block str)
-					          (error "invalid character after '#'"))
-			          -1	'eof)))
+	(values (? (and sym
+					(not .sym)
+			        (= #\. sym.))
+		       'dot
+		       (? sym
+			      'symbol
+			      (case (read-char str)
+			        #\(	 'bracket-open
+			        #\)	 'bracket-close
+			        #\'	 'quote
+			        #\`	 'backquote
+			        #\"	 'dblquote
+			        #\,	 (? (= #\@ (peek-char str))
+				            (and (read-char str) 'quasiquote-splice)
+				            'quasiquote)
+			        #\#	(case (read-char str)
+				          #\\  'char
+				          #\x  'hexnum
+				          #\'  'function
+				          #\|  (read-comment-block str)
+				          (error "invalid character after '#'"))
+			        -1	'eof)))
 		     pkg sym)))
 
 (defun read-atom (str token pkg sym)
   (case token
-    'dblquote (get-string str)
-    'char     (code-char (read-char str))
-    'hexnum   (read-hex str)
-	'function `(function ,(read-expr str))
-    'symbol   (make-symbol (list-string sym)
-						   (if
-							 (not pkg)	nil
-							 (eq t pkg)	*keyword-package*
-							 (make-package (list-string pkg))))
+    'dblquote  (get-string str)
+    'char      (code-char (read-char str))
+    'hexnum    (read-hex str)
+	'function  `(function ,(read-expr str))
+    'symbol    (make-symbol (list-string sym)
+						    (?
+							  (not pkg)	nil
+							  (eq t pkg)	*keyword-package*
+							  (make-package (list-string pkg))))
 	(error "syntax error: token ~A, sym ~A" token sym)))
 
 (defun read-quote (str token)
@@ -114,20 +109,18 @@
   (unless token
 	(error "missing closing bracket"))
   (unless (eq 'bracket-close token)
-    (cons (if
-			(token-is-quote? token)
-			  (read-quote str token)
-			(eq 'bracket-open token)
-			  (read-cons-slot str)
+    (cons (?
+			(token-is-quote? token)   (read-quote str token)
+			(eq 'bracket-open token)  (read-cons-slot str)
 			(read-atom str token pkg sym))
 		  (with ((token pkg sym) (read-token str))
-		    (case token
-			  'dot		(with (x (read-expr str)
-							   (token pkg sym) (read-token str))
-					      (unless (eq 'bracket-close token)
-						    (error "only one value allowed after dotted cons"))
-					      x)
-			  (read-list str token pkg sym))))))
+		    (? (eq 'dot token)
+			   (with (x (read-expr str)
+					  (token pkg sym) (read-token str))
+			     (unless (eq 'bracket-close token)
+				   (error "only one value allowed after dotted cons"))
+				 x)
+			   (read-list str token pkg sym))))))
 
 (defun read-cons (str)
   (with ((token pkg sym) (read-token str))
@@ -136,21 +129,19 @@
 
 (defun read-cons-slot (str)
   (let l (read-cons str)
-	(if (= #\. (peek-char str))
-	   (progn
-		 (read-char str)
-		 `(slot-value ,l (quote ,(read-expr str))))
+	(? (= #\. (peek-char str))
+	   (and (read-char str)
+		    `(slot-value ,l (quote ,(read-expr str))))
 	   l)))
 
 (defun read-expr (str)
   (with ((token pkg sym) (read-token str))
-	(unless (or (not token)
-				(eq 'eof token))
-	  (if (token-is-quote? token)
-		  (read-quote str token)
-		  (if (eq 'bracket-open token)
-			  (read-cons-slot str)
-			  (read-atom str token pkg sym))))))
+	(?
+	  (not token) nil
+	  (eq 'eof token) nil
+      (token-is-quote? token) (read-quote str token)
+      (eq 'bracket-open token) (read-cons-slot str)
+	  (read-atom str token pkg sym))))
 
 (defun read (&optional (str *standard-input*))
   "Read expression from stream."
