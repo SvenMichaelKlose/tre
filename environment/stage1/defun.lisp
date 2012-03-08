@@ -35,6 +35,8 @@
        		 *defined-functions* (cons ',name *defined-functions*))
        (%set-atom-fun ,name
            #'(,(%defun-checked-args args)
+               ,@(if *exec-log*
+                     `((print ,name)))
                (block ,name
                  ,@(%add-documentation name body))))
 	   (return-from nil ',name))))
