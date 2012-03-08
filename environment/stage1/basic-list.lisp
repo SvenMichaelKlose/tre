@@ -1,7 +1,4 @@
-;;;;; TRE environment
-;;;;; Copyright (c) 2005-2009,2011 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Basic list functions.
+;;;;; tré - Copyright (c) 2005-2009,2011-2012 Sven Michael Klose <pixel@copei.de>
 
 (functional nth copy-list)
 
@@ -13,5 +10,6 @@
 
 (%defun copy-list (c)
   (if c
-	  (cons (car c)
-            (copy-list (cdr c)))))
+      (if (cons? c)
+	      (cons (car c) (copy-list (cdr c)))
+          (%error "COPY-LIST: cons expected"))))
