@@ -5,8 +5,7 @@
 (defmacro %define-assoc (name getter-fun-name)
   `(defun ,name (key lst &key (test #'eql))
      (when lst
-	   (unless (cons? lst)
-	     (%error "list expected"))
+	   (declare type cons lst)
        (dolist (i lst)
          (? (cons? i)
 		    (? (funcall test key (,getter-fun-name i))
