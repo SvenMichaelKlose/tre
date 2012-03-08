@@ -1,5 +1,5 @@
 /*
- * tré - Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
+ * tré - Copyright (c) 2005-2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -146,7 +146,7 @@ treatom_builtin_make_package (treptr args)
 		return tre_package_keyword;
 
     atom = treatom_get (TREATOM_STRINGP(name), TRECONTEXT_PACKAGE());
-	TREATOM_SET_TYPE(atom, TRETYPE_PACKAGE);
+	/* TREATOM_SET_TYPE(atom, TRETYPE_PACKAGE); */
 	return atom;
 }
 
