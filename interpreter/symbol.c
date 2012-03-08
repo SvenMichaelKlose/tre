@@ -1,5 +1,5 @@
 /*
- * tré - Copyright (c) 2005-2008,2010 Sven Klose <pixel@copei.de>
+ * tré - Copyright (c) 2005-2008,2010,2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -52,11 +52,11 @@ tresymbolpage_find_root (treptr package)
 {
 	long i;
 
-	for (i = 0; i < MAX_PACKAGES; i++)
+	DOTIMES(i, MAX_PACKAGES)
 		if (tresymbol_roots[i].package == package)
 			return tresymbol_roots[i].root;
 
-	for (i = 0; i < MAX_PACKAGES; i++)
+	DOTIMES(i, MAX_PACKAGES)
 		if (tresymbol_roots[i].package == 0) {
 			tresymbol_roots[i].package = package;
 			return tresymbol_roots[i].root;
