@@ -1,5 +1,4 @@
-;;;; TRE environment
-;;;; Copyright (c) 2005-2006,2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2005-2006,2008-2012 Sven Klose <pixel@copei.de>
 
 (defvar *default-hash-size* 2039)
 
@@ -12,10 +11,8 @@
 (defun hash-table? (x)
   (%hash-table? x))
 
-(defun make-hash-table (&key (test #'eq)
-							 (size *default-hash-size*))
-  (make-%hash-table :test test :size size
-    				:hash (make-array *default-hash-size*)))
+(defun make-hash-table (&key (test #'eq) (size *default-hash-size*))
+  (make-%hash-table :test test :size size :hash (make-array *default-hash-size*)))
 
 (defun %make-hash-index-num (h k)
   (let i k
@@ -39,7 +36,7 @@
   (?
     (number? key) (%make-hash-index-num h key)
     (string? key) (%make-hash-index-string h key)
-    (%make-hash-index-num h (>> (%%id key) 2))))
+    (%make-hash-index-num h (%%id key))))
 
 (defmacro %with-hash-bucket (bucket idx h key &rest body)
   `(with (,idx (%make-hash-index ,h ,key)
