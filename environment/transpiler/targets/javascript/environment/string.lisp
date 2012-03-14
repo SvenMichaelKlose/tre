@@ -56,8 +56,8 @@
 
 ;; XXX ECMAScript only.
 (defun %subseq-string (seq start end)
-  ;(unless (< (%%%- (length seq) 1) start end)
+  (unless (< (%%%- (length seq) 1) start end)
     (?
       (integer= start end)
 	    ""
-      (seq.substr start (- end start))));)
+      (seq.substr start (- end start)))))
