@@ -1,7 +1,4 @@
-;;;;; TRE to C transpiler
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Configuration
+;;;;; tré - Copyright (c) 2008-2010,2012 Sven Michael Klose <pixel@copei.de>
 
 (defun make-c-transpiler ()
   (let tr (create-transpiler
@@ -11,9 +8,9 @@
 			  :inline-exceptions (list 'c-init)
 			  :dont-inline-list '(error format replace-tree)
 			  :identifier-char?
-	  		      (fn (or (and (>= _ #\a) (<= _ #\z))
-		  	  		      (and (>= _ #\A) (<= _ #\Z))
-		  	  		      (and (>= _ #\0) (<= _ #\9))
+	  		      (fn (or (<= #\a _ #\z)
+		  	  		      (<= #\A _ #\Z)
+		  	  		      (<= #\0 _ #\9)
 			  		      (in=? _ #\_ #\. #\$ #\#)))
 			  :named-functions? t
 			  :named-function-next #'cdddr
@@ -27,7 +24,7 @@
 	        (expex-expr-filter ex) #'c-expex-filter
 			(expex-setter-filter ex) (compose (fn mapcan (fn expex-set-global-variable-value _) _)
 										      #'expex-compiled-funcall)
-			));(expex-inline? ex) (fn in? _ 'aref '%vec '%car '%cdr '%eq '%not)))
+			(expex-inline? ex) (fn in? _ 'cons 'aref '%vec '%car '%cdr '%eq '%not)))
 	tr))
 
 (defvar *c-transpiler* (make-c-transpiler))

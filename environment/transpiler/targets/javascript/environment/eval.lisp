@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2011-2012 Sven Michael Klose <pixel@copei.de>
 
 (setf *gensym-prefix* "~jsG")
 
@@ -10,7 +10,6 @@
 (defun make-js-eval-transpiler ()
   (let tr (copy-array *js-transpiler* :copy-elements? t)
     (transpiler-reset tr)
-    (target-transpile-setup tr :obfuscate? nil)
     (dolist (i *defined-functions*)
       (let-when f (symbol-function i)
         (transpiler-add-defined-function tr i)

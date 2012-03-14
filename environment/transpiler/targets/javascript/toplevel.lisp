@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
 
 (defun js-transpile-prologue ()
   (format nil "    var _I_ = 0; while (1) {switch (_I_) {case 0: ~%"))
@@ -33,9 +33,6 @@
 
 (defun js-transpile (sources &key (obfuscate? nil) (print-obfuscations? nil) (files-to-update nil))
   (let tr *js-transpiler*
-    (unless files-to-update
-      (transpiler-reset tr)
-      (target-transpile-setup tr :obfuscate? obfuscate?))
     (when (transpiler-lambda-export? tr)
       (transpiler-add-wanted-function tr 'array-copy))
 	(string-concat
@@ -65,5 +62,6 @@
 				  	                      (transpiler-import-from-environment tr))
 			                 :decl-gen (js-make-decl-gen tr)
                              :files-to-update files-to-update
+                             :obfuscate? obfuscate?
 			                 :print-obfuscations? print-obfuscations?)
     	(js-transpile-post))))

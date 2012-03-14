@@ -1,15 +1,4 @@
-;;;;; TRE compiler
-;;;;; Copyright (C) 2006-2011 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; METACODE FUNCTION INFORMATION
-;;;;;
-;;;;; This structure contains all information required to generate
-;;;;; a native function. They're referenced by %FUNINFO-expressions in
-;;;;; metacode-functions.
-;;;;;
-;;;;; A LAMBDA-expression with a FUNFINFO has the following format:
-;;;;;	(function (%FUNINFO <symbol-associated-with-funinfo>
-;;;;;			   argument-list . body))
+;;;;; tré - Copyright (c) 2006-2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *funinfo-sym-counter* 0)
 
@@ -49,3 +38,22 @@
 			 (funinfo-parent p))
 	   (funinfo-topmost p)
 	   fi)))
+
+(def-funinfo copy-funinfo (funinfo)
+  (make-funinfo
+      :parent parent
+      :name name
+      :sym sym
+      :args (copy-list args)
+      :env (copy-list env)
+      :env-hash (copy-hash-table env-hash)
+      :used-env (copy-list used-env)
+      :free-vars (copy-list free-vars)
+      :lexicals (copy-list lexicals)
+      :lexical lexical
+      :ghost ghost
+      :local-function-args (copy-list local-function-args)
+      :immutables (copy-list immutables)
+      :num-tags num-tags
+      :globals (copy-list globals)
+      :needs-cps? needs-cps?))

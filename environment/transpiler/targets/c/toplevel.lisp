@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2012 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *closure-argdefs* nil)
 (defvar *c-init-group-size* 64)
@@ -91,8 +91,6 @@
 (defun c-transpile (sources &key (obfuscate? nil))
   (let tr *c-transpiler*
 	(with-temporary *current-transpiler* tr
-      (transpiler-reset tr)
-      (target-transpile-setup tr :obfuscate? obfuscate?)
       (string-concat (apply #'string-concat (mapcar (fn format nil "#include \"~A\"~%" _) *c-interpreter-headers*))
   	                 (format nil "#define userfun_apply trespecial_apply_compiled~%")
   	                 (target-transpile *c-transpiler*

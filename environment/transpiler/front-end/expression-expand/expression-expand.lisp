@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2006-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2006-2012 Sven Michael Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Breaks up nested expressions. The result is a pure list of
 ;;;;; assignments (%SETQ expressions) mixed with jumps and tags.
@@ -6,32 +6,6 @@
 (defvar *current-expex* nil)
 (defvar *expex-funinfo* nil)
 (defvar *expex-warn?* nil)
-
-;;;; CONFIGURATION
-
-(defstruct expex
-  (transpiler nil)
-
-  ; Callback to check if an object is a function.
-  (functionp (fn function? (symbol-value _)))
-
-  ; Callback to get the argument definition of a function.
-  (function-arguments #'function-arguments)
-
-  ; Callback to collect used functions.
-  (function-collector #'((fun args)))
-
-  ; Callback to collect used variables.
-  (argument-filter #'((var) var))
-
-  (setter-filter #'((var) var))
-
-  (expr-filter #'transpiler-import-from-expex)
-
-  (plain-arg-fun? #'((var)))
-
-  (inline? #'((x)))
-  (move-lexicals? nil))
 
 ;;;; SYMBOLS
 

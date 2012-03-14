@@ -67,7 +67,7 @@
 
   ; You shouldn't have to tweak these.
   (symbol-translations nil)
-  thisify-classes
+  (thisify-classes (make-hash-table :test #'eq))
   (function-args (make-hash-table :test #'eq))
   (function-bodies (make-hash-table :test #'eq))
   emitted-wanted-functions
@@ -208,7 +208,6 @@
 
 (defun transpiler-reset (tr)
   (setf (transpiler-thisify-classes tr) (make-hash-table :test #'eq)	; thisified classes.
-  		(transpiler-function-args tr) nil
   		(transpiler-emitted-wanted-functions tr) nil
   		(transpiler-wanted-functions tr) nil
   		(transpiler-wanted-functions-hash tr) (make-hash-table :test #'eq)
@@ -217,6 +216,7 @@
   		(transpiler-defined-functions-hash tr) (make-hash-table :test #'eq)
   		(transpiler-defined-variables-hash tr) (make-hash-table :test #'eq)
   		(transpiler-function-args tr) (make-hash-table :test #'eq)
+  		(transpiler-function-bodies tr) (make-hash-table :test #'eq)
   		(transpiler-exported-closures tr) nil
         (transpiler-memorized-sources tr) nil
         (transpiler-memorize-sources? tr) t)
@@ -234,3 +234,62 @@
 
 (defun transpiler-add-emitted-decl (tr x)
   (push x (transpiler-emitted-decls tr)))
+
+(def-transpiler copy-transpiler (transpiler)
+  (aprog1
+    (make-transpiler :std-macro-expander     std-macro-expander
+                     :macro-expander         macro-expander
+                     :setf-function?         setf-function?
+                     :separator              separator
+                     :unwanted-functions     unwanted-functions
+                     :identifier-char?       identifier-char?
+                     :literal-conversion     literal-conversion
+                     :defined-functions-hash (copy-hash-table defined-functions-hash)
+                     :defined-variables-hash (copy-hash-table defined-variables-hash)
+                     :wanted-functions       (copy-list wanted-functions)
+                     :wanted-functions-hash  (copy-hash-table wanted-functions-hash)
+                     :wanted-variables       (copy-list wanted-variables)
+                     :wanted-variables-hash  (copy-hash-table wanted-variables-hash)
+                     :named-functions?       named-functions?
+                     :named-function-next    named-function-next
+                     :inline-exceptions      (copy-list inline-exceptions)
+                     :dont-inline-list       (copy-list dont-inline-list)
+                     :obfuscate?             obfuscate?
+                     :import-from-environment? import-from-environment?
+                     :gen-string              gen-string
+                     :lambda-export?          lambda-export?
+                     :needs-var-declarations? needs-var-declarations?
+                     :stack-locals?           stack-locals?
+                     :place-expand-ignore-toplevel-funinfo? place-expand-ignore-toplevel-funinfo?
+                     :apply-argdefs?          apply-argdefs?
+                     :continuation-passing-style? continuation-passing-style?
+                     :cps-exceptions          (copy-list cps-exceptions)
+                     :cps-functions           (copy-list cps-functions)
+                     :symbol-translations     (copy-list symbol-translations)
+                     :thisify-classes         (copy-hash-table thisify-classes)
+                     :function-args           (copy-hash-table function-args)
+                     :function-bodies         (copy-hash-table function-args)
+                     :emitted-wanted-functions (copy-list emitted-wanted-functions)
+                     :obfuscations            (copy-hash-table obfuscations)
+                     :plain-arg-funs          (copy-list plain-arg-funs)
+                     :exported-closures       (copy-list exported-closures)
+                     :rename-all-args?        rename-all-args?
+                     :rename-toplevel-function-args? rename-toplevel-function-args?
+                     :dot-expand?             dot-expand?
+                     :raw-constructor-names?  raw-constructor-names?
+                     :memorized-sources       (copy-list memorized-sources)
+                     :memorize-sources?       memorize-sources?
+                     :predefined-symbols      (copy-list predefined-symbols)
+                     :global-funinfo          (and global-funinfo (copy-funinfo global-funinfo))
+                     :compiled-chars          (copy-hash-table compiled-chars)
+                     :compiled-numbers        (copy-hash-table compiled-numbers)
+                     :compiled-strings        (copy-hash-table compiled-strings)
+                     :compiled-symbols        (copy-hash-table compiled-symbols)
+                     :compiled-decls          (copy-list compiled-decls)
+                     :compiled-inits          (copy-list compiled-inits)
+                     :emitted-decls           (copy-list emitted-decls)
+                     :raw-decls               (copy-list raw-decls)
+                     :sightened-files         (copy-list sightened-files)
+                     :compiled-files          (copy-list compiled-files)
+                     :current-package         current-package)
+    (setf (transpiler-expex !) (copy-expex expex !))))

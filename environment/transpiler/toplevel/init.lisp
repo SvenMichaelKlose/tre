@@ -70,5 +70,5 @@
 	(transpiler-make-std-macro-expander tr)
 	(transpiler-make-code-expander tr)
 	(transpiler-make-expex tr)
-	(transpiler-obfuscate-symbol tr nil)
+    (make-global-funinfo tr)
 	tr))

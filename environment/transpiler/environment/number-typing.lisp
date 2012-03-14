@@ -1,5 +1,4 @@
-;;;;; TRE transpiler environment
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2012 Sven Klose <pixel@copei.de>
 
 (defmacro + (&rest x)
   (?
@@ -10,42 +9,44 @@
 	  	   args.))
 	(every #'string? x)
 	  (apply #'string-concat x)
-;	(not (= 2 (length x)))
-;      `(+ ,@x)
-;	(and (some #'character? x) ; XXX would still mix with other types in vars
-;		 (not (some #'integerp x)))
-;      `(character+ ,@x)
-;	(and (some #'integerp x)
-;		 (not (some #'character? x)))
-;      `(integer+ ,@x)
     `(+ ,@x)))
 
-(mapcan-macro _
-    '(- = < > <= >=)
-  `((defmacro ,_ (&rest x)
-  	  (?
-		(some #'string? x)
-      	  `(,($ 'string _) ,,@x)
-	    (and (some #'character? x) ; XXX would still mix with other types in vars
-		     (not (some #'integerp x)))
-      	  `(,($ 'character _) ,,@x)
-	    (and (some #'integerp x)
-		     (not (some #'character? x)))
-      	  `(,($ 'integer _) ,,@x)
-        `(,_ ,,@x)))))
+;(defmacro def-typed-transpiler-op (name)
+;  `(defmacro ,name (&rest x)
+;  	 (?
+;	   (some #'string? x)
+;         `(,($ 'string name) ,,@x)
+;	   (some #'integerp x)
+;         `(,($ 'integer name) ,,@(filter (fn ? (integerp _)
+;                                               _
+;                                               `(%wrap-char-number ,,_))
+;                                         x))
+;       `(,name ,,@x))))
+;
+;(def-typed-transpiler-op -)
+;(def-typed-transpiler-op =)
+;(def-typed-transpiler-op <)
+;(def-typed-transpiler-op >)
+;(def-typed-transpiler-op <=)
+;(def-typed-transpiler-op >=)
 
-;; Make inliners for CHARACTER arithmetics.
-(mapcan-macro _
-    '(= < > <= >=)
-  (with (charname ($ 'character _)
-         op		  ($ '%%% _))
-    `((defmacro ,charname (&rest x)
-        (? (= 2 (length x))
-           `(,op (%slot-value ,,x. v)
-                 (%slot-value ,,.x. v))
-           `(,charname ,,@x)))
-      (defmacro ,($ 'integer _) (&rest x)
-		`(,op ,,@x)))))
+(defmacro def-transpiler-char-op-inliner (name)
+  (with (charname ($ 'character name)
+         op		  ($ '%%% name))
+    `(progn
+       (defmacro ,charname (&rest x)
+         (? (= 2 (length x))
+            `(,op (%slot-value ,,x. v)
+                  (%slot-value ,,.x. v))
+            `(,charname ,,@x)))
+       (defmacro ,($ 'integer name) (&rest x)
+		 `(,op ,,@x)))))
+
+;(def-transpiler-char-op-inliner =)
+;(def-transpiler-char-op-inliner <)
+;(def-transpiler-char-op-inliner >)
+;(def-transpiler-char-op-inliner <=)
+;(def-transpiler-char-op-inliner >=)
 
 (defmacro character+ (&rest x)
   (? (= 2 (length x))

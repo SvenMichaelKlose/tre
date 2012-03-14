@@ -35,9 +35,6 @@
 
 (defun php-transpile (sources &key (obfuscate? nil) (print-obfuscations? nil) (files-to-update nil))
   (let tr *php-transpiler*
-    (unless files-to-update
-      (transpiler-reset tr)
-      (target-transpile-setup tr :obfuscate? obfuscate?))
     (transpiler-add-defined-variable tr '*KEYWORD-PACKAGE*)
 	(string-concat
         "<?php "
@@ -59,5 +56,6 @@
                          (transpiler-sighten tr
                              (transpiler-compiled-inits tr))))
 			:files-to-update files-to-update
+            :obfuscate? obfuscate?
 			:print-obfuscations? print-obfuscations?)
         "?>")))

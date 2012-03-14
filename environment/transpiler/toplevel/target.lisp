@@ -1,7 +1,7 @@
-;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
 
-(defvar *nil-symbol-name* nil)
-(defvar *t-symbol-name* nil)
+(defvar *nil-symbol-name* "NIL")
+(defvar *t-symbol-name* "T")
 
 (defun eq-string= (x y)
   (? (or (symbol? x)
@@ -91,10 +91,12 @@
 								 (files-to-update nil)
 								 (dep-gen nil)
 								 (decl-gen nil)
+                                 (obfuscate? nil)
                                  (print-obfuscations? nil))
   (setf *recompiling?* (? files-to-update t))
   (when files-to-update
     (clr (transpiler-emitted-decls tr)))
+  (transpiler-switch-obfuscator tr obfuscate?)
   (with-temporary *current-transpiler* tr
 	(target-transpile-0 tr :files-after-deps files-after-deps
 					  	   :files-before-deps files-before-deps
@@ -102,10 +104,3 @@
 					       :dep-gen dep-gen
 						   :decl-gen decl-gen
                            :print-obfuscations? print-obfuscations?)))
-
-(defun target-transpile-setup (tr &key (obfuscate? nil))
-  (with-temporary *current-transpiler* tr
-    (transpiler-switch-obfuscator tr obfuscate?)
-	(make-global-funinfo tr)
-    (setf *nil-symbol-name* "NIL"
-          *t-symbol-name* "T")))

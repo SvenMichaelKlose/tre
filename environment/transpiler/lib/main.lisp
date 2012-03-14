@@ -1,4 +1,4 @@
-;;;;; tré - (c) 2005-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - (c) 2005-2012 Sven Michael Klose <pixel@copei.de>
 
 (env-load "transpiler/lib/c-newlines.lisp")
 (env-load "transpiler/lib/c-literal-string.lisp")
@@ -12,6 +12,7 @@
 (env-load "transpiler/lib/simple-argument-list-p.lisp")
 (env-load "transpiler/lib/pass.lisp")
 
+(env-load "transpiler/lib/expex.lisp")
 (env-load "transpiler/lib/transpiler/transpiler.lisp")
 (env-load "transpiler/lib/transpiler/import.lisp")
 
