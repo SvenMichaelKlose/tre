@@ -1,12 +1,18 @@
-;;;;; tré - Copyright (c) 2005-2006,2008-2009 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2005-2006,2008-2009,2012 Sven Michael Klose <pixel@copei.de>
 
-(defun >= (x y)
-  (or (= x y)
-      (> x y)))
+(defun >= (n &rest x)
+  (dolist (i x t)
+    (or (= n i)
+        (> n i)
+        (return nil))
+    (setq n i)))
 
-(defun <= (x y)
-  (or (= x y)
-      (< x y)))
+(defun <= (n &rest x)
+  (dolist (i x t)
+    (or (= n i)
+        (< n i)
+        (return nil))
+    (setq n i)))
 
 (defun character>= (x y)
   (or (character= x y)
