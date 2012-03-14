@@ -44,10 +44,12 @@
     ,@body))
 
 (defun href (h key)
+  (declare type hash-table h)
   (%with-hash-bucket b i h key
     (assoc-value key b :test (%hash-table-test h))))
 
 (defun (setf href) (new-value h key)
+  (declare type hash-table h)
   (let tst (%hash-table-test h)
     (%with-hash-bucket b i h key
       (? (assoc key b :test tst)
@@ -56,18 +58,21 @@
   new-value)
 
 (defun hremove (h key)
+  (declare type hash-table h)
   (%with-hash-bucket b i h key
     (setf (aref (%hash-table-hash h) i)
 		  (remove (assoc key b :test (%hash-table-test h)) b))))
 
 (defun hashkeys (h)
+  (declare type hash-table h)
   (let keys nil
 	(dotimes (i (length (%hash-table-hash h)) keys)
 	  (push (carlist (aref (%hash-table-hash h) i)) keys))
     (apply #'nconc keys)))
 
-(defun copy-hash-table (x)
-  (with (tst (%hash-table-test x)
+(defun copy-hash-table (h)
+  (declare type hash-table h)
+  (with (tst (%hash-table-test h)
          n (make-hash-table :test tst))
-    (dolist (i (hashkeys x) n)
-      (setf (href n i) (href x i)))))
+    (dolist (i (hashkeys h) n)
+      (setf (href n i) (href h i)))))

@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
 
 (env-load "stage4/make-keyword.lisp")
 (env-load "stage4/assoc-hash.lisp")
@@ -11,7 +11,6 @@
 (env-load "stage4/copy-array.lisp")
 (env-load "stage4/count-if.lisp")
 (env-load "stage4/count-tree.lisp")
-(env-load "stage4/declare.lisp")
 (env-load "stage4/def-head-predicate.lisp")
 (env-load "stage4/define-getset-alias.lisp")
 (env-load "stage4/define-tree-filter.lisp")
@@ -25,7 +24,6 @@
 (env-load "stage4/find-tree.lisp")
 (env-load "stage4/force-downcase-string.lisp")
 (env-load "stage4/force-string.lisp")
-(env-load "stage4/force-tree.lisp")
 (env-load "stage4/global-variable.lisp")
 (env-load "stage4/hcache.lisp")
 (env-load "stage4/head-if.lisp")
@@ -35,7 +33,6 @@
 (env-load "stage4/let-if.lisp")
 (env-load "stage4/let-when.lisp")
 (env-load "stage4/list-aliases.lisp")
-(env-load "stage4/list-unless.lisp")
 (env-load "stage4/mapatree.lisp")
 (env-load "stage4/maptree.lisp")
 (env-load "stage4/mapped-macro.lisp" 'c)

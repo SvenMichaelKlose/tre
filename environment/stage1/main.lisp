@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (C) 2005-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (C) 2005-2012 Sven Michael Klose <pixel@copei.de>
 
 (env-load "stage1/basic-list.lisp" 'c)
 (env-load "stage1/cons.lisp" 'c)
@@ -28,6 +28,9 @@
 (env-load "stage1/anaphoric.lisp")
 (env-load "stage1/force-list.lisp")
 (env-load "stage1/comparison.lisp")
+(env-load "stage1/conditional.lisp")
+(env-load "stage1/eval.lisp")
+(env-load "stage1/list-traversal.lisp")
 (env-load "stage1/comparison-c.lisp" 'c)
 (env-load "stage1/funcall.lisp" 'c)
 (env-load "stage1/member.lisp" 'c)
@@ -37,11 +40,8 @@
 (env-load "stage1/set-c.lisp" 'c)
 (env-load "stage1/setf-builtin.lisp" 'c)
 (env-load "stage1/incdec.lisp")
-(env-load "stage1/eval.lisp")
 (env-load "stage1/queue.lisp")
-(env-load "stage1/conditional.lisp")
 (env-load "stage1/stack.lisp")
-(env-load "stage1/list-traversal.lisp")
 (env-load "stage1/tests-scope.lisp")
 (env-load "stage1/list-synonyms.lisp")
 (env-load "stage1/lambda.lisp")
