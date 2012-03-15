@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2009-2012 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2009-2012 Sven Michael Klose <pixel@copei.de>
 
 (defun %href-object-key (key)
   (string-concat "_caroshi_obj" key._caroshi-object-id))
@@ -49,3 +49,6 @@
       (setf a (make-hash-table)))
     (%setq nil (%transpiler-native "for (var " k " in " b ") " a "[" k "]=" b "[" k "];"))
     a))
+
+(defun copy-hash-table (x)
+  (hash-merge nil x))
