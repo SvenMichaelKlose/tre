@@ -25,7 +25,7 @@
   (let compiled-code (make-queue)
 	(dolist (i files (queue-list compiled-code))
       (let code (? (compile-file? i. (transpiler-compiled-files tr) files-to-update)
-                   (concat-stringtree (transpiler-transpile tr .i))
+                   (transpiler-make-code tr .i)
                    (assoc-value i. (transpiler-compiled-files tr) :test #'eq-string=))
         (acons-or-replace code i. (transpiler-compiled-files tr) :test #'eq-string=)
 	    (enqueue compiled-code code)))))

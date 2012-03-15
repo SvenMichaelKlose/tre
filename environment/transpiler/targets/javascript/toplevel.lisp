@@ -31,33 +31,37 @@
         (enqueue decls (js-transpile-prologue))
 	    (queue-list decls))))
 
+(defun js-files-before-deps ()
+  (append (list (cons 't1 *js-base*))
+          (when *transpiler-assert*
+            (list (cons 't2 *js-base-debug-print*)))
+          (list (cons 't3 *js-base2*))
+          (unless *transpiler-no-stream?*
+            (list (cons 't4 *js-base-stream*)))
+          (when (eq t *have-environment-tests*)
+            (list (cons 't5 (make-environment-tests))))))
+
+(defun js-files-after-deps ()
+  (append (list (cons 'late-symbol-function-assignments #'emit-late-symbol-function-assignments)
+                (cons 'memorized-source-emitter #'js-emit-memorized-sources))
+          (when *have-compiler?*
+            (append (list (cons 'list-of-defined-functions #'js-emit-early-defined-functions)
+                          (list (+ *js-env-path* "env-load-stub.lisp")))
+                    (mapcan (fn unless ._
+                                 (list (list (string-concat "environment/" _.))))
+                            (reverse *environment-filenames*))
+                    (list (list (+ *js-env-path* "late-macro.lisp"))
+                          (list (+ *js-env-path* "eval.lisp")))))))
+
 (defun js-transpile (sources &key (obfuscate? nil) (print-obfuscations? nil) (files-to-update nil))
   (let tr *js-transpiler*
     (when (transpiler-lambda-export? tr)
       (transpiler-add-wanted-function tr 'array-copy))
 	(string-concat
 		(js-transpile-pre tr)
-    	(target-transpile tr :files-before-deps
-			                     (append (list (cons 't1 *js-base*))
-		 		  		                 (when *transpiler-assert*
-				   	  	                   (list (cons 't2 *js-base-debug-print*)))
-				  	                     (list (cons 't3 *js-base2*))
-                                         (unless *transpiler-no-stream?*
-				  	                       (list (cons 't4 *js-base-stream*)))
-				                         (when (eq t *have-environment-tests*)
-				   	  	                   (list (cons 't5 (make-environment-tests)))))
-		  	                 :files-after-deps
- 		                         (append (list (cons 'late-symbol-function-assignments #'emit-late-symbol-function-assignments)
- 		                                       (cons 'memorized-source-emitter #'js-emit-memorized-sources))
-                                         (when *have-compiler?*
-                                           (append (list (cons 'list-of-defined-functions #'js-emit-early-defined-functions)
-                                                         (list (+ *js-env-path* "env-load-stub.lisp")))
-                                                   (mapcan (fn unless ._
-                                                                (list (list (string-concat "environment/" _.))))
-                                                           (reverse *environment-filenames*))
-                                                   (list (list (+ *js-env-path* "late-macro.lisp"))
-                                                         (list (+ *js-env-path* "eval.lisp")))))
-                                         sources)
+    	(target-transpile tr :files-before-deps (js-files-before-deps)
+		  	                 :files-after-deps (append (js-files-after-deps) sources)
+
 		 	                 :dep-gen #'(()
 				  	                      (transpiler-import-from-environment tr))
 			                 :decl-gen (js-make-decl-gen tr)

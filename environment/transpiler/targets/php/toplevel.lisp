@@ -52,9 +52,7 @@
 				  	(transpiler-import-from-environment tr))
             :decl-gen
                 #'(()
-                     (transpiler-transpile tr                                                                       
-                         (transpiler-sighten tr
-                             (transpiler-compiled-inits tr))))
+                     (transpiler-make-code tr (transpiler-sighten tr (transpiler-compiled-inits tr))))
 			:files-to-update files-to-update
             :obfuscate? obfuscate?
 			:print-obfuscations? print-obfuscations?)

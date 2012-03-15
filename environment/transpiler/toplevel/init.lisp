@@ -1,13 +1,13 @@
-;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *std-macro-expander* nil)
 
 ;; Make expander for standard macro which picks macros of the same
 ;; name in der user-defined expander first.
 (defun make-overlayed-std-macro-expander (expander-name)
-  (with (e (define-expander expander-name)
-         mypred (expander-pred e)
-		 mycall (expander-call e))
+  (with (e       (define-expander expander-name)
+         mypred  (expander-pred e)
+		 mycall  (expander-call e))
     (setf (expander-pred e) (lx (mypred)
 								(fn (or (funcall ,mypred _)
                                         (aif *std-macro-expander*
@@ -65,10 +65,9 @@
 	ex))
 
 (defun create-transpiler (&rest args)
-  (let tr (apply #'make-transpiler args)
-	(transpiler-reset tr)
-	(transpiler-make-std-macro-expander tr)
-	(transpiler-make-code-expander tr)
-	(transpiler-make-expex tr)
-    (make-global-funinfo tr)
-	tr))
+  (aprog1 (apply #'make-transpiler args)
+	(transpiler-reset !)
+	(transpiler-make-std-macro-expander !)
+	(transpiler-make-code-expander !)
+	(transpiler-make-expex !)
+    (make-global-funinfo !)))
