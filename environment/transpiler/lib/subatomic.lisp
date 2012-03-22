@@ -29,9 +29,11 @@
 
 (defun vm-jump-tag (x)
   (?
-	(%%vm-go? x) .x.
+	(%%vm-go? x)
+      .x.
 	(or (%%vm-go-nil? x)
-        (%%vm-go-not-nil? x)) ..x.))
+        (%%vm-go-not-nil? x))
+      ..x.))
 
 (defun %%vm-scope-body (x)
   .x)
