@@ -72,7 +72,7 @@
 
 (defun copy-hash-table (h)
   (declare type hash-table h)
-  (with (tst (%hash-table-test h)
-         n (make-hash-table :test tst))
+  (let n (make-hash-table :test (%hash-table-test h)
+                          :size (%hash-table-size h))
     (dolist (i (hashkeys h) n)
       (setf (href n i) (href h i)))))
