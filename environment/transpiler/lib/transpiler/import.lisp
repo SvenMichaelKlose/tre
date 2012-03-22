@@ -17,7 +17,7 @@
 (defun transpiler-add-wanted-function (tr x)
   (when (transpiler-can-import? tr x)
     (setf (href (transpiler-wanted-functions-hash tr) x) t)
-    (push x (transpiler-wanted-functions tr)))
+    (nconc! (transpiler-wanted-functions tr) (list x)))
   x)
 
 (defun transpiler-should-add-wanted-variable? (tr var)
@@ -42,8 +42,6 @@
 (defvar *delayed-var-inits* nil)
 
 (defun transpiler-import-wanted-function (tr x)
-  (when (eq 'add-to-cart x)
-    (print (+ "IMPORTING!")))
   (unless (transpiler-defined-function tr x)
     (let fun (symbol-function x)
       (setf *imported-something* t)
@@ -68,8 +66,6 @@
 	        (transpiler-wanted-variables tr))))
 
 (defun transpiler-import-from-environment (tr)
-    (print 'IMPORT)
-    (print (transpiler-wanted-functions tr))
   (clr *imported-something*)
   (with (funs (transpiler-import-wanted-functions tr)
 	     vars (transpiler-import-wanted-variables tr))

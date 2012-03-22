@@ -1,16 +1,23 @@
-;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2009,2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2009,2011-2012 Sven Klose <pixel@copei.de>
 
 (defun car (x) (when x x._))
 (defun cdr (x) (when x x.__))
 
+(defvar *rplaca-breakpoints* nil)
+
 (defun rplaca (x val)
   (declare type cons x)
+  (when (member x *rplaca-breakpoints* :test #'eq)
+    (invoke-debugger))
   (setf x._ val)
   x)
 
+(defvar *rplacd-breakpoints* nil)
+
 (defun rplacd (x val)
   (declare type cons x)
+  (when (member x *rplacd-breakpoints* :test #'eq)
+    (invoke-debugger))
   (setf x.__ val)
   x)
 

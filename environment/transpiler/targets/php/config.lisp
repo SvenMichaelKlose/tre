@@ -1,5 +1,4 @@
-;;;;; Transpiler: TRE to PHP
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *php-version* 503)
 
@@ -28,20 +27,18 @@
 	  :named-functions? t
 	  :named-function-next #'cddr
       :place-expand-ignore-toplevel-funinfo? t
-      :raw-constructor-names? t))
+      :raw-constructor-names? t
+      :expex-initializer #'((ex)
+                             (setf (expex-inline? ex) #'%slot-value?
+                                   (expex-move-lexicals? ex) t
+    	                           (expex-setter-filter ex) (compose (fn mapcar (fn php-setter-filter *php-transpiler* _) _)
+                                                                     #'expex-compiled-funcall)
+    	                           (expex-function-arguments ex) #'current-transpiler-function-arguments-w/o-builtins
+    	                           (expex-argument-filter ex) #'php-expex-filter))))
 
 (defun make-php-transpiler ()
-  (with (tr (make-php-transpiler-0)
-    	 ex (transpiler-expex tr))
-    (setf (expex-inline? ex) #'%slot-value?
-          (expex-move-lexicals? ex) t
-    	  (expex-setter-filter ex) (compose (fn mapcar (fn php-setter-filter *php-transpiler* _) _)
-                                            #'expex-compiled-funcall)
-    	  (expex-function-arguments ex) #'current-transpiler-function-arguments-w/o-builtins
-    	  (expex-argument-filter ex) #'php-expex-filter)
-
-	(apply #'transpiler-add-obfuscation-exceptions
-		tr
+  (aprog1 (make-php-transpiler-0)
+	(apply #'transpiler-add-obfuscation-exceptions !
 	    '(t this %funinfo false true null
 		  %transpiler-native %transpiler-string
 		  lambda function
@@ -57,9 +54,8 @@
 		  split object *array *string == === + - * /
 
 		  __construct))
-	(transpiler-add-defined-function tr '%cons)
-	(transpiler-add-function-args tr '%cons '(a b))
-	tr))
+	(transpiler-add-defined-function ! '%cons)
+	(transpiler-add-function-args ! '%cons '(a b))))
 
 (defvar *php-transpiler* (make-php-transpiler))
 (defvar *php-newline* (format nil "~%"))

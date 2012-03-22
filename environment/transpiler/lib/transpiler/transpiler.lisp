@@ -22,7 +22,8 @@
   (identifier-char? (fn error "structure 'transpiler': IDENTIFIER-CHAR? is not initialised"))
   (literal-conversion (fn error "structure 'transpiler': LITERAL-CONVERSION is not initialised"))
 
-  (expex nil)
+  expex
+  expex-initializer
 
   (defined-functions-hash (make-hash-table :test #'eq))
   (defined-variables-hash (make-hash-table :test #'eq))
@@ -283,5 +284,7 @@
                      :raw-decls               (copy-list raw-decls)
                      :sightened-files         (copy-list sightened-files)
                      :compiled-files          (copy-list compiled-files)
-                     :current-package         current-package)
-    (setf (transpiler-expex !) (copy-expex expex !))))
+                     :current-package         current-package
+                     :expex-initializer       expex-initializer)
+    (setf (transpiler-expex !) (transpiler-make-expex !))
+    (funcall (transpiler-expex-initializer !) (transpiler-expex !))))

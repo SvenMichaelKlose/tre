@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2012 Sven Klose <pixel@copei.de>
 
 (defun js-setf-function? (x)
   (or (%setf-function? x)
@@ -27,16 +27,17 @@
 	  :predefined-symbols '(window document true)
 	  :inline-exceptions '(%slot-value error format identity %bind)
 	  :dont-inline-list '(%slot-value error format identity %bind map apply maphash js-eval-transpile)
-      :place-expand-ignore-toplevel-funinfo? t))
+      :place-expand-ignore-toplevel-funinfo? t
+      :expex-initializer 
+        #'((ex)
+            (setf (expex-inline? ex) #'%slot-value?
+                  (expex-setter-filter ex) #'expex-collect-wanted-variable
+                  (expex-function-arguments ex) #'current-transpiler-function-arguments-w/o-builtins
+                  (expex-argument-filter ex) #'expex-%setq-collect-wanted-global-variable))))
 
 (defun make-javascript-transpiler ()
-  (with (tr (make-javascript-transpiler-0)
-    	 ex (transpiler-expex tr))
-    (setf (expex-inline? ex) #'%slot-value?
-    	  (expex-setter-filter ex) #'expex-collect-wanted-variable
-    	  (expex-function-arguments ex) #'current-transpiler-function-arguments-w/o-builtins
-    	  (expex-argument-filter ex) #'expex-%setq-collect-wanted-global-variable)
-	(apply #'transpiler-add-obfuscation-exceptions tr
+  (aprog1 (make-javascript-transpiler-0)
+	(apply #'transpiler-add-obfuscation-exceptions !
 	    '(t this %funinfo false true null delete
 		  %transpiler-native %transpiler-string
 		  lambda function
@@ -54,10 +55,9 @@
 
 		  alert
           
-          focus disabled match escape))
-	tr))
+          focus disabled match escape))))
 
-(defvar *js-transpiler* (make-javascript-transpiler))
+(defvar *js-transpiler* (copy-transpiler (make-javascript-transpiler)))
 (defvar *js-newline* (format nil "~%"))
 (defvar *js-separator* (format nil ";~%"))
 (defvar *js-indent* "")

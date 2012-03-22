@@ -70,4 +70,5 @@
 	(transpiler-make-std-macro-expander !)
 	(transpiler-make-code-expander !)
 	(transpiler-make-expex !)
+	(funcall (transpiler-expex-initializer !) (transpiler-expex !))
     (make-global-funinfo !)))
