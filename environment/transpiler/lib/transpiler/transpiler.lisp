@@ -24,9 +24,7 @@
 
   (expex nil)
 
-  ; Functions defined in transpiled code, not in the environment.
   (defined-functions-hash (make-hash-table :test #'eq))
-
   (defined-variables-hash (make-hash-table :test #'eq))
 
   ; Functions to be imported from the environment.
@@ -70,7 +68,6 @@
   (thisify-classes (make-hash-table :test #'eq))
   (function-args (make-hash-table :test #'eq))
   (function-bodies (make-hash-table :test #'eq))
-  emitted-wanted-functions
   (obfuscations (make-hash-table :test #'eq))
   plain-arg-funs
   (exported-closures nil)
@@ -146,9 +143,6 @@
 (define-slot-setter-push transpiler-add-unwanted-function tr
   (transpiler-unwanted-functions tr))
 
-(define-slot-setter-push transpiler-add-emitted-wanted-function tr
-  (transpiler-emitted-wanted-functions tr))
-
 (defun transpiler-wanted-function? (tr fun)
   (href (transpiler-wanted-functions-hash tr) fun))
 
@@ -208,7 +202,6 @@
 
 (defun transpiler-reset (tr)
   (setf (transpiler-thisify-classes tr) (make-hash-table :test #'eq)	; thisified classes.
-  		(transpiler-emitted-wanted-functions tr) nil
   		(transpiler-wanted-functions tr) nil
   		(transpiler-wanted-functions-hash tr) (make-hash-table :test #'eq)
   		(transpiler-wanted-variables tr) nil
@@ -269,7 +262,6 @@
                      :thisify-classes         (copy-hash-table thisify-classes)
                      :function-args           (copy-hash-table function-args)
                      :function-bodies         (copy-hash-table function-args)
-                     :emitted-wanted-functions (copy-list emitted-wanted-functions)
                      :obfuscations            (copy-hash-table obfuscations)
                      :plain-arg-funs          (copy-list plain-arg-funs)
                      :exported-closures       (copy-list exported-closures)
