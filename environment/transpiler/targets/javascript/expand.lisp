@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
 
 (defmacro define-js-std-macro (&rest x)
   `(define-transpiler-std-macro *js-transpiler* ,@x))
@@ -121,6 +121,12 @@
     `(progn
        (%var ,name)
 	   (%setq ,name ,val))))
+
+(define-js-std-macro %%usetf-car (val x)
+  (shared-setf-car val x))
+
+(define-js-std-macro %%usetf-cdr (val x)
+  (shared-setf-cdr val x))
 
 (define-js-std-macro make-string (&optional len)
   "")

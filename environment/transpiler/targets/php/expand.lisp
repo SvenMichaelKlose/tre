@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
 
 (defmacro define-php-std-macro (&rest x)
   `(define-transpiler-std-macro *php-transpiler* ,@x))
@@ -53,6 +53,12 @@
       (redef-warn "redefinition of variable ~A" name))
     (transpiler-add-defined-variable tr name)
     `(%setq ,name ,val)))
+
+(define-php-std-macro %%usetf-car (val x)
+  (shared-setf-car val x))
+
+(define-php-std-macro %%usetf-cdr (val x)
+  (shared-setf-cdr val x))
 
 (define-php-std-macro make-string (&optional len)
   "")
