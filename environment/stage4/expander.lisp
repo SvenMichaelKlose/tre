@@ -48,7 +48,7 @@
 
 (defun set-expander-macro (expander-name name fun)
   (when (expander-has-macro? expander-name name)
-    (warn "Macro ~A already defined." name))
+    (warn "Macro ~A already defined.~%" name))
   (setf (href (expander-macros (expander-get expander-name)) name) fun))
 
 (defun set-expander-macros (expander-name lst)
@@ -56,13 +56,13 @@
 
 (defmacro define-expander-macro (expander-name name args &body body)
   (unless (atom expander-name)
-    (error "Atom expected as expander-name instead of ~A." expander-name))
+    (error "Atom expected as expander-name instead of ~A.~%" expander-name))
   (unless (atom name)
-    (error "Atom expected as macro-name instead of ~A for expander ~A." name expander-name))
+    (error "Atom expected as macro-name instead of ~A for expander ~A.~%" name expander-name))
   (with-gensym g
     `(progn
 	   (when (expander-has-macro? ',expander-name ',name)
-	     (warn "Macro ~A already defined." ',name))
+	     (warn "Macro ~A already defined.~%" ',name))
 	   (defun ,g ,args ,@body)
        (setf (href (expander-macros (expander-get ',expander-name)) ',name) #',g))))
 
