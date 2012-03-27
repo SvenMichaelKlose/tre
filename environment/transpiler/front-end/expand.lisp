@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
 
 (defun transpiler-macro? (tr name)
   (or (expander-has-macro? (transpiler-std-macro-expander tr) name)
@@ -8,9 +8,9 @@
   (let quoted-name (list 'quote name)
     `(progn
        (when (expander-has-macro? (transpiler-std-macro-expander ,tr) ,quoted-name)
-	     (warn "Macro ~A is already defined as a standard macro." ,quoted-name))
+	     (warn "Macro ~A is already defined as a standard macro.~%" ,quoted-name))
 	   (when (expander-has-macro? (transpiler-macro-expander ,tr) ,quoted-name)
-	     (error "Macro ~A is already defined in code generator." ,quoted-name))
+	     (error "Macro ~A is already defined in code generator.~%" ,quoted-name))
 	   (transpiler-add-inline-exception ,tr ,quoted-name)
        (define-expander-macro ,(transpiler-std-macro-expander (eval tr)) ,name ,@args-and-body))))
 
