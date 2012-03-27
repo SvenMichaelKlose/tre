@@ -15,9 +15,8 @@
 
 (define-format #\A (str l i txt args)
   (? args
-     (? (or (cons? args.)
-			(variablep args.))
-		(late-print args. str) ; XXX
+     (? (cons? args.)
+        (late-print args. str)
         (princ args. str))
 	 (error "argument specified in format is missing"))
   (values i .args))
@@ -32,9 +31,8 @@
        (character= el #\A)
 		 (progn
 		   (? args
-		      (? (or (cons? args.)
-					  (variablep args.))
-				 (late-print args. str) ; XXX
+		      (? (cons? args.)
+				 (late-print args. str)
                  (princ args. str))
 			  (error "argument specified in format is missing"))
            (%format str l (integer-1+ i) txt .args))
