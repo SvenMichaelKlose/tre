@@ -1,4 +1,4 @@
-;;;;; tré - Copyright 2006,2008,2011 (c) Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright 2006,2008,2011-2012 (c) Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; XXX experimental - LOOP can only do infinite loops.
 
@@ -15,13 +15,13 @@
 ;(defun %loop-single-with-clause (x)
 ;  (with (mk-with  #'((var form)
 ;  					   `(with (,var ,form)
-;	  				   	  ,@(if (eq 'and (stream-peek x))
-;	    				        (%loop-single-with-clause (stream-next x))
-;								(%loop-var-clause x))))
+;	  				   	  ,@(? (eq 'and (stream-peek x))
+;	    				       (%loop-single-with-clause (stream-next x))
+;							   (%loop-var-clause x))))
 ;		 var (stream-get x))
-;	(if (eq '= (stream-peek x))
-;	    (mk-with var (stream-get (stream-next x)))
-;	    (mk-with var nil))))
+;	(? (eq '= (stream-peek x))
+;	   (mk-with var (stream-get (stream-next x)))
+;	   (mk-with var nil))))
 
 ;(defun %loop-with-clause (x)
 ;  (when (eq 'with (stream-peek x))

@@ -1,13 +1,12 @@
-;;;;; TRE environment
-;;;;; Copyright (c) 2005,2008-2009,2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2005,2008-2009,2011-2012 Sven Michael Klose <pixel@copei.de>
 
 (functional listp)
 
 ;; Return T if argument is a cons or NIL (non-atomic/end of list).
 (%defun listp (x)
-  (if (cons? x)
-	  t
-      (not x)))
+  (? (cons? x)
+     t
+     (not x)))
 
 (define-test "LISTP for cell"
   ((listp '(1)))

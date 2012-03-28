@@ -4,9 +4,9 @@
   (in? e :constructor))
 
 (defun %struct-make-symbol (name options)
-  (aif (assoc-value :constructor options)
-       !.
-       ($ "MAKE-" name)))
+  (!? (assoc-value :constructor options)
+      !.
+      ($ "MAKE-" name)))
 
 (defun %struct?-symbol (name)
   ($ name "?"))

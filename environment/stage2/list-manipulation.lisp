@@ -1,15 +1,14 @@
-;;;; TRE environment
-;;;; Copyright (c) 2005-2009,2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2005-2009,2011-2012 Sven Michael Klose <pixel@copei.de>
 
 (functional append adjoin reverse)
 
 (defun append (&rest lsts)
   (when lsts
-	(if (car lsts) ; Ignore empty lists.
-   	    (let n (copy-list (car lsts))
-          (rplacd (last n) (apply #'append (cdr lsts)))
-          n)
-		(apply #'append (cdr lsts)))))
+	(? (car lsts) ; Ignore empty lists.
+   	   (let n (copy-list (car lsts))
+         (rplacd (last n) (apply #'append (cdr lsts)))
+         n)
+	   (apply #'append (cdr lsts)))))
 
 (defmacro append! (place &rest args)
   `(setf ,place (append ,place ,@args)))
@@ -37,7 +36,7 @@
 
 (defun nconc (&rest lsts)
   (when lsts
-    (aif (car lsts)
+    (!? (car lsts)
 	    (progn
 		  (rplacd (last !) (apply #'nconc (cdr lsts)))
 		  !)
@@ -55,9 +54,9 @@
   `(setf ,place (nconc ,place ,@lsts)))
 
 (defun adjoin (obj lst &rest args)
-  (if (apply #'member obj lst args)
-      lst
-      (cons obj lst)))
+  (? (apply #'member obj lst args)
+     lst
+     (cons obj lst)))
 
 (defmacro adjoin! (obj &rest place)
   `(setf ,(car place) (adjoin ,obj ,@place)))

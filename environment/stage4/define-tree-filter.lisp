@@ -5,7 +5,7 @@
 	(with-gensym fun
       `(defun ,name ,args
 	     (with (,fun #'(,args
-				          (if
+				          (?
 					        ,@body
 					        (atom ,iter)
 					          ,iter
@@ -19,7 +19,7 @@
       `(defun ,name ,args
 	     (with (,fun #'(,args
                           (mapcan #'((,iter)
-                                      (if
+                                      (?
 					                    ,@body
 					                    (atom ,iter)
 					                      (list ,iter)

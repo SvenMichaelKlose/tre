@@ -1,5 +1,4 @@
-;;;; TRE environment
-;;;; Copyright (c) 2006-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2006-2012 Sven Michael Klose <pixel@copei.de>
 
 (setq
 	*UNIVERSE*
@@ -26,10 +25,10 @@
 
 (%set-atom-fun any-quasiquote?
   #'((x)
-       (if (cons? x)
-    	   (if
-	          (eq (car x) 'quasiquote)	       t
-	          (eq (car x) 'quasiquote-splice)  t))))
+       (? (cons? x)
+          (?
+            (eq (car x) 'quasiquote)         t
+            (eq (car x) 'quasiquote-splice)  t))))
 
 (%set-atom-fun %quasiquote-eval
   #'((%gsbq)
@@ -37,29 +36,29 @@
 
 (%set-atom-fun %backquote-quasiquote
   #'((%gsbq)
-      (cons (if (not (any-quasiquote? (car (cdr (car %gsbq)))))
-                (copy-tree (%quasiquote-eval %gsbq))
-                (%backquote (car (cdr (car %gsbq)))))
+      (cons (? (not (any-quasiquote? (car (cdr (car %gsbq)))))
+               (copy-tree (%quasiquote-eval %gsbq))
+               (%backquote (car (cdr (car %gsbq)))))
             (%backquote (cdr %gsbq)))))
 
 (%set-atom-fun %backquote-quasiquote-splice
   #'((%gsbq)
-       (if (not (any-quasiquote? (car (cdr (car %gsbq)))))
-           (#'((%gstmp)
-                 (if
-                   (not %gstmp) (%backquote (cdr %gsbq))
-                   (atom %gstmp) (%error "QUASIQUOTE-SPLICE: list expected")
-                   (%nconc (copy-tree %gstmp)
-                  		   (%backquote (cdr %gsbq)))))
-                (%quasiquote-eval %gsbq))
+       (? (not (any-quasiquote? (car (cdr (car %gsbq)))))
+          (#'((%gstmp)
+                (?
+                  (not %gstmp) (%backquote (cdr %gsbq))
+                  (atom %gstmp) (%error "QUASIQUOTE-SPLICE: list expected")
+                  (%nconc (copy-tree %gstmp)
+                          (%backquote (cdr %gsbq)))))
+            (%quasiquote-eval %gsbq))
 
-           (cons (copy-tree (car (cdr (car %gsbq))))
-                 (%backquote (cdr %gsbq))))))
+          (cons (copy-tree (car (cdr (car %gsbq))))
+                (%backquote (cdr %gsbq))))))
 
 ;; Expand BACKQUOTE arguments.
 (%set-atom-fun %backquote
   #'((%gsbq)
-       (if
+       (?
          (atom %gsbq) %gsbq
          (atom (car %gsbq)) (cons (car %gsbq)
                                   (%backquote (cdr %gsbq)))

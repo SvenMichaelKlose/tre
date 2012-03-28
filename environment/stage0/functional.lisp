@@ -1,5 +1,4 @@
-;;;;; TRE environmen
-;;;;; Copyright (c) 2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2011-2012 Sven Michael Klose <pixel@copei.de>
 
 (setq *universe*
 	  (cons 'functional
@@ -13,8 +12,8 @@
 
 (%set-atom-fun functional
   (macro (&rest names)
-	(if *show-definitions*
-	    (print `(functional ,@names)))
+	(? *show-definitions*
+	   (print `(functional ,@names)))
     `(progn
 	   (setq *functionals* (%nconc ',names *functionals*)))))
 

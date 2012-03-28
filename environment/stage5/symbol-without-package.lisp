@@ -1,6 +1,6 @@
-;;;;; tré - Copyright (c) 2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2011-2012 Sven Michael Klose <pixel@copei.de>
 
 (defun symbol-without-package (x)
-  (aif (symbol? x)
-       (make-symbol (symbol-name x))
-       x))
+  (!? (symbol? x)
+      (make-symbol (symbol-name x))
+      x))

@@ -1,11 +1,10 @@
-;;;;; TRE environment
-;;;;; Copyright (c) 2009 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2009,2012 Sven Michael Klose <pixel@copei.de>
 
 (defun head-if (predicate x &key (but-last nil))
   (when x
-	(if (and (funcall predicate x.)
-			 (or (not but-last)
-				 .x))
+	(? (and (funcall predicate x.)
+		    (or (not but-last)
+			    .x))
 		(cons x.
 			  (head-if predicate .x :but-last but-last)))))
 

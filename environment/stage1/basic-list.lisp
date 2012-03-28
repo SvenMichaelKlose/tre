@@ -3,13 +3,13 @@
 (functional nth copy-list)
 
 (%defun nth (i c)
-  (if c
-	  (if (integer> i 0)
-		  (nth (integer- i 1) (cdr c))
-          (car c))))
+  (? c
+     (? (integer> i 0)
+	    (nth (integer- i 1) (cdr c))
+        (car c))))
 
 (%defun copy-list (c)
-  (if c
-      (if (cons? c)
-	      (cons (car c) (copy-list (cdr c)))
-          (%error "COPY-LIST: cons expected"))))
+  (? c
+     (? (cons? c)
+	    (cons (car c) (copy-list (cdr c)))
+        (%error "COPY-LIST: cons expected"))))

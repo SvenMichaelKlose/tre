@@ -1,38 +1,37 @@
-;;;;; TRE environment
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2009,2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *tests* nil)
 
 (%defun test-equal (x y)
-  (if
+  (?
     (atom x)	 (eql x y)
     (atom y)	 (eql x y)
     (test-equal (car x) (car y))
       		    (test-equal (cdr x) (cdr y))))
 
 (%defun do-test (test)
-  (if (test-equal (eval (car (cdr test)))
-                  (eval (car (cdr (cdr test)))))
-	  nil
-      (progn
-	    (print (car test))
-	    (print 'FAILED-RESULT)
-	    (print (eval (car (cdr test))))
-	    (print 'WANTED-RESULT)
-	    (print (eval (car (cdr (cdr test)))))
-	    (invoke-debugger))))
+  (? (test-equal (eval (car (cdr test)))
+                 (eval (car (cdr (cdr test)))))
+	 nil
+     (progn
+	   (print (car test))
+	   (print 'FAILED-RESULT)
+	   (print (eval (car (cdr test))))
+	   (print 'WANTED-RESULT)
+	   (print (eval (car (cdr (cdr test)))))
+	   (invoke-debugger))))
 
 (%defun do-tests (tests)
-  (if (not tests)
-	  nil
-      (progn
-		(do-test (car tests))
-		(do-tests (cdr tests)))))
+  (? (not tests)
+     nil
+     (progn
+	   (do-test (car tests))
+	   (do-tests (cdr tests)))))
 
 ;; Add test to global list.
 (%defspecial define-test (description expr result)
-  (if *show-definitions*
-      (print (list 'define-test description)))
+  (? *show-definitions*
+     (print (list 'define-test description)))
   (setq *tests* (cons (cons description
 		    				(cons (cons (quote block)
 								        (cons nil

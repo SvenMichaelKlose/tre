@@ -1,8 +1,7 @@
-;;;; TRE environment
-;;;; Copyright (C) 2008 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (C) 2008,2012 Sven Michael Klose <pixel@copei.de>
 
 (defun repeat-while-changes (fun x)
-  (let y (funcall fun x)
-    (if (equal x y)
+  (alet (funcall fun x)
+    (? (equal x !)
         x
-        (repeat-while-changes fun y))))
+        (repeat-while-changes fun !))))

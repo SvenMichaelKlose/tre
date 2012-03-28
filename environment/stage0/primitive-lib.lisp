@@ -1,5 +1,4 @@
-;;;; TRE environment
-;;;; Copyright (c) 2006-2009 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2006-2009,2012 Sven Michael Klose <pixel@copei.de>
 
 (setq
 	*universe*
@@ -33,23 +32,23 @@
 
 (%set-atom-fun copy-tree
   #'((x)
-      (if x
-		  (if (atom x)
-              x
-        	  (cons (copy-tree (car x))
-              	    (copy-tree (cdr x)))))))
+      (? x
+		 (? (atom x)
+            x
+            (cons (copy-tree (car x))
+              	  (copy-tree (cdr x)))))))
 
 (%set-atom-fun last
   #'((x)
-      (if x
-		  (if (cdr x)
-              (last (cdr x))
-              x))))
+      (? x
+		 (? (cdr x)
+            (last (cdr x))
+            x))))
 
 (%set-atom-fun %nconc
   #'((a b)
-      (if a
-          (progn
-		    (rplacd (last a) b)
-    	    a)
-		  b)))
+      (? a
+         (progn
+		   (rplacd (last a) b)
+    	   a)
+		 b)))

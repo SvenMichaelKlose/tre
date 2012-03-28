@@ -1,16 +1,15 @@
-;;;; TRE environment
-;;;; Copyright (c) 2009 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2009,2012 Sven Michael Klose <pixel@copei.de>
 
 (defun escape-charlist (x quote-char)
   (when x
-    (if
+    (?
 	  (= quote-char x.)
         (cons #\\
               (cons x.
                     (escape-charlist .x quote-char)))
 	  (= #\\ x.)
         (cons #\\
-			  (if (and .x (digit-char-p .x.))
+			  (? (and .x (digit-char-p .x.))
                   (escape-charlist .x quote-char)
                   (cons #\\
                         (escape-charlist .x quote-char))))

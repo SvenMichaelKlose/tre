@@ -1,7 +1,4 @@
-;;;;; TRE environment
-;;;;; Copyright (C) 2006,2009,2011 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Early built-in function tests
+;;;;; tré - Copyright (C) 2006,2009,2011-2012 Sven Michael Klose <pixel@copei.de>
 
 (define-test "CAR accepts NIL"
   ((car nil))
@@ -177,7 +174,7 @@
   t)
 
 (define-test "if 0 is a boolean 'true'"
-  ((if 0 t))
+  ((? 0 t))
   t)
 
 (define-test "ELT returns CHARACTER of STRING"

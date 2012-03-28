@@ -2,7 +2,7 @@
 
 ;; Create new local variable.
 (defmacro let (place expr &body body)
-  (if
+  (?
 	(not body)
 	  (progn
 		(print place)

@@ -1,5 +1,4 @@
-;;;; TRE environment
-;;;; Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2005-2009,2012 Sven Michael Klose <pixel@copei.de>
 
 (defun %map (func lists)
   (block nil
@@ -7,10 +6,10 @@
            (nl (make-queue)))	; Argument list.
       (tagbody
         start
-        (if (endp i)	; Stop at end of lists.
-          (return (queue-list nl)))
-        (if (not (car i))	; Break if any list has no more elements.
-          (return nil))
+        (? (endp i)	; Stop at end of lists.
+           (return (queue-list nl)))
+        (? (not (car i))	; Break if any list has no more elements.
+           (return nil))
         (enqueue nl (caar i))	; Add head of list to list of arguments
         (rplaca i (cdar i))	; Move pointer to next element in list.
         (setq i (cdr i))	; Go for next list.
@@ -40,8 +39,8 @@
 	         (,iter nil))
         (tagbody
           ,starttag
-          (if (not ,tmplst)
-            (go ,endtag))
+          (? (not ,tmplst)
+             (go ,endtag))
           (setq ,iter (car ,tmplst))
           ,@body
           (setq ,tmplst (cdr ,tmplst))

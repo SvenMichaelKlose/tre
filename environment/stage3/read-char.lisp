@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2005-2008,2010 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2005-2008,2010,2012 Sven Michael Klose <pixel@copei.de>
 
 (defun fresh-line? (&optional (str *standard-output*))
   "Test if stream is at the beginning of a line."
@@ -6,7 +6,7 @@
 
 (defun read-char (&optional (str *standard-input*))
   "Read character from stream."
-  (if
+  (?
     (stream-peeked-char str)
       (prog1
         (stream-peeked-char str)

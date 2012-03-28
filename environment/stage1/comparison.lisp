@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2005-2006,2008-2009 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2005-2006,2008-2009,2012 Sven Michael Klose <pixel@copei.de>
 
 (functional eql equal
             = < > <= >=
@@ -7,7 +7,7 @@
             character= character> character< character<= character>=)
 
 (defun equal (x y)
-  (if
+  (?
 	(or (atom x)
 		(atom y))
       (eql x y)

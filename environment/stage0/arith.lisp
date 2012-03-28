@@ -1,5 +1,4 @@
-;;;; TRE environment
-;;;; Copyright (c) 2009,2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2009,2011-2012 Sven Michael Klose <pixel@copei.de>
 
 (setq
 	*universe*
@@ -13,21 +12,12 @@
 	(cons '-
 		  *defined-functions*)))
 
-;tredoc
-; (arg :type (number string)
-;  	   :occurence rest)
-; "Adds numbers or concatenated strings."
-; (returns :type (number string))
 (%set-atom-fun +
   #'((&rest x)
-	   (if (string? (car x))
-		   (apply #'string-concat x)
-		   (apply #'number+ x))))
+	   (? (string? (car x))
+		  (apply #'string-concat x)
+		  (apply #'number+ x))))
 
-;tredoc
-; (arg :type number)
-; "Substract rest of arguments from first."
-; (returns :type number)
 (%set-atom-fun -
   #'((&rest x)
 	   (apply #'number- x)))

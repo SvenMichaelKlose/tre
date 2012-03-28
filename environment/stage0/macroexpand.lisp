@@ -1,5 +1,4 @@
-;;;;; TRE environment
-;;;;; Copyright (c) 2006-2009 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2006-2009,2012 Sven Michael Klose <pixel@copei.de>
 
 (setq
 	*universe*
@@ -42,9 +41,8 @@
 
 (%set-atom-fun %macroexpand-backquote
   #'((%g)
-       (if
-         (atom %g)
-           %g
+       (?
+         (atom %g) %g
 
          (atom (car %g))
 	  	   (cons (car %g)
@@ -67,10 +65,10 @@
 
 (%set-atom-fun %macroexpand-rest
   #'((%g)
-       (if (atom %g)
-           %g
-       	   (cons (%macroexpand (car %g))
-                 (%macroexpand-rest (cdr %g))))))
+       (? (atom %g)
+          %g
+       	  (cons (%macroexpand (car %g))
+                (%macroexpand-rest (cdr %g))))))
 
 (%set-atom-fun %macroexpand-xlat
   #'((%g)
@@ -82,14 +80,14 @@
 
 (%set-atom-fun %macroexpand-call
   #'((%g)
-       (if (if (atom (car %g))
-			   (apply *macrop-diversion* (list %g)))
-           (%macroexpand-xlat %g)
-		   %g)))
+       (? (? (atom (car %g))
+		     (apply *macrop-diversion* (list %g)))
+          (%macroexpand-xlat %g)
+		  %g)))
 
 (%set-atom-fun %macroexpand
   #'((%g)
-       (if
+       (?
          (atom %g)
            %g
 

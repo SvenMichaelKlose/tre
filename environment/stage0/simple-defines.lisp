@@ -1,5 +1,4 @@
-;;;; TRE environment
-;;;; Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2005-2008,2012 Sven Michael Klose <pixel@copei.de>
 
 (setq *universe*
 	  (cons '%defun
@@ -30,8 +29,8 @@
 
 (%set-atom-fun defvar
   (macro (name &optional (init nil))
-	(if *show-definitions*
-	    (print `(defvar ,name)))
+	(? *show-definitions*
+	   (print `(defvar ,name)))
     `(setq *universe* (cons ',name *universe*)
 		   *variables* (cons (cons ',name
 								   ',init)
@@ -42,8 +41,8 @@
 
 (%set-atom-fun defconstant
   (macro (name &optional (init nil))
-	(if *show-definitions*
-	    (print `(defconstant ,name)))
+	(? *show-definitions*
+	   (print `(defconstant ,name)))
     `(progn
 	   (defvar ,name ,init)
 	   (setq *constants* (cons ',name *constants*)))))

@@ -12,7 +12,7 @@
 
 ;(defun string= (sa sb)
 ;  "Return T if two strings match."
-;  (if (and (string? sa)
+;  (? (and (string? sa)
 ;		   (string? sb))
 ;    (let* ((la (length sa))
 ;	       (lb (length sb)))

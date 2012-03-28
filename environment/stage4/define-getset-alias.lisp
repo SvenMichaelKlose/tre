@@ -1,10 +1,9 @@
-;;;;; Caroshi ECMAScript library
-;;;;; Copyright (c) 2009 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2009,2012 Sven Michael Klose <pixel@copei.de>
 
 (defun get-definer (class)
-  (if class
-	  `(defmethod ,class)
-	  '(defun)))
+  (? class
+     `(defmethod ,class)
+     '(defun)))
 
 (defmacro define-alias (alias real &key (class nil))
   `(,@(get-definer class) ,alias ()

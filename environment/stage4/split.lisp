@@ -1,21 +1,21 @@
-;;;;; tré - Copyright (c) 2008-2009,2011-2012 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2009,2011-2012 Sven Michael Klose <pixel@copei.de>
 
 (defun split-if (test seq)
   (and seq
-       (aif (position-if test seq)
-            (cons (subseq seq 0 !)
-                  (split-if test (subseq seq (integer-1+ !))))
-            (list seq))))
+       (!? (position-if test seq)
+           (cons (subseq seq 0 !)
+                 (split-if test (subseq seq (integer-1+ !))))
+           (list seq))))
 
 (defun generic-split (obj seq &key (test #'eql))
   "Split sequence where element is equal to 'obj' and excluding them."
   (and seq
        (let pos (position obj seq :test test)
-	     (if pos
-		     (cons (subseq seq 0 pos)
-			       (split obj
-						  (subseq seq (integer-1+ pos))
-					      :test test))
+	     (? pos
+		    (cons (subseq seq 0 pos)
+		          (split obj
+					     (subseq seq (integer-1+ pos))
+				         :test test))
 		     (list seq)))))
 
 (defun split (obj seq &key (test #'eql))

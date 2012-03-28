@@ -1,18 +1,15 @@
-;;;;; TRE environment
-;;;;; Copyright (C) 2008 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Square root
-;;;;;
-;;;;; XXX experimental
+;;;;; tré - Copyright (C) 2008-2012 Sven Michael Klose <pixel@copei.de>
+
+; XXX experimental!
 
 (defun close-enough? (x y precision)
   (> precision (abs (- x y))))
 
 (defun fixed-point (f start precision)
   (with (iter #'((old new)
-				   (if (close-enough? old new precision)
-					   new
-					   (iter new (f new)))))
+				   (? (close-enough? old new precision)
+					  new
+					  (iter new (f new)))))
 	(iter start (f start))))
 
 (defun average (a b)

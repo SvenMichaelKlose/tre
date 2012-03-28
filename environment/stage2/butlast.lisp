@@ -1,11 +1,10 @@
-;;;; TRE environment
-;;;; Copyright (c) 2006 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2006,2012 Sven Michael Klose <pixel@copei.de>
 
 (functional butlast)
 
 (defun butlast (plist)
-  (if (cdr plist)
-      (cons (car plist) (butlast (cdr plist)))))
+  (? (cdr plist)
+     (cons (car plist) (butlast (cdr plist)))))
 
 (define-test "BUTLAST basically works"
   ((butlast '(1 2 3)))

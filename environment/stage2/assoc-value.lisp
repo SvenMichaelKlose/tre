@@ -1,5 +1,4 @@
-;;;; TRE environment
-;;;; Copyright (c) 2008,2010-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008,2010-2012 Sven Michael Klose <pixel@copei.de>
 
 (functional assoc-value)
 
@@ -7,6 +6,6 @@
   (cdr (apply #'assoc args)))
 
 (defun (setf assoc-value) (val &rest args)
-  (aif (apply #'assoc args)
-       (rplacd ! val)
-       (acons! (car args) val (cadr args))))
+  (!? (apply #'assoc args)
+      (rplacd ! val)
+      (acons! (car args) val (cadr args))))

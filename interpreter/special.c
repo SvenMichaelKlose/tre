@@ -1,5 +1,5 @@
 /*
- * tré -  Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
+ * tré -  Copyright (c) 2005-2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -770,7 +770,7 @@ char *tre_special_names[] = {
     "APPLY",
     "SETQ",
     "MACRO", "SPECIAL",
-    "COND", "IF",
+    "COND", "?",
     "QUOTE",
     "PROGN",
     "BLOCK", "RETURN-FROM", "TAGBODY", "GO",

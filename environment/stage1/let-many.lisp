@@ -1,33 +1,33 @@
 ;;;; tré - Copyright (c) 2005-2006,2008,2012 Sven Michael Klose <pixel@copei.de>
 
 (%defun %chk-place (x)
-  (if (%arg-keyword? x)
-	  (progn
-		(print x)
-	    (%error "place is an argument keyword"))))
+  (? (%arg-keyword? x)
+     (progn
+	   (print x)
+	   (%error "place is an argument keyword"))))
 
 (%defun %error-if-not-unique (x)
   (%simple-map #'((i)
-					(if (< 1 (count i x))
-						(progn
-	  				      (print i)
-	    				  (%error "place not unique"))))
+					(? (< 1 (count i x))
+					   (progn
+	  				     (print i)
+	    			     (%error "place not unique"))))
 			   x))
 
 (%defun %let-places (x)
   (%simple-mapcar #'car x))
 
 (%defun %let-chk-places (x)
-  (if (atom x)
-	  (progn
-        (print x)
-        (%error "assignment list expected instead of an atom")))
+  (? (atom x)
+     (progn
+       (print x)
+       (%error "assignment list expected instead of an atom")))
   (%simple-map #'%chk-place x)
   (%simple-map #'((p) (%error-if-not-unique (%let-places x)))
 			   x))
 
 (defmacro let* (alst &body body)
-  (if
+  (?
     (not alst)
 	  `(progn
 		 ,@body)

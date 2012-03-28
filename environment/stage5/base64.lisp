@@ -1,5 +1,4 @@
-;;;;; TRE environment
-;;;;; Copyright (c) 2009-2010 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2009-2010,2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *base64-key*
   		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=")
@@ -19,14 +18,14 @@
 			   e2 (bit-or (<< (bit-and c1 3)
 							  4)
 						  (>> (or c2 0) 4))
-			   e3 (if c2
-				    (bit-or (<< (bit-and c2 15)
-							    2)
-						    (>> (or c3 0) 6))
-					64)
-			   e4 (if c3
-					(bit-and c3 63)
-					64))
+			   e3 (? c2
+				     (bit-or (<< (bit-and c2 15)
+							     2)
+						     (>> (or c3 0) 6))
+					 64)
+			   e4 (? c3
+					 (bit-and c3 63)
+					 64))
           (setf x ...x)
 		  (+! out (base64-encode-char e1)
 				  (base64-encode-char e2)
@@ -38,10 +37,10 @@
 
 (defun base64-compress (x)
   (when x
-    (if (or (alphanumericp x.)
-            (in=? x. #\+ #\/ #\=))
-        (cons x. (base64-compress .x))
-        (base64-compress .x))))
+    (? (or (alphanumericp x.)
+           (in=? x. #\+ #\/ #\=))
+       (cons x. (base64-compress .x))
+       (base64-compress .x))))
 
 (defun base64-decode (x)
   (let out ""
@@ -62,9 +61,9 @@
 						  e4))
 			  (setf x ....x)
 			  (+! out (string (code-char c1))
-					  (if (not (= 64 e3))
-					      (string (code-char c2))
-						  "")
-				      (if (not (= 64 e4))
-					      (string (code-char c3))
-						  "")))))))
+					  (? (not (= 64 e3))
+					     (string (code-char c2))
+					     "")
+				      (? (not (= 64 e4))
+					     (string (code-char c3))
+					     "")))))))

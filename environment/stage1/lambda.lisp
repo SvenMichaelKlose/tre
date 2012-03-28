@@ -1,23 +1,23 @@
-;;;; tré - Copyright (c) 2006-2011 Sven Klose <pixel@copei.de>
+;;;; tré - Copyright (c) 2006-2012 Sven Michael Klose <pixel@copei.de>
 
 (defun past-lambda-1 (x)
-  (if (eq (car x) 'lambda)
-	(cdr x)
-	x))
+  (? (eq (car x) 'lambda)
+	 (cdr x)
+	 x))
 
 ;; Get name of FUNCTION.
 (defun lambda-name (x)
-  (if (eq (car x) 'function)
-	  (if (cdr (cdr x))
-		  (cadr x))))
+  (? (eq (car x) 'function)
+     (? (cdr (cdr x))
+	    (cadr x))))
 
 ;; Get LAMBDA of FUNCTION.
 (defun past-function (x)
-  (if (eq (car x) 'function)
-	  (if (cdr (cdr x))
-		  (caddr x)	; (FUNCTION name lambda-expression)
-      	  (cadr x)) ; (FUNCTION lambda-expression)
-	  x))
+  (? (eq (car x) 'function)
+	 (? (cdr (cdr x))
+	    (caddr x)	; (FUNCTION name lambda-expression)
+        (cadr x)) ; (FUNCTION lambda-expression)
+	 x))
 
 ;; The compiler stores function information before the arguments of
 ;; a LAMBDA-expression.
@@ -25,9 +25,9 @@
   (past-lambda-1 (past-function x)))
 
 (defun args-past-funinfo (x)
-  (if (eq '%funinfo (car x))
-	  (cddr x)
-	  x))
+  (? (eq '%funinfo (car x))
+     (cddr x)
+     x))
 
 ;;;; Tré accepts the LAMBDA notation for anonymous functions also
 ;;;; without the LAMBDA symbol. PAST-LAMBDA gets you past the

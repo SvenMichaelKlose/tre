@@ -1,13 +1,12 @@
-;;;; TRE environment
-;;;; Copyright (c) 2005-2006, 2008, 2010 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2005-2006,2008,2010,2012 Sven Michael Klose <pixel@copei.de>
 
 (defun make-queue ()
   (cons nil nil))
 
 (defun enqueue (queue obj)
-  (if (car queue)
-      (setf (car queue) (setf (cdar queue) (list obj)))
-      (setf (car queue) (setf (cdr queue) (list obj))))
+  (? (car queue)
+     (setf (car queue) (setf (cdar queue) (list obj)))
+     (setf (car queue) (setf (cdr queue) (list obj))))
   obj)
 
 (defun enqueue-list (queue x)
@@ -16,10 +15,10 @@
 
 (defun queue-pop (queue)
   (let v (cadr queue)
-    (if (eq (car queue) (cdr queue))
-        (setf (car queue) nil))
-    (if (cdr queue)
-        (setf (cdr queue) (cddr queue)))
+    (? (eq (car queue) (cdr queue))
+       (setf (car queue) nil))
+    (? (cdr queue)
+       (setf (cdr queue) (cddr queue)))
     v))
 
 (functional queue-list queue-front)

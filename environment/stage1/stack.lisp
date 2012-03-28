@@ -1,12 +1,11 @@
-;;;; TRE environment
-;;;; Copyright (c) 2005-2008,2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2005-2008,2011-2012 Sven Michael Klose <pixel@copei.de>
 
 (defmacro push (elm expr)
-  (if (and (cons? elm)
-           (eq 'cons (car elm)))
-      (progn
-        (princ "; HINT: Macro PUSH: CONSed element: you may want to consider using ACONS! instead")
-        (terpri)))
+  (? (and (cons? elm)
+          (eq 'cons (car elm)))
+     (progn
+       (princ "; HINT: Macro PUSH: CONSed element: you may want to consider using ACONS! instead")
+       (terpri)))
   `(setf ,expr (cons ,elm ,expr)))
 
 (defmacro pop (expr)

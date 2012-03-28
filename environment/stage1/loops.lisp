@@ -8,9 +8,8 @@
 					 binds)
          (tagbody
            ,tag
-           (if ,test
-               (return (progn
-						 ,@result)))
+           (? ,test
+              (return (progn ,@result)))
            ,@body
            ,@(mapcar #'((b)
 						  (and (caddr b)
