@@ -1,27 +1,25 @@
 ;;;;; tré - Copyright (c) 2006-2012 Sven Michael Klose <pixel@copei.de>
 
-(setq
-	*UNIVERSE*
-	(cons 'any-quasiquote?
-    (cons '%quasiquote-eval
-    (cons '%backquote-quasiquote
-	(cons '%backquote-quasiquote-splice
-	(cons '%backquote
-	(cons 'backquote
-	(cons 'quasiquote
-	(cons 'quasiquote-splice
-		  *UNIVERSE*)))))))))
+(setq *UNIVERSE*
+	  (cons 'any-quasiquote?
+      (cons '%quasiquote-eval
+      (cons '%backquote-quasiquote
+	  (cons '%backquote-quasiquote-splice
+	  (cons '%backquote
+	  (cons 'backquote
+	  (cons 'quasiquote
+	  (cons 'quasiquote-splice
+		    *UNIVERSE*)))))))))
 
-(setq
-	*defined-functions*
-	(cons 'any-quasiquote?
-    (cons '%quasiquote-eval
-    (cons '%backquote-quasiquote
-	(cons '%backquote-quasiquote-splice
-	(cons '%backquote
-	(cons 'quasiquote
-	(cons 'quasiquote-splice
-		  *defined-functions*))))))))
+(setq *defined-functions*
+	  (cons 'any-quasiquote?
+      (cons '%quasiquote-eval
+      (cons '%backquote-quasiquote
+	  (cons '%backquote-quasiquote-splice
+	  (cons '%backquote
+	  (cons 'quasiquote
+	  (cons 'quasiquote-splice
+		    *defined-functions*))))))))
 
 (%set-atom-fun any-quasiquote?
   #'((x)
@@ -36,24 +34,23 @@
 
 (%set-atom-fun %backquote-quasiquote
   #'((%gsbq)
-      (cons (? (not (any-quasiquote? (car (cdr (car %gsbq)))))
-               (copy-tree (%quasiquote-eval %gsbq))
-               (%backquote (car (cdr (car %gsbq)))))
+      (cons (? (any-quasiquote? (car (cdr (car %gsbq))))
+               (%backquote (car (cdr (car %gsbq))))
+               (copy-tree (%quasiquote-eval %gsbq)))
             (%backquote (cdr %gsbq)))))
 
 (%set-atom-fun %backquote-quasiquote-splice
   #'((%gsbq)
-       (? (not (any-quasiquote? (car (cdr (car %gsbq)))))
+       (? (any-quasiquote? (car (cdr (car %gsbq))))
+          (cons (copy-tree (car (cdr (car %gsbq))))
+                (%backquote (cdr %gsbq)))
           (#'((%gstmp)
                 (?
                   (not %gstmp) (%backquote (cdr %gsbq))
                   (atom %gstmp) (%error "QUASIQUOTE-SPLICE: list expected")
                   (%nconc (copy-tree %gstmp)
                           (%backquote (cdr %gsbq)))))
-            (%quasiquote-eval %gsbq))
-
-          (cons (copy-tree (car (cdr (car %gsbq))))
-                (%backquote (cdr %gsbq))))))
+            (%quasiquote-eval %gsbq)))))
 
 ;; Expand BACKQUOTE arguments.
 (%set-atom-fun %backquote
