@@ -1,6 +1,7 @@
 ;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
 
 (env-load "stage4/make-keyword.lisp")
+(env-load "stage4/assoc-adjoin.lisp")
 (env-load "stage4/assoc-hash.lisp")
 (env-load "stage4/assoc-replace.lisp")
 (env-load "stage4/cache.lisp")
