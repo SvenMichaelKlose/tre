@@ -50,7 +50,7 @@
     (when *show-definitions*
       (late-print `(defvar ,name)))
     (when (transpiler-defined-variable tr name)
-      (redef-warn "redefinition of variable ~A" name))
+      (redef-warn "redefinition of variable ~A.~%" name))
     (transpiler-add-defined-variable tr name)
     `(%setq ,name ,val)))
 
