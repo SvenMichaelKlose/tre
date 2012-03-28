@@ -13,5 +13,5 @@
              :target target :obfuscate? obfuscate? :print-obfuscations? print-obfuscations? :files-to-update files-to-update))
 
 (defun compile (expression &key (target nil) (obfuscate? nil) (print-obfuscations? nil) (files-to-update nil) (section-id 'compile))
-  (compile-0 (list (cons section-id (list expression)))
+  (compile-0 (and expression (list (cons section-id (list expression))))
              :target target :obfuscate? obfuscate? :print-obfuscations? print-obfuscations? :files-to-update files-to-update))
