@@ -1,55 +1,37 @@
 ;;;;; tré - Copyright (c) 2006-2008,2011-2012 Sven Michael Klose <pixel@copei.de>
 
-(defvar *format-handlers* nil)
-
-(defmacro define-format (chr (str l i txt args) &rest body)
-  (with-gensym g
-    `(progn
-       (defun ,g (,str ,l ,i ,txt ,args)
-         ,@body)
-       (acons! ,chr #',g *format-handlers*))))
-
-(define-format #\% (str l i txt args)
+(defun %format-directive-eol (str txt args)
   (terpri str)
-  (values i args))
+  (%format str txt args))
 
-(define-format #\A (str l i txt args)
+(defun %format-directive-placeholder (str txt args)
   (? args
      (? (cons? args.)
-        (late-print args. str)
+		(late-print args. str)
         (princ args. str))
-	 (error "argument specified in format is missing"))
-  (values i .args))
+     (error "argument specified in format is missing"))
+  (%format str txt .args))
 
-(defun %format-directive (str l i txt args)
-   (let el (char-upcase (elt txt i))
-     (?
-       (character= el #\%)
-		 (progn
-		   (terpri str)
-           (%format str l (integer-1+ i) txt args))
-       (character= el #\A)
-		 (progn
-		   (? args
-		      (? (cons? args.)
-				 (late-print args. str)
-                 (princ args. str))
-			  (error "argument specified in format is missing"))
-           (%format str l (integer-1+ i) txt .args))
-       (progn
-		 (princ #\~ str)
-         (%format str l i txt args)))))
+(defun %format-directive-tilde (str txt args)
+  (princ #\~ str)
+  (%format str txt args))
 
-(defun %format (str l i txt args)
-  (while (integer< i l)
-         nil
-    (? (character= (elt txt i) #\~)
-       (return (%format-directive str l (integer-1+ i) txt args))
+(defun %format-directive (str txt args)
+  (let el (char-upcase txt.)
+    (?
+      (character= el #\%) (%format-directive-eol str .txt args)
+      (character= el #\A) (%format-directive-placeholder str .txt args)
+      (%format-directive-tilde str txt args))))
+
+(defun %format (str txt args)
+  (when txt
+    (? (character= txt. #\~)
+       (%format-directive str .txt args)
        (progn
-         (princ (elt txt i) str)
-         (setf i (integer-1+ i))))))
+         (princ txt. str)
+         (%format str .txt args)))))
 
 (defun format (str txt &rest args)
   "Print formatted string."
   (with-default-stream nstr str
-    (%format nstr (length txt) 0 txt args)))
+    (%format nstr (string-list txt) args)))
