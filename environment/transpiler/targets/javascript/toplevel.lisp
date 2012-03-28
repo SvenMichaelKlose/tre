@@ -61,7 +61,6 @@
 		(js-transpile-pre tr)
     	(target-transpile tr :files-before-deps (js-files-before-deps)
 		  	                 :files-after-deps (append (js-files-after-deps) sources)
-
 		 	                 :dep-gen #'(()
 				  	                      (transpiler-import-from-environment tr))
 			                 :decl-gen (js-make-decl-gen tr)

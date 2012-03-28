@@ -4,10 +4,9 @@
 
 (defun php-print-native-environment (out)
   (princ ,(concat-stringtree
-              (mapcar (fn with-open-file i (open (+ "environment/transpiler/targets/php/environment/native/"
-                                                    _ ".php")
-						 	                     :direction 'input)
-			  	           (read-all-lines i))
+              (mapcar (fn let p (+ "environment/transpiler/targets/php/environment/native/" _ ".php")
+                           (with-open-file i (open p :direction 'input)
+			  	             (read-all-lines i)))
                       '("settings" "character" "cons" "vector" "funref" "symbol")))
 		 out))
 
@@ -41,8 +40,8 @@
 		(php-transpile-prepare tr)
     	(target-transpile tr
     	 	:files-before-deps
-			    (append (list (cons 'base1 *php-base*))
-				  	    (list (cons 'base2 *php-base2*)))
+			    (list (cons 'base1 *php-base*)
+				  	  (cons 'base2 *php-base2*))
 		  	:files-after-deps
 				(append (when (eq t *have-environment-tests*)
 				   	  	  (list (cons 'env-tests (make-environment-tests))))

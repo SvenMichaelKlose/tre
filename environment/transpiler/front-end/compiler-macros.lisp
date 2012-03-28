@@ -1,13 +1,4 @@
-;;;;; TRE compiler
-;;;;; Copyright (c) 2006-2011 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Compiler-macro expansion.
-;;;;;
-;;;;; Converts control-flow functions into jumps.
-;;;;; VM-GO unconditionally jumps to a tag.
-;;;;; VM-GO-NIL jumps to a tag if the first argument is NIL.
-;;;;; Both jump types are removed when tree-expanding.
-;;;;; VM-SCOPE holds a list of expresions and tags. They are nerged in the next pass.
+;;;;; tré - Copyright (c) 2006-2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *tagbody-replacements*)
 
@@ -104,11 +95,11 @@
   `(%%vm-scope ,@(mapcar (fn `(%setq ,_. ,._.))
                          (group args 2))))
 
-(define-compiler-macro if (&rest body)
+(define-compiler-macro ? (&rest body)
   (with (tests (group body 2)
 		 end   (car (last tests)))
     (unless body
-      (error "IF: Body missing"))
+      (error "?: Body missing"))
     `(cond
         ,@(? (= 1 (length end))
 			 (append (butlast tests)

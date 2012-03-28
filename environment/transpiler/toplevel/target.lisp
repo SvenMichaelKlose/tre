@@ -26,9 +26,10 @@
   (let sightened-code (make-queue)
 	(dolist (i files (queue-list sightened-code))
       (let code (? (compile-file? i. (transpiler-sightened-files tr) files-to-update)
-                   (? (symbol? i.) (transpiler-sighten tr (? (function? .i)
-                                                             (funcall .i)
-                                                             .i))
+                   (? (symbol? i.)
+                      (transpiler-sighten tr (? (function? .i)
+                                                (funcall .i)
+                                                .i))
 		  			  (transpiler-sighten-file tr i.))
                    (assoc-value i. (transpiler-sightened-files tr) :test #'eq-string=))
         (assoc-adjoin code i. (transpiler-sightened-files tr) :test #'eq-string=)
@@ -51,14 +52,12 @@
 	(with (compiled-before (funcall back-before before-deps)
 		   compiled-after (funcall back-after after-deps))
 	  (prog1
-	    (concat-stringtree
-		    (awhen decl-gen
-		      (funcall !))
-			compiled-before
-            (reverse (transpiler-raw-decls tr))
-			compiled-after)
-        (when (and print-obfuscations?
-                   (transpiler-obfuscate? tr))
+	    (concat-stringtree (awhen decl-gen
+		                     (funcall !))
+			               compiled-before
+                           (reverse (transpiler-raw-decls tr))
+			               compiled-after)
+        (when (and print-obfuscations? (transpiler-obfuscate? tr))
           (transpiler-print-obfuscations tr))))))
 
 (defun target-transpile-0 (tr &key (files-after-deps nil)
