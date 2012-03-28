@@ -286,5 +286,4 @@
                      :compiled-files          (copy-alist compiled-files)
                      :current-package         current-package
                      :expex-initializer       expex-initializer)
-    (setf (transpiler-expex !) (transpiler-make-expex !))
-    (funcall (transpiler-expex-initializer !) (transpiler-expex !))))
+    (funcall (transpiler-expex-initializer !) (transpiler-make-expex !))))

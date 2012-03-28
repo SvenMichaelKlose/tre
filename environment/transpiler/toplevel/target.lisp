@@ -84,14 +84,14 @@
 								 (decl-gen nil)
                                  (obfuscate? nil)
                                  (print-obfuscations? nil))
-  (setf *recompiling?* (? files-to-update t))
-  (when files-to-update
-    (clr (transpiler-emitted-decls tr)))
-  (transpiler-switch-obfuscator tr obfuscate?)
-  (with-temporary *current-transpiler* tr
-	(target-transpile-0 tr :files-after-deps files-after-deps
-					  	   :files-before-deps files-before-deps
-                           :files-to-update files-to-update
-					       :dep-gen dep-gen
-						   :decl-gen decl-gen
-                           :print-obfuscations? print-obfuscations?)))
+  (with-temporary *recompiling?* (? files-to-update t)
+    (when files-to-update
+      (clr (transpiler-emitted-decls tr)))
+    (transpiler-switch-obfuscator tr obfuscate?)
+    (with-temporary *current-transpiler* tr
+	  (target-transpile-0 tr :files-after-deps files-after-deps
+					  	     :files-before-deps files-before-deps
+                             :files-to-update files-to-update
+					         :dep-gen dep-gen
+						     :decl-gen decl-gen
+                             :print-obfuscations? print-obfuscations?))))

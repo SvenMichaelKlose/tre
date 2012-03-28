@@ -69,6 +69,5 @@
 	(transpiler-reset !)
 	(transpiler-make-std-macro-expander !)
 	(transpiler-make-code-expander !)
-	(transpiler-make-expex !)
-	(funcall (transpiler-expex-initializer !) (transpiler-expex !))
+	(funcall (transpiler-expex-initializer !) (transpiler-make-expex !))
     (make-global-funinfo !)))
