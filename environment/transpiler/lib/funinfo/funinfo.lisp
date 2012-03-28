@@ -34,8 +34,7 @@
 
 (defun funinfo-topmost (fi)
   (let p (funinfo-parent fi)
-    (if (and p
-			 (funinfo-parent p))
+    (? (and p (funinfo-parent p))
 	   (funinfo-topmost p)
 	   fi)))
 

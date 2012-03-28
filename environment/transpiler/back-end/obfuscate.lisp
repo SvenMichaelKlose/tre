@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *transpiler-obfuscation-counter* 0)
 
@@ -10,9 +10,9 @@
   (let obs (transpiler-obfuscations tr)
     (or (href obs x)
         (setf (href obs x)
-			  (aif (symbol-package x)
-    		       (make-symbol (symbol-name (transpiler-obfuscated-sym)) (transpiler-obfuscate-symbol tr !))
-    		       (transpiler-obfuscated-sym))))))
+			  (!? (symbol-package x)
+    		      (make-symbol (symbol-name (transpiler-obfuscated-sym)) (transpiler-obfuscate-symbol tr !))
+    		      (transpiler-obfuscated-sym))))))
 
 (defun obfuscateable-symbol? (tr x)
   (not (eq t (href (transpiler-obfuscations tr)
@@ -24,9 +24,9 @@
        (obfuscateable-symbol? tr x)))
 
 (defun transpiler-obfuscate-symbol (tr x)
-  (if (must-obfuscate-symbol? tr x)
-	  (transpiler-obfuscate-symbol-0 tr x)
-	  x))
+  (? (must-obfuscate-symbol? tr x)
+     (transpiler-obfuscate-symbol-0 tr x)
+     x))
 
 (define-tree-filter transpiler-obfuscate (tr x)
   (or (variablep x)
@@ -42,9 +42,9 @@
 (defun transpiler-print-obfuscations (tr)
   (dolist (k (hashkeys (transpiler-obfuscations tr)))
     (unless (in=? (elt (symbol-name k) 0) #\~) ; #\_)
-	  (format t "~A~A -> ~A" (aif (symbol-package k)
-                                  (string-concat (symbol-name !) ":")
-                                  "")
+	  (format t "~A~A -> ~A" (!? (symbol-package k)
+                                 (string-concat (symbol-name !) ":")
+                                 "")
                              (symbol-name k)
 						     (href (transpiler-obfuscations tr) k)))))
 
