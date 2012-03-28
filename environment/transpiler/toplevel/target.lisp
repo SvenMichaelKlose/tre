@@ -13,21 +13,13 @@
   (or (member file files-to-update :test #'eq-string=)
       (not (assoc-value file processed-files :test #'eq-string=))))
 
-(defmacro acons-or-replace (value key place &key (test #'eql))
-  (with-gensym (gkey gvalue)
-    `(with (,gkey ,key
-            ,gvalue ,value)
-       (? (assoc-value ,gkey ,place :test ,test)
-          (setf (assoc-value ,gkey ,place :test ,test) ,gvalue)
-          (acons! ,gkey ,gvalue ,place)))))
-
 (defun target-transpile-2 (tr files files-to-update)
   (let compiled-code (make-queue)
 	(dolist (i files (queue-list compiled-code))
       (let code (? (compile-file? i. (transpiler-compiled-files tr) files-to-update)
                    (transpiler-make-code tr .i)
                    (assoc-value i. (transpiler-compiled-files tr) :test #'eq-string=))
-        (acons-or-replace code i. (transpiler-compiled-files tr) :test #'eq-string=)
+        (assoc-adjoin code i. (transpiler-compiled-files tr) :test #'eq-string=)
 	    (enqueue compiled-code code)))))
 
 (defun target-transpile-1 (tr files files-to-update)
@@ -39,7 +31,7 @@
                                                              .i))
 		  			  (transpiler-sighten-file tr i.))
                    (assoc-value i. (transpiler-sightened-files tr) :test #'eq-string=))
-        (acons-or-replace code i. (transpiler-sightened-files tr) :test #'eq-string=)
+        (assoc-adjoin code i. (transpiler-sightened-files tr) :test #'eq-string=)
 	    (enqueue sightened-code (cons i. code))))))
 
 (defun target-transpile-generic (tr &key (front-before nil)

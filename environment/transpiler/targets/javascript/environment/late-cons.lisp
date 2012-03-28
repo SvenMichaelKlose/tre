@@ -4,25 +4,25 @@
 (defun cdr (x) (when x x.__))
 
 (defvar *rplaca-breakpoints* nil)
+(defvar *rplacd-breakpoints* nil)
 
 (defun rplaca (x val)
   (declare type cons x)
-  (when (member x *rplaca-breakpoints* :test #'eq)
-    (invoke-debugger))
+  (when-debug
+    (when (member x *rplaca-breakpoints* :test #'eq)
+      (invoke-debugger)))
   (setf x._ val)
   x)
 
-(defvar *rplacd-breakpoints* nil)
-
 (defun rplacd (x val)
   (declare type cons x)
-  (when (member x *rplacd-breakpoints* :test #'eq)
-    (invoke-debugger))
+  (when-debug
+    (when (member x *rplacd-breakpoints* :test #'eq)
+      (invoke-debugger)))
   (setf x.__ val)
   x)
 
 (defun cons? (x)
   (and (object? x)
 	   x.__class
-	   (%%%= x.__class ,(transpiler-obfuscated-symbol-string
-							*current-transpiler* 'cons))))
+	   (%%%= x.__class ,(transpiler-obfuscated-symbol-string *current-transpiler* 'cons))))
