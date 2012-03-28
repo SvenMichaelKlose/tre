@@ -1,5 +1,5 @@
 #!/bin/sh
-# tré - Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
+# tré - Copyright (c) 2005-2012 Sven Michael Klose <pixel@copei.de>
 
 svnversion -n >_current-version
 
@@ -57,11 +57,10 @@ echo
 LIBC_PATH=`find /lib -name libc.so.* | head -n 1`
 LIBDL_PATH=`find /lib -name libdl.so.* | head -n 1`
 KERNEL_IDENT=`uname -i`
-SYSTEM_NAME=`uname -n`
 CPU_TYPE=`uname -m`
 OS_RELEASE=`uname -r`
 OS_VERSION="unknown" #`uname -v`
-BUILD_MACHINE_INFO="-DTRE_BIG_ENDIAN -DLIBC_PATH=\"$LIBC_PATH\" -DTRE_KERNEL_IDENT=\"$KERNEL_IDENT\" -DTRE_SYSTEM_NAME=\"$SYSTEM_NAME\" -DTRE_CPU_TYPE=\"$CPU_TYPE\" -DTRE_OS_RELEASE=\"$OS_RELEASE\" -DTRE_OS_VERSION=\"$OS_VERSION\""
+BUILD_MACHINE_INFO="-DTRE_BIG_ENDIAN -DLIBC_PATH=\"$LIBC_PATH\" -DTRE_KERNEL_IDENT=\"$KERNEL_IDENT\" -DTRE_CPU_TYPE=\"$CPU_TYPE\" -DTRE_OS_RELEASE=\"$OS_RELEASE\" -DTRE_OS_VERSION=\"$OS_VERSION\""
 
 GNU_LIBC_FLAGS="-D_GNU_SOURCE -D_BSD_SOURCE -D_SVID_SOURCE"
 C_DIALECT_FLAGS="-ansi -Wall -Wextra" #-Werror"

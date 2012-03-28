@@ -227,7 +227,6 @@ tre_init (void)
 #endif
 
     MAKE_VAR("*KERNEL-IDENT*", trestring_get (TRE_KERNEL_IDENT));
-    MAKE_VAR("*SYSTEM-NAME*", trestring_get (TRE_SYSTEM_NAME));
     MAKE_VAR("*CPU-TYPE*", trestring_get (TRE_CPU_TYPE));
     MAKE_VAR("*OS-RELEASE*", trestring_get (TRE_OS_RELEASE));
     MAKE_VAR("*OS-VERSION*", trestring_get (TRE_OS_VERSION));
@@ -355,6 +354,7 @@ main (int argc, char *argv[])
 	tregc_force ();
     trediag_init ();
 #endif
+    goto user;
 
 boot:
     c = 1;
