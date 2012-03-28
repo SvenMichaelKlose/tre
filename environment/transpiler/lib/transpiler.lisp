@@ -282,8 +282,8 @@
                      :compiled-inits          (copy-list compiled-inits)
                      :emitted-decls           (copy-list emitted-decls)
                      :raw-decls               (copy-list raw-decls)
-                     :sightened-files         (copy-list sightened-files)
-                     :compiled-files          (copy-list compiled-files)
+                     :sightened-files         (copy-alist sightened-files)
+                     :compiled-files          (copy-alist compiled-files)
                      :current-package         current-package
                      :expex-initializer       expex-initializer)
     (setf (transpiler-expex !) (transpiler-make-expex !))
