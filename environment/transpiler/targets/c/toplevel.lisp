@@ -2,6 +2,7 @@
 
 (defvar *closure-argdefs* nil)
 (defvar *c-init-group-size* 64)
+(defvar *c-init-counter* 0)
 
 (define-tree-filter c-transpiler-get-argdef-symbols (x)
   (not x)
@@ -12,12 +13,12 @@
 
 (defun c-transpiler-spot-argdef-symbols (x)
   (when x
-	(if (atom x)
-		(when (symbol-name x)
-		  (c-compiled-symbol x))
-		(progn
-		  (c-transpiler-spot-argdef-symbols x.)
-		  (c-transpiler-spot-argdef-symbols .x)))))
+	(? (atom x)
+	   (when (symbol-name x)
+	     (c-compiled-symbol x))
+	   (progn
+	     (c-transpiler-spot-argdef-symbols x.)
+	     (c-transpiler-spot-argdef-symbols .x)))))
 
 (defun c-transpiler-make-closure-argdef-symbols ()
   (c-transpiler-spot-argdef-symbols *closure-argdefs*))
@@ -78,7 +79,7 @@
   (let init-funs nil
     (append
         (mapcar (fn (with-gensym g
-				      (let name ($ 'c-init- g)
+				      (let name ($ 'C-INIT- (1+! *c-init-counter*))
 				        (push name init-funs)
 				        `(defun ,name ()
 						   ,@(mapcar #'((x)

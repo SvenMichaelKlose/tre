@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2005-2012 Sven Michael Klose <pixel@copei.de>
 
 (defun lambda-make-funinfo (args parent)
   (with (argnames (argument-expand-names 'lambda-expand args)
@@ -29,7 +29,7 @@
 (defvar *lexical-sym-counter* 0)
 
 (defun lambda-export-make-exported (fi x)
-  (let exported-name ($ '~LEXICAL- (1+! *lexical-sym-counter*))
+  (let exported-name ($ '~L (1+! *lexical-sym-counter*))
     (let fi-exported (lambda-make-funinfo (lambda-args x) fi)
 	  (funinfo-make-ghost fi-exported)
 	  (lambda-expand-tree fi-exported (lambda-body x) t)

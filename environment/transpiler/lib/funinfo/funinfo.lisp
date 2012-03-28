@@ -5,7 +5,7 @@
 (defstruct funinfo
   (parent nil)
   (name nil) ; Name of the function.
-  (sym ($ '~FUNINFO- (1+! *funinfo-sym-counter*))) ; Symbol of this funinfo used in LAMBDA-expressions.
+  (sym ($ '~F (1+! *funinfo-sym-counter*))) ; Symbol of this funinfo used in LAMBDA-expressions.
 
   (args nil) ; List of arguments.
 
