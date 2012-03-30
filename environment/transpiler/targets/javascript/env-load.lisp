@@ -42,8 +42,7 @@
 			 "character.lisp"
 			 "number.lisp"
 			 "../../../environment/number.lisp"
-             )
-			 ;"../../../environment/number-typing.lisp")
+			 "../../../environment/number-typing.lisp")
 		 (js-load-base *js-env-path*
 			 "apply.lisp"
 			 "array.lisp"

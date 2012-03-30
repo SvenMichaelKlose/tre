@@ -5,6 +5,7 @@
 
 (env-load "transpiler/lib/c-newlines.lisp")
 (env-load "transpiler/lib/c-literal-string.lisp")
+(env-load "transpiler/lib/string-concat-successive-literals.lisp")
 (env-load "transpiler/lib/predicates.lisp")
 (env-load "transpiler/lib/subatomic.lisp")
 (env-load "transpiler/lib/tag.lisp")

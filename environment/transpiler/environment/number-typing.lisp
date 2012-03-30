@@ -1,15 +1,10 @@
 ;;;;; tré - Copyright (c) 2008-2012 Sven Klose <pixel@copei.de>
 
 (defmacro + (&rest x)
-  (?
-	(some #'string? x)
-      (let args (string-concat-successive-literals x)
-		(? .args
-      	   `(string-concat ,@args)
-	  	   args.))
-	(every #'string? x)
-	  (apply #'string-concat x)
-    `(+ ,@x)))
+  (opt-string-concat x '+))
+
+(defmacro string-concat (&rest x)
+  (opt-string-concat x 'string-concat))
 
 ;(defmacro def-typed-transpiler-op (name)
 ;  `(defmacro ,name (&rest x)

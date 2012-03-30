@@ -47,7 +47,7 @@
 			              "../../../environment/list.lisp"
 			              "number.lisp"
 			              "../../../environment/number.lisp"
-;			              "../../../environment/number-typing.lisp"
+			              "../../../environment/number-typing.lisp"
 			              "sequence.lisp"
 			              "../../../environment/sequence.lisp"
 			              "../../../environment/character.lisp"
