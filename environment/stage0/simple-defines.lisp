@@ -45,4 +45,7 @@
 	   (print `(defconstant ,name)))
     `(progn
 	   (defvar ,name ,init)
-	   (setq *constants* (cons ',name *constants*)))))
+	   (setq *constants* (cons (cons ',name
+								     ',init)
+							   *constants*)
+           ,name ,init))))
