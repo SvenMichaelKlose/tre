@@ -122,6 +122,9 @@
        (%var ,name)
 	   (%setq ,name ,val))))
 
+(define-js-std-macro defconstant (&rest x)
+  `(defvar ,@x))
+
 (define-js-std-macro %%usetf-car (val x)
   (shared-setf-car val x))
 

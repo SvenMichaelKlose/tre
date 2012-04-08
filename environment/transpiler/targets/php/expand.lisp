@@ -54,6 +54,9 @@
     (transpiler-add-defined-variable tr name)
     `(%setq ,name ,val)))
 
+(define-php-std-macro defconstant (&rest x)
+  `(defvar ,@x))
+
 (define-php-std-macro %%usetf-car (val x)
   (shared-setf-car val x))
 
