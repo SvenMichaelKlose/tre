@@ -25,7 +25,8 @@
        (atom var)
        (symbol? var)
        (not (href (transpiler-wanted-variables-hash tr) var))
-	   (assoc var *variables* :test #'eq)))
+	   (or (assoc var *variables* :test #'eq)
+	       (assoc var *constants* :test #'eq))))
 
 (defun transpiler-add-wanted-variable (tr var)
   (when (transpiler-should-add-wanted-variable? tr var)
@@ -53,8 +54,7 @@
     (awhile (pop (transpiler-wanted-functions tr))
             nil
       (enqueue q (transpiler-import-wanted-function tr !)))
-    (append (apply #'append (queue-list q))
-            (transpiler-import-exported-closures tr))))
+    (apply #'append (queue-list q))))
 
 (defun transpiler-import-wanted-variables (tr)
   (transpiler-sighten tr
@@ -68,19 +68,20 @@
 (defun transpiler-import-from-environment (tr)
   (clr *imported-something*)
   (with (funs (transpiler-import-wanted-functions tr)
+         exported (transpiler-import-exported-closures tr)
 	     vars (transpiler-import-wanted-variables tr))
     (? *imported-something*
-       (append funs vars (transpiler-import-from-environment tr))
+       (append (append funs exported vars) (transpiler-import-from-environment tr))
        *delayed-var-inits*)))
 
 (defun transpiler-import-from-expex (x)
-  (aif (atom-function-expr? x)
-       (? (funinfo-in-this-or-parent-env? *expex-funinfo* !)
-	      x
-          (progn
-	        (transpiler-add-wanted-function *current-transpiler* !))
-            `(symbol-function (%quote ,!)))
-       (or (vec-function-expr? x) x)))
+  (!? (atom-function-expr? x)
+      (? (funinfo-in-this-or-parent-env? *expex-funinfo* !)
+	     x
+         (progn
+	       (transpiler-add-wanted-function *current-transpiler* !))
+           `(symbol-function (%quote ,!)))
+      (or (vec-function-expr? x) x)))
 
 (defun transpiler-import-universe (tr)
   (map (fn transpiler-add-wanted-function tr _) (reverse *defined-functions*)))

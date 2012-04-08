@@ -72,6 +72,7 @@
   (obfuscations (make-hash-table :test #'eq))
   plain-arg-funs
   (exported-closures nil)
+  (delayed-var-inits nil)
   (rename-all-args? nil)
   (rename-toplevel-function-args? nil)
   (dot-expand? t)
@@ -212,6 +213,7 @@
   		(transpiler-function-args tr) (make-hash-table :test #'eq)
   		(transpiler-function-bodies tr) (make-hash-table :test #'eq)
   		(transpiler-exported-closures tr) nil
+  		(transpiler-delayed-var-inits tr) nil
         (transpiler-memorized-sources tr) nil
         (transpiler-memorize-sources? tr) t)
   (transpiler-add-obfuscation-exceptions tr nil (make-symbol ""))
@@ -266,6 +268,7 @@
                      :obfuscations            (copy-hash-table obfuscations)
                      :plain-arg-funs          (copy-list plain-arg-funs)
                      :exported-closures       (copy-list exported-closures)
+                     :delayed-var-inits       (copy-list delayed-var-inits)
                      :rename-all-args?        rename-all-args?
                      :rename-toplevel-function-args? rename-toplevel-function-args?
                      :dot-expand?             dot-expand?
