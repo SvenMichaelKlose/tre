@@ -1,4 +1,4 @@
-;;;; tré - Copyright (c) 2005-2006,2008,2011,2011 Sven Klose <pixel@copei.de>
+;;;; tré - Copyright (c) 2005-2006,2008,2011-2012 Sven Michael Klose <pixel@copei.de>
 
 (defun %fopen-direction (direction)
   (case direction
@@ -22,7 +22,7 @@
   (with-gensym g
     `(let ,var ,file
        (unless ,var
-         (%error "couldn't open file"))
+         (error "couldn't open file '~A'" ,var))
        (with (,g (progn ,@body))
 		 (close ,var)
 		 ,g))))
