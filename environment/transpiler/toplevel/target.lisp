@@ -43,14 +43,16 @@
 							 	   		 (decl-gen nil)
                                          (print-obfuscations? nil))
   (with (before-deps (funcall front-before)
-		 after-deps (funcall front-after))
+		 after-deps  (funcall front-after))
 	(awhen dep-gen
       (when *have-compiler?*
         (setf *save-compiled-source?* t)
         (clr *save-args-only?*))
-      (acons! 'imported-deps (funcall !) after-deps))
+      (let former-deps (assoc-value 'imported-deps after-deps :test #'eq-string=)
+        (setf after-deps (aremove 'imported-deps after-deps :test #'eq-string=))
+        (acons! 'imported-deps (append former-deps (funcall !)) after-deps)))
 	(with (compiled-before (funcall back-before before-deps)
-		   compiled-after (funcall back-after after-deps))
+		   compiled-after  (funcall back-after after-deps))
 	  (prog1
 	    (concat-stringtree (awhen decl-gen
 		                     (funcall !))
