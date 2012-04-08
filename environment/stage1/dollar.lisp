@@ -4,7 +4,3 @@
 
 (defun $ (&rest args)
   (make-symbol (apply #'string-concat (filter #'string args))))
-
-(define-test "$"
-  (($ "DOLLAR-" 'test))
-  'dollar-test)

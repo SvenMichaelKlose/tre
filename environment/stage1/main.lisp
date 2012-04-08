@@ -51,3 +51,4 @@
 (env-load "stage1/test-lexical-scope.lisp")
 (env-load "stage1/test-block.lisp")
 (env-load "stage1/dollar.lisp")
+(env-load "stage1/test-dollar.lisp")
