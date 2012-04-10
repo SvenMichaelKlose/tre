@@ -19,7 +19,7 @@
 		  	    (and (>= _ #\A) (<= _ #\Z))
 		  	    (and (>= _ #\0) (<= _ #\9))
 			    (in=? _ #\_ #\. #\#)))
-	  :gen-string (fn c-literal-string _ #\')
+	  :gen-string (fn c-literal-string _ #\" (list #\$))
 	  :lambda-export? t
 	  :stack-locals? nil
 	  :rename-all-args? t
