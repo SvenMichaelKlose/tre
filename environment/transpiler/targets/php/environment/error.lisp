@@ -1,5 +1,4 @@
-;;;;; Transpiler: TRE to PHP
-;;;;; Copyright (c) 2008-2009,2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2009,2011-2012 Sven Michael Klose <pixel@copei.de>
 
 (dont-obfuscate exit)
 
@@ -18,7 +17,7 @@
 
 (dont-inline error)
 
-,(? *transpiler-log*
+,(? *transpiler-assert*
     '(defun error (fmt &rest args)
        (%error (+ "Error :" (apply #'format nil fmt args))))
-    '(defun error (&rest args)))
+    '(defun error (fmt &rest args)))
