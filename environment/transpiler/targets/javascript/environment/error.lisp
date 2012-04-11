@@ -1,10 +1,9 @@
-;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
 
 (dont-inline %error)
 
 (defun %error (msg)
-  (alert msg)
+  (princ msg)
   (invoke-debugger)
   nil)
 
