@@ -5,7 +5,7 @@
 (defun length (x)
   (?
     (not x) 0
-    (cons? x) (%list-length x)
+    (cons? x) (list-length x)
     (string? x) (strlen x)
     (sizeof x)))
 

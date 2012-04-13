@@ -1,13 +1,12 @@
-;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
 
 (dont-obfuscate length)
 
 (defun length (x)
   (? x
      (? (cons? x)
-	     (%list-length x)
-	     x.length)
+	    (list-length x)
+	    x.length)
      0))
 
 (dont-obfuscate split)

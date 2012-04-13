@@ -1,9 +1,8 @@
-;;;;; TRE transpiler environment
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
 
 (defun list (&rest x) x)
 
-(defun %list-length (x)
+(defun list-length (x)
   (let len 0
     (while (cons? x)
            len
