@@ -32,6 +32,9 @@
                    "}~%"))
     (php-print-native-environment out)))
 
+(defun php-transpile-decls (tr)
+  (transpiler-make-code tr (transpiler-sighten tr (transpiler-compiled-inits tr))))
+
 (defun php-transpile (sources &key (obfuscate? nil) (print-obfuscations? nil) (files-to-update nil))
   (let tr *php-transpiler*
     (transpiler-add-defined-variable tr '*KEYWORD-PACKAGE*)
@@ -39,19 +42,15 @@
         "<?php "
 		(php-transpile-prepare tr)
     	(target-transpile tr
-    	 	:files-before-deps
-			    (list (cons 'base1 *php-base*)
-				  	  (cons 'base2 *php-base2*))
-		  	:files-after-deps
-				(append (when (eq t *have-environment-tests*)
-				   	  	  (list (cons 'env-tests (make-environment-tests))))
-                        sources)
-		 	:dep-gen
-		     	#'(()
-				  	(transpiler-import-from-environment tr))
-            :decl-gen
-                #'(()
-                     (transpiler-make-code tr (transpiler-sighten tr (transpiler-compiled-inits tr))))
+    	 	:files-before-deps (list (cons 'base1 *php-base*)
+				  	                 (cons 'base2 *php-base2*))
+		  	:files-after-deps (append (when (eq t *have-environment-tests*)
+				   	  	                (list (cons 'env-tests (make-environment-tests))))
+                                      sources)
+		 	:dep-gen #'(()
+				  	     (transpiler-import-from-environment tr))
+            :decl-gen #'(()
+                          (php-transpile-decls tr))
 			:files-to-update files-to-update
             :obfuscate? obfuscate?
 			:print-obfuscations? print-obfuscations?)
