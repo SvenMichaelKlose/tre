@@ -1,7 +1,7 @@
 ;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *closure-argdefs* nil)
-(defvar *c-init-group-size* 64)
+(defvar *c-init-group-size* 16)
 (defvar *c-init-counter* 0)
 
 (define-tree-filter c-transpiler-get-argdef-symbols (x)
