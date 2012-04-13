@@ -41,17 +41,20 @@
           (when (eq t *have-environment-tests*)
             (list (cons 't5 (make-environment-tests))))))
 
+(defun js-files-compiler ()
+  (append (list (cons 'list-of-defined-functions #'js-emit-early-defined-functions)
+                (list (+ *js-env-path* "env-load-stub.lisp")))
+          (mapcan (fn unless ._
+                       (list (list (string-concat "environment/" _.))))
+                  (reverse *environment-filenames*))
+          (list (list (+ *js-env-path* "late-macro.lisp"))
+                (list (+ *js-env-path* "eval.lisp")))))
+
 (defun js-files-after-deps ()
   (append (list (cons 'late-symbol-function-assignments #'emit-late-symbol-function-assignments)
                 (cons 'memorized-source-emitter #'js-emit-memorized-sources))
           (when *have-compiler?*
-            (append (list (cons 'list-of-defined-functions #'js-emit-early-defined-functions)
-                          (list (+ *js-env-path* "env-load-stub.lisp")))
-                    (mapcan (fn unless ._
-                                 (list (list (string-concat "environment/" _.))))
-                            (reverse *environment-filenames*))
-                    (list (list (+ *js-env-path* "late-macro.lisp"))
-                          (list (+ *js-env-path* "eval.lisp")))))))
+            (js-files-compiler))))
 
 (defun js-transpile (sources &key (obfuscate? nil) (print-obfuscations? nil) (files-to-update nil))
   (let tr *js-transpiler*
