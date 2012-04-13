@@ -92,6 +92,7 @@
   (compiled-decls nil)
   (compiled-inits nil)
   (emitted-decls nil)
+  (imported-deps "")
 
   (raw-decls nil)
 
@@ -284,6 +285,7 @@
                      :compiled-decls          (copy-list compiled-decls)
                      :compiled-inits          (copy-list compiled-inits)
                      :emitted-decls           (copy-list emitted-decls)
+                     :imported-deps           imported-deps
                      :raw-decls               (copy-list raw-decls)
                      :sightened-files         (copy-alist sightened-files)
                      :compiled-files          (copy-alist compiled-files)
