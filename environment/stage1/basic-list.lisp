@@ -12,4 +12,6 @@
   (? c
      (? (cons? c)
 	    (cons (car c) (copy-list (cdr c)))
-        (%error "COPY-LIST: cons expected"))))
+        (progn
+          (print c)
+          (%error "COPY-LIST: cons expected")))))
