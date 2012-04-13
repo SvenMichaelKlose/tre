@@ -217,15 +217,21 @@
 
 ;;;; HASH TABLE
 
-(define-php-macro href (x y)
-  `(%transpiler-native "(is_a (" ,(php-dollarize x) ", '__l') ? "
-                       ,(php-dollarize x) "->g(" ,(php-dollarize y) ") : "
-                       ,(php-dollarize x) "[" ,(php-dollarize y) "])"))
+(define-php-macro %%%href (h k)
+  `(%transpiler-native ,(php-dollarize h) "[" ,(php-dollarize k) "]"))
 
-(define-php-macro %%usetf-href (v x y)
-  `(%transpiler-native "(is_a (" ,(php-dollarize x) ", '__l') ? "
-                       ,(php-dollarize x) "->s(" ,(php-dollarize y) "," ,(php-dollarize v) ") : "
-                       ,(php-dollarize x) "[" ,(php-dollarize y) "] = " ,(php-dollarize v) ")"))
+(define-php-macro %%%href-set (h k v)
+  `(%transpiler-native ,(php-dollarize h) "[" ,(php-dollarize k) "] = " ,(php-dollarize v)))
+
+(define-php-macro href (h k)
+  `(%transpiler-native "(is_a (" ,(php-dollarize h) ", '__l') ? "
+                       ,(php-dollarize h) "->g(" ,(php-dollarize k) ") : "
+                       ,(php-dollarize h) "[" ,(php-dollarize k) "])"))
+
+(define-php-macro %%usetf-href (v h k)
+  `(%transpiler-native "(is_a (" ,(php-dollarize h) ", '__l') ? "
+                       ,(php-dollarize h) "->s(" ,(php-dollarize k) "," ,(php-dollarize v) ") : "
+                       ,(php-dollarize h) "[" ,(php-dollarize k) "] = " ,(php-dollarize v) ")"))
 
 (define-php-macro hremove (h key)
   `(%transpiler-native "null; unset ($" ,h "[" ,(php-dollarize key) "])"))
