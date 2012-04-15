@@ -1,9 +1,8 @@
-;;;;; TRE transpiler
-;;;;; Copyright (c) 2009-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2009-2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *show-inlines?* nil)
 (defvar *opt-inline-max-levels* 8)
-(defvar *opt-inline-max-size* 32)
+(defvar *opt-inline-max-size* 16)
 (defvar *opt-inline-max-repetitions* 0)
 
 (defun opt-inline-inlined-fun (tr x argdef body level current parent)
