@@ -1,11 +1,13 @@
 ;;;;; tré - Copyright (c) 2009-2012 Sven Michael Klose <pixel@copei.de>
 
+(defvar *obj-id-counter* 0)
+
 (defun %href-object-key (key)
   (string-concat "_caroshi_obj" key._caroshi-object-id))
 
 (defun %href-make-object-key (key)
   (unless (defined? key._caroshi-object-id)
-    (setf key._caroshi-object-id (gensym-number))))
+    (setf key._caroshi-object-id (1+! *obj-id-counter*))))
 
 (defun %%usetf-href (value hash key)
   (? (object? key)
