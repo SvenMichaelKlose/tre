@@ -225,13 +225,13 @@
 
 (define-php-macro href (h k)
   `(%transpiler-native "(is_a (" ,(php-dollarize h) ", '__l') ? "
-                       ,(php-dollarize h) "->g(" ,(php-dollarize k) ") : "
-                       ,(php-dollarize h) "[" ,(php-dollarize k) "])"))
+                       ,(php-dollarize h) "->g(userfun_T37T37key(" ,(php-dollarize k) ")) : "
+                       ,(php-dollarize h) "[userfun_T37T37key(" ,(php-dollarize k) ")])"))
 
 (define-php-macro %%usetf-href (v h k)
   `(%transpiler-native "(is_a (" ,(php-dollarize h) ", '__l') ? "
-                       ,(php-dollarize h) "->s(" ,(php-dollarize k) "," ,(php-dollarize v) ") : "
-                       ,(php-dollarize h) "[" ,(php-dollarize k) "] = " ,(php-dollarize v) ")"))
+                       ,(php-dollarize h) "->s(userfun_T37T37key(" ,(php-dollarize k) ")," ,(php-dollarize v) ") : "
+                       ,(php-dollarize h) "[userfun_T37T37key(" ,(php-dollarize k) ")] = " ,(php-dollarize v) ")"))
 
 (define-php-macro hremove (h key)
   `(%transpiler-native "null; unset ($" ,h "[" ,(php-dollarize key) "])"))
