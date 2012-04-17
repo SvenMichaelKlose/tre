@@ -4,9 +4,10 @@
   `(define-transpiler-std-macro *php-transpiler* ,@x))
 
 (define-php-std-macro %defsetq (place &rest x)
-  `(progn
+  `(%%vm-scope
      (%var ,place)
-     (%setq ,place ,@x)))
+     (%setq ,place ,@x)
+     (%setq (slot-value ,(list 'quote place) 'f) ,(compiled-function-name-string *current-transpiler* place))))
 
 (define-php-std-macro define-native-php-fun (name args &rest body)
   `(%%vm-scope
@@ -70,7 +71,6 @@
 (define-php-std-macro slot-value (place slot)
   `(%slot-value ,place ,(cadr slot)))
 
-;; XXX Can't we do this in one macro?
 (define-php-std-macro bind (fun &rest args)
   `(%bind ,(? (%slot-value? fun)
  			  .fun.
