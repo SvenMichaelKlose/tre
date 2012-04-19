@@ -1,7 +1,8 @@
 ;;;;; tré - Copyright (c) 2005-2012 Sven Michael Klose <pixel@copei.de>
 
-;,(awhen *current-transpiler*
-;   (setf (transpiler-save-argument-defs-only? *current-transpiler*) t))
+,(awhen (and (function? #'%%usetf-transpiler-save-argument-defs-only?)
+             *current-transpiler*)
+   (%%usetf-transpiler-save-argument-defs-only? t !))
 
 (env-load "transpiler/lib/main.lisp")
 (env-load "transpiler/back-end/main.lisp")
