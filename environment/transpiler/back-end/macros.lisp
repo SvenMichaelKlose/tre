@@ -1,4 +1,7 @@
-;;;;; tré - Copyright (c) 2008-2009,2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2009,2011-2012 Sven Michael Klose <pixel@copei.de>
+
+(defun transpiler-make-code-expander (tr)                                                                                                                      
+  (define-expander (transpiler-macro-expander tr)))
 
 (defmacro define-codegen-macro (tr name &rest x)
   (when *show-definitions*

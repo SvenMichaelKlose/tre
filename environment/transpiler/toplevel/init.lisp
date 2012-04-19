@@ -1,32 +1,5 @@
 ;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
 
-(defvar *std-macro-expander* nil)
-
-;; Make expander for standard macro which picks macros of the same
-;; name in der user-defined expander first.
-(defun make-overlayed-std-macro-expander (expander-name)
-  (with (e       (define-expander expander-name)
-         mypred  (expander-pred e)
-		 mycall  (expander-call e))
-    (setf (expander-pred e) (lx (mypred)
-								(fn (or (funcall ,mypred _)
-                                        (aif *std-macro-expander*
-                                             (expander-has-macro? 'standard-macros _.)
-				 				             (%%macrop _)))))
-   		  (expander-call e) (lx (mypred mycall)
-								(fn (? (funcall ,mypred _)
-				 				       (funcall ,mycall _)
-                                       (aif *std-macro-expander*
-                                            (with-temporary *current-expander* !
-                                              (funcall (expander-call !) _))
-				 				            (%%macrocall _))))))))
-
-(defun transpiler-make-std-macro-expander (tr)
- (make-overlayed-std-macro-expander (transpiler-std-macro-expander tr)))
-
-(defun transpiler-make-code-expander (tr)
-  (define-expander (transpiler-macro-expander tr)))
-
 (defun transpiler-make-expex (tr)
   (let ex (make-expex)
     (setf (transpiler-expex tr) ex

@@ -8,6 +8,7 @@
 
 (defun make-php-transpiler-0 ()
   (create-transpiler
+      :name 'php
 	  :std-macro-expander 'php-alternate-std
 	  :macro-expander 'php
 	  :setf-function? #'php-setf-function?

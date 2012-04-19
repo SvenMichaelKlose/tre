@@ -11,6 +11,7 @@
 (defvar *recompiling?* nil)
 
 (defstruct transpiler
+  name
   std-macro-expander
   macro-expander
   (setf-function? #'identity)
@@ -44,6 +45,8 @@
 
   (obfuscate? nil)
   (import-from-environment? t)
+  (save-sources? nil)
+  (save-argument-defs-only? nil)
 
   ; Generator for literal strings.
   (gen-string (fn c-literal-string _ #\"))
@@ -102,6 +105,10 @@
 
   (current-package nil))
 
+(defun transpiler-macro? (tr name)
+  (or (expander-has-macro? (transpiler-std-macro-expander tr) name)
+      (expander-has-macro? (transpiler-macro-expander tr) name)))
+
 (defun transpiler-defined-functions (tr)
   (hashkeys (transpiler-defined-functions-hash tr)))
 
@@ -149,15 +156,15 @@
 (defun transpiler-wanted-function? (tr fun)
   (href (transpiler-wanted-functions-hash tr) fun))
 
+(defun transpiler-unwanted-function? (tr fun)
+  (member fun (transpiler-unwanted-functions tr)))
+
 (defun transpiler-wanted-variable? (tr name)
   (href (transpiler-wanted-variables-hash tr) name))
 
 (defun transpiler-imported-variable? (tr x)
   (and (transpiler-import-from-environment? tr)
        (assoc x *variables* :test #'eq)))
-
-(defun transpiler-unwanted-function? (tr fun)
-  (member fun (transpiler-unwanted-functions tr)))
 
 (defun transpiler-inline-exception? (tr fun)
   (member fun (transpiler-inline-exceptions tr) :test #'eq))
@@ -234,7 +241,8 @@
 
 (def-transpiler copy-transpiler (transpiler)
   (aprog1
-    (make-transpiler :std-macro-expander     std-macro-expander
+    (make-transpiler :name                   name
+                     :std-macro-expander     std-macro-expander
                      :macro-expander         macro-expander
                      :setf-function?         setf-function?
                      :separator              separator
@@ -253,6 +261,8 @@
                      :dont-inline-list       (copy-list dont-inline-list)
                      :obfuscate?             obfuscate?
                      :import-from-environment? import-from-environment?
+                     :save-sources?           save-sources?
+                     :save-argument-defs-only? save-argument-defs-only?
                      :gen-string              gen-string
                      :lambda-export?          lambda-export?
                      :needs-var-declarations? needs-var-declarations?

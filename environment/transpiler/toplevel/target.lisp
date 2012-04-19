@@ -35,10 +35,8 @@
 
 (defun target-sighten-deps (tr dep-gen)
   (when dep-gen
-    (when *have-compiler?*
-      (setf *save-compiled-source?* t)
-      (clr *save-args-only?*))
-    (funcall dep-gen)))
+    (with-temporary (transpiler-save-argument-defs-only? tr) nil
+      (funcall dep-gen))))
 
 (defun target-transpile (tr &key (files-before-deps nil)
                                  (files-after-deps nil)
@@ -49,6 +47,8 @@
                                  (print-obfuscations? nil))
   (with-temporaries (*recompiling?* (? files-to-update t)
                      *current-transpiler* tr)
+    (when *have-compiler?*
+      (setf (transpiler-save-sources? tr) t))
     (when files-to-update
       (clr (transpiler-emitted-decls tr)))
     (transpiler-switch-obfuscator tr obfuscate?)

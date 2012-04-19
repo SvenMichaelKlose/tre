@@ -31,9 +31,11 @@
    		            ,@(body-without-noargs-tag body))))
      ,@(when (and *have-compiler?* (not (transpiler-memorize-sources? *current-transpiler*)))
          `((%setq *defined-functions* (cons ,(list 'quote n) *defined-functions*))))
-     ,@(when *save-compiled-source?*
+     ,@(when (transpiler-save-sources? tr)
          (apply #'transpiler-add-obfuscation-exceptions *current-transpiler* (collect-symbols (cons args body)))
+         (when (transpiler-save-argument-defs-only? tr)
+           (print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!))
          (? (transpiler-memorize-sources? *current-transpiler*)
             (and (acons! name (cons args body) (transpiler-memorized-sources *current-transpiler*))
                  nil)
-            `((%setq (slot-value ,name '__source) ,(list 'quote (cons args (unless *save-args-only?* body))))))))))
+            `((%setq (slot-value ,name '__source) ,(list 'quote (cons args (unless (transpiler-save-argument-defs-only? tr) body))))))))))

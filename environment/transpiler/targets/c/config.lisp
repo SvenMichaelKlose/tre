@@ -2,6 +2,7 @@
 
 (defun make-c-transpiler ()
   (aprog1 (create-transpiler
+              :name 'c
 			  :std-macro-expander 'c-alternate-std
 			  :macro-expander 'c
 			  :separator (format nil ";~%")

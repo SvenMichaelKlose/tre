@@ -1,8 +1,19 @@
 ;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
 
-(defun transpiler-macro? (tr name)
-  (or (expander-has-macro? (transpiler-std-macro-expander tr) name)
-	  (expander-has-macro? (transpiler-macro-expander tr) name)))
+(defun make-overlayed-std-macro-expander (expander-name)
+  (with (e       (define-expander expander-name)
+         mypred  (expander-pred e)
+		 mycall  (expander-call e))
+    (setf (expander-pred e) (lx (mypred)
+								(fn or (funcall ,mypred _)
+				 				       (%%macrop _)))
+   		  (expander-call e) (lx (mypred mycall)
+								(fn ? (funcall ,mypred _)
+				 				      (funcall ,mycall _)
+				 				      (%%macrocall _))))))
+
+(defun transpiler-make-std-macro-expander (tr)
+ (make-overlayed-std-macro-expander (transpiler-std-macro-expander tr)))
 
 (defmacro define-transpiler-std-macro (tr name &rest args-and-body)
   (let quoted-name (list 'quote name)
