@@ -3,8 +3,6 @@
 (defun make-c-transpiler ()
   (aprog1 (create-transpiler
               :name 'c
-			  :std-macro-expander 'c-alternate-std
-			  :macro-expander 'c
 			  :separator (format nil ";~%")
 			  :inline-exceptions (list 'c-init)
 			  :dont-inline-list '(error format replace-tree)

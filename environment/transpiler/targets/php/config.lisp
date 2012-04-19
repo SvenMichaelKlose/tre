@@ -9,8 +9,6 @@
 (defun make-php-transpiler-0 ()
   (create-transpiler
       :name 'php
-	  :std-macro-expander 'php-alternate-std
-	  :macro-expander 'php
 	  :setf-function? #'php-setf-function?
 	  :unwanted-functions '(wait)
 	  :apply-argdefs? nil
@@ -58,7 +56,7 @@
 	(transpiler-add-defined-function ! '%cons)
 	(transpiler-add-function-args ! '%cons '(a b))))
 
-(defvar *php-transpiler* (make-php-transpiler))
+(defvar *php-transpiler* (copy-transpiler (make-php-transpiler)))
 (defvar *php-newline* (format nil "~%"))
 (defvar *php-separator* (format nil ";~%"))
 (defvar *php-indent* "    ")

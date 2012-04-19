@@ -13,7 +13,9 @@
 				 				      (%%macrocall _))))))
 
 (defun transpiler-make-std-macro-expander (tr)
- (make-overlayed-std-macro-expander (transpiler-std-macro-expander tr)))
+  (let expander-name ($ (transpiler-name tr) '-standard)
+    (setf (transpiler-std-macro-expander tr) expander-name)
+    (make-overlayed-std-macro-expander expander-name)))
 
 (defmacro define-transpiler-std-macro (tr name &rest args-and-body)
   (let quoted-name (list 'quote name)

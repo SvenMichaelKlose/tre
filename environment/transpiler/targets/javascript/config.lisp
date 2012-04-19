@@ -7,8 +7,6 @@
 (defun make-javascript-transpiler-0 ()
   (create-transpiler
       :name 'js
-	  :std-macro-expander 'js-alternate-std
-	  :macro-expander 'javascript
 	  :setf-function? #'js-setf-function?
 	  :unwanted-functions '(wait)
 	  :named-functions? nil
