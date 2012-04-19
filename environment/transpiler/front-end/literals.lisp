@@ -1,13 +1,11 @@
-;;;;; TRE transpiler
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
 
 (define-tree-filter transpiler-expand-characters (x)
   (character? x)
 	`(code-char ,(char-code x)))
 
 (defmacro define-compiled-literal (name (x table) &key maker init-maker decl-maker)
-  "Define collector for declarations and initialisations for a certain
-   data type of literals."
+  "Define a collector of declarations and initializations for literals of a particular data type."
   (let slot `(,($ 'transpiler-compiled- table 's) *current-transpiler*)
     `(defun ,name (,x)
        (or (href ,slot ,x)

@@ -2,7 +2,6 @@
 
 (env-load "transpiler/targets/php/expex.lisp")
 (env-load "transpiler/targets/php/expex-literals.lisp")
-(env-load "transpiler/targets/php/global.lisp")
 (env-load "transpiler/targets/php/config.lisp")
 (env-load "transpiler/targets/php/expand.lisp")
 (env-load "transpiler/targets/php/class.lisp")

@@ -33,8 +33,6 @@
          `((%setq *defined-functions* (cons ,(list 'quote n) *defined-functions*))))
      ,@(when (transpiler-save-sources? tr)
          (apply #'transpiler-add-obfuscation-exceptions *current-transpiler* (collect-symbols (cons args body)))
-         (when (transpiler-save-argument-defs-only? tr)
-           (print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!))
          (? (transpiler-memorize-sources? *current-transpiler*)
             (and (acons! name (cons args body) (transpiler-memorized-sources *current-transpiler*))
                  nil)

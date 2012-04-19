@@ -20,7 +20,7 @@
 			  :rename-all-args? t
 			  :literal-conversion #'identity
 	          :expex-initializer #'((ex)
-	                                 (setf (expex-argument-filter ex) #'c-expex-literal
+	                                 (setf (expex-argument-filter ex) #'c-expex-argument-filter
 	                                       (expex-expr-filter ex) #'c-expex-filter
 			                               (expex-setter-filter ex) (compose (fn mapcan (fn expex-set-global-variable-value _) _)
 										                                     #'expex-compiled-funcall)

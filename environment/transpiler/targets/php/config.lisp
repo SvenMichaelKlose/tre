@@ -35,7 +35,7 @@
     	                           (expex-setter-filter ex) (compose (fn mapcar (fn php-setter-filter *php-transpiler* _) _)
                                                                      #'expex-compiled-funcall)
     	                           (expex-function-arguments ex) #'current-transpiler-function-arguments-w/o-builtins
-    	                           (expex-argument-filter ex) #'php-expex-filter))))
+    	                           (expex-argument-filter ex) #'php-expex-argument-filter))))
 
 (defun make-php-transpiler ()
   (aprog1 (make-php-transpiler-0)

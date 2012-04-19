@@ -25,8 +25,13 @@
   (adjoin! x (funinfo-globals *expex-funinfo*))
   x)
 
-(defun php-expex-literal (x)
+(defun php-expex-argument-filter (x)
   (?
+    (and (atom x)
+         (not (eq '~%RET x))
+         (not (funinfo-in-toplevel-env? *expex-funinfo* x))
+         (transpiler-defined-variable *php-transpiler* x))
+      `(%transpiler-native "$GLOBALS['" ,(transpiler-obfuscated-symbol-string *php-transpiler* x) "']")
     (character? x) (php-expex-add-global (php-compiled-char x))
     (%quote? x)    (php-expex-add-global (php-compiled-symbol .x.))
     (keyword? x)   (php-expex-add-global (php-compiled-symbol x))

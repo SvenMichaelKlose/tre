@@ -31,9 +31,7 @@
 				                                    'tre_package_keyword
 				                                    'treptr_nil))))
 
-;; An EXPEX-ARGUMENT-FILTER.
-;; Just a type dispatcher.
-(defun c-expex-literal (x)
+(defun c-expex-argument-filter (x)
   (?
 	(cons? x) (transpiler-import-from-expex x)
     (character? x) (c-compiled-char x)

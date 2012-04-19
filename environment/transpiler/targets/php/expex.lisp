@@ -1,7 +1,7 @@
-;;;;; tré - Copyright (c) 2009-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2009-2012 Sven Michael Klose <pixel@copei.de>
 
 (defun php-local-fun-filter (x)
-  `(%setq ,(php-expex-filter .x.)
+  `(%setq ,(php-expex-argument-filter .x.)
           ,(let val ..x.
              (? (and (cons? val)
                      (transpiler-defined-function *php-transpiler* val.))
