@@ -1,7 +1,4 @@
-;;;;; TRE environment
-;;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; ANSI terminal functions.
+;;;;; tré - Copyright (c) 2008 Sven Klose <pixel@copei.de>
 
 ;;;; Primitives.
 
@@ -34,24 +31,24 @@
 
 ;;;; Macros.
 
-(defmacro defc (cmd name args description &rest codes)
+(defmacro define-ansi-cmd (cmd name args description &rest codes)
   `(defun ,name ,args
 	 ,description
 	 ,(cons cmd codes)))
 
 (defmacro %defz (defname cmd)
   `(defmacro ,defname (name &rest args)
-     `(defc ,cmd ,,name () ,,@args)))
+     `(define-ansi-cmd ,cmd ,,name () ,,@args)))
 
 (%defz defs ansi-set-flag)
 (%defz def-sgr ansi-sgr)
 (%defz def0 ansi-cmd0)
 
 (defmacro def1 (&rest args)
-  `(defc ansi-cmd1 ,@args))
+  `(define-ansi-cmd ansi-cmd1 ,@args))
 
 (defmacro def2 (&rest args)
-  `(defc ansi-cmd2 ,@args))
+  `(define-ansi-cmd ansi-cmd2 ,@args))
 
 ;;;; Public functions.
 
@@ -133,10 +130,10 @@
 		c
 		(ansi-read-nonctrl))))
 
-(defun ansi-read-digit (&optional (v 0))
+(defun ansi-read-natural-number (&optional (v 0))
   (with (c (read-char))
     (if (digit-char-p  c)
-	    (ansi-read-digit (+ (- c #\0) (* 10 v)))
+	    (ansi-read-natural-number (+ (- c #\0) (* 10 v)))
 		v)))
 
 (defun ansi-get-position ()
@@ -145,8 +142,8 @@
   (ansi-cmd0 "6n")
   (force-output)
   (when (= #\[ (ansi-read-nonctrl))
-     (with (height (ansi-read-digit)
-     	    width  (ansi-read-digit))
+     (with (height (ansi-read-natural-number)
+     	    width  (ansi-read-natural-number))
   	   (%terminal-normal)
 	   (values width height))))
 
