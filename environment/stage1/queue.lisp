@@ -4,22 +4,21 @@
   (cons nil nil))
 
 (defun enqueue (queue obj)
-  (? (car queue)
-     (setf (car queue) (setf (cdar queue) (list obj)))
-     (setf (car queue) (setf (cdr queue) (list obj))))
+  (rplaca queue
+          (cdr (rplacd (or (car queue) queue)
+                       (list obj))))
   obj)
 
 (defun enqueue-list (queue x)
-  (setf (cdr queue) (nconc (cdr queue) x)
-		(car queue) (last x)))
+  (rplacd queue (nconc (cdr queue) x))
+  (rplaca queue (last x)))
 
 (defun queue-pop (queue)
-  (let v (cadr queue)
-    (? (eq (car queue) (cdr queue))
-       (setf (car queue) nil))
+  (prog1 (cadr queue)
+    (? (not (cddr queue))
+       (rplaca queue nil))
     (? (cdr queue)
-       (setf (cdr queue) (cddr queue)))
-    v))
+       (rplacd queue (cddr queue)))))
 
 (functional queue-list queue-front)
 
