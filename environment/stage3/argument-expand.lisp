@@ -59,13 +59,13 @@
 								   (rest-arg nil))
   (with (err
 		   #'((msg &rest args)
-				(apply #'error
-					   (string-concat
-						 (format nil "Call of function ~A:~%" (symbol-name fun))
-						 (format nil "Argument definition: ~A~%" adef)
-						 (format nil "Given arguments: ~A~%" alst)
-						 msg)
-					   args))
+				(error (string-concat
+                           (format nil "Call of function ~A:~%"
+						               "Argument definition: ~A~%"
+						               "Given arguments: ~A~%"
+                                       "~A")
+					               (symbol-name fun) adef alst msg
+					       args)))
 		 get-name
 		   #'((def)
 				(? (cons? def.)
