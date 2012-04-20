@@ -1,4 +1,4 @@
-;;;; tré - Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
+;;;; tré - Copyright (c) 2005-2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *assert* t)
 (defvar *tre-has-math* t)
@@ -9,8 +9,6 @@
 (defvar *tre-has-transpiler* t)
 (defvar *exec-log* nil)
 (defvar *print-circularities?* nil)
-(defvar *save-compiled-source?* nil)
-(defvar *save-args-only?* nil)
 (defvar *have-compiler?* nil)
 (defvar *have-c-compiler?* t)
 (defvar *show-compiler-progress?* t)
