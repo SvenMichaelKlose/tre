@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
 
 ;; After this pass:
 ;; - Symbols are obfuscated.
@@ -13,7 +13,7 @@
     concat-stringtree #'concat-stringtree
     to-string (fn transpiler-to-string tr _)
     obfuscate (fn transpiler-obfuscate tr _)
-    codegen-expander (fn expander-expand (transpiler-macro-expander tr) _)
+    codegen-expand (fn expander-expand (transpiler-codegen-expander tr) _)
     finalize-sexprs #'transpiler-finalize-sexprs
     encapsulate-strings #'transpiler-encapsulate-strings
     function-names (fn translate-function-names tr nil _))

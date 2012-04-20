@@ -180,7 +180,7 @@
   (let tre *php-transpiler*
 	(transpiler-add-inline-exception tre op)
 	(transpiler-add-plain-arg-fun tre op)
-	`(define-expander-macro ,(transpiler-macro-expander tre) ,op (&rest args)
+	`(define-expander-macro ,(transpiler-codegen-expander tre) ,op (&rest args)
 	   `(%transpiler-native ,,@(pad (mapcar #'php-dollarize args) ,replacement-op)))))
 
 (mapcar-macro x

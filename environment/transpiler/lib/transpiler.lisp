@@ -13,7 +13,7 @@
 (defstruct transpiler
   name
   std-macro-expander
-  macro-expander
+  codegen-expander
   (setf-function? #'identity)
   separator
 
@@ -107,7 +107,7 @@
 
 (defun transpiler-macro? (tr name)
   (or (expander-has-macro? (transpiler-std-macro-expander tr) name)
-      (expander-has-macro? (transpiler-macro-expander tr) name)))
+      (expander-has-macro? (transpiler-codegen-expander tr) name)))
 
 (defun transpiler-defined-functions (tr)
   (hashkeys (transpiler-defined-functions-hash tr)))
@@ -205,7 +205,7 @@
   (member fun (transpiler-dont-inline-list tr) :test #'eq))
 
 (defun transpiler-macro (tr name)
-  (let expander (expander-get (transpiler-macro-expander tr))
+  (let expander (expander-get (transpiler-codegen-expander tr))
     (funcall (expander-lookup expander)
 			 expander
 		     name)))
@@ -243,7 +243,7 @@
   (aprog1
     (make-transpiler :name                   name
                      :std-macro-expander     std-macro-expander
-                     :macro-expander         macro-expander
+                     :codegen-expander       codegen-expander
                      :setf-function?         setf-function?
                      :separator              separator
                      :unwanted-functions     unwanted-functions

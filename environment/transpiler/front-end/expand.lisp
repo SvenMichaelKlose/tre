@@ -22,7 +22,7 @@
     `(progn
        (when (expander-has-macro? (transpiler-std-macro-expander ,tr) ,quoted-name)
 	     (warn "Macro ~A is already defined as a standard macro.~%" ,quoted-name))
-	   (when (expander-has-macro? (transpiler-macro-expander ,tr) ,quoted-name)
+	   (when (expander-has-macro? (transpiler-codegen-expander ,tr) ,quoted-name)
 	     (error "Macro ~A is already defined in code generator.~%" ,quoted-name))
 	   (transpiler-add-inline-exception ,tr ,quoted-name)
        (define-expander-macro ,(transpiler-std-macro-expander (eval tr)) ,name ,@args-and-body))))
