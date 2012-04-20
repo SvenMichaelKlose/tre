@@ -49,9 +49,6 @@
           (return (progn ,@result)))))))
 
 (defun filter (func lst)
-  (when lst
-	(cons (funcall func (car lst))
-		  (filter func (cdr lst)))))
-
-(defun filter-concat (func lst)
-  (funcall #'nconc func lst))
+  (let result (cons nil nil)
+    (dolist (i lst (cdr result))
+      (rplaca result (cdr (rplacd (or (car result) result) (list (funcall func i))))))))
