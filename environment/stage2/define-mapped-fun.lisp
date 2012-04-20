@@ -6,15 +6,13 @@
        (,mapfun #'(,@fun) ,g))))
 
 (defmacro define-filter (name &rest fun)
-  `(define-mapped-fun mapcar ,name ,@fun))
+  `(define-mapped-fun filter ,name ,@fun))
 
 (defmacro define-mapcan-fun (name &rest fun)
   `(define-mapped-fun mapcan ,name ,@fun))
 
-(define-mapcar-fun carlist (a)
-  (car a))
+(define-filter carlist (x)
+  (car x))
 
-(defun cdrlist (x)
-  (when x
-    (cons (cdr (car x))
-		  (cdrlist (cdr x)))))
+(define-filter cdrlist (x)
+  (cdr x))

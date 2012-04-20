@@ -1,6 +1,4 @@
-;;;;; TRE environment
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2010,2012 Sven Michael Klose <pixel@copei.de>
 
-(defun symbols-function-exprs (x)
-  (mapcar (fn `(function ,_))
-		  x))
+(define-filter symbols-function-exprs (x)
+  `(function ,x))

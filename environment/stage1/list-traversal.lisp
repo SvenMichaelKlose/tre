@@ -51,4 +51,6 @@
 (defun filter (func lst)
   (let result (cons nil nil)
     (dolist (i lst (cdr result))
-      (rplaca result (cdr (rplacd (or (car result) result) (list (funcall func i))))))))
+      (rplaca result
+              (cdr (rplacd (or (car result) result)
+                           (list (funcall func i))))))))
