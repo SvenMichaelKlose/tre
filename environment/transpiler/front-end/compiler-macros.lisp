@@ -16,7 +16,7 @@
 (defun compiler-macroexpand (x)
   (expander-expand 'compiler x))
 
-(define-mapcar-fun vars-to-identity (x)
+(define-filter vars-to-identity (x)
   (? (atom x)
      `(identity ,x)
      x))
