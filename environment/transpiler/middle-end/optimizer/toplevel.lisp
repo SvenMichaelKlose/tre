@@ -1,5 +1,9 @@
 ;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
 
+(defun two-subsequent-tags? (a d)
+  (and a (atom a)
+       d. (atom d.)))
+
 (defun opt-peephole-has-no-jumps-to (x tag)
   (dolist (i x t)
 	(when (vm-jump? i)
