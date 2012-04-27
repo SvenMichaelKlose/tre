@@ -1,5 +1,4 @@
-;;;;; TRE compiler
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *opt-peephole?* t)
 (defvar *opt-peephole-funinfo* nil)
@@ -104,9 +103,8 @@
                      (%%vm-go? a) (traverse-tag .a. v)
                      (%setq-on? a v) (find-tree (%setq-value a) v :test #'eq)
                      (find-tree a v :test #'eq) t
-                     (or (%%vm-go-not-nil? a)
-                         (%%vm-go-nil? a)) (or (traverse-tag ..a. v)
-                                               (rec d v))
+                     (vm-conditional-jump? a) (or (traverse-tag ..a. v)
+                                                  (rec d v))
                      (rec d v)))))
     (or (eq *opt-peephole-funinfo* (transpiler-global-funinfo *current-transpiler*))
         (and (not (~%ret? v))

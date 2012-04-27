@@ -1,4 +1,4 @@
-;;;; tré compiler -- Copyright (c) 2006-2011 Sven Klose <pixel@copei.de>
+;;;; tré compiler -- Copyright (c) 2006-2012 Sven Michael Klose <pixel@copei.de>
 
 (mapcar-macro x
 	'(%quote %new
@@ -27,13 +27,14 @@
   (and (cons? e)
 	   (in? e. '%%vm-go '%%vm-go-nil '%%vm-go-not-nil)))
 
+(defun vm-conditional-jump? (x)
+  (or (%%vm-go-nil? x)
+      (%%vm-go-not-nil? x)))
+
 (defun vm-jump-tag (x)
   (?
-	(%%vm-go? x)
-      .x.
-	(or (%%vm-go-nil? x)
-        (%%vm-go-not-nil? x))
-      ..x.))
+	(%%vm-go? x) .x.
+	(vm-conditional-jump? x) ..x.))
 
 (defun %%vm-scope-body (x)
   .x)
