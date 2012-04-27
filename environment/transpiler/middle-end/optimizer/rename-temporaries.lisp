@@ -1,0 +1,40 @@
+;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
+
+(defun two-subsequent-tags? (a d)
+  (and a (atom a)
+       d. (atom d.)))
+
+(defun vm-go-nil-head? (a d)
+  (and d
+       (%setq? a)
+       (atom (%setq-value a))
+       (%%vm-go-nil? d.)
+       (let plc (%setq-place a)
+         (and (eq plc (cadr d.))
+              (removable-place? plc)
+              (not (opt-peephole-will-be-used-again? (opt-peephole-tag-code (caddr d.)) plc))
+              (not (opt-peephole-will-be-used-again? .d plc))))))
+
+(defun assignment-to-symbol? (x)
+  (and (%setq? x)
+       (awhen (%setq-place x)
+         (atom !))))
+
+(def-opt-peephole-fun opt-peephole-rename-temporaries
+  (and (assignment-to-symbol? a)
+       (%setq? d.)
+       (with (plc (%setq-place a)
+              val (%setq-value d.))
+         (and (not (in? plc '~%ret '~%tmp))
+              (cons? val)
+              (removable-place? plc)
+              (find-tree .val plc :test #'eq)
+              (or (eq (%setq-place d.) plc)
+                  (not (opt-peephole-will-be-used-again? .d plc))))))
+    (with (plc (%setq-place a)
+           val (%setq-value d.)
+           fi *opt-peephole-funinfo*)
+      (funinfo-env-adjoin fi '~%tmp)
+      `((%setq ~%tmp ,(%setq-value a))
+        (%setq ,(%setq-place d.) ,(replace-tree plc '~%tmp val :test #'eq))
+        ,@(opt-peephole-rename-temporaries .d))))

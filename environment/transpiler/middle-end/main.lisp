@@ -1,4 +1,4 @@
-;;;;; TRE transpiler/middle-end - (c) 2005-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - (c) 2005-2012 Sven Michael Klose <pixel@copei.de>
 
 (when nil
     (env-load "transpiler/middle-end/graph/cblock.lisp")
@@ -15,7 +15,7 @@
 
 (env-load "transpiler/middle-end/update-funinfos.lisp")
 (env-load "transpiler/middle-end/opt-places.lisp")
-(env-load "transpiler/middle-end/opt-peephole.lisp")
+(env-load "transpiler/middle-end/optimizer/main.lisp")
 (env-load "transpiler/middle-end/opt-tailcall.lisp")
 (env-load "transpiler/middle-end/cps.lisp")
 (env-load "transpiler/middle-end/named-functions.lisp")
