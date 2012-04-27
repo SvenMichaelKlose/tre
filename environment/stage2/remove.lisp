@@ -10,9 +10,7 @@
 	      (remove-if fun (cdr x)))))
 
 (defun remove-if-not (fun x)
-  (remove-if (fn not (funcall fun _))
-			 x))
+  (remove-if (fn not (funcall fun _)) x))
 
 (defun remove (elm x &key (test #'eql))
-  (remove-if (fn funcall test elm _)
-			 x))
+  (remove-if (fn funcall test elm _) x))
