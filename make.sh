@@ -106,7 +106,7 @@ link ()
 {
 	echo "Linking..."
 	OBJS=`find obj -name \*.o`
-	$LD -o $TRE $OBJS $LIBFLAGS
+	$LD -o $TRE $OBJS $LIBFLAGS || exit 1
 }
 
 standard_compile ()
@@ -114,7 +114,7 @@ standard_compile ()
 	mkdir -p obj
 	for f in $FILES; do
 		echo "Compiling $f"
-		$CC $CFLAGS $COPTS -c -o obj/$f.o interpreter/$f
+		$CC $CFLAGS $COPTS -c -o obj/$f.o interpreter/$f || exit 1
 	done
 }
 
@@ -129,7 +129,7 @@ crunsh_compile ()
 	done
 	echo
 	echo "Compiling..."
-	$CC -static $CFLAGS -fwhole-program $COPTS -o $TRE $CRUNSHTMP $LIBFLAGS
+	$CC -static $CFLAGS -fwhole-program $COPTS -o $TRE $CRUNSHTMP $LIBFLAGS || exit 1
 	rm $CRUNSHTMP
 }
 
@@ -138,13 +138,13 @@ install_it ()
 	echo "Initialising default environment."
 	echo | $TRE -n
 	echo "Installing $TRE to $BINDIR."
-	sudo cp $TRE $BINDIR
+	sudo cp $TRE $BINDIR || exit 1
 }
 
 install_it_without_reload ()
 {
 	echo "Installing $TRE to $BINDIR."
-	sudo cp $TRE $BINDIR
+	sudo cp $TRE $BINDIR || exit 1
 }
 
 case $1 in
@@ -191,23 +191,23 @@ crunshraw)
 
 boot)
 	basic_clean
-	./make.sh crunsh $ARGS
-	./tre makefiles/make-compiled1.lisp
-	./make.sh crunshraw $ARGS
-	./tre makefiles/make-compiled.lisp
-	./make.sh crunshraw $ARGS
+	./make.sh crunsh $ARGS || exit 1
+	./tre makefiles/make-compiled1.lisp || exit 1
+	./make.sh crunshraw $ARGS || exit 1
+	./tre makefiles/make-compiled.lisp || exit 1
+	./make.sh crunshraw $ARGS || exit 1
 	;;
 
 bootunclean)
-	./make.sh boot0
-	./tre make-compiled.lisp
-	./make.sh crunshraw
+	./make.sh boot0 || exit 1
+	./tre make-compiled.lisp || exit 1
+	./make.sh crunshraw || exit 1
 	;;
 
 recompile)
 	echo "(quit)" | tre -n
-	tre makefiles/make-compiled.lisp
-	./make.sh crunshraw
+	tre makefiles/make-compiled.lisp || exit 1
+	./make.sh crunshraw || exit 1
 	;;
 
 install)
