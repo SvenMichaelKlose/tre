@@ -2,27 +2,19 @@
 
 (defmacro define-tree-filter (name args &body body)
   (let iter (car (last args))
-	(with-gensym fun
-      `(defun ,name ,args
-	     (with (,fun #'(,args
-				          (?
-					        ,@body
-					        (atom ,iter)
-					          ,iter
-				            (cons (,fun ,@(butlast args) (car ,iter))
-				     	          (,fun ,@(butlast args) (cdr ,iter))))))
-	       (,fun ,@args))))))
+    `(defun ,name ,args
+       (?
+         ,@body
+         (atom ,iter) ,iter
+         (cons (,name ,@(butlast args) (car ,iter))
+               (,name ,@(butlast args) (cdr ,iter)))))))
 
 (defmacro define-concat-tree-filter (name args &body body)
   (let iter (car (last args))
-	(with-gensym fun
-      `(defun ,name ,args
-	     (with (,fun #'(,args
-                          (mapcan #'((,iter)
-                                      (?
-					                    ,@body
-					                    (atom ,iter)
-					                      (list ,iter)
-				                        (list (,fun ,@(butlast args) ,iter))))
-                                  ,iter)))
-	       (,fun ,@args))))))
+    `(defun ,name ,args
+       (mapcan #'((,iter)
+                   (?
+                     ,@body
+                     (atom ,iter) (list ,iter)
+                     (list (,name ,@(butlast args) ,iter))))
+               ,iter))))
