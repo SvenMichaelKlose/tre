@@ -1,9 +1,5 @@
 ;;;;; tré - Copyright (c) 2010-2012 Sven Michael Klose <pixel@copei.de>
 
-(defun in-cps-mode? ()
-  (and (transpiler-continuation-passing-style? *current-transpiler*)                                              
-       (not *transpiler-except-cps?*)))
-
 (defun cps-tag-function-name (x xlats tag-xlats)
   (assoc-value (assoc-value x tag-xlats)
                xlats))

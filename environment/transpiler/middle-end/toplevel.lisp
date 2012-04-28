@@ -19,9 +19,9 @@
     opt-find-unused-places #'opt-places-find-used
 ;    middleend-graph (fn (middleend-graph _)
 ;                        (identity _))
-    cps (fn ? (in-cps-mode?)
-              (cps _)
-              _)
+;    cps (fn ? (in-cps-mode?)
+;              (cps _)
+;              _)
     opt-peephole #'opt-peephole
     opt-tailcall #'opt-tailcall
     opt-peephole #'opt-peephole

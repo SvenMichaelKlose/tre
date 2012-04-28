@@ -302,3 +302,7 @@
                      :current-package         current-package
                      :expex-initializer       expex-initializer)
     (funcall (transpiler-expex-initializer !) (transpiler-make-expex !))))
+
+(defun in-cps-mode? ()
+  (and (transpiler-continuation-passing-style? *current-transpiler*)
+       (not *transpiler-except-cps?*)))
