@@ -64,18 +64,18 @@
                       x))
 	   rec
 		 #'((x)
-             (funcall (compose #'translate-tags
-                               #'reduce-tags
-                               #'opt-peephole-remove-vm-go-nil-heads
+             (funcall (compose #'opt-peephole-remove-vm-go-nil-heads
                                #'opt-peephole-rename-temporaries
 			                   #'opt-peephole-remove-spare-tags
 				               #'opt-peephole-remove-code
 				               #'opt-peephole-remove-assignments
-				               #'opt-peephole-remove-void)
+                               #'translate-tags
+                               #'reduce-tags
+				               #'opt-peephole-remove-void
+                               #'opt-peephole-remove-identity)
 				      x)))
       (? *opt-peephole?*
 	       (with-temporary *opt-peephole-funinfo* (transpiler-global-funinfo *current-transpiler*)
              (with-temporary *opt-peephole-body* statements
-	           (repeat-while-changes #'rec
-		         (opt-peephole-remove-identity statements))))
+	           (repeat-while-changes #'rec statements)))
          statements)))
