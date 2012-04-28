@@ -78,10 +78,10 @@ if [ -f /lib/x86_64-linux-gnu/libdl.so* ]; then
 	LIBFLAGS="$LIBFLAGS -ldl";
 fi
 
-COMPILED_ENV=${COMPILED_ENV:-"interpreter/_compiled-env.c"}
+COMPILED_ENV=${COMPILED_ENV:-"_compiled-env.c"}
 
-if [ -f $COMPILED_ENV ]; then
-	FILES="$FILES ../$COMPILED_ENV";
+if [ -f interpreter/$COMPILED_ENV ]; then
+	FILES="$FILES $COMPILED_ENV";
 	CFLAGS="$CFLAGS -DTRE_HAVE_COMPILED_ENV";
 fi
 
@@ -98,7 +98,7 @@ echo "Library flags: $LIBFLAGS"
 basic_clean ()
 {
 	echo "Cleaning..."
-	rm -f *.core $COMPILED_ENV
+	rm -f *.core interpreter/$COMPILED_ENV
 	rm -rf obj
 }
 
