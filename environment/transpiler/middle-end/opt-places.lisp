@@ -1,5 +1,4 @@
-;;;;; TRE compiler
-;;;;; Copyright (c) 2009-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2009-2012 Sven Michael Klose <pixel@copei.de>
 
 (defun opt-places-find-used-fun (x)
   (let fi (get-lambda-funinfo x)
@@ -23,12 +22,10 @@
   x)
 
 (defun opt-places-correct-funinfo (fi)
-  (funinfo-env-reset fi)
-  (dolist (i (append (funinfo-used-env fi)
-					 (funinfo-lexicals fi)))
-    (funinfo-env-add fi i))
-  (when (transpiler-stack-locals? *current-transpiler*)
-    (funinfo-env-add-many fi (funinfo-args fi))))
+  (funinfo-env-set fi (append (funinfo-used-env fi)
+                              (funinfo-lexicals fi)
+                              (when (transpiler-stack-locals? *current-transpiler*)
+                                (funinfo-args fi)))))
 
 (defun opt-places-remove-unused-body (x)
   (let fi (get-lambda-funinfo x)

@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (C) 2006-2007,2009-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (C) 2006-2007,2009-2012 Sven Michael Klose <pixel@copei.de>
 
 ;;;; ARGUMENTS
 
@@ -104,14 +104,22 @@
   (dolist (i x)
 	(funinfo-env-add fi i)))
 
-(defun funinfo-env-adjoin (fi x)
-  (unless (funinfo-in-env? fi x)
-    (funinfo-env-add fi x)))
-
 (defun funinfo-env-reset (fi)
   (setf (funinfo-env fi) nil)
   (unless (funinfo-parent fi)
     (setf (funinfo-env-hash fi) (make-hash-table :test #'eq))))
+
+(defun funinfo-env-set (fi x)
+  (? (funinfo-parent fi)
+     (setf (funinfo-env fi) x)
+     (progn
+       (error "no parent")
+       (funinfo-env-reset fi)
+       (funinfo-env-add-many fi x))))
+
+(defun funinfo-env-adjoin (fi x)
+  (unless (funinfo-in-env? fi x)
+    (funinfo-env-add fi x)))
 
 (defun funinfo-add-used-env (fi x)
   (adjoin! x (funinfo-used-env fi) :test #'eq))
