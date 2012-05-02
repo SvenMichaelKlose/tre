@@ -45,6 +45,7 @@
 
   (obfuscate? nil)
   (import-from-environment? t)
+  (only-environment-macros? t)
   (save-sources? nil)
   (save-argument-defs-only? nil)
 
@@ -261,6 +262,7 @@
                      :dont-inline-list       (copy-list dont-inline-list)
                      :obfuscate?             obfuscate?
                      :import-from-environment? import-from-environment?
+                     :only-environment-macros? only-environment-macros?
                      :save-sources?           save-sources?
                      :save-argument-defs-only? save-argument-defs-only?
                      :gen-string              gen-string

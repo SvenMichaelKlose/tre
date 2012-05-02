@@ -10,11 +10,13 @@
 	(cons '%macroexpand-backquote
 	(cons '%%macrop
 	(cons '%%macrocall
+	(cons '%%env-macrop
+	(cons '%%env-macrocall
 	(cons '%macroexpand-list
 	(cons '%macroexpand-rest
 	(cons '%macroexpand-xlat
 	(cons '%macroexpand-call
-		  *universe*)))))))))))))
+		  *universe*)))))))))))))))
 
 (setq
 	*defined-functions*
@@ -22,11 +24,13 @@
 	(cons '%macroexpand-backquote
 	(cons '%%macrop
 	(cons '%%macrocall
+	(cons '%%env-macrop
+	(cons '%%env-macrocall
 	(cons '%macroexpand-list
 	(cons '%macroexpand-rest
 	(cons '%macroexpand-xlat
 	(cons '%macroexpand-call
-		  *defined-functions*)))))))))
+		  *defined-functions*)))))))))))
 
 (setq *macrop-diversion* nil
       *macrocall-diversion* nil
@@ -115,6 +119,14 @@
 (%set-atom-fun %%macrocall
   #'((%g)
        (%macrocall (symbol-function (car %g)) (cdr %g))))
+
+(%set-atom-fun %%env-macrop
+  #'((%g)
+       (%%macrop %g)))
+
+(%set-atom-fun %%env-macrocall
+  #'((%g)
+       (%%macrocall %g)))
 
 (%set-atom-fun *macroexpand-hook*
   #'((%g)

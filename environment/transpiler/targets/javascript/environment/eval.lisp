@@ -10,6 +10,7 @@
 (defun make-js-eval-transpiler ()
   (let tr (copy-transpiler *js-transpiler*)
     (transpiler-reset tr)
+    (setf (transpiler-only-environment-macros? tr) nil)
     (dolist (i *defined-functions*)
       (let-when f (symbol-function i)
         (transpiler-add-defined-function tr i)
