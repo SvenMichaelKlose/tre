@@ -1,5 +1,5 @@
 /*
- * tré - Copyright (c) 2005-2007,2011 Sven Klose <pixel@copei.de>
+ * tré - Copyright (c) 2005-2007,2011-2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -26,7 +26,7 @@ treerror_msg (treptr expr, const char *prefix, const char *msg, va_list ap)
 	struct tre_stream * s = treio_get_stream ();
 
     fflush (stdout);
-    fprintf (stderr, "; In interpreter: %s: ", prefix);
+    fprintf (stderr, "; In interpreter:\n; %s: ", prefix);
     vfprintf (stderr, msg, ap);
     fprintf (stderr, ".\n");
 
