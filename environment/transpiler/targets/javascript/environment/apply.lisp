@@ -9,13 +9,13 @@
   (with ( fun lst.
          l (last .lst)
          args (%nconc (butlast .lst) l.))
-    (aif fun.tre-exp
-         (? fun.tre-cps
-	        (!.apply nil (%transpiler-native "[" continuer "," args "]"))
-	        (continuer (!.apply nil (%transpiler-native "[" args "]"))))
-         (? fun.tre-cps
-            (fun.apply nil (list-array (cons continuer args)))
-            (continuer (fun.apply nil (list-array (cons continuer args))))))))
+    (!? fun.tre-exp
+        (? fun.tre-cps
+	       (!.apply nil (%transpiler-native "[" continuer "," args "]"))
+	       (continuer (!.apply nil (%transpiler-native "[" args "]"))))
+        (? fun.tre-cps
+           (fun.apply nil (list-array (cons continuer args)))
+           (continuer (fun.apply nil (list-array (cons continuer args))))))))
 
 (defun apply (&rest lst)
   (with (fun lst.
@@ -26,9 +26,9 @@
 	    (error "APPLY: first argument is not a function: ~A" fun))
 	  (unless (listp l)
 	    (error "APPLY: last argument is not a cell")))
-    (aif fun.tre-exp
-         (!.apply nil (%transpiler-native "[" args "]"))
-    	 (fun.apply nil (list-array args)))))
+    (!? fun.tre-exp
+        (!.apply nil (%transpiler-native "[" args "]"))
+     (fun.apply nil (list-array args)))))
 
 (dont-inline cps-wrap)
 (defun cps-wrap  (x) x)

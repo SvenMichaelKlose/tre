@@ -85,17 +85,6 @@
                        ,(awhen (symbol-package sym)
                           `(make-package ,(transpiler-obfuscated-symbol-name *js-transpiler* !)))))))
 
-(define-js-std-macro defun (name args &rest body)
-  (let dname (transpiler-package-symbol *js-transpiler* (%defun-name name))
-    (js-cps-exception name)
-    (when (in-cps-mode?)
-      (transpiler-add-cps-function *js-transpiler* dname))
-    (let g '~%tfun
-      `(progn
-         ,@(js-make-early-symbol-expr g dname)
-         ,@(apply #'shared-essential-defun dname args body)
-	     (setf (symbol-function ,g) ,dname)))))
-
 (defun js-emit-memorized-sources ()
   (clr (transpiler-memorize-sources? *js-transpiler*))
   (mapcar (fn `(%setq (slot-value ,_. '__source) ,(list 'quote ._)))
@@ -107,7 +96,7 @@
 (define-js-std-macro %defspecial (&rest x))
 
 (define-js-std-macro defmacro (&rest x)
-  (apply #'shared-defmacro '*js-transpiler* x))
+  (apply #'shared-defmacro x))
 
 (define-js-std-macro defvar (name &optional (val '%%no-value))
   (when (eq '%%no-value val)

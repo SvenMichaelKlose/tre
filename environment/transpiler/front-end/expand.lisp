@@ -15,13 +15,30 @@
                                       (%%macrocall _))))))
 
 (defun transpiler-make-std-macro-expander (tr)
+  (let expander-name ($ (transpiler-name tr) '-standard-pre)
+    (define-expander expander-name)
+    (setf (transpiler-pre-std-macro-expander tr) expander-name))
   (let expander-name ($ (transpiler-name tr) '-standard)
     (setf (transpiler-std-macro-expander tr) expander-name)
     (make-overlayed-std-macro-expander tr expander-name)))
 
+(defmacro define-transpiler-pre-std-macro (tr name &rest args-and-body)
+  (let quoted-name (list 'quote name)
+    `(progn
+       (when (expander-has-macro? (transpiler-pre-std-macro-expander ,tr) ,quoted-name)
+	     (warn "Macro ~A is already defined as a pre-standard macro.~%" ,quoted-name))
+       (when (expander-has-macro? (transpiler-std-macro-expander ,tr) ,quoted-name)
+	     (warn "Macro ~A is already defined as a standard macro.~%" ,quoted-name))
+	   (when (expander-has-macro? (transpiler-codegen-expander ,tr) ,quoted-name)
+	     (error "Macro ~A is already defined in code generator.~%" ,quoted-name))
+	   (transpiler-add-inline-exception ,tr ,quoted-name)
+       (define-expander-macro ,(transpiler-pre-std-macro-expander (eval tr)) ,name ,@args-and-body))))
+
 (defmacro define-transpiler-std-macro (tr name &rest args-and-body)
   (let quoted-name (list 'quote name)
     `(progn
+       (when (expander-has-macro? (transpiler-pre-std-macro-expander ,tr) ,quoted-name)
+	     (warn "Macro ~A is already defined as a pre-standard macro.~%" ,quoted-name))
        (when (expander-has-macro? (transpiler-std-macro-expander ,tr) ,quoted-name)
 	     (warn "Macro ~A is already defined as a standard macro.~%" ,quoted-name))
 	   (when (expander-has-macro? (transpiler-codegen-expander ,tr) ,quoted-name)
@@ -31,7 +48,9 @@
 
 (defun transpiler-macroexpand (tr x)
   (with-temporary *setf-function?* (transpiler-setf-function? tr)
-	(expander-expand (transpiler-std-macro-expander tr) x)))
+    (repeat-while-changes (lx (tr)
+	                          (fn expander-expand-once (transpiler-std-macro-expander ,tr) (expander-expand-once (transpiler-pre-std-macro-expander ,tr) _)))
+                          x)))
 
 (defmacro transpiler-wrap-invariant-to-binary (definer op len replacement combinator)
   `(,definer ,op (&rest x)

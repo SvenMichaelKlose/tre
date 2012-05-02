@@ -1,5 +1,4 @@
-;;;;; Transpiler: TRE to PHP
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
 
 (dont-obfuscate apply call function_exists call_user_func_array array)
 
@@ -8,17 +7,15 @@
          l (last .lst)
          args (%nconc (butlast .lst) l.)
          funref? (is_a fun "__funref")
-         fun-name (if funref?
-                      (%%%string+ "userfun_" fun.n)
-                      fun)
+         fun-name (? funref?
+                     (%%%string+ "userfun_" fun.n)
+                     fun)
          expander-name (%%%string+ fun-name "_treexp"))
     (when funref?
       (setf args (cons fun.g args)))
-	(if
-      (function_exists expander-name)
-	    (call_user_func_array expander-name (%transpiler-native "array ($" args ")"))
-	  (function_exists fun-name)
-        (call_user_func_array fun-name (list-array args))
+	(?
+      (function_exists expander-name) (call_user_func_array expander-name (%transpiler-native "array ($" args ")"))
+	  (function_exists fun-name) (call_user_func_array fun-name (list-array args))
       (error (+ "Function '" fun-name "' does not exist.")))))
 
 (defmacro cps-wrap (x) x)

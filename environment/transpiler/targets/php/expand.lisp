@@ -42,7 +42,7 @@
        (%setq ~%ret nil))))
 
 (define-php-std-macro defmacro (&rest x)
-  (apply #'shared-defmacro '*php-transpiler* x))
+  (apply #'shared-defmacro x))
 
 (define-php-std-macro defvar (name &optional (val '%%no-value))
   (when (eq '%%no-value val)

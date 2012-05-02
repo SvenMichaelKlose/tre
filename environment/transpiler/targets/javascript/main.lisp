@@ -2,6 +2,7 @@
 
 (env-load "transpiler/targets/javascript/config.lisp")
 (env-load "transpiler/targets/javascript/expand.lisp")
+(env-load "transpiler/targets/javascript/pre-std-macros.lisp")
 (env-load "transpiler/targets/javascript/class.lisp")
 (env-load "transpiler/targets/javascript/codegen.lisp")
 ;(env-load "transpiler/targets/javascript/codegen-inline.lisp")

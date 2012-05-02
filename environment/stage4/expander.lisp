@@ -68,15 +68,17 @@
 	   (defun ,g ,args ,@body)
        (setf (href (expander-macros (expander-get ',expander-name)) ',name) #',g))))
 
+(defun expander-expand-once (expander-name x)
+  (let e (expander-get expander-name)
+    (with-temporaries (*macrop-diversion* (expander-pred e)
+                       *macrocall-diversion* (expander-call e))
+      (%macroexpand x))))
+
 (defun expander-expand (expander-name expr)
   (let e (expander-get expander-name)
 	(funcall (expander-pre e))
     (prog1
-	  (repeat-while-changes
-		(fn (with-temporaries (*macrop-diversion* (expander-pred e)
-                               *macrocall-diversion* (expander-call e))
-	          (%macroexpand _)))
-		expr)
+	  (repeat-while-changes (lx (expander-name) (fn expander-expand-once ,expander-name _)) expr)
       (funcall (expander-post e)))))
 
 (defun expander-has-macro? (expander-name macro-name)
