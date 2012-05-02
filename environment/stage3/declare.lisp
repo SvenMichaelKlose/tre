@@ -28,7 +28,7 @@
 	(error "Variable expected but got ~A to declare as of type ~A" x typ))
   `(unless (or ,@(mapcar (fn %declare-statement-type-predicate _ x)
                          (force-list typ)))
-	 (error "~A is not of type ~A. Object: " ,(symbol-name x) (quote ,typ) ,x)))
+	 (error "~A is not of type ~A. Object: ~A" ,(symbol-name x) (quote ,typ) ,x)))
 
 (defun %declare-statement-type (x)
   (unless (<= 2 (length x))
