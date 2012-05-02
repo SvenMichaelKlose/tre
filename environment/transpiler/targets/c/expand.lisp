@@ -6,6 +6,10 @@
 (define-c-std-macro %defsetq (&rest x)
   `(%setq ,@x))
 
+(define-c-std-macro %lx (lexicals fun)                                                                                                                        
+  (eval (macroexpand `(with ,(mapcan (fn `(,_ ',_)) .lexicals.)
+                        ,fun))))
+
 (define-c-std-macro not (&rest x)
   (? .x
      `(%not2 ,@x)
