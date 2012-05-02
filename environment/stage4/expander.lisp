@@ -1,7 +1,6 @@
 ;;;;; tré - Copyright (c) 2006-2009,2011-2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *expanders* nil)
-(defvar *current-expander* nil)
 
 (defstruct expander
   macros
@@ -33,14 +32,16 @@
     (acons! expander-name e *expanders*)
     (unless pred
       (setf (expander-pred e)
-			(fn and (atom _.)
-				 	(symbol-name _.)
-				 	(expander-macro-function *current-expander* _.))))
+            (lx (e)
+			    (fn and (atom _.)
+				 	    (symbol-name _.)
+				 	    (expander-macro-function ,e _.)))))
     (unless call
       (setf (expander-call e)
-			(fn (when *expander-print*
-                  (print _))
-                (apply (expander-macro-function *current-expander* _.) ._))))
+            (lx (e)
+			    (fn (when *expander-print*
+                      (print _))
+                    (apply (expander-macro-function ,e _.) ._)))))
     (setf (expander-lookup e)
           #'((expander name)
               (href (expander-macros expander) name)))
@@ -72,8 +73,7 @@
 	(funcall (expander-pre e))
     (prog1
 	  (repeat-while-changes
-		(fn (with-temporaries (*current-expander* e
-			                   *macrop-diversion* (expander-pred e)
+		(fn (with-temporaries (*macrop-diversion* (expander-pred e)
                                *macrocall-diversion* (expander-call e))
 	          (%macroexpand _)))
 		expr)
