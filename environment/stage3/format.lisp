@@ -1,37 +1,44 @@
 ;;;;; tré - Copyright (c) 2006-2008,2011-2012 Sven Michael Klose <pixel@copei.de>
 
-(defun %format-directive-eol (str txt args)
-  (terpri str)
-  (%format str txt args))
+(defstruct format-info
+  stream
+  text
+  args
+  (processed-args 0))
 
-(defun %format-directive-placeholder (str txt args)
+(defun %format-directive-eol (inf txt args)
+  (terpri (format-info-stream inf))
+  (%format inf txt args))
+
+(defun %format-directive-placeholder (inf txt args)
   (? args
      (? (cons? args.)
-		(late-print args. str)
-        (princ args. str))
-     (error "argument specified in format is missing"))
-  (%format str txt .args))
+		(late-print args. (format-info-stream inf))
+        (princ args. (format-info-stream inf)))
+     (error "argument ~A specified in format ~A is missing" (format-info-processed-args inf) (format-info-text inf)))
+  (%format inf txt .args))
 
-(defun %format-directive-tilde (str txt args)
-  (princ #\~ str)
-  (%format str txt args))
+(defun %format-directive-tilde (inf txt args)
+  (princ #\~ (format-info-stream inf))
+  (%format inf txt args))
 
-(defun %format-directive (str txt args)
+(defun %format-directive (inf txt args)
+  (1+! (format-info-processed-args inf))
   (let el (char-upcase txt.)
     (?
-      (character= el #\%) (%format-directive-eol str .txt args)
-      (character= el #\A) (%format-directive-placeholder str .txt args)
-      (%format-directive-tilde str txt args))))
+      (character= el #\%) (%format-directive-eol inf .txt args)
+      (character= el #\A) (%format-directive-placeholder inf .txt args)
+      (%format-directive-tilde inf txt args))))
 
-(defun %format (str txt args)
+(defun %format (inf txt args)
   (when txt
     (? (character= txt. #\~)
-       (%format-directive str .txt args)
+       (%format-directive inf .txt args)
        (progn
-         (princ txt. str)
-         (%format str .txt args)))))
+         (princ txt. (format-info-stream inf))
+         (%format inf .txt args)))))
 
 (defun format (str txt &rest args)
   "Print formatted string."
   (with-default-stream nstr str
-    (%format nstr (string-list txt) args)))
+    (%format (make-format-info :stream nstr :text txt :args args) (string-list txt) args)))
