@@ -1,5 +1,4 @@
-;;;;; TRE environment
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *type-predicates*
   '((nil . not)
@@ -29,7 +28,7 @@
 	(error "Variable expected but got ~A to declare as of type ~A" x typ))
   `(unless (or ,@(mapcar (fn %declare-statement-type-predicate _ x)
                          (force-list typ)))
-	 (error "~A is not of type ~A" ,(symbol-name x) (quote ,typ))))
+	 (error "~A is not of type ~A. Object: " ,(symbol-name x) (quote ,typ) ,x)))
 
 (defun %declare-statement-type (x)
   (unless (<= 2 (length x))

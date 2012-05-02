@@ -15,7 +15,7 @@
      (? (cons? args.)
 		(late-print args. (format-info-stream inf))
         (princ args. (format-info-stream inf)))
-     (error "argument ~A specified in format ~A is missing" (format-info-processed-args inf) (format-info-text inf)))
+     (error "argument ~A specified in format \"~A\" is missing" (format-info-processed-args inf) (format-info-text inf)))
   (%format inf txt .args))
 
 (defun %format-directive-tilde (inf txt args)
