@@ -15,26 +15,21 @@
   (make-%hash-table :test test :size size :hash (make-array *default-hash-size*)))
 
 (defun %make-hash-index-num (h k)
-  (let i k
-    (setf k (>> k 8))
-    (setf i (logxor i k))
-    (setf k (>> k 8))
-    (setf i (logxor i k))
-    (setf k (>> k 8))
-    (mod (logxor i k) (%hash-table-size h))))
+  (mod k (%hash-table-size h)))
 
 (defun %make-hash-index-string (h str)
   (with (k 0
+         m 0
 	     l (length str))
     (do ((i 0 (integer-1+ i)))
-        ((or (integer< 4 i)
-			 (integer= i l))
+        ((or (integer< 16 i)
+             (integer= i l))
 		 (mod (abs k) (%hash-table-size h)))
-      (setf k (logxor k (elt str i))))))
+      (setf k (logxor k (setf m (bit-or (<< m 8) (elt str i))))))))
 
 (defun %make-hash-index (h key)
   (?
-    (number? key) (%make-hash-index-num h key)
+    (number? key) (%make-hash-index-num h (abs (integer key)))
     (string? key) (%make-hash-index-string h key)
     (%make-hash-index-num h (%%id key))))
 
