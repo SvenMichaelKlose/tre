@@ -59,20 +59,16 @@
 
 ;;;; ENVIRONMENT
 
-(defmacro with-funinfo-env-temporary (fi args &rest body)
-  (with-gensym old-env
-    `(let ,old-env (copy-tree (funinfo-env ,fi))
-       (funinfo-env-add-args ,fi ,args)
-       (prog1
-         (progn
-           ,@body)
-	     (setf (funinfo-env ,fi) ,old-env)))))
+
+(defun funinfo-env-pos (fi x)
+  (when (funinfo-parent fi)
+    (position x (funinfo-env fi) :test #'eq)))
 
 ,`(progn
     ,@(mapcar (fn `(defun ,($ 'funinfo- _.) (fi var)
 			   	     (position var (,($ 'funinfo- ._.) fi) :test #'eq)))
 		      `((free-var-pos free-vars)
-                (env-pos env)
+;                (env-pos env)
                 (lexical-pos lexicals))))
 
 (defun funinfosym-env-pos (fi-sym x)
@@ -122,7 +118,8 @@
     (funinfo-env-add fi x)))
 
 (defun funinfo-add-used-env (fi x)
-  (adjoin! x (funinfo-used-env fi) :test #'eq))
+  (when (funinfo-parent fi)
+    (adjoin! x (funinfo-used-env fi) :test #'eq)))
 
 (defun funinfo-get-name (fi)
   (when fi
