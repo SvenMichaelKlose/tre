@@ -11,15 +11,13 @@
   (when *show-definitions*
     (late-print `(defun ,name ,args)))
   (with (n (%defun-name name)
-         original-body (or (cddr (assoc name *function-sources* :test #'eq))
-                           body)
          tr *current-transpiler*
 		 (fi-sym a) (split-funinfo-and-args args))
     (when (transpiler-defined-function tr name)
       (redef-warn "redefinition of function ~A.~%" name))
 	(transpiler-add-defined-function tr n)
     (transpiler-add-function-args tr n a)
-	(transpiler-add-function-body tr n original-body)
+	(transpiler-add-function-body tr n body)
 	`((%defsetq ,name
 	           #'(,@(awhen fi-sym
 				      `(%funinfo ,!))
@@ -38,5 +36,6 @@
          (? (transpiler-memorize-sources? *current-transpiler*)
             (and (acons! name (cons args body) (transpiler-memorized-sources *current-transpiler*))
                  nil)
-            `((%setq (slot-value ,name '__source) ,(list 'quote (cons args (unless (transpiler-save-argument-defs-only? tr)
-                                                                             original-body))))))))))
+            `((%setq (slot-value ,name '__source) ,(list 'quote (cons args (and (transpiler-save-argument-defs-only? tr)
+                                                                                (or (cddr (assoc name *function-sources* :test #'eq))
+                                                                                    body)))))))))))
