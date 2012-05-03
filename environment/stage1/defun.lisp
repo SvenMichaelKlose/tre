@@ -1,5 +1,7 @@
 ;;;; tré - Copyright (c) 2005-2008,2010-2011-2012 Sven Michael Klose <pixel@copei.de>
 
+(defvar *function-sources* nil)
+
 ; Check and return keyword argument or NIL.
 (%defun %defun-arg-keyword (args)
   (let a (car args)
@@ -28,6 +30,7 @@
 
 (defmacro defun (name args &body body)
   (let name (%defun-name name)
+    (setq *function-sources* (cons (cons name (cons args body)) *function-sources*))
     `(block nil
 	   (? *show-definitions*
 	      (print `(defun ,name)))
