@@ -1,24 +1,52 @@
-// TRE to PHP transpiler
-// Copyright (c) 2010-2011 Sven Klose <pixel@copei.de>
+// tré - Copyright (c) 2010-2012 Sven Michael Klose <pixel@copei.de>
+
+$SYMBOLVALUES = Array ();
+$SYMBOLFUNCTIONS = Array ();
 
 class __symbol {
     var $n;
-    var $v;
-    var $f;
     var $p;
 
 	public function __construct ($name, $pkg)
 	{
 		$this->n = $name;
-		$this->v = NULL;
-		$this->f = NULL;
 		$this->p = $pkg;
+        $pn = $this->pn ();
+        if (!isset ($GLOBALS['SYMBOLVALUES'][$n])) {
+           $GLOBALS['SYMBOLVALUES'][$pn] = Array ();
+           $GLOBALS['SYMBOLFUNCTIONS'][$pn] = Array ();
+        }
         return $this;
 	}
 
+    public function pn ()
+    {
+        return $this->p ? $this->p->n : "NIL";
+    }
+
+    public function v ()
+    {
+        return $GLOBALS['SYMBOLVALUES'][$this->pn ()][$this->n];
+    }
+
+    public function f ()
+    {
+        return $GLOBALS['SYMBOLFUNCTIONS'][$this->pn ()][$this->n];
+    }
+
+    public function sv ($v)
+    {
+        return $GLOBALS['SYMBOLVALUES'][$this->pn ()][$this->n] = $v;
+    }
+
+    public function sf ($v)
+    {
+        return $GLOBALS['SYMBOLFUNCTIONS'][$this->pn ()][$this->n] = $v;
+    }
+
     public function __toString ()
     {
-        return (($this->p) ? ":" : "") . $this->n;
+        return (($this->pn ()) ? ":" : "") . $this->n;
     }
 }
 

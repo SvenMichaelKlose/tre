@@ -7,7 +7,7 @@
   `(%%vm-scope
      (%var ,place)
      (%setq ,place ,@x)
-     (%setq (slot-value ,(list 'quote place) 'f) ,(compiled-function-name-string *current-transpiler* place))))
+     ((slot-value ,(list 'quote place) 'sf) ,(compiled-function-name-string *current-transpiler* place))))
 
 (define-php-std-macro define-native-php-fun (name args &rest body)
   `(%%vm-scope

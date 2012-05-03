@@ -1,19 +1,42 @@
-// TRE to PHP transpiler
-// Copyright (c) 2010-2011 Sven Klose <pixel@copei.de>
+// tré - Copyright (c) 2010-2012 Sven Michael Klose <pixel@copei.de>
+
+$CARS = Array ();
+$CDRS = Array ();
+$CONSID = 0;
 
 class __cons {
-    var $car;
-    var $cdr;
+    var $id;
 
 	public function __construct ($car, $cdr)
 	{
-		$this->car = $car;
-		$this->cdr = $cdr;
+        $this->id = ++$GLOBALS['CONSID'];
+		$GLOBALS['CARS'][$this->id] = $car;
+		$GLOBALS['CDRS'][$this->id] = $cdr;
         return $this;
+	}
+
+    public function a ()
+    {
+		return $GLOBALS['CARS'][$this->id];
+	}
+
+    public function d ()
+    {
+		return $GLOBALS['CDRS'][$this->id];
+	}
+
+    public function sa ($x)
+    {
+		return $GLOBALS['CARS'][$this->id] = $x;
+	}
+
+    public function sd ($x)
+    {
+		return $GLOBALS['CDRS'][$this->id] = $x;
 	}
 
     public function __toString ()
     {
-        return "(" . $this->car . "." . $this->cdr . ")";
+        return '(' . $this->a () . ' . ' . $this->d () . ')';
     }
 }

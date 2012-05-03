@@ -217,11 +217,14 @@
 
 ;;;; HASH TABLE
 
-(define-php-macro %%%href (h k)
-  `(%transpiler-native ,(php-dollarize h) "[" ,(php-dollarize k) "]"))
+(defun php-array-indexes (x)
+  (mapcan (fn list "[" (php-dollarize _) "]") x))
 
-(define-php-macro %%%href-set (h k v)
-  `(%transpiler-native ,(php-dollarize h) "[" ,(php-dollarize k) "] = " ,(php-dollarize v)))
+(define-php-macro %%%href (h &rest k)
+  `(%transpiler-native ,(php-dollarize h) ,@(php-array-indexes k)))
+
+(define-php-macro %%%href-set (v h &rest k)
+  `(%transpiler-native ,(php-dollarize h) ,@(php-array-indexes k) " = " ,(php-dollarize v)))
 
 (define-php-macro href (h k)
   `(%transpiler-native "(is_a (" ,(php-dollarize h) ", '__l') ? "

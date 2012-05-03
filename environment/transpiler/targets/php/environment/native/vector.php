@@ -1,27 +1,30 @@
-// TRE to PHP transpiler
-// Copyright (c) 2010-2011 Sven Klose <pixel@copei.de>
+// tré - Copyright (c) 2010-2012 Sven Michael Klose <pixel@copei.de>
+
+$LEXICALS = Array ();
+$LEXICALID = 0;
 
 class __l {
-    var $d;
+    var $id;
 
 	public function __construct ()
 	{
-		$this->d = Array ();
+		$this->id = ++$GLOBALS['LEXICALID'];
+		$GLOBALS['LEXICALS'][$this->id] = Array ();
         return $this;
 	}
 
     public function g ($i)
     {
-            return $this->d[$i];
+		return $GLOBALS['LEXICALS'][$this->id][$i];
     }
 
     public function s ($i, $v)
     {
-        $this->d[$i] = $v;
+		$GLOBALS['LEXICALS'][$this->id][$i] = $v;
     }
 
     public function __toString ()
     {
-        return $this->d;
+        return "lexical scope context";
     }
 }

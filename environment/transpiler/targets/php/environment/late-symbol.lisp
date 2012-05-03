@@ -15,12 +15,12 @@
 (defun symbol-value (x)
   (?
     (%%%eq t x) t
-    x x.v))
+    (x.v)))
 
 (defun symbol-function (x)
   (?
     (%%%eq t x) nil
-    x x.f))
+    x (x.f)))
 
 (defun symbol-package (x)
   (?

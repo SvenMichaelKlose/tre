@@ -1,17 +1,14 @@
-;;;;; Transpiler: TRE to PHP
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
 
-(defun car (x) (when x x.car))
-(defun cdr (x) (when x x.cdr))
+(defun car (x) (when x (x.a)))
+(defun cdr (x) (when x (x.d)))
 
 (defun rplaca (x val)
-  (declare type cons x)
-  (setq x.car val)
+  (x.sa val)
   x)
 
 (defun rplacd (x val)
-  (declare type cons x)
-  (setq x.cdr val)
+  (x.sd val)
   x)
 
 (defun cons? (x)
