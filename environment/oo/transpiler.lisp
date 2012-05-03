@@ -49,6 +49,6 @@
   (when *show-definitions*
     (late-print `(defmember ,class-name ,@names)))
   (!? (href (transpiler-thisify-classes *current-transpiler*) class-name)
-      (dolist (name names)
-        (push (list name t) (class-members !)))
-      (error "class ~A is not defined." class-name)))
+      (append! (class-members !) (mapcar (fn list _ t) names))
+      (error "class ~A is not defined." class-name))
+  nil)
