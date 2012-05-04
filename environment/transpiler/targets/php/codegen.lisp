@@ -42,8 +42,8 @@
 
 (defun php-jump (tag)
   (? *php-goto?*
-     `("goto _I_" ,tag)
-     `(" $_I_=" ,tag "; break")))
+     `("goto _I_" ,tag ";")
+     `(" $_I_=" ,tag "; break;")))
 
 (define-php-macro %%vm-go (tag)
   (php-line (php-jump tag)))
