@@ -12,7 +12,7 @@ class __symbol {
 		$this->n = $name;
 		$this->p = $pkg;
         $pn = $this->pn ();
-        if (!isset ($GLOBALS['SYMBOLVALUES'][$n])) {
+        if (!isset ($GLOBALS['SYMBOLVALUES'][$pn])) {
            $GLOBALS['SYMBOLVALUES'][$pn] = Array ();
            $GLOBALS['SYMBOLFUNCTIONS'][$pn] = Array ();
         }
