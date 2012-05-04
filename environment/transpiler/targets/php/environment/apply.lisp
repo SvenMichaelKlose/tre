@@ -7,9 +7,7 @@
          l (last .lst)
          args (%nconc (butlast .lst) l.)
          funref? (is_a fun "__funref")
-         fun-name (? funref?
-                     (%%%string+ "userfun_" fun.n)
-                     fun)
+         fun-name (? funref? fun.n fun)
          expander-name (%%%string+ fun-name "_treexp"))
     (when funref?
       (setf args (cons fun.g args)))

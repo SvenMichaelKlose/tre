@@ -42,8 +42,8 @@
 
 (defun php-jump (tag)
   (? *php-goto?*
-     `("goto _I_" ,tag ";")
-     `(" $_I_=" ,tag "; break;")))
+     `("goto _I_" ,tag)
+     `(" $_I_=" ,tag "; break")))
 
 (define-php-macro %%vm-go (tag)
   (php-line (php-jump tag)))
@@ -97,7 +97,7 @@
   (let fi (get-funinfo-by-sym fi-sym)
     (? (funinfo-ghost fi)
   	   `(%transpiler-native "new __funref("
-             (%transpiler-string ,(transpiler-symbol-string *php-transpiler* name))
+             (%transpiler-string ,(compiled-function-name-string *php-transpiler* name))
              ","
              ,(php-dollarize (funinfo-lexical (funinfo-parent fi)))
              ")")
