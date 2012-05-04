@@ -1,5 +1,4 @@
-;;;;; Transpiler: TRE to PHP
-;;;;; Copyright (c) 2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2011-2012 Sven Michael Klose <pixel@copei.de>
 
 (dont-obfuscate is_object isset function_exists)
 
@@ -7,4 +6,6 @@
   (is_object x))
 
 (defun function? (x)
-  (function_exists x))
+  (?
+    (is_a x "__funref") (function_exists x.n)
+    (string? x) (function_exists x)))
