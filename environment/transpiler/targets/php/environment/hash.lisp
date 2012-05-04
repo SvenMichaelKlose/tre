@@ -3,9 +3,10 @@
 (dont-obfuscate is_a)
 
 (defun %%key (x)
-  (? (is_a x "__symbol")
-     (%%%string+ "~%SYM " x.n)
-     x))
+  (?
+    (is_a x "__symbol") (%%%string+ "~%SYM " x.n)
+    (is_a x "__cons") (%%%string+ "~%CONS " x.id)
+    x))
 
 (defun hash-table? (x)
   (is_a x "__l"))
