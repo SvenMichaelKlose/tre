@@ -16,10 +16,8 @@
 (defun %print-check-circularity (x str info)
   (and *print-circularities?*
        (?
-         (href (print-info-first-occurences info) x)
-           (%print-first-occurence x str info)
-         (href (print-info-visited info) x)
-           (%print-circularity x str))))
+         (href (print-info-first-occurences info) x) (%print-first-occurence x str info)
+         (href (print-info-visited info) x) (%print-circularity x str))))
 
 (defun %print-rest-0 (c str info)
   (setf (href (print-info-visited info) c) t)
