@@ -39,12 +39,12 @@
   (let tr *php-transpiler*
     (transpiler-add-defined-variable tr '*KEYWORD-PACKAGE*)
 	(string-concat
-        "<?php "
+        "<?php $_I_ = 0; while (1) { switch ($_I_) { case 0:"
 		(php-transpile-prepare tr)
     	(target-transpile tr
-    	 	:files-before-deps (list (cons 'base1 *php-base*)
-				  	                 (cons 'base2 *php-base2*))
-		  	:files-after-deps (append (when (eq t *have-environment-tests*)
+    	 	:files-before-deps (list (cons 'base1 *php-base*))
+		  	:files-after-deps (append (list (cons 'base2 *php-base2*))
+                                      (when (eq t *have-environment-tests*)
 				   	  	                (list (cons 'env-tests (make-environment-tests))))
                                       sources)
 		 	:dep-gen #'(()
@@ -54,4 +54,4 @@
 			:files-to-update files-to-update
             :obfuscate? obfuscate?
 			:print-obfuscations? print-obfuscations?)
-        "?>")))
+        "} break; } ?>")))
