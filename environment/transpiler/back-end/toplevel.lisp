@@ -5,7 +5,7 @@
 ;; - Strings are encapsulated.
 ;; - Expressions are expanded via code generating macros.
 ;; - Everything is converted to strings and concatenated.
-(transpiler-pass transpiler-emit-code-compose (tr)
+(transpiler-pass transpiler-generate-code-compose (tr)
     print-o (fn (when *show-compiler-progress?*
                   (princ "o")
                   (force-output))
@@ -18,10 +18,10 @@
     encapsulate-strings #'transpiler-encapsulate-strings
     function-names (fn translate-function-names tr nil _))
 
-(defun transpiler-emit-code (tr x)
-  (funcall (transpiler-emit-code-compose tr) x))
+(defun transpiler-generate-code (tr x)
+  (funcall (transpiler-generate-code-compose tr) x))
 
-(transpiler-pass transpiler-make-places-compose ()
+(transpiler-pass transpiler-backend-make-places-compose ()
     place-assign #'place-assign
     place-expand #'place-expand
     make-function-prologues #'make-function-prologues)
@@ -29,10 +29,10 @@
 ;; After this pass:
 ;; - Function prologues are generated.
 ;; - Places are translated into vector ops.
-(defun transpiler-generate-code (tr x)
+(defun transpiler-backend-prepare (tr x)
   (? (transpiler-lambda-export? tr)
-     (funcall (transpiler-make-places-compose) x)
+     (funcall (transpiler-backend-make-places-compose) x)
 	 (make-function-prologues x)))
 
 (defun transpiler-backend (tr x)
-  (concat-stringtree (funcall (transpiler-emit-code-compose tr) (transpiler-generate-code tr x))))
+  (concat-stringtree (mapcar (fn transpiler-generate-code tr (transpiler-backend-prepare tr (list _))) x)))

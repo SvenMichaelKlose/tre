@@ -36,7 +36,7 @@
 
 (defun transpiler-import-exported-closures (tr)
   (and (transpiler-exported-closures tr)
-	   (append (transpiler-sighten tr (pop (transpiler-exported-closures tr)))
+	   (append (transpiler-frontend tr (pop (transpiler-exported-closures tr)))
 		       (transpiler-import-exported-closures tr))))
 
 (defvar *imported-something* nil)
@@ -46,7 +46,7 @@
   (unless (transpiler-defined-function tr x)
     (let fun (symbol-function x)
       (setf *imported-something* t)
-      (transpiler-sighten tr `((defun ,x ,(function-arguments fun)
+      (transpiler-frontend tr `((defun ,x ,(function-arguments fun)
                                  ,@(function-body fun)))))))
 
 (defun transpiler-import-wanted-functions (tr)
@@ -57,10 +57,10 @@
     (apply #'append (queue-list q))))
 
 (defun transpiler-import-wanted-variables (tr)
-  (transpiler-sighten tr
+  (transpiler-frontend tr
     (mapcar (fn (unless (transpiler-defined-variable tr _)
 				  (setf *imported-something* t)
-				  (setf *delayed-var-inits* (append (transpiler-sighten tr `((setf ,_ ,(assoc-value _ *variables* :test #'eq))))
+				  (setf *delayed-var-inits* (append (transpiler-frontend tr `((setf ,_ ,(assoc-value _ *variables* :test #'eq))))
  							                        *delayed-var-inits*))
 	              `(defvar ,_ nil)))
 	        (transpiler-wanted-variables tr))))

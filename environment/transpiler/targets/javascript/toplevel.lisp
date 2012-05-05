@@ -26,7 +26,7 @@
       (with-queue decls
 		(dolist (i (funinfo-env (transpiler-global-funinfo tr)))
           (unless (transpiler-emitted-decl? tr i)
-       	    (enqueue decls (transpiler-emit-code tr (list `(%var ,i))))
+       	    (enqueue decls (transpiler-generate-code tr (list `(%var ,i))))
             (transpiler-add-emitted-decl tr i)))
         (enqueue decls (js-transpile-prologue))
 	    (queue-list decls))))

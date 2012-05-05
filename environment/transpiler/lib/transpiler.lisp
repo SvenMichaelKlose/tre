@@ -56,6 +56,9 @@
   ; Tells if functions must be moved out of functions.
   (lambda-export? nil)
 
+  (accumulate-toplevel-expressions? nil)
+  (accumulated-toplevel-expressions nil)
+
   (needs-var-declarations? nil)
 
   ; Tells if local variables are on the stack.
@@ -102,7 +105,7 @@
   (raw-decls nil)
 
   ; Recompiling
-  (sightened-files)
+  (frontend-files)
   (compiled-files)
 
   (current-package nil))
@@ -242,6 +245,9 @@
 (defun transpiler-add-emitted-decl (tr x)
   (push x (transpiler-emitted-decls tr)))
 
+(defun transpiler-add-toplevel-expression (tr x)
+  (nconc! (transpiler-accumulated-toplevel-expressions tr) (list x)))
+
 (def-transpiler copy-transpiler (transpiler)
   (aprog1
     (make-transpiler :name                   name
@@ -270,6 +276,8 @@
                      :save-argument-defs-only? save-argument-defs-only?
                      :gen-string              gen-string
                      :lambda-export?          lambda-export?
+                     :accumulate-toplevel-expressions? accumulate-toplevel-expressions?
+                     :accumulated-toplevel-expressions (copy-list accumulated-toplevel-expressions)
                      :needs-var-declarations? needs-var-declarations?
                      :stack-locals?           stack-locals?
                      :place-expand-ignore-toplevel-funinfo? place-expand-ignore-toplevel-funinfo?
@@ -302,7 +310,7 @@
                      :emitted-decls           (copy-list emitted-decls)
                      :imported-deps           imported-deps
                      :raw-decls               (copy-list raw-decls)
-                     :sightened-files         (copy-alist sightened-files)
+                     :frontend-files          (copy-alist frontend-files)
                      :compiled-files          (copy-alist compiled-files)
                      :current-package         current-package
                      :expex-initializer       expex-initializer)

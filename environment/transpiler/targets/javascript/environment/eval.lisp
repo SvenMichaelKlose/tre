@@ -19,7 +19,7 @@
     (setf *js-eval-transpiler* tr)))
 
 (defun js-eval-transpile (tr expression)
-  (clr (transpiler-sightened-files tr)
+  (clr (transpiler-frontend-files tr)
        (transpiler-compiled-files tr)
        (transpiler-raw-decls tr))
   (concat-stringtree (js-transpile-pre tr)
