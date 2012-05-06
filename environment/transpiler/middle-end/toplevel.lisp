@@ -9,11 +9,7 @@
 ;; - Peephole-optimisations were performed.
 ;; - FUNINFOs were updated with number of jump tags in function.
 ;; - FUNCTION expression contain the names of top-level functions.
-(transpiler-pass transpiler-expand-compose (tr)
-    print-dot                (fn (when *show-compiler-progress?*
-                                   (princ ".")
-                                   (force-output))
-                                   _)
+(transpiler-pass transpiler-middleend-0 (tr)
     update-funinfo           #'transpiler-update-funinfo
     opt-remove-unused-places #'opt-places-remove-unused
     opt-find-unused-places   #'opt-places-find-used
@@ -32,4 +28,4 @@
     make-packages            #'make-packages)
 
 (defun transpiler-middleend (tr x)
-  (mapcan (fn funcall (transpiler-expand-compose tr) (list _)) x))
+  (mapcan (fn transpiler-middleend-0 tr (list _)) x))
