@@ -11,7 +11,7 @@
 
 (define-php-std-macro define-native-php-fun (name args &rest body)
   `(%%vm-scope
-     ,@(apply #'shared-essential-defun (%defun-name name) args (body-with-noargs-tag body))
+     ,@(apply #'shared-defun (%defun-name name) args (body-with-noargs-tag body))
      (%setq ~%ret nil)))
 
 (transpiler-wrap-invariant-to-binary define-php-std-macro eq 2 eq and)
@@ -27,7 +27,7 @@
   (with ((fi-sym adef) (split-funinfo-and-args args)
          fun-name (%defun-name name))
     `(%%vm-scope
-       ,@(apply #'shared-essential-defun fun-name args
+       ,@(apply #'shared-defun fun-name args
                 (? *exec-log*
                    `((%transpiler-native "error_log (\"" ,(symbol-name fun-name) "\")")
                         nil ,@body)

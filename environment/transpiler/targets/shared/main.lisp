@@ -3,7 +3,7 @@
 (env-load "transpiler/targets/shared/noargs-tag.lisp")
 (env-load "transpiler/targets/shared/not-gensym.lisp")
 (env-load "transpiler/targets/shared/expand/log-function-calls.lisp")
-(env-load "transpiler/targets/shared/expand/essential-defun.lisp")
+(env-load "transpiler/targets/shared/expand/defun.lisp")
 (env-load "transpiler/targets/shared/expand/defmacro.lisp")
 (env-load "transpiler/targets/shared/expand/mapcar.lisp")
 (env-load "transpiler/targets/shared/expand/opt-string-concat.lisp")

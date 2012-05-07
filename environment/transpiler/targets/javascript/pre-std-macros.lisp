@@ -11,5 +11,5 @@
     (let g '~%tfun
       `(progn
          ,@(js-make-early-symbol-expr g dname)
-         ,@(apply #'shared-essential-defun dname args body)
+         ,@(apply #'shared-defun dname args body)
 	     (setf (symbol-function ,g) ,dname)))))

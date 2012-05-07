@@ -68,7 +68,7 @@
   (let dname (%defun-name name)
     (js-make-late-symbol-function-assignment dname)
     `(progn
-       ,@(apply #'shared-essential-defun dname args (body-with-noargs-tag body)))))
+       ,@(apply #'shared-defun dname args (body-with-noargs-tag body)))))
 
 (define-js-std-macro cps-mode (x)
   (when *show-definitions*

@@ -18,7 +18,7 @@
         ,*not-gensym*)))
 
 (define-c-std-macro defun (name args &rest body)
-  (car (apply #'shared-essential-defun name args body)))
+  (car (apply #'shared-defun name args body)))
 
 (define-c-std-macro defmacro (&rest x)
   (apply #'shared-defmacro '*c-transpiler* x))

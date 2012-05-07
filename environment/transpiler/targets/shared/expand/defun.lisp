@@ -5,7 +5,7 @@
 (defun redef-warn (&rest args)
   (apply (? *allow-redefinitions?* #'warn #'error) args))
 
-(defun shared-essential-defun (name args &rest body)
+(defun shared-defun (name args &rest body)
   (awhen (transpiler-current-package *current-transpiler*)
     (setf name (make-symbol (symbol-name name) !)))
   (when *show-definitions*
