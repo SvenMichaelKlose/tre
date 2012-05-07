@@ -26,8 +26,8 @@
                       '(no-args))
                   (block ,(? (cons? name) .name. name)
                     ,@(when *log-functions?*
-                        `((when (function? log)
-                            (log ,(symbol-name n)))))
+                        `((when (function? raw-log)
+                            (%%%log ,(symbol-name n)))))
    		            ,@(body-without-noargs-tag body))))
      ,@(when (and *have-compiler?* (not (transpiler-memorize-sources? *current-transpiler*)))
          `((%setq *defined-functions* (cons ,(list 'quote n) *defined-functions*))))
