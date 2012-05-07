@@ -1,14 +1,4 @@
-DEFSTRUCT: MAKE-*: Keywords don't set value if it has the name of a function.
+2012/05/03:
 
-interpreter/MACROEXPAND-1: - CAR required?
-
-(setf this.parent)
-
-Find illegal keyword arguments.
-
-Literal characters as argument default values.
-
-QUASIQUOTE copies conses. Provide some alternative or make it non-copying.
-
-No recompilation without opt-inline -- c-call functions are missing.
-Check if importer can take all functions.
+(with (var #'((cannot use &rest keyword)))
+  ...)
