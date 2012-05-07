@@ -1,0 +1,3 @@
+(defvar *I-become-a-function-myself* (fn _))
+
+    Probably happens in middle-end/named-functions.lisp
