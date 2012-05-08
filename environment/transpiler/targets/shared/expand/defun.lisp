@@ -19,16 +19,17 @@
     (transpiler-add-function-args tr n a)
 	(transpiler-add-function-body tr n body)
 	`((%defsetq ,name
-	           #'(,@(awhen fi-sym
+	            #'(,@(awhen fi-sym
 				      `(%funinfo ,!))
-			      ,a
-                  ,@(when (body-has-noargs-tag? body)
-                      '(no-args))
-                  (block ,(? (cons? name) .name. name)
-                    ,@(when *log-functions?*
-                        `((when (function? raw-log)
-                            (%%%log ,(symbol-name n)))))
-   		            ,@(body-without-noargs-tag body))))
+			       ,a
+                   ,@(when (body-has-noargs-tag? body)
+                       '(no-args))
+                   (block ,(? (cons? name) .name. name)
+                     ,@(and *log-functions?*
+                            (not (eq '%%%log name))
+                            `((when (function? raw-log)
+                                (%%%log ,(symbol-name n)))))
+   		             ,@(body-without-noargs-tag body))))
      ,@(when (and *have-compiler?* (not (transpiler-memorize-sources? *current-transpiler*)))
          `((%setq *defined-functions* (cons ,(list 'quote n) *defined-functions*))))
      ,@(when (transpiler-save-sources? tr)
