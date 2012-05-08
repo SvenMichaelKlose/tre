@@ -13,7 +13,7 @@
       (setf args (cons fun.g args)))
 	(?
       (function_exists expander-name) (call_user_func_array expander-name (%transpiler-native "array ($" args ")"))
-	  (function_exists fun-name) (call_user_func_array fun-name (list-array args))
+	  (function_exists fun-name) (call_user_func_array fun-name (list-phparray args))
       (error (+ "Function '" fun-name "' does not exist.")))))
 
 (defmacro cps-wrap (x) x)
