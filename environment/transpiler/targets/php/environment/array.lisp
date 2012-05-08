@@ -27,6 +27,6 @@
       (a.p i))))
 
 (defun list-phparray (x)
-  (let a (make-array)
+  (let a (%%%make-hash-table)
     (dolist (i x a)
       (%setq (%transpiler-native "$" a "[]") i))))

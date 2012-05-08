@@ -21,6 +21,7 @@ class __l {
     public function s ($i, $v)
     {
 		$GLOBALS['LEXICALS'][$this->id][$i] = $v;
+        return $v;
     }
 
     public function __toString ()

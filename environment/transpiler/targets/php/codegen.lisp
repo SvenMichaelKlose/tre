@@ -201,21 +201,36 @@
 
 ;;;; ARRAYS
 
-(define-php-macro make-array (&rest elements)
-  `(%transpiler-native "Array()" ""))
-
 (defun php-array-subscript (indexes)
   (mapcar (fn `("[" ,(php-dollarize _) "]")) indexes))
 
+(defun php-literal-array-element (x)
+  (list (php-dollarize x.) "=>" (php-dollarize .x.)))
+
+(defun php-literal-array-elements (x)
+  (pad (mapcar #'php-literal-array-element x) ","))
+
+(define-php-macro %%%make-hash-table (&rest elements)
+  `(%transpiler-native "Array (" ,@(php-literal-array-elements (group elements 2)) ")"))
+
+(define-php-macro make-array (&rest elements)
+  `(%transpiler-native "new __array ()" ""))
+
 (define-php-macro aref (arr &rest indexes)
+  `(href ,arr ,@indexes))
+
+(define-php-macro %%usetf-aref (val arr &rest indexes)
+  `(%%usetf-href ,val ,arr ,@indexes))
+
+ (define-php-macro php-aref (arr &rest indexes)
   `(%transpiler-native ,(php-dollarize arr) ,@(php-array-subscript indexes)))
+ 
+(define-php-macro %%usetf-php-aref (val &rest x)
+  `(%transpiler-native (php-aref ,@x)
+                       ,(php-assignment-operator val)
+                       ,(php-dollarize val)))
 
-(define-php-macro %%usetf-aref (val &rest x)
-  `(%transpiler-native (aref ,@x)
-					   ,(php-assignment-operator val)
-					   ,(php-dollarize val)))
-
-;;;; HASH TABLE
+;;;; HASH TABLES
 
 (defun php-array-indexes (x)
   (mapcan (fn list "[" (php-dollarize _) "]") x))
@@ -227,29 +242,25 @@
   `(%transpiler-native ,(php-dollarize h) ,@(php-array-indexes k) " = " ,(php-dollarize v)))
 
 (define-php-macro href (h k)
-  `(%transpiler-native "(is_a (" ,(php-dollarize h) ", '__l') ? "
+;  `(%transpiler-native ,(php-dollarize h) "->g(userfun_T37T37key(" ,(php-dollarize k) "))"))
+  `(%transpiler-native "(is_a (" ,(php-dollarize h) ", '__l') || is_a (" ,(php-dollarize h) ", '__array')) ? "
                        ,(php-dollarize h) "->g(userfun_T37T37key(" ,(php-dollarize k) ")) : "
-                       ,(php-dollarize h) "[userfun_T37T37key(" ,(php-dollarize k) ")])"))
+                       ,(php-dollarize h) "[userfun_T37T37key(" ,(php-dollarize k) ")]"))
 
 (define-php-macro %%usetf-href (v h k)
-  `(%transpiler-native "(is_a (" ,(php-dollarize h) ", '__l') ? "
+;  `(%transpiler-native ,(php-dollarize h) "->s(userfun_T37T37key(" ,(php-dollarize k) ")," ,(php-dollarize v) ")"))
+  `(%transpiler-native "(is_a (" ,(php-dollarize h) ", '__l') || is_a (" ,(php-dollarize h) ", '__array')) ? "
                        ,(php-dollarize h) "->s(userfun_T37T37key(" ,(php-dollarize k) ")," ,(php-dollarize v) ") : "
-                       ,(php-dollarize h) "[userfun_T37T37key(" ,(php-dollarize k) ")] = " ,(php-dollarize v) ")"))
+                       ,(php-dollarize h) "[userfun_T37T37key(" ,(php-dollarize k) ")] = " ,(php-dollarize v)))
 
 (define-php-macro hremove (h key)
   `(%transpiler-native "null; unset ($" ,h "[" ,(php-dollarize key) "])"))
 
 (define-php-macro make-hash-table (&rest ignored-args)
-  `(%transpiler-native "Array()" ""))
-
-(defun php-literal-array-element (x)
-  (list (php-dollarize x.) "=>" (php-dollarize .x.)))
-
-(defun php-literal-array-elements (x)
-  (pad (mapcar #'php-literal-array-element x) ","))
+  `(make-array))
 
 (define-php-macro %make-hash-table (&rest args)
-  `(%transpiler-native "Array(" ,@(php-literal-array-elements (group args 2)) ")"))
+  `(%transpiler-native "new __array (Array (" ,@(php-literal-array-elements (group args 2)) "))"))
 
 ;;;; OBJECTS
 

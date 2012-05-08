@@ -6,11 +6,10 @@ $ARRAYID = 0;
 class __array {
     var $id;
 
-	public function __construct ($phparray = NULL)
+	public function __construct ($phparray = Array ())
 	{
 		$this->id = ++$GLOBALS['ARRAYID'];
-		$GLOBALS['ARRAYS'][$this->id] = $phparray || Array ();
-
+		$GLOBALS['ARRAYS'][$this->id] = $phparray;
         return $this;
 	}
 
@@ -27,6 +26,7 @@ class __array {
     public function s ($i, $v)
     {
 		$GLOBALS['ARRAYS'][$this->id][$i] = $v;
+        return $v;
     }
 
     public function p ($v)
