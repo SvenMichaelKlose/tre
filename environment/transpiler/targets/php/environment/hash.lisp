@@ -6,6 +6,7 @@
   (?
     (is_a x "__symbol") (%%%string+ "~%SYM " x.n)
     (is_a x "__cons") (%%%string+ "~%CONS " x.id)
+    (is_a x "__array") (%%%string+ "~%ARRAY " x.id)
     x))
 
 (defun hash-table? (x)
