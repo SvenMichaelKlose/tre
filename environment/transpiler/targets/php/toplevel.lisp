@@ -2,13 +2,15 @@
 
 (defvar *php-goto?* t) ; PHP version < 5.3 has no 'goto'.
 
+(defvar *php-native-environment*
+        ,(concat-stringtree
+             (mapcar (fn let p (+ "environment/transpiler/targets/php/environment/native/" _ ".php")
+                          (with-open-file i (open p :direction 'input)
+		  	             (read-all-lines i)))
+                     '("settings" "character" "cons" "lexical" "funref" "symbol" "array"))))
+
 (defun php-print-native-environment (out)
-  (princ ,(concat-stringtree
-              (mapcar (fn let p (+ "environment/transpiler/targets/php/environment/native/" _ ".php")
-                           (with-open-file i (open p :direction 'input)
-			  	             (read-all-lines i)))
-                      '("settings" "character" "cons" "lexical" "funref" "symbol" "array")))
-		 out))
+  (princ *php-native-environment* out))
 
 (defun php-transpile-prepare (tr &key (import-universe? nil))
   (with-string-stream out
