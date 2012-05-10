@@ -99,17 +99,7 @@
   (apply #'shared-defmacro x))
 
 (define-js-std-macro defvar (name &optional (val '%%no-value))
-  (when (eq '%%no-value val)
-    (setf val `',name))
-  (let tr *js-transpiler*
-    (when *show-definitions*
-      (late-print `(defvar ,name)))
-    (when (transpiler-defined-variable tr name)
-      (redef-warn "redefinition of variable ~A.~%" name))
-    (transpiler-add-defined-variable tr name)
-    `(progn
-       (%var ,name)
-	   (%setq ,name ,val))))
+  (funcall #'shared-defvar name val))
 
 (define-js-std-macro defconstant (&rest x)
   `(defvar ,@x))

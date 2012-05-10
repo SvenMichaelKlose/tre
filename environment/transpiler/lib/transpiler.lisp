@@ -72,7 +72,10 @@
   (cps-exceptions nil)
   (cps-functions nil)
 
-  ; You shouldn't have to tweak these.
+  ;;;
+  ;;; You mustn't init these.
+  ;;;
+
   (symbol-translations nil)
   (thisify-classes (make-hash-table :test #'eq))
   (function-args (make-hash-table :test #'eq))
