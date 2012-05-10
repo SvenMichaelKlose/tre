@@ -248,6 +248,9 @@
 (defun transpiler-add-toplevel-expression (tr x)
   (nconc! (transpiler-accumulated-toplevel-expressions tr) (list x)))
 
+(defun transpiler-add-delayed-var-init (tr x)
+  (nconc! (transpiler-delayed-var-inits tr) (transpiler-frontend tr x)))
+
 (def-transpiler copy-transpiler (transpiler)
   (aprog1
     (make-transpiler :name                   name

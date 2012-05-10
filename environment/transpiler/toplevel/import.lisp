@@ -20,7 +20,7 @@
     (nconc! (transpiler-wanted-functions tr) (list x)))
   x)
 
-(defun transpiler-should-add-wanted-variable? (tr var)
+(defun transpiler-must-add-wanted-variable? (tr var)
   (and (transpiler-import-from-environment? tr)
        (atom var)
        (symbol? var)
@@ -29,7 +29,7 @@
 	       (assoc var *constants* :test #'eq))))
 
 (defun transpiler-add-wanted-variable (tr var)
-  (when (transpiler-should-add-wanted-variable? tr var)
+  (when (transpiler-must-add-wanted-variable? tr var)
     (setf (href (transpiler-wanted-variables-hash tr) var) t)
     (push var (transpiler-wanted-variables tr)))
   var)
@@ -39,13 +39,9 @@
 	   (append (transpiler-frontend tr (pop (transpiler-exported-closures tr)))
 		       (transpiler-import-exported-closures tr))))
 
-(defvar *imported-something* nil)
-(defvar *delayed-var-inits* nil)
-
 (defun transpiler-import-wanted-function (tr x)
   (unless (transpiler-defined-function tr x)
     (let fun (symbol-function x)
-      (setf *imported-something* t)
       (transpiler-frontend tr `((defun ,x ,(function-arguments fun)
                                  ,@(function-body fun)))))))
 
@@ -53,26 +49,24 @@
   (with-queue q
     (awhile (pop (transpiler-wanted-functions tr))
             nil
-      (enqueue q (transpiler-import-wanted-function tr !)))
+      (awhen (transpiler-import-wanted-function tr !)
+        (enqueue q !)))
     (apply #'append (queue-list q))))
 
 (defun transpiler-import-wanted-variables (tr)
   (transpiler-frontend tr
-    (mapcar (fn (unless (transpiler-defined-variable tr _)
-				  (setf *imported-something* t)
-				  (setf *delayed-var-inits* (append (transpiler-frontend tr `((setf ,_ ,(assoc-value _ *variables* :test #'eq))))
- 							                        *delayed-var-inits*))
-	              `(defvar ,_ nil)))
+    (mapcan (fn unless (transpiler-defined-variable tr _)
+				 (transpiler-add-delayed-var-init tr `((setf ,_ ,(assoc-value _ *variables* :test #'eq))))
+	             `((defvar ,_ nil)))
 	        (transpiler-wanted-variables tr))))
 
 (defun transpiler-import-from-environment (tr)
-  (clr *imported-something*)
   (with (funs (transpiler-import-wanted-functions tr)
          exported (transpiler-import-exported-closures tr)
 	     vars (transpiler-import-wanted-variables tr))
-    (? *imported-something*
+    (? (or funs exported vars)
        (append (append funs exported vars) (transpiler-import-from-environment tr))
-       *delayed-var-inits*)))
+       (transpiler-delayed-var-inits tr))))
 
 (defun transpiler-import-from-expex (x)
   (!? (atom-function-expr? x)
