@@ -55,26 +55,30 @@
     (transpiler-switch-obfuscator tr obfuscate?)
     (with (before-deps (target-transpile-1 tr files-before-deps files-to-update)
 		   after-deps  (target-transpile-1 tr files-after-deps files-to-update)
-		   deps        (target-sighten-deps tr dep-gen)
-	       compiled-before (target-transpile-2 tr before-deps files-to-update)
-	       compiled-deps   (awhen deps (transpiler-make-code tr !))
-		   compiled-after  (target-transpile-2 tr after-deps files-to-update)
+		   deps        (target-sighten-deps tr dep-gen))
+      (when *show-definitions*
+        (format t "; Let me think. Hmm...")
+        (force-output))
+      (with (compiled-before (target-transpile-2 tr before-deps files-to-update)
+	         compiled-deps   (awhen deps (transpiler-make-code tr !))
+		     compiled-after  (target-transpile-2 tr after-deps files-to-update)
            )
 ;           compiled-acctop (when (transpiler-accumulate-toplevel-expressions? tr)
 ;	                         (transpiler-make-code tr 
 ;                                 (target-transpile-1 tr (list (cons 'accumulated-toplevel #'(()
 ;                                                                                              (transpiler-make-toplevel-function tr))))
 ;                                                     (list 'accumulated-toplevel)))))
-      (awhen compiled-deps
-        (setf (transpiler-imported-deps tr) (string-concat (transpiler-imported-deps tr) !)))
-	  (prog1
-	    (concat-stringtree (awhen decl-gen
-	                         (funcall !))
-	                       compiled-before
-                           (reverse (transpiler-raw-decls tr))
-                           (transpiler-imported-deps tr)
-	                       compiled-after
-                           )
-                           ;(or compiled-acctop ""))
-        (when (and print-obfuscations? (transpiler-obfuscate? tr))
-          (transpiler-print-obfuscations tr))))))
+        (terpri)
+        (awhen compiled-deps
+          (setf (transpiler-imported-deps tr) (string-concat (transpiler-imported-deps tr) !)))
+	    (prog1
+	      (concat-stringtree (awhen decl-gen
+	                           (funcall !))
+	                         compiled-before
+                             (reverse (transpiler-raw-decls tr))
+                             (transpiler-imported-deps tr)
+	                         compiled-after
+                             )
+                             ;(or compiled-acctop ""))
+          (when (and print-obfuscations? (transpiler-obfuscate? tr))
+            (transpiler-print-obfuscations tr)))))))
