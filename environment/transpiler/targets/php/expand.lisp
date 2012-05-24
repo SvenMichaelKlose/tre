@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
 
 (defmacro define-php-std-macro (&rest x)
   `(define-transpiler-std-macro *php-transpiler* ,@x))
@@ -9,7 +9,7 @@
      (%setq ,place ,@x)
      ((slot-value ,(list 'quote place) 'sf) ,(compiled-function-name-string *current-transpiler* place))))
 
-(define-php-std-macro define-native-php-fun (name args &rest body)
+(define-php-std-macro define-native-php-fun (name args &body body)
   `(%%vm-scope
      ,@(apply #'shared-defun (%defun-name name) args (body-with-noargs-tag body))
      (%setq ~%ret nil)))
@@ -19,11 +19,11 @@
 (define-php-std-macro not (&rest x)
   (? .x
      `(%not (list ,@x))
-      `(let ,*not-gensym* t
-         (? ,x. (setf ,*not-gensym* nil))
-         ,*not-gensym*)))
+     `(let ,*not-gensym* t
+        (? ,x. (setf ,*not-gensym* nil))
+        ,*not-gensym*)))
 
-(define-php-std-macro defun (name args &rest body)
+(define-php-std-macro defun (name args &body body)
   (with ((fi-sym adef) (split-funinfo-and-args args)
          fun-name (%defun-name name))
     `(%%vm-scope
@@ -41,8 +41,8 @@
                       (argument-expand-names 'compile-argument-expansion adef))))))
        (%setq ~%ret nil))))
 
-(define-php-std-macro defmacro (&rest x)
-  (apply #'shared-defmacro x))
+(define-php-std-macro defmacro (name args &body x)
+  (apply #'shared-defmacro name args x))
 
 (define-php-std-macro defvar (name &optional (val '%%no-value))
   (funcall #'shared-defvar name val))
@@ -70,31 +70,26 @@
 		  ,fun))
 
 (defun php-transpiler-make-new-hash (x)
-  `(%make-hash-table ,@(mapcan (fn list _. ._.) (group x 2))))
+  `(%make-hash-table ,@x))
 
 (defun php-transpiler-make-new-object (x)
-  `(%new ,x. ,@.x))
+  `(%new ,@x))
 
 (define-php-std-macro new (&rest x)
   (unless x
 	(error "NEW expects arguments"))
+  (unless (and x. (or (symbol? x.) (string? x.)))
+    (error "NEW expects first argument to be a non-NIL symbol or string instead of ~A" x.))
   (? (or (keyword? x.)
-		 (string? x.))
-	 (php-transpiler-make-new-hash x)
-	 (php-transpiler-make-new-object x)))
-
-(define-php-std-macro php-type-predicate (name &rest types)
-  `(defun ,name (x)
-     (when x
-	   ,(? (< 1 (length types))
-       	   `(or ,@(mapcar (fn `(%%%= (%php-typeof x) ,_)) types))
-           `(%%%= (%php-typeof x) ,types.)))))
+	     (string? x.))
+     (php-transpiler-make-new-hash x)
+     (php-transpiler-make-new-object x)))
 
 (define-php-std-macro undefined? (x)
   `(isset ,x))
 
 (define-php-std-macro defined? (x)
-  `(not (undefined? x)))
+  `(not (isset ,x)))
 
 (define-php-std-macro dont-obfuscate (&rest symbols)
   (apply #'transpiler-add-obfuscation-exceptions *php-transpiler* symbols)
@@ -118,10 +113,9 @@
 (define-php-std-macro functional (&rest x)
   (when *show-definitions*
     (late-print `(functional ,@x)))
-  (setf *functionals* (nconc x *functionals*))
+  (append! *functionals* x)
   nil)
 
 (define-php-std-macro in-package (n)
   (setf (transpiler-current-package *js-transpiler*) (when n (make-package (symbol-name n))))
   `(%%in-package ,n))
-
