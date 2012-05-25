@@ -1,8 +1,7 @@
-;;;;; Caroshi - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; Caroshi – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun php-make-constructor (cname bases args body)
-  (transpiler-add-defined-function *php-transpiler* cname)
-  (transpiler-add-function-args *php-transpiler* cname args)
+  (transpiler-add-defined-function *php-transpiler* cname args body)
   `(%setq __construct
       #'(,args
           ; Add class name for debugging.

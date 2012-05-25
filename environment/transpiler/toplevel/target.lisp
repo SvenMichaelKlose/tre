@@ -57,7 +57,7 @@
 		   after-deps  (target-transpile-1 tr files-after-deps files-to-update)
 		   deps        (target-sighten-deps tr dep-gen))
       (when *show-definitions*
-        (format t "; ~A top-level expressions.~%" (apply #'+ (mapcar (fn length ._) (append before-deps deps after-deps))))
+        (format t "; ~A toplevel expressions.~%" (apply #'+ (mapcar (fn length ._) (append before-deps deps after-deps))))
         (format t "; Let me think. Hmm...")
         (force-output))
       (with (compiled-before (target-transpile-2 tr before-deps files-to-update)

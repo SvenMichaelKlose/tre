@@ -11,7 +11,7 @@
 (defun js-make-function-with-compiled-argument-expansion (x)
   (let g '~%cargs
     (when (in-cps-mode?)
-      (transpiler-add-cps-function *js-transpiler* g))
+      (transpiler-add-cps-function *current-transpiler* g))
     (with-lambda-content x fi args body
       `(#'((,g)
 	        (setf ,g ,(copy-lambda `(function ,x) :body (body-with-noargs-tag body)))
@@ -52,12 +52,12 @@
 
 (defun js-cps-exception (x)
   (unless (in-cps-mode?)
-    (transpiler-add-cps-exception *js-transpiler* (%defun-name x))))
+    (transpiler-add-cps-exception *current-transpiler* (%defun-name x))))
 
 (defvar *late-symbol-function-assignments* nil)
 
 (defun js-make-late-symbol-function-assignment (dname)
-  (push `(setf (slot-value ',dname 'f) ,(compiled-function-name *js-transpiler* dname))
+  (push `(setf (slot-value ',dname 'f) ,(compiled-function-name *current-transpiler* dname))
         *late-symbol-function-assignments*))
 
 (defun emit-late-symbol-function-assignments ()
@@ -81,14 +81,14 @@
 (defun js-make-early-symbol-expr (g sym)
    `(,@(unless (eq g '~%tfun)
          `((%var ,g)))
-     (%setq ,g (symbol ,(transpiler-obfuscated-symbol-name *js-transpiler* sym)
+     (%setq ,g (symbol ,(transpiler-obfuscated-symbol-name *current-transpiler* sym)
                        ,(awhen (symbol-package sym)
-                          `(make-package ,(transpiler-obfuscated-symbol-name *js-transpiler* !)))))))
+                          `(make-package ,(transpiler-obfuscated-symbol-name *current-transpiler* !)))))))
 
 (defun js-emit-memorized-sources ()
-  (clr (transpiler-memorize-sources? *js-transpiler*))
+  (clr (transpiler-memorize-sources? *current-transpiler*))
   (mapcar (fn `(%setq (slot-value ,_. '__source) ,(list 'quote ._)))
-          (transpiler-memorized-sources *js-transpiler*)))
+          (transpiler-memorized-sources *current-transpiler*)))
 
 (define-js-std-macro %defun (&rest x)
   `(defun ,@x))
@@ -164,13 +164,13 @@
 (define-js-std-macro dont-obfuscate (&rest symbols)
   (when *show-definitions*
     (late-print `(dont-obfuscate ,@symbols)))
-  (apply #'transpiler-add-obfuscation-exceptions *js-transpiler* symbols)
+  (apply #'transpiler-add-obfuscation-exceptions *current-transpiler* symbols)
   nil)
 
 (define-js-std-macro dont-inline (&rest x)
   (dolist (i x)
-    (transpiler-add-inline-exception *js-transpiler* i)
-    (transpiler-add-dont-inline *js-transpiler* i))
+    (transpiler-add-inline-exception *current-transpiler* i)
+    (transpiler-add-dont-inline *current-transpiler* i))
   nil)
 
 (define-js-std-macro assert (x &optional (txt nil) &rest args)
@@ -194,7 +194,7 @@
   nil)
 
 (define-js-std-macro in-package (n)
-  (setf (transpiler-current-package *js-transpiler*) (when n (make-package (symbol-name n))))
+  (setf (transpiler-current-package *current-transpiler*) (when n (make-package (symbol-name n))))
   `(%%in-package ,n))
 
 (define-js-std-macro invoke-debugger ()

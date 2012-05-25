@@ -65,7 +65,7 @@
 		 fi (get-lambda-funinfo x)
 		 num-locals (length (funinfo-env fi)))
     `(,(code-char 10)
-	  "function " ,(compiled-function-name *php-transpiler* name) ,@(php-argument-list args)
+	  "function " ,(compiled-function-name *current-transpiler* name) ,@(php-argument-list args)
       "{" ,(code-char 10)
 		 ,@(awhen (funinfo-globals fi)
              (php-line "global " (php-list !)))
@@ -79,7 +79,7 @@
 
 (define-php-macro function (name &optional (x 'only-name))
   (? (eq 'only-name x)
-     `(%transpiler-native (%transpiler-string ,(compiled-function-name-string *php-transpiler* name)))
+     `(%transpiler-native (%transpiler-string ,(compiled-function-name-string *current-transpiler* name)))
   	 (? (atom x)
 		(error "codegen: arguments and body expected: ~A" x)
 	  	(codegen-php-function name x))))
@@ -97,7 +97,7 @@
   (let fi (get-funinfo-by-sym fi-sym)
     (? (funinfo-ghost fi)
   	   `(%transpiler-native "new __funref("
-             (%transpiler-string ,(compiled-function-name-string *php-transpiler* name))
+             (%transpiler-string ,(compiled-function-name-string *current-transpiler* name))
              ","
              ,(php-dollarize (funinfo-lexical (funinfo-parent fi)))
              ")")
@@ -205,7 +205,7 @@
   (mapcar (fn `("[" ,(php-dollarize _) "]")) indexes))
 
 (defun php-literal-array-element (x)
-  (list (compiled-function-name *php-transpiler* '%%key) " (" (php-dollarize x.) ") => " (php-dollarize .x.)))
+  (list (compiled-function-name *current-transpiler* '%%key) " (" (php-dollarize x.) ") => " (php-dollarize .x.)))
 
 (defun php-literal-array-elements (x)
   (pad (mapcar #'php-literal-array-element x) ","))

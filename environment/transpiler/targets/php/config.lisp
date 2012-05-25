@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *php-version* 503)
 
@@ -53,8 +53,7 @@
 		  split object *array *string == === + - * /
 
 		  __construct))
-	(transpiler-add-defined-function ! '%cons)
-	(transpiler-add-function-args ! '%cons '(a b))))
+	(transpiler-add-defined-function ! '%cons '(a d) nil)))
 
 (defvar *php-transpiler* (copy-transpiler (make-php-transpiler)))
 (defvar *php-newline* (format nil "~%"))

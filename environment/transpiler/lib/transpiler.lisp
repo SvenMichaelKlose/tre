@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *current-transpiler* nil)
 (defvar *transpiler-assert* nil)
@@ -127,8 +127,10 @@
 (defun transpiler-defined-functions-without-builtins (tr)
   (remove-if #'builtin? (transpiler-defined-functions tr)))
 
-(defun transpiler-add-defined-function (tr name)
+(defun transpiler-add-defined-function (tr name args body)
   (setf (href (transpiler-defined-functions-hash tr) name) t)
+  (transpiler-add-function-args tr name args)
+  (transpiler-add-function-body tr name body)
   name)
 
 (defun transpiler-defined-variable (tr name)

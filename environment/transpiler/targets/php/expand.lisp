@@ -92,11 +92,11 @@
   `(not (isset ,x)))
 
 (define-php-std-macro dont-obfuscate (&rest symbols)
-  (apply #'transpiler-add-obfuscation-exceptions *php-transpiler* symbols)
+  (apply #'transpiler-add-obfuscation-exceptions *current-transpiler* symbols)
   nil)
 
 (define-php-std-macro dont-inline (x)
-  (transpiler-add-inline-exception *php-transpiler* x)
+  (transpiler-add-inline-exception *current-transpiler* x)
   nil)
 
 (define-php-std-macro assert (x &optional (txt nil) &rest args)
