@@ -55,9 +55,11 @@
     (transpiler-switch-obfuscator tr obfuscate?)
     (with (before-deps (target-transpile-1 tr files-before-deps files-to-update)
 		   after-deps  (target-transpile-1 tr files-after-deps files-to-update)
-		   deps        (target-sighten-deps tr dep-gen))
-      (when *show-definitions*
-        (format t "; ~A toplevel expressions.~%" (apply #'+ (mapcar (fn length ._) (append before-deps deps after-deps))))
+		   deps        (target-sighten-deps tr dep-gen)
+           num-exprs   (apply #'+ (mapcar (fn length ._) (append before-deps deps after-deps)))
+           show?       #'(() (and *show-definitions* (< 50 num-exprs))))
+      (when (show?)
+        (format t "; ~A toplevel expressions.~%" num-exprs)
         (format t "; Let me think. Hmm...")
         (force-output))
       (with (compiled-before (target-transpile-2 tr before-deps files-to-update)
@@ -69,7 +71,7 @@
 ;                                 (target-transpile-1 tr (list (cons 'accumulated-toplevel #'(()
 ;                                                                                              (transpiler-make-toplevel-function tr))))
 ;                                                     (list 'accumulated-toplevel)))))
-        (when *show-definitions*
+        (when (show?)
           (terpri))
         (awhen compiled-deps
           (setf (transpiler-imported-deps tr) (string-concat (transpiler-imported-deps tr) !)))
