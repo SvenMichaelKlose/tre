@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 ;;;; GENERAL
 
@@ -205,7 +205,7 @@
   (mapcar (fn `("[" ,(php-dollarize _) "]")) indexes))
 
 (defun php-literal-array-element (x)
-  (list (php-dollarize x.) "=>" (php-dollarize .x.)))
+  (list (compiled-function-name *php-transpiler* '%%key) " (" (php-dollarize x.) ") => " (php-dollarize .x.)))
 
 (defun php-literal-array-elements (x)
   (pad (mapcar #'php-literal-array-element x) ","))
@@ -244,14 +244,14 @@
 (define-php-macro href (h k)
 ;  `(%transpiler-native ,(php-dollarize h) "->g(userfun_T37T37key(" ,(php-dollarize k) "))"))
   `(%transpiler-native "(is_a (" ,(php-dollarize h) ", '__l') || is_a (" ,(php-dollarize h) ", '__array')) ? "
-                       ,(php-dollarize h) "->g(userfun_T37T37key(" ,(php-dollarize k) ")) : "
-                       ,(php-dollarize h) "[userfun_T37T37key(" ,(php-dollarize k) ")]"))
+                       ,(php-dollarize h) "->g(userfun_T37T37key (" ,(php-dollarize k) ")) : "
+                       ,(php-dollarize h) "[userfun_T37T37key (" ,(php-dollarize k) ")]"))
 
 (define-php-macro %%usetf-href (v h k)
 ;  `(%transpiler-native ,(php-dollarize h) "->s(userfun_T37T37key(" ,(php-dollarize k) ")," ,(php-dollarize v) ")"))
   `(%transpiler-native "(is_a (" ,(php-dollarize h) ", '__l') || is_a (" ,(php-dollarize h) ", '__array')) ? "
-                       ,(php-dollarize h) "->s(userfun_T37T37key(" ,(php-dollarize k) ")," ,(php-dollarize v) ") : "
-                       ,(php-dollarize h) "[userfun_T37T37key(" ,(php-dollarize k) ")] = " ,(php-dollarize v)))
+                       ,(php-dollarize h) "->s(userfun_T37T37key (" ,(php-dollarize k) ")," ,(php-dollarize v) ") : "
+                       ,(php-dollarize h) "[userfun_T37T37key (" ,(php-dollarize k) ")] = " ,(php-dollarize v)))
 
 (define-php-macro hremove (h key)
   `(%transpiler-native "null; unset ($" ,h "[" ,(php-dollarize key) "])"))
