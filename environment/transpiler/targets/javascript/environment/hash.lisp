@@ -3,7 +3,7 @@
 (defvar *obj-id-counter* 0)
 
 (defun %href-object-key (key)
-  (string-concat "_caroshi_obj" key._caroshi-object-id))
+  (%%%string+ "~~id" key._caroshi-object-id))
 
 (defun %href-make-object-key (key)
   (unless (defined? key._caroshi-object-id)
@@ -41,7 +41,8 @@
 (defun hashkeys (x)
   (with-queue q
     (maphash #'((k v)
-				 (enqueue q k))
+                 (unless (%%%= "~~id" (k.substr 0 4))
+				   (enqueue q k)))
              x)
     (queue-list q)))
 
@@ -49,7 +50,7 @@
   (when (or a b)
     (unless a
       (setf a (make-hash-table)))
-    (%setq nil (%transpiler-native "for (var " k " in " b ") " a "[" k "]=" b "[" k "];"))
+    (%setq nil (%transpiler-native "for (var " k " in " b ") if (" k ".substr (0,4) != \"~~id\") " a "[" k "]=" b "[" k "];"))
     a))
 
 (defun copy-hash-table (x)
