@@ -1,13 +1,12 @@
-;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008-2011-2012 Sven Michael Klose <pixel@copei.de>
 
 (dont-obfuscate constructor)
 
-(defvar *%array-constructor* (make-array).constructor)
+(defvar *js-array-constructor* (make-array).constructor)
 
 (defun array? (x)
   (when x
-    (eq *%array-constructor* x.constructor)))
+    (eq *js-array-constructor* x.constructor)))
 
 (dont-obfuscate push)
 
