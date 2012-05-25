@@ -1,5 +1,6 @@
-;;;; tré - Copyright (c) 2010-2012 Sven Michael Klose <pixel@copei.de>
+;;;; tré – Copyright (c) 2010-2012 Sven Michael Klose <pixel@copei.de>
 
+(env-load "stage5/in-package.lisp" 'c)
 (env-load "stage5/array-list.lisp")
 (env-load "stage5/backslash-to-slash.lisp")
 (env-load "stage5/base64.lisp" 'c)
@@ -9,6 +10,8 @@
 (env-load "stage5/english-numbers.lisp")
 (env-load "stage5/half.lisp")
 (env-load "stage5/levenshtein.lisp")
+(env-load "stage5/make-upcase-symbol.lisp")
+(env-load "stage5/make-keywords.lisp")
 (env-load "stage5/merge-unique.lisp")
 (env-load "stage5/string-char.lisp" 'c)
 (env-load "stage5/string-has-whitespace-p.lisp")
