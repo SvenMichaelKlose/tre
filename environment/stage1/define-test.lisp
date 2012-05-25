@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2009,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2009,2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *tests* nil)
 
@@ -29,7 +29,7 @@
 	   (do-tests (cdr tests)))))
 
 ;; Add test to global list.
-(%defspecial define-test (description expr result)
+(defmacro define-test (description expr result)
   (? *show-definitions*
      (print (list 'define-test description)))
   (setq *tests* (cons (cons description
@@ -38,7 +38,8 @@
                                               expr))
 				    		(cons result nil)))
                       *tests*))
-  (do-test (car *tests*)))
+  (do-test (car *tests*))
+  nil)
 
 (define-test "APPLY one argument"
   ((apply #'list '(1 2 3)))

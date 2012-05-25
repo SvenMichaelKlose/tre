@@ -56,8 +56,8 @@
 
 (defvar *late-symbol-function-assignments* nil)
 
-(defun js-make-late-symbol-function-assignment (dname)
-  (push `(setf (slot-value ',dname 'f) ,(compiled-function-name *current-transpiler* dname))
+(defun js-make-late-symbol-function-assignment (name)
+  (push `(setf (slot-value ',name 'f) ,(compiled-function-name *current-transpiler* name))
         *late-symbol-function-assignments*))
 
 (defun emit-late-symbol-function-assignments ()
@@ -91,8 +91,6 @@
 
 (define-js-std-macro %defun (&rest x)
   `(defun ,@x))
-
-(define-js-std-macro %defspecial (&rest x))
 
 (define-js-std-macro defmacro (&rest x)
   (apply #'shared-defmacro x))
