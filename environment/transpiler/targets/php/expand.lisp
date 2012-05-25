@@ -11,7 +11,7 @@
 
 (define-php-std-macro define-native-php-fun (name args &body body)
   `(%%vm-scope
-     ,@(apply #'shared-defun (%defun-name name) args (body-with-noargs-tag body))
+     ,@(apply #'shared-defun name args (body-with-noargs-tag body))
      (%setq ~%ret nil)))
 
 (transpiler-wrap-invariant-to-binary define-php-std-macro eq 2 eq and)

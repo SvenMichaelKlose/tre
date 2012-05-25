@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 (defmacro define-js-std-macro (&rest x)
   `(define-transpiler-std-macro *js-transpiler* ,@x))
@@ -65,10 +65,9 @@
 
 (define-js-std-macro define-native-js-fun (name args &rest body)
   (js-cps-exception name)
-  (let dname (%defun-name name)
-    (js-make-late-symbol-function-assignment dname)
-    `(progn
-       ,@(apply #'shared-defun dname args (body-with-noargs-tag body)))))
+  (js-make-late-symbol-function-assignment name)
+  `(progn
+     ,@(apply #'shared-defun name args (body-with-noargs-tag body))))
 
 (define-js-std-macro cps-mode (x)
   (when *show-definitions*
