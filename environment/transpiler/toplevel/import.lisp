@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun transpiler-defined? (tr name)
   (or (transpiler-defined-function tr name)
@@ -55,17 +55,17 @@
 
 (defun transpiler-import-wanted-variables (tr)
   (transpiler-frontend tr
-    (mapcan (fn unless (transpiler-defined-variable tr _)
-				 (transpiler-add-delayed-var-init tr `((setf ,_ ,(assoc-value _ *variables* :test #'eq))))
-	             `((defvar ,_ nil)))
-	        (transpiler-wanted-variables tr))))
+      (mapcan (fn unless (transpiler-defined-variable tr _)
+				   (transpiler-add-delayed-var-init tr `((setf ,_ ,(assoc-value _ *variables* :test #'eq))))
+	               `((defvar ,_ nil)))
+	          (transpiler-wanted-variables tr))))
 
 (defun transpiler-import-from-environment (tr)
   (with (funs (transpiler-import-wanted-functions tr)
          exported (transpiler-import-exported-closures tr)
 	     vars (transpiler-import-wanted-variables tr))
     (? (or funs exported vars)
-       (append (append funs exported vars) (transpiler-import-from-environment tr))
+       (append funs exported vars (transpiler-import-from-environment tr))
        (transpiler-delayed-var-inits tr))))
 
 (defun transpiler-import-from-expex (x)
