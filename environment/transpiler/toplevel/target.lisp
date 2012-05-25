@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *nil-symbol-name* "NIL")
 (defvar *t-symbol-name* "T")
@@ -57,6 +57,7 @@
 		   after-deps  (target-transpile-1 tr files-after-deps files-to-update)
 		   deps        (target-sighten-deps tr dep-gen))
       (when *show-definitions*
+        (format t "; ~A top-level expressions.~%" (apply #'+ (mapcar (fn length ._) (append before-deps deps after-deps))))
         (format t "; Let me think. Hmm...")
         (force-output))
       (with (compiled-before (target-transpile-2 tr before-deps files-to-update)
@@ -68,7 +69,8 @@
 ;                                 (target-transpile-1 tr (list (cons 'accumulated-toplevel #'(()
 ;                                                                                              (transpiler-make-toplevel-function tr))))
 ;                                                     (list 'accumulated-toplevel)))))
-        (terpri)
+        (when *show-definitions*
+          (terpri))
         (awhen compiled-deps
           (setf (transpiler-imported-deps tr) (string-concat (transpiler-imported-deps tr) !)))
 	    (prog1
