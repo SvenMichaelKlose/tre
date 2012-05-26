@@ -4,21 +4,21 @@
 
 (%defun test-equal (x y)
   (?
-    (atom x)	 (eql x y)
-    (atom y)	 (eql x y)
+    (atom x)	(eql x y)
+    (atom y)	(eql x y)
     (test-equal (car x) (car y))
       		    (test-equal (cdr x) (cdr y))))
 
 (%defun do-test (test)
-  (? (test-equal (eval (car (cdr test)))
-                 (eval (car (cdr (cdr test)))))
+  (? (test-equal (eval (macroexpand (car (cdr test))))
+                 (eval (macroexpand (car (cdr (cdr test))))))
 	 nil
      (progn
 	   (print (car test))
 	   (print 'FAILED-RESULT)
-	   (print (eval (car (cdr test))))
+	   (print (eval (macroexpand (car (cdr test)))))
 	   (print 'WANTED-RESULT)
-	   (print (eval (car (cdr (cdr test)))))
+	   (print (eval (macroexpand (car (cdr (cdr test))))))
 	   (invoke-debugger))))
 
 (%defun do-tests (tests)
@@ -36,7 +36,8 @@
 		    				(cons (cons (quote block)
 								        (cons nil
                                               expr))
-				    		(cons result nil)))
+				    		      (cons result
+                                        nil)))
                       *tests*))
   (do-test (car *tests*))
   nil)

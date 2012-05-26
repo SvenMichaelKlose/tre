@@ -1,10 +1,10 @@
-;;;;; tré - Copyright (c) 2005-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2012 Sven Michael Klose <pixel@copei.de>
 
 (env-load "stage1/basic-list.lisp" 'c)
 (env-load "stage1/cons.lisp" 'c)
 (env-load "stage1/gensym.lisp" 'c)
 (env-load "stage1/defmacro.lisp" 'c)
-(env-load "stage1/define-test.lisp")
+(env-load "stage1/define-test.lisp" 'c)
 
 (env-load "stage1/listp.lisp" 'c)
 (env-load "stage1/count.lisp" 'c)
