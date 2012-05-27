@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *php-goto?* t) ; PHP version < 5.3 has no 'goto'.
 
@@ -37,29 +37,28 @@
 (defun php-transpile-decls (tr)
   (transpiler-make-code tr (transpiler-frontend tr (transpiler-compiled-inits tr))))
 
-(defun php-transpile (sources &key (obfuscate? nil) (print-obfuscations? nil) (files-to-update nil))
-  (let tr *php-transpiler*
-    (transpiler-add-defined-variable tr '*KEYWORD-PACKAGE*)
-    (setf (transpiler-accumulate-toplevel-expressions? tr) (not *php-goto?*))
-	(string-concat
-        "<?php "
-        (? *php-goto?*
-           ""
-           "$_I_ = 0; while (1) { switch ($_I_) { case 0:")
-		(php-transpile-prepare tr)
-    	(target-transpile tr
-    	 	:files-before-deps (list (cons 'base1 *php-base*))
-		  	:files-after-deps (append (list (cons 'base2 *php-base2*))
-                                      (when (eq t *have-environment-tests*)
-				   	  	                (list (cons 'env-tests (make-environment-tests))))
-                                      sources)
-		 	:dep-gen #'(()
-				  	     (transpiler-import-from-environment tr))
-            :decl-gen #'(()
-                          (php-transpile-decls tr))
-			:files-to-update files-to-update
-            :obfuscate? obfuscate?
-			:print-obfuscations? print-obfuscations?)
-        (? *php-goto?*
-           " ?>"
-           "} break; }"))))
+(defun php-transpile (sources &key (transpiler nil) (obfuscate? nil) (print-obfuscations? nil) (files-to-update nil))
+  (transpiler-add-defined-variable transpiler '*KEYWORD-PACKAGE*)
+  (setf (transpiler-accumulate-toplevel-expressions? transpiler) (not *php-goto?*))
+  (string-concat
+      "<?php "
+      (? *php-goto?*
+         ""
+         "$_I_ = 0; while (1) { switch ($_I_) { case 0:")
+	  (php-transpile-prepare transpiler)
+   	  (target-transpile transpiler
+   	 	  :files-before-deps (list (cons 'base1 *php-base*))
+	  	  :files-after-deps (append (list (cons 'base2 *php-base2*))
+                                    (when (eq t *have-environment-tests*)
+			   	  	                  (list (cons 'env-tests (make-environment-tests))))
+                                    sources)
+	 	  :dep-gen #'(()
+			  	       (transpiler-import-from-environment transpiler))
+          :decl-gen #'(()
+                        (php-transpile-decls transpiler))
+		  :files-to-update files-to-update
+          :obfuscate? obfuscate?
+	      :print-obfuscations? print-obfuscations?)
+      (? *php-goto?*
+         " ?>"
+         "} break; }")))

@@ -89,8 +89,8 @@
         `((defun c-init ()
 		    ,@(mapcar #'list (reverse init-funs)))))))
 
-(defun c-transpile (sources &key (obfuscate? nil))
-  (let tr *c-transpiler*
+(defun c-transpile (sources &key (transpiler nil) (obfuscate? nil))
+  (let tr transpiler
     (string-concat
         (apply #'string-concat (mapcar (fn format nil "#include \"~A\"~%" _) *c-interpreter-headers*))
   	    (format nil "#define userfun_apply trespecial_apply_compiled~%")
