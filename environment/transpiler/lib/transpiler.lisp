@@ -12,7 +12,6 @@
 
 (defstruct transpiler
   name
-  pre-std-macro-expander
   std-macro-expander
   codegen-expander
   (setf-function? #'identity)
@@ -114,8 +113,7 @@
   (current-package nil))
 
 (defun transpiler-macro? (tr name)
-  (or (expander-has-macro? (transpiler-pre-std-macro-expander tr) name)
-      (expander-has-macro? (transpiler-std-macro-expander tr) name)
+  (or (expander-has-macro? (transpiler-std-macro-expander tr) name)
       (expander-has-macro? (transpiler-codegen-expander tr) name)))
 
 (defun transpiler-defined-functions (tr)
@@ -260,7 +258,6 @@
   (aprog1
     (make-transpiler :name                   name
                      :std-macro-expander     std-macro-expander
-                     :pre-std-macro-expander pre-std-macro-expander
                      :codegen-expander       codegen-expander
                      :setf-function?         setf-function?
                      :separator              separator

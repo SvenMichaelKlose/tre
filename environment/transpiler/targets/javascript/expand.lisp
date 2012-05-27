@@ -87,6 +87,17 @@
   (mapcar (fn `(%setq (slot-value ,_. '__source) ,(list 'quote ._)))
           (transpiler-memorized-sources *current-transpiler*)))
 
+(define-js-std-macro defun (name args &rest body)
+  (let dname (transpiler-package-symbol *js-transpiler* (%defun-name name))
+    (js-cps-exception name)
+    (when (in-cps-mode?)
+      (transpiler-add-cps-function *js-transpiler* dname))
+    (let g '~%tfun
+      `(progn
+         ,@(js-make-early-symbol-expr g dname)
+         ,@(apply #'shared-defun dname args body)
+         (setf (symbol-function ,g) ,dname)))))
+
 (define-js-std-macro %defun (&rest x)
   `(defun ,@x))
 
