@@ -33,9 +33,9 @@
 
 (defun expex-funinfo-env-add ()
   (let s (expex-sym)
-    (aif *expex-funinfo*
-         (funinfo-env-add ! s)
-	     (error "expression-expander: FUNINFO missing. Cannot make GENSYM"))
+    (!? *expex-funinfo*
+        (funinfo-env-add ! s)
+	    (error "expression-expander: FUNINFO missing. Cannot make GENSYM"))
 	s))
 
 (defun expex-internal-symbol? (x)
@@ -129,19 +129,19 @@
 	(cons p a)))
 
 (defun expex-move-arg-vm-scope (ex x)
-  (aif (%%vm-scope-body x)
-       (let s (expex-funinfo-env-add)
-         (cons (expex-body ex ! s) s))
-	   (cons nil nil)))
+  (!? (%%vm-scope-body x)
+      (let s (expex-funinfo-env-add)
+        (cons (expex-body ex ! s) s))
+	  (cons nil nil)))
 
-(defun lambda-expression-needing-cps? (x)
+(defun lambda-expression-needs-cps? (x)
   (and (lambda-expr? x)
        (funinfo-needs-cps? (get-lambda-funinfo x))))
 
 (defun expex-move-arg-std (ex x)
   (with (s (expex-funinfo-env-add)
     	 (moved new-expr) (expex-expr ex x))
-      (when (lambda-expression-needing-cps? x)
+      (when (lambda-expression-needs-cps? x)
         (transpiler-add-cps-function *current-transpiler* s))
       (cons (append moved
 		    		(? (expex-returnable? ex new-expr.)
@@ -208,7 +208,7 @@
 (defun expex-cps (x)
   (and (or (%setq? x)
             (%set-atom-fun? x))
-       (lambda-expression-needing-cps? (%setq-value x))
+       (lambda-expression-needs-cps? (%setq-value x))
        (transpiler-add-cps-function *current-transpiler* (%setq-place x))))
 
 (defun expex-vm-go-nil (ex x)
