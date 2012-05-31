@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2006-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2006–2012 Sven Michael Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Breaks up nested expressions. The result is a pure list of
 ;;;;; assignments (%SETQ expressions) mixed with jumps and tags.
@@ -104,10 +104,10 @@
   (let argdef (or (funinfo-get-local-function-args *expex-funinfo* fun)
                   (funcall (expex-function-arguments ex) fun))
 	(? (expex-expandable-args? ex fun argdef)
-   	   (argument-expand-compiled-values fun argdef (? (and (not (in-cps-mode?))
-                                                           (transpiler-cps-function? *current-transpiler* fun))
-                                                      .args
-                                                      args))
+   	   (expex-argument-expand fun argdef (? (and (not (in-cps-mode?))
+                                                 (transpiler-cps-function? *current-transpiler* fun))
+                                            .args
+                                            args))
 	   args)))
 
 ;; Expand arguments if they are passed to a function.

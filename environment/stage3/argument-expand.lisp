@@ -182,18 +182,6 @@
 (defun argument-expand-names (fun def)
   (argument-expand fun def nil nil))
 
-(defun %argument-expand-rest (args)
-  (when args
-    `(cons ,args.
-           ,(%argument-expand-rest .args))))
-
-(defun argument-expand-compiled-values (fun def vals)
-  (mapcar (fn ? (and (cons? _)
-                     (argument-rest-keyword? _.))
-                (%argument-expand-rest ._)
-                _)
-          (cdrlist (argument-expand fun def vals t))))
-
 ;;; Tests
 
 (define-test "argument expansion works with simple list"

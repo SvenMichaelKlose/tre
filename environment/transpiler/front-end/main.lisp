@@ -2,6 +2,7 @@
 
 (env-load "transpiler/front-end/arith-wrappers.lisp" 'c)
 
+(env-load "transpiler/front-end/expression-expand/argument-expand.lisp")
 (env-load "transpiler/front-end/expression-expand/expression-expand.lisp")
 (env-load "transpiler/front-end/expression-expand/guest-utils.lisp")
 (env-load "transpiler/front-end/expression-expand/funcalls.lisp")
