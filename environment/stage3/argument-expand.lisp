@@ -1,4 +1,7 @@
-;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+
+(defun argument-rest-keyword? (x)
+  (in? x '&rest '&body))
 
 (defun argument-keyword? (x)
   (in? x '&rest '&body '&optional '&key))
@@ -179,20 +182,6 @@
 (defun argument-expand-names (fun def)
   (argument-expand fun def nil nil))
 
-(defun argument-expand-values-r (x)
-  (when x
-    (let a x.
-	  (cons (? (and (cons? a)
-           		    (or (eq '&rest a.)
-                        (eq '&body a.)))
-      		   .a
-      		   a)
-		    (argument-expand-values-r .x)))))
- 
-(defun argument-expand-values (fun def vals)
-  (argument-expand-values-r
-    (cdrlist (argument-expand fun def vals t))))
-
 (defun %argument-expand-rest (args)
   (when args
     `(cons ,args.
@@ -200,8 +189,7 @@
 
 (defun argument-expand-compiled-values (fun def vals)
   (mapcar (fn ? (and (cons? _)
-                     (or (eq '&rest _.)
-                         (eq '&body _.)))
+                     (argument-rest-keyword? _.))
                 (%argument-expand-rest ._)
                 _)
           (cdrlist (argument-expand fun def vals t))))
