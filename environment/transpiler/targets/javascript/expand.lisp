@@ -162,10 +162,10 @@
   `(aref ,hash ,key))
 
 (define-js-std-macro undefined? (x)
-  `(= "undefined" (%js-typeof ,x)))
+  `(%%%= "undefined" (%js-typeof ,x)))
 
 (define-js-std-macro defined? (x)
-  `(not (= "undefined" (%js-typeof ,x))))
+  `(%%%!= "undefined" (%js-typeof ,x)))
 
 (define-js-std-macro dont-obfuscate (&rest symbols)
   (when *show-definitions*
