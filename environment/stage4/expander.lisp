@@ -64,7 +64,7 @@
   (with-gensym g
     `(progn
 	   (when (expander-has-macro? ',expander-name ',name)
-	     (warn "Macro ~A already defined.~%" ',name))
+	     (warn "Redefinition of acro ~A in expander ~A.~%" ',name ',expander-name))
 	   (defun ,g ,args ,@body)
        (setf (href (expander-macros (expander-get ',expander-name)) ',name) #',g))))
 
