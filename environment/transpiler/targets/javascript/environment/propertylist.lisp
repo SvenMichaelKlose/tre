@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2010-2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2010–2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *%property-list-tmp* nil)
 
@@ -10,7 +10,7 @@
 (defun %property-list (hash)
   (setf *%property-list-tmp* nil)
   (%setq nil (%transpiler-native
-      "for (var " i " in " hash ") "
-          ,(compiled-function-name-string *js-transpiler* '%property-list-0)
-               "(" i ", " hash "[" i "]);"))
+                 "for (var i in " hash ") "
+                     "if (i != \"" '_caroshi-object-id "\") "
+                         ,(compiled-function-name-string *js-transpiler* '%property-list-0) "(typeof i == \"string\" ? (OBJKEYS[i] || i) : i, " hash "[i]);"))
   (reverse *%property-list-tmp*))
