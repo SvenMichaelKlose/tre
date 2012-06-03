@@ -5,7 +5,7 @@
 
 (defvar *current-expex* nil)
 (defvar *expex-funinfo* nil)
-(defvar *expex-warn?* nil)
+(defvar *expex-warn?* t)
 
 ;;;; SYMBOLS
 
@@ -50,9 +50,9 @@
         (assoc x *variables* :test #'eq))))
 
 (defun expex-symbol-defined? (x)
-  (let tr *current-transpiler*
-    (or (funinfo-in-this-or-parent-env? *expex-funinfo* x)
-        (expex-internal-symbol? x))))
+  (or (funinfo-in-this-or-parent-env? *expex-funinfo* x)
+      (expex-internal-symbol? x)
+      (transpiler-late-symbol? *current-transpiler* x)))
 
 (defun expex-warn (x)
   (and *expex-warn?*

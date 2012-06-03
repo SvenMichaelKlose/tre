@@ -5,11 +5,12 @@
 (defvar *last-pass-result* nil)
 
 (defmacro transpiler-pass (name args &rest x)
-  (let cache-var ($ '*pass- name '*)
+  (with (cache-var ($ '*pass- name '*)
+         init (gensym))
     `(progn
        (defvar ,cache-var nil)
        (defun ,name (,@args ,init)
-         (setf ,cache-var init)
+         (setf ,cache-var ,init)
          (dolist (i (list ,@(mapcan (fn `((with-temporary *current-pass* ,(list 'quote _.)
                                             (setf *last-pass-result*
                                                   (? *transpiler-debug-dump*

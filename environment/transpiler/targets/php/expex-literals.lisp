@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2009-2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2009–2011 Sven Michael Klose <pixel@copei.de>
 
 (defmacro php-define-compiled-literal (name (x table) &key maker init-maker)
   `(define-compiled-literal ,name (,x ,table)
@@ -7,7 +7,7 @@
 	   :decl-maker (fn identity nil))) ; APPLY doesn't ignore NIL.
 
 (php-define-compiled-literal php-compiled-char (x char)
-  :maker ($ 'trechar_compiled_ (char-code x))
+  :maker (transpiler-add-late-symbol *current-transpiler* ($ 'trechar_compiled_ (char-code x)))
   :init-maker (%transpiler-native "new __character (" ,(char-code x) ")"))
 
 (php-define-compiled-literal php-compiled-symbol (x symbol)

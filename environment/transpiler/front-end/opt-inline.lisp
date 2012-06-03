@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2009-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2009–2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *show-inlines?* nil)
 (defvar *opt-inline-max-levels* 8)
@@ -14,7 +14,7 @@
   (opt-inline-0 tr level current parent
 	            (transpiler-frontend-1 tr (? (and (not argdef) .x)
 			                                 .x
-			                                 (argument-expand-compiled-values 'opt-inline argdef .x)))))
+			                                 (expex-argument-expand 'opt-inline argdef .x)))))
 
 (defun opt-inline-import (tr x argdef body level current parent)
   (when (and (not argdef) .x)

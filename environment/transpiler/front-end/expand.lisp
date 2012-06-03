@@ -32,5 +32,5 @@
   `(,definer ,op (&rest x)
      (transpiler-add-inline-exception *current-transpiler* ,(list 'quote replacement))
      (? (< ,len (length x))
-        (cons ',combinator (mapcar (fn `(,replacement ,,@(subseq x 0 ,(1- len)) ,_)) (subseq x ,(1- len))))
+        (cons ',combinator (mapcar (fn `(,replacement ,,@(subseq x 0 ,(1- len)) ,,_)) (subseq x ,(1- len))))
         (cons ',replacement x))))

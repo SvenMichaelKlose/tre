@@ -81,6 +81,7 @@
   (function-bodies (make-hash-table :test #'eq))
   (obfuscations (make-hash-table :test #'eq))
   plain-arg-funs
+  (late-symbols (make-hash-table :test #'eq))
   (exported-closures nil)
   (delayed-var-inits nil)
   (rename-all-args? nil)
@@ -201,6 +202,13 @@
 (define-slot-setter-push transpiler-add-plain-arg-fun tr
   (transpiler-plain-arg-funs tr))
 
+(defun transpiler-add-late-symbol (tr x)
+  (setf (href (transpiler-late-symbols tr) x) t)
+  x)
+
+(defun transpiler-late-symbol? (tr x)
+  (href (transpiler-late-symbols tr) x))
+
 (define-slot-setter-push transpiler-add-exported-closure tr
   (transpiler-exported-closures tr))
 
@@ -229,6 +237,7 @@
   		(transpiler-defined-variables-hash tr) (make-hash-table :test #'eq)
   		(transpiler-function-args tr) (make-hash-table :test #'eq)
   		(transpiler-function-bodies tr) (make-hash-table :test #'eq)
+  		(transpiler-late-symbols tr) (make-hash-table :test #'eq)
   		(transpiler-exported-closures tr) nil
   		(transpiler-delayed-var-inits tr) nil
         (transpiler-memorized-sources tr) nil
@@ -296,6 +305,7 @@
                      :function-bodies         (copy-hash-table function-args)
                      :obfuscations            (copy-hash-table obfuscations)
                      :plain-arg-funs          (copy-list plain-arg-funs)
+                     :late-symbols            (copy-hash-table late-symbols)
                      :exported-closures       (copy-list exported-closures)
                      :delayed-var-inits       (copy-list delayed-var-inits)
                      :rename-all-args?        rename-all-args?
