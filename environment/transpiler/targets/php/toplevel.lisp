@@ -7,7 +7,7 @@
              (mapcar (fn let p (+ "environment/transpiler/targets/php/environment/native/" _ ".php")
                           (with-open-file i (open p :direction 'input)
 		  	             (read-all-lines i)))
-                     '("settings" "character" "cons" "lexical" "funref" "symbol" "array"))))
+                     '("settings" "error" "character" "cons" "lexical" "funref" "symbol" "array"))))
 
 (defun php-print-native-environment (out)
   (princ *php-native-environment* out))

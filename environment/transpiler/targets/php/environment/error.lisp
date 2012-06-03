@@ -2,21 +2,14 @@
 
 (dont-obfuscate exit)
 
-(defun invoke-native-debugger ()
-  (header "HTTP/1.0 404")
-  (print_r *_request*)
-  (%setq nil (echo "<pre>"))
-  (%setq nil (debug_print_backtrace))
-  (%setq nil (echo "</pre>"))
-  (princ "<p>No native debugger - program exits.</p>")
-  (%setq nil (exit))
-  nil)
+(defun invoke-debugger ()
+  (tre_backtrace "INVOKE-DEBUGGER called"))
 
 (dont-inline %error)
 
 (defun %error (msg)
   (princ msg)
-  (invoke-native-debugger))
+  (invoke-debugger))
 
 (dont-inline error)
 
