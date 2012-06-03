@@ -57,8 +57,8 @@
 		   (funinfo-in-toplevel-env? ! var)
            (funinfo-in-args-or-env? fi var)))))
 
-;;;; ENVIRONMENT
 
+;;;; ENVIRONMENT
 
 (defun funinfo-env-pos (fi x)
   (when (funinfo-parent fi)
@@ -68,7 +68,6 @@
     ,@(mapcar (fn `(defun ,($ 'funinfo- _.) (fi var)
 			   	     (position var (,($ 'funinfo- ._.) fi) :test #'eq)))
 		      `((free-var-pos free-vars)
-;                (env-pos env)
                 (lexical-pos lexicals))))
 
 (defun funinfosym-env-pos (fi-sym x)
