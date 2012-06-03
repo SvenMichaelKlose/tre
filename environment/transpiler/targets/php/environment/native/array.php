@@ -1,4 +1,4 @@
-// tré - Copyright (c) 2012 Sven Michael Klose <pixel@copei.de>
+// tré – Copyright (c) 2012 Sven Michael Klose <pixel@copei.de>
 
 $ARRAYS = Array ();
 $ARRAYID = 0;
@@ -24,7 +24,9 @@ class __array {
     public function g ($i)
     {
         $this->_chk ($i);
-		return $GLOBALS['ARRAYS'][$this->id][$i];
+		if (isset ($GLOBALS['ARRAYS'][$this->id][$i]))
+		    return $GLOBALS['ARRAYS'][$this->id][$i];
+        return NULL;
     }
 
     public function a ()
