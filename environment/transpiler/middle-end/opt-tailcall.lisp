@@ -1,5 +1,4 @@
-;;;;; TRE compiler
-;;;;; Copyright (c) 2010-2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2010-2012 Sven Michael Klose <pixel@copei.de>
 
 (defun opt-tailcall-fun-0 (fi args x name front-tag)
   (append (mapcan #'((arg val)
@@ -45,7 +44,6 @@
 	   (cons x. (opt-tailcall-fun fi args .x name front-tag)))))
 
 (metacode-walker opt-tailcall (x)
-	:traverse? nil
 	:if-named-function
 	   (let front-tag (make-compiler-tag)
 	     `(function
