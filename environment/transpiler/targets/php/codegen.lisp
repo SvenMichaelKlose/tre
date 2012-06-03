@@ -245,7 +245,9 @@
 ;  `(%transpiler-native ,(php-dollarize h) "->g(userfun_T37T37key(" ,(php-dollarize k) "))"))
   `(%transpiler-native "(is_a (" ,(php-dollarize h) ", '__l') || is_a (" ,(php-dollarize h) ", '__array')) ? "
                        ,(php-dollarize h) "->g(userfun_T37T37key (" ,(php-dollarize k) ")) : "
-                       ,(php-dollarize h) "[userfun_T37T37key (" ,(php-dollarize k) ")]"))
+                       "(isset (" ,(php-dollarize h) "[userfun_T37T37key (" ,(php-dollarize k) ")]) ? "
+                           ,(php-dollarize h) "[userfun_T37T37key (" ,(php-dollarize k) ")] : "
+                           "NULL)"))
 
 (define-php-macro %%usetf-href (v h k)
 ;  `(%transpiler-native ,(php-dollarize h) "->s(userfun_T37T37key(" ,(php-dollarize k) ")," ,(php-dollarize v) ")"))
