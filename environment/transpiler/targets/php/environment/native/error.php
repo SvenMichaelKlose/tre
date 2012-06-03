@@ -3,7 +3,7 @@
 function tre_backtrace ($msg)
 {
     header ("HTTP/1.0 404 Not Found");
-    header ("Status: 404 Not Found")
+    header ("Status: 404 Not Found");
     echo "<html><body>$msg<pre>";
     debug_print_backtrace ();
     echo "</pre></body></html>";
