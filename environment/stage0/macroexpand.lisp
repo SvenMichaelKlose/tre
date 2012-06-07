@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2006-2009,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2006–2009,2012 Sven Michael Klose <pixel@copei.de>
 
 (setq
 	*universe*
@@ -32,16 +32,19 @@
 	(cons '%macroexpand-call
 		  *defined-functions*)))))))))))
 
-(setq *macrop-diversion* nil
-      *macrocall-diversion* nil
-      *current-macro* nil)
 (setq
 	*variables*
 	(cons (cons '*macrop-diversion* nil)
 	(cons (cons '*macrocall-diversion* nil)
 	(cons (cons '*current-macro* nil)
 	(cons (cons '*macroexpand-backquote-diversion* nil)
-				*variables*)))))
+	(cons (cons '*macroexpand-print?* nil)
+				*variables*))))))
+
+(setq *macrop-diversion* nil
+      *macrocall-diversion* nil
+      *current-macro* nil
+      *macroexpand-print?* nil)
 
 (%set-atom-fun %macroexpand-backquote
   #'((%g)
@@ -76,8 +79,14 @@
 
 (%set-atom-fun %macroexpand-xlat
   #'((%g)
+       (? *macroexpand-print?*
+          (progn
+            (print '*macroexpand-print?*)
+            (print %g)))
        (setq *current-macro* (car %g))
        (#'((%g)
+             (? *macroexpand-print?*
+                (print %g))
              (setq *current-macro* nil)
              %g)
          (apply *macrocall-diversion* (list %g)))))
