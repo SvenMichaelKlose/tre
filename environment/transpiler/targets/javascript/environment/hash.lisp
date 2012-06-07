@@ -7,20 +7,26 @@
   `(%%%string+ "~~id" ,key))
 
 (defun %%usetf-href (value hash key)
-  (? (object? key)
-     (progn
-       (unless (defined? key._caroshi-object-id)
-         (let id (%%key (setf *obj-id-counter* (%%%+ 1 *obj-id-counter*)))
-           (setf key._caroshi-object-id id
-                 (aref *obj-keys* id) key)))
-       (setf (aref hash key._caroshi-object-id) value))
-     (setf (aref hash key) value)))
+  (?
+    (character? key)
+      (setf (aref hash (%%%string+ "~%C" key.v)) value)
+    (object? key)
+      (progn
+        (unless (defined? key._caroshi-object-id)
+          (let id (%%key (setf *obj-id-counter* (%%%+ 1 *obj-id-counter*)))
+            (setf key._caroshi-object-id id
+                  (aref *obj-keys* id) key)))
+        (setf (aref hash key._caroshi-object-id) value))
+    (setf (aref hash key) value)))
 
 (defun href (hash key)
-  (? (object? key)
-     (? (defined? key._caroshi-object-id)
-        (aref hash key._caroshi-object-id))
-     (aref hash key)))
+  (? 
+    (character? key)
+      (aref hash (%%%string+ "~%C" key.v))
+    (object? key)
+      (? (defined? key._caroshi-object-id)
+         (aref hash key._caroshi-object-id))
+    (aref hash key)))
 
 (defun hash-table? (x)
   (and (object? x)
