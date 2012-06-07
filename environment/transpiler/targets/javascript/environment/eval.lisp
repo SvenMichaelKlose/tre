@@ -28,7 +28,8 @@
 (defun eval (x)
   (with-temporary *js-transpiler* (or *js-eval-transpiler* (make-js-eval-transpiler))
     (let tr *js-transpiler*
-      (%%%eval (with-temporary *transpiler-debug-dump* nil
+      (%%%eval (with-temporaries (*transpiler-debug-dump* nil
+                                  *expex-warn?* nil)
                  (+ (js-eval-transpile tr x)
                     (transpiler-obfuscated-symbol-string tr '*native-eval-return-value*)
                     " = "
