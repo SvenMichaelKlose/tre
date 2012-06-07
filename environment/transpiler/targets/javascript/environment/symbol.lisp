@@ -1,31 +1,29 @@
-;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *symbols* (make-hash-table))
 
-(dont-inline %symbol) ; XXX remove this one?
+(dont-inline %symbol)
 
 ;; Symbol constructor
 ;;
 ;; It has a function field but that isn't used yet.
 (define-native-js-fun %symbol (name pkg)
   (setf this.__class ,(transpiler-obfuscated-symbol-string *current-transpiler* 'symbol)
-		this.n name	; name
-     	this.v this	; value
-      	this.f nil	; function
-		this.p (or pkg nil))	; package
+		this.n name
+     	this.v this
+      	this.f nil
+		this.p (or pkg nil))
   this)
 
 ;; Find symbol by name or create a new one.
 (define-native-js-fun symbol (name pkg)
   (unless (%%%= ,*nil-symbol-name* name)
     (or (%%%= ,*t-symbol-name* name)
-	    (let pkg-name (? pkg pkg.n ,*nil-symbol-name*)
-          ; Make package if missing.
-          (let symbol-table (or (%href *symbols* pkg-name)
-	    				        (setf (%href *symbols* pkg-name) (make-hash-table)))
-            ; Get or make symbol.
-            (or (%href symbol-table name)
-	            (setf (%href symbol-table name) (new %symbol name pkg))))))))
+	    (with (pkg-name (? pkg pkg.n ,*nil-symbol-name*)
+               symbol-table (or (%href *symbols* pkg-name)
+	    				        (setf (%href *symbols* pkg-name) (make-hash-table))))
+          (or (%href symbol-table name)
+              (setf (%href symbol-table name) (new %symbol name pkg)))))))
 
 (define-native-js-fun %%usetf-symbol-function (v x)
   (setq x.f v))
