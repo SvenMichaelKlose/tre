@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2009,2011-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008-2009,2011-2012 Sven Michael Klose <pixel@copei.de>
 
 (defun make-environment-tests ()
   (with (names nil
@@ -9,10 +9,10 @@
 				  (let n ($ 'test- num)
 					(setf names (push n names))
 				    `(defun ,n ()
-				       (%%%log (+ "Test " (string ,num) ": " ,(car _) "</br>"))
-				       (unless (equal ,(caddr _) ,(cadr _))
-				         (%%%log (+ "Test '" ,(car _) "' failed</br>"))
-						 (print ,(cadr _) document)
+				       (%%%log (+ "Test " (string ,num) ": " ,_. "</br>"))
+				       (unless (equal ,.._. ,._.)
+				         (%%%log (+ "Test '" ,_. "' failed</br>"))
+						 (print ,._.)
 						 (%%%log "</br>")))))
 		    	*tests*))
 	`(,@funs
