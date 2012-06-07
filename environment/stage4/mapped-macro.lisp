@@ -2,10 +2,10 @@
 
 (defmacro mapcar-macro (arg param &body body)
   `(progn
-     ,,@(mapcar #'((,arg) ,@body)
-                ,param)))
+     ,@(mapcar (fn (eval (macroexpand `(#'((,arg) ,@body) ',_))))
+               (eval param))))
 
 (defmacro mapcan-macro (arg param &body body)
   `(progn
-     ,,@(mapcan #'((,arg) ,@body)
-                ,param)))
+     ,@(mapcan (fn (eval (macroexpand `(#'((,arg) ,@body) ',_))))
+               (eval param))))
