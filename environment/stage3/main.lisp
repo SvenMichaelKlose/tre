@@ -1,4 +1,4 @@
-;;;; tré - Copyright (C) 2005-2009,2011-2012 Sven Michael Klose <pixel@copei.de>
+;;;; tré – Copyright (C) 2005-2009,2011–2012 Sven Michael Klose <pixel@copei.de>
 
 (env-load "stage3/list-unless.lisp")
 (env-load "stage3/force-tree.lisp")
@@ -10,6 +10,7 @@
 (env-load "stage3/file-stream.lisp")
 (env-load "stage3/string-stream.lisp")
 (env-load "stage3/with-default-stream.lisp")
+(env-load "stage3/with-temporary.lisp")
 (env-load "stage3/princ.lisp")
 (env-load "stage3/print-tracer.lisp")
 (env-load "stage3/print.lisp")
@@ -30,4 +31,3 @@
 (env-load "stage3/random.lisp" 'c)
 (env-load "stage3/argument-expand.lisp")
 (env-load "stage3/string-integer.lisp" 'c)
-(env-load "stage3/with-temporary.lisp")
