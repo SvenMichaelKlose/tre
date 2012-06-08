@@ -1,5 +1,4 @@
-;;;;; TRE compiler
-;;;;; Copyright (c) 2006-2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2006–2012 Sven Klose <pixel@copei.de>
 
 (defun backquote-cons-quasiquote (x)
   (? (any-quasiquote? (cadr x.))
@@ -12,14 +11,19 @@
   (? (any-quasiquote? (cadr x.))
      `(cons ,(copy-tree (cadr x.))
             ,(backquote-cons-1 .x))
-     (aif (backquote-cons-1 .x)
-          `(%nconc ,(copy-tree (cadr x.))
-      		       ,(backquote-cons-1 .x))
+     (!? (backquote-cons-1 .x)
+         `(%nconc ,(copy-tree (cadr x.))
+                  ,(backquote-cons-1 .x))
           (copy-tree (cadr x.)))))
 
 (defun backquote-cons-atom (x)
   (when x
-	(? (string= "" (symbol-name x)) ; XXX?
+	(? (or (number? x)
+           (string? x)
+           (array? x)
+           (hash-table? x)
+           (eq t x))
+           ;(string= "" (symbol-name x)) ; XXX?
 	   x
 	   `(%quote ,x))))
 
