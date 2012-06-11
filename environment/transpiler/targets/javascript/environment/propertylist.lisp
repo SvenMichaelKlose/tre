@@ -10,7 +10,7 @@
 (defun %property-list (hash)
   (setf *%property-list-tmp* nil)
   (%setq nil (%transpiler-native
-                 "for (var i in " hash ") "
-                     "if (i != \"" '_caroshi-object-id "\") "
-                         ,(compiled-function-name-string *js-transpiler* '%property-list-0) "(typeof i == \"string\" ? (OBJKEYS[i] || i) : i, " hash "[i]);"))
+                 "for (var k in " hash ") "
+                     "if (k != \"" '_caroshi-object-id "\" && k != \"" '__tre-test "\") "
+                         ,(compiled-function-name-string *js-transpiler* '%property-list-0) "(typeof k == \"string\" ? (OBJKEYS[k] || k) : k, " hash "[k]);"))
   (reverse *%property-list-tmp*))

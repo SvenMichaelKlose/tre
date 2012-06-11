@@ -128,9 +128,6 @@
     		  (error "function must be a SLOT-VALUE, got ~A" fun))
 		  ,fun))
 
-(define-js-std-macro make-hash-table (&key (test #'eql) (size nil))
-  `(%%%make-hash-table))
-
 (defun js-transpiler-make-new-hash (x)
   `(%%%make-hash-table
 	 ,@(mapcan (fn list (? (and (not (string? _.))

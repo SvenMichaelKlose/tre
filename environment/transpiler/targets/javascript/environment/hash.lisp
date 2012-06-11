@@ -3,6 +3,10 @@
 (defvar *obj-id-counter* 0)
 (defvar *obj-keys* (%%%make-hash-table))
 
+(defun make-hash-table (&key (test #'eql) (size nil))
+  (aprog1 (%%%make-hash-table)
+    (setf !.__tre-test test)))
+
 (defmacro %%key (key)
   `(%%%string+ "~~id" ,key))
 
@@ -35,10 +39,7 @@
 (defun hash-assoc (x)
   (with-queue q
     (maphash #'((k v)
-				 (enqueue q (cons (? (defined? k._caroshi-key-object)
-                                     k._caroshi-key-object
-                                     k)
-                                  v)))
+				 (enqueue q (cons k v)))
          	 x)
     (queue-list q)))
 
@@ -51,7 +52,7 @@
       (setf a (make-hash-table)))
     (%setq nil (%transpiler-native
                    "for (var k in " b ") "
-                       "if (k != \"" '_caroshi-object-id "\") "
+                       "if (k != \"" '_caroshi-object-id "\" && k !=\"" '__tre_test "\") "
                            a "[k] = " b "[k];"))
     a))
 

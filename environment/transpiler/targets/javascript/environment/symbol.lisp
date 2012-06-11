@@ -1,6 +1,6 @@
 ;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
-(defvar *symbols* (make-hash-table))
+(defvar *symbols* (%%%make-hash-table))
 
 (dont-inline %symbol)
 
@@ -21,7 +21,7 @@
     (or (%%%= ,*t-symbol-name* name)
 	    (with (pkg-name (? pkg pkg.n ,*nil-symbol-name*)
                symbol-table (or (%href *symbols* pkg-name)
-	    				        (setf (%href *symbols* pkg-name) (make-hash-table))))
+	    				        (setf (%href *symbols* pkg-name) (%%%make-hash-table))))
           (or (%href symbol-table name)
               (setf (%href symbol-table name) (new %symbol name pkg)))))))
 
