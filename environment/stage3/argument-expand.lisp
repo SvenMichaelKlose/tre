@@ -12,9 +12,9 @@
 
 ;; We want keywords to be legal all across a level.
 ;; Make an extra keyword definition list, so they can be found.
-(defvar argument-exp-sort-key)
 (defun argument-exp-sort (def)
   (with (; Copy &KEY definitions.
+         argument-exp-sort-key nil
 		 rec2
 		   (fn
 		     (when _
