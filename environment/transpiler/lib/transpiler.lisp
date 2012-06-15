@@ -111,7 +111,11 @@
   (frontend-files)
   (compiled-files)
 
-  (current-package nil))
+  (current-package nil)
+  
+  (dump-passes? nil)
+  (current-pass nil)
+  (last-pass-result nil))
 
 (defun transpiler-macro? (tr name)
   (or (expander-has-macro? (transpiler-std-macro-expander tr) name)
