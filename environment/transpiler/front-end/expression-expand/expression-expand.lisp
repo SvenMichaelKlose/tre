@@ -1,7 +1,4 @@
 ;;;;; tré – Copyright (c) 2006–2012 Sven Michael Klose <pixel@copei.de>
-;;;;;
-;;;;; Breaks up nested expressions. The result is a pure list of
-;;;;; assignments (%SETQ expressions) mixed with jumps and tags.
 
 (defvar *current-expex* nil)
 (defvar *expex-funinfo* nil)
@@ -58,6 +55,7 @@
   (and *expex-warn?*
 	   (symbol? x)
 	   (not (expex-symbol-defined? x))
+       (not (transpiler-can-import? *current-transpiler* x))
 	   (error "symbol ~A is not defined in function ~A.~%"
 			  (symbol-name x) (funinfo-get-name *expex-funinfo*))))
 
