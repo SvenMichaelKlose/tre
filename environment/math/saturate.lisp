@@ -1,7 +1,4 @@
-;;;;; TRE environment - editor
-;;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Some math.
+;;;;; tré – Copyright (c) 2008,2012 Sven Michael Klose <pixel@copei.de>
 
 (defun saturates? (x y max)
   (> (+ x y) max))
@@ -19,8 +16,8 @@
 	  min
 	  (- x y)))
 
-(defmacro saturate! (place x y max)
-  `(setf ,place (saturate ,x ,y ,max)))
+(defmacro saturate! (place x max)
+  `(setf ,place (saturate ,place ,x ,max)))
 
-(defmacro desaturate! (place x y &optional (min 0))
-  `(setf ,place (desaturate ,x ,y ,min)))
+(defmacro desaturate! (place x &optional (min 0))
+  `(setf ,place (desaturate ,place ,x ,min)))
