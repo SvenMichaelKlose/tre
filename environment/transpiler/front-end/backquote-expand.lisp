@@ -46,7 +46,8 @@
 (defun simple-quote-expand (x)
   (when x
 	(? (atom x)
-	   (? (or (string? x)
+	   (? (or (in? x nil t)
+              (string? x)
 			  (number? x))
 		  x
 		  `(%quote ,x))
