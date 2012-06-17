@@ -47,6 +47,14 @@
 (define-php-std-macro defvar (name &optional (val '%%no-value))
   (funcall #'shared-defvar name val))
 
+(define-php-std-macro define-external-variable (name)
+  (when *show-definitions*
+    (late-print `(define-external-variable ,name)))
+  (when (transpiler-defined-variable *current-transpiler* name)
+    (redef-warn "redefinition of variable ~A." name))
+  (transpiler-add-defined-variable *current-transpiler* name)
+  nil)
+
 (define-php-std-macro defconstant (&rest x)
   `(defvar ,@x))
 

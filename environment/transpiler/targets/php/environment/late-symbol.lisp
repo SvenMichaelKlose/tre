@@ -9,7 +9,11 @@
 (defun symbol-name (x)
   (?
     (%%%eq t x) ,*t-symbol-name*
-    x x.n
+    x (? (symbol? x)
+         x.n
+         (progn
+           (print x)
+           (error "symbol expected")))
     ,*nil-symbol-name*))
 
 (defun symbol-value (x)

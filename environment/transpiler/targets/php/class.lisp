@@ -1,7 +1,7 @@
 ;;;;; Caroshi – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun php-make-constructor (cname bases args body)
-  (transpiler-add-defined-function *php-transpiler* cname args body)
+  (transpiler-add-defined-function *current-transpiler* cname args body)
   `(%setq __construct
       #'(,args
           ; Add class name for debugging.
@@ -25,7 +25,7 @@
   `(%setq (%transpiler-native ,x.)
           #'(,.x.
 	          (%thisify ,class-name
-		        (let ~%this ,(? (transpiler-continuation-passing-style? *php-transpiler*)
+		        (let ~%this ,(? (transpiler-continuation-passing-style? *current-transpiler*)
                                 '~%cps-this
                                 'this)
 	              ,@(or (ignore-body-doc ..x.)

@@ -1,5 +1,4 @@
-;;;;; Transpiler: TRE to PHP
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Extra code-generating macros to avoid costly function calls.
 
@@ -22,5 +21,5 @@
   x)
 
 (define-php-macro userfun_cons (x y)
-  `("new " ,(transpiler-obfuscated-symbol-string *php-transpiler* '__cons)
+  `("new " ,(transpiler-obfuscated-symbol-string *current-transpiler* '__cons)
                "(" ,(php-dollarize x) "," ,(php-dollarize y) ")"))
