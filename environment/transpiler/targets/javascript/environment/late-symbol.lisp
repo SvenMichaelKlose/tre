@@ -11,6 +11,7 @@
 (defun symbol-name (x)
   (?
     (%%%eq t x) ,*t-symbol-name*
+    (%%%eq false x) "FALSE"
     x x.n
     ,*nil-symbol-name*))
 
