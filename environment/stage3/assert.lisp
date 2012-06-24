@@ -1,7 +1,4 @@
-;;;; TRE tree processor environment
-;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de?
-;;;;
-;;;; Assertions
+;;;; tré – Copyright (c) 2008 Sven Michael Klose <pixel@copei.de?
 
 (defun make-assertion (x &optional (txt "") (args nil))
   `(unless ,x
