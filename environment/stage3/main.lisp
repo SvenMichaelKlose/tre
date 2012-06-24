@@ -19,7 +19,7 @@
 (env-load "stage3/force-output.lisp" 'c)
 (env-load "stage3/read-char.lisp")
 (env-load "stage3/read-hex.lisp" 'c)
-(env-load "stage3/read-integer.lisp")
+(env-load "stage3/read-number.lisp")
 (env-load "stage3/read-line.lisp")
 (env-load "stage3/read.lisp")
 (env-load "stage3/read-file.lisp")
