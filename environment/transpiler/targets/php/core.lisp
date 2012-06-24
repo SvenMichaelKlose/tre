@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun php-load-base (dir-path &rest files)
   (with-temporary *have-compiler?* nil
@@ -9,10 +9,6 @@
 
 (defvar *php-env-path* "environment/transpiler/targets/php/environment/")
 
-;;;; First part of the core functions
-;;;;
-;;;; It contains the essential functions needed to store argument
-;;;; definitions for APPLY.
 (defvar *php-base*
 	,(list 'quote (append (php-load-base *php-env-path*
 		                      "return-value.lisp"
@@ -20,16 +16,10 @@
 		                      "cons.lisp"
 		                      "symbol.lisp"))))
 
-;(defvar *php-base-debug-print*
-;		(php-load-base *php-env-path*
-;			"debug-print.lisp"))
-
-;;;; Second part of the core functions
-;;;;
-;;;; Functions required by imported environment functions.
 (defvar *php-base2*
 	,(list 'quote (append
 		              (php-load-base *php-env-path*
+			              "print-object.lisp"
 			              "log.lisp"
 			              "apply.lisp"
 			              "array.lisp"

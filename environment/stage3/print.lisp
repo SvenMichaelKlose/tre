@@ -85,7 +85,9 @@
     (string? x) (%print-string x str)
     (array? x) (%print-array x str info)
     (function? x) (%print-function x str info)
-    (%print-symbol x str)))
+    (symbol? x) (%print-symbol x str)
+    (object? x) (%print-object x str info)
+    "UNKNOWN OBJECT"))
 
 (defun %late-print (x str info)
   (? (cons? x)
