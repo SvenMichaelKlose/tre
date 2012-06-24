@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2006-2009,2011-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2006–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *expanders* nil)
 
@@ -33,7 +33,7 @@
     (unless pred
       (setf (expander-pred e)
             (lx (e)
-			    (fn and (atom _.)
+			    (fn and (symbol? _.)
 				 	    (symbol-name _.)
 				 	    (expander-macro-function ,e _.)))))
     (unless call
