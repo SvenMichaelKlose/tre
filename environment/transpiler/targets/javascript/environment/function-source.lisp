@@ -16,5 +16,5 @@
 (defun function-source (fun)
   (let f (? (symbol? fun) (symbol-function fun) fun)
     (awhen f.__source
-      `#(,(function-arguments f)
-         ,@(function-body f)))))
+      `#'(,(function-arguments f)
+          ,@(function-body f)))))
