@@ -25,14 +25,17 @@
 		                                  :decl-gen (js-make-decl-gen tr))
    	                 (js-transpile-post)))
 
-(defun eval (x)
+(defun eval-compile (x)
   (with-temporary *js-transpiler* (or *js-eval-transpiler* (make-js-eval-transpiler))
     (let tr *js-transpiler*
-      (%%%eval (with-temporaries ((transpiler-dump-passes? tr) nil
-                                  *expex-warn?* nil)
-                 (+ (js-eval-transpile tr x)
-                    (transpiler-obfuscated-symbol-string tr '*native-eval-return-value*)
-                    " = "
-                    (transpiler-obfuscated-symbol-string tr '~%ret)
-                    ";")))
-      *native-eval-return-value*)))
+      (with-temporaries ((transpiler-dump-passes? tr) nil
+                         *expex-warn?* nil)
+        (+ (js-eval-transpile tr x)
+           (transpiler-obfuscated-symbol-string tr '*native-eval-return-value*)
+           " = "
+           (transpiler-obfuscated-symbol-string tr '~%ret)
+           ";")))))
+
+(defun eval (x)
+  (%%%eval (eval-compile x))
+  *native-eval-return-value*)
