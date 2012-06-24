@@ -1,4 +1,4 @@
-;;;; tré - Copyright (c) 2011 Sven Klose <pixel@copei.de>
+;;;; tré - Copyright (c) 2011–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun function-arguments (fun)
   (let f (? (symbol? fun) (symbol-function fun) fun)
@@ -12,3 +12,9 @@
   (let f (? (symbol? fun) (symbol-function fun) fun)
     (awhen f.__source
       .!)))
+
+(defun function-source (fun)
+  (let f (? (symbol? fun) (symbol-function fun) fun)
+    (awhen f.__source
+      `#(,(function-arguments f)
+         ,@(function-body f)))))
