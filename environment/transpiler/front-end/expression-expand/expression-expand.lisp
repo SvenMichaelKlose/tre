@@ -8,7 +8,6 @@
 
 (defvar *expexsym-counter* nil)
 
-;; Returns new unique symbol.
 (defun expex-sym ()
   ($ '~E (1+! *expexsym-counter*)))
 
@@ -108,17 +107,18 @@
                                             args))
 	   args)))
 
+(defvar already-printed? nil)
+
 ;; Expand arguments if they are passed to a function.
 (defun expex-argexpand (ex x)
   (with (new? (%new? x)
 		 fun (? new? .x.  x.)
 		 args (? new? ..x .x))
 	`(,@(when new?
-		  (list '%new))
-	  ,fun
-    	  ,@(? (funcall (expex-functionp ex) fun)
-	    	   (expex-convert-quotes (expex-argexpand-0 ex fun args))
-	    	   args))))
+		  '(%new))
+	  ,fun ,@(? (funcall (expex-functionp ex) fun)
+	    	    (expex-convert-quotes (expex-argexpand-0 ex fun args))
+	    	    args))))
 
 ;;;;; ARGUMENT VALUE EXPANSION
 
