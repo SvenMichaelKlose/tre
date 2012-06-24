@@ -1,12 +1,12 @@
-;;;;; tré - Copyright (c) 2008,2010,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008,2010,2012 Sven Michael Klose <pixel@copei.de>
 
 (defun token-is-quote? (x)
   (in? x 'quote 'backquote 'quasiquote 'quasiquote-splice))
 
-(defun is-special-char? (x)
+(defun special-char? (x)
   (in=? x #\( #\) #\' #\` #\, #\: #\; #\" #\#))
 
-(defun is-symchar? (x)
+(defun symbol-char? (x)
   (and (> x 32)
 	   (not (in=? x #\( #\) #\' #\` #\, #\: #\;))))
 
@@ -33,11 +33,11 @@
                       (progn
 						(skip-comment str)
 						(rec))
-                      (when (is-symchar? c)
+                      (when (symbol-char? c)
                         (cons (char-upcase (read-char str))
                               (rec)))))))
   (unless (or (end-of-file str)
-			  (is-special-char? (peek-char str)))
+			  (special-char? (peek-char str)))
     (rec))))
 
 (defun get-symbol-and-package (str)
@@ -68,9 +68,13 @@
 	(values (? (and sym
 					(not .sym)
 			        (= #\. sym.))
-		       'dot
+		         'dot
 		       (? sym
-			      'symbol
+                  (? (every (fn or (digit-char-p _)
+                                   (eq #\. _))
+                            sym)
+                     'number
+			         'symbol)
 			      (case (read-char str)
 			        #\(	 'bracket-open
 			        #\)	 'bracket-close
@@ -93,6 +97,8 @@
   (case token
     'dblquote  (get-string str)
     'char      (code-char (read-char str))
+    'number    (with-stream-string s (list-string sym)
+                 (read-number s))
     'hexnum    (read-hex str)
 	'function  `(function ,(read-expr str))
     'symbol    (make-symbol (list-string sym)
@@ -150,7 +156,7 @@
 	(read-expr str)))
 
 (defun read-all (str)
-  "Read many toplevel expressions from stream."
+  "Read all expressions from stream."
   (unless (progn
 			(skip-spaces str)
 			(end-of-file str))
