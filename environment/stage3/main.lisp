@@ -12,7 +12,7 @@
 (env-load "stage3/with-string-stream.lisp")
 (env-load "stage3/with-default-stream.lisp")
 (env-load "stage3/with-temporary.lisp")
-(env-load "stage3/object.lisp" 'c)
+(env-load "stage3/object-p.lisp" 'c)
 (env-load "stage3/princ.lisp")
 (env-load "stage3/print-tracer.lisp")
 (env-load "stage3/print-object.lisp" 'c)
