@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2006-2008,2011-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2006–2008,2011-2012 Sven Michael Klose <pixel@copei.de>
 
 (defstruct format-info
   stream
@@ -26,13 +26,13 @@
   (1+! (format-info-processed-args inf))
   (let el (char-upcase txt.)
     (?
-      (character= el #\%) (%format-directive-eol inf .txt args)
-      (character= el #\A) (%format-directive-placeholder inf .txt args)
+      (character== el #\%) (%format-directive-eol inf .txt args)
+      (character== el #\A) (%format-directive-placeholder inf .txt args)
       (%format-directive-tilde inf txt args))))
 
 (defun %format (inf txt args)
   (when txt
-    (? (character= txt. #\~)
+    (? (character== txt. #\~)
        (%format-directive inf .txt args)
        (progn
          (princ txt. (format-info-stream inf))

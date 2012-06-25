@@ -1,4 +1,4 @@
-;;;; TRE environment - Copyright (c) 2008,2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008,2011–2012 Sven Michael Klose <pixel@copei.de>
 
 (defstruct c-call-target
   put-arg
@@ -32,7 +32,7 @@
 				  (in=? *cpu-type* "amd64" "x86_64") (make-c-call-target-amd64)
 				  (error "unsupported *CPU-TYPE*")))
 
-	(when (= -1 code)
+	(when (== -1 code)
 	  (error "couldn't allocate trampoline"))
 
 	(do ((i (reverse args) (cdr i))

@@ -1,4 +1,4 @@
-;;;;; Tré environment - Copyright (c) 2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2011–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun chars-integer (chars len)
   (let result 0
@@ -7,8 +7,8 @@
 
 (defun read-bmp-array (name &key (verbose? nil))
   (let a (read-binary-file name)
-    (unless (and (= #\B a.)
-                 (= #\M .a.))
+    (unless (and (== #\B a.)
+                 (== #\M .a.))
       (error "not a BMP file (wrong magic)"))
     (with (bitmap-offset (chars-integer (nthcdr 10 a) 4)
            header (nthcdr 14 a)

@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2011 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2011–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun make-levenshtein (row column)
   (with (width (length row)
@@ -21,7 +21,7 @@
                j (integer-1+ jc))
           (setf (aref m i j)
                 (min (integer+ (aref m ic jc)
-                        (? (= (elt row ic) (elt column jc))
+                        (? (== (elt row ic) (elt column jc))
                            0
                            1))
                      (integer+ (aref m ic j) 1)

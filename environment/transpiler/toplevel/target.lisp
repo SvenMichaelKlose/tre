@@ -3,15 +3,15 @@
 (defvar *nil-symbol-name* "NIL")
 (defvar *t-symbol-name* "T")
 
-(defun eq-string= (x y)
+(defun eq-string== (x y)
   (? (or (symbol? x)
          (symbol? y))
      (eq x y)
-     (string= x y)))
+     (string== x y)))
 
 (defun compile-file? (file processed-files files-to-update)
-  (or (member file files-to-update :test #'eq-string=)
-      (not (assoc file processed-files :test #'eq-string=))))
+  (or (member file files-to-update :test #'eq-string==)
+      (not (assoc file processed-files :test #'eq-string==))))
 
 (defun target-transpile-2 (tr files files-to-update)
   (let compiled-code (make-queue)
@@ -19,8 +19,8 @@
       (let code (? (compile-file? i. (transpiler-compiled-files tr) files-to-update)
                    (with-temporary (transpiler-accumulate-toplevel-expressions? tr) (not (eq 'accumulated-toplevel i.))
                      (transpiler-make-code tr .i))
-                   (assoc-value i. (transpiler-compiled-files tr) :test #'eq-string=))
-        (assoc-adjoin code i. (transpiler-compiled-files tr) :test #'eq-string=)
+                   (assoc-value i. (transpiler-compiled-files tr) :test #'eq-string==))
+        (assoc-adjoin code i. (transpiler-compiled-files tr) :test #'eq-string==)
 	    (enqueue compiled-code code)))))
 
 (defun target-transpile-1 (tr files files-to-update)
@@ -30,8 +30,8 @@
                    (? (symbol? i.)
                       (transpiler-frontend tr (? (function? .i) (funcall .i) .i))
 		  			  (transpiler-frontend-file tr i.))
-                   (assoc-value i. (transpiler-frontend-files tr) :test #'eq-string=))
-        (assoc-adjoin code i. (transpiler-frontend-files tr) :test #'eq-string=)
+                   (assoc-value i. (transpiler-frontend-files tr) :test #'eq-string==))
+        (assoc-adjoin code i. (transpiler-frontend-files tr) :test #'eq-string==)
 	    (enqueue frontend-code (cons i. code))))))
 
 (defun target-sighten-deps (tr dep-gen)

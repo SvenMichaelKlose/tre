@@ -1,12 +1,12 @@
-;;;;; tré - Copyright (c) 2005-2006,2008-2009,2011-2012 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2006,2008–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
 
 (functional atom cons? symbol? number? string? function? array? zero? evenp endp symbol? keyword? integerp)
 
 (defun zero? (x)
-  (= x 0))
+  (== x 0))
 
 (defun evenp (x)
-  (= 0 (mod x 2)))
+  (== 0 (mod x 2)))
 
 (defun endp (x)
   (eq x nil))

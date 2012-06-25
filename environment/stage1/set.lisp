@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2005-2009,2011-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *setf-function?* #'%setf-function?)
 
@@ -33,7 +33,7 @@
 
 (defmacro setf (&rest args)
   (? args
-    (? (= 1 (length args))
+    (? (== 1 (length args))
        `(setf ,(car args))
        `(progn
 		  ,@(%setf args)))

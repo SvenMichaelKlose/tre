@@ -36,7 +36,7 @@
     (and (defined? hash.__tre-test)
          (not (%%%eq #'eq hash.__tre-test)
               (and (string? key)
-                   (%%%eq #'string= hash.__tre-test))))
+                   (%%%eq #'string== hash.__tre-test))))
       (dolist (k (hashkeys hash))
         (when (funcall hash.__tre-test (aref hash key))
           (return (aref hash key))))

@@ -1,5 +1,4 @@
-;;;;; TRE environment - editor
-;;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008,2012 Sven Michael Klose <pixel@copei.de>
 
 ;;;; Editor state.
 
@@ -15,7 +14,7 @@
   terminal)
 
 (defun editor-io-line (n)
-  (when (= 0 (mod n 10))
+  (when (== 0 (mod n 10))
   	(ansi-column 0)
   	(ansi-bold)
   	(princ n)

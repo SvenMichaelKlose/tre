@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 (js-type-predicate %string? "string")
 
@@ -35,8 +35,8 @@
    	(x.to-string)))
 
 ;; XXX must be optional.
-(defun string= (x y)
-  (%%%= x y))
+(defun string== (x y)
+  (%%%== x y))
 
 (dont-obfuscate to-upper-case)
 
@@ -58,6 +58,6 @@
 (defun %subseq-string (seq start end)
   (unless (< (%%%- (length seq) 1) start end)
     (?
-      (integer= start end)
+      (integer== start end)
 	    ""
       (seq.substr start (- end start)))))

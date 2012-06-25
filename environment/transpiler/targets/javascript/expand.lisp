@@ -152,14 +152,14 @@
   `(defun ,name (x)
      (when x
 	   ,(? (< 1 (length types))
-       	   `(or ,@(mapcar (fn `(%%%= (%js-typeof x) ,_)) types))
-           `(%%%= (%js-typeof x) ,types.)))))
+       	   `(or ,@(mapcar (fn `(%%%== (%js-typeof x) ,_)) types))
+           `(%%%== (%js-typeof x) ,types.)))))
 
 (define-js-std-macro %href (hash key)
   `(aref ,hash ,key))
 
 (define-js-std-macro undefined? (x)
-  `(%%%= "undefined" (%js-typeof ,x)))
+  `(%%%== "undefined" (%js-typeof ,x)))
 
 (define-js-std-macro defined? (x)
   `(%%%!= "undefined" (%js-typeof ,x)))

@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008,2012 Sven Michael Klose <pixel@copei.de>
 
 ;;;; Primitives.
 
@@ -141,7 +141,7 @@
   (%terminal-raw)
   (ansi-cmd0 "6n")
   (force-output)
-  (when (= #\[ (ansi-read-nonctrl))
+  (when (== #\[ (ansi-read-nonctrl))
      (with (height (ansi-read-natural-number)
      	    width  (ansi-read-natural-number))
   	   (%terminal-normal)

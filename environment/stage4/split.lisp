@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2009,2011-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun split-if (predicate seq)
   "Split sequence at elements for which the predicate is true. Those elements are excluded. Returns a list of subsequences."
@@ -21,8 +21,8 @@
 
 (define-test "SPLIT works on string"
   ((let x (split #\/ "foo/bar")
-	 (and (string= "foo" x.)
-	 	  (string= "bar" .x.)
+	 (and (string== "foo" x.)
+	 	  (string== "bar" .x.)
 		  (not ..x))))
   t)
 

@@ -1,5 +1,4 @@
-;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2009,2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008-2009,2011–2012 Sven Klose <pixel@copei.de>
 
 (defvar *characters* (make-array))
 
@@ -17,7 +16,7 @@
 (defun character? (x)
   (and (object? x)
 	   x.__class
-	   (%%%= x.__class ,(transpiler-obfuscated-symbol-string *current-transpiler* '%character))))
+	   (%%%== x.__class ,(transpiler-obfuscated-symbol-string *current-transpiler* '%character))))
 
 (defun code-char (x)
   (declare type number x)
@@ -46,6 +45,6 @@
 ;	  (setf n (%%%- n i.v)))))
 
 ;(mapcan-macro _
-;    `(= < > <= >=)
+;    `(== < > <= >=)
 ;  `((defun ,($ 'character _) (x y)
 ;      (,($ '%%% _) x.v y.v))))

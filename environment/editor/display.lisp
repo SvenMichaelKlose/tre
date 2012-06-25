@@ -1,7 +1,4 @@
-;;;;; TRE environment - editor
-;;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Displaying stuff.
+;;;;; tré – Copyright (c) 2008,2012 Sven Michael Klose <pixel@copei.de>
 
 (defun editor-default-color (ed)
   "Set default text color."
@@ -36,12 +33,12 @@
 (defun editor-expand-line (ed line &optional (i 0) (pos 0))
   (with (expand-tab
 		  #'((line i pos)
-  		       (if (= 0 (mod pos (editor-conf 'tabstop)))
+  		       (if (== 0 (mod pos (editor-conf 'tabstop)))
       		       (editor-expand-line ed line (1+ i) pos)
       		       (cons 32 (expand-tab line i (1+ pos))))))
     (when (< i (length line))
       (with (c (elt line i))
-        (if (= c 9)
+        (if (== c 9)
 		    (cons 32 (expand-tab line i (1+ pos)))
             (cons c (editor-expand-line ed line (1+ i) (1+ pos))))))))
 

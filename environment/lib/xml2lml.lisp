@@ -1,5 +1,4 @@
-;;;; XML parser
-;;;; Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2009 Sven Michael Klose <pixel@copei.de>
 
 ;;; Macros and functions that don't belong here.
 
@@ -14,9 +13,9 @@
 
 (defun xml-error (form &rest args)
   (princ (list-string (reverse *xml2lml-read*)))
-  (if args
-      (error (apply #'format t form args))
-      (error (funcall #'format t form))))
+  (error (? args
+         (apply #'format t form args)
+         (funcall #'format t form))))
 
 (defun xml-error-unexpected-eof (in)
   (xml-error "unexpected end of file"))
@@ -60,7 +59,7 @@
   (peek-char in))
 
 (defun xml-optional-char (in ch)
-  (when (= (xml-peek-char in) ch)
+  (when (== (xml-peek-char in) ch)
     (xml-read-char in)))
 
 (defun xml-skip-spaces (in)
@@ -68,7 +67,7 @@
     (xml-read-char in)))
 
 (defun xml-expect-char (in c)
-  (unless (= c (xml-read-char in))
+  (unless (== c (xml-read-char in))
     (xml-error "character '~A' expected" c)))
 
 (defun xml-read-optional-slash (in)
@@ -84,9 +83,9 @@
   (with-queue-string-while q (funcall pred (xml-peek-char in))
     (with (c (xml-read-char in))
       (enqueue q 
-        (if (xml-whitespace? c) ; Compress whitespace sequence.
-	        (xml-compress-whitespace in)
-	        c)))))
+        (? (xml-whitespace? c) ; Compress whitespace sequence.
+	       (xml-compress-whitespace in)
+	       c)))))
 
 (defun xml2lml-identifier (in)
   "Parse XML identifier string."
@@ -100,7 +99,7 @@
 (defvar *xml-unified-strings* nil)
 
 (defun xml-init-tables ()
-  (setq *xml-unified-strings* (make-hash-table :test #'string=))
+  (setq *xml-unified-strings* (make-hash-table :test #'string==))
   (setq *xml2lml-read* nil))
 
 (defun xml-unify-string (s)
@@ -110,19 +109,18 @@
         (setf (href *xml-unified-strings* s) s))))
 
 (defun xml2lml-unify-identifier (in)
-  (let i (string-upcase (xml2lml-identifier in))
-    (xml-unify-string i)))
+  (xml-unify-string (string-upcase (xml2lml-identifier in))))
 
 (defun charlist-to-octalstring (x)
   (concat-stringtree
-	  (mapcar (fn (if (< _ 256)
-					  (+ "\\" (print-octal _ nil))
-					  (+ "\\u" (print-hexword _ nil))))
+	  (filter (fn ? (< _ 256)
+				    (+ "\\" (print-octal _ nil))
+				    (+ "\\u" (print-hexword _ nil)))
 			  (force-list x))))
 
 (defun xml2lml-entity (in)
   (xml-read-char in) ; #\&
-  (let e (xml-read-while in (fn (not (= _ #\;))))
+  (let e (xml-read-while in (fn (not (== _ #\;))))
 	(prog1
 	  (charlist-to-octalstring (href *xml-entities-hash* e))
 	  (xml-read-char in))))
@@ -131,8 +129,8 @@
   "Read plain text until next tag or end of stream."
   (xml-skip-spaces in)
   (let txt (xml-read-while in #'xml-text-char?)
-;	(if (= #\& (xml-peek-char in))
-;		(+ txt
+;	(? (== #\& (xml-peek-char in))
+;	   (+ txt
 ;		   (xml2lml-entity in)
 ;		   (xml2lml-text in))
 	    txt));)
@@ -140,33 +138,33 @@
 (defun xml2lml-name (in &optional (pkg nil))
   "Parse name with optional namespace."
   (with (ident (xml2lml-unify-identifier in))
-    (if (= (xml-peek-char in) #\:)
-        (progn
-	      (xml-read-char in)
-	      (values ident (xml2lml-unify-identifier in)))
-        (values nil (make-symbol ident pkg)))))
+    (? (== (xml-peek-char in) #\:)
+       (progn
+	     (xml-read-char in)
+	     (values ident (xml2lml-unify-identifier in)))
+       (values nil (make-symbol ident pkg)))))
 
 (defun xml2lml-quoted-string-r (in quot)
   (with (c (xml-read-char in))
-    (unless (= quot c)
-      (cons (if (= c #\\)
-			    (xml-read-char in)
-        	    c)
+    (unless (== quot c)
+      (cons (? (== c #\\)
+			   (xml-read-char in)
+        	   c)
 		    (xml2lml-quoted-string-r in quot)))))
 
 (defun xml2lml-string-symbol (s)
-  (unless (string= "" s)
-    (if (every (fn (and (alpha-char-p _)
-					    (lower-case-p _)))
-			   (string-list s))
-	    (make-symbol (string-upcase s))
-	    s)))
+  (unless (string== "" s)
+    (? (every (fn and (alpha-char-p _)
+				      (lower-case-p _))
+		      (string-list s))
+       (make-symbol (string-upcase s))
+       s)))
 
 (defun xml2lml-quoted-string (in)
   "Read quoted string."
   (xml-skip-spaces in)
   (let c (xml-read-char in)
-    (unless (or (= c #\") (= c #\'))
+    (unless (or (== c #\") (== c #\'))
       (xml-error "quote expected"))
 	(list-string (xml2lml-quoted-string-r in c))))
 
@@ -189,11 +187,11 @@
          inline    (xml-read-optional-slash in))
     (when (and inline closing)
       (xml-error "/ at start and end of tag")) ; XXX xml-collect-error
-    (unless (= (xml-read-char in) #\>)
+    (unless (== (xml-read-char in) #\>)
       (xml-error "end of tag expected instead of char '~A'" (stream-last-char in)))
 	;(xml-issue-collected-errors)
     (values ns name
-			(if
+			(?
 			  closing	'closing
 			  inline	'inline
 			  			'opening)
@@ -201,26 +199,26 @@
 
 (defun xml2lml-version-tag (in)
   (xml-expect-char in #\?)
-  (while (not (and (= #\? (xml-read-char in))
-				   (= #\> (xml-read-char in))))
+  (while (not (and (== #\? (xml-read-char in))
+				   (== #\> (xml-read-char in))))
 	     (xml2lml-toplevel in)))
 
 (defun xml-skip-decl (in)
-  (while (not (= #\> (xml-read-char in)))
+  (while (not (== #\> (xml-read-char in)))
 		 (xml2lml-toplevel in)))
 
 (defun xml-skip-comment (in)
-  (while (not (and (= #\- (xml-read-char in))
-				   (= #\- (xml-read-char in))
-				   (= #\> (xml-read-char in))))
+  (while (not (and (== #\- (xml-read-char in))
+				   (== #\- (xml-read-char in))
+				   (== #\> (xml-read-char in))))
 		 (xml2lml-toplevel in)))
 
 (defun xml2lml-comment-or-decl (in)
   (xml-expect-char in #\!)
-  (if (and (= #\- (read-char in))
-  		   (= #\- (read-char in)))
-	  (xml-skip-comment in)
-	  (xml-skip-decl in)))
+  (? (and (== #\- (read-char in))
+  	      (== #\- (read-char in)))
+	 (xml-skip-comment in)
+	 (xml-skip-decl in)))
 
 (defun xml2lml-tag (in)
   "Read tag and return xml-node."
@@ -231,18 +229,18 @@
 (defun xml2lml-list (in this-ns this-name)
   "Parse block tag (until it's closed) or inline tag."
   (xml-skip-spaces in)
-  (if (= (xml-peek-char in) #\<)
-      (with ((ns name type attrs) (xml2lml-tag in))
-	    (case type
-	      'inline
-	  	       `((,name ,@attrs) ,@(xml2lml-list in this-ns this-name))
-	      'closing
-	           (unless (and (equal ns this-ns)
-				            (equal name this-name))
-                 (xml-error "closing tag for ~A:~A where ~A:~A was expected"
-			                ns name this-ns this-name))
-	      `(,(xml2lml-block in ns name attrs) ,@(xml2lml-list in this-ns this-name))))
-	  `(,(xml2lml-text in) ,@(xml2lml-list in this-ns this-name))))
+  (? (== (xml-peek-char in) #\<)
+     (with ((ns name type attrs) (xml2lml-tag in))
+       (case type
+         'inline
+  	          `((,name ,@attrs) ,@(xml2lml-list in this-ns this-name))
+         'closing
+              (unless (and (equal ns this-ns)
+			               (equal name this-name))
+                (xml-error "closing tag for ~A:~A where ~A:~A was expected"
+		                   ns name this-ns this-name))
+         `(,(xml2lml-block in ns name attrs) ,@(xml2lml-list in this-ns this-name))))
+  `(,(xml2lml-text in) ,@(xml2lml-list in this-ns this-name))))
 
 (defun xml2lml-block (in ns name attrs)
   "Parse block tag (until it's closed) or inline tag."
@@ -258,12 +256,12 @@
 (defun xml2lml-toplevel (in)
   "Parse top-level block tag."
   (xml-skip-spaces in)
-  (unless (= #\< (xml-read-char in))
+  (unless (== #\< (xml-read-char in))
 	(error "expected tag instead of text"))
-  (if
-	(= #\? (xml-peek-char in))
+  (?
+	(== #\? (xml-peek-char in))
 	  (xml2lml-version-tag in)
-	(= #\! (xml-peek-char in))
+	(== #\! (xml-peek-char in))
 	  (xml2lml-comment-or-decl in)
     (xml2lml-cont-std in)))
 

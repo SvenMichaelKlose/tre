@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2012 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 (defmacro + (&rest x)
   (opt-string-concat x '+))
@@ -19,7 +19,7 @@
 ;       `(,name ,,@x))))
 ;
 ;(def-typed-transpiler-op -)
-;(def-typed-transpiler-op =)
+;(def-typed-transpiler-op ==)
 ;(def-typed-transpiler-op <)
 ;(def-typed-transpiler-op >)
 ;(def-typed-transpiler-op <=)
@@ -30,21 +30,21 @@
          op		  ($ '%%% name))
     `(progn
        (defmacro ,charname (&rest x)
-         (? (= 2 (length x))
+         (? (== 2 (length x))
             `(,op (%slot-value ,,x. v)
                   (%slot-value ,,.x. v))
             `(,charname ,,@x)))
        (defmacro ,($ 'integer name) (&rest x)
 		 `(,op ,,@x)))))
 
-;(def-transpiler-char-op-inliner =)
+;(def-transpiler-char-op-inliner ==)
 ;(def-transpiler-char-op-inliner <)
 ;(def-transpiler-char-op-inliner >)
 ;(def-transpiler-char-op-inliner <=)
 ;(def-transpiler-char-op-inliner >=)
 
 (defmacro character+ (&rest x)
-  (? (= 2 (length x))
+  (? (== 2 (length x))
      `(code-char (%%%+ (%slot-value ,x. v)
                        (%slot-value ,.x. v)))
      `(character+ ,@x)))
@@ -53,7 +53,7 @@
   `(%%%+ ,@x))
 
 (defmacro character- (&rest x)
-  (? (= 1 (length x))
+  (? (== 1 (length x))
      `(code-char (%transpiler-native "(-" (%slot-value ,x. v) ")"))
      `(code-char (%%%- ,@(mapcar (fn (? (integerp _)
 							            _
@@ -61,6 +61,6 @@
                                  x)))))
 
 (defmacro integer- (&rest x)
-  (? (= 1 (length x))
+  (? (== 1 (length x))
      `(%transpiler-native "(-" ,x. ")")
      `(%%%- ,@x)))

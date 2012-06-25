@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2009-2010,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2009–2010,2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *base64-key*
   		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=")
@@ -33,7 +33,7 @@
 				  (base64-encode-char e4)))))))
  
 (defun base64-decode-char (x)
-  (position x *base64-key* :test #'=))
+  (position x *base64-key* :test #'==))
 
 (defun base64-compress (x)
   (when x
@@ -61,9 +61,9 @@
 						  e4))
 			  (setf x ....x)
 			  (+! out (string (code-char c1))
-					  (? (not (= 64 e3))
+					  (? (not (== 64 e3))
 					     (string (code-char c2))
 					     "")
-				      (? (not (= 64 e4))
+				      (? (not (== 64 e4))
 					     (string (code-char c3))
 					     "")))))))

@@ -1,21 +1,18 @@
-;;;;; TRE environment - editor
-;;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Commands.
+;;;;; tré – Copyright (c) 2008,2012 Sven Michael Klose <pixel@copei.de>
 
 (defun editor-expand-pos (line p &optional (i 0) (pos 0))
   (with (expand-tab
 		  #'((line p i pos)
-  			   (if (= p i)
+  			   (if (== p i)
 	  			   pos
-      			   (if (= 0 (mod pos (editor-conf 'tabstop)))
+      			   (if (== 0 (mod pos (editor-conf 'tabstop)))
           			   (editor-expand-pos line p (1+ i) pos)
           			   (expand-tab line p i (1+ pos))))))
-    (if (= p i)
+    (if (== p i)
 	    pos
         (if (< i (length line))
           (with (c (elt line i))
-            (if (= c 9)
+            (if (== c 9)
 		        (expand-tab line p i (1+ pos))
                 (editor-expand-pos line p (1+ i) (1+ pos))))
 	      pos))))
@@ -99,7 +96,7 @@
 (defun editor-input-char (ed)
   (editor-home ed)
   (with (c (read-char))
-	(unless (= c 27)
+	(unless (== c 27)
 	  (case (integer c)
 	    8		(editor-cmd-left ed)
 	    10		(editor-cmd-down ed)

@@ -1,8 +1,7 @@
-;;;; TRE environment
-;;;; Copyright (c) 2008-2009.2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2009.2011–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun %empty-string? (x)
-  (string= "" (or (trim #\  x) "")))
+  (string== "" (or (trim #\  x) "")))
 
 (defun empty-string? (&rest x)
   (when x

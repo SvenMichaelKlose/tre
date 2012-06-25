@@ -1,5 +1,4 @@
-;;;;; Transpiler: TRE to PHP
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 (dont-obfuscate is_string)
 
@@ -33,8 +32,8 @@
 	(not x) "NIL" ;,*nil-symbol-name*
    	(strval x)))
 
-(defun string= (x y)
-  (%%%= x y))
+(defun string== (x y)
+  (%%%== x y))
 
 (dont-obfuscate strtoupper)
 
@@ -49,6 +48,6 @@
 (dont-obfuscate substr)
 
 (defun %subseq-string (seq start end)
-  (? (= start end)
+  (? (== start end)
 	 ""
      (substr seq start (- end start))))

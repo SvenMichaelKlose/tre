@@ -17,8 +17,8 @@
 
 ;; Find symbol by name or create a new one.
 (define-native-js-fun symbol (name pkg)
-  (unless (%%%= ,*nil-symbol-name* name)
-    (or (%%%= ,*t-symbol-name* name)
+  (unless (%%%== ,*nil-symbol-name* name)
+    (or (%%%== ,*t-symbol-name* name)
 	    (with (pkg-name (? pkg pkg.n ,*nil-symbol-name*)
                symbol-table (or (%href *symbols* pkg-name)
 	    				        (setf (%href *symbols* pkg-name) (%%%make-hash-table))))

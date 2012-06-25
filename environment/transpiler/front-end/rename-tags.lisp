@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2009-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2009–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun rename-body-tags-get-expr-0 (x)
   (?
@@ -49,16 +49,16 @@
 
 (defun rename-body-tags-set-0 (x renamed)
   (?
-	(number? x)	      (or (assoc-value x renamed :test #'=)
+	(number? x)	      (or (assoc-value x renamed :test #'==)
 				  	  	  (error "didn't gather tag ~A" x.))
 	(%quote? x)       x
-	(%%vm-go? x)      `(%%vm-go ,(or (assoc-value .x. renamed :test #'=)
+	(%%vm-go? x)      `(%%vm-go ,(or (assoc-value .x. renamed :test #'==)
 						   		     (error "didn't gather tag ~A for VM-GO" x)))
 	(%%vm-go-nil? x)  `(%%vm-go-nil ,.x.
-				   	 	  		    ,(or (assoc-value ..x. renamed :test #'=)
+				   	 	  		    ,(or (assoc-value ..x. renamed :test #'==)
 						       		     (error "didn't gather tag ~A VM-GO-NIL" x)))
 	(%%vm-go-not-nil? x)  `(%%vm-go-not-nil ,.x.
-				   	 	  		            ,(or (assoc-value ..x. renamed :test #'=)
+				   	 	  		            ,(or (assoc-value ..x. renamed :test #'==)
 						       		             (error "didn't gather tag ~A VM-GO-NOT-NIL" x)))
 	(lambda? x) 	  (copy-lambda x
 				  		  :body (rename-body-tags-set (lambda-body x) renamed))

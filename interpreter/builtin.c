@@ -1,5 +1,5 @@
 /*
- * tré - Copyright (c) 2005-2012 Sven Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -385,10 +385,10 @@ char *tre_builtin_names[] = {
 	"CHARACTER+", "CHARACTER-",
 	"*", "/", "MOD",
     "LOGXOR", "NUMBER?",
-    "=", "<", ">",
-    "NUMBER=", "NUMBER<", "NUMBER>",
-    "INTEGER=", "INTEGER<", "INTEGER>",
-    "CHARACTER=", "CHARACTER<", "CHARACTER>",
+    "==", "<", ">",
+    "NUMBER==", "NUMBER<", "NUMBER>",
+    "INTEGER==", "INTEGER<", "INTEGER>",
+    "CHARACTER==", "CHARACTER<", "CHARACTER>",
 	"BIT-OR", "BIT-AND",
 	"<<", ">>",
     "CODE-CHAR", "INTEGER",
@@ -419,7 +419,7 @@ char *tre_builtin_names[] = {
     "ELT", "%SET-ELT", "LENGTH",
 
 	"STRING?",
-    "MAKE-STRING", "STRING=", "STRING-CONCAT", "STRING", "SYMBOL-NAME",
+    "MAKE-STRING", "STRING==", "STRING-CONCAT", "STRING", "SYMBOL-NAME",
 	"LIST-STRING",
 
     "MAKE-ARRAY", "ARRAY?", "AREF", "%SET-AREF",

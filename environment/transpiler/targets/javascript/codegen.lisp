@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun js-call (x)
   `(,x. ,@(parenthized-comma-separated-list .x)))
@@ -147,7 +147,7 @@
 	  (%%%/ "/")
 	  (%%%* "*")
 	  (%%%mod "%")
-	  (%%%= "==")
+	  (%%%== "==")
 	  (%%%!= "!=")
 	  (%%%< "<")
 	  (%%%> ">")
@@ -202,7 +202,7 @@
 ;;;; META-CODES
 
 (define-js-macro %quote (x)
-  (? (not (string= "" (symbol-name x))) ;XXX
+  (? (not (string== "" (symbol-name x))) ;XXX
 	 (js-codegen-symbol-constructor *current-transpiler* x)
 	 x))
 

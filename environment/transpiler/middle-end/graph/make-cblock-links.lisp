@@ -1,7 +1,7 @@
-;;;;; tré - Copyright (c) 2010-2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2010–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun tag-cblock (tags tag)
-  (assoc-value tag tags :test #'=))
+  (assoc-value tag tags :test #'==))
 
 (defun set-unconditional-link (cb tags tag)
   (setf (cblock-next cb) (tag-cblock tags tag)))

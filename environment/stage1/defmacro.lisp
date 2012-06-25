@@ -23,3 +23,6 @@
          			  (macro ,args
 	       			    (block ,name
 	         			  ,@(%add-documentation name body)))))))
+
+(defmacro "=" ()
+  (error "="))

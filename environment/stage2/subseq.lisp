@@ -1,9 +1,9 @@
-;;;;; tré - Copyright (c) 2007-2009,2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2007–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
 
 (functional subseq)
 
 (defun subseq-list (seq start end)
-  (unless (integer= start end)
+  (unless (integer== start end)
     (labels ((copy (lst len)
                (when (and lst (integer< 0 len))
                  (cons (car lst)
@@ -14,7 +14,7 @@
         (copy (nthcdr start seq) (integer- end start))))))
 
 (defun %subseq-sequence (maker seq start end)
-  (unless (integer= start end)
+  (unless (integer== start end)
     (with (seqlen  (length seq))
   	  (when (integer< start seqlen)
 	    (when (integer>= end seqlen)
@@ -49,5 +49,5 @@
   nil)
 
 (define-test "SUBSEQ returns empty string when start and end are the same"
-  ((string= "" (subseq "lisp" 1 1)))
+  ((string== "" (subseq "lisp" 1 1)))
   t)

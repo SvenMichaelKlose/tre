@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2009-2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2009–2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *c-builtins-descr*
 	`((trebuiltin_
@@ -36,16 +36,16 @@
 		(MOD)
 		(LOGXOR)
 ;		(NUMBER?)
-		(= number_equal)
+		(== number_equal)
 		(< lessp)
 		(> greaterp)
-		(NUMBER= number_equal)
+		(NUMBER== number_equal)
 		(NUMBER< lessp)
 		(NUMBER> greaterp)
-		(INTEGER= number_equal)
+		(INTEGER== number_equal)
 		(INTEGER< lessp)
 		(INTEGER> greaterp)
-		(CHARACTER= number_equal)
+		(CHARACTER== number_equal)
 		(CHARACTER< lessp)
 		(CHARACTER> greaterp)
 		(BIT-OR bit_or)
@@ -96,7 +96,7 @@
 	(trestring_builtin_
 ;		(STRINGP)
     	(MAKE-STRING make)
-		(STRING= compare)
+		(STRING== compare)
 		(STRING-CONCAT concat)
 		(STRING)
 		(SYMBOL-NAME symbol_name)

@@ -1,7 +1,6 @@
-;;;; TRE processor environment
-;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;; tré – Copyright (c) 2008–2009,2012 Sven Michael Klose <pixel@copei.de>
 
-(defvar *dl-libs* (make-hash-table :test #'string=))
+(defvar *dl-libs* (make-hash-table :test #'string==))
 
 (defun alien-import-lib (name)
   (or (href *dl-libs* name)

@@ -1,11 +1,10 @@
-;;;; TRE environment
-;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2010,2012 Sven Michael Klose <pixel@copei.de>
 
 (defconstant *alien-xml-tmp* "__alien.tmp")
 (defconstant *gccxml-path* "/usr/bin/gccxml")
 
-(defvar *alien-imported-functions* (make-hash-table :test #'string=))
-(defvar *alien-structs* (make-hash-table :test #'string=))
+(defvar *alien-imported-functions* (make-hash-table :test #'string==))
+(defvar *alien-structs* (make-hash-table :test #'string==))
 
 (defun alien-import-get-type-desc (hash desc)
   (href hash (lml-get-attribute desc :type)))
@@ -32,7 +31,7 @@
 		          (alien-import-print-type
 					      (alien-import-get-type-from-desc hash field)
 						  (lml-get-attribute field :name)
-						  :first (= 0 idx))
+						  :first (== 0 idx))
 			      (unless (eq 'constructor field.)
 				      (and (print 'XXX)
 				           (print field)))))))
@@ -81,12 +80,12 @@
 			      (alien-import-print-type
 					  (alien-import-get-type-from-desc hash a)
 					  (lml-get-attribute a :name)
-					  :first (= 0 idx))))))
+					  :first (== 0 idx))))))
 		  (format t ")~%")
 		  (setf (href *alien-imported-functions* fun-name) t))))))
 
 (defun alien-import-descr-hash (descr)
-  (with (hash (make-hash-table :test #'string=))
+  (with (hash (make-hash-table :test #'string==))
     (dolist (x descr hash)
       (awhen (lml-get-attribute x :id)
 	    (with (h (case x.

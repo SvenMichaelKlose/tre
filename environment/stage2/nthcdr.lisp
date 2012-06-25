@@ -1,10 +1,10 @@
-;;;;; tré - Copyright (c) 2007,2011-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2007,2011–2012 Sven Michael Klose <pixel@copei.de>
 
 (functional nthcdr)
 
 (defun nthcdr (idx lst)
   (when lst
-    (? (integer= 0 idx)
+    (? (integer== 0 idx)
        lst
        (nthcdr (integer-1- idx) (cdr lst)))))
 

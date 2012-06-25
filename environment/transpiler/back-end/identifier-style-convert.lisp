@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2009,2011-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun transpiler-translate-symbol (tr from to)
   (acons! from to (transpiler-symbol-translations tr)))
@@ -9,8 +9,8 @@
 (defun global-variable-notation? (x)
   (let l (length x)
     (and (< 2 l)
-         (= (elt x 0) #\*)
-         (= (elt x (1- l)) #\*))))
+         (== (elt x 0) #\*)
+         (== (elt x (1- l)) #\*))))
 
 (defun transpiler-symbol-string-r (tr s)
   (with (encapsulate-char
@@ -20,9 +20,9 @@
 		   #'((x pos)
                 (when x
 			      (let c (char-downcase x.)
-			        (? (and .x (or (character= #\- c)
-                                   (and (= 0 pos)
-                                        (character= #\* c))))
+			        (? (and .x (or (character== #\- c)
+                                   (and (== 0 pos)
+                                        (character== #\* c))))
 					   (cons (char-upcase (cadr x))
 						     (convert-camel ..x (1+ pos)))
 					   (cons c (convert-camel .x (1+ pos)))))))
@@ -46,7 +46,7 @@
         convert-global
 	       #'((x)
                (let l (length x)
-                 (remove-if (fn = _ #\-) (string-list (string-upcase (subseq x 1 (1- l))))))))
+                 (remove-if (fn == _ #\-) (string-list (string-upcase (subseq x 1 (1- l))))))))
 	(? (or (string? s)
 		   (number? s))
 	   (string s)
@@ -63,7 +63,7 @@
   (!? (symbol-package s)
       (transpiler-symbol-string-r tr (make-symbol (string-concat (symbol-name !) ":" (symbol-name s))))
       (transpiler-symbol-string-r tr s))
-;  (when (= "nil" !)
+;  (when (== "nil" !)
 ;    (error "gen nil"))))
 )
 
@@ -87,7 +87,7 @@
 (defun transpiler-to-string (tr x)
   (maptree (fn ?
 			    (cons? _)    (transpiler-to-string-cons tr _)
-			    (string? _)  (? (string= "nil" _)
+			    (string? _)  (? (string== "nil" _)
                                 (progn
                                   (princ "X")
                                   (error "nil as string"))

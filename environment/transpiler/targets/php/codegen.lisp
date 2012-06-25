@@ -108,7 +108,7 @@
 (defun %transpiler-native-without-reference? (val)
   (and (%transpiler-native? val)
 	   (string? .val.)
-	   (string= "" .val.)))
+	   (empty-string? .val.)))
 
 (defun php-assignment-operator (val)
   (? (or (and (atom val)
@@ -189,7 +189,7 @@
       (%%%* "*")
       (%%%/ "/")
       (%%%mod "%")
-      (%%%= "==")
+      (%%%== "==")
       (%%%< "<")
       (%%%> ">")
       (%%%<= "<=")

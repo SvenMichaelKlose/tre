@@ -96,8 +96,8 @@
   (global-funinfo nil)
 
   ; Literals that must be declared or cached before code with them is emitted.
-  (compiled-chars (make-hash-table :test #'=))
-  (compiled-numbers (make-hash-table :test #'=))
+  (compiled-chars (make-hash-table :test #'==))
+  (compiled-numbers (make-hash-table :test #'==))
   (compiled-strings (make-hash-table :test #'eq))
   (compiled-symbols (make-hash-table :test #'eq))
   (compiled-decls nil)

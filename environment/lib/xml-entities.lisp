@@ -1,5 +1,4 @@
-;;;; XML parser
-;;;; Copyright (c) 2009,2011 Sven Klose <pixel@copei.de>
+;;;; tré – Copyright (c) 2009,2011–2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *xml-entities*
 		'(("amp" . 38)
@@ -115,12 +114,12 @@
           ("lsaquo" . 8249)
           ("rsaquo" . 8250)))
 
-(defvar *xml-entities-hash* (assoc-hash *xml-entities* :test #'string=))
+(defvar *xml-entities-hash* (assoc-hash *xml-entities* :test #'string==))
 
 (defun xml-entities-charlist-to-unicode (x)
   (when x
-    (when (= #\& x.)
-	  (awhen (position #\; .x :test #'=)
+    (when (== #\& x.)
+	  (awhen (position #\; .x :test #'==)
 	    (let-when n (href *xml-entities-hash* (list-string (subseq .x 0 !)))
 	      (return-from xml-entities-charlist-to-unicode
 					   (cons (code-char n)

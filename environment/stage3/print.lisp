@@ -1,4 +1,4 @@
-;;;;; trè - Copyright (c) 2005-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; trè – Copyright (c) 2005–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun %print-first-occurence (x str info)
   (hremove (print-info-first-occurences info) x)
@@ -45,8 +45,8 @@
   (princ #\" str)
   (dolist (i (string-list x))
 	(?
-      (= i #\") (princ "\\\"" str)
-      (= i #\\) (princ "\\\\" str)
+      (== i #\") (princ "\\\"" str)
+      (== i #\\) (princ "\\\\" str)
 	  (princ i str)))
   (princ #\" str))
 

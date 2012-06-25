@@ -87,7 +87,7 @@
                 (enqueue form '(cons? (car e)))
                 (enqueue form `(#'((e) (block nil (and ,@!))) (car e))))
               (? (number? mcar)
-                (enqueue form `(= (car e) ,mcar))
+                (enqueue form `(== (car e) ,mcar))
                 (enqueue form `(eq (car e) ',mcar))))))
 
         ; If next is an any match, return its first element or T.

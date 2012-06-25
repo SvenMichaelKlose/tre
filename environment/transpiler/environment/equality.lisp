@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2009,2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun eql (x y)
   (unless x			; Convert falsity to 'null'.
@@ -9,7 +9,7 @@
       (? (or (number? x) (number? y))
          (?
            (and (integer? x) (integer? y))
-	         (integer= x y)
+	         (integer== x y)
            (and (character? x) (character? y))
-	         (character= x y))
-	    (= x y))))
+	         (character== x y))
+	    (== x y))))

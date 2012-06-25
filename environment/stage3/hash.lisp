@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2005-2006,2008-2012 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2006,2008–2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *default-hash-size* 2039)
 
@@ -23,7 +23,7 @@
 	     l (length str))
     (do ((i 0 (integer-1+ i)))
         ((or (integer< 16 i)
-             (integer= i l))
+             (integer== i l))
 		 (mod (abs k) (%hash-table-size h)))
       (setf k (logxor k (setf m (bit-or (<< m 8) (elt str i))))))))
 
@@ -85,13 +85,13 @@
   t)
 
 (define-test "HREF string key"
-  ((let h (make-hash-table :test #'string=)
+  ((let h (make-hash-table :test #'string==)
      (setf (href h "str") 'x)
      (eq (href h "str") 'x)))
   t)
 
 (define-test "HREF empty string key"
-  ((let h (make-hash-table :test #'string=)
+  ((let h (make-hash-table :test #'string==)
      (setf (href h "") 'x)
      (eq (href h "") 'x)))
   t)

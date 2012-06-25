@@ -23,7 +23,7 @@
            (array? x)
            (hash-table? x)
            (eq t x))
-           ;(string= "" (symbol-name x)) ; XXX?
+           ;(string== "" (symbol-name x)) ; XXX?
 	   x
 	   `(%quote ,x))))
 

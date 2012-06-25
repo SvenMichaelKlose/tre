@@ -5,7 +5,7 @@
 	(or (not a b)
 	    (and (not a) b))  t
 	(and a (not b))       nil
-	(= a. b.)             (list<= .a .b)
+	(== a. b.)             (list<= .a .b)
 	(< a. b.)))
 
 (define-test "<=-LIST: first list is less"

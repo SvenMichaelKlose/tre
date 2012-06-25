@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2005-2006,2008,2010-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2006,2008,2010–2012 Sven Michael Klose <pixel@copei.de>
 
 (? (not (eq t *BUILTIN-MEMBER*))
    (progn
@@ -18,7 +18,7 @@
   t)
 
 (define-test "MEMBER finds elements with user predicate"
-  ((? (member "lisp" '("tre" "lisp") :test #'string=)
+  ((? (member "lisp" '("tre" "lisp") :test #'string==)
 	  t))
   t)
 

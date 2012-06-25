@@ -19,7 +19,7 @@
 (defun skip-spaces (str)
   (unless (end-of-file str)
     (let c (peek-char str)
-      (when (= #\; c)
+      (when (== #\; c)
 	    (skip-comment str))
 	  (when (and (< c 33)
 			     (>= c 0))
@@ -29,7 +29,7 @@
 (defun get-symbol (str)
   (with (rec #'(()
 				 (let c (char-upcase (peek-char str))
-                   (? (= 59 c) ; #\; - vim syntax highlighting fscks up.
+                   (? (== 59 c) ; #\; - vim syntax highlighting fscks up.
                       (progn
 						(skip-comment str)
 						(rec))
@@ -43,7 +43,7 @@
 (defun get-symbol-and-package (str)
   (skip-spaces str)
   (let sym (get-symbol str)
-	(? (= (peek-char str) #\:)
+	(? (== (peek-char str) #\:)
 	   (values (or sym t)
 			   (and (read-char str)
 				    (get-symbol str)))
@@ -52,14 +52,14 @@
 (defun get-string (str)
   (with (rec #'(()
   				 (let c (read-char str)
-	               (unless (= c 34) ; " - vim syntax highlighting fscks up.
-                     (cons (? (= c #\\) (read-char str) c)
+	               (unless (== c 34) ; " - vim syntax highlighting fscks up.
+                     (cons (? (== c #\\) (read-char str) c)
 	                       (rec))))))
 	(list-string (rec))))
 
 (defun read-comment-block (str)
-  (while (not (and (= #\| (read-char str))
-			       (= #\# (peek-char str))))
+  (while (not (and (== #\| (read-char str))
+			       (== #\# (peek-char str))))
 	     (read-char str)
     nil))
 
@@ -67,7 +67,7 @@
   (with ((pkg sym) (get-symbol-and-package str))
 	(values (? (and sym
 					(not .sym)
-			        (= #\. sym.))
+			        (== #\. sym.))
 		         'dot
 		       (? sym
                   (? (every (fn or (digit-char-p _)
@@ -81,7 +81,7 @@
 			        #\'	 'quote
 			        #\`	 'backquote
 			        #\"	 'dblquote
-			        #\,	 (? (= #\@ (peek-char str))
+			        #\,	 (? (== #\@ (peek-char str))
 				            (and (read-char str) 'quasiquote-splice)
 				            'quasiquote)
 			        #\#	(case (read-char str)
@@ -135,7 +135,7 @@
 
 (defun read-cons-slot (str)
   (let l (read-cons str)
-	(? (= #\. (peek-char str))
+	(? (== #\. (peek-char str))
 	   (and (read-char str)
 		    `(slot-value ,l (quote ,(read-expr str))))
 	   l)))

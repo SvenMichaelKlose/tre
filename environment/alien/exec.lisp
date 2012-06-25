@@ -1,7 +1,4 @@
-;;;;; TRE processor environment
-;;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Program execution.
+;;;;; tré – Copyright (c) 2008,2012 Sven Michael Klose <pixel@copei.de>
 
 (defconstant *c-nl* (string (code-char 10)))
 
@@ -56,7 +53,7 @@ Returns NIL."
 	(when environment
 	  (%put-pointer-list environv envptrs :null-terminated t))
 
-	(when (= 0 (fork))
+	(when (== 0 (fork))
       (with (cc (make-c-call :funptr cexecve))
         (c-call-add-arg cc cpath)
         (c-call-add-arg cc argv)

@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 (js-type-predicate %number? "number")
 
@@ -20,4 +20,4 @@
 
 (defun integer? (x)
   (and (number? x)
-       (%%%= (parse-int x 10) (parse-float x 10))))
+       (%%%== (parse-int x 10) (parse-float x 10))))

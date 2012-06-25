@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (C) 2006,2009,2011-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (C) 2006,2009,2011–2012 Sven Michael Klose <pixel@copei.de>
 
 (define-test "CAR accepts NIL"
   ((car nil))
@@ -165,12 +165,12 @@
   ((last nil))
   nil)
 
-(define-test "= works with floats"
-  ((= 1 1))
+(define-test "== works with floats"
+  ((== 1 1))
   t)
 
-(define-test "= works with characters"
-  ((= #\A #\A))
+(define-test "== works with characters"
+  ((== #\A #\A))
   t)
 
 (define-test "if 0 is a boolean 'true'"
@@ -187,6 +187,6 @@
 ; SYMBOL-FUNCTION SYMBOL-PACKAGE
 ; BOUNDP FBOUNDP
 ; MACROP STRINGP
-; = < >
+; == < >
 ; BIT-OR BIT-AND
 ; << >>

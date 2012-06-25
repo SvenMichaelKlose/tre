@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2006-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2006–2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *tagbody-replacements*)
 
@@ -101,7 +101,7 @@
     (unless body
       (error "?: Body missing"))
     `(cond
-        ,@(? (= 1 (length end))
+        ,@(? (== 1 (length end))
 			 (append (butlast tests)
 					 (list (cons t end)))
 			 tests))))

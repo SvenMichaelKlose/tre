@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2011-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2011–2012 Sven Michael Klose <pixel@copei.de>
 
 (setq *universe*
 	  (cons 'functional
@@ -26,10 +26,10 @@
             number+ number- number* number/
             integer+ integer- integer* integer/
             character+ character-
-            logxor number? = < >
-            number= number< number>
-            integer= integer< integer>
-            character= character< character>
+            logxor number? == < >
+            number== number< number>
+            integer== integer< integer>
+            character== character< character>
             bit-or bit-and
             << >>
             code-char integer
@@ -45,7 +45,7 @@
             assoc member
             elt length
             string?
-            make-string string= string-concat string symbol-name
+            make-string string== string-concat string symbol-name
             list-string
             make-array array? aref
             slot-value %slot-value)

@@ -85,7 +85,7 @@
                (return nil))
              (setf n i)))))))
 
-(def-generic-transpiler-comparison =)
+(def-generic-transpiler-comparison ==)
 (def-generic-transpiler-comparison <)
 (def-generic-transpiler-comparison >)
 (def-generic-transpiler-comparison <=)

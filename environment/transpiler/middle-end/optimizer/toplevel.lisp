@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun two-subsequent-tags? (a d)
   (and a (atom a)
@@ -7,7 +7,7 @@
 (defun opt-peephole-has-no-jumps-to (x tag)
   (dolist (i x t)
 	(when (vm-jump? i)
-	  (when (= (vm-jump-tag i) tag)
+	  (when (== (vm-jump-tag i) tag)
 		(return nil)))))
 
 (defun opt-peephole-tags-lambda (x)

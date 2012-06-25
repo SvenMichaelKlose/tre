@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2005-2008,2010-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2008,2010–2012 Sven Michael Klose <pixel@copei.de>
 
 (defmacro do (binds (test &rest result) &body body)
   (let tag (gensym)
@@ -21,7 +21,7 @@
   (let g (gensym)
     `(let ,g ,times
        (do ((,iter 0 (integer+ 1 ,iter)))
-	       ((integer= ,iter ,times) ,@result)
+	       ((integer== ,iter ,times) ,@result)
 	     ,@body))))
 
 (defmacro dotimes-step ((iter times step &rest result) &body body)

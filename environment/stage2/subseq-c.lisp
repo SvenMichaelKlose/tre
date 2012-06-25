@@ -1,8 +1,8 @@
-;;;;; tré - Copyright (c) 2007-2009,2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2007–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
 
 ;; XXX unify with SUBSEQ-SEQUENCE
 (defun %subseq-string (seq start end)
-  (? (integer= start end)
+  (? (integer== start end)
 	 ""
      (with (seqlen  (length seq))
        (when (integer< start seqlen) ; XXX return NIl when out of range for JavaScript.

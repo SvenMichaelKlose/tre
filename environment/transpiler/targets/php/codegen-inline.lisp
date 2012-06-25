@@ -1,14 +1,12 @@
 ;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
-;;;;;
-;;;;; Extra code-generating macros to avoid costly function calls.
 
 ;(define-php-binary - "-")
 (define-php-binary / "/")
 (define-php-binary * "*")
-;(define-php-binary = "==") ; XXX these will give us trouble with chars.
+;(define-php-binary == "==") ; XXX these will give us trouble with chars.
 ;(define-php-binary < "<")
 ;(define-php-binary > ">")
-(define-php-binary string= "==")
+(define-php-binary string== "==")
 (define-php-binary >> ">>")
 (define-php-binary << "<<")
 (define-php-binary mod "%")
