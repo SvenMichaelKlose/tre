@@ -20,5 +20,5 @@
 	  (error "illegal character '~A' at begin of hexadecimal number" (string (code-char (peek-char str)))))
 	(prog1
       (rec)
-	  (when (is-symchar? (peek-char str))
+	  (when (symbol-char? (peek-char str))
 		(error "illegal character '~A' in hexadecimal number" (string (code-char (peek-char str))))))))
