@@ -51,15 +51,21 @@
 		   (number? s))
 	   (string s)
        (list-string
-           (let str (string s)
+           (let str (symbol-name s)
 	         (convert-special (? (global-variable-notation? str)
                                  (convert-global str)
     	                         (convert-camel (string-list str) 0))))))))
 
 (defun transpiler-symbol-string-0 (tr s)
-  (aif (symbol-package s)
-       (transpiler-symbol-string-r tr (make-symbol (string-concat (symbol-name !) ":" (symbol-name s))))
-       (transpiler-symbol-string-r tr s)))
+;  (when (%%%eq false s)
+;    (invoke-debugger))
+;  (aprog1
+  (!? (symbol-package s)
+      (transpiler-symbol-string-r tr (make-symbol (string-concat (symbol-name !) ":" (symbol-name s))))
+      (transpiler-symbol-string-r tr s))
+;  (when (= "nil" !)
+;    (error "gen nil"))))
+)
 
 (defun transpiler-dot-symbol-string (tr sl)
   (apply #'string-concat (pad (mapcar (fn transpiler-symbol-string-0 tr (make-symbol (list-string _)))
@@ -67,21 +73,25 @@
                               ".")))
 
 (defun transpiler-symbol-string (tr s)
-  (let sl (string-list (string s))
+  (let sl (string-list (symbol-name s))
     (? (position #\. sl)
 	   (transpiler-dot-symbol-string tr sl)
 	   (transpiler-symbol-string-0 tr s))))
 
 (defun transpiler-to-string-cons (tr x)
   (?
-    (%transpiler-string? x)      (funcall (transpiler-gen-string tr) (cadr x))
+    (%transpiler-string? x)      (funcall (transpiler-gen-string tr) .x.)
     (eq '%transpiler-native x.)  (transpiler-to-string tr .x)
     x))
 
 (defun transpiler-to-string (tr x)
   (maptree (fn ?
 			    (cons? _)    (transpiler-to-string-cons tr _)
-			    (string? _)  _
+			    (string? _)  (? (string= "nil" _)
+                                (progn
+                                  (princ "X")
+                                  (error "nil as string"))
+                                _)
 				(or (assoc-value _ (transpiler-symbol-translations tr) :test #'eq)
 					(transpiler-symbol-string tr _)))
 		   x))
