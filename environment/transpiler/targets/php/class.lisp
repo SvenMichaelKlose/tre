@@ -4,9 +4,6 @@
   (transpiler-add-defined-function *current-transpiler* cname args body)
   `(%setq __construct
       #'(,args
-          ; Add class name for debugging.
-          ,@(when *transpiler-assert*
-              `((setf this.__class ',cname)))
           ; Inject calls to base constructors.
           (let ~%this this
             (%thisify ,cname
@@ -44,15 +41,16 @@
 
 (define-php-std-macro finalize-class (class-name)
   (let classes (transpiler-thisify-classes *current-transpiler*)
-    (aif (href classes class-name)
-	     `(progn
-	        (defun ,($ class-name '?) (x)
-	          (and (object? x)
-	               (string= x.__class ,(symbol-name class-name))
-                   x))
-            (%setq nil (%transpiler-native (%php-class-head ,class-name)))
-		    ,(assoc-value class-name *delayed-constructors*)
-		    ,@(php-emit-members class-name !)
-		    ,@(php-emit-methods class-name !)
-            (%setq nil (%transpiler-native (%php-class-tail))))
-	     (error "Cannot finalize undefined class ~A." class-name))))
+    (!? (href classes class-name)
+	    `(progn
+           (dont-obfuscate is_a)
+	       (defun ,($ class-name '?) (x)
+	         (and (object? x)
+	              (is_a x ,(transpiler-obfuscated-symbol-string *current-transpiler* class-name))
+                  x))
+           (%setq nil (%transpiler-native (%php-class-head ,class-name)))
+	       ,(assoc-value class-name *delayed-constructors*)
+	        ,@(php-emit-members class-name !)
+	        ,@(php-emit-methods class-name !)
+           (%setq nil (%transpiler-native (%php-class-tail))))
+	    (error "Cannot finalize undefined class ~A." class-name))))
