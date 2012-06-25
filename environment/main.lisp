@@ -101,6 +101,7 @@
 (defvar *universe-functions* (currently-defined-functions))
 
 (env-load "version.lisp")
+(format t "; Revision ~A.~%" *tre-revision*)
 
 (dump-system)
 (%load-launchfile)
