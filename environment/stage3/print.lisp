@@ -20,7 +20,7 @@
          (href (print-info-visited info) x) (%print-circularity x str))))
 
 (defun %print-rest-0 (c str info)
-  (setf (href (print-info-visited info) c) t)
+  (= (href (print-info-visited info) c) t)
   (%late-print c. str info)
   (let x .c
     (? x
@@ -58,7 +58,7 @@
 
 (defun %print-array-0 (x str info)
   (when *print-circularities?*
-    (setf (href (print-info-visited info) x) t))
+    (= (href (print-info-visited info) x) t))
   (princ "#(" str)
   (dotimes (i (length x))
     (%late-print (aref x i) str info)

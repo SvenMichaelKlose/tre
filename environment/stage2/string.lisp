@@ -45,7 +45,7 @@
 		 (s))
     (do ((i (integer-1- l) (integer-1- i)))
 		((integer< i 0))
-      (setf s (push (elt x i) s)))
+      (= s (push (elt x i) s)))
 	s))
 
 (define-test "STRING-LIST works"

@@ -16,7 +16,7 @@
 	
 (defun transpiler-add-wanted-function (tr x)
   (when (transpiler-can-import? tr x)
-    (setf (href (transpiler-wanted-functions-hash tr) x) t)
+    (= (href (transpiler-wanted-functions-hash tr) x) t)
     (nconc! (transpiler-wanted-functions tr) (list x)))
   x)
 
@@ -30,7 +30,7 @@
 
 (defun transpiler-add-wanted-variable (tr var)
   (when (transpiler-must-add-wanted-variable? tr var)
-    (setf (href (transpiler-wanted-variables-hash tr) var) t)
+    (= (href (transpiler-wanted-variables-hash tr) var) t)
     (push var (transpiler-wanted-variables tr)))
   var)
 
@@ -56,7 +56,7 @@
 (defun transpiler-import-wanted-variables (tr)
   (transpiler-frontend tr
       (mapcan (fn unless (transpiler-defined-variable tr _)
-				   (transpiler-add-delayed-var-init tr `((setf ,_ ,(assoc-value _ *variables* :test #'eq))))
+				   (transpiler-add-delayed-var-init tr `((= ,_ ,(assoc-value _ *variables* :test #'eq))))
 	               `((defvar ,_ nil)))
 	          (transpiler-wanted-variables tr))))
 

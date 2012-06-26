@@ -9,9 +9,9 @@
   (assert (not (character? x))
 		  (error "%CHARACTER: argument already a character"))
   (or (aref *characters* x)
-  	  (setf this.__class ,(transpiler-obfuscated-symbol-string *current-transpiler* '%character)
-  		    this.v x
-		    (aref *characters* x) this)))
+  	  (= this.__class ,(transpiler-obfuscated-symbol-string *current-transpiler* '%character)
+  	     this.v x
+	     (aref *characters* x) this)))
 
 (defun character? (x)
   (and (object? x)
@@ -37,12 +37,12 @@
 ;(defun character+ (&rest x)
 ;  (let n 0
 ;	(dolist (i x (new %character n))
-;	  (setf n (%%%+ n i.v)))))
+;	  (= n (%%%+ n i.v)))))
 
 ;(defun character- (&rest x)
 ;  (let n 0
 ;	(dolist (i x (new %character n))
-;	  (setf n (%%%- n i.v)))))
+;	  (= n (%%%- n i.v)))))
 
 ;(mapcan-macro _
 ;    `(== < > <= >=)

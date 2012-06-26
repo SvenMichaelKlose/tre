@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2005-2006,2009-2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2006,2009–2012 Sven Michael Klose <pixel@copei.de>
 
 (functional assoc rassoc acons copy-alist)
 
@@ -23,23 +23,23 @@
   (unless (eq 'b (cdr (assoc 2 lst)))
 	(%error "ASSOC doesn't work with numbers")))
 
-(defun %setf-assoc (new-value key x &key (test #'eql))
+(defun %=-assoc (new-value key x &key (test #'eql))
   (? (listp x)
      (when x
 	   (? (funcall test key (car x))
           (rplaca x new-value)
-		  (%setf-assoc new-value key (cdr x) :test test)))
+		  (%=-assoc new-value key (cdr x) :test test)))
 	 (%error "not a pair")))
 
-(defun (setf assoc) (new-value key lst &key (test #'eql))
-  (%setf-assoc new-value key lst :test test)
+(defun (= assoc) (new-value key lst &key (test #'eql))
+  (%=-assoc new-value key lst :test test)
   new-value)
 
 (defun acons (key val lst)
   (cons (cons key val) lst))
 
 (defmacro acons! (key val place)
-  `(setf ,place (acons ,key ,val ,place)))
+  `(= ,place (acons ,key ,val ,place)))
 
 (defun copy-alist (x)
   (mapcar (fn cons (car _) (cdr _)) x))
@@ -53,4 +53,4 @@
 			 (aremove obj (cdr lst) :test test)))))
 
 (defmacro aremove! (obj place &key (test #'eql))
-  `(setf ,place (aremove ,obj ,place :test ,test)))
+  `(= ,place (aremove ,obj ,place :test ,test)))

@@ -1,40 +1,39 @@
-;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun transpiler-make-expex (tr)
   (let ex (make-expex)
-    (setf (transpiler-expex tr) ex
+    (= (transpiler-expex tr) ex
 
-		  (expex-transpiler ex)
-			tr
+	   (expex-transpiler ex) tr
 
-		  (expex-function-collector ex)
-		    (lx (tr)
-				#'((fun args)
-			         (transpiler-add-wanted-function ,tr fun)))
+	   (expex-function-collector ex)
+	       (lx (tr)
+		     #'((fun args)
+		          (transpiler-add-wanted-function ,tr fun)))
 
-		  (expex-argument-filter ex)
-		    (lx (tr)
-		    	#'((var)
-			         (transpiler-add-wanted-variable ,tr var)))
+	   (expex-argument-filter ex)
+	       (lx (tr)
+	    	 #'((var)
+		          (transpiler-add-wanted-variable ,tr var)))
 
-		  (expex-functionp ex)
-		    (lx (tr)
-				#'((fun)
-			         (when (atom fun)
-			           (or (transpiler-function-arguments ,tr fun)
-				           (and (not (transpiler-unwanted-function? ,tr fun))
-					            (function? (symbol-function fun)))))))
+	   (expex-functionp ex)
+	       (lx (tr)
+			 #'((fun)
+		          (when (atom fun)
+		            (or (transpiler-function-arguments ,tr fun)
+			            (and (not (transpiler-unwanted-function? ,tr fun))
+				             (function? (symbol-function fun)))))))
 
-		  (expex-function-arguments ex)
-		    (lx (tr)
-				#'((fun)
-			         (or (transpiler-function-arguments ,tr fun)
-				         (function-arguments (symbol-function fun)))))
+	   (expex-function-arguments ex)
+	       (lx (tr)
+			 #'((fun)
+		          (or (transpiler-function-arguments ,tr fun)
+			          (function-arguments (symbol-function fun)))))
 
-		  (expex-plain-arg-fun? ex)
-		    (lx (tr)
-				#'((fun)
-			         (transpiler-plain-arg-fun? ,tr fun))))
+	   (expex-plain-arg-fun? ex)
+	       (lx (tr)
+			 #'((fun)
+		          (transpiler-plain-arg-fun? ,tr fun))))
 	ex))
 
 (defun create-transpiler (&rest args)

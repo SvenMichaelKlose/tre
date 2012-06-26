@@ -7,7 +7,7 @@ MACROS
 		following expression would be expanded towards the leaves:
 	</para>
 
-	(setf (unsettable-place-maker x) y)
+	(= (unsettable-place-maker x) y)
 
 	<para>
 		Macros are usually expressions, but TRE also allows atomic macros.
@@ -22,5 +22,5 @@ MACROS
 
 	(defun mystruct-set-pos (x y)
 	  (with-mystruct x
-	    (setf x new-x
-			  y new-y)))
+	    (= x new-x
+		   y new-y)))

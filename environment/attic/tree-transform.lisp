@@ -104,22 +104,22 @@
 
 (defun tree-transform-compile (trn)
   "Match a pattern and return first toplevel cons after match."
-  (setf (tree-transform-clips trn) nil)
+  (= (tree-transform-clips trn) nil)
   (let form (tree-transform-compile-r (tree-transform-match trn) trn)
-    (setf (tree-transform-compiled-match trn)
+    (= (tree-transform-compiled-match trn)
       (eval (macroexpand `#'((e trn)
         (and
           ,@form)))))))
 
 (defun tree-transform! (trn e)
   (when (cons? e)
-    (setf (tree-transform-clips trn) nil)
+    (= (tree-transform-clips trn) nil)
     ; If expression matches, get toplevel cons after match.
     (awhen (funcall (tree-transform-compiled-match trn) e trn)
       ; Get arguments to conversion function and call the conversion function.
       (let* ((a (tree-transform-conversion-args trn))
              (c (apply (tree-transform-conversion trn) (apply #'nconc a))))
         (when (and ! (not (eq ! t)))	; Append rest to conversion.
-          (setf c (nconc c !)))
+          (= c (nconc c !)))
         (rplac-cons e c)	; Replace expression by conversion.
         expr))))

@@ -4,5 +4,5 @@
 
 (defun rplac-cons (dest what)
   "Replace CAR and CDR of a cons."
-  (setf (car dest) (car what)
-	(cdr dest) (cdr what)))
+  (= (car dest) (car what)
+	 (cdr dest) (cdr what)))

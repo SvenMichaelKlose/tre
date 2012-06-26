@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun js-load-base (dir-path &rest files)
   (mapcan (fn (let f (+ dir-path _)
@@ -50,31 +50,31 @@
 	 	 (js-load-base "environment/transpiler/environment/"
              "character.lisp"
 			 "atom.lisp"))))
-(setf *js-base2* (append *js-base2*
-		                 ,(list 'quote (js-load-base *js-env-path*
-			                                         "bind.lisp"
-			                                         "../../../environment/eq.lisp"
-			                                         "../../../environment/equality.lisp"
-			                                         "late-cons.lisp"
-			                                         "late-symbol.lisp"
-			                                         "../../../environment/list.lisp"
-			                                         "../../../environment/sequence.lisp"
-			                                         "sequence.lisp"
-			                                         "../../../environment/list-string.lisp"
-			                                         "string.lisp"
-			                                         "../../../environment/member.lisp"
-			                                         "hash.lisp"
-                                                     "base64.lisp"
-                                                     "function-source.lisp"
-                                                     "dot-expand.lisp"))))
+(= *js-base2* (append *js-base2*
+	                  ,(list 'quote (js-load-base *js-env-path*
+		                                          "bind.lisp"
+		                                          "../../../environment/eq.lisp"
+		                                          "../../../environment/equality.lisp"
+		                                          "late-cons.lisp"
+		                                          "late-symbol.lisp"
+		                                          "../../../environment/list.lisp"
+		                                          "../../../environment/sequence.lisp"
+		                                          "sequence.lisp"
+		                                          "../../../environment/list-string.lisp"
+		                                          "string.lisp"
+		                                          "../../../environment/member.lisp"
+		                                          "hash.lisp"
+                                                  "base64.lisp"
+                                                  "function-source.lisp"
+                                                  "dot-expand.lisp"))))
 
 (when *have-compiler?*
-  (setf *js-base2* (append *js-base2* ,(list 'quote (js-load-base *js-env-path* "native-eval.lisp")))))
+  (= *js-base2* (append *js-base2* ,(list 'quote (js-load-base *js-env-path* "native-eval.lisp")))))
 
-(setf *js-base2* (append *js-base2*
-		         ,(list 'quote (js-load-base "environment/transpiler/environment/"
-			                                 "assoc.lisp"
-                                             "setf-function-p.lisp"))))
+(= *js-base2* (append *js-base2*
+	                  ,(list 'quote (js-load-base "environment/transpiler/environment/"
+		                                          "assoc.lisp"
+                                                  "setf-function-p.lisp"))))
 
 (defvar *js-base-stream*
 	,(list 'quote (append

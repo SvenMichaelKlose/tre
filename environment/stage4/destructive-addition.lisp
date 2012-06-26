@@ -1,8 +1,7 @@
-;;;;; TRE environment
-;;;;; Copyright (c) 2010 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2010,2012 Sven Michael Klose <pixel@copei.de>
 
 (defmacro +! (place &rest vals)
-  `(setf ,place (+ ,place ,@vals)))
+  `(= ,place (+ ,place ,@vals)))
 
 (defmacro integer+! (place &rest vals)
-  `(setf ,place (integer+ ,place ,@vals)))
+  `(= ,place (integer+ ,place ,@vals)))

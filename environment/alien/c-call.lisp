@@ -11,7 +11,7 @@
 
 (defun c-call-add-arg (cc value)
   "Add argument type and value to C-CALL."
-  (setf (c-call-args cc) (append (c-call-args cc) (list value))))
+  (= (c-call-args cc) (append (c-call-args cc) (list value))))
 
 (defun c-call-put-arg (target p val argnum)
   (funcall (c-call-target-put-arg target) p val argnum))
@@ -38,7 +38,7 @@
 	(do ((i (reverse args) (cdr i))
 		 (argnum (1- (length args)) (1- argnum)))
 		((not i))
-	  (setf p (c-call-put-arg target p (car i) argnum)))
+	  (= p (c-call-put-arg target p (car i) argnum)))
 
 	(%put-list p (append (c-call-call cc target)
                          (c-call-epilogue target (length args))))

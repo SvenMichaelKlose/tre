@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2009,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2009,2012 Sven Michael Klose <pixel@copei.de>
 
 (defun get-definer (class)
   (? class
@@ -15,7 +15,7 @@
 
 (defmacro define-set-alias (alias real &key (class nil))
   `(,@(get-definer class) ,($ 'set- alias) (x)
-      (setf ,real x)))
+      (= ,real x)))
 
 (defmacro define-getset-alias (alias real &key (class nil))
   `(progn

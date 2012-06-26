@@ -4,5 +4,5 @@
 
 (defun alien-import-lib (name)
   (or (href *dl-libs* name)
-	  (setf (href *dl-libs* name)
-	        (or (alien-dlopen (string-concat name))))))
+	  (= (href *dl-libs* name)
+	     (or (alien-dlopen (string-concat name))))))

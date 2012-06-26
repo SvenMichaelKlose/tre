@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *funinfos* (make-hash-table :test #'eq))
 (defvar *funinfos-reverse* (make-hash-table :test #'eq))
@@ -6,9 +6,9 @@
 (defun make-lambda-funinfo (fi)
   (when (href *funinfos-reverse* fi)
 	(error "funinfo already memorized"))
-  (setf (href *funinfos-reverse* fi) t)
+  (= (href *funinfos-reverse* fi) t)
   (let g (funinfo-sym fi)
-	(setf (href *funinfos* g) fi)
+	(= (href *funinfos* g) fi)
 	`(%funinfo ,g)))
 
 (defun make-lambda-funinfo-if-missing (x fi)

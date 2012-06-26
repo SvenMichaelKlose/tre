@@ -17,7 +17,7 @@
                               (functional ,name)
 							  (defun ,name (x)
 	                            (car ,(%make-cdr i)))
-						      (defun (setf ,name) (v x)
+						      (defun (= ,name) (v x)
 							    (rplaca ,(%make-cdr i) v)))
 						 l)
 				   (incf i))

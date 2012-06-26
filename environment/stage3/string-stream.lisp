@@ -1,5 +1,4 @@
-;;;; TRE environment
-;;;; Copyright (c) 2005-2006,2008,2010-2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2006,2008,2010–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun make-string-stream ()
   (make-stream
@@ -17,4 +16,4 @@
 (defun get-stream-string (str)
   (prog1
 	(queue-string (stream-user-detail str))
-	(setf (stream-user-detail str) (make-queue))))
+	(= (stream-user-detail str) (make-queue))))

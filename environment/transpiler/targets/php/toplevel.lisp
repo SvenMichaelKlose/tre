@@ -39,7 +39,7 @@
 
 (defun php-transpile (sources &key (transpiler nil) (obfuscate? nil) (print-obfuscations? nil) (files-to-update nil))
   (transpiler-add-defined-variable transpiler '*KEYWORD-PACKAGE*)
-  (setf (transpiler-accumulate-toplevel-expressions? transpiler) (not *php-goto?*))
+  (= (transpiler-accumulate-toplevel-expressions? transpiler) (not *php-goto?*))
   (string-concat
       "<?php "
       (? *php-goto?*

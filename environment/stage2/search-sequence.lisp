@@ -1,13 +1,12 @@
-;;;;; TRE environment
-;;;;; Copyright (c) 2005-2006,2008-2009,2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2006,2008-2009,2011–2012 Sven Michael Klose <pixel@copei.de>
 
 (functional find position)
 
 (defmacro xchg (a b)
   (with-gensym g
     `(let ,g ,a
-	   (setf ,a ,b
-	   		 ,b ,g))))
+	   (= ,a ,b
+	   	  ,b ,g))))
 
 (defun find-if (pred seq &key (start nil) (end nil) (from-end nil) (with-index nil))
   (when (and seq (integer< 0 (length seq)))
@@ -60,7 +59,7 @@
   (let idx nil
     (find-if #'((x i)
 				  (when (funcall test x obj)
-					(setf idx i)))
+					(= idx i)))
 			 seq :start start :end end :from-end from-end :with-index t)
 	idx))
 
@@ -76,7 +75,7 @@
   (let idx nil
     (find-if #'((x i)
 				  (when (funcall pred x)
-					(setf idx i)))
+					(= idx i)))
 			 seq :start start :end end :from-end from-end :with-index t)
 	idx))
 

@@ -14,7 +14,7 @@
   name
   std-macro-expander
   codegen-expander
-  (setf-function? #'identity)
+  (=-function? #'identity)
   separator
 
   ; List of functions that must not be imported from the environment.
@@ -131,7 +131,7 @@
   (remove-if #'builtin? (transpiler-defined-functions tr)))
 
 (defun transpiler-add-defined-function (tr name args body)
-  (setf (href (transpiler-defined-functions-hash tr) name) t)
+  (= (href (transpiler-defined-functions-hash tr) name) t)
   (transpiler-add-function-args tr name args)
   (transpiler-add-function-body tr name body)
   name)
@@ -140,11 +140,11 @@
   (href (transpiler-defined-variables-hash tr) name))
 
 (defun transpiler-add-defined-variable (tr name)
-  (setf (href (transpiler-defined-variables-hash tr) name) t)
+  (= (href (transpiler-defined-variables-hash tr) name) t)
   name)
 
 (defun transpiler-switch-obfuscator (tr on?)
-  (setf (transpiler-obfuscate? tr) on?))
+  (= (transpiler-obfuscate? tr) on?))
 
 (defun transpiler-function-arguments (tr fun)
   (href (transpiler-function-args tr) fun))
@@ -159,10 +159,10 @@
   (href (transpiler-function-bodies tr) fun))
 
 (defun transpiler-add-function-args (tr fun args)
-  (setf (href (transpiler-function-args tr) fun) args))
+  (= (href (transpiler-function-args tr) fun) args))
 
 (defun transpiler-add-function-body (tr fun args)
-  (setf (href (transpiler-function-bodies tr) fun) args))
+  (= (href (transpiler-function-bodies tr) fun) args))
 
 (define-slot-setter-push transpiler-add-unwanted-function tr
   (transpiler-unwanted-functions tr))
@@ -200,14 +200,14 @@
 
 (defun transpiler-add-obfuscation-exceptions (tr &rest x)
   (dolist (i x)
-	(setf (href (transpiler-obfuscations tr) (make-symbol (symbol-name i)))
-		  t)))
+	(= (href (transpiler-obfuscations tr) (make-symbol (symbol-name i)))
+	   t)))
 
 (define-slot-setter-push transpiler-add-plain-arg-fun tr
   (transpiler-plain-arg-funs tr))
 
 (defun transpiler-add-late-symbol (tr x)
-  (setf (href (transpiler-late-symbols tr) x) t)
+  (= (href (transpiler-late-symbols tr) x) t)
   x)
 
 (defun transpiler-late-symbol? (tr x)
@@ -232,25 +232,25 @@
 		     name)))
 
 (defun transpiler-reset (tr)
-  (setf (transpiler-thisify-classes tr) (make-hash-table :test #'eq)	; thisified classes.
-  		(transpiler-wanted-functions tr) nil
-  		(transpiler-wanted-functions-hash tr) (make-hash-table :test #'eq)
-  		(transpiler-wanted-variables tr) nil
-  		(transpiler-wanted-variables-hash tr) (make-hash-table :test #'eq)
-  		(transpiler-defined-functions-hash tr) (make-hash-table :test #'eq)
-  		(transpiler-defined-variables-hash tr) (make-hash-table :test #'eq)
-  		(transpiler-function-args tr) (make-hash-table :test #'eq)
-  		(transpiler-function-bodies tr) (make-hash-table :test #'eq)
-  		(transpiler-late-symbols tr) (make-hash-table :test #'eq)
-  		(transpiler-exported-closures tr) nil
-  		(transpiler-delayed-var-inits tr) nil
-        (transpiler-memorized-sources tr) nil
-        (transpiler-memorize-sources? tr) t)
+  (= (transpiler-thisify-classes tr) (make-hash-table :test #'eq)	; thisified classes.
+  	 (transpiler-wanted-functions tr) nil
+  	 (transpiler-wanted-functions-hash tr) (make-hash-table :test #'eq)
+  	 (transpiler-wanted-variables tr) nil
+  	 (transpiler-wanted-variables-hash tr) (make-hash-table :test #'eq)
+  	 (transpiler-defined-functions-hash tr) (make-hash-table :test #'eq)
+  	 (transpiler-defined-variables-hash tr) (make-hash-table :test #'eq)
+  	 (transpiler-function-args tr) (make-hash-table :test #'eq)
+  	 (transpiler-function-bodies tr) (make-hash-table :test #'eq)
+  	 (transpiler-late-symbols tr) (make-hash-table :test #'eq)
+  	 (transpiler-exported-closures tr) nil
+  	 (transpiler-delayed-var-inits tr) nil
+     (transpiler-memorized-sources tr) nil
+     (transpiler-memorize-sources? tr) t)
   (transpiler-add-obfuscation-exceptions tr nil (make-symbol ""))
   tr)
 
 (defun make-global-funinfo (tr)
-  (make-lambda-funinfo (setf (transpiler-global-funinfo tr) (make-funinfo))))
+  (make-lambda-funinfo (= (transpiler-global-funinfo tr) (make-funinfo))))
 
 (defun transpiler-package-symbol (tr x)
   (make-symbol (symbol-name x) (transpiler-current-package tr)))
@@ -272,7 +272,7 @@
     (make-transpiler :name                   name
                      :std-macro-expander     std-macro-expander
                      :codegen-expander       codegen-expander
-                     :setf-function?         setf-function?
+                     :=-function?            =-function?
                      :separator              separator
                      :unwanted-functions     unwanted-functions
                      :identifier-char?       identifier-char?

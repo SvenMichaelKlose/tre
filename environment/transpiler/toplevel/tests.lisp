@@ -5,9 +5,9 @@
 		 num 0
   		 funs (mapcar
 				(fn
-				  (setf num (1+ num))
+				  (= num (1+ num))
 				  (let n ($ 'test- num)
-					(setf names (push n names))
+					(= names (push n names))
 				    `(defun ,n ()
 				       (%%%log (+ "Test " (string ,num) ": " ,_. "</br>"))
 				       (unless (equal ,.._. ,._.)

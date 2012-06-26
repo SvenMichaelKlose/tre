@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun ignore-body-doc (body)
   (? (and (not *transpiler-assert*)
@@ -20,12 +20,12 @@
 	  (late-print `(defclass ,class-name ,@(awhen args (list !)))))
     (when (href classes cname)
 	  (warn "Class ~A already defined." cname))
-	(setf (href classes cname)
-		  (? bases
-    		 (let bc (href classes bases.)
-			   (make-class :members (class-members bc)
-					       :parent bc));:methods (class-methods bc)))
-			 (make-class)))
+	(= (href classes cname)
+      (? bases
+         (let bc (href classes bases.)
+           (make-class :members (class-members bc)
+                       :parent bc));:methods (class-methods bc)))
+         (make-class)))
 	(acons! cname
 			(funcall constructor-maker cname bases args body)
 		    *delayed-constructors*)
@@ -39,7 +39,7 @@
                                    (tail-after-atoms body :keep-last t)))
         (? (assoc name (class-methods !))
            (progn
-             (setf (assoc-value name (class-methods !)) code)
+             (= (assoc-value name (class-methods !)) code)
              (warn "In class '~A': member '~A' already defined." class-name name))
            (acons! name code (class-methods !))))
       (error "Defiinition of method ~A: class ~A is not defined." name class-name))

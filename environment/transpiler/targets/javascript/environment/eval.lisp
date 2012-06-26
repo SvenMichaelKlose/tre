@@ -1,6 +1,6 @@
 ;;;;; tré – Copyright (c) 2011–2012 Sven Michael Klose <pixel@copei.de>
 
-(setf *gensym-prefix* "~jsG")
+(= *gensym-prefix* "~jsG")
 
 (unless (eq '*native-eval-return-value* *native-eval-return-value*)
   (defvar *native-eval-return-value* nil))
@@ -10,11 +10,11 @@
 (defun make-js-eval-transpiler ()
   (let tr (copy-transpiler *js-transpiler*)
     (transpiler-reset tr)
-    (setf (transpiler-only-environment-macros? tr) nil)
+    (= (transpiler-only-environment-macros? tr) nil)
     (dolist (i *defined-functions*)
       (let-when f (symbol-function i)
         (transpiler-add-defined-function tr i (car f.__source) (cdr f.__source))))
-    (setf *js-eval-transpiler* tr)))
+    (= *js-eval-transpiler* tr)))
 
 (defun js-eval-transpile (tr expression)
   (clr (transpiler-frontend-files tr)

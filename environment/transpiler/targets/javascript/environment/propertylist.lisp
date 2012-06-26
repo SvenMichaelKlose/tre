@@ -8,7 +8,7 @@
 (dont-inline %property-list)
 
 (defun %property-list (hash)
-  (setf *%property-list-tmp* nil)
+  (= *%property-list-tmp* nil)
   (%setq nil (%transpiler-native
                  "for (var k in " hash ") "
                      "if (k != \"" '__tre-object-id "\" && k != \"" '__tre-test "\") "

@@ -36,7 +36,7 @@
 				  (rec2 ._)
 				  (cons _. (rec3 ._))))))
 
-	(setf argument-exp-sort-key nil)
+	(= argument-exp-sort-key nil)
 	(values (rec3 def) (reverse argument-exp-sort-key))))
 
 ;; Expands argument definition and argument list to an associative list
@@ -102,7 +102,7 @@
 		   #'((def vals)
 				(and (argument-keyword? def.)
 				     (err "Keyword ~A after &OPTIONAL" (list def.)))
-				(setf no-static '&optional)
+				(= no-static '&optional)
 				(cons (cons (get-name def)
 							(get-value def vals))
 					  (?
@@ -122,8 +122,8 @@
 
 		 exp-rest
 		   #'((def vals)
-				(setf no-static '&rest)
-  			    (setf rest-arg (list (cons def. (cons '&rest vals))))
+				(= no-static '&rest)
+  			    (= rest-arg (list (cons def. (cons '&rest vals))))
 			    nil)
 
          exp-optional-rest
@@ -165,11 +165,11 @@
 					     (exp-main-non-key def vals))))))
 
   (with ((a k) (argument-exp-sort adef))
-	 (setf argdefs a
-		   key-args k
-		   num 0
-		   no-static nil
-		   rest-arg nil)
+	 (= argdefs a
+	    key-args k
+	    num 0
+	    no-static nil
+	    rest-arg nil)
 	 (%nconc (exp-main argdefs alst)
 			 (%nconc key-args
 			 		 rest-arg)))))

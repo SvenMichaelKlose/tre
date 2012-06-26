@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2009 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2009,2012 Sven Michael Klose <pixel@copei.de>
 
 ;;; Macros and functions that don't belong here.
 
@@ -106,7 +106,7 @@
   "Unify string."
   (when s
     (or (href *xml-unified-strings* s)
-        (setf (href *xml-unified-strings* s) s))))
+        (= (href *xml-unified-strings* s) s))))
 
 (defun xml2lml-unify-identifier (in)
   (xml-unify-string (string-upcase (xml2lml-identifier in))))

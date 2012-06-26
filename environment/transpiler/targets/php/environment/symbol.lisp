@@ -9,5 +9,5 @@
     (or (%%%== ,*t-symbol-name* name)
         (new __symbol name pkg))))
 
-(define-native-php-fun %%usetf-symbol-function (v x)
+(define-native-php-fun %%u=-symbol-function (v x)
   (x.sf v))

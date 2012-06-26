@@ -1,11 +1,10 @@
-;;;;; TRE environment
-;;;;; Copyright (c) 2005, 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005, 2008–2010,2012 Sven Michael Klose <pixel@copei.de>
 
 (defmacro incf (place &optional (n 1))
-  `(setf ,place (number+ ,place ,n)))
+  `(= ,place (number+ ,place ,n)))
 
 (defmacro decf (place &optional (n 1))
-  `(setf ,place (- ,place ,n)))
+  `(= ,place (- ,place ,n)))
 
 (defmacro 1+! (place &optional (n 1))
   `(incf ,place ,n))
@@ -14,7 +13,7 @@
   `(decf ,place ,n))
 
 (defmacro integer1+! (place &optional (n 1))
-  `(setf ,place (integer+ ,place ,n)))
+  `(= ,place (integer+ ,place ,n)))
 
 (defmacro integer1-! (place &optional (n 1))
-  `(setf ,place (integer- ,place ,n)))
+  `(= ,place (integer- ,place ,n)))

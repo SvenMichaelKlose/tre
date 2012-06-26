@@ -26,7 +26,7 @@
 			   e4 (? c3
 					 (bit-and c3 63)
 					 64))
-          (setf x ...x)
+          (= x ...x)
 		  (+! out (base64-encode-char e1)
 				  (base64-encode-char e2)
 				  (base64-encode-char e3)
@@ -44,7 +44,7 @@
 
 (defun base64-decode (x)
   (let out ""
-	(setf x (base64-compress x))
+	(= x (base64-compress x))
 	(let len (length x)
 	  (while x out
 	    (with (e1 (base64-decode-char x.)
@@ -59,7 +59,7 @@
 			   c3 (bit-or (<< (bit-and e3 3)
 							  6)
 						  e4))
-			  (setf x ....x)
+			  (= x ....x)
 			  (+! out (string (code-char c1))
 					  (? (not (== 64 e3))
 					     (string (code-char c2))

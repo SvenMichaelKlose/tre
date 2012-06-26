@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2011-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2011–2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *macros* nil)
 (defvar *standard-macro-expander* nil)
@@ -10,7 +10,7 @@
            `(progn
               (%defsetq ,g #'(,args ,@body))
               ,@(js-make-early-symbol-expr name-sym name)
-              (setf *macros* (cons (cons ,name-sym #',g) *macros*))
+              (= *macros* (cons (cons ,name-sym #',g) *macros*))
               (when *standard-macro-expander*
                 (set-expander-macro 'standard-macros ,name-sym #',g :may-redefine? t))))))
     '(defmacro define-std-macro (name args &rest body)))

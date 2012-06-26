@@ -8,7 +8,7 @@
 (defun string-concat (&rest x)
   (let result ""
     (dolist (i x result)
-      (setf result (%%%string+ result i)))))
+      (= result (%%%string+ result i)))))
 
 (dont-obfuscate ord strlen substr)
 
@@ -19,7 +19,7 @@
 (dont-obfuscate from-char-code)
 
 ,(when *transpiler-assert*
-   '(defun %setf-elt-string (val seq idx)
+   '(defun %=-elt-string (val seq idx)
       (error "cannot modify strings")))
 
 (dont-obfuscate strval)

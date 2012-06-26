@@ -1,5 +1,4 @@
-;;;; TRE environment
-;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008,2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *collected-errors* nil)
 
@@ -11,5 +10,5 @@
 	(let errors (apply #'string-concat (mapcar #'((x)
 					       						   (string-concat x "~%"))
 											   *collected-errors*))
-	  (setf *collected-errors* nil)
+	  (= *collected-errors* nil)
 	  (%error (format nil errors)))))

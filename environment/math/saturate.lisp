@@ -17,7 +17,7 @@
 	  (- x y)))
 
 (defmacro saturate! (place x max)
-  `(setf ,place (saturate ,place ,x ,max)))
+  `(= ,place (saturate ,place ,x ,max)))
 
 (defmacro desaturate! (place x &optional (min 0))
-  `(setf ,place (desaturate ,place ,x ,min)))
+  `(= ,place (desaturate ,place ,x ,min)))

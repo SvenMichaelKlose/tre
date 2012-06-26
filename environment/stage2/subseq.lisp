@@ -18,11 +18,11 @@
     (with (seqlen  (length seq))
   	  (when (integer< start seqlen)
 	    (when (integer>= end seqlen)
-	      (setf end seqlen))
+	      (= end seqlen))
   	    (with (l (integer- end start)
 		       s (funcall maker l))
           (dotimes (x l s)
-	  	    (setf (elt s x) (elt seq (integer+ start x)))))))))
+	  	    (= (elt s x) (elt seq (integer+ start x)))))))))
 
 (defun subseq (seq start &optional (end 99999))
   (when seq

@@ -11,7 +11,7 @@
   (when-debug
     (when (member x *rplaca-breakpoints* :test #'eq)
       (invoke-debugger)))
-  (setf x._ val)
+  (= x._ val)
   x)
 
 (defun rplacd (x val)
@@ -19,7 +19,7 @@
   (when-debug
     (when (member x *rplacd-breakpoints* :test #'eq)
       (invoke-debugger)))
-  (setf x.__ val)
+  (= x.__ val)
   x)
 
 (defun cons? (x)

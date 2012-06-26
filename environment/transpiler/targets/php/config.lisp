@@ -2,14 +2,14 @@
 
 (defvar *php-version* 503)
 
-(defun php-setf-function? (x)
-  (or (%setf-function? x)
+(defun php-=-function? (x)
+  (or (%=-function? x)
       (transpiler-function-arguments *php-transpiler* x)))
 
 (defun make-php-transpiler-0 ()
   (create-transpiler
       :name 'php
-	  :setf-function? #'php-setf-function?
+	  :=-function? #'php-=-function?
 	  :unwanted-functions '(wait)
 	  :apply-argdefs? nil
 	  :literal-conversion #'identity
@@ -28,12 +28,12 @@
       :place-expand-ignore-toplevel-funinfo? t
       :raw-constructor-names? t
       :expex-initializer #'((ex)
-                             (setf (expex-inline? ex) #'%slot-value?
-                                   (expex-move-lexicals? ex) t
-    	                           (expex-setter-filter ex) (compose (fn mapcar (fn php-setter-filter *php-transpiler* _) _)
-                                                                     #'expex-compiled-funcall)
-    	                           (expex-function-arguments ex) #'current-transpiler-function-arguments-w/o-builtins
-    	                           (expex-argument-filter ex) #'php-expex-argument-filter))))
+                             (= (expex-inline? ex) #'%slot-value?
+                                (expex-move-lexicals? ex) t
+    	                        (expex-setter-filter ex) (compose (fn mapcar (fn php-setter-filter *php-transpiler* _) _)
+                                                                  #'expex-compiled-funcall)
+    	                        (expex-function-arguments ex) #'current-transpiler-function-arguments-w/o-builtins
+    	                        (expex-argument-filter ex) #'php-expex-argument-filter))))
 
 (defun make-php-transpiler ()
   (aprog1 (make-php-transpiler-0)

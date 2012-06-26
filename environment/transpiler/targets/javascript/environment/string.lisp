@@ -20,7 +20,7 @@
 (dont-obfuscate from-char-code)
 
 ,(when *transpiler-assert*
-   '(defun %setf-elt-string (val seq idx)
+   '(defun %=-elt-string (val seq idx)
       (error "cannot modify strings")))
 
 (dont-obfuscate to-string)

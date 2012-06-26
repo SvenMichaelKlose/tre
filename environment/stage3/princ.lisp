@@ -2,9 +2,9 @@
 
 (defun %princ-character (c str)
   (unless (and (string? c) (== 0 (length c)))
-    (setf (stream-last-char str) (? (string? c)
-                                    (elt c (1- (length c)))
-                                    c))
+    (= (stream-last-char str) (? (string? c)
+                                 (elt c (1- (length c)))
+                                 c))
     (funcall (stream-fun-out str) c str)))
 
 (defun %princ-number (c str)

@@ -21,7 +21,7 @@
 	(prog1
 	  struct-name
   	  (unless (href *alien-structs* struct-name)
-  	    (setf (href *alien-structs* struct-name) t)
+  	    (= (href *alien-structs* struct-name) t)
 	    (format t "[")
 		(let idx -1
 		  (dolist (x (split #\ (trim #\ (lml-get-attribute desc :members))))
@@ -82,7 +82,7 @@
 					  (lml-get-attribute a :name)
 					  :first (== 0 idx))))))
 		  (format t ")~%")
-		  (setf (href *alien-imported-functions* fun-name) t))))))
+		  (= (href *alien-imported-functions* fun-name) t))))))
 
 (defun alien-import-descr-hash (descr)
   (with (hash (make-hash-table :test #'string==))
@@ -92,7 +92,7 @@
 				   'namespace nil
 				   hash))
 		  (when h
-	        (setf (href h !) x)))))))
+	        (= (href h !) x)))))))
 
 (defun alien-import-process-xml (descr)
   (let d (lml-get-children descr)

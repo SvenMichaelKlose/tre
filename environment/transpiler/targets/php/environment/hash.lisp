@@ -20,6 +20,6 @@
 
 (defun hash-merge (a b)
   (unless a
-    (setf a (make-hash-table)))
+    (= a (make-hash-table)))
   (dolist (k (hashkeys b) a)
-    (setf (href a k) (href b k))))
+    (= (href a k) (href b k))))

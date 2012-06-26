@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 (define-js-macro userfun_cons (x y)
   `("new " ,(transpiler-obfuscated-symbol-string *js-transpiler* 'userfun_%cons)
@@ -9,6 +9,6 @@
 	  (userfun_cdr __))
   (let slotname .p.
     `((define-js-macro ,p. (x)
-        `("(" ,,x "==null?null:" ,,x "." ,slotname ")"))
-      (define-js-macro ,($ '%%usetf- p.) (v x)
-        `(,,x "." ,slotname "=" ,,v)))))
+        `("(" ,,x "==null ? null : " ,,x "." ,slotname ")"))
+      (define-js-macro ,($ '%%u=- p.) (v x)
+        `(,,x "." ,slotname " = " ,,v)))))

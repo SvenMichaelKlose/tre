@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2010-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2010–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun cps-tag-function-name (x xlats tag-xlats)
   (assoc-value (assoc-value x tag-xlats)
@@ -259,7 +259,7 @@
   (with (continuer '~%continuer
          new-args (cons continuer (lambda-args x))
          fi (get-lambda-funinfo x))
-    (setf (funinfo-args fi) new-args)
+    (= (funinfo-args fi) new-args)
     (copy-lambda x
         :args new-args
         :body (with (body (cps-filter (lambda-body x))

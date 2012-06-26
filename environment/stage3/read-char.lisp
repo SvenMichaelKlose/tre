@@ -10,14 +10,14 @@
     (stream-peeked-char str)
       (prog1
         (stream-peeked-char str)
-        (setf (stream-peeked-char str) nil))
+        (= (stream-peeked-char str) nil))
     (not (end-of-file str))
-      (setf (stream-last-char str) (funcall (stream-fun-in str) str))))
+      (= (stream-last-char str) (funcall (stream-fun-in str) str))))
 
 (defun peek-char (&optional (str *standard-input*))
   "Read character without stepping to next."
   (or (stream-peeked-char str)
-      (setf (stream-peeked-char str) (read-char str))))
+      (= (stream-peeked-char str) (read-char str))))
 
 (defun end-of-file (&optional (str *standard-input*))
   "Test if stream is at file end."

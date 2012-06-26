@@ -7,7 +7,7 @@
     `(progn
        (defvar ,cache-var nil)
        (defun ,name (,@args ,init)
-         (setf ,cache-var ,init)
+         (= ,cache-var ,init)
          (dolist (i (list ,@(mapcan (fn `((with-temporary (transpiler-current-pass ,tr) ,(list 'quote _.)
                                             (? (transpiler-dump-passes? ,tr)
                                                #'((x)
@@ -19,4 +19,4 @@
                                                ,._.))))
                                     (reverse (group x 2))))
                    ,cache-var)
-           (setf ,cache-var (setf (transpiler-last-pass-result ,tr) (funcall i ,cache-var))))))))
+           (= ,cache-var (= (transpiler-last-pass-result ,tr) (funcall i ,cache-var))))))))

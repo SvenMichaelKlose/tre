@@ -1,7 +1,4 @@
-;;;;; TRE compiler
-;;;;; Copyright (C) 2006-2007,2009,2011 Sven Klose <pixel@copei.de>
-
-;;;; LEXICALS AND GHOST ARGUMENTS
+;;;;; tré – Copyright (c) 2006–2007,2009,2011–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun funinfo-add-lexical (fi name)
   (adjoin! name (funinfo-lexicals fi)))
@@ -9,23 +6,23 @@
 (defun funinfo-make-lexical (fi)
   (unless (funinfo-lexical fi)
     (let lexical (gensym)
-	  (setf (funinfo-lexical fi) lexical)
+	  (= (funinfo-lexical fi) lexical)
 	  (funinfo-env-add fi lexical))))
 
 (defun funinfo-make-ghost (fi)
   (unless (funinfo-ghost fi)
     (let ghost (gensym)
-	  (setf (funinfo-ghost fi) ghost)
-	  (setf (funinfo-args fi)
-		    (cons ghost
-				  (funinfo-args fi)))
+	  (= (funinfo-ghost fi) ghost)
+	  (= (funinfo-args fi)
+	     (cons ghost
+			   (funinfo-args fi)))
 	  (funinfo-env-add fi ghost))))
 
 (defun funinfo-link-lexically (fi)
   (funinfo-make-lexical (funinfo-parent fi))
   (funinfo-make-ghost fi))
 
-;; Make lexical path to desired variable.
+;; XXX link funinfos
 (defun funinfo-setup-lexical-links (fi var)
   (let fi-parent (funinfo-parent fi)
     (unless fi-parent

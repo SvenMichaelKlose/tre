@@ -14,8 +14,8 @@
       (transpiler-add-cps-function *current-transpiler* g))
     (with-lambda-content x fi args body
       `(#'((,g)
-	        (setf ,g ,(copy-lambda `(function ,x) :body (body-with-noargs-tag body)))
-		    (setf (slot-value ,g 'tre-exp) ,(compile-argument-expansion g args))
+	        (= ,g ,(copy-lambda `(function ,x) :body (body-with-noargs-tag body)))
+		    (= (slot-value ,g 'tre-exp) ,(compile-argument-expansion g args))
 		    ,g)
 		  nil))))
 
@@ -27,7 +27,7 @@
   (? .x
      `(%not (list ,@x))
      `(let ,*not-gensym* t
-        (? ,x. (setf ,*not-gensym* nil))
+        (? ,x. (= ,*not-gensym* nil))
         ,*not-gensym*)))
 
 (define-js-std-macro function (x)
@@ -55,7 +55,7 @@
 (defvar *late-symbol-function-assignments* nil)
 
 (defun js-make-late-symbol-function-assignment (name)
-  (push `(setf (slot-value ',name 'f) ,(compiled-function-name *current-transpiler* name))
+  (push `(= (slot-value ',name 'f) ,(compiled-function-name *current-transpiler* name))
         *late-symbol-function-assignments*))
 
 (defun emit-late-symbol-function-assignments ()
@@ -72,7 +72,7 @@
     (print `(cps-mode ,x)))
   (unless (in? x nil t)
     (error "Expected NIL or T is the only argument."))
-  (setf *transpiler-except-cps?* (not x))
+  (= *transpiler-except-cps?* (not x))
   `(%setq %cps-mode ,x))
 
 (defun js-make-early-symbol-expr (g sym)
@@ -96,7 +96,7 @@
       `(progn
          ,@(js-make-early-symbol-expr g dname)
          ,@(apply #'shared-defun dname args body)
-         (setf (symbol-function ,g) ,dname)))))
+         (= (symbol-function ,g) ,dname)))))
 
 (define-js-std-macro %defun (&rest x)
   `(defun ,@x))
@@ -110,11 +110,11 @@
 (define-js-std-macro defconstant (&rest x)
   `(defvar ,@x))
 
-(define-js-std-macro %%usetf-car (val x)
-  (shared-setf-car val x))
+(define-js-std-macro %%u=-car (val x)
+  (shared-=-car val x))
 
-(define-js-std-macro %%usetf-cdr (val x)
-  (shared-setf-cdr val x))
+(define-js-std-macro %%u=-cdr (val x)
+  (shared-=-cdr val x))
 
 (define-js-std-macro make-string (&optional len)
   "")
@@ -193,11 +193,11 @@
 (define-js-std-macro functional (&rest x)
   (when *show-definitions*
     (late-print `(functional ,@x)))
-  (setf *functionals* (nconc x *functionals*))
+  (= *functionals* (nconc x *functionals*))
   nil)
 
 (define-js-std-macro in-package (n)
-  (setf (transpiler-current-package *current-transpiler*) (when n (make-package (symbol-name n))))
+  (= (transpiler-current-package *current-transpiler*) (when n (make-package (symbol-name n))))
   `(%%in-package ,n))
 
 (define-js-std-macro invoke-debugger ()

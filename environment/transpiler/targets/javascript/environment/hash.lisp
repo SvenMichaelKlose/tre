@@ -5,7 +5,7 @@
 
 (defun make-hash-table (&key (test #'eql) (size nil))
   (aprog1 (%%%make-hash-table)
-    (setf !.__tre-test test)))
+    (= !.__tre-test test)))
 
 (defmacro %%key (key)
   `(%%%string+ "~~id" ,key))
@@ -13,18 +13,18 @@
 (defun hashkeys (hash)
   (carlist (%property-list hash)))
 
-(defun %%usetf-href (value hash key)
+(defun %%u=-href (value hash key)
   (?
     (character? key)
-      (setf (aref hash (%%%string+ "~%C" key.v)) value)
+      (= (aref hash (%%%string+ "~%C" key.v)) value)
     (object? key)
       (progn
         (unless (defined? key.__tre-object-id)
-          (let id (%%key (setf *obj-id-counter* (%%%+ 1 *obj-id-counter*)))
-            (setf key.__tre-object-id id
-                  (aref *obj-keys* id) key)))
-        (setf (aref hash key.__tre-object-id) value))
-    (setf (aref hash key) value)))
+          (let id (%%key (= *obj-id-counter* (%%%+ 1 *obj-id-counter*)))
+            (= key.__tre-object-id id
+               (aref *obj-keys* id) key)))
+        (= (aref hash key.__tre-object-id) value))
+    (= (aref hash key) value)))
 
 (defun href (hash key)
   (? 
@@ -56,7 +56,7 @@
 (defun hash-merge (a b)
   (when (or a b)
     (unless a
-      (setf a (make-hash-table)))
+      (= a (make-hash-table)))
     (%setq nil (%transpiler-native
                    "for (var k in " b ") "
                        "if (k != \"" '__tre-object-id "\" && k !=\"" '__tre_test "\") "

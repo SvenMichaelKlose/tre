@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2010-2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2010–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun reassignment? (fi x)
   (and (%setq? x)
@@ -20,13 +20,13 @@
                                (list x.)))
                      .x))
       (enqueue result (copy-tree x.))
-      (setf x .x))))
+      (= x .x))))
 
 (defun metacode-to-cblocks-0 (fi x)
   (when x
     (let cb (make-cblock)
       (with ((copy next) (copy-until-cblock-end cb fi x))
-        (setf (cblock-code cb) copy)
+        (= (cblock-code cb) copy)
         (cons cb (metacode-to-cblocks-0 fi next))))))
 
 (defun metacode-to-cblocks (x fi)

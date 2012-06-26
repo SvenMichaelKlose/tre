@@ -1,7 +1,4 @@
-;;;;; Caroshi ECMAScript library
-;;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Elements
+;;;;; tré – Copyright (c) 2008,2012 Sven Michael Klose <pixel@copei.de>
 
 (defclass caroshi-element ())
 
@@ -13,7 +10,7 @@
 ;(defun ducktype-test ()
 ;  (let o (new caroshi-element)
 ;    (o.some-member-function)
-;    (setf o.some-member 'fnord)
+;    (= o.some-member 'fnord)
 ;    o.some-member))
 
 ;(ducktype-test)

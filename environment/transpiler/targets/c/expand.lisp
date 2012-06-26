@@ -14,7 +14,7 @@
   (? .x
      `(%not2 ,@x)
      `(let ,*not-gensym* t
-        (? ,x. (setf ,*not-gensym* nil))
+        (? ,x. (= ,*not-gensym* nil))
         ,*not-gensym*)))
 
 (define-c-std-macro defun (name args &rest body)
@@ -25,7 +25,7 @@
 
 (define-c-std-macro defvar (name &optional (val '%%no-value))
   (when (eq '%%no-value val)
-    (setf name `',name))
+    (= name `',name))
   (let tr *c-transpiler*
     (when *show-definitions*
       (late-print `(defvar ,name)))
@@ -41,11 +41,11 @@
 (transpiler-wrap-invariant-to-binary define-c-std-macro eq 2 %eq and)
 (transpiler-wrap-invariant-to-binary define-c-std-macro %not2 1 %not and)
 
-(define-c-std-macro %%usetf-car (val x)
-  (shared-setf-car val x))
+(define-c-std-macro %%u=-car (val x)
+  (shared-=-car val x))
 
-(define-c-std-macro %%usetf-cdr (val x)
-  (shared-setf-cdr val x))
+(define-c-std-macro %%u=-cdr (val x)
+  (shared-=-cdr val x))
 
 (mapcan-macro _
     '(car cdr cons? atom number? string? array? function? builtin?)
@@ -57,10 +57,10 @@
 (define-c-std-macro slot-value (obj slot)
   `(%slot-value ,obj (%quote ,slot)))
 
-(define-c-std-macro %%usetf-slot-value (val obj slot)
-  `(%%usetf-%slot-value ,val ,obj (%quote ,slot)))
+(define-c-std-macro %%u=-slot-value (val obj slot)
+  `(%%u=-%slot-value ,val ,obj (%quote ,slot)))
 
-(define-c-std-macro %%usetf-aref (val arr &rest idx)
+(define-c-std-macro %%u=-aref (val arr &rest idx)
   (? (and (== 1 (length idx))
 	      (not (%transpiler-native? idx.))
 		  (number? idx.))

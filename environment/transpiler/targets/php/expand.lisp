@@ -20,7 +20,7 @@
   (? .x
      `(%not (list ,@x))
      `(let ,*not-gensym* t
-        (? ,x. (setf ,*not-gensym* nil))
+        (? ,x. (= ,*not-gensym* nil))
         ,*not-gensym*)))
 
 (define-php-std-macro defun (name args &body body)
@@ -58,11 +58,11 @@
 (define-php-std-macro defconstant (&rest x)
   `(defvar ,@x))
 
-(define-php-std-macro %%usetf-car (val x)
-  (shared-setf-car val x))
+(define-php-std-macro %%u=-car (val x)
+  (shared-=-car val x))
 
-(define-php-std-macro %%usetf-cdr (val x)
-  (shared-setf-cdr val x))
+(define-php-std-macro %%u=-cdr (val x)
+  (shared-=-cdr val x))
 
 (define-php-std-macro make-string (&optional len)
   "")
@@ -125,5 +125,5 @@
   nil)
 
 (define-php-std-macro in-package (n)
-  (setf (transpiler-current-package *js-transpiler*) (when n (make-package (symbol-name n))))
+  (= (transpiler-current-package *js-transpiler*) (when n (make-package (symbol-name n))))
   `(%%in-package ,n))

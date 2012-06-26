@@ -1,5 +1,4 @@
-;;;;; TRE transpiler environment
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun maparray (fun hash)
   (dotimes (i (length hash))
@@ -15,9 +14,9 @@
     (cons? seq) (nth idx seq)
   	(aref seq idx)))
 
-(defun (setf elt) (val seq idx)
+(defun (= elt) (val seq idx)
   (?
 	,@(when *transpiler-assert*
         '((string? seq) (error "strings cannot be modified")))
-	(array? seq) (setf (aref seq idx) val)
+	(array? seq) (= (aref seq idx) val)
 	(cons? seq) (rplaca (nthcdr idx seq) val)))

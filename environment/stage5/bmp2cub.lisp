@@ -1,4 +1,4 @@
-;;;;; Copyright (c) 2011 Sven Klose <pixel@copei.de>
+;;;;; Copyright (c) 2011–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun bmp2cub-read-slices (files)
   (with (num-slices (length files)
@@ -8,7 +8,7 @@
       (format t "Reading slice ~A..." i)
       (force-output)
       (with ((slice w h) (read-bmp-array n))
-        (setf (aref slices i) slice)
+        (= (aref slices i) slice)
         (format t "O.K.~%"))
       (1+! i))))
 

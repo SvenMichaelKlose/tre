@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (C) 2006-2007,2009-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2006–2007,2009–2012 Sven Michael Klose <pixel@copei.de>
 
 ;;;; ARGUMENTS
 
@@ -90,8 +90,8 @@
 	; XXX (error "double definition of ~A in ~A" x (funinfo-env fi))
     (unless (funinfo-parent fi)
   	  (unless (funinfo-env-hash fi)
-  	    (setf (funinfo-env-hash fi) (make-hash-table :size 65521 :test #'eq)))
-  	  (setf (href (funinfo-env-hash fi) x) t))
+  	    (= (funinfo-env-hash fi) (make-hash-table :size 65521 :test #'eq)))
+  	  (= (href (funinfo-env-hash fi) x) t))
     (push x (funinfo-env fi)))
   x)
 
@@ -100,13 +100,13 @@
 	(funinfo-env-add fi i)))
 
 (defun funinfo-env-reset (fi)
-  (setf (funinfo-env fi) nil)
+  (= (funinfo-env fi) nil)
   (unless (funinfo-parent fi)
-    (setf (funinfo-env-hash fi) (make-hash-table :test #'eq))))
+    (= (funinfo-env-hash fi) (make-hash-table :test #'eq))))
 
 (defun funinfo-env-set (fi x)
   (? (funinfo-parent fi)
-     (setf (funinfo-env fi) x)
+     (= (funinfo-env fi) x)
      (progn
        (error "no parent")
        (funinfo-env-reset fi)

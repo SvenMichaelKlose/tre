@@ -49,7 +49,7 @@
   (with-temporaries (*recompiling?* (? files-to-update t)
                      *current-transpiler* tr)
     (when *have-compiler?*
-      (setf (transpiler-save-sources? tr) t))
+      (= (transpiler-save-sources? tr) t))
     (when files-to-update
       (clr (transpiler-emitted-decls tr)))
     (transpiler-switch-obfuscator tr obfuscate?)
@@ -74,7 +74,7 @@
         (when (show?)
           (terpri))
         (awhen compiled-deps
-          (setf (transpiler-imported-deps tr) (string-concat (transpiler-imported-deps tr) !)))
+          (= (transpiler-imported-deps tr) (string-concat (transpiler-imported-deps tr) !)))
 	    (prog1
 	      (concat-stringtree (awhen decl-gen
 	                           (funcall !))

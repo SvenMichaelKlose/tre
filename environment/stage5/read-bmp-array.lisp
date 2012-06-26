@@ -3,7 +3,7 @@
 (defun chars-integer (chars len)
   (let result 0
     (dotimes (i len result)
-      (setf result (bit-or (<< result 8) (elt chars (- len i 1)))))))
+      (= result (bit-or (<< result 8) (elt chars (- len i 1)))))))
 
 (defun read-bmp-array (name &key (verbose? nil))
   (let a (read-binary-file name)
@@ -28,4 +28,4 @@
       (do ((ptr (1- (* width height)) (integer-1- ptr)))
           ((integer< ptr 0) (values bitmap width height))
         (%%set (+ bitmap ptr) (integer bitmap-list.))
-        (setf bitmap-list .bitmap-list)))))
+        (= bitmap-list .bitmap-list)))))

@@ -2,7 +2,7 @@
 
 (defun compile-argument-expansion-defaults (defaults)
   (mapcar (fn `(when (eq ,_ ,(list 'quote _))
-			     (setf ,_ ,(assoc-value _ defaults))))
+			     (= ,_ ,(assoc-value _ defaults))))
 		  (carlist defaults)))
 
 (defun compile-argument-expansion-0 (adef p &optional (argdefs nil) (key-args nil))
@@ -22,19 +22,18 @@
 
 		 compexp-static
 		   #'((def)
-			    `((setf ,def. (car ,p))
-				  (setf ,p (cdr ,p))
+			    `((= ,def. (car ,p))
+				  (= ,p (cdr ,p))
 				  ,@(compexp-main .def)))
 
 		 compexp-optional
 		   #'((def)
 			    `(,@(compexp-key)
 				  (? ,p
-				     (setf ,(get-name def) (car ,p)
-				           ,p (cdr ,p))
+				     (= ,(get-name def) (car ,p)
+				        ,p (cdr ,p))
 					 ,@(when (cons? def.)
-					     `((setf ,(get-name def)
-								 ,(get-default def)))))
+					     `((= ,(get-name def) ,(get-default def)))))
 				  ,@(when .def
 					  (? (argument-keyword? .def.)
 				  		 (compexp-main .def)
@@ -43,7 +42,7 @@
 		 compexp-rest
 		   #'((def)
 			    `(,@(compexp-key)
-				  (setf ,def. ,p)))
+				  (= ,def. ,p)))
 
          compexp-optional-rest
 		   #'((def)
@@ -57,7 +56,7 @@
 			    `(,@(compexp-key)
 				  (with-temporary ,p (car ,p)
 				    ,@(compile-argument-expansion-0 def. p))
-				  (setf ,p (cdr ,p))
+				  (= ,p (cdr ,p))
 				  ,@(compexp-main .def)))
 
 		 compexp-main
@@ -72,13 +71,13 @@
 				  #'(()
                       (block compexp
 				        (let v nil
-					      (while (keyword? (setf v (car ,p)))
+					      (while (keyword? (= v (car ,p)))
 							     nil
 						    (?
 						      ,@(mapcan (fn `((eq v ,(make-symbol (symbol-name _) *keyword-package*))
-											  (setf ,p (cdr ,p)
-												    ,_ (car ,p)
-												    ,p (cdr ,p))))
+											  (= ,p (cdr ,p)
+											     ,_ (car ,p)
+												 ,p (cdr ,p))))
 									    (carlist key-args))
 						      (return-from compexp nil)))))))
           ,@(when argdefs

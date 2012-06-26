@@ -149,10 +149,10 @@
 	(dolist (grp *c-builtins-descr* h)
 	  (let head (string-downcase (symbol-name grp.))
 		(dolist (f .grp)
-		  (setf (href h f.)
-				(+ head (aif .f
-				     (string-downcase (symbol-name !.))
-					 (string-downcase (symbol-name f.))))))))))
+		  (= (href h f.)
+		     (+ head (aif .f
+				          (string-downcase (symbol-name !.))
+					      (string-downcase (symbol-name f.))))))))))
 
 (defun c-builtin-name (x)
   (href *c-builtins* x))

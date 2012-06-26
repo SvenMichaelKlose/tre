@@ -33,10 +33,10 @@
 	  (removed-tags nil
        replace-tag
          #'((old-dest new-dest)
-			 (setf removed-tags (filter (fn ? (eq ._ old-dest)
-                                              (cons _. new-dest)
-                                              _)
-                                        removed-tags)))
+			 (= removed-tags (filter (fn ? (eq ._ old-dest)
+                                           (cons _. new-dest)
+                                           _)
+                                     removed-tags)))
 
        add-removed-tag
          #'((old-tag new-tag)

@@ -1,11 +1,11 @@
-;;;;; tré - Copyright (c) 2010,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2010,2012 Sven Michael Klose <pixel@copei.de>
 
 (defun cblocks-remove-doubles-1 (blks original x)
   (? x
      (? (equal (%setq-value original)
                (%setq-value x.))
         (progn
-          (setf (caddr x.) (%setq-place original))
+          (= (caddr x.) (%setq-place original))
           (print x.)
           (cblocks-remove-doubles-1 blks original .x))
         (cblocks-remove-doubles-1 blks original .x))

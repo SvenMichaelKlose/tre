@@ -19,8 +19,8 @@
 (defun expander-macro-function (expander-name macro-name)
   (href (expander-macros expander-name) macro-name))
 
-(defun (setf expander-macro-function) (new-function expander-name macro-name)
-  (setf (href (expander-macros expander-name) macro-name) new-function))
+(defun (= expander-macro-function) (new-function expander-name macro-name)
+  (= (href (expander-macros expander-name) macro-name) new-function))
 
 (defun define-expander (expander-name &key (pre nil) (post nil)
 										   (pred nil) (call nil))
@@ -31,27 +31,27 @@
 						:post (or post #'(nil)))
     (acons! expander-name e *expanders*)
     (unless pred
-      (setf (expander-pred e)
-            (lx (e)
-			    (fn and (symbol? _.)
-				 	    (symbol-name _.)
-				 	    (expander-macro-function ,e _.)))))
+      (= (expander-pred e)
+         (lx (e)
+	       (fn and (symbol? _.)
+	               (symbol-name _.)
+	               (expander-macro-function ,e _.)))))
     (unless call
-      (setf (expander-call e)
-            (lx (e)
-			    (fn (when *expander-print*
-                      (print _))
-                    (apply (expander-macro-function ,e _.) ._)))))
-    (setf (expander-lookup e)
-          #'((expander name)
-              (href (expander-macros expander) name)))
+      (= (expander-call e)
+         (lx (e)
+	       (fn (when *expander-print*
+                 (print _))
+               (apply (expander-macro-function ,e _.) ._)))))
+    (= (expander-lookup e)
+       #'((expander name)
+           (href (expander-macros expander) name)))
 	e))
 
 (defun set-expander-macro (expander-name name fun &key (may-redefine? nil))
   (and (not may-redefine?)
        (expander-has-macro? expander-name name)
        (warn "Macro ~A already defined.~%" name))
-  (setf (href (expander-macros (expander-get expander-name)) name) fun))
+  (= (href (expander-macros (expander-get expander-name)) name) fun))
 
 (defun set-expander-macros (expander-name lst)
   (map (fn set-expander-macro expander-name _. ._) lst))
@@ -66,7 +66,7 @@
 	   (when (expander-has-macro? ',expander-name ',name)
 	     (warn "Redefinition of acro ~A in expander ~A.~%" ',name ',expander-name))
 	   (defun ,g ,args ,@body)
-       (setf (href (expander-macros (expander-get ',expander-name)) ',name) #',g))))
+       (= (href (expander-macros (expander-get ',expander-name)) ',name) #',g))))
 
 (defun expander-expand-once (expander-name x)
   (let e (expander-get expander-name)

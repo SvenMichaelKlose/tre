@@ -1,5 +1,4 @@
-;;;; TRE environment
-;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2009,2012 Sven Michael Klose <pixel@copei.de>
 
 (defun little-endianess? (&optional (endianess *endianess*))
   (eq endianess 'little))
@@ -10,8 +9,8 @@
 (defun value-bytes (val width)
   (with (lst nil)
 	(dotimes (x width lst)
-	  (setf lst (append lst (list (mod val 256))))
-	  (setf val (>> val 8)))))
+	  (= lst (append lst (list (mod val 256))))
+	  (= val (>> val 8)))))
 
 (defun dword-bytes (val)
   (value-bytes val 4))
@@ -27,7 +26,7 @@
 (defun %put-list (ptr x)
   "Write list of bytes to memory. Returns following address."
   (dolist (v x ptr)
-	(setf ptr (%put-char ptr v))))
+	(= ptr (%put-char ptr v))))
 
 (defun %put-short (ptr val)
   "Write 16 bit integer to address. Regards *ENDIANESS*."
@@ -49,19 +48,19 @@
 (defun %put-dword (ptr x &key (endianess *endianess*))
   "Write 32 bit integer to address. Regards *ENDIANESS*."
 ;  (when (little-endianess? endianess)
-;    (setf x (rotate-int-byte-left x)))
+;    (= x (rotate-int-byte-left x)))
 
   (dotimes (dummy 4 ptr)
-	(setf ptr (%put-char ptr (bit-and x #xff))
-		  x ;(if (little-endianess? endianess)
-				;(rotate-dword-byte-left x)
-				(>> x 8))));)
+	(= ptr (%put-char ptr (bit-and x #xff))
+	   x ;(if (little-endianess? endianess)
+			  ;(rotate-dword-byte-left x)
+		      (>> x 8))));)
 
 (defun %get-dword (ptr)
   (with (v 0)
 	(dotimes (x 4)
-	  (setf v (bit-and (<< v 8) (%%get ptr))
-			ptr (+ ptr 4)))
+	  (= v (bit-and (<< v 8) (%%get ptr))
+		 ptr (+ ptr 4)))
 	v))
 
 (defun %put-dword-list (ptr x &key (null-terminated nil))
@@ -84,7 +83,7 @@
   (dotimes (x (length str) (if null-terminated
 							   (%put-char ptr 0)
 							   ptr))
-    (setf ptr (%put-char ptr (elt str x)))))
+    (= ptr (%put-char ptr (elt str x)))))
 
 (defun binary-truth (x)
   (if x

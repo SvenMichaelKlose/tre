@@ -7,8 +7,8 @@
      (with (seqlen  (length seq))
        (when (integer< start seqlen) ; XXX return NIl when out of range for JavaScript.
          (when (integer>= end seqlen)
-	       (setf end seqlen))
+	       (= end seqlen))
   	     (with (l (integer- end start)
 	            s (make-string 0))
            (dotimes (x l s)
-	  	     (setf s (+ s (string (elt seq (integer+ start x)))))))))))
+	  	     (= s (+ s (string (elt seq (integer+ start x)))))))))))

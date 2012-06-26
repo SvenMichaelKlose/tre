@@ -1,13 +1,13 @@
-;;;;; tré - Copyright (c) 2008-2012 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
-(defun js-setf-function? (x)
-  (or (%setf-function? x)
+(defun js-=-function? (x)
+  (or (%=-function? x)
       (transpiler-function-arguments *js-transpiler* x)))
 
 (defun make-javascript-transpiler-0 ()
   (create-transpiler
       :name 'js
-	  :setf-function? #'js-setf-function?
+	  :=-function? #'js-=-function?
 	  :unwanted-functions '(wait)
 	  :named-functions? nil
 	  :apply-argdefs? t
@@ -29,10 +29,10 @@
       :place-expand-ignore-toplevel-funinfo? t
       :expex-initializer 
         #'((ex)
-            (setf (expex-inline? ex) #'%slot-value?
-                  (expex-setter-filter ex) #'expex-collect-wanted-variable
-                  (expex-function-arguments ex) #'current-transpiler-function-arguments-w/o-builtins
-                  (expex-argument-filter ex) #'expex-%setq-collect-wanted-global-variable))))
+            (= (expex-inline? ex) #'%slot-value?
+               (expex-setter-filter ex) #'expex-collect-wanted-variable
+               (expex-function-arguments ex) #'current-transpiler-function-arguments-w/o-builtins
+               (expex-argument-filter ex) #'expex-%setq-collect-wanted-global-variable))))
 
 (defun make-javascript-transpiler ()
   (aprog1 (make-javascript-transpiler-0)

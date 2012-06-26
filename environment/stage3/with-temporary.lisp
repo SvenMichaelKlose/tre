@@ -1,13 +1,13 @@
-;;;;; tré - Copyright (c) 2005-2008,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2008,2012 Sven Michael Klose <pixel@copei.de>
 
 (defmacro with-temporary (place val &body body)
   (with-gensym old-val
     `(with (,old-val ,place)
-       (setf ,place ,val)
+       (= ,place ,val)
        (prog1
          (progn
            ,@body)
-         (setf ,place ,old-val)))))
+         (= ,place ,old-val)))))
 
 (defmacro with-temporaries (lst &body body)
   (? lst

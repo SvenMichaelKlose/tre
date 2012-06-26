@@ -18,13 +18,13 @@
 
 (defun js-codegen-symbol-constructor (tr x)
   (or (href *js-compiled-symbols* x)
-      (setf (href *js-compiled-symbols* x)
-            (let g (compiled-symbol-identifier x)
-              (push `("var " ,(transpiler-obfuscated-symbol-string tr g)
-                             "=" ,@(js-codegen-symbol-constructor-expr tr x)
-		                     ,*js-separator*)
-                    (transpiler-raw-decls tr))
-              g))))
+      (= (href *js-compiled-symbols* x)
+         (let g (compiled-symbol-identifier x)
+           (push `("var " ,(transpiler-obfuscated-symbol-string tr g)
+                          "=" ,@(js-codegen-symbol-constructor-expr tr x)
+	                      ,*js-separator*)
+                 (transpiler-raw-decls tr))
+           g))))
 
 (define-codegen-macro-definer define-js-macro *js-transpiler*)
 
@@ -59,7 +59,7 @@
 (define-js-macro function (&rest x)
   (when ..x
 	(error "an optional function name followed by the head/body expected"))
-  (setf x (? .x .x. x.))
+  (= x (? .x .x. x.))
   (? (or (atom x)
 		 (%stack? x))
 	 x
@@ -166,7 +166,7 @@
   `(%transpiler-native ,arr
      ,@(mapcar (fn `("[" ,_ "]")) idx)))
 
-(define-js-macro %%usetf-aref (val &rest x)
+(define-js-macro %%u=-aref (val &rest x)
   `(%transpiler-native (aref ,@x) "=" ,val))
 
 ;;;; HASH TABLES
@@ -185,7 +185,7 @@
   `(%transpiler-native ,arr
      ,@(mapcar (fn `("[" ,_ "]")) idx)))
 
-(define-js-macro %%usetf-href (val &rest x)
+(define-js-macro %%u=-href (val &rest x)
   `(%transpiler-native (aref ,@x) "=" ,val))
 
 (define-js-macro hremove (h key)

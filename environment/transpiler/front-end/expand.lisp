@@ -4,11 +4,11 @@
   (with (e       (define-expander expander-name)
          mypred  (expander-pred e)
 		 mycall  (expander-call e))
-    (setf (expander-pred e) (lx (tr mypred)
-								(fn or (funcall ,mypred _)
-                                       (? (transpiler-only-environment-macros? ,tr)
-				 				          (%%env-macrop _)
-				 				          (%%macrop _))))
+    (= (expander-pred e) (lx (tr mypred)
+						   (fn or (funcall ,mypred _)
+                                  (? (transpiler-only-environment-macros? ,tr)
+				 		             (%%env-macrop _)
+				 		             (%%macrop _))))
    		  (expander-call e) (lx (tr mypred mycall)
 								(fn ? (funcall ,mypred _) (funcall ,mycall _)
                                       (transpiler-only-environment-macros? ,tr) (%%env-macrocall _)
@@ -16,7 +16,7 @@
 
 (defun transpiler-make-std-macro-expander (tr)
   (let expander-name ($ (transpiler-name tr) '-standard)
-    (setf (transpiler-std-macro-expander tr) expander-name)
+    (= (transpiler-std-macro-expander tr) expander-name)
     (make-overlayed-std-macro-expander tr expander-name)))
 
 (defmacro define-transpiler-std-macro (tr name &rest args-and-body)
@@ -25,7 +25,7 @@
      (define-expander-macro ,(transpiler-std-macro-expander (eval tr)) ,name ,@args-and-body)))
 
 (defun transpiler-macroexpand (tr x)
-  (with-temporary *setf-function?* (transpiler-setf-function? tr)
+  (with-temporary *=-function?* (transpiler-=-function? tr)
     (expander-expand (transpiler-std-macro-expander ,tr) x)))
 
 (defmacro transpiler-wrap-invariant-to-binary (definer op len replacement combinator)

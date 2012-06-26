@@ -1,5 +1,4 @@
-;;;;; TRE environment
-;;;;; Copyright (c) 2010 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2010,2012 Sven Michael Klose <pixel@copei.de>
 
 (defun merge (&rest lists)
   (let result nil
@@ -7,4 +6,4 @@
 	  (adjoin! x result))))
 
 (defmacro merge! (&rest lists)
-  `(setf ,lists. (merge ,lists. ,@.lists)))
+  `(= ,lists. (merge ,lists. ,@.lists)))

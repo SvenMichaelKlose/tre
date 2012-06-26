@@ -1,15 +1,15 @@
-;;;;; tré - Copyright (c) 2011-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2011–2012 Sven Michael Klose <pixel@copei.de>
 
 (define-expander 'standard-macros)
 (set-expander-macros 'standard-macros *macros*)
-(setf *standard-macro-expander* (expander-get 'standard-macros))
+(= *standard-macro-expander* (expander-get 'standard-macros))
 
 (defvar *environment-macros* (copy-alist *macros*))
 (define-expander 'environment-macros)
 (set-expander-macros 'environment-macros *environment-macros*)
 (defvar *environment-macro-expander* (expander-get 'environment-macros))
 
-(setf *macroexpand-backquote-diversion* #'%macroexpand-backquote)
+(= *macroexpand-backquote-diversion* #'%macroexpand-backquote)
 
 (defun %%macrop (x)
   (expander-has-macro? 'standard-macros x.))

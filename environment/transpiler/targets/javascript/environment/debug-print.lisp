@@ -1,9 +1,8 @@
-;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2009,2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun js-print-write (x doc)
-  (setf doc.body.inner-h-t-m-l
-  	    (+ doc.body.inner-h-t-m-l x)))
+  (= doc.body.inner-h-t-m-l
+     (+ doc.body.inner-h-t-m-l x)))
 
 (defun js-print-cons-r (x doc)
   (when x

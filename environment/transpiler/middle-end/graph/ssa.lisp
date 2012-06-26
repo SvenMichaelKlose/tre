@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2010,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2010,2012 Sven Michael Klose <pixel@copei.de>
 
 (defun cblocks-merge-joins (cb)
   (with (global-visited nil
@@ -27,10 +27,10 @@
                    (cons v. (filter (fn cblock-rename-value lst _) .v)))))))
 
 (defun cblock-rename-merged (cb)
-  (setf (cblock-aliases cb) (filter (fn cons _ (gensym)) (cblock-merged-ins cb)))
-  (setf (cblock-realnames cb) (pairlist (cdrlist (cblock-aliases cb))
-                                        (carlist (cblock-aliases cb))))
-  (setf (cblock-code cb) (filter (fn cblock-rename-statement (cblock-aliases cb) _) (cblock-code cb))))
+  (= (cblock-aliases cb) (filter (fn cons _ (gensym)) (cblock-merged-ins cb)))
+  (= (cblock-realnames cb) (pairlist (cdrlist (cblock-aliases cb))
+                                     (carlist (cblock-aliases cb))))
+  (= (cblock-code cb) (filter (fn cblock-rename-statement (cblock-aliases cb) _) (cblock-code cb))))
 
 (defun cblocks-rename-merged (cb)
   (with (global-visited nil
@@ -43,7 +43,7 @@
     (visit cb nil)))
 
 (defun cblock-unname-merged (cb)
-  (setf (cblock-code cb) (filter (fn cblock-rename-statement (cblock-realnames cb) _) (cblock-code cb))))
+  (= (cblock-code cb) (filter (fn cblock-rename-statement (cblock-realnames cb) _) (cblock-code cb))))
 
 (defun cblocks-unname-merged (cb)
   (with (global-visited nil

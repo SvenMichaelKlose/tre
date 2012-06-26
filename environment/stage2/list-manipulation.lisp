@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2005-2009,2011-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
 
 (functional append adjoin reverse)
 
@@ -11,7 +11,7 @@
 	   (apply #'append (cdr lsts)))))
 
 (defmacro append! (place &rest args)
-  `(setf ,place (append ,place ,@args)))
+  `(= ,place (append ,place ,@args)))
 
 (define-test "COPY-LIST works"
   ((copy-list '(l i s p)))
@@ -51,7 +51,7 @@
   '(l i s p))
 
 (defmacro nconc! (place &rest lsts)
-  `(setf ,place (nconc ,place ,@lsts)))
+  `(= ,place (nconc ,place ,@lsts)))
 
 (defun adjoin (obj lst &rest args)
   (? (apply #'member obj lst args)
@@ -59,7 +59,7 @@
      (cons obj lst)))
 
 (defmacro adjoin! (obj &rest place)
-  `(setf ,(car place) (adjoin ,obj ,@place)))
+  `(= ,(car place) (adjoin ,obj ,@place)))
 
 (define-test "ADJOIN doesn't add known member"
   ((adjoin 'i '(l i s p)))

@@ -18,7 +18,7 @@
 	      pos))))
 
 (defun editor-cmd-quit (ed)
-  (setf (editor-state-quit? ed) t))
+  (= (editor-state-quit? ed) t))
 
 (defun editor-cmd-write (ed)
   (editor-write (editor-state-name ed)
@@ -66,9 +66,9 @@
 
 (defun editor-cmd-line-start (ed)
   (with (a (editor-state-column-offset ed))
-    (setf (editor-state-column-offset ed) 0
-		  (editor-state-x ed) 0
-		  (text-container-x (editor-state-text ed)) 0)
+    (= (editor-state-column-offset ed) 0
+	   (editor-state-x ed) 0
+	   (text-container-x (editor-state-text ed)) 0)
 	(when a
 	  (editor-redraw ed))))
 
@@ -90,7 +90,7 @@
   (editor-insert-char ed c))
 
 (rcmd editor-cmd-delete-char (ed)
-  (setf (editor-state-mode ed) "DELETE")
+  (= (editor-state-mode ed) "DELETE")
   (editor-delete-char ed))
 
 (defun editor-input-char (ed)
@@ -107,9 +107,9 @@
 	  (editor-input-char ed))))
 
 (defun editor-cmd-input (ed)
-  (setf (editor-state-mode ed) "INSERT")
+  (= (editor-state-mode ed) "INSERT")
   (editor-input-char ed)
-  (setf (editor-state-mode ed) nil))
+  (= (editor-state-mode ed) nil))
 
 ;(defun editor-cmd-para (ed direction)
 ;  `(defun ,($ "editor-cmd-para-" direction) ()

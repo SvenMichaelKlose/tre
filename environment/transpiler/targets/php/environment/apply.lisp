@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 (dont-obfuscate apply call function_exists call_user_func_array array)
 
@@ -10,7 +10,7 @@
          fun-name (? funref? fun.n fun)
          expander-name (%%%string+ fun-name "_treexp"))
     (when funref?
-      (setf args (cons fun.g args)))
+      (= args (cons fun.g args)))
 	(?
       (function_exists expander-name) (call_user_func_array expander-name (%transpiler-native "array ($" args ")"))
 	  (function_exists fun-name) (call_user_func_array fun-name (list-phparray args))

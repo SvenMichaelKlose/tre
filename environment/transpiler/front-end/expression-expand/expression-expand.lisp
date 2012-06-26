@@ -232,7 +232,7 @@
       (%%vm-scope? x) (values nil (expex-body ex (%%vm-scope-body x)))
       (and (%setq? x)
            (eq '%cps-mode (%setq-place x))) (progn
-                                              (setf *transpiler-except-cps?* (not (%setq-value x)))
+                                              (= *transpiler-except-cps?* (not (%setq-value x)))
                                               (print 'CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC)
                                               (print *transpiler-except-cps?*)
                                               (values nil nil))

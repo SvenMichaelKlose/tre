@@ -1,7 +1,4 @@
-;;;;; TRE environment - editor
-;;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Text container.
+;;;;; tré – Copyright (c) 2008,2012 Sven Michael Klose <pixel@copei.de>
 
 (defstruct text-container
   (x 0)
@@ -12,13 +9,13 @@
   (elt (text-container-lines txt)
 	   (or n (text-container-y txt))))
 
-(defun (setf text-container-line) (val txt &optional (n nil))
+(defun (= text-container-line) (val txt &optional (n nil))
   (with (lines	(text-container-lines txt)
 		 y		(or n (text-container-y txt)))
-    (setf (text-container-lines txt)
-	      (nconc (subseq lines 0 y)
-			     (list val)
-			     (subseq lines (1+ y)))))
+    (= (text-container-lines txt)
+	   (nconc (subseq lines 0 y)
+		      (list val)
+		      (subseq lines (1+ y)))))
   val)
 
 (defun text-container-up (txt &optional (n 1))
@@ -56,10 +53,10 @@
   `(defun ,name (txt ,@(if insertion '(c)))
     (with (x		(text-container-x txt)
     	   line	(text-container-line txt))
-	  (setf (text-container-line txt)
-		    (string-concat (or (subseq line 0 x) "")
-						   ,@(if insertion (list `(string c)))
-					       (or (subseq line ,(if insertion 'x '(1+ x))) ""))))))
+	  (= (text-container-line txt)
+	     (string-concat (or (subseq line 0 x) "")
+					        ,@(if insertion (list `(string c)))
+				            (or (subseq line ,(if insertion 'x '(1+ x))) ""))))))
 
 (define-text-container-modifier text-container-insert-char t)
 (define-text-container-modifier text-container-delete-char nil)

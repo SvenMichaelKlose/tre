@@ -1,10 +1,10 @@
-;;;;; Caroshi - Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun js-make-constructor (cname bases args body)
   (let magic (list 'quote ($ '__ cname))
     `(progn
        (defun ,cname ,args
-         (setf (slot-value this ,magic) t)
+         (= (slot-value this ,magic) t)
          ; Inject calls to base constructors.
          ,@(mapcar (fn `((slot-value ,_ 'CALL) this)) bases)
          (let ~%this this

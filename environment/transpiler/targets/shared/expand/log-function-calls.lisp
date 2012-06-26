@@ -1,8 +1,7 @@
-;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2010 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2010,2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *log-functions?* nil)
 
 (defmacro log-functions (x)
-  (setf *log-functions?* x)
+  (= *log-functions?* x)
   nil)

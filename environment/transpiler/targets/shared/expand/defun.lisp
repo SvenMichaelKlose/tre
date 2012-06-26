@@ -11,7 +11,7 @@
       x))
 
 (defun shared-defun (name args &rest body)
-  (setf name (apply-current-package name))
+  (= name (apply-current-package name))
   (when *show-definitions*
     (late-print `(defun ,name ,args)))
   (with (tr *current-transpiler*
