@@ -3,25 +3,24 @@
 (defvar *transpiler-obfuscation-counter* 0)
 
 (defun transpiler-obfuscated-sym ()
-  (incf *transpiler-obfuscation-counter*)
+  (1+! *transpiler-obfuscation-counter*)
   (number-sym *transpiler-obfuscation-counter*))
 
 (defun transpiler-obfuscate-symbol-0 (tr x)
   (let obs (transpiler-obfuscations tr)
-    (or (href obs x)
-        (= (href obs x)
-		   (!? (symbol-package x)
-    	       (make-symbol (symbol-name (transpiler-obfuscated-sym)) (transpiler-obfuscate-symbol tr !))
-    	       (transpiler-obfuscated-sym))))))
+    (| (href obs x)
+       (= (href obs x)
+	      (!? (symbol-package x)
+              (make-symbol (symbol-name (transpiler-obfuscated-sym)) (transpiler-obfuscate-symbol tr !))
+              (transpiler-obfuscated-sym))))))
 
 (defun obfuscateable-symbol? (tr x)
-  (not (eq t (href (transpiler-obfuscations tr)
-				   (make-symbol (symbol-name x))))))
+  (not (eq t (href (transpiler-obfuscations tr) (make-symbol (symbol-name x))))))
 
 (defun must-obfuscate-symbol? (tr x)
-  (and x
-	   (transpiler-obfuscate? tr)
-       (obfuscateable-symbol? tr x)))
+  (& x
+     (transpiler-obfuscate? tr)
+     (obfuscateable-symbol? tr x)))
 
 (defun transpiler-obfuscate-symbol (tr x)
   (? (must-obfuscate-symbol? tr x)
@@ -29,8 +28,7 @@
      x))
 
 (define-tree-filter transpiler-obfuscate (tr x)
-  (or (variablep x)
-      (function? x))
+  (| (variablep x) (function? x))
 	(transpiler-obfuscate-symbol tr x))
 
 (defun transpiler-obfuscated-symbol-name (tr x)

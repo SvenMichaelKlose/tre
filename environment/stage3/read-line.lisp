@@ -4,22 +4,22 @@
   "Read line from string."
   (with-default-stream nstr str
     (with-queue q
-      (while (and (not (end-of-file nstr))
-                  (not (let c (peek-char nstr)
-                         (or (== c 10)
-				             (== c 13)))))
-              (progn
-                (let lst (peek-char nstr)
-                  (when (and (not (end-of-file nstr))
-                             (or (== lst 10)
-				                 (== lst 13)))
-                    (enqueue q (read-char nstr))
-                    (when (let c (peek-char nstr)
-                            (and (not (end-of-file nstr))
-                                 (or (== c 10)
-				                     (== c 13))
-                                 (not (== c lst))))
-                      (enqueue q (read-char nstr)))))
+      (while (& (not (end-of-file nstr))
+                (not (let c (peek-char nstr)
+                       (| (== c 10)
+		                  (== c 13)))))
+             (progn
+               (let lst (peek-char nstr)
+                 (when (& (not (end-of-file nstr))
+                          (| (== lst 10)
+			                 (== lst 13)))
+                  (enqueue q (read-char nstr))
+                  (when (let c (peek-char nstr)
+                          (& (not (end-of-file nstr))
+                             (| (== c 10)
+		                        (== c 13))
+                             (not (== c lst))))
+                    (enqueue q (read-char nstr)))))
                 (return-from read-line (list-string (queue-list q))))
            (enqueue q (read-char nstr))))))
 

@@ -1,7 +1,4 @@
-;;;;; TRE environment
-;;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; Alien C-call AMD64 supoort
+;;;;; tré – Copyright (c) 2008,2012 Sven Michael Klose <pixel@copei.de>
 
 ;;;; MACHINE INSTRUCTIONS
 
@@ -15,8 +12,8 @@
   '(RDI RSI RDX RCX))
 
 (defun amd64-regval (x)
-  (or (position x *AMD64-REGS-DWORD*)
-      (position x *AMD64-REGS-QWORD*)))
+  (| (position x *AMD64-REGS-DWORD*)
+     (position x *AMD64-REGS-QWORD*)))
 
 (defun amd64-regval-rex (regval)
   (+ #x48 (if (< 7 regval)

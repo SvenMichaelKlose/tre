@@ -22,8 +22,8 @@
          m 0
 	     l (length str))
     (do ((i 0 (integer-1+ i)))
-        ((or (integer< 16 i)
-             (integer== i l))
+        ((| (integer< 16 i)
+            (integer== i l))
 		 (mod (abs k) (%hash-table-size h)))
       (= k (logxor k (= m (bit-or (<< m 8) (elt str i))))))))
 

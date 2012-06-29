@@ -28,7 +28,7 @@
 ;	(%loop-single-with-clause (stream-next x))))
 
 ;(defun %loop-var-clause (x)
-;  (or (%loop-with-clause x)))
+;  (| (%loop-with-clause x)))
 
 ;(defun %loop-extended (x)
 ;  (with (;(exp0 x) (%loop-name-clause x)

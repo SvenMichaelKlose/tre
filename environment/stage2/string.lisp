@@ -12,8 +12,8 @@
 
 ;(defun string== (sa sb)
 ;  "Return T if two strings match."
-;  (? (and (string? sa)
-;		   (string? sb))
+;  (? (& (string? sa)
+;	     (string? sb))
 ;    (let* ((la (length sa))
 ;	       (lb (length sb)))
 ;      (when (== la lb)
@@ -23,15 +23,15 @@
 ;    (eql sa sb)))
 
 (define-test "STRING= works"
-  ((and (string== "abc" "abc")
-        (not (string== "ABC" "abc"))
-        (not (string== "abc" "abcd"))
-        (not (string== "abcd" "abc"))))
+  ((& (string== "abc" "abc")
+      (not (string== "ABC" "abc"))
+      (not (string== "abc" "abcd"))
+      (not (string== "abcd" "abc"))))
   t)
 
 ;(define-test "STRING= is safe"
-;  ((and (string== nil nil)
-;        (string== 1 1)
+;  ((& (string== nil nil)
+;      (string== 1 1)
 ;	(string== #'eq #'eq)))
 ;  t)
 

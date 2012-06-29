@@ -1,11 +1,11 @@
-;;;;; tré - Copyright (c) 2009-2010,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2009–2010,2012 Sven Michael Klose <pixel@copei.de>
 
 (defun count-tree-0 (v x init max test)
   (?
 	(funcall test v x)  (integer-1+ max)
 	(atom x)  max
 	(let sum (count-tree-0 v x. init max test)
-	  (? (and max (<= max sum))
+	  (? (& max (<= max sum))
 		  sum
 	      (count-tree-0 v .x sum max test)))))
 

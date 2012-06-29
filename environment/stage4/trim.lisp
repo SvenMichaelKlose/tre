@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2010,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2010,2012 Sven Michael Klose <pixel@copei.de>
 
 (defun trim-tail (obj seq &key (test #'eql))
   (let len (length seq)
@@ -19,10 +19,10 @@
 
 (defun trim (obj seq &key (test #'eql))
   "Trim start and end of sequence where element is equal to 'obj'."
-  (and seq
-	   (? (integer< 0 (length seq))
-  		  (trim-tail obj (trim-head obj seq :test test) :test test)
-		  seq)))
+  (& seq
+     (? (integer< 0 (length seq))
+  	    (trim-tail obj (trim-head obj seq :test test) :test test)
+	    seq)))
 
 (define-test "TRIM-HEAD works"
   ((trim-head #\  "  "))

@@ -3,8 +3,8 @@
 (defvar *php-version* 503)
 
 (defun php-=-function? (x)
-  (or (%=-function? x)
-      (transpiler-function-arguments *php-transpiler* x)))
+  (| (%=-function? x)
+     (transpiler-function-arguments *php-transpiler* x)))
 
 (defun make-php-transpiler-0 ()
   (create-transpiler
@@ -14,10 +14,10 @@
 	  :apply-argdefs? nil
 	  :literal-conversion #'identity
 	  :identifier-char?
-	    (fn (or (and (>= _ #\a) (<= _ #\z))
-		  	    (and (>= _ #\A) (<= _ #\Z))
-		  	    (and (>= _ #\0) (<= _ #\9))
-			    (in=? _ #\_ #\. #\#)))
+	    (fn (| (& (>= _ #\a) (<= _ #\z))
+		  	   (& (>= _ #\A) (<= _ #\Z))
+		  	   (& (>= _ #\0) (<= _ #\9))
+			   (in=? _ #\_ #\. #\#)))
 	  :gen-string (fn c-literal-string _ #\" (list #\$))
 	  :lambda-export? t
 	  :stack-locals? nil

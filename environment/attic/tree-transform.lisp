@@ -85,13 +85,13 @@
             (? (cons? mcar)
               (awhen (tree-transform-compile-r mcar trn)
                 (enqueue form '(cons? (car e)))
-                (enqueue form `(#'((e) (block nil (and ,@!))) (car e))))
+                (enqueue form `(#'((e) (block nil (& ,@!))) (car e))))
               (? (number? mcar)
                 (enqueue form `(== (car e) ,mcar))
                 (enqueue form `(eq (car e) ',mcar))))))
 
         ; If next is an any match, return its first element or T.
-        (when (and (cdr m) (eq (cadr m) '*any))
+        (when (& (cdr m) (eq (cadr m) '*any))
           (enqueue form '(? (cdr e) (cdr e) t))
           (return-from tree-transform-compile-r (queue-list form)))
 
@@ -108,8 +108,7 @@
   (let form (tree-transform-compile-r (tree-transform-match trn) trn)
     (= (tree-transform-compiled-match trn)
       (eval (macroexpand `#'((e trn)
-        (and
-          ,@form)))))))
+        (& ,@form)))))))
 
 (defun tree-transform! (trn e)
   (when (cons? e)
@@ -119,7 +118,7 @@
       ; Get arguments to conversion function and call the conversion function.
       (let* ((a (tree-transform-conversion-args trn))
              (c (apply (tree-transform-conversion trn) (apply #'nconc a))))
-        (when (and ! (not (eq ! t)))	; Append rest to conversion.
-          (= c (nconc c !)))
+        (& ! (not (eq ! t))	; Append rest to conversion.
+           (= c (nconc c !)))
         (rplac-cons e c)	; Replace expression by conversion.
         expr))))

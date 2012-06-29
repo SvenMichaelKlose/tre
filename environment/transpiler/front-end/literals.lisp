@@ -8,9 +8,10 @@
   "Define a collector of declarations and initializations for literals of a particular data type."
   (let slot `(,($ 'transpiler-compiled- table 's) *current-transpiler*)
     `(defun ,name (,x)
-       (or (href ,slot ,x)
-	 	   (let n ,maker
-	         ,@(when decl-maker
-                 `((push (funcall ,decl-maker n) (transpiler-compiled-decls *current-transpiler*))))
-	       	 (push `(= ,,n ,init-maker) (transpiler-compiled-inits *current-transpiler*))
-	       	 (= (href ,slot ,x) n))))))
+       (let tr *current-transpiler*
+         (| (href ,slot ,x)
+	 	  (let n ,maker
+	        ,@(& decl-maker
+                 `((push (funcall ,decl-maker n) (transpiler-compiled-decls tr))))
+            (push `(= ,,n ,init-maker) (transpiler-compiled-inits tr))
+            (= (href ,slot ,x) n)))))))

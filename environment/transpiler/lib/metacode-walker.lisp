@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2010-2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2010–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun function-copier-0 (x body-statements)
   `(function ,(list 'quasiquote-splice `(awhen (lambda-name ,x) (list !)))
@@ -22,6 +22,16 @@
 	      (function-copier x s)))
 	 statement))
 
+(defun illegal-%%tag? (x)
+  (& (%setq? x)
+     (cons? (%setq-value x))
+     (eq '%%tag (car (%setq-value x)))))
+
+(defun metacode-statement? (x)
+  (| (in? x. '%setq '%set-vec '%var '%function-prologue '%function-epilogue '%function-return '%%tag)
+	 (vm-jump? x)
+     (%%vm-call-nil? x)))
+
 (defmacro metacode-walker-statements (name args &key (if-atom nil)
 										  			 (if-cons nil)
 										  			 (if-slot-value nil)
@@ -35,34 +45,27 @@
 	   (with (rec
 				#'((,x)
                      (?
-					   (and (%setq? ,x)
-							(cons? (%setq-value ,x))
-							(eq '%%tag (car (%setq-value ,x))))
-					     (progn
-						   (print ,x)
-						   (error "illegal tag, not in toplevel"))
-		               (not ,x)		nil
-		               ,@(awhen if-atom `((atom ,x)	,!))
+                       (illegal-%%tag? ,x) (& (print ,x) (error "illegal tag, not in toplevel"))
+		               (not ,x)		       nil
+		               ,@(awhen if-atom       `((atom ,x) ,!))
 		               ,@(awhen if-slot-value `((%slot-value? ,x) ,!))
 
-		               ,@(awhen (or if-named-function if-function)
+		               ,@(awhen (| if-named-function if-function)
 			               `((%setq-named-function? ,x)
 			    			   ,(metacode-walker-copier x ! :%setq? t :copy? copy-function-heads?)
 			                 (named-lambda? ,x)
 			    			   ,(metacode-walker-copier x ! :copy? copy-function-heads?)))
 
-		               ,@(awhen (or if-lambda if-function)
+		               ,@(awhen (| if-lambda if-function)
 			               `((%setq-lambda? ,x)
 			    			   ,(metacode-walker-copier x ! :%setq? t :copy? copy-function-heads?)))
 
 		               ,@(awhen if-cons `((cons? ,x) ,!))
 
-		               (not (or (in? (car ,x) '%setq '%set-vec '%var '%function-prologue '%function-epilogue '%function-return '%%tag)
-								(vm-jump? ,x)
-                                (%%vm-call-nil? ,x)))
-		                 (progn
-			               (print ,x)
-			               (error "metacode statement expected instead"))
+		               (not (metacode-statement? ,x))
+			               (progn
+                             (print ,x)
+			                 (error "metacode statement expected instead"))
 
 					   (copy-tree ,x))))
 		(mapcar #'rec ,x)))))
@@ -85,8 +88,7 @@
 	       (? (not ,x) nil
 	          ,@(awhen if-symbol	`((symbol? ,x) ,!))
 	          ,@(awhen if-atom		`((atom ,x) ,!))
-			  ,@(unless traverse?
-			      (list x)))
+			  ,@(unless traverse? (list x)))
 		,@(awhen if-slot-value	`((%slot-value? ,x)	,!))
 		,@(awhen if-stack		`((%stack? ,x)		,!))
 		,@(awhen if-vec			`((%vec? ,x)		,!))
@@ -94,11 +96,11 @@
 		(in? (car ,x) '%quote '%var '%transpiler-native)
 		   ,(? traverse? nil x)
 
-		,@(awhen (or if-named-function if-function)
+		,@(awhen (| if-named-function if-function)
 			`((named-lambda? ,x)
 			    ,(metacode-walker-copier x ! :copy? copy-function-heads?)))
 
-		,@(awhen (or if-lambda if-function)
+		,@(awhen (| if-lambda if-function)
 			`((lambda? ,x)
 			    ,(metacode-walker-copier x ! :copy? copy-function-heads?)))
 
@@ -108,6 +110,6 @@
 
 (defmacro metacode-walker (name args &rest config)
   (let p (position :only-statements? config)
-	(? (and p (elt config (1+ p)))
+	(? (& p (elt config (1+ p)))
 	   `(metacode-walker-statements ,name ,args ,@config)
 	   `(metacode-walker-all ,name ,args ,@config))))

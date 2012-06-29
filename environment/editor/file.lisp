@@ -1,7 +1,4 @@
-;;;;; TRE environment - editor
-;;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
-;;;;;
-;;;;; File I/O.
+;;;;; tré – Copyright (c) 2008,2012 Sven Michael Klose <pixel@copei.de>
 
 (defun editor-read-line (str &optional (n 1))
   (when (not (end-of-file str))
@@ -13,8 +10,8 @@
     (with (n 1)
 	  (mapcar #'((x)
 				   (editor-io-line n)
-				   (incf n)
-				   (format str "~A~%" (or x "")))
+				   (1+! n)
+				   (format str "~A~%" (| x "")))
 		     (text-container-lines text)))))
 
 (defun editor-read (name)

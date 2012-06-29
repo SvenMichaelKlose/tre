@@ -1,4 +1,4 @@
-;;;; tré compiler -- Copyright (c) 2006-2012 Sven Michael Klose <pixel@copei.de>
+;;;; tré – Copyright (c) 2006–2012 Sven Michael Klose <pixel@copei.de>
 
 (mapcar-macro x
 	'(%quote %new
@@ -15,21 +15,20 @@
   `(def-head-predicate ,x))
 
 (defun atomic? (x)
-  (or (atom x)
-	  (in? x. '%stack '%vec '%slot-value)))
+  (| (atom x)
+     (in? x. '%stack '%vec '%slot-value)))
 
 (defun atomic-or-functional? (x)
-  (or (atomic? x)
-	  (and (cons? x)
-           (functional? x.))))
+  (| (atomic? x)
+     (& (cons? x) (functional? x.))))
 
 (defun vm-jump? (e)
-  (and (cons? e)
-	   (in? e. '%%vm-go '%%vm-go-nil '%%vm-go-not-nil)))
+  (& (cons? e)
+     (in? e. '%%vm-go '%%vm-go-nil '%%vm-go-not-nil)))
 
 (defun vm-conditional-jump? (x)
-  (or (%%vm-go-nil? x)
-      (%%vm-go-not-nil? x)))
+  (| (%%vm-go-nil? x)
+     (%%vm-go-not-nil? x)))
 
 (defun vm-jump-tag (x)
   (?
@@ -40,14 +39,14 @@
   .x)
 
 (defun %var? (x)
-  (and (cons? x)
-	   (eq '%VAR x.)
-	   (eq nil ..x)))
+  (& (cons? x)
+     (eq '%VAR x.)
+     (eq nil ..x)))
 
 (defun %setqret? (x)
-  (and (cons? x)
-	   (eq '%SETQ x.)
-	   (eq '~%RET .x.)))
+  (& (cons? x)
+     (eq '%SETQ x.)
+     (eq '~%RET .x.)))
 
 (defun %setq-place (x)
   .x.)
@@ -74,21 +73,21 @@
   (eq '~%ret x))
 
 (defun %setq-lambda? (x)
-  (and (%setq? x)
-	   (lambda? (%setq-value x))))
+  (& (%setq? x)
+     (lambda? (%setq-value x))))
 
 (defun %setq-named-lambda? (x)
-  (and (%setq? x)
-	   (named-lambda? (%setq-value x))))
+  (& (%setq? x)
+     (named-lambda? (%setq-value x))))
 
 (defun %setq-named-function? (x)
-  (and (%setq? x)
-	   (named-lambda? (%setq-value x))))
+  (& (%setq? x)
+     (named-lambda? (%setq-value x))))
 
 (defun %setq-funcall? (x)
-  (and (%setq? x)
-	   (cons? (%setq-value x))))
+  (? (%setq? x)
+     (cons? (%setq-value x))))
 
 (defun atom-or-%quote? (x)
-  (or (atom x)
-	  (%quote? x)))
+  (| (atom x)
+     (%quote? x)))

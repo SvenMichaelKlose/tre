@@ -3,25 +3,25 @@
 (js-type-predicate %string? "string")
 
 (defun string? (x)
-  (or (%string? x)
-	  (instanceof x (%transpiler-native "String"))))
+  (| (%string? x)
+     (instanceof x (%transpiler-native "String"))))
 
 ;; XXX must be optional.
 (defun string-concat (&rest x)
-  (apply #'+ (mapcar (fn or _ "") x)))
+  (apply #'+ (filter (fn | _ "") x)))
 
 (dont-obfuscate char-code-at)
 
 ;; XXX ECMAScript only.
 (defun %elt-string (seq idx)
-  (when (%%%< idx seq.length)
-    (code-char (seq.char-code-at idx))))
+  (& (%%%< idx seq.length)
+     (code-char (seq.char-code-at idx))))
 
 (dont-obfuscate from-char-code)
 
-,(when *transpiler-assert*
-   '(defun %=-elt-string (val seq idx)
-      (error "cannot modify strings")))
+,(& *transpiler-assert*
+    '(defun %=-elt-string (val seq idx)
+       (error "cannot modify strings")))
 
 (dont-obfuscate to-string)
 
@@ -42,15 +42,13 @@
 
 ;; XXX ECMAScript only.
 (defun string-upcase (x)
-  (when x
-    (x.to-upper-case)))
+  (& x (x.to-upper-case)))
 
 (dont-obfuscate to-lower-case)
 
 ;; XXX ECMAScript only.
 (defun string-downcase (x)
-  (when x
-    (x.to-lower-case)))
+  (& x (x.to-lower-case)))
 
 (dont-obfuscate substr length)
 

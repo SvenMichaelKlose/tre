@@ -6,9 +6,9 @@
   (make-symbol (string-concat "%%U=-" (symbol-name fun))))
 
 (defun %=-complement (p val)
-  (? (or (atom p)
-	     (%slot-value? p)
-		 (slot-value? p))
+  (? (| (atom p)
+	    (%slot-value? p)
+	    (slot-value? p))
 	 (progn
 	   (? (member p *constants* :test #'eq)
 		  (%error "cannot set constant"))

@@ -1,8 +1,8 @@
 ;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun compile-argument-expansion-defaults (defaults)
-  (mapcar (fn `(when (eq ,_ ,(list 'quote _))
-			     (= ,_ ,(assoc-value _ defaults))))
+  (mapcar (fn `(& (eq ,_ ,(list 'quote _))
+			      (= ,_ ,(assoc-value _ defaults))))
 		  (carlist defaults)))
 
 (defun compile-argument-expansion-0 (adef p &optional (argdefs nil) (key-args nil))
@@ -17,8 +17,7 @@
 
 		 compexp-key
 		   #'(()
-			    (when key-args
-				  '((compexp-keywords))))
+			    (& key-args '((compexp-keywords))))
 
 		 compexp-static
 		   #'((def)
@@ -32,12 +31,12 @@
 				  (? ,p
 				     (= ,(get-name def) (car ,p)
 				        ,p (cdr ,p))
-					 ,@(when (cons? def.)
-					     `((= ,(get-name def) ,(get-default def)))))
-				  ,@(when .def
-					  (? (argument-keyword? .def.)
-				  		 (compexp-main .def)
-					     (compexp-optional .def)))))
+					 ,@(& (cons? def.)
+					      `((= ,(get-name def) ,(get-default def)))))
+				  ,@(& .def
+					   (? (argument-keyword? .def.)
+				  		  (compexp-main .def)
+					      (compexp-optional .def)))))
 
 		 compexp-rest
 		   #'((def)
@@ -80,8 +79,7 @@
 												 ,p (cdr ,p))))
 									    (carlist key-args))
 						      (return-from compexp nil)))))))
-          ,@(when argdefs
-			  (compexp-main argdefs))
+          ,@(& argdefs (compexp-main argdefs))
 		  ,@(compexp-key)
 		  ,@(compile-argument-expansion-defaults key-args)))
        (append (compexp-main argdefs)
@@ -93,8 +91,8 @@
      ((%transpiler-native ,(compiled-function-name *current-transpiler* fun-name)) ,@toplevel-continuer ,@names)))
 
 (defun compile-argument-expansion (fun-name adef)
-  (? (and (== 2 (length adef))
-		  (eq '&rest adef.))
+  (? (& (== 2 (length adef))
+	    (eq '&rest adef.))
 	 (list 'function fun-name)
      (let-if names (argument-expand-names 'compile-argument-expansion adef)
         (with-gensym p

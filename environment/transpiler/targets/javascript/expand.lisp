@@ -19,7 +19,7 @@
 		    ,g)
 		  nil))))
 
-(transpiler-wrap-invariant-to-binary define-js-std-macro eq 2 eq and)
+(transpiler-wrap-invariant-to-binary define-js-std-macro eq 2 eq &)
 
 (functional %not)
 
@@ -33,8 +33,8 @@
 (define-js-std-macro function (x)
   (? (cons? x)
      (with-lambda-content x fi args body
-	   (? (or (body-has-noargs-tag? body)
-              (simple-argument-list? args))
+	   (? (| (body-has-noargs-tag? body)
+             (simple-argument-list? args))
   	      `(function ,x)
 		  (js-make-function-with-compiled-argument-expansion x)))
   	 `(function ,x)))
@@ -84,7 +84,7 @@
 
 (defun js-emit-memorized-sources ()
   (clr (transpiler-memorize-sources? *current-transpiler*))
-  (mapcar (fn `(%setq (slot-value ,_. '__source) ,(list 'quote ._)))
+  (filter (fn `(%setq (slot-value ,_. '__source) ,(list 'quote ._)))
           (transpiler-memorized-sources *current-transpiler*)))
 
 (define-js-std-macro defun (name args &rest body)
@@ -130,8 +130,8 @@
 
 (defun js-transpiler-make-new-hash (x)
   `(%%%make-hash-table
-	 ,@(mapcan (fn list (? (and (not (string? _.))
-							    (eq :class _.))
+	 ,@(mapcan (fn list (? (& (not (string? _.))
+							  (eq :class _.))
 						   "class" ; IE6 wants this.
 						   _.)
 						._.)
@@ -143,8 +143,8 @@
 (define-js-std-macro new (&rest x)
   (unless x
 	(error "NEW expects arguments"))
-  (? (or (keyword? x.)
-		 (string? x.))
+  (? (| (keyword? x.)
+	    (string? x.))
 	 (js-transpiler-make-new-hash x)
 	 (js-transpiler-make-new-object x)))
 
@@ -152,7 +152,7 @@
   `(defun ,name (x)
      (when x
 	   ,(? (< 1 (length types))
-       	   `(or ,@(mapcar (fn `(%%%== (%js-typeof x) ,_)) types))
+       	   `(| ,@(filter (fn `(%%%== (%js-typeof x) ,_)) types))
            `(%%%== (%js-typeof x) ,types.)))))
 
 (define-js-std-macro %href (hash key)

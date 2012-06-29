@@ -8,9 +8,9 @@
 
 (defun global-variable-notation? (x)
   (let l (length x)
-    (and (< 2 l)
-         (== (elt x 0) #\*)
-         (== (elt x (1- l)) #\*))))
+    (& (< 2 l)
+       (== (elt x 0) #\*)
+       (== (elt x (1- l)) #\*))))
 
 (defun transpiler-symbol-string-r (tr s)
   (with (encapsulate-char
@@ -18,37 +18,36 @@
 				
 		 convert-camel
 		   #'((x pos)
-                (when x
-			      (let c (char-downcase x.)
-			        (? (and .x (or (character== #\- c)
-                                   (and (== 0 pos)
-                                        (character== #\* c))))
-					   (cons (char-upcase (cadr x))
-						     (convert-camel ..x (1+ pos)))
-					   (cons c (convert-camel .x (1+ pos)))))))
+                (& x
+			       (let c (char-downcase x.)
+			         (? (& .x (| (character== #\- c)
+                                 (& (== 0 pos)
+                                    (character== #\* c))))
+					    (cons (char-upcase (cadr x))
+						      (convert-camel ..x (1+ pos)))
+					    (cons c (convert-camel .x (1+ pos)))))))
 
 		 convert-special2
-		   (fn (when _
+		   (fn & _
 			     (let c _.
-				   (? (transpiler-special-char? tr c)
-					  (append (encapsulate-char c)
-							  (convert-special2 ._))
-					  (cons c (convert-special2 ._))))))
+			       (? (transpiler-special-char? tr c)
+				      (append (encapsulate-char c)
+						      (convert-special2 ._))
+				      (cons c (convert-special2 ._)))))
 
 		 convert-special
-		   (fn (when _
+		   (fn & _
 			     (let c _.
 				   ; Encapsulate initial char if it's a digit.
 				   (? (digit-char-p c)
-					  (append (encapsulate-char c)
-							  (convert-special2 ._))
-					  (convert-special2 _)))))
+				      (append (encapsulate-char c)
+						      (convert-special2 ._))
+				      (convert-special2 _))))
         convert-global
 	       #'((x)
                (let l (length x)
                  (remove-if (fn == _ #\-) (string-list (string-upcase (subseq x 1 (1- l))))))))
-	(? (or (string? s)
-		   (number? s))
+	(? (| (string? s) (number? s))
 	   (string s)
        (list-string
            (let str (symbol-name s)
@@ -68,7 +67,7 @@
 )
 
 (defun transpiler-dot-symbol-string (tr sl)
-  (apply #'string-concat (pad (mapcar (fn transpiler-symbol-string-0 tr (make-symbol (list-string _)))
+  (apply #'string-concat (pad (filter (fn transpiler-symbol-string-0 tr (make-symbol (list-string _)))
 		                              (split #\. sl))
                               ".")))
 
@@ -92,6 +91,6 @@
                                   (princ "X")
                                   (error "nil as string"))
                                 _)
-				(or (assoc-value _ (transpiler-symbol-translations tr) :test #'eq)
-					(transpiler-symbol-string tr _)))
+				(| (assoc-value _ (transpiler-symbol-translations tr) :test #'eq)
+				   (transpiler-symbol-string tr _)))
 		   x))

@@ -1,11 +1,11 @@
-;;;;; tré - Copyright (c) 2009,2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2009,2011–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun list<= (a b)
   (?
-	(or (not a b)
-	    (and (not a) b))  t
-	(and a (not b))       nil
-	(== a. b.)             (list<= .a .b)
+	(| (not a b)
+	   (& (not a) b))  t
+	(& a (not b))      nil
+	(== a. b.)         (list<= .a .b)
 	(< a. b.)))
 
 (define-test "<=-LIST: first list is less"

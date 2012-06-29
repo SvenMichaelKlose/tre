@@ -4,14 +4,14 @@
 (defvar *t-symbol-name* "T")
 
 (defun eq-string== (x y)
-  (? (or (symbol? x)
-         (symbol? y))
+  (? (| (symbol? x)
+        (symbol? y))
      (eq x y)
      (string== x y)))
 
 (defun compile-file? (file processed-files files-to-update)
-  (or (member file files-to-update :test #'eq-string==)
-      (not (assoc file processed-files :test #'eq-string==))))
+  (| (member file files-to-update :test #'eq-string==)
+     (not (assoc file processed-files :test #'eq-string==))))
 
 (defun target-transpile-2 (tr files files-to-update)
   (let compiled-code (make-queue)
@@ -35,9 +35,9 @@
 	    (enqueue frontend-code (cons i. code))))))
 
 (defun target-sighten-deps (tr dep-gen)
-  (when dep-gen
-    (with-temporary (transpiler-save-argument-defs-only? tr) nil
-      (funcall dep-gen))))
+  (& dep-gen
+     (with-temporary (transpiler-save-argument-defs-only? tr) nil
+       (funcall dep-gen))))
 
 (defun target-transpile (tr &key (files-before-deps nil)
                                  (files-after-deps nil)
@@ -48,16 +48,16 @@
                                  (print-obfuscations? nil))
   (with-temporaries (*recompiling?* (? files-to-update t)
                      *current-transpiler* tr)
-    (when *have-compiler?*
-      (= (transpiler-save-sources? tr) t))
-    (when files-to-update
-      (clr (transpiler-emitted-decls tr)))
+    (& *have-compiler?*
+       (= (transpiler-save-sources? tr) t))
+    (& files-to-update
+       (clr (transpiler-emitted-decls tr)))
     (transpiler-switch-obfuscator tr obfuscate?)
     (with (before-deps (target-transpile-1 tr files-before-deps files-to-update)
 		   after-deps  (target-transpile-1 tr files-after-deps files-to-update)
 		   deps        (target-sighten-deps tr dep-gen)
            num-exprs   (apply #'+ (mapcar (fn length ._) (append before-deps deps after-deps)))
-           show?       #'(() (and *show-definitions* (< 50 num-exprs))))
+           show?       #'(() (& *show-definitions* (< 50 num-exprs))))
       (when (show?)
         (format t "; ~A toplevel expressions.~%" num-exprs)
         (format t "; Let me think. Hmm...")
@@ -71,8 +71,7 @@
 ;                                 (target-transpile-1 tr (list (cons 'accumulated-toplevel #'(()
 ;                                                                                              (transpiler-make-toplevel-function tr))))
 ;                                                     (list 'accumulated-toplevel)))))
-        (when (show?)
-          (terpri))
+        (& (show?) (terpri))
         (awhen compiled-deps
           (= (transpiler-imported-deps tr) (string-concat (transpiler-imported-deps tr) !)))
 	    (prog1
@@ -83,6 +82,6 @@
                              (transpiler-imported-deps tr)
 	                         compiled-after
                              )
-                             ;(or compiled-acctop ""))
-          (when (and print-obfuscations? (transpiler-obfuscate? tr))
-            (transpiler-print-obfuscations tr)))))))
+                             ;(| compiled-acctop ""))
+          (& print-obfuscations? (transpiler-obfuscate? tr)
+             (transpiler-print-obfuscations tr)))))))

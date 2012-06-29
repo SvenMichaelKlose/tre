@@ -31,18 +31,16 @@
 						l  (length sl)
 					    p  (dot-position sl))
 				   (?
-					 (or (== 1 l)
-						 (not p))
+					 (| (== 1 l) (not p))
 						x
-					 (or (== #\. (car sl))
-					 	 (== #\. (car (last sl))))
+					 (| (== #\. (car sl)) (== #\. (car (last sl))))
 						(dot-expand-list sl)
 					 `(%slot-value ,(list-symbol (subseq sl 0 p))
 						           ,(conv (list-symbol (subseq sl (1+ p))))))))
 		 label?
-		   (fn (not (or (cons? _)
-						(number? _)
-				        (string? _)))))
+		   (fn (not (| (cons? _)
+					   (number? _)
+				       (string? _)))))
     (when x
       (?
 		(label? x) (conv x)

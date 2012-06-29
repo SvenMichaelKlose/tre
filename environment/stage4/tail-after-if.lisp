@@ -1,10 +1,10 @@
-;;;;; tré - Copyright (c) 2009,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2009,2012 Sven Michael Klose <pixel@copei.de>
 
 (defun tail-after-if (predicate x &key (keep-last nil))
   (when x
-	(? (and (funcall predicate x.)
-		    (or (not keep-last)
-			    .x))
+	(? (& (funcall predicate x.)
+		  (| (not keep-last)
+		     .x))
        (tail-after-if predicate .x :keep-last keep-last)
        x)))
 

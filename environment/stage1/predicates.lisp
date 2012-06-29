@@ -3,27 +3,26 @@
 (functional atom cons? symbol? number? string? function? array? zero? evenp endp symbol? keyword? integerp)
 
 (defun zero? (x)
-  (== x 0))
+  (== 0 x))
 
 (defun evenp (x)
   (== 0 (mod x 2)))
 
 (defun endp (x)
-  (eq x nil))
+  (eq nil x))
 
 (defun variablep (x)
-  (and (atom x)
-	   (not (or (string? x)
-				(number? x)))))
+  (& (atom x)
+     (not (| (string? x)
+             (number? x)))))
 
 (defun keyword? (x)
-  (and (symbol? x)
-	   (eq (symbol-package x)
-		   *keyword-package*)))
+  (& (symbol? x)
+     (eq *keyword-package* (symbol-package x))))
 
 (defun integerp (x)
-  (and (number? x)
-	   (not (character? x))))
+  (& (number? x)
+     (not (character? x))))
 
 (define-test "NOT works with NIL"
   ((not nil))

@@ -1,10 +1,10 @@
-;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 (dont-obfuscate is_array)
 
 (defun array? (x)
-  (or (is_a x "__array")
-      (is_array x)))
+  (| (is_a x "__array")
+     (is_array x)))
 
 (defun %array-length (x)
   ((%transpiler-native count) (? (is_a x "__array")

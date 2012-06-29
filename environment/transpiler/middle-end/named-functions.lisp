@@ -1,11 +1,11 @@
-;;;;; tré - Copyright (c) 2008,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008,2012 Sven Michael Klose <pixel@copei.de>
 
 (defun transpiler-make-named-functions (tr x)
   (?
     (not x) x
-    (and (transpiler-named-functions? tr)
-         (%setq? x.)
-         (lambda? (caddr x.)))
+    (& (transpiler-named-functions? tr)
+       (%setq? x.)
+       (lambda? (caddr x.)))
       (cons `(function ,(cadadr x) ,(cadaddr x.))
             (transpiler-make-named-functions tr (funcall (transpiler-named-function-next tr) x)))
     (%%vm-scope? x.)

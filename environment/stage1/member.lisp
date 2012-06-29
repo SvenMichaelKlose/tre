@@ -8,9 +8,9 @@
 			 lst
              (%member-r elm (cdr lst)))))
      (defun member (elm &rest lsts)
-       (or (%member-r elm (car lsts))
-           (? (cdr lsts)
-              (apply #'member elm (cdr lsts)))))))
+       (| (%member-r elm (car lsts))
+          (? (cdr lsts)
+             (apply #'member elm (cdr lsts)))))))
 
 (define-test "MEMBER finds elements"
   ((? (member 's '(i) '(l i k e) '(l i s p))
@@ -33,6 +33,6 @@
         (%member-if-r pred (cdr lst)))))
 
 (defun member-if (pred &rest lsts)
-  (or (%member-if-r pred (car lsts))
-      (? (cdr lsts)
-         (apply #'member-if pred (cdr lsts)))))
+  (| (%member-if-r pred (car lsts))
+     (? (cdr lsts)
+        (apply #'member-if pred (cdr lsts)))))

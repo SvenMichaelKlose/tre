@@ -38,8 +38,8 @@
 	   (%setq ,name ,val))))
 
 (functional %eq %not %not2)
-(transpiler-wrap-invariant-to-binary define-c-std-macro eq 2 %eq and)
-(transpiler-wrap-invariant-to-binary define-c-std-macro %not2 1 %not and)
+(transpiler-wrap-invariant-to-binary define-c-std-macro eq 2 %eq &)
+(transpiler-wrap-invariant-to-binary define-c-std-macro %not2 1 %not &)
 
 (define-c-std-macro %%u=-car (val x)
   (shared-=-car val x))
@@ -60,17 +60,18 @@
 (define-c-std-macro %%u=-slot-value (val obj slot)
   `(%%u=-%slot-value ,val ,obj (%quote ,slot)))
 
+(defun single-index? (x)
+  (& (== 1 (length x))
+     (not (%transpiler-native? x.))
+     (number? x.)))
+
 (define-c-std-macro %%u=-aref (val arr &rest idx)
-  (? (and (== 1 (length idx))
-	      (not (%transpiler-native? idx.))
-		  (number? idx.))
+  (? (single-index? idx)
     `(%immediate-set-aref ,val ,arr (%transpiler-native ,idx.))
     `(%set-aref ,(compiled-list (cons val (cons arr idx))))))
 
 (define-c-std-macro aref (arr &rest idx)
-  (? (and (== 1 (length idx))
-		  (not (%transpiler-native? idx.))
-		  (number? idx.))
+  (? (single-index? idx)
      `(%immediate-aref ,arr (%transpiler-native ,idx.))
      `(%aref ,(compiled-list (cons arr idx)))))
 	  

@@ -8,15 +8,14 @@
   (declare type number x)
   (assert (not (character? x))
 		  (error "%CHARACTER: argument already a character"))
-  (or (aref *characters* x)
-  	  (= this.__class ,(transpiler-obfuscated-symbol-string *current-transpiler* '%character)
-  	     this.v x
-	     (aref *characters* x) this)))
+  (| (aref *characters* x)
+     (= this.__class ,(transpiler-obfuscated-symbol-string *current-transpiler* '%character)
+        this.v x (aref *characters* x) this)))
 
 (defun character? (x)
-  (and (object? x)
-	   x.__class
-	   (%%%== x.__class ,(transpiler-obfuscated-symbol-string *current-transpiler* '%character))))
+  (& (object? x)
+     x.__class
+     (%%%== x.__class ,(transpiler-obfuscated-symbol-string *current-transpiler* '%character))))
 
 (defun code-char (x)
   (declare type number x)

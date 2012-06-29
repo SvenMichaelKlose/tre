@@ -1,11 +1,11 @@
-;;;;; tré - Copyright (c) 2005-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun lambda-make-funinfo (args parent)
   (with (argnames (argument-expand-names 'lambda-expand args)
          fi (make-funinfo :args argnames
 					      :parent parent))
-	(when (transpiler-stack-locals? *current-transpiler*)
-      (funinfo-env-add-many fi argnames))
+	(& (transpiler-stack-locals? *current-transpiler*)
+       (funinfo-env-add-many fi argnames))
 	(funinfo-env-add fi '~%ret)
 	fi))
 
@@ -50,8 +50,7 @@
 ;;;; Passthrough
 
 (defun lambda-expand-tree-unexported-lambda (fi x)
-  (with (new-fi (or (when (lambda-funinfo x)
-					  (get-lambda-funinfo x))
+  (with (new-fi (| (& (lambda-funinfo x) (get-lambda-funinfo x))
 					(lambda-make-funinfo (lambda-args x) fi))
 		 body (lambda-expand-tree-0 new-fi (lambda-body x)))
 	(copy-lambda x :info new-fi :body body)))
@@ -59,13 +58,13 @@
 ;;;; Toplevel
 
 (defun lambda-expand-tree-cons (fi x)
-  (when (and (%set-atom-fun? x)
-             (lambda? ..x.))
-    (funinfo-add-local-function-args fi .x. (lambda-args ..x.)))
+  (& (%set-atom-fun? x)
+     (lambda? ..x.)
+     (funinfo-add-local-function-args fi .x. (lambda-args ..x.)))
   (?
     (lambda-call? x) (lambda-call-embed fi x)
-    (lambda? x) (? (and (transpiler-lambda-export? *current-transpiler*)
-                        (not (eq fi (transpiler-global-funinfo *current-transpiler*) )))
+    (lambda? x) (? (& (transpiler-lambda-export? *current-transpiler*)
+                      (not (eq fi (transpiler-global-funinfo *current-transpiler*) )))
                    (lambda-export fi x)
 		           (lambda-expand-tree-unexported-lambda fi x))
 	(lambda-expand-tree-0 fi x)))

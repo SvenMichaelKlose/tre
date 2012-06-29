@@ -7,8 +7,8 @@
   (in? x '&rest '&body '&optional '&key))
 
 (defun argument-list-keyword? (x)
-  (or (argument-keyword? x)
-      (keyword? x)))
+  (| (argument-keyword? x)
+     (keyword? x)))
 
 ;; We want keywords to be legal all across a level.
 ;; Make an extra keyword definition list, so they can be found.
@@ -86,13 +86,13 @@
 
 		 check-val
 		   #'((vals)
-			    (and apply-values (endp vals)
-				     (err "argument ~A missing" (list num))))
+			    (& apply-values (endp vals)
+				   (err "argument ~A missing" (list num))))
 
 		 exp-static
 		   #'((def vals)
-			    (and no-static
-				     (err "static argument definition after ~A" (list no-static)))
+			    (& no-static
+				   (err "static argument definition after ~A" (list no-static)))
 				(check-val vals)
 				(cons (cons def.
 							vals.)
@@ -100,8 +100,8 @@
 
 		 exp-optional
 		   #'((def vals)
-				(and (argument-keyword? def.)
-				     (err "Keyword ~A after &OPTIONAL" (list def.)))
+				(& (argument-keyword? def.)
+				   (err "Keyword ~A after &OPTIONAL" (list def.)))
 				(= no-static '&optional)
 				(cons (cons (get-name def)
 							(get-value def vals))
@@ -135,17 +135,17 @@
 
 		 exp-sub
 		   #'((def vals)
-			    (and no-static
-				     (err "static sublevel argument definition after ~A" (list no-static)))
-				(and apply-values (atom vals.)
-				     (err "sublist expected for argument ~A" (list num)))
+			    (& no-static
+				   (err "static sublevel argument definition after ~A" (list no-static)))
+				(& apply-values (atom vals.)
+				   (err "sublist expected for argument ~A" (list num)))
 				(%nconc (argument-expand-0 fun def. vals. apply-values)
 					    (exp-main .def .vals)))
 
 		 exp-check-too-many
            #'((def vals)
-			    (and (not def) vals
-				     (err "too many arguments. ~A max, but ~A more given" (list (length argdefs) (length vals)))))
+			    (& (not def) vals
+				   (err "too many arguments. ~A max, but ~A more given" (list (length argdefs) (length vals)))))
 
 		 exp-main-non-key
 		   #'((def vals)
@@ -157,12 +157,11 @@
 
          exp-main
 		   #'((def vals)
-			    (incf num)
+			    (1+! num)
 			    (? (keyword? vals.)
 				   (exp-key def vals)
-				   (or (exp-check-too-many def vals)
-			           (when def
-					     (exp-main-non-key def vals))))))
+				   (| (exp-check-too-many def vals)
+			          (& def (exp-main-non-key def vals))))))
 
   (with ((a k) (argument-exp-sort adef))
 	 (= argdefs a

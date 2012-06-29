@@ -118,8 +118,8 @@
   (last-pass-result nil))
 
 (defun transpiler-macro? (tr name)
-  (or (expander-has-macro? (transpiler-std-macro-expander tr) name)
-      (expander-has-macro? (transpiler-codegen-expander tr) name)))
+  (| (expander-has-macro? (transpiler-std-macro-expander tr) name)
+     (expander-has-macro? (transpiler-codegen-expander tr) name)))
 
 (defun transpiler-defined-functions (tr)
   (hashkeys (transpiler-defined-functions-hash tr)))
@@ -150,10 +150,10 @@
   (href (transpiler-function-args tr) fun))
 
 (defun current-transpiler-function-arguments-w/o-builtins (x)
-  (or (transpiler-function-arguments *current-transpiler* x)
-	  (? (builtin? x)
-		 'builtin
-		 (function-arguments (symbol-function x)))))
+  (| (transpiler-function-arguments *current-transpiler* x)
+     (? (builtin? x)
+        'builtin
+        (function-arguments (symbol-function x)))))
 
 (defun transpiler-function-body (tr fun)
   (href (transpiler-function-bodies tr) fun))
@@ -177,8 +177,8 @@
   (href (transpiler-wanted-variables-hash tr) name))
 
 (defun transpiler-imported-variable? (tr x)
-  (and (transpiler-import-from-environment? tr)
-       (assoc x *variables* :test #'eq)))
+  (& (transpiler-import-from-environment? tr)
+     (assoc x *variables* :test #'eq)))
 
 (defun transpiler-inline-exception? (tr fun)
   (member fun (transpiler-inline-exceptions tr) :test #'eq))
@@ -227,9 +227,7 @@
 
 (defun transpiler-macro (tr name)
   (let expander (expander-get (transpiler-codegen-expander tr))
-    (funcall (expander-lookup expander)
-			 expander
-		     name)))
+    (funcall (expander-lookup expander) expander name)))
 
 (defun transpiler-reset (tr)
   (= (transpiler-thisify-classes tr) (make-hash-table :test #'eq)	; thisified classes.
@@ -319,7 +317,7 @@
                      :memorized-sources       (copy-list memorized-sources)
                      :memorize-sources?       memorize-sources?
                      :predefined-symbols      (copy-list predefined-symbols)
-                     :global-funinfo          (and global-funinfo (copy-funinfo global-funinfo))
+                     :global-funinfo          (& global-funinfo (copy-funinfo global-funinfo))
                      :compiled-chars          (copy-hash-table compiled-chars)
                      :compiled-numbers        (copy-hash-table compiled-numbers)
                      :compiled-strings        (copy-hash-table compiled-strings)
@@ -336,5 +334,5 @@
     (funcall (transpiler-expex-initializer !) (transpiler-make-expex !))))
 
 (defun in-cps-mode? ()
-  (and (transpiler-continuation-passing-style? *current-transpiler*)
-       (not *transpiler-except-cps?*)))
+  (& (transpiler-continuation-passing-style? *current-transpiler*)
+     (not *transpiler-except-cps?*)))

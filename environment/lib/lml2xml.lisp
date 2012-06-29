@@ -1,22 +1,20 @@
-;;;;; TRE environment
-;;;;; Copyright (c) 2007-2009,2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2007-2009,2011–2012 Sven Michael Klose <pixel@copei.de>
 ;;;;;
 ;;;;; LML-to-XML conversion
 
 (def-head-predicate %exec)
 
 (defun lml-attr? (x)
-  (and (cons? x) (cons? .x)
-       (atom x.)
-	   (keyword? x.)
-	   (or (atom .x.)
-		   (%exec? .x.))))
+  (& (cons? x) (cons? .x)
+     (atom x.)
+     (keyword? x.)
+     (| (atom .x.)
+	    (%exec? .x.))))
 
 (defun lml-body (x)
-  (when x
-	(? (lml-attr? x)
-	   (lml-body ..x)
-	   x)))
+  (& x (? (lml-attr? x)
+	      (lml-body ..x)
+	      x)))
 
 (defun lml2xml-end (s)
   (princ ">" s))

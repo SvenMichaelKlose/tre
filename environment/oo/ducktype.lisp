@@ -25,19 +25,16 @@
 				       :slots base-methods)))
 
 (defun %ducktype-make-class (cname bases)
-  (when (href *ducktype-classes* cname)
-    (error "Class ~A already defined." cname))
+  (& (href *ducktype-classes* cname)
+     (error "Class ~A already defined." cname))
   (= (href *ducktype-classes* cname)
      (? bases
         nil ;(%ducktype-inherit cname bases) XXX
        (make-class))))
 
 (defmacro defclass (class-name args &rest body)
-  (with (cname (if (cons? class-name)
-				   class-name.
-				   class-name)
-		 bases (and (cons? class-name)
-				    .class-name))
+  (with (cname (? (cons? class-name) class-name. class-name)
+		 bases (& (cons? class-name) .class-name))
 	(%ducktype-make-class cname bases)
 	(with (slothash (ducktype-slothash-name cname))
 	  `(progn
@@ -57,9 +54,9 @@
 		          ,@body)))))))
 
 (defun %ducktype-assert-definition (what name class-name)
-  (unless (href *ducktype-classes* class-name)
-	(error "Definition of ~A ~A: class ~A is not defined."
-		   what name class-name)))
+  (| (href *ducktype-classes* class-name)
+	 (error "Definition of ~A ~A: class ~A is not defined."
+		    what name class-name)))
 
 (defmacro defmethod (class-name name args &rest body)
   (progn
@@ -79,20 +76,20 @@
     nil))
 
 (defun %ducktype-assert (obj)
-  (unless (array? obj)
-    (error "ducktype object expected - not even an array"))
-  (unless (eq *ducktype-magic* (ducktype-obj-magic obj))
-    (error "ducktype object expected")))
+  (| (array? obj)
+     (error "ducktype object expected - not even an array"))
+  (| (eq *ducktype-magic* (ducktype-obj-magic obj))
+     (error "ducktype object expected")))
 
 (defun %slot-value (obj slot)
   (%ducktype-assert obj)
-  (or (href (ducktype-obj-slots obj) slot)
-	  (href (ducktype-obj-members obj) slot)))
+  (| (href (ducktype-obj-slots obj) slot)
+     (href (ducktype-obj-members obj) slot)))
 
 (defun slot-value (obj slot)
   (%ducktype-assert obj)
-  (or (href (ducktype-obj-slots obj) slot)
-	  (href (ducktype-obj-members obj) .slot.)))
+  (| (href (ducktype-obj-slots obj) slot)
+     (href (ducktype-obj-members obj) .slot.)))
 
 (defun (= %slot-value) (value obj slot)
   (%ducktype-assert obj)

@@ -1,15 +1,11 @@
 ;;;;; tré – Copyright (c) 2008–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun eql (x y)
-  (unless x			; Convert falsity to 'null'.
-	(setq x nil))
-  (unless y
-	(setq y nil))
-  (or (%%%eq x y)
-      (? (or (number? x) (number? y))
-         (?
-           (and (integer? x) (integer? y))
-	         (integer== x y)
-           (and (character? x) (character? y))
-	         (character== x y))
-	    (== x y))))
+  (| x (setq x nil))
+  (| y (setq y nil))
+  (| (%%%eq x y)
+     (? (| (number? x) (number? y))
+        (?
+          (& (integer? x) (integer? y)) (integer== x y)
+          (& (character? x) (character? y)) (character== x y))
+        (== x y))))

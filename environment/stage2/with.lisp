@@ -1,9 +1,8 @@
-;;;;; tré - Copyright (c) 2005-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun copy-while (pred x)
-  (when (and x (funcall pred (car x)))
-	(cons (car x)
-		  (copy-while pred (cdr x)))))
+  (& x (funcall pred (car x))
+     (cons (car x) (copy-while pred (cdr x)))))
 
 (define-test "COPY-WHILE"
   ((copy-while #'number? '(1 2 3 a)))

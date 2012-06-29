@@ -1,5 +1,4 @@
-;;;;; TRE to C transpiler
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 ;;;; GENERAL CODE GENERATION
 
@@ -77,8 +76,7 @@
 	 `(,dest " = ")))
 
 (defun codegen-%setq-value (val)
-   (? (or (atom val)
-		  (codegen-expr? val))
+   (? (| (atom val) (codegen-expr? val))
       val
       `(,val. ,@(parenthized-comma-separated-list .val))))
 
@@ -135,8 +133,7 @@
 
 (defun c-make-aref (arr idx)
   `("((treptr *) TREATOM_DETAIL(" ,arr "))["
-	    ,(? (or (number? idx)
-				(%transpiler-native? idx))
+	    ,(? (| (number? idx) (%transpiler-native? idx))
 		  	idx
 			`("(ulong)TRENUMBER_VAL(" ,idx ")"))
 		"]"))

@@ -1,12 +1,18 @@
 ;;;; tré - Copyright (c) 2005-2006,2008-2012 Sven Michael Klose <pixel@copei.de>
 
-(defmacro !? (predicate &body alternatives)
+(defmacro %!? (predicate &body alternatives)
   (? alternatives
      `(let ! ,predicate
         (? !
 		   ,(car alternatives)
-		   (!? ,@(cdr alternatives))))
-   predicate))
+		   ,@(? (cdr alternatives)
+                `((%!? ,@(cdr alternatives))))))
+     predicate))
+
+(defmacro !? (predicate &body alternatives)
+  (| alternatives
+     (error "!? expects at least one alternative"))
+  `(%!? ,predicate ,@alternatives))
 
 (defmacro awhen (predicate &body body)
   `(let ! ,predicate

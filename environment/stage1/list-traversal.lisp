@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2005-2009,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2009,2012 Sven Michael Klose <pixel@copei.de>
 
 (defun %map (func lists)
   (block nil
@@ -24,8 +24,8 @@
 
 (defun mapcar (func &rest lists)
   (let args (%map func lists)
-    (when args
-      (cons (apply func args) (apply #'mapcar func lists)))))
+    (& args
+       (cons (apply func args) (apply #'mapcar func lists)))))
 
 (defun mapcan (func &rest lists)
   (apply #'nconc (apply #'mapcar func lists)))
@@ -52,5 +52,5 @@
   (let result (cons nil nil)
     (dolist (i lst (cdr result))
       (rplaca result
-              (cdr (rplacd (or (car result) result)
+              (cdr (rplacd (| (car result) result)
                            (list (funcall func i))))))))

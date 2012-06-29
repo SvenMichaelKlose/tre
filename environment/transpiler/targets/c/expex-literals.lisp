@@ -1,5 +1,4 @@
-;;;;; TRE transpiler
-;;;;; Copyright (c) 2009-2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2009–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun c-make-decl (name)
   (format nil "treptr ~A;~%" (transpiler-symbol-string *current-transpiler* name)))
@@ -42,7 +41,6 @@
 	x))
 
 (defun c-expex-filter (x)
-  (when (and (cons? x)
-             (symbol? x.))
-    (c-compiled-symbol x.))
+  (& (cons? x) (symbol? x.)
+     (c-compiled-symbol x.))
   (transpiler-import-from-expex x))

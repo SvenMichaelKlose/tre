@@ -30,10 +30,10 @@
 
 (defun php-expex-argument-filter (x)
   (?
-    (and (atom x)
-         (not (eq '~%RET x))
-         (not (funinfo-in-toplevel-env? *expex-funinfo* x))
-         (expex-global-variable? x))
+    (& (atom x)
+       (not (eq '~%RET x))
+       (not (funinfo-in-toplevel-env? *expex-funinfo* x))
+       (expex-global-variable? x))
       (progn
         (transpiler-add-wanted-variable *current-transpiler* x)
         (php-global x))

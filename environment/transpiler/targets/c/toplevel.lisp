@@ -7,18 +7,17 @@
 (define-tree-filter c-transpiler-get-argdef-symbols (x)
   (not x)
     x
-  (and (atom x)
-	   (symbol-name x))
+  (& (atom x) ; XXX symbol?
+     (symbol-name x))
     (c-compiled-symbol x))
 
 (defun c-transpiler-spot-argdef-symbols (x)
-  (when x
-	(? (atom x)
-	   (when (symbol-name x)
-	     (c-compiled-symbol x))
-	   (progn
-	     (c-transpiler-spot-argdef-symbols x.)
-	     (c-transpiler-spot-argdef-symbols .x)))))
+  (& x
+	 (? (atom x)
+	    (& (symbol-name x) (c-compiled-symbol x))
+	    (progn
+	      (c-transpiler-spot-argdef-symbols x.)
+	      (c-transpiler-spot-argdef-symbols .x)))))
 
 (defun c-transpiler-make-closure-argdef-symbols ()
   (c-transpiler-spot-argdef-symbols *closure-argdefs*))
@@ -27,13 +26,11 @@
   (transpiler-compiled-inits *c-transpiler*))
 
 (defun c-transpiler-closure-argument-definitions ()
-  (mapcar (fn `(%setq-atom-value
-				   ,_.
-				   ,(compiled-tree (c-transpiler-get-argdef-symbols ._))))
+  (filter (fn `(%setq-atom-value ,_. ,(compiled-tree (c-transpiler-get-argdef-symbols ._))))
 		  *closure-argdefs*))
 
 (defun c-transpiler-register-functions ()
-  (mapcar (fn `(%setq ~%ret
+  (filter (fn `(%setq ~%ret
 					  (treatom_register_compiled_function
 						  ,(c-compiled-symbol _)
 						  ,_)))

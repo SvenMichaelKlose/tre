@@ -1,5 +1,4 @@
-;;;;; TRE compiler
-;;;;; Copyright (c) 2010-2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2010–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun test-meta-code-0 (x)
   "Check code between expression- and place-expansions."
@@ -13,8 +12,7 @@
     (progn
 	  (?
 	    (atom x.)
-	      (unless (or (not x.)
-					  (number? x.))
+	      (unless (| (not x.) (number? x.))
 		    (print x)
 		    (error "meta-code: illegal atom. Number, jump, SETQ- or function expression expected"))			   
 	    (%var? x.)

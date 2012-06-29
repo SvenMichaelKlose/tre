@@ -2,18 +2,18 @@
 
 (defun split-if (predicate seq)
   "Split sequence at elements for which the predicate is true. Those elements are excluded. Returns a list of subsequences."
-  (and seq
-       (!? (position-if predicate seq)
-           (cons (subseq seq 0 !)
-                 (split-if predicate (subseq seq (integer-1+ !))))
-           (list seq))))
+  (& seq
+     (!? (position-if predicate seq)
+         (cons (subseq seq 0 !)
+               (split-if predicate (subseq seq (integer-1+ !))))
+         (list seq))))
 
 (defun generic-split (obj seq &key (test #'eql))
-  (and seq
-       (!? (position obj seq :test test)
-		   (cons (subseq seq 0 !)
-		         (generic-split obj (subseq seq (integer-1+ !)) :test test))
-		    (list seq))))
+  (& seq
+     (!? (position obj seq :test test)
+         (cons (subseq seq 0 !)
+               (generic-split obj (subseq seq (integer-1+ !)) :test test))
+         (list seq))))
 
 (defun split (obj seq &key (test #'eql))
   "Split sequence at elements equal to OBJ. Those elements are excluded. Returns a list of subsequences."
@@ -21,9 +21,9 @@
 
 (define-test "SPLIT works on string"
   ((let x (split #\/ "foo/bar")
-	 (and (string== "foo" x.)
-	 	  (string== "bar" .x.)
-		  (not ..x))))
+	 (& (string== "foo" x.)
+	    (string== "bar" .x.)
+	    (not ..x))))
   t)
 
 (define-test "SPLIT works on string with gaps"

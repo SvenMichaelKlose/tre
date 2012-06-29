@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 (defmacro define-php-std-macro (&rest x)
   `(define-transpiler-std-macro *php-transpiler* ,@x))
@@ -14,7 +14,7 @@
      ,@(apply #'shared-defun name args (body-with-noargs-tag body))
      (%setq ~%ret nil)))
 
-(transpiler-wrap-invariant-to-binary define-php-std-macro eq 2 eq and)
+(transpiler-wrap-invariant-to-binary define-php-std-macro eq 2 eq &)
 
 (define-php-std-macro not (&rest x)
   (? .x
@@ -86,10 +86,9 @@
 (define-php-std-macro new (&rest x)
   (unless x
 	(error "NEW expects arguments"))
-  (unless (and x. (or (symbol? x.) (string? x.)))
+  (unless (& x. (| (symbol? x.) (string? x.)))
     (error "NEW expects first argument to be a non-NIL symbol or string instead of ~A" x.))
-  (? (or (keyword? x.)
-	     (string? x.))
+  (? (| (keyword? x.) (string? x.))
      (php-transpiler-make-new-hash x)
      (php-transpiler-make-new-object x)))
 

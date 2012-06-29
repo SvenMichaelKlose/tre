@@ -1,7 +1,7 @@
-;;;;; tré - Copyright (c) 2005-2009,2011-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun %compiled-atom (x quoted?)
-  (? (and quoted? x (symbol? x))
+  (? (& quoted? x (symbol? x))
      (list 'quote x)
      x))
 

@@ -18,12 +18,12 @@
 
 (defun backquote-cons-atom (x)
   (when x
-	(? (or (number? x)
-           (string? x)
-           (array? x)
-           (hash-table? x)
-           (eq t x))
-           ;(string== "" (symbol-name x)) ; XXX?
+	(? (| (number? x)
+          (string? x)
+          (array? x)
+          (hash-table? x)
+          (eq t x))
+          ;(string== "" (symbol-name x)) ; XXX?
 	   x
 	   `(%quote ,x))))
 
@@ -46,9 +46,9 @@
 (defun simple-quote-expand (x)
   (when x
 	(? (atom x)
-	   (? (or (in? x nil t)
-              (string? x)
-			  (number? x))
+	   (? (| (in? x nil t)
+             (string? x)
+		  (number? x))
 		  x
 		  `(%quote ,x))
 	   `(cons ,(simple-quote-expand x.)

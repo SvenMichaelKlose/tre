@@ -1,7 +1,7 @@
 ;;;;; tré – Copyright (c) 2005–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun %princ-character (c str)
-  (unless (and (string? c) (== 0 (length c)))
+  (unless (& (string? c) (== 0 (length c)))
     (= (stream-last-char str) (? (string? c)
                                  (elt c (1- (length c)))
                                  c))

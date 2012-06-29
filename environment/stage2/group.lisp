@@ -4,7 +4,7 @@
 
 (defun group-head (l size)
   (let result (make-queue)
-    (while (and l (< 0 size))
+    (while (& l (< 0 size))
            (queue-list result)
       (enqueue result (car l))
       (= l (cdr l))
@@ -16,6 +16,7 @@
 
 (defun group (l size)
   (let result (make-queue)
-    (while l (queue-list result)
+    (while l
+           (queue-list result)
       (enqueue result (group-head l size))
       (= l (group-tail l size)))))

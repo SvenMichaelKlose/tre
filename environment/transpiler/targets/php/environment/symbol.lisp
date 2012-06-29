@@ -6,8 +6,8 @@
 
 (define-native-php-fun symbol (name pkg)
   (unless (%%%== ,*nil-symbol-name* name)
-    (or (%%%== ,*t-symbol-name* name)
-        (new __symbol name pkg))))
+    (| (%%%== ,*t-symbol-name* name)
+       (new __symbol name pkg))))
 
 (define-native-php-fun %%u=-symbol-function (v x)
   (x.sf v))

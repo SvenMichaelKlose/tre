@@ -26,7 +26,7 @@
    	                 (js-transpile-post)))
 
 (defun eval-compile (x)
-  (with-temporary *js-transpiler* (or *js-eval-transpiler* (make-js-eval-transpiler))
+  (with-temporary *js-transpiler* (| *js-eval-transpiler* (make-js-eval-transpiler))
     (let tr *js-transpiler*
       (with-temporaries ((transpiler-dump-passes? tr) nil
                          *expex-warn?* nil)

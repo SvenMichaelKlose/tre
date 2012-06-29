@@ -1,22 +1,22 @@
-;;;;; tré - Copyright (c) 2005,2008,2011-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005,2008,2011–2012 Sven Michael Klose <pixel@copei.de>
 
-(%defun compiler-and (x)
+(%defun compiler-& (x)
   (? (cdr x)
      `(? ,(car x)
-	     ,(compiler-and (cdr x)))
+	     ,(compiler-& (cdr x)))
       (car x)))
 
-(defmacro and (&rest x)
-  (compiler-and x))
+(defmacro & (&rest x)
+  (compiler-& x))
 
-(%defun compiler-or (x)
+(%defun compiler-| (x)
   (? (cdr x)
      (let g (gensym)
        `(let ,g ,(car x)
           (? ,g
              ,g
-		     ,(compiler-or (cdr x)))))
+		     ,(compiler-| (cdr x)))))
      (car x)))
 
-(defmacro or (&rest x)
-  (compiler-or x))
+(defmacro | (&rest x)
+  (compiler-| x))

@@ -6,7 +6,7 @@
 	  (== quote-char x.)
         (cons #\\ (cons x. (escape-charlist .x quote-char chars-to-escape)))
 	  (== #\\ x.)
-        (cons #\\ (? (and .x (digit-char-p .x.))
+        (cons #\\ (? (& .x (digit-char-p .x.))
                      (escape-charlist .x quote-char chars-to-escape)
                      (cons #\\ (escape-charlist .x quote-char chars-to-escape))))
       (member x. chars-to-escape :test #'character==)

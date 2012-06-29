@@ -3,8 +3,8 @@
 ;;;; ARGUMENTS
 
 (defun funinfo-arg? (fi var)
-  (and (member var (funinfo-args fi) :test #'eq)
-       fi))
+  (& (member var (funinfo-args fi) :test #'eq)
+     fi))
 
 ;;;; FREE VARIABLES
 
@@ -22,47 +22,47 @@
 			 (funinfo-args fi)))
 
 (defun funinfo-in-env? (fi x)
-  (when (? (funinfo-parent fi)
-           (member x (funinfo-env fi) :test #'eq)
-           (href (funinfo-env-hash fi) x))
-    fi))
+  (& (? (funinfo-parent fi)
+        (member x (funinfo-env fi) :test #'eq)
+        (href (funinfo-env-hash fi) x))
+     fi))
 
 (defun funinfo-in-args-or-env? (fi x)
-  (or (funinfo-arg? fi x)
-	  (funinfo-in-env? fi x)))
+  (| (funinfo-arg? fi x)
+     (funinfo-in-env? fi x)))
 
 (defun funinfo-in-parent-env? (fi var)
-  (when fi
-    (awhen (funinfo-parent fi)
-      (or (funinfo-in-args-or-env? ! var)
-		  (funinfo-in-parent-env? ! var)))))
+  (& fi
+     (awhen (funinfo-parent fi)
+       (| (funinfo-in-args-or-env? ! var)
+	      (funinfo-in-parent-env? ! var)))))
 
 (defun funinfo-in-this-or-parent-env? (fi var)
-  (when fi
-    (or (funinfo-in-args-or-env? fi var)
+  (& fi
+     (| (funinfo-in-args-or-env? fi var)
 	    (awhen (funinfo-parent fi)
-		  (funinfo-in-this-or-parent-env? ! var)))))
+	      (funinfo-in-this-or-parent-env? ! var)))))
 
 (defun funinfo-in-env-or-lexical? (fi var)
-  (when (and fi (funinfo-parent fi))
-    (or (funinfo-in-args-or-env? fi var)
+  (& fi (funinfo-parent fi)
+     (| (funinfo-in-args-or-env? fi var)
 	    (awhen (funinfo-parent fi)
-		  (funinfo-in-env-or-lexical? ! var)))))
+          (funinfo-in-env-or-lexical? ! var)))))
 
 (defun funinfo-in-toplevel-env? (fi var)
-  (when fi
-    (unless (and (funinfo-parent fi)
-                 (funinfo-in-args-or-env? fi var))
-      (aif (funinfo-parent fi)
-		   (funinfo-in-toplevel-env? ! var)
+  (& fi
+     (unless (& (funinfo-parent fi)
+                (funinfo-in-args-or-env? fi var))
+       (!? (funinfo-parent fi)
+           (funinfo-in-toplevel-env? ! var)
            (funinfo-in-args-or-env? fi var)))))
 
 
 ;;;; ENVIRONMENT
 
 (defun funinfo-env-pos (fi x)
-  (when (funinfo-parent fi)
-    (position x (funinfo-env fi) :test #'eq)))
+  (& (funinfo-parent fi)
+     (position x (funinfo-env fi) :test #'eq)))
 
 ,`(progn
     ,@(mapcar (fn `(defun ,($ 'funinfo- _.) (fi var)
@@ -117,13 +117,13 @@
     (funinfo-env-add fi x)))
 
 (defun funinfo-add-used-env (fi x)
-  (when (funinfo-parent fi)
-    (adjoin! x (funinfo-used-env fi) :test #'eq)))
+  (& (funinfo-parent fi)
+     (adjoin! x (funinfo-used-env fi) :test #'eq)))
 
 (defun funinfo-get-name (fi)
-  (when fi
-    (or (funinfo-name fi)
-		(funinfo-get-name (funinfo-parent fi)))))
+  (& fi
+     (| (funinfo-name fi)
+	    (funinfo-get-name (funinfo-parent fi)))))
 
 (defun funinfo-immutable? (fi x)
   (member x (funinfo-immutables fi) :test #'eq))

@@ -8,25 +8,24 @@
 	   (= ,a ,b
 	   	  ,b ,g))))
 
+; XXX with-index?
 (defun find-if (pred seq &key (start nil) (end nil) (from-end nil) (with-index nil))
-  (when (and seq (integer< 0 (length seq)))
-    (let* ((e (or end (integer-1- (length seq))))
-	 	   (s (or start 0)))
-      ; Make sure the start and end indices are sane.
-      (when (or (and (integer> s e) (not from-end))
-                (and (integer< s e) from-end))
-        (xchg s e))
-      (do ((i s (? from-end
-				   (integer-1- i)
-				   (integer-1+ i))))
-          ((? from-end
-	          (integer< i e)
-			  (integer> i e)))
-	    (let elm (elt seq i)
-          (when (apply pred (cons elm
-                                  (when with-index
-								    (list i))))
-		    (return elm)))))))
+  (& seq (integer< 0 (length seq))
+     (let* ((e (| end (integer-1- (length seq))))
+	 	    (s (| start 0)))
+       ; Make sure the start and end indices are sane.
+       (& (| (& (integer> s e) (not from-end))
+             (& (integer< s e) from-end))
+          (xchg s e))
+       (do ((i s (? from-end
+				    (integer-1- i)
+				    (integer-1+ i))))
+           ((? from-end
+	           (integer< i e)
+			   (integer> i e)))
+	     (let elm (elt seq i)
+           (& (apply pred (cons elm (& with-index (list i))))
+		      (return elm)))))))
  
 (defun find (obj seq &key (start nil) (end nil) (from-end nil) (test #'eql))
   (find-if (fn funcall test _ obj) seq :start start :end end :from-end from-end))
@@ -58,8 +57,8 @@
 (defun position (obj seq &key (start nil) (end nil) (from-end nil) (test #'eql))
   (let idx nil
     (find-if #'((x i)
-				  (when (funcall test x obj)
-					(= idx i)))
+				  (& (funcall test x obj)
+					 (= idx i)))
 			 seq :start start :end end :from-end from-end :with-index t)
 	idx))
 
@@ -74,8 +73,8 @@
 (defun position-if (pred seq &key (start nil) (end nil) (from-end nil))
   (let idx nil
     (find-if #'((x i)
-				  (when (funcall pred x)
-					(= idx i)))
+				  (& (funcall pred x)
+					 (= idx i)))
 			 seq :start start :end end :from-end from-end :with-index t)
 	idx))
 
@@ -83,17 +82,17 @@
   (find-if pred (apply #'append seqs)))
 
 (define-test "SOME works"
-  ((and (some #'number? '(a b 3)))
-        (not (some #'number? '(a b c))))
+  ((& (some #'number? '(a b 3)))
+      (not (some #'number? '(a b c))))
   t)
 
 (defun every (pred &rest seqs)
   (dolist (seq seqs t)
     (dotimes (i (length seq))
-      (unless (funcall pred (elt seq i))
-        (return-from every nil)))))
+      (| (funcall pred (elt seq i))
+         (return-from every nil)))))
 
 (define-test "EVERY works"
-  ((and (every #'number? '(1 2 3))
-        (not (every #'number? '(1 2 a)))))
+  ((& (every #'number? '(1 2 3))
+      (not (every #'number? '(1 2 a)))))
   t)

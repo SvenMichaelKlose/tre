@@ -1,12 +1,11 @@
-;;;;; TRE compiler
-;;;;; Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2012 Sven Michael Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Apply this only to expanded arguments or keywords are renamed, too.
 
 (defun find-and-add-renamed-doubles (fi old-replacements vars args)
   (let argnames (remove-if #'keyword? (argument-expand-names 'rename-args args))
     (append (list-aliases (? (transpiler-rename-all-args? *current-transpiler*)
-						  	 (? (and fi (funinfo-ghost fi))
+						  	 (? (& fi (funinfo-ghost fi))
 								.argnames
 								argnames)
 							 (intersect argnames vars)))
@@ -38,12 +37,10 @@
 (defun rename-function-arguments-inside-named-toplevel-functions (x)
   (? (atom x)
 	 x
-     (cons (? (lambda? x.)
-			  (? (transpiler-rename-toplevel-function-args? *current-transpiler*)
-				 (rename-function-arguments-r nil nil x.)
-				 (rename-function-arguments-named-function x.))
-        	  (cons? x.)
-			    (rename-function-arguments-inside-named-toplevel-functions x.)
+     (cons (? (lambda? x.) (? (transpiler-rename-toplevel-function-args? *current-transpiler*)
+				              (rename-function-arguments-r nil nil x.)
+				              (rename-function-arguments-named-function x.))
+        	  (cons? x.)   (rename-function-arguments-inside-named-toplevel-functions x.)
 			  x.)
            (rename-function-arguments-inside-named-toplevel-functions .x))))
 

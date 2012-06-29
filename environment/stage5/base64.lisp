@@ -17,11 +17,11 @@
 	  		   e1 (>> c1 2)
 			   e2 (bit-or (<< (bit-and c1 3)
 							  4)
-						  (>> (or c2 0) 4))
+						  (>> (| c2 0) 4))
 			   e3 (? c2
 				     (bit-or (<< (bit-and c2 15)
 							     2)
-						     (>> (or c3 0) 6))
+						     (>> (| c3 0) 6))
 					 64)
 			   e4 (? c3
 					 (bit-and c3 63)
@@ -37,8 +37,8 @@
 
 (defun base64-compress (x)
   (when x
-    (? (or (alphanumericp x.)
-           (in=? x. #\+ #\/ #\=))
+    (? (| (alphanumericp x.)
+          (in=? x. #\+ #\/ #\=))
        (cons x. (base64-compress .x))
        (base64-compress .x))))
 

@@ -1,9 +1,9 @@
-;;;;; tré - Copyright (c) 2008-2009,2012 Sven Michael Klose <pixel@copei.de?
+;;;;; tré – Copyright (c) 2008–2009,2012 Sven Michael Klose <pixel@copei.de?
 
 (defun hex-digit-char-p (x)
-  (or (digit-char-p x)
-      (and (>= x #\A) (<= x #\F))
-      (and (>= x #\a) (<= x #\f))))
+  (| (digit-char-p x)
+     (& (>= x #\A) (<= x #\F))
+     (& (>= x #\a) (<= x #\f))))
 
 (defun read-hex (str)
   (with (rec #'((&optional (v 0) (n 0))
@@ -16,9 +16,9 @@
 								        10
 								        (- #\A 10))))))
 					  v))))
-    (unless (hex-digit-char-p (peek-char str))
-	  (error "illegal character '~A' at begin of hexadecimal number" (string (code-char (peek-char str)))))
+    (| (hex-digit-char-p (peek-char str))
+	   (error "illegal character '~A' at begin of hexadecimal number" (peek-char str)))
 	(prog1
       (rec)
-	  (when (symbol-char? (peek-char str))
-		(error "illegal character '~A' in hexadecimal number" (string (code-char (peek-char str))))))))
+	  (& (symbol-char? (peek-char str))
+		 (error "illegal character '~A' in hexadecimal number" (peek-char str))))))

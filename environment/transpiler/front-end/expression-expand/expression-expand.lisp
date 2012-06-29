@@ -20,7 +20,7 @@
   (funcall (expex-setter-filter ex) x))
 
 (defun expex-guest-filter-arguments (ex x)
-  (mapcar (fn funcall (expex-argument-filter ex) _) x))
+  (filter (fn funcall (expex-argument-filter ex) _) x))
 
 ;;;; UTILS
 
@@ -36,27 +36,27 @@
 
 (defun expex-internal-symbol? (x)
   (let tr *current-transpiler*
-    (or (function? x)
-	    (keyword? x)
-	    (member x (transpiler-predefined-symbols tr) :test #'eq)
-	    (in? x nil t '~%ret 'this)
-	    (transpiler-imported-variable? tr x)
-	    (transpiler-defined-variable tr x)
-	    (transpiler-macro? tr x)
-        (assoc x *variables* :test #'eq))))
+    (| (function? x)
+	   (keyword? x)
+	   (member x (transpiler-predefined-symbols tr) :test #'eq)
+	   (in? x nil t '~%ret 'this)
+	   (transpiler-imported-variable? tr x)
+	   (transpiler-defined-variable tr x)
+	   (transpiler-macro? tr x)
+       (assoc x *variables* :test #'eq))))
 
 (defun expex-symbol-defined? (x)
-  (or (funinfo-in-this-or-parent-env? *expex-funinfo* x)
-      (expex-internal-symbol? x)
-      (transpiler-late-symbol? *current-transpiler* x)))
+  (| (funinfo-in-this-or-parent-env? *expex-funinfo* x)
+     (expex-internal-symbol? x)
+     (transpiler-late-symbol? *current-transpiler* x)))
 
 (defun expex-warn (x)
-  (and *expex-warn?*
-	   (symbol? x)
-	   (not (expex-symbol-defined? x))
-       (not (transpiler-can-import? *current-transpiler* x))
-	   (error "symbol ~A is not defined in function ~A.~%"
-			  (symbol-name x) (funinfo-get-name *expex-funinfo*))))
+  (& *expex-warn?*
+     (symbol? x)
+     (not (expex-symbol-defined? x))
+     (not (transpiler-can-import? *current-transpiler* x))
+     (error "symbol ~A is not defined in function ~A.~%"
+            (symbol-name x) (funinfo-get-name *expex-funinfo*))))
 
 ;;;; PREDICATES
 
@@ -64,31 +64,31 @@
 ;;
 ;; Rejects atoms and expressions with meta-forms.
 (defun expex-able? (ex x)
-  (or (and (expex-move-lexicals? ex)
-           (atom x)
-           (not (in? x '~%ret))
-           (funinfo-in-parent-env? *expex-funinfo* x)
-           (not (funinfo-in-toplevel-env? *expex-funinfo* x)))
-      (not (or (atom x)
-		       (function-ref-expr? x)
-               (in? x. '%%vm-go '%%vm-go-nil '%%vm-go-not-nil '%transpiler-native '%transpiler-string '%quote)))))
+  (| (& (expex-move-lexicals? ex)
+        (atom x)
+        (not (in? x '~%ret))
+        (funinfo-in-parent-env? *expex-funinfo* x)
+        (not (funinfo-in-toplevel-env? *expex-funinfo* x)))
+     (not (| (atom x)
+             (function-ref-expr? x)
+             (in? x. '%%vm-go '%%vm-go-nil '%%vm-go-not-nil '%transpiler-native '%transpiler-string '%quote)))))
 
 ;; Check if an expression has a return value.
 (defun expex-returnable? (ex x)
-  (not (or (vm-jump? x)
-		   (%var? x))))
+  (not (| (vm-jump? x)
+		  (%var? x))))
 
 ;; Check if arguments to a function should be expanded.
 (defun expex-expandable-args? (ex fun argdef)
-  (not (or (eq argdef 'builtin)
-           (funcall (expex-plain-arg-fun? ex) fun))))
+  (not (| (eq argdef 'builtin)
+          (funcall (expex-plain-arg-fun? ex) fun))))
 
 ;;;; ARGUMENT EXPANSION
 
 ;; XXX this sucks blood out of stones. Should have proper macro expansion
 ;; instead.
 (defun expex-convert-quotes (x)
-  (mapcar (fn ? (quote? _)
+  (filter (fn ? (quote? _)
 			    `(%quote ,._.)
 			    _)
 		  x))
@@ -98,11 +98,11 @@
   (dolist (i args)
     (expex-warn i))
   (funcall (expex-function-collector ex) fun args)
-  (let argdef (or (funinfo-get-local-function-args *expex-funinfo* fun)
-                  (funcall (expex-function-arguments ex) fun))
+  (let argdef (| (funinfo-get-local-function-args *expex-funinfo* fun)
+                 (funcall (expex-function-arguments ex) fun))
 	(? (expex-expandable-args? ex fun argdef)
-   	   (expex-argument-expand fun argdef (? (and (not (in-cps-mode?))
-                                                 (transpiler-cps-function? *current-transpiler* fun))
+   	   (expex-argument-expand fun argdef (? (& (not (in-cps-mode?))
+                                               (transpiler-cps-function? *current-transpiler* fun))
                                             .args
                                             args))
 	   args)))
@@ -114,8 +114,7 @@
   (with (new? (%new? x)
 		 fun (? new? .x.  x.)
 		 args (? new? ..x .x))
-	`(,@(when new?
-		  '(%new))
+	`(,@(& new? '(%new))
 	  ,fun ,@(? (funcall (expex-functionp ex) fun)
 	    	    (expex-convert-quotes (expex-argexpand-0 ex fun args))
 	    	    args))))
@@ -133,14 +132,14 @@
 	  (cons nil nil)))
 
 (defun lambda-expression-needs-cps? (x)
-  (and (lambda-expr? x)
-       (funinfo-needs-cps? (get-lambda-funinfo x))))
+  (& (lambda-expr? x)
+     (funinfo-needs-cps? (get-lambda-funinfo x))))
 
 (defun expex-move-arg-std (ex x)
   (with (s (expex-funinfo-env-add)
     	 (moved new-expr) (expex-expr ex x))
-      (when (lambda-expression-needs-cps? x)
-        (transpiler-add-cps-function *current-transpiler* s))
+      (& (lambda-expression-needs-cps? x)
+         (transpiler-add-cps-function *current-transpiler* s))
       (cons (append moved
 		    		(? (expex-returnable? ex new-expr.)
 		        	   (expex-make-%setq ex s new-expr.)
@@ -160,7 +159,7 @@
 	(expex-move-arg-std ex x)))
 
 (defun expex-filter-and-move-args (ex x)
-  (with ((moved new-expr) (assoc-splice (mapcar (fn expex-move-arg ex _) (expex-guest-filter-arguments ex x))))
+  (with ((moved new-expr) (assoc-splice (filter (fn expex-move-arg ex _) (expex-guest-filter-arguments ex x))))
     (values (apply #'append moved) new-expr)))
 
 (defun expex-move-slot-value (ex x)
@@ -194,8 +193,7 @@
   (with-temporary *expex-funinfo* (get-lambda-funinfo x)
     (values nil
 		    (list `(function
-					   ,@(awhen (lambda-name x)
-						   (list !))
+					   ,@(awhen (lambda-name x) (list !))
 					   (,@(lambda-head x)
 				        ,@(expex-body ex (lambda-body x))))))))
 
@@ -204,10 +202,10 @@
   (values nil nil))
 
 (defun expex-cps (x)
-  (and (or (%setq? x)
-            (%set-atom-fun? x))
-       (lambda-expression-needs-cps? (%setq-value x))
-       (transpiler-add-cps-function *current-transpiler* (%setq-place x))))
+  (& (| (%setq? x)
+          (%set-atom-fun? x))
+     (lambda-expression-needs-cps? (%setq-value x))
+     (transpiler-add-cps-function *current-transpiler* (%setq-place x))))
 
 (defun expex-vm-go-nil (ex x)
   (with ((moved new-expr) (expex-filter-and-move-args ex (list .x.)))
@@ -230,27 +228,23 @@
 	  (lambda? x) (expex-lambda ex x)
       (not (expex-able? ex x)) (values nil (list x))
       (%%vm-scope? x) (values nil (expex-body ex (%%vm-scope-body x)))
-      (and (%setq? x)
-           (eq '%cps-mode (%setq-place x))) (progn
-                                              (= *transpiler-except-cps?* (not (%setq-value x)))
-                                              (print 'CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC)
-                                              (print *transpiler-except-cps?*)
-                                              (values nil nil))
+      (& (%setq? x)
+         (eq '%cps-mode (%setq-place x))) (progn
+                                            (= *transpiler-except-cps?* (not (%setq-value x)))
+                                            (values nil nil))
       (%setq? x) (with (plc (%setq-place x)
                         val (peel-identity (%setq-value x)))
-                   (let-when fun (and (cons? val) val.)
-                     (unless (or (symbol? fun)
-                                 (cons? fun))
-                       (error "function must be a symbol or expression: misplaced ~A~%" x)))
+                   (let-when fun (& (cons? val) val.)
+                     (| (symbol? fun) (cons? fun)
+                        (error "function must be a symbol or expression: misplaced ~A~%" x)))
                    (expex-expr-setq ex `(%setq ,plc ,val)))
       (expex-expr-std ex x))))
 
 ;;;; BODY EXPANSION
 
 (defun expex-force-%setq (ex x)
-  (or (when (metacode-expression-only x)
-        (list x))
-	  (expex-make-%setq ex '~%ret x)))
+  (| (& (metacode-expression-only x) (list x))
+     (expex-make-%setq ex '~%ret x)))
 
 (defun expex-copy-%setq (ex x s)
   `(,x.
@@ -268,13 +262,12 @@
 		x)))
 
 (defun expex-atom-to-identity-expr (x)
-  (? (and (atom x)
-	      (not (number? x)))
+  (? (& (atom x) (not (number? x)))
 	 `(identity ,x)
 	 x))
 
 (defun expex-save-atoms (x)
-  (mapcar #'expex-atom-to-identity-expr x))
+  (filter #'expex-atom-to-identity-expr x))
 
 (defun expex-list (ex x)
   (mapcan (fn with ((moved new-expr) (expex-expr ex _))
@@ -287,8 +280,8 @@
 ;;;; TOPLEVEL
 
 (defun expression-expand (ex x)
-  (when x
-    (with-temporary *expexsym-counter* 0
-	  (with-temporary *current-expex* ex
-	    (with-temporary *expex-funinfo* (transpiler-global-funinfo *current-transpiler*)
-          (expex-body ex x))))))
+  (& x
+     (with-temporary *expexsym-counter* 0
+	   (with-temporary *current-expex* ex
+	     (with-temporary *expex-funinfo* (transpiler-global-funinfo *current-transpiler*)
+           (expex-body ex x))))))

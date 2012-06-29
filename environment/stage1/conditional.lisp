@@ -1,10 +1,8 @@
-;;;;; tré - Copyright (c) 2005-2008,2011-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2008,2011–2012 Sven Michael Klose <pixel@copei.de>
 
 (defmacro when (predicate &body body)
-  `(and ,predicate
-        ,(? (cdr body)
-	        `(progn ,@body)
-	        (car body))))
+  `(& ,predicate
+	  (progn ,@body)))
 
 (defmacro unless (predicate &body body)
   `(when (not ,predicate) ,@body))

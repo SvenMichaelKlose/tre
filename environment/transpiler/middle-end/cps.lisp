@@ -5,10 +5,10 @@
                xlats))
 
 (defun cps-cons-function-name (x xlats)
-  (or (assoc-value x xlats)
-      (progn
-        (print x)
-        (error "no CPS function name"))))
+  (| (assoc-value x xlats)
+     (progn
+       (print x)
+       (error "no CPS function name"))))
 
 (defun cps-make-call-to-next (x xlats)
   `(%setq nil ,(? .x
@@ -16,55 +16,51 @@
                   '(~%continuer ~%ret))))
 
 (defun cps-function-assignment? (x)
-  (and (%setq? x)
-       (let v (%setq-value x)
-         (and (lambda? v)
-              (funinfo-needs-cps? (get-lambda-funinfo v))))))
+  (& (%setq? x)
+     (let v (%setq-value x)
+       (& (lambda? v)
+          (funinfo-needs-cps? (get-lambda-funinfo v))))))
+
+(defun cps-function? (n)
+  (let tr *current-transpiler*
+    (| (transpiler-cps-function? tr n)
+       (& (transpiler-defined-function tr n)
+          (not (transpiler-cps-exception? tr n))))))
 
 (defun cps-funcall? (x)
-  (and (%setq-funcall? x)
-       (with (n (car (%setq-value x))
-              tr *current-transpiler*)
-              ;n (? (%transpiler-native? v.)
-                 ;   (cadr v.)
-                  ;  v.))
-         (and (not (expander-has-macro? (transpiler-codegen-expander tr) (compiled-function-name tr n)))
-              (or (transpiler-cps-function? tr n)
-                  (and (transpiler-defined-function tr n)
-                       (not (transpiler-cps-exception? tr n))))))))
+  (& (%setq-funcall? x)
+     (let n (car (%setq-value x))
+       (& (not (expander-has-macro? (transpiler-codegen-expander tr) (compiled-function-name tr n)))
+          (cps-function? n)))))
 
 (defun cps-constructorcall? (x)
-  (and (%setq-funcall? x)
-       (eq '%new (car (%setq-value x)))
-       (with (n (cadr (%setq-value x))
-              tr *current-transpiler*)
-         (or (transpiler-cps-function? tr n)
-             (and (transpiler-defined-function tr n)
-                  (not (transpiler-cps-exception? tr n)))))))
+  (& (%setq-funcall? x)
+     (eq '%new (car (%setq-value x)))
+     (cps-function? (cadr (%setq-value x)))))
 
 (defun cps-apply? (x)
-  (and (%setq-funcall? x)
-       (eq 'apply (car (%setq-value x)))))
+  (& (%setq-funcall? x)
+     (eq 'apply (car (%setq-value x)))))
 
 (defun cps-methodcall? (x)
-  (and (%setq? x)
-       (cons? (%setq-value x))
-       (%slot-value? (car (%setq-value x)))))
+  (& (%setq? x)
+     (cons? (%setq-value x))
+     (%slot-value? (car (%setq-value x)))))
 
 (defun cps-foureign-funcall? (x)
   (%setq-funcall? x))
        ;(eq 'cps-wrap (car (%setq-value x)))))
 
 ;(defun cps-foureign-funcall? (x)
-;  (and (%setq-funcall? x)
+;  (& (%setq-funcall? x)
 ;       (let n (car (%setq-value x))
-;         (and (not (%transpiler-native? n))
-;              (or (and (atom n)
+;         (& (not (%transpiler-native? n))
+;              (| (& (atom n)
 ;                       (not (transpiler-defined-function *current-transpiler* n)
 ;                            (transpiler-cps-function? *current-transpiler* n)
 ;                            (expander-has-macro? (transpiler-codegen-expander *current-transpiler*)
 ;                                                 (compiled-function-name *current-transpiler* n))))
-;                  (and (%slot-value? n)
+;                  (& (%slot-value? n)
 ;                       (eq 'window .n.)
 ;                       (print n)))))))
 
@@ -95,8 +91,7 @@
 ;                          (cdr (%setq-value x))))
 ;    (let r `(,@replacements
 ;             (%setq ,(%setq-place x) (,(car (%setq-value x)) ,@new-args)))
-;      (when some-replaced?
-;        (print r))
+;      (& some-replaced? (print r))
 ;      r)))
 
 (defun cps-foureign-funcall (fi x)
@@ -111,13 +106,13 @@
                                                :args (list arg)))))))
 
 (defun cps-split-make-continuer (fi x xlats)
-  (aif (%setq-place x.)
-       (copy-lambda `#'((_)
+  (!? (%setq-place x.)
+      (copy-lambda `#'((_)
                          (%setq ,(%setq-place x.) _)
                          ,(cps-make-call-to-next x xlats))
-                    :args '(_)
-                    :info (make-funinfo :args '(_) :parent fi))
-       (cps-cons-function-name .x xlats)))
+                   :args '(_)
+                   :info (make-funinfo :args '(_) :parent fi))
+      (cps-cons-function-name .x xlats)))
 
 (defun cps-split-funcall-0 (fi fun xlats args)
   `((%setq nil (,fun ,@args))))
@@ -171,13 +166,13 @@
                                        ,(cps-cons-function-name .x xlats)))))
 
 (defun cps-splitpoint-expr? (x)
-  (or (cps-apply? x)
-      (cps-funcall? x)
-;      (cps-foureign-funcall? x)
-;      (cps-methodcall? x)
-;      (cps-constructorcall? x)
-      (%%vm-go? x)
-      (%%vm-go-nil? x)))
+  (| (cps-apply? x)
+     (cps-funcall? x)
+;     (cps-foureign-funcall? x)
+;     (cps-methodcall? x)
+;     (cps-constructorcall? x)
+     (%%vm-go? x)
+     (%%vm-go-nil? x)))
 
 (defun cps-check-funcall (fi x xlats))
 
@@ -207,8 +202,8 @@
     nil))
 
 (defun cps-funcall-with-literal-continuer? (x)
-  (and (%setq-funcall? x.)
-       (member '~%continuer (cdr (%setq-value x.)) :test #'eq)))
+  (& (%setq-funcall? x.)
+     (member '~%continuer (cdr (%setq-value x.)) :test #'eq)))
 
 (defun cps-body (fi continuer x xlats tag-xlats &key (first? t) exit-tag)
   (?
@@ -276,9 +271,9 @@
     (%setq (%slot-value ,(%setq-place x) tre-cps) t)))
 
 (defun %quote-%transpiler-native-or-%var? (x)
-  (or (%quote? x)
-      (%transpiler-native? x)
-      (%var? x)))
+  (| (%quote? x)
+     (%transpiler-native? x)
+     (%var? x)))
 
 (define-concat-tree-filter cps-filter (x)
   (%quote-%transpiler-native-or-%var? x) (list x)

@@ -26,14 +26,14 @@
   (in=? x #\< #\> #\/ #\: #\=))
 
 (defun xml-whitespace? (x)
-  (and (< x 33) (> x 0)))
+  (& (< x 33) (> x 0)))
 
 (defun xml-text-char? (x)
   (not (in=? x #\<))); #\&)))
 
 (defun xml-identifier-char? (x)
-  (not (or (xml-special-char? x)
-		   (xml-whitespace? x))))
+  (not (| (xml-special-char? x)
+		  (xml-whitespace? x))))
 
 ;;; String functions
 
@@ -104,8 +104,8 @@
 
 (defun xml-unify-string (s)
   "Unify string."
-  (when s
-    (or (href *xml-unified-strings* s)
+  (& s
+     (| (href *xml-unified-strings* s)
         (= (href *xml-unified-strings* s) s))))
 
 (defun xml2lml-unify-identifier (in)
@@ -154,8 +154,8 @@
 
 (defun xml2lml-string-symbol (s)
   (unless (string== "" s)
-    (? (every (fn and (alpha-char-p _)
-				      (lower-case-p _))
+    (? (every (fn & (alpha-char-p _)
+				    (lower-case-p _))
 		      (string-list s))
        (make-symbol (string-upcase s))
        s)))
@@ -164,31 +164,28 @@
   "Read quoted string."
   (xml-skip-spaces in)
   (let c (xml-read-char in)
-    (unless (or (== c #\") (== c #\'))
+    (unless (| (== c #\") (== c #\'))
       (xml-error "quote expected"))
 	(list-string (xml2lml-quoted-string-r in c))))
 
 (defun xml2lml-attributes (in)
   "Read single attribute assigment."
   (xml-skip-spaces in)
-  (when (xml-identifier-char? (xml-peek-char in))
-    (with ((ns name) (xml2lml-name in
-									 *keyword-package*))
-      (xml-expect-char in #\=)
-      `(,name ,(xml2lml-string-symbol
-				   (xml-unify-string
-					   (xml2lml-quoted-string in)))
-		  ,@(xml2lml-attributes in)))))
+  (& (xml-identifier-char? (xml-peek-char in))
+     (with ((ns name) (xml2lml-name in *keyword-package*))
+       (xml-expect-char in #\=)
+       `(,name ,(xml2lml-string-symbol (xml-unify-string (xml2lml-quoted-string in)))
+         ,@(xml2lml-attributes in)))))
 
 (defun xml2lml-standard-tag (in)
   (with (closing   (xml-read-optional-slash in)
          (ns name) (xml2lml-name in)
          attrs     (xml2lml-attributes in)
          inline    (xml-read-optional-slash in))
-    (when (and inline closing)
-      (xml-error "/ at start and end of tag")) ; XXX xml-collect-error
-    (unless (== (xml-read-char in) #\>)
-      (xml-error "end of tag expected instead of char '~A'" (stream-last-char in)))
+    (& inline closing
+       (xml-error "/ at start and end of tag")) ; XXX xml-collect-error
+    (| (== (xml-read-char in) #\>)
+       (xml-error "end of tag expected instead of char '~A'" (stream-last-char in)))
 	;(xml-issue-collected-errors)
     (values ns name
 			(?
@@ -199,8 +196,8 @@
 
 (defun xml2lml-version-tag (in)
   (xml-expect-char in #\?)
-  (while (not (and (== #\? (xml-read-char in))
-				   (== #\> (xml-read-char in))))
+  (while (not (& (== #\? (xml-read-char in))
+			     (== #\> (xml-read-char in))))
 	     (xml2lml-toplevel in)))
 
 (defun xml-skip-decl (in)
@@ -208,15 +205,15 @@
 		 (xml2lml-toplevel in)))
 
 (defun xml-skip-comment (in)
-  (while (not (and (== #\- (xml-read-char in))
-				   (== #\- (xml-read-char in))
-				   (== #\> (xml-read-char in))))
+  (while (not (& (== #\- (xml-read-char in))
+			     (== #\- (xml-read-char in))
+			     (== #\> (xml-read-char in))))
 		 (xml2lml-toplevel in)))
 
 (defun xml2lml-comment-or-decl (in)
   (xml-expect-char in #\!)
-  (? (and (== #\- (read-char in))
-  	      (== #\- (read-char in)))
+  (? (& (== #\- (read-char in))
+  	    (== #\- (read-char in)))
 	 (xml-skip-comment in)
 	 (xml-skip-decl in)))
 
@@ -235,10 +232,10 @@
          'inline
   	          `((,name ,@attrs) ,@(xml2lml-list in this-ns this-name))
          'closing
-              (unless (and (equal ns this-ns)
-			               (equal name this-name))
-                (xml-error "closing tag for ~A:~A where ~A:~A was expected"
-		                   ns name this-ns this-name))
+              (| (& (equal ns this-ns)
+			        (equal name this-name))
+                 (xml-error "closing tag for ~A:~A where ~A:~A was expected"
+		                    ns name this-ns this-name))
          `(,(xml2lml-block in ns name attrs) ,@(xml2lml-list in this-ns this-name))))
   `(,(xml2lml-text in) ,@(xml2lml-list in this-ns this-name))))
 

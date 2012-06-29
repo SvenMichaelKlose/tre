@@ -8,17 +8,11 @@
 
 (defun equal (x y)
   (?
-	(or (atom x)
-		(atom y))
-      (eql x y)
-    (equal (car x)
-		   (car y))
-      (equal (cdr x)
-			 (cdr y))))
+	(| (atom x) (atom y))    (eql x y)
+    (equal (car x) (car y))  (equal (cdr x) (cdr y))))
 
 (define-test "EQUAL with CONS"
-  ((equal (list 'x)
-		  (list 'x)))
+  ((equal (list 'x) (list 'x)))
   t)
 
 (define-test "EQUAL fails on different lists"

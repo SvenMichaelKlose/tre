@@ -16,10 +16,10 @@
 
 (defun peek-char (&optional (str *standard-input*))
   "Read character without stepping to next."
-  (or (stream-peeked-char str)
-      (= (stream-peeked-char str) (read-char str))))
+  (| (stream-peeked-char str)
+     (= (stream-peeked-char str) (read-char str))))
 
 (defun end-of-file (&optional (str *standard-input*))
   "Test if stream is at file end."
-  (when (stream-fun-eof str)
-    (funcall (stream-fun-eof str) str)))
+  (& (stream-fun-eof str)
+     (funcall (stream-fun-eof str) str)))

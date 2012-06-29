@@ -31,8 +31,8 @@
     x x.p))
 
 (defun symbol? (x)
-  (or (not x)
-      (%%%eq t x)
-      (and (object? x)
-	       x.__class
-           (%%%== x.__class ,(transpiler-obfuscated-symbol-string *current-transpiler* 'symbol)))))
+  (| (not x)
+     (%%%eq t x)
+     (& (object? x)
+	     x.__class
+         (%%%== x.__class ,(transpiler-obfuscated-symbol-string *current-transpiler* 'symbol)))))

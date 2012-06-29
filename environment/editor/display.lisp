@@ -95,7 +95,7 @@
 	    (princ (elt line xl))))))
 
 (defun editor-redraw-line (ed &optional (n nil))
-  (with (y (or n (editor-state-y ed)))
+  (with (y (| n (editor-state-y ed)))
     (ansi-position 0 y)
     (ansi-clrln)
     (with (ty (+ y (editor-state-line-offset ed)))

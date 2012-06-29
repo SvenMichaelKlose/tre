@@ -1,21 +1,22 @@
-;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun assignment-to-symbol? (x)
-  (and (%setq? x)
-       (awhen (%setq-place x)
-         (atom !))))
+  (& (%setq? x)
+     (awhen (%setq-place x)
+       (atom !))))
 
+; XXX make new predicate
 (def-opt-peephole-fun opt-peephole-rename-temporaries
-  (and (assignment-to-symbol? a)
-       (%setq? d.)
-       (with (plc (%setq-place a)
-              val (%setq-value d.))
-         (and (not (in? plc '~%ret '~%tmp))
-              (cons? val)
-              (removable-place? plc)
-              (find-tree .val plc :test #'eq)
-              (or (eq (%setq-place d.) plc)
-                  (not (opt-peephole-will-be-used-again? .d plc))))))
+  (& (assignment-to-symbol? a)
+     (%setq? d.)
+     (with (plc (%setq-place a)
+            val (%setq-value d.))
+       (& (not (in? plc '~%ret '~%tmp))
+          (cons? val)
+          (removable-place? plc)
+          (find-tree .val plc :test #'eq)
+          (| (eq (%setq-place d.) plc)
+              (not (opt-peephole-will-be-used-again? .d plc))))))
     (with (plc (%setq-place a)
            val (%setq-value d.)
            fi *opt-peephole-funinfo*)

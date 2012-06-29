@@ -1,8 +1,8 @@
 ;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun two-subsequent-tags? (a d)
-  (and a (atom a)
-       d. (atom d.)))
+  (& a (atom a)
+     d. (atom d.)))
 
 (defun opt-peephole-has-no-jumps-to (x tag)
   (dolist (i x t)
@@ -20,28 +20,28 @@
   (copy-lambda x :body (opt-peephole-remove-spare-tags (opt-peephole-tags-lambda (lambda-body x)))))
 
 (defun opt-peephole-remove-spare-tags (x)
-  (when x
-	(cons (?
-	  		(named-lambda? x.) (opt-peephole-remove-spare-tags-body x.)
-	  		(and (%setq? x.)
-	  	   		 (lambda? (caddr x.))) `(%setq ,(cadr x.) ,(opt-peephole-remove-spare-tags-body (caddr x.)))
-			x.)
-		  (opt-peephole-remove-spare-tags .x))))
+  (& x
+	 (cons (?
+	  		 (named-lambda? x.)       (opt-peephole-remove-spare-tags-body x.)
+	  		 (& (%setq? x.)
+	  	   	    (lambda? (caddr x.))) `(%setq ,(cadr x.) ,(opt-peephole-remove-spare-tags-body (caddr x.)))
+			 x.)
+		   (opt-peephole-remove-spare-tags .x))))
    
 (defun opt-peephole (statements)
   (with
 	  (removed-tags nil
        replace-tag
          #'((old-dest new-dest)
-			 (= removed-tags (filter (fn ? (eq ._ old-dest)
-                                           (cons _. new-dest)
-                                           _)
-                                     removed-tags)))
+			  (= removed-tags (filter (fn ? (eq ._ old-dest)
+                                            (cons _. new-dest)
+                                            _)
+                                      removed-tags)))
 
        add-removed-tag
          #'((old-tag new-tag)
-			 (replace-tag old-tag new-tag)
-		     (acons! old-tag new-tag removed-tags))
+			  (replace-tag old-tag new-tag)
+		      (acons! old-tag new-tag removed-tags))
 
 	   reduce-tags
 		 #'((x)
@@ -50,7 +50,7 @@
                   (progn
 				    (add-removed-tag a d.)
 				    (reduce-tags d))
-    		    (and (number? a)
+    		    (& (number? a)
                      (%%vm-go? d.))
                   (progn
                     (add-removed-tag a (cadr d.))
@@ -58,9 +58,9 @@
 
        translate-tags
 		 #'((x)
-    		 (maptree (fn aif (assoc _ removed-tags :test #'eq)
-                              .!
-                              _)
+    		 (maptree (fn !? (assoc _ removed-tags :test #'eq)
+                             .!
+                             _)
                       x))
 	   rec
 		 #'((x)

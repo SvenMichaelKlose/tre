@@ -23,6 +23,5 @@
 (defun editor-state-create (name terminal)
   (make-editor-state
 	  :name name
-	  :text (make-text-container
-		        :lines (and name (editor-read name)))
+	  :text (make-text-container :lines (& name (editor-read name)))
 	  :terminal terminal))

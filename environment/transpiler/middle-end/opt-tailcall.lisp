@@ -13,16 +13,16 @@
 		  (opt-tailcall-fun fi args .x name front-tag)))
 
 (defun %setq-function-call? (x)
-  (and (%setq? x)
-	   (cons? (%setq-value x))))
+  (& (%setq? x)
+     (cons? (%setq-value x))))
 
 (defun call-of-function? (expr name)
-  (and (%setq-function-call? expr)
-	   (eq name (car (%setq-value expr)))))
+  (& (%setq-function-call? expr)
+     (eq name (car (%setq-value expr)))))
 
 (defun sets-non-local? (fi x)
-  (and (%setq? x)
-	   (not (funinfo-in-env? fi (%setq-place x)))))
+  (& (%setq? x)
+     (not (funinfo-in-env? fi (%setq-place x)))))
 
 (defun function-will-exit? (fi x)
   (?
@@ -31,15 +31,15 @@
 	(%%vm-go? x.)
 	  (when (member (cadr x.) .x :test #'eq)
 		(function-will-exit? fi .x))
-	(or (vm-jump? x.)
-		(%setq? x.))
+	(| (vm-jump? x.)
+	   (%setq? x.))
 	  nil
 	(function-will-exit? fi .x)))
 
 (defun opt-tailcall-fun (fi args x name front-tag)
   (when x
-    (? (and (call-of-function? x. name)
-  		    (function-will-exit? fi .x))
+    (? (& (call-of-function? x. name)
+  		  (function-will-exit? fi .x))
 	   (opt-tailcall-fun-0 fi args x name front-tag)
 	   (cons x. (opt-tailcall-fun fi args .x name front-tag)))))
 

@@ -2,13 +2,12 @@
 
 (defun collect-symbols (x)
   (with (ret (make-queue)
-  		 rec #'((x)
-				  (when x
-    				(? (and (atom x)
-							(not (string== "" (symbol-name x))))
-        			   (enqueue ret x)
-        			   (when (cons? x)
-          			     (rec x.)
-          			     (rec .x))))))
+  		 rec (fn & _
+    			   (? (& (atom _)
+					     (not (string== "" (symbol-name _))))
+        		      (enqueue ret _)
+        		      (when (cons? _)
+          		        (rec _.)
+          		        (rec ._)))))
 	(rec x)
 	(queue-list ret)))

@@ -27,20 +27,19 @@
   (let e (make-expander :macros (make-hash-table :test #'eq)
 						:pred pred
 						:call call
-						:pre (or pre #'(nil))
-						:post (or post #'(nil)))
+						:pre (| pre #'(nil))
+						:post (| post #'(nil)))
     (acons! expander-name e *expanders*)
     (unless pred
       (= (expander-pred e)
          (lx (e)
-	       (fn and (symbol? _.)
-	               (symbol-name _.)
-	               (expander-macro-function ,e _.)))))
+	       (fn & (symbol? _.)
+	             (symbol-name _.)
+	             (expander-macro-function ,e _.)))))
     (unless call
       (= (expander-call e)
          (lx (e)
-	       (fn (when *expander-print*
-                 (print _))
+	       (fn (& *expander-print* (print _))
                (apply (expander-macro-function ,e _.) ._)))))
     (= (expander-lookup e)
        #'((expander name)
@@ -48,9 +47,9 @@
 	e))
 
 (defun set-expander-macro (expander-name name fun &key (may-redefine? nil))
-  (and (not may-redefine?)
-       (expander-has-macro? expander-name name)
-       (warn "Macro ~A already defined.~%" name))
+  (& (not may-redefine?)
+     (expander-has-macro? expander-name name)
+     (warn "Macro ~A already defined.~%" name))
   (= (href (expander-macros (expander-get expander-name)) name) fun))
 
 (defun set-expander-macros (expander-name lst)
@@ -63,8 +62,8 @@
     (error "Atom expected as macro-name instead of ~A for expander ~A.~%" name expander-name))
   (with-gensym g
     `(progn
-	   (when (expander-has-macro? ',expander-name ',name)
-	     (warn "Redefinition of acro ~A in expander ~A.~%" ',name ',expander-name))
+	   (& (expander-has-macro? ',expander-name ',name)
+	      (warn "Redefinition of acro ~A in expander ~A.~%" ',name ',expander-name))
 	   (defun ,g ,args ,@body)
        (= (href (expander-macros (expander-get ',expander-name)) ',name) #',g))))
 

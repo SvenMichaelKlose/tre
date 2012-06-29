@@ -8,8 +8,7 @@
 (defun + (&rest x)
   (let n (%wrap-char-number x.)
 	(dolist (i .x n)
-      (= n (? (or (string? n)
-                  (string? i))
+      (= n (? (| (string? n) (string? i))
 	          (%%%string+ (string n) (string i))
 	          (%%%+ n (%wrap-char-number i)))))))
 
@@ -92,8 +91,8 @@
 (def-generic-transpiler-comparison >=)
 
 (defun number? (x)
-  (or (%number? x)
-	  (character? x)))
+  (| (%number? x)
+     (character? x)))
 
 (defun integer (x)
   (?

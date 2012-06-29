@@ -17,14 +17,14 @@
 	     ")")))
 
 (defun js-codegen-symbol-constructor (tr x)
-  (or (href *js-compiled-symbols* x)
-      (= (href *js-compiled-symbols* x)
-         (let g (compiled-symbol-identifier x)
-           (push `("var " ,(transpiler-obfuscated-symbol-string tr g)
-                          "=" ,@(js-codegen-symbol-constructor-expr tr x)
-	                      ,*js-separator*)
-                 (transpiler-raw-decls tr))
-           g))))
+  (| (href *js-compiled-symbols* x)
+     (= (href *js-compiled-symbols* x)
+        (let g (compiled-symbol-identifier x)
+          (push `("var " ,(transpiler-obfuscated-symbol-string tr g)
+                         "=" ,@(js-codegen-symbol-constructor-expr tr x)
+                         ,*js-separator*)
+                (transpiler-raw-decls tr))
+          g))))
 
 (define-codegen-macro-definer define-js-macro *js-transpiler*)
 
@@ -57,11 +57,9 @@
   (parenthized-comma-separated-list (argument-expand-names debug-section args)))
 
 (define-js-macro function (&rest x)
-  (when ..x
-	(error "an optional function name followed by the head/body expected"))
+  (& ..x (error "an optional function name followed by the head/body expected"))
   (= x (? .x .x. x.))
-  (? (or (atom x)
-		 (%stack? x))
+  (? (| (atom x) (%stack? x))
 	 x
      `("function " ,@(js-argument-list 'unnamed-js-function (lambda-args x)) ,(code-char 10)
 	   "{" ,(code-char 10)
@@ -70,12 +68,12 @@
 
 (define-js-macro %function-prologue (fi-sym)
   `(%transpiler-native ""
-	   ,@(when (transpiler-stack-locals? *current-transpiler*)
-	       `(,*js-indent* "var _locals=[]" ,*js-separator*))
-	   ,@(when (< 0 (funinfo-num-tags (get-funinfo-by-sym fi-sym)))
-	       `(,*js-indent* "var _I_=0" ,*js-separator*
-		     ,*js-indent* "while(1){" ,*js-separator*
-		     ,*js-indent* "switch(_I_){case 0:" ,*js-separator*))))
+	   ,@(& (transpiler-stack-locals? *current-transpiler*)
+	        `(,*js-indent* "var _locals=[]" ,*js-separator*))
+	   ,@(& (< 0 (funinfo-num-tags (get-funinfo-by-sym fi-sym)))
+	        `(,*js-indent* "var _I_=0" ,*js-separator*
+		      ,*js-indent* "while(1){" ,*js-separator*
+		      ,*js-indent* "switch(_I_){case 0:" ,*js-separator*))))
 
 (define-js-macro %function-return (fi-sym)
   (let fi (get-funinfo-by-sym fi-sym)
@@ -83,19 +81,18 @@
 
 (define-js-macro %function-return-cps (fi-sym)
   (let fi (get-funinfo-by-sym fi-sym)
-    (? (and (funinfo-num-tags fi)
-            (< 0 (funinfo-num-tags fi)))
+    (? (& (funinfo-num-tags fi)
+          (< 0 (funinfo-num-tags fi)))
        `(,*js-indent*  "return" ,*js-separator*)
        "")))
 
 (define-js-macro %function-epilogue (fi-sym)
   (let fi (get-funinfo-by-sym fi-sym)
-    (or `(,@(? (and (transpiler-continuation-passing-style? *current-transpiler*)
-                    (funinfo-needs-cps? fi))
+    (| `(,@(? (& (transpiler-continuation-passing-style? *current-transpiler*)
+                 (funinfo-needs-cps? fi))
               `((%function-return-cps ,fi-sym))
               `((%function-return ,fi-sym)))
-	      ,@(when (< 0 (funinfo-num-tags fi))
-	          `("}}")))
+	     ,@(& (< 0 (funinfo-num-tags fi)) `("}}")))
         "")))
 
 ;;;; ASSIGNMENT
@@ -106,15 +103,13 @@
         ,@(? dest
 		     `(,dest "=")
 		     '("")))
-	,(? (or (atom val)
-			(codegen-expr? val))
+	,(? (| (atom val) (codegen-expr? val))
 		val
 		(js-call val))
     ,*js-separator*))
 
 (define-js-macro %setq (dest val)
-  (? (and (not dest)
-		  (atom val))
+  (? (& (not dest) (atom val))
 	 '(%transpiler-native "")
 	 (js-%setq-0 dest val)))
 
@@ -164,7 +159,7 @@
 
 (define-js-macro aref (arr &rest idx)
   `(%transpiler-native ,arr
-     ,@(mapcar (fn `("[" ,_ "]")) idx)))
+     ,@(filter (fn `("[" ,_ "]")) idx)))
 
 (define-js-macro %%u=-aref (val &rest x)
   `(%transpiler-native (aref ,@x) "=" ,val))
@@ -174,16 +169,15 @@
 (define-js-macro %%%make-hash-table (&rest args)
   (let pairs (group args 2)
     `("{"
-      ,@(when args
-	      (mapcan (fn `(,(symbol-without-package _.) ":" ,._. ",")) (butlast pairs)))
-      ,@(when args
-		  (let x (car (last pairs))
-		    `(,(symbol-without-package x.) ":" ,.x.)))
+      ,@(& args (filter (fn `(,(symbol-without-package _.) ":" ,._. ",")) (butlast pairs)))
+      ,@(& args ; XXX append to previous
+		   (let x (car (last pairs))
+		     `(,(symbol-without-package x.) ":" ,.x.)))
      "}")))
 
 (define-js-macro href (arr &rest idx)
   `(%transpiler-native ,arr
-     ,@(mapcar (fn `("[" ,_ "]")) idx)))
+     ,@(filter (fn `("[" ,_ "]")) idx)))
 
 (define-js-macro %%u=-href (val &rest x)
   `(%transpiler-native (aref ,@x) "=" ,val))

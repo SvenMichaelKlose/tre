@@ -49,17 +49,17 @@
 
 (defun rename-body-tags-set-0 (x renamed)
   (?
-	(number? x)	      (or (assoc-value x renamed :test #'==)
-				  	  	  (error "didn't gather tag ~A" x.))
+	(number? x)	      (| (assoc-value x renamed :test #'==)
+				  	    (error "didn't gather tag ~A" x.))
 	(%quote? x)       x
-	(%%vm-go? x)      `(%%vm-go ,(or (assoc-value .x. renamed :test #'==)
-						   		     (error "didn't gather tag ~A for VM-GO" x)))
+	(%%vm-go? x)      `(%%vm-go ,(| (assoc-value .x. renamed :test #'==)
+						   		    (error "didn't gather tag ~A for VM-GO" x)))
 	(%%vm-go-nil? x)  `(%%vm-go-nil ,.x.
-				   	 	  		    ,(or (assoc-value ..x. renamed :test #'==)
-						       		     (error "didn't gather tag ~A VM-GO-NIL" x)))
+				   	 	  		    ,(| (assoc-value ..x. renamed :test #'==)
+						       		    (error "didn't gather tag ~A VM-GO-NIL" x)))
 	(%%vm-go-not-nil? x)  `(%%vm-go-not-nil ,.x.
-				   	 	  		            ,(or (assoc-value ..x. renamed :test #'==)
-						       		             (error "didn't gather tag ~A VM-GO-NOT-NIL" x)))
+				   	 	  		            ,(| (assoc-value ..x. renamed :test #'==)
+						       		            (error "didn't gather tag ~A VM-GO-NOT-NIL" x)))
 	(lambda? x) 	  (copy-lambda x
 				  		  :body (rename-body-tags-set (lambda-body x) renamed))
 	(%%vm-scope? x)   `(%%vm-scope ,@(rename-body-tags-set .x renamed))

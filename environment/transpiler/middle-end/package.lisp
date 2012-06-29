@@ -5,27 +5,26 @@
     (atom x) x
     (eq '%quote x.) x
     (eq '%%in-package x.)
-      (and (= (transpiler-current-package *current-transpiler*) (and .x. (make-package (symbol-name .x.))))
-           nil)
-    (cons (process-%%in-package x.)
-          (process-%%in-package .x))))
+      (& (= (transpiler-current-package *current-transpiler*) (& .x. (make-package (symbol-name .x.))))
+         nil)
+    (cons-r process-%%in-package x)))
 
 (defun make-packages-0 (x)
-  (?
-    (not x) x
-    (and (symbol? x)
+  (let tr *current-transpiler*
+    (?
+      (not x) x
+      (& (symbol? x)
          (not (symbol-package x)))
-      (let packaged-symbol (transpiler-package-symbol *current-transpiler* x)
-        (? (transpiler-defined-function *current-transpiler* packaged-symbol)
-           packaged-symbol
-           x))
-    (atom x) x
-    (eq '%%in-package x.)
-      (and (= (transpiler-current-package *current-transpiler*) (and .x. (make-package (symbol-name .x.))))
+        (let packaged-symbol (transpiler-package-symbol tr x) ; XXX into own function
+          (? (transpiler-defined-function tr packaged-symbol)
+             packaged-symbol
+             x))
+      (atom x) x
+      (eq '%%in-package x.)
+        (& (= (transpiler-current-package tr) (& .x. (make-package (symbol-name .x.))))
            nil)
-    (%slot-value? x) x
-    (cons (make-packages-0 x.)
-          (make-packages-0 .x))))
+      (%slot-value? x) x
+      (cons-r make-packages-0 x))))
 
 (defun make-packages (x)
   (let processed (process-%%in-package x)

@@ -12,16 +12,16 @@
 
 (defun opt-inline-args-to-inlined-fun (tr x argdef body level current parent)
   (opt-inline-0 tr level current parent
-	            (transpiler-frontend-1 tr (? (and (not argdef) .x)
+	            (transpiler-frontend-1 tr (? (& (not argdef) .x)
 			                                 .x
 			                                 (expex-argument-expand 'opt-inline argdef .x)))))
 
 (defun opt-inline-import (tr x argdef body level current parent)
-  (when (and (not argdef) .x)
-	(print (symbol-name x.))
-	(warn "REMINDER: no argument definition for function ~A" argdef))
-  (when *show-inlines?*
-    (format t "; Inlining function ~A" x.))
+  (& (not argdef) .x
+	 (print (symbol-name x.))
+	 (warn "REMINDER: no argument definition for function ~A" argdef))
+  (& *show-inlines?*
+     (format t "; Inlining function ~A" x.))
   `(,(opt-inline-inlined-fun tr x argdef body level current parent)
 	,@(opt-inline-args-to-inlined-fun tr x argdef body level current parent)))
 
@@ -30,8 +30,8 @@
 		 argdef (? (transpiler-defined-function tr x.)
 				   (transpiler-function-arguments tr x.)
 				   (function-arguments fun))
-	     body (or (transpiler-function-body tr x.)
-				  (function-body fun)))
+	     body (| (transpiler-function-body tr x.)
+			     (function-body fun)))
 	(?
 	  (not body) nil
 	  (not argdef) x
@@ -41,8 +41,8 @@
 	  x)))
 
 (defun inlineable? (tr x)
-  (not (or (transpiler-macro? tr x)
-		   (transpiler-dont-inline? tr x))))
+  (not (| (transpiler-macro? tr x)
+		  (transpiler-dont-inline? tr x))))
 
 (defun opt-inline-0 (tr level current parent x &key (tail? nil))
   (?
@@ -52,18 +52,20 @@
 	  (cons x. (opt-inline-0 tr level current parent .x :tail? tail?))
 
 	(let f x..
-	  (and (not tail? (eq current f))
-		   (inlineable? tr f)
-		   (or (transpiler-defined-function tr f)
-			   (and (atom f)
-					(function? (symbol-function f))
-			 	    (not (builtin? f))))))
+	  (& (not tail? (eq current f))
+		 (inlineable? tr f)
+		 (| (transpiler-defined-function tr f)
+            (& (atom f)
+               (function? (symbol-function f))
+               (not (builtin? f))))))
 	  (cons (opt-inline-1 tr level current parent x.)
 		    (opt-inline-0 tr level current parent .x))
+
 	(lambda? x.)
 	  (cons (copy-lambda x. :args (lambda-args x.)
 				            :body (opt-inline-0 tr level current parent (lambda-body x.)))
 		    (opt-inline-0 tr level current parent .x))
+
 	(cons (opt-inline-0 tr level current parent x.)
 		  (opt-inline-0 tr level current parent .x :tail? tail?))))
 
@@ -77,8 +79,7 @@
 (defun opt-inline (tr x)
   (? (atom x)
 	 x
-	 (cons (? (and (lambda? x.)
-				   (inlineable-expr? tr x.))
+	 (cons (? (& (lambda? x.) (inlineable-expr? tr x.))
 			  (opt-inline-lambda tr x.)
 			  (opt-inline tr x.))
            (opt-inline tr .x))))

@@ -1,4 +1,4 @@
-;;;; tré - Copyright (c) 2006-2012 Sven Michael Klose <pixel@copei.de>
+;;;; tré – Copyright (c) 2006–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun past-lambda-1 (x)
   (? (eq (car x) 'lambda)
@@ -37,13 +37,13 @@
 
 (defun lambda-funinfo (x)
   (let p (past-lambda-1 (past-function x))
-	(when (eq '%funinfo (car p))
-	  (cadr p))))
+	(& (eq '%funinfo (car p))
+	   (cadr p))))
 
 (defun lambda-funinfo-expr (x)
   (let p (past-lambda-1 (past-function x))
-	(when (eq '%funinfo (car p))
-	  (list '%funinfo (cadr p)))))
+	(& (eq '%funinfo (car p))
+	   (list '%funinfo (cadr p)))))
 
 (defun lambda-head (x)
   (append (lambda-funinfo-expr x)
@@ -59,19 +59,19 @@
   (cdr x))
 
 (defun function-expr? (x)
-  (and (cons? x)
-       (eq 'FUNCTION (car x))))
+  (& (cons? x)
+     (eq 'FUNCTION (car x))))
 
 (defun lambda-expr? (x)
-  (and (function-expr? x)
-       (cons? (cdr x))
-       (cons? (cadr x))))
+  (& (function-expr? x)
+     (cons? (cdr x))
+     (cons? (cadr x))))
 
 (defun lambda? (x)
-  (and (lambda-expr? x)
-	   (let l (past-lambda (cadr x))
-		 (and (cons? l)
-			  (listp (car l))))))
+  (& (lambda-expr? x)
+     (let l (past-lambda (cadr x))
+       (& (cons? l)
+          (listp (car l))))))
 
 (define-test "IS-LAMBDA? works"
   ((lambda? '#'((x) x)))
@@ -82,9 +82,9 @@
   t)
 
 (defun lambda-call? (x)
-  (and (cons? x)
-	   (cdr x)
-       (lambda? (car x))))
+  (& (cons? x)
+     (cdr x)
+     (lambda? (car x))))
 
 (define-test "IS-LAMBDA-CALL? works"
   ((lambda-call? '(#'((x) x) nil)))

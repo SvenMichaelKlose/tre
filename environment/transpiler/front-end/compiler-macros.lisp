@@ -9,8 +9,8 @@
 						   :post #'compiler-macroexpand-prepost)
 
 (defmacro define-compiler-macro (&rest x)
-  (when *show-definitions*
-	(late-print `(define-compiler-macro ,x.)))
+  (& *show-definitions*
+	 (late-print `(define-compiler-macro ,x.)))
   `(define-expander-macro compiler ,@x))
 
 (defun compiler-macroexpand (x)
@@ -53,16 +53,16 @@
 
 (define-compiler-macro tagbody (&rest args)
   `(%%vm-scope
-     ,@(mapcar (fn (? (cons? _)
+     ,@(filter (fn (? (cons? _)
 		     		  _
-		     		  (or (assoc-value _ *tagbody-replacements* :test #'eq)
-		       			  _)))
+		     		  (| (assoc-value _ *tagbody-replacements* :test #'eq)
+		       		     _)))
                args)
      (identity nil)))
 
 (define-compiler-macro progn (&rest body)
-  `(%%vm-scope ,@(or (vars-to-identity body) ; XXX fscking workaround
-					 '((identity nil)))))
+  `(%%vm-scope ,@(| (vars-to-identity body) ; XXX fscking workaround
+				    '((identity nil)))))
 
 (define-expander 'compiler-return)
 (defvar *blockname* nil)
@@ -78,8 +78,8 @@
 (define-compiler-macro block (block-name &rest body)
   (? body
 	 (with-compiler-tag g
-	   (with-temporary *blockname* block-name
-		 (with-temporary *blockname-replacement* g
+	   (with-temporaries (*blockname* block-name
+		                  *blockname-replacement* g)
            (with (b	 (expander-expand 'compiler-return body)
 			      head  (butlast b)
                   tail  (last b)
@@ -88,12 +88,11 @@
                            ,@(? (vm-jump? tail.)
 						        tail
 						        `((%setq ~%ret ,@tail)))))
-            (nconc ret `(,g (identity ~%ret)))))))
+            (nconc ret `(,g (identity ~%ret))))))
     `(identity nil)))
 
 (define-compiler-macro setq (&rest args)
-  `(%%vm-scope ,@(mapcar (fn `(%setq ,_. ,._.))
-                         (group args 2))))
+  `(%%vm-scope ,@(filter (fn `(%setq ,_. ,._.)) (group args 2))))
 
 (define-compiler-macro ? (&rest body)
   (with (tests (group body 2)

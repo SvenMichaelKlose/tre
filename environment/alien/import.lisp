@@ -10,8 +10,7 @@
   (href hash (lml-get-attribute desc :type)))
 
 (defun alien-import-print-type (data-type name &key :first t)
-  (unless first
-	(format t ", "))
+  (| first (format t ", "))
   (format t "~A" (force-string data-type))
   (awhen name
     (format t " ~A" (force-string !))))
@@ -27,14 +26,13 @@
 		  (dolist (x (split #\ (trim #\ (lml-get-attribute desc :members))))
 			(1+! idx)
 		    (with (field (href hash x))
-			  (if (eq 'field field.)
-		          (alien-import-print-type
-					      (alien-import-get-type-from-desc hash field)
-						  (lml-get-attribute field :name)
-						  :first (== 0 idx))
-			      (unless (eq 'constructor field.)
-				      (and (print 'XXX)
-				           (print field)))))))
+			  (? (eq 'field field.)
+		         (alien-import-print-type (alien-import-get-type-from-desc hash field)
+					                      (lml-get-attribute field :name)
+					                      :first (== 0 idx))
+			     (unless (eq 'constructor field.)
+			       (print 'XXX)
+			       (print field))))))
 	    (format t "]")))))
 
 (defun alien-import-get-type (hash tp)
@@ -52,11 +50,10 @@
          (format nil " ~A[~A]"
                  (alien-import-get-type-from-desc hash tp)
                  (1+ (string-integer (force-string (lml-get-attribute tp :size)))))
-	  (if (lml-get-attribute tp :name)
-		  (if (eq 'CVQUALIFIEDTYPE tp.)
-	   	      (alien-import-get-type-from-desc hash tp)
-		      (and (print tp)
-			       "???"))))))
+	  (? (lml-get-attribute tp :name)
+	     (? (eq 'CVQUALIFIEDTYPE tp.)
+	   	    (alien-import-get-type-from-desc hash tp)
+		    (& (print tp) "???"))))))
 
 (defun alien-import-get-type-from-desc (hash a)
   (when a	; XXX
@@ -64,25 +61,20 @@
 
 (defun alien-import-print (descr hash)
   (dolist (x descr)
-    (when (eq x. 'function)
-	  (let fun-name (string (lml-get-attribute x :name))
-	    (unless (href *alien-imported-functions* fun-name)
-		  (format t "Function ~A ~A ("
-				  (force-string (lml-get-attribute x :name))
-				  (alien-import-get-type
-					hash
-					(href hash (lml-get-attribute x :returns))))
-		  (awhen (lml-get-children x)
-			(let idx -1
-		      (dolist (a !)
-				(1+! idx)
-		        (when (eq a. 'argument)
-			      (alien-import-print-type
-					  (alien-import-get-type-from-desc hash a)
-					  (lml-get-attribute a :name)
-					  :first (== 0 idx))))))
-		  (format t ")~%")
-		  (= (href *alien-imported-functions* fun-name) t))))))
+    (& (eq x. 'function)
+	   (let fun-name (string (lml-get-attribute x :name))
+	     (unless (href *alien-imported-functions* fun-name)
+		   (format t "Function ~A ~A ("
+				   (force-string (lml-get-attribute x :name))
+				   (alien-import-get-type hash (href hash (lml-get-attribute x :returns))))
+		   (awhen (lml-get-children x)
+			 (let idx -1
+		       (dolist (a !)
+				 (1+! idx)
+		         (& (eq a. 'argument)
+			        (alien-import-print-type (alien-import-get-type-from-desc hash a) (lml-get-attribute a :name) :first (== 0 idx))))))
+		   (format t ")~%")
+		   (= (href *alien-imported-functions* fun-name) t))))))
 
 (defun alien-import-descr-hash (descr)
   (with (hash (make-hash-table :test #'string==))

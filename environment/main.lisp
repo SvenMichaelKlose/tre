@@ -88,8 +88,8 @@
 
 ; Load file specified on command-line or loaded image.
 (defun %load-launchfile ()
-  (when %LAUNCHFILE
-    (load %LAUNCHFILE)))
+  (awhen %LAUNCHFILE
+    (load !)))
 
 ;; Dump fast-loadable image.
 (defun dump-system ()

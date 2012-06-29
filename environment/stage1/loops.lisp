@@ -12,8 +12,8 @@
               (return (progn ,@result)))
            ,@body
            ,@(mapcar #'((b)
-						  (and (caddr b)
-							   `(setq ,(car b) ,(caddr b))))
+						  (& (caddr b)
+						     `(setq ,(car b) ,(caddr b))))
 					 binds)
            (go ,tag))))))
 

@@ -7,11 +7,11 @@
 
 (defun text-container-line (txt &optional (n nil))
   (elt (text-container-lines txt)
-	   (or n (text-container-y txt))))
+	   (| n (text-container-y txt))))
 
 (defun (= text-container-line) (val txt &optional (n nil))
   (with (lines	(text-container-lines txt)
-		 y		(or n (text-container-y txt)))
+		 y		(| n (text-container-y txt)))
     (= (text-container-lines txt)
 	   (nconc (subseq lines 0 y)
 		      (list val)
@@ -54,9 +54,9 @@
     (with (x		(text-container-x txt)
     	   line	(text-container-line txt))
 	  (= (text-container-line txt)
-	     (string-concat (or (subseq line 0 x) "")
-					        ,@(if insertion (list `(string c)))
-				            (or (subseq line ,(if insertion 'x '(1+ x))) ""))))))
+	     (string-concat (| (subseq line 0 x) "")
+					       ,@(? insertion (list `(string c)))
+				           (| (subseq line ,(if insertion 'x '(1+ x))) ""))))))
 
 (define-text-container-modifier text-container-insert-char t)
 (define-text-container-modifier text-container-delete-char nil)

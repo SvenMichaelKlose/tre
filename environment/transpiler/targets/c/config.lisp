@@ -7,10 +7,10 @@
 			  :inline-exceptions (list 'c-init)
 			  :dont-inline-list '(error format replace-tree)
 			  :identifier-char?
-	  		      (fn (or (<= #\a _ #\z)
-		  	  		      (<= #\A _ #\Z)
-		  	  		      (<= #\0 _ #\9)
-			  		      (in=? _ #\_ #\. #\$ #\#)))
+	  		      (fn (| (<= #\a _ #\z)
+		  	  		     (<= #\A _ #\Z)
+		  	  		     (<= #\0 _ #\9)
+			  		     (in=? _ #\_ #\. #\$ #\#)))
 			  :named-functions? t
 			  :named-function-next #'cdddr
 			  :lambda-export? t

@@ -3,8 +3,8 @@
 (defun cblocks-merge-joins (cb)
   (with (global-visited nil
          visit #'((cb visited-blocks)
-                      (? (and visited-blocks
-                              (member cb visited-blocks :test #'eq))
+                      (? (& visited-blocks
+                            (member cb visited-blocks :test #'eq))
                          (map (fn adjoin! _ (cblock-merged-ins cb))
                               (intersect (cblock-ins cb)
                                          (cblock-outs visited-blocks.)))
@@ -14,8 +14,8 @@
     (visit cb nil)))
 
 (defun cblock-rename-value (lst x)
-  (or (assoc-value x lst :test #'eq)
-      x))
+  (| (assoc-value x lst :test #'eq)
+     x))
 
 (defun cblock-rename-statement (lst x)
   (? (%quote? (%setq-value x))
@@ -35,7 +35,7 @@
 (defun cblocks-rename-merged (cb)
   (with (global-visited nil
          visit #'((cb visited-blocks)
-                      (? (and visited-blocks (member cb visited-blocks :test #'eq))
+                      (? (& visited-blocks (member cb visited-blocks :test #'eq))
                          (cblock-rename-merged cb)
                          (unless (member cb global-visited :test #'eq)
                            (push cb global-visited)
@@ -48,7 +48,7 @@
 (defun cblocks-unname-merged (cb)
   (with (global-visited nil
          visit #'((cb visited-blocks)
-                      (? (and visited-blocks (member cb visited-blocks :test #'eq))
+                      (? (& visited-blocks (member cb visited-blocks :test #'eq))
                          (cblock-unname-merged cb)
                          (unless (member cb global-visited :test #'eq)
                            (push cb global-visited)

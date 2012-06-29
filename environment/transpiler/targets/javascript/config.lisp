@@ -1,8 +1,8 @@
 ;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun js-=-function? (x)
-  (or (%=-function? x)
-      (transpiler-function-arguments *js-transpiler* x)))
+  (| (%=-function? x)
+     (transpiler-function-arguments *js-transpiler* x)))
 
 (defun make-javascript-transpiler-0 ()
   (create-transpiler
@@ -13,10 +13,10 @@
 	  :apply-argdefs? t
 	  :literal-conversion #'transpiler-expand-characters
 	  :identifier-char?
-	    (fn (or (and (>= _ #\a) (<= _ #\z))
-		  	    (and (>= _ #\A) (<= _ #\Z))
-		  	    (and (>= _ #\0) (<= _ #\9))
-			    (in=? _ #\_ #\. #\$ #\#)))
+	    (fn (| (& (>= _ #\a) (<= _ #\z))
+		  	   (& (>= _ #\A) (<= _ #\Z))
+		  	   (& (>= _ #\0) (<= _ #\9))
+			   (in=? _ #\_ #\. #\$ #\#)))
 	  :lambda-export? nil
 	  :continuation-passing-style? t
 	  :needs-var-declarations? t

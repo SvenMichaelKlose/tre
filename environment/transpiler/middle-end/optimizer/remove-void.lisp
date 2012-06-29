@@ -1,29 +1,29 @@
-;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun opt-peephole-find-next-tag (x)
-  (when x
-	(? (atom x.)
-	   x
-	   (opt-peephole-find-next-tag .x))))
+  (& x
+	 (? (atom x.)
+	    x
+	    (opt-peephole-find-next-tag .x))))
 
 (defun void-assignment? (a)
-  (and (%setq? a)
-	   (eq .a. ..a.)))
+  (& (%setq? a)
+     (eq .a. ..a.)))
 
 (defun reversed-assignments? (a d)
   (let n d
-    (and (%setq? a)
-	     (%setq? n)
-         .a.
-	     (atom .a.)
-	     (eq .a. (caddr n))
-	     (eq (cadr n) ..a.))))
+    (& (%setq? a)
+	   (%setq? n)
+       .a.
+	   (atom .a.)
+	   (eq .a. (caddr n))
+	   (eq (cadr n) ..a.))))
 
 (defun jump-to-following-tag? (a d)
-  (and d (vm-jump? a)
-       (? (%%vm-go? a)
-          (eq .a. d.)
-          (eq ..a. d.))))
+  (& d (vm-jump? a)
+     (? (%%vm-go? a)
+        (eq .a. d.)
+        (eq ..a. d.))))
 
 ;; Remove unreached code or code that does nothing.
 (def-opt-peephole-fun opt-peephole-remove-void

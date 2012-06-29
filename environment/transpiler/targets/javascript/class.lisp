@@ -6,21 +6,21 @@
        (defun ,cname ,args
          (= (slot-value this ,magic) t)
          ; Inject calls to base constructors.
-         ,@(mapcar (fn `((slot-value ,_ 'CALL) this)) bases)
+         ,@(filter (fn `((slot-value ,_ 'CALL) this)) bases)
          (let ~%this this
            (%thisify ,cname
              ,@(ignore-body-doc body))))
 
        ; Inherit base class prototypes.
-       ,@(mapcar (fn `(hash-merge (slot-value ,cname 'PROTOTYPE)
+       ,@(filter (fn `(hash-merge (slot-value ,cname 'PROTOTYPE)
                      		      (slot-value ,_ 'PROTOTYPE)))
 		         bases)
 
 	   ; Make predicate.
 	   (defun ,($ cname '?) (x)
-	     (and (object? x)
-              (defined? (slot-value x ,magic))
-              x)))))
+	     (& (object? x)
+            (defined? (slot-value x ,magic))
+            x)))))
 
 (define-js-std-macro defclass (class-name args &rest body)
   (apply #'transpiler_defclass #'js-make-constructor class-name args body))
@@ -35,12 +35,8 @@
   `((%transpiler-native ,x.)
 	#'(,.x.
 		(%thisify ,class-name
-		  ,@(when *transpiler-assert*
-			  (list (string-concat (symbol-name class-name)
-								   "." (symbol-name x.))))
 		  (let ~%this ,(? (in-cps-mode?) '~%cps-this 'this)
-	        ,@(or (ignore-body-doc ..x.)
-				  (list nil)))))))
+	        ,@(| (ignore-body-doc ..x.) (list nil)))))))
 
 (defun js-emit-methods (class-name cls)
   (awhen (class-methods cls)
@@ -51,8 +47,8 @@
 
 (define-js-std-macro finalize-class (class-name)
   (let classes (transpiler-thisify-classes *current-transpiler*)
-    (aif (href classes class-name)
-	      `(progn
-			 ,(assoc-value class-name *delayed-constructors*)
-			 ,(js-emit-methods class-name !))
-	     (error "Cannot finalize undefined class ~A." class-name))))
+    (!? (href classes class-name)
+	    `(progn
+		   ,(assoc-value class-name *delayed-constructors*)
+		   ,(js-emit-methods class-name !))
+	    (error "Cannot finalize undefined class ~A." class-name))))

@@ -17,8 +17,8 @@
   (with-gensym x
     `(defun ,name (&rest ,x ,@args)
        (dolist (,iter ,x t)
-         (unless ,test-expr
-           (return nil))))))
+         (| ,test-expr
+            (return nil))))))
 
 (def-rest-predicate lower-case-p c ()
   (range-p c #\a #\z))
@@ -27,8 +27,8 @@
   (range-p c #\A #\Z))
 
 (def-rest-predicate alpha-char-p c ()
-  (or (lower-case-p c)
-      (upper-case-p c)))
+  (| (lower-case-p c)
+     (upper-case-p c)))
 
 (defun decimal-digit? (x)
   (range-p x #\0 #\9))
@@ -37,14 +37,14 @@
   (range-p x start (character+ start (character- base 10))))
 
 (defun nondecimal-digit? (x &key (base 10))
-  (and (< 10 base)
-       (or (%nondecimal-digit? x #\a base)
-           (%nondecimal-digit? x #\A base))))
+  (& (< 10 base)
+     (| (%nondecimal-digit? x #\a base)
+        (%nondecimal-digit? x #\A base))))
 
 (defun digit-char-p (c &key (base 10))
-  (and (character? c)
-       (or (decimal-digit? c)
-           (nondecimal-digit? c :base base))))
+  (& (character? c)
+     (| (decimal-digit? c)
+        (nondecimal-digit? c :base base))))
 
 (define-test "DIGIT-CHAR-P #\0"
   ((digit-char-p #\0))
@@ -55,5 +55,5 @@
   nil)
 
 (def-rest-predicate alphanumericp c ()
-  (or (alpha-char-p c)
-      (digit-char-p c)))
+  (| (alpha-char-p c)
+     (digit-char-p c)))

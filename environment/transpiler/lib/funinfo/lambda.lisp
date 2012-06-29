@@ -4,20 +4,20 @@
 (defvar *funinfos-reverse* (make-hash-table :test #'eq))
 
 (defun make-lambda-funinfo (fi)
-  (when (href *funinfos-reverse* fi)
-	(error "funinfo already memorized"))
+  (& (href *funinfos-reverse* fi)
+	 (error "funinfo already memorized"))
   (= (href *funinfos-reverse* fi) t)
   (let g (funinfo-sym fi)
 	(= (href *funinfos* g) fi)
 	`(%funinfo ,g)))
 
 (defun make-lambda-funinfo-if-missing (x fi)
-  (or (lambda-funinfo-expr x)
-	  (make-lambda-funinfo fi)))
+  (| (lambda-funinfo-expr x)
+     (make-lambda-funinfo fi)))
 
 (defun make-missing-lambda-funinfo (x fi)
-  (when (lambda-funinfo-expr x)
-	(error "already has funinfo expression"))
+  (& (lambda-funinfo-expr x)
+	 (error "already has funinfo expression"))
   (make-lambda-funinfo fi))
 
 (defun lambda-head-w/-missing-funinfo (x fi)
@@ -35,7 +35,7 @@
   (get-funinfo-by-sym (lambda-funinfo x)))
 
 (defun funinfo-expr-symbol (x)
-  (and (eq '%funinfo x.) .x.))
+  (& (eq '%funinfo x.) .x.))
 
 (defun split-funinfo-and-args (x)
   (let fi-sym (funinfo-expr-symbol x)

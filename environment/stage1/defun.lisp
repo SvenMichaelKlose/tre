@@ -5,25 +5,25 @@
 ; Check and return keyword argument or NIL.
 (%defun %defun-arg-keyword (args)
   (let a (car args)
-	(let d (and (cdr args)
-				(cadr args))
+	(let d (& (cdr args)
+			  (cadr args))
       (? (%arg-keyword? a)
          (? d
             (? (%arg-keyword? d)
-                (%error "keyword following keyword"))
+               (%error "keyword following keyword"))
             (%error "end after keyword"))))))
 
 (%defun %defun-checked-args (args)
-  (? args
-     (or (%defun-arg-keyword args)
-         (cons (car args)
-               (%defun-checked-args (cdr args))))))
+  (& args
+     (| (%defun-arg-keyword args)
+        (cons (car args) (%defun-checked-args (cdr args))))))
 
 (%defun %defun-name (name)
   (? (atom name)
      name
      (? (eq (car name) '=)
-        (make-symbol (string-concat "%%U=-" (string (cadr name))) (symbol-package (cadr name)))
+        (make-symbol (string-concat "%%U=-" (string (cadr name)))
+                     (symbol-package (cadr name)))
         (progn
 	      (print name)
 	      (%error "illegal function name")))))

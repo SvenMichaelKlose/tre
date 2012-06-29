@@ -1,6 +1,6 @@
-;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
-(dont-obfuscate sizeof strlen)
+(dont-obfuscate sizeof strlen explode)
 
 (defun length (x)
   (?
@@ -10,8 +10,7 @@
     (sizeof x)))
 
 (defun split (obj seq &key (test #'eql))
-  (? (and (eq #'eql test)
-          (string? seq))
+  (? (& (eq #'eql test) (string? seq))
      (array-list (explode (? (character? obj)
                              (char-string obj)
                              obj)

@@ -25,8 +25,7 @@
 		        (let ~%this ,(? (transpiler-continuation-passing-style? *current-transpiler*)
                                 '~%cps-this
                                 'this)
-	              ,@(or (ignore-body-doc ..x.)
-				        (list nil)))))))
+	              ,@(| (ignore-body-doc ..x.) (list nil)))))))
 
 (defun php-emit-members (class-name cls)
   (awhen (class-members cls)
@@ -45,9 +44,9 @@
 	    `(progn
            (dont-obfuscate is_a)
 	       (defun ,($ class-name '?) (x)
-	         (and (object? x)
-	              (is_a x ,(transpiler-obfuscated-symbol-string *current-transpiler* class-name))
-                  x))
+	         (& (object? x)
+	            (is_a x ,(transpiler-obfuscated-symbol-string *current-transpiler* class-name))
+                x))
            (%setq nil (%transpiler-native (%php-class-head ,class-name)))
 	       ,(assoc-value class-name *delayed-constructors*)
 	        ,@(php-emit-members class-name !)

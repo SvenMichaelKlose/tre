@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2006-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2006–2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *funinfo-sym-counter* 0)
 
@@ -34,7 +34,7 @@
 
 (defun funinfo-topmost (fi)
   (let p (funinfo-parent fi)
-    (? (and p (funinfo-parent p))
+    (? (& p (funinfo-parent p))
 	   (funinfo-topmost p)
 	   fi)))
 
