@@ -3,44 +3,6 @@
 (defvar *closure-argdefs* nil)
 (defvar *c-init-group-size* 16)
 (defvar *c-init-counter* 0)
-
-(define-tree-filter c-transpiler-get-argdef-symbols (x)
-  (not x)
-    x
-  (& (atom x) ; XXX symbol?
-     (symbol-name x))
-    (c-compiled-symbol x))
-
-(defun c-transpiler-spot-argdef-symbols (x)
-  (& x
-	 (? (atom x)
-	    (& (symbol-name x) (c-compiled-symbol x))
-	    (progn
-	      (c-transpiler-spot-argdef-symbols x.)
-	      (c-transpiler-spot-argdef-symbols .x)))))
-
-(defun c-transpiler-make-closure-argdef-symbols ()
-  (c-transpiler-spot-argdef-symbols *closure-argdefs*))
-
-(defun c-transpiler-compiled-inits ()
-  (transpiler-compiled-inits *c-transpiler*))
-
-(defun c-transpiler-closure-argument-definitions ()
-  (filter (fn `(%setq-atom-value ,_. ,(compiled-tree (c-transpiler-get-argdef-symbols ._))))
-		  *closure-argdefs*))
-
-(defun c-transpiler-register-functions ()
-  (filter (fn `(%setq ~%ret
-					  (treatom_register_compiled_function
-						  ,(c-compiled-symbol _)
-						  ,_)))
-		  (transpiler-defined-functions-without-builtins *c-transpiler*)))
-
-(defun c-transpiler-declarations-and-initialisations ()
-  (append (c-transpiler-compiled-inits)
-		  (c-transpiler-closure-argument-definitions)
-		  (c-transpiler-register-functions)))
-
 (defvar *c-interpreter-headers*
 	     '("ptr.h"
 		   "list.h"
@@ -72,6 +34,25 @@
 		   "alien.h"
 		   "compiled.h"))
 
+(define-tree-filter c-transpiler-compile-argument-def-symbols (x)
+  (& x (symbol? x)) (c-compiled-symbol x))
+
+(defun c-transpiler-make-closure-argument-defs ()
+  (filter (fn `(%setq-atom-value ,_. ,(compiled-tree (c-transpiler-compile-argument-def-symbols ._))))
+		  *closure-argdefs*))
+
+(defun c-transpiler-make-function-registrations ()
+  (filter (fn `(%setq ~%ret
+					  (treatom_register_compiled_function
+						  ,(c-compiled-symbol _)
+						  ,_)))
+		  (transpiler-defined-functions-without-builtins *c-transpiler*)))
+
+(defun c-transpiler-declarations-and-initialisations ()
+  (append (transpiler-compiled-inits *c-transpiler*)
+		  (c-transpiler-make-closure-argument-defs)
+		  (c-transpiler-make-function-registrations)))
+
 (defun c-transpiler-make-init (tr)
   (let init-funs nil
     (append
@@ -92,10 +73,10 @@
         (apply #'string-concat (mapcar (fn format nil "#include \"~A\"~%" _) *c-interpreter-headers*))
   	    (format nil "#define userfun_apply trespecial_apply_compiled~%")
   	    (target-transpile tr
-	                      :files-after-deps sources
-	                      :dep-gen #'(()
-			                           (transpiler-import-from-environment tr))
-	                      :decl-gen #'(()
-			                            (c-transpiler-make-closure-argdef-symbols)
-			                            (let init (transpiler-make-code tr (transpiler-frontend tr (c-transpiler-make-init tr)))
-		   	                              (concat-stringtree (transpiler-compiled-decls tr) init)))))))
+            :files-after-deps sources
+            :dep-gen #'(()
+                          (transpiler-import-from-environment tr))
+            :decl-gen #'(()
+                           (c-transpiler-compile-argument-def-symbols *closure-argdefs*)
+                           (let init (transpiler-make-code tr (transpiler-frontend tr (c-transpiler-make-init tr)))
+                             (concat-stringtree (transpiler-compiled-decls tr) init)))))))
