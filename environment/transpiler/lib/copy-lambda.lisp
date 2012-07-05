@@ -5,7 +5,7 @@
       (= (funinfo-name !) name))
   name)
 
-(defun copy-lambda (x &key (name nil) (info nil) (args nil) (body nil))
+(defun copy-lambda (x &key (name nil) (info nil) (args 'no-args) (body 'no-bpdy))
   `(function
 	 ,@(awhen (!? name
 				  (copy-lambda-name x !)
@@ -14,5 +14,9 @@
 	 (,@(? info
 		   (make-lambda-funinfo-if-missing x info)
 		   (lambda-funinfo-expr x))
-	  ,(| args (lambda-args x))
-	  ,@(| body (lambda-body x)))))
+	  ,(? (eq 'no-args args)
+          (lambda-args x)
+          args)
+	  ,@(? (eq 'no-body body)
+           (lambda-body x)
+           body))))

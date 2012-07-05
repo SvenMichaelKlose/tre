@@ -46,12 +46,9 @@
 (metacode-walker opt-tailcall (x)
 	:if-named-function
 	   (let front-tag (make-compiler-tag)
-	     `(function
-             ,(lambda-name x)
-		     (,@(lambda-head x)
-			   	  ,front-tag
-		          ,@(opt-tailcall-fun (get-lambda-funinfo x)
-									  (lambda-args x)
-									  (lambda-body x)
-								      (lambda-name x)
-									  front-tag)))))
+         `(,front-tag
+		   ,@(opt-tailcall-fun (get-lambda-funinfo x)
+                               (lambda-args x)
+                               (lambda-body x)
+                               (lambda-name x)
+                               front-tag))))
