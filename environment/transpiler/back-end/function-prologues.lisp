@@ -26,16 +26,12 @@
       ,@body
       (%function-epilogue ,fi-sym))))
 
-(defun make-function-prologues-fun (name fun-expr)
-  (let fi (get-lambda-funinfo fun-expr)
+(defun make-function-prologues-fun (x)
+  (let fi (get-lambda-funinfo x)
     (unless fi
-	  (print fun-expr)
+	  (print x)
 	  (error "no funinfo"))
-    `(function
-	   ,@(awhen name (list !))
-	   (,@(lambda-head fun-expr)
-  	    ,@(make-function-prologues-0 fi
-	          (funinfo-function-prologue fi (lambda-body fun-expr)))))))
+    (copy-lambda x :body (make-function-prologues-0 fi (funinfo-function-prologue fi (lambda-body x))))))
 
 (define-tree-filter make-function-prologues-0 (fi x)
   (| (atom x)
@@ -43,10 +39,9 @@
      (%transpiler-native? x)
      (%var? x))
     x
-  (named-lambda? x)
-    (make-function-prologues-fun .x. ..x.)
-  (lambda? x) ; XXX Add variables to ignore in subfunctions.
-    (make-function-prologues-fun nil x))
+  (| (named-lambda? x)
+     (lambda? x)) ; XXX Add variables to ignore in subfunctions.
+    (make-function-prologues-fun x))
 
 (defun make-function-prologues (x)
   (make-function-prologues-0 (transpiler-global-funinfo *current-transpiler*) x))
