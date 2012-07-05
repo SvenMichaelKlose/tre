@@ -27,7 +27,6 @@
 									      (if-vec nil)
 									      (copy-function-heads? nil))
   (with-cons x r args
-             (print
     (with-gensym v
       `(defun ,name ,args
          (when ,x
@@ -59,4 +58,3 @@
 
                      ,(| if-cons v))
                   (,name (cdr ,x) ,@r))))))))
-  )
