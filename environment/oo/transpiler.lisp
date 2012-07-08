@@ -13,8 +13,7 @@
   (with (cname (? (cons? class-name) class-name. class-name)
 		 bases (& (cons? class-name) .class-name)
 		classes (transpiler-thisify-classes *current-transpiler*))
-	(& *show-definitions*
-	   (late-print `(defclass ,class-name ,@(awhen args (list !)))))
+	(print-definition `(defclass ,class-name ,@(awhen args (list !))))
     (& (href classes cname)
 	   (warn "Class ~A already defined." cname))
 	(= (href classes cname)
@@ -29,8 +28,7 @@
 	nil))
 
 (defun transpiler_defmethod (class-name name args &rest body)
-  (& *show-definitions*
-     (late-print `(defmethod ,class-name ,name ,@(awhen args (list !)))))
+  (print-definition `(defmethod ,class-name ,name ,@(awhen args (list !))))
   (!? (href (transpiler-thisify-classes *current-transpiler*) class-name)
       (let code (list args (append (head-atoms body :but-last t)
                                    (tail-after-atoms body :keep-last t)))
@@ -43,8 +41,7 @@
   nil)
 
 (defun transpiler_defmember (class-name &rest names)
-  (& *show-definitions*
-     (late-print `(defmember ,class-name ,@names)))
+  (print-definition `(defmember ,class-name ,@names))
   (!? (href (transpiler-thisify-classes *current-transpiler*) class-name)
       (append! (class-members !) (mapcar (fn list _ t) names))
       (error "class ~A is not defined." class-name))

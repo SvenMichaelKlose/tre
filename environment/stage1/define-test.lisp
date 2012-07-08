@@ -30,8 +30,7 @@
 
 ;; Add test to global list.
 (defmacro define-test (description expr result)
-  (? *show-definitions*
-     (print (list 'define-test description)))
+  (print-definition (list 'define-test description))
   (setq *tests* (cons (cons description
 		    				(cons (cons (quote block)
 								        (cons nil

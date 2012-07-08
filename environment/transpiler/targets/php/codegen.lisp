@@ -174,8 +174,7 @@
 ;;;; NUMBERS, ARITHMETIC, COMPARISON
 
 (defmacro define-php-binary (op replacement-op)
-  (when *show-definitions*
-	(print `(define-php-binary ,op ,replacement-op)))
+  (print-definition `(define-php-binary ,op ,replacement-op))
   (let tre *php-transpiler*
 	(transpiler-add-inline-exception tre op)
 	(transpiler-add-plain-arg-fun tre op)

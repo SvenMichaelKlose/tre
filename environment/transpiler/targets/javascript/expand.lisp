@@ -68,8 +68,7 @@
      ,@(apply #'shared-defun name args (body-with-noargs-tag body))))
 
 (define-js-std-macro cps-mode (x)
-  (when *show-definitions*
-    (print `(cps-mode ,x)))
+  (print-definition `(cps-mode ,x))
   (unless (in? x nil t)
     (error "Expected NIL or T is the only argument."))
   (= *transpiler-except-cps?* (not x))
@@ -165,8 +164,7 @@
   `(%%%!= "undefined" (%js-typeof ,x)))
 
 (define-js-std-macro dont-obfuscate (&rest symbols)
-  (when *show-definitions*
-    (late-print `(dont-obfuscate ,@symbols)))
+  (print-definition `(dont-obfuscate ,@symbols))
   (apply #'transpiler-add-obfuscation-exceptions *current-transpiler* symbols)
   nil)
 
@@ -191,8 +189,7 @@
   `(%%%+ ,@x))
 
 (define-js-std-macro functional (&rest x)
-  (when *show-definitions*
-    (late-print `(functional ,@x)))
+  (print-definition `(functional ,@x))
   (= *functionals* (nconc x *functionals*))
   nil)
 

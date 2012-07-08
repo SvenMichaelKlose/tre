@@ -1,4 +1,7 @@
-;;;; tré - Copyright (c) 2008-2009,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2009,2012 Sven Michael Klose <pixel@copei.de>
+
+;;;; QUASIQUOTEs outside BACKQUOTEs are treated here. They serve as
+;;;; anonymous macros.
 
 (setq *UNIVERSE*
 	  (cons 'quasiquote-expand

@@ -12,8 +12,7 @@
 
 (defun shared-defun (name args &rest body)
   (= name (apply-current-package name))
-  (when *show-definitions*
-    (late-print `(defun ,name ,args)))
+  (print-definition `(defun ,name ,args))
   (with (tr *current-transpiler*
 		 (fi-sym a) (split-funinfo-and-args args))
     (when (transpiler-defined-function tr name)

@@ -6,11 +6,13 @@
 	 x))
 
 (defun + (&rest x)
-  (let n (%wrap-char-number x.)
-	(dolist (i .x n)
-      (= n (? (| (string? n) (string? i))
-	          (%%%string+ (string n) (string i))
-	          (%%%+ n (%wrap-char-number i)))))))
+  (? (cons? x.)
+     (apply #'append x)
+     (let n (%wrap-char-number x.)
+	   (dolist (i .x n)
+         (= n (? (| (string? n) (string? i))
+	             (%%%string+ (string n) (string i))
+	             (%%%+ n (%wrap-char-number i))))))))
 
 (defun * (&rest x)
   (let n (%wrap-char-number x.)

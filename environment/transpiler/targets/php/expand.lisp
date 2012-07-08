@@ -48,8 +48,7 @@
   (funcall #'shared-defvar name val))
 
 (define-php-std-macro define-external-variable (name)
-  (when *show-definitions*
-    (late-print `(define-external-variable ,name)))
+  (print-definition `(define-external-variable ,name))
   (when (transpiler-defined-variable *current-transpiler* name)
     (redef-warn "redefinition of variable ~A." name))
   (transpiler-add-defined-variable *current-transpiler* name)
@@ -118,8 +117,7 @@
   (apply #'shared-mapcar fun lsts))
 
 (define-php-std-macro functional (&rest x)
-  (when *show-definitions*
-    (late-print `(functional ,@x)))
+  (print-definition `(functional ,@x))
   (append! *functionals* x)
   nil)
 

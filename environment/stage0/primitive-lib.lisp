@@ -1,7 +1,9 @@
-;;;;; tré - Copyright (c) 2006-2009,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2006–2009,2012 Sven Michael Klose <pixel@copei.de>
+
+(setq *show-definitions?* t)
 
 (setq
-	*universe*
+	*universe* ; The garbage collector roots here.
 	(cons 'last
 	(cons '%nconc
 	(cons 'copy-tree
@@ -21,7 +23,7 @@
 	(cons (cons '*defined-functions* nil)
 	(cons (cons '*universe* nil)
 	(cons (cons '*keyword-package* nil)
-	(cons (cons '*show-definitions* nil)
+	(cons (cons '*show-definitions?* nil)
 	(cons (cons '*environment-path* nil)
 	(cons (cons '*endianess* nil)
 	(cons (cons '*pointer-size* nil)

@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2009,2011-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2009,2011–2012 Sven Michael Klose <pixel@copei.de>
 
 (setq
 	*universe*
@@ -14,9 +14,10 @@
 
 (%set-atom-fun +
   #'((&rest x)
-	   (? (string? (car x))
-		  (apply #'string-concat x)
-		  (apply #'number+ x))))
+       (?
+         (string? (car x)) (apply #'string-concat x)
+         (cons? (car x)) (apply #'append x)
+         (apply #'number+ x))))
 
 (%set-atom-fun -
   #'((&rest x)

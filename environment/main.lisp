@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2011 Sven Michael Klose <pixel@copei.de>
 
 ;; *UNIVERSE* contains the names of all top-level definitions that
 ;; shouldn't be removed by the garbage collector.
@@ -11,7 +11,7 @@
 ;; Associative array of DEFVAR names and their initial forms.
 (setq *variables*
 	  (cons (cons '*environment-filenames* nil)
-	  (cons (cons '*show-definitions* nil)
+	  (cons (cons '*show-definitions?* nil)
 	  (cons (cons '*boot-image* nil)
 	  (cons (cons '%launchfile nil)
 	        nil)))))
@@ -25,9 +25,7 @@
 	  (setq *environment-filenames* (cons (cons path back-end) *environment-filenames*))
       (load (string-concat *environment-path* "/environment/" path))))
 
-(env-load "stage0/config-early.lisp" 'c)
 (env-load "stage0/main.lisp" 'c)
-(env-load "stage0/config.lisp" 'c)
 
 (env-load "stage1/main.lisp")
 

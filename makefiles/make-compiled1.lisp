@@ -1,6 +1,6 @@
 ;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
-(= *show-definitions* t)
+(= *show-definitions?* t)
 (= *opt-inline?* nil)
 
 (let code (compile-files '("makefiles/make-compiled-1.lisp") :target 'c)

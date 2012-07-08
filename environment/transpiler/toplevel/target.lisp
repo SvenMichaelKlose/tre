@@ -57,7 +57,7 @@
 		   after-deps  (target-transpile-1 tr files-after-deps files-to-update)
 		   deps        (target-sighten-deps tr dep-gen)
            num-exprs   (apply #'+ (mapcar (fn length ._) (append before-deps deps after-deps)))
-           show?       #'(() (& *show-definitions* (< 50 num-exprs))))
+           show?       #'(() (& *show-definitions?* (< 50 num-exprs))))
       (when (show?)
         (format t "; ~A toplevel expressions.~%" num-exprs)
         (format t "; Let me think. Hmm...")

@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2005-2009,2011-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2009,2011-2012 Sven Michael Klose <pixel@copei.de>
 
 (functional nth copy-list)
 
@@ -9,9 +9,6 @@
         (car c))))
 
 (%defun copy-list (c)
-  (? c
-     (? (cons? c)
-	    (cons (car c) (copy-list (cdr c)))
-        (progn
-          (print c)
-          (%error "COPY-LIST: cons expected")))))
+  (? (atom c)
+     c
+	 (cons (car c) (copy-list (cdr c)))))

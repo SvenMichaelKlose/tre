@@ -12,8 +12,7 @@
 
 (%set-atom-fun functional
   (macro (&rest names)
-	(? *show-definitions*
-	   (print `(functional ,@names)))
+	(print-definition `(functional ,@names))
     `(progn
 	   (setq *functionals* (%nconc ',names *functionals*)))))
 

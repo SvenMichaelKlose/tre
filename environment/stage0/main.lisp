@@ -7,3 +7,4 @@
 (env-load "stage0/arith.lisp" 'c)
 (env-load "stage0/simple-defines.lisp" 'c)
 (env-load "stage0/functional.lisp" 'c)
+(env-load "stage0/config.lisp" 'c)

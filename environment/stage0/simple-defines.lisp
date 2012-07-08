@@ -10,6 +10,11 @@
 	  (cons '%defun
 		    *defined-functions*))
 
+(%set-atom-fun print-definition
+  #'((x)
+       (? *show-definitions?*
+          (print x))))
+
 (%set-atom-fun %defun
   (macro (name args &rest body)
     `(block nil
@@ -20,8 +25,7 @@
 
 (%set-atom-fun defvar
   (macro (name &optional (init nil))
-	(? *show-definitions*
-	   (print `(defvar ,name)))
+	(print-definition `(defvar ,name))
     `(setq *universe* (cons ',name *universe*)
 		   *variables* (cons (cons ',name
 								   ',init)
@@ -32,8 +36,7 @@
 
 (%set-atom-fun defconstant
   (macro (name &optional (init nil))
-	(? *show-definitions*
-	   (print `(defconstant ,name)))
+	(print-definition `(defconstant ,name))
     `(progn
 	   (defvar ,name ,init)
 	   (setq *constants* (cons (cons ',name

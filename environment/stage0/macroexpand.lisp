@@ -1,5 +1,10 @@
 ;;;;; tré – Copyright (c) 2006–2009,2012 Sven Michael Klose <pixel@copei.de>
 
+;;;; This is where the Lisp macro magic happens.
+;;;; Leaves are expanded first.
+;;;; XXX Don't use symbols starting with '%' anywhere else.
+;;;; XXX Solve this issue with packaging.
+
 (setq
 	*universe*
 	(cons '*macrop-diversion*

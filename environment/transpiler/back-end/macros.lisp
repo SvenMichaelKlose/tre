@@ -6,8 +6,7 @@
     (define-expander (transpiler-codegen-expander tr))))
 
 (defmacro define-codegen-macro (tr name &rest x)
-  (when *show-definitions*
-	(print `(define-transpiler-macro ,tr ,x.)))
+  (print-definition `(define-transpiler-macro ,tr ,x.))
   `(progn
      (transpiler-add-unwanted-function ,tr ',name)
      (transpiler-add-inline-exception ,tr ',name)

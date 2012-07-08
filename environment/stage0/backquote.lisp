@@ -1,4 +1,7 @@
-;;;;; tré - Copyright (c) 2006-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2006–2012 Sven Michael Klose <pixel@copei.de>
+
+;;;; XXX Never use %GSBQ anywhere within your QUASIQUOTEs.
+;;;; XXX Solve this issue with packaging.
 
 (setq *UNIVERSE*
 	  (cons 'any-quasiquote?
