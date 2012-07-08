@@ -13,7 +13,9 @@
 (%set-atom-fun print-definition
   #'((x)
        (? *show-definitions?*
-          (print x))))
+          (? #'late-print
+             (late-print x)
+             (print x)))))
 
 (%set-atom-fun %defun
   (macro (name args &rest body)
