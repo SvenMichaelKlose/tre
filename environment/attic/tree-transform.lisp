@@ -1,6 +1,4 @@
-;;;; nix operating system project
-;;;; lisp compiler
-;;;; (c) 2005,2011 Sven Klose <pixel@copei.de>
+;;;; tré – Copyright (c) 2005,2011–2012 Sven Michael Klose <pixel@copei.de>
 ;;;;
 ;;;; Tree transformation
 ;;;;
@@ -49,8 +47,8 @@
     (setq ,name
       (make-tree-transform :placeholders ,placeholders
                            :match ,match
-			   :conversion #'((&key ,@(cadr placeholders))
-					 ,conversion)))
+			   :conversion #'((&key ,@.placeholders.)
+					            ,conversion)))
     (tree-transform-compile ,name)))
 
 (defun tree-transform-conversion-args (trn)
@@ -65,42 +63,42 @@
    match."
   ; Match cons.
   (let form (make-queue)
-    (do ((m match (cdr m)))
+    (do ((m match .m))
         ((endp m) (queue-list form))
-      (let mcar (car m)
+      (let mcar m.
         (cond
           ((eq mcar '*rest)	; Rest of current list.
             (enqueue form
               `(progn
-                 (push (cons ',(cadr m) e) (tree-transform-clips trn))
+                 (push (cons ',.m. e) (tree-transform-clips trn))
                  (return t)))
             (return-from tree-transform-compile-r (queue-list form)))
 
           ; Take element if match is a placeholder.
           ((member mcar (tree-transform-placeholders trn))
-            (enqueue form `(push (cons ',mcar (car e)) (tree-transform-clips trn))))
+            (enqueue form `(push (cons ',mcar e.) (tree-transform-clips trn))))
 
           (t
             ; If any of the elements is a cons, the match fails.
             (? (cons? mcar)
               (awhen (tree-transform-compile-r mcar trn)
-                (enqueue form '(cons? (car e)))
-                (enqueue form `(#'((e) (block nil (& ,@!))) (car e))))
+                (enqueue form '(cons? e.))
+                (enqueue form `(#'((e) (block nil (& ,@!))) e.)))
               (? (number? mcar)
-                (enqueue form `(== (car e) ,mcar))
-                (enqueue form `(eq (car e) ',mcar))))))
+                (enqueue form `(== e. ,mcar))
+                (enqueue form `(eq e. ',mcar))))))
 
         ; If next is an any match, return its first element or T.
-        (when (& (cdr m) (eq (cadr m) '*any))
-          (enqueue form '(? (cdr e) (cdr e) t))
+        (when (& .m (eq .m. '*any))
+          (enqueue form '(| .e t))
           (return-from tree-transform-compile-r (queue-list form)))
 
         ; Return T if end of lists match.
-        (? (not (cdr m))
+        (? (not .m)
           (progn
-            (enqueue form '(not (cdr e)))
+            (enqueue form '(not .e))
             (return-from tree-transform-compile-r (queue-list form)))
-          (enqueue form '(setq e (cdr e))))))))
+          (enqueue form '(setq e .e)))))))
 
 (defun tree-transform-compile (trn)
   "Match a pattern and return first toplevel cons after match."
@@ -108,7 +106,7 @@
   (let form (tree-transform-compile-r (tree-transform-match trn) trn)
     (= (tree-transform-compiled-match trn)
       (eval (macroexpand `#'((e trn)
-        (& ,@form)))))))
+                               (& ,@form)))))))
 
 (defun tree-transform! (trn e)
   (when (cons? e)
