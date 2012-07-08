@@ -6,7 +6,7 @@
 	 x))
 
 (defun + (&rest x)
-  (? (cons? x.)
+  (? (listp x.)
      (apply #'append x)
      (let n (%wrap-char-number x.)
 	   (dolist (i .x n)

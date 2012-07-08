@@ -16,6 +16,7 @@
   #'((&rest x)
        (?
          (string? (car x)) (apply #'string-concat x)
+         (not (car x)) (apply #'append x)
          (cons? (car x)) (apply #'append x)
          (apply #'number+ x))))
 
