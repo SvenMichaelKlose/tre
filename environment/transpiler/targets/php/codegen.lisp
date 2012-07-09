@@ -151,7 +151,7 @@
             (list *php-separator*)))))
 
 (define-php-macro %setq (dest val)
-  (? (& (transpiler-obfuscated-nil? dest) (atom val))
+  (? (& (not dest) (atom val))
      '(%transpiler-native "")
      (php-%setq-0 dest val)))
 

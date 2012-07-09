@@ -69,11 +69,11 @@
 ;;;; ASSIGNMENT
 
 (defun codegen-%setq-place (dest val)
-  (? (transpiler-obfuscated-nil? dest)
+  (? dest
+	 `(,dest " = ")
 	 (? (codegen-expr? val)
 		'("")
-	    '("(void) "))
-	 `(,dest " = ")))
+	    '("(void) "))))
 
 (defun codegen-%setq-value (val)
    (? (| (atom val) (codegen-expr? val))

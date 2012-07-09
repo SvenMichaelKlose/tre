@@ -45,6 +45,3 @@
                                  "")
                              (symbol-name k)
 						     (href (transpiler-obfuscations tr) k)))))
-
-(defun transpiler-obfuscated-nil? (x)
-  (eq x (transpiler-obfuscate-symbol *current-transpiler* nil)))
