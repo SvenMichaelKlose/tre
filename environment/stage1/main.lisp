@@ -17,6 +17,7 @@
 
 (env-load "stage1/arg-keyword-p.lisp")
 (env-load "stage1/defun.lisp" 'c)
+(env-load "stage1/require.lisp" 'c)
 (env-load "stage1/if.lisp")
 (env-load "stage1/fn.lisp")
 (env-load "stage1/lx.lisp")
