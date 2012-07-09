@@ -9,10 +9,10 @@
             ,fi nil
             ,vargs nil
             ,vbody nil)
-       (if (%funinfo-expr? ,g)
-           (= ,fi (cadr ,g)
-              ,vargs (caddr ,g)
-              ,vbody (cdddr ,g))
-           (= ,vargs (car ,g)
-              ,vbody (cdr ,g)))
+       (? (%funinfo-expr? ,g)
+          (= ,fi (cadr ,g)
+             ,vargs (caddr ,g)
+             ,vbody (cdddr ,g))
+          (= ,vargs (car ,g)
+             ,vbody (cdr ,g)))
        ,@body)))
