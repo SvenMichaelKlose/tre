@@ -4,4 +4,5 @@
 (env-load "transpiler/toplevel/tests.lisp")
 (env-load "transpiler/toplevel/toplevel.lisp")
 (env-load "transpiler/toplevel/import.lisp")
+(env-load "transpiler/toplevel/dependencies.lisp")
 (env-load "transpiler/toplevel/target.lisp")
