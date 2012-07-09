@@ -32,7 +32,7 @@
   (let name (%defun-name name)
     (setq *function-sources* (cons (cons name (cons args body)) *function-sources*))
     `(block nil
-	   (print-definition `(defun ,name))
+	   (print-definition `(defun ,name ,args))
        (setq *universe* (cons ',name *universe*)
        		 *defined-functions* (cons ',name *defined-functions*))
        (%set-atom-fun ,name
