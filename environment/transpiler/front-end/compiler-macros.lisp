@@ -44,11 +44,11 @@
 ;;; is expanded.
 
 (define-compiler-macro go (tag)
-  (aif (cdr (assoc tag *tagbody-replacements* :test #'eq))
-    `(%%vm-go ,!)
-    (with-compiler-tag g
-      (acons! tag g *tagbody-replacements*)
-      `(%%vm-go ,g))))
+  (!? (cdr (assoc tag *tagbody-replacements* :test #'eq))
+      `(%%vm-go ,!)
+      (with-compiler-tag g
+        (acons! tag g *tagbody-replacements*)
+        `(%%vm-go ,g))))
 
 (define-compiler-macro tagbody (&rest args)
   `(%%vm-scope

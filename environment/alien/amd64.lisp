@@ -16,9 +16,9 @@
      (position x *AMD64-REGS-QWORD*)))
 
 (defun amd64-regval-rex (regval)
-  (+ #x48 (if (< 7 regval)
-			  1
-			  0)))
+  (+ #x48 (? (< 7 regval)
+		     1
+		     0)))
 
 (defun amd64-mov-reg-const-q (regval val)
   `(,(amd64-regval-rex regval)
@@ -33,8 +33,8 @@
           (x86-call-eax)))
 
 (defun amd64-c-call-epilogue (num-args)
-  (append (when (< 6 num-args)
-		    (amd64-add-rsp-const-d (* 8 (- num-args 6))))
+  (append (& (< 6 num-args)
+		     (amd64-add-rsp-const-d (* 8 (- num-args 6))))
           (x86-ret)))
 
 ;;;; CONFIGURATION
@@ -44,9 +44,8 @@
 
 ; XXX stack arguments untested
 (defun amd64-c-call-put-arg (p val argnum)
-  (if (< argnum 6)
-	  (%put-list p
-				 (if (< argnum 4)
+  (? (< argnum 6)
+     (%put-list p (? (< argnum 4)
 		  			 (amd64-mov-reg-const-q (amd64-arg-regval argnum) val)
 		  			 (amd64-mov-reg-const-q (+ argnum 4) val)))
       (%put-list (%put-list p (x86-push-const-dword val))
@@ -54,6 +53,6 @@
 
 (defun make-c-call-target-amd64 ()
   (make-c-call-target
-    :put-arg    #'amd64-c-call-put-arg
-    :call       #'amd64-c-call
-    :epilogue   #'amd64-c-call-epilogue))
+      :put-arg    #'amd64-c-call-put-arg
+      :call       #'amd64-c-call
+      :epilogue   #'amd64-c-call-epilogue))

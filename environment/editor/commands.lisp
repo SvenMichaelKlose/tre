@@ -3,18 +3,18 @@
 (defun editor-expand-pos (line p &optional (i 0) (pos 0))
   (with (expand-tab
 		  #'((line p i pos)
-  			   (if (== p i)
-	  			   pos
-      			   (if (== 0 (mod pos (editor-conf 'tabstop)))
-          			   (editor-expand-pos line p (1+ i) pos)
-          			   (expand-tab line p i (1+ pos))))))
-    (if (== p i)
-	    pos
-        (if (< i (length line))
-          (with (c (elt line i))
-            (if (== c 9)
-		        (expand-tab line p i (1+ pos))
-                (editor-expand-pos line p (1+ i) (1+ pos))))
+  			   (? (== p i)
+	  			  pos
+      			  (? (== 0 (mod pos (editor-conf 'tabstop)))
+          		     (editor-expand-pos line p (1+ i) pos)
+          		     (expand-tab line p i (1+ pos))))))
+    (? (== p i)
+	   pos
+       (? (< i (length line))
+          (let c (elt line i)
+            (? (== c 9)
+	           (expand-tab line p i (1+ pos))
+               (editor-expand-pos line p (1+ i) (1+ pos))))
 	      pos))))
 
 (defun editor-cmd-quit (ed)
@@ -49,9 +49,9 @@
     (saturate! (editor-state-y ed) y n th)
     (when (saturates? y n th)
 	  (with (s	(- n (- th y)))
-		(if (>= s th)
-			(editor-redraw ed)
-            (editor-scroll-down ed s))))))
+		(? (>= s th)
+		   (editor-redraw ed)
+           (editor-scroll-down ed s))))))
 
 (defun editor-cmd-right (ed &optional (nn 1))
   (let text (editor-state-text ed)

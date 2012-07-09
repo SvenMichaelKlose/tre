@@ -5,7 +5,7 @@
 (defun fork ()
   "Create process copy. Returns the new process-ID to the calling process.
 Returns 0 to the new process."
-  (with (libc		(alien-dlopen *LIBC-PATH*))
+  (with (libc		(alien-dlopen *libc-path*))
 	(prog1
 	  (alien-call (alien-dlsym libc "fork"))
       (alien-dlclose libc))))
@@ -13,9 +13,9 @@ Returns 0 to the new process."
 (defun wait ()
   "Waits until a child process exits.
 Return a status integer. See UNIX man page wait (2)."
-  (with (libc	(alien-dlopen *LIBC-PATH*)
+  (with (libc	(alien-dlopen *libc-path*)
 	     fun	(alien-dlsym libc "wait")
-		 status (%malloc *POINTER-SIZE*))
+		 status (%malloc *pointer-size*))
 
     (with (cc (make-c-call :funptr fun))
       (c-call-add-arg cc status)
@@ -32,35 +32,31 @@ Return a status integer. See UNIX man page wait (2)."
 entry is usually the path to the executable.
 'environment' may be an associative list of variable/value string pairs.
 Returns NIL."
-  (with (libc		(alien-dlopen *LIBC-PATH*)
+  (with (libc		(alien-dlopen *libc-path*)
          cexecve	(alien-dlsym libc "execve")
          cperror	(alien-dlsym libc "perror")
 		 cpath		(%malloc-string path :null-terminated t)
-		 argptrs	(mapcar #'((x)
-								 (%malloc-string x :null-terminated t))
-						    args)
-		 argv		(%malloc (* *POINTER-SIZE* (1+ (length args))))
-		 environv   (if environment
-		 			    (%malloc (* *POINTER-SIZE* (1+ (length environment))))
-						0)
-		 envptrs	(when environment
-					  (mapcar #'((x)
-								   (%malloc-string (string-concat (car x) "=" (cdr x))
-												   :null-terminated t))
-						      environment)))
+		 argptrs	(filter (fn %malloc-string _ :null-terminated t) args)
+		 argv		(%malloc (* *pointer-size* (1+ (length args))))
+		 environv   (? environment
+		 			   (%malloc (* *pointer-size* (1+ (length environment))))
+					   0)
+		 envptrs	(& environment
+					   (filter (fn %malloc-string (string-concat _. "=" ._) :null-terminated t)
+						       environment)))
 
 	(%put-pointer-list argv argptrs :null-terminated t)
-	(when environment
-	  (%put-pointer-list environv envptrs :null-terminated t))
+	(& environment
+	   (%put-pointer-list environv envptrs :null-terminated t))
 
-	(when (== 0 (fork))
-      (with (cc (make-c-call :funptr cexecve))
-        (c-call-add-arg cc cpath)
-        (c-call-add-arg cc argv)
-        (c-call-add-arg cc environv)
-        (c-call-do cc)
-	    (print 'execve-error)
-	    (quit)))
+	(& (== 0 (fork))
+       (with (cc (make-c-call :funptr cexecve))
+         (c-call-add-arg cc cpath)
+         (c-call-add-arg cc argv)
+         (c-call-add-arg cc environv)
+         (c-call-do cc)
+	     (print 'execve-error)
+	     (quit)))
 
     (%free-list argptrs)
     (%free cpath)
@@ -71,12 +67,7 @@ Returns NIL."
 	  (%free environv))
 
     (alien-dlclose libc)
-	(when wait
-	  (wait))))
+	(& wait (wait))))
 
 (defun exec (bin args)
   (execve bin (cons bin args) nil))
-
-; XXX
-;(execve "/usr/bin/mplayer" `("/usr/bin/mplayer" "-quiet" "test.mp3"))
-;(execve "/bin/mkdir" `("/bin/mkdir" "new_dir"))

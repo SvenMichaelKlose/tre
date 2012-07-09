@@ -96,15 +96,15 @@
 (defun ansi-color (name &optional (high nil))
   "Translates symbol to ANSI color number."
   (+ (position name *ansi-color-names*)
-     (if high
-		 (length *ansi-color-names*)
-		 0)))
+     (? high
+	    (length *ansi-color-names*)
+	    0)))
 
 (defmacro defcol (where high code)
   (with (name ($ 'ansi-
-			     (if where 'foreground 'background)
+			     (? where 'foreground 'background)
 			     '-color
-			     (if high '-high "")
+			     (? high '-high "")
 				 '-raw))
 	 `(defun ,name (c)
         (ansi-set-color-raw ,code c))))
@@ -117,24 +117,24 @@
 (defmacro defmastercol (where)
   (with (name ($ 'ansi- where -color))
     `(defun ,name (code)
-       (if (> code (length *ansi-color-names*))
-	       (,($ name '-high-raw) (- code (length *ansi-color-names*)))
-	       (,($ name '-raw) code)))))
+       (? (> code (length *ansi-color-names*))
+	      (,($ name '-high-raw) (- code (length *ansi-color-names*)))
+	      (,($ name '-raw) code)))))
 
 (defmastercol foreground)
 (defmastercol background)
 
 (defun ansi-read-nonctrl ()
   (with (c (read-char))
-	(if (> c 31)
-		c
-		(ansi-read-nonctrl))))
+	(? (> c 31)
+	   c
+	   (ansi-read-nonctrl))))
 
 (defun ansi-read-natural-number (&optional (v 0))
   (with (c (read-char))
-    (if (digit-char-p  c)
-	    (ansi-read-natural-number (+ (- c #\0) (* 10 v)))
-		v)))
+    (? (digit-char-p  c)
+	   (ansi-read-natural-number (+ (- c #\0) (* 10 v)))
+	   v)))
 
 (defun ansi-get-position ()
   "Get values of cursor position."

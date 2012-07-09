@@ -1,5 +1,4 @@
-;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2010,2012 Sven Michael Klose <pixel@copei.de>
 
 (defun list-without-noargs-tag (x)
   (remove 'no-args x))
@@ -11,6 +10,6 @@
   (eq 'no-args body.))
 
 (defun body-without-noargs-tag (body)
-  (if (body-has-noargs-tag? body)
-      .body
-      body))
+  (? (body-has-noargs-tag? body)
+     .body
+     body))

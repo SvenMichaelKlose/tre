@@ -52,9 +52,9 @@
 
   (dotimes (dummy 4 ptr)
 	(= ptr (%put-char ptr (bit-and x #xff))
-	   x ;(if (little-endianess? endianess)
-			  ;(rotate-dword-byte-left x)
-		      (>> x 8))));)
+	   x ;(? (little-endianess? endianess)
+		     ;(rotate-dword-byte-left x)
+		     (>> x 8))));)
 
 (defun %get-dword (ptr)
   (with (v 0)
@@ -66,29 +66,27 @@
 (defun %put-dword-list (ptr x &key (null-terminated nil))
   "Write list of dwords to memory. Returns following address."
   (with (n (%put-list ptr (mapcan #'dword-bytes x)))
-	(if null-terminated
-		(%put-dword n 0)
-		n)))
+	(? null-terminated
+	   (%put-dword n 0)
+	   n)))
 
 (defun %put-pointer-list (ptr x &key (null-terminated nil))
   "Write list of dwords to memory. Returns following address."
   (with (n (%put-list ptr (mapcan #'((y)
 									   (value-bytes y *pointer-size*))
 								  x)))
-	(if null-terminated
-		(%put-list n (value-bytes 0 *pointer-size*))
-		n)))
+	(? null-terminated
+	   (%put-list n (value-bytes 0 *pointer-size*))
+	   n)))
 
 (defun %put-string (ptr str &key (null-terminated nil))
-  (dotimes (x (length str) (if null-terminated
-							   (%put-char ptr 0)
-							   ptr))
+  (dotimes (x (length str) (? null-terminated
+							  (%put-char ptr 0)
+							  ptr))
     (= ptr (%put-char ptr (elt str x)))))
 
 (defun binary-truth (x)
-  (if x
-	  1
-	  0))
+  (? x 1 0))
 
 (defun %malloc-string (x &key (null-terminated nil))
   (with (m (%malloc (+ (length x) (binary-truth null-terminated))))

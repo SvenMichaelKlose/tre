@@ -150,9 +150,7 @@
 	  (let head (string-downcase (symbol-name grp.))
 		(dolist (f .grp)
 		  (= (href h f.)
-		     (+ head (aif .f
-				          (string-downcase (symbol-name !.))
-					      (string-downcase (symbol-name f.))))))))))
+		     (+ head (string-downcase (symbol-name (!? .f !. f.))))))))))
 
 (defun c-builtin-name (x)
   (href *c-builtins* x))
@@ -161,8 +159,8 @@
 ;; to consed lists.
 ,`(progn
 	,@(macroexpand (mapcar (fn let n (make-symbol (c-builtin-name _))
-                                (when (functional? _)
-                                  (cons n *functionals*))
+                                (& (functional? _)
+                                   (push n *functionals*))
                                `(define-c-std-macro ,_ (&rest x)
 					 			  `(,n ,,(compiled-list x))))
 			  			   (hashkeys *c-builtins*))))
