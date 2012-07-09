@@ -8,3 +8,5 @@
                                   (1+ !)
                                   0)
                               (1- (length l)))))))
+
+(format t "; Revision ~A.~%" *tre-revision*)
