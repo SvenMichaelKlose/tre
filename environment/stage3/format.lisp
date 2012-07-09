@@ -18,6 +18,10 @@
      (error "argument ~A specified in format \"~A\" is missing" (format-info-processed-args inf) (format-info-text inf)))
   (%format inf txt .args))
 
+(defun %format-directive-force-output (inf txt args)
+  (force-output (format-info-stream inf))
+  (%format inf txt args))
+
 (defun %format-directive-tilde (inf txt args)
   (princ #\~ (format-info-stream inf))
   (%format inf txt args))
@@ -28,6 +32,7 @@
     (?
       (character== el #\%) (%format-directive-eol inf .txt args)
       (character== el #\A) (%format-directive-placeholder inf .txt args)
+      (character== el #\F) (%format-directive-force-output inf .txt args)
       (%format-directive-tilde inf txt args))))
 
 (defun %format (inf txt args)
