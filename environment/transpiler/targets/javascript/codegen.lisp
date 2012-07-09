@@ -11,9 +11,9 @@
 (defun js-codegen-symbol-constructor-expr (tr x)
   (let s (compiled-function-name-string tr 'symbol)
     `(,s "(\"" ,(transpiler-obfuscated-symbol-name tr x) "\","
-	           ,@(aif (symbol-package x)
-	                `((,s "(\"" ,(transpiler-obfuscated-symbol-name tr !) "\",null)"))
-	                '(("null")))
+	           ,@(!? (symbol-package x)
+	                 `((,s "(\"" ,(transpiler-obfuscated-symbol-name tr !) "\",null)"))
+	                 '(("null")))
 	     ")")))
 
 (defun js-codegen-symbol-constructor (tr x)
@@ -240,9 +240,9 @@
 (define-js-macro %%funref (name fi-sym)
   (let fi (get-funinfo-by-sym fi-sym)
     (? (funinfo-ghost fi)
-	   (aif (funinfo-lexical (funinfo-parent fi))
-  	  		`(%funref ,name ,!)
-			(error "no lexical for ghost"))
+	   (!? (funinfo-lexical (funinfo-parent fi))
+  	  	   `(%funref ,name ,!)
+		   (error "no lexical for ghost"))
 	   name)))
 
 (define-js-macro %invoke-debugger ()
