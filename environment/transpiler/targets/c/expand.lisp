@@ -21,12 +21,12 @@
   (car (apply #'shared-defun name args body)))
 
 (define-c-std-macro defmacro (&rest x)
-  (apply #'shared-defmacro '*c-transpiler* x))
+  (apply #'shared-defmacro '*current-transpiler* x))
 
 (define-c-std-macro defvar (name &optional (val '%%no-value))
   (when (eq '%%no-value val)
     (= name `',name))
-  (let tr *c-transpiler*
+  (let tr *current-transpiler*
     (print-definition `(defvar ,name))
     (when (transpiler-defined-variable tr name)
       (redef-warn "redefinition of variable ~A.~%" name))
