@@ -73,6 +73,10 @@
 (defun lambda-body (x)
   (cdr (past-lambda x)))
 
+(defun lambda-args-and-body (x)
+  (values (lambda-args x)
+          (lambda-body x)))
+
 (defun lambda-call-vals (x)
   (cdr x))
 
