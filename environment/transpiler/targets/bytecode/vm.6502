@@ -1,0 +1,45 @@
+POINTER_INDEX macro place
+    clc
+    adc place
+    sta tmp_ptr
+    lda #0
+    adc place+1
+    sta tmp_ptr+1
+end
+
+make_stack_index:
+    GET_STACK_INDEX
+    POINTER_INDEX stack
+    rts
+
+get_stack_value:
+    jsr make_stack_index
+get_pointer_value:
+    lda (tmp_ptr)
+    sta tmp_value
+    lda (tmp_ptr),y
+    sta tmp_value+1
+    bra got_value
+
+get_literal:
+    GET_LITERAL_INDEX
+    POINTER_INDEX literals
+
+run:
+    ldy #1
+run_next:
+    ; Check in SET instruction
+    GETBIT
+    bcs no_set
+
+    ;; Get value.
+    ; Is it on the stack?
+    GETBIT
+    bcs no_stack
+    get_stack_value
+
+    GETBIT
+    bcs >get_vector
+    get_literal
+
+    GET_LITERAL_INDEX

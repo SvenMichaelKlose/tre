@@ -19,7 +19,7 @@
   ; List of functions that must not be imported from the environment.
   unwanted-functions
 
-  (identifier-char? (fn error "structure 'transpiler': IDENTIFIER-CHAR? is not initialised"))
+  (identifier-char? (fn identity t))
   (literal-conversion (fn error "structure 'transpiler': LITERAL-CONVERSION is not initialised"))
 
   expex
@@ -69,6 +69,8 @@
   (continuation-passing-style? nil)
   (cps-exceptions nil)
   (cps-functions nil)
+
+  (make-text? t) ; Tell if text or expressions are generated.
 
   ;;;
   ;;; You mustn't init these.
@@ -300,6 +302,7 @@
                      :continuation-passing-style? continuation-passing-style?
                      :cps-exceptions          (copy-list cps-exceptions)
                      :cps-functions           (copy-list cps-functions)
+                     :make-text?              make-text?
                      :symbol-translations     (copy-list symbol-translations)
                      :thisify-classes         (copy-hash-table thisify-classes)
                      :function-args           (copy-hash-table function-args)

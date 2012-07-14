@@ -1,4 +1,10 @@
-;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+
+(defun transpiler-concat-text (tr &rest x)
+  (apply (? (transpiler-make-text? tr)
+            #'concat-stringtree
+            #'((&rest x) x))
+         x))
 
 ;; After this pass:
 ;; - Symbols are obfuscated.
@@ -6,9 +12,13 @@
 ;; - Expressions are expanded via code generating macros.
 ;; - Everything is converted to strings and concatenated.
 (transpiler-pass transpiler-generate-code (tr)
-    concat-stringtree   #'concat-stringtree
-    to-string           (fn transpiler-to-string tr _)
-    obfuscate           (fn transpiler-obfuscate tr _)
+    concat-stringtree   (fn transpiler-concat-text tr _)
+    to-string           (fn ? (transpiler-make-text? tr)
+                              (transpiler-to-string tr _)
+                              _)
+    obfuscate           (fn ? (transpiler-make-text? tr)
+                              (transpiler-obfuscate tr _)
+                              _)
     codegen-expand      (fn expander-expand (transpiler-codegen-expander tr) _)
     finalize-sexprs     #'transpiler-finalize-sexprs
     encapsulate-strings #'transpiler-encapsulate-strings
@@ -28,4 +38,4 @@
 	 (make-function-prologues x)))
 
 (defun transpiler-backend (tr x)
-  (concat-stringtree (mapcar (fn transpiler-generate-code tr (transpiler-backend-prepare tr (list _))) x)))
+  (transpiler-concat-text tr (mapcar (fn transpiler-generate-code tr (transpiler-backend-prepare tr (list _))) x)))

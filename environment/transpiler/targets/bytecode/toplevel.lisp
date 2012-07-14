@@ -1,9 +1,8 @@
 ;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
-(defvar *closure-argdefs* nil)
-(defvar *c-init-group-size* 16)
-(defvar *c-init-counter* 0)
-(defvar *c-interpreter-headers*
+(defvar *bc-init-group-size* 16)
+(defvar *bc-init-counter* 0)
+(defvar *bc-interpreter-headers*
 	     '("ptr.h"
 		   "list.h"
 		   "array.h"
@@ -34,47 +33,47 @@
 		   "alien.h"
 		   "compiled.h"))
 
-(define-tree-filter c-transpiler-compile-argument-def-symbols (x)
-  (& x (symbol? x)) (c-compiled-symbol x))
+(define-tree-filter bc-transpiler-compile-argument-def-symbols (x)
+  (& x (symbol? x)) (bc-compiled-symbol x))
 
-(defun c-transpiler-make-closure-argument-defs ()
-  (filter (fn `(%setq-atom-value ,_. ,(compiled-tree (c-transpiler-compile-argument-def-symbols ._))))
+(defun bc-transpiler-make-closure-argument-defs ()
+  (filter (fn `(%setq-atom-value ,_. ,(compiled-tree (bc-transpiler-compile-argument-def-symbols ._))))
 		  *closure-argdefs*))
 
-(defun c-transpiler-make-function-registrations (tr)
+(defun bc-transpiler-make-function-registrations (tr)
   (filter (fn `(%setq ~%ret
 					  (treatom_register_compiled_function
-						  ,(c-compiled-symbol _)
+						  ,(bc-compiled-symbol _)
 						  ,_)))
 		  (transpiler-defined-functions-without-builtins tr)))
 
-(defun c-transpiler-declarations-and-initialisations (tr)
+(defun bc-transpiler-declarations-and-initialisations (tr)
   (append (transpiler-compiled-inits tr)
-		  (c-transpiler-make-closure-argument-defs)
-		  (c-transpiler-make-function-registrations tr)))
+		  (bc-transpiler-make-closure-argument-defs)
+		  (bc-transpiler-make-function-registrations tr)))
 
-(defun c-transpiler-make-init (tr)
+(defun bc-transpiler-make-init (tr)
   (let init-funs nil
     (append
         (mapcar (fn (with-gensym g
-				      (let name ($ 'C-INIT- (1+! *c-init-counter*))
+				      (let name ($ 'C-INIT- (1+! *bc-init-counter*))
 				        (push name init-funs)
 				        `(defun ,name ()
 						   ,@(mapcar (fn `(tregc_push_compiled ,_)) _)))))
-			    (group (c-transpiler-declarations-and-initialisations tr) *c-init-group-size*))
-        `((defun c-init ()
+			    (group (bc-transpiler-declarations-and-initialisations tr) *bc-init-group-size*))
+        `((defun bc-init ()
 		    ,@(mapcar #'list (reverse init-funs)))))))
 
-(defun c-transpile (sources &key transpiler obfuscate? print-obfuscations? files-to-update)
+(defun bc-transpile (sources &key transpiler obfuscate? print-obfuscations? files-to-update)
   (let tr transpiler
     (string-concat
-        (apply #'string-concat (mapcar (fn format nil "#include \"~A\"~%" _) *c-interpreter-headers*))
+        (apply #'string-concat (mapcar (fn format nil "#include \"~A\"~%" _) *bc-interpreter-headers*))
   	    (format nil "#define userfun_apply trespecial_apply_compiled~%")
   	    (target-transpile tr
             :files-after-deps sources
             :dep-gen #'(()
                           (transpiler-import-from-environment tr))
             :decl-gen #'(()
-                           (c-transpiler-compile-argument-def-symbols *closure-argdefs*)
-                           (let init (transpiler-make-code tr (transpiler-frontend tr (c-transpiler-make-init tr)))
+                           (bc-transpiler-compile-argument-def-symbols *closure-argdefs*)
+                           (let init (transpiler-make-code tr (transpiler-frontend tr (bc-transpiler-make-init tr)))
                              (concat-stringtree (transpiler-compiled-decls tr) init)))))))

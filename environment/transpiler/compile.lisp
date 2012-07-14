@@ -1,12 +1,22 @@
 ;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun compile-0 (sources &key (target nil) (transpiler nil) (obfuscate? nil) (print-obfuscations? nil) (files-to-update nil))
-  (?
-    (not target) (error "target missing")
-    (eq 'c target) ,(& *have-c-compiler?* '(c-transpile sources :transpiler (| transpiler *c-transpiler*) :obfuscate? obfuscate?))
-    (eq 'js target) (js-transpile sources :transpiler (| transpiler *js-transpiler*) :obfuscate? obfuscate? :print-obfuscations? :print-obfuscations? :files-to-update files-to-update)
-    (eq 'php target) (php-transpile sources :transpiler (| transpiler *php-transpiler*) :obfuscate? obfuscate? :print-obfuscations? :print-obfuscations? :files-to-update files-to-update)
-    (error "unknown target ~A")))
+  (| target (error "target missing"))
+  (funcall (case target
+             'c ,(& *have-c-compiler?* '#'c-transpile)
+             'bytecode ,(& *have-c-compiler?* '#'bc-transpile)
+             'js #'js-transpile
+             'php #'php-transpile
+             (error "unknown target ~A"))
+           sources
+           :transpiler (case target
+                         'c ,(& *have-c-compiler?* '*c-transpiler*)
+                         'bytecode ,(& *have-c-compiler? '*bc-transpiler*)
+                         'js *js-transpiler*
+                         'php *php-transpiler*)
+           :obfuscate? obfuscate?
+           :print-obfuscations? print-obfuscations?
+           :files-to-update files-to-update))
 
 (defun compile-files (files &key (target nil) (transpiler nil) (obfuscate? nil) (print-obfuscations? nil) (files-to-update nil))
   (compile-0 (mapcar #'list files)

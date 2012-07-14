@@ -75,7 +75,8 @@
          (progn
 	       (transpiler-add-wanted-function *current-transpiler* !))
            `(symbol-function (%quote ,!)))
-      (| (vec-function-expr? x) x)))
+      x))
+;      (| (vec-function-expr? x) x)))
 
 (defun transpiler-import-universe (tr)
   (map (fn transpiler-add-wanted-function tr _) (reverse *defined-functions*)))

@@ -75,13 +75,12 @@
         (awhen compiled-deps
           (= (transpiler-imported-deps tr) (string-concat (transpiler-imported-deps tr) !)))
 	    (prog1
-	      (concat-stringtree (awhen decl-gen
-	                           (funcall !))
-	                         compiled-before
-                             (reverse (transpiler-raw-decls tr))
-                             (transpiler-imported-deps tr)
-	                         compiled-after
-                             )
-                             ;(| compiled-acctop ""))
+	      (transpiler-concat-text tr (awhen decl-gen
+	                                   (funcall !))
+	                                 compiled-before
+                                     (reverse (transpiler-raw-decls tr))
+                                     (transpiler-imported-deps tr)
+	                                 compiled-after)
+                                     ;(| compiled-acctop ""))
           (& print-obfuscations? (transpiler-obfuscate? tr)
              (transpiler-print-obfuscations tr)))))))

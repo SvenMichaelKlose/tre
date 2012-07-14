@@ -1,0 +1,2 @@
+(defun fnord ()
+  #'bc-transpile)
