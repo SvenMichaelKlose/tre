@@ -73,7 +73,7 @@
 ;                                                     (list 'accumulated-toplevel)))))
         (& (show?) (terpri))
         (awhen compiled-deps
-          (= (transpiler-imported-deps tr) (string-concat (transpiler-imported-deps tr) !)))
+          (= (transpiler-imported-deps tr) (transpiler-concat-text tr (transpiler-imported-deps tr) !)))
 	    (prog1
 	      (transpiler-concat-text tr (awhen decl-gen
 	                                   (funcall !))
