@@ -53,8 +53,8 @@
 (defun expex-warn (x)
   (& *expex-warn?*
      (symbol? x)
-     (not (expex-symbol-defined? x))
-     (not (transpiler-can-import? *current-transpiler* x))
+     (not (expex-symbol-defined? x)
+          (transpiler-can-import? *current-transpiler* x))
      (error "symbol ~A is not defined in function ~A.~%"
             (symbol-name x) (funinfo-get-name *expex-funinfo*))))
 

@@ -33,9 +33,7 @@
 (defun bc-expex-argument-filter (x)
   (?
 	(cons? x) (transpiler-import-from-expex x)
-    (character? x) (bc-compiled-char x)
-    (number? x) (bc-compiled-number x)
-    (string? x) (bc-compiled-string x)
+    (| (character? x) (number? x) (string? x)) (print `(%quote ,x))
 	(funinfo-in-this-or-parent-env? *expex-funinfo* x) x
 	(expex-funinfo-defined-variable? x) `(treatom_get_value ,(bc-compiled-symbol x))
 	x))

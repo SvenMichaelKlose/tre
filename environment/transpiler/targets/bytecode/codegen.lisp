@@ -48,8 +48,3 @@
 
 (define-bc-macro %%vm-go-nil (val tag)
   `(%bc-go-nil ,val ,tag))
-
-;;;; SYMBOLS
-
-(define-bc-macro %quote (x)
-  x)
