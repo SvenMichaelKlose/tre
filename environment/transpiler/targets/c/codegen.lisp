@@ -52,11 +52,7 @@
 	(c-codegen-function name x)))
 
 (define-c-macro %function-prologue (fi-sym)
-  (with (fi (get-funinfo-by-sym fi-sym)
-    	 num-vars (length (funinfo-env fi)))
-	(? (< 0 num-vars)
-	   (c-codegen-function-prologue-for-local-variables fi num-vars)
-	   '(%transpiler-native ""))))
+  (c-codegen-function-prologue-for-local-variables (get-funinfo-by-sym fi-sym)))
 
 ;;;; FUNCTION REFERENCE
 

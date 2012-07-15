@@ -1,11 +1,12 @@
 ;;;;; tré – Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
 
-(defun c-codegen-function-prologue-for-local-variables (fi num-vars)
+(defun c-codegen-function-prologue-for-local-variables (fi)
   `(,@(c-line "treptr __ret")
     ,@(alet (length (funinfo-env fi))
-        (& (< 0 !)
-	       `(("    int __c; for (__c = " ,! "; __c > 0; __c--)")
-             ,@(c-line " *--trestack_ptr = treptr_nil"))))
+        `(,@(& (< 1 !)
+	           `(("    int __c; for (__c = " ,! "; __c > 0; __c--)")))
+          ,@(& (< 0 !)
+               (c-line " *--trestack_ptr = treptr_nil"))))
     ,@(codegen-copy-arguments-to-locals fi)))
 
 (define-c-macro %function-epilogue (fi-sym)
