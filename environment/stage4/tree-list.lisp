@@ -3,9 +3,8 @@
 (defun tree-list-0 (q x)
   (? (atom x)
      (enqueue q x)
-     (progn
-       (tree-list-0 q x.)
-       (& .x (tree-list-0 q .x)))))
+     (dolist (i x)
+       (tree-list-0 q i))))
 
 (defun tree-list (x)
   (& x
