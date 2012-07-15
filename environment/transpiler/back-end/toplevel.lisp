@@ -22,7 +22,9 @@
     codegen-expand      (fn expander-expand (transpiler-codegen-expander tr) _)
     finalize-sexprs     #'transpiler-finalize-sexprs
     encapsulate-strings #'transpiler-encapsulate-strings
-    function-names      (fn translate-function-names tr nil _))
+    function-names      (fn ? (transpiler-function-name-prefix tr)
+                              (translate-function-names tr nil _)
+                              _))
 
 (transpiler-pass transpiler-backend-make-places ()
     place-assign            #'place-assign

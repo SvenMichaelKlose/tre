@@ -2,8 +2,9 @@
 
 (defun bc-transpile (sources &key transpiler obfuscate? print-obfuscations? files-to-update)
   (let tr transpiler
-    (target-transpile tr
-                      :files-after-deps sources
-                      :dep-gen #'(()
-                                   (transpiler-import-from-environment tr))
-                      :decl-gen #'(nil))))
+    (tree-list
+      (target-transpile tr
+                        :files-after-deps sources
+                        :dep-gen #'(()
+                                     (transpiler-import-from-environment tr))
+                        :decl-gen #'(nil)))))

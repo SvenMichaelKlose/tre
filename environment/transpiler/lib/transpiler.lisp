@@ -57,6 +57,7 @@
   (accumulate-toplevel-expressions? nil)
   (accumulated-toplevel-expressions nil)
 
+  (function-name-prefix "USERFUN_")
   (needs-var-declarations? nil)
 
   ; Tells if local variables are on the stack.
@@ -295,6 +296,7 @@
                      :lambda-export?          lambda-export?
                      :accumulate-toplevel-expressions? accumulate-toplevel-expressions?
                      :accumulated-toplevel-expressions (copy-list accumulated-toplevel-expressions)
+                     :function-name-prefix    function-name-prefix
                      :needs-var-declarations? needs-var-declarations?
                      :stack-locals?           stack-locals?
                      :place-expand-ignore-toplevel-funinfo? place-expand-ignore-toplevel-funinfo?

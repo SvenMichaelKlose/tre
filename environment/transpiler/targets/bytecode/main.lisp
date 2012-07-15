@@ -5,6 +5,6 @@
 (env-load "transpiler/targets/bytecode/expand.lisp" 'c)
 (env-load "transpiler/targets/bytecode/builtin.lisp" 'c)
 (env-load "transpiler/targets/bytecode/codegen.lisp" 'c)
-(env-load "transpiler/targets/bytecode/codegen-function-gcstack.lisp" 'c)
 (env-load "transpiler/targets/bytecode/codegen-inline.lisp" 'c)
+(env-load "transpiler/targets/bytecode/codegen-function-gcstack.lisp" 'c)
 (env-load "transpiler/targets/bytecode/toplevel.lisp" 'c)

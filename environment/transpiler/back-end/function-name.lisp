@@ -1,7 +1,7 @@
 ;;;;; tré – Copyright (c) 2009–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun compiled-user-function-name (x)
-  (make-symbol (string-concat "USERFUN_" (symbol-name x)) (symbol-package x)))
+  (make-symbol (string-concat (transpiler-function-name-prefix tr) (symbol-name x)) (symbol-package x)))
 
 (defun compiled-function-name (tr x)
   (? (| (%transpiler-native? x)
