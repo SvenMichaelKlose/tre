@@ -9,9 +9,6 @@
 
 (define-codegen-macro-definer define-bc-macro *bc-transpiler*)
 
-(defun bc-codegen-var-decl (name)
-  `("treptr " ,(transpiler-symbol-string *current-transpiler* name)))
-
 ;;;; SYMBOL TRANSLATIONS
 
 (transpiler-translate-symbol *bc-transpiler* nil "treptr_nil")
@@ -19,38 +16,15 @@
 
 ;;;; FUNCTIONS
 
-(defun bc-make-function-declaration (name args)
-  (push (concat-stringtree "extern treptr " (transpiler-symbol-string *current-transpiler* name)
-  	    	               " " (parenthized-comma-separated-list (mapcar #'bc-codegen-var-decl args))
-			               ";" (string (code-char 10)))
-	    (transpiler-compiled-decls *current-transpiler*)))
-
-(defun bc-codegen-function (name x)
-  (let args (argument-expand-names 'unnamed-bc-function (lambda-args x))
-    (bc-make-function-declaration name args)
-    `(,(code-char 10)
-	  "treptr " ,name " "
-	  ,@(parenthized-comma-separated-list (mapcar (fn `("treptr " ,_)) args))
-	  ,(code-char 10)
-	  "{" ,(code-char 10)
-          ,@(lambda-body x)
-	  "}" ,*bc-newline*)))
-
-(define-bc-macro eq (&rest x)
-  `(%eq ,@x))
-
 (define-bc-macro function (name &optional (x 'only-name))
   (?
 	(eq 'only-name x)	name
     (atom x)			(error "codegen: arguments and body expected: ~A" x)
-	(bc-codegen-function name x)))
+    `(%%%bc-fun ,name ,(argument-expand-names 'unnamed-bc-function (lambda-args x))
+      ,@(lambda-body x))))
 
 (define-bc-macro %function-prologue (fi-sym)
-  (with (fi (get-funinfo-by-sym fi-sym)
-    	 num-vars (length (funinfo-env fi)))
-	(? (< 0 num-vars)
-	   (bc-codegen-function-prologue-for-local-variables fi num-vars)
-	   '(%transpiler-native ""))))
+  (bc-codegen-function-prologue-for-local-variables (get-funinfo-by-sym fi-sym)))
 
 ;;;; FUNCTION REFERENCE
 

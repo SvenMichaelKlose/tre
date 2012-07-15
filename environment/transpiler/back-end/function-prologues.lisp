@@ -1,5 +1,10 @@
 ;;;;; tré – Copyright (c) 2005–2012 Sven Michael Klose <pixel@copei.de>
 
+(defun codegen-copy-arguments-to-locals (fi)
+  (& (transpiler-stack-locals? *current-transpiler*)
+     (mapcar (fn `(%setq ,(place-assign (place-expand-0 fi _)) ,_))
+             (funinfo-local-args fi))))
+
 (defun funinfo-var-declarations (fi)
   (unless (transpiler-stack-locals? *current-transpiler*)
     (mapcan (fn unless (funinfo-arg? fi _)
