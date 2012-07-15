@@ -37,12 +37,12 @@
 (defun expex-internal-symbol? (x)
   (let tr *current-transpiler*
     (| (function? x)
-	   (keyword? x)
-	   (member x (transpiler-predefined-symbols tr) :test #'eq)
-	   (in? x nil t '~%ret 'this)
-	   (transpiler-imported-variable? tr x)
-	   (transpiler-defined-variable tr x)
-	   (transpiler-macro? tr x)
+       (keyword? x)
+       (member x (transpiler-predefined-symbols tr) :test #'eq)
+       (in? x nil t '~%ret 'this)
+       (transpiler-imported-variable? tr x)
+       (transpiler-defined-variable tr x)
+       (transpiler-macro? tr x)
        (assoc x *variables* :test #'eq))))
 
 (defun expex-symbol-defined? (x)
