@@ -25,19 +25,13 @@
 
 ;; Convert from lambda-expanded funref to one with lexical.
 (define-bc-macro %%funref (name fi-sym)
-  (let fi (get-funinfo-by-sym fi-sym)
- 	`('%funref ,name ,(place-assign (place-expand-funref-lexical fi)) "))")))
+  `(%funref ,name ,(place-assign (place-expand-funref-lexical (get-funinfo-by-sym fi-sym)))))
 
 ;;;; ASSIGNMENT
 
-(define-bc-macro %setq (dest val)
-  `(%bc-setq ,@(codegen-%setq-place dest val)) ,val)
-
-(define-bc-macro %setq-atom-value (dest val)
-  `(%bc-setq-atom-value ,dest ,val))
-
-(define-bc-macro %set-atom-fun (dest val)
-  `(%bc-set-atom-fun ,dest ,val))
+(define-bc-macro %setq (place x)
+  `(%bc-setq ,place ,(? (cons? x)
+                        `(,x. ,(length .x) ,.x))))
 
 ;;;; STACK
 

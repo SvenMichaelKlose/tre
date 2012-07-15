@@ -23,7 +23,8 @@
 			                             (expex-setter-filter ex) (compose (fn mapcan (fn expex-set-global-variable-value _) _)
 									                                       #'expex-compiled-funcall)
 		                                 (expex-inline? ex) (fn in? _ 'cons 'aref '%vec '%car '%cdr '%eq '%not)))
-              :make-text? nil)
+              :make-text? nil
+              :function-name-prefix nil)
 	(= (transpiler-inline-exceptions !) '(error format identity))))
 
 (defvar *bc-transpiler* (copy-transpiler (make-bc-transpiler)))
