@@ -31,7 +31,8 @@
 
 (define-bc-macro %setq (place x)
   `(%bc-setq ,place ,(? (cons? x)
-                        `(,x. ,(length .x) ,.x))))
+                        `(,x. ,(length .x) ,@.x)
+                        x)))
 
 ;;;; STACK
 
