@@ -4,16 +4,5 @@
   `((%%%num-vars ,(length (funinfo-env fi)))
     ,@(codegen-copy-arguments-to-locals fi)))
 
-(define-bc-macro %function-epilogue (fi-sym)
-  (with (fi (get-funinfo-by-sym fi-sym)
-    	 num-vars (length (funinfo-env fi)))
-    `((%setq "__ret" ,(place-assign (place-expand-0 fi '~%ret)))
-      ,@(when (< 0 num-vars)
-		  `(,(bc-line "trestack_ptr += " num-vars)))
-      (%function-return ,fi-sym))))
-
-(define-bc-macro %function-return (fi-sym)
-  (bc-line "return __ret"))
-
-(defun bc-stack (x)
-  `("trestack_ptr[" ,x "]"))
+(define-bc-macro %function-epilogue (fi-sym))
+(define-bc-macro %function-return (fi-sym))
