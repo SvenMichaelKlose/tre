@@ -58,10 +58,8 @@
 		   deps        (target-sighten-deps tr dep-gen)
            num-exprs   (apply #'+ (mapcar (fn length ._) (append before-deps deps after-deps)))
            show?       #'(() (& *show-definitions?* (< 50 num-exprs))))
-      (when (show?)
-        (format t "; ~A toplevel expressions.~%" num-exprs)
-        (format t "; Let me think. Hmm...")
-        (force-output))
+      (& (show?)
+         (format t "; ~A toplevel expressions.~%; Let me think. Hmm...~F" num-exprs))
       (with (compiled-before (target-transpile-2 tr before-deps files-to-update)
 	         compiled-deps   (awhen deps (transpiler-make-code tr !))
 		     compiled-after  (target-transpile-2 tr after-deps files-to-update)
@@ -71,9 +69,11 @@
 ;                                 (target-transpile-1 tr (list (cons 'accumulated-toplevel #'(()
 ;                                                                                              (transpiler-make-toplevel-function tr))))
 ;                                                     (list 'accumulated-toplevel)))))
-        (& (show?) (terpri))
+        (& (show?) (format t " Phew!~%~F"))
         (awhen compiled-deps
           (= (transpiler-imported-deps tr) (transpiler-concat-text tr (transpiler-imported-deps tr) !)))
+        (& (show?)
+           (format t "Concatenating results...~F"))
 	    (prog1
 	      (transpiler-concat-text tr (awhen decl-gen
 	                                   (funcall !))
@@ -82,5 +82,6 @@
                                      (transpiler-imported-deps tr)
 	                                 compiled-after)
                                      ;(| compiled-acctop ""))
+          (& (show?) (format t " Done.~%~F"))
           (& print-obfuscations? (transpiler-obfuscate? tr)
              (transpiler-print-obfuscations tr)))))))

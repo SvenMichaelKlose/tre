@@ -2,9 +2,12 @@
 
 (defun bc-transpile (sources &key transpiler obfuscate? print-obfuscations? files-to-update)
   (let tr transpiler
-    (tree-list
+    (alet
       (target-transpile tr
                         :files-after-deps sources
                         :dep-gen #'(()
                                      (transpiler-import-from-environment tr))
-                        :decl-gen #'(nil)))))
+                        :decl-gen #'(nil))
+      (print !)
+      (format t "Flattening...~F")
+    (tree-list !))))
