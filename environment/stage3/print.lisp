@@ -20,7 +20,7 @@
        (href (print-info-visited info) x) (%print-circularity x str))))
 
 (defun %print-rest-0 (c str info)
-  (= (href (print-info-visited info) c) t)
+;  (= (href (print-info-visited info) c) t)
   (%late-print c. str info)
   (let x .c
     (? x
@@ -34,8 +34,8 @@
        (princ ")" str))))
 
 (defun %print-rest (x str info)
-  (| (%print-check-circularity x str info)
-     (%print-rest-0 x str info)))
+;  (| (%print-check-circularity x str info)
+     (%print-rest-0 x str info));)
 
 (defun %print-cons (x str info)
   (princ #\( str)
@@ -57,8 +57,8 @@
   (princ (symbol-name x) str))
 
 (defun %print-array-0 (x str info)
-  (& *print-circularities?*
-     (= (href (print-info-visited info) x) t))
+;  (& *print-circularities?*
+;     (= (href (print-info-visited info) x) t))
   (princ "#(" str)
   (dotimes (i (length x))
     (%late-print (aref x i) str info)
@@ -66,8 +66,8 @@
   (princ ")" str))
 
 (defun %print-array (x str info)
-  (| (%print-check-circularity x str info)
-     (%print-array-0 x str info)))
+;  (| (%print-check-circularity x str info)
+     (%print-array-0 x str info));)
 
 (defun %print-function-0 (x str info)
   (princ "#'" str)
@@ -76,8 +76,8 @@
                str info))
 
 (defun %print-function (x str info)
-  (| (%print-check-circularity x str info)
-     (%print-function-0 x str info)))
+;  (| (%print-check-circularity x str info)
+     (%print-function-0 x str info));)
 
 (defun %print-atom (x str info)
   (?

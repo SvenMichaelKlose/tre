@@ -30,7 +30,8 @@
      (%print-trace-atom x info)))
 
 (defun print-trace (x)
-  (let info (make-print-info)
-    (%print-trace x info)
-    (= (print-info-visited info) (make-hash-table :test #'eq))
-    info))
+  (make-print-info))
+;  (let info (make-print-info)
+;    (%print-trace x info)
+;    (= (print-info-visited info) (make-hash-table :test #'eq))
+;    info))
