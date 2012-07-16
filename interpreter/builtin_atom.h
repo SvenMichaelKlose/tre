@@ -1,5 +1,5 @@
 /*
- * tré - Copyright (c) 2005-2006, 2008-2011 Sven Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005-2006,2008-2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #ifndef TRE_BUILTIN_ATOM_H
@@ -20,8 +20,6 @@ extern treptr treatom_builtin_set_symbol_package (treptr);
 extern treptr treatom_builtin_set_atom_fun (treptr);
 extern treptr treatom_builtin_functionp (treptr);
 extern treptr treatom_builtin_builtinp (treptr);
-extern treptr treatom_builtin_boundp (treptr);
-extern treptr treatom_builtin_fboundp (treptr);
 extern treptr treatom_builtin_macrop (treptr);
 extern treptr treatom_builtin_atom_list (treptr);
 extern treptr treatom_builtin_type_id (treptr);

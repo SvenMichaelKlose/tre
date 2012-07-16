@@ -39,18 +39,6 @@
 treevalfunc_t treeval_xlat_builtin[];
 
 /*tredoc
-  (cmd name "IDENTITY"
-	(arg name "obj")
-	(description
-	  "Returns argument untouched."))
-  */
-treptr
-trebuiltin_identity (treptr args)
-{
-    return trearg_get (args);
-}
-
-/*tredoc
   (cmd name "QUIT" type "bt"
     (description
 	  "Terminate the interpreter."))
@@ -367,7 +355,6 @@ trebuiltin_get (treptr args)
 
 
 char *tre_builtin_names[] = {
-    "IDENTITY",
     "QUIT",
     "LOAD",
     "EVAL", "%MACROCALL",
@@ -398,9 +385,7 @@ char *tre_builtin_names[] = {
     "MAKE-SYMBOL", "MAKE-PACKAGE",
 	"ATOM", "SYMBOL-VALUE", "%TYPE-ID", "%%ID", "%MAKE-PTR",
 	"SYMBOL-FUNCTION", "SYMBOL-PACKAGE", "SYMBOL-COMPILED-FUNCTION",
-	"FUNCTION?", "BUILTIN?",
-    "BOUNDP", "FBOUNDP",
-    "MACROP",
+	"FUNCTION?", "BUILTIN?", "MACROP",
     "%ATOM-LIST",
 
 	"CONS", "LIST",
@@ -458,7 +443,6 @@ trebuiltin_debug (treptr no_args)
 }
 
 treevalfunc_t treeval_xlat_builtin[] = {
-    trebuiltin_identity,
     trebuiltin_quit,
     trebuiltin_load,
     trebuiltin_eval,
@@ -522,8 +506,6 @@ treevalfunc_t treeval_xlat_builtin[] = {
     treatom_builtin_symbol_compiled_function,
     treatom_builtin_functionp,
     treatom_builtin_builtinp,
-    treatom_builtin_boundp,
-    treatom_builtin_fboundp,
     treatom_builtin_macrop,
     treatom_builtin_atom_list,
 

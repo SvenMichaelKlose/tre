@@ -37,9 +37,7 @@
             make-symbol make-package
             atom symbol-value %type-id %%id %make-ptr
             symbol-function symbol-package symbol-compiled-function
-            function? builtin?
-            boundp fboundp
-            macrop
+            function? builtin? macrop
             cons list car cdr cons?
             assoc member
             elt length

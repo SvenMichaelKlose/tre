@@ -12,10 +12,11 @@
 
 (setq
 	*defined-functions*
+	(cons 'identity
 	(cons 'copy-tree
 	(cons 'last
 	(cons '%nconc
-		  nil))))
+		  nil)))))
 
 (setq
 	*variables*
@@ -31,6 +32,8 @@
 	(cons (cons '*libc-path* nil)
 	(cons (cons '*have-environment-tests* nil)
 		  *variables*))))))))))))
+
+(%set-atom-fun identity #'((x) x))
 
 (%set-atom-fun copy-tree
   #'((x)

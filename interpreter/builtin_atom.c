@@ -1,5 +1,5 @@
 /*
- * tré - Copyright (c) 2005-2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005-2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -267,32 +267,6 @@ treatom_builtin_builtinp (treptr list)
     treptr arg = trearg_get (list);
 
     return TREPTR_TRUTH(TREPTR_IS_BUILTIN(arg));
-}
-
-/*tredoc
-  (cmd :name BOUNDP
-	(arg obj)
-	(para "Returns T if global symbol is bound to a variable."))
- */
-treptr
-treatom_builtin_boundp (treptr list)
-{
-    treptr arg = trearg_get (list);
-
-    return TREPTR_TRUTH(TREATOM_VALUE(arg) != arg);
-}
-
-/*tredoc
- (cmd :name FBOUNDP
-	(arg obj)
- 	(para "Check on function."))
- */
-treptr
-treatom_builtin_fboundp (treptr list)
-{
-    treptr arg = trearg_get (list);
-
-    return TREPTR_TRUTH(TREATOM_FUN(arg) != treptr_nil);
 }
 
 /*tredoc
