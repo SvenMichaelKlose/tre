@@ -70,18 +70,17 @@
 ;                                                                                              (transpiler-make-toplevel-function tr))))
 ;                                                     (list 'accumulated-toplevel)))))
         (& (show?) (format t " Phew!~%~F"))
-        (awhen compiled-deps
-          (= (transpiler-imported-deps tr) (transpiler-concat-text tr (transpiler-imported-deps tr) !)))
-        (& (show?)
-           (format t "Concatenating results...~F"))
-	    (prog1
-	      (transpiler-concat-text tr (awhen decl-gen
-	                                   (funcall !))
-	                                 compiled-before
-                                     (reverse (transpiler-raw-decls tr))
-                                     (transpiler-imported-deps tr)
-	                                 compiled-after)
-                                     ;(| compiled-acctop ""))
-          (& (show?) (format t " Done.~%~F"))
-          (& print-obfuscations? (transpiler-obfuscate? tr)
-             (transpiler-print-obfuscations tr)))))))
+        (!? compiled-deps
+            (= (transpiler-imported-deps tr) (transpiler-concat-text tr (transpiler-imported-deps tr) !)))
+        (let decls-and-inits (!? decl-gen (funcall !))
+          (& (show?) (format t "; Concatenating results...~F"))
+	      (prog1
+	        (transpiler-concat-text tr decls-and-inits
+	                                   compiled-before
+                                       (reverse (transpiler-raw-decls tr))
+                                       (transpiler-imported-deps tr)
+	                                   compiled-after)
+                                       ;(| compiled-acctop ""))
+            (& (show?) (format t " Done.~%~F"))
+            (& print-obfuscations? (transpiler-obfuscate? tr)
+               (transpiler-print-obfuscations tr))))))))
