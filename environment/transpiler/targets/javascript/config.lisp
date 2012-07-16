@@ -2,7 +2,7 @@
 
 (defun js-=-function? (x)
   (| (%=-function? x)
-     (transpiler-function-arguments *js-transpiler* x)))
+     (transpiler-defined-function *current-transpiler* x)))
 
 (defun make-javascript-transpiler-0 ()
   (create-transpiler
