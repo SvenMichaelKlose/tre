@@ -9,11 +9,13 @@
              'php #'php-transpile
              (error "unknown target ~A"))
            sources
-           :transpiler (case target
-                         'c ,(& *have-c-compiler?* '*c-transpiler*)
-                         'bytecode ,(& *have-c-compiler? '*bc-transpiler*)
-                         'js *js-transpiler*
-                         'php *php-transpiler*)
+           :transpiler (| transpiler
+                          (copy-transpiler
+                            (case target
+                              'c ,(& *have-c-compiler?* '*c-transpiler*)
+                              'bytecode ,(& *have-c-compiler? '*bc-transpiler*)
+                              'js *js-transpiler*
+                              'php *php-transpiler*)))
            :obfuscate? obfuscate?
            :print-obfuscations? print-obfuscations?
            :files-to-update files-to-update))
