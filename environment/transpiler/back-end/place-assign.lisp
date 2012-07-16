@@ -9,8 +9,8 @@
 (defun unassigned-%set-vec? (x)
   (& (%set-vec? x) ....x))
 
-(defun place-assign-error (x)
-  (error "can't find index in lexicals for ~A.~%" x))
+(defun place-assign-error (x v)
+  (error "can't assign place because the find index in lexicals for ~A in ~A.~%" v x))
 
 (define-tree-filter place-assign (x)
   (| (%quote? x)
@@ -18,10 +18,10 @@
   (unassigned-%stack? x)       `(%stack ,(funinfosym-env-pos .x. ..x.))
   (unassigned-%vec? x)         `(%vec ,(place-assign .x.)
 		                              ,(| (funinfosym-lexical-pos ..x. ...x.)
-                                          (place-assign-error x)))
+                                          (place-assign-error x ...x.)))
   (unassigned-%set-vec? x)     `(%set-vec ,(place-assign .x.)
 		                                  ,(| (funinfosym-lexical-pos ..x. ...x.)
-                                              (place-assign-error x))
+                                              (place-assign-error x ...x.))
                                           ,(place-assign ....x.))
   (lambda? x)                  (copy-lambda x :body (place-assign (lambda-body x)))
   (%slot-value? x)             `(%slot-value ,(place-assign .x.) ,..x.))
