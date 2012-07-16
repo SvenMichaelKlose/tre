@@ -334,6 +334,7 @@
                      :frontend-files          (copy-alist frontend-files)
                      :compiled-files          (copy-alist compiled-files)
                      :current-package         current-package
+                     :dump-passes?            dump-passes?
                      :expex-initializer       expex-initializer)
     (funcall (transpiler-expex-initializer !) (transpiler-make-expex !))))
 
