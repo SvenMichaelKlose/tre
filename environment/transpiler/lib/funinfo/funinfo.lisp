@@ -11,7 +11,7 @@
 
   ; Lists of stack variables. The rest contains the parent environments.
   (env nil)
-  (env-hash (make-hash-table :test #'eq))
+  (env-hash nil)
   (used-env nil)
 
   ; List of variables defined outside the function.
@@ -21,6 +21,7 @@
   (lexical nil)  ; Name of the array of lexicals.
   (ghost nil)    ; Name of hidden argument with an array of lexicals.
   (local-function-args nil)
+  (literals nil) ; Literals used in the function.
 
   ; List if variables which must not be removed by the optimizer in order
   ; to keep re-assigned arguments out of the GC (see OPT-TAILCALL).
@@ -45,7 +46,7 @@
       :sym sym
       :args (copy-list args)
       :env (copy-list env)
-      :env-hash (copy-hash-table env-hash)
+      :env-hash (& env-hash (copy-hash-table env-hash))
       :used-env (copy-list used-env)
       :free-vars (copy-list free-vars)
       :lexicals (copy-list lexicals)

@@ -24,7 +24,8 @@
 (defun funinfo-in-env? (fi x)
   (& (? (funinfo-parent fi)
         (member x (funinfo-env fi) :test #'eq)
-        (href (funinfo-env-hash fi) x))
+        (!? (funinfo-env-hash fi)
+            (href ! x)))
      fi))
 
 (defun funinfo-in-args-or-env? (fi x)
@@ -90,7 +91,7 @@
 	; XXX (error "double definition of ~A in ~A" x (funinfo-env fi))
     (unless (funinfo-parent fi)
   	  (unless (funinfo-env-hash fi)
-  	    (= (funinfo-env-hash fi) (make-hash-table :size 65521 :test #'eq)))
+  	    (= (funinfo-env-hash fi) (make-hash-table :test #'eq)))
   	  (= (href (funinfo-env-hash fi) x) t))
     (push x (funinfo-env fi)))
   x)

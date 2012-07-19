@@ -6,11 +6,14 @@
   (?
 	(eq 'only-name x)	name
     (atom x)			(error "codegen: arguments and body expected: ~A" x)
-    `(%%%bc-fun ,name ,(argument-expand-names 'unnamed-bytecode-function (lambda-args x))
+    `(%%%bc-fun ,name ,(lambda-funinfo x)
       ,@(lambda-body x))))
 
 (define-bc-macro %function-prologue (fi-sym)
-  (bc-codegen-function-prologue-for-local-variables (get-funinfo-by-sym fi-sym)))
+  (codegen-copy-arguments-to-locals (get-funinfo-by-sym fi-sym)))
+
+(define-bc-macro %function-epilogue (fi-sym)
+  '%%bc-return)
 
 (define-bc-macro %%funref (name fi-sym)
   `(%funref ,name ,(place-assign (place-expand-funref-lexical (get-funinfo-by-sym fi-sym)))))
@@ -19,3 +22,6 @@
   `(%bc-setq ,place ,(? (cons? x)
                         `(%bc-funcall ,x. ,(length .x) ,@.x)
                         x)))
+
+(define-bc-macro identity (x)
+  x)
