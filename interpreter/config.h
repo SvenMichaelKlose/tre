@@ -36,6 +36,8 @@ typedef int bool;
 #define TRE_COUNT_LISTNODES /* For debugging. */
 #endif
 
+#define INTERPRETER
+
 #ifndef TRE_QUIET_LOAD
 #define TRE_VERBOSE_LOAD	/* Print what files are loaded. */
 #endif

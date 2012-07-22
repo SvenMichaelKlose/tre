@@ -438,6 +438,8 @@ trespecial_macro (treptr list)
     return f;
 }
 
+#ifdef INTERPRETER
+
 /*tredoc
   (cmd :name SPECIAL
 	(arg :type argument-definition)
@@ -766,16 +768,19 @@ trespecial_function (treptr args)
     return treerror (arg, "function or argument/body pair expected");
 }
 
+#endif /* #ifdef INTERPRETER */
+
 char *tre_special_names[] = {
     "APPLY",
-    "SETQ",
+    "SETQ", "%SET-ATOM-FUN",
     "MACRO", "SPECIAL",
+#ifdef INTERPRETER
     "COND", "?",
     "QUOTE",
     "PROGN",
     "BLOCK", "RETURN-FROM", "TAGBODY", "GO",
     "FUNCTION",
-    "%SET-ATOM-FUN",
+#endif /* #ifdef INTERPRETER */
     "SET-BREAKPOINT", "REMOVE-BREAKPOINT",
     NULL
 };
@@ -783,8 +788,10 @@ char *tre_special_names[] = {
 treevalfunc_t treeval_xlat_spec[] = {
     trespecial_apply,
     trespecial_setq,
+    treatom_builtin_set_atom_fun,
     trespecial_macro,
     trespecial_special,
+#ifdef INTERPRETER
     trespecial_cond,
     trespecial_if,
     trespecial_quote,
@@ -794,9 +801,9 @@ treevalfunc_t treeval_xlat_spec[] = {
     trespecial_tagbody,
     trespecial_go,
     trespecial_function,
-    treatom_builtin_set_atom_fun,
     tredebug_builtin_set_breakpoint,
     tredebug_builtin_remove_breakpoint,
+#endif /* #ifdef INTERPRETER */
     NULL
 };
 
@@ -812,19 +819,17 @@ trespecial (treptr func, treptr expr)
 void
 trespecial_init ()
 {
-    tre_atom_evaluated_go
-        = treatom_get ("%%EVALD-GO", TRECONTEXT_PACKAGE());
+#ifdef INTERPRETER
+    tre_atom_evaluated_go = treatom_get ("%%EVALD-GO", TRECONTEXT_PACKAGE());
 	EXPAND_UNIVERSE(tre_atom_evaluated_go);
 
-    tre_atom_evaluated_return_from
-        = treatom_get ("%%EVALD-RETURN-FROM", TRECONTEXT_PACKAGE());
+    tre_atom_evaluated_return_from = treatom_get ("%%EVALD-RETURN-FROM", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(tre_atom_evaluated_return_from);
 
-    treatom_lambda
-        = treatom_get ("LAMBDA", TRECONTEXT_PACKAGE());
+    treatom_lambda = treatom_get ("LAMBDA", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treatom_lambda);
+#endif /* #ifdef INTERPRETER */
 
-    treatom_funref
-        = treatom_get ("%FUNREF", TRECONTEXT_PACKAGE());
+    treatom_funref = treatom_get ("%FUNREF", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treatom_funref);
 }

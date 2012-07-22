@@ -1,8 +1,11 @@
 /*
- * tré - Copyright (c) 2005-2008,2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2008,2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
+
+#ifdef INTERPRETER
+
 #include "atom.h"
 #include "list.h"
 #include "eval.h"
@@ -327,3 +330,5 @@ trearg_init (void)
 
     trethread_make ();
 }
+
+#endif /* #ifdef INTERPRETER */

@@ -1,8 +1,11 @@
 /*
- * tré - Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2007,2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
+
+#ifdef INTERPRETER
+
 #include "atom.h"
 #include "list.h"
 #include "number.h"
@@ -97,3 +100,5 @@ tredebug_builtin_remove_breakpoint (treptr args)
     tredebug_remove_breakpoint (TREATOM_NAME(tredebug_breakpoint_arg (args)));
     return treptr_nil;
 }
+
+#endif /* #ifdef INTERPRETER */

@@ -1,8 +1,11 @@
 /*
- * tré - Copyright (c) 2005-2009,2011 Sven Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
+
+#ifdef INTERPRETER
+
 #include "atom.h"
 #include "error.h"
 #include "eval.h"
@@ -651,3 +654,5 @@ treptr_type (treptr x)
 {
     return TREPTR_TYPE(x);
 }
+
+#endif /* #ifdef INTERPRETER */

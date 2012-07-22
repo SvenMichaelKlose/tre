@@ -1,8 +1,11 @@
 /*
- * tré - Copyright (c) 2005-2008,2010,2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2008,2010,2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
+
+#ifdef INTERPRETER
+
 #include "atom.h"
 #include "list.h"
 #include "io.h"
@@ -432,3 +435,5 @@ treread_init ()
     EXPAND_UNIVERSE(treatom_quasiquote_splice);
     EXPAND_UNIVERSE(treatom_function);
 }
+
+#endif /* #ifdef INTERPRETER */

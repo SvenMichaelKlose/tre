@@ -1,6 +1,8 @@
 /*
- * tré - Copyright (c) 2005-2008,2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2008,2012 Sven Michael Klose <pixel@copei.de>
  */
+
+#ifdef INTERPRETER
 
 #ifndef TRE_ARGUMENTS_H
 #define TRE_ARGUMENTS_H
@@ -19,3 +21,5 @@ extern treptr tre_atom_rest;
 extern treptr tre_atom_body;
 
 #endif 	/* #ifndef TRE_ARGUMENTS_H */
+
+#endif /* #ifdef INTERPRETER */

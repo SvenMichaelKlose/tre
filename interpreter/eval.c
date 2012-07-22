@@ -1,8 +1,11 @@
 /*
- * tré - Copyright (c) 2005-2009,2011-2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
+
+#ifdef INTERPRETER
+
 #include "atom.h"
 #include "list.h"
 #include "number.h"
@@ -458,3 +461,5 @@ treeval_init ()
     treatom_set_value (treopt_verbose_eval, treptr_nil);
 	EXPAND_UNIVERSE(treopt_verbose_eval);
 }
+
+#endif /* #ifdef INTERPRETER */

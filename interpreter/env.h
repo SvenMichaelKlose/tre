@@ -1,9 +1,8 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
- *
- * Utility functions
+ * tré – Copyright (c) 2005–2008,2012 Sven Michael Klose <pixel@copei.de>
  */
+
+#ifdef INTERPRETER
 
 #ifndef TRE_ENV_H
 #define TRE_ENV_H
@@ -38,3 +37,5 @@ extern void treenv_bind_sloppy (treptr atoms, treptr values);
 extern void treenv_unbind (treptr atoms);
 
 #endif	/* #ifndef TRE_ENV_H */
+
+#endif /* #ifdef INTERPRETER */

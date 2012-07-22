@@ -1,11 +1,11 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2008,2011 Sven Klose <pixel@copei.de>
- *
- * Environment
+ * tré – Copyright (c) 2005–2008,2011–2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
+
+#ifdef INTERPRETER
+
 #include "atom.h"
 #include "list.h"
 #include "number.h"
@@ -125,3 +125,5 @@ treenv_unbind (treptr la)
         TRELIST_FREE_EARLY(bding);
     }
 }
+
+#endif /* #ifdef INTERPRETER */

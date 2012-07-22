@@ -1,9 +1,8 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
- *
- * Evaluation-related section.
+ * tré – Copyright (c) 2005–2009,2012 Sven Michael Klose <pixel@copei.de>
  */
+
+#ifdef INTERPRETER
 
 #ifndef TRE_EVAL_H
 #define TRE_EVAL_H
@@ -27,3 +26,5 @@ extern void treeval_init (void);
 extern treptr treeval_compiled_expr (treptr func, treptr expr, bool do_eval);
 
 #endif 	/* #ifndef TRE_EVAL_H */
+
+#endif /* #ifdef INTERPRETER */

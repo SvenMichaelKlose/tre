@@ -1,6 +1,8 @@
 /*
- * tré - Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2007,2012 Sven Michael Klose <pixel@copei.de>
  */
+
+#ifdef INTERPRETER
 
 #ifndef TRE_DEBUG_H
 #define TRE_DEBUG_H
@@ -31,3 +33,5 @@ extern treptr treptr_index (treptr);
 extern treptr treptr_type (treptr);
 
 #endif	/* #ifndef TRE_DEBUG_H */
+
+#endif /* #ifdef INTERPRETER */

@@ -1,18 +1,22 @@
 /*
- * tré - Copyright (c) 2005-2007,2009 Sven Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2007,2009,2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #ifndef TRE_SPECIAL_H
 #define TRE_SPECIAL_H
 
+#ifdef INTERPRETER
+
 extern bool treeval_is_return (treptr);
 extern bool treeval_is_go (treptr);
 extern bool treeval_is_jump (treptr);
 
-extern char *tre_special_names[];
-
 extern treptr tre_atom_evaluated_go;
 extern treptr tre_atom_evaluated_return_from;
+
+#endif /* #ifdef INTERPRETER */
+
+extern char *tre_special_names[];
 
 extern treptr trespecial (treptr func, treptr expr);
 extern void trespecial_init (void);

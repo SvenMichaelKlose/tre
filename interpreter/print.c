@@ -1,5 +1,5 @@
 /*
- * tré - Copyright (c) 2005-2009,2011 Sven Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
  */
 
 /*
@@ -7,6 +7,9 @@
  */
 
 #include "config.h"
+
+#ifdef INTERPRETER
+
 #include "atom.h"
 #include "list.h"
 #include "number.h"
@@ -317,3 +320,5 @@ treprint (treptr p)
     printnl ();
 	return p;
 }
+
+#endif /* #ifdef INTERPRETER */

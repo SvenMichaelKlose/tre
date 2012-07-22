@@ -1,8 +1,11 @@
 /*
- * tré - Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2009,2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
+
+#ifdef INTERPRETER
+
 #include "atom.h"
 #include "list.h"
 #include "eval.h"
@@ -68,3 +71,5 @@ tremacro_init (void)
     treptr_current_macro = treatom_get ("*CURRENT-MACRO*", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treptr_current_macro);
 }
+
+#endif /* #ifdef INTERPRETER */

@@ -1,11 +1,11 @@
 /*
- * TRE tree processor
- * Copyright (c) 2008 Sven Klose <pixel@copei.de>
- *
- * Dot-expansion wrappers calling TRE function, if defined.
+ * tré – Copyright (c) 2008,2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
+
+#ifdef INTERPRETER
+
 #include "atom.h"
 #include "list.h"
 #include "eval.h"
@@ -42,3 +42,5 @@ tredot_init (void)
     treatom_dotexpand_hook = & TREPTR_TO_ATOM(treptr_dotexpand_hook);
     EXPAND_UNIVERSE(treptr_dotexpand_hook);
 }
+
+#endif /* #ifdef INTERPRETER */
