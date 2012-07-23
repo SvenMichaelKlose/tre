@@ -1,10 +1,7 @@
 ;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun transpiler-concat-text (tr &rest x)
-  (apply (? (transpiler-make-text? tr)
-            #'concat-stringtree
-            #'((&rest x) x))
-         x))
+  (apply (transpiler-code-concatenator tr) x))
 
 ;; After this pass:
 ;; - Symbols are obfuscated.

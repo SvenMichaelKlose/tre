@@ -25,3 +25,6 @@
 
 (define-bc-macro identity (x)
   x)
+
+(define-bc-macro %quote (x)
+  x)

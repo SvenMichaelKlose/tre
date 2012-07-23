@@ -71,7 +71,8 @@
   (cps-exceptions nil)
   (cps-functions nil)
 
-  (make-text? t) ; Tell if text or expressions are generated.
+  (code-concatenator #'concat-stringtree)
+  (make-text? t)
 
   ;;;
   ;;; You mustn't init these.
@@ -304,6 +305,7 @@
                      :continuation-passing-style? continuation-passing-style?
                      :cps-exceptions          (copy-list cps-exceptions)
                      :cps-functions           (copy-list cps-functions)
+                     :code-concatenator       code-concatenator
                      :make-text?              make-text?
                      :symbol-translations     (copy-list symbol-translations)
                      :thisify-classes         (copy-hash-table thisify-classes)

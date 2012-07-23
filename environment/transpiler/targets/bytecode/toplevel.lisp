@@ -2,9 +2,9 @@
 
 (defun bc-transpile (sources &key transpiler obfuscate? print-obfuscations? files-to-update)
   (let tr transpiler
-    (alet (tree-list (target-transpile tr
-                                       :files-after-deps sources
-                                       :dep-gen #'(() (transpiler-import-from-environment tr))))
+    (alet (target-transpile tr :files-after-deps sources
+                               :dep-gen #'(()
+                                             (transpiler-import-from-environment tr)))
       (& *show-definitions?*
          (format t "; ~A codes.~%" (length !)))
-      !)))
+      (expr-to-code !))))

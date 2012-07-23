@@ -56,7 +56,7 @@
   (let args (make-queue)
     ; Make list of keyword/value pairs.
     (dolist (i (tree-transform-placeholders trn) (queue-list args))
-      (enqueue args (list (intern (symbol-name i) "") (assoc i (tree-transform-clips trn)))))))
+      (enqueue args (list (make-keyword i) (assoc i (tree-transform-clips trn)))))))
 
 (defun tree-transform-compile-r (match trn)
   "Match tree-transform against expression and return first toplevel cons after
