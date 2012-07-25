@@ -10,8 +10,6 @@
 
 (defun js-make-function-with-compiled-argument-expansion (x)
   (let g '~%cargs
-    (when (in-cps-mode?)
-      (transpiler-add-cps-function *current-transpiler* g))
     (with-lambda-content x fi args body
       `(#'((,g)
 	        (= ,g ,(copy-lambda `(function ,x) :body (body-with-noargs-tag body)))
@@ -48,10 +46,6 @@
             ((slot-value ,e 'apply) nil (%transpiler-native "[" ,a "]")))
           (,f ,@args)))))
 
-(defun js-cps-exception (x)
-  (unless (in-cps-mode?)
-    (transpiler-add-cps-exception *current-transpiler* (%defun-name x))))
-
 (defvar *late-symbol-function-assignments* nil)
 
 (defun js-make-late-symbol-function-assignment (name)
@@ -62,17 +56,9 @@
   (reverse *late-symbol-function-assignments*))
 
 (define-js-std-macro define-native-js-fun (name args &rest body)
-  (js-cps-exception name)
   (js-make-late-symbol-function-assignment name)
   `(progn
      ,@(apply #'shared-defun name args (body-with-noargs-tag body))))
-
-(define-js-std-macro cps-mode (x)
-  (print-definition `(cps-mode ,x))
-  (unless (in? x nil t)
-    (error "Expected NIL or T is the only argument."))
-  (= *transpiler-except-cps?* (not x))
-  `(%setq %cps-mode ,x))
 
 (defun js-make-early-symbol-expr (g sym)
    `(,@(unless (eq g '~%tfun)
@@ -87,10 +73,7 @@
           (transpiler-memorized-sources *current-transpiler*)))
 
 (define-js-std-macro defun (name args &rest body)
-  (let dname (transpiler-package-symbol *js-transpiler* (%defun-name name))
-    (js-cps-exception name)
-    (when (in-cps-mode?)
-      (transpiler-add-cps-function *js-transpiler* dname))
+  (let dname (apply-current-package (transpiler-package-symbol *js-transpiler* (%defun-name name)))
     (let g '~%tfun
       `(progn
          ,@(js-make-early-symbol-expr g dname)

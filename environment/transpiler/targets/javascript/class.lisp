@@ -35,7 +35,7 @@
   `((%transpiler-native ,x.)
 	#'(,.x.
 		(%thisify ,class-name
-		  (let ~%this ,(? (in-cps-mode?) '~%cps-this 'this)
+		  (let ~%this this
 	        ,@(| (ignore-body-doc ..x.) (list nil)))))))
 
 (defun js-emit-methods (class-name cls)
