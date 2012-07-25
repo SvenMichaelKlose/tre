@@ -9,11 +9,8 @@
     `(%%%bc-fun ,name ,(lambda-funinfo x)
       ,@(lambda-body x))))
 
-(define-bc-macro %function-prologue (fi-sym)
-  (codegen-copy-arguments-to-locals (get-funinfo-by-sym fi-sym)))
-
-(define-bc-macro %function-epilogue (fi-sym)
-  '%%bc-return)
+(define-bc-macro %function-prologue (fi-sym))
+(define-bc-macro %function-epilogue (fi-sym) '%%bc-return)
 
 (define-bc-macro %%funref (name fi-sym)
   `(%funref ,name ,(place-assign (place-expand-funref-lexical (get-funinfo-by-sym fi-sym)))))
@@ -23,8 +20,5 @@
                         `(%bc-funcall ,x. ,(length .x) ,@.x)
                         x)))
 
-(define-bc-macro identity (x)
-  x)
-
-(define-bc-macro %quote (x)
-  x)
+(define-bc-macro identity (x) x)
+(define-bc-macro %quote (x) x)

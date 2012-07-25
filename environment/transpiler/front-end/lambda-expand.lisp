@@ -2,11 +2,11 @@
 
 (defun lambda-make-funinfo (args parent)
   (with (argnames (argument-expand-names 'lambda-expand args)
-         fi (make-funinfo :args argnames
-					      :parent parent))
-	(& (transpiler-stack-locals? *current-transpiler*)
+         fi (make-funinfo :args argnames :parent parent))
+    (funinfo-env-add fi '~%ret)
+    ; XXX nicer when moved to place-assign/expand
+    (& (transpiler-copy-arguments-to-stack? *current-transpiler*)
        (funinfo-env-add-many fi argnames))
-	(funinfo-env-add fi '~%ret)
 	fi))
 
 ;;;; Inlining
@@ -51,7 +51,7 @@
 
 (defun lambda-expand-tree-unexported-lambda (fi x)
   (with (new-fi (| (& (lambda-funinfo x) (get-lambda-funinfo x))
-					(lambda-make-funinfo (lambda-args x) fi))
+				   (lambda-make-funinfo (lambda-args x) fi))
 		 body (lambda-expand-tree-0 new-fi (lambda-body x)))
 	(copy-lambda x :info new-fi :body body)))
 

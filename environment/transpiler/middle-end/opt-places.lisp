@@ -2,17 +2,17 @@
 
 (defun opt-places-find-used-fun (x)
   (let fi (get-lambda-funinfo x)
-    (awhen (funinfo-lexical fi)
-      (funinfo-add-used-env fi !))
+    (!? (funinfo-lexical fi)
+        (funinfo-add-used-env fi !))
     (opt-places-find-used-0 fi (lambda-body x))))
 
 (defun opt-places-find-used-0 (fi x)
   (?
-    (atom x)			(when (funinfo-in-env? fi x)
-						  (funinfo-add-used-env fi x))
+    (atom x)			(& (funinfo-in-env? fi x)
+						   (funinfo-add-used-env fi x))
 	(%quote? x)			nil
 	(lambda? x)			(opt-places-find-used-fun x)
-	(named-lambda? x)	(opt-places-find-used-fun (caddr x))
+	(named-lambda? x)	(opt-places-find-used-fun ..x.)
 	(progn
 	  (opt-places-find-used-0 fi x.)
       (opt-places-find-used-0 fi .x))))
@@ -22,10 +22,10 @@
   x)
 
 (defun opt-places-correct-funinfo (fi)
-  (funinfo-env-set fi (append (funinfo-used-env fi)
-                              (funinfo-lexicals fi)
-                              (when (transpiler-stack-locals? *current-transpiler*)
-                                (funinfo-args fi)))))
+  (funinfo-env-set fi (+ (funinfo-used-env fi)
+                         (funinfo-lexicals fi)
+                         (& (transpiler-copy-arguments-to-stack? *current-transpiler*)
+                            (funinfo-args fi)))))
 
 (defun opt-places-remove-unused-body (x)
   (let fi (get-lambda-funinfo x)
@@ -36,7 +36,7 @@
   (?
     (atom x)			nil
 	(lambda? x)			(opt-places-remove-unused-body x)
-	(named-lambda? x)	(opt-places-remove-unused-body (caddr x))
+	(named-lambda? x)	(opt-places-remove-unused-body ..x.)
 	(progn
 	  (opt-places-remove-unused-0 fi x.)
       (opt-places-remove-unused-0 fi .x))))

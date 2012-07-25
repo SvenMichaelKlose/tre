@@ -10,13 +10,6 @@
                           (rec .x (1+ i))))))
     (rec x 0)))
 
-(defun list-array (x)
-  (with (a (make-array (length x))
-         idx 0)
-    (dolist (i x a)
-      (= (aref a idx) i)
-      (1+! idx))))
-
 (defun translate-jumps (indexes x)
   (with (get-tag-index (fn assoc-value _ (queue-list indexes))
          rec #'((x)

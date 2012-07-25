@@ -29,6 +29,9 @@
   (let args (argument-expand-names 'unnamed-c-function (lambda-args x))
     (c-make-function-declaration name args)
     `(,(code-char 10)
+      "/*" ,*c-newline*
+      "  env: " ,@(mapcar (fn + (symbol-name _) " ") (funinfo-env (get-funinfo-by-sym (lambda-funinfo x)))) ,*c-newline*
+      "*/" ,*c-newline*
 	  "treptr " ,name " "
 	  ,@(parenthized-comma-separated-list (mapcar (fn `("treptr " ,_)) args))
 	  ,(code-char 10)

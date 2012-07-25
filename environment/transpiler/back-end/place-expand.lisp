@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2011 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2012 Sven Michael Klose <pixel@copei.de>
 
 ;;; Pass lexical up one step through ghost.
 
@@ -59,7 +59,9 @@
 
 	; Emit stack place.
 	(& (transpiler-stack-locals? *current-transpiler*)
-       (funinfo-in-env? fi x))
+       (| (& (transpiler-arguments-on-stack? *current-transpiler*)
+             (funinfo-arg? fi x))
+          (funinfo-in-env? fi x)))
       (place-expand-emit-stackplace fi x)
 
     (| (funinfo-in-args-or-env? fi x)

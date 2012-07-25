@@ -18,8 +18,7 @@
 ;;;; ARGUMENTS & ENVIRONMENT
 
 (defun funinfo-local-args (fi)
-  (remove-if (fn funinfo-lexical? fi _)
-			 (funinfo-args fi)))
+  (remove-if (fn funinfo-lexical? fi _) (funinfo-args fi)))
 
 (defun funinfo-in-env? (fi x)
   (& (? (funinfo-parent fi)
@@ -93,7 +92,7 @@
   	  (unless (funinfo-env-hash fi)
   	    (= (funinfo-env-hash fi) (make-hash-table :test #'eq)))
   	  (= (href (funinfo-env-hash fi) x) t))
-    (push x (funinfo-env fi)))
+    (append! (funinfo-env fi) (list x)))
   x)
 
 (defun funinfo-env-add-many (fi x)
@@ -119,7 +118,7 @@
 
 (defun funinfo-add-used-env (fi x)
   (& (funinfo-parent fi)
-     (adjoin! x (funinfo-used-env fi) :test #'eq)))
+     (append! (funinfo-used-env fi) (list x))))
 
 (defun funinfo-get-name (fi)
   (& fi

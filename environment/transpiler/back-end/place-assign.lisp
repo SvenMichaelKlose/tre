@@ -15,7 +15,10 @@
 (define-tree-filter place-assign (x)
   (| (%quote? x)
      (%transpiler-native? x)) x
-  (unassigned-%stack? x)       `(%stack ,(funinfosym-env-pos .x. ..x.))
+  (unassigned-%stack? x)       `(%stack ,(+ (funinfosym-env-pos .x. ..x.)
+                                               (? (transpiler-arguments-on-stack? *current-transpiler*)
+                                                  (length (funinfo-args (get-funinfo-by-sym .x.)))
+                                                  0)))
   (unassigned-%vec? x)         `(%vec ,(place-assign .x.)
 		                              ,(| (funinfosym-lexical-pos ..x. ...x.)
                                           (place-assign-error x ...x.)))

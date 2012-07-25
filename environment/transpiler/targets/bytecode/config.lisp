@@ -18,8 +18,8 @@
 			  :rename-all-args? t
 			  :literal-conversion #'identity
 	          :expex-initializer #'((ex)
-	                                  (= (expex-argument-filter ex) #'bc-expex-argument-filter
-	                                     (expex-expr-filter ex) #'bc-expex-filter
+	                                  (= (expex-argument-filter ex) #'transpiler-import-from-expex
+	                                     (expex-expr-filter ex) #'transpiler-import-from-expex
 			                             (expex-setter-filter ex) (compose (fn mapcan (fn expex-set-global-variable-value _) _)
 									                                       #'expex-compiled-funcall)
 		                                 (expex-inline? ex) (fn in? _ 'cons 'aref '%vec '%car '%cdr '%eq '%not)))

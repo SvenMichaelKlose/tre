@@ -62,6 +62,8 @@
 
   ; Tells if local variables are on the stack.
   (stack-locals? nil)
+  (arguments-on-stack? nil)
+  (copy-arguments-to-stack? nil)
 
   (place-expand-ignore-toplevel-funinfo? nil)
 
@@ -300,6 +302,8 @@
                      :function-name-prefix    function-name-prefix
                      :needs-var-declarations? needs-var-declarations?
                      :stack-locals?           stack-locals?
+                     :arguments-on-stack?     arguments-on-stack?
+                     :copy-arguments-to-stack? copy-arguments-to-stack?
                      :place-expand-ignore-toplevel-funinfo? place-expand-ignore-toplevel-funinfo?
                      :apply-argdefs?          apply-argdefs?
                      :continuation-passing-style? continuation-passing-style?
