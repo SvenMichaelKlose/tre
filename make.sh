@@ -25,6 +25,8 @@ FILES="
 	builtin_stream.c
 	builtin_string.c
 
+	bytecode.c
+
 	debug.c
 	diag.c
 	dot.c
