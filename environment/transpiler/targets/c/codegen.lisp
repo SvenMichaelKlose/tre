@@ -61,9 +61,8 @@
 
 ;; Convert from lambda-expanded funref to one with lexical.
 (define-c-macro %%funref (name fi-sym)
-  (let fi (get-funinfo-by-sym fi-sym)
- 	`("_trelist_get (" ,(c-compiled-symbol '%funref) ", "
-		  "_trelist_get (" ,(c-compiled-symbol name) "," ,(place-assign (place-expand-funref-lexical fi)) "))")))
+  `("_trelist_get (" ,(c-compiled-symbol '%funref) ", "
+	    "_trelist_get (" ,(c-compiled-symbol name) "," ,(codegen-funref-lexical fi-sym) "))"))
 
 ;;;; ASSIGNMENT
 

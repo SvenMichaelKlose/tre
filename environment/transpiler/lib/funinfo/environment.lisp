@@ -105,20 +105,20 @@
     (= (funinfo-env-hash fi) (make-hash-table :test #'eq))))
 
 (defun funinfo-env-set (fi x)
-  (? (funinfo-parent fi)
-     (= (funinfo-env fi) x)
-     (progn
-       (error "no parent")
-       (funinfo-env-reset fi)
-       (funinfo-env-add-many fi x))))
+  (funinfo-env-reset fi)
+  (funinfo-env-add-many fi x))
 
 (defun funinfo-env-adjoin (fi x)
   (unless (funinfo-in-env? fi x)
     (funinfo-env-add fi x)))
 
+(defun funinfo-used-env? (fi x)
+  (member x (funinfo-used-env fi) :test #'eq))
+
 (defun funinfo-add-used-env (fi x)
   (& (funinfo-parent fi)
-     (append! (funinfo-used-env fi) (list x))))
+     (not (funinfo-used-env? fi x))
+     (+! (funinfo-used-env fi) (list x))))
 
 (defun funinfo-get-name (fi)
   (& fi

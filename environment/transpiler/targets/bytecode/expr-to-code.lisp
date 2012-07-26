@@ -19,7 +19,7 @@
                                                   (cons ..x. (cons (get-tag-index .x.) (rec ...x)))
                                                   (cons (get-tag-index .x.) (rec ..x))))
                          (cons x. (rec .x))))))
-    (list-array (rec x))))
+    (rec x)))
 
 (defun make-bytecode-function (fi x)
   (translate-jumps (get-tag-indexes x) x))
