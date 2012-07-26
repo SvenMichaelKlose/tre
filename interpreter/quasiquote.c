@@ -37,8 +37,7 @@ trequasiquote_expand (treptr list)
 void
 trequasiquote_init (void)
 {
-    treptr_quasiquoteexpand_hook =
-        treatom_get ("*QUASIQUOTEEXPAND-HOOK*", TRECONTEXT_PACKAGE());
+    treptr_quasiquoteexpand_hook = treatom_get ("*QUASIQUOTEEXPAND-HOOK*", TRECONTEXT_PACKAGE());
     treatom_quasiquoteexpand_hook = & TREPTR_TO_ATOM(treptr_quasiquoteexpand_hook);
     EXPAND_UNIVERSE(treptr_quasiquoteexpand_hook);
 }

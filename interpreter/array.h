@@ -17,5 +17,6 @@ extern struct tre_sequence_type trearray_seqtype;
 extern treptr trearray_make (ulong size);
 
 #define TREARRAY_SIZE(arr) (trearray_get_size (TREATOM_VALUE(arr)))
+#define TREARRAY_RAW(arr) ((treptr *) (TREATOM_DETAIL(arr)))
 
 #endif

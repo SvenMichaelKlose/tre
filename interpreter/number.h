@@ -1,5 +1,5 @@
 /*
- * tré - Copyright (c) 2005-2008,2011 Sven Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2008,2011–2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #ifndef TRE_NUMBERS_H
@@ -15,12 +15,10 @@ struct tre_number {
 };
 
 #define TRE_NUMBER(index) (&tre_numbers[index])
-#define TRENUMBER_VAL(ptr) \
-	((TRE_NUMBER((ulong) TREATOM_DETAIL(ptr)))->value)
-#define TRENUMBER_CHARPTR(ptr) \
-	((char *) (long) (TRE_NUMBER((ulong) TREATOM_DETAIL(ptr)))->value)
-#define TRENUMBER_TYPE(ptr) \
-	((TRE_NUMBER((ulong) TREATOM_DETAIL(ptr)))->type)
+#define TRENUMBER_VAL(ptr) ((TRE_NUMBER((ulong) TREATOM_DETAIL(ptr)))->value)
+#define TRENUMBER_INT(ptr) ((int) TRENUMBER_VAL(ptr))
+#define TRENUMBER_CHARPTR(ptr) ((char *) (long) (TRE_NUMBER((ulong) TREATOM_DETAIL(ptr)))->value)
+#define TRENUMBER_TYPE(ptr) ((TRE_NUMBER((ulong) TREATOM_DETAIL(ptr)))->type)
 
 extern void * tre_numbers_free;
 extern struct tre_number tre_numbers[NUM_NUMBERS];
