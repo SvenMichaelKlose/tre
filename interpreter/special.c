@@ -244,9 +244,7 @@ treeval_compiled_expr (treptr func, treptr x, bool do_expand)
     tregc_push (x);
 
     funcdef = TREATOM_VALUE(func);
-    forms = (funcdef != treptr_nil) ?
-		CAR(funcdef) :
-		treptr_nil;
+    forms = CAR(funcdef);
 
    	/* Expand argument keywords. */
    	trearg_expand (&expforms, &expvals, forms, args, do_expand);
@@ -286,6 +284,9 @@ trespecial_apply_compiled_call_funref (treptr func, treptr x)
 	return result;
 }
 
+#define FUNREF_FUNCTION(x)  CAR(CDR(x))
+#define FUNREF_LEXICALS(x)  CDR(CDR(x))
+
 /*tredoc
   (cmd :name APPLY
 	(arg :type function)
@@ -312,8 +313,8 @@ trespecial_apply_compiled (treptr list)
 	if (trespecial_is_compiled_funref (func)) {
 		tregc_push (args);
 		res = trespecial_apply_compiled_call_funref (
-		    CAR(CDR(func)),
-		    CONS(CDR(CDR(func)), args)
+            FUNREF_FUNCTION(func),
+		    CONS(FUNREF_LEXICALS(func), args)
 		);
 		tregc_pop ();
 		tregc_pop ();
