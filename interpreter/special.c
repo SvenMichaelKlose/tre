@@ -81,7 +81,7 @@ trespecial_apply_compiled_call (treptr func, treptr args)
 	treptr cargs = CONS(func, args);
 
 	tregc_push (cargs);
-	result = treeval_compiled_expr (func, cargs, FALSE);
+	result = treeval_compiled_expr (func, cargs, CAR(TREATOM_VALUE(func)), FALSE);
 	tregc_pop ();
 
 	return result;
@@ -230,12 +230,10 @@ trespecial_is_compiled_funref (treptr x)
 }
 
 treptr
-treeval_compiled_expr (treptr func, treptr x, bool do_expand)
+treeval_compiled_expr (treptr func, treptr x, treptr argdef, bool do_expand)
 {
-    treptr  funcdef;	/* Function definition tree. */
     treptr  expforms;	/* Expanded argument forms. */
     treptr  expvals;    /* Expanded argument values. */
-	treptr  forms;
 	treptr  evaluated;
 	treptr  result;
 	treptr  args = CDR(x);
@@ -243,11 +241,8 @@ treeval_compiled_expr (treptr func, treptr x, bool do_expand)
     tregc_push (func);
     tregc_push (x);
 
-    funcdef = TREATOM_VALUE(func);
-    forms = CAR(funcdef);
-
    	/* Expand argument keywords. */
-   	trearg_expand (&expforms, &expvals, forms, args, do_expand);
+   	trearg_expand (&expforms, &expvals, argdef, args, do_expand);
    	tregc_push (expvals);
 
 	evaluated = CONS(func, expvals);
@@ -257,29 +252,6 @@ treeval_compiled_expr (treptr func, treptr x, bool do_expand)
 	tregc_pop ();
 	tregc_pop ();
 	tregc_pop ();
-
-	return result;
-}
-
-treptr
-trespecial_apply_compiled_call_funref (treptr func, treptr x)
-{
-    treptr  expforms;   /* Expanded argument forms. */
-    treptr  expvals;    /* Expanded argument values. */
-    treptr  evaluated;
-    treptr  result;
-
-    tregc_push (CONS(func, x));
-
-    trearg_expand (&expforms, &expvals, TREATOM_VALUE(func), x, FALSE);
-    tregc_push (expvals);
-
-    evaluated = CONS(func, expvals);
-    tregc_push (evaluated);
-    result = trespecial_call_compiled (evaluated);
-    tregc_pop ();
-    tregc_pop ();
-    tregc_pop ();
 
 	return result;
 }
@@ -298,6 +270,7 @@ treptr
 trespecial_apply_compiled (treptr list)
 {
     treptr  func;
+    treptr  f;
     treptr  args = treptr_nil;
     treptr  fake;
     treptr  efunc;
@@ -312,9 +285,12 @@ trespecial_apply_compiled (treptr list)
 
 	if (trespecial_is_compiled_funref (func)) {
 		tregc_push (args);
-		res = trespecial_apply_compiled_call_funref (
-            FUNREF_FUNCTION(func),
-		    CONS(FUNREF_LEXICALS(func), args)
+        f = FUNREF_FUNCTION(func);
+		res = treeval_compiled_expr (
+            f,
+		    CONS(f, CONS(FUNREF_LEXICALS(func), args)),
+            TREATOM_VALUE(f),
+            FALSE
 		);
 		tregc_pop ();
 		tregc_pop ();
