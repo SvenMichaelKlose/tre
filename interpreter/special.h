@@ -27,5 +27,6 @@ extern treptr trespecial_apply_compiled (treptr);
 extern treptr trespecial_call_compiled (treptr);
 
 extern bool trespecial_is_compiled_funcall (treptr);
+extern treptr treeval_compiled_expr (treptr func, treptr expr, bool do_eval);                                                                                  
 
 #endif	/* #ifndef TRE_SPECIAL_H */

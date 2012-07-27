@@ -213,40 +213,6 @@ treeval_xlat_function (treevalfunc_t *xlat, treptr func, treptr expr,
     return ret;
 }
 
-treptr
-treeval_compiled_expr (treptr func, treptr x, bool do_expand)
-{
-    treptr  funcdef;	/* Function definition tree. */
-    treptr  expforms;	/* Expanded argument forms. */
-    treptr  expvals;    /* Expanded argument values. */
-	treptr  forms;
-	treptr  evaluated;
-	treptr  result;
-	treptr  args = CDR(x);
-
-    tregc_push (func);
-    tregc_push (x);
-
-    funcdef = TREATOM_VALUE(func);
-    forms = (funcdef != treptr_nil) ?
-		CAR(funcdef) :
-		treptr_nil;
-
-   	/* Expand argument keywords. */
-   	trearg_expand (&expforms, &expvals, forms, args, do_expand);
-   	tregc_push (expvals);
-
-	evaluated = CONS(func, expvals);
-	tregc_push (evaluated);
-	result = trespecial_call_compiled (evaluated);
-	tregc_pop ();
-	tregc_pop ();
-	tregc_pop ();
-	tregc_pop ();
-
-	return result;
-}
-
 /*
  * Evaluate expression
  *

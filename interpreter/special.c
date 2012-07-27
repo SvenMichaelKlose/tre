@@ -75,13 +75,13 @@ error:
 }
 
 treptr
-trespecial_apply_call_fake (treptr func, treptr args)
+trespecial_apply_compiled_call (treptr func, treptr args)
 {
-	treptr expr = CONS(func, args);
 	treptr result;
+	treptr cargs = CONS(func, args);
 
-	tregc_push (expr);
-	result = treeval_compiled_expr (func, expr, FALSE);
+	tregc_push (cargs);
+	result = treeval_compiled_expr (func, cargs, FALSE);
 	tregc_pop ();
 
 	return result;
@@ -114,7 +114,7 @@ trespecial_apply (treptr list)
     fake = CONS(func, args);
     tregc_push (fake);
 	if (TREPTR_IS_FUNCTION(func) && TREATOM_COMPILED_FUN(func)) {
-		tmp = trespecial_apply_call_fake (func, args);
+		tmp = trespecial_apply_compiled_call (func, args);
 		tregc_pop ();
 		tregc_pop ();
 		return tmp;
@@ -125,7 +125,7 @@ trespecial_apply (treptr list)
 	if (TREPTR_IS_FUNCTION(efunc) && TREATOM_COMPILED_FUN(efunc)) {
 		tregc_pop ();
 		tregc_pop ();
-		return trespecial_apply_call_fake (efunc, args);
+		return trespecial_apply_compiled_call (efunc, args);
 	}
 
     if (TREPTR_IS_FUNCTION(efunc))
@@ -162,15 +162,12 @@ trespecial_call_compiled (treptr lst)
     args = trealloc (sizeof (ffi_type *) * len);
     refs = trealloc (sizeof (treptr) * len);
     values = trealloc (sizeof (void *) * len);
-
-	/* Initialize the argument info vectors */
 	for (i = 0; x != treptr_nil; i++, x = CDR(x)) {
 		args[i] = &ffi_type_ulong;
 		refs[i] = CAR(x);
 		values[i] = &refs[i];
 	}
 
-	/* Initialize the cif */
 	if (ffi_prep_cif(&cif, FFI_DEFAULT_ABI, i, &ffi_type_ulong, args) == FFI_OK) {
 		fun = TREATOM_COMPILED_FUN(CAR(lst));
 		ffi_call(&cif, fun, &rc, values);
@@ -227,26 +224,47 @@ error:
 }
 
 bool
-trespecial_is_compiled_funcall (treptr x)
+trespecial_is_compiled_funref (treptr x)
 {
 	return TREPTR_IS_CONS(x) && CAR(x) == treatom_funref;
 }
 
 treptr
-trespecial_apply_compiled_call (treptr func, treptr args)
+treeval_compiled_expr (treptr func, treptr x, bool do_expand)
 {
-	treptr result;
-	treptr cargs = CONS(func, args);
+    treptr  funcdef;	/* Function definition tree. */
+    treptr  expforms;	/* Expanded argument forms. */
+    treptr  expvals;    /* Expanded argument values. */
+	treptr  forms;
+	treptr  evaluated;
+	treptr  result;
+	treptr  args = CDR(x);
 
-	tregc_push (cargs);
-	result = treeval_compiled_expr (func, cargs, FALSE);
+    tregc_push (func);
+    tregc_push (x);
+
+    funcdef = TREATOM_VALUE(func);
+    forms = (funcdef != treptr_nil) ?
+		CAR(funcdef) :
+		treptr_nil;
+
+   	/* Expand argument keywords. */
+   	trearg_expand (&expforms, &expvals, forms, args, do_expand);
+   	tregc_push (expvals);
+
+	evaluated = CONS(func, expvals);
+	tregc_push (evaluated);
+	result = trespecial_call_compiled (evaluated);
+	tregc_pop ();
+	tregc_pop ();
+	tregc_pop ();
 	tregc_pop ();
 
 	return result;
 }
 
 treptr
-trespecial_apply_compiled_call_closure (treptr func, treptr x)
+trespecial_apply_compiled_call_funref (treptr func, treptr x)
 {
     treptr  expforms;   /* Expanded argument forms. */
     treptr  expvals;    /* Expanded argument values. */
@@ -255,7 +273,6 @@ trespecial_apply_compiled_call_closure (treptr func, treptr x)
 
     tregc_push (CONS(func, x));
 
-    /* Expand argument keywords. */
     trearg_expand (&expforms, &expvals, TREATOM_VALUE(func), x, FALSE);
     tregc_push (expvals);
 
@@ -284,7 +301,6 @@ trespecial_apply_compiled (treptr list)
     treptr  fake;
     treptr  efunc;
 	treptr  res;
-    treptr  lexicals;
 
     if (list == treptr_nil)
 		return treerror (list, "arguments expected");
@@ -293,13 +309,11 @@ trespecial_apply_compiled (treptr list)
     func = CAR(list);
     args = trespecial_apply_compiled_args (trelist_copy (CDR(list)));
 
-	if (trespecial_is_compiled_funcall (func)) {
+	if (trespecial_is_compiled_funref (func)) {
 		tregc_push (args);
-	    lexicals = CDR(CDR(func));
-		res = trespecial_apply_compiled_call_closure (
+		res = trespecial_apply_compiled_call_funref (
 		    CAR(CDR(func)),
-		    lexicals != treptr_nil ? CONS(CDR(CDR(func)), args) :
-			                         CONS(treptr_nil, args)
+		    CONS(CDR(CDR(func)), args)
 		);
 		tregc_pop ();
 		tregc_pop ();
@@ -342,6 +356,8 @@ trespecial_apply_compiled (treptr list)
 
     return res;
 }
+
+#ifdef INTERPRETER
 
 /* Test if expression is an evaluated RETURN-FROM. */
 bool
@@ -437,8 +453,6 @@ trespecial_macro (treptr list)
 
     return f;
 }
-
-#ifdef INTERPRETER
 
 /*tredoc
   (cmd :name SPECIAL
