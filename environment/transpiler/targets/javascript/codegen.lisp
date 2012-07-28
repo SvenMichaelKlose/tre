@@ -155,7 +155,7 @@
 ;;;; ARRAYS
 
 (define-js-macro make-array (&rest elements)
-  `(%transpiler-native "[" ,@(pad elements ",") "]"))
+  `(%transpiler-native ,@(parenthized-comma-separated-list elements :type 'square)))
 
 (define-js-macro aref (arr &rest idx)
   `(%transpiler-native ,arr
@@ -166,14 +166,11 @@
 
 ;;;; HASH TABLES
 
+(defun js-literal-hash-entry (name value)
+  `(,(symbol-without-package name) ":" ,value ","))
+
 (define-js-macro %%%make-hash-table (&rest args)
-  (let pairs (group args 2)
-    `("{"
-      ,@(& args (filter (fn `(,(symbol-without-package _.) ":" ,._. ",")) (butlast pairs)))
-      ,@(& args ; XXX append to previous
-		   (let x (car (last pairs))
-		     `(,(symbol-without-package x.) ":" ,.x.)))
-     "}")))
+  (parenthized-comma-separated-list (filter (fn js-literal-hash-entry _. ._) (group args 2)) :type 'curly))
 
 (define-js-macro href (arr &rest idx)
   `(%transpiler-native ,arr
@@ -188,7 +185,8 @@
 ;;;; OBJECTS
 
 (define-js-macro %new (&rest x)
-  `(%transpiler-native "new " ,(compiled-function-name *current-transpiler* x.) "(" ,@(pad .x ",") ")"))
+  `(%transpiler-native "new " ,(compiled-function-name *current-transpiler* x.)
+                              ,@(parenthized-comma-separated-list .x)))
 
 (define-js-macro delete-object (x)
   `(%transpiler-native "delete " ,x))
