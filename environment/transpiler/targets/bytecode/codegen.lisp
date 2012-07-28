@@ -6,12 +6,8 @@
   (?
 	(eq 'only-name x)	name
     (atom x)			(error "codegen: arguments and body expected: ~A" x)
-    (progn
-      (let fi (get-funinfo-by-sym (lambda-funinfo x))
-        (print (funinfo-env fi)))
     `(%%%bc-fun ,name ,(lambda-funinfo x)
       ,@(lambda-body x))))
-  )
 
 (define-bc-macro %function-prologue (fi-sym) '(%setq nil nil))
 (define-bc-macro %function-epilogue (fi-sym) '%%bc-return)
