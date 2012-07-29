@@ -1,8 +1,5 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
- *
- * List related section.
+ * tré – Copyright (c) 2005–2009,2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -20,7 +17,7 @@
 
 treptr tre_lists_free;
 struct tre_list tre_lists[NUM_LISTNODES];
-ulong trelist_num_used;
+size_t trelist_num_used;
 
 #define TRENODE_SET(node, value) \
     (node)->car = car; 	\

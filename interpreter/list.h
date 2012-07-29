@@ -1,5 +1,5 @@
 /*
- * tré - Copyright (c) 2005-2009,2011 Sven Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #ifndef TRE_LIST_H
@@ -94,7 +94,7 @@ extern treptr trelist_delete (ulong, treptr);
 extern void   trelist_append (treptr *lst, treptr lst2) __attribute__((pure));
 extern long   trelist_position (treptr elt, treptr lst) __attribute__((pure));
 extern long   trelist_position_name (treptr elt, treptr lst) __attribute__ ((pure));
-extern ulong trelist_length (treptr) __attribute__((pure));
+extern size_t trelist_length (treptr) __attribute__((pure));
 extern bool   trelist_equal (treptr, treptr) __attribute__((pure));
 extern treptr trelist_nth (treptr, ulong) __attribute__((pure));
 extern treptr trelist_last (treptr) __attribute__((pure));

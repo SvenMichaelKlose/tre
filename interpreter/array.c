@@ -1,5 +1,5 @@
 /*
- * tré - Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2009,2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -34,7 +34,7 @@ trearray_get_raw (ulong size)
 }
 
 /* Get total size of array. */
-ulong
+size_t
 trearray_get_size (treptr sizes)
 {
     treptr  a;
