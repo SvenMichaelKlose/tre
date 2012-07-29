@@ -99,3 +99,5 @@
     (%late-print x s (print-trace x))
 	(terpri s))
   x)
+
+(= *definition-printer* #'late-print)

@@ -10,10 +10,16 @@
 	  (cons '%defun
 		    *defined-functions*))
 
+(setq *variables*
+	  (cons (cons '*definition-printer* nil)
+		    *variables*))
+
+(setq *definition-printer* #'print)
+
 (%set-atom-fun print-definition
   #'((x)
        (? *show-definitions?*
-          (print x))))
+          (apply *definition-printer* (list x)))))
 
 (%set-atom-fun %defun
   (macro (name args &rest body)
