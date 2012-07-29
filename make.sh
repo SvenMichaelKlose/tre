@@ -74,7 +74,7 @@ BUILDOPTS="-O"
 CRUNSHOPTS="-Ofast --whole-program"
 CRUNSHFLAGS="-DTRE_COMPILED_CRUNSHED -Iinterpreter"
 
-LIBFLAGS="-lm -lffi"
+LIBFLAGS="-lm -lffi -ldl"
 
 if [ -f /lib/x86_64-linux-gnu/libdl.so* ]; then
 	LIBFLAGS="$LIBFLAGS -ldl";
@@ -131,7 +131,7 @@ crunsh_compile ()
 	done
 	echo
 	echo "Compiling..."
-	$CC -static $CFLAGS -fwhole-program $COPTS -o $TRE $CRUNSHTMP $LIBFLAGS || exit 1
+	$CC $CFLAGS -fwhole-program $COPTS -o $TRE $CRUNSHTMP $LIBFLAGS || exit 1
 	rm $CRUNSHTMP
 }
 
@@ -189,6 +189,10 @@ crunshraw)
 	COPTS="$COPTS $CRUNSHOPTS"
 	crunsh_compile
 	install_it_without_reload
+	;;
+
+precompile)
+	echo "(precompile-environments)" | ./tre || exit 1
 	;;
 
 boot)
