@@ -225,6 +225,18 @@ treatom_builtin_symbol_compiled_function (treptr list)
    	return treptr_nil;
 }
 
+treptr
+treatom_builtin_usetf_symbol_function (treptr list)
+{
+    TRELIST_DEFREGS();
+printf ("XXXXX\n");
+    trearg_get2 (&car, &cdr, list);
+
+	cdr = trearg_typed (1, TRETYPE_ATOM, cdr, NULL);
+    treatom_set_function (cdr, car);
+    return car;
+}
+
 /*tredoc
   (cmd :name %SET-ATOM-FUN
 	(arg :name obj :type atom)
