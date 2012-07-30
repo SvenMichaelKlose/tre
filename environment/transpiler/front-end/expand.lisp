@@ -20,6 +20,7 @@
     (make-overlayed-std-macro-expander tr expander-name)))
 
 (defmacro define-transpiler-std-macro (tr name &rest args-and-body)
+  (print-definition `(define-transpiler-std-macro ,tr ,name ,args-and-body.))
   `(progn
      (transpiler-add-inline-exception ,tr ',name)
      (define-expander-macro ,(transpiler-std-macro-expander (eval tr)) ,name ,@args-and-body)))
