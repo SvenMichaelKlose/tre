@@ -2,7 +2,9 @@
 
 (defun lambda-make-funinfo (args parent)
   (with (argnames (argument-expand-names 'lambda-expand args)
-         fi (make-funinfo :args argnames :parent parent))
+         fi (make-funinfo :argdef args
+                          :args argnames
+                          :parent parent))
     (funinfo-env-add fi '~%ret)
     ; XXX nicer when moved to place-assign/expand
     (& (transpiler-copy-arguments-to-stack? *current-transpiler*)

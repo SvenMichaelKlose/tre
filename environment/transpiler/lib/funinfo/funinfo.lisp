@@ -7,7 +7,8 @@
   (name nil) ; Name of the function.
   (sym ($ '~F (1+! *funinfo-sym-counter*))) ; Symbol of this funinfo used in LAMBDA-expressions.
 
-  (args nil) ; List of arguments.
+  (argdef nil) ; Argument definition.
+  (args nil) ; Expanded argument definition.
 
   ; Lists of stack variables. The rest contains the parent environments.
   (env nil)
