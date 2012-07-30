@@ -172,9 +172,6 @@ treatom_get_function (treptr atom)
 treptr
 treatom_set_function (treptr atom, treptr value)
 {
-	if (TREATOM_FUN(atom) != treptr_nil && TREATOM_BINDING(atom) == treptr_nil)
-		trewarn (atom, "redefining function of %s '%s'",
-					   treerror_typename (TREPTR_TYPE(atom)), TREATOM_NAME(atom));
     return TREATOM_FUN(atom) = value;
 }
 

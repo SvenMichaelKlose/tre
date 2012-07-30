@@ -276,6 +276,10 @@ treeval_expr (treptr x)
             v = treeval_funcall (fun, x, TRUE);
             break;
 
+        case TRETYPE_ARRAY:
+            v = trespecial_apply_bytecode_call (fun, CDR(x), TRUE);
+            break;
+
         case TRETYPE_USERSPECIAL:
             v = treeval_funcall (fun, x, FALSE);
             break;

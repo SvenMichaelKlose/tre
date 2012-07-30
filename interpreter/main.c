@@ -246,6 +246,7 @@ tre_init (void)
 
 	signal (SIGINT, tre_signal);
 
+    trecode_init ();
     tre_is_initialized = TRUE;
     tre_interrupt_debugger = TRUE;
 }

@@ -5,6 +5,7 @@
 #ifndef TRE_BYECODE_H
 #define TRE_BYECODE_H
 
+extern void trecode_init ();
 extern treptr trecode_exec (treptr bytecode_array);
 
 #endif

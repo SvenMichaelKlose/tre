@@ -19,6 +19,8 @@
 #include "argument.h"
 #include "xxx.h"
 #include "eval.h"
+#include "bytecode.h"
+#include "array.h"
 
 #include "builtin_debug.h"
 #include "builtin_atom.h"
@@ -28,13 +30,6 @@ treptr tre_atom_evaluated_return_from;
 
 treptr treatom_funref;
 
-/*
- * Convert APPLY arguments into simple list
- *
- * The last element of the list must be a list which is copied and
- * appended to the second last element. The last list is copied because
- * it'd be removed as a part of the temporary argument list.
- */
 treptr
 trespecial_apply_args (treptr list)
 {
@@ -74,76 +69,6 @@ error:
                            "(waiting for new argument list)");
 }
 
-treptr
-trespecial_apply_compiled_call (treptr func, treptr args)
-{
-	treptr result;
-	treptr cargs = CONS(func, args);
-
-	tregc_push (cargs);
-	result = treeval_compiled_expr (func, cargs, CAR(TREATOM_VALUE(func)), FALSE);
-	tregc_pop ();
-
-	return result;
-}
-
-/*tredoc
-  (cmd :name APPLY
-	(arg :type function)
-	(args :type any)
-	(descr "Call function with argument list.")
-	(returns "Whatever the called function returns."))
- */
-treptr
-trespecial_apply (treptr list)
-{
-    treptr  func;
-    treptr  args;
-    treptr  fake;
-    treptr  efunc;
-    treptr  res;
-    treptr  tmp;
-
-    if (list == treptr_nil)
-		return treerror (list, "arguments expected");
-
-    func = CAR(list);
-    tmp = trelist_copy (CDR(list));
-	tregc_push (tmp);
-    args = trespecial_apply_args (tmp);
-    fake = CONS(func, args);
-    tregc_push (fake);
-	if (TREPTR_IS_FUNCTION(func) && TREATOM_COMPILED_FUN(func)) {
-		tmp = trespecial_apply_compiled_call (func, args);
-		tregc_pop ();
-		tregc_pop ();
-		return tmp;
-	}
-
-    efunc = treeval (func);
-    RPLACA(fake, efunc);
-	if (TREPTR_IS_FUNCTION(efunc) && TREATOM_COMPILED_FUN(efunc)) {
-		tregc_pop ();
-		tregc_pop ();
-		return trespecial_apply_compiled_call (efunc, args);
-	}
-
-    if (TREPTR_IS_FUNCTION(efunc))
-        res = treeval_funcall (efunc, fake, FALSE);
-    else if (TREPTR_IS_BUILTIN(efunc))
-        res = treeval_xlat_function (treeval_xlat_builtin, efunc, fake, FALSE);
-    else if (TREPTR_IS_SPECIAL(efunc))
-        res = trespecial (efunc, fake);
-    else
-        res = treerror (func, "function expected");
-
-    tregc_pop ();
-	tregc_pop ();
-    TRELIST_FREE_EARLY(fake);
-
-    return res;
-}
-
 #include <ffi.h>
 
 treptr
@@ -180,22 +105,136 @@ trespecial_call_compiled (treptr lst)
 	return rc;
 }
 
-/*
- * Convert APPLY arguments into simple list
- *
- * The last element of the list must be a list which is copied and
- * appended to the second last element. The last list is copied because
- * it'd be removed as a part of the temporary argument list.
- */
+treptr
+treeval_compiled_expr (treptr func, treptr x, treptr argdef, bool do_expand)
+{
+    treptr  expforms;
+    treptr  expvals;
+	treptr  evaluated;
+	treptr  result;
+	treptr  args = CDR(x);
+
+    tregc_push (func);
+    tregc_push (x);
+
+   	trearg_expand (&expforms, &expvals, argdef, args, do_expand);
+   	tregc_push (expvals);
+
+	evaluated = CONS(func, expvals);
+	tregc_push (evaluated);
+	result = trespecial_call_compiled (evaluated);
+	tregc_pop ();
+	tregc_pop ();
+	tregc_pop ();
+	tregc_pop ();
+
+	return result;
+}
+
+treptr
+trespecial_apply_bytecode_call (treptr func, treptr args, bool do_argeval)
+{
+    treptr  expforms;
+    treptr  expvals;
+	treptr  result;
+	treptr  i;
+
+    tregc_push (func);
+    tregc_push (args);
+
+   	trearg_expand (&expforms, &expvals, TREARRAY_RAW(func)[0], args, do_argeval);
+   	tregc_push (expvals);
+    DOLIST(i, expvals)
+        tregc_push (i);
+
+	result = trecode_exec (func);
+    DOLIST(i, expvals)
+        tregc_pop ();
+
+	tregc_pop ();
+	tregc_pop ();
+	tregc_pop ();
+
+	return result;
+}
+
+treptr
+trespecial_apply_compiled_call (treptr func, treptr args)
+{
+	treptr result;
+	treptr cargs;
+
+	if (TREPTR_IS_ARRAY(func))
+		return trespecial_apply_bytecode_call (func, args, FALSE);
+
+	cargs = CONS(func, args);
+	tregc_push (cargs);
+	result = treeval_compiled_expr (func, cargs, CAR(TREATOM_VALUE(func)), FALSE);
+	tregc_pop ();
+
+	return result;
+}
+
+#define IS_COMPILED_FUN(x) (TREPTR_IS_ARRAY(x) || (TREPTR_IS_FUNCTION(x) && TREATOM_COMPILED_FUN(x)))
+
+treptr
+trespecial_apply (treptr list)
+{
+    treptr  func;
+    treptr  args;
+    treptr  fake;
+    treptr  efunc;
+    treptr  res;
+    treptr  tmp;
+
+    if (list == treptr_nil)
+		return treerror (list, "arguments expected");
+
+    func = CAR(list);
+    tmp = trelist_copy (CDR(list));
+	tregc_push (tmp);
+    args = trespecial_apply_args (tmp);
+    fake = CONS(func, args);
+    tregc_push (fake);
+	if (IS_COMPILED_FUN(func)) {
+		tmp = trespecial_apply_compiled_call (func, args);
+		tregc_pop ();
+		tregc_pop ();
+		return tmp;
+	}
+
+    efunc = treeval (func);
+    RPLACA(fake, efunc);
+	if (IS_COMPILED_FUN(efunc)) {
+		tregc_pop ();
+		tregc_pop ();
+		return trespecial_apply_compiled_call (efunc, args);
+	}
+
+    if (TREPTR_IS_FUNCTION(efunc))
+        res = treeval_funcall (efunc, fake, FALSE);
+    else if (TREPTR_IS_BUILTIN(efunc))
+        res = treeval_xlat_function (treeval_xlat_builtin, efunc, fake, FALSE);
+    else if (TREPTR_IS_SPECIAL(efunc))
+        res = trespecial (efunc, fake);
+    else
+        res = treerror (func, "function expected");
+
+    tregc_pop ();
+	tregc_pop ();
+    TRELIST_FREE_EARLY(fake);
+
+    return res;
+}
+
 treptr
 trespecial_apply_compiled_args (treptr list)
 {
     treptr i;
     treptr last;
 
-    RETURN_NIL(list); /* No arguments. */
+    RETURN_NIL(list);
 
-    /* Handle single argument. */
     if (CDR(list) == treptr_nil) {
         list = CAR(list);
         if (TREPTR_IS_ATOM(list) && list != treptr_nil)
@@ -203,7 +242,6 @@ trespecial_apply_compiled_args (treptr list)
 		return list;
     }
 
-    /* Handle two or more arguments. */
     DOLIST(i, list) {
         if (CDDR(i) != treptr_nil)
             continue;
@@ -229,43 +267,9 @@ trespecial_is_compiled_funref (treptr x)
 	return TREPTR_IS_CONS(x) && CAR(x) == treatom_funref;
 }
 
-treptr
-treeval_compiled_expr (treptr func, treptr x, treptr argdef, bool do_expand)
-{
-    treptr  expforms;	/* Expanded argument forms. */
-    treptr  expvals;    /* Expanded argument values. */
-	treptr  evaluated;
-	treptr  result;
-	treptr  args = CDR(x);
-
-    tregc_push (func);
-    tregc_push (x);
-
-   	/* Expand argument keywords. */
-   	trearg_expand (&expforms, &expvals, argdef, args, do_expand);
-   	tregc_push (expvals);
-
-	evaluated = CONS(func, expvals);
-	tregc_push (evaluated);
-	result = trespecial_call_compiled (evaluated);
-	tregc_pop ();
-	tregc_pop ();
-	tregc_pop ();
-	tregc_pop ();
-
-	return result;
-}
-
 #define FUNREF_FUNCTION(x)  CAR(CDR(x))
 #define FUNREF_LEXICALS(x)  CDR(CDR(x))
 
-/*tredoc
-  (cmd :name APPLY
-	(arg :type function)
-	(args :type any)
-	(descr "Call function with argument list.")
-	(returns "Whatever the called function returns."))
- */
 treptr
 trespecial_apply_compiled (treptr list)
 {
@@ -297,7 +301,7 @@ trespecial_apply_compiled (treptr list)
 		return res;
 	}
 
-	if (TREPTR_IS_FUNCTION(func) && TREATOM_COMPILED_FUN(func)) {
+	if (IS_COMPILED_FUN(func)) {
 		tregc_push (args);
 		res = trespecial_apply_compiled_call (func, args);
 		tregc_pop ();
@@ -311,7 +315,7 @@ trespecial_apply_compiled (treptr list)
     efunc = treeval (func);
     RPLACA(fake, efunc);
 
-	if (TREPTR_IS_FUNCTION(efunc) && TREATOM_COMPILED_FUN(efunc)) {
+	if (IS_COMPILED_FUN(efunc)) {
 		res = trespecial_apply_compiled_call (efunc, args);
 		tregc_pop ();
 		tregc_pop ();
