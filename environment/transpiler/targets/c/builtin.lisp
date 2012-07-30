@@ -2,7 +2,6 @@
 
 (defvar *c-builtins-descr*
 	`((trebuiltin_
-;		(IDENTITY)
 		(QUIT)
 		(LOAD)
 		(EVAL)
@@ -35,7 +34,7 @@
 		(/ quotient)
 		(MOD)
 		(LOGXOR)
-;		(NUMBER?)
+		(NUMBER?)
 		(== number_equal)
 		(< lessp)
 		(> greaterp)
@@ -57,19 +56,19 @@
 		(CHARACTER? characterp))
 
 	(treatom_builtin_
-;		(EQ)
+		(EQ)
 		(EQL)
 		(MAKE-SYMBOL make_symbol)
 		(MAKE-PACKAGE make_package)
-;		(ATOM)
+		(ATOM)
 		(SYMBOL-VALUE)
 		(%TYPE-ID type_id)
 		(%%ID id)
 		(SYMBOL-VALUE symbol_value)
 		(SYMBOL-FUNCTION symbol_function)
 		(SYMBOL-PACKAGE symbol_package)
-;		(FUNCTION?)
-;		(BUILTIN?)
+		(FUNCTION?)
+		(BUILTIN?)
 		(BOUNDP)
 		(FBOUNDP)
 		(MACROP)
@@ -78,11 +77,11 @@
 	(trelist_builtin_
 		;(CONS)
 		(LIST)
-;    	(CAR)
-;		(CDR)
+    	(CAR)
+		(CDR)
 		(RPLACA)
 		(RPLACD)
-;    	(CONS?)
+   	    (CONS?)
         ,@(when *builtin-assoc*
 		    '((ASSOC)))
         ,@(when *builtin-member*
@@ -94,7 +93,7 @@
 		(LENGTH))
 
 	(trestring_builtin_
-;		(STRINGP)
+		(STRINGP)
     	(MAKE-STRING make)
 		(STRING== compare)
 		(STRING-CONCAT concat)
@@ -103,10 +102,10 @@
 		(LIST-STRING list_string))
 
 	(trearray_builtin_
-    	(MAKE-ARRAY make))
-;		(ARRAY? p))
-;		(AREF)
-;		(%SET-AREF set_aref))
+    	(MAKE-ARRAY make)
+		(ARRAY? p)
+		(AREF)
+		(%SET-AREF set_aref))
 
 	(tremacro_builtin_
     	(MACROEXPAND-1 macroexpand_1)

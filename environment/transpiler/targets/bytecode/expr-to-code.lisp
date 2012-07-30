@@ -22,12 +22,23 @@
     (rec x)))
 
 (defun make-bytecode-function (fi x)
-  (translate-jumps (get-tag-indexes x) x))
+  `(,(funinfo-name fi)
+    ,(funinfo-argdef fi)
+    ,(length (funinfo-env fi))
+    ,@(translate-jumps (get-tag-indexes x) x)))
 
 (defun get-next-function (x)
   (cdr (member '%%%bc-fun x :test #'eq)))
 
 (defun expr-to-code (expr)
   (let-when x (get-next-function expr)
-    (cons (make-bytecode-function (get-funinfo-by-sym .x.) (copy-while (fn not (eq _ '%%bc-return)) ..x))
+    (cons (make-bytecode-function (get-funinfo-by-sym x.) (copy-while (fn not (eq _ '%%bc-return)) .x))
           (expr-to-code (cdr (member '%%bc-return ..x :test #'eq))))))
+
+(defun load-bytecode-function (x)
+  (format t "Loading bytecode function ~A.~%" x.)
+  (= (symbol-function x.) (late-print (list-array .x))))
+
+(defun load-bytecode-functions (x)
+  (map #'load-bytecode-function x)
+  x)
