@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 (env-load "stage4/unless.lisp")
 (env-load "stage4/make-keyword.lisp")
@@ -46,6 +46,7 @@
 (env-load "stage4/print-hex.lisp")
 (env-load "stage4/print-octal.lisp")
 (env-load "stage4/remove.lisp")
+(env-load "stage4/remove-keywords.lisp")
 (env-load "stage4/remove-many.lisp")
 (env-load "stage4/remove-tail.lisp")
 (env-load "stage4/repeat.lisp")

@@ -1,9 +1,7 @@
 ;;;;; tré – Copyright (c) 2005–2012 Sven Michael Klose <pixel@copei.de>
-;;;;;
-;;;;; Apply this only to expanded arguments or keywords are renamed, too.
 
 (defun find-and-add-renamed-doubles (fi old-replacements vars args)
-  (let argnames (remove-if #'keyword? (argument-expand-names 'rename-args args))
+  (let argnames (remove-keywords (argument-expand-names 'rename-args args))
     (append (list-aliases (? (transpiler-rename-all-args? *current-transpiler*)
 						  	 (? (& fi (funinfo-ghost fi))
 								.argnames
