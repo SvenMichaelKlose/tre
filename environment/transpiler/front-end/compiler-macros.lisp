@@ -15,6 +15,12 @@
 (defun compiler-macroexpand (x)
   (expander-expand 'compiler x))
 
+(defun make-vm-scope (x)
+;  (? .x
+     `(%%vm-scope ,@x)
+     )
+;     x.))
+
 (define-filter vars-to-identity (x)
   (? (atom x)
      `(identity ,x)
@@ -28,7 +34,7 @@
                             `((%setq ~%ret ,_.)
                               (%%vm-go-nil ~%ret ,next)))
                         ,@(awhen (vars-to-identity ._)
-						    `((%setq ~%ret (%%vm-scope ,@!))))
+						    `((%setq ~%ret ,(make-vm-scope !))))
                        (%%vm-go ,end-tag)
                        ,next))
 			     args)
@@ -60,7 +66,7 @@
      (identity nil)))
 
 (define-compiler-macro progn (&rest body)
-  `(%%vm-scope ,@(| (vars-to-identity body) ; XXX fscking workaround
+  (make-vm-scope (| (vars-to-identity body) ; XXX fscking workaround
 				    '((identity nil)))))
 
 (define-expander 'compiler-return)
@@ -91,7 +97,7 @@
     `(identity nil)))
 
 (define-compiler-macro setq (&rest args)
-  `(%%vm-scope ,@(filter (fn `(%setq ,_. ,._.)) (group args 2))))
+  (make-vm-scope (filter (fn `(%setq ,_. ,._.)) (group args 2))))
 
 (define-compiler-macro ? (&rest body)
   (with (tests (group body 2)
