@@ -18,7 +18,9 @@
         ,@(awhen (funinfo-lexical? fi lex-sym)
 		    `((%set-vec ,lex-sym ,! ,lex-sym)))
         ,@(mapcan (fn & (funinfo-lexical? fi _)
-				  	    `((%setq ,_ (%transpiler-native ,_))))
+				  	    `((%setq ,_ ,(? (transpiler-arguments-on-stack? *current-transpiler*)
+                                        `(%stackarg ,(funinfo-sym fi) ,_)
+                                        `(%transpiler-native ,_)))))
 				  (funinfo-args fi))))))
 
 (defun funinfo-function-prologue (fi body)

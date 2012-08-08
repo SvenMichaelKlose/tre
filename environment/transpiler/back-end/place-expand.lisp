@@ -25,9 +25,7 @@
 	 (make-lexical-0 fi x)))
 
 (defun place-expand-emit-stackplace (fi x)
-  (? (transpiler-stack-locals? *current-transpiler*)
-  	 `(%stack ,(funinfo-sym fi) ,x)
-	 x))
+  `(%stack ,(funinfo-sym fi) ,x))
 
 (defun place-expand-atom (fi x)
   (?
@@ -46,8 +44,6 @@
 	   (eq x (funinfo-lexical fi)))
 	  (place-expand-emit-stackplace fi x)
 
-	; Emit lexical place, except the lexical array itself (it can
-	; self-reference for child functions).
 	(& (not (eq x (funinfo-lexical fi)))
 	   (funinfo-lexical? fi x))
 	  `(%vec ,(place-expand-atom fi (funinfo-lexical fi))
@@ -57,7 +53,6 @@
 	(not (transpiler-lambda-export? *current-transpiler*))
       x
 
-	; Emit stack place.
 	(& (transpiler-stack-locals? *current-transpiler*)
        (| (& (transpiler-arguments-on-stack? *current-transpiler*)
              (funinfo-arg? fi x))
@@ -69,7 +64,6 @@
           (funinfo-in-toplevel-env? fi x)))
 	  x
 
-    ; Emit lexical place (outside the function).
     (make-lexical fi x)))
 
 (defun place-expand-fun (fi name fun-expr)

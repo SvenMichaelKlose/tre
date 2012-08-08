@@ -6,6 +6,9 @@
   (& (member var (funinfo-args fi) :test #'eq)
      fi))
 
+(defun funinfo-arg-pos (fi x)
+  (position x (funinfo-args fi) :test #'eq))
+
 ;;;; FREE VARIABLES
 
 (defun funinfo-free-var? (fi var)

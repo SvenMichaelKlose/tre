@@ -66,6 +66,7 @@
 		(%%ID id)
 		(SYMBOL-VALUE symbol_value)
 		(SYMBOL-FUNCTION symbol_function)
+		(%%U=-SYMBOL-FUNCTION usetf_symbol_function)
 		(SYMBOL-PACKAGE symbol_package)
 		(FUNCTION?)
 		(BUILTIN?)
@@ -103,9 +104,9 @@
 
 	(trearray_builtin_
     	(MAKE-ARRAY make)
-		(ARRAY? p)
-		(AREF)
-		(%SET-AREF set_aref))
+		(ARRAY? p))
+;		(AREF)
+;		(%SET-AREF set_aref))
 
 	(tremacro_builtin_
     	(MACROEXPAND-1 macroexpand_1)

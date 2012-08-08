@@ -3,22 +3,26 @@
 (defun get-tag-indexes (x)
   (with (indexes (make-queue)
          rec #'((x i)
-                  (& x (? (%%tag? x.)
+                  (& x (? (eq '%%tag x.)
                           (progn
                             (enqueue indexes (cons .x. i))
                             (rec ..x i))
                           (rec .x (1+ i))))))
-    (rec x 0)))
+    (rec x 0)
+    (print (queue-list indexes))))
 
 (defun translate-jumps (indexes x)
-  (with (get-tag-index (fn assoc-value _ (queue-list indexes))
+  (with (get-tag-index (fn | (assoc-value _ indexes :test #'==)
+                             (error "cannot get bytecode index ~A in ~A" _ indexes))
          rec #'((x)
-                  (& x (?
-                         (%%tag? x) (rec .x)
-                         (vm-jump? x) (cons x. (? (%%vm-go-nil? x)
-                                                  (cons ..x. (cons (get-tag-index .x.) (rec ...x)))
-                                                  (cons (get-tag-index .x.) (rec ..x))))
-                         (cons x. (rec .x))))))
+                (print (subseq x 0 4))
+                  (& x 
+                     (let e x.
+                       (?
+                         (eq '%%tag e) (rec ..x)
+                         (eq '%%vm-go-nil e) (cons e (cons .x. (cons ..x. (cons (get-tag-index ...x.) (rec ....x)))))
+                         (eq '%%vm-go e) (cons e (cons (get-tag-index .x.) (rec ..x)))
+                         (cons e (rec .x)))))))
     (rec x)))
 
 (defun make-bytecode-function (fi x)

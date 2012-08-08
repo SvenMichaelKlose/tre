@@ -1,5 +1,5 @@
 /*
- * tré - Copyright (c) 2005-2009,2011-2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -28,6 +28,7 @@
 #include "dot.h"
 #include "quasiquote.h"
 #include "builtin_list.h"
+#include "bytecode.h"
 
 #ifdef TRE_HAVE_COMPILED_ENV
 	treptr userfun_cInit (void);
