@@ -1,5 +1,5 @@
 /*
- * tré - Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2008 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -118,7 +118,6 @@ trearray_builtin_aref (treptr list)
     if (elts == NULL)
         return treerror (treptr_invalid, "index error");
 
-    /* Return element at index. */
     return *elts;
 }
 
@@ -127,9 +126,9 @@ trearray_builtin_set_aref (treptr list)
 {
     treptr  val = CAR(list);
     treptr  *elts = trearray_get_elt (CDR(list));
+
     if (elts == NULL)
         return treerror (treptr_invalid, "index error");
-
     *elts = val;
 
     return val;
