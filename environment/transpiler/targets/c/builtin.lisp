@@ -61,17 +61,14 @@
 		(MAKE-SYMBOL make_symbol)
 		(MAKE-PACKAGE make_package)
 		(ATOM)
-		(SYMBOL-VALUE)
 		(%TYPE-ID type_id)
 		(%%ID id)
 		(SYMBOL-VALUE symbol_value)
 		(SYMBOL-FUNCTION symbol_function)
 		(%%U=-SYMBOL-FUNCTION usetf_symbol_function)
 		(SYMBOL-PACKAGE symbol_package)
-		(FUNCTION?)
-		(BUILTIN?)
-		(BOUNDP)
-		(FBOUNDP)
+		(FUNCTION? functionp)
+		(BUILTIN? builtinp)
 		(MACROP)
 		(%ATOM-LIST atom_list))
 
@@ -82,7 +79,7 @@
 		(CDR)
 		(RPLACA)
 		(RPLACD)
-   	    (CONS?)
+   	    (CONS? consp)
         ,@(when *builtin-assoc*
 		    '((ASSOC)))
         ,@(when *builtin-member*
@@ -94,7 +91,7 @@
 		(LENGTH))
 
 	(trestring_builtin_
-		(STRINGP)
+		(STRING? stringp)
     	(MAKE-STRING make)
 		(STRING== compare)
 		(STRING-CONCAT concat)
@@ -105,8 +102,8 @@
 	(trearray_builtin_
     	(MAKE-ARRAY make)
 		(ARRAY? p))
-;		(AREF)
-;		(%SET-AREF set_aref))
+;		(AREF))
+;		(%%U=-AREF set_aref))
 
 	(tremacro_builtin_
     	(MACROEXPAND-1 macroexpand_1)

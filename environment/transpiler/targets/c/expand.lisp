@@ -67,7 +67,7 @@
 (define-c-std-macro %%u=-aref (val arr &rest idx)
   (? (single-index? idx)
     `(%immediate-set-aref ,val ,arr (%transpiler-native ,idx.))
-    `(%set-aref ,(compiled-list (cons val (cons arr idx))))))
+    `(%set-aref ,(compiled-list `(,val ,arr ,@idx)))))
 
 (define-c-std-macro aref (arr &rest idx)
   (? (single-index? idx)

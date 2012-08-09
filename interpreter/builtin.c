@@ -407,7 +407,7 @@ char *tre_builtin_names[] = {
     "MAKE-STRING", "STRING==", "STRING-CONCAT", "STRING", "SYMBOL-NAME",
 	"LIST-STRING",
 
-    "MAKE-ARRAY", "ARRAY?", "AREF", "%SET-AREF",
+    "MAKE-ARRAY", "ARRAY?", "AREF", "%%U=-AREF",
 
     "MACROEXPAND-1", "MACROEXPAND",
 
