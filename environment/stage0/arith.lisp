@@ -14,11 +14,12 @@
 
 (%set-atom-fun +
   #'((&rest x)
-       (?
-         (string? (car x)) (apply #'string-concat x)
-         (not (car x)) (apply #'append x)
-         (cons? (car x)) (apply #'append x)
-         (apply #'number+ x))))
+       (apply (?
+                (string? (car x)) #'string-concat
+                (not (car x)) #'append
+                (cons? (car x)) #'append
+                #'number+)
+              x)))
 
 (%set-atom-fun -
   #'((&rest x)
