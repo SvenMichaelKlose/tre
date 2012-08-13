@@ -73,8 +73,8 @@
       (? (funinfo-in-this-or-parent-env? *expex-funinfo* !)
 	     x
          (progn
-	       (transpiler-add-wanted-function *current-transpiler* !))
-           `(symbol-function (%quote ,!)))
+	       (transpiler-add-wanted-function *current-transpiler* !)
+           (transpiler-macroexpand *current-transpiler* `(symbol-function (%quote ,!)))))
       x))
 ;      (| (vec-function-expr? x) x)))
 

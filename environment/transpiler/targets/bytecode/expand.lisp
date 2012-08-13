@@ -42,17 +42,8 @@
 (define-bc-std-macro %%u=-cdr (val x)
   (shared-=-cdr val x))
 
-(define-bc-std-macro slot-value (obj slot)
-  `(%slot-value ,obj (%quote ,slot)))
-
-(define-bc-std-macro %%u=-slot-value (val obj slot)
-  `(%%u=-%slot-value ,val ,obj (%quote ,slot)))
-
 (define-bc-std-macro %%u=-aref (val arr &rest idx)
-  `(%set-aref ,(compiled-list (cons val (cons arr idx)))))
+  `(%set-aref ,val ,arr ,@idx))
 
-(define-bc-std-macro aref (arr &rest idx)
-  `(%aref ,(compiled-list (cons arr idx))))
-	  
 (define-bc-std-macro mapcar (fun &rest lsts)
   (apply #'shared-mapcar fun lsts))

@@ -229,7 +229,6 @@ treptr
 treatom_builtin_usetf_symbol_function (treptr list)
 {
     TRELIST_DEFREGS();
-printf ("XXXXX\n");
     trearg_get2 (&car, &cdr, list);
 
 	cdr = trearg_typed (1, TRETYPE_ATOM, cdr, NULL);

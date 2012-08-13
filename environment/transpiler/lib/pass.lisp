@@ -11,10 +11,10 @@
          (dolist (i (list ,@(mapcan (fn `((with-temporary (transpiler-current-pass ,tr) ,(list 'quote _.)
                                             (? (transpiler-dump-passes? ,tr)
                                                #'((x)
-                                                    (format t ,(string-concat "; **** before " (symbol-name _.) "~%"))
+                                                    (format t ,(string-concat "; **** " (symbol-name _.) "~%"))
                                                     (prog1
                                                       (print (funcall ,._. x))
-                                                      (format t ,(string-concat "; **** after " (symbol-name _.) "~%"))
+                                                      (format t ,(string-concat "; **** " (symbol-name _.) " (end)~%"))
                                                       (force-output)))
                                                ,._.))))
                                     (reverse (group x 2))))

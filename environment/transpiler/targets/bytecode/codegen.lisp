@@ -11,7 +11,7 @@
         ,@(lambda-body x)))))
 
 (define-bc-macro %function-prologue (fi-sym) '(%setq nil nil))
-(define-bc-macro %function-epilogue (fi-sym) '%%bc-return)
+(define-bc-macro %function-epilogue (fi-sym) '((%%vm-go nil) %%bc-return))
 
 (define-bc-macro %%funref (name fi-sym)
   `(%funref ,name ,(codegen-funref-lexical fi-sym)))
@@ -22,9 +22,15 @@
                         (%funref? x)
                         (%stack? x)
                         (%vec? x)))
-                (? (eq '%bc-builtin x.)
-                   `(%bc-funcall ,@x)
-                   `(%bc-funcall ,x. ,(length .x) ,@.x))
+                `(%bc-funcall
+                   ,@(?
+                       (eq 'cons x.)
+                         `(%bc-builtin cons ,.x. ,..x.)
+                       (eq '%bc-builtin x.)
+                         `(%bc-builtin
+                            ,(cadr .x.)
+                            ,@..x)
+                       `(,x. ,(length .x) ,@.x)))
                 x)
             ,place))
 

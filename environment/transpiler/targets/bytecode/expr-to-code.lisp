@@ -3,26 +3,30 @@
 (defun get-tag-indexes (x)
   (with (indexes (make-queue)
          rec #'((x i)
-                  (& x (? (eq '%%tag x.)
-                          (progn
-                            (enqueue indexes (cons .x. i))
-                            (rec ..x i))
-                          (rec .x (1+ i))))))
+                  (& x 
+                     (?
+                       (eq '%quote x.)
+                         (rec ..x (+ 2 i))
+                       (eq '%%tag x.)
+                         (progn
+                           (enqueue indexes (cons .x. i))
+                           (rec ..x i))
+                       (rec .x (1+ i))))))
     (rec x 0)
     (print (queue-list indexes))))
 
 (defun translate-jumps (indexes x)
-  (with (get-tag-index (fn | (assoc-value _ indexes :test #'==)
-                             (error "cannot get bytecode index ~A in ~A" _ indexes))
+  (with (get-tag-index (fn & _ (| (assoc-value _ indexes :test #'==)
+                                  (error "cannot get bytecode index ~A in ~A" _ indexes)))
          rec #'((x)
-                (print (subseq x 0 4))
                   (& x 
-                     (let e x.
-                       (?
-                         (eq '%%tag e) (rec ..x)
-                         (eq '%%vm-go-nil e) (cons e (cons .x. (cons ..x. (cons (get-tag-index ...x.) (rec ....x)))))
-                         (eq '%%vm-go e) (cons e (cons (get-tag-index .x.) (rec ..x)))
-                         (cons e (rec .x)))))))
+                     (? (eq '%%tag x.)
+                        (rec ..x)
+                        (cons x. (case x. :test #'eq
+                                   '%quote       (cons .x. (rec ..x))
+                                   '%%vm-go-nil  (cons .x. (cons ..x. (cons (get-tag-index ...x.) (rec ....x))))
+                                   '%%vm-go      (cons (get-tag-index .x.) (rec ..x))
+                                   (rec .x)))))))
     (rec x)))
 
 (defun make-bytecode-function (fi x)
@@ -40,9 +44,12 @@
           (expr-to-code (cdr (member '%%bc-return ..x :test #'eq))))))
 
 (defun load-bytecode-function (x)
-  (format t "Loading bytecode function ~A.~%" x.)
-  (= (symbol-function x.) (late-print (list-array .x))))
+  (= (symbol-function x.) (list-array .x)))
 
 (defun load-bytecode-functions (x)
-  (map #'load-bytecode-function x)
+  (map (fn (format t "Loading bytecode function ~A.~%" _.)
+           (late-print (list-array ._)))
+       x)
+  (dolist (i x)
+    (= (symbol-function i.) (list-array .i)))
   x)
