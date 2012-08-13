@@ -21,6 +21,7 @@
 #include "eval.h"
 #include "bytecode.h"
 #include "array.h"
+#include "main.h"
 
 #include "builtin_debug.h"
 #include "builtin_atom.h"
@@ -138,18 +139,24 @@ trespecial_apply_bytecode_call (treptr func, treptr args, bool do_argeval)
     treptr  expvals;
 	treptr  result;
 	treptr  i;
+    int     num_args;
 
     tregc_push (func);
     tregc_push (args);
 
    	trearg_expand (&expforms, &expvals, TREARRAY_RAW(func)[0], args, do_argeval);
    	tregc_push (expvals);
-    DOLIST(i, expvals)
-        tregc_push (i);
+
+    num_args = trelist_length (expvals);
+    printf ("Pushing %d bc args\n", trelist_length (expvals));
+    DOLIST(i, expvals) {
+        printf ("to bc arg: ");
+        treprint (CAR(i));
+        *--trestack_ptr = CAR(i);
+    }
 
 	result = trecode_exec (func);
-    DOLIST(i, expvals)
-        tregc_pop ();
+    trestack_ptr += num_args;
 
 	tregc_pop ();
 	tregc_pop ();

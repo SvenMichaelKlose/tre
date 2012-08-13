@@ -34,12 +34,14 @@
 treptr treptr_set;
 treptr treptr_funcall;
 treptr treptr_builtin;
+treptr treptr_special;
 treptr treptr_jmp;
 treptr treptr_cond;
 treptr treptr_stack;
 treptr treptr_vec;
 treptr treptr_cons;
 treptr treptr_quote;
+treptr treptr_apply;
 
 treptr trecode_get (treptr ** p);
 
@@ -54,6 +56,8 @@ trecode_list (treptr ** p, int len)
     tregc_push (l);
     DOTIMES(i, len) {
         v = trecode_get (&x);
+        printf ("Elm %d: ", i);
+        treprint (v);
         tre_enqueue (l, v);
     }
     tregc_pop ();
@@ -67,12 +71,14 @@ trecode_get (treptr ** p)
 {
     treptr  v;
     treptr  fun;
+    treptr  funtype;
     treptr  args;
     treptr  car;
     treptr  cdr;
     treptr  * x = *p;
     int     num_args;
     int     i;
+    int     j;
 
     v = *x++;
     printf ("value "); treprint (v); fflush (stdout);
@@ -87,7 +93,8 @@ trecode_get (treptr ** p)
     } else if (v == treptr_funcall) {
         printf ("funcall "); treprint (*x); fflush (stdout);
         fun = *x++;
-        if (fun == treptr_builtin) {
+        if (fun == treptr_builtin || fun == treptr_special) {
+            funtype = fun;
             printf ("builtin "); fflush (stdout);
             fun = *x++;
             treprint (fun); fflush (stdout);
@@ -100,30 +107,30 @@ trecode_get (treptr ** p)
                 v = CONS(car, cdr);
                 tregc_pop ();
             } else {
-                printf ("builtin std"); fflush (stdout);
                 num_args = TRENUMBER_INT(*x++);
-                printf ("num args: %d\n", num_args);
+                printf ("builtin std num args: %d\n", num_args); fflush (stdout);
                 args = trecode_list (&x, num_args);
-                printf ("args len after %d: \n", trelist_length (args)); fflush (stdout);
                 tregc_push (args);
-                v = treeval_xlat_function (treeval_xlat_builtin, fun, CONS(fun, args), FALSE);
+                if (fun == treptr_apply)
+                    v = trespecial_apply_compiled (args);
+                else
+                    v = treeval_xlat_function (funtype == treptr_builtin ? treeval_xlat_builtin : treeval_xlat_spec, fun, CONS(fun, args), FALSE);
                 tregc_pop ();
             }
         } else if (TREPTR_IS_ARRAY(TREATOM_FUN(fun))) {
             num_args = TRENUMBER_INT(*x++);
             printf ("num args: %d\n", num_args); fflush (stdout);
-            DOTIMES(i, num_args) {
-                *trestack_ptr++ = trecode_get (&x);
-            }
-            printf ("exec\n"); fflush (stdout);
-            v = trecode_exec (TREATOM_FUN(fun));
-            printf ("RETURN ");
-            treprint (*x);
-            treprint (x[1]);
+            j = -1;
+            DOTIMES(i, num_args)
+                trestack_ptr[j--] = trecode_get (&x);
             trestack_ptr -= num_args;
+            v = trecode_exec (TREATOM_FUN(fun));
+            trestack_ptr += num_args;
         } else 
             treerror_norecover (fun, "tried to call an unsupported function type in bytecode");
-    }
+    } else if (TREPTR_IS_VARIABLE(v))
+        v = TREATOM_VALUE(v);
+    printf ("Return value: "); treprint (v);
     *p = x;
     return v;
 }
@@ -171,7 +178,7 @@ trecode_exec (treptr fun)
     treprint (fun);
 
     DOTIMES(i, num_locals)
-        *trestack_ptr++ = treptr_nil;
+        *--trestack_ptr = treptr_nil;
 
     while (1) {
         v = *x++;
@@ -183,10 +190,8 @@ trecode_exec (treptr fun)
         } else if (v == treptr_jmp) {
             printf ("=============== function return =============\n"); fflush (stdout);
             dest = *x++;
-            if (dest == treptr_nil) {
-                trestack_ptr -= num_locals;
+            if (dest == treptr_nil)
                 break;
-            }
             x = &code[TRENUMBER_INT(dest)];
         } else if (v == treptr_cond) {
             if (trecode_get (&x) != treptr_nil) {
@@ -201,7 +206,7 @@ trecode_exec (treptr fun)
     }
 
     v = *trestack_ptr;
-    trestack_ptr -= num_locals;
+    trestack_ptr += num_locals;
     return v;
 }
 
@@ -214,6 +219,8 @@ trecode_init ()
     EXPAND_UNIVERSE(treptr_funcall);
     treptr_builtin = treatom_get ("%BC-BUILTIN", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treptr_builtin);
+    treptr_special = treatom_get ("%BC-SPECIAL", TRECONTEXT_PACKAGE());
+    EXPAND_UNIVERSE(treptr_special);
     treptr_jmp = treatom_get ("%%VM-GO", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treptr_jmp);
     treptr_cond = treatom_get ("%%VM-GO-NIL", TRECONTEXT_PACKAGE());
@@ -226,4 +233,6 @@ trecode_init ()
     EXPAND_UNIVERSE(treptr_cons);
     treptr_quote = treatom_get ("%QUOTE", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treptr_quote);
+    treptr_apply = treatom_get ("APPLY", TRECONTEXT_PACKAGE());
+    EXPAND_UNIVERSE(treptr_apply);
 }

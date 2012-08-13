@@ -4,6 +4,8 @@
 (= *opt-inline?* nil)
 
 (let code (compile-files '("makefiles/make-compiled-bytecode-1.lisp") :target 'bytecode)
-  (with-open-file out (open "env.treby" :direction 'output)
-    (late-print code out)))
-(quit)
+  (with-open-file out (open "bytecode-image" :direction 'output)
+    (dolist (i code)
+      (late-print i out))))
+
+(fnord 1)

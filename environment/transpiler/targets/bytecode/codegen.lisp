@@ -24,12 +24,8 @@
                         (%vec? x)))
                 `(%bc-funcall
                    ,@(?
-                       (eq 'cons x.)
-                         `(%bc-builtin cons ,.x. ,..x.)
-                       (eq '%bc-builtin x.)
-                         `(%bc-builtin
-                            ,(cadr .x.)
-                            ,@..x)
+                       (eq 'cons x.) `(%bc-builtin cons ,.x. ,..x.)
+                       (in? x. '%bc-builtin '%bc-special) `(,x. ,(cadr .x.) ,@..x)
                        `(,x. ,(length .x) ,@.x)))
                 x)
             ,place))

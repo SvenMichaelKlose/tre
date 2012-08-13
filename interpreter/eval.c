@@ -181,8 +181,7 @@ treeval_function (treptr expr)
  * Built-in functions have no environment.
  */
 treptr
-treeval_xlat_function (treevalfunc_t *xlat, treptr func, treptr expr,
-			bool do_argeval)
+treeval_xlat_function (treevalfunc_t *xlat, treptr func, treptr expr, bool do_argeval)
 {
     treptr  args = CDR(expr);
     treptr  evaldargs;
