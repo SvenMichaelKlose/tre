@@ -47,3 +47,6 @@
 
 (define-bc-std-macro mapcar (fun &rest lsts)
   (apply #'shared-mapcar fun lsts))
+
+(define-bc-std-macro %set-atom-fun (place value)
+  `(setq ,place ,value))

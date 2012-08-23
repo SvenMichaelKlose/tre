@@ -8,6 +8,9 @@
                (remove-if (fn in? _ 'cons '%quote) *builtins*))
      ,@(mapcar (fn `(define-bc-std-macro ,_ (&rest x)
  			          `(%bc-special ,(list '%quote _) ,,(length x) ,,@x)))
-               *specials*))))
+               (remove '%set-atom-fun *specials*)))))
 
 (make-bc-builtins)
+
+;(define-bc-std-macro %set-atom-fun (place value)
+;  `(%bc-special '%set-atom-fun ,value ,place))

@@ -18,7 +18,9 @@
                               _)
     codegen-expand      (fn expander-expand (transpiler-codegen-expander tr) _)
     finalize-sexprs     #'transpiler-finalize-sexprs
-    encapsulate-strings #'transpiler-encapsulate-strings
+    encapsulate-strings (fn ? (transpiler-encapsulate-strings? tr)
+                              (transpiler-encapsulate-strings _)
+                              _)
     function-names      (fn ? (transpiler-function-name-prefix tr)
                               (translate-function-names tr nil _)
                               _))

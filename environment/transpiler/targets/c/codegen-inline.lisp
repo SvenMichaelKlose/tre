@@ -1,5 +1,4 @@
-;;;;; TRE to C transpiler
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 ;;;; COMPARISON
 
@@ -24,10 +23,12 @@
 	  (number?  "NUMBER")
 	  (string?  "STRING")
 	  (array?  "ARRAY")
-	  (function?  "FUNCTION")
 	  (builtin?   "BUILTIN"))
   `((define-c-macro ,($ '% _.) (x)
       `(,(+ "TREPTR_TRUTH(TREPTR_IS_" ._.) "(" ,,x "))"))))
+
+(define-c-macro %function? (x)
+  `("(TREPTR_TRUTH(TREPTR_IS_FUNCTION(" ,x ") || IS_COMPILED_FUN(" ,x ")))"))
 
 ;;;; MISCELLANEOUS
 

@@ -1,3 +1,4 @@
-(defun fnord (a &optional (b nil))
-  (print a)
-  (print b))
+(defun fnord ()
+  (= *milestone* t)
+  (with (rec (fn print _))
+    (rec 65)))

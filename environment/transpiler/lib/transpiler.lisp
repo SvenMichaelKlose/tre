@@ -75,6 +75,7 @@
 
   (code-concatenator #'concat-stringtree)
   (make-text? t)
+  (encapsulate-strings? t)
 
   ;;;
   ;;; You mustn't init these.
@@ -311,6 +312,7 @@
                      :cps-functions           (copy-list cps-functions)
                      :code-concatenator       code-concatenator
                      :make-text?              make-text?
+                     :encapsulate-strings?    encapsulate-strings?
                      :symbol-translations     (copy-list symbol-translations)
                      :thisify-classes         (copy-hash-table thisify-classes)
                      :function-args           (copy-hash-table function-args)

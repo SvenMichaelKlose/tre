@@ -38,6 +38,8 @@ treptr  tredebug_mirror_stack;
 /* Current postition on the function stack. */
 treptr  tredebug_fspos;
 
+treptr  treptr_milestone;
+
 /*
  * Get currently evaluated function.
  */
@@ -640,7 +642,15 @@ tredebug_init (void)
     DOTIMES(i, TREDEBUG_MAX_BREAKPOINTS)
         tredebug_breakpoints[i] = treptr_nil;
 
+
     tredebug_level = 0;
+}
+
+void
+tredebug_init_late (void)
+{
+    MAKE_VAR("*MILESTONE*", treptr_nil);
+    treptr_milestone = treatom_get ("*MILESTONE*", TRECONTEXT_PACKAGE());
 }
 
 treptr

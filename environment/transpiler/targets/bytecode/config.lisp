@@ -27,6 +27,7 @@
               :code-concatenator #'((&rest x)
                                       (tree-list x))
               :make-text? nil
+              :encapsulate-strings? nil
               :function-name-prefix nil)
 	(= (transpiler-inline-exceptions !) '(error format identity))))
 

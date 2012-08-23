@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005-2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -264,7 +264,7 @@ treatom_builtin_functionp (treptr list)
 {
     treptr arg = trearg_get (list);
 
-    return TREPTR_TRUTH(TREPTR_IS_FUNCTION(arg) || TREPTR_IS_BUILTIN(arg));
+    return TREPTR_TRUTH(TREPTR_IS_FUNCTION(arg) || TREPTR_IS_BUILTIN(arg) || IS_COMPILED_FUN(arg));
 }
 
 /*tredoc

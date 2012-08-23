@@ -30,17 +30,23 @@
 
 (defvar *lexical-sym-counter* 0)
 
-(defun lambda-export-make-exported (fi x)
+(defun lambda-export-make-exported-name ()
   (let exported-name ($ '~L (1+! *lexical-sym-counter*))
+    (? (symbol-function exported-name)
+       (lambda-export-make-exported-name)
+       exported-name)))
+
+(defun lambda-export-make-exported (fi x)
+  (let exported-name (lambda-export-make-exported-name)
     (let fi-exported (lambda-make-funinfo (lambda-args x) fi)
 	  (funinfo-make-ghost fi-exported)
 	  (lambda-expand-tree fi-exported (lambda-body x))
-      (let argdef (append (awhen (funinfo-ghost fi-exported)
-						    (list !))
-						  (lambda-args x))
+      (let argdef (+ (awhen (funinfo-ghost fi-exported)
+                       (list !))
+                     (lambda-args x))
 		(acons! exported-name argdef *closure-argdefs*)
 	    (transpiler-add-exported-closure *current-transpiler*
-            `((defun ,exported-name ,(append (make-lambda-funinfo fi-exported) argdef)
+            `((defun ,exported-name ,(+ (make-lambda-funinfo fi-exported) argdef)
 		        ,@(lambda-body x)))))
 	  (values exported-name fi-exported))))
 

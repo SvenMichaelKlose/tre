@@ -1,5 +1,7 @@
 ;;;;; tré – Copyright (c) 2005–2012 Sven Michael Klose <pixel@copei.de>
 
+(setq *milestone* nil)
+
 ;; The garbage collector keeps everything that connected to *UNIVERSE*.
 (setq *universe*
 	  (cons '*environment-filenames*

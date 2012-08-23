@@ -167,7 +167,7 @@
 ;;;; HASH TABLES
 
 (defun js-literal-hash-entry (name value)
-  `(,(symbol-without-package name) ":" ,value ","))
+  `(,(symbol-without-package name) ":" ,value))
 
 (define-js-macro %%%make-hash-table (&rest args)
   (parenthized-comma-separated-list (filter (fn js-literal-hash-entry _. ._) (group args 2)) :type 'curly))

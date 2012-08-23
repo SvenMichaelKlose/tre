@@ -16,12 +16,13 @@
 extern int tredebug_mode;
 extern treptr tredebug_next;
 
-extern treptr tredebug_tmp;
+extern treptr treptr_milestone; /* Helps debugging across tré and C. */
 
 extern treptr tredebug_get_parent (void);
 
 extern treptr tredebug (void);
 extern void   tredebug_init (void);
+extern void   tredebug_init_late (void);
 extern void   tredebug_chk_breakpoints (treptr);
 extern bool   tredebug_set_breakpoint (char *);
 extern bool   tredebug_remove_breakpoint (char *);

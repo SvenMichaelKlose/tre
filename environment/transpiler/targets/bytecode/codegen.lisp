@@ -6,8 +6,8 @@
   (?
 	(eq 'only-name x)	name
     (atom x)			(error "codegen: arguments and body expected: ~A" x)
-    (alet (lambda-args x)
-      `(%%%bc-fun ,(lambda-funinfo x)
+    (alet (lambda-args x) ; XXX Should be in FUNINFO.
+      `(%%%bc-fun ,(lambda-funinfo x) ,(length !) ,@(& ! (list !))
         ,@(lambda-body x)))))
 
 (define-bc-macro %function-prologue (fi-sym) '(%setq nil nil))
@@ -25,7 +25,9 @@
                 `(%bc-funcall
                    ,@(?
                        (eq 'cons x.) `(%bc-builtin cons ,.x. ,..x.)
+                       (eq 'apply x.) `(%bc-special apply 1 ,@.x) ; XXX APPLYs inserted in expex
                        (in? x. '%bc-builtin '%bc-special) `(,x. ,(cadr .x.) ,@..x)
+                       (eq '%make-lexical-array x.) `(%bc-builtin make-array 1 ,.x.)
                        `(,x. ,(length .x) ,@.x)))
                 x)
             ,place))

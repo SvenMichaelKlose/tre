@@ -29,9 +29,9 @@
                                    (rec .x)))))))
     (rec x)))
 
-(defun make-bytecode-function (fi x)
+(defun make-bytecode-function (fi args x)
   `(,(funinfo-name fi)
-    ,(funinfo-argdef fi)
+    ,args
     ,(length (funinfo-env fi))
     ,@(translate-jumps (get-tag-indexes x) x)))
 
@@ -40,7 +40,7 @@
 
 (defun expr-to-code (expr)
   (let-when x (get-next-function expr)
-    (cons (make-bytecode-function (get-funinfo-by-sym x.) (copy-while (fn not (eq _ '%%bc-return)) .x))
+    (cons (make-bytecode-function (get-funinfo-by-sym x.) (subseq ..x 0 .x.) (copy-while (fn not (eq _ '%%bc-return)) (nthcdr .x. ..x)))
           (expr-to-code (cdr (member '%%bc-return ..x :test #'eq))))))
 
 (defun load-bytecode-function (x)

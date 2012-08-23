@@ -22,9 +22,12 @@
 #include "bytecode.h"
 #include "array.h"
 #include "main.h"
+#include "print.h"
 
 #include "builtin_debug.h"
 #include "builtin_atom.h"
+
+#include <stdio.h>
 
 treptr tre_atom_evaluated_go;
 treptr tre_atom_evaluated_return_from;
@@ -182,8 +185,6 @@ trespecial_apply_compiled_call (treptr func, treptr args)
 	return result;
 }
 
-#define IS_COMPILED_FUN(x) (TREPTR_IS_ARRAY(x) || (TREPTR_IS_FUNCTION(x) && TREATOM_COMPILED_FUN(x)))
-
 treptr
 trespecial_apply (treptr list)
 {
@@ -300,7 +301,9 @@ trespecial_apply_compiled (treptr list)
 		res = treeval_compiled_expr (
             f,
 		    CONS(f, CONS(FUNREF_LEXICALS(func), args)),
-            TREATOM_VALUE(f),
+            TREPTR_IS_ARRAY(TREATOM_FUN(f)) ?
+                TREARRAY_RAW(TREATOM_FUN(f))[0] :
+                TREATOM_VALUE(f),
             FALSE
 		);
 		tregc_pop ();

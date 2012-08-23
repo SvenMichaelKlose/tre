@@ -238,6 +238,8 @@ tre_init (void)
 	MAKE_VAR("*ENDIANESS*", treatom_alloc (TRE_ENDIANESS_STRING, TRECONTEXT_PACKAGE(), TRETYPE_VARIABLE, treptr_invalid));
 	MAKE_VAR("*POINTER-SIZE*", treatom_number_get (sizeof (void *), TRENUMTYPE_INTEGER));
     tre_init_image_path ();
+    trecode_init ();
+    tredebug_init_late ();
 
 	MAKE_HOOK_VAR(tremain_history, "_");
 	MAKE_HOOK_VAR(tremain_history_2, "__");
@@ -247,7 +249,6 @@ tre_init (void)
 
 	signal (SIGINT, tre_signal);
 
-    trecode_init ();
     tre_is_initialized = TRUE;
     tre_interrupt_debugger = TRUE;
 }
