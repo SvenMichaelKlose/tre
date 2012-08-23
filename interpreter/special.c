@@ -76,7 +76,7 @@ error:
 #include <ffi.h>
 
 treptr
-trespecial_call_compiled (treptr lst)
+trespecial_call_compiled (treptr func, treptr x)
 {
 	ffi_cif cif;
 	ffi_type **args;
@@ -84,9 +84,8 @@ trespecial_call_compiled (treptr lst)
 	void **values;
 	treptr rc;
 	int i;
-	treptr x = CDR(lst);
 	void * fun;
-    int len = trelist_length (lst);
+    int len = trelist_length (x) + 1;
 
     args = trealloc (sizeof (ffi_type *) * len);
     refs = trealloc (sizeof (treptr) * len);
@@ -98,10 +97,10 @@ trespecial_call_compiled (treptr lst)
 	}
 
 	if (ffi_prep_cif(&cif, FFI_DEFAULT_ABI, i, &ffi_type_ulong, args) == FFI_OK) {
-		fun = TREATOM_COMPILED_FUN(CAR(lst));
+		fun = TREATOM_COMPILED_FUN(func);
 		ffi_call(&cif, fun, &rc, values);
 	} else
-        treerror_norecover (lst, "libffi: cif is not O.K.");
+        treerror_norecover (treptr_nil, "libffi: cif is not O.K.");
 
     trealloc_free (args);
     trealloc_free (refs);
@@ -114,18 +113,14 @@ treeval_compiled_expr (treptr func, treptr args, treptr argdef, bool do_expand)
 {
     treptr  expforms;
     treptr  expvals;
-	treptr  evaluated;
 	treptr  result;
 
    	tregc_push (args);
    	trearg_expand (&expforms, &expvals, argdef, args, do_expand);
    	tregc_push (expvals);
 
-	evaluated = CONS(func, expvals);
-	tregc_push (evaluated);
-	result = trespecial_call_compiled (evaluated);
+	result = trespecial_call_compiled (func, expvals);
 
-	tregc_pop ();
 	tregc_pop ();
 	tregc_pop ();
 

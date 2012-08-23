@@ -25,7 +25,7 @@ extern void trespecial_init (void);
 /* for compiled code */
 extern treptr trespecial_apply (treptr);
 extern treptr trespecial_apply_compiled (treptr);
-extern treptr trespecial_call_compiled (treptr);
+extern treptr trespecial_call_compiled (treptr func, treptr args);
 
 extern bool trespecial_is_compiled_funcall (treptr);
 extern treptr treeval_compiled_expr (treptr func, treptr expr, treptr argdef, bool do_eval);
