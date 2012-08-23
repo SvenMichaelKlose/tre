@@ -303,18 +303,16 @@ trespecial_apply_compiled (treptr list)
 		return res;
 	}
 
-    fake = CONS(func, args);
-    tregc_push (fake);
-
     efunc = treeval (func);
-    RPLACA(fake, efunc);
 
 	if (IS_COMPILED_FUN(efunc)) {
 		res = trespecial_apply_compiled_call (efunc, args);
 		tregc_pop ();
-		tregc_pop ();
 		return res;
 	}
+
+    fake = CONS(efunc, args);
+    tregc_push (fake);
 
     if (TREPTR_IS_FUNCTION(efunc))
         res = treeval_funcall (efunc, fake, FALSE);
