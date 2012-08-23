@@ -190,19 +190,16 @@ trespecial_apply (treptr list)
     tmp = trelist_copy (CDR(list));
 	tregc_push (tmp);
     args = trespecial_apply_args (tmp);
-    fake = CONS(func, args);
-    tregc_push (fake);
 	if (IS_COMPILED_FUN(func)) {
 		tmp = trespecial_apply_compiled_call (func, args);
 		tregc_pop ();
-		tregc_pop ();
 		return tmp;
 	}
+    tregc_push (fake);
 
     efunc = treeval (func);
-    RPLACA(fake, efunc);
+    fake = CONS(efunc, args);
 	if (IS_COMPILED_FUN(efunc)) {
-		tregc_pop ();
 		tregc_pop ();
 		return trespecial_apply_compiled_call (efunc, args);
 	}
@@ -216,7 +213,6 @@ trespecial_apply (treptr list)
     else
         res = treerror (func, "function expected");
 
-    tregc_pop ();
 	tregc_pop ();
     TRELIST_FREE_EARLY(fake);
 
