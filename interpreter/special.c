@@ -110,24 +110,21 @@ trespecial_call_compiled (treptr lst)
 }
 
 treptr
-treeval_compiled_expr (treptr func, treptr x, treptr argdef, bool do_expand)
+treeval_compiled_expr (treptr func, treptr args, treptr argdef, bool do_expand)
 {
     treptr  expforms;
     treptr  expvals;
 	treptr  evaluated;
 	treptr  result;
-	treptr  args = CDR(x);
 
-    tregc_push (func);
-    tregc_push (x);
-
+   	tregc_push (args);
    	trearg_expand (&expforms, &expvals, argdef, args, do_expand);
    	tregc_push (expvals);
 
 	evaluated = CONS(func, expvals);
 	tregc_push (evaluated);
 	result = trespecial_call_compiled (evaluated);
-	tregc_pop ();
+
 	tregc_pop ();
 	tregc_pop ();
 	tregc_pop ();
@@ -171,18 +168,9 @@ trespecial_apply_bytecode_call (treptr func, treptr args, bool do_argeval)
 treptr
 trespecial_apply_compiled_call (treptr func, treptr args)
 {
-	treptr result;
-	treptr cargs;
-
-	if (TREPTR_IS_ARRAY(func))
-		return trespecial_apply_bytecode_call (func, args, FALSE);
-
-	cargs = CONS(func, args);
-	tregc_push (cargs);
-	result = treeval_compiled_expr (func, cargs, CAR(TREATOM_VALUE(func)), FALSE);
-	tregc_pop ();
-
-	return result;
+	return TREPTR_IS_ARRAY(func) ?
+		       trespecial_apply_bytecode_call (func, args, FALSE) :
+	           treeval_compiled_expr (func, args, CAR(TREATOM_VALUE(func)), FALSE);
 }
 
 treptr
@@ -300,7 +288,7 @@ trespecial_apply_compiled (treptr list)
         f = FUNREF_FUNCTION(func);
 		res = treeval_compiled_expr (
             f,
-		    CONS(f, CONS(FUNREF_LEXICALS(func), args)),
+		    CONS(FUNREF_LEXICALS(func), args),
             TREPTR_IS_ARRAY(TREATOM_FUN(f)) ?
                 TREARRAY_RAW(TREATOM_FUN(f))[0] :
                 TREATOM_VALUE(f),

@@ -265,7 +265,7 @@ treeval_expr (treptr x)
     		tregc_pop ();
     		tregc_pop ();
 		}
-		return treeval_compiled_expr (fun, x, CAR(TREATOM_VALUE(fun)), TRUE);
+		return treeval_compiled_expr (fun, CDR(x), CAR(TREATOM_VALUE(fun)), TRUE);
 	}
 
     tregc_push (fun);
