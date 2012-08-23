@@ -190,15 +190,15 @@ trespecial_apply (treptr list)
 		tregc_pop ();
 		return tmp;
 	}
-    tregc_push (fake);
 
     efunc = treeval (func);
-    fake = CONS(efunc, args);
 	if (IS_COMPILED_FUN(efunc)) {
 		tregc_pop ();
 		return trespecial_apply_compiled_call (efunc, args);
 	}
 
+    fake = CONS(efunc, args);
+    tregc_push (fake);
     if (TREPTR_IS_FUNCTION(efunc))
         res = treeval_funcall (efunc, fake, FALSE);
     else if (TREPTR_IS_BUILTIN(efunc))
@@ -208,6 +208,7 @@ trespecial_apply (treptr list)
     else
         res = treerror (func, "function expected");
 
+	tregc_pop ();
 	tregc_pop ();
     TRELIST_FREE_EARLY(fake);
 
@@ -301,7 +302,9 @@ trespecial_apply_compiled (treptr list)
     efunc = treeval (func);
 
 	if (IS_COMPILED_FUN(efunc)) {
+		tregc_push (args);
 		res = trespecial_apply_compiled_call (efunc, args);
+		tregc_pop ();
 		tregc_pop ();
 		return res;
 	}
