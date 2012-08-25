@@ -279,7 +279,6 @@ trespecial_apply_compiled (treptr list)
     if (list == treptr_nil)
 		return treerror (list, "arguments expected");
 
-	tregc_push (list);
     func = CAR(list);
     args = trespecial_apply_compiled_args (trelist_copy (CDR(list)));
 
@@ -288,14 +287,12 @@ trespecial_apply_compiled (treptr list)
         f = FUNREF_FUNCTION(func);
 		res = treeval_compiled_expr (f, CONS(FUNREF_LEXICALS(func), args), function_arguments (f), FALSE);
 		tregc_pop ();
-		tregc_pop ();
 		return res;
 	}
 
 	if (IS_COMPILED_FUN(func)) {
 		tregc_push (args);
 		res = trespecial_apply_compiled_call (func, args);
-		tregc_pop ();
 		tregc_pop ();
 		return res;
 	}
@@ -305,7 +302,6 @@ trespecial_apply_compiled (treptr list)
 	if (IS_COMPILED_FUN(efunc)) {
 		tregc_push (args);
 		res = trespecial_apply_compiled_call (efunc, args);
-		tregc_pop ();
 		tregc_pop ();
 		return res;
 	}
@@ -323,7 +319,6 @@ trespecial_apply_compiled (treptr list)
         res = treerror (func, "function expected");
 
     tregc_pop ();
-	tregc_pop ();
     TRELIST_FREE_EARLY(fake);
 
     return res;
