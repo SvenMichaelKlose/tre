@@ -174,7 +174,7 @@ trecode_get (treptr ** p)
                 args = trecode_list (&x, num_args);
                 tregc_push (args);
                 v = (fun == treptr_apply) ?
-                    trespecial_apply_compiled (CAR(args)) :
+                    trespecial_apply_compiled (args) :
                     treeval_xlat_function (funtype == treptr_builtin ? treeval_xlat_builtin : treeval_xlat_spec, fun, CONS(fun, args), FALSE);
                 tregc_pop ();
             }
