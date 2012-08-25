@@ -259,6 +259,14 @@ trespecial_is_compiled_funref (treptr x)
 #define FUNREF_LEXICALS(x)  CDR(CDR(x))
 
 treptr
+function_arguments (treptr f)
+{
+     return TREPTR_IS_ARRAY(TREATOM_FUN(f)) ?
+                treprint (TREARRAY_RAW(TREATOM_FUN(f))[0]) :
+                TREATOM_VALUE(f);
+}
+
+treptr
 trespecial_apply_compiled (treptr list)
 {
     treptr  func;
@@ -278,14 +286,7 @@ trespecial_apply_compiled (treptr list)
 	if (trespecial_is_compiled_funref (func)) {
 		tregc_push (args);
         f = FUNREF_FUNCTION(func);
-		res = treeval_compiled_expr (
-            f,
-		    CONS(FUNREF_LEXICALS(func), args),
-            TREPTR_IS_ARRAY(TREATOM_FUN(f)) ?
-                TREARRAY_RAW(TREATOM_FUN(f))[0] :
-                TREATOM_VALUE(f),
-            FALSE
-		);
+		res = treeval_compiled_expr (f, CONS(FUNREF_LEXICALS(func), args), function_arguments (f), FALSE);
 		tregc_pop ();
 		tregc_pop ();
 		return res;
