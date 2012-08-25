@@ -7,5 +7,6 @@
 
 extern void trecode_init ();
 extern treptr trecode_exec (treptr bytecode_array);
+extern treptr trecode_call (treptr fun, treptr args);
 
 #endif

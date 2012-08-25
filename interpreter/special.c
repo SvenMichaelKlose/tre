@@ -119,7 +119,9 @@ treeval_compiled_expr (treptr func, treptr args, treptr argdef, bool do_expand)
    	trearg_expand (&expforms, &expvals, argdef, args, do_expand);
    	tregc_push (expvals);
 
-	result = trespecial_call_compiled (func, expvals);
+    result = TREPTR_IS_ARRAY(func) ?
+             trecode_call (func, expvals) :
+	         trespecial_call_compiled (func, expvals);
 
 	tregc_pop ();
 	tregc_pop ();
@@ -261,8 +263,8 @@ trespecial_is_compiled_funref (treptr x)
 treptr
 function_arguments (treptr f)
 {
-     return TREPTR_IS_ARRAY(TREATOM_FUN(f)) ?
-                treprint (TREARRAY_RAW(TREATOM_FUN(f))[0]) :
+     return TREPTR_IS_ARRAY(f) ?
+                TREARRAY_RAW(f)[0] :
                 TREATOM_VALUE(f);
 }
 

@@ -107,6 +107,22 @@ trecode_set_fun (treptr ** p, treptr value)
 }
 
 treptr
+trecode_call (treptr fun, treptr args)
+{
+    treptr i;
+    treptr v;
+    treptr num_args = 0;
+
+    DOLIST(i, args) {
+        *--trestack_ptr = CAR(i);
+        num_args++;
+    }
+    v = trecode_exec (fun);
+    trestack_ptr += num_args;
+    return v;
+}
+
+treptr
 trecode_get (treptr ** p)
 {
     treptr  v;
@@ -175,7 +191,7 @@ trecode_get (treptr ** p)
             treerror_norecover (fun, "tried to call an unsupported function type in bytecode");
     } else if (v == treptr_funref) {
         printf ("lexical funref\n"); fflush (stdout);
-        fun = *x++;
+        fun = TREATOM_FUN(*x++);
         tregc_push (fun);
         lex = trecode_get (&x);
         tregc_push (lex);
