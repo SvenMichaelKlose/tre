@@ -145,7 +145,9 @@ trearg_expand (treptr *rvars, treptr *rvals, treptr iargdef, treptr args,
     treptr   form;
     treptr   init;
     treptr   key;
-    ulong  kpos;
+    treptr   original_argdef = argdef;
+    treptr   original_args = args;
+    ulong    kpos;
 
     dvars = vars = CONS(treptr_nil, treptr_nil);
     tregc_push (dvars);
@@ -160,8 +162,11 @@ trearg_expand (treptr *rvars, treptr *rvals, treptr iargdef, treptr args,
         if (argdef == treptr_nil)
 	    	break;
 
-        while (TREPTR_IS_ATOM(argdef))
+        while (TREPTR_IS_ATOM(argdef)) {
+            treprint (original_argdef);
+            treprint (original_args);
 	    	argdef = treerror (iargdef, "argument definition must be a list");
+        }
 
 		/* Fetch next form and argument. */
         var = CAR(argdef);
@@ -171,8 +176,11 @@ trearg_expand (treptr *rvars, treptr *rvals, treptr iargdef, treptr args,
 
 		/* Process sub-level argument list. */
         if (TREPTR_IS_CONS(var)) {
-            while (TREPTR_IS_ATOM(val))
+            while (TREPTR_IS_ATOM(val)) {
+                treprint (original_argdef);
+                treprint (original_args);
 	        	val = treerror (val, "list type argument expected");
+            }
 
 	    	trearg_expand (&svars, &svals, var, val, do_argeval);
             RPLACD(dvars, svars);
@@ -201,8 +209,11 @@ trearg_expand (treptr *rvars, treptr *rvals, treptr iargdef, treptr args,
             argdef = CDR(argdef);
 	    	while (1) {
                 if (argdef == treptr_nil) {
-		    		if (args != treptr_nil)
+		    		if (args != treptr_nil) {
+                        treprint (original_argdef);
+                        treprint (original_args);
 						trewarn (args, "stale &OPTIONAL keyword in argument definition");
+                    }
 		    		break;
 				}
 
@@ -238,9 +249,10 @@ trearg_expand (treptr *rvars, treptr *rvals, treptr iargdef, treptr args,
         /* Process &KEY argument. */
 		if (var == tre_atom_key) {
             argdef = CDR(argdef);
-            if (argdef == treptr_nil) {
-		       if (args != treptr_nil)
-				   trewarn (args, "stale &KEY keyword in argument definition");
+            if (argdef == treptr_nil && args != treptr_nil) {
+                treprint (original_argdef);
+                treprint (original_args);
+				trewarn (args, "stale &KEY keyword in argument definition");
 			}
 	    	while (argdef != treptr_nil) {
 	        	key = CAR(argdef);
@@ -257,8 +269,11 @@ trearg_expand (treptr *rvars, treptr *rvals, treptr iargdef, treptr args,
 		    		svals = trelist_nth (args, kpos + 1);
 
 		    		/* Remove keyword and value from argument list. */
-        	    	while (CDR(args) == treptr_nil)
+        	    	while (CDR(args) == treptr_nil) {
+                        treprint (original_argdef);
+                        treprint (original_args);
 	    	        	RPLACD(args, CONS(treerror (args, "missing argument after keyword"), treptr_nil));
+                    }
 		    		args = trelist_delete (kpos, args);
 		    		args = trelist_delete (kpos, args);
 
@@ -278,8 +293,11 @@ trearg_expand (treptr *rvars, treptr *rvals, treptr iargdef, treptr args,
 	    	break;
         }
 
-        if (args == treptr_nil)
+        if (args == treptr_nil) {
+            treprint (original_argdef);
+            treprint (original_args);
 	    	val = treerror (argdef, "missing argument");
+        }
 
 		/* Evaluate single argument if so desired. */
         if (do_argeval)
@@ -295,8 +313,11 @@ trearg_expand (treptr *rvars, treptr *rvals, treptr iargdef, treptr args,
 		args = CDR(args);
     }
 
-    if (args != treptr_nil)
+    if (args != treptr_nil) {
+        treprint (original_argdef);
+        treprint (original_args);
 		trewarn (args, "too many arguments (continue to ignore)");
+    }
 
     *rvars = CDR(vars);
     *rvals = CDR(vals);
