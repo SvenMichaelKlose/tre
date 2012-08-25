@@ -21,7 +21,7 @@
   (pad (filter #'php-dollarize x) ","))
 
 (defun php-argument-list (x)
-  `("(" ,@(pad (filter #'php-dollarize x) ",") ")"))
+  (parenthized-comma-separated-list (filter #'php-dollarize x)))
 
 (define-codegen-macro-definer define-php-macro *php-transpiler*)
 
