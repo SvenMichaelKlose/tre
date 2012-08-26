@@ -13,9 +13,7 @@
   (unless (funinfo-ghost fi)
     (let ghost (gensym)
 	  (= (funinfo-ghost fi) ghost)
-	  (= (funinfo-args fi)
-	     (cons ghost
-			   (funinfo-args fi)))
+	  (push ghost (funinfo-args fi))
 	  (funinfo-env-add fi ghost))))
 
 (defun funinfo-link-lexically (fi)
@@ -25,8 +23,7 @@
 ;; XXX link funinfos
 (defun funinfo-setup-lexical-links (fi var)
   (let fi-parent (funinfo-parent fi)
-    (unless fi-parent
-	  (error "couldn't find ~A in environment" var))
+    (| fi-parent (error "couldn't find ~A in environment" var))
     (funinfo-add-free-var fi var)
     (funinfo-link-lexically fi)
     (? (funinfo-in-args-or-env? fi-parent var)
