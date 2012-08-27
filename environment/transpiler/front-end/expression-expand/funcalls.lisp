@@ -1,18 +1,14 @@
 ;;;;; tré – Copyright (c) 2009–2012 Sven Michael Klose <pixel@copei.de>
 
-(defun %setq-make-call-to-local-function (x f)
-  (expex-body *current-expex*
-              `((%setq ,(cadr x)
-		               (,(compiled-user-function-name 'apply)
-			               (cons ,f
-					             (cons ,(compiled-list (cdr (caddr x)))
-						               nil)))))))
+(defun %setq-make-call-to-local-function (x)
+  (with-%setq place value x
+    (expex-body *current-expex* (transpiler-frontend-1 *current-transpiler* `((%setq ,place (apply ,value. ,(compiled-list .value))))))))
 
 (defun expex-compiled-funcall (x)
   (? (%setq-value-atom? x)
 	 (list x)
-     (let fun (car (%setq-value x))
+     (alet (car (%setq-value x))
 	   (?
-	     (function-expr? fun) (%setq-make-call-to-local-function x fun)
-		 (expex-in-env? fun) (%setq-make-call-to-local-function x fun)
+	     (function-expr? !) (%setq-make-call-to-local-function x)
+		 (expex-in-env? !) (%setq-make-call-to-local-function x)
 	  	 (list x)))))
