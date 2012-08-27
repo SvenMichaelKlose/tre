@@ -10,6 +10,7 @@
 		   "atom.h"
 		   "eval.h"
 		   "gc.h"
+		   "builtin_apply.h"
 		   "builtin_arith.h"
 		   "builtin_array.h"
 		   "builtin_atom.h"
@@ -42,10 +43,7 @@
 		  *closure-argdefs*))
 
 (defun c-transpiler-make-function-registrations (tr)
-  (filter (fn `(%setq ~%ret
-					  (treatom_register_compiled_function
-						  ,(c-compiled-symbol _)
-						  ,_)))
+  (filter (fn `(%setq ~%ret (treatom_register_compiled_function ,(c-compiled-symbol _) ,_)))
 		  (transpiler-defined-functions-without-builtins tr)))
 
 (defun c-transpiler-declarations-and-initialisations (tr)
@@ -65,11 +63,13 @@
         `((defun c-init ()
 		    ,@(mapcar #'list (reverse init-funs)))))))
 
+(defun c-transpiler-header-inclusions ()
+  (apply #'+ (mapcar (fn format nil "#include \"~A\"~%" _) *c-interpreter-headers*)))
+
 (defun c-transpile (sources &key transpiler obfuscate? print-obfuscations? files-to-update)
   (let tr transpiler
     (string-concat
-        (apply #'string-concat (mapcar (fn format nil "#include \"~A\"~%" _) *c-interpreter-headers*))
-  	    (format nil "#define userfun_apply trespecial_apply_compiled~%")
+        (c-transpiler-header-inclusions)
   	    (target-transpile tr
             :files-after-deps sources
             :dep-gen #'(()

@@ -5,6 +5,7 @@
 		(QUIT)
 		(LOAD)
 		(EVAL)
+		(APPLY)
 		(%MACROCALL macrocall)
 		(PRINT)
 		(GC)
@@ -16,9 +17,6 @@
 		(%FREE-EXEC free_exec)
 		(%%SET set)
 		(%%GET get))
-
-	(trespecial_
-		(APPLY apply_compiled))
 
 	(treerror_builtin_
 		(%ERROR error))
