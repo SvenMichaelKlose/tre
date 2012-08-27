@@ -19,6 +19,7 @@
 #include "thread.h"
 #include "special.h"
 #include "alien.h"
+#include "builtin_apply.h"
 #include "builtin_arith.h"
 #include "builtin_array.h"
 #include "builtin_atom.h"
@@ -446,7 +447,7 @@ treevalfunc_t treeval_xlat_builtin[] = {
     trebuiltin_quit,
     trebuiltin_load,
     trebuiltin_eval,
-    trespecial_apply,
+    trebuiltin_apply,
     trebuiltin_macrocall,
     trebuiltin_print,
     trebuiltin_gc,

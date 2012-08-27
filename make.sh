@@ -13,7 +13,10 @@ FILES="
     atom.c
 
 	builtin.c
-	builtin_arith.c builtin_array.c builtin_atom.c
+	builtin_apply.c
+	builtin_arith.c
+    builtin_array.c
+    builtin_atom.c
 	builtin_debug.c
 	builtin_error.c
 	builtin_fileio.c

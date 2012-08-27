@@ -23,6 +23,8 @@
 #include "xxx.h"
 #include "diag.h"
 
+#include "builtin_apply.h"
+
 #include <stdio.h>
 
 treptr treopt_verbose_eval;
@@ -231,7 +233,6 @@ treeval_expr (treptr x)
     tredebug_chk_breakpoints (x);
 	TREDEBUG_STEP();
 
-	/* Get function value of variable immediately. */
 	switch (TREPTR_TYPE(fun)) {
 		case TRETYPE_VARIABLE:
         	fun = TREATOM_FUN(fun);
@@ -276,7 +277,7 @@ treeval_expr (treptr x)
             break;
 
         case TRETYPE_ARRAY:
-            v = trespecial_apply_bytecode_call (fun, CDR(x), TRUE);
+            v = trebuiltin_apply_bytecode_call (fun, CDR(x), TRUE);
             break;
 
         case TRETYPE_USERSPECIAL:
