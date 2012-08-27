@@ -44,7 +44,7 @@ trespecial_apply_args (treptr list)
 
     /* Handle single argument. */
     if (CDR(list) == treptr_nil) {
-        list = treeval (CAR(list));
+        list = CAR(list);
         if (TREPTR_IS_ATOM(list) && list != treptr_nil)
             goto error;
 		return list;
@@ -52,13 +52,10 @@ trespecial_apply_args (treptr list)
 
     /* Handle two or more arguments. */
     DOLIST(i, list) {
-        if (CDDR(i) != treptr_nil) {
-			RPLACA(i, treeval (CAR(i)));
+        if (CDDR(i) != treptr_nil)
             continue;
-		}
 
-		RPLACA(i, treeval (CAR(i)));
-        last = treeval (CADR(i));
+        last = CADR(i);
         if (TREPTR_IS_ATOM(last) && last != treptr_nil)
             goto error;
 
@@ -69,8 +66,7 @@ trespecial_apply_args (treptr list)
     return list;
 
 error:
-    return treerror (list, "last argument must be a list "
-                           "(waiting for new argument list)");
+    return treerror (list, "last argument must be a list (waiting for new argument list)");
 }
 
 #include <ffi.h>
@@ -187,26 +183,21 @@ trespecial_apply (treptr list)
     tmp = trelist_copy (CDR(list));
 	tregc_push (tmp);
     args = trespecial_apply_args (tmp);
+
 	if (IS_COMPILED_FUN(func)) {
 		tmp = trespecial_apply_compiled_call (func, args);
 		tregc_pop ();
 		return tmp;
 	}
 
-    efunc = treeval (func);
-	if (IS_COMPILED_FUN(efunc)) {
-		tregc_pop ();
-		return trespecial_apply_compiled_call (efunc, args);
-	}
-
-    fake = CONS(efunc, args);
+    fake = CONS(func, args);
     tregc_push (fake);
-    if (TREPTR_IS_FUNCTION(efunc))
-        res = treeval_funcall (efunc, fake, FALSE);
-    else if (TREPTR_IS_BUILTIN(efunc))
-        res = treeval_xlat_function (treeval_xlat_builtin, efunc, fake, FALSE);
-    else if (TREPTR_IS_SPECIAL(efunc))
-        res = trespecial (efunc, fake);
+    if (TREPTR_IS_FUNCTION(func))
+        res = treeval_funcall (func, fake, FALSE);
+    else if (TREPTR_IS_BUILTIN(func))
+        res = treeval_xlat_function (treeval_xlat_builtin, func, fake, FALSE);
+    else if (TREPTR_IS_SPECIAL(func))
+        res = trespecial (func, fake);
     else
         res = treerror (func, "function expected");
 
@@ -215,40 +206,6 @@ trespecial_apply (treptr list)
     TRELIST_FREE_EARLY(fake);
 
     return res;
-}
-
-treptr
-trespecial_apply_compiled_args (treptr list)
-{
-    treptr i;
-    treptr last;
-
-    RETURN_NIL(list);
-
-    if (CDR(list) == treptr_nil) {
-        list = CAR(list);
-        if (TREPTR_IS_ATOM(list) && list != treptr_nil)
-            goto error;
-		return list;
-    }
-
-    DOLIST(i, list) {
-        if (CDDR(i) != treptr_nil)
-            continue;
-
-        last = CADR(i);
-        if (TREPTR_IS_ATOM(last) && last != treptr_nil)
-            goto error;
-
-        RPLACD(i, last);
-        break;
-    }
-
-    return list;
-
-error:
-    return treerror (list, "last argument must be a list "
-                           "(waiting for new argument list)");
 }
 
 bool
@@ -273,7 +230,7 @@ trespecial_apply_compiled (treptr list)
 {
     treptr  func;
     treptr  f;
-    treptr  args = treptr_nil;
+    treptr  args;
     treptr  fake;
     treptr  efunc;
 	treptr  res;
@@ -282,11 +239,13 @@ trespecial_apply_compiled (treptr list)
 		return treerror (list, "arguments expected");
 
     func = CAR(list);
-    args = trespecial_apply_compiled_args (trelist_copy (CDR(list)));
+    args = trespecial_apply_args (trelist_copy (CDR(list)));
 
 	if (trespecial_is_compiled_funref (func)) {
 		tregc_push (args);
         f = FUNREF_FUNCTION(func);
+        if (TREPTR_IS_ARRAY(TREATOM_FUN(f)))
+            f = TREATOM_FUN(f);
 		res = treeval_compiled_expr (f, CONS(FUNREF_LEXICALS(func), args), function_arguments (f), FALSE);
 		tregc_pop ();
 		return res;
@@ -754,7 +713,6 @@ trespecial_function (treptr args)
 #endif /* #ifdef INTERPRETER */
 
 char *tre_special_names[] = {
-    "APPLY",
     "SETQ", "%SET-ATOM-FUN",
     "MACRO", "SPECIAL",
 #ifdef INTERPRETER
@@ -769,7 +727,6 @@ char *tre_special_names[] = {
 };
 
 treevalfunc_t treeval_xlat_spec[] = {
-    trespecial_apply,
     trespecial_setq,
     treatom_builtin_set_atom_fun,
     trespecial_macro,

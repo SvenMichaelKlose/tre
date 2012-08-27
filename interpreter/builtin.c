@@ -357,7 +357,7 @@ trebuiltin_get (treptr args)
 char *tre_builtin_names[] = {
     "QUIT",
     "LOAD",
-    "EVAL", "%MACROCALL",
+    "EVAL", "APPLY", "%MACROCALL",
     "PRINT",
     "GC",
     "DEBUG",
@@ -446,6 +446,7 @@ treevalfunc_t treeval_xlat_builtin[] = {
     trebuiltin_quit,
     trebuiltin_load,
     trebuiltin_eval,
+    trespecial_apply,
     trebuiltin_macrocall,
     trebuiltin_print,
     trebuiltin_gc,
