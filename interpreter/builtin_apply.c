@@ -187,7 +187,6 @@ trebuiltin_apply (treptr list)
     treptr  f;
     treptr  args;
     treptr  fake;
-    treptr  efunc;
 	treptr  res;
 
     if (list == treptr_nil)
@@ -213,24 +212,15 @@ trebuiltin_apply (treptr list)
 		return res;
 	}
 
-    efunc = treeval (func);
-
-	if (IS_COMPILED_FUN(efunc)) {
-		tregc_push (args);
-		res = trebuiltin_apply_compiled_call (efunc, args);
-		tregc_pop ();
-		return res;
-	}
-
-    fake = CONS(efunc, args);
+    fake = CONS(func, args);
     tregc_push (fake);
 
-    if (TREPTR_IS_FUNCTION(efunc))
-        res = treeval_funcall (efunc, fake, FALSE);
-    else if (TREPTR_IS_BUILTIN(efunc))
-        res = treeval_xlat_function (treeval_xlat_builtin, efunc, fake, FALSE);
-    else if (TREPTR_IS_SPECIAL(efunc))
-        res = trespecial (efunc, fake);
+    if (TREPTR_IS_FUNCTION(func))
+        res = treeval_funcall (func, fake, FALSE);
+    else if (TREPTR_IS_BUILTIN(func))
+        res = treeval_xlat_function (treeval_xlat_builtin, func, fake, FALSE);
+    else if (TREPTR_IS_SPECIAL(func))
+        res = trespecial (func, fake);
     else
         res = treerror (func, "function expected");
 
