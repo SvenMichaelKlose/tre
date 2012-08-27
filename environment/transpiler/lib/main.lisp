@@ -1,4 +1,4 @@
-;;;;; tré - (c) 2005-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – (c) 2005–2012 Sven Michael Klose <pixel@copei.de>
 
 (env-load "transpiler/lib/expex.lisp")
 (env-load "transpiler/lib/transpiler.lisp")
@@ -12,6 +12,7 @@
 (env-load "transpiler/lib/compiled-list.lisp")
 (env-load "transpiler/lib/with-lambda-call.lisp")
 (env-load "transpiler/lib/with-lambda-content.lisp")
+(env-load "transpiler/lib/with-%setq.lisp")
 (env-load "transpiler/lib/simple-argument-list-p.lisp")
 (env-load "transpiler/lib/pass.lisp")
 
