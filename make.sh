@@ -70,7 +70,7 @@ C_DIALECT_FLAGS="-ansi -Wall -Wextra" #-Werror"
 CFLAGS="-pipe $C_DIALECT_FLAGS $GNU_LIBC_FLAGS $BUILD_MACHINE_INFO $ARGS"
 
 DEBUGOPTS="-O0 -g"
-BUILDOPTS="-O"
+BUILDOPTS="-Ofast"
 CRUNSHOPTS="-Ofast --whole-program"
 CRUNSHFLAGS="-DTRE_COMPILED_CRUNSHED -Iinterpreter"
 
@@ -100,7 +100,7 @@ echo "Library flags: $LIBFLAGS"
 basic_clean ()
 {
 	echo "Cleaning..."
-	rm -f *.core interpreter/$COMPILED_ENV
+	rm -f *.core interpreter/$COMPILED_ENV tre tmp.c
 	rm -rf obj
 }
 
