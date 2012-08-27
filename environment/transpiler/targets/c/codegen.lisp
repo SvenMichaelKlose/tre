@@ -26,11 +26,12 @@
 	    (transpiler-compiled-decls *current-transpiler*)))
 
 (defun c-codegen-function (name x)
-  (let args (argument-expand-names 'unnamed-c-function (lambda-args x))
+  (with (fi (get-funinfo-by-sym (lambda-funinfo x))
+         args (argument-expand-names 'unnamed-c-function (funinfo-args fi)))
     (c-make-function-declaration name args)
     `(,(code-char 10)
       "/*" ,*c-newline*
-      "  env: " ,@(mapcar (fn + (symbol-name _) " ") (funinfo-env (get-funinfo-by-sym (lambda-funinfo x)))) ,*c-newline*
+      "  env: " ,@(mapcar (fn + (symbol-name _) " ") (funinfo-env fi)) ,*c-newline*
       "*/" ,*c-newline*
 	  "treptr " ,name " "
 	  ,@(parenthized-comma-separated-list (mapcar (fn `("treptr " ,_)) args))
