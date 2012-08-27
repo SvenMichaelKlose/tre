@@ -76,6 +76,7 @@
   (code-concatenator #'concat-stringtree)
   (make-text? t)
   (encapsulate-strings? t)
+  (dump-passes? nil)
 
   ;;;
   ;;; You mustn't init these.
@@ -99,6 +100,8 @@
 
   (predefined-symbols nil)
 
+  (funinfos (make-hash-table :test #'eq))
+  (funinfos-reverse (make-hash-table :test #'eq))
   (global-funinfo nil)
 
   ; Literals that must be declared or cached before code with them is emitted.
@@ -119,7 +122,6 @@
 
   (current-package nil)
   
-  (dump-passes? nil)
   (current-pass nil)
   (last-pass-result nil))
 
@@ -254,7 +256,8 @@
   tr)
 
 (defun make-global-funinfo (tr)
-  (make-lambda-funinfo (= (transpiler-global-funinfo tr) (make-funinfo))))
+  (alet (= (transpiler-global-funinfo tr) (make-funinfo :transpiler tr))
+    (make-lambda-funinfo ! tr)))
 
 (defun transpiler-package-symbol (tr x)
   (make-symbol (symbol-name x) (transpiler-current-package tr)))
@@ -313,6 +316,7 @@
                      :code-concatenator       code-concatenator
                      :make-text?              make-text?
                      :encapsulate-strings?    encapsulate-strings?
+                     :dump-passes?            dump-passes?
                      :symbol-translations     (copy-list symbol-translations)
                      :thisify-classes         (copy-hash-table thisify-classes)
                      :function-args           (copy-hash-table function-args)
@@ -329,6 +333,8 @@
                      :memorized-sources       (copy-list memorized-sources)
                      :memorize-sources?       memorize-sources?
                      :predefined-symbols      (copy-list predefined-symbols)
+                     :funinfos                (copy-hash-table funinfos)
+                     :funinfos-reverse        (copy-hash-table funinfos-reverse)
                      :global-funinfo          (& global-funinfo (copy-funinfo global-funinfo))
                      :compiled-chars          (copy-hash-table compiled-chars)
                      :compiled-numbers        (copy-hash-table compiled-numbers)
@@ -342,7 +348,6 @@
                      :frontend-files          (copy-alist frontend-files)
                      :compiled-files          (copy-alist compiled-files)
                      :current-package         current-package
-                     :dump-passes?            dump-passes?
                      :expex-initializer       expex-initializer)
     (funcall (transpiler-expex-initializer !) (transpiler-make-expex !))))
 

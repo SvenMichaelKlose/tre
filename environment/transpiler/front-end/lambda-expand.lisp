@@ -4,7 +4,8 @@
   (with (argnames (argument-expand-names 'lambda-expand args)
          fi (make-funinfo :argdef args
                           :args argnames
-                          :parent parent))
+                          :parent parent
+                          :transpiler *current-transpiler*))
     (funinfo-env-add fi '~%ret)
     ; XXX nicer when moved to place-assign/expand
     (& (transpiler-copy-arguments-to-stack? *current-transpiler*)
@@ -36,24 +37,17 @@
        (lambda-export-make-exported-name)
        exported-name)))
 
-(defun lambda-export-make-exported (fi x)
-  (let exported-name (lambda-export-make-exported-name)
-    (let fi-exported (lambda-make-funinfo (lambda-args x) fi)
-	  (funinfo-make-ghost fi-exported)
-	  (lambda-expand-tree fi-exported (lambda-body x))
-      (let argdef (+ (awhen (funinfo-ghost fi-exported)
-                       (list !))
-                     (lambda-args x))
-		(acons! exported-name argdef *closure-argdefs*)
-	    (transpiler-add-exported-closure *current-transpiler*
-            `((defun ,exported-name ,(+ (make-lambda-funinfo fi-exported) argdef)
-		        ,@(lambda-body x)))))
-	  (values exported-name fi-exported))))
-
 (defun lambda-export (fi x)
-  (with ((exported-name fi-exported) (lambda-export-make-exported fi x))
-    `(%%funref ,exported-name
-               ,(funinfo-sym fi-exported))))
+  (with (exported-name (lambda-export-make-exported-name)
+         fi-exported (lambda-make-funinfo (lambda-args x) fi))
+    (funinfo-make-ghost fi-exported)
+    (lambda-expand-tree fi-exported (lambda-body x))
+    (let argdef (funinfo-args fi-exported)
+      (acons! exported-name argdef *closure-argdefs*)
+      (transpiler-add-exported-closure *current-transpiler*
+          `((defun ,exported-name ,(+ (make-lambda-funinfo fi-exported) argdef)
+              ,@(lambda-body x)))))
+    `(%%funref ,exported-name ,(funinfo-sym fi-exported))))
 
 ;;;; Passthrough
 

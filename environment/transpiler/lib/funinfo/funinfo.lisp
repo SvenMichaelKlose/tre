@@ -3,6 +3,7 @@
 (defvar *funinfo-sym-counter* 0)
 
 (defstruct funinfo
+  (transpiler nil)
   (parent nil)
   (name nil) ; Name of the function.
   (sym ($ '~F (1+! *funinfo-sym-counter*))) ; Symbol of this funinfo used in LAMBDA-expressions.

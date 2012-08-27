@@ -1,14 +1,11 @@
 ;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
-(defvar *funinfos* (make-hash-table :test #'eq))
-(defvar *funinfos-reverse* (make-hash-table :test #'eq))
-
-(defun make-lambda-funinfo (fi)
-  (& (href *funinfos-reverse* fi)
+(defun make-lambda-funinfo (fi &optional (tr *current-transpiler*))
+  (& (href (transpiler-funinfos tr) fi)
 	 (error "funinfo already memorized"))
-  (= (href *funinfos-reverse* fi) t)
+  (= (href (transpiler-funinfos tr) fi) t)
   (let g (funinfo-sym fi)
-	(= (href *funinfos* g) fi)
+	(= (href (transpiler-funinfos tr) g) fi)
 	`(%funinfo ,g)))
 
 (defun make-lambda-funinfo-if-missing (x fi)
@@ -28,8 +25,8 @@
   `#'(,@(lambda-head-w/-missing-funinfo x fi)
 		  ,@(lambda-body x)))
 
-(defun get-funinfo-by-sym (x)
-  (href *funinfos* x))
+(defun get-funinfo-by-sym (x &optional (tr *current-transpiler*))
+  (href (transpiler-funinfos tr) x))
 
 (defun get-lambda-funinfo (x)
   (get-funinfo-by-sym (lambda-funinfo x)))
