@@ -1,7 +1,8 @@
 ;;;;; tré – Copyright (c) 2009–2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *builtins*
-	`(QUIT LOAD EVAL %MACROCALL PRINT GC DEBUG INTERN
+	`(APPLY EVAL
+      QUIT LOAD %MACROCALL PRINT GC DEBUG INTERN
 	  %MALLOC %MALLOC-EXEC %FREE %FREE-EXEC
 	  %%SET %%GET
       %ERROR
@@ -27,4 +28,4 @@
       OPEN-SOCKET ACCEPT RECV SEND CLOSE-CONNECTION CLOSE-SOCKET))
 
 (defvar *specials*
-    '(APPLY %SET-ATOM-FUN))
+    '(%SET-ATOM-FUN))

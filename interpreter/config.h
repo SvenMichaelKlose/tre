@@ -1,5 +1,5 @@
 /*
- * tré - Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #ifndef TRE_TRE_H
@@ -35,6 +35,7 @@ typedef int bool;
 #define TRE_EXIT_ON_STDIO_SIGINT /* Exit on SIGINT in stdio prompt. */
 #define TRE_COUNT_LISTNODES /* For debugging. */
 #endif
+#define TRE_DUMP_CODE /* For bytecode debugging. */
 
 #define INTERPRETER
 
@@ -114,6 +115,6 @@ typedef int bool;
 #endif
 #endif
 
-#define TRESTACK_SIZE		(4 * MEGA)
+#define TRESTACK_SIZE		(8 * MEGA)
 
 #endif /* #ifndef TRE_TRE_H */

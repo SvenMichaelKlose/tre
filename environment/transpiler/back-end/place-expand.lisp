@@ -15,7 +15,7 @@
 (defun make-lexical-0 (fi x)
   (funinfo-setup-lexical-links fi x)
   (let ret (make-lexical-1 fi x)
-	`(%vec ,(make-lexical fi .ret.)
+	`(%vec ,(place-expand-atom fi (make-lexical fi .ret.))
 		   ,..ret.
 		   ,...ret.)))
 
@@ -95,7 +95,8 @@
   (& (%set-atom-fun? x) (%vec? (place-expand-0 fi (%setq-place x)))) (place-expand-setter fi x)
   (%%funref? x)         `(%%funref ,.x. ,(place-expand-0 fi ..x.))
   (%setq-atom-value? x) `(%setq-atom-value ,.x. ,(place-expand-0 fi ..x.))
-  (%slot-value? x)      `(%slot-value ,(place-expand-0 fi .x.) ,..x.))
+  (%slot-value? x)      `(%slot-value ,(place-expand-0 fi .x.) ,..x.)
+  (%stackarg? x)        x)
 
 (defun place-expand (x)
   (place-expand-0 (transpiler-global-funinfo *current-transpiler*) x))

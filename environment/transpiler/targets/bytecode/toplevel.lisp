@@ -7,4 +7,4 @@
                                              (transpiler-import-from-environment tr)))
       (& *show-definitions?*
          (format t "; ~A codes.~%" (length !)))
-      (load-bytecode-functions (expr-to-code !)))))
+      (load-bytecode-functions (expr-to-code tr !)))))

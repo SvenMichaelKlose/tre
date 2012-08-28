@@ -20,6 +20,7 @@
 #include "eval.h"
 #include "bytecode.h"
 #include "array.h"
+#include "io.h"
 #include "main.h"
 #include "print.h"
 #include "special.h"
@@ -112,12 +113,8 @@ trebuiltin_apply_bytecode_call (treptr func, treptr args, bool do_argeval)
    	tregc_push (expvals);
 
     num_args = trelist_length (expvals);
-    printf ("Pushing %d bc args\n", trelist_length (expvals));
-    DOLIST(i, expvals) {
-        printf ("to bc arg: ");
-        treprint (CAR(i));
+    DOLIST(i, expvals)
         *--trestack_ptr = CAR(i);
-    }
 
 	result = trecode_exec (func);
     trestack_ptr += num_args;
@@ -188,6 +185,8 @@ trebuiltin_apply (treptr list)
     treptr  args;
     treptr  fake;
 	treptr  res;
+	treptr  a;
+	treptr  b;
 
     if (list == treptr_nil)
 		return treerror (list, "arguments expected");
@@ -200,7 +199,9 @@ trebuiltin_apply (treptr list)
         f = FUNREF_FUNCTION(func);
         if (TREPTR_IS_ARRAY(TREATOM_FUN(f)))
             f = TREATOM_FUN(f);
-		res = treeval_compiled_expr (f, CONS(FUNREF_LEXICALS(func), args), function_arguments (f), FALSE);
+		b = CONS(FUNREF_LEXICALS(func), args);
+        a = function_arguments (f);
+		res = treeval_compiled_expr (f, b, a, FALSE);
 		tregc_pop ();
 		return res;
 	}

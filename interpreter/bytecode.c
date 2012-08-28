@@ -58,14 +58,14 @@ trecode_list (treptr ** p, int len)
 
     tregc_push (l);
     DOTIMES(i, len) {
+        /*printf("Elm %d: ", i);*/
         v = trecode_get (&x);
-        printf ("Elm %d: ", i);
-        treprint (v);
         tre_enqueue (l, v);
     }
     tregc_pop ();
     *p = x;
 
+    /*printf ("New list: "); treprint (CDR(l)); fflush (stdout);*/
     return CDR(l);
 }
 
@@ -75,17 +75,18 @@ trecode_set_place (treptr ** p, treptr value)
     treptr * x = *p;
     treptr v = *x++;
 
-    printf ("Place ");
-    treprint (v);
-
     if (v == treptr_stack) {
-        treprint (*x); fflush (stdout);
+        /*printf("Place is stack %d ", TRENUMBER_INT(*x));*/
         trestack_ptr[TRENUMBER_INT(*x++)] = value;
-    } else if (v != treptr_nil)
+    } else if (v != treptr_nil) {
+        /*printf("Place is symbol ");*/
         TREATOM_VALUE(v) = value;
+    }
 
-    printf ("\n");
     *p = x;
+#ifdef TRE_DUMP_BYTECODE
+    /*fflush (stdout);*/
+#endif
 }
 
 void
@@ -94,16 +95,26 @@ trecode_set_fun (treptr ** p, treptr value)
     treptr * x = *p;
     treptr v = *x++;
 
-    printf ("fun place ");
-    treprint (v);
-
     if (v == treptr_stack) {
-        treprint (*x); fflush (stdout);
+        /*printf("Funcion place is stack %d\n", TRENUMBER_INT(*x));*/
         TREATOM_FUN(trestack_ptr[TRENUMBER_INT(*x++)]) = value;
-    } else if (v != treptr_nil)
+    } else if (v != treptr_nil) {
+        /*printf("Funcion place is symbol %s\n", TREATOM_NAME(v));*/
         TREATOM_FUN(v) = value;
+    }
 
     *p = x;
+}
+
+void
+trecode_print_args (int num_args)
+{
+    int i;
+
+    DOTIMES(i, num_args) {
+        printf("Argument %d: ", i);
+        treprint (trestack_ptr[num_args - i]);
+    }
 }
 
 treptr
@@ -113,12 +124,16 @@ trecode_call (treptr fun, treptr args)
     treptr v;
     treptr num_args = 0;
 
+    /*printf("Arguments: "); treprint (args);*/
     DOLIST(i, args) {
+        /*printf("Argument %d: ", num_args);*/
+        /*treprint (CAR(i));*/
         *--trestack_ptr = CAR(i);
         num_args++;
     }
     v = trecode_exec (fun);
     trestack_ptr += num_args;
+
     return v;
 }
 
@@ -139,68 +154,66 @@ trecode_get (treptr ** p)
     int     j;
 
     v = *x++;
-    printf ("value "); treprint (v); fflush (stdout);
     if (v == treptr_stack) {
-        treprint (*x); fflush (stdout);
+        /*printf("stack %d: ", TRENUMBER_INT(*x));*/
         v = trestack_ptr[TRENUMBER_INT(*x++)];
     } else if (v == treptr_vec) {
+        /*printf("vector: ");*/
         vec = trecode_get (&x);
+        /*printf("vector index %d: ", TRENUMBER_INT(*x)); fflush (stdout);*/
         v = _TREVEC(vec, TRENUMBER_INT(*x++));
     } else if (v == treptr_quote) {
-        printf ("quote "); treprint (*x); fflush (stdout);
+        /*printf("quote: ");*/
         v = *x++;
     } else if (v == treptr_funcall) {
-        printf ("funcall "); treprint (*x); fflush (stdout);
+        /*printf("funcall: ");*/
         fun = *x++;
         if (fun == treptr_builtin || fun == treptr_special) {
+            /*printf("builtin %s\n", TREATOM_NAME(*x));*/
             funtype = fun;
-            printf ("builtin "); fflush (stdout);
             fun = *x++;
-            treprint (fun); fflush (stdout);
             if (fun == treptr_cons) {
                 /* Special treatment to avoid back-end workarounds. */
-                printf ("builtin cons\n"); fflush (stdout);
                 car = trecode_get (&x);
                 tregc_push (car);
                 cdr = trecode_get (&x);
                 v = CONS(car, cdr);
                 tregc_pop ();
             } else if (fun == treptr_set_atom_fun) {
-                printf ("builtin atom fun setter\n"); fflush (stdout);
                 trecode_set_place (&x, trecode_get (&x));
             } else {
                 num_args = TRENUMBER_INT(*x++);
-                printf ("builtin std num args: %d\n", num_args); fflush (stdout);
                 args = trecode_list (&x, num_args);
+/*printf ("builtin arguments: "); treprint (args);*/
                 tregc_push (args);
-                v = (fun == treptr_apply) ?
-                    trespecial_apply_compiled (args) :
-                    treeval_xlat_function (funtype == treptr_builtin ? treeval_xlat_builtin : treeval_xlat_spec, fun, CONS(fun, args), FALSE);
+                v = treeval_xlat_function (funtype == treptr_builtin ? treeval_xlat_builtin : treeval_xlat_spec, fun, CONS(fun, args), FALSE);
                 tregc_pop ();
             }
         } else if (TREPTR_IS_ATOM(fun) && TREPTR_IS_ARRAY(TREATOM_FUN(fun))) {
             num_args = TRENUMBER_INT(*x++);
-            printf ("num args: %d\n", num_args); fflush (stdout);
+            /*printf("Direct call of bytecode function %s with %d arguments.\n", TREATOM_NAME(*x), num_args);*/
             j = -1;
             DOTIMES(i, num_args)
                 trestack_ptr[j--] = trecode_get (&x);
             trestack_ptr -= num_args;
+            /*trecode_print_args (num_args);*/
             v = trecode_exec (TREATOM_FUN(fun));
             trestack_ptr += num_args;
         } else 
             treerror_norecover (fun, "tried to call an unsupported function type in bytecode");
     } else if (v == treptr_funref) {
-        printf ("lexical funref\n"); fflush (stdout);
-        fun = TREATOM_FUN(*x++);
+        /*printf("Lexical funref ");*/
+        fun = *x++;
+        /*treprint (fun);*/
         tregc_push (fun);
         lex = trecode_get (&x);
         tregc_push (lex);
-        v = CONS(treptr_funref, CONS(fun, CONS(lex, treptr_nil)));
+        v = CONS(treptr_funref, CONS(fun, lex));
         tregc_pop ();
         tregc_pop ();
     } else if (TREPTR_IS_VARIABLE(v))
         v = TREATOM_VALUE(v);
-    printf ("Return value: "); treprint (v);
+    /*treprint (v);*/
     *p = x;
     return v;
 }
@@ -222,46 +235,47 @@ trecode_exec (treptr fun)
     unsigned num_locals;
     unsigned i = 0;
     int      vec;
-    int      vecindex;
 
-    printf ("Executing bytecode function.\n");
+    /*printf("\nExecuting bytecode function.\n");*/
     if (TREPTR_IS_ARRAY(fun) == FALSE)
         treerror_norecover (fun, "bytecode array function expected");
     x = &TREARRAY_RAW(fun)[1];
     num_locals = TRENUMBER_INT(*x++);
     code = x;
-    treprint (fun);
+    /*treprint (fun);*/
 
     DOTIMES(i, num_locals)
         *--trestack_ptr = treptr_nil;
 
     while (1) {
         v = *x++;
-        printf ("Instruction ");
-        treprint (v);
+        /*printf("Instruction %s ", TREATOM_NAME(v));*/
         if (v == treptr_set) {
             x = trecode_set (x);
+            /*printf("\n");*/
         } else if (v == treptr_jmp) {
-            printf ("=============== function return =============\n"); fflush (stdout);
             dest = *x++;
             if (dest == treptr_nil)
                 break;
             x = &code[TRENUMBER_INT(dest)];
+            /*printf("\n");*/
         } else if (v == treptr_cond) {
             if (trecode_get (&x) != treptr_nil) {
-                printf ("Skipping jump.\n");
+                /*printf("Skipping jump.\n");*/
                 x++;
             } else {
-                printf ("Jumping to %d.\n", TRENUMBER_INT(*x));
+                /*printf("Jumping to %d.\n", TRENUMBER_INT(*x));*/
                 x = &code[TRENUMBER_INT(*x)];
             }
         } else if (v == treptr_set_vec) {
+            /*printf("\n"); fflush (stdout);*/
             vec = trecode_get (&x);
             i = TRENUMBER_INT(*x++);
             v = _TREVEC(vec, i) = trecode_get (&x);
         } else
             treerror_norecover (v, "illegal bytecode instruction");
     }
+    /*printf("Function return.\n\n");*/
 
     v = *trestack_ptr;
     trestack_ptr += num_locals;
@@ -273,6 +287,8 @@ trecode_init ()
 {
     treptr_set = treatom_get ("%BC-SET", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treptr_set);
+    treptr_set_vec = treatom_get ("%BC-SET-VEC", TRECONTEXT_PACKAGE());
+    EXPAND_UNIVERSE(treptr_set_vec);
     treptr_funcall = treatom_get ("%BC-FUNCALL", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treptr_funcall);
     treptr_builtin = treatom_get ("%BC-BUILTIN", TRECONTEXT_PACKAGE());
@@ -287,8 +303,6 @@ trecode_init ()
     EXPAND_UNIVERSE(treptr_stack);
     treptr_vec = treatom_get ("%VEC", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treptr_vec);
-    treptr_set_vec = treatom_get ("%SET-VEC", TRECONTEXT_PACKAGE());
-    EXPAND_UNIVERSE(treptr_set_vec);
     treptr_set_atom_fun = treatom_get ("%SET-ATOM-FUN", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treptr_set_atom_fun);
     treptr_cons = treatom_get ("CONS", TRECONTEXT_PACKAGE());

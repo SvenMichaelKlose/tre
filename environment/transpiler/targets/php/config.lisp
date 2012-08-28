@@ -3,8 +3,9 @@
 (defvar *php-version* 503)
 
 (defun php-=-function? (x)
-  (| (%=-function? x)
-     (transpiler-defined-function *current-transpiler* x)))
+  t)
+;  (| (%=-function? x)
+;     (transpiler-defined-function *current-transpiler* x)))
 
 (defun make-php-transpiler-0 ()
   (create-transpiler

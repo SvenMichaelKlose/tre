@@ -1,5 +1,5 @@
 /*
- * tré - Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2010,2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -14,6 +14,7 @@
 #include "builtin_string.h"
 
 #include <math.h>
+#include <string.h>
 
 /* Perform operation over list. */
 treptr
@@ -133,9 +134,10 @@ trenumber_builtin_quotient (treptr list)
 }
 
 void
-trenumber_builtin_args (treptr *car, treptr *cdr, treptr list)
+trenumber_builtin_args (char * name, treptr *car, treptr *cdr, treptr list)
 {
-	const char * descr = "in binary arithmetic operation";
+    char descr[64];
+	stpcpy (stpcpy (descr, "in binary arithmetic operation "), name);
 
     trearg_get2 (car, cdr, list);
 	*car = trearg_typed (1, TRETYPE_NUMBER, *car, descr);
@@ -154,7 +156,7 @@ trenumber_builtin_mod (treptr list)
 {
     TRELIST_DEFREGS();
     double    val;
-    trenumber_builtin_args (&car, &cdr, list);
+    trenumber_builtin_args ("MOD", &car, &cdr, list);
 
     val = fmod (TRENUMBER_VAL(car), TRENUMBER_VAL(cdr));
     return treatom_number_get (val, TRENUMTYPE_FLOAT);
@@ -174,7 +176,7 @@ trenumber_builtin_logxor (treptr list)
 }
 
 /*tredoc
-  (cmd :name "=" :essential t
+  (cmd :name "==" :essential t
 	(args
 	  (arg :name "x")
 	  (arg :name "y"))
@@ -189,7 +191,7 @@ trenumber_builtin_number_equal (treptr list)
     if (TREPTR_IS_STRING(car) || TREPTR_IS_STRING(cdr))
 		return trestring_builtin_compare (list);
 
-    trenumber_builtin_args (&car, &cdr, list);
+    trenumber_builtin_args ("==", &car, &cdr, list);
     if (TRENUMBER_VAL(car) == TRENUMBER_VAL(cdr))
         return treptr_t;
 
@@ -207,7 +209,7 @@ treptr
 trenumber_builtin_lessp (treptr list)
 {
     TRELIST_DEFREGS();
-    trenumber_builtin_args (&car, &cdr, list);
+    trenumber_builtin_args ("<", &car, &cdr, list);
 
     if (TRENUMBER_VAL(car) < TRENUMBER_VAL(cdr))
         return treptr_t;
@@ -225,7 +227,7 @@ treptr
 trenumber_builtin_greaterp (treptr list)
 {
     TRELIST_DEFREGS();
-    trenumber_builtin_args (&car, &cdr, list);
+    trenumber_builtin_args (">", &car, &cdr, list);
 
     if (TRENUMBER_VAL(car) > TRENUMBER_VAL(cdr))
         return treptr_t;
