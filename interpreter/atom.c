@@ -150,7 +150,11 @@ treatom_set_value (treptr atom, treptr value)
 treptr
 treatom_register_compiled_function (treptr sym, void * fun)
 {
-    TREATOM_COMPILED_FUN(sym) = fun;
+    treptr anonymous;
+
+    if (TREATOM_FUN(sym) == treptr_nil)
+        TREATOM_FUN(sym) = treatom_alloc (NULL, treptr_nil, TRETYPE_FUNCTION, treptr_nil);
+
     TREATOM_COMPILED_FUN(TREATOM_FUN(sym)) = fun;
 	return sym;
 }

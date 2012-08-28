@@ -39,7 +39,8 @@
   (& x (symbol? x)) (c-compiled-symbol x))
 
 (defun c-transpiler-make-closure-argument-defs ()
-  (filter (fn `(%setq-atom-value ,_. ,(compiled-tree (c-transpiler-compile-argument-def-symbols ._))))
+  (filter (fn `(treatom_builtin_usetf_symbol_value (cons (list ,(compiled-tree (c-transpiler-compile-argument-def-symbols ._)))
+                                                         (list (symbol-function ',_.)))))
 		  *closure-argdefs*))
 
 (defun c-transpiler-make-function-registrations (tr)
@@ -47,21 +48,20 @@
 		  (transpiler-defined-functions-without-builtins tr)))
 
 (defun c-transpiler-declarations-and-initialisations (tr)
-  (append (transpiler-compiled-inits tr)
-		  (c-transpiler-make-closure-argument-defs)
-		  (c-transpiler-make-function-registrations tr)))
+  (+ (transpiler-compiled-inits tr)
+     (c-transpiler-make-function-registrations tr)
+     (c-transpiler-make-closure-argument-defs)))
 
 (defun c-transpiler-make-init (tr)
   (let init-funs nil
-    (append
-        (mapcar (fn (with-gensym g
+    (+ (mapcar (fn (with-gensym g
 				      (let name ($ 'C-INIT- (1+! *c-init-counter*))
 				        (push name init-funs)
 				        `(defun ,name ()
 						   ,@(mapcar (fn `(tregc_push_compiled ,_)) _)))))
 			    (group (c-transpiler-declarations-and-initialisations tr) *c-init-group-size*))
-        `((defun c-init ()
-		    ,@(mapcar #'list (reverse init-funs)))))))
+       `((defun c-init ()
+	       ,@(mapcar #'list (reverse init-funs)))))))
 
 (defun c-transpiler-header-inclusions ()
   (apply #'+ (mapcar (fn format nil "#include \"~A\"~%" _) *c-interpreter-headers*)))

@@ -43,7 +43,7 @@ treptr
 trestring_builtin_make (treptr list)
 {
     char * str;
-    treptr  arg = trearg_typed (1, TRETYPE_NUMBER, trearg_get (list), "length");
+    treptr  arg = trearg_typed (1, TRETYPE_NUMBER, trearg_get (list), "MAKE-STRING");
     treptr  atom;
 
     str = trestring_get_raw ((ulong) TRENUMBER_VAL(arg));
@@ -159,7 +159,7 @@ trestring_builtin_concat (treptr list)
     DOLIST(p, list) {
 		if (CAR(p) == treptr_nil)
 			continue;
-        car = trearg_typed (argnum++, TRETYPE_STRING, CAR(p), NULL);
+        car = trearg_typed (argnum++, TRETYPE_STRING, CAR(p), "STRING-CONCAT");
 	   	len += strlen (TREATOM_STRINGP(car));
     }
 
@@ -233,7 +233,7 @@ treptr
 trestring_builtin_symbol_name (treptr list)
 {
     char    buf[TRE_MAX_STRINGLEN];
-    treptr  arg = trearg_typed (1, TRETYPE_ATOM, trearg_get (list), NULL);
+    treptr  arg = trearg_typed (1, TRETYPE_ATOM, trearg_get (list), "SYMBOL-NAME");
     char *  an = TREATOM_NAME(arg);
 
     buf[0] = 0;

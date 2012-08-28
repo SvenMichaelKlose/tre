@@ -18,7 +18,7 @@
 
 /* Perform operation over list. */
 treptr
-treeval_exprop (treptr list, treeval_opfunc_t func)
+treeval_exprop (treptr list, treeval_opfunc_t func, const char * descr)
 {
     treptr  arg;
     double  val;
@@ -32,7 +32,7 @@ treeval_exprop (treptr list, treeval_opfunc_t func)
 	n = 2;
     list = CDR(list);
     while (list != treptr_nil) {
-        arg = trearg_typed (n++, TRETYPE_NUMBER, CAR(list), "in arithmetic operation");
+        arg = trearg_typed (n++, TRETYPE_NUMBER, CAR(list), descr);
         val = (*func) (val, TRENUMBER_VAL(arg));
         list = CDR(list);
     }
@@ -64,7 +64,7 @@ trenumber_builtin_plus (treptr list)
 {
     if (list == treptr_nil)
 		return treatom_number_get (0, TRENUMTYPE_FLOAT);
-    return treeval_exprop (list, treeval_op_plus);
+    return treeval_exprop (list, treeval_op_plus, "+");
 }
 
 treptr
@@ -90,7 +90,7 @@ trenumber_builtin_difference (treptr list)
 		return treatom_number_get (-TREATOM_VALUE(CAR(list)),
 								   TRENUMTYPE_FLOAT);
 
-    return treeval_exprop (list, treeval_op_difference);
+    return treeval_exprop (list, treeval_op_difference, "-");
 }
 
 treptr
@@ -111,7 +111,7 @@ trenumber_builtin_times (treptr list)
 {
     if (list == treptr_nil)
 		return treatom_number_get (1, TRENUMTYPE_FLOAT);
-    return treeval_exprop (list, treeval_op_times);
+    return treeval_exprop (list, treeval_op_times, "*");
 }
 
 /*tredoc
@@ -130,7 +130,7 @@ trenumber_builtin_quotient (treptr list)
     if (CDR(list) == treptr_nil)
 		return treatom_number_get (1.0 / TREATOM_VALUE(CAR(list)), TRENUMTYPE_FLOAT);
 
-    return treeval_exprop (list, treeval_op_quotient);
+    return treeval_exprop (list, treeval_op_quotient, "/");
 }
 
 void
@@ -172,7 +172,7 @@ trenumber_builtin_logxor (treptr list)
 {
     if (list == treptr_nil)
 		return treatom_number_get (0, TRENUMTYPE_FLOAT);
-    return treeval_exprop (list, treeval_op_logxor);
+    return treeval_exprop (list, treeval_op_logxor, "LOGXOR");
 }
 
 /*tredoc

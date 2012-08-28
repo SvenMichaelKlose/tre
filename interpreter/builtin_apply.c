@@ -139,7 +139,7 @@ function_arguments (treptr f)
 {
      return TREPTR_IS_ARRAY(f) ?
                 TREARRAY_RAW(f)[0] :
-                TREATOM_VALUE(f);
+                CAR(TREATOM_VALUE(f));
 }
 
 treptr
@@ -186,7 +186,7 @@ trebuiltin_apply (treptr list)
     treptr  fake;
 	treptr  res;
 	treptr  a;
-	treptr  b;
+	treptr  args_with_ghost;
 
     if (list == treptr_nil)
 		return treerror (list, "arguments expected");
@@ -196,12 +196,10 @@ trebuiltin_apply (treptr list)
 
 	if (trebuiltin_is_compiled_funref (func)) {
 		tregc_push (args);
-        f = FUNREF_FUNCTION(func);
-        if (TREPTR_IS_ARRAY(TREATOM_FUN(f)))
-            f = TREATOM_FUN(f);
-		b = CONS(FUNREF_LEXICALS(func), args);
+        f = TREATOM_FUN(FUNREF_FUNCTION(func));
+		args_with_ghost = CONS(FUNREF_LEXICALS(func), args);
         a = function_arguments (f);
-		res = treeval_compiled_expr (f, b, a, FALSE);
+		res = treeval_compiled_expr (f, args_with_ghost, a, FALSE);
 		tregc_pop ();
 		return res;
 	}

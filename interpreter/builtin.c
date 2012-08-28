@@ -109,7 +109,7 @@ trebuiltin_macrocall (treptr list)
 
     trearg_get2 (&macro, &args, list);
 
-	macro = trearg_typed (1, TRETYPE_MACRO, macro, "macro to call");
+	macro = trearg_typed (1, TRETYPE_MACRO, macro, "MACROCALL");
 
     fake = CONS(macro, args);
     tregc_push (fake);
@@ -137,7 +137,7 @@ trebuiltin_load (treptr expr)
     treptr  pathname = trearg_get (expr);
     char    fname[1024];
 
-	pathname = trearg_typed (1, TRETYPE_STRING, pathname, "pathname");
+	pathname = trearg_typed (1, TRETYPE_STRING, pathname, "LOAD");
 
     trestring_copy (fname, pathname);
 
@@ -197,9 +197,9 @@ trebuiltin_intern (treptr args)
     } else
         package = treptr_nil;
 
-	name = trearg_typed (1, TRETYPE_STRING, name, "symbol name");
+	name = trearg_typed (1, TRETYPE_STRING, name, "INTERN");
     if (package != treptr_nil)
-		package = trearg_typed (1, TRETYPE_STRING, package, "package name");
+		package = trearg_typed (1, TRETYPE_STRING, package, "INTERN");
 
     n = TRESTRING_DATA(TREATOM_STRING(name));
     if (package != treptr_nil)
@@ -228,7 +228,7 @@ trebuiltin_malloc (treptr args)
     void    * ret;
 
     len = trearg_get (args);
-	len = trearg_typed (1, TRETYPE_NUMBER, len, "size");
+	len = trearg_typed (1, TRETYPE_NUMBER, len, "%MALLOC");
 
 	ret = trealloc ((size_t) TRENUMBER_VAL(len));
 
@@ -236,7 +236,7 @@ trebuiltin_malloc (treptr args)
 }
 
 /*tredoc
-  (cmd name "%MALLOC" type "bt"
+  (cmd name "%MALLOC-EXEC" type "bt"
     (description
 	  "Allocates a block of executable memory.")
 	(arg name "num-bytes" type "INTEGER")
@@ -250,7 +250,7 @@ trebuiltin_malloc_exec (treptr args)
     void    * ret;
 
     len = trearg_get (args);
-	len = trearg_typed (1, TRETYPE_NUMBER, len, "size");
+	len = trearg_typed (1, TRETYPE_NUMBER, len, "%MALLOC-EXEC");
 
 	ret = mmap (NULL, (size_t) TRENUMBER_VAL(len),
 				PROT_READ | PROT_WRITE | PROT_EXEC,
@@ -274,7 +274,7 @@ trebuiltin_free (treptr args)
     treptr  ptr;
 
     ptr = trearg_get (args);
-	ptr = trearg_typed (1, TRETYPE_NUMBER, ptr, "address");
+	ptr = trearg_typed (1, TRETYPE_NUMBER, ptr, "%FREE");
 
 	trealloc_free ((void *) (long) TRENUMBER_VAL(ptr));
 
@@ -296,8 +296,8 @@ trebuiltin_free_exec (treptr args)
     treptr  len;
 
     trearg_get2 (&ptr, &len, args);
-	ptr = trearg_typed (1, TRETYPE_NUMBER, ptr, "address");
-	len = trearg_typed (1, TRETYPE_NUMBER, len, "size");
+	ptr = trearg_typed (1, TRETYPE_NUMBER, ptr, "%FREE-EXEC");
+	len = trearg_typed (1, TRETYPE_NUMBER, len, "%FREE-EXEC");
 
 	munmap ((void *) (long) TRENUMBER_VAL(ptr), (size_t) TRENUMBER_VAL(len));
 
@@ -323,8 +323,8 @@ trebuiltin_set (treptr args)
 
     trearg_get2 (&ptr, &val, args);
 
-	ptr = trearg_typed (1, TRETYPE_NUMBER, ptr, "address");
-	val = trearg_typed (2, TRETYPE_NUMBER, val, "byte");
+	ptr = trearg_typed (1, TRETYPE_NUMBER, ptr, "%%SET");
+	val = trearg_typed (2, TRETYPE_NUMBER, val, "%%SET");
 
 	c = (char) TRENUMBER_VAL(val);
 	p = TRENUMBER_CHARPTR(ptr);
@@ -347,7 +347,7 @@ trebuiltin_get (treptr args)
     treptr ptr = trearg_get (args);
 	char   * p;
 
-	ptr = trearg_typed (1, TRETYPE_NUMBER, ptr, "address");
+	ptr = trearg_typed (1, TRETYPE_NUMBER, ptr, "%%GET");
 
 	p = TRENUMBER_CHARPTR(ptr);
 
@@ -384,8 +384,8 @@ char *tre_builtin_names[] = {
 
     "NOT", "EQ", "EQL",
     "MAKE-SYMBOL", "MAKE-PACKAGE",
-	"ATOM", "SYMBOL-VALUE", "%TYPE-ID", "%%ID", "%MAKE-PTR",
-	"SYMBOL-FUNCTION", "%%U=-SYMBOL-FUNCTION", "SYMBOL-PACKAGE", "SYMBOL-COMPILED-FUNCTION",
+	"ATOM", "%TYPE-ID", "%%ID", "%MAKE-PTR",
+    "SYMBOL-VALUE", "%%U=-SYMBOL-VALUE", "SYMBOL-FUNCTION", "%%U=-SYMBOL-FUNCTION", "SYMBOL-PACKAGE", "SYMBOL-COMPILED-FUNCTION",
 	"FUNCTION?", "BUILTIN?", "MACROP",
     "%ATOM-LIST",
 
@@ -499,10 +499,11 @@ treevalfunc_t treeval_xlat_builtin[] = {
     treatom_builtin_make_symbol,
     treatom_builtin_make_package,
     treatom_builtin_atom,
-    treatom_builtin_symbol_value,
     treatom_builtin_type_id,
     treatom_builtin_id,
     treatom_builtin_make_ptr,
+    treatom_builtin_symbol_value,
+    treatom_builtin_usetf_symbol_value,
     treatom_builtin_symbol_function,
     treatom_builtin_usetf_symbol_function,
     treatom_builtin_symbol_package,

@@ -62,6 +62,7 @@
 		(%TYPE-ID type_id)
 		(%%ID id)
 		(SYMBOL-VALUE symbol_value)
+		(%%U=-SYMBOL-VALUE usetf_symbol_value)
 		(SYMBOL-FUNCTION symbol_function)
 		(%%U=-SYMBOL-FUNCTION usetf_symbol_function)
 		(SYMBOL-PACKAGE symbol_package)
@@ -145,7 +146,8 @@
 	  (let head (string-downcase (symbol-name grp.))
 		(dolist (f .grp)
 		  (= (href h f.)
-		     (+ head (string-downcase (symbol-name (!? .f !. f.))))))))))
+		     (+ (? (starts-with? (symbol-name .f.) "%%U=-") "" head)
+                (string-downcase (symbol-name (| .f. f.))))))))))
 
 (defun c-builtin-name (x)
   (href *c-builtins* x))
