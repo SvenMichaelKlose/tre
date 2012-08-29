@@ -191,11 +191,21 @@ treatom_builtin_usetf_symbol_value (treptr list)
     TRELIST_DEFREGS();
     trearg_get2 (&car, &cdr, list);
 
-	cdr = trearg_typed (1, TRETYPE_ATOM, cdr, "SETF SYMBOL-VALUE");
+	cdr = trearg_typed (2, TRETYPE_ATOM, cdr, "SETF SYMBOL-VALUE");
     treatom_set_value (cdr, car);
     return car;
 }
 
+treptr
+treatom_builtin_setq_atom_value (treptr list)
+{
+    TRELIST_DEFREGS();
+    trearg_get2 (&car, &cdr, list);
+
+	car = trearg_typed (1, TRETYPE_ATOM, car, "SETF SYMBOL-VALUE");
+    treatom_set_value (car, cdr);
+    return cdr;
+}
 
 /*tredoc
   (cmd :name SYMBOL-FUNCTION

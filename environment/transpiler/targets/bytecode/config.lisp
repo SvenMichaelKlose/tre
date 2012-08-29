@@ -27,7 +27,8 @@
               :code-concatenator #'((&rest x) (tree-list x))
               :make-text? nil
               :encapsulate-strings? nil
-              :function-name-prefix nil)
+              :function-name-prefix nil
+              :place-expand-ignore-toplevel-funinfo? t)
 	(= (transpiler-inline-exceptions !) '(error format identity))))
 
 (defvar *bc-transpiler* (copy-transpiler (make-bc-transpiler)))

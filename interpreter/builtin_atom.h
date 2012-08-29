@@ -14,6 +14,7 @@ extern treptr treatom_builtin_make_package (treptr);
 extern treptr treatom_builtin_atom (treptr) __attribute((pure));
 extern treptr treatom_builtin_symbol_value (treptr);
 extern treptr treatom_builtin_usetf_symbol_value (treptr);
+extern treptr treatom_builtin_setq_atom_value (treptr);
 extern treptr treatom_builtin_symbol_function (treptr);
 extern treptr treatom_builtin_usetf_symbol_function (treptr);
 extern treptr treatom_builtin_symbol_package (treptr);

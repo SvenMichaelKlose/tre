@@ -96,8 +96,8 @@ treeval_funcall (treptr func, treptr expr, bool do_argeval)
 #endif
 
     args = CDR(expr);
+    forms = function_arguments (func);
     funcdef = TREATOM_VALUE(func);
-    forms = CAR(funcdef);
     body = CDR(funcdef);
 
     /* Switch to new environment. */
@@ -261,12 +261,12 @@ treeval_expr (treptr x)
         	fun = treeval (fun);
 	}
 
-	if (TREATOM_COMPILED_FUN(fun) && TREPTR_IS_BUILTIN(fun) == FALSE) {
+	if (IS_COMPILED_FUN(fun) && TREPTR_IS_BUILTIN(fun) == FALSE) {
 		if (copied_expr) {
     		tregc_pop ();
     		tregc_pop ();
 		}
-		return treeval_compiled_expr (fun, CDR(x), CAR(TREATOM_VALUE(fun)), TRUE);
+		return treeval_compiled_expr (fun, CDR(x), function_arguments (fun), TRUE);
 	}
 
     tregc_push (fun);

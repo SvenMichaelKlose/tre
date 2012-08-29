@@ -30,14 +30,14 @@
                         (cons x. (case x. :test #'eq
                                    '%quote       (cons .x. (rec ..x))
                                    '%%vm-go-nil  (with ((cnd n) (get-bc-value .x))
-                                                   `(,@cnd ,(get-tag-index n.) .@(rec .n)))
+                                                   `(,@cnd ,(get-tag-index n.) ,@(rec .n)))
                                    '%%vm-go      (cons (get-tag-index .x.) (rec ..x))
                                    (rec .x)))))))
     (rec x)))
 
 (defun make-bytecode-function (fi x)
   `(,(funinfo-name fi)
-    ,(funinfo-args fi)
+    ,(funinfo-argdef fi)
     ,(length (funinfo-env fi))
     ,@(translate-jumps (get-tag-indexes ...x) ...x)))
 

@@ -195,7 +195,7 @@ trebuiltin_apply (treptr list)
     args = trebuiltin_apply_args (trelist_copy (CDR(list)));
 
 	if (trebuiltin_is_compiled_funref (func)) {
-		tregc_push (args);
+	    tregc_push (args);
         f = TREATOM_FUN(FUNREF_FUNCTION(func));
 		args_with_ghost = CONS(FUNREF_LEXICALS(func), args);
         a = function_arguments (f);
@@ -205,7 +205,7 @@ trebuiltin_apply (treptr list)
 	}
 
 	if (IS_COMPILED_FUN(func)) {
-		tregc_push (args);
+	    tregc_push (args);
 		res = trebuiltin_apply_compiled_call (func, args);
 		tregc_pop ();
 		return res;

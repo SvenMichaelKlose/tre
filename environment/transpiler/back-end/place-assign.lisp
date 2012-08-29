@@ -24,7 +24,7 @@
 (define-tree-filter place-assign (x)
   (| (%quote? x)
      (%transpiler-native? x)) x
-  (unassigned-%stackarg? x)    `(%stack ,(place-assign-stackarg (print x)))
+  (unassigned-%stackarg? x)    `(%stack ,(place-assign-stackarg x))
   (unassigned-%stack? x)       `(%stack ,(| (funinfosym-env-pos .x. ..x.)
                                             (place-assign-stackarg x)))
   (unassigned-%vec? x)         `(%vec ,(place-assign .x.)

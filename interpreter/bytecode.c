@@ -45,6 +45,7 @@ treptr treptr_cons;
 treptr treptr_quote;
 treptr treptr_apply;
 treptr treptr_funref;
+treptr treptr_quote;
 
 treptr trecode_get (treptr ** p);
 
@@ -124,7 +125,6 @@ trecode_call (treptr fun, treptr args)
     treptr v;
     treptr num_args = 0;
 
-    /*printf("Arguments: "); treprint (args);*/
     DOLIST(i, args) {
         /*printf("Argument %d: ", num_args);*/
         /*treprint (CAR(i));*/
@@ -189,7 +189,11 @@ trecode_get (treptr ** p)
                 v = treeval_xlat_function (funtype == treptr_builtin ? treeval_xlat_builtin : treeval_xlat_spec, fun, CONS(fun, args), FALSE);
                 tregc_pop ();
             }
+        } else if (fun == treptr_quote) {
+            x++;
+            v = *x++;
         } else if (TREPTR_IS_ATOM(fun) && TREPTR_IS_ARRAY(TREATOM_FUN(fun))) {
+            /*printf("Calling %s with %d arguments.\n", TREATOM_NAME(fun), num_args);*/
             num_args = TRENUMBER_INT(*x++);
             /*printf("Direct call of bytecode function %s with %d arguments.\n", TREATOM_NAME(*x), num_args);*/
             j = -1;
@@ -313,4 +317,6 @@ trecode_init ()
     EXPAND_UNIVERSE(treptr_apply);
     treptr_funref = treatom_get ("%FUNREF", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treptr_funref);
+    treptr_quote = treatom_get ("%QUOTE", TRECONTEXT_PACKAGE());
+    EXPAND_UNIVERSE(treptr_quote);
 }

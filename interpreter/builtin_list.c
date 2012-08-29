@@ -1,5 +1,5 @@
 /*
- * tré - Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2010,2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -138,15 +138,17 @@ trelist_builtin_consp (treptr list)
 }
 
 treptr
-treeval_noargs (treptr efunc, treptr fake)
+treeval_noargs (treptr fun, treptr fake)
 {
-    if (TREPTR_IS_FUNCTION(efunc))
-        return treeval_funcall (efunc, fake, FALSE);
-    if (TREPTR_IS_BUILTIN(efunc))
-        return treeval_xlat_function (treeval_xlat_builtin, efunc, fake, FALSE);
-    if (TREPTR_IS_SPECIAL(efunc))
-        return trespecial (efunc, fake);
-    return treerror (efunc, "function expected");
+    if (IS_COMPILED_FUN(fun))
+        return treeval_compiled_expr (fun, CDR(fake), function_arguments (fun), FALSE);
+    if (TREPTR_IS_FUNCTION(fun))
+        return treeval_funcall (fun, fake, FALSE);
+    if (TREPTR_IS_BUILTIN(fun))
+        return treeval_xlat_function (treeval_xlat_builtin, fun, fake, FALSE);
+    if (TREPTR_IS_SPECIAL(fun))
+        return trespecial (fun, fake);
+    return treerror (fun, "function expected");
 }
 
 #ifdef TRE_BUILTIN_ASSOC

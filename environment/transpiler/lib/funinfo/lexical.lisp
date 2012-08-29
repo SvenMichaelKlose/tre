@@ -13,6 +13,7 @@
   (unless (funinfo-ghost fi)
     (let ghost (gensym)
 	  (= (funinfo-ghost fi) ghost)
+	  (push ghost (funinfo-argdef fi))
 	  (push ghost (funinfo-args fi))
 	  (funinfo-env-add fi ghost))))
 
