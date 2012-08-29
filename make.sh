@@ -227,6 +227,19 @@ clean)
 	basic_clean
 	;;
 
+backup)
+    mkdir backup
+    cp tre backup
+    cp ~/.tre.image backup
+    echo "Backed up to backup/. Use 'restore' on occasion."
+    ;;
+
+restore)
+    sudo cp backup/tre /usr/local/bin/
+    cp backup/tre .
+    cp backup/.tre.image ~
+    ;;
+
 *)
-	echo "Usage: make.sh build|clean|crunsh|debug [args]"
+	echo "Usage: make.sh boot|bootunclean|build|crunsh|crunshraw|recompile|debug|debugraw|backup|restore|install|clean [args]"
 esac
