@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2006-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2006–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun function-arguments (fun)
   (?
@@ -7,4 +7,6 @@
     (car (symbol-value fun))))
 
 (defun function-body (fun)
-  (cdr (symbol-value fun)))
+  (? (array? fun)
+     (aref fun 1)
+     (cdr (symbol-value fun))))

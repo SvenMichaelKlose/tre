@@ -66,9 +66,6 @@
   (= (symbol-function x.) (list-array .x)))
 
 (defun load-bytecode-functions (x)
-  (map (fn (format t "Loading bytecode function ~A.~%" _.)
-           (late-print (list-array ._)))
-       x)
   (dolist (i x)
-    (= (symbol-function i.) (list-array .i)))
+    (= (symbol-function i.) (list-array `(,.i. ,(function-body (symbol-function i.)) ,@..i))))
   x)
