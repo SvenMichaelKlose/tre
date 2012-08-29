@@ -26,7 +26,7 @@ Return a status integer. See UNIX man page wait (2)."
 	  (%get-dword status)
 	  (%free status))))
 
-(defun execve (path args &optional (environment nil) &key (wait t))
+(defun execve (path args &optional (environment nil) &key (wait? t))
   "Overlays current process with a new program at 'path'.
 'args' is a list of argument strings. Keep in mind that the first argument
 entry is usually the path to the executable.
@@ -67,7 +67,7 @@ Returns NIL."
 	  (%free environv))
 
     (alien-dlclose libc)
-	(& wait (wait))))
+	(& wait? (wait))))
 
 (defun exec (bin args)
   (execve bin (cons bin args) nil))

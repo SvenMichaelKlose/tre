@@ -10,13 +10,6 @@
   (eval (macroexpand `(with ,(mapcan (fn `(,_ ',_)) .lexicals.)
                         ,fun))))
 
-(define-bc-std-macro not (&rest x)
-  (? .x
-     `(%not2 ,@x)
-     `(let ,*not-gensym* t
-        (? ,x. (= ,*not-gensym* nil))
-        ,*not-gensym*)))
-
 (define-bc-std-macro defun (name args &rest body)
   (car (apply #'shared-defun name args body)))
 
