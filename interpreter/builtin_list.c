@@ -138,16 +138,16 @@ trelist_builtin_consp (treptr list)
 }
 
 treptr
-treeval_noargs (treptr fun, treptr fake)
+treeval_noargs (treptr fun, treptr args)
 {
     if (IS_COMPILED_FUN(fun))
-        return treeval_compiled_expr (fun, CDR(fake), function_arguments (fun), FALSE);
+        return treeval_compiled_expr (fun, args, function_arguments (fun), FALSE);
     if (TREPTR_IS_FUNCTION(fun))
-        return treeval_funcall (fun, CDR(fake), FALSE);
+        return treeval_funcall (fun, args, FALSE);
     if (TREPTR_IS_BUILTIN(fun))
-        return treeval_xlat_function (treeval_xlat_builtin, fun, fake, FALSE);
+        return treeval_xlat_function (treeval_xlat_builtin, fun, args, FALSE);
     if (TREPTR_IS_SPECIAL(fun))
-        return trespecial (fun, fake);
+        return trespecial (fun, args);
     return treerror (fun, "function expected");
 }
 
@@ -189,11 +189,9 @@ trelist_builtin_assoc (treptr args)
 			if (treatom_eql (elmkey, key) != treptr_nil)
 				goto got_it;
 		} else {
-    		fake = CONS(etest, CONS(key, CONS(elmkey, treptr_nil)));
+    		fake = CONS(key, CONS(elmkey, treptr_nil));
     		tregc_push (fake);
-
 			res = treeval_noargs (etest, fake);
-
     		tregc_pop ();
     		TRELIST_FREE_EARLY(fake);
 			if (res != treptr_nil)
@@ -251,11 +249,9 @@ trelist_builtin_member (treptr args)
 					goto got_t;
 				}
 			} else {
-    			fake = CONS(etest, CONS(key, CONS(CAR(sublist), treptr_nil)));
+    			fake = CONS(key, CONS(CAR(sublist), treptr_nil));
     			tregc_push (fake);
-
 				res = treeval_noargs (etest, fake);
-
     			tregc_pop ();
     			TRELIST_FREE_EARLY(fake);
 				if (res != treptr_nil) {

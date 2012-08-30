@@ -500,9 +500,9 @@ treevalfunc_t treeval_xlat_special[] = {
  * Call built-in special operator
  */
 treptr
-trespecial (treptr func, treptr expr)
+trespecial (treptr func, treptr args)
 {
-    return treeval_xlat_function (treeval_xlat_special, func, expr, FALSE);
+    return treeval_xlat_function (treeval_xlat_special, func, args, FALSE);
 }
 
 void

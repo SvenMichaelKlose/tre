@@ -575,7 +575,7 @@ treevalfunc_t treeval_xlat_builtin[] = {
  * Call built-in function
  */
 treptr
-trebuiltin (treptr func, treptr expr)
+trebuiltin (treptr func, treptr args)
 {
-    return treeval_xlat_function (treeval_xlat_builtin, func, expr, TRUE);
+    return treeval_xlat_function (treeval_xlat_builtin, func, args, TRUE);
 }

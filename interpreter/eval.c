@@ -170,20 +170,9 @@ treeval_function (treptr expr)
     return ret;
 }
 
-/*
- * Execute built-in function.
- *
- * 'xlat'        C function table.
- * 'func'        Pointer to function atom. Its value is the table index.
- * 'expr'        Expression to evaluate.
- * 'do_argeval'  If not 0 all arguments are evaluated.
- *
- * Built-in functions have no environment.
- */
 treptr
-treeval_xlat_function (treevalfunc_t *xlat, treptr func, treptr expr, bool do_argeval)
+treeval_xlat_function (treevalfunc_t *xlat, treptr func, treptr args, bool do_argeval)
 {
-    treptr  args = CDR(expr);
     treptr  evaldargs;
     treptr  ret;
 #ifdef TRE_DIAGNOSTICS
@@ -222,11 +211,13 @@ treptr
 treeval_expr (treptr x)
 {
     treptr  fun;
+    treptr  args;
     treptr  v = treptr_nil;
     treptr  slot_obj;
 	bool	copied_expr = FALSE;
 
     fun = CAR(x);
+    args = CDR(x);
 
     tredebug_chk_breakpoints (x);
 	TREDEBUG_STEP();
@@ -241,9 +232,7 @@ treeval_expr (treptr x)
 				slot_obj = CAR(CDR(fun));
        			fun = treeval (fun);
    				tregc_push (fun);
-				x = CONS(CAR(x),
-			 			CONS(slot_obj,
-				  			trelist_copy (CDR(x))));
+				x = CONS(CAR(x), CONS(slot_obj, trelist_copy (CDR(x))));
 				tregc_push (x);
 				copied_expr = TRUE;
 				break;
@@ -264,30 +253,30 @@ treeval_expr (treptr x)
     		tregc_pop ();
     		tregc_pop ();
 		}
-		return treeval_compiled_expr (fun, CDR(x), function_arguments (fun), TRUE);
+		return treeval_compiled_expr (fun, args, function_arguments (fun), TRUE);
 	}
 
     tregc_push (fun);
 
     switch (TREPTR_TYPE(fun)) {
         case TRETYPE_FUNCTION:
-            v = treeval_funcall (fun, CDR(x), TRUE);
+            v = treeval_funcall (fun, args, TRUE);
             break;
 
         case TRETYPE_ARRAY:
-            v = trebuiltin_apply_bytecode_call (fun, CDR(x), TRUE);
+            v = trebuiltin_apply_bytecode_call (fun, args, TRUE);
             break;
 
         case TRETYPE_USERSPECIAL:
-            v = treeval_funcall (fun, CDR(x), FALSE);
+            v = treeval_funcall (fun, args, FALSE);
             break;
 
         case TRETYPE_BUILTIN:
-            v = trebuiltin (fun, x);
+            v = trebuiltin (fun, args);
             break;
 
         case TRETYPE_SPECIAL:
-            v = trespecial (fun, x);
+            v = trespecial (fun, args);
             break;
 
         default:
