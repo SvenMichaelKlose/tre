@@ -22,8 +22,7 @@
 #include "string2.h"
 #include "xxx.h"
 #include "diag.h"
-
-#include "builtin_apply.h"
+#include "apply.h"
 
 #include <stdio.h>
 
@@ -181,8 +180,8 @@ treeval_xlat_function (treevalfunc_t *xlat, treptr func, treptr args, bool do_ar
 
     /* Evaluate arguments. */
     evaldargs = (do_argeval) ?
-        treeval_args (args) :
-        trelist_copy (args);
+                    treeval_args (args) :
+                    trelist_copy (args);
     tregc_push (evaldargs);
 
     /* Call internal function. */
@@ -264,7 +263,7 @@ treeval_expr (treptr x)
             break;
 
         case TRETYPE_ARRAY:
-            v = trebuiltin_apply_bytecode_call (fun, args, TRUE);
+            v = treapply_bytecode (fun, args, TRUE);
             break;
 
         case TRETYPE_USERSPECIAL:

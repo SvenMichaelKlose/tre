@@ -12,6 +12,7 @@
 #include "gc.h"
 #include "print.h"
 #include "thread.h"
+#include "apply.h"
 
 treptr treptr_quasiquoteexpand_hook;
 struct tre_atom *treatom_quasiquoteexpand_hook;
@@ -24,7 +25,7 @@ trequasiquote_expand (treptr list)
     if (treatom_quasiquoteexpand_hook->fun == treptr_nil)
         return list;
 
-    ret = trebuiltin_funcall0 (treatom_quasiquoteexpand_hook->fun, CONS(list, treptr_nil));
+    ret = trefuncall (treatom_quasiquoteexpand_hook->fun, CONS(list, treptr_nil));
 	tregc_retval (ret);
     return ret;
 }

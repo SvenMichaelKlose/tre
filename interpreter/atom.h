@@ -1,5 +1,5 @@
 /*
- * tré - Copyright (c) 2005-2007,2009,2011 Sven Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005-2007,2009,2011–2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #ifndef TRE_ATOM_H
@@ -71,7 +71,7 @@ extern treptr treatom_get_value (treptr atom) __attribute__((pure));
 extern treptr treatom_get_function (treptr atom) __attribute__((pure));
 extern treptr treatom_register_compiled_function (treptr sym, void * fun);
 
-extern treptr treatom_alloc (char *symbol, treptr package, int type, treptr value);
+extern treptr treatom_alloc (char * symbol, treptr package, int type, treptr value);
 extern void   treatom_free (treptr);
 
 extern void   treatom_remove (treptr);

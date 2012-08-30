@@ -6,11 +6,12 @@
 (defvar *c-interpreter-headers*
 	     '("ptr.h"
 		   "list.h"
+		   "alloc.h"
+		   "apply.h"
 		   "array.h"
 		   "atom.h"
 		   "eval.h"
 		   "gc.h"
-		   "builtin_apply.h"
 		   "builtin_arith.h"
 		   "builtin_array.h"
 		   "builtin_atom.h"

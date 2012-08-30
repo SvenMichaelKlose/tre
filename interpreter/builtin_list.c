@@ -13,9 +13,10 @@
 #include "builtin_list.h"
 #include "xxx.h"
 #include "special.h"
-
 #include "gc.h"
 #include "thread.h"
+#include "apply.h"
+
 #include "builtin_atom.h"
 
 treptr trelist_builtin_eq_symbol;

@@ -8,12 +8,12 @@ ARGS="$2 $3 $4 $5 $6 $7 $8 $9"
 FILES="
     alien.c
     alloc.c
+    apply.c
     argument.c
     array.c
     atom.c
 
 	builtin.c
-	builtin_apply.c
 	builtin_arith.c
     builtin_array.c
     builtin_atom.c

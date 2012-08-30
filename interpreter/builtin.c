@@ -19,7 +19,7 @@
 #include "thread.h"
 #include "special.h"
 #include "alien.h"
-#include "builtin_apply.h"
+#include "apply.h"
 #include "builtin_arith.h"
 #include "builtin_array.h"
 #include "builtin_atom.h"
@@ -34,10 +34,62 @@
 #include "builtin_stream.h"
 #include "builtin_string.h"
 #include "main.h"
+#include "xxx.h"
 
 #include <sys/mman.h>
 
 treevalfunc_t treeval_xlat_builtin[];
+
+treptr
+trebuiltin_apply_args (treptr list)
+{
+    treptr i;
+    treptr last;
+
+    RETURN_NIL(list); /* No arguments. */
+
+    /* Handle single argument. */
+    if (CDR(list) == treptr_nil) {
+        list = CAR(list);
+        if (TREPTR_IS_ATOM(list) && list != treptr_nil)
+            goto error;
+        return list;
+    }
+
+    /* Handle two or more arguments. */
+    DOLIST(i, list) {
+        if (CDDR(i) != treptr_nil)
+            continue;
+
+        last = CADR(i);
+        if (TREPTR_IS_ATOM(last) && last != treptr_nil)
+            goto error;
+
+        RPLACD(i, last);
+        break;
+    }
+
+    return list;
+                                                                                                                                                               
+error:
+    return treerror (list, "last argument must be a list (waiting for new argument list)");
+}
+
+treptr
+trebuiltin_apply (treptr list)
+{
+    if (list == treptr_nil)
+        return treerror (list, "arguments expected");
+    return trefuncall (CAR(list), trebuiltin_apply_args (trelist_copy (CDR(list))));
+}
+
+treptr
+trebuiltin_funcall (treptr list)
+{
+    if (list == treptr_nil)
+        return treerror (list, "arguments expected");
+    return trefuncall (CAR(list), CDR(list));
+}
 
 /*tredoc
   (cmd name "QUIT" type "bt"

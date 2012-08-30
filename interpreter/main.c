@@ -27,7 +27,7 @@
 #include "diag.h"
 #include "dot.h"
 #include "quasiquote.h"
-#include "builtin_apply.h"
+#include "apply.h"
 #include "builtin_list.h"
 #include "bytecode.h"
 
@@ -239,7 +239,7 @@ tre_init (void)
 	MAKE_VAR("*ENDIANESS*", treatom_alloc (TRE_ENDIANESS_STRING, TRECONTEXT_PACKAGE(), TRETYPE_VARIABLE, treptr_invalid));
 	MAKE_VAR("*POINTER-SIZE*", treatom_number_get (sizeof (void *), TRENUMTYPE_INTEGER));
     tre_init_image_path ();
-    trebuiltin_apply_init ();
+    treapply_init ();
     trecode_init ();
     tredebug_init_late ();
 

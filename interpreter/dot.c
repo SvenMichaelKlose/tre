@@ -13,7 +13,7 @@
 #include "print.h"
 #include "thread.h"
 
-#include "builtin_apply.h"
+#include "apply.h"
 
 treptr treptr_dotexpand_hook;
 struct tre_atom *treatom_dotexpand_hook;
@@ -26,7 +26,7 @@ tredot_expand (treptr list)
     if (treatom_dotexpand_hook->fun == treptr_nil)
         return list;
 
-    ret = trebuiltin_funcall0 (treatom_dotexpand_hook->fun, CONS(list, treptr_nil));
+    ret = trefuncall (treatom_dotexpand_hook->fun, CONS(list, treptr_nil));
 	tregc_retval (ret);
     return ret;
 }

@@ -24,8 +24,8 @@
 #include "main.h"
 #include "print.h"
 #include "special.h"
+#include "apply.h"
 
-#include "builtin_apply.h"
 #include "builtin_debug.h"
 #include "builtin_atom.h"
 
@@ -98,7 +98,7 @@ treeval_compiled_expr (treptr func, treptr args, treptr argdef, bool do_expand)
 }
 
 treptr
-trebuiltin_apply_bytecode_call (treptr func, treptr args, bool do_argeval)
+treapply_bytecode (treptr func, treptr args, bool do_argeval)
 {
     treptr  expforms;
     treptr  expvals;
@@ -127,10 +127,10 @@ trebuiltin_apply_bytecode_call (treptr func, treptr args, bool do_argeval)
 }
 
 treptr
-trebuiltin_apply_compiled_call (treptr func, treptr args)
+treapply_compiled (treptr func, treptr args)
 {
 	return TREPTR_IS_ARRAY(func) ?
-		       trebuiltin_apply_bytecode_call (func, args, FALSE) :
+		       treapply_bytecode (func, args, FALSE) :
 	           treeval_compiled_expr (func, args, CAR(TREATOM_VALUE(func)), FALSE);
 }
 
@@ -143,45 +143,9 @@ function_arguments (treptr f)
 }
 
 treptr
-trebuiltin_apply_args (treptr list)
-{
-    treptr i;
-    treptr last;
-
-    RETURN_NIL(list); /* No arguments. */
-
-    /* Handle single argument. */
-    if (CDR(list) == treptr_nil) {
-        list = CAR(list);
-        if (TREPTR_IS_ATOM(list) && list != treptr_nil)
-            goto error;
-		return list;
-    }
-
-    /* Handle two or more arguments. */
-    DOLIST(i, list) {
-        if (CDDR(i) != treptr_nil)
-            continue;
-
-        last = CADR(i);
-        if (TREPTR_IS_ATOM(last) && last != treptr_nil)
-            goto error;
-
-        RPLACD(i, last);
-        break;
-    }
-
-    return list;
-
-error:
-    return treerror (list, "last argument must be a list (waiting for new argument list)");
-}
-
-treptr
-trebuiltin_funcall0 (treptr func, treptr args)
+trefuncall (treptr func, treptr args)
 {
     treptr  f;
-    treptr  fake;
 	treptr  res;
 	treptr  a;
 	treptr  args_with_ghost;
@@ -198,7 +162,7 @@ trebuiltin_funcall0 (treptr func, treptr args)
 
 	if (IS_COMPILED_FUN(func)) {
 	    tregc_push (args);
-		res = trebuiltin_apply_compiled_call (func, args);
+		res = treapply_compiled (func, args);
 		tregc_pop ();
 		return res;
 	}
@@ -215,24 +179,8 @@ trebuiltin_funcall0 (treptr func, treptr args)
     return res;
 }
 
-treptr
-trebuiltin_funcall (treptr list)
-{
-    if (list == treptr_nil)
-		return treerror (list, "arguments expected");
-    return trebuiltin_funcall0 (CAR(list), CDR(list));
-}
-
-treptr
-trebuiltin_apply (treptr list)
-{
-    if (list == treptr_nil)
-		return treerror (list, "arguments expected");
-    return trebuiltin_funcall0 (CAR(list), trebuiltin_apply_args (trelist_copy (CDR(list))));
-}
-
 void
-trebuiltin_apply_init ()
+treapply_init ()
 {
     treatom_funref = treatom_get ("%FUNREF", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treatom_funref);
