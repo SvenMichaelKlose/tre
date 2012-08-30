@@ -35,9 +35,6 @@
 (define-bc-std-macro %%u=-cdr (val x)
   (shared-=-cdr val x))
 
-(define-bc-std-macro %%u=-aref (val arr &rest idx)
-  `(%set-aref ,val ,arr ,@idx))
-
 (define-bc-std-macro mapcar (fun &rest lsts)
   (apply #'shared-mapcar fun lsts))
 
