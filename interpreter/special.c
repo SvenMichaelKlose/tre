@@ -474,7 +474,7 @@ char *tre_special_names[] = {
     NULL
 };
 
-treevalfunc_t treeval_xlat_spec[] = {
+treevalfunc_t treeval_xlat_special[] = {
     trespecial_setq,
     treatom_builtin_set_atom_fun,
     trespecial_macro,
@@ -501,7 +501,7 @@ treevalfunc_t treeval_xlat_spec[] = {
 treptr
 trespecial (treptr func, treptr expr)
 {
-    return treeval_xlat_function (treeval_xlat_spec, func, expr, FALSE);
+    return treeval_xlat_function (treeval_xlat_special, func, expr, FALSE);
 }
 
 void

@@ -17,7 +17,7 @@ extern treptr tre_atom_evaluated_return_from;
 #endif /* #ifdef INTERPRETER */
 
 extern char *tre_special_names[];
-extern treevalfunc_t treeval_xlat_spec[];
+extern treevalfunc_t treeval_xlat_special[];
 
 extern treptr trespecial (treptr func, treptr expr);
 extern void trespecial_init (void);

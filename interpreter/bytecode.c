@@ -186,7 +186,7 @@ trecode_get (treptr ** p)
                 args = trecode_list (&x, num_args);
 /*printf ("builtin arguments: "); treprint (args);*/
                 tregc_push (args);
-                v = treeval_xlat_function (funtype == treptr_builtin ? treeval_xlat_builtin : treeval_xlat_spec, fun, CONS(fun, args), FALSE);
+                v = treeval_xlat_function (funtype == treptr_builtin ? treeval_xlat_builtin : treeval_xlat_special, fun, CONS(fun, args), FALSE);
                 tregc_pop ();
             }
         } else if (fun == treptr_quote) {
