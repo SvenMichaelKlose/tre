@@ -219,11 +219,10 @@ trecode_get (treptr ** p)
     return v;
 }
 
-treptr *
-trecode_set (treptr * x)
+void
+trecode_set (treptr ** x)
 {
-    trecode_set_place (&x, trecode_get (&x));
-    return x;
+    trecode_set_place (x, trecode_get (x));
 }
 
 treptr
@@ -252,7 +251,7 @@ trecode_exec (treptr fun)
         v = *x++;
         /*printf("Instruction %s ", TREATOM_NAME(v));*/
         if (v == treptr_set) {
-            x = trecode_set (x);
+            trecode_set (&x);
             /*printf("\n");*/
         } else if (v == treptr_jmp) {
             dest = *x++;
