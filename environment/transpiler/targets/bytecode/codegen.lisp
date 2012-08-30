@@ -24,10 +24,10 @@
              (%vec? x)))
      `(%bc-funcall
          ,@(?
-             (eq 'cons x.) `(%bc-builtin cons ,.x. ,..x.)
-             (eq '%setq-atom-value x.) `(%bc-builtin ,x. 2 ,@.x)
-             (eq '%bc-builtin x.) `(,x. ,(cadr .x.) ,@..x)
-             (eq '%make-lexical-array x.) `(%bc-builtin make-array 1 ,.x.)
+             (eq 'cons x.) `(cons ,.x. ,..x.)
+             (eq '%setq-atom-value x.) `(,x. 2 ,@.x)
+             (eq '%bc-builtin x.) `(,(cadr .x.) ,@..x)
+             (eq '%make-lexical-array x.) `(make-array 1 ,.x.)
              `(,x. ,(length .x) ,@.x)))
      x))
 

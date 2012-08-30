@@ -168,10 +168,8 @@ trecode_get (treptr ** p)
     } else if (v == treptr_funcall) {
         /*printf("funcall: ");*/
         fun = *x++;
-        if (fun == treptr_builtin || fun == treptr_special) {
+        if (TREPTR_IS_BUILTIN(fun)) {
             /*printf("builtin %s\n", TREATOM_NAME(*x));*/
-            funtype = fun;
-            fun = *x++;
             if (fun == treptr_cons) {
                 /* Special treatment to avoid back-end workarounds. */
                 car = trecode_get (&x);
@@ -186,7 +184,7 @@ trecode_get (treptr ** p)
                 args = trecode_list (&x, num_args);
 /*printf ("builtin arguments: "); treprint (args);*/
                 tregc_push (args);
-                v = treeval_xlat_function (funtype == treptr_builtin ? treeval_xlat_builtin : treeval_xlat_special, fun, CONS(fun, args), FALSE);
+                v = treeval_xlat_function (treeval_xlat_builtin, fun, CONS(fun, args), FALSE);
                 tregc_pop ();
             }
         } else if (fun == treptr_quote) {
