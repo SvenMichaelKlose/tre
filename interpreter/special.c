@@ -465,7 +465,7 @@ char *tre_special_names[] = {
     "MACRO", "SPECIAL",
 #ifdef INTERPRETER
     "COND", "?",
-    "QUOTE",
+    "QUOTE", "%QUOTE",
     "PROGN",
     "BLOCK", "RETURN-FROM", "TAGBODY", "GO",
     "FUNCTION",
@@ -482,6 +482,7 @@ treevalfunc_t treeval_xlat_special[] = {
 #ifdef INTERPRETER
     trespecial_cond,
     trespecial_if,
+    trespecial_quote,
     trespecial_quote,
     trespecial_progn,
     trespecial_block,
