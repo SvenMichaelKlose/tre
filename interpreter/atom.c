@@ -1,5 +1,5 @@
 /*
- * tré - Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2009,2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -150,8 +150,6 @@ treatom_set_value (treptr atom, treptr value)
 treptr
 treatom_register_compiled_function (treptr sym, void * fun)
 {
-    treptr anonymous;
-
     if (TREATOM_FUN(sym) == treptr_nil)
         TREATOM_FUN(sym) = treatom_alloc (NULL, treptr_nil, TRETYPE_FUNCTION, treptr_nil);
 
