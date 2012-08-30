@@ -153,18 +153,8 @@ trecode_get (treptr ** p)
     int     j;
 
     v = *x++;
-    if (v == treptr_stack) {
-        /*printf("stack %d: ", TRENUMBER_INT(*x));*/
-        v = trestack_ptr[TRENUMBER_INT(*x++)];
-    } else if (v == treptr_vec) {
-        /*printf("vector: ");*/
-        vec = trecode_get (&x);
-        /*printf("vector index %d: ", TRENUMBER_INT(*x)); fflush (stdout);*/
-        v = _TREVEC(vec, TRENUMBER_INT(*x++));
-    } else if (v == treptr_quote) {
-        /*printf("quote: ");*/
-        v = *x++;
-    } else if (v == treptr_funcall) {
+
+    if (v == treptr_funcall) {
         /*printf("funcall: ");*/
         fun = *x++;
         if (TREPTR_IS_BUILTIN(fun)) {
@@ -181,18 +171,14 @@ trecode_get (treptr ** p)
             } else {
                 num_args = TRENUMBER_INT(*x++);
                 args = trecode_list (&x, num_args);
-/*printf ("builtin arguments: "); treprint (args);*/
+                /*printf ("builtin arguments: "); treprint (args);*/
                 tregc_push (args);
                 v = treeval_xlat_function (treeval_xlat_builtin, fun, args, FALSE);
                 tregc_pop ();
             }
-        } else if (fun == treptr_quote) {
-            x++;
-            v = *x++;
         } else if (TREPTR_IS_ATOM(fun) && TREPTR_IS_ARRAY(TREATOM_FUN(fun))) {
-            /*printf("Calling %s with %d arguments.\n", TREATOM_NAME(fun), num_args);*/
             num_args = TRENUMBER_INT(*x++);
-            /*printf("Direct call of bytecode function %s with %d arguments.\n", TREATOM_NAME(*x), num_args);*/
+            /*printf("Immediate call of bytecode function %s with %d arguments.\n", TREATOM_NAME(fun), num_args);*/
             j = -1;
             DOTIMES(i, num_args)
                 trestack_ptr[j--] = trecode_get (&x);
@@ -202,6 +188,17 @@ trecode_get (treptr ** p)
             trestack_ptr += num_args;
         } else 
             treerror_norecover (fun, "tried to call an unsupported function type in bytecode");
+    } else if (v == treptr_stack) {
+        /*printf("stack %d: ", TRENUMBER_INT(*x));*/
+        v = trestack_ptr[TRENUMBER_INT(*x++)];
+    } else if (v == treptr_quote) {
+        /*printf("quote: ");*/
+        v = *x++;
+    } else if (v == treptr_vec) {
+        /*printf("vector: ");*/
+        vec = trecode_get (&x);
+        /*printf("vector index %d: ", TRENUMBER_INT(*x)); fflush (stdout);*/
+        v = _TREVEC(vec, TRENUMBER_INT(*x++));
     } else if (v == treptr_funref) {
         /*printf("Lexical funref ");*/
         fun = *x++;

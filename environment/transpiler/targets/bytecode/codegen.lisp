@@ -21,7 +21,8 @@
         (not (%%funref? x)
              (%funref? x)
              (%stack? x)
-             (%vec? x)))
+             (%vec? x)
+             (%quote? x)))
      `(%bc-funcall
          ,@(?
              (eq 'cons x.) `(cons ,.x. ,..x.)
