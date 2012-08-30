@@ -104,22 +104,14 @@ trebuiltin_macrocall (treptr list)
 {
     treptr macro;
     treptr args;
-    treptr fake;
     treptr res;
 
     trearg_get2 (&macro, &args, list);
-
 	macro = trearg_typed (1, TRETYPE_MACRO, macro, "MACROCALL");
 
-    fake = CONS(macro, args);
-    tregc_push (fake);
-
     trethread_push_call (CDR(TREATOM_VALUE(macro)));
-    res = treeval_funcall (macro, fake, FALSE);
+    res = treeval_funcall (macro, args, FALSE);
     trethread_pop_call ();
-
-    tregc_pop ();
-    TRELIST_FREE_EARLY(fake);
 
     return res;
 }

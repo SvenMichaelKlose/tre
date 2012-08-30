@@ -13,6 +13,8 @@
 #include "print.h"
 #include "thread.h"
 
+#include "builtin_apply.h"
+
 treptr treptr_dotexpand_hook;
 struct tre_atom *treatom_dotexpand_hook;
 

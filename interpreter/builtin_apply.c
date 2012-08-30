@@ -207,7 +207,7 @@ trebuiltin_funcall0 (treptr func, treptr args)
     tregc_push (fake);
 
     if (TREPTR_IS_FUNCTION(func))
-        res = treeval_funcall (func, fake, FALSE);
+        res = treeval_funcall (func, args, FALSE);
     else if (TREPTR_IS_BUILTIN(func))
         res = treeval_xlat_function (treeval_xlat_builtin, func, fake, FALSE);
     else if (TREPTR_IS_SPECIAL(func))

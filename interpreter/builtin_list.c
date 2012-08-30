@@ -143,7 +143,7 @@ treeval_noargs (treptr fun, treptr fake)
     if (IS_COMPILED_FUN(fun))
         return treeval_compiled_expr (fun, CDR(fake), function_arguments (fun), FALSE);
     if (TREPTR_IS_FUNCTION(fun))
-        return treeval_funcall (fun, fake, FALSE);
+        return treeval_funcall (fun, CDR(fake), FALSE);
     if (TREPTR_IS_BUILTIN(fun))
         return treeval_xlat_function (treeval_xlat_builtin, fun, fake, FALSE);
     if (TREPTR_IS_SPECIAL(fun))

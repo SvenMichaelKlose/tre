@@ -79,9 +79,8 @@ treeval_funcall_compiled_funref (treptr funref, treptr expr)
  * 'do_argeval'  If not 0 all arguments are evaluated.
  */
 treptr
-treeval_funcall (treptr func, treptr expr, bool do_argeval)
+treeval_funcall (treptr func, treptr args, bool do_argeval)
 {
-    treptr  args;		/* Arguments; second to last expression element. */
     treptr  funcdef;	/* Function definition tree. */
     treptr  expforms;	/* Expanded argument forms. */
     treptr  expvals;    /* Expanded argument values. */
@@ -95,7 +94,6 @@ treeval_funcall (treptr func, treptr expr, bool do_argeval)
     treptr funstack = TRECONTEXT_FUNSTACK();
 #endif
 
-    args = CDR(expr);
     forms = function_arguments (func);
     funcdef = TREATOM_VALUE(func);
     body = CDR(funcdef);
@@ -273,7 +271,7 @@ treeval_expr (treptr x)
 
     switch (TREPTR_TYPE(fun)) {
         case TRETYPE_FUNCTION:
-            v = treeval_funcall (fun, x, TRUE);
+            v = treeval_funcall (fun, CDR(x), TRUE);
             break;
 
         case TRETYPE_ARRAY:
@@ -281,7 +279,7 @@ treeval_expr (treptr x)
             break;
 
         case TRETYPE_USERSPECIAL:
-            v = treeval_funcall (fun, x, FALSE);
+            v = treeval_funcall (fun, CDR(x), FALSE);
             break;
 
         case TRETYPE_BUILTIN:

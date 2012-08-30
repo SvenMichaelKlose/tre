@@ -24,18 +24,9 @@ treptr treptr_current_macro;
 treptr
 tremacro_builtin_macroexpand_1 (treptr list)
 {
-    treptr  ret;
-    treptr  fake;
-
     if (treatom_macroexpand_hook->fun == treptr_nil)
         return list;
-
-    fake = CONS(treptr_macroexpand_hook, CONS(list, treptr_nil));
-    tregc_push (fake);
-    ret = treeval_funcall (treatom_macroexpand_hook->fun, fake, FALSE);
-    tregc_pop ();
-
-    return ret;
+    return treeval_funcall (treatom_macroexpand_hook->fun, CONS(list, treptr_nil), FALSE);
 }
 
 /*
