@@ -178,21 +178,13 @@ error:
 }
 
 treptr
-trebuiltin_apply (treptr list)
+trebuiltin_funcall0 (treptr func, treptr args)
 {
-    treptr  func;
     treptr  f;
-    treptr  args;
     treptr  fake;
 	treptr  res;
 	treptr  a;
 	treptr  args_with_ghost;
-
-    if (list == treptr_nil)
-		return treerror (list, "arguments expected");
-
-    func = CAR(list);
-    args = trebuiltin_apply_args (trelist_copy (CDR(list)));
 
 	if (trebuiltin_is_compiled_funref (func)) {
 	    tregc_push (args);
@@ -227,6 +219,22 @@ trebuiltin_apply (treptr list)
     TRELIST_FREE_EARLY(fake);
 
     return res;
+}
+
+treptr
+trebuiltin_funcall (treptr list)
+{
+    if (list == treptr_nil)
+		return treerror (list, "arguments expected");
+    return trebuiltin_funcall0 (CAR(list), CDR(list));
+}
+
+treptr
+trebuiltin_apply (treptr list)
+{
+    if (list == treptr_nil)
+		return treerror (list, "arguments expected");
+    return trebuiltin_funcall0 (CAR(list), trebuiltin_apply_args (trelist_copy (CDR(list))));
 }
 
 void

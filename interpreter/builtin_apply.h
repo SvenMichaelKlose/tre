@@ -7,6 +7,8 @@
 
 extern treptr function_arguments (treptr);
 
+extern treptr trebuiltin_funcall0 (treptr func, treptr args);
+extern treptr trebuiltin_funcall (treptr);
 extern treptr trebuiltin_apply (treptr);
 extern treptr trebuiltin_call_compiled (treptr func, treptr args);
 

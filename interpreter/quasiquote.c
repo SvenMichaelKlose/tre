@@ -20,17 +20,12 @@ treptr
 trequasiquote_expand (treptr list)
 {
     treptr  ret;
-    treptr  fake;
 
     if (treatom_quasiquoteexpand_hook->fun == treptr_nil)
         return list;
 
-    fake = CONS(treptr_quasiquoteexpand_hook, CONS(list, treptr_nil));
-    tregc_push (fake);
-    ret = treeval_funcall (treatom_quasiquoteexpand_hook->fun, fake, FALSE);
+    ret = trebuiltin_funcall0 (treatom_quasiquoteexpand_hook->fun, CONS(list, treptr_nil));
 	tregc_retval (ret);
-    tregc_pop ();
-
     return ret;
 }
 

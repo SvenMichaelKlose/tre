@@ -142,7 +142,6 @@ trecode_get (treptr ** p)
 {
     treptr  v;
     treptr  fun;
-    treptr  funtype;
     treptr  args;
     treptr  car;
     treptr  cdr;
