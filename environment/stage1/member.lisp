@@ -1,19 +1,14 @@
 ;;;;; tré – Copyright (c) 2005–2006,2008,2010–2012 Sven Michael Klose <pixel@copei.de>
 
 (? (not (eq t *BUILTIN-MEMBER*))
-   (progn
-     (defun %member-r (elm lst)
-       (? lst
-          (? (equal elm (car lst))
-			 lst
-             (%member-r elm (cdr lst)))))
-     (defun member (elm &rest lsts)
-       (| (%member-r elm (car lsts))
-          (? (cdr lsts)
-             (apply #'member elm (cdr lsts)))))))
+   (defun member (elm lst &key (test #'eql))
+     (? lst
+        (? (funcall test elm (car lst))
+           lst
+           (member elm (cdr lst) :test test)))))
 
 (define-test "MEMBER finds elements"
-  ((? (member 's '(i) '(l i k e) '(l i s p))
+  ((? (member 's '(l i s p))
 	  t))
   t)
 
@@ -22,7 +17,7 @@
 	  t))
   t)
 
-(define-test "MEMBER detects foureign elements"
+(define-test "MEMBER falsely detects foureign elements"
   ((member 'A '(l i s p)))
   nil)
 
