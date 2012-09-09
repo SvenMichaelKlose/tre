@@ -14,4 +14,4 @@
 (dont-inline error)
 
 (defun error (fmt &rest args)
-  (%error (+ "Error :" (apply #'format nil fmt args))))
+  (%error (+ "Error: " (apply #'format nil fmt args))))
