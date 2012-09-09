@@ -83,7 +83,6 @@ treeval_compiled_expr (treptr func, treptr args, treptr argdef, bool do_expand)
     treptr  expvals;
 	treptr  result;
 
-   	tregc_push (func);
    	tregc_push (args);
    	trearg_expand (&expforms, &expvals, argdef, args, do_expand);
    	tregc_push (expvals);
@@ -92,7 +91,6 @@ treeval_compiled_expr (treptr func, treptr args, treptr argdef, bool do_expand)
              trecode_call (func, expvals) :
 	         trebuiltin_call_compiled (func, expvals);
 
-	tregc_pop ();
 	tregc_pop ();
 	tregc_pop ();
 
@@ -145,39 +143,40 @@ function_arguments (treptr f)
 }
 
 treptr
-trefuncall_0 (treptr func, treptr args)
+trefuncall (treptr func, treptr args)
 {
     treptr  f;
+	treptr  res;
 	treptr  a;
 	treptr  args_with_ghost;
 
 	if (trebuiltin_is_compiled_funref (func)) {
+	    tregc_push (args);
         f = TREATOM_FUN(FUNREF_FUNCTION(func));
 		args_with_ghost = CONS(FUNREF_LEXICALS(func), args);
         a = function_arguments (f);
-		return treeval_compiled_expr (f, args_with_ghost, a, FALSE);
+		res = treeval_compiled_expr (f, args_with_ghost, a, FALSE);
+		tregc_pop ();
+		return res;
 	}
-	if (IS_COMPILED_FUN(func))
-		return treapply_compiled (func, args);
+
+	if (IS_COMPILED_FUN(func)) {
+	    tregc_push (args);
+		res = treapply_compiled (func, args);
+		tregc_pop ();
+		return res;
+	}
+
     if (TREPTR_IS_FUNCTION(func))
-        return treeval_funcall (func, args, FALSE);
-    if (TREPTR_IS_BUILTIN(func))
-        return treeval_xlat_function (treeval_xlat_builtin, func, args, FALSE);
-    if (TREPTR_IS_SPECIAL(func))
-        return trespecial (func, args);
-    return treerror (func, "function expected");
-}
+        res = treeval_funcall (func, args, FALSE);
+    else if (TREPTR_IS_BUILTIN(func))
+        res = treeval_xlat_function (treeval_xlat_builtin, func, args, FALSE);
+    else if (TREPTR_IS_SPECIAL(func))
+        res = trespecial (func, args);
+    else
+        res = treerror (func, "function expected");
 
-treptr
-trefuncall (treptr func, treptr args)
-{
-    treptr  result;
-
-    tregc_push (args);
-    result = trefuncall_0 (func, args);
-    tregc_pop ();
-
-    return result;
+    return res;
 }
 
 void
