@@ -79,14 +79,20 @@
 ;  (| (%print-check-circularity x str info)
      (%print-function-0 x str info));)
 
+(defun %print-character (x str)
+  (princ #\# str)
+  (princ #\\ str)
+  (princ x str))
+
 (defun %print-atom (x str info)
   (?
-    (number? x)   (princ x str)
-    (string? x)   (%print-string x str)
-    (array? x)    (%print-array x str info)
-    (function? x) (%print-function x str info)
-    (symbol? x)   (%print-symbol x str)
-    (object? x)   (%print-object x str info)
+    (character? x) (%print-character x str)
+    (number? x)    (princ x str)
+    (string? x)    (%print-string x str)
+    (array? x)     (%print-array x str info)
+    (function? x)  (%print-function x str info)
+    (symbol? x)    (%print-symbol x str)
+    (object? x)    (%print-object x str info)
     "UNKNOWN OBJECT"))
 
 (defun %late-print (x str info)
