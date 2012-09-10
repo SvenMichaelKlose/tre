@@ -23,6 +23,7 @@
   (? x (string x) ""))
 
 (defun lml-attr-string (x)
+  (& (cons? x) (error "cannot take cons as a LML attribute"))
   (string-downcase (string-or-empty-string x)))
 
 (defun lml-attr-value-string (x)

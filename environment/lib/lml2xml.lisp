@@ -1,6 +1,4 @@
 ;;;;; tré – Copyright (c) 2007-2009,2011–2012 Sven Michael Klose <pixel@copei.de>
-;;;;;
-;;;;; LML-to-XML conversion
 
 (def-head-predicate %exec)
 
