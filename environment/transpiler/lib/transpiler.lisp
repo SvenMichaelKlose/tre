@@ -1,7 +1,7 @@
 ;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *current-transpiler* nil)
-(defvar *transpiler-assert* nil)
+(defvar *transpiler-assert* t)
 (defvar *transpiler-log* nil)
 (defvar *transpiler-no-stream?* nil)
 
