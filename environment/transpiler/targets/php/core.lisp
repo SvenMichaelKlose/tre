@@ -11,6 +11,7 @@
 
 (defvar *php-base*
 	,(list 'quote (append (php-load-base *php-env-path*
+		                      "assert.lisp"
 		                      "return-value.lisp"
 		                      "not.lisp"
 		                      "cons.lisp"
