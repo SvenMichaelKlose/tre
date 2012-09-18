@@ -30,7 +30,8 @@
             (%print-rest x str info))
           (progn
 		    (princ " . " str)
-            (%print-atom x str info)))
+            (%print-atom x str info)
+            (princ ")" str)))
        (princ ")" str))))
 
 (defun %print-rest (x str info)
