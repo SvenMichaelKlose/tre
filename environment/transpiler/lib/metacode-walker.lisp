@@ -1,7 +1,7 @@
 ;;;;; tré – Copyright (c) 2010–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun function-copier (x statement)
-  `(copy-lambda ,x :body ,statement))
+  `(list (copy-lambda ,x :body ,statement)))
 
 (defun metacode-walker-copier (x statement &key (%setq? nil))
   (? %setq?
@@ -31,7 +31,7 @@
       `(defun ,name ,args
          (when ,x
            (let ,v (car ,x)
-             (cons (?
+             (+ (?
 		             (atom ,v)
                        (let ,x (car ,x)
                          ,(? (| if-symbol if-atom)
@@ -39,8 +39,8 @@
                                 (not ,v) nil
 	                            ,@(awhen if-symbol  `((symbol? ,v) ,!))
 	                            ,@(awhen if-atom    `((atom ,v)    ,!))
-                                ,v)
-                             v))
+                                (list ,v))
+                             `(list ,v)))
                      ,@(awhen if-slot-value  `((%slot-value? ,v)  ,!))
 		             ,@(awhen if-stack       `((%stack? ,v)	      ,!))
 		             ,@(awhen if-vec         `((%vec? ,v)         ,!))
@@ -56,5 +56,5 @@
 			             (& (print ,v)
 			                (error "metacode statement expected instead"))
 
-                     ,(| if-cons v))
+                     ,(| if-cons `(list ,v)))
                   (,name (cdr ,x) ,@r))))))))
