@@ -34,7 +34,7 @@
          (apply #'transpiler-add-obfuscation-exceptions *current-transpiler* (collect-symbols (list name args body)))
          (? (transpiler-memorize-sources? *current-transpiler*)
             (& (acons! name (cons args body) (transpiler-memorized-sources *current-transpiler*))
-                nil)
+               nil)
             `((%setq (slot-value ,name '__source) ,(let source (assoc-value name *function-sources* :test #'eq)
                                                      (list 'quote (cons (| source. args)
                                                                         (unless (transpiler-save-argument-defs-only? tr)
