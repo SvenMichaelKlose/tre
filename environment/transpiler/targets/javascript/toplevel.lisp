@@ -44,7 +44,7 @@
 (defun js-files-compiler ()
   (append (list (cons 'list-of-defined-functions #'js-emit-early-defined-functions)
                 (list (+ *js-env-path* "env-load-stub.lisp")))
-          (mapcan (fn unless ._
+          (mapcan (fn unless (eq 'c ._)
                        (list (list (string-concat "environment/" _.))))
                   (reverse *environment-filenames*))
           (list (list (+ *js-env-path* "late-macro.lisp"))
