@@ -30,7 +30,7 @@
 	(character? x) (char-string x)
     (symbol? x) (symbol-name x)
 	(not x) "NIL" ;,*nil-symbol-name*
-   	(strval x)))
+   	(strval x))) ; XXX wrong conversion? got no net to find out.
 
 (defun string== (x y)
   (%%%== x y))
