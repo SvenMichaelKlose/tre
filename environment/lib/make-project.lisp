@@ -1,12 +1,18 @@
 ;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
-(defun make-project (project-name &key target (files nil) (modified-file-getter nil) (files-to-update nil) (recompiler-path nil) (emitter nil))
+(defun make-project (project-name &key target
+                                       (files nil)
+                                       (modified-file-getter nil)
+                                       (files-to-update nil)
+                                       (recompiler-path nil)
+                                       (emitter nil)
+                                       (obfuscate? nil))
   (format t "; Making project '~A'...~%" project-name)
   (| (in? target 'c 'bytecode 'js 'php)
      (error "You must specify a target (must be one of C, BYTECODE, JS or PHP)"))
   (| emitter
      (error "Argument EMITTER is required, which takes the compiled code and puts it somewhere."))
-  (let code (compile-files files :target target :files-to-update files-to-update)
+  (let code (compile-files files :target target :files-to-update files-to-update :obfuscate? obfuscate?)
     (funcall emitter code)
     (awhen recompiler-path
       (| modified-file-getter
@@ -21,6 +27,7 @@
                                            :modified-file-getter modified-file-getter
                                            :files-to-update (funcall modified-file-getter)
                                            :recompiler-path recompiler-path
-                                           :emitter emitter)
+                                           :emitter emitter
+                                           :obfuscate? obfuscate?)
                              (quit)))
       (format t " OK.~%"))))
