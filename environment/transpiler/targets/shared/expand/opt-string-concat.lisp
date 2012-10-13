@@ -6,6 +6,6 @@
     (every #'string? x) (apply #'string-concat x)
     (some #'string? x) (alet (string-concat-successive-literals x)
                          (? .!
-                           `(string-concat ,@!)
-                           !.))
+                            `(string-concat ,@!)
+                            !.))
     `(,op ,@x)))

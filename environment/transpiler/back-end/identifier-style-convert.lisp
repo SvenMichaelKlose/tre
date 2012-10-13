@@ -77,6 +77,9 @@
 	   (transpiler-dot-symbol-string tr sl)
 	   (transpiler-symbol-string-0 tr s))))
 
+(defun current-transpiler-symbol-string (s)
+  (transpiler-symbol-string *current-transpiler* s))
+
 (defun transpiler-to-string-cons (tr x)
   (?
     (%transpiler-string? x)      (funcall (transpiler-gen-string tr) .x.)
