@@ -4,12 +4,13 @@
   (make-stream
       :user-detail (make-queue)
       :fun-in #'((str)
+                  (let buf (queue-list (stream-user-detail str))
+                    (when (string? buf.)
+                      (= (stream-user-detail str) (make-queue))
+                      (enqueue-list (stream-user-detail str) (append (string-list buf.) .buf))))
                   (queue-pop (stream-user-detail str)))
       :fun-out #'((x str)
-			       (? (string? x)
-				      (enqueue-list (stream-user-detail str)
-								    (string-list x))
-                      (enqueue (stream-user-detail str) x)))
+				   (enqueue (stream-user-detail str) x))
 	  :fun-eof #'((str)
 			       (not (queue-list (stream-user-detail str))))))
 
