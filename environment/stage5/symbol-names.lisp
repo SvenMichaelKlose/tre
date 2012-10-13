@@ -5,6 +5,6 @@
                 (funcall (? downcase?
                             #'string-downcase
                             #'identity)
-                         _)
+                         (symbol-name _))
                 _)
           x))

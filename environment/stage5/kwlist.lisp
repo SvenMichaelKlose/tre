@@ -4,7 +4,7 @@
   (filter (fn cons _. ._.) (group x 2)))
 
 (defun alist-kwlist (x)
-  (filter (fn list _. ._) x))
+  (mapcan (fn list _. ._) x))
 
 (defun kwlist-evalist (x)
   (list 'backquote (filter (fn list _. (list 'quasiquote ._))
