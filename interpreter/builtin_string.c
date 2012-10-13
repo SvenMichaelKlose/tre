@@ -55,7 +55,7 @@ trestring_builtin_make (treptr list)
 /*tredoc
   (cmd :name LIST-STRING
 	(args :type string)
-	(descr "Converts string to list of characters.")
+	(descr "Converts list of characters into a string.")
 	(returns character-list))
  */
 treptr
