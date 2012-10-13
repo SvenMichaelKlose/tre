@@ -105,6 +105,7 @@ basic_clean ()
 	echo "Cleaning..."
 	rm -f *.core interpreter/$COMPILED_ENV tre tmp.c
 	rm -rf obj
+    rm -f examples/js/hello-world.js
 }
 
 link ()
