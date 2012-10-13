@@ -42,15 +42,15 @@
 
 (defun php-jump (tag)
   (? *php-goto?*
-     `("goto _I_" ,tag ";")
-     `(" $_I_=" ,tag "; break;")))
+     `("goto _I_" ,tag)
+     `(" $_I_=" ,tag "; break")))
 
 (define-php-macro %%vm-go (tag)
   (php-line (php-jump tag)))
 
 (define-php-macro %%vm-go-nil (val tag)
   (let v (php-dollarize val)
-    (php-line "if (!" v "&&!is_string(" v ")&&!is_numeric(" v ")&&!is_array(" v ")) { " (php-jump tag) "}")))
+    (php-line "if (!" v "&&!is_string(" v ")&&!is_numeric(" v ")&&!is_array(" v ")) { " (php-jump tag) "; }")))
 
 (define-php-macro %%vm-go-not-nil (val tag)
   (let v (php-dollarize val)
@@ -63,12 +63,15 @@
 (defun codegen-php-function (name x)
   (with (args (argument-expand-names 'unnamed-c-function (lambda-args x))
 		 fi (get-lambda-funinfo x)
-		 num-locals (length (funinfo-env fi)))
+		 num-locals (length (funinfo-env fi))
+	     compiled-name (compiled-function-name *current-transpiler* name))
     `(,(code-char 10)
-	  "function " ,(compiled-function-name *current-transpiler* name) ,@(php-argument-list args)
+	  "function " ,compiled-name ,@(php-argument-list args)
       "{" ,(code-char 10)
 		 ,@(awhen (funinfo-globals fi)
              (php-line "global " (php-list !)))
+         ,@(when *print-executed-functions?*
+             `("echo \"" ,compiled-name "\\n\";"))
          ,@(unless *php-goto?*
              (list "    $_I_=0; while (1) { switch ($_I_) { case 0:" *php-newline*))
          ,@(lambda-body x)
