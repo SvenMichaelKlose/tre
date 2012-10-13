@@ -3,9 +3,6 @@
 (defmacro + (&rest x)
   (opt-string-concat x '+))
 
-(defmacro string-concat (&rest x)
-  (opt-string-concat x 'string-concat))
-
 ;(defmacro def-typed-transpiler-op (name)
 ;  `(defmacro ,name (&rest x)
 ;  	 (?
@@ -64,3 +61,21 @@
   (? (== 1 (length x))
      `(%transpiler-native "(-" ,x. ")")
      `(%%%- ,@x)))
+
+(defmacro integer1+ (x)
+  `(%%%+ ,x 1))
+
+(defmacro integer1- (x)
+  `(%%%- ,x 1))
+
+(defmacro def-integer-op (op)
+  `(defmacro ,($ 'integer op) (&rest x)
+     `(,($ '%%% op) ,,@x)))
+
+(def-integer-op +)
+(def-integer-op -)
+(def-integer-op ==)
+(def-integer-op <)
+(def-integer-op >)
+(def-integer-op <=)
+(def-integer-op >=)
