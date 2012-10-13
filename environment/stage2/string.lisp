@@ -53,4 +53,8 @@
   t)
 
 (defun queue-string (x)
-  (list-string (queue-list x)))
+  (let str ""
+    (dolist (i (queue-list x) str)
+      (= str (string-concat str (?
+                                  (string? i) i
+                                  (character? i) (string i)))))))
