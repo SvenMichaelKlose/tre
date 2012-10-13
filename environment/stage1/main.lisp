@@ -19,6 +19,7 @@
 (env-load "stage1/defun.lisp" 'c)
 (env-load "stage1/require.lisp" 'c)
 (env-load "stage1/fn.lisp")
+(env-load "stage1/accent-circonflex.lisp")
 (env-load "stage1/lx.lisp")
 (env-load "stage1/predicates-c.lisp" 'c)
 (env-load "stage1/predicates.lisp")
@@ -33,6 +34,7 @@
 
 (env-load "stage1/queue.lisp")
 (env-load "stage1/list-traversal.lisp")
+(env-load "stage1/tp.lisp")
 (env-load "stage1/comparison-c.lisp" 'c)
 (env-load "stage1/funcall.lisp" 'c)
 (env-load "stage1/member.lisp" 'c)

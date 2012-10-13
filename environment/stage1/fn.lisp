@@ -6,3 +6,6 @@
 			    (not (eq '%slot-value (car (car body)))))
 			 body
 			 (list body))))
+
+(defmacro square (&rest body)
+  `(fn ,@body))
