@@ -8,7 +8,7 @@
 
 (defun symbol-name (x)
   (?
-    (%%%eq t x) ,*t-symbol-name*
+    (eq t x) ,*t-symbol-name*
     x (? (symbol? x)
          x.n
          (progn
@@ -18,22 +18,23 @@
 
 (defun symbol-value (x)
   (?
-    (%%%eq t x) t
+    (eq t x) t
     (x.v)))
 
 (defun symbol-function (x)
   (?
-    (%%%eq t x) nil
+    (eq t x) nil
     x (x.f)))
 
 (defun symbol-package (x)
   (?
     (not x) nil
-    (%%%eq t x) nil
+    (eq t x) nil
     x.p))
 
 (dont-obfuscate is_a)
 
 (defun symbol? (x)
   (| (not x)
+     (eq t x)
      (is_a x "__symbol")))

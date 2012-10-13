@@ -16,5 +16,3 @@
                              obj)
                           seq))
      (generic-split obj seq)))
-
-(defun %property-list (x))

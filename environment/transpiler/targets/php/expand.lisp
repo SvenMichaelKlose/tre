@@ -124,3 +124,6 @@
 (define-php-std-macro in-package (n)
   (= (transpiler-current-package *js-transpiler*) (when n (make-package (symbol-name n))))
   `(%%in-package ,n))
+
+(define-php-std-macro string-concat (&rest x)
+  `(%%%string+ ,@x))

@@ -20,6 +20,7 @@
 (defvar *php-base2*
 	,(list 'quote (append
 		              (php-load-base *php-env-path*
+			              "../../../environment/number-typing.lisp"
 			              "print-object.lisp"
 			              "log.lisp"
 			              "apply.lisp"
@@ -38,7 +39,6 @@
 			              "../../../environment/list.lisp"
 			              "number.lisp"
 			              "../../../environment/number.lisp"
-			              "../../../environment/number-typing.lisp"
 			              "sequence.lisp"
 			              "../../../environment/sequence.lisp"
 			              "../../../environment/character.lisp"
@@ -49,6 +49,7 @@
 			              "string.lisp"
 			              "../../../environment/member.lisp"
 			              "hash.lisp"
-                          "base64.lisp")
+                          "base64.lisp"
+                          "quit.lisp")
 		              (php-load-base "environment/transpiler/environment/"
 			              "assoc.lisp"))))

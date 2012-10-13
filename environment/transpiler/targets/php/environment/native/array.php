@@ -57,3 +57,19 @@ class __array {
         return "array";
     }
 }
+
+function userfun_phparrayHashTable ($x)
+{
+    $h = new __array ();
+    foreach ($x as $k => $v)
+        $h->s ($k, $v);
+    return $h;
+}
+
+function userfun_phparrayHashkeys ($x)
+{
+    $h = Array ();
+    foreach ($x as $k => $v)
+        $h[] = $k;
+    return $h;
+}
