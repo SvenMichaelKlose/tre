@@ -31,24 +31,25 @@
 
 (defun lml2xml-attr (s x)
   (princ (string-concat " "
-			            (lml-attr-string x.)
+                        (lml-attr-string x.)
                         "=\""
-			            (? (string? .x.)
+		                (? (string? .x.)
                            .x.
-				           (lml-attr-string .x.))
+                           (lml-attr-string .x.))
                         "\"")
-         s)
+             s)
   (lml2xml-attr-or-body s ..x))
 
 (defun lml2xml-body (s x)
   (lml2xml-end s)
-  (mapcar (fn lml2xml-0 s _) x))
+  (dolist (i x)
+    (lml2xml-0 s i)))
 
 (defun lml2xml-attr-or-body (s x)
-  (when x
-    (? (lml-attr? x)
-       (lml2xml-attr s x)
-       (lml2xml-body s x))))
+  (& x
+     (? (lml-attr? x)
+        (lml2xml-attr s x)
+        (lml2xml-body s x))))
 
 (defun lml2xml-block (s x)
   (lml2xml-attr-or-body s .x)
@@ -59,21 +60,21 @@
   (lml2xml-end-inline s))
 
 (defun lml2xml-error-tagname (x)
-  (error "First element is not a tag name: ~A" x))
+  (error "First element is not a tag name symbol but ~A" x))
 
 (defun lml2xml-expr (s x)
-  (unless (atom x.)
-    (lml2xml-error-tagname x))
+  (| (atom x.)
+     (lml2xml-error-tagname x))
   (lml2xml-open s x)
   (? (lml-body .x)
      (lml2xml-block s x)
      (lml2xml-inline s x)))
 
 (defun lml2xml-0 (s x)
-  (when x
-    (? (cons? x)
-	   (lml2xml-expr s x)
-	   (lml2xml-atom s x))))
+  (& x
+     (? (cons? x)
+	    (lml2xml-expr s x)
+	    (lml2xml-atom s x))))
 
 (defun lml2xml (x &optional (str nil))
   (with-default-stream s str
