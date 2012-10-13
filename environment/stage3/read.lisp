@@ -1,14 +1,19 @@
 ;;;;; tré – Copyright (c) 2008,2010,2012 Sven Michael Klose <pixel@copei.de>
 
 (defun token-is-quote? (x)
-  (in? x 'quote 'backquote 'quasiquote 'quasiquote-splice))
+  (in? x 'quote 'backquote 'quasiquote 'quasiquote-splice 'accent-circonflex))
+
+(defun %read-closing-bracket? (x)
+  (in? x 'bracket-close 'square-bracket-close 'curly-bracket-close))
 
 (defun special-char? (x)
-  (in=? x #\( #\) #\' #\` #\, #\: #\; #\" #\#))
+  (in=? x #\( #\)
+          #\[ #\]
+          #\{ #\}
+          #\' #\` #\, #\: #\; #\" #\# #\^))
 
 (defun symbol-char? (x)
-  (& (> x 32)
-     (not (in=? x #\( #\) #\' #\` #\, #\: #\;))))
+  (& (> x 32) (not (special-char? x))))
 
 (defun skip-comment (str)
   (let c (read-char str)
@@ -72,8 +77,13 @@
 			      (case (read-char str)
 			        #\(	 'bracket-open
 			        #\)	 'bracket-close
+			        #\[	 'square-bracket-open
+			        #\]	 'square-bracket-close
+			        #\{	 'curly-bracket-open
+			        #\}	 'curly-bracket-close
 			        #\'	 'quote
 			        #\`	 'backquote
+			        #\^	 'accent-circonflex
 			        #\"	 'dblquote
 			        #\,	 (? (== #\@ (peek-char str))
 				            (& (read-char str) 'quasiquote-splice)
@@ -97,7 +107,7 @@
 	'function  `(function ,(read-expr str))
     'symbol    (make-symbol (list-string sym)
 						    (?
-							  (not pkg)	nil
+							  (not pkg)	    nil
 							  (eq t pkg)	*keyword-package*
 							  (make-package (list-string pkg))))
 	(error "syntax error: token ~A, sym ~A" token sym)))
@@ -107,23 +117,25 @@
 
 (defun read-list (str token pkg sym)
   (| token (error "missing closing bracket"))
-  (unless (eq 'bracket-close token)
+  (unless (%read-closing-bracket? token)
     (cons (?
-		    (token-is-quote? token)   (read-quote str token)
-		    (eq 'bracket-open token)  (read-cons-slot str)
+		    (token-is-quote? token)         (read-quote str token)
+		    (eq 'bracket-open token)        (read-cons-slot str)
+		    (eq 'square-bracket-open token) (cons 'square (read-cons-slot str))
+		    (eq 'curly-bracket-open token)  (cons 'curly (read-cons-slot str))
 		    (read-atom str token pkg sym))
 	      (with ((token pkg sym) (read-token str))
 	        (? (eq 'dot token)
 		       (with (x (read-expr str)
 				      (token pkg sym) (read-token str))
-		         (| (eq 'bracket-close token)
+		         (| (%read-closing-bracket? token)
 			        (error "only one value allowed after dotted cons"))
 			     x)
 		       (read-list str token pkg sym))))))
 
 (defun read-cons (str)
   (with ((token pkg sym) (read-token str))
-    (unless (eq 'bracket-close token)
+    (unless (%read-closing-bracket? token)
 	  (read-list str token pkg sym))))
 
 (defun read-cons-slot (str)
@@ -138,8 +150,10 @@
 	(?
 	  (not token) nil
 	  (eq 'eof token) nil
-      (token-is-quote? token) (read-quote str token)
-      (eq 'bracket-open token) (read-cons-slot str)
+      (token-is-quote? token)         (read-quote str token)
+      (eq 'bracket-open token)        (read-cons-slot str)
+      (eq 'square-bracket-open token) (cons 'square (read-cons-slot str))
+      (eq 'curly-bracket-open token)  (cons 'curly (read-cons-slot str))
 	  (read-atom str token pkg sym))))
 
 (defun read (&optional (str *standard-input*))

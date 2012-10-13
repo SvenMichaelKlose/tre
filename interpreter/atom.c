@@ -39,13 +39,16 @@ const treptr treptr_invalid = (treptr) -1;
 
 treptr treptr_universe; /* *UNIVERSE* variable */
 
-treptr treatom_quote;
+treptr treatom_accent_circonflex;
 treptr treatom_backquote;
+treptr treatom_function;
+treptr treatom_lambda;
+treptr treatom_quote;
 treptr treatom_quasiquote;
 treptr treatom_quasiquote_splice;
-treptr treatom_function;
 treptr treatom_values;
-treptr treatom_lambda;
+treptr treatom_square;
+treptr treatom_curly;
 
 treptr tre_package_keyword;
 
