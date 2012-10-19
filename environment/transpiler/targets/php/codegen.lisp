@@ -124,6 +124,9 @@
  
 (defun php-%setq-value (val)
   (?
+    (& (cons? val)
+       (eq 'userfun_cons val.))
+      `("new __cons (" ,(php-dollarize .val.) "," ,(php-dollarize ..val.) ")")
     (| (not val)
        (eq t val)
        (number? val)
