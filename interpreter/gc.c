@@ -1,5 +1,5 @@
 /*
- * tré - Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -271,7 +271,7 @@ tregc_force ()
     if (tregc_running)
 		return;
 
-#if TRE_VERBOSE_GC
+#ifdef TRE_VERBOSE_GC
     printf ("before gc");
     tregc_print_stats ();
 #endif
