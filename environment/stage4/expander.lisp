@@ -24,27 +24,20 @@
 
 (defun define-expander (expander-name &key (pre nil) (post nil)
 										   (pred nil) (call nil))
-  (let e (make-expander :macros (make-hash-table :test #'eq)
-						:pred pred
-						:call call
-						:pre (| pre #'(nil))
-						:post (| post #'(nil)))
-    (acons! expander-name e *expanders*)
-    (unless pred
-      (= (expander-pred e)
-         (lx (e)
-	       (fn & (symbol? _.)
-	             (symbol-name _.)
-	             (expander-macro-function ,e _.)))))
-    (unless call
-      (= (expander-call e)
-         (lx (e)
-	       (fn (& *expander-print* (print _))
-               (apply (expander-macro-function ,e _.) ._)))))
-    (= (expander-lookup e)
+  (aprog1 (make-expander :macros (make-hash-table :test #'eq)
+                         :pred pred
+                         :call call
+                         :pre (| pre #'(nil))
+                         :post (| post #'(nil)))
+    (acons! expander-name ! *expanders*)
+    (| pred (= (expander-pred !) (lx (!) [& (symbol? _.)
+	                                        (symbol-name _.)
+	                                        (expander-macro-function ,! _.)])))
+    (| call (= (expander-call !) (lx (!) [(& *expander-print* (print _))
+                                          (apply (expander-macro-function ,! _.) ._)])))
+    (= (expander-lookup !)
        #'((expander name)
-           (href (expander-macros expander) name)))
-	e))
+           (href (expander-macros expander) name)))))
 
 (defun set-expander-macro (expander-name name fun &key (may-redefine? nil))
   (& (not may-redefine?)
@@ -53,32 +46,33 @@
   (= (href (expander-macros (expander-get expander-name)) name) fun))
 
 (defun set-expander-macros (expander-name lst)
-  (map (fn set-expander-macro expander-name _. ._) lst))
+  (map [set-expander-macro expander-name _. ._] lst))
 
 (defmacro define-expander-macro (expander-name name args &body body)
-  (unless (atom expander-name)
-    (error "Atom expected as expander-name instead of ~A.~%" expander-name))
-  (unless (atom name)
-    (error "Atom expected as macro-name instead of ~A for expander ~A.~%" name expander-name))
+  (| (atom expander-name)
+     (error "Atom expected as expander-name instead of ~A.~%" expander-name))
+  (| (atom name)
+     (error "Atom expected as macro-name instead of ~A for expander ~A.~%" name expander-name))
   (with-gensym g
     `(progn
-	   (& (expander-has-macro? ',expander-name ',name)
-	      (warn "Redefinition of acro ~A in expander ~A.~%" ',name ',expander-name))
-	   (defun ,g ,args ,@body)
-       (= (href (expander-macros (expander-get ',expander-name)) ',name) #',g))))
+       (& (expander-has-macro? ',expander-name ',name)
+          (warn "Redefinition of macro ~A in expander ~A.~%" ',name ',expander-name))
+       (defun ,g ,args ,@body)
+       (alet (expander-macros (expander-get ',expander-name))
+         (= (href ! ',name) #',g)))))
 
 (defun expander-expand-once (expander-name x)
-  (let e (expander-get expander-name)
-    (with-temporaries (*macrop-diversion* (expander-pred e)
-                       *macrocall-diversion* (expander-call e))
+  (alet (expander-get expander-name)
+    (with-temporaries (*macrop-diversion* (expander-pred !)
+                       *macrocall-diversion* (expander-call !))
       (%macroexpand x))))
 
 (defun expander-expand (expander-name expr)
-  (let e (expander-get expander-name)
-	(funcall (expander-pre e))
+  (alet (expander-get expander-name)
+    (funcall (expander-pre !))
     (prog1
-	  (repeat-while-changes (lx (expander-name) (fn expander-expand-once ,expander-name _)) expr)
-      (funcall (expander-post e)))))
+      (repeat-while-changes (lx (expander-name) [expander-expand-once ,expander-name _]) expr)
+      (funcall (expander-post !)))))
 
 (defun expander-has-macro? (expander-name macro-name)
   (href (expander-macros (expander-get expander-name)) macro-name))
