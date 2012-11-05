@@ -1,15 +1,16 @@
 ;;;;; tré – Copyright (c) 2010–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun function-copier (x statement)
-  `(list (copy-lambda ,x :body ,statement)))
+  `(copy-lambda ,x :body ,statement))
 
-(defun metacode-walker-copier (x statement &key (%setq? nil))
-  (? %setq?
-     (list 'backquote `(%setq ,(list 'quasiquote `(%setq-place (car ,x)))
-						      ,(list 'quasiquote `(let ,x (%setq-value (car ,x))
-                                                    ,(function-copier x statement)))))
-     `(let ,x (car ,x)
-        ,(function-copier x statement))))
+(defun metacode-walker-copier-setq (x statement)
+   (list 'backquote `((%setq ,(list 'quasiquote `(%setq-place (car ,x)))
+                             ,(list 'quasiquote `(let ,x (%setq-value (car ,x))
+                                                   ,(function-copier x statement)))))))
+
+(defun metacode-walker-copier (x statement)
+  `(let ,x (car ,x)
+     (list ,(function-copier x statement))))
 
 (defun metacode-statement? (x)
   (| (in? x. '%setq '%set-vec '%var '%function-prologue '%function-epilogue '%function-return '%%tag)
@@ -32,29 +33,30 @@
          (when ,x
            (let ,v (car ,x)
              (+ (?
-		             (atom ,v)
-                       (let ,x (car ,x)
-                         ,(? (| if-symbol if-atom)
-                             `(?
-                                (not ,v) nil
-	                            ,@(awhen if-symbol  `((symbol? ,v) ,!))
-	                            ,@(awhen if-atom    `((atom ,v)    ,!))
-                                (list ,v))
-                             `(list ,v)))
-                     ,@(awhen if-slot-value  `((%slot-value? ,v)  ,!))
-		             ,@(awhen if-stack       `((%stack? ,v)	      ,!))
-		             ,@(awhen if-vec         `((%vec? ,v)         ,!))
+                  (atom ,v)
+                    (let ,x (car ,x)
+                      ,(? (| if-symbol if-atom)
+                          `(?
+                             (not ,v) nil
+                             ,@(!? if-symbol  `((symbol? ,v) ,!))
+                             ,@(!? if-atom    `((atom ,v)    ,!))
+                             (list ,v))
+                          `(list ,v)))
 
-		             ,@(alet (| if-named-function if-function `(,name (lambda-body ,x) ,@r))
-			             `((%setq-named-function? ,v) ,(metacode-walker-copier x ! :%setq? t)
-			               (named-lambda? ,v) ,(metacode-walker-copier x !)))
+                  ,@(!? if-slot-value  `((%slot-value? ,v)  ,!))
+                  ,@(!? if-stack       `((%stack? ,v)       ,!))
+                  ,@(!? if-vec         `((%vec? ,v)         ,!))
 
-		             ,@(alet (| if-lambda if-function `(,name (lambda-body ,x) ,@r))
-			             `((%setq-lambda? ,v) ,(metacode-walker-copier x ! :%setq? t)))
+                  ,@(alet (| if-named-function if-function `(,name (lambda-body ,x) ,@r))
+                      `((%setq-named-function? ,v) ,(metacode-walker-copier-setq x !)
+                        (named-lambda? ,v) ,(metacode-walker-copier x !)))
 
-		             (not (metacode-statement? ,v))
-			             (& (print ,v)
-			                (error "metacode statement expected instead"))
+                  ,@(alet (| if-lambda if-function `(,name (lambda-body ,x) ,@r))
+                      `((%setq-lambda? ,v) ,(metacode-walker-copier-setq x !)))
 
-                     ,(| if-cons `(list ,v)))
-                  (,name (cdr ,x) ,@r))))))))
+                  (not (metacode-statement? ,v))
+                    (& (print ,v)
+                       (error "metacode statement expected instead"))
+
+                  ,(| if-cons `(list ,v)))
+                (,name (cdr ,x) ,@r))))))))
