@@ -14,13 +14,17 @@
   (is_a x "__l"))
 
 (defun hash-merge (a b)
-  (unless a
-    (= a (make-hash-table)))
+  (| a (= a (make-hash-table)))
   (dolist (k (hashkeys b) a)
     (= (href a k) (href b k))))
 
 (defun hashkeys (x)
-  (maparray #'identity (phparray-hashkeys x)))
+  (maparray #'identity (phphash-hashkeys x)))
 
 (defun hash-assoc (x)
-  (filter (fn cons _ (href x _)) (hashkeys x)))
+  (filter [cons _ (href x _)] (hashkeys x)))
+
+(defun assoc-phphash (x)
+  (let a (%%%make-hash-table)
+    (dolist (i x a)
+      (%%%href-set .i a i.))))

@@ -55,8 +55,8 @@
 
 		  __construct))
 	(transpiler-add-defined-function ! '%cons '(a d) nil)
-	(transpiler-add-defined-function ! 'phparray-hash-table '(x) nil)
-	(transpiler-add-defined-function ! 'phparray-hashkeys '(x) nil)))
+	(transpiler-add-defined-function ! 'phphash-hash-table '(x) nil)
+	(transpiler-add-defined-function ! 'phphash-hashkeys '(x) nil)))
 
 (defvar *php-transpiler* (copy-transpiler (make-php-transpiler)))
 (defvar *php-newline* (format nil "~%"))

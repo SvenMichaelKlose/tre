@@ -30,8 +30,3 @@
   (let a (%%%make-hash-table)
     (dolist (i x a)
       (%setq (%transpiler-native "$" a "[]") i))))
-
-(defun assoc-phparray (x)
-  (let a (%%%make-hash-table)
-    (dolist (i x a)
-      (%%%href-set .i a i.))))

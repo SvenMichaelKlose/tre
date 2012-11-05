@@ -11,7 +11,7 @@
 
 (defmacro assert-slot-if-not-nil (place slot)
   `(& *transpiler-assert*
-     (with-gensym p
-       `(let ,p ,place
-          (unless ,p
-            (assert-slot ,p ,slot))))))
+      (with-gensym p
+        `(let ,p ,place
+           (unless ,p
+             (assert-slot ,p ,slot))))))
