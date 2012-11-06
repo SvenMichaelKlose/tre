@@ -20,8 +20,8 @@
   ; List of functions that must not be imported from the environment.
   unwanted-functions
 
-  (identifier-char? (fn identity t))
-  (literal-conversion (fn error "structure 'transpiler': LITERAL-CONVERSION is not initialised"))
+  (identifier-char? [identity t])
+  (literal-conversion [error "structure 'transpiler': LITERAL-CONVERSION is not initialised"])
 
   expex
   expex-initializer
@@ -50,7 +50,7 @@
   (save-argument-defs-only? nil)
 
   ; Generator for literal strings.
-  (gen-string (fn c-literal-string _ #\"))
+  (gen-string [c-literal-string _ #\"])
 
   ; Tells if functions must be moved out of functions.
   (lambda-export? nil)

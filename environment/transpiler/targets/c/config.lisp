@@ -7,10 +7,10 @@
 			  :inline-exceptions (list 'c-init)
 			  :dont-inline-list '(error format replace-tree)
 			  :identifier-char?
-	  		      (fn (| (<= #\a _ #\z)
-		  	  		     (<= #\A _ #\Z)
-		  	  		     (<= #\0 _ #\9)
-			  		     (in=? _ #\_ #\. #\$ #\#)))
+	  		      [| (<= #\a _ #\z)
+		  	  	     (<= #\A _ #\Z)
+		  	  	     (<= #\0 _ #\9)
+			  	     (in=? _ #\_ #\. #\$ #\#)]
 			  :named-functions? t
 			  :named-function-next #'cdddr
 			  :lambda-export? t
@@ -21,9 +21,9 @@
 	          :expex-initializer #'((ex)
 	                                 (= (expex-argument-filter ex) #'c-expex-argument-filter
 	                                    (expex-expr-filter ex) #'c-expex-filter
-			                            (expex-setter-filter ex) (compose (fn mapcan (fn expex-set-global-variable-value _) _)
+			                            (expex-setter-filter ex) (compose [mapcan [expex-set-global-variable-value _] _]
 									                                      #'expex-compiled-funcall)
-		                                (expex-inline? ex) (fn in? _ 'cons 'aref '%vec '%car '%cdr '%eq '%not))))
+		                                (expex-inline? ex) [in? _ 'cons 'aref '%vec '%car '%cdr '%eq '%not])))
 	(= (transpiler-inline-exceptions !) '(error format identity))))
 
 (defvar *c-transpiler* (copy-transpiler (make-c-transpiler)))

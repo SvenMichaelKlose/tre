@@ -29,13 +29,13 @@
 
 (defun php-emit-members (class-name cls)
   (awhen (class-members cls)
-	(mapcar (fn `(%setq nil (%transpiler-native "var $" ,_.)))
+	(mapcar ^(%setq nil (%transpiler-native "var $" ,_.))
             (reverse !))))
 
 (defun php-emit-methods (class-name cls)
   (awhen (class-methods cls)
-	(mapcan (fn `((%setq nil (%transpiler-native (%php-method-head)))
-                  ,(php-emit-method class-name _)))
+	(mapcan ^((%setq nil (%transpiler-native (%php-method-head)))
+              ,(php-emit-method class-name _))
             (reverse !))))
 
 (define-php-std-macro finalize-class (class-name)

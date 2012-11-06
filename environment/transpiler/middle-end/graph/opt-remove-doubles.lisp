@@ -16,7 +16,7 @@
   (? x
      (? (& (cons? (%setq-value x.))
            (member (car (%setq-value x.)) '(%car %cdr) :test #'eq)
-           (every (fn funinfo-in-args-or-env? fi _) (cdr (%setq-value x.))))
+           (every [funinfo-in-args-or-env? fi _] (cdr (%setq-value x.))))
         (cblocks-remove-doubles-1 blks x. .x)
         (cblocks-remove-doubles-0 fi blks .x))
      (awhen .blks

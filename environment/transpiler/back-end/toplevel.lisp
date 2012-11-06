@@ -9,21 +9,21 @@
 ;; - Expressions are expanded via code generating macros.
 ;; - Everything is converted to strings and concatenated.
 (transpiler-pass transpiler-generate-code (tr)
-    concat-stringtree   (fn transpiler-concat-text tr _)
-    to-string           (fn ? (transpiler-make-text? tr)
-                              (transpiler-to-string tr _)
-                              _)
-    obfuscate           (fn ? (transpiler-make-text? tr)
-                              (transpiler-obfuscate tr _)
-                              _)
-    codegen-expand      (fn expander-expand (transpiler-codegen-expander tr) _)
+    concat-stringtree   [transpiler-concat-text tr _]
+    to-string           [? (transpiler-make-text? tr)
+                           (transpiler-to-string tr _)
+                           _]
+    obfuscate           [? (transpiler-make-text? tr)
+                           (transpiler-obfuscate tr _)
+                           _]
+    codegen-expand      [expander-expand (transpiler-codegen-expander tr) _]
     finalize-sexprs     #'transpiler-finalize-sexprs
-    encapsulate-strings (fn ? (transpiler-encapsulate-strings? tr)
-                              (transpiler-encapsulate-strings _)
-                              _)
-    function-names      (fn ? (transpiler-function-name-prefix tr)
-                              (translate-function-names tr nil _)
-                              _))
+    encapsulate-strings [? (transpiler-encapsulate-strings? tr)
+                           (transpiler-encapsulate-strings _)
+                           _]
+    function-names      [? (transpiler-function-name-prefix tr)
+                           (translate-function-names tr nil _)
+                           _])
 
 (transpiler-pass transpiler-backend-make-places ()
     place-assign            #'place-assign
@@ -39,4 +39,4 @@
 	 (make-function-prologues x)))
 
 (defun transpiler-backend (tr x)
-  (transpiler-concat-text tr (mapcar (fn transpiler-generate-code tr (transpiler-backend-prepare tr (list _))) x)))
+  (transpiler-concat-text tr (mapcar [transpiler-generate-code tr (transpiler-backend-prepare tr (list _))] x)))

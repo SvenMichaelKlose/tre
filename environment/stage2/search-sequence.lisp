@@ -28,7 +28,7 @@
 		      (return elm)))))))
  
 (defun find (obj seq &key (start nil) (end nil) (from-end nil) (test #'eql))
-  (find-if (fn funcall test _ obj) seq :start start :end end :from-end from-end))
+  (find-if [funcall test _ obj] seq :start start :end end :from-end from-end))
 
 (define-test "FIND finds elements"
   ((find 's '(l i s p)))

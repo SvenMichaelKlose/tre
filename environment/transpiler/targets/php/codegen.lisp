@@ -70,8 +70,8 @@
       "{" ,(code-char 10)
 		 ,@(awhen (funinfo-globals fi)
              (php-line "global " (php-list !)))
-         ,@(when *print-executed-functions?*
-             `("echo \"" ,compiled-name "\\n\";"))
+         ,@(& *print-executed-functions?*
+              `("echo \"" ,compiled-name "\\n\";"))
          ,@(unless *php-goto?*
              (list "    $_I_=0; while (1) { switch ($_I_) { case 0:" *php-newline*))
          ,@(lambda-body x)
@@ -145,8 +145,8 @@
   `((%transpiler-native
 	    ,*php-indent*
 	    ,@(? dest
-			 `(,@(when (atom dest)
-				   (list "$"))
+			 `(,@(& (atom dest)
+				    (list "$"))
 			   ,dest
 			   ,(php-assignment-operator val))
 	         '(""))
@@ -206,7 +206,7 @@
 ;;;; ARRAYS
 
 (defun php-array-subscript (indexes)
-  (filter (fn `("[" ,(php-dollarize _) "]")) indexes))
+  (filter ^("[" ,(php-dollarize _) "]") indexes))
 
 (defun php-literal-array-element (x)
   (list (compiled-function-name *current-transpiler* '%%key) " (" (php-dollarize x.) ") => " (php-dollarize .x.)))
@@ -237,7 +237,7 @@
 ;;;; HASH TABLES
 
 (defun php-array-indexes (x)
-  (mapcan (fn list "[" (php-dollarize _) "]") x))
+  (mapcan [list "[" (php-dollarize _) "]"] x))
 
 (define-php-macro %%%href (h &rest k)
   `(%transpiler-native ,(php-dollarize h) ,@(php-array-indexes k)))

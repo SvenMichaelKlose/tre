@@ -49,8 +49,8 @@
 
 (define-php-std-macro define-external-variable (name)
   (print-definition `(define-external-variable ,name))
-  (when (transpiler-defined-variable *current-transpiler* name)
-    (redef-warn "redefinition of variable ~A." name))
+  (& (transpiler-defined-variable *current-transpiler* name)
+     (redef-warn "redefinition of variable ~A." name))
   (transpiler-add-defined-variable *current-transpiler* name)
   nil)
 
@@ -106,11 +106,11 @@
   nil)
 
 (define-php-std-macro assert (x &optional (txt nil) &rest args)
-  (when *transpiler-assert*
-    (make-assertion x txt args)))
+  (& *transpiler-assert*
+     (make-assertion x txt args)))
 
 (define-php-std-macro %lx (lexicals fun)
-  (eval (macroexpand `(with ,(mapcan (fn `(,_ ',_)) .lexicals.)
+  (eval (macroexpand `(with ,(mapcan ^(,_ ',_) .lexicals.)
                         ,fun))))
 
 (define-php-std-macro mapcar (fun &rest lsts)
@@ -122,7 +122,7 @@
   nil)
 
 (define-php-std-macro in-package (n)
-  (= (transpiler-current-package *js-transpiler*) (when n (make-package (symbol-name n))))
+  (= (transpiler-current-package *js-transpiler*) (& n (make-package (symbol-name n))))
   `(%%in-package ,n))
 
 (define-php-std-macro string-concat (&rest x)

@@ -1,4 +1,4 @@
-;;;; tré - Copyright (c) 2007-2009,2011 Sven Klose <pixel@copei.de>
+;;;; tré – Copyright (c) 2007–2009,2011–2012 Sven Klose <pixel@copei.de>
 
 (functional remove remove-if remove-if-not)
 
@@ -10,7 +10,7 @@
 	      (remove-if fun (cdr x)))))
 
 (defun remove-if-not (fun x)
-  (remove-if (fn not (funcall fun _)) x))
+  (remove-if [not (funcall fun _)] x))
 
 (defun remove (elm x &key (test #'eql))
-  (remove-if (fn funcall test elm _) x))
+  (remove-if [funcall test elm _] x))

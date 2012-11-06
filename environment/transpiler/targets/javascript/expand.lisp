@@ -69,7 +69,7 @@
 
 (defun js-emit-memorized-sources ()
   (clr (transpiler-memorize-sources? *current-transpiler*))
-  (filter (fn `(%setq (slot-value ,_. '__source) ,(list 'quote ._)))
+  (filter ^(%setq (slot-value ,_. '__source) ,(list 'quote ._))
           (transpiler-memorized-sources *current-transpiler*)))
 
 (define-js-std-macro defun (name args &rest body)
@@ -112,11 +112,11 @@
 
 (defun js-transpiler-make-new-hash (x)
   `(%%%make-hash-table
-	 ,@(mapcan (fn list (? (& (not (string? _.))
-							  (eq :class _.))
-						   "class" ; IE6 wants this.
-						   _.)
-						._.)
+	 ,@(mapcan [list (? (& (not (string? _.))
+						   (eq :class _.))
+					    "class" ; IE6 wants this.
+					    _.)
+					 ._.]
 			   (group x 2))))
 
 (defun js-transpiler-make-new-object (x)
@@ -134,7 +134,7 @@
   `(defun ,name (x)
      (when x
 	   ,(? (< 1 (length types))
-       	   `(| ,@(filter (fn `(%%%== (%js-typeof x) ,_)) types))
+       	   `(| ,@(filter ^(%%%== (%js-typeof x) ,_) types))
            `(%%%== (%js-typeof x) ,types.)))))
 
 (define-js-std-macro %href (hash key)
@@ -162,7 +162,7 @@
     (make-assertion x txt args)))
 
 (define-js-std-macro %lx (lexicals fun)
-  (eval (macroexpand `(with ,(mapcan (fn `(,_ ',_)) .lexicals.)
+  (eval (macroexpand `(with ,(mapcan ^(,_ ',_) .lexicals.)
                         ,fun))))
 
 (define-js-std-macro mapcar (fun &rest lsts)

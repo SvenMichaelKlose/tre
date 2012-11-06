@@ -15,11 +15,11 @@
 	  :apply-argdefs? nil
 	  :literal-conversion #'identity
 	  :identifier-char?
-	    (fn (| (& (>= _ #\a) (<= _ #\z))
-		  	   (& (>= _ #\A) (<= _ #\Z))
-		  	   (& (>= _ #\0) (<= _ #\9))
-			   (in=? _ #\_ #\. #\#)))
-	  :gen-string (fn c-literal-string _ #\" (list #\$))
+	    [| (& (>= _ #\a) (<= _ #\z))
+           (& (>= _ #\A) (<= _ #\Z))
+           (& (>= _ #\0) (<= _ #\9))
+           (in=? _ #\_ #\. #\#)]
+	  :gen-string [c-literal-string _ #\" (list #\$)]
 	  :lambda-export? t
 	  :stack-locals? nil
 	  :rename-all-args? t
@@ -31,7 +31,7 @@
       :expex-initializer #'((ex)
                              (= (expex-inline? ex) #'%slot-value?
                                 (expex-move-lexicals? ex) t
-    	                        (expex-setter-filter ex) (compose (fn mapcar (fn php-setter-filter *php-transpiler* _) _)
+    	                        (expex-setter-filter ex) (compose [mapcar [php-setter-filter *php-transpiler* _] _]
                                                                   #'expex-compiled-funcall)
     	                        (expex-function-arguments ex) #'current-transpiler-function-arguments-w/o-builtins
     	                        (expex-argument-filter ex) #'php-expex-argument-filter))))

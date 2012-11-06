@@ -20,7 +20,7 @@
   (funcall (expex-setter-filter ex) x))
 
 (defun expex-guest-filter-arguments (ex x)
-  (filter (fn funcall (expex-argument-filter ex) _) x))
+  (filter [funcall (expex-argument-filter ex) _] x))
 
 ;;;; UTILS
 
@@ -88,9 +88,9 @@
 ;; XXX this sucks blood out of stones. Should have proper macro expansion
 ;; instead.
 (defun expex-convert-quotes (x)
-  (filter (fn ? (quote? _)
-			    `(%quote ,._.)
-			    _)
+  (filter [? (quote? _)
+		     `(%quote ,._.)
+			 _]
 		  x))
 
 ;; Expand arguments to function.
@@ -159,7 +159,7 @@
 	(expex-move-arg-std ex x)))
 
 (defun expex-filter-and-move-args (ex x)
-  (with ((moved new-expr) (assoc-splice (filter (fn expex-move-arg ex _) (expex-guest-filter-arguments ex x))))
+  (with ((moved new-expr) (assoc-splice (filter [expex-move-arg ex _] (expex-guest-filter-arguments ex x))))
     (values (apply #'append moved) new-expr)))
 
 (defun expex-move-slot-value (ex x)
@@ -270,8 +270,8 @@
   (filter #'expex-atom-to-identity-expr x))
 
 (defun expex-list (ex x)
-  (mapcan (fn with ((moved new-expr) (expex-expr ex _))
-               (append moved (mapcan (fn expex-force-%setq ex _) new-expr)))
+  (mapcan [with ((moved new-expr) (expex-expr ex _))
+            (append moved (mapcan [expex-force-%setq ex _] new-expr))]
           x))
 
 (defun expex-body (ex x &optional (s '~%ret))

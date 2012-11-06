@@ -2,4 +2,4 @@
   (make-project "Hello World"
                 :files '("examples/js/hello-world.lisp")
                 :target 'js
-                :emitter (fn princ _ out)))
+                :emitter [princ _ out]))

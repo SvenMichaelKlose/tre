@@ -7,7 +7,7 @@
   `(%setq ,@x))
 
 (define-bc-std-macro %lx (lexicals fun)                                                                                                                        
-  (eval (macroexpand `(with ,(mapcan (fn `(,_ ',_)) .lexicals.)
+  (eval (macroexpand `(with ,(mapcan ^(,_ ',_) .lexicals.)
                         ,fun))))
 
 (define-bc-std-macro defun (name args &rest body)

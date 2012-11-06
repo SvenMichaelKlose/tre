@@ -4,7 +4,7 @@
   `(define-compiled-literal ,name (,x ,table)
 	   :maker ,maker
 	   :init-maker ,init-maker
-	   :decl-maker (fn identity nil))) ; APPLY doesn't ignore NIL.
+	   :decl-maker [identity nil])) ; APPLY doesn't ignore NIL.
 
 (php-define-compiled-literal php-compiled-char (x char)
   :maker (transpiler-add-late-symbol *current-transpiler* ($ 'trechar_compiled_ (char-code x)))

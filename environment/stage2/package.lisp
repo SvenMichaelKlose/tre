@@ -1,5 +1,4 @@
-;;;;; TRE tree processor
-;;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008,2012 Sven Michael Klose <pixel@copei.de>
 
 (defun make-package (name)
   (unless (package? name)
@@ -8,10 +7,10 @@
 
 (defmacro defpackage (name &rest exports)
   (with (pkg (make-package name))
-	(map (fn make-symbol _ pkg t) exports)))
+	(map [make-symbol _ pkg t] exports)))
 
 (defmacro use-package (name &rest-imports)
   (with (pkg (symbol-function name))
-    (map (fn (with (n (symbol-name _))
-			   (make-symbol n nil (make-symbol _ pkg))))
+    (map [with (n (symbol-name _))
+           (make-symbol n nil (make-symbol _ pkg))]
 	     imports)))

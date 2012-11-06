@@ -7,7 +7,7 @@
   `(%setq ,@x))
 
 (define-c-std-macro %lx (lexicals fun)                                                                                                                        
-  (eval (macroexpand `(with ,(mapcan (fn `(,_ ',_)) .lexicals.)
+  (eval (macroexpand `(with ,(mapcan ^(,_ ',_) .lexicals.)
                         ,fun))))
 
 (define-c-std-macro not (&rest x)
@@ -24,12 +24,12 @@
   (apply #'shared-defmacro '*current-transpiler* x))
 
 (define-c-std-macro defvar (name &optional (val '%%no-value))
-  (when (eq '%%no-value val)
-    (= name `',name))
+  (& (eq '%%no-value val)
+     (= name `',name))
   (let tr *current-transpiler*
     (print-definition `(defvar ,name))
-    (when (transpiler-defined-variable tr name)
-      (redef-warn "redefinition of variable ~A.~%" name))
+    (& (transpiler-defined-variable tr name)
+       (redef-warn "redefinition of variable ~A.~%" name))
     (transpiler-add-defined-variable tr name)
     (transpiler-obfuscate-symbol tr name)
     `(progn

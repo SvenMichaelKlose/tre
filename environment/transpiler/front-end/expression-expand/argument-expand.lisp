@@ -5,7 +5,7 @@
      `(cons ,args. ,(%expex-argument-expand-rest .args))))
 
 (defun expex-argument-expand (fun def vals)
-  (filter (fn ? (& (cons? _) (argument-rest-keyword? _.))
-                (%expex-argument-expand-rest ._)
-                _)
+  (filter [? (& (cons? _) (argument-rest-keyword? _.))
+             (%expex-argument-expand-rest ._)
+             _]
           (cdrlist (argument-expand fun def vals t))))

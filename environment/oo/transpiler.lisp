@@ -43,6 +43,6 @@
 (defun transpiler_defmember (class-name &rest names)
   (print-definition `(defmember ,class-name ,@names))
   (!? (href (transpiler-thisify-classes *current-transpiler*) class-name)
-      (append! (class-members !) (mapcar (fn list _ t) names))
+      (append! (class-members !) (mapcar [list _ t] names))
       (error "class ~A is not defined." class-name))
   nil)

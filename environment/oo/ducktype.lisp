@@ -42,10 +42,9 @@
 	     (= (href ,slothash '__class) ',cname)
 		 (= (href *ducktype-slothashes* ',cname) ,slothash)
 	     ; Inherit base class slots.
-	     ,@(mapcar (fn (with (baseslots (ducktype-slothash-name _))
-	   				     `(dolist (i (hashkeys ,baseslots))
-						    (= (href ,slothash i)
-							   (href ,baseslots i)))))
+	     ,@(mapcar [with (baseslots (ducktype-slothash-name _))
+	   				 `(dolist (i (hashkeys ,baseslots))
+						(= (href ,slothash i) (href ,baseslots i)))]
 				   bases)
 		 ,(thisify
 		    *ducktype-classes*

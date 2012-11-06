@@ -2,10 +2,10 @@
 
 (defun php-load-base (dir-path &rest files)
   (with-temporary *have-compiler?* nil
-    (mapcan (fn (let f (+ dir-path _)
-				  (format t  "(php-load-base \"~A\")~%" f)
-  				  (read-file-all f)))
-		    files)))
+    (mapcan [let f (+ dir-path _)
+              (format t  "(php-load-base \"~A\")~%" f)
+              (read-file-all f)]
+            files)))
 
 (defvar *php-env-path* "environment/transpiler/targets/php/environment/")
 

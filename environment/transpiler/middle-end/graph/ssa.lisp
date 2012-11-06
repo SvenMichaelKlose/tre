@@ -5,7 +5,7 @@
          visit #'((cb visited-blocks)
                       (? (& visited-blocks
                             (member cb visited-blocks :test #'eq))
-                         (map (fn adjoin! _ (cblock-merged-ins cb))
+                         (map [adjoin! _ (cblock-merged-ins cb)]
                               (intersect (cblock-ins cb)
                                          (cblock-outs visited-blocks.)))
                          (unless (member cb global-visited :test #'eq)
@@ -24,13 +24,13 @@
        `(%setq ,(cblock-rename-value lst (%setq-place x))
                ,(? (atom v)
                    (cblock-rename-value lst v)
-                   (cons v. (filter (fn cblock-rename-value lst _) .v)))))))
+                   (cons v. (filter [cblock-rename-value lst _] .v)))))))
 
 (defun cblock-rename-merged (cb)
-  (= (cblock-aliases cb) (filter (fn cons _ (gensym)) (cblock-merged-ins cb)))
+  (= (cblock-aliases cb) (filter [cons _ (gensym)] (cblock-merged-ins cb)))
   (= (cblock-realnames cb) (pairlist (cdrlist (cblock-aliases cb))
                                      (carlist (cblock-aliases cb))))
-  (= (cblock-code cb) (filter (fn cblock-rename-statement (cblock-aliases cb) _) (cblock-code cb))))
+  (= (cblock-code cb) (filter [cblock-rename-statement (cblock-aliases cb) _] (cblock-code cb))))
 
 (defun cblocks-rename-merged (cb)
   (with (global-visited nil
@@ -43,7 +43,7 @@
     (visit cb nil)))
 
 (defun cblock-unname-merged (cb)
-  (= (cblock-code cb) (filter (fn cblock-rename-statement (cblock-realnames cb) _) (cblock-code cb))))
+  (= (cblock-code cb) (filter [cblock-rename-statement (cblock-realnames cb) _] (cblock-code cb))))
 
 (defun cblocks-unname-merged (cb)
   (with (global-visited nil

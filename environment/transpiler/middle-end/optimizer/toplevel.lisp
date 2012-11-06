@@ -12,9 +12,9 @@
 
 (defun opt-peephole-tags-lambda (x)
   (with (body x
-		 spare-tags (find-all-if (fn opt-peephole-has-no-jumps-to body _)
+		 spare-tags (find-all-if [opt-peephole-has-no-jumps-to body _]
 		  				         (find-all-if #'number? x)))
-    (remove-if (fn member _ spare-tags :test #'eq) x)))
+    (remove-if [member _ spare-tags :test #'eq] x)))
 
 (defun opt-peephole-remove-spare-tags-body (x)
   (copy-lambda x :body (opt-peephole-remove-spare-tags (opt-peephole-tags-lambda (lambda-body x)))))
@@ -33,9 +33,9 @@
 	  (removed-tags nil
        replace-tag
          #'((old-dest new-dest)
-			  (= removed-tags (filter (fn ? (eq ._ old-dest)
-                                            (cons _. new-dest)
-                                            _)
+			  (= removed-tags (filter [? (eq ._ old-dest)
+                                         (cons _. new-dest)
+                                         _]
                                       removed-tags)))
 
        add-removed-tag
@@ -58,9 +58,9 @@
 
        translate-tags
 		 #'((x)
-    		 (maptree (fn !? (assoc _ removed-tags :test #'eq)
-                             .!
-                             _)
+    		 (maptree [!? (assoc _ removed-tags :test #'eq)
+                          .!
+                          _]
                       x))
 	   rec
 		 #'((x)

@@ -67,27 +67,24 @@
 ;(defun cps-foureign-funcall (fi x)
 ;  (with (replacements nil
 ;         some-replaced? nil
-;         new-args (mapcar (fn (? (transpiler-cps-function? *current-transpiler* _)
-;                                  (with-gensym (g arg v1 v2)
-;                                    (setq some-replaced? t)
-;                                    (funinfo-env-add fi g)
-;                                    (funinfo-env-add fi v1)
-;                                    (funinfo-env-add fi v2)
-;                                    (append! replacements
-;                                             `((%setq ,g
-;                                                      ,(copy-lambda
-;                                                          `#'((&rest ,arg)
-;                                                               (%setq ,v2 (cons ,_
-;                                                                               ,arg))
-;                                                               (%setq ,v1 (cons #'cps-return-dummy
-;                                                                               ,v2))
-;                                                               (%setq nil (apply ,v1)))
-;                                                          :info (make-funinfo
-;                                                                    :env (list v1)
-;                                                                    :parent fi
-;                                                                    :args (list arg))))))
-;                                    g)
-;                                  _))
+;         new-args (mapcar [? (transpiler-cps-function? *current-transpiler* _)
+;                             (with-gensym (g arg v1 v2)
+;                               (setq some-replaced? t)
+;                               (funinfo-env-add fi g)
+;                               (funinfo-env-add fi v1)
+;                               (funinfo-env-add fi v2)
+;                               (append! replacements
+;                                        `((%setq ,g ,(copy-lambda
+;                                                         `#'((&rest ,arg)
+;                                                              (%setq ,v2 (cons ,_ ,arg))
+;                                                              (%setq ,v1 (cons #'cps-return-dummy ,v2))
+;                                                              (%setq nil (apply ,v1)))
+;                                                         :info (make-funinfo
+;                                                                   :env (list v1)
+;                                                                   :parent fi
+;                                                                   :args (list arg))))))
+;                               g)
+;                             _))
 ;                          (cdr (%setq-value x))))
 ;    (let r `(,@replacements
 ;             (%setq ,(%setq-place x) (,(car (%setq-value x)) ,@new-args)))
@@ -261,7 +258,7 @@
                      xlats (cps-get-xlats body)
                      tag-xlats (cps-get-tag-xlats body))
                 (funinfo-env-add fi '~%cps-this)
-                `(,@(mapcar (fn `(%var ,_)) (cdrlist xlats))
+                `(,@(mapcar ^(%var ,_) (cdrlist xlats))
                   (%setq ~%cps-this this)
                   ,@(cps-make-functions (get-lambda-funinfo x) continuer body xlats tag-xlats)
                   (%setq nil (,(cdar xlats))))))))

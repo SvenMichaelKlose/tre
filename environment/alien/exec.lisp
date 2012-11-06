@@ -36,13 +36,13 @@ Returns NIL."
          cexecve	(alien-dlsym libc "execve")
          cperror	(alien-dlsym libc "perror")
 		 cpath		(%malloc-string path :null-terminated t)
-		 argptrs	(filter (fn %malloc-string _ :null-terminated t) args)
+		 argptrs	(filter [%malloc-string _ :null-terminated t] args)
 		 argv		(%malloc (* *pointer-size* (1+ (length args))))
 		 environv   (? environment
 		 			   (%malloc (* *pointer-size* (1+ (length environment))))
 					   0)
 		 envptrs	(& environment
-					   (filter (fn %malloc-string (string-concat _. "=" ._) :null-terminated t)
+					   (filter [%malloc-string (string-concat _. "=" ._) :null-terminated t]
 						       environment)))
 
 	(%put-pointer-list argv argptrs :null-terminated t)

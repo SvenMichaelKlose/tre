@@ -4,7 +4,7 @@
   (transpiler nil)
 
   ; Callback to check if an object is a function.
-  (functionp (fn function? (symbol-value _)))
+  (functionp [function? (symbol-value _)])
 
   ; Callback to get the argument definition of a function.
   (function-arguments #'function-arguments)

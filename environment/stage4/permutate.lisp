@@ -4,7 +4,7 @@
   (& head
 	 (? tail-permutations
 	    (mapcan #'((h)
-	 	             (mapcar (fn cons h (copy-list _)) tail-permutations))
+	 	             (mapcar [cons h (copy-list _)] tail-permutations))
 		        head)
 		(mapcar #'list head))))
 

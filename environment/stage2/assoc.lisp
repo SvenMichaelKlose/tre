@@ -42,7 +42,7 @@
   `(= ,place (acons ,key ,val ,place)))
 
 (defun copy-alist (x)
-  (filter (fn cons (car _) (cdr _)) x))
+  (filter [cons (car _) (cdr _)] x))
 
 (defun aremove (obj lst &key (test #'eql))
   (& lst
@@ -56,7 +56,7 @@
   `(= ,place (aremove ,obj ,place :test ,test)))
 
 (defun areplace (x replacements &key (test #'eql))
-  (filter (fn !? (assoc _. replacements :test test) ! _) x))
+  (filter [!? (assoc _. replacements :test test) ! _] x))
 
 (defmacro curly (&rest x)
   `(assoc ,@x))

@@ -1,5 +1,4 @@
-;;;;; TRE to C transpiler
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Functions with purely malloc'ed GC.
 
@@ -7,16 +6,15 @@
   `(,@(c-line "treptr _local_array = trearray_make (" num-vars ")")
     ,@(c-line "tregc_push (_local_array)")
     ,@(c-line "const treptr * _locals = (treptr *) TREATOM_DETAIL(_local_array)")
-	,@(when (transpiler-stack-locals? *current-transpiler*)
-	(mapcar (fn `(%setq ,(place-assign (place-expand-0 fi _))
-						    ,_))
-		    (funinfo-local-args fi)))))
+	,@(& (transpiler-stack-locals? *current-transpiler*)
+	     (mapcar ^(%setq ,(place-assign (place-expand-0 fi _)) ,_)]
+	             (funinfo-local-args fi)))))
 
 (define-c-macro %function-epilogue (fi-sym)
   (with (fi (get-funinfo-by-sym fi-sym)
     	 num-vars (length (funinfo-env fi)))
-    `(,@(when (< 0 num-vars)
-	  	  `(,(c-line "tregc_pop ()")))
+    `(,@(& (< 0 num-vars)
+	  	   `(,(c-line "tregc_pop ()")))
       (%function-return ,fi-sym))))
 
 (define-c-macro %function-return (fi-sym)

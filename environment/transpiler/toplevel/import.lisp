@@ -36,8 +36,8 @@
 
 (defun transpiler-import-exported-closures (tr)
   (& (transpiler-exported-closures tr)
-     (append (transpiler-frontend tr (pop (transpiler-exported-closures tr)))
-             (transpiler-import-exported-closures tr))))
+     (+ (transpiler-frontend tr (pop (transpiler-exported-closures tr)))
+        (transpiler-import-exported-closures tr))))
 
 (defun transpiler-import-wanted-function (tr x)
   (unless (transpiler-defined-function tr x)
@@ -51,13 +51,13 @@
             nil
       (awhen (transpiler-import-wanted-function tr !)
         (enqueue q !)))
-    (apply #'append (queue-list q))))
+    (apply #'+ (queue-list q))))
 
 (defun transpiler-import-wanted-variables (tr)
   (transpiler-frontend tr
-      (mapcan (fn unless (transpiler-defined-variable tr _)
-				   (transpiler-add-delayed-var-init tr `((= ,_ ,(assoc-value _ *variables* :test #'eq))))
-	               `((defvar ,_ nil)))
+      (mapcan [unless (transpiler-defined-variable tr _)
+				(transpiler-add-delayed-var-init tr `((= ,_ ,(assoc-value _ *variables* :test #'eq))))
+	            `((defvar ,_ nil))]
 	          (transpiler-wanted-variables tr))))
 
 (defun transpiler-import-from-environment (tr)
@@ -65,7 +65,7 @@
          exported (transpiler-import-exported-closures tr)
 	     vars (transpiler-import-wanted-variables tr))
     (? (| funs exported vars)
-       (append funs exported vars (transpiler-import-from-environment tr))
+       (+ funs exported vars (transpiler-import-from-environment tr))
        (transpiler-delayed-var-inits tr))))
 
 (defun transpiler-import-from-expex (x)
@@ -79,4 +79,4 @@
 ;      (| (vec-function-expr? x) x)))
 
 (defun transpiler-import-universe (tr)
-  (map (fn transpiler-add-wanted-function tr _) (reverse *defined-functions*)))
+  (map [transpiler-add-wanted-function tr _] (reverse *defined-functions*)))

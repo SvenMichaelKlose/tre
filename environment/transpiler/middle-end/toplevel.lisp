@@ -13,19 +13,19 @@
     update-funinfo           #'transpiler-update-funinfo
     opt-remove-unused-places #'opt-places-remove-unused
     opt-find-unused-places   #'opt-places-find-used
-;    middleend-graph          (fn (middleend-graph _)
-;                                 (identity _))
-;    cps                      (fn ? (in-cps-mode?)
-;                                   (cps _)
-;                                   _)
+;    middleend-graph          [(middleend-graph _)
+;                              (identity _)]
+;    cps                      [? (in-cps-mode?)
+;                                (cps _)
+;                                _]
     opt-peephole             #'opt-peephole
     opt-tailcall             #'opt-tailcall
     opt-peephole             #'opt-peephole
-    make-named-functions     (fn transpiler-make-named-functions tr _)
+    make-named-functions     [transpiler-make-named-functions tr _]
     quote-keywords           #'transpiler-quote-keywords
-    expression-expand        (fn with-temporary *expex-warn?* nil
-                                  (transpiler-expression-expand tr _))
+    expression-expand        [with-temporary *expex-warn?* nil
+                               (transpiler-expression-expand tr _)]
     make-packages            #'make-packages)
 
 (defun transpiler-middleend (tr x)
-  (mapcan (fn transpiler-middleend-0 tr (list _)) x))
+  (mapcan [transpiler-middleend-0 tr (list _)] x))

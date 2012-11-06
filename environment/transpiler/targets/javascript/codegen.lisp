@@ -159,7 +159,7 @@
 
 (define-js-macro aref (arr &rest idx)
   `(%transpiler-native ,arr
-     ,@(filter (fn `("[" ,_ "]")) idx)))
+     ,@(filter ^("[" ,_ "]") idx)))
 
 (define-js-macro %%u=-aref (val &rest x)
   `(%transpiler-native (aref ,@x) "=" ,val))
@@ -170,11 +170,11 @@
   `(,(symbol-without-package name) ":" ,value))
 
 (define-js-macro %%%make-hash-table (&rest args)
-  (parenthized-comma-separated-list (filter (fn js-literal-hash-entry _. ._) (group args 2)) :type 'curly))
+  (parenthized-comma-separated-list (filter [js-literal-hash-entry _. ._] (group args 2)) :type 'curly))
 
 (define-js-macro href (arr &rest idx)
   `(%transpiler-native ,arr
-     ,@(filter (fn `("[" ,_ "]")) idx)))
+     ,@(filter ^("[" ,_ "]") idx)))
 
 (define-js-macro %%u=-href (val &rest x)
   `(%transpiler-native (aref ,@x) "=" ,val))

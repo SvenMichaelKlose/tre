@@ -69,8 +69,8 @@
 	(values (? (& sym (not .sym) (== #\. sym.))
 		         'dot
 		       (? sym
-                  (? (every (fn | (digit-char-p _)
-                                  (eq #\. _))
+                  (? (every [| (digit-char-p _)
+                               (eq #\. _)]
                             sym)
                      'number
 			         'symbol)

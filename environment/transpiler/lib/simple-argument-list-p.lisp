@@ -2,7 +2,7 @@
 
 (defun simple-argument-list? (x)
   (? x
-     (not (member-if (fn | (cons? _)
-	                       (argument-keyword? _))
+     (not (member-if [| (cons? _)
+	                    (argument-keyword? _)]
 				     x))
 	 t))

@@ -17,18 +17,18 @@
      field))
 
 (defun %struct-make-args (fields)
-  `(&key ,@(mapcar (fn (let n (%struct-field-name _)
-						 `(,n ',n)))
+  `(&key ,@(mapcar [let n (%struct-field-name _)
+                     `(,n ',n)]
 				   fields)))
 
 (defun %struct-make-init (fields g)
   (let index 0
-    (mapcar (fn let argname (%struct-field-name _)
-                 `(= (aref ,g ,(1+! index))
-					 (? (eq ,argname ',argname)
-					    ,(when (cons? _)
-						   (cadr _))
-					    ,argname)))
+    (mapcar [let argname (%struct-field-name _)
+              `(= (aref ,g ,(1+! index))
+				  (? (eq ,argname ',argname)
+				     ,(& (cons? _)
+						 (cadr _))
+				     ,argname))]
             fields)))
 
 (defun %struct-make (name fields options)
@@ -64,7 +64,7 @@
 
 (defun %struct-getters (name fields)
   (let index 0
-    (mapcar (fn %struct-single-get name (%struct-field-name _) (1+! index)) fields)))
+    (mapcar [%struct-single-get name (%struct-field-name _) (1+! index)] fields)))
 
 (defun %struct? (name)
   (let sym (%struct?-symbol name)
@@ -74,9 +74,9 @@
 
 (defun %struct-sort-fields (fields-and-options)
   (with-queue (fields options)
-    (map (fn (? (& (cons? _) (%struct-option-keyword _.))
-	            (enqueue options _)
-	            (enqueue fields _)))
+    (map [? (& (cons? _) (%struct-option-keyword _.))
+	        (enqueue options _)
+	        (enqueue fields _)]
 	     fields-and-options)
     (values (queue-list fields) (queue-list options))))
 

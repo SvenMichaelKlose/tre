@@ -23,8 +23,8 @@
 		  	                                    (dot-expand (list-symbol without-end))))))
 
 (defun dot-expand (x)
-  (with (starts-with-dot?  (fn == #\. (elt _ 0))
-  		 dot-position (fn position #\. _ :test #'==)
+  (with (starts-with-dot?  [== #\. (elt _ 0)]
+  		 dot-position [position #\. _ :test #'==]
 		 conv
 			#'((x)
 				 (with (sl (string-list (symbol-name x))
@@ -38,9 +38,9 @@
 					 `(%slot-value ,(list-symbol (subseq sl 0 p))
 						           ,(conv (list-symbol (subseq sl (1+ p))))))))
 		 label?
-		   (fn (not (| (cons? _)
-					   (number? _)
-				       (string? _)))))
+		   [not (| (cons? _)
+				   (number? _)
+				   (string? _))])
     (when x
       (?
 		(label? x) (conv x)

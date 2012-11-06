@@ -4,9 +4,9 @@
 
 (defvar *php-native-environment*
         ,(concat-stringtree
-             (mapcar (fn let p (+ "environment/transpiler/targets/php/environment/native/" _ ".php")
-                          (with-open-file i (open p :direction 'input)
-		  	             (read-all-lines i)))
+             (mapcar [let p (+ "environment/transpiler/targets/php/environment/native/" _ ".php")
+                       (with-open-file i (open p :direction 'input)
+		  	             (read-all-lines i))]
                      '("settings" "error" "character" "cons" "lexical" "funref" "symbol" "array"))))
 
 (defun php-print-native-environment (out)
@@ -14,8 +14,8 @@
 
 (defun php-transpile-prepare (tr &key (import-universe? nil))
   (with-string-stream out
-    (when import-universe?
-      (transpiler-import-universe tr))
+    (& import-universe?
+       (transpiler-import-universe tr))
     (format out (+ "mb_internal_encoding ('UTF-8');~%"
                    "if (get_magic_quotes_gpc ()) {~%"
                    "    $vars = array (&$_GET, &$_POST, &$_COOKIE, &$_REQUEST);~%"

@@ -9,9 +9,9 @@
 ;	   (some #'string? x)
 ;         `(,($ 'string name) ,,@x)
 ;	   (some #'integerp x)
-;         `(,($ 'integer name) ,,@(filter (fn ? (integerp _)
-;                                               _
-;                                               `(%wrap-char-number ,,_))
+;         `(,($ 'integer name) ,,@(filter [? (integerp _)
+;                                            _
+;                                            `(%wrap-char-number ,,_)]
 ;                                         x))
 ;       `(,name ,,@x))))
 ;
@@ -52,9 +52,9 @@
 (defmacro character- (&rest x)
   (? (== 1 (length x))
      `(code-char (%transpiler-native "(-" (%slot-value ,x. v) ")"))
-     `(code-char (%%%- ,@(mapcar (fn (? (integerp _)
-							            _
-							            `(%slot-value ,_ v)))
+     `(code-char (%%%- ,@(mapcar [? (integerp _)
+							        _
+							        `(%slot-value ,_ v)]
                                  x)))))
 
 (defmacro integer- (&rest x)

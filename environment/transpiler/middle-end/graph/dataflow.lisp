@@ -5,14 +5,14 @@
     (let ins nil
       (dolist (i (reverse (cblock-code cb)))
         (remove! (%setq-place i) ins)
-        (map (fn adjoin! _ ins)
+        (map [adjoin! _ ins]
              (let v (%setq-value i)
                (? (atom v)
                   (& (funinfo-in-args-or-env? fi v)
                      (list v))
-                  (mapcan (fn & (atom _)
-                                (funinfo-in-args-or-env? fi _)
-                                (list _))
+                  (mapcan [& (atom _)
+                             (funinfo-in-args-or-env? fi _)
+                             (list _)]
                           .v)))))
       (append! (cblock-ins cb) ins))))
 
@@ -44,4 +44,4 @@
          (cblock-distribute-var cb v)))))
 
 (defun cblocks-distribute-ins-and-outs (blks fi)
-  (map (fn cblock-distribute-ins-and-outs _ fi) blks))
+  (map [cblock-distribute-ins-and-outs _ fi] blks))

@@ -31,10 +31,10 @@
     (c-make-function-declaration name args)
     `(,(code-char 10)
       "/*" ,*c-newline*
-      "  env: " ,@(mapcar (fn + (symbol-name _) " ") (funinfo-env fi)) ,*c-newline*
+      "  env: " ,@(mapcar [+ (symbol-name _) " "] (funinfo-env fi)) ,*c-newline*
       "*/" ,*c-newline*
 	  "treptr " ,name " "
-	  ,@(parenthized-comma-separated-list (mapcar (fn `("treptr " ,_)) args))
+	  ,@(parenthized-comma-separated-list (mapcar ^("treptr " ,_) args))
 	  ,(code-char 10)
 	  "{" ,(code-char 10)
           ,@(lambda-body x)

@@ -2,13 +2,13 @@
 
 (defun codegen-copy-arguments-to-locals (fi)
   (& (transpiler-stack-locals? *current-transpiler*)
-     (mapcar (fn `(%setq ,(place-assign (place-expand-0 fi _)) ,_))
+     (mapcar ^(%setq ,(place-assign (place-expand-0 fi _)) ,_)
              (funinfo-local-args fi))))
 
 (defun funinfo-var-declarations (fi)
   (unless (transpiler-stack-locals? *current-transpiler*)
-    (mapcan (fn unless (funinfo-arg? fi _)
-			     `((%var ,_)))
+    (mapcan [unless (funinfo-arg? fi _)
+		      `((%var ,_))]
 	        (funinfo-env fi))))
 
 (defun funinfo-copiers-to-lexicals (fi)
@@ -17,10 +17,10 @@
       `((%setq ,lex-sym (%make-lexical-array ,(length lexicals)))
         ,@(awhen (funinfo-lexical? fi lex-sym)
 		    `((%set-vec ,lex-sym ,! ,lex-sym)))
-        ,@(mapcan (fn & (funinfo-lexical? fi _)
-				  	    `((%setq ,_ ,(? (transpiler-arguments-on-stack? *current-transpiler*)
-                                        `(%stackarg ,(funinfo-sym fi) ,_)
-                                        `(%transpiler-native ,_)))))
+        ,@(mapcan [& (funinfo-lexical? fi _)
+				     `((%setq ,_ ,(? (transpiler-arguments-on-stack? *current-transpiler*)
+                                     `(%stackarg ,(funinfo-sym fi) ,_)
+                                     `(%transpiler-native ,_))))]
 				  (funinfo-args fi))))))
 
 (defun funinfo-function-prologue (fi body)

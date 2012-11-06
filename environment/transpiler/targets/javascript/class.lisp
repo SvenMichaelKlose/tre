@@ -6,14 +6,14 @@
        (defun ,cname ,args
          (= (slot-value this ,magic) t)
          ; Inject calls to base constructors.
-         ,@(filter (fn `((slot-value ,_ 'CALL) this)) bases)
+         ,@(filter ^((slot-value ,_ 'CALL) this) bases)
          (let ~%this this
            (%thisify ,cname
              ,@(ignore-body-doc body))))
 
        ; Inherit base class prototypes.
-       ,@(filter (fn `(hash-merge (slot-value ,cname 'PROTOTYPE)
-                     		      (slot-value ,_ 'PROTOTYPE)))
+       ,@(filter ^(hash-merge (slot-value ,cname 'PROTOTYPE)
+                              (slot-value ,_ 'PROTOTYPE))
 		         bases)
 
 	   ; Make predicate.
@@ -42,8 +42,7 @@
   (awhen (class-methods cls)
 	`(hash-merge
 	     (slot-value ,class-name 'PROTOTYPE)
-	     (%%%make-hash-table ,@(mapcan (fn js-emit-method class-name _)
-		    		                   (reverse !))))))
+	     (%%%make-hash-table ,@(mapcan [js-emit-method class-name _] (reverse !))))))
 
 (define-js-std-macro finalize-class (class-name)
   (let classes (transpiler-thisify-classes *current-transpiler*)

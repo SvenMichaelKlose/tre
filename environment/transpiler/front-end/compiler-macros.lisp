@@ -29,14 +29,14 @@
 (define-compiler-macro cond (&rest args)
   (with-compiler-tag end-tag
     `(%%vm-scope
-       ,@(mapcan (fn with-compiler-tag next
-                      `(,@(unless (t? _.)
-                            `((%setq ~%ret ,_.)
-                              (%%vm-go-nil ~%ret ,next)))
-                        ,@(awhen (vars-to-identity ._)
-						    `((%setq ~%ret ,(make-vm-scope !))))
-                       (%%vm-go ,end-tag)
-                       ,next))
+       ,@(mapcan [with-compiler-tag next
+                   `(,@(unless (t? _.)
+                         `((%setq ~%ret ,_.)
+                           (%%vm-go-nil ~%ret ,next)))
+                     ,@(awhen (vars-to-identity ._)
+				         `((%setq ~%ret ,(make-vm-scope !))))
+                     (%%vm-go ,end-tag)
+                     ,next)]
 			     args)
        ,end-tag
 	   (identity ~%ret))))
@@ -58,10 +58,10 @@
 
 (define-compiler-macro tagbody (&rest args)
   `(%%vm-scope
-     ,@(filter (fn (? (cons? _)
-		     		  _
-		     		  (| (assoc-value _ *tagbody-replacements* :test #'eq)
-		       		     _)))
+     ,@(filter [(? (cons? _)
+		           _
+		     	   (| (assoc-value _ *tagbody-replacements* :test #'eq)
+		       	      _))]
                args)
      (identity nil)))
 
@@ -85,7 +85,7 @@
 	 (with-compiler-tag g
 	   (with-temporaries (*blockname* block-name
 		                  *blockname-replacement* g)
-           (with (b	 (expander-expand 'compiler-return body)
+           (with (b     (expander-expand 'compiler-return body)
 			      head  (butlast b)
                   tail  (last b)
                   ret   `(%%vm-scope
@@ -97,7 +97,7 @@
     `(identity nil)))
 
 (define-compiler-macro setq (&rest args)
-  (make-vm-scope (filter (fn `(%setq ,_. ,._.)) (group args 2))))
+  (make-vm-scope (filter ^(%setq ,_. ,._.) (group args 2))))
 
 (define-compiler-macro ? (&rest body)
   (with (tests (group body 2)
@@ -106,6 +106,5 @@
       (error "?: Body missing"))
     `(cond
         ,@(? (== 1 (length end))
-			 (append (butlast tests)
-					 (list (cons t end)))
+			 (+ (butlast tests) (list (cons t end)))
 			 tests))))

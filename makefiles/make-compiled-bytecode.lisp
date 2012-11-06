@@ -4,7 +4,7 @@
 (= *opt-inline?* nil)
 (= *lexical-sym-counter* 2000)
 
-(let code (compile-files '("makefiles/make-compiled-bytecode-1.lisp") :target 'bytecode)
+(let code (compile-files '("makefiles/make-compiled-0.lisp") :target 'bytecode)
   (with-open-file out (open "bytecode-image" :direction 'output)
     (dolist (i code)
       (late-print i out))))

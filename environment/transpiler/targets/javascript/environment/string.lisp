@@ -8,7 +8,7 @@
 
 ;; XXX must be optional.
 (defun string-concat (&rest x)
-  (apply #'+ (filter (fn | _ "") x)))
+  (apply #'+ (filter [| _ ""] x)))
 
 (dont-obfuscate char-code-at)
 

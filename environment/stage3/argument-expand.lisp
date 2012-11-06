@@ -16,25 +16,23 @@
   (with (; Copy &KEY definitions.
          argument-exp-sort-key nil
 		 rec2
-		   (fn
-		     (when _
-			   (? (argument-keyword? _.)
-				  (rec3 _)
-				  (progn
-				    ; Turn keyword definition into ACONS.
-                    (push (? (cons? _.)
-                             (cons (car _.) (cadr _.)) ; with default value
-                             (cons _. _.)) ; with itself
-                          argument-exp-sort-key)
-                    (rec2 ._)))))
+		   [when _
+			 (? (argument-keyword? _.)
+				(rec3 _)
+				(progn
+				  ; Turn keyword definition into ACONS.
+                  (push (? (cons? _.)
+                           (cons (car _.) (cadr _.)) ; with default value
+                           (cons _. _.)) ; with itself
+                        argument-exp-sort-key)
+                  (rec2 ._)))]
 
 		 ; Copy argument definition until &KEY.
 		 rec3
-		   (fn
-		     (when _
-		       (? (eq '&key _.)
-				  (rec2 ._)
-				  (cons _. (rec3 ._))))))
+		   [when _
+		     (? (eq '&key _.)
+				(rec2 ._)
+				(cons _. (rec3 ._)))])
 
 	(= argument-exp-sort-key nil)
 	(values (rec3 def) (reverse argument-exp-sort-key))))

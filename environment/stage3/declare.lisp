@@ -26,7 +26,7 @@
 (defun %declare-statement-type-1 (typ x)
   (unless (variablep x)
 	(error "Variable expected but got ~A to declare as of type ~A" x typ))
-  `(unless (| ,@(filter (fn %declare-statement-type-predicate _ x)
+  `(unless (| ,@(filter [%declare-statement-type-predicate _ x]
                         (force-list typ)))
 	 (error "~A is not of type ~A. Object: ~A" ,(symbol-name x) (quote ,typ) ,x)))
 
@@ -34,7 +34,7 @@
   (unless (<= 2 (length x))
 	(error "expected type and one or more variables, but got only ~A" x))
   `(progn
-	 ,@(filter (fn %declare-statement-type-1 x. _) .x)))
+	 ,@(filter [%declare-statement-type-1 x. _] .x)))
 
 (defvar *declare-statement-classes*
   '((type .	%declare-statement-type)))

@@ -1,5 +1,4 @@
-;;;;; Caroshi ECMAScript library
-;;;;; Copyright (c) 2010 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2010,2012 Sven Michael Klose <pixel@copei.de>
 
 (defun string-has-whitespace? (x)
-  (member-if (fn character<= _ #\ ) (string-list x)))
+  (member-if [character<= _ #\ ] (string-list x)))

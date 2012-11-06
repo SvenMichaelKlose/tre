@@ -1,6 +1,10 @@
 Copyright (c) 2005-2012 Sven Klose <pixel@copei.de>
 
+ABOUT
 
+    tré is a dialect of the Lisp family of programming languages.
+    This compiler translates it into various other programming
+    languages or codes.
 
 BUILD & INSTALL
 

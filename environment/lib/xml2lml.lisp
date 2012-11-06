@@ -113,14 +113,14 @@
 
 (defun charlist-to-octalstring (x)
   (concat-stringtree
-	  (filter (fn ? (< _ 256)
-				    (+ "\\" (print-octal _ nil))
-				    (+ "\\u" (print-hexword _ nil)))
+	  (filter [? (< _ 256)
+				 (+ "\\" (print-octal _ nil))
+				 (+ "\\u" (print-hexword _ nil))]
 			  (force-list x))))
 
 (defun xml2lml-entity (in)
   (xml-read-char in) ; #\&
-  (let e (xml-read-while in (fn (not (== _ #\;))))
+  (let e (xml-read-while in [not (== _ #\;)])
 	(prog1
 	  (charlist-to-octalstring (href *xml-entities-hash* e))
 	  (xml-read-char in))))
@@ -145,7 +145,7 @@
        (values nil (make-symbol ident pkg)))))
 
 (defun xml2lml-quoted-string-r (in quot)
-  (with (c (xml-read-char in))
+  (let c (xml-read-char in)
     (unless (== quot c)
       (cons (? (== c #\\)
 			   (xml-read-char in)
@@ -154,8 +154,8 @@
 
 (defun xml2lml-string-symbol (s)
   (unless (string== "" s)
-    (? (every (fn & (alpha-char-p _)
-				    (lower-case-p _))
+    (? (every [& (alpha-char-p _)
+			     (lower-case-p _)]
 		      (string-list s))
        (make-symbol (string-upcase s))
        s)))
