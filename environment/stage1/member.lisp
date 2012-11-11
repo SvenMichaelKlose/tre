@@ -31,3 +31,6 @@
   (| (%member-if-r pred (car lsts))
      (? (cdr lsts)
         (apply #'member-if pred (cdr lsts)))))
+
+(defun member-if-not (pred &rest lsts)
+  (member-if #'((_) (not (funcall pred _))) lsts))
