@@ -23,3 +23,7 @@
 
 (defun values (&rest vals)
   (cons 'VALUES vals))
+
+(defun values? (x)
+  (& (cons? x)
+     (eq 'VALUES x.)))
