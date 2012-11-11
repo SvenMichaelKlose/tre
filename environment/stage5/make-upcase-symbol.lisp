@@ -2,3 +2,6 @@
 
 (defun make-upcase-symbol (x)
   (make-symbol (string-upcase x)))
+
+(defun make-upcase-symbols (x)
+  (filter #'make-upcase-symbol x))
