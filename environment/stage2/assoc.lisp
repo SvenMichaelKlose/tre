@@ -60,3 +60,9 @@
 
 (defmacro curly (&rest x)
   `(assoc ,@x))
+
+(defun force-assoc (x)
+  (when x
+    (& (atom x)  (= x (list x)))
+    (& (atom x.) (= x (list x)))
+    x))
