@@ -27,15 +27,21 @@
 	   x
 	   `(%quote ,x))))
 
+(defun backquote-cons-2 (x)
+  (?
+    (atom x)        x
+    (quasiquote? x) .x.
+    (backquote-cons-1 x)))
+
 (defun backquote-cons-1 (x)
   (?
     (atom x) (backquote-cons-atom x)
     (atom x.) `(cons ,(backquote-cons-atom x.)
-                     ,(backquote-cons-1 .x))
+                     ,(backquote-cons-2 .x))
     (quasiquote? x.) (backquote-cons-quasiquote x)
     (quasiquote-splice? x.) (backquote-cons-quasiquote-splice x)
     `(cons ,(backquote-cons x.)
-           ,(backquote-cons-1 .x))))
+           ,(backquote-cons-2 .x))))
 
 (defun backquote-cons (x)
   (?
