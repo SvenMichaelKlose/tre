@@ -4,8 +4,8 @@
   (with-gensym (gkey gvalue)
     `(with (,gkey ,key
             ,gvalue ,value)
-       (? (assoc ,gkey ,place :test ,test)
-          (= (assoc-value ,gkey ,place :test ,test) ,gvalue)
-          ,(? to-end?
-              `(append! ,place (list (cons ,gkey ,gvalue)))
-              `(acons! ,gkey ,gvalue ,place))))))
+       (!? (assoc ,gkey ,place :test ,test)
+           (= .! ,gvalue)
+           ,(? to-end?
+               `(append! ,place (list (cons ,gkey ,gvalue)))
+               `(acons! ,gkey ,gvalue ,place))))))
