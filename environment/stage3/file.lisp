@@ -4,6 +4,6 @@
   (with-open-file f (open path :direction 'input)
     (apply #'+ (read-all-lines f))))
 
-(defun put-file (path x)
+(defun put-file (path data)
   (with-open-file f (open path :direction 'output)
     (princ data f)))
