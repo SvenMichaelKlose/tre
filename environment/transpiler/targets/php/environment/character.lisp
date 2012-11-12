@@ -1,5 +1,4 @@
-;;;;; Transpiler: TRE to PHP
-;;;;; Copyright (c) 2008-2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *characters* (make-array))
 
@@ -10,12 +9,10 @@
 
 (defun code-char (x)
   (declare type number x)
-  (? (character? x)
-	 x
-	 (new __character x)))
+  (new __character (%wrap-char-number x)))
 
 (defun char-code (x)
-  (declare type number x)
+  (declare type character x)
   x.v)
 
 (dont-obfuscate from-char-code chr)
