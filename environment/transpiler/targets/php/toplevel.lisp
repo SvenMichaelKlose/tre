@@ -4,9 +4,7 @@
 
 (defvar *php-native-environment*
         ,(concat-stringtree
-             (mapcar [let p (+ "environment/transpiler/targets/php/environment/native/" _ ".php")
-                       (with-open-file i (open p :direction 'input)
-		  	             (read-all-lines i))]
+             (mapcar [fetch-file (+ "environment/transpiler/targets/php/environment/native/" _ ".php")]
                      '("settings" "error" "character" "cons" "lexical" "funref" "symbol" "array"))))
 
 (defun php-print-native-environment (out)

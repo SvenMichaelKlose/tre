@@ -7,9 +7,7 @@
   (format nil "    }break;}~%"))
 
 (defun js-gen-funref-wrapper ()
-  ,(concat-stringtree
-      (with-open-file i (open "environment/transpiler/targets/javascript/funref.js" :direction 'input)
-	  	(read-all-lines i))))
+  ,(fetch-file "environment/transpiler/targets/javascript/funref.js"))
 
 (defun js-transpile-pre (tr)
   (when (transpiler-lambda-export? tr)
