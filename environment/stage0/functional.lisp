@@ -1,24 +1,11 @@
 ;;;;; tré – Copyright (c) 2011–2012 Sven Michael Klose <pixel@copei.de>
 
-(setq *universe*
-	  (cons 'functional
-		    *universe*))
+(defmacro functional (macro (&rest names)
+  (print-definition `(functional ,@names))
+  `(setq *functionals* (%nconc ',names *functionals*))))
 
-(setq *defined-functions*
-	  (cons 'functional?
-		    *defined-functions*))
-
-(defvar *functionals* nil)
-
-(%set-atom-fun functional
-  (macro (&rest names)
-	(print-definition `(functional ,@names))
-    `(progn
-	   (setq *functionals* (%nconc ',names *functionals*)))))
-
-(%set-atom-fun functional?
-  (function ((name)
-	(member name *functionals* :test #'eq))))
+(defun functional? (name)
+  (member name *functionals* :test #'eq))
 
 (functional identity
             + - * / mod

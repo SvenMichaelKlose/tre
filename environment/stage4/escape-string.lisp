@@ -1,7 +1,8 @@
 ;;;;; tré – Copyright (c) 2009,2012 Sven Michael Klose <pixel@copei.de>
 
-(defun escape-charlist (x quote-char chars-to-escape)
+(defun escape-charlist (x &optional (quote-char #\") (chars-to-escape #\"))
   (when x
+    (= chars-to-escape (force-list chars-to-escape))
     (?
 	  (== quote-char x.)
         (cons #\\ (cons x. (escape-charlist .x quote-char chars-to-escape)))
@@ -13,5 +14,5 @@
         (cons #\\ (cons x. (escape-charlist .x quote-char chars-to-escape)))
       (cons x. (escape-charlist .x quote-char chars-to-escape)))))
 
-(defun escape-string (x quote-char &optional (chars-to-escape nil))
+(defun escape-string (x &optional (quote-char #\") (chars-to-escape #\"))
   (list-string (escape-charlist (string-list x) quote-char chars-to-escape)))

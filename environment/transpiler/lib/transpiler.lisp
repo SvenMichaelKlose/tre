@@ -50,7 +50,7 @@
   (save-argument-defs-only? nil)
 
   ; Generator for literal strings.
-  (gen-string [c-literal-string _ #\"])
+  (gen-string #'c-literal-string)
 
   ; Tells if functions must be moved out of functions.
   (lambda-export? nil)
