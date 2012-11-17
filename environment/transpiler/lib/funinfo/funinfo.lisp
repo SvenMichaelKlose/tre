@@ -2,11 +2,18 @@
 
 (defvar *funinfo-sym-counter* 0)
 
+(defun make-funinfo-sym ()
+  (alet ($ '~F (1+! *funinfo-sym-counter*))
+    (? (& (eq ! (symbol-value !))
+          (not (symbol-function !)))
+       !
+       (make-funinfo-sym))))
+
 (defstruct funinfo
   (transpiler nil)
   (parent nil)
   (name nil) ; Name of the function.
-  (sym ($ '~F (1+! *funinfo-sym-counter*))) ; Symbol of this funinfo used in LAMBDA-expressions.
+  (sym (make-funinfo-sym)) ; Symbol of this funinfo used in LAMBDA-expressions.
 
   (argdef nil) ; Argument definition.
   (args nil) ; Expanded argument definition.

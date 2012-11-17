@@ -11,4 +11,10 @@
 
 ;; Returns newly created, unique symbol.
 (%defun gensym ()
-  (make-symbol (string-concat *gensym-prefix* (string (gensym-number)))))
+  (#'((x)
+       (? (eq (symbol-value x) x)
+          (? (symbol-function x)
+             (gensym)
+             x)
+          (gensym)))
+     (make-symbol (string-concat *gensym-prefix* (string (gensym-number))))))

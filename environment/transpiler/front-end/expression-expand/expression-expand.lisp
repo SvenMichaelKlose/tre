@@ -6,10 +6,14 @@
 
 ;;;; SYMBOLS
 
-(defvar *expexsym-counter* nil)
+(defvar *expexsym-counter* 0)
 
 (defun expex-sym ()
-  ($ '~E (1+! *expexsym-counter*)))
+  (alet ($ '~E (1+! *expexsym-counter*))
+    (? (& (eq ! (symbol-value !))
+          (not (symbol-function !)))
+       !
+       (expex-sym))))
 
 ;;;; GUEST CALLBACKS
 
@@ -281,7 +285,6 @@
 
 (defun expression-expand (ex x)
   (& x
-     (with-temporary *expexsym-counter* 0
-	   (with-temporary *current-expex* ex
-	     (with-temporary *expex-funinfo* (transpiler-global-funinfo *current-transpiler*)
-           (expex-body ex x))))))
+	 (with-temporary *current-expex* ex
+	   (with-temporary *expex-funinfo* (transpiler-global-funinfo *current-transpiler*)
+         (expex-body ex x)))))

@@ -31,8 +31,15 @@
 
 (defvar *lexical-sym-counter* 0)
 
+(defun lambda-export-make-lexical-sym ()
+  (alet ($ '~L (1+! *lexical-sym-counter*))
+    (? (& (eq ! (symbol-value !))
+          (not (symbol-function !)))
+       !
+       (lambda-export-make-lexical-sym))))
+
 (defun lambda-export-make-exported-name ()
-  (let exported-name ($ '~L (1+! *lexical-sym-counter*))
+  (let exported-name (lambda-export-make-lexical-sym)
     (? (symbol-function exported-name)
        (lambda-export-make-exported-name)
        exported-name)))
