@@ -27,7 +27,7 @@
   (princ (string-concat "</" (lml-attr-string x.) ">") s))
 
 (defun lml2xml-atom (s x)
-  (princ x s))
+  (& x (princ x s)))
 
 (defun lml2xml-attr (s x)
   (princ (string-concat " "
