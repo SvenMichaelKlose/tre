@@ -36,26 +36,27 @@
   (transpiler-make-code tr (transpiler-frontend tr (transpiler-compiled-inits tr))))
 
 (defun php-transpile (sources &key (transpiler nil) (obfuscate? nil) (print-obfuscations? nil) (files-to-update nil))
-  (transpiler-add-defined-variable transpiler '*KEYWORD-PACKAGE*)
-  (= (transpiler-accumulate-toplevel-expressions? transpiler) (not *php-goto?*))
-  (+ "<?php "
-     (? *php-goto?*
-        ""
-        "$_I_ = 0; while (1) { switch ($_I_) { case 0:")
-	 (php-transpile-prepare transpiler)
-   	 (target-transpile transpiler
-         :files-before-deps (list (cons 'base1 *php-base*))
-	  	 :files-after-deps (+ (list (cons 'base2 *php-base2*))
-                              (when (eq t *have-environment-tests*)
-                                (list (cons 'env-tests (make-environment-tests))))
-                              sources)
-	 	  :dep-gen  #'(()
-			  	        (transpiler-import-from-environment transpiler))
-          :decl-gen #'(()
-                        (php-transpile-decls transpiler))
-		  :files-to-update files-to-update
-          :obfuscate? obfuscate?
-	      :print-obfuscations? print-obfuscations?)
-      (? *php-goto?*
-         " ?>"
-         "} break; }")))
+  (with-temporary *opt-inline-max-size* 16
+    (transpiler-add-defined-variable transpiler '*KEYWORD-PACKAGE*)
+    (= (transpiler-accumulate-toplevel-expressions? transpiler) (not *php-goto?*))
+    (+ "<?php "
+       (? *php-goto?*
+          ""
+          "$_I_ = 0; while (1) { switch ($_I_) { case 0:")
+	   (php-transpile-prepare transpiler)
+   	   (target-transpile transpiler
+           :files-before-deps (list (cons 'base1 *php-base*))
+	  	   :files-after-deps (+ (list (cons 'base2 *php-base2*))
+                                (when (eq t *have-environment-tests*)
+                                  (list (cons 'env-tests (make-environment-tests))))
+                                sources)
+	 	    :dep-gen  #'(()
+			  	          (transpiler-import-from-environment transpiler))
+            :decl-gen #'(()
+                          (php-transpile-decls transpiler))
+		    :files-to-update files-to-update
+            :obfuscate? obfuscate?
+	        :print-obfuscations? print-obfuscations?)
+        (? *php-goto?*
+           " ?>"
+           "} break; }"))))

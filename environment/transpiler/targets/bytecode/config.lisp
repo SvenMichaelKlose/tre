@@ -4,8 +4,7 @@
   (aprog1 (create-transpiler
               :name 'bytecode
 			  :separator (format nil ";~%")
-			  :inline-exceptions (list 'bc-init)
-			  :dont-inline-list '(error format replace-tree)
+			  :inline-exceptions '(bc-init error format replace-tree)
 			  :identifier-char?
 	  		      [| (<= #\a _ #\z)
 		  	  		 (<= #\A _ #\Z)

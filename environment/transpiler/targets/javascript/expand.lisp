@@ -153,8 +153,7 @@
 
 (define-js-std-macro dont-inline (&rest x)
   (dolist (i x)
-    (transpiler-add-inline-exception *current-transpiler* i)
-    (transpiler-add-dont-inline *current-transpiler* i))
+    (transpiler-add-inline-exception *current-transpiler* i))
   nil)
 
 (define-js-std-macro assert (x &optional (txt nil) &rest args)

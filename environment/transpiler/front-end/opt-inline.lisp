@@ -41,8 +41,7 @@
 	  x)))
 
 (defun inlineable? (tr x)
-  (not (| (transpiler-macro? tr x)
-		  (transpiler-dont-inline? tr x))))
+  (not (transpiler-inline-exception? tr x)))
 
 (defun opt-inline-0 (tr level current parent x &key (tail? nil))
   (?

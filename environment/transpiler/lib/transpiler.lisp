@@ -41,7 +41,6 @@
   (named-function-next nil)
 
   (inline-exceptions nil)
-  (dont-inline-list nil)
 
   (obfuscate? nil)
   (import-from-environment? t)
@@ -201,9 +200,6 @@
 (define-slot-setter-push transpiler-add-inline-exception tr
   (transpiler-inline-exceptions tr))
 
-(define-slot-setter-push transpiler-add-dont-inline tr
-  (transpiler-dont-inline-list tr))
-
 (define-slot-setter-push transpiler-add-cps-exception tr
   (transpiler-cps-exceptions tr))
 
@@ -230,9 +226,6 @@
 
 (defun transpiler-plain-arg-fun? (tr fun)
   (member fun (transpiler-plain-arg-funs tr) :test #'eq))
-
-(defun transpiler-dont-inline? (tr fun)
-  (member fun (transpiler-dont-inline-list tr) :test #'eq))
 
 (defun transpiler-macro (tr name)
   (let expander (expander-get (transpiler-codegen-expander tr))
@@ -294,7 +287,6 @@
                      :named-functions?       named-functions?
                      :named-function-next    named-function-next
                      :inline-exceptions      (copy-list inline-exceptions)
-                     :dont-inline-list       (copy-list dont-inline-list)
                      :obfuscate?             obfuscate?
                      :import-from-environment? import-from-environment?
                      :only-environment-macros? only-environment-macros?

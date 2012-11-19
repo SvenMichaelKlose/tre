@@ -101,8 +101,9 @@
   (apply #'transpiler-add-obfuscation-exceptions *current-transpiler* symbols)
   nil)
 
-(define-php-std-macro dont-inline (x)
-  (transpiler-add-inline-exception *current-transpiler* x)
+(define-php-std-macro dont-inline (&rest x)
+  (adolist (x)
+    (transpiler-add-inline-exception *current-transpiler* !))
   nil)
 
 (define-php-std-macro assert (x &optional (txt nil) &rest args)

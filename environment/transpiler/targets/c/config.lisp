@@ -4,8 +4,7 @@
   (aprog1 (create-transpiler
               :name 'c
 			  :separator (format nil ";~%")
-			  :inline-exceptions (list 'c-init)
-			  :dont-inline-list '(error format replace-tree)
+			  :inline-exceptions '(c-init error format replace-tree)
 			  :identifier-char?
 	  		      [| (<= #\a _ #\z)
 		  	  	     (<= #\A _ #\Z)

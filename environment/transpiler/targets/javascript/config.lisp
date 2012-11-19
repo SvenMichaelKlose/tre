@@ -24,8 +24,7 @@
 	  :rename-all-args? t
 	  :rename-toplevel-function-args? t
 	  :predefined-symbols '(window document true)
-	  :inline-exceptions '(%slot-value error format identity %bind)
-	  :dont-inline-list '(%slot-value error format identity %bind map apply maphash js-eval-transpile)
+	  :inline-exceptions '(%slot-value error format identity %bind map apply maphash js-eval-transpile)
       :place-expand-ignore-toplevel-funinfo? t
       :expex-initializer 
         #'((ex)
