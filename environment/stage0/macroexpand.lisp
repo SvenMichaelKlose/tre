@@ -1,74 +1,157 @@
 ;;;;; tré – Copyright (c) 2006–2009,2012 Sven Michael Klose <pixel@copei.de>
 
-(defvar'*macrop-diversion* nil)
-(defvar'*macrocall-diversion* nil)
-(defvar'*current-macro* nil)
-(defvar'*macroexpand-backquote-diversion* nil)
-(defvar'*macroexpand-print?* nil)
+;;;; This is where the Lisp macro magic happens.
+;;;; Leaves are expanded first.
+;;;; XXX Don't use symbols starting with '%' anywhere else.
+;;;; XXX Solve this issue with packaging.
 
-(defun %macroexpand-backquote (x)
-  (?
-    (atom x) x
+(setq
+	*universe*
+	(cons '*macrop-diversion*
+	(cons '*macroexpand-backquote-diversion*
+	(cons '*macrocall-diversion*
+	(cons '*current-macro*
+	(cons '%macroexpand
+	(cons '%macroexpand-backquote
+	(cons '%%macrop
+	(cons '%%macrocall
+	(cons '%%env-macrop
+	(cons '%%env-macrocall
+	(cons '%macroexpand-list
+	(cons '%macroexpand-rest
+	(cons '%macroexpand-xlat
+	(cons '%macroexpand-call
+		  *universe*)))))))))))))))
 
-    (atom (car x))
-  	    (cons (car x)
-              (%macroexpand-backquote .x))
+(setq
+	*defined-functions*
+	(cons '%macroexpand
+	(cons '%macroexpand-backquote
+	(cons '%%macrop
+	(cons '%%macrocall
+	(cons '%%env-macrop
+	(cons '%%env-macrocall
+	(cons '%macroexpand-list
+	(cons '%macroexpand-rest
+	(cons '%macroexpand-xlat
+	(cons '%macroexpand-call
+		  *defined-functions*)))))))))))
 
-    (eq (caar x) 'QUASIQUOTE)
-	    (cons (cons 'QUASIQUOTE (%macroexpand (cdar x)))
-	          (%macroexpand-backquote .x))
+(setq
+	*variables*
+	(cons (cons '*macrop-diversion* nil)
+	(cons (cons '*macrocall-diversion* nil)
+	(cons (cons '*current-macro* nil)
+	(cons (cons '*macroexpand-backquote-diversion* nil)
+	(cons (cons '*macroexpand-print?* nil)
+				*variables*))))))
 
-    (eq (caar x) 'QUASIQUOTE-SPLICE)
-	    (cons (cons 'QUASIQUOTE-SPLICE (%macroexpand (cdar x)))
-              (%macroexpand-backquote .x))
+(setq *macrop-diversion* nil
+      *macrocall-diversion* nil
+      *current-macro* nil
+      *macroexpand-print?* nil)
 
-    (cons-r %macroexpand-backquote x)))
+(%set-atom-fun %macroexpand-backquote
+  #'((%g)
+       (?
+         (atom %g) %g
+
+         (atom (car %g))
+	  	   (cons (car %g)
+                 (%macroexpand-backquote (cdr %g)))
+
+         (eq (car (car %g)) 'QUASIQUOTE)
+	  	   (cons (cons 'QUASIQUOTE
+		        	   (%macroexpand (cdr (car %g))))
+	             (%macroexpand-backquote (cdr %g)))
+
+         (eq (car (car %g)) 'QUASIQUOTE-SPLICE)
+	  	   (cons (cons 'QUASIQUOTE-SPLICE
+		        	   (%macroexpand (cdr (car %g))))
+	             (%macroexpand-backquote (cdr %g)))
+
+         (cons (%macroexpand-backquote (car %g))
+	           (%macroexpand-backquote (cdr %g))))))
 
 (setq *macroexpand-backquote-diversion* #'%macroexpand-backquote)
 
-(defun %macroexpand-rest (x)
-  (? (cons? x)
-     (cons (%macroexpand x.)
-           (%macroexpand-rest .x))
-     x))
+(%set-atom-fun %macroexpand-rest
+  #'((%g)
+       (? (atom %g)
+          %g
+       	  (cons (%macroexpand (car %g))
+                (%macroexpand-rest (cdr %g))))))
 
-(defun %macroexpand-xlat (x)
-  (when *macroexpand-print?*
-    (print '*macroexpand-print?*)
-    (print x))
-  (with-temporary *current-macro* x.
-    (aprog1 (apply *macrocall-diversion* (list x))
-      (& *macroexpand-print?* (print x)))))
+(%set-atom-fun %macroexpand-xlat
+  #'((%g)
+       (? *macroexpand-print?*
+          (progn
+            (print '*macroexpand-print?*)
+            (print %g)))
+       (setq *current-macro* (car %g))
+       (#'((%g)
+             (? *macroexpand-print?*
+                (print %g))
+             (setq *current-macro* nil)
+             %g)
+         (apply *macrocall-diversion* (list %g)))))
 
-(defun %macroexpand-call (x)
-  (? (& (atom x.) (apply *macrop-diversion* (list x)))
-     (%macroexpand-xlat x)
-	 x))
+(%set-atom-fun %macroexpand-call
+  #'((%g)
+       (? (? (atom (car %g))
+		     (apply *macrop-diversion* (list %g)))
+          (%macroexpand-xlat %g)
+		  %g)))
 
-(defun %macroexpand (x)
-  (? (cons? x)
-     (case x. :test #'eq
-       'QUOTE x
-       'BACKQUOTE  (cons 'BACKQUOTE (apply *macroexpand-backquote-diversion* (list .x)))
-       'QUASIQUOTE (cons 'QUASIQUOTE (%macroexpand .x))
-       'QUASIQUOTE-SPLICE (cons 'QUASIQUOTE-SPLICE (%macroexpand .x))
-       (%macroexpand-call (%macroexpand-rest x)))
-     x))
+(%set-atom-fun %macroexpand
+  #'((%g)
+       (?
+         (atom %g)
+           %g
 
-(defun %%macrop (x)
-  (macrop (symbol-function x.)))
+         (eq (car %g) 'QUOTE)
+           %g
 
-(defun %%macrocall (x)
-  (%macrocall (symbol-function x.) .x))
+         (eq (car %g) 'BACKQUOTE)
+           (cons 'BACKQUOTE
+                 (apply *macroexpand-backquote-diversion* (list (cdr %g))))
 
-(defun %%env-macrop (x)
-  (%%macrop x))
+         (eq (car %g) 'QUASIQUOTE)
+	  	   (cons 'QUASIQUOTE
+		     	 (%macroexpand (cdr %g)))
 
-(defun %%env-macrocall (x)
-  (%%macrocall x))
+         (eq (car %g) 'QUASIQUOTE-SPLICE)
+	  	   (cons 'QUASIQUOTE-SPLICE
+		     	 (%macroexpand (cdr %g)))
 
-(defun *macroexpand-hook* (x)
-  (with-temporary (*macrop-diversion* #'%%macrop
+         (%macroexpand-call (%macroexpand-rest %g)))))
+
+(%set-atom-fun %%macrop
+  #'((%g)
+       (macrop (symbol-function (car %g)))))
+
+(%set-atom-fun %%macrocall
+  #'((%g)
+       (%macrocall (symbol-function (car %g)) (cdr %g))))
+
+(%set-atom-fun %%env-macrop
+  #'((%g)
+       (%%macrop %g)))
+
+(%set-atom-fun %%env-macrocall
+  #'((%g)
+       (%%macrocall %g)))
+
+(%set-atom-fun *macroexpand-hook*
+  #'((%g)
+	   (#'((%gp %gc %gcm)
+             (setq *macrop-diversion* #'%%macrop
                    *macrocall-diversion* #'%%macrocall
                    *current-macro* nil)
-    (%macroexpand x)))
+	         (#'((%g)
+                   (setq *macrop-diversion* %gp
+                         *macrocall-diversion* %gc
+                         *current-macro* %gcm)
+				   %g)
+	           (%macroexpand %g)))
+          *macrop-diversion* *macrocall-diversion* *current-macro*)))

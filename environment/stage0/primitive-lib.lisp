@@ -2,33 +2,58 @@
 
 (setq *show-definitions?* t)
 
-(defvar '*variables* nil)
-(defvar '*defined-functions* nil)
-(defvar '*universe* nil)
-(defvar '*keyword-package* nil)
-(defvar '*show-definitions?* nil)
-(defvar '*environment-path* nil)
-(defvar '*endianess* nil)
-(defvar '*pointer-size* nil)
-(defvar '*cpu-type* nil)
-(defvar '*libc-path* nil)
-(defvar '*have-environment-tests* nil)
+(setq
+	*universe* ; The garbage collector roots here.
+	(cons 'last
+	(cons '%nconc
+	(cons 'copy-tree
+	(cons '*variables*
+		  *universe*)))))
 
-(defun identity (x) x)
+(setq
+	*defined-functions*
+	(cons 'identity
+	(cons 'copy-tree
+	(cons 'last
+	(cons '%nconc
+		  nil)))))
 
-(defun copy-tree (x)
-  (& x (? (atom x) x
-          (cons (copy-tree x.)
-           	    (copy-tree .x)))))
+(setq
+	*variables*
+	(cons (cons '*variables* nil)
+	(cons (cons '*defined-functions* nil)
+	(cons (cons '*universe* nil)
+	(cons (cons '*keyword-package* nil)
+	(cons (cons '*show-definitions?* nil)
+	(cons (cons '*environment-path* nil)
+	(cons (cons '*endianess* nil)
+	(cons (cons '*pointer-size* nil)
+	(cons (cons '*cpu-type* nil)
+	(cons (cons '*libc-path* nil)
+	(cons (cons '*have-environment-tests* nil)
+		  *variables*))))))))))))
 
-(defun last (x)
-  (& x (? .x
-          (last .x)
-          x)))
+(%set-atom-fun identity #'((x) x))
 
-(defun %nconc (a b)
-  (? a
-     (progn
-       (rplacd (last a) b)
-       a)
-	 b))
+(%set-atom-fun copy-tree
+  #'((x)
+      (? x
+		 (? (atom x)
+            x
+            (cons (copy-tree (car x))
+              	  (copy-tree (cdr x)))))))
+
+(%set-atom-fun last
+  #'((x)
+      (? x
+		 (? (cdr x)
+            (last (cdr x))
+            x))))
+
+(%set-atom-fun %nconc
+  #'((a b)
+      (? a
+         (progn
+		   (rplacd (last a) b)
+    	   a)
+		 b)))

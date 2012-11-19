@@ -1,11 +1,26 @@
 ;;;;; tré – Copyright (c) 2009,2011–2012 Sven Michael Klose <pixel@copei.de>
 
-(defun + (&rest x)
-  (apply (?
-           (string? x.) #'string-concat
-           (| (not x.) (cons? x.)) #'append
-           #'number+)
-         x))
+(setq
+	*universe*
+	(cons '+
+	(cons '-
+		  *universe*)))
 
-(defun - (&rest x)
-  (apply #'number- x))
+(setq
+	*defined-functions*
+	(cons '+
+	(cons '-
+		  *defined-functions*)))
+
+(%set-atom-fun +
+  #'((&rest x)
+       (apply (?
+                (string? (car x)) #'string-concat
+                (not (car x)) #'append
+                (cons? (car x)) #'append
+                #'number+)
+              x)))
+
+(%set-atom-fun -
+  #'((&rest x)
+	   (apply #'number- x)))
