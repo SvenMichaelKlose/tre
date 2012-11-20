@@ -1,4 +1,4 @@
-;;;; TRE environment Copyright (c) 2005,2011 Sven Klose <pixel@copei.de>
+;;;; tré – Copyright (c) 2005,2011–2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *gensym-prefix* "~G")
 (defvar *gensym-counter* 0)
