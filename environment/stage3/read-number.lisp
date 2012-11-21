@@ -9,7 +9,7 @@
 
 (defun peek-dot (str)
   (awhen (peek-char str)
-    (eq #\. !)))
+    (== #\. !)))
 
 (defun read-mantissa (&optional (str *standard-input*))
   "Read positive integer from stream."
