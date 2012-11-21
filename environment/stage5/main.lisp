@@ -34,3 +34,5 @@
 (env-load "stage5/percent.lisp")
 (env-load "stage5/bmp2cub.lisp")
 (env-load "stage5/ppm.lisp")
+(env-load "stage5/pi.lisp")
+(env-load "stage5/dct.lisp")
