@@ -33,3 +33,4 @@
 (env-load "stage5/parenthized-comma-separated-list.lisp")
 (env-load "stage5/percent.lisp")
 (env-load "stage5/bmp2cub.lisp")
+(env-load "stage5/ppm.lisp")
