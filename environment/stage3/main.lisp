@@ -24,7 +24,6 @@
 (env-load "stage3/read-line.lisp")
 (env-load "stage3/read.lisp")
 (env-load "stage3/read-file.lisp")
-(env-load "stage3/read-binary-file.lisp")
 (env-load "stage3/file.lisp")
 (env-load "stage3/format.lisp")
 (env-load "stage3/error.lisp" 'c)
