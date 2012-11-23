@@ -233,3 +233,39 @@ trenumber_builtin_greaterp (treptr list)
         return treptr_t;
     return treptr_nil;
 }
+
+/*tredoc
+  (cmd :name SQRT
+    (arg :type number)
+    (descr "Calculates square root.")
+    (returns number))
+ */
+treptr
+trenumber_builtin_sqrt (treptr list)
+{
+    return treatom_number_get (sqrt (TRENUMBER_VAL(trearg_get (list))), TRENUMTYPE_FLOAT);
+}
+
+/*tredoc
+  (cmd :name SIN
+    (arg :type number)
+    (descr "Calculates sine.")
+    (returns number))
+ */
+treptr
+trenumber_builtin_sin (treptr list)
+{
+    return treatom_number_get (sin (TRENUMBER_VAL(trearg_get (list))), TRENUMTYPE_FLOAT);
+}
+
+/*tredoc
+  (cmd :name COS
+    (arg :type number)
+    (descr "Calculates cosine.")
+    (returns number))
+ */
+treptr
+trenumber_builtin_cos (treptr list)
+{
+    return treatom_number_get (cos (TRENUMBER_VAL(trearg_get (list))), TRENUMTYPE_FLOAT);
+}
