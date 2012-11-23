@@ -19,9 +19,9 @@
 
 (defmacro dotimes ((iter times &rest result) &body body)
   (let g (gensym)
-    `(let ,g ,times
+    `(let ,g (integer ,times)
        (do ((,iter 0 (integer+ 1 ,iter)))
-	       ((integer== ,iter ,times) ,@result)
+	       ((integer== ,iter ,g) ,@result)
 	     ,@body))))
 
 (defmacro dotimes-step ((iter times step &rest result) &body body)
