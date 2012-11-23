@@ -14,6 +14,8 @@
         			 (? (> n 9)
           				(recp out (/ (- n m) 10))
           				out))))
+    (when (< c 0)
+      (princ #\- str))
     (dolist (i (recp nil c))
       (%princ-character (code-char (+ i #\0)) str))))
 
