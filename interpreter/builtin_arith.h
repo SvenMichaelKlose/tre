@@ -16,6 +16,8 @@ extern treptr trenumber_builtin_logxor (treptr);
 extern treptr trenumber_builtin_sqrt (treptr);
 extern treptr trenumber_builtin_sin (treptr);
 extern treptr trenumber_builtin_cos (treptr);
+extern treptr trenumber_builtin_random (treptr);
+extern treptr trenumber_builtin_exp (treptr);
 extern treptr trenumber_builtin_number_equal (treptr);
 extern treptr trenumber_builtin_lessp (treptr);
 extern treptr trenumber_builtin_greaterp (treptr);

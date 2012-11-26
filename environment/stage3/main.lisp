@@ -32,6 +32,5 @@
 (env-load "stage3/loop.lisp")
 (env-load "stage3/with-struct.lisp")
 (env-load "stage3/collected-errors.lisp")
-(env-load "stage3/random.lisp" 'c)
 (env-load "stage3/argument-expand.lisp")
 (env-load "stage3/string-integer.lisp" 'c)

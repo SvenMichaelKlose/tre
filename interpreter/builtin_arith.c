@@ -15,6 +15,7 @@
 
 #include <math.h>
 #include <string.h>
+#include <stdlib.h>
 
 /* Perform operation over list. */
 treptr
@@ -87,8 +88,7 @@ trenumber_builtin_difference (treptr list)
 		return treerror (treptr_nil, "Argument expected");
 
     if (CDR(list) == treptr_nil)
-		return treatom_number_get (-TREATOM_VALUE(CAR(list)),
-								   TRENUMTYPE_FLOAT);
+		return treatom_number_get (-TRENUMBER_VAL(CAR(list)), TRENUMTYPE_FLOAT);
 
     return treeval_exprop (list, treeval_op_difference, "-");
 }
@@ -268,4 +268,28 @@ treptr
 trenumber_builtin_cos (treptr list)
 {
     return treatom_number_get (cos (TRENUMBER_VAL(trearg_get (list))), TRENUMTYPE_FLOAT);
+}
+
+/*tredoc
+  (cmd :name RANDOM
+    (arg :type number)
+    (descr "Get random long integer.")
+    (returns number))
+ */
+treptr
+trenumber_builtin_random (treptr list)
+{
+    return treatom_number_get ((float) random (), TRENUMTYPE_FLOAT);
+}
+
+/*tredoc
+  (cmd :name EXP
+    (arg :type number)
+    (descr "Exponential function.")
+    (returns number))
+ */
+treptr
+trenumber_builtin_exp (treptr list)
+{
+    return treatom_number_get (expf (TRENUMBER_VAL(trearg_get (list))), TRENUMTYPE_FLOAT);
 }
