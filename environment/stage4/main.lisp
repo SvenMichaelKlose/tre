@@ -11,6 +11,7 @@
 (env-load "stage4/compose.lisp")
 (env-load "stage4/concat-stringtree.lisp")
 (env-load "stage4/copy-array.lisp")
+(env-load "stage4/copy.lisp")
 (env-load "stage4/count-if.lisp")
 (env-load "stage4/count-tree.lisp")
 (env-load "stage4/def-head-predicate.lisp")
