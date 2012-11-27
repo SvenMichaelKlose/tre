@@ -31,7 +31,8 @@
 	(cons (cons '*cpu-type* nil)
 	(cons (cons '*libc-path* nil)
 	(cons (cons '*have-environment-tests* nil)
-		  *variables*))))))))))))
+	(cons (cons '*rand-max* nil)
+		  *variables*)))))))))))))
 
 (%set-atom-fun identity #'((x) x))
 
