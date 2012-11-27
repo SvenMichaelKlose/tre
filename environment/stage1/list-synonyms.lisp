@@ -20,7 +20,7 @@
 						      (defun (= ,name) (v x)
 							    (rplaca ,(%make-cdr i) v)))
 						 l)
-				   (incf i))
+				   (1+! i))
 			 *first-to-tenth*)
 		 l)))
 

@@ -7,22 +7,22 @@
 
 (defun editor-scroll-up (ed n)
   (ansi-scroll-down n)
-  (decf (editor-state-line-offset ed) n)
+  (1-! (editor-state-line-offset ed) n)
   (dotimes (y n)
 	(editor-redraw-line y)))
 
 (defun editor-scroll-down (ed n)
   (ansi-scroll-up n)
-  (incf (editor-state-line-offset ed) n)
+  (1+! (editor-state-line-offset ed) n)
   (dotimes (y n)
     (editor-redraw-line ed (- (terminal-height (editor-state-terminal ed)) 2 y))))
 
 (defun editor-scroll-left (ed n)
-  (decf (editor-state-column-offset ed) n)
+  (1-! (editor-state-column-offset ed) n)
   (editor-redraw ed))
 
 (defun editor-scroll-right (ed n)
-  (incf (editor-state-column-offset ed) n)
+  (1+! (editor-state-column-offset ed) n)
   (editor-redraw ed))
 
 (defun editor-clear-bottom (ed)
