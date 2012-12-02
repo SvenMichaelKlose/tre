@@ -27,6 +27,7 @@ FILES="
 	builtin_sequence.c
 	builtin_stream.c
 	builtin_string.c
+	builtin_time.c
 
 	bytecode.c
 
@@ -77,7 +78,7 @@ BUILDOPTS="-Ofast"
 CRUNSHOPTS="-Ofast --whole-program"
 CRUNSHFLAGS="-DTRE_COMPILED_CRUNSHED -Iinterpreter"
 
-LIBFLAGS="-lm -lffi -ldl"
+LIBFLAGS="-lm -lffi -ldl -lrt"
 
 if [ -f /lib/x86_64-linux-gnu/libdl.so* ]; then
 	LIBFLAGS="$LIBFLAGS -ldl";
