@@ -357,5 +357,5 @@ treatom_builtin_id (treptr args)
 {
     treptr arg = trearg_get (args);
 
-    return treatom_number_get (arg / sizeof (treptr), TRENUMTYPE_INTEGER);
+    return treatom_number_get (arg, TRENUMTYPE_INTEGER);
 }
