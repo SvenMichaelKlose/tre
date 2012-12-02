@@ -102,5 +102,5 @@
   (place-expand-0 (transpiler-global-funinfo *current-transpiler*) x))
 
 (defun place-expand-funref-lexical (fi)
-  (place-expand-0 (funinfo-parent fi)
-                  (funinfo-lexical (funinfo-parent fi))))
+  (alet (funinfo-parent fi)
+    (place-expand-0 ! (funinfo-lexical !))))
