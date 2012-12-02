@@ -1,10 +1,16 @@
-Copyright (c) 2005-2012 Sven Klose <pixel@copei.de>
+TRÉ
 
 ABOUT
 
     tré is a dialect of the Lisp family of programming languages.
     This compiler translates it into various other programming
     languages or codes.
+
+PREPARE LINUX
+
+    Install libffi and headers.
+
+        # aptitude install libffi-dev
 
 BUILD & INSTALL
 
@@ -47,3 +53,5 @@ DOCUMENTATION
 
     The most detailed documentation if the environment is the code
     itself.
+
+Copyright (c) 2005-2012 Sven Michael Klose <pixel@copei.de>
