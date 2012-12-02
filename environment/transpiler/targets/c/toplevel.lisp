@@ -77,5 +77,6 @@
                           (transpiler-import-from-environment tr))
             :decl-gen #'(()
                            (c-transpiler-compile-argument-def-symbols *closure-argdefs*)
-                           (let init (transpiler-make-code tr (transpiler-frontend tr (c-transpiler-make-init tr)))
+                           (let init (with-temporary (transpiler-profile? tr) nil
+                                       (transpiler-make-code tr (transpiler-frontend tr (c-transpiler-make-init tr))))
                              (concat-stringtree (transpiler-compiled-decls tr) init)))))))

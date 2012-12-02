@@ -27,7 +27,16 @@
                      ,@(& *log-functions?*
                           (not (eq '%%%log name))
                           `((& (function? raw-log) (%%%log ,(symbol-name name)))))
-   		             ,@(body-without-noargs-tag body))))
+   		             ,@(alet (body-without-noargs-tag body)
+                         (? (& (transpiler-profile? tr)
+                               (not (eq 'add-profile name)))
+                            `((let ~%profiling-timer (& (not *profile-lock*) (nanotime))
+                                (prog1
+                                  (progn ,@!)
+                                  (when ~%profiling-timer
+                                    (with-temporary *profile-lock* t
+                                      (add-profile ',name (integer- (nanotime) ~%profiling-timer)))))))
+                            !)))))
      ,@(& *have-compiler?* (not (transpiler-memorize-sources? *current-transpiler*))
           `((%setq *defined-functions* (cons ,(list 'quote name) *defined-functions*))))
      ,@(when (transpiler-save-sources? tr)

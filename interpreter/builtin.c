@@ -33,6 +33,7 @@
 #include "builtin_sequence.h"
 #include "builtin_stream.h"
 #include "builtin_string.h"
+#include "builtin_time.h"
 #include "main.h"
 #include "xxx.h"
 
@@ -467,6 +468,8 @@ char *tre_builtin_names[] = {
 
     "SYS-IMAGE-CREATE", "SYS-IMAGE-LOAD",
 
+    "NANOTIME",
+
     "OPEN-SOCKET", "ACCEPT", "RECV", "SEND", "CLOSE-CONNECTION", "CLOSE-SOCKET",
 
     NULL
@@ -620,6 +623,8 @@ treevalfunc_t treeval_xlat_builtin[] = {
 
     treimage_builtin_create,
     treimage_builtin_load,
+
+    tretime_builtin_nanotime,
 
     trenet_builtin_open_socket,
     trenet_builtin_accept,

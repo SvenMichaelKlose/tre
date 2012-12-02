@@ -139,6 +139,10 @@
 	(treimage_builtin_
     	(SYS-IMAGE-CREATE create)
 		(SYS-IMAGE-LOAD load))
+
+	(tretime_builtin_
+		(NANOTIME))
+
 	(trenet_builtin_
         (OPEN-SOCKET open_socket)
         (ACCEPT accept)
