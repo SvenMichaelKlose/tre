@@ -1,7 +1,7 @@
 ;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *current-transpiler* nil)
-(defvar *transpiler-assert* t)
+(defvar *transpiler-assert* nil)
 (defvar *transpiler-log* nil)
 (defvar *transpiler-no-stream?* nil)
 
@@ -9,6 +9,9 @@
 (defvar *opt-inline?* nil)
 (defvar *recompiling?* nil)
 (defvar *print-executed-functions?* nil)
+
+(defun make-variables-hash ()
+  (assoc-hash (filter [cons _. t] *variables*) :test #'eq))
 
 (defstruct transpiler
   name
@@ -28,6 +31,7 @@
 
   (defined-functions-hash (make-hash-table :test #'eq))
   (defined-variables-hash (make-hash-table :test #'eq))
+  (host-variables-hash    nil)
 
   ; Functions to be imported from the environment.
   (wanted-functions nil)
@@ -47,6 +51,7 @@
   (only-environment-macros? t)
   (save-sources? nil)
   (save-argument-defs-only? nil)
+  (profile? nil)
 
   ; Generator for literal strings.
   (gen-string #'c-literal-string)
@@ -151,6 +156,9 @@
   (= (href (transpiler-defined-variables-hash tr) name) t)
   name)
 
+(defun transpiler-host-variable? (tr name)
+  (href (transpiler-host-variables-hash tr) name))
+
 (defun transpiler-switch-obfuscator (tr on?)
   (= (transpiler-obfuscate? tr) on?))
 
@@ -186,7 +194,7 @@
 
 (defun transpiler-imported-variable? (tr x)
   (& (transpiler-import-from-environment? tr)
-     (assoc x *variables* :test #'eq)))
+     (transpiler-host-variable? tr x)))
 
 (defun transpiler-inline-exception? (tr fun)
   (member fun (transpiler-inline-exceptions tr) :test #'eq))
@@ -232,16 +240,16 @@
     (funcall (expander-lookup expander) expander name)))
 
 (defun transpiler-reset (tr)
-  (= (transpiler-thisify-classes tr) (make-hash-table :test #'eq)	; thisified classes.
-  	 (transpiler-wanted-functions tr) nil
-  	 (transpiler-wanted-functions-hash tr) (make-hash-table :test #'eq)
-  	 (transpiler-wanted-variables tr) nil
-  	 (transpiler-wanted-variables-hash tr) (make-hash-table :test #'eq)
+  (= (transpiler-thisify-classes tr)        (make-hash-table :test #'eq)	; thisified classes.
+  	 (transpiler-wanted-functions tr)       nil
+  	 (transpiler-wanted-functions-hash tr)  (make-hash-table :test #'eq)
+  	 (transpiler-wanted-variables tr)       nil
+  	 (transpiler-wanted-variables-hash tr)  (make-hash-table :test #'eq)
   	 (transpiler-defined-functions-hash tr) (make-hash-table :test #'eq)
-  	 (transpiler-defined-variables-hash tr) (make-hash-table :test #'eq)
-  	 (transpiler-function-args tr) (make-hash-table :test #'eq)
-  	 (transpiler-function-bodies tr) (make-hash-table :test #'eq)
-  	 (transpiler-late-symbols tr) (make-hash-table :test #'eq)
+  	 (transpiler-host-variables-hash tr)    (make-variables-hash)
+  	 (transpiler-function-args tr)          (make-hash-table :test #'eq)
+  	 (transpiler-function-bodies tr)        (make-hash-table :test #'eq)
+  	 (transpiler-late-symbols tr)           (make-hash-table :test #'eq)
   	 (transpiler-exported-closures tr) nil
   	 (transpiler-delayed-var-inits tr) nil
      (transpiler-memorized-sources tr) nil
@@ -280,6 +288,7 @@
                      :literal-conversion     literal-conversion
                      :defined-functions-hash (copy-hash-table defined-functions-hash)
                      :defined-variables-hash (copy-hash-table defined-variables-hash)
+                     :host-variables-hash    (copy-hash-table host-variables-hash)
                      :wanted-functions       (copy-list wanted-functions)
                      :wanted-functions-hash  (copy-hash-table wanted-functions-hash)
                      :wanted-variables       (copy-list wanted-variables)
@@ -292,6 +301,7 @@
                      :only-environment-macros? only-environment-macros?
                      :save-sources?           save-sources?
                      :save-argument-defs-only? save-argument-defs-only?
+                     :profile?                profile?
                      :gen-string              gen-string
                      :lambda-export?          lambda-export?
                      :accumulate-toplevel-expressions? accumulate-toplevel-expressions?

@@ -47,7 +47,7 @@
        (transpiler-imported-variable? tr x)
        (transpiler-defined-variable tr x)
        (transpiler-macro? tr x)
-       (assoc x *variables* :test #'eq))))
+       (transpiler-host-variable? tr x))))
 
 (defun expex-symbol-defined? (x)
   (| (funinfo-in-this-or-parent-env? *expex-funinfo* x)
