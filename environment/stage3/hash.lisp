@@ -19,13 +19,12 @@
 
 (defun %make-hash-index-string (h str)
   (with (k 0
-         m 0
 	     l (length str))
     (do ((i 0 (integer-1+ i)))
-        ((| (integer< 16 i)
+        ((| (integer== ,(* 8 *pointer-size*) i)
             (integer== i l))
 		 (mod (abs k) (%hash-table-size h)))
-      (= k (logxor k (= m (bit-or (<< m 8) (elt str i))))))))
+      (= k (logxor (<< k 1) (elt str i))))))
 
 (defun %make-hash-index (h key)
   (?
