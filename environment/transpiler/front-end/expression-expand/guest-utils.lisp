@@ -9,7 +9,7 @@
      (| (not (expex-in-env? x))
         (funinfo-in-toplevel-env? *expex-funinfo* x))
      (| (transpiler-defined-variable *current-transpiler* x)
-        (global-variable? x))))
+        (transpiler-host-variable? *current-transpiler* x))))
 
 (defun expex-stack-locals? (ex)
   (& *expex-funinfo* ; Is set if we're inside a function.
