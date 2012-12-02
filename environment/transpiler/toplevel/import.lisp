@@ -25,7 +25,7 @@
      (atom var)
      (symbol? var)
      (not (href (transpiler-wanted-variables-hash tr) var))
-     (| (assoc var *variables* :test #'eq)
+     (| (transpiler-host-variable? tr var)
         (assoc var *constants* :test #'eq))))
 
 (defun transpiler-add-wanted-variable (tr var)
