@@ -34,13 +34,16 @@
      (eq tmp (cdr (append '(l) tmp)))))
   nil)
 
-(defun nconc (&rest lsts)
+(defun %nconc-0 (lsts)
   (when lsts
     (!? (car lsts)
 	    (progn
-		  (rplacd (last !) (apply #'nconc (cdr lsts)))
+		  (rplacd (last !) (%nconc-0 (cdr lsts)))
 		  !)
-		(apply #'nconc (cdr lsts)))))
+		(%nconc-0 (cdr lsts)))))
+
+(defun nconc (&rest lsts)
+  (%nconc-0 lsts))
 
 (define-test "NCONC works"
   ((nconc (copy-list '(l i)) (copy-list '(s p))))

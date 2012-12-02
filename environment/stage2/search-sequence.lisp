@@ -8,8 +8,21 @@
 	   (= ,a ,b
 	   	  ,b ,g))))
 
-; XXX with-index?
-(defun find-if (pred seq &key (start nil) (end nil) (from-end nil) (with-index nil))
+(defun %find-if-list (pred seq from-end with-index)
+  (alet (? from-end
+           (reverse seq)
+           seq)
+    (? with-index
+       (let idx 0
+         (dolist (i !)
+           (& (funcall pred i idx)
+              (return i))
+           (1+! idx)))
+       (dolist (i !)
+         (& (funcall pred i)
+            (return i))))))
+
+(defun %find-if-sequence (pred seq start end from-end with-index)
   (& seq (integer< 0 (length seq))
      (let* ((e (| end (integer-1- (length seq))))
 	 	    (s (| start 0)))
@@ -27,6 +40,11 @@
            (& (apply pred (cons elm (& with-index (list i))))
 		      (return elm)))))))
  
+(defun find-if (pred seq &key (start nil) (end nil) (from-end nil) (with-index nil))
+  (? (not (atom seq) start end)
+     (%find-if-list pred seq from-end with-index)
+     (%find-if-sequence pred seq start end from-end with-index)))
+
 (defun find (obj seq &key (start nil) (end nil) (from-end nil) (test #'eql))
   (find-if [funcall test _ obj] seq :start start :end end :from-end from-end))
 
@@ -55,12 +73,12 @@
   5)
 
 (defun position (obj seq &key (start nil) (end nil) (from-end nil) (test #'eql))
-  (let idx nil
+  (let *position-index* nil
     (find-if #'((x i)
-				  (& (funcall test x obj)
-					 (= idx i)))
-			 seq :start start :end end :from-end from-end :with-index t)
-	idx))
+                 (& (funcall test x obj)
+                    (= *position-index* i)))
+             seq :start start :end end :from-end from-end :with-index t)
+	  *position-index*))
 
 (define-test "POSITION works with character list"
   ((position 's '(l i s p)))
@@ -71,12 +89,12 @@
   4)
 
 (defun position-if (pred seq &key (start nil) (end nil) (from-end nil))
-  (let idx nil
+  (let *position-index* nil
     (find-if #'((x i)
 				  (& (funcall pred x)
-					 (= idx i)))
+					 (= *position-index* i)))
 			 seq :start start :end end :from-end from-end :with-index t)
-	idx))
+	  *position-index*))
 
 (defun some (pred &rest seqs)
   (find-if pred (apply #'append seqs)))
