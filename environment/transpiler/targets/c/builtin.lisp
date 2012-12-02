@@ -56,6 +56,7 @@
 		(>> bit_shift_right)
 		(CODE-CHAR code_char)
 		(INTEGER)
+		(FLOAT)
 		(CHARACTER? characterp))
 
 	(treatom_builtin_
@@ -81,8 +82,10 @@
 		(LIST)
     	(CAR)
 		(CDR)
+		(CPR)
 		(RPLACA)
 		(RPLACD)
+		(RPLACP)
    	    (CONS? consp)
         ,@(when *builtin-assoc*
 		    '((ASSOC)))

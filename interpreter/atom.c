@@ -92,16 +92,14 @@ treatom_init_builtins (void)
 
     /* Builtin functions. */
     for (i = 0; tre_builtin_names[i] != NULL; i++) {
-        atom = treatom_alloc (tre_builtin_names[i], treptr_nil,
-                              TRETYPE_BUILTIN, treptr_nil);
+        atom = treatom_alloc (tre_builtin_names[i], treptr_nil, TRETYPE_BUILTIN, treptr_nil);
         TREATOM_SET_DETAIL(atom, i);
         EXPAND_UNIVERSE(atom);
     }
 
     /* Special forms. */
     for (i = 0; tre_special_names[i] != NULL; i++) {
-        atom = treatom_alloc (tre_special_names[i], treptr_nil,
-                              TRETYPE_SPECIAL, treptr_nil);
+        atom = treatom_alloc (tre_special_names[i], treptr_nil, TRETYPE_SPECIAL, treptr_nil);
         TREATOM_SET_DETAIL(atom, i);
         EXPAND_UNIVERSE(atom);
     }
@@ -121,6 +119,8 @@ treatom_init_big_bang ()
     EXPAND_UNIVERSE(treptr_t);
     EXPAND_UNIVERSE(tre_package_keyword);
 	MAKE_VAR("*KEYWORD-PACKAGE*", tre_package_keyword);
+    tre_default_listprop = treatom_alloc ("*DEFAULT-LISTPROP*", treptr_nil, TRETYPE_VARIABLE, treptr_nil);
+    EXPAND_UNIVERSE(tre_default_listprop);
 }
 
 /*

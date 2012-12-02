@@ -1,5 +1,5 @@
 /*
- * tré - Copyright (c) 2007-2009,2011-2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2007–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -108,6 +108,7 @@ treimage_write_conses (FILE *f)
             if (!(tregc_listmarks[i] & c)) {
                 idx = (i << 3) + j;
                 treimage_write (f, &tre_lists[idx], sizeof (struct tre_list));
+                treimage_write (f, &tre_listprops[idx], sizeof (treptr));
             }
 
             c <<= 1;
@@ -309,6 +310,7 @@ treimage_read_conses (FILE * f)
             idx = (i << 3) + j;
             if (!(tregc_listmarks[i] & c)) {
                 treimage_read (f, &tre_lists[idx], sizeof (struct tre_list));
+                treimage_read (f, &tre_listprops[idx], sizeof (treptr));
                 trelist_num_used++;
             } else {
                 if (tre_lists_free == treptr_nil)

@@ -17,11 +17,9 @@
 
 treptr tre_lists_free;
 struct tre_list tre_lists[NUM_LISTNODES];
+treptr tre_listprops[NUM_LISTNODES];
+treptr tre_default_listprop;
 size_t trelist_num_used;
-
-#define TRENODE_SET(node, value) \
-    (node)->car = car; 	\
-    (node)->cdr = cdr;
 
 #ifdef TRE_LIST_DIAGNOSTICS
 treptr
@@ -29,7 +27,7 @@ trelist_car (treptr lst)
 {
     CHKPTR(_CAR(lst));
     if (TRE_GETMARK(trediag_listmarks, lst))
-        treerror_internal (_CAR(lst), "car of free cons");
+        treerror_internal (treptr_nil, "free CAR");
 
     return _CAR(lst);
 }
@@ -39,9 +37,19 @@ trelist_cdr (treptr lst)
 {
     CHKPTR(_CDR(lst));
     if (TRE_GETMARK(trediag_listmarks, lst))
-        treerror_internal (_CAR(lst), "cdr using free cons. cdr gone. car");
+        treerror_internal (treptr_nil, "free CDR");
 
     return _CDR(lst);
+}
+
+treptr
+trelist_cpr (treptr lst)
+{
+    CHKPTR(_CPR(lst));
+    if (TRE_GETMARK(trediag_listmarks, lst))
+        treerror_internal (treptr_nil, "free CPR");
+
+    return _CPR(lst);
 }
 #endif
 
@@ -51,7 +59,7 @@ trelist_rplaca (treptr cons, treptr val)
     CHKPTR(val);
 #ifdef TRE_LIST_DIAGNOSTICS
     if (TRE_GETMARK(trediag_listmarks, cons))
-		treerror_internal (cons, "rplaca of free cons");
+		treerror_internal (cons, "RPLACA on free cons");
 #endif
 
     _CAR(cons) = val;
@@ -63,11 +71,24 @@ trelist_rplacd (treptr cons, treptr val)
     CHKPTR(val);
 #ifdef TRE_LIST_DIAGNOSTICS
     if (TRE_GETMARK(trediag_listmarks, cons))
-		treerror_internal (cons, "rplacd of free cons");
+		treerror_internal (cons, "RPLACD on free cons");
 #endif
 
     _CDR(cons) = val;
 }
+
+void
+trelist_rplacp (treptr cons, treptr val)
+{
+    CHKPTR(val);
+#ifdef TRE_LIST_DIAGNOSTICS
+    if (TRE_GETMARK(trediag_listmarks, cons))
+		treerror_internal (cons, "RPLACP on free cons");
+#endif
+
+    _CPR(cons) = val;
+}
+
 
 /*
  * Free single list element.
@@ -96,11 +117,6 @@ trelist_free (treptr node)
 #endif
 }
 
-/*
- * Free list including sublists.
- *
- * Atoms are left alone.
- */
 void
 trelist_free_expr (treptr node)
 {
@@ -112,9 +128,6 @@ trelist_free_expr (treptr node)
     trelist_free (node);
 }
 
-/*
- * Free pure list, ignoring sublists.
- */
 void
 trelist_free_toplevel (treptr node)
 {
@@ -127,7 +140,6 @@ trelist_free_toplevel (treptr node)
     }
 }
 
-/* Collect garbage and try again, */
 void
 trelist_gc ()
 {
@@ -136,9 +148,6 @@ trelist_gc ()
     	treerror_internal (treptr_invalid, "no more free list elements");
 }
 
-/*
- * Allocate a list node.
- */
 treptr
 _trelist_get (treptr car, treptr cdr)
 {
@@ -154,7 +163,9 @@ _trelist_get (treptr car, treptr cdr)
     ret = tre_lists_free;
 
     tre_lists_free = _CDR(ret);
-    TRELIST_SET(ret, car, cdr);
+    _CAR(ret) = car;
+    _CDR(ret) = cdr;
+    _CPR(ret) = TREATOM_VALUE(tre_default_listprop);
     tregc_retval (ret);
 
 #ifdef TRE_COUNT_LISTNODES
@@ -413,4 +424,5 @@ trelist_init ()
 
     tre_lists_free = 0;
     trelist_num_used = 0;
+    tre_default_listprop = treptr_nil;
 }

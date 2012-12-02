@@ -75,7 +75,7 @@ trelist_builtin_car (treptr list)
 /*tredoc
   (cmd :name CDR
 	(arg :type cons)
-	(returns "CAR of cell. Returns NIL if the argument is NIL.))
+	(returns "CDR of cell. Returns NIL if the argument is NIL.))
  */
 treptr
 trelist_builtin_cdr (treptr list)
@@ -83,6 +83,19 @@ trelist_builtin_cdr (treptr list)
     treptr arg = trelist_builtin_cxr_arg (list, "CDR");
     RETURN_NIL(arg);
     return CDR(arg);
+}
+
+/*tredoc
+  (cmd :name CPR
+	(arg :type cons)
+	(returns "Property of cell. Returns NIL if the argument is NIL.))
+ */
+treptr
+trelist_builtin_cpr (treptr list)
+{
+    treptr arg = trelist_builtin_cxr_arg (list, "property");
+    RETURN_NIL(arg);
+    return CPR(arg);
 }
 
 #define TRELISTARG_GET2(cons, new, list) \
@@ -95,7 +108,7 @@ trelist_builtin_cdr (treptr list)
   (cmd :name RPLACA
 	(arg :type cons)
 	(arg :type obj)
-	(descr "Set adress register of cell to new value.")
+	(descr "Set CAR cons.")
 	(returns-argument obj))
  */
 treptr
@@ -110,7 +123,7 @@ trelist_builtin_rplaca (treptr list)
   (cmd :name RPLACD
 	(arg :type cons)
 	(arg :type obj)
-	(descr "Set decrement register of cell to new value.")
+	(descr "Set CDR of cons.")
 	(returns-argument obj))
  */
 treptr
@@ -122,7 +135,22 @@ trelist_builtin_rplacd (treptr list)
 }
 
 /*tredoc
-  (cmd :name CONSP
+  (cmd :name RPLACP
+	(arg :type cons)
+	(arg :type obj)
+	(descr "Set property of cons.")
+	(returns-argument obj))
+ */
+treptr
+trelist_builtin_rplacp (treptr list)
+{
+    TRELISTARG_GET2(cons, new, list);
+    RPLACP(cons, new);
+    return cons;
+}
+
+/*tredoc
+  (cmd :name CONS?
 	(arg :type obj :occurrence *)
 	(descr "Checks if all objects are conses.")
 	(returns boolean))

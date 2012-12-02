@@ -109,6 +109,7 @@ tregc_trace_tree (treptr p)
         _TREGC_ALLOC_CONS(i);
 
         tregc_trace_object (_CAR(i));
+        tregc_trace_object (_CPR(i));
 
         if (TREPTR_IS_ATOM(_CDR(i))) {
             tregc_trace_object (_CDR(i));
