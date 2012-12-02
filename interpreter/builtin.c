@@ -424,7 +424,7 @@ char *tre_builtin_names[] = {
     "CHARACTER==", "CHARACTER<", "CHARACTER>",
 	"BIT-OR", "BIT-AND",
 	"<<", ">>",
-    "CODE-CHAR", "INTEGER",
+    "CODE-CHAR", "INTEGER", "FLOAT",
     "CHARACTER?",
 
     "NOT", "EQ", "EQL",
@@ -541,6 +541,7 @@ treevalfunc_t treeval_xlat_builtin[] = {
     trenumber_builtin_bit_shift_right,
     trenumber_builtin_code_char,
     trenumber_builtin_integer,
+    trenumber_builtin_float,
     trenumber_builtin_characterp,
 
     treatom_builtin_not,

@@ -1,5 +1,5 @@
 /*
- * tré - Copyright (c) 2005-2010 Sven Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2010,2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #include <ctype.h>
@@ -100,6 +100,21 @@ trenumber_builtin_integer (treptr args)
     long    tmp = (long) TRENUMBER_VAL(arg);
 
     return treatom_number_get ((double) tmp, TRENUMTYPE_INTEGER);
+}
+
+/*tredoc
+  (cmd :name FLOAT
+    (arg :type number)
+    (descr "Converts any number to float. "
+		   "Always returns a new number.")
+	(returns float))
+ */
+treptr
+trenumber_builtin_float (treptr args)
+{
+    treptr  arg = trenumber_arg_get (args);
+
+    return treatom_number_get (TRENUMBER_VAL(arg), TRENUMTYPE_FLOAT);
 }
 
 /*tredoc
