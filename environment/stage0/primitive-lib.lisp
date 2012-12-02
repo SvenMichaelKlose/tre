@@ -32,7 +32,8 @@
 	(cons (cons '*libc-path* nil)
 	(cons (cons '*have-environment-tests* nil)
 	(cons (cons '*rand-max* nil)
-		  *variables*)))))))))))))
+	(cons (cons '*default-listprop* nil)
+		  *variables*))))))))))))))
 
 (%set-atom-fun identity #'((x) x))
 
