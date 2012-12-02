@@ -108,3 +108,9 @@
         ,@(? (== 1 (length end))
 			 (+ (butlast tests) (list (cons t end)))
 			 tests))))
+
+(define-compiler-macro %%vm-scope (&rest body)
+  `(%%vm-scope ,@(mapcan [? (%%vm-scope? _)
+                            ._
+                            (list _)]
+                         body)))
