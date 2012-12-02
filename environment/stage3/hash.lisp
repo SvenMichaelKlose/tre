@@ -71,6 +71,12 @@
     (dolist (i (hashkeys h) n)
       (= (href n i) (href h i)))))
 
+(defun hash-alist (h)
+  (declare type hash-table h)
+  (with-queue alist
+    (dolist (i (hashkeys h) (queue-list alist))
+      (enqueue alist (cons i (href h i))))))
+
 (define-test "HREF symbol key"
   ((let h (make-hash-table :test #'eq)
      (= (href h 'a) 'x)
