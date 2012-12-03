@@ -1,5 +1,5 @@
 /*
- * tré - Copyright (c) 2005-2006,2009,2011 Sven Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2006,2009,2011–2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #ifndef TRE_BUILTIN_H
@@ -11,6 +11,7 @@ extern treevalfunc_t treeval_xlat_builtin[];
 extern treptr trebuiltin (treptr func, treptr expr);
 
 /* for compiled code */
+extern treptr trebuiltin_apply (treptr);
 extern treptr trebuiltin_print (treptr);
 extern treptr trebuiltin_eval (treptr);
 extern treptr trebuiltin_macrocall (treptr);

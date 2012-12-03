@@ -75,7 +75,7 @@ trebuiltin_call_compiled (void * fun, treptr x)
 }
 
 treptr
-treeval_compiled_expr_c_exp (treptr func, treptr args, treptr argdef, bool do_expand)
+treeval_compiled_expr_c_exp (treptr func, treptr args)
 {
 	treptr  result;
 
@@ -129,58 +129,13 @@ treeval_compiled_expr_bc (treptr func, treptr args, treptr argdef, bool do_expan
 }
 
 treptr
-treeval_compiled_expr (treptr func, treptr args, treptr argdef, bool do_expand)
+trefuncall_compiled (treptr func, treptr args, bool do_expand)
 {
     return TREPTR_IS_ARRAY(func) ?
-               treeval_compiled_expr_bc (func, args, argdef, do_expand) :
+               treeval_compiled_expr_bc (func, args, TREARRAY_RAW(func)[0], do_expand) :
                (!do_expand && TREATOM_COMPILED_EXPANDER(func) ?
-                    treeval_compiled_expr_c_exp (func, args, argdef, do_expand) :
-                    treeval_compiled_expr_c (func, args, argdef, do_expand));
-}
-
-treptr
-treapply_bytecode (treptr func, treptr args, bool do_argeval)
-{
-    treptr  expforms;
-    treptr  expvals;
-	treptr  result;
-	treptr  i;
-    int     num_args;
-
-    tregc_push (func);
-    tregc_push (args);
-
-   	trearg_expand (&expforms, &expvals, TREARRAY_RAW(func)[0], args, do_argeval);
-   	tregc_push (expvals);
-
-    num_args = trelist_length (expvals);
-    DOLIST(i, expvals)
-        *--trestack_ptr = CAR(i);
-
-	result = trecode_exec (func);
-    trestack_ptr += num_args;
-
-	tregc_pop ();
-	tregc_pop ();
-	tregc_pop ();
-
-	return result;
-}
-
-treptr
-treapply_compiled (treptr func, treptr args)
-{
-	return TREPTR_IS_ARRAY(func) ?
-		       treapply_bytecode (func, args, FALSE) :
-	           treeval_compiled_expr (func, args, CAR(TREATOM_VALUE(func)), FALSE);
-}
-
-treptr
-function_arguments (treptr f)
-{
-     return TREPTR_IS_ARRAY(f) ?
-                TREARRAY_RAW(f)[0] :
-                CAR(TREATOM_VALUE(f));
+                    treeval_compiled_expr_c_exp (func, args) :
+                    treeval_compiled_expr_c (func, args, CAR(TREATOM_VALUE(func)), do_expand));
 }
 
 treptr
@@ -188,36 +143,31 @@ trefuncall (treptr func, treptr args)
 {
     treptr  f;
 	treptr  res;
-	treptr  a;
 	treptr  args_with_ghost;
 
 	if (trebuiltin_is_compiled_funref (func)) {
 	    tregc_push (args);
         f = TREATOM_FUN(FUNREF_FUNCTION(func));
 		args_with_ghost = CONS(FUNREF_LEXICALS(func), args);
-        a = function_arguments (f);
-		res = treeval_compiled_expr (f, args_with_ghost, a, FALSE);
+		res = trefuncall_compiled (f, args_with_ghost, FALSE);
 		tregc_pop ();
 		return res;
 	}
 
 	if (IS_COMPILED_FUN(func)) {
 	    tregc_push (args);
-		res = treapply_compiled (func, args);
+		res = trefuncall_compiled (func, args, FALSE);
 		tregc_pop ();
 		return res;
 	}
 
     if (TREPTR_IS_FUNCTION(func))
-        res = treeval_funcall (func, args, FALSE);
-    else if (TREPTR_IS_BUILTIN(func))
-        res = treeval_xlat_function (treeval_xlat_builtin, func, args, FALSE);
-    else if (TREPTR_IS_SPECIAL(func))
-        res = trespecial (func, args);
-    else
-        res = treerror (func, "function expected");
-
-    return res;
+        return treeval_funcall (func, args, FALSE);
+    if (TREPTR_IS_BUILTIN(func))
+        return treeval_xlat_function (treeval_xlat_builtin, func, args, FALSE);
+    if (TREPTR_IS_SPECIAL(func))
+        return trespecial (func, args);
+    return treerror (func, "function expected");
 }
 
 void

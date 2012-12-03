@@ -170,7 +170,7 @@ treptr
 treeval_noargs (treptr fun, treptr args)
 {
     if (IS_COMPILED_FUN(fun))
-        return treeval_compiled_expr (fun, args, function_arguments (fun), FALSE);
+        return trefuncall_compiled (fun, args, FALSE);
     if (TREPTR_IS_FUNCTION(fun))
         return treeval_funcall (fun, args, FALSE);
     if (TREPTR_IS_BUILTIN(fun))

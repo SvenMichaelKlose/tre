@@ -80,12 +80,12 @@ treeval_funcall_compiled_funref (treptr funref, treptr expr)
 treptr
 treeval_funcall (treptr func, treptr args, bool do_argeval)
 {
-    treptr  funcdef;	/* Function definition tree. */
-    treptr  expforms;	/* Expanded argument forms. */
-    treptr  expvals;    /* Expanded argument values. */
-    treptr  ret;		/* Function return value. */
-    treptr  forms;		/* Unexpanded argument definition. */
-    treptr  body;		/* Function body. */
+    treptr  funcdef;
+    treptr  expforms;
+    treptr  expvals;
+    treptr  ret;
+    treptr  argdef;
+    treptr  body;
     treptr  env;
     treptr  env_parent;
     treptr  old_parent;
@@ -93,8 +93,8 @@ treeval_funcall (treptr func, treptr args, bool do_argeval)
     treptr funstack = TRECONTEXT_FUNSTACK();
 #endif
 
-    forms = function_arguments (func);
     funcdef = TREATOM_VALUE(func);
+    argdef = CAR(funcdef);
     body = CDR(funcdef);
 
     /* Switch to new environment. */
@@ -104,7 +104,7 @@ treeval_funcall (treptr func, treptr args, bool do_argeval)
     old_parent = env_parent;
 
     /* Expand argument keywords. */
-    trearg_expand (&expforms, &expvals, forms, args, do_argeval);
+    trearg_expand (&expforms, &expvals, argdef, args, do_argeval);
     tregc_push (CONS(expforms, expvals));
 
     /* Bind arguments. */
@@ -252,7 +252,7 @@ treeval_expr (treptr x)
     		tregc_pop ();
     		tregc_pop ();
 		}
-		return treeval_compiled_expr (fun, args, function_arguments (fun), TRUE);
+		return trefuncall_compiled (fun, args, TRUE);
 	}
 
     tregc_push (fun);
@@ -263,7 +263,7 @@ treeval_expr (treptr x)
             break;
 
         case TRETYPE_ARRAY:
-            v = treapply_bytecode (fun, args, TRUE);
+            v = trefuncall_compiled (fun, args, TRUE);
             break;
 
         case TRETYPE_USERSPECIAL:
