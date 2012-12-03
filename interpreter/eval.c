@@ -258,26 +258,11 @@ treeval_expr (treptr x)
     tregc_push (fun);
 
     switch (TREPTR_TYPE(fun)) {
-        case TRETYPE_FUNCTION:
-            v = treeval_funcall (fun, args, TRUE);
-            break;
-
-        case TRETYPE_ARRAY:
-            v = trefuncall_compiled (fun, args, TRUE);
-            break;
-
-        case TRETYPE_USERSPECIAL:
-            v = treeval_funcall (fun, args, FALSE);
-            break;
-
-        case TRETYPE_BUILTIN:
-            v = trebuiltin (fun, args);
-            break;
-
-        case TRETYPE_SPECIAL:
-            v = trespecial (fun, args);
-            break;
-
+        case TRETYPE_FUNCTION:    v = treeval_funcall (fun, args, TRUE); break;
+        case TRETYPE_ARRAY:       v = trefuncall_compiled (fun, args, TRUE); break;
+        case TRETYPE_USERSPECIAL: v = treeval_funcall (fun, args, FALSE); break;
+        case TRETYPE_BUILTIN:     v = trebuiltin (fun, args); break;
+        case TRETYPE_SPECIAL:     v = trespecial (fun, args); break;
         default:
 			treeval_recursions--;
             return treerror (CAR(x), "function expected instead of %s",
@@ -319,15 +304,8 @@ treeval (treptr x)
     trethread_push_call (x);
 
     switch (TREPTR_TYPE(x)) {
-        /* Call function, special form or macro. */
-        case TRETYPE_CONS:
-            val = treeval_expr (x);
-            break;
-
-        /* Return variable value. */
-        case TRETYPE_VARIABLE:
-            val = TREATOM_VALUE(x);
-            break;
+        case TRETYPE_CONS:     val = treeval_expr (x); break; /* Call function, special form or macro. */
+        case TRETYPE_VARIABLE: val = TREATOM_VALUE(x); break; /* Return variable value. */
 
 #ifdef TRE_DIAGNOSTICS
         /* Return constants as they are. */

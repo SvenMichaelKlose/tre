@@ -75,11 +75,11 @@ trebuiltin_call_compiled (void * fun, treptr x)
 }
 
 treptr
-treeval_compiled_expr_c_exp (treptr func, treptr args)
+treeval_compiled_expr_c_exp (treptr func, treptr args, bool do_eval)
 {
 	treptr  result;
 
-    args = CONS(args, treptr_nil);
+    args = CONS(do_eval ? treeval_args (args) : args, treptr_nil);
    	tregc_push (args);
 
     result = trebuiltin_call_compiled (TREATOM_COMPILED_EXPANDER(func), args);
@@ -90,14 +90,14 @@ treeval_compiled_expr_c_exp (treptr func, treptr args)
 }
 
 treptr
-treeval_compiled_expr_c (treptr func, treptr args, treptr argdef, bool do_expand)
+treeval_compiled_expr_c (treptr func, treptr args, treptr argdef, bool do_eval)
 {
     treptr  expforms;
     treptr  expvals;
 	treptr  result;
 
    	tregc_push (args);
-   	trearg_expand (&expforms, &expvals, argdef, args, do_expand);
+   	trearg_expand (&expforms, &expvals, argdef, args, do_eval);
    	tregc_push (expvals);
 
     result = trebuiltin_call_compiled (TREATOM_COMPILED_FUN(func), expvals);
@@ -110,14 +110,14 @@ treeval_compiled_expr_c (treptr func, treptr args, treptr argdef, bool do_expand
 
 
 treptr
-treeval_compiled_expr_bc (treptr func, treptr args, treptr argdef, bool do_expand)
+treeval_compiled_expr_bc (treptr func, treptr args, treptr argdef, bool do_eval)
 {
     treptr  expforms;
     treptr  expvals;
 	treptr  result;
 
    	tregc_push (args);
-   	trearg_expand (&expforms, &expvals, argdef, args, do_expand);
+   	trearg_expand (&expforms, &expvals, argdef, args, do_eval);
    	tregc_push (expvals);
 
     result = trecode_call (func, expvals);
@@ -129,13 +129,13 @@ treeval_compiled_expr_bc (treptr func, treptr args, treptr argdef, bool do_expan
 }
 
 treptr
-trefuncall_compiled (treptr func, treptr args, bool do_expand)
+trefuncall_compiled (treptr func, treptr args, bool do_eval)
 {
     return TREPTR_IS_ARRAY(func) ?
-               treeval_compiled_expr_bc (func, args, TREARRAY_RAW(func)[0], do_expand) :
-               (!do_expand && TREATOM_COMPILED_EXPANDER(func) ?
-                    treeval_compiled_expr_c_exp (func, args) :
-                    treeval_compiled_expr_c (func, args, CAR(TREATOM_VALUE(func)), do_expand));
+               treeval_compiled_expr_bc (func, args, TREARRAY_RAW(func)[0], do_eval) :
+               (TREATOM_COMPILED_EXPANDER(func) ?
+                    treeval_compiled_expr_c_exp (func, args, do_eval) :
+                    treeval_compiled_expr_c (func, args, CAR(TREATOM_VALUE(func)), do_eval));
 }
 
 treptr
