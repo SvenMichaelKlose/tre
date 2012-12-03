@@ -5,6 +5,7 @@
 #include "config.h"
 #include "atom.h"
 #include "number.h"
+#include "cons.h"
 #include "list.h"
 #include "string2.h"
 #include "eval.h"

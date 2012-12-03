@@ -7,6 +7,8 @@
 #ifdef INTERPRETER
 
 #include "atom.h"
+#include "cons.h"
+#include "list.h"
 #include "error.h"
 #include "eval.h"
 #include "print.h"
@@ -15,7 +17,6 @@
 #include "main.h"
 #include "thread.h"
 #include "util.h"
-#include "list.h"
 #include "builtin_debug.h"
 #include "builtin_stream.h"
 #include "xxx.h"

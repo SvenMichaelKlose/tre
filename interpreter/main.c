@@ -4,6 +4,7 @@
 
 #include "config.h"
 #include "atom.h"
+#include "cons.h"
 #include "list.h"
 #include "number.h"
 #include "io.h"
@@ -207,7 +208,7 @@ tre_init (void)
     trediag_init ();
 #endif
 
-    trelist_init ();
+    trecons_init ();
     tresymbol_init ();
     treatom_init ();
     trenumber_init ();

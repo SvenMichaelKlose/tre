@@ -30,7 +30,7 @@ FILES="
 	builtin_time.c
 
 	bytecode.c
-
+	cons.c
 	debug.c
 	diag.c
 	dot.c

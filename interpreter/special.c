@@ -6,6 +6,7 @@
 #include "ptr.h"
 #include "alloc.h"
 #include "atom.h"
+#include "cons.h"
 #include "list.h"
 #include "number.h"
 #include "eval.h"

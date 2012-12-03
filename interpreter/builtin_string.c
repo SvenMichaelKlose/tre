@@ -1,5 +1,5 @@
 /*
- * tré - Copyright (c) 2005-2009 Sven Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2009,2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #include <stdlib.h>
@@ -9,6 +9,7 @@
 
 #include "config.h"
 #include "atom.h"
+#include "cons.h"
 #include "list.h"
 #include "string2.h"
 #include "number.h"

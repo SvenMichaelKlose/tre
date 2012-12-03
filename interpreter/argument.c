@@ -7,6 +7,7 @@
 #ifdef INTERPRETER
 
 #include "atom.h"
+#include "cons.h"
 #include "list.h"
 #include "eval.h"
 #include "builtin.h"
