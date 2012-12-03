@@ -45,8 +45,12 @@
 		  *closure-argdefs*))
 
 (defun c-transpiler-make-function-registrations (tr)
-  (filter ^(%setq ~%ret (treatom_register_compiled_function ,(c-compiled-symbol _) ,_))
-		  (transpiler-defined-functions-without-builtins tr)))
+  (filter ^(%setq ~%ret (treatom_register_compiled_function ,(c-compiled-symbol _) ,_ ,(alet ($ _ '_treexp)
+                                                                                         (? (transpiler-defined-function tr !)
+                                                                                            (compiled-user-function-name !)
+                                                                                            '(%transpiler-native "NULL")))))
+		  (remove-if [ends-with? (symbol-name _) "_TREEXP"]
+                     (transpiler-defined-functions-without-builtins tr))))
 
 (defun c-transpiler-declarations-and-initialisations (tr)
   (+ (transpiler-compiled-inits tr)
@@ -59,7 +63,7 @@
 				 (let name ($ 'C-INIT- (1+! *c-init-counter*))
 				   (push name init-funs)
 				   `(defun ,name ()
-				,@(mapcar ^(tregc_push_compiled ,_) _)))]
+				      ,@(mapcar ^(tregc_push_compiled ,_) _)))]
 			   (group (c-transpiler-declarations-and-initialisations tr) *c-init-group-size*))
        `((defun c-init ()
 	       ,@(mapcar #'list (reverse init-funs)))))))

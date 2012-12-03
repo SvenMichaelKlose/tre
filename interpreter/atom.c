@@ -151,12 +151,13 @@ treatom_set_value (treptr atom, treptr value)
 }
 
 treptr
-treatom_register_compiled_function (treptr sym, void * fun)
+treatom_register_compiled_function (treptr sym, void * fun, void * expander_fun)
 {
     if (TREATOM_FUN(sym) == treptr_nil)
         TREATOM_FUN(sym) = treatom_alloc (NULL, treptr_nil, TRETYPE_FUNCTION, treptr_nil);
 
     TREATOM_COMPILED_FUN(TREATOM_FUN(sym)) = fun;
+    TREATOM_COMPILED_EXPANDER(TREATOM_FUN(sym)) = expander_fun;
 	return sym;
 }
 

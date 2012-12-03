@@ -44,7 +44,7 @@ trebuiltin_is_compiled_funref (treptr x)
 }
 
 treptr
-trebuiltin_call_compiled (treptr func, treptr x)
+trebuiltin_call_compiled (void * fun, treptr x)
 {
 	ffi_cif cif;
 	ffi_type **args;
@@ -52,7 +52,6 @@ trebuiltin_call_compiled (treptr func, treptr x)
 	void **values;
 	treptr rc;
 	int i;
-	void * fun;
     int len = trelist_length (x) + 1;
 
     args = trealloc (sizeof (ffi_type *) * len);
@@ -65,7 +64,6 @@ trebuiltin_call_compiled (treptr func, treptr x)
 	}
 
 	if (ffi_prep_cif(&cif, FFI_DEFAULT_ABI, i, &ffi_type_ulong, args) == FFI_OK) {
-		fun = TREATOM_COMPILED_FUN(func);
 		ffi_call(&cif, fun, &rc, values);
 	} else
         treerror_norecover (treptr_nil, "libffi: cif is not O.K.");
@@ -77,7 +75,22 @@ trebuiltin_call_compiled (treptr func, treptr x)
 }
 
 treptr
-treeval_compiled_expr (treptr func, treptr args, treptr argdef, bool do_expand)
+treeval_compiled_expr_c_exp (treptr func, treptr args, treptr argdef, bool do_expand)
+{
+	treptr  result;
+
+    args = CONS(args, treptr_nil);
+   	tregc_push (args);
+
+    result = trebuiltin_call_compiled (TREATOM_COMPILED_EXPANDER(func), args);
+
+	tregc_pop ();
+
+	return result;
+}
+
+treptr
+treeval_compiled_expr_c (treptr func, treptr args, treptr argdef, bool do_expand)
 {
     treptr  expforms;
     treptr  expvals;
@@ -87,14 +100,42 @@ treeval_compiled_expr (treptr func, treptr args, treptr argdef, bool do_expand)
    	trearg_expand (&expforms, &expvals, argdef, args, do_expand);
    	tregc_push (expvals);
 
-    result = TREPTR_IS_ARRAY(func) ?
-             trecode_call (func, expvals) :
-	         trebuiltin_call_compiled (func, expvals);
+    result = trebuiltin_call_compiled (TREATOM_COMPILED_FUN(func), expvals);
 
 	tregc_pop ();
 	tregc_pop ();
 
 	return result;
+}
+
+
+treptr
+treeval_compiled_expr_bc (treptr func, treptr args, treptr argdef, bool do_expand)
+{
+    treptr  expforms;
+    treptr  expvals;
+	treptr  result;
+
+   	tregc_push (args);
+   	trearg_expand (&expforms, &expvals, argdef, args, do_expand);
+   	tregc_push (expvals);
+
+    result = trecode_call (func, expvals);
+
+	tregc_pop ();
+	tregc_pop ();
+
+	return result;
+}
+
+treptr
+treeval_compiled_expr (treptr func, treptr args, treptr argdef, bool do_expand)
+{
+    return TREPTR_IS_ARRAY(func) ?
+               treeval_compiled_expr_bc (func, args, argdef, do_expand) :
+               (!do_expand && TREATOM_COMPILED_EXPANDER(func) ?
+                    treeval_compiled_expr_c_exp (func, args, argdef, do_expand) :
+                    treeval_compiled_expr_c (func, args, argdef, do_expand));
 }
 
 treptr

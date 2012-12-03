@@ -29,6 +29,7 @@ typedef uint treptr;
 #define TREATOM_VALUE(ptr)		(TREPTR_TO_ATOM(ptr).value)
 #define TREATOM_FUN(ptr)		(TREPTR_TO_ATOM(ptr).fun)
 #define TREATOM_COMPILED_FUN(ptr)		(TREPTR_TO_ATOM(ptr).compiled_fun)
+#define TREATOM_COMPILED_EXPANDER(ptr)	(TREPTR_TO_ATOM(ptr).compiled_expander)
 #define TREATOM_BINDING(ptr)	(TREPTR_TO_ATOM(ptr).binding)
 #define TREATOM_PACKAGE(ptr)	(TREPTR_TO_ATOM(ptr).package)
 #define TREATOM_DETAIL(ptr)		(TREPTR_TO_ATOM(ptr).detail)

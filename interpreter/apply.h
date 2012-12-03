@@ -8,7 +8,7 @@
 extern treptr function_arguments (treptr);
 
 extern treptr trefuncall (treptr func, treptr args);
-extern treptr trebuiltin_call_compiled (treptr func, treptr args);
+extern treptr trebuiltin_call_compiled (void * fun, treptr args);
 
 extern bool   trebuiltin_is_compiled_funcall (treptr);
 extern treptr treeval_compiled_expr (treptr func, treptr expr, treptr argdef, bool do_eval);

@@ -18,7 +18,15 @@
         ,*not-gensym*)))
 
 (define-c-std-macro defun (name args &rest body)
-  (car (apply #'shared-defun name args body)))
+  `(%%vm-scope
+     ,(car (apply #'shared-defun name args body))
+     ,@(with ((fi-sym adef) (split-funinfo-and-args args)
+              fun-name      (%defun-name name))
+         (unless (simple-argument-list? adef)
+           (with-gensym p
+             `((%setq ~%ret nil)
+               (defun ,($ fun-name '_treexp) (,p)
+                 ,(compile-argument-expansion-function-body fun-name adef p nil (argument-expand-names 'compile-argument-expansion adef)))))))))
 
 (define-c-std-macro defmacro (&rest x)
   (apply #'shared-defmacro '*current-transpiler* x))
