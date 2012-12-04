@@ -128,3 +128,6 @@
 
 (define-php-std-macro string-concat (&rest x)
   `(%%%string+ ,@x))
+
+(define-php-std-macro %%%nanotime ()
+  '(microtime))

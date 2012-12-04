@@ -84,3 +84,6 @@
 	  
 (define-c-std-macro mapcar (fun &rest lsts)
   (apply #'shared-mapcar fun lsts))
+
+(define-c-std-macro %%%nanotime ()
+  '(nanotime))
