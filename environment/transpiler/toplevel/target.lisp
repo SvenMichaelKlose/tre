@@ -52,7 +52,8 @@
        (= (transpiler-save-sources? tr) t))
     (& files-to-update
        (clr (transpiler-emitted-decls tr)))
-    (= (transpiler-host-variables-hash tr) (make-variables-hash ))
+    (= (transpiler-host-functions-hash tr) (make-functions-hash))
+    (= (transpiler-host-variables-hash tr) (make-variables-hash))
     (transpiler-switch-obfuscator tr obfuscate?)
     (with (before-deps (target-transpile-1 tr files-before-deps files-to-update)
 		   after-deps  (target-transpile-1 tr files-after-deps files-to-update)

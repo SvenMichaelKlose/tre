@@ -42,7 +42,7 @@
 (defun transpiler-import-wanted-function (tr x)
   (unless (transpiler-defined-function tr x)
     (let fun (symbol-function x)
-      (transpiler-frontend tr `((defun ,x ,(function-arguments fun)
+      (transpiler-frontend tr `((defun ,x ,(transpiler-host-function-arguments tr x)
                                  ,@(function-body fun)))))))
 
 (defun transpiler-import-wanted-functions (tr)

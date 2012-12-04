@@ -29,7 +29,7 @@
   (with (fun (symbol-function x.)
 		 argdef (? (transpiler-defined-function tr x.)
 				   (transpiler-function-arguments tr x.)
-				   (function-arguments fun))
+				   (transpiler-host-function-arguments tr x.))
 	     body (| (transpiler-function-body tr x.)
 			     (function-body fun)))
 	(?

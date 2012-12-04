@@ -6,8 +6,7 @@
 
 (defun expex-global-variable? (x)
   (& (atom x)
-     (| (not (expex-in-env? x))
-        (funinfo-in-toplevel-env? *expex-funinfo* x))
+     (not (expex-in-env? x))
      (| (transpiler-defined-variable *current-transpiler* x)
         (transpiler-host-variable? *current-transpiler* x))))
 

@@ -10,6 +10,9 @@
 (defvar *recompiling?* nil)
 (defvar *print-executed-functions?* nil)
 
+(defun make-functions-hash ()
+  (assoc-hash (filter [cons _ (function-arguments (symbol-function _))] *defined-functions*) :test #'eq))
+
 (defun make-variables-hash ()
   (assoc-hash (filter [cons _. t] *variables*) :test #'eq))
 
@@ -31,6 +34,7 @@
 
   (defined-functions-hash (make-hash-table :test #'eq))
   (defined-variables-hash (make-hash-table :test #'eq))
+  (host-functions-hash    nil)
   (host-variables-hash    nil)
 
   ; Functions to be imported from the environment.
@@ -156,6 +160,12 @@
   (= (href (transpiler-defined-variables-hash tr) name) t)
   name)
 
+(defun transpiler-host-function? (tr name)
+  (href (transpiler-host-functions-hash tr) name))
+
+(defun transpiler-host-function-arguments (tr name)
+  (transpiler-host-function? tr name))
+
 (defun transpiler-host-variable? (tr name)
   (href (transpiler-host-variables-hash tr) name))
 
@@ -169,7 +179,7 @@
   (| (transpiler-function-arguments *current-transpiler* x)
      (? (builtin? x)
         'builtin
-        (function-arguments (symbol-function x)))))
+        (transpiler-host-function-arguments *current-transpiler* x))))
 
 (defun transpiler-function-body (tr fun)
   (href (transpiler-function-bodies tr) fun))
@@ -246,6 +256,7 @@
   	 (transpiler-wanted-variables tr)       nil
   	 (transpiler-wanted-variables-hash tr)  (make-hash-table :test #'eq)
   	 (transpiler-defined-functions-hash tr) (make-hash-table :test #'eq)
+  	 (transpiler-host-functions-hash tr)    (make-functions-hash)
   	 (transpiler-host-variables-hash tr)    (make-variables-hash)
   	 (transpiler-function-args tr)          (make-hash-table :test #'eq)
   	 (transpiler-function-bodies tr)        (make-hash-table :test #'eq)
@@ -288,6 +299,7 @@
                      :literal-conversion     literal-conversion
                      :defined-functions-hash (copy-hash-table defined-functions-hash)
                      :defined-variables-hash (copy-hash-table defined-variables-hash)
+                     :host-functions-hash    (copy-hash-table host-functions-hash)
                      :host-variables-hash    (copy-hash-table host-variables-hash)
                      :wanted-functions       (copy-list wanted-functions)
                      :wanted-functions-hash  (copy-hash-table wanted-functions-hash)
@@ -323,7 +335,7 @@
                      :symbol-translations     (copy-list symbol-translations)
                      :thisify-classes         (copy-hash-table thisify-classes)
                      :function-args           (copy-hash-table function-args)
-                     :function-bodies         (copy-hash-table function-args)
+                     :function-bodies         (copy-hash-table function-bodies)
                      :obfuscations            (copy-hash-table obfuscations)
                      :plain-arg-funs          (copy-list plain-arg-funs)
                      :late-symbols            (copy-hash-table late-symbols)
