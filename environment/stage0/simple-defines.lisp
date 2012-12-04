@@ -2,12 +2,13 @@
 
 (setq *universe*
 	  (cons '%defun
+	  (cons 'print-definition
 	  (cons 'defvar
 	  (cons 'defconstant
-		    *universe*))))
+		    *universe*)))))
 
 (setq *defined-functions*
-	  (cons '%defun
+	  (cons 'print-definition
 		    *defined-functions*))
 
 (setq *variables*
