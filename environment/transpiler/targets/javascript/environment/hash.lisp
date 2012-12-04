@@ -49,7 +49,7 @@
   (& (object? x)
      (undefined? x.__class)))
 
-(defun hash-assoc (x)
+(defun hash-alist (x)
   (with-queue q
     (maphash #'((k v)
 				 (enqueue q (cons k v)))

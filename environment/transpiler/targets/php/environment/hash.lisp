@@ -21,7 +21,7 @@
 (defun hashkeys (x)
   (maparray #'identity (phphash-hashkeys x)))
 
-(defun hash-assoc (x)
+(defun hash-alist (x)
   (filter [cons _ (href x _)] (hashkeys x)))
 
 (defun assoc-phphash (x)
