@@ -1,6 +1,5 @@
 ;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
-(= *show-definitions?* t)
 (= *opt-inline?* nil)
 
 (let code (with-temporary (transpiler-profile? *c-transpiler*) nil
