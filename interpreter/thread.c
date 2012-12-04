@@ -1,5 +1,5 @@
 /*
- * tré - Copyright (c) 2005-2007 Sven Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2007,2012 Sven Michael Klose <pixel@copei.de>
  */
 
 /*
@@ -8,7 +8,7 @@
 
 #include "config.h"
 #include "atom.h"
-#include "list.h"
+#include "cons.h"
 #include "thread.h"
 
 struct tre_thread_context tre_context;
