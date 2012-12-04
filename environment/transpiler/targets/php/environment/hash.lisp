@@ -11,15 +11,17 @@
     x))
 
 (defun hash-table? (x)
-  (is_a x "__l"))
+  (is_a x "__array"))
+
+(defun hashkeys (x)
+  (? (hash-table? x)
+     (x.keys)
+     (maparray #'identity (phphash-hashkeys x))))
 
 (defun hash-merge (a b)
   (| a (= a (make-hash-table)))
   (dolist (k (hashkeys b) a)
     (= (href a k) (href b k))))
-
-(defun hashkeys (x)
-  (maparray #'identity (phphash-hashkeys x)))
 
 (defun hash-alist (x)
   (filter [cons _ (href x _)] (hashkeys x)))

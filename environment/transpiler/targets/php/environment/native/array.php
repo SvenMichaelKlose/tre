@@ -52,6 +52,14 @@ class __array {
 		unset ($GLOBALS['ARRAYS'][$this->id][$i]);
     }
 
+    public function keys ()
+    {
+        $h = NULL;
+        foreach ($GLOBALS['ARRAYS'][$this->id] as $k => $v)
+            $h = new __cons ($k, $h);
+        return $h;
+    }
+
     public function __toString ()
     {
         return "array";
