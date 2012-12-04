@@ -5,6 +5,7 @@
 (defvar *c-init-counter* 0)
 (defvar *c-interpreter-headers*
 	     '("ptr.h"
+		   "cons.h"
 		   "list.h"
 		   "alloc.h"
 		   "apply.h"
