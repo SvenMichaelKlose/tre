@@ -10,7 +10,7 @@
 		    old-replacements)))
 
 (defun rename-arg (replacements x)
-  (assoc-replace x replacements :test #'eq))
+  (| (assoc-value x replacements :test #'eq) x))
 
 (defun rename-function-arguments-r (replacements env x)
   (with (args (lambda-args x)

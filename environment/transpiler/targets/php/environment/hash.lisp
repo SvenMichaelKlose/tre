@@ -4,9 +4,9 @@
 
 (defun %%key (x)
   (?
-    (is_a x "__symbol") (%%%string+ "~%S" x.n "~P" x.p)
-    (is_a x "__cons") (%%%string+ "~%L" x.id)
-    (is_a x "__array") (%%%string+ "~%A" x.id)
+    (is_a x "__symbol")    (%%%string+ "~%S" x.n "~P" x.p)
+    (is_a x "__cons")      (%%%string+ "~%L" x.id)
+    (is_a x "__array")     (%%%string+ "~%A" x.id)
     (is_a x "__character") (%%%string+ "~%C" x.v)
     x))
 
@@ -23,10 +23,7 @@
   (dolist (k (hashkeys b) a)
     (= (href a k) (href b k))))
 
-(defun hash-alist (x)
-  (filter [cons _ (href x _)] (hashkeys x)))
-
-(defun assoc-phphash (x)
+(defun alist-phphash (x)
   (let a (%%%make-hash-table)
     (dolist (i x a)
       (%%%href-set .i a i.))))

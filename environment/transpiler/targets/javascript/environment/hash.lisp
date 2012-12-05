@@ -49,13 +49,6 @@
   (& (object? x)
      (undefined? x.__class)))
 
-(defun hash-alist (x)
-  (with-queue q
-    (maphash #'((k v)
-				 (enqueue q (cons k v)))
-         	 x)
-    (queue-list q)))
-
 (defun hash-merge (a b)
   (when (| a b)
     (unless a

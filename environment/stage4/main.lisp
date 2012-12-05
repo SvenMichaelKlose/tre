@@ -3,7 +3,6 @@
 (env-load "stage4/unless.lisp")
 (env-load "stage4/make-keyword.lisp")
 (env-load "stage4/aadjoin.lisp")
-(env-load "stage4/alist-hash.lisp")
 (env-load "stage4/cache.lisp")
 (env-load "stage4/clr.lisp")
 (env-load "stage4/collect-symbols.lisp")
