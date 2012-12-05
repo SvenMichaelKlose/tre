@@ -56,7 +56,7 @@
   `(= ,place (aremove ,obj ,place :test ,test)))
 
 (defun areplace (x replacements &key (test #'eql))
-  (filter [!? (assoc _. replacements :test test) ! _] x))
+  (filter [| (assoc _. replacements :test test) _] x))
 
 (defmacro curly (&rest x)
   `(assoc ,@x))

@@ -2,30 +2,46 @@
 
 (defun %princ-character (c str)
   (unless (& (string? c) (zero? (length c)))
-    (= (stream-last-char str) (? (string? c)
-                                 (elt c (1- (length c)))
-                                 c))
-    (funcall (stream-fun-out str) c str)))
+    (? (cons? c)
+       (dolist (i c c)
+         (%princ-character i str))
+       (progn
+         (= (stream-last-char str) (? (string? c)
+                                      (elt c (1- (length c)))
+                                      c))
+         (funcall (stream-fun-out str) c str)))))
+
+(defun number-digit (x)
+  (code-char (+ x #\0)))
+
+(defun integer-chars-0 (x)
+  (alet (integer (mod x 10))
+    (cons (number-digit !)
+          (& (<= 10 x)
+             (integer-chars-0 (/ (- x !) 10))))))
+
+(defun integer-chars (x)
+  (reverse (integer-chars-0 (integer (abs x)))))
+
+(defun fraction-chars-0 (x)
+  (alet (mod (* x 10) 10)
+    (& (< 0 !)
+       (cons (number-digit !) (fraction-chars-0 !)))))
+
+(defun fraction-chars (x)
+  (fraction-chars-0 (mod (abs x) 1)))
 
 (defun %princ-number (c str)
-  (with (recp #'((out n) ; XXX: REC will bug the expression-expander.
-      			   (let m (mod n 10)
-        			 (push m out)
-        			 (? (> n 9)
-          				(recp out (/ (- n m) 10))
-          				out))))
-    (when (< c 0)
-      (princ #\- str))
-    (dolist (i (recp nil c))
-      (%princ-character (code-char (+ i #\0)) str))))
+  (when (< c 0)
+    (princ #\- str))
+  (%princ-character (integer-chars c) str)
+  (alet (mod c 1)
+    (unless (zero? !)
+      (princ #\. str)
+      (%princ-character (fraction-chars !) str))))
 
 (defun %princ-string (obj str)
   (%princ-character obj str))
-; Streams can handle characters and strings.
-; XXX move to alternative section
-;  (do ((i 0 (1+ i)))
-;      ((>= i (length obj)))
-;    (%princ-character (elt obj i) str)))
 
 (defun princ (obj &optional (str *standard-output*))
   "Print object in human readable format."

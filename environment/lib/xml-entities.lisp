@@ -114,7 +114,7 @@
           ("lsaquo" . 8249)
           ("rsaquo" . 8250)))
 
-(defvar *xml-entities-hash* (assoc-hash *xml-entities* :test #'string==))
+(defvar *xml-entities-hash* (alist-hash *xml-entities* :test #'string==))
 
 (defun xml-entities-charlist-to-unicode (x)
   (when x

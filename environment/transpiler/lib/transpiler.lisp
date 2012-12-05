@@ -11,10 +11,10 @@
 (defvar *print-executed-functions?* nil)
 
 (defun make-functions-hash ()
-  (assoc-hash (filter [cons _ (function-arguments (symbol-function _))] *defined-functions*) :test #'eq))
+  (alist-hash (filter [cons _ (function-arguments (symbol-function _))] *defined-functions*) :test #'eq))
 
 (defun make-variables-hash ()
-  (assoc-hash (filter [cons _. t] *variables*) :test #'eq))
+  (alist-hash (filter [cons _. t] *variables*) :test #'eq))
 
 (defstruct transpiler
   name

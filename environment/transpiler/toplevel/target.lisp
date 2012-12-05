@@ -20,7 +20,7 @@
                    (with-temporary (transpiler-accumulate-toplevel-expressions? tr) (not (eq 'accumulated-toplevel i.))
                      (transpiler-make-code tr .i))
                    (assoc-value i. (transpiler-compiled-files tr) :test #'eq-string==))
-        (assoc-adjoin code i. (transpiler-compiled-files tr) :test #'eq-string==)
+        (aadjoin! code i. (transpiler-compiled-files tr) :test #'eq-string==)
 	    (enqueue compiled-code code)))))
 
 (defun target-transpile-1 (tr files files-to-update)
@@ -31,7 +31,7 @@
                       (transpiler-frontend tr (? (function? .i) (funcall .i) .i))
 		  			  (transpiler-frontend-file tr i.))
                    (assoc-value i. (transpiler-frontend-files tr) :test #'eq-string==))
-        (assoc-adjoin code i. (transpiler-frontend-files tr) :test #'eq-string==)
+        (aadjoin! code i. (transpiler-frontend-files tr) :test #'eq-string==)
 	    (enqueue frontend-code (cons i. code))))))
 
 (defun target-sighten-deps (tr dep-gen)
