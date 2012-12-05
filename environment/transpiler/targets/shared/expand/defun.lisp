@@ -32,16 +32,16 @@
   nil)
 
 (defun shared-defun-source-memorizer (tr name args body)
-  (+ (& *have-compiler?* (not (transpiler-memorize-sources? tr))
-        `((%setq *defined-functions* (cons ,(list 'quote name) *defined-functions*))))
+  (+ (& *have-compiler?*
+        (not (transpiler-memorize-sources? tr))
+        `((%setq *defined-functions* (cons `',name *defined-functions*))))
      (when (transpiler-save-sources? tr)
        (apply #'transpiler-add-obfuscation-exceptions tr (collect-symbols (list name args body)))
        (? (transpiler-memorize-sources? tr)
           (shared-defun-memorize-source tr name args body)
           `((%setq (slot-value ,name '__source) ,(let source (assoc-value name *function-sources* :test #'eq)
-                                                   (list 'quote (cons (| source. args)
-                                                                      (unless (transpiler-save-argument-defs-only? tr)
-                                                                        (| .source body)))))))))))
+                                                   `'(,(| source. args) . ,(unless (transpiler-save-argument-defs-only? tr)
+                                                                             (| .source body))))))))))
 
 (defun shared-defun (name args &rest body)
   (= name (apply-current-package name))
