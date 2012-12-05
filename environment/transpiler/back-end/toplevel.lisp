@@ -39,4 +39,4 @@
 	 (make-function-prologues x)))
 
 (defun transpiler-backend (tr x)
-  (transpiler-concat-text tr (mapcar [transpiler-generate-code tr (transpiler-backend-prepare tr (list _))] x)))
+  (transpiler-concat-text tr (transpiler-generate-code tr (transpiler-backend-prepare tr x))))
