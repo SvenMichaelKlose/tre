@@ -47,7 +47,7 @@
 
 (dont-obfuscate substr)
 
-(defun %subseq-string (seq start end)
+(defun string-subseq (seq start &optional (end 99999))
   (? (== start end)
 	 ""
      (substr seq start (- end start))))

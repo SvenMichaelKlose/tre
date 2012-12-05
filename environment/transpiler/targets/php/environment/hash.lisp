@@ -4,18 +4,40 @@
 
 (defun %%key (x)
   (?
-    (is_a x "__symbol")    (%%%string+ "~%S" x.n "~P" x.p)
+    (is_a x "__symbol")    (%%%string+ "~%S" x.n "~%P" x.p)
     (is_a x "__cons")      (%%%string+ "~%L" x.id)
     (is_a x "__array")     (%%%string+ "~%A" x.id)
     (is_a x "__character") (%%%string+ "~%C" x.v)
     x))
+
+(defun %%unkey-get-package-boundary (x)
+  (awhen (position #\~ x :test #'character==)
+    (when (& (== #\% (elt x (+ 1 !)))
+             (== #\P (elt x (+ 2 !))))
+      (| (%%unkey-get-package-boundary (string-subseq ! 3))
+         !))))
+
+(defun %%unkey (x)
+  (? (& (== #\~ (elt x 0))
+        (== #\% (elt x 1)))
+     (alet (string-subseq x 3)
+       (case (elt x 2) :test #'character==
+         #\S (let boundary (%%unkey-get-package-boundary !)
+               (make-symbol (subseq ! 0 boundary)
+                            (let-when p (subseq ! (+ 3 boundary))
+                              (make-symbol p))))
+         #\L (%%%href *conses* (string-subseq x 3))
+         #\A (%%%href *arrays* (string-subseq x 3))
+         #\C (code-char (string-subseq x 3))
+         (error "illegal index ~A" x)))
+     x))
 
 (defun hash-table? (x)
   (is_a x "__array"))
 
 (defun hashkeys (x)
   (? (hash-table? x)
-     (x.keys)
+     (filter #'%%unkey (x.keys))
      (maparray #'identity (phphash-hashkeys x))))
 
 (defun hash-merge (a b)

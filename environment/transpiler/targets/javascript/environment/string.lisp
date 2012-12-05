@@ -6,13 +6,11 @@
   (| (%string? x)
      (instanceof x (%transpiler-native "String"))))
 
-;; XXX must be optional.
 (defun string-concat (&rest x)
   (apply #'+ (filter [| _ ""] x)))
 
 (dont-obfuscate char-code-at)
 
-;; XXX ECMAScript only.
 (defun %elt-string (seq idx)
   (& (%%%< idx seq.length)
      (code-char (seq.char-code-at idx))))
@@ -25,7 +23,6 @@
 
 (dont-obfuscate to-string)
 
-;; XXX ECMAScript only.
 (defun string (x)
   (?
 	(string? x) x
@@ -34,26 +31,22 @@
 	(not x) ,*nil-symbol-name*
    	(x.to-string)))
 
-;; XXX must be optional.
 (defun string== (x y)
   (%%%== x y))
 
 (dont-obfuscate to-upper-case)
 
-;; XXX ECMAScript only.
 (defun string-upcase (x)
   (& x (x.to-upper-case)))
 
 (dont-obfuscate to-lower-case)
 
-;; XXX ECMAScript only.
 (defun string-downcase (x)
   (& x (x.to-lower-case)))
 
 (dont-obfuscate substr length)
 
-;; XXX ECMAScript only.
-(defun %subseq-string (seq start end)
+(defun string-subseq (seq start &optional (end 99999))
   (unless (< (%%%- (length seq) 1) start end)
     (?
       (integer== start end)

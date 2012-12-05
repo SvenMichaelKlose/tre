@@ -2,7 +2,7 @@
 
 (functional subseq)
 
-(defun subseq-list (seq start end)
+(defun list-subseq (seq start end)
   (unless (integer== start end)
     (labels ((copy (lst len)
                (& lst (integer< 0 len)
@@ -29,12 +29,10 @@
     (& (integer> start end)
        (xchg start end))
 	(?
-	  (cons? seq)   (subseq-list seq start end)
-	  (string? seq) (%subseq-string seq start end)
-	  (array? seq)   (%subseq-sequence #'make-array seq start end)
-	  (progn
-		(print seq)
-		(%error "type not supported")))))
+	  (cons? seq)   (list-subseq seq start end)
+	  (string? seq) (string-subseq seq start end)
+	  (array? seq)  (%subseq-sequence #'make-array seq start end)
+      (error "type of ~A not supported" seq))))
 
 (define-test "SUBSEQ basically works"
   ((subseq '(1 2 3 4) 1 3))

@@ -1,11 +1,10 @@
 ;;;;; tré – Copyright (c) 2007–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
 
-;; XXX unify with SUBSEQ-SEQUENCE
-(defun %subseq-string (seq start end)
+(defun string-subseq (seq start &optional (end 99999))
   (? (integer== start end)
 	 ""
      (with (seqlen  (length seq))
-       (when (integer< start seqlen) ; XXX return NIl when out of range for JavaScript.
+       (when (integer< start seqlen)
          (when (integer>= end seqlen)
 	       (= end seqlen))
   	     (with (l (integer- end start)
