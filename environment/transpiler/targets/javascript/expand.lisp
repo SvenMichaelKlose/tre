@@ -183,3 +183,6 @@
  `(%setq nil (%invoke-debugger)))
 
 (define-js-std-macro define-test (&rest x))
+
+;(define-js-std-macro filter (fun lst)
+  ;(shared-opt-filter fun lst))

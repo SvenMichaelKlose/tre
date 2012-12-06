@@ -9,6 +9,7 @@
 (env-load "transpiler/targets/shared/expand/defvar.lisp")
 (env-load "transpiler/targets/shared/expand/mapcar.lisp")
 (env-load "transpiler/targets/shared/expand/opt-string-concat.lisp")
+(env-load "transpiler/targets/shared/expand/opt-filter.lisp")
 (env-load "transpiler/targets/shared/expand/setf-cons.lisp")
 (env-load "transpiler/targets/shared/codegen/define-macro-definer.lisp")
 (env-load "transpiler/targets/shared/codegen/codegen-expr-p.lisp")

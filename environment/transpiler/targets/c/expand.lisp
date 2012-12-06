@@ -87,3 +87,6 @@
 
 (define-c-std-macro %%%nanotime ()
   '(nanotime))
+
+(define-c-std-macro filter (fun lst)
+  (shared-opt-filter fun lst))

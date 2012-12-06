@@ -131,3 +131,6 @@
 
 (define-php-std-macro %%%nanotime ()
   '(microtime))
+
+(define-php-std-macro filter (fun lst)
+  (shared-opt-filter fun lst))
