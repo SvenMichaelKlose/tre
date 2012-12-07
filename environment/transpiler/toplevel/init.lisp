@@ -24,12 +24,6 @@
 			            (& (not (transpiler-unwanted-function? ,tr fun))
 				           (function? (symbol-function fun)))))))
 
-	   (expex-function-arguments ex)
-	       (lx (tr)
-			 #'((fun)
-		          (| (transpiler-function-arguments ,tr fun)
-			         (transpiler-host-function-arguments ,tr fun))))
-
 	   (expex-plain-arg-fun? ex)
 	       (lx (tr)
 			 #'((fun)

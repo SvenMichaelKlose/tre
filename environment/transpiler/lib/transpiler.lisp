@@ -6,7 +6,7 @@
 (defvar *transpiler-no-stream?* nil)
 
 (defvar *transpiler-except-cps?* t)
-(defvar *opt-inline?* nil)
+(defvar *opt-inline?* t)
 (defvar *recompiling?* nil)
 (defvar *print-executed-functions?* nil)
 
@@ -175,11 +175,11 @@
 (defun transpiler-function-arguments (tr fun)
   (href (transpiler-function-args tr) fun))
 
-(defun current-transpiler-function-arguments-w/o-builtins (x)
-  (| (transpiler-function-arguments *current-transpiler* x)
-     (? (builtin? x)
-        'builtin
-        (transpiler-host-function-arguments *current-transpiler* x))))
+(defun current-transpiler-function-arguments (x)
+  (alet *current-transpiler*
+    (| (transpiler-function-arguments ! x)
+       (transpiler-host-function-arguments ! x)
+       (function-arguments (symbol-function x)))))
 
 (defun transpiler-function-body (tr fun)
   (href (transpiler-function-bodies tr) fun))

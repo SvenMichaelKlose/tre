@@ -6,9 +6,6 @@
   ; Callback to check if an object is a function.
   (functionp [function? (symbol-value _)])
 
-  ; Callback to get the argument definition of a function.
-  (function-arguments #'function-arguments)
-
   ; Callback to collect used functions.
   (function-collector #'((fun args)))
 
@@ -28,7 +25,6 @@
   (make-expex
       :transpiler tr
       :functionp functionp
-      :function-arguments function-arguments
       :function-collector function-collector
       :argument-filter argument-filter
       :setter-filter setter-filter

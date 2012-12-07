@@ -21,11 +21,26 @@
 			   stack-places values)
      ,@body))
 
+(defun lambda-call-embed-0 (fi args vals body)
+  (with ((a v) (assoc-splice (argument-expand 'dummy-in-lambda-call-embed args vals)))
+    (funinfo-env-add-many fi a)
+     (lambda-expand-tree fi (lambda-expand-make-inline-body a v body))))
+
 (defun lambda-call-embed (fi lambda-call)
   (with-lambda-call (args vals body lambda-call)
-    (with ((a v) (assoc-splice (argument-expand 'dummy-in-lambda-call-embed args vals)))
-	  (funinfo-env-add-many fi a)
-	  (lambda-expand-tree fi (lambda-expand-make-inline-body a v body)))))
+    (lambda-call-embed-0 fi args vals body)))
+
+(defvar *embedded-lambda-funrefs* nil)
+
+(defun lambda-funref-embed (fi x)
+  (with (fun (cadr x.)
+         tr  *current-transpiler*)
+    (with-temporary *embedded-lambda-funrefs* (cons fun *embedded-lambda-funrefs*)
+      (lambda-call-embed-0 fi (| (transpiler-function-arguments tr fun)
+                                 (function-arguments (symbol-function fun)))
+                              (rename-body-tags (transpiler-frontend-1 tr (| (transpiler-function-body tr fun)
+                                                                             (function-body (symbol-function fun)))))
+                              .x))))
 
 ;;;; Export
 
@@ -71,11 +86,19 @@
      (lambda? ..x.)
      (funinfo-add-local-function-args fi .x. (lambda-args ..x.)))
   (?
-    (lambda-call? x) (lambda-call-embed fi x)
-    (lambda? x) (? (& (transpiler-lambda-export? *current-transpiler*)
-                      (not (eq fi (transpiler-global-funinfo *current-transpiler*) )))
-                   (lambda-export fi x)
-		           (lambda-expand-tree-unexported-lambda fi x))
+;    (& (cons? x)
+;       (cons? x.)
+;       (eq 'function x..)
+;       (atom (cadr x.))
+;       (not (builtin? (symbol-function (cadr x.))))
+;       (not (cddr x.))
+;       (not (member (cadr x.) *embedded-lambda-funrefs* :test #'eq)))
+;                          (lambda-funref-embed fi x)
+    (lambda-call? x)      (lambda-call-embed fi x)
+    (lambda? x)           (? (& (transpiler-lambda-export? *current-transpiler*)
+                                (not (eq fi (transpiler-global-funinfo *current-transpiler*) )))
+                             (lambda-export fi x)
+		                     (lambda-expand-tree-unexported-lambda fi x))
 	(lambda-expand-tree-0 fi x)))
 
 (defun lambda-expand-tree-0 (fi x)

@@ -103,7 +103,7 @@
     (expex-warn i))
   (funcall (expex-function-collector ex) fun args)
   (let argdef (| (funinfo-get-local-function-args *expex-funinfo* fun)
-                 (funcall (expex-function-arguments ex) fun))
+                 (current-transpiler-function-arguments fun))
 	(? (expex-expandable-args? ex fun argdef)
    	   (expex-argument-expand fun argdef (? (& (not (in-cps-mode?))
                                                (transpiler-cps-function? *current-transpiler* fun))

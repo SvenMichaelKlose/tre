@@ -30,7 +30,6 @@
         #'((ex)
             (= (expex-inline? ex) #'%slot-value?
                (expex-setter-filter ex) #'expex-collect-wanted-variable
-               (expex-function-arguments ex) #'current-transpiler-function-arguments-w/o-builtins
                (expex-argument-filter ex) #'expex-%setq-collect-wanted-global-variable))))
 
 (defun make-javascript-transpiler ()
