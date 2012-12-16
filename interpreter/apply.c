@@ -76,21 +76,6 @@ trebuiltin_call_compiled (void * fun, treptr x)
 }
 
 treptr
-treeval_compiled_expr_c_exp (treptr func, treptr args, bool do_eval)
-{
-	treptr  result;
-
-    args = CONS(do_eval ? treeval_args (args) : args, treptr_nil);
-   	tregc_push (args);
-
-    result = trebuiltin_call_compiled (TREATOM_COMPILED_EXPANDER(func), args);
-
-	tregc_pop ();
-
-	return result;
-}
-
-treptr
 treeval_compiled_expr_c (treptr func, treptr args, treptr argdef, bool do_eval)
 {
     treptr  expforms;
@@ -135,33 +120,20 @@ trefuncall_compiled (treptr func, treptr args, bool do_eval)
     return TREPTR_IS_ARRAY(func) ?
                treeval_compiled_expr_bc (func, args, TREARRAY_RAW(func)[0], do_eval) :
                (TREATOM_COMPILED_EXPANDER(func) ?
-                    treeval_compiled_expr_c_exp (func, args, do_eval) :
+                    trebuiltin_call_compiled (TREATOM_COMPILED_EXPANDER(func),
+                                              CONS(do_eval ? treeval_args (args) : args, treptr_nil)) :
                     treeval_compiled_expr_c (func, args, CAR(TREATOM_VALUE(func)), do_eval));
 }
 
 treptr
 trefuncall (treptr func, treptr args)
 {
-    treptr  f;
-	treptr  res;
-	treptr  args_with_ghost;
-
-	if (trebuiltin_is_compiled_funref (func)) {
-	    tregc_push (args);
-        f = TREATOM_FUN(FUNREF_FUNCTION(func));
-		args_with_ghost = CONS(FUNREF_LEXICALS(func), args);
-		res = trefuncall_compiled (f, args_with_ghost, FALSE);
-		tregc_pop ();
-		return res;
-	}
-
-	if (IS_COMPILED_FUN(func)) {
-	    tregc_push (args);
-		res = trefuncall_compiled (func, args, FALSE);
-		tregc_pop ();
-		return res;
-	}
-
+	if (trebuiltin_is_compiled_funref (func))
+		return trefuncall_compiled (TREATOM_FUN(FUNREF_FUNCTION(func)),
+		                            CONS(FUNREF_LEXICALS(func), args),
+                                    FALSE);
+	if (IS_COMPILED_FUN(func))
+		return trefuncall_compiled (func, args, FALSE);
     if (TREPTR_IS_FUNCTION(func))
         return treeval_funcall (func, args, FALSE);
     if (TREPTR_IS_BUILTIN(func))
