@@ -1,113 +1,74 @@
 ;;;;; tré – Copyright (c) 2008–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
 
-(defvar *ducktype-magic* '%%QUACK-QUACK!)
-(defvar *ducktype-classes* (make-hash-table))
-(defvar *ducktype-slothashes* (make-hash-table))
-(defvar *ducktype-members* (make-hash-table))
+;;;: Simulates ducktype objects like those used in the JavaScript target.
 
-(defstruct ducktype-obj
-  (magic *ducktype-magic*)
-  (class nil)
-  (slots nil)
+(defvar *classes* (make-hash-table :test #'eq))
+
+(defstruct class
+  name
+  (methods nil)
   (members nil))
 
-(defun ducktype-slothash-name (objname)
-  ($ '%%DUCKTYPED-SLOTS- objname))
+(defstruct object
+  class
+  slots)
 
-(defun %ducktype-inherit (cname bases)
-  (with (base-members nil
-	     base-methods nil)
-   	(dolist (base bases)
-	  (let bclass (href *ducktype-classes* base)
-		(nconc base-members (class-members bclass))
-		(nconc base-methods (class-methods bclass))))
-	(make-ducktype-obj :members base-members
-				       :slots base-methods)))
+(defun %quote? (x))
 
-(defun %ducktype-make-class (cname bases)
-  (& (href *ducktype-classes* cname)
-     (error "Class ~A already defined." cname))
-  (= (href *ducktype-classes* cname)
-     (? bases
-        nil ;(%ducktype-inherit cname bases) XXX
-       (make-class))))
-
-(defmacro defclass (class-name args &rest body)
-  (with (cname (? (cons? class-name) class-name. class-name)
-		 bases (& (cons? class-name) .class-name))
-	(%ducktype-make-class cname bases)
-	(with (slothash (ducktype-slothash-name cname))
-	  `(progn
-	     (defvar ,slothash (make-hash-table))
-	     (= (href ,slothash '__class) ',cname)
-		 (= (href *ducktype-slothashes* ',cname) ,slothash)
-	     ; Inherit base class slots.
-	     ,@(mapcar [with (baseslots (ducktype-slothash-name _))
-	   				 `(dolist (i (hashkeys ,baseslots))
-						(= (href ,slothash i) (href ,baseslots i)))]
-				   bases)
-		 ,(thisify
-		    *ducktype-classes*
-	        `(defun ,cname (this ,@args)
-			   (%thisify ,cname
-		          ,@body)))))))
-
-(defun %ducktype-assert-definition (what name class-name)
-  (| (href *ducktype-classes* class-name)
-	 (error "Definition of ~A ~A: class ~A is not defined."
-		    what name class-name)))
-
-(defmacro defmethod (class-name name args &rest body)
-  (progn
-    (%ducktype-assert-definition "method" name class-name)
-    (= (href (href *ducktype-slothashes* class-name) name)
-	   (eval `(function ,(thisify
-	    				    *ducktype-classes*
-						    `((this ,@args)
-		           			    (%thisify ,class-name ,@body))))))
-    nil))
-
-(defmacro defmember (class-name &rest names)
-  (progn
-    (%ducktype-assert-definition "member" class-name class-name)
-    (= (href *ducktype-members* class-name )
-	   (append (href *ducktype-members* class-name) names))
-    nil))
-
-(defun %ducktype-assert (obj)
-  (| (array? obj)
-     (error "ducktype object expected - not even an array"))
-  (| (eq *ducktype-magic* (ducktype-obj-magic obj))
-     (error "ducktype object expected")))
-
-(defun %slot-value (obj slot)
-  (%ducktype-assert obj)
-  (| (href (ducktype-obj-slots obj) slot)
-     (href (ducktype-obj-members obj) slot)))
-
-(defun slot-value (obj slot)
-  (%ducktype-assert obj)
-  (| (href (ducktype-obj-slots obj) slot)
-     (href (ducktype-obj-members obj) .slot.)))
-
-(defun (= %slot-value) (value obj slot)
-  (%ducktype-assert obj)
-  (= (href (ducktype-obj-members obj) slot) value))
-
-(defun (= slot-value) (value obj slot)
-  (%ducktype-assert obj)
-  (= (href (ducktype-obj-members obj) .slot.) value))
+(defmacro defclass (classes args &rest body)
+  (print-definition `(defclass ,classes ,args))
+  (= classes (force-list classes))
+  (print classes)
+  (print (reverse .classes))
+  (& (href *classes* classes.) (error "Class ~A already defined." classes.))
+  (= (href *classes* classes.) (make-class :members (apply #'hmerge (filter [class-members (href *classes* _)] (reverse .classes)))
+	                                       :methods (| (apply #'hmerge (filter [class-methods (href *classes* _)] (reverse .classes)))
+                                                       (make-hash-table :test #'eq))))
+  (thisify *classes* `(defun ,classes. (this ,@args)
+			            (%thisify ,classes. ,@body))))
 
 (defun %new (name &rest args)
-  (let members (make-hash-table)
-	(dolist (i (href *ducktype-members* name))
-	  (clr (href members i)))
-	(let this (make-ducktype-obj
-				:class name
-				:slots (href *ducktype-slothashes* name)
-				:members members)
-	  (apply (symbol-function name) this args)
-	  this)))
+  (with (class  (href *classes* name)
+         object (make-object :class class
+                             :slots (copy-hash-table (class-methods class))))
+    (apply (symbol-function name) object args)
+    object))
 
 (defmacro new (name &rest args)
   `(%new ',name ,@args))
+
+(defun %ducktype-assert (x)
+  (| (object? x) (error "ducktype object expected instead of ~A" x)))
+
+(defun %ducktype-assert-class (class-name)
+  (| (href *classes* class-name) (error "class ~A is not defined" class-name)))
+
+(defmacro defmethod (class-name name args &rest body)
+  (print-definition `(defmethod ,class-name ,name ,args))
+  (%ducktype-assert-class class-name)
+  `(+! (href (class-methods (href *classes* ',class-name)) name)
+       (function ,(thisify *classes* `((this ,@args)
+                                         (%thisify ,class-name ,@body))))))
+
+(defmacro defmember (class-name &rest names)
+  (print-definition `(defmember ,@names))
+  (%ducktype-assert-class class-name)
+  (| (href *classes* class-name) (error "class ~A is not defined"))
+;  (+! (class-members (href *classes* class-name)) names)
+  nil)
+
+(defun %slot-value (obj slot)
+  (%ducktype-assert obj)
+  (href (object-slots obj) slot))
+
+(defun slot-value (obj slot)
+  (%ducktype-assert obj)
+  (href (object-slots obj) slot))
+
+(defun (= %slot-value) (value obj slot)
+  (%ducktype-assert obj)
+  (= (href (object-slots obj) slot) value))
+
+(defun (= slot-value) (value obj slot)
+  (%ducktype-assert obj)
+  (= (href (object-slots obj) .slot.) value))

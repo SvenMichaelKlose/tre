@@ -5,7 +5,10 @@
 (defmember caroshi-element
 	some-member)
 
-(defmethod caroshi-element some-member-function ())
+(defclass (caroshi-css-layout caroshi-element) ()
+  this)
+
+(defmethod caroshi-css-layout some-member-function ())
 
 ;(defun ducktype-test ()
 ;  (let o (new caroshi-element)

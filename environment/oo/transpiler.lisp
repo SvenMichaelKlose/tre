@@ -12,7 +12,7 @@
 (defun transpiler_defclass (constructor-maker class-name args &rest body)
   (with (cname (? (cons? class-name) class-name. class-name)
 		 bases (& (cons? class-name) .class-name)
-		classes (transpiler-thisify-classes *current-transpiler*))
+		 classes (transpiler-thisify-classes *current-transpiler*))
 	(print-definition `(defclass ,class-name ,@(awhen args (list !))))
     (& (href classes cname)
 	   (warn "Class ~A already defined." cname))
