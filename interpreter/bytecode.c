@@ -151,12 +151,10 @@ trecode_get (treptr ** p)
     treptr  * x = *p;
     int     num_args;
     int     i;
-    int     j;
 
     v = *x++;
 
     if (v == treptr_funcall) {
-        /*printf("funcall: ");*/
         fun = *x++;
         if (TREPTR_IS_BUILTIN(fun)) {
             /*printf("builtin %s\n", TREATOM_NAME(*x));*/
@@ -180,10 +178,13 @@ trecode_get (treptr ** p)
         } else if (TREPTR_IS_ATOM(fun) && TREPTR_IS_ARRAY(TREATOM_FUN(fun))) {
             num_args = TRENUMBER_INT(*x++);
             /*printf("Immediate call of bytecode function %s with %d arguments.\n", TREATOM_NAME(fun), num_args);*/
-            j = -1;
+            v = tre_make_queue ();
+            tregc_push (v);
             DOTIMES(i, num_args)
-                trestack_ptr[j--] = trecode_get (&x);
-            trestack_ptr -= num_args;
+                tre_enqueue (v, trecode_get (&x));
+            DOLIST(i, tre_queue_list (v))
+                *--trestack_ptr = CAR(i);
+            tregc_pop ();
             /*trecode_print_args (num_args);*/
             v = trecode_exec (TREATOM_FUN(fun));
             trestack_ptr += num_args;
@@ -214,6 +215,7 @@ trecode_get (treptr ** p)
         v = TREATOM_VALUE(v);
     /*treprint (v);*/
     *p = x;
+
     return v;
 }
 
@@ -268,8 +270,10 @@ trecode_exec (treptr fun)
         } else if (v == treptr_set_vec) {
             /*printf("\n"); fflush (stdout);*/
             vec = trecode_get (&x);
+            tregc_push (vec);
             i = TRENUMBER_INT(*x++);
             v = _TREVEC(vec, i) = trecode_get (&x);
+            tregc_pop ();
         } else
             treerror_norecover (v, "illegal bytecode instruction");
     }
