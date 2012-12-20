@@ -130,7 +130,7 @@
   `(%%%string+ ,@x))
 
 (define-php-std-macro %%%nanotime ()
-  '(microtime))
+  '(microtime t))
 
 (define-php-std-macro filter (fun lst)
   (shared-opt-filter fun lst))
