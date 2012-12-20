@@ -71,6 +71,13 @@
     (dolist (i (hashkeys h) n)
       (= (href n i) (href h i)))))
 
+(defun hmerge (&rest lst)
+  (let l (remove-if #'not lst)
+    (& l (let h (copy-hash-table l.)
+           (dolist (b .l h)
+             (dolist (j (hashkeys b))
+               (= (href h j) (href b j))))))))
+
 (defun hash-alist (h)
   (declare type hash-table h)
   (with-queue alist
