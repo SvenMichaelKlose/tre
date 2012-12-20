@@ -1,6 +1,6 @@
 ;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
-;;;; GENERAL
+;;;; CODE GENERATION HELPERS
 
 (defvar *php-by-reference?* nil)
 
@@ -28,10 +28,15 @@
 (defmacro define-php-infix (name)
   `(define-transpiler-infix *php-transpiler* ,name))
 
-;;;; SYMBOLS
+;;;; TRUTH
 
 (transpiler-translate-symbol *php-transpiler* nil "NULL")
 (transpiler-translate-symbol *php-transpiler* t "TRUE")
+
+;;;; LITERAL SYMBOLS
+
+(define-php-macro %quote (x)
+  (php-compiled-symbol x))
 
 ;;;; CONTROL FLOW
 
@@ -57,8 +62,6 @@
     (php-line "if (!(!" v "&&!is_string(" v ")&&!is_numeric(" v ")&&!is_array(" v ")) { " (php-jump tag) "}")))
 
 ;;;; FUNCTIONS
-
-(defvar *php-codegen-funinfo* nil)
 
 (defun codegen-php-function (name x)
   (with (args (argument-expand-names 'unnamed-c-function (lambda-args x))
@@ -94,7 +97,7 @@
 (defun php-codegen-argument-filter (x)
   (php-dollarize x))
 
-;;;; FUNCTION REFERENCE
+;;;; FUNCTION REFERENCES
 
 (define-php-macro %%funref (name fi-sym)
   (let fi (get-funinfo-by-sym fi-sym)
@@ -106,7 +109,7 @@
              ")")
 	   name)))
 
-;;;; ASSIGNMENT
+;;;; ASSIGNMENTS
 
 (defun %transpiler-native-without-reference? (val)
   (& (%transpiler-native? val)
@@ -166,7 +169,7 @@
 					   ,(php-assignment-operator val)
 					   ,(php-dollarize val)))
 
-;;;; VARIABLES
+;;;; VECTORS
 
 (define-php-macro %make-lexical-array (&rest elements)
   `(%transpiler-native "new __l()" ""))
@@ -177,7 +180,7 @@
 (define-php-macro %set-vec (v i x)
   `(%transpiler-native ,*php-indent* ,(php-dollarize v) "->s(" ,(php-dollarize i) "," ,(php-%setq-value x) ")",*php-separator*))
 
-;;;; NUMBERS, ARITHMETIC, COMPARISON
+;;;; NUMBERS
 
 (defmacro define-php-binary (op replacement-op)
   (print-definition `(define-php-binary ,op ,replacement-op))
@@ -246,7 +249,6 @@
   `(%transpiler-native ,(php-dollarize h) ,@(php-array-indexes k) " = " ,(php-dollarize v)))
 
 (define-php-macro href (h k)
-;  `(%transpiler-native ,(php-dollarize h) "->g(userfun_T37T37key(" ,(php-dollarize k) "))"))
   `(%transpiler-native "(is_a (" ,(php-dollarize h) ", '__l') || is_a (" ,(php-dollarize h) ", '__array')) ? "
                        ,(php-dollarize h) "->g(userfun_T37T37key (" ,(php-dollarize k) ")) : "
                        "(isset (" ,(php-dollarize h) "[userfun_T37T37key (" ,(php-dollarize k) ")]) ? "
@@ -254,7 +256,6 @@
                            "NULL)"))
 
 (define-php-macro %%u=-href (v h k)
-;  `(%transpiler-native ,(php-dollarize h) "->s(userfun_T37T37key(" ,(php-dollarize k) ")," ,(php-dollarize v) ")"))
   `(%transpiler-native "(is_a (" ,(php-dollarize h) ", '__l') || is_a (" ,(php-dollarize h) ", '__array')) ? "
                        ,(php-dollarize h) "->s(userfun_T37T37key (" ,(php-dollarize k) ")," ,(php-dollarize v) ") : "
                        ,(php-dollarize h) "[userfun_T37T37key (" ,(php-dollarize k) ")] = " ,(php-dollarize v)))
@@ -282,11 +283,6 @@
 		`(%transpiler-native ,(php-dollarize x) "->" ,y)
 		(error "%TRANSPILER-NATIVE expected"))
 	 `(%transpiler-native "$" ,x "->" ,y)))
-
-;;;; MISCELLANEOUS
-
-(define-php-macro %quote (x)
-  (php-compiled-symbol x))
 
 (define-php-macro %php-class-head (name)
   `(%transpiler-native "class " ,name "{"))
