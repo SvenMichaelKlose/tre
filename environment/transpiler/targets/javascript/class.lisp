@@ -40,9 +40,8 @@
 
 (defun js-emit-methods (class-name cls)
   (awhen (class-methods cls)
-	`(hash-merge
-	     (slot-value ,class-name 'PROTOTYPE)
-	     (%%%make-hash-table ,@(mapcan [js-emit-method class-name _] (reverse !))))))
+	`(hash-merge (slot-value ,class-name 'PROTOTYPE)
+	             (%%%make-hash-table ,@(mapcan [js-emit-method class-name _] (reverse !))))))
 
 (define-js-std-macro finalize-class (class-name)
   (let classes (transpiler-thisify-classes *current-transpiler*)
