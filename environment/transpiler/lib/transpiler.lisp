@@ -56,6 +56,7 @@
   (save-sources? nil)
   (save-argument-defs-only? nil)
   (profile? nil)
+  (profile-num-calls? nil)
 
   ; Generator for literal strings.
   (gen-string #'c-literal-string)
@@ -134,18 +135,35 @@
   (current-pass nil)
   (last-pass-result nil))
 
-(defun transpiler-macro? (tr name)
-  (| (expander-has-macro? (transpiler-std-macro-expander tr) name)
-     (expander-has-macro? (transpiler-codegen-expander tr) name)))
+(defmacro transpiler-getter (name &rest body)
+  `(defun ,($ transpiler- name) (tr x)
+     ,@body))
 
-(defun transpiler-defined-functions (tr)
-  (hashkeys (transpiler-defined-functions-hash tr)))
+(defun transpiler-defined-functions (tr) (hashkeys (transpiler-defined-functions-hash tr)))
+(defun transpiler-defined-functions-without-builtins (tr) (remove-if #'builtin? (transpiler-defined-functions tr)))
+(transpiler-getter defined-function        (href (transpiler-defined-functions-hash tr) x))
+(transpiler-getter defined-variable        (href (transpiler-defined-variables-hash tr) x))
+(transpiler-getter host-function?          (href (transpiler-host-functions-hash tr) x))
+(transpiler-getter host-function-arguments (href (transpiler-host-functions-hash tr) x))
+(transpiler-getter host-variable?          (href (transpiler-host-variables-hash tr) x))
+(transpiler-getter function-body           (href (transpiler-function-bodies tr) x))
+(transpiler-getter function-arguments      (href (transpiler-function-args tr) x))
+(transpiler-getter wanted-function?        (href (transpiler-wanted-functions-hash tr) x))
+(transpiler-getter wanted-variable?        (href (transpiler-wanted-variables-hash tr) x))
+(transpiler-getter late-symbol?            (href (transpiler-late-symbols tr) x))
+(transpiler-getter unwanted-function?        (member x (transpiler-unwanted-functions tr) :test #'eq))
+(transpiler-getter inline-exception?         (member x (transpiler-inline-exceptions tr) :test #'eq))
+(transpiler-getter transpiler-cps-exception? (member x (transpiler-cps-exceptions tr) :test #'eq))
+(transpiler-getter cps-function?             (member x (transpiler-cps-functions tr) :test #'eq))
+(transpiler-getter plain-arg-fun?            (member x (transpiler-plain-arg-funs tr) :test #'eq))
+(transpiler-getter add-defined-variable (= (href (transpiler-defined-variables-hash tr) x) t)
+                                        x)
+(transpiler-getter switch-obfuscator (= (transpiler-obfuscate? tr) x))
+(transpiler-getter macro? (| (expander-has-macro? (transpiler-std-macro-expander tr) x)
+                             (expander-has-macro? (transpiler-codegen-expander tr) x)))
+(transpiler-getter imported-variable? (& (transpiler-import-from-environment? tr)
+                                         (transpiler-host-variable? tr x)))
 
-(defun transpiler-defined-function (tr name)
-  (href (transpiler-defined-functions-hash tr) name))
-
-(defun transpiler-defined-functions-without-builtins (tr)
-  (remove-if #'builtin? (transpiler-defined-functions tr)))
 
 (defun transpiler-add-defined-function (tr name args body)
   (= (href (transpiler-defined-functions-hash tr) name) t)
@@ -153,97 +171,28 @@
   (transpiler-add-function-body tr name body)
   name)
 
-(defun transpiler-defined-variable (tr name)
-  (href (transpiler-defined-variables-hash tr) name))
+(defun transpiler-add-function-args (tr fun args) (= (href (transpiler-function-args tr) fun) args))
+(defun transpiler-add-function-body (tr fun args) (= (href (transpiler-function-bodies tr) fun) args))
+(define-slot-setter-push transpiler-add-unwanted-function tr (transpiler-unwanted-functions tr))
+(define-slot-setter-push transpiler-add-exported-closure tr (transpiler-exported-closures tr))
+(define-slot-setter-push transpiler-add-cps-function tr (transpiler-cps-functions tr))
+(define-slot-setter-push transpiler-add-inline-exception tr (transpiler-inline-exceptions tr))
+(define-slot-setter-push transpiler-add-cps-exception tr (transpiler-cps-exceptions tr))
+(define-slot-setter-push transpiler-add-plain-arg-fun tr (transpiler-plain-arg-funs tr))
 
-(defun transpiler-add-defined-variable (tr name)
-  (= (href (transpiler-defined-variables-hash tr) name) t)
-  name)
-
-(defun transpiler-host-function? (tr name)
-  (href (transpiler-host-functions-hash tr) name))
-
-(defun transpiler-host-function-arguments (tr name)
-  (transpiler-host-function? tr name))
-
-(defun transpiler-host-variable? (tr name)
-  (href (transpiler-host-variables-hash tr) name))
-
-(defun transpiler-switch-obfuscator (tr on?)
-  (= (transpiler-obfuscate? tr) on?))
-
-(defun transpiler-function-arguments (tr fun)
-  (href (transpiler-function-args tr) fun))
-
-(defun current-transpiler-function-arguments (x)
-  (alet *current-transpiler*
-    (| (transpiler-function-arguments ! x)
-       (transpiler-host-function-arguments ! x)
-       (function-arguments (symbol-function x)))))
-
-(defun transpiler-function-body (tr fun)
-  (href (transpiler-function-bodies tr) fun))
-
-(defun transpiler-add-function-args (tr fun args)
-  (= (href (transpiler-function-args tr) fun) args))
-
-(defun transpiler-add-function-body (tr fun args)
-  (= (href (transpiler-function-bodies tr) fun) args))
-
-(define-slot-setter-push transpiler-add-unwanted-function tr
-  (transpiler-unwanted-functions tr))
-
-(defun transpiler-wanted-function? (tr fun)
-  (href (transpiler-wanted-functions-hash tr) fun))
-
-(defun transpiler-unwanted-function? (tr fun)
-  (member fun (transpiler-unwanted-functions tr)))
-
-(defun transpiler-wanted-variable? (tr name)
-  (href (transpiler-wanted-variables-hash tr) name))
-
-(defun transpiler-imported-variable? (tr x)
-  (& (transpiler-import-from-environment? tr)
-     (transpiler-host-variable? tr x)))
-
-(defun transpiler-inline-exception? (tr fun)
-  (member fun (transpiler-inline-exceptions tr) :test #'eq))
-
-(defun transpiler-cps-exception? (tr fun)
-  (member fun (transpiler-cps-exceptions tr) :test #'eq))
-
-(defun transpiler-cps-function? (tr fun)
-  (member fun (transpiler-cps-functions tr) :test #'eq))
-
-(define-slot-setter-push transpiler-add-inline-exception tr
-  (transpiler-inline-exceptions tr))
-
-(define-slot-setter-push transpiler-add-cps-exception tr
-  (transpiler-cps-exceptions tr))
+(defun transpiler-add-plain-arg-funs (tr lst)
+  (dolist (i lst)
+    (transpiler-add-plain-arg-fun tr i)))
 
 (defun transpiler-add-obfuscation-exceptions (tr &rest x)
   (dolist (i x)
 	(= (href (transpiler-obfuscations tr) (make-symbol (symbol-name i)))
 	   t)))
 
-(define-slot-setter-push transpiler-add-plain-arg-fun tr
-  (transpiler-plain-arg-funs tr))
 
 (defun transpiler-add-late-symbol (tr x)
   (= (href (transpiler-late-symbols tr) x) t)
   x)
-
-(defun transpiler-late-symbol? (tr x)
-  (href (transpiler-late-symbols tr) x))
-
-(define-slot-setter-push transpiler-add-exported-closure tr
-  (transpiler-exported-closures tr))
-
-(define-slot-setter-push transpiler-add-cps-function tr
-  (transpiler-cps-functions tr))
-
-(defun transpiler-plain-arg-fun? (tr fun)
-  (member fun (transpiler-plain-arg-funs tr) :test #'eq))
 
 (defun transpiler-macro (tr name)
   (let expander (expander-get (transpiler-codegen-expander tr))
@@ -314,6 +263,7 @@
                      :save-sources?           save-sources?
                      :save-argument-defs-only? save-argument-defs-only?
                      :profile?                profile?
+                     :profile-num-calls?      profile-num-calls?
                      :gen-string              gen-string
                      :lambda-export?          lambda-export?
                      :accumulate-toplevel-expressions? accumulate-toplevel-expressions?
@@ -369,3 +319,9 @@
 (defun in-cps-mode? ()
   (& (transpiler-continuation-passing-style? *current-transpiler*)
      (not *transpiler-except-cps?*)))
+
+(defun current-transpiler-function-arguments (x)
+  (alet *current-transpiler*
+    (| (transpiler-function-arguments ! x)
+       (transpiler-host-function-arguments ! x)
+       (function-arguments (symbol-function x)))))
