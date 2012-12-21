@@ -28,7 +28,8 @@
               :encapsulate-strings? nil
               :function-name-prefix nil
               :place-expand-ignore-toplevel-funinfo? t)
-	(= (transpiler-inline-exceptions !) '(error format identity))))
+	(= (transpiler-inline-exceptions !) '(error format identity))
+    (transpiler-add-plain-arg-funs ! *builtins*)))
 
 (defvar *bc-transpiler* (copy-transpiler (make-bc-transpiler)))
 (defvar *bc-separator*  (transpiler-separator *bc-transpiler*))
