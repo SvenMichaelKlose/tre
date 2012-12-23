@@ -18,13 +18,18 @@
 (defun shared-defun-profiling-body (tr name body)
   (alet (body-without-noargs-tag body)
     (? (& (transpiler-profile? tr)
-          (not (eq 'add-profile name)))
-       `((let ~%profiling-timer (& (not *profile-lock*) (%%%nanotime))
-           (prog1
-             (progn ,@!)
-               (& ~%profiling-timer
-                  (with-temporary *profile-lock* t
-                    (add-profile ',name (integer- (%%%nanotime) ~%profiling-timer)))))))
+          (not (eq 'add-profile name)
+               (eq 'add-profile-call name)))
+       (? (transpiler-profile-num-calls? tr)
+          `((progn
+              (& (not *profile-lock*)
+                 (add-profile-call ',name))
+              ,@!))
+          `((let ~%profiling-timer (& (not *profile-lock*) (%%%nanotime))
+              (prog1
+                (progn ,@!)
+                  (& ~%profiling-timer
+                     (add-profile ',name (integer- (%%%nanotime) ~%profiling-timer)))))))
        !)))
 
 (defun shared-defun-memorize-source (tr name args body)
