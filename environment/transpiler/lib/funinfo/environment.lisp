@@ -21,7 +21,7 @@
 ;;;; ARGUMENTS & ENVIRONMENT
 
 (defun funinfo-local-args (fi)
-  (remove-if (fn funinfo-lexical? fi _) (funinfo-args fi)))
+  (remove-if [funinfo-lexical? fi _] (funinfo-args fi)))
 
 (defun funinfo-in-env? (fi x)
   (& (? (funinfo-parent fi)
