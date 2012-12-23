@@ -9,10 +9,14 @@
 
 (defun open (path &key direction)
   (!? (%fopen path (%fopen-direction direction))
-      (make-stream :handle !
-                   :fun-in #'((str) (%read-char (stream-handle str)))
-                   :fun-out #'((c str) (%princ c (stream-handle str)))
-                   :fun-eof #'((str) (%feof (stream-handle str))))
+      (make-stream
+          :handle !
+          :fun-in #'((str)
+                       (%stream-track-input-location str (%read-char (stream-handle str))))
+          :fun-out #'((c str)
+                        (%princ c (stream-handle str)))
+          :fun-eof #'((str)
+                        (%feof (stream-handle str))))
       (error "couldn't open file '~A'" ,path)))
 
 (defun close (str)
