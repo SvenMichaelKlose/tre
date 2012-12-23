@@ -25,7 +25,10 @@
     quote-keywords           #'transpiler-quote-keywords
     expression-expand        [with-temporary *expex-warn?* nil
                                (transpiler-expression-expand tr _)]
-    make-packages            #'make-packages)
+    make-packages            #'make-packages
+    inject-debugging         [? (transpiler-inject-debugging? tr)
+                                (inject-debugging _)
+                                _])
 
 (defun transpiler-middleend (tr x)
   (mapcan [transpiler-middleend-0 tr (list _)] x))

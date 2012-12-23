@@ -3,6 +3,8 @@
 (defmacro define-tree-filter (name args &body body)
   (let iter (car (last args))
     `(defun ,name ,args
+       (awhen (& (cons? ,iter) (cpr ,iter))
+         (= *default-listprop* !))
        (?
          ,@body
          (atom ,iter) ,iter

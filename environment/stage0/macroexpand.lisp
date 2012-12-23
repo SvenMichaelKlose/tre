@@ -79,8 +79,11 @@
   #'((%g)
        (? (atom %g)
           %g
-       	  (cons (%macroexpand (car %g))
-                (%macroexpand-rest (cdr %g))))))
+          (progn
+            (? (cpr %g)
+               (setq *default-listprop* (cpr %g)))
+       	    (cons (%macroexpand (car %g))
+                  (%macroexpand-rest (cdr %g)))))))
 
 (%set-atom-fun %macroexpand-xlat
   #'((%g)
@@ -109,22 +112,15 @@
          (atom %g)
            %g
 
-         (eq (car %g) 'QUOTE)
-           %g
-
-         (eq (car %g) 'BACKQUOTE)
-           (cons 'BACKQUOTE
-                 (apply *macroexpand-backquote-diversion* (list (cdr %g))))
-
-         (eq (car %g) 'QUASIQUOTE)
-	  	   (cons 'QUASIQUOTE
-		     	 (%macroexpand (cdr %g)))
-
-         (eq (car %g) 'QUASIQUOTE-SPLICE)
-	  	   (cons 'QUASIQUOTE-SPLICE
-		     	 (%macroexpand (cdr %g)))
-
-         (%macroexpand-call (%macroexpand-rest %g)))))
+         (progn
+           (? (cpr %g)
+              (setq *default-listprop* (cpr %g)))
+           (?
+             (eq (car %g) 'QUOTE)             %g
+             (eq (car %g) 'BACKQUOTE)         (cons 'BACKQUOTE (apply *macroexpand-backquote-diversion* (list (cdr %g))))
+             (eq (car %g) 'QUASIQUOTE)        (cons 'QUASIQUOTE (%macroexpand (cdr %g)))
+             (eq (car %g) 'QUASIQUOTE-SPLICE) (cons 'QUASIQUOTE-SPLICE (%macroexpand (cdr %g)))
+             (%macroexpand-call (%macroexpand-rest %g)))))))
 
 (%set-atom-fun %%macrop
   #'((%g)

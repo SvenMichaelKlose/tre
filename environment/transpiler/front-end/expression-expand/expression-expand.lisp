@@ -223,6 +223,8 @@
   (? (identity? x) .x. x))
 
 (defun expex-expr (ex expr)
+  (awhen (& (cons? expr) (cpr expr))
+    (= *default-listprop* !))
   (let x (expex-guest-filter-expr ex expr)
     (expex-cps x)
     (?

@@ -21,6 +21,6 @@
 (env-load "transpiler/middle-end/named-functions.lisp")
 (env-load "transpiler/middle-end/quote-keywords.lisp")
 (env-load "transpiler/middle-end/package.lisp")
-;(env-load "transpiler/middle-end/inject.lisp")
+(env-load "transpiler/middle-end/inject.lisp")
 
 (env-load "transpiler/middle-end/toplevel.lisp")

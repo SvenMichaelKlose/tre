@@ -146,6 +146,7 @@
 	   l)))
 
 (defun read-expr (str)
+  (= *default-listprop* (cons (stream-in-column str) (stream-in-line str)))
   (with ((token pkg sym) (read-token str))
 	(?
 	  (not token) nil

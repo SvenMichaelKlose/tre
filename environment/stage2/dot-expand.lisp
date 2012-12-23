@@ -31,10 +31,8 @@
 						l  (length sl)
 					    p  (dot-position sl))
 				   (?
-					 (| (== 1 l) (not p))
-						x
-					 (| (== #\. (car sl)) (== #\. (car (last sl))))
-						(dot-expand-list sl)
+					 (| (== 1 l) (not p)) x
+					 (| (== #\. (car sl)) (== #\. (car (last sl)))) (dot-expand-list sl)
 					 `(%slot-value ,(list-symbol (subseq sl 0 p))
 						           ,(conv (list-symbol (subseq sl (1+ p))))))))
 		 label?
@@ -44,7 +42,10 @@
     (when x
       (?
 		(label? x) (conv x)
-		(cons? x) (cons-r dot-expand x)
+		(cons? x) (progn
+                    (awhen (cpr x)
+                      (= *default-listprop* !))
+                    (cons-r dot-expand x))
       	x))))
 
 (%set-atom-fun *dotexpand-hook* #'dot-expand)

@@ -105,8 +105,11 @@
   (?
 	(atom x) x
 	(atom x.) (cons x. (lambda-expand-tree-0 fi .x))
-	(cons (lambda-expand-tree-cons fi x.)
-		  (lambda-expand-tree-0 fi .x))))
+    (progn
+      (awhen (cpr x)
+        (= *default-listprop* !))
+	  (cons (lambda-expand-tree-cons fi x.)
+		    (lambda-expand-tree-0 fi .x)))))
 
 (defun lambda-expand-tree (fi x)
   (aprog1 (lambda-expand-tree-0 fi x)
