@@ -52,7 +52,8 @@
 
 		  alert
           
-          focus disabled match escape))))
+          focus disabled match escape))
+    (transpiler-add-plain-arg-funs ! *builtins*)))
 
 (defvar *js-transpiler* (copy-transpiler (make-javascript-transpiler)))
 (defvar *js-newline* (format nil "~%"))
