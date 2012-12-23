@@ -87,6 +87,7 @@
   (make-text? t)
   (encapsulate-strings? t)
   (dump-passes? nil)
+  (inject-debugging? nil)
 
   ;;;
   ;;; You mustn't init these.
