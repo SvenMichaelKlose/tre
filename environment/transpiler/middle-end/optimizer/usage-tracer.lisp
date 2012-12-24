@@ -28,7 +28,8 @@
                      (%%vm-go? a)    (traverse-tag .a. v)
                      (%setq-on? a v) (find-tree (%setq-value a) v :test #'eq)
                      (find-tree a v :test #'eq) t
-                     (vm-conditional-jump? a) (| (traverse-tag ..a. v) (rec d v))
+                     (%%vm-go-nil? a) (| (traverse-tag ..a. v)
+                                         (rec d v))
                      (rec d v)))))
     (| (eq *opt-peephole-funinfo* (transpiler-global-funinfo *current-transpiler*))
        (& (not (~%ret? v))

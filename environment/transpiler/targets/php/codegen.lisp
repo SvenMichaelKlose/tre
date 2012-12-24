@@ -57,10 +57,6 @@
   (let v (php-dollarize val)
     (php-line "if (!" v "&&!is_string(" v ")&&!is_numeric(" v ")&&!is_array(" v ")) { " (php-jump tag) "; }")))
 
-(define-php-macro %%vm-go-not-nil (val tag)
-  (let v (php-dollarize val)
-    (php-line "if (!(!" v "&&!is_string(" v ")&&!is_numeric(" v ")&&!is_array(" v ")) { " (php-jump tag) "}")))
-
 ;;;; FUNCTIONS
 
 (defun codegen-php-function (name x)
