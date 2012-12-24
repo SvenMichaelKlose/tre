@@ -35,23 +35,10 @@
   (aprog1 (expex-sym)
     (funinfo-env-add *expex-funinfo* !)))
 
-(defun expex-symbol-defined? (x)
-  (let tr *current-transpiler*
-    (| (funinfo-in-this-or-parent-env? *expex-funinfo* x)
-       (function? x)
-       (keyword? x)
-       (member x (transpiler-predefined-symbols tr) :test #'eq)
-       (in? x nil t '~%ret 'this)
-       (transpiler-imported-variable? tr x)
-       (transpiler-defined-variable tr x)
-       (transpiler-macro? tr x)
-       (transpiler-host-variable? tr x)
-       (transpiler-late-symbol? tr x))))
-
 (defun expex-warn (x)
   (& *expex-warn?*
      (symbol? x)
-     (not (expex-symbol-defined? x)
+     (not (transpiler-defined-symbol? x)
           (transpiler-can-import? *current-transpiler* x))
      (error "symbol ~A is not defined in function ~A.~%"
             (symbol-name x)
@@ -100,8 +87,6 @@
                                             args))
 	   args)))
 
-(defvar already-printed? nil)
-
 ;; Expand arguments if they are passed to a function.
 (defun expex-argexpand (ex x)
   (with (new? (%new? x)
@@ -123,10 +108,6 @@
       (let s (expex-funinfo-env-add)
         (cons (expex-body ex ! s) s))
 	  (cons nil nil)))
-
-(defun lambda-expression-needs-cps? (x)
-  (& (lambda-expr? x)
-     (funinfo-needs-cps? (get-lambda-funinfo x))))
 
 (defun expex-move-arg-std (ex x)
   (with (s                (expex-funinfo-env-add)
