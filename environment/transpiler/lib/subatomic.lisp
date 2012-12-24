@@ -91,3 +91,7 @@
 (defun atom-or-%quote? (x)
   (| (atom x)
      (%quote? x)))
+
+(defun has-return-value? (x)
+  (not (| (vm-jump? x)
+          (%var? x))))
