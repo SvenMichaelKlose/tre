@@ -23,11 +23,14 @@
 	(lambda? x) `#'(,@(lambda-funinfo-expr x)
 		            ,(lambda-args x)
 		            ,@(thisify-list-0 classdef (lambda-body x) (append exclusions (lambda-args x))))
-    (cons (? (%slot-value? x.)
-			 `(%slot-value ,(thisify-list-0 classdef (cadr x.) exclusions)
-					        ,(caddr x.))
-			 (thisify-list-0 classdef x. exclusions))
-		  (thisify-list-0 classdef .x exclusions))))
+    (progn
+      (awhen (cpr x)
+        (= *default-listprop* !))
+      (cons (? (%slot-value? x.)
+			   `(%slot-value ,(thisify-list-0 classdef (cadr x.) exclusions)
+					          ,(caddr x.))
+			   (thisify-list-0 classdef x. exclusions))
+		    (thisify-list-0 classdef .x exclusions)))))
 
 ;; Thisify class members inside found %THISIFY.
 (defun thisify-list (classes x cls)
@@ -41,5 +44,8 @@
 	 (atom x)       x
 	 (%thisify? x.) (append (thisify-list classes (cddr x.) (cadr x.))
 			                (thisify classes .x))
-	 (cons (thisify classes x.)
-	 	   (thisify classes .x))))
+     (progn
+       (awhen (cpr x)
+         (= *default-listprop* !))
+	   (cons (thisify classes x.)
+	 	     (thisify classes .x)))))
