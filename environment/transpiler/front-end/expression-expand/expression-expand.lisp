@@ -32,27 +32,21 @@
   (expex-guest-filter-setter ex `(%setq ,plc ,(peel-identity val))))
 
 (defun expex-funinfo-env-add ()
-  (let s (expex-sym)
-    (!? *expex-funinfo*
-        (funinfo-env-add ! s)
-	    (error "expression-expander: FUNINFO missing. Cannot make GENSYM"))
-	s))
+  (aprog1 (expex-sym)
+    (funinfo-env-add *expex-funinfo* !)))
 
-(defun expex-internal-symbol? (x)
+(defun expex-symbol-defined? (x)
   (let tr *current-transpiler*
-    (| (function? x)
+    (| (funinfo-in-this-or-parent-env? *expex-funinfo* x)
+       (function? x)
        (keyword? x)
        (member x (transpiler-predefined-symbols tr) :test #'eq)
        (in? x nil t '~%ret 'this)
        (transpiler-imported-variable? tr x)
        (transpiler-defined-variable tr x)
        (transpiler-macro? tr x)
-       (transpiler-host-variable? tr x))))
-
-(defun expex-symbol-defined? (x)
-  (| (funinfo-in-this-or-parent-env? *expex-funinfo* x)
-     (expex-internal-symbol? x)
-     (transpiler-late-symbol? *current-transpiler* x)))
+       (transpiler-host-variable? tr x)
+       (transpiler-late-symbol? tr x))))
 
 (defun expex-warn (x)
   (& *expex-warn?*
