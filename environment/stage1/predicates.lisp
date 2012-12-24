@@ -14,11 +14,6 @@
 (defun end? (x)
   (eq nil x))
 
-(defun variablep (x)
-  (& (atom x)
-     (not (| (string? x)
-             (number? x)))))
-
 (defun keyword? (x)
   (& (symbol? x)
      (eq *keyword-package* (symbol-package x))))

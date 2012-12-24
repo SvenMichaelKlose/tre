@@ -24,8 +24,8 @@
      ,x))
 
 (defun %declare-statement-type-1 (typ x)
-  (unless (variablep x)
-	(error "Variable expected but got ~A to declare as of type ~A" x typ))
+  (unless (symbol? x)
+	(error "Symbol expected but got ~A to declare as of type ~A" x typ))
   `(unless (| ,@(filter [%declare-statement-type-predicate _ x]
                         (force-list typ)))
 	 (error "~A is not of type ~A. Object: ~A" ,(symbol-name x) (quote ,typ) ,x)))

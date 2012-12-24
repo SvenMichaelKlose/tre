@@ -8,8 +8,8 @@
 ;  	 (?
 ;	   (some #'string? x)
 ;         `(,($ 'string name) ,,@x)
-;	   (some #'integerp x)
-;         `(,($ 'integer name) ,,@(filter [? (integerp _)
+;	   (some #'integer? x)
+;         `(,($ 'integer name) ,,@(filter [? (integer? _)
 ;                                            _
 ;                                            `(%wrap-char-number ,,_)]
 ;                                         x))
@@ -52,7 +52,7 @@
 (defmacro character- (&rest x)
   (? (== 1 (length x))
      `(code-char (%transpiler-native "(-" (%slot-value ,x. v) ")"))
-     `(code-char (%%%- ,@(mapcar [? (integerp _)
+     `(code-char (%%%- ,@(mapcar [? (integer? _)
 							        _
 							        `(%slot-value ,_ v)]
                                  x)))))
