@@ -37,3 +37,4 @@
 (env-load "stage5/pi.lisp")
 (env-load "stage5/dct.lisp")
 (env-load "stage5/draw-signal.lisp")
+(env-load "stage5/orize.lisp")
