@@ -23,10 +23,6 @@
   (& (symbol? x)
      (eq *keyword-package* (symbol-package x))))
 
-(defun integer? (x)
-  (& (number? x)
-     (not (character? x))))
-
 (define-test "NOT works with NIL"
   ((not nil))
   t)

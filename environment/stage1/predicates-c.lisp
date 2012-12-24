@@ -3,3 +3,8 @@
 (defun symbol? (x)
   (& (atom x)
      (not (== 0 (length (symbol-name x))))))
+
+(defun integer? (x)
+  (& (number? x)
+     (== 0 (mod x 1))
+     (not (character? x))))
