@@ -84,7 +84,7 @@
 
 		 check-val
 		   #'((vals)
-			    (& apply-values (endp vals)
+			    (& apply-values (not vals)
 				   (err "argument ~A missing" (list num))))
 
 		 exp-static

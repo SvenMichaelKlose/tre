@@ -64,7 +64,7 @@
   ; Match cons.
   (let form (make-queue)
     (do ((m match .m))
-        ((endp m) (queue-list form))
+        ((end? m) (queue-list form))
       (let mcar m.
         (cond
           ((eq mcar '*rest)	; Rest of current list.

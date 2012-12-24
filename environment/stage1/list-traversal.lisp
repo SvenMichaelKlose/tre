@@ -6,7 +6,7 @@
            (nl (make-queue)))	; Argument list.
       (tagbody
         start
-        (? (endp i)	; Stop at end of lists.
+        (? (not i)
            (return (queue-list nl)))
         (? (not (car i))	; Break if any list has no more elements.
            (return nil))

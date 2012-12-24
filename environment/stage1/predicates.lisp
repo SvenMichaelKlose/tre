@@ -1,14 +1,17 @@
 ;;;;; tré – Copyright (c) 2005–2006,2008–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
 
-(functional atom cons? symbol? number? string? function? array? zero? evenp endp symbol? keyword? integerp)
+(functional atom cons? symbol? number? string? function? array? zero? even? odd? end? symbol? keyword? integer?)
 
 (defun zero? (x)
   (== 0 x))
 
-(defun evenp (x)
+(defun even? (x)
   (== 0 (mod x 2)))
 
-(defun endp (x)
+(defun odd? (x)
+  (== 1 (mod x 2)))
+
+(defun end? (x)
   (eq nil x))
 
 (defun variablep (x)
@@ -20,7 +23,7 @@
   (& (symbol? x)
      (eq *keyword-package* (symbol-package x))))
 
-(defun integerp (x)
+(defun integer? (x)
   (& (number? x)
      (not (character? x))))
 
