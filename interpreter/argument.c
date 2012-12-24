@@ -86,7 +86,7 @@ trearg_get2 (treptr *a, treptr *b, treptr list)
 }
 
 treptr
-trearg_correct (ulong argnum, int type, treptr x, const char * descr)
+trearg_correct (ulong argnum, unsigned type, treptr x, const char * descr)
 {
 	char buf[4096];
 	const char * l = descr ? " (" : "";
