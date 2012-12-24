@@ -278,8 +278,10 @@ trenumber_builtin_cos (treptr list)
     (returns number))
  */
 treptr
-trenumber_builtin_random (treptr list)
+trenumber_builtin_random (treptr dummy)
 {
+    (void) dummy;
+
     return treatom_number_get ((float) random (), TRENUMTYPE_FLOAT);
 }
 

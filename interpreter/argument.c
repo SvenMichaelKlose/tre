@@ -104,7 +104,7 @@ trearg_correct (ulong argnum, int type, treptr x, const char * descr)
 }
 
 treptr
-trearg_typed (ulong argnum, int type, treptr x, const char * descr)
+trearg_typed (ulong argnum, unsigned type, treptr x, const char * descr)
 {
 	while ((type == TRETYPE_ATOM && TREPTR_TYPE(x) == TRETYPE_CONS)
 		   || (type != TRETYPE_ATOM && TREPTR_TYPE(x) != type))

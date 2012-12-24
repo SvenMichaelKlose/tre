@@ -52,8 +52,10 @@ trenet_builtin_open_socket (treptr args)
 }
 
 treptr
-trenet_builtin_accept (treptr args)
-{    
+trenet_builtin_accept (treptr dummy)
+{
+    (void) dummy;
+
     socklen_t sockaddr_len = sizeof (struct sockaddr_in);
 
     if ((trenet_connection = accept (trenet_socket, (struct sockaddr *) &client, &sockaddr_len)) == -1)
@@ -63,11 +65,13 @@ trenet_builtin_accept (treptr args)
 }
 
 treptr
-trenet_builtin_recv (treptr args)
+trenet_builtin_recv (treptr dummy)
 {    
     char      * data = trealloc (MAX_DATA);
     treptr    result;
     size_t    len;
+
+    (void) dummy;
 
     len = recv (trenet_connection, data, MAX_DATA, 0);
     result = trestring_get_binary (data, len);
@@ -88,16 +92,20 @@ trenet_builtin_send (treptr args)
 }
 
 treptr
-trenet_builtin_close_connection (treptr args)
+trenet_builtin_close_connection (treptr dummy)
 {
+    (void) dummy;
+
     close (trenet_connection);
     trenet_connection = -1;
     return treptr_nil;
 }
 
 treptr
-trenet_builtin_close_socket (treptr args)
+trenet_builtin_close_socket (treptr dummy)
 {
+    (void) dummy;
+
     close (trenet_socket);
     return treptr_nil;
 }

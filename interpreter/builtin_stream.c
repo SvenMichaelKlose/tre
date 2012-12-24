@@ -1,5 +1,5 @@
 /*
- * tré - Copyright (c) 2006-2009,2011 Sven Klose <pixel@copei.de>
+ * tré – Copyright (c) 2006–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #include <stdlib.h>
@@ -150,6 +150,8 @@ trestream_builtin_terminal_raw (treptr dummy)
     struct termios settings;
     long desc = STDIN_FILENO;
 
+    (void) dummy;
+
     (void) tcgetattr (desc, &settings);
     settings.c_lflag &= ~(ICANON | ECHO);
     settings.c_cc[VMIN] = 1;
@@ -168,6 +170,8 @@ trestream_builtin_terminal_normal (treptr dummy)
 {
     struct termios settings;
     long desc = STDIN_FILENO;
+
+    (void) dummy;
 
     (void) tcgetattr (desc, &settings);
     settings.c_lflag |= ICANON | ECHO;

@@ -141,6 +141,7 @@ trecode_call (treptr fun, treptr args)
 treptr
 trecode_get (treptr ** p)
 {
+    treptr  a;
     treptr  v;
     treptr  fun;
     treptr  args;
@@ -182,8 +183,8 @@ trecode_get (treptr ** p)
             tregc_push (v);
             DOTIMES(i, num_args)
                 tre_enqueue (v, trecode_get (&x));
-            DOLIST(i, tre_queue_list (v))
-                *--trestack_ptr = CAR(i);
+            DOLIST(a, tre_queue_list (v))
+                *--trestack_ptr = CAR(a);
             tregc_pop ();
             /*trecode_print_args (num_args);*/
             v = trecode_exec (TREATOM_FUN(fun));
