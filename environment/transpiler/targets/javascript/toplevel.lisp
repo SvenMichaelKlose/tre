@@ -10,8 +10,10 @@
   ,(fetch-file "environment/transpiler/targets/javascript/funref.js"))
 
 (defun js-transpile-pre (tr)
-  (when (transpiler-lambda-export? tr)
-    (js-gen-funref-wrapper)))
+  (+ (js-transpile-prologue)
+     (? (transpiler-lambda-export? tr)
+        (js-gen-funref-wrapper)
+        "")))
 
 (defun js-transpile-post ()
   (js-transpile-epilogue))
@@ -21,13 +23,8 @@
 
 (defun js-make-decl-gen (tr)
   #'(()
-      (with-queue decls
-		(dolist (i (funinfo-env (transpiler-global-funinfo tr)))
-          (unless (transpiler-emitted-decl? tr i)
-       	    (enqueue decls (transpiler-generate-code tr (list `(%var ,i))))
-            (transpiler-add-emitted-decl tr i)))
-        (enqueue decls (js-transpile-prologue))
-	    (queue-list decls))))
+      (filter [transpiler-generate-code tr (list `(%var ,_))]
+		      (funinfo-env (transpiler-global-funinfo tr)))))
 
 (defun js-files-before-deps ()
   (+ (list (cons 't1 *js-base*))
