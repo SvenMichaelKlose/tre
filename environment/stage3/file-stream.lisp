@@ -24,7 +24,7 @@
 
 (defmacro with-open-file (var file &rest body)
   (with-gensym g
-    `(let ,var ,file
-       (with (,g (progn ,@body))
-		 (close ,var)
-		 ,g))))
+    `(with (,var ,file
+            ,g   (progn ,@body))
+       (close ,var)
+       ,g)))
