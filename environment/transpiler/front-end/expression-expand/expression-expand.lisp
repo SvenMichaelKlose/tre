@@ -61,7 +61,8 @@
 
 ;; Check if arguments to a function should be expanded.
 (defun expex-expandable-args? (ex fun argdef)
-  (not (funcall (expex-plain-arg-fun? ex) fun)))
+  (| (transpiler-defined-function *current-transpiler* fun)
+     (not (funcall (expex-plain-arg-fun? ex) fun))))
 
 ;;;; ARGUMENT EXPANSION
 
