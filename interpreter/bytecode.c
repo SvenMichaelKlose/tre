@@ -126,6 +126,7 @@ trecode_call (treptr fun, treptr args)
     treptr v;
     treptr num_args = 0;
 
+    tregc_push (fun);
     DOLIST(i, args) {
         /*printf("Argument %d: ", num_args);*/
         /*treprint (CAR(i));*/
@@ -134,6 +135,7 @@ trecode_call (treptr fun, treptr args)
     }
     v = trecode_exec (fun);
     trestack_ptr += num_args;
+    tregc_pop ();
 
     return v;
 }
@@ -177,6 +179,7 @@ trecode_get (treptr ** p)
                 tregc_pop ();
             }
         } else if (TREPTR_IS_ATOM(fun) && TREPTR_IS_ARRAY(TREATOM_FUN(fun))) {
+            tregc_push (TREATOM_FUN(fun));
             num_args = TRENUMBER_INT(*x++);
             /*printf("Immediate call of bytecode function %s with %d arguments.\n", TREATOM_NAME(fun), num_args);*/
             v = tre_make_queue ();
@@ -189,6 +192,7 @@ trecode_get (treptr ** p)
             /*trecode_print_args (num_args);*/
             v = trecode_exec (TREATOM_FUN(fun));
             trestack_ptr += num_args;
+            tregc_pop ();
         } else 
             treerror_norecover (fun, "tried to call an unsupported function type in bytecode");
     } else if (v == treptr_stack) {
