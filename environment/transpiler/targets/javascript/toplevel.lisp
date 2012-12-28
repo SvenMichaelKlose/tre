@@ -24,7 +24,8 @@
 (defun js-make-decl-gen (tr)
   #'(()
       (filter [transpiler-generate-code tr (list `(%var ,_))]
-		      (funinfo-env (transpiler-global-funinfo tr)))))
+		      (remove-if [transpiler-emitted-decl? tr _]
+                         (funinfo-env (transpiler-global-funinfo tr))))))
 
 (defun js-files-before-deps ()
   (+ (list (cons 't1 *js-base*))
