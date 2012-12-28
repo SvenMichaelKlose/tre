@@ -39,4 +39,6 @@
 	 (make-function-prologues x)))
 
 (defun transpiler-backend (tr x)
-  (transpiler-concat-text tr (transpiler-generate-code tr (transpiler-backend-prepare tr x))))
+  (? x
+     (transpiler-concat-text tr (transpiler-generate-code tr (transpiler-backend-prepare tr x)))
+     ""))
