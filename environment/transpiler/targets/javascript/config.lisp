@@ -11,7 +11,7 @@
 	  :unwanted-functions '(wait)
 	  :named-functions? nil
 	  :apply-argdefs? t
-	  :literal-conversion #'transpiler-expand-characters
+	  :literal-conversion #'transpiler-expand-literal-characters
 	  :identifier-char?
 	    (fn (| (& (>= _ #\a) (<= _ #\z))
 		  	   (& (>= _ #\A) (<= _ #\Z))
