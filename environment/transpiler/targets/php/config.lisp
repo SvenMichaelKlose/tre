@@ -26,7 +26,6 @@
 	  :inline-exceptions '(%slot-value error format identity %bind)
 	  :named-functions? t
 	  :named-function-next #'cddr
-      :place-expand-ignore-toplevel-funinfo? t
       :raw-constructor-names? t
       :expex-initializer #'((ex)
                              (= (expex-inline? ex) #'%slot-value?

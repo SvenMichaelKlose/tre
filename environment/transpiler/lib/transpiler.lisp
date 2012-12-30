@@ -75,8 +75,6 @@
   (arguments-on-stack? nil)
   (copy-arguments-to-stack? nil)
 
-  (place-expand-ignore-toplevel-funinfo? nil)
-
   (apply-argdefs? nil)
 
   (continuation-passing-style? nil)
@@ -174,7 +172,6 @@
         :stack-locals?           stack-locals?
         :arguments-on-stack?     arguments-on-stack?
         :copy-arguments-to-stack? copy-arguments-to-stack?
-        :place-expand-ignore-toplevel-funinfo? place-expand-ignore-toplevel-funinfo?
         :apply-argdefs?          apply-argdefs?
         :continuation-passing-style? continuation-passing-style?
         :cps-exceptions          (copy-list cps-exceptions)

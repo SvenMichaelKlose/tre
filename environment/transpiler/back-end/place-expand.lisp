@@ -1,7 +1,5 @@
 ;;;;; tré – Copyright (c) 2005–2012 Sven Michael Klose <pixel@copei.de>
 
-;;; Pass lexical up one step through ghost.
-
 (defun make-lexical-place-expr (fi var)
   `(%vec ,(funinfo-ghost fi)
          ,(funinfo-sym (funinfo-parent fi))
@@ -20,7 +18,7 @@
 		   ,...ret.)))
 
 (defun make-lexical (fi x)
-  (? (eq (funinfo-ghost fi) x)
+  (? (eq x (funinfo-ghost fi))
 	 (place-expand-atom (funinfo-parent fi) x)
 	 (make-lexical-0 fi x)))
 
@@ -29,40 +27,37 @@
 
 (defun place-expand-atom (fi x)
   (?
-	(not fi)
-	  (progn
-		(print x)
-	    (error "place-expand-atom: no funinfo"))
+    (not fi)
+      (progn
+        (print x)
+        (error "place-expand-atom: no funinfo"))
 
-	(| (not x)
-	   (number? x)
-	   (string? x)
-	   (not (funinfo-in-this-or-parent-env? fi x)))
-	  x
-
-	(& (transpiler-stack-locals? *current-transpiler*)
-	   (eq x (funinfo-lexical fi)))
-	  (place-expand-emit-stackplace fi x)
-
-	(& (not (eq x (funinfo-lexical fi)))
-	   (funinfo-lexical? fi x))
-	  `(%vec ,(place-expand-atom fi (funinfo-lexical fi))
-			 ,(funinfo-sym fi)
-			 ,x)
-
-	(not (transpiler-lambda-export? *current-transpiler*))
+    (| (not x)
+       (number? x)
+       (string? x)
+       (not (transpiler-lambda-export? *current-transpiler*))
+       (not (funinfo-in-this-or-parent-env? fi x))
+       (funinfo-in-toplevel-env? fi x))
       x
 
-	(& (transpiler-stack-locals? *current-transpiler*)
+    (& (transpiler-stack-locals? *current-transpiler*)
+       (eq x (funinfo-lexical fi)))
+      (place-expand-emit-stackplace fi x)
+
+    (& (not (eq x (funinfo-lexical fi)))
+       (funinfo-lexical? fi x))
+      `(%vec ,(place-expand-atom fi (funinfo-lexical fi))
+             ,(funinfo-sym fi)
+             ,x)
+
+    (& (transpiler-stack-locals? *current-transpiler*)
        (| (& (transpiler-arguments-on-stack? *current-transpiler*)
              (funinfo-arg? fi x))
           (funinfo-in-env? fi x)))
-      (place-expand-emit-stackplace fi x)
+       (place-expand-emit-stackplace fi x)
 
-    (| (funinfo-in-args-or-env? fi x)
-       (& (transpiler-place-expand-ignore-toplevel-funinfo? *current-transpiler*)
-          (funinfo-in-toplevel-env? fi x)))
-	  x
+    (funinfo-in-args-or-env? fi x)
+      x
 
     (make-lexical fi x)))
 
@@ -88,7 +83,7 @@
      (%var? x))
                         x
   (named-lambda? x)     (place-expand-fun fi .x. ..x.)
-  (lambda? x)           (place-expand-fun fi nil x) ; XXX Add variables to ignore in subfunctions.
+  (lambda? x)           (place-expand-fun fi nil x)
   (& (%setq? x)
      (%vec? (place-expand-0 fi (%setq-place x))))
                         (place-expand-setter fi x)
