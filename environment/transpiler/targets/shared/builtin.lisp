@@ -1,7 +1,7 @@
 ;;;;; tré – Copyright (c) 2009–2012 Sven Michael Klose <pixel@copei.de>
 
 (defvar *builtins*
-	`(APPLY EVAL
+	'(APPLY EVAL
       QUIT LOAD %MACROCALL PRINT GC DEBUG INTERN
 	  %MALLOC %MALLOC-EXEC %FREE %FREE-EXEC
 	  %%SET %%GET
@@ -15,10 +15,7 @@
       SYMBOL-FUNCTION %%U=-SYMBOL-FUNCTION SYMBOL-PACKAGE
       FUNCTION? BUILTIN? MACROP %ATOM-LIST
       NOT CONS LIST CAR CDR RPLACA RPLACD CONS?
-      ,@(when *builtin-assoc*
-          '(ASSOC))
-      ,@(when *builtin-member*
-          '(MEMBER))
+      ASSOC MEMBER
       ELT %SET-ELT LENGTH
       STRING? MAKE-STRING STRING== STRING-CONCAT STRING LIST-STRING
       MAKE-ARRAY ARRAY? AREF %%U=-AREF
