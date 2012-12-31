@@ -9,7 +9,7 @@
          (with-gensym (g name-sym)
            `(progn
               (%defsetq ,g #'(,args ,@body))
-              ,@(js-make-early-symbol-expr name-sym name)
+              ,@(js-early-symbol-maker name-sym name)
               (= *macros* (cons (cons ,name-sym #',g) *macros*))
               (when *standard-macro-expander*
                 (set-expander-macro 'standard-macros ,name-sym #',g :may-redefine? t))))))

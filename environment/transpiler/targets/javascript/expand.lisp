@@ -60,7 +60,7 @@
   `(progn
      ,@(apply #'shared-defun name args (body-with-noargs-tag body))))
 
-(defun js-make-early-symbol-expr (g sym)
+(defun js-early-symbol-maker (g sym)
    `(,@(unless (eq g '~%tfun)
          `((%var ,g)))
      (%setq ,g (symbol ,(transpiler-obfuscated-symbol-name *current-transpiler* sym)
@@ -76,7 +76,7 @@
   (let dname (apply-current-package (transpiler-package-symbol *js-transpiler* (%defun-name name)))
     (let g '~%tfun
       `(progn
-         ,@(js-make-early-symbol-expr g dname)
+         ,@(js-early-symbol-maker g dname)
          ,@(apply #'shared-defun dname args body)
          (= (symbol-function ,g) ,dname)))))
 
