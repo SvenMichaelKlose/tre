@@ -61,5 +61,5 @@
                          ,@(& (body-has-noargs-tag? body) '(no-args))
                          (block ,name
                            ,@(shared-defun-funcall-logger name)
-                           ,@(shared-defun-profiling-body tr name body)
-                           ,@(shared-defun-source-memorizer tr name args body)))))))
+                           ,@(shared-defun-profiling-body tr name body))))
+      ,@(shared-defun-source-memorizer tr name args body))))
