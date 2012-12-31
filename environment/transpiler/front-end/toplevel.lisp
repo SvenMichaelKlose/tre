@@ -24,6 +24,7 @@
 ;; - Quoting is done by %QUOTE (same as QUOTE) exclusively.
 (transpiler-pass transpiler-frontend-1 (tr)
     backquote-expand          #'backquote-expand
+    literal-conversion        [funcall (transpiler-literal-conversion tr) _]
     compiler-macroexpand      #'compiler-macroexpand
     transpiler-macroexpand-2  [transpiler-macroexpand tr _]
     quasiquote-expand         #'quasiquote-expand
