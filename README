@@ -1,4 +1,6 @@
-TRÉ
+tré
+
+Copyright (c) 2005–2012 Sven Michael Klose <pixel@copei.de>
 
 ABOUT
 
@@ -36,7 +38,7 @@ ABOUT THE INTERPRETER
 
     Opposite to the compiler the interpreter has no lexical scopging
     but surprisingly it copes with the compiler source anyway.
-    Hopefully, the interpreter is replaced by the compiler soon.
+    Hopefully, the interpreter is replaced by the compiler, soon.
 
 
 THE DIALECT
@@ -53,5 +55,3 @@ DOCUMENTATION
 
     The most detailed documentation if the environment is the code
     itself.
-
-Copyright (c) 2005-2012 Sven Michael Klose <pixel@copei.de>
