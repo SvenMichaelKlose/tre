@@ -2,9 +2,11 @@
 
 (defun car (x) (& x x._))
 (defun cdr (x) (& x x.__))
+(defun cpr (x) (& x x._p))
 
 (defvar *rplaca-breakpoints* nil)
 (defvar *rplacd-breakpoints* nil)
+(defvar *rplacp-breakpoints* nil)
 
 (defun rplaca (x val)
   (declare type cons x)
@@ -20,6 +22,14 @@
     (& (member x *rplacd-breakpoints* :test #'eq)
        (invoke-debugger)))
   (= x.__ val)
+  x)
+
+(defun rplacp (x val)
+  (declare type cons x)
+  (when-debug
+    (& (member x *rplacp-breakpoints* :test #'eq)
+       (invoke-debugger)))
+  (= x._p val)
   x)
 
 (defun cons? (x)
