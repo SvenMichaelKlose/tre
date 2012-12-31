@@ -39,7 +39,7 @@
 (defun shared-defun-source-memorizer (tr name args body)
   (+ (& *have-compiler?*
         (not (transpiler-memorize-sources? tr))
-        `((%setq *defined-functions* (cons `',name *defined-functions*))))
+        `((%setq *defined-functions* (cons ',name *defined-functions*))))
      (when (transpiler-save-sources? tr)
        (apply #'transpiler-add-obfuscation-exceptions tr (collect-symbols (list name args body)))
        (? (transpiler-memorize-sources? tr)
