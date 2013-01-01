@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2006–2007,2009–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2006–2007,2009–2013 Sven Michael Klose <pixel@copei.de>
 
 ;;;; ARGUMENTS
 
@@ -90,7 +90,9 @@
 	(print x)
 	(error "atom expected"))
   (unless (funinfo-in-env? fi x)
-    (push x (funinfo-env fi))
+    (? (funinfo-parent fi)
+       (append! (funinfo-env fi) (list x))
+       (push x (funinfo-env fi)))
     (unless (funinfo-parent fi)
 	  (= (href (| (funinfo-env-hash fi)
   	              (= (funinfo-env-hash fi) (make-hash-table :test #'eq)))
