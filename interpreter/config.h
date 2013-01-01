@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
  */
 
 #ifndef TRE_TRE_H
@@ -17,7 +17,7 @@ typedef int bool;
 
 #ifndef TRE_COPYRIGHT
 #define TRE_COPYRIGHT \
-	"Copyright (c) 2005-2012 Sven Michael Klose <pixel@copei.de>\n"
+	"Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>\n"
 #endif
 
 #define TRE_VERSION	"current"
