@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -272,7 +272,7 @@ tremain_help (void)
 {
 	printf (TRE_INFO
 			TRE_COPYRIGHT
-            "Usage: tre [-h] [-i image-file] [source-file]\n"
+            "Usage: tre [OPTION]... [source-file]\n"
             "\n"
             " -h  Print this help message.\n"
             " -i  Load image file before source-file.\n"
