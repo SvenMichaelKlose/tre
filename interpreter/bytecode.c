@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2012–2013 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -60,14 +60,12 @@ trecode_list (treptr ** p, int len)
 
     tregc_push (l);
     DOTIMES(i, len) {
-        /*printf("Elm %d: ", i);*/
         v = trecode_get (&x);
         tre_enqueue (l, v);
     }
     tregc_pop ();
     *p = x;
 
-    /*printf ("New list: "); treprint (CDR(l)); fflush (stdout);*/
     return CDR(l);
 }
 
@@ -77,18 +75,12 @@ trecode_set_place (treptr ** p, treptr value)
     treptr * x = *p;
     treptr v = *x++;
 
-    if (v == treptr_stack) {
-        /*printf("Place is stack %d ", TRENUMBER_INT(*x));*/
+    if (v == treptr_stack)
         trestack_ptr[TRENUMBER_INT(*x++)] = value;
-    } else if (v != treptr_nil) {
-        /*printf("Place is symbol ");*/
+    else if (v != treptr_nil)
         TREATOM_VALUE(v) = value;
-    }
 
     *p = x;
-#ifdef TRE_DUMP_BYTECODE
-    /*fflush (stdout);*/
-#endif
 }
 
 void
@@ -97,13 +89,10 @@ trecode_set_fun (treptr ** p, treptr value)
     treptr * x = *p;
     treptr v = *x++;
 
-    if (v == treptr_stack) {
-        /*printf("Funcion place is stack %d\n", TRENUMBER_INT(*x));*/
+    if (v == treptr_stack)
         TREATOM_FUN(trestack_ptr[TRENUMBER_INT(*x++)]) = value;
-    } else if (v != treptr_nil) {
-        /*printf("Funcion place is symbol %s\n", TREATOM_NAME(v));*/
+    else if (v != treptr_nil)
         TREATOM_FUN(v) = value;
-    }
 
     *p = x;
 }
@@ -128,8 +117,6 @@ trecode_call (treptr fun, treptr args)
 
     tregc_push (fun);
     DOLIST(i, args) {
-        /*printf("Argument %d: ", num_args);*/
-        /*treprint (CAR(i));*/
         *--trestack_ptr = CAR(i);
         num_args++;
     }
@@ -160,9 +147,7 @@ trecode_get (treptr ** p)
     if (v == treptr_funcall) {
         fun = *x++;
         if (TREPTR_IS_BUILTIN(fun)) {
-            /*printf("builtin %s\n", TREATOM_NAME(*x));*/
             if (fun == treptr_cons) {
-                /* Special treatment to avoid back-end workarounds. */
                 car = trecode_get (&x);
                 tregc_push (car);
                 cdr = trecode_get (&x);
@@ -173,7 +158,6 @@ trecode_get (treptr ** p)
             } else {
                 num_args = TRENUMBER_INT(*x++);
                 args = trecode_list (&x, num_args);
-                /*printf ("builtin arguments: "); treprint (args);*/
                 tregc_push (args);
                 v = treeval_xlat_function (treeval_xlat_builtin, fun, args, FALSE);
                 tregc_pop ();
@@ -181,7 +165,6 @@ trecode_get (treptr ** p)
         } else if (TREPTR_IS_ATOM(fun) && TREPTR_IS_ARRAY(TREATOM_FUN(fun))) {
             tregc_push (TREATOM_FUN(fun));
             num_args = TRENUMBER_INT(*x++);
-            /*printf("Immediate call of bytecode function %s with %d arguments.\n", TREATOM_NAME(fun), num_args);*/
             v = tre_make_queue ();
             tregc_push (v);
             DOTIMES(i, num_args)
@@ -189,27 +172,20 @@ trecode_get (treptr ** p)
             DOLIST(a, tre_queue_list (v))
                 *--trestack_ptr = CAR(a);
             tregc_pop ();
-            /*trecode_print_args (num_args);*/
             v = trecode_exec (TREATOM_FUN(fun));
             trestack_ptr += num_args;
             tregc_pop ();
         } else 
             treerror_norecover (fun, "tried to call an unsupported function type in bytecode");
     } else if (v == treptr_stack) {
-        /*printf("stack %d: ", TRENUMBER_INT(*x));*/
         v = trestack_ptr[TRENUMBER_INT(*x++)];
     } else if (v == treptr_quote) {
-        /*printf("quote: ");*/
         v = *x++;
     } else if (v == treptr_vec) {
-        /*printf("vector: ");*/
         vec = trecode_get (&x);
-        /*printf("vector index %d: ", TRENUMBER_INT(*x)); fflush (stdout);*/
         v = _TREVEC(vec, TRENUMBER_INT(*x++));
     } else if (v == treptr_funref) {
-        /*printf("Lexical funref ");*/
         fun = *x++;
-        /*treprint (fun);*/
         tregc_push (fun);
         lex = trecode_get (&x);
         tregc_push (lex);
@@ -218,7 +194,6 @@ trecode_get (treptr ** p)
         tregc_pop ();
     } else if (TREPTR_IS_VARIABLE(v))
         v = TREATOM_VALUE(v);
-    /*treprint (v);*/
     *p = x;
 
     return v;
@@ -241,39 +216,31 @@ trecode_exec (treptr fun)
     unsigned i = 0;
     int      vec;
 
-    /*printf("\nExecuting bytecode function.\n");*/
     if (TREPTR_IS_ARRAY(fun) == FALSE)
         treerror_norecover (fun, "bytecode array function expected");
     x = &TREARRAY_RAW(fun)[2]; /* skip over argument definition and body */
     num_locals = TRENUMBER_INT(*x++);
     code = x;
-    /*treprint (fun);*/
 
     DOTIMES(i, num_locals)
         *--trestack_ptr = treptr_nil;
 
     while (1) {
         v = *x++;
-        /*printf("Instruction %s ", TREATOM_NAME(v));*/
         if (v == treptr_set) {
             trecode_set (&x);
-            /*printf("\n");*/
         } else if (v == treptr_jmp) {
             dest = *x++;
             if (dest == treptr_nil)
                 break;
             x = &code[TRENUMBER_INT(dest)];
-            /*printf("\n");*/
         } else if (v == treptr_cond) {
             if (trecode_get (&x) != treptr_nil) {
-                /*printf("Skipping jump.\n");*/
                 x++;
             } else {
-                /*printf("Jumping to %d.\n", TRENUMBER_INT(*x));*/
                 x = &code[TRENUMBER_INT(*x)];
             }
         } else if (v == treptr_set_vec) {
-            /*printf("\n"); fflush (stdout);*/
             vec = trecode_get (&x);
             tregc_push (vec);
             i = TRENUMBER_INT(*x++);
@@ -282,7 +249,6 @@ trecode_exec (treptr fun)
         } else
             treerror_norecover (v, "illegal bytecode instruction");
     }
-    /*printf("Function return.\n\n");*/
 
     v = *trestack_ptr;
     trestack_ptr += num_locals;
