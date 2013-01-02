@@ -35,7 +35,6 @@ typedef int bool;
 #define TRE_EXIT_ON_STDIO_SIGINT /* Exit on SIGINT in stdio prompt. */
 #define TRE_COUNT_LISTNODES /* For debugging. */
 #endif
-#define TRE_DUMP_CODE /* For bytecode debugging. */
 
 #define INTERPRETER
 
