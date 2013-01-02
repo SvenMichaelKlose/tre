@@ -5,4 +5,5 @@
 (env-load "transpiler/targets/bytecode/builtin.lisp" 'bc)
 (env-load "transpiler/targets/bytecode/codegen.lisp" 'bc)
 (env-load "transpiler/targets/bytecode/expr-to-code.lisp" 'bc)
+(env-load "transpiler/targets/bytecode/load-bytecode-functions.lisp" 'bc)
 (env-load "transpiler/targets/bytecode/toplevel.lisp" 'bc)
