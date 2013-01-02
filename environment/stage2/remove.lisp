@@ -1,13 +1,12 @@
-;;;; tré – Copyright (c) 2007–2009,2011–2012 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2007–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
 
 (functional remove remove-if remove-if-not)
 
 (defun remove-if (fun x)
-  (?
-    (not x) nil
-    (funcall fun (car x)) (remove-if fun (cdr x))
-    (cons (car x)
-	      (remove-if fun (cdr x)))))
+  (with-queue q
+    (dolist (i x (queue-list q))
+      (| (funcall fun i)
+         (enqueue q i)))))
 
 (defun remove-if-not (fun x)
   (remove-if [not (funcall fun _)] x))
