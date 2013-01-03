@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun transpiler-defined? (tr name)
   (| (transpiler-defined-function tr name)
@@ -19,6 +19,10 @@
     (= (href (transpiler-wanted-functions-hash tr) x) t)
     (nconc! (transpiler-wanted-functions tr) (list x)))
   x)
+
+(defun transpiler-add-wanted-functions (tr x)
+  (dolist (i x x)
+    (transpiler-add-wanted-function tr i)))
 
 (defun transpiler-must-add-wanted-variable? (tr var)
   (& (transpiler-import-from-environment? tr)

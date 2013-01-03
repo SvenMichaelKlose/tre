@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun compile-0 (sources &key (target nil) (transpiler nil) (obfuscate? nil) (print-obfuscations? nil) (files-to-update nil))
   (| target (error "target missing"))
@@ -31,3 +31,17 @@
 (defun compile (expression &key (target nil) (transpiler nil) (obfuscate? nil) (print-obfuscations? nil) (files-to-update nil) (section-id 'compile))
   (compile-0 (& expression `((,section-id . (,expression))))
              :target target :transpiler transpiler :obfuscate? obfuscate? :print-obfuscations? print-obfuscations? :files-to-update files-to-update))
+
+(defun compile-c-environment (funs)
+  (let transpiler (copy-transpiler *c-transpiler*)
+    (transpiler-add-wanted-functions transpiler funs)
+    (let code (compile-files nil :target 'c :transpiler transpiler)
+      (with-open-file out (open "interpreter/_compiled-env.c" :direction 'output)
+	    (princ code out))))
+  nil)
+
+(defun compile-bytecode-environment (funs)
+  (let transpiler (copy-transpiler *bc-transpiler*)
+    (transpiler-add-wanted-functions transpiler funs)
+    (compile-files nil :target 'bytecode :transpiler transpiler))
+  nil)
