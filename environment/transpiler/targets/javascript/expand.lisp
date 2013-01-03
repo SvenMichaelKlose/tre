@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defmacro define-js-std-macro (&rest x)
   `(define-transpiler-std-macro *js-transpiler* ,@x))
@@ -66,11 +66,6 @@
      (%setq ,g (symbol ,(transpiler-obfuscated-symbol-name *current-transpiler* sym)
                        ,(awhen (symbol-package sym)
                           `(make-package ,(transpiler-obfuscated-symbol-name *current-transpiler* !)))))))
-
-(defun js-emit-memorized-sources ()
-  (clr (transpiler-memorize-sources? *current-transpiler*))
-  (filter ^(%setq (slot-value ,_. '__source) ,(list 'quote ._))
-          (transpiler-memorized-sources *current-transpiler*)))
 
 (define-js-std-macro defun (name args &rest body)
   (let dname (apply-current-package (transpiler-package-symbol *js-transpiler* (%defun-name name)))

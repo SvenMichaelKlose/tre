@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun js-transpile-prologue ()
   (format nil "    var _I_ = 0; while (1) {switch (_I_) {case 0: ~%"))
@@ -21,6 +21,11 @@
 (defun js-emit-early-defined-functions ()
   (mapcar ^(push ',_. *defined-functions*)
           (transpiler-memorized-sources *js-transpiler*)))
+
+(defun js-emit-memorized-sources ()
+  (clr (transpiler-memorize-sources? *current-transpiler*))
+  (filter ^(%setq (slot-value ,_. '__source) ,(list 'quote ._))
+          (transpiler-memorized-sources *current-transpiler*)))
 
 (defun js-make-decl-gen (tr)
   #'(()
