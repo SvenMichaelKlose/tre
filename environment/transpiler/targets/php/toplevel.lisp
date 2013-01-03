@@ -1,11 +1,22 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
-(defvar *php-goto?* t) ; PHP version < 5.3 has no 'goto'.
+(defvar *php-goto?* t) ; PHP version <5.3 has no 'goto'.
+
+(defun php-transpile-prologue ()
+  (+ (format nil "<?php // tré revision ~A~%" *tre-revision*)
+     (? *php-goto?*
+        ""
+        "$_I_ = 0; while (1) { switch ($_I_) { case 0:")))
+
+(defun php-transpile-epilogue ()
+  (+ (? *php-goto?*
+        ""
+        "} break; }")
+     "?>"))
 
 (defvar *php-native-environment*
-        ,(concat-stringtree
-             (mapcar [fetch-file (+ "environment/transpiler/targets/php/environment/native/" _ ".php")]
-                     '("settings" "error" "character" "cons" "lexical" "funref" "symbol" "array"))))
+        ,(apply #'+ (mapcar [fetch-file (+ "environment/transpiler/targets/php/environment/native/" _ ".php")]
+                            '("settings" "error" "character" "cons" "lexical" "funref" "symbol" "array"))))
 
 (defun php-print-native-environment (out)
   (princ *php-native-environment* out))
@@ -39,24 +50,19 @@
   (with-temporary *opt-inline-max-size* 16
     (transpiler-add-defined-variable transpiler '*KEYWORD-PACKAGE*)
     (= (transpiler-accumulate-toplevel-expressions? transpiler) (not *php-goto?*))
-    (+ "<?php "
-       (? *php-goto?*
-          ""
-          "$_I_ = 0; while (1) { switch ($_I_) { case 0:")
+    (+ (php-transpile-prologue)
 	   (php-transpile-prepare transpiler)
    	   (target-transpile transpiler
-           :files-before-deps (list (cons 'base1 *php-base*))
-	  	   :files-after-deps (+ (list (cons 'base2 *php-base2*))
-                                (when (eq t *have-environment-tests*)
-                                  (list (cons 'env-tests (make-environment-tests))))
-                                sources)
-	 	    :dep-gen  #'(()
-			  	          (transpiler-import-from-environment transpiler))
             :decl-gen #'(()
-                          (php-transpile-decls transpiler))
+                           (php-transpile-decls transpiler))
+            :files-before-deps (list (cons 'base1 *php-base*))
+	 	    :dep-gen  #'(()
+			  	           (transpiler-import-from-environment transpiler))
+	  	    :files-after-deps (+ (list (cons 'base2 *php-base2*))
+                                 (when (eq t *have-environment-tests*)
+                                   (list (cons 'env-tests (make-environment-tests))))
+                                 sources)
 		    :files-to-update files-to-update
             :obfuscate? obfuscate?
 	        :print-obfuscations? print-obfuscations?)
-        (? *php-goto?*
-           " ?>"
-           "} break; }"))))
+       (php-transpile-epilogue))))

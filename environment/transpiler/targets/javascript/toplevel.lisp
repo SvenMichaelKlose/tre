@@ -1,22 +1,14 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
-(defun js-transpile-prologue ()
-  (format nil "    var _I_ = 0; while (1) {switch (_I_) {case 0: ~%"))
-
-(defun js-transpile-epilogue ()
-  (format nil "    }break;}~%"))
-
-(defun js-gen-funref-wrapper ()
-  ,(fetch-file "environment/transpiler/targets/javascript/funref.js"))
-
-(defun js-transpile-pre (tr)
-  (+ (js-transpile-prologue)
+(defun js-transpile-prologue (tr)
+  (+ (format nil "// tré revision ~A~%" *tre-revision*)
+     (format nil "var _I_ = 0; while (1) {switch (_I_) {case 0: ~%")
      (? (transpiler-lambda-export? tr)
-        (js-gen-funref-wrapper)
+        ,(fetch-file "environment/transpiler/targets/javascript/funref.js")
         "")))
 
-(defun js-transpile-post ()
-  (js-transpile-epilogue))
+(defun js-transpile-epilogue ()
+  (format nil "}break;}~%"))
 
 (defun js-emit-early-defined-functions ()
   (mapcar ^(push ',_. *defined-functions*)
@@ -29,9 +21,9 @@
 
 (defun js-make-decl-gen (tr)
   #'(()
-      (filter [transpiler-generate-code tr `((%var ,_))]
-		      (remove-if [transpiler-emitted-decl? tr _]
-                         (funinfo-env (transpiler-global-funinfo tr))))))
+       (filter [transpiler-generate-code tr `((%var ,_))]
+		       (remove-if [transpiler-emitted-decl? tr _]
+                          (funinfo-env (transpiler-global-funinfo tr))))))
 
 (defun js-files-before-deps ()
   (+ `((t1 . ,*js-base*))
@@ -62,13 +54,14 @@
   (let tr transpiler
     (& (transpiler-lambda-export? tr)
        (transpiler-add-wanted-function tr 'array-copy))
-    (+ (js-transpile-pre tr)
-       (target-transpile tr :files-before-deps   (js-files-before-deps)
-                            :files-after-deps    (+ (js-files-after-deps) sources)
+    (+ (js-transpile-prologue tr)
+       (target-transpile tr :decl-gen            (js-make-decl-gen tr)
+                            :files-before-deps   (js-files-before-deps)
                             :dep-gen             #'(()
                                                       (transpiler-import-from-environment tr))
-                            :decl-gen            (js-make-decl-gen tr)
+                            :files-after-deps    (+ (js-files-after-deps)
+                                                    sources)
                             :files-to-update     files-to-update
                             :obfuscate?          obfuscate?
                             :print-obfuscations? print-obfuscations?)
-       (js-transpile-post))))
+       (js-transpile-epilogue))))

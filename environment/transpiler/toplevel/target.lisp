@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008-2013 Sven Michael Klose <pixel@copei.de>
 
 (defvar *nil-symbol-name* "NIL")
 (defvar *t-symbol-name* "T")
@@ -39,11 +39,11 @@
      (with-temporary (transpiler-save-argument-defs-only? tr) nil
        (funcall dep-gen))))
 
-(defun target-transpile (tr &key (files-before-deps nil)
+(defun target-transpile (tr &key (decl-gen nil)
+                                 (files-before-deps nil)
+                                 (dep-gen nil)
                                  (files-after-deps nil)
                                  (files-to-update nil)
-                                 (dep-gen nil)
-                                 (decl-gen nil)
                                  (obfuscate? nil)
                                  (print-obfuscations? nil))
   (with-temporaries (*recompiling?* (? files-to-update t)

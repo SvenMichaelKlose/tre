@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defvar *closure-argdefs* nil)
 (defvar *c-init-group-size* 16)
@@ -74,14 +74,13 @@
 
 (defun c-transpile (sources &key transpiler obfuscate? print-obfuscations? files-to-update)
   (let tr transpiler
-    (string-concat
-        (c-transpiler-header-inclusions)
-  	    (target-transpile tr
-            :files-after-deps sources
-            :dep-gen #'(()
-                          (transpiler-import-from-environment tr))
-            :decl-gen #'(()
-                           (c-transpiler-compile-argument-def-symbols *closure-argdefs*)
-                           (let init (with-temporary (transpiler-profile? tr) nil
-                                       (transpiler-make-code tr (transpiler-frontend tr (c-transpiler-make-init tr))))
-                             (concat-stringtree (transpiler-compiled-decls tr) init)))))))
+    (+ (c-transpiler-header-inclusions)
+  	   (target-transpile tr
+           :decl-gen #'(()
+                          (c-transpiler-compile-argument-def-symbols *closure-argdefs*)
+                          (let init (with-temporary (transpiler-profile? tr) nil
+                                      (transpiler-make-code tr (transpiler-frontend tr (c-transpiler-make-init tr))))
+                            (concat-stringtree (transpiler-compiled-decls tr) init)))
+           :dep-gen #'(()
+                         (transpiler-import-from-environment tr))
+           :files-after-deps sources))))

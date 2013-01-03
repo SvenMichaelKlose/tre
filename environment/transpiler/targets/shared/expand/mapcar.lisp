@@ -1,7 +1,7 @@
-;;;;; tré – Copyright (c) 2010–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2010–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun shared-mapcar (fun &rest lsts)
-  `(,(? (== 1 (length lsts))
-        'filter
-        'mapcar)
+  `(,(? .lsts
+        'mapcar
+        'filter)
         ,fun ,@lsts))
