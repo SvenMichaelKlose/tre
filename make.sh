@@ -1,5 +1,5 @@
 #!/bin/sh
-# tré - Copyright (c) 2005-2012 Sven Michael Klose <pixel@copei.de>
+# tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
 
 svnversion -n >_current-version
 
@@ -222,7 +222,7 @@ recompile)
 	;;
 
 bytecode)
-	(echo "(compile-bytecode-environment (reverse *universe-functions*))" | ./tre) || exit 1
+	(echo "(compile-bytecode-environment (reverse *universe-functions*))(dump-system)" | ./tre) || exit 1
 	;;
 
 install)
