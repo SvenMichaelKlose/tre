@@ -1,8 +1,8 @@
-;;;;; tré – Copyright (c) 2005–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
 
 (setq *milestone* nil)
 
-;; The garbage collector keeps everything that connected to *UNIVERSE*.
+;; The garbage collector keeps everything that's connected to *UNIVERSE*.
 (setq *universe*
 	  (cons '*environment-filenames*
 	  (cons 'env-load
@@ -31,16 +31,13 @@
 (env-load "lib/main.lisp")
 (& *tre-has-math*       (env-load "math/main.lisp"))
 (& *tre-has-alien*      (env-load "alien/main.lisp" 'c))
-(& *tre-has-transpiler* (env-load "oo/thisify.lisp"))
-(when *tre-has-class*   (unless *tre-has-transpiler*
-                          (env-load "oo/thisify.lisp"))
-                        (env-load "oo/class.lisp")
+(env-load "oo/thisify.lisp")
+(when *tre-has-class*   (env-load "oo/class.lisp")
                         ;  (env-load "oo/ducktype.lisp")
                         ;  (env-load "oo/ducktype-test.lisp")
                         (env-load "oo/transpiler.lisp"))
 (& *tre-has-editor*     (env-load "editor/main.lisp"))
-;(setq *UNIVERSE* (cdr *UNIVERSE*))
-(& *tre-has-transpiler* (env-load "transpiler/main.lisp"))
+(env-load "transpiler/main.lisp")
 
 (setq *tests* (reverse *tests*))
 
