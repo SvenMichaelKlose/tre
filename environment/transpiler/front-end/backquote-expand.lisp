@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2006–2012 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2006–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun backquote-cons-quasiquote (x)
   (? (any-quasiquote? (cadr x.))
@@ -16,7 +16,7 @@
                   ,(backquote-cons-1 .x))
           (copy-tree (cadr x.)))))
 
-(defun backquote-cons-atom (x)
+(defun quote-literal (x)
   (? (| (not x)
         (number? x)
         (string? x)
@@ -34,8 +34,8 @@
 
 (defun backquote-cons-1 (x)
   (?
-    (atom x)                (backquote-cons-atom x)
-    (atom x.)               `(cons ,(backquote-cons-atom x.)
+    (atom x)                (quote-literal x)
+    (atom x.)               `(cons ,(quote-literal x.)
                                    ,(backquote-cons-2 .x))
     (quasiquote? x.)        (backquote-cons-quasiquote x)
     (quasiquote-splice? x.) (backquote-cons-quasiquote-splice x)
@@ -44,17 +44,13 @@
 
 (defun backquote-cons (x)
   (?
-    (atom x)       (backquote-cons-atom x)
+    (atom x)       (quote-literal x)
     (backquote? x) `(cons 'BACKQUOTE ,(backquote-cons .x))
     (backquote-cons-1 x)))
 
 (defun simple-quote-expand (x)
   (? (atom x)
-     (? (| (in? x nil t)
-           (string? x)
-           (number? x))
-        x
-        `(%quote ,x))
+     (quote-literal x)
      `(cons ,(simple-quote-expand x.)
             ,(simple-quote-expand .x))))
 
