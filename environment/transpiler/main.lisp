@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
 
 ,(awhen (& (function? #'%%usetf-transpiler-save-argument-defs-only?)
            *current-transpiler*)
@@ -18,3 +18,4 @@
 (env-load "transpiler/targets/precompile-environments.lisp")
 
 (env-load "transpiler/compile.lisp")
+(env-load "transpiler/compile-environment.lisp" 'c)
