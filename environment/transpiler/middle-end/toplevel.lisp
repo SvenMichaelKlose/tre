@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun transpiler-expression-expand (tr x)
   (expression-expand (transpiler-expex tr) x))
@@ -23,12 +23,12 @@
     opt-peephole             #'opt-peephole
     make-named-functions     [transpiler-make-named-functions tr _]
     quote-keywords           #'transpiler-quote-keywords
-    expression-expand        [with-temporary *expex-warn?* nil
-                               (transpiler-expression-expand tr _)]
-    make-packages            #'make-packages
     inject-debugging         [? (transpiler-inject-debugging? tr)
                                 (inject-debugging _)
-                                _])
+                                _]
+    expression-expand        [with-temporary *expex-warn?* nil
+                               (transpiler-expression-expand tr _)]
+    make-packages            #'make-packages)
 
 (defun transpiler-middleend (tr x)
   (mapcan [transpiler-middleend-0 tr (list _)] x))
