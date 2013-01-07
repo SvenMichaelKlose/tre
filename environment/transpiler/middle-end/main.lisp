@@ -1,4 +1,4 @@
-;;;;; tré - (c) 2005-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
 
 (when nil
     (env-load "transpiler/middle-end/graph/cblock.lisp")
@@ -20,7 +20,7 @@
 ;(env-load "transpiler/middle-end/cps.lisp")
 (env-load "transpiler/middle-end/named-functions.lisp")
 (env-load "transpiler/middle-end/quote-keywords.lisp")
-(env-load "transpiler/middle-end/package.lisp")
+(env-load "transpiler/middle-end/make-packages.lisp")
 (env-load "transpiler/middle-end/inject.lisp")
 
 (env-load "transpiler/middle-end/toplevel.lisp")
