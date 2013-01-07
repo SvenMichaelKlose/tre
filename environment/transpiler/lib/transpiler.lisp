@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defvar *current-transpiler* nil)
 (defvar *transpiler-assert* nil)
@@ -180,6 +180,7 @@
         :make-text?              make-text?
         :encapsulate-strings?    encapsulate-strings?
         :dump-passes?            dump-passes?
+        :inject-debugging?       inject-debugging?
         :symbol-translations     (copy-list symbol-translations)
         :thisify-classes         (copy-hash-table thisify-classes)
         :function-args           (copy-hash-table function-args)
