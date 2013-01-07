@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008,2010,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008,2010,2012–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun token-is-quote? (x)
   (in? x 'quote 'backquote 'quasiquote 'quasiquote-splice 'accent-circonflex))
@@ -118,6 +118,7 @@
 (defun read-list (str token pkg sym)
   (| token (error "missing closing bracket"))
   (unless (%read-closing-bracket? token)
+    (= *default-listprop* (cons (stream-in-column str) (stream-in-line str)))
     (cons (?
 		    (token-is-quote? token)         (read-quote str token)
 		    (eq 'bracket-open token)        (read-cons-slot str)
@@ -146,7 +147,6 @@
 	   l)))
 
 (defun read-expr (str)
-  (= *default-listprop* (cons (stream-in-column str) (stream-in-line str)))
   (with ((token pkg sym) (read-token str))
 	(?
 	  (not token) nil
