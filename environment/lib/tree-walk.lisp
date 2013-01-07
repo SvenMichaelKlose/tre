@@ -1,12 +1,11 @@
-;;;;; tré – Copyright (c) 2005–2007,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2007,2012–2013 Sven Michael Klose <pixel@copei.de>
 
 ;; Replace elements in tree.
 (defun tree-walk (i &key (ascending nil) (dont-ascend-if nil) (dont-ascend-after-if nil))
   (? (atom i)
 	 (funcall ascending i)
      (progn
-       (awhen (cpr i)
-         (= *default-listprop* !))
+       (make-default-listprop i)
 	   (with (y i.
 		      a (| (& dont-ascend-if (funcall dont-ascend-if y) y)
 				   (? (& dont-ascend-after-if (funcall dont-ascend-after-if y))

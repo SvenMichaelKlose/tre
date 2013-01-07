@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2005-2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2011,2013 Sven Michael Klose <pixel@copei.de>
 
 (env-load "stage2/with-gensym.lisp")
 (env-load "stage2/list-manipulation.lisp")
@@ -25,6 +25,7 @@
 (env-load "stage2/subseq.lisp")
 (env-load "stage2/list-symbol.lisp")
 (env-load "stage2/butlast.lisp" 'c)
+(env-load "stage2/make-default-listprop.lisp")
 (env-load "stage2/dot-expand.lisp")
 (env-load "stage2/defstruct.lisp")
 (env-load "stage2/abs.lisp")

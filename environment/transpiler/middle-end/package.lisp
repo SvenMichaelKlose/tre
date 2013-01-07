@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2011–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2011–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun process-%%in-package (x)
   (?
@@ -24,7 +24,9 @@
         (& (= (transpiler-current-package tr) (& .x. (make-package (symbol-name .x.))))
            nil)
       (%slot-value? x) x
-      (cons-r make-packages-0 x))))
+      (progn
+        (make-default-listprop x)
+        (cons-r make-packages-0 x)))))
 
 (defun make-packages (x)
   (let processed (process-%%in-package x)

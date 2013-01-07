@@ -43,8 +43,7 @@
       (?
 		(label? x) (conv x)
 		(cons? x) (progn
-                    (awhen (cpr x)
-                      (= *default-listprop* !))
+                    (make-default-listprop x)
                     (cons-r dot-expand x))
       	x))))
 

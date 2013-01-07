@@ -10,6 +10,7 @@
 (defun make-php-transpiler-0 ()
   (create-transpiler
       :name 'php
+      :inject-debugging? t
 	  :=-function? #'php-=-function?
 	  :unwanted-functions '(wait)
 	  :apply-argdefs? nil

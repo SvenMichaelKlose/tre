@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2006–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2006–2013 Sven Michael Klose <pixel@copei.de>
 
 (defvar *current-expex* nil)
 (defvar *expex-funinfo* nil)
@@ -201,8 +201,7 @@
     (values moved (list new-expr))))
 
 (defun expex-expr (ex expr)
-  (awhen (& (cons? expr) (cpr expr))
-    (= *default-listprop* !))
+  (make-default-listprop expr)
   (let x (expex-guest-filter-expr ex expr)
     (expex-cps x)
     (?

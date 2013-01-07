@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun lambda-make-funinfo (args parent)
   (with (argnames (argument-expand-names 'lambda-expand args)
@@ -106,8 +106,7 @@
 	(atom x) x
 	(atom x.) (cons x. (lambda-expand-tree-0 fi .x))
     (progn
-      (awhen (cpr x)
-        (= *default-listprop* !))
+      (make-default-listprop x)
 	  (cons (lambda-expand-tree-cons fi x.)
 		    (lambda-expand-tree-0 fi .x)))))
 

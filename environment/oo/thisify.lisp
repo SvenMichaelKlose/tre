@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Wrap local method calls into SLOT-VALUEs.
 
@@ -11,7 +11,7 @@
 (defun thisify-symbol (classdef x exclusions)
   (!? (& classdef
          (not (| (number? x) (string? x)))
-         (not (find x exclusions)) ; XXX :test #'eq
+         (not (member x exclusions :test #'eq))
          (assoc x classdef))
       `(%slot-value ~%this ,x)
       x))
@@ -24,21 +24,18 @@
 		            ,(lambda-args x)
 		            ,@(thisify-list-0 classdef (lambda-body x) (append exclusions (lambda-args x))))
     (progn
-      (awhen (cpr x)
-        (= *default-listprop* !))
+      (make-default-listprop x)
       (cons (? (%slot-value? x.)
 			   `(%slot-value ,(thisify-list-0 classdef (cadr x.) exclusions)
 					          ,(caddr x.))
 			   (thisify-list-0 classdef x. exclusions))
 		    (thisify-list-0 classdef .x exclusions)))))
 
-;; Thisify class members inside found %THISIFY.
 (defun thisify-list (classes x cls)
   (thisify-list-0 (thisify-collect-methods-and-members (href classes cls)) x nil))
 
 (def-head-predicate %thisify)
 
-;; Search %THISIFY-expressions and treat them accordingly.
 (defun thisify (classes x)
   (?
 	 (atom x)       x
