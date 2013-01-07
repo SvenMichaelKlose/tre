@@ -27,7 +27,7 @@
       (make-default-listprop x)
       (cons (? (%slot-value? x.)
 			   `(%slot-value ,(thisify-list-0 classdef (cadr x.) exclusions)
-					          ,(caddr x.))
+					         ,(caddr x.))
 			   (thisify-list-0 classdef x. exclusions))
 		    (thisify-list-0 classdef .x exclusions)))))
 
@@ -42,7 +42,6 @@
 	 (%thisify? x.) (append (thisify-list classes (cddr x.) (cadr x.))
 			                (thisify classes .x))
      (progn
-       (awhen (cpr x)
-         (= *default-listprop* !))
+       (make-default-listprop x)
 	   (cons (thisify classes x.)
 	 	     (thisify classes .x)))))
