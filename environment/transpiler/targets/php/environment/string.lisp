@@ -8,7 +8,7 @@
 (defun string-concat (&rest x)
   (let result ""
     (dolist (i x result)
-      (| i (= result (%%%string+ result i))))))
+      (& i (= result (%%%string+ result i))))))
 
 (dont-obfuscate ord strlen substr)
 
