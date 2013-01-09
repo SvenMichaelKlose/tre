@@ -1,15 +1,15 @@
-;;;;; tré - Copyright (c) 2008-2010,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2010,2012–2013 Sven Michael Klose <pixel@copei.de>
 
 (defmacro define-tree-filter (name args &body body)
   (let iter (car (last args))
     `(defun ,name ,args
-       (awhen (& (cons? ,iter) (cpr ,iter))
-         (= *default-listprop* !))
        (?
          ,@body
          (atom ,iter) ,iter
-         (cons (,name ,@(butlast args) (car ,iter))
-               (,name ,@(butlast args) (cdr ,iter)))))))
+         (progn
+           (make-default-listprop ,iter)
+           (cons (,name ,@(butlast args) (car ,iter))
+                 (,name ,@(butlast args) (cdr ,iter))))))))
 
 (defmacro define-concat-tree-filter (name args &body body)
   (let iter (car (last args))
