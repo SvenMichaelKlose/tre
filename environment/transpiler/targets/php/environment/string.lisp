@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (dont-obfuscate is_string)
 
@@ -8,7 +8,7 @@
 (defun string-concat (&rest x)
   (let result ""
     (dolist (i x result)
-      (= result (%%%string+ result i)))))
+      (| i (= result (%%%string+ result i))))))
 
 (dont-obfuscate ord strlen substr)
 
