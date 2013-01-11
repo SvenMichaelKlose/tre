@@ -6,9 +6,8 @@
   (is_string x))
 
 (defun string-concat (&rest x)
-  (let result ""
-    (dolist (i x result)
-      (& i (= result (%%%string+ result i))))))
+  (!? (remove-if #'not x)
+      (implode (list-phphash !))))
 
 (dont-obfuscate ord strlen substr)
 
