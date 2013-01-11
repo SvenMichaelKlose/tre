@@ -7,7 +7,9 @@
     (eq '%%in-package x.)
       (& (= (transpiler-current-package *current-transpiler*) (& .x. (make-package (symbol-name .x.))))
          nil)
-    (cons-r process-%%in-package x)))
+    (progn
+      (make-default-listprop x)
+      (cons-r process-%%in-package x))))
 
 (defun make-packages-0 (x)
   (let tr *current-transpiler*
