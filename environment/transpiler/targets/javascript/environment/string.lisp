@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (js-type-predicate %string? "string")
 
@@ -6,8 +6,13 @@
   (| (%string? x)
      (instanceof x (%transpiler-native "String"))))
 
+(dont-obfuscate push join)
+
 (defun string-concat (&rest x)
-  (apply #'+ (filter [| _ ""] x)))
+  (let-when a (remove-if #'not x)
+    (let res (make-array)
+      (dolist (i a (res.join ""))
+        (res.push i)))))
 
 (dont-obfuscate char-code-at)
 
