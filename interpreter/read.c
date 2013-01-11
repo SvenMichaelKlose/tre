@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2008,2010,2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2008,2010,2012–2013 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -114,6 +114,21 @@ after_pname:
 }
 
 void
+treread_comment_block (struct tre_stream * stream)
+{
+    char c;
+    
+    while ((c = treio_getc (stream)) != 0) {
+        if (c != '|')
+            continue;
+        c = treio_getc (stream);
+        if (c == '#')
+            return;
+	    treio_putback (stream);
+    }
+}
+
+void
 treread_token (struct tre_stream * stream)
 {
     char   c;
@@ -162,6 +177,11 @@ treread_token (struct tre_stream * stream)
 	    	if (c == '\'') {
             	TRECONTEXT_TOKEN() = TRETOKEN_FUNCTION;
 				break;
+	    	}
+	    	if (c == '|') {
+                treread_comment_block (stream);
+                treread_token (stream);
+                break;
 	    	}
 			treerror_norecover (treptr_invalid, "syntax error after '#'");
 	    	break;
