@@ -1,18 +1,9 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun %wrap-char-number (x)
   (? (character? x)
 	 (char-code x)
 	 x))
-
-(defun + (&rest x)
-  (? (listp x.)
-     (apply #'append x)
-     (let n (%wrap-char-number x.)
-	   (dolist (i .x n)
-         (= n (? (| (string? n) (string? i))
-	             (%%%string+ (string n) (string i))
-	             (%%%+ n (%wrap-char-number i))))))))
 
 (defun * (&rest x)
   (let n (%wrap-char-number x.)
