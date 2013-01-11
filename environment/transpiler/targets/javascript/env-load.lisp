@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun js-load-base (dir-path &rest files)
   (mapcan [let f (+ dir-path _)
@@ -21,7 +21,6 @@
 		                           "return-value.lisp"
                                    "log.lisp"
 		                           "defined-functions.lisp"
-		                           "not.lisp"
 		                           "cons.lisp"
 		                           "symbol.lisp"
 		                           "propertylist.lisp"))))
@@ -34,7 +33,8 @@
 
 (defvar *js-base2*
 	,(list 'quote (+ (js-load-base "environment/transpiler/environment/"
-                                   "cps-disable.lisp")
+                                   "cps-disable.lisp"
+		                           "not.lisp")
 		             (js-load-base *js-env-path*
 			                       "macro.lisp"
 			                       "character.lisp"

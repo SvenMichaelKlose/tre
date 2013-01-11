@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2010,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2010,2012–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun make-c-transpiler ()
   (aprog1 (create-transpiler
@@ -22,7 +22,7 @@
 	                                    (expex-expr-filter ex) #'c-expex-filter
 			                            (expex-setter-filter ex) (compose [mapcan [expex-set-global-variable-value _] _]
 									                                      #'expex-compiled-funcall)
-		                                (expex-inline? ex) [in? _ 'cons 'aref '%vec '%car '%cdr '%eq '%not])))
+		                                (expex-inline? ex) [in? _ 'cons 'aref '%vec '%car '%cdr '%eq])))
 	(= (transpiler-inline-exceptions !) '(error format identity))))
 
 (defvar *c-transpiler* (copy-transpiler (make-c-transpiler)))

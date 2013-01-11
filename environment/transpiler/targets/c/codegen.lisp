@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 ;;;; GENERAL CODE GENERATION
 
@@ -25,13 +25,19 @@
 			               ";" (string (code-char 10)))
 	    (transpiler-compiled-decls *current-transpiler*)))
 
+(defun symbols-comment (x)
+  (mapcar [+ (symbol-name _) " "] x))
+
 (defun c-codegen-function (name x)
   (with (fi (get-funinfo-by-sym (lambda-funinfo x))
          args (argument-expand-names 'unnamed-c-function (funinfo-args fi)))
     (c-make-function-declaration name args)
     `(,(code-char 10)
       "/*" ,*c-newline*
-      "  env: " ,@(mapcar [+ (symbol-name _) " "] (funinfo-env fi)) ,*c-newline*
+      "  args:     " ,@(symbols-comment (funinfo-args fi)) ,*c-newline*
+      "  env:      " ,@(symbols-comment (funinfo-env fi)) ,*c-newline*
+      "  lexical:  " ,(symbol-name (funinfo-lexical fi)) ,*c-newline*
+      "  lexicals: " ,@(symbols-comment (funinfo-lexicals fi)) ,*c-newline*
       "*/" ,*c-newline*
 	  "treptr " ,name " "
 	  ,@(parenthized-comma-separated-list (mapcar ^("treptr " ,_) args))
@@ -42,9 +48,6 @@
 
 (defun %eq (&rest x)
   (apply #'eq x))
-
-(defun %not (&rest x)
-  (apply #'not x))
 
 (define-c-macro eq (&rest x)
   `(%eq ,@x))

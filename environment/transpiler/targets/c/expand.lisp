@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defmacro define-c-std-macro (&rest x)
   `(define-transpiler-std-macro *c-transpiler* ,@x))
@@ -11,11 +11,7 @@
                         ,fun))))
 
 (define-c-std-macro not (&rest x)
-  (? .x
-     `(%not2 ,@x)
-     `(let ,*not-gensym* t
-        (? ,x. (= ,*not-gensym* nil))
-        ,*not-gensym*)))
+  (funcall #'shared-not x))
 
 (define-c-std-macro defun (name args &rest body)
   `(%%vm-scope
@@ -44,9 +40,7 @@
        (%var ,name)
 	   (%setq ,name ,val))))
 
-(functional %eq %not %not2)
 (transpiler-wrap-invariant-to-binary define-c-std-macro eq 2 %eq &)
-(transpiler-wrap-invariant-to-binary define-c-std-macro %not2 1 %not &)
 
 (define-c-std-macro %%u=-car (val x)
   (shared-=-car val x))

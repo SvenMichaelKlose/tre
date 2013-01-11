@@ -17,11 +17,7 @@
 (transpiler-wrap-invariant-to-binary define-php-std-macro eq 2 eq &)
 
 (define-php-std-macro not (&rest x)
-  (? .x
-     `(%not (list ,@x))
-     `(let ,*not-gensym* t
-        (? ,x. (= ,*not-gensym* nil))
-        ,*not-gensym*)))
+  (funcall #'shared-not x))
 
 (define-php-std-macro defun (name args &body body)
   (with ((fi-sym adef) (split-funinfo-and-args args)

@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun php-load-base (dir-path &rest files)
   (with-temporary *have-compiler?* nil
@@ -13,7 +13,6 @@
 	,(list 'quote (append (php-load-base *php-env-path*
 		                      "assert.lisp"
 		                      "return-value.lisp"
-		                      "not.lisp"
 		                      "cons.lisp"
 		                      "symbol.lisp"))))
 
@@ -27,6 +26,7 @@
 			              "array.lisp"
 			              "atom.lisp")
 		              (php-load-base "environment/transpiler/environment/"
+                          "not.lisp"
 			              "atom.lisp")
 		              (php-load-base *php-env-path*
 			              "bind.lisp"

@@ -19,14 +19,8 @@
 
 (transpiler-wrap-invariant-to-binary define-js-std-macro eq 2 eq &)
 
-(functional %not)
-
 (define-js-std-macro not (&rest x)
-  (? .x
-     `(%not (list ,@x))
-     `(let ,*not-gensym* t
-        (? ,x. (= ,*not-gensym* nil))
-        ,*not-gensym*)))
+  (funcall #'shared-not x))
 
 (define-js-std-macro function (x)
   (? (cons? x)
