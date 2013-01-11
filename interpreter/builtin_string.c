@@ -156,7 +156,7 @@ trestring_builtin_concat (treptr list)
     ulong   len = 0;
 	int	    argnum = 1;
 
-    /* Sum up length of all elements in the list. */
+    /* Sum up new length. */
     DOLIST(p, list) {
 		if (CAR(p) == treptr_nil)
 			continue;
@@ -164,7 +164,7 @@ trestring_builtin_concat (treptr list)
 	   	len += strlen (TREATOM_STRINGP(car));
     }
 
-    /* Copy elements to new string. */
+    /* Allocate string. */
     news = trestring_get_raw (len);
     if (news == NULL) {
 		tregc_force ();
@@ -174,13 +174,14 @@ trestring_builtin_concat (treptr list)
 	}
     newp = TRESTRING_DATA(news);
 
+    /* Copy to string. */
     DOLIST(p, list) {
 		if (CAR(p) == treptr_nil)
 			continue;
 		newp = stpcpy (newp, TREATOM_STRINGP(CAR(p)));
 	}
 
-    /* Return new string atom. */
+    /* Make atom. */
     atom = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_STRING, treptr_nil);
     TREATOM_SET_STRING(atom, news);
 
