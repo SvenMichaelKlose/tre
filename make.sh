@@ -203,26 +203,26 @@ precompile)
 boot)
 	basic_clean
 	./make.sh crunsh $ARGS || exit 1
-	(echo "(compile-c-environment (list 'c-transpile))" | ./tre) || exit 1
+	(echo "(compile-c-compiler)" | ./tre) || exit 1
 	./make.sh crunshraw $ARGS || exit 1
-	(echo "(compile-c-environment (reverse *universe-functions*))" | ./tre) || exit 1
+	(echo "(compile-c-environment *universe-functions*)" | ./tre) || exit 1
 	./make.sh crunshraw $ARGS || exit 1
 	;;
 
 bootunclean)
 	./make.sh boot0 || exit 1
-	(echo "(compile-c-environment (reverse *universe-functions*))" | ./tre) || exit 1
+	(echo "(compile-c-environment *universe-functions*)" | ./tre) || exit 1
 	./make.sh crunshraw || exit 1
 	;;
 
 recompile)
 	echo "(quit)" | tre -n
-	(echo "(compile-c-environment (reverse *universe-functions*))" | ./tre) || exit 1
+	(echo "(compile-c-environment *universe-functions*)" | ./tre) || exit 1
 	./make.sh crunshraw || exit 1
 	;;
 
 bytecode)
-	(echo "(compile-bytecode-environment (reverse *universe-functions*))(dump-system)" | ./tre) || exit 1
+	(echo "(compile-bytecode-environment *universe-functions*)(dump-system)" | ./tre) || exit 1
 	;;
 
 install)

@@ -12,6 +12,9 @@
 	    (princ code out))))
   nil)
 
+(defun compile-c-compiler ()
+  (compile-c-environment '(c-transpile)))
+
 (defun compile-bytecode-environment (&optional (funs nil))
   (let tr (%compile-environment-configure-transpiler *bc-transpiler* funs)
     (compile-files nil :target 'bytecode :transpiler tr))
