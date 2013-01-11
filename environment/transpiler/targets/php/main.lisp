@@ -7,5 +7,5 @@
 (env-load "transpiler/targets/php/class.lisp")
 (env-load "transpiler/targets/php/codegen.lisp")
 ;(env-load "transpiler/targets/php/codegen-inline.lisp")
-(env-load "transpiler/targets/php/core.lisp")
+(env-load "transpiler/targets/php/env-load.lisp")
 (env-load "transpiler/targets/php/toplevel.lisp")
