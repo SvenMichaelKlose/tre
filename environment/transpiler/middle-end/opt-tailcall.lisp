@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2010-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2010–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun opt-tailcall-fun-0 (fi args x name front-tag)
   (append (mapcan #'((arg val)
@@ -45,7 +45,8 @@
 
 (metacode-walker opt-tailcall (x)
 	:if-named-function
-	   (let front-tag (make-compiler-tag)
+	   (with (front-tag (make-compiler-tag)
+              x x.)
          `(,front-tag
 		   ,@(opt-tailcall-fun (get-lambda-funinfo x)
                                (lambda-args x)
