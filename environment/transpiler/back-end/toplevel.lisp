@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun transpiler-concat-text (tr &rest x)
   (apply (transpiler-code-concatenator tr) x))
@@ -40,5 +40,5 @@
 
 (defun transpiler-backend (tr x)
   (? x
-     (transpiler-concat-text tr (transpiler-generate-code tr (transpiler-backend-prepare tr x)))
+     (transpiler-concat-text tr (filter [transpiler-concat-text tr (transpiler-generate-code tr (transpiler-backend-prepare tr (list _)))] x))
      ""))
