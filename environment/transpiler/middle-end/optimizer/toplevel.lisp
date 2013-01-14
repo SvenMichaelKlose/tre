@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun two-subsequent-tags? (a d)
   (& a (atom a)
@@ -6,9 +6,9 @@
 
 (defun opt-peephole-has-no-jumps-to (x tag)
   (dolist (i x t)
-	(when (vm-jump? i)
-	  (when (== (vm-jump-tag i) tag)
-		(return nil)))))
+    (& (vm-jump? i)
+       (== (vm-jump-tag i) tag)
+       (return nil))))
 
 (defun opt-peephole-tags-lambda (x)
   (with (body x
@@ -20,13 +20,13 @@
   (copy-lambda x :body (opt-peephole-remove-spare-tags (opt-peephole-tags-lambda (lambda-body x)))))
 
 (defun opt-peephole-remove-spare-tags (x)
-  (& x
+  (with-cons a d x
 	 (cons (?
-	  		 (named-lambda? x.)       (opt-peephole-remove-spare-tags-body x.)
-	  		 (& (%setq? x.)
-	  	   	    (lambda? (caddr x.))) `(%setq ,(cadr x.) ,(opt-peephole-remove-spare-tags-body (caddr x.)))
-			 x.)
-		   (opt-peephole-remove-spare-tags .x))))
+	  		 (named-lambda? a)       (opt-peephole-remove-spare-tags-body a)
+	  		 (& (%setq? a)
+	  	   	    (lambda? ..a.)) `(%setq ,.a. ,(opt-peephole-remove-spare-tags-body ..a.))
+			 a)
+		   (opt-peephole-remove-spare-tags d))))
    
 (defun opt-peephole (statements)
   (with
@@ -51,31 +51,29 @@
 				    (add-removed-tag a d.)
 				    (reduce-tags d))
     		    (& (number? a)
-                     (%%vm-go? d.))
+                   (%%vm-go? d.))
                   (progn
                     (add-removed-tag a (cadr d.))
 				    (reduce-tags d))))
 
        translate-tags
-		 #'((x)
-    		 (maptree [!? (assoc _ removed-tags :test #'eq)
-                          .!
-                          _]
-                      x))
+		 [maptree [!? (assoc _ removed-tags :test #'eq)
+                      .!
+                      _]
+                  _]
 	   rec
-		 #'((x)
-             (funcall (compose #'opt-peephole-remove-vm-go-nil-heads
-                               #'opt-peephole-rename-temporaries
-			                   #'opt-peephole-remove-spare-tags
-				               #'opt-peephole-remove-code
-				               #'opt-peephole-remove-assignments
-                               #'translate-tags
-                               #'reduce-tags
-				               #'opt-peephole-remove-void
-                               #'opt-peephole-remove-identity)
-				      x)))
-      (? *opt-peephole?*
-	       (with-temporary *opt-peephole-funinfo* (transpiler-global-funinfo *current-transpiler*)
-             (with-temporary *opt-peephole-body* statements
-	           (repeat-while-changes #'rec statements)))
-         statements)))
+		 [funcall (compose #'opt-peephole-remove-void
+                           ;#'opt-peephole-remove-vm-go-nil-heads
+                           ;#'opt-peephole-rename-temporaries
+                           ;#'opt-peephole-remove-code
+                           ;#'opt-peephole-remove-assignments
+                           #'opt-peephole-remove-identity
+                           #'opt-peephole-remove-spare-tags
+                           #'translate-tags
+                           #'reduce-tags)
+                  _])
+  (? *opt-peephole?*
+     (with-temporary *opt-peephole-funinfo* (transpiler-global-funinfo *current-transpiler*)
+       (with-temporary *opt-peephole-body* statements
+         (repeat-while-changes #'rec statements)))
+     statements)))

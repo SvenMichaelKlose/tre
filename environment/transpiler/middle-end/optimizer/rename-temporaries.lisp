@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun assignment-to-symbol? (x)
   (& (%setq? x)
@@ -23,4 +23,4 @@
       (funinfo-env-adjoin fi '~%tmp)
       `((%setq ~%tmp ,(%setq-value a))
         (%setq ,(%setq-place d.) ,(replace-tree plc '~%tmp val :test #'eq))
-        ,@(opt-peephole-rename-temporaries .d))))
+        ,@.d)))

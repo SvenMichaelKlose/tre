@@ -1,58 +1,48 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
-(defun %setq-on? (x plc)
-  (& (%setq? x)
-     (eq (%setq-place x) plc)))
-
-(defun opt-peephole-tag-code (tag)
-  (member tag *opt-peephole-body* :test #'eq))
-
-(defun opt-peephole-will-be-used-again? (x v)
-  (with (traversed-tags nil
-         traverse-tag #'((tag v)
-                          (!? (opt-peephole-tag-code tag)
-                              (unless (member tag traversed-tags :test #'eq)
-                                (push tag traversed-tags)
-                                (rec .! v))
-                              (progn
-                                (print *opt-peephole-body*)
-                                (print tag)
-                                (error "no tag"))))
-         rec #'((x v)
-                 (with (a x.
-                        d .x)
-                   (?
-	                 (not x)         (~%ret? v)
-	                 (atom x)        (error "illegal meta-code: statement expected")
-	                 (lambda? a)     (rec d v)
-                     (%%vm-go? a)    (traverse-tag .a. v)
-                     (%setq-on? a v) (find-tree (%setq-value a) v :test #'eq)
-                     (find-tree a v :test #'eq) t
-                     (%%vm-go-nil? a) (| (traverse-tag ..a. v)
-                                         (rec d v))
-                     (rec d v)))))
-    (| (eq *opt-peephole-funinfo* (transpiler-global-funinfo *current-transpiler*))
-       (& (not (~%ret? v))
-          (transpiler-defined-variable *current-transpiler* v))
-       (funinfo-immutable? *opt-peephole-funinfo* v)
-       (rec x v))))
+(defun tag-code (tag)
+  (member-if [& (number? _) (== _ tag)] *opt-peephole-body*))
 
 (defun removable-place? (x)
-  (& x (atom x)
-     (funinfo-in-env? *opt-peephole-funinfo* x)
-     (not (eq x (funinfo-lexical *opt-peephole-funinfo*)))
-     (not (funinfo-lexical? *opt-peephole-funinfo* x))))
+  (alet *opt-peephole-funinfo*
+    (& x (atom x)
+       (funinfo-in-env? ! x)
+       (not (eq x (funinfo-lexical !))
+            (funinfo-lexical? ! x)
+            (funinfo-immutable? ! x)
+            (unless (funinfo-parent !)
+              (| (transpiler-defined-function *current-transpiler* x)
+                 (transpiler-defined-variable *current-transpiler* x)))))))
 
-(defun assignment-to-unused-place? (a d)
-  (& (%setq? a)
-     (removable-place? (%setq-place a))
-     (not (opt-peephole-will-be-used-again? d (%setq-place a)))))
-
-(defun assignment-to-unneccessary-temoporary? (a d)
-  (& d
-     (%setq? a)
-	 (%setq? d.)
-	 (let-when plc (%setq-place a)
-	 (& (eq plc (%setq-value d.))
-        (removable-place? plc)
-        (not (opt-peephole-will-be-used-again? .d plc))))))
+(defun opt-peephole-will-be-used-again? (x v)
+   (with (traversed-tags nil
+          traversed-tag?
+            [member _ traversed-tags :test #'number==]
+          traverse-tag
+            [unless (traversed-tag? _)
+              (push _ traversed-tags)
+              (traverse-statements (tag-code _))]
+          traverse-statements
+            [? (not _)
+               (& (funinfo-parent *opt-peephole-funinfo*)
+                  (~%ret? v))
+               (with-cons a d _
+                 (?
+                   (%setq? a)       (with (place (%setq-place a)
+                                           value (%setq-value a))
+                                      (? (eq v place value)
+                                         (traverse-statements d)
+                                         (| (find-tree value v :test #'eq)
+                                            (unless (eq v place)
+                                              (traverse-statements d)))))
+                   (%%vm-go? a)     (traverse-tag .a.)
+                   (%%vm-go-nil? a) (| (eq v .a.)
+                                       (traverse-tag ..a.)
+                                       (traverse-statements d))
+                   (number? a)      (unless (traversed-tag? a)
+                                      (traverse-statements d))
+                   (progn
+                     (print _)
+                     (error "illegal metacode statement ~A" _))))])
+    (| (not (removable-place? v))
+       (traverse-statements x))))

@@ -1,8 +1,9 @@
-;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (def-opt-peephole-fun opt-peephole-remove-code
-  (assignment-to-unused-place? a d)
+  (& (%setq? a)
+     (not (opt-peephole-will-be-used-again? d (%setq-place a))))
 	(? (atomic-or-functional? (%setq-value a))
-  	   (opt-peephole-remove-code d)
+  	   d
   	   (cons `(%setq nil ,(%setq-value a))
-	         (opt-peephole-remove-code d))))
+	         d)))
