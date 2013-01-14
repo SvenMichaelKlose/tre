@@ -2,11 +2,10 @@
 
 (defvar *tagbody-replacements*)
 
-(defun compiler-macroexpand-prepost ()
+(defun init-compiler-macros ()
   (setq *tagbody-replacements* nil))
 
-(define-expander 'compiler :pre  #'compiler-macroexpand-prepost
-						   :post #'compiler-macroexpand-prepost)
+(define-expander 'compiler :pre  #'init-compiler-macros)
 
 (defmacro define-compiler-macro (&rest x)
   (print-definition `(define-compiler-macro ,x.))
@@ -21,7 +20,7 @@
              (list _)]
           body))
 
-(define-filter vars-to-identity (x)
+(define-filter distinguish-vars-from-tags (x)
   (? (atom x)
      `(identity ,x)
      x))
@@ -33,7 +32,7 @@
                    `(,@(unless (t? _.)
                          `((%setq ~%ret ,_.)
                            (%%vm-go-nil ~%ret ,next)))
-                     ,@(awhen (vars-to-identity ._)
+                     ,@(awhen (distinguish-vars-from-tags ._)
 				         `((%setq ~%ret (%%vm-scope ,@!))))
                      (%%vm-go ,end-tag)
                      ,next)]
@@ -67,7 +66,7 @@
 
 (define-compiler-macro progn (&rest body)
   (!? body
-      `(%%vm-scope ,@(vars-to-identity body))))
+      `(%%vm-scope ,@(distinguish-vars-from-tags body))))
 
 (define-expander 'compiler-return)
 (defvar *blockname* nil)
