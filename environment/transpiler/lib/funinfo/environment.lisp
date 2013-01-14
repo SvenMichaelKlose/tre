@@ -24,7 +24,8 @@
   (remove-if [funinfo-lexical? fi _] (funinfo-args fi)))
 
 (defun funinfo-in-env? (fi x)
-  (& (? (funinfo-parent fi)
+  (& x (atom x)
+     (? (funinfo-parent fi)
         (member x (funinfo-env fi) :test #'eq)
         (!? (funinfo-env-hash fi)
             (href ! x)))

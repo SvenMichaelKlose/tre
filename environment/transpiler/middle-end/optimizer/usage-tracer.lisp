@@ -5,8 +5,7 @@
 
 (defun removable-place? (x)
   (alet *opt-peephole-funinfo*
-    (& x (atom x)
-       (funinfo-in-env? ! x)
+    (& (funinfo-in-env? ! x)
        (not (eq x (funinfo-lexical !))
             (funinfo-lexical? ! x)
             (funinfo-immutable? ! x)
