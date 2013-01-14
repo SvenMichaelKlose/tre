@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2006–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2006–2013 Sven Michael Klose <pixel@copei.de>
 
 (defvar *tagbody-replacements*)
 
@@ -15,11 +15,11 @@
 (defun compiler-macroexpand (x)
   (expander-expand 'compiler x))
 
-(defun make-vm-scope (x)
-;  (? .x
-     `(%%vm-scope ,@x)
-     )
-;     x.))
+(defun compress-%%vm-scopes (body)
+  (mapcan [? (%%vm-scope? _)
+             ._
+             (list _)]
+          body))
 
 (define-filter vars-to-identity (x)
   (? (atom x)
@@ -34,7 +34,7 @@
                          `((%setq ~%ret ,_.)
                            (%%vm-go-nil ~%ret ,next)))
                      ,@(awhen (vars-to-identity ._)
-				         `((%setq ~%ret ,(make-vm-scope !))))
+				         `((%setq ~%ret (%%vm-scope ,@!))))
                      (%%vm-go ,end-tag)
                      ,next)]
 			     args)
@@ -66,8 +66,8 @@
      (identity nil)))
 
 (define-compiler-macro progn (&rest body)
-  (make-vm-scope (| (vars-to-identity body) ; XXX fscking workaround
-				    '((identity nil)))))
+  (!? body
+      `(%%vm-scope ,@(vars-to-identity body))))
 
 (define-expander 'compiler-return)
 (defvar *blockname* nil)
@@ -97,7 +97,7 @@
     `(identity nil)))
 
 (define-compiler-macro setq (&rest args)
-  (make-vm-scope (filter ^(%setq ,_. ,._.) (group args 2))))
+  `(%%vm-scope ,@(filter ^(%setq ,_. ,._.) (group args 2))))
 
 (define-compiler-macro ? (&rest body)
   (with (tests (group body 2)
@@ -110,7 +110,12 @@
 			 tests))))
 
 (define-compiler-macro %%vm-scope (&rest body)
-  `(%%vm-scope ,@(mapcan [? (%%vm-scope? _)
-                            ._
-                            (list _)]
-                         body)))
+   (?
+     .body            `(%%vm-scope ,@(compress-%%vm-scopes body))
+     (vm-jump? body.) `(%%vm-scope ,body.)
+     body.            body.))
+
+(define-compiler-macro function (x)
+  `(function ,(? (atom x)
+                 x
+                 (cons x. (compress-%%vm-scopes .x)))))
