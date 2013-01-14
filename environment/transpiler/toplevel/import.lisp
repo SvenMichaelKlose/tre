@@ -17,7 +17,7 @@
 (defun transpiler-add-wanted-function (tr x)
   (when (transpiler-can-import? tr x)
     (= (href (transpiler-wanted-functions-hash tr) x) t)
-    (nconc! (transpiler-wanted-functions tr) (list x)))
+    (push x (transpiler-wanted-functions tr)))
   x)
 
 (defun transpiler-add-wanted-functions (tr x)
