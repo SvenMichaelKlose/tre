@@ -17,6 +17,7 @@
 (env-load "transpiler/middle-end/opt-places.lisp")
 (env-load "transpiler/middle-end/optimizer/main.lisp")
 (env-load "transpiler/middle-end/opt-tailcall.lisp")
+(env-load "transpiler/middle-end/link-funinfo-envs.lisp")
 ;(env-load "transpiler/middle-end/cps.lisp")
 (env-load "transpiler/middle-end/named-functions.lisp")
 (env-load "transpiler/middle-end/quote-keywords.lisp")

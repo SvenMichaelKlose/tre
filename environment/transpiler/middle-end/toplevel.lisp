@@ -6,7 +6,7 @@
 ;; After this pass
 ;; - Functions are assigned run-time argument definitions
 ;; - VM-SCOPEs are removed. All code is flat with jump tags.
-;; - Peephole-optimisations were performed.
+;; - Peephole optimisations were performed.
 ;; - FUNINFOs were updated with number of jump tags in function.
 ;; - FUNCTION expression contain the names of top-level functions.
 (transpiler-pass transpiler-middleend-0 (tr)
@@ -21,6 +21,7 @@
     opt-peephole             #'opt-peephole
     opt-tailcall             #'opt-tailcall
     opt-peephole             #'opt-peephole
+    link-funinfos            #'link-funinfos
     make-named-functions     [transpiler-make-named-functions tr _]
     quote-keywords           #'transpiler-quote-keywords
     inject-debugging         [? (transpiler-inject-debugging? tr)

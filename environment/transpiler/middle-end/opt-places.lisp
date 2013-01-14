@@ -1,24 +1,32 @@
 ;;;;; tré – Copyright (c) 2009–2012 Sven Michael Klose <pixel@copei.de>
 
-(defun opt-places-find-used-fun (x)
-  (let fi (get-lambda-funinfo x)
-    (!? (funinfo-lexical fi)
-        (funinfo-add-used-env fi !))
-    (opt-places-find-used-0 fi (lambda-body x))))
+(defun opt-places-find-used-1 (x fi)
+  (& (symbol? x)
+     (funinfo-in-env? fi x)
+     (funinfo-add-used-env fi x)))
 
-(defun opt-places-find-used-0 (fi x)
-  (?
-    (atom x)			(& (funinfo-in-env? fi x)
-						   (funinfo-add-used-env fi x))
-	(%quote? x)			nil
-	(lambda? x)			(opt-places-find-used-fun x)
-	(named-lambda? x)	(opt-places-find-used-fun ..x.)
-	(progn
-	  (opt-places-find-used-0 fi x.)
-      (opt-places-find-used-0 fi .x))))
+(metacode-walker opt-places-find-used-0 (x fi)
+  :if-named-function (let fi (get-lambda-funinfo x.)
+                       (!? (funinfo-lexical fi)
+                           (funinfo-add-used-env fi !))
+                       (opt-places-find-used-0 (lambda-body x.) fi))
+  :if-go-nil (opt-places-find-used-1 .x. fi)
+  :if-setq (with (x x.
+                  p (%setq-place x)
+                  v (%setq-value x))
+             (opt-places-find-used-1 p fi)
+             (?
+               (symbol? v) (opt-places-find-used-1 v fi)
+               (lambda? v) (copy-lambda v :body (let fi (get-lambda-funinfo v)
+                                                  (!? (funinfo-lexical fi)
+                                                      (funinfo-add-used-env fi !))
+                                                  (opt-places-find-used-0 (lambda-body v) fi)))
+               (& (cons? v)
+                  (dolist (i v)
+                    (opt-places-find-used-1 i fi))))))
 
 (defun opt-places-find-used (x)
-  (opt-places-find-used-0 (transpiler-global-funinfo *current-transpiler*) x)
+  (opt-places-find-used-0 x (transpiler-global-funinfo *current-transpiler*))
   x)
 
 (defun move-~%ret-to-front (x)
