@@ -1,7 +1,7 @@
-;;;;; tré – Copyright (c) 2010–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2010–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun function-copier (x statement)
-  `(copy-lambda ,x :body ,statement))
+  `(copy-lambda (car ,x) :body ,statement))
 
 (defun metacode-walker-copier-setq (x statement)
    (list 'backquote `((%setq ,(list 'quasiquote `(%setq-place (car ,x)))
@@ -9,8 +9,7 @@
                                                    ,(function-copier x statement)))))))
 
 (defun metacode-walker-copier (x statement)
-  `(let ,x (car ,x)
-     (list ,(function-copier x statement))))
+   `(list ,(function-copier x statement)))
 
 (defun metacode-statement? (x)
   (| (in? x. '%setq '%set-vec '%var '%function-prologue '%function-epilogue '%function-return '%%tag)
@@ -20,6 +19,9 @@
 (defmacro metacode-walker (name args &key (if-atom nil)
 					  	    	          (if-cons nil)
 					  	    	          (if-symbol nil)
+					  	    	          (if-setq nil)
+					  	    	          (if-go nil)
+					  	    	          (if-go-nil nil)
 									      (if-function nil)
 									      (if-lambda nil)
 									      (if-named-function nil)
@@ -43,15 +45,18 @@
                              (list ,v))
                           `(list ,v)))
 
+                  ,@(!? if-setq        `((%setq? ,v)        ,!))
+                  ,@(!? if-go          `((%%vm-go? ,v)      ,!))
+                  ,@(!? if-go-nil      `((%%vm-go-nil? ,v)  ,!))
                   ,@(!? if-slot-value  `((%slot-value? ,v)  ,!))
                   ,@(!? if-stack       `((%stack? ,v)       ,!))
                   ,@(!? if-vec         `((%vec? ,v)         ,!))
 
-                  ,@(alet (| if-named-function if-function `(,name (lambda-body ,x) ,@r))
+                  ,@(alet (| if-named-function if-function `(,name (lambda-body ,v) ,@r))
                       `((%setq-named-function? ,v) ,(metacode-walker-copier-setq x !)
                         (named-lambda? ,v) ,(metacode-walker-copier x !)))
 
-                  ,@(alet (| if-lambda if-function `(,name (lambda-body ,x) ,@r))
+                  ,@(alet (| if-lambda if-function `(,name (lambda-body ,v) ,@r))
                       `((%setq-lambda? ,v) ,(metacode-walker-copier-setq x !)))
 
                   (not (metacode-statement? ,v))
