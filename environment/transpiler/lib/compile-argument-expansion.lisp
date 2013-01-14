@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun compile-argument-expansion-defaults (defaults)
   (mapcar (fn `(& (eq ,_ ,(list 'quote _))
@@ -98,9 +98,9 @@
         (with-gensym p
           (? (in-cps-mode?)
              (with-gensym toplevel-continuer
-                print `#'((,p)
-                            (let ,toplevel-continuer ~%continuer
-                              ,(compile-argument-expansion-function-body fun-name adef p (list toplevel-continuer) names)))))
+                `#'((,p)
+                      (let ,toplevel-continuer ~%continuer
+                        ,(compile-argument-expansion-function-body fun-name adef p (list toplevel-continuer) names))))
              `#'((,p)
-                  ,(compile-argument-expansion-function-body fun-name adef p nil names)))
+                  ,(compile-argument-expansion-function-body fun-name adef p nil names))))
 	    (list 'function fun-name))))
