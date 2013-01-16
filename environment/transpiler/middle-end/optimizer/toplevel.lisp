@@ -63,9 +63,9 @@
                   _]
 	   rec
 		 [funcall (compose #'opt-peephole-remove-void
-                           ;#'opt-peephole-remove-vm-go-nil-heads
-                           ;#'opt-peephole-rename-temporaries
-                           ;#'opt-peephole-remove-code
+                           #'opt-peephole-remove-vm-go-nil-heads
+                           #'opt-peephole-rename-temporaries
+                           #'opt-peephole-remove-code
                            #'opt-peephole-remove-assignments
                            #'opt-peephole-remove-identity
                            #'opt-peephole-remove-spare-tags
