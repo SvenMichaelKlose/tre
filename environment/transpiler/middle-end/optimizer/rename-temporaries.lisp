@@ -14,7 +14,7 @@
        (& (not (in? plc '~%ret '~%tmp))
           (cons? val)
           (removable-place? plc)
-          (find-tree .val plc :test #'eq)
+          (find-tree plc .val :test #'eq)
           (| (eq (%setq-place d.) plc)
               (not (opt-peephole-will-be-used-again? .d plc))))))
     (with (plc (%setq-place a)

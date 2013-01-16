@@ -1,7 +1,9 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun tag-code (tag)
-  (member-if [& (number? _) (== _ tag)] *opt-peephole-body*))
+  (| (member-if [& (number? _) (== _ tag)]
+                *opt-peephole-body*)
+     (error "tag not founf")))
 
 (defun removable-place? (x)
   (alet *opt-peephole-funinfo*
@@ -31,15 +33,14 @@
                                            value (%setq-value a))
                                       (? (eq v place value)
                                          (traverse-statements d)
-                                         (| (find-tree value v :test #'eq)
+                                         (| (find-tree v value :test #'eq)
                                             (unless (eq v place)
                                               (traverse-statements d)))))
                    (%%vm-go? a)     (traverse-tag .a.)
                    (%%vm-go-nil? a) (| (eq v .a.)
                                        (traverse-tag ..a.)
                                        (traverse-statements d))
-                   (number? a)      (unless (traversed-tag? a)
-                                      (traverse-statements d))
+                   (number? a)      (traverse-statements d)
                    (progn
                      (print _)
                      (error "illegal metacode statement ~A" _))))])
