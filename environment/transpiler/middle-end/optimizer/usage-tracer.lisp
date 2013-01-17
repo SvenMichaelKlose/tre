@@ -3,7 +3,7 @@
 (defun tag-code (tag)
   (| (member-if [& (number? _) (== _ tag)]
                 *opt-peephole-body*)
-     (error "tag not founf")))
+     (error "tag ~A not found in body ~A" tag *opt-peephole-body*)))
 
 (defun removable-place? (x)
   (alet *opt-peephole-funinfo*
