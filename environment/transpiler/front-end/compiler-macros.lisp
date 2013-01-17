@@ -20,11 +20,6 @@
              (list _)]
           body))
 
-(define-filter distinguish-vars-from-tags (x)
-  (? (atom x)
-     `(identity ,x)
-     x))
-
 (define-compiler-macro cond (&rest args)
   (with-compiler-tag end-tag
     `(%%vm-scope

@@ -1,5 +1,13 @@
 ;;;;; tré – Copyright (c) 2006–2013 Sven Michael Klose <pixel@copei.de>
 
+(defun peel-identity (x)
+  (? (identity? x) .x. x))
+
+(defun %setq-cps-mode? (x)
+  (& (%setq? x)
+     (eq '%cps-mode (%setq-place x))))
+
+
 (defvar *current-expex* nil)
 (defvar *expex-funinfo* nil)
 (defvar *expex-warn?* t)
@@ -176,13 +184,6 @@
   (with ((moved new-expr) (expex-filter-and-move-args ex (list .x.)))
     (values moved `((%%vm-go-nil ,@new-expr ,..x.)))))
 
-(defun peel-identity (x)
-  (? (identity? x) .x. x))
-
-(defun %setq-cps-mode? (x)
-  (& (%setq? x)
-     (eq '%cps-mode (%setq-place x))))
-
 (defun expex-%setq-cps-mode (x)
   (= *transpiler-except-cps?* (not (%setq-value x)))
   (values nil nil))
@@ -235,22 +236,13 @@
 				  (expex-make-%setq ex s last.)))
 		x)))
 
-(defun expex-atom-to-identity-expr (x)
-  (? (& (atom x)
-        (not (number? x)))
-	 `(identity ,x)
-	 x))
-
-(defun expex-save-atoms (x)
-  (filter #'expex-atom-to-identity-expr x))
-
 (defun expex-list (ex x)
   (mapcan [with ((moved new-expr) (expex-expr ex _))
             (append moved (mapcan [expex-force-%setq ex _] new-expr))]
           x))
 
 (defun expex-body (ex x &optional (s '~%ret))
-  (expex-make-return-value ex s (expex-list ex (expex-save-atoms (list-without-noargs-tag x)))))
+  (expex-make-return-value ex s (expex-list ex (distinguish-vars-from-tags (list-without-noargs-tag x)))))
 
 ;;;; TOPLEVEL
 
