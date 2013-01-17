@@ -5,5 +5,4 @@
      (not (opt-peephole-will-be-used-again? d (%setq-place a))))
 	(? (atomic-or-functional? (%setq-value a))
   	   d
-  	   (cons `(%setq nil ,(%setq-value a))
-	         d)))
+       (opt-peephole-remove-code (cons `(%setq nil ,(%setq-value a)) d))))

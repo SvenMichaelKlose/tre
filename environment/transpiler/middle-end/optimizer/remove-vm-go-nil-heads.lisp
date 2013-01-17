@@ -14,5 +14,4 @@
 
 (def-opt-peephole-fun opt-peephole-remove-vm-go-nil-heads
   (vm-go-nil-head? a d)
-    (cons `(%%vm-go-nil ,(%setq-value a) ,(caddr d.))
-          .d))
+    (opt-peephole-remove-vm-go-nil-heads (cons `(%%vm-go-nil ,(%setq-value a) ,(caddr d.)) .d)))
