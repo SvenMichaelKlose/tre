@@ -2,8 +2,8 @@
 
 (defun assignment-to-symbol? (x)
   (& (%setq? x)
-     (awhen (%setq-place x)
-       (atom !))))
+     (%setq-place x)
+     (atom x)))
 
 ; XXX make new predicate
 (def-opt-peephole-fun opt-peephole-rename-temporaries
