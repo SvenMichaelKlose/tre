@@ -45,10 +45,10 @@
      (!? (funinfo-parent fi)
          (funinfo-in-env-or-lexical? ! x))))
 
-(defun funinfo-in-toplevel-env? (fi x)
+(defun funinfo-toplevel-var? (fi x)
   (!? (funinfo-parent fi)
       (& (not (funinfo-in-args-or-env? fi x))
-         (funinfo-in-toplevel-env? ! x))
+         (funinfo-toplevel-var? ! x))
       (funinfo-in-args-or-env? fi x)))
 
 

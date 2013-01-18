@@ -62,7 +62,7 @@
         (atom x)
         (not (eq '~%ret x))
         (funinfo-in-parent-env? *expex-funinfo* x)
-        (not (funinfo-in-toplevel-env? *expex-funinfo* x)))
+        (not (funinfo-toplevel-var? *expex-funinfo* x)))
      (not (| (atom x)
              (static-symbol-function? x)
              (in? x. '%%vm-go '%%vm-go-nil '%transpiler-native '%transpiler-string '%quote)))))

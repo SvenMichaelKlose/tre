@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2009–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2009–2013 Sven Michael Klose <pixel@copei.de>
 
 (defmacro php-define-compiled-literal (name (x table) &key maker init-maker)
   `(define-compiled-literal ,name (,x ,table)
@@ -32,7 +32,7 @@
   (?
     (& (atom x)
        (not (eq '~%RET x))
-       (not (funinfo-in-toplevel-env? *expex-funinfo* x))
+       (not (funinfo-toplevel-var? *expex-funinfo* x))
        (expex-global-variable? x))
       (progn
         (transpiler-add-wanted-variable *current-transpiler* x)
