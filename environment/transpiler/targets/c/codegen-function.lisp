@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 ;;;;;
 ;;;;; Functions with purely malloc'ed GC.
 
@@ -12,7 +12,7 @@
 
 (define-c-macro %function-epilogue (fi-sym)
   (with (fi (get-funinfo-by-sym fi-sym)
-    	 num-vars (length (funinfo-env fi)))
+    	 num-vars (length (funinfo-vars fi)))
     `(,@(& (< 0 num-vars)
 	  	   `(,(c-line "tregc_pop ()")))
       (%function-return ,fi-sym))))

@@ -1,7 +1,7 @@
 ;;;;; tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun funinfo-var-ghost (fi var)
-  (? (funinfo-in-args-or-env? (funinfo-parent fi) var)
+  (? (funinfo-arg-or-var? (funinfo-parent fi) var)
      (funinfo-ghost fi)
 	 (funinfo-var-ghost (funinfo-parent fi) var)))
 
@@ -35,8 +35,8 @@
     (| (& (transpiler-stack-locals? *current-transpiler*)
           (| (& (transpiler-arguments-on-stack? *current-transpiler*)
                 (funinfo-arg? fi x))
-             (funinfo-in-env? fi x)))
-       (funinfo-in-args-or-env? fi x))
+             (funinfo-var? fi x)))
+       (funinfo-arg-or-var? fi x))
       nil
 
     (link-funinfos-make-lexicals fi x)))

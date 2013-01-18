@@ -35,7 +35,7 @@
     `(,(code-char 10)
       "/*" ,*c-newline*
       "  args:     " ,@(symbols-comment (funinfo-args fi)) ,*c-newline*
-      "  env:      " ,@(symbols-comment (funinfo-env fi)) ,*c-newline*
+      "  env:      " ,@(symbols-comment (funinfo-vars fi)) ,*c-newline*
       "  lexical:  " ,(symbol-name (funinfo-lexical fi)) ,*c-newline*
       "  lexicals: " ,@(symbols-comment (funinfo-lexicals fi)) ,*c-newline*
       "*/" ,*c-newline*

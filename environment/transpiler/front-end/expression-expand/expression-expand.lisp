@@ -39,9 +39,9 @@
 (defun expex-make-%setq (ex plc val)
   (expex-guest-filter-setter ex `(%setq ,plc ,(peel-identity val))))
 
-(defun expex-funinfo-env-add ()
+(defun expex-funinfo-var-add ()
   (aprog1 (expex-sym)
-    (funinfo-env-add *expex-funinfo* !)))
+    (funinfo-var-add *expex-funinfo* !)))
 
 (defun expex-warn (x)
   (& *expex-warn?*
@@ -61,7 +61,7 @@
   (| (& (expex-move-lexicals? ex)
         (atom x)
         (not (eq '~%ret x))
-        (funinfo-in-parent-env? *expex-funinfo* x)
+        (funinfo-parent-var? *expex-funinfo* x)
         (not (funinfo-toplevel-var? *expex-funinfo* x)))
      (not (| (atom x)
              (static-symbol-function? x)
@@ -114,12 +114,12 @@
 
 (defun expex-move-arg-vm-scope (ex x)
   (!? (%%vm-scope-body x)
-      (let s (expex-funinfo-env-add)
+      (let s (expex-funinfo-var-add)
         (cons (expex-body ex ! s) s))
 	  (cons nil nil)))
 
 (defun expex-move-arg-std (ex x)
-  (with (s                (expex-funinfo-env-add)
+  (with (s                (expex-funinfo-var-add)
          (moved new-expr) (expex-expr ex x))
     (& (lambda-expression-needs-cps? x)
        (transpiler-add-cps-function *current-transpiler* s))
@@ -130,7 +130,7 @@
           s)))
 
 (defun expex-move-arg-atom (ex x)
-  (let s (expex-funinfo-env-add)
+  (let s (expex-funinfo-var-add)
     (cons (expex-make-%setq ex s x) s)))
 
 (defun expex-move-arg (ex x)
@@ -171,7 +171,7 @@
 				         ,@(expex-body ex (lambda-body x))))))))
 
 (defun expex-var (x)
-  (funinfo-env-add *expex-funinfo* .x.)
+  (funinfo-var-add *expex-funinfo* .x.)
   (values nil nil))
 
 (defun expex-cps (x)

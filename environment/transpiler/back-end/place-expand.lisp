@@ -6,7 +6,7 @@
          ,var))
 
 (defun make-lexical-1 (fi var)
-  (? (funinfo-in-args-or-env? (funinfo-parent fi) var)
+  (? (funinfo-arg-or-var? (funinfo-parent fi) var)
 	 (make-lexical-place-expr fi var)
 	 (make-lexical-1 (funinfo-parent fi) var)))
 
@@ -53,10 +53,10 @@
     (& (transpiler-stack-locals? *current-transpiler*)
        (| (& (transpiler-arguments-on-stack? *current-transpiler*)
              (funinfo-arg? fi x))
-          (funinfo-in-env? fi x)))
+          (funinfo-var? fi x)))
        (place-expand-emit-stackplace fi x)
 
-    (funinfo-in-args-or-env? fi x)
+    (funinfo-arg-or-var? fi x)
       x
 
     (make-lexical fi x)))

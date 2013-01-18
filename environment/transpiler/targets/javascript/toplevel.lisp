@@ -23,7 +23,7 @@
   #'(()
        (filter [transpiler-generate-code tr `((%var ,_))]
 		       (remove-if [transpiler-emitted-decl? tr _]
-                          (funinfo-env (transpiler-global-funinfo tr))))))
+                          (funinfo-vars (transpiler-global-funinfo tr))))))
 
 (defun js-files-before-deps ()
   (+ `((t1 . ,*js-base*))

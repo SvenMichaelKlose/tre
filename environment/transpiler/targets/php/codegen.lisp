@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 ;;;; CODE GENERATION HELPERS
 
@@ -62,7 +62,7 @@
 (defun codegen-php-function (name x)
   (with (args (argument-expand-names 'unnamed-c-function (lambda-args x))
 		 fi (get-lambda-funinfo x)
-		 num-locals (length (funinfo-env fi))
+		 num-locals (length (funinfo-vars fi))
 	     compiled-name (compiled-function-name *current-transpiler* name))
     `(,(code-char 10)
 	  "function " ,compiled-name ,@(php-argument-list args)

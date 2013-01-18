@@ -6,10 +6,10 @@
                           :args argnames
                           :parent parent
                           :transpiler *current-transpiler*))
-    (funinfo-env-add fi '~%ret)
+    (funinfo-var-add fi '~%ret)
     ; XXX nicer when moved to place-assign/expand
     (& (transpiler-copy-arguments-to-stack? *current-transpiler*)
-       (funinfo-env-add-many fi argnames))
+       (funinfo-var-add-many fi argnames))
 	fi))
 
 ;;;; Inlining
@@ -23,7 +23,7 @@
 
 (defun lambda-call-embed-0 (fi args vals body)
   (with ((a v) (assoc-splice (argument-expand 'dummy-in-lambda-call-embed args vals)))
-    (funinfo-env-add-many fi a)
+    (funinfo-var-add-many fi a)
      (lambda-expand-tree fi (lambda-expand-make-inline-body a v body))))
 
 (defun lambda-call-embed (fi lambda-call)

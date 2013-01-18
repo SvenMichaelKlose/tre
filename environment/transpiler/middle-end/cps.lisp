@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2010–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2010–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun cps-tag-function-name (x xlats tag-xlats)
   (assoc-value (assoc-value x tag-xlats)
@@ -70,9 +70,9 @@
 ;         new-args (mapcar [? (transpiler-cps-function? *current-transpiler* _)
 ;                             (with-gensym (g arg v1 v2)
 ;                               (setq some-replaced? t)
-;                               (funinfo-env-add fi g)
-;                               (funinfo-env-add fi v1)
-;                               (funinfo-env-add fi v2)
+;                               (funinfo-var-add fi g)
+;                               (funinfo-var-add fi v1)
+;                               (funinfo-var-add fi v2)
 ;                               (append! replacements
 ;                                        `((%setq ,g ,(copy-lambda
 ;                                                         `#'((&rest ,arg)
@@ -121,7 +121,7 @@
 
 (defun cps-split-apply (fi x xlats)
   (with-gensym g
-    (funinfo-env-add fi g)
+    (funinfo-var-add fi g)
     `((%setq ,g (cons ,(cps-split-make-continuer fi x xlats)
                       ,@(cdr (%setq-value x.))))
       ,@(cps-split-funcall-0 fi 'cps-apply xlats (list g)))))
@@ -131,7 +131,7 @@
          tag-no-cps (make-compiler-tag)
          tag-end (make-compiler-tag))
     (with-gensym g
-      (funinfo-env-add fi g)
+      (funinfo-var-add fi g)
       `((%setq ,g (%defined? (%slot-value ,method tre-cps)))
         (%%vm-go-nil ,g ,tag-no-cps)
         (%%vm-go-nil (%slot-value ,method tre-cps) ,tag-no-cps)
@@ -257,7 +257,7 @@
         :body (with (body (cps-filter (lambda-body x))
                      xlats (cps-get-xlats body)
                      tag-xlats (cps-get-tag-xlats body))
-                (funinfo-env-add fi '~%cps-this)
+                (funinfo-var-add fi '~%cps-this)
                 `(,@(mapcar ^(%var ,_) (cdrlist xlats))
                   (%setq ~%cps-this this)
                   ,@(cps-make-functions (get-lambda-funinfo x) continuer body xlats tag-xlats)
@@ -290,7 +290,7 @@
          tag-end (make-compiler-tag)
          fi (transpiler-global-funinfo *current-transpiler*))
     (with-gensym g
-      (funinfo-env-add fi g)
+      (funinfo-var-add fi g)
       `((%setq ,g (%defined? (%slot-value ,constructor tre-cps)))
         (%%vm-go-nil ,g ,tag-no-cps)
         (%%vm-go-nil (%slot-value ,constructor tre-cps) ,tag-no-cps)

@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2009–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2009–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun unassigned-%stackarg? (x)
   (& (%stackarg? x) ..x))
@@ -18,7 +18,7 @@
 (defun place-assign-stackarg (x)
   (let fi (get-funinfo-by-sym .x.)
     (? (transpiler-arguments-on-stack? *current-transpiler*)
-       (+ (length (funinfo-env fi)) (- (length (funinfo-args fi)) (funinfo-arg-pos fi ..x.) 1))
+       (+ (length (funinfo-vars fi)) (- (length (funinfo-args fi)) (funinfo-arg-pos fi ..x.) 1))
        (error "cannot assign stack argument ~A" ..x.))))
 
 (define-tree-filter place-assign (x)

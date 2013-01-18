@@ -40,7 +40,7 @@
 (defun make-bytecode-function (fi x)
   `(,(funinfo-name fi)
     ,(funinfo-argdef fi)
-    ,(length (funinfo-env fi))
+    ,(length (funinfo-vars fi))
     ,@(translate-jumps (get-tag-indexes ...x) ...x)))
 
 (defun get-next-function (x)

@@ -3,7 +3,7 @@
 (defun opt-tailcall-fun-0 (fi args x name front-tag)
   (append (mapcan #'((arg val)
 					   (with-gensym g ; Avoid accidential GC.
-						 (funinfo-env-add fi g)
+						 (funinfo-var-add fi g)
 						 (funinfo-add-immutable fi g)
 					     `((%setq ,arg ,val)
 					       (%setq ,g ,arg))))
@@ -22,7 +22,7 @@
 
 (defun sets-non-local? (fi x)
   (& (%setq? x)
-     (not (funinfo-in-env? fi (%setq-place x)))))
+     (not (funinfo-var? fi (%setq-place x)))))
 
 (defun function-will-exit? (fi x)
   (?

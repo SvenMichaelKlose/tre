@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun codegen-copy-arguments-to-locals (fi)
   (& (transpiler-stack-locals? *current-transpiler*)
@@ -9,7 +9,7 @@
   (unless (transpiler-stack-locals? *current-transpiler*)
     (mapcan [unless (funinfo-arg? fi _)
 		      `((%var ,_))]
-	        (funinfo-env fi))))
+	        (funinfo-vars fi))))
 
 (defun funinfo-copiers-to-lexicals (fi)
   (let-when lexicals (funinfo-lexicals fi)

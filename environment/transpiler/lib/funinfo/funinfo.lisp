@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2006–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2006–2013 Sven Michael Klose <pixel@copei.de>
 
 (defvar *funinfo-sym-counter* 0)
 
@@ -19,8 +19,8 @@
   (args nil) ; Expanded argument definition.
 
   ; Lists of stack variables. The rest contains the parent environments.
-  (env nil)
-  (env-hash nil)
+  (vars nil)
+  (vars-hash nil)
   (used-env nil)
 
   ; List of variables defined outside the function.
@@ -50,19 +50,19 @@
 
 (def-funinfo copy-funinfo (funinfo)
   (make-funinfo
-      :parent parent
-      :name name
-      :sym sym
-      :args (copy-list args)
-      :env (copy-list env)
-      :env-hash (& env-hash (copy-hash-table env-hash))
-      :used-env (copy-list used-env)
-      :free-vars (copy-list free-vars)
-      :lexicals (copy-list lexicals)
-      :lexical lexical
-      :ghost ghost
+      :parent       parent
+      :name         name
+      :sym          sym
+      :args         (copy-list args)
+      :vars         (copy-list vars)
+      :vars-hash    (copy-hash-table vars-hash)
+      :used-env     (copy-list used-env)
+      :free-vars    (copy-list free-vars)
+      :lexicals     (copy-list lexicals)
+      :lexical      lexical
+      :ghost        ghost
       :local-function-args (copy-list local-function-args)
-      :immutables (copy-list immutables)
-      :num-tags num-tags
-      :globals (copy-list globals)
-      :needs-cps? needs-cps?))
+      :immutables   (copy-list immutables)
+      :num-tags     num-tags
+      :globals      (copy-list globals)
+      :needs-cps?   needs-cps?))

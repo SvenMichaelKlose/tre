@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2010–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2010–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun cblock-collect-ins (x fi)
   (dolist (cb x)
@@ -8,10 +8,10 @@
         (map [adjoin! _ ins]
              (let v (%setq-value i)
                (? (atom v)
-                  (& (funinfo-in-args-or-env? fi v)
+                  (& (funinfo-arg-or-var? fi v)
                      (list v))
                   (mapcan [& (atom _)
-                             (funinfo-in-args-or-env? fi _)
+                             (funinfo-arg-or-var? fi _)
                              (list _)]
                           .v)))))
       (append! (cblock-ins cb) ins))))
@@ -36,11 +36,11 @@
 
 (defun cblock-distribute-ins-and-outs (cb fi)
   (dolist (v (cblock-ins cb))
-    (& (funinfo-in-args-or-env? fi v)
+    (& (funinfo-arg-or-var? fi v)
        (cblock-distribute-var cb v)))
   (dolist (statement (cblock-code cb))
     (let v (%setq-place statement)
-      (& (funinfo-in-args-or-env? fi v)
+      (& (funinfo-arg-or-var? fi v)
          (cblock-distribute-var cb v)))))
 
 (defun cblocks-distribute-ins-and-outs (blks fi)

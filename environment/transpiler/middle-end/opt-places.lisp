@@ -1,8 +1,8 @@
-;;;;; tré – Copyright (c) 2009–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2009–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun opt-places-find-used-1 (x fi)
   (& (symbol? x)
-     (funinfo-in-env? fi x)
+     (funinfo-var? fi x)
      (funinfo-add-used-env fi x)))
 
 (metacode-walker opt-places-find-used-0 (x fi)
@@ -34,12 +34,12 @@
 
 (defun opt-places-used-env (fi)
   (+ (funinfo-lexicals fi)
-     (intersect (funinfo-env fi) (funinfo-used-env fi) :test #'eq)
+     (intersect (funinfo-vars fi) (funinfo-used-env fi) :test #'eq)
      (& (transpiler-copy-arguments-to-stack? *current-transpiler*)
         (funinfo-args fi))))
 
 (defun opt-places-correct-funinfo (fi)
-  (funinfo-env-set fi (move-~%ret-to-front (opt-places-used-env fi))))
+  (funinfo-vars-set fi (move-~%ret-to-front (opt-places-used-env fi))))
 
 (defun opt-places-remove-unused-body (x)
   (let fi (get-lambda-funinfo x)
