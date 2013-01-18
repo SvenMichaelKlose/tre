@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2006–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2006–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun compilable? (x)
   (| (function? x)
@@ -8,15 +8,11 @@
 	'(identity quote backquote quasiquote quasiquote-splice)
   `(def-head-predicate ,x))
 
-(defun function-ref-expr? (x)
+(defun static-symbol-function? (x)
   (& (cons? x)
      (eq 'FUNCTION x.)
-     (atom .x.)))
-
-(defun atom-function-expr? (x)
-  (& (cons? x)
-     (eq x. 'function)
      (atom .x.)
+     (not ..x)
      .x.))
 
 (defun named-lambda? (x)

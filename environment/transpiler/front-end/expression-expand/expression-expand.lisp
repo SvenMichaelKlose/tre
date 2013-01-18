@@ -64,7 +64,7 @@
         (funinfo-in-parent-env? *expex-funinfo* x)
         (not (funinfo-in-toplevel-env? *expex-funinfo* x)))
      (not (| (atom x)
-             (function-ref-expr? x)
+             (static-symbol-function? x)
              (in? x. '%%vm-go '%%vm-go-nil '%transpiler-native '%transpiler-string '%quote)))))
 
 ;; Check if arguments to a function should be expanded.
@@ -230,11 +230,11 @@
    	(? (has-return-value? last.)
 	   (append (butlast x)
 			   (? (%setq? last.)
-				  (? (eq s (cadr last.))
+				  (? (eq s (%setq-place last.)) ; ???
                      (expex-guest-filter-setter ex last.)
 				     (expex-copy-%setq ex last s))
 				  (expex-make-%setq ex s last.)))
-		x)))
+       x)))
 
 (defun expex-list (ex x)
   (mapcan [with ((moved new-expr) (expex-expr ex _))
@@ -248,6 +248,6 @@
 
 (defun expression-expand (ex x)
   (& x
-	 (with-temporary *current-expex* ex
-	   (with-temporary *expex-funinfo* (transpiler-global-funinfo *current-transpiler*)
-         (expex-body ex x)))))
+	 (with-temporaries (*current-expex* ex
+	                    *expex-funinfo* (transpiler-global-funinfo *current-transpiler*))
+         (expex-body ex x))))
