@@ -73,7 +73,7 @@
        (transpiler-delayed-var-inits tr))))
 
 (defun transpiler-import-from-expex (x)
-  (!? (atom-function-expr? x)
+  (!? (static-symbol-function? x)
       (? (funinfo-in-this-or-parent-env? *expex-funinfo* !)
 	     x
          (progn
