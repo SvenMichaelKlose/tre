@@ -1,9 +1,9 @@
-;;;;; tré – Copyright (c) 2010–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2010–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun translate-function-name (funinf x)
   (? (& (transpiler-defined-function *current-transpiler* x)
 	    (| (not funinf)
-	       (not (funinfo-in-env-or-lexical? funinf x))))
+	       (not (funinfo-var-or-lexical? funinf x))))
      (compiled-function-name *current-transpiler* x)
      x))
 

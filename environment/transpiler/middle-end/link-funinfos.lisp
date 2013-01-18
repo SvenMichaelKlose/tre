@@ -22,7 +22,7 @@
     (| (not x)
        (number? x)
        (string? x)
-       (not (funinfo-in-env-or-lexical? fi x))
+       (not (funinfo-var-or-lexical? fi x))
        (funinfo-toplevel-var? fi x)
        (& (transpiler-stack-locals? *current-transpiler*)
           (eq x (funinfo-lexical fi))))

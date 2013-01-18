@@ -309,7 +309,7 @@
 
 (defun transpiler-defined-symbol? (x)
   (let tr *current-transpiler*
-    (| (funinfo-in-env-or-lexical? *expex-funinfo* x)
+    (| (funinfo-var-or-lexical? *expex-funinfo* x)
        (function? x)
        (keyword? x)
        (member x (transpiler-predefined-symbols tr) :test #'eq)

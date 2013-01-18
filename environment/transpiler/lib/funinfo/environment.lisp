@@ -40,10 +40,10 @@
       (| (funinfo-in-args-or-env? ! x)
 	     (funinfo-in-parent-env? ! x))))
 
-(defun funinfo-in-env-or-lexical? (fi x)
+(defun funinfo-var-or-lexical? (fi x)
   (| (funinfo-in-args-or-env? fi x)
      (!? (funinfo-parent fi)
-         (funinfo-in-env-or-lexical? ! x))))
+         (funinfo-var-or-lexical? ! x))))
 
 (defun funinfo-toplevel-var? (fi x)
   (!? (funinfo-parent fi)
@@ -127,6 +127,6 @@
   (adjoin! x (funinfo-immutables fi) :test #'eq))
 
 (defun funinfo-global-variable? (fi x)
-  (& (not (funinfo-in-env-or-lexical? fi x))
+  (& (not (funinfo-var-or-lexical? fi x))
      (| (transpiler-defined-variable *current-transpiler* x)
         (transpiler-host-variable? *current-transpiler* x))))

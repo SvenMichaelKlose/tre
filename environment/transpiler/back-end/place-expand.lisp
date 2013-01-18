@@ -36,7 +36,7 @@
        (number? x)
        (string? x)
        (not (transpiler-lambda-export? *current-transpiler*))
-       (not (funinfo-in-env-or-lexical? fi x))
+       (not (funinfo-var-or-lexical? fi x))
        (funinfo-toplevel-var? fi x))
       x
 

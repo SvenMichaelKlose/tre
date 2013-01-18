@@ -9,6 +9,6 @@
 	 (list x)
      (alet (car (%setq-value x))
 	   (?
-	     (function-expr? !)           (%setq-make-call-to-local-function x)
-		 (expex-in-env-or-lexical? !) (%setq-make-call-to-local-function x)
+	     (function-expr? !)        (%setq-make-call-to-local-function x)
+		 (expex-var-or-lexical? !) (%setq-make-call-to-local-function x)
 	  	 (list x)))))
