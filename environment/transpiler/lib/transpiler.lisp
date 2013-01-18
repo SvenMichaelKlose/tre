@@ -246,7 +246,6 @@
 (transpiler-getter imported-variable? (& (transpiler-import-from-environment? tr)
                                          (transpiler-host-variable? tr x)))
 
-
 (defun transpiler-add-defined-function (tr name args body)
   (= (href (transpiler-defined-functions-hash tr) name) t)
   (transpiler-add-function-args tr name args)
@@ -310,7 +309,7 @@
 
 (defun transpiler-defined-symbol? (x)
   (let tr *current-transpiler*
-    (| (funinfo-in-this-or-parent-env? *expex-funinfo* x)
+    (| (funinfo-in-env-or-lexical? *expex-funinfo* x)
        (function? x)
        (keyword? x)
        (member x (transpiler-predefined-symbols tr) :test #'eq)

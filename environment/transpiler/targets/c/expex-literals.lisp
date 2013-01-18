@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2009–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2009–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun c-make-decl (name)
   (format nil "treptr ~A;~%" (transpiler-symbol-string *current-transpiler* name)))
@@ -32,11 +32,11 @@
 
 (defun c-expex-argument-filter (x)
   (?
-	(cons? x) (transpiler-import-from-expex x)
+	(cons? x)      (transpiler-import-from-expex x)
     (character? x) (c-compiled-char x)
-    (number? x) (c-compiled-number x)
-    (string? x) (c-compiled-string x)
-	(funinfo-in-this-or-parent-env? *expex-funinfo* x) x
+    (number? x)    (c-compiled-number x)
+    (string? x)    (c-compiled-string x)
+	(funinfo-in-env-or-lexical? *expex-funinfo* x) x
 	(expex-funinfo-defined-variable? x) `(treatom_get_value ,(c-compiled-symbol x))
 	x))
 

@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun make-lexical-place-expr (fi var)
   `(%vec ,(funinfo-ghost fi)
@@ -36,7 +36,7 @@
        (number? x)
        (string? x)
        (not (transpiler-lambda-export? *current-transpiler*))
-       (not (funinfo-in-this-or-parent-env? fi x))
+       (not (funinfo-in-env-or-lexical? fi x))
        (funinfo-in-toplevel-env? fi x))
       x
 

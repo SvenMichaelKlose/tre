@@ -35,28 +35,22 @@
   (| (funinfo-arg? fi x)
      (funinfo-in-env? fi x)))
 
-(defun funinfo-in-parent-env? (fi var)
+(defun funinfo-in-parent-env? (fi x)
   (!? (funinfo-parent fi)
-      (| (funinfo-in-args-or-env? ! var)
-	     (funinfo-in-parent-env? ! var))))
+      (| (funinfo-in-args-or-env? ! x)
+	     (funinfo-in-parent-env? ! x))))
 
-(defun funinfo-in-this-or-parent-env? (fi var)
-  (| (funinfo-in-args-or-env? fi var)
+(defun funinfo-in-env-or-lexical? (fi x)
+  (| (funinfo-in-args-or-env? fi x)
      (!? (funinfo-parent fi)
-         (funinfo-in-this-or-parent-env? ! var))))
+         (funinfo-in-env-or-lexical? ! x))))
 
-(defun funinfo-in-env-or-lexical? (fi var)
-  (& (funinfo-parent fi)
-     (| (funinfo-in-args-or-env? fi var)
-	    (awhen (funinfo-parent fi)
-          (funinfo-in-env-or-lexical? ! var)))))
-
-(defun funinfo-in-toplevel-env? (fi var)
+(defun funinfo-in-toplevel-env? (fi x)
   (& (unless (& (funinfo-parent fi)
-                (funinfo-in-args-or-env? fi var))
+                (funinfo-in-args-or-env? fi x))
        (!? (funinfo-parent fi)
-           (funinfo-in-toplevel-env? ! var)
-           (funinfo-in-args-or-env? fi var)))))
+           (funinfo-in-toplevel-env? ! x)
+           (funinfo-in-args-or-env? fi x)))))
 
 
 ;;;; ENVIRONMENT
@@ -132,3 +126,8 @@
 
 (defun funinfo-add-immutable (fi x)
   (adjoin! x (funinfo-immutables fi) :test #'eq))
+
+(defun funinfo-global-variable? (fi x)
+  (& (not (funinfo-in-env-or-lexical? fi x))
+     (| (transpiler-defined-variable *current-transpiler* x)
+        (transpiler-host-variable? *current-transpiler* x))))

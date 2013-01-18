@@ -6,5 +6,5 @@
   (acons! fun-name args (funinfo-local-function-args fi)))
 
 (defun funinfo-get-local-function-args (fi fun-name)
-  (awhen (funinfo-in-this-or-parent-env? fi fun-name)
+  (awhen (funinfo-in-env-or-lexical? fi fun-name)
     (assoc-value fun-name (funinfo-local-function-args !) :test #'eq)))

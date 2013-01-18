@@ -120,14 +120,14 @@
 
 (defun expex-move-arg-std (ex x)
   (with (s                (expex-funinfo-env-add)
-    	 (moved new-expr) (expex-expr ex x))
-      (& (lambda-expression-needs-cps? x)
-         (transpiler-add-cps-function *current-transpiler* s))
-      (cons (append moved
-		    		(? (has-return-value? new-expr.)
-		        	   (expex-make-%setq ex s new-expr.)
-			    	   new-expr))
-  	        s)))
+         (moved new-expr) (expex-expr ex x))
+    (& (lambda-expression-needs-cps? x)
+       (transpiler-add-cps-function *current-transpiler* s))
+    (cons (+ moved
+             (? (has-return-value? new-expr.)
+                (expex-make-%setq ex s new-expr.)
+                new-expr))
+          s)))
 
 (defun expex-move-arg-atom (ex x)
   (let s (expex-funinfo-env-add)
@@ -143,7 +143,7 @@
 
 (defun expex-filter-and-move-args (ex x)
   (with ((moved new-expr) (assoc-splice (filter [expex-move-arg ex _] (expex-guest-filter-arguments ex x))))
-    (values (apply #'append moved) new-expr)))
+    (values (apply #'+ moved) new-expr)))
 
 (defun expex-move-slot-value (ex x)
   (with ((moved new-expr) (expex-filter-and-move-args ex (list .x.)))
@@ -221,24 +221,27 @@
   (| (& (metacode-expression-only x) (list x))
      (expex-make-%setq ex '~%ret x)))
 
-(defun expex-copy-%setq (ex x s)
+(defun expex-force-copying-assignment (ex x s)
   `(,x.
-    ,@(expex-make-%setq ex s (cadr x.))))
+    ,@(expex-make-%setq ex s (%setq-place x.))))
+
+(defun expex-wanted-return-value? (s x)
+  (eq s (%setq-place x)))
 
 (defun expex-make-return-value (ex s x)
   (let last (last x)
-   	(? (has-return-value? last.)
-	   (append (butlast x)
-			   (? (%setq? last.)
-				  (? (eq s (%setq-place last.)) ; ???
-                     (expex-guest-filter-setter ex last.)
-				     (expex-copy-%setq ex last s))
-				  (expex-make-%setq ex s last.)))
+    (? (has-return-value? last.)
+       (+ (butlast x)
+          (? (%setq? last.)
+             (? (expex-wanted-return-value? s last.)
+                (expex-guest-filter-setter ex last.)
+                (expex-force-copying-assignment ex last s))
+             (expex-make-%setq ex s last.)))
        x)))
 
 (defun expex-list (ex x)
   (mapcan [with ((moved new-expr) (expex-expr ex _))
-            (append moved (mapcan [expex-force-%setq ex _] new-expr))]
+            (+ moved (mapcan [expex-force-%setq ex _] new-expr))]
           x))
 
 (defun expex-body (ex x &optional (s '~%ret))
