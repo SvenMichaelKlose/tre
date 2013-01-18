@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2009–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2009–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun %setq-make-call-to-local-function (x)
   (with-%setq place value x
@@ -9,6 +9,6 @@
 	 (list x)
      (alet (car (%setq-value x))
 	   (?
-	     (function-expr? !) (%setq-make-call-to-local-function x)
-		 (expex-in-env? !) (%setq-make-call-to-local-function x)
+	     (function-expr? !)           (%setq-make-call-to-local-function x)
+		 (expex-in-env-or-lexical? !) (%setq-make-call-to-local-function x)
 	  	 (list x)))))

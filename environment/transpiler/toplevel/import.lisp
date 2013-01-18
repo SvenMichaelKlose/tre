@@ -74,7 +74,7 @@
 
 (defun transpiler-import-from-expex (x)
   (!? (static-symbol-function? x)
-      (? (funinfo-in-this-or-parent-env? *expex-funinfo* !)
+      (? (funinfo-in-env-or-lexical? *expex-funinfo* !)
 	     x
          (progn
 	       (transpiler-add-wanted-function *current-transpiler* !)
