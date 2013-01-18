@@ -46,11 +46,10 @@
          (funinfo-in-env-or-lexical? ! x))))
 
 (defun funinfo-in-toplevel-env? (fi x)
-  (& (unless (& (funinfo-parent fi)
-                (funinfo-in-args-or-env? fi x))
-       (!? (funinfo-parent fi)
-           (funinfo-in-toplevel-env? ! x)
-           (funinfo-in-args-or-env? fi x)))))
+  (!? (funinfo-parent fi)
+      (& (not (funinfo-in-args-or-env? fi x))
+         (funinfo-in-toplevel-env? ! x))
+      (funinfo-in-args-or-env? fi x)))
 
 
 ;;;; ENVIRONMENT
