@@ -36,26 +36,23 @@
      (funinfo-in-env? fi x)))
 
 (defun funinfo-in-parent-env? (fi var)
-  (& fi
-     (awhen (funinfo-parent fi)
-       (| (funinfo-in-args-or-env? ! var)
-	      (funinfo-in-parent-env? ! var)))))
+  (!? (funinfo-parent fi)
+      (| (funinfo-in-args-or-env? ! var)
+	     (funinfo-in-parent-env? ! var))))
 
 (defun funinfo-in-this-or-parent-env? (fi var)
-  (& fi
-     (| (funinfo-in-args-or-env? fi var)
-	    (awhen (funinfo-parent fi)
-	      (funinfo-in-this-or-parent-env? ! var)))))
+  (| (funinfo-in-args-or-env? fi var)
+     (!? (funinfo-parent fi)
+         (funinfo-in-this-or-parent-env? ! var))))
 
 (defun funinfo-in-env-or-lexical? (fi var)
-  (& fi (funinfo-parent fi)
+  (& (funinfo-parent fi)
      (| (funinfo-in-args-or-env? fi var)
 	    (awhen (funinfo-parent fi)
           (funinfo-in-env-or-lexical? ! var)))))
 
 (defun funinfo-in-toplevel-env? (fi var)
-  (& fi
-     (unless (& (funinfo-parent fi)
+  (& (unless (& (funinfo-parent fi)
                 (funinfo-in-args-or-env? fi var))
        (!? (funinfo-parent fi)
            (funinfo-in-toplevel-env? ! var)
@@ -127,9 +124,8 @@
      (+! (funinfo-used-env fi) (list x))))
 
 (defun funinfo-get-name (fi)
-  (& fi
-     (| (funinfo-name fi)
-	    (funinfo-get-name (funinfo-parent fi)))))
+  (| (funinfo-name fi)
+     (funinfo-get-name (funinfo-parent fi))))
 
 (defun funinfo-immutable? (fi x)
   (member x (funinfo-immutables fi) :test #'eq))
