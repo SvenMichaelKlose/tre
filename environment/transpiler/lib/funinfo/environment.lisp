@@ -64,7 +64,7 @@
 		      `((free-var-pos free-vars)
                 (lexical-pos lexicals))))
 
-(defun funinfosym-env-pos (fi-sym x)
+(defun funinfosym-var-pos (fi-sym x)
   (funinfo-var-pos (get-funinfo-by-sym fi-sym) x))
 
 (defun funinfosym-lexical-pos (fi-sym x)
@@ -105,13 +105,13 @@
   (unless (funinfo-var? fi x)
     (funinfo-var-add fi x)))
 
-(defun funinfo-used-env? (fi x)
-  (member x (funinfo-used-env fi) :test #'eq))
+(defun funinfo-used-var? (fi x)
+  (member x (funinfo-used-vars fi) :test #'eq))
 
-(defun funinfo-add-used-env (fi x)
+(defun funinfo-add-used-var (fi x)
   (& (funinfo-parent fi)
-     (not (funinfo-used-env? fi x))
-     (+! (funinfo-used-env fi) (list x))))
+     (not (funinfo-used-var? fi x))
+     (+! (funinfo-used-vars fi) (list x))))
 
 (defun funinfo-get-name (fi)
   (| (funinfo-name fi)

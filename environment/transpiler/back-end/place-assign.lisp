@@ -25,7 +25,7 @@
   (| (%quote? x)
      (%transpiler-native? x)) x
   (unassigned-%stackarg? x)    `(%stack ,(place-assign-stackarg x))
-  (unassigned-%stack? x)       `(%stack ,(| (funinfosym-env-pos .x. ..x.)
+  (unassigned-%stack? x)       `(%stack ,(| (funinfosym-var-pos .x. ..x.)
                                             (place-assign-stackarg x)))
   (unassigned-%vec? x)         `(%vec ,(place-assign .x.)
 		                              ,(| (funinfosym-lexical-pos ..x. ...x.)

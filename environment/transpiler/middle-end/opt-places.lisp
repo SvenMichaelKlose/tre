@@ -3,12 +3,12 @@
 (defun opt-places-find-used-1 (x fi)
   (& (symbol? x)
      (funinfo-var? fi x)
-     (funinfo-add-used-env fi x)))
+     (funinfo-add-used-var fi x)))
 
 (metacode-walker opt-places-find-used-0 (x fi)
   :if-named-function (let fi (get-lambda-funinfo x.)
                        (!? (funinfo-lexical fi)
-                           (funinfo-add-used-env fi !))
+                           (funinfo-add-used-var fi !))
                        (opt-places-find-used-0 (lambda-body x.) fi))
   :if-go-nil (opt-places-find-used-1 .x. fi)
   :if-setq (with (x x.
@@ -19,7 +19,7 @@
                (symbol? v) (opt-places-find-used-1 v fi)
                (lambda? v) (copy-lambda v :body (let fi (get-lambda-funinfo v)
                                                   (!? (funinfo-lexical fi)
-                                                      (funinfo-add-used-env fi !))
+                                                      (funinfo-add-used-var fi !))
                                                   (opt-places-find-used-0 (lambda-body v) fi)))
                (& (cons? v)
                   (dolist (i v)
@@ -32,14 +32,14 @@
 (defun move-~%ret-to-front (x)
   (cons '~%ret (remove '~%ret x :test #'eq)))
 
-(defun opt-places-used-env (fi)
+(defun opt-places-used-vars (fi)
   (+ (funinfo-lexicals fi)
-     (intersect (funinfo-vars fi) (funinfo-used-env fi) :test #'eq)
+     (intersect (funinfo-vars fi) (funinfo-used-vars fi) :test #'eq)
      (& (transpiler-copy-arguments-to-stack? *current-transpiler*)
         (funinfo-args fi))))
 
 (defun opt-places-correct-funinfo (fi)
-  (funinfo-vars-set fi (move-~%ret-to-front (opt-places-used-env fi))))
+  (funinfo-vars-set fi (move-~%ret-to-front (opt-places-used-vars fi))))
 
 (defun opt-places-remove-unused-body (x)
   (let fi (get-lambda-funinfo x)
