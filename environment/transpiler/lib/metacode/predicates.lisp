@@ -1,4 +1,4 @@
-;;;; tré – Copyright (c) 2006–2012 Sven Michael Klose <pixel@copei.de>
+;;;; tré – Copyright (c) 2006–2013 Sven Michael Klose <pixel@copei.de>
 
 (mapcar-macro x
 	'(%quote %new
@@ -95,3 +95,23 @@
 (defun lambda-expression-needs-cps? (x)
   (& (lambda-expr? x)
      (funinfo-needs-cps? (get-lambda-funinfo x))))
+
+(defun named-lambda? (x)
+  (& (function-expr? x)
+     ..x))
+
+(defun vec-function-expr? (x)
+  (& (cons? x)
+     (eq x. 'function)
+     (%vec? .x.)
+     .x.))
+
+(defun metacode-expression? (x)
+  (| (atom x)
+     (%setq? x)
+     (vm-jump? x)
+     (%var? x)
+     (named-lambda? x)))
+
+(defun metacode-expression-only (x)
+  (& (metacode-expression? x) x))
