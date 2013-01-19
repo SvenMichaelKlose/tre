@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2006,2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2006,2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defvar *default-hash-size* 2039)
 
@@ -65,11 +65,12 @@
     (apply #'nconc keys)))
 
 (defun copy-hash-table (h)
-  (declare type hash-table h)
-  (let n (make-hash-table :test (%hash-table-test h)
-                          :size (%hash-table-size h))
-    (dolist (i (hashkeys h) n)
-      (= (href n i) (href h i)))))
+  (when h
+    (declare type hash-table h)
+    (let n (make-hash-table :test (%hash-table-test h)
+                            :size (%hash-table-size h))
+      (dolist (i (hashkeys h) n)
+        (= (href n i) (href h i))))))
 
 (defun hmerge (&rest lst)
   (let l (remove-if #'not lst)
