@@ -6,7 +6,12 @@
 
 (defun static-symbol-function? (x)
   (& (cons? x)
-     (eq 'FUNCTION x.)
+     (eq 'function x.)
      (atom .x.)
      (not ..x)
      .x.))
+
+(defun simple-argument-list? (x)
+  (? x
+     (not (some [| (cons? _) (argument-keyword? _)] x))
+	 t))
