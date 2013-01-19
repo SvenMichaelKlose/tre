@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2008,2011–2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2008,2011–2013 Sven Michael Klose <pixel@copei.de>
  */
 
 #ifndef TRE_NUMBERS_H
@@ -24,7 +24,7 @@ extern void * tre_numbers_free;
 extern struct tre_number tre_numbers[NUM_NUMBERS];
 
 /* Check if string contains a number. */
-extern bool trenumber_is_value (char *) __attribute__((pure));
+extern bool trenumber_is_value (char *);
 
 extern ulong trenumber_alloc (double value, int type);
 extern void trenumber_free (treptr);
