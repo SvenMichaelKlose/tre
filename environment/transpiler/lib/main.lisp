@@ -10,9 +10,6 @@
 (env-load "transpiler/lib/funinfo/local-function-args.lisp")
 (env-load "transpiler/lib/funinfo/debug.lisp")
 
-(env-load "transpiler/lib/c-newlines.lisp")
-(env-load "transpiler/lib/c-literal-string.lisp")
-(env-load "transpiler/lib/string-concat-successive-literals.lisp")
 (env-load "transpiler/lib/predicates.lisp")
 (env-load "transpiler/lib/tag.lisp")
 (env-load "transpiler/lib/with-lambda-call.lisp")

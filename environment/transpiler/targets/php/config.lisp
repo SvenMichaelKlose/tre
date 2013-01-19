@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defvar *php-version* 503)
 
@@ -18,7 +18,7 @@
                             (& (>= _ #\A) (<= _ #\Z))
                             (& (>= _ #\0) (<= _ #\9))
                             (in=? _ #\_ #\. #\#)]
-      :gen-string [c-literal-string _ #\" (list #\$)]
+      :gen-string [literal-string _ #\" (list #\$)]
       :lambda-export? t
       :stack-locals? nil
       :rename-all-args? t

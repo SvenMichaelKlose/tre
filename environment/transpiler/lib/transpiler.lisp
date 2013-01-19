@@ -59,7 +59,7 @@
   (profile-num-calls? nil)
 
   ; Generator for literal strings.
-  (gen-string #'c-literal-string)
+  (gen-string #'literal-string)
 
   ; Tells if functions must be moved out of functions.
   (lambda-export? nil)

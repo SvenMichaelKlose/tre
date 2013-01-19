@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (env-load "stage4/unless.lisp")
 (env-load "stage4/make-keyword.lisp")
@@ -34,6 +34,8 @@
 (env-load "stage4/let-when.lisp")
 (env-load "stage4/list-aliases.lisp")
 (env-load "stage4/list-array.lisp" 'c)
+(env-load "stage4/literal-string.lisp")
+(env-load "stage4/make-c-newlines.lisp")
 (env-load "stage4/mapatree.lisp")
 (env-load "stage4/maptree.lisp")
 (env-load "stage4/mapped-macro.lisp")
