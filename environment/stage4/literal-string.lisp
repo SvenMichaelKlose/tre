@@ -4,3 +4,5 @@
   (string-concat (string quote-char)
 				 (make-c-newlines (escape-string x quote-char chars-to-escape))
 				 (string quote-char)))
+
+(define-filter literal-strings #'literal-string)
