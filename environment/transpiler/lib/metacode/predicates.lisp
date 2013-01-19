@@ -72,14 +72,6 @@
   (& (%setq? x)
      (lambda? (%setq-value x))))
 
-(defun %setq-named-lambda? (x)
-  (& (%setq? x)
-     (named-lambda? (%setq-value x))))
-
-(defun %setq-named-function? (x)
-  (& (%setq? x)
-     (named-lambda? (%setq-value x))))
-
 (defun %setq-funcall? (x)
   (? (%setq? x)
      (cons? (%setq-value x))))

@@ -1,15 +1,13 @@
 ;;;;; tré – Copyright (c) 2010–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun function-copier (x statement)
-  `(copy-lambda (car ,x) :body ,statement))
-
-(defun metacode-walker-copier-setq (x statement)
-   (list 'backquote `((%setq ,(list 'quasiquote `(%setq-place (car ,x)))
-                             ,(list 'quasiquote `(let ,x (%setq-value (car ,x))
-                                                   ,(function-copier x statement)))))))
+  `(copy-lambda ,x :body ,statement))
 
 (defun metacode-walker-copier (x statement)
    `(list ,(function-copier x statement)))
+
+(defun metacode-walker-copier-setq (x statement)
+   ``((%setq ,,`(%setq-place ,x) ,(function-copier `(%setq-value ,x) statement))))
 
 (defun metacode-statement? (x)
   (| (in? x. '%setq '%set-vec '%var '%function-prologue '%function-epilogue '%function-return '%%tag)
@@ -22,7 +20,6 @@
 					  	    	          (if-setq nil)
 					  	    	          (if-go nil)
 					  	    	          (if-go-nil nil)
-									      (if-function nil)
 									      (if-lambda nil)
 									      (if-named-function nil)
 									      (if-slot-value nil)
@@ -52,12 +49,11 @@
                   ,@(!? if-stack       `((%stack? ,v)       ,!))
                   ,@(!? if-vec         `((%vec? ,v)         ,!))
 
-                  ,@(alet (| if-named-function if-function `(,name (lambda-body ,v) ,@r))
-                      `((%setq-named-function? ,v) ,(metacode-walker-copier-setq x !)
-                        (named-lambda? ,v) ,(metacode-walker-copier x !)))
+                  ,@(alet (| if-named-function `(,name (lambda-body ,v) ,@r))
+                      `((named-lambda? ,v) ,(metacode-walker-copier v !)))
 
-                  ,@(alet (| if-lambda if-function `(,name (lambda-body ,v) ,@r))
-                      `((%setq-lambda? ,v) ,(metacode-walker-copier-setq x !)))
+                  ,@(alet (| if-lambda `(,name (lambda-body ,v) ,@r))
+                      `((%setq-lambda? ,v) ,(metacode-walker-copier-setq v !)))
 
                   (not (metacode-statement? ,v))
                     (& (print ,v)
