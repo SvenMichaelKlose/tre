@@ -17,12 +17,7 @@
           (copy-tree (cadr x.)))))
 
 (defun quote-literal (x)
-  (? (| (not x)
-        (number? x)
-        (string? x)
-        (array? x)
-        (hash-table? x)
-        (eq t x))
+  (? (constant-literal? x)
      x
      `(%quote ,x)))
 

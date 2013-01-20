@@ -15,3 +15,11 @@
   (? x
      (not (some [| (cons? _) (argument-keyword? _)] x))
 	 t))
+
+(defun constant-literal? (x)
+  (| (not x)
+     (eq t x))
+     (number? x)
+     (string? x)
+     (array? x)
+     (hash-table? x))
