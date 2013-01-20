@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (define-codegen-macro-definer define-bc-macro *bc-transpiler*)
 
@@ -13,13 +13,13 @@
 (define-bc-macro %function-prologue (fi-sym) '(%setq nil nil))
 (define-bc-macro %function-epilogue (fi-sym) '((%%vm-go nil) %%bc-return))
 
-(define-bc-macro %%funref (name fi-sym)
-  `(%funref ,name ,(codegen-funref-lexical fi-sym)))
+(define-bc-macro %%closure (name fi-sym)
+  `(%closure ,name ,(codegen-funref-lexical fi-sym)))
 
 (defun bc-make-value (x)
   (? (& (cons? x)
-        (not (%%funref? x)
-             (%funref? x)
+        (not (%%closure? x)
+             (%closure? x)
              (%stack? x)
              (%vec? x)
              (%quote? x)))

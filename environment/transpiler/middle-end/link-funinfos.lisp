@@ -61,7 +61,7 @@
         (%set-atom-fun? x))
      (%vec? (link-funinfos-0 fi (%setq-place x))))
                         (link-funinfos-setter fi x)
-  (%%funref? x)         (link-funinfos-0 fi ..x.)
+  (%%closure? x)        (link-funinfos-0 fi ..x.)
   (%setq-atom-value? x) (link-funinfos-0 fi ..x.)
   (%slot-value? x)      (link-funinfos-0 fi .x.)
   (%stackarg? x)        x)

@@ -5,7 +5,7 @@
 	  %%vm-scope %%vm-go %%vm-go-nil %%vm-call-nil
 	  %stack %stackarg %vec %set-vec %setq %tag %%tag
 	  %transpiler-native %transpiler-string
-	  %%funref %funref
+	  %%closure %closure
 	  %set-atom-fun
 	  %setq-atom-value
 	  %setq-atom-fun

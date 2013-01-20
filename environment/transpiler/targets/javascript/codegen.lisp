@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun js-call (x)
   `(,x. ,@(parenthized-comma-separated-list .x)))
@@ -232,11 +232,11 @@
 (define-js-macro %defined? (x)
   `(%transpiler-native "\"undefined\" != typeof " ,x))
 
-(define-js-macro %%funref (name fi-sym)
+(define-js-macro %%closure (name fi-sym)
   (let fi (get-funinfo-by-sym fi-sym)
     (? (funinfo-ghost fi)
 	   (!? (funinfo-lexical (funinfo-parent fi))
-  	  	   `(%funref ,name ,!)
+  	  	   `(%closure ,name ,!)
 		   (error "no lexical for ghost"))
 	   name)))
 

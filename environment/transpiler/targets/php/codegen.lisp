@@ -93,9 +93,7 @@
 (defun php-codegen-argument-filter (x)
   (php-dollarize x))
 
-;;;; FUNCTION REFERENCES
-
-(define-php-macro %%funref (name fi-sym)
+(define-php-macro %%closure (name fi-sym)
   (let fi (get-funinfo-by-sym fi-sym)
     (? (funinfo-ghost fi)
   	   `(%transpiler-native "new __funref("

@@ -69,7 +69,7 @@
       (transpiler-add-exported-closure *current-transpiler*
           `((defun ,exported-name ,(+ (make-lambda-funinfo fi-exported) argdef)
               ,@(lambda-body x)))))
-    `(%%funref ,exported-name ,(funinfo-sym fi-exported))))
+    `(%%closure ,exported-name ,(funinfo-sym fi-exported))))
 
 ;;;; Passthrough
 

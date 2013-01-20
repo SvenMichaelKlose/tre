@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -33,15 +33,15 @@
 #include <stdio.h>
 #include <ffi.h>
 
-#define FUNREF_FUNCTION(x)  CAR(CDR(x))
-#define FUNREF_LEXICALS(x)  CDR(CDR(x))
+#define CLOSURE_FUNCTION(x)  CAR(CDR(x))
+#define CLOSURE_LEXICALS(x)  CDR(CDR(x))
 
-treptr treatom_funref;
+treptr treatom_closure;
 
 bool
-trebuiltin_is_compiled_funref (treptr x)
+trebuiltin_is_compiled_closure (treptr x)
 {
-	return TREPTR_IS_CONS(x) && CAR(x) == treatom_funref;
+	return TREPTR_IS_CONS(x) && CAR(x) == treatom_closure;
 }
 
 treptr
@@ -128,9 +128,9 @@ trefuncall_compiled (treptr func, treptr args, bool do_eval)
 treptr
 trefuncall (treptr func, treptr args)
 {
-	if (trebuiltin_is_compiled_funref (func))
-		return trefuncall_compiled (TREATOM_FUN(FUNREF_FUNCTION(func)),
-		                            CONS(FUNREF_LEXICALS(func), args),
+	if (trebuiltin_is_compiled_closure (func))
+		return trefuncall_compiled (TREATOM_FUN(CLOSURE_FUNCTION(func)),
+		                            CONS(CLOSURE_LEXICALS(func), args),
                                     FALSE);
 	if (IS_COMPILED_FUN(func))
 		return trefuncall_compiled (func, args, FALSE);
@@ -146,6 +146,6 @@ trefuncall (treptr func, treptr args)
 void
 treapply_init ()
 {
-    treatom_funref = treatom_get ("%FUNREF", TRECONTEXT_PACKAGE());
-    EXPAND_UNIVERSE(treatom_funref);
+    treatom_closure = treatom_get ("%CLOSURE", TRECONTEXT_PACKAGE());
+    EXPAND_UNIVERSE(treatom_closure);
 }

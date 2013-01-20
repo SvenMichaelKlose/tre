@@ -45,7 +45,7 @@ treptr treptr_set_atom_fun;
 treptr treptr_cons;
 treptr treptr_quote;
 treptr treptr_apply;
-treptr treptr_funref;
+treptr treptr_closure;
 treptr treptr_quote;
 
 treptr trecode_get (treptr ** p);
@@ -184,12 +184,12 @@ trecode_get (treptr ** p)
     } else if (v == treptr_vec) {
         vec = trecode_get (&x);
         v = _TREVEC(vec, TRENUMBER_INT(*x++));
-    } else if (v == treptr_funref) {
+    } else if (v == treptr_closure) {
         fun = *x++;
         tregc_push (fun);
         lex = trecode_get (&x);
         tregc_push (lex);
-        v = CONS(treptr_funref, CONS(fun, lex));
+        v = CONS(treptr_closure, CONS(fun, lex));
         tregc_pop ();
         tregc_pop ();
     } else if (TREPTR_IS_VARIABLE(v))
@@ -284,8 +284,8 @@ trecode_init ()
     EXPAND_UNIVERSE(treptr_quote);
     treptr_apply = treatom_get ("APPLY", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treptr_apply);
-    treptr_funref = treatom_get ("%FUNREF", TRECONTEXT_PACKAGE());
-    EXPAND_UNIVERSE(treptr_funref);
+    treptr_closure = treatom_get ("%CLOSURE", TRECONTEXT_PACKAGE());
+    EXPAND_UNIVERSE(treptr_closure);
     treptr_quote = treatom_get ("%QUOTE", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treptr_quote);
 }

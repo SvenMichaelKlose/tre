@@ -46,6 +46,10 @@
           ,@(lambda-body x)
 	  "}" ,*c-newline*)))
 
+(define-c-macro %%closure (name fi-sym)
+  `("_trelist_get (" ,(c-compiled-symbol '%closure) ", "
+	    "_trelist_get (" ,(c-compiled-symbol name) "," ,(codegen-funref-lexical fi-sym) "))"))
+
 (defun %eq (&rest x)
   (apply #'eq x))
 
@@ -60,13 +64,6 @@
 
 (define-c-macro %function-prologue (fi-sym)
   (c-codegen-function-prologue-for-local-variables (get-funinfo-by-sym fi-sym)))
-
-;;;; FUNCTION REFERENCE
-
-;; Convert from lambda-expanded funref to one with lexical.
-(define-c-macro %%funref (name fi-sym)
-  `("_trelist_get (" ,(c-compiled-symbol '%funref) ", "
-	    "_trelist_get (" ,(c-compiled-symbol name) "," ,(codegen-funref-lexical fi-sym) "))"))
 
 ;;;; ASSIGNMENT
 
