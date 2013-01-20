@@ -73,7 +73,7 @@
                            #'reduce-tags)
                   _])
   (? *opt-peephole?*
-     (with-temporary *funinfo* (transpiler-global-funinfo *transpiler*)
-       (with-temporary *opt-peephole-body* statements
-         (repeat-while-changes #'rec statements)))
+     (with-temporaries (*funinfo* (transpiler-global-funinfo *transpiler*)
+                        *body*    statements)
+       (repeat-while-changes #'rec statements))
      statements)))

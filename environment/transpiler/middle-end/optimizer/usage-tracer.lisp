@@ -2,8 +2,8 @@
 
 (defun tag-code (tag)
   (| (member-if [& (number? _) (== _ tag)]
-                *opt-peephole-body*)
-     (error "tag ~A not found in body ~A" tag *opt-peephole-body*)))
+                *body*)
+     (error "tag ~A not found in body ~A" tag *body*)))
 
 (defun removable-place? (x)
   (alet *funinfo*

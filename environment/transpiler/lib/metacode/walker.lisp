@@ -1,5 +1,7 @@
 ;;;;; tré – Copyright (c) 2010–2013 Sven Michael Klose <pixel@copei.de>
 
+(defvar *body*)
+
 (defun function-copier (x statement)
   `(copy-lambda ,x :body ,statement))
 
