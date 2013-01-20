@@ -15,7 +15,8 @@
 
 (defvar *js-base*
 	,(list 'quote (+ (js-load-base "environment/transpiler/environment/"
-                                   "cps-disable.lisp")
+                                   "cps-disable.lisp"
+                                   "when-debug.lisp")
 	                 (js-load-base *js-env-path*
                                    "opt-inline.lisp"
 		                           "return-value.lisp"
