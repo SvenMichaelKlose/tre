@@ -1,7 +1,7 @@
-;;;;; tré – Copyright (c) 2009,2011–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2009,2011–2013 Sven Michael Klose <pixel@copei.de>
 
 (defvar *tre-revision*
-    ,(with-open-file in (open "_current-version" :direction 'input)
+    ,(with-open-file in (open "environment/_current-version" :direction 'input)
        (let l (string-list (read-line in))
          (list-string
            (alet (subseq l

@@ -1,7 +1,7 @@
 #!/bin/sh
 # tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
 
-svnversion -n >_current-version
+svnversion -n >environment/_current-version
 
 ARGS="$2 $3 $4 $5 $6 $7 $8 $9"
 
@@ -104,7 +104,7 @@ echo "Library flags: $LIBFLAGS"
 basic_clean ()
 {
 	echo "Cleaning..."
-	rm -f *.core interpreter/$COMPILED_ENV tre tmp.c __alien.tmp
+	rm -f *.core interpreter/$COMPILED_ENV tre tmp.c __alien.tmp environemnt/_current-version
 	rm -rf obj
     rm -f examples/js/hello-world.js
 }
