@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2010,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2010,2012–2013 Sven Michael Klose <pixel@copei.de>
 
 (defconstant *alien-xml-tmp* "__alien.tmp")
 (defconstant *gccxml-path* "/usr/bin/gccxml")
@@ -9,7 +9,7 @@
 (defun alien-import-get-type-desc (hash desc)
   (href hash (lml-get-attribute desc :type)))
 
-(defun alien-import-print-type (data-type name &key :first t)
+(defun alien-import-print-type (data-type name &key (first t))
   (| first (format t ", "))
   (format t "~A" (force-string data-type))
   (awhen name

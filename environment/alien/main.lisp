@@ -9,4 +9,4 @@
 (env-load "alien/alien.lisp" 'c)
 (env-load "alien/exec.lisp" 'c)
 (env-load "alien/unix.lisp" 'c)
-;(env-load "alien/import.lisp" 'c)
+(env-load "alien/import.lisp" 'c)
