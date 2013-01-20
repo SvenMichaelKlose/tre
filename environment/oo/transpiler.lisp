@@ -1,7 +1,7 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun ignore-body-doc (body)
-  (? (& (not (transpiler-assert? *current-transpiler*))
+  (? (& (not (transpiler-assert? *transpiler*))
 	    (string? body.)
 	    .body)
 	 .body
@@ -12,7 +12,7 @@
 (defun transpiler_defclass (constructor-maker class-name args &rest body)
   (with (cname (? (cons? class-name) class-name. class-name)
 		 bases (& (cons? class-name) .class-name)
-		 classes (transpiler-thisify-classes *current-transpiler*))
+		 classes (transpiler-thisify-classes *transpiler*))
 	(print-definition `(defclass ,class-name ,@(awhen args (list !))))
     (& (href classes cname)
 	   (warn "Class ~A already defined." cname))
@@ -29,7 +29,7 @@
 
 (defun transpiler_defmethod (class-name name args &rest body)
   (print-definition `(defmethod ,class-name ,name ,@(awhen args (list !))))
-  (!? (href (transpiler-thisify-classes *current-transpiler*) class-name)
+  (!? (href (transpiler-thisify-classes *transpiler*) class-name)
       (let code (list args (append (head-atoms body :but-last t)
                                    (tail-after-atoms body :keep-last t)))
         (? (assoc name (class-methods !))
@@ -42,7 +42,7 @@
 
 (defun transpiler_defmember (class-name &rest names)
   (print-definition `(defmember ,class-name ,@names))
-  (!? (href (transpiler-thisify-classes *current-transpiler*) class-name)
+  (!? (href (transpiler-thisify-classes *transpiler*) class-name)
       (append! (class-members !) (mapcar [list _ t] names))
       (error "class ~A is not defined." class-name))
   nil)

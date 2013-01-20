@@ -17,13 +17,13 @@
 
 (defun place-assign-stackarg (x)
   (let fi (get-funinfo-by-sym .x.)
-    (? (transpiler-arguments-on-stack? *current-transpiler*)
+    (? (transpiler-arguments-on-stack? *transpiler*)
        (+ (length (funinfo-vars fi)) (- (length (funinfo-args fi)) (funinfo-arg-pos fi ..x.) 1))
        (error "cannot assign stack argument ~A" ..x.))))
 
 (define-tree-filter place-assign (x)
   (| (%quote? x)
-     (%transpiler-native? x)) x
+     (%transpiler-native? x))  x
   (unassigned-%stackarg? x)    `(%stack ,(place-assign-stackarg x))
   (unassigned-%stack? x)       `(%stack ,(| (funinfosym-var-pos .x. ..x.)
                                             (place-assign-stackarg x)))

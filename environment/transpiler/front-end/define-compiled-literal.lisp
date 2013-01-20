@@ -1,10 +1,10 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defmacro define-compiled-literal (name (x table) &key maker init-maker decl-maker)
   "Define a collector of declarations and initializations for literals of a particular data type."
-  (let slot `(,($ 'transpiler-compiled- table 's) *current-transpiler*)
+  (let slot `(,($ 'transpiler-compiled- table 's) *transpiler*)
     `(defun ,name (,x)
-       (let tr *current-transpiler*
+       (let tr *transpiler*
          (| (href ,slot ,x)
 	 	    (let n ,maker
 	          ,@(& decl-maker

@@ -1,12 +1,12 @@
 ;;;;; tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun codegen-copy-arguments-to-locals (fi)
-  (& (transpiler-stack-locals? *current-transpiler*)
+  (& (transpiler-stack-locals? *transpiler*)
      (mapcar ^(%setq ,(place-assign (place-expand-0 fi _)) ,_)
              (funinfo-local-args fi))))
 
 (defun funinfo-var-declarations (fi)
-  (unless (transpiler-stack-locals? *current-transpiler*)
+  (unless (transpiler-stack-locals? *transpiler*)
     (mapcan [unless (funinfo-arg? fi _)
 		      `((%var ,_))]
 	        (funinfo-vars fi))))
@@ -18,17 +18,17 @@
         ,@(awhen (funinfo-lexical? fi lex-sym)
 		    `((%set-vec ,lex-sym ,! ,lex-sym)))
         ,@(mapcan [& (funinfo-lexical? fi _)
-				     `((%setq ,_ ,(? (transpiler-arguments-on-stack? *current-transpiler*)
+				     `((%setq ,_ ,(? (transpiler-arguments-on-stack? *transpiler*)
                                      `(%stackarg ,(funinfo-sym fi) ,_)
                                      `(%transpiler-native ,_))))]
 				  (funinfo-args fi))))))
 
 (defun funinfo-function-prologue (fi body)
   (let fi-sym (funinfo-sym fi)
-    `(,@(& (transpiler-needs-var-declarations? *current-transpiler*)
+    `(,@(& (transpiler-needs-var-declarations? *transpiler*)
 	       (funinfo-var-declarations fi))
 	  (%function-prologue ,fi-sym)
-	  ,@(& (transpiler-lambda-export? *current-transpiler*)
+	  ,@(& (transpiler-lambda-export? *transpiler*)
 		   (funinfo-copiers-to-lexicals fi))
       ,@body
       (%function-epilogue ,fi-sym))))
@@ -51,4 +51,4 @@
     (make-function-prologues-fun x))
 
 (defun make-function-prologues (x)
-  (make-function-prologues-0 (transpiler-global-funinfo *current-transpiler*) x))
+  (make-function-prologues-0 (transpiler-global-funinfo *transpiler*) x))

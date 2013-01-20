@@ -1,6 +1,6 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
-(defvar *current-transpiler* nil)
+(defvar *transpiler* nil)
 (defvar *transpiler-log* nil)
 (defvar *transpiler-no-stream?* nil)
 
@@ -309,7 +309,7 @@
   (make-symbol (symbol-name x) (transpiler-current-package tr)))
 
 (defun transpiler-defined-symbol? (x)
-  (let tr *current-transpiler*
+  (let tr *transpiler*
     (| (funinfo-var-or-lexical? *expex-funinfo* x)
        (function? x)
        (keyword? x)
@@ -322,11 +322,11 @@
        (transpiler-late-symbol? tr x))))
 
 (defun in-cps-mode? ()
-  (& (transpiler-continuation-passing-style? *current-transpiler*)
+  (& (transpiler-continuation-passing-style? *transpiler*)
      (not *transpiler-except-cps?*)))
 
 (defun current-transpiler-function-arguments (x)
-  (alet *current-transpiler*
+  (alet *transpiler*
     (| (transpiler-function-arguments ! x)
        (transpiler-host-function-arguments ! x)
        (function-arguments (symbol-function x)))))

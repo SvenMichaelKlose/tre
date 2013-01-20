@@ -2,7 +2,7 @@
 
 (defun %setq-make-call-to-local-function (x)
   (with-%setq place value x
-    (expex-body *current-expex* (transpiler-frontend-1 *current-transpiler* `((%setq ,place (apply ,value. ,(compiled-list .value))))))))
+    (expex-body *current-expex* (transpiler-frontend-1 *transpiler* `((%setq ,place (apply ,value. ,(compiled-list .value))))))))
 
 (defun expex-compiled-funcall (x)
   (? (%setq-value-atom? x)

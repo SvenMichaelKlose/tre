@@ -26,7 +26,7 @@
                     (opt-places-find-used-1 i fi))))))
 
 (defun opt-places-find-used (x)
-  (opt-places-find-used-0 x (transpiler-global-funinfo *current-transpiler*))
+  (opt-places-find-used-0 x (transpiler-global-funinfo *transpiler*))
   x)
 
 (defun move-~%ret-to-front (x)
@@ -35,7 +35,7 @@
 (defun opt-places-used-vars (fi)
   (+ (funinfo-lexicals fi)
      (intersect (funinfo-vars fi) (funinfo-used-vars fi) :test #'eq)
-     (& (transpiler-copy-arguments-to-stack? *current-transpiler*)
+     (& (transpiler-copy-arguments-to-stack? *transpiler*)
         (funinfo-args fi))))
 
 (defun opt-places-correct-funinfo (fi)
@@ -56,5 +56,5 @@
       (opt-places-remove-unused-0 fi .x))))
 
 (defun opt-places-remove-unused (x)
-  (opt-places-remove-unused-0 (transpiler-global-funinfo *current-transpiler*) x)
+  (opt-places-remove-unused-0 (transpiler-global-funinfo *transpiler*) x)
   x)

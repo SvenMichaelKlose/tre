@@ -22,7 +22,7 @@
           (funinfo-needs-cps? (get-lambda-funinfo v))))))
 
 (defun cps-function? (n)
-  (let tr *current-transpiler*
+  (let tr *transpiler*
     (| (transpiler-cps-function? tr n)
        (& (transpiler-defined-function tr n)
           (not (transpiler-cps-exception? tr n))))))
@@ -56,10 +56,10 @@
 ;       (let n (car (%setq-value x))
 ;         (& (not (%transpiler-native? n))
 ;              (| (& (atom n)
-;                       (not (transpiler-defined-function *current-transpiler* n)
-;                            (transpiler-cps-function? *current-transpiler* n)
-;                            (expander-has-macro? (transpiler-codegen-expander *current-transpiler*)
-;                                                 (compiled-function-name *current-transpiler* n))))
+;                       (not (transpiler-defined-function *transpiler* n)
+;                            (transpiler-cps-function? *transpiler* n)
+;                            (expander-has-macro? (transpiler-codegen-expander *transpiler*)
+;                                                 (compiled-function-name *transpiler* n))))
 ;                  (& (%slot-value? n)
 ;                       (eq 'window .n.)
 ;                       (print n)))))))
@@ -67,7 +67,7 @@
 ;(defun cps-foureign-funcall (fi x)
 ;  (with (replacements nil
 ;         some-replaced? nil
-;         new-args (mapcar [? (transpiler-cps-function? *current-transpiler* _)
+;         new-args (mapcar [? (transpiler-cps-function? *transpiler* _)
 ;                             (with-gensym (g arg v1 v2)
 ;                               (setq some-replaced? t)
 ;                               (funinfo-var-add fi g)
@@ -288,7 +288,7 @@
   (with (constructor (cadr (%setq-value x))
          tag-no-cps (make-compiler-tag)
          tag-end (make-compiler-tag)
-         fi (transpiler-global-funinfo *current-transpiler*))
+         fi (transpiler-global-funinfo *transpiler*))
     (with-gensym g
       (funinfo-var-add fi g)
       `((%setq ,g (%defined? (%slot-value ,constructor tre-cps)))
@@ -303,7 +303,7 @@
 
 (defun cps-toplevel-funcall (x)
   `((%setq nil (,(car (%setq-value x))
-                ,(cps-make-dummy-continuer (%setq-place x) (transpiler-global-funinfo *current-transpiler*))
+                ,(cps-make-dummy-continuer (%setq-place x) (transpiler-global-funinfo *transpiler*))
                 ,@(cdr (%setq-value x))))))
 
 (defun cps-toplevel-methodcall (x)
@@ -326,7 +326,7 @@
   (cps-constructorcall? x) (cps-toplevel-constructorcall x)
   (cps-funcall? x) (cps-toplevel-funcall x)
   (cps-function-assignment? x) (cps-function-assignment x)
-  (cps-foureign-funcall? x) (cps-foureign-funcall (transpiler-global-funinfo *current-transpiler*) x))
+  (cps-foureign-funcall? x) (cps-foureign-funcall (transpiler-global-funinfo *transpiler*) x))
 
 (defun cps (x)
   (cps-toplevel x))

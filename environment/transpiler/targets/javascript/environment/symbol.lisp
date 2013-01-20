@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defvar *symbols* (%%%make-hash-table))
 
@@ -8,7 +8,7 @@
 ;;
 ;; It has a function field but that isn't used yet.
 (define-native-js-fun %symbol (name pkg)
-  (= this.__class ,(transpiler-obfuscated-symbol-string *current-transpiler* 'symbol)
+  (= this.__class ,(transpiler-obfuscated-symbol-string *transpiler* 'symbol)
      this.n name
      this.v this
      this.f nil

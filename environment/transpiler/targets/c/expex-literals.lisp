@@ -1,7 +1,7 @@
 ;;;;; tré – Copyright (c) 2009–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun c-make-decl (name)
-  (format nil "treptr ~A;~%" (transpiler-symbol-string *current-transpiler* name)))
+  (format nil "treptr ~A;~%" (transpiler-symbol-string *transpiler* name)))
 
 ;;;;; Make declarations, initialisations and references to literals.
 
@@ -41,6 +41,7 @@
 	x))
 
 (defun c-expex-filter (x)
-  (& (cons? x) (symbol? x.)
+  (& (cons? x)
+     (symbol? x.)
      (c-compiled-symbol x.))
   (transpiler-import-from-expex x))

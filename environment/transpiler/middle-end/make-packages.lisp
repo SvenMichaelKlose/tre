@@ -2,22 +2,22 @@
 
 (defun process-%%in-package (x)
   (?
-    (atom x) x
-    (eq '%quote x.) x
+    (| (atom x) 
+       (eq '%quote x.)) x
     (eq '%%in-package x.)
-      (& (= (transpiler-current-package *current-transpiler*) (& .x. (make-package (symbol-name .x.))))
+      (& (= (transpiler-current-package *transpiler*) (& .x. (make-package (symbol-name .x.))))
          nil)
     (progn
       (make-default-listprop x)
       (cons-r process-%%in-package x))))
 
 (defun make-packages-0 (x)
-  (let tr *current-transpiler*
+  (let tr *transpiler*
     (?
       (not x) x
       (& (symbol? x)
          (not (symbol-package x)))
-        (let packaged-symbol (transpiler-package-symbol tr x) ; XXX into own function
+        (let packaged-symbol (transpiler-package-symbol tr x)
           (? (transpiler-defined-function tr packaged-symbol)
              packaged-symbol
              x))
@@ -32,6 +32,6 @@
 
 (defun make-packages (x)
   (let processed (process-%%in-package x)
-    (? (transpiler-current-package *current-transpiler*)
+    (? (transpiler-current-package *transpiler*)
        (make-packages-0 processed)
        processed)))

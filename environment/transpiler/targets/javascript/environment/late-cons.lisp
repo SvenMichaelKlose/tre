@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun car (x) (& x x._))
 (defun cdr (x) (& x x.__))
@@ -35,4 +35,4 @@
 (defun cons? (x)
   (& (object? x)
      x.__class
-     (%%%== x.__class ,(transpiler-obfuscated-symbol-string *current-transpiler* 'cons))))
+     (%%%== x.__class ,(transpiler-obfuscated-symbol-string *transpiler* 'cons))))

@@ -77,10 +77,9 @@
       (? (funinfo-var-or-lexical? *expex-funinfo* !)
 	     x
          (progn
-	       (transpiler-add-wanted-function *current-transpiler* !)
-           (transpiler-macroexpand *current-transpiler* `(symbol-function (%quote ,!)))))
+	       (transpiler-add-wanted-function *transpiler* !)
+           (transpiler-macroexpand *transpiler* `(symbol-function (%quote ,!)))))
       x))
-;      (| (vec-function-expr? x) x)))
 
 (defun transpiler-import-universe (tr)
   (map [transpiler-add-wanted-function tr _] (reverse *defined-functions*)))

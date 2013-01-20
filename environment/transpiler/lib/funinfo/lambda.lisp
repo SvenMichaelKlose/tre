@@ -1,6 +1,6 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
-(defun make-lambda-funinfo (fi &optional (tr *current-transpiler*))
+(defun make-lambda-funinfo (fi &optional (tr *transpiler*))
   (& (href (transpiler-funinfos tr) fi)
 	 (error "funinfo already memorized"))
   (= (href (transpiler-funinfos tr) fi) t)
@@ -25,7 +25,7 @@
   `#'(,@(lambda-head-w/-missing-funinfo x fi)
 		  ,@(lambda-body x)))
 
-(defun get-funinfo-by-sym (x &optional (tr *current-transpiler*))
+(defun get-funinfo-by-sym (x &optional (tr *transpiler*))
   (href (transpiler-funinfos tr) x))
 
 (defun get-lambda-funinfo (x)

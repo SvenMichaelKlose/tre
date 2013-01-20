@@ -1,12 +1,12 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 ;;;;;
-;;;;; Functions with purely malloc'ed GC.
+;;;;; Environment without extra GC'ed stack.
 
 (defun c-codegen-function-prologue-for-local-variables (fi num-vars)
   `(,@(c-line "treptr _local_array = trearray_make (" num-vars ")")
     ,@(c-line "tregc_push (_local_array)")
     ,@(c-line "const treptr * _locals = (treptr *) TREATOM_DETAIL(_local_array)")
-	,@(& (transpiler-stack-locals? *current-transpiler*)
+	,@(& (transpiler-stack-locals? *transpiler*)
 	     (mapcar ^(%setq ,(place-assign (place-expand-0 fi _)) ,_)]
 	             (funinfo-local-args fi)))))
 

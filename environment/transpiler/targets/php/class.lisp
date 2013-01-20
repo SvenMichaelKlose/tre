@@ -1,7 +1,7 @@
-;;;;; Caroshi – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; Caroshi – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun php-make-constructor (cname bases args body)
-  (transpiler-add-defined-function *current-transpiler* cname args body)
+  (transpiler-add-defined-function *transpiler* cname args body)
   `(%setq __construct
       #'(,args
           ; Inject calls to base constructors.
@@ -22,7 +22,7 @@
   `(%setq (%transpiler-native ,x.)
           #'(,.x.
 	          (%thisify ,class-name
-		        (let ~%this ,(? (transpiler-continuation-passing-style? *current-transpiler*)
+		        (let ~%this ,(? (transpiler-continuation-passing-style? *transpiler*)
                                 '~%cps-this
                                 'this)
 	              ,@(| (ignore-body-doc ..x.) (list nil)))))))
@@ -39,13 +39,13 @@
             (reverse !))))
 
 (define-php-std-macro finalize-class (class-name)
-  (let classes (transpiler-thisify-classes *current-transpiler*)
+  (let classes (transpiler-thisify-classes *transpiler*)
     (!? (href classes class-name)
 	    `(progn
            (dont-obfuscate is_a)
 	       (defun ,($ class-name '?) (x)
 	         (& (object? x)
-	            (is_a x ,(transpiler-obfuscated-symbol-string *current-transpiler* class-name))
+	            (is_a x ,(transpiler-obfuscated-symbol-string *transpiler* class-name))
                 x))
            (%setq nil (%transpiler-native (%php-class-head ,class-name)))
 	       ,(assoc-value class-name *delayed-constructors*)

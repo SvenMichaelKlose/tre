@@ -125,5 +125,5 @@
 
 (defun funinfo-global-variable? (fi x)
   (& (not (funinfo-var-or-lexical? fi x))
-     (| (transpiler-defined-variable *current-transpiler* x)
-        (transpiler-host-variable? *current-transpiler* x))))
+     (| (transpiler-defined-variable *transpiler* x)
+        (transpiler-host-variable? *transpiler* x))))

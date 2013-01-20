@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun transpiler-translate-symbol (tr from to)
   (acons! from to (transpiler-symbol-translations tr)))
@@ -56,15 +56,9 @@
     	                         (convert-camel (string-list str) 0))))))))
 
 (defun transpiler-symbol-string-0 (tr s)
-;  (when (%%%eq false s)
-;    (invoke-debugger))
-;  (aprog1
   (!? (symbol-package s)
       (transpiler-symbol-string-r tr (make-symbol (string-concat (symbol-name !) ":" (symbol-name s))))
-      (transpiler-symbol-string-r tr s))
-;  (when (== "nil" !)
-;    (error "gen nil"))))
-)
+      (transpiler-symbol-string-r tr s)))
 
 (defun transpiler-dot-symbol-string (tr sl)
   (apply #'string-concat (pad (filter (fn transpiler-symbol-string-0 tr (make-symbol (list-string _)))
@@ -78,7 +72,7 @@
 	   (transpiler-symbol-string-0 tr s))))
 
 (defun current-transpiler-symbol-string (s)
-  (transpiler-symbol-string *current-transpiler* s))
+  (transpiler-symbol-string *transpiler* s))
 
 (defun transpiler-to-string-cons (tr x)
   (?

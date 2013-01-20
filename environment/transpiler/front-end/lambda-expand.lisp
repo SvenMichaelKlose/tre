@@ -5,9 +5,9 @@
          fi (make-funinfo :argdef args
                           :args argnames
                           :parent parent
-                          :transpiler *current-transpiler*))
+                          :transpiler *transpiler*))
     (funinfo-var-add fi '~%ret)
-    (& (transpiler-copy-arguments-to-stack? *current-transpiler*)
+    (& (transpiler-copy-arguments-to-stack? *transpiler*)
        (funinfo-var-add-many fi argnames))
 	fi))
 
@@ -53,7 +53,7 @@
     (lambda-expand-tree fi-exported (lambda-body x))
     (let argdef (funinfo-args fi-exported)
       (acons! exported-name argdef *closure-argdefs*)
-      (transpiler-add-exported-closure *current-transpiler*
+      (transpiler-add-exported-closure *transpiler*
           `((defun ,exported-name ,(+ (make-lambda-funinfo fi-exported) argdef)
               ,@(lambda-body x)))))
     `(%%closure ,exported-name ,(funinfo-sym fi-exported))))
@@ -74,8 +74,8 @@
      (funinfo-add-local-function-args fi .x. (lambda-args ..x.)))
   (?
     (lambda-call? x)      (lambda-call-embed fi x)
-    (lambda? x)           (? (& (transpiler-lambda-export? *current-transpiler*)
-                                (not (eq fi (transpiler-global-funinfo *current-transpiler*) )))
+    (lambda? x)           (? (& (transpiler-lambda-export? *transpiler*)
+                                (not (eq fi (transpiler-global-funinfo *transpiler*))))
                              (lambda-export fi x)
 		                     (lambda-expand-tree-unexported-lambda fi x))
 	(lambda-expand-tree-0 fi x)))
@@ -91,7 +91,7 @@
 
 (defun lambda-expand-tree (fi x)
   (aprog1 (lambda-expand-tree-0 fi x)
-    (with-temporary (transpiler-lambda-export? *current-transpiler*) t
+    (with-temporary (transpiler-lambda-export? *transpiler*) t
       (place-expand-0 fi !))))
 
 (defun transpiler-lambda-expand (tr x)

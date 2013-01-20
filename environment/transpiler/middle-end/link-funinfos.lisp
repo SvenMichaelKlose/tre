@@ -24,7 +24,7 @@
        (string? x)
        (not (funinfo-var-or-lexical? fi x))
        (funinfo-toplevel-var? fi x)
-       (& (transpiler-stack-locals? *current-transpiler*)
+       (& (transpiler-stack-locals? *transpiler*)
           (eq x (funinfo-lexical fi))))
       nil
 
@@ -32,8 +32,8 @@
        (funinfo-lexical? fi x))
       (link-funinfos-atom fi (funinfo-lexical fi))
 
-    (| (& (transpiler-stack-locals? *current-transpiler*)
-          (| (& (transpiler-arguments-on-stack? *current-transpiler*)
+    (| (& (transpiler-stack-locals? *transpiler*)
+          (| (& (transpiler-arguments-on-stack? *transpiler*)
                 (funinfo-arg? fi x))
              (funinfo-var? fi x)))
        (funinfo-arg-or-var? fi x))
@@ -67,7 +67,7 @@
   (%stackarg? x)        x)
 
 (defun link-funinfos (x)
-  (link-funinfos-0 (transpiler-global-funinfo *current-transpiler*) x)
+  (link-funinfos-0 (transpiler-global-funinfo *transpiler*) x)
   x)
 
 (defun link-funinfos-closure-lexical (fi)

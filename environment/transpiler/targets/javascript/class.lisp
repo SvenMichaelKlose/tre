@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun js-make-constructor (cname bases args body)
   (let magic (list 'quote ($ '__ cname))
@@ -44,7 +44,7 @@
 	             (%%%make-hash-table ,@(mapcan [js-emit-method class-name _] (reverse !))))))
 
 (define-js-std-macro finalize-class (class-name)
-  (let classes (transpiler-thisify-classes *current-transpiler*)
+  (let classes (transpiler-thisify-classes *transpiler*)
     (!? (href classes class-name)
 	    `(progn
 		   ,(assoc-value class-name *delayed-constructors*)

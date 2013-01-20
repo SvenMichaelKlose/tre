@@ -7,7 +7,7 @@
 	   :decl-maker [identity nil])) ; APPLY doesn't ignore NIL.
 
 (php-define-compiled-literal php-compiled-char (x char)
-  :maker (transpiler-add-late-symbol *current-transpiler* ($ 'trechar_compiled_ (char-code x)))
+  :maker (transpiler-add-late-symbol *transpiler* ($ 'trechar_compiled_ (char-code x)))
   :init-maker (%transpiler-native "new __character (" ,(char-code x) ")"))
 
 (php-define-compiled-literal php-compiled-symbol (x symbol)
@@ -26,7 +26,7 @@
   x)
 
 (defun php-global (x)
-  `(%transpiler-native "$GLOBALS['" ,(transpiler-obfuscated-symbol-string *current-transpiler* x) "']"))
+  `(%transpiler-native "$GLOBALS['" ,(transpiler-obfuscated-symbol-string *transpiler* x) "']"))
 
 (defun php-expex-argument-filter (x)
   (?
@@ -35,7 +35,7 @@
        (not (funinfo-toplevel-var? *expex-funinfo* x))
        (expex-global-variable? x))
       (progn
-        (transpiler-add-wanted-variable *current-transpiler* x)
+        (transpiler-add-wanted-variable *transpiler* x)
         (php-global x))
     (character? x) (php-expex-add-global (php-compiled-char x))
     (%quote? x)    (php-expex-add-global (php-compiled-symbol .x.))

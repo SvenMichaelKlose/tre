@@ -10,7 +10,7 @@
 (define-codegen-macro-definer define-c-macro *c-transpiler*)
 
 (defun c-codegen-var-decl (name)
-  `("treptr " ,(transpiler-symbol-string *current-transpiler* name)))
+  `("treptr " ,(transpiler-symbol-string *transpiler* name)))
 
 ;;;; SYMBOL TRANSLATIONS
 
@@ -20,10 +20,10 @@
 ;;;; FUNCTIONS
 
 (defun c-make-function-declaration (name args)
-  (push (concat-stringtree "extern treptr " (transpiler-symbol-string *current-transpiler* name)
+  (push (concat-stringtree "extern treptr " (transpiler-symbol-string *transpiler* name)
   	    	               " " (parenthized-comma-separated-list (mapcar #'c-codegen-var-decl args))
 			               ";" (string (code-char 10)))
-	    (transpiler-compiled-decls *current-transpiler*)))
+	    (transpiler-compiled-decls *transpiler*)))
 
 (defun symbols-comment (x)
   (mapcar [+ (symbol-name _) " "] x))
@@ -110,11 +110,11 @@
   `(%transpiler-native "l" ,tag ":" ,*c-newline*))
  
 (define-c-macro %%vm-go (tag)
-  (c-line "goto l" (transpiler-symbol-string *current-transpiler* tag)))
+  (c-line "goto l" (transpiler-symbol-string *transpiler* tag)))
 
 (define-c-macro %%vm-go-nil (val tag)
   `(,*c-indent* "if (" ,val " == treptr_nil)" ,(code-char 10)
-	,*c-indent* ,@(c-line "goto l" (transpiler-symbol-string *current-transpiler* tag))))
+	,*c-indent* ,@(c-line "goto l" (transpiler-symbol-string *transpiler* tag))))
 
 ;;;; SYMBOLS
 

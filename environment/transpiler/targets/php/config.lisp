@@ -5,7 +5,7 @@
 (defun php-=-function? (x)
   t)
 ;  (| (%=-function? x)
-;     (transpiler-defined-function *current-transpiler* x)))
+;     (transpiler-defined-function *transpiler* x)))
 
 (defun make-php-transpiler-0 ()
   (create-transpiler

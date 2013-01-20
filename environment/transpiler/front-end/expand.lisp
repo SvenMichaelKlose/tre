@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun make-overlayed-std-macro-expander (tr expander-name)
   (with (e       (define-expander expander-name)
@@ -31,7 +31,7 @@
 
 (defmacro transpiler-wrap-invariant-to-binary (definer op len replacement combinator)
   `(,definer ,op (&rest x)
-     (transpiler-add-inline-exception *current-transpiler* ,(list 'quote replacement))
+     (transpiler-add-inline-exception *transpiler* ,(list 'quote replacement))
      (? (< ,len (length x))
         (cons ',combinator (mapcar ^(,replacement ,,@(subseq x 0 ,(1- len)) ,,_) (subseq x ,(1- len))))
         (cons ',replacement x))))

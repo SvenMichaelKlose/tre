@@ -12,7 +12,7 @@
      `(cons ,(copy-tree (cadr x.))
             ,(backquote-cons-1 .x))
      (!? (backquote-cons-1 .x)
-         `(%nconc ,(let tr *current-transpiler*
+         `(%nconc ,(let tr *transpiler*
                      (? (transpiler-assert? tr)
                         (compiler-macroexpand (transpiler-macroexpand tr `(aprog1 ,(copy-tree (cadr x.))
                                                                             (| (list? !) (error ",@ expects a list instead of ~A" !)))))

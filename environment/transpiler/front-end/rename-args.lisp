@@ -1,8 +1,8 @@
-;;;;; tré – Copyright (c) 2005–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun find-and-add-renamed-doubles (fi old-replacements vars args)
   (let argnames (remove-keywords (argument-expand-names 'rename-args args))
-    (append (list-aliases (? (transpiler-rename-all-args? *current-transpiler*)
+    (append (list-aliases (? (transpiler-rename-all-args? *transpiler*)
 						  	 (? (& fi (funinfo-ghost fi))
 								.argnames
 								argnames)
@@ -22,12 +22,11 @@
 
 ;;; XXX renames top-level keyword arguments?
 (define-tree-filter rename-function-arguments-0 (replacements env x)
-  (atom x) (rename-arg replacements x)
-  (%quote? x) x
-  (lambda? x) (rename-function-arguments-r replacements env x)
-  (%slot-value? x)
-    `(%slot-value ,(rename-function-arguments-0 replacements env .x.)
-				  ,..x.))
+  (atom x)         (rename-arg replacements x)
+  (%quote? x)      x
+  (lambda? x)      (rename-function-arguments-r replacements env x)
+  (%slot-value? x) `(%slot-value ,(rename-function-arguments-0 replacements env .x.)
+				                 ,..x.))
 
 (defun rename-function-arguments-named-function (x)
   (copy-lambda x :body (rename-function-arguments-0 nil nil (lambda-body x))))
@@ -35,7 +34,7 @@
 (defun rename-function-arguments-inside-named-toplevel-functions (x)
   (? (atom x)
 	 x
-     (cons (? (lambda? x.) (? (transpiler-rename-toplevel-function-args? *current-transpiler*)
+     (cons (? (lambda? x.) (? (transpiler-rename-toplevel-function-args? *transpiler*)
 				              (rename-function-arguments-r nil nil x.)
 				              (rename-function-arguments-named-function x.))
         	  (cons? x.)   (rename-function-arguments-inside-named-toplevel-functions x.)

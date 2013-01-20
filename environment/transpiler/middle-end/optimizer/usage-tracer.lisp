@@ -12,8 +12,8 @@
             (funinfo-lexical? ! x)
             (funinfo-immutable? ! x)
             (unless (funinfo-parent !)
-              (| (transpiler-defined-function *current-transpiler* x)
-                 (transpiler-defined-variable *current-transpiler* x)))))))
+              (| (transpiler-defined-function *transpiler* x)
+                 (transpiler-defined-variable *transpiler* x)))))))
 
 (defun opt-peephole-will-be-used-again? (x v)
    (with (traversed-tags nil

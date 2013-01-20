@@ -7,7 +7,7 @@
   `(%%vm-scope
      (%var ,place)
      (%setq ,place ,@x)
-     ((slot-value ,(list 'quote place) 'sf) ,(compiled-function-name-string *current-transpiler* place))))
+     ((slot-value ,(list 'quote place) 'sf) ,(compiled-function-name-string *transpiler* place))))
 
 (define-php-std-macro define-native-php-fun (name args &body body)
   `(%%vm-scope
@@ -45,9 +45,9 @@
 
 (define-php-std-macro define-external-variable (name)
   (print-definition `(define-external-variable ,name))
-  (& (transpiler-defined-variable *current-transpiler* name)
+  (& (transpiler-defined-variable *transpiler* name)
      (redef-warn "redefinition of variable ~A." name))
-  (transpiler-add-defined-variable *current-transpiler* name)
+  (transpiler-add-defined-variable *transpiler* name)
   nil)
 
 (define-php-std-macro defconstant (&rest x)
@@ -94,16 +94,16 @@
   `(not (isset ,x)))
 
 (define-php-std-macro dont-obfuscate (&rest symbols)
-  (apply #'transpiler-add-obfuscation-exceptions *current-transpiler* symbols)
+  (apply #'transpiler-add-obfuscation-exceptions *transpiler* symbols)
   nil)
 
 (define-php-std-macro dont-inline (&rest x)
   (adolist (x)
-    (transpiler-add-inline-exception *current-transpiler* !))
+    (transpiler-add-inline-exception *transpiler* !))
   nil)
 
 (define-php-std-macro assert (x &optional (txt nil) &rest args)
-  (& (transpiler-assert? *current-transpiler*)
+  (& (transpiler-assert? *transpiler*)
      (make-assertion x txt args)))
 
 (define-php-std-macro %lx (lexicals fun)

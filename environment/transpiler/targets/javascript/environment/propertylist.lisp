@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2010–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2010–2013 Sven Michael Klose <pixel@copei.de>
 
 (defvar *%property-list-tmp* nil)
 
@@ -12,5 +12,5 @@
   (%setq nil (%transpiler-native
                  "for (var k in " hash ") "
                      "if (k != \"" '__tre-object-id "\" && k != \"" '__tre-test "\") "
-                         ,(compiled-function-name-string *current-transpiler* '%property-list-0) "(typeof k == \"string\" ? (OBJKEYS[k] || k) : k, " hash "[k]);"))
+                         ,(compiled-function-name-string *transpiler* '%property-list-0) "(typeof k == \"string\" ? (OBJKEYS[k] || k) : k, " hash "[k]);"))
   (reverse *%property-list-tmp*))

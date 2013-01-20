@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defvar *allow-redefinitions?* nil)
 
@@ -6,7 +6,7 @@
   (apply (? *allow-redefinitions?* #'warn #'error) args))
 
 (defun apply-current-package (x)
-  (!? (transpiler-current-package *current-transpiler*)
+  (!? (transpiler-current-package *transpiler*)
       (make-symbol (symbol-name x) !)
       x))
 
@@ -51,7 +51,7 @@
 (defun shared-defun (name args &rest body)
   (= name (apply-current-package name))
   (print-definition `(defun ,name ,args))
-  (with (tr *current-transpiler*
+  (with (tr         *transpiler*
 		 (fi-sym a) (split-funinfo-and-args args))
     (& (transpiler-defined-function tr name)
        (redef-warn "redefinition of function ~A.~%" name))

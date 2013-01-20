@@ -43,7 +43,7 @@
 (defvar *late-symbol-function-assignments* nil)
 
 (defun js-make-late-symbol-function-assignment (name)
-  (push `(= (slot-value ',name 'f) ,(compiled-function-name *current-transpiler* name))
+  (push `(= (slot-value ',name 'f) ,(compiled-function-name *transpiler* name))
         *late-symbol-function-assignments*))
 
 (defun emit-late-symbol-function-assignments ()
@@ -57,9 +57,9 @@
 (defun js-early-symbol-maker (g sym)
    `(,@(unless (eq g '~%tfun)
          `((%var ,g)))
-     (%setq ,g (symbol ,(transpiler-obfuscated-symbol-name *current-transpiler* sym)
+     (%setq ,g (symbol ,(transpiler-obfuscated-symbol-name *transpiler* sym)
                        ,(awhen (symbol-package sym)
-                          `(make-package ,(transpiler-obfuscated-symbol-name *current-transpiler* !)))))))
+                          `(make-package ,(transpiler-obfuscated-symbol-name *transpiler* !)))))))
 
 (define-js-std-macro defun (name args &rest body)
   (let dname (apply-current-package (transpiler-package-symbol *js-transpiler* (%defun-name name)))
@@ -137,16 +137,16 @@
 
 (define-js-std-macro dont-obfuscate (&rest symbols)
   (print-definition `(dont-obfuscate ,@symbols))
-  (apply #'transpiler-add-obfuscation-exceptions *current-transpiler* symbols)
+  (apply #'transpiler-add-obfuscation-exceptions *transpiler* symbols)
   nil)
 
 (define-js-std-macro dont-inline (&rest x)
   (dolist (i x)
-    (transpiler-add-inline-exception *current-transpiler* i))
+    (transpiler-add-inline-exception *transpiler* i))
   nil)
 
 (define-js-std-macro assert (x &optional (txt nil) &rest args)
-  (when (transpiler-assert? *current-transpiler*)
+  (when (transpiler-assert? *transpiler*)
     (make-assertion x txt args)))
 
 (define-js-std-macro %lx (lexicals fun)
@@ -165,7 +165,7 @@
   nil)
 
 (define-js-std-macro in-package (n)
-  (= (transpiler-current-package *current-transpiler*) (when n (make-package (symbol-name n))))
+  (= (transpiler-current-package *transpiler*) (& n (make-package (symbol-name n))))
   `(%%in-package ,n))
 
 (define-js-std-macro invoke-debugger ()

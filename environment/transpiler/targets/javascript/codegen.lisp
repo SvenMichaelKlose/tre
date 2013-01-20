@@ -65,7 +65,7 @@
 
 (define-js-macro %function-prologue (fi-sym)
   `(%transpiler-native ""
-	   ,@(& (transpiler-stack-locals? *current-transpiler*)
+	   ,@(& (transpiler-stack-locals? *transpiler*)
 	        `(,*js-indent* "var _locals=[]" ,*js-separator*))
 	   ,@(& (< 0 (funinfo-num-tags (get-funinfo-by-sym fi-sym)))
 	        `(,*js-indent* "var _I_=0" ,*js-separator*
@@ -85,7 +85,7 @@
 
 (define-js-macro %function-epilogue (fi-sym)
   (let fi (get-funinfo-by-sym fi-sym)
-    (| `(,@(? (& (transpiler-continuation-passing-style? *current-transpiler*)
+    (| `(,@(? (& (transpiler-continuation-passing-style? *transpiler*)
                  (funinfo-needs-cps? fi))
               `((%function-return-cps ,fi-sym))
               `((%function-return ,fi-sym)))
@@ -182,7 +182,7 @@
 ;;;; OBJECTS
 
 (define-js-macro %new (&rest x)
-  `(%transpiler-native "new " ,(compiled-function-name *current-transpiler* x.)
+  `(%transpiler-native "new " ,(compiled-function-name *transpiler* x.)
                               ,@(parenthized-comma-separated-list .x)))
 
 (define-js-macro delete-object (x)
@@ -192,17 +192,18 @@
 
 (define-js-macro %quote (x)
   (? (not (string== "" (symbol-name x))) ;XXX
-	 (js-codegen-symbol-constructor *current-transpiler* x)
+	 (js-codegen-symbol-constructor *transpiler* x)
 	 x))
 
 (define-js-macro %slot-value (x y)
-  `(%transpiler-native ,(? (cons? x)
-                           x
-                           (transpiler-obfuscated-symbol-string *current-transpiler* x))
-                       "."
-                       ,(? (cons? y)
-                           y
-                           (transpiler-obfuscated-symbol-string *current-transpiler* y))))
+  `(%transpiler-native
+       ,(? (cons? x)
+           x
+           (transpiler-obfuscated-symbol-string *transpiler* x))
+       "."
+       ,(? (cons? y)
+           y
+           (transpiler-obfuscated-symbol-string *transpiler* y))))
 
 (define-js-macro %try ()
   '(%transpiler-native "try {"))
@@ -216,7 +217,7 @@
 ;;;; BACK-END META-CODES
 
 (define-js-macro %stack (x)
-  (? (transpiler-stack-locals? *current-transpiler*)
+  (? (transpiler-stack-locals? *transpiler*)
   	 `(%transpiler-native "_locals[" ,x "]")
      (js-stack x)))
 

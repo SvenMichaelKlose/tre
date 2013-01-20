@@ -25,12 +25,12 @@
                  ,(compile-argument-expansion-function-body fun-name adef p nil (argument-expand-names 'compile-argument-expansion adef)))))))))
 
 (define-c-std-macro defmacro (&rest x)
-  (apply #'shared-defmacro '*current-transpiler* x))
+  (apply #'shared-defmacro '*transpiler* x))
 
 (define-c-std-macro defvar (name &optional (val '%%no-value))
   (& (eq '%%no-value val)
      (= name `',name))
-  (let tr *current-transpiler*
+  (let tr *transpiler*
     (print-definition `(defvar ,name))
     (& (transpiler-defined-variable tr name)
        (redef-warn "redefinition of variable ~A.~%" name))

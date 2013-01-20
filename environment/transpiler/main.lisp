@@ -1,7 +1,7 @@
 ;;;;; tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
 
 ,(awhen (& (function? #'%%=-transpiler-save-argument-defs-only?)
-           *current-transpiler*)
+           *transpiler*)
    (%%usetf-transpiler-save-argument-defs-only? t !))
 
 (env-load "transpiler/lib/main.lisp")

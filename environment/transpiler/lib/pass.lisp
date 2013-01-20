@@ -1,9 +1,9 @@
-;;;;; tré – Copyright (c) 2010–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2010–2013 Sven Michael Klose <pixel@copei.de>
 
 (defmacro transpiler-pass (name args &rest x)
   (with (cache-var ($ '*pass- name '*)
          init (gensym)
-         tr '*current-transpiler*)
+         tr '*transpiler*)
     `(progn
        (defvar ,cache-var nil)
        (defun ,name (,@args ,init)

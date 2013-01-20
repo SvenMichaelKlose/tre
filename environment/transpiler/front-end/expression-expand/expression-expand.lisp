@@ -47,7 +47,7 @@
   (& *expex-warn?*
      (symbol? x)
      (not (transpiler-defined-symbol? x)
-          (transpiler-can-import? *current-transpiler* x))
+          (transpiler-can-import? *transpiler* x))
      (error "symbol ~A is not defined in function ~A.~%"
             (symbol-name x)
             (funinfo-get-name *expex-funinfo*))))
@@ -69,7 +69,7 @@
 
 ;; Check if arguments to a function should be expanded.
 (defun expex-expandable-args? (ex fun argdef)
-  (| (transpiler-defined-function *current-transpiler* fun)
+  (| (transpiler-defined-function *transpiler* fun)
      (not (funcall (expex-plain-arg-fun? ex) fun))))
 
 ;;;; ARGUMENT EXPANSION
@@ -91,7 +91,7 @@
                  (current-transpiler-function-arguments fun))
 	(? (expex-expandable-args? ex fun argdef)
    	   (expex-argument-expand fun argdef (? (& (not (in-cps-mode?))
-                                               (transpiler-cps-function? *current-transpiler* fun))
+                                               (transpiler-cps-function? *transpiler* fun))
                                             .args
                                             args))
 	   args)))
@@ -122,7 +122,7 @@
   (with (s                (expex-funinfo-var-add)
          (moved new-expr) (expex-expr ex x))
     (& (lambda-expression-needs-cps? x)
-       (transpiler-add-cps-function *current-transpiler* s))
+       (transpiler-add-cps-function *transpiler* s))
     (cons (+ moved
              (? (has-return-value? new-expr.)
                 (expex-make-%setq ex s new-expr.)
@@ -178,7 +178,7 @@
   (& (| (%setq? x)
         (%set-atom-fun? x))
      (lambda-expression-needs-cps? (%setq-value x))
-     (transpiler-add-cps-function *current-transpiler* (%setq-place x))))
+     (transpiler-add-cps-function *transpiler* (%setq-place x))))
 
 (defun expex-vm-go-nil (ex x)
   (with ((moved new-expr) (expex-filter-and-move-args ex (list .x.)))
@@ -252,5 +252,5 @@
 (defun expression-expand (ex x)
   (& x
 	 (with-temporaries (*current-expex* ex
-	                    *expex-funinfo* (transpiler-global-funinfo *current-transpiler*))
+	                    *expex-funinfo* (transpiler-global-funinfo *transpiler*))
          (expex-body ex x))))

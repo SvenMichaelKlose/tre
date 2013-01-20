@@ -1,9 +1,9 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun shared-defvar (name &optional (val '%%no-value))
   (when (eq '%%no-value val)
     (= val `',name))
-  (let tr *current-transpiler*
+  (let tr *transpiler*
     (print-definition `(defvar ,name))
     (when (transpiler-defined-variable tr name)
       (redef-warn "redefinition of variable ~A.~%" name))

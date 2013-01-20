@@ -63,7 +63,7 @@
   (with (args (argument-expand-names 'unnamed-c-function (lambda-args x))
 		 fi (get-lambda-funinfo x)
 		 num-locals (length (funinfo-vars fi))
-	     compiled-name (compiled-function-name *current-transpiler* name))
+	     compiled-name (compiled-function-name *transpiler* name))
     `(,(code-char 10)
 	  "function " ,compiled-name ,@(php-argument-list args)
       "{" ,(code-char 10)
@@ -81,7 +81,7 @@
 
 (define-php-macro function (name &optional (x 'only-name))
   (? (eq 'only-name x)
-     `(%transpiler-native (%transpiler-string ,(compiled-function-name-string *current-transpiler* name)))
+     `(%transpiler-native (%transpiler-string ,(compiled-function-name-string *transpiler* name)))
   	 (? (atom x)
 		(error "codegen: arguments and body expected: ~A" x)
 	  	(codegen-php-function name x))))
@@ -97,7 +97,7 @@
   (let fi (get-funinfo-by-sym fi-sym)
     (? (funinfo-ghost fi)
   	   `(%transpiler-native "new __closure("
-             (%transpiler-string ,(compiled-function-name-string *current-transpiler* name))
+             (%transpiler-string ,(compiled-function-name-string *transpiler* name))
              ","
              ,(php-dollarize (funinfo-lexical (funinfo-parent fi)))
              ")")
@@ -124,7 +124,7 @@
     (& (cons? val)
        (eq 'userfun_cons val.))
       `("new __cons (" ,(php-dollarize .val.) "," ,(php-dollarize ..val.) ")")
-    (| (not val)
+    (| (not val)        ; XXX CONSTANT-LITERAL?
        (eq t val)
        (number? val)
        (string? val))
@@ -185,17 +185,17 @@
 	   `(%transpiler-native ,,@(pad (filter #'php-dollarize args) ,replacement-op)))))
 
 (mapcar-macro x
-    '((%%%+ "+")
-      (%%%- "-")
-      (%%%* "*")
-      (%%%/ "/")
+    '((%%%+   "+")
+      (%%%-   "-")
+      (%%%*   "*")
+      (%%%/   "/")
       (%%%mod "%")
-      (%%%== "==")
-      (%%%< "<")
-      (%%%> ">")
-      (%%%<= "<=")
-      (%%%>= ">=")
-      (%%%eq "==="))
+      (%%%==  "==")
+      (%%%<   "<")
+      (%%%>   ">")
+      (%%%<=  "<=")
+      (%%%>=  ">=")
+      (%%%eq  "==="))
   `(define-php-binary ,@x))
 
 (define-php-binary %%%string+ ".")
@@ -206,7 +206,7 @@
   (filter ^("[" ,(php-dollarize _) "]") indexes))
 
 (defun php-literal-array-element (x)
-  (list (compiled-function-name *current-transpiler* '%%key) " (" (php-dollarize x.) ") => " (php-dollarize .x.)))
+  (list (compiled-function-name *transpiler* '%%key) " (" (php-dollarize x.) ") => " (php-dollarize .x.)))
 
 (defun php-literal-array-elements (x)
   (pad (filter #'php-literal-array-element x) ","))

@@ -1,8 +1,8 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun js-=-function? (x)
   (| t ;(%=-function? x)
-     (transpiler-defined-function *current-transpiler* x)))
+     (transpiler-defined-function *transpiler* x)))
 
 (defun make-javascript-transpiler-0 ()
   (create-transpiler

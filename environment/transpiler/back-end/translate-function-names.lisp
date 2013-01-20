@@ -1,13 +1,13 @@
 ;;;;; tré – Copyright (c) 2010–2013 Sven Michael Klose <pixel@copei.de>
 
-(defun translate-function-name (funinfo x)
-  (? (& (transpiler-defined-function *current-transpiler* x)
+(defun translate-function-name (tr funinfo x)
+  (? (& (transpiler-defined-function tr x)
 	    (| (not funinfo)
 	       (not (funinfo-var-or-lexical? funinfo x))))
-     (compiled-function-name *current-transpiler* x)
+     (compiled-function-name tr x)
      x))
 
-(define-tree-filter translate-function-names (tr funinfo x)
+(define-tree-filter translate-function-names (tr funinfo x) ; XXX use metacode-walker instead
   (named-lambda? x)
 	(copy-lambda x :name (compiled-function-name tr .x.)
 				   :body (translate-function-names tr (get-lambda-funinfo x) (lambda-body x)))
@@ -19,9 +19,9 @@
      (%setq-atom-value? x))
 	x
   (%slot-value? x)
-	`(%slot-value ,(translate-function-name funinfo .x.) ,..x.)
+	`(%slot-value ,(translate-function-name tr funinfo .x.) ,..x.)
   (& (transpiler-raw-constructor-names? tr)
      (%new? x))
     x
   (atom x)
-	(translate-function-name funinfo x))
+	(translate-function-name tr funinfo x))

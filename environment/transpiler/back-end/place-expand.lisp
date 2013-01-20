@@ -35,12 +35,12 @@
     (| (not x)
        (number? x)
        (string? x)
-       (not (transpiler-lambda-export? *current-transpiler*))
+       (not (transpiler-lambda-export? *transpiler*))
        (not (funinfo-var-or-lexical? fi x))
        (funinfo-toplevel-var? fi x))
       x
 
-    (& (transpiler-stack-locals? *current-transpiler*)
+    (& (transpiler-stack-locals? *transpiler*)
        (eq x (funinfo-lexical fi)))
       (place-expand-emit-stackplace fi x)
 
@@ -50,8 +50,8 @@
              ,(funinfo-sym fi)
              ,x)
 
-    (& (transpiler-stack-locals? *current-transpiler*)
-       (| (& (transpiler-arguments-on-stack? *current-transpiler*)
+    (& (transpiler-stack-locals? *transpiler*)
+       (| (& (transpiler-arguments-on-stack? *transpiler*)
              (funinfo-arg? fi x))
           (funinfo-var? fi x)))
        (place-expand-emit-stackplace fi x)
@@ -96,7 +96,7 @@
   (%stackarg? x)        x)
 
 (defun place-expand (x)
-  (place-expand-0 (transpiler-global-funinfo *current-transpiler*) x))
+  (place-expand-0 (transpiler-global-funinfo *transpiler*) x))
 
 (defun place-expand-closure-lexical (fi)
   (alet (funinfo-parent fi)

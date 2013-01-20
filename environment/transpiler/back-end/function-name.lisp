@@ -1,7 +1,7 @@
-;;;;; tré – Copyright (c) 2009–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2009–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun compiled-user-function-name (x)
-  (!? (transpiler-function-name-prefix *current-transpiler*)
+  (!? (transpiler-function-name-prefix *transpiler*)
       (make-symbol (string-concat ! (symbol-name x)) (symbol-package x))
       x))
 

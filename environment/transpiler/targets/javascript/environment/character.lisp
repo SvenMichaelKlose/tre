@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008-2009,2011–2012 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008-2009,2011–2013 Sven Michael Klose <pixel@copei.de>
 
 (defvar *characters* (make-array))
 
@@ -9,13 +9,13 @@
   (assert (not (character? x))
 		  (error "%CHARACTER: argument already a character"))
   (| (aref *characters* x)
-     (= this.__class ,(transpiler-obfuscated-symbol-string *current-transpiler* '%character)
+     (= this.__class ,(transpiler-obfuscated-symbol-string *transpiler* '%character)
         this.v x (aref *characters* x) this)))
 
 (defun character? (x)
   (& (object? x)
      x.__class
-     (%%%== x.__class ,(transpiler-obfuscated-symbol-string *current-transpiler* '%character))))
+     (%%%== x.__class ,(transpiler-obfuscated-symbol-string *transpiler* '%character))))
 
 (defun code-char (x)
   (declare type number x)

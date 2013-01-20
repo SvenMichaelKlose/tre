@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2009–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2009–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun expex-set-global-variable-value (x)
   (list
@@ -9,12 +9,12 @@
 
 (defun expex-collect-wanted-variable (x)
   (when (expex-global-variable? (cadr x))
-    (transpiler-add-wanted-variable *current-transpiler* (cadr x)))
+    (transpiler-add-wanted-variable *transpiler* (cadr x)))
   (list x))
 
 (defun expex-%setq-collect-wanted-global-variable (x)
   (? (atom x)
      (? (expex-global-variable? x)
-	     (transpiler-add-wanted-variable *current-transpiler* x)
+	     (transpiler-add-wanted-variable *transpiler* x)
 	     x)
 	 (transpiler-import-from-expex x)))

@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun make-symbol (x &optional (pkg nil))
   (symbol x pkg))
@@ -35,4 +35,4 @@
      (%%%eq t x)
      (& (object? x)
 	     x.__class
-         (%%%== x.__class ,(transpiler-obfuscated-symbol-string *current-transpiler* 'symbol)))))
+         (%%%== x.__class ,(transpiler-obfuscated-symbol-string *transpiler* 'symbol)))))

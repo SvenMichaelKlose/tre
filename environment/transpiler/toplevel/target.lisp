@@ -47,7 +47,7 @@
                                  (obfuscate? nil)
                                  (print-obfuscations? nil))
   (with-temporaries (*recompiling?* (? files-to-update t)
-                     *current-transpiler* tr
+                     *transpiler*   tr
                      *opt-inline?* (& (not (transpiler-inject-debugging? tr))
                                       *opt-inline?*))
     (& *have-compiler?*
