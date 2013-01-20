@@ -26,7 +26,7 @@
 
 - M-V-B/WITH: assignment to NIL is ignored.
 
-- =: Many arguments.
+- ==: Many arguments.
 
 - Pattern-matching macro definitions.
 
