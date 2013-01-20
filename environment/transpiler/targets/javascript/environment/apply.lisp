@@ -1,5 +1,4 @@
-;;;;; Transpiler: TRE to JavaScript
-;;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2010,2013 Sven Michael Klose <pixel@copei.de>
 
 (dont-obfuscate apply call)
 
@@ -24,8 +23,8 @@
     (when-debug
       (unless (function? fun)
 	    (error "APPLY: first argument is not a function: ~A" fun))
-	  (unless (listp l)
-	    (error "APPLY: last argument is not a cell")))
+	  (unless (list? l)
+	    (error "APPLY: last argument is not a list")))
     (!? fun.tre-exp
         (!.apply nil (%transpiler-native "[" args "]"))
      (fun.apply nil (list-array args)))))

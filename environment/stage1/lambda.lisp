@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2006–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2006–2013 Sven Michael Klose <pixel@copei.de>
 
 ;;;; A LAMBDA-expression is an anonymous function.  In many other dialects
 ;;:: the LAMBDA symbol is required to describe anonymous functions:
@@ -93,7 +93,7 @@
   (& (lambda-expr? x)
      (let l (past-lambda (cadr x))
        (& (cons? l)
-          (listp (car l))))))
+          (list? (car l))))))
 
 (define-test "IS-LAMBDA? works"
   ((lambda? '#'((x) x)))

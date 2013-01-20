@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2006,2009–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2006,2009–2013 Sven Michael Klose <pixel@copei.de>
 
 (functional assoc rassoc acons copy-alist)
 
@@ -24,7 +24,7 @@
      (%error "ASSOC doesn't work with numbers")))
 
 (defun %=-assoc (new-value key x &key (test #'eql))
-  (? (listp x)
+  (? (list? x)
      (& x
         (? (funcall test key (car x))
            (rplaca x new-value)

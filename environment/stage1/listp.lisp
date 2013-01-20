@@ -1,25 +1,24 @@
-;;;;; tré - Copyright (c) 2005,2008-2009,2011-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005,2008–2009,2011–2012,2013 Sven Michael Klose <pixel@copei.de>
 
-(functional listp)
+(functional list?)
 
-;; Return T if argument is a cons or NIL (non-atomic/end of list).
-(%defun listp (x)
+(%defun list? (x)
   (? (cons? x)
      t
      (not x)))
 
-(define-test "LISTP for cell"
-  ((listp '(1)))
+(define-test "LIST? for cell"
+  ((list? '(1)))
   t)
 
-(define-test "LISTP for NIL"
-  ((listp nil))
+(define-test "LIST? for NIL"
+  ((list? nil))
   t)
 
-(define-test "LISTP fails with number"
-  ((listp 1))
+(define-test "LIST? fails with number"
+  ((list? 1))
   nil)
 
-(define-test "LISTP fails with symbol"
-  ((listp 'a))
+(define-test "LIST? fails with symbol"
+  ((list? 'a))
   nil)

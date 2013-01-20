@@ -1,18 +1,18 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defvar *type-predicates*
-  '((nil . not)
-    (cons . cons?)
-	(list . listp)
-	(atom . atom)
-	(symbol . symbol?)
-	(function . function?)
-	(number . number?)
-	(integer . number?)
-	(float . number?)
-	(character . character?)
-	(array . array?)
- 	(string . string?)
+  '((nil        . not)
+    (cons       . cons?)
+	(list       . list?)
+	(atom       . atom)
+	(symbol     . symbol?)
+	(function   . function?)
+	(number     . number?)
+	(integer    . number?)
+	(float      . number?)
+	(character  . character?)
+	(array      . array?)
+ 	(string     . string?)
     (hash-table . hash-table?)))
 
 (defun %declare-type-predicate (typ)
