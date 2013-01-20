@@ -104,7 +104,7 @@ echo "Library flags: $LIBFLAGS"
 basic_clean ()
 {
 	echo "Cleaning..."
-	rm -f *.core interpreter/$COMPILED_ENV tre tmp.c
+	rm -f *.core interpreter/$COMPILED_ENV tre tmp.c __alien.tmp
 	rm -rf obj
     rm -f examples/js/hello-world.js
 }
