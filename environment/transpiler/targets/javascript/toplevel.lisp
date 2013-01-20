@@ -4,7 +4,7 @@
   (+ (format nil "// tré revision ~A~%" *tre-revision*)
      (format nil "var _I_ = 0; while (1) {switch (_I_) {case 0: ~%")
      (? (transpiler-lambda-export? tr)
-        ,(fetch-file "environment/transpiler/targets/javascript/funref.js")
+        ,(fetch-file "environment/transpiler/targets/javascript/closure.js")
         "")))
 
 (defun js-transpile-epilogue ()

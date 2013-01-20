@@ -14,7 +14,7 @@
 (define-bc-macro %function-epilogue (fi-sym) '((%%vm-go nil) %%bc-return))
 
 (define-bc-macro %%closure (name fi-sym)
-  `(%closure ,name ,(codegen-funref-lexical fi-sym)))
+  `(%closure ,name ,(codegen-closure-lexical fi-sym)))
 
 (defun bc-make-value (x)
   (? (& (cons? x)

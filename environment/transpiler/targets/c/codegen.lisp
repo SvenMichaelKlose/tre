@@ -48,7 +48,7 @@
 
 (define-c-macro %%closure (name fi-sym)
   `("_trelist_get (" ,(c-compiled-symbol '%closure) ", "
-	    "_trelist_get (" ,(c-compiled-symbol name) "," ,(codegen-funref-lexical fi-sym) "))"))
+	    "_trelist_get (" ,(c-compiled-symbol name) "," ,(codegen-closure-lexical fi-sym) "))"))
 
 (defun %eq (&rest x)
   (apply #'eq x))

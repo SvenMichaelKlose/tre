@@ -96,7 +96,7 @@
 (define-php-macro %%closure (name fi-sym)
   (let fi (get-funinfo-by-sym fi-sym)
     (? (funinfo-ghost fi)
-  	   `(%transpiler-native "new __funref("
+  	   `(%transpiler-native "new __closure("
              (%transpiler-string ,(compiled-function-name-string *current-transpiler* name))
              ","
              ,(php-dollarize (funinfo-lexical (funinfo-parent fi)))

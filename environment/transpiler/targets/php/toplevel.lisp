@@ -16,7 +16,7 @@
 
 (defvar *php-native-environment*
         ,(apply #'+ (mapcar [fetch-file (+ "environment/transpiler/targets/php/environment/native/" _ ".php")]
-                            '("settings" "error" "character" "cons" "lexical" "funref" "symbol" "array"))))
+                            '("settings" "error" "character" "cons" "lexical" "closure" "symbol" "array"))))
 
 (defun php-print-native-environment (out)
   (princ *php-native-environment* out))

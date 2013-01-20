@@ -70,6 +70,6 @@
   (link-funinfos-0 (transpiler-global-funinfo *current-transpiler*) x)
   x)
 
-(defun link-funinfos-funref-lexical (fi)
+(defun link-funinfos-closure-lexical (fi)
   (alet (funinfo-parent fi)
     (link-funinfos-0 ! (funinfo-lexical !))))

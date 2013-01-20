@@ -11,5 +11,5 @@
 (env-load "transpiler/back-end/place-expand.lisp")
 (env-load "transpiler/back-end/place-assign.lisp")
 (env-load "transpiler/back-end/function-prologues.lisp")
-(env-load "transpiler/back-end/funref.lisp")
+(env-load "transpiler/back-end/closure.lisp")
 (env-load "transpiler/back-end/toplevel.lisp")
