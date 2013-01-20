@@ -52,4 +52,5 @@
                           "base64.lisp"
                           "quit.lisp")
 		              (php-load-base "environment/transpiler/environment/"
-			              "assoc.lisp"))))
+			              "assoc.lisp"
+                          "string.lisp"))))

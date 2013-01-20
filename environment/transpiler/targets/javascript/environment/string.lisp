@@ -20,20 +20,14 @@
   (& (%%%< idx seq.length)
      (code-char (seq.char-code-at idx))))
 
-(dont-obfuscate from-char-code)
-
-,(& *transpiler-assert*
-    '(defun %=-elt-string (val seq idx)
-       (error "cannot modify strings")))
-
 (dont-obfuscate to-string)
 
 (defun string (x)
   (?
-	(string? x) x
+	(string? x)    x
 	(character? x) (char-string x)
-    (symbol? x) (symbol-name x)
-	(not x) ,*nil-symbol-name*
+    (symbol? x)    (symbol-name x)
+	(not x)        ,*nil-symbol-name*
    	(x.to-string)))
 
 (defun string== (x y)
@@ -53,7 +47,6 @@
 
 (defun string-subseq (seq start &optional (end 99999))
   (unless (< (%%%- (length seq) 1) start end)
-    (?
-      (integer== start end)
-	    ""
-      (seq.substr start (- end start)))))
+    (? (integer== start end)
+	   ""
+       (seq.substr start (- end start)))))

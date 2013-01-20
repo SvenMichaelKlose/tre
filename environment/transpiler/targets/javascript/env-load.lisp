@@ -47,7 +47,8 @@
 			                       "atom.lisp")
 	 	             (js-load-base "environment/transpiler/environment/"
                                    "character.lisp"
-			                       "atom.lisp"))))
+			                       "atom.lisp"
+                                   "string.lisp"))))
 (= *js-base2* (+ *js-base2*
 	             ,(list 'quote (js-load-base *js-env-path*
 		                                     "bind.lisp"
