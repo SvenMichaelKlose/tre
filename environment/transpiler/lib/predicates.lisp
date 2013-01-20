@@ -18,8 +18,8 @@
 
 (defun constant-literal? (x)
   (| (not x)
-     (eq t x))
+     (eq t x)
      (number? x)
      (string? x)
      (array? x)
-     (hash-table? x))
+     (hash-table? x)))
