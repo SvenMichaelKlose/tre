@@ -109,6 +109,13 @@ basic_clean ()
     rm -f examples/js/hello-world.js
 }
 
+distclean ()
+{
+	echo "Cleaning for distribution..."
+    basic_clean
+	rm -rf backup
+}
+
 link ()
 {
 	echo "Linking..."
@@ -231,6 +238,10 @@ install)
 
 clean)
 	basic_clean
+	;;
+
+distclean)
+	distclean
 	;;
 
 backup)
