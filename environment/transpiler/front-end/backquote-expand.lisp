@@ -12,9 +12,13 @@
      `(cons ,(copy-tree (cadr x.))
             ,(backquote-cons-1 .x))
      (!? (backquote-cons-1 .x)
-         `(%nconc ,(copy-tree (cadr x.))
+         `(%nconc ,(? *transpiler-assert*
+                      (compiler-macroexpand (transpiler-macroexpand *current-transpiler*
+                                                                    `(aprog1 ,(copy-tree (cadr x.))
+                                                                       (| (list? !) (error ",@ expects a list instead of ~A" !)))))
+                      (copy-tree (cadr x.)))
                   ,(backquote-cons-1 .x))
-          (copy-tree (cadr x.)))))
+         (copy-tree (cadr x.)))))
 
 (defun quote-literal (x)
   (? (constant-literal? x)
