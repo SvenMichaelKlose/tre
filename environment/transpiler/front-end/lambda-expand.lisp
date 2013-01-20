@@ -7,7 +7,6 @@
                           :parent parent
                           :transpiler *current-transpiler*))
     (funinfo-var-add fi '~%ret)
-    ; XXX nicer when moved to place-assign/expand
     (& (transpiler-copy-arguments-to-stack? *current-transpiler*)
        (funinfo-var-add-many fi argnames))
 	fi))
@@ -29,18 +28,6 @@
 (defun lambda-call-embed (fi lambda-call)
   (with-lambda-call (args vals body lambda-call)
     (lambda-call-embed-0 fi args vals body)))
-
-(defvar *embedded-lambda-funrefs* nil)
-
-(defun lambda-funref-embed (fi x)
-  (with (fun (cadr x.)
-         tr  *current-transpiler*)
-    (with-temporary *embedded-lambda-funrefs* (cons fun *embedded-lambda-funrefs*)
-      (lambda-call-embed-0 fi (| (transpiler-function-arguments tr fun)
-                                 (function-arguments (symbol-function fun)))
-                              (rename-body-tags (transpiler-frontend-1 tr (| (transpiler-function-body tr fun)
-                                                                             (function-body (symbol-function fun)))))
-                              .x))))
 
 ;;;; Export
 
@@ -86,14 +73,6 @@
      (lambda? ..x.)
      (funinfo-add-local-function-args fi .x. (lambda-args ..x.)))
   (?
-;    (& (cons? x)
-;       (cons? x.)
-;       (eq 'function x..)
-;       (atom (cadr x.))
-;       (not (builtin? (symbol-function (cadr x.))))
-;       (not (cddr x.))
-;       (not (member (cadr x.) *embedded-lambda-funrefs* :test #'eq)))
-;                          (lambda-funref-embed fi x)
     (lambda-call? x)      (lambda-call-embed fi x)
     (lambda? x)           (? (& (transpiler-lambda-export? *current-transpiler*)
                                 (not (eq fi (transpiler-global-funinfo *current-transpiler*) )))
