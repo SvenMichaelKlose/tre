@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (c) 2008-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defvar *opt-peephole?* t)
 (defvar *opt-peephole-funinfo* nil)
@@ -23,7 +23,6 @@
 	 (with-cons a d x
 	   (?
 		 (named-lambda? a) (opt-peephole-rec a d ..a. ,fun .a.)
-		 (%setq-named-lambda? a) (opt-peephole-rec a d (caddr (%setq-value a)) ,fun (cadr (%setq-value a)) t)
 		 (%setq-lambda? a) (opt-peephole-rec a d (%setq-value a) ,fun nil t)
 		 ,@body
 		 t (cons a (,fun d))))))

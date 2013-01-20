@@ -11,7 +11,8 @@
 	  %setq-atom-fun
 	  %function-prologue
 	  %function-epilogue
-	  %function-return)
+	  %function-return
+      %var)
   `(def-head-predicate ,x))
 
 (defun atomic? (x)
@@ -21,6 +22,13 @@
 (defun atomic-or-functional? (x)
   (| (atomic? x)
      (& (cons? x) (functional? x.))))
+
+(defun ~%ret? (x)
+  (eq '~%ret x))
+
+(defun atom-or-%quote? (x)
+  (| (atom x)
+     (%quote? x)))
 
 (defun vm-jump? (e)
   (& (cons? e)
@@ -33,16 +41,6 @@
 
 (defun %%vm-scope-body (x)
   .x)
-
-(defun %var? (x)
-  (& (cons? x)
-     (eq '%VAR x.)
-     (eq nil ..x)))
-
-(defun %setqret? (x)
-  (& (cons? x)
-     (eq '%SETQ x.)
-     (eq '~%RET .x.)))
 
 (defun %setq-place (x)
   .x.)
@@ -59,15 +57,6 @@
 	   .v
 	   (list v))))
 
-(defun %slot-value-obj (x)
-  .x.)
-
-(defun %slot-value-slot (x)
-  ..x.)
-
-(defun ~%ret? (x)
-  (eq '~%ret x))
-
 (defun %setq-lambda? (x)
   (& (%setq? x)
      (lambda? (%setq-value x))))
@@ -76,9 +65,15 @@
   (? (%setq? x)
      (cons? (%setq-value x))))
 
-(defun atom-or-%quote? (x)
-  (| (atom x)
-     (%quote? x)))
+(defun %setq-funcall-of? (x name)                                                                                                                                             
+  (& (%setq-funcall? x)
+     (eq name (car (%setq-value x)))))
+
+(defun %slot-value-obj (x)
+  .x.)
+
+(defun %slot-value-slot (x)
+  ..x.)
 
 (defun has-return-value? (x)
   (not (| (vm-jump? x)
@@ -106,4 +101,4 @@
      (named-lambda? x)))
 
 (defun metacode-expression-only (x)
-  (& (metacode-expression? x) x))
+  (& x (metacode-expression? x)))
