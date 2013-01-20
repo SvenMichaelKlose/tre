@@ -103,7 +103,7 @@
   nil)
 
 (define-php-std-macro assert (x &optional (txt nil) &rest args)
-  (& *transpiler-assert*
+  (& (transpiler-assert? *current-transpiler*)
      (make-assertion x txt args)))
 
 (define-php-std-macro %lx (lexicals fun)

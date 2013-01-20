@@ -1,7 +1,6 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defvar *current-transpiler* nil)
-(defvar *transpiler-assert* nil)
 (defvar *transpiler-log* nil)
 (defvar *transpiler-no-stream?* nil)
 
@@ -50,6 +49,7 @@
 
   (inline-exceptions nil)
 
+  (assert? nil)
   (obfuscate? nil)
   (import-from-environment? t)
   (only-environment-macros? t)
@@ -156,6 +156,7 @@
         :named-functions?       named-functions?
         :named-function-next    named-function-next
         :inline-exceptions      (copy-list inline-exceptions)
+        :assert?                assert?
         :obfuscate?             obfuscate?
         :import-from-environment? import-from-environment?
         :only-environment-macros? only-environment-macros?

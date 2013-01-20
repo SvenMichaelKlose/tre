@@ -10,14 +10,14 @@
 (defun js-transpile-epilogue ()
   (format nil "}break;}~%"))
 
-(defun js-emit-early-defined-functions ()
+(defun js-emit-early-defined-functions (tr)
   (mapcar ^(push ',_. *defined-functions*)
-          (transpiler-memorized-sources *js-transpiler*)))
+          (transpiler-memorized-sources tr)))
 
-(defun js-emit-memorized-sources ()
-  (clr (transpiler-memorize-sources? *current-transpiler*))
+(defun js-emit-memorized-sources (tr)
+  (clr (transpiler-memorize-sources? tr))
   (filter ^(%setq (slot-value ,_. '__source) ,(list 'quote ._))
-          (transpiler-memorized-sources *current-transpiler*)))
+          (transpiler-memorized-sources tr)))
 
 (defun js-make-decl-gen (tr)
   #'(()
@@ -25,9 +25,9 @@
 		       (remove-if [transpiler-emitted-decl? tr _]
                           (funinfo-vars (transpiler-global-funinfo tr))))))
 
-(defun js-files-before-deps ()
+(defun js-files-before-deps (tr)
   (+ `((t1 . ,*js-base*))
-     (& *transpiler-assert*
+     (& (transpiler-assert? tr)
         `((t2 . ,*js-base-debug-print*)))
      `((t3 . ,*js-base2*))
      (unless *transpiler-no-stream?*
@@ -35,8 +35,9 @@
      (& (eq t *have-environment-tests*)
         `((t5 . ,(make-environment-tests))))))
 
-(defun js-files-compiler ()
-  (+ `((list-of-early-defined-functions . ,#'js-emit-early-defined-functions)
+(defun js-files-compiler (tr)
+  (+ `((list-of-early-defined-functions . ,#'(()
+                                                (js-emit-early-defined-functions tr)))
        (,(+ *js-env-path* "env-load-stub.lisp")))
      (mapcan [unless (eq 'c ._)
                `((,(+ "environment/" _.)))]
@@ -44,11 +45,12 @@
      `((,(+ *js-env-path* "late-macro.lisp"))
        (,(+ *js-env-path* "eval.lisp")))))
 
-(defun js-files-after-deps ()
+(defun js-files-after-deps (tr)
   (+ `((late-symbol-function-assignments . ,#'emit-late-symbol-function-assignments)
-       (memorized-source-emitter . ,#'js-emit-memorized-sources))
+       (memorized-source-emitter . ,#'(()
+                                         (js-emit-memorized-sources tr))))
      (& *have-compiler?*
-        (js-files-compiler))))
+        (js-files-compiler tr))))
 
 (defun js-transpile (sources &key (transpiler nil) (obfuscate? nil) (print-obfuscations? nil) (files-to-update nil))
   (let tr transpiler
@@ -56,10 +58,10 @@
        (transpiler-add-wanted-function tr 'array-copy))
     (+ (js-transpile-prologue tr)
        (target-transpile tr :decl-gen            (js-make-decl-gen tr)
-                            :files-before-deps   (js-files-before-deps)
+                            :files-before-deps   (js-files-before-deps tr)
                             :dep-gen             #'(()
                                                       (transpiler-import-from-environment tr))
-                            :files-after-deps    (+ (js-files-after-deps)
+                            :files-after-deps    (+ (js-files-after-deps tr)
                                                     sources)
                             :files-to-update     files-to-update
                             :obfuscate?          obfuscate?

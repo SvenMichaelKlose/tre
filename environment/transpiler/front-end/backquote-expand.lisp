@@ -12,11 +12,11 @@
      `(cons ,(copy-tree (cadr x.))
             ,(backquote-cons-1 .x))
      (!? (backquote-cons-1 .x)
-         `(%nconc ,(? *transpiler-assert*
-                      (compiler-macroexpand (transpiler-macroexpand *current-transpiler*
-                                                                    `(aprog1 ,(copy-tree (cadr x.))
-                                                                       (| (list? !) (error ",@ expects a list instead of ~A" !)))))
-                      (copy-tree (cadr x.)))
+         `(%nconc ,(let tr *current-transpiler*
+                     (? (transpiler-assert? tr)
+                        (compiler-macroexpand (transpiler-macroexpand tr `(aprog1 ,(copy-tree (cadr x.))
+                                                                            (| (list? !) (error ",@ expects a list instead of ~A" !)))))
+                        (copy-tree (cadr x.))))
                   ,(backquote-cons-1 .x))
          (copy-tree (cadr x.)))))
 

@@ -1,7 +1,7 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun ignore-body-doc (body)
-  (? (& (not *transpiler-assert*)
+  (? (& (not (transpiler-assert? *current-transpiler*))
 	    (string? body.)
 	    .body)
 	 .body

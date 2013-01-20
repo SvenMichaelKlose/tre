@@ -146,7 +146,7 @@
   nil)
 
 (define-js-std-macro assert (x &optional (txt nil) &rest args)
-  (when *transpiler-assert*
+  (when (transpiler-assert? *current-transpiler*)
     (make-assertion x txt args)))
 
 (define-js-std-macro %lx (lexicals fun)
