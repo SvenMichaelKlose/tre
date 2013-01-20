@@ -6,7 +6,7 @@
      (error "tag ~A not found in body ~A" tag *opt-peephole-body*)))
 
 (defun removable-place? (x)
-  (alet *opt-peephole-funinfo*
+  (alet *funinfo*
     (& (funinfo-var? ! x)
        (not (eq x (funinfo-lexical !))
             (funinfo-lexical? ! x)
@@ -25,7 +25,7 @@
               (traverse-statements (tag-code _))]
           traverse-statements
             [? (not _)
-               (& (funinfo-parent *opt-peephole-funinfo*)
+               (& (funinfo-parent *funinfo*)
                   (~%ret? v))
                (with-cons a d _
                  (?

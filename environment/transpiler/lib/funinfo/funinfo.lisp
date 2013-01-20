@@ -1,5 +1,6 @@
 ;;;;; tré – Copyright (c) 2006–2013 Sven Michael Klose <pixel@copei.de>
 
+(defvar *funinfo* nil)
 (defvar *funinfo-sym-counter* 0)
 
 (defun make-funinfo-sym ()

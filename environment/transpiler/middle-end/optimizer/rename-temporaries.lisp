@@ -18,7 +18,7 @@
              (not (opt-peephole-will-be-used-again? .d plc))))))
     (with (plc (%setq-place a)
            val (%setq-value d.)
-           fi *opt-peephole-funinfo*)
+           fi *funinfo*)
       (funinfo-vars-adjoin fi '~%tmp)
       `((%setq ~%tmp ,(%setq-value a))
         (%setq ,(%setq-place d.) ,(replace-tree plc '~%tmp val :test #'eq))

@@ -1,7 +1,6 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defvar *opt-peephole?* t)
-(defvar *opt-peephole-funinfo* nil)
 (defvar *opt-peephole-body* nil)
 
 (defmacro opt-peephole-rec (a d val fun name &optional (setq? nil))
@@ -11,7 +10,7 @@
      (let f (copy-lambda ,val
                          :name ,name
                          :body (with-temporary *opt-peephole-body* body
-                                 (with-temporary *opt-peephole-funinfo* (get-lambda-funinfo ,val)
+                                 (with-temporary *funinfo* (get-lambda-funinfo ,val)
                                    (,fun body))))
        (cons ,(? setq?
 	            '`(%setq ,plc ,f)
