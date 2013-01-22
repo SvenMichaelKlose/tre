@@ -2,14 +2,11 @@
 
 (defvar *body*)
 
-(defun function-copier (x statement)
-  `(copy-lambda ,x :body ,statement))
-
 (defun metacode-walker-copier (x statement)
-   `(list ,(function-copier x statement)))
+   `(list (copy-lambda ,x :body ,statement)))
 
 (defun metacode-walker-copier-setq (x statement)
-   ``((%setq ,,`(%setq-place ,x) ,(function-copier `(%setq-value ,x) statement))))
+  ``((%setq ,,(%setq-place ,x) ,,(copy-lambda (%setq-value ,x) :body ,statement))))
 
 (defun metacode-statement? (x)
   (| (in? x. '%setq '%set-vec '%var '%function-prologue '%function-epilogue '%function-return '%%tag)
@@ -54,7 +51,7 @@
                   ,@(alet (| if-named-function `(,name (lambda-body ,v) ,@r))
                       `((named-lambda? ,v) ,(metacode-walker-copier v !)))
 
-                  ,@(alet (| if-lambda `(,name (lambda-body ,v) ,@r))
+                  ,@(alet (| if-lambda `(,name (lambda-body (%setq-value ,v)) ,@r))
                       `((%setq-lambda? ,v) ,(metacode-walker-copier-setq v !)))
 
                   (not (metacode-statement? ,v))
