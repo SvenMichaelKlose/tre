@@ -10,14 +10,14 @@
 (defun js-transpile-epilogue ()
   (format nil "}break;}~%"))
 
-(defun js-emit-early-defined-functions (tr)
+(defun js-emit-early-defined-functions ()
   (mapcar ^(push ',_. *defined-functions*)
-          (transpiler-memorized-sources tr)))
+          (transpiler-memorized-sources *js-transpiler*)))
 
-(defun js-emit-memorized-sources (tr)
-  (clr (transpiler-memorize-sources? tr))
+(defun js-emit-memorized-sources ()
+  (clr (transpiler-memorize-sources? *transpiler*))
   (filter ^(%setq (slot-value ,_. '__source) ,(list 'quote ._))
-          (transpiler-memorized-sources tr)))
+          (transpiler-memorized-sources *transpiler*)))
 
 (defun js-make-decl-gen (tr)
   #'(()
@@ -35,9 +35,8 @@
      (& (eq t *have-environment-tests*)
         `((t5 . ,(make-environment-tests))))))
 
-(defun js-files-compiler (tr)
-  (+ `((list-of-early-defined-functions . ,#'(()
-                                                (js-emit-early-defined-functions tr)))
+(defun js-files-compiler ()
+  (+ `((list-of-early-defined-functions . ,#'js-emit-early-defined-functions)
        (,(+ *js-env-path* "env-load-stub.lisp")))
      (mapcan [unless (eq 'c ._)
                `((,(+ "environment/" _.)))]
@@ -45,12 +44,11 @@
      `((,(+ *js-env-path* "late-macro.lisp"))
        (,(+ *js-env-path* "eval.lisp")))))
 
-(defun js-files-after-deps (tr)
+(defun js-files-after-deps ()
   (+ `((late-symbol-function-assignments . ,#'emit-late-symbol-function-assignments)
-       (memorized-source-emitter . ,#'(()
-                                         (js-emit-memorized-sources tr))))
+       (memorized-source-emitter . ,#'js-emit-memorized-sources))
      (& *have-compiler?*
-        (js-files-compiler tr))))
+        (js-files-compiler))))
 
 (defun js-transpile (sources &key (transpiler nil) (obfuscate? nil) (print-obfuscations? nil) (files-to-update nil))
   (let tr transpiler
@@ -61,7 +59,7 @@
                             :files-before-deps   (js-files-before-deps tr)
                             :dep-gen             #'(()
                                                       (transpiler-import-from-environment tr))
-                            :files-after-deps    (+ (js-files-after-deps tr)
+                            :files-after-deps    (+ (js-files-after-deps)
                                                     sources)
                             :files-to-update     files-to-update
                             :obfuscate?          obfuscate?
