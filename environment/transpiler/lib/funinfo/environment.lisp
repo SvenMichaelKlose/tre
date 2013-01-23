@@ -1,5 +1,12 @@
 ;;;;; tré – Copyright (c) 2006–2007,2009–2013 Sven Michael Klose <pixel@copei.de>
 
+
+;;;; FUNCTION NAME
+
+(defun funinfo-get-name (fi)
+  (| (funinfo-name fi)
+     (funinfo-get-name (funinfo-parent fi))))
+
 ;;;; ARGUMENTS
 
 (defun funinfo-arg? (fi var)
@@ -9,19 +16,11 @@
 (defun funinfo-arg-pos (fi x)
   (position x (funinfo-args fi) :test #'eq))
 
-;;;; FREE VARIABLES
-
-(defun funinfo-free-var? (fi var)
-  (member var (funinfo-free-vars fi) :test #'eq))
-
-(defun funinfo-add-free-var (fi var)
-  (adjoin! var (funinfo-free-vars fi) :test #'eq)
-  var)
-
-;;;; ARGUMENTS & ENVIRONMENT
-
 (defun funinfo-local-args (fi)
   (remove-if [funinfo-lexical? fi _] (funinfo-args fi)))
+
+
+;;;; ARGUMENTS & VARIABLES
 
 (defun funinfo-var? (fi x)
   (& x (atom x)
@@ -35,43 +34,25 @@
   (| (funinfo-arg? fi x)
      (funinfo-var? fi x)))
 
-(defun funinfo-parent-var? (fi x)
-  (!? (funinfo-parent fi)
-      (| (funinfo-arg-or-var? ! x)
-	     (funinfo-parent-var? ! x))))
-
 (defun funinfo-var-or-lexical? (fi x)
-  (| (funinfo-arg-or-var? fi x)
-     (!? (funinfo-parent fi)
-         (funinfo-var-or-lexical? ! x))))
-
-(defun funinfo-toplevel-var? (fi x)
   (!? (funinfo-parent fi)
-      (& (not (funinfo-arg-or-var? fi x))
-         (funinfo-toplevel-var? ! x))
-      (funinfo-arg-or-var? fi x)))
+      (| (funinfo-arg-or-var? fi x)
+         (funinfo-var-or-lexical? ! x))))
 
 
 ;;;; ENVIRONMENT
+
+(defun funinfo-parent-var? (fi x)
+  (!? (funinfo-parent fi)
+      (| (funinfo-arg-or-var? ! x)
+         (funinfo-parent-var? ! x))))
 
 (defun funinfo-var-pos (fi x)
   (& (funinfo-parent fi)
      (position x (funinfo-vars fi) :test #'eq)))
 
-,`(progn
-    ,@(mapcar (fn `(defun ,($ 'funinfo- _.) (fi var)
-			   	     (position var (,($ 'funinfo- ._.) fi) :test #'eq)))
-		      `((free-var-pos free-vars)
-                (lexical-pos lexicals))))
-
 (defun funinfosym-var-pos (fi-sym x)
   (funinfo-var-pos (get-funinfo-by-sym fi-sym) x))
-
-(defun funinfosym-lexical-pos (fi-sym x)
-  (funinfo-lexical-pos (get-funinfo-by-sym fi-sym) x))
-
-(defun funinfo-lexical? (fi x)
-  (member x (funinfo-lexicals fi) :test #'eq))
 
 (defun funinfo-var-add (fi x)
   (unless (atom x)
@@ -105,6 +86,21 @@
   (unless (funinfo-var? fi x)
     (funinfo-var-add fi x)))
 
+
+;;;; LEXICAL CONTEXT
+
+(defun funinfo-lexical-pos (fi x)
+  (position x (funinfo-lexicals fi) :test #'eq))
+
+(defun funinfosym-lexical-pos (fi-sym x)
+  (funinfo-lexical-pos (get-funinfo-by-sym fi-sym) x))
+
+(defun funinfo-lexical? (fi x)
+  (member x (funinfo-lexicals fi) :test #'eq))
+
+
+;;;; USED VARIABLES
+
 (defun funinfo-used-var? (fi x)
   (member x (funinfo-used-vars fi) :test #'eq))
 
@@ -113,15 +109,33 @@
      (not (funinfo-used-var? fi x))
      (+! (funinfo-used-vars fi) (list x))))
 
-(defun funinfo-get-name (fi)
-  (| (funinfo-name fi)
-     (funinfo-get-name (funinfo-parent fi))))
+
+;;;; IMMUTABLES
 
 (defun funinfo-immutable? (fi x)
   (member x (funinfo-immutables fi) :test #'eq))
 
 (defun funinfo-add-immutable (fi x)
   (adjoin! x (funinfo-immutables fi) :test #'eq))
+
+
+;;;; FREE VARIABLES
+
+(defun funinfo-free-var? (fi var)
+  (member var (funinfo-free-vars fi) :test #'eq))
+
+(defun funinfo-add-free-var (fi var)
+  (adjoin! var (funinfo-free-vars fi) :test #'eq)
+  var)
+
+
+;;;; GLOBAL VARIABLES
+
+(defun funinfo-toplevel-var? (fi x)
+  (!? (funinfo-parent fi)
+      (& (not (funinfo-arg-or-var? fi x))
+         (funinfo-toplevel-var? ! x))
+      (funinfo-arg-or-var? fi x)))
 
 (defun funinfo-global-variable? (fi x)
   (& (not (funinfo-var-or-lexical? fi x))
