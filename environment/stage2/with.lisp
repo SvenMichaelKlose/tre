@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun copy-while (pred x)
   (& x (funcall pred (car x))
@@ -12,7 +12,7 @@
   (values (copy-while pred x)
 		  (remove-if pred x)))
 
-(defmacro with (alst &body body)
+(defmacro with (lst &body body)
   (unless body
 	(error "body expected"))
   (labels ((sub (x)
@@ -20,7 +20,8 @@
                 `((with ,x
 					,@body))
                 body)))
-    (let* ((plc (car alst))
+    (let* ((alst (macroexpand lst))
+           (plc (car alst))
            (val (cadr alst)))
       (?
 	    (cons? plc) `(multiple-value-bind ,plc ,val
