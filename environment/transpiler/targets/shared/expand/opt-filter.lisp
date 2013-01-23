@@ -7,8 +7,9 @@
                        `(append ,@lsts)
                        lsts.)
                 (queue-list ,q))
-         (enqueue ,q ,(?
-                        (static-symbol-function? fun) `(,.fun. ,i)
-                        (function-expr? fun)          `(,fun ,i)
-                        (atom fun)                    `(funcall ,fun ,i)
-                        (error "function or variable required instead of ~A" fun)))))))
+         (enqueue ,q ,(alet (macroexpand fun)
+                        (?
+                          (static-symbol-function? !) `(,.!. ,i)
+                          (function-expr? !)          `(,! ,i)
+                          (atom !)                    `(funcall ,! ,i)
+                          (error "function or variable required instead of ~A" !))))))))
