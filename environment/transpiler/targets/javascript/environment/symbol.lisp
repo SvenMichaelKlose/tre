@@ -4,9 +4,6 @@
 
 (dont-inline %symbol)
 
-;; Symbol constructor
-;;
-;; It has a function field but that isn't used yet.
 (define-native-js-fun %symbol (name pkg)
   (= this.__class ,(transpiler-obfuscated-symbol-string *transpiler* 'symbol)
      this.n name
@@ -15,11 +12,10 @@
      this.p (| pkg nil))
   this)
 
-;; Find symbol by name or create a new one.
 (define-native-js-fun symbol (name pkg)
   (unless (%%%== ,*nil-symbol-name* name)
     (| (%%%== ,*t-symbol-name* name)
-	   (with (pkg-name (? pkg pkg.n ,*nil-symbol-name*)
+	   (with (pkg-name     (? pkg pkg.n ,*nil-symbol-name*)
               symbol-table (| (%href *symbols* pkg-name)
 	   				          (= (%href *symbols* pkg-name) (%%%make-hash-table))))
          (| (%href symbol-table name)
