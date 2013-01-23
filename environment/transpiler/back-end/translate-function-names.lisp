@@ -1,9 +1,7 @@
 ;;;;; tré – Copyright (c) 2010–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun translate-function-name (tr funinfo x)
-  (? (& (transpiler-defined-function tr x)
-	    (| (not funinfo)
-	       (not (funinfo-var-or-lexical? funinfo x))))
+  (? (transpiler-defined-function tr x)
      (compiled-function-name tr x)
      x))
 

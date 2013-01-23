@@ -6,10 +6,9 @@
       x))
 
 (defun compiled-function-name (tr x)
-  (? (| (%transpiler-native? x)
-	    (not (transpiler-defined-function tr x)))
-	 x
-     (compiled-user-function-name x)))
+  (? (transpiler-defined-function tr x)
+     (compiled-user-function-name x)
+	 x))
 
 (defun compiled-function-name-string (tr name)
   (transpiler-obfuscated-symbol-string tr (compiled-function-name tr name)))
