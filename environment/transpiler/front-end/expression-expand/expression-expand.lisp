@@ -46,7 +46,7 @@
 (defun expex-warn (x)
   (& *expex-warn?*
      (symbol? x)
-     (not (transpiler-defined-symbol? x)
+     (not (transpiler-defined-symbol? *expex-funinfo* x)
           (transpiler-can-import? *transpiler* x))
      (error "symbol ~A is not defined in function ~A.~%"
             (symbol-name x)
@@ -194,8 +194,10 @@
     (let-when fun (& (cons? val) val.)
       (| (symbol? fun) (cons? fun)
          (error "function must be a symbol or expression: misplaced ~A~%" x)))
-      (with ((moved new-expr) (expex-move-args ex (list val)))
-        (values moved (expex-make-%setq ex plc new-expr.)))))
+    (? (%setq? val)
+       (values nil (expex-body ex `(,val (%setq ,plc ,(%setq-place val)))))
+       (with ((moved new-expr) (expex-move-args ex (list val)))
+         (values moved (expex-make-%setq ex plc new-expr.))))))
 
 (defun expex-expr-std (ex x)
   (with ((moved new-expr) (expex-move-args ex (expex-argexpand ex x)))
