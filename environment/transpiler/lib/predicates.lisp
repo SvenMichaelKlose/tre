@@ -8,8 +8,7 @@
   (& (cons? x)
      (eq 'function x.)
      (atom .x.)
-     (not ..x)
-     .x.))
+     (not ..x)))
 
 (defun simple-argument-list? (x)
   (? x

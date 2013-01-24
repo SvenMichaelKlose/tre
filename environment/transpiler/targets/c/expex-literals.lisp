@@ -39,9 +39,3 @@
 	(funinfo-var-or-lexical? *expex-funinfo* x) x
 	(expex-funinfo-defined-variable? x) `(treatom_get_value ,(c-compiled-symbol x))
 	x))
-
-(defun c-expex-filter (x)
-  (& (cons? x)
-     (symbol? x.)
-     (c-compiled-symbol x.))
-  (transpiler-import-from-expex x))

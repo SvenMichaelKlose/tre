@@ -73,13 +73,12 @@
        (transpiler-delayed-var-inits tr))))
 
 (defun transpiler-import-from-expex (x)
-  (!? (static-symbol-function? x)
-      (? (funinfo-var-or-lexical? *expex-funinfo* !)
-	     x
-         (progn
-	       (transpiler-add-wanted-function *transpiler* !)
-           (transpiler-macroexpand *transpiler* `(symbol-function (%quote ,!)))))
-      x))
+  (? (& (static-symbol-function? x)
+        (not (funinfo-var-or-lexical? *expex-funinfo* .x.)))
+     (progn
+       (transpiler-add-wanted-function *transpiler* .x.)
+       (transpiler-macroexpand *transpiler* `(symbol-function (%quote ,.x.))))
+     x))
 
 (defun transpiler-import-universe (tr)
   (map [transpiler-add-wanted-function tr _] (reverse *defined-functions*)))

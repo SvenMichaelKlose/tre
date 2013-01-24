@@ -19,7 +19,6 @@
 			  :literal-conversion #'identity
 	          :expex-initializer #'((ex)
 	                                 (= (expex-argument-filter ex) #'c-expex-argument-filter
-	                                    (expex-expr-filter ex) #'c-expex-filter
 			                            (expex-setter-filter ex) (compose [mapcan [expex-set-global-variable-value _] _]
 									                                      #'expex-compiled-funcall)
 		                                (expex-inline? ex) [in? _ 'cons 'aref '%vec '%car '%cdr '%%%eq])))
