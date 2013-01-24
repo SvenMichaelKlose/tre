@@ -238,13 +238,10 @@
              (expex-make-%setq ex s last)))
        x)))
 
-(defun expex-list (ex x)
-  (mapcan [with ((moved new-expr) (expex-expr ex _))
-            (+ moved (mapcan [expex-force-%setq ex _] new-expr))]
-          x))
-
 (defun expex-body (ex x &optional (s '~%ret))
-  (expex-make-return-value ex s (expex-list ex (distinguish-vars-from-tags (list-without-noargs-tag x)))))
+  (expex-make-return-value ex s (mapcan [with ((moved new-expr) (expex-expr ex _))
+                                          (+ moved (mapcan [expex-force-%setq ex _] new-expr))]
+                                        (distinguish-vars-from-tags (list-without-noargs-tag x)))))
 
 
 ;;;; TOP LEVEL
