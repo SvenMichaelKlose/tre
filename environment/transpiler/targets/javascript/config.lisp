@@ -13,10 +13,10 @@
 	  :apply-argdefs? t
 	  :literal-conversion #'transpiler-expand-literal-characters
 	  :identifier-char?
-	    (fn (| (& (>= _ #\a) (<= _ #\z))
-		  	   (& (>= _ #\A) (<= _ #\Z))
-		  	   (& (>= _ #\0) (<= _ #\9))
-			   (in=? _ #\_ #\. #\$ #\#)))
+        [| (& (>= _ #\a) (<= _ #\z))
+           (& (>= _ #\A) (<= _ #\Z))
+           (& (>= _ #\0) (<= _ #\9))
+           (in=? _ #\_ #\. #\$ #\#)]
 	  :lambda-export? nil
 	  :continuation-passing-style? t
 	  :needs-var-declarations? t

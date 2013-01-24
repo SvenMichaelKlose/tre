@@ -14,7 +14,7 @@
 
 (defun transpiler-symbol-string-r (tr s)
   (with (encapsulate-char
-		   (fn string-list (string-concat "T" (format nil "~A" (char-code _))))
+		   [string-list (string-concat "T" (format nil "~A" (char-code _)))]
 				
 		 convert-camel
 		   #'((x pos)
@@ -27,26 +27,25 @@
 						      (convert-camel ..x (1+ pos)))
 					    (cons c (convert-camel .x (1+ pos)))))))
 
-		 convert-special2
-		   (fn & _
-			     (let c _.
-			       (? (transpiler-special-char? tr c)
-				      (append (encapsulate-char c)
-						      (convert-special2 ._))
-				      (cons c (convert-special2 ._)))))
+         convert-special2
+           [& _
+              (let c _.
+                (? (transpiler-special-char? tr c)
+                   (append (encapsulate-char c)
+                           (convert-special2 ._))
+                   (cons c (convert-special2 ._))))]
 
 		 convert-special
-		   (fn & _
-			     (let c _.
-				   ; Encapsulate initial char if it's a digit.
-				   (? (digit-char-p c)
-				      (append (encapsulate-char c)
-						      (convert-special2 ._))
-				      (convert-special2 _))))
-        convert-global
-	       #'((x)
-               (let l (length x)
-                 (remove-if (fn == _ #\-) (string-list (string-upcase (subseq x 1 (1- l))))))))
+           [& _
+              (let c _.
+                   ; Encapsulate initial char if it's a digit.
+                   (? (digit-char-p c)
+                      (append (encapsulate-char c)
+                              (convert-special2 ._))
+                      (convert-special2 _)))]
+         convert-global
+           [remove-if [== _ #\-]
+                      (string-list (string-upcase (subseq _ 1 (1- (length _)))))])
 	(? (| (string? s) (number? s))
 	   (string s)
        (list-string
@@ -61,7 +60,7 @@
       (transpiler-symbol-string-r tr s)))
 
 (defun transpiler-dot-symbol-string (tr sl)
-  (apply #'string-concat (pad (filter (fn transpiler-symbol-string-0 tr (make-symbol (list-string _)))
+  (apply #'string-concat (pad (filter [transpiler-symbol-string-0 tr (make-symbol (list-string _))]
 		                              (split #\. sl))
                               ".")))
 
@@ -76,18 +75,18 @@
 
 (defun transpiler-to-string-cons (tr x)
   (?
-    (%transpiler-string? x)      (funcall (transpiler-gen-string tr) .x.)
-    (eq '%transpiler-native x.)  (transpiler-to-string tr .x)
+    (%transpiler-string? x)     (funcall (transpiler-gen-string tr) .x.)
+    (eq '%transpiler-native x.) (transpiler-to-string tr .x)
     x))
 
 (defun transpiler-to-string (tr x)
-  (maptree (fn ?
-			    (cons? _)    (transpiler-to-string-cons tr _)
-			    (string? _)  (? (string== "nil" _)
-                                (progn
-                                  (princ "X")
-                                  (error "nil as string"))
-                                _)
-				(| (assoc-value _ (transpiler-symbol-translations tr) :test #'eq)
-				   (transpiler-symbol-string tr _)))
-		   x))
+  (maptree [?
+             (cons? _)    (transpiler-to-string-cons tr _)
+             (string? _)  (? (string== "nil" _)
+                             (progn
+                               (princ "X")
+                               (error "nil as string"))
+                             _)
+             (| (assoc-value _ (transpiler-symbol-translations tr) :test #'eq)
+                (transpiler-symbol-string tr _))]
+           x))
