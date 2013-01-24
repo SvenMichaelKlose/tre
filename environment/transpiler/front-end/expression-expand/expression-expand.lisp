@@ -222,22 +222,20 @@
   (| (& (metacode-expression-only x) (list x))
      (expex-make-%setq ex '~%ret x)))
 
-(defun expex-force-copying-assignment (ex x s)
-  `(,x.
-    ,@(expex-make-%setq ex s (%setq-place x.))))
-
-(defun expex-wanted-return-value? (s x)
-  (eq s (%setq-place x)))
-
 (defun expex-make-return-value (ex s x)
-  (let last (last x)
-    (? (has-return-value? last.)
+  (with (last (car (last x))
+         wanted-return-value? #'(()
+                                   (eq s (%setq-place last)))
+         make-return-value    #'(()
+                                   `(,last
+                                     ,@(expex-make-%setq ex s (%setq-place last)))))
+    (? (has-return-value? last)
        (+ (butlast x)
-          (? (%setq? last.)
-             (? (expex-wanted-return-value? s last.)
-                (expex-guest-filter-setter ex last.)
-                (expex-force-copying-assignment ex last s))
-             (expex-make-%setq ex s last.)))
+          (? (%setq? last)
+             (? (wanted-return-value?)
+                (expex-guest-filter-setter ex last)
+                (make-return-value))
+             (expex-make-%setq ex s last)))
        x)))
 
 (defun expex-list (ex x)
