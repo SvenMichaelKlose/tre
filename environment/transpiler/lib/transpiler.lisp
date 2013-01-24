@@ -302,24 +302,26 @@
   tr)
 
 (defun make-global-funinfo (tr)
-  (alet (= (transpiler-global-funinfo tr) (make-funinfo :transpiler tr))
+  (alet (= (transpiler-global-funinfo tr) (make-funinfo :name 'GLOBAL-SCOPE :transpiler tr))
     (make-lambda-funinfo ! tr)))
 
 (defun transpiler-package-symbol (tr x)
   (make-symbol (symbol-name x) (transpiler-current-package tr)))
 
-(defun transpiler-defined-symbol? (x)
+(defun transpiler-defined-symbol? (fi x)
   (let tr *transpiler*
-    (| (funinfo-var-or-lexical? *expex-funinfo* x)
+    (| (funinfo-var-or-lexical? fi x)
        (function? x)
        (keyword? x)
        (member x (transpiler-predefined-symbols tr) :test #'eq)
        (in? x nil t '~%ret 'this)
        (transpiler-imported-variable? tr x)
+       (transpiler-defined-function tr x)
        (transpiler-defined-variable tr x)
        (transpiler-macro? tr x)
        (transpiler-host-variable? tr x)
-       (transpiler-late-symbol? tr x))))
+       (transpiler-late-symbol? tr x)
+       (funinfo-var? (transpiler-global-funinfo tr) x))))
 
 (defun in-cps-mode? ()
   (& (transpiler-continuation-passing-style? *transpiler*)
