@@ -11,7 +11,7 @@
         ,@(lambda-body x)))))
 
 (define-bc-macro %function-prologue (fi-sym) '(%setq nil nil))
-(define-bc-macro %function-epilogue (fi-sym) '((%%vm-go nil) %%bc-return))
+(define-bc-macro %function-epilogue (fi-sym) '((%%go nil) %%bc-return))
 
 (define-bc-macro %%closure (name fi-sym)
   `(%closure ,name ,(codegen-closure-lexical fi-sym)))

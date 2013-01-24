@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2010,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2010,2012–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun cblock-to-metacode (x)
   (with (blks (cdr (butlast x))
@@ -7,9 +7,9 @@
                  (+ (list tag)
                     (cblock-code cb)
                     (!? (cblock-conditional-next cb)
-                        `((%%vm-go-nil ,(cblock-conditional-place cb)
-                                       ,(assoc-value ! tags :test #'eq)))
+                        `((%%go-nil ,(cblock-conditional-place cb)
+                                    ,(assoc-value ! tags :test #'eq)))
                           (awhen (assoc-value (cblock-next cb) tags :test #'eq)
-                            `((%%vm-go ,!))))))
+                            `((%%go ,!))))))
             (cdrlist tags)
             blks)))

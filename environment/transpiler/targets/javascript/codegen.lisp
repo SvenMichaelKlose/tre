@@ -33,13 +33,13 @@
 (define-js-macro %%tag (tag)
   `(%transpiler-native "case " ,tag ":" ,*js-newline*))
 
-(define-js-macro %%vm-go (tag)
+(define-js-macro %%go (tag)
   `(,*js-indent* "_I_=" ,tag ";continue" ,*js-separator*))
 
-(define-js-macro %%vm-go-nil (val tag)
+(define-js-macro %%go-nil (val tag)
   `(,*js-indent* "if(!" ,val "&&" ,val "!==0&&" ,val "!==''){_I_=" ,tag ";continue;}" ,*js-newline*))
 
-(define-js-macro %%vm-call-nil (val consequence alternative)
+(define-js-macro %%call-nil (val consequence alternative)
   `(,*js-indent* "if(!" ,val "&&" ,val "!==0&&" ,val "!=='')"
                      ,consequence "();"
                  "else "

@@ -50,10 +50,10 @@
      `("goto _I_" ,tag)
      `(" $_I_=" ,tag "; break")))
 
-(define-php-macro %%vm-go (tag)
+(define-php-macro %%go (tag)
   (php-line (php-jump tag)))
 
-(define-php-macro %%vm-go-nil (val tag)
+(define-php-macro %%go-nil (val tag)
   (let v (php-dollarize val)
     (php-line "if (!" v "&&!is_string(" v ")&&!is_numeric(" v ")&&!is_array(" v ")) { " (php-jump tag) "; }")))
 

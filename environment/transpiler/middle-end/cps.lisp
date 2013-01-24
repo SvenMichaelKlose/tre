@@ -133,10 +133,10 @@
     (with-gensym g
       (funinfo-var-add fi g)
       `((%setq ,g (%defined? (%slot-value ,method tre-cps)))
-        (%%vm-go-nil ,g ,tag-no-cps)
-        (%%vm-go-nil (%slot-value ,method tre-cps) ,tag-no-cps)
+        (%%go-nil ,g ,tag-no-cps)
+        (%%go-nil (%slot-value ,method tre-cps) ,tag-no-cps)
         ,@(cps-split-funcall fi x xlats)
-        (%%vm-go ,tag-end)
+        (%%go ,tag-end)
         ,tag-no-cps
         ,x.
         ,(cps-make-call-to-next x xlats)
@@ -152,15 +152,15 @@
 
 (defun cps-split (fi x xlats tag-xlats &key (first? t))
   (?
-    (cps-apply? x.) (cps-split-apply fi x xlats)
-;    (cps-methodcall? x.) (cps-split-methodcall fi x xlats)
-;    (cps-constructorcall? x.) (cps-split-constructorcall fi x xlats)
-    (cps-funcall? x.) (cps-split-funcall fi x xlats)
+    (cps-apply? x.)            (cps-split-apply fi x xlats)
+;    (cps-methodcall? x.)       (cps-split-methodcall fi x xlats)
+;    (cps-constructorcall? x.)  (cps-split-constructorcall fi x xlats)
+    (cps-funcall? x.)          (cps-split-funcall fi x xlats)
 ;    (cps-foureign-funcall? x.) (cps-foureign-funcall fi x.)
-    (%%vm-go? x.) `((%setq nil (,(cps-tag-function-name (cadr x.) xlats tag-xlats))))
-    (%%vm-go-nil? x.) `((%%vm-call-nil ,(cadr x.)
-                                       ,(cps-tag-function-name (caddr x.) xlats tag-xlats)
-                                       ,(cps-cons-function-name .x xlats)))))
+    (%%go? x.)                 `((%setq nil (,(cps-tag-function-name (cadr x.) xlats tag-xlats))))
+    (%%go-nil? x.)             `((%%call-nil ,(cadr x.)
+                                             ,(cps-tag-function-name (caddr x.) xlats tag-xlats)
+                                             ,(cps-cons-function-name .x xlats)))))
 
 (defun cps-splitpoint-expr? (x)
   (| (cps-apply? x)
@@ -168,8 +168,8 @@
 ;     (cps-foureign-funcall? x)
 ;     (cps-methodcall? x)
 ;     (cps-constructorcall? x)
-     (%%vm-go? x)
-     (%%vm-go-nil? x)))
+     (%%go? x)
+     (%%go-nil? x)))
 
 (defun cps-check-funcall (fi x xlats))
 
@@ -189,7 +189,7 @@
 
 (defun cps-body-exit (fi continuer x xlats tag-xlats first? exit-tag)
   `(,x.
-    (%%vm-go ,exit-tag)
+    (%%go ,exit-tag)
     ,@(cps-body fi continuer .x xlats tag-xlats :first? first? :exit-tag exit-tag)))
 
 (defun cps-body-epilogue (continuer x exit-tag)
@@ -292,11 +292,11 @@
     (with-gensym g
       (funinfo-var-add fi g)
       `((%setq ,g (%defined? (%slot-value ,constructor tre-cps)))
-        (%%vm-go-nil ,g ,tag-no-cps)
-        (%%vm-go-nil (%slot-value ,constructor tre-cps) ,tag-no-cps)
+        (%%go-nil ,g ,tag-no-cps)
+        (%%go-nil (%slot-value ,constructor tre-cps) ,tag-no-cps)
         ,@(cps-split-constructorcall-0 fi (list x)
               (cps-make-dummy-continuer (%setq-place x) fi))
-        (%%vm-go ,tag-end)
+        (%%go ,tag-end)
         ,tag-no-cps
         ,x
         ,tag-end))))
@@ -312,10 +312,10 @@
          tag-end (make-compiler-tag))
     (with-gensym g
       `((%setq ,g (%defined? (%slot-value ,method tre-cps)))
-        (%%vm-go-nil ,g ,tag-no-cps)
-        (%%vm-go-nil (%slot-value ,method tre-cps) ,tag-no-cps)
+        (%%go-nil ,g ,tag-no-cps)
+        (%%go-nil (%slot-value ,method tre-cps) ,tag-no-cps)
         ,@(cps-toplevel-funcall x)
-        (%%vm-go ,tag-end)
+        (%%go ,tag-end)
         ,tag-no-cps
         ,x
         ,tag-end))))

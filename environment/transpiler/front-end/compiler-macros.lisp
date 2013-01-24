@@ -26,10 +26,10 @@
        ,@(mapcan [with-compiler-tag next
                    `(,@(unless (t? _.)
                          `((%setq ~%ret ,_.)
-                           (%%vm-go-nil ~%ret ,next)))
+                           (%%go-nil ~%ret ,next)))
                      ,@(awhen (distinguish-vars-from-tags ._)
 				         `((%setq ~%ret (%%vm-scope ,@!))))
-                     (%%vm-go ,end-tag)
+                     (%%go ,end-tag)
                      ,next)]
 			     args)
        ,end-tag
@@ -45,10 +45,10 @@
 
 (define-compiler-macro go (tag)
   (!? (cdr (assoc tag *tagbody-replacements* :test #'eq))
-      `(%%vm-go ,!)
+      `(%%go ,!)
       (with-compiler-tag g
         (acons! tag g *tagbody-replacements*)
-        `(%%vm-go ,g))))
+        `(%%go ,g))))
 
 (define-compiler-macro tagbody (&rest args)
   `(%%vm-scope
@@ -71,7 +71,7 @@
   (? (eq block-name *blockname*)
      `(%%vm-scope
         (%setq ~%ret ,expr)
-        (%%vm-go ,*blockname-replacement*))
+        (%%go ,*blockname-replacement*))
 	 `(return-from ,block-name ,expr)))
 
 (define-compiler-macro block (block-name &rest body)

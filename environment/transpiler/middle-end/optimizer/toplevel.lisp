@@ -51,7 +51,7 @@
 				    (add-removed-tag a d.)
 				    (reduce-tags d))
     		    (& (number? a)
-                   (%%vm-go? d.))
+                   (%%go? d.))
                   (progn
                     (add-removed-tag a (cadr d.))
 				    (reduce-tags d))))
@@ -63,7 +63,7 @@
                   _]
 	   rec
 		 [funcall (compose #'opt-peephole-remove-void
-                           #'opt-peephole-remove-vm-go-nil-heads
+                           #'opt-peephole-remove-%%go-nil-heads
                            #'opt-peephole-rename-temporaries
                            #'opt-peephole-remove-code
                            #'opt-peephole-remove-assignments

@@ -11,7 +11,7 @@
 (defun metacode-statement? (x)
   (| (in? x. '%setq '%set-vec '%var '%function-prologue '%function-epilogue '%function-return '%%tag)
 	 (vm-jump? x)
-     (%%vm-call-nil? x)))
+     (%%call-nil? x)))
 
 (defmacro metacode-walker (name args &key (if-atom nil)
 					  	    	          (if-cons nil)
@@ -42,8 +42,8 @@
                           `(list ,v)))
 
                   ,@(!? if-setq        `((%setq? ,v)        ,!))
-                  ,@(!? if-go          `((%%vm-go? ,v)      ,!))
-                  ,@(!? if-go-nil      `((%%vm-go-nil? ,v)  ,!))
+                  ,@(!? if-go          `((%%go? ,v)         ,!))
+                  ,@(!? if-go-nil      `((%%go-nil? ,v)     ,!))
                   ,@(!? if-slot-value  `((%slot-value? ,v)  ,!))
                   ,@(!? if-stack       `((%stack? ,v)       ,!))
                   ,@(!? if-vec         `((%vec? ,v)         ,!))

@@ -30,10 +30,10 @@
                     (not x)    x
                     (%%tag? x) (rec ..x)
                     (cons x. (case x. :test #'eq
-                               '%quote       (cons .x. (rec ..x))
-                               '%%vm-go-nil  (with ((cnd n) (get-bc-value .x))
-                                               `(,@cnd ,(get-tag-index n.) ,@(rec .n)))
-                               '%%vm-go      (cons (get-tag-index .x.) (rec ..x))
+                               '%quote   (cons .x. (rec ..x))
+                               '%%go-nil (with ((cnd n) (get-bc-value .x))
+                                           `(,@cnd ,(get-tag-index n.) ,@(rec .n)))
+                               '%%go     (cons (get-tag-index .x.) (rec ..x))
                                (rec .x))))))
     (rec x)))
 

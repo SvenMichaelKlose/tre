@@ -19,7 +19,7 @@
 
 (defun jump-to-following-tag? (a d)
   (& d (vm-jump? a)
-     (? (%%vm-go? a)
+     (? (%%go? a)
         (eq .a. d.)
         (eq ..a. d.))))
 
@@ -28,4 +28,4 @@
   (reversed-assignments? a d)  (cons a (opt-peephole-remove-void .d))
   (jump-to-following-tag? a d) (opt-peephole-remove-void d)
   ; Remove code after label until next tag.
-  (%%vm-go? a)                 (cons a (opt-peephole-remove-void (find-next-tag d))))
+  (%%go? a)                    (cons a (opt-peephole-remove-void (find-next-tag d))))

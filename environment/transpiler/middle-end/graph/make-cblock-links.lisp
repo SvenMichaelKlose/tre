@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2010–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2010–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun tag-cblock (tags tag)
   (assoc-value tag tags :test #'==))
@@ -22,8 +22,8 @@
     (with (cb x.
            l (last-cblock-instruction cb))
       (?
-        (%%vm-go? l) (set-unconditional-link cb tags .l.)
-        (%%vm-go-nil? l) (set-conditional-link cb tags ..l. .l. .x.)
+        (%%go? l)     (set-unconditional-link cb tags .l.)
+        (%%go-nil? l) (set-conditional-link cb tags ..l. .l. .x.)
         (= (cblock-next cb) .x.))
       (when (vm-jump? l)
         (remove-last-cblock-instruction cb))
