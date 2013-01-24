@@ -12,6 +12,7 @@
 (defvar *expex-funinfo* nil)
 (defvar *expex-warn?* t)
 
+
 ;;;; SYMBOLS
 
 (defvar *expexsym-counter* 0)
@@ -23,6 +24,7 @@
        !
        (expex-sym))))
 
+
 ;;;; GUEST CALLBACKS
 
 (defun expex-guest-filter-expr (ex x)
@@ -33,6 +35,7 @@
 
 (defun expex-guest-filter-arguments (ex x)
   (filter [funcall (expex-argument-filter ex) _] x))
+
 
 ;;;; UTILS
 
@@ -52,11 +55,9 @@
             (symbol-name x)
             (funinfo-get-name *expex-funinfo*))))
 
+
 ;;;; PREDICATES
 
-;; Check if an expression is expandable.
-;;
-;; Rejects atoms and expressions with meta-forms.
 (defun expex-able? (ex x)
   (| (& (expex-move-lexicals? ex)
         (atom x)
@@ -67,22 +68,19 @@
              (static-symbol-function? x)
              (in? x. '%%vm-go '%%vm-go-nil '%transpiler-native '%transpiler-string '%quote)))))
 
-;; Check if arguments to a function should be expanded.
 (defun expex-expandable-args? (ex fun argdef)
   (| (transpiler-defined-function *transpiler* fun)
      (not (funcall (expex-plain-arg-fun? ex) fun))))
 
+
 ;;;; ARGUMENT EXPANSION
 
-;; XXX this sucks blood out of stones. Should have proper macro expansion
-;; instead.
 (defun expex-convert-quotes (x)
   (filter [? (quote? _)
 		     `(%quote ,._.)
 			 _]
 		  x))
 
-;; Expand arguments to function.
 (defun expex-argexpand-0 (ex fun args)
   (dolist (i args)
     (expex-warn i))
@@ -96,7 +94,6 @@
                                             args))
 	   args)))
 
-;; Expand arguments if they are passed to a function.
 (defun expex-argexpand (ex x)
   (with (new? (%new? x)
 		 fun  (? new? .x. x.)
@@ -106,19 +103,20 @@
 	    	    (expex-convert-quotes (expex-argexpand-0 ex fun args))
 	    	    args))))
 
+
 ;;;;; ARGUMENT VALUE EXPANSION
 
-(defun expex-move-arg-inline (ex x)
+(defun expex-move-inline (ex x)
   (with ((p a) (expex-move-args ex x))
 	(cons p a)))
 
-(defun expex-move-arg-vm-scope (ex x)
+(defun expex-move-vm-scope (ex x)
   (!? (%%vm-scope-body x)
       (let s (expex-funinfo-var-add)
         (cons (expex-body ex ! s) s))
 	  (cons nil nil)))
 
-(defun expex-move-arg-std (ex x)
+(defun expex-move-std (ex x)
   (with (s                (expex-funinfo-var-add)
          (moved new-expr) (expex-expr ex x))
     (& (lambda-expression-needs-cps? x)
@@ -129,20 +127,23 @@
                 new-expr))
           s)))
 
-(defun expex-move-arg-atom (ex x)
+(defun expex-move-atom (ex x)
   (let s (expex-funinfo-var-add)
     (cons (expex-make-%setq ex s x) s)))
 
-(defun expex-move-arg (ex x)
+(defun expex-move (ex x)
   (?
 	(not (expex-able? ex x))       (cons nil x)
-    (atom x)                       (expex-move-arg-atom ex x)
-	(funcall (expex-inline? ex) x) (expex-move-arg-inline ex x)
-    (%%vm-scope? x)                (expex-move-arg-vm-scope ex x)
-	(expex-move-arg-std ex x)))
+    (atom x)                       (expex-move-atom ex x)
+	(funcall (expex-inline? ex) x) (expex-move-inline ex x)
+    (%%vm-scope? x)                (expex-move-vm-scope ex x)
+	(expex-move-std ex x)))
+
+
+;;;; MOVING ARGUMENTS
 
 (defun expex-filter-and-move-args (ex x)
-  (with ((moved new-expr) (assoc-splice (filter [expex-move-arg ex _] (expex-guest-filter-arguments ex x))))
+  (with ((moved new-expr) (assoc-splice (filter [expex-move ex _] (expex-guest-filter-arguments ex x))))
     (values (apply #'+ moved) new-expr)))
 
 (defun expex-move-slot-value (ex x)
@@ -153,14 +154,11 @@
   (with ((moved new-expr) (expex-filter-and-move-args ex x))
     (values moved new-expr)))
 
-;; Move subexpressions out of a parent.
-;;
-;; Returns the head of moved expressions and a new parent with
-;; replaced arguments.
 (defun expex-move-args (ex x)
   (? (%slot-value? x)
 	 (expex-move-slot-value ex x)
 	 (expex-move-args-0 ex x)))
+
 
 ;;;; EXPRESSION EXPANSION
 
@@ -217,6 +215,7 @@
       (%setq? x)               (expex-expr-%setq ex x)
       (expex-expr-std ex x))))
 
+
 ;;;; BODY EXPANSION
 
 (defun expex-force-%setq (ex x)
@@ -249,7 +248,8 @@
 (defun expex-body (ex x &optional (s '~%ret))
   (expex-make-return-value ex s (expex-list ex (distinguish-vars-from-tags (list-without-noargs-tag x)))))
 
-;;;; TOPLEVEL
+
+;;;; TOP LEVEL
 
 (defun expression-expand (ex x)
   (& x
