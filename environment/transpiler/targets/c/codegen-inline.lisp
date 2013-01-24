@@ -2,7 +2,7 @@
 
 ;;;; COMPARISON
 
-(define-c-macro %eq (&rest x)
+(define-c-macro %%%eq (&rest x)
   `("TREPTR_TRUTH(" ,(pad x "==") ")"))
 
 (define-c-macro cons (a d)

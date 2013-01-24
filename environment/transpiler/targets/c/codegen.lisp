@@ -50,11 +50,11 @@
   `("_trelist_get (" ,(c-compiled-symbol '%closure) ", "
 	    "_trelist_get (" ,(c-compiled-symbol name) "," ,(codegen-closure-lexical fi-sym) "))"))
 
-(defun %eq (&rest x)
+(defun %%%eq (&rest x)
   (apply #'eq x))
 
 (define-c-macro eq (&rest x)
-  `(%eq ,@x))
+  `(%%%eq ,@x))
 
 (define-c-macro function (name &optional (x 'only-name))
   (?

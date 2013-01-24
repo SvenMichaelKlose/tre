@@ -40,7 +40,7 @@
        (%var ,name)
 	   (%setq ,name ,val))))
 
-(transpiler-wrap-invariant-to-binary define-c-std-macro eq 2 %eq &)
+(transpiler-wrap-invariant-to-binary define-c-std-macro eq 2 %%%eq &)
 
 (define-c-std-macro %%u=-car (val x)
   (shared-=-car val x))
