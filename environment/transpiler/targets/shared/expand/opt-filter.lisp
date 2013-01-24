@@ -9,7 +9,7 @@
                 (queue-list ,q))
          (enqueue ,q ,(alet (macroexpand fun)
                         (?
-                          (static-symbol-function? !) `(,.!. ,i)
-                          (function-expr? !)          `(,! ,i)
-                          (atom !)                    `(funcall ,! ,i)
+                          (literal-symbol-function? !) `(,.!. ,i)
+                          (function-expr? !)           `(,! ,i)
+                          (atom !)                     `(funcall ,! ,i)
                           (error "function or variable required instead of ~A" !))))))))

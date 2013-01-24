@@ -65,7 +65,7 @@
         (funinfo-parent-var? *expex-funinfo* x)
         (not (funinfo-toplevel-var? *expex-funinfo* x)))
      (not (| (atom x)
-             (static-symbol-function? x)
+             (literal-symbol-function? x)
              (in? x. '%%go '%%go-nil '%transpiler-native '%transpiler-string '%quote)))))
 
 (defun expex-expandable-args? (ex fun argdef)

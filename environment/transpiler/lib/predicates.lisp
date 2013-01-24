@@ -4,7 +4,7 @@
 	'(identity quote backquote quasiquote quasiquote-splice)
   `(def-head-predicate ,x))
 
-(defun static-symbol-function? (x)
+(defun literal-symbol-function? (x)
   (& (cons? x)
      (eq 'function x.)
      (atom .x.)

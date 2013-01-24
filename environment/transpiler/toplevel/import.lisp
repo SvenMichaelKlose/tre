@@ -73,7 +73,7 @@
        (transpiler-delayed-var-inits tr))))
 
 (defun transpiler-import-from-expex (x)
-  (? (& (static-symbol-function? x)
+  (? (& (literal-symbol-function? x)
         (not (funinfo-var-or-lexical? *expex-funinfo* .x.)))
      (progn
        (transpiler-add-wanted-function *transpiler* .x.)
