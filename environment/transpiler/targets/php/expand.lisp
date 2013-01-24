@@ -4,13 +4,13 @@
   `(define-transpiler-std-macro *php-transpiler* ,@x))
 
 (define-php-std-macro %defsetq (place &rest x)
-  `(%%vm-scope
+  `(%%block
      (%var ,place)
      (%setq ,place ,@x)
      ((slot-value ,(list 'quote place) 'sf) ,(compiled-function-name-string *transpiler* place))))
 
 (define-php-std-macro define-native-php-fun (name args &body body)
-  `(%%vm-scope
+  `(%%block
      ,@(apply #'shared-defun name args (body-with-noargs-tag body))
      (%setq ~%ret nil)))
 
@@ -22,7 +22,7 @@
 (define-php-std-macro defun (name args &body body)
   (with ((fi-sym adef) (split-funinfo-and-args args)
          fun-name (%defun-name name))
-    `(%%vm-scope
+    `(%%block
        ,@(apply #'shared-defun fun-name args
                 (? *exec-log*
                    `((%transpiler-native "error_log (\"" ,(symbol-name fun-name) "\")")

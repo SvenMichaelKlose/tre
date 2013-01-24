@@ -14,21 +14,21 @@
 (defun compiler-macroexpand (x)
   (expander-expand 'compiler x))
 
-(defun compress-%%vm-scopes (body)
-  (mapcan [? (%%vm-scope? _)
+(defun compress-%%blocks (body)
+  (mapcan [? (%%block? _)
              ._
              (list _)]
           body))
 
 (define-compiler-macro cond (&rest args)
   (with-compiler-tag end-tag
-    `(%%vm-scope
+    `(%%block
        ,@(mapcan [with-compiler-tag next
                    `(,@(unless (t? _.)
                          `((%setq ~%ret ,_.)
                            (%%go-nil ~%ret ,next)))
                      ,@(awhen (distinguish-vars-from-tags ._)
-				         `((%setq ~%ret (%%vm-scope ,@!))))
+				         `((%setq ~%ret (%%block ,@!))))
                      (%%go ,end-tag)
                      ,next)]
 			     args)
@@ -51,7 +51,7 @@
         `(%%go ,g))))
 
 (define-compiler-macro tagbody (&rest args)
-  `(%%vm-scope
+  `(%%block
      ,@(filter [(? (cons? _)
 		           _
 		     	   (| (assoc-value _ *tagbody-replacements* :test #'eq)
@@ -61,7 +61,7 @@
 
 (define-compiler-macro progn (&rest body)
   (!? body
-      `(%%vm-scope ,@(distinguish-vars-from-tags body))))
+      `(%%block ,@(distinguish-vars-from-tags body))))
 
 (define-expander 'compiler-return)
 (defvar *blockname* nil)
@@ -69,7 +69,7 @@
 
 (define-expander-macro compiler-return return-from (block-name expr)
   (? (eq block-name *blockname*)
-     `(%%vm-scope
+     `(%%block
         (%setq ~%ret ,expr)
         (%%go ,*blockname-replacement*))
 	 `(return-from ,block-name ,expr)))
@@ -82,7 +82,7 @@
            (with (b     (expander-expand 'compiler-return body)
 			      head  (butlast b)
                   tail  (last b)
-                  ret   `(%%vm-scope
+                  ret   `(%%block
                            ,@head
                            ,@(? (vm-jump? tail.)
 						        tail
@@ -91,7 +91,7 @@
     `(identity nil)))
 
 (define-compiler-macro setq (&rest args)
-  `(%%vm-scope ,@(filter ^(%setq ,_. ,._.) (group args 2))))
+  `(%%block ,@(filter ^(%setq ,_. ,._.) (group args 2))))
 
 (define-compiler-macro ? (&rest body)
   (with (tests (group body 2)
@@ -103,13 +103,13 @@
 			 (+ (butlast tests) (list (cons t end)))
 			 tests))))
 
-(define-compiler-macro %%vm-scope (&rest body)
+(define-compiler-macro %%block (&rest body)
    (?
-     .body            `(%%vm-scope ,@(compress-%%vm-scopes body))
-     (vm-jump? body.) `(%%vm-scope ,body.)
+     .body            `(%%block ,@(compress-%%blocks body))
+     (vm-jump? body.) `(%%block ,body.)
      body.            body.))
 
 (define-compiler-macro function (x)
   `(function ,(? (atom x)
                  x
-                 (cons x. (compress-%%vm-scopes .x)))))
+                 (cons x. (compress-%%blocks .x)))))

@@ -2,7 +2,7 @@
 
 (mapcar-macro x
 	'(%quote %new
-	  %%vm-scope %%go %%go-nil %%call-nil
+	  %%block %%go %%go-nil %%call-nil
 	  %stack %stackarg %vec %set-vec %setq %tag %%tag
 	  %transpiler-native %transpiler-string
 	  %%closure %closure
@@ -39,7 +39,7 @@
 	(%%go? x) .x.
 	(%%go-nil? x) ..x.))
 
-(defun %%vm-scope-body (x)
+(defun %%block-body (x)
   .x)
 
 (defun %setq-place (x)

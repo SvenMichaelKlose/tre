@@ -110,8 +110,8 @@
   (with ((p a) (expex-move-args ex x))
 	(cons p a)))
 
-(defun expex-move-vm-scope (ex x)
-  (!? (%%vm-scope-body x)
+(defun expex-move-%%block (ex x)
+  (!? (%%block-body x)
       (let s (expex-funinfo-var-add)
         (cons (expex-body ex ! s) s))
 	  (cons nil nil)))
@@ -136,7 +136,7 @@
 	(not (expex-able? ex x))       (cons nil x)
     (atom x)                       (expex-move-atom ex x)
 	(funcall (expex-inline? ex) x) (expex-move-inline ex x)
-    (%%vm-scope? x)                (expex-move-vm-scope ex x)
+    (%%block? x)                   (expex-move-%%block ex x)
 	(expex-move-std ex x)))
 
 
@@ -210,7 +210,7 @@
 	  (%var? x)                (expex-var x)
 	  (lambda? x)              (expex-lambda ex x)
       (not (expex-able? ex x)) (values nil (list x))
-      (%%vm-scope? x)          (values nil (expex-body ex (%%vm-scope-body x)))
+      (%%block? x)             (values nil (expex-body ex (%%block-body x)))
       (%setq-cps-mode? x)      (expex-%setq-cps-mode x)
       (%setq? x)               (expex-expr-%setq ex x)
       (expex-expr-std ex x))))

@@ -14,7 +14,7 @@
   (funcall #'shared-not x))
 
 (define-c-std-macro defun (name args &rest body)
-  `(%%vm-scope
+  `(%%block
      ,(car (apply #'shared-defun name args body))
      ,@(with ((fi-sym adef) (split-funinfo-and-args args)
               fun-name      (%defun-name name))

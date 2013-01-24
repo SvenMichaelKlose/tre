@@ -11,10 +11,11 @@
        (funinfo-var-add-many fi argnames))
 	fi))
 
-;;;; Inlining
+
+;;;; INLINING
 
 (defun lambda-expand-make-inline-body (stack-places values body)
-  `(%%vm-scope
+  `(%%block
 	 ,@(mapcar #'((stack-place init-value)
 				    `(%setq ,stack-place ,init-value))
 			   stack-places values)
@@ -29,7 +30,8 @@
   (with-lambda-call (args vals body lambda-call)
     (lambda-call-embed-0 fi args vals body)))
 
-;;;; Export
+
+;;;; EXPORT
 
 (defvar *lexical-sym-counter* 0)
 
@@ -58,7 +60,8 @@
               ,@(lambda-body x)))))
     `(%%closure ,exported-name ,(funinfo-sym fi-exported))))
 
-;;;; Passthrough
+
+;;;; PASSTHROUGH
 
 (defun lambda-expand-tree-unexported-lambda (fi x)
   (with (new-fi (| (& (lambda-funinfo x) (get-lambda-funinfo x))
@@ -66,7 +69,8 @@
 		 body (lambda-expand-tree-0 new-fi (lambda-body x)))
 	(copy-lambda x :info new-fi :body body)))
 
-;;;; Toplevel
+
+;;;; TOP LEVEL
 
 (defun lambda-expand-tree-cons (fi x)
   (& (%set-atom-fun? x)
