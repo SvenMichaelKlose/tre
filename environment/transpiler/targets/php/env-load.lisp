@@ -12,6 +12,7 @@
 (defvar *php-base*
 	,(list 'quote (append (php-load-base *php-env-path*
                               "../../../environment/when-debug.lisp"
+                              "../../../environment/defvar-native.lisp"
 		                      "assert.lisp"
 		                      "return-value.lisp"
 		                      "cons.lisp"
@@ -24,6 +25,7 @@
 			              "print-object.lisp"
 			              "log.lisp"
 			              "apply.lisp"
+			              "hash.lisp"
 			              "array.lisp"
 			              "atom.lisp")
 		              (php-load-base "environment/transpiler/environment/"
@@ -49,7 +51,6 @@
 			              "../../../environment/list-string.lisp"
 			              "string.lisp"
 			              "../../../environment/member.lisp"
-			              "hash.lisp"
                           "base64.lisp"
                           "quit.lisp")
 		              (php-load-base "environment/transpiler/environment/"
