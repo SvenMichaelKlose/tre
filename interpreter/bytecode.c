@@ -268,9 +268,9 @@ trecode_init ()
     EXPAND_UNIVERSE(treptr_builtin);
     treptr_special = treatom_get ("%BC-SPECIAL", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treptr_special);
-    treptr_jmp = treatom_get ("%%VM-GO", TRECONTEXT_PACKAGE());
+    treptr_jmp = treatom_get ("%%GO", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treptr_jmp);
-    treptr_cond = treatom_get ("%%VM-GO-NIL", TRECONTEXT_PACKAGE());
+    treptr_cond = treatom_get ("%%GO-NIL", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treptr_cond);
     treptr_stack = treatom_get ("%STACK", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treptr_stack);
