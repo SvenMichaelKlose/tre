@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2009–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2009–2013 Sven Michael Klose <pixel@copei.de>
 
 (defvar *c-builtins-descr*
 	`((trebuiltin_
@@ -70,7 +70,7 @@
 		(SYMBOL-VALUE symbol_value)
 		(%SETQ-ATOM-VALUE setq_atom_value)
 		(SYMBOL-FUNCTION symbol_function)
-		(%%U=-SYMBOL-FUNCTION usetf_symbol_function)
+		(=-SYMBOL-FUNCTION usetf_symbol_function)
 		(SYMBOL-PACKAGE symbol_package)
 		(FUNCTION? functionp)
 		(BUILTIN? builtinp)
@@ -110,7 +110,7 @@
     	(MAKE-ARRAY make)
 		(ARRAY? p))
 ;		(AREF))
-;		(%%U=-AREF set_aref))
+;		(=-AREF set_aref))
 
 	(tremacro_builtin_
     	(MACROEXPAND-1 macroexpand_1)
@@ -158,7 +158,7 @@
 	  (let head (string-downcase (symbol-name grp.))
 		(dolist (f .grp)
 		  (= (href h f.)
-		     (+ (? (starts-with? (symbol-name .f.) "%%U=-") "" head)
+		     (+ (? (starts-with? (symbol-name .f.) "=-") "" head)
                 (string-downcase (symbol-name (| .f. f.))))))))))
 
 (defun c-builtin-name (x)

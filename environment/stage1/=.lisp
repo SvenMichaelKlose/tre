@@ -1,9 +1,9 @@
-;;;;; tré – Copyright (c) 2005–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
 
 (defvar *=-function?* #'%=-function?)
 
 (defun %=-make-symbol (fun)
-  (make-symbol (string-concat "%%U=-" (symbol-name fun))))
+  (make-symbol (string-concat "=-" (symbol-name fun))))
 
 (defun %=-complement (p val)
   (? (| (atom p)

@@ -1,7 +1,7 @@
-;;;;; tré – Copyright (c) 2005–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
 
 (env-load "stage1/basic-list.lisp" 'c)
-(env-load "stage1/cons.lisp" 'c)
+(env-load "stage1/cons.lisp")
 (env-load "stage1/gensym.lisp" 'c)
 (env-load "stage1/defmacro.lisp" 'c)
 (env-load "stage1/define-test.lisp" 'c)
@@ -39,9 +39,9 @@
 (env-load "stage1/funcall.lisp" 'c)
 (env-load "stage1/member.lisp" 'c)
 (env-load "stage1/slot-value-p.lisp")
-(env-load "stage1/setf-function-p.lisp" 'c)
-(env-load "stage1/set.lisp")
-(env-load "stage1/setf-builtin.lisp" 'c)
+(env-load "stage1/=-function?.lisp" 'c)
+(env-load "stage1/=.lisp")
+(env-load "stage1/=-cxr.lisp" 'c)
 
 (env-load "stage1/incdec.lisp")
 (env-load "stage1/stack.lisp")
@@ -51,7 +51,7 @@
 (env-load "stage1/function-source.lisp" 'c)
 (env-load "stage1/loops.lisp")
 (env-load "stage1/labels.lisp")
-(env-load "stage1/test-lexical-scope.lisp")
+(env-load "stage1/test-lexical-scope.lisp" 'c)
 (env-load "stage1/test-block.lisp")
 (env-load "stage1/dollar.lisp")
 (env-load "stage1/test-dollar.lisp")

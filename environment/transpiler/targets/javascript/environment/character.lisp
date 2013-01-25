@@ -7,7 +7,7 @@
 (defun %character (x)
   (declare type number x)
   (assert (not (character? x))
-		  (error "%CHARACTER: argument already a character"))
+    (error "%CHARACTER: argument already a character"))
   (| (aref *characters* x)
      (= this.__class ,(transpiler-obfuscated-symbol-string *transpiler* '%character)
         this.v x (aref *characters* x) this)))

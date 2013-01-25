@@ -17,9 +17,9 @@
     (| (%%%== ,*t-symbol-name* name)
 	   (with (pkg-name     (? pkg pkg.n ,*nil-symbol-name*)
               symbol-table (| (%href *symbols* pkg-name)
-	   				          (= (%href *symbols* pkg-name) (%%%make-hash-table))))
+	   				          (=-href (%%%make-hash-table) *symbols* pkg-name)))
          (| (%href symbol-table name)
-            (= (%href symbol-table name) (new %symbol name pkg)))))))
+            (=-href (new %symbol name pkg) symbol-table name))))))
 
-(define-native-js-fun %%u=-symbol-function (v x)
+(define-native-js-fun =-symbol-function (v x)
   (setq x.f v))

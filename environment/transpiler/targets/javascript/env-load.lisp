@@ -15,9 +15,11 @@
 
 (defvar *js-base*
 	,(list 'quote (+ (js-load-base "environment/transpiler/environment/"
+                                   "defvar-native.lisp"
                                    "cps-disable.lisp"
                                    "when-debug.lisp")
 	                 (js-load-base *js-env-path*
+                                   "predefined-symbols.lisp"
                                    "opt-inline.lisp"
 		                           "return-value.lisp"
                                    "log.lisp"
@@ -38,13 +40,12 @@
 		                           "not.lisp")
 		             (js-load-base *js-env-path*
 			                       "macro.lisp"
+			                       "array.lisp"
 			                       "character.lisp"
 			                       "number.lisp"
 			                       "../../../environment/number.lisp"
-			                       "../../../environment/number-typing.lisp")
-                     (js-load-base *js-env-path*
+			                       "../../../environment/number-typing.lisp"
 			                       "apply.lisp"
-			                       "array.lisp"
 			                       "atom.lisp")
 	 	             (js-load-base "environment/transpiler/environment/"
                                    "character.lisp"

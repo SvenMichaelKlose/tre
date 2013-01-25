@@ -19,7 +19,6 @@
   name
   std-macro-expander
   codegen-expander
-  (=-function? #'identity)
   separator
 
   ; List of functions that must not be imported from the environment.
@@ -87,6 +86,8 @@
   (dump-passes? nil)
   (inject-debugging? nil)
 
+  (predefined-symbols nil)
+
   ;;;
   ;;; You mustn't init these.
   ;;;
@@ -106,8 +107,6 @@
   (raw-constructor-names? nil)
   (memorized-sources nil)
   (memorize-sources? t)
-
-  (predefined-symbols nil)
 
   (funinfos (make-hash-table :test #'eq))
   (funinfos-reverse (make-hash-table :test #'eq))
@@ -134,13 +133,31 @@
   (current-pass nil)
   (last-pass-result nil))
 
+(defun transpiler-reset (tr)
+  (= (transpiler-thisify-classes tr)        (make-hash-table :test #'eq)	; thisified classes.
+  	 (transpiler-wanted-functions tr)       nil
+  	 (transpiler-wanted-functions-hash tr)  (make-hash-table :test #'eq)
+  	 (transpiler-wanted-variables tr)       nil
+  	 (transpiler-wanted-variables-hash tr)  (make-hash-table :test #'eq)
+  	 (transpiler-defined-functions-hash tr) (make-hash-table :test #'eq)
+  	 (transpiler-host-functions-hash tr)    (make-functions-hash)
+  	 (transpiler-host-variables-hash tr)    (make-variables-hash)
+  	 (transpiler-function-args tr)          (make-hash-table :test #'eq)
+  	 (transpiler-function-bodies tr)        (make-hash-table :test #'eq)
+  	 (transpiler-late-symbols tr)           (make-hash-table :test #'eq)
+  	 (transpiler-exported-closures tr) nil
+  	 (transpiler-delayed-var-inits tr) nil
+     (transpiler-memorized-sources tr) nil
+     (transpiler-memorize-sources? tr) t)
+  (transpiler-add-obfuscation-exceptions tr nil (make-symbol ""))
+  tr)
+
 (def-transpiler copy-transpiler (transpiler)
   (aprog1
     (make-transpiler
         :name                   name
         :std-macro-expander     std-macro-expander
         :codegen-expander       codegen-expander
-        :=-function?            =-function?
         :separator              separator
         :unwanted-functions     unwanted-functions
         :identifier-char?       identifier-char?
@@ -281,25 +298,6 @@
 (defun transpiler-macro (tr name)
   (let expander (expander-get (transpiler-codegen-expander tr))
     (funcall (expander-lookup expander) expander name)))
-
-(defun transpiler-reset (tr)
-  (= (transpiler-thisify-classes tr)        (make-hash-table :test #'eq)	; thisified classes.
-  	 (transpiler-wanted-functions tr)       nil
-  	 (transpiler-wanted-functions-hash tr)  (make-hash-table :test #'eq)
-  	 (transpiler-wanted-variables tr)       nil
-  	 (transpiler-wanted-variables-hash tr)  (make-hash-table :test #'eq)
-  	 (transpiler-defined-functions-hash tr) (make-hash-table :test #'eq)
-  	 (transpiler-host-functions-hash tr)    (make-functions-hash)
-  	 (transpiler-host-variables-hash tr)    (make-variables-hash)
-  	 (transpiler-function-args tr)          (make-hash-table :test #'eq)
-  	 (transpiler-function-bodies tr)        (make-hash-table :test #'eq)
-  	 (transpiler-late-symbols tr)           (make-hash-table :test #'eq)
-  	 (transpiler-exported-closures tr) nil
-  	 (transpiler-delayed-var-inits tr) nil
-     (transpiler-memorized-sources tr) nil
-     (transpiler-memorize-sources? tr) t)
-  (transpiler-add-obfuscation-exceptions tr nil (make-symbol ""))
-  tr)
 
 (defun make-global-funinfo (tr)
   (alet (= (transpiler-global-funinfo tr) (make-funinfo :name 'GLOBAL-SCOPE :transpiler tr))

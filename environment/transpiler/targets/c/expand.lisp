@@ -42,10 +42,10 @@
 
 (transpiler-wrap-invariant-to-binary define-c-std-macro eq 2 %%%eq &)
 
-(define-c-std-macro %%u=-car (val x)
+(define-c-std-macro =-car (val x)
   (shared-=-car val x))
 
-(define-c-std-macro %%u=-cdr (val x)
+(define-c-std-macro =-cdr (val x)
   (shared-=-cdr val x))
 
 (mapcan-macro _
@@ -58,15 +58,15 @@
 (define-c-std-macro slot-value (obj slot)
   `(%slot-value ,obj (%quote ,slot)))
 
-(define-c-std-macro %%u=-slot-value (val obj slot)
-  `(%%u=-%slot-value ,val ,obj (%quote ,slot)))
+(define-c-std-macro =-slot-value (val obj slot)
+  `(=-%slot-value ,val ,obj (%quote ,slot)))
 
 (defun single-index? (x)
   (& (== 1 (length x))
      (not (%transpiler-native? x.))
      (number? x.)))
 
-(define-c-std-macro %%u=-aref (val arr &rest idx)
+(define-c-std-macro =-aref (val arr &rest idx)
   (? (single-index? idx)
     `(%immediate-set-aref ,val ,arr (%transpiler-native ,idx.))
     `(%set-aref ,(compiled-list `(,val ,arr ,@idx)))))

@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -432,7 +432,7 @@ char *tre_builtin_names[] = {
     "NOT", "EQ", "EQL",
     "MAKE-SYMBOL", "MAKE-PACKAGE",
 	"ATOM", "%TYPE-ID", "%%ID",
-    "SYMBOL-VALUE", "%SETQ-ATOM-VALUE", "SYMBOL-FUNCTION", "%%U=-SYMBOL-FUNCTION", "SYMBOL-PACKAGE", "SYMBOL-COMPILED-FUNCTION",
+    "SYMBOL-VALUE", "%SETQ-ATOM-VALUE", "SYMBOL-FUNCTION", "=-SYMBOL-FUNCTION", "SYMBOL-PACKAGE", "SYMBOL-COMPILED-FUNCTION",
 	"FUNCTION?", "BUILTIN?", "MACROP",
     "%ATOM-LIST",
 
@@ -455,7 +455,7 @@ char *tre_builtin_names[] = {
     "MAKE-STRING", "STRING==", "STRING-CONCAT", "STRING", "SYMBOL-NAME",
 	"LIST-STRING",
 
-    "MAKE-ARRAY", "ARRAY?", "AREF", "%%U=-AREF",
+    "MAKE-ARRAY", "ARRAY?", "AREF", "=-AREF",
 
     "MACROEXPAND-1", "MACROEXPAND",
 

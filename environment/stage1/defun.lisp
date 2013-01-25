@@ -1,4 +1,4 @@
-;;;; tré – Copyright (c) 2005–2008,2010-2011–2012 Sven Michael Klose <pixel@copei.de>
+;;;; tré – Copyright (c) 2005–2008,2010-2013 Sven Michael Klose <pixel@copei.de>
 
 (defvar *function-sources* nil)
 
@@ -22,7 +22,7 @@
   (? (atom name)
      name
      (? (eq (car name) '=)
-        (make-symbol (string-concat "%%U=-" (string (cadr name)))
+        (make-symbol (string-concat "=-" (string (cadr name)))
                      (symbol-package (cadr name)))
         (progn
 	      (print name)

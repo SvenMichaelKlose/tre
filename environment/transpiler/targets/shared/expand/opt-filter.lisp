@@ -11,5 +11,6 @@
                         (?
                           (literal-symbol-function? !) `(,.!. ,i)
                           (function-expr? !)           `(,! ,i)
-                          (atom !)                     `(funcall ,! ,i)
+                          (| (atom !)
+                             (%%closure? !))           `(funcall ,! ,i)
                           (error "function or variable required instead of ~A" !))))))))

@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008-2011-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (dont-obfuscate constructor)
 
@@ -22,3 +22,9 @@
   (declare type array arr)
   (%setq nil (%transpiler-native "return " arr ".indexOf (" obj ") != -1;"))
   nil)
+
+(defun aref (a k)
+  (href a k))
+
+(defun =-aref (v a k)
+  (=-href v a k))

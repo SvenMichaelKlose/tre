@@ -81,10 +81,10 @@
 (define-js-std-macro defconstant (&rest x)
   `(defvar ,@x))
 
-(define-js-std-macro %%u=-car (val x)
+(define-js-std-macro =-car (val x)
   (shared-=-car val x))
 
-(define-js-std-macro %%u=-cdr (val x)
+(define-js-std-macro =-cdr (val x)
   (shared-=-cdr val x))
 
 (define-js-std-macro make-string (&optional len)

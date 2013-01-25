@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2009,2011–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2009,2011–2013 Sven Michael Klose <pixel@copei.de>
 
 (dont-obfuscate is_a)
 
@@ -12,10 +12,10 @@
 
 (defun %%unkey-get-package-boundary (x)
   (awhen (position #\~ x :test #'character==)
-    (when (& (== #\% (elt x (+ 1 !)))
-             (== #\P (elt x (+ 2 !))))
-      (| (%%unkey-get-package-boundary (string-subseq ! 3))
-         !))))
+    (& (== #\% (elt x (+ 1 !)))
+       (== #\P (elt x (+ 2 !)))
+       (| (%%unkey-get-package-boundary (string-subseq ! 3))
+          !))))
 
 (defun %%unkey (x)
   (? (& (== #\~ (elt x 0))
@@ -49,3 +49,19 @@
   (let a (%%%make-hash-table)
     (dolist (i x a)
       (%%%href-set .i a i.))))
+
+(defun href (h k)
+  (alet (%%key k)
+    (?  (| (is_a h "__l") 
+           (is_a h "__array"))
+        (h.g !)
+        (& (isset (php-aref h !))
+           (php-aref h !)))))
+
+(defun (= href) (v h k)
+  (alet (%%key k)
+    (?  (| (is_a h "__l") 
+           (is_a h "__array"))
+        (h.s (%%key !) v)
+        (=-php-aref v h !) v))
+  v)

@@ -10,8 +10,7 @@
 
 (defun transpiler-can-import? (tr name)
   (& (transpiler-import-from-environment? tr)
-     (symbol? name)
-     (not (builtin? name))
+     (function? (symbol-function name))
      (not (transpiler-defined? tr name))))
 	
 (defun transpiler-add-wanted-function (tr x)

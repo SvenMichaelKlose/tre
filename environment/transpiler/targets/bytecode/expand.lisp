@@ -29,10 +29,10 @@
        (%var ,name)
 	   (%setq ,name ,val))))
 
-(define-bc-std-macro %%u=-car (val x)
+(define-bc-std-macro =-car (val x)
   (shared-=-car val x))
 
-(define-bc-std-macro %%u=-cdr (val x)
+(define-bc-std-macro =-cdr (val x)
   (shared-=-cdr val x))
 
 (define-bc-std-macro mapcar (fun &rest lsts)

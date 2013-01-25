@@ -1,35 +1,28 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
-(defun js-=-function? (x)
-  (| t ;(%=-function? x)
-     (transpiler-defined-function *transpiler* x)))
-
 (defun make-javascript-transpiler-0 ()
   (create-transpiler
       :name 'js
-	  :=-function? #'js-=-function?
 	  :unwanted-functions '(wait)
 	  :named-functions? nil
 	  :apply-argdefs? t
-	  :literal-conversion #'transpiler-expand-literal-characters
-	  :identifier-char?
-        [| (& (>= _ #\a) (<= _ #\z))
-           (& (>= _ #\A) (<= _ #\Z))
-           (& (>= _ #\0) (<= _ #\9))
-           (in=? _ #\_ #\. #\$ #\#)]
+	  :identifier-char? [| (& (>= _ #\a) (<= _ #\z))
+                           (& (>= _ #\A) (<= _ #\Z))
+                           (& (>= _ #\0) (<= _ #\9))
+                           (in=? _ #\_ #\. #\$ #\#)]
 	  :lambda-export? nil
 	  :continuation-passing-style? t
 	  :needs-var-declarations? t
 	  :stack-locals? nil
 	  :rename-all-args? t
 	  :rename-toplevel-function-args? t
-	  :predefined-symbols '(window document true)
 	  :inline-exceptions '(%slot-value error format identity %bind map apply maphash js-eval-transpile)
+	  :literal-conversion #'transpiler-expand-literal-characters
       :expex-initializer 
-        #'((ex)
-            (= (expex-inline? ex) #'%slot-value?
-               (expex-setter-filter ex) #'expex-collect-wanted-variable
-               (expex-argument-filter ex) #'expex-%setq-collect-wanted-global-variable))))
+          #'((ex)
+               (= (expex-inline? ex)         #'%slot-value?
+                  (expex-setter-filter ex)   #'expex-collect-wanted-variable
+                  (expex-argument-filter ex) #'expex-%setq-collect-wanted-global-variable))))
 
 (defun make-javascript-transpiler ()
   (aprog1 (make-javascript-transpiler-0)
@@ -55,6 +48,6 @@
     (transpiler-add-plain-arg-funs ! *builtins*)))
 
 (defvar *js-transpiler* (copy-transpiler (make-javascript-transpiler)))
-(defvar *js-newline* (format nil "~%"))
-(defvar *js-separator* (format nil ";~%"))
-(defvar *js-indent* "")
+(defvar *js-newline*    (format nil "~%"))
+(defvar *js-separator*  (format nil ";~%"))
+(defvar *js-indent*     "    ")

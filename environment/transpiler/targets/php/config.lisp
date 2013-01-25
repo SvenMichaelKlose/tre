@@ -2,15 +2,9 @@
 
 (defvar *php-version* 503)
 
-(defun php-=-function? (x)
-  t)
-;  (| (%=-function? x)
-;     (transpiler-defined-function *transpiler* x)))
-
 (defun make-php-transpiler-0 ()
   (create-transpiler
       :name 'php
-	  :=-function? #'php-=-function?
 	  :unwanted-functions '(wait)
 	  :apply-argdefs? nil
       :literal-conversion #'transpiler-expand-literal-characters
@@ -26,12 +20,13 @@
       :named-functions? t
       :named-function-next #'cddr
       :raw-constructor-names? t
-      :expex-initializer #'((ex)
-                              (= (expex-inline? ex) #'%slot-value?
-                                 (expex-move-lexicals? ex) t
-    	                         (expex-setter-filter ex) (compose [mapcar [php-setter-filter *php-transpiler* _] _]
-                                                                   #'expex-compiled-funcall)
-    	                         (expex-argument-filter ex) #'php-expex-argument-filter))))
+      :expex-initializer
+          #'((ex)
+               (= (expex-inline? ex)         #'%slot-value?
+                  (expex-move-lexicals? ex)  t
+    	          (expex-setter-filter ex)   (compose [mapcar [php-setter-filter *php-transpiler* _] _]
+                                                      #'expex-compiled-funcall)
+    	          (expex-argument-filter ex) #'php-expex-argument-filter))))
 
 (defun make-php-transpiler ()
   (aprog1 (make-php-transpiler-0)
@@ -57,6 +52,6 @@
     (transpiler-add-plain-arg-funs ! *builtins*)))
 
 (defvar *php-transpiler* (copy-transpiler (make-php-transpiler)))
-(defvar *php-newline* (format nil "~%"))
-(defvar *php-separator* (format nil ";~%"))
-(defvar *php-indent* "    ")
+(defvar *php-newline*    (format nil "~%"))
+(defvar *php-separator*  (format nil ";~%"))
+(defvar *php-indent*     "    ")

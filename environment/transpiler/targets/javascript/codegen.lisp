@@ -28,6 +28,7 @@
 
 (define-codegen-macro-definer define-js-macro *js-transpiler*)
 
+
 ;;;; CONTROL FLOW
 
 (define-js-macro %%tag (tag)
@@ -47,6 +48,7 @@
 
 (define-js-macro %set-atom-fun (plc val)
   `(%transpiler-native ,*js-indent* ,plc "=" ,val ,*js-separator*))
+
 
 ;;;; FUNCTIONS
 
@@ -92,6 +94,7 @@
 	     ,@(& (< 0 (funinfo-num-tags fi)) `("}}")))
         "")))
 
+
 ;;;; ASSIGNMENT
 
 (defun js-%setq-0 (dest val)
@@ -110,10 +113,12 @@
 	 '(%transpiler-native "")
 	 (js-%setq-0 dest val)))
 
+
 ;;;; VARIABLE DECLARATIONS
 
 (define-js-macro %var (name)
   `(%transpiler-native ,*js-indent* "var " ,name ,*js-separator*))
+
 
 ;;;; TYPE PREDICATES
 
@@ -122,10 +127,12 @@
 
 (define-js-infix instanceof)
 
+
 ;;;; SYMBOL REPLACEMENTS
 
 (transpiler-translate-symbol *js-transpiler* nil "null")
 (transpiler-translate-symbol *js-transpiler* t "true")
+
 
 ;;;; NUMBERS, ARITHMETIC AND COMPARISON
 
@@ -149,17 +156,25 @@
 	  (%%%neq "!=="))
   `(define-js-binary ,@x))
 
+
 ;;;; ARRAYS
 
 (define-js-macro make-array (&rest elements)
   `(%transpiler-native ,@(parenthized-comma-separated-list elements :type 'square)))
 
-(define-js-macro aref (arr &rest idx)
+(define-js-macro %%%aref (arr &rest idx)
   `(%transpiler-native ,arr
      ,@(filter ^("[" ,_ "]") idx)))
 
-(define-js-macro %%u=-aref (val &rest x)
-  `(%transpiler-native (aref ,@x) "=" ,val))
+(define-js-macro %%%=-aref (val &rest x)
+  `(%transpiler-native (%%%aref ,@x) "=" ,val))
+
+(define-js-macro aref (arr &rest idx)
+  `(%%%aref ,arr ,@idx))
+
+(define-js-macro =-aref (val &rest x)
+  `(%%%=-aref ,val ,@x))
+
 
 ;;;; HASH TABLES
 
@@ -170,14 +185,14 @@
   (parenthized-comma-separated-list (filter [js-literal-hash-entry _. ._] (group args 2)) :type 'curly))
 
 (define-js-macro href (arr &rest idx)
-  `(%transpiler-native ,arr
-     ,@(filter ^("[" ,_ "]") idx)))
+  `(aref ,arr ,@idx))
 
-(define-js-macro %%u=-href (val &rest x)
-  `(%transpiler-native (aref ,@x) "=" ,val))
+(define-js-macro =-href (val &rest x)
+  `(=-aref ,val ,@x))
 
 (define-js-macro hremove (h key)
   `(%transpiler-native "delete " ,h "[" ,key "]"))
+
 
 ;;;; OBJECTS
 
@@ -187,6 +202,7 @@
 
 (define-js-macro delete-object (x)
   `(%transpiler-native "delete " ,x))
+
 
 ;;;; META-CODES
 
@@ -213,6 +229,7 @@
 
 (define-js-macro %catch (x)
   `(%transpiler-native "catch (" ,x ") {"))
+
 
 ;;;; BACK-END META-CODES
 

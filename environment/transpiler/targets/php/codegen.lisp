@@ -220,13 +220,13 @@
 (define-php-macro aref (arr &rest indexes)
   `(href ,arr ,@indexes))
 
-(define-php-macro %%u=-aref (val arr &rest indexes)
-  `(%%u=-href ,val ,arr ,@indexes))
+(define-php-macro =-aref (val arr &rest indexes)
+  `(=-href ,val ,arr ,@indexes))
 
- (define-php-macro php-aref (arr &rest indexes)
+(define-php-macro php-aref (arr &rest indexes)
   `(%transpiler-native ,(php-dollarize arr) ,@(php-array-subscript indexes)))
  
-(define-php-macro %%u=-php-aref (val &rest x)
+(define-php-macro =-php-aref (val &rest x)
   `(%transpiler-native (php-aref ,@x)
                        ,(php-assignment-operator val)
                        ,(php-dollarize val)))
@@ -249,7 +249,7 @@
                            ,(php-dollarize h) "[userfun_T37T37key (" ,(php-dollarize k) ")] : "
                            "NULL)"))
 
-(define-php-macro %%u=-href (v h k)
+(define-php-macro =-href (v h k)
   `(%transpiler-native "(is_a (" ,(php-dollarize h) ", '__l') || is_a (" ,(php-dollarize h) ", '__array')) ? "
                        ,(php-dollarize h) "->s(userfun_T37T37key (" ,(php-dollarize k) ")," ,(php-dollarize v) ") : "
                        ,(php-dollarize h) "[userfun_T37T37key (" ,(php-dollarize k) ")] = " ,(php-dollarize v)))

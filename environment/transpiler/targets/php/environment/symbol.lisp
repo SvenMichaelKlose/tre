@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2010,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2010,2012–2013 Sven Michael Klose <pixel@copei.de>
 
 (defvar *symbols* (%%%make-hash-table))
 
@@ -9,5 +9,5 @@
     (| (%%%== ,*t-symbol-name* name)
        (new __symbol name pkg))))
 
-(define-native-php-fun %%u=-symbol-function (v x)
+(define-native-php-fun =-symbol-function (v x)
   (x.sf v))

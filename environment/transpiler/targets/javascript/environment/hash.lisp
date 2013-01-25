@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2009–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2009–2013 Sven Michael Klose <pixel@copei.de>
 
 (defvar *obj-id-counter* 0)
 (defvar *obj-keys* (%%%make-hash-table))
@@ -13,17 +13,17 @@
 (defun hashkeys (hash)
   (carlist (%property-list hash)))
 
-(defun %%u=-href-obj (value hash key)
+(defun =-href-obj (value hash key)
   (unless (defined? key.__tre-object-id)
     (let id (%%key (= *obj-id-counter* (%%%+ 1 *obj-id-counter*)))
       (= key.__tre-object-id id
          (aref *obj-keys* id) key)))
     (= (aref hash key.__tre-object-id) value))
 
-(defun %%u=-href (value hash key)
+(defun =-href (value hash key)
   (?
     (character? key) (= (aref hash (%%%string+ "~%C" key.v)) value)
-    (object? key)    (%%u=-href-obj value hash key)
+    (object? key)    (=-href-obj value hash key)
     (= (aref hash key) value)))
 
 (defun %href-user-test? (hash key)

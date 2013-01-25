@@ -53,10 +53,10 @@
 (define-php-std-macro defconstant (&rest x)
   `(defvar ,@x))
 
-(define-php-std-macro %%u=-car (val x)
+(define-php-std-macro =-car (val x)
   (shared-=-car val x))
 
-(define-php-std-macro %%u=-cdr (val x)
+(define-php-std-macro =-cdr (val x)
   (shared-=-cdr val x))
 
 (define-php-std-macro make-string (&optional len)

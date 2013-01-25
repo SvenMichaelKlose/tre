@@ -1,15 +1,10 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (dont-obfuscate is_array)
 
 (defun array? (x)
   (| (is_a x "__array")
      (is_array x)))
-
-(defun %array-length (x)
-  ((%transpiler-native count) (? (is_a x "__array")
-                                 (x.a)
-                                 x)))
 
 (defun %array-push (arr x)
   (%setq (%transpiler-native "$" arr "[]") x)
@@ -30,3 +25,9 @@
   (let a (%%%make-hash-table)
     (dolist (i x a)
       (%setq (%transpiler-native "$" a "[]") i))))
+
+(defun aref (a k)
+  (href a k))
+
+(defun (= aref) (v a k)
+  (=-href v a k))
