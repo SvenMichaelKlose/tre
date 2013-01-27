@@ -21,10 +21,8 @@
 (defun php-print-native-environment (out)
   (princ *php-native-environment* out))
 
-(defun php-transpile-prepare (tr &key (import-universe? nil))
+(defun php-transpile-prepare (tr)
   (with-string-stream out
-    (& import-universe?
-       (transpiler-import-universe tr))
     (format out (+ "mb_internal_encoding ('UTF-8');~%"
                    "if (get_magic_quotes_gpc ()) {~%"
                    "    $vars = array (&$_GET, &$_POST, &$_COOKIE, &$_REQUEST);~%"
@@ -53,16 +51,16 @@
     (+ (php-transpile-prologue)
 	   (php-transpile-prepare transpiler)
    	   (target-transpile transpiler
-            :decl-gen #'(()
-                           (php-transpile-decls transpiler))
-            :files-before-deps (list (cons 'base1 *php-base*))
-	 	    :dep-gen  #'(()
-			  	           (transpiler-import-from-environment transpiler))
-	  	    :files-after-deps (+ (list (cons 'base2 *php-base2*))
-                                 (when (eq t *have-environment-tests*)
+           :decl-gen #'(()
+                          (php-transpile-decls transpiler))
+           :files-before-deps (list (cons 'base1 *php-base*))
+           :dep-gen  #'(()
+                          (transpiler-import-from-environment transpiler))
+           :files-after-deps (+ (list (cons 'base2 *php-base2*))
+                                (& (eq t *have-environment-tests*)
                                    (list (cons 'env-tests (make-environment-tests))))
-                                 sources)
-		    :files-to-update files-to-update
-            :obfuscate? obfuscate?
-	        :print-obfuscations? print-obfuscations?)
-       (php-transpile-epilogue))))
+                                sources)
+           :files-to-update files-to-update
+           :obfuscate? obfuscate?
+           :print-obfuscations? print-obfuscations?)
+   (php-transpile-epilogue))))
