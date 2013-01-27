@@ -234,7 +234,7 @@
     (funcall (transpiler-expex-initializer !) (transpiler-make-expex !))))
 
 (defmacro transpiler-getter (name &rest body)
-  `(defun ,($ transpiler- name) (tr x)
+  `(defun ,($ 'transpiler- name) (tr x)
      ,@body))
 
 (defmacro transpiler-getter-list (name)
