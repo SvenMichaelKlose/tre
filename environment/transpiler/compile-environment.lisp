@@ -2,7 +2,7 @@
 
 (defun %compile-environment-configure-transpiler (tr funs)
   (= (transpiler-dot-expand? (copy-transpiler tr)) nil)
-  (transpiler-add-wanted-functions tr (| funs (reverse *universe-functions*)))
+  (transpiler-add-wanted-functions tr (| funs *universe-functions*))
   tr)
 
 (defun compile-c-environment (&optional (funs nil))
