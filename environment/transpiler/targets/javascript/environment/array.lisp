@@ -4,27 +4,25 @@
 
 (defvar *js-array-constructor* (make-array).constructor)
 
-(defun array? (x)
-  (when x
-    (eq *js-array-constructor* x.constructor)))
-
-(dont-obfuscate push)
-
-(defun list-array (x)
-  (let a (make-array)
-    (dolist (i x a)
-      (a.push i))))
-
-(dont-obfuscate *array)
-(dont-inline array-find)
-
-(defun array-find (arr obj)
-  (declare type array arr)
-  (%setq nil (%transpiler-native "return " arr ".indexOf (" obj ") != -1;"))
-  nil)
-
 (defun aref (a k)
   (href a k))
 
 (defun =-aref (v a k)
   (=-href v a k))
+
+(defun array? (x)
+  (& x (eq *js-array-constructor* x.constructor)))
+
+(dont-obfuscate push)
+
+(defun list-array (x)
+  (alet (make-array)
+    (dolist (i x !)
+      (!.push i))))
+
+(dont-obfuscate *array)
+(dont-inline array-find)
+
+(defun array-find (arr obj)
+  (%setq nil (%transpiler-native "return " arr ".indexOf (" obj ") != -1;"))
+  nil)

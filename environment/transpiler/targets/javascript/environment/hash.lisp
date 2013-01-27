@@ -39,9 +39,9 @@
 
 (defun href (hash key)
   (? 
-    (character? key) (aref hash (%%%string+ "~%C" key.v))
-    (object? key)    (& (defined? key.__tre-object-id)
-                        (aref hash key.__tre-object-id))
+    (character? key)            (aref hash (%%%string+ "~%C" key.v))
+    (object? key)               (& (defined? key.__tre-object-id)
+                                   (aref hash key.__tre-object-id))
     (%href-user-test? hash key) (%href-user hash key)
     (aref hash key)))
 
@@ -51,8 +51,7 @@
 
 (defun hash-merge (a b)
   (when (| a b)
-    (unless a
-      (= a (make-hash-table)))
+    (| a (= a (make-hash-table)))
     (%setq nil (%transpiler-native
                    "for (var k in " b ") "
                        "if (k != \"" '__tre-object-id "\" && k !=\"" '__tre_test "\") "

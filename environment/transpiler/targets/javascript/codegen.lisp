@@ -134,6 +134,12 @@
 (transpiler-translate-symbol *js-transpiler* t "true")
 
 
+;;;; ARGUMENT EXPANSION CONSING
+
+(define-js-macro %%%cons (a d)
+  `(userfun_cons ,a ,d))
+
+
 ;;;; NUMBERS, ARITHMETIC AND COMPARISON
 
 (defmacro define-js-binary (op repl-op)
