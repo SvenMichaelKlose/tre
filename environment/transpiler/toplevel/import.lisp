@@ -11,6 +11,7 @@
 (defun transpiler-can-import? (tr name)
   (& (transpiler-import-from-environment? tr)
      (function? (symbol-function name))
+     (not (builtin? name))
      (not (transpiler-defined? tr name))))
 	
 (defun transpiler-add-wanted-function (tr x)
@@ -43,17 +44,14 @@
         (transpiler-import-exported-closures tr))))
 
 (defun transpiler-import-wanted-function (tr x)
-  (unless (transpiler-defined-function tr x)
-    (let fun (symbol-function x)
-      (transpiler-frontend tr `((defun ,x ,(transpiler-host-function-arguments tr x)
-                                 ,@(function-body fun)))))))
+  (transpiler-frontend tr `((defun ,x ,(transpiler-host-function-arguments tr x)
+                              ,@(function-body (symbol-function x))))))
 
 (defun transpiler-import-wanted-functions (tr)
   (with-queue q
     (awhile (pop (transpiler-wanted-functions tr))
             nil
-      (awhen (transpiler-import-wanted-function tr !)
-        (enqueue q !)))
+      (enqueue q (transpiler-import-wanted-function tr !)))
     (apply #'+ (queue-list q))))
 
 (defun transpiler-import-wanted-variables (tr)
@@ -64,9 +62,9 @@
 	          (transpiler-wanted-variables tr))))
 
 (defun transpiler-import-from-environment (tr)
-  (with (funs (transpiler-import-wanted-functions tr)
+  (with (funs     (transpiler-import-wanted-functions tr)
          exported (transpiler-import-exported-closures tr)
-	     vars (transpiler-import-wanted-variables tr))
+         vars     (transpiler-import-wanted-variables tr))
     (? (| funs exported vars)
        (+ funs exported vars (transpiler-import-from-environment tr))
        (transpiler-delayed-var-inits tr))))
@@ -78,6 +76,3 @@
        (transpiler-add-wanted-function *transpiler* .x.)
        (transpiler-macroexpand *transpiler* `(symbol-function (%quote ,.x.))))
      x))
-
-(defun transpiler-import-universe (tr)
-  (map [transpiler-add-wanted-function tr _] (reverse *defined-functions*)))
