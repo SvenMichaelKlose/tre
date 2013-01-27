@@ -25,9 +25,10 @@
              (%quote? x)))
      `(%bc-funcall
          ,@(?
-             (eq 'cons x.) `(cons ,.x. ,..x.)
-             (eq '%setq-atom-value x.) `(,x. 2 ,@.x)
-             (eq '%bc-builtin x.) `(,(cadr .x.) ,@..x)
+             (| (eq 'cons x.)
+                (eq '%%%cons x.))         `(cons ,.x. ,..x.)
+             (eq '%setq-atom-value x.)    `(,x. 2 ,@.x)
+             (eq '%bc-builtin x.)         `(,(cadr .x.) ,@..x)
              (eq '%make-lexical-array x.) `(make-array 1 ,.x.)
              `(,x. ,(length .x) ,@.x)))
      x))

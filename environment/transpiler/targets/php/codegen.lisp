@@ -28,15 +28,24 @@
 (defmacro define-php-infix (name)
   `(define-transpiler-infix *php-transpiler* ,name))
 
+
 ;;;; TRUTH
 
 (transpiler-translate-symbol *php-transpiler* nil "NULL")
 (transpiler-translate-symbol *php-transpiler* t "TRUE")
 
+
+;;;; ARGUMENT EXPANSION CONSING
+
+(define-php-macro %%%cons (a d)
+  `(userfun_cons ,a ,d))
+
+
 ;;;; LITERAL SYMBOLS
 
 (define-php-macro %quote (x)
   (php-compiled-symbol x))
+
 
 ;;;; CONTROL FLOW
 
@@ -56,6 +65,7 @@
 (define-php-macro %%go-nil (val tag)
   (let v (php-dollarize val)
     (php-line "if (!" v "&&!is_string(" v ")&&!is_numeric(" v ")&&!is_array(" v ")) { " (php-jump tag) "; }")))
+
 
 ;;;; FUNCTIONS
 
@@ -102,6 +112,7 @@
              ,(php-dollarize (funinfo-lexical (funinfo-parent fi)))
              ")")
 	   name)))
+
 
 ;;;; ASSIGNMENTS
 
@@ -163,6 +174,7 @@
 					   ,(php-assignment-operator val)
 					   ,(php-dollarize val)))
 
+
 ;;;; VECTORS
 
 (define-php-macro %make-lexical-array (&rest elements)
@@ -173,6 +185,7 @@
 
 (define-php-macro %set-vec (v i x)
   `(%transpiler-native ,*php-indent* ,(php-dollarize v) "->s(" ,(php-dollarize i) "," ,(php-%setq-value x) ")",*php-separator*))
+
 
 ;;;; NUMBERS
 
@@ -199,6 +212,7 @@
   `(define-php-binary ,@x))
 
 (define-php-binary %%%string+ ".")
+
 
 ;;;; ARRAYS
 
@@ -231,6 +245,7 @@
                        ,(php-assignment-operator val)
                        ,(php-dollarize val)))
 
+
 ;;;; HASH TABLES
 
 (defun php-array-indexes (x)
@@ -262,6 +277,7 @@
 
 (define-php-macro %make-hash-table (&rest args)
   `(%transpiler-native "new __array (Array (" ,@(php-literal-array-elements (group args 2)) "))"))
+
 
 ;;;; OBJECTS
 

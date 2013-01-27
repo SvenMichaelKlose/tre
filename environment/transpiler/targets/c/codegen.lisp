@@ -47,8 +47,8 @@
 	  "}" ,*c-newline*)))
 
 (define-c-macro %%closure (name fi-sym)
-  `("_trelist_get (" ,(c-compiled-symbol '%closure) ", "
-	    "_trelist_get (" ,(c-compiled-symbol name) "," ,(codegen-closure-lexical fi-sym) "))"))
+  `("CONS (" ,(c-compiled-symbol '%closure) ", "
+	    "CONS (" ,(c-compiled-symbol name) "," ,(codegen-closure-lexical fi-sym) "))"))
 
 (defun %%%eq (&rest x)
   (apply #'eq x))
@@ -87,6 +87,11 @@
 
 (define-c-macro %set-atom-fun (dest val)
   `(%transpiler-native ,dest "=" ,val ,*c-separator*))
+
+;;;; ARGUMENT EXPANSION CONSING
+
+(define-c-macro %%%cons (a d)
+  `(%transpiler-native "CONS(" ,a ", " ,d ")"))
 
 ;;;; STACK
 
@@ -151,7 +156,7 @@
 (defun c-make-array (size)
   (? (number? size)
      `("trearray_make (" (%transpiler-native ,size) ")")
-     `("trearray_get (_trelist_get (" ,size ", treptr_nil))")))
+     `("trearray_get (CONS (" ,size ", treptr_nil))")))
 
 (define-c-macro make-array (size)
   (c-make-array size))
