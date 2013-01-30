@@ -41,6 +41,13 @@
                              (list ,v))
                           `(list ,v)))
 
+                  (& (%setq? ,v)
+                     (cons? (%setq-value ,v))
+                     (in? (car (%setq-value ,v)) '%setq '%%vm-go '%%vm-go-nil))
+                    (progn
+                      (print ,v)
+                      (print (funinfo-get-name *funinfo*))
+                      (error "misused call of metacode ~A in statement ~A" (car (%setq-value ,v)) ,v))
                   ,@(!? if-setq        `((%setq? ,v)        ,!))
                   ,@(!? if-go          `((%%go? ,v)         ,!))
                   ,@(!? if-go-nil      `((%%go-nil? ,v)     ,!))
@@ -49,10 +56,12 @@
                   ,@(!? if-vec         `((%vec? ,v)         ,!))
 
                   ,@(alet (| if-named-function `(,name (lambda-body ,v) ,@r))
-                      `((named-lambda? ,v) ,(metacode-walker-copier v !)))
+                      `((named-lambda? ,v) (with-temporary *funinfo* (get-lambda-funinfo ,v)
+                                             ,(metacode-walker-copier v !))))
 
                   ,@(alet (| if-lambda `(,name (lambda-body (%setq-value ,v)) ,@r))
-                      `((%setq-lambda? ,v) ,(metacode-walker-copier-setq v !)))
+                      `((%setq-lambda? ,v) (with-temporary *funinfo* (get-lambda-funinfo (%setq-value ,v))
+                                             ,(metacode-walker-copier-setq v !))))
 
                   (not (metacode-statement? ,v))
                     (& (print ,v)
