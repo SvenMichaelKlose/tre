@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 ;; After this pass
 ;; - Functions are inlined.
@@ -7,7 +7,7 @@
 ;; - FUNINFO objects are built for all functions.
 ;; - Accesses to the object in a method are thisified.
 (transpiler-pass transpiler-frontend-2 (tr)
-    fake-expression-expand    [(transpiler-expression-expand tr (make-packages _))
+    fake-expression-expand    [(validate-metacode (transpiler-expression-expand tr (make-packages _)))
                                _]
     lambda-expand             [transpiler-lambda-expand tr _]
     rename-function-arguments #'rename-function-arguments
