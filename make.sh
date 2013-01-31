@@ -247,6 +247,7 @@ distclean)
 backup)
     mkdir backup
     cp tre backup
+    cp interpreter/_compiled-env.c backup
     cp ~/.tre.image backup
     echo "Backed up to backup/. Use 'restore' on occasion."
     ;;
@@ -254,6 +255,7 @@ backup)
 restore)
     sudo cp backup/tre /usr/local/bin/
     cp backup/tre .
+    cp backup/_compiled-env.c interpreter
     cp backup/.tre.image ~
     ;;
 
