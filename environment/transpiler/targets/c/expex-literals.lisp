@@ -37,5 +37,5 @@
     (number? x)    (c-compiled-number x)
     (string? x)    (c-compiled-string x)
 	(funinfo-var-or-lexical? *expex-funinfo* x) x
-	(expex-funinfo-defined-variable? x) `(treatom_get_value ,(c-compiled-symbol x))
+	(expex-global-variable? x) `(treatom_get_value ,(c-compiled-symbol x))
 	x))
