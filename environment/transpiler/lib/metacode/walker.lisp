@@ -47,7 +47,8 @@
                     (progn
                       (print ,v)
                       (print (funinfo-get-name *funinfo*))
-                      (error "misused call of metacode ~A in statement ~A" (car (%setq-value ,v)) ,v))
+                      (error "invalid call of metacode ~A in statement ~A" (car (%setq-value ,v)) ,v))
+
                   ,@(!? if-setq        `((%setq? ,v)        ,!))
                   ,@(!? if-go          `((%%go? ,v)         ,!))
                   ,@(!? if-go-nil      `((%%go-nil? ,v)     ,!))

@@ -1,5 +1,11 @@
 ;;;;; tré – Copyright (c) 2006–2013 Sven Michael Klose <pixel@copei.de>
 
+; This pass converts the input into a sequence of statements without
+; %%BLOCKs, it expands arguments and moves statements out of
+; arguments. Every instruction which is not a jump or tag is forced
+; into a %SETQ assignment.
+
+
 (defun peel-identity (x)
   (? (identity? x) .x. x))
 
@@ -88,10 +94,7 @@
   (let argdef (| (funinfo-get-local-function-args *expex-funinfo* fun)
                  (current-transpiler-function-arguments fun))
 	(? (expex-expandable-args? ex fun argdef)
-   	   (expex-argument-expand fun argdef (? (& (not (in-cps-mode?))
-                                               (transpiler-cps-function? *transpiler* fun))
-                                            .args
-                                            args))
+   	   (expex-argument-expand fun argdef args)
 	   args)))
 
 (defun expex-argexpand (ex x)
