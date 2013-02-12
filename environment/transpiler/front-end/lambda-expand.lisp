@@ -2,10 +2,10 @@
 
 (defun lambda-make-funinfo (args parent)
   (with (argnames (argument-expand-names 'lambda-expand args)
-         fi (make-funinfo :argdef args
-                          :args argnames
-                          :parent parent
-                          :transpiler *transpiler*))
+         fi       (make-funinfo :argdef     args
+                                :args       argnames
+                                :parent     parent
+                                :transpiler *transpiler*))
     (funinfo-var-add fi '~%ret)
     (& (transpiler-copy-arguments-to-stack? *transpiler*)
        (funinfo-var-add-many fi argnames))
@@ -24,7 +24,7 @@
 (defun lambda-call-embed-0 (fi args vals body)
   (with ((a v) (assoc-splice (argument-expand 'dummy-in-lambda-call-embed args vals)))
     (funinfo-var-add-many fi a)
-     (lambda-expand-tree fi (lambda-expand-make-inline-body a v body))))
+    (lambda-expand-tree fi (lambda-expand-make-inline-body a v body))))
 
 (defun lambda-call-embed (fi lambda-call)
   (with-lambda-call (args vals body lambda-call)
@@ -50,7 +50,7 @@
 
 (defun lambda-export (fi x)
   (with (exported-name (lambda-export-make-exported-name)
-         fi-exported (lambda-make-funinfo (lambda-args x) fi))
+         fi-exported   (lambda-make-funinfo (lambda-args x) fi))
     (funinfo-make-ghost fi-exported)
     (lambda-expand-tree fi-exported (lambda-body x))
     (let argdef (funinfo-args fi-exported)
@@ -64,9 +64,10 @@
 ;;;; PASSTHROUGH
 
 (defun lambda-expand-tree-unexported-lambda (fi x)
-  (with (new-fi (| (& (lambda-funinfo x) (get-lambda-funinfo x))
+  (with (new-fi (| (& (lambda-funinfo x)
+                      (get-lambda-funinfo x))
 				   (lambda-make-funinfo (lambda-args x) fi))
-		 body (lambda-expand-tree-0 new-fi (lambda-body x)))
+		 body   (lambda-expand-tree-0 new-fi (lambda-body x)))
 	(copy-lambda x :info new-fi :body body)))
 
 
@@ -77,16 +78,16 @@
      (lambda? ..x.)
      (funinfo-add-local-function-args fi .x. (lambda-args ..x.)))
   (?
-    (lambda-call? x)      (lambda-call-embed fi x)
-    (lambda? x)           (? (& (transpiler-lambda-export? *transpiler*)
-                                (not (eq fi (transpiler-global-funinfo *transpiler*))))
-                             (lambda-export fi x)
-		                     (lambda-expand-tree-unexported-lambda fi x))
+    (lambda-call? x) (lambda-call-embed fi x)
+    (lambda? x)      (? (& (transpiler-lambda-export? *transpiler*)
+                           (not (eq fi (transpiler-global-funinfo *transpiler*))))
+                        (lambda-export fi x)
+		                (lambda-expand-tree-unexported-lambda fi x))
 	(lambda-expand-tree-0 fi x)))
 
 (defun lambda-expand-tree-0 (fi x)
   (?
-	(atom x) x
+	(atom x)  x
 	(atom x.) (cons x. (lambda-expand-tree-0 fi .x))
     (progn
       (make-default-listprop x)
