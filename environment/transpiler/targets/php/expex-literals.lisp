@@ -22,6 +22,7 @@
 				      ")"))
 
 (defun php-expex-add-global (x)
+  (funinfo-var-add (transpiler-global-funinfo *transpiler*) x)
   (adjoin! x (funinfo-globals *expex-funinfo*))
   x)
 
