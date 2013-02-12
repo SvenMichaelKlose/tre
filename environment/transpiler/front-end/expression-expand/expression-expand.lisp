@@ -107,7 +107,11 @@
 	    	    args))))
 
 
-;;;;; ARGUMENT VALUE EXPANSION
+;;;;; MOVING SINGLE ARGUMENTS
+
+(defun expex-move-atom (ex x)
+  (let s (expex-funinfo-var-add)
+    (cons (expex-make-%setq ex s x) s)))
 
 (defun expex-move-inline (ex x)
   (with ((p a) (expex-move-args ex x))
@@ -129,10 +133,6 @@
                 (expex-make-%setq ex s new-expr.)
                 new-expr))
           s)))
-
-(defun expex-move-atom (ex x)
-  (let s (expex-funinfo-var-add)
-    (cons (expex-make-%setq ex s x) s)))
 
 (defun expex-move (ex x)
   (?
