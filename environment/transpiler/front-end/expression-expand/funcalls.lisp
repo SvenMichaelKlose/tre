@@ -8,7 +8,7 @@
   (? (%setq-value-atom? x)
 	 (list x)
      (alet (car (%setq-value x))
-	   (?
-	     (function-expr? !)        (%setq-make-call-to-local-function x)
-		 (expex-var-or-lexical? !) (%setq-make-call-to-local-function x)
-	  	 (list x)))))
+	   (? (| (function-expr? !)       
+		     (expex-var-or-lexical? !))
+          (%setq-make-call-to-local-function x)
+	  	  (list x)))))
