@@ -22,7 +22,7 @@
                            (transpiler-encapsulate-strings _)
                            _]
     function-names      [? (transpiler-function-name-prefix tr)
-                           (translate-function-names tr nil _)
+                           (translate-function-names tr (transpiler-global-funinfo *transpiler*) _)
                            _])
 
 (transpiler-pass transpiler-backend-make-places ()
