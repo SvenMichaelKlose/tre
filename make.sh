@@ -69,7 +69,7 @@ OS_VERSION="unknown" #`uname -v`
 BUILD_MACHINE_INFO="-DTRE_BIG_ENDIAN -DLIBC_PATH=\"$LIBC_PATH\" -DTRE_KERNEL_IDENT=\"$KERNEL_IDENT\" -DTRE_CPU_TYPE=\"$CPU_TYPE\" -DTRE_OS_RELEASE=\"$OS_RELEASE\" -DTRE_OS_VERSION=\"$OS_VERSION\""
 
 GNU_LIBC_FLAGS="-D_GNU_SOURCE -D_BSD_SOURCE -D_SVID_SOURCE"
-C_DIALECT_FLAGS="-ansi -Wall -Wextra" #-Werror"
+C_DIALECT_FLAGS="-ansi -Wall -Wextra -Werror"
 
 CFLAGS="-pipe $C_DIALECT_FLAGS $GNU_LIBC_FLAGS $BUILD_MACHINE_INFO $ARGS"
 
@@ -210,10 +210,9 @@ precompile)
 boot)
 	basic_clean
 	./make.sh crunsh $ARGS || exit 1
-	(echo "(compile-c-compiler)" | ./tre) || exit 1
-	./make.sh crunshraw $ARGS || exit 1
+	(echo "(compile-bytecode-compiler)(dump-system)" | ./tre) || exit 1
 	(echo "(compile-c-environment *universe-functions*)" | ./tre) || exit 1
-	./make.sh crunshraw $ARGS || exit 1
+	./make.sh crunsh $ARGS || exit 1
 	;;
 
 bootunclean)
