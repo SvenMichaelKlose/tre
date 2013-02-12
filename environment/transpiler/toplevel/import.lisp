@@ -50,9 +50,9 @@
 (defun transpiler-import-wanted-functions (tr)
   (with-queue q
     (awhile (pop (transpiler-wanted-functions tr))
-            nil
-      (enqueue q (transpiler-import-wanted-function tr !)))
-    (apply #'+ (queue-list q))))
+            (apply #'+ (queue-list q))
+      (unless (transpiler-defined-function tr !)
+        (enqueue q (transpiler-import-wanted-function tr !))))))
 
 (defun transpiler-import-wanted-variables (tr)
   (transpiler-frontend tr
