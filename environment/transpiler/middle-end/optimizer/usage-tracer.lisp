@@ -7,13 +7,11 @@
 
 (defun removable-place? (x)
   (alet *funinfo*
-    (& (funinfo-var? ! x)
+    (& (funinfo-parent !)
+       (funinfo-var? ! x)
        (not (eq x (funinfo-lexical !))
             (funinfo-lexical? ! x)
-            (funinfo-immutable? ! x)
-            (unless (funinfo-parent !)
-              (| (transpiler-defined-function *transpiler* x)
-                 (transpiler-defined-variable *transpiler* x)))))))
+            (funinfo-immutable? ! x)))))
 
 (defun opt-peephole-will-be-used-again? (x v)
    (with (traversed-tags nil
