@@ -93,7 +93,7 @@
 (defun compile-argument-expansion (fun-name adef)
   (? (& (== 2 (length adef))
 	    (eq '&rest adef.))
-	 (list 'function fun-name)
+	 fun-name
      (let-if names (argument-expand-names 'compile-argument-expansion adef)
         (with-gensym p
           (? (in-cps-mode?)
@@ -103,4 +103,4 @@
                         ,(compile-argument-expansion-function-body fun-name adef p (list toplevel-continuer) names))))
              `#'((,p)
                   ,(compile-argument-expansion-function-body fun-name adef p nil names))))
-	    (list 'function fun-name))))
+	    fun-name)))
