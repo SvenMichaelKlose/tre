@@ -29,7 +29,7 @@
   (with-temporary *=-function?* [| (transpiler-defined-function tr _)
                                    (transpiler-can-import? tr _)
                                    (%=-function? _)]
-    (expander-expand (transpiler-std-macro-expander ,tr) x)))
+    (expander-expand (transpiler-std-macro-expander tr) x)))
 
 (defmacro transpiler-wrap-invariant-to-binary (definer op len replacement combinator)
   `(,definer ,op (&rest x)
