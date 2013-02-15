@@ -97,17 +97,6 @@ trecode_set_fun (treptr ** p, treptr value)
     *p = x;
 }
 
-void
-trecode_print_args (int num_args)
-{
-    int i;
-
-    DOTIMES(i, num_args) {
-        printf("Argument %d: ", i);
-        treprint (trestack_ptr[num_args - i]);
-    }
-}
-
 treptr
 trecode_call (treptr fun, treptr args)
 {
