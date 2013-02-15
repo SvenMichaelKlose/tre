@@ -16,15 +16,15 @@
 (defun =-href-obj (value hash key)
   (unless (defined? key.__tre-object-id)
     (let id (%%key (= *obj-id-counter* (%%%+ 1 *obj-id-counter*)))
-      (= key.__tre-object-id id
-         (aref *obj-keys* id) key)))
-    (= (aref hash key.__tre-object-id) value))
+      (= key.__tre-object-id id)
+      (%%%=-aref key *obj-keys* id)))
+  (%%%=-aref value hash key.__tre-object-id))
 
 (defun =-href (value hash key)
   (?
-    (character? key) (= (aref hash (%%%string+ "~%C" key.v)) value)
+    (character? key) (%%=aref value hash (%%%string+ "~%C" key.v))
     (object? key)    (=-href-obj value hash key)
-    (= (aref hash key) value)))
+    (%%%=-aref value hash key)))
 
 (defun %href-user-test? (hash key)
   (& (defined? hash.__tre-test)
@@ -34,16 +34,16 @@
 
 (defun %href-user (hash key)
   (dolist (k (hashkeys hash))
-    (& (funcall hash.__tre-test (aref hash key))
-       (return (aref hash key)))))
+    (& (funcall hash.__tre-test (%%%aref hash key))
+       (return (%%%aref hash key)))))
 
 (defun href (hash key)
   (? 
-    (character? key)            (aref hash (%%%string+ "~%C" key.v))
+    (character? key)            (%%%aref hash (%%%string+ "~%C" key.v))
     (object? key)               (& (defined? key.__tre-object-id)
-                                   (aref hash key.__tre-object-id))
+                                   (%%%aref hash key.__tre-object-id))
     (%href-user-test? hash key) (%href-user hash key)
-    (aref hash key)))
+    (%%%aref hash key)))
 
 (defun hash-table? (x)
   (& (object? x)
