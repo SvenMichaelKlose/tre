@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
  */
 
 #ifndef TRE_PTR_H
@@ -53,7 +53,7 @@ typedef uint treptr;
 #define TREPTR_IS_MACRO(ptr)	(TREPTR_TYPE(ptr) == TRETYPE_MACRO)
 #define TREPTR_IS_FUNCTION(ptr)	(TREPTR_TYPE(ptr) == TRETYPE_FUNCTION)
 
-#define IS_COMPILED_FUN(x) (TREPTR_IS_ARRAY(x) || (TREPTR_IS_FUNCTION(x) && TREATOM_COMPILED_FUN(x)))
+#define IS_COMPILED_FUN(x) (TREPTR_IS_ARRAY(x) || ((TREPTR_IS_FUNCTION(x) || TREPTR_IS_MACRO(x)) && TREATOM_COMPILED_FUN(x)))
 
 #define TREPTR_TRUTH(test)	((test) ? treptr_t : treptr_nil)
 
