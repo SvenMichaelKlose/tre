@@ -2,7 +2,7 @@
 
 (defun %compile-environment-configure-transpiler (tr funs)
   (= (transpiler-dot-expand? (copy-transpiler tr)) nil)
-  (transpiler-add-wanted-functions tr (| funs *universe-functions*))
+  (transpiler-add-wanted-functions tr (| funs (+ *universe-functions* *macros*)))
   tr)
 
 (defun compile-c-environment (&optional (funs nil))
@@ -12,13 +12,13 @@
 	    (princ code out))))
   nil)
 
-(defun compile-c-compiler ()
-  (compile-c-environment '(c-transpile)))
-
 (defun compile-bytecode-environment (&optional (funs nil))
   (let tr (%compile-environment-configure-transpiler *bc-transpiler* funs)
     (compile-files nil :target 'bytecode :transpiler tr))
   nil)
+
+(defun compile-c-compiler ()
+  (compile-c-environment '(c-transpile)))
 
 (defun compile-bytecode-compiler ()
   (compile-bytecode-environment '(bc-transpile)))
