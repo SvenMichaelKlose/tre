@@ -287,7 +287,7 @@ treatom_builtin_functionp (treptr list)
 {
     treptr arg = trearg_get (list);
 
-    return TREPTR_TRUTH(TREPTR_IS_FUNCTION(arg) || TREPTR_IS_BUILTIN(arg) || IS_COMPILED_FUN(arg));
+    return TREPTR_TRUTH(TREPTR_IS_FUNCTION(arg) || TREPTR_IS_MACRO(arg) || TREPTR_IS_BUILTIN(arg) || IS_COMPILED_FUN(arg));
 }
 
 /*tredoc
