@@ -94,6 +94,20 @@ trebuiltin_funcall (treptr list)
 }
 
 /*tredoc
+  (cmd name "EVAL" type "bt"
+ 	(description
+	  "Evaluates object.")
+    (arg name "obj")
+    (returns
+	  "Result of evaluation."))
+ */
+treptr
+trebuiltin_eval (treptr list)
+{
+    return treeval (trearg_get (list));
+}
+
+/*tredoc
   (cmd name "QUIT" type "bt"
     (description
 	  "Terminate the interpreter."))
@@ -129,45 +143,6 @@ trebuiltin_print (treptr expr)
     expr = trearg_get (expr);
     treprint (expr);
     return expr;
-}
-
-/*tredoc
-  (cmd name "EVAL" type "bt"
- 	(description
-	  "Evaluates object.")
-    (arg name "obj")
-    (returns
-	  "Result of evaluation."))
- */
-treptr
-trebuiltin_eval (treptr list)
-{
-    return treeval (trearg_get (list));
-}
-
-/*tredoc
-   (cmd name "%MACROCALL" type "bt"
-	 (description
-	   "Executes a macro with arguments.")
-	 (args
-	   (arg name "macro")
-	   (arg name "arguments" type "CONS")))
-  */
-treptr
-trebuiltin_macrocall (treptr list)
-{
-    treptr macro;
-    treptr args;
-    treptr res;
-
-    trearg_get2 (&macro, &args, list);
-	macro = trearg_typed (1, TRETYPE_MACRO, macro, "MACROCALL");
-
-    trethread_push_call (CDR(TREATOM_VALUE(macro)));
-    res = treeval_funcall (macro, args, FALSE);
-    trethread_pop_call ();
-
-    return res;
 }
 
 /*tredoc
@@ -404,7 +379,7 @@ trebuiltin_get (treptr args)
 char *tre_builtin_names[] = {
     "QUIT",
     "LOAD",
-    "EVAL", "APPLY", "%MACROCALL",
+    "EVAL", "APPLY",
     "PRINT",
     "GC",
     "DEBUG",
@@ -497,7 +472,6 @@ treevalfunc_t treeval_xlat_builtin[] = {
     trebuiltin_load,
     trebuiltin_eval,
     trebuiltin_apply,
-    trebuiltin_macrocall,
     trebuiltin_print,
     trebuiltin_gc,
     trebuiltin_debug,

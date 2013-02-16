@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2006–2009,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2006–2009,2012–2013 Sven Michael Klose <pixel@copei.de>
 
 ;;;; This is where the Lisp macro magic happens.
 ;;;; Leaves are expanded first.
@@ -128,7 +128,7 @@
 
 (%set-atom-fun %%macrocall
   #'((%g)
-       (%macrocall (symbol-function (car %g)) (cdr %g))))
+       (apply (symbol-function (car %g)) (cdr %g))))
 
 (%set-atom-fun %%env-macrop
   #'((%g)

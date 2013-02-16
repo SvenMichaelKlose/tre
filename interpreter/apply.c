@@ -134,7 +134,7 @@ trefuncall (treptr func, treptr args)
                                     FALSE);
 	if (IS_COMPILED_FUN(func))
 		return trefuncall_compiled (func, args, FALSE);
-    if (TREPTR_IS_FUNCTION(func))
+    if (TREPTR_IS_FUNCTION(func) || TREPTR_IS_MACRO(func))
         return treeval_funcall (func, args, FALSE);
     if (TREPTR_IS_BUILTIN(func))
         return treeval_xlat_function (treeval_xlat_builtin, func, args, FALSE);
