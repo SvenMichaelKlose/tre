@@ -150,6 +150,7 @@ trecode_get (treptr ** p)
                 tregc_push (args);
                 v = treeval_xlat_function (treeval_xlat_builtin, TREATOM_FUN(fun), args, FALSE);
                 tregc_pop ();
+                TRELIST_FREE_TOPLEVEL_EARLY(args);
             }
         } else if (TREPTR_IS_ATOM(fun) && TREPTR_IS_ARRAY(TREATOM_FUN(fun))) {
             tregc_push (TREATOM_FUN(fun));
@@ -161,6 +162,7 @@ trecode_get (treptr ** p)
             DOLIST(a, tre_queue_list (v))
                 *--trestack_ptr = CAR(a);
             tregc_pop ();
+            TRELIST_FREE_TOPLEVEL_EARLY(v);
             v = trecode_exec (TREATOM_FUN(fun));
             trestack_ptr += num_args;
             tregc_pop ();
