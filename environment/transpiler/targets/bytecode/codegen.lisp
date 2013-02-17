@@ -34,7 +34,7 @@
      x))
 
 (define-bc-macro %setq (place x)
-  `(%bc-set ,(bc-make-value x) ,place))
+  `(,(bc-make-value x) ,place))
 
 (define-bc-macro %set-vec (vec index x)
   `(%bc-set-vec ,vec ,index ,(bc-make-value x)))

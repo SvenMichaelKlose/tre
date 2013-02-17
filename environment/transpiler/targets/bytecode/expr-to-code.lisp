@@ -2,6 +2,13 @@
 
 (def-head-predicate %%bc-return)
 
+(defun get-bc-value (x)
+  (case x. :test #'eq
+    '%stack (values `(%stack ,.x.) ..x)
+    '%vec   (with ((vec n) (get-bc-value .x))
+              (values `(%vec ,@vec ,n.) .n))
+    (values (list x.) .x)))
+
 (defun get-tag-indexes (x)
   (with (indexes (make-queue)
          rec #'((x i)
@@ -14,13 +21,6 @@
                     (rec .x (1+ i)))))
     (rec x 0)
     (queue-list indexes)))
-
-(defun get-bc-value (x)
-  (case x. :test #'eq
-    '%stack (values `(%stack ,.x.) ..x)
-    '%vec   (with ((vec n) (get-bc-value .x))
-              (values `(%vec ,@vec ,n.) .n))
-    (values (list x.) .x)))
 
 (defun translate-jumps (indexes x)
   (with (get-tag-index [& _ (| (assoc-value _ indexes :test #'==)
@@ -41,7 +41,7 @@
   `(,(funinfo-name fi)
     ,(funinfo-argdef fi)
     ,(length (funinfo-vars fi))
-    ,@(translate-jumps (get-tag-indexes ...x) ...x)))
+    ,@(translate-jumps (get-tag-indexes x) x)))
 
 (defun get-next-function (x)
   (cdr (member '%%%bc-fun x :test #'eq)))
@@ -62,5 +62,5 @@
 
 (defun expr-to-code (tr expr)
   (let-when x (get-next-function expr)
-    (cons (make-bytecode-function (get-funinfo-by-sym x. tr) (copy-until-%bc-return .x))
+    (cons (make-bytecode-function (get-funinfo-by-sym x. tr) (copy-until-%bc-return ...x))
           (expr-to-code tr (next-%bc-return ..x)))))
