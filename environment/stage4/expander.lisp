@@ -56,7 +56,7 @@
   (with-gensym g
     `(progn
        (& (expander-has-macro? ',expander-name ',name)
-          (warn "Redefinition of macro ~A in expander ~A.~%" ',name ',expander-name))
+          (error "Redefinition of macro ~A in expander ~A.~%" ',name ',expander-name))
        (defun ,g ,args ,@body)
        (alet (expander-macros (expander-get ',expander-name))
          (= (href ! ',name) #',g)))))
