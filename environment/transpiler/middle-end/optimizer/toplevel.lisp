@@ -7,7 +7,7 @@
 (defun opt-peephole-has-no-jumps-to (x tag)
   (dolist (i x t)
     (& (vm-jump? i)
-       (== (vm-jump-tag i) tag)
+       (== (%%go-tag i) tag)
        (return nil))))
 
 (defun opt-peephole-tags-lambda (x)

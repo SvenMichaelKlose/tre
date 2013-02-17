@@ -34,7 +34,7 @@
   (& (cons? e)
      (in? e. '%%go '%%go-nil)))
 
-(defun vm-jump-tag (x)
+(defun %%go-tag (x)
   (?
 	(%%go? x) .x.
 	(%%go-nil? x) ..x.))
