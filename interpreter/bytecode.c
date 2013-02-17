@@ -32,7 +32,6 @@
 #include <strings.h>
 #include <stdlib.h>
 
-treptr treptr_set;
 treptr treptr_funcall;
 treptr treptr_builtin;
 treptr treptr_special;
@@ -51,20 +50,18 @@ treptr treptr_quote;
 treptr trecode_get (treptr ** p);
 
 treptr
-trecode_list (treptr ** p, int len)
+trecode_list (treptr ** x, int len)
 {
     treptr  l = tre_make_queue ();
     treptr  v;
-    treptr  * x = *p;
     int     i;
 
     tregc_push (l);
     DOTIMES(i, len) {
-        v = trecode_get (&x);
+        v = trecode_get (x);
         tre_enqueue (l, v);
     }
     tregc_pop ();
-    *p = x;
 
     return CDR(l);
 }
@@ -213,26 +210,27 @@ trecode_exec (treptr fun)
         *--trestack_ptr = treptr_nil;
 
     while (1) {
-        v = *x++;
-        if (v == treptr_set) {
-            trecode_set (&x);
-        } else if (v == treptr_jmp) {
+        v = *x;
+        if (v == treptr_jmp) {
+            x++;
             dest = *x++;
             if (dest == treptr_nil)
                 break;
             x = &code[TRENUMBER_INT(dest)];
         } else if (v == treptr_cond) {
+            x++;
             dest = *x++;
             if (trecode_get (&x) == treptr_nil)
                 x = &code[TRENUMBER_INT(dest)];
         } else if (v == treptr_set_vec) {
+            x++;
             vec = trecode_get (&x);
             tregc_push (vec);
             i = TRENUMBER_INT(*x++);
             v = _TREVEC(vec, i) = trecode_get (&x);
             tregc_pop ();
         } else
-            treerror_norecover (v, "illegal bytecode instruction");
+            trecode_set (&x);
     }
 
     v = *trestack_ptr;
@@ -243,8 +241,6 @@ trecode_exec (treptr fun)
 void
 trecode_init ()
 {
-    treptr_set = treatom_get ("%BC-SET", TRECONTEXT_PACKAGE());
-    EXPAND_UNIVERSE(treptr_set);
     treptr_set_vec = treatom_get ("%BC-SET-VEC", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treptr_set_vec);
     treptr_funcall = treatom_get ("%BC-FUNCALL", TRECONTEXT_PACKAGE());
