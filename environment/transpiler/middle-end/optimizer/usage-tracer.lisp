@@ -34,8 +34,8 @@
                                          (unless (eq v place)
                                            (traverse-statements d)))))
                    (%%go? a)     (traverse-tag .a.)
-                   (%%go-nil? a) (| (eq v .a.)
-                                    (traverse-tag ..a.)
+                   (%%go-nil? a) (| (eq v ..a.)
+                                    (traverse-tag .a.)
                                     (traverse-statements d))
                    (number? a)   (traverse-statements d)
                    (progn

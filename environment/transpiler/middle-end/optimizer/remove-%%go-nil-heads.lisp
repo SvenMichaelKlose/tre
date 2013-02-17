@@ -14,4 +14,4 @@
 
 (def-opt-peephole-fun opt-peephole-remove-%%go-nil-heads
   (%%go-nil-head? a d)
-    (opt-peephole-remove-%%go-nil-heads (cons `(%%go-nil ,(%setq-value a) ,(caddr d.)) .d)))
+    (opt-peephole-remove-%%go-nil-heads (cons `(%%go-nil ,(cadr d.) ,(%setq-value a)) .d)))

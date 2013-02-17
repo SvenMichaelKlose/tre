@@ -35,9 +35,7 @@
      (in? e. '%%go '%%go-nil)))
 
 (defun %%go-tag (x)
-  (?
-	(%%go? x) .x.
-	(%%go-nil? x) ..x.))
+  .x.)
 
 (defun %%block-body (x)
   .x)

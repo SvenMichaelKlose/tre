@@ -23,7 +23,7 @@
            l (last-cblock-instruction cb))
       (?
         (%%go? l)     (set-unconditional-link cb tags .l.)
-        (%%go-nil? l) (set-conditional-link cb tags ..l. .l. .x.)
+        (%%go-nil? l) (set-conditional-link cb tags .l. ..l. .x.)
         (= (cblock-next cb) .x.))
       (when (vm-jump? l)
         (remove-last-cblock-instruction cb))

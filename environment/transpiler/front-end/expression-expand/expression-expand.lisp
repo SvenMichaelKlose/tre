@@ -186,8 +186,8 @@
      (transpiler-add-cps-function *transpiler* (%setq-place x))))
 
 (defun expex-%%go-nil (ex x)
-  (with ((moved new-expr) (expex-filter-and-move-args ex (list .x.)))
-    (values moved `((%%go-nil ,@new-expr ,..x.)))))
+  (with ((moved new-expr) (expex-filter-and-move-args ex (list ..x.)))
+    (values moved `((%%go-nil ,.x. ,@new-expr)))))
 
 (defun expex-%setq-cps-mode (x)
   (= *transpiler-except-cps?* (not (%setq-value x)))

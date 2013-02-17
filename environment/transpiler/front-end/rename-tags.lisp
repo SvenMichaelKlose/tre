@@ -52,8 +52,9 @@
 	(%quote? x)   x
 	(%%go? x)     `(%%go ,(| (assoc-value .x. renamed :test #'==)
                              (error "didn't gather tag ~A for VM-GO" x)))
-	(%%go-nil? x) `(%%go-nil ,.x. ,(| (assoc-value ..x. renamed :test #'==)
-                                        (error "didn't gather tag ~A VM-GO-NIL" x)))
+	(%%go-nil? x) `(%%go-nil ,(| (assoc-value .x. renamed :test #'==)
+                                 (error "didn't gather tag ~A VM-GO-NIL" x))
+                             ,..x.)
 	(lambda? x)   (copy-lambda x :body (rename-body-tags-set (lambda-body x) renamed))
 	(%%block? x)  `(%%block ,@(rename-body-tags-set .x renamed))
 	(rename-body-tags-set-expr x renamed)))

@@ -26,7 +26,7 @@
        ,@(mapcan [with-compiler-tag next
                    `(,@(unless (t? _.)
                          `((%setq ~%ret ,_.)
-                           (%%go-nil ~%ret ,next)))
+                           (%%go-nil ,next ~%ret)))
                      ,@(awhen (distinguish-vars-from-tags ._)
 				         `((%setq ~%ret (%%block ,@!))))
                      (%%go ,end-tag)

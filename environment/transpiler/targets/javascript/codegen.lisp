@@ -37,7 +37,7 @@
 (define-js-macro %%go (tag)
   `(,*js-indent* "_I_=" ,tag ";continue" ,*js-separator*))
 
-(define-js-macro %%go-nil (val tag)
+(define-js-macro %%go-nil (tag val)
   `(,*js-indent* "if(!" ,val "&&" ,val "!==0&&" ,val "!==''){_I_=" ,tag ";continue;}" ,*js-newline*))
 
 (define-js-macro %%call-nil (val consequence alternative)

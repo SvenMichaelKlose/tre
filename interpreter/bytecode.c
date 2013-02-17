@@ -222,10 +222,9 @@ trecode_exec (treptr fun)
                 break;
             x = &code[TRENUMBER_INT(dest)];
         } else if (v == treptr_cond) {
-            if (trecode_get (&x) != treptr_nil) {
-                x++;
-            } else
-                x = &code[TRENUMBER_INT(*x)];
+            dest = *x++;
+            if (trecode_get (&x) == treptr_nil)
+                x = &code[TRENUMBER_INT(dest)];
         } else if (v == treptr_set_vec) {
             vec = trecode_get (&x);
             tregc_push (vec);
