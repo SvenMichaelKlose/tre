@@ -161,6 +161,9 @@
 		     (+ (? (starts-with? (symbol-name .f.) "=-") "" head)
                 (string-downcase (symbol-name (| .f. f.))))))))))
 
+(defun c-builtin-names ()
+  (hashkeys *c-builtins*))
+
 (defun c-builtin-name (x)
   (href *c-builtins* x))
 
@@ -168,8 +171,7 @@
 ;; to consed lists.
 ,`(progn
 	,@(macroexpand (mapcar [let n (make-symbol (c-builtin-name _))
-                             (& (functional? _)
-                                (push n *functionals*))
                              `(define-c-std-macro ,_ (&rest x)
 					 		    `(,n ,,(compiled-list x)))]
-			  			   (hashkeys *c-builtins*))))
+			  			   (remove-many '(eq car cdr cons? atom number? string? array? function? builtin?)
+                                        (c-builtin-names)))))

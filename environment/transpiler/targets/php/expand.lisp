@@ -93,30 +93,8 @@
 (define-php-std-macro defined? (x)
   `(not (isset ,x)))
 
-(define-php-std-macro dont-obfuscate (&rest symbols)
-  (apply #'transpiler-add-obfuscation-exceptions *transpiler* symbols)
-  nil)
-
-(define-php-std-macro dont-inline (&rest x)
-  (adolist (x)
-    (transpiler-add-inline-exception *transpiler* !))
-  nil)
-
-(define-php-std-macro assert (x &optional (txt nil) &rest args)
-  (& (transpiler-assert? *transpiler*)
-     (make-assertion x txt args)))
-
-(define-php-std-macro %lx (lexicals fun)
-  (eval (macroexpand `(with ,(mapcan ^(,_ ',_) .lexicals.)
-                        ,fun))))
-
 (define-php-std-macro mapcar (fun &rest lsts)
   (apply #'shared-mapcar fun lsts))
-
-(define-php-std-macro functional (&rest x)
-  (print-definition `(functional ,@x))
-  (append! *functionals* x)
-  nil)
 
 (define-php-std-macro in-package (n)
   (= (transpiler-current-package *js-transpiler*) (& n (make-package (symbol-name n))))

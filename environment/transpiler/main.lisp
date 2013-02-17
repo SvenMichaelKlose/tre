@@ -15,6 +15,7 @@
 (env-load "transpiler/targets/bytecode/main.lisp")
 (env-load "transpiler/targets/javascript/main.lisp")
 (env-load "transpiler/targets/php/main.lisp")
+(env-load "transpiler/targets/shared/expand/expand.lisp")
 (env-load "transpiler/targets/precompile-environments.lisp")
 
 (env-load "transpiler/compile.lisp")

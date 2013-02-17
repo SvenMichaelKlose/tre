@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defmacro + (&rest x)
   (opt-string-concat x '+))
@@ -46,9 +46,6 @@
                        (%slot-value ,.x. v)))
      `(character+ ,@x)))
 
-(defmacro integer+ (&rest x)
-  `(%%%+ ,@x))
-
 (defmacro character- (&rest x)
   (? (== 1 (length x))
      `(code-char (%transpiler-native "(-" (%slot-value ,x. v) ")"))
@@ -73,7 +70,6 @@
      `(,($ '%%% op) ,,@x)))
 
 (def-integer-op +)
-(def-integer-op -)
 (def-integer-op ==)
 (def-integer-op <)
 (def-integer-op >)

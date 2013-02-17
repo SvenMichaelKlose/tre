@@ -135,34 +135,11 @@
 (define-js-std-macro defined? (x)
   `(%%%!= "undefined" (%js-typeof ,x)))
 
-(define-js-std-macro dont-obfuscate (&rest symbols)
-  (print-definition `(dont-obfuscate ,@symbols))
-  (apply #'transpiler-add-obfuscation-exceptions *transpiler* symbols)
-  nil)
-
-(define-js-std-macro dont-inline (&rest x)
-  (dolist (i x)
-    (transpiler-add-inline-exception *transpiler* i))
-  nil)
-
-(define-js-std-macro assert (x &optional (txt nil) &rest args)
-  (when (transpiler-assert? *transpiler*)
-    (make-assertion x txt args)))
-
-(define-js-std-macro %lx (lexicals fun)
-  (eval (macroexpand `(with ,(mapcan ^(,_ ',_) .lexicals.)
-                        ,fun))))
-
 (define-js-std-macro mapcar (fun &rest lsts)
   (apply #'shared-mapcar fun lsts))
 
 (define-js-std-macro string-concat (&rest x)
   `(%%%+ ,@x))
-
-(define-js-std-macro functional (&rest x)
-  (print-definition `(functional ,@x))
-  (= *functionals* (nconc x *functionals*))
-  nil)
 
 (define-js-std-macro in-package (n)
   (= (transpiler-current-package *transpiler*) (& n (make-package (symbol-name n))))
