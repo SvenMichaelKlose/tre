@@ -119,7 +119,6 @@ trecode_call (treptr fun, treptr args)
 treptr
 trecode_get (treptr ** p)
 {
-    treptr  a;
     treptr  v;
     treptr  fun;
     treptr  args;
@@ -127,6 +126,7 @@ trecode_get (treptr ** p)
     treptr  cdr;
     treptr  vec;
     treptr  lex;
+    treptr  * old_sp;
     treptr  * x = *p;
     int     num_args;
     int     i;
@@ -155,14 +155,10 @@ trecode_get (treptr ** p)
         } else if (TREPTR_IS_ATOM(fun) && TREPTR_IS_ARRAY(TREATOM_FUN(fun))) {
             tregc_push (TREATOM_FUN(fun));
             num_args = TRENUMBER_INT(*x++);
-            v = tre_make_queue ();
-            tregc_push (v);
+            old_sp = trestack_ptr;
             DOTIMES(i, num_args)
-                tre_enqueue (v, trecode_get (&x));
-            DOLIST(a, tre_queue_list (v))
-                *--trestack_ptr = CAR(a);
-            tregc_pop ();
-            TRELIST_FREE_TOPLEVEL_EARLY(v);
+                *--old_sp = trecode_get (&x);
+            trestack_ptr = old_sp;
             v = trecode_exec (TREATOM_FUN(fun));
             trestack_ptr += num_args;
             tregc_pop ();
@@ -203,8 +199,8 @@ trecode_exec (treptr fun)
     treptr   * x;
     treptr   dest;
     treptr   v;
-    unsigned num_locals;
-    unsigned i = 0;
+    int      num_locals;
+    int      i;
     int      vec;
 
     if (TREPTR_IS_ARRAY(fun) == FALSE)
@@ -228,9 +224,8 @@ trecode_exec (treptr fun)
         } else if (v == treptr_cond) {
             if (trecode_get (&x) != treptr_nil) {
                 x++;
-            } else {
+            } else
                 x = &code[TRENUMBER_INT(*x)];
-            }
         } else if (v == treptr_set_vec) {
             vec = trecode_get (&x);
             tregc_push (vec);
