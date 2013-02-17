@@ -59,7 +59,6 @@
 (env-load "stage4/starts-with.lisp")
 (env-load "stage4/single-quoted.lisp")
 (env-load "stage4/symbols-function-exprs.lisp")
-(env-load "stage4/t.lisp")
 (env-load "stage4/tail-after-if.lisp")
 (env-load "stage4/tree-list.lisp")
 (env-load "stage4/tree-size.lisp")
