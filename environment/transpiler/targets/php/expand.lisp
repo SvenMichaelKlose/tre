@@ -16,9 +16,6 @@
 
 (transpiler-wrap-invariant-to-binary define-php-std-macro eq 2 eq &)
 
-(define-php-std-macro not (&rest x)
-  (funcall #'shared-not x))
-
 (define-php-std-macro defun (name args &body body)
   (with ((fi-sym adef) (split-funinfo-and-args args)
          fun-name (%defun-name name))
@@ -92,9 +89,6 @@
 
 (define-php-std-macro defined? (x)
   `(not (isset ,x)))
-
-(define-php-std-macro mapcar (fun &rest lsts)
-  (apply #'shared-mapcar fun lsts))
 
 (define-php-std-macro in-package (n)
   (= (transpiler-current-package *js-transpiler*) (& n (make-package (symbol-name n))))

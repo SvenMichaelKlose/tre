@@ -6,13 +6,6 @@
 (define-c-std-macro %defsetq (&rest x)
   `(%setq ,@x))
 
-(define-c-std-macro %lx (lexicals fun)                                                                                                                        
-  (eval (macroexpand `(with ,(mapcan ^(,_ ',_) .lexicals.)
-                        ,fun))))
-
-(define-c-std-macro not (&rest x)
-  (funcall #'shared-not x))
-
 (define-c-std-macro defun (name args &rest body)
   `(%%block
      ,(car (apply #'shared-defun name args body))
@@ -75,9 +68,6 @@
   (? (single-index? idx)
      `(%immediate-aref ,arr (%transpiler-native ,idx.))
      `(%aref ,(compiled-list (cons arr idx)))))
-	  
-(define-c-std-macro mapcar (fun &rest lsts)
-  (apply #'shared-mapcar fun lsts))
 
 (define-c-std-macro %%%nanotime ()
   '(nanotime))

@@ -6,10 +6,6 @@
 (define-bc-std-macro %defsetq (&rest x)
   `(%setq ,@x))
 
-(define-bc-std-macro %lx (lexicals fun)                                                                                                                        
-  (eval (macroexpand `(with ,(mapcan ^(,_ ',_) .lexicals.)
-                        ,fun))))
-
 (define-bc-std-macro defun (name args &rest body)
   (car (apply #'shared-defun name args body)))
 
@@ -34,9 +30,6 @@
 
 (define-bc-std-macro =-cdr (val x)
   (shared-=-cdr val x))
-
-(define-bc-std-macro mapcar (fun &rest lsts)
-  (apply #'shared-mapcar fun lsts))
 
 (define-bc-std-macro %set-atom-fun (place value)
   `(setq ,place ,value))

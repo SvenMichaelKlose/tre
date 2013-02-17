@@ -19,9 +19,6 @@
 
 (transpiler-wrap-invariant-to-binary define-js-std-macro eq 2 eq &)
 
-(define-js-std-macro not (&rest x)
-  (funcall #'shared-not x))
-
 (define-js-std-macro function (x)
   (? (cons? x)
      (with-lambda-content x fi args body
@@ -135,9 +132,6 @@
 (define-js-std-macro defined? (x)
   `(%%%!= "undefined" (%js-typeof ,x)))
 
-(define-js-std-macro mapcar (fun &rest lsts)
-  (apply #'shared-mapcar fun lsts))
-
 (define-js-std-macro string-concat (&rest x)
   `(%%%+ ,@x))
 
@@ -149,6 +143,3 @@
  `(%setq nil (%invoke-debugger)))
 
 (define-js-std-macro define-test (&rest x))
-
-;(define-js-std-macro filter (fun lst)
-  ;(shared-opt-filter fun lst))
