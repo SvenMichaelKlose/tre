@@ -4,7 +4,7 @@
   `(define-transpiler-std-macro *js-transpiler* ,@x))
 
 (define-js-std-macro %defsetq (&rest x)
-  `(progn
+  `(%%block
 	 (%var ,x.)
 	 (%setq ,@x)))
 
@@ -49,7 +49,7 @@
 (define-js-std-macro define-native-js-fun (name args &rest body)
   (js-make-late-symbol-function-assignment name)
   `(progn
-     ,@(apply #'shared-defun name args (body-with-noargs-tag body))))
+     ,(apply #'shared-defun name args (body-with-noargs-tag body))))
 
 (defun js-early-symbol-maker (g sym)
    `(,@(unless (eq g '~%tfun)
@@ -63,7 +63,7 @@
     (let g '~%tfun
       `(progn
          ,@(js-early-symbol-maker g dname)
-         ,@(apply #'shared-defun dname args body)
+         ,(apply #'shared-defun dname args body)
          (= (symbol-function ,g) ,dname)))))
 
 (define-js-std-macro %defun (&rest x)

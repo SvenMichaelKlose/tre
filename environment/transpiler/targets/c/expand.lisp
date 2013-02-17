@@ -8,7 +8,7 @@
 
 (define-c-std-macro defun (name args &rest body)
   `(%%block
-     ,(car (apply #'shared-defun name args body))
+     ,(apply #'shared-defun name args body)
      ,@(with ((fi-sym adef) (split-funinfo-and-args args)
               fun-name      (%defun-name name))
          (unless (simple-argument-list? adef)

@@ -11,7 +11,7 @@
 
 (define-php-std-macro define-native-php-fun (name args &body body)
   `(%%block
-     ,@(apply #'shared-defun name args (body-with-noargs-tag body))
+     ,(apply #'shared-defun name args (body-with-noargs-tag body))
      (%setq ~%ret nil)))
 
 (transpiler-wrap-invariant-to-binary define-php-std-macro eq 2 eq &)
@@ -20,11 +20,11 @@
   (with ((fi-sym adef) (split-funinfo-and-args args)
          fun-name (%defun-name name))
     `(%%block
-       ,@(apply #'shared-defun fun-name args
-                (? *exec-log*
-                   `((%transpiler-native "error_log (\"" ,(symbol-name fun-name) "\")")
-                        nil ,@body)
-                   body))
+       ,(apply #'shared-defun fun-name args
+               (? *exec-log*
+                  `((%transpiler-native "error_log (\"" ,(symbol-name fun-name) "\")")
+                       nil ,@body)
+                  body))
        (%setq ~%ret nil)
        ,@(unless (simple-argument-list? adef)
            (with-gensym p

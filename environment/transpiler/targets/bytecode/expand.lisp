@@ -7,7 +7,7 @@
   `(%setq ,@x))
 
 (define-bc-std-macro defun (name args &rest body)
-  (car (apply #'shared-defun name args body)))
+  (apply #'shared-defun name args body))
 
 (define-bc-std-macro %set-atom-fun (place value)
   `(setq ,place ,value))
