@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2006,2009,2011–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2006,2009,2011–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun (= car) (val lst)
   (rplaca lst val)
@@ -10,9 +10,6 @@
 
 (defun (= elt) (val seq idx)
   (%set-elt val seq idx))
-
-(defun (= aref) (val arr &rest idx)
-  (apply #'%set-aref val arr idx))
 
 (defun (= caar) (val lst)
   (rplaca (car lst) val)
