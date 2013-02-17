@@ -17,29 +17,7 @@
                (defun ,($ fun-name '_treexp) (,p)
                  ,(compile-argument-expansion-function-body fun-name adef p nil (argument-expand-names 'compile-argument-expansion adef)))))))))
 
-(define-c-std-macro defmacro (&rest x)
-  (apply #'shared-defmacro '*transpiler* x))
-
-(define-c-std-macro defvar (name &optional (val '%%no-value))
-  (& (eq '%%no-value val)
-     (= name `',name))
-  (let tr *transpiler*
-    (print-definition `(defvar ,name))
-    (& (transpiler-defined-variable tr name)
-       (redef-warn "redefinition of variable ~A.~%" name))
-    (transpiler-add-defined-variable tr name)
-    (transpiler-obfuscate-symbol tr name)
-    `(progn
-       (%var ,name)
-	   (%setq ,name ,val))))
-
 (transpiler-wrap-invariant-to-binary define-c-std-macro eq 2 %%%eq &)
-
-(define-c-std-macro =-car (val x)
-  (shared-=-car val x))
-
-(define-c-std-macro =-cdr (val x)
-  (shared-=-cdr val x))
 
 (mapcan-macro _
     '(car cdr cons? atom number? string? array? function? builtin?)

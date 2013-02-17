@@ -34,27 +34,12 @@
                       (argument-expand-names 'compile-argument-expansion adef))))))
        (%setq ~%ret nil))))
 
-(define-php-std-macro defmacro (name args &body x)
-  (apply #'shared-defmacro name args x))
-
-(define-php-std-macro defvar (name &optional (val '%%no-value))
-  (funcall #'shared-defvar name val))
-
 (define-php-std-macro define-external-variable (name)
   (print-definition `(define-external-variable ,name))
   (& (transpiler-defined-variable *transpiler* name)
      (redef-warn "redefinition of variable ~A." name))
   (transpiler-add-defined-variable *transpiler* name)
   nil)
-
-(define-php-std-macro defconstant (&rest x)
-  `(defvar ,@x))
-
-(define-php-std-macro =-car (val x)
-  (shared-=-car val x))
-
-(define-php-std-macro =-cdr (val x)
-  (shared-=-cdr val x))
 
 (define-php-std-macro make-string (&optional len)
   "")
@@ -69,20 +54,15 @@
     		  (error "function must be a SLOT-VALUE, got ~A" fun))
 		  ,fun))
 
-(defun php-transpiler-make-new-hash (x)
-  `(%make-hash-table ,@x))
-
-(defun php-transpiler-make-new-object (x)
-  `(%new ,@x))
-
 (define-php-std-macro new (&rest x)
   (unless x
 	(error "NEW expects arguments"))
   (unless (& x. (| (symbol? x.) (string? x.)))
     (error "NEW expects first argument to be a non-NIL symbol or string instead of ~A" x.))
-  (? (| (keyword? x.) (string? x.))
-     (php-transpiler-make-new-hash x)
-     (php-transpiler-make-new-object x)))
+  (? (| (keyword? x.)
+        (string? x.))
+     `(%make-hash-table ,@x)
+     `(%new ,@x)))
 
 (define-php-std-macro undefined? (x)
   `(isset ,x))

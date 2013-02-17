@@ -69,21 +69,6 @@
 (define-js-std-macro %defun (&rest x)
   `(defun ,@x))
 
-(define-js-std-macro defmacro (&rest x)
-  (apply #'shared-defmacro x))
-
-(define-js-std-macro defvar (name &optional (val '%%no-value))
-  (funcall #'shared-defvar name val))
-
-(define-js-std-macro defconstant (&rest x)
-  `(defvar ,@x))
-
-(define-js-std-macro =-car (val x)
-  (shared-=-car val x))
-
-(define-js-std-macro =-cdr (val x)
-  (shared-=-cdr val x))
-
 (define-js-std-macro make-string (&optional len)
   "")
 

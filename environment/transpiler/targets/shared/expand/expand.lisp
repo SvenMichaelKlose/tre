@@ -38,3 +38,39 @@
         'mapcar
         'filter)
         ,fun ,@lsts))
+
+(define-shared-std-macro (bc c js php) defmacro (&rest x)
+  (print-definition `(defmacro ,x. ,.x.))
+  (eval (macroexpand `(define-transpiler-std-macro *transpiler* ,@x)))
+  (when *have-compiler?*
+    `(define-std-macro ,@x)))
+
+(define-shared-std-macro (bc c js php) defconstant (&rest x)
+  `(defvar ,@x))
+
+(define-shared-std-macro (bc c js php) defvar (name &optional (val '%%no-value))
+  (when (eq '%%no-value val)
+    (= val `',name))
+  (let tr *transpiler*
+    (print-definition `(defvar ,name))
+    (when (transpiler-defined-variable tr name)
+      (redef-warn "redefinition of variable ~A.~%" name))
+    (transpiler-add-defined-variable tr name)
+    (when *have-compiler?*
+      (transpiler-add-delayed-var-init tr `((%setq *variables* (cons (cons ',name ',val) *variables*)))))
+    `(progn
+       ,@(when (transpiler-needs-var-declarations? tr)
+           `((%var ,name)))
+	   (%setq ,name ,val))))
+
+(define-shared-std-macro (bc c js php) =-car (val x)
+  (with-gensym g
+    `(let ,g ,val
+       (rplaca ,x ,g)
+       ,g)))
+
+(define-shared-std-macro (bc c js php) =-cdr (val x)
+  (with-gensym g
+    `(let ,g ,val
+       (rplacd ,x ,g)
+       ,g)))

@@ -5,8 +5,6 @@
 (env-load "transpiler/targets/shared/noargs-tag.lisp")
 (env-load "transpiler/targets/shared/expand/log-function-calls.lisp")
 (env-load "transpiler/targets/shared/expand/defun.lisp")
-(env-load "transpiler/targets/shared/expand/defmacro.lisp")
-(env-load "transpiler/targets/shared/expand/defvar.lisp")
 (env-load "transpiler/targets/shared/expand/opt-string-concat.lisp")
 (env-load "transpiler/targets/shared/expand/opt-filter.lisp")
 (env-load "transpiler/targets/shared/expand/setf-cons.lisp")
