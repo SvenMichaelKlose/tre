@@ -1,6 +1,4 @@
-;;;;; TRE environment
-;;;;; Copyright (c) 2010 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2010,2013 Sven Michael Klose <pixel@copei.de>
 
-(defun remove-many (items lst)
-  (dolist (i items lst)
-	(remove! i lst)))
+(defun remove-many (items lst &key (test #'eql))
+  (remove-if [member _ items :test test] lst))
