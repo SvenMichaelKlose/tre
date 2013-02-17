@@ -1,4 +1,4 @@
-;;;; tré – Copyright (C) 2005–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
+;;;; tré – Copyright (C) 2005–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
 
 (env-load "stage3/list-unless.lisp")
 (env-load "stage3/force-tree.lisp")
@@ -30,6 +30,7 @@
 (env-load "stage3/error.lisp" 'c)
 (env-load "stage3/documentation.lisp")
 (env-load "stage3/assert.lisp")
+(env-load "stage3/assert-c.lisp" 'c)
 (env-load "stage3/loop.lisp")
 (env-load "stage3/with-struct.lisp")
 (env-load "stage3/collected-errors.lisp")
