@@ -1,9 +1,9 @@
-;;;;; tré – Copyright (c) 2011–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2011–2013 Sven Michael Klose <pixel@copei.de>
 
 (defvar *macros* nil)
 (defvar *standard-macro-expander* nil)
 
-,(? *have-compiler*
+,(? *have-compiler?*
     '(defmacro define-std-macro (name args &rest body)
        (unless (eq 'define-std-macro name)
          (with-gensym (g name-sym)
@@ -15,7 +15,7 @@
                 (set-expander-macro 'standard-macros ,name-sym #',g :may-redefine? t))))))
     '(defmacro define-std-macro (name args &rest body)))
 
-,(? *have-compiler*
+,(? *have-compiler?*
     '(defun macrop (name)
 	   (expander-has-macro? 'standard-macros name))
     '(defun macrop (x)))
