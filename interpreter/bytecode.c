@@ -135,7 +135,7 @@ trecode_get (treptr ** p)
 
     if (v == treptr_funcall) {
         fun = *x++;
-        if (TREPTR_IS_BUILTIN(fun)) {
+        if (TREPTR_IS_BUILTIN(TREATOM_FUN(fun))) {
             if (fun == treptr_cons) {
                 car = trecode_get (&x);
                 tregc_push (car);
@@ -148,7 +148,7 @@ trecode_get (treptr ** p)
                 num_args = TRENUMBER_INT(*x++);
                 args = trecode_list (&x, num_args);
                 tregc_push (args);
-                v = treeval_xlat_function (treeval_xlat_builtin, fun, args, FALSE);
+                v = treeval_xlat_function (treeval_xlat_builtin, TREATOM_FUN(fun), args, FALSE);
                 tregc_pop ();
             }
         } else if (TREPTR_IS_ATOM(fun) && TREPTR_IS_ARRAY(TREATOM_FUN(fun))) {

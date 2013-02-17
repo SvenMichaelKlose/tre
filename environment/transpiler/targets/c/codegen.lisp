@@ -150,7 +150,7 @@
   (append (c-make-aref arr idx)
 		  `("=" ,val)))
 
-(define-c-macro %set-aref (args)
+(define-c-macro %=-aref (args)
   `(trearray_builtin_set_aref ,args))
 
 (defun c-make-array (size)

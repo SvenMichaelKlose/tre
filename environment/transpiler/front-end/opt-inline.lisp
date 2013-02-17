@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2009–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2009–2013 Sven Michael Klose <pixel@copei.de>
 
 (defvar *show-inlines?* nil)
 (defvar *opt-inline-max-levels* 8)
@@ -56,7 +56,7 @@
 		 (| (transpiler-defined-function tr f)
             (& (atom f)
                (function? (symbol-function f))
-               (not (builtin? f))))))
+               (not (builtin? (symbol-function f)))))))
 	  (cons (opt-inline-1 tr level current parent x.)
 		    (opt-inline-0 tr level current parent .x))
 

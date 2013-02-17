@@ -35,6 +35,7 @@ typedef uint treptr;
 #define TREATOM_DETAIL(ptr)		(TREPTR_TO_ATOM(ptr).detail)
 #define TREATOM_STRING(ptr)		((char *) TREATOM_DETAIL(ptr))
 #define TREATOM_STRINGP(ptr)	((char *) TRESTRING_DATA(TREATOM_STRING(ptr)))
+#define TREATOM_SET_FUN(ptr, val)	    (TREPTR_TO_ATOM(ptr).fun = val)
 #define TREATOM_SET_DETAIL(ptr, val)	(TREPTR_TO_ATOM(ptr).detail = (void *) val)
 #define TREATOM_SET_STRING(ptr, val)	(TREATOM_DETAIL(ptr) = (char *) val)
 #define TREATOM_SET_TYPE(ptr, val)	(TREATOM_TYPE(ptr) = val)

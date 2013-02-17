@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2009,2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2009,2012–2013 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -88,21 +88,26 @@ treatom_init_atom_table (void)
 void
 treatom_init_builtins (void)
 {
-    treptr   atom;
+    treptr name;
+    treptr fun;
     ulong  i;
 
-    /* Builtin functions. */
+    /* Built–in functions. */
     for (i = 0; tre_builtin_names[i] != NULL; i++) {
-        atom = treatom_alloc (tre_builtin_names[i], treptr_nil, TRETYPE_BUILTIN, treptr_nil);
-        TREATOM_SET_DETAIL(atom, i);
-        EXPAND_UNIVERSE(atom);
+        fun = treatom_alloc (NULL, treptr_nil, TRETYPE_BUILTIN, treptr_nil);
+        TREATOM_SET_DETAIL(fun, i);
+        name = treatom_alloc (tre_builtin_names[i], treptr_nil, TRETYPE_VARIABLE, treptr_nil);
+        TREATOM_SET_FUN(name, fun);
+        EXPAND_UNIVERSE(name);
     }
 
     /* Special forms. */
     for (i = 0; tre_special_names[i] != NULL; i++) {
-        atom = treatom_alloc (tre_special_names[i], treptr_nil, TRETYPE_SPECIAL, treptr_nil);
-        TREATOM_SET_DETAIL(atom, i);
-        EXPAND_UNIVERSE(atom);
+        fun = treatom_alloc (NULL, treptr_nil, TRETYPE_SPECIAL, treptr_nil);
+        TREATOM_SET_DETAIL(fun, i);
+        name = treatom_alloc (tre_special_names[i], treptr_nil, TRETYPE_VARIABLE, treptr_nil);
+        TREATOM_SET_FUN(name, fun);
+        EXPAND_UNIVERSE(name);
     }
 }
 

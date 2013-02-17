@@ -11,7 +11,7 @@
 (defun transpiler-can-import? (tr name)
   (& (transpiler-import-from-environment? tr)
      (function? (symbol-function name))
-     (not (builtin? name))
+     (not (builtin? (symbol-function name)))
      (not (transpiler-defined? tr name))))
 	
 (defun transpiler-add-wanted-function (tr x)
