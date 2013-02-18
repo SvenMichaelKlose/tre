@@ -44,7 +44,7 @@
   (alet *js-env-path*
     `((list-of-early-defined-functions . ,#'js-emit-early-defined-functions)
       (,(+ ! "env-load-stub.lisp"))
-       ,@(js-environemnt-files)
+       ,@(js-environment-files)
       (,(+ ! "late-macro.lisp"))
       (,(+ ! "eval.lisp")))))
 
@@ -61,8 +61,6 @@
     (+ (js-transpile-prologue tr)
        (target-transpile tr :decl-gen            (js-make-decl-gen tr)
                             :files-before-deps   (js-files-before-deps tr)
-                            :dep-gen             #'(()
-                                                      (transpiler-import-from-environment tr))
                             :files-after-deps    (+ (js-files-after-deps)
                                                     sources)
                             :files-to-update     files-to-update

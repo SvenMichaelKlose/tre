@@ -3,7 +3,7 @@
 (defvar *closure-argdefs* nil)
 (defvar *c-init-group-size* 16)
 (defvar *c-init-counter* 0)
-(defvar *c-interpreter-headers*
+(defvar *c-core-headers*
 	     '("ptr.h"
 		   "cons.h"
 		   "list.h"
@@ -70,7 +70,7 @@
 	       ,@(mapcar #'list (reverse init-funs)))))))
 
 (defun c-transpiler-header-inclusions ()
-  (apply #'+ (mapcar [format nil "#include \"~A\"~%" _] *c-interpreter-headers*)))
+  (apply #'+ (mapcar [format nil "#include \"~A\"~%" _] *c-core-headers*)))
 
 (defun c-transpile (sources &key transpiler obfuscate? print-obfuscations? files-to-update)
   (let tr transpiler
@@ -81,6 +81,4 @@
                           (let init (with-temporary (transpiler-profile? tr) nil
                                       (transpiler-make-code tr (transpiler-frontend tr (c-transpiler-make-init tr))))
                             (concat-stringtree (transpiler-compiled-decls tr) init)))
-           :dep-gen #'(()
-                         (transpiler-import-from-environment tr))
            :files-after-deps sources))))

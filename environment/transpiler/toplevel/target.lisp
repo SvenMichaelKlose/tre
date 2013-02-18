@@ -48,12 +48,12 @@
                                  (print-obfuscations? nil))
   (with-temporaries (*recompiling?* (? files-to-update t)
                      *transpiler*   tr
-                     *opt-inline?* (& (not (transpiler-inject-debugging? tr))
-                                      *opt-inline?*))
-    (& *have-compiler?*
-       (= (transpiler-save-sources? tr) t))
-    (& files-to-update
-       (clr (transpiler-emitted-decls tr)))
+                     *opt-inline?*  (unless (transpiler-inject-debugging? tr)
+                                      *opt-inline?*)
+                     dep-gen        (| dep-gen #'(()
+                                                    (transpiler-import-from-environment tr))))
+    (& *have-compiler?* (= (transpiler-save-sources? tr) t))
+    (& files-to-update  (clr (transpiler-emitted-decls tr)))
     (= (transpiler-host-functions-hash tr) (make-functions-hash))
     (= (transpiler-host-variables-hash tr) (make-variables-hash))
     (transpiler-switch-obfuscator tr obfuscate?)
@@ -61,13 +61,13 @@
 		   after-deps  (target-transpile-1 tr files-after-deps files-to-update)
 		   deps        (target-sighten-deps tr dep-gen)
            num-exprs   (apply #'+ (mapcar [length ._] (+ before-deps deps after-deps)))
-           show?       #'(() (& *show-definitions?* (< 50 num-exprs))))
+           show?       #'(()
+                            (& *show-definitions?* (< 50 num-exprs))))
       (& (show?)
          (format t "; ~A toplevel expressions.~%; Let me think. Hmm...~F" num-exprs))
       (with (compiled-before (target-transpile-2 tr before-deps files-to-update)
 	         compiled-deps   (awhen deps (transpiler-make-code tr !))
-		     compiled-after  (target-transpile-2 tr after-deps files-to-update)
-           )
+		     compiled-after  (target-transpile-2 tr after-deps files-to-update))
 ;           compiled-acctop (when (transpiler-accumulate-toplevel-expressions? tr)
 ;	                         (transpiler-make-code tr 
 ;                                 (target-transpile-1 tr (list (cons 'accumulated-toplevel #'(()
@@ -77,7 +77,6 @@
         (!? compiled-deps
             (= (transpiler-imported-deps tr) (transpiler-concat-text tr (transpiler-imported-deps tr) !)))
         (let decls-and-inits (!? decl-gen (funcall !))
-          (& (show?) (format t "; Concatenating results...~F"))
 	      (prog1
 	        (transpiler-concat-text tr decls-and-inits
 	                                   compiled-before
@@ -85,6 +84,5 @@
                                        (transpiler-imported-deps tr)
 	                                   compiled-after)
                                        ;(| compiled-acctop ""))
-            (& (show?) (format t " Done.~%~F"))
             (& print-obfuscations? (transpiler-obfuscate? tr)
                (transpiler-print-obfuscations tr))))))))

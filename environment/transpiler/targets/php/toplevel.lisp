@@ -54,8 +54,6 @@
            :decl-gen #'(()
                           (php-transpile-decls transpiler))
            :files-before-deps (list (cons 'base1 *php-base*))
-           :dep-gen  #'(()
-                          (transpiler-import-from-environment transpiler))
            :files-after-deps (+ (list (cons 'base2 *php-base2*))
                                 (& (eq t *have-environment-tests*)
                                    (list (cons 'env-tests (make-environment-tests))))
