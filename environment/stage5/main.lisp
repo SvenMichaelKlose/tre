@@ -35,6 +35,5 @@
 (env-load "stage5/bmp2cub.lisp")
 (env-load "stage5/ppm.lisp")
 (env-load "stage5/pi.lisp")
-(env-load "stage5/dct.lisp" 'c)
 (env-load "stage5/draw-signal.lisp")
 (env-load "stage5/orize.lisp")
