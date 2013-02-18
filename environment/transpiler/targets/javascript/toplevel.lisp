@@ -26,29 +26,33 @@
                           (funinfo-vars (transpiler-global-funinfo tr))))))
 
 (defun js-files-before-deps (tr)
-  (+ `((t1 . ,*js-base*))
-     (& (transpiler-assert? tr)
-        `((t2 . ,*js-base-debug-print*)))
-     `((t3 . ,*js-base2*))
-     (unless *transpiler-no-stream?*
-       `((t4 . ,*js-base-stream*)))
-     (& (eq t *have-environment-tests*)
-        `((t5 . ,(make-environment-tests))))))
+  `((essential-functions-1 . ,*js-base*)
+    ,@(& (transpiler-assert? tr)
+         `((debug-printing . ,*js-base-debug-print*)))
+    (essential-functions-2 . ,*js-base2*)
+    ,@(unless *transpiler-no-stream?*
+        `((standard-streams . ,*js-base-stream*)))
+    ,@(& (t? *have-environment-tests*)
+         `((environment-tests . ,(make-environment-tests))))))
+
+(defun js-environment-files ()
+  (mapcan [unless (eq 'c ._)
+            `((,(+ "environment/" _.)))]
+          (reverse *environment-filenames*)))
 
 (defun js-files-compiler ()
-  (+ `((list-of-early-defined-functions . ,#'js-emit-early-defined-functions)
-       (,(+ *js-env-path* "env-load-stub.lisp")))
-     (mapcan [unless (eq 'c ._)
-               `((,(+ "environment/" _.)))]
-             (reverse *environment-filenames*))
-     `((,(+ *js-env-path* "late-macro.lisp"))
-       (,(+ *js-env-path* "eval.lisp")))))
+  (alet *js-env-path*
+    `((list-of-early-defined-functions . ,#'js-emit-early-defined-functions)
+      (,(+ ! "env-load-stub.lisp"))
+       ,@(js-environemnt-files)
+      (,(+ ! "late-macro.lisp"))
+      (,(+ ! "eval.lisp")))))
 
 (defun js-files-after-deps ()
-  (+ `((late-symbol-function-assignments . ,#'emit-late-symbol-function-assignments)
-       (memorized-source-emitter . ,#'js-emit-memorized-sources))
-     (& *have-compiler?*
-        (js-files-compiler))))
+  `((late-symbol-function-assignments . ,#'emit-late-symbol-function-assignments)
+    (memorized-source-emitter . ,#'js-emit-memorized-sources)
+    ,@(& *have-compiler?*
+         (js-files-compiler))))
 
 (defun js-transpile (sources &key (transpiler nil) (obfuscate? nil) (print-obfuscations? nil) (files-to-update nil))
   (let tr transpiler
