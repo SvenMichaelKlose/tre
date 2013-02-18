@@ -4,4 +4,4 @@
   (alet (target-transpile transpiler :files-after-deps sources)
     (& *show-definitions?*
        (format t "; ~A codes.~%" (length !)))
-    (load-bytecode-functions (expr-to-code transpiler !))))
+    (expr-to-code transpiler !)))

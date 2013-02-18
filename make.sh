@@ -210,7 +210,7 @@ precompile)
 boot)
 	basic_clean
 	./make.sh crunsh $ARGS || exit 1
-	(echo "(compile-bytecode-compiler)(dump-system)" | ./tre) || exit 1
+	(echo "(load-bytecode (compile-bytecode-compiler))(dump-system)" | ./tre) || exit 1
 	(echo "(compile-c-environment)" | ./tre) || exit 1
 	./make.sh crunsh $ARGS || exit 1
 	;;
@@ -228,7 +228,7 @@ recompile)
 	;;
 
 bytecode)
-	(echo "(compile-bytecode-environment)(dump-system)" | ./tre) || exit 1
+	(echo "(load-bytecode (compile-bytecode-environment))(dump-system)" | ./tre) || exit 1
 	;;
 
 install)
@@ -259,5 +259,5 @@ restore)
     ;;
 
 *)
-	echo "Usage: make.sh boot|bootunclean|build|crunsh|crunshraw|recompile|debug|debugraw|backup|restore|install|clean [args]"
+	echo "Usage: make.sh boot|bootunclean|build|crunsh|crunshraw|recompile|precompile|bytecode|debug|debugraw|backup|restore|install|clean [args]"
 esac
