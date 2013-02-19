@@ -15,6 +15,9 @@
 (defun make-variables-hash ()
   (alist-hash (filter [cons _. t] *variables*) :test #'eq))
 
+(defun make-functionals-hash ()
+  (alist-hash (filter [cons _ t] *functionals*) :test #'eq))
+
 (defstruct transpiler
   name
   std-macro-expander
@@ -34,6 +37,7 @@
   (defined-variables-hash (make-hash-table :test #'eq))
   (host-functions-hash    nil)
   (host-variables-hash    nil)
+  (functionals-hash       nil)
 
   ; Functions to be imported from the environment.
   (wanted-functions nil)
@@ -142,6 +146,7 @@
   	 (transpiler-defined-functions-hash tr) (make-hash-table :test #'eq)
   	 (transpiler-host-functions-hash tr)    (make-functions-hash)
   	 (transpiler-host-variables-hash tr)    (make-variables-hash)
+  	 (transpiler-functionals-hash tr)       (make-functionals-hash)
   	 (transpiler-function-args tr)          (make-hash-table :test #'eq)
   	 (transpiler-function-bodies tr)        (make-hash-table :test #'eq)
   	 (transpiler-late-symbols tr)           (make-hash-table :test #'eq)
@@ -166,6 +171,7 @@
         :defined-variables-hash (copy-hash-table defined-variables-hash)
         :host-functions-hash    (copy-hash-table host-functions-hash)
         :host-variables-hash    (copy-hash-table host-variables-hash)
+        :functionals-hash       (copy-hash-table functionals-hash)
         :wanted-functions       (copy-list wanted-functions)
         :wanted-functions-hash  (copy-hash-table wanted-functions-hash)
         :wanted-variables       (copy-list wanted-variables)
@@ -305,6 +311,12 @@
 
 (defun transpiler-package-symbol (tr x)
   (make-symbol (symbol-name x) (transpiler-current-package tr)))
+
+(defun transpiler-add-functional (tr x)
+  (= (href (transpiler-functionals-hash tr) x) t))
+
+(defun transpiler-functional? (tr x)
+  (href (transpiler-functionals-hash tr) x))
 
 (defun transpiler-defined-symbol? (fi x)
   (let tr *transpiler*

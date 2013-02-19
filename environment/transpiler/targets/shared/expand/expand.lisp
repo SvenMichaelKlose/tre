@@ -19,10 +19,26 @@
 
 (define-shared-std-macro (js php) functional (&rest x)
   (print-definition `(functional ,@x))
-  (!? (member-if [member _ x] *functionals*)
-      (error "Redefinition of functional." !.))
-  (+! *functionals* x)
+  (adolist (x)
+    (? (transpiler-functional? *transpiler* !)
+       (warn "Redefinition of functional ~A." !))
+    (transpiler-add-functional *transpiler* !))
   nil)
+
+(define-shared-std-macro (js php) when-debug (&body x)
+  (when (transpiler-assert? *transpiler*)
+	`(progn
+	   ,@x)))
+
+(define-shared-std-macro (js php) unless-debug (&body x)
+  (unless (transpiler-assert? *transpiler*)
+	`(progn
+	   ,@x)))
+
+(define-shared-std-macro (js php) if-debug (consequence alternative)
+  (? (transpiler-assert? *transpiler*)
+	 consequence
+	 alternative))
 
 (define-shared-std-macro (c js php) not (&rest x)
    `(? ,x. nil ,(!? .x
