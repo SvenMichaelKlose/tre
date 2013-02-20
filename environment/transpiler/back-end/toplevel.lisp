@@ -9,6 +9,8 @@
 ;; - Expressions are expanded via code generating macros.
 ;; - Everything is converted to strings and concatenated.
 (transpiler-pass transpiler-generate-code (tr)
+    print-o             [(& *show-transpiler-progress?* (princ #\o) (force-output))
+                         _]
     concat-stringtree   [transpiler-concat-text tr _]
     to-string           [? (transpiler-make-text? tr)
                            (transpiler-to-string tr _)

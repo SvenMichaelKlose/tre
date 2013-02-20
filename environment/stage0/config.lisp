@@ -9,3 +9,4 @@
 (defvar *print-circularities?* nil)
 (defvar *have-compiler?* nil)
 (defvar *have-c-compiler?* t)
+(defvar *show-transpiler-progress?* t)
