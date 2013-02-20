@@ -46,9 +46,6 @@
 (defun %setq-value (x)
   ..x.)
 
-(defun %setq-value-atom? (x)
-  (atom (%setq-value x)))
-
 (defun %setq-args (x)
   (let v (%setq-value x)
     (? (cons? v)
