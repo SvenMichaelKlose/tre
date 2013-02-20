@@ -5,7 +5,7 @@
 ;(cps-exception t)
 
 (defun cps-apply (continuer &rest lst)
-  (with ( fun lst.
+  (with (fun lst.
          l (last .lst)
          args (%nconc (butlast .lst) l.))
     (!? fun.tre-exp
