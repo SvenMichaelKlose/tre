@@ -7,12 +7,12 @@
 
 (defun compiled-list (x &key (quoted? nil))
   (? (cons? x)
-     `(cons ,(%compiled-atom x. quoted?)
-            ,(compiled-list .x :quoted? quoted?))
+     `(%%%cons ,(%compiled-atom x. quoted?)
+               ,(compiled-list .x :quoted? quoted?))
 	 (%compiled-atom x quoted?)))
 
 (defun compiled-tree (x &key (quoted? nil))
   (? (cons? x)
-     `(cons ,(compiled-tree x. :quoted? quoted?)
-            ,(compiled-tree .x :quoted? quoted?))
+     `(%%%cons ,(compiled-tree x. :quoted? quoted?)
+               ,(compiled-tree .x :quoted? quoted?))
 	 (%compiled-atom x quoted?)))
