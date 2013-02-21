@@ -80,20 +80,6 @@ trecode_set_place (treptr ** p, treptr value)
     *p = x;
 }
 
-void
-trecode_set_fun (treptr ** p, treptr value)
-{
-    treptr * x = *p;
-    treptr v = *x++;
-
-    if (v == treptr_stack)
-        TREATOM_FUN(trestack_ptr[TRENUMBER_INT(*x++)]) = value;
-    else if (v != treptr_nil)
-        TREATOM_FUN(v) = value;
-
-    *p = x;
-}
-
 treptr
 trecode_call (treptr fun, treptr args)
 {
