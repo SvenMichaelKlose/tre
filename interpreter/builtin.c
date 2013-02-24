@@ -416,14 +416,6 @@ char *tre_builtin_names[] = {
 
     "CONS?",
 
-#ifdef TRE_BUILTIN_ASSOC
-	"ASSOC",
-#endif
-
-#ifdef TRE_BUILTIN_MEMBER
-	"MEMBER",
-#endif
-
     "ELT", "%SET-ELT", "LENGTH",
 
 	"STRING?",
@@ -550,12 +542,6 @@ treevalfunc_t treeval_xlat_builtin[] = {
     trelist_builtin_rplacd,
     trelist_builtin_rplacp,
     trelist_builtin_consp,
-#ifdef TRE_BUILTIN_ASSOC
-    trelist_builtin_assoc,
-#endif
-#ifdef TRE_BUILTIN_MEMBER
-    trelist_builtin_member,
-#endif
 
     tresequence_builtin_elt,
     tresequence_builtin_set_elt,

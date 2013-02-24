@@ -6,7 +6,6 @@
 		(LOAD)
 		(EVAL)
 		(APPLY)
-		(%MACROCALL macrocall)
 		(PRINT)
 		(GC)
 		(DEBUG)
@@ -86,11 +85,7 @@
 		(RPLACA)
 		(RPLACD)
 		(RPLACP)
-   	    (CONS? consp)
-        ,@(when *builtin-assoc*
-		    '((ASSOC)))
-        ,@(when *builtin-member*
-		    '((MEMBER))))
+   	    (CONS? consp))
 
 	(tresequence_builtin_
     	(ELT)
@@ -166,12 +161,3 @@
 
 (defun c-builtin-name (x)
   (href *c-builtins* x))
-
-;; Make transpiler standard macros that convert arguments to built-in functions
-;; to consed lists.
-,`(progn
-	,@(macroexpand (mapcar [let n (make-symbol (c-builtin-name _))
-                             `(define-c-std-macro ,_ (&rest x)
-					 		    `(,n ,,(compiled-list x)))]
-			  			   (remove-many '(eq car cdr cons? atom number? string? array? function? builtin?)
-                                        (c-builtin-names)))))

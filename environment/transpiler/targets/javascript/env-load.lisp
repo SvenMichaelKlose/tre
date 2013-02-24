@@ -15,11 +15,8 @@
 
 (defvar *js-base*
 	,(list 'quote (+ (js-load-base "environment/transpiler/environment/"
-                                   "defvar-native.lisp"
-                                   "cps-disable.lisp"
-                                   "when-debug.lisp")
+                                   "cps-disable.lisp")
 	                 (js-load-base *js-env-path*
-                                   "predefined-symbols.lisp"
                                    "opt-inline.lisp"
 		                           "return-value.lisp"
                                    "log.lisp"
@@ -48,9 +45,13 @@
 			                       "apply.lisp"
 			                       "atom.lisp")
 	 	             (js-load-base "environment/transpiler/environment/"
+                                   "defvar-native.lisp"
                                    "character.lisp"
 			                       "atom.lisp"
-                                   "string.lisp"))))
+                                   "string.lisp")
+		             (js-load-base *js-env-path*
+                                   "predefined-symbols.lisp"))))
+
 (= *js-base2* (+ *js-base2*
 	             ,(list 'quote (js-load-base *js-env-path*
 		                                     "bind.lisp"
@@ -63,7 +64,6 @@
 		                                     "sequence.lisp"
 		                                     "../../../environment/list-string.lisp"
 		                                     "string.lisp"
-		                                     "../../../environment/member.lisp"
 		                                     "hash.lisp"
                                              "base64.lisp"
                                              "function-source.lisp"
@@ -74,7 +74,6 @@
 
 (= *js-base2* (+ *js-base2*
 	             ,(list 'quote (js-load-base "environment/transpiler/environment/"
-		                                     "assoc.lisp"
                                              "setf-function-p.lisp"))))
 
 (defvar *js-base-stream*

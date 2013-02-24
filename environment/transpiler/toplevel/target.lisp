@@ -60,10 +60,8 @@
     (with (before-deps (target-transpile-1 tr files-before-deps files-to-update)
 		   after-deps  (target-transpile-1 tr files-after-deps files-to-update)
 		   deps        (target-sighten-deps tr dep-gen)
-           num-exprs   (apply #'+ (mapcar [length ._] (+ before-deps deps after-deps)))
-           show?       #'(()
-                            (& *show-definitions?* (< 50 num-exprs))))
-      (& (show?)
+           num-exprs   (apply #'+ (mapcar [length ._] (+ before-deps deps after-deps))))
+      (& *show-transpiler-progress?*
          (format t "; ~A toplevel expressions.~%; Let me think. Hmm...~F" num-exprs))
       (with (compiled-before (target-transpile-2 tr before-deps files-to-update)
 	         compiled-deps   (awhen deps (transpiler-make-code tr !))
@@ -73,7 +71,7 @@
 ;                                 (target-transpile-1 tr (list (cons 'accumulated-toplevel #'(()
 ;                                                                                              (transpiler-make-toplevel-function tr))))
 ;                                                     (list 'accumulated-toplevel)))))
-        (& (show?) (format t " Phew!~%~F"))
+        (& *show-transpiler-progress?* (format t " Phew!~%~F"))
         (!? compiled-deps
             (= (transpiler-imported-deps tr) (transpiler-concat-text tr (transpiler-imported-deps tr) !)))
         (let decls-and-inits (!? decl-gen (funcall !))

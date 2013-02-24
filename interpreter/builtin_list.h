@@ -14,8 +14,5 @@ extern treptr trelist_builtin_rplaca (treptr);
 extern treptr trelist_builtin_rplacd (treptr);
 extern treptr trelist_builtin_rplacp (treptr);
 extern treptr trelist_builtin_consp (treptr);
-extern treptr trelist_builtin_assoc (treptr);
-extern treptr trelist_builtin_member (treptr);
-extern void   trelist_builtin_init ();
 
 #endif	/* #ifndef TRE_BUILTIN_LIST_H */

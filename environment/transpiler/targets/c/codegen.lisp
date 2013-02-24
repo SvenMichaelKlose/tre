@@ -100,6 +100,11 @@
 
 ;;;; LEXICALS
 
+(defun c-make-array (size)
+  (? (number? size)
+     `("trearray_make (" (%transpiler-native ,size) ")")
+     `("trearray_get (CONS (" ,size ", treptr_nil))")))
+
 (define-c-macro %make-lexical-array (size)
   (c-make-array size))
 
@@ -131,6 +136,11 @@
 
 ;;;; ARRAYS
 
+(define-c-macro make-array (&rest sizes)
+  (? (== 1 (length sizes))
+     (c-make-array sizes.)
+     `(trearray_builtin_make ,(compiled-list sizes)))]
+
 (defun c-make-aref (arr idx)
   `("((treptr *) TREATOM_DETAIL(" ,arr "))["
 	    ,(? (| (number? idx) (%transpiler-native? idx))
@@ -153,10 +163,11 @@
 (define-c-macro %=-aref (args)
   `(trearray_builtin_set_aref ,args))
 
-(defun c-make-array (size)
-  (? (number? size)
-     `("trearray_make (" (%transpiler-native ,size) ")")
-     `("trearray_get (CONS (" ,size ", treptr_nil))")))
+;;;; BUILT-INS
 
-(define-c-macro make-array (size)
-  (c-make-array size))
+,`(progn
+    ,@(macroexpand (mapcar [let n (make-symbol (c-builtin-name _))
+                             `(define-c-macro ,_ (&rest x)
+                                `(,n ,,(compiled-list x)))]
+                           (remove-many '(%setq-atom-value eq symbol-function make-array)
+                                        (c-builtin-names)))))

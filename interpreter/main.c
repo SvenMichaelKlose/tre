@@ -220,14 +220,6 @@ tre_init (void)
     tredot_init ();
     trespecial_init ();
     treimage_init ();
-    trelist_builtin_init ();
-
-#ifdef TRE_BUILTIN_MEMBER
-    MAKE_VAR("*BUILTIN-MEMBER*", treptr_t);
-#endif
-#ifdef TRE_BUILTIN_ASSOC
-    MAKE_VAR("*BUILTIN-ASSOC*", treptr_t);
-#endif
 
     MAKE_VAR("*KERNEL-IDENT*", trestring_get (TRE_KERNEL_IDENT));
     MAKE_VAR("*CPU-TYPE*", trestring_get (TRE_CPU_TYPE));

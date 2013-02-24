@@ -39,7 +39,6 @@
             symbol-function symbol-package symbol-compiled-function
             function? builtin? macrop
             cons list car cdr cons?
-            assoc member
             elt length
             string?
             make-string string== string-concat string symbol-name
