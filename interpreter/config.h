@@ -23,7 +23,6 @@ typedef int bool;
 #define TRE_VERSION	"current"
 
 #if 0
-#define TRE_DIAGNOSTICS		/* Do diagnostic checks. */
 #define TRE_GC_DEBUG		/* Run garbage collector everywhere. */
 #define TRE_VERBOSE_GC 		/* Print statistics after GC. Implies TRE_VERBOSE_SYMBOL_GC. */
 #define TRE_VERBOSE_SYMBOL_GC 	/* Print statistics after GC. */
@@ -101,12 +100,6 @@ typedef int bool;
 
 #ifdef TRE_VERBOSE_GC
 #define TRE_VERBOSE_SYMBOL_GC
-#endif
-
-#ifdef TRE_DIAGNOSTICS
-#ifndef TRE_LIST_DIAGNOSTICS
-#define TRE_LIST_DIAGNOSTICS
-#endif
 #endif
 
 #define TRESTACK_SIZE		(8 * MEGA)

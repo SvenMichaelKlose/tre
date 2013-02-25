@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
  */
 
 /*
@@ -21,13 +21,11 @@
 #include "io.h"
 #include "string2.h"
 #include "thread.h"
-#include "diag.h"
 #include "array.h"
 
 #include <stdio.h>
 #include <strings.h>
 
-/* List element marks. */
 char treprint_marks_cons[NUM_LISTNODES >> 3];
 char treprint_marks_atoms[NUM_ATOMS >> 3];
 
@@ -93,8 +91,6 @@ treprint_chk_atom_mark (treptr atom)
 {
     bool mark;
 
-	CHKPTR(atom);
-
     if (TREPTR_IS_CONS(atom))
     	return FALSE;
 
@@ -118,8 +114,6 @@ void
 treprint_atom (treptr atom, ulong indent)
 {
     char * name;
-
-	CHKPTR(atom);
 
     if (treprint_chk_atom_mark (atom)) {
         printf ("*circular*");
@@ -315,7 +309,6 @@ treprint_r (treptr p)
 treptr
 treprint (treptr p)
 {
-	CHKPTR(p);
     treprint_wipe_marks ();
     treprint_r (p);
     printnl ();

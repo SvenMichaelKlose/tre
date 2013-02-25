@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -33,51 +33,6 @@ treptr treeval_function_symbol;
 
 unsigned treeval_recursions;
 
-/*
- * Execute user-defined function.
- *
- * 'func'        Pointer to function atom. Its value is the table index.
- * 'expr'        Expression to evaluate.
- */
-#if 0
-treptr
-treeval_funcall_compiled_funref (treptr funref, treptr expr)
-{
-    treptr  args;		/* Arguments; second to last expression element. */
-    treptr  funcdef;	/* Function definition tree. */
-    treptr  expforms;	/* Expanded argument forms. */
-    treptr  expvals;    /* Expanded argument values. */
-    treptr  ret;		/* Function return value. */
-    treptr  forms;		/* Unexpanded argument definition. */
-    treptr  body;		/* Function body. */
-    treptr  ghost;
-
-    args = CDR(expr);
-	func = CADDR(funref);
-	ghost = CADDDR(funref);
-    funcdef = TREATOM_VALUE(func);
-    forms = CAR(funcdef);
-    body = CDR(funcdef);
-
-    /* Expand argument keywords. */
-    trearg_expand (&expforms, &expvals, forms, args, do_argeval);
-    tregc_push (CONS(expforms, expvals));
-
-    /* Evaluate body. */
-    ret = treeval_list (body);
-    tregc_retval (ret);
-
-    return ret;
-}
-#endif
-
-/*
- * Execute user-defined function.
- *
- * 'func'        Pointer to function atom. Its value is the table index.
- * 'expr'        Expression to evaluate.
- * 'do_argeval'  If not 0 all arguments are evaluated.
- */
 treptr
 treeval_funcall (treptr func, treptr args, bool do_argeval)
 {
@@ -90,44 +45,30 @@ treeval_funcall (treptr func, treptr args, bool do_argeval)
     treptr  env;
     treptr  env_parent;
     treptr  old_parent;
-#ifdef TRE_DIAGNOSTICS
-    treptr funstack = TRECONTEXT_FUNSTACK();
-#endif
 
     funcdef = TREATOM_VALUE(func);
     argdef = CAR(funcdef);
     body = CDR(funcdef);
 
-    /* Switch to new environment. */
     env = (treptr) (size_t) TREATOM_DETAIL(func);
     env_parent = TRECONTEXT_ENV_CURRENT();
     TRECONTEXT_ENV_CURRENT() = env;
     old_parent = env_parent;
 
-    /* Expand argument keywords. */
     trearg_expand (&expforms, &expvals, argdef, args, do_argeval);
     tregc_push (CONS(expforms, expvals));
 
-    /* Bind arguments. */
     treenv_bind (expforms, expvals);
 
-    /* Evaluate body. */
     ret = treeval_list (body);
     tregc_retval (ret);
 
-    /* Restore former environment. */
     treenv_unbind (expforms);
     TRECONTEXT_ENV_CURRENT() = old_parent;
 
-    /* Free argument list. */
     tregc_pop ();
     TRELIST_FREE_TOPLEVEL_EARLY(expvals);
     TRELIST_FREE_TOPLEVEL_EARLY(expforms);
-
-#ifdef TRE_DIAGNOSTICS
-    if (funstack != TRECONTEXT_FUNSTACK())
-		treerror_internal (treptr_invalid, "function stack corrupted");
-#endif
 
     return ret;
 }
@@ -135,34 +76,29 @@ treeval_funcall (treptr func, treptr args, bool do_argeval)
 treptr
 treeval_function (treptr expr)
 {
-    treptr  args;		/* Arguments; second to last expression element. */
-    treptr  funcdef;	/* Function definition tree. */
-    treptr  expforms;	/* Expanded argument forms. */
-    treptr  expvals;    /* Expanded argument values. */
-    treptr  ret;		/* Function return value. */
-    treptr  forms;		/* Unexpanded argument definition. */
-    treptr  body;		/* Function body. */
+    treptr  args;
+    treptr  funcdef;
+    treptr  expforms;
+    treptr  expvals;
+    treptr  ret;
+    treptr  forms;
+    treptr  body;
 
     args = CDR(expr);
     funcdef = CADAR(expr);
     forms = CAR(funcdef);
     body = CDR(funcdef);
 
-    /* Expand argument keywords. */
     trearg_expand (&expforms, &expvals, forms, args, TRUE);
     tregc_push (CONS(expforms, expvals));
 
-    /* Bind arguments. */
     treenv_bind (expforms, expvals);
 
-    /* Evaluate body. */
     ret = treeval_list (body);
     tregc_retval (ret);
 
-	/* Restore argument symbol values. */
     treenv_unbind (expforms);
 
-    /* Free argument list. */
     tregc_pop ();
     TRELIST_FREE_TOPLEVEL_EARLY(expvals);
     TRELIST_FREE_TOPLEVEL_EARLY(expforms);
@@ -175,38 +111,19 @@ treeval_xlat_function (treevalfunc_t *xlat, treptr func, treptr args, bool do_ar
 {
     treptr  evaldargs;
     treptr  ret;
-#ifdef TRE_DIAGNOSTICS
-    treptr funstack = TRECONTEXT_FUNSTACK();
-#endif
 
-    /* Evaluate arguments. */
-    evaldargs = (do_argeval) ?
-                    treeval_args (args) :
-                    trelist_copy (args);
+    evaldargs = (do_argeval) ? treeval_args (args) : trelist_copy (args);
     tregc_push (evaldargs);
 
-    /* Call internal function. */
     ret = xlat[(ulong) TREATOM_DETAIL(func)] (evaldargs);
     tregc_retval (ret);
 
-    /* Free internal garbage immediately. */
     tregc_pop ();
     TRELIST_FREE_TOPLEVEL_EARLY(evaldargs);
-
-#ifdef TRE_DIAGNOSTICS
-    if (funstack != TRECONTEXT_FUNSTACK())
-		treerror_internal (treptr_invalid, "function stack corrupted");
-#endif
 
     return ret;
 }
 
-/*
- * Evaluate expression
- *
- * Does a function call. The first argument of the list must be a function
- * atom.
- */
 treptr
 treeval_expr (treptr x)
 {
@@ -281,18 +198,10 @@ treeval_expr (treptr x)
     return v;
 }
 
-/*
- * Evaluate an expression or atom.
- */
 treptr
 treeval (treptr x)
 {
     treptr val = x;
-
-	CHKPTR(x);
-#ifdef TRE_DIAGNOSTICS
-    treptr gcss = tregc_save_stack;
-#endif
 
     RETURN_NIL(x);
 
@@ -305,42 +214,17 @@ treeval (treptr x)
     trethread_push_call (x);
 
     switch (TREPTR_TYPE(x)) {
-        case TRETYPE_CONS:     val = treeval_expr (x); break; /* Call function, special form or macro. */
-        case TRETYPE_VARIABLE: val = TREATOM_VALUE(x); break; /* Return variable value. */
-
-#ifdef TRE_DIAGNOSTICS
-        /* Return constants as they are. */
-        case TRETYPE_NUMBER:
-        case TRETYPE_STRING:
-        case TRETYPE_ARRAY:
-        case TRETYPE_FUNCTION:
-        case TRETYPE_USERSPECIAL:
-        case TRETYPE_BUILTIN:
-        case TRETYPE_SPECIAL:
-        case TRETYPE_MACRO:
-            break;
-
-        /* Cough, if we don't know the atom type. */
-        default:
-            treerror_internal (x, "invalid atom type");
-#endif
+        case TRETYPE_CONS:     val = treeval_expr (x); break;
+        case TRETYPE_VARIABLE: val = TREATOM_VALUE(x); break;
     }
 
     tregc_retval (val);
     trethread_pop_call ();
     tregc_pop ();
 
-#ifdef TRE_DIAGNOSTICS
-    if (gcss != tregc_save_stack)
-		treerror_internal (x, "GC stack corrupted");
-#endif
-
     return val;
 }
 
-/*
- * Evaluate expressions in list and return value of the last.
- */
 treptr
 treeval_list (treptr x)
 {
@@ -354,9 +238,6 @@ treeval_list (treptr x)
     return res;
 }
 
-/*
- * Evaluate list atom-wise.
- */
 treptr
 treeval_args (treptr x)
 {

@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2009,2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2009,2012–2013 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -16,7 +16,6 @@
 #include "builtin_sequence.h"
 #include "argument.h"
 #include "array.h"
-#include "diag.h"
 #include "xxx.h"
 
 #include <stdlib.h>
@@ -43,12 +42,6 @@ tresequence_get_type (treptr seq)
 	unsigned type = TREPTR_TYPE(seq);
 	struct tre_sequence_type * seqtype;
 
-#ifdef TRE_DIAGNOSTICS
-	if (type > TRETYPE_MAXTYPE)
-		treerror_internal (treptr_nil,
-						   "tresequence_get_type: type out of range");
-#endif
-
 	seqtype = tre_sequence_types[type];
 	if (seqtype == NULL)
 		treerror_norecover (seq, "not a sequence");
@@ -56,14 +49,6 @@ tresequence_get_type (treptr seq)
     return seqtype;
 }
 
-/*tredoc
-  (cmd :name %%USEFT-ELT
-	(arg :name value)
-	(arg :name index :type unsigned-integer)
-	(arg :type sequence)
-	(descr "Set element at index of sequence to new value.")
-	(returns-argument value))
- */
 treptr
 tresequence_builtin_set_elt (treptr args)
 {
@@ -86,13 +71,6 @@ tresequence_builtin_set_elt (treptr args)
     return val;
 }
 
-/*tredoc
-  (cmd :name -ELT
-	(arg :name value)
-	(arg :name index :type unsigned-integer)
-	(arg :type sequence)
-	(returns "Element at index of sequence."))
- */
 treptr
 tresequence_builtin_elt (treptr args)
 {
@@ -113,12 +91,6 @@ tresequence_builtin_elt (treptr args)
     return (*t->get) (seq, (ulong) TRENUMBER_VAL(idx));
 }
 
-/*tredoc
-  (cmd :name LENGTH
-	(arg :type sequence)
-	(returns :type unsigned-integer
-			 "Return number of elements in sequence."))
- */
 treptr
 tresequence_builtin_length (treptr args)
 {
@@ -126,7 +98,6 @@ tresequence_builtin_length (treptr args)
     treptr seq = trearg_get (args);
     struct tre_sequence_type *t;
 
-	CHKPTR(seq);
     if (seq == treptr_nil)
 		return treatom_number_get (0, TRENUMTYPE_INTEGER);
 
@@ -135,6 +106,5 @@ tresequence_builtin_length (treptr args)
         return treerror (seq, "sequence expected");
 
     ret = treatom_number_get ((double) (*t->length) (seq), TRENUMTYPE_INTEGER);
-	CHKPTR(ret);
 	return ret;
 }

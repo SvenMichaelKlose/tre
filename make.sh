@@ -32,7 +32,6 @@ FILES="
 	bytecode.c
 	cons.c
 	debug.c
-	diag.c
 	dot.c
 	error.c
 	env.c

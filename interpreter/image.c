@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2007–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2007–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -11,7 +11,6 @@
 #include "eval.h"
 #include "error.h"
 #include "array.h"
-#include "diag.h"
 #include "gc.h"
 #include "util.h"
 #include "builtin.h"

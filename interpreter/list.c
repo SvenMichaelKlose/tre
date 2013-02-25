@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2009,2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2009,2012–2013 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -11,7 +11,6 @@
 #include "builtin_sequence.h"
 #include "number.h"
 #include "io.h"
-#include "diag.h"
 #include "xxx.h"
 
 #include <string.h>
@@ -197,11 +196,6 @@ trelist_append (treptr *lst, treptr lst2)
 
     if (lst2 == treptr_nil)
 		return;
-
-#ifdef TRE_LIST_DIAGNOSTICS
-    if (TREPTR_IS_ATOM(lst2))
-		treerror_internal (lst2, "trelist_append: can append list only");
-#endif
 
     if (*lst == treptr_nil) {
         *lst = lst2;

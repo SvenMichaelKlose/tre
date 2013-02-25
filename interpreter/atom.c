@@ -11,7 +11,6 @@
 #include "eval.h"
 #include "error.h"
 #include "array.h"
-#include "diag.h"
 #include "gc.h"
 #include "builtin.h"
 #include "special.h"
@@ -22,9 +21,6 @@
 #include "alloc.h"
 #include "util.h"
 
-/*
- * The atom list is a growing table.
- */
 void * tre_atoms_free;
 struct tre_atom tre_atoms[NUM_ATOMS];
 
@@ -56,7 +52,6 @@ treptr tre_package_keyword;
 void
 treatom_init_truth (void)
 {
-    /* Initialise NIL atom manually to make list functions work. */
     ATOM_SET(TREPTR_NIL_INDEX, tresymbol_add ("NIL"), treptr_nil, TRETYPE_VARIABLE);
     tre_atoms[TREPTR_NIL_INDEX].value = TRETYPE_INDEX_TO_PTR(TRETYPE_VARIABLE, TREPTR_NIL_INDEX);
     tre_atoms[TREPTR_NIL_INDEX].fun = treptr_nil;
@@ -92,7 +87,6 @@ treatom_init_builtins (void)
     treptr fun;
     ulong  i;
 
-    /* Built–in functions. */
     for (i = 0; tre_builtin_names[i] != NULL; i++) {
         fun = treatom_alloc (NULL, treptr_nil, TRETYPE_BUILTIN, treptr_nil);
         TREATOM_SET_DETAIL(fun, i);
@@ -101,7 +95,6 @@ treatom_init_builtins (void)
         EXPAND_UNIVERSE(name);
     }
 
-    /* Special forms. */
     for (i = 0; tre_special_names[i] != NULL; i++) {
         fun = treatom_alloc (NULL, treptr_nil, TRETYPE_SPECIAL, treptr_nil);
         TREATOM_SET_DETAIL(fun, i);
@@ -129,9 +122,6 @@ treatom_init_big_bang ()
     EXPAND_UNIVERSE(tre_default_listprop);
 }
 
-/*
- * Initialise atom table.
- */
 void
 treatom_init (void)
 {
@@ -193,7 +183,6 @@ treatom_set_binding (treptr atom, treptr value)
     return TREATOM_BINDING(atom) = value;
 }
 
-/* Allocate an atom. */
 treptr
 treatom_alloc (char * symbol, treptr package, int type, treptr value)
 {
@@ -212,7 +201,6 @@ treatom_alloc (char * symbol, treptr package, int type, treptr value)
     atomi = ((ulong) item - (ulong) tre_atoms) / sizeof (struct tre_atom);
     TREGC_ALLOC_ATOM(atomi);
 
-    /* Make symbol. */
     if (value == treptr_invalid)
 		value = TRETYPE_INDEX_TO_PTR(type, atomi);
 
@@ -221,19 +209,16 @@ treatom_alloc (char * symbol, treptr package, int type, treptr value)
     ATOM_SET(atomi, symbol, package, type);
     TREATOM_VALUE(atomi) = value;
 
-    /* Make typed pointer. */
     ret = TRETYPE_INDEX_TO_PTR(type, atomi);
 	tresymbolpage_add (ret);
 	return ret;
 }
 
-/* Free an atom. */
 void
 treatom_free (treptr x)
 {
     TREATOM_TYPE(x) = TRETYPE_UNUSED;
 
-    /* Release symbol string. */
     if (TREATOM_NAME(x) != NULL) {
 		tresymbolpage_remove (x);
         tresymbol_free (TREATOM_NAME(x));
@@ -243,11 +228,6 @@ treatom_free (treptr x)
 	trealloc_free_item (&tre_atoms_free, &tre_atoms[TREPTR_INDEX(x)]);
 }
 
-/*
- * Get number atom.
- *
- * Already existing numbers with the same value are not reused.
- */
 treptr
 treatom_number_get (double value, int type)
 {
@@ -255,10 +235,8 @@ treatom_number_get (double value, int type)
     ulong  num;
 
     atom = treatom_alloc (NULL, treptr_nil, TRETYPE_NUMBER, treptr_nil);
-	CHKPTR(atom);
     num = trenumber_alloc (value, type);
     TREATOM_SET_DETAIL(atom, num);
-	CHKPTR(atom);
 
     return atom;
 }
@@ -275,30 +253,22 @@ trechar_get (double value)
     return treatom_number_get (value, TRENUMTYPE_CHAR);
 }
 
-/* Seek symbolic atom. */
 treptr
 treatom_seek (char * symbol, treptr package)
 {
 	return tresymbolpage_find (symbol, package);
 }
 
-/*
- * Seek or create symbolic atom.
- *
- * Create or reuse atom of name 'symbol'.
- */
 treptr
 treatom_get (char * symbol, treptr package)
 {   
     treptr  atom;
 	double  dvalue;
 
-    /* Reuse existing atom. */
     atom = treatom_seek (symbol, package);
     if (atom != ATOM_NOT_FOUND)
 		return atom;
 
-    /* Create number. */
     if (trenumber_is_value (symbol)) {
 		if (sscanf (symbol, "%lf", &dvalue) != 1) {
 			printf ("Illegal number: '%s'", symbol);
@@ -310,13 +280,9 @@ treatom_get (char * symbol, treptr package)
     return treatom_alloc (symbol, package, TRETYPE_VARIABLE, treptr_invalid);
 }
 
-/*
- * Remove atom and object.
- */
 void
 treatom_remove (treptr el)
 {
-    /* Do type specific clean-up. */
     switch (TREPTR_TYPE(el)) {
         case TRETYPE_NUMBER:
             trenumber_free (el);
@@ -334,7 +300,6 @@ treatom_remove (treptr el)
     treatom_free (el);
 }
 
-/* Lookup variable that points to function containing body. */
 treptr
 treatom_body_to_var (treptr body)
 {        
@@ -360,7 +325,6 @@ treatom_body_to_var (treptr body)
     return treptr_nil;
 }
 
-/* Return body of user-defined form. */
 treptr
 treatom_fun_body (treptr atomp)
 {

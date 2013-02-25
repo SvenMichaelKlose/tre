@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -14,7 +14,6 @@
 #include "util.h"
 #include "array.h"
 #include "env.h"
-#include "diag.h"
 #include "string2.h"
 #include "alloc.h"
 #include "symbol.h"
@@ -28,7 +27,6 @@
 #include <stdio.h>
 #include <string.h>
 
-/* List element marks. */
 char tregc_listmarks[NUM_LISTNODES >> 3];
 char tregc_atommarks[NUM_ATOMS >> 3];
 
@@ -45,13 +43,9 @@ treptr tregc_retval_current;
 
 bool tregc_running;
 
-/* Put expression on stack of expressions that should not be removed by the
- * garbage collector. Atoms are ignored.
- */
 void
 tregc_push (treptr expr)
 {
-	CHKPTR(expr);
 	tregc_save = expr;
     TRELIST_PUSH(tregc_save_stack, expr);
 }
@@ -66,23 +60,12 @@ tregc_push_compiled (treptr expr)
 void
 tregc_pop ()
 {
-#ifdef TRE_DIAGNOSTICS
-    if (tregc_save_stack == treptr_nil)
-		treerror_internal (treptr_invalid, "GC save stack underflow");
-#endif
-
-	CHKPTR(_CAR(tregc_save_stack));
     TRELIST_POP(tregc_save_stack);
 }
 
-/*
- * Save current return value during GC.
- */
 void
 tregc_retval (treptr retval)
 {
-	CHKPTR(tregc_retval_current);
-	CHKPTR(retval);
     tregc_retval_current = retval;
 }
 
@@ -103,7 +86,6 @@ tregc_trace_tree (treptr p)
     treptr i;
 
     _DOLIST(i, p) {
-        /* Avoid circular trace. */
         if (TRE_GETMARK(tregc_listmarks, i) == FALSE)
 	    	return;
 
@@ -134,10 +116,8 @@ tregc_trace_array (treptr arr)
     treptr *  i = TREATOM_DETAIL(arr);
     size_t    size = TREARRAY_SIZE(arr);
 
-    /* Mark dimension list. */
     tregc_trace_tree (TREATOM_VALUE(arr));
 
-    /* Mark elements in array. */
     while (size--)
 		tregc_trace_object (*i++);
 }
@@ -147,7 +127,6 @@ tregc_trace_atom (treptr a)
 {
     ulong  ai = TREPTR_INDEX(a);
 
-    /* Avoid circular trace. */
     if (TRE_GETMARK(tregc_atommarks, ai) == FALSE)
 		return;
     _TREGC_ALLOC_ATOM(ai);
@@ -223,10 +202,6 @@ tregc_sweep (void)
     ulong  idx;
     char  c;
 
-    /* Free marked atoms.
-     *
-     * Atoms must be freed first, so they can remove their internal conses.
-     */
     DOTIMES(i, sizeof (tregc_atommarks)) {
 		c = 1;
 		DOTIMES(j, 8) {
@@ -241,7 +216,6 @@ tregc_sweep (void)
         }
     }
 
-    /* Free marked list elements. */
     DOTIMES(i, sizeof (tregc_listmarks)) {
         c = 1;
 		DOTIMES(j, 8) {
@@ -264,9 +238,6 @@ tregc_pass (void)
     tregc_running = FALSE;
 }
 
-/*
-int gc_run = 0;
-*/
 void
 tregc_force ()
 {

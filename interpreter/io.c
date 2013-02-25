@@ -1,10 +1,5 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
- *
- * Simple streams
- *
- * These are provide for standard I/O.
+ * tré – Copyright (c) 2005–2008,2013 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -27,8 +22,8 @@
 struct tre_stream * treio_readerstreams[TRE_MAX_NESTED_FILES];
 ulong treio_readerstreamptr;
 
-struct tre_stream  * treio_reader;      /* Reader stream */
-struct tre_stream  * treio_console;  /* Console stream */
+struct tre_stream  * treio_reader;
+struct tre_stream  * treio_console;
 
 void
 treio_flush (struct tre_stream * s)
@@ -42,7 +37,6 @@ treio_eof (struct tre_stream * s)
     return TREIO_EOF(s);
 }
 
-/* Get character from input stream. */
 int
 treio_getc (struct tre_stream * s)
 {
@@ -77,40 +71,28 @@ treio_putc (struct tre_stream * s, char c)
     TREIO_PUTC(s, c);
 }
 
-/* Put back last read char to input stream (only one). */
 void
 treio_putback (struct tre_stream * s)
 {
-#ifdef TRE_DIAGNOSTICS
-    if (s->putback_char != -1)
-	treerror_internal (treptr_nil, "treio: putback twice");
-#endif
-
     s->putback_char = s->last_char;
 }
 
-/* Read line from input stream. */
 int
 treio_getline (struct tre_stream * str, char * s, ulong maxlen)
 {
     int       c = 0;
     ulong  i;
 
-    /* Read line until end of line or file. */
     for (i = 0; i < maxlen && (c = treio_getc (str)) != EOF && c!= '\n'; i++)
         s[i] = (c == '\t') ? ' ' : c;
-
-    /* Null-terminate line. */
     s[i]= 0;
 
-    /* Issue end of file if line is empty. */
     if (c == EOF && i == 0)
- 	return -1 ;
+ 	    return -1 ;
 
     return i;
 }        
 
-/* Skip over whitespaces. */
 void
 treio_skip_spaces (struct tre_stream * s)
 {

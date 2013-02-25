@@ -11,7 +11,6 @@
 #include "eval.h"
 #include "error.h"
 #include "array.h"
-#include "diag.h"
 #include "gc.h"
 #include "util.h"
 #include "builtin.h"

@@ -25,7 +25,6 @@
 #include "string2.h"
 #include "image.h"
 #include "util.h"
-#include "diag.h"
 #include "dot.h"
 #include "quasiquote.h"
 #include "apply.h"
@@ -204,9 +203,6 @@ tre_init (void)
     tredebug_init ();
     trethread_make ();
     tregc_init ();
-#ifdef TRE_DIAGNOSTICS
-    trediag_init ();
-#endif
 
     trecons_init ();
     tresymbol_init ();
@@ -349,10 +345,6 @@ main (int argc, char *argv[])
     c = 2;
     treimage_load (tremain_imagelaunch ? tremain_imagelaunch : tremain_boot_image);
     tremain_imagelaunch = NULL;
-#ifdef TRE_DIAGNOSTICS
-	tregc_force ();
-    trediag_init ();
-#endif
     goto user;
 
 boot:
@@ -369,10 +361,6 @@ load_error:
 user:
 #ifdef TRE_HAVE_COMPILED_ENV
 	(void) userfun_cInit ();
-#endif
-#ifdef TRE_DIAGNOSTICS
-	tregc_force ();
-    trediag_init ();
 #endif
     if (tre_restart_fun != treptr_nil) {
         treeval (CONS(tre_restart_fun, treptr_nil));
