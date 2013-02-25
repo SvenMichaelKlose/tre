@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -147,8 +147,8 @@ const char *tredebug_help =
     " t    Print function call backtrace.\n";
 
 ulong  tredebug_argc;
-char      *tredebug_argv[TREDEBUG_MAX_ARGS];
-char      tredebug_argvbuf[256];
+char * tredebug_argv[TREDEBUG_MAX_ARGS + 1];
+char   tredebug_argvbuf[256];
 
 void
 tredebug_prompt (void)
