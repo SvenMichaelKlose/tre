@@ -73,39 +73,6 @@ treeval_funcall (treptr func, treptr args, bool do_argeval)
 }
 
 treptr
-treeval_function (treptr expr)
-{
-    treptr  args;
-    treptr  funcdef;
-    treptr  expforms;
-    treptr  expvals;
-    treptr  ret;
-    treptr  forms;
-    treptr  body;
-
-    args = CDR(expr);
-    funcdef = CADAR(expr);
-    forms = CAR(funcdef);
-    body = CDR(funcdef);
-
-    trearg_expand (&expforms, &expvals, forms, args, TRUE);
-    tregc_push (CONS(expforms, expvals));
-
-    treenv_bind (expforms, expvals);
-
-    ret = treeval_list (body);
-    tregc_retval (ret);
-
-    treenv_unbind (expforms);
-
-    tregc_pop ();
-    TRELIST_FREE_TOPLEVEL_EARLY(expvals);
-    TRELIST_FREE_TOPLEVEL_EARLY(expforms);
-
-    return ret;
-}
-
-treptr
 treeval_xlat_function (treevalfunc_t *xlat, treptr func, treptr args, bool do_argeval)
 {
     treptr  evaldargs;
@@ -128,9 +95,7 @@ treeval_expr (treptr x)
 {
     treptr  fun;
     treptr  args;
-    treptr  v = treptr_nil;
-    treptr  slot_obj;
-	bool	copied_expr = FALSE;
+    treptr  v = treptr_invalid;
 
     fun = CAR(x);
     args = CDR(x);
@@ -138,60 +103,23 @@ treeval_expr (treptr x)
     tredebug_chk_breakpoints (x);
 	TREDEBUG_STEP();
 
-	switch (TREPTR_TYPE(fun)) {
-		case TRETYPE_VARIABLE:
-        	fun = TREATOM_FUN(fun);
-			break;
+    fun = TREPTR_TYPE(fun) == TRETYPE_VARIABLE ? TREATOM_FUN(fun) : treeval (fun);
 
-		case TRETYPE_CONS:
-			if (CAR(fun) == treeval_slot_value) {
-				slot_obj = CAR(CDR(fun));
-       			fun = treeval (fun);
-   				tregc_push (fun);
-				x = CONS(CAR(x), CONS(slot_obj, trelist_copy (CDR(x))));
-				tregc_push (x);
-				copied_expr = TRUE;
-				break;
-			} else if (CAR(fun) == treeval_function_symbol
-						&& TREPTR_IS_CONS(CDR(fun))
-						&& TREPTR_IS_CONS(CADR(fun))
-						&& CDDR(fun) == treptr_nil) {
-				treeval_recursions--;
-				return treeval_function (x);
-			}
-
-		default:
-        	fun = treeval (fun);
-	}
-
-	if (IS_COMPILED_FUN(fun) && TREPTR_IS_BUILTIN(fun) == FALSE) {
-		if (copied_expr) {
-    		tregc_pop ();
-    		tregc_pop ();
-		}
+	if (IS_COMPILED_FUN(fun))
 		return trefuncall_compiled (fun, args, TRUE);
-	}
 
     tregc_push (fun);
-
     switch (TREPTR_TYPE(fun)) {
         case TRETYPE_FUNCTION:    v = treeval_funcall (fun, args, TRUE); break;
         case TRETYPE_ARRAY:       v = trefuncall_compiled (fun, args, TRUE); break;
         case TRETYPE_USERSPECIAL: v = treeval_funcall (fun, args, FALSE); break;
         case TRETYPE_BUILTIN:     v = trebuiltin (fun, args); break;
         case TRETYPE_SPECIAL:     v = trespecial (fun, args); break;
-        default:
-			treeval_recursions--;
-            return treerror (CAR(x), "function expected instead of %s", treerror_typename (TREPTR_TYPE(CAR(x))));
+        default:                  treerror_norecover (CAR(x), "function expected instead of %s",
+                                                              treerror_typename (TREPTR_TYPE(CAR(x))));
     }
-
     tredebug_chk_next ();
-
     tregc_pop ();
-	if (copied_expr) {
-    	tregc_pop ();
-    	tregc_pop ();
-	}
 
     return v;
 }
