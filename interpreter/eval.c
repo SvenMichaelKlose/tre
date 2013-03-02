@@ -91,11 +91,18 @@ treeval_xlat_function (treevalfunc_t *xlat, treptr func, treptr args, bool do_ar
 }
 
 treptr
-treeval_expr (treptr x)
+treeval (treptr x)
 {
     treptr  fun;
     treptr  args;
     treptr  v = treptr_invalid;
+
+    if (TREPTR_IS_VARIABLE(x))
+        return TREATOM_VALUE(x);
+    if (TREPTR_IS_ATOM(x))
+        return x;
+
+    trethread_push_call (x);
 
     fun = CAR(x);
     args = CDR(x);
@@ -119,36 +126,11 @@ treeval_expr (treptr x)
                                                               treerror_typename (TREPTR_TYPE(CAR(x))));
     }
     tredebug_chk_next ();
+    tregc_retval (v);
     tregc_pop ();
+    trethread_pop_call ();
 
     return v;
-}
-
-treptr
-treeval (treptr x)
-{
-    treptr val = x;
-
-    RETURN_NIL(x);
-
-#ifdef TRE_VERBOSE_EVAL
-	treprint (x);
-    fflush (stdout);
-#endif
-
-    tregc_push (x);
-    trethread_push_call (x);
-
-    switch (TREPTR_TYPE(x)) {
-        case TRETYPE_CONS:     val = treeval_expr (x); break;
-        case TRETYPE_VARIABLE: val = TREATOM_VALUE(x); break;
-    }
-
-    tregc_retval (val);
-    trethread_pop_call ();
-    tregc_pop ();
-
-    return val;
 }
 
 treptr

@@ -42,7 +42,6 @@ treptr treptr_set_vec;
 treptr treptr_set_atom_fun;
 treptr treptr_cons;
 treptr treptr_quote;
-treptr treptr_apply;
 treptr treptr_closure;
 treptr treptr_quote;
 
@@ -248,8 +247,6 @@ trecode_init ()
     EXPAND_UNIVERSE(treptr_cons);
     treptr_quote = treatom_get ("%QUOTE", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treptr_quote);
-    treptr_apply = treatom_get ("APPLY", TRECONTEXT_PACKAGE());
-    EXPAND_UNIVERSE(treptr_apply);
     treptr_closure = treatom_get ("%CLOSURE", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treptr_closure);
     treptr_quote = treatom_get ("%QUOTE", TRECONTEXT_PACKAGE());
