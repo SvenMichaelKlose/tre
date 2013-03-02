@@ -7,7 +7,6 @@
 
 #include "ptr.h"
 
-/* Atom table. */
 struct tre_atom {
     char *  name;
     char	type;
@@ -53,17 +52,13 @@ extern treptr tre_package_keyword;
         TREATOM_VALUE(treatom_get (symbol_name, TRECONTEXT_PACKAGE())) = init; \
     }
 
-/* Initialise this section. */
 extern void treatom_init (void);
 
-/* Lookup atom. */
 extern treptr treatom_seek (char *, treptr package);
 #define ATOM_NOT_FOUND  treptr_invalid
 
-/* Lookup or create atom. */
 extern treptr treatom_get (char *, treptr package);
 
-/* Create new number atom for computational values. */
 extern treptr treatom_number_get (double, int type);
 
 /* for compiled code */
@@ -83,10 +78,8 @@ extern treptr treatom_sym_set_value (char * symbol, treptr value);
 extern treptr treatom_set_function (treptr atom, treptr value);
 extern treptr treatom_set_binding (treptr atom, treptr value);
 
-/* Lookup variable that points to function containing body. */
 extern treptr treatom_body_to_var (treptr body);
 
-/* Return body of function or macro. */
 extern treptr treatom_fun_body (treptr atomp);
 
 #endif

@@ -22,7 +22,6 @@
 #include "argument.h"
 #include "string2.h"
 #include "xxx.h"
-#include "diag.h"
 #include "apply.h"
 
 #include <stdio.h>
@@ -183,8 +182,7 @@ treeval_expr (treptr x)
         case TRETYPE_SPECIAL:     v = trespecial (fun, args); break;
         default:
 			treeval_recursions--;
-            return treerror (CAR(x), "function expected instead of %s",
-                             treerror_typename (TREPTR_TYPE(CAR(x))));
+            return treerror (CAR(x), "function expected instead of %s", treerror_typename (TREPTR_TYPE(CAR(x))));
     }
 
     tredebug_chk_next ();

@@ -1,5 +1,5 @@
 /*
- * tré - Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2008 Sven Michael Klose <pixel@copei.de>
  */
 
 #ifndef TRE_IO_H
@@ -33,10 +33,9 @@ struct treio_ops {
 #define TREIO_CLOSE(s) (treio_close_stream (s))
 #define TREIO_FLUSH(s) ((*s->ops->flush) (s->detail_out))
 
-extern struct tre_stream  *treio_reader;  /* Reader stream */
-extern struct tre_stream  *treio_console; /* Console stream */
+extern struct tre_stream  *treio_reader;
+extern struct tre_stream  *treio_console;
 
-/* Reader stream diversion stack pointer */
 extern ulong treio_readerstreamptr;
 
 extern struct tre_stream * treio_make_stream (struct treio_ops *, const char * name);
@@ -52,7 +51,6 @@ extern void treio_skip_spaces (struct tre_stream *);
 extern int  treio_eof (struct tre_stream *);
 extern void treio_prompt (void);
 
-/* Standard stream diversion for LOAD and related functions. */
 extern struct tre_stream * treio_get_stream ();
 extern void treiostd_divert (struct tre_stream *);
 extern void treiostd_undivert (void);

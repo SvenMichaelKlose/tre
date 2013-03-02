@@ -1,5 +1,5 @@
 /*
- * tré - Copyright (c) 2005-2008,2010,2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2008,2010,2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -18,10 +18,10 @@
 ulong num_symbols;
 
 struct tresymbol_page {
-	struct tresymbol_page * entries[256]; /* Page for next character. */
-	ulong   atom;	/* Atom of the symbol. */
-	ulong   num_entries;	/* Reference counter. */
-	char    * name;
+	struct tresymbol_page * entries[256];
+	ulong  atom;
+	ulong  num_entries;
+	char * name;
 };
 
 struct tresymbol_root {
@@ -29,10 +29,8 @@ struct tresymbol_root {
 	struct tresymbol_page * root;
 };
 
-/* Root pages of all packages. */
 struct tresymbol_root tresymbol_roots[MAX_PACKAGES];
 
-/* Allocate a new node. */
 struct tresymbol_page *
 tresymbolpage_alloc ()
 {
@@ -46,7 +44,6 @@ tresymbolpage_alloc ()
 	return (struct tresymbol_page *) r;
 }
 
-/* Find root node of a package. */
 struct tresymbol_page *
 tresymbolpage_find_root (treptr package)
 {
@@ -65,24 +62,20 @@ tresymbolpage_find_root (treptr package)
 	return NULL;
 }
 
-/* Set package for root node. */
 void
 tresymbolpage_set_package (ulong i, treptr package)
 {
 	tresymbol_roots[i].package = package;
 }
 
-/* Add symbol to node or continue with child. */
 void
 tresymbolpage_add_rec (struct tresymbol_page * p, char * name, treptr atom, char * np)
 {
 	ulong x = (ulong) (unsigned char) *np;
 
-	p->num_entries++; /* This node is occupied by one more symbol. */
+	p->num_entries++;
 
-	/* Continue with child node. */
 	if (* np) {
-		/* Allocate new node. */
 		if (p->entries[x] == NULL)
 			p->entries[x] = tresymbolpage_alloc ();
 
@@ -90,20 +83,15 @@ tresymbolpage_add_rec (struct tresymbol_page * p, char * name, treptr atom, char
 		return;
 	}
 
-	/* End of symbol. */
-
-	/* Check if symbol already exists. */
 	if (p->name) {
 		printf ("tresymbol_page: '%s' already set", name);
 		exit (-1);
 	}
 
-	/* Make entry. */
 	p->name = name;
 	p->atom = atom;
 }
 
-/* Add symbol to database. */
 void
 tresymbolpage_add (treptr atom)
 {
@@ -120,18 +108,14 @@ tresymbolpage_find_rec (struct tresymbol_page * p, char * np)
 	ulong x = (ulong) (unsigned char) *np;
 
 	if (x && p->entries[x] == NULL)
-		return treptr_invalid; /* Symbol doesn't exist. */
+		return treptr_invalid;
 
-	if (x == 0) /* End of symbol. */
-		return p->name ? /* Exists? */
-			   p->atom : /* Return its atom. */
-			   treptr_invalid; /* Symbol not found. */
+	if (x == 0)
+		return p->name ? p->atom : treptr_invalid;
 
-	/* Continue with next character. */
 	return tresymbolpage_find_rec (p->entries[x], ++np);
 }
 
-/* Find symbol in database. */
 treptr
 tresymbolpage_find (char * name, treptr package)
 {
@@ -144,7 +128,6 @@ tresymbolpage_remove_rec (struct tresymbol_page * p, char * np)
 	ulong x = (ulong) (unsigned char) *np;
 
 	if (x) {
-		/* Remove from children first. */
 		if (tresymbolpage_remove_rec (p->entries[x], ++np) == 0) {
 			trealloc_free (p->entries[x]);
 			p->entries[x] = NULL;
@@ -174,11 +157,10 @@ tresymbolpage_init ()
 		tresymbol_roots[i].root = tresymbolpage_alloc ();
 }
 
-/* Allocate space for symbol string. */
 char *
 tresymbol_add (char * symbol)
 {
-    char  * nstr;
+    char * nstr;
 
     if (symbol == NULL)
 		return NULL;
@@ -195,7 +177,6 @@ tresymbol_add (char * symbol)
     return nstr;
 }
 
-/* Free symbol string. */
 void
 tresymbol_free (char *symbol)
 {
@@ -209,8 +190,8 @@ tresymbol_free (char *symbol)
 void
 tresymbol_clear ()
 {
-	ulong  i;
-	char   * symbol;
+	ulong i;
+	char  * symbol;
 
     DOTIMES(i, NUM_ATOMS) {
 		if (tre_atoms[i].type == TRETYPE_UNUSED)

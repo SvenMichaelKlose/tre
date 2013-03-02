@@ -15,7 +15,6 @@
 
 #include <string.h>
 
-/* Return last cons of a list. */
 treptr
 trelist_last (treptr l)
 {
@@ -25,7 +24,6 @@ trelist_last (treptr l)
     return l;
 }
 
-/* Copy tree. */
 treptr
 trelist_copy_tree (treptr l)
 {
@@ -54,11 +52,6 @@ trelist_copy (treptr l)
     return CONS(CAR(l), trelist_copy (CDR(l)));
 }
 
-/*
- * Remove element from list.
- *
- * The element is unlinked and left for garbage collection.
- */
 treptr
 trelist_delete (ulong i, treptr l)
 {
@@ -81,7 +74,6 @@ trelist_delete (ulong i, treptr l)
     return treerror (l, "trelist_delete: index '%d' out of range", i);
 }
 
-/* Get zero-indexed position of element in list. */
 long
 trelist_position (treptr elt, treptr l)
 {
@@ -99,7 +91,6 @@ trelist_position (treptr elt, treptr l)
 }
 
 
-/* Get zero-indexed position of element in list by symbol name. */
 long
 trelist_position_name (treptr elt, treptr l)
 {
@@ -117,7 +108,6 @@ trelist_position_name (treptr elt, treptr l)
     return -1;
 }
 
-/* Get length of a pure list. */
 size_t
 trelist_length (treptr p)
 {
@@ -131,7 +121,6 @@ trelist_length (treptr p)
     return len;
 }
 
-/* Return nth cons. */
 treptr
 trelist_nthcdr (treptr l, ulong idx)
 {
@@ -146,7 +135,6 @@ trelist_nthcdr (treptr l, ulong idx)
 	return l;
 }
 
-/* Return nth element. */
 treptr
 trelist_nth (treptr l, ulong idx)
 {
@@ -157,28 +145,24 @@ trelist_nth (treptr l, ulong idx)
     return CAR(l);
 }
 
-/* Sequence type: replace element at index. */
 void
 trelist_t_set (treptr s, ulong idx, treptr val)
 {
     RPLACA(trelist_nthcdr (s, idx), val);
 }
 
-/* Sequence type: return element at index. */
 treptr
 trelist_t_get (treptr s, ulong idx)
 {
     return trelist_nth (s, idx);
 }
 
-/* Sequence type configuration. */
 struct tre_sequence_type trelist_seqtype = {
 	trelist_t_set,
 	trelist_t_get,
 	trelist_length
 };
 
-/* Return T if all elements in a list are of the same type. */
 bool
 trelist_check_type (treptr list, ulong type)
 {
@@ -188,7 +172,6 @@ trelist_check_type (treptr list, ulong type)
     return TRUE;
 }
 
-/* Append lst2 after lst. */
 void
 trelist_append (treptr *lst, treptr lst2)
 {
@@ -206,7 +189,6 @@ trelist_append (treptr *lst, treptr lst2)
     RPLACD(tmp, lst2);
 }
 
-/* Return T if trees have the same layout and contain the same elements. */
 bool
 trelist_equal (treptr la, treptr lb)
 {

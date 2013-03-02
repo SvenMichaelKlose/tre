@@ -10,11 +10,6 @@
 
 #include <time.h>
 
-/*
- * (NANOTIME)
- *
- * Get number of nanoseconds since the epoch.
- */
 treptr
 tretime_builtin_nanotime (treptr dummy)
 {

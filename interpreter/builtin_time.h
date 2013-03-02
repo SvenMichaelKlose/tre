@@ -1,5 +1,5 @@
 /*
- * tré - Copyright (c) 2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #ifndef TRE_BUILTIN_TIME_H

@@ -24,21 +24,21 @@ typedef uint treptr;
 	TRETYPE_INDEX_TO_PTR(TRE_ATOM(index).type, index)
 #define TREPTR_TO_ATOM(ptr)	TRE_ATOM(TREPTR_INDEX(ptr))
 
-#define TREATOM_NAME(ptr)		(TREPTR_TO_ATOM(ptr).name)
-#define TREATOM_TYPE(ptr)		(TREPTR_TO_ATOM(ptr).type)
-#define TREATOM_VALUE(ptr)		(TREPTR_TO_ATOM(ptr).value)
-#define TREATOM_FUN(ptr)		(TREPTR_TO_ATOM(ptr).fun)
+#define TREATOM_NAME(ptr)		        (TREPTR_TO_ATOM(ptr).name)
+#define TREATOM_TYPE(ptr)		        (TREPTR_TO_ATOM(ptr).type)
+#define TREATOM_VALUE(ptr)		        (TREPTR_TO_ATOM(ptr).value)
+#define TREATOM_FUN(ptr)		        (TREPTR_TO_ATOM(ptr).fun)
 #define TREATOM_COMPILED_FUN(ptr)		(TREPTR_TO_ATOM(ptr).compiled_fun)
 #define TREATOM_COMPILED_EXPANDER(ptr)	(TREPTR_TO_ATOM(ptr).compiled_expander)
-#define TREATOM_BINDING(ptr)	(TREPTR_TO_ATOM(ptr).binding)
-#define TREATOM_PACKAGE(ptr)	(TREPTR_TO_ATOM(ptr).package)
-#define TREATOM_DETAIL(ptr)		(TREPTR_TO_ATOM(ptr).detail)
-#define TREATOM_STRING(ptr)		((char *) TREATOM_DETAIL(ptr))
-#define TREATOM_STRINGP(ptr)	((char *) TRESTRING_DATA(TREATOM_STRING(ptr)))
+#define TREATOM_BINDING(ptr)	        (TREPTR_TO_ATOM(ptr).binding)
+#define TREATOM_PACKAGE(ptr)	        (TREPTR_TO_ATOM(ptr).package)
+#define TREATOM_DETAIL(ptr)		        (TREPTR_TO_ATOM(ptr).detail)
+#define TREATOM_STRING(ptr)		        ((char *) TREATOM_DETAIL(ptr))
+#define TREATOM_STRINGP(ptr)	        ((char *) TRESTRING_DATA(TREATOM_STRING(ptr)))
 #define TREATOM_SET_FUN(ptr, val)	    (TREPTR_TO_ATOM(ptr).fun = val)
 #define TREATOM_SET_DETAIL(ptr, val)	(TREPTR_TO_ATOM(ptr).detail = (void *) val)
 #define TREATOM_SET_STRING(ptr, val)	(TREATOM_DETAIL(ptr) = (char *) val)
-#define TREATOM_SET_TYPE(ptr, val)	(TREATOM_TYPE(ptr) = val)
+#define TREATOM_SET_TYPE(ptr, val)	    (TREATOM_TYPE(ptr) = val)
 
 #define TREPTR_TYPE(ptr)		(ptr >> TREPTR_INDEX_WIDTH)
 #define TREPTR_INDEX(ptr)		(ptr & ~TREPTR_FLAGS)
@@ -56,15 +56,14 @@ typedef uint treptr;
 
 #define IS_COMPILED_FUN(x) (TREPTR_IS_ARRAY(x) || ((TREPTR_IS_FUNCTION(x) || TREPTR_IS_MACRO(x)) && TREATOM_COMPILED_FUN(x)))
 
-#define TREPTR_TRUTH(test)	((test) ? treptr_t : treptr_nil)
+#define TREPTR_TRUTH(test) ((test) ? treptr_t : treptr_nil)
 
-#define NULLP(x)	(x == treptr_nil)
+#define NULLP(x)           (x == treptr_nil)
 
 extern const treptr treptr_nil;
 extern const treptr treptr_t;
 extern const treptr treptr_invalid;
 
-/* Already looked-up atoms. */
 extern treptr treatom_accent_circonflex;
 extern treptr treatom_function;
 extern treptr treatom_backquote;

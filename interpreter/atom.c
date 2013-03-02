@@ -24,9 +24,9 @@
 void * tre_atoms_free;
 struct tre_atom tre_atoms[NUM_ATOMS];
 
-#define TREPTR_NIL_INDEX	0 /* NIL and T are allocated manually. */
+#define TREPTR_NIL_INDEX	0
 #define TREPTR_T_INDEX		1
-#define TREPTR_FIRST_INDEX	2 /* First allocator index. */
+#define TREPTR_FIRST_INDEX	2
 
 #define TREPACKAGE_KEYWORD_INDEX	1
 
@@ -34,7 +34,7 @@ const treptr treptr_nil = TRETYPE_INDEX_TO_PTR(TRETYPE_VARIABLE, TREPTR_NIL_INDE
 const treptr treptr_t = TRETYPE_INDEX_TO_PTR(TRETYPE_VARIABLE, TREPTR_T_INDEX);
 const treptr treptr_invalid = (treptr) -1;
 
-treptr treptr_universe; /* *UNIVERSE* variable */
+treptr treptr_universe;
 
 treptr treatom_accent_circonflex;
 treptr treatom_backquote;
@@ -166,9 +166,7 @@ treatom_get_value (treptr atom)
 treptr
 treatom_get_function (treptr atom)
 {
-	return (TREPTR_IS_BUILTIN(atom)) ?
-			atom :
-    		TREATOM_FUN(atom);
+	return TREPTR_IS_BUILTIN(atom) ? atom : TREATOM_FUN(atom);
 }
 
 treptr
@@ -281,23 +279,15 @@ treatom_get (char * symbol, treptr package)
 }
 
 void
-treatom_remove (treptr el)
+treatom_remove (treptr x)
 {
-    switch (TREPTR_TYPE(el)) {
-        case TRETYPE_NUMBER:
-            trenumber_free (el);
-	    	break;
-
-        case TRETYPE_ARRAY:
-	    	trearray_free (el);
-	    	break;
-
-        case TRETYPE_STRING:
-	    	trestring_free (el);
-	    	break;
+    switch (TREPTR_TYPE(x)) {
+        case TRETYPE_NUMBER: trenumber_free (x); break;
+        case TRETYPE_ARRAY:  trearray_free  (x); break;
+        case TRETYPE_STRING: trestring_free (x); break;
     }
 
-    treatom_free (el);
+    treatom_free (x);
 }
 
 treptr

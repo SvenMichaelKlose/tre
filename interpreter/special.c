@@ -36,7 +36,6 @@
 treptr tre_atom_evaluated_go;
 treptr tre_atom_evaluated_return_from;
 
-/* Test if expression is an evaluated RETURN-FROM. */
 bool
 treeval_is_return (treptr x)
 {
@@ -47,7 +46,6 @@ treeval_is_return (treptr x)
 			 || CDDDR(x) != treptr_nil);
 }
 
-/* Test if expression is an evaluated GO. */
 bool
 treeval_is_go (treptr x)
 {
@@ -56,21 +54,12 @@ treeval_is_go (treptr x)
 			 || TREPTR_IS_CONS(CDR(x)));
 }
 
-/* Test if expression is an evaluated GO or RETURN-FROM. */
 bool
 treeval_is_jump (treptr p)
 {
     return treeval_is_return (p) || treeval_is_go (p);
 }
 
-/*tredoc
-  (cmd :name SETQ
-	(args :occurrence *
-	  (arg :type symbol)
-	  (arg :name value))
-	(descr "Assign quoted value to variable.")
-	(returns "The last value assigned."))
- */
 treptr
 trespecial_setq (treptr list)
 {
@@ -79,12 +68,10 @@ trespecial_setq (treptr list)
     treptr  tmp;
 	long     argnum = 1;
 
-    /* Check if there're any arguments. */
     while (list == treptr_nil)
 		list = treerror (treptr_invalid, "arguments expected");
 
     do {
-        /* Check arguments. */
 		car = trearg_typed (argnum, TRETYPE_VARIABLE, CAR(list), "SETQ place");
 
 		argnum++;
@@ -93,13 +80,11 @@ trespecial_setq (treptr list)
 	    	cdr = treerror (list, "even number arguments expected - supply the missing one");
 			list = treptr_nil;
 		} else {
-			/* Evaluate value expression. */
         	tmp = CDR(list);
         	cdr = treeval (CAR(list));
         	list = tmp;
 		}
 
-		/* Catch RETURN-FROM. */
 		TREEVAL_RETURN_JUMP(cdr);
 
         treatom_set_value (car, cdr);
@@ -110,13 +95,6 @@ trespecial_setq (treptr list)
     return cdr;
 }
 
-/*tredoc
-  (cmd :name MACRO
-	(arg :type argument-definition)
-	(arg :type expression-list)
-	(descr "Create a macro.")
-	(returns macro))
- */
 treptr
 trespecial_macro (treptr list)
 {
@@ -131,20 +109,12 @@ trespecial_macro (treptr list)
     return f;
 }
 
-/*tredoc
-  (cmd :name SPECIAL
-	(arg :type argument-definition)
-	(arg :type expression-list)
-	(descr "Create a special function whose arguments are not evaluated.")
-	(returns special))
- */
 treptr
 trespecial_special (treptr list)
 {
     treptr  expr = trelist_copy (list);
     treptr  ret;
 
-    /* Create macro atom. */
     tregc_push (expr);
     ret = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_USERSPECIAL, expr);
     tregc_pop ();
@@ -152,13 +122,6 @@ trespecial_special (treptr list)
     return ret;
 }
 
-/*XXX deprecated
- *  (COND (test expression-list)*)
- *
- *  Evaluates test-expression pairs in order. If a test returns non-NIL,
- *  the expression is evaluated and returned. If no test matches NIL is
- *  returned.
- */
 treptr
 trespecial_cond (treptr p)
 {
@@ -208,12 +171,6 @@ trespecial_if (treptr p)
     return treptr_nil;
 }
 
-/*
- * (QUOTE expression)
- *
- * Returns expression unevaluated. The short form "'", preceding
- * symbols and expressions, may be used.
- */
 treptr
 trespecial_quote (treptr list)
 {
@@ -222,11 +179,6 @@ trespecial_quote (treptr list)
     return CAR(list);
 }
 
-/*
- * (PROGN expression*)
- *
- * Evaluates expressions and returns the value of the last.
- */
 treptr
 trespecial_progn (treptr list)
 {
@@ -240,13 +192,6 @@ trespecial_progn (treptr list)
     return last;
 }
 
-/*
- * (BLOCK symbol expression*)
- *
- * Evaluates expression by expression and returns the last.
- * On evaluation of RETURN-FROM inside the body, evaluation of the
- * block is terminated.
- */
 treptr
 trespecial_block (treptr args)
 {
@@ -281,11 +226,6 @@ trespecial_block (treptr args)
     return last;
 }
 
-/*
- * (RETURN-FROM tag expression)
- *
- * Exit BLOCK named tag and return the evaluated expression.
- */
 treptr
 trespecial_return_from (treptr args)
 {
@@ -293,7 +233,6 @@ trespecial_return_from (treptr args)
     treptr evl;
     treptr ret;
 
-    /* Check arguments. */
     if (args == treptr_nil)
 		return treerror (treptr_invalid, "tag and expression expected");
     if (CDR(args) == treptr_nil)
@@ -301,7 +240,6 @@ trespecial_return_from (treptr args)
     if (CDDR(args) != treptr_nil)
 		return treerror (CDDR(args), "only two args expected");
 
-    /* Evaluate expression for return value. */
     args = trelist_copy (args);
     tregc_push (args);
 
@@ -316,14 +254,6 @@ trespecial_return_from (treptr args)
     return ret;
 }
 
-/*
- * (TAGBODY {tag | expression} *)
- *
- * Evaluates expression by expression and returns NIL. Tags are
- * ignored.
- * On evaluation of GO inside the body, evaluation is continued
- * after the tag specified.
- */
 treptr
 trespecial_tagbody (treptr body)
 {
@@ -335,38 +265,30 @@ trespecial_tagbody (treptr body)
     p = body;
     while (1) {
 tag_found:
-		/* Return on end of list. */
 		if (p == treptr_nil)
 	    	break;
 
-        /* Evaluate expression, skip non-expression. */
 		car = CAR(p);
 		if (TREPTR_IS_ATOM(car))
             goto next;
 
         res = treeval (car);
 
-        /* Pass through RETURN-FROM for BLOCK. */
         if (treeval_is_return (res))
             return res;
 
-        /* Continue to next if expression didn't return a GO expression. */
-		if (!treeval_is_go (res))
-            goto next;
+		if (treeval_is_go (res)) {
+            tag = CDR(res);
+		    DOLIST(p, body) {
+	    	    if (CAR(p) != tag)
+				    continue;
 
-		/* We have a GO. Continue after occurence of the tag. */
-        tag = CDR(res);
-		DOLIST(p, body) {
-	    	if (CAR(p) != tag)
-				continue;
-
-	    	p = CDR(p);
-	    	TRELIST_FREE_EARLY(res);
-	    	goto tag_found;
-		}
-
-		return res;
-
+	    	    p = CDR(p);
+	    	    TRELIST_FREE_EARLY(res);
+	    	    goto tag_found;
+		    }
+		    return res;
+        }
 next:
         p = CDR(p);
     }
@@ -374,11 +296,6 @@ next:
     return treptr_nil;
 }
 
-/*
- * (GO tag)
- *
- * Inside a TAGBODY, continue evaluation at tag.
- */
 treptr
 trespecial_go (treptr args)
 {
@@ -388,15 +305,11 @@ trespecial_go (treptr args)
 treptr
 trespecial_past_lambda (treptr x)
 {
-	/* Jump past optional LAMBDA keyword. */
 	return (TREPTR_IS_ATOM(FIRST(x)) && FIRST(x) == treatom_lambda)
 			? CDR(x)
 			: x;
 }
 
-/*
- * Make function atom of LAMBDA expression.
- */
 treptr
 trespecial_function_from_expr (treptr expr)
 {
@@ -408,7 +321,6 @@ trespecial_function_from_expr (treptr expr)
     if (TREPTR_IS_ATOM(CAR(x)) && CAR(x) != treptr_nil)
         return treerror (expr, "argument list expected instead of atom");
 
-	/* Copy arguments and body for the new atom. */
     x = trelist_copy (x);
     tregc_push (x);
     f = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_FUNCTION, x);
@@ -420,14 +332,6 @@ trespecial_function_from_expr (treptr expr)
     return f;
 }
 
-/*tredoc
-  (spacial :name FUNCTION
-	(or
-	  (arg :type symbol)
-	  (arg :type lambda-expression))
-	(descr "Make function.")
-	(returns function))
- */
 treptr
 trespecial_function (treptr args)
 {
@@ -497,9 +401,6 @@ treevalfunc_t treeval_xlat_special[] = {
     NULL
 };
 
-/*
- * Call built-in special operator
- */
 treptr
 trespecial (treptr func, treptr args)
 {

@@ -38,10 +38,6 @@ trelist_rplacp (treptr cons, treptr val)
     _CPR(cons) = val;
 }
 
-
-/*
- * Free single list element.
- */
 void
 trelist_free (treptr node)
 {

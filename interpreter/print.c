@@ -29,15 +29,10 @@
 char treprint_marks_cons[NUM_LISTNODES >> 3];
 char treprint_marks_atoms[NUM_ATOMS >> 3];
 
-#define TREPRINT_MARK_CONS(i) \
-    TRE_MARK(treprint_marks_cons, i)
-#define TREPRINT_GET_MARK_CONS(i) \
-    TRE_GETMARK(treprint_marks_cons, i)
-
-#define TREPRINT_MARK_ATOM(i) \
-    TRE_MARK(treprint_marks_atoms, TREPTR_INDEX(i))
-#define TREPRINT_GET_MARK_ATOM(i) \
-    TRE_GETMARK(treprint_marks_atoms, TREPTR_INDEX(i))
+#define TREPRINT_MARK_CONS(i)     TRE_MARK(treprint_marks_cons, i)
+#define TREPRINT_GET_MARK_CONS(i) TRE_GETMARK(treprint_marks_cons, i)
+#define TREPRINT_MARK_ATOM(i)     TRE_MARK(treprint_marks_atoms, TREPTR_INDEX(i))
+#define TREPRINT_GET_MARK_ATOM(i) TRE_GETMARK(treprint_marks_atoms, TREPTR_INDEX(i))
 
 void
 treprint_wipe_marks (void)
@@ -135,11 +130,11 @@ treprint_atom (treptr atom, ulong indent)
 	    	if (TRENUMBER_TYPE(atom) == TRENUMTYPE_CHAR) {
 				printf ("#\\");
 	        	putchar ((int) TRENUMBER_VAL(atom));
-	    	} else if (TRENUMBER_TYPE(atom) == TRENUMTYPE_INTEGER) {
+	    	} else if (TRENUMBER_TYPE(atom) == TRENUMTYPE_INTEGER)
                 printf ("%G", TRENUMBER_VAL(atom));
-			} else if (TRENUMBER_TYPE(atom) == TRENUMTYPE_FLOAT) {
+			else if (TRENUMBER_TYPE(atom) == TRENUMTYPE_FLOAT)
                 printf ("%.1f", TRENUMBER_VAL(atom));
-			} else
+			else
 				treerror_internal (atom, "unknown number type");
 	    	break;
 
@@ -214,21 +209,19 @@ treprint_cons (treptr * p, ulong * indent, int * postatom, char ** prepend)
     if (*postatom)
     	printf (" ");
 
-	/* Check if we already passed car. */
     if (TREPTR_IS_CONS(car) && TREPRINT_GET_MARK_CONS(car)) {
         printf ("*circular*");
         return 2;
 	}
 
-    /* Print dotted pair. */
     if (cdr != treptr_nil && TREPTR_IS_ATOM(cdr)) {
     	treprint_atom (car, *indent);
    	    printf (" . ");
     	treprint_atom (cdr, *indent);
 		return 0;
-    } else if (TREPTR_IS_CONS(car)) {
+    } else if (TREPTR_IS_CONS(car))
     	treprint_indent (car, *indent + *postatom, FALSE, *prepend);
-	} else {
+	else {
         printf ("%s", *prepend);
         treprint_atom (car, *indent + *postatom);
     }
@@ -239,7 +232,7 @@ treprint_cons (treptr * p, ulong * indent, int * postatom, char ** prepend)
     TREPRINT_HLCLOSE(car);
     TREPRINT_HLCLOSE(*p);
     *p = _CDR(*p);
-	/* Check if we already passed cdr. */
+
     if (TREPTR_IS_CONS(*p) && TREPRINT_GET_MARK_CONS(*p)) {
         printf ("*circular");
 		return 0;

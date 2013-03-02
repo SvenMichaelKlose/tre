@@ -1,8 +1,5 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
- *
- * UN*X file I/O
+ * tré – Copyright (c) 2005–2008 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -39,7 +36,7 @@ treiostd_open_file (char * name)
 {
 	const char * txt1 = "file '";
 	const char * txt2 = "'";
-	char * n = trealloc (strlen (txt1) + strlen (name) + strlen (txt2) + 1);
+	char       * n    = trealloc (strlen (txt1) + strlen (name) + strlen (txt2) + 1);
     struct tre_stream * s;
     FILE * fd;
 

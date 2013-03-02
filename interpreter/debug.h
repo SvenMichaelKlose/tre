@@ -16,7 +16,7 @@
 extern int tredebug_mode;
 extern treptr tredebug_next;
 
-extern treptr treptr_milestone; /* Helps debugging across tré and C. */
+extern treptr treptr_milestone; /* For debugging across tré and C. */
 
 extern treptr tredebug_get_parent (void);
 

@@ -12,11 +12,6 @@
 #include "error.h"
 #include "array.h"
 
-/*
- * (MAKE-ARRAY n)
- *
- * Makes new array consisting of n elements.
- */
 treptr
 trearray_builtin_make (treptr sizes)
 {
@@ -32,11 +27,6 @@ trearray_builtin_make (treptr sizes)
     return trearray_get (sizes);
 }
 
-/*
- * Get one-dimensional index.
- *
- * Checks if the number of indices are correct and if indices are in range.
- */
 ulong
 trearray_get_check_index (treptr indices, treptr sizes)
 {
@@ -79,7 +69,6 @@ trearray_get_elt (treptr list)
     treptr  *elts;
     ulong  idx;
 
-    /* Get/check arguments. */
     if (list == treptr_nil)
 		treerror (list, "array expexted");
     if (CDR(list) == treptr_nil)
@@ -87,15 +76,12 @@ trearray_get_elt (treptr list)
     array = trearg_typed (1, TRETYPE_ARRAY, CAR(list), NULL);
     indices = CDR(list);
 
-    /* Check that indices are integers. */
     if (trelist_check_type (indices, TRETYPE_NUMBER) == FALSE)
 		treerror (indices, "integer expected");
 
-    /* Get array definition and pointer to elements. */
     sizes = TREATOM_VALUE(array);
     elts = TREATOM_DETAIL(array);
 
-    /* Get one dimensional index. */
     idx = trearray_get_check_index (indices, sizes);
     if (idx == (ulong) -1)
 		return NULL;
@@ -130,6 +116,7 @@ trearray_builtin_set_aref (treptr list)
 
     if (elts == NULL)
         return treerror (treptr_invalid, "index error");
+
     *elts = val;
 
     return val;

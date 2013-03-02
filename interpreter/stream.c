@@ -1,8 +1,5 @@
 /*
- * TRE interpreter
- * Copyright (c) 2005-2006,2008 Sven Klose <pixel@copei.de>
- *
- * Streams
+ * tré – Copyright (c) 2005–2006,2008 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -16,14 +13,14 @@
 #include "stream.h"
 #include "string2.h"
 
-FILE* tre_fileio_handles[TRE_FILEIO_MAX_FILES];
+FILE * tre_fileio_handles[TRE_FILEIO_MAX_FILES];
 
 long
 trestream_fopen (treptr path, treptr mode)
 {
     char   * spath = TREATOM_STRINGP(path);
     char   * smode = TREATOM_STRINGP(mode);
-    FILE   * file = fopen (spath, smode);
+    FILE   * file  = fopen (spath, smode);
     ulong  i;
 
     if (file == NULL)
@@ -46,10 +43,7 @@ trestream_fopen (treptr path, treptr mode)
 long
 trestream_fclose (long handle)
 {
-	if (tre_fileio_handles[handle] == NULL)
-		return -1;
-
-	if (fclose (tre_fileio_handles[handle]))
+	if (tre_fileio_handles[handle] == NULL || fclose (tre_fileio_handles[handle]))
 		return -1;
 
 	tre_fileio_handles[handle] = NULL;

@@ -1,5 +1,5 @@
 /*
- * tré - Copyright (c) 2005-2007,2011-2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2007,2011–2012 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -30,9 +30,8 @@ treerror_msg (treptr expr, const char *prefix, const char *msg, va_list ap)
     vfprintf (stderr, msg, ap);
     fprintf (stderr, ".\n");
 
-	if (treio_readerstreamptr) {
+	if (treio_readerstreamptr)
 		fprintf (stderr, "; In %s, line %ld, column %ld.\n", s->file_name, s->line, s->column);
-	}
 
     if (expr != treptr_invalid) {
 		fprintf (stderr, "; Erroraneous object:\n");

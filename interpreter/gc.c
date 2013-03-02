@@ -32,8 +32,8 @@ char tregc_atommarks[NUM_ATOMS >> 3];
 
 #define _TREGC_ALLOC_ATOM(index)	TRE_UNMARK(tregc_atommarks, index)
 #define _TREGC_ALLOC_CONS(index)	TRE_UNMARK(tregc_listmarks, index)
-#define _TREGC_FREE_ATOM(index)	TRE_MARK(tregc_atommarks, index)
-#define _TREGC_FREE_CONS(index)	TRE_MARK(tregc_listmarks, index)
+#define _TREGC_FREE_ATOM(index)     TRE_MARK(tregc_atommarks, index)
+#define _TREGC_FREE_CONS(index)     TRE_MARK(tregc_listmarks, index)
 
 treptr tregc_car;
 treptr tregc_cdr;

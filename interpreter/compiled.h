@@ -1,5 +1,5 @@
 /*
- * tré - Copyright (c) 2009 Sven Klose <pixel@copei.de>
+ * tré – Copyright (c) 2009 Sven Michael Klose <pixel@copei.de>
  */
 
 #ifndef TRE_COMPILED_H

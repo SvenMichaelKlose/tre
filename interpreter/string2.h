@@ -1,5 +1,5 @@
 /*
- * tré - Copyright (c) 2005-2008,2011 Sven Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2008,2011 Sven Michael Klose <pixel@copei.de>
  */
 
 #ifndef TRE_STRING_H
@@ -13,11 +13,11 @@
 extern treptr tre_strings;
 extern treptr trestring_get (const char *string);
 extern treptr trestring_get_binary (const char *string, size_t len);
-extern void trestring_free (treptr);
-extern char *trestring_get_raw (size_t len);
+extern void   trestring_free (treptr);
+extern char * trestring_get_raw (size_t len);
 
 extern struct tre_sequence_type trestring_seqtype;
 
-extern void trestring_copy (char *to, treptr str);
+extern void   trestring_copy (char *to, treptr str);
 
 #endif

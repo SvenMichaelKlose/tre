@@ -1,5 +1,5 @@
 /*
- * tré - Copyright (c) 2005-2008 Sven Klose <pixel@copei.de
+ * tré – Copyright (c) 2005–2008 Sven Michael Klose <pixel@copei.de
  */
 
 #include <dlfcn.h>

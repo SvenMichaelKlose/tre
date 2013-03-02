@@ -17,7 +17,6 @@
 #include "thread.h"
 #include "gc.h"
 
-/* Allocate and initialise array. */
 treptr *
 trearray_get_raw (ulong size)
 {
@@ -27,14 +26,12 @@ trearray_get_raw (ulong size)
     if (array == NULL)
 		return NULL;
 
-    /* Initialise elements. */
     while (size--)
 		array[size] = treptr_nil;
 
     return array;
 }
 
-/* Get total size of array. */
 size_t
 trearray_get_size (treptr sizes)
 {
@@ -52,7 +49,6 @@ trearray_get_size (treptr sizes)
     return size;
 }
 
-/* Create array atom. */
 treptr
 trearray_get (treptr sizes)
 {
@@ -71,9 +67,6 @@ trearray_get (treptr sizes)
     return a;
 }
 
-#include "gc.h"
-
-/* Create a one-dimensional array for compiled code. */
 treptr
 trearray_make (ulong size)
 {
@@ -92,18 +85,12 @@ trearray_make (ulong size)
     return ret;
 }
 
-/*
- * Free array.
- *
- * The atom is not freed.
- */
 void
 trearray_free (treptr array)
 {
     trealloc_free (TREATOM_DETAIL(array));
 }
 
-/* Sequence: Get value at index. */
 treptr
 trearray_t_get (treptr array, ulong idx)
 {
@@ -126,7 +113,6 @@ trearray_set (treptr *a, ulong idx, treptr val)
     a[idx] = val;
 }
 
-/* Sequence: replace value at index. */
 void
 trearray_t_set (treptr array, ulong idx, treptr val)
 {
@@ -142,14 +128,12 @@ trearray_t_set (treptr array, ulong idx, treptr val)
     trearray_set (a, idx, val);
 }
 
-/* Sequence: Return length of array. */
 size_t
 trearray_t_length (treptr array)
 {
     return TREARRAY_SIZE(array);
 }
 
-/* Sequence type configuration. */
 struct tre_sequence_type trearray_seqtype = {
     trearray_t_set,
     trearray_t_get,

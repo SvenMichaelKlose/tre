@@ -20,12 +20,6 @@
 #include "gc.h"
 #include "builtin_string.h"
 
-/*tredoc
-  (cmd :name STRINGP
-	(arg)
-	(descr "Checks if argument is a string.")
-	(returns boolean))
- */
 treptr
 trestring_builtin_stringp (treptr list)
 {
@@ -34,12 +28,6 @@ trestring_builtin_stringp (treptr list)
     return TREPTR_TRUTH(TREPTR_IS_STRING(arg));
 }
 
-/*tredoc
-  (cmd :name MAKE-STRING
-	(arg :type integer)
-	(descr "Makes new string consisting of n characters.")
-	(returns string))
- */
 treptr
 trestring_builtin_make (treptr list)
 {
@@ -53,12 +41,6 @@ trestring_builtin_make (treptr list)
     return atom;
 }
 
-/*tredoc
-  (cmd :name LIST-STRING
-	(args :type string)
-	(descr "Converts list of characters into a string.")
-	(returns character-list))
- */
 treptr
 trestring_builtin_list_string (treptr list)
 {
@@ -71,11 +53,9 @@ trestring_builtin_list_string (treptr list)
 
 	treptr arg;
 
-    /* Sum up length of all elements in the list. */
 	arg = trearg_get (list);
 	len = trelist_length (arg);
 
-    /* Copy elements to new string. */
     news = trestring_get_raw (len);
     if (news == NULL) {
 		tregc_force ();
@@ -94,7 +74,6 @@ trestring_builtin_list_string (treptr list)
 		newp[i++] = (unsigned char) TRENUMBER_VAL(CAR(p));
 	}
 
-    /* Return new string atom. */
     atom = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_STRING, treptr_nil);
     TREATOM_SET_STRING(atom, news);
 
@@ -102,12 +81,6 @@ trestring_builtin_list_string (treptr list)
 }
 
 
-/*tredoc
-  (cmd :name STRING=
-	(args :type string)
-	(descr "Compare strings.")
-	(returns string))
- */
 treptr
 trestring_builtin_compare (treptr list)
 {
@@ -139,12 +112,6 @@ trestring_builtin_compare (treptr list)
 }
 
 
-/*tredoc
-  (cmd :name STRING-CONCAT
-	(args :type string)
-	(descr "Concatenates strings.")
-	(returns string))
- */
 treptr
 trestring_builtin_concat (treptr list)
 {
@@ -156,7 +123,6 @@ trestring_builtin_concat (treptr list)
     ulong   len = 0;
 	int	    argnum = 1;
 
-    /* Sum up new length. */
     DOLIST(p, list) {
 		if (CAR(p) == treptr_nil)
 			continue;
@@ -164,7 +130,6 @@ trestring_builtin_concat (treptr list)
 	   	len += strlen (TREATOM_STRINGP(car));
     }
 
-    /* Allocate string. */
     news = trestring_get_raw (len);
     if (news == NULL) {
 		tregc_force ();
@@ -174,26 +139,18 @@ trestring_builtin_concat (treptr list)
 	}
     newp = TRESTRING_DATA(news);
 
-    /* Copy to string. */
     DOLIST(p, list) {
 		if (CAR(p) == treptr_nil)
 			continue;
 		newp = stpcpy (newp, TREATOM_STRINGP(CAR(p)));
 	}
 
-    /* Make atom. */
     atom = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_STRING, treptr_nil);
     TREATOM_SET_STRING(atom, news);
 
     return atom;
 }
 
-/*tredoc
-  (cmd :name STRING
-	(arg :type (number symbol string))
-	(descr "Argument converted to string.
-		   "If argument is already a string returns the original."))
- */
 treptr
 trestring_builtin_string (treptr list)
 {
@@ -213,7 +170,6 @@ trestring_builtin_string (treptr list)
            	snprintf (buf, TRE_MAX_STRINGLEN, "%g", TRENUMBER_VAL(arg));
            	return trestring_get (buf);
     	}
-   		/* Convert atom name to string. */
    		if (TREPTR_IS_ATOM(arg) && TREATOM_NAME(arg)) {
    			strncpy (buf, TREATOM_NAME(arg), TRE_MAX_STRINGLEN);
        		return trestring_get (buf);
@@ -225,12 +181,6 @@ trestring_builtin_string (treptr list)
 	return treptr_invalid;
 }
 
-/*tredoc
-  (cmd :name SYMBOL-NAME
-	(arg :type symbol)
- 	(descr "Gets the name of a symbol.")
-	(returns :type string))
- */
 treptr
 trestring_builtin_symbol_name (treptr list)
 {

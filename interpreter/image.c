@@ -41,9 +41,9 @@ treptr treimage_initfun;
 struct treimage_header {
     int     format_version;
     treptr  init_fun;
-    size_t   num_symbols;
-    size_t   num_strings;
-    size_t   num_arrays;
+    size_t  num_symbols;
+    size_t  num_strings;
+    size_t  num_arrays;
 };
 
 void
@@ -66,7 +66,7 @@ treimage_write_atoms (FILE *f)
     size_t j;
     size_t idx;
     size_t len;
-    char c;
+    char   c;
 	struct tre_atom buf;
 
     treimage_write (f, tregc_atommarks, sizeof tregc_atommarks);
@@ -77,10 +77,7 @@ treimage_write_atoms (FILE *f)
             if (!(tregc_atommarks[i] & c)) {
                 idx = (i << 3) + j;
 				memcpy (&buf, &tre_atoms[idx], sizeof (struct tre_atom));
-				if (tre_atoms[idx].name)
-				    len = strlen (tre_atoms[idx].name);
-				else
-					len = -1;
+				len = tre_atoms[idx].name ? strlen (tre_atoms[idx].name) : (size_t) -1;
 				buf.name = (char *) len;
                 treimage_write (f, &buf, sizeof (struct tre_atom));
 				if (len != (size_t) -1 && len != 0)
@@ -98,7 +95,7 @@ treimage_write_conses (FILE *f)
     size_t i;
     size_t j;
     size_t idx;
-    char c;
+    char   c;
 
     treimage_write (f, tregc_listmarks, sizeof tregc_listmarks);
 
@@ -122,7 +119,7 @@ treimage_write_numbers (FILE * f, char * nmarks)
     size_t i;
     size_t j;
     size_t idx;
-    char c;
+    char   c;
 
     treimage_write (f, nmarks, NMARK_SIZE);
 
@@ -142,7 +139,7 @@ treimage_write_numbers (FILE * f, char * nmarks)
 void
 treimage_write_arrays (FILE *f)
 {
-    size_t  i;
+    size_t i;
 
     DOTIMES(i, NUM_ATOMS)
         if (tre_atoms[i].type == TRETYPE_ARRAY)
@@ -152,10 +149,10 @@ treimage_write_arrays (FILE *f)
 void
 treimage_write_strings (FILE *f, size_t num)
 {
-    size_t  i;
-    size_t  j;
+    size_t   i;
+    size_t   j;
     char   * s;
-    size_t  * lens = trealloc (sizeof (size_t) * num);
+    size_t * lens = trealloc (sizeof (size_t) * num);
 
     /* Make and write length index. */
     j = 0;
@@ -179,12 +176,12 @@ int
 treimage_create (char *file, treptr init_fun)
 {
     struct treimage_header  h;
-    size_t n_arr = 0;
-    size_t n_str = 0;
-    size_t n_sym = 0;
-    size_t i;
-    FILE  *f;
-    char  nmarks[NMARK_SIZE];
+    size_t  n_arr = 0;
+    size_t  n_str = 0;
+    size_t  n_sym = 0;
+    size_t  i;
+    FILE  * f;
+    char    nmarks[NMARK_SIZE];
 
     treimage_initfun = init_fun;
     tregc_force ();
@@ -237,7 +234,7 @@ treimage_create (char *file, treptr init_fun)
 void
 treimage_remove_atoms (void)
 {
-    size_t  i;
+    size_t i;
 
     DOTIMES(i, NUM_ATOMS) {
         switch (tre_atoms[i].type) {
@@ -257,8 +254,8 @@ treimage_read_atoms (FILE *f)
     size_t j;
     size_t idx;
     size_t symlen;
-    char c;
-	char symbol[TRE_MAX_SYMLEN + 1];
+    char   c;
+	char   symbol[TRE_MAX_SYMLEN + 1];
 	char * allocated_symbol;
 
     treimage_read (f, tregc_atommarks, sizeof tregc_atommarks);
@@ -297,7 +294,7 @@ treimage_read_conses (FILE * f)
     size_t j;
     size_t idx;
     size_t last;
-    char c;
+    char   c;
 
     treimage_read (f, tregc_listmarks, sizeof tregc_listmarks);
 
@@ -333,7 +330,7 @@ treimage_make_free (void)
     size_t i;
     size_t j;
     size_t idx;
-    char c;
+    char   c;
 
     tre_atoms_free = NULL;
     DOTIMES(i, sizeof tregc_atommarks) {
@@ -357,8 +354,8 @@ treimage_read_numbers (FILE *f)
     size_t i;
     size_t j;
     size_t idx;
-    char c;
-    char  nmarks[NMARK_SIZE];
+    char   c;
+    char   nmarks[NMARK_SIZE];
 
     treimage_read (f, nmarks, NMARK_SIZE);
 
@@ -367,9 +364,9 @@ treimage_read_numbers (FILE *f)
         c = 1;
         DOTIMES(j, 8) {
             idx = (i << 3) + j;
-            if (nmarks[i] & c) {
+            if (nmarks[i] & c)
                 treimage_read (f, &tre_numbers[idx], sizeof (struct tre_number));
-            } else {
+            else {
 				*(void **) &tre_numbers[idx] = tre_numbers_free;
                 tre_numbers_free = &tre_numbers[idx];
 			}
@@ -382,9 +379,9 @@ treimage_read_numbers (FILE *f)
 void
 treimage_read_arrays (FILE *f)
 {
-    size_t  i;
-    size_t  l;
-    void      *a;
+    size_t i;
+    size_t l;
+    void * a;
 
     DOTIMES(i, NUM_ATOMS) {
         if (tre_atoms[i].type != TRETYPE_ARRAY)
@@ -400,12 +397,12 @@ treimage_read_arrays (FILE *f)
 void
 treimage_read_strings (FILE *f, struct treimage_header *h)
 {
-    char   * s;
-    size_t  i;
-    size_t  j;
-    size_t  l;
-    size_t  lenlen = sizeof (size_t) * h->num_strings;
-    size_t  * lens = trealloc (lenlen);
+    char *   s;
+    size_t   i;
+    size_t   j;
+    size_t   l;
+    size_t   lenlen = sizeof (size_t) * h->num_strings;
+    size_t * lens = trealloc (lenlen);
 
     treimage_read (f, lens, lenlen);
 
@@ -429,7 +426,7 @@ int
 treimage_load (char *file)
 {
     struct treimage_header  h;
-    FILE  * f;
+    FILE * f;
 
     f = fopen (file, "r");
     if (f == NULL)

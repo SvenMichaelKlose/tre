@@ -28,11 +28,6 @@ treptr tre_atom_body;
 treptr tre_atom_optional;
 treptr tre_atom_key;
 
-/*
- * Get the first element in argument list.
- *
- * An error will be issued if the list doesn't contain exactly one element.
- */
 treptr
 trearg_get (treptr list)
 {
@@ -48,11 +43,6 @@ trearg_get (treptr list)
     return CAR(list);
 }
 
-/*
- * Get the first two elements from a list.
- *
- * An error will be issued if the list doesn't contain exactly two elements.
- */
 void
 trearg_get2 (treptr *a, treptr *b, treptr list)
 {
@@ -118,21 +108,8 @@ trearg_typed (ulong argnum, unsigned type, treptr x, const char * descr)
       RPLACD(to, _tmp);	  \
       to = _tmp; }
 
-/*
- * Expand argument keywords
- *
- * 'argdef'	Unexpanded list of forms with keywords.
- * 'args'	Unexpanded list of values.
- * 'rvars'	Expanded list of forms. NOT GC SAVE!
- * 'rvals'	Expanded list of values. NOT GC SAVE!
- * 'do_argeval' Evaluate values.
- *
- * This expander supports the &REST, &OPTIONAL and &KEY keywords, including
- * initial values and sublevel arguments.
- */
 void
-trearg_expand (treptr *rvars, treptr *rvals, treptr iargdef, treptr args,
-                bool do_argeval)
+trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool do_argeval)
 {
     treptr   argdef = iargdef;
     treptr   svars;
@@ -157,9 +134,7 @@ trearg_expand (treptr *rvars, treptr *rvals, treptr iargdef, treptr args,
     args = trelist_copy (args);
     tregc_push (args);
 
-    /* Process an unlimited number of arguments. */
     while (1) {
-	/* Stop, if all arguments are processed. */
         if (argdef == treptr_nil)
 	    	break;
 
@@ -171,9 +146,7 @@ trearg_expand (treptr *rvars, treptr *rvals, treptr iargdef, treptr args,
 
 		/* Fetch next form and argument. */
         var = CAR(argdef);
-		val = (args != treptr_nil) ?
-	      CAR(args) :
-	      treptr_nil;
+		val = (args != treptr_nil) ? CAR(args) : treptr_nil;
 
 		/* Process sub-level argument list. */
         if (TREPTR_IS_CONS(var)) {
@@ -231,10 +204,8 @@ trearg_expand (treptr *rvars, treptr *rvals, treptr iargdef, treptr args,
 	        	_ADDF(dvars, CONS(form, treptr_nil));
 
 				svals = (args != treptr_nil) ?
-								 do_argeval ?
-								 	treeval (CAR(args)) :
-								 	CAR(args) :
-								 treeval (init);
+                            (do_argeval ? treeval (CAR(args)) : CAR(args)) :
+                            treeval (init);
 
 	        	/* Add argument as a list. */
 	        	_ADDF(dvals, CONS(svals, treptr_nil));
@@ -309,7 +280,7 @@ trearg_expand (treptr *rvars, treptr *rvals, treptr iargdef, treptr args,
         _ADDF(dvals, CONS(val, treptr_nil));
         tregc_pop ();
 
-	next:
+next:
 		argdef = CDR(argdef);
 		args = CDR(args);
     }
@@ -340,7 +311,6 @@ trearg_get_keyword (treptr a)
 void
 trearg_init (void)
 {
-    /* Create keywords. */
     tre_atom_rest = treatom_get ("&REST", treptr_nil);
     tre_atom_body = treatom_get ("&BODY", treptr_nil);
     tre_atom_optional = treatom_get ("&OPTIONAL", treptr_nil);

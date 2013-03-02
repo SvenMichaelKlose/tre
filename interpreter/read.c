@@ -54,12 +54,6 @@ is_symchar (unsigned char c)
             c != 255);
 }
 
-/*
- * Read symbol.
- *
- * Returns the length of the symbol or 0 if a special character or end
- * of input is read.
- */
 int
 get_symbol (struct tre_stream *str, char *s, char *p)
 {
@@ -80,8 +74,7 @@ again:
         goto again;
     }
 
-after_pname:
-    /* Read until a non-symbol character is found. */
+past_package_name:
     while (1) {
         c = toupper (treio_getc (str));
         if (is_symchar (c)) {
@@ -93,7 +86,7 @@ after_pname:
 				len = 0;
 				s = os;
 				got_package = TRUE;
-				goto after_pname;
+				goto past_package_name;
 	    	}
 
             *s++ = c;

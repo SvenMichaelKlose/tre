@@ -26,9 +26,9 @@ struct tre_number tre_numbers[NUM_NUMBERS];
 bool
 trenumber_is_value (char *symbol)
 {
-    ulong   ndots = 0;	/* Number of dots in string. */
-	ulong	len = 0;	/* Length of symbol. */
-    char    c;        	/* Last read character. */
+    ulong   num_dots = 0;
+	ulong	len = 0;
+    char    c;
 
     if (*symbol == '-' && symbol[1] != 0)
 		symbol++;
@@ -36,7 +36,7 @@ trenumber_is_value (char *symbol)
     while ((c = *symbol++) != 0) {
 		len++;
 		if (c == '.') {
-	    	if (ndots++)
+	    	if (num_dots++)
 	        	return FALSE;
 	    	continue;
         }
@@ -45,7 +45,7 @@ trenumber_is_value (char *symbol)
 	    	return FALSE;
     }
 
-	if (ndots == 1 && len == 1)
+	if (num_dots == 1 && len == 1)
 		return FALSE;
 
     return TRUE;

@@ -30,11 +30,6 @@ tremacro_builtin_macroexpand_1 (treptr list)
     return treeval_funcall (treatom_macroexpand_hook->fun, CONS(list, treptr_nil), FALSE);
 }
 
-/*
- * (MACRO-EXPAND form)
- *
- * Expand macros in form until it doesn't change anymore.
- */
 treptr
 tremacro_builtin_macroexpand (treptr list)
 {

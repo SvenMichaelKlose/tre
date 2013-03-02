@@ -8,22 +8,16 @@
 #include "atom.h"
 #include "cons.h"
 #include "list.h"
-#include "number.h"
 #include "eval.h"
-#include "builtin.h"
 #include "error.h"
 #include "gc.h"
-#include "debug.h"
-#include "thread.h"
-#include "env.h"
 #include "argument.h"
-#include "xxx.h"
 #include "eval.h"
 #include "bytecode.h"
 #include "array.h"
-#include "io.h"
-#include "main.h"
 #include "print.h"
+#include "thread.h"
+#include "builtin.h"
 #include "special.h"
 #include "apply.h"
 
@@ -64,9 +58,9 @@ trebuiltin_call_compiled (void * fun, treptr x)
 		values[i] = &refs[i];
 	}
 
-	if (ffi_prep_cif(&cif, FFI_DEFAULT_ABI, i, &ffi_type_ulong, args) == FFI_OK) {
+	if (ffi_prep_cif(&cif, FFI_DEFAULT_ABI, i, &ffi_type_ulong, args) == FFI_OK)
 		ffi_call(&cif, fun, &rc, values);
-	} else
+	else
         treerror_norecover (treptr_nil, "libffi: cif is not O.K.");
 
     trealloc_free (args);

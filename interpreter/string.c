@@ -17,12 +17,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* Allocate and initialise string. */
 char *
 trestring_get_raw (size_t len)
 {
-    size_t  l = len + sizeof (size_t) + 1;
-    char    * nstr = trealloc (l);
+    size_t l = len + sizeof (size_t) + 1;
+    char * nstr = trealloc (l);
 
     if (nstr == NULL)
 		return nstr;
@@ -42,8 +41,8 @@ trestring_copy (char *to, treptr str)
 treptr
 trestring_get (const char *str)
 {
-    char    * nstr = trestring_get_raw (strlen (str));
-    treptr  atom;
+    char * nstr = trestring_get_raw (strlen (str));
+    treptr atom;
 
     if (nstr == NULL)
         return treerror (treptr_invalid, "out of memory");
@@ -56,8 +55,8 @@ trestring_get (const char *str)
 treptr
 trestring_get_binary (const char *str, size_t len)
 {
-    char    * nstr = trestring_get_raw (len);
-    treptr  atom;
+    char * nstr = trestring_get_raw (len);
+    treptr atom;
 
     if (nstr == NULL)
         return treerror (treptr_invalid, "out of memory");
@@ -67,7 +66,6 @@ trestring_get_binary (const char *str, size_t len)
     return atom;
 }
 
-/* Remove string. */
 void
 trestring_free (treptr str)
 {
@@ -76,7 +74,6 @@ trestring_free (treptr str)
     trealloc_free (s);
 }
 
-/* Sequence: Get character at index. */
 treptr
 trestring_t_get (treptr str, size_t idx)
 {
@@ -90,7 +87,6 @@ trestring_t_get (treptr str, size_t idx)
     return treatom_number_get ((double) TRESTRING_DATA(s)[idx], TRENUMTYPE_CHAR);
 }
 
-/* Sequence: Return length of string. */
 size_t
 trestring_t_length (treptr str)
 {
@@ -99,7 +95,6 @@ trestring_t_length (treptr str)
     return TRESTRING_LEN(s);
 }
 
-/* Sequence type configuration. */
 struct tre_sequence_type trestring_seqtype = {
 	NULL,
 	trestring_t_get,
