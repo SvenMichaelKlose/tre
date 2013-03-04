@@ -7,43 +7,53 @@
   (aprog1 (%%%make-hash-table)
     (= !.__tre-test test)))
 
-(defmacro %%key (key)
-  `(%%%string+ "~~id" ,key))
+(defun %%objkey (x)     (%%%string+ "~~O" x))
+(defun %%make-objkey () (%%objkey (= *obj-id-counter* (%%%+ 1 *obj-id-counter*))))
+(defun %%numkey (x)     (%%%string+ "~~N" x))
 
 (defun hashkeys (hash)
   (carlist (%property-list hash)))
 
-(defun =-href-obj (value hash key)
+(defun %make-href-object-key (key)
   (unless (defined? key.__tre-object-id)
-    (let id (%%key (= *obj-id-counter* (%%%+ 1 *obj-id-counter*)))
+    (let id (%%make-objkey)
       (= key.__tre-object-id id)
       (%%%=-aref key *obj-keys* id)))
-  (%%%=-aref value hash key.__tre-object-id))
+  key.__tre-object-id)
+
+(defun %href-key (key)
+  (? (object? key)
+     (%make-href-object-key key)
+     (aprog1 (%%numkey key)
+       (%%%=-aref key *obj-keys* !))))
+
+(defun =-href-obj (value hash key)
+  (%%%=-aref value hash (%href-key key)))
+
+(defun %href-==? (x)
+  (in? x #'== #'string== #'number== #'integer==))
 
 (defun =-href (value hash key)
-  (?
-    (character? key) (%%=aref value hash (%%%string+ "~%C" key.v))
-    (object? key)    (=-href-obj value hash key)
-    (%%%=-aref value hash key)))
-
-(defun %href-user-test? (hash key)
-  (& (defined? hash.__tre-test)
-     (not (%%%eq #'eq hash.__tre-test)
-          (& (string? key)
-             (%%%eq #'string== hash.__tre-test)))))
+  (!? hash.__tre-test
+      (? (%href-==? !)
+         (%%%=-aref value hash key)
+         (=-href-obj value hash key))
+      (%%%=-aref value hash key)))
 
 (defun %href-user (hash key)
   (dolist (k (hashkeys hash))
-    (& (funcall hash.__tre-test (%%%aref hash key))
-       (return (%%%aref hash key)))))
+    (& (funcall hash.__tre-test k key)
+       (return (%%%aref hash (%href-key key))))))
 
 (defun href (hash key)
-  (? 
-    (character? key)            (%%%aref hash (%%%string+ "~%C" key.v))
-    (object? key)               (& (defined? key.__tre-object-id)
-                                   (%%%aref hash key.__tre-object-id))
-    (%href-user-test? hash key) (%href-user hash key)
-    (%%%aref hash key)))
+  (!? hash.__tre-test
+      (?
+        (%href-==? !) (%%%aref hash key)
+        (eq #'eq !)   (%%%aref hash (? (object? key)
+                                       key.__tre-object-id
+                                       (%%numkey key)))
+        (%href-user hash key))
+      (%%%aref hash key)))
 
 (defun hash-table? (x)
   (& (object? x)
@@ -51,7 +61,7 @@
 
 (defun hash-merge (a b)
   (when (| a b)
-    (| a (= a (make-hash-table)))
+    (| a (= a (make-hash-table :test b.__tre-test)))
     (%setq nil (%transpiler-native
                    "for (var k in " b ") "
                        "if (k != \"" '__tre-object-id "\" && k !=\"" '__tre_test "\") "
