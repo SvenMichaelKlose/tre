@@ -55,7 +55,7 @@
     (?  (| (is_a h "__l") 
            (is_a h "__array"))
         (h.g !)
-        (& (isset (php-aref h !))
+        (& (php-aref-defined? h !)
            (php-aref h !)))))
 
 (defun (= href) (v h k)

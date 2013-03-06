@@ -239,7 +239,10 @@
 
 (define-php-macro php-aref (arr &rest indexes)
   `(%transpiler-native ,(php-dollarize arr) ,@(php-array-subscript indexes)))
- 
+
+(define-php-macro php-aref-defined? (arr &rest indexes)
+  `(%transpiler-native "isset (" ,(php-dollarize arr) ,@(php-array-subscript indexes) ")"))
+
 (define-php-macro =-php-aref (val &rest x)
   `(%transpiler-native (php-aref ,@x)
                        ,(php-assignment-operator val)
