@@ -185,6 +185,23 @@ trenumber_builtin_cos (treptr x)
 }
 
 treptr
+trenumber_builtin_atan (treptr x)
+{
+    return treatom_number_get (atan (TRENUMBER_VAL(trearg_get (x))), TRENUMTYPE_FLOAT);
+}
+
+treptr
+trenumber_builtin_atan2 (treptr x)
+{
+    treptr a;
+    treptr b;
+
+    trearg_get2 (&a, &b, x);
+
+    return treatom_number_get (atan2 (TRENUMBER_VAL(a), TRENUMBER_VAL(b)), TRENUMTYPE_FLOAT);
+}
+
+treptr
 trenumber_builtin_random (treptr dummy)
 {
     (void) dummy;

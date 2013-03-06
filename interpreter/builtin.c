@@ -393,7 +393,7 @@ char *tre_builtin_names[] = {
 	"INTEGER+", "INTEGER-",
 	"CHARACTER+", "CHARACTER-",
 	"*", "/", "MOD",
-    "LOGXOR", "SQRT", "SIN", "COS", "RANDOM", "EXP",
+    "LOGXOR", "SQRT", "SIN", "COS", "ATAN", "ATAN2", "RANDOM", "EXP",
     "NUMBER?",
     "==", "<", ">",
     "NUMBER==", "NUMBER<", "NUMBER>",
@@ -443,13 +443,6 @@ char *tre_builtin_names[] = {
     NULL
 };
 
-/*tredoc
-  (cmd name "DEBUG" type "bt"
-	(description
-	  "Prints a message. Used as a breakpoint when debugging "
-	  "the interpreter.")
-	(returns nil))
-  */
 treptr
 trebuiltin_debug (treptr no_args)
 {
@@ -490,6 +483,8 @@ treevalfunc_t treeval_xlat_builtin[] = {
     trenumber_builtin_sqrt,
     trenumber_builtin_sin,
     trenumber_builtin_cos,
+    trenumber_builtin_atan,
+    trenumber_builtin_atan2,
     trenumber_builtin_random,
     trenumber_builtin_exp,
     trenumber_builtin_numberp,
