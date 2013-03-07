@@ -34,6 +34,8 @@
 		(SQRT)
 		(SIN)
 		(COS)
+		(ATAN)
+		(ATAN2)
 		(RANDOM)
 		(EXP)
 		(NUMBER?)
