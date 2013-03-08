@@ -30,6 +30,6 @@
 (env-load "stage5/parenthized-comma-separated-list.lisp")
 (env-load "stage5/bmp2cub.lisp")
 (env-load "stage5/ppm.lisp")
-(env-load "stage5/pi.lisp")
+(env-load "stage5/pi.lisp" 'c)
 (env-load "stage5/draw-signal.lisp")
 (env-load "stage5/orize.lisp")
