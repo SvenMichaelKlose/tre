@@ -2,7 +2,7 @@
 
 (defvar *symbols* (%%%make-hash-table))
 
-(dont-obfuscate __symbol)
+(dont-obfuscate __symbol n pn v f sv sf *keyword-package*)
 
 (define-native-php-fun symbol (name pkg)
   (unless (%%%== ,*nil-symbol-name* name)

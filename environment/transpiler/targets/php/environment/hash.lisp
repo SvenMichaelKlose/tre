@@ -1,6 +1,6 @@
 ;;;;; tré – Copyright (c) 2009,2011–2013 Sven Michael Klose <pixel@copei.de>
 
-(dont-obfuscate is_a)
+(dont-obfuscate is_a *conses* *arrays*)
 
 (defun %%key (x)
   (?
@@ -11,24 +11,24 @@
     x))
 
 (defun %%unkey-get-package-boundary (x)
-  (awhen (position #\~ x :test #'character==)
-    (& (== #\% (elt x (+ 1 !)))
-       (== #\P (elt x (+ 2 !)))
+  (awhen (position "~" x :test #'string==)
+    (& (%%%== "%" (substr x (+ 1 !) 1))
+       (%%%== "P" (substr x (+ 2 !) 1))
        (| (%%unkey-get-package-boundary (string-subseq ! 3))
           !))))
 
 (defun %%unkey (x)
-  (? (& (== #\~ (elt x 0))
-        (== #\% (elt x 1)))
-     (alet (string-subseq x 3)
-       (case (elt x 2) :test #'character==
-         #\S (let boundary (%%unkey-get-package-boundary !)
+  (? (& (%%%== "~" (substr x 0 1))
+        (%%%== "%" (substr x 1 1)))
+     (alet (substr x 3)
+       (case (substr x 2 1) :test #'%%%==
+         "S" (let boundary (%%unkey-get-package-boundary !)
                (make-symbol (subseq ! 0 boundary)
                             (let-when p (subseq ! (+ 3 boundary))
                               (make-symbol p))))
-         #\L (%%%href *conses* (string-subseq x 3))
-         #\A (%%%href *arrays* (string-subseq x 3))
-         #\C (code-char (string-subseq x 3))
+         "L" (%%%href *conses* (substr x 3))
+         "A" (%%%href *arrays* (substr x 3))
+         "C" (code-char (substr x 3))
          (error "illegal index ~A" x)))
      x))
 
