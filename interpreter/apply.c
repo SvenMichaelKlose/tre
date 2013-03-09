@@ -39,7 +39,7 @@ trebuiltin_is_compiled_closure (treptr x)
 }
 
 treptr
-trebuiltin_call_compiled (void * fun, treptr x)
+trefuncall_ffi (void * fun, treptr x)
 {
 	ffi_cif cif;
 	ffi_type **args;
@@ -70,17 +70,20 @@ trebuiltin_call_compiled (void * fun, treptr x)
 }
 
 treptr
-treeval_compiled_expr_c (treptr func, treptr args, treptr argdef, bool do_eval)
+trefuncall_c (treptr func, treptr args, treptr argdef, bool do_eval)
 {
     treptr  expforms;
     treptr  expvals;
 	treptr  result;
 
+    if (TREATOM_COMPILED_EXPANDER(func))
+        return trefuncall_ffi (TREATOM_COMPILED_EXPANDER(func), CONS(do_eval ? treeval_args (args) : args, treptr_nil));
+
    	tregc_push (args);
    	trearg_expand (&expforms, &expvals, argdef, args, do_eval);
    	tregc_push (expvals);
 
-    result = trebuiltin_call_compiled (TREATOM_COMPILED_FUN(func), expvals);
+    result = trefuncall_ffi (TREATOM_COMPILED_FUN(func), expvals);
 
 	tregc_pop ();
 	tregc_pop ();
@@ -90,7 +93,7 @@ treeval_compiled_expr_c (treptr func, treptr args, treptr argdef, bool do_eval)
 
 
 treptr
-treeval_compiled_expr_bc (treptr func, treptr args, treptr argdef, bool do_eval)
+trefuncall_bytecode (treptr func, treptr args, treptr argdef, bool do_eval)
 {
     treptr  expforms;
     treptr  expvals;
@@ -112,11 +115,8 @@ treptr
 trefuncall_compiled (treptr func, treptr args, bool do_eval)
 {
     return TREPTR_IS_ARRAY(func) ?
-               treeval_compiled_expr_bc (func, args, TREARRAY_RAW(func)[0], do_eval) :
-               (TREATOM_COMPILED_EXPANDER(func) ?
-                    trebuiltin_call_compiled (TREATOM_COMPILED_EXPANDER(func),
-                                              CONS(do_eval ? treeval_args (args) : args, treptr_nil)) :
-                    treeval_compiled_expr_c (func, args, CAR(TREATOM_VALUE(func)), do_eval));
+               trefuncall_bytecode (func, args, TREARRAY_RAW(func)[0], do_eval) :
+               trefuncall_c (func, args, CAR(TREATOM_VALUE(func)), do_eval);
 }
 
 treptr
