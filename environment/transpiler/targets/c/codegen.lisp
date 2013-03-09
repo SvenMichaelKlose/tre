@@ -53,9 +53,6 @@
 (defun %%%eq (&rest x)
   (apply #'eq x))
 
-(define-c-macro eq (&rest x)
-  `(%%%eq ,@x))
-
 (define-c-macro function (name &optional (x 'only-name))
   (?
 	(eq 'only-name x)	name
@@ -162,12 +159,3 @@
 
 (define-c-macro %=-aref (args)
   `(trearray_builtin_set_aref ,args))
-
-;;;; BUILT-INS
-
-,`(progn
-    ,@(macroexpand (mapcar [let n (make-symbol (c-builtin-name _))
-                             `(define-c-macro ,_ (&rest x)
-                                `(,n ,,(compiled-list x)))]
-                           (remove-many '(%setq-atom-value eq symbol-function make-array)
-                                        (c-builtin-names)))))

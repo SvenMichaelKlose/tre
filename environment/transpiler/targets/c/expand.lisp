@@ -19,13 +19,6 @@
 
 (transpiler-wrap-invariant-to-binary define-c-std-macro eq 2 %%%eq &)
 
-(mapcan-macro _
-    '(car cdr cons? atom number? string? array? function? builtin?)
-  (let n ($ '% _)
-  `((functional ,n)
-    (define-c-std-macro ,_ (x)
-	  `(,n ,,x)))))
-
 (define-c-std-macro slot-value (obj slot)
   `(%slot-value ,obj (%quote ,slot)))
 

@@ -30,6 +30,8 @@
 				                                    'tre_package_keyword
 				                                    'treptr_nil))))
 
+(functional *TREATOM_VALUE*)
+
 (defun c-expex-argument-filter (x)
   (?
 	(cons? x)      (transpiler-import-from-expex x)
@@ -37,5 +39,5 @@
     (number? x)    (c-compiled-number x)
     (string? x)    (c-compiled-string x)
 	(funinfo-var-or-lexical? *expex-funinfo* x) x
-	(expex-global-variable? x) `(treatom_get_value ,(c-compiled-symbol x))
+	(expex-global-variable? x) `(%transpiler-native "TREATOM_VALUE(" ,(c-compiled-symbol x) ")")
 	x))
