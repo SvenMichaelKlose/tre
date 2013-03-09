@@ -203,8 +203,7 @@
 ;;;; OBJECTS
 
 (define-js-macro %new (&rest x)
-  `(%transpiler-native "new " ,(compiled-function-name *transpiler* x.)
-                              ,@(parenthized-comma-separated-list .x)))
+  `(%transpiler-native "new " ,x. ,@(parenthized-comma-separated-list .x)))
 
 (define-js-macro delete-object (x)
   `(%transpiler-native "delete " ,x))
