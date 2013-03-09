@@ -49,6 +49,7 @@ trefuncall_ffi (void * fun, treptr x)
 	int i;
     int len = trelist_length (x) + 1;
 
+    tregc_push (x);
     args = trealloc (sizeof (ffi_type *) * len);
     refs = trealloc (sizeof (treptr) * len);
     values = trealloc (sizeof (void *) * len);
@@ -66,29 +67,18 @@ trefuncall_ffi (void * fun, treptr x)
     trealloc_free (args);
     trealloc_free (refs);
     trealloc_free (values);
+    tregc_pop ();
 	return rc;
 }
 
 treptr
-trefuncall_c (treptr func, treptr args, treptr argdef, bool do_eval)
+trefuncall_c (treptr func, treptr args, bool do_eval)
 {
-    treptr  expforms;
-    treptr  expvals;
-	treptr  result;
+    treptr a = do_eval ? treeval_args (args) : args;
 
     if (TREATOM_COMPILED_EXPANDER(func))
-        return trefuncall_ffi (TREATOM_COMPILED_EXPANDER(func), CONS(do_eval ? treeval_args (args) : args, treptr_nil));
-
-   	tregc_push (args);
-   	trearg_expand (&expforms, &expvals, argdef, args, do_eval);
-   	tregc_push (expvals);
-
-    result = trefuncall_ffi (TREATOM_COMPILED_FUN(func), expvals);
-
-	tregc_pop ();
-	tregc_pop ();
-
-	return result;
+        return trefuncall_ffi (TREATOM_COMPILED_EXPANDER(func), CONS(a, treptr_nil));
+    return trefuncall_ffi (TREATOM_COMPILED_FUN(func), a);
 }
 
 
@@ -116,7 +106,7 @@ trefuncall_compiled (treptr func, treptr args, bool do_eval)
 {
     return TREPTR_IS_ARRAY(func) ?
                trefuncall_bytecode (func, args, TREARRAY_RAW(func)[0], do_eval) :
-               trefuncall_c (func, args, CAR(TREATOM_VALUE(func)), do_eval);
+               trefuncall_c (func, args, do_eval);
 }
 
 treptr
