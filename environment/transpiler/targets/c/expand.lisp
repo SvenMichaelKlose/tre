@@ -33,12 +33,12 @@
 (define-c-std-macro =-aref (val arr &rest idx)
   (? (single-index? idx)
     `(%immediate-set-aref ,val ,arr (%transpiler-native ,idx.))
-    `(%=-aref ,(compiled-list `(,val ,arr ,@idx)))))
+    `(=-%aref ,val ,arr ,@idx)))
 
 (define-c-std-macro aref (arr &rest idx)
   (? (single-index? idx)
      `(%immediate-aref ,arr (%transpiler-native ,idx.))
-     `(%aref ,(compiled-list (cons arr idx)))))
+     `(%aref ,arr ,@idx)))
 
 (define-c-std-macro %%%nanotime ()
   '(nanotime))

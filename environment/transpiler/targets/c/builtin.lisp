@@ -105,9 +105,9 @@
 
 	(trearray_builtin_
     	(MAKE-ARRAY make)
-		(ARRAY? p))
-;		(AREF))
-;		(=-AREF set_aref))
+		(ARRAY? p)
+		(%AREF aref)
+		(=-%AREF set_aref))
 
 	(tremacro_builtin_
     	(MACROEXPAND-1 macroexpand_1)
