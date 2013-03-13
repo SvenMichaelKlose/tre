@@ -214,3 +214,14 @@ trenumber_builtin_exp (treptr x)
 {
     return treatom_number_get (expf (TRENUMBER_VAL(trearg_get (x))), TRENUMTYPE_FLOAT);
 }
+
+treptr
+trenumber_builtin_pow (treptr x)
+{
+    treptr a;
+    treptr b;
+
+    trearg_get2 (&a, &b, x);
+
+    return treatom_number_get (pow (TRENUMBER_VAL(a), TRENUMBER_VAL(b)), TRENUMTYPE_FLOAT);
+}
