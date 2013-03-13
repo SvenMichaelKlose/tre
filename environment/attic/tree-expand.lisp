@@ -19,4 +19,4 @@
 
 (defun tree-expand (fi l)
   (with (x (remove-setq l))
-    (setf (funinfo-first-cblock fi) x)))
+    (= (funinfo-first-cblock fi) x)))
