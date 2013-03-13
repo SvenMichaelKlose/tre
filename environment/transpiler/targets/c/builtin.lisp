@@ -39,6 +39,7 @@
 		(RANDOM)
 		(EXP)
 		(POW)
+		(ROUND)
 		(NUMBER? numberp)
 		(== number_equal)
 		(< lessp)
