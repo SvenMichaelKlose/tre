@@ -1,6 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
-
-;;;: Simulates ducktype objects like those used in the JavaScript target.
+;;;;; tré – Copyright (c) 2008–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
 
 (defvar *classes* (make-hash-table :test #'eq))
 
@@ -20,9 +18,10 @@
   (= classes (force-list classes))
   (print classes)
   (print (reverse .classes))
-  (& (href *classes* classes.) (error "Class ~A already defined." classes.))
-  (= (href *classes* classes.) (make-class :members (apply #'hmerge (filter [class-members (href *classes* _)] (reverse .classes)))
-	                                       :methods (| (apply #'hmerge (filter [class-methods (href *classes* _)] (reverse .classes)))
+  (& (href *classes* classes.)
+     (error "Class ~A already defined." classes.))
+  (= (href *classes* classes.) (make-class :members (apply #'hash-merge (filter [class-members (href *classes* _)] (reverse .classes)))
+	                                       :methods (| (apply #'hash-merge (filter [class-methods (href *classes* _)] (reverse .classes)))
                                                        (make-hash-table :test #'eq))))
   (thisify *classes* `(defun ,classes. (this ,@args)
 			            (%thisify ,classes. ,@body))))
@@ -38,7 +37,8 @@
   `(%new ',name ,@args))
 
 (defun %ducktype-assert (x)
-  (| (object? x) (error "ducktype object expected instead of ~A" x)))
+  (| (object? x)
+     (error "ducktype object expected instead of ~A" x)))
 
 (defun %ducktype-assert-class (class-name)
   (| (href *classes* class-name) (error "class ~A is not defined" class-name)))

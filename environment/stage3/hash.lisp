@@ -38,12 +38,10 @@
     ,@body))
 
 (defun href (h key)
-  (declare type hash-table h)
   (%with-hash-bucket b i h key
     (assoc-value key b :test (%hash-table-test h))))
 
 (defun (= href) (new-value h key)
-  (declare type hash-table h)
   (let tst (%hash-table-test h)
     (%with-hash-bucket b i h key
       (? (assoc key b :test tst)
@@ -52,13 +50,11 @@
   new-value)
 
 (defun hremove (h key)
-  (declare type hash-table h)
   (%with-hash-bucket b i h key
     (= (aref (%hash-table-hash h) i)
 	   (remove (assoc key b :test (%hash-table-test h)) b))))
 
 (defun hashkeys (h)
-  (declare type hash-table h)
   (let keys nil
 	(dotimes (i (length (%hash-table-hash h)) keys)
 	  (push (carlist (aref (%hash-table-hash h) i)) keys))
@@ -66,13 +62,12 @@
 
 (defun copy-hash-table (h)
   (when h
-    (declare type hash-table h)
     (let n (make-hash-table :test (%hash-table-test h)
                             :size (%hash-table-size h))
       (dolist (i (hashkeys h) n)
         (= (href n i) (href h i))))))
 
-(defun hmerge (&rest lst)
+(defun hash-merge (&rest lst)
   (let l (remove-if #'not lst)
     (& l (let h (copy-hash-table l.)
            (dolist (b .l h)
@@ -83,7 +78,6 @@
   (hash-merge nil x))
 
 (defun hash-alist (h)
-  (declare type hash-table h)
   (with-queue alist
     (dolist (i (hashkeys h) (queue-list alist))
       (enqueue alist (cons i (href h i))))))
