@@ -4,10 +4,6 @@
   (sqrt (+ (pow (abs (- x x2)) 2)
            (pow (abs (- y y2)) 2))))
 
-(defun within? (x lower interval)
-  (& (<= lower x)
-     (< x (+ lower interval))))
-
 (defun inside-rect? (x y rx ry rw rh)
   (& (within? x rx rw) 
      (within? y ry rh)))
