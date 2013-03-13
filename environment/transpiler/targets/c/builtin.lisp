@@ -38,6 +38,7 @@
 		(ATAN2)
 		(RANDOM)
 		(EXP)
+		(POW)
 		(NUMBER? numberp)
 		(== number_equal)
 		(< lessp)
