@@ -21,6 +21,7 @@ extern treptr trenumber_builtin_atan2 (treptr);
 extern treptr trenumber_builtin_random (treptr);
 extern treptr trenumber_builtin_exp (treptr);
 extern treptr trenumber_builtin_pow (treptr);
+extern treptr trenumber_builtin_round (treptr);
 extern treptr trenumber_builtin_number_equal (treptr);
 extern treptr trenumber_builtin_lessp (treptr);
 extern treptr trenumber_builtin_greaterp (treptr);

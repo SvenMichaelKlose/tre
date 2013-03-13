@@ -225,3 +225,9 @@ trenumber_builtin_pow (treptr x)
 
     return treatom_number_get (pow (TRENUMBER_VAL(a), TRENUMBER_VAL(b)), TRENUMTYPE_FLOAT);
 }
+
+treptr
+trenumber_builtin_round (treptr x)
+{
+    return treatom_number_get (round (TRENUMBER_VAL(trearg_get (x))), TRENUMTYPE_FLOAT);
+}
