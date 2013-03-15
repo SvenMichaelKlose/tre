@@ -9,15 +9,15 @@
                (c-line " *--trestack_ptr = treptr_nil"))))
     ,@(codegen-copy-arguments-to-locals fi)))
 
-(define-c-macro %function-epilogue (fi-sym)
-  (with (fi (get-funinfo-by-sym fi-sym)
-    	 num-vars (length (funinfo-vars fi)))
+(define-c-macro %function-epilogue (name)
+  (let fi (get-funinfo name)
     `((%setq "__ret" ,(place-assign (place-expand-0 fi '~%ret)))
-      ,@(& (< 0 num-vars)
-		  `(,(c-line "trestack_ptr += " num-vars)))
-      (%function-return ,fi-sym))))
+      ,@(alet (length (funinfo-vars fi))
+          (& (< 0 !)
+             `(,(c-line "trestack_ptr += " !))))
+      (%function-return ,name))))
 
-(define-c-macro %function-return (fi-sym)
+(define-c-macro %function-return (name)
   `(%transpiler-native ,@(c-line "return __ret")))
 
 (defun c-stack (x)

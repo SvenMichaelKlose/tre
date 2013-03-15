@@ -10,17 +10,13 @@
 	     (mapcar ^(%setq ,(place-assign (place-expand-0 fi _)) ,_)]
 	             (funinfo-local-args fi)))))
 
-(define-c-macro %function-epilogue (fi-sym)
-  (with (fi (get-funinfo-by-sym fi-sym)
-    	 num-vars (length (funinfo-vars fi)))
-    `(,@(& (< 0 num-vars)
-	  	   `(,(c-line "tregc_pop ()")))
-      (%function-return ,fi-sym))))
+(define-c-macro %function-epilogue (name)
+  `(,@(& (< 0 (length (funinfo-vars (get-funinfo name))))
+         `(,(c-line "tregc_pop ()")))
+    (%function-return ,name)))
 
-(define-c-macro %function-return (fi-sym)
-  (let fi (get-funinfo-by-sym fi-sym)
-    `(%transpiler-native
-         ,@(c-line "return " (place-assign (place-expand-0 fi '~%ret))))))
+(define-c-macro %function-return (name)
+  `(%transpiler-native ,@(c-line "return " (place-assign (place-expand-0 (get-funinfo name) '~%ret)))))
 
 (defun c-stack (x)
   `("_TRELOCAL(" ,x ")"))

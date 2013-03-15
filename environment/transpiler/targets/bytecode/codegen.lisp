@@ -6,15 +6,14 @@
   (?
 	(eq 'only-name x)	name
     (atom x)			(error "codegen: arguments and body expected: ~A" x)
-    (alet (lambda-args x) ; XXX Should be in FUNINFO.
-      `(%%%bc-fun ,(lambda-funinfo x)
-        ,@(lambda-body x)))))
+    `(%%%bc-fun ,name
+       ,@(lambda-body x))))
 
-(define-bc-macro %function-prologue (fi-sym) '(%setq nil nil))
-(define-bc-macro %function-epilogue (fi-sym) '((%%go nil) %%bc-return))
+(define-bc-macro %function-prologue (name) '(%setq nil nil))
+(define-bc-macro %function-epilogue (name) '((%%go nil) %%bc-return))
 
-(define-bc-macro %%closure (name fi-sym)
-  `(%closure ,name ,(codegen-closure-lexical fi-sym)))
+(define-bc-macro %%closure (name)
+  `(%closure ,name ,(codegen-closure-lexical name)))
 
 (defun bc-make-value (x)
   (? (& (cons? x)

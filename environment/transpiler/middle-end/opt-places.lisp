@@ -17,10 +17,6 @@
              (opt-places-find-used-1 p fi)
              (?
                (symbol? v) (opt-places-find-used-1 v fi)
-               (lambda? v) (copy-lambda v :body (let fi (get-lambda-funinfo v)
-                                                  (!? (funinfo-lexical fi)
-                                                      (funinfo-add-used-var fi !))
-                                                  (opt-places-find-used-0 (lambda-body v) fi)))
                (& (cons? v)
                   (dolist (i v)
                     (opt-places-find-used-1 i fi))))))
@@ -48,9 +44,8 @@
 
 (defun opt-places-remove-unused-0 (fi x)
   (?
-    (atom x)			nil
-	(lambda? x)			(opt-places-remove-unused-body x)
-	(named-lambda? x)	(opt-places-remove-unused-body ..x.)
+    (atom x)          nil
+	(named-lambda? x) (opt-places-remove-unused-body x)
 	(progn
 	  (opt-places-remove-unused-0 fi x.)
       (opt-places-remove-unused-0 fi .x))))

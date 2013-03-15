@@ -10,7 +10,6 @@
 		  	  		 (<= #\A _ #\Z)
 		  	  		 (<= #\0 _ #\9)
 			  		 (in=? _ #\_ #\. #\$ #\#)]
-			  :named-functions? t
 			  :named-function-next #'cdddr
 			  :lambda-export? t
 			  :stack-locals? t

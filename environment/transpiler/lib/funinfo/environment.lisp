@@ -3,9 +3,8 @@
 
 ;;;; FUNCTION NAME
 
-(defun funinfo-get-name (fi)
-  (| (funinfo-name fi)
-     (funinfo-get-name (funinfo-parent fi))))
+(defun funinfo-names (fi)
+  (& fi (cons (funinfo-name fi) (funinfo-names (funinfo-parent fi)))))
 
 ;;;; ARGUMENTS
 
@@ -51,8 +50,8 @@
   (& (funinfo-parent fi)
      (position x (funinfo-vars fi) :test #'eq)))
 
-(defun funinfosym-var-pos (fi-sym x)
-  (funinfo-var-pos (get-funinfo-by-sym fi-sym) x))
+(defun funinfosym-var-pos (name x)
+  (funinfo-var-pos (get-funinfo name) x))
 
 (defun funinfo-var-add (fi x)
   (unless (atom x)
@@ -92,8 +91,8 @@
 (defun funinfo-lexical-pos (fi x)
   (position x (funinfo-lexicals fi) :test #'eq))
 
-(defun funinfosym-lexical-pos (fi-sym x)
-  (funinfo-lexical-pos (get-funinfo-by-sym fi-sym) x))
+(defun funinfosym-lexical-pos (name x)
+  (funinfo-lexical-pos (get-funinfo name) x))
 
 (defun funinfo-lexical? (fi x)
   (member x (funinfo-lexicals fi) :test #'eq))

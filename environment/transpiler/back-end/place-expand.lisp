@@ -2,7 +2,7 @@
 
 (defun make-lexical-place-expr (fi var)
   `(%vec ,(funinfo-ghost fi)
-         ,(funinfo-sym (funinfo-parent fi))
+         ,(funinfo-name (funinfo-parent fi))
          ,var))
 
 (defun make-lexical-1 (fi var)
@@ -23,7 +23,7 @@
 	 (make-lexical-0 fi x)))
 
 (defun place-expand-emit-stackplace (fi x)
-  `(%stack ,(funinfo-sym fi) ,x))
+  `(%stack ,(funinfo-name fi) ,x))
 
 (defun place-expand-atom (fi x)
   (?
@@ -47,7 +47,7 @@
     (& (not (eq x (funinfo-lexical fi)))
        (funinfo-lexical? fi x))
       `(%vec ,(place-expand-atom fi (funinfo-lexical fi))
-             ,(funinfo-sym fi)
+             ,(funinfo-name fi)
              ,x)
 
     (& (transpiler-stack-locals? *transpiler*)
@@ -61,15 +61,12 @@
 
     (make-lexical fi x)))
 
-(defun place-expand-fun (fi name fun-expr)
-  (let fi (get-lambda-funinfo fun-expr)
-	(unless fi
-	  (print fun-expr)
-	  (error "place-expand-fun: no funinfo"))
-    `(function
-	   ,@(awhen name (list !))
-	   (,@(lambda-head fun-expr)
-  	        ,@(place-expand-0 fi (lambda-body fun-expr))))))
+(defun place-expand-fun (x)
+  (let fi (get-lambda-funinfo x)
+    (unless fi
+      (print x)
+      (error "place-expand-fun: no funinfo for ~A" (lambda-name x)))
+    (copy-lambda x :body (place-expand-0 fi (lambda-body x)))))
 
 (defun place-expand-setter (fi x)
   (let p (place-expand-0 fi (%setq-place x))
@@ -82,15 +79,14 @@
      (%transpiler-native? x)
      (%var? x))
                         x
-  (named-lambda? x)     (place-expand-fun fi .x. ..x.)
-  (lambda? x)           (place-expand-fun fi nil x)
+  (named-lambda? x)     (place-expand-fun x)
   (& (%setq? x)
      (%vec? (place-expand-0 fi (%setq-place x))))
                         (place-expand-setter fi x)
   (& (%set-atom-fun? x)
      (%vec? (place-expand-0 fi (%setq-place x))))
                         (place-expand-setter fi x)
-  (%%closure? x)        `(%%closure ,.x. ,(place-expand-0 fi ..x.))
+  (%%closure? x)        x
   (%setq-atom-value? x) `(%setq-atom-value ,.x. ,(place-expand-0 fi ..x.))
   (%slot-value? x)      `(%slot-value ,(place-expand-0 fi .x.) ,..x.)
   (%stackarg? x)        x)

@@ -69,12 +69,13 @@
 
 ;;;; FUNCTIONS
 
-(defun codegen-php-function (name x)
-  (with (args (argument-expand-names 'unnamed-c-function (lambda-args x))
-		 fi (get-lambda-funinfo x)
-		 num-locals (length (funinfo-vars fi))
+(defun codegen-php-function (x)
+  (with (args          (argument-expand-names 'unnamed-c-function (lambda-args x))
+		 fi            (get-lambda-funinfo x)
+         name          (funinfo-name fi)
+		 num-locals    (length (funinfo-vars fi))
 	     compiled-name (compiled-function-name *transpiler* name))
-    `(,(code-char 10)
+    `(,*php-newline*
 	  "function " ,compiled-name ,@(php-argument-list args)
       "{" ,(code-char 10)
 		 ,@(awhen (funinfo-globals fi)
@@ -89,22 +90,20 @@
              (list "    }}" *php-newline*))
       "}" ,*php-newline*)))
 
-(define-php-macro function (name &optional (x 'only-name))
-  (? (eq 'only-name x)
-     `(%transpiler-native (%transpiler-string ,(compiled-function-name-string *transpiler* name)))
-  	 (? (atom x)
-		(error "codegen: arguments and body expected: ~A" x)
-	  	(codegen-php-function name x))))
+(define-php-macro function (&rest x)
+  (? .x
+     (codegen-php-function (cons 'function (print x)))
+     `(%transpiler-native (%transpiler-string ,(compiled-function-name-string *transpiler* x.)))))
 
-(define-php-macro %function-prologue (fi-sym) '(%transpiler-native ""))
-(define-php-macro %function-epilogue (fi-sym) '(%transpiler-native ""))
-(define-php-macro %function-return (fi-sym) '(%transpiler-native ""))
+(define-php-macro %function-prologue (name) '(%transpiler-native ""))
+(define-php-macro %function-epilogue (name) '(%transpiler-native ""))
+(define-php-macro %function-return (name)   '(%transpiler-native ""))
 
 (defun php-codegen-argument-filter (x)
   (php-dollarize x))
 
-(define-php-macro %%closure (name fi-sym)
-  (let fi (get-funinfo-by-sym fi-sym)
+(define-php-macro %%closure (name)
+  (let fi (get-funinfo name)
     (? (funinfo-ghost fi)
   	   `(%transpiler-native "new __closure("
              (%transpiler-string ,(compiled-function-name-string *transpiler* name))

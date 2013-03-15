@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun digit-number (x)
   (- x #\0))
@@ -11,25 +11,24 @@
   (awhen (peek-char str)
     (== #\. !)))
 
+(defun read-mantissa-0 (str v s)
+  (? (peek-digit str)
+     (read-mantissa-0 str (+ v (* s (digit-number (read-char str)))) (/ s 10))
+     v))
+
 (defun read-mantissa (&optional (str *standard-input*))
-  "Read positive integer from stream."
-  (with (rec #'((v s)
-			      (? (peek-digit str)
-					 (rec (+ v (* s (digit-number (read-char str))))
-                          (/ s 10))
-					 v)))
-	(& (awhen (peek-char str)
-	     (digit-char-p !))
-	   (rec 0 0.1))))
+  (& (!? (peek-char str)
+         (digit-char-p !))
+     (read-mantissa-0 str 0 0.1)))
+
+(defun read-integer-0 (str v)
+  (? (peek-digit str)
+     (read-integer-0 str (+ (* v 10) (digit-number (read-char str))))
+     v))
 
 (defun read-integer (&optional (str *standard-input*))
-  "Read positive integer from stream."
-  (with (rec #'((v)
-			      (? (peek-digit str)
-					 (rec (+ (* v 10) (digit-number (read-char str))))
-					 v)))
-	(& (peek-digit str)
-	   (integer (rec 0)))))
+  (& (peek-digit str)
+     (integer (read-integer-0 str 0))))
 
 (defun read-number (&optional (str *standard-input*))
   (+ (read-integer str)

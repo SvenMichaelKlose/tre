@@ -3,9 +3,6 @@
 (defmacro define-bc-std-macro (&rest x)
   `(define-transpiler-std-macro *bc-transpiler* ,@x))
 
-(define-bc-std-macro %defsetq (&rest x)
-  `(%setq ,@x))
-
 (define-bc-std-macro defun (name args &rest body)
   (apply #'shared-defun name args body))
 

@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2010,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2010,2012–2013 Sven Michael Klose <pixel@copei.de>
 
 (env-load "transpiler/back-end/identifier-style-convert.lisp")
 (env-load "transpiler/back-end/macros.lisp")
@@ -10,6 +10,6 @@
 (env-load "transpiler/back-end/function-name.lisp")
 (env-load "transpiler/back-end/place-expand.lisp")
 (env-load "transpiler/back-end/place-assign.lisp")
-(env-load "transpiler/back-end/function-prologues.lisp")
+(env-load "transpiler/back-end/make-framed-functions.lisp")
 (env-load "transpiler/back-end/closure.lisp")
 (env-load "transpiler/back-end/toplevel.lisp")

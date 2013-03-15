@@ -109,7 +109,6 @@
      (vm-jump? body.) `(%%block ,body.)
      body.            body.))
 
-(define-compiler-macro function (x)
-  `(function ,(? (atom x)
-                 x
-                 (cons x. (compress-%%blocks .x)))))
+(define-compiler-macro function (&rest x)
+  `(function ,x. ,@(!? .x
+                       (compress-%%blocks !))))

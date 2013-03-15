@@ -1,5 +1,4 @@
-;;;;; TRE transpiler
-;;;;; Copyright (c) 2010 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2010,2013 Sven Michael Klose <pixel@copei.de>
 
 (defun middleend-graph-0 (x)
   (with (fi (get-lambda-funinfo x)
@@ -15,5 +14,4 @@
     (cblock-to-metacode blks)))
 
 (define-tree-filter middleend-graph (x)
-  (named-lambda? x) (copy-lambda x :body (middleend-graph-0 x))
-  (lambda? x) (copy-lambda x :body (middleend-graph-0 x)))
+  (named-lambda? x) (copy-lambda x :body (middleend-graph-0 x)))

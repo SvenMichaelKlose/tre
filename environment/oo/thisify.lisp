@@ -20,9 +20,7 @@
   (?
 	(atom x)    (thisify-symbol classdef x exclusions)
 	(%quote? x) x
-	(lambda? x) `#'(,@(lambda-funinfo-expr x)
-		            ,(lambda-args x)
-		            ,@(thisify-list-0 classdef (lambda-body x) (append exclusions (lambda-args x))))
+	(lambda? x) (copy-lambda x :body (thisify-list-0 classdef (lambda-body x) (append exclusions (lambda-args x))))
     (progn
       (make-default-listprop x)
       (cons (? (%slot-value? x.)

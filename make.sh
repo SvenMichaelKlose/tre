@@ -209,9 +209,10 @@ precompile)
 boot)
 	basic_clean
 	./make.sh crunsh $ARGS || exit 1
-	(echo "(load-bytecode (compile-bytecode-compiler))(dump-system)" | ./tre) || exit 1
+	(echo "(compile-c-compiler)" | ./tre) || exit 1
+	./make.sh crunshraw $ARGS || exit 1
 	(echo "(compile-c-environment)" | ./tre) || exit 1
-	./make.sh crunsh $ARGS || exit 1
+	./make.sh crunshraw $ARGS || exit 1
 	;;
 
 bootunclean)

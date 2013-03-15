@@ -1,16 +1,5 @@
 ;;;;; tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
 
-(defun lambda-make-funinfo (args parent)
-  (with (argnames (argument-expand-names 'lambda-expand args)
-         fi       (make-funinfo :argdef     args
-                                :args       argnames
-                                :parent     parent
-                                :transpiler *transpiler*))
-    (funinfo-var-add fi '~%ret)
-    (& (transpiler-copy-arguments-to-stack? *transpiler*)
-       (funinfo-var-add-many fi argnames))
-	fi))
-
 
 ;;;; INLINING
 
@@ -49,26 +38,29 @@
        exported-name)))
 
 (defun lambda-export (fi x)
-  (with (exported-name (lambda-export-make-exported-name)
-         fi-exported   (lambda-make-funinfo (lambda-args x) fi))
-    (funinfo-make-ghost fi-exported)
-    (lambda-expand-tree fi-exported (lambda-body x))
-    (let argdef (funinfo-args fi-exported)
-      (acons! exported-name argdef *closure-argdefs*)
-      (transpiler-add-exported-closure *transpiler*
-          `((defun ,exported-name ,(+ (make-lambda-funinfo fi-exported) argdef)
-              ,@(lambda-body x)))))
-    `(%%closure ,exported-name ,(funinfo-sym fi-exported))))
+  (with (name   (lambda-export-make-exported-name)
+         args   (lambda-args x)
+         body   (lambda-body x)
+         new-fi (create-funinfo :name   name
+                                :args   args
+                                :parent fi))
+    (funinfo-make-ghost new-fi)
+    (acons! name args *closure-argdefs*)
+    (transpiler-add-exported-closure *transpiler* `((defun ,name ,(funinfo-argdef new-fi) ,@body)))
+    `(%%closure ,name)))
 
 
 ;;;; PASSTHROUGH
 
 (defun lambda-expand-tree-unexported-lambda (fi x)
-  (with (new-fi (| (& (lambda-funinfo x)
-                      (get-lambda-funinfo x))
-				   (lambda-make-funinfo (lambda-args x) fi))
-		 body   (lambda-expand-tree-0 new-fi (lambda-body x)))
-	(copy-lambda x :info new-fi :body body)))
+  (!? (get-funinfo (lambda-name x))
+      (copy-lambda x :body (lambda-expand-tree-0 ! (lambda-body x)))
+      (with (name   (| (lambda-name x)
+                       (make-funinfo-sym))
+             new-fi (create-funinfo :name   name
+                                    :args   (lambda-args x)
+                                    :parent fi))
+        (copy-lambda x :name name :body (lambda-expand-tree-0 new-fi (lambda-body x))))))
 
 
 ;;;; TOP LEVEL
@@ -78,11 +70,12 @@
      (lambda? ..x.)
      (funinfo-add-local-function-args fi .x. (lambda-args ..x.)))
   (?
-    (lambda-call? x) (lambda-call-embed fi x)
-    (lambda? x)      (? (& (transpiler-lambda-export? *transpiler*)
-                           (not (eq fi (transpiler-global-funinfo *transpiler*))))
-                        (lambda-export fi x)
-		                (lambda-expand-tree-unexported-lambda fi x))
+    (lambda-call? x)  (lambda-call-embed fi x)
+    (lambda? x)       (? (& (transpiler-lambda-export? *transpiler*)
+                            (not (eq fi (transpiler-global-funinfo *transpiler*))))
+                         (lambda-export fi x)
+                         (lambda-expand-tree-unexported-lambda fi x))
+    (named-lambda? x) (lambda-expand-tree-unexported-lambda fi x)
 	(lambda-expand-tree-0 fi x)))
 
 (defun lambda-expand-tree-0 (fi x)

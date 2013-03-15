@@ -46,8 +46,6 @@
   (wanted-variables nil)
   (wanted-variables-hash (make-hash-table :test #'eq))
 
-  ; Tells if target required named top-level functions (like C).
-  (named-functions? nil)
   (named-function-next nil)
 
   (inline-exceptions nil)
@@ -176,7 +174,6 @@
         :wanted-functions-hash  (copy-hash-table wanted-functions-hash)
         :wanted-variables       (copy-list wanted-variables)
         :wanted-variables-hash  (copy-hash-table wanted-variables-hash)
-        :named-functions?       named-functions?
         :named-function-next    named-function-next
         :inline-exceptions      (copy-list inline-exceptions)
         :assert?                assert?
@@ -306,8 +303,7 @@
     (funcall (expander-lookup expander) expander name)))
 
 (defun make-global-funinfo (tr)
-  (alet (= (transpiler-global-funinfo tr) (make-funinfo :name 'GLOBAL-SCOPE :transpiler tr))
-    (make-lambda-funinfo ! tr)))
+  (= (transpiler-global-funinfo tr) (create-funinfo :name 'global-scope :parent nil :args nil :transpiler tr)))
 
 (defun transpiler-package-symbol (tr x)
   (make-symbol (symbol-name x) (transpiler-current-package tr)))

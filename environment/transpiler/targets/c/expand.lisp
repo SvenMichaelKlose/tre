@@ -3,19 +3,14 @@
 (defmacro define-c-std-macro (&rest x)
   `(define-transpiler-std-macro *c-transpiler* ,@x))
 
-(define-c-std-macro %defsetq (&rest x)
-  `(%setq ,@x))
-
 (define-c-std-macro defun (name args &rest body)
   `(%%block
      ,(apply #'shared-defun name args body)
-     ,@(with ((fi-sym adef) (split-funinfo-and-args args)
-              fun-name      (%defun-name name))
-         (unless (simple-argument-list? adef)
+     ,@(let fun-name (%defun-name name)
+         (unless (simple-argument-list? args)
            (with-gensym p
-             `((%setq ~%ret nil)
-               (defun ,($ fun-name '_treexp) (,p)
-                 ,(compile-argument-expansion-function-body fun-name adef p nil (argument-expand-names 'compile-argument-expansion adef)))))))))
+             `((defun ,($ fun-name '_treexp) (,p)
+                 ,(compile-argument-expansion-function-body fun-name args p nil (argument-expand-names 'compile-argument-expansion args)))))))))
 
 (transpiler-wrap-invariant-to-binary define-c-std-macro eq 2 %%%eq &)
 

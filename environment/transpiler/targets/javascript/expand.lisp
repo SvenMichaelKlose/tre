@@ -3,30 +3,27 @@
 (defmacro define-js-std-macro (&rest x)
   `(define-transpiler-std-macro *js-transpiler* ,@x))
 
-(define-js-std-macro %defsetq (&rest x)
-  `(%%block
-	 (%var ,x.)
-	 (%setq ,@x)))
-
 (defun js-make-function-with-compiled-argument-expansion (x)
-  (let g '~%cargs
-    (with-lambda-content x fi args body
-      `(#'((,g)
-	        (= ,g ,(copy-lambda `(function ,x) :body (body-with-noargs-tag body)))
-		    (= (slot-value ,g 'tre-exp) ,(compile-argument-expansion g args))
-		    ,g)
-		  nil))))
+  (alet (| (lambda-name x) (gensym))
+    (with-gensym g
+      `(%%block
+         ,(copy-lambda x :name ! :body (body-with-noargs-tag (lambda-body x)))
+         ,(compile-argument-expansion g ! (lambda-args x))
+         (= (slot-value ,! 'tre-exp) ,g)
+         ,!))))
 
 (transpiler-wrap-invariant-to-binary define-js-std-macro eq 2 eq &)
 
-(define-js-std-macro function (x)
-  (? (cons? x)
-     (with-lambda-content x fi args body
-	   (? (| (body-has-noargs-tag? body)
-             (simple-argument-list? args))
-  	      `(function ,x)
-		  (js-make-function-with-compiled-argument-expansion x)))
-  	 `(function ,x)))
+(define-js-std-macro function (&rest x)
+  (alet (cons 'function x)
+    (? .x
+       (with (args (lambda-args !)
+              body (lambda-body !))
+         (? (| (body-has-noargs-tag? body)
+               (simple-argument-list? args))
+            !
+            (js-make-function-with-compiled-argument-expansion !)))
+       !)))
 
 (define-js-std-macro funcall (fun &rest args)
   (with-gensym (f e a)
@@ -48,23 +45,22 @@
 
 (define-js-std-macro define-native-js-fun (name args &rest body)
   (js-make-late-symbol-function-assignment name)
-  `(progn
-     ,(apply #'shared-defun name args (body-with-noargs-tag body))))
+  (apply #'shared-defun name args (body-with-noargs-tag body)))
 
 (defun js-early-symbol-maker (g sym)
    `(,@(unless (eq g '~%tfun)
          `((%var ,g)))
      (%setq ,g (symbol ,(transpiler-obfuscated-symbol-name *transpiler* sym)
-                       ,(awhen (symbol-package sym)
-                          `(make-package ,(transpiler-obfuscated-symbol-name *transpiler* !)))))))
+                       ,(!? (symbol-package sym)
+                            `(make-package ,(transpiler-obfuscated-symbol-name *transpiler* !)))))))
 
 (define-js-std-macro defun (name args &rest body)
-  (let dname (apply-current-package (transpiler-package-symbol *js-transpiler* (%defun-name name)))
-    (let g '~%tfun
+  (with (dname (apply-current-package (transpiler-package-symbol *js-transpiler* (%defun-name name)))
+         g     '~%tfun)
       `(progn
          ,@(js-early-symbol-maker g dname)
          ,(apply #'shared-defun dname args body)
-         (= (symbol-function ,g) ,dname)))))
+         (= (symbol-function ,g) ,dname))))
 
 (define-js-std-macro %defun (&rest x)
   `(defun ,@x))

@@ -61,9 +61,11 @@
      (symbol? x)
      (not (transpiler-defined-symbol? *expex-funinfo* x)
           (transpiler-can-import? *transpiler* x))
-     (error "symbol ~A is not defined in function ~A.~%"
+     (error "symbol ~A is not defined in ~A.~%"
             (symbol-name x)
-            (funinfo-get-name *expex-funinfo*))))
+            (!? (butlast (funinfo-names *expex-funinfo*))
+                (apply #'+ "scope of " (pad (symbol-names (reverse !)) " "))
+                "toplevel"))))
 
 
 ;;;; PREDICATES
@@ -171,9 +173,7 @@
 
 (defun expex-lambda (ex x)
   (with-temporary *expex-funinfo* (get-lambda-funinfo x)
-    (values nil (list `(function ,@(awhen (lambda-name x) (list !))
-					             (,@(lambda-head x)
-				         ,@(expex-body ex (lambda-body x))))))))
+    (values nil (list (copy-lambda x :body (expex-body ex (lambda-body x)))))))
 
 (defun expex-var (x)
   (funinfo-var-add *expex-funinfo* .x.)
@@ -215,7 +215,7 @@
     (?
       (%%go-nil? x)            (expex-%%go-nil ex x)
 	  (%var? x)                (expex-var x)
-	  (lambda? x)              (expex-lambda ex x)
+	  (named-lambda? x)        (expex-lambda ex x)
       (not (expex-able? ex x)) (values nil (list x))
       (%%block? x)             (values nil (expex-body ex (%%block-body x)))
       (%setq-cps-mode? x)      (expex-%setq-cps-mode x)

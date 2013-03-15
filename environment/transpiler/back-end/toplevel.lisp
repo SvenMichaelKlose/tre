@@ -28,9 +28,9 @@
                            _])
 
 (transpiler-pass transpiler-backend-make-places ()
-    place-assign            #'place-assign
-    place-expand            #'place-expand
-    make-function-prologues #'make-function-prologues)
+    place-assign           #'place-assign
+    place-expand           #'place-expand
+    make-framed-functions  #'make-framed-functions)
 
 ;; After this pass:
 ;; - Function prologues are generated.
@@ -38,7 +38,7 @@
 (defun transpiler-backend-prepare (tr x)
   (? (transpiler-lambda-export? tr)
      (transpiler-backend-make-places x)
-	 (make-function-prologues x)))
+	 (make-framed-functions x)))
 
 (defun transpiler-backend (tr x)
   (? x

@@ -15,12 +15,6 @@
                   `(,(cps-cons-function-name .x xlats))
                   '(~%continuer ~%ret))))
 
-(defun cps-function-assignment? (x)
-  (& (%setq? x)
-     (let v (%setq-value x)
-       (& (lambda? v)
-          (funinfo-needs-cps? (get-lambda-funinfo v))))))
-
 (defun cps-function? (n)
   (let tr *transpiler*
     (| (transpiler-cps-function? tr n)
@@ -263,10 +257,6 @@
                   ,@(cps-make-functions (get-lambda-funinfo x) continuer body xlats tag-xlats)
                   (%setq nil (,(cdar xlats))))))))
 
-(defun cps-function-assignment (x)
-  `((%setq ,(%setq-place x) ,(cps-function (%setq-value x)))
-    (%setq (%slot-value ,(%setq-place x) tre-cps) t)))
-
 (defun %quote-%transpiler-native-or-%var? (x)
   (| (%quote? x)
      (%transpiler-native? x)
@@ -274,8 +264,7 @@
 
 (define-concat-tree-filter cps-filter (x)
   (%quote-%transpiler-native-or-%var? x) (list x)
-  (eq 'this x) (list '~%cps-this)
-  (cps-function-assignment? x) (cps-function-assignment x))
+  (eq 'this x) (list '~%cps-this))
 
 (defun cps-make-dummy-continuer (place parent-fi)
   (copy-lambda `#'((_)
@@ -325,7 +314,6 @@
   (cps-methodcall? x) (cps-toplevel-methodcall x)
   (cps-constructorcall? x) (cps-toplevel-constructorcall x)
   (cps-funcall? x) (cps-toplevel-funcall x)
-  (cps-function-assignment? x) (cps-function-assignment x)
   (cps-foureign-funcall? x) (cps-foureign-funcall (transpiler-global-funinfo *transpiler*) x))
 
 (defun cps (x)

@@ -1,7 +1,7 @@
-;;;;; tré – Copyright (c) 2009–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2009–2013 Sven Michael Klose <pixel@copei.de>
 
 (define-tree-filter transpiler-update-funinfo (x)
-  (lambda? x)
+  (named-lambda? x)
       (with (fi		  (get-lambda-funinfo x)
 		     body	  (lambda-body x)
              num-tags (count-if #'number? body))

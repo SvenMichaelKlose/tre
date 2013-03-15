@@ -51,16 +51,14 @@
 (defun shared-defun (name args &rest body)
   (= name (apply-current-package name))
   (print-definition `(defun ,name ,args))
-  (with (tr         *transpiler*
-		 (fi-sym a) (split-funinfo-and-args args))
+  (let tr *transpiler*
     (& (transpiler-defined-function tr name)
        (redef-warn "redefinition of function ~A.~%" name))
-	(transpiler-add-defined-function tr name a body)
+	(transpiler-add-defined-function tr name args body)
 	`(%%block
-       (%defsetq ,name #'(,@(!? fi-sym `(%funinfo ,!))
-			              ,a
-                          ,@(& (body-has-noargs-tag? body) '(no-args))
-                          (block ,name
-                            ,@(shared-defun-funcall-logger name)
-                            ,@(shared-defun-profiling-body tr name body))))
+       (function ,name (,args
+                        ,@(& (body-has-noargs-tag? body) '(no-args))
+                        (block ,name
+                          ,@(shared-defun-funcall-logger name)
+                          ,@(shared-defun-profiling-body tr name body))))
        ,@(shared-defun-source-memorizer tr name args body))))

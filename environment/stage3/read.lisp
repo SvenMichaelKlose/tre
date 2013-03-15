@@ -30,18 +30,20 @@
         (read-char str)
         (skip-spaces str)))))
 
+(defun get-symbol-0 (str)
+  (let c (char-upcase (peek-char str))
+    (? (== 59 c) ; #\; - vim syntax highlighting fscks up.
+       (progn
+         (skip-comment str)
+         (get-symbol-0 str))
+       (& (symbol-char? c)
+          (cons (char-upcase (read-char str))
+                (get-symbol-0 str))))))
+
 (defun get-symbol (str)
-  (with (rec #'(()
-				 (let c (char-upcase (peek-char str))
-                   (? (== 59 c) ; #\; - vim syntax highlighting fscks up.
-                      (progn
-						(skip-comment str)
-						(rec))
-                      (& (symbol-char? c)
-                         (cons (char-upcase (read-char str)) (rec)))))))
   (unless (| (end-of-file str)
 	         (special-char? (peek-char str)))
-    (rec))))
+    (get-symbol-0 str)))
 
 (defun get-symbol-and-package (str)
   (skip-spaces str)
@@ -51,12 +53,16 @@
 				            (get-symbol str)))
 	   (values nil sym))))
 
+(defun get-string-0 (str)
+  (let c (read-char str)
+    (unless (== c 34) ; " - vim syntax highlighting fscks up.
+      (cons (? (== c #\\)
+               (read-char str)
+               c)
+            (get-string-0 str)))))
+
 (defun get-string (str)
-  (with (rec #'(()
-  				 (let c (read-char str)
-	               (unless (== c 34) ; " - vim syntax highlighting fscks up.
-                     (cons (? (== c #\\) (read-char str) c) (rec))))))
-	(list-string (rec))))
+  (list-string (get-string-0 str)))
 
 (defun read-comment-block (str)
   (while (not (& (== #\| (read-char str))

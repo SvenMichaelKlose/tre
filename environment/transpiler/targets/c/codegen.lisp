@@ -1,5 +1,6 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
+
 ;;;; GENERAL CODE GENERATION
 
 (defun c-line (&rest x)
@@ -12,43 +13,44 @@
 (defun c-codegen-var-decl (name)
   `("treptr " ,(transpiler-symbol-string *transpiler* name)))
 
+
 ;;;; SYMBOL TRANSLATIONS
 
 (transpiler-translate-symbol *c-transpiler* nil "treptr_nil")
 (transpiler-translate-symbol *c-transpiler* t "treptr_t")
 
+
 ;;;; FUNCTIONS
 
 (defun c-make-function-declaration (name args)
-  (push (concat-stringtree "extern treptr " (transpiler-symbol-string *transpiler* name)
+  (push (concat-stringtree "extern treptr " (compiled-function-name-string *transpiler* name)
   	    	               " " (parenthized-comma-separated-list (mapcar #'c-codegen-var-decl args))
-			               ";" (string (code-char 10)))
+			               ";" *c-newline*)
 	    (transpiler-compiled-decls *transpiler*)))
 
-(defun symbols-comment (x)
-  (mapcar [+ (symbol-name _) " "] x))
-
 (defun c-codegen-function (name x)
-  (with (fi (get-funinfo-by-sym (lambda-funinfo x))
+  (with (fi   (get-funinfo name)
          args (argument-expand-names 'unnamed-c-function (funinfo-args fi)))
+    (| fi (error "No funinfo for ~A.~%" name))
     (c-make-function-declaration name args)
-    `(,(code-char 10)
+    `(,*c-newline*
       "/*" ,*c-newline*
-      "  args:     " ,@(symbols-comment (funinfo-args fi)) ,*c-newline*
-      "  env:      " ,@(symbols-comment (funinfo-vars fi)) ,*c-newline*
-      "  lexical:  " ,(symbol-name (funinfo-lexical fi)) ,*c-newline*
-      "  lexicals: " ,@(symbols-comment (funinfo-lexicals fi)) ,*c-newline*
+      "  argdef:   " ,(late-print (funinfo-argdef fi) nil) ,*c-newline*
+      "  args:     " ,(late-print (funinfo-args fi) nil) ,*c-newline*
+      "  env:      " ,(late-print (funinfo-vars fi) nil) ,*c-newline*
+      "  lexical:  " ,(late-print (funinfo-lexical fi) nil) ,*c-newline*
+      "  lexicals: " ,(late-print (funinfo-lexicals fi) nil) ,*c-newline*
       "*/" ,*c-newline*
-	  "treptr " ,name " "
+	  "treptr " ,(compiled-function-name *transpiler* name) " "
 	  ,@(parenthized-comma-separated-list (mapcar ^("treptr " ,_) args))
-	  ,(code-char 10)
-	  "{" ,(code-char 10)
+	  ,*c-newline*
+	  "{" ,*c-newline*
           ,@(lambda-body x)
 	  "}" ,*c-newline*)))
 
-(define-c-macro %%closure (name fi-sym)
+(define-c-macro %%closure (name)
   `("CONS (" ,(c-compiled-symbol '%closure) ", "
-	    "CONS (" ,(c-compiled-symbol name) "," ,(codegen-closure-lexical fi-sym) "))"))
+	    "CONS (" ,(c-compiled-symbol name) "," ,(codegen-closure-lexical name) "))"))
 
 (defun %%%eq (&rest x)
   (apply #'eq x))
@@ -56,11 +58,11 @@
 (define-c-macro function (name &optional (x 'only-name))
   (?
 	(eq 'only-name x)	name
-    (atom x)			(error "codegen: arguments and body expected: ~A" x)
 	(c-codegen-function name x)))
 
-(define-c-macro %function-prologue (fi-sym)
-  (c-codegen-function-prologue-for-local-variables (get-funinfo-by-sym fi-sym)))
+(define-c-macro %function-prologue (name)
+  (c-codegen-function-prologue-for-local-variables (get-funinfo name)))
+
 
 ;;;; ASSIGNMENT
 
@@ -85,15 +87,19 @@
 (define-c-macro %set-atom-fun (dest val)
   `(%transpiler-native ,dest "=" ,val ,*c-separator*))
 
+
 ;;;; ARGUMENT EXPANSION CONSING
 
 (define-c-macro %%%cons (a d)
   `(%transpiler-native "CONS(" ,a ", " ,d ")"))
 
+
 ;;;; STACK
+
 
 (define-c-macro %stack (x)
   (c-stack x))
+
 
 ;;;; LEXICALS
 
@@ -111,17 +117,19 @@
 (define-c-macro %set-vec (vec index value)
   (c-line `(%transpiler-native "_TREVEC(" ,vec "," ,index ") = " ,(codegen-%setq-value value))))
 
+
 ;;;; CONTROL FLOW
 
 (define-c-macro %%tag (tag)
   `(%transpiler-native "l" ,tag ":" ,*c-newline*))
  
 (define-c-macro %%go (tag)
-  (c-line "goto l" (transpiler-symbol-string *transpiler* tag)))
+  (c-line `(%transpiler-native "goto l" ,tag)))
 
 (define-c-macro %%go-nil (tag val)
-  `(,*c-indent* "if (" ,val " == treptr_nil)" ,(code-char 10)
-	,*c-indent* ,@(c-line "goto l" (transpiler-symbol-string *transpiler* tag))))
+  `(,*c-indent* "if (" ,val " == treptr_nil)" ,*c-newline*
+	,*c-indent* ,@(c-line `(%transpiler-native "goto l" ,tag))))
+
 
 ;;;; SYMBOLS
 
@@ -130,6 +138,7 @@
 
 (define-c-macro symbol-function (x)
   `("treatom_get_function (" ,x ")"))
+
 
 ;;;; ARRAYS
 

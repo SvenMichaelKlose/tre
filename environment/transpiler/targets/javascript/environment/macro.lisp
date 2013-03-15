@@ -8,11 +8,11 @@
        (unless (eq 'define-std-macro name)
          (with-gensym (g name-sym)
            `(progn
-              (%defsetq ,g #'(,args ,@body))
+              (function ,name (,args ,@body))
               ,@(js-early-symbol-maker name-sym name)
-              (= *macros* (cons (cons ,name-sym #',g) *macros*))
+              (= *macros* (cons (cons ,name-sym #',name) *macros*))
               (when *standard-macro-expander*
-                (set-expander-macro 'standard-macros ,name-sym #',g :may-redefine? t))))))
+                (set-expander-macro 'standard-macros ,name-sym #',name :may-redefine? t))))))
     '(defmacro define-std-macro (name args &rest body)))
 
 ,(? *have-compiler?*

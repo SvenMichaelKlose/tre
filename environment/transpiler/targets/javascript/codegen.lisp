@@ -56,42 +56,41 @@
   (parenthized-comma-separated-list (argument-expand-names debug-section args)))
 
 (define-js-macro function (&rest x)
-  (& ..x (error "an optional function name followed by the head/body expected"))
-  (= x (? .x .x. x.))
-  (? (| (atom x) (%stack? x))
-	 x
-     `("function " ,@(js-argument-list 'unnamed-js-function (lambda-args x)) ,(code-char 10)
-	   "{" ,(code-char 10)
-		   ,@(lambda-body x)
-	   "}")))
+  (alet (cons 'function x)
+    (? .x
+       `("function " ,(compiled-function-name-string *transpiler* (lambda-name !))
+                     ,@(js-argument-list 'unnamed-js-function (lambda-args !)) ,*js-newline*
+	     "{" ,*js-newline*
+		     ,@(lambda-body !)
+	     "}" ,*js-newline*)
+       !)))
 
-(define-js-macro %function-prologue (fi-sym)
+(define-js-macro %function-prologue (name)
   `(%transpiler-native ""
 	   ,@(& (transpiler-stack-locals? *transpiler*)
 	        `(,*js-indent* "var _locals=[]" ,*js-separator*))
-	   ,@(& (< 0 (funinfo-num-tags (get-funinfo-by-sym fi-sym)))
+	   ,@(& (< 0 (funinfo-num-tags (get-funinfo name)))
 	        `(,*js-indent* "var _I_=0" ,*js-separator*
 		      ,*js-indent* "while(1){" ,*js-separator*
 		      ,*js-indent* "switch(_I_){case 0:" ,*js-separator*))))
 
-(define-js-macro %function-return (fi-sym)
-  (let fi (get-funinfo-by-sym fi-sym)
-    `(,*js-indent* "return " ,(place-assign (place-expand-0 fi '~%ret)) ,*js-separator*)))
+(define-js-macro %function-return (name)
+  `(,*js-indent* "return " ,(place-assign (place-expand-0 (get-funinfo name) '~%ret)) ,*js-separator*))
 
-(define-js-macro %function-return-cps (fi-sym)
-  (let fi (get-funinfo-by-sym fi-sym)
-    (? (& (funinfo-num-tags fi)
-          (< 0 (funinfo-num-tags fi)))
+(define-js-macro %function-return-cps (name)
+  (alet (get-funinfo name)
+    (? (& (funinfo-num-tags !)
+          (< 0 (funinfo-num-tags !)))
        `(,*js-indent*  "return" ,*js-separator*)
        "")))
 
-(define-js-macro %function-epilogue (fi-sym)
-  (let fi (get-funinfo-by-sym fi-sym)
+(define-js-macro %function-epilogue (name)
+  (alet (get-funinfo name)
     (| `(,@(? (& (transpiler-continuation-passing-style? *transpiler*)
-                 (funinfo-needs-cps? fi))
-              `((%function-return-cps ,fi-sym))
-              `((%function-return ,fi-sym)))
-	     ,@(& (< 0 (funinfo-num-tags fi)) `("}}")))
+                 (funinfo-needs-cps? !))
+              `((%function-return-cps ,name))
+              `((%function-return ,name)))
+	     ,@(& (< 0 (funinfo-num-tags !)) `("}}")))
         "")))
 
 
@@ -255,10 +254,10 @@
 (define-js-macro %defined? (x)
   `(%transpiler-native "\"undefined\" != typeof " ,x))
 
-(define-js-macro %%closure (name fi-sym)
-  (let fi (get-funinfo-by-sym fi-sym)
-    (? (funinfo-ghost fi)
-	   (!? (funinfo-lexical (funinfo-parent fi))
+(define-js-macro %%closure (name)
+  (alet (get-funinfo name)
+    (? (funinfo-ghost !)
+	   (!? (codegen-closure-lexical !)
   	  	   `(%closure ,name ,!)
 		   (error "no lexical for ghost"))
 	   name)))

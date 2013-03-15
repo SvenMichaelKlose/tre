@@ -23,8 +23,6 @@
   (with-cons a d x
 	 (cons (?
 	  		 (named-lambda? a)       (opt-peephole-remove-spare-tags-body a)
-	  		 (& (%setq? a)
-	  	   	    (lambda? ..a.)) `(%setq ,.a. ,(opt-peephole-remove-spare-tags-body ..a.))
 			 a)
 		   (opt-peephole-remove-spare-tags d))))
    

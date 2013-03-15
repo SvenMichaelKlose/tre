@@ -75,18 +75,14 @@
 
 (defun transpiler-to-string-cons (tr x)
   (?
-    (%transpiler-string? x)     (funcall (transpiler-gen-string tr) .x.)
-    (eq '%transpiler-native x.) (transpiler-to-string tr .x)
+    (%transpiler-string? x) (funcall (transpiler-gen-string tr) .x.)
+    (%transpiler-native? x) (transpiler-to-string tr .x)
     x))
 
 (defun transpiler-to-string (tr x)
   (maptree [?
              (cons? _)    (transpiler-to-string-cons tr _)
-             (string? _)  (? (string== "nil" _)
-                             (progn
-                               (princ "X")
-                               (error "nil as string"))
-                             _)
+             (string? _)  _
              (| (assoc-value _ (transpiler-symbol-translations tr) :test #'eq)
                 (transpiler-symbol-string tr _))]
            x))

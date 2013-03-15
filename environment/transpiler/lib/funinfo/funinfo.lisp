@@ -14,7 +14,6 @@
   (transpiler nil)
   (parent nil)
   (name nil) ; Name of the function.
-  (sym (make-funinfo-sym)) ; Symbol of this funinfo used in LAMBDA-expressions.
 
   (argdef nil) ; Argument definition.
   (args nil) ; Expanded argument definition.
@@ -50,7 +49,7 @@
   (make-funinfo
       :parent       parent
       :name         name
-      :sym          sym
+      :argdef        argdef
       :args         (copy-list args)
       :vars         (copy-list vars)
       :vars-hash    (copy-hash-table vars-hash)
@@ -64,3 +63,25 @@
       :num-tags     num-tags
       :globals      (copy-list globals)
       :needs-cps?   needs-cps?))
+
+(defun get-funinfo (name &optional (tr *transpiler*))
+  (& name (href (transpiler-funinfos tr) name)))
+
+(defun get-lambda-funinfo (x)
+  (when (named-lambda? x)
+    (get-funinfo (lambda-name x))))
+
+(defun create-funinfo (&key name parent args (transpiler *transpiler*))
+  (& (href (transpiler-funinfos transpiler) name)
+     (error "Funinfo for ~A already memorized." name))
+  (with (argnames (argument-expand-names 'lambda-expand args)
+         fi       (make-funinfo :name       name
+                                :argdef     args
+                                :args       argnames
+                                :parent     parent
+                                :transpiler transpiler))
+    (= (href (transpiler-funinfos transpiler) name) fi)
+    (funinfo-var-add fi '~%ret)
+    (& (transpiler-copy-arguments-to-stack? transpiler)
+       (funinfo-var-add-many fi argnames))
+    fi))

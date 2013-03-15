@@ -15,7 +15,7 @@
 	 (link-funinfos-make-lexicals-0 fi x)))
 
 (defun link-funinfos-emit-stackplace (fi x)
-  `(%stack ,(funinfo-sym fi) ,x))
+  `(%stack ,(funinfo-name fi) ,x))
 
 (defun link-funinfos-atom (fi x)
   (?
@@ -41,7 +41,7 @@
 
     (link-funinfos-make-lexicals fi x)))
 
-(defun link-funinfos-fun (fi name fun-expr)
+(defun link-funinfos-fun (name fun-expr)
   (link-funinfos-0 (get-lambda-funinfo fun-expr) (lambda-body fun-expr)))
 
 (defun link-funinfos-setter (fi x)
@@ -49,19 +49,18 @@
   (link-funinfos-0 fi (%setq-value x)))
 
 (define-tree-filter link-funinfos-0 (fi x)
-  (not fi)              (error "link-funinfos-0: no funinfo")
+  (not fi)              (error "LINK-FUNINFOS-0: no funinfo")
   (atom x)              (link-funinfos-atom fi x)
   (| (%quote? x)
      (%transpiler-native? x)
      (%var? x))
                         nil
-  (named-lambda? x)     (link-funinfos-fun fi .x. ..x.)
-  (lambda? x)           (link-funinfos-fun fi nil x)
+  (named-lambda? x)     (link-funinfos-fun .x. x)
   (& (| (%setq? x)
         (%set-atom-fun? x))
      (%vec? (link-funinfos-0 fi (%setq-place x))))
                         (link-funinfos-setter fi x)
-  (%%closure? x)        (link-funinfos-0 fi ..x.)
+  (%%closure? x)        x
   (%setq-atom-value? x) (link-funinfos-0 fi ..x.)
   (%slot-value? x)      (link-funinfos-0 fi .x.)
   (%stackarg? x)        x)

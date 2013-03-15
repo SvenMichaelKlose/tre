@@ -90,7 +90,7 @@
      ,@(compile-argument-expansion-0 adef p)
      ((%transpiler-native ,(compiled-function-name *transpiler* fun-name)) ,@toplevel-continuer ,@names)))
 
-(defun compile-argument-expansion (fun-name adef)
+(defun compile-argument-expansion (this-name fun-name adef)
   (? (& (== 2 (length adef))
 	    (eq '&rest adef.))
 	 fun-name
@@ -98,9 +98,11 @@
         (with-gensym p
           (? (in-cps-mode?)
              (with-gensym toplevel-continuer
-                `#'((,p)
-                      (let ,toplevel-continuer ~%continuer
-                        ,(compile-argument-expansion-function-body fun-name adef p (list toplevel-continuer) names))))
-             `#'((,p)
-                  ,(compile-argument-expansion-function-body fun-name adef p nil names))))
+                `(function ,this-name
+                           ((,p)
+                              (let ,toplevel-continuer ~%continuer
+                                ,(compile-argument-expansion-function-body fun-name adef p (list toplevel-continuer) names)))))
+             `(function ,this-name
+                        ((,p)
+                           ,(compile-argument-expansion-function-body fun-name adef p nil names)))))
 	    fun-name)))
