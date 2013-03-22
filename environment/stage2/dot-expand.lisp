@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun dot-expand-make-expr (which num x)
   (? (< 0 num)
@@ -15,9 +15,9 @@
 	 (dot-expand-count-end (butlast x) (1+ num))
 	 (values num x)))
 
-(defun dot-expand-list (x &optional (num 0))
+(defun dot-expand-list (x)
   (with ((num-cdrs without-start) (dot-expand-count-start x)
-		 (num-cars without-end) (dot-expand-count-end without-start))
+		 (num-cars without-end)   (dot-expand-count-end without-start))
 	(dot-expand-make-expr 'car num-cars
 		                  (dot-expand-make-expr 'cdr num-cdrs
 		  	                                    (dot-expand (list-symbol without-end))))))

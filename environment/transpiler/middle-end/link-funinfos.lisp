@@ -41,7 +41,7 @@
 
     (link-funinfos-make-lexicals fi x)))
 
-(defun link-funinfos-fun (name fun-expr)
+(defun link-funinfos-fun (fun-expr)
   (link-funinfos-0 (get-lambda-funinfo fun-expr) (lambda-body fun-expr)))
 
 (defun link-funinfos-setter (fi x)
@@ -55,7 +55,7 @@
      (%transpiler-native? x)
      (%var? x))
                         nil
-  (named-lambda? x)     (link-funinfos-fun .x. x)
+  (named-lambda? x)     (link-funinfos-fun x)
   (& (| (%setq? x)
         (%set-atom-fun? x))
      (%vec? (link-funinfos-0 fi (%setq-place x))))

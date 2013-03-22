@@ -10,7 +10,7 @@
 	  ,@(opt-inline-0 tr level current (cons x. parent)
 		              (rename-body-tags (transpiler-frontend-1 tr body)))))
 
-(defun opt-inline-args-to-inlined-fun (tr x argdef body level current parent)
+(defun opt-inline-args-to-inlined-fun (tr x argdef level current parent)
   (opt-inline-0 tr level current parent
 	            (transpiler-frontend-1 tr (? (& (not argdef) .x)
 			                                 .x
@@ -23,7 +23,7 @@
   (& *show-inlines?*
      (format t "; Inlining function ~A" x.))
   `(,(opt-inline-inlined-fun tr x argdef body level current parent)
-	,@(opt-inline-args-to-inlined-fun tr x argdef body level current parent)))
+	,@(opt-inline-args-to-inlined-fun tr x argdef level current parent)))
 
 (defun opt-inline-1 (tr level current parent x)
   (with (fun (symbol-function x.)
