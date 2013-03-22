@@ -28,8 +28,8 @@
     `(progn
        (defmacro ,charname (&rest x)
          (? (== 2 (length x))
-            `(,op (%slot-value ,,x. v)
-                  (%slot-value ,,.x. v))
+            `(,op (slot-value ,,x. 'v)
+                  (slot-value ,,.x. 'v))
             `(,charname ,,@x)))
        (defmacro ,($ 'integer name) (&rest x)
 		 `(,op ,,@x)))))
@@ -42,17 +42,17 @@
 
 (defmacro character+ (&rest x)
   (? (== 2 (length x))
-     `(code-char (%%%+ (%slot-value ,x. v)
-                       (%slot-value ,.x. v)))
+     `(code-char (%%%+ (slot-value ,x. 'v)
+                       (slot-value ,.x. 'v)))
      `(character+ ,@x)))
 
 (defmacro character- (&rest x)
-  (? (== 1 (length x))
-     `(code-char (%transpiler-native "(-" (%slot-value ,x. v) ")"))
-     `(code-char (%%%- ,@(mapcar [? (integer? _)
-							        _
-							        `(%slot-value ,_ v)]
-                                 x)))))
+  `(code-char ,(? (== 1 (length x))
+                  `(%transpiler-native "(-" (slot-value ,x. 'v) ")")
+                  `(%%%- ,@(mapcar [? (integer? _)
+                                       _
+                                       `(slot-value ,_ 'v)]
+                                   x)))))
 
 (defmacro integer- (&rest x)
   (? (== 1 (length x))
