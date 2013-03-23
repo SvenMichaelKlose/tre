@@ -92,7 +92,7 @@
 
 (define-php-macro function (&rest x)
   (? .x
-     (codegen-php-function (cons 'function (print x)))
+     (codegen-php-function (cons 'function x))
      `(%transpiler-native (%transpiler-string ,(compiled-function-name-string *transpiler* x.)))))
 
 (define-php-macro %function-prologue (name) '(%transpiler-native ""))
