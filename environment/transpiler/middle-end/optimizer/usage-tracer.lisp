@@ -37,7 +37,9 @@
                    (%%go-nil? a) (| (eq v ..a.)
                                     (traverse-tag .a.)
                                     (traverse-statements d))
-                   (number? a)   (traverse-statements d)
+                   (| (number? a)
+                      (named-lambda? a))
+                                 (traverse-statements d)
                    (progn
                      (print _)
                      (error "illegal metacode statement ~A" _))))])

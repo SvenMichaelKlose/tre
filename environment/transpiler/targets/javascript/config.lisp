@@ -4,7 +4,7 @@
   (create-transpiler
       :name 'js
 	  :unwanted-functions '(wait)
-	  :named-function-next #'cddr
+	  :named-function-next #'cdr
 	  :apply-argdefs? t
 	  :identifier-char? [| (& (>= _ #\a) (<= _ #\z))
                            (& (>= _ #\A) (<= _ #\Z))

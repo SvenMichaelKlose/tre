@@ -32,10 +32,10 @@
        (lambda-export-make-lexical-sym))))
 
 (defun lambda-export-make-exported-name ()
-  (let exported-name (lambda-export-make-lexical-sym)
-    (? (symbol-function exported-name)
+  (alet (lambda-export-make-lexical-sym)
+    (? (symbol-function !)
        (lambda-export-make-exported-name)
-       exported-name)))
+       !)))
 
 (defun lambda-export (fi x)
   (with (name   (lambda-export-make-exported-name)
@@ -60,10 +60,11 @@
              new-fi (create-funinfo :name   name
                                     :args   (lambda-args x)
                                     :parent fi))
+        (funinfo-var-add fi name)
         (copy-lambda x :name name :body (lambda-expand-tree-0 new-fi (lambda-body x))))))
 
 
-;;;; TOP LEVEL
+;;;; TOPLEVEL
 
 (defun lambda-expand-tree-cons (fi x)
   (& (%set-atom-fun? x)

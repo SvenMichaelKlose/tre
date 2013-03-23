@@ -7,9 +7,9 @@
   (alet (| (lambda-name x) (gensym))
     (with-gensym g
       `(%%block
+         (%var ,g) ; XXX Not required without expander.
          ,(copy-lambda x :name ! :body (body-with-noargs-tag (lambda-body x)))
-         ,(compile-argument-expansion g ! (lambda-args x))
-         (= (slot-value ,! 'tre-exp) ,g)
+         (= (slot-value ,! 'tre-exp) ,(compile-argument-expansion g ! (lambda-args x)))
          ,!))))
 
 (transpiler-wrap-invariant-to-binary define-js-std-macro eq 2 eq &)
@@ -45,7 +45,9 @@
 
 (define-js-std-macro define-native-js-fun (name args &rest body)
   (js-make-late-symbol-function-assignment name)
-  (apply #'shared-defun name args (body-with-noargs-tag body)))
+  `(progn
+     (%var ,(%defun-name name))
+     ,(apply #'shared-defun name args (body-with-noargs-tag body))))
 
 (defun js-early-symbol-maker (g sym)
    `(,@(unless (eq g '~%tfun)
@@ -58,6 +60,7 @@
   (with (dname (apply-current-package (transpiler-package-symbol *js-transpiler* (%defun-name name)))
          g     '~%tfun)
       `(progn
+         (%var ,dname)
          ,@(js-early-symbol-maker g dname)
          ,(apply #'shared-defun dname args body)
          (= (symbol-function ,g) ,dname))))

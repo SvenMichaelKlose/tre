@@ -1,5 +1,6 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
+
 (defun js-call (x)
   `(,x. ,@(parenthized-comma-separated-list .x)))
 
@@ -58,11 +59,12 @@
 (define-js-macro function (&rest x)
   (alet (cons 'function x)
     (? .x
-       `("function " ,(compiled-function-name-string *transpiler* (lambda-name !))
-                     ,@(js-argument-list 'unnamed-js-function (lambda-args !)) ,*js-newline*
-	     "{" ,*js-newline*
-		     ,@(lambda-body !)
-	     "}" ,*js-newline*)
+       (let name (compiled-function-name-string *transpiler* (lambda-name !))
+         `(,name "="
+           "function " ,@(js-argument-list 'unnamed-js-function (lambda-args !)) ,*js-newline*
+	       "{" ,*js-newline*
+		       ,@(lambda-body !)
+	       "}" ,*js-newline*))
        !)))
 
 (define-js-macro %function-prologue (name)
@@ -208,7 +210,7 @@
   `(%transpiler-native "delete " ,x))
 
 
-;;;; META-CODES
+;;;; METACODES
 
 (define-js-macro %quote (x)
   (? (not (string== "" (symbol-name x))) ;XXX
@@ -235,7 +237,7 @@
   `(%transpiler-native "catch (" ,x ") {"))
 
 
-;;;; BACK-END META-CODES
+;;;; BACKEND METACODES
 
 (define-js-macro %stack (x)
   (? (transpiler-stack-locals? *transpiler*)

@@ -9,6 +9,7 @@
   :if-named-function (let fi (get-lambda-funinfo x.)
                        (!? (funinfo-lexical fi)
                            (funinfo-add-used-var fi !))
+                       (funinfo-add-used-var fi (lambda-name x.))
                        (opt-places-find-used-0 (lambda-body x.) fi))
   :if-go-nil (opt-places-find-used-1 .x. fi)
   :if-setq (with (x x.
@@ -45,9 +46,9 @@
 (defun opt-places-remove-unused-0 (fi x)
   (?
     (atom x)          nil
-	(named-lambda? x) (opt-places-remove-unused-body x)
-	(progn
-	  (opt-places-remove-unused-0 fi x.)
+    (named-lambda? x) (opt-places-remove-unused-body x)
+    (progn
+      (opt-places-remove-unused-0 fi x.)
       (opt-places-remove-unused-0 fi .x))))
 
 (defun opt-places-remove-unused (x)
