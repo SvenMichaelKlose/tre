@@ -63,9 +63,7 @@
           (transpiler-can-import? *transpiler* x))
      (error "symbol ~A is not defined in ~A.~%"
             (symbol-name x)
-            (!? (butlast (funinfo-names *expex-funinfo*))
-                (apply #'+ "scope of " (pad (symbol-names (reverse !)) " "))
-                "toplevel"))))
+            (funinfo-scope-description *expex-funinfo*))))
 
 
 ;;;; PREDICATES
@@ -80,7 +78,7 @@
              (literal-symbol-function? x)
              (in? x. '%%go '%%go-nil '%transpiler-native '%transpiler-string '%quote)))))
 
-(defun expex-expandable-args? (ex fun argdef)
+(defun expex-expandable-args? (ex fun)
   (| (transpiler-defined-function *transpiler* fun)
      (not (funcall (expex-plain-arg-fun? ex) fun))))
 
@@ -99,7 +97,7 @@
   (funcall (expex-function-collector ex) fun args)
   (let argdef (| (funinfo-get-local-function-args *expex-funinfo* fun)
                  (current-transpiler-function-arguments fun))
-	(? (expex-expandable-args? ex fun argdef)
+	(? (expex-expandable-args? ex fun)
    	   (expex-argument-expand fun argdef args)
 	   args)))
 

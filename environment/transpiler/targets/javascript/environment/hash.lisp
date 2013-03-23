@@ -1,7 +1,7 @@
 ;;;;; tré – Copyright (c) 2009–2013 Sven Michael Klose <pixel@copei.de>
 
 (defvar *obj-id-counter* 0)
-(defvar *obj-keys* (%%%make-hash-table))
+(defvar *obj-keys*       (%%%make-hash-table))
 
 (defun make-hash-table (&key (test #'eql) (size nil))
   (aprog1 (%%%make-hash-table)
@@ -16,9 +16,9 @@
 
 (defun %make-href-object-key (key)
   (unless (defined? key.__tre-object-id)
-    (let id (%%make-objkey)
-      (= key.__tre-object-id id)
-      (%%%=-aref key *obj-keys* id)))
+    (alet (%%make-objkey)
+      (= key.__tre-object-id !)
+      (%%%=-aref key *obj-keys* !)))
   key.__tre-object-id)
 
 (defun %href-key (key)
@@ -34,15 +34,15 @@
   (in? x #'== #'string== #'number== #'integer==))
 
 (defun =-href (value hash key)
-  (!? hash.__tre-test
+  (!? (defined? hash.__tre-test)
       (? (%href-==? !)
          (%%%=-aref value hash key)
          (=-href-obj value hash key))
       (%%%=-aref value hash key)))
 
 (defun %href-user (hash key)
-  (dolist (k (hashkeys hash))
-    (& (funcall hash.__tre-test k key)
+  (adolist ((hashkeys hash))
+    (& (funcall hash.__tre-test ! key)
        (return (%%%aref hash (%href-key key))))))
 
 (defun href (hash key)

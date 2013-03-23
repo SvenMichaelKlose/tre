@@ -1,49 +1,17 @@
 ;;;;; tré – Copyright (c) 2008-2009,2011–2013 Sven Michael Klose <pixel@copei.de>
 
-(defvar *characters* (make-array))
-
-(dont-inline %character)
+(dont-inline %character from-char-code)
 
 (defun %character (x)
-  (declare type number x)
-  (assert (not (character? x))
-    (error "%CHARACTER: argument already a character"))
-  (| (aref *characters* x)
-     (= this.__class ,(transpiler-obfuscated-symbol-string *transpiler* '%character)
-        this.v x (aref *characters* x) this)))
+  (= this.__class ,(transpiler-obfuscated-symbol-string *transpiler* '%character)
+     this.v       (%wrap-char-number x))
+  this)
 
 (defun character? (x)
   (& (object? x)
      x.__class
      (%%%== x.__class ,(transpiler-obfuscated-symbol-string *transpiler* '%character))))
 
-(defun code-char (x)
-  (declare type number x)
-  (? (character? x)
-	 x
-	 (new %character x)))
-
-(defun char-code (x)
-  (declare type number x)
-  x.v)
-
-(dont-obfuscate from-char-code)
-
-(defun char-string (x)
-  (declare type character x)
-  (*string.from-char-code (char-code x)))
-
-;(defun character+ (&rest x)
-;  (let n 0
-;	(dolist (i x (new %character n))
-;	  (= n (%%%+ n i.v)))))
-
-;(defun character- (&rest x)
-;  (let n 0
-;	(dolist (i x (new %character n))
-;	  (= n (%%%- n i.v)))))
-
-;(mapcan-macro _
-;    `(== < > <= >=)
-;  `((defun ,($ 'character _) (x y)
-;      (,($ '%%% _) x.v y.v))))
+(defun code-char (x)   (new %character x))
+(defun char-code (x)   x.v)
+(defun char-string (x) (*string.from-char-code (char-code x)))
