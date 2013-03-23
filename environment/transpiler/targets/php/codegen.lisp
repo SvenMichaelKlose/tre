@@ -301,6 +301,3 @@
 
 (define-php-macro %php-class-tail ()
   `(%transpiler-native "}" ""))
-
-(define-php-macro %php-method-head ()
-  `(%transpiler-native "public " ""))

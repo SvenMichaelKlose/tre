@@ -1,16 +1,20 @@
 ;;;;; Caroshi – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
-(defun php-make-constructor (cname bases args body)
-  (transpiler-add-defined-function *transpiler* cname args body)
-  `(%setq __construct
-      #'(,args
-          ; Inject calls to base constructors.
-          (let ~%this this
-            (%thisify ,cname
-              ,@(ignore-body-doc body))))))
+(defun php-constructor-name (class-name)
+  ($ class-name '-constructor))
+
+(defun php-method-name (class-name name)
+  ($ class-name '- name))
+
+(defun php-constructor (class-name bases args body)
+  (transpiler-add-defined-function *transpiler* class-name args body)
+  `(function ,(php-constructor-name class-name)
+             (,(cons 'this args)
+              (let ~%this this
+                (%thisify ,class-name ,@body)))))
 
 (define-php-std-macro defclass (class-name args &rest body)
-  (apply #'transpiler_defclass #'php-make-constructor class-name args body))
+  (apply #'transpiler_defclass #'php-constructor class-name args body))
 
 (define-php-std-macro defmethod (class-name name args &rest body)
   (apply #'transpiler_defmethod class-name name args body))
@@ -18,24 +22,31 @@
 (define-php-std-macro defmember (class-name &rest names)
   (apply #'transpiler_defmember class-name names))
 
-(defun php-emit-method (class-name x)
-  `(%setq (%transpiler-native ,x.)
-          #'(,.x.
-	          (%thisify ,class-name
-		        (let ~%this ,(? (transpiler-continuation-passing-style? *transpiler*)
-                                '~%cps-this
-                                'this)
-	              ,@(| (ignore-body-doc ..x.) (list nil)))))))
+(defun php-method-function (class-name x)
+  `(function ,(php-method-name class-name x.)
+             (,(cons 'this .x.)
+              (let ~%this this
+	            (%thisify ,class-name ,@(| ..x. (list nil)))))))
 
-(defun php-emit-members (class-name cls)
-  (awhen (class-members cls)
-	(mapcar ^(%setq nil (%transpiler-native "var $" ,_.))
+(defun php-method-functions (class-name cls)
+  (awhen (class-methods cls)
+	(mapcar [php-method-function class-name _]
             (reverse !))))
 
-(defun php-emit-methods (class-name cls)
+(defun php-method (class-name x)
+  `("public function " ,x. " " ,(php-argument-list (argument-expand-names 'php-method .x.)) ,*php-newline*
+    "{" ,*php-newline*
+        ,*php-indent* "return " ,(php-method-name class-name x.) ,(php-argument-list (argument-expand-names 'php-method-function-call (cons 'this .x.))) ,*php-separator*
+    "}"))
+
+(defun php-members (class-name cls)
+  (awhen (class-members cls)
+	(mapcar ^(%transpiler-native "var $" ,_. ,*php-separator*)
+            (reverse !))))
+
+(defun php-methods (class-name cls)
   (awhen (class-methods cls)
-	(mapcan ^((%setq nil (%transpiler-native (%php-method-head)))
-              ,(php-emit-method class-name _))
+	(mapcan [php-method class-name _]
             (reverse !))))
 
 (define-php-std-macro finalize-class (class-name)
@@ -47,9 +58,16 @@
 	         (& (object? x)
 	            (is_a x ,(transpiler-obfuscated-symbol-string *transpiler* class-name))
                 x))
-           (%setq nil (%transpiler-native (%php-class-head ,class-name)))
 	       ,(assoc-value class-name *delayed-constructors*)
-	        ,@(php-emit-members class-name !)
-	        ,@(php-emit-methods class-name !)
-           (%setq nil (%transpiler-native (%php-class-tail))))
+           ,@(php-method-functions class-name !)
+           (%setq nil (%transpiler-native
+                        (%php-class-head ,class-name)
+                        ,(alet (argument-expand-names 'php-constructor-function (transpiler-function-arguments *transpiler* class-name))
+                           `("public function __construct " ,(php-argument-list !) ,*php-newline*
+                             "{" ,*php-newline*
+                                 ,*php-indent* "return " ,(php-constructor-name class-name) ,(php-argument-list (cons 'this !)) ,*php-separator*
+                             "}")) ,*php-newline*
+                        ,@(php-members class-name !)
+	                    ,@(php-methods class-name !)
+                        (%php-class-tail))))
 	    (error "Cannot finalize undefined class ~A." class-name))))
