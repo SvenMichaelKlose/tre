@@ -23,15 +23,15 @@
 ;; - Conditionals are implemented with VM-GO and VM-GO-NIL.
 ;; - Quoting is done by %QUOTE (same as QUOTE) exclusively.
 (transpiler-pass transpiler-frontend-1 (tr)
-    backquote-expand          #'backquote-expand
     literal-conversion        [funcall (transpiler-literal-conversion tr) _]
+    backquote-expand          #'backquote-expand
     compiler-macroexpand      #'compiler-macroexpand
     transpiler-macroexpand-2  [transpiler-macroexpand tr _]
     quasiquote-expand         #'quasiquote-expand
     transpiler-macroexpand-1  [? (transpiler-dot-expand? tr)
                                  (transpiler-macroexpand tr _)
                                  _]
-    literal-conversion        [funcall (transpiler-literal-conversion tr) _]
+;    literal-conversion        [funcall (transpiler-literal-conversion tr) _]
     dot-expand                [? (transpiler-dot-expand? tr)
                                  (dot-expand _)
                                  _]
