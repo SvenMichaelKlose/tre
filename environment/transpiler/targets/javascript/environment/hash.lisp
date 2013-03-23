@@ -34,7 +34,8 @@
   (in? x #'== #'string== #'number== #'integer==))
 
 (defun =-href (value hash key)
-  (!? (defined? hash.__tre-test)
+  (!? (& (defined? hash.__tre-test)
+         hash.__tre-test)
       (? (%href-==? !)
          (%%%=-aref value hash key)
          (=-href-obj value hash key))
