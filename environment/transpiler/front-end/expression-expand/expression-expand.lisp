@@ -92,14 +92,15 @@
 		  x))
 
 (defun expex-argexpand-0 (ex fun args)
-  (dolist (i args)
-    (expex-warn i))
+  (adolist (args)
+    (expex-warn !))
   (funcall (expex-function-collector ex) fun args)
   (let argdef (| (funinfo-get-local-function-args *expex-funinfo* fun)
                  (current-transpiler-function-arguments fun))
-	(? (expex-expandable-args? ex fun)
-   	   (expex-argument-expand fun argdef args)
-	   args)))
+    (transpiler-expand-literal-characters
+	    (? (expex-expandable-args? ex fun)
+   	       (expex-argument-expand fun argdef args)
+	       args))))
 
 (defun expex-argexpand (ex x)
   (with (new? (%new? x)
