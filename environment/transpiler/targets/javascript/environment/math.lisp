@@ -1,6 +1,8 @@
 ;;;;; tré – Copyright (c) 2013 Sven Michael Klose <pixel@copei.de>
 
-(defconstant *pi* *math.p-i)
+(dont-obfuscate *math *p-i abs pow sqrt sin cos atan atan2)
+
+(defconstant *pi* *math.*p-i)
 
 (defun abs (x)     (*math.abs x))
 (defun pow (x y)   (*math.pow x y))
