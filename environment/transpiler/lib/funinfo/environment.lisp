@@ -101,12 +101,16 @@
 ;;;; USED VARIABLES
 
 (defun funinfo-used-var? (fi x)
-  (member x (funinfo-used-vars fi) :test #'eq))
+  (? (funinfo-parent fi)
+     (member x (funinfo-used-vars fi) :test #'eq)
+     t))
 
 (defun funinfo-add-used-var (fi x)
   (& (funinfo-parent fi)
      (not (funinfo-used-var? fi x))
-     (+! (funinfo-used-vars fi) (list x))))
+     (? (funinfo-arg-or-var? fi x)
+        (push x (funinfo-used-vars fi))
+        (funinfo-add-used-var (funinfo-parent fi) x))))
 
 
 ;;;; IMMUTABLES

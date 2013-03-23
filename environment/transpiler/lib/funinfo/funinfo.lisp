@@ -19,6 +19,7 @@
   (args nil) ; Expanded argument definition.
 
   ; Lists of stack variables. The rest contains the parent environments.
+  (original-vars nil)
   (vars nil)
   (vars-hash nil)
   (used-vars nil)
@@ -75,11 +76,12 @@
   (& (href (transpiler-funinfos transpiler) name)
      (error "Funinfo for ~A already memorized." name))
   (with (argnames (argument-expand-names 'lambda-expand args)
-         fi       (make-funinfo :name       name
-                                :argdef     args
-                                :args       argnames
-                                :parent     parent
-                                :transpiler transpiler))
+         fi       (make-funinfo :name          name
+                                :argdef        args
+                                :original-vars argnames
+                                :args          argnames
+                                :parent        parent
+                                :transpiler    transpiler))
     (= (href (transpiler-funinfos transpiler) name) fi)
     (funinfo-var-add fi '~%ret)
     (& (transpiler-copy-arguments-to-stack? transpiler)
