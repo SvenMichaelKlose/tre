@@ -46,11 +46,7 @@
 ;;;; UTILS
 
 (defun expex-make-%setq (ex plc val)
-  (+ (? (%setq? val)
-        (expex-guest-filter-setter ex val))
-     (expex-guest-filter-setter ex `(%setq ,plc ,(? (%setq? val)
-                                                    (%setq-place val)
-                                                    (peel-identity val))))))
+  (expex-guest-filter-setter ex `(%setq ,plc ,val)))
 
 (defun expex-funinfo-var-add ()
   (aprog1 (expex-sym)
