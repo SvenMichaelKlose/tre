@@ -301,6 +301,9 @@ treatom_body_to_var (treptr body)
         if (tre_atoms[a].type != TRETYPE_FUNCTION && tre_atoms[a].type != TRETYPE_MACRO)
 	    	continue;
 
+        if (!TREPTR_IS_CONS(tre_atoms[a].value))
+            continue;
+
         tmp = CDR(tre_atoms[a].value);
         if (NULLP(tmp) || CAR(tmp) != body)
 	    	continue;
