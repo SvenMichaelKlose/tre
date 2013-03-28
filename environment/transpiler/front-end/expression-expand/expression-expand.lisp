@@ -46,7 +46,11 @@
 ;;;; UTILS
 
 (defun expex-make-%setq (ex plc val)
-  (expex-guest-filter-setter ex `(%setq ,plc ,val)))
+  (+ (? (%setq? val)
+        (expex-guest-filter-setter ex val))
+     (expex-guest-filter-setter ex `(%setq ,plc ,(? (%setq? val)
+                                                    (%setq-place val)
+                                                    (peel-identity val))))))
 
 (defun expex-funinfo-var-add ()
   (aprog1 (expex-sym)
@@ -195,7 +199,8 @@
       (| (symbol? fun) (cons? fun)
          (error "function must be a symbol or expression: misplaced ~A~%" x)))
     (? (%setq? val)
-       (values nil (expex-body ex `(,val (%setq ,plc ,(%setq-place val)))))
+       (values nil (expex-body ex `(,val
+                                    (%setq ,plc ,(%setq-place val)))))
        (with ((moved new-expr) (expex-move-args ex (list val)))
          (values moved (expex-make-%setq ex plc new-expr.))))))
 
