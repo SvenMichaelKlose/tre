@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2007,2010,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2007,2010,2012–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun read-line (&optional (str *standard-input*))
   "Read line from string."
@@ -25,6 +25,7 @@
 
 (defun read-all-lines (&optional (str *standard-input*))
   (with-default-stream nstr str
-    (unless (end-of-file nstr)
-	  (cons (read-line nstr)
-			(read-all-lines nstr)))))
+    (with-queue q
+      (while (not (end-of-file nstr))
+             (queue-list q)
+	    (enqueue q (read-line nstr))))))
