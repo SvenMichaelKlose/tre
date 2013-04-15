@@ -2,20 +2,17 @@
 
 (defvar *default-hash-size* 2039)
 
-(defstruct %hash-table
+(defstruct hash-table
+  (:constructor %make-hash-table)
   test              ; Function for equality test of keys.
   size              ; Initial hash table size.
-  hash              ; Internal hash table.
-  count)            ; Number of elements stored in the table.
-
-(defun hash-table? (x)
-  (%hash-table? x))
+  hash)
 
 (defun make-hash-table (&key (test #'eq) (size *default-hash-size*))
-  (make-%hash-table :test test :size size :hash (make-array *default-hash-size*)))
+  (%make-hash-table :test test :size size :hash (make-array *default-hash-size*)))
 
 (defun %make-hash-index-num (h k)
-  (mod k (%hash-table-size h)))
+  (mod k (hash-table-size h)))
 
 (defun %make-hash-index-string (h str)
   (with (k 0
@@ -23,7 +20,7 @@
     (do ((i 0 (integer-1+ i)))
         ((| (integer== ,(* 8 *pointer-size*) i)
             (integer== i l))
-		 (mod (abs k) (%hash-table-size h)))
+		 (mod (abs k) (hash-table-size h)))
       (= k (logxor (<< k 1) (elt str i))))))
 
 (defun %make-hash-index (h key)
@@ -33,37 +30,37 @@
     (%make-hash-index-num h (%%id key))))
 
 (defmacro %with-hash-bucket (bucket idx h key &rest body)
-  `(with (,idx (%make-hash-index ,h ,key)
-	      ,bucket (aref (%hash-table-hash ,h) ,idx))
+  `(with (,idx    (%make-hash-index ,h ,key)
+	      ,bucket (aref (hash-table-hash ,h) ,idx))
     ,@body))
 
 (defun href (h key)
   (%with-hash-bucket b i h key
-    (assoc-value key b :test (%hash-table-test h))))
+    (assoc-value key b :test (hash-table-test h))))
 
 (defun (= href) (new-value h key)
-  (let tst (%hash-table-test h)
+  (let tst (hash-table-test h)
     (%with-hash-bucket b i h key
       (? (assoc key b :test tst)
          (= (cdr (assoc key b :test tst)) new-value)
-         (= (aref (%hash-table-hash h) i) (acons key new-value b)))))
+         (= (aref (hash-table-hash h) i) (acons key new-value b)))))
   new-value)
 
 (defun hremove (h key)
   (%with-hash-bucket b i h key
-    (= (aref (%hash-table-hash h) i)
-	   (remove (assoc key b :test (%hash-table-test h)) b))))
+    (= (aref (hash-table-hash h) i)
+	   (remove (assoc key b :test (hash-table-test h)) b))))
 
 (defun hashkeys (h)
   (let keys nil
-	(dotimes (i (length (%hash-table-hash h)) keys)
-	  (push (carlist (aref (%hash-table-hash h) i)) keys))
+	(dotimes (i (length (hash-table-hash h)) keys)
+	  (push (carlist (aref (hash-table-hash h) i)) keys))
     (apply #'nconc keys)))
 
 (defun copy-hash-table (h)
   (when h
-    (let n (make-hash-table :test (%hash-table-test h)
-                            :size (%hash-table-size h))
+    (let n (make-hash-table :test (hash-table-test h)
+                            :size (hash-table-size h))
       (dolist (i (hashkeys h) n)
         (= (href n i) (href h i))))))
 
@@ -86,9 +83,6 @@
   (let h (make-hash-table :test test)
     (dolist (i x h)
       (= (href h i.) .i))))
-
-(defun hash-table-test (h)
-  (%hash-table-test h))
 
 (define-test "HREF symbol key"
   ((let h (make-hash-table :test #'eq)
