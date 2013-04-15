@@ -24,7 +24,6 @@ extern treptr treatom_builtin_set_atom_fun (treptr);
 extern treptr treatom_builtin_functionp (treptr);
 extern treptr treatom_builtin_builtinp (treptr);
 extern treptr treatom_builtin_macrop (treptr);
-extern treptr treatom_builtin_atom_list (treptr);
 extern treptr treatom_builtin_type_id (treptr);
 extern treptr treatom_builtin_id (treptr);
 

@@ -409,7 +409,6 @@ char *tre_builtin_names[] = {
 	"ATOM", "%TYPE-ID", "%%ID",
     "SYMBOL-VALUE", "%SETQ-ATOM-VALUE", "SYMBOL-FUNCTION", "=-SYMBOL-FUNCTION", "SYMBOL-PACKAGE", "SYMBOL-COMPILED-FUNCTION",
 	"FUNCTION?", "BUILTIN?", "MACROP",
-    "%ATOM-LIST",
 
 	"CONS", "LIST",
     "CAR", "CDR", "CPR", "RPLACA", "RPLACD", "RPLACP",
@@ -528,7 +527,6 @@ treevalfunc_t treeval_xlat_builtin[] = {
     treatom_builtin_functionp,
     treatom_builtin_builtinp,
     treatom_builtin_macrop,
-    treatom_builtin_atom_list,
 
     trelist_builtin_cons,
     trelist_builtin_list,

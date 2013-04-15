@@ -41,27 +41,21 @@ treptr  tredebug_fspos;
 
 treptr  treptr_milestone;
 
-/*
- * Get currently evaluated function.
- */
 treptr
 trefunstack_get_named_function (treptr fspos)
 {
     treptr  p;
     treptr  a = treptr_nil;
 
-    /* Lookup first named function on the stack. */
     DOLIST(p, fspos) {
-		/* Get variable of atom containing body. */
 		a = treatom_body_to_var (CAR(p));
         if (a != treptr_nil && TREATOM_NAME(a))
-	    	break; /* Atom is named. */
+	    	break;
     }
 
     return a;
 }
 
-/* Print currently evaluated function with the current expression marked. */
 void
 tredebug_print_function (treptr fspos, treptr expr)
 {
@@ -86,7 +80,6 @@ tredebug_print_current (void)
     tredebug_print_function (CAR(pinfo), CDR(pinfo));
 }
 
-/* Print currently evaluated function with the current expression marked. */
 void
 tredebug_print_parents (void)
 {
@@ -102,7 +95,6 @@ tredebug_chk_breakpoints (treptr expr)
     if (!tredebug_num_breakpoints)
         return;
 
-	/* Seek breakpoint for expression function. */
     fun = CAR(expr);
     DOTIMES(i, TREDEBUG_MAX_BREAKPOINTS) {
         if (tredebug_breakpoints[i] == fun) {
@@ -164,18 +156,14 @@ tredebug_split_args (char *ap)
     char      *d = tredebug_argvbuf;
 
     while (*ap >= ' ' && i < TREDEBUG_MAX_ARGS) {
-        /* Skip whitespaces. */
         while (*ap == ' ')
             ap++;
         
-        /* Break at end of line. */
         if (*ap < ' ')
             break;
        
-        /* Save argument position. */
         tredebug_argv[i++] = d;
        
-        /* Copy argument. */
         while (*ap != 0 && *ap > ' ')
             *d++ = toupper (*ap++);
         *d++ = 0;
@@ -253,7 +241,6 @@ tredebug_remove_breakpoint (char *name)
     return c;
 }
 
-/* User command: set breakpoint. */
 void
 tredebug_breakpoint (void)
 {
@@ -283,7 +270,6 @@ tredebug_breakpoint (void)
 	    	return;
 }
 
-/* Delete all breakpoints. */
 void
 tredebug_breakpoints_delete_all (void)
 {
@@ -315,7 +301,6 @@ tredebug_breakpoints_delete (void)
         return;
     }
 
-    /* Delete all breakpoints. */
     if (tredebug_argc == 0) {
 		printf ("Delete all breakpoints?: ");
 		c = treio_getc (treio_console);
@@ -326,7 +311,6 @@ tredebug_breakpoints_delete (void)
 		return;
 	}
 
-    /* Remove breakpoints specified by arguments. */
     DOTIMES(i, tredebug_argc) {
         if (!tredebug_remove_breakpoint (tredebug_argv[i])) {
             printf ("Symbol %s not breakpointed.\n", tredebug_argv[i]);
@@ -361,26 +345,18 @@ tredebug_print (void)
     }
 }
 
-/*
- * Get first named function parent to the function stack position given.
- */
 treptr
 tredebug_parent_funstack (treptr fspos)
 {
     treptr  tmp;
     treptr  body;
 
-    /*
-     * Step up, so we don't get stuck if the current stack position
-     * contains a named function.
-     */
     fspos = CDR(fspos);
 
     tmp = trefunstack_get_named_function (fspos);
     RETURN_NIL(tmp);
     body = CADR(TREATOM_VALUE(TREATOM_FUN(tmp)));
 
-    /* Get function stack slot, which points to the atom body. */
     while (fspos != treptr_nil && CAR(fspos) != body)
         fspos = CDR(fspos);
 
@@ -454,7 +430,6 @@ tredebug_trace (void)
         		tredebug_lookup_bodyname (x);
 				break;
 
-			/* built-in functions don't recurse. */
 			case TRETYPE_BUILTIN:
     			printf ("%s ", TREATOM_NAME(x));
 				break;
@@ -463,16 +438,6 @@ tredebug_trace (void)
     printnl ();
 }
 
-/*
- * Initialize mirror stack
- *
- * The mirror stack enables the debugger to step backwards along the
- * singly-linked function stack. It contains references to function stack
- * elements in reverse order. When moving up a function, the current function
- * stack position is pushed onto the mirror stack. When moving back down
- * again, the position is pop'ed from the mirror stack. The original funstack
- * remains untouched.
- */
 void
 tredebug_init_mirror_stack (void)
 {
@@ -494,13 +459,13 @@ tredebug_up (void)
 
     tmp = tredebug_parent_funstack (tredebug_fspos);
     if (tmp == treptr_nil) {
-        printf ("Already at top-level.\n");
+        printf ("You cannot go upwards further. You're already at the current expression.\n");
 		return;
     }
+
     expr = CAR(CDR(tmp));
     tredebug_fspos = tmp;
 
-    /* Save current position on mirror stack. */
     TRELIST_PUSH(tredebug_mirror_stack, CONS(tmp, expr));
 
     tredebug_print_function (tmp, expr);
@@ -516,18 +481,17 @@ tredebug_down (void)
     if (!has_funstack ())
         return;
 
-    /* Check if we can go down any further. */
     if (CDR(tredebug_mirror_stack) == treptr_nil) {
-        printf ("Already at current expression.\n");
+        printf ("You cannot go downwards further. You're already at the current expression.\n");
         return;
     }
 
-    /* Discard current entry. */
     TRELIST_POP(tredebug_mirror_stack);
 
     child = CAR(tredebug_mirror_stack);
     fspos = CAR(child);
     expr = CDR(child);
+
     tredebug_print_function (fspos, expr);
 }
 
@@ -579,13 +543,8 @@ tredebug (void)
 			printf ("Continuing...\n");
 			goto end;
 
-		case 'u':
-			tredebug_up ();
-			continue;
-
-		case 'd':
-			tredebug_down ();
-			continue;
+		case 'u': tredebug_up (); continue;
+		case 'd': tredebug_down (); continue;
 
 	    case 'h':
 			printf ("%s", tredebug_help);
