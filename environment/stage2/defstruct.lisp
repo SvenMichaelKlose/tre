@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun %struct-option-keyword (e)
   (in? e :constructor))
@@ -22,22 +22,23 @@
 				   fields)))
 
 (defun %struct-make-init (fields g)
-  (let index 0
+  (let index 1
     (mapcar [let argname (%struct-field-name _)
               `(= (aref ,g ,(1+! index))
-				  (? (eq ,argname ',argname)
-				     ,(& (cons? _)
-						 (cadr _))
-				     ,argname))]
+                  (? (eq ,argname ',argname)
+                     ,(& (cons? _)
+                         (cadr _))
+                     ,argname))}
             fields)))
 
 (defun %struct-make (name fields options)
   (with (sym (%struct-make-symbol name options)
 		 g (gensym)
          user-init (%struct-make-init fields g)
-	     type-init `((= (aref ,g 0) ',name)))
+	     type-init `((= (aref ,g 0) 'struct
+                        (aref ,g 1) ',name)))
     `(defun ,sym ,(%struct-make-args fields)
-       (let ,g (make-array ,(1+ (length fields)))
+       (let ,g (make-array ,(+ 2 (length fields)))
          ,@(? user-init
 	          (nconc type-init user-init)
 	          type-init)
@@ -63,14 +64,18 @@
          (= (aref arr ,index) val)))))
 
 (defun %struct-getters (name fields)
-  (let index 0
+  (let index 1
     (mapcar [%struct-single-get name (%struct-field-name _) (1+! index)] fields)))
+
+(defun struct? (x)
+  (& (array? x)
+     (eq 'struct (aref x 0))))
 
 (defun %struct? (name)
   (let sym (%struct?-symbol name)
-    `(defun ,sym (arr)
-       (& (array? arr)
-          (eq ',name (aref arr 0))))))
+    `(defun ,sym (x)
+       (& (struct? x)
+          (eq ',name (aref x 1))))))
 
 (defun %struct-sort-fields (fields-and-options)
   (with-queue (fields options)
