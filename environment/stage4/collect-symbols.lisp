@@ -1,9 +1,9 @@
-;;;;; tré – Copyright (c) 2009–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2009–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun collect-symbols (x)
   (with (ret (make-queue)
   		 rec [& _
-    			(? (& (atom _)
+    			(? (& (symbol? _)
 					  (not (string== "" (symbol-name _))))
         		   (enqueue ret _)
         		   (when (cons? _)

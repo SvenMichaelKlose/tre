@@ -75,6 +75,7 @@
 		(SYMBOL-FUNCTION symbol_function)
 		(=-SYMBOL-FUNCTION usetf_symbol_function)
 		(SYMBOL-PACKAGE symbol_package)
+		(SYMBOL? symbolp)
 		(FUNCTION? functionp)
 		(BUILTIN? builtinp)
 		(MACROP)

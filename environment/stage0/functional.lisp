@@ -35,7 +35,7 @@
             character?
             not eq eql
             make-symbol make-package
-            atom symbol-value %type-id %%id %make-ptr
+            atom symbol-value %type %%id %make-ptr
             symbol-function symbol-package symbol-compiled-function
             function? builtin? macrop
             cons list car cdr cons?

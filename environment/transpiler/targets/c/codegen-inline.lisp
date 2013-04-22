@@ -18,6 +18,7 @@
 (mapcan-macro _
 	'((cons?    "CONS")
 	  (atom     "ATOM")
+	  (symbol?  "VARIABLE")
 	  (number?  "NUMBER")
 	  (string?  "STRING")
 	  (array?   "ARRAY")

@@ -128,15 +128,15 @@
 ;  ((function? #'block))
 ;  nil)
 
-(define-test "STRINGP recognizes strings"
+(define-test "STRING? recognizes strings"
   ((string? "some string"))
   t)
 
-(define-test "STRINGP fails on numbers"
+(define-test "STRING? fails on numbers"
   ((string? 1))
   nil)
 
-(define-test "STRINGP fails on symbols"
+(define-test "STRING? fails on symbols"
   ((string? 'a))
   nil)
 
@@ -186,7 +186,7 @@
 ; MAKE-SYMBOL ATOM SYMBOL-VALUE %TYPE-ID
 ; SYMBOL-FUNCTION SYMBOL-PACKAGE
 ; BOUNDP FBOUNDP
-; MACROP STRINGP
+; MACROP STRING?
 ; == < >
 ; BIT-OR BIT-AND
 ; << >>

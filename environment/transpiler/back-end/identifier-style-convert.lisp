@@ -83,6 +83,8 @@
   (maptree [?
              (cons? _)    (transpiler-to-string-cons tr _)
              (string? _)  _
-             (| (assoc-value _ (transpiler-symbol-translations tr) :test #'eq)
-                (transpiler-symbol-string tr _))]
+             (symbol? _)  (| (assoc-value _ (transpiler-symbol-translations tr) :test #'eq)
+                             (transpiler-symbol-string tr _))
+             (number? _)  (princ _ nil)
+             (error "Cannot translate ~A to string" _)]
            x))
