@@ -1,4 +1,4 @@
-;;;; tré - Copyright (c) 2005-2006,2008-2012 Sven Michael Klose <pixel@copei.de>
+;;;; tré – Copyright (c) 2005–2006,2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defmacro %!? (predicate &body alternatives)
   (? alternatives
@@ -28,8 +28,11 @@
 	 ,@body
 	 !))
 
-(defmacro adolist ((seq &optional (result nil)) &body body)
-  `(dolist (! ,seq ,result)
-     ,@body))
+(defmacro adolist (params &body body)
+  (let p (? (atom params)
+            (list params)
+            params)
+    `(dolist (! ,(car p) ,(cadr p))
+       ,@body)))
 
 ; XXX tests missing
