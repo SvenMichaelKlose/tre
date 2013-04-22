@@ -18,7 +18,7 @@ typedef uint treptr;
 #define TREATOM_TO_PTR(idx)	\
 	(TRETYPE_INDEX_TO_PTR(TRE_ATOM(idx).type, idx))
 
-#define TREPTR_NIL()	TRETYPE_INDEX_TO_PTR(TRETYPE_VARIABLE, 0)
+#define TREPTR_NIL()	TRETYPE_INDEX_TO_PTR(TRETYPE_SYMBOL, 0)
 
 #define TREATOM_INDEX_TO_PTR(index) \
 	TRETYPE_INDEX_TO_PTR(TRE_ATOM(index).type, index)
@@ -44,8 +44,7 @@ typedef uint treptr;
 #define TREPTR_INDEX(ptr)		(ptr & ~TREPTR_FLAGS)
 #define TREPTR_IS_CONS(ptr)		((ptr & TREPTR_FLAGS) == TRETYPE_CONS)
 #define TREPTR_IS_ATOM(ptr)		(TREPTR_IS_CONS(ptr) == FALSE)
-#define TREPTR_IS_VARIABLE(ptr)	(TREPTR_TYPE(ptr) == TRETYPE_VARIABLE)
-#define TREPTR_IS_SYMBOL(ptr)	(TREPTR_IS_VARIABLE(ptr) && TREATOM_VALUE(ptr) == ptr)
+#define TREPTR_IS_SYMBOL(ptr)	(TREPTR_TYPE(ptr) == TRETYPE_SYMBOL)
 #define TREPTR_IS_NUMBER(ptr)	(TREPTR_TYPE(ptr) == TRETYPE_NUMBER)
 #define TREPTR_IS_STRING(ptr)	(TREPTR_TYPE(ptr) == TRETYPE_STRING)
 #define TREPTR_IS_ARRAY(ptr)	(TREPTR_TYPE(ptr) == TRETYPE_ARRAY)

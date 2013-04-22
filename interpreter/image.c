@@ -78,12 +78,12 @@ treimage_write_atoms (FILE *f)
                 idx = (i << 3) + j;
 				memcpy (&buf, &tre_atoms[idx], sizeof (struct tre_atom));
 				len = 0;
-                if (tre_atoms[idx].type == TRETYPE_VARIABLE) {
+                if (tre_atoms[idx].type == TRETYPE_SYMBOL) {
 				    len = strlen (tre_atoms[idx].detail);
 				    buf.detail = (void *) len;
                 }
                 treimage_write (f, &buf, sizeof (struct tre_atom));
-				if (tre_atoms[idx].type == TRETYPE_VARIABLE)
+				if (tre_atoms[idx].type == TRETYPE_SYMBOL)
                 	treimage_write (f, tre_atoms[idx].detail, len);
             }
 
@@ -193,7 +193,7 @@ treimage_create (char *file, treptr init_fun)
     /* Count arrays and strings, trace numbers. */
     bzero (nmarks, NMARK_SIZE);
     DOTIMES(i, NUM_ATOMS) {
-		if (tre_atoms[i].type == TRETYPE_VARIABLE)
+		if (tre_atoms[i].type == TRETYPE_SYMBOL)
 			n_sym++;
         switch (tre_atoms[i].type) {
             case TRETYPE_ARRAY:
@@ -269,7 +269,7 @@ treimage_read_atoms (FILE *f)
             if (!(tregc_atommarks[i] & c)) {
                 idx = (i << 3) + j;
                 treimage_read (f, &tre_atoms[idx], sizeof (struct tre_atom));
-				if (tre_atoms[idx].type == TRETYPE_VARIABLE) {
+				if (tre_atoms[idx].type == TRETYPE_SYMBOL) {
 				    symlen = (size_t) tre_atoms[idx].detail;
 					if (symlen > TRE_MAX_SYMLEN)
 						treerror_internal (treptr_nil, "image read: symbol exceeds max length %d with length of %d", TRE_MAX_SYMLEN, symlen);

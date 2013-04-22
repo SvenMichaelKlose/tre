@@ -118,7 +118,7 @@ treprint_atom (treptr atom, ulong indent)
     TREPRINT_HLOPEN(atom);
 
     switch (TREPTR_TYPE(atom)) {
-		case TRETYPE_VARIABLE:
+		case TRETYPE_SYMBOL:
 		case TRETYPE_BUILTIN:
 		case TRETYPE_SPECIAL:
 	    	if (TREATOM_PACKAGE(atom) != TRECONTEXT_PACKAGE())

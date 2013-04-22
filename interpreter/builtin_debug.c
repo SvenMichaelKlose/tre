@@ -19,10 +19,6 @@
 #include "builtin_debug.h"
 #include "argument.h"
 
-/*tredoc
-  (cmd :name end-debug
-	(descr "Leaves the debugger and terminated the current program.'))
- */
 treptr
 tredebug_builtin_end_debug (treptr no_args)
 {
@@ -53,10 +49,6 @@ tredebug_builtin_end_debug (treptr no_args)
     return treptr_nil;
 }
 
-/*tredoc
-  (cmd :name invoke-debugger
-	(descr "Invokes debugger."))
- */
 treptr
 tredebug_builtin_invoke_debugger (treptr no_args)
 {
@@ -73,17 +65,9 @@ tredebug_builtin_invoke_debugger (treptr no_args)
 treptr
 tredebug_breakpoint_arg (treptr args)
 {
-    return trearg_typed (1, TRETYPE_VARIABLE, trearg_get (args), "function name");
+    return trearg_typed (1, TRETYPE_SYMBOL, trearg_get (args), "function name");
 }
 
-/*tredoc
-  (cmd :name set-breakpoint
-	(arg :name function :type function
-		 "Function to set breakpoint on function.")
-	(descr
-	  "Sets breakpoint. Before the breakpointed function is called, "
-	  "the debugger is invoked."))
- */
 treptr
 tredebug_builtin_set_breakpoint (treptr args)
 {
@@ -91,10 +75,6 @@ tredebug_builtin_set_breakpoint (treptr args)
     return treptr_nil;
 }
 
-/*tredoc
-  (cmd :name remove-breakpoint
-	(desc "Removes formerly set breakpoint on function."))
- */
 treptr
 tredebug_builtin_remove_breakpoint (treptr args)
 {

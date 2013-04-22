@@ -30,8 +30,8 @@ struct tre_atom tre_atoms[NUM_ATOMS];
 
 #define TREPACKAGE_KEYWORD_INDEX	1
 
-const treptr treptr_nil = TRETYPE_INDEX_TO_PTR(TRETYPE_VARIABLE, TREPTR_NIL_INDEX);
-const treptr treptr_t = TRETYPE_INDEX_TO_PTR(TRETYPE_VARIABLE, TREPTR_T_INDEX);
+const treptr treptr_nil = TRETYPE_INDEX_TO_PTR(TRETYPE_SYMBOL, TREPTR_NIL_INDEX);
+const treptr treptr_t = TRETYPE_INDEX_TO_PTR(TRETYPE_SYMBOL, TREPTR_T_INDEX);
 const treptr treptr_invalid = (treptr) -1;
 
 treptr treptr_universe;
@@ -52,16 +52,16 @@ treptr tre_package_keyword;
 void
 treatom_init_truth (void)
 {
-    ATOM_SET(TREPTR_NIL_INDEX, TRETYPE_VARIABLE);
+    ATOM_SET(TREPTR_NIL_INDEX, TRETYPE_SYMBOL);
     ATOM_SET_NAME(TREPTR_NIL_INDEX, tresymbol_add ("NIL"));
-    tre_atoms[TREPTR_NIL_INDEX].value = TRETYPE_INDEX_TO_PTR(TRETYPE_VARIABLE, TREPTR_NIL_INDEX);
+    tre_atoms[TREPTR_NIL_INDEX].value = TRETYPE_INDEX_TO_PTR(TRETYPE_SYMBOL, TREPTR_NIL_INDEX);
     tre_atoms[TREPTR_NIL_INDEX].fun = treptr_nil;
     tre_atoms[TREPTR_NIL_INDEX].binding = treptr_nil;
 	tresymbolpage_add (treptr_nil);
 
-    ATOM_SET(TREPTR_T_INDEX, TRETYPE_VARIABLE);
+    ATOM_SET(TREPTR_T_INDEX, TRETYPE_SYMBOL);
     ATOM_SET_NAME(TREPTR_T_INDEX, tresymbol_add ("T"));
-    tre_atoms[TREPTR_T_INDEX].value = TRETYPE_INDEX_TO_PTR(TRETYPE_VARIABLE, TREPTR_T_INDEX);
+    tre_atoms[TREPTR_T_INDEX].value = TRETYPE_INDEX_TO_PTR(TRETYPE_SYMBOL, TREPTR_T_INDEX);
     tre_atoms[TREPTR_T_INDEX].fun = treptr_nil;
     tre_atoms[TREPTR_T_INDEX].binding = treptr_nil;
 	tresymbolpage_add (treptr_t);
@@ -118,7 +118,7 @@ treatom_init_big_bang ()
     treptr_universe = treatom_alloc_symbol ("*UNIVERSE*", treptr_nil, treptr_nil);
     EXPAND_UNIVERSE(treptr_t);
     EXPAND_UNIVERSE(tre_package_keyword);
-	MAKE_VAR("*KEYWORD-PACKAGE*", tre_package_keyword);
+	MAKE_SYMBOL("*KEYWORD-PACKAGE*", tre_package_keyword);
     tre_default_listprop = treatom_alloc_symbol ("*DEFAULT-LISTPROP*", treptr_nil, treptr_nil);
     EXPAND_UNIVERSE(tre_default_listprop);
 }
@@ -199,7 +199,7 @@ treatom_alloc (int type)
 treptr
 treatom_alloc_symbol (char * symbol, treptr package, treptr value)
 {
-    treptr  atom = treatom_alloc (TRETYPE_VARIABLE);
+    treptr  atom = treatom_alloc (TRETYPE_SYMBOL);
     ulong   atomi = TREPTR_INDEX(atom);
 
     if (value == treptr_invalid)
@@ -218,7 +218,7 @@ treatom_alloc_symbol (char * symbol, treptr package, treptr value)
 void
 treatom_free (treptr x)
 {
-    if (TREATOM_TYPE(x) == TRETYPE_VARIABLE) {
+    if (TREATOM_TYPE(x) == TRETYPE_SYMBOL) {
 		tresymbolpage_remove (x);
         tresymbol_free (TREATOM_DETAIL(x));
     }
@@ -310,7 +310,7 @@ treatom_body_to_var (treptr body)
 	    	continue;
 
         for (b = 0; b < NUM_ATOMS; b++)
-            if (tre_atoms[b].type == TRETYPE_VARIABLE
+            if (tre_atoms[b].type == TRETYPE_SYMBOL
 					&& tre_atoms[b].detail != NULL
 					&& tre_atoms[b].fun == TREATOM_INDEX_TO_PTR(a))
                 return TREATOM_INDEX_TO_PTR(b);
@@ -324,7 +324,7 @@ treatom_fun_body (treptr atomp)
 {
     treptr fun;
 
-    if (TREPTR_IS_VARIABLE(atomp) == FALSE) {
+    if (TREPTR_IS_SYMBOL(atomp) == FALSE) {
         treerror_internal (atomp, "variable expected");
 		return treptr_nil;
     }

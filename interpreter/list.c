@@ -98,7 +98,7 @@ trelist_position_name (treptr elt, treptr l)
 	const char * eltname = TREATOM_NAME(elt);
 
     while (l != treptr_nil) {
-		if (TREPTR_IS_VARIABLE(CAR(l)) && ! strcmp (TREATOM_NAME(CAR(l)), eltname))
+		if (TREPTR_IS_SYMBOL(CAR(l)) && ! strcmp (TREATOM_NAME(CAR(l)), eltname))
 	    	return c;
 
         l = CDR(l);

@@ -186,7 +186,7 @@ treptr
 treatom_builtin_symbolp (treptr list)
 {
     treptr arg = trearg_get (list);
-    return TREPTR_TRUTH(TREPTR_IS_VARIABLE(arg));
+    return TREPTR_TRUTH(TREPTR_IS_SYMBOL(arg));
 }
 
 treptr

@@ -186,7 +186,7 @@ tre_init_image_path (void)
     tremain_boot_image = malloc (4096);
     strcpy (tremain_boot_image, p);
     strcpy (&tremain_boot_image[strlen (p)], "/.tre.image");
-	MAKE_VAR("*BOOT-IMAGE*", trestring_get (tremain_boot_image));
+	MAKE_SYMBOL("*BOOT-IMAGE*", trestring_get (tremain_boot_image));
 }
 
 /* Initialise everything. */
@@ -217,25 +217,25 @@ tre_init (void)
     trespecial_init ();
     treimage_init ();
 
-    MAKE_VAR("*KERNEL-IDENT*", trestring_get (TRE_KERNEL_IDENT));
-    MAKE_VAR("*CPU-TYPE*", trestring_get (TRE_CPU_TYPE));
-    MAKE_VAR("*OS-RELEASE*", trestring_get (TRE_OS_RELEASE));
-    MAKE_VAR("*OS-VERSION*", trestring_get (TRE_OS_VERSION));
+    MAKE_SYMBOL("*KERNEL-IDENT*", trestring_get (TRE_KERNEL_IDENT));
+    MAKE_SYMBOL("*CPU-TYPE*", trestring_get (TRE_CPU_TYPE));
+    MAKE_SYMBOL("*OS-RELEASE*", trestring_get (TRE_OS_RELEASE));
+    MAKE_SYMBOL("*OS-VERSION*", trestring_get (TRE_OS_VERSION));
 
-    MAKE_VAR("*ENVIRONMENT-PATH*", trestring_get (TRE_ENVIRONMENT));
+    MAKE_SYMBOL("*ENVIRONMENT-PATH*", trestring_get (TRE_ENVIRONMENT));
 
-	MAKE_VAR("*LIBC-PATH*", trestring_get (LIBC_PATH));
-	MAKE_VAR("*ENDIANESS*", treatom_alloc_symbol (TRE_ENDIANESS_STRING, TRECONTEXT_PACKAGE(), treptr_invalid));
-	MAKE_VAR("*POINTER-SIZE*", treatom_number_get (sizeof (void *), TRENUMTYPE_INTEGER));
-	MAKE_VAR("*RAND-MAX*", treatom_number_get (RAND_MAX, TRENUMTYPE_INTEGER));
+	MAKE_SYMBOL("*LIBC-PATH*", trestring_get (LIBC_PATH));
+	MAKE_SYMBOL("*ENDIANESS*", treatom_alloc_symbol (TRE_ENDIANESS_STRING, TRECONTEXT_PACKAGE(), treptr_invalid));
+	MAKE_SYMBOL("*POINTER-SIZE*", treatom_number_get (sizeof (void *), TRENUMTYPE_INTEGER));
+	MAKE_SYMBOL("*RAND-MAX*", treatom_number_get (RAND_MAX, TRENUMTYPE_INTEGER));
     tre_init_image_path ();
     treapply_init ();
     trecode_init ();
     tredebug_init_late ();
 
-	MAKE_HOOK_VAR(tremain_history, "_");
-	MAKE_HOOK_VAR(tremain_history_2, "__");
-	MAKE_HOOK_VAR(tremain_history_3, "___");
+	MAKE_HOOK_SYMBOL(tremain_history, "_");
+	MAKE_HOOK_SYMBOL(tremain_history_2, "__");
+	MAKE_HOOK_SYMBOL(tremain_history_3, "___");
 
     tre_restart_fun = treptr_nil;
 
@@ -250,9 +250,9 @@ tremain_init_after_image_loaded ()
 {
     /* Create global %LAUNCHFILE variable containing the source file
      * to evaluate after the environment is set up. */
-    MAKE_VAR("%LAUNCHFILE", (tremain_launchfile ?
-                				trestring_get (tremain_launchfile) :
-                				treptr_nil));
+    MAKE_SYMBOL("%LAUNCHFILE", (tremain_launchfile ?
+                				    trestring_get (tremain_launchfile) :
+                				    treptr_nil));
 }
 
 void

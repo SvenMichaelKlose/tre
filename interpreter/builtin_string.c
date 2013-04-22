@@ -185,7 +185,7 @@ treptr
 trestring_builtin_symbol_name (treptr list)
 {
     char    buf[TRE_MAX_STRINGLEN];
-    treptr  arg = trearg_typed (1, TRETYPE_VARIABLE, trearg_get (list), "SYMBOL-NAME");
+    treptr  arg = trearg_typed (1, TRETYPE_SYMBOL, trearg_get (list), "SYMBOL-NAME");
     char *  an = TREATOM_DETAIL(arg);
 
     buf[0] = 0;

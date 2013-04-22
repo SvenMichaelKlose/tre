@@ -193,7 +193,7 @@ tresymbol_clear ()
 	ulong i;
 
     DOTIMES(i, NUM_ATOMS) {
-		if (tre_atoms[i].type != TRETYPE_VARIABLE)
+		if (tre_atoms[i].type != TRETYPE_SYMBOL)
 			continue;
 		tresymbolpage_remove (i);
 		tresymbol_free (tre_atoms[i].detail);

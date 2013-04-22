@@ -160,7 +160,7 @@ trecode_get (treptr ** p)
         v = CONS(treptr_closure, CONS(fun, lex));
         tregc_pop ();
         tregc_pop ();
-    } else if (TREPTR_IS_VARIABLE(v))
+    } else if (TREPTR_IS_SYMBOL(v))
         v = TREATOM_VALUE(v);
     *p = x;
 

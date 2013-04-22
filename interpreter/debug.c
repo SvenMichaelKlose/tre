@@ -204,7 +204,7 @@ tredebug_set_breakpoint (char *name)
         return FALSE;
     }
 
-    if (TREPTR_IS_VARIABLE(atom))
+    if (TREPTR_IS_SYMBOL(atom))
         fatom = TREATOM_FUN(atom);
     else
         fatom = atom;
@@ -609,7 +609,7 @@ tredebug_init (void)
 void
 tredebug_init_late (void)
 {
-    MAKE_VAR("*MILESTONE*", treptr_nil);
+    MAKE_SYMBOL("*MILESTONE*", treptr_nil);
     treptr_milestone = treatom_get ("*MILESTONE*", TRECONTEXT_PACKAGE());
 }
 

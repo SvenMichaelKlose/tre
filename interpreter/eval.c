@@ -103,7 +103,7 @@ treeval_expr (treptr x)
     tredebug_chk_breakpoints (x);
 	TREDEBUG_STEP();
 
-    fun = TREPTR_TYPE(fun) == TRETYPE_VARIABLE ? TREATOM_FUN(fun) : treeval (fun);
+    fun = TREPTR_TYPE(fun) == TRETYPE_SYMBOL ? TREATOM_FUN(fun) : treeval (fun);
 
 	if (IS_COMPILED_FUN(fun))
 		return trefuncall_compiled (fun, args, TRUE);
@@ -140,8 +140,8 @@ treeval (treptr x)
     trethread_push_call (x);
 
     switch (TREPTR_TYPE(x)) {
-        case TRETYPE_CONS:     val = treeval_expr (x); break;
-        case TRETYPE_VARIABLE: val = TREATOM_VALUE(x); break;
+        case TRETYPE_CONS:   val = treeval_expr (x); break;
+        case TRETYPE_SYMBOL: val = TREATOM_VALUE(x); break;
     }
 
     tregc_retval (val);

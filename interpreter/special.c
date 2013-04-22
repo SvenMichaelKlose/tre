@@ -72,7 +72,7 @@ trespecial_setq (treptr list)
 		list = treerror (treptr_invalid, "arguments expected");
 
     do {
-		car = trearg_typed (argnum, TRETYPE_VARIABLE, CAR(list), "SETQ place");
+		car = trearg_typed (argnum, TRETYPE_SYMBOL, CAR(list), "SETQ place");
 
 		argnum++;
         list = CDR(list);
@@ -351,7 +351,7 @@ trespecial_function (treptr args)
         case TRETYPE_CONS:
 			return trespecial_function_from_expr (arg);
 
-        case TRETYPE_VARIABLE:
+        case TRETYPE_SYMBOL:
             return TREATOM_FUN(arg);
 
         case TRETYPE_FUNCTION:

@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2007 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2007,2013 Sven Michael Klose <pixel@copei.de>
  */
 
 #ifndef TRE_TYPE_H
@@ -10,7 +10,7 @@
 /* NOTE: Keep in sync with sequence.c:tre_sequence_types[]. */
 
 #define TRETYPE_CONS		0
-#define TRETYPE_VARIABLE	1
+#define TRETYPE_SYMBOL      1
 #define TRETYPE_NUMBER		2
 #define TRETYPE_STRING		3
 #define TRETYPE_ARRAY		4
