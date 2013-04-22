@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -101,7 +101,8 @@ trespecial_macro (treptr list)
     treptr  f;
     treptr  expr = trelist_copy (list);
 
-    f = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_MACRO, expr);
+    f = treatom_alloc (TRETYPE_MACRO);
+    TREATOM_VALUE(TREPTR_INDEX(f)) = expr;
 	tregc_push (f);
     treenv_create (f);
 	tregc_pop ();
@@ -116,7 +117,8 @@ trespecial_special (treptr list)
     treptr  ret;
 
     tregc_push (expr);
-    ret = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_USERSPECIAL, expr);
+    ret = treatom_alloc (TRETYPE_USERSPECIAL);
+    TREATOM_VALUE(TREPTR_INDEX(ret)) = expr;
     tregc_pop ();
 
     return ret;
@@ -323,7 +325,8 @@ trespecial_function_from_expr (treptr expr)
 
     x = trelist_copy (x);
     tregc_push (x);
-    f = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_FUNCTION, x);
+    f = treatom_alloc (TRETYPE_FUNCTION);
+    TREATOM_VALUE(TREPTR_INDEX(f)) = expr;
     tregc_pop ();
     tregc_push (f);
     treenv_create (f);

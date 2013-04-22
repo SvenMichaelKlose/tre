@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -44,10 +44,14 @@ trestring_get (const char *str)
     char * nstr = trestring_get_raw (strlen (str));
     treptr atom;
 
-    if (nstr == NULL)
-        return treerror (treptr_invalid, "out of memory");
+    if (!nstr) {
+        tregc_force ();
+        nstr = trestring_get_raw (strlen (str));
+        if (!nstr)
+            return treerror (treptr_invalid, "out of memory");
+    }
     strcpy (TRESTRING_DATA(nstr), str);
-    atom = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_STRING, treptr_nil);
+    atom = treatom_alloc (TRETYPE_STRING);
     TREATOM_SET_STRING(atom, nstr);
     return atom;
 }
@@ -61,7 +65,7 @@ trestring_get_binary (const char *str, size_t len)
     if (nstr == NULL)
         return treerror (treptr_invalid, "out of memory");
     bcopy (str, TRESTRING_DATA(nstr), len);
-    atom = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_STRING, treptr_nil);
+    atom = treatom_alloc (TRETYPE_STRING);
     TREATOM_SET_STRING(atom, nstr);
     return atom;
 }

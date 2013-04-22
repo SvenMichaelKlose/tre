@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2009,2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2009,2012–2013 Sven Michael Klose <pixel@copei.de>
  */
 
 #include <stdlib.h>
@@ -36,7 +36,7 @@ trestring_builtin_make (treptr list)
     treptr  atom;
 
     str = trestring_get_raw ((ulong) TRENUMBER_VAL(arg));
-    atom = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_STRING, treptr_nil);
+    atom = treatom_alloc (TRETYPE_STRING);
     TREATOM_SET_STRING(atom, str);
     return atom;
 }
@@ -74,7 +74,7 @@ trestring_builtin_list_string (treptr list)
 		newp[i++] = (unsigned char) TRENUMBER_VAL(CAR(p));
 	}
 
-    atom = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_STRING, treptr_nil);
+    atom = treatom_alloc (TRETYPE_STRING);
     TREATOM_SET_STRING(atom, news);
 
     return atom;
@@ -145,7 +145,7 @@ trestring_builtin_concat (treptr list)
 		newp = stpcpy (newp, TREATOM_STRINGP(CAR(p)));
 	}
 
-    atom = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_STRING, treptr_nil);
+    atom = treatom_alloc (TRETYPE_STRING);
     TREATOM_SET_STRING(atom, news);
 
     return atom;
@@ -185,8 +185,8 @@ treptr
 trestring_builtin_symbol_name (treptr list)
 {
     char    buf[TRE_MAX_STRINGLEN];
-    treptr  arg = trearg_typed (1, TRETYPE_ATOM, trearg_get (list), "SYMBOL-NAME");
-    char *  an = TREATOM_NAME(arg);
+    treptr  arg = trearg_typed (1, TRETYPE_VARIABLE, trearg_get (list), "SYMBOL-NAME");
+    char *  an = TREATOM_DETAIL(arg);
 
     buf[0] = 0;
     if (an)

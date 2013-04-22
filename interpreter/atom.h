@@ -8,15 +8,14 @@
 #include "ptr.h"
 
 struct tre_atom {
-    char *  name;
-    char	type;
+    void *  detail;
     treptr	value;
     treptr	fun;
+    int     type;
     void *  compiled_fun;
     void *  compiled_expander;
     treptr	binding;
     treptr	package;
-    void *  detail;
 };
 
 extern void * tre_atoms_free;
@@ -27,27 +26,28 @@ extern treptr tre_package_keyword;
 
 #define TRE_ATOM(index)	(tre_atoms[index])
 
-#define ATOM_SET(index, nam, pack, typ) \
-	tre_atoms[index].name = nam;	\
+#define ATOM_SET(index, typ) \
 	tre_atoms[index].value = treptr_nil;	\
 	tre_atoms[index].fun = treptr_nil;	\
 	tre_atoms[index].compiled_fun = NULL;	\
 	tre_atoms[index].compiled_expander = NULL;	\
 	tre_atoms[index].binding = treptr_nil;	\
-	tre_atoms[index].package = pack;	\
+	tre_atoms[index].package = treptr_nil;	\
 	tre_atoms[index].type = typ;	\
 	tre_atoms[index].detail = NULL
+
+#define ATOM_SET_NAME(index, name)     (tre_atoms[index].detail = name)
 
 #define EXPAND_UNIVERSE(ptr) \
     (TREATOM_VALUE(treptr_universe) = CONS(ptr, TREATOM_VALUE(treptr_universe)))
 
 #define MAKE_HOOK_VAR(var, symbol_name) \
-    var = treatom_alloc (symbol_name, TRECONTEXT_PACKAGE(), TRETYPE_VARIABLE, treptr_nil); \
+    var = treatom_alloc_symbol (symbol_name, TRECONTEXT_PACKAGE(), treptr_nil); \
     EXPAND_UNIVERSE(var)
 
 #define MAKE_VAR(symbol_name, init) \
     if (treatom_seek (symbol_name, TRECONTEXT_PACKAGE()) == ATOM_NOT_FOUND) { \
-        EXPAND_UNIVERSE(treatom_alloc (symbol_name, TRECONTEXT_PACKAGE(), TRETYPE_VARIABLE, init)); \
+        EXPAND_UNIVERSE(treatom_alloc_symbol (symbol_name, TRECONTEXT_PACKAGE(), init)); \
     } else { \
         TREATOM_VALUE(treatom_get (symbol_name, TRECONTEXT_PACKAGE())) = init; \
     }
@@ -68,9 +68,8 @@ extern treptr treatom_get_value (treptr atom);
 extern treptr treatom_get_function (treptr atom);
 extern treptr treatom_register_compiled_function (treptr sym, void * fun, void * expander_fun);
 
-extern treptr treatom_alloc (char * symbol, treptr package, int type, treptr value);
-extern void   treatom_free (treptr);
-
+extern treptr treatom_alloc (int type);
+extern treptr treatom_alloc_symbol (char * symbol, treptr package, treptr value);
 extern void   treatom_remove (treptr);
 
 extern treptr treatom_set_value (treptr atom, treptr value);

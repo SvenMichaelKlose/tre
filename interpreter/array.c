@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2009,2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2009,2012–2013 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -54,16 +54,24 @@ trearray_get (treptr sizes)
 {
     treptr  a;
     ulong   size = trearray_get_size (sizes);
+    treptr  * array;
+    treptr  copied_sizes;
 
-    a = treatom_alloc (NULL, TRECONTEXT_PACKAGE(), TRETYPE_ARRAY, treptr_nil);
-    treatom_set_value (a, trelist_copy (sizes));
-    TREATOM_DETAIL(a) = trearray_get_raw (size);
-    if (TREATOM_DETAIL(a) == NULL) {
+    array = trearray_get_raw (size);
+    if (!array) {
 		tregc_force ();
-    	TREATOM_DETAIL(a) = trearray_get_raw (size);
-        if (TREATOM_DETAIL(a) == NULL)
+    	array = trearray_get_raw (size);
+        if (!array)
 		    return treerror (treptr_invalid, "out of memory");
 	}
+    copied_sizes = trelist_copy (sizes);
+    tregc_push (copied_sizes);
+    a = treatom_alloc (TRETYPE_ARRAY);
+    tregc_push (a);
+    treatom_set_value (a, copied_sizes);
+    TREATOM_DETAIL(a) = array;
+    tregc_pop ();
+    tregc_pop ();
     return a;
 }
 
@@ -75,11 +83,9 @@ trearray_make (ulong size)
 	treptr ret;
 
 	n = trenumber_get ((double) size);
-	tregc_push (n);
 	s = CONS(n, treptr_nil);
 	tregc_push (s);
 	ret = trearray_get (s);
-	tregc_pop ();
 	tregc_pop ();
 
     return ret;

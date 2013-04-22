@@ -24,8 +24,7 @@ typedef int bool;
 
 #if 0
 #define TRE_GC_DEBUG		/* Run garbage collector everywhere. */
-#define TRE_VERBOSE_GC 		/* Print statistics after GC. Implies TRE_VERBOSE_SYMBOL_GC. */
-#define TRE_VERBOSE_SYMBOL_GC 	/* Print statistics after GC. */
+#define TRE_VERBOSE_GC 		/* Print statistics after GC. */
 #define TRE_VERBOSE_EVAL	/* Print what is evaluated. */
 #define TRE_VERBOSE_READ    /* Print READ expressions in read-eval loop. */
 #define TRE_PRINT_MACROEXPANSIONS /* Print macroexpansions in read-eval loop. */
@@ -61,7 +60,7 @@ typedef int bool;
 #endif
 
 #ifndef NUM_NUMBERS
-#define NUM_NUMBERS	NUM_ATOMS /* FIXME: bus error if less than atoms */
+#define NUM_NUMBERS	(NUM_ATOMS / 2)
 #endif
 
 #ifndef NULL

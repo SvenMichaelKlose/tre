@@ -24,7 +24,7 @@ typedef uint treptr;
 	TRETYPE_INDEX_TO_PTR(TRE_ATOM(index).type, index)
 #define TREPTR_TO_ATOM(ptr)	TRE_ATOM(TREPTR_INDEX(ptr))
 
-#define TREATOM_NAME(ptr)		        (TREPTR_TO_ATOM(ptr).name)
+#define TREATOM_NAME(ptr)		        ((char *) TREPTR_TO_ATOM(ptr).detail)
 #define TREATOM_TYPE(ptr)		        (TREPTR_TO_ATOM(ptr).type)
 #define TREATOM_VALUE(ptr)		        (TREPTR_TO_ATOM(ptr).value)
 #define TREATOM_FUN(ptr)		        (TREPTR_TO_ATOM(ptr).fun)

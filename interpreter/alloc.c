@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2009 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2009,2013 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -16,7 +16,7 @@ trealloc (size_t size)
 }
 
 void
-trealloc_free (void *p)
+trealloc_free (void * p)
 {
     free (p);
 }
@@ -24,30 +24,37 @@ trealloc_free (void *p)
 void *
 trealloc_item (void * start)
 {
-	void * first = *((void **) start);
+    void ** p = (void **) start;
+	void ** first = *p;
+
 	if (!first)
 		return NULL;
 
-	*((void **) start) = *((void **) first);
+	*p = *first;
 	return first;
 }
 
 void
 trealloc_free_item (void * start, void * item)
 {
-	*((void **) item) = *((void **) start);
-	*((void **) start) = item;
+    void ** p = (void **) start;
+    void ** i = (void **) item;
+
+	*i = *p;
+	*p = i;
 }
 
 void *
-trealloc_item_init (void * map, ulong num, ulong size)
+trealloc_item_init (void * start, size_t num, size_t size)
 {
-	void * last = NULL;
+    void ** p = (void **) start;
+	void *  last = NULL;
 
 	while (num--) {
-		*((void **) map) = last;
-		last = map;
-		map += size;
+		*p = last;
+		last = p;
+		p = ((void *) p) + size;
 	}
+
 	return last;
 }

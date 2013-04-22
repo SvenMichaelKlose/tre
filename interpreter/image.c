@@ -77,11 +77,14 @@ treimage_write_atoms (FILE *f)
             if (!(tregc_atommarks[i] & c)) {
                 idx = (i << 3) + j;
 				memcpy (&buf, &tre_atoms[idx], sizeof (struct tre_atom));
-				len = tre_atoms[idx].name ? strlen (tre_atoms[idx].name) : (size_t) -1;
-				buf.name = (char *) len;
+				len = 0;
+                if (tre_atoms[idx].type == TRETYPE_VARIABLE) {
+				    len = strlen (tre_atoms[idx].detail);
+				    buf.detail = (void *) len;
+                }
                 treimage_write (f, &buf, sizeof (struct tre_atom));
-				if (len != (size_t) -1 && len != 0)
-                	treimage_write (f, tre_atoms[idx].name, len);
+				if (tre_atoms[idx].type == TRETYPE_VARIABLE)
+                	treimage_write (f, tre_atoms[idx].detail, len);
             }
 
             c <<= 1;
@@ -190,7 +193,7 @@ treimage_create (char *file, treptr init_fun)
     /* Count arrays and strings, trace numbers. */
     bzero (nmarks, NMARK_SIZE);
     DOTIMES(i, NUM_ATOMS) {
-		if (tre_atoms[i].name)
+		if (tre_atoms[i].type == TRETYPE_VARIABLE)
 			n_sym++;
         switch (tre_atoms[i].type) {
             case TRETYPE_ARRAY:
@@ -266,17 +269,14 @@ treimage_read_atoms (FILE *f)
             if (!(tregc_atommarks[i] & c)) {
                 idx = (i << 3) + j;
                 treimage_read (f, &tre_atoms[idx], sizeof (struct tre_atom));
-				symlen = (size_t) tre_atoms[idx].name;
-				if (symlen == (size_t) -1)
-					tre_atoms[idx].name = NULL;
-				else {
+				if (tre_atoms[idx].type == TRETYPE_VARIABLE) {
+				    symlen = (size_t) tre_atoms[idx].detail;
 					if (symlen > TRE_MAX_SYMLEN)
 						treerror_internal (treptr_nil, "image read: symbol exceeds max length %d with length of %d", TRE_MAX_SYMLEN, symlen);
-					if (symlen != 0)
-                		treimage_read (f, symbol, symlen);
+               		treimage_read (f, symbol, symlen);
 					symbol[symlen] = 0;
     				allocated_symbol = tresymbol_add (symbol);
-    				TREATOM_NAME(idx) = allocated_symbol;
+    				ATOM_SET_NAME(idx, allocated_symbol);
     				tresymbolpage_add (TRETYPE_INDEX_TO_PTR(tre_atoms[idx].type, idx));
 				}
             }

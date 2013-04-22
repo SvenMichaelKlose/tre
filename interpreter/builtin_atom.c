@@ -183,6 +183,13 @@ treatom_builtin_set_atom_fun (treptr list)
 }
 
 treptr
+treatom_builtin_symbolp (treptr list)
+{
+    treptr arg = trearg_get (list);
+    return TREPTR_TRUTH(TREPTR_IS_VARIABLE(arg));
+}
+
+treptr
 treatom_builtin_functionp (treptr list)
 {
     treptr arg = trearg_get (list);

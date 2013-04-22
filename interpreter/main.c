@@ -225,7 +225,7 @@ tre_init (void)
     MAKE_VAR("*ENVIRONMENT-PATH*", trestring_get (TRE_ENVIRONMENT));
 
 	MAKE_VAR("*LIBC-PATH*", trestring_get (LIBC_PATH));
-	MAKE_VAR("*ENDIANESS*", treatom_alloc (TRE_ENDIANESS_STRING, TRECONTEXT_PACKAGE(), TRETYPE_VARIABLE, treptr_invalid));
+	MAKE_VAR("*ENDIANESS*", treatom_alloc_symbol (TRE_ENDIANESS_STRING, TRECONTEXT_PACKAGE(), treptr_invalid));
 	MAKE_VAR("*POINTER-SIZE*", treatom_number_get (sizeof (void *), TRENUMTYPE_INTEGER));
 	MAKE_VAR("*RAND-MAX*", treatom_number_get (RAND_MAX, TRENUMTYPE_INTEGER));
     tre_init_image_path ();

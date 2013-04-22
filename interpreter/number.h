@@ -14,11 +14,11 @@ struct tre_number {
     char    type;
 };
 
-#define TRE_NUMBER(index) (&tre_numbers[index])
-#define TRENUMBER_VAL(ptr) ((TRE_NUMBER((ulong) TREATOM_DETAIL(ptr)))->value)
-#define TRENUMBER_INT(ptr) ((int) TRENUMBER_VAL(ptr))
-#define TRENUMBER_CHARPTR(ptr) ((char *) (long) (TRE_NUMBER((ulong) TREATOM_DETAIL(ptr)))->value)
-#define TRENUMBER_TYPE(ptr) ((TRE_NUMBER((ulong) TREATOM_DETAIL(ptr)))->type)
+#define TREPTR_NUMBER(ptr)     tre_numbers[(size_t) TREATOM_DETAIL(ptr)]
+#define TRENUMBER_VAL(ptr)     TREPTR_NUMBER(ptr).value
+#define TRENUMBER_INT(ptr)     ((int) TRENUMBER_VAL(ptr))
+#define TRENUMBER_CHARPTR(ptr) ((char *) (long) TREPTR_NUMBER(ptr).value)
+#define TRENUMBER_TYPE(ptr)    TREPTR_NUMBER(ptr).type
 
 extern void * tre_numbers_free;
 extern struct tre_number tre_numbers[NUM_NUMBERS];

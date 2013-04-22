@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2008,2010,2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2008,2010,2012–2013 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -25,7 +25,7 @@ struct tresymbol_page {
 };
 
 struct tresymbol_root {
-	treptr	package;
+	treptr package;
 	struct tresymbol_page * root;
 };
 
@@ -100,7 +100,7 @@ tresymbolpage_add (treptr atom)
 		tresymbolpage_add_rec (tresymbolpage_find_root (TREATOM_PACKAGE(atom)), name, atom, name);
 }
 
-treptr tresymbolpage_find_rec (struct tresymbol_page * p, char * np) __attribute__ ((pure));
+treptr tresymbolpage_find_rec (struct tresymbol_page * p, char * np);
 
 treptr
 tresymbolpage_find_rec (struct tresymbol_page * p, char * np)
@@ -191,16 +191,12 @@ void
 tresymbol_clear ()
 {
 	ulong i;
-	char  * symbol;
 
     DOTIMES(i, NUM_ATOMS) {
-		if (tre_atoms[i].type == TRETYPE_UNUSED)
-			continue;
-		symbol = tre_atoms[i].name;
-		if (! symbol)
+		if (tre_atoms[i].type != TRETYPE_VARIABLE)
 			continue;
 		tresymbolpage_remove (i);
-		tresymbol_free (symbol);
+		tresymbol_free (tre_atoms[i].detail);
 	}
 }
 

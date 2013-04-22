@@ -17,20 +17,20 @@
 void * tre_numbers_free;
 struct tre_number tre_numbers[NUM_NUMBERS];
 
-#define NUMBER_SET(num, val, typ) \
-    (num)->value = val; \
-    (num)->type = typ;	/* unused */
+#define NUMBER_SET(idx, val, typ) \
+    tre_numbers[idx].value = val; \
+    tre_numbers[idx].type = typ;
 
-#define TRENUMBER_INDEX(ptr) 	((ulong) TREATOM_DETAIL(ptr))
+#define TRENUMBER_INDEX(ptr) 	((size_t) TREATOM_DETAIL(ptr))
 
 bool
 trenumber_is_value (char *symbol)
 {
-    ulong   num_dots = 0;
-	ulong	len = 0;
-    char    c;
+    size_t num_dots = 0;
+	size_t len = 0;
+    char  c;
 
-    if (*symbol == '-' && symbol[1] != 0)
+    if (symbol[0] == '-' && symbol[1])
 		symbol++;
 
     while ((c = *symbol++) != 0) {
@@ -45,7 +45,7 @@ trenumber_is_value (char *symbol)
 	    	return FALSE;
     }
 
-	if (num_dots == 1 && len == 1)
+	if (!len || (num_dots == 1 && len == 1))
 		return FALSE;
 
     return TRUE;
@@ -54,8 +54,7 @@ trenumber_is_value (char *symbol)
 ulong
 trenumber_alloc (double value, int type)
 {
-	ulong idx;
-
+	size_t idx;
     void * i = trealloc_item (&tre_numbers_free);
 
     if (!i) {
@@ -65,8 +64,8 @@ trenumber_alloc (double value, int type)
 	    	treerror_internal (treptr_nil, "out of numbers");
     }
 
-    idx = ((ulong) i - (ulong) tre_numbers) / sizeof (struct tre_number);
-    NUMBER_SET(&tre_numbers[idx], value, type);
+    idx = ((size_t) i - (size_t) tre_numbers) / sizeof (struct tre_number);
+    NUMBER_SET(idx, value, type);
 
     return idx;
 }
@@ -80,5 +79,5 @@ trenumber_free (treptr n)
 void
 trenumber_init ()
 {
-	tre_numbers_free = trealloc_item_init (tre_numbers, NUM_NUMBERS, sizeof (struct tre_number));
+	tre_numbers_free = trealloc_item_init (&tre_numbers, NUM_NUMBERS, sizeof (struct tre_number));
 }
