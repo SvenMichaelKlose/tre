@@ -1,7 +1,7 @@
-;;;;; tré – Copyright (c) 2008-2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defvar *nil-symbol-name* "NIL")
-(defvar *t-symbol-name* "T")
+(defvar *t-symbol-name*   "T")
 
 (defun eq-string== (x y)
   (? (| (symbol? x)
@@ -48,6 +48,7 @@
                                  (print-obfuscations? nil))
   (with-temporaries (*recompiling?* (? files-to-update t)
                      *transpiler*   tr
+                     *assert*       (| *assert* (transpiler-assert? tr))
                      *opt-inline?*  (unless (transpiler-inject-debugging? tr)
                                       *opt-inline?*)
                      dep-gen        (| dep-gen #'(()
@@ -62,7 +63,7 @@
 		   deps        (target-sighten-deps tr dep-gen)
            num-exprs   (apply #'+ (mapcar [length ._] (+ before-deps deps after-deps))))
       (& *show-transpiler-progress?*
-         (format t "; ~A toplevel expressions.~%; Let me think. Hmm...~F" num-exprs))
+         (format t "; ~A top level expressions.~%; Let me think. Hmm...~F" num-exprs))
       (with (compiled-before (target-transpile-2 tr before-deps files-to-update)
 	         compiled-deps   (awhen deps (transpiler-make-code tr !))
 		     compiled-after  (target-transpile-2 tr after-deps files-to-update))
