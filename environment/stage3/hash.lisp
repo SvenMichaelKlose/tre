@@ -9,7 +9,7 @@
   hash)
 
 (defun make-hash-table (&key (test #'eq) (size *default-hash-size*))
-  (%make-hash-table :test test :size size :hash (make-array *default-hash-size*)))
+  (%make-hash-table :test test :size size :hash (make-array size)))
 
 (defun %make-hash-index-num (h k)
   (mod k (hash-table-size h)))
