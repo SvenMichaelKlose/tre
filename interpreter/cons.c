@@ -43,7 +43,7 @@ trelist_free (treptr node)
 {
     _CDR(node) = tre_lists_free;
     tre_lists_free = node;
-#ifdef TRE_COUNT_LISTNODES
+#ifdef TRE_VERBOSE_GC
     trelist_num_used--;
 #endif
 }
@@ -97,7 +97,7 @@ _trelist_get (treptr car, treptr cdr)
     _CPR(ret) = TREATOM_VALUE(tre_default_listprop);
     tregc_retval (ret);
 
-#ifdef TRE_COUNT_LISTNODES
+#ifdef TRE_VERBOSE_GC
     trelist_num_used++;
 #endif
 #ifdef TRE_GC_DEBUG
