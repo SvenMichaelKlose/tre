@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2007,2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2007,2012–2013 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -23,8 +23,8 @@ treptr
 tredebug_builtin_end_debug (treptr no_args)
 {
     struct tre_atom *atom;
-    treptr   b;
-    ulong  i;
+    treptr  b;
+    size_t  i;
 
     (void) no_args;
 

@@ -35,7 +35,7 @@ trestring_builtin_make (treptr list)
     treptr  arg = trearg_typed (1, TRETYPE_NUMBER, trearg_get (list), "MAKE-STRING");
     treptr  atom;
 
-    str = trestring_get_raw ((ulong) TRENUMBER_VAL(arg));
+    str = trestring_get_raw ((size_t) TRENUMBER_VAL(arg));
     atom = treatom_alloc (TRETYPE_STRING);
     TREATOM_SET_STRING(atom, str);
     return atom;
@@ -48,7 +48,7 @@ trestring_builtin_list_string (treptr list)
     treptr  p;
     treptr  atom;
     char *  newp;
-    ulong   len = 0;
+    size_t  len = 0;
 	int	    i;
 
 	treptr arg;
@@ -120,7 +120,7 @@ trestring_builtin_concat (treptr list)
     treptr  car;
     treptr  atom;
     char *  newp;
-    ulong   len = 0;
+    size_t  len = 0;
 	int	    argnum = 1;
 
     DOLIST(p, list) {

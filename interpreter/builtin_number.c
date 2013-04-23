@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2010,2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2010,2012–2013 Sven Michael Klose <pixel@copei.de>
  */
 
 #include <ctype.h>
@@ -13,12 +13,6 @@
 #include "gc.h"
 #include "argument.h"
 
-/*tredoc
-  (cmd :name NUMBERP
-    (arg :type obj)
-    (descr "Checks if argument is a number.")
-	(returns boolean))
- */
 treptr
 trenumber_builtin_numberp (treptr list)
 {
@@ -27,22 +21,12 @@ trenumber_builtin_numberp (treptr list)
     return TREPTR_TRUTH(TREPTR_IS_NUMBER(arg));
 }
 
-/*
- * Expect and take single argument.
- *
- * Issues an error if the argument is not a number.
- */
 treptr
 trenumber_arg_get (treptr args)
 {
 	return trearg_typed (1, TRETYPE_NUMBER, trearg_get (args), NULL);
 }
 
-/*
- * Expect and take two arguments.
- *
- * Issues an error if an argument is not a number.
- */
 void
 trenumber_arg_get2 (treptr * first, treptr * second, treptr args)
 {
@@ -51,12 +35,6 @@ trenumber_arg_get2 (treptr * first, treptr * second, treptr args)
 	*second = trearg_typed (2, TRETYPE_NUMBER, *second, NULL);
 }
 
-/*tredoc
-  (cmd :name CHARACTERP
-    (arg :type obj)
-    (descr "Checks if argument is a character.")
-	(returns boolean))
- */
 treptr
 trenumber_builtin_characterp (treptr args)
 {
@@ -74,25 +52,12 @@ trenumber_code_char (treptr x)
     return treatom_number_get ((double) tmp, TRENUMTYPE_CHAR);
 }
 
-/*tredoc
-  (cmd :name CODE-CHAR
-    (arg :type integer)
-    (descr "Converts integer number to character.")
-	(returns character))
- */
 treptr
 trenumber_builtin_code_char (treptr args)
 {
     return trenumber_code_char (trenumber_arg_get (args));
 }
 
-/*tredoc
-  (cmd :name INTEGER
-    (arg :type number)
-    (descr "Converts any number to integer. "
-		   "Always returns a new number.")
-	(returns integer))
- */
 treptr
 trenumber_builtin_integer (treptr args)
 {
@@ -102,13 +67,6 @@ trenumber_builtin_integer (treptr args)
     return treatom_number_get ((double) tmp, TRENUMTYPE_INTEGER);
 }
 
-/*tredoc
-  (cmd :name FLOAT
-    (arg :type number)
-    (descr "Converts any number to float. "
-		   "Always returns a new number.")
-	(returns float))
- */
 treptr
 trenumber_builtin_float (treptr args)
 {
@@ -117,46 +75,23 @@ trenumber_builtin_float (treptr args)
     return treatom_number_get (TRENUMBER_VAL(arg), TRENUMTYPE_FLOAT);
 }
 
-/*tredoc
-  (cmd :name BIT-OR
-    (arg :type number)
-    (arg :type number)
-    (descr "OR bit-wise."))
-
-  (cmd :name BIT-AND
-    (arg :name "number")
-    (arg :name "number")
-    (descr "AND bit-wise."))
-
-  (cmd :name <<
-    (arg :type number)
-    (arg :name "num-bits" :type integer)
-    (descr "Shifts number left one or more bits.")
-	(returns integer))
-
-  (cmd :name >>
-    (arg :type number)
-    (arg :name "num-bits")
-    (descr "Shifts number right one or more bits.")
-	(returns integer))
- */
 void
-trenumber_arg_bit_op (ulong * ix, ulong * iy, treptr args)
+trenumber_arg_bit_op (size_t * ix, size_t * iy, treptr args)
 {
 	treptr  x;
 	treptr  y;
 
     trenumber_arg_get2 (&x, &y, args);
-    *ix = (ulong) TRENUMBER_VAL(x);
-	*iy = (ulong) TRENUMBER_VAL(y);
+    *ix = (size_t) TRENUMBER_VAL(x);
+	*iy = (size_t) TRENUMBER_VAL(y);
 }
 
 #define TRENUMBER_DEF_BITOP(name, op) \
 	treptr	\
 	name (treptr args)	\
 	{	\
-		ulong	ix;	\
-		ulong	iy;	\
+		size_t	ix;	\
+		size_t	iy;	\
 	\
     	trenumber_arg_bit_op (&ix, &iy, args);	\
     	return treatom_number_get ((double) (ix op iy),	\

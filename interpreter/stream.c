@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2006,2008 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2006,2008,2013 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -18,10 +18,10 @@ FILE * tre_fileio_handles[TRE_FILEIO_MAX_FILES];
 long
 trestream_fopen (treptr path, treptr mode)
 {
-    char   * spath = TREATOM_STRINGP(path);
-    char   * smode = TREATOM_STRINGP(mode);
-    FILE   * file  = fopen (spath, smode);
-    ulong  i;
+    char * spath = TREATOM_STRINGP(path);
+    char * smode = TREATOM_STRINGP(mode);
+    FILE * file  = fopen (spath, smode);
+    size_t i;
 
     if (file == NULL)
         return treptr_nil;

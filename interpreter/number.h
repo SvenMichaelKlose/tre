@@ -23,11 +23,11 @@ struct tre_number {
 extern void * tre_numbers_free;
 extern struct tre_number tre_numbers[NUM_NUMBERS];
 
-extern bool  trenumber_is_value (char *);
+extern bool   trenumber_is_value (char *);
 
-extern ulong trenumber_alloc (double value, int type);
-extern void  trenumber_free (treptr);
+extern size_t trenumber_alloc (double value, int type);
+extern void   trenumber_free (treptr);
 
-extern void  trenumber_init (void);
+extern void   trenumber_init (void);
 
 #endif

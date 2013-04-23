@@ -81,7 +81,7 @@ treeval_xlat_function (treevalfunc_t *xlat, treptr func, treptr args, bool do_ar
     evaldargs = (do_argeval) ? treeval_args (args) : trelist_copy (args);
     tregc_push (evaldargs);
 
-    ret = xlat[(ulong) TREATOM_DETAIL(func)] (evaldargs);
+    ret = xlat[(size_t) TREATOM_DETAIL(func)] (evaldargs);
     tregc_retval (ret);
 
     tregc_pop ();

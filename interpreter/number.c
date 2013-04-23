@@ -24,7 +24,7 @@ struct tre_number tre_numbers[NUM_NUMBERS];
 #define TRENUMBER_INDEX(ptr) 	((size_t) TREATOM_DETAIL(ptr))
 
 bool
-trenumber_is_value (char *symbol)
+trenumber_is_value (char * symbol)
 {
     size_t num_dots = 0;
 	size_t len = 0;
@@ -51,7 +51,7 @@ trenumber_is_value (char *symbol)
     return TRUE;
 }
 
-ulong
+size_t
 trenumber_alloc (double value, int type)
 {
 	size_t idx;

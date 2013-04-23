@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2008,2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2008,2012–2013 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -27,47 +27,47 @@ trearray_builtin_make (treptr sizes)
     return trearray_get (sizes);
 }
 
-ulong
+size_t
 trearray_get_check_index (treptr indices, treptr sizes)
 {
     treptr  i;
     treptr  s;
-    long  tmp;
-    ulong  ti = 0;
-    ulong  r = 1;
-    ulong  argnum = 2;
+    long    tmp;
+    size_t  ti = 0;
+    size_t  r = 1;
+    size_t  argnum = 2;
 
     for (i = indices, s = sizes;
 			 i != treptr_nil && s != treptr_nil;
              i = CDR(i), s = CDR(s)) {
         tmp = TRENUMBER_VAL(CAR(i));
         if (tmp < 0)
-	    	return (ulong) -1;
+	    	return (size_t) -1;
 
         ti += (long) tmp * r;
         r *= TRENUMBER_VAL(CAR(s));
 		if (ti >= r) {
 	    	trewarn (treptr_invalid, "index %d (arg %d) is larger than %d",
-		      		 (ulong) tmp, argnum, r - 1);
-	    	return (ulong) -1;
+		      		 (size_t) tmp, argnum, r - 1);
+	    	return (size_t) -1;
 		}
 
         argnum++;
     }
 
     if (i != treptr_nil || s != treptr_nil)
-        return (ulong) -1;
+        return (size_t) -1;
     return ti;
 }
 
 treptr *
 trearray_get_elt (treptr list)
 {
-    treptr  array;
-    treptr  indices;
-    treptr  sizes;
-    treptr  *elts;
-    ulong  idx;
+    treptr   array;
+    treptr   indices;
+    treptr   sizes;
+    treptr * elts;
+    size_t   idx;
 
     if (list == treptr_nil)
 		treerror (list, "array expexted");
@@ -83,7 +83,7 @@ trearray_get_elt (treptr list)
     elts = TREATOM_DETAIL(array);
 
     idx = trearray_get_check_index (indices, sizes);
-    if (idx == (ulong) -1)
+    if (idx == (size_t) -1)
 		return NULL;
     return &elts[idx];
 }

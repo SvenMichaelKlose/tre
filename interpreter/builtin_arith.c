@@ -51,7 +51,7 @@ double treeval_op_plus       (double a, double b) { return a + b; }
 double treeval_op_difference (double a, double b) { return a - b; }
 double treeval_op_times      (double a, double b) { return a * b; }
 double treeval_op_quotient   (double a, double b) { return a / b; }
-double treeval_op_logxor     (double a, double b) { return (ulong) a ^ (ulong) b; }
+double treeval_op_logxor     (double a, double b) { return (size_t) a ^ (size_t) b; }
 
 treptr
 trenumber_builtin_plus (treptr x)

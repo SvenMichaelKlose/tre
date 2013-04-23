@@ -13,6 +13,7 @@
 #include "thread.h"
 #include "string2.h"
 #include "alloc.h"
+#include "gc.h"
 
 #include <stdlib.h>
 #include <string.h>

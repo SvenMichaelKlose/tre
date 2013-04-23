@@ -18,7 +18,7 @@
 #include "gc.h"
 
 treptr *
-trearray_get_raw (ulong size)
+trearray_get_raw (size_t size)
 {
     treptr  * array;
 
@@ -35,9 +35,9 @@ trearray_get_raw (ulong size)
 size_t
 trearray_get_size (treptr sizes)
 {
-    treptr  a;
-    treptr  car;
-    ulong   size = 1;
+    treptr a;
+    treptr car;
+    size_t size = 1;
 
     _DOLIST(a, sizes) {
 		car = _CAR(a);
@@ -52,10 +52,10 @@ trearray_get_size (treptr sizes)
 treptr
 trearray_get (treptr sizes)
 {
-    treptr  a;
-    ulong   size = trearray_get_size (sizes);
-    treptr  * array;
-    treptr  copied_sizes;
+    treptr   a;
+    size_t   size = trearray_get_size (sizes);
+    treptr * array;
+    treptr   copied_sizes;
 
     array = trearray_get_raw (size);
     if (!array) {
@@ -76,7 +76,7 @@ trearray_get (treptr sizes)
 }
 
 treptr
-trearray_make (ulong size)
+trearray_make (size_t size)
 {
 	treptr n;
 	treptr s;
@@ -98,11 +98,11 @@ trearray_free (treptr array)
 }
 
 treptr
-trearray_t_get (treptr array, ulong idx)
+trearray_t_get (treptr array, size_t idx)
 {
-    treptr  adef = TREATOM_VALUE(array);
-    ulong 	size = CAR(adef);
-    treptr  * a = (treptr *) TREATOM_DETAIL(array);
+    treptr   adef = TREATOM_VALUE(array);
+    size_t   size = CAR(adef);
+    treptr * a = (treptr *) TREATOM_DETAIL(array);
 
     if (size <= idx)
         return treerror (array, "index %d out of range", idx);
@@ -111,7 +111,7 @@ trearray_t_get (treptr array, ulong idx)
 }
 
 void
-trearray_set (treptr *a, ulong idx, treptr val)
+trearray_set (treptr *a, size_t idx, treptr val)
 {
     if (a[idx] == val)
 		return;
@@ -120,11 +120,11 @@ trearray_set (treptr *a, ulong idx, treptr val)
 }
 
 void
-trearray_t_set (treptr array, ulong idx, treptr val)
+trearray_t_set (treptr array, size_t idx, treptr val)
 {
-    treptr  adef = TREATOM_VALUE(array);
-    ulong   size = CAR(adef);
-    treptr  * a = (treptr *) TREATOM_DETAIL(array);
+    treptr   adef = TREATOM_VALUE(array);
+    size_t   size = CAR(adef);
+    treptr * a = (treptr *) TREATOM_DETAIL(array);
 
     if (size <= idx) {
         treerror (array, "index %d out of range", idx);

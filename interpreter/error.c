@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2007,2011–2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2007,2011–2013 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -99,7 +99,7 @@ trewarn (treptr expr, const char *msg, ...)
 }
 
 const char *
-treerror_typename (ulong t)
+treerror_typename (size_t t)
 {
 	/* !!! Keep this in sync with type.h! */
 	static const char * type_names[] = {

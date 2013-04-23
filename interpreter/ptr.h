@@ -5,11 +5,10 @@
 #ifndef TRE_PTR_H
 #define TRE_PTR_H
 
-#include "ctype2.h"
 #include "config.h"
 #include "type.h"
 
-typedef uint treptr;
+typedef unsigned int treptr;
 
 #define TREPTR_FLAGS	((treptr) -1 << TREPTR_INDEX_WIDTH)
 

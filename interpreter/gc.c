@@ -125,7 +125,7 @@ tregc_trace_array (treptr arr)
 void
 tregc_trace_atom (treptr a)
 {
-    ulong  ai = TREPTR_INDEX(a);
+    size_t  ai = TREPTR_INDEX(a);
 
     if (TRE_GETMARK(tregc_atommarks, ai) == FALSE)
 		return;
@@ -197,10 +197,10 @@ tregc_mark (void)
 void
 tregc_sweep (void)
 {
-    ulong  i;
-    ulong  j;
-    ulong  idx;
-    char  c;
+    size_t i;
+    size_t j;
+    size_t idx;
+    char   c;
 
     DOTIMES(i, sizeof (tregc_atommarks)) {
 		c = 1;
@@ -277,9 +277,9 @@ tregc_force_user ()
 void
 tregc_print_stats ()
 {
-    ulong c[TRETYPE_MAXTYPE + 1];
-    ulong i;
-    ulong atoms;
+    size_t c[TRETYPE_MAXTYPE + 1];
+    size_t i;
+    size_t atoms;
 
     for (i = 0; i <= TRETYPE_MAXTYPE; i++)
         c[i] = 0;
@@ -287,7 +287,7 @@ tregc_print_stats ()
     for (atoms = i = 0; i < NUM_ATOMS; i++)
         if (tre_atoms[i].type != TRETYPE_UNUSED) {
             atoms++;
-            c[(ulong) tre_atoms[i].type]++;
+            c[(size_t) tre_atoms[i].type]++;
         }
 
     printf (": %ld cons, %ld atoms. %ld syms, "

@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2008,2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2008,2012–2013 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -76,7 +76,7 @@ trearg_get2 (treptr *a, treptr *b, treptr list)
 }
 
 treptr
-trearg_correct (ulong argnum, unsigned type, treptr x, const char * descr)
+trearg_correct (size_t argnum, unsigned type, treptr x, const char * descr)
 {
 	char buf[4096];
 	const char * l = descr ? " (" : "";
@@ -94,7 +94,7 @@ trearg_correct (ulong argnum, unsigned type, treptr x, const char * descr)
 }
 
 treptr
-trearg_typed (ulong argnum, unsigned type, treptr x, const char * descr)
+trearg_typed (size_t argnum, unsigned type, treptr x, const char * descr)
 {
 	while ((type == TRETYPE_ATOM && TREPTR_TYPE(x) == TRETYPE_CONS)
 		   || (type != TRETYPE_ATOM && TREPTR_TYPE(x) != type))
@@ -111,21 +111,21 @@ trearg_typed (ulong argnum, unsigned type, treptr x, const char * descr)
 void
 trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool do_argeval)
 {
-    treptr   argdef = iargdef;
-    treptr   svars;
-    treptr   svals;
-    treptr   var;
-    treptr   val;
-    treptr   dvars;
-    treptr   dvals;
-    treptr   vars;
-    treptr   vals;
-    treptr   form;
-    treptr   init;
-    treptr   key;
-    treptr   original_argdef = argdef;
-    treptr   original_args = args;
-    ulong    kpos;
+    treptr argdef = iargdef;
+    treptr svars;
+    treptr svals;
+    treptr var;
+    treptr val;
+    treptr dvars;
+    treptr dvals;
+    treptr vars;
+    treptr vals;
+    treptr form;
+    treptr init;
+    treptr key;
+    treptr original_argdef = argdef;
+    treptr original_args = args;
+    size_t kpos;
 
     dvars = vars = CONS(treptr_nil, treptr_nil);
     tregc_push (dvars);
@@ -235,8 +235,8 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
  				}
 
                 /* Get position of key in argument list. */
-				kpos = (ulong) trelist_position_name (key, args);
-	 			if (kpos != (ulong) -1) {
+				kpos = (size_t) trelist_position_name (key, args);
+	 			if (kpos != (size_t) -1) {
 		    		/* Get argument after key. */
 		    		svals = trelist_nth (args, kpos + 1);
 

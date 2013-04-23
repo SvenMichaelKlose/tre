@@ -2,6 +2,10 @@
  * tré – Copyright (c) 2012–2013 Sven Michael Klose <pixel@copei.de>
  */
 
+#include <string.h>
+#include <strings.h>
+#include <stdlib.h>
+
 #include "config.h"
 #include "atom.h"
 #include "number.h"
@@ -26,10 +30,6 @@
 #include "compiled.h"
 #include "bytecode.h"
 #include "queue.h"
-
-#include <string.h>
-#include <strings.h>
-#include <stdlib.h>
 
 treptr treptr_funcall;
 treptr treptr_builtin;

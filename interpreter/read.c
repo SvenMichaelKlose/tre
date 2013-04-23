@@ -57,8 +57,8 @@ is_symchar (unsigned char c)
 int
 get_symbol (struct tre_stream *str, char *s, char *p)
 {
-    ulong  len = 0;
-    char   * os = s;
+    size_t len = 0;
+    char * os = s;
     char   c;
 	bool   got_package = FALSE;
 
@@ -125,7 +125,7 @@ void
 treread_token (struct tre_stream * stream)
 {
     char   c;
-    ulong  len = get_symbol (stream, TRECONTEXT_TOKEN_NAME(), TRECONTEXT_PACKAGE_NAME());
+    size_t len = get_symbol (stream, TRECONTEXT_TOKEN_NAME(), TRECONTEXT_PACKAGE_NAME());
 
     if (len == 1 && TRECONTEXT_TOKEN_NAME()[0] == '.') {
     	TRECONTEXT_TOKEN() = TRETOKEN_DOT;
@@ -190,7 +190,7 @@ treread_string (struct tre_stream *stream)
     char   str[TRE_MAX_STRINGLEN + 1];
     char   * i;
     char   c;
-    ulong  l;
+    size_t l;
 
     i = str;
 	l = 0;

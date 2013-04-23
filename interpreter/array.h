@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005-2007,2009 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005-2007,2009,2013 Sven Michael Klose <pixel@copei.de>
  */
 
 #ifndef TRE_ARRAY_H
@@ -14,7 +14,7 @@ extern size_t trearray_get_size (treptr sizes);
 extern struct tre_sequence_type trearray_seqtype;
 
 /* for compiled code */
-extern treptr trearray_make (ulong size);
+extern treptr trearray_make (size_t size);
 
 #define TREARRAY_SIZE(arr) (trearray_get_size (TREATOM_VALUE(arr)))
 #define TREARRAY_RAW(arr) ((treptr *) (TREATOM_DETAIL(arr)))

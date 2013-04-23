@@ -15,12 +15,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-ulong num_symbols;
+size_t num_symbols;
 
 struct tresymbol_page {
 	struct tresymbol_page * entries[256];
-	ulong  atom;
-	ulong  num_entries;
+	size_t atom;
+	size_t num_entries;
 	char * name;
 };
 
@@ -63,7 +63,7 @@ tresymbolpage_find_root (treptr package)
 }
 
 void
-tresymbolpage_set_package (ulong i, treptr package)
+tresymbolpage_set_package (size_t i, treptr package)
 {
 	tresymbol_roots[i].package = package;
 }
@@ -71,7 +71,7 @@ tresymbolpage_set_package (ulong i, treptr package)
 void
 tresymbolpage_add_rec (struct tresymbol_page * p, char * name, treptr atom, char * np)
 {
-	ulong x = (ulong) (unsigned char) *np;
+	size_t x = (size_t) (unsigned char) *np;
 
 	p->num_entries++;
 
@@ -105,7 +105,7 @@ treptr tresymbolpage_find_rec (struct tresymbol_page * p, char * np);
 treptr
 tresymbolpage_find_rec (struct tresymbol_page * p, char * np)
 {
-	ulong x = (ulong) (unsigned char) *np;
+	size_t x = (size_t) (unsigned char) *np;
 
 	if (x && p->entries[x] == NULL)
 		return treptr_invalid;
@@ -122,10 +122,10 @@ tresymbolpage_find (char * name, treptr package)
 	return tresymbolpage_find_rec (tresymbolpage_find_root (package), name);
 }
 
-ulong
+size_t
 tresymbolpage_remove_rec (struct tresymbol_page * p, char * np)
 {
-	ulong x = (ulong) (unsigned char) *np;
+	size_t x = (size_t) (unsigned char) *np;
 
 	if (x) {
 		if (tresymbolpage_remove_rec (p->entries[x], ++np) == 0) {
@@ -190,7 +190,7 @@ tresymbol_free (char *symbol)
 void
 tresymbol_clear ()
 {
-	ulong i;
+	size_t i;
 
     DOTIMES(i, NUM_ATOMS) {
 		if (tre_atoms[i].type != TRETYPE_SYMBOL)

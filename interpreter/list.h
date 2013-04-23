@@ -23,14 +23,14 @@ extern struct tre_sequence_type trelist_seqtype;
 
 extern treptr trelist_copy (treptr);
 extern treptr trelist_copy_tree (treptr);
-extern treptr trelist_delete (ulong, treptr);
+extern treptr trelist_delete (size_t, treptr);
 extern void   trelist_append (treptr *lst, treptr lst2);
 extern long   trelist_position (treptr elt, treptr lst);
 extern long   trelist_position_name (treptr elt, treptr lst);
 extern size_t trelist_length (treptr);
 extern bool   trelist_equal (treptr, treptr);
-extern treptr trelist_nth (treptr, ulong);
+extern treptr trelist_nth (treptr, size_t);
 extern treptr trelist_last (treptr);
-extern bool   trelist_check_type (treptr, ulong atom_type);
+extern bool   trelist_check_type (treptr, size_t atom_type);
 
 #endif 	/* #ifndef TRE_LIST_H */

@@ -5,8 +5,6 @@
 #ifndef TRE_ALLOC_H
 #define TRE_ALLOC_H
 
-#include "ctype2.h"
-
 #include <sys/types.h>
 
 extern treptr trealloc_used;

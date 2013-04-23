@@ -85,7 +85,7 @@ treatom_builtin_eql (treptr list)
 treptr
 treatom_builtin_make_symbol (treptr args)
 {
-	ulong num_args = trelist_length (args);
+	size_t num_args = trelist_length (args);
 	treptr name;
 	treptr package;
 

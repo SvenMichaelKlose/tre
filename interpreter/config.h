@@ -55,7 +55,7 @@ typedef int bool;
 #endif
 
 #ifndef NUM_ATOMS
-#define NUM_ATOMS	(NUM_LISTNODES / 4)
+#define NUM_ATOMS	(NUM_LISTNODES / 8)
 #endif
 
 #ifndef NUM_NUMBERS

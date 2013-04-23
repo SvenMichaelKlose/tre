@@ -2,6 +2,8 @@
  * tré – Copyright (c) 2005–2009,2012–2013 Sven Michael Klose <pixel@copei.de>
  */
 
+#include <stdlib.h>
+
 #include "config.h"
 #include "atom.h"
 #include "number.h"
@@ -70,7 +72,7 @@ treatom_init_truth (void)
 void
 treatom_init_atom_table (void)
 {
-	ulong x;
+	size_t x;
 
     tre_atoms_free = trealloc_item_init (
 		&tre_atoms[TREPTR_FIRST_INDEX],
@@ -86,7 +88,7 @@ treatom_init_builtins (void)
 {
     treptr name;
     treptr fun;
-    ulong  i;
+    size_t i;
 
     for (i = 0; tre_builtin_names[i] != NULL; i++) {
         fun = treatom_alloc (TRETYPE_BUILTIN);
@@ -177,8 +179,8 @@ treatom_set_binding (treptr atom, treptr value)
 treptr
 treatom_alloc (int type)
 {
-    ulong  atomi;
-	void   * item;
+    size_t atomi;
+	void * item;
 
 	item = trealloc_item (&tre_atoms_free);
 	if (!item) {
@@ -188,7 +190,7 @@ treatom_alloc (int type)
 	    	return treerror (treptr_invalid, "atom table full");
     }
 
-    atomi = ((ulong) item - (ulong) tre_atoms) / sizeof (struct tre_atom);
+    atomi = ((size_t) item - (size_t) tre_atoms) / sizeof (struct tre_atom);
     TREGC_ALLOC_ATOM(atomi);
     ATOM_SET(atomi, type);
 
@@ -200,7 +202,7 @@ treptr
 treatom_alloc_symbol (char * symbol, treptr package, treptr value)
 {
     treptr  atom = treatom_alloc (TRETYPE_SYMBOL);
-    ulong   atomi = TREPTR_INDEX(atom);
+    size_t  atomi = TREPTR_INDEX(atom);
 
     if (value == treptr_invalid)
 		value = atom;
@@ -231,7 +233,7 @@ treptr
 treatom_number_get (double value, int type)
 {
     treptr atom;
-    ulong  num;
+    size_t num;
 
     num = trenumber_alloc (value, type);
     atom = treatom_alloc (TRETYPE_NUMBER);
@@ -294,9 +296,9 @@ treatom_remove (treptr x)
 treptr
 treatom_body_to_var (treptr body)
 {        
-    ulong  a;
-    ulong  b; 
-	treptr    tmp;
+    size_t a;
+    size_t b; 
+	treptr tmp;
 
     for (a = 0; a < NUM_ATOMS; a++) {
         if (tre_atoms[a].type != TRETYPE_FUNCTION && tre_atoms[a].type != TRETYPE_MACRO)

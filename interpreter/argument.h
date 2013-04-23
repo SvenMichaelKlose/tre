@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2008,2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2008,2012–2013 Sven Michael Klose <pixel@copei.de>
  */
 
 #ifdef INTERPRETER
@@ -10,8 +10,8 @@
 extern treptr trearg_get (treptr args);
 extern void   trearg_get2 (treptr *car, treptr *cdr, treptr args);
 
-extern treptr trearg_correct (ulong argnum, unsigned type, treptr, const char * descr);
-extern treptr trearg_typed (ulong argnum, unsigned type, treptr, const char * descr);
+extern treptr trearg_correct (size_t argnum, unsigned type, treptr, const char * descr);
+extern treptr trearg_typed (size_t argnum, unsigned type, treptr, const char * descr);
 
 extern void   trearg_expand (treptr *rvars, treptr *rvals, treptr argdef, treptr args, bool do_argeval);
 

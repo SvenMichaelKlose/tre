@@ -20,7 +20,7 @@
 #include <errno.h>
 
 struct tre_stream * treio_readerstreams[TRE_MAX_NESTED_FILES];
-ulong treio_readerstreamptr;
+size_t treio_readerstreamptr;
 
 struct tre_stream  * treio_reader;
 struct tre_stream  * treio_console;
@@ -78,10 +78,10 @@ treio_putback (struct tre_stream * s)
 }
 
 int
-treio_getline (struct tre_stream * str, char * s, ulong maxlen)
+treio_getline (struct tre_stream * str, char * s, size_t maxlen)
 {
-    int       c = 0;
-    ulong  i;
+    int    c = 0;
+    size_t i;
 
     for (i = 0; i < maxlen && (c = treio_getc (str)) != EOF && c!= '\n'; i++)
         s[i] = (c == '\t') ? ' ' : c;

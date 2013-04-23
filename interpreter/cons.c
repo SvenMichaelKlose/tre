@@ -111,7 +111,7 @@ _trelist_get (treptr car, treptr cdr)
 void
 trecons_init ()
 {
-    ulong  i;
+    size_t  i;
 
     for (i = 0; i < LAST_LISTNODE; i++)
 		tre_lists[i].cdr = (treptr) i + 1;
