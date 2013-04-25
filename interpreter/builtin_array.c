@@ -2,6 +2,8 @@
  * tré – Copyright (c) 2005–2008,2012–2013 Sven Michael Klose <pixel@copei.de>
  */
 
+#include <stdlib.h>
+
 #include "config.h"
 #include "atom.h"
 #include "cons.h"

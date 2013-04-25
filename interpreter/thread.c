@@ -1,10 +1,12 @@
 /*
- * tré – Copyright (c) 2005–2007,2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2007,2012–2013 Sven Michael Klose <pixel@copei.de>
  */
 
 /*
  * NOTE: There's only a single thread.
  */
+
+#include <stdlib.h>
 
 #include "config.h"
 #include "atom.h"

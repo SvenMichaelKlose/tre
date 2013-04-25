@@ -1,6 +1,9 @@
 /*
- * tré – Copyright (c) 2005-2009,2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2009,2013 Sven Michael Klose <pixel@copei.de>
  */
+
+#include <ctype.h>
+#include <stdlib.h>
 
 #include "config.h"
 #include "atom.h"
@@ -11,8 +14,6 @@
 #include "gc.h"
 #include "argument.h"
 #include "alloc.h"
-
-#include <ctype.h>
 
 void * tre_numbers_free;
 struct tre_number tre_numbers[NUM_NUMBERS];

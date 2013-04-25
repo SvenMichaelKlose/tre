@@ -6,6 +6,9 @@
 
 #ifdef INTERPRETER
 
+#include <ctype.h>
+#include <string.h>
+
 #include "atom.h"
 #include "cons.h"
 #include "list.h"
@@ -16,9 +19,6 @@
 #include "thread.h"
 #include "number.h"
 #include "error.h"
-
-#include <ctype.h>
-#include <string.h>
 
 #define TRETOKEN_EOF			       0
 #define TRETOKEN_BRACKET_OPEN	       1

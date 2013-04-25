@@ -2,6 +2,11 @@
  * tré – Copyright (c) 2005–2008 Sven Michael Klose <pixel@copei.de>
  */
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <errno.h>
+
 #include "config.h"
 #include "atom.h"
 #include "io.h"
@@ -9,11 +14,6 @@
 #include "error.h"
 #include "string2.h"
 #include "alloc.h"
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <errno.h>
 
 int
 treiostd_eof (void *s)

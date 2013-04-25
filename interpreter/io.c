@@ -2,6 +2,11 @@
  * tré – Copyright (c) 2005–2008,2013 Sven Michael Klose <pixel@copei.de>
  */
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <errno.h>
+
 #include "config.h"
 #include "atom.h"
 #include "io.h"
@@ -13,11 +18,6 @@
 #include "main.h"
 #include "builtin_stream.h"
 #include "alloc.h"
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <errno.h>
 
 struct tre_stream * treio_readerstreams[TRE_MAX_NESTED_FILES];
 size_t treio_readerstreamptr;

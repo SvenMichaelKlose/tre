@@ -6,6 +6,8 @@
 
 #ifdef INTERPRETER
 
+#include <stdlib.h>
+
 #include "atom.h"
 #include "cons.h"
 #include "list.h"
@@ -18,8 +20,6 @@
 #include "debug.h"
 #include "thread.h"
 #include "xxx.h"
-
-#include <stdlib.h>
 
 void
 treenv_create (treptr a)

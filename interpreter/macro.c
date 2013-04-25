@@ -1,10 +1,12 @@
 /*
- * tré – Copyright (c) 2005–2009,2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2009,2012–2013 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
 
 #ifdef INTERPRETER
+
+#include <stdlib.h>
 
 #include "atom.h"
 #include "cons.h"

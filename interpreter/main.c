@@ -2,6 +2,11 @@
  * tré – Copyright (c) 2005–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
  */
 
+#include <setjmp.h>
+#include <stdlib.h>
+#include <string.h>
+#include <signal.h>
+
 #include "config.h"
 #include "atom.h"
 #include "cons.h"
@@ -34,11 +39,6 @@
 #ifdef TRE_HAVE_COMPILED_ENV
 	treptr userfun_cInit (void);
 #endif
-
-#include <setjmp.h>
-#include <stdlib.h>
-#include <string.h>
-#include <signal.h>
 
 char * tremain_self = NULL;   /* Path to running executable. */
 char * tremain_imagelaunch = NULL;

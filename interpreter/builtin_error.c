@@ -1,6 +1,9 @@
 /*
- * tré - Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2008,2013 Sven Michael Klose <pixel@copei.de>
  */
+
+#include <stdio.h>
+#include <stdarg.h>
 
 #include "atom.h"
 #include "list.h"
@@ -9,13 +12,6 @@
 #include "string2.h"
 #include "builtin_error.h"
 
-#include <stdio.h>
-#include <stdarg.h>
-
-/*tredoc
- (cmd :name %ERROR
-   (descr "Terminate current read-eval loop and issue an error."))
- */
 treptr
 treerror_builtin_error (treptr args)
 {

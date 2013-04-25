@@ -2,6 +2,8 @@
  * tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
  */
 
+#include <stdio.h>
+
 #include "config.h"
 #include "ptr.h"
 #include "alloc.h"
@@ -28,8 +30,6 @@
 
 #include "builtin_debug.h"
 #include "builtin_atom.h"
-
-#include <stdio.h>
 
 #ifdef INTERPRETER
 

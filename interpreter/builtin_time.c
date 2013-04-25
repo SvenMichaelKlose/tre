@@ -1,14 +1,14 @@
 /*
- * tré – Copyright (c) 2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2012–2013 Sven Michael Klose <pixel@copei.de>
  */
+
+#include <time.h>
 
 #include "config.h"
 #include "atom.h"
 #include "list.h"
 #include "number.h"
 #include "builtin_time.h"
-
-#include <time.h>
 
 treptr
 tretime_builtin_nanotime (treptr dummy)

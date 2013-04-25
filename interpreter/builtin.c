@@ -2,6 +2,8 @@
  * tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
  */
 
+#include <sys/mman.h>
+
 #include "config.h"
 #include "atom.h"
 #include "cons.h"
@@ -37,8 +39,6 @@
 #include "builtin_time.h"
 #include "main.h"
 #include "xxx.h"
-
-#include <sys/mman.h>
 
 treevalfunc_t treeval_xlat_builtin[];
 

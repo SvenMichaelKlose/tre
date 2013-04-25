@@ -1,6 +1,8 @@
 /*
- * tré - Copyright (c) 2005-2008 Sven Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2008,2013 Sven Michael Klose <pixel@copei.de>
  */
+
+#include <stdio.h>
 
 #include "config.h"
 #include "atom.h"
@@ -13,8 +15,6 @@
 #include "argument.h"
 #include "builtin_fileio.h"
 #include "xxx.h"
-
-#include <stdio.h>
 
 FILE * tre_fileio_handles[TRE_FILEIO_MAX_FILES];
 

@@ -6,6 +6,10 @@
 
 #ifdef INTERPRETER
 
+#include <stdarg.h>
+#include <ctype.h>
+#include <string.h>
+
 #include "atom.h"
 #include "cons.h"
 #include "list.h"
@@ -21,10 +25,6 @@
 #include "builtin_stream.h"
 #include "xxx.h"
 #include "gc.h"
-
-#include <stdarg.h>
-#include <ctype.h>
-#include <string.h>
 
 int    tredebug_mode;
 treptr tredebug_next;

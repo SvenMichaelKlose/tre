@@ -2,6 +2,10 @@
  * tré – Copyright (c) 2007–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
  */
 
+#include <string.h>
+#include <strings.h>
+#include <stdlib.h>
+
 #include "config.h"
 #include "atom.h"
 #include "cons.h"
@@ -23,10 +27,6 @@
 #include "thread.h"
 #include "image.h"
 #include "alloc.h"
-
-#include <string.h>
-#include <strings.h>
-#include <stdlib.h>
 
 #ifdef TRE_COMPILED_CRUNSHED
 #define TRE_IMAGE_FORMAT_VERSION    -1

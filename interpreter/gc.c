@@ -2,6 +2,9 @@
  * tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
  */
 
+#include <stdio.h>
+#include <string.h>
+
 #include "config.h"
 #include "atom.h"
 #include "cons.h"
@@ -23,9 +26,6 @@
 
 #include "io.h"
 #include "main.h"
-
-#include <stdio.h>
-#include <string.h>
 
 char tregc_listmarks[NUM_LISTNODES >> 3];
 char tregc_atommarks[NUM_ATOMS >> 3];

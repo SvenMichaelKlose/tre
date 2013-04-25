@@ -2,6 +2,10 @@
  * tré – Copyright (c) 2005–2010,2012–2013 Sven Michael Klose <pixel@copei.de>
  */
 
+#include <math.h>
+#include <string.h>
+#include <stdlib.h>
+
 #include "config.h"
 #include "atom.h"
 #include "cons.h"
@@ -13,10 +17,6 @@
 #include "builtin.h"
 #include "builtin_number.h"
 #include "builtin_string.h"
-
-#include <math.h>
-#include <string.h>
-#include <stdlib.h>
 
 treptr
 treeval_exprop (treptr x, treeval_opfunc_t func, const char * descr)

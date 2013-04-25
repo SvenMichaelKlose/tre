@@ -2,12 +2,12 @@
  * tré – Copyright (c) 2005–2009,2013 Sven Michael Klose <pixel@copei.de>
  */
 
+#include <stdlib.h>
+
 #include "config.h"
 #include "xxx.h"
 #include "ptr.h"
 #include "alloc.h"
-
-#include <stdlib.h>
 
 void *
 trealloc (size_t size)

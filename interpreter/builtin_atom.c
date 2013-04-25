@@ -2,6 +2,8 @@
  * tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
  */
 
+#include <string.h>
+
 #include "config.h"
 #include "atom.h"
 #include "cons.h"
@@ -14,8 +16,6 @@
 #include "string2.h"
 #include "thread.h"
 #include "xxx.h"
-
-#include <string.h>
 
 treptr
 treatom_builtin_not (treptr list)

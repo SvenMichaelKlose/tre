@@ -6,6 +6,8 @@
 
 #ifdef INTERPRETER
 
+#include <stdlib.h>
+
 #include "atom.h"
 #include "cons.h"
 #include "list.h"

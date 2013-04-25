@@ -2,6 +2,8 @@
  * tré – Copyright (c) 2005–2010,2012–2013 Sven Michael Klose <pixel@copei.de>
  */
 
+#include <stdlib.h>
+
 #include "config.h"
 #include "atom.h"
 #include "cons.h"
@@ -23,14 +25,6 @@
 treptr trelist_builtin_eq_symbol;
 treptr trelist_builtin_test_symbol;
 
-/*tredoc
-  (cmd :name CONS
-	(arg :name a)
-	(arg :name d)
-	(Returns "A new cell containing the first argument as the CAR "
-		     "and the second argument as the CDR.")
-	(see-also CAR CDR))
- */
 treptr
 trelist_builtin_cons (treptr list)
 {
@@ -39,11 +33,6 @@ trelist_builtin_cons (treptr list)
     return CONS(car, cdr);
 }
 
-/*tredoc
-  (cmd :name LIST
-	(arg :name expression :occurrence *)
-	(Returns "Copy of argument list."))
- */
 treptr
 trelist_builtin_list (treptr list)
 {
@@ -59,11 +48,6 @@ trelist_builtin_cxr_arg (treptr list, const char * descr)
 	return trearg_typed (1, TRETYPE_CONS, arg, descr);
 }
 
-/*tredoc
-  (cmd :name CAR
-	(arg :type cons)
-	(returns "CAR of cell. Returns NIL if the argument is NIL.))
- */
 treptr
 trelist_builtin_car (treptr list)
 {
@@ -73,11 +57,6 @@ trelist_builtin_car (treptr list)
     return CAR(arg);
 }
 
-/*tredoc
-  (cmd :name CDR
-	(arg :type cons)
-	(returns "CDR of cell. Returns NIL if the argument is NIL.))
- */
 treptr
 trelist_builtin_cdr (treptr list)
 {
@@ -86,11 +65,6 @@ trelist_builtin_cdr (treptr list)
     return CDR(arg);
 }
 
-/*tredoc
-  (cmd :name CPR
-	(arg :type cons)
-	(returns "Property of cell. Returns NIL if the argument is NIL.))
- */
 treptr
 trelist_builtin_cpr (treptr list)
 {
@@ -105,13 +79,6 @@ trelist_builtin_cpr (treptr list)
     trearg_get2 (&cons, &new, list);	\
 	cons = trearg_typed (1, TRETYPE_CONS, cons, NULL);
 
-/*tredoc
-  (cmd :name RPLACA
-	(arg :type cons)
-	(arg :type obj)
-	(descr "Set CAR cons.")
-	(returns-argument obj))
- */
 treptr
 trelist_builtin_rplaca (treptr list)
 {
@@ -120,13 +87,6 @@ trelist_builtin_rplaca (treptr list)
     return cons;
 }
 
-/*tredoc
-  (cmd :name RPLACD
-	(arg :type cons)
-	(arg :type obj)
-	(descr "Set CDR of cons.")
-	(returns-argument obj))
- */
 treptr
 trelist_builtin_rplacd (treptr list)
 {
@@ -135,13 +95,6 @@ trelist_builtin_rplacd (treptr list)
     return cons;
 }
 
-/*tredoc
-  (cmd :name RPLACP
-	(arg :type cons)
-	(arg :type obj)
-	(descr "Set property of cons.")
-	(returns-argument obj))
- */
 treptr
 trelist_builtin_rplacp (treptr list)
 {
@@ -150,12 +103,6 @@ trelist_builtin_rplacp (treptr list)
     return cons;
 }
 
-/*tredoc
-  (cmd :name CONS?
-	(arg :type obj :occurrence *)
-	(descr "Checks if all objects are conses.")
-	(returns boolean))
- */
 treptr
 trelist_builtin_consp (treptr list)
 {

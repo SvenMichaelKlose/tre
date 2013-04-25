@@ -6,6 +6,8 @@
 
 #ifdef INTERPRETER
 
+#include <stdio.h>
+
 #include "atom.h"
 #include "cons.h"
 #include "list.h"
@@ -20,8 +22,6 @@
 #include "thread.h"
 #include "env.h"
 #include "xxx.h"
-
-#include <stdio.h>
 
 treptr tre_atom_rest;
 treptr tre_atom_body;

@@ -6,6 +6,8 @@
 
 #ifdef INTERPRETER
 
+#include <stdio.h>
+
 #include "atom.h"
 #include "cons.h"
 #include "list.h"
@@ -23,8 +25,6 @@
 #include "string2.h"
 #include "xxx.h"
 #include "apply.h"
-
-#include <stdio.h>
 
 treptr treopt_verbose_eval;
 treptr treeval_slot_value;

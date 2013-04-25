@@ -2,6 +2,9 @@
  * tré – Copyright (c) 2005–2007,2011–2013 Sven Michael Klose <pixel@copei.de>
  */
 
+#include <stdio.h>
+#include <stdarg.h>
+
 #include "config.h"
 #include "atom.h"
 #include "list.h"
@@ -16,9 +19,6 @@
 #include "string2.h"
 #include "macro.h"
 #include "xxx.h"
-
-#include <stdio.h>
-#include <stdarg.h>
 
 void
 treerror_msg (treptr expr, const char *prefix, const char *msg, va_list ap)

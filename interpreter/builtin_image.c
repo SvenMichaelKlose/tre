@@ -1,6 +1,8 @@
 /*
- * tré – Copyright (c) 2005–2007,2011–2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2007,2011–2013 Sven Michael Klose <pixel@copei.de>
  */
+
+#include <stdio.h>
 
 #include "config.h"
 #include "atom.h"
@@ -13,14 +15,6 @@
 #include "image.h"
 #include "builtin_fileio.h"
 
-#include <stdio.h>
-
-/*tredoc
-  (cmd :name SYS-IMAGE-CREATE
-	(arg :name path :type string)
-	(arg :name init-fun :type function :occurrence optional)
-	(descr "Dumps current environment to image file."))
- */
 treptr
 treimage_builtin_create (treptr list)
 {
@@ -46,11 +40,6 @@ treimage_builtin_create (treptr list)
     return treptr_nil;
 }
 
-/*tredoc
-  (cmd :name SYS-IMAGE-LOAD :never-returns t
-	(arg :name path :type string)
-	(descr "Replaces current environment by image."))
- */
 treptr
 treimage_builtin_load (treptr list)
 {

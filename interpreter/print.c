@@ -10,6 +10,9 @@
 
 #ifdef INTERPRETER
 
+#include <stdio.h>
+#include <strings.h>
+
 #include "atom.h"
 #include "cons.h"
 #include "list.h"
@@ -22,9 +25,6 @@
 #include "string2.h"
 #include "thread.h"
 #include "array.h"
-
-#include <stdio.h>
-#include <strings.h>
 
 char treprint_marks_cons[NUM_LISTNODES >> 3];
 char treprint_marks_atoms[NUM_ATOMS >> 3];
@@ -108,8 +108,6 @@ treprint_chk_atom_mark (treptr atom)
 void
 treprint_atom (treptr atom, size_t indent)
 {
-    char * name;
-
     if (treprint_chk_atom_mark (atom)) {
         printf ("*circular*");
         return;
@@ -119,12 +117,18 @@ treprint_atom (treptr atom, size_t indent)
 
     switch (TREPTR_TYPE(atom)) {
 		case TRETYPE_SYMBOL:
-		case TRETYPE_BUILTIN:
-		case TRETYPE_SPECIAL:
 	    	if (TREATOM_PACKAGE(atom) != TRECONTEXT_PACKAGE())
                 printf ("%s:", TREATOM_NAME(TREATOM_PACKAGE(atom)));
            	printf ("%s", TREATOM_NAME(atom));
 	    	break;
+
+		case TRETYPE_BUILTIN:
+           	printf ("*BUILTIN*");
+            break;
+
+		case TRETYPE_SPECIAL:
+           	printf ("*SPECIAL*");
+            break;
 
 		case TRETYPE_NUMBER:
 	    	if (TRENUMBER_TYPE(atom) == TRENUMTYPE_CHAR) {
@@ -143,33 +147,21 @@ treprint_atom (treptr atom, size_t indent)
 	    	break;
 
 		case TRETYPE_FUNCTION:
-            name = TREATOM_NAME(atom);
-            if (name == NULL) {
-	        	printf ("#'(");
-	        	treprint_indent (TREATOM_VALUE(atom), indent, TRUE, "");
-	        	printf (")");
-            } else
-                printf ("#'%s", name);
+	        printf ("#'(");
+	        treprint_indent (TREATOM_VALUE(atom), indent, TRUE, "");
+	        printf (")");
 	    	break;
 
 		case TRETYPE_MACRO:
-            name = TREATOM_NAME(atom);
-            if (name == NULL) {
-	        	printf ("(MACRO");
-	        	treprint_r (TREATOM_VALUE(atom));
-	        	printf (")");
-            } else
-                printf ("%s", name);
+	        printf ("(MACRO");
+	       	treprint_r (TREATOM_VALUE(atom));
+	       	printf (")");
 	    	break;
 
 		case TRETYPE_USERSPECIAL:
-            name = TREATOM_NAME(atom);
-            if (name == NULL) {
-	        	printf ("(SPECIAL");
-	        	treprint_r (TREATOM_VALUE(atom));
-	        	printf (")");
-            } else
-                printf ("%s", name);
+	       	printf ("(SPECIAL");
+	       	treprint_r (TREATOM_VALUE(atom));
+	       	printf (")");
 	    	break;
 
 		case TRETYPE_CONS:

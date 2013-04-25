@@ -2,6 +2,10 @@
  * tré – Copyright (c) 2005–2009,2012–2013 Sven Michael Klose <pixel@copei.de>
  */
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
+
 #include "config.h"
 #include "atom.h"
 #include "cons.h"
@@ -17,10 +21,6 @@
 #include "argument.h"
 #include "array.h"
 #include "xxx.h"
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h>
 
 struct tre_sequence_type * tre_sequence_types [] = {
 	&trelist_seqtype,	/* #define TRETYPE_CONS        0 */

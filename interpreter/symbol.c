@@ -2,6 +2,11 @@
  * tré – Copyright (c) 2005–2008,2010,2012–2013 Sven Michael Klose <pixel@copei.de>
  */
 
+#include <string.h>
+#include <strings.h>
+#include <stdlib.h>
+#include <stdio.h>
+
 #include "config.h"
 #include "atom.h"
 #include "list.h"
@@ -9,11 +14,6 @@
 #include "util.h"
 #include "symbol.h"
 #include "alloc.h"
-
-#include <string.h>
-#include <strings.h>
-#include <stdlib.h>
-#include <stdio.h>
 
 size_t num_symbols;
 

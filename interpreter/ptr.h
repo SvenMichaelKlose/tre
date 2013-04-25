@@ -8,7 +8,7 @@
 #include "config.h"
 #include "type.h"
 
-typedef unsigned int treptr;
+typedef size_t treptr;
 
 #define TREPTR_FLAGS	((treptr) -1 << TREPTR_INDEX_WIDTH)
 
