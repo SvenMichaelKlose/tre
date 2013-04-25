@@ -37,8 +37,6 @@ char tregc_atommarks[NUM_ATOMS >> 3];
 
 treptr tregc_car;
 treptr tregc_cdr;
-treptr tregc_save;
-treptr tregc_save_stack;
 treptr tregc_retval_current;
 
 bool tregc_running;
@@ -46,8 +44,7 @@ bool tregc_running;
 void
 tregc_push (treptr expr)
 {
-	tregc_save = expr;
-    TRELIST_PUSH(tregc_save_stack, expr);
+    *--trestack_ptr = expr;
 }
 
 treptr
@@ -60,7 +57,7 @@ tregc_push_compiled (treptr expr)
 void
 tregc_pop ()
 {
-    TRELIST_POP(tregc_save_stack);
+    trestack_ptr++;
 }
 
 void
@@ -115,10 +112,11 @@ tregc_trace_array (treptr arr)
 {
     treptr *  i = TREATOM_DETAIL(arr);
     size_t    size = TREARRAY_SIZE(arr);
+    size_t    counter = size;
 
     tregc_trace_tree (TREATOM_VALUE(arr));
 
-    while (size--)
+    while (counter--)
 		tregc_trace_object (*i++);
 }
 
@@ -184,8 +182,6 @@ tregc_mark (void)
     tregc_trace_object (tregc_car);
     tregc_trace_object (tregc_cdr);
 
-    tregc_trace_object (tregc_save);
-    tregc_trace_object (tregc_save_stack);
     tregc_trace_object (tregc_retval_current);
 
     tregc_trace_list (tre_lists_free);
@@ -304,8 +300,6 @@ void
 tregc_init ()
 {
     tregc_running = FALSE;
-    tregc_save_stack = treptr_nil;
-    tregc_save = treptr_nil;
     tregc_retval_current = treptr_nil;
     tregc_car = treptr_nil;
     tregc_cdr = treptr_nil;

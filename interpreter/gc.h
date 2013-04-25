@@ -6,7 +6,6 @@
 #define TRE_GC_H
 
 extern int    tregc_running;
-extern treptr tregc_save_stack;
 
 extern char   tregc_listmarks[NUM_LISTNODES >> 3];
 extern char   tregc_atommarks[NUM_ATOMS >> 3];
