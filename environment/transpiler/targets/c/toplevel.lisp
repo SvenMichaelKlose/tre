@@ -70,7 +70,8 @@
 	       ,@(mapcar #'list (reverse init-funs)))))))
 
 (defun c-transpiler-header-inclusions ()
-  (apply #'+ (mapcar [format nil "#include \"~A\"~%" _] *c-core-headers*)))
+  (+ (format nil "#include <stdlib.h>~%")
+     (apply #'+ (mapcar [format nil "#include \"~A\"~%" _] *c-core-headers*))))
 
 (defun c-transpile (sources &key transpiler obfuscate? print-obfuscations? files-to-update)
   (let tr transpiler
