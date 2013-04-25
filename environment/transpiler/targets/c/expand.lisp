@@ -7,6 +7,7 @@
   `(%%block
      ,(apply #'shared-defun name args body)
      ,@(let fun-name (%defun-name name)
+         (c-compiled-symbol fun-name)
          (unless (simple-argument-list? args)
            (with-gensym p
              `((defun ,($ fun-name '_treexp) (,p)
