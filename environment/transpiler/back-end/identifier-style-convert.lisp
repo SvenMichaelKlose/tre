@@ -23,8 +23,12 @@
 			         (? (& .x (| (character== #\- c)
                                  (& (== 0 pos)
                                     (character== #\* c))))
-					    (cons (char-upcase (cadr x))
-						      (convert-camel ..x (1+ pos)))
+                        (? (& (character== #\- c)
+                              (not (alpha-char-p .x.)))
+                           (+ (string-list "T45")
+                              (convert-camel .x (1+ pos)))
+					       (cons (char-upcase (cadr x))
+						         (convert-camel ..x (1+ pos))))
 					    (cons c (convert-camel .x (1+ pos)))))))
 
          convert-special2
