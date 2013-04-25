@@ -5,10 +5,10 @@
 (defvar *js-array-constructor* (make-array).constructor)
 
 (defun aref (a k)
-  (href a k))
+  (%%%aref a k))
 
 (defun =-aref (v a k)
-  (=-href v a k))
+  (%%%=-aref v a k))
 
 (defun array? (x)
   (& x (eq *js-array-constructor* x.constructor)))
