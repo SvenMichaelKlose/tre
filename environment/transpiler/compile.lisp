@@ -3,19 +3,19 @@
 (defun compile-0 (sources &key (target nil) (transpiler nil) (obfuscate? nil) (print-obfuscations? t) (files-to-update nil))
   (| target (error "target missing"))
   (funcall (case target
-             'c ,(& *have-c-compiler?* '#'c-transpile)
+             'c        ,(& *have-c-compiler?* '#'c-transpile)
              'bytecode ,(& *have-c-compiler?* '#'bc-transpile)
-             'js #'js-transpile
-             'php #'php-transpile
+             'js       #'js-transpile
+             'php      #'php-transpile
              (error "unknown target ~A"))
            sources
            :transpiler (| transpiler
                           (copy-transpiler
                             (case target
-                              'c ,(& *have-c-compiler?* '*c-transpiler*)
+                              'c        ,(& *have-c-compiler?* '*c-transpiler*)
                               'bytecode ,(& *have-c-compiler? '*bc-transpiler*)
-                              'js *js-transpiler*
-                              'php *php-transpiler*)))
+                              'js       *js-transpiler*
+                              'php      *php-transpiler*)))
            :obfuscate? obfuscate?
            :print-obfuscations? print-obfuscations?
            :files-to-update files-to-update))
