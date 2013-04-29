@@ -3,6 +3,6 @@
 ,`(progn
     ,@(macroexpand (mapcar [let n (make-symbol (c-builtin-name _))
                              (unless (expander-has-macro? 'c-codegen _)
-                               `(define-c-macro ,_ (&rest x)
+                               `(define-c-std-macro ,_ (&rest x)
                                   `(,n ,,(compiled-list x))))]
                            (c-builtin-names))))
