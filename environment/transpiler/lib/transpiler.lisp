@@ -126,6 +126,9 @@
 
   (raw-decls nil)
 
+  (identifiers (make-hash-table :test #'eq))
+  (converted-identifiers (make-hash-table :test #'eq))
+
   ; Recompiling
   (frontend-files)
   (compiled-files)
@@ -148,6 +151,8 @@
   	 (transpiler-function-args tr)          (make-hash-table :test #'eq)
   	 (transpiler-function-bodies tr)        (make-hash-table :test #'eq)
   	 (transpiler-late-symbols tr)           (make-hash-table :test #'eq)
+  	 (transpiler-identifiers tr)            (make-hash-table :test #'eq)
+  	 (transpiler-converted-identifiers tr)  (make-hash-table :test #'eq)
   	 (transpiler-exported-closures tr) nil
   	 (transpiler-delayed-var-inits tr) nil
      (transpiler-memorized-sources tr) nil
@@ -233,6 +238,8 @@
         :frontend-files          (copy-alist frontend-files)
         :compiled-files          (copy-alist compiled-files)
         :current-package         current-package
+        :identifiers             (copy-hash-table identifiers)
+        :converted-identifiers   (copy-hash-table converted-identifiers)
         :expex-initializer       expex-initializer)
     (funcall (transpiler-expex-initializer !) (transpiler-make-expex !))))
 

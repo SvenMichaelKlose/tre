@@ -58,7 +58,7 @@
                                  (convert-global str)
     	                         (convert-camel (string-list str) 0))))))))
 
-(defun transpiler-symbol-string-0 (tr s)
+(defun transpiler-symbol-string-1 (tr s)
   (!? (symbol-package s)
       (transpiler-symbol-string-r tr (make-symbol (string-concat (symbol-name !) ":" (symbol-name s))))
       (transpiler-symbol-string-r tr s)))
@@ -68,11 +68,21 @@
 		                              (split #\. sl))
                               ".")))
 
-(defun transpiler-symbol-string (tr s)
+(defun transpiler-symbol-string-0 (tr s)
   (let sl (string-list (symbol-name s))
     (? (position #\. sl)
 	   (transpiler-dot-symbol-string tr sl)
-	   (transpiler-symbol-string-0 tr s))))
+	   (transpiler-symbol-string-1 tr s))))
+
+(defun transpiler-symbol-string (tr s)
+  (| (href (transpiler-identifiers tr) s)
+     (let n (transpiler-symbol-string-0 tr s)
+       (awhen (href (transpiler-converted-identifiers tr) n)
+         (error "Identifier conversion clash. Symbols ~A and ~A are both converted to ~A."
+                (symbol-name s) (symbol-name !) (symbol-name n)))
+       (= (href (transpiler-identifiers tr) s) n)
+       (= (href (transpiler-converted-identifiers tr) n) s)
+       n)))
 
 (defun current-transpiler-symbol-string (s)
   (transpiler-symbol-string *transpiler* s))
