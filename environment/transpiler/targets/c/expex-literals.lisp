@@ -13,22 +13,22 @@
 
 (c-define-compiled-literal c-compiled-number (x number)
   :maker ($ 'trenumber_compiled_ (gensym-number))
-  :init-maker (tregc_push_compiled (trenumber_get (%transpiler-native ,x))))
+  :init-maker (tregc_add_unremovable (trenumber_get (%transpiler-native ,x))))
 
 (c-define-compiled-literal c-compiled-char (x char)
   :maker ($ 'trechar_compiled_ (char-code x))
-  :init-maker (tregc_push_compiled (trechar_get (%transpiler-native ,(char-code x)))))
+  :init-maker (tregc_add_unremovable (trechar_get (%transpiler-native ,(char-code x)))))
 
 (c-define-compiled-literal c-compiled-string (x string)
   :maker ($ 'trestring_compiled_ (gensym-number))
-  :init-maker (tregc_push_compiled (trestring_get (%transpiler-native (%transpiler-string ,x)))))
+  :init-maker (tregc_add_unremovable (trestring_get (%transpiler-native (%transpiler-string ,x)))))
 
 (c-define-compiled-literal c-compiled-symbol (x symbol)
   :maker ($ 'tresymbol_compiled_ x (? (keyword? x) '_keyword ""))
-  :init-maker (tregc_push_compiled (treatom_get (%transpiler-native (%transpiler-string ,(symbol-name x)))
-			                                    ,(? (keyword? x)
-				                                    'tre_package_keyword
-				                                    'treptr_nil))))
+  :init-maker (tregc_add_unremovable (treatom_get (%transpiler-native (%transpiler-string ,(symbol-name x)))
+			                                      ,(? (keyword? x)
+				                                      'tre_package_keyword
+				                                      'treptr_nil))))
 
 (functional *TREATOM_VALUE*)
 

@@ -64,7 +64,7 @@
 				 (let name ($ 'C-INIT- (1+! *c-init-counter*))
 				   (push name init-funs)
 				   `(defun ,name ()
-				      ,@(mapcar ^(tregc_push_compiled ,_) _)))]
+				      ,@(mapcar ^(tregc_add_unremovable ,_) _)))]
 			   (group (c-transpiler-declarations-and-initialisations tr) *c-init-group-size*))
        `((defun c-init ()
 	       ,@(mapcar #'list (reverse init-funs)))))))
