@@ -84,8 +84,8 @@ _trelist_get (treptr car, treptr cdr)
 {
     treptr ret;
 
-	tregc_car = car;
-	tregc_car = cdr;
+    tregc_push (car);
+    tregc_push (cdr);
 
 	if (tre_lists_free == treptr_nil)
 		tregc_force ();
@@ -105,6 +105,8 @@ _trelist_get (treptr car, treptr cdr)
         tregc_force ();
 #endif
 
+    tregc_pop ();
+    tregc_pop ();
     return ret;
 }
 

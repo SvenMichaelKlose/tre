@@ -76,10 +76,10 @@ treatom_init_atom_table (void)
 
     tre_atoms_free = trealloc_item_init (
 		&tre_atoms[TREPTR_FIRST_INDEX],
-		NUM_ATOMS - TREPTR_FIRST_INDEX - 1,
+		NUM_ATOMS - TREPTR_FIRST_INDEX,
 		sizeof (struct tre_atom)
 	);
-	DOTIMES(x, NUM_ATOMS - TREPTR_FIRST_INDEX - 1)
+	DOTIMES(x, NUM_ATOMS - TREPTR_FIRST_INDEX)
 	  tre_atoms[x + TREPTR_FIRST_INDEX].type = TRETYPE_UNUSED;
 }
 

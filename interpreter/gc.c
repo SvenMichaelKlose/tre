@@ -35,9 +35,8 @@ char tregc_atommarks[NUM_ATOMS >> 3];
 #define _TREGC_FREE_ATOM(index)     TRE_MARK(tregc_atommarks, index)
 #define _TREGC_FREE_CONS(index)     TRE_MARK(tregc_listmarks, index)
 
-treptr tregc_car;
-treptr tregc_cdr;
 treptr tregc_retval_current;
+treptr tregc_unremovables;
 
 bool tregc_running;
 
@@ -48,9 +47,9 @@ tregc_push (treptr expr)
 }
 
 treptr
-tregc_push_compiled (treptr expr)
+tregc_add_unremovable (treptr expr)
 {
-	tregc_push (expr);
+    tregc_unremovables = CONS(expr, tregc_unremovables);
 	return expr;
 }
 
@@ -178,9 +177,7 @@ tregc_mark (void)
     tregc_mark_stack ();
 
     tregc_trace_list (TRECONTEXT_FUNSTACK());
-
-    tregc_trace_object (tregc_car);
-    tregc_trace_object (tregc_cdr);
+    tregc_trace_tree (tregc_unremovables);
 
     tregc_trace_object (tregc_retval_current);
 
@@ -301,6 +298,5 @@ tregc_init ()
 {
     tregc_running = FALSE;
     tregc_retval_current = treptr_nil;
-    tregc_car = treptr_nil;
-    tregc_cdr = treptr_nil;
+    tregc_unremovables = treptr_nil;
 }

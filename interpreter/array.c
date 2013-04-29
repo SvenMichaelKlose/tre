@@ -59,6 +59,7 @@ trearray_get (treptr sizes)
     treptr * array;
     treptr   copied_sizes;
 
+    tregc_push (sizes);
     array = trearray_get_raw (size);
     if (!array) {
 		tregc_force ();
@@ -69,7 +70,6 @@ trearray_get (treptr sizes)
     copied_sizes = trelist_copy (sizes);
     tregc_push (copied_sizes);
     a = treatom_alloc (TRETYPE_ARRAY);
-    tregc_push (a);
     treatom_set_value (a, copied_sizes);
     TREATOM_DETAIL(a) = array;
     tregc_pop ();

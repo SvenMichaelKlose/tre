@@ -74,11 +74,16 @@ trefuncall_ffi (void * fun, treptr x)
 treptr
 trefuncall_c (treptr func, treptr args, bool do_eval)
 {
+    treptr ret;
     treptr a = do_eval ? treeval_args (args) : args;
 
-    if (TREATOM_COMPILED_EXPANDER(func))
-        return trefuncall_ffi (TREATOM_COMPILED_EXPANDER(func), CONS(a, treptr_nil));
-    return trefuncall_ffi (TREATOM_COMPILED_FUN(func), a);
+    tregc_push (a);
+    ret = (TREATOM_COMPILED_EXPANDER(func)) ?
+              trefuncall_ffi (TREATOM_COMPILED_EXPANDER(func), CONS(a, treptr_nil)) :
+              trefuncall_ffi (TREATOM_COMPILED_FUN(func), a);
+    tregc_pop ();
+
+    return ret;
 }
 
 

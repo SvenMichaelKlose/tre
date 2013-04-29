@@ -55,7 +55,8 @@ treeval_funcall (treptr func, treptr args, bool do_argeval)
     old_parent = env_parent;
 
     trearg_expand (&expforms, &expvals, argdef, args, do_argeval);
-    tregc_push (CONS(expforms, expvals));
+    tregc_push (expforms);
+    tregc_push (expvals);
 
     treenv_bind (expforms, expvals);
 
@@ -65,6 +66,7 @@ treeval_funcall (treptr func, treptr args, bool do_argeval)
     treenv_unbind (expforms);
     TRECONTEXT_ENV_CURRENT() = old_parent;
 
+    tregc_pop ();
     tregc_pop ();
     TRELIST_FREE_TOPLEVEL_EARLY(expvals);
     TRELIST_FREE_TOPLEVEL_EARLY(expforms);
@@ -177,13 +179,11 @@ treeval_args (treptr x)
 		return x;
 
     tregc_push (x);
-
     car = treeval (CAR(x));
     tregc_push (car);
     cdr = treeval_args (CDR(x));
     val = CONS(car, cdr);
     tregc_pop ();
-
     tregc_pop ();
 
     return val;
