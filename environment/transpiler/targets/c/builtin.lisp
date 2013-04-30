@@ -40,7 +40,7 @@
 		(EXP)
 		(POW)
 		(ROUND)
-		(NUMBER? numberp)
+;		(NUMBER? numberp)
 		(== number_equal)
 		(< lessp)
 		(> greaterp)
@@ -63,11 +63,11 @@
 		(CHARACTER? characterp))
 
 	(treatom_builtin_
-		(EQ)
+;		(EQ)
 		(EQL)
 		(MAKE-SYMBOL make_symbol)
 		(MAKE-PACKAGE make_package)
-		(ATOM)
+;		(ATOM)
 		(%TYPE-ID type_id)
 		(%%ID id)
 		(SYMBOL-VALUE symbol_value)
@@ -75,22 +75,23 @@
 		(SYMBOL-FUNCTION symbol_function)
 		(=-SYMBOL-FUNCTION usetf_symbol_function)
 		(SYMBOL-PACKAGE symbol_package)
-		(SYMBOL? symbolp)
-		(FUNCTION? functionp)
-		(BUILTIN? builtinp)
+;		(SYMBOL? symbolp)
+;		(FUNCTION? functionp)
+;		(BUILTIN? builtinp)
 		(MACROP)
 		(%ATOM-LIST atom_list))
 
 	(trelist_builtin_
 		;(CONS)
 		(LIST)
-    	(CAR)
-		(CDR)
+;    	(CAR)
+;		(CDR)
 		(CPR)
 		(RPLACA)
 		(RPLACD)
 		(RPLACP)
-   	    (CONS? consp))
+;   	    (CONS? consp))
+)
 
 	(tresequence_builtin_
     	(ELT)
@@ -98,7 +99,7 @@
 		(LENGTH))
 
 	(trestring_builtin_
-		(STRING? stringp)
+;		(STRING? stringp)
     	(MAKE-STRING make)
 		(STRING== compare)
 		(STRING-CONCAT concat)
@@ -108,7 +109,7 @@
 
 	(trearray_builtin_
     	(MAKE-ARRAY make)
-		(ARRAY? p)
+;		(ARRAY? p)
 		(%AREF aref)
 		(=-%AREF set_aref))
 
