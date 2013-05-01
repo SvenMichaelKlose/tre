@@ -5,7 +5,7 @@
 
 (defun peek-digit (str)
   (awhen (peek-char str)
-    (& (digit-char-p !) !)))
+    (& (digit-char? !) !)))
 
 (defun peek-dot (str)
   (awhen (peek-char str)
@@ -18,7 +18,7 @@
 
 (defun read-mantissa (&optional (str *standard-input*))
   (& (!? (peek-char str)
-         (digit-char-p !))
+         (digit-char? !))
      (read-mantissa-0 str 0 0.1)))
 
 (defun read-integer-0 (str v)

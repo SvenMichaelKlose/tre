@@ -24,7 +24,7 @@
                                  (& (== 0 pos)
                                     (character== #\* c))))
                         (? (& (character== #\- c)
-                              (not (alpha-char-p .x.)))
+                              (not (alphanumeric? .x.)))
                            (+ (string-list "T45")
                               (convert-camel .x (1+ pos)))
 					       (cons (char-upcase (cadr x))
@@ -33,20 +33,17 @@
 
          convert-special2
            [& _
-              (let c _.
-                (? (transpiler-special-char? tr c)
-                   (append (encapsulate-char c)
-                           (convert-special2 ._))
-                   (cons c (convert-special2 ._))))]
+              (? (transpiler-special-char? tr _.)
+                 (append (encapsulate-char _.)
+                         (convert-special2 ._))
+                 (cons _. (convert-special2 ._)))]
 
 		 convert-special
            [& _
-              (let c _.
-                   ; Encapsulate initial char if it's a digit.
-                   (? (digit-char-p c)
-                      (append (encapsulate-char c)
-                              (convert-special2 ._))
-                      (convert-special2 _)))]
+              (? (digit-char? _.)
+                 (append (encapsulate-char _.)
+                         (convert-special2 ._))
+                 (convert-special2 _))]
          convert-global
            [remove-if [== _ #\-]
                       (string-list (string-upcase (subseq _ 1 (1- (length _)))))])

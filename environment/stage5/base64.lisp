@@ -37,7 +37,7 @@
 
 (defun base64-compress (x)
   (when x
-    (? (| (alphanumericp x.)
+    (? (| (alphanumeric? x.)
           (in=? x. #\+ #\/ #\=))
        (cons x. (base64-compress .x))
        (base64-compress .x))))

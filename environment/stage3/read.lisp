@@ -75,7 +75,7 @@
 	(values (? (& sym (not .sym) (== #\. sym.))
 		         'dot
 		       (? sym
-                  (? (every [| (digit-char-p _)
+                  (? (every [| (digit-char? _)
                                (eq #\. _)]
                             sym)
                      'number

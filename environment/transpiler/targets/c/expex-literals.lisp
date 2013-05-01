@@ -39,5 +39,5 @@
     (number? x)    (c-compiled-number x)
     (string? x)    (c-compiled-string x)
 	(funinfo-var-or-lexical? *expex-funinfo* x) x
-	(expex-global-variable? x) `(%transpiler-native "TREATOM_VALUE(" ,(c-compiled-symbol x) ")")
+	(expex-global-variable? x) `(*TREATOM_VALUE* ,(c-compiled-symbol x))
 	x))
