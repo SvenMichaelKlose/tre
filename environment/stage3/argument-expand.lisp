@@ -6,9 +6,14 @@
 (defun argument-keyword? (x)
   (in? x '&rest '&body '&optional '&key))
 
-(defun argument-list-keyword? (x)
-  (| (argument-keyword? x)
-     (keyword? x)))
+(defun argument-name? (x)
+  (atom x))
+
+(defun argument-name (x)
+  x)
+
+(defun argument-def-without-type (x)
+  x)
 
 (defun make-&key-alist (def)
   (with (&keys nil
@@ -29,7 +34,6 @@
 				(make-&key-descr ._)
 				(cons _. (copy-def-until-&key ._)))])
 
-	(= &keys nil) ; XXX Remove this?
 	(values (copy-def-until-&key def)
             (reverse &keys))))
 
@@ -59,7 +63,7 @@
 						              "; Given arguments: ~A~%")
                        (symbol-name fun) (apply #'format nil msg args)
                        adef alst))
-		 get-name
+		 get-name ; DEFGENERIC: Ignore types.
 		   #'((def)
 				(? (cons? def.)
 				   def..
@@ -78,17 +82,13 @@
 				  (cons? def.) (cadr def.)
 				  def.))
 
-		 check-val
-		   #'((vals)
-			    (& apply-values (not vals)
-				   (err "argument ~A missing" (list num))))
-
 		 exp-static
 		   #'((def vals)
 			    (& no-static
 				   (err "static argument definition after ~A" (list no-static)))
-				(check-val vals)
-				(cons (cons def. vals.)
+			    (& apply-values (not vals)
+				   (err "argument ~A missing" (list num)))
+				(cons (cons (get-name def) vals.)
 					  (exp-main .def .vals)))
 
 		 exp-optional
@@ -99,8 +99,8 @@
 				(cons (cons (get-name def)
 							(get-value def vals))
 					  (?
-						(argument-list-keyword? (cadr def)) (exp-main .def .vals)
-						.def (exp-optional .def .vals)
+						(argument-keyword? .def.) (exp-main .def .vals)
+						.def                      (exp-optional .def .vals)
 					  	(exp-main .def .vals))))
 
 		 exp-key
@@ -115,7 +115,8 @@
 		 exp-rest
 		   #'((def vals)
 				(= no-static '&rest)
-  			    (= rest-arg (list (cons def. (cons '&rest vals))))
+  			    (= rest-arg (list (cons (get-name def)
+                                        (cons '&rest vals))))
 			    nil)
 
          exp-optional-rest
@@ -143,8 +144,8 @@
 		   #'((def vals)
 				(exp-check-too-many def vals)
 				(?
-				  (argument-keyword? def.) (exp-optional-rest def vals)
-				  (cons? def.)             (exp-sub def vals)
+				  (argument-keyword? def.)    (exp-optional-rest def vals)
+				  (not (argument-name? def.)) (exp-sub def vals)
 				  (exp-static def vals)))
 
          exp-main
@@ -156,11 +157,11 @@
 			          (& def (exp-main-non-key def vals))))))
 
   (with ((a k) (make-&key-alist adef))
-	 (= argdefs a
-	    key-args k
-	    num 0
+	 (= argdefs   a
+	    key-args  k
+	    num       0
 	    no-static nil
-	    rest-arg nil)
+	    rest-arg  nil)
 	 (%nconc (exp-main argdefs alst)
 			 (%nconc key-args
 			 		 rest-arg)))))
