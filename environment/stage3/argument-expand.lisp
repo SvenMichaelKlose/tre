@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun argument-rest-keyword? (x)
   (in? x '&rest '&body))
@@ -10,32 +10,28 @@
   (| (argument-keyword? x)
      (keyword? x)))
 
-;; We want keywords to be legal all across a level.
-;; Make an extra keyword definition list, so they can be found.
-(defun argument-exp-sort (def)
-  (with (; Copy &KEY definitions.
-         argument-exp-sort-key nil
-		 rec2
+(defun make-&key-alist (def)
+  (with (&keys nil
+		 make-&key-descr
 		   [when _
 			 (? (argument-keyword? _.)
-				(rec3 _)
-				(progn
-				  ; Turn keyword definition into ACONS.
-                  (push (? (cons? _.)
-                           (cons (car _.) (cadr _.)) ; with default value
-                           (cons _. _.)) ; with itself
-                        argument-exp-sort-key)
-                  (rec2 ._)))]
+				(copy-def-until-&key _)
+				(alet _.
+                  (push (? (cons? !)
+                           (cons !. .!.) ; with default value
+                           (cons ! !))   ; with itself
+                        &keys)
+                  (make-&key-descr ._)))]
 
-		 ; Copy argument definition until &KEY.
-		 rec3
+		 copy-def-until-&key
 		   [when _
 		     (? (eq '&key _.)
-				(rec2 ._)
-				(cons _. (rec3 ._)))])
+				(make-&key-descr ._)
+				(cons _. (copy-def-until-&key ._)))])
 
-	(= argument-exp-sort-key nil)
-	(values (rec3 def) (reverse argument-exp-sort-key))))
+	(= &keys nil) ; XXX Remove this?
+	(values (copy-def-until-&key def)
+            (reverse &keys))))
 
 ;; Expands argument definition and argument list to an associative list
 ;; of argument name/value pairs. Argument rest lists start with the
@@ -92,8 +88,7 @@
 			    (& no-static
 				   (err "static argument definition after ~A" (list no-static)))
 				(check-val vals)
-				(cons (cons def.
-							vals.)
+				(cons (cons def. vals.)
 					  (exp-main .def .vals)))
 
 		 exp-optional
@@ -110,12 +105,11 @@
 
 		 exp-key
 		   #'((def vals)
-			    (with  (w ($ vals.)
-			    		k (assoc w key-args))
+			    (let k (assoc ($ vals.) key-args :test #'eq)
 				  (? k
-			         (progn
-					   (rplacd k (cadr vals)) ; check if key-value exists.
-					   (exp-main def (cddr vals)))
+			         (alet vals
+					   (rplacd k .!.) ; check if key-value exists.
+					   (exp-main def ..!))
 					 (exp-main-non-key def vals))))
 
 		 exp-rest
@@ -127,9 +121,9 @@
          exp-optional-rest
 		   #'((def vals)
 		        (case def.
-				  '&rest		(exp-rest .def vals)
-				  '&body		(exp-rest .def vals)
-				  '&optional	(exp-optional .def vals)))
+				  '&rest     (exp-rest .def vals)
+				  '&body     (exp-rest .def vals)
+				  '&optional (exp-optional .def vals)))
 
 		 exp-sub
 		   #'((def vals)
@@ -150,7 +144,7 @@
 				(exp-check-too-many def vals)
 				(?
 				  (argument-keyword? def.) (exp-optional-rest def vals)
-				  (cons? def.) (exp-sub def vals)
+				  (cons? def.)             (exp-sub def vals)
 				  (exp-static def vals)))
 
          exp-main
@@ -161,7 +155,7 @@
 				   (| (exp-check-too-many def vals)
 			          (& def (exp-main-non-key def vals))))))
 
-  (with ((a k) (argument-exp-sort adef))
+  (with ((a k) (make-&key-alist adef))
 	 (= argdefs a
 	    key-args k
 	    num 0
@@ -271,4 +265,4 @@
 
 ;(define-test "argument expansion can handle &KEY keyword with init forms"
 ;  ((equal (argument-expand '(a b &key (c 3) (d 42)) '(23 2) t)
-;          '(values (a b c d) (23 2 3 42))))
+;          '(values (a b c d) (23 2 3 42)))))

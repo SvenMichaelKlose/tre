@@ -6,7 +6,7 @@
 		  (carlist defaults)))
 
 (defun compile-argument-expansion-0 (adef p &optional (argdefs nil) (key-args nil))
-  (with ((argdefs key-args) (argument-exp-sort adef)
+  (with ((argdefs key-args) (make-&key-alist adef)
 		 get-name
 		   #'((def)
 				(? (cons? def.) def.. def.))
@@ -46,9 +46,9 @@
          compexp-optional-rest
 		   #'((def)
 		        (case def.
-				  '&rest		(compexp-rest .def)
-				  '&body		(compexp-rest .def)
-				  '&optional	(compexp-optional .def)))
+				  '&rest     (compexp-rest .def)
+				  '&body     (compexp-rest .def)
+				  '&optional (compexp-optional .def)))
 
 		 compexp-sub
 		   #'((def)
@@ -82,8 +82,8 @@
           ,@(& argdefs (compexp-main argdefs))
 		  ,@(compexp-key)
 		  ,@(compile-argument-expansion-defaults key-args)))
-       (append (compexp-main argdefs)
-		       (compile-argument-expansion-defaults key-args)))))
+       (+ (compexp-main argdefs)
+		  (compile-argument-expansion-defaults key-args)))))
 
 (defun compile-argument-expansion-function-body (fun-name adef p toplevel-continuer names)
   `(with ,(mapcan (fn `(,_ ,(list 'quote _))) names)
