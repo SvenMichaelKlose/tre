@@ -7,27 +7,22 @@
 
 (defun compile-argument-expansion-0 (adef p &optional (argdefs nil) (key-args nil))
   (with ((argdefs key-args) (make-&key-alist adef)
-		 get-name
-		   #'((def)
-				(? (cons? def.) def.. def.))
+		 get-name    [? (cons? _.) _.. _.]
+		 get-default [? (cons? _.) (cadr _.) _.]
 
-		 get-default
-		   #'((def)
-				(? (cons? def.) (cadr def.) def.))
-
-		 compexp-key
+		 key
 		   #'(()
-			    (& key-args '((compexp-keywords))))
+			    (& key-args '((keywords))))
 
-		 compexp-static
+		 static
 		   #'((def)
 			    `((= ,def. (car ,p))
 				  (= ,p (cdr ,p))
-				  ,@(compexp-main .def)))
+				  ,@(main .def)))
 
-		 compexp-optional
+		 optional
 		   #'((def)
-			    `(,@(compexp-key)
+			    `(,@(key)
 				  (? ,p
 				     (= ,(get-name def) (car ,p)
 				        ,p (cdr ,p))
@@ -35,38 +30,38 @@
 					      `((= ,(get-name def) ,(get-default def)))))
 				  ,@(& .def
 					   (? (argument-keyword? .def.)
-				  		  (compexp-main .def)
-					      (compexp-optional .def)))))
+				  		  (main .def)
+					      (optional .def)))))
 
-		 compexp-rest
+		 arest
 		   #'((def)
-			    `(,@(compexp-key)
+			    `(,@(key)
 				  (= ,def. ,p)))
 
-         compexp-optional-rest
+         optional-rest
 		   #'((def)
 		        (case def.
-				  '&rest     (compexp-rest .def)
-				  '&body     (compexp-rest .def)
-				  '&optional (compexp-optional .def)))
+				  '&rest     (arest .def)
+				  '&body     (arest .def)
+				  '&optional (optional .def)))
 
-		 compexp-sub
+		 sub
 		   #'((def)
-			    `(,@(compexp-key)
+			    `(,@(key)
 				  (with-temporary ,p (car ,p)
 				    ,@(compile-argument-expansion-0 def. p))
 				  (= ,p (cdr ,p))
-				  ,@(compexp-main .def)))
+				  ,@(main .def)))
 
-		 compexp-main
+		 main
 		   #'((def)
 				(?
 				  (not def)					nil
-				  (argument-keyword? def.)	(compexp-optional-rest def)
-				  (cons? def.)				(compexp-sub def)
-				  (compexp-static def))))
+				  (argument-keyword? def.)	(optional-rest def)
+				  (cons? def.)				(sub def)
+				  (static def))))
    (? key-args
-      `((with (compexp-keywords
+      `((with (keywords
 				  #'(()
                       (block compexp
 				        (let v nil
@@ -79,30 +74,39 @@
 												 ,p (cdr ,p))))
 									    (carlist key-args))
 						      (return-from compexp nil)))))))
-          ,@(& argdefs (compexp-main argdefs))
-		  ,@(compexp-key)
+          ,@(& argdefs (main argdefs))
+		  ,@(key)
 		  ,@(compile-argument-expansion-defaults key-args)))
-       (+ (compexp-main argdefs)
-		  (compile-argument-expansion-defaults key-args)))))
+       (main argdefs))))
 
 (defun compile-argument-expansion-function-body (fun-name adef p toplevel-continuer names)
   `(with ,(mapcan (fn `(,_ ,(list 'quote _))) names)
      ,@(compile-argument-expansion-0 adef p)
      ((%transpiler-native ,(compiled-function-name *transpiler* fun-name)) ,@toplevel-continuer ,@names)))
 
+(defun compile-argument-expansion-cps (this-name fun-name adef names)
+  (with-gensym (toplevel-continuer p)
+    `(function ,this-name
+               ((,p)
+                  (let ,toplevel-continuer ~%continuer
+                    ,(compile-argument-expansion-function-body fun-name adef p (list toplevel-continuer) names))))))
+
+(defun compile-argument-expansion-no-cps (this-name fun-name adef names)
+  (with-gensym p
+    `(function ,this-name
+               ((,p)
+                  ,(compile-argument-expansion-function-body fun-name adef p nil names)))))
+
+(defun only-&rest? (adef)
+  (& (== 2 (length adef))
+     (eq '&rest adef.)))
+
 (defun compile-argument-expansion (this-name fun-name adef)
-  (? (& (== 2 (length adef))
-	    (eq '&rest adef.))
+  (? (only-&rest? adef)
 	 fun-name
-     (let-if names (argument-expand-names 'compile-argument-expansion adef)
-        (with-gensym p
-          (? (in-cps-mode?)
-             (with-gensym toplevel-continuer
-                `(function ,this-name
-                           ((,p)
-                              (let ,toplevel-continuer ~%continuer
-                                ,(compile-argument-expansion-function-body fun-name adef p (list toplevel-continuer) names)))))
-             `(function ,this-name
-                        ((,p)
-                           ,(compile-argument-expansion-function-body fun-name adef p nil names)))))
-	    fun-name)))
+     (alet (argument-expand-names 'compile-argument-expansion adef)
+       (funcall (? (in-cps-mode?)
+                   #'compile-argument-expansion-cps
+                   #'compile-argument-expansion-no-cps)
+                this-name fun-name adef !)
+	   fun-name)))
