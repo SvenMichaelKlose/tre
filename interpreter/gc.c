@@ -200,7 +200,7 @@ tregc_sweep (void)
 		DOTIMES(j, 8) {
 	    	if (tregc_atommarks[i] & c) {
 	        	idx = (i << 3) + j;
-                if (TREPTR_TO_ATOM(idx).type != TRETYPE_UNUSED
+                if (tre_atom_types[idx] != TRETYPE_UNUSED
 					&& TREPTR_TO_ATOM(idx).compiled_fun == NULL)
 	           	    treatom_remove (TREATOM_TO_PTR(idx));
             }
@@ -278,9 +278,9 @@ tregc_print_stats ()
         c[i] = 0;
 
     for (atoms = i = 0; i < NUM_ATOMS; i++)
-        if (tre_atoms[i].type != TRETYPE_UNUSED) {
+        if (tre_atom_types[i] != TRETYPE_UNUSED) {
             atoms++;
-            c[(size_t) tre_atoms[i].type]++;
+            c[(size_t) tre_atom_types[i]]++;
         }
 
     printf (": %ld cons, %ld atoms. %ld syms, "

@@ -193,7 +193,7 @@ tresymbol_clear ()
 	size_t i;
 
     DOTIMES(i, NUM_ATOMS) {
-		if (tre_atoms[i].type != TRETYPE_SYMBOL)
+		if (tre_atom_types[i] != TRETYPE_SYMBOL)
 			continue;
 		tresymbolpage_remove (i);
 		tresymbol_free (tre_atoms[i].detail);

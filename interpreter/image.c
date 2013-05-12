@@ -62,11 +62,11 @@ treimage_read (FILE *f, void *p, size_t len)
 void
 treimage_write_atoms (FILE *f)
 {
-    size_t i;
-    size_t j;
-    size_t idx;
-    size_t len;
-    char   c;
+    size_t   i;
+    size_t   j;
+    size_t   idx;
+    size_t   len;
+    char     c;
 	struct tre_atom buf;
 
     treimage_write (f, tregc_atommarks, sizeof tregc_atommarks);
@@ -78,12 +78,13 @@ treimage_write_atoms (FILE *f)
                 idx = (i << 3) + j;
 				memcpy (&buf, &tre_atoms[idx], sizeof (struct tre_atom));
 				len = 0;
-                if (tre_atoms[idx].type == TRETYPE_SYMBOL) {
+                if (tre_atom_types[idx] == TRETYPE_SYMBOL) {
 				    len = strlen (tre_atoms[idx].detail);
 				    buf.detail = (void *) len;
                 }
+                treimage_write (f, &tre_atom_types[idx], sizeof (tre_type));
                 treimage_write (f, &buf, sizeof (struct tre_atom));
-				if (tre_atoms[idx].type == TRETYPE_SYMBOL)
+				if (tre_atom_types[idx] == TRETYPE_SYMBOL)
                 	treimage_write (f, tre_atoms[idx].detail, len);
             }
 
@@ -145,7 +146,7 @@ treimage_write_arrays (FILE *f)
     size_t i;
 
     DOTIMES(i, NUM_ATOMS)
-        if (tre_atoms[i].type == TRETYPE_ARRAY)
+        if (tre_atom_types[i] == TRETYPE_ARRAY)
             treimage_write (f, tre_atoms[i].detail, TREARRAY_SIZE(i) * sizeof (treptr));
 }
 
@@ -160,13 +161,13 @@ treimage_write_strings (FILE *f, size_t num)
     /* Make and write length index. */
     j = 0;
     DOTIMES(i, NUM_ATOMS)
-        if (tre_atoms[i].type == TRETYPE_STRING)
+        if (tre_atom_types[i] == TRETYPE_STRING)
             lens[j++] = TRESTRING_LEN(TREATOM_STRING(i));
     treimage_write (f, lens, sizeof (size_t) * num);
 
     /* Write strings. */
     DOTIMES(i, NUM_ATOMS) {
-        if (tre_atoms[i].type != TRETYPE_STRING)
+        if (tre_atom_types[i] != TRETYPE_STRING)
             continue;
         s = TREATOM_STRING(i);
         treimage_write (f, TRESTRING_DATA(s), TRESTRING_LEN(s));
@@ -193,9 +194,9 @@ treimage_create (char *file, treptr init_fun)
     /* Count arrays and strings, trace numbers. */
     bzero (nmarks, NMARK_SIZE);
     DOTIMES(i, NUM_ATOMS) {
-		if (tre_atoms[i].type == TRETYPE_SYMBOL)
+		if (tre_atom_types[i] == TRETYPE_SYMBOL)
 			n_sym++;
-        switch (tre_atoms[i].type) {
+        switch (tre_atom_types[i]) {
             case TRETYPE_ARRAY:
                 n_arr++;
                 break;
@@ -240,7 +241,7 @@ treimage_remove_atoms (void)
     size_t i;
 
     DOTIMES(i, NUM_ATOMS) {
-        switch (tre_atoms[i].type) {
+        switch (tre_atom_types[i]) {
             case TRETYPE_ARRAY:
             case TRETYPE_STRING:
                 treatom_remove (i);
@@ -268,8 +269,9 @@ treimage_read_atoms (FILE *f)
         DOTIMES(j, 8) {
             if (!(tregc_atommarks[i] & c)) {
                 idx = (i << 3) + j;
+                treimage_read (f, &tre_atom_types[idx], sizeof (tre_type));
                 treimage_read (f, &tre_atoms[idx], sizeof (struct tre_atom));
-				if (tre_atoms[idx].type == TRETYPE_SYMBOL) {
+				if (tre_atom_types[idx] == TRETYPE_SYMBOL) {
 				    symlen = (size_t) tre_atoms[idx].detail;
 					if (symlen > TRE_MAX_SYMLEN)
 						treerror_internal (treptr_nil, "image read: symbol exceeds max length %d with length of %d", TRE_MAX_SYMLEN, symlen);
@@ -277,7 +279,7 @@ treimage_read_atoms (FILE *f)
 					symbol[symlen] = 0;
     				allocated_symbol = tresymbol_add (symbol);
     				ATOM_SET_NAME(idx, allocated_symbol);
-    				tresymbolpage_add (TRETYPE_INDEX_TO_PTR(tre_atoms[idx].type, idx));
+    				tresymbolpage_add (TRETYPE_INDEX_TO_PTR(tre_atom_types[idx], idx));
 				}
             }
 
@@ -340,7 +342,7 @@ treimage_make_free (void)
                 idx = (i << 3) + j;
                 *(void ***) &tre_atoms[idx] = tre_atoms_free;
                 tre_atoms_free = &tre_atoms[idx];
-                tre_atoms[idx].type = TRETYPE_UNUSED;
+                tre_atom_types[idx] = TRETYPE_UNUSED;
             }
 
             c <<= 1;
@@ -384,7 +386,7 @@ treimage_read_arrays (FILE *f)
     void * a;
 
     DOTIMES(i, NUM_ATOMS) {
-        if (tre_atoms[i].type != TRETYPE_ARRAY)
+        if (tre_atom_types[i] != TRETYPE_ARRAY)
             continue;
 
         l = TREARRAY_SIZE(i) * sizeof (treptr);
@@ -408,7 +410,7 @@ treimage_read_strings (FILE *f, struct treimage_header *h)
 
     j = 0;
     DOTIMES(i, NUM_ATOMS) {
-        if (tre_atoms[i].type != TRETYPE_STRING)
+        if (tre_atom_types[i] != TRETYPE_STRING)
             continue;
 
         l = lens[j++];

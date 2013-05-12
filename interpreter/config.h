@@ -16,21 +16,20 @@ typedef int bool;
 #endif
 
 #ifndef TRE_COPYRIGHT
-#define TRE_COPYRIGHT \
-	"Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>\n"
+#define TRE_COPYRIGHT "Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>\n"
 #endif
 
 #define TRE_VERSION	"current"
 
 #if 0
-#define TRE_GC_DEBUG		/* Run garbage collector everywhere. */
-#define TRE_VERBOSE_GC 		/* Print statistics after GC. */
-#define TRE_VERBOSE_EVAL	/* Print what is evaluated. */
-#define TRE_VERBOSE_READ    /* Print READ expressions in read-eval loop. */
+#define TRE_GC_DEBUG		      /* Run garbage collector everywhere. */
+#define TRE_VERBOSE_GC 		      /* Print statistics after GC. */
+#define TRE_VERBOSE_EVAL	      /* Print what is evaluated. */
+#define TRE_VERBOSE_READ          /* Print READ expressions in read-eval loop. */
 #define TRE_PRINT_MACROEXPANSIONS /* Print macroexpansions in read-eval loop. */
-#define TRE_READ_ECHO		/* Echo what is READ. */
-#define TRE_NO_MANUAL_FREE	/* Don't free internal garbage manually. */
-#define TRE_EXIT_ON_STDIO_SIGINT /* Exit on SIGINT in stdio prompt. */
+#define TRE_READ_ECHO		      /* Echo what is READ. */
+#define TRE_NO_MANUAL_FREE	      /* Don't free internal garbage manually. */
+#define TRE_EXIT_ON_STDIO_SIGINT  /* Exit on SIGINT in stdio prompt. */
 #endif
 
 #define INTERPRETER
@@ -55,15 +54,21 @@ typedef int bool;
 #endif
 
 #ifndef NUM_ATOMS
-#define NUM_ATOMS	(NUM_LISTNODES / 8)
+#define NUM_ATOMS	    (NUM_LISTNODES / 8)
 #endif
 
 #ifndef NUM_NUMBERS
-#define NUM_NUMBERS	(NUM_LISTNODES / 32)
+#define NUM_NUMBERS	    (NUM_LISTNODES / 32)
 #endif
 
+#ifndef NUM_FUNCTIONS
+#define NUM_FUNCTIONS	(NUM_LISTNODES / 32)
+#endif
+
+#define TRESTACK_SIZE	(8 * MEGA)
+
 #ifndef NULL
-#define NULL	((void *) 0)
+#define NULL    ((void *) 0)
 #endif
 
 #ifndef FALSE
@@ -99,7 +104,5 @@ typedef int bool;
 #ifdef TRE_VERBOSE_GC
 #define TRE_VERBOSE_SYMBOL_GC
 #endif
-
-#define TRESTACK_SIZE		(8 * MEGA)
 
 #endif /* #ifndef TRE_TRE_H */

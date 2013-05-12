@@ -25,6 +25,7 @@
 
 void * tre_atoms_free;
 struct tre_atom tre_atoms[NUM_ATOMS];
+tre_type tre_atom_types[NUM_ATOMS];
 
 #define TREPTR_NIL_INDEX	0
 #define TREPTR_T_INDEX		1
@@ -80,7 +81,7 @@ treatom_init_atom_table (void)
 		sizeof (struct tre_atom)
 	);
 	DOTIMES(x, NUM_ATOMS - TREPTR_FIRST_INDEX)
-	  tre_atoms[x + TREPTR_FIRST_INDEX].type = TRETYPE_UNUSED;
+	  tre_atom_types[x + TREPTR_FIRST_INDEX] = TRETYPE_UNUSED;
 }
 
 void
@@ -301,7 +302,7 @@ treatom_body_to_var (treptr body)
 	treptr tmp;
 
     for (a = 0; a < NUM_ATOMS; a++) {
-        if (tre_atoms[a].type != TRETYPE_FUNCTION && tre_atoms[a].type != TRETYPE_MACRO)
+        if (tre_atom_types[a] != TRETYPE_FUNCTION && tre_atom_types[a] != TRETYPE_MACRO)
 	    	continue;
 
         if (!TREPTR_IS_CONS(tre_atoms[a].value))
@@ -312,7 +313,7 @@ treatom_body_to_var (treptr body)
 	    	continue;
 
         for (b = 0; b < NUM_ATOMS; b++)
-            if (tre_atoms[b].type == TRETYPE_SYMBOL
+            if (tre_atom_types[b] == TRETYPE_SYMBOL
 					&& tre_atoms[b].detail != NULL
 					&& tre_atoms[b].fun == TREATOM_INDEX_TO_PTR(a))
                 return TREATOM_INDEX_TO_PTR(b);

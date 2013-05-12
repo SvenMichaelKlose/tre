@@ -11,15 +11,17 @@ struct tre_atom {
     void *  detail;
     treptr	value;
     treptr	fun;
-    int     type;
     void *  compiled_fun;
     void *  compiled_expander;
     treptr	binding;
     treptr	package;
 };
 
+typedef char tre_type;
+
 extern void * tre_atoms_free;
 extern struct tre_atom tre_atoms[NUM_ATOMS];
+extern tre_type tre_atom_types[NUM_ATOMS];
 
 extern treptr treptr_universe;
 extern treptr tre_package_keyword;
@@ -33,8 +35,8 @@ extern treptr tre_package_keyword;
 	tre_atoms[index].compiled_expander = NULL;	\
 	tre_atoms[index].binding = treptr_nil;	\
 	tre_atoms[index].package = treptr_nil;	\
-	tre_atoms[index].type = typ;	\
-	tre_atoms[index].detail = NULL
+	tre_atoms[index].detail = NULL; \
+	tre_atom_types[index] = typ
 
 #define ATOM_SET_NAME(index, name)     (tre_atoms[index].detail = name)
 

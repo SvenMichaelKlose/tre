@@ -15,16 +15,16 @@ typedef size_t treptr;
 #define TRETYPE_INDEX_TO_PTR(type, index) \
 	(((treptr) type << TREPTR_INDEX_WIDTH) | index)
 #define TREATOM_TO_PTR(idx)	\
-	(TRETYPE_INDEX_TO_PTR(TRE_ATOM(idx).type, idx))
+	(TRETYPE_INDEX_TO_PTR(tre_atom_types[idx], idx))
 
 #define TREPTR_NIL()	TRETYPE_INDEX_TO_PTR(TRETYPE_SYMBOL, 0)
 
 #define TREATOM_INDEX_TO_PTR(index) \
-	TRETYPE_INDEX_TO_PTR(TRE_ATOM(index).type, index)
+	TRETYPE_INDEX_TO_PTR(tre_atom_types[index], index)
 #define TREPTR_TO_ATOM(ptr)	TRE_ATOM(TREPTR_INDEX(ptr))
 
 #define TREATOM_NAME(ptr)		        ((char *) TREPTR_TO_ATOM(ptr).detail)
-#define TREATOM_TYPE(ptr)		        (TREPTR_TO_ATOM(ptr).type)
+#define TREATOM_TYPE(ptr)		        (tre_atom_types[TREPTR_INDEX(ptr)])
 #define TREATOM_VALUE(ptr)		        (TREPTR_TO_ATOM(ptr).value)
 #define TREATOM_FUN(ptr)		        (TREPTR_TO_ATOM(ptr).fun)
 #define TREATOM_COMPILED_FUN(ptr)		(TREPTR_TO_ATOM(ptr).compiled_fun)
