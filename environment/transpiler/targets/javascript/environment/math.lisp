@@ -1,6 +1,6 @@
 ;;;;; tré – Copyright (c) 2013 Sven Michael Klose <pixel@copei.de>
 
-(dont-obfuscate *math *p-i abs acos asin atan atan2 ceil cos exp floor log max min pow rount sin sqrt tan)
+(dont-obfuscate *math *p-i abs acos asin atan atan2 ceil cos exp floor log max min pow rount sin sqrt tan random)
 
 (defconstant *pi* *math.*p-i)
 
@@ -21,3 +21,4 @@
 (defun sin (x)     (*math.sin x))
 (defun sqrt (x)    (*math.sqrt x))
 (defun tan (x)     (*math.tan x))
+(defun random ()   (*math.random))
