@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2009,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2009,2012–2013 Sven Michael Klose <pixel@copei.de>
 
 ;;; Macros and functions that don't belong here.
 
@@ -154,8 +154,8 @@
 
 (defun xml2lml-string-symbol (s)
   (unless (string== "" s)
-    (? (every [& (alpha-char-p _)
-			     (lower-case-p _)]
+    (? (every [& (alpha-char? _)
+			     (lower-case? _)]
 		      (string-list s))
        (make-symbol (string-upcase s))
        s)))
