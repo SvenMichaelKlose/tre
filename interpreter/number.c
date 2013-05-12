@@ -18,10 +18,6 @@
 void * tre_numbers_free;
 struct tre_number tre_numbers[NUM_NUMBERS];
 
-#define NUMBER_SET(idx, val, typ) \
-    tre_numbers[idx].value = val; \
-    tre_numbers[idx].type = typ;
-
 #define TRENUMBER_INDEX(ptr) 	((size_t) TREATOM_DETAIL(ptr))
 
 bool
@@ -55,8 +51,7 @@ trenumber_is_value (char * symbol)
 size_t
 trenumber_alloc (double value, int type)
 {
-	size_t idx;
-    void * i = trealloc_item (&tre_numbers_free);
+    struct tre_number * i = trealloc_item (&tre_numbers_free);
 
     if (!i) {
         tregc_force ();
@@ -65,10 +60,10 @@ trenumber_alloc (double value, int type)
 	    	treerror_internal (treptr_nil, "out of numbers");
     }
 
-    idx = ((size_t) i - (size_t) tre_numbers) / sizeof (struct tre_number);
-    NUMBER_SET(idx, value, type);
+    i->value = value;
+    i->type = type;
 
-    return idx;
+    return ((size_t) i - (size_t) tre_numbers) / sizeof (struct tre_number);
 }
 
 void
