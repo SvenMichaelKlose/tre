@@ -26,6 +26,7 @@
 (env-load "stage2/butlast.lisp" 'c)
 (env-load "stage2/make-default-listprop.lisp")
 (env-load "stage2/dot-expand.lisp")
+(env-load "stage2/deftype.lisp")
 (env-load "stage2/defstruct.lisp")
 (env-load "stage2/abs.lisp" 'c)
 (env-load "stage2/traverse.lisp")
