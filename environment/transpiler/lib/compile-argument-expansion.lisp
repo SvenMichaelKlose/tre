@@ -34,32 +34,28 @@
 					      (optional .def)))))
 
 		 arest
-		   #'((def)
-			    `(,@(key)
-				  (= ,def. ,p)))
+		   [`(,@(key)
+			  (= ,_. ,p))]
 
          optional-rest
-		   #'((def)
-		        (case def.
-				  '&rest     (arest .def)
-				  '&body     (arest .def)
-				  '&optional (optional .def)))
+		   [case _.
+			 '&rest     (arest ._)
+			 '&body     (arest ._)
+			 '&optional (optional ._)]
 
 		 sub
-		   #'((def)
-			    `(,@(key)
-				  (with-temporary ,p (car ,p)
-				    ,@(compile-argument-expansion-0 def. p))
-				  (= ,p (cdr ,p))
-				  ,@(main .def)))
+           [`(,@(key)
+			  (with-temporary ,p (car ,p)
+			    ,@(compile-argument-expansion-0 _. p))
+			    (= ,p (cdr ,p))
+			    ,@(main ._))]
 
 		 main
-		   #'((def)
-				(?
-				  (not def)					nil
-				  (argument-keyword? def.)	(optional-rest def)
-				  (cons? def.)				(sub def)
-				  (static def))))
+		   [?
+             (not _)                nil
+             (argument-keyword? _.) (optional-rest _)
+             (cons? _.)             (sub _)
+             (static _)])
    (? key-args
       `((with (keywords
 				  #'(()
@@ -108,5 +104,4 @@
        (funcall (? (in-cps-mode?)
                    #'compile-argument-expansion-cps
                    #'compile-argument-expansion-no-cps)
-                this-name fun-name adef !)
-	   fun-name)))
+                this-name fun-name adef !))))
