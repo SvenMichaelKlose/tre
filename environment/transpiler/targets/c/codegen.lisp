@@ -148,7 +148,7 @@
      `(trearray_builtin_make ,(compiled-list sizes)))]
 
 (defun c-make-aref (arr idx)
-  `("((treptr *) TREATOM_DETAIL(" ,arr "))["
+  `("TREAARRAY_VALUES(" ,arr ")["
 	    ,(? (| (number? idx) (%transpiler-native? idx))
 		  	idx
 			`("(ulong)TRENUMBER_VAL(" ,idx ")"))

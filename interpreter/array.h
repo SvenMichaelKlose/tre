@@ -5,6 +5,16 @@
 #ifndef TRE_ARRAY_H
 #define TRE_ARRAY_H
 
+struct tre_array {
+    treptr    sizes;
+    treptr *  values;
+};
+
+#define TREPTR_ARRAY(ptr)    ((struct tre_array *) TREATOM_DETAIL(ptr))
+#define TREARRAY_SIZES(ptr)  (TREPTR_ARRAY(ptr)->sizes)
+#define TREARRAY_VALUES(ptr) (TREPTR_ARRAY(ptr)->values)
+#define TREARRAY_SIZE(ptr)   (trearray_get_size (TREARRAY_SIZES(ptr)))
+
 extern void trearray_init (void);
 
 extern treptr trearray_get (treptr sizes);
@@ -15,8 +25,5 @@ extern struct tre_sequence_type trearray_seqtype;
 
 /* for compiled code */
 extern treptr trearray_make (size_t size);
-
-#define TREARRAY_SIZE(arr) (trearray_get_size (TREATOM_VALUE(arr)))
-#define TREARRAY_RAW(arr) ((treptr *) (TREATOM_DETAIL(arr)))
 
 #endif

@@ -110,7 +110,7 @@ treptr
 trefuncall_compiled (treptr func, treptr args, bool do_eval)
 {
     return TREPTR_IS_ARRAY(func) ?
-               trefuncall_bytecode (func, args, TREARRAY_RAW(func)[0], do_eval) :
+               trefuncall_bytecode (func, args, TREARRAY_VALUES(func)[0], do_eval) :
                trefuncall_c (func, args, do_eval);
 }
 

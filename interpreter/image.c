@@ -145,9 +145,13 @@ treimage_write_arrays (FILE *f)
 {
     size_t i;
 
-    DOTIMES(i, NUM_ATOMS)
-        if (tre_atom_types[i] == TRETYPE_ARRAY)
-            treimage_write (f, tre_atoms[i].detail, TREARRAY_SIZE(i) * sizeof (treptr));
+    DOTIMES(i, NUM_ATOMS) {
+        if (tre_atom_types[i] != TRETYPE_ARRAY)
+            continue;
+
+        treimage_write (f, &TREARRAY_SIZES(i), sizeof (treptr));
+        treimage_write (f, TREARRAY_VALUES(i), TREARRAY_SIZE(i) * sizeof (treptr));
+    }
 }
 
 void
@@ -383,15 +387,19 @@ treimage_read_arrays (FILE *f)
 {
     size_t i;
     size_t l;
-    void * a;
+    struct tre_array * a;
+    treptr sizes;
 
     DOTIMES(i, NUM_ATOMS) {
         if (tre_atom_types[i] != TRETYPE_ARRAY)
             continue;
 
-        l = TREARRAY_SIZE(i) * sizeof (treptr);
-        a = trealloc (l);
-        treimage_read (f, a, l);
+        treimage_read (f, &sizes, sizeof (treptr));
+        l = trearray_get_size (sizes) * sizeof (treptr);
+        a = trealloc (sizeof (struct tre_array));
+        a->sizes = sizes;
+        a->values = trealloc (l);
+        treimage_read (f, a->values, l);
         TREATOM_SET_DETAIL(i, a);
     }
 }

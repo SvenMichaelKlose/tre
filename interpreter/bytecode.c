@@ -186,7 +186,7 @@ trecode_exec (treptr fun)
 
     if (TREPTR_IS_ARRAY(fun) == FALSE)
         treerror_norecover (fun, "bytecode array function expected");
-    x = &TREARRAY_RAW(fun)[2]; /* skip over argument definition and body */
+    x = &TREARRAY_VALUES(fun)[2]; /* skip over argument definition and body */
     num_locals = TRENUMBER_INT(*x++);
     code = x;
 

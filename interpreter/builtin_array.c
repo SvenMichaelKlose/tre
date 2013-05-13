@@ -65,11 +65,11 @@ trearray_get_check_index (treptr indices, treptr sizes)
 treptr *
 trearray_get_elt (treptr list)
 {
-    treptr   array;
-    treptr   indices;
-    treptr   sizes;
-    treptr * elts;
-    size_t   idx;
+    treptr    array;
+    treptr    indices;
+    treptr    sizes;
+    treptr *  elts;
+    size_t    idx;
 
     if (list == treptr_nil)
 		treerror (list, "array expexted");
@@ -81,8 +81,8 @@ trearray_get_elt (treptr list)
     if (trelist_check_type (indices, TRETYPE_NUMBER) == FALSE)
 		treerror (indices, "integer expected");
 
-    sizes = TREATOM_VALUE(array);
-    elts = TREATOM_DETAIL(array);
+    sizes = TREARRAY_SIZES(array);
+    elts = TREARRAY_VALUES(array);
 
     idx = trearray_get_check_index (indices, sizes);
     if (idx == (size_t) -1)
@@ -102,7 +102,7 @@ trearray_builtin_p (treptr list)
 treptr
 trearray_builtin_aref (treptr list)
 {
-    treptr *elts = trearray_get_elt (list);
+    treptr *  elts = trearray_get_elt (list);
 
     if (elts == NULL)
         return treerror (treptr_invalid, "index error");
@@ -113,8 +113,8 @@ trearray_builtin_aref (treptr list)
 treptr
 trearray_builtin_set_aref (treptr list)
 {
-    treptr  val = CAR(list);
-    treptr  *elts = trearray_get_elt (CDR(list));
+    treptr    val = CAR(list);
+    treptr *  elts = trearray_get_elt (CDR(list));
 
     if (elts == NULL)
         return treerror (treptr_invalid, "index error");

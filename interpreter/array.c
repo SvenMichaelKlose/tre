@@ -19,19 +19,27 @@
 #include "thread.h"
 #include "gc.h"
 
-treptr *
+struct tre_array *
 trearray_get_raw (size_t size)
 {
-    treptr  * array;
+    struct tre_array * a;
+    treptr * v;
 
-    array = trealloc (sizeof (treptr) * size);
-    if (array == NULL)
+    a = trealloc (sizeof (struct tre_array));
+    if (!a)
+        return NULL;
+
+    v = trealloc (sizeof (treptr) * size);
+    if (!v) {
+        trealloc_free (a);
 		return NULL;
+    }
+    a->values = v;
 
     while (size--)
-		array[size] = treptr_nil;
+		v[size] = treptr_nil;
 
-    return array;
+    return a;
 }
 
 size_t
@@ -54,10 +62,9 @@ trearray_get_size (treptr sizes)
 treptr
 trearray_get (treptr sizes)
 {
-    treptr   a;
-    size_t   size = trearray_get_size (sizes);
-    treptr * array;
-    treptr   copied_sizes;
+    treptr a;
+    struct tre_array * array;
+    size_t  size = trearray_get_size (sizes);
 
     tregc_push (sizes);
     array = trearray_get_raw (size);
@@ -67,10 +74,9 @@ trearray_get (treptr sizes)
         if (!array)
 		    return treerror (treptr_invalid, "out of memory");
 	}
-    copied_sizes = trelist_copy (sizes);
-    tregc_push (copied_sizes);
+    array->sizes = trelist_copy (sizes);
+    tregc_push (array->sizes);
     a = treatom_alloc (TRETYPE_ARRAY);
-    treatom_set_value (a, copied_sizes);
     TREATOM_DETAIL(a) = array;
     tregc_pop ();
     tregc_pop ();
@@ -96,15 +102,15 @@ trearray_make (size_t size)
 void
 trearray_free (treptr array)
 {
-    trealloc_free (TREATOM_DETAIL(array));
+    trealloc_free (TREPTR_ARRAY(array)->values);
+    trealloc_free (TREPTR_ARRAY(array));
 }
 
 treptr
 trearray_t_get (treptr array, size_t idx)
 {
-    treptr   adef = TREATOM_VALUE(array);
-    size_t   size = CAR(adef);
-    treptr * a = (treptr *) TREATOM_DETAIL(array);
+    size_t   size = TRENUMBER_VAL(CAR(TREARRAY_SIZES(array)));
+    treptr * a = TREARRAY_VALUES(array);
 
     if (size <= idx)
         return treerror (array, "index %d out of range", idx);
@@ -113,27 +119,17 @@ trearray_t_get (treptr array, size_t idx)
 }
 
 void
-trearray_set (treptr *a, size_t idx, treptr val)
-{
-    if (a[idx] == val)
-		return;
-
-    a[idx] = val;
-}
-
-void
 trearray_t_set (treptr array, size_t idx, treptr val)
 {
-    treptr   adef = TREATOM_VALUE(array);
-    size_t   size = CAR(adef);
-    treptr * a = (treptr *) TREATOM_DETAIL(array);
+    size_t   size = TRENUMBER_VAL(CAR(TREARRAY_SIZES(array)));
+    treptr * a = TREARRAY_VALUES(array);
 
     if (size <= idx) {
         treerror (array, "index %d out of range", idx);
 		return;
     }
 
-    trearray_set (a, idx, val);
+    a[idx] = val;
 }
 
 size_t
