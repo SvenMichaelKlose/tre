@@ -18,7 +18,6 @@
 #include "gc.h"
 #include "debug.h"
 #include "thread.h"
-#include "env.h"
 #include "argument.h"
 #include "xxx.h"
 #include "eval.h"
@@ -103,9 +102,6 @@ trespecial_macro (treptr list)
 
     f = treatom_alloc (TRETYPE_MACRO);
     TREATOM_VALUE(TREPTR_INDEX(f)) = expr;
-	tregc_push (f);
-    treenv_create (f);
-	tregc_pop ();
 
     return f;
 }
@@ -325,9 +321,6 @@ trespecial_function_from_expr (treptr expr)
 
     f = treatom_alloc (TRETYPE_FUNCTION);
     TREATOM_VALUE(TREPTR_INDEX(f)) = x;
-    tregc_push (f);
-    treenv_create (f);
-    tregc_pop ();
 
     return f;
 }

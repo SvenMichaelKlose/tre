@@ -20,7 +20,6 @@
 #include "print.h"
 #include "debug.h"
 #include "thread.h"
-#include "env.h"
 #include "argument.h"
 #include "string2.h"
 #include "xxx.h"
@@ -32,6 +31,43 @@ treptr treeval_function_symbol;
 
 unsigned treeval_recursions;
 
+#define PUSH_BINDING(x)	(TREATOM_BINDING(x) = CONS(TREATOM_VALUE(x), TREATOM_BINDING(x)))
+
+void
+treeval_bind (treptr la, treptr lv)
+{
+    treptr  arg;
+    treptr  val;
+
+    for (;la != treptr_nil && lv != treptr_nil; la = CDR(la), lv = CDR(lv)) {
+        arg = CAR(la);
+        val = CAR(lv);
+
+		PUSH_BINDING(arg);
+		TREATOM_VALUE(arg) = val;
+    }
+
+    if (la != treptr_nil)
+        treerror (la, "arguments missing");
+    if (lv != treptr_nil)
+        treerror (lv, "too many arguments. Rest of forms");
+}
+
+void
+treeval_unbind (treptr la)
+{
+    treptr  bding;
+    treptr  car;
+
+    for (;la != treptr_nil; la = CDR(la)) {
+        car = CAR(la);
+        bding = TREATOM_BINDING(car);
+        TREATOM_VALUE(car) = CAR(bding);
+        TREATOM_BINDING(car) = CDR(bding);
+        TRELIST_FREE_EARLY(bding);
+    }
+}
+
 treptr
 treeval_funcall (treptr func, treptr args, bool do_argeval)
 {
@@ -41,30 +77,21 @@ treeval_funcall (treptr func, treptr args, bool do_argeval)
     treptr  ret;
     treptr  argdef;
     treptr  body;
-    treptr  env;
-    treptr  env_parent;
-    treptr  old_parent;
 
     funcdef = TREATOM_VALUE(func);
     argdef = CAR(funcdef);
     body = CDR(funcdef);
 
-    env = (treptr) (size_t) TREATOM_ENV(func);
-    env_parent = TRECONTEXT_ENV_CURRENT();
-    TRECONTEXT_ENV_CURRENT() = env;
-    old_parent = env_parent;
-
     trearg_expand (&expforms, &expvals, argdef, args, do_argeval);
     tregc_push (expforms);
     tregc_push (expvals);
 
-    treenv_bind (expforms, expvals);
+    treeval_bind (expforms, expvals);
 
     ret = treeval_list (body);
     tregc_retval (ret);
 
-    treenv_unbind (expforms);
-    TRECONTEXT_ENV_CURRENT() = old_parent;
+    treeval_unbind (expforms);
 
     tregc_pop ();
     tregc_pop ();

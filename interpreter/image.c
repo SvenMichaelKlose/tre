@@ -19,7 +19,6 @@
 #include "util.h"
 #include "builtin.h"
 #include "special.h"
-#include "env.h"
 #include "io.h"
 #include "main.h"
 #include "symbol.h"

@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2007 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2007,2013 Sven Michael Klose <pixel@copei.de>
  */
 
 #ifndef TRE_THREAD_H
@@ -24,8 +24,6 @@ extern struct tre_thread_context tre_context;
 #define TRECONTEXT_TOKEN_NAME() 	(tre_context.token_name)
 #define TRECONTEXT_PACKAGE()		(tre_context.package)
 #define TRECONTEXT_PACKAGE_NAME()	(tre_context.package_name)
-
-#define TRECONTEXT_ENV_CURRENT()	(tre_context.env_current)
 
 #define TRECONTEXT_PARENT()	    	(CADR(TRECONTEXT_FUNSTACK()))
 #define TRECONTEXT_CURRENT()		(CAR(TRECONTEXT_FUNSTACK()))

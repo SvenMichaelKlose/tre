@@ -15,7 +15,6 @@ struct tre_atom {
     void *  compiled_expander;
     treptr	binding;
     treptr	package;
-    treptr	env;
 };
 
 typedef char tre_type;
@@ -36,7 +35,6 @@ extern treptr tre_package_keyword;
 	tre_atoms[index].compiled_expander = NULL;	\
 	tre_atoms[index].binding = treptr_nil;	\
 	tre_atoms[index].package = treptr_nil;	\
-	tre_atoms[index].env = treptr_nil;	\
 	tre_atoms[index].detail = NULL; \
 	tre_atom_types[index] = typ
 

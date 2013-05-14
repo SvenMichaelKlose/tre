@@ -31,7 +31,6 @@ typedef size_t treptr;
 #define TREATOM_COMPILED_EXPANDER(ptr)	(TREPTR_TO_ATOM(ptr).compiled_expander)
 #define TREATOM_BINDING(ptr)	        (TREPTR_TO_ATOM(ptr).binding)
 #define TREATOM_PACKAGE(ptr)	        (TREPTR_TO_ATOM(ptr).package)
-#define TREATOM_ENV(ptr)	            (TREPTR_TO_ATOM(ptr).env)
 #define TREATOM_DETAIL(ptr)		        (TREPTR_TO_ATOM(ptr).detail)
 #define TREATOM_STRING(ptr)		        ((char *) TREATOM_DETAIL(ptr))
 #define TREATOM_STRINGP(ptr)	        ((char *) TRESTRING_DATA(TREATOM_STRING(ptr)))

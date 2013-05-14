@@ -20,7 +20,6 @@
 #include "print.h"
 #include "debug.h"
 #include "thread.h"
-#include "env.h"
 #include "xxx.h"
 
 treptr tre_atom_rest;

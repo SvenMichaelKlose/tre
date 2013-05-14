@@ -34,7 +34,6 @@ FILES="
 	debug.c
 	dot.c
 	error.c
-	env.c
 	eval.c
 	gc.c
 	image.c

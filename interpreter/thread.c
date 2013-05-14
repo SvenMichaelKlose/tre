@@ -18,7 +18,6 @@ struct tre_thread_context tre_context;
 void
 trethread_make ()
 {
-    TRECONTEXT_ENV_CURRENT() = treptr_nil;
     TRECONTEXT_FUNSTACK() = treptr_nil;
     TRECONTEXT_PACKAGE() = treptr_nil;
 }
