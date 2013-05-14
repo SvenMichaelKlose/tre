@@ -20,6 +20,7 @@
 #include "main.h"
 #include "builtin_debug.h"
 #include "argument.h"
+#include "symbol.h"
 
 treptr
 tredebug_builtin_end_debug (treptr no_args)
@@ -73,14 +74,14 @@ tredebug_breakpoint_arg (treptr args)
 treptr
 tredebug_builtin_set_breakpoint (treptr args)
 {
-    tredebug_set_breakpoint (TREATOM_NAME(tredebug_breakpoint_arg (args)));
+    tredebug_set_breakpoint (TRESYMBOL_NAME(tredebug_breakpoint_arg (args)));
     return treptr_nil;
 }
 
 treptr
 tredebug_builtin_remove_breakpoint (treptr args)
 {
-    tredebug_remove_breakpoint (TREATOM_NAME(tredebug_breakpoint_arg (args)));
+    tredebug_remove_breakpoint (TRESYMBOL_NAME(tredebug_breakpoint_arg (args)));
     return treptr_nil;
 }
 

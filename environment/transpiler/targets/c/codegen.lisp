@@ -82,7 +82,7 @@
   (c-line `((%transpiler-native ,@(codegen-%setq-place dest val)) ,(codegen-%setq-value val))))
 
 (define-c-macro %setq-atom-value (dest val)
-  `(%transpiler-native "TREATOM_VALUE(" ,(? (%quote? dest) (c-compiled-symbol (cadr dest)) dest) ") = " ,val))
+  `(%transpiler-native "TRESYMBOL_VALUE(" ,(? (%quote? dest) (c-compiled-symbol (cadr dest)) dest) ") = " ,val))
 
 (define-c-macro %set-atom-fun (dest val)
   `(%transpiler-native ,dest "=" ,val ,*c-separator*))

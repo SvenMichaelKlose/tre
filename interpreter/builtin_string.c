@@ -18,6 +18,7 @@
 #include "thread.h"
 #include "argument.h"
 #include "gc.h"
+#include "symbol.h"
 #include "builtin_string.h"
 
 treptr
@@ -170,8 +171,8 @@ trestring_builtin_string (treptr list)
            	snprintf (buf, TRE_MAX_STRINGLEN, "%g", TRENUMBER_VAL(arg));
            	return trestring_get (buf);
     	}
-   		if (TREPTR_IS_ATOM(arg) && TREATOM_NAME(arg)) {
-   			strncpy (buf, TREATOM_NAME(arg), TRE_MAX_STRINGLEN);
+   		if (TREPTR_IS_ATOM(arg) && TRESYMBOL_NAME(arg)) {
+   			strncpy (buf, TRESYMBOL_NAME(arg), TRE_MAX_STRINGLEN);
        		return trestring_get (buf);
 		}
     	arg = treerror (arg, "string, number or named atom expected");

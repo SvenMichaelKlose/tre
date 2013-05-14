@@ -13,6 +13,7 @@
 #include "number.h"
 #include "io.h"
 #include "xxx.h"
+#include "symbol.h"
 
 treptr tre_lists_free;
 struct tre_list tre_lists[NUM_LISTNODES];
@@ -94,7 +95,7 @@ _trelist_get (treptr car, treptr cdr)
     tre_lists_free = _CDR(ret);
     _CAR(ret) = car;
     _CDR(ret) = cdr;
-    _CPR(ret) = TREATOM_VALUE(tre_default_listprop);
+    _CPR(ret) = TRESYMBOL_VALUE(tre_default_listprop);
     tregc_retval (ret);
 
 #ifdef TRE_VERBOSE_GC

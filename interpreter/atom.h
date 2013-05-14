@@ -41,7 +41,7 @@ extern treptr tre_package_keyword;
 #define ATOM_SET_NAME(index, name)     (tre_atoms[index].detail = name)
 
 #define EXPAND_UNIVERSE(ptr) \
-    (TREATOM_VALUE(treptr_universe) = CONS(ptr, TREATOM_VALUE(treptr_universe)))
+    (TRESYMBOL_VALUE(treptr_universe) = CONS(ptr, TRESYMBOL_VALUE(treptr_universe)))
 
 #define MAKE_HOOK_SYMBOL(var, symbol_name) \
     var = treatom_alloc_symbol (symbol_name, TRECONTEXT_PACKAGE(), treptr_nil); \
@@ -51,7 +51,7 @@ extern treptr tre_package_keyword;
     if (treatom_seek (symbol_name, TRECONTEXT_PACKAGE()) == ATOM_NOT_FOUND) { \
         EXPAND_UNIVERSE(treatom_alloc_symbol (symbol_name, TRECONTEXT_PACKAGE(), init)); \
     } else { \
-        TREATOM_VALUE(treatom_get (symbol_name, TRECONTEXT_PACKAGE())) = init; \
+        TRESYMBOL_VALUE(treatom_get (symbol_name, TRECONTEXT_PACKAGE())) = init; \
     }
 
 extern void treatom_init (void);

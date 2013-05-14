@@ -26,6 +26,7 @@
 #include "io.h"
 #include "main.h"
 #include "print.h"
+#include "symbol.h"
 
 #include "builtin_debug.h"
 #include "builtin_atom.h"
@@ -101,7 +102,7 @@ trespecial_macro (treptr list)
     treptr  expr = trelist_copy (list);
 
     f = treatom_alloc (TRETYPE_MACRO);
-    TREATOM_VALUE(TREPTR_INDEX(f)) = expr;
+    TRESYMBOL_VALUE(TREPTR_INDEX(f)) = expr;
 
     return f;
 }
@@ -114,7 +115,7 @@ trespecial_special (treptr list)
 
     tregc_push (expr);
     ret = treatom_alloc (TRETYPE_USERSPECIAL);
-    TREATOM_VALUE(TREPTR_INDEX(ret)) = expr;
+    TRESYMBOL_VALUE(TREPTR_INDEX(ret)) = expr;
     tregc_pop ();
 
     return ret;
@@ -320,7 +321,7 @@ trespecial_function_from_expr (treptr expr)
         return treerror (expr, "argument list expected instead of atom");
 
     f = treatom_alloc (TRETYPE_FUNCTION);
-    TREATOM_VALUE(TREPTR_INDEX(f)) = x;
+    TRESYMBOL_VALUE(TREPTR_INDEX(f)) = x;
 
     return f;
 }
@@ -342,7 +343,7 @@ trespecial_function (treptr args)
 			return trespecial_function_from_expr (arg);
 
         case TRETYPE_SYMBOL:
-            return TREATOM_FUN(arg);
+            return TRESYMBOL_FUN(arg);
 
         case TRETYPE_FUNCTION:
         case TRETYPE_BUILTIN:

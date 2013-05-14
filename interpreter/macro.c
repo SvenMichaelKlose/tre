@@ -18,6 +18,7 @@
 #include "thread.h"
 #include "debug.h"
 #include "argument.h"
+#include "symbol.h"
 
 treptr treptr_macroexpand_hook;
 struct tre_atom * treatom_macroexpand_hook;

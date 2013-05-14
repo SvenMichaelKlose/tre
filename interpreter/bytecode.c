@@ -29,6 +29,7 @@
 #include "compiled.h"
 #include "bytecode.h"
 #include "queue.h"
+#include "symbol.h"
 
 treptr treptr_funcall;
 treptr treptr_builtin;
@@ -72,7 +73,7 @@ trecode_set_place (treptr ** p, treptr value)
     if (v == treptr_stack)
         trestack_ptr[TRENUMBER_INT(*x++)] = value;
     else if (v != treptr_nil)
-        TREATOM_VALUE(v) = value;
+        TRESYMBOL_VALUE(v) = value;
 
     *p = x;
 }
@@ -115,7 +116,7 @@ trecode_get (treptr ** p)
 
     if (v == treptr_funcall) {
         fun = *x++;
-        if (TREPTR_IS_BUILTIN(TREATOM_FUN(fun))) {
+        if (TREPTR_IS_BUILTIN(TRESYMBOL_FUN(fun))) {
             if (fun == treptr_cons) {
                 car = trecode_get (&x);
                 tregc_push (car);
@@ -128,18 +129,18 @@ trecode_get (treptr ** p)
                 num_args = TRENUMBER_INT(*x++);
                 args = trecode_list (&x, num_args);
                 tregc_push (args);
-                v = treeval_xlat_function (treeval_xlat_builtin, TREATOM_FUN(fun), args, FALSE);
+                v = treeval_xlat_function (treeval_xlat_builtin, TRESYMBOL_FUN(fun), args, FALSE);
                 tregc_pop ();
                 TRELIST_FREE_TOPLEVEL_EARLY(args);
             }
-        } else if (TREPTR_IS_ATOM(fun) && TREPTR_IS_ARRAY(TREATOM_FUN(fun))) {
-            tregc_push (TREATOM_FUN(fun));
+        } else if (TREPTR_IS_ATOM(fun) && TREPTR_IS_ARRAY(TRESYMBOL_FUN(fun))) {
+            tregc_push (TRESYMBOL_FUN(fun));
             num_args = TRENUMBER_INT(*x++);
             old_sp = trestack_ptr;
             DOTIMES(i, num_args)
                 *--old_sp = trecode_get (&x);
             trestack_ptr = old_sp;
-            v = trecode_exec (TREATOM_FUN(fun));
+            v = trecode_exec (TRESYMBOL_FUN(fun));
             trestack_ptr += num_args;
             tregc_pop ();
         } else 
@@ -160,7 +161,7 @@ trecode_get (treptr ** p)
         tregc_pop ();
         tregc_pop ();
     } else if (TREPTR_IS_SYMBOL(v))
-        v = TREATOM_VALUE(v);
+        v = TRESYMBOL_VALUE(v);
     *p = x;
 
     return v;

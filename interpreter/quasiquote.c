@@ -16,6 +16,7 @@
 #include "print.h"
 #include "thread.h"
 #include "apply.h"
+#include "symbol.h"
 
 treptr treptr_quasiquoteexpand_hook;
 struct tre_atom *treatom_quasiquoteexpand_hook;

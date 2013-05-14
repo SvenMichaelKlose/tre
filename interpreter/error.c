@@ -19,6 +19,7 @@
 #include "string2.h"
 #include "macro.h"
 #include "xxx.h"
+#include "symbol.h"
 
 void
 treerror_msg (treptr expr, const char *prefix, const char *msg, va_list ap)
@@ -54,12 +55,12 @@ treerror_internal (treptr expr, const char *msg, ...)
 void
 treerror_macroexpansion (void)
 {
-    treptr c = TREATOM_VALUE(treptr_current_macro);
+    treptr c = TRESYMBOL_VALUE(treptr_current_macro);
 
     if (c == treptr_nil)
         return;
 
-    fprintf (stderr, "; During expansion of macro %s:\n", TREATOM_NAME(c));
+    fprintf (stderr, "; During expansion of macro %s:\n", TRESYMBOL_NAME(c));
 }
 
 treptr

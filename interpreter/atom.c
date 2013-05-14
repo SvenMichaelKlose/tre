@@ -22,6 +22,7 @@
 #include "alloc.h"
 #include "util.h"
 #include "function.h"
+#include "symbol.h"
 
 void * tre_atoms_free;
 struct tre_atom tre_atoms[NUM_ATOMS];
@@ -139,36 +140,36 @@ treatom_init (void)
 treptr
 treatom_set_value (treptr atom, treptr value)
 {
-    return TREATOM_VALUE(atom) = value;
+    return TRESYMBOL_VALUE(atom) = value;
 }
 
 treptr
 treatom_register_compiled_function (treptr sym, void * fun, void * expander_fun)
 {
-    if (TREATOM_FUN(sym) == treptr_nil)
-        TREATOM_FUN(sym) = treatom_alloc (TRETYPE_FUNCTION);
+    if (TRESYMBOL_FUN(sym) == treptr_nil)
+        TRESYMBOL_FUN(sym) = treatom_alloc (TRETYPE_FUNCTION);
 
-    TREFUNCTION_NATIVE(TREATOM_FUN(sym)) = fun;
-    TREFUNCTION_NATIVE_EXPANDER(TREATOM_FUN(sym)) = expander_fun;
+    TREFUNCTION_NATIVE(TRESYMBOL_FUN(sym)) = fun;
+    TREFUNCTION_NATIVE_EXPANDER(TRESYMBOL_FUN(sym)) = expander_fun;
 	return sym;
 }
 
 treptr
 treatom_get_value (treptr atom)
 {
-    return TREATOM_VALUE(atom);
+    return TRESYMBOL_VALUE(atom);
 }
 
 treptr
 treatom_get_function (treptr atom)
 {
-	return TREPTR_IS_BUILTIN(atom) ? atom : TREATOM_FUN(atom);
+	return TREPTR_IS_BUILTIN(atom) ? atom : TRESYMBOL_FUN(atom);
 }
 
 treptr
 treatom_set_function (treptr atom, treptr value)
 {
-    return TREATOM_FUN(atom) = value;
+    return TRESYMBOL_FUN(atom) = value;
 }
 
 treptr
@@ -332,9 +333,9 @@ treatom_fun_body (treptr atomp)
 		return treptr_nil;
     }
 
-    fun = TREATOM_FUN(atomp);
+    fun = TRESYMBOL_FUN(atomp);
     if (fun != treptr_nil)
-        return CDR(TREATOM_VALUE(fun));
+        return CDR(TRESYMBOL_VALUE(fun));
 
     return treptr_nil;
 }

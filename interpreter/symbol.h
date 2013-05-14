@@ -5,6 +5,11 @@
 #ifndef TRE_SYMBOL_H
 #define TRE_SYMBOL_H
 
+#define TRESYMBOL_NAME(ptr)     ((char *) TREPTR_TO_ATOM(ptr).detail)
+#define TRESYMBOL_VALUE(ptr)    (TREPTR_TO_ATOM(ptr).value)
+#define TRESYMBOL_FUN(ptr)      (TREPTR_TO_ATOM(ptr).fun)
+#define TRESYMBOL_PACKAGE(ptr)  (TREPTR_TO_ATOM(ptr).package)
+
 extern size_t num_symbols;
 
 extern void   tresymbolpage_remove (treptr atom);

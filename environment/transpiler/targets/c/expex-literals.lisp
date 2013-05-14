@@ -30,7 +30,7 @@
 				                                      'tre_package_keyword
 				                                      'treptr_nil))))
 
-(functional *TREATOM_VALUE*)
+(functional *TRESYMBOL_VALUE*)
 
 (defun c-expex-argument-filter (x)
   (?
@@ -39,5 +39,5 @@
     (number? x)    (c-compiled-number x)
     (string? x)    (c-compiled-string x)
 	(funinfo-var-or-lexical? *expex-funinfo* x) x
-	(expex-global-variable? x) `(*TREATOM_VALUE* ,(c-compiled-symbol x))
+	(expex-global-variable? x) `(*TRESYMBOL_VALUE* ,(c-compiled-symbol x))
 	x))

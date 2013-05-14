@@ -19,6 +19,7 @@
 #include "thread.h"
 #include "number.h"
 #include "error.h"
+#include "symbol.h"
 
 #define TRETOKEN_EOF			       0
 #define TRETOKEN_BRACKET_OPEN	       1

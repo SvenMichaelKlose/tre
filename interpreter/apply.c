@@ -24,6 +24,7 @@
 #include "special.h"
 #include "apply.h"
 #include "function.h"
+#include "symbol.h"
 
 #include "builtin_debug.h"
 #include "builtin_atom.h"
@@ -119,7 +120,7 @@ treptr
 trefuncall (treptr func, treptr args)
 {
 	if (trebuiltin_is_compiled_closure (func))
-		return trefuncall_compiled (TREATOM_FUN(CLOSURE_FUNCTION(func)),
+		return trefuncall_compiled (TRESYMBOL_FUN(CLOSURE_FUNCTION(func)),
 		                            CONS(CLOSURE_LEXICALS(func), args),
                                     FALSE);
 	if (IS_COMPILED_FUN(func))

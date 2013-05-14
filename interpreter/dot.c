@@ -15,8 +15,8 @@
 #include "gc.h"
 #include "print.h"
 #include "thread.h"
-
 #include "apply.h"
+#include "symbol.h"
 
 treptr treptr_dotexpand_hook;
 struct tre_atom *treatom_dotexpand_hook;

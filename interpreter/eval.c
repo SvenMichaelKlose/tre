@@ -24,6 +24,7 @@
 #include "string2.h"
 #include "xxx.h"
 #include "apply.h"
+#include "symbol.h"
 #include "function.h"
 
 treptr treopt_verbose_eval;
@@ -32,7 +33,7 @@ treptr treeval_function_symbol;
 
 unsigned treeval_recursions;
 
-#define PUSH_BINDING(x)	(TREFUNCTION_BINDING(x) = CONS(TREATOM_VALUE(x), TREFUNCTION_BINDING(x)))
+#define PUSH_BINDING(x)	(TREFUNCTION_BINDING(x) = CONS(TRESYMBOL_VALUE(x), TREFUNCTION_BINDING(x)))
 
 void
 treeval_bind (treptr la, treptr lv)
@@ -45,7 +46,7 @@ treeval_bind (treptr la, treptr lv)
         val = CAR(lv);
 
 		PUSH_BINDING(arg);
-		TREATOM_VALUE(arg) = val;
+		TRESYMBOL_VALUE(arg) = val;
     }
 
     if (la != treptr_nil)
@@ -63,7 +64,7 @@ treeval_unbind (treptr la)
     for (;la != treptr_nil; la = CDR(la)) {
         car = CAR(la);
         bding = TREFUNCTION_BINDING(car);
-        TREATOM_VALUE(car) = CAR(bding);
+        TRESYMBOL_VALUE(car) = CAR(bding);
         TREFUNCTION_BINDING(car) = CDR(bding);
         TRELIST_FREE_EARLY(bding);
     }
@@ -133,7 +134,7 @@ treeval_expr (treptr x)
     tredebug_chk_breakpoints (x);
 	TREDEBUG_STEP();
 
-    fun = TREPTR_TYPE(fun) == TRETYPE_SYMBOL ? TREATOM_FUN(fun) : treeval (fun);
+    fun = TREPTR_TYPE(fun) == TRETYPE_SYMBOL ? TRESYMBOL_FUN(fun) : treeval (fun);
 
 	if (IS_COMPILED_FUN(fun))
 		return trefuncall_compiled (fun, args, TRUE);
@@ -171,7 +172,7 @@ treeval (treptr x)
 
     switch (TREPTR_TYPE(x)) {
         case TRETYPE_CONS:   val = treeval_expr (x); break;
-        case TRETYPE_SYMBOL: val = TREATOM_VALUE(x); break;
+        case TRETYPE_SYMBOL: val = TRESYMBOL_VALUE(x); break;
     }
 
     tregc_retval (val);

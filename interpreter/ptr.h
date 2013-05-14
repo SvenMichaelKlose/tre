@@ -23,11 +23,7 @@ typedef size_t treptr;
 	TRETYPE_INDEX_TO_PTR(tre_atom_types[index], index)
 #define TREPTR_TO_ATOM(ptr)	TRE_ATOM(TREPTR_INDEX(ptr))
 
-#define TREATOM_NAME(ptr)		        ((char *) TREPTR_TO_ATOM(ptr).detail)
 #define TREATOM_TYPE(ptr)		        (tre_atom_types[TREPTR_INDEX(ptr)])
-#define TREATOM_VALUE(ptr)		        (TREPTR_TO_ATOM(ptr).value)
-#define TREATOM_FUN(ptr)		        (TREPTR_TO_ATOM(ptr).fun)
-#define TREATOM_PACKAGE(ptr)	        (TREPTR_TO_ATOM(ptr).package)
 #define TREATOM_DETAIL(ptr)		        (TREPTR_TO_ATOM(ptr).detail)
 #define TREATOM_STRING(ptr)		        ((char *) TREATOM_DETAIL(ptr))
 #define TREATOM_STRINGP(ptr)	        ((char *) TRESTRING_DATA(TREATOM_STRING(ptr)))

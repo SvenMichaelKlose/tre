@@ -17,6 +17,7 @@
 #include "thread.h"
 #include "xxx.h"
 #include "function.h"
+#include "symbol.h"
 
 treptr
 treatom_builtin_not (treptr list)
@@ -128,7 +129,7 @@ treatom_builtin_arg (treptr list, const char * descr)
 treptr
 treatom_builtin_symbol_value (treptr list)
 {
-    return TREATOM_VALUE(treatom_builtin_arg (list, "SYMBOL-VALUE"));
+    return TRESYMBOL_VALUE(treatom_builtin_arg (list, "SYMBOL-VALUE"));
 }
 
 treptr
@@ -151,13 +152,13 @@ treptr
 treatom_builtin_symbol_function (treptr list)
 {
     treptr arg = treatom_builtin_arg (list, "SYMBOL-FUNCTION");
-	return TREPTR_IS_BUILTIN(arg) ? arg : TREATOM_FUN(arg);
+	return TREPTR_IS_BUILTIN(arg) ? arg : TRESYMBOL_FUN(arg);
 }
 
 treptr
 treatom_builtin_symbol_package (treptr list)
 {
-    return TREATOM_PACKAGE(treatom_builtin_arg (list, "SYMBOL-PACKAGE"));
+    return TRESYMBOL_PACKAGE(treatom_builtin_arg (list, "SYMBOL-PACKAGE"));
 }
 
 treptr

@@ -130,16 +130,16 @@ tregc_trace_atom (treptr a)
 
     switch (TREATOM_TYPE(a)) {
         case TRETYPE_SYMBOL:
-            tregc_trace_object (TREATOM_VALUE(a));
-            tregc_trace_object (TREATOM_FUN(a));
-            tregc_trace_object (TREATOM_PACKAGE(a));
+            tregc_trace_object (TRESYMBOL_VALUE(a));
+            tregc_trace_object (TRESYMBOL_FUN(a));
+            tregc_trace_object (TRESYMBOL_PACKAGE(a));
             tregc_trace_object (TREFUNCTION_BINDING(a));
 	    	break;
 
         case TRETYPE_FUNCTION:
         case TRETYPE_MACRO:
         case TRETYPE_USERSPECIAL:
-            tregc_trace_object (TREATOM_VALUE(a));
+            tregc_trace_object (TRESYMBOL_VALUE(a));
 	    	break;
 
         case TRETYPE_ARRAY:

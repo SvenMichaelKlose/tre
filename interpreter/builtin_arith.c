@@ -14,6 +14,7 @@
 #include "error.h"
 #include "number.h"
 #include "argument.h"
+#include "symbol.h"
 #include "builtin.h"
 #include "builtin_number.h"
 #include "builtin_string.h"
@@ -100,7 +101,7 @@ trenumber_builtin_quotient (treptr x)
 		return treerror (treptr_nil, "Argument expected");
 
     if (CDR(x) == treptr_nil)
-		return treatom_number_get (1.0 / TREATOM_VALUE(CAR(x)), TRENUMTYPE_FLOAT);
+		return treatom_number_get (1.0 / TRESYMBOL_VALUE(CAR(x)), TRENUMTYPE_FLOAT);
 
     return treeval_exprop (x, treeval_op_quotient, "/");
 }

@@ -17,6 +17,7 @@
 #include "argument.h"
 #include "stream.h"
 #include "string2.h"
+#include "symbol.h"
 #include "builtin_stream.h"
 
 treptr
@@ -38,7 +39,7 @@ trestream_builtin_princ (treptr args)
 	    	break;
 
 		case TRETYPE_SYMBOL:
-	    	fprintf (str, "%s", TREATOM_NAME(obj));
+	    	fprintf (str, "%s", TRESYMBOL_NAME(obj));
 	    	break;
 
 		case TRETYPE_NUMBER:

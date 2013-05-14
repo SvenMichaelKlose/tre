@@ -25,6 +25,8 @@
 #include "string2.h"
 #include "thread.h"
 #include "array.h"
+#include "symbol.h"
+#include "function.h"
 
 char treprint_marks_cons[NUM_LISTNODES >> 3];
 char treprint_marks_atoms[NUM_ATOMS >> 3];
@@ -116,9 +118,9 @@ treprint_atom (treptr atom, size_t indent)
 
     switch (TREPTR_TYPE(atom)) {
 		case TRETYPE_SYMBOL:
-	    	if (TREATOM_PACKAGE(atom) != TRECONTEXT_PACKAGE())
-                printf ("%s:", TREATOM_NAME(TREATOM_PACKAGE(atom)));
-           	printf ("%s", TREATOM_NAME(atom));
+	    	if (TRESYMBOL_PACKAGE(atom) != TRECONTEXT_PACKAGE())
+                printf ("%s:", TRESYMBOL_NAME(TRESYMBOL_PACKAGE(atom)));
+           	printf ("%s", TRESYMBOL_NAME(atom));
 	    	break;
 
 		case TRETYPE_BUILTIN:
@@ -147,19 +149,19 @@ treprint_atom (treptr atom, size_t indent)
 
 		case TRETYPE_FUNCTION:
 	        printf ("#'(");
-	        treprint_indent (TREATOM_VALUE(atom), indent, TRUE, "");
+	        treprint_indent (TREFUNCTION_SOURCE(atom), indent, TRUE, "");
 	        printf (")");
 	    	break;
 
 		case TRETYPE_MACRO:
 	        printf ("(MACRO");
-	       	treprint_r (TREATOM_VALUE(atom));
+	       	treprint_r (TREFUNCTION_SOURCE(atom));
 	       	printf (")");
 	    	break;
 
 		case TRETYPE_USERSPECIAL:
 	       	printf ("(SPECIAL");
-	       	treprint_r (TREATOM_VALUE(atom));
+	       	treprint_r (TREFUNCTION_SOURCE(atom));
 	       	printf (")");
 	    	break;
 

@@ -95,9 +95,9 @@ tresymbolpage_add_rec (struct tresymbol_page * p, char * name, treptr atom, char
 void
 tresymbolpage_add (treptr atom)
 {
-	char * name = TREATOM_NAME(atom);
+	char * name = TRESYMBOL_NAME(atom);
 	if (name)
-		tresymbolpage_add_rec (tresymbolpage_find_root (TREATOM_PACKAGE(atom)), name, atom, name);
+		tresymbolpage_add_rec (tresymbolpage_find_root (TRESYMBOL_PACKAGE(atom)), name, atom, name);
 }
 
 treptr tresymbolpage_find_rec (struct tresymbol_page * p, char * np);
@@ -143,7 +143,7 @@ tresymbolpage_remove_rec (struct tresymbol_page * p, char * np)
 void
 tresymbolpage_remove (treptr atom)
 {
-	(void) tresymbolpage_remove_rec (tresymbolpage_find_root (TREATOM_PACKAGE(atom)), TREATOM_NAME(atom));
+	(void) tresymbolpage_remove_rec (tresymbolpage_find_root (TRESYMBOL_PACKAGE(atom)), TRESYMBOL_NAME(atom));
 }
 
 void

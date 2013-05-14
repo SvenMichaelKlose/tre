@@ -14,6 +14,7 @@
 #include "number.h"
 #include "io.h"
 #include "xxx.h"
+#include "symbol.h"
 
 treptr
 trelist_last (treptr l)
@@ -95,10 +96,10 @@ long
 trelist_position_name (treptr elt, treptr l)
 {
     long c = 0;
-	const char * eltname = TREATOM_NAME(elt);
+	const char * eltname = TRESYMBOL_NAME(elt);
 
     while (l != treptr_nil) {
-		if (TREPTR_IS_SYMBOL(CAR(l)) && ! strcmp (TREATOM_NAME(CAR(l)), eltname))
+		if (TREPTR_IS_SYMBOL(CAR(l)) && ! strcmp (TRESYMBOL_NAME(CAR(l)), eltname))
 	    	return c;
 
         l = CDR(l);

@@ -21,6 +21,7 @@
 #include "debug.h"
 #include "thread.h"
 #include "xxx.h"
+#include "symbol.h"
 
 treptr tre_atom_rest;
 treptr tre_atom_body;
@@ -304,7 +305,7 @@ next:
 treptr
 trearg_get_keyword (treptr a)
 {
-    return treatom_get (TREATOM_NAME(a), tre_package_keyword);
+    return treatom_get (TRESYMBOL_NAME(a), tre_package_keyword);
 }
 
 void
