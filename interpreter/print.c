@@ -65,13 +65,12 @@ void treprint_r (treptr);
 void
 treprint_array (treptr array)
 {
-    treptr * elts = TREATOM_DETAIL(array);
-    size_t   size = trearray_get_size (TREATOM_VALUE(array));
+    treptr * elts = TREARRAY_VALUES(array);
     size_t   i;
 
     printf ("#(");
 
-    DOTIMES(i, size) {
+    DOTIMES(i, TREARRAY_SIZE(array)) {
 		treprint_no_nl = TRUE;
         if (i)
 	    	printf (" ");
