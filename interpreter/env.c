@@ -50,23 +50,6 @@ treenv_bind (treptr la, treptr lv)
 }
 
 void
-treenv_bind_sloppy (treptr la, treptr lv)
-{
-    treptr  car;
-    
-    while (la != treptr_nil) {
-        car = CAR(la);
-        
-		PUSH_BINDING(car);
-        TREATOM_VALUE(car) = (lv != treptr_nil) ? CAR(lv) : treptr_nil;
-
-        la = CDR(la);
-        if (lv != treptr_nil)
-            lv = CDR(lv);
-    }
-}
-
-void
 treenv_unbind (treptr la)
 {
     treptr  bding;
