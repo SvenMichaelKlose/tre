@@ -84,7 +84,7 @@ treptr
 trenet_builtin_send (treptr args)
 {
     treptr  data = trearg_get (args);
-    char    * s = TREATOM_STRING(data);
+    char *  s = TREPTR_STRING(data);
 
     send (trenet_connection, TRESTRING_DATA(s), TRESTRING_LEN(s), 0);    
 

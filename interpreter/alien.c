@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2008 Sven Michael Klose <pixel@copei.de
+ * tré – Copyright (c) 2005–2008,2013 Sven Michael Klose <pixel@copei.de
  */
 
 #include <dlfcn.h>
@@ -24,7 +24,7 @@ retry:
     while (TREPTR_IS_STRING(path) == FALSE)
         path = treerror (path, "path to shared object expected");
 
-    hdl = dlopen (TREATOM_STRINGP(path), RTLD_NOW);
+    hdl = dlopen (TREPTR_STRINGZ(path), RTLD_NOW);
     if (hdl == NULL) {
         path = treerror (path, dlerror ());
 		goto retry;
@@ -64,7 +64,7 @@ trealien_builtin_dlsym (treptr args)
     while (TREPTR_IS_STRING(sym) == FALSE)
         sym = treerror (sym, "symbol string expected");
 
-    ret = dlsym ((void *) (long) TRENUMBER_VAL(hdl), TREATOM_STRINGP(sym));
+    ret = dlsym ((void *) (long) TRENUMBER_VAL(hdl), TREPTR_STRINGZ(sym));
     if (ret == NULL)
         return trestring_get (dlerror ());
 

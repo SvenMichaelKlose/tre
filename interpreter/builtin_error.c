@@ -20,5 +20,5 @@ treerror_builtin_error (treptr args)
     if (TREPTR_IS_STRING(arg) == FALSE)
         treerror (arg, "string expected");
 
-    return treerror (treptr_invalid, TREATOM_STRINGP(arg));
+    return treerror (treptr_invalid, TREPTR_STRINGZ(arg));
 }

@@ -165,14 +165,14 @@ treimage_write_strings (FILE *f, size_t num)
     j = 0;
     DOTIMES(i, NUM_ATOMS)
         if (tre_atom_types[i] == TRETYPE_STRING)
-            lens[j++] = TRESTRING_LEN(TREATOM_STRING(i));
+            lens[j++] = TRESTRING_LEN(TREPTR_STRING(i));
     treimage_write (f, lens, sizeof (size_t) * num);
 
     /* Write strings. */
     DOTIMES(i, NUM_ATOMS) {
         if (tre_atom_types[i] != TRETYPE_STRING)
             continue;
-        s = TREATOM_STRING(i);
+        s = TREPTR_STRING(i);
         treimage_write (f, TRESTRING_DATA(s), TRESTRING_LEN(s));
     }
 

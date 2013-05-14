@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2008,2011 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2008,2011,2013 Sven Michael Klose <pixel@copei.de>
  */
 
 #ifndef TRE_STRING_H
@@ -9,6 +9,9 @@
 
 #define TRESTRING_LEN(x) (*(size_t*)x)
 #define TRESTRING_DATA(x) (((char*) x) + sizeof (size_t))
+#define TREPTR_STRING(ptr)              TREATOM_DETAIL(ptr)                                                             
+#define TREPTR_STRINGZ(ptr)             TRESTRING_DATA(TREPTR_STRING(ptr))
+#define TREATOM_SET_STRING(ptr, val)    (TREATOM_DETAIL(ptr) = (char *) val)
 
 extern treptr tre_strings;
 extern treptr trestring_get (const char *string);

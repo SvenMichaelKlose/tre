@@ -20,8 +20,8 @@ FILE * tre_fileio_handles[TRE_FILEIO_MAX_FILES];
 long
 trestream_fopen (treptr path, treptr mode)
 {
-    char * spath = TREATOM_STRINGP(path);
-    char * smode = TREATOM_STRINGP(mode);
+    char * spath = TREPTR_STRINGZ(path);
+    char * smode = TREPTR_STRINGZ(mode);
     FILE * file  = fopen (spath, smode);
     size_t i;
 

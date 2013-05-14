@@ -31,7 +31,7 @@ treimage_builtin_create (treptr list)
 	while (TRUE) {
 		file = trearg_typed (1, TRETYPE_STRING, file, "pathname");
 
-    	if (treimage_create (TRESTRING_DATA(TREATOM_STRING(file)), init_fun) == FALSE)
+    	if (treimage_create (TREPTR_STRINGZ(file), init_fun) == FALSE)
 			break;
 
        	file = treerror (file, "cannot create image - tell new pathname");
@@ -48,7 +48,7 @@ treimage_builtin_load (treptr list)
 
 	while (TRUE) {
     	file = trearg_typed (1, TRETYPE_STRING, file, "pathname");
-    	r = treimage_load (TRESTRING_DATA(TREATOM_STRING(file)));
+    	r = treimage_load (TREPTR_STRINGZ(file));
     	if (r == -2) {
         	file = treerror (file, "incompatible image format - tell new pathname");
             continue;

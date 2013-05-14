@@ -35,7 +35,7 @@ trestring_get_raw (size_t len)
 void
 trestring_copy (char *to, treptr str)
 {
-    char * s = TREATOM_STRING(str);
+    char * s = TREPTR_STRING(str);
     strncpy (to, TRESTRING_DATA(s), TRESTRING_LEN(s) + 1);
 }
 
@@ -74,15 +74,13 @@ trestring_get_binary (const char *str, size_t len)
 void
 trestring_free (treptr str)
 {
-    char * s = TREATOM_STRING(str);
-
-    trealloc_free (s);
+    trealloc_free (TREPTR_STRING(str));
 }
 
 treptr
 trestring_t_get (treptr str, size_t idx)
 {
-    char * s = TREATOM_STRING(str);
+    char * s = TREPTR_STRING(str);
 
     if (TRESTRING_LEN(s)< idx) {
         trewarn (TRECONTEXT_CURRENT(), "index out of range");
@@ -95,9 +93,7 @@ trestring_t_get (treptr str, size_t idx)
 size_t
 trestring_t_length (treptr str)
 {
-    char * s = TREATOM_STRING(str);
-
-    return TRESTRING_LEN(s);
+    return TRESTRING_LEN(TREPTR_STRING(str));
 }
 
 struct tre_sequence_type trestring_seqtype = {

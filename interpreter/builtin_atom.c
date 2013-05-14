@@ -96,7 +96,7 @@ treatom_builtin_make_symbol (treptr args)
     name = trearg_typed (1, TRETYPE_STRING, CAR(args), "MAKE-SYMBOL");
 	package = num_args == 2 ? CADR(args) : TRECONTEXT_PACKAGE();
 
-    return treatom_get (TREATOM_STRINGP(name), package);
+    return treatom_get (TREPTR_STRINGZ(name), package);
 }
 
 
@@ -104,9 +104,9 @@ treptr
 treatom_builtin_make_package (treptr args)
 {
 	treptr name = trearg_typed (1, TRETYPE_STRING, trearg_get (args), "MAKE-PACKAGE");
-	return strlen (TREATOM_STRINGP(name)) == 0 ?
+	return strlen (TREPTR_STRINGZ(name)) == 0 ?
 		       tre_package_keyword :
-	           treatom_get (TREATOM_STRINGP(name), TRECONTEXT_PACKAGE());
+	           treatom_get (TREPTR_STRINGZ(name), TRECONTEXT_PACKAGE());
 }
 
 treptr

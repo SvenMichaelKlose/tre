@@ -94,7 +94,7 @@ trestring_builtin_compare (treptr list)
 	if (TREPTR_IS_STRING(CAR(list)) == FALSE)
 		treerror_norecover (list, "string expected as first argument");
 
-	x = TREATOM_STRINGP(CAR(list));
+	x = TREPTR_STRINGZ(CAR(list));
 	len = strlen (x);
     DOLIST(p, CDR(list)) {
 		car = CAR(p);
@@ -102,7 +102,7 @@ trestring_builtin_compare (treptr list)
 			treerror_norecover (list, "string expected");
 		if (car == treptr_nil)
 			continue;
-		y = TREATOM_STRINGP(car);
+		y = TREPTR_STRINGZ(car);
 		if (len != strlen (y))
 			return treptr_nil;
 		if (strcmp (x, y))
@@ -128,7 +128,7 @@ trestring_builtin_concat (treptr list)
 		if (CAR(p) == treptr_nil)
 			continue;
         car = trearg_typed (argnum++, TRETYPE_STRING, CAR(p), "STRING-CONCAT");
-	   	len += strlen (TREATOM_STRINGP(car));
+	   	len += strlen (TREPTR_STRINGZ(car));
     }
 
     news = trestring_get_raw (len);
@@ -143,7 +143,7 @@ trestring_builtin_concat (treptr list)
     DOLIST(p, list) {
 		if (CAR(p) == treptr_nil)
 			continue;
-		newp = stpcpy (newp, TREATOM_STRINGP(CAR(p)));
+		newp = stpcpy (newp, TREPTR_STRINGZ(CAR(p)));
 	}
 
     atom = treatom_alloc (TRETYPE_STRING);

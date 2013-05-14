@@ -144,7 +144,7 @@ treprint_atom (treptr atom, size_t indent)
 	    	break;
 
 		case TRETYPE_STRING:
-            printf ("\"%s\"", (char *) TREATOM_STRINGP(atom));
+            printf ("\"%s\"", (char *) TREPTR_STRINGZ(atom));
 	    	break;
 
 		case TRETYPE_FUNCTION:

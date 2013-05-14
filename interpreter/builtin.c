@@ -222,9 +222,9 @@ trebuiltin_intern (treptr args)
     if (package != treptr_nil)
 		package = trearg_typed (1, TRETYPE_STRING, package, "INTERN");
 
-    n = TRESTRING_DATA(TREATOM_STRING(name));
+    n = TREPTR_STRINGZ(name);
     if (package != treptr_nil)
-        p = treatom_get (TRESTRING_DATA(TREATOM_STRING(package)), treptr_nil);
+        p = treatom_get (TREPTR_STRINGZ(package), treptr_nil);
     else
         p = treptr_nil;
 
