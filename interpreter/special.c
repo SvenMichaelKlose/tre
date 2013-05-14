@@ -323,15 +323,12 @@ trespecial_function_from_expr (treptr expr)
     if (TREPTR_IS_ATOM(CAR(x)) && CAR(x) != treptr_nil)
         return treerror (expr, "argument list expected instead of atom");
 
-    x = trelist_copy (x);
-    tregc_push (x);
     f = treatom_alloc (TRETYPE_FUNCTION);
-    TREATOM_VALUE(TREPTR_INDEX(f)) = expr;
-    tregc_pop ();
+    TREATOM_VALUE(TREPTR_INDEX(f)) = x;
     tregc_push (f);
     treenv_create (f);
-
     tregc_pop ();
+
     return f;
 }
 
