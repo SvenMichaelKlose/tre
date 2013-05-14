@@ -49,7 +49,7 @@ treeval_funcall (treptr func, treptr args, bool do_argeval)
     argdef = CAR(funcdef);
     body = CDR(funcdef);
 
-    env = (treptr) (size_t) TREATOM_DETAIL(func);
+    env = (treptr) (size_t) TREATOM_ENV(func);
     env_parent = TRECONTEXT_ENV_CURRENT();
     TRECONTEXT_ENV_CURRENT() = env;
     old_parent = env_parent;

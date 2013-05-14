@@ -24,7 +24,7 @@
 void
 treenv_create (treptr a)
 {
-    TREATOM_DETAIL(a) = (void *) (size_t) CONS(TRECONTEXT_ENV_CURRENT(), CONS(treptr_nil, treptr_nil));
+    TREATOM_ENV(a) = CONS(TRECONTEXT_ENV_CURRENT(), CONS(treptr_nil, treptr_nil));
 }
 
 #define PUSH_BINDING(x)	(TREATOM_BINDING(x) = CONS(TREATOM_VALUE(x), TREATOM_BINDING(x)))

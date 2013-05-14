@@ -145,6 +145,7 @@ tregc_trace_atom (treptr a)
     tregc_trace_object (TREATOM_FUN(a));
     tregc_trace_object (TREATOM_PACKAGE(a));
     tregc_trace_object (TREATOM_BINDING(a));
+    tregc_trace_object (TREATOM_ENV(a));
 }
 
 void
