@@ -21,6 +21,7 @@
 #include "thread.h"
 #include "alloc.h"
 #include "util.h"
+#include "function.h"
 
 void * tre_atoms_free;
 struct tre_atom tre_atoms[NUM_ATOMS];
@@ -147,8 +148,8 @@ treatom_register_compiled_function (treptr sym, void * fun, void * expander_fun)
     if (TREATOM_FUN(sym) == treptr_nil)
         TREATOM_FUN(sym) = treatom_alloc (TRETYPE_FUNCTION);
 
-    TREATOM_COMPILED_FUN(TREATOM_FUN(sym)) = fun;
-    TREATOM_COMPILED_EXPANDER(TREATOM_FUN(sym)) = expander_fun;
+    TREFUNCTION_NATIVE(TREATOM_FUN(sym)) = fun;
+    TREFUNCTION_NATIVE_EXPANDER(TREATOM_FUN(sym)) = expander_fun;
 	return sym;
 }
 
@@ -173,7 +174,7 @@ treatom_set_function (treptr atom, treptr value)
 treptr
 treatom_set_binding (treptr atom, treptr value)
 {
-    return TREATOM_BINDING(atom) = value;
+    return TREFUNCTION_BINDING(atom) = value;
 }
 
 treptr

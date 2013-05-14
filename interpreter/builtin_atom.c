@@ -16,6 +16,7 @@
 #include "string2.h"
 #include "thread.h"
 #include "xxx.h"
+#include "function.h"
 
 treptr
 treatom_builtin_not (treptr list)
@@ -163,7 +164,7 @@ treptr
 treatom_builtin_symbol_compiled_function (treptr list)
 {
     treptr arg = treatom_builtin_arg (list, "SYMBOL-COMPILED-FUNCTION");
-	return TREATOM_COMPILED_FUN(arg) ? trenumber_get ((double) (long) TREATOM_COMPILED_FUN(arg)) : treptr_nil;
+	return TREFUNCTION_NATIVE(arg) ? trenumber_get ((double) (long) TREFUNCTION_NATIVE(arg)) : treptr_nil;
 }
 
 treptr

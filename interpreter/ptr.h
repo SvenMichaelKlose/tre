@@ -27,9 +27,6 @@ typedef size_t treptr;
 #define TREATOM_TYPE(ptr)		        (tre_atom_types[TREPTR_INDEX(ptr)])
 #define TREATOM_VALUE(ptr)		        (TREPTR_TO_ATOM(ptr).value)
 #define TREATOM_FUN(ptr)		        (TREPTR_TO_ATOM(ptr).fun)
-#define TREATOM_COMPILED_FUN(ptr)		(TREPTR_TO_ATOM(ptr).compiled_fun)
-#define TREATOM_COMPILED_EXPANDER(ptr)	(TREPTR_TO_ATOM(ptr).compiled_expander)
-#define TREATOM_BINDING(ptr)	        (TREPTR_TO_ATOM(ptr).binding)
 #define TREATOM_PACKAGE(ptr)	        (TREPTR_TO_ATOM(ptr).package)
 #define TREATOM_DETAIL(ptr)		        (TREPTR_TO_ATOM(ptr).detail)
 #define TREATOM_STRING(ptr)		        ((char *) TREATOM_DETAIL(ptr))
@@ -52,7 +49,7 @@ typedef size_t treptr;
 #define TREPTR_IS_MACRO(ptr)	(TREPTR_TYPE(ptr) == TRETYPE_MACRO)
 #define TREPTR_IS_FUNCTION(ptr)	(TREPTR_TYPE(ptr) == TRETYPE_FUNCTION)
 
-#define IS_COMPILED_FUN(x) (TREPTR_IS_ARRAY(x) || ((TREPTR_IS_FUNCTION(x) || TREPTR_IS_MACRO(x)) && TREATOM_COMPILED_FUN(x)))
+#define IS_COMPILED_FUN(x) (TREPTR_IS_ARRAY(x) || ((TREPTR_IS_FUNCTION(x) || TREPTR_IS_MACRO(x)) && TREFUNCTION_NATIVE(x)))
 
 #define TREPTR_TRUTH(test) ((test) ? treptr_t : treptr_nil)
 

@@ -24,6 +24,7 @@
 #include "string2.h"
 #include "xxx.h"
 #include "apply.h"
+#include "function.h"
 
 treptr treopt_verbose_eval;
 treptr treeval_slot_value;
@@ -31,7 +32,7 @@ treptr treeval_function_symbol;
 
 unsigned treeval_recursions;
 
-#define PUSH_BINDING(x)	(TREATOM_BINDING(x) = CONS(TREATOM_VALUE(x), TREATOM_BINDING(x)))
+#define PUSH_BINDING(x)	(TREFUNCTION_BINDING(x) = CONS(TREATOM_VALUE(x), TREFUNCTION_BINDING(x)))
 
 void
 treeval_bind (treptr la, treptr lv)
@@ -61,9 +62,9 @@ treeval_unbind (treptr la)
 
     for (;la != treptr_nil; la = CDR(la)) {
         car = CAR(la);
-        bding = TREATOM_BINDING(car);
+        bding = TREFUNCTION_BINDING(car);
         TREATOM_VALUE(car) = CAR(bding);
-        TREATOM_BINDING(car) = CDR(bding);
+        TREFUNCTION_BINDING(car) = CDR(bding);
         TRELIST_FREE_EARLY(bding);
     }
 }
@@ -78,7 +79,7 @@ treeval_funcall (treptr func, treptr args, bool do_argeval)
     treptr  argdef;
     treptr  body;
 
-    funcdef = TREATOM_VALUE(func);
+    funcdef = TREFUNCTION_SOURCE(func);
     argdef = CAR(funcdef);
     body = CDR(funcdef);
 

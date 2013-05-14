@@ -1,0 +1,38 @@
+/*
+ * tré – Copyright (c) 2013 Sven Michael Klose <pixel@copei.de>
+ */
+
+#ifndef TRE_FUNCTION_H
+#define TRE_FUNCTION_H
+
+struct tre_function {
+    treptr	source;
+    void *  native;
+    void *  native_expander;
+#ifdef INTERPRETER
+    treptr	env;
+#endif
+};
+
+extern void * tre_functions_free;
+extern struct tre_function tre_functions[NUM_FUNCTIONS];
+
+#define TREFUNCTION_INDEX(ptr)              ((size_t) TREATOM_DETAIL(ptr))
+#define TREPTR_FUNCTION(ptr)                (&tre_functions[TREFUNCTION_INDEX(ptr)])
+
+#define TREFUNCTION_SOURCE(ptr)             TREATOM_VALUE(ptr)
+#define TREFUNCTION_BINDING(ptr)            (TREPTR_TO_ATOM(ptr).binding)
+#define TREFUNCTION_NATIVE(ptr)             (TREPTR_TO_ATOM(ptr).compiled_fun)
+#define TREFUNCTION_NATIVE_EXPANDER(ptr)    (TREPTR_TO_ATOM(ptr).compiled_expander)
+
+/*
+#define TREFUNCTION_SOURCE(ptr)             (TREPTR_FUNCTION(ptr)->source)
+#define TREFUNCTION_NATIVE(ptr)             (TREPTR_FUNCTION(ptr)->native)
+#define TREFUNCTION_NATIVE_EXPANDER (ptr)   (TREPTR_FUNCTION(ptr)->native)
+*/
+
+extern treptr trefunction_make ();
+extern void   trefunction_free (treptr);
+extern void   trefunction_init ();
+
+#endif /* #ifndef TRE_FUNCTION_H */

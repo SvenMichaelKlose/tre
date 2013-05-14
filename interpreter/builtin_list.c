@@ -19,6 +19,7 @@
 #include "gc.h"
 #include "thread.h"
 #include "apply.h"
+#include "function.h"
 
 #include "builtin_atom.h"
 

@@ -23,6 +23,7 @@
 #include "builtin.h"
 #include "special.h"
 #include "apply.h"
+#include "function.h"
 
 #include "builtin_debug.h"
 #include "builtin_atom.h"
@@ -78,9 +79,9 @@ trefuncall_c (treptr func, treptr args, bool do_eval)
     treptr a = do_eval ? treeval_args (args) : args;
 
     tregc_push (a);
-    ret = (TREATOM_COMPILED_EXPANDER(func)) ?
-              trefuncall_ffi (TREATOM_COMPILED_EXPANDER(func), CONS(a, treptr_nil)) :
-              trefuncall_ffi (TREATOM_COMPILED_FUN(func), a);
+    ret = (TREFUNCTION_NATIVE_EXPANDER(func)) ?
+              trefuncall_ffi (TREFUNCTION_NATIVE_EXPANDER(func), CONS(a, treptr_nil)) :
+              trefuncall_ffi (TREFUNCTION_NATIVE(func), a);
     tregc_pop ();
 
     return ret;
