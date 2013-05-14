@@ -128,22 +128,23 @@ tregc_trace_atom (treptr a)
     _TREGC_ALLOC_ATOM(ai);
 
     switch (TREATOM_TYPE(a)) {
+        case TRETYPE_SYMBOL:
+            tregc_trace_object (TREATOM_VALUE(a));
+            tregc_trace_object (TREATOM_FUN(a));
+            tregc_trace_object (TREATOM_PACKAGE(a));
+            tregc_trace_object (TREATOM_BINDING(a));
+	    	break;
+
         case TRETYPE_FUNCTION:
         case TRETYPE_MACRO:
-	    	tregc_trace_object ((treptr) (size_t) TREATOM_DETAIL(a));
+        case TRETYPE_USERSPECIAL:
+            tregc_trace_object (TREATOM_VALUE(a));
 	    	break;
 
         case TRETYPE_ARRAY:
 	    	tregc_trace_array (a);
 	    	break;
-
-        case TRETYPE_UNUSED:
-			return;
     }
-    tregc_trace_object (TREATOM_VALUE(a));
-    tregc_trace_object (TREATOM_FUN(a));
-    tregc_trace_object (TREATOM_PACKAGE(a));
-    tregc_trace_object (TREATOM_BINDING(a));
 }
 
 void
