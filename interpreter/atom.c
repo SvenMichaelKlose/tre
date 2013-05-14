@@ -96,7 +96,7 @@ treatom_init_builtins (void)
         fun = treatom_alloc (TRETYPE_BUILTIN);
         TREATOM_SET_DETAIL(fun, i);
         name = treatom_alloc_symbol (tre_builtin_names[i], treptr_nil, treptr_nil);
-        TREATOM_SET_FUN(name, fun);
+        TRESYMBOL_FUN(name) = fun;
         EXPAND_UNIVERSE(name);
     }
 
@@ -104,7 +104,7 @@ treatom_init_builtins (void)
         fun = treatom_alloc (TRETYPE_SPECIAL);
         TREATOM_SET_DETAIL(fun, i);
         name = treatom_alloc_symbol (tre_special_names[i], treptr_nil, treptr_nil);
-        TREATOM_SET_FUN(name, fun);
+        TRESYMBOL_FUN(name) = fun;
         EXPAND_UNIVERSE(name);
     }
 }
