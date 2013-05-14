@@ -31,6 +31,7 @@
 		   "number.h"
 		   "special.h"
 		   "string2.h"
+		   "symbol.h"
 		   "io.h"
 		   "main.h"
 		   "xxx.h"
