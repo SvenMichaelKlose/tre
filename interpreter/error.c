@@ -113,7 +113,6 @@ treerror_typename (size_t t)
 		"macro",
 		"function",
 		"special form",
-		"package",
 		"atom"
 	};
 

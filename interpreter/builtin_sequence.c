@@ -33,7 +33,6 @@ struct tre_sequence_type * tre_sequence_types [] = {
 	NULL,	            /* #define TRETYPE_MACRO       7 */
 	NULL,	            /* #define TRETYPE_FUNCTION    8 */
 	NULL,	            /* #define TRETYPE_USERSPECIAL 9 */
-	NULL,	            /* #define TRETYPE_PACKAGE     10 */
 };
 	
 struct tre_sequence_type *

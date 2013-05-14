@@ -7,7 +7,7 @@
 
 /* NOTE: You must change %TYPE-ID callers with these. */
 /* NOTE: Keep in sync with error.c:treerror_typename(). */
-/* NOTE: Keep in sync with sequence.c:tre_sequence_types[]. */
+/* NOTE: Keep in sync with builtin_sequence.c:tre_sequence_types[]. */
 
 #define TRETYPE_CONS		0
 #define TRETYPE_SYMBOL      1
@@ -19,9 +19,8 @@
 #define TRETYPE_MACRO		7
 #define TRETYPE_FUNCTION	8
 #define TRETYPE_USERSPECIAL	9
-#define TRETYPE_PACKAGE		10
-#define TRETYPE_MAXTYPE		10
-#define TRETYPE_ATOM		11 /* parameter dummy */
+#define TRETYPE_MAXTYPE		9
+#define TRETYPE_ATOM		10 /* parameter dummy */
 #define TRETYPE_UNUSED		-1
 
 #define TRETYPE_WIDTH		4

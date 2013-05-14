@@ -171,10 +171,6 @@ treprint_atom (treptr atom, size_t indent)
 	    	treprint_array (atom);
 	    	break;
 
-        case TRETYPE_PACKAGE:
-            printf ("(PACKAGE-ATOM)");
-	    	break;
-
 		default:
 	    	treerror_internal (treptr_invalid,
                                "#<unknown atom %d (type %d index %d)>",
