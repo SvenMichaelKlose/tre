@@ -148,15 +148,15 @@
      `(trearray_builtin_make ,(compiled-list sizes)))]
 
 (defun c-make-aref (arr idx)
-  `("TREAARRAY_VALUES(" ,arr ")["
-	    ,(? (| (number? idx) (%transpiler-native? idx))
+  `("TREARRAY_VALUES(" ,arr ")["
+	    ,(? (| (number? idx)
+               (%transpiler-native? idx))
 		  	idx
-			`("(ulong)TRENUMBER_VAL(" ,idx ")"))
+			`("(size_t)TRENUMBER_VAL(" ,idx ")"))
 		"]"))
 
 (define-c-macro %immediate-aref (arr idx)
   (c-make-aref arr idx))
 
 (define-c-macro %immediate-set-aref (val arr idx)
-  (append (c-make-aref arr idx)
-		  `("=" ,val)))
+  (+ (c-make-aref arr idx) `("=" ,val)))
