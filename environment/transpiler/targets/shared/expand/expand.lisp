@@ -2,7 +2,10 @@
 
 (defmacro define-shared-std-macro (targets &rest x)
   `(progn
-     ,@(filter ^(,($ 'define- _ '-std-macro) ,@x) targets)))
+     ,@(filter ^(,($ 'define- _ '-std-macro) ,@x)
+               (? *have-c-compiler?*
+                  targets
+                  (remove 'c targets)))))
 
 (define-shared-std-macro (js php) dont-obfuscate (&rest symbols)
   (apply #'transpiler-add-obfuscation-exceptions *transpiler* symbols)
