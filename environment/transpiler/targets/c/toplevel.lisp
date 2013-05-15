@@ -36,6 +36,7 @@
 		   "main.h"
 		   "xxx.h"
 		   "alien.h"
+		   "function.h"
 		   "compiled.h"))
 
 (define-tree-filter c-transpiler-compile-argument-def-symbols (x)
