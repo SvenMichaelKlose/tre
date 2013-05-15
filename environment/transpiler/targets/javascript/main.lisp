@@ -1,5 +1,6 @@
 ;;;; tré – Copyright (c) 2005-2010,2012 Sven Michael Klose <pixel@copei.de>
 
+(env-load "transpiler/targets/javascript/import-from-expex.lisp")
 (env-load "transpiler/targets/javascript/config.lisp")
 (env-load "transpiler/targets/javascript/expand.lisp")
 (env-load "transpiler/targets/javascript/class.lisp")

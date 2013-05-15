@@ -34,6 +34,7 @@
 
 (defun transpiler-add-wanted-variable (tr var)
   (when (transpiler-must-add-wanted-variable? tr var)
+    (format t "Importing ~A.~%" (symbol-name var))
     (= (href (transpiler-wanted-variables-hash tr) var) t)
     (push var (transpiler-wanted-variables tr)))
   var)
