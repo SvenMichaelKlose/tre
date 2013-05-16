@@ -1,9 +1,9 @@
-;;;; tré – Copyright (c) 2005–2008,2010-2013 Sven Michael Klose <pixel@copei.de>
+;;;; tré – Copyright (c) 2005–2008,2010–2013 Sven Michael Klose <pixel@copei.de>
 
 (defvar *function-sources* nil)
 
 ; Check and return keyword argument or NIL.
-(%defun %defun-arg-keyword (args)
+(early-defun %defun-arg-keyword (args)
   (let a (car args)
 	(let d (& (cdr args)
 			  (cadr args))
@@ -13,12 +13,12 @@
                (%error "keyword following keyword"))
             (%error "end after keyword"))))))
 
-(%defun %defun-checked-args (args)
+(early-defun %defun-checked-args (args)
   (& args
      (| (%defun-arg-keyword args)
         (cons (car args) (%defun-checked-args (cdr args))))))
 
-(%defun %defun-name (name)
+(early-defun %defun-name (name)
   (? (atom name)
      name
      (? (eq (car name) '=)

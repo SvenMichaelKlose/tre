@@ -1,9 +1,9 @@
-;;;;; tré – Copyright (c) 2005–2008,2011–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2008,2011–2013 Sven Michael Klose <pixel@copei.de>
 
 (defvar *documentation* nil)
 (defvar *macros* nil)
 
-(%defun %add-documentation (name body)
+(early-defun %add-documentation (name body)
   (? (? (string? (car body))
         (cdr body))
      (progn

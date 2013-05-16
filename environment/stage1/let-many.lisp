@@ -1,12 +1,12 @@
-;;;; tré - Copyright (c) 2005-2006,2008,2012 Sven Michael Klose <pixel@copei.de>
+;;;; tré – Copyright (c) 2005–2006,2008,2012–2013 Sven Michael Klose <pixel@copei.de>
 
-(%defun %chk-place (x)
+(early-defun %chk-place (x)
   (? (%arg-keyword? x)
      (progn
 	   (print x)
 	   (%error "place is an argument keyword"))))
 
-(%defun %error-if-not-unique (x)
+(early-defun %error-if-not-unique (x)
   (%simple-map #'((i)
 					(? (< 1 (count i x))
 					   (progn
@@ -14,10 +14,10 @@
 	    			     (%error "place not unique"))))
 			   x))
 
-(%defun %let-places (x)
+(early-defun %let-places (x)
   (%simple-mapcar #'car x))
 
-(%defun %let-chk-places (x)
+(early-defun %let-chk-places (x)
   (? (atom x)
      (progn
        (print x)

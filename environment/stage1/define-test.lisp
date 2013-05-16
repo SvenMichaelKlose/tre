@@ -1,15 +1,15 @@
-;;;;; tré – Copyright (c) 2008–2009,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2009,2012–2013 Sven Michael Klose <pixel@copei.de>
 
 (defvar *tests* nil)
 
-(%defun test-equal (x y)
+(early-defun test-equal (x y)
   (?
     (atom x)	(eql x y)
     (atom y)	(eql x y)
     (test-equal (car x) (car y))
       		    (test-equal (cdr x) (cdr y))))
 
-(%defun do-test (test)
+(early-defun do-test (test)
   (? (test-equal (eval (macroexpand (car (cdr test))))
                  (eval (macroexpand (car (cdr (cdr test))))))
 	 nil
@@ -21,7 +21,7 @@
 	   (print (eval (macroexpand (car (cdr (cdr test))))))
 	   (invoke-debugger))))
 
-(%defun do-tests (tests)
+(early-defun do-tests (tests)
   (? (not tests)
      nil
      (progn

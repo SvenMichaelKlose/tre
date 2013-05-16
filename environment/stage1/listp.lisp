@@ -1,8 +1,8 @@
-;;;;; tré – Copyright (c) 2005,2008–2009,2011–2012,2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005,2008–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
 
 (functional list?)
 
-(%defun list? (x)
+(early-defun list? (x)
   (? (cons? x)
      t
      (not x)))

@@ -1,7 +1,7 @@
-;;;;; tré – Copyright (c) 2005–2008,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2008,2012–2013 Sven Michael Klose <pixel@copei.de>
 
 (setq *universe*
-	  (cons '%defun
+	  (cons 'early-defun
 	  (cons 'print-definition
 	  (cons 'defvar
 	  (cons 'defconstant
@@ -22,7 +22,7 @@
        (? *show-definitions?*
           (apply *definition-printer* (list x)))))
 
-(%set-atom-fun %defun
+(%set-atom-fun early-defun
   (macro (name args &rest body)
     `(block nil
        (setq *universe* (cons ',name *universe*))

@@ -1,6 +1,6 @@
-;;;;; tré - Copyright (c) 2005-2006,2008-2009,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2006,2008–2009,2012–2013 Sven Michael Klose <pixel@copei.de>
 
-(%defun %arg-keyword? (x)
+(early-defun %arg-keyword? (x)
   (?
     (eq x '&rest) t
     (eq x '&body) t

@@ -65,7 +65,7 @@
          ,(apply #'shared-defun dname args body)
          (= (symbol-function ,g) ,dname))))
 
-(define-js-std-macro %defun (&rest x)
+(define-js-std-macro early-defun (&rest x)
   `(defun ,@x))
 
 (define-js-std-macro make-string (&optional len)
