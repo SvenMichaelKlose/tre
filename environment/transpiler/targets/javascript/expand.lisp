@@ -80,7 +80,7 @@
     		  (error "function must be a SLOT-VALUE, got ~A" fun))
 		  ,fun))
 
-(defun js-transpiler-make-new-hash (x)
+(defun js-make-new-hash (x)
   `(%%%make-hash-table
 	 ,@(mapcan [list (? (& (not (string? _.))
 						   (eq :class _.))
@@ -89,16 +89,15 @@
 					 ._.]
 			   (group x 2))))
 
-(defun js-transpiler-make-new-object (x)
+(defun js-make-new-object (x)
   `(%new ,@x))
 
 (define-js-std-macro new (&rest x)
-  (unless x
-	(error "NEW expects arguments"))
+  (| x (error "NEW expects arguments"))
   (? (| (keyword? x.)
 	    (string? x.))
-	 (js-transpiler-make-new-hash x)
-	 (js-transpiler-make-new-object x)))
+	 (js-make-new-hash x)
+	 (js-make-new-object x)))
 
 (define-js-std-macro js-type-predicate (name &rest types)
   `(defun ,name (x)
