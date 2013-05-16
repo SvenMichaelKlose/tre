@@ -17,11 +17,10 @@
 	(cons '%%macrocall
 	(cons '%%env-macrop
 	(cons '%%env-macrocall
-	(cons '%macroexpand-list
 	(cons '%macroexpand-rest
 	(cons '%macroexpand-xlat
 	(cons '%macroexpand-call
-		  *universe*)))))))))))))))
+		  *universe*))))))))))))))
 
 (setq
 	*defined-functions*
@@ -31,11 +30,10 @@
 	(cons '%%macrocall
 	(cons '%%env-macrop
 	(cons '%%env-macrocall
-	(cons '%macroexpand-list
 	(cons '%macroexpand-rest
 	(cons '%macroexpand-xlat
 	(cons '%macroexpand-call
-		  *defined-functions*)))))))))))
+		  *defined-functions*))))))))))
 
 (setq
 	*variables*
@@ -124,7 +122,8 @@
 
 (%set-atom-fun %%macrop
   #'((%g)
-       (macrop (symbol-function (car %g)))))
+       (? (symbol? (car %g))
+          (macrop (symbol-function (car %g))))))
 
 (%set-atom-fun %%macrocall
   #'((%g)

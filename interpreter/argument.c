@@ -79,16 +79,14 @@ treptr
 trearg_correct (size_t argnum, unsigned type, treptr x, const char * descr)
 {
 	char buf[4096];
-	const char * l = descr ? " (" : "";
-	const char * r = descr ? ")" : "";
 
 	if (descr == NULL)
 		descr = "";
 
-	sprintf (buf, "argument %ld%s%s%s: %s expected instead of %s",
-			 argnum, l, descr, r,
-			 treerror_typename (type),
-			 treerror_typename (TREPTR_TYPE(x)));
+	snprintf (buf, 4096, "argument %ld to %s: %s expected instead of %s",
+			  argnum, descr,
+			  treerror_typename (type),
+			  treerror_typename (TREPTR_TYPE(x)));
 
 	return treerror (x, buf);
 }
@@ -96,6 +94,9 @@ trearg_correct (size_t argnum, unsigned type, treptr x, const char * descr)
 treptr
 trearg_typed (size_t argnum, unsigned type, treptr x, const char * descr)
 {
+	if (type == TRETYPE_FUNCTION && (TREPTR_TYPE(x) == TRETYPE_FUNCTION || TREPTR_TYPE(x) == TRETYPE_MACRO))
+        return x;
+
 	while ((type == TRETYPE_ATOM && TREPTR_TYPE(x) == TRETYPE_CONS)
 		   || (type != TRETYPE_ATOM && TREPTR_TYPE(x) != type))
 		x = trearg_correct (argnum, type, x, descr);

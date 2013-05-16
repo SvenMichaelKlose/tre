@@ -111,8 +111,8 @@ trefuncall_bytecode (treptr func, treptr args, treptr argdef, bool do_eval)
 treptr
 trefuncall_compiled (treptr func, treptr args, bool do_eval)
 {
-    return TREPTR_IS_ARRAY(func) ?
-               trefuncall_bytecode (func, args, TREARRAY_VALUES(func)[0], do_eval) :
+    return TREFUNCTION_BYTECODE(func) != treptr_nil ?
+               trefuncall_bytecode (func, args, TREARRAY_VALUES(TREFUNCTION_BYTECODE(func))[0], do_eval) :
                trefuncall_c (func, args, do_eval);
 }
 

@@ -11,6 +11,7 @@ struct tre_atom {
     void *  detail;
     treptr	value;
     treptr	fun;
+    treptr  bytecode;
     void *  compiled_fun;
     void *  compiled_expander;
     treptr	binding;
@@ -31,6 +32,7 @@ extern treptr tre_package_keyword;
 #define ATOM_SET(index, typ) \
 	tre_atoms[index].value = treptr_nil;	\
 	tre_atoms[index].fun = treptr_nil;	\
+	tre_atoms[index].bytecode = treptr_nil;	\
 	tre_atoms[index].compiled_fun = NULL;	\
 	tre_atoms[index].compiled_expander = NULL;	\
 	tre_atoms[index].binding = treptr_nil;	\

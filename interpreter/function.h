@@ -7,11 +7,9 @@
 
 struct tre_function {
     treptr	source;
+    treptr	bytecode;
     void *  native;
     void *  native_expander;
-#ifdef INTERPRETER
-    treptr	env;
-#endif
 };
 
 extern void * tre_functions_free;
@@ -22,6 +20,7 @@ extern struct tre_function tre_functions[NUM_FUNCTIONS];
 
 #define TREFUNCTION_SOURCE(ptr)             (TREPTR_TO_ATOM(ptr).value)
 #define TREFUNCTION_BINDING(ptr)            (TREPTR_TO_ATOM(ptr).binding)
+#define TREFUNCTION_BYTECODE(ptr)           (TREPTR_TO_ATOM(ptr).bytecode)
 #define TREFUNCTION_NATIVE(ptr)             (TREPTR_TO_ATOM(ptr).compiled_fun)
 #define TREFUNCTION_NATIVE_EXPANDER(ptr)    (TREPTR_TO_ATOM(ptr).compiled_expander)
 

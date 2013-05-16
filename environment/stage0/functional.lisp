@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2011–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2011–2013 Sven Michael Klose <pixel@copei.de>
 
 (setq *universe*
 	  (cons 'functional
@@ -36,7 +36,7 @@
             not eq eql
             make-symbol make-package
             atom symbol-value %type %%id %make-ptr
-            symbol-function symbol-package symbol-compiled-function
+            symbol-function symbol-package function-native
             function? builtin? macrop
             cons list car cdr cons?
             elt length

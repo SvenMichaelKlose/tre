@@ -30,6 +30,7 @@
 #include "bytecode.h"
 #include "queue.h"
 #include "symbol.h"
+#include "function.h"
 
 treptr treptr_funcall;
 treptr treptr_builtin;
@@ -174,18 +175,19 @@ trecode_set (treptr ** x)
 }
 
 treptr
-trecode_exec (treptr fun)
+trecode_exec (treptr fun_atom)
 {
     treptr   * code;
     treptr   * x;
     treptr   dest;
     treptr   v;
+    treptr   fun = TREFUNCTION_BYTECODE(fun_atom);
     int      num_locals;
     int      i;
     int      vec;
 
     if (TREPTR_IS_ARRAY(fun) == FALSE)
-        treerror_norecover (fun, "bytecode array function expected");
+        treerror_norecover (fun, "bytecode function expected");
     x = &TREARRAY_VALUES(fun)[2]; /* skip over argument definition and body */
     num_locals = TRENUMBER_INT(*x++);
     code = x;

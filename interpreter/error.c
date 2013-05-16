@@ -27,15 +27,14 @@ treerror_msg (treptr expr, const char *prefix, const char *msg, va_list ap)
 	struct tre_stream * s = treio_get_stream ();
 
     fflush (stdout);
-    fprintf (stderr, "; In interpreter:\n; %s: ", prefix);
+	if (treio_readerstreamptr)
+		fprintf (stderr, "; Break at %s line %ld, column %ld.\n", s->file_name, s->line, s->column);
+    fprintf (stderr, "; %s: ", prefix);
     vfprintf (stderr, msg, ap);
     fprintf (stderr, ".\n");
 
-	if (treio_readerstreamptr)
-		fprintf (stderr, "; In %s, line %ld, column %ld.\n", s->file_name, s->line, s->column);
-
     if (expr != treptr_invalid) {
-		fprintf (stderr, "; Erroraneous object:\n");
+		fprintf (stderr, "; Misplaced object:\n");
         treprint (expr);
     }
     fflush (stderr);
@@ -105,7 +104,7 @@ treerror_typename (size_t t)
 	/* !!! Keep this in sync with type.h! */
 	static const char * type_names[] = {
 		"cons",
-		"variable",
+		"symbol",
 		"number",
 		"string",
 		"array",

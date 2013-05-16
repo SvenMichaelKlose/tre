@@ -351,7 +351,7 @@ trespecial_function (treptr args)
 			return arg;
 
 		default:
-			return treerror (arg, "FUNCTION expects a variable, function, special-form or LAMBDA expression");
+			return treerror (arg, "FUNCTION expects a symbol, function, special form or function expression");
     }
 
     return treerror (arg, "function or argument/body pair expected");

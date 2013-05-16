@@ -1,12 +1,11 @@
-tré
-
 Copyright (c) 2005–2012 Sven Michael Klose <pixel@copei.de>
 
 ABOUT
 
-    tré is a dialect of the Lisp family of programming languages.
-    This compiler translates it into various other programming
-    languages or codes.
+    This is tré, a metamorphic transpiler for a dialect of the
+    Lisp family of programming languages.  It can generate C,
+    ECMAScript/JavaScript, PHP and a dedicated bytecode.  Except
+    for PHP tré can compile itself to all other targets.
 
 PREPARE LINUX
 

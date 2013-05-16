@@ -121,15 +121,15 @@ treatom_builtin_atom (treptr list)
 }
 
 treptr
-treatom_builtin_arg (treptr list, const char * descr)
+treatom_builtin_arg (treptr list, int type, const char * descr)
 {
-    return trearg_typed (1, TRETYPE_ATOM, trearg_get (list), descr);
+    return trearg_typed (1, type, trearg_get (list), descr);
 }
 
 treptr
 treatom_builtin_symbol_value (treptr list)
 {
-    return TRESYMBOL_VALUE(treatom_builtin_arg (list, "SYMBOL-VALUE"));
+    return TRESYMBOL_VALUE(treatom_builtin_arg (list, TRETYPE_SYMBOL, "SYMBOL-VALUE"));
 }
 
 treptr
@@ -137,7 +137,7 @@ treatom_builtin_usetf_symbol_value (treptr list)
 {
     TRELIST_DEFREGS();
     trearg_get2 (&car, &cdr, list);
-    return treatom_set_value (trearg_typed (2, TRETYPE_ATOM, cdr, "SETF SYMBOL-VALUE"), car);
+    return treatom_set_value (trearg_typed (2, TRETYPE_ATOM, cdr, "=-SYMBOL-VALUE"), car);
 }
 
 treptr
@@ -145,26 +145,26 @@ treatom_builtin_setq_atom_value (treptr list)
 {
     TRELIST_DEFREGS();
     trearg_get2 (&car, &cdr, list);
-    return treatom_set_value (trearg_typed (1, TRETYPE_ATOM, car, "SETF SYMBOL-VALUE"), cdr);
+    return treatom_set_value (trearg_typed (1, TRETYPE_SYMBOL, car, "=-SYMBOL-VALUE"), cdr);
 }
 
 treptr
 treatom_builtin_symbol_function (treptr list)
 {
-    treptr arg = treatom_builtin_arg (list, "SYMBOL-FUNCTION");
+    treptr arg = treatom_builtin_arg (list, TRETYPE_SYMBOL, "SYMBOL-FUNCTION");
 	return TREPTR_IS_BUILTIN(arg) ? arg : TRESYMBOL_FUN(arg);
 }
 
 treptr
 treatom_builtin_symbol_package (treptr list)
 {
-    return TRESYMBOL_PACKAGE(treatom_builtin_arg (list, "SYMBOL-PACKAGE"));
+    return TRESYMBOL_PACKAGE(treatom_builtin_arg (list, TRETYPE_SYMBOL, "SYMBOL-PACKAGE"));
 }
 
 treptr
-treatom_builtin_symbol_compiled_function (treptr list)
+treatom_builtin_function_native (treptr list)
 {
-    treptr arg = treatom_builtin_arg (list, "SYMBOL-COMPILED-FUNCTION");
+    treptr arg = treatom_builtin_arg (list, TRETYPE_FUNCTION, "SYMBOL-COMPILED-FUNCTION");
 	return TREFUNCTION_NATIVE(arg) ? trenumber_get ((double) (long) TREFUNCTION_NATIVE(arg)) : treptr_nil;
 }
 
@@ -173,7 +173,29 @@ treatom_builtin_usetf_symbol_function (treptr list)
 {
     TRELIST_DEFREGS();
     trearg_get2 (&car, &cdr, list);
-    return treatom_set_function (trearg_typed (1, TRETYPE_ATOM, cdr, "(SETF SYMBOL-FUNCTION"), car);
+    return treatom_set_function (trearg_typed (1, TRETYPE_SYMBOL, cdr, "=-SYMBOL-FUNCTION"), car);
+}
+
+treptr
+treatom_builtin_function_bytecode (treptr list)
+{
+    treptr arg = treatom_builtin_arg (list, TRETYPE_FUNCTION, "FUNCTION-BYTECODE");
+	return TREFUNCTION_BYTECODE(arg) ? treptr_nil : TREFUNCTION_BYTECODE(arg);
+}
+
+treptr
+treatom_builtin_usetf_function_bytecode (treptr list)
+{
+    TRELIST_DEFREGS();
+    trearg_get2 (&car, &cdr, list);
+    return TREFUNCTION_BYTECODE(trearg_typed (1, TRETYPE_FUNCTION, cdr, "=-FUNCTION-BYTECODE")) = car;
+}
+
+treptr
+treatom_builtin_function_source (treptr list)
+{
+    treptr arg = treatom_builtin_arg (list, TRETYPE_FUNCTION, "FUNCTION-BYTECODE");
+	return TREFUNCTION_SOURCE(arg) ? TREFUNCTION_SOURCE(arg) : treptr_nil;
 }
 
 treptr
@@ -181,7 +203,7 @@ treatom_builtin_set_atom_fun (treptr list)
 {
     TRELIST_DEFREGS();
     trearg_get2 (&car, &cdr, list);
-    return treatom_set_function (trearg_typed (1, TRETYPE_ATOM, car, "%SET-ATOM-FUN"), treeval (cdr));
+    return treatom_set_function (trearg_typed (1, TRETYPE_SYMBOL, car, "%SET-ATOM-FUN"), treeval (cdr));
 }
 
 treptr

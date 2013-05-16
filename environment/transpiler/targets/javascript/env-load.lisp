@@ -67,6 +67,7 @@
 		                                     "hash.lisp"
                                              "base64.lisp"
                                              "function-source.lisp"
+                                             "function-bytecode.lisp"
                                              "dot-expand.lisp"
                                              "math.lisp"))))
 

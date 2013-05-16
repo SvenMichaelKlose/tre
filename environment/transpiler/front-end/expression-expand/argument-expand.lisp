@@ -6,7 +6,7 @@
   (& args
      `(%%%cons ,args. ,(%expex-argument-expand-rest .args))))
 
-(defun expex-argument-values (fun vals)
+(defun argument-values-without-cps (fun vals)
   (? (& (not (in-cps-mode?))
         (transpiler-cps-function? *transpiler* fun))
      .vals
@@ -17,4 +17,4 @@
                 (argument-rest-keyword? _.))
              (%expex-argument-expand-rest ._)
              _]
-          (cdrlist (argument-expand fun def (expex-argument-values fun vals) t))))
+          (cdrlist (argument-expand fun def (argument-values-without-cps fun vals) t))))

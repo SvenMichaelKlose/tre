@@ -61,6 +61,7 @@ treatom_init_truth (void)
     tre_atoms[TREPTR_NIL_INDEX].value = TRETYPE_INDEX_TO_PTR(TRETYPE_SYMBOL, TREPTR_NIL_INDEX);
     tre_atoms[TREPTR_NIL_INDEX].fun = treptr_nil;
     tre_atoms[TREPTR_NIL_INDEX].binding = treptr_nil;
+    tre_atoms[TREPTR_NIL_INDEX].bytecode = treptr_nil;
 	tresymbolpage_add (treptr_nil);
 
     ATOM_SET(TREPTR_T_INDEX, TRETYPE_SYMBOL);
@@ -68,6 +69,7 @@ treatom_init_truth (void)
     tre_atoms[TREPTR_T_INDEX].value = TRETYPE_INDEX_TO_PTR(TRETYPE_SYMBOL, TREPTR_T_INDEX);
     tre_atoms[TREPTR_T_INDEX].fun = treptr_nil;
     tre_atoms[TREPTR_T_INDEX].binding = treptr_nil;
+    tre_atoms[TREPTR_T_INDEX].bytecode = treptr_nil;
 	tresymbolpage_add (treptr_t);
 }
 
@@ -329,7 +331,7 @@ treatom_fun_body (treptr atomp)
     treptr fun;
 
     if (TREPTR_IS_SYMBOL(atomp) == FALSE) {
-        treerror_internal (atomp, "variable expected");
+        treerror_internal (atomp, "symbol expected");
 		return treptr_nil;
     }
 

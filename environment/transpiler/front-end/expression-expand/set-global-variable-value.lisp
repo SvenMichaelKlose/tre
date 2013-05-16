@@ -2,7 +2,7 @@
 
 (defun expex-set-global-variable-value (x)
   (list
-    (let place (%setq-place x)
-      (? (expex-global-variable? place)
-	     `(%setq-atom-value (%quote ,place) ,(%setq-value x))
+    (alet (%setq-place x)
+      (? (expex-global-variable? !)
+	     `(%setq-atom-value (%quote ,!) ,(%setq-value x))
 	     x))))

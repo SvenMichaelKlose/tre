@@ -1,20 +1,24 @@
-;;;; tré - Copyright (c) 2011–2012 Sven Michael Klose <pixel@copei.de>
+;;;; tré - Copyright (c) 2011–2013 Sven Michael Klose <pixel@copei.de>
 
-(defun function-arguments (fun)
-  (let f (? (symbol? fun) (symbol-function fun) fun)
-    (? f
-       (!? f.__source
-           !.
-           '(&rest unknown-args))
-       '(&rest unknown-args))))
+(defun function|symbol-function (x)
+  (? (symbol? x)
+     (symbol-function x)
+     x))
 
-(defun function-body (fun)
-  (let f (? (symbol? fun) (symbol-function fun) fun)
-    (awhen f.__source
-      .!)))
+(defun function-arguments (x)
+  (!? (function|symbol-function x)
+      (!? !.__source
+          !.
+          '(&rest unknown-args))
+      '(&rest unknown-args)))
 
-(defun function-source (fun)
-  (let f (? (symbol? fun) (symbol-function fun) fun)
-    (awhen f.__source
-      `#'(,(function-arguments f)
-          ,@(function-body f)))))
+(defun function-body (x)
+  (alet (function|symbol-function x)
+    (!? !.__source
+        .!)))
+
+(defun function-source (x)
+  (alet (function|symbol-function x)
+    (& !.__source
+       `#'(,(function-arguments !)
+           ,@(function-body !)))))

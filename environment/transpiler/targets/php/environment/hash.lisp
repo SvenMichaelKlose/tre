@@ -2,6 +2,9 @@
 
 (dont-obfuscate is_a *conses* *arrays*)
 
+(defun hash-table? (x)
+  (is_a x "__array"))
+
 (defun %%key (x)
   (?
     (is_a x "__symbol")    (%%%string+ "~%S" x.n "~%P" x.p)
@@ -31,9 +34,6 @@
          "C" (code-char (substr x 3))
          (error "illegal index ~A" x)))
      x))
-
-(defun hash-table? (x)
-  (is_a x "__array"))
 
 (defun hashkeys (x)
   (? (hash-table? x)

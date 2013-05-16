@@ -1,12 +1,12 @@
-;;;;; tré – Copyright (c) 2006–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2006–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun function-arguments (fun)
   (?
-    (builtin? fun) '(&rest args-to-builtin)
-    (array? fun) (aref fun 0)
-    (car (symbol-value fun))))
+    (builtin? fun)          '(&rest args-to-builtin)
+    (function-bytecode fun) (aref (function-bytecode fun) 0)
+    (car (function-source fun))))
 
 (defun function-body (fun)
-  (? (array? fun)
-     (aref fun 1)
-     (cdr (symbol-value fun))))
+  (? (function-bytecode fun)
+     (aref (function-bytecode fun) 1)
+     (cdr (function-source fun))))
