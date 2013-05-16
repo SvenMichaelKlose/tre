@@ -141,14 +141,6 @@ treatom_builtin_usetf_symbol_value (treptr list)
 }
 
 treptr
-treatom_builtin_setq_atom_value (treptr list)
-{
-    TRELIST_DEFREGS();
-    trearg_get2 (&car, &cdr, list);
-    return treatom_set_value (trearg_typed (1, TRETYPE_SYMBOL, car, "=-SYMBOL-VALUE"), cdr);
-}
-
-treptr
 treatom_builtin_symbol_function (treptr list)
 {
     treptr arg = treatom_builtin_arg (list, TRETYPE_SYMBOL, "SYMBOL-FUNCTION");

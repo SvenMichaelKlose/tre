@@ -10,7 +10,6 @@
   (| (%quote? x)
      (%transpiler-native? x)
      (%%closure? x)
-     (%setq-atom-value? x)
      (%function-prologue? x)
      (%function-epilogue? x)
      (& (transpiler-raw-constructor-names? tr)

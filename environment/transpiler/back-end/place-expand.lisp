@@ -87,7 +87,6 @@
      (%vec? (place-expand-0 fi (%setq-place x))))
                         (place-expand-setter fi x)
   (%%closure? x)        x
-  (%setq-atom-value? x) `(%setq-atom-value ,.x. ,(place-expand-0 fi ..x.))
   (%slot-value? x)      `(%slot-value ,(place-expand-0 fi .x.) ,..x.)
   (%stackarg? x)        x)
 

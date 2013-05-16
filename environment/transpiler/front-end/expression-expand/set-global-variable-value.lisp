@@ -4,5 +4,5 @@
   (list
     (alet (%setq-place x)
       (? (expex-global-variable? !)
-	     `(%setq-atom-value (%quote ,!) ,(%setq-value x))
+	     `(=-symbol-value ,(%setq-value x) (%quote ,!))
 	     x))))

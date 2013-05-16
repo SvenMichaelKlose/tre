@@ -71,7 +71,7 @@
 		(%TYPE-ID type_id)
 		(%%ID id)
 		(SYMBOL-VALUE symbol_value)
-		(%SETQ-ATOM-VALUE setq_atom_value)
+		(=-SYMBOL-VALUE usetf_symbol_value)
 		(SYMBOL-FUNCTION symbol_function)
 		(=-SYMBOL-FUNCTION usetf_symbol_function)
 		(SYMBOL-PACKAGE symbol_package)

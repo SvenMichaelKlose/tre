@@ -7,7 +7,6 @@
 	  %transpiler-native %transpiler-string
 	  %%closure %closure
 	  %set-atom-fun
-	  %setq-atom-value
 	  %setq-atom-fun
 	  %function-prologue
 	  %function-epilogue
