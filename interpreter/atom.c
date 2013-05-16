@@ -237,7 +237,7 @@ treptr
 treatom_number_get (double value, int type)
 {
     treptr atom;
-    size_t num;
+    struct tre_number * num;
 
     num = trenumber_alloc (value, type);
     atom = treatom_alloc (TRETYPE_NUMBER);

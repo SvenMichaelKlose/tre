@@ -48,7 +48,7 @@ trenumber_is_value (char * symbol)
     return TRUE;
 }
 
-size_t
+struct tre_number *
 trenumber_alloc (double value, int type)
 {
     struct tre_number * i = trealloc_item (&tre_numbers_free);
@@ -59,17 +59,16 @@ trenumber_alloc (double value, int type)
         if (!i)
 	    	treerror_internal (treptr_nil, "out of numbers");
     }
-
     i->value = value;
     i->type = type;
 
-    return ((size_t) i - (size_t) tre_numbers) / sizeof (struct tre_number);
+    return i;
 }
 
 void
 trenumber_free (treptr n)
 {
-	trealloc_free_item (&tre_numbers_free, &tre_numbers[TRENUMBER_INDEX(n)]);
+	trealloc_free_item (&tre_numbers_free, TREATOM_DETAIL(n));
 }
 
 void

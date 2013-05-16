@@ -31,6 +31,7 @@ trefunction_alloc ()
     }
 
     i->source = treptr_nil;
+    i->bytecode = treptr_nil;
     i->native = NULL;
     i->native_expander = NULL;
 
