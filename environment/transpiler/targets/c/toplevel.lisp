@@ -1,6 +1,5 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
-(defvar *closure-argdefs* nil)
 (defvar *c-init-group-size* 16)
 (defvar *c-init-counter* 0)
 (defvar *c-core-headers*
@@ -42,10 +41,10 @@
 (define-tree-filter c-compile-symbols-in-tree (x)
   (& x (symbol? x)) (c-compiled-symbol x))
 
-(defun c-closure-argument-defs ()
-  (filter ^(treatom_builtin_usetf_symbol_value (cons (list ,(compiled-tree (c-compile-symbols-in-tree (print ._))))
-                                                     (list (symbol-function ',(print _.)))))
-		  *closure-argdefs*))
+(defun c-closure-argument-defs (tr)
+  (filter ^(treatom_builtin_usetf_symbol_value (cons (list ,(compiled-tree (c-compile-symbols-in-tree ._)))
+                                                     (list (symbol-function ',_.))))
+		  (transpiler-closure-argdefs tr)))
 
 (defun c-function-registrations (tr)
   (filter ^(%setq ~%ret (treatom_register_compiled_function ,(c-compiled-symbol _) ,_ ,(alet ($ _ '_treexp)
@@ -58,7 +57,7 @@
 (defun c-declarations-and-initialisations (tr)
   (+ (transpiler-compiled-inits tr)
      (c-function-registrations tr)
-     (c-closure-argument-defs)))
+     (c-closure-argument-defs tr)))
 
 (defun c-make-init (tr)
   (let init-funs nil
@@ -80,7 +79,7 @@
     (+ (c-header-inclusions)
   	   (target-transpile tr
            :decl-gen #'(()
-                          (c-compile-symbols-in-tree *closure-argdefs*) ; XXX not already done in defun c-closure-argument-defs?
+                          (c-compile-symbols-in-tree (transpiler-closure-argdefs tr)) ; XXX not already done in defun c-closure-argument-defs?
                           (let init (with-temporary (transpiler-profile? tr) nil
                                       (transpiler-make-code tr (transpiler-frontend tr (c-make-init tr))))
                             (concat-stringtree (transpiler-compiled-decls tr) init)))
