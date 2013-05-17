@@ -35,6 +35,7 @@
 #include "apply.h"
 #include "builtin_list.h"
 #include "bytecode.h"
+#include "function.h"
 
 #ifdef TRE_HAVE_COMPILED_ENV
 	treptr userfun_cInit (void);
@@ -207,6 +208,7 @@ tre_init (void)
     trecons_init ();
     tresymbol_init ();
     treatom_init ();
+    trefunction_init ();
     trenumber_init ();
     treread_init ();
     trearg_init ();

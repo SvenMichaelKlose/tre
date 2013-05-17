@@ -25,26 +25,7 @@
 treptr
 tredebug_builtin_end_debug (treptr no_args)
 {
-    struct tre_atom *atom;
-    treptr  b;
-    size_t  i;
-
     (void) no_args;
-
-    for (i = 0; i < NUM_ATOMS; i++) {
-		if (tre_atom_types[i] == TRETYPE_UNUSED)
-	    	continue;
-        atom = &tre_atoms[i];
-        b = atom->binding;
-        if (b == treptr_nil)
-	    	continue;
-
-		while (CDR(b) != treptr_nil)
-	    	b = CDR(b);
-
-        atom->value = CAR(b);
-		atom->binding = treptr_nil;
-    }
 
     tre_restart (treptr_nil);
 

@@ -133,7 +133,6 @@ tregc_trace_atom (treptr a)
             tregc_trace_object (TRESYMBOL_VALUE(a));
             tregc_trace_object (TRESYMBOL_FUN(a));
             tregc_trace_object (TRESYMBOL_PACKAGE(a));
-            tregc_trace_object (TREFUNCTION_BINDING(a));
 	    	break;
 
         case TRETYPE_FUNCTION:

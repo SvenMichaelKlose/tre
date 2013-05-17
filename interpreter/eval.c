@@ -33,40 +33,44 @@ treptr treeval_function_symbol;
 
 unsigned treeval_recursions;
 
-#define PUSH_BINDING(x)	(TREFUNCTION_BINDING(x) = CONS(TRESYMBOL_VALUE(x), TREFUNCTION_BINDING(x)))
-
-void
+treptr
 treeval_bind (treptr la, treptr lv)
 {
-    treptr  arg;
-    treptr  val;
+    treptr  sym;
+    treptr  old = treptr_nil;
 
-    for (;la != treptr_nil && lv != treptr_nil; la = CDR(la), lv = CDR(lv)) {
-        arg = CAR(la);
-        val = CAR(lv);
+    while (la != treptr_nil && lv != treptr_nil) {
+        tregc_push (old);
+        sym = CAR(la);
+        old = CONS(CONS(sym, TRESYMBOL_VALUE(sym)), old);
+		TRESYMBOL_VALUE(sym) = CAR(lv);
+        tregc_pop ();
 
-		PUSH_BINDING(arg);
-		TRESYMBOL_VALUE(arg) = val;
+        la = CDR(la);
+        lv = CDR(lv);
     }
 
     if (la != treptr_nil)
         treerror (la, "arguments missing");
     if (lv != treptr_nil)
         treerror (lv, "too many arguments. Rest of forms");
+
+    return old;
 }
 
 void
-treeval_unbind (treptr la)
+treeval_unbind (treptr old)
 {
-    treptr  bding;
-    treptr  car;
+    treptr  v;
+    treptr  tmp;
 
-    for (;la != treptr_nil; la = CDR(la)) {
-        car = CAR(la);
-        bding = TREFUNCTION_BINDING(car);
-        TRESYMBOL_VALUE(car) = CAR(bding);
-        TREFUNCTION_BINDING(car) = CDR(bding);
-        TRELIST_FREE_EARLY(bding);
+    while (old != treptr_nil) {
+        v = CAR(old);
+        TRESYMBOL_VALUE(CAR(v)) = CDR(v);
+        TRELIST_FREE_EARLY(v);
+        tmp = CDR(old);
+        TRELIST_FREE_EARLY(old);
+        old = tmp;
     }
 }
 
@@ -79,6 +83,7 @@ treeval_funcall (treptr func, treptr args, bool do_argeval)
     treptr  ret;
     treptr  argdef;
     treptr  body;
+    treptr  old_bindings;
 
     funcdef = TREFUNCTION_SOURCE(func);
     argdef = CAR(funcdef);
@@ -88,12 +93,14 @@ treeval_funcall (treptr func, treptr args, bool do_argeval)
     tregc_push (expforms);
     tregc_push (expvals);
 
-    treeval_bind (expforms, expvals);
+    old_bindings = treeval_bind (expforms, expvals);
+    tregc_push (old_bindings);
 
     ret = treeval_list (body);
     tregc_retval (ret);
 
-    treeval_unbind (expforms);
+    tregc_pop ();
+    treeval_unbind (old_bindings);
 
     tregc_pop ();
     tregc_pop ();

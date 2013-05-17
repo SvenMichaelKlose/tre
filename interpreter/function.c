@@ -13,12 +13,12 @@
 #include "eval.h"
 #include "gc.h"
 #include "alloc.h"
-#include "env.h"
+#include "symbol.h"
 
 void * tre_functions_free;
 struct tre_function tre_functions[NUM_FUNCTIONS];
 
-size_t
+struct tre_function *
 trefunction_alloc ()
 {
     struct tre_function * i = trealloc_item (&tre_functions_free);
@@ -35,19 +35,27 @@ trefunction_alloc ()
     i->native = NULL;
     i->native_expander = NULL;
 
-    return ((size_t) i - (size_t) tre_functions) / sizeof (struct tre_function);
+    return i;
 }
 
 void
 trefunction_free (treptr x)
 {
-	trealloc_free_item (&tre_functions, &tre_functions[TREFUNCTION_INDEX(x)]);
+	trealloc_free_item (&tre_functions, TREPTR_FUNCTION(x));
 }
 
 treptr
-trefunction_make ()
+trefunction_make (tre_type type, treptr source)
 {
-    treptr a = treatom_alloc (TRETYPE_FUNCTION);
+    struct tre_function * i;
+    treptr a;
+
+    tregc_push (source);
+    i = trefunction_alloc ();
+    a = treatom_alloc (type);
+    TREATOM_DETAIL(a) = i;
+    TREFUNCTION_SOURCE(a) = source;
+    tregc_pop ();
 
     return a;                                                                                                                      
 }

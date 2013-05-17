@@ -14,7 +14,6 @@ struct tre_atom {
     treptr  bytecode;
     void *  compiled_fun;
     void *  compiled_expander;
-    treptr	binding;
     treptr	package;
 };
 
@@ -35,7 +34,6 @@ extern treptr tre_package_keyword;
 	tre_atoms[index].bytecode = treptr_nil;	\
 	tre_atoms[index].compiled_fun = NULL;	\
 	tre_atoms[index].compiled_expander = NULL;	\
-	tre_atoms[index].binding = treptr_nil;	\
 	tre_atoms[index].package = treptr_nil;	\
 	tre_atoms[index].detail = NULL; \
 	tre_atom_types[index] = typ
@@ -79,7 +77,6 @@ extern void   treatom_remove (treptr);
 extern treptr treatom_set_value (treptr atom, treptr value);
 extern treptr treatom_sym_set_value (char * symbol, treptr value);
 extern treptr treatom_set_function (treptr atom, treptr value);
-extern treptr treatom_set_binding (treptr atom, treptr value);
 
 extern treptr treatom_body_to_var (treptr body);
 

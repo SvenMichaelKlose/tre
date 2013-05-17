@@ -30,7 +30,7 @@ extern struct tre_function tre_functions[NUM_FUNCTIONS];
 #define TREFUNCTION_NATIVE_EXPANDER (ptr)   (TREPTR_FUNCTION(ptr)->native)
 */
 
-extern treptr trefunction_make ();
+extern treptr trefunction_make (tre_type, treptr source);
 extern void   trefunction_free (treptr);
 extern void   trefunction_init ();
 
