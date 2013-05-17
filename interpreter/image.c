@@ -40,10 +40,10 @@ treptr treimage_initfun;
 struct treimage_header {
     int     format_version;
     treptr  init_fun;
-    size_t  num_symbols;
     size_t  num_strings;
-    size_t  num_arrays;
 };
+
+#define ATOMIC(type)    (type != TRETYPE_NUMBER && type != TRETYPE_STRING && type != TRETYPE_ARRAY)
 
 void
 treimage_write (FILE *f, void *p, size_t len)
@@ -75,14 +75,14 @@ treimage_write_atoms (FILE *f)
         DOTIMES(j, 8) {
             if (!(tregc_atommarks[i] & c)) {
                 idx = (i << 3) + j;
-                if (1) { /* tre_atom_types[idx] != TRETYPE_NUMBER) { */
+                treimage_write (f, &tre_atom_types[idx], sizeof (tre_type));
+                if (ATOMIC(tre_atom_types[idx])) {
 				    memcpy (&buf, &tre_atoms[idx], sizeof (struct tre_atom));
 				    len = 0;
                     if (tre_atom_types[idx] == TRETYPE_SYMBOL) {
 				        len = strlen (tre_atoms[idx].detail);
 				        buf.detail = (void *) len;
                     }
-                    treimage_write (f, &tre_atom_types[idx], sizeof (tre_type));
                     treimage_write (f, &buf, sizeof (struct tre_atom));
 				    if (tre_atom_types[idx] == TRETYPE_SYMBOL)
                 	    treimage_write (f, tre_atoms[idx].detail, len);
@@ -159,50 +159,41 @@ treimage_write_strings (FILE *f, size_t num)
 
     /* Write strings. */
     DOTIMES(i, NUM_ATOMS) {
-        if (tre_atom_types[i] != TRETYPE_STRING)
-            continue;
-        s = TREPTR_STRING(i);
-        treimage_write (f, TRESTRING_DATA(s), TRESTRING_LEN(s));
+        if (tre_atom_types[i] == TRETYPE_STRING) {
+            s = TREPTR_STRING(i);
+            treimage_write (f, TRESTRING_DATA(s), TRESTRING_LEN(s));
+        }
     }
 
     trealloc_free (lens);
+}
+
+size_t
+treimage_count_strings (void)
+{
+    size_t  i;
+    size_t  n = 0;
+
+    DOTIMES(i, NUM_ATOMS)
+         if (tre_atom_types[i] == TRETYPE_STRING)
+                n++;
+    return n;
 }
 
 int
 treimage_create (char *file, treptr init_fun)
 {
     struct treimage_header  h;
-    size_t  n_arr = 0;
-    size_t  n_str = 0;
-    size_t  n_sym = 0;
-    size_t  i;
     FILE  * f;
 
     treimage_initfun = init_fun;
     tregc_force ();
     tregc_mark_non_internal ();
 
-    /* Count arrays and strings. */
-    DOTIMES(i, NUM_ATOMS) {
-		if (tre_atom_types[i] == TRETYPE_SYMBOL)
-			n_sym++;
-        switch (tre_atom_types[i]) {
-            case TRETYPE_ARRAY:
-                n_arr++;
-                break;
-
-            case TRETYPE_STRING:
-                n_str++;
-                break;
-        }
-    }
-
     h.format_version = TRE_IMAGE_FORMAT_VERSION;
     h.init_fun = init_fun;
 
-	h.num_symbols = n_sym;
-    h.num_strings = n_str;
-    h.num_arrays = n_arr;
+    h.num_strings = treimage_count_strings ();
 
     f = fopen (file, "w");
     if (f == NULL)
@@ -215,26 +206,10 @@ treimage_create (char *file, treptr init_fun)
     treimage_write_conses (f);
     treimage_write_numbers (f);
     treimage_write_arrays (f);
-    treimage_write_strings (f, n_str);
+    treimage_write_strings (f, h.num_strings);
 
     fclose (f);
     return 0;
-}
-
-void
-treimage_remove_atoms (void)
-{
-    size_t i;
-
-    DOTIMES(i, NUM_ATOMS) {
-        switch (tre_atom_types[i]) {
-            case TRETYPE_ARRAY:
-            case TRETYPE_STRING:
-                treatom_remove (i);
-        }
-    }
-
-	tresymbol_clear ();
 }
 
 void
@@ -250,13 +225,14 @@ treimage_read_atoms (FILE *f)
 
     treimage_read (f, tregc_atommarks, sizeof tregc_atommarks);
 
+    tre_atoms_free = NULL;
     DOTIMES(i, sizeof tregc_atommarks) {
         c = 1;
         DOTIMES(j, 8) {
+            idx = (i << 3) + j;
             if (!(tregc_atommarks[i] & c)) {
-                idx = (i << 3) + j;
                 treimage_read (f, &tre_atom_types[idx], sizeof (tre_type));
-                if (1) { /* tre_atom_types[idx] != TRETYPE_NUMBER) { */
+                if (ATOMIC(tre_atom_types[idx])) {
                     treimage_read (f, &tre_atoms[idx], sizeof (struct tre_atom));
 				    if (tre_atom_types[idx] == TRETYPE_SYMBOL) {
 				        symlen = (size_t) tre_atoms[idx].detail;
@@ -269,6 +245,10 @@ treimage_read_atoms (FILE *f)
     				    tresymbolpage_add (TRETYPE_INDEX_TO_PTR(tre_atom_types[idx], idx));
                     }
 				}
+            } else {
+                *(void **) &tre_atoms[idx] = tre_atoms_free;
+                tre_atom_types[idx] = TRETYPE_UNUSED;
+                tre_atoms_free = &tre_atoms[idx];
             }
 
             c <<= 1;
@@ -283,14 +263,12 @@ treimage_read_conses (FILE * f)
     size_t i;
     size_t j;
     size_t idx;
-    size_t last;
     char   c;
 
     treimage_read (f, tregc_listmarks, sizeof tregc_listmarks);
 
     trelist_num_used = 0;
     tre_lists_free = treptr_nil;
-    last = treptr_nil;
     DOTIMES(i, sizeof tregc_listmarks) {
         c = 1;
         DOTIMES(j, 8) {
@@ -300,17 +278,13 @@ treimage_read_conses (FILE * f)
                 treimage_read (f, &tre_listprops[idx], sizeof (treptr));
                 trelist_num_used++;
             } else {
-                if (tre_lists_free == treptr_nil)
-                    tre_lists_free = idx;
-                if (last != treptr_nil)
-                    tre_lists[last].cdr = idx;
-                last = idx;
+                tre_lists[idx].cdr = tre_lists_free;
+                tre_lists_free = idx;
             }
 
             c <<= 1;
         }
     }
-    tre_lists[last].cdr = treptr_nil;
 }
 
 /* Make list of free atoms. */
@@ -422,8 +396,7 @@ treimage_load (char *file)
     if (h.format_version != TRE_IMAGE_FORMAT_VERSION)
         goto error;
 
-    treimage_remove_atoms ();
-
+	tresymbol_clear ();
     treimage_read_atoms (f);
     treimage_read_conses (f);
     treimage_make_free ();
