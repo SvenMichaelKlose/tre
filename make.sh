@@ -35,6 +35,7 @@ FILES="
 	dot.c
 	error.c
 	eval.c
+	function.c
 	gc.c
 	image.c
 	io.c

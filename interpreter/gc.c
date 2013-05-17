@@ -138,7 +138,8 @@ tregc_trace_atom (treptr a)
         case TRETYPE_FUNCTION:
         case TRETYPE_MACRO:
         case TRETYPE_USERSPECIAL:
-            tregc_trace_object (TRESYMBOL_VALUE(a));
+            tregc_trace_object (TREFUNCTION_SOURCE(a));
+            tregc_trace_object (TREFUNCTION_BYTECODE(a));
 	    	break;
 
         case TRETYPE_ARRAY:
@@ -200,8 +201,7 @@ tregc_sweep (void)
 		DOTIMES(j, 8) {
 	    	if (tregc_atommarks[i] & c) {
 	        	idx = (i << 3) + j;
-                if (tre_atom_types[idx] != TRETYPE_UNUSED
-					&& TREPTR_TO_ATOM(idx).compiled_fun == NULL)
+                if (tre_atom_types[idx] != TRETYPE_UNUSED)
 	           	    treatom_remove (TREATOM_TO_PTR(idx));
             }
 

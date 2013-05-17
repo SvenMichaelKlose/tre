@@ -38,12 +38,6 @@ trefunction_alloc ()
     return i;
 }
 
-void
-trefunction_free (treptr x)
-{
-	trealloc_free_item (&tre_functions, TREPTR_FUNCTION(x));
-}
-
 treptr
 trefunction_make (tre_type type, treptr source)
 {
@@ -58,6 +52,12 @@ trefunction_make (tre_type type, treptr source)
     tregc_pop ();
 
     return a;                                                                                                                      
+}
+
+void
+trefunction_free (treptr x)
+{
+	trealloc_free_item (&tre_functions_free, TREPTR_FUNCTION(x));
 }
 
 void

@@ -41,7 +41,7 @@ typedef size_t treptr;
 #define TREPTR_IS_MACRO(ptr)	(TREPTR_TYPE(ptr) == TRETYPE_MACRO)
 #define TREPTR_IS_FUNCTION(ptr)	(TREPTR_TYPE(ptr) == TRETYPE_FUNCTION)
 
-#define IS_COMPILED_FUN(x) (TREPTR_IS_ARRAY(x) || ((TREPTR_IS_FUNCTION(x) || TREPTR_IS_MACRO(x)) && TREFUNCTION_NATIVE(x)))
+#define IS_COMPILED_FUN(x) ((TREPTR_IS_FUNCTION(x) || TREPTR_IS_MACRO(x)) && (TREFUNCTION_BYTECODE(x) != treptr_nil || TREFUNCTION_NATIVE(x)))
 
 #define TREPTR_TRUTH(test) ((test) ? treptr_t : treptr_nil)
 

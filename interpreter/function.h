@@ -15,22 +15,14 @@ struct tre_function {
 extern void * tre_functions_free;
 extern struct tre_function tre_functions[NUM_FUNCTIONS];
 
-#define TREFUNCTION_INDEX(ptr)              ((size_t) TREATOM_DETAIL(ptr))
-#define TREPTR_FUNCTION(ptr)                (&tre_functions[TREFUNCTION_INDEX(ptr)])
-
-#define TREFUNCTION_SOURCE(ptr)             (TREPTR_TO_ATOM(ptr).value)
-#define TREFUNCTION_BINDING(ptr)            (TREPTR_TO_ATOM(ptr).binding)
-#define TREFUNCTION_BYTECODE(ptr)           (TREPTR_TO_ATOM(ptr).bytecode)
-#define TREFUNCTION_NATIVE(ptr)             (TREPTR_TO_ATOM(ptr).compiled_fun)
-#define TREFUNCTION_NATIVE_EXPANDER(ptr)    (TREPTR_TO_ATOM(ptr).compiled_expander)
-
-/*
+#define TREPTR_FUNCTION(ptr)                ((struct tre_function *) TREATOM_DETAIL(ptr))
 #define TREFUNCTION_SOURCE(ptr)             (TREPTR_FUNCTION(ptr)->source)
+#define TREFUNCTION_BYTECODE(ptr)           (TREPTR_FUNCTION(ptr)->bytecode)
 #define TREFUNCTION_NATIVE(ptr)             (TREPTR_FUNCTION(ptr)->native)
-#define TREFUNCTION_NATIVE_EXPANDER (ptr)   (TREPTR_FUNCTION(ptr)->native)
-*/
+#define TREFUNCTION_NATIVE_EXPANDER(ptr)    (TREPTR_FUNCTION(ptr)->native_expander)
 
 extern treptr trefunction_make (tre_type, treptr source);
+extern struct tre_function * trefunction_alloc ();
 extern void   trefunction_free (treptr);
 extern void   trefunction_init ();
 

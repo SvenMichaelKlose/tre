@@ -26,6 +26,7 @@
 #include "thread.h"
 #include "image.h"
 #include "alloc.h"
+#include "function.h"
 
 #ifdef TRE_COMPILED_CRUNSHED
 #define TRE_IMAGE_FORMAT_VERSION    -1
@@ -43,8 +44,6 @@ struct treimage_header {
     size_t  num_strings;
 };
 
-#define ATOMIC(type)    (type != TRETYPE_NUMBER && type != TRETYPE_STRING && type != TRETYPE_ARRAY)
-
 void
 treimage_write (FILE *f, void *p, size_t len)
 {
@@ -61,11 +60,11 @@ treimage_read (FILE *f, void *p, size_t len)
 void
 treimage_write_atoms (FILE *f)
 {
-    size_t   i;
-    size_t   j;
-    size_t   idx;
-    size_t   len;
-    char     c;
+    size_t  i;
+    size_t  j;
+    size_t  idx;
+    size_t  symlen;
+    char    c;
 	struct tre_atom buf;
 
     treimage_write (f, tregc_atommarks, sizeof tregc_atommarks);
@@ -76,16 +75,26 @@ treimage_write_atoms (FILE *f)
             if (!(tregc_atommarks[i] & c)) {
                 idx = (i << 3) + j;
                 treimage_write (f, &tre_atom_types[idx], sizeof (tre_type));
-                if (ATOMIC(tre_atom_types[idx])) {
-				    memcpy (&buf, &tre_atoms[idx], sizeof (struct tre_atom));
-				    len = 0;
-                    if (tre_atom_types[idx] == TRETYPE_SYMBOL) {
-				        len = strlen (tre_atoms[idx].detail);
-				        buf.detail = (void *) len;
-                    }
-                    treimage_write (f, &buf, sizeof (struct tre_atom));
-				    if (tre_atom_types[idx] == TRETYPE_SYMBOL)
-                	    treimage_write (f, tre_atoms[idx].detail, len);
+                switch (tre_atom_types[idx]) {
+                    case TRETYPE_SYMBOL:
+				        memcpy (&buf, &tre_atoms[idx], sizeof (struct tre_atom));
+				        symlen = strlen (tre_atoms[idx].detail);
+				        buf.detail = (void *) symlen;
+                        treimage_write (f, &buf, sizeof (struct tre_atom));
+                	    treimage_write (f, tre_atoms[idx].detail, symlen);
+                        break;
+
+                    case TRETYPE_FUNCTION:
+                    case TRETYPE_MACRO:
+                    case TRETYPE_USERSPECIAL:
+                        treimage_write (f, &TREFUNCTION_SOURCE(idx), sizeof (treptr));
+                        treimage_write (f, &TREFUNCTION_BYTECODE(idx), sizeof (treptr));
+                        break;
+
+                    case TRETYPE_BUILTIN:
+                    case TRETYPE_SPECIAL:
+                        treimage_write (f, &TREATOM_DETAIL(idx), sizeof (void *));
+                        break;
                 }
             }
 
@@ -134,11 +143,10 @@ treimage_write_arrays (FILE *f)
     size_t i;
 
     DOTIMES(i, NUM_ATOMS) {
-        if (tre_atom_types[i] != TRETYPE_ARRAY)
-            continue;
-
-        treimage_write (f, &TREARRAY_SIZES(i), sizeof (treptr));
-        treimage_write (f, TREARRAY_VALUES(i), TREARRAY_SIZE(i) * sizeof (treptr));
+        if (tre_atom_types[i] == TRETYPE_ARRAY) {
+            treimage_write (f, &TREARRAY_SIZES(i), sizeof (treptr));
+            treimage_write (f, TREARRAY_VALUES(i), TREARRAY_SIZE(i) * sizeof (treptr));
+        }
     }
 }
 
@@ -232,9 +240,9 @@ treimage_read_atoms (FILE *f)
             idx = (i << 3) + j;
             if (!(tregc_atommarks[i] & c)) {
                 treimage_read (f, &tre_atom_types[idx], sizeof (tre_type));
-                if (ATOMIC(tre_atom_types[idx])) {
-                    treimage_read (f, &tre_atoms[idx], sizeof (struct tre_atom));
-				    if (tre_atom_types[idx] == TRETYPE_SYMBOL) {
+                switch (tre_atom_types[idx]) {
+                    case TRETYPE_SYMBOL:
+                        treimage_read (f, &tre_atoms[idx], sizeof (struct tre_atom));
 				        symlen = (size_t) tre_atoms[idx].detail;
 					    if (symlen > TRE_MAX_SYMLEN)
 						    treerror_internal (treptr_nil, "image read: symbol exceeds max length %d with length of %d", TRE_MAX_SYMLEN, symlen);
@@ -243,8 +251,21 @@ treimage_read_atoms (FILE *f)
     				    allocated_symbol = tresymbol_add (symbol);
     				    ATOM_SET_NAME(idx, allocated_symbol);
     				    tresymbolpage_add (TRETYPE_INDEX_TO_PTR(tre_atom_types[idx], idx));
-                    }
-				}
+                        break;
+
+                    case TRETYPE_FUNCTION:
+                    case TRETYPE_MACRO:
+                    case TRETYPE_USERSPECIAL:
+                        TREATOM_DETAIL(idx) = trefunction_alloc ();
+                        treimage_read (f, &TREFUNCTION_SOURCE(idx), sizeof (treptr));
+                        treimage_read (f, &TREFUNCTION_BYTECODE(idx), sizeof (treptr));
+                        break;
+
+                    case TRETYPE_BUILTIN:
+                    case TRETYPE_SPECIAL:
+                        treimage_read (f, &TREATOM_DETAIL(idx), sizeof (void *));
+                        break;
+                }
             } else {
                 *(void **) &tre_atoms[idx] = tre_atoms_free;
                 tre_atom_types[idx] = TRETYPE_UNUSED;

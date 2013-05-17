@@ -60,14 +60,12 @@ treatom_init_truth (void)
     ATOM_SET_NAME(TREPTR_NIL_INDEX, tresymbol_add ("NIL"));
     tre_atoms[TREPTR_NIL_INDEX].value = TRETYPE_INDEX_TO_PTR(TRETYPE_SYMBOL, TREPTR_NIL_INDEX);
     tre_atoms[TREPTR_NIL_INDEX].fun = treptr_nil;
-    tre_atoms[TREPTR_NIL_INDEX].bytecode = treptr_nil;
 	tresymbolpage_add (treptr_nil);
 
     ATOM_SET(TREPTR_T_INDEX, TRETYPE_SYMBOL);
     ATOM_SET_NAME(TREPTR_T_INDEX, tresymbol_add ("T"));
     tre_atoms[TREPTR_T_INDEX].value = TRETYPE_INDEX_TO_PTR(TRETYPE_SYMBOL, TREPTR_T_INDEX);
     tre_atoms[TREPTR_T_INDEX].fun = treptr_nil;
-    tre_atoms[TREPTR_T_INDEX].bytecode = treptr_nil;
 	tresymbolpage_add (treptr_t);
 }
 
@@ -147,7 +145,7 @@ treptr
 treatom_register_compiled_function (treptr sym, void * fun, void * expander_fun)
 {
     if (TRESYMBOL_FUN(sym) == treptr_nil)
-        TRESYMBOL_FUN(sym) = treatom_alloc (TRETYPE_FUNCTION);
+        TRESYMBOL_FUN(sym) = trefunction_make (TRETYPE_FUNCTION, treptr_nil);
 
     TREFUNCTION_NATIVE(TRESYMBOL_FUN(sym)) = fun;
     TREFUNCTION_NATIVE_EXPANDER(TRESYMBOL_FUN(sym)) = expander_fun;
@@ -281,9 +279,12 @@ void
 treatom_remove (treptr x)
 {
     switch (TREPTR_TYPE(x)) {
-        case TRETYPE_NUMBER: trenumber_free (x); break;
-        case TRETYPE_ARRAY:  trearray_free  (x); break;
-        case TRETYPE_STRING: trestring_free (x); break;
+        case TRETYPE_NUMBER:      trenumber_free (x); break;
+        case TRETYPE_ARRAY:       trearray_free  (x); break;
+        case TRETYPE_STRING:      trestring_free (x); break;
+        case TRETYPE_FUNCTION:    trefunction_free (x); break;
+        case TRETYPE_MACRO:       trefunction_free (x); break;
+        case TRETYPE_USERSPECIAL: trefunction_free (x); break;
     }
 
     treatom_free (x);

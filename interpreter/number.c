@@ -68,7 +68,7 @@ trenumber_alloc (double value, int type)
 void
 trenumber_free (treptr n)
 {
-	trealloc_free_item (&tre_numbers_free, TREATOM_DETAIL(n));
+	trealloc_free_item (&tre_numbers_free, TREPTR_NUMBER(n));
 }
 
 void

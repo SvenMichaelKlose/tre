@@ -27,6 +27,7 @@
 #include "main.h"
 #include "print.h"
 #include "symbol.h"
+#include "function.h"
 
 #include "builtin_debug.h"
 #include "builtin_atom.h"
@@ -35,30 +36,6 @@
 
 treptr tre_atom_evaluated_go;
 treptr tre_atom_evaluated_return_from;
-
-bool
-treeval_is_return (treptr x)
-{
-	return !(TREPTR_IS_ATOM(x)
-    		 || CAR(x) != tre_atom_evaluated_return_from
-			 || TREPTR_IS_ATOM(CDR(x))
-			 || TREPTR_IS_ATOM(CDDR(x))
-			 || CDDDR(x) != treptr_nil);
-}
-
-bool
-treeval_is_go (treptr x)
-{
-	return !(TREPTR_IS_ATOM(x)
-    		 || CAR(x) != tre_atom_evaluated_go
-			 || TREPTR_IS_CONS(CDR(x)));
-}
-
-bool
-treeval_is_jump (treptr p)
-{
-    return treeval_is_return (p) || treeval_is_go (p);
-}
 
 treptr
 trespecial_setq (treptr list)
@@ -96,29 +73,91 @@ trespecial_setq (treptr list)
 }
 
 treptr
+trespecial_past_lambda (treptr x)
+{
+	return (TREPTR_IS_ATOM(FIRST(x)) && FIRST(x) == treatom_lambda)
+			? CDR(x)
+			: x;
+}
+
+treptr
+trespecial_function_from_expr (treptr expr)
+{
+    treptr x = trespecial_past_lambda (expr);
+
+    if (x == treptr_nil)
+        return treerror (expr, "argument list and body missing");
+    if (TREPTR_IS_ATOM(CAR(x)) && CAR(x) != treptr_nil)
+        return treerror (expr, "argument list expected instead of atom");
+
+    return trefunction_make (TRETYPE_FUNCTION, x);
+}
+
+treptr
+trespecial_function (treptr args)
+{
+    treptr arg;
+
+    if (args == treptr_nil)
+		return treerror (args, "function name expected");
+    if (CDR(args) != treptr_nil)
+		return treerror (args, "single argument expected");
+
+    arg = FIRST(args);
+
+    switch (TREPTR_TYPE(arg)) {
+        case TRETYPE_CONS:
+			return trespecial_function_from_expr (arg);
+
+        case TRETYPE_SYMBOL:
+            return TRESYMBOL_FUN(arg);
+
+        case TRETYPE_FUNCTION:
+        case TRETYPE_BUILTIN:
+        case TRETYPE_SPECIAL:
+			return arg;
+
+		default:
+			return treerror (arg, "FUNCTION expects a symbol, function, special form or function expression");
+    }
+
+    return treerror (arg, "function or argument/body pair expected");
+}
+
+treptr
 trespecial_macro (treptr list)
 {
-    treptr  f;
-    treptr  expr = trelist_copy (list);
-
-    f = treatom_alloc (TRETYPE_MACRO);
-    TRESYMBOL_VALUE(TREPTR_INDEX(f)) = expr;
-
-    return f;
+    return trefunction_make (TRETYPE_MACRO, trelist_copy (list));
 }
 
 treptr
 trespecial_special (treptr list)
 {
-    treptr  expr = trelist_copy (list);
-    treptr  ret;
+    return trefunction_make (TRETYPE_USERSPECIAL, trelist_copy (list));
+}
 
-    tregc_push (expr);
-    ret = treatom_alloc (TRETYPE_USERSPECIAL);
-    TRESYMBOL_VALUE(TREPTR_INDEX(ret)) = expr;
-    tregc_pop ();
+bool
+treeval_is_return (treptr x)
+{
+	return !(TREPTR_IS_ATOM(x)
+    		 || CAR(x) != tre_atom_evaluated_return_from
+			 || TREPTR_IS_ATOM(CDR(x))
+			 || TREPTR_IS_ATOM(CDDR(x))
+			 || CDDDR(x) != treptr_nil);
+}
 
-    return ret;
+bool
+treeval_is_go (treptr x)
+{
+	return !(TREPTR_IS_ATOM(x)
+    		 || CAR(x) != tre_atom_evaluated_go
+			 || TREPTR_IS_CONS(CDR(x)));
+}
+
+bool
+treeval_is_jump (treptr p)
+{
+    return treeval_is_return (p) || treeval_is_go (p);
 }
 
 treptr
@@ -299,62 +338,6 @@ treptr
 trespecial_go (treptr args)
 {
     return CONS(tre_atom_evaluated_go, trearg_get (args));
-}
-
-treptr
-trespecial_past_lambda (treptr x)
-{
-	return (TREPTR_IS_ATOM(FIRST(x)) && FIRST(x) == treatom_lambda)
-			? CDR(x)
-			: x;
-}
-
-treptr
-trespecial_function_from_expr (treptr expr)
-{
-    treptr f;
-    treptr x = trespecial_past_lambda (expr);
-
-    if (x == treptr_nil)
-        return treerror (expr, "argument list and body missing");
-    if (TREPTR_IS_ATOM(CAR(x)) && CAR(x) != treptr_nil)
-        return treerror (expr, "argument list expected instead of atom");
-
-    f = treatom_alloc (TRETYPE_FUNCTION);
-    TRESYMBOL_VALUE(TREPTR_INDEX(f)) = x;
-
-    return f;
-}
-
-treptr
-trespecial_function (treptr args)
-{
-    treptr arg;
-
-    if (args == treptr_nil)
-		return treerror (args, "function name expected");
-    if (CDR(args) != treptr_nil)
-		return treerror (args, "single argument expected");
-
-    arg = FIRST(args);
-
-    switch (TREPTR_TYPE(arg)) {
-        case TRETYPE_CONS:
-			return trespecial_function_from_expr (arg);
-
-        case TRETYPE_SYMBOL:
-            return TRESYMBOL_FUN(arg);
-
-        case TRETYPE_FUNCTION:
-        case TRETYPE_BUILTIN:
-        case TRETYPE_SPECIAL:
-			return arg;
-
-		default:
-			return treerror (arg, "FUNCTION expects a symbol, function, special form or function expression");
-    }
-
-    return treerror (arg, "function or argument/body pair expected");
 }
 
 #endif /* #ifdef INTERPRETER */
