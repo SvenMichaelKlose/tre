@@ -1,16 +1,9 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
-(defun argument-rest-keyword? (x)
-  (in? x '&rest '&body))
-
-(defun argument-keyword? (x)
-  (in? x '&rest '&body '&optional '&key))
-
-(defun argument-name? (x)
-  (atom x))
-
-(defun argument-name (x)
-  x)
+(defun argument-rest-keyword? (x) (in? x '&rest '&body))
+(defun argument-keyword? (x)      (in? x '&rest '&body '&optional '&key))
+(defun argument-name? (x)         (atom x))
+(defun argument-name (x)          x)
 
 (defun argument-def-without-type (x)
   x)

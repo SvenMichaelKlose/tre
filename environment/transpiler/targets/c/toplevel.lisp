@@ -59,7 +59,7 @@
      (c-function-registrations tr)
      (c-closure-argument-defs tr)))
 
-(defun c-make-init (tr)
+(defun c-make-init-functions (tr)
   (let init-funs nil
     (+ (mapcar [with-gensym g
 				 (let name ($ 'C-INIT- (1+! *c-init-counter*))
@@ -79,8 +79,8 @@
     (+ (c-header-inclusions)
   	   (target-transpile tr
            :decl-gen #'(()
-                          (c-compile-symbols-in-tree (transpiler-closure-argdefs tr)) ; XXX not already done in defun c-closure-argument-defs?
+                          (c-compile-symbols-in-tree (transpiler-closure-argdefs tr))
                           (let init (with-temporary (transpiler-profile? tr) nil
-                                      (transpiler-make-code tr (transpiler-frontend tr (c-make-init tr))))
+                                      (transpiler-make-code tr (transpiler-frontend tr (c-make-init-functions tr))))
                             (concat-stringtree (transpiler-compiled-decls tr) init)))
            :files-after-deps sources))))

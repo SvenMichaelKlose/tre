@@ -2,13 +2,13 @@
 
 (defvar *php-goto?* t) ; PHP version <5.3 has no 'goto'.
 
-(defun php-transpile-prologue ()
+(defun php-prologue ()
   (+ (format nil "<?php // tré revision ~A~%" *tre-revision*)
      (? *php-goto?*
         ""
         "$_I_ = 0; while (1) { switch ($_I_) { case 0:")))
 
-(defun php-transpile-epilogue ()
+(defun php-epilogue ()
   (+ (? *php-goto?*
         ""
         "} break; }")
@@ -21,7 +21,7 @@
 (defun php-print-native-environment (out)
   (princ *php-native-environment* out))
 
-(defun php-transpile-prepare (tr)
+(defun php-prepare (tr)
   (with-string-stream out
     (format out (+ "mb_internal_encoding ('UTF-8');~%"
                    "if (get_magic_quotes_gpc ()) {~%"
@@ -41,24 +41,24 @@
                    "}~%"))
     (php-print-native-environment out)))
 
-(defun php-transpile-decls (tr)
+(defun php-decls (tr)
   (transpiler-make-code tr (transpiler-frontend tr (transpiler-compiled-inits tr))))
 
 (defun php-transpile (sources &key (transpiler nil) (obfuscate? nil) (print-obfuscations? nil) (files-to-update nil))
   (with-temporary *opt-inline-max-size* 16
     (transpiler-add-defined-variable transpiler '*KEYWORD-PACKAGE*)
     (= (transpiler-accumulate-toplevel-expressions? transpiler) (not *php-goto?*))
-    (+ (php-transpile-prologue)
-	   (php-transpile-prepare transpiler)
+    (+ (php-prologue)
+	   (php-prepare transpiler)
    	   (target-transpile transpiler
            :decl-gen #'(()
-                          (php-transpile-decls transpiler))
-           :files-before-deps (list (cons 'base1 *php-base*))
-           :files-after-deps (+ (list (cons 'base2 *php-base2*))
+                          (php-decls transpiler))
+           :files-before-deps `((base1 ,*php-base*))
+           :files-after-deps (+ `((base2 ,*php-base2*))
                                 (& (eq t *have-environment-tests*)
                                    (list (cons 'env-tests (make-environment-tests))))
                                 sources)
            :files-to-update files-to-update
            :obfuscate? obfuscate?
            :print-obfuscations? print-obfuscations?)
-   (php-transpile-epilogue))))
+   (php-epilogue))))
