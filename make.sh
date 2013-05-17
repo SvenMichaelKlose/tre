@@ -74,7 +74,7 @@ CFLAGS="-pipe $C_DIALECT_FLAGS $GNU_LIBC_FLAGS $BUILD_MACHINE_INFO $ARGS"
 
 DEBUGOPTS="-O0 -g"
 BUILDOPTS="-Ofast"
-CRUNSHOPTS="-Ofast --whole-program"
+CRUNSHOPTS="-Ofast --whole-program -flto"
 CRUNSHFLAGS="-DTRE_COMPILED_CRUNSHED -Iinterpreter"
 
 LIBFLAGS="-lm -lffi -ldl -lrt"
