@@ -276,9 +276,10 @@ void
 tremain_print_hardinfo (void)
 {
 	printf (TRE_INFO TRE_COPYRIGHT);
+	printf ("Object pointer size: %d\n", (int) sizeof (treptr));
 	printf ("Max. cells: %d\n", NUM_LISTNODES);
 	printf ("Max. atoms: %d\n", NUM_ATOMS);
-	printf ("Max. symbol length: %d characters\n", TRE_MAX_SYMLEN);
+	printf ("Max. literal symbol length: %d characters\n", TRE_MAX_SYMLEN);
 	printf ("Max. literal string length: %d characters\n", TRE_MAX_STRINGLEN);
 	printf ("Max. packages: %d\n", MAX_PACKAGES);
 	printf ("Cells start: %8lX\n", (size_t) &tre_lists);
