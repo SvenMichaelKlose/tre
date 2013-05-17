@@ -13,7 +13,7 @@
 extern size_t num_symbols;
 
 extern void   tresymbolpage_remove (treptr atom);
-extern void   tresymbolpage_add (treptr atom);
+extern struct tresymbol_page * tresymbolpage_add (treptr atom);
 extern treptr tresymbolpage_find (char * name, treptr atom);
 extern void   tresymbolpage_set_package (size_t root_index, treptr package);
 

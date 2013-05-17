@@ -127,13 +127,13 @@ trespecial_function (treptr args)
 treptr
 trespecial_macro (treptr list)
 {
-    return trefunction_make (TRETYPE_MACRO, trelist_copy (list));
+    return trefunction_make (TRETYPE_MACRO, trelist_copy_tree (list));
 }
 
 treptr
 trespecial_special (treptr list)
 {
-    return trefunction_make (TRETYPE_USERSPECIAL, trelist_copy (list));
+    return trefunction_make (TRETYPE_USERSPECIAL, trelist_copy_tree (list));
 }
 
 bool

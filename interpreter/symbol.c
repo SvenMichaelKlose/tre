@@ -68,7 +68,7 @@ tresymbolpage_set_package (size_t i, treptr package)
 	tresymbol_roots[i].package = package;
 }
 
-void
+struct tresymbol_page *
 tresymbolpage_add_rec (struct tresymbol_page * p, char * name, treptr atom, char * np)
 {
 	size_t x = (size_t) (unsigned char) *np;
@@ -79,8 +79,7 @@ tresymbolpage_add_rec (struct tresymbol_page * p, char * name, treptr atom, char
 		if (p->entries[x] == NULL)
 			p->entries[x] = tresymbolpage_alloc ();
 
-		tresymbolpage_add_rec (p->entries[x], name, atom, ++np);
-		return;
+		return tresymbolpage_add_rec (p->entries[x], name, atom, ++np);
 	}
 
 	if (p->name) {
@@ -90,14 +89,15 @@ tresymbolpage_add_rec (struct tresymbol_page * p, char * name, treptr atom, char
 
 	p->name = name;
 	p->atom = atom;
+
+    return p;
 }
 
-void
+struct tresymbol_page *
 tresymbolpage_add (treptr atom)
 {
 	char * name = TRESYMBOL_NAME(atom);
-	if (name)
-		tresymbolpage_add_rec (tresymbolpage_find_root (TRESYMBOL_PACKAGE(atom)), name, atom, name);
+    return tresymbolpage_add_rec (tresymbolpage_find_root (TRESYMBOL_PACKAGE(atom)), name, atom, name);
 }
 
 treptr tresymbolpage_find_rec (struct tresymbol_page * p, char * np);
