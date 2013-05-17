@@ -8,7 +8,11 @@
 #include "config.h"
 #include "type.h"
 
+#if NUM_LISTNODES > (32 * MEGA)
 typedef size_t treptr;
+#else
+typedef unsigned int treptr;
+#endif
 
 #define TREPTR_FLAGS	((treptr) -1 << TREPTR_INDEX_WIDTH)
 
