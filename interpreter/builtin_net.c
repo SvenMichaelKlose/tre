@@ -1,5 +1,5 @@
 /*
- * tré - Copyright (c) 2011-2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2011–2013 Sven Michael Klose <pixel@copei.de>
  */
 
 #include <stdio.h>
@@ -67,7 +67,7 @@ trenet_builtin_accept (treptr dummy)
 treptr
 trenet_builtin_recv (treptr dummy)
 {    
-    char      * data = trealloc (MAX_DATA);
+    char      * data = malloc (MAX_DATA);
     treptr    result;
     size_t    len;
 
@@ -75,7 +75,7 @@ trenet_builtin_recv (treptr dummy)
 
     len = recv (trenet_connection, data, MAX_DATA, 0);
     result = trestring_get_binary (data, len);
-    trealloc_free (data);
+    free (data);
 
     return result;
 }

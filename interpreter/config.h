@@ -57,14 +57,6 @@ typedef int bool;
 #define NUM_ATOMS	    (NUM_LISTNODES / 8)
 #endif
 
-#ifndef NUM_NUMBERS
-#define NUM_NUMBERS	    (NUM_LISTNODES / 32)
-#endif
-
-#ifndef NUM_FUNCTIONS
-#define NUM_FUNCTIONS	(NUM_LISTNODES / 32)
-#endif
-
 #define TRESTACK_SIZE	(8 * MEGA)
 
 #ifndef NULL

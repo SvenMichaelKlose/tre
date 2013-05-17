@@ -15,11 +15,6 @@
 #include "argument.h"
 #include "alloc.h"
 
-void * tre_numbers_free;
-struct tre_number tre_numbers[NUM_NUMBERS];
-
-#define TRENUMBER_INDEX(ptr) 	((size_t) TREATOM_DETAIL(ptr))
-
 bool
 trenumber_is_value (char * symbol)
 {
@@ -51,13 +46,13 @@ trenumber_is_value (char * symbol)
 struct tre_number *
 trenumber_alloc (double value, int type)
 {
-    struct tre_number * i = trealloc_item (&tre_numbers_free);
+    struct tre_number * i = malloc (sizeof (struct tre_number));
 
     if (!i) {
         tregc_force ();
-    	i = trealloc_item (&tre_numbers_free);
+    	i = malloc (sizeof (struct tre_number));
         if (!i)
-	    	treerror_internal (treptr_nil, "out of numbers");
+	    	treerror_internal (treptr_nil, "out of memory for more numbers");
     }
     i->value = value;
     i->type = type;
@@ -68,11 +63,10 @@ trenumber_alloc (double value, int type)
 void
 trenumber_free (treptr n)
 {
-	trealloc_free_item (&tre_numbers_free, TREPTR_NUMBER(n));
+	free (TREPTR_NUMBER(n));
 }
 
 void
 trenumber_init ()
 {
-	tre_numbers_free = trealloc_item_init (&tre_numbers, NUM_NUMBERS, sizeof (struct tre_number));
 }

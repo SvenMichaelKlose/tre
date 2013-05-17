@@ -156,7 +156,7 @@ treimage_write_strings (FILE *f, size_t num)
     size_t   i;
     size_t   j;
     char   * s;
-    size_t * lens = trealloc (sizeof (size_t) * num);
+    size_t * lens = malloc (sizeof (size_t) * num);
 
     /* Make and write length index. */
     j = 0;
@@ -173,7 +173,7 @@ treimage_write_strings (FILE *f, size_t num)
         }
     }
 
-    trealloc_free (lens);
+    free (lens);
 }
 
 size_t
@@ -362,9 +362,9 @@ treimage_read_arrays (FILE *f)
 
         treimage_read (f, &sizes, sizeof (treptr));
         l = trearray_get_size (sizes) * sizeof (treptr);
-        a = trealloc (sizeof (struct tre_array));
+        a = malloc (sizeof (struct tre_array));
         a->sizes = sizes;
-        a->values = trealloc (l);
+        a->values = malloc (l);
         treimage_read (f, a->values, l);
         TREATOM_SET_DETAIL(i, a);
     }
@@ -378,7 +378,7 @@ treimage_read_strings (FILE *f, struct treimage_header *h)
     size_t   j;
     size_t   l;
     size_t   lenlen = sizeof (size_t) * h->num_strings;
-    size_t * lens = trealloc (lenlen);
+    size_t * lens = malloc (lenlen);
 
     treimage_read (f, lens, lenlen);
 
@@ -388,14 +388,14 @@ treimage_read_strings (FILE *f, struct treimage_header *h)
             continue;
 
         l = lens[j++];
-        s = trealloc (l + 1 + sizeof (size_t));
+        s = malloc (l + 1 + sizeof (size_t));
         TRESTRING_LEN(s) = l;
         TREATOM_SET_STRING(i, s);
         treimage_read (f, TRESTRING_DATA(s), l);
         (TRESTRING_DATA(s))[l] = 0;
     }
 
-    trealloc_free (lens);
+    free (lens);
 }
 
 int

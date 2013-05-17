@@ -15,7 +15,6 @@
 #include "array.h"
 #include "argument.h"
 #include "util.h"
-#include "alloc.h"
 #include "thread.h"
 #include "gc.h"
 
@@ -25,13 +24,13 @@ trearray_get_raw (size_t size)
     struct tre_array * a;
     treptr * v;
 
-    a = trealloc (sizeof (struct tre_array));
+    a = malloc (sizeof (struct tre_array));
     if (!a)
         return NULL;
 
-    v = trealloc (sizeof (treptr) * size);
+    v = malloc (sizeof (treptr) * size);
     if (!v) {
-        trealloc_free (a);
+        free (a);
 		return NULL;
     }
     a->values = v;
@@ -102,8 +101,8 @@ trearray_make (size_t size)
 void
 trearray_free (treptr array)
 {
-    trealloc_free (TREPTR_ARRAY(array)->values);
-    trealloc_free (TREPTR_ARRAY(array));
+    free (TREPTR_ARRAY(array)->values);
+    free (TREPTR_ARRAY(array));
 }
 
 treptr

@@ -2,12 +2,12 @@
  * tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
  */
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <ffi.h>
 
 #include "config.h"
 #include "ptr.h"
-#include "alloc.h"
 #include "atom.h"
 #include "cons.h"
 #include "list.h"
@@ -52,9 +52,9 @@ trefuncall_ffi (void * fun, treptr x)
     int         len = trelist_length (x) + 1;
 
     tregc_push (x);
-    args = trealloc (sizeof (ffi_type *) * len);
-    refs = trealloc (sizeof (treptr) * len);
-    values = trealloc (sizeof (void *) * len);
+    args = malloc (sizeof (ffi_type *) * len);
+    refs = malloc (sizeof (treptr) * len);
+    values = malloc (sizeof (void *) * len);
 	for (i = 0; x != treptr_nil; i++, x = CDR(x)) {
 		args[i] = &ffi_type_ulong;
 		refs[i] = CAR(x);
@@ -66,9 +66,9 @@ trefuncall_ffi (void * fun, treptr x)
 	else
         treerror_norecover (treptr_nil, "libffi: cif is not O.K.");
 
-    trealloc_free (args);
-    trealloc_free (refs);
-    trealloc_free (values);
+    free (args);
+    free (refs);
+    free (values);
     tregc_pop ();
 	return rc;
 }

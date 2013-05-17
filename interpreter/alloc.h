@@ -10,9 +10,6 @@
 extern treptr trealloc_used;
 extern treptr trealloc_unused;
 
-extern void * trealloc (size_t);
-extern void   trealloc_free (void *);
-
 extern void * trealloc_item (void * handle);
 extern void   trealloc_free_item (void * handle, void * item);
 extern void * trealloc_item_init (void * map, size_t num_items, size_t item_size);

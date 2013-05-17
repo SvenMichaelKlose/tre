@@ -12,9 +12,6 @@ struct tre_function {
     void *  native_expander;
 };
 
-extern void * tre_functions_free;
-extern struct tre_function tre_functions[NUM_FUNCTIONS];
-
 #define TREPTR_FUNCTION(ptr)                ((struct tre_function *) TREATOM_DETAIL(ptr))
 #define TREFUNCTION_SOURCE(ptr)             (TREPTR_FUNCTION(ptr)->source)
 #define TREFUNCTION_BYTECODE(ptr)           (TREPTR_FUNCTION(ptr)->bytecode)

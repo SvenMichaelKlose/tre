@@ -20,9 +20,6 @@ struct tre_number {
 #define TRENUMBER_CHARPTR(ptr) ((char *) (long) TREPTR_NUMBER(ptr)->value)
 #define TRENUMBER_TYPE(ptr)    TREPTR_NUMBER(ptr)->type
 
-extern void * tre_numbers_free;
-extern struct tre_number tre_numbers[NUM_NUMBERS];
-
 extern bool   trenumber_is_value (char *);
 
 extern struct tre_number * trenumber_alloc (double value, int type);

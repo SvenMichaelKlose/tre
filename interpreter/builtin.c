@@ -2,13 +2,13 @@
  * tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
  */
 
+#include <stdlib.h>
 #include <sys/mman.h>
 
 #include "config.h"
 #include "atom.h"
 #include "cons.h"
 #include "list.h"
-#include "alloc.h"
 #include "number.h"
 #include "string2.h"
 #include "argument.h"
@@ -251,7 +251,7 @@ trebuiltin_malloc (treptr args)
     len = trearg_get (args);
 	len = trearg_typed (1, TRETYPE_NUMBER, len, "%MALLOC");
 
-	ret = trealloc ((size_t) TRENUMBER_VAL(len));
+	ret = malloc ((size_t) TRENUMBER_VAL(len));
 
 	return treatom_number_get ((double) (long) ret, TRENUMTYPE_INTEGER);
 }
@@ -297,7 +297,7 @@ trebuiltin_free (treptr args)
     ptr = trearg_get (args);
 	ptr = trearg_typed (1, TRETYPE_NUMBER, ptr, "%FREE");
 
-	trealloc_free ((void *) (long) TRENUMBER_VAL(ptr));
+	free ((void *) (long) TRENUMBER_VAL(ptr));
 
 	return treptr_nil;
 }

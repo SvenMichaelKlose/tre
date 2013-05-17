@@ -34,7 +34,7 @@ struct tresymbol_root tresymbol_roots[MAX_PACKAGES];
 struct tresymbol_page *
 tresymbolpage_alloc ()
 {
-	void * r = trealloc (sizeof (struct tresymbol_page));
+	void * r = malloc (sizeof (struct tresymbol_page));
 	if (! r) {
 		fprintf (stderr, "tresymbolpage: out of memory");
 		exit (-1);
@@ -129,7 +129,7 @@ tresymbolpage_remove_rec (struct tresymbol_page * p, char * np)
 
 	if (x) {
 		if (tresymbolpage_remove_rec (p->entries[x], ++np) == 0) {
-			trealloc_free (p->entries[x]);
+			free (p->entries[x]);
 			p->entries[x] = NULL;
 		}
 	} else {
@@ -165,7 +165,7 @@ tresymbol_add (char * symbol)
     if (symbol == NULL)
 		return NULL;
 
-    nstr = trealloc (strlen (symbol) + 1);
+    nstr = malloc (strlen (symbol) + 1);
 	if (! nstr) {
 		printf ("tresymbol_add: out of memory\n");
 		exit (-1);
@@ -183,7 +183,7 @@ tresymbol_free (char *symbol)
     if (symbol == NULL)
         return;
 
-	trealloc_free (symbol);
+	free (symbol);
     num_symbols--;
 }
 

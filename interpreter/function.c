@@ -15,19 +15,16 @@
 #include "alloc.h"
 #include "symbol.h"
 
-void * tre_functions_free;
-struct tre_function tre_functions[NUM_FUNCTIONS];
-
 struct tre_function *
 trefunction_alloc ()
 {
-    struct tre_function * i = trealloc_item (&tre_functions_free);
+    struct tre_function * i = malloc (sizeof (struct tre_function));
 
     if (!i) {
         tregc_force ();
-    	i = trealloc_item (&tre_functions_free);
+    	i = malloc (sizeof (struct tre_function));
         if (!i)
-	    	treerror_internal (treptr_nil, "out of functions");
+	    	treerror_internal (treptr_nil, "out of memory for more functions");
     }
 
     i->source = treptr_nil;
@@ -57,11 +54,10 @@ trefunction_make (tre_type type, treptr source)
 void
 trefunction_free (treptr x)
 {
-	trealloc_free_item (&tre_functions_free, TREPTR_FUNCTION(x));
+	free (TREPTR_FUNCTION(x));
 }
 
 void
 trefunction_init ()
 {
-	tre_functions_free = trealloc_item_init (&tre_functions, NUM_FUNCTIONS, sizeof (struct tre_function));
 }

@@ -10,18 +10,6 @@
 #include "alloc.h"
 
 void *
-trealloc (size_t size)
-{
-    return malloc (size);
-}
-
-void
-trealloc_free (void * p)
-{
-    free (p);
-}
-
-void *
 trealloc_item (void * start)
 {
     void ** p = (void **) start;

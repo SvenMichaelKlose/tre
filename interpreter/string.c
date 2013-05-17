@@ -22,7 +22,7 @@ char *
 trestring_get_raw (size_t len)
 {
     size_t l = len + sizeof (size_t) + 1;
-    char * nstr = trealloc (l);
+    char * nstr = malloc (l);
 
     if (nstr == NULL)
 		return nstr;
@@ -74,7 +74,7 @@ trestring_get_binary (const char *str, size_t len)
 void
 trestring_free (treptr str)
 {
-    trealloc_free (TREPTR_STRING(str));
+    free (TREPTR_STRING(str));
 }
 
 treptr
