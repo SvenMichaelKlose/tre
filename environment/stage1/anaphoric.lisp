@@ -35,4 +35,11 @@
     `(dolist (! ,(car p) ,(cadr p))
        ,@body)))
 
+(defmacro adotimes (params &body body)
+  (let p (? (atom params)
+            (list params)
+            params)
+    `(dotimes (! ,(car p) ,(cadr p))
+       ,@body)))
+
 ; XXX tests missing
