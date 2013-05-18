@@ -54,6 +54,21 @@ treptr treatom_curly;
 treptr tre_package_keyword;
 
 void
+treatom_init_atom_table (void)
+{
+	size_t x;
+
+    tre_atoms_free = trealloc_item_init (
+		&tre_atoms[TREPTR_FIRST_INDEX],
+		NUM_ATOMS - TREPTR_FIRST_INDEX,
+		sizeof (struct tre_atom)
+	);
+	DOTIMES(x, NUM_ATOMS)
+	  tre_atom_types[x] = TRETYPE_UNUSED;
+}
+
+
+void
 treatom_init_truth (void)
 {
     ATOM_SET(TREPTR_NIL_INDEX, TRETYPE_SYMBOL);
@@ -67,20 +82,6 @@ treatom_init_truth (void)
     tre_atoms[TREPTR_T_INDEX].value = TRETYPE_INDEX_TO_PTR(TRETYPE_SYMBOL, TREPTR_T_INDEX);
     tre_atoms[TREPTR_T_INDEX].fun = treptr_nil;
 	tresymbolpage_add (treptr_t);
-}
-
-void
-treatom_init_atom_table (void)
-{
-	size_t x;
-
-    tre_atoms_free = trealloc_item_init (
-		&tre_atoms[TREPTR_FIRST_INDEX],
-		NUM_ATOMS - TREPTR_FIRST_INDEX,
-		sizeof (struct tre_atom)
-	);
-	DOTIMES(x, NUM_ATOMS - TREPTR_FIRST_INDEX)
-	  tre_atom_types[x + TREPTR_FIRST_INDEX] = TRETYPE_UNUSED;
 }
 
 void
@@ -128,8 +129,8 @@ treatom_init_big_bang ()
 void
 treatom_init (void)
 {
-    treatom_init_truth ();
     treatom_init_atom_table ();
+    treatom_init_truth ();
 	treatom_init_keyword_package ();
     treatom_init_big_bang ();
     treatom_init_builtins ();
