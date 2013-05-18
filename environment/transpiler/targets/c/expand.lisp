@@ -3,6 +3,9 @@
 (defmacro define-c-std-macro (&rest x)
   `(define-transpiler-std-macro *c-transpiler* ,@x))
 
+(defun c-expander-name (x)
+  ($ x '_treexp))
+
 (define-c-std-macro defun (name args &rest body)
   `(%%block
      ,(apply #'shared-defun name args body)
@@ -10,7 +13,7 @@
          (c-compiled-symbol fun-name)
          (unless (simple-argument-list? args)
            (with-gensym p
-             `((defun ,($ fun-name '_treexp) (,p)
+             `((defun ,(c-expander-name fun-name) (,p)
                  ,(compile-argument-expansion-function-body fun-name args p nil (argument-expand-names 'compile-argument-expansion args)))))))))
 
 (transpiler-wrap-invariant-to-binary define-c-std-macro eq 2 %%%eq &)

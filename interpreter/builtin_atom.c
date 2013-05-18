@@ -85,31 +85,6 @@ treatom_builtin_eql (treptr list)
 }
 
 treptr
-treatom_builtin_make_symbol (treptr args)
-{
-	size_t num_args = trelist_length (args);
-	treptr name;
-	treptr package;
-
-	if (num_args == 0 || num_args > 2)
-		args = treerror (treptr_nil, "name and optional package required");
-    name = trearg_typed (1, TRETYPE_STRING, CAR(args), "MAKE-SYMBOL");
-	package = num_args == 2 ? CADR(args) : TRECONTEXT_PACKAGE();
-
-    return treatom_get (TREPTR_STRINGZ(name), package);
-}
-
-
-treptr
-treatom_builtin_make_package (treptr args)
-{
-	treptr name = trearg_typed (1, TRETYPE_STRING, trearg_get (args), "MAKE-PACKAGE");
-	return strlen (TREPTR_STRINGZ(name)) == 0 ?
-		       tre_package_keyword :
-	           treatom_get (TREPTR_STRINGZ(name), TRECONTEXT_PACKAGE());
-}
-
-treptr
 treatom_builtin_atom (treptr list)
 {
     treptr x;
@@ -124,42 +99,6 @@ treptr
 treatom_builtin_arg (treptr list, int type, const char * descr)
 {
     return trearg_typed (1, type, trearg_get (list), descr);
-}
-
-treptr
-treatom_builtin_symbol_value (treptr list)
-{
-    return TRESYMBOL_VALUE(treatom_builtin_arg (list, TRETYPE_SYMBOL, "SYMBOL-VALUE"));
-}
-
-treptr
-treatom_builtin_usetf_symbol_value (treptr list)
-{
-    TRELIST_DEFREGS();
-    trearg_get2 (&car, &cdr, list);
-    return treatom_set_value (trearg_typed (2, TRETYPE_FUNCTION, cdr, "=-SYMBOL-VALUE"), car);
-}
-
-treptr
-treatom_builtin_symbol_function (treptr list)
-{
-    treptr arg = treatom_builtin_arg (list, TRETYPE_SYMBOL, "SYMBOL-FUNCTION");
-	return TREPTR_IS_BUILTIN(arg) ? arg : TRESYMBOL_FUN(arg);
-}
-
-treptr
-treatom_builtin_usetf_symbol_function (treptr list)
-{
-    TRELIST_DEFREGS();
-    trearg_get2 (&car, &cdr, list);
-    return treatom_set_function (trearg_typed (2, TRETYPE_FUNCTION, cdr, "=-SYMBOL-FUNCTION"),
-                                 trearg_typed (1, TRETYPE_SYMBOL, car, "=-SYMBOL-FUNCTION"));
-}
-
-treptr
-treatom_builtin_symbol_package (treptr list)
-{
-    return TRESYMBOL_PACKAGE(treatom_builtin_arg (list, TRETYPE_SYMBOL, "SYMBOL-PACKAGE"));
 }
 
 treptr
@@ -190,14 +129,6 @@ treatom_builtin_function_source (treptr list)
 {
     treptr arg = treatom_builtin_arg (list, TRETYPE_FUNCTION, "FUNCTION-BYTECODE");
 	return TREFUNCTION_SOURCE(arg) ? TREFUNCTION_SOURCE(arg) : treptr_nil;
-}
-
-treptr
-treatom_builtin_set_atom_fun (treptr list)
-{
-    TRELIST_DEFREGS();
-    trearg_get2 (&car, &cdr, list);
-    return treatom_set_function (trearg_typed (1, TRETYPE_SYMBOL, car, "%SET-ATOM-FUN"), treeval (cdr));
 }
 
 treptr

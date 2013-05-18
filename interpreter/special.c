@@ -31,6 +31,7 @@
 
 #include "builtin_debug.h"
 #include "builtin_atom.h"
+#include "builtin_symbol.h"
 
 #ifdef INTERPRETER
 
@@ -358,7 +359,7 @@ char *tre_special_names[] = {
 
 treevalfunc_t treeval_xlat_special[] = {
     trespecial_setq,
-    treatom_builtin_set_atom_fun,
+    tresymbol_builtin_set_atom_fun,
     trespecial_macro,
     trespecial_special,
 #ifdef INTERPRETER

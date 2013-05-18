@@ -29,6 +29,7 @@
 #include "builtin_debug.h"
 #include "builtin_error.h"
 #include "builtin_fileio.h"
+#include "builtin_function.h"
 #include "builtin_image.h"
 #include "builtin_list.h"
 #include "builtin_net.h"
@@ -36,6 +37,7 @@
 #include "builtin_sequence.h"
 #include "builtin_stream.h"
 #include "builtin_string.h"
+#include "builtin_symbol.h"
 #include "builtin_time.h"
 #include "main.h"
 #include "xxx.h"
@@ -405,15 +407,17 @@ char *tre_builtin_names[] = {
     "CHARACTER?",
 
     "NOT", "EQ", "EQL",
+	"ATOM", "SYMBOL?", "FUNCTION?", "BUILTIN?", "MACROP",
+    "%TYPE-ID", "%%ID",
+
     "MAKE-SYMBOL", "MAKE-PACKAGE",
-	"ATOM", "%TYPE-ID", "%%ID",
     "SYMBOL-VALUE", "=-SYMBOL-VALUE",
     "SYMBOL-FUNCTION", "=-SYMBOL-FUNCTION",
     "SYMBOL-PACKAGE",
+
     "FUNCTION-NATIVE",
     "FUNCTION-BYTECODE", "=-FUNCTION-BYTECODE",
     "FUNCTION-SOURCE",
-	"SYMBOL?", "FUNCTION?", "BUILTIN?", "MACROP",
 
 	"CONS", "LIST",
     "CAR", "CDR", "CPR", "RPLACA", "RPLACD", "RPLACP",
@@ -518,24 +522,26 @@ treevalfunc_t treeval_xlat_builtin[] = {
     treatom_builtin_not,
     treatom_builtin_eq,
     treatom_builtin_eql,
-    treatom_builtin_make_symbol,
-    treatom_builtin_make_package,
     treatom_builtin_atom,
-    treatom_builtin_type_id,
-    treatom_builtin_id,
-    treatom_builtin_symbol_value,
-    treatom_builtin_usetf_symbol_value,
-    treatom_builtin_symbol_function,
-    treatom_builtin_usetf_symbol_function,
-    treatom_builtin_symbol_package,
-    treatom_builtin_function_native,
-    treatom_builtin_function_bytecode,
-    treatom_builtin_usetf_function_bytecode,
-    treatom_builtin_function_source,
     treatom_builtin_symbolp,
     treatom_builtin_functionp,
     treatom_builtin_builtinp,
     treatom_builtin_macrop,
+    treatom_builtin_type_id,
+    treatom_builtin_id,
+
+    tresymbol_builtin_make_symbol,
+    tresymbol_builtin_make_package,
+    tresymbol_builtin_symbol_value,
+    tresymbol_builtin_usetf_symbol_value,
+    tresymbol_builtin_symbol_function,
+    tresymbol_builtin_usetf_symbol_function,
+    tresymbol_builtin_symbol_package,
+
+    trefunction_builtin_function_native,
+    trefunction_builtin_function_bytecode,
+    trefunction_builtin_usetf_function_bytecode,
+    trefunction_builtin_function_source,
 
     trelist_builtin_cons,
     trelist_builtin_list,
