@@ -75,9 +75,12 @@ trelist_free_toplevel (treptr node)
 void
 trelist_gc ()
 {
+	if (tre_lists_free != treptr_nil)
+        return;
+
 	tregc_force ();
    	if (tre_lists_free == treptr_nil)
-    	treerror_internal (treptr_invalid, "no more free list elements");
+    	treerror_internal (treptr_invalid, "out of conses");
 }
 
 treptr
@@ -88,10 +91,9 @@ _trelist_get (treptr car, treptr cdr)
     tregc_push (car);
     tregc_push (cdr);
 
-	if (tre_lists_free == treptr_nil)
-		tregc_force ();
-    ret = tre_lists_free;
+	trelist_gc ();
 
+    ret = tre_lists_free;
     tre_lists_free = _CDR(ret);
     _CAR(ret) = car;
     _CDR(ret) = cdr;
@@ -117,10 +119,10 @@ trecons_init ()
     size_t  i;
 
     for (i = 0; i < LAST_LISTNODE; i++)
-		tre_lists[i].cdr = (treptr) i + 1;
-    tre_lists[LAST_LISTNODE].cdr = TREPTR_NIL();
+		_CDR(i) = (treptr) i + 1;
+    _CDR(LAST_LISTNODE) = TREPTR_NIL();
 
     tre_lists_free = 0;
-    trelist_num_used = 0;
     tre_default_listprop = treptr_nil;
+    trelist_num_used = 0;
 }
