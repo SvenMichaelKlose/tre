@@ -20,6 +20,7 @@ FILES="
 	builtin_debug.c
 	builtin_error.c
 	builtin_fileio.c
+	builtin_function.c
 	builtin_image.c
 	builtin_list.c
 	builtin_net.c
@@ -27,6 +28,7 @@ FILES="
 	builtin_sequence.c
 	builtin_stream.c
 	builtin_string.c
+	builtin_symbol.c
 	builtin_time.c
 
 	bytecode.c
@@ -73,11 +75,11 @@ C_DIALECT_FLAGS="-ansi -Wall -Wextra"
 CFLAGS="-pipe $C_DIALECT_FLAGS $GNU_LIBC_FLAGS $BUILD_MACHINE_INFO $ARGS"
 
 DEBUGOPTS="-O0 -g"
-BUILDOPTS="-Ofast"
+BUILDOPTS="-Ofast -flto"
 CRUNSHOPTS="-Ofast --whole-program -flto"
 CRUNSHFLAGS="-DTRE_COMPILED_CRUNSHED -Iinterpreter"
 
-LIBFLAGS="-lm -lffi -ldl -lrt"
+LIBFLAGS="-lm -lffi -ldl -lrt -flto"
 
 if [ -f /lib/x86_64-linux-gnu/libdl.so* ]; then
 	LIBFLAGS="$LIBFLAGS -ldl";
