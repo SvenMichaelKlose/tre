@@ -87,7 +87,7 @@ tresymbolpage_add_rec (struct tresymbol_page * p, char * name, treptr atom, char
 		exit (-1);
 	}
 
-	p->name = name;
+	p->name = tresymbol_add (name);
 	p->atom = atom;
 
     return p;
@@ -133,6 +133,7 @@ tresymbolpage_remove_rec (struct tresymbol_page * p, char * np)
 			p->entries[x] = NULL;
 		}
 	} else {
+        tresymbol_free (p->name);
 		p->name = NULL;
 		p->atom = 0;
 	}
