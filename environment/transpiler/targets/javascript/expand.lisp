@@ -7,7 +7,7 @@
   (alet (| (lambda-name x) (gensym))
     (with-gensym g
       `(%%block
-         (%var ,g) ; XXX Not required without expander.
+         (%var ,g)
          ,(copy-lambda x :name ! :body (body-with-noargs-tag (lambda-body x)))
          (= (slot-value ,! 'tre-exp) ,(compile-argument-expansion g ! (lambda-args x)))
          ,!))))

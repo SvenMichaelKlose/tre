@@ -18,14 +18,15 @@
 	     ")")))
 
 (defun js-codegen-symbol-constructor (tr x)
-  (| (href *js-compiled-symbols* x)
-     (= (href *js-compiled-symbols* x)
-        (let g (compiled-symbol-identifier x)
-          (push `("var " ,(transpiler-obfuscated-symbol-string tr g)
-                         "=" ,@(js-codegen-symbol-constructor-expr tr x)
-                         ,*js-separator*)
-                (transpiler-raw-decls tr))
-          g))))
+  (alet *js-compiled-symbols*
+    (| (href ! x)
+       (= (href ! x)
+          (let g (compiled-symbol-identifier x)
+            (push `("var " ,(transpiler-obfuscated-symbol-string tr g)
+                           "=" ,@(js-codegen-symbol-constructor-expr tr x)
+                           ,*js-separator*)
+                  (transpiler-raw-decls tr))
+            g)))))
 
 (define-codegen-macro-definer define-js-macro *js-transpiler*)
 
@@ -213,19 +214,10 @@
 ;;;; METACODES
 
 (define-js-macro %quote (x)
-  (? (not (string== "" (symbol-name x))) ;XXX
-	 (js-codegen-symbol-constructor *transpiler* x)
-	 x))
+  (js-codegen-symbol-constructor *transpiler* x))
 
 (define-js-macro %slot-value (x y)
-  `(%transpiler-native
-       ,(? (cons? x)
-           x
-           (transpiler-obfuscated-symbol-string *transpiler* x))
-       "."
-       ,(? (cons? y)
-           y
-           (transpiler-obfuscated-symbol-string *transpiler* y))))
+  `(%transpiler-native ,x "." ,y))
 
 (define-js-macro %try ()
   '(%transpiler-native "try {"))

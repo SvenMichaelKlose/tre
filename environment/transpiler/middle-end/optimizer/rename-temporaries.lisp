@@ -5,7 +5,6 @@
      (%setq-place x)
      (atom x)))
 
-; XXX make new predicate
 (def-opt-peephole-fun opt-peephole-rename-temporaries
   (& (assignment-to-symbol? a)
      (%setq? d.)
@@ -17,9 +16,8 @@
           (| (eq (%setq-place d.) plc)
              (not (opt-peephole-will-be-used-again? .d plc))))))
     (with (plc (%setq-place a)
-           val (%setq-value d.)
-           fi *funinfo*)
-      (funinfo-vars-adjoin fi '~%tmp)
+           val (%setq-value d.))
+      (funinfo-vars-adjoin *funinfo* '~%tmp)
       `((%setq ~%tmp ,(%setq-value a))
         (%setq ,(%setq-place d.) ,(replace-tree plc '~%tmp val :test #'eq))
         ,@.d)))
