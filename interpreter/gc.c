@@ -156,13 +156,6 @@ tregc_init_maps ()
 }
 
 void
-tregc_mark_non_internal ()
-{
-    tregc_trace_object (treptr_universe);
-    tregc_trace_object (treimage_initfun);
-}
-
-void
 tregc_mark_stack (void)
 {
 	treptr * s;
@@ -171,21 +164,24 @@ tregc_mark_stack (void)
 }
 
 void
-tregc_mark (void)
+tregc_mark (bool do_mark_only)
 {
 	tregc_init_maps ();
-    tregc_mark_non_internal ();
-    tregc_mark_stack ();
 
-    tregc_trace_list (TRECONTEXT_FUNSTACK());
+    tregc_trace_object (treptr_universe);
+    tregc_trace_object (treimage_initfun);
     tregc_trace_tree (tregc_unremovables);
-
-    tregc_trace_object (tregc_retval_current);
-
-    tregc_trace_list (tre_lists_free);
 
     tregc_trace_atom (tre_atom_evaluated_go);
     tregc_trace_atom (tre_atom_evaluated_return_from);
+
+    if (do_mark_only)
+        return;
+
+    tregc_mark_stack ();
+    tregc_trace_list (TRECONTEXT_FUNSTACK());
+    tregc_trace_object (tregc_retval_current);
+    tregc_trace_list (tre_lists_free);
 }
  
 void
@@ -196,38 +192,39 @@ tregc_sweep (void)
     size_t idx;
     char   c;
 
+    idx = 0;
     DOTIMES(i, sizeof (tregc_atommarks)) {
 		c = 1;
 		DOTIMES(j, 8) {
-	    	if (tregc_atommarks[i] & c) {
-	        	idx = (i << 3) + j;
+	    	if (tregc_atommarks[i] & c)
                 if (tre_atom_types[idx] != TRETYPE_UNUSED)
 	           	    treatom_remove (TREATOM_TO_PTR(idx));
-            }
 
 	    	c <<= 1;
+            idx++;
         }
     }
 
+    idx = 0;
     DOTIMES(i, sizeof (tregc_listmarks)) {
         c = 1;
 		DOTIMES(j, 8) {
-	    	if (tregc_listmarks[i] & c) {
-	        	idx = (i << 3) + j;
+	    	if (tregc_listmarks[i] & c)
 	        	trelist_free (idx);
-            }
 
 	    	c <<= 1;
+            idx++;
         }
     }
 }
 
 void
-tregc_pass (void)
+tregc_pass (bool do_mark_only)
 {
     tregc_running = TRUE;
-    tregc_mark ();
-    tregc_sweep ();
+    tregc_mark (do_mark_only);
+    if (!do_mark_only)
+        tregc_sweep ();
     tregc_running = FALSE;
 }
 
@@ -242,29 +239,19 @@ tregc_force ()
     tregc_print_stats ();
 #endif
 
-    tregc_pass ();
+    tregc_pass (FALSE);
 
 #ifdef TRE_VERBOSE_GC
     printf (" after gc");
     tregc_print_stats ();
 	fflush (stdout);
 #endif
-
 }
 
 void
-tregc_force_user ()
+tregc_mark_only ()
 {
-    if (tregc_running)
-		return;
-
-    printf ("\nbefore gc");
-    tregc_print_stats ();
-
-    tregc_pass ();
-
-    printf (" after gc");
-    tregc_print_stats ();
+    tregc_pass (TRUE);
 }
 
 void

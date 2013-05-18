@@ -13,9 +13,8 @@ extern char   tregc_atommarks[NUM_ATOMS >> 3];
 extern treptr tregc_retval_current;
 
 extern void   tregc_trace_object (treptr);
-extern void   tregc_mark_non_internal (void);
-extern void   tregc_force (void);
-extern void   tregc_force_user (void);
+extern void   tregc_force ();
+extern void   tregc_mark_only ();
 extern void   tregc_init (void);
 
 extern void   tregc_push (treptr);
