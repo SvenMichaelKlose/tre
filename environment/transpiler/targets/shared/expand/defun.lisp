@@ -51,9 +51,11 @@
 (defun shared-defun (name args &rest body)
   (= name (apply-current-package name))
   (print-definition `(defun ,name ,args))
+  (| (list? args)
+     (error "Argument list expected instead of ~A." args))
   (let tr *transpiler*
     (& (transpiler-defined-function tr name)
-       (redef-warn "redefinition of function ~A.~%" name))
+       (redef-warn "Redefinition of function ~A." name))
 	(transpiler-add-defined-function tr name args body)
 	`(%%block
        (function ,name (,args
