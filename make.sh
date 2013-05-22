@@ -75,8 +75,8 @@ C_DIALECT_FLAGS="-ansi -Wall -Wextra"
 CFLAGS="-pipe $C_DIALECT_FLAGS $GNU_LIBC_FLAGS $BUILD_MACHINE_INFO $ARGS"
 
 DEBUGOPTS="-O0 -g"
-BUILDOPTS="-Ofast -flto"
-CRUNSHOPTS="-Ofast --whole-program -flto"
+BUILDOPTS="-Ofast --whole-program -flto -march=native -mtune=native"
+CRUNSHOPTS="-Ofast --whole-program -march=native -mtune=native"
 CRUNSHFLAGS="-DTRE_COMPILED_CRUNSHED -Iinterpreter"
 
 LIBFLAGS="-lm -lffi -ldl -lrt -flto"
