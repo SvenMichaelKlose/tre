@@ -1,5 +1,7 @@
 ;;;;; tré – Copyright (c) 2008–2010,2012–2013 Sven Michael Klose <pixel@copei.de>
 
+; XXX This doesn't work yet!
+
 (defconstant *alien-xml-tmp* "__alien.tmp")
 (defconstant *gccxml-path* "/usr/bin/gccxml")
 
