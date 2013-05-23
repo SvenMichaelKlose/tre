@@ -97,7 +97,6 @@ treeval_funcall (treptr func, treptr args, bool do_argeval)
     tregc_push (old_bindings);
 
     ret = treeval_list (body);
-    tregc_retval (ret);
 
     tregc_pop ();
     treeval_unbind (old_bindings);
@@ -120,7 +119,6 @@ treeval_xlat_function (treevalfunc_t *xlat, treptr func, treptr args, bool do_ar
     tregc_push (evaldargs);
 
     ret = xlat[(size_t) TREATOM_DETAIL(func)] (evaldargs);
-    tregc_retval (ret);
 
     tregc_pop ();
     TRELIST_FREE_TOPLEVEL_EARLY(evaldargs);
@@ -182,7 +180,6 @@ treeval (treptr x)
         case TRETYPE_SYMBOL: val = TRESYMBOL_VALUE(x); break;
     }
 
-    tregc_retval (val);
     trethread_pop_call ();
     tregc_pop ();
 

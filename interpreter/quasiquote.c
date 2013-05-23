@@ -24,14 +24,9 @@ struct tre_atom *treatom_quasiquoteexpand_hook;
 treptr
 trequasiquote_expand (treptr list)
 {
-    treptr  ret;
-
-    if (treatom_quasiquoteexpand_hook->fun == treptr_nil)
-        return list;
-
-    ret = trefuncall (treatom_quasiquoteexpand_hook->fun, CONS(list, treptr_nil));
-	tregc_retval (ret);
-    return ret;
+    return treatom_quasiquoteexpand_hook->fun == treptr_nil ?
+               list :
+               trefuncall (treatom_quasiquoteexpand_hook->fun, CONS(list, treptr_nil));
 }
 
 void

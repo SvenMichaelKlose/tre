@@ -24,14 +24,9 @@ struct tre_atom *treatom_dotexpand_hook;
 treptr
 tredot_expand (treptr list)
 {
-    treptr  ret;
-
-    if (treatom_dotexpand_hook->fun == treptr_nil)
-        return list;
-
-    ret = trefuncall (treatom_dotexpand_hook->fun, CONS(list, treptr_nil));
-	tregc_retval (ret);
-    return ret;
+    return treatom_dotexpand_hook->fun == treptr_nil ?
+               list :
+               trefuncall (treatom_dotexpand_hook->fun, CONS(list, treptr_nil));
 }
 
 void

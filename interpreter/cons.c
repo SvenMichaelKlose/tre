@@ -98,14 +98,9 @@ _trelist_get (treptr car, treptr cdr)
     _CAR(ret) = car;
     _CDR(ret) = cdr;
     _CPR(ret) = TRESYMBOL_VALUE(tre_default_listprop);
-    tregc_retval (ret);
 
 #ifdef TRE_VERBOSE_GC
     trelist_num_used++;
-#endif
-#ifdef TRE_GC_DEBUG
-    if (tre_is_initialized)
-        tregc_force ();
 #endif
 
     tregc_pop ();

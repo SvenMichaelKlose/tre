@@ -35,7 +35,6 @@ char tregc_atommarks[NUM_ATOMS >> 3];
 #define _TREGC_FREE_ATOM(index)     TRE_MARK(tregc_atommarks, index)
 #define _TREGC_FREE_CONS(index)     TRE_MARK(tregc_listmarks, index)
 
-treptr tregc_retval_current;
 treptr tregc_unremovables;
 
 bool tregc_running;
@@ -57,12 +56,6 @@ void
 tregc_pop ()
 {
     trestack_ptr++;
-}
-
-void
-tregc_retval (treptr retval)
-{
-    tregc_retval_current = retval;
 }
 
 void
@@ -180,7 +173,6 @@ tregc_mark (bool do_mark_only)
 
     tregc_mark_stack ();
     tregc_trace_list (TRECONTEXT_FUNSTACK());
-    tregc_trace_object (tregc_retval_current);
     tregc_trace_list (tre_lists_free);
 }
  
@@ -284,6 +276,5 @@ void
 tregc_init ()
 {
     tregc_running = FALSE;
-    tregc_retval_current = treptr_nil;
     tregc_unremovables = treptr_nil;
 }
