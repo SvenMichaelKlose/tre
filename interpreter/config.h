@@ -35,29 +35,29 @@ typedef int bool;
 #define INTERPRETER
 
 #ifndef TRE_QUIET_LOAD
-#define TRE_VERBOSE_LOAD	/* Print what files are loaded. */
+#define TRE_VERBOSE_LOAD	        /* Print what files are loaded. */
 #endif
 
-#define TRE_MAX_SYMLEN		(4 * KILO)
-#define TRE_MAX_STRINGLEN	(64 * KILO)
+#define TRE_MAX_SYMLEN		        (4 * KILO)
+#define TRE_MAX_STRINGLEN	        (64 * KILO)
 
-#define TRE_MAX_NESTED_FILES	16
-#define TRE_FILEIO_MAX_FILES   16
+#define TRE_MAX_NESTED_FILES	    16
+#define TRE_FILEIO_MAX_FILES        16
 
-#define MAX_PACKAGES		128
+#define MAX_PACKAGES		        128
 
-#define TREDEBUG_MAX_ARGS	16
+#define TREDEBUG_MAX_ARGS	        16
 #define TREDEBUG_MAX_BREAKPOINTS	16
 
 #ifndef NUM_LISTNODES
-#define NUM_LISTNODES	(32 * MEGA)
+#define NUM_LISTNODES	            (32 * MEGA)
 #endif
 
 #ifndef NUM_ATOMS
-#define NUM_ATOMS	    (NUM_LISTNODES / 8)
+#define NUM_ATOMS	                (NUM_LISTNODES / 8)
 #endif
 
-#define TRESTACK_SIZE	(8 * MEGA)
+#define TRESTACK_SIZE	            (512 * KILO)
 
 #ifndef NULL
 #define NULL    ((void *) 0)
