@@ -4,9 +4,9 @@
 
 (defun remove-if (fun x)
   (with-queue q
-    (dolist (i x (queue-list q))
-      (| (funcall fun i)
-         (enqueue q i)))))
+    (adolist (x (queue-list q))
+      (| (funcall fun !)
+         (enqueue q !)))))
 
 (defun remove-if-not (fun x)
   (remove-if [not (funcall fun _)] x))
