@@ -1,8 +1,22 @@
 ;;;;; tré – Copyright (c) 2008–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
 
-(defun car (x) (& x x._))
-(defun cdr (x) (& x x.__))
-(defun cpr (x) (& x x._p))
+(defun car (x)
+  (? x
+     (? (atom x)
+        (error "cons or NIL expected instead of ~A")
+        x._)))
+
+(defun cdr (x)
+  (? x
+     (? (atom x)
+        (error "cons or NIL expected instead of ~A")
+        x.__)))
+
+(defun cpr (x)
+  (? x
+     (? (atom x)
+        (error "cons or NIL expected instead of ~A")
+        x._p)))
 
 (defvar *rplaca-breakpoints* nil)
 (defvar *rplacd-breakpoints* nil)
