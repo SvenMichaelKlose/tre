@@ -39,11 +39,14 @@
 (define-js-macro %%go (tag)
   `(,*js-indent* "_I_=" ,tag ";continue" ,*js-separator*))
 
+(defun js-nil? (x)
+  `("(!" ,x "&&" ,x "!==0&&" ,x "!=='')"))
+
 (define-js-macro %%go-nil (tag val)
-  `(,*js-indent* "if(!" ,val "&&" ,val "!==0&&" ,val "!==''){_I_=" ,tag ";continue;}" ,*js-newline*))
+  `(,*js-indent* "if" ,(js-nil? val) "{_I_=" ,tag ";continue;}" ,*js-newline*))
 
 (define-js-macro %%call-nil (val consequence alternative)
-  `(,*js-indent* "if(!" ,val "&&" ,val "!==0&&" ,val "!=='')"
+  `(,*js-indent* "if",(js-nil? val)
                      ,consequence "();"
                  "else "
                      ,alternative "();" ,*js-newline*))
