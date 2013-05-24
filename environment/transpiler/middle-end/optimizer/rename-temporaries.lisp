@@ -20,4 +20,4 @@
       (funinfo-vars-adjoin *funinfo* '~%tmp)
       `((%setq ~%tmp ,(%setq-value a))
         (%setq ,(%setq-place d.) ,(replace-tree plc '~%tmp val :test #'eq))
-        ,@.d)))
+        ,@(opt-peephole-rename-temporaries .d))))

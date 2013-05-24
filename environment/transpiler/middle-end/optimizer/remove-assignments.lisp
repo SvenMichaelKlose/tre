@@ -9,4 +9,5 @@
 
 (def-opt-peephole-fun opt-peephole-remove-assignments
   (assignment-to-unneccessary-temoporary? a d)
-    (opt-peephole-remove-assignments (cons `(%setq ,(%setq-place d.) ,(%setq-value a)) .d)))
+    (opt-peephole-remove-assignments (cons `(%setq ,(%setq-place d.) ,(%setq-value a))
+                                           (opt-peephole-remove-assignments .d))))

@@ -60,15 +60,14 @@
                       _]
                   _]
 	   rec
-		 [funcall (compose #'opt-peephole-remove-void
-                           #'opt-peephole-remove-%%go-nil-heads
-                           #'opt-peephole-rename-temporaries
-                           #'opt-peephole-remove-code
-                           #'opt-peephole-remove-assignments
-                           #'opt-peephole-remove-identity
+		 [funcall (compose
                            #'opt-peephole-remove-spare-tags
                            #'translate-tags
-                           #'reduce-tags)
+                           #'reduce-tags
+                           #'opt-peephole-remove-void
+                           #'opt-peephole-rename-temporaries
+                           #'opt-peephole-remove-code
+                           #'opt-peephole-remove-assignments)
                   _])
   (? *opt-peephole?*
      (with-temporaries (*funinfo* (transpiler-global-funinfo *transpiler*)
