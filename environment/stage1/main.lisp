@@ -38,7 +38,7 @@
 (env-load "stage1/comparison-c.lisp" 'c)
 (env-load "stage1/funcall.lisp" 'c)
 (env-load "stage1/loops.lisp")
-(env-load "stage1/member.lisp" 'c)
+(env-load "stage1/member.lisp")
 (env-load "stage1/slot-value-p.lisp")
 (env-load "stage1/=-function?.lisp" 'c)
 (env-load "stage1/=.lisp")

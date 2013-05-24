@@ -1,11 +1,10 @@
 ;;;;; tré – Copyright (c) 2005–2006,2008,2010–2013 Sven Michael Klose <pixel@copei.de>
 
-(? (not (eq t *BUILTIN-MEMBER*))
-   (defun member (elm lst &key (test #'eql))
-     (do ((i lst (cdr i)))
-         ((not i))
-       (? (funcall test elm (car i))
-          (return-from member i)))))
+(defun member (elm lst &key (test #'eql))
+  (do ((i lst (cdr i)))
+      ((not i))
+    (? (funcall test elm (car i))
+       (return-from member i))))
 
 (define-test "MEMBER finds elements"
   ((? (member 's '(l i s p))
