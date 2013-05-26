@@ -76,7 +76,7 @@
   (not fi)              (error "place-expand-0: no funinfo")
   (atom x)              (place-expand-atom fi x)
   (| (%quote? x)
-     (%transpiler-native? x)
+     (%%native? x)
      (%var? x))
                         x
   (named-lambda? x)     (place-expand-fun x)

@@ -9,7 +9,7 @@
 
 (defun %property-list (hash)
   (= *%property-list-tmp* nil)
-  (%setq nil (%transpiler-native
+  (%setq nil (%%native
                  "for (var k in " hash ") "
                      "if (k != \"" '__tre-object-id "\" && k != \"" '__tre-test "\") "
                          ,(compiled-function-name-string *transpiler* '%property-list-0) "(typeof k == \"string\" ? (" *obj-keys* "[k] || k) : k, " hash "[k]);"))

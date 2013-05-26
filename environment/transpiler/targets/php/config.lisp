@@ -31,7 +31,7 @@
   (aprog1 (make-php-transpiler-0)
 	(apply #'transpiler-add-obfuscation-exceptions !
 	    '(t this %funinfo false true null
-		  %transpiler-native %transpiler-string
+		  %%native %transpiler-string
 		  lambda function
 		  &key &optional &rest
 		  table tbody td tr ul li hr img div p html head body a href src

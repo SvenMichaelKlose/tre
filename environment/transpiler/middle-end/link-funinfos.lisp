@@ -52,7 +52,7 @@
   (not fi)              (error "LINK-FUNINFOS-0: no funinfo")
   (atom x)              (link-funinfos-atom fi x)
   (| (%quote? x)
-     (%transpiler-native? x)
+     (%%native? x)
      (%var? x))
                         nil
   (named-lambda? x)     (link-funinfos-fun x)

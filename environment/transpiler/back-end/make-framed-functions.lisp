@@ -20,7 +20,7 @@
         ,@(mapcan [& (funinfo-lexical? fi _)
 				     `((%setq ,_ ,(? (transpiler-arguments-on-stack? *transpiler*)
                                      `(%stackarg ,(funinfo-name fi) ,_)
-                                     `(%transpiler-native ,_))))]
+                                     `(%%native ,_))))]
 				  (funinfo-args fi))))))
 
 (defun make-framed-function (x)

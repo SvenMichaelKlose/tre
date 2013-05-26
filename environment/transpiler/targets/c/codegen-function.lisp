@@ -1,6 +1,4 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
-;;;;;
-;;;;; Environment without extra GC'ed stack.
 
 (defun c-codegen-function-prologue-for-local-variables (fi num-vars)
   `(,@(c-line "treptr _local_array = trearray_make (" num-vars ")")
@@ -16,7 +14,7 @@
     (%function-return ,name)))
 
 (define-c-macro %function-return (name)
-  `(%transpiler-native ,@(c-line "return " (place-assign (place-expand-0 (get-funinfo name) '~%ret)))))
+  `(%%native ,@(c-line "return " (place-assign (place-expand-0 (get-funinfo name) '~%ret)))))
 
 (defun c-stack (x)
   `("_TRELOCAL(" ,x ")"))

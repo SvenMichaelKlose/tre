@@ -8,7 +8,7 @@
 (define-tree-filter translate-function-names (tr fi x) ; XXX use metacode-walker instead
   (named-lambda? x)          (copy-lambda x :body (translate-function-names tr (get-lambda-funinfo x) (lambda-body x)))
   (| (%quote? x)
-     (%transpiler-native? x)
+     (%%native? x)
      (%%closure? x)
      (%function-prologue? x)
      (%function-epilogue? x)
@@ -18,4 +18,4 @@
   (& (atom x)
      (| (not (funinfo-parent fi))
         (not (funinfo-arg-or-var? fi x))))
-	                         (translate-function-name tr x))
+                             (translate-function-name tr x))

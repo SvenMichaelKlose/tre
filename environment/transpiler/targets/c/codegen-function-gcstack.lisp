@@ -18,7 +18,7 @@
       (%function-return ,name))))
 
 (define-c-macro %function-return (name)
-  `(%transpiler-native ,@(c-line "return __ret")))
+  `(%%native ,@(c-line "return __ret")))
 
 (defun c-stack (x)
   `("trestack_ptr[" ,x "]"))

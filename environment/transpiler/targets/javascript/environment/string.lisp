@@ -4,7 +4,7 @@
 
 (defun string? (x)
   (| (%string? x)
-     (instanceof x (%transpiler-native "String"))))
+     (instanceof x (%%native "String"))))
 
 (dont-obfuscate push join)
 

@@ -76,7 +76,7 @@
         (not (funinfo-toplevel-var? *expex-funinfo* x)))
      (not (| (atom x)
              (literal-symbol-function? x)
-             (in? x. '%%go '%%go-nil '%transpiler-native '%transpiler-string '%quote)))))
+             (in? x. '%%go '%%go-nil '%%native '%transpiler-string '%quote)))))
 
 (defun expex-expandable-args? (ex fun)
   (| (transpiler-defined-function *transpiler* fun)

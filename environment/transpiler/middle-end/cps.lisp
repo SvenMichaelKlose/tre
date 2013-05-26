@@ -48,7 +48,7 @@
 ;(defun cps-foureign-funcall? (x)
 ;  (& (%setq-funcall? x)
 ;       (let n (car (%setq-value x))
-;         (& (not (%transpiler-native? n))
+;         (& (not (%%native? n))
 ;              (| (& (atom n)
 ;                       (not (transpiler-defined-function *transpiler* n)
 ;                            (transpiler-cps-function? *transpiler* n)
@@ -198,18 +198,18 @@
 
 (defun cps-body (fi continuer x xlats tag-xlats &key (first? t) exit-tag)
   (?
-    (not x) (cons nil nil)
-    (number? x.) (cps-body-tag fi continuer x xlats tag-xlats first? exit-tag)
+    (not x)                   (cons nil nil)
+    (number? x.)              (cps-body-tag fi continuer x xlats tag-xlats first? exit-tag)
     (cps-splitpoint-expr? x.) (cps-body-splitpoint fi x xlats tag-xlats first?)
     (cps-funcall-with-literal-continuer? x) (cps-body-exit fi continuer x xlats tag-xlats first? exit-tag)
-    (not .x) (cps-body-epilogue continuer x exit-tag)
+    (not .x)                  (cps-body-epilogue continuer x exit-tag)
     (cons x. (cps-body fi continuer .x xlats tag-xlats :first? nil :exit-tag exit-tag))))
 
 (defun cps-make-functions (fi continuer x xlats tag-xlats)
   (when x
     (with (chunk (cps-body fi continuer x xlats tag-xlats :exit-tag (gensym-number))
-           body (butlast chunk)
-           next (caar (last chunk)))
+           body  (butlast chunk)
+           next  (caar (last chunk)))
       `((%setq ,(assoc-value x xlats) ,(copy-lambda `#'(()
                                                          ,@body)
                                                     :info (make-funinfo :parent fi :args nil)))
@@ -230,9 +230,9 @@
 (defun cps-get-xlats (x &key (first? t))
   (when x
     (?
-      (number? x.) (cps-get-xlat-simple x)
+      (number? x.)              (cps-get-xlat-simple x)
       (cps-splitpoint-expr? x.) (cps-get-xlat-expr x first?)
-      first? (cps-get-xlat-simple x)
+      first?                    (cps-get-xlat-simple x)
       (cps-get-xlats .x :first? nil))))
 
 (defun cps-get-tag-xlats (x)
@@ -243,13 +243,13 @@
 
 (defun cps-function (x)
   (with (continuer '~%continuer
-         new-args (cons continuer (lambda-args x))
-         fi (get-lambda-funinfo x))
+         new-args  (cons continuer (lambda-args x))
+         fi        (get-lambda-funinfo x))
     (= (funinfo-args fi) new-args)
     (copy-lambda x
         :args new-args
-        :body (with (body (cps-filter (lambda-body x))
-                     xlats (cps-get-xlats body)
+        :body (with (body      (cps-filter (lambda-body x))
+                     xlats     (cps-get-xlats body)
                      tag-xlats (cps-get-tag-xlats body))
                 (funinfo-var-add fi '~%cps-this)
                 `(,@(mapcar ^(%var ,_) (cdrlist xlats))
@@ -257,13 +257,13 @@
                   ,@(cps-make-functions (get-lambda-funinfo x) continuer body xlats tag-xlats)
                   (%setq nil (,(cdar xlats))))))))
 
-(defun %quote-%transpiler-native-or-%var? (x)
+(defun %quote-%%native-or-%var? (x)
   (| (%quote? x)
-     (%transpiler-native? x)
+     (%%native? x)
      (%var? x)))
 
 (define-concat-tree-filter cps-filter (x)
-  (%quote-%transpiler-native-or-%var? x) (list x)
+  (%quote-%%native-or-%var? x) (list x)
   (eq 'this x) (list '~%cps-this))
 
 (defun cps-make-dummy-continuer (place parent-fi)
@@ -275,16 +275,15 @@
 
 (defun cps-toplevel-constructorcall (x)
   (with (constructor (cadr (%setq-value x))
-         tag-no-cps (make-compiler-tag)
-         tag-end (make-compiler-tag)
-         fi (transpiler-global-funinfo *transpiler*))
+         tag-no-cps  (make-compiler-tag)
+         tag-end     (make-compiler-tag)
+         fi          (transpiler-global-funinfo *transpiler*))
     (with-gensym g
       (funinfo-var-add fi g)
       `((%setq ,g (%defined? (%slot-value ,constructor tre-cps)))
         (%%go-nil ,tag-no-cps ,g)
         (%%go-nil ,tag-no-cps (%slot-value ,constructor tre-cps))
-        ,@(cps-split-constructorcall-0 fi (list x)
-              (cps-make-dummy-continuer (%setq-place x) fi))
+        ,@(cps-split-constructorcall-0 fi (list x) (cps-make-dummy-continuer (%setq-place x) fi))
         (%%go ,tag-end)
         ,tag-no-cps
         ,x
@@ -296,9 +295,9 @@
                 ,@(cdr (%setq-value x))))))
 
 (defun cps-toplevel-methodcall (x)
-  (with (method (car (%setq-value x))
+  (with (method     (car (%setq-value x))
          tag-no-cps (make-compiler-tag)
-         tag-end (make-compiler-tag))
+         tag-end    (make-compiler-tag))
     (with-gensym g
       `((%setq ,g (%defined? (%slot-value ,method tre-cps)))
         (%%go-nil ,tag-no-cps ,g)
@@ -310,11 +309,11 @@
         ,tag-end))))
 
 (define-concat-tree-filter cps-toplevel (x)
-  (%quote-%transpiler-native-or-%var? x) (list x)
-  (cps-methodcall? x) (cps-toplevel-methodcall x)
-  (cps-constructorcall? x) (cps-toplevel-constructorcall x)
-  (cps-funcall? x) (cps-toplevel-funcall x)
-  (cps-foureign-funcall? x) (cps-foureign-funcall (transpiler-global-funinfo *transpiler*) x))
+  (%quote-%%native-or-%var? x) (list x)
+  (cps-methodcall? x)          (cps-toplevel-methodcall x)
+  (cps-constructorcall? x)     (cps-toplevel-constructorcall x)
+  (cps-funcall? x)             (cps-toplevel-funcall x)
+  (cps-foureign-funcall? x)    (cps-foureign-funcall (transpiler-global-funinfo *transpiler*) x))
 
 (defun cps (x)
   (cps-toplevel x))

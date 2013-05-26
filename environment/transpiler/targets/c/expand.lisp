@@ -26,17 +26,17 @@
 
 (defun single-index? (x)
   (& (== 1 (length x))
-     (not (%transpiler-native? x.))
+     (not (%%native? x.))
      (number? x.)))
 
 (define-c-std-macro =-aref (val arr &rest idx)
   (? (single-index? idx)
-    `(%immediate-set-aref ,val ,arr (%transpiler-native ,idx.))
+    `(%immediate-set-aref ,val ,arr (%%native ,idx.))
     `(=-%aref ,val ,arr ,@idx)))
 
 (define-c-std-macro aref (arr &rest idx)
   (? (single-index? idx)
-     `(%immediate-aref ,arr (%transpiler-native ,idx.))
+     `(%immediate-aref ,arr (%%native ,idx.))
      `(%aref ,arr ,@idx)))
 
 (define-c-std-macro %%%nanotime ()

@@ -8,6 +8,6 @@
 	  (userfun_cdr __))
   (unless *assert*
     `((define-js-macro ,p. (x)
-        `(%transpiler-native ,,(js-nil? x) " ? null : " ,,x "." ,.p.))
+        `(%%native ,,(js-nil? x) " ? null : " ,,x "." ,.p.))
       (define-js-macro ,.p. (v x)
-        `(%transpiler-native ,,x "." ,.p. " = " ,,v)))))
+        `(%%native ,,x "." ,.p. " = " ,,v)))))

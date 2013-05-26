@@ -1,6 +1,5 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
-
 ;;;; GENERAL CODE GENERATION
 
 (defun c-line (&rest x)
@@ -79,16 +78,16 @@
       `(,val. ,@(parenthized-comma-separated-list .val))))
 
 (define-c-macro %setq (dest val)
-  (c-line `((%transpiler-native ,@(codegen-%setq-place dest val)) ,(codegen-%setq-value val))))
+  (c-line `((%%native ,@(codegen-%setq-place dest val)) ,(codegen-%setq-value val))))
 
 (define-c-macro %set-atom-fun (dest val)
-  `(%transpiler-native ,dest "=" ,val ,*c-separator*))
+  `(%%native ,dest "=" ,val ,*c-separator*))
 
 
 ;;;; ARGUMENT EXPANSION CONSING
 
 (define-c-macro %%%cons (a d)
-  `(%transpiler-native "CONS(" ,a ", " ,d ")"))
+  `(%%native "CONS(" ,a ", " ,d ")"))
 
 
 ;;;; STACK
@@ -102,7 +101,7 @@
 
 (defun c-make-array (size)
   (? (number? size)
-     `("trearray_make (" (%transpiler-native ,size) ")")
+     `("trearray_make (" (%%native ,size) ")")
      `("trearray_get (CONS (" ,size ", treptr_nil))")))
 
 (define-c-macro %make-lexical-array (size)
@@ -112,20 +111,20 @@
   `("_TREVEC(" ,vec "," ,index ")"))
 
 (define-c-macro %set-vec (vec index value)
-  (c-line `(%transpiler-native "_TREVEC(" ,vec "," ,index ") = " ,(codegen-%setq-value value))))
+  (c-line `(%%native "_TREVEC(" ,vec "," ,index ") = " ,(codegen-%setq-value value))))
 
 
 ;;;; CONTROL FLOW
 
 (define-c-macro %%tag (tag)
-  `(%transpiler-native "l" ,tag ":" ,*c-newline*))
+  `(%%native "l" ,tag ":" ,*c-newline*))
  
 (define-c-macro %%go (tag)
-  (c-line `(%transpiler-native "goto l" ,tag)))
+  (c-line `(%%native "goto l" ,tag)))
 
 (define-c-macro %%go-nil (tag val)
   `(,*c-indent* "if (" ,val " == treptr_nil)" ,*c-newline*
-	,*c-indent* ,@(c-line `(%transpiler-native "goto l" ,tag))))
+	,*c-indent* ,@(c-line `(%%native "goto l" ,tag))))
 
 
 ;;;; SYMBOLS
@@ -150,7 +149,7 @@
 (defun c-make-aref (arr idx)
   `("TREARRAY_VALUES(" ,arr ")["
 	    ,(? (| (number? idx)
-               (%transpiler-native? idx))
+               (%%native? idx))
 		  	idx
 			`("(size_t)TRENUMBER_VAL(" ,idx ")"))
 		"]"))

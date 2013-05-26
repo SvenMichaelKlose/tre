@@ -24,5 +24,5 @@
 (dont-inline array-find)
 
 (defun array-find (arr obj)
-  (%setq nil (%transpiler-native "return " arr ".indexOf (" obj ") != -1;"))
+  (%setq nil (%%native "return " arr ".indexOf (" obj ") != -1;"))
   nil)

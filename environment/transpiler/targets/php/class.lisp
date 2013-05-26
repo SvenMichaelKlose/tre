@@ -41,7 +41,7 @@
 
 (defun php-members (class-name cls)
   (awhen (class-members cls)
-	(mapcar ^(%transpiler-native "var $" ,_. ,*php-separator*)
+	(mapcar ^(%%native "var $" ,_. ,*php-separator*)
             (reverse !))))
 
 (defun php-methods (class-name cls)
@@ -60,7 +60,7 @@
                 x))
 	       ,(assoc-value class-name *delayed-constructors*)
            ,@(php-method-functions class-name !)
-           (%setq nil (%transpiler-native
+           (%setq nil (%%native
                         (%php-class-head ,class-name)
                         ,(alet (argument-expand-names 'php-constructor-function (transpiler-function-arguments *transpiler* class-name))
                            `("public function __construct " ,(php-argument-list !) ,*php-newline*

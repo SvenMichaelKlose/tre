@@ -10,8 +10,8 @@
          args (%nconc (butlast .lst) l.))
     (!? fun.tre-exp
         (? fun.tre-cps
-	       (!.apply nil (%transpiler-native "[" continuer "," args "]"))
-	       (continuer (!.apply nil (%transpiler-native "[" args "]"))))
+	       (!.apply nil (%%native "[" continuer "," args "]"))
+	       (continuer (!.apply nil (%%native "[" args "]"))))
         (? fun.tre-cps
            (fun.apply nil (list-array (cons continuer args)))
            (continuer (fun.apply nil (list-array (cons continuer args))))))))
@@ -26,7 +26,7 @@
 	  (unless (list? l)
 	    (error "APPLY: last argument is not a list")))
     (!? fun.tre-exp
-        (!.apply nil (%transpiler-native "[" args "]"))
+        (!.apply nil (%%native "[" args "]"))
      (fun.apply nil (list-array args)))))
 
 (dont-inline cps-wrap)

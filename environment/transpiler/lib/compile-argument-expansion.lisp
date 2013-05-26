@@ -78,7 +78,7 @@
 (defun compile-argument-expansion-function-body (fun-name adef p toplevel-continuer names)
   `(with ,(mapcan (fn `(,_ ,(list 'quote _))) names)
      ,@(compile-argument-expansion-0 adef p)
-     ((%transpiler-native ,(compiled-function-name *transpiler* fun-name)) ,@toplevel-continuer ,@names)))
+     ((%%native ,(compiled-function-name *transpiler* fun-name)) ,@toplevel-continuer ,@names)))
 
 (defun compile-argument-expansion-cps (this-name fun-name adef names)
   (with-gensym (toplevel-continuer p)

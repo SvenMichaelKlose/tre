@@ -51,8 +51,8 @@
 
 (define-php-macro %%tag (tag)
   (? *php-goto?*
-     `(%transpiler-native "_I_" ,tag ":" ,*php-newline*)
-     `(%transpiler-native "case " ,tag ":" ,*php-newline*)))
+     `(%%native "_I_" ,tag ":" ,*php-newline*)
+     `(%%native "case " ,tag ":" ,*php-newline*)))
 
 (defun php-jump (tag)
   (? *php-goto?*
@@ -93,11 +93,11 @@
 (define-php-macro function (&rest x)
   (? .x
      (codegen-php-function (cons 'function x))
-     `(%transpiler-native (%transpiler-string ,(compiled-function-name-string *transpiler* x.)))))
+     `(%%native (%transpiler-string ,(compiled-function-name-string *transpiler* x.)))))
 
-(define-php-macro %function-prologue (name) '(%transpiler-native ""))
-(define-php-macro %function-epilogue (name) '(%transpiler-native ""))
-(define-php-macro %function-return (name)   '(%transpiler-native ""))
+(define-php-macro %function-prologue (name) '(%%native ""))
+(define-php-macro %function-epilogue (name) '(%%native ""))
+(define-php-macro %function-return (name)   '(%%native ""))
 
 (defun php-codegen-argument-filter (x)
   (php-dollarize x))
@@ -105,7 +105,7 @@
 (define-php-macro %%closure (name)
   (let fi (get-funinfo name)
     (? (funinfo-ghost fi)
-  	   `(%transpiler-native "new __closure("
+  	   `(%%native "new __closure("
              (%transpiler-string ,(compiled-function-name-string *transpiler* name))
              ","
              ,(php-dollarize (funinfo-lexical (funinfo-parent fi)))
@@ -115,15 +115,15 @@
 
 ;;;; ASSIGNMENTS
 
-(defun %transpiler-native-without-reference? (val)
-  (& (%transpiler-native? val)
+(defun %%native-without-reference? (val)
+  (& (%%native? val)
      (string? .val.)
      (empty-string? .val.)))
 
 (defun php-assignment-operator (val)
   (? (| (& (atom val) ; XXX required?
 	  	   (symbol? val))
-		(not (%transpiler-native-without-reference? val)))
+		(not (%%native-without-reference? val)))
      (? *php-by-reference?*
    	    "=&"
         "=")
@@ -140,7 +140,7 @@
        (string? val))
       (list val)
 	(| (atom val)
-	    (& (%transpiler-native? val)
+	    (& (%%native? val)
 		   (atom .val.)
 		   (not ..val)))
       (list "$" val)
@@ -149,7 +149,7 @@
     `((,val. ,@(parenthized-comma-separated-list (filter #'php-codegen-argument-filter .val))))))
 
 (defun php-%setq-0 (dest val)
-  `((%transpiler-native
+  `((%%native
 	    ,*php-indent*
 	    ,@(? dest
 			 `(,@(& (atom dest)
@@ -159,31 +159,31 @@
 	         '(""))
         ,@(php-%setq-value val)
         ,@(unless (& (not dest)
-                     (%transpiler-native? val)
+                     (%%native? val)
                      (not ..val))
             (list *php-separator*)))))
 
 (define-php-macro %setq (dest val)
   (? (& (not dest) (atom val))
-     '(%transpiler-native "")
+     '(%%native "")
      (php-%setq-0 dest val)))
 
 (define-php-macro %set-atom-fun (plc val)
-  `(%transpiler-native ,(php-dollarize plc)
-					   ,(php-assignment-operator val)
-					   ,(php-dollarize val)))
+  `(%%native ,(php-dollarize plc)
+             ,(php-assignment-operator val)
+             ,(php-dollarize val)))
 
 
 ;;;; VECTORS
 
 (define-php-macro %make-lexical-array (&rest elements)
-  `(%transpiler-native "new __l()" ""))
+  `(%%native "new __l()" ""))
 
 (define-php-macro %vec (v i)
-  `(%transpiler-native ,(php-dollarize v) "->g(" ,(php-dollarize i) ")"))
+  `(%%native ,(php-dollarize v) "->g(" ,(php-dollarize i) ")"))
 
 (define-php-macro %set-vec (v i x)
-  `(%transpiler-native ,*php-indent* ,(php-dollarize v) "->s(" ,(php-dollarize i) "," ,(php-%setq-value x) ")",*php-separator*))
+  `(%%native ,*php-indent* ,(php-dollarize v) "->s(" ,(php-dollarize i) "," ,(php-%setq-value x) ")",*php-separator*))
 
 
 ;;;; NUMBERS
@@ -194,7 +194,7 @@
 	(transpiler-add-inline-exception tre op)
 	(transpiler-add-plain-arg-fun tre op)
 	`(define-expander-macro ,(transpiler-codegen-expander tre) ,op (&rest args)
-	   `(%transpiler-native ,,@(pad (filter #'php-dollarize args) ,replacement-op)))))
+	   `(%%native ,,@(pad (filter #'php-dollarize args) ,replacement-op)))))
 
 (mapcar-macro x
     '((%%%+   "+")
@@ -225,10 +225,10 @@
   (pad (filter #'php-literal-array-element x) ","))
 
 (define-php-macro %%%make-hash-table (&rest elements)
-  `(%transpiler-native "Array (" ,@(php-literal-array-elements (group elements 2)) ")"))
+  `(%%native "Array (" ,@(php-literal-array-elements (group elements 2)) ")"))
 
 (define-php-macro make-array (&rest elements)
-  `(%transpiler-native "new __array ()" ""))
+  `(%%native "new __array ()" ""))
 
 (define-php-macro aref (arr &rest indexes)
   `(href ,arr ,@indexes))
@@ -237,15 +237,15 @@
   `(=-href ,val ,arr ,@indexes))
 
 (define-php-macro php-aref (arr &rest indexes)
-  `(%transpiler-native ,(php-dollarize arr) ,@(php-array-subscript indexes)))
+  `(%%native ,(php-dollarize arr) ,@(php-array-subscript indexes)))
 
 (define-php-macro php-aref-defined? (arr &rest indexes)
-  `(%transpiler-native "isset (" ,(php-dollarize arr) ,@(php-array-subscript indexes) ")"))
+  `(%%native "isset (" ,(php-dollarize arr) ,@(php-array-subscript indexes) ")"))
 
 (define-php-macro =-php-aref (val &rest x)
-  `(%transpiler-native (php-aref ,@x)
-                       ,(php-assignment-operator val)
-                       ,(php-dollarize val)))
+  `(%%native (php-aref ,@x)
+             ,(php-assignment-operator val)
+             ,(php-dollarize val)))
 
 
 ;;;; HASH TABLES
@@ -254,50 +254,50 @@
   (mapcan [list "[" (php-dollarize _) "]"] x))
 
 (define-php-macro %%%href (h &rest k)
-  `(%transpiler-native ,(php-dollarize h) ,@(php-array-indexes k)))
+  `(%%native ,(php-dollarize h) ,@(php-array-indexes k)))
 
 (define-php-macro %%%href-set (v h &rest k)
-  `(%transpiler-native ,(php-dollarize h) ,@(php-array-indexes k) " = " ,(php-dollarize v)))
+  `(%%native ,(php-dollarize h) ,@(php-array-indexes k) " = " ,(php-dollarize v)))
 
 (define-php-macro href (h k)
-  `(%transpiler-native "(is_a (" ,(php-dollarize h) ", '__l') || is_a (" ,(php-dollarize h) ", '__array')) ? "
-                       ,(php-dollarize h) "->g(userfun_T37T37key (" ,(php-dollarize k) ")) : "
-                       "(isset (" ,(php-dollarize h) "[userfun_T37T37key (" ,(php-dollarize k) ")]) ? "
-                           ,(php-dollarize h) "[userfun_T37T37key (" ,(php-dollarize k) ")] : "
-                           "NULL)"))
+  `(%%native "(is_a (" ,(php-dollarize h) ", '__l') || is_a (" ,(php-dollarize h) ", '__array')) ? "
+                 ,(php-dollarize h) "->g(userfun_T37T37key (" ,(php-dollarize k) ")) : "
+                 "(isset (" ,(php-dollarize h) "[userfun_T37T37key (" ,(php-dollarize k) ")]) ? "
+                     ,(php-dollarize h) "[userfun_T37T37key (" ,(php-dollarize k) ")] : "
+                     "NULL)"))
 
 (define-php-macro =-href (v h k)
-  `(%transpiler-native "(is_a (" ,(php-dollarize h) ", '__l') || is_a (" ,(php-dollarize h) ", '__array')) ? "
-                       ,(php-dollarize h) "->s(userfun_T37T37key (" ,(php-dollarize k) ")," ,(php-dollarize v) ") : "
-                       ,(php-dollarize h) "[userfun_T37T37key (" ,(php-dollarize k) ")] = " ,(php-dollarize v)))
+  `(%%native "(is_a (" ,(php-dollarize h) ", '__l') || is_a (" ,(php-dollarize h) ", '__array')) ? "
+                 ,(php-dollarize h) "->s(userfun_T37T37key (" ,(php-dollarize k) ")," ,(php-dollarize v) ") : "
+                 ,(php-dollarize h) "[userfun_T37T37key (" ,(php-dollarize k) ")] = " ,(php-dollarize v)))
 
 (define-php-macro hremove (h key)
-  `(%transpiler-native "null; unset ($" ,h "[" ,(php-dollarize key) "])"))
+  `(%%native "null; unset ($" ,h "[" ,(php-dollarize key) "])"))
 
 (define-php-macro make-hash-table (&rest ignored-args)
   `(make-array))
 
 (define-php-macro %make-hash-table (&rest args)
-  `(%transpiler-native "new __array (Array (" ,@(php-literal-array-elements (group args 2)) "))"))
+  `(%%native "new __array (Array (" ,@(php-literal-array-elements (group args 2)) "))"))
 
 
 ;;;; OBJECTS
 
 (define-php-macro %new (&rest x)
-  `(%transpiler-native "new " ,x. ,@(php-argument-list .x)))
+  `(%%native "new " ,x. ,@(php-argument-list .x)))
 
 (define-php-macro delete-object (x)
-  `(%transpiler-native "null; unset " ,x))
+  `(%%native "null; unset " ,x))
 
 (define-php-macro %slot-value (x y)
   (? (cons? x)
-	 (? (eq '%transpiler-native x.)
-		`(%transpiler-native ,(php-dollarize x) "->" ,y)
-		(error "%TRANSPILER-NATIVE expected"))
-	 `(%transpiler-native "$" ,x "->" ,y)))
+	 (? (%%native? x)
+		`(%%native ,(php-dollarize x) "->" ,y)
+		(error "%%NATIVE expected"))
+	 `(%%native "$" ,x "->" ,y)))
 
 (define-php-macro %php-class-head (name)
-  `(%transpiler-native "class " ,name "{"))
+  `(%%native "class " ,name "{"))
 
 (define-php-macro %php-class-tail ()
-  `(%transpiler-native "}" ""))
+  `(%%native "}" ""))

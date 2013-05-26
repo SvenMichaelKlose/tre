@@ -34,7 +34,7 @@
 ;;;; CONTROL FLOW
 
 (define-js-macro %%tag (tag)
-  `(%transpiler-native "case " ,tag ":" ,*js-newline*))
+  `(%%native "case " ,tag ":" ,*js-newline*))
 
 (define-js-macro %%go (tag)
   `(,*js-indent* "_I_=" ,tag ";continue" ,*js-separator*))
@@ -52,7 +52,7 @@
                      ,alternative "();" ,*js-newline*))
 
 (define-js-macro %set-atom-fun (plc val)
-  `(%transpiler-native ,*js-indent* ,plc "=" ,val ,*js-separator*))
+  `(%%native ,*js-indent* ,plc "=" ,val ,*js-separator*))
 
 
 ;;;; FUNCTIONS
@@ -72,7 +72,7 @@
        !)))
 
 (define-js-macro %function-prologue (name)
-  `(%transpiler-native ""
+  `(%%native ""
 	   ,@(& (transpiler-stack-locals? *transpiler*)
 	        `(,*js-indent* "var _locals=[]" ,*js-separator*))
 	   ,@(& (< 0 (funinfo-num-tags (get-funinfo name)))
@@ -104,7 +104,7 @@
 
 (defun js-%setq-0 (dest val)
   `(,*js-indent*
-	(%transpiler-native
+	(%%native
         ,@(? dest
 		     `(,dest "=")
 		     '("")))
@@ -115,14 +115,14 @@
 
 (define-js-macro %setq (dest val)
   (? (& (not dest) (atom val))
-	 '(%transpiler-native "")
+	 '(%%native "")
 	 (js-%setq-0 dest val)))
 
 
 ;;;; VARIABLE DECLARATIONS
 
 (define-js-macro %var (name)
-  `(%transpiler-native ,*js-indent* "var " ,name ,*js-separator*))
+  `(%%native ,*js-indent* "var " ,name ,*js-separator*))
 
 
 ;;;; TYPE PREDICATES
@@ -171,14 +171,13 @@
 ;;;; ARRAYS
 
 (define-js-macro make-array (&rest elements)
-  `(%transpiler-native ,@(parenthized-comma-separated-list elements :type 'square)))
+  `(%%native ,@(parenthized-comma-separated-list elements :type 'square)))
 
 (define-js-macro %%%aref (arr &rest idx)
-  `(%transpiler-native ,arr
-     ,@(filter ^("[" ,_ "]") idx)))
+  `(%%native ,arr ,@(filter ^("[" ,_ "]") idx))) ; XXX add function C-ARRAY-SUBSCRIPT.
 
 (define-js-macro %%%=-aref (val &rest x)
-  `(%transpiler-native (%%%aref ,@x) "=" ,val))
+  `(%%native (%%%aref ,@x) "=" ,val))
 
 (define-js-macro aref (arr &rest idx)
   `(%%%aref ,arr ,@idx))
@@ -202,16 +201,16 @@
   `(=-aref ,val ,@x))
 
 (define-js-macro hremove (h key)
-  `(%transpiler-native "delete " ,h "[" ,key "]"))
+  `(%%native "delete " ,h "[" ,key "]"))
 
 
 ;;;; OBJECTS
 
 (define-js-macro %new (&rest x)
-  `(%transpiler-native "new " ,x. ,@(parenthized-comma-separated-list .x)))
+  `(%%native "new " ,x. ,@(parenthized-comma-separated-list .x)))
 
 (define-js-macro delete-object (x)
-  `(%transpiler-native "delete " ,x))
+  `(%%native "delete " ,x))
 
 
 ;;;; METACODES
@@ -220,36 +219,36 @@
   (js-codegen-symbol-constructor *transpiler* x))
 
 (define-js-macro %slot-value (x y)
-  `(%transpiler-native ,x "." ,y))
+  `(%%native ,x "." ,y))
 
 (define-js-macro %try ()
-  '(%transpiler-native "try {"))
+  '(%%native "try {"))
 
 (define-js-macro %closing-bracket ()
-  '(%transpiler-native "}"))
+  '(%%native "}"))
 
 (define-js-macro %catch (x)
-  `(%transpiler-native "catch (" ,x ") {"))
+  `(%%native "catch (" ,x ") {"))
 
 
 ;;;; BACKEND METACODES
 
 (define-js-macro %stack (x)
   (? (transpiler-stack-locals? *transpiler*)
-  	 `(%transpiler-native "_locals[" ,x "]")
+  	 `(%%native "_locals[" ,x "]")
      (js-stack x)))
 
 (define-js-macro %vec (v i)
-  `(%transpiler-native ,v "[" ,i "]"))
+  `(%%native ,v "[" ,i "]"))
 
 (define-js-macro %set-vec (v i x)
-  `(%transpiler-native (aref ,v ,i) "=" ,x ,*js-separator*))
+  `(%%native (aref ,v ,i) "=" ,x ,*js-separator*))
 
 (define-js-macro %js-typeof (x)
-  `(%transpiler-native "typeof " ,x))
+  `(%%native "typeof " ,x))
 
 (define-js-macro %defined? (x)
-  `(%transpiler-native "\"undefined\" != typeof " ,x))
+  `(%%native "\"undefined\" != typeof " ,x))
 
 (define-js-macro %%closure (name)
   (alet (get-funinfo name)
@@ -260,7 +259,7 @@
 	   name)))
 
 (define-js-macro %invoke-debugger ()
-  '(%transpiler-native "null; debugger"))
+  '(%%native "null; debugger"))
 
 (define-js-macro %%%eval (x)
-  `((%transpiler-native "window.eval ") ,x))
+  `((%%native "window.eval ") ,x))

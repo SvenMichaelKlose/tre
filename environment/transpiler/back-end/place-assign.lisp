@@ -23,7 +23,7 @@
 
 (define-tree-filter place-assign (x)
   (| (%quote? x)
-     (%transpiler-native? x))  x
+     (%%native? x))  x
   (unassigned-%stackarg? x)    `(%stack ,(place-assign-stackarg x))
   (unassigned-%stack? x)       `(%stack ,(| (funinfosym-var-pos .x. ..x.)
                                             (place-assign-stackarg x)))

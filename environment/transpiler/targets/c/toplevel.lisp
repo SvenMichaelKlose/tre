@@ -59,7 +59,7 @@
                     ,(alet (c-expander-name name)
                        (? (transpiler-defined-function tr !)
                           (compiled-user-function-name !)
-                          '(%transpiler-native "NULL"))))))
+                          '(%%native "NULL"))))))
 
 (defun c-function-registrations (tr)
   (filter [c-function-registration tr _]

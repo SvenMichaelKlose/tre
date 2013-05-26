@@ -32,7 +32,7 @@
   (apply #'transpiler_defmember class-name names))
 
 (defun js-emit-method (class-name x)
-  `((%transpiler-native ,x.)
+  `((%%native ,x.)
 	#'(,.x.
 		(%thisify ,class-name
 		  (let ~%this this

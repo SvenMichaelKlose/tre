@@ -7,7 +7,7 @@
      (is_array x)))
 
 (defun %array-push (arr x)
-  (%setq (%transpiler-native "$" arr "[]") x)
+  (%setq (%%native "$" arr "[]") x)
   x)
 
 (defun array-push (arr x)
@@ -24,7 +24,7 @@
 (defun list-phphash (x)
   (let a (%%%make-hash-table)
     (dolist (i x a)
-      (%setq (%transpiler-native "$" a "[]") i))))
+      (%setq (%%native "$" a "[]") i))))
 
 (defun aref (a k)
   (href a k))

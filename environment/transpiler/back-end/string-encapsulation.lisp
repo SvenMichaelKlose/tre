@@ -1,8 +1,8 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (define-tree-filter transpiler-encapsulate-strings (x)
   (string? x)
     `(%transpiler-string ,x)
   (| (%quote? x)
-     (%transpiler-native? x))
+     (%%native? x))
     x)

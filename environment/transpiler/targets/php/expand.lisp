@@ -15,7 +15,7 @@
     `(%%block
        ,(apply #'shared-defun fun-name args
                (? *exec-log*
-                  `((%transpiler-native "error_log (\"" ,(symbol-name fun-name) "\")")
+                  `((%%native "error_log (\"" ,(symbol-name fun-name) "\")")
                        nil ,@body)
                   body))
        (%setq ~%ret nil)

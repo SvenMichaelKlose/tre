@@ -28,7 +28,7 @@
   (aprog1 (make-javascript-transpiler-0)
 	(apply #'transpiler-add-obfuscation-exceptions !
 	    '(t this %funinfo false true null delete
-		  %transpiler-native %transpiler-string
+		  %%native %transpiler-string
 		  lambda function
 		  &key &optional &rest
 		  prototype

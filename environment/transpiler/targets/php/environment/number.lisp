@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (dont-obfuscate is_int is_float)
 
@@ -10,7 +10,7 @@
      (is_float x)))
 
 (defun number (x)
-  (%transpiler-native "(float)$" x))
+  (%%native "(float)$" x))
 
 (defun number-integer (x)
-  (%transpiler-native "(int)$" x))
+  (%%native "(int)$" x))

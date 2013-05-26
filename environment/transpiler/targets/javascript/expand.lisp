@@ -31,7 +31,7 @@
             ,e (slot-value ,f 'tre-exp))
        (? ,e
           (let ,a (list ,@args)
-            ((slot-value ,e 'apply) nil (%transpiler-native "[" ,a "]")))
+            ((slot-value ,e 'apply) nil (%%native "[" ,a "]")))
           (,f ,@args)))))
 
 (defvar *late-symbol-function-assignments* nil)

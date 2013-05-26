@@ -4,7 +4,7 @@
 	'(%quote %new
 	  %%block %%go %%go-nil %%call-nil
 	  %stack %stackarg %vec %set-vec %setq %tag %%tag
-	  %transpiler-native %transpiler-string
+	  %%native %transpiler-string
 	  %%closure %closure
 	  %set-atom-fun
 	  %setq-atom-fun
