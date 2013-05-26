@@ -60,7 +60,6 @@ FILES="
 CC=cc
 LD=cc
 
-echo
 LIBC_PATH=`find /lib -name libc.so.* | head -n 1`
 LIBDL_PATH=`find /lib -name libdl.so.* | head -n 1`
 KERNEL_IDENT=`uname -i`
@@ -76,7 +75,7 @@ CFLAGS="-pipe $C_DIALECT_FLAGS $GNU_LIBC_FLAGS $BUILD_MACHINE_INFO $ARGS"
 
 DEBUGOPTS="-O0 -g"
 BUILDOPTS="-Ofast --whole-program -flto -march=native -mtune=native"
-CRUNSHOPTS="-Ofast --whole-program -march=native -mtune=native"
+CRUNSHOPTS="-Ofast --whole-program -flto -march=native -mtune=native"
 CRUNSHFLAGS="-DTRE_COMPILED_CRUNSHED -Iinterpreter"
 
 LIBFLAGS="-lm -lffi -ldl -lrt -flto"
@@ -95,12 +94,6 @@ fi
 CRUNSHTMP="tmp.c"
 TRE="./tre"
 BINDIR="/usr/local/bin/"
-
-echo "libc is '$LIBC_PATH'."
-echo "libdl is '$LIBDL_PATH'."
-echo "Compiler: $CC"
-echo "Compiler flags: $CFLAGS $COPTS"
-echo "Library flags: $LIBFLAGS"
 
 basic_clean ()
 {
@@ -136,7 +129,7 @@ standard_compile ()
 crunsh_compile ()
 {
 	rm -f $CRUNSHTMP
-	echo "Compiling crunshed for best optimisation..."
+	echo "Compiling as one file for best optimisation..."
 	echo -n "Concatenating sources:"
 	for f in $FILES; do
 		echo -n " $f"
@@ -150,40 +143,11 @@ crunsh_compile ()
 
 install_it ()
 {
-	echo "Initialising default environment."
-	echo | $TRE -n
-	echo "Installing $TRE to $BINDIR."
-	sudo cp $TRE $BINDIR || exit 1
-}
-
-install_it_without_reload ()
-{
 	echo "Installing $TRE to $BINDIR."
 	sudo cp $TRE $BINDIR || exit 1
 }
 
 case $1 in
-debug)
-	COPTS="$COPTS $DEBUGOPTS"
-	standard_compile
-	link
-	install_it
-	;;
-
-debugraw)
-	COPTS="$COPTS $DEBUGOPTS"
-	standard_compile
-	link
-	install_it_without_reload
-	;;
-
-build)
-	COPTS="$COPTS $BUILDOPTS"
-	standard_compile
-	link
-	install_it
-	;;
-
 crunsh)
 	CFLAGS="$CFLAGS $CRUNSHFLAGS"
 	COPTS="$COPTS $CRUNSHOPTS"
@@ -191,50 +155,66 @@ crunsh)
 	install_it
 	;;
 
-boot0)
-	CFLAGS="$CFLAGS $CRUNSHFLAGS"
-	COPTS="$COPTS $CRUNSHOPTS"
-	crunsh_compile
+reload)
+    echo "Reloading environment from source..."
+    echo | tre -n
 	;;
 
-crunshraw)
-	CFLAGS="$CFLAGS $CRUNSHFLAGS"
-	COPTS="$COPTS $CRUNSHOPTS"
-	crunsh_compile
-	install_it_without_reload
+interpreter)
+    echo "Making interpreter..."
+	basic_clean
+	./make.sh crunsh $ARGS || exit 1
+	./make.sh reload $ARGS || exit 1
+	;;
+
+debug)
+    echo "Making debuggable version..."
+	COPTS="$COPTS $DEBUGOPTS"
+	standard_compile
+	link
+	install_it
+	;;
+
+build)
+    echo "Making regular build file by file..."
+	COPTS="$COPTS $BUILDOPTS"
+	standard_compile
+	link
+	install_it
 	;;
 
 precompile)
+    echo "Precompiling target core functions..."
 	echo "(precompile-environments)" | ./tre || exit 1
 	;;
 
-boot)
-	basic_clean
-	./make.sh crunsh $ARGS || exit 1
+
+compiler)
+    echo "Making just the compiler..."
 	(echo "(compile-c-compiler)" | ./tre) || exit 1
-	./make.sh crunshraw $ARGS || exit 1
+	./make.sh crunsh $ARGS || exit 1
+    ;;
+
+all)
+    echo "Making everything..."
 	(echo "(compile-c-environment)" | ./tre) || exit 1
-	./make.sh crunshraw $ARGS || exit 1
+	./make.sh crunsh || exit 1
 	;;
 
-bootunclean)
-	./make.sh boot0 || exit 1
-	(echo "(compile-c-environment)" | ./tre) || exit 1
-	./make.sh crunshraw || exit 1
-	;;
-
-recompile)
-	echo "(quit)" | tre -n
-	(echo "(compile-c-environment)" | ./tre) || exit 1
-	./make.sh crunshraw || exit 1
+boot)
+    echo "Booting everything from scratch..."
+	./make.sh interpreter $ARGS || exit 1
+	./make.sh compiler $ARGS || exit 1
+	./make.sh all $ARGS || exit 1
 	;;
 
 bytecode)
+    echo "Making bytecodes for everything..."
 	(echo "(load-bytecode (compile-bytecode-environment))(dump-system)" | ./tre) || exit 1
 	;;
 
 install)
-	install_it_without_reload
+	install_it
 	;;
 
 clean)
@@ -246,20 +226,37 @@ distclean)
 	;;
 
 backup)
-    mkdir backup
-    cp tre backup
-    cp interpreter/_compiled-env.c backup
-    cp ~/.tre.image backup
+    echo "Making backup..."
+    mkdir -p backup
+    cp -v $BINDIR/tre backup
+    cp -v interpreter/_compiled-env.c backup
+    cp -v ~/.tre.image backup/image
     echo "Backed up to backup/. Use 'restore' on occasion."
     ;;
 
 restore)
-    sudo cp backup/tre /usr/local/bin/
-    cp backup/tre .
-    cp backup/_compiled-env.c interpreter
-    cp backup/.tre.image ~
+    sudo cp backup/tre $BINDIR
+    cp -v backup/tre .
+    cp -v backup/_compiled-env.c interpreter
+    cp -v backup/image ~/.tre.image
     ;;
 
 *)
-	echo "Usage: make.sh boot|bootunclean|build|crunsh|crunshraw|recompile|precompile|bytecode|debug|debugraw|backup|restore|install|clean [args]"
+	echo "Usage: make.sh boot|interpreter|compiler|all|bytecode|debug|build|crunsh|reload|precompile|backup|restore|install|clean|distclean [args]"
+	echo "  boot         Build everything from scratch."
+	echo "  interpreter  Clean and build the interpreter."
+	echo "  compiler     Compile just the compiler, not the whole environment."
+    echo "  all          Compile environment."
+    echo "  bytecode     Compile environment to bytecode, replacing the C functions."
+    echo "  build        Do a regular C source build file by file."
+    echo "  debug        Compile C sources for gdb. May the force be with you."
+    echo "  crunsh       Compile C sources as one big file for best optimization."
+    echo "  reload       Reload the environment."
+    echo "  precompile   Precompile obligatory target environments (EXPERIMENTAL)."
+    echo "  backup       Backup installation to local directory 'backup'."
+    echo "  restore      Restore the last 'backup'."
+    echo "  install      Install the compiled executable."
+    echo "  clean        Remove executable, object files and garbage."
+    echo "  distclean    Like 'clean' but also removing the last 'backup'."
+    ;;
 esac
