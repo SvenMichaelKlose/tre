@@ -86,7 +86,7 @@
 
 (defun transpiler-to-string-cons (tr x)
   (?
-    (%transpiler-string? x) (funcall (transpiler-gen-string tr) .x.)
+    (%%string? x) (funcall (transpiler-gen-string tr) .x.)
     (%%native? x) (transpiler-to-string tr .x)
     x))
 

@@ -3,5 +3,5 @@
 (defun codegen-expr? (x)
   (& (cons? x)
      (| (string? x.)
-        (in? x. '%transpiler-string '%%native)
+        (in? x. '%%native '%%string)
         (expander-has-macro? (transpiler-codegen-expander *transpiler*) x.))))

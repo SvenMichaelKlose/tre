@@ -13,7 +13,7 @@
 (php-define-compiled-literal php-compiled-symbol (x symbol)
   :maker ($ 'tresymbol_compiled_ x (? (keyword? x) '_keyword ""))
   :init-maker (%%native "new __symbol ("
-			  	            (%transpiler-string ,(symbol-name x))
+			  	            (%%string ,(symbol-name x))
                             ","
 			   	            ,(? (keyword? x)
                                 "$KEYWORDPACKAGE"

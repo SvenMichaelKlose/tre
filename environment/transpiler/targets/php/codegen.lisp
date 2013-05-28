@@ -93,7 +93,7 @@
 (define-php-macro function (&rest x)
   (? .x
      (codegen-php-function (cons 'function x))
-     `(%%native (%transpiler-string ,(compiled-function-name-string *transpiler* x.)))))
+     `(%%native (%%string ,(compiled-function-name-string *transpiler* x.)))))
 
 (define-php-macro %function-prologue (name) '(%%native ""))
 (define-php-macro %function-epilogue (name) '(%%native ""))
@@ -106,7 +106,7 @@
   (let fi (get-funinfo name)
     (? (funinfo-ghost fi)
   	   `(%%native "new __closure("
-             (%transpiler-string ,(compiled-function-name-string *transpiler* name))
+             (%%string ,(compiled-function-name-string *transpiler* name))
              ","
              ,(php-dollarize (funinfo-lexical (funinfo-parent fi)))
              ")")
