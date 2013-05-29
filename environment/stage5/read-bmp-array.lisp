@@ -1,21 +1,24 @@
-;;;;; tré – Copyright (c) 2011–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2011–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun chars-integer (chars len)
   (let result 0
-    (dotimes (i len result)
-      (= result (bit-or (<< result 8) (elt chars (- len i 1)))))))
+    (adotimes (len result)
+      (= result (bit-or (<< result 8) (elt chars (- len ! 1)))))))
+
+(defun bmp-magic? (x)
+  (| (& (== #\B x.)
+        (== #\M .x.))))
 
 (defun read-bmp-array (name &key (verbose? nil))
   (let a (read-binary-file name)
-    (| (& (== #\B a.)
-          (== #\M .a.))
+    (| (bmp-magic? a)
        (error "not a BMP file (wrong magic)"))
     (with (bitmap-offset (chars-integer (nthcdr 10 a) 4)
-           header (nthcdr 14 a)
-           width (chars-integer (nthcdr 4 header) 4)
-           height (chars-integer (nthcdr 8 header) 4)
-           bitmap-list (nthcdr bitmap-offset a)
-           bitmap (%malloc (* width height)))
+           header        (nthcdr 14 a)
+           width         (chars-integer (nthcdr 4 header) 4)
+           height        (chars-integer (nthcdr 8 header) 4)
+           bitmap-list   (nthcdr bitmap-offset a)
+           bitmap        (%malloc (* width height)))
       (when verbose?
         (format t "File size is: ~A~%" (chars-integer ..a 4))
         (format t "Bitmap offset is: ~A~%" bitmap-offset)
