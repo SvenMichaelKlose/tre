@@ -58,6 +58,7 @@
   (save-argument-defs-only? nil)
   (profile? nil)
   (profile-num-calls? nil)
+  (warn-on-unused-symbols? nil)
 
   ; Generator for literal strings.
   (gen-string #'literal-string)
@@ -191,6 +192,7 @@
         :save-argument-defs-only? save-argument-defs-only?
         :profile?                profile?
         :profile-num-calls?      profile-num-calls?
+        :warn-on-unused-symbols? warn-on-unused-symbols?
         :gen-string              gen-string
         :lambda-export?          lambda-export?
         :accumulate-toplevel-expressions? accumulate-toplevel-expressions?

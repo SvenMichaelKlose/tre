@@ -3,11 +3,6 @@
 (defun transpiler-concat-text (tr &rest x)
   (apply (transpiler-code-concatenator tr) x))
 
-;; After this pass:
-;; - Symbols are obfuscated.
-;; - Strings are encapsulated.
-;; - Expressions are expanded via code generating macros.
-;; - Everything is converted to strings and concatenated.
 (transpiler-pass transpiler-generate-code (tr)
     print-o             [(& *show-transpiler-progress?* (princ #\o) (force-output))
                          _]
@@ -27,17 +22,17 @@
                            (translate-function-names tr (transpiler-global-funinfo *transpiler*) _)
                            _])
 
-(transpiler-pass transpiler-backend-make-places ()
+(transpiler-pass transpiler-backend-make-places (tr)
+    warn-unused            [? (transpiler-warn-on-unused-symbols? tr)
+                              (warn-unused _)
+                              _]
     place-assign           #'place-assign
     place-expand           #'place-expand
     make-framed-functions  #'make-framed-functions)
 
-;; After this pass:
-;; - Function prologues are generated.
-;; - Places are translated into vector ops.
 (defun transpiler-backend-prepare (tr x)
   (? (transpiler-lambda-export? tr)
-     (transpiler-backend-make-places x)
+     (transpiler-backend-make-places tr x)
 	 (make-framed-functions x)))
 
 (defun transpiler-backend (tr x)
