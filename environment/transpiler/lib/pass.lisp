@@ -17,6 +17,6 @@
                                                  (format t ,(string-concat "; **** " (symbol-name _.) " (end)~%"))
                                                  (force-output)))
                                            ,._.)))
-                                    (reverse (group x 2))))
+                                    (group x 2)))
                    ,cache-var)
            (= ,cache-var (= (transpiler-last-pass-result ,tr) (funcall i ,cache-var))))))))

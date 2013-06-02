@@ -4,38 +4,40 @@
   (apply (transpiler-code-concatenator tr) x))
 
 (transpiler-pass transpiler-generate-code (tr)
-    print-o             [(& *show-transpiler-progress?* (princ #\o) (force-output))
-                         _]
-    concat-stringtree   [transpiler-concat-text tr _]
-    to-string           [? (transpiler-make-text? tr)
-                           (transpiler-to-string tr _)
+    function-names      [? (transpiler-function-name-prefix tr)
+                           (translate-function-names tr (transpiler-global-funinfo *transpiler*) _)
                            _]
-    obfuscate           [? (transpiler-make-text? tr)
-                           (transpiler-obfuscate tr _)
-                           _]
-    codegen-expand      [expander-expand (transpiler-codegen-expander tr) _]
-    finalize-sexprs     #'transpiler-finalize-sexprs
     encapsulate-strings [? (transpiler-encapsulate-strings? tr)
                            (transpiler-encapsulate-strings _)
                            _]
-    function-names      [? (transpiler-function-name-prefix tr)
-                           (translate-function-names tr (transpiler-global-funinfo *transpiler*) _)
-                           _])
+    finalize-sexprs     #'transpiler-finalize-sexprs
+    codegen-expand      [expander-expand (transpiler-codegen-expander tr) _]
+    obfuscate           [? (transpiler-make-text? tr)
+                           (transpiler-obfuscate tr _)
+                           _]
+    to-string           [? (transpiler-make-text? tr)
+                           (transpiler-to-string tr _)
+                           _]
+    concat-stringtree   [transpiler-concat-text tr _]
+    print-o             [(& *show-transpiler-progress?* (princ #\o) (force-output))
+                         _])
 
 (transpiler-pass transpiler-backend-make-places (tr)
+    make-framed-functions  #'make-framed-functions
+    place-expand           #'place-expand
+    place-assign           #'place-assign
     warn-unused            [? (transpiler-warn-on-unused-symbols? tr)
                               (warn-unused _)
-                              _]
-    place-assign           #'place-assign
-    place-expand           #'place-expand
-    make-framed-functions  #'make-framed-functions)
+                              _])
 
 (defun transpiler-backend-prepare (tr x)
   (? (transpiler-lambda-export? tr)
      (transpiler-backend-make-places tr x)
 	 (make-framed-functions x)))
 
+(defun transpiler-backend-0 (tr x)
+  (transpiler-concat-text tr (transpiler-generate-code tr (transpiler-backend-prepare tr (list x)))))
+
 (defun transpiler-backend (tr x)
-  (? x
-     (transpiler-concat-text tr (filter [transpiler-concat-text tr (transpiler-generate-code tr (transpiler-backend-prepare tr (list _)))] x))
-     ""))
+  (& x
+     (transpiler-concat-text tr (filter [transpiler-backend-0 tr _] x))))
