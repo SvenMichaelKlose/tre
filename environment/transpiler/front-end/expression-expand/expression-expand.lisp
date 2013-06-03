@@ -7,7 +7,10 @@
 
 
 (defun peel-identity (x)
-  (? (identity? x) .x. x))
+  (? (| (identity? x)
+        (%identity? x))
+     .x.
+     x))
 
 (defun %setq-cps-mode? (x)
   (& (%setq? x)
