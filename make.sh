@@ -185,7 +185,7 @@ build)
 
 precompile)
     echo "Precompiling target core functions..."
-	echo "(precompile-environments)" | ./tre || exit 1
+	echo "(precompile-environments)(dump-system)" | ./tre || exit 1
 	;;
 
 
