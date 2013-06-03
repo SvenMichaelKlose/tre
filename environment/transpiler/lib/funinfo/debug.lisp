@@ -22,5 +22,5 @@
 
 (defun funinfo-scope-description (fi)
   (!? (butlast (funinfo-names fi))
-      (apply #'+ "scope of " (pad (symbol-names (reverse !)) " "))
+      (apply #'+ "scope of " (symbol-names-string (reverse !)))
       "toplevel"))

@@ -35,10 +35,10 @@
     `(,*c-newline*
       "/*" ,*c-newline*
       "  argdef:   " ,(late-print (funinfo-argdef fi) nil) ,*c-newline*
-      "  args:     " ,(late-print (funinfo-args fi) nil) ,*c-newline*
-      "  env:      " ,(late-print (funinfo-vars fi) nil) ,*c-newline*
-      "  lexical:  " ,(late-print (funinfo-lexical fi) nil) ,*c-newline*
-      "  lexicals: " ,(late-print (funinfo-lexicals fi) nil) ,*c-newline*
+      "  args:     " ,(symbol-names-string (funinfo-args fi)) ,*c-newline*
+      "  env:      " ,(symbol-names-string (funinfo-vars fi)) ,*c-newline*
+      "  lexical:  " ,(symbol-name (funinfo-lexical fi)) ,*c-newline*
+      "  lexicals: " ,(symbol-names-string (funinfo-lexicals fi)) ,*c-newline*
       "*/" ,*c-newline*
 	  "treptr " ,(compiled-function-name *transpiler* name) " "
 	  ,@(parenthized-comma-separated-list (mapcar ^("treptr " ,_) args))
@@ -51,12 +51,9 @@
   `("CONS (" ,(c-compiled-symbol '%closure) ", "
 	    "CONS (" ,(c-compiled-symbol name) "," ,(codegen-closure-lexical name) "))"))
 
-(defun %%%eq (&rest x)
-  (apply #'eq x))
-
 (define-c-macro function (name &optional (x 'only-name))
-  (?
-	(eq 'only-name x)	name
+  (? (eq 'only-name x)
+     name
 	(c-codegen-function name x)))
 
 (define-c-macro %function-prologue (name)
@@ -159,3 +156,9 @@
 
 (define-c-macro %immediate-set-aref (val arr idx)
   (+ (c-make-aref arr idx) `("=" ,val)))
+
+
+;;;; LEFTOVERS
+
+(defun %%%eq (&rest x)
+  (apply #'eq x))
