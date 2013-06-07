@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2006–2009,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2006–2009,2012–2013 Sven Michael Klose <pixel@copei.de>
 
 (setq *show-definitions?* t)
 
@@ -42,8 +42,11 @@
       (? x
 		 (? (atom x)
             x
-            (cons (copy-tree (car x))
-              	  (copy-tree (cdr x)))))))
+            (progn
+              (? (cpr x)
+                 (setq *default-listprop* (cpr x)))
+              (cons (copy-tree (car x))
+              	    (copy-tree (cdr x))))))))
 
 (%set-atom-fun last
   #'((x)

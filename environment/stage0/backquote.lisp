@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2006–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2006–2013 Sven Michael Klose <pixel@copei.de>
 
 ;;;; XXX Never use %GSBQ anywhere within your QUASIQUOTEs.
 ;;;; XXX Solve this issue with packaging.
@@ -45,8 +45,11 @@
 (%set-atom-fun %backquote-quasiquote-splice
   #'((%gsbq)
        (? (any-quasiquote? (car (cdr (car %gsbq))))
-          (cons (copy-tree (car (cdr (car %gsbq))))
-                (%backquote (cdr %gsbq)))
+          (progn
+            (? (cpr %gsbq)
+               (setq *default-listprop* (cpr %gsbq)))
+            (cons (copy-tree (car (cdr (car %gsbq))))
+                  (%backquote (cdr %gsbq))))
           (#'((%gstmp)
                 (?
                   (not %gstmp) (%backquote (cdr %gsbq))
@@ -58,6 +61,9 @@
 ;; Expand BACKQUOTE arguments.
 (%set-atom-fun %backquote
   #'((%gsbq)
+       (? (cons? %gsbq)
+          (? (cpr %gsbq)
+             (setq *default-listprop* (cpr %gsbq))))
        (?
          (atom %gsbq) %gsbq
          (atom (car %gsbq)) (cons (car %gsbq)
@@ -72,8 +78,8 @@
 
 (%set-atom-fun quasiquote
   #'((x)
-	   (%error "',' outside backquote")))
+	   (%error "QUASIQUOTE (or ',' for short) outside backquote.")))
 
 (%set-atom-fun quasiquote-splice
   #'((x)
-	   (%error "',@' outside backquote")))
+	   (%error "QUASIQUOTE-SPLICE (or ',@' for short) outside backquote.")))

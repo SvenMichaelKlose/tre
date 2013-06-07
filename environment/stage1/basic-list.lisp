@@ -2,13 +2,16 @@
 
 (functional nth copy-list)
 
-(early-defun nth (i c)
-  (? c
+(early-defun nth (i x)
+  (? x
      (? (integer> i 0)
-	    (nth (integer- i 1) (cdr c))
-        (car c))))
+	    (nth (integer- i 1) (cdr x))
+        (car x))))
 
-(early-defun copy-list (c)
-  (? (atom c)
-     c
-	 (cons (car c) (copy-list (cdr c)))))
+(early-defun copy-list (x)
+  (? (atom x)
+     x
+     (progn
+       (? (cpr x)
+          (setq *default-listprop* (cpr x)))
+	   (cons (car x) (copy-list (cdr x))))))

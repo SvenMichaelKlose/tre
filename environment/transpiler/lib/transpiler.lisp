@@ -138,7 +138,9 @@
   (current-package nil)
   
   (current-pass nil)
-  (last-pass-result nil))
+  (last-pass-result nil)
+  
+  (cpr-count? nil))
 
 (defun transpiler-reset (tr)
   (= (transpiler-thisify-classes tr)        (make-hash-table :test #'eq)	; thisified classes.
@@ -245,7 +247,8 @@
         :identifiers             (copy-hash-table identifiers)
         :converted-identifiers   (copy-hash-table converted-identifiers)
         :closure-argdefs         (copy-tree closure-argdefs)
-        :expex-initializer       expex-initializer)
+        :expex-initializer       expex-initializer
+        :cpr-count?              cpr-count?)
     (funcall (transpiler-expex-initializer !) (transpiler-make-expex !))))
 
 (defmacro transpiler-getter (name &rest body)

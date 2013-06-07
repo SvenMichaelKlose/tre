@@ -51,6 +51,9 @@
 
 (%set-atom-fun %macroexpand-backquote
   #'((%g)
+       (? (cons? %g)
+          (? (cpr %g)
+             (setq *default-listprop* (cpr %g))))
        (?
          (atom %g) %g
 

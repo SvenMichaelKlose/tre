@@ -2,11 +2,17 @@
 
 (defvar *former-position* nil)
 
+(defun foureign-cpr? (x old)
+  (& (cons? x)
+     (| (& (not (eq old (cpr x)))
+           (cpr x))
+        (foureign-cpr? x. old)
+        (foureign-cpr? .x old))))
+
 (metacode-walker inject-debugging (x)
-	:if-cons (? (| (not (cpr x))
-                   (eq *former-position* (cpr x)))
-                (list x.)
-                (progn
-                  (= *former-position* (cpr x))
-                  `((%setq nil (%debug-step ,(car (cpr x)) ,(cdr (cpr x))))
-                    ,x.))))
+	:if-cons (!? (foureign-cpr? x *former-position*)
+                 (progn
+                   (= *former-position* !)
+                   `((%setq nil (%debug-step ,(car !) ,(car .!) ,(cdr .!)))
+                     ,x.))
+                 (list x.)))

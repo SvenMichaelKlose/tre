@@ -121,10 +121,13 @@
 (defun read-quote (str token)
   (list token (read-expr str)))
 
+(defun read-set-listprop (str)
+  (= *default-listprop* (cons (stream-in-id str) (cons (stream-in-column str) (stream-in-line str)))))
+
 (defun read-list (str token pkg sym)
   (| token (error "missing closing bracket"))
   (unless (%read-closing-bracket? token)
-    (= *default-listprop* (cons (stream-in-column str) (stream-in-line str)))
+    (read-set-listprop str)
     (cons (?
 		    (token-is-quote? token)         (read-quote str token)
 		    (eq 'bracket-open token)        (read-cons-slot str)
@@ -141,6 +144,7 @@
 		       (read-list str token pkg sym))))))
 
 (defun read-cons (str)
+  (read-set-listprop str)
   (with ((token pkg sym) (read-token str))
     (unless (%read-closing-bracket? token)
 	  (read-list str token pkg sym))))

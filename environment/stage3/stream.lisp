@@ -1,4 +1,6 @@
-;;;; tré – Copyright (c) 2005-2006,2010,2012 Sven Michael Klose <pixel@copei.de>
+;;;; tré – Copyright (c) 2005–2006,2010,2012–2013 Sven Michael Klose <pixel@copei.de>
+
+(defvar *default-stream-tabsize* 8)
 
 (defstruct stream
   (handle nil)
@@ -11,9 +13,10 @@
   (peeked-char	nil)
 
   (track-input-location?  t)
+  (in-id        nil)
   (in-line      1)
   (in-column    1)
-  (in-tabsize   8)
+  (in-tabsize   *default-stream-tabsize*)
 
   (track-output-location? nil)
   (out-line     1)

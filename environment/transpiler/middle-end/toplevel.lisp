@@ -5,8 +5,10 @@
 
 (transpiler-pass transpiler-middleend-0 (tr)
     make-packages            #'make-packages
+        cpr                       [cpr-count _ "make packages"]
     expression-expand        [with-temporary *expex-warn?* nil
                                (transpiler-expression-expand tr _)]
+        cpr                       [cpr-count _ "expression expand"]
     inject-debugging         [? (transpiler-inject-debugging? tr)
                                 (inject-debugging _)
                                 _]

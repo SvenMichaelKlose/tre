@@ -2,6 +2,7 @@
 
 (env-load "transpiler/front-end/arith-wrappers.lisp" 'c)
 
+(env-load "transpiler/front-end/cpr-count.lisp")
 (env-load "transpiler/front-end/tag-convert.lisp")
 (env-load "transpiler/front-end/expression-expand/argument-expand.lisp")
 (env-load "transpiler/front-end/expression-expand/expression-expand.lisp")

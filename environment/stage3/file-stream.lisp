@@ -1,4 +1,4 @@
-;;;; tré – Copyright (c) 2005–2006,2008,2011–2012 Sven Michael Klose <pixel@copei.de>
+;;;; tré – Copyright (c) 2005–2006,2008,2011–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun %fopen-direction (direction)
   (case direction
@@ -10,9 +10,10 @@
 (defun open (path &key direction)
   (!? (%fopen path (%fopen-direction direction))
       (make-stream
-          :handle !
-          :fun-in #'((str)
-                       (%stream-track-input-location str (%read-char (stream-handle str))))
+          :handle  !
+          :in-id   path
+          :fun-in  #'((str)
+                        (%stream-track-input-location str (%read-char (stream-handle str))))
           :fun-out #'((c str)
                         (%princ c (stream-handle str)))
           :fun-eof #'((str)
