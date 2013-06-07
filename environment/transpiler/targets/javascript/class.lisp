@@ -1,29 +1,26 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
-(defun js-make-constructor (cname bases args body)
-  (let magic (list 'quote ($ '__ cname))
+(defun js-gen-inherited-methods (class-name bases)
+  (filter ^(hash-merge (slot-value ,class-name 'prototype)
+                       (slot-value ,_ 'prototype))
+          bases))
+
+(defun js-gen-inherited-constructor-calls (bases)
+  (filter ^((slot-value ,_ 'CALL) this) bases))
+
+(defun js-gen-constructor (class-name bases args body)
+  (let magic (list 'quote ($ '__ class-name))
     `(progn
-       (defun ,cname ,args
-         (= (slot-value this ,magic) t)
-         ; Inject calls to base constructors.
-         ,@(filter ^((slot-value ,_ 'CALL) this) bases)
+       (defun ,class-name ,args
+         ,@(js-gen-inherited-constructor-calls bases)
          (let ~%this this
-           (%thisify ,cname
-             ,@(ignore-body-doc body))))
-
-       ; Inherit base class prototypes.
-       ,@(filter ^(hash-merge (slot-value ,cname 'PROTOTYPE)
-                              (slot-value ,_ 'PROTOTYPE))
-		         bases)
-
-	   ; Make predicate.
-	   (defun ,($ cname '?) (x)
-	     (& (object? x)
-            (defined? (slot-value x ,magic))
-            x)))))
+           (%thisify ,class-name ,@body)))
+       ,@(js-gen-inherited-methods class-name bases)
+	   (defun ,($ class-name '?) (x)
+	     (%%native x " instanceof " ,(compiled-function-name-string *transpiler* class-name))))))
 
 (define-js-std-macro defclass (class-name args &rest body)
-  (apply #'transpiler_defclass #'js-make-constructor class-name args body))
+  (apply #'transpiler_defclass #'js-gen-constructor class-name args body))
 
 (define-js-std-macro defmethod (class-name name args &rest body)
   (apply #'transpiler_defmethod class-name name args body))
@@ -36,11 +33,11 @@
 	#'(,.x.
 		(%thisify ,class-name
 		  (let ~%this this
-	        ,@(| (ignore-body-doc ..x.) (list nil)))))))
+	        ,@(| ..x. (list nil)))))))
 
 (defun js-emit-methods (class-name cls)
   (awhen (class-methods cls)
-	`(hash-merge (slot-value ,class-name 'PROTOTYPE)
+	`(hash-merge (slot-value ,class-name 'prototype)
 	             (%%%make-hash-table ,@(mapcan [js-emit-method class-name _] (reverse !))))))
 
 (define-js-std-macro finalize-class (class-name)
