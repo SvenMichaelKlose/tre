@@ -23,8 +23,7 @@
 		  	                                    (dot-expand (list-symbol without-end))))))
 
 (defun dot-expand (x)
-  (with (starts-with-dot?  [== #\. (elt _ 0)]
-  		 dot-position [position #\. _ :test #'==]
+  (with (dot-position [position #\. _ :test #'==]
 		 conv
 			#'((x)
 				 (with (sl (string-list (symbol-name x))
@@ -42,9 +41,9 @@
     (when x
       (?
 		(label? x) (conv x)
-		(cons? x) (progn
-                    (make-default-listprop x)
-                    (cons-r dot-expand x))
+		(cons? x)  (progn
+                     (make-default-listprop x)
+                     (cons-r dot-expand x))
       	x))))
 
 (%set-atom-fun *dotexpand-hook* #'dot-expand)
