@@ -63,9 +63,11 @@
 (define-js-macro function (&rest x)
   (alet (cons 'function x)
     (? .x
-       (let name (compiled-function-name-string *transpiler* (lambda-name !))
-         `(,name "="
-           "function " ,@(js-argument-list 'unnamed-js-function (lambda-args !)) ,*js-newline*
+       (with (name            (lambda-name !)
+              translated-name (? (transpiler-defined-function *transpiler* name)
+                                 (compiled-function-name-string *transpiler* name)
+                                 name))
+         `(,translated-name "=" "function " ,@(js-argument-list 'codegen-function-macro (lambda-args !)) ,*js-newline*
 	       "{" ,*js-newline*
 		       ,@(lambda-body !)
 	       "}" ,*js-newline*))
