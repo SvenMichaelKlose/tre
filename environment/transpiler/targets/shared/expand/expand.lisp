@@ -22,7 +22,7 @@
 
 (define-shared-std-macro (js php) functional (&rest x)
   (print-definition `(functional ,@x))
-  (adolist (x)
+  (adolist x
     (? (transpiler-functional? *transpiler* !)
        (warn "Redefinition of functional ~A." !))
     (transpiler-add-functional *transpiler* !))
@@ -76,7 +76,7 @@
       (redef-warn "redefinition of variable ~A.~%" name))
     (transpiler-add-defined-variable tr name)
     (when *have-compiler?*
-      (transpiler-add-delayed-var-init tr `((%setq *variables* (cons (cons ',name ',val) *variables*)))))
+      (transpiler-add-delayed-var-init tr `((= *variables* (cons (cons ',name ',val) *variables*)))))
     `(progn
        ,@(when (transpiler-needs-var-declarations? tr)
            `((%var ,name)))
