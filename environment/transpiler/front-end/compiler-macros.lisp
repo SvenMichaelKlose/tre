@@ -24,11 +24,9 @@
   (with-compiler-tag end-tag
     `(%%block
        ,@(mapcan [with-compiler-tag next
-                   `(,@(unless (t? _.)
-                         `((%setq ~%ret ,_.)
-                           (%%go-nil ,next ~%ret)))
-                     ,@(awhen (distinguish-vars-from-tags ._)
-				         `((%setq ~%ret (%%block ,@!))))
+                   `((%setq ~%ret ,_.)
+                     (%%go-nil ,next ~%ret)
+				     (%setq ~%ret (%%block ,@(distinguish-vars-from-tags ._)))
                      (%%go ,end-tag)
                      ,next)]
 			     args)
