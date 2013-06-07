@@ -1,12 +1,5 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
-(defun ignore-body-doc (body)
-  (? (& (not (transpiler-assert? *transpiler*))
-	    (string? body.)
-	    .body)
-	 .body
-	 body))
-
 (defvar *delayed-constructors* nil)
 
 (defun transpiler_defclass (constructor-maker class-name args &rest body)
