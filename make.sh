@@ -69,7 +69,7 @@ OS_VERSION="unknown" #`uname -v`
 BUILD_MACHINE_INFO="-DTRE_BIG_ENDIAN -DLIBC_PATH=\"$LIBC_PATH\" -DTRE_KERNEL_IDENT=\"$KERNEL_IDENT\" -DTRE_CPU_TYPE=\"$CPU_TYPE\" -DTRE_OS_RELEASE=\"$OS_RELEASE\" -DTRE_OS_VERSION=\"$OS_VERSION\""
 
 GNU_LIBC_FLAGS="-D_GNU_SOURCE -D_BSD_SOURCE -D_SVID_SOURCE"
-C_DIALECT_FLAGS="-ansi -Wall -Wextra"
+C_DIALECT_FLAGS="-ansi -Wall -Wextra -Werror"
 
 CFLAGS="-pipe $C_DIALECT_FLAGS $GNU_LIBC_FLAGS $BUILD_MACHINE_INFO $ARGS"
 
@@ -248,7 +248,7 @@ restore)
 	echo "  compiler     Compile just the compiler, not the whole environment."
     echo "  all          Compile environment."
     echo "  bytecode     Compile environment to bytecode, replacing the C functions."
-    echo "  build        Do a regular C source build file by file."
+    echo "  build        Do a regular build file by file."
     echo "  debug        Compile C sources for gdb. May the force be with you."
     echo "  crunsh       Compile C sources as one big file for best optimization."
     echo "  reload       Reload the environment."
@@ -256,7 +256,7 @@ restore)
     echo "  backup       Backup installation to local directory 'backup'."
     echo "  restore      Restore the last 'backup'."
     echo "  install      Install the compiled executable."
-    echo "  clean        Remove executable, object files and garbage."
-    echo "  distclean    Like 'clean' but also removing the last 'backup'."
+    echo "  clean        Remove built files but not the backup."
+    echo "  distclean    Like 'clean' but also removes backups."
     ;;
 esac
