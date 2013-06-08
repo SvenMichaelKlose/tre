@@ -7,9 +7,8 @@
     (eq '%%in-package x.)
       (& (= (transpiler-current-package *transpiler*) (& .x. (make-package (symbol-name .x.))))
          nil)
-    (progn
-      (make-default-listprop x)
-      (cons-r process-%%in-package x))))
+    (listprop-cons x (process-%%in-package x.)
+                     (process-%%in-package .x))))
 
 (defun make-packages-0 (x)
   (let tr *transpiler*
@@ -26,9 +25,8 @@
         (& (= (transpiler-current-package tr) (& .x. (make-package (symbol-name .x.))))
            nil)
       (%slot-value? x) x
-      (progn
-        (make-default-listprop x)
-        (cons-r make-packages-0 x)))))
+      (listprop-cons x (make-packages-0 x.)
+                       (make-packages-0 .x)))))
 
 (defun make-packages (x)
   (let processed (process-%%in-package x)

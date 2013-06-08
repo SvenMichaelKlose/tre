@@ -48,8 +48,10 @@
           (progn
             (? (cpr %gsbq)
                (setq *default-listprop* (cpr %gsbq)))
-            (cons (copy-tree (car (cdr (car %gsbq))))
-                  (%backquote (cdr %gsbq))))
+            (#'((p c) (rplacp c p))
+              *default-listprop*
+              (cons (copy-tree (car (cdr (car %gsbq))))
+                    (%backquote (cdr %gsbq)))))
           (#'((%gstmp)
                 (?
                   (not %gstmp) (%backquote (cdr %gsbq))
@@ -61,17 +63,23 @@
 ;; Expand BACKQUOTE arguments.
 (%set-atom-fun %backquote
   #'((%gsbq)
-       (? (cons? %gsbq)
-          (? (cpr %gsbq)
-             (setq *default-listprop* (cpr %gsbq))))
        (?
          (atom %gsbq) %gsbq
-         (atom (car %gsbq)) (cons (car %gsbq)
-                                  (%backquote (cdr %gsbq)))
-         (eq 'QUASIQUOTE (car (car %gsbq))) (%backquote-quasiquote %gsbq)
-         (eq 'QUASIQUOTE-SPLICE (car (car %gsbq))) (%backquote-quasiquote-splice %gsbq)
-         (cons (%backquote (car %gsbq))
-               (%backquote (cdr %gsbq))))))
+         (progn
+           (? (cpr %gsbq)
+              (setq *default-listprop* (cpr %gsbq)))
+           (#'((p c)
+                 (? (cons? c)
+                    (rplacp c p)
+                    c))
+             *default-listprop*
+             (?
+               (atom (car %gsbq)) (cons (car %gsbq)
+                                        (%backquote (cdr %gsbq)))
+               (eq 'QUASIQUOTE (car (car %gsbq))) (%backquote-quasiquote %gsbq)
+               (eq 'QUASIQUOTE-SPLICE (car (car %gsbq))) (%backquote-quasiquote-splice %gsbq)
+               (cons (%backquote (car %gsbq))
+                     (%backquote (cdr %gsbq)))))))))
 
 (%set-atom-fun backquote
   (special (%gsbq) (%backquote %gsbq)))

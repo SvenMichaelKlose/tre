@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2009,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2009,2012–2013 Sven Michael Klose <pixel@copei.de>
 
 ;;;; QUASIQUOTEs outside BACKQUOTEs are treated here. They serve as
 ;;;; anonymous macros.
@@ -19,14 +19,16 @@
           (progn
             (? (cpr x)
                (setq *default-listprop* (cpr x)))
-		    (?
-              (atom (car x))                 (cons (car x) (%quasiquote-expand (cdr x)))
-		      (eq (car (car x)) 'quote)      (cons (car x) (%quasiquote-expand (cdr x)))
-		      (eq (car (car x)) 'backquote)  (cons (car x) (%quasiquote-expand (cdr x)))
-		      (eq (car (car x)) 'quasiquote) (cons (eval (cadar x)) (%quasiquote-expand (cdr x)))
-		      (eq (car (car x)) 'quasiquote-splice) (append (eval (cadar x)) (%quasiquote-expand (cdr x)))
-		      (cons (%quasiquote-expand (car x))
-				    (%quasiquote-expand (cdr x))))))))
+            (#'((p c) (rplacp c p))
+              *default-listprop*
+		      (?
+                (atom (car x))                 (cons (car x) (%quasiquote-expand (cdr x)))
+		        (eq (car (car x)) 'quote)      (cons (car x) (%quasiquote-expand (cdr x)))
+		        (eq (car (car x)) 'backquote)  (cons (car x) (%quasiquote-expand (cdr x)))
+		        (eq (car (car x)) 'quasiquote) (cons (eval (cadar x)) (%quasiquote-expand (cdr x)))
+		        (eq (car (car x)) 'quasiquote-splice) (append (eval (cadar x)) (%quasiquote-expand (cdr x)))
+		        (cons (%quasiquote-expand (car x))
+				      (%quasiquote-expand (cdr x)))))))))
 
 (%set-atom-fun quasiquote-expand ; XXX
   #'((x)

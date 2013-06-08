@@ -3,7 +3,8 @@
 (transpiler-pass transpiler-frontend-2 (tr)
     thisify                   [thisify (transpiler-thisify-classes tr) _]
     cpr                       [cpr-count _ "thisify"]
-    opt-inline                [? *opt-inline?*
+    opt-inline                [? (& *opt-inline?*
+                                    (not (transpiler-inject-debugging? tr)))
                                  (opt-inline tr _)
 	                             _]
     cpr                       [cpr-count _ "opt-inline"]

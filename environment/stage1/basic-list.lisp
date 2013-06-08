@@ -14,4 +14,6 @@
      (progn
        (? (cpr x)
           (setq *default-listprop* (cpr x)))
-	   (cons (car x) (copy-list (cdr x))))))
+       (#'((p c) (rplacp c p))
+         *default-listprop*
+	     (cons (car x) (copy-list (cdr x)))))))

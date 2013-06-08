@@ -45,8 +45,10 @@
             (progn
               (? (cpr x)
                  (setq *default-listprop* (cpr x)))
-              (cons (copy-tree (car x))
-              	    (copy-tree (cdr x))))))))
+              (#'((p c) (rplacp c p))
+                *default-listprop*
+                (cons (copy-tree (car x))
+              	      (copy-tree (cdr x)))))))))
 
 (%set-atom-fun last
   #'((x)

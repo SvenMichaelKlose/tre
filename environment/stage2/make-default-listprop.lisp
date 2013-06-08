@@ -5,3 +5,10 @@
     `(let ,g ,x
        (awhen (& (cons? ,g) (cpr ,g))
          (= *default-listprop* !)))))
+
+(defmacro listprop-cons (x a d)
+  (with-gensym g
+    `(progn
+       (make-default-listprop ,x)
+       (let ,g *default-listprop*
+         (rplacp (cons ,a ,d) ,g)))))

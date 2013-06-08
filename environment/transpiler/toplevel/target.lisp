@@ -9,30 +9,38 @@
      (eq x y)
      (string== x y)))
 
-(defun compile-file? (file processed-files files-to-update)
-  (| (member file files-to-update :test #'eq-string==)
-     (not (assoc file processed-files :test #'eq-string==))))
+(defun compile-file? (section processed-sections sections-to-update)
+  (| (member section sections-to-update :test #'eq-string==)
+     (not (assoc section processed-sections :test #'eq-string==))))
 
-(defun target-transpile-2 (tr files files-to-update)
+(defun accumulated-toplevel? (section)
+  (not (eq 'accumulated-toplevel section)))
+
+(defun target-transpile-2 (tr sections sections-to-update)
   (let compiled-code (make-queue)
-	(dolist (i files (queue-list compiled-code))
-      (let code (? (compile-file? i. (transpiler-compiled-files tr) files-to-update)
-                   (with-temporary (transpiler-accumulate-toplevel-expressions? tr) (not (eq 'accumulated-toplevel i.))
-                     (transpiler-make-code tr .i))
-                   (assoc-value i. (transpiler-compiled-files tr) :test #'eq-string==))
-        (aadjoin! code i. (transpiler-compiled-files tr) :test #'eq-string==)
-	    (enqueue compiled-code code)))))
+	(dolist (i sections (queue-list compiled-code))
+      (with-cons section data i
+        (let code (? (compile-file? section (transpiler-compiled-files tr) sections-to-update)
+                     (with-temporary (transpiler-accumulate-toplevel-expressions? tr) (not (accumulated-toplevel? section))
+                       (transpiler-make-code tr data))
+                     (assoc-value section (transpiler-compiled-files tr) :test #'eq-string==))
+          (aadjoin! code section (transpiler-compiled-files tr) :test #'eq-string==)
+	      (enqueue compiled-code code))))))
 
-(defun target-transpile-1 (tr files files-to-update)
+(defun target-transpile-1 (tr sections sections-to-update)
   (let frontend-code (make-queue)
-	(dolist (i files (queue-list frontend-code))
-      (let code (? (compile-file? i. (transpiler-frontend-files tr) files-to-update)
-                   (? (symbol? i.)
-                      (transpiler-frontend tr (? (function? .i) (funcall .i) .i))
-		  			  (transpiler-frontend-file tr i.))
-                   (assoc-value i. (transpiler-frontend-files tr) :test #'eq-string==))
-        (aadjoin! code i. (transpiler-frontend-files tr) :test #'eq-string==)
-	    (enqueue frontend-code (cons i. code))))))
+	(dolist (i sections (queue-list frontend-code))
+      (with-cons section data i
+        (let code (? (compile-file? section (transpiler-frontend-files tr) sections-to-update)
+                     (?
+                       (symbol? section) (transpiler-frontend tr (? (function? data)
+                                                                    (funcall data)
+                                                                    data))
+		  			   (string? section) (transpiler-frontend-file tr section)
+                       (error "Compiler input is not described by a symbol (paired with a function or expressions) or a file name string. Got ~A instead" i.))
+                     (assoc-value section (transpiler-frontend-files tr) :test #'eq-string==))
+          (aadjoin! code section (transpiler-frontend-files tr) :test #'eq-string==)
+	      (enqueue frontend-code (cons section code)))))))
 
 (defun target-sighten-deps (tr dep-gen)
   (& dep-gen
@@ -65,7 +73,7 @@
       (& *show-transpiler-progress?*
          (format t "; ~A top level expressions.~%; Let me think. Hmm...~F" num-exprs))
       (with (compiled-before (target-transpile-2 tr before-deps files-to-update)
-	         compiled-deps   (awhen deps (transpiler-make-code tr !))
+	         compiled-deps   (!? deps (transpiler-make-code tr !))
 		     compiled-after  (target-transpile-2 tr after-deps files-to-update))
 ;           compiled-acctop (when (transpiler-accumulate-toplevel-expressions? tr)
 ;	                         (transpiler-make-code tr 
@@ -83,5 +91,6 @@
                                        (transpiler-imported-deps tr)
 	                                   compiled-after)
                                        ;(| compiled-acctop ""))
-            (& print-obfuscations? (transpiler-obfuscate? tr)
+            (& print-obfuscations?
+               (transpiler-obfuscate? tr)
                (transpiler-print-obfuscations tr))))))))

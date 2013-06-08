@@ -41,9 +41,8 @@
     (when x
       (?
 		(label? x) (conv x)
-		(cons? x)  (progn
-                     (make-default-listprop x)
-                     (cons-r dot-expand x))
+		(cons? x)  (listprop-cons x (dot-expand (car x))
+                                    (dot-expand (cdr x)))
       	x))))
 
 (%set-atom-fun *dotexpand-hook* #'dot-expand)

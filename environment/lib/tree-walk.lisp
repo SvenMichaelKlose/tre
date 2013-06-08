@@ -5,7 +5,6 @@
   (? (atom i)
 	 (funcall ascending i)
      (progn
-       (make-default-listprop i)
 	   (with (y i.
 		      a (| (& dont-ascend-if (funcall dont-ascend-if y) y)
 				   (? (& dont-ascend-after-if (funcall dont-ascend-after-if y))
@@ -16,6 +15,7 @@
 					 		     :ascending ascending
 					 		     :dont-ascend-if dont-ascend-if
 					 		     :dont-ascend-after-if dont-ascend-after-if))))
-	    (cons a (tree-walk .i :ascending ascending
-						      :dont-ascend-if dont-ascend-if
-						      :dont-ascend-after-if dont-ascend-after-if))))))
+        (listprop-cons i a
+                         (tree-walk .i :ascending ascending
+						               :dont-ascend-if dont-ascend-if
+						               :dont-ascend-after-if dont-ascend-after-if))))))

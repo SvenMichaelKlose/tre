@@ -84,9 +84,8 @@
 	(atom x)  x
 	(atom x.) (cons x. (lambda-expand-tree-0 fi .x))
     (progn
-      (make-default-listprop x)
-	  (cons (lambda-expand-tree-cons fi x.)
-		    (lambda-expand-tree-0 fi .x)))))
+	  (listprop-cons x (lambda-expand-tree-cons fi x.)
+		               (lambda-expand-tree-0 fi .x)))))
 
 (defun lambda-expand-tree (fi x)
   (aprog1 (lambda-expand-tree-0 fi x)

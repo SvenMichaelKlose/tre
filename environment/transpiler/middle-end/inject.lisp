@@ -2,17 +2,27 @@
 
 (defvar *former-position* nil)
 
-(defun foureign-cpr? (x old)
+(def-head-predicate debugger-step)
+
+(defun same-location? (a b)
+  (& a b
+     (string== a. b.)
+     (== (car .a) (car .b))
+     (== (cdr .a) (cdr .b))))
+
+(defun find-next-location (x old)
   (& (cons? x)
-     (| (& (not (eq old (cpr x)))
+     (| (& (not (same-location? old (cpr x)))
            (cpr x))
-        (foureign-cpr? x. old)
-        (foureign-cpr? .x old))))
+        (find-next-location x. old)
+        (find-next-location .x old))))
 
 (metacode-walker inject-debugging (x)
-	:if-cons (!? (foureign-cpr? x *former-position*)
+	:if-cons (!? (& (%setq? x.)
+                    (not (debugger-step? (%setq-value x.)))
+                    (find-next-location x *former-position*))
                  (progn
                    (= *former-position* !)
-                   `((%setq nil (%debug-step ,(car !) ,(car .!) ,(cdr .!)))
+                   `((%setq nil (debugger-step ,(car !) ,(car .!) ,(cdr .!)))
                      ,x.))
                  (list x.)))

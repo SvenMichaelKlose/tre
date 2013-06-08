@@ -21,13 +21,12 @@
 	(atom x)    (thisify-symbol classdef x exclusions)
 	(%quote? x) x
 	(lambda? x) (copy-lambda x :body (thisify-list-0 classdef (lambda-body x) (append exclusions (lambda-args x))))
-    (progn
-      (make-default-listprop x)
-      (cons (? (%slot-value? x.)
-			   `(%slot-value ,(thisify-list-0 classdef (cadr x.) exclusions)
-					         ,(caddr x.))
-			   (thisify-list-0 classdef x. exclusions))
-		    (thisify-list-0 classdef .x exclusions)))))
+    (listprop-cons x
+                   (? (%slot-value? x.)
+			          `(%slot-value ,(thisify-list-0 classdef (cadr x.) exclusions)
+                                    ,(caddr x.))
+                      (thisify-list-0 classdef x. exclusions))
+                   (thisify-list-0 classdef .x exclusions))))
 
 (defun thisify-list (classes x cls)
   (thisify-list-0 (thisify-collect-methods-and-members (href classes cls)) x nil))
@@ -39,7 +38,4 @@
 	 (atom x)       x
 	 (%thisify? x.) (append (thisify-list classes (cddr x.) (cadr x.))
 			                (thisify classes .x))
-     (progn
-       (make-default-listprop x)
-	   (cons (thisify classes x.)
-	 	     (thisify classes .x)))))
+     (listprop-cons x (thisify classes x.) (thisify classes .x))))

@@ -49,33 +49,38 @@
       *current-macro* nil
       *macroexpand-print?* nil)
 
+(print 1)
 (%set-atom-fun %macroexpand-backquote
   #'((%g)
-       (? (cons? %g)
-          (? (cpr %g)
-             (setq *default-listprop* (cpr %g))))
        (?
          (atom %g) %g
+         (progn
+            (? (cpr %g)
+               (setq *default-listprop* (cpr %g)))
+            (#'((p c)
+                  (rplacp c p))
+              *default-listprop*
+              (?
+                (atom (car %g))
+	  	          (cons (car %g)
+                        (%macroexpand-backquote (cdr %g)))
 
-         (atom (car %g))
-	  	   (cons (car %g)
-                 (%macroexpand-backquote (cdr %g)))
+                (eq (car (car %g)) 'QUASIQUOTE)
+	  	          (cons (cons 'QUASIQUOTE
+		        	          (%macroexpand (cdr (car %g))))
+	                    (%macroexpand-backquote (cdr %g)))
 
-         (eq (car (car %g)) 'QUASIQUOTE)
-	  	   (cons (cons 'QUASIQUOTE
-		        	   (%macroexpand (cdr (car %g))))
-	             (%macroexpand-backquote (cdr %g)))
+                (eq (car (car %g)) 'QUASIQUOTE-SPLICE)
+	  	          (cons (cons 'QUASIQUOTE-SPLICE
+		        	          (%macroexpand (cdr (car %g))))
+	                    (%macroexpand-backquote (cdr %g)))
 
-         (eq (car (car %g)) 'QUASIQUOTE-SPLICE)
-	  	   (cons (cons 'QUASIQUOTE-SPLICE
-		        	   (%macroexpand (cdr (car %g))))
-	             (%macroexpand-backquote (cdr %g)))
-
-         (cons (%macroexpand-backquote (car %g))
-	           (%macroexpand-backquote (cdr %g))))))
+                (cons (%macroexpand-backquote (car %g))
+	                  (%macroexpand-backquote (cdr %g)))))))))
 
 (setq *macroexpand-backquote-diversion* #'%macroexpand-backquote)
 
+(print 2)
 (%set-atom-fun %macroexpand-rest
   #'((%g)
        (? (atom %g)
@@ -83,9 +88,13 @@
           (progn
             (? (cpr %g)
                (setq *default-listprop* (cpr %g)))
-       	    (cons (%macroexpand (car %g))
-                  (%macroexpand-rest (cdr %g)))))))
+            (#'((p c)
+                  (rplacp c p))
+       	      *default-listprop*
+              (cons (%macroexpand (car %g))
+                    (%macroexpand-rest (cdr %g))))))))
 
+(print 3)
 (%set-atom-fun %macroexpand-xlat
   #'((%g)
        (? *macroexpand-print?*
@@ -100,46 +109,56 @@
              %g)
          (apply *macrocall-diversion* (list %g)))))
 
+(print 4)
 (%set-atom-fun %macroexpand-call
   #'((%g)
        (? (? (atom (car %g))
 		     (apply *macrop-diversion* (list %g)))
           (%macroexpand-xlat %g)
 		  %g)))
+(print 5)
 
 (%set-atom-fun %macroexpand
   #'((%g)
        (?
-         (atom %g)
-           %g
-
+         (atom %g) %g
          (progn
            (? (cpr %g)
               (setq *default-listprop* (cpr %g)))
-           (?
-             (eq (car %g) 'QUOTE)             %g
-             (eq (car %g) 'BACKQUOTE)         (cons 'BACKQUOTE (apply *macroexpand-backquote-diversion* (list (cdr %g))))
-             (eq (car %g) 'QUASIQUOTE)        (cons 'QUASIQUOTE (%macroexpand (cdr %g)))
-             (eq (car %g) 'QUASIQUOTE-SPLICE) (cons 'QUASIQUOTE-SPLICE (%macroexpand (cdr %g)))
-             (%macroexpand-call (%macroexpand-rest %g)))))))
+           (#'((p c)
+                 (? (cons? c)
+                    (rplacp c p)
+                    c))
+             *default-listprop*
+             (?
+               (eq (car %g) 'QUOTE)             %g
+               (eq (car %g) 'BACKQUOTE)         (cons 'BACKQUOTE (apply *macroexpand-backquote-diversion* (list (cdr %g))))
+               (eq (car %g) 'QUASIQUOTE)        (cons 'QUASIQUOTE (%macroexpand (cdr %g)))
+               (eq (car %g) 'QUASIQUOTE-SPLICE) (cons 'QUASIQUOTE-SPLICE (%macroexpand (cdr %g)))
+               (%macroexpand-call (%macroexpand-rest %g))))))))
 
+(print 6)
 (%set-atom-fun %%macrop
   #'((%g)
        (? (symbol? (car %g))
           (macrop (symbol-function (car %g))))))
 
+(print 7)
 (%set-atom-fun %%macrocall
   #'((%g)
        (apply (symbol-function (car %g)) (cdr %g))))
 
+(print 8)
 (%set-atom-fun %%env-macrop
   #'((%g)
        (%%macrop %g)))
 
+(print 9)
 (%set-atom-fun %%env-macrocall
   #'((%g)
        (%%macrocall %g)))
 
+(print 10)
 (%set-atom-fun *macroexpand-hook*
   #'((%g)
 	   (#'((%gp %gc %gcm)
@@ -153,3 +172,4 @@
 				   %g)
 	           (%macroexpand %g)))
           *macrop-diversion* *macrocall-diversion* *current-macro*)))
+(print 10000)
