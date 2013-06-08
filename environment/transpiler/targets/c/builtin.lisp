@@ -94,7 +94,7 @@
 		(LIST)
 ;    	(CAR)
 ;		(CDR)
-		(CPR)
+;		(CPR)
 		(RPLACA)
 		(RPLACD)
 		(RPLACP)

@@ -45,7 +45,7 @@
 (define-c-std-macro filter (fun lst)
   (shared-opt-filter fun lst))
 
-(mapcar-macro x '(car cdr cons? atom symbol? number? string? array? builtin? function? identity)
+(mapcar-macro x '(car cdr cpr cons? atom symbol? number? string? array? builtin? function? identity)
   `(progn
      (functional ,($ '% x))
      (define-c-std-macro ,x (x)

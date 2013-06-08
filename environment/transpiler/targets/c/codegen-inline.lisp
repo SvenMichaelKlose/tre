@@ -15,6 +15,9 @@
 (define-c-macro %cdr (x)
   `("(" ,x " == treptr_nil ? treptr_nil : tre_lists[" ,x "].cdr)"))
 
+(define-c-macro %cpr (x)
+  `("(" ,x " == treptr_nil ? treptr_nil : tre_listprops[" ,x "])"))
+
 (mapcan-macro _
 	'((%cons?    "CONS")
 	  (%atom     "ATOM")
@@ -28,6 +31,3 @@
 
 (define-c-macro %function? (x)
   `("(TREPTR_TRUTH(TREPTR_IS_FUNCTION(" ,x ") || IS_COMPILED_FUN(" ,x ")))"))
-
-(define-c-macro %identity (x)
-  x)
