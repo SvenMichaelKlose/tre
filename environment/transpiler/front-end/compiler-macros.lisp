@@ -24,11 +24,15 @@
   (with-compiler-tag end-tag
     `(%%block
        ,@(mapcan [with-compiler-tag next
-                   `((%setq ~%ret ,_.)
-                     (%%go-nil ,next ~%ret)
-				     (%setq ~%ret (%%block ,@(distinguish-vars-from-tags ._)))
-                     (%%go ,end-tag)
-                     ,next)]
+                   (when _.
+                     `(,@(unless (t? _.)
+                           `((%setq ~%ret ,_.)
+                             (%%go-nil ,next ~%ret)))
+				       ,@(!? (distinguish-vars-from-tags ._)
+				             `((%setq ~%ret (%%block ,@!))))
+                       (%%go ,end-tag)
+                       ,@(unless (t? _.)
+                           (list next))))]
 			     args)
        ,end-tag
 	   (identity ~%ret))))
