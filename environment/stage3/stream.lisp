@@ -24,16 +24,19 @@
 
   (user-detail nil))
 
+(defun next-tabulator-column (column size)
+  (1+ (* size (1+ (integer (/ (1- column) size))))))
+
 (defun %stream-track-input-location (str x)
   (when (stream-track-input-location? str)
     (? (string? x)
-       (dolist (i (string-list x))
-         (%stream-track-input-location str i))
+       (adolist ((string-list x))
+         (%stream-track-input-location str !))
        (? (== 10 x)
           (progn
             (= (stream-in-column str) 1)
             (1+! (stream-in-line str)))
           (?
-            (== 9 x) (= (stream-in-column str) (* (stream-in-tabsize str) (1+ (integer (/ (stream-in-column str) (stream-in-tabsize str))))))
+            (== 9 x) (= (stream-in-column str) (next-tabulator-column (stream-in-column str) (stream-in-tabsize str)))
             (< 31 x) (1+! (stream-in-column str))))))
   x)
