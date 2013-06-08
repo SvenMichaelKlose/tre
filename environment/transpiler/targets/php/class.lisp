@@ -3,8 +3,14 @@
 (defun php-constructor-name (class-name)
   ($ class-name '-constructor))
 
+(defun php-compiled-constructor-name (class-name)
+  (compiled-function-name *transpiler* (php-constructor-name class-name)))
+
 (defun php-method-name (class-name name)
   ($ class-name '- name))
+
+(defun php-compiled-method-name (class-name name)
+  (compiled-function-name *transpiler* (php-method-name class-name name)))
 
 (defun php-constructor (class-name bases args body)
   (transpiler-add-defined-function *transpiler* class-name args body)
@@ -36,7 +42,7 @@
 (defun php-method (class-name x)
   `("public function " ,x. " " ,(php-argument-list (argument-expand-names 'php-method .x.)) ,*php-newline*
     "{" ,*php-newline*
-        ,*php-indent* "return " ,(php-method-name class-name x.) ,(php-argument-list (argument-expand-names 'php-method-function-call (cons 'this .x.))) ,*php-separator*
+        ,*php-indent* "return " ,(php-compiled-method-name class-name x.) ,(php-argument-list (argument-expand-names 'php-method-function-call (cons 'this .x.))) ,*php-separator*
     "}"))
 
 (defun php-members (class-name cls)
@@ -65,7 +71,7 @@
                         ,(alet (argument-expand-names 'php-constructor-function (transpiler-function-arguments *transpiler* class-name))
                            `("public function __construct " ,(php-argument-list !) ,*php-newline*
                              "{" ,*php-newline*
-                                 ,*php-indent* "return " ,(php-constructor-name class-name) ,(php-argument-list (cons 'this !)) ,*php-separator*
+                                 ,*php-indent* "return " ,(php-compiled-constructor-name class-name) ,(php-argument-list (cons 'this !)) ,*php-separator*
                              "}")) ,*php-newline*
                         ,@(php-members class-name !)
 	                    ,@(php-methods class-name !)
