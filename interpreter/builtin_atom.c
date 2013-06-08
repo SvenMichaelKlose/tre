@@ -161,9 +161,7 @@ treptr
 treatom_builtin_type_id (treptr args)
 {
     treptr arg = trearg_get (args);
-	return TREPTR_IS_CONS(arg) ?
-               treatom_number_get (0, TRENUMTYPE_INTEGER) :
-               treatom_number_get (TREATOM_TYPE(arg), TRENUMTYPE_INTEGER);
+	return treatom_number_get (TREPTR_TYPE(arg), TRENUMTYPE_INTEGER);
 }
 
 treptr
