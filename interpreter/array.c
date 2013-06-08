@@ -19,7 +19,7 @@
 #include "gc.h"
 
 struct tre_array *
-trearray_get_raw (size_t size)
+trearray_get_raw (tre_size size)
 {
     struct tre_array * a;
     treptr * v;
@@ -41,12 +41,12 @@ trearray_get_raw (size_t size)
     return a;
 }
 
-size_t
+tre_size
 trearray_get_size (treptr sizes)
 {
     treptr a;
     treptr car;
-    size_t size = 1;
+    tre_size size = 1;
 
     _DOLIST(a, sizes) {
 		car = _CAR(a);
@@ -63,7 +63,7 @@ trearray_get (treptr sizes)
 {
     treptr a;
     struct tre_array * array;
-    size_t  size = trearray_get_size (sizes);
+    tre_size  size = trearray_get_size (sizes);
 
     tregc_push (sizes);
     array = trearray_get_raw (size);
@@ -83,7 +83,7 @@ trearray_get (treptr sizes)
 }
 
 treptr
-trearray_make (size_t size)
+trearray_make (tre_size size)
 {
 	treptr n;
 	treptr s;
@@ -106,9 +106,9 @@ trearray_free (treptr array)
 }
 
 treptr
-trearray_t_get (treptr array, size_t idx)
+trearray_t_get (treptr array, tre_size idx)
 {
-    size_t   size = TRENUMBER_VAL(CAR(TREARRAY_SIZES(array)));
+    tre_size   size = TRENUMBER_VAL(CAR(TREARRAY_SIZES(array)));
     treptr * a = TREARRAY_VALUES(array);
 
     if (size <= idx)
@@ -118,9 +118,9 @@ trearray_t_get (treptr array, size_t idx)
 }
 
 void
-trearray_t_set (treptr array, size_t idx, treptr val)
+trearray_t_set (treptr array, tre_size idx, treptr val)
 {
-    size_t   size = TRENUMBER_VAL(CAR(TREARRAY_SIZES(array)));
+    tre_size   size = TRENUMBER_VAL(CAR(TREARRAY_SIZES(array)));
     treptr * a = TREARRAY_VALUES(array);
 
     if (size <= idx) {
@@ -131,7 +131,7 @@ trearray_t_set (treptr array, size_t idx, treptr val)
     a[idx] = val;
 }
 
-size_t
+tre_size
 trearray_t_length (treptr array)
 {
     return TREARRAY_SIZE(array);

@@ -29,36 +29,38 @@ trearray_builtin_make (treptr sizes)
     return trearray_get (sizes);
 }
 
-size_t
+tre_size
 trearray_get_check_index (treptr indices, treptr sizes)
 {
     treptr  i;
     treptr  s;
-    long    tmp;
-    size_t  ti = 0;
-    size_t  r = 1;
-    size_t  argnum = 2;
+    tre_size  tmp;
+    tre_size  ti = 0;
+    tre_size  r = 1;
+    tre_size  argnum = 2;
 
     for (i = indices, s = sizes;
 			 i != treptr_nil && s != treptr_nil;
              i = CDR(i), s = CDR(s)) {
         tmp = TRENUMBER_VAL(CAR(i));
+#if 0
         if (tmp < 0)
-	    	return (size_t) -1;
+	    	return (tre_size) -1;
+#endif
 
         ti += (long) tmp * r;
         r *= TRENUMBER_VAL(CAR(s));
 		if (ti >= r) {
 	    	trewarn (treptr_invalid, "index %d (arg %d) is larger than %d",
-		      		 (size_t) tmp, argnum, r - 1);
-	    	return (size_t) -1;
+		      		 (tre_size) tmp, argnum, r - 1);
+	    	return (tre_size) -1;
 		}
 
         argnum++;
     }
 
     if (i != treptr_nil || s != treptr_nil)
-        return (size_t) -1;
+        return (tre_size) -1;
     return ti;
 }
 
@@ -69,7 +71,7 @@ trearray_get_elt (treptr list)
     treptr    indices;
     treptr    sizes;
     treptr *  elts;
-    size_t    idx;
+    tre_size  idx;
 
     if (list == treptr_nil)
 		treerror (list, "array expexted");
@@ -85,7 +87,7 @@ trearray_get_elt (treptr list)
     elts = TREARRAY_VALUES(array);
 
     idx = trearray_get_check_index (indices, sizes);
-    if (idx == (size_t) -1)
+    if (idx == (tre_size) -1)
 		return NULL;
     return &elts[idx];
 }

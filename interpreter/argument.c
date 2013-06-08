@@ -76,7 +76,7 @@ trearg_get2 (treptr *a, treptr *b, treptr list)
 }
 
 treptr
-trearg_correct (size_t argnum, unsigned type, treptr x, const char * descr)
+trearg_correct (tre_size argnum, unsigned type, treptr x, const char * descr)
 {
 	char buf[4096];
 
@@ -84,7 +84,7 @@ trearg_correct (size_t argnum, unsigned type, treptr x, const char * descr)
 		descr = "";
 
 	snprintf (buf, 4096, "argument %ld to %s: %s expected instead of %s",
-			  argnum, descr,
+			  (long) argnum, descr,
 			  treerror_typename (type),
 			  treerror_typename (TREPTR_TYPE(x)));
 
@@ -92,7 +92,7 @@ trearg_correct (size_t argnum, unsigned type, treptr x, const char * descr)
 }
 
 treptr
-trearg_typed (size_t argnum, unsigned type, treptr x, const char * descr)
+trearg_typed (tre_size argnum, unsigned type, treptr x, const char * descr)
 {
 	if (type == TRETYPE_FUNCTION && (TREPTR_TYPE(x) == TRETYPE_FUNCTION || TREPTR_TYPE(x) == TRETYPE_MACRO))
         return x;
@@ -126,7 +126,7 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
     treptr key;
     treptr original_argdef = argdef;
     treptr original_args = args;
-    size_t kpos;
+    tre_size kpos;
 
     dvars = vars = CONS(treptr_nil, treptr_nil);
     tregc_push (dvars);
@@ -236,8 +236,8 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
  				}
 
                 /* Get position of key in argument list. */
-				kpos = (size_t) trelist_position_name (key, args);
-	 			if (kpos != (size_t) -1) {
+				kpos = (tre_size) trelist_position_name (key, args);
+	 			if (kpos != (tre_size) -1) {
 		    		/* Get argument after key. */
 		    		svals = trelist_nth (args, kpos + 1);
 

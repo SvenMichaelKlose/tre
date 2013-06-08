@@ -10,8 +10,10 @@
 
 #if NUM_LISTNODES > (32 * MEGA)
 typedef size_t treptr;
+typedef size_t tre_size;
 #else
 typedef unsigned int treptr;
+typedef unsigned int tre_size;
 #endif
 
 #define TREPTR_FLAGS	((treptr) -1 << TREPTR_INDEX_WIDTH)

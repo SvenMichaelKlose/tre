@@ -65,7 +65,7 @@ tresequence_builtin_set_elt (treptr args)
 
     if (t->set == NULL)
         return treerror (seq, "sequence cannot be modified");
-    (*t->set) (seq, (size_t) TRENUMBER_VAL(idx), val);
+    (*t->set) (seq, (tre_size) TRENUMBER_VAL(idx), val);
 
     return val;
 }
@@ -87,7 +87,7 @@ tresequence_builtin_elt (treptr args)
     t = tresequence_get_type (seq);
     if (t == NULL)
         return treerror (seq, "sequence expected");
-    return (*t->get) (seq, (size_t) TRENUMBER_VAL(idx));
+    return (*t->get) (seq, (tre_size) TRENUMBER_VAL(idx));
 }
 
 treptr

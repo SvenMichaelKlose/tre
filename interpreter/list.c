@@ -54,7 +54,7 @@ trelist_copy (treptr l)
 }
 
 treptr
-trelist_delete (size_t i, treptr l)
+trelist_delete (tre_size i, treptr l)
 {
     treptr  p;
     treptr  f = treptr_nil;
@@ -109,10 +109,10 @@ trelist_position_name (treptr elt, treptr l)
     return -1;
 }
 
-size_t
+tre_size
 trelist_length (treptr p)
 {
-    size_t len = 0;
+    tre_size len = 0;
 
     while (p != treptr_nil) {
 		len++;
@@ -123,7 +123,7 @@ trelist_length (treptr p)
 }
 
 treptr
-trelist_nthcdr (treptr l, size_t idx)
+trelist_nthcdr (treptr l, tre_size idx)
 {
     while (l != treptr_nil) {
 		if (TREPTR_IS_ATOM(l))
@@ -137,7 +137,7 @@ trelist_nthcdr (treptr l, size_t idx)
 }
 
 treptr
-trelist_nth (treptr l, size_t idx)
+trelist_nth (treptr l, tre_size idx)
 {
 	l = trelist_nthcdr (l, idx);
 
@@ -147,13 +147,13 @@ trelist_nth (treptr l, size_t idx)
 }
 
 void
-trelist_t_set (treptr s, size_t idx, treptr val)
+trelist_t_set (treptr s, tre_size idx, treptr val)
 {
     RPLACA(trelist_nthcdr (s, idx), val);
 }
 
 treptr
-trelist_t_get (treptr s, size_t idx)
+trelist_t_get (treptr s, tre_size idx)
 {
     return trelist_nth (s, idx);
 }
@@ -165,7 +165,7 @@ struct tre_sequence_type trelist_seqtype = {
 };
 
 bool
-trelist_check_type (treptr list, size_t type)
+trelist_check_type (treptr list, tre_size type)
 {
     for (; list != treptr_nil; list = CDR(list))
         if (TREPTR_TYPE(CAR(list)) != type)

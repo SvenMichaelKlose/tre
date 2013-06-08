@@ -6,9 +6,9 @@
 #define TRE_SEQUENCE_H
 
 struct tre_sequence_type {
-     void    (*set) (treptr, size_t, treptr);
-     treptr  (*get) (treptr, size_t);
-     size_t  (*length) (treptr);
+     void     (*set) (treptr, tre_size, treptr);
+     treptr   (*get) (treptr, tre_size);
+     tre_size (*length) (treptr);
 };
 
 extern treptr tresequence_builtin_elt (treptr);

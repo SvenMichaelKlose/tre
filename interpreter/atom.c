@@ -56,7 +56,7 @@ treptr tre_package_keyword;
 void
 treatom_init_atom_table (void)
 {
-	size_t x;
+	tre_size x;
 
     tre_atoms_free = trealloc_item_init (
 		&tre_atoms[TREPTR_FIRST_INDEX],
@@ -197,7 +197,7 @@ treptr
 treatom_alloc_symbol (char * symbol, treptr package, treptr value)
 {
     treptr  atom = treatom_alloc (TRETYPE_SYMBOL);
-    size_t  atomi = TREPTR_INDEX(atom);
+    tre_size  atomi = TREPTR_INDEX(atom);
 
     if (value == treptr_invalid)
 		value = atom;
@@ -294,8 +294,8 @@ treatom_remove (treptr x)
 treptr
 treatom_body_to_var (treptr body)
 {        
-    size_t a;
-    size_t b; 
+    tre_size a;
+    tre_size b; 
 	treptr tmp;
 
     for (a = 0; a < NUM_ATOMS; a++) {

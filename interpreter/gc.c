@@ -102,9 +102,9 @@ tregc_trace_object (treptr p)
 void
 tregc_trace_array (treptr arr)
 {
-    size_t    size = TREARRAY_SIZE(arr);
+    tre_size    size = TREARRAY_SIZE(arr);
     treptr *  i = TREARRAY_VALUES(arr);
-    size_t    counter = size;
+    tre_size    counter = size;
 
     tregc_trace_tree (TREARRAY_SIZES(arr));
 
@@ -115,7 +115,7 @@ tregc_trace_array (treptr arr)
 void
 tregc_trace_atom (treptr a)
 {
-    size_t  ai = TREPTR_INDEX(a);
+    tre_size  ai = TREPTR_INDEX(a);
 
     if (TRE_GETMARK(tregc_atommarks, ai) == FALSE)
 		return;
@@ -179,9 +179,9 @@ tregc_mark (bool do_mark_only)
 void
 tregc_sweep (void)
 {
-    size_t i;
-    size_t j;
-    size_t idx;
+    tre_size i;
+    tre_size j;
+    tre_size idx;
     char   c;
 
     idx = 0;
@@ -249,9 +249,9 @@ tregc_mark_only ()
 void
 tregc_print_stats ()
 {
-    size_t c[TRETYPE_MAXTYPE + 1];
-    size_t i;
-    size_t atoms;
+    long c[TRETYPE_MAXTYPE + 1];
+    long i;
+    long atoms;
 
     for (i = 0; i <= TRETYPE_MAXTYPE; i++)
         c[i] = 0;
@@ -259,13 +259,13 @@ tregc_print_stats ()
     for (atoms = i = 0; i < NUM_ATOMS; i++)
         if (tre_atom_types[i] != TRETYPE_UNUSED) {
             atoms++;
-            c[(size_t) tre_atom_types[i]]++;
+            c[(int) tre_atom_types[i]]++;
         }
 
     printf (": %ld cons, %ld atoms. %ld syms, "
             "(%ld var, %ld num, %ld arr, %ld str, "
             "%ld fun, %ld mac, %ld usr, %ld blt, %ld spc).\n",
-            trelist_num_used, atoms, num_symbols,
+            (long) trelist_num_used, atoms, (long) num_symbols,
             c[TRETYPE_SYMBOL], c[TRETYPE_NUMBER], c[TRETYPE_ARRAY], c[TRETYPE_STRING],
             c[TRETYPE_FUNCTION], c[TRETYPE_MACRO], c[TRETYPE_USERSPECIAL],
             c[TRETYPE_BUILTIN], c[TRETYPE_SPECIAL]);

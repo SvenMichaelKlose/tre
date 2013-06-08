@@ -10,12 +10,12 @@
 #define TRESYMBOL_FUN(ptr)      (TREPTR_TO_ATOM(ptr).fun)
 #define TRESYMBOL_PACKAGE(ptr)  (TREPTR_TO_ATOM(ptr).package)
 
-extern size_t num_symbols;
+extern tre_size num_symbols;
 
 extern void   tresymbolpage_remove (treptr atom);
 extern struct tresymbol_page * tresymbolpage_add (treptr atom);
 extern treptr tresymbolpage_find (char * name, treptr atom);
-extern void   tresymbolpage_set_package (size_t root_index, treptr package);
+extern void   tresymbolpage_set_package (tre_size root_index, treptr package);
 
 extern char * tresymbol_add (char *);
 extern void   tresymbol_free (char *);

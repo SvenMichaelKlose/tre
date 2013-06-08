@@ -17,13 +17,13 @@ struct tre_array {
 
 extern void trearray_init (void);
 
-extern treptr trearray_get (treptr sizes);
-extern void   trearray_free (treptr);
-extern size_t trearray_get_size (treptr sizes);
+extern treptr   trearray_get (treptr sizes);
+extern void     trearray_free (treptr);
+extern tre_size trearray_get_size (treptr sizes);
 
 extern struct tre_sequence_type trearray_seqtype;
 
 /* for compiled code */
-extern treptr trearray_make (size_t size);
+extern treptr trearray_make (tre_size size);
 
 #endif

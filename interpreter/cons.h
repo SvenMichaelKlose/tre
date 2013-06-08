@@ -76,7 +76,7 @@ extern struct tre_list tre_lists[NUM_LISTNODES];
 extern treptr tre_listprops[NUM_LISTNODES];
 extern treptr tre_default_listprop;
 extern treptr tre_lists_free;
-extern size_t trelist_num_used;
+extern tre_size trelist_num_used;
 
 extern treptr _trelist_get (treptr car, treptr cdr);
 extern void   trelist_free (treptr);

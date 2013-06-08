@@ -19,9 +19,9 @@
 #include "gc.h"
 
 char *
-trestring_get_raw (size_t len)
+trestring_get_raw (tre_size len)
 {
-    size_t l = len + sizeof (size_t) + 1;
+    tre_size l = len + sizeof (tre_size) + 1;
     char * nstr = malloc (l);
 
     if (nstr == NULL)
@@ -58,7 +58,7 @@ trestring_get (const char *str)
 }
 
 treptr
-trestring_get_binary (const char *str, size_t len)
+trestring_get_binary (const char *str, tre_size len)
 {
     char * nstr = trestring_get_raw (len);
     treptr atom;
@@ -78,7 +78,7 @@ trestring_free (treptr str)
 }
 
 treptr
-trestring_t_get (treptr str, size_t idx)
+trestring_t_get (treptr str, tre_size idx)
 {
     char * s = TREPTR_STRING(str);
 
@@ -90,7 +90,7 @@ trestring_t_get (treptr str, size_t idx)
     return treatom_number_get ((double) TRESTRING_DATA(s)[idx], TRENUMTYPE_CHAR);
 }
 
-size_t
+tre_size
 trestring_t_length (treptr str)
 {
     return TRESTRING_LEN(TREPTR_STRING(str));

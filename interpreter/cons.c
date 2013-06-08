@@ -19,7 +19,7 @@ treptr tre_lists_free;
 struct tre_list tre_lists[NUM_LISTNODES];
 treptr tre_listprops[NUM_LISTNODES];
 treptr tre_default_listprop;
-size_t trelist_num_used;
+tre_size trelist_num_used;
 
 void
 trelist_rplaca (treptr cons, treptr val)
@@ -111,7 +111,7 @@ _trelist_get (treptr car, treptr cdr)
 void
 trecons_init ()
 {
-    size_t  i;
+    treptr i;
 
     for (i = 0; i < LAST_LISTNODE; i++)
 		_CDR(i) = (treptr) i + 1;
