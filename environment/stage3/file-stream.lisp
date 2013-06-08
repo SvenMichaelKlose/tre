@@ -13,7 +13,7 @@
           :handle  !
           :in-id   path
           :fun-in  #'((str)
-                        (%stream-track-input-location str (%read-char (stream-handle str))))
+                        (%read-char (stream-handle str)))
           :fun-out #'((c str)
                         (%princ c (stream-handle str)))
           :fun-eof #'((str)
