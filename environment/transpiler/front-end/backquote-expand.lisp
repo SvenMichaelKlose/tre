@@ -9,8 +9,7 @@
 
 (defun backquote-cons-quasiquote-splice (x)
   (? (any-quasiquote? (cadr x.))
-     `(%%%cons ,(copy-tree (cadr x.))
-               ,(backquote-cons-1 .x))
+     (error "~A in QUASIQUOTE-SPLICE (or ',@' for short)." (cadr x.))
      (!? (backquote-cons-1 .x)
          `(%nconc ,(let tr *transpiler*
                      (? (transpiler-assert? tr)
