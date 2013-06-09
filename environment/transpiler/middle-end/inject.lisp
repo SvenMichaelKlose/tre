@@ -19,7 +19,6 @@
 
 (metacode-walker inject-debugging (x)
 	:if-cons (!? (& (%setq? x.)
-                    (not (debugger-step? (%setq-value x.)))
                     (find-next-location x *former-position*))
                  (progn
                    (= *former-position* !)

@@ -9,10 +9,10 @@
 (defvar *recompiling?* nil)
 (defvar *print-executed-functions?* nil)
 
-(defun make-functions-hash ()
+(defun make-host-functions-hash ()
   (alist-hash (filter [cons _ (function-arguments (symbol-function _))] (+ *defined-functions* *macros*)) :test #'eq))
 
-(defun make-variables-hash ()
+(defun make-host-variables-hash ()
   (alist-hash (filter [cons _. t] *variables*) :test #'eq))
 
 (defun make-functionals-hash ()
@@ -149,8 +149,8 @@
   	 (transpiler-wanted-variables tr)       nil
   	 (transpiler-wanted-variables-hash tr)  (make-hash-table :test #'eq)
   	 (transpiler-defined-functions-hash tr) (make-hash-table :test #'eq)
-  	 (transpiler-host-functions-hash tr)    (make-functions-hash)
-  	 (transpiler-host-variables-hash tr)    (make-variables-hash)
+  	 (transpiler-host-functions-hash tr)    (make-host-functions-hash)
+  	 (transpiler-host-variables-hash tr)    (make-host-variables-hash)
   	 (transpiler-functionals-hash tr)       (make-functionals-hash)
   	 (transpiler-function-args tr)          (make-hash-table :test #'eq)
   	 (transpiler-function-bodies tr)        (make-hash-table :test #'eq)
