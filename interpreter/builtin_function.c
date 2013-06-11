@@ -20,37 +20,72 @@
 #include "symbol.h"
 
 treptr
-trefunction_builtin_arg (treptr list, int type, const char * descr)
+trefunction_native (treptr fun)
 {
-    return trearg_typed (1, type, trearg_get (list), descr);
+	return TREFUNCTION_NATIVE(fun) ? trenumber_get ((double) (long) TREFUNCTION_NATIVE(fun)) : treptr_nil;
 }
 
 treptr
-trefunction_builtin_function_native (treptr list)
+trefunction_bytecode (treptr fun)
 {
-    treptr arg = trefunction_builtin_arg (list, TRETYPE_FUNCTION, "SYMBOL-COMPILED-FUNCTION");
-	return TREFUNCTION_NATIVE(arg) ? trenumber_get ((double) (long) TREFUNCTION_NATIVE(arg)) : treptr_nil;
+	return TREFUNCTION_BYTECODE(fun) ? treptr_nil : TREFUNCTION_BYTECODE(fun);
 }
 
 treptr
-trefunction_builtin_function_bytecode (treptr list)
+trefunction_set_bytecode (treptr array, treptr fun)
 {
-    treptr arg = trefunction_builtin_arg (list, TRETYPE_FUNCTION, "FUNCTION-BYTECODE");
-	return TREFUNCTION_BYTECODE(arg) ? treptr_nil : TREFUNCTION_BYTECODE(arg);
+    return TREFUNCTION_BYTECODE(fun) = array;
 }
 
 treptr
-trefunction_builtin_usetf_function_bytecode (treptr list)
+trefunction_source (treptr fun)
+{
+	return TREFUNCTION_SOURCE(fun) ? TREFUNCTION_SOURCE(fun) : treptr_nil;
+}
+
+treptr
+trefunction_set_source (treptr list, treptr fun)
+{
+    return TREFUNCTION_SOURCE(fun) = list;
+}
+
+treptr
+trefunction_builtin_arg (treptr x, int type, const char * descr)
+{
+    return trearg_typed (1, type, trearg_get (x), descr);
+}
+
+treptr
+trefunction_builtin_function_native (treptr x)
+{
+    return trefunction_native (trefunction_builtin_arg (x, TRETYPE_FUNCTION, "FUNCTION-NATIVE"));
+}
+
+treptr
+trefunction_builtin_function_bytecode (treptr x)
+{
+    return trefunction_bytecode (trefunction_builtin_arg (x, TRETYPE_FUNCTION, "FUNCTION-BYTECODE"));
+}
+
+treptr
+trefunction_builtin_usetf_function_bytecode (treptr x)
 {
     TRELIST_DEFREGS();
-    trearg_get2 (&car, &cdr, list);
-    return TREFUNCTION_BYTECODE(trearg_typed (2, TRETYPE_FUNCTION, cdr, "=-FUNCTION-BYTECODE")) =
-                                trearg_typed (1, TRETYPE_ARRAY, car, "=-FUNCTION-BYTECODE");
+    trearg_get2 (&car, &cdr, x);
+    return trefunction_set_bytecode(trearg_typed (2, TRETYPE_FUNCTION, cdr, "=-FUNCTION-BYTECODE"),
+                                    trearg_typed (1, TRETYPE_ARRAY, car, "=-FUNCTION-BYTECODE"));
 }
 
 treptr
-trefunction_builtin_function_source (treptr list)
+trefunction_builtin_function_source (treptr x)
 {
-    treptr arg = trefunction_builtin_arg (list, TRETYPE_FUNCTION, "FUNCTION-BYTECODE");
-	return TREFUNCTION_SOURCE(arg) ? TREFUNCTION_SOURCE(arg) : treptr_nil;
+    return trefunction_source (trefunction_builtin_arg (x, TRETYPE_FUNCTION, "FUNCTION-SOURCE"));
+}
+
+treptr
+trefunction_builtin_set_source (treptr x)
+{
+    TRELIST_DEFREGS();
+    trearg_get2 (&car, &cdr, x);
+    return trefunction_set_source(car, trearg_typed (2, TRETYPE_FUNCTION, cdr, "=-FUNCTION-SOURCE"));
 }

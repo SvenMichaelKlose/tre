@@ -1,7 +1,35 @@
 ;;;;; tré – Copyright (c) 2009–2013 Sven Michael Klose <pixel@copei.de>
 
 (defvar *c-builtins-descr*
-	`((trebuiltin_
+	`(
+	(treatom_
+		(EQ             builtin_eq)
+		(EQL            builtin_eql)
+		(ATOM           builtin_atom)
+		(%TYPE-ID       builtin_type_id)
+		(%%ID           builtin_id)
+		(SYMBOL?        builtin_symbolp)
+		(FUNCTION?      builtin_functionp)
+		(BUILTIN?       builtin_builtinp)
+		(MACROP         builtin_macrop))
+
+	(trearray_
+    	(MAKE-ARRAY     builtin_make)
+		(ARRAY?         builtin_p)
+		(AREF           builtin_aref)
+		(=-AREF         builtin_set_aref))
+
+	(treerror_
+		(%ERROR         builtin_error))
+
+	(trefunction_
+		(FUNCTION-NATIVE        native)
+		(FUNCTION-BYTECODE      bytecode)
+		(=-FUNCTION-BYTECODE    set_bytecode)
+		(FUNCTION-SOURCE        source)
+		(=-FUNCTION-SOURCE      set_source))
+
+    (trebuiltin_
 		(QUIT)
 		(LOAD)
 		(EVAL)
@@ -17,148 +45,121 @@
 		(%%SET set)
 		(%%GET get))
 
-	(treerror_builtin_
-		(%ERROR error))
+	(trenumber_
+		(NUMBER+        builtin_plus)
+		(NUMBER-        builtin_difference)
+		(INTEGER+       builtin_plus)
+		(INTEGER-       builtin_difference)
+		(CHARACTER+     builtin_character_plus)
+		(CHARACTER-     builtin_character_difference)
+		(*              builtin_times)
+		(/              builtin_quotient)
+		(MOD            builtin_mod)
+		(LOGXOR         builtin_logxor)
+		(SQRT           builtin_sqrt)
+		(SIN            builtin_sin)
+		(COS            builtin_cos)
+		(ATAN           builtin_atan)
+		(ATAN2          builtin_atan2)
+		(RANDOM         builtin_random)
+		(EXP            builtin_exp)
+		(POW            builtin_pow)
+		(ROUND          builtin_round)
+		(==             builtin_number_equal)
+		(<              builtin_lessp)
+		(>              builtin_greaterp)
+		(NUMBER==       builtin_number_equal)
+		(NUMBER<        builtin_lessp)
+		(NUMBER>        builtin_greaterp)
+		(INTEGER==      builtin_number_equal)
+		(INTEGER<       builtin_lessp)
+		(INTEGER>       builtin_greaterp)
+		(CHARACTER==    builtin_number_equal)
+		(CHARACTER<     builtin_lessp)
+		(CHARACTER>     builtin_greaterp)
 
-	(trenumber_builtin_
-		(NUMBER+        plus)
-		(NUMBER-        difference)
-		(INTEGER+       plus)
-		(INTEGER-       difference)
-		(CHARACTER+     character_plus)
-		(CHARACTER-     character_difference)
-		(* times)
-		(/ quotient)
-		(MOD)
-		(LOGXOR)
-		(SQRT)
-		(SIN)
-		(COS)
-		(ATAN)
-		(ATAN2)
-		(RANDOM)
-		(EXP)
-		(POW)
-		(ROUND)
-;		(NUMBER?         numberp)
-		(==             number_equal)
-		(<              lessp)
-		(>              greaterp)
-		(NUMBER==       number_equal)
-		(NUMBER<        lessp)
-		(NUMBER>        greaterp)
-		(INTEGER==      number_equal)
-		(INTEGER<       lessp)
-		(INTEGER>       greaterp)
-		(CHARACTER==    number_equal)
-		(CHARACTER<     lessp)
-		(CHARACTER>     greaterp)
-		(BIT-OR         bit_or)
-		(BIT-AND        bit_and)
-		(<<             bit_shift_left)
-		(>>             bit_shift_right)
-		(CODE-CHAR      code_char)
-		(INTEGER)
-		(FLOAT)
-		(CHARACTER?     characterp))
+		(NUMBER?        builtin_numberp)
+		(BIT-OR         builtin_bit_or)
+		(BIT-AND        builtin_bit_and)
+		(<<             builtin_bit_shift_left)
+		(>>             builtin_bit_shift_right)
+		(CODE-CHAR      builtin_code_char)
+		(INTEGER        builtin_integer)
+		(FLOAT          builtin_float)
+		(CHARACTER?     builtin_characterp))
 
-	(treatom_builtin_
-;		(EQ)
-		(EQL)
-;		(ATOM)
-		(%TYPE-ID   type_id)
-		(%%ID id)
-;		(SYMBOL?    symbolp)
-;		(FUNCTION?  functionp)
-;		(BUILTIN?   builtinp)
-		(MACROP)
-		(%ATOM-LIST atom_list))
+	(tresymbol_
+		(MAKE-SYMBOL        builtin_make_symbol)
+		(MAKE-PACKAGE       builtin_make_package)
+		(SYMBOL-VALUE       builtin_symbol_value)
+		(=-SYMBOL-VALUE     set_value)
+		(SYMBOL-FUNCTION    builtin_symbol_function)
+		(=-SYMBOL-FUNCTION  builtin_usetf_symbol_function)
+		(SYMBOL-PACKAGE     builtin_symbol_package))
 
-	(tresymbol_builtin_
-		(MAKE-SYMBOL        make_symbol)
-		(MAKE-PACKAGE       make_package)
-		(SYMBOL-VALUE       symbol_value)
-		(=-SYMBOL-VALUE     usetf_symbol_value)
-		(SYMBOL-FUNCTION    symbol_function)
-		(=-SYMBOL-FUNCTION  usetf_symbol_function)
-		(SYMBOL-PACKAGE     symbol_package))
-
-	(trefunction_builtin_
-		(FUNCTION-NATIVE        function_native)
-		(FUNCTION-BYTECODE      function_bytecode)
-		(=-FUNCTION-BYTECODE    usetf_function_bytecode)
-		(FUNCTION-SOURCE        function_source))
-
-	(trelist_builtin_
-		;(CONS)
-		(LIST)
-;    	(CAR)
-;		(CDR)
-;		(CPR)
+	(trelist_
+		(CONS               get)
+		(LIST               builtin_list)
+    	(CAR)
+		(CDR)
+		(CPR)
 		(RPLACA)
 		(RPLACD)
 		(RPLACP)
-;   	    (CONS? consp))
-)
+   	    (CONS?              builtin_consp))
 
-	(tresequence_builtin_
-    	(ELT)
-		(%SET-ELT set_elt)
-		(LENGTH))
+	(tresequence_
+    	(ELT                builtin_elt)
+		(%SET-ELT           builtin_set_elt)
+		(LENGTH             builtin_length))
 
-	(trestring_builtin_
-;		(STRING?            stringp)
-    	(MAKE-STRING        make)
-		(STRING==           compare)
-		(STRING-CONCAT      concat)
-		(STRING)
-		(SYMBOL-NAME        symbol_name)
-		(LIST-STRING        list_string))
+	(trestring_
+		(STRING?            builtin_stringp)
+    	(MAKE-STRING        builtin_make)
+		(STRING==           builtin_compare)
+		(STRING-CONCAT      builtin_concat)
+		(STRING             builtin_string)
+		(SYMBOL-NAME        builtin_symbol_name)
+		(LIST-STRING        builtin_list_string))
 
-	(trearray_builtin_
-    	(MAKE-ARRAY         make)
-;		(ARRAY?             p)
-		(%AREF              aref)
-		(=-%AREF            set_aref))
+	(tremacro_
+    	(MACROEXPAND-1      builtin_macroexpand_1)
+		(MACROEXPAND        builtin_macroexpand))
 
-	(tremacro_builtin_
-    	(MACROEXPAND-1      macroexpand_1)
-		(MACROEXPAND))
+	(trestream_
+    	(%PRINC             builtin_princ)
+		(%FORCE-OUTPUT      builtin_force_output)
+		(%READ-CHAR         builtin_read_char)
+    	(%FOPEN             builtin_fopen)
+		(%FEOF              builtin_feof)
+		(%FCLOSE            builtin_fclose)
+		(%TERMINAL-RAW      builtin_terminal_raw)
+		(%TERMINAL-NORMAL   builtin_terminal_normal))
 
-	(trestream_builtin_
-    	(%PRINC princ)
-		(%FORCE-OUTPUT      force_output)
-		(%READ-CHAR         read_char)
-    	(%FOPEN             fopen)
-		(%FEOF              feof)
-		(%FCLOSE            fclose)
-		(%TERMINAL-RAW      terminal_raw)
-		(%TERMINAL-NORMAL   terminal_normal))
+	(tredebug_
+		(END-DEBUG          builtin_end_debug)
+		(INVOKE-DEBUGGER    builtin_invoke_debugger))
 
-	(tredebug_builtin_
-		(END-DEBUG          end_debug)
-		(INVOKE-DEBUGGER    invoke_debugger))
+	(trealien_
+    	(ALIEN-DLOPEN       builtin_dlopen)
+		(ALIEN-DLCLOSE      builtin_dlclose)
+		(ALIEN-DLSYM        builtin_dlsym)
+    	(ALIEN-CALL         builtin_call))
 
-	(trealien_builtin_
-    	(ALIEN-DLOPEN       dlopen)
-		(ALIEN-DLCLOSE      dlclose)
-		(ALIEN-DLSYM        dlsym)
-    	(ALIEN-CALL         call))
+	(treimage_
+    	(SYS-IMAGE-CREATE   builtin_create)
+		(SYS-IMAGE-LOAD     builtin_load))
 
-	(treimage_builtin_
-    	(SYS-IMAGE-CREATE   create)
-		(SYS-IMAGE-LOAD     load))
+	(tretime_
+		(NANOTIME           builtin_nanotime))
 
-	(tretime_builtin_
-		(NANOTIME))
-
-	(trenet_builtin_
-        (OPEN-SOCKET        open_socket)
-        (ACCEPT accept)
-        (RECV recv)
-        (SEND send)
-        (CLOSE-CONNECTION   close_connection)
-        (CLOSE-SOCKET       close_socket))))
+	(trenet_
+        (OPEN-SOCKET        builtin_open_socket)
+        (ACCEPT             builtin_accept)
+        (RECV               builtin_recv)
+        (SEND               builtin_send)
+        (CLOSE-CONNECTION   builtin_close_connection)
+        (CLOSE-SOCKET       builtin_close_socket))))
 
 ;; Build hash table for name conversion.
 (defvar *c-builtins*
@@ -166,9 +167,9 @@
 	(dolist (grp *c-builtins-descr* h)
 	  (let head (string-downcase (symbol-name grp.))
 		(dolist (f .grp)
-		  (= (href h f.)
-		     (+ (? (starts-with? (symbol-name .f.) "=-") "" head)
-                (string-downcase (symbol-name (| .f. f.))))))))))
+          (& (href h f.)
+             (error "Built-in function ~A is defined more than once." f.))
+		  (= (href h f.) (+ head (string-downcase (symbol-name (| .f. f.))))))))))
 
 (defun c-builtin-names ()
   (hashkeys *c-builtins*))

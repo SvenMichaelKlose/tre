@@ -1,7 +1,5 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
-;;;; GENERAL CODE GENERATION
-
 (defun c-line (&rest x)
   `(,*c-indent*
     ,@x
@@ -81,14 +79,7 @@
   `(%%native ,dest "=" ,val ,*c-separator*))
 
 
-;;;; ARGUMENT EXPANSION CONSING
-
-(define-c-macro %%%cons (a d)
-  `(%%native "CONS(" ,a ", " ,d ")"))
-
-
 ;;;; STACK
-
 
 (define-c-macro %stack (x)
   (c-stack x))
@@ -129,19 +120,13 @@
 (define-c-macro %quote (x)
   (c-compiled-symbol x))
 
-(define-c-macro symbol-function (x)
-  `("treatom_get_function (" ,x ")"))
-
-(define-c-macro =-symbol-value (v x)
-  `("TRESYMBOL_VALUE(" ,x ")=" ,v))
-
 
 ;;;; ARRAYS
 
-(define-c-macro make-array (&rest sizes)
-  (? (== 1 (length sizes))
-     (c-make-array sizes.)
-     `(trearray_builtin_make ,(compiled-list sizes)))]
+;(define-c-macro make-array (&rest sizes)
+;  (? (== 1 (length sizes))
+;     (c-make-array sizes.)
+;     `(trearray_builtin_make ,(compiled-list sizes)))]
 
 (defun c-make-aref (arr idx)
   `("TREARRAY_VALUES(" ,arr ")["
@@ -156,9 +141,3 @@
 
 (define-c-macro %immediate-set-aref (val arr idx)
   (+ (c-make-aref arr idx) `("=" ,val)))
-
-
-;;;; LEFTOVERS
-
-(defun %%%eq (&rest x)
-  (apply #'eq x))

@@ -35,12 +35,6 @@
 (transpiler-translate-symbol *php-transpiler* t "TRUE")
 
 
-;;;; ARGUMENT EXPANSION CONSING
-
-(define-php-macro %%%cons (a d)
-  `(userfun_cons ,a ,d))
-
-
 ;;;; LITERAL SYMBOLS
 
 (define-php-macro %quote (x)

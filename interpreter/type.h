@@ -25,4 +25,6 @@
 
 #define TRETYPE_WIDTH		4
 
+#define TRETYPECHK(argnum, object, type, descr) (trearg_typed (argnum, type, object, descr))
+
 #endif /* #ifndef TRE_TYPE_H */

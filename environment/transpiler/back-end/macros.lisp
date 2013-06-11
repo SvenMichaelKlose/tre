@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun transpiler-make-code-expander (tr)
   (let expander-name ($ (transpiler-name tr) '-codegen)
@@ -7,7 +7,4 @@
 
 (defmacro define-codegen-macro (tr name &rest x)
   (print-definition `(define-transpiler-macro ,tr ,x.))
-  `(progn
-     (transpiler-add-unwanted-function ,tr ',name)
-     (transpiler-add-inline-exception ,tr ',name)
-     (define-expander-macro ,(transpiler-codegen-expander (eval tr)) ,name ,@x)))
+  `(define-expander-macro ,(transpiler-codegen-expander (eval tr)) ,name ,@x))

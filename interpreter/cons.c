@@ -21,22 +21,46 @@ treptr tre_listprops[NUM_LISTNODES];
 treptr tre_default_listprop;
 tre_size trelist_num_used;
 
-void
+treptr
+trelist_car (treptr cons)
+{
+    RETURN_NIL(cons);
+    return _CAR(cons);
+}
+
+treptr
+trelist_cdr (treptr cons)
+{
+    RETURN_NIL(cons);
+    return _CDR(cons);
+}
+
+treptr
+trelist_cpr (treptr cons)
+{
+    RETURN_NIL(cons);
+    return _CPR(cons);
+}
+
+treptr
 trelist_rplaca (treptr cons, treptr val)
 {
     _CAR(cons) = val;
+    return cons;
 }
 
-void
+treptr
 trelist_rplacd (treptr cons, treptr val)
 {
     _CDR(cons) = val;
+    return cons;
 }
 
-void
+treptr
 trelist_rplacp (treptr cons, treptr val)
 {
     _CPR(cons) = val;
+    return cons;
 }
 
 void
@@ -84,7 +108,7 @@ trelist_gc ()
 }
 
 treptr
-_trelist_get (treptr car, treptr cdr)
+trelist_get (treptr car, treptr cdr)
 {
     treptr ret;
 

@@ -49,7 +49,6 @@
       *current-macro* nil
       *macroexpand-print?* nil)
 
-(print 1)
 (%set-atom-fun %macroexpand-backquote
   #'((%g)
        (?
@@ -80,7 +79,6 @@
 
 (setq *macroexpand-backquote-diversion* #'%macroexpand-backquote)
 
-(print 2)
 (%set-atom-fun %macroexpand-rest
   #'((%g)
        (? (atom %g)
@@ -94,7 +92,6 @@
               (cons (%macroexpand (car %g))
                     (%macroexpand-rest (cdr %g))))))))
 
-(print 3)
 (%set-atom-fun %macroexpand-xlat
   #'((%g)
        (? *macroexpand-print?*
@@ -109,14 +106,12 @@
              %g)
          (apply *macrocall-diversion* (list %g)))))
 
-(print 4)
 (%set-atom-fun %macroexpand-call
   #'((%g)
        (? (? (atom (car %g))
 		     (apply *macrop-diversion* (list %g)))
           (%macroexpand-xlat %g)
 		  %g)))
-(print 5)
 
 (%set-atom-fun %macroexpand
   #'((%g)
@@ -137,28 +132,23 @@
                (eq (car %g) 'QUASIQUOTE-SPLICE) (cons 'QUASIQUOTE-SPLICE (%macroexpand (cdr %g)))
                (%macroexpand-call (%macroexpand-rest %g))))))))
 
-(print 6)
 (%set-atom-fun %%macrop
   #'((%g)
        (? (symbol? (car %g))
           (macrop (symbol-function (car %g))))))
 
-(print 7)
 (%set-atom-fun %%macrocall
   #'((%g)
        (apply (symbol-function (car %g)) (cdr %g))))
 
-(print 8)
 (%set-atom-fun %%env-macrop
   #'((%g)
        (%%macrop %g)))
 
-(print 9)
 (%set-atom-fun %%env-macrocall
   #'((%g)
        (%%macrocall %g)))
 
-(print 10)
 (%set-atom-fun *macroexpand-hook*
   #'((%g)
 	   (#'((%gp %gc %gcm)
@@ -172,4 +162,3 @@
 				   %g)
 	           (%macroexpand %g)))
           *macrop-diversion* *macrocall-diversion* *current-macro*)))
-(print 10000)

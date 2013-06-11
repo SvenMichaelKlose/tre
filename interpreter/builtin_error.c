@@ -13,12 +13,15 @@
 #include "builtin_error.h"
 
 treptr
-treerror_builtin_error (treptr args)
+treerror_error (treptr message)
 {
-    treptr  arg = trearg_get (args);
+    return TREPTR_IS_STRING(message) == FALSE ?
+               treerror (message, "string expected") :
+               treerror (treptr_invalid, TREPTR_STRINGZ(message));
+}
 
-    if (TREPTR_IS_STRING(arg) == FALSE)
-        treerror (arg, "string expected");
-
-    return treerror (treptr_invalid, TREPTR_STRINGZ(arg));
+treptr
+treerror_builtin_error (treptr x)
+{
+    return treerror_error (trearg_get (x));
 }

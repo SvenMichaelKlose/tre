@@ -5,15 +5,19 @@
 #ifndef TRE_BUILTIN_ATOM_H
 #define TRE_BUILTIN_ATOM_H
 
+extern treptr treatom_atom (treptr);
+extern treptr treatom_symbolp (treptr);
+extern treptr treatom_functionp (treptr);
+extern treptr treatom_builtinp (treptr);
+extern treptr treatom_macrop (treptr);
+extern treptr treatom_type_id (treptr);
+extern treptr treatom_id (treptr);
+
 extern treptr treatom_builtin_not (treptr);
 extern treptr treatom_builtin_eq (treptr);
-extern treptr treatom_eql (treptr, treptr);
+extern treptr treatom_builtin_eql_binary (treptr, treptr);
 extern treptr treatom_builtin_eql (treptr);
 extern treptr treatom_builtin_atom (treptr);
-extern treptr treatom_builtin_function_native (treptr);
-extern treptr treatom_builtin_function_bytecode (treptr);
-extern treptr treatom_builtin_usetf_function_bytecode (treptr);
-extern treptr treatom_builtin_function_source (treptr);
 extern treptr treatom_builtin_symbolp (treptr);
 extern treptr treatom_builtin_functionp (treptr);
 extern treptr treatom_builtin_builtinp (treptr);

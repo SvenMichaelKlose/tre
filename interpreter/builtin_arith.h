@@ -5,6 +5,20 @@
 #ifndef TRE_BUILTIN_ARITH_H
 #define TRE_BUILTIN_ARITH_H
 
+extern treptr trenumber_mod (treptr, treptr);
+extern treptr trenumber_sqrt (treptr);
+extern treptr trenumber_sin (treptr);
+extern treptr trenumber_cos (treptr);
+extern treptr trenumber_atan (treptr);
+extern treptr trenumber_atan2 (treptr, treptr);
+extern treptr trenumber_random ();
+extern treptr trenumber_exp (treptr);
+extern treptr trenumber_pow (treptr, treptr);
+extern treptr trenumber_round (treptr);
+extern treptr trenumber_equal (treptr, treptr);
+extern treptr trenumber_lessp (treptr, treptr);
+extern treptr trenumber_greaterp (treptr, treptr);
+
 extern treptr trenumber_builtin_plus (treptr);
 extern treptr trenumber_builtin_character_plus (treptr);
 extern treptr trenumber_builtin_difference (treptr);

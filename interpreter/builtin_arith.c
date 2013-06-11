@@ -118,14 +118,19 @@ trenumber_builtin_args (char * name, treptr *car, treptr *cdr, treptr x)
 }
 
 treptr
+trenumber_mod (treptr x, treptr mod)
+{
+    return treatom_number_get (fmod (TRENUMBER_VAL(x), TRENUMBER_VAL(mod)), TRENUMTYPE_FLOAT);
+}
+
+
+treptr
 trenumber_builtin_mod (treptr x)
 {
     TRELIST_DEFREGS();
-    double    val;
     trenumber_builtin_args ("MOD", &car, &cdr, x);
 
-    val = fmod (TRENUMBER_VAL(car), TRENUMBER_VAL(cdr));
-    return treatom_number_get (val, TRENUMTYPE_FLOAT);
+    return trenumber_mod (car, cdr);
 }
 
 treptr
@@ -137,58 +142,104 @@ trenumber_builtin_logxor (treptr x)
 }
 
 treptr
+trenumber_equal (treptr a, treptr b)
+{
+    return TREPTR_IS_STRING(a) || TREPTR_IS_STRING(b) ?
+               trestring_builtin_compare (CONS(a, CONS(b, treptr_nil))) :
+               TREPTR_TRUTH(TRENUMBER_VAL(a) == TRENUMBER_VAL(b));
+}
+
+
+treptr
 trenumber_builtin_number_equal (treptr x)
 {
     TRELIST_DEFREGS();
-
 	trearg_get2 (&car, &cdr, x);
-    if (TREPTR_IS_STRING(car) || TREPTR_IS_STRING(cdr))
-		return trestring_builtin_compare (x);
-
-    trenumber_builtin_args ("==", &car, &cdr, x);
-    return TREPTR_TRUTH(TRENUMBER_VAL(car) == TRENUMBER_VAL(cdr));
+    return trenumber_equal (car, cdr);
 }
+
+treptr
+trenumber_lessp (treptr a, treptr b)
+{
+    return TREPTR_TRUTH(TRENUMBER_VAL(a) < TRENUMBER_VAL(b));
+}
+
 
 treptr
 trenumber_builtin_lessp (treptr x)
 {
     TRELIST_DEFREGS();
     trenumber_builtin_args ("<", &car, &cdr, x);
-
-    return TREPTR_TRUTH(TRENUMBER_VAL(car) < TRENUMBER_VAL(cdr));
+    return trenumber_lessp (car, cdr);
 }
+
+treptr
+trenumber_greaterp (treptr a, treptr b)
+{
+    return TREPTR_TRUTH(TRENUMBER_VAL(a) > TRENUMBER_VAL(b));
+}
+
 
 treptr
 trenumber_builtin_greaterp (treptr x)
 {
     TRELIST_DEFREGS();
     trenumber_builtin_args (">", &car, &cdr, x);
+    return trenumber_greaterp (car, cdr);
+}
 
-    return TREPTR_TRUTH(TRENUMBER_VAL(car) > TRENUMBER_VAL(cdr));
+treptr
+trenumber_sqrt (treptr x)
+{
+    return treatom_number_get (sqrt (TRENUMBER_VAL(x)), TRENUMTYPE_FLOAT);
 }
 
 treptr
 trenumber_builtin_sqrt (treptr x)
 {
-    return treatom_number_get (sqrt (TRENUMBER_VAL(trearg_get (x))), TRENUMTYPE_FLOAT);
+    return trenumber_sqrt (trearg_get (x));
+}
+
+treptr
+trenumber_sin (treptr x)
+{
+    return treatom_number_get (sin (TRENUMBER_VAL(x)), TRENUMTYPE_FLOAT);
 }
 
 treptr
 trenumber_builtin_sin (treptr x)
 {
-    return treatom_number_get (sin (TRENUMBER_VAL(trearg_get (x))), TRENUMTYPE_FLOAT);
+    return trenumber_sin (trearg_get (x));
+}
+
+treptr
+trenumber_cos (treptr x)
+{
+    return treatom_number_get (cos (TRENUMBER_VAL(x)), TRENUMTYPE_FLOAT);
 }
 
 treptr
 trenumber_builtin_cos (treptr x)
 {
-    return treatom_number_get (cos (TRENUMBER_VAL(trearg_get (x))), TRENUMTYPE_FLOAT);
+    return trenumber_cos (trearg_get (x));
+}
+
+treptr
+trenumber_atan (treptr x)
+{
+    return treatom_number_get (atan (TRENUMBER_VAL(x)), TRENUMTYPE_FLOAT);
 }
 
 treptr
 trenumber_builtin_atan (treptr x)
 {
-    return treatom_number_get (atan (TRENUMBER_VAL(trearg_get (x))), TRENUMTYPE_FLOAT);
+    return trenumber_atan (trearg_get (x));
+}
+
+treptr
+trenumber_atan2 (treptr a, treptr b)
+{
+    return treatom_number_get (atan2 (TRENUMBER_VAL(a), TRENUMBER_VAL(b)), TRENUMTYPE_FLOAT);
 }
 
 treptr
@@ -196,24 +247,39 @@ trenumber_builtin_atan2 (treptr x)
 {
     treptr a;
     treptr b;
-
     trearg_get2 (&a, &b, x);
+    return trenumber_atan2 (a, b);
+}
 
-    return treatom_number_get (atan2 (TRENUMBER_VAL(a), TRENUMBER_VAL(b)), TRENUMTYPE_FLOAT);
+treptr
+trenumber_random ()
+{
+    return treatom_number_get ((float) random (), TRENUMTYPE_FLOAT);
 }
 
 treptr
 trenumber_builtin_random (treptr dummy)
 {
     (void) dummy;
+    return trenumber_random ();
+}
 
-    return treatom_number_get ((float) random (), TRENUMTYPE_FLOAT);
+treptr
+trenumber_exp (treptr x)
+{
+    return treatom_number_get (expf (TRENUMBER_VAL(trearg_get (x))), TRENUMTYPE_FLOAT);
 }
 
 treptr
 trenumber_builtin_exp (treptr x)
 {
-    return treatom_number_get (expf (TRENUMBER_VAL(trearg_get (x))), TRENUMTYPE_FLOAT);
+    return trenumber_exp (trearg_get (x));
+}
+
+treptr
+trenumber_pow (treptr a, treptr b)
+{
+    return treatom_number_get (pow (TRENUMBER_VAL(a), TRENUMBER_VAL(b)), TRENUMTYPE_FLOAT);
 }
 
 treptr
@@ -221,14 +287,18 @@ trenumber_builtin_pow (treptr x)
 {
     treptr a;
     treptr b;
-
     trearg_get2 (&a, &b, x);
+    return trenumber_pow (a, b);
+}
 
-    return treatom_number_get (pow (TRENUMBER_VAL(a), TRENUMBER_VAL(b)), TRENUMTYPE_FLOAT);
+treptr
+trenumber_round (treptr x)
+{
+    return treatom_number_get (round (TRENUMBER_VAL(x)), TRENUMTYPE_FLOAT);
 }
 
 treptr
 trenumber_builtin_round (treptr x)
 {
-    return treatom_number_get (round (TRENUMBER_VAL(trearg_get (x))), TRENUMTYPE_FLOAT);
+    return trenumber_round (trearg_get (x));
 }

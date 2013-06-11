@@ -1,10 +1,8 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
-(functional %%%cons)
-
 (defun %expex-argument-expand-rest (args)
   (& args
-     `(%%%cons ,args. ,(%expex-argument-expand-rest .args))))
+     `(cons ,args. ,(%expex-argument-expand-rest .args))))
 
 (defun argument-values-without-cps (fun vals)
   (? (& (not (in-cps-mode?))

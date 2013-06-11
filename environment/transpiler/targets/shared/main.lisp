@@ -1,6 +1,7 @@
 ;;;;; tré – Copyright (c) 2010–2013 Sven Michael Klose <pixel@copei.de>
 
 (env-load "transpiler/targets/shared/builtin.lisp")
+(env-load "transpiler/targets/shared/builtin-argdefs.lisp")
 (env-load "transpiler/targets/shared/functionals.lisp")
 (env-load "transpiler/targets/shared/noargs-tag.lisp")
 (env-load "transpiler/targets/shared/expand/log-function-calls.lisp")

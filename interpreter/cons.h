@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
  */
 
 #ifndef TRE_CONS_H
@@ -18,7 +18,7 @@ struct tre_list {
 #define _CDR(x) 	(tre_lists[x].cdr)
 #define _CPR(x) 	(tre_listprops[x])
 
-#define CONS(a,d)	_trelist_get (a, d)
+#define CONS(a,d)	trelist_get (a, d)
 
 #ifdef TRE_LIST_DIAGNOSTICS
 #define CAR(x) 		(trelist_car (x))
@@ -78,18 +78,17 @@ extern treptr tre_default_listprop;
 extern treptr tre_lists_free;
 extern tre_size trelist_num_used;
 
-extern treptr _trelist_get (treptr car, treptr cdr);
+extern treptr trelist_get (treptr car, treptr cdr);
 extern void   trelist_free (treptr);
 extern void   trelist_free_expr (treptr);
 extern void   trelist_free_toplevel (treptr);
 
-#ifdef TRE_LIST_DIAGNOSTICS
 extern treptr trelist_car (treptr);
 extern treptr trelist_cdr (treptr);
-#endif
+extern treptr trelist_cpr (treptr);
 
-extern void   trelist_rplaca (treptr, treptr);
-extern void   trelist_rplacd (treptr, treptr);
-extern void   trelist_rplacp (treptr, treptr);
+extern treptr trelist_rplaca (treptr, treptr);
+extern treptr trelist_rplacd (treptr, treptr);
+extern treptr trelist_rplacp (treptr, treptr);
 
 #endif 	/* #ifndef TRE_CONS_H */

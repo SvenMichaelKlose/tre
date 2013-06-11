@@ -9,8 +9,13 @@
 (defvar *recompiling?* nil)
 (defvar *print-executed-functions?* nil)
 
+(defun make-host-functions-and-macros-hash ()
+  (filter [cons _ (function-arguments (symbol-function _))] (+ *defined-functions* *macros*)))
+
 (defun make-host-functions-hash ()
-  (alist-hash (filter [cons _ (function-arguments (symbol-function _))] (+ *defined-functions* *macros*)) :test #'eq))
+  (alist-hash (+ (make-host-functions-and-macros-hash)
+                 *builtin-argdefs*)
+              :test #'eq))
 
 (defun make-host-variables-hash ()
   (alist-hash (filter [cons _. t] *variables*) :test #'eq))

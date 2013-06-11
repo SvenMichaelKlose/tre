@@ -19,19 +19,25 @@
 FILE * tre_fileio_handles[TRE_FILEIO_MAX_FILES];
 
 treptr
-trestream_builtin_fopen (treptr list)
+trestream_fopen_wrapper (treptr path, treptr mode)
 {
-    treptr  car;
-    treptr  cdr;
     treptr  handle;
 
-    trearg_get2 (&car, &cdr, list);
+	path = trearg_typed (1, TRETYPE_STRING, path, "pathname");
+	mode = trearg_typed (2, TRETYPE_STRING, mode, "access mode");
 
-	car = trearg_typed (1, TRETYPE_STRING, car, "pathname");
-	cdr = trearg_typed (2, TRETYPE_STRING, cdr, "access mode");
-
-    handle = trestream_fopen (car, cdr);
+    handle = trestream_fopen (path, mode);
     RETURN_NIL(handle);
 
     return treatom_number_get ((double) handle, TRENUMTYPE_INTEGER);
+}
+
+treptr
+trestream_builtin_fopen (treptr x)
+{
+    treptr  path;
+    treptr  mode;
+
+    trearg_get2 (&path, &mode, x);
+    return trestream_fopen_wrapper (path, mode);
 }

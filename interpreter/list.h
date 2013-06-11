@@ -8,7 +8,7 @@
 #include <stddef.h>
 
 #define TRELIST_PUSH(stack, expr) \
-    stack = _trelist_get (expr, stack);
+    stack = CONS(expr, stack);
 
 #define TRELIST_POP(stack) \
     { int __llpp = CDR(stack); 	\

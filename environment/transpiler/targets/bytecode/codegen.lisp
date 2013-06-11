@@ -24,8 +24,7 @@
              (%quote? x)))
      `(%bc-funcall
          ,@(?
-             (| (eq 'cons x.)
-                (eq '%%%cons x.))         `(cons ,.x. ,..x.)
+             (eq 'cons x.)                `(cons ,.x. ,..x.)
              (eq '=-symbol-value x.)      `(,x. 2 ,@.x)
              (eq '%bc-builtin x.)         `(,(cadr .x.) ,@..x)
              (eq '%make-lexical-array x.) `(make-array 1 ,.x.)

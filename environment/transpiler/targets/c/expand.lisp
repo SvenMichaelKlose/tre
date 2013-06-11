@@ -32,24 +32,15 @@
 (define-c-std-macro =-aref (val arr &rest idx)
   (? (single-index? idx)
     `(%immediate-set-aref ,val ,arr (%%native ,idx.))
-    `(=-%aref ,val ,arr ,@idx)))
+    `(=-aref ,val ,arr ,@idx)))
 
 (define-c-std-macro aref (arr &rest idx)
   (? (single-index? idx)
      `(%immediate-aref ,arr (%%native ,idx.))
-     `(%aref ,arr ,@idx)))
+     `(aref ,arr ,@idx)))
 
 (define-c-std-macro %%%nanotime ()
   '(nanotime))
 
 (define-c-std-macro filter (fun lst)
   (shared-opt-filter fun lst))
-
-(mapcar-macro x '(car cdr cpr cons? atom symbol? number? string? array? builtin? function? identity)
-  `(progn
-     (functional ,($ '% x))
-     (define-c-std-macro ,x (x)
-       `(,($ '% x) ,,x))))
-
-(define-c-std-macro cons (a d)
-  `(%cons ,a ,d))

@@ -20,6 +20,42 @@
 #include "symbol.h"
 
 treptr
+treatom_symbolp (treptr object)
+{
+    return TREPTR_TRUTH(TREPTR_IS_SYMBOL(object));
+}
+
+treptr
+treatom_functionp (treptr object)
+{
+    return TREPTR_TRUTH(TREPTR_IS_FUNCTION(object) || TREPTR_IS_MACRO(object) || TREPTR_IS_BUILTIN(object) || IS_COMPILED_FUN(object));
+}
+
+treptr
+treatom_builtinp (treptr object)
+{
+    return TREPTR_TRUTH(TREPTR_IS_BUILTIN(object));
+}
+
+treptr
+treatom_macrop (treptr object)
+{
+    return TREPTR_TRUTH(TREPTR_IS_MACRO(object));
+}
+
+treptr
+treatom_type_id (treptr object)
+{
+	return treatom_number_get (TREPTR_TYPE(object), TRENUMTYPE_INTEGER);
+}
+
+treptr
+treatom_id (treptr object)
+{
+    return treatom_number_get (object, TRENUMTYPE_INTEGER);
+}
+
+treptr
 treatom_builtin_not (treptr list)
 {
 	treptr x;
@@ -102,70 +138,37 @@ treatom_builtin_arg (treptr list, int type, const char * descr)
 }
 
 treptr
-treatom_builtin_function_native (treptr list)
+treatom_builtin_symbolp (treptr x)
 {
-    treptr arg = treatom_builtin_arg (list, TRETYPE_FUNCTION, "SYMBOL-COMPILED-FUNCTION");
-	return TREFUNCTION_NATIVE(arg) ? trenumber_get ((double) (long) TREFUNCTION_NATIVE(arg)) : treptr_nil;
+    return treatom_symbolp (trearg_get (x));
 }
 
 treptr
-treatom_builtin_function_bytecode (treptr list)
+treatom_builtin_functionp (treptr x)
 {
-    treptr arg = treatom_builtin_arg (list, TRETYPE_FUNCTION, "FUNCTION-BYTECODE");
-	return TREFUNCTION_BYTECODE(arg) ? treptr_nil : TREFUNCTION_BYTECODE(arg);
+    return treatom_functionp (trearg_get (x));
 }
 
 treptr
-treatom_builtin_usetf_function_bytecode (treptr list)
+treatom_builtin_builtinp (treptr x)
 {
-    TRELIST_DEFREGS();
-    trearg_get2 (&car, &cdr, list);
-    return TREFUNCTION_BYTECODE(trearg_typed (2, TRETYPE_FUNCTION, cdr, "=-FUNCTION-BYTECODE")) =
-                                trearg_typed (1, TRETYPE_ARRAY, car, "=-FUNCTION-BYTECODE");
+    return treatom_builtinp (trearg_get (x));
 }
 
 treptr
-treatom_builtin_function_source (treptr list)
+treatom_builtin_macrop (treptr x)
 {
-    treptr arg = treatom_builtin_arg (list, TRETYPE_FUNCTION, "FUNCTION-BYTECODE");
-	return TREFUNCTION_SOURCE(arg) ? TREFUNCTION_SOURCE(arg) : treptr_nil;
+    return treatom_macrop (trearg_get (x));
 }
 
 treptr
-treatom_builtin_symbolp (treptr list)
+treatom_builtin_type_id (treptr x)
 {
-    treptr arg = trearg_get (list);
-    return TREPTR_TRUTH(TREPTR_IS_SYMBOL(arg));
+    return treatom_type_id (trearg_get (x));
 }
 
 treptr
-treatom_builtin_functionp (treptr list)
+treatom_builtin_id (treptr x)
 {
-    treptr arg = trearg_get (list);
-    return TREPTR_TRUTH(TREPTR_IS_FUNCTION(arg) || TREPTR_IS_MACRO(arg) || TREPTR_IS_BUILTIN(arg) || IS_COMPILED_FUN(arg));
-}
-
-treptr
-treatom_builtin_builtinp (treptr list)
-{
-    return TREPTR_TRUTH(TREPTR_IS_BUILTIN(trearg_get (list)));
-}
-
-treptr
-treatom_builtin_macrop (treptr list)
-{
-    return TREPTR_TRUTH(TREPTR_IS_MACRO(trearg_get (list)));
-}
-
-treptr
-treatom_builtin_type_id (treptr args)
-{
-    treptr arg = trearg_get (args);
-	return treatom_number_get (TREPTR_TYPE(arg), TRENUMTYPE_INTEGER);
-}
-
-treptr
-treatom_builtin_id (treptr args)
-{
-    return treatom_number_get (trearg_get (args), TRENUMTYPE_INTEGER);
+    return treatom_id (trearg_get (x));
 }

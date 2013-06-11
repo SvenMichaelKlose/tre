@@ -1,6 +1,5 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
-
 (defun js-call (x)
   `(,x. ,@(parenthized-comma-separated-list .x)))
 
@@ -139,12 +138,6 @@
 
 (transpiler-translate-symbol *js-transpiler* nil "null")
 (transpiler-translate-symbol *js-transpiler* t "true")
-
-
-;;;; ARGUMENT EXPANSION CONSING
-
-(define-js-macro %%%cons (a d)
-  `(userfun_cons ,a ,d))
 
 
 ;;;; NUMBERS, ARITHMETIC AND COMPARISON

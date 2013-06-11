@@ -65,63 +65,71 @@ trearray_get_check_index (treptr indices, treptr sizes)
 }
 
 treptr *
-trearray_get_elt (treptr list)
+trearray_get_elt (treptr array, treptr indexes)
 {
-    treptr    array;
-    treptr    indices;
     treptr    sizes;
     treptr *  elts;
     tre_size  idx;
 
-    if (list == treptr_nil)
-		treerror (list, "array expexted");
-    if (CDR(list) == treptr_nil)
-		treerror (list, "index(es) expexted");
-    array = trearg_typed (1, TRETYPE_ARRAY, CAR(list), NULL);
-    indices = CDR(list);
+    if (indexes == treptr_nil)
+		treerror (indexes, "index(es) expexted");
 
-    if (trelist_check_type (indices, TRETYPE_NUMBER) == FALSE)
-		treerror (indices, "integer expected");
+    if (trelist_check_type (indexes, TRETYPE_NUMBER) == FALSE)
+		treerror (indexes, "integer expected");
 
     sizes = TREARRAY_SIZES(array);
     elts = TREARRAY_VALUES(array);
 
-    idx = trearray_get_check_index (indices, sizes);
+    idx = trearray_get_check_index (indexes, sizes);
     if (idx == (tre_size) -1)
 		return NULL;
     return &elts[idx];
 }
 
 treptr
-trearray_builtin_p (treptr list)
+trearray_p (treptr x)
 {
-    treptr arg = trearg_get (list);
-
-    return TREPTR_TRUTH(TREPTR_IS_ARRAY(arg));
-}
-
-
-treptr
-trearray_builtin_aref (treptr list)
-{
-    treptr *  elts = trearray_get_elt (list);
-
-    if (elts == NULL)
-        return treerror (treptr_invalid, "index error");
-
-    return *elts;
+    return TREPTR_TRUTH(TREPTR_IS_ARRAY(x));
 }
 
 treptr
-trearray_builtin_set_aref (treptr list)
+trearray_builtin_p (treptr x)
 {
-    treptr    val = CAR(list);
-    treptr *  elts = trearray_get_elt (CDR(list));
+    return trearray_p (trearg_get (x));
+}
 
-    if (elts == NULL)
+treptr
+trearray_aref (treptr array, treptr indexes)
+{
+    treptr *  elts;
+
+    if (array == treptr_nil)
+		treerror (array, "array expexted");
+
+    elts = trearray_get_elt (array, indexes);
+    return !elts ?
+               treerror (treptr_invalid, "index error") :
+               *elts;
+}
+
+treptr
+trearray_builtin_aref (treptr x)
+{
+    return trearray_aref (CAR(x), CDR(x));
+}
+
+treptr
+trearray_set_aref (treptr val, treptr array, treptr indexes)
+{
+    treptr *  elts = trearray_get_elt (array, indexes);
+
+    if (!elts)
         return treerror (treptr_invalid, "index error");
+    return *elts = val;
+}
 
-    *elts = val;
-
-    return val;
+treptr
+trearray_builtin_set_aref (treptr x)
+{
+    return trearray_set_aref (CAR(x), CADR(x), CDDR(x));
 }

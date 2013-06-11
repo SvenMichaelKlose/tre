@@ -44,9 +44,7 @@
   (& x (symbol? x)) (c-compiled-symbol x))
 
 (defun c-closure-argument-def (tr def)
-  `(tresymbol_builtin_usetf_symbol_value
-       (cons (list ,(compiled-tree (c-compile-symbols-in-tree .def)))
-             (list (symbol-function ',def.)))))
+  `(= (function-source (symbol-function ',def.)) (list ',.def)))
 
 (defun c-closure-argument-defs (tr)
   (filter [c-closure-argument-def tr _]

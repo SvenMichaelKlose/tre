@@ -2,40 +2,41 @@
 
 (transpiler-pass transpiler-frontend-2 (tr)
     thisify                   [thisify (transpiler-thisify-classes tr) _]
-    cpr                       [cpr-count _ "thisify"]
+;    cpr                       [cpr-count _ "thisify"]
     opt-inline                [? (& *opt-inline?*
                                     (not (transpiler-inject-debugging? tr)))
                                  (opt-inline tr _)
 	                             _]
-    cpr                       [cpr-count _ "opt-inline"]
+;    cpr                       [cpr-count _ "opt-inline"]
     rename-function-arguments #'rename-function-arguments
-    cpr                       [cpr-count _ "rename args"]
+;    cpr                       [cpr-count _ "rename args"]
     lambda-expand             [transpiler-lambda-expand tr _]
-    cpr                       [cpr-count _ "lambda expand"]
+;    cpr                       [cpr-count _ "lambda expand"]
     fake-expression-expand    [(validate-metacode (transpiler-expression-expand tr (make-packages _)))
                                _])
 
 (transpiler-pass transpiler-frontend-1 (tr)
     file-input                #'identity
-    cpr                       [cpr-count _ "file input"]
+;    cpr                       [cpr-count _ "file input"]
     dot-expand                [? (transpiler-dot-expand? tr)
                                  (dot-expand _)
                                  _]
-    cpr                       [cpr-count _ "dot expand"]
+;    cpr                       [cpr-count _ "dot expand"]
     transpiler-macroexpand-1  [? (transpiler-dot-expand? tr)
                                  (transpiler-macroexpand tr _)
                                  _]
-    cpr                       [cpr-count _ "macroexpand"]
+;    cpr                       [cpr-count _ "macroexpand"]
     quasiquote-expand         #'quasiquote-expand
-    cpr                       [cpr-count _ "quasiquote-expand"]
+;    cpr                       [cpr-count _ "quasiquote-expand"]
     transpiler-macroexpand-2  [transpiler-macroexpand tr _]
-    cpr                       [cpr-count _ "macroexpand"]
+;    cpr                       [cpr-count _ "macroexpand"]
     compiler-macroexpand      #'compiler-macroexpand
-    cpr                       [cpr-count _ "compiler-macroexpand"]
+;    cpr                       [cpr-count _ "compiler-macroexpand"]
     backquote-expand          #'backquote-expand
-    cpr                       [cpr-count _ "backquote-macroexpand"]
+;    cpr                       [cpr-count _ "backquote-macroexpand"]
     literal-conversion        [funcall (transpiler-literal-conversion tr) _]
-    cpr                       [cpr-count _ "literal conversion"])
+;    cpr                       [cpr-count _ "literal conversion"])
+)
 
 (defun transpiler-frontend-0 (tr x)
   (transpiler-frontend-2 tr (transpiler-frontend-1 tr x)))
