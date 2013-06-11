@@ -115,20 +115,6 @@ trelist_builtin_consp (treptr list)
     return treptr_t;
 }
 
-treptr
-treeval_noargs (treptr fun, treptr args)
-{
-    if (IS_COMPILED_FUN(fun))
-        return trefuncall_compiled (fun, args, FALSE);
-    if (TREPTR_IS_FUNCTION(fun))
-        return treeval_funcall (fun, args, FALSE);
-    if (TREPTR_IS_BUILTIN(fun))
-        return treeval_xlat_function (treeval_xlat_builtin, fun, args, FALSE);
-    if (TREPTR_IS_SPECIAL(fun))
-        return trespecial (fun, args);
-    return treerror (fun, "function expected");
-}
-
 void
 trelist_builtin_init ()
 {
