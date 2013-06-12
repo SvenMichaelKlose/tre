@@ -114,7 +114,7 @@
 		(LENGTH             builtin_length))
 
 	(trestring_
-		(STRING?            builtin_stringp)
+		(STRING?            p)
     	(MAKE-STRING        builtin_make)
 		(STRING==           builtin_compare)
 		(STRING-CONCAT      builtin_concat)
