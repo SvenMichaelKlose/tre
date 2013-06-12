@@ -5,7 +5,6 @@
 #ifndef TRE_BUILTIN_ATOM_H
 #define TRE_BUILTIN_ATOM_H
 
-extern treptr treatom_atom (treptr);
 extern treptr treatom_symbolp (treptr);
 extern treptr treatom_functionp (treptr);
 extern treptr treatom_builtinp (treptr);

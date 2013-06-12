@@ -5,10 +5,10 @@
       (EQ           &rest objects)
       (EQL          &rest objects)
       (ATOM         &rest objects)
-      (SYMBOL?      &rest objects) ;object)
-      (FUNCTION?    &rest objects) ;object)
-      (BUILTIN?     &rest objects) ;object)
-      (MACROP       &rest objects) ;object)
+      (SYMBOL?      object)
+      (FUNCTION?    object)
+      (BUILTIN?     object)
+      (MACROP       object)
       (%TYPE-ID     &rest objects) ;object)
       (%%ID         &rest objects) ;object)
 
@@ -90,7 +90,6 @@
       (SYMBOL-FUNCTION      &rest x) ;symbol)
       (=-SYMBOL-FUNCTION    &rest x) ;function symbol)
       (SYMBOL-PACKAGE       &rest x) ;symbol)
-      (FUNCTION?        &rest x) ;object)
       (CONS             a d)
       (LIST             &rest objects)
       (CAR              list)
@@ -130,3 +129,12 @@
       (SEND             &rest x) ;string)
       (CLOSE-CONNECTION)
       (CLOSE-SOCKET)))
+
+(defun sanity-check-builtin-argdefs ()
+  (alet (carlist *builtin-argdefs*)
+    (while ! nil
+      (& (member !. .!)
+         (error "~A occurs more than once in argument definitions." !.))
+      (= ! .!))))
+
+(sanity-check-builtin-argdefs)

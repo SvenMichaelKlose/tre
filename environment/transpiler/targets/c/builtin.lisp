@@ -8,10 +8,10 @@
 		(ATOM           builtin_atom)
 		(%TYPE-ID       builtin_type_id)
 		(%%ID           builtin_id)
-		(SYMBOL?        builtin_symbolp)
-		(FUNCTION?      builtin_functionp)
-		(BUILTIN?       builtin_builtinp)
-		(MACROP         builtin_macrop))
+		(SYMBOL?        symbolp)
+		(FUNCTION?      functionp)
+		(BUILTIN?       builtinp)
+		(MACROP         macrop))
 
 	(trearray_
     	(MAKE-ARRAY     builtin_make)
