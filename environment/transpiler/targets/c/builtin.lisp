@@ -91,10 +91,10 @@
 	(tresymbol_
 		(MAKE-SYMBOL        builtin_make_symbol)
 		(MAKE-PACKAGE       builtin_make_package)
-		(SYMBOL-VALUE       builtin_symbol_value)
+		(SYMBOL-VALUE       value)
 		(=-SYMBOL-VALUE     set_value)
-		(SYMBOL-FUNCTION    builtin_symbol_function)
-		(=-SYMBOL-FUNCTION  builtin_usetf_symbol_function)
+		(SYMBOL-FUNCTION    function)
+		(=-SYMBOL-FUNCTION  set_function)
 		(SYMBOL-PACKAGE     builtin_symbol_package))
 
 	(trelist_
