@@ -22,11 +22,16 @@
 #include "builtin_string.h"
 
 treptr
+trestring_p (treptr object)
+{
+    return TREPTR_TRUTH(TREPTR_IS_STRING(object));
+}
+
+
+treptr
 trestring_builtin_stringp (treptr list)
 {
-    treptr arg = trearg_get (list);
-
-    return TREPTR_TRUTH(TREPTR_IS_STRING(arg));
+    return trestring_p (trearg_get (list));
 }
 
 treptr
