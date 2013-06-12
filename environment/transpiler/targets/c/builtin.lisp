@@ -15,9 +15,9 @@
 
 	(trearray_
     	(MAKE-ARRAY     builtin_make)
-		(ARRAY?         builtin_p)
-		(AREF           builtin_aref)
-		(=-AREF         builtin_set_aref))
+		(ARRAY?         p)
+		(AREF)
+		(=-AREF         set_aref))
 
 	(treerror_
 		(%ERROR         builtin_error))

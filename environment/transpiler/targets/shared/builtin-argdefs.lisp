@@ -41,9 +41,9 @@
       (CHARACTER>   &rest x) ;a b)
 
       (MAKE-ARRAY   &rest sizes)
-      (ARRAY?       &rest x) ;object)
-      (AREF         &rest x) ;array &rest indexes)
-      (=-AREF       &rest x) ;object array &rest indexes)
+      (ARRAY?       object)
+      (AREF         array &rest indexes)
+      (=-AREF       object array &rest indexes)
 
       (%ERROR       &rest x) ;message-string)
 
