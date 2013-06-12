@@ -98,7 +98,7 @@
       (RPLACA           object list)
       (RPLACD           object list)
       (RPLACP           object list)
-      (CONS?            &rest x) ;object)
+      (CONS?            object)
       (ELT              &rest x) ;sequence index)
       (%SET-ELT         &rest x) ;object sequence index)
       (LENGTH           &rest x) ;sequence)

@@ -105,14 +105,17 @@ trelist_builtin_rplacp (treptr list)
 }
 
 treptr
+trelist_consp (treptr object)
+{
+   if (TREPTR_IS_ATOM(object))
+       return treptr_nil;
+    return treptr_t;
+}
+
+treptr
 trelist_builtin_consp (treptr list)
 {
-	treptr x;
-
-	DOLIST(x, list)
-        if (TREPTR_IS_ATOM(CAR(x)))
-		    return treptr_nil;
-    return treptr_t;
+    return trelist_consp (CAR(list));
 }
 
 void

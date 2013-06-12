@@ -106,7 +106,7 @@
 		(RPLACA)
 		(RPLACD)
 		(RPLACP)
-   	    (CONS?              builtin_consp))
+   	    (CONS?              consp))
 
 	(tresequence_
     	(ELT                builtin_elt)

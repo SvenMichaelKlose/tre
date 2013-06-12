@@ -5,6 +5,8 @@
 #ifndef TRE_BUILTIN_LIST_H
 #define TRE_BUILTIN_LIST_H
 
+extern treptr trelist_consp (treptr);
+
 extern treptr trelist_builtin_cons (treptr);
 extern treptr trelist_builtin_list (treptr);
 extern treptr trelist_builtin_car (treptr);
