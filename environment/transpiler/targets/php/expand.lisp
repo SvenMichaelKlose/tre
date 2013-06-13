@@ -9,7 +9,7 @@
      (%setq ~%ret nil)))
 
 (define-php-std-macro eq (&rest x)
-  (? .x
+  (? ..x
      `(& (eq ,x. ,.x.)
          (eq ,x. ,@..x))
      `(eq ,@x)))
