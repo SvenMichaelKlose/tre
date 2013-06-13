@@ -42,7 +42,9 @@
 
 (defun backquote-cons (x)
   (?
-    (atom x)       (quote-literal x)
+    (atom x)       (progn
+                     (warn "Atom ~A  is in a BACKQUOTE (or ` for short) instead of a QUOTE (or ' for short)."  x)
+                     (quote-literal x))
     (backquote? x) `(cons 'BACKQUOTE ,(backquote-cons .x))
     (backquote-cons-1 x)))
 
