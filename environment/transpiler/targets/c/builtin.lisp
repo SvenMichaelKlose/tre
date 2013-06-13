@@ -6,8 +6,8 @@
 		(EQ             builtin_eq)
 		(EQL            builtin_eql)
 		(ATOM           builtin_atom)
-		(%TYPE-ID       builtin_type_id)
-		(%%ID           builtin_id)
+		(%TYPE-ID       type_id)
+		(%%ID           id)
 		(SYMBOL?        symbolp)
 		(FUNCTION?      functionp)
 		(BUILTIN?       builtinp)
@@ -46,6 +46,8 @@
 		(%%GET get))
 
 	(trenumber_
+		(%+             plus)
+		(%-             difference)
 		(NUMBER+        builtin_plus)
 		(NUMBER-        builtin_difference)
 		(INTEGER+       builtin_plus)
@@ -78,15 +80,15 @@
 		(CHARACTER<     lessp)
 		(CHARACTER>     greaterp)
 
-		(NUMBER?        builtin_numberp)
+		(NUMBER?        numberp)
 		(BIT-OR         builtin_bit_or)
 		(BIT-AND        builtin_bit_and)
 		(<<             builtin_bit_shift_left)
 		(>>             builtin_bit_shift_right)
-		(CODE-CHAR      builtin_code_char)
+		(CODE-CHAR      code_char)
 		(INTEGER        builtin_integer)
 		(FLOAT          builtin_float)
-		(CHARACTER?     builtin_characterp))
+		(CHARACTER?     characterp))
 
 	(tresymbol_
 		(MAKE-SYMBOL        builtin_make_symbol)
@@ -119,7 +121,7 @@
 		(STRING==           builtin_compare)
 		(STRING-CONCAT      builtin_concat)
 		(STRING             builtin_string)
-		(SYMBOL-NAME        builtin_symbol_name)
+		(SYMBOL-NAME        symbol_name)
 		(LIST-STRING        builtin_list_string))
 
 	(tremacro_

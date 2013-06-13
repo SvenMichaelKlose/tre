@@ -6,6 +6,7 @@
 #define TRE_BUILTIN_STRING_H
 
 extern treptr trestring_p (treptr);
+extern treptr trestring_symbol_name (treptr);
 
 extern treptr trestring_builtin_stringp (treptr);
 extern treptr trestring_builtin_list_string (treptr);

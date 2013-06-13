@@ -5,6 +5,8 @@
 #ifndef TRE_BUILTIN_ARITH_H
 #define TRE_BUILTIN_ARITH_H
 
+extern treptr trenumber_plus (treptr, treptr);
+extern treptr trenumber_difference (treptr, treptr);
 extern treptr trenumber_mod (treptr, treptr);
 extern treptr trenumber_sqrt (treptr);
 extern treptr trenumber_sin (treptr);

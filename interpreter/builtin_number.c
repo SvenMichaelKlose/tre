@@ -15,11 +15,15 @@
 #include "argument.h"
 
 treptr
+trenumber_numberp (treptr object)
+{
+    return TREPTR_TRUTH(TREPTR_IS_NUMBER(object));
+}
+
+treptr
 trenumber_builtin_numberp (treptr list)
 {
-    treptr  arg = trearg_get (list);
-
-    return TREPTR_TRUTH(TREPTR_IS_NUMBER(arg));
+    return trenumber_numberp (trearg_get (list));
 }
 
 treptr
@@ -37,19 +41,21 @@ trenumber_arg_get2 (treptr * first, treptr * second, treptr args)
 }
 
 treptr
-trenumber_builtin_characterp (treptr args)
+trenumber_characterp (treptr object)
 {
-    treptr  arg = trearg_get (args);
-
-    return TREPTR_TRUTH(TREPTR_IS_NUMBER(arg) && (TRENUMBER_TYPE(arg) == TRENUMTYPE_CHAR));
+    return TREPTR_TRUTH(TREPTR_IS_NUMBER(object) && (TRENUMBER_TYPE(object) == TRENUMTYPE_CHAR));
 }
 
 treptr
-trenumber_code_char (treptr x)
+trenumber_builtin_characterp (treptr args)
 {
-    char	tmp;
+    return trenumber_characterp (trearg_get (args));
+}
 
-    tmp = (char) TRENUMBER_VAL(x);
+treptr
+trenumber_code_char (treptr number)
+{
+    char tmp = (char) TRENUMBER_VAL(number);
     return treatom_number_get ((double) tmp, TRENUMTYPE_CHAR);
 }
 

@@ -27,7 +27,6 @@ trestring_p (treptr object)
     return TREPTR_TRUTH(TREPTR_IS_STRING(object));
 }
 
-
 treptr
 trestring_builtin_stringp (treptr list)
 {
@@ -188,14 +187,20 @@ trestring_builtin_string (treptr list)
 }
 
 treptr
-trestring_builtin_symbol_name (treptr list)
+trestring_symbol_name (treptr symbol)
 {
     char    buf[TRE_MAX_STRINGLEN];
-    treptr  arg = trearg_typed (1, TRETYPE_SYMBOL, trearg_get (list), "SYMBOL-NAME");
-    char *  an = TREATOM_DETAIL(arg);
+    treptr  sym = trearg_typed (1, TRETYPE_SYMBOL, symbol, "SYMBOL-NAME");
+    char *  an = TREATOM_DETAIL(sym);
 
     buf[0] = 0;
     if (an)
         strcpy (buf, an);
     return trestring_get (buf);
+}
+
+treptr
+trestring_builtin_symbol_name (treptr list)
+{
+    return trestring_symbol_name (trearg_get (list));
 }

@@ -44,3 +44,22 @@
 
 (define-c-std-macro filter (fun lst)
   (shared-opt-filter fun lst))
+
+
+(functional %+ %-)
+
+(define-c-std-macro number+ (&rest x)
+  (alet `(%+ ,x. ,.x.)
+    (? ..x
+       `(%+ ,! (number+ ,@..x))
+       !)))
+
+(define-c-std-macro number- (&rest x)
+  (? ..x
+     `(%- ,x. (number+ ,@.x))
+     `(%- ,@x)))
+
+(define-c-std-macro integer+ (&rest x) `(number+ ,@x))
+(define-c-std-macro character+ (&rest x) `(number+ ,@x))
+(define-c-std-macro integer- (&rest x) `(number- ,@x))
+(define-c-std-macro character- (&rest x) `(number- ,@x))

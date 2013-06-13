@@ -1,12 +1,15 @@
 /*
- * tré – Copyright (c) 2005–2008,2010,2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2008,2010,2012–2013 Sven Michael Klose <pixel@copei.de>
  */
 
 #ifndef TRE_BUILTIN_NUMBER_H
 #define TRE_BUILTIN_NUMBER_H
 
-extern treptr trenumber_builtin_numberp (treptr);
+extern treptr trenumber_numberp (treptr);
+extern treptr trenumber_characterp (treptr);
 extern treptr trenumber_code_char (treptr);
+
+extern treptr trenumber_builtin_numberp (treptr);
 extern treptr trenumber_builtin_code_char (treptr);
 extern treptr trenumber_builtin_integer (treptr);
 extern treptr trenumber_builtin_float (treptr);

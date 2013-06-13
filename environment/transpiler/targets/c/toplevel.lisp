@@ -40,16 +40,6 @@
 		   "function.h"
 		   "compiled.h"))
 
-(define-tree-filter c-compile-symbols-in-tree (x)
-  (& x (symbol? x)) (c-compiled-symbol x))
-
-(defun c-closure-argument-def (tr def)
-  `(= (function-source (symbol-function ',def.)) (list ',.def)))
-
-(defun c-closure-argument-defs (tr)
-  (filter [c-closure-argument-def tr _]
-		  (transpiler-closure-argdefs tr)))
-
 (defun c-function-registration (tr name)
   `(%setq ~%ret (treatom_register_compiled_function
                     ,(c-compiled-symbol name)
@@ -66,8 +56,7 @@
 
 (defun c-declarations-and-initialisations (tr)
   (+ (transpiler-compiled-inits tr)
-     (c-function-registrations tr)
-     (c-closure-argument-defs tr)))
+     (c-function-registrations tr)))
 
 (defun c-make-init-function (tr statements)
   (alet ($ 'C-INIT- (1+! *c-init-counter*))
@@ -88,7 +77,6 @@
     (transpiler-make-code tr (transpiler-frontend tr (c-make-init-functions tr)))))
 
 (defun c-decl-gen (tr)
-  (c-compile-symbols-in-tree (transpiler-closure-argdefs tr))
   (concat-stringtree (transpiler-compiled-decls tr)
                      (c-compile-init-functions tr)))
 

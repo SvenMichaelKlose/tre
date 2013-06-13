@@ -63,9 +63,21 @@ trenumber_builtin_plus (treptr x)
 }
 
 treptr
+trenumber_plus (treptr a, treptr b)
+{
+    return treatom_number_get (TRENUMBER_VAL(a) + TRENUMBER_VAL(b), TRENUMTYPE_FLOAT);
+}
+
+treptr
 trenumber_builtin_character_plus (treptr x)
 {
     return trenumber_code_char (trenumber_builtin_plus (x));
+}
+
+treptr
+trenumber_difference (treptr a, treptr b)
+{
+    return treatom_number_get (TRENUMBER_VAL(a) - TRENUMBER_VAL(b), TRENUMTYPE_FLOAT);
 }
 
 treptr
