@@ -7,7 +7,6 @@
 	  %%native %%string
 	  %%closure %closure
 	  %set-atom-fun
-	  %setq-atom-fun
 	  %function-prologue
 	  %function-epilogue
 	  %function-return
