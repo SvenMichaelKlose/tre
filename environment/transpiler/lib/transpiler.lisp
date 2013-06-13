@@ -134,7 +134,6 @@
 
   (identifiers (make-hash-table :test #'eq))
   (converted-identifiers (make-hash-table :test #'eq))
-  (closure-argdefs nil)
 
   ; Recompiling
   (frontend-files)
@@ -162,11 +161,10 @@
   	 (transpiler-late-symbols tr)           (make-hash-table :test #'eq)
   	 (transpiler-identifiers tr)            (make-hash-table :test #'eq)
   	 (transpiler-converted-identifiers tr)  (make-hash-table :test #'eq)
-  	 (transpiler-closure-argdefs tr)        nil
-  	 (transpiler-exported-closures tr) nil
-  	 (transpiler-delayed-var-inits tr) nil
-     (transpiler-memorized-sources tr) nil
-     (transpiler-memorize-sources? tr) t)
+  	 (transpiler-exported-closures tr)      nil
+  	 (transpiler-delayed-var-inits tr)      nil
+     (transpiler-memorized-sources tr)      nil
+     (transpiler-memorize-sources? tr)      t)
   (transpiler-add-obfuscation-exceptions tr nil (make-symbol ""))
   tr)
 
@@ -251,7 +249,6 @@
         :current-package         current-package
         :identifiers             (copy-hash-table identifiers)
         :converted-identifiers   (copy-hash-table converted-identifiers)
-        :closure-argdefs         (copy-tree closure-argdefs)
         :expex-initializer       expex-initializer
         :cpr-count?              cpr-count?)
     (funcall (transpiler-expex-initializer !) (transpiler-make-expex !))))

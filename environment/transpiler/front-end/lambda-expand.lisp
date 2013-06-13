@@ -45,7 +45,6 @@
                                 :args   args
                                 :parent fi))
     (funinfo-make-ghost new-fi)
-    (acons! name args (transpiler-closure-argdefs *transpiler*))
     (transpiler-add-exported-closure *transpiler* `((defun ,name ,(funinfo-argdef new-fi) ,@body)))
     `(%%closure ,name)))
 
