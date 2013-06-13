@@ -1,10 +1,10 @@
 ;;;;; tré – Copyright (c) 2006–2008,2011–2013 Sven Michael Klose <pixel@copei.de>
 
-(defun error (&rest args)
-  (%error (apply #'format nil (+ args. "~%") .args)))
+(defun error (msg &rest args)
+  (%error (apply #'format nil (+ msg "~%") args)))
 
-(defun warn (&rest args)
-  (apply #'format t (string-concat "; WARNING: " args. "~%") .args))
+(defun warn (msg &rest args)
+  (apply #'format t (+ "; WARNING: " msg "~%") args))
 
-(defun hint (&rest args)
-  (apply #'format t (string-concat "; HINT: " args. "~%") .args))
+(defun hint (msg &rest args)
+  (apply #'format t (+ "; HINT: " msg "~%") args))
