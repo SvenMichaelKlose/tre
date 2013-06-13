@@ -8,7 +8,11 @@
      ,(apply #'shared-defun name args (body-with-noargs-tag body))
      (%setq ~%ret nil)))
 
-(transpiler-wrap-invariant-to-binary define-php-std-macro eq 2 eq &)
+(define-php-std-macro eq (&rest x)
+  (? .x
+     `(& (eq ,x. ,.x.)
+         (eq ,x. ,@..x))
+     `(eq ,@x)))
 
 (define-php-std-macro defun (name args &body body)
   (let fun-name (%defun-name name)

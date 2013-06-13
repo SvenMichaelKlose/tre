@@ -12,7 +12,11 @@
          (= (slot-value ,! 'tre-exp) ,(compile-argument-expansion g ! (lambda-args x)))
          ,!))))
 
-(transpiler-wrap-invariant-to-binary define-js-std-macro eq 2 eq &)
+(define-js-std-macro eq (&rest x)
+  (? .x
+     `(& (eq ,x. ,.x.)
+         (eq ,x. ,@..x))
+     `(eq ,@x)))
 
 (define-js-std-macro function (&rest x)
   (alet (cons 'function x)

@@ -16,7 +16,11 @@
              `((defun ,(c-expander-name fun-name) (,p)
                  ,(compile-argument-expansion-function-body fun-name args p nil (argument-expand-names 'compile-argument-expansion args)))))))))
 
-(transpiler-wrap-invariant-to-binary define-c-std-macro eq 2 %%%eq &)
+(define-c-std-macro eq (&rest x)
+  (? ..x
+     `(& (%%%eq ,x. ,.x.)
+         (eq ,x. ,@..x))
+     `(%%%eq ,@x)))
 
 (define-c-std-macro slot-value (obj slot)
   `(%slot-value ,obj (%quote ,slot)))
