@@ -59,7 +59,7 @@
     (error "NEW expects first argument to be a non-NIL symbol or string instead of ~A" x.))
   (? (| (keyword? x.)
         (string? x.))
-     `(%make-hash-table ,@x)
+     `(%%make-hash-table ,@x)
      `(%new ,@x)))
 
 (define-php-std-macro undefined? (x)

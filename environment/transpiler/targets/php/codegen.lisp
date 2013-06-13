@@ -271,7 +271,7 @@
 (define-php-macro make-hash-table (&rest ignored-args)
   `(make-array))
 
-(define-php-macro %make-hash-table (&rest args)
+(define-php-macro %%make-hash-table (&rest args)
   `(%%native "new __array (Array (" ,@(php-literal-array-elements (group args 2)) "))"))
 
 
