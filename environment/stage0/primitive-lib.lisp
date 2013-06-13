@@ -4,19 +4,21 @@
 
 (setq
 	*universe* ; The garbage collector roots here.
+	(cons 'list
 	(cons 'last
 	(cons '%nconc
 	(cons 'copy-tree
 	(cons '*variables*
-		  *universe*)))))
+		  *universe*))))))
 
 (setq
 	*defined-functions*
+	(cons 'list
 	(cons 'identity
 	(cons 'copy-tree
 	(cons 'last
 	(cons '%nconc
-		  nil)))))
+		  nil))))))
 
 (setq
 	*variables*
@@ -36,6 +38,7 @@
 		  *variables*))))))))))))))
 
 (%set-atom-fun identity #'((x) x))
+(%set-atom-fun list #'((&rest x) x))
 
 (%set-atom-fun copy-tree
   #'((x)

@@ -35,12 +35,6 @@ trelist_builtin_cons (treptr list)
 }
 
 treptr
-trelist_builtin_list (treptr list)
-{
-    return trelist_copy (list);
-}
-
-treptr
 trelist_builtin_cxr_arg (treptr list, const char * descr)
 {
     treptr arg = trearg_get (list);

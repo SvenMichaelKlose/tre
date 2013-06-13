@@ -101,7 +101,6 @@
 
 	(trelist_
 		(CONS               get)
-		(LIST               builtin_list)
     	(CAR)
 		(CDR)
 		(CPR)

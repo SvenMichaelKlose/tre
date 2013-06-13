@@ -93,7 +93,6 @@
       (=-SYMBOL-FUNCTION    function symbol)
       (SYMBOL-PACKAGE       &rest x) ;symbol)
       (CONS             a d)
-      (LIST             &rest objects)
       (CAR              list)
       (CDR              list)
       (CPR              list)
