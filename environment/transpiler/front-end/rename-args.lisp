@@ -1,7 +1,7 @@
 ;;;;; tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun find-and-add-renamed-doubles (fi old-replacements vars args)
-  (let argnames (remove-keywords (argument-expand-names 'rename-args args))
+  (let argnames (argument-expand-names 'rename-args args)
     (append (list-aliases (? (transpiler-rename-all-args? *transpiler*)
 						  	 (? (& fi (funinfo-ghost fi))
 								.argnames
