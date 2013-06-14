@@ -142,6 +142,7 @@
   (current-package nil)
   
   (current-pass nil)
+  (current-section nil)
   (last-pass-result nil)
   
   (cpr-count? nil))

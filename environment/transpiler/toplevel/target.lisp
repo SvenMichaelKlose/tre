@@ -20,27 +20,29 @@
   (let compiled-code (make-queue)
 	(dolist (i sections (queue-list compiled-code))
       (with-cons section data i
-        (let code (? (compile-file? section (transpiler-compiled-files tr) sections-to-update)
-                     (with-temporary (transpiler-accumulate-toplevel-expressions? tr) (not (accumulated-toplevel? section))
-                       (transpiler-make-code tr data))
-                     (assoc-value section (transpiler-compiled-files tr) :test #'eq-string==))
-          (aadjoin! code section (transpiler-compiled-files tr) :test #'eq-string==)
-	      (enqueue compiled-code code))))))
+        (with-temporary (transpiler-current-section tr) section
+          (let code (? (compile-file? section (transpiler-compiled-files tr) sections-to-update)
+                       (with-temporary (transpiler-accumulate-toplevel-expressions? tr) (not (accumulated-toplevel? section))
+                         (transpiler-make-code tr data))
+                       (assoc-value section (transpiler-compiled-files tr) :test #'eq-string==))
+            (aadjoin! code section (transpiler-compiled-files tr) :test #'eq-string==)
+	        (enqueue compiled-code code)))))))
 
 (defun target-transpile-1 (tr sections sections-to-update)
   (let frontend-code (make-queue)
 	(dolist (i sections (queue-list frontend-code))
       (with-cons section data i
-        (let code (? (compile-file? section (transpiler-frontend-files tr) sections-to-update)
-                     (?
-                       (symbol? section) (transpiler-frontend tr (? (function? data)
-                                                                    (funcall data)
-                                                                    data))
-		  			   (string? section) (transpiler-frontend-file tr section)
-                       (error "Compiler input is not described by a symbol (paired with a function or expressions) or a file name string. Got ~A instead" i.))
-                     (assoc-value section (transpiler-frontend-files tr) :test #'eq-string==))
-          (aadjoin! code section (transpiler-frontend-files tr) :test #'eq-string==)
-	      (enqueue frontend-code (cons section code)))))))
+        (with-temporary (transpiler-current-section tr) section
+          (let code (? (compile-file? section (transpiler-frontend-files tr) sections-to-update)
+                       (?
+                         (symbol? section) (transpiler-frontend tr (? (function? data)
+                                                                      (funcall data)
+                                                                      data))
+		  			     (string? section) (transpiler-frontend-file tr section)
+                         (error "Compiler input is not described by a symbol (paired with a function or expressions) or a file name string. Got ~A instead" i.))
+                       (assoc-value section (transpiler-frontend-files tr) :test #'eq-string==))
+            (aadjoin! code section (transpiler-frontend-files tr) :test #'eq-string==)
+	        (enqueue frontend-code (cons section code))))))))
 
 (defun target-sighten-deps (tr dep-gen)
   (& dep-gen
