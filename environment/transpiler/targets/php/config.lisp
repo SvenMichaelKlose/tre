@@ -5,7 +5,6 @@
 (defun make-php-transpiler-0 ()
   (create-transpiler
       :name 'php
-	  :unwanted-functions '(wait)
 	  :apply-argdefs? nil
       :literal-conversion #'transpiler-expand-literal-characters
 	  :identifier-char?  [| (& (>= _ #\a) (<= _ #\z))

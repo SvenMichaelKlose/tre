@@ -3,7 +3,6 @@
 (defun make-javascript-transpiler-0 ()
   (create-transpiler
       :name 'js
-	  :unwanted-functions '(wait)
 	  :named-function-next #'cdr
 	  :apply-argdefs? t
 	  :identifier-char? [| (& (>= _ #\a) (<= _ #\z))

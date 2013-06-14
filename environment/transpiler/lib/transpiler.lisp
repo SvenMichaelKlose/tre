@@ -10,7 +10,8 @@
 (defvar *print-executed-functions?* nil)
 
 (defun make-host-functions-and-macros-hash ()
-  (filter [cons _ (function-arguments (symbol-function _))] (+ *defined-functions* *macros*)))
+  (filter [cons _ (function-arguments (symbol-function _))]
+          (+ *defined-functions* *macros*)))
 
 (defun make-host-functions-hash ()
   (alist-hash (+ (make-host-functions-and-macros-hash)
@@ -28,9 +29,6 @@
   std-macro-expander
   codegen-expander
   separator
-
-  ; List of functions that must not be imported from the environment.
-  unwanted-functions
 
   (identifier-char? [identity t])
   (literal-conversion [error "structure 'transpiler': LITERAL-CONVERSION is not initialised"])
@@ -176,7 +174,6 @@
         :std-macro-expander     std-macro-expander
         :codegen-expander       codegen-expander
         :separator              separator
-        :unwanted-functions     unwanted-functions
         :identifier-char?       identifier-char?
         :literal-conversion     literal-conversion
         :defined-functions-hash (copy-hash-table defined-functions-hash)
@@ -275,7 +272,7 @@
 (transpiler-getter late-symbol?            (href (transpiler-late-symbols tr) x))
 (progn
   ,@(filter  [`(transpiler-getter-list ,_)]
-            '(unwanted-function inline-exception cps-function plain-arg-fun emitted-decl)))
+            '(inline-exception cps-function plain-arg-fun emitted-decl)))
 
 (transpiler-getter add-defined-variable (= (href (transpiler-defined-variables-hash tr) x) t)
                                         x)
@@ -293,7 +290,6 @@
 
 (defun transpiler-add-function-args (tr fun args) (= (href (transpiler-function-args tr) fun) args))
 (defun transpiler-add-function-body (tr fun args) (= (href (transpiler-function-bodies tr) fun) args))
-(define-slot-setter-push transpiler-add-unwanted-function tr (transpiler-unwanted-functions tr))
 (define-slot-setter-push transpiler-add-exported-closure tr  (transpiler-exported-closures tr))
 (define-slot-setter-push transpiler-add-cps-function tr      (transpiler-cps-functions tr))
 (define-slot-setter-push transpiler-add-inline-exception tr  (transpiler-inline-exceptions tr))
@@ -304,12 +300,12 @@
 (defun transpiler-add-delayed-var-init (tr x)    (nconc! (transpiler-delayed-var-inits tr) (transpiler-frontend tr x)))
 
 (defun transpiler-add-plain-arg-funs (tr lst)
-  (dolist (i lst)
-    (transpiler-add-plain-arg-fun tr i)))
+  (adolist lst
+    (transpiler-add-plain-arg-fun tr !)))
 
 (defun transpiler-add-obfuscation-exceptions (tr &rest x)
-  (dolist (i x)
-	(= (href (transpiler-obfuscations tr) (make-symbol (symbol-name i)))
+  (adolist x
+	(= (href (transpiler-obfuscations tr) (make-symbol (symbol-name !)))
 	   t)))
 
 (defun transpiler-add-late-symbol (tr x)
