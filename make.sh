@@ -1,8 +1,6 @@
 #!/bin/sh
 # tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
 
-svnversion -n >environment/_current-version
-
 ARGS="$2 $3 $4 $5 $6 $7 $8 $9"
 
 FILES="
@@ -98,9 +96,9 @@ BINDIR="/usr/local/bin/"
 basic_clean ()
 {
 	echo "Cleaning..."
-	rm -f *.core interpreter/$COMPILED_ENV tre tmp.c __alien.tmp environemnt/_current-version
-	rm -rf obj
-    rm -f examples/js/hello-world.js
+	rm -vf *.core interpreter/$COMPILED_ENV tre tmp.c __alien.tmp environment/_current-version
+	rm -vrf obj
+    rm -vf examples/js/hello-world.js
 }
 
 distclean ()
@@ -157,6 +155,7 @@ crunsh)
 
 reload)
     echo "Reloading environment from source..."
+    svnversion -n >environment/_current-version
     echo | tre -n
 	;;
 
