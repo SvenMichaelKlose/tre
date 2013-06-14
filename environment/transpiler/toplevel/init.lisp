@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun transpiler-make-expex (tr)
   (let ex (make-expex)
@@ -21,8 +21,7 @@
 			 #'((fun)
 		          (& (atom fun)
 		             (| (transpiler-function-arguments ,tr fun)
-			            (& (not (transpiler-unwanted-function? ,tr fun))
-				           (function? (symbol-function fun)))))))
+			            (function? (symbol-function fun))))))
 
 	   (expex-plain-arg-fun? ex)
 	       (lx (tr)

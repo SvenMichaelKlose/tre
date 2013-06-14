@@ -5,7 +5,6 @@
      (transpiler-defined-variable tr name)
      (transpiler-wanted-function? tr name)
      (transpiler-wanted-variable? tr name)
-     (transpiler-unwanted-function? tr name)
      (transpiler-macro tr name)))
 
 (defun transpiler-can-import? (tr name)
@@ -34,7 +33,6 @@
 
 (defun transpiler-add-wanted-variable (tr var)
   (when (transpiler-must-add-wanted-variable? tr var)
-    (format t "Importing ~A.~%" (symbol-name var))
     (= (href (transpiler-wanted-variables-hash tr) var) t)
     (push var (transpiler-wanted-variables tr)))
   var)
