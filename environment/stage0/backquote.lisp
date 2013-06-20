@@ -37,10 +37,15 @@
 
 (%set-atom-fun %backquote-quasiquote
   #'((%gsbq)
-      (cons (? (any-quasiquote? (car (cdr (car %gsbq))))
-               (%backquote (car (cdr (car %gsbq))))
-               (copy-tree (%quasiquote-eval %gsbq)))
-            (%backquote (cdr %gsbq)))))
+       (? (cpr %gsbq)
+          (setq *default-listprop* (cpr %gsbq)))
+       (#'((p c)
+             (rplacp c p))
+         *default-listprop*
+         (cons (? (any-quasiquote? (car (cdr (car %gsbq))))
+                  (%backquote (car (cdr (car %gsbq))))
+                  (copy-tree (%quasiquote-eval %gsbq)))
+               (%backquote (cdr %gsbq))))))
 
 (%set-atom-fun %backquote-quasiquote-splice
   #'((%gsbq)
@@ -48,13 +53,14 @@
           (progn
             (? (cpr %gsbq)
                (setq *default-listprop* (cpr %gsbq)))
-            (#'((p c) (rplacp c p))
+            (#'((p c)
+                  (rplacp c p))
               *default-listprop*
               (cons (copy-tree (car (cdr (car %gsbq))))
                     (%backquote (cdr %gsbq)))))
           (#'((%gstmp)
                 (?
-                  (not %gstmp) (%backquote (cdr %gsbq))
+                  (not %gstmp)  (%backquote (cdr %gsbq))
                   (atom %gstmp) (%error "QUASIQUOTE-SPLICE: list expected")
                   (%nconc (copy-tree %gstmp)
                           (%backquote (cdr %gsbq)))))
@@ -70,13 +76,12 @@
               (setq *default-listprop* (cpr %gsbq)))
            (#'((p c)
                  (? (cons? c)
-                    (rplacp c p)
-                    c))
+                    (rplacp c (setq *default-listprop* p))))
              *default-listprop*
              (?
-               (atom (car %gsbq)) (cons (car %gsbq)
-                                        (%backquote (cdr %gsbq)))
-               (eq 'QUASIQUOTE (car (car %gsbq))) (%backquote-quasiquote %gsbq)
+               (atom (car %gsbq))                        (cons (car %gsbq)
+                                                               (%backquote (cdr %gsbq)))
+               (eq 'QUASIQUOTE (car (car %gsbq)))        (%backquote-quasiquote %gsbq)
                (eq 'QUASIQUOTE-SPLICE (car (car %gsbq))) (%backquote-quasiquote-splice %gsbq)
                (cons (%backquote (car %gsbq))
                      (%backquote (cdr %gsbq)))))))))

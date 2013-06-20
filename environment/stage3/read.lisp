@@ -128,12 +128,13 @@
   (| token (error "missing closing bracket"))
   (unless (%read-closing-bracket? token)
     (cons (with-temporary *default-listprop* *default-listprop*
-            (?
-		      (token-is-quote? token)         (read-quote str token)
-		      (eq 'bracket-open token)        (read-cons-slot str)
-		      (eq 'square-bracket-open token) (cons 'square (read-cons-slot str))
-		      (eq 'curly-bracket-open token)  (cons 'curly (read-cons-slot str))
-		      (read-atom str token pkg sym)))
+            (case token
+		      'bracket-open        (read-cons-slot str)
+		      'square-bracket-open (cons 'square (read-cons-slot str))
+		      'curly-bracket-open  (cons 'curly (read-cons-slot str))
+		      (? (token-is-quote? token)
+                 (read-quote str token)
+		         (read-atom str token pkg sym))))
           (with-temporary *default-listprop* *default-listprop*
 	        (with ((token pkg sym) (read-token str))
 	          (? (eq 'dot token)
@@ -160,14 +161,15 @@
 
 (defun read-expr (str)
   (with ((token pkg sym) (read-token str))
-	(?
-	  (not token) nil
-	  (eq 'eof token) nil
-      (token-is-quote? token)         (read-quote str token)
-      (eq 'bracket-open token)        (read-cons-slot str)
-      (eq 'square-bracket-open token) (cons 'square (read-cons-slot str))
-      (eq 'curly-bracket-open token)  (cons 'curly (read-cons-slot str))
-	  (read-atom str token pkg sym))))
+    (case token
+      nil                  nil
+      'eof                 nil
+      'bracket-open        (read-cons-slot str)
+      'square-bracket-open (cons 'square (read-cons-slot str))
+      'curly-bracket-open  (cons 'curly (read-cons-slot str))
+      (? (token-is-quote? token)
+         (read-quote str token)
+         (read-atom str token pkg sym)))))
 
 (defun read (&optional (str *standard-input*))
   "Read expression from stream."

@@ -42,7 +42,8 @@
   (transpiler-frontend-2 tr (transpiler-frontend-1 tr x)))
 
 (defun transpiler-frontend (tr x)
-  (remove-if #'not (mapcan [transpiler-frontend-0 tr (list _)] x)))
+  (remove-if #'not (mapcan [(= *default-listprop* nil)
+                            (transpiler-frontend-0 tr (list _))] x)))
 
 (defun transpiler-frontend-file (tr file)
   (format t "(LOAD \"~A\")~%" file)

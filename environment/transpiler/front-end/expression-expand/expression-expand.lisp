@@ -212,18 +212,18 @@
     (values moved (list new-expr))))
 
 (defun expex-expr (ex expr)
-  (make-default-listprop expr)
-  (let x (expex-guest-filter-expr ex expr)
-    (expex-cps x)
-    (?
-      (%%go-nil? x)            (expex-%%go-nil ex x)
-	  (%var? x)                (expex-var x)
-	  (named-lambda? x)        (expex-lambda ex x)
-      (not (expex-able? ex x)) (values nil (list x))
-      (%%block? x)             (values nil (expex-body ex (%%block-body x)))
-      (%setq-cps-mode? x)      (expex-%setq-cps-mode x)
-      (%setq? x)               (expex-expr-%setq ex x)
-      (expex-expr-std ex x))))
+  (with-default-listprop expr
+    (let x (expex-guest-filter-expr ex expr)
+      (expex-cps x)
+      (?
+        (%%go-nil? x)            (expex-%%go-nil ex x)
+	    (%var? x)                (expex-var x)
+	    (named-lambda? x)        (expex-lambda ex x)
+        (not (expex-able? ex x)) (values nil (list x))
+        (%%block? x)             (values nil (expex-body ex (%%block-body x)))
+        (%setq-cps-mode? x)      (expex-%setq-cps-mode x)
+        (%setq? x)               (expex-expr-%setq ex x)
+        (expex-expr-std ex x)))))
 
 
 ;;;; BODY EXPANSION

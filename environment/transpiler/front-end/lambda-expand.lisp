@@ -81,7 +81,7 @@
 (defun lambda-expand-tree-0 (fi x)
   (?
 	(atom x)  x
-	(atom x.) (cons x. (lambda-expand-tree-0 fi .x))
+	(atom x.) (listprop-cons x x. (lambda-expand-tree-0 fi .x))
     (progn
 	  (listprop-cons x (lambda-expand-tree-cons fi x.)
 		               (lambda-expand-tree-0 fi .x)))))

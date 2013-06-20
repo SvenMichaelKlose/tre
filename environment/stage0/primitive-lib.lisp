@@ -48,7 +48,8 @@
             (progn
               (? (cpr x)
                  (setq *default-listprop* (cpr x)))
-              (#'((p c) (rplacp c p))
+              (#'((p c)
+                    (rplacp c (setq *default-listprop* p)))
                 *default-listprop*
                 (cons (copy-tree (car x))
               	      (copy-tree (cdr x)))))))))

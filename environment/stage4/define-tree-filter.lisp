@@ -8,8 +8,8 @@
          (atom ,iter) ,iter
          (progn
            (make-default-listprop ,iter)
-           (cons (,name ,@(butlast args) (car ,iter))
-                 (,name ,@(butlast args) (cdr ,iter))))))))
+           (listprop-cons ,iter (,name ,@(butlast args) (car ,iter))
+                                (,name ,@(butlast args) (cdr ,iter))))))))
 
 (defmacro define-concat-tree-filter (name args &body body)
   (let iter (car (last args))

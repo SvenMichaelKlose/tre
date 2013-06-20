@@ -57,7 +57,7 @@
             (? (cpr %g)
                (setq *default-listprop* (cpr %g)))
             (#'((p c)
-                  (rplacp c p))
+                  (rplacp c (setq *default-listprop* p)))
               *default-listprop*
               (?
                 (atom (car %g))
@@ -87,7 +87,7 @@
             (? (cpr %g)
                (setq *default-listprop* (cpr %g)))
             (#'((p c)
-                  (rplacp c p))
+                  (rplacp c (setq *default-listprop* p)))
        	      *default-listprop*
               (cons (%macroexpand (car %g))
                     (%macroexpand-rest (cdr %g))))))))
@@ -122,7 +122,7 @@
               (setq *default-listprop* (cpr %g)))
            (#'((p c)
                  (? (cons? c)
-                    (rplacp c p)
+                    (rplacp c (setq *default-listprop* p))
                     c))
              *default-listprop*
              (?
@@ -152,13 +152,13 @@
 (%set-atom-fun *macroexpand-hook*
   #'((%g)
 	   (#'((%gp %gc %gcm)
-             (setq *macrop-diversion* #'%%macrop
+             (setq *macrop-diversion*    #'%%macrop
                    *macrocall-diversion* #'%%macrocall
-                   *current-macro* nil)
+                   *current-macro*       nil)
 	         (#'((%g)
-                   (setq *macrop-diversion* %gp
+                   (setq *macrop-diversion*    %gp
                          *macrocall-diversion* %gc
-                         *current-macro* %gcm)
+                         *current-macro*       %gcm)
 				   %g)
 	           (%macroexpand %g)))
           *macrop-diversion* *macrocall-diversion* *current-macro*)))
