@@ -7,6 +7,7 @@
 
 #include <stddef.h>
 
+#define FIRST_LISTNODE	1
 #define LAST_LISTNODE	(NUM_LISTNODES - 1)
 
 struct tre_list {

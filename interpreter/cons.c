@@ -97,39 +97,39 @@ trelist_free_toplevel (treptr node)
 }
 
 void
-trelist_gc ()
+trelist_gc (treptr car, treptr cdr)
 {
-	if (tre_lists_free != treptr_nil)
-        return;
+    tregc_push (car);
+    tregc_push (cdr);
 
 	tregc_force ();
-   	if (tre_lists_free == treptr_nil)
+   	if (!tre_lists_free)
     	treerror_internal (treptr_invalid, "out of conses");
+
+    tregc_pop ();
+    tregc_pop ();
 }
 
 treptr
 trelist_get (treptr car, treptr cdr)
 {
-    treptr ret;
+    treptr cons;
 
-    tregc_push (car);
-    tregc_push (cdr);
+    if (!tre_lists_free)
+	    trelist_gc (car, cdr);
 
-	trelist_gc ();
+    cons = tre_lists_free;
+    tre_lists_free = _CDR(cons);
 
-    ret = tre_lists_free;
-    tre_lists_free = _CDR(ret);
-    _CAR(ret) = car;
-    _CDR(ret) = cdr;
-    _CPR(ret) = TRESYMBOL_VALUE(tre_default_listprop);
+    _CAR(cons) = car;
+    _CDR(cons) = cdr;
+    _CPR(cons) = TRESYMBOL_VALUE(tre_default_listprop);
 
 #ifdef TRE_VERBOSE_GC
     trelist_num_used++;
 #endif
 
-    tregc_pop ();
-    tregc_pop ();
-    return ret;
+    return cons;
 }
 
 void
@@ -137,11 +137,11 @@ trecons_init ()
 {
     treptr i;
 
-    for (i = 0; i < LAST_LISTNODE; i++)
+    for (i = FIRST_LISTNODE; i < LAST_LISTNODE; i++)
 		_CDR(i) = (treptr) i + 1;
     _CDR(LAST_LISTNODE) = TREPTR_NIL();
 
-    tre_lists_free = 0;
+    tre_lists_free = FIRST_LISTNODE;
     tre_default_listprop = treptr_nil;
     trelist_num_used = 0;
 }
