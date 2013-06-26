@@ -28,19 +28,24 @@
 (define-c-std-macro =-slot-value (val obj slot)
   `(=-%slot-value ,val ,obj (%quote ,slot)))
 
-(defun single-index? (x)
-  (& (== 1 (length x))
-     (not (%%native? x.))
-     (number? x.)))
+(defun single? (x)
+  (== 1 (length x)))
+
+(defun make-number-%%native (x)
+  (? (number? x)
+     `(%%native ,x)
+     x))
 
 (define-c-std-macro =-aref (val arr &rest idx)
-  (? (single-index? idx)
-    `(%immediate-set-aref ,val ,arr (%%native ,idx.))
+  (? (single? idx)
+    `(%immediate-set-aref ,val ,arr ,(make-number-%%native idx.))
     `(=-aref ,val ,arr ,@idx)))
 
+(functional %immediate-aref)
+
 (define-c-std-macro aref (arr &rest idx)
-  (? (single-index? idx)
-     `(%immediate-aref ,arr (%%native ,idx.))
+  (? (single? idx)
+     `(%immediate-aref ,arr ,(make-number-%%native idx.))
      `(aref ,arr ,@idx)))
 
 (define-c-std-macro %%%nanotime ()
