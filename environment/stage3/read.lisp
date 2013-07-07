@@ -53,16 +53,16 @@
 				            (get-symbol str)))
 	   (values nil sym))))
 
-(defun get-string-0 (str)
+(defun read-string-0 (str)
   (let c (read-char str)
     (unless (== c 34) ; " - vim syntax highlighting fscks up.
       (cons (? (== c #\\)
                (read-char str)
                c)
-            (get-string-0 str)))))
+            (read-string-0 str)))))
 
-(defun get-string (str)
-  (list-string (get-string-0 str)))
+(defun read-string (str)
+  (list-string (read-string-0 str)))
 
 (defun read-comment-block (str)
   (while (not (& (== #\| (read-char str))
@@ -105,7 +105,7 @@
 
 (defun read-atom (str token pkg sym)
   (case token
-    'dblquote  (get-string str)
+    'dblquote  (read-string str)
     'char      (code-char (read-char str))
     'number    (with-stream-string s (list-string sym)
                  (read-number s))
