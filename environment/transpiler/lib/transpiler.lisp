@@ -5,7 +5,7 @@
 (defvar *transpiler-no-stream?* nil)
 
 (defvar *transpiler-except-cps?* t)
-(defvar *opt-inline?* t)
+(defvar *opt-inline?* nil)
 (defvar *recompiling?* nil)
 (defvar *print-executed-functions?* nil)
 
