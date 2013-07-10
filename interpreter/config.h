@@ -58,6 +58,7 @@ typedef int bool;
 #endif
 
 #define TRESTACK_SIZE	            (512 * KILO)
+#define TRESTACK_SIZE_SECONDARY     (TRESTACK_SIZE / 32)
 
 #ifndef NULL
 #define NULL    ((void *) 0)

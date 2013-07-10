@@ -326,6 +326,7 @@ char *tre_builtin_names[] = {
     "FUNCTION-NATIVE",
     "FUNCTION-BYTECODE", "=-FUNCTION-BYTECODE",
     "FUNCTION-SOURCE", "=-FUNCTION-SOURCE",
+    "MAKE-FUNCTION",
 
 	"CONS", "CAR", "CDR", "CPR", "RPLACA", "RPLACD", "RPLACP",
 
@@ -450,6 +451,7 @@ treevalfunc_t treeval_xlat_builtin[] = {
     trefunction_builtin_usetf_function_bytecode,
     trefunction_builtin_function_source,
     trefunction_builtin_set_source,
+    trefunction_builtin_make_function,
 
     trelist_builtin_cons,
     trelist_builtin_car,

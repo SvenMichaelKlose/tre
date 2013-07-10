@@ -55,12 +55,12 @@ trecode_list (treptr ** x, int len)
     treptr  v;
     int     i;
 
-    tregc_push (l);
+    tregc_push_secondary (l);
     DOTIMES(i, len) {
         v = trecode_get (x);
         tre_enqueue (l, v);
     }
-    tregc_pop ();
+    tregc_pop_secondary ();
 
     return CDR(l);
 }
@@ -80,29 +80,11 @@ trecode_set_place (treptr ** p, treptr value)
 }
 
 treptr
-trecode_call (treptr fun, treptr args)
-{
-    treptr i;
-    treptr v;
-    treptr num_args = 0;
-
-    tregc_push (fun);
-    DOLIST(i, args) {
-        *--trestack_ptr = CAR(i);
-        num_args++;
-    }
-    v = trecode_exec (fun);
-    trestack_ptr += num_args;
-    tregc_pop ();
-
-    return v;
-}
-
-treptr
 trecode_get (treptr ** p)
 {
     treptr  v;
-    treptr  fun;
+    treptr  funsym;
+    treptr  fun = treptr_nil;
     treptr  args;
     treptr  car;
     treptr  cdr;
@@ -116,32 +98,37 @@ trecode_get (treptr ** p)
     v = *x++;
 
     if (v == treptr_funcall) {
-        fun = *x++;
-        if (TREPTR_IS_BUILTIN(TRESYMBOL_FUN(fun))) {
-            if (fun == treptr_cons) {
+        funsym = *x++;
+        if (!TREPTR_IS_SYMBOL(funsym))
+            treerror_norecover (fun, "symbol (with function) expected");
+        fun = TRESYMBOL_FUN(funsym);
+        if (!TREPTR_IS_FUNCTION(fun))
+            treerror_norecover (fun, "function expected");
+        if (TREPTR_IS_BUILTIN(fun)) {
+            if (funsym == treptr_cons) {
                 car = trecode_get (&x);
                 tregc_push (car);
                 cdr = trecode_get (&x);
                 v = CONS(car, cdr);
                 tregc_pop ();
-            } else if (fun == treptr_set_atom_fun) {
+            } else if (funsym == treptr_set_atom_fun) {
                 trecode_set_place (&x, trecode_get (&x));
             } else {
                 num_args = TRENUMBER_INT(*x++);
                 args = trecode_list (&x, num_args);
                 tregc_push (args);
-                v = treeval_xlat_function (treeval_xlat_builtin, TRESYMBOL_FUN(fun), args, FALSE);
+                v = treeval_xlat_function (treeval_xlat_builtin, fun, args, FALSE);
                 tregc_pop ();
                 TRELIST_FREE_TOPLEVEL_EARLY(args);
             }
-        } else if (TREPTR_IS_ATOM(fun) && TREPTR_IS_ARRAY(TRESYMBOL_FUN(fun))) {
-            tregc_push (TRESYMBOL_FUN(fun));
+        } else if (TREFUNCTION_BYTECODE(fun) != treptr_nil) {
+            tregc_push (fun);
             num_args = TRENUMBER_INT(*x++);
             old_sp = trestack_ptr;
             DOTIMES(i, num_args)
                 *--old_sp = trecode_get (&x);
             trestack_ptr = old_sp;
-            v = trecode_exec (TRESYMBOL_FUN(fun));
+            v = trecode_exec (fun);
             trestack_ptr += num_args;
             tregc_pop ();
         } else 
@@ -175,19 +162,20 @@ trecode_set (treptr ** x)
 }
 
 treptr
-trecode_exec (treptr fun_atom)
+trecode_exec (treptr fun)
 {
     treptr   * code;
     treptr   * x;
     treptr   dest;
     treptr   v;
-    treptr   fun = TREFUNCTION_BYTECODE(fun_atom);
     int      num_locals;
     int      i;
     int      vec;
 
+    fun = TREFUNCTION_BYTECODE(fun);
     if (TREPTR_IS_ARRAY(fun) == FALSE)
-        treerror_norecover (fun, "bytecode function expected");
+        treerror_norecover (fun, "bytecode function in form of an array expected");
+
     x = &TREARRAY_VALUES(fun)[2]; /* skip over argument definition and body */
     num_locals = TRENUMBER_INT(*x++);
     code = x;
@@ -221,6 +209,31 @@ trecode_exec (treptr fun_atom)
 
     v = *trestack_ptr;
     trestack_ptr += num_locals;
+    return v;
+}
+
+treptr
+trecode_call (treptr fun, treptr args)
+{
+    treptr i;
+    treptr v;
+    treptr num_args = 0;
+
+    if (!TREPTR_IS_FUNCTION(fun))
+        treerror_norecover (fun, "function expected");
+
+    if (TREFUNCTION_BYTECODE(fun) == treptr_nil)
+        treerror_norecover (fun, "function has no bytecode");
+
+    tregc_push (fun);
+    DOLIST(i, args) {
+        *--trestack_ptr = CAR(i);
+        num_args++;
+    }
+    v = trecode_exec (fun);
+    trestack_ptr += num_args;
+    tregc_pop ();
+
     return v;
 }
 

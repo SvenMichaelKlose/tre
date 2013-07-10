@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <signal.h>
+#include <locale.h>
 
 #include "config.h"
 #include "atom.h"
@@ -179,6 +180,10 @@ treptr * trestack;
 treptr * trestack_top;
 treptr * trestack_ptr;
 
+treptr * trestack_secondary;
+treptr * trestack_top_secondary;
+treptr * trestack_ptr_secondary;
+
 void
 tre_init_image_path (void)
 {
@@ -199,6 +204,8 @@ tre_init (void)
 
 	trestack = malloc (sizeof (treptr) * TRESTACK_SIZE);
 	trestack_top = trestack_ptr = &trestack[TRESTACK_SIZE];
+	trestack_secondary = malloc (sizeof (treptr) * TRESTACK_SIZE_SECONDARY);
+	trestack_top_secondary = trestack_ptr_secondary = &trestack[TRESTACK_SIZE_SECONDARY];
 
     treio_init ();
     tredebug_init ();
@@ -329,6 +336,7 @@ main (int argc, char *argv[])
 {
     static int c = 0;
 
+    setlocale (LC_ALL, "");
     tremain_get_args (argc, argv);
     tre_init ();
 

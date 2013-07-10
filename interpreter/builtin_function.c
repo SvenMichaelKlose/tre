@@ -28,7 +28,7 @@ trefunction_native (treptr fun)
 treptr
 trefunction_bytecode (treptr fun)
 {
-	return TREFUNCTION_BYTECODE(fun) ? treptr_nil : TREFUNCTION_BYTECODE(fun);
+	return TREFUNCTION_BYTECODE(fun) ? TREFUNCTION_BYTECODE(fun) : treptr_nil;
 }
 
 treptr
@@ -47,6 +47,12 @@ treptr
 trefunction_set_source (treptr list, treptr fun)
 {
     return TREFUNCTION_SOURCE(fun) = list;
+}
+
+treptr
+trefunction_make_function (treptr source)
+{
+    return trefunction_make (TRETYPE_FUNCTION, source);
 }
 
 treptr
@@ -72,8 +78,8 @@ trefunction_builtin_usetf_function_bytecode (treptr x)
 {
     TRELIST_DEFREGS();
     trearg_get2 (&car, &cdr, x);
-    return trefunction_set_bytecode(trearg_typed (2, TRETYPE_FUNCTION, cdr, "=-FUNCTION-BYTECODE"),
-                                    trearg_typed (1, TRETYPE_ARRAY, car, "=-FUNCTION-BYTECODE"));
+    return trefunction_set_bytecode(trearg_typed (1, TRETYPE_ARRAY, car, "=-FUNCTION-BYTECODE"),
+                                    trearg_typed (2, TRETYPE_FUNCTION, cdr, "=-FUNCTION-BYTECODE"));
 }
 
 treptr
@@ -88,4 +94,10 @@ trefunction_builtin_set_source (treptr x)
     TRELIST_DEFREGS();
     trearg_get2 (&car, &cdr, x);
     return trefunction_set_source(car, trearg_typed (2, TRETYPE_FUNCTION, cdr, "=-FUNCTION-SOURCE"));
+}
+
+treptr
+trefunction_builtin_make_function (treptr source)
+{
+    return trefunction_make_function (trearg_get (source));
 }

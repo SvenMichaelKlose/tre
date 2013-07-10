@@ -59,6 +59,18 @@ tregc_pop ()
 }
 
 void
+tregc_push_secondary (treptr expr)
+{
+    *--trestack_ptr_secondary = expr;
+}
+
+void
+tregc_pop_secondary ()
+{
+    trestack_ptr_secondary++;
+}
+
+void
 tregc_trace_list (treptr expr)
 {
     while (expr != treptr_nil) {
@@ -152,7 +164,10 @@ void
 tregc_mark_stack (void)
 {
 	treptr * s;
+
 	for (s = trestack_ptr; s != trestack_top; s++)
+		tregc_trace_object (*s);
+	for (s = trestack_ptr_secondary; s != trestack_top_secondary; s++)
 		tregc_trace_object (*s);
 }
 

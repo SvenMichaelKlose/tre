@@ -19,21 +19,19 @@
 #include "symbol.h"
 
 treptr treptr_dotexpand_hook;
-struct tre_atom *treatom_dotexpand_hook;
 
 treptr
 tredot_expand (treptr list)
 {
-    return treatom_dotexpand_hook->fun == treptr_nil ?
+    return TRESYMBOL_FUN(treptr_dotexpand_hook) == treptr_nil ?
                list :
-               trefuncall (treatom_dotexpand_hook->fun, CONS(list, treptr_nil));
+               trefuncall (TRESYMBOL_FUN(treptr_dotexpand_hook), CONS(list, treptr_nil));
 }
 
 void
 tredot_init (void)
 {
     treptr_dotexpand_hook = treatom_get ("*DOTEXPAND-HOOK*", TRECONTEXT_PACKAGE());
-    treatom_dotexpand_hook = & TREPTR_TO_ATOM(treptr_dotexpand_hook);
     EXPAND_UNIVERSE(treptr_dotexpand_hook);
 }
 
