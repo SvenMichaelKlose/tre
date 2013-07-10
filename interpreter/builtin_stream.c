@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <termios.h>
+#include <string.h>
 
 #include "config.h"
 #include "atom.h"
@@ -25,7 +26,8 @@ trestream_builtin_princ (treptr args)
 {
     treptr obj;
     treptr handle;
-    FILE   * str;
+    FILE * str;
+    char * s;
 
     trearg_get2 (&obj, &handle, args);
     if (handle != treptr_nil)
@@ -35,7 +37,8 @@ trestream_builtin_princ (treptr args)
 
     switch (TREPTR_TYPE(obj)) {
 		case TRETYPE_STRING:
-	    	fprintf (str, "%s", TREPTR_STRINGZ(obj));
+	    	s = TREPTR_STRINGZ(obj);
+	    	fwrite (s, strlen (s), 1, str);
 	    	break;
 
 		case TRETYPE_SYMBOL:
