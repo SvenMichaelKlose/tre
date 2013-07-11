@@ -336,7 +336,6 @@ main (int argc, char *argv[])
 {
     static int c = 0;
 
-    setlocale (LC_ALL, "");
     tremain_get_args (argc, argv);
     tre_init ();
 
