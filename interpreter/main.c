@@ -289,10 +289,10 @@ tremain_print_hardinfo (void)
 	printf ("Max. literal symbol length: %d characters\n", TRE_MAX_SYMLEN);
 	printf ("Max. literal string length: %d characters\n", TRE_MAX_STRINGLEN);
 	printf ("Max. packages: %d\n", MAX_PACKAGES);
-	printf ("Cells start: %8lX\n", (size_t) &tre_lists);
-	printf ("Cells end:   %8lX\n", (size_t) &tre_lists[NUM_LISTNODES]);
-	printf ("Atoms start: %8lX\n", (size_t) &tre_atoms);
-	printf ("Atoms end:   %8lX\n", (size_t) &tre_atoms[NUM_ATOMS]);
+	printf ("Cells start: %8lX\n", (long) &tre_lists);
+	printf ("Cells end:   %8lX\n", (long) &tre_lists[NUM_LISTNODES]);
+	printf ("Atoms start: %8lX\n", (long) &tre_atoms);
+	printf ("Atoms end:   %8lX\n", (long) &tre_atoms[NUM_ATOMS]);
 
 	printf ("Max. files: %d\n", TRE_FILEIO_MAX_FILES);
 	printf ("Max. nested files (interpreter): %d\n", TRE_MAX_NESTED_FILES);

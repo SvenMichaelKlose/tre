@@ -146,7 +146,7 @@ void
 tredebug_prompt (void)
 {
 	(void) trestream_builtin_terminal_normal (treptr_nil);
-    printf (":%ld] ", tredebug_level);
+    printf (":%ld] ", (long) tredebug_level);
 }
 
 void
@@ -392,7 +392,7 @@ tredebug_lookup_bodyname (treptr body)
 
     if (!does_repeat) {
         if (repetitions > 0)
-            printf ("(%ld times) ", repetitions + 1);
+            printf ("(%ld times) ", (long) repetitions + 1);
 		repetitions = 0;
     }
 }

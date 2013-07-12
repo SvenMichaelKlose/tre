@@ -110,7 +110,7 @@ void
 treprint_atom (treptr atom, size_t indent)
 {
     if (treprint_chk_atom_mark (atom)) {
-        printf ("*circular*");
+        printf ("unprintable-circularity");
         return;
     }
 
@@ -124,11 +124,11 @@ treprint_atom (treptr atom, size_t indent)
 	    	break;
 
 		case TRETYPE_BUILTIN:
-           	printf ("*BUILTIN*");
+           	printf ("unprintable-builtin");
             break;
 
 		case TRETYPE_SPECIAL:
-           	printf ("*SPECIAL*");
+           	printf ("unprintable-special-form");
             break;
 
 		case TRETYPE_NUMBER:
@@ -199,7 +199,7 @@ treprint_cons (treptr * p, size_t * indent, int * postatom, char ** prepend)
     	printf (" ");
 
     if (TREPTR_IS_CONS(car) && TREPRINT_GET_MARK_CONS(car)) {
-        printf ("*circular*");
+        printf ("unprintable-circularity");
         return 2;
 	}
 
@@ -223,7 +223,7 @@ treprint_cons (treptr * p, size_t * indent, int * postatom, char ** prepend)
     *p = _CDR(*p);
 
     if (TREPTR_IS_CONS(*p) && TREPRINT_GET_MARK_CONS(*p)) {
-        printf ("*circular");
+        printf ("unprintable-circularity");
 		return 0;
 	}
 
@@ -249,11 +249,11 @@ treprint_indent (treptr p, size_t indent, bool nobracket, char * prepend)
         TREPRINT_MARK_CONS(p);
 
     if (_CAR(p) == p) {
-		printf ("cons self-referenced in car");
+		printf ("cons self-referenced in CAR");
         _CAR(p) = treptr_nil;
     }
     if (_CDR(p) == p) {
-		printf ("cons self-referenced in car");
+		printf ("cons self-referenced in CDR");
         _CDR(p) = treptr_nil;
     }
 
