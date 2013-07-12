@@ -2,6 +2,8 @@
  * tré – Copyright (c) 2012–2013 Sven Michael Klose <pixel@copei.de>
  */
 
+#define BD
+
 #include <string.h>
 #include <strings.h>
 #include <stdlib.h>
@@ -32,12 +34,8 @@
 #include "symbol.h"
 #include "function.h"
 
-treptr treptr_funcall;
-treptr treptr_builtin;
-treptr treptr_special;
 treptr treptr_jmp;
 treptr treptr_cond;
-treptr treptr_stack;
 treptr treptr_vec;
 treptr treptr_set_vec;
 treptr treptr_set_atom_fun;
@@ -71,10 +69,12 @@ trecode_set_place (treptr ** p, treptr value)
     treptr * x = *p;
     treptr v = *x++;
 
-    if (v == treptr_stack)
-        trestack_ptr[TRENUMBER_INT(*x++)] = value;
-    else if (v != treptr_nil)
+    if (TREPTR_IS_NUMBER(v)) {
+        printf ("set stack\n");
+        trestack_ptr[TRENUMBER_INT(v)] = value;
+    } else if (v != treptr_nil) {
         TRESYMBOL_VALUE(v) = value;
+    }
 
     *p = x;
 }
@@ -83,7 +83,6 @@ treptr
 trecode_get (treptr ** p)
 {
     treptr  v;
-    treptr  funsym;
     treptr  fun = treptr_nil;
     treptr  args;
     treptr  car;
@@ -96,33 +95,59 @@ trecode_get (treptr ** p)
     int     i;
 
     v = *x++;
+#ifdef BD
+printf ("GET: ");
+treprint (v);
+#endif
 
-    if (v == treptr_funcall) {
-        funsym = *x++;
-        if (!TREPTR_IS_SYMBOL(funsym))
-            treerror_norecover (fun, "symbol (with function) expected");
-        fun = TRESYMBOL_FUN(funsym);
-        if (!TREPTR_IS_FUNCTION(fun))
-            treerror_norecover (fun, "function expected");
+    if (TREPTR_IS_NUMBER(v)) {
+        printf ("stack\n");
+        v = trestack_ptr[TRENUMBER_INT(v)];
+    } else if (v == treptr_quote) {
+        printf ("quote\n");
+        v = *x++;
+    } else if (v == treptr_vec) {
+        printf ("vec\n");
+        vec = trecode_get (&x);
+        v = _TREVEC(vec, TRENUMBER_INT(*x++));
+    } else if (v == treptr_closure) {
+        printf ("closure\n");
+        fun = *x++;
+        tregc_push_secondary (fun);
+        lex = trecode_get (&x);
+        tregc_push_secondary (lex);
+        v = CONS(treptr_closure, CONS(fun, lex));
+        tregc_pop_secondary ();
+        tregc_pop_secondary ();
+    } else if (TREPTR_IS_SYMBOL(v) && TRESYMBOL_FUN(v)) {
+        printf ("funcall ");
+        fun = TRESYMBOL_FUN(v);
         if (TREPTR_IS_BUILTIN(fun)) {
-            if (funsym == treptr_cons) {
+            printf ("builtin ");
+            if (v == treptr_cons) {
+                printf ("cons\n");
                 car = trecode_get (&x);
-                tregc_push (car);
+                tregc_push_secondary (car);
                 cdr = trecode_get (&x);
                 v = CONS(car, cdr);
-                tregc_pop ();
-            } else if (funsym == treptr_set_atom_fun) {
+                tregc_pop_secondary ();
+            } else if (v == treptr_set_atom_fun) {
+                printf ("set-atom-fun\n");
                 trecode_set_place (&x, trecode_get (&x));
             } else {
+                printf ("\n");
                 num_args = TRENUMBER_INT(*x++);
                 args = trecode_list (&x, num_args);
-                tregc_push (args);
+                tregc_push_secondary (args);
                 v = treeval_xlat_function (treeval_xlat_builtin, fun, args, FALSE);
-                tregc_pop ();
+                tregc_pop_secondary ();
+/*
                 TRELIST_FREE_TOPLEVEL_EARLY(args);
+*/
             }
         } else if (TREFUNCTION_BYTECODE(fun) != treptr_nil) {
-            tregc_push (fun);
+            printf ("bytecode\n");
+            tregc_push_secondary (fun);
             num_args = TRENUMBER_INT(*x++);
             old_sp = trestack_ptr;
             DOTIMES(i, num_args)
@@ -130,26 +155,13 @@ trecode_get (treptr ** p)
             trestack_ptr = old_sp;
             v = trecode_exec (fun);
             trestack_ptr += num_args;
-            tregc_pop ();
-        } else 
-            treerror_norecover (fun, "tried to call an unsupported function type in bytecode");
-    } else if (v == treptr_stack) {
-        v = trestack_ptr[TRENUMBER_INT(*x++)];
-    } else if (v == treptr_quote) {
-        v = *x++;
-    } else if (v == treptr_vec) {
-        vec = trecode_get (&x);
-        v = _TREVEC(vec, TRENUMBER_INT(*x++));
-    } else if (v == treptr_closure) {
-        fun = *x++;
-        tregc_push (fun);
-        lex = trecode_get (&x);
-        tregc_push (lex);
-        v = CONS(treptr_closure, CONS(fun, lex));
-        tregc_pop ();
-        tregc_pop ();
-    } else if (TREPTR_IS_SYMBOL(v))
-        v = TRESYMBOL_VALUE(v);
+            tregc_pop_secondary ();
+        } else
+            treerror_norecover (v, "function expected in bytecode");
+    } else if (v != treptr_nil && v != treptr_t)
+        treerror_norecover (v, "Un%QUOTEd literal in bytecode.");
+else
+            printf ("NIL|T\n");
     *p = x;
 
     return v;
@@ -158,6 +170,9 @@ trecode_get (treptr ** p)
 void
 trecode_set (treptr ** x)
 {
+#ifdef BD
+printf ("SET: ");
+#endif
     trecode_set_place (x, trecode_get (x));
 }
 
@@ -171,6 +186,11 @@ trecode_exec (treptr fun)
     int      num_locals;
     int      i;
     int      vec;
+
+#ifdef BD
+printf ("EXEC: ");
+treprint (fun);
+#endif
 
     fun = TREFUNCTION_BYTECODE(fun);
     if (TREPTR_IS_ARRAY(fun) == FALSE)
@@ -199,10 +219,10 @@ trecode_exec (treptr fun)
         } else if (v == treptr_set_vec) {
             x++;
             vec = trecode_get (&x);
-            tregc_push (vec);
+            tregc_push_secondary (vec);
             i = TRENUMBER_INT(*x++);
             v = _TREVEC(vec, i) = trecode_get (&x);
-            tregc_pop ();
+            tregc_pop_secondary ();
         } else
             trecode_set (&x);
     }
@@ -225,14 +245,14 @@ trecode_call (treptr fun, treptr args)
     if (TREFUNCTION_BYTECODE(fun) == treptr_nil)
         treerror_norecover (fun, "function has no bytecode");
 
-    tregc_push (fun);
+    tregc_push_secondary (fun);
     DOLIST(i, args) {
         *--trestack_ptr = CAR(i);
         num_args++;
     }
     v = trecode_exec (fun);
     trestack_ptr += num_args;
-    tregc_pop ();
+    tregc_pop_secondary ();
 
     return v;
 }
@@ -242,18 +262,10 @@ trecode_init ()
 {
     treptr_set_vec = treatom_get ("%BC-SET-VEC", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treptr_set_vec);
-    treptr_funcall = treatom_get ("%BC-FUNCALL", TRECONTEXT_PACKAGE());
-    EXPAND_UNIVERSE(treptr_funcall);
-    treptr_builtin = treatom_get ("%BC-BUILTIN", TRECONTEXT_PACKAGE());
-    EXPAND_UNIVERSE(treptr_builtin);
-    treptr_special = treatom_get ("%BC-SPECIAL", TRECONTEXT_PACKAGE());
-    EXPAND_UNIVERSE(treptr_special);
     treptr_jmp = treatom_get ("%%GO", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treptr_jmp);
     treptr_cond = treatom_get ("%%GO-NIL", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treptr_cond);
-    treptr_stack = treatom_get ("%STACK", TRECONTEXT_PACKAGE());
-    EXPAND_UNIVERSE(treptr_stack);
     treptr_vec = treatom_get ("%VEC", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treptr_vec);
     treptr_set_atom_fun = treatom_get ("%SET-ATOM-FUN", TRECONTEXT_PACKAGE());

@@ -17,7 +17,7 @@
 			  :rename-all-args? t
 			  :literal-conversion #'identity
 	          :expex-initializer #'((ex)
-	                                  (= (expex-argument-filter ex) #'transpiler-import-from-expex
+	                                  (= (expex-argument-filter ex) #'bc-expex-argument-filter
 			                             (expex-setter-filter ex) (compose [mapcan [expex-set-global-variable-value _] _]
 									                                       #'expex-compiled-funcall)))
               :code-concatenator #'((&rest x) (tree-list x))

@@ -15,21 +15,35 @@
 (define-bc-macro %%closure (name)
   `(%closure ,name ,(codegen-closure-lexical name)))
 
-(defun bc-make-value (x)
-  (? (& (cons? x)
-        (not (%%closure? x)
-             (%closure? x)
-             (%stack? x)
-             (%vec? x)
-             (%quote? x)))
-     `(%bc-funcall
-         ,@(?
-             (eq 'cons x.)                `(cons ,.x. ,..x.)
-             (eq '=-symbol-value x.)      `(,x. 2 ,@.x)
-             (eq '%bc-builtin x.)         `(,(cadr .x.) ,@..x)
-             (eq '%make-lexical-array x.) `(make-array 1 ,.x.)
-             `(,x. ,(length .x) ,@.x)))
+(defun bc-quote-literal (x)
+  (? (| (symbol? x)
+        (number? x)
+        (string? x))
+     `(%quote ,x)
      x))
+
+(define-filter bc-quote-literals #'bc-quote-literal)
+
+(defun bc-special? (x)
+  (| (%%closure? x)
+     (%closure? x)
+     (%stack? x)
+     (%vec? x)
+     (%quote? x)))
+
+(defun bc-make-funcall (x)
+  (?
+    (eq 'cons x.)                `(cons ,(bc-quote-literal .x.) ,(bc-quote-literal ..x.))
+    (eq '=-symbol-value x.)      `(,x. 2 ,@(bc-quote-literals .x))
+    (eq '%symbol-value x.)       `(symbol-value 1 ,(bc-quote-literal .x.))
+    (eq '%make-lexical-array x.) `(make-array 1 ,(bc-quote-literal .x.))
+    `(,x. ,(length .x) ,@(bc-quote-literals .x))))
+
+(defun bc-make-value (x)
+  (?
+    (atom x)         `(%quote nil)
+    (bc-special? x)  x
+    (bc-make-funcall x)))
 
 (define-bc-macro %setq (place x)
   `(,(bc-make-value x) ,place))

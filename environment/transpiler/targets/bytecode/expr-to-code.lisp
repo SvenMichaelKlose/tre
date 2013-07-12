@@ -4,7 +4,7 @@
 
 (defun get-bc-value (x)
   (case x. :test #'eq
-    '%stack (values `(%stack ,.x.) ..x)
+    '%stack (values (list .x.) ..x)
     '%vec   (with ((vec n) (get-bc-value .x))
               (values `(%vec ,@vec ,n.) .n))
     (values (list x.) .x)))
@@ -48,10 +48,10 @@
 
 (defun copy-until-%bc-return (x)
   (when x
-    (cons x.
-          (?
-            (%quote? x)            (cons .x. (copy-until-%bc-return ..x))
-            (not (%%bc-return? x)) (copy-until-%bc-return .x)))))
+    (?
+      (%quote? x)             (cons x. (cons .x. (copy-until-%bc-return ..x)))
+      (%stack? x)             (cons .x. (copy-until-%bc-return ..x))
+      (not (%%bc-return? x))  (cons x. (copy-until-%bc-return .x)))))
 
 (defun next-%bc-return (x)
   (?
@@ -62,5 +62,5 @@
 
 (defun expr-to-code (tr expr)
   (let-when x (get-next-function expr)
-    (cons (make-bytecode-function (get-funinfo x. tr) (copy-until-%bc-return ...x))
+    (cons (make-bytecode-function (get-funinfo x. tr) (print (copy-until-%bc-return .....x)))
           (expr-to-code tr (next-%bc-return ..x)))))

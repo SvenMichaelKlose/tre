@@ -6,4 +6,4 @@
  			      `(%bc-builtin ,(list '%quote _) ,,(length x) ,,@x))
                (remove-if [in? _ 'cons '%quote] *builtins*))))
 
-(make-bc-builtins)
+;(make-bc-builtins)
