@@ -72,6 +72,7 @@
       (=-FUNCTION-BYTECODE  array function)
       (FUNCTION-SOURCE      function)
       (=-FUNCTION-SOURCE    args-and-body function)
+      (MAKE-FUNCTION        &optional (source nil))
 
       (*                &rest numbers)
       (/                &rest numbers)
