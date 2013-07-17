@@ -72,11 +72,11 @@ C_DIALECT_FLAGS="-ansi -Wall -Wextra -Werror"
 CFLAGS="-pipe $C_DIALECT_FLAGS $GNU_LIBC_FLAGS $BUILD_MACHINE_INFO $ARGS"
 
 DEBUGOPTS="-O0 -g"
-BUILDOPTS="-Ofast --whole-program -flto -march=native -mtune=native"
-CRUNSHOPTS="-Ofast --whole-program -flto -march=native -mtune=native"
+BUILDOPTS="-Ofast --whole-program -march=native -mtune=native"
+CRUNSHOPTS="-Ofast --whole-program -march=native -mtune=native"
 CRUNSHFLAGS="-DTRE_COMPILED_CRUNSHED -Iinterpreter"
 
-LIBFLAGS="-lm -lffi -ldl -lrt -flto"
+LIBFLAGS="-lm -lffi -ldl -lrt"
 
 if [ -f /lib/x86_64-linux-gnu/libdl.so* ]; then
 	LIBFLAGS="$LIBFLAGS -ldl";
@@ -135,7 +135,7 @@ crunsh_compile ()
 	done
 	echo
 	echo "Compiling..."
-	$CC $CFLAGS -fwhole-program $COPTS -o $TRE $CRUNSHTMP $LIBFLAGS || exit 1
+	$CC $CFLAGS $COPTS -o $TRE $CRUNSHTMP $LIBFLAGS || exit 1
 	rm $CRUNSHTMP
 }
 
@@ -197,7 +197,6 @@ compiler)
 all)
     echo "Making everything..."
 	(echo "(compile-c-environment)" | ./tre) || exit 1
-	./make.sh crunsh || exit 1
 	;;
 
 boot)
@@ -205,6 +204,16 @@ boot)
 	./make.sh interpreter $ARGS || exit 1
 	./make.sh compiler $ARGS || exit 1
 	./make.sh all $ARGS || exit 1
+	./make.sh crunsh || exit 1
+	;;
+
+debugboot)
+    echo "Booting everything from scratch..."
+	./make.sh interpreter $ARGS || exit 1
+	./make.sh compiler $ARGS || exit 1
+	./make.sh all $ARGS || exit 1
+	./make.sh debug || exit 1
+	./make.sh reload || exit 1
 	;;
 
 bytecode)
@@ -243,6 +252,7 @@ restore)
 *)
 	echo "Usage: make.sh boot|interpreter|compiler|all|bytecode|debug|build|crunsh|reload|precompile|backup|restore|install|clean|distclean [args]"
 	echo "  boot         Build everything from scratch."
+	echo "  debugboot    Like 'boot', but for debugging"
 	echo "  interpreter  Clean and build the interpreter."
 	echo "  compiler     Compile just the compiler, not the whole environment."
     echo "  all          Compile environment."
