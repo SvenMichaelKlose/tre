@@ -78,7 +78,7 @@ tresymbol_builtin_usetf_symbol_value (treptr list)
 {
     TRELIST_DEFREGS();
     trearg_get2 (&car, &cdr, list);
-    return tresymbol_set_value (trearg_typed (2, TRETYPE_SYMBOL, cdr, "=-SYMBOL-VALUE"), car);
+    return tresymbol_set_value (car, trearg_typed (2, TRETYPE_SYMBOL, cdr, "=-SYMBOL-VALUE"));
 }
 
 treptr
