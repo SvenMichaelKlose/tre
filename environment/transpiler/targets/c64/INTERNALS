@@ -1,0 +1,7 @@
+Memory is splitted in half. The top half contains conses while the bottom half
+hold atoms, so the top bit of a pointer to an object already tells to what kind
+of object it points to. The high byte of atom pointers tell if the atom is NIL
+or a number.
+
+Furthermore, pointers and atom length have to be even. The lowest bits are
+reserved for garbage collection.
