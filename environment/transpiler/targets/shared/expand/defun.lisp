@@ -48,6 +48,15 @@
                                                    `'(,(| source. args) . ,(unless (transpiler-save-argument-defs-only? tr)
                                                                              (| .source body))))))))))
 
+(defun shared-defun-backtrace (tr name body)
+  (? (transpiler-backtrace? tr)
+     `((push ',name *backtrace*)
+       (prog1
+         (progn
+           ,@body)
+         (= *backtrace* .*backtrace*)))
+     body))
+
 (defun shared-defun (name args &rest body)
   (= name (apply-current-package name))
   (print-definition `(defun ,name ,args))
@@ -61,6 +70,6 @@
        (function ,name (,args
                         ,@(& (body-has-noargs-tag? body) '(no-args))
                         (block ,name
-                          ,@(shared-defun-funcall-logger name)
-                          ,@(shared-defun-profiling-body tr name body))))
+                          ,@(shared-defun-backtrace tr name (+ (shared-defun-funcall-logger name)
+                                                               (shared-defun-profiling-body tr name body))))))
        ,@(shared-defun-source-memorizer tr name args body))))
