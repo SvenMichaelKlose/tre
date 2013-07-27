@@ -3,6 +3,11 @@
 (defun transpiler-expression-expand (tr x)
   (expression-expand (transpiler-expex tr) x))
 
+(defun transpiler-opt-peephole (tr x)
+  (? (transpiler-inject-debugging? tr)
+     x
+     (opt-peephole x)))
+
 (transpiler-pass transpiler-middleend-0 (tr)
     make-packages            #'make-packages
 ;        cpr                       [cpr-count _ "make packages"]
@@ -15,9 +20,15 @@
     quote-keywords           #'transpiler-quote-keywords
     make-named-functions     [transpiler-make-named-functions tr _]
     link-funinfos            #'link-funinfos
-    opt-peephole             #'opt-peephole
-    opt-tailcall             #'opt-tailcall
-    opt-peephole             #'opt-peephole
+    opt-peephole             [? (transpiler-inject-debugging? tr)
+                                _
+                                (transpiler-opt-peephole tr _)]
+    opt-tailcall             [? (transpiler-inject-debugging? tr)
+                                _
+                                (opt-tailcall _)]
+    opt-peephole             [? (transpiler-inject-debugging? tr)
+                                _
+                                (transpiler-opt-peephole tr _)]
 ;    cps                      [? (in-cps-mode?)
 ;                                (cps _)
 ;                                _]
