@@ -36,15 +36,19 @@
      `(%%native ,x)
      x))
 
+(defun c-fast-aref? (idx)
+  (& (not (transpiler-assert? *transpiler*))
+     (single? idx)))
+
 (define-c-std-macro =-aref (val arr &rest idx)
-  (? (single? idx)
-    `(%immediate-set-aref ,val ,arr ,(make-number-%%native idx.))
+  (? (c-fast-aref? idx)
+    `(%immediate-=-aref ,val ,arr ,(make-number-%%native idx.))
     `(=-aref ,val ,arr ,@idx)))
 
 (functional %immediate-aref)
 
 (define-c-std-macro aref (arr &rest idx)
-  (? (single? idx)
+  (? (c-fast-aref? idx)
      `(%immediate-aref ,arr ,(make-number-%%native idx.))
      `(aref ,arr ,@idx)))
 
