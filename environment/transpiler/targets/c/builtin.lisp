@@ -27,7 +27,8 @@
 		(FUNCTION-BYTECODE      bytecode)
 		(=-FUNCTION-BYTECODE    set_bytecode)
 		(FUNCTION-SOURCE        source)
-		(=-FUNCTION-SOURCE      set_source))
+		(=-FUNCTION-SOURCE      set_source)
+		(MAKE-FUNCTION          make_function))
 
     (trebuiltin_
 		(QUIT)
