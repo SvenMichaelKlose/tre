@@ -55,12 +55,12 @@
 
 (defun next-%bc-return (x)
   (?
-    (not x) x
+    (not x)                x
     (%quote? x)            (next-%bc-return ..x)
     (not (%%bc-return? x)) (next-%bc-return .x)
     .x))
 
 (defun expr-to-code (tr expr)
   (let-when x (get-next-function expr)
-    (cons (make-bytecode-function (get-funinfo x. tr) (print (copy-until-%bc-return .....x)))
+    (cons (make-bytecode-function (get-funinfo x. tr) (copy-until-%bc-return ...x))
           (expr-to-code tr (next-%bc-return ..x)))))

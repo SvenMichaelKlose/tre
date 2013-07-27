@@ -16,7 +16,7 @@
   `(%closure ,name ,(codegen-closure-lexical name)))
 
 (defun bc-quote-literal (x)
-  (? (| (symbol? x)
+  (? (| (& x (symbol? x))
         (number? x)
         (string? x))
      `(%quote ,x)
@@ -40,10 +40,9 @@
     `(,x. ,(length .x) ,@(bc-quote-literals .x))))
 
 (defun bc-make-value (x)
-  (?
-    (atom x)         `(%quote nil)
-    (bc-special? x)  x
-    (bc-make-funcall x)))
+  (? (atom x)         (bc-quote-literal x)
+     (bc-special? x)  x
+     (bc-make-funcall x)))
 
 (define-bc-macro %setq (place x)
   `(,(bc-make-value x) ,place))

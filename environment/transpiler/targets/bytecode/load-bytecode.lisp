@@ -8,3 +8,6 @@
   (adolist ((filter [cons _. (list-array `(,._. ,(function-body (symbol-function _.)) ,@.._))]
                     x))
     (= (function-bytecode (symbol-function !.)) .!)))
+
+(defun test-bc ()
+  (make-stream))
