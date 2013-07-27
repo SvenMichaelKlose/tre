@@ -123,11 +123,6 @@
 
 ;;;; ARRAYS
 
-;(define-c-macro make-array (&rest sizes)
-;  (? (== 1 (length sizes))
-;     (c-make-array sizes.)
-;     `(trearray_builtin_make ,(compiled-list sizes)))]
-
 (defun c-make-aref (arr idx)
   `("TREARRAY_VALUES(" ,arr ")["
 	    ,(? (| (number? idx)
@@ -139,5 +134,5 @@
 (define-c-macro %immediate-aref (arr idx)
   (c-make-aref arr idx))
 
-(define-c-macro %immediate-set-aref (val arr idx)
+(define-c-macro %immediate-=-aref (val arr idx)
   (+ (c-make-aref arr idx) `("=" ,val)))
