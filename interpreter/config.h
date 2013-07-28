@@ -98,4 +98,8 @@ typedef int bool;
 #define TRE_VERBOSE_SYMBOL_GC
 #endif
 
+#ifdef TRE_HAVE_NO_BYTECODE_ASSERTIONS
+#undef TRE_HAVE_BYTECODE_ASSERTIONS
+#endif
+
 #endif /* #ifndef TRE_TRE_H */

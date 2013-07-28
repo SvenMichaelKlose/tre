@@ -139,8 +139,11 @@ trecode_get (treptr ** p)
             tregc_pop_secondary ();
         } else
             treerror_norecover (v, "function expected in bytecode");
-    } else if (v != treptr_nil && v != treptr_t)
+    } 
+#ifdef TRE_HAVE_BYTECODE_ASSERTIONS
+      else if (v != treptr_nil && v != treptr_t)
         treerror_norecover (v, "Un%QUOTEd literal in bytecode.");
+#endif
     *p = x;
 
     return v;
@@ -164,8 +167,10 @@ trecode_exec (treptr fun)
     int      vec;
 
     fun = TREFUNCTION_BYTECODE(fun);
+#ifdef TRE_HAVE_BYTECODE_ASSERTIONS
     if (TREPTR_IS_ARRAY(fun) == FALSE)
         treerror_norecover (fun, "bytecode function in form of an array expected");
+#endif
 
     x = &TREARRAY_VALUES(fun)[2]; /* skip over argument definition and body */
     num_locals = TRENUMBER_INT(*x++);
@@ -210,11 +215,13 @@ trecode_call (treptr fun, treptr args)
     treptr v;
     treptr num_args = 0;
 
+#ifdef TRE_HAVE_BYTECODE_ASSERTIONS
     if (!(TREPTR_IS_FUNCTION(fun) || TREPTR_IS_MACRO(fun)))
         treerror_norecover (fun, "function expected");
 
     if (TREFUNCTION_BYTECODE(fun) == treptr_nil)
         treerror_norecover (fun, "function has no bytecode");
+#endif
 
     tregc_push_secondary (fun);
     DOLIST(i, args) {
