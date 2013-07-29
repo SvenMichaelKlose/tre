@@ -21,14 +21,6 @@
 
 (defun %print-rest-0 (c str info)
 ;  (= (href (print-info-visited info) c) t)
-  (awhen (cpr c)
-    (princ #\[ str)
-    (princ !. str)
-    (princ #\, str)
-    (princ (car .!) str)
-    (princ #\, str)
-    (princ (cdr .!) str)
-    (princ #\] str))
   (%late-print c. str info)
   (let x .c
     (? x
