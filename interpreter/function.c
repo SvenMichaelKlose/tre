@@ -56,8 +56,3 @@ trefunction_free (treptr x)
 {
 	free (TREPTR_FUNCTION(x));
 }
-
-void
-trefunction_init ()
-{
-}

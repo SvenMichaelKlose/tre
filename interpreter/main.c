@@ -215,7 +215,6 @@ tre_init (void)
     trecons_init ();
     tresymbol_init ();
     treatom_init ();
-    trefunction_init ();
     trenumber_init ();
     treread_init ();
     trearg_init ();
