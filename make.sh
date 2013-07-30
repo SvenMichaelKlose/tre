@@ -194,6 +194,12 @@ compiler)
 	./make.sh crunsh $ARGS || exit 1
     ;;
 
+bcompiler)
+    echo "Making just the compiler..."
+	(echo "(compile-c-environment '(compile-bytecode-environment))" | ./tre) || exit 1
+	./make.sh crunsh $ARGS || exit 1
+    ;;
+
 all)
     echo "Making everything..."
 	(echo "(compile-c-environment)" | ./tre) || exit 1
@@ -254,7 +260,8 @@ restore)
 	echo "  boot         Build everything from scratch."
 	echo "  debugboot    Like 'boot', but for debugging"
 	echo "  interpreter  Clean and build the interpreter."
-	echo "  compiler     Compile just the compiler, not the whole environment."
+	echo "  compiler     Compile just the compiler and the C target."
+	echo "  bcompiler    Compile just the compiler and the bytecode target."
     echo "  all          Compile environment."
     echo "  bytecode     Compile environment to bytecode, replacing the C functions."
     echo "  build        Do a regular build file by file."
