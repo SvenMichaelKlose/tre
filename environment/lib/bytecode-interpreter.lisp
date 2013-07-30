@@ -5,7 +5,8 @@
   pos
   (funstack     nil)
   (stack        (make-array 16384))
-  (stack-pos    16384))
+  (stack-pos    16384)
+  (interrupt    nil))
 
 (defun trecode-fetch (tc)
   (prog1
@@ -42,6 +43,8 @@
 (defun trecode-get-call (tc fun)
   (apply fun (trecode-get-args tc)))
 
+(defun trecode-function? (tc x))
+
 (defun trecode-get (tc)
   (awhen (trecode-fetch tc)
     (?
@@ -49,8 +52,6 @@
       (eq '%quote !)           (trecode-fetch !)
       (eq '%vec !)             (aref (trecode-get tc) (trecode-fetch tc))
       (eq '%closure !)         (trecode-get-closure tc)
-      (& (symbol? !)
-         (symbol-function !))  (trecode-call-builtin tc (symbol-function !))
       (trecode-function? tc !) (trecode-call tc ! (trecode-get-args tc))
       !)))
 
@@ -65,22 +66,25 @@
 (defun trecode-exec-set-vec (tc)
     (= (aref (trecode-get tc) (trecode-get tc)) (trecode-get tc)))
 
-(defun trecode-set-place (tc value place)
+(defun trecode-exec-set-place (tc value place)
   (?
     (number? place) (trecode-set-stack tc place value)
-    v               (= (symbol-value place) value)))
+    (= (symbol-value place) value)))
 
 (defun trecode-exec-set (tc)
-  (trecode-set-place tc (trecode-get tc) (trecode-get tc)))
+  (trecode-exec-set-place tc (trecode-get tc) (trecode-get tc)))
 
 (defun trecode-exec (tc)
     (loop
+      (awhen (trecode-interrupt tc)
+        (& (funcall ! tc)
+           (return)))
       (case (trecode-fetch tc) :test #'eq
-        '%%go      (| (trecode-exec-jmp tc)
+        '%%go      (| (trecode-exec-cond tc)
                       (return))
         '%%go-nil  (trecode-exec-jump tc)
         '%%set-vec (trecode-exec-set-vec tc)
-        (trecode-set tc))))
+        (trecode-exec-set tc))))
 
 (defun trecode-push-fun (tc fun args num-locals)
   (push (cons fun (cons args num-locals)) (trecode-funstack tc)))
@@ -88,22 +92,25 @@
 (defun trecode-pop-fun (tc)
   (pop (trecode-funstack tc)))
 
-(defun trecode-call (tc fun args)
-  (| (function? fun)
-     (macro? fun)
-     (error "Function expexted instead of ~A." fun))
-  (| (function-bytecode fun)
-     (error "Function ~A has no bytecode." fun))
-  (tc-push-many tc args)
-  (let bytecode (function-bytecode fun)
-    (| (array? bytecode)
-       (error "Bytecode for ~A is not an array." fun))
-    (let num-locals (aref bytecode 2)
-      (= (trecode-fun tc) bytecode)
-      (adotimes num-locals
-        (trecode-push tc nil))
-      (trecode-push-fun tc fun args num-locals))))
+(defun trecode-call (tc sym args)
+  (| (symbol? sym)
+     (error "Symbol expected instead of ~A."))
+  (let fun (symbol-function sym)
+    (| (function? fun)
+       (macrop fun)
+       (error "No function bound to symbol ~A." sym))
+    (| (function-bytecode fun)
+       (error "Function ~A has no bytecode." sym))
+    (trecode-push-many tc args)
+    (let bytecode (function-bytecode fun)
+      (| (array? bytecode)
+         (error "Bytecode for ~A is not an array." fun))
+      (let num-locals (aref bytecode 2)
+        (= (trecode-fun tc) bytecode)
+        (adotimes num-locals
+          (trecode-push tc nil))
+        (trecode-push-fun tc fun args num-locals)))))
 
 (defun trecode-return (tc)
   (alet (trecode-pop-fun tc)
-    (tc-pop (+ (length .!.) ..!))))
+    (trecode-pop (+ (length .!.) ..!))))
