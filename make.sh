@@ -96,7 +96,7 @@ BINDIR="/usr/local/bin/"
 basic_clean ()
 {
 	echo "Cleaning..."
-	rm -vf *.core interpreter/$COMPILED_ENV tre tmp.c __alien.tmp environment/_current-version
+	rm -vf *.core interpreter/$COMPILED_ENV tre tmp.c __alien.tmp environment/_current-version environment/transpiler/targets/c64/tre.c64
 	rm -vrf obj
     rm -vf examples/js/hello-world.js
 }
