@@ -22,10 +22,3 @@
 
 (defun close (str)
   (%fclose (stream-handle str)))
-
-(defmacro with-open-file (var file &rest body)
-  (with-gensym g
-    `(with (,var ,file
-            ,g   (progn ,@body))
-       (close ,var)
-       ,g)))
