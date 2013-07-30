@@ -1,5 +1,7 @@
 ;;;;; trè – Copyright (c) 2005–2012 Sven Michael Klose <pixel@copei.de>
 
+(defvar *print-automatic-newline?* t)
+
 (defun %print-first-occurence (x str info)
   (hremove (print-info-first-occurences info) x)
   (princ "(%%reference " str)
@@ -104,7 +106,8 @@
 (defun late-print (x &optional (str *standard-output*))
   (with-default-stream s str
     (%late-print x s (print-trace x))
-	(terpri s))
+    (when *print-automatic-newline?*
+	  (terpri s)))
   x)
 
 (= *definition-printer* #'late-print)
