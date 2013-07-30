@@ -138,7 +138,7 @@ trecode_get (treptr ** p)
             trestack_ptr += num_args;
             tregc_pop_secondary ();
         } else
-            treerror_norecover (v, "function expected in bytecode");
+            treerror_norecover (v, "Function expected in bytecode.");
     } 
 #ifdef TRE_HAVE_BYTECODE_ASSERTIONS
       else if (v != treptr_nil && v != treptr_t)
@@ -169,7 +169,7 @@ trecode_exec (treptr fun)
     fun = TREFUNCTION_BYTECODE(fun);
 #ifdef TRE_HAVE_BYTECODE_ASSERTIONS
     if (TREPTR_IS_ARRAY(fun) == FALSE)
-        treerror_norecover (fun, "bytecode function in form of an array expected");
+        treerror_norecover (fun, "Bytecode function in form of an array expected.");
 #endif
 
     x = &TREARRAY_VALUES(fun)[2]; /* skip over argument definition and body */
@@ -217,10 +217,10 @@ trecode_call (treptr fun, treptr args)
 
 #ifdef TRE_HAVE_BYTECODE_ASSERTIONS
     if (!(TREPTR_IS_FUNCTION(fun) || TREPTR_IS_MACRO(fun)))
-        treerror_norecover (fun, "function expected");
+        treerror_norecover (fun, "Function expected.");
 
     if (TREFUNCTION_BYTECODE(fun) == treptr_nil)
-        treerror_norecover (fun, "function has no bytecode");
+        treerror_norecover (fun, "Function has no bytecode.");
 #endif
 
     tregc_push_secondary (fun);

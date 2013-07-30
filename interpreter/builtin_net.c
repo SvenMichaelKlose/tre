@@ -34,7 +34,7 @@ trenet_builtin_open_socket (treptr args)
     treptr port = trearg_get (args);
 
     if ((trenet_socket = socket (AF_INET, SOCK_STREAM, 0)) == -1)
-        treerror_norecover (treptr_nil, "Cannot create socket");
+        treerror_norecover (treptr_nil, "Cannot create socket.");
 
     server.sin_family = AF_INET;
     server.sin_port = htons(TRENUMBER_VAL(port));
@@ -42,10 +42,10 @@ trenet_builtin_open_socket (treptr args)
     bzero (&server.sin_zero, 8);
 
     if (bind (trenet_socket, (struct sockaddr *) &server, sockaddr_len) == -1)
-        treerror_norecover (treptr_nil, "Cannot bind socket");
+        treerror_norecover (treptr_nil, "Cannot bind socket.");
 
     if (listen (trenet_socket, MAX_CLIENTS) == -1)
-        treerror_norecover (treptr_nil, "Cannot listen to socket");
+        treerror_norecover (treptr_nil, "Cannot listen to socket.");
 
     trenet_connection = -1;
     return treptr_nil;
@@ -59,7 +59,7 @@ trenet_builtin_accept (treptr dummy)
     socklen_t sockaddr_len = sizeof (struct sockaddr_in);
 
     if ((trenet_connection = accept (trenet_socket, (struct sockaddr *) &client, &sockaddr_len)) == -1)
-        treerror_norecover (treptr_nil, "Cannot accept connection to socket");
+        treerror_norecover (treptr_nil, "Cannot accept connection to socket.");
 
     return treptr_nil;
 }

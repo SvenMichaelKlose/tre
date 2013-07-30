@@ -20,11 +20,11 @@ trearray_builtin_make (treptr sizes)
     treptr  i;
 
     if (sizes == treptr_nil)
-		return treerror (sizes, "size(s) expexted");
+		return treerror (sizes, "Size(s) expexted.");
 
     DOLIST(i, sizes)
         if (TREPTR_IS_NUMBER(CAR(i)) == FALSE)
-	    	return treerror (CAR(i), "integer expected");
+	    	return treerror (CAR(i), "Integer expected.");
 
     return trearray_get (sizes);
 }
@@ -72,10 +72,10 @@ trearray_get_elt (treptr array, treptr indexes)
     tre_size  idx;
 
     if (indexes == treptr_nil)
-		treerror (indexes, "index(es) expexted");
+		treerror (indexes, "Index(es) expexted.");
 
     if (trelist_check_type (indexes, TRETYPE_NUMBER) == FALSE)
-		treerror (indexes, "integer expected");
+		treerror (indexes, "Integer expected.");
 
     sizes = TREARRAY_SIZES(array);
     elts = TREARRAY_VALUES(array);
@@ -104,11 +104,11 @@ trearray_aref (treptr array, treptr indexes)
     treptr *  elts;
 
     if (array == treptr_nil)
-		treerror (array, "array expexted");
+		treerror (array, "Array expexted.");
 
     elts = trearray_get_elt (array, indexes);
     return !elts ?
-               treerror (treptr_invalid, "index error") :
+               treerror (treptr_invalid, "Index error.") :
                *elts;
 }
 
@@ -124,7 +124,7 @@ trearray_set_aref (treptr val, treptr array, treptr indexes)
     treptr *  elts = trearray_get_elt (array, indexes);
 
     if (!elts)
-        return treerror (treptr_invalid, "index error");
+        return treerror (treptr_invalid, "Index error.");
     return *elts = val;
 }
 

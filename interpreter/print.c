@@ -140,7 +140,7 @@ treprint_atom (treptr atom, size_t indent)
 			else if (TRENUMBER_TYPE(atom) == TRENUMTYPE_FLOAT)
                 printf ("%.1f", TRENUMBER_VAL(atom));
 			else
-				treerror_internal (atom, "unknown number type");
+				treerror_internal (atom, "Unknown number type.");
 	    	break;
 
 		case TRETYPE_STRING:
@@ -174,9 +174,7 @@ treprint_atom (treptr atom, size_t indent)
 	    	break;
 
 		default:
-	    	treerror_internal (treptr_invalid,
-                               "#<unknown atom %d (type %d index %d)>",
-                               atom, TREPTR_TYPE(atom), TREPTR_INDEX(atom));
+	    	treerror_internal (treptr_invalid, "#<unknown atom %d (type %d index %d)>", atom, TREPTR_TYPE(atom), TREPTR_INDEX(atom));
     }
     TREPRINT_HLCLOSE(atom);
 }

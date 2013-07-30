@@ -53,7 +53,7 @@ trestream_builtin_princ (treptr args)
 	    	break;
 
   		default:
-	    	return treerror (obj, "type not supported");
+	    	return treerror (obj, "Type not supported.");
     }
 
     return obj;

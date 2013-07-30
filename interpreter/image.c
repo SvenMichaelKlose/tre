@@ -243,7 +243,7 @@ treimage_read_atoms (FILE *f)
                     case TRETYPE_SYMBOL:
                         treimage_read (f, &symlen, sizeof (tre_size));
 					    if (symlen > TRE_MAX_SYMLEN)
-						    treerror_internal (treptr_nil, "image read: symbol exceeds max length %d with length of %d", TRE_MAX_SYMLEN, symlen);
+						    treerror_internal (treptr_nil, "While reading image: Symbol exceeds max length %d with length of %d.", TRE_MAX_SYMLEN, symlen);
                		    treimage_read (f, symbol, symlen);
 					    symbol[symlen] = 0;
     				    allocated_symbol = tresymbol_add (symbol);

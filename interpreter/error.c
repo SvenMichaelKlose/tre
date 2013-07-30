@@ -31,7 +31,7 @@ treerror_msg (treptr expr, const char *prefix, const char *msg, va_list ap)
 		fprintf (stderr, "; Break on line %ld, column %ld in file '%s'.\n", (long) s->line, (long) s->column, s->file_name);
     fprintf (stderr, "; %s: ", prefix);
     vfprintf (stderr, msg, ap);
-    fprintf (stderr, ".\n");
+    fprintf (stderr, "\n");
 
     if (expr != treptr_invalid) {
 		fprintf (stderr, "; Misplaced object:\n");
@@ -117,7 +117,7 @@ treerror_typename (size_t t)
 	};
 
 	if (t > TRETYPE_ATOM)
-		treerror_internal (t, "unknown type index %u", t);
+		treerror_internal (t, "Unknown type index %u.", t);
 
 	return type_names[t];
 }

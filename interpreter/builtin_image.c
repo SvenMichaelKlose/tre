@@ -22,7 +22,7 @@ treimage_builtin_create (treptr list)
     treptr  init_fun = treptr_nil;
 
     while (list == treptr_nil || TREPTR_IS_ATOM(list))
-        list = treerror (treptr_invalid, "argument list missing");
+        list = treerror (treptr_invalid, "Argument list missing.");
 
     if (TREPTR_IS_CONS(CDR(list)))
         init_fun = CADR(list);
@@ -34,7 +34,7 @@ treimage_builtin_create (treptr list)
     	if (treimage_create (TREPTR_STRINGZ(file), init_fun) == FALSE)
 			break;
 
-       	file = treerror (file, "cannot create image - tell new pathname");
+       	file = treerror (file, "Cannot create image - please provide a new path.");
 	}
 
     return treptr_nil;
@@ -50,11 +50,11 @@ treimage_builtin_load (treptr list)
     	file = trearg_typed (1, TRETYPE_STRING, file, "pathname");
     	r = treimage_load (TREPTR_STRINGZ(file));
     	if (r == -2) {
-        	file = treerror (file, "incompatible image format - tell new pathname");
+        	file = treerror (file, "Incompatible image format - please provide a new path.");
             continue;
         }
     	if (r)
-        	file = treerror (file, "can't open image - tell new pathname");
+        	file = treerror (file, "Can't open image - please provide a new path.");
 	}
 
 	/*NOTREACHED*/

@@ -22,7 +22,7 @@ trealien_builtin_dlopen (treptr args)
 
 retry:
     while (TREPTR_IS_STRING(path) == FALSE)
-        path = treerror (path, "path to shared object expected");
+        path = treerror (path, "Path to shared object expected.");
 
     hdl = dlopen (TREPTR_STRINGZ(path), RTLD_NOW);
     if (hdl == NULL) {
@@ -40,7 +40,7 @@ trealien_builtin_dlclose (treptr args)
     long    ret;
 
     while (TREPTR_IS_NUMBER(hdl) == FALSE)
-        hdl = treerror (hdl, "number handle expected");
+        hdl = treerror (hdl, "Number handle expected.");
 
     ret = dlclose ((void *) (long) TRENUMBER_VAL(hdl));
     if (ret == -1)
@@ -59,10 +59,10 @@ trealien_builtin_dlsym (treptr args)
     trearg_get2 (&hdl, &sym, args);
 
     while (TREPTR_IS_NUMBER(hdl) == FALSE)
-        hdl = treerror (hdl, "number handle expected");
+        hdl = treerror (hdl, "Number handle expected.");
 
     while (TREPTR_IS_STRING(sym) == FALSE)
-        sym = treerror (sym, "symbol string expected");
+        sym = treerror (sym, "Symbol string expected.");
 
     ret = dlsym ((void *) (long) TRENUMBER_VAL(hdl), TREPTR_STRINGZ(sym));
     if (ret == NULL)
@@ -80,7 +80,7 @@ trealien_builtin_call (treptr args)
 
     ptr = trearg_get (args);
     while (TREPTR_IS_NUMBER(ptr) == FALSE)
-        ptr = treerror (ptr, "number expected");
+        ptr = treerror (ptr, "Number expected.");
 
     fun = (void *) (long) TRENUMBER_VAL(ptr);
     ret = (* fun) ();

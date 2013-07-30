@@ -51,9 +51,9 @@ treeval_bind (treptr la, treptr lv)
     }
 
     if (la != treptr_nil)
-        treerror (la, "arguments missing");
+        treerror (la, "Arguments missing.");
     if (lv != treptr_nil)
-        treerror (lv, "too many arguments. Rest of forms");
+        treerror (lv, "Too many arguments.");
 
     return old;
 }
@@ -151,8 +151,7 @@ treeval_expr (treptr x)
         case TRETYPE_USERSPECIAL: v = treeval_funcall (fun, args, FALSE); break;
         case TRETYPE_BUILTIN:     v = trebuiltin (fun, args); break;
         case TRETYPE_SPECIAL:     v = trespecial (fun, args); break;
-        default:                  treerror_norecover (CAR(x), "function expected instead of %s",
-                                                              treerror_typename (TREPTR_TYPE(CAR(x))));
+        default:                  treerror_norecover (CAR(x), "Function expected instead of %s.", treerror_typename (TREPTR_TYPE(CAR(x))));
     }
     tredebug_chk_next ();
     tregc_pop ();

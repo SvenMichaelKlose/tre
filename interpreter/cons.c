@@ -104,7 +104,7 @@ trelist_gc (treptr car, treptr cdr)
 
 	tregc_force ();
    	if (!tre_lists_free)
-    	treerror_internal (treptr_invalid, "out of conses");
+    	treerror_internal (treptr_invalid, "Out of conses.");
 
     tregc_pop ();
     tregc_pop ();

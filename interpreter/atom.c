@@ -182,7 +182,7 @@ treatom_alloc (int type)
         tregc_force ();
 		item = trealloc_item (&tre_atoms_free);
     	if (!item)
-	    	return treerror (treptr_invalid, "atom table full");
+	    	return treerror (treptr_invalid, "Atom table full.");
     }
 
     atomi = ((size_t) item - (size_t) tre_atoms) / sizeof (struct tre_atom);
@@ -266,10 +266,8 @@ treatom_get (char * symbol, treptr package)
 		return atom;
 
     if (trenumber_is_value (symbol)) {
-		if (sscanf (symbol, "%lf", &dvalue) != 1) {
-			printf ("Illegal number: '%s'", symbol);
-			treerror (treptr_nil, "illegal number format");
-		}
+		if (sscanf (symbol, "%lf", &dvalue) != 1)
+			treerror (treptr_nil, "Illegal number format %s.", symbol);
         return treatom_number_get (dvalue, TRENUMTYPE_FLOAT);
 	}
 
@@ -324,10 +322,8 @@ treatom_fun_body (treptr atomp)
 {
     treptr fun;
 
-    if (TREPTR_IS_SYMBOL(atomp) == FALSE) {
-        treerror_internal (atomp, "symbol expected");
-		return treptr_nil;
-    }
+    if (TREPTR_IS_SYMBOL(atomp) == FALSE)
+        treerror_internal (atomp, "Symbol expected.");
 
     fun = TRESYMBOL_FUN(atomp);
     if (fun != treptr_nil)

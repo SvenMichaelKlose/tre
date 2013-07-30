@@ -28,7 +28,7 @@ treeval_exprop (treptr x, treeval_opfunc_t func, const char * descr)
 
     arg = CAR(x);
     if (TREPTR_IS_NUMBER(arg) == FALSE)
-        return treerror (arg, "not a number");
+        return treerror (arg, "Not a number.");
     val = TRENUMBER_VAL(arg);
 
 	n = 2;
@@ -84,7 +84,7 @@ treptr
 trenumber_builtin_difference (treptr x)
 {
     if (x == treptr_nil)
-		return treerror (treptr_nil, "Argument expected");
+		return treerror (treptr_nil, "Argument expected.");
 
     if (CDR(x) == treptr_nil)
 		return treatom_number_get (-TRENUMBER_VAL(CAR(x)), TRENUMTYPE_FLOAT);
@@ -110,7 +110,7 @@ treptr
 trenumber_builtin_quotient (treptr x)
 {
     if (x == treptr_nil)
-		return treerror (treptr_nil, "Argument expected");
+		return treerror (treptr_nil, "Argument expected.");
 
     if (CDR(x) == treptr_nil)
 		return treatom_number_get (1.0 / TRESYMBOL_VALUE(CAR(x)), TRENUMTYPE_FLOAT);

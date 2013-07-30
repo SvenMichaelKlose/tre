@@ -16,7 +16,7 @@ treptr
 treerror_error (treptr message)
 {
     return TREPTR_IS_STRING(message) == FALSE ?
-               treerror (message, "string expected") :
+               treerror (message, "String expected.") :
                treerror (treptr_invalid, TREPTR_STRINGZ(message));
 }
 

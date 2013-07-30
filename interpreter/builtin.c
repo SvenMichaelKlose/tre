@@ -76,14 +76,14 @@ trebuiltin_apply_args (treptr list)
     return list;
                                                                                                                                                                
 error:
-    return treerror (list, "last argument must be a list (waiting for new argument list)");
+    return treerror (list, "Last argument must be a list - please provide a new argument list.");
 }
 
 treptr
 trebuiltin_apply (treptr list)
 {
     if (list == treptr_nil)
-        return treerror (list, "arguments expected");
+        return treerror (list, "Arguments expected.");
     return trefuncall (CAR(list), trebuiltin_apply_args (trelist_copy (CDR(list))));
 }
 
@@ -91,7 +91,7 @@ treptr
 trebuiltin_funcall (treptr list)
 {
     if (list == treptr_nil)
-        return treerror (list, "arguments expected");
+        return treerror (list, "Arguments expected.");
     return trefuncall (CAR(list), CDR(list));
 }
 
@@ -110,7 +110,7 @@ trebuiltin_quit (treptr args)
     if (args != treptr_nil) {
         arg = CAR(args);
         if (TREPTR_IS_NUMBER(arg) == FALSE)
-	    	return treerror (arg, "integer expected");
+	    	return treerror (arg, "Integer expected.");
         code = TRENUMBER_VAL(arg);
     }
 
@@ -145,7 +145,7 @@ trebuiltin_load (treptr expr)
 
     stream = treiostd_open_file (fname);
     if (stream == NULL) {
-        treerror_norecover (treptr_invalid, "couldn't load file %s", fname);
+        treerror_norecover (treptr_invalid, "Couldn't load file %s.", fname);
 		return treptr_nil;
 	}
 
@@ -176,7 +176,7 @@ trebuiltin_intern (treptr args)
     if (TREPTR_IS_CONS(CDR(args))) {
         package = CADR(args);
         if (CDDR(args) != treptr_nil)
-	    	treerror (args, "INTERN: one or two arguments required");
+	    	treerror (args, "One or two arguments required.");
     } else
         package = treptr_nil;
 

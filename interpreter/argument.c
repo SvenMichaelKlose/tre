@@ -32,13 +32,13 @@ treptr
 trearg_get (treptr list)
 {
    	if (list == treptr_nil)
-       	return treerror (treptr_invalid, "argument expected");
+       	return treerror (treptr_invalid, "Argument expected.");
 
    	if (TREPTR_IS_ATOM(list))
-       	return treerror (list, "atom instead of list - need 1 argument");
+       	return treerror (list, "Atom instead of list - need 1 argument.");
     
     if (CDR(list) != treptr_nil)
-        trewarn (list, "single argument expected");
+        trewarn (list, "Single argument expected.");
     
     return CAR(list);
 }
@@ -53,17 +53,17 @@ trearg_get2 (treptr *a, treptr *b, treptr list)
 
 	do {
    		while (list == treptr_nil)
-        	list = treerror (treptr_invalid, "two args required");
+        	list = treerror (treptr_invalid, "Two arguments expected.");
 
    		if (TREPTR_IS_CONS(list))
 			break;
 
-       	list = treerror (list, "atom instead of list - need 2 arguments");
+       	list = treerror (list, "Atom instead of list - need two arguments.");
 	} while (TRUE);
 
     if (CDR(list) == treptr_nil) {
     	while (second == treptr_nil)
-        	second = treerror (treptr_invalid, "second argument missing");
+        	second = treerror (treptr_invalid, "Second argument missing.");
 	} else {
 		second = CADR(list);
 
@@ -83,7 +83,7 @@ trearg_correct (tre_size argnum, unsigned type, treptr x, const char * descr)
 	if (descr == NULL)
 		descr = "";
 
-	snprintf (buf, 4096, "argument %ld to %s: %s expected instead of %s",
+	snprintf (buf, 4096, "Argument %ld to %s: %s expected instead of %s.",
 			  (long) argnum, descr,
 			  treerror_typename (type),
 			  treerror_typename (TREPTR_TYPE(x)));
@@ -142,7 +142,7 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
         while (TREPTR_IS_ATOM(argdef)) {
             treprint (original_argdef);
             treprint (original_args);
-	    	argdef = treerror (iargdef, "argument definition must be a list");
+	    	argdef = treerror (iargdef, "Argument definition must be a list.");
         }
 
 		/* Fetch next form and argument. */
@@ -154,7 +154,7 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
             while (TREPTR_IS_ATOM(val)) {
                 treprint (original_argdef);
                 treprint (original_args);
-	        	val = treerror (val, "list type argument expected");
+	        	val = treerror (val, "List type argument expected.");
             }
 
 	    	trearg_expand (&svars, &svals, var, val, do_argeval);
@@ -245,7 +245,7 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
         	    	while (CDR(args) == treptr_nil) {
                         treprint (original_argdef);
                         treprint (original_args);
-	    	        	RPLACD(args, CONS(treerror (args, "missing argument after keyword"), treptr_nil));
+	    	        	RPLACD(args, CONS(treerror (args, "Missing argument after keyword."), treptr_nil));
                     }
 		    		args = trelist_delete (kpos, args);
 		    		args = trelist_delete (kpos, args);
@@ -269,7 +269,7 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
         if (args == treptr_nil) {
             treprint (original_argdef);
             treprint (original_args);
-	    	val = treerror (argdef, "missing argument");
+	    	val = treerror (argdef, "Missing argument.");
         }
 
 		/* Evaluate single argument if so desired. */

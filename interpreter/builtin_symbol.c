@@ -33,7 +33,7 @@ tresymbol_builtin_make_symbol (treptr args)
 	treptr package;
 
 	if (num_args == 0 || num_args > 2)
-		args = treerror (treptr_nil, "name and optional package required");
+		args = treerror (treptr_nil, "Name and optional package required.");
     name = trearg_typed (1, TRETYPE_STRING, CAR(args), "MAKE-SYMBOL");
 	package = num_args == 2 ? CADR(args) : TRECONTEXT_PACKAGE();
 

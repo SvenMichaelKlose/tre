@@ -66,7 +66,7 @@ trestring_builtin_list_string (treptr list)
 		tregc_force ();
     	news = trestring_get_raw (len);
     	if (news == NULL)
-			treerror_norecover (treptr_invalid, "out of memory");
+			treerror_norecover (treptr_invalid, "Out of memory.");
 	}
     newp = TRESTRING_DATA(news);
 
@@ -75,7 +75,7 @@ trestring_builtin_list_string (treptr list)
 		if (CAR(p) == treptr_nil)
 			continue;
 		if (TREPTR_IS_NUMBER(CAR(p)) == FALSE)
-			treerror_norecover (CAR(p), "number expected");
+			treerror_norecover (CAR(p), "Number expected.");
 		newp[i++] = (unsigned char) TRENUMBER_VAL(CAR(p));
 	}
 
@@ -96,14 +96,14 @@ trestring_builtin_compare (treptr list)
 	unsigned  len;
 
 	if (TREPTR_IS_STRING(CAR(list)) == FALSE)
-		treerror_norecover (list, "string expected as first argument");
+		treerror_norecover (list, "String expected as first argument.");
 
 	x = TREPTR_STRINGZ(CAR(list));
 	len = strlen (x);
     DOLIST(p, CDR(list)) {
 		car = CAR(p);
 		if (TREPTR_IS_STRING(car) == FALSE)
-			treerror_norecover (list, "string expected");
+			treerror_norecover (list, "String expected.");
 		if (car == treptr_nil)
 			continue;
 		y = TREPTR_STRINGZ(car);
@@ -140,7 +140,7 @@ trestring_builtin_concat (treptr list)
 		tregc_force ();
     	news = trestring_get_raw (len);
     	if (news == NULL)
-			treerror_norecover (treptr_invalid, "out of memory");
+			treerror_norecover (treptr_invalid, "Out of memory.");
 	}
     newp = TRESTRING_DATA(news);
 
@@ -179,7 +179,7 @@ trestring_builtin_string (treptr list)
    			strncpy (buf, TRESYMBOL_NAME(arg), TRE_MAX_STRINGLEN);
        		return trestring_get (buf);
 		}
-    	arg = treerror (arg, "string, number or named atom expected");
+    	arg = treerror (arg, "String, number or named atom expected.");
 	}
 
 	/*NOTREACHED*/

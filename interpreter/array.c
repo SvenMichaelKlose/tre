@@ -51,7 +51,7 @@ trearray_get_size (treptr sizes)
     _DOLIST(a, sizes) {
 		car = _CAR(a);
 		if (TREPTR_IS_NUMBER(car) == FALSE)
-	    	return treerror (car, "array size: number expected");
+	    	return treerror (car, "Number expected for array size.");
 		size *= TRENUMBER_VAL(car);
     }
 
@@ -71,7 +71,7 @@ trearray_get (treptr sizes)
 		tregc_force ();
     	array = trearray_get_raw (size);
         if (!array)
-		    return treerror (treptr_invalid, "out of memory");
+		    return treerror (treptr_invalid, "Cannot allocate array. Out of memory.");
 	}
     array->sizes = trelist_copy (sizes);
     tregc_push (array->sizes);
@@ -112,7 +112,7 @@ trearray_t_get (treptr array, tre_size idx)
     treptr * a = TREARRAY_VALUES(array);
 
     if (size <= idx)
-        return treerror (array, "index %d out of range", idx);
+        return treerror (array, "Index %d is out of range.", idx);
 
     return a[idx];
 }
@@ -124,7 +124,7 @@ trearray_t_set (treptr array, tre_size idx, treptr val)
     treptr * a = TREARRAY_VALUES(array);
 
     if (size <= idx) {
-        treerror (array, "index %d out of range", idx);
+        treerror (array, "Index %d is out of range.", idx);
 		return;
     }
 

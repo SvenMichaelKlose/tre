@@ -47,7 +47,7 @@ trespecial_setq (treptr list)
 	long     argnum = 1;
 
     while (list == treptr_nil)
-		list = treerror (treptr_invalid, "arguments expected");
+		list = treerror (treptr_invalid, "Arguments expected.");
 
     do {
 		car = trearg_typed (argnum, TRETYPE_SYMBOL, CAR(list), "SETQ place");
@@ -55,7 +55,7 @@ trespecial_setq (treptr list)
 		argnum++;
         list = CDR(list);
         if (list == treptr_nil) {
-	    	cdr = treerror (list, "even number arguments expected - supply the missing one");
+	    	cdr = treerror (list, "Even number arguments expected - please provide the missing one.");
 			list = treptr_nil;
 		} else {
         	tmp = CDR(list);
@@ -87,9 +87,9 @@ trespecial_function_from_expr (treptr expr)
     treptr x = trespecial_past_lambda (expr);
 
     if (x == treptr_nil)
-        return treerror (expr, "argument list and body missing");
+        return treerror (expr, "Argument list and body missing.");
     if (TREPTR_IS_ATOM(CAR(x)) && CAR(x) != treptr_nil)
-        return treerror (expr, "argument list expected instead of atom");
+        return treerror (expr, "Argument list expected instead of atom.");
 
     return trefunction_make (TRETYPE_FUNCTION, x);
 }
@@ -100,9 +100,9 @@ trespecial_function (treptr args)
     treptr arg;
 
     if (args == treptr_nil)
-		return treerror (args, "function name expected");
+		return treerror (args, "Function name expected.");
     if (CDR(args) != treptr_nil)
-		return treerror (args, "single argument expected");
+		return treerror (args, "Single argument expected.");
 
     arg = FIRST(args);
 
@@ -119,10 +119,10 @@ trespecial_function (treptr args)
 			return arg;
 
 		default:
-			return treerror (arg, "FUNCTION expects a symbol, function, special form or function expression");
+			return treerror (arg, "FUNCTION expects a symbol, function, special form or function expression.");
     }
 
-    return treerror (arg, "function or argument/body pair expected");
+    return treerror (arg, "Function or argument/body pair expected.");
 }
 
 treptr
@@ -169,12 +169,12 @@ trespecial_cond (treptr p)
     treptr body;
 
     if (TREPTR_IS_ATOM(p))
-		return treerror (p, "expression expected");
+		return treerror (p, "Expression expected.");
 
     for (;p != treptr_nil; p = CDR(p)) {
 		pair = CAR(p);
 		if (p == treptr_nil || TREPTR_IS_ATOM(p))
-	    	return treerror (p, "test/expression pair expected");
+	    	return treerror (p, "Test/expression pair expected.");
 
 		test = CAR(pair);
 		body = CDR(pair);
@@ -192,7 +192,7 @@ trespecial_if (treptr p)
     treptr body;
 
     if (TREPTR_IS_ATOM(p))
-        return treerror (p, "expression expected");
+        return treerror (p, "Expression expected.");
 
     while (p != treptr_nil) {
         test = CAR(p);
@@ -214,7 +214,7 @@ treptr
 trespecial_quote (treptr list)
 {
     if (list == treptr_nil)
-        treerror (treptr_nil, "argument expected");
+        treerror (treptr_nil, "Argument expected.");
     return CAR(list);
 }
 
@@ -240,7 +240,7 @@ trespecial_block (treptr args)
 
     tag = CAR(args);
     if (TREPTR_IS_CONS(tag))
-		return treerror (tag, "tag expected instead of an expression");
+		return treerror (tag, "Tag expected instead of an expression.");
 
     p = CDR(args);
     RETURN_NIL(p);
@@ -273,11 +273,11 @@ trespecial_return_from (treptr args)
     treptr ret;
 
     if (args == treptr_nil)
-		return treerror (treptr_invalid, "tag and expression expected");
+		return treerror (treptr_invalid, "Tag and expression expected.");
     if (CDR(args) == treptr_nil)
-		return treerror (treptr_invalid, "expression missing after tag");
+		return treerror (treptr_invalid, "Expression missing after tag.");
     if (CDDR(args) != treptr_nil)
-		return treerror (CDDR(args), "only two args expected");
+		return treerror (CDDR(args), "Only two args expected.");
 
     args = trelist_copy (args);
     tregc_push (args);

@@ -82,7 +82,7 @@ past_package_name:
 	    	/* Take read symbol as package name. */
             if (c == ':') {
 				if (got_package)
-		    		treerror (treptr_invalid, "double package name");
+		    		treerror (treptr_invalid, "Double package name.");
 				strcpy (p, os);
 				len = 0;
 				s = os;
@@ -94,7 +94,7 @@ past_package_name:
             len++;
 	    	if (len > TRE_MAX_SYMLEN)
 				treerror_internal (treptr_invalid,
-			   					   "literal symbols must be no longer than %d chars",
+			   					   "Literal symbols must be no longer than %d chars.",
 			   					   TRE_MAX_SYMLEN);
             continue;
         }
@@ -177,7 +177,7 @@ treread_token (struct tre_stream * stream)
                 treread_token (stream);
                 break;
 	    	}
-			treerror_norecover (treptr_invalid, "syntax error after '#'");
+			treerror_norecover (treptr_invalid, "Syntax error after '#'.");
 	    	break;
         case -1:
 	    	TRECONTEXT_TOKEN() = TRETOKEN_EOF;
@@ -204,9 +204,7 @@ treread_string (struct tre_stream *stream)
 			c = treio_getc (stream);
 	   	*i++ = c;
 	   	if (++l > TRE_MAX_STRINGLEN)
-			return treerror (treptr_invalid,
-                       	 	 "literal strings must be no longer than %d chars",
-		             	 	 TRE_MAX_STRINGLEN);
+			return treerror (treptr_invalid, "Literal strings must be no longer than %d chars.", TRE_MAX_STRINGLEN);
 	}
 	*i = 0;
 	return trestring_get (str);
@@ -243,12 +241,10 @@ treread_hexnum (struct tre_stream *stream)
 	treio_putback (stream);
 
 	if (! n)
-		return treerror (treatom_number_get ((double) c, TRENUMTYPE_CHAR),
-				         "Missing characters after initiating hexadecimal number");
+		return treerror (treatom_number_get ((double) c, TRENUMTYPE_CHAR), "Missing characters after initiating hexadecimal number.");
 
 	if (! isspace (c) && isalpha (c))
-		return treerror (treatom_number_get ((double) c, TRENUMTYPE_CHAR),
-				         "Illegal character for hexadecimal number");
+		return treerror (treatom_number_get ((double) c, TRENUMTYPE_CHAR), "Illegal character for hexadecimal number.");
 
 	return treatom_number_get ((double) v, TRENUMTYPE_INTEGER);
 }
@@ -266,7 +262,7 @@ treread_atom (struct tre_stream *stream)
         return treread_hexnum (stream);
 
     if (TRECONTEXT_TOKEN() < TRETOKEN_SYMBOL)
-		return treerror (treptr_invalid, "syntax error");
+		return treerror (treptr_invalid, "Syntax error.");
 
     return treatom_get (
 		TRECONTEXT_TOKEN_NAME(),
@@ -292,7 +288,7 @@ treread_quote (struct tre_stream *stream)
 		case TRETOKEN_FUNCTION: atom = treatom_function; break;
 		case TRETOKEN_ACCENT_CIRCONFLEX: atom = treatom_accent_circonflex; break;
 		default:
-	    	return treerror (treptr_invalid, "treread_quote: unsupported token");
+	    	return treerror (treptr_invalid, "Unsupported token.");
     }
 
     expr = treread_expr (stream);
@@ -371,7 +367,7 @@ treread_list (struct tre_stream *stream)
 
 error:
     tregc_pop ();
-    return treerror (treptr_invalid, "closing bracket expected");
+    return treerror (treptr_invalid, "Closing bracket expected.");
 }
 
 treptr

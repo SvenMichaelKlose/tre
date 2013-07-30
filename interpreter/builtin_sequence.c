@@ -43,7 +43,7 @@ tresequence_get_type (treptr seq)
 
 	seqtype = tre_sequence_types[type];
 	if (seqtype == NULL)
-		treerror_norecover (seq, "not a sequence");
+		treerror_norecover (seq, "Sequence expected.");
 	
     return seqtype;
 }
@@ -57,14 +57,14 @@ tresequence_builtin_set_elt (treptr args)
     treptr  idx = CADDR(args);
 
     if (TREPTR_IS_NUMBER(idx) == FALSE)
-		return treerror (idx, "index must be integer");
+		return treerror (idx, "Index must be an integer.");
 
     t = tresequence_get_type (seq);
     if (t == NULL)
-        return treerror (treptr_invalid, "sequence expected");
+        return treerror (treptr_invalid, "Sequence expected.");
 
     if (t->set == NULL)
-        return treerror (seq, "sequence cannot be modified");
+        return treerror (seq, "Sequence cannot be modified.");
     (*t->set) (seq, (tre_size) TRENUMBER_VAL(idx), val);
 
     return val;
@@ -80,13 +80,13 @@ tresequence_builtin_elt (treptr args)
     trearg_get2 (&seq, &idx, args);
 
     if (TREPTR_IS_NUMBER(idx) == FALSE)
-		return treerror (idx, "index must be integer");
+		return treerror (idx, "Index must be an integer.");
 
 	RETURN_NIL(seq);
 
     t = tresequence_get_type (seq);
     if (t == NULL)
-        return treerror (seq, "sequence expected");
+        return treerror (seq, "Sequence expected.");
     return (*t->get) (seq, (tre_size) TRENUMBER_VAL(idx));
 }
 
@@ -102,7 +102,7 @@ tresequence_builtin_length (treptr args)
 
     t = tresequence_get_type (seq);
     if (t == NULL)
-        return treerror (seq, "sequence expected");
+        return treerror (seq, "Sequence expected.");
 
     ret = treatom_number_get ((double) (*t->length) (seq), TRENUMTYPE_INTEGER);
 	return ret;

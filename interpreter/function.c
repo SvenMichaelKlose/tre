@@ -24,7 +24,7 @@ trefunction_alloc ()
         tregc_force ();
     	i = malloc (sizeof (struct tre_function));
         if (!i)
-	    	treerror_internal (treptr_nil, "out of memory for more functions");
+	    	treerror_internal (treptr_nil, "Out of memory for more functions.");
     }
 
     i->source = treptr_nil;

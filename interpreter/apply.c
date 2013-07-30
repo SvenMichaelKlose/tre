@@ -131,7 +131,7 @@ trefuncall (treptr func, treptr args)
         return treeval_xlat_function (treeval_xlat_builtin, func, args, FALSE);
     if (TREPTR_IS_SPECIAL(func))
         return trespecial (func, args);
-    return treerror (func, "function expected");
+    return treerror (func, "Function expected.");
 }
 
 void

@@ -72,7 +72,7 @@ trelist_delete (tre_size i, treptr l)
 		return l;
     }
 
-    return treerror (l, "trelist_delete: index '%d' out of range", i);
+    return treerror (l, "trelist_delete: Index '%d' out of range.", i);
 }
 
 long
@@ -127,7 +127,7 @@ trelist_nthcdr (treptr l, tre_size idx)
 {
     while (l != treptr_nil) {
 		if (TREPTR_IS_ATOM(l))
-			treerror_norecover (l, "internal NTHCDR: cons expected");
+			treerror_norecover (l, "Internal NTHCDR: cons expected.");
 		if (!idx--)
 			break;
         l = CDR(l);
