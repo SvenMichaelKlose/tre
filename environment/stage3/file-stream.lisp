@@ -5,7 +5,7 @@
     'input   "r"
     'output  "w"
     'append  "a"
-    (%error ":DIRECTION isn't specified.")))
+    (error ":DIRECTION isn't specified.")))
 
 (defun open (path &key direction)
   (!? (%fopen path (%fopen-direction direction))
@@ -18,7 +18,7 @@
                         (%princ c (stream-handle str)))
           :fun-eof #'((str)
                         (%feof (stream-handle str))))
-      (error "Couldn't open file `~A'." ,path)))
+      (error "Couldn't open file `~A'." path)))
 
 (defun close (str)
   (%fclose (stream-handle str)))

@@ -9,9 +9,7 @@
           (? (cons? i)
              (? (funcall test key (,getter-fun-name i))
                 (return i))
-             (progn
-               (print i)
-               (%error "Not a pair.")))))))
+             (error "Pair expected instead of ~A." i))))))
 
 (%define-assoc assoc  car)
 (%define-assoc rassoc cdr)
@@ -30,7 +28,7 @@
         (? (funcall test key (car x))
            (rplaca x new-value)
            (%=-assoc new-value key (cdr x) :test test)))
-     (%error "Not a pair.")))
+     (error "Pair expected instead of ~A." x)))
 
 (defun (= assoc) (new-value key lst &key (test #'eql))
   (%=-assoc new-value key lst :test test)

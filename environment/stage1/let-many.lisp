@@ -2,16 +2,12 @@
 
 (early-defun %chk-place (x)
   (? (%arg-keyword? x)
-     (progn
-	   (print x)
-	   (%error "Place is an argument keyword."))))
+     (error "Place ~A is an argument keyword." x)))
 
 (early-defun %error-if-not-unique (x)
   (%simple-map #'((i)
 					(? (< 1 (count i x))
-					   (progn
-	  				     (print i)
-	    			     (%error "Place not unique."))))
+					   (error "Place ~A is not unique.")))
 			   x))
 
 (early-defun %let-places (x)
@@ -19,9 +15,7 @@
 
 (early-defun %let-chk-places (x)
   (? (atom x)
-     (progn
-       (print x)
-       (%error "Assignment list expected instead of an atom.")))
+     (error "Assignment list expected instead of atom ~A." x))
   (%simple-map #'%chk-place x)
   (%simple-map #'((p) (%error-if-not-unique (%let-places x)))
 			   x))

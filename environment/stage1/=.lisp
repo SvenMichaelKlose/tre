@@ -11,25 +11,23 @@
 	    (slot-value? p))
 	 (progn
 	   (? (member p *constants* :test #'eq)
-		  (%error "Cannot set constant."))
+		  (error "Cannot set constant ~A." p))
        (list 'setq p val))
      (let* ((fun (car p))
 	        (args (cdr p))
 	        (setfun (%=-make-symbol fun)))
        (? (funcall *=-function?* setfun)
 		  (? (member (car args) *constants* :test #'eq)
-		   	 (%error (string-concat "Cannot set constant " (symbol-name (car args)) "."))
+		   	 (error "Cannot set constant ~A." args)
 	         `(,setfun ,val ,@args))
-          (progn
-            (print p)
-	        (%error "Place not settable."))))))
+          (error "Place ~A isn't settable.")))))
 
 (defun %= (args)
   (? (not (cdr args))
-     (%error "Pairs expected."))
+     (error "Pair expected instead of single ~A." (car args))
      (cons (%=-complement (car args) (cadr args))
            (? (cddr args)
-              (%= (cddr args)))))
+              (%= (cddr args))))))
 
 (defmacro = (&rest args)
   (? args
@@ -37,4 +35,4 @@
        `(= ,(car args))
        `(progn
 		  ,@(%= args)))
-    (%error "Arguments expected.")))
+    (error "Arguments expected.")))

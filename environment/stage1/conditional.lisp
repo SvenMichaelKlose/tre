@@ -5,7 +5,8 @@
 	  (progn ,@body)))
 
 (defmacro unless (predicate &body body)
-  `(when (not ,predicate) ,@body))
+  `(when (not ,predicate)
+     ,@body))
 
 (defun group2 (x)
   (? x
@@ -21,7 +22,7 @@
                   (cadr cases)
                   (? (eq 'function (caadr cases))
                      (cadadr cases)
-                     (%error ":TEST expects a FUNCTION.")))
+                     (error ":TEST must be a function.")))
                'equal)
       (let v (? (eq :test (car cases))
                 (caddr cases)

@@ -2,7 +2,6 @@
 
 (defvar *function-sources* nil)
 
-; Check and return keyword argument or NIL.
 (early-defun %defun-arg-keyword (args)
   (let a (car args)
 	(let d (& (cdr args)
@@ -10,8 +9,8 @@
       (? (%arg-keyword? a)
          (? d
             (? (%arg-keyword? d)
-               (%error "Keyword follows keyword"))
-            (%error "Unexpected end of argument list after keyword."))))))
+               (error "Keyword ~A follows keyword ~A." d a))
+            (error "Unexpected end of argument list after keyword."))))))
 
 (early-defun %defun-checked-args (args)
   (& args
@@ -19,14 +18,13 @@
         (cons (car args) (%defun-checked-args (cdr args))))))
 
 (early-defun %defun-name (name)
-  (? (atom name)
+  (? (symbol? name)
      name
-     (? (eq (car name) '=)
+     (? (& (cons? name)
+           (eq (car name) '=))
         (make-symbol (string-concat "=-" (string (cadr name)))
                      (symbol-package (cadr name)))
-        (progn
-	      (print name)
-	      (%error "Illegal function name.")))))
+        (error "Illegal function name ~A. It must be symbol or of the form (= symbol)." name))))
 
 (defmacro defun (name args &body body)
   (let name (%defun-name name)
