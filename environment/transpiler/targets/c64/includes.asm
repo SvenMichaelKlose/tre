@@ -9,7 +9,7 @@
 #include "vstack.asm"
 #include "cons.asm"
 #include "atom.asm"
-#include "gc.asm"
+;#include "gc.asm"
 #include "messages.asm"
 #include "cons-init.asm"
 #include "atom-init.asm"

@@ -12,12 +12,12 @@ gc:
     rts
 
 mark:
-    ldy #1
+    ldy #1          ; Atom or cons?
     lda (p),y
     bpl mark_atom
 
     ldy #0          ; Check if cons is already marked.
-    lda (p),y       ; (Set 0th bit in CAR.
+    lda (p),y       
     tax
     and #1
     bne already_marked_cons
@@ -33,8 +33,8 @@ mark:
     tax
     iny
     lda (p),y
-    sta p
-    stx p+1
+    sta p+1
+    stx p
 
     jsr vstack_call ; Mark it.
     .word mark
@@ -56,8 +56,8 @@ mark:
 
 already_marked_cons:
 mark_atom:
-    ldy #0          ; Check if cons is already marked.
-    lda (p),y       ; (Set 0th bit in CAR.
+    ldy #0          ; Check if atom is already marked.
+    lda (p),y
     tax
     and #1
     bne already_marked_atom

@@ -13,14 +13,13 @@ enough_space:
         clc
         adc atoms_ptr
         sta atoms_ptr
-        bcs pagewrap
-        rts
-pagewrap:
+        bcs no_pagewrap
         inc atoms_free+1
+no_pagewrap:
         rts
 
 page_too_small:
-        lda atoms_free+1
+        lda atoms_free+1    ; At least a single free page is required.
         sta p+1
         bne enough_space
         
