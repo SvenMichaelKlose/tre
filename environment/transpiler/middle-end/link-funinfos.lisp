@@ -49,7 +49,7 @@
   (link-funinfos-0 fi (%setq-value x)))
 
 (define-tree-filter link-funinfos-0 (fi x)
-  (not fi)              (error "LINK-FUNINFOS-0: no funinfo")
+  (not fi)              (error "FUNINFO missing.")
   (atom x)              (link-funinfos-atom fi x)
   (| (%quote? x)
      (%%native? x)

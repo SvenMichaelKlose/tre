@@ -18,7 +18,7 @@
          (funcall #'format t form))))
 
 (defun xml-error-unexpected-eof (in)
-  (xml-error "unexpected end of file"))
+  (xml-error "Unexpected end of file."))
 
 ;;; Character functions.
 
@@ -68,10 +68,9 @@
 
 (defun xml-expect-char (in c)
   (unless (== c (xml-read-char in))
-    (xml-error "character '~A' expected" c)))
+    (xml-error "Character '~A' expected." c)))
 
 (defun xml-read-optional-slash (in)
-  "Read slash from stream or do dothing."
   (xml-optional-char in #\/))
 
 (defun xml-compress-whitespace (in)
@@ -79,7 +78,6 @@
   #\ )
 
 (defun xml-read-while (in pred)
-  "Read characters from input stream until pred returns T."
   (with-queue-string-while q (funcall pred (xml-peek-char in))
     (with (c (xml-read-char in))
       (enqueue q 
@@ -88,10 +86,9 @@
 	       c)))))
 
 (defun xml2lml-identifier (in)
-  "Parse XML identifier string."
   (xml-skip-spaces in)
   (unless (xml-identifier-char? (xml-peek-char in))
-    (xml-error "identifier name expected"))
+    (xml-error "Identifier name expected."))
   (with-queue-string-while q
     (when (xml-identifier-char? (xml-peek-char in))
       (enqueue q (xml-read-char in)))))
@@ -103,7 +100,6 @@
   (setq *xml2lml-read* nil))
 
 (defun xml-unify-string (s)
-  "Unify string."
   (& s
      (| (href *xml-unified-strings* s)
         (= (href *xml-unified-strings* s) s))))
@@ -126,7 +122,6 @@
 	  (xml-read-char in))))
 
 (defun xml2lml-text (in)
-  "Read plain text until next tag or end of stream."
   (xml-skip-spaces in)
   (let txt (xml-read-while in #'xml-text-char?)
 ;	(? (== #\& (xml-peek-char in))
@@ -136,7 +131,6 @@
 	    txt));)
 
 (defun xml2lml-name (in &optional (pkg nil))
-  "Parse name with optional namespace."
   (with (ident (xml2lml-unify-identifier in))
     (? (== (xml-peek-char in) #\:)
        (progn
@@ -161,15 +155,13 @@
        s)))
 
 (defun xml2lml-quoted-string (in)
-  "Read quoted string."
   (xml-skip-spaces in)
   (let c (xml-read-char in)
     (unless (| (== c #\") (== c #\'))
-      (xml-error "quote expected"))
+      (xml-error "Quote expected."))
 	(list-string (xml2lml-quoted-string-r in c))))
 
 (defun xml2lml-attributes (in)
-  "Read single attribute assigment."
   (xml-skip-spaces in)
   (& (xml-identifier-char? (xml-peek-char in))
      (with ((ns name) (xml2lml-name in *keyword-package*))
@@ -183,9 +175,9 @@
          attrs     (xml2lml-attributes in)
          inline    (xml-read-optional-slash in))
     (& inline closing
-       (xml-error "/ at start and end of tag")) ; XXX xml-collect-error
+       (xml-error "`/' at start and end of tag.")) ; XXX xml-collect-error
     (| (== (xml-read-char in) #\>)
-       (xml-error "end of tag expected instead of char '~A'" (stream-last-char in)))
+       (xml-error "End of tag expected instead of char '~A'." (stream-last-char in)))
 	;(xml-issue-collected-errors)
     (values ns name
 			(?
@@ -218,13 +210,11 @@
 	 (xml-skip-decl in)))
 
 (defun xml2lml-tag (in)
-  "Read tag and return xml-node."
   (xml-skip-spaces in)
   (xml-expect-char in #\<)
   (xml2lml-standard-tag in))
 
 (defun xml2lml-list (in this-ns this-name)
-  "Parse block tag (until it's closed) or inline tag."
   (xml-skip-spaces in)
   (? (== (xml-peek-char in) #\<)
      (with ((ns name type attrs) (xml2lml-tag in))
@@ -234,13 +224,12 @@
          'closing
               (| (& (equal ns this-ns)
 			        (equal name this-name))
-                 (xml-error "closing tag for ~A:~A where ~A:~A was expected"
+                 (xml-error "Closing tag for ~A:~A where ~A:~A was expected."
 		                    ns name this-ns this-name))
          `(,(xml2lml-block in ns name attrs) ,@(xml2lml-list in this-ns this-name))))
   `(,(xml2lml-text in) ,@(xml2lml-list in this-ns this-name))))
 
 (defun xml2lml-block (in ns name attrs)
-  "Parse block tag (until it's closed) or inline tag."
   `(,name ,@attrs ,@(xml2lml-list in ns name)))
 
 (defun xml2lml-cont-std (in)
@@ -251,10 +240,9 @@
 	(xml2lml-block in ns name attrs)))
 
 (defun xml2lml-toplevel (in)
-  "Parse top-level block tag."
   (xml-skip-spaces in)
   (unless (== #\< (xml-read-char in))
-	(error "expected tag instead of text"))
+	(error "Expected tag instead of text."))
   (?
 	(== #\? (xml-peek-char in))
 	  (xml2lml-version-tag in)

@@ -1,16 +1,12 @@
 ;;;;; tré – Copyright (c) 2008,2012–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun fork ()
-"Create process copy. Returns the new process-ID to the calling process.
-Returns 0 to the new process."
   (alet (alien-dlopen *libc-path*)
 	(prog1
 	  (alien-call (alien-dlsym ! "fork"))
       (alien-dlclose !))))
 
 (defun wait ()
-"Waits until a child process exits.
-Return a status integer. See UNIX man page wait (2)."
   (with (libc	(alien-dlopen *libc-path*)
 	     fun	(alien-dlsym libc "wait")
 		 status (%malloc *pointer-size*))
@@ -23,11 +19,6 @@ Return a status integer. See UNIX man page wait (2)."
 	  (%free status))))
 
 (defun execve (path args &optional (environment nil) &key (wait? t))
-"Overlays current process with a new program at 'path'.
-'args' is a list of argument strings. Keep in mind that the first argument
-entry is usually the path to the executable.
-'environment' may be an associative list of variable/value string pairs.
-Returns NIL."
   (with (libc     (alien-dlopen *libc-path*)
          cexecve  (alien-dlsym libc "execve")
          cperror  (alien-dlsym libc "perror")

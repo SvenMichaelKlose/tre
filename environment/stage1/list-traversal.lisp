@@ -9,7 +9,7 @@
         (? (not i)
            (return (queue-list nl)))
         (? (atom i)
-           (error "list expected instead of ~A" i))
+           (error "List expected instead of ~A." i))
         (? (not (car i))	    ; Break if any list has no more elements.
            (return nil))
         (enqueue nl (caar i))	; Add head of list to list of arguments
@@ -44,7 +44,7 @@
            (? (not ,tmplst)
               (go ,endtag))
            (? (not (list? ,tmplst))
-              (error "list expected instead of ~A" ,tmplst))
+              (error "List expected instead of ~A." ,tmplst))
            (setq ,iter (car ,tmplst))
            ,@body
            (setq ,tmplst (cdr ,tmplst))

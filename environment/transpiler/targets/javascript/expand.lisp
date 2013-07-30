@@ -81,7 +81,7 @@
 (define-js-std-macro bind (fun &rest args)
   `(%bind ,(? (%slot-value? fun)
  			  .fun.
-    		  (error "function must be a SLOT-VALUE, got ~A" fun))
+    		  (error "Function must be a SLOT-VALUE, got ~A." fun))
 		  ,fun))
 
 (defun js-make-new-hash (x)
@@ -97,7 +97,7 @@
   `(%new ,@x))
 
 (define-js-std-macro new (&rest x)
-  (| x (error "NEW expects arguments"))
+  (| x (error "Argument(s) expected."))
   (? (| (keyword? x.)
 	    (string? x.))
 	 (js-make-new-hash x)

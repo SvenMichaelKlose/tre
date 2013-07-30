@@ -64,7 +64,7 @@
      (symbol? x)
      (not (transpiler-defined-symbol? *expex-funinfo* x)
           (transpiler-can-import? *transpiler* x))
-     (error "symbol ~A is not defined in ~A.~%"
+     (error "Symbol ~A is not defined in ~A."
             (symbol-name x)
             (funinfo-scope-description *expex-funinfo*))))
 
@@ -200,7 +200,7 @@
          val (peel-identity (%setq-value x)))
     (let-when fun (& (cons? val) val.)
       (| (symbol? fun) (cons? fun)
-         (error "function must be a symbol or expression: misplaced ~A~%" x)))
+         (error "Function must be a symbol or expression: misplaced ~A." x)))
     (? (%setq? val)
        (values nil (expex-body ex `(,val
                                     (%setq ,plc ,(%setq-place val)))))

@@ -49,14 +49,14 @@
 (define-php-std-macro bind (fun &rest args)
   `(%bind ,(? (%slot-value? fun)
  			  .fun.
-    		  (error "function must be a SLOT-VALUE, got ~A" fun))
+    		  (error "Function must be a SLOT-VALUE, got ~A." fun))
 		  ,fun))
 
 (define-php-std-macro new (&rest x)
   (unless x
-	(error "NEW expects arguments"))
+	(error "Argument(s) expected."))
   (unless (& x. (| (symbol? x.) (string? x.)))
-    (error "NEW expects first argument to be a non-NIL symbol or string instead of ~A" x.))
+    (error "NEW expects first argument to be a non-NIL symbol or string instead of ~A." x.))
   (? (| (keyword? x.)
         (string? x.))
      `(%%make-hash-table ,@x)

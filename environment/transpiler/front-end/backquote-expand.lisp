@@ -14,7 +14,7 @@
          `(%nconc ,(let tr *transpiler*
                      (? (transpiler-assert? tr)
                         (compiler-macroexpand (transpiler-macroexpand tr `(aprog1 ,(copy-tree (cadr x.))
-                                                                            (| (list? !) (error ",@ expects a list instead of ~A" !)))))
+                                                                            (| (list? !) (error ",@ expects a list instead of ~A." !)))))
                         (copy-tree (cadr x.))))
                   ,(backquote-1 .x))
          (copy-tree (cadr x.)))))

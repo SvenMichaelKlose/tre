@@ -39,7 +39,7 @@
                                                                       (funcall data)
                                                                       data))
 		  			     (string? section) (transpiler-frontend-file tr section)
-                         (error "Compiler input is not described by a symbol (paired with a function or expressions) or a file name string. Got ~A instead" i.))
+                         (error "Compiler input is not described by a symbol (paired with a function or expressions) or a file name string. Got ~A instead." i.))
                        (assoc-value section (transpiler-frontend-files tr) :test #'eq-string==))
             (aadjoin! code section (transpiler-frontend-files tr) :test #'eq-string==)
 	        (enqueue frontend-code (cons section code))))))))

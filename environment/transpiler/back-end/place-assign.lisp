@@ -13,13 +13,13 @@
   (& (%set-vec? x) ....x))
 
 (defun place-assign-error (x v)
-  (error "Can't assign place because the index in lexicals for ~A is missing in ~A.~%" v x))
+  (error "Can't assign place because the index in lexicals for ~A is missing in ~A." v x))
 
 (defun place-assign-stackarg (x)
   (let fi (get-funinfo .x.)
     (? (transpiler-arguments-on-stack? *transpiler*)
        (+ (length (funinfo-vars fi)) (- (length (funinfo-args fi)) (funinfo-arg-pos fi ..x.) 1))
-       (error "cannot assign stack argument ~A." ..x.))))
+       (error "Cannot assign stack argument ~A." ..x.))))
 
 (define-tree-filter place-assign (x)
   (| (%quote? x)

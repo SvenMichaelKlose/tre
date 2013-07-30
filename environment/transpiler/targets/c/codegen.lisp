@@ -28,7 +28,7 @@
 (defun c-codegen-function (name x)
   (with (fi   (get-funinfo name)
          args (argument-expand-names 'unnamed-c-function (funinfo-args fi)))
-    (| fi (error "No funinfo for ~A.~%" name))
+    (| fi (error "No funinfo for ~A." name))
     (c-make-function-declaration name args)
     `(,*c-newline*
       "/*" ,*c-newline*

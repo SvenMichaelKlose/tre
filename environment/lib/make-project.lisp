@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun make-project (project-name &key target
                                        (files nil)
@@ -9,7 +9,7 @@
                                        (obfuscate? nil))
   (format t "; Making project '~A'...~%" project-name)
   (| (in? target 'c 'bytecode 'js 'php)
-     (error "You must specify a target (must be one of C, BYTECODE, JS or PHP)"))
+     (error "You must specify a target. It must be one of C, BYTECODE, JS or PHP."))
   (| emitter
      (error "Argument EMITTER is required, which takes the compiled code and puts it somewhere."))
   (let code (compile-files files :target target :files-to-update files-to-update :obfuscate? obfuscate?)

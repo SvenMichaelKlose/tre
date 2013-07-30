@@ -23,7 +23,7 @@
 
 (defun funinfo-setup-lexical-links (fi var)
   (let fi-parent (funinfo-parent fi)
-    (| fi-parent (error "couldn't find ~A in environment" var))
+    (| fi-parent (error "Couldn't find ~A in environment." var))
     (funinfo-add-free-var fi var)
     (funinfo-link-lexically fi)
     (? (funinfo-arg-or-var? fi-parent var)

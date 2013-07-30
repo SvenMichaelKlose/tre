@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2008,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2008,2012–2013 Sven Michael Klose <pixel@copei.de>
 
 (defmacro with-temporary (place val &body body)
   (with-gensym old-val
@@ -15,6 +15,4 @@
         ,@(? ..lst
              `((with-temporaries ,..lst ,@body))
              body))
-     (error "WITH-TEMPORARIES: assignment list expected")))
-
-; XXX tests missing
+     (error "Assignment list expected.")))

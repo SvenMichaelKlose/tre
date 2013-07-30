@@ -74,7 +74,7 @@
 
 (defun create-funinfo (&key name parent args (transpiler *transpiler*))
   (& (href (transpiler-funinfos transpiler) name)
-     (error "Funinfo for ~A already memorized." name))
+     (error "FUNFINFO for ~A is already memorized." name))
   (with (argnames (argument-expand-names 'lambda-expand args)
          fi       (make-funinfo :name          name
                                 :argdef        args

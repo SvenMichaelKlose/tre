@@ -4,5 +4,5 @@
   x.__tre-bytecode)
 
 (defun (= function-bytecode) (v x)
-  (| (array? x) (error "array expected"))
+  (| (array? x) (error "Array expected."))
   (= x.__tre-bytecode v))

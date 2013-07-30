@@ -2,4 +2,4 @@
 
 (defun make-assertion (x &optional (txt "") (args nil))
   `(unless ,x
-	 (error (+ "assertion failed: " ,txt) ,@args)))
+	 (error (+ "Assertion failed: " ,txt) ,@args)))

@@ -31,7 +31,7 @@
   separator
 
   (identifier-char? [identity t])
-  (literal-conversion [error "structure 'transpiler': LITERAL-CONVERSION is not initialised"])
+  (literal-conversion [error "TRANSPILER-LITERAL-CONVERSION is not initialized."])
 
   expex
   expex-initializer
@@ -62,7 +62,7 @@
   (profile?                 nil)
   (profile-num-calls?       nil)
   (warn-on-unused-symbols?  nil)
-  (backtrace?               t)
+  (backtrace?               nil)
 
   ; Generator for literal strings.
   (gen-string #'literal-string)

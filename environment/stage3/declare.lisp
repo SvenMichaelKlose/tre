@@ -25,14 +25,14 @@
 
 (defun %declare-statement-type-1 (typ x)
   (unless (symbol? x)
-	(error "Symbol expected but got ~A to declare as of type ~A" x typ))
+	(error "Symbol expected but got ~A to declare as of type ~A." x typ))
   `(unless (| ,@(filter [%declare-statement-type-predicate _ x]
                         (force-list typ)))
-	 (error "~A is not of type ~A. Object: ~A" ,(symbol-name x) (quote ,typ) ,x)))
+	 (error "~A is not of type ~A. Object: ~A." ,(symbol-name x) (quote ,typ) ,x)))
 
 (defun %declare-statement-type (x)
   (unless (<= 2 (length x))
-	(error "expected type and one or more variables, but got only ~A" x))
+	(error "Expected type and one or more variables, but got only ~A." x))
   `(progn
 	 ,@(filter [%declare-statement-type-1 x. _] .x)))
 
@@ -43,13 +43,13 @@
   (funcall
       (symbol-function
 	      (| (assoc-value x. *declare-statement-classes*)
-	         (error "unknown declaration class ~A. Choose one of ~A instead"
+	         (error "Unknown declaration class ~A. Choose one of ~A instead."
 		            x. (carlist *declare-statement-classes*))))
       .x))
 
 (defmacro declare (&rest x)
   (unless x
-	(error "arguments expected"))
+	(error "Arguments expected."))
   (let body (filter #'%declare-statement (force-tree x))
 	(when *assert*
   	  `(progn

@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2006–2008,2011-2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2006–2008,2011–2013 Sven Michael Klose <pixel@copei.de>
 
 (defstruct format-info
   stream
@@ -15,7 +15,7 @@
      (? (cons? args.)
 		(late-print args. (format-info-stream inf))
         (princ args. (format-info-stream inf)))
-     (error "argument ~A specified in format \"~A\" is missing" (format-info-processed-args inf) (format-info-text inf)))
+     (error "Argument ~A specified in format \"~A\" is missing." (format-info-processed-args inf) (format-info-text inf)))
   (%format inf txt .args))
 
 (defun %format-directive-force-output (inf txt args)
@@ -44,6 +44,5 @@
          (%format inf .txt args)))))
 
 (defun format (str txt &rest args)
-  "Print formatted string."
   (with-default-stream nstr str
     (%format (make-format-info :stream nstr :text txt :args args) (string-list txt) args)))

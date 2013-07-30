@@ -12,7 +12,7 @@
 (defun read-bmp-array (name &key (verbose? nil))
   (let a (read-binary-file name)
     (| (bmp-magic? a)
-       (error "not a BMP file (wrong magic)"))
+       (error "Not a BMP file. It has an incorrect magic."))
     (with (bitmap-offset (chars-integer (nthcdr 10 a) 4)
            header        (nthcdr 14 a)
            width         (chars-integer (nthcdr 4 header) 4)

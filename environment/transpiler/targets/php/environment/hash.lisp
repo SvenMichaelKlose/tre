@@ -32,7 +32,7 @@
          "L" (%%%href *conses* (substr x 3))
          "A" (%%%href *arrays* (substr x 3))
          "C" (code-char (substr x 3))
-         (error "illegal index ~A" x)))
+         (error "Illegal index ~A." x)))
      x))
 
 (defun hashkeys (x)

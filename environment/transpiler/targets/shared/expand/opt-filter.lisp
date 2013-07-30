@@ -13,4 +13,4 @@
                           (function-expr? !)           `(,! ,i)
                           (| (atom !)
                              (%%closure? !))           `(funcall ,! ,i)
-                          (error "function or variable required instead of ~A" !))))))))
+                          (error "Function or variable required instead of ~A." !))))))))

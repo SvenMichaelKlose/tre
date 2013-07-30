@@ -8,7 +8,7 @@
   (| (assoc-value x xlats)
      (progn
        (print x)
-       (error "no CPS function name"))))
+       (error "No CPS function name."))))
 
 (defun cps-make-call-to-next (x xlats)
   `(%setq nil ,(? .x

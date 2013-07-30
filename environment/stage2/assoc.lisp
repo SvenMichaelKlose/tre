@@ -11,18 +11,18 @@
                 (return i))
              (progn
                (print i)
-               (%error "not a pair")))))))
+               (%error "Not a pair.")))))))
 
 (%define-assoc assoc  car)
 (%define-assoc rassoc cdr)
 
 (let lst '((a . d) (b . e) (c . f))
   (| (eq 'e (cdr (assoc 'b lst)))
-     (%error "ASSOC doesn't work with symbols")))
+     (%error "ASSOC doesn't work with symbols.")))
 
 (let lst '((1 . a) (2 . b) (3 . c))
   (| (eq 'b (cdr (assoc 2 lst)))
-     (%error "ASSOC doesn't work with numbers")))
+     (%error "ASSOC doesn't work with numbers.")))
 
 (defun %=-assoc (new-value key x &key (test #'eql))
   (? (list? x)
@@ -30,7 +30,7 @@
         (? (funcall test key (car x))
            (rplaca x new-value)
            (%=-assoc new-value key (cdr x) :test test)))
-     (%error "not a pair")))
+     (%error "Not a pair.")))
 
 (defun (= assoc) (new-value key lst &key (test #'eql))
   (%=-assoc new-value key lst :test test)

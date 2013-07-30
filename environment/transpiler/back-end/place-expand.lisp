@@ -30,7 +30,7 @@
     (not fi)
       (progn
         (print x)
-        (error "place-expand-atom: no funinfo"))
+        (error "FUNINFO is missing."))
 
     (| (not x)
        (number? x)
@@ -65,7 +65,7 @@
   (let fi (get-lambda-funinfo x)
     (unless fi
       (print x)
-      (error "place-expand-fun: no funinfo for ~A" (lambda-name x)))
+      (error "FUNINFO missing for ~A." (lambda-name x)))
     (copy-lambda x :body (place-expand-0 fi (lambda-body x)))))
 
 (defun place-expand-setter (fi x)
@@ -73,7 +73,7 @@
     `(%set-vec ,.p. ,..p. ,...p. ,(place-expand-0 fi (%setq-value x)))))
 
 (define-tree-filter place-expand-0 (fi x)
-  (not fi)              (error "place-expand-0: no funinfo")
+  (not fi)              (error "FUNFINFO is missing.")
   (atom x)              (place-expand-atom fi x)
   (| (%quote? x)
      (%%native? x)

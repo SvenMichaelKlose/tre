@@ -10,8 +10,8 @@
       (? (%arg-keyword? a)
          (? d
             (? (%arg-keyword? d)
-               (%error "keyword following keyword"))
-            (%error "end after keyword"))))))
+               (%error "Keyword follows keyword"))
+            (%error "Unexpected end of argument list after keyword."))))))
 
 (early-defun %defun-checked-args (args)
   (& args
@@ -26,7 +26,7 @@
                      (symbol-package (cadr name)))
         (progn
 	      (print name)
-	      (%error "illegal function name")))))
+	      (%error "Illegal function name.")))))
 
 (defmacro defun (name args &body body)
   (let name (%defun-name name)

@@ -38,10 +38,10 @@
 
 (defun %ducktype-assert (x)
   (| (object? x)
-     (error "ducktype object expected instead of ~A" x)))
+     (error "Ducktype object expected instead of ~A." x)))
 
 (defun %ducktype-assert-class (class-name)
-  (| (href *classes* class-name) (error "class ~A is not defined" class-name)))
+  (| (href *classes* class-name) (error "Class ~A is not defined." class-name)))
 
 (defmacro defmethod (class-name name args &rest body)
   (print-definition `(defmethod ,class-name ,name ,args))
@@ -53,7 +53,7 @@
 (defmacro defmember (class-name &rest names)
   (print-definition `(defmember ,@names))
   (%ducktype-assert-class class-name)
-  (| (href *classes* class-name) (error "class ~A is not defined"))
+  (| (href *classes* class-name) (error "Class ~A is not defined."))
 ;  (+! (class-members (href *classes* class-name)) names)
   nil)
 

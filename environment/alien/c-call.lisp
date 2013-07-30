@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008,2011–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008,2011–2013 Sven Michael Klose <pixel@copei.de>
 
 (defstruct c-call-target
   put-arg
@@ -10,7 +10,6 @@
   (args nil))
 
 (defun c-call-add-arg (cc value)
-  "Add argument type and value to C-CALL."
   (= (c-call-args cc) (append (c-call-args cc) (list value))))
 
 (defun c-call-put-arg (target p val argnum)
@@ -30,10 +29,10 @@
 		 target (?
 				  (in=? *cpu-type* "i386" "i486" "i586" "i686") (make-c-call-target-x86)
 				  (in=? *cpu-type* "amd64" "x86_64") (make-c-call-target-amd64)
-				  (error "unsupported *CPU-TYPE*")))
+				  (error "Unsupported *CPU-TYPE*.")))
 
 	(when (== -1 code)
-	  (error "couldn't allocate trampoline"))
+	  (error "Couldn't allocate trampoline."))
 
 	(do ((i (reverse args) (cdr i))
 		 (argnum (1- (length args)) (1- argnum)))

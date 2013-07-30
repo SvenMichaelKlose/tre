@@ -287,7 +287,7 @@
   (? (cons? x)
 	 (? (%%native? x)
 		`(%%native ,(php-dollarize x) "->" ,y)
-		(error "%%NATIVE expected"))
+		(error "%%NATIVE expected instead of ~A." x))
 	 `(%%native "$" ,x "->" ,y)))
 
 (define-php-macro %php-class-head (name)

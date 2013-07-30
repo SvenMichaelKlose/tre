@@ -1,5 +1,4 @@
-;;;;; Common LISP flavor for TRE
-;;;;; Copyright (C) 2005-2006,2008 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (C) 2005–2006,2008,2013 Sven Michael Klose <pixel@copei.de>
 
 (%defun %ltest (test lst)
   (cond
@@ -23,14 +22,14 @@
   (cond
 	((%arg-keyword? x)
 		(print x)
-	    (%error "place is an argument keyword"))))
+	    (%error "Place is an argument keyword."))))
 
 (%defun %error-if-not-unique (x)
   (%simple-map #'((i)
 					(cond
 					  ((< 1 (count i x))
 	  				     (print i)
-	    				 (%error "place not unique"))))
+	    				 (%error "Place not unique."))))
 			   x))
 
 (%defun %let-places (x)
@@ -40,13 +39,13 @@
   (cond
     ((atom x)
        (print x)
-       (%error "assignment list expected instead of an atom")))
+       (%error "Assignment list expected instead of an atom.")))
   (%simple-map #'%chk-place x)
   (%simple-map #'((p)
   					(cond
 					  ((%error-if-not-unique (%let-places x))
 						 (print x)
-						 (%error "place is not unique"))))
+						 (%error "Place is not unique."))))
 			   x))
 
 ;; Create new local variables.

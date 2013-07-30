@@ -32,7 +32,7 @@
 	  (cons? seq)   (list-subseq seq start end)
 	  (string? seq) (string-subseq seq start end)
 	  (array? seq)  (%subseq-sequence #'make-array seq start end)
-      (error "type of ~A not supported" seq))))
+      (error "Type of ~A not supported." seq))))
 
 (define-test "SUBSEQ basically works"
   ((subseq '(1 2 3 4) 1 3))

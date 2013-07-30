@@ -22,9 +22,9 @@
          args (%nconc (butlast .lst) l.))
     (when-debug
       (unless (function? fun)
-	    (error "APPLY: first argument is not a function: ~A" fun))
+	    (error "First argument ~A is not a function." fun))
 	  (unless (list? l)
-	    (error "APPLY: last argument is not a list")))
+	    (error "Last argument is not a list.")))
     (!? fun.tre-exp
         (!.apply nil (%%native "[" args "]"))
      (fun.apply nil (list-array args)))))

@@ -1,5 +1,4 @@
-;;;;; TRE environment
-;;;;; Copyright (c) 2009 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2009,2013 Sven Michael Klose <pixel@copei.de>
 
 (let x (block nil
 			  1
@@ -8,4 +7,4 @@
 			  2)
   (unless (eq 'fnord x)
 	(print x)
-	(%error "BLOCK test failed")))
+	(%error "BLOCK test failed.")))

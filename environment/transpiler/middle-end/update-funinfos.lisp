@@ -7,6 +7,6 @@
              num-tags (count-if #'number? body))
         (& (not *recompiling?*)
            (funinfo-num-tags fi)
-	       (error "funfinfo ~A: num-tags already set to ~A. new num:~A" fi (funinfo-num-tags fi) num-tags))
+	       (error "FUNFINO ~A: NUM-TAGS already set to ~A. Can't set new number ~A." fi (funinfo-num-tags fi) num-tags))
         (= (funinfo-num-tags fi) num-tags)
 	    (copy-lambda x :body (transpiler-update-funinfo body))))

@@ -3,7 +3,7 @@
 (defun tag-code (tag)
   (| (member-if [& (number? _) (== _ tag)]
                 *body*)
-     (error "tag ~A not found in body ~A" tag *body*)))
+     (error "Tag ~A not found in body ~A." tag *body*)))
 
 (defun removable-place? (x)
   (alet *funinfo*
@@ -42,6 +42,6 @@
                                  (traverse-statements d)
                    (progn
                      (print _)
-                     (error "illegal metacode statement ~A" _))))])
+                     (error "Illegal metacode statement ~A." _))))])
     (| (not (removable-place? v))
        (traverse-statements x))))

@@ -5,7 +5,7 @@
 (define-bc-macro function (name &optional (x 'only-name))
   (?
 	(eq 'only-name x)	name
-    (atom x)			(error "codegen: arguments and body expected: ~A" x)
+    (atom x)			(error "Arguments and body expected instead of ~A." x)
     `(%%%bc-fun ,name
        ,@(lambda-body x))))
 

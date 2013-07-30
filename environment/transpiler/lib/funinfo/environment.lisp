@@ -56,7 +56,7 @@
 (defun funinfo-var-add (fi x)
   (unless (atom x)
 	(print x)
-	(error "atom expected"))
+	(error "Atom expected."))
   (unless (funinfo-var? fi x)
     (? (funinfo-parent fi)
        (append! (funinfo-vars fi) (list x))

@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2008,2011–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2008,2011–2013 Sven Michael Klose <pixel@copei.de>
 
 (defmacro when (predicate &body body)
   `(& ,predicate
@@ -21,7 +21,7 @@
                   (cadr cases)
                   (? (eq 'function (caadr cases))
                      (cadadr cases)
-                     (%error "invalid predicate for TEST: FUNCTION expected")))
+                     (%error ":TEST expects a FUNCTION.")))
                'equal)
       (let v (? (eq :test (car cases))
                 (caddr cases)

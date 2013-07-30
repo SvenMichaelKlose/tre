@@ -24,7 +24,7 @@
 
 (defun translate-jumps (indexes x)
   (with (get-tag-index [& _ (| (assoc-value _ indexes :test #'==)
-                               (error "cannot get bytecode index ~A in ~A" _ indexes))]
+                               (error "Cannot get bytecode index ~A in ~A." _ indexes))]
          rec #'((x)
                   (?
                     (not x)    x

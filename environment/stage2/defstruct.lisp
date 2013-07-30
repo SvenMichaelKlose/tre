@@ -50,7 +50,7 @@
 (defun %struct-assertion (name sym)
   (when *assert*
     `((unless (,(%struct?-symbol name) arr)
-        (error ,(string-concat "In " (symbol-name sym) ": Expected a " (symbol-name name) " structure instead of ~A") arr)))))
+        (error ,(string-concat "In " (symbol-name sym) ": Expected a " (symbol-name name) " structure instead of ~A.") arr)))))
 
 (defun %struct-single-get (name field index)
   (let sym (%struct-getter-symbol name field)

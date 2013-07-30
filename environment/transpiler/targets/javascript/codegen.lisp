@@ -250,7 +250,7 @@
     (? (funinfo-ghost !)
 	   (!? (codegen-closure-lexical !)
   	  	   `(%closure ,name ,!)
-		   (error "no lexical for ghost"))
+		   (error "No lexical for ghost."))
 	   name)))
 
 (define-js-macro %invoke-debugger ()

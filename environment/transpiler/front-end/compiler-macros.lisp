@@ -99,7 +99,7 @@
   (with (tests (group body 2)
 		 end   (car (last tests)))
     (unless body
-      (error "?: Body missing"))
+      (error "Body is missing."))
     `(cond
         ,@(? (== 1 (length end))
 			 (+ (butlast tests) (list (cons t end)))

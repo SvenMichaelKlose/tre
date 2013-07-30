@@ -99,7 +99,7 @@
 				          #\x  'hexnum
 				          #\'  'function
 				          #\|  (read-comment-block str)
-				          (error "invalid character after '#'"))
+				          (error "Invalid character after '#'."))
 			        -1	'eof)))
 		     pkg sym)))
 
@@ -116,7 +116,7 @@
 							  (not pkg)	    nil
 							  (eq t pkg)	*keyword-package*
 							  (make-package (list-string pkg))))
-	(error "syntax error: token ~A, sym ~A" token sym)))
+	(error "Syntax error: token ~A, sym ~A." token sym)))
 
 (defun read-quote (str token)
   (list token (read-expr str)))
@@ -125,7 +125,7 @@
   (= *default-listprop* (cons (stream-in-id str) (cons (stream-in-column str) (stream-in-line str)))))
 
 (defun read-list (str token pkg sym)
-  (| token (error "missing closing bracket"))
+  (| token (error "Missing closing bracket."))
   (unless (%read-closing-bracket? token)
     (cons (with-temporary *default-listprop* *default-listprop*
             (case token
@@ -141,7 +141,7 @@
 		         (with (x (read-expr str)
 				        (token pkg sym) (read-token str))
 		           (| (%read-closing-bracket? token)
-			          (error "only one value allowed after dotted cons"))
+			          (error "Only one value allowed after dotted cons."))
 			       x)
 		         (read-list str token pkg sym)))))))
 

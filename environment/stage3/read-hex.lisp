@@ -17,8 +17,8 @@
 								         (- #\A 10))))))
 					   v))))
     (| (hex-digit-char? (peek-char str))
-	   (error "illegal character '~A' at begin of hexadecimal number" (peek-char str)))
+	   (error "Illegal character '~A' at begin of hexadecimal number." (peek-char str)))
 	(prog1
       (rec 0)
 	  (& (symbol-char? (peek-char str))
-		 (error "illegal character '~A' in hexadecimal number" (peek-char str))))))
+		 (error "Illegal character '~A' in hexadecimal number." (peek-char str))))))

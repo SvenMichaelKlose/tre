@@ -1,8 +1,8 @@
-;;;;; tré – Copyright (c) 2008,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008,2012–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun make-package (name)
   (unless (package? name)
-    (error "package ~A is already defined"))
+    (error "Package ~A is already defined."))
   (%set-atom-fun name (%make-package)))
 
 (defmacro defpackage (name &rest exports)

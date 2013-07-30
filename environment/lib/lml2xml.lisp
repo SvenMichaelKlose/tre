@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2007-2009,2011–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2007-2009,2011–2013 Sven Michael Klose <pixel@copei.de>
 
 (def-head-predicate %exec)
 
@@ -60,7 +60,7 @@
   (lml2xml-end-inline s))
 
 (defun lml2xml-error-tagname (x)
-  (error "First element is not a tag name symbol but ~A" x))
+  (error "First element is not a tag name symbol but ~A." x))
 
 (defun lml2xml-expr (s x)
   (| (atom x.)

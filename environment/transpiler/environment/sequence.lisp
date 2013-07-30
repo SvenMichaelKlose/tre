@@ -18,6 +18,6 @@
 (defun (= elt) (val seq idx)
   (?
 	,@(when (transpiler-assert? *transpiler*)
-        '((string? seq) (error "strings cannot be modified")))
+        '((string? seq) (error "Strings cannot be modified.")))
 	(array? seq) (= (aref seq idx) val)
 	(cons? seq)  (rplaca (nthcdr idx seq) val)))

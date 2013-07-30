@@ -14,7 +14,7 @@
 
 (defmacro with (lst &body body)
   (unless body
-	(error "body expected"))
+	(error "Body expected."))
   (labels ((sub (x)
              (? x
                 `((with ,x
@@ -35,5 +35,3 @@
 
         `(let ,plc ,val
 		   ,@(sub (cddr alst)))))))
-
-; XXX tests missing

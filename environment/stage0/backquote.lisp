@@ -61,7 +61,7 @@
           (#'((%gstmp)
                 (?
                   (not %gstmp)  (%backquote (cdr %gsbq))
-                  (atom %gstmp) (%error "QUASIQUOTE-SPLICE: list expected")
+                  (atom %gstmp) (%error "QUASIQUOTE-SPLICE expects a list.")
                   (%nconc (copy-tree %gstmp)
                           (%backquote (cdr %gsbq)))))
             (%quasiquote-eval %gsbq)))))

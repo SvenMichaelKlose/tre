@@ -1,4 +1,4 @@
-;;;;; tré - Copyright 2006,2008,2011-2012 (c) Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright 2006,2008,2011–2013 (c) Sven Klose <pixel@copei.de>
 ;;;;;
 ;;;;; XXX experimental - LOOP can only do infinite loops.
 
@@ -35,7 +35,7 @@
 ;  		 (exp1 x) (%loop-var-clause x)
 ;  		 (exp2 x) (%loop-main-clause x))
 ;	(when x
-;	  (error "Trailing LOOP clause ~A" x))
+;	  (error "Trailing LOOP clause ~A." x))
 ;	(append exp1 exp2)))
 
 (defmacro loop (&rest body)
