@@ -10,6 +10,8 @@
 (env-load "transpiler/front-end/main.lisp")
 (env-load "transpiler/toplevel/main.lisp")
 
+(env-load "transpiler/debugger/main.lisp")
+
 (env-load "transpiler/targets/shared/main.lisp")
 (env-load "transpiler/targets/c/main.lisp")
 (env-load "transpiler/targets/bytecode/main.lisp")
