@@ -20,7 +20,7 @@
 		  (? (member (car args) *constants* :test #'eq)
 		   	 (error "Cannot set constant ~A." args)
 	         `(,setfun ,val ,@args))
-          (error "Place ~A isn't settable.")))))
+          (error "Place ~A isn't settable." p)))))
 
 (defun %= (args)
   (? (not (cdr args))
