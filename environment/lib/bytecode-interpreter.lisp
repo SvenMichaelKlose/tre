@@ -115,7 +115,7 @@
      (error "Symbol expected instead of ~A."))
   (let fun (symbol-function sym)
     (| (function? fun)
-       (macrop fun)
+       (macro? fun)
        (error "No function bound to symbol ~A." sym))
     (| (function-bytecode fun)
        (error "Function ~A has no bytecode." sym))

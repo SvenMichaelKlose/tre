@@ -17,9 +17,9 @@
     '(defmacro define-std-macro (name args &rest body)))
 
 ,(? *have-compiler?*
-    '(defun macrop (name)
+    '(defun macro? (name)
 	   (expander-has-macro? 'standard-macros name))
-    '(defun macrop (x)))
+    '(defun macro? (x)))
 
 (defun macroexpand (x)
   (expander-expand 'standard-macros x))

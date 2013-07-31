@@ -315,7 +315,7 @@ char *tre_builtin_names[] = {
     "CHARACTER?",
 
     "NOT", "EQ", "EQL",
-	"ATOM", "SYMBOL?", "FUNCTION?", "BUILTIN?", "MACROP",
+	"ATOM", "SYMBOL?", "FUNCTION?", "BUILTIN?", "MACRO?",
     "%TYPE-ID", "%%ID",
 
     "MAKE-SYMBOL", "MAKE-PACKAGE",

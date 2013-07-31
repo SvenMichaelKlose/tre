@@ -11,7 +11,7 @@
 		(SYMBOL?        symbolp)
 		(FUNCTION?      functionp)
 		(BUILTIN?       builtinp)
-		(MACROP         macrop))
+		(MACRO?         macrop))
 
 	(trearray_
     	(MAKE-ARRAY     builtin_make)

@@ -37,7 +37,7 @@
             make-symbol make-package
             atom symbol-value %type %%id %make-ptr
             symbol-function symbol-package function-native
-            function? builtin? macrop
+            function? builtin? macro?
             cons list car cdr cons?
             elt length
             string?

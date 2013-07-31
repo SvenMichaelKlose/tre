@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (C) 2006,2009,2011–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (C) 2006,2009,2011–2013 Sven Michael Klose <pixel@copei.de>
 
 (define-test "CAR accepts NIL"
   ((car nil))
@@ -186,7 +186,7 @@
 ; MAKE-SYMBOL ATOM SYMBOL-VALUE %TYPE-ID
 ; SYMBOL-FUNCTION SYMBOL-PACKAGE
 ; BOUNDP FBOUNDP
-; MACROP STRING?
+; MACRO? STRING?
 ; == < >
 ; BIT-OR BIT-AND
 ; << >>

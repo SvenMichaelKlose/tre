@@ -8,7 +8,7 @@
       (SYMBOL?      object)
       (FUNCTION?    object)
       (BUILTIN?     object)
-      (MACROP       object)
+      (MACRO?       object)
       (%TYPE-ID     object)
       (%%ID         object)
 

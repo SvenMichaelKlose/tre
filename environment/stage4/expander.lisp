@@ -63,7 +63,7 @@
 (defun expander-expand-once (expander-name x)
   (alet (expander-get expander-name)
     (| (expander? !) (error "Expander ~A is not defined." (symbol-name expander-name)))
-    (with-temporaries (*macrop-diversion* (expander-pred !)
+    (with-temporaries (*macro?-diversion* (expander-pred !)
                        *macrocall-diversion* (expander-call !))
       (%macroexpand x))))
 

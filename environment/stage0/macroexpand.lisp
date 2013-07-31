@@ -7,15 +7,15 @@
 
 (setq
 	*universe*
-	(cons '*macrop-diversion*
+	(cons '*macro?-diversion*
 	(cons '*macroexpand-backquote-diversion*
 	(cons '*macrocall-diversion*
 	(cons '*current-macro*
 	(cons '%macroexpand
 	(cons '%macroexpand-backquote
-	(cons '%%macrop
+	(cons '%%macro?
 	(cons '%%macrocall
-	(cons '%%env-macrop
+	(cons '%%env-macro?
 	(cons '%%env-macrocall
 	(cons '%macroexpand-rest
 	(cons '%macroexpand-xlat
@@ -26,9 +26,9 @@
 	*defined-functions*
 	(cons '%macroexpand
 	(cons '%macroexpand-backquote
-	(cons '%%macrop
+	(cons '%%macro?
 	(cons '%%macrocall
-	(cons '%%env-macrop
+	(cons '%%env-macro?
 	(cons '%%env-macrocall
 	(cons '%macroexpand-rest
 	(cons '%macroexpand-xlat
@@ -37,14 +37,14 @@
 
 (setq
 	*variables*
-	(cons (cons '*macrop-diversion* nil)
+	(cons (cons '*macro?-diversion* nil)
 	(cons (cons '*macrocall-diversion* nil)
 	(cons (cons '*current-macro* nil)
 	(cons (cons '*macroexpand-backquote-diversion* nil)
 	(cons (cons '*macroexpand-print?* nil)
 				*variables*))))))
 
-(setq *macrop-diversion* nil
+(setq *macro?-diversion* nil
       *macrocall-diversion* nil
       *current-macro* nil
       *macroexpand-print?* nil)
@@ -109,7 +109,7 @@
 (%set-atom-fun %macroexpand-call
   #'((%g)
        (? (? (atom (car %g))
-		     (apply *macrop-diversion* (list %g)))
+		     (apply *macro?-diversion* (list %g)))
           (%macroexpand-xlat %g)
 		  %g)))
 
@@ -132,18 +132,18 @@
                (eq (car %g) 'QUASIQUOTE-SPLICE) (cons 'QUASIQUOTE-SPLICE (%macroexpand (cdr %g)))
                (%macroexpand-call (%macroexpand-rest %g))))))))
 
-(%set-atom-fun %%macrop
+(%set-atom-fun %%macro?
   #'((%g)
        (? (symbol? (car %g))
-          (macrop (symbol-function (car %g))))))
+          (macro? (symbol-function (car %g))))))
 
 (%set-atom-fun %%macrocall
   #'((%g)
        (apply (symbol-function (car %g)) (cdr %g))))
 
-(%set-atom-fun %%env-macrop
+(%set-atom-fun %%env-macro?
   #'((%g)
-       (%%macrop %g)))
+       (%%macro? %g)))
 
 (%set-atom-fun %%env-macrocall
   #'((%g)
@@ -152,13 +152,13 @@
 (%set-atom-fun *macroexpand-hook*
   #'((%g)
 	   (#'((%gp %gc %gcm)
-             (setq *macrop-diversion*    #'%%macrop
+             (setq *macro?-diversion*    #'%%macro?
                    *macrocall-diversion* #'%%macrocall
                    *current-macro*       nil)
 	         (#'((%g)
-                   (setq *macrop-diversion*    %gp
+                   (setq *macro?-diversion*    %gp
                          *macrocall-diversion* %gc
                          *current-macro*       %gcm)
 				   %g)
 	           (%macroexpand %g)))
-          *macrop-diversion* *macrocall-diversion* *current-macro*)))
+          *macro?-diversion* *macrocall-diversion* *current-macro*)))
