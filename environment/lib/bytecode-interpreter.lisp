@@ -1,98 +1,116 @@
 ;;;;; tré – Copyright (c) 2013 Sven Michael Klose <pixel@copei.de>
+;;;;;
+;;;;; Non–recursive bytecode interpreter.
 
-(defstruct trecode
+(defstruct process
   fun
   pos
   (funstack     nil)
   (stack        (make-array 16384))
   (stack-pos    16384)
-  (interrupt    nil))
+  (interrupt    nil)
+  (microstack   nil)
+  (retvals      nil))
 
-(defun trecode-fetch (tc)
+(defun process-fetch (tc)
   (prog1
-    (aref (trecode-fun tc) (+ 3 (trecode-pos tc)))
-    (1+! (trecode-pos tc))))
+    (aref (process-fun tc) (process-pos tc))
+    (1+! (process-pos tc))))
 
-(defun trecode-get-stack (tc index)
-  (aref (trecode-stack tc) index))
+(defun process-get-stack (tc index)
+  (aref (process-stack tc) index))
 
-(defun trecode-set-stack (tc index value)
-  (= (aref (trecode-stack tc) index) value))
+(defun process-set-stack (tc index value)
+  (= (aref (process-stack tc) index) value))
 
-(defun trecode-push (tc v)
-  (1-! (trecode-stack-pos tc))
-  (trecode-set-stack tc (trecode-stack-pos tc) v))
+(defun process-push (tc v)
+  (1-! (process-stack-pos tc))
+  (process-set-stack tc (process-stack-pos tc) v))
 
-(defun trecode-push-many (tc v)
+(defun process-push-many (tc v)
   (adolist v
-    (trecode-push tc !)))
+    (process-push tc !)))
 
-(defun trecode-pop (tc &optional (num 1))
-  (-! (trecode-stack tc) num))
+(defun process-push-nil (tc num)
+  (adotimes num
+     (process-push tc nil)))
 
-(defun trecode-get-closure (tc)
-  (with (fun (trecode-fetch tc)
-         lex (trecode-get tc))
+(defun process-pop (tc &optional (num 1))
+  (-! (process-stack tc) num))
+
+(defun process-push-microstack (tc fun)
+  (push fun (process-microstack tc)))
+
+(defun process-pop-microstack (tc)
+  (pop (process-microstack tc)))
+
+(defun process-get-closure (tc)
+  (with (fun (process-fetch tc)
+         lex (process-get tc))
     (cons '%%closure (cons fun lex))))
 
-(defun trecode-get-args (tc)
+(defun process-fetch-args (tc)
   (with-queue q
-    (adotimes ((trecode-fetch tc) (queue-list q))
-      (enqueue q (trecode-get tc)))))
+    (adotimes ((process-fetch tc) (queue-list q))
+      (enqueue q (process-get tc)))))
 
-(defun trecode-get-call (tc fun)
-  (apply fun (trecode-get-args tc)))
+(defun process-get-call (tc fun)
+  (apply fun (process-fetch-args tc)))
 
-(defun trecode-function? (tc x))
+(defun process-function? (tc x))
 
-(defun trecode-get (tc)
-  (awhen (trecode-fetch tc)
+(defun process-get (tc &key (call? nil))
+  (awhen (process-fetch tc)
     (?
-      (number? !)              (trecode-get-stack tc !)
-      (eq '%quote !)           (trecode-fetch !)
-      (eq '%vec !)             (aref (trecode-get tc) (trecode-fetch tc))
-      (eq '%closure !)         (trecode-get-closure tc)
-      (trecode-function? tc !) (trecode-call tc ! (trecode-get-args tc))
-      !)))
+      (not !)                  nil
+      (eq t !)                 t
+      (number? !)              (process-get-stack tc !)
+      (eq '%quote !)           (process-fetch !)
+      (eq '%vec !)             (aref (process-get tc) (process-get tc))
+      (eq '%closure !)         (process-get-closure tc)
+      call?                    (process-call tc ! (process-fetch-args tc))
+      (error "Illegal bytecode."))))
 
-(defun trecode-exec-jump (tc)
-  (= (trecode-pos tc) (trecode-fetch tc)))
+(defun process-exec-jump (tc)
+  (= (process-pos tc) (+ 3 (process-fetch tc))))
 
-(defun trecode-exec-cond (tc)
-  (alet (trecode-fetch tc)
-    (unless (trecode-get tc)
-      (= (trecode-pos tc) !))))
+(defun process-exec-cond (tc)
+  (alet (process-fetch tc)
+    (unless (process-get tc)
+      (= (process-pos tc) (+ 3 !)))))
 
-(defun trecode-exec-set-vec (tc)
-    (= (aref (trecode-get tc) (trecode-get tc)) (trecode-get tc)))
+(defun process-exec-set-vec (tc)
+    (= (aref (process-get tc) (process-get tc)) (process-get tc)))
 
-(defun trecode-exec-set-place (tc value place)
+(defun process-exec-set-place (tc value place)
   (?
-    (number? place) (trecode-set-stack tc place value)
+    (number? place) (process-set-stack tc place value)
     (= (symbol-value place) value)))
 
-(defun trecode-exec-set (tc)
-  (trecode-exec-set-place tc (trecode-get tc) (trecode-get tc)))
+(defun process-exec-set (tc)
+  (process-exec-set-place tc (process-get tc :call? t) (process-get tc)))
 
-(defun trecode-exec (tc)
-    (loop
-      (awhen (trecode-interrupt tc)
-        (& (funcall ! tc)
-           (return)))
-      (case (trecode-fetch tc) :test #'eq
-        '%%go      (| (trecode-exec-cond tc)
-                      (return))
-        '%%go-nil  (trecode-exec-jump tc)
-        '%%set-vec (trecode-exec-set-vec tc)
-        (trecode-exec-set tc))))
+(defun process-exec (tc)
+  (loop
+    (awhen (process-interrupt tc)
+      (& (funcall ! tc)
+         (return)))
+    (!? (pop (process-microstack tc))
+        (funcall ! tc)
+        (case (process-fetch tc) :test #'eq
+          '%%go      (process-exec-jump tc)
+          '%%go-nil  (| (process-exec-cond tc)
+                        (return))
+          '%%set-vec (process-exec-set-vec tc)
+          (process-exec-set tc)))))
 
-(defun trecode-push-fun (tc fun args num-locals)
-  (push (cons fun (cons args num-locals)) (trecode-funstack tc)))
+(defun process-push-fun (tc fun args num-locals)
+  (push (cons fun (cons args num-locals)) (process-funstack tc)))
 
-(defun trecode-pop-fun (tc)
-  (pop (trecode-funstack tc)))
+(defun process-pop-fun (tc)
+  (pop (process-funstack tc)))
 
-(defun trecode-call (tc sym args)
+(defun process-call (tc sym args)
   (| (symbol? sym)
      (error "Symbol expected instead of ~A."))
   (let fun (symbol-function sym)
@@ -101,16 +119,15 @@
        (error "No function bound to symbol ~A." sym))
     (| (function-bytecode fun)
        (error "Function ~A has no bytecode." sym))
-    (trecode-push-many tc args)
+    (process-push-many tc args)
     (let bytecode (function-bytecode fun)
       (| (array? bytecode)
          (error "Bytecode for ~A is not an array." fun))
       (let num-locals (aref bytecode 2)
-        (= (trecode-fun tc) bytecode)
-        (adotimes num-locals
-          (trecode-push tc nil))
-        (trecode-push-fun tc fun args num-locals)))))
+        (= (process-fun tc) bytecode)
+        (process-push-nil tc num-locals)
+        (process-push-fun tc fun args num-locals)))))
 
-(defun trecode-return (tc)
-  (alet (trecode-pop-fun tc)
-    (trecode-pop (+ (length .!.) ..!))))
+(defun process-return (tc)
+  (alet (process-pop-fun tc)
+    (process-pop (+ (length .!.) ..!))))
