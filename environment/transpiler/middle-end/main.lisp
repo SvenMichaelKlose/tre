@@ -23,5 +23,6 @@
 (env-load "transpiler/middle-end/quote-keywords.lisp")
 (env-load "transpiler/middle-end/make-packages.lisp")
 (env-load "transpiler/middle-end/inject.lisp")
+(env-load "transpiler/middle-end/accumulate-toplevel-expressions.lisp")
 
 (env-load "transpiler/middle-end/toplevel.lisp")

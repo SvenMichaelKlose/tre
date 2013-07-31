@@ -47,7 +47,6 @@
 (defun php-transpile (sources &key (transpiler nil) (obfuscate? nil) (print-obfuscations? nil) (files-to-update nil))
   (with-temporary *opt-inline-max-size* 16
     (transpiler-add-defined-variable transpiler '*KEYWORD-PACKAGE*)
-    (= (transpiler-accumulate-toplevel-expressions? transpiler) (not *php-goto?*))
     (+ (php-prologue)
 	   (php-prepare transpiler)
    	   (target-transpile transpiler

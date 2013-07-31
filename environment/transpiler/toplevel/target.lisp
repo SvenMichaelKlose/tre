@@ -76,12 +76,14 @@
          (format t "; ~A top level expressions.~%; Let me think. Hmm...~F" num-exprs))
       (with (compiled-before  (target-transpile-2 tr before-deps files-to-update)
 	         compiled-deps    (!? deps (transpiler-make-code tr !))
-		     compiled-after   (target-transpile-2 tr after-deps files-to-update))
-;             compiled-acctop  (when (transpiler-accumulate-toplevel-expressions? tr)
-;	                             (transpiler-make-code tr 
-;                                    (target-transpile-1 tr (list (cons 'accumulated-toplevel #'(()
-;                                                                                                  (transpiler-make-toplevel-function tr))))
-;                                                        (list 'accumulated-toplevel)))))
+		     compiled-after   (target-transpile-2 tr after-deps files-to-update)
+             compiled-acctop  (& (print (transpiler-accumulate-toplevel-expressions? tr))
+                                 (print (transpiler-accumulated-toplevel-expressions tr))
+	                             (transpiler-make-code tr 
+                                    (target-transpile-1 tr (list (cons 'accumulated-toplevel
+                                                                       #'(()
+                                                                            (transpiler-make-toplevel-function tr))))
+                                                        (list 'accumulated-toplevel)))))
         (& *show-transpiler-progress?* (format t " Phew!~%~F"))
         (!? compiled-deps
             (= (transpiler-imported-deps tr) (transpiler-concat-text tr (transpiler-imported-deps tr) !)))
@@ -91,8 +93,8 @@
 	                                   compiled-before
                                        (reverse (transpiler-raw-decls tr))
                                        (transpiler-imported-deps tr)
-	                                   compiled-after)
-                                       ;(| compiled-acctop ""))
+	                                   compiled-after
+                                       compiled-acctop)
             (& print-obfuscations?
                (transpiler-obfuscate? tr)
                (transpiler-print-obfuscations tr))))))))

@@ -5,8 +5,7 @@
 
 (defun transpiler-make-toplevel-function (tr)
   `((defun accumulated-toplevel ()
-      ,@(transpiler-accumulated-toplevel-expressions tr))
-    (accumulated-toplevel)))
+      ,@(reverse (transpiler-accumulated-toplevel-expressions tr)))))
 
 (defun transpiler-all-passes (tr x)
   (transpiler-make-code tr (transpiler-frontend tr x)))
