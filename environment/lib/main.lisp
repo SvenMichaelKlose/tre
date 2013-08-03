@@ -7,4 +7,4 @@
 (env-load "lib/xml-entities.lisp")
 (env-load "lib/xml2lml.lisp")
 (env-load "lib/make-project.lisp")
-(env-load "lib/bytecode-interpreter.lisp")
+;(env-load "lib/bytecode-interpreter.lisp")

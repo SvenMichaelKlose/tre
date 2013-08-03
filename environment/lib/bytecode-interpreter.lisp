@@ -8,9 +8,7 @@
   (funstack     nil)
   (stack        (make-array 16384))
   (stack-pos    16384)
-  (interrupt    nil)
-  (microstack   nil)
-  (retvals      nil))
+  (interrupt    nil))
 
 (defun process-fetch (tc)
   (prog1
@@ -80,7 +78,7 @@
       (= (process-pos tc) (+ 3 !)))))
 
 (defun process-exec-set-vec (tc)
-    (= (aref (process-get tc) (process-get tc)) (process-get tc)))
+  (= (aref (process-get tc) (process-get tc)) (process-get tc)))
 
 (defun process-exec-set-place (tc value place)
   (?
@@ -110,24 +108,28 @@
 (defun process-pop-fun (tc)
   (pop (process-funstack tc)))
 
+(defun process-enter (tc bytecode args)
+  (| (array? bytecode)
+     (error "Bytecode for ~A is not an array." fun))
+  (process-push-many tc args)
+  (let num-locals (aref bytecode 2)
+    (= (process-fun tc) bytecode)
+    (process-push-nil tc num-locals)
+    (process-push-fun tc fun args num-locals)))
+
+(defun process-return (tc)
+  (prog1
+    (process-get-stack tc 0)
+    (alet (process-pop-fun tc)
+      (process-pop (+ (length .!.) ..!)))))
+
 (defun process-call (tc sym args)
   (| (symbol? sym)
      (error "Symbol expected instead of ~A."))
-  (let fun (symbol-function sym)
-    (| (function? fun)
-       (macro? fun)
+  (alet (symbol-function sym)
+    (| (function? !)
+       (macro? !)
        (error "No function bound to symbol ~A." sym))
-    (| (function-bytecode fun)
-       (error "Function ~A has no bytecode." sym))
-    (process-push-many tc args)
-    (let bytecode (function-bytecode fun)
-      (| (array? bytecode)
-         (error "Bytecode for ~A is not an array." fun))
-      (let num-locals (aref bytecode 2)
-        (= (process-fun tc) bytecode)
-        (process-push-nil tc num-locals)
-        (process-push-fun tc fun args num-locals)))))
-
-(defun process-return (tc)
-  (alet (process-pop-fun tc)
-    (process-pop (+ (length .!.) ..!))))
+    (!? (function-bytecode !)
+        (process-enter tc bytecode args)
+        (! args))))
