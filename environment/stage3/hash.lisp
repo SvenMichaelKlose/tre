@@ -17,7 +17,7 @@
 (defun %make-hash-index-string (h str)
   (with (k 0
 	     l (length str))
-    (do ((i 0 (integer-1+ i)))
+    (do ((i 0 (integer++ i)))
         ((| (integer== ,(* 8 *pointer-size*) i)
             (integer== i l))
 		 (mod (abs k) (hash-table-size h)))

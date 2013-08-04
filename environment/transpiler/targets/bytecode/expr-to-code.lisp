@@ -18,7 +18,7 @@
                     (%%tag? x)  (progn
                                   (enqueue indexes (cons .x. i))
                                   (rec ..x i))
-                    (rec .x (1+ i)))))
+                    (rec .x (++ i)))))
     (rec x 0)
     (queue-list indexes)))
 

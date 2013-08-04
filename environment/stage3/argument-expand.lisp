@@ -45,10 +45,10 @@
 ;; 'fun' is only used for error messages.
 (defun argument-expand-0 (fun adef alst apply-values
 						 &optional (no-static nil)
-								   (argdefs nil)
-								   (key-args nil)
-								   (num nil)
-								   (rest-arg nil))
+								   (argdefs   nil)
+								   (key-args  nil)
+								   (num       nil)
+								   (rest-arg  nil))
   (with (err
 		   #'((msg args)
 				(error (string-concat "; Call of function ~A: ~A~%"
@@ -143,7 +143,7 @@
 
          exp-main
 		   #'((def vals)
-			    (1+! num)
+			    (++! num)
 			    (? (keyword? vals.)
 				   (exp-key def vals)
 				   (| (exp-check-too-many def vals)

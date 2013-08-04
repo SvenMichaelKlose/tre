@@ -17,22 +17,22 @@
          (dolist (i !)
            (& (funcall pred i idx)
               (return i))
-           (1+! idx)))
+           (++! idx)))
        (dolist (i !)
          (& (funcall pred i)
             (return i))))))
 
 (defun %find-if-sequence (pred seq start end from-end with-index)
   (& seq (integer< 0 (length seq))
-     (let* ((e (| end (integer-1- (length seq))))
+     (let* ((e (| end (integer-- (length seq))))
 	 	    (s (| start 0)))
        ; Make sure the start and end indices are sane.
        (& (| (& (integer> s e) (not from-end))
              (& (integer< s e) from-end))
           (xchg s e))
        (do ((i s (? from-end
-				    (integer-1- i)
-				    (integer-1+ i))))
+				    (integer-- i)
+				    (integer++ i))))
            ((? from-end
 	           (integer< i e)
 			   (integer> i e)))

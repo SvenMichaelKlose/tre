@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2007,2011–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2007,2011–2013 Sven Michael Klose <pixel@copei.de>
 
 (functional group-head group-tail group)
 
@@ -8,7 +8,7 @@
            (queue-list result)
       (enqueue result (car l))
       (= l (cdr l))
-      (1-! size))))
+      (--! size))))
 
 (defun group-tail (l size)
   (dotimes (i size l)

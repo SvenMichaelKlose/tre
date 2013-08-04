@@ -24,9 +24,9 @@
          cperror  (alien-dlsym libc "perror")
          cpath    (%malloc-string path :null-terminated t)
          argptrs  (filter [%malloc-string _ :null-terminated t] args)
-         argv     (%malloc (* *pointer-size* (1+ (length args))))
+         argv     (%malloc (* *pointer-size* (++ (length args))))
          environv (? environment
-                     (%malloc (* *pointer-size* (1+ (length environment))))
+                     (%malloc (* *pointer-size* (++ (length environment))))
                       0)
          envptrs  (& environment
                      (filter [%malloc-string (string-concat _. "=" ._) :null-terminated t]

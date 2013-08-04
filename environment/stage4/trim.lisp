@@ -1,11 +1,11 @@
-;;;;; tré – Copyright (c) 2008–2010,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2010,2012–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun trim-tail (obj seq &key (test #'eql))
   (let len (length seq)
 	(when (integer< 0 len)
-      (? (funcall test obj (elt seq (integer-1- len)))
+      (? (funcall test obj (elt seq (integer-- len)))
 	     (trim-tail obj
-			        (subseq seq 0 (integer-1- len))
+			        (subseq seq 0 (integer-- len))
 				    :test test)
 		 seq))))
 

@@ -1,11 +1,11 @@
-;;;;; tré – Copyright (c) 2011–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2011–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun make-levenshtein (row column)
-  (with (width (length row)
+  (with (width  (length row)
          height (length column)
-         w (integer-1+ width)
-         h (integer-1+ height)
-         m (make-array w h))
+         w      (integer++ width)
+         h      (integer++ height)
+         m      (make-array w h))
 ;    (dotimes (i w)
 ;      (= (aref m i) (make-array)))
     (dotimes (i w)
@@ -17,8 +17,8 @@
       (= (aref m 0 j ) j))
     (dotimes (jc height) 
       (dotimes (ic width) 
-        (with (i (integer-1+ ic)
-               j (integer-1+ jc))
+        (with (i (integer++ ic)
+               j (integer++ jc))
           (= (aref m i j)
              (min (integer+ (aref m ic jc)
                   (? (== (elt row ic) (elt column jc))

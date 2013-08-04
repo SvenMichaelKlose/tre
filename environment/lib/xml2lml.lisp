@@ -38,8 +38,8 @@
 ;;; String functions
 
 (defun xml-string-trailing-whitespaces (s)
-  (do ((i (1- (length s)) (1- i))
-       (n 0 (1+ n)))
+  (do ((i (-- (length s)) (-- i))
+       (n 0 (++ n)))
       ((< i 0) t)
     (unless (xml-whitespace? (elt s i))
       (return n))))

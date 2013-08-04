@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2006–2008,2011–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2006–2008,2011–2013 Sven Michael Klose <pixel@copei.de>
 
 (defconstant *first-to-tenth*
   '(first second third fourth fifth sixth seventh eighth ninth tenth))
@@ -6,7 +6,7 @@
 (defun %make-cdr (i)
   (? (== i 0)
      'x
-     `(cdr ,(%make-cdr (1- i)))))
+     `(cdr ,(%make-cdr (-- i)))))
 
 (defmacro %make-list-synonyms ()
   `(block nil
@@ -20,7 +20,7 @@
 						      (defun (= ,name) (v x)
 							    (rplaca ,(%make-cdr i) v)))
 						 l)
-				   (1+! i))
+				   (++! i))
 			 *first-to-tenth*)
 		 l)))
 

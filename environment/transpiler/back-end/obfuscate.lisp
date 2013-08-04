@@ -3,7 +3,7 @@
 (defvar *transpiler-obfuscation-counter* 0)
 
 (defun transpiler-obfuscated-sym ()
-  (1+! *transpiler-obfuscation-counter*)
+  (++! *transpiler-obfuscation-counter*)
   (number-sym *transpiler-obfuscation-counter*))
 
 (defun transpiler-obfuscate-symbol-0 (tr x)

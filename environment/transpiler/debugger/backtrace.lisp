@@ -5,13 +5,13 @@
 (defun backtrace ()
   (with (print-repetition
              #'((x repetitions)
-                  (format t "~A (~A times) " (symbol-name x.) (1+ repetitions))
+                  (format t "~A (~A times) " (symbol-name x.) (++ repetitions))
                   (rec .x nil 0))
          rec #'((x former repetitions)
                   (?
                     x
                       (?
-                        (eq x. former)      (rec .x former (1+ repetitions))
+                        (eq x. former)      (rec .x former (++ repetitions))
                         (zero? repetitions) (format t "~A " (symbol-name x.))
                         (print-repetition (list former) repetitions))
                     (not (zero? repetitions))

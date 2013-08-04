@@ -28,7 +28,7 @@
         (format t "Planes: ~A~%" (chars-integer (nthcdr 12 header) 2))
         (format t "Bits per pixel: ~A~%" (chars-integer (nthcdr 14 header) 2))
         (format t "Compression: ~A~%" (chars-integer (nthcdr 16 header) 4)))
-      (do ((ptr (1- (* width height)) (integer-1- ptr)))
+      (do ((ptr (-- (* width height)) (integer-- ptr)))
           ((integer< ptr 0) (values bitmap width height))
         (%%set (+ bitmap ptr) (integer bitmap-list.))
         (= bitmap-list .bitmap-list)))))

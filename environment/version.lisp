@@ -6,9 +6,9 @@
          (list-string
            (alet (subseq l
                          (!? (position #\: l)
-                             (1+ !)
+                             (++ !)
                              0)
-                         (1- (length l)))
+                         (-- (length l)))
              (? (== #\M (car (last !)))
                 (butlast !)
                 !))))))

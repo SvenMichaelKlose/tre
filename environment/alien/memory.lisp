@@ -21,7 +21,7 @@
 (defun %put-char (ptr val)
   "Write byte to address."
   (%%set ptr val)
-  (1+ ptr))
+  (++ ptr))
 
 (defun %put-list (ptr x)
   "Write list of bytes to memory. Returns following address."

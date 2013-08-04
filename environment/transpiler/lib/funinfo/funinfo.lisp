@@ -4,7 +4,7 @@
 (defvar *funinfo-sym-counter* 0)
 
 (defun make-funinfo-sym ()
-  (alet ($ '~F (1+! *funinfo-sym-counter*))
+  (alet ($ '~F (++! *funinfo-sym-counter*))
     (? (& (eq ! (symbol-value !))
           (not (symbol-function !)))
        !

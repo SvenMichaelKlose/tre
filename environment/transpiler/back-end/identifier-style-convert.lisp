@@ -10,7 +10,7 @@
   (let l (length x)
     (& (< 2 l)
        (== (elt x 0) #\*)
-       (== (elt x (1- l)) #\*))))
+       (== (elt x (-- l)) #\*))))
 
 (defun transpiler-symbol-string-r (tr s)
   (with (encapsulate-char
@@ -25,11 +25,11 @@
                                     (character== #\* c))))
                         (? (& (character== #\- c)
                               (not (alphanumeric? .x.)))
-                           (+ (string-list "T45")
-                              (convert-camel .x (1+ pos)))
+                           (append (string-list "T45")
+                                   (convert-camel .x (++ pos)))
 					       (cons (char-upcase (cadr x))
-						         (convert-camel ..x (1+ pos))))
-					    (cons c (convert-camel .x (1+ pos)))))))
+						         (convert-camel ..x (++ pos))))
+					    (cons c (convert-camel .x (++ pos)))))))
 
          convert-special2
            [& _
@@ -46,7 +46,7 @@
                  (convert-special2 _))]
          convert-global
            [remove-if [== _ #\-]
-                      (string-list (string-upcase (subseq _ 1 (1- (length _)))))])
+                      (string-list (string-upcase (subseq _ 1 (-- (length _)))))])
 	(? (| (string? s) (number? s))
 	   (string s)
        (list-string

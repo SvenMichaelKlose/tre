@@ -5,4 +5,4 @@
     (while (cons? x)
            len
       (= x .x)
-      (1+! len))))
+      (++! len))))

@@ -1,6 +1,5 @@
 ;;;;; tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
 
-
 ;;;; INLINING
 
 (defun lambda-expand-make-inline-body (stack-places values body)
@@ -25,7 +24,7 @@
 (defvar *lexical-sym-counter* 0)
 
 (defun lambda-export-make-lexical-sym ()
-  (alet ($ '~L (1+! *lexical-sym-counter*))
+  (alet ($ '~L (++! *lexical-sym-counter*))
     (? (& (eq ! (symbol-value !))
           (not (symbol-function !)))
        !

@@ -26,7 +26,7 @@
 	    (format t "[")
 		(let idx -1
 		  (dolist (x (split #\ (trim #\ (lml-get-attribute desc :members))))
-			(1+! idx)
+			(++! idx)
 		    (with (field (href hash x))
 			  (? (eq 'field field.)
 		         (alien-import-print-type (alien-import-get-type-from-desc hash field)
@@ -51,7 +51,7 @@
       'arraytype
          (format nil " ~A[~A]"
                  (alien-import-get-type-from-desc hash tp)
-                 (1+ (string-integer (force-string (lml-get-attribute tp :size)))))
+                 (++ (string-integer (force-string (lml-get-attribute tp :size)))))
 	  (? (lml-get-attribute tp :name)
 	     (? (eq 'CVQUALIFIEDTYPE tp.)
 	   	    (alien-import-get-type-from-desc hash tp)
@@ -72,7 +72,7 @@
 		   (awhen (lml-get-children x)
 			 (let idx -1
 		       (dolist (a !)
-				 (1+! idx)
+				 (++! idx)
 		         (& (eq a. 'argument)
 			        (alien-import-print-type (alien-import-get-type-from-desc hash a) (lml-get-attribute a :name) :first (== 0 idx))))))
 		   (format t ")~%")

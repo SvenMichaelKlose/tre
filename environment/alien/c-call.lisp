@@ -35,7 +35,7 @@
 	  (error "Couldn't allocate trampoline."))
 
 	(do ((i (reverse args) (cdr i))
-		 (argnum (1- (length args)) (1- argnum)))
+		 (argnum (-- (length args)) (-- argnum)))
 		((not i))
 	  (= p (c-call-put-arg target p (car i) argnum)))
 

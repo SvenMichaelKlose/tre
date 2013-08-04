@@ -24,7 +24,7 @@
 (defun %struct-make-init (fields g)
   (let index 1
     (mapcar [let argname (%struct-field-name _)
-              `(= (aref ,g ,(1+! index))
+              `(= (aref ,g ,(++! index))
                   (? (eq ,argname ',argname)
                      ,(& (cons? _)
                          (cadr _))
@@ -65,7 +65,7 @@
 
 (defun %struct-getters (name fields)
   (let index 1
-    (mapcar [%struct-single-get name (%struct-field-name _) (1+! index)] fields)))
+    (mapcar [%struct-single-get name (%struct-field-name _) (++! index)] fields)))
 
 (defun struct? (x)
   (& (array? x)
@@ -100,14 +100,16 @@
   (multiple-value-bind (flds opts) (%struct-sort-fields fields-and-options)
     (%struct-add-def name flds)
     `(progn
-      ,(%struct-make name flds opts)
-      ,(%struct? name)
-      ,@(%struct-getters name flds)
-      (defmacro ,($ "WITH-" name) (s &body body)
-		 `(with-struct ,name ,,s ,,@body))
-      (defmacro ,($ "DEF-" name) (name args &body body)
-		 `(defun ,,name ,,args
-            (with-struct ,name ,name ,,@body))))))
+       ,(%struct-make name flds opts)
+       ,(%struct? name)
+       ,@(%struct-getters name flds)
+       (defmacro ,($ "WITH-" name) (s &body body)
+		 `(with-struct ,name ,,s
+            ,,@body))
+       (defmacro ,($ "DEF-" name) (name args &body body)
+	     `(defun ,,name ,,args
+            (with-struct ,name ,name
+              ,,@body))))))
 
 (defmacro defstruct (name &body fields-and-options)
   (apply #'%defstruct-expander name fields-and-options))

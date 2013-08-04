@@ -10,7 +10,7 @@
       (with ((slice w h) (read-bmp-array n))
         (= (aref slices i) slice)
         (format t "O.K.~%"))
-      (1+! i))))
+      (++! i))))
 
 (defun bmp2cub-make-cub-data (slices x y z width)
   (let data (make-queue)

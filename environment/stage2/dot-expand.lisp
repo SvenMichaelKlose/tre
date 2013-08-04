@@ -2,17 +2,17 @@
 
 (defun dot-expand-make-expr (which num x)
   (? (< 0 num)
-	 `(,which ,(dot-expand-make-expr which (1- num) x))
+	 `(,which ,(dot-expand-make-expr which (-- num) x))
 	 x))
 
 (defun dot-expand-count-start (x &optional (num 0))
   (? (== #\. (car x))
-	 (dot-expand-count-start (cdr x) (1+ num))
+	 (dot-expand-count-start (cdr x) (++ num))
 	 (values num x)))
 
 (defun dot-expand-count-end (x &optional (num 0))
   (? (== #\. (car (last x)))
-	 (dot-expand-count-end (butlast x) (1+ num))
+	 (dot-expand-count-end (butlast x) (++ num))
 	 (values num x)))
 
 (defun dot-expand-list (x)
@@ -33,7 +33,7 @@
 					 (| (== 1 l) (not p)) x
 					 (| (== #\. (car sl)) (== #\. (car (last sl)))) (dot-expand-list sl)
 					 `(%slot-value ,(list-symbol (subseq sl 0 p))
-						           ,(conv (list-symbol (subseq sl (1+ p))))))))
+						           ,(conv (list-symbol (subseq sl (++ p))))))))
 		 label?
 		   [not (| (cons? _)
 				   (number? _)

@@ -7,7 +7,7 @@
     (labels ((copy (lst len)
                (& lst (integer< 0 len)
                   (cons (car lst)
-				        (copy (cdr lst) (integer-1- len))))))
+				        (copy (cdr lst) (integer-- len))))))
       (when seq
         (& (integer> start end)
            (xchg start end))

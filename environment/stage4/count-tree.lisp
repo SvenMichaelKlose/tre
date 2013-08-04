@@ -3,7 +3,7 @@
 (defun count-tree (v x &key (test #'eql) (counter 0))
   (?
 	(atom x) (? (funcall test v x)
-                (integer-1+ counter)
+                (integer++ counter)
                 counter)
     (integer+ (count-tree v x. :test test :counter counter)
               (count-tree v .x :test test :counter counter))))

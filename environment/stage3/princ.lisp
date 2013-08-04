@@ -1,13 +1,13 @@
-;;;;; tré – Copyright (c) 2005–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun %princ-character (c str)
   (unless (& (string? c) (zero? (length c)))
     (? (cons? c)
-       (dolist (i c c)
-         (%princ-character i str))
+       (adolist (c c)
+         (%princ-character ! str))
        (progn
          (= (stream-last-char str) (? (string? c)
-                                      (elt c (1- (length c)))
+                                      (elt c (-- (length c)))
                                       c))
          (funcall (stream-fun-out str) c str)))))
 
@@ -47,10 +47,10 @@
   "Print object in human readable format."
   (with-default-stream s str
     (?
-      (string? obj) (%princ-string obj s)
+      (string? obj)    (%princ-string obj s)
       (character? obj) (%princ-character obj s)
-      (number? obj) (%princ-number obj s)
-      (symbol? obj) (%princ-string (symbol-name obj) s))
+      (number? obj)    (%princ-number obj s)
+      (symbol? obj)    (%princ-string (symbol-name obj) s))
 	obj))
 
 (defun terpri (&optional (str *standard-output*))

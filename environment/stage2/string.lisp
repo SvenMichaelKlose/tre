@@ -25,7 +25,7 @@
 (defun string-list (x)
   (let* ((l (length x))
 		 (s))
-    (do ((i (integer-1- l) (integer-1- i)))
+    (do ((i (integer-- l) (integer-- i)))
 		((integer< i 0))
       (= s (push (elt x i) s)))
 	s))
@@ -36,7 +36,7 @@
 
 (defun queue-string (x)
   (let str ""
-    (dolist (i (queue-list x) str)
+    (adolist ((queue-list x) str)
       (= str (string-concat str (?
-                                  (string? i) i
-                                  (character? i) (string i)))))))
+                                  (string? !)    !
+                                  (character? !) (string !)))))))

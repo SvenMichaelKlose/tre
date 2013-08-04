@@ -59,7 +59,7 @@
      (c-function-registrations tr)))
 
 (defun c-make-init-function (tr statements)
-  (alet ($ 'C-INIT- (1+! *c-init-counter*))
+  (alet ($ 'C-INIT- (++! *c-init-counter*))
     `(defun ,! ()
        ,@(mapcar ^(tregc_add_unremovable ,_) statements))))
 
@@ -70,7 +70,7 @@
        `((defun c-init ()
            ,@(with-queue q
                (adotimes (*c-init-counter* (queue-list q))
-                 (enqueue q `(,($ 'C-INIT- (1+ !)))))))))))
+                 (enqueue q `(,($ 'C-INIT- (++ !)))))))))))
 
 (defun c-compile-init-functions (tr)
   (with-temporary (transpiler-profile? tr) nil

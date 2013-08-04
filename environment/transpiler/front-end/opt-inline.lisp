@@ -37,7 +37,7 @@
 	  (not argdef) x
 	  (< *opt-inline-max-repetitions* (count x. parent)) x
   	  (< *opt-inline-max-levels* level) x
-	  (< (tree-size body) *opt-inline-max-size*) (opt-inline-import tr x argdef body (1+ level) current parent)
+	  (< (tree-size body) *opt-inline-max-size*) (opt-inline-import tr x argdef body (++ level) current parent)
 	  x)))
 
 (defun inlineable? (tr x)

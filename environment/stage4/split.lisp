@@ -1,18 +1,18 @@
-;;;;; tré – Copyright (c) 2008–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun split-if (predicate seq)
   "Split sequence at elements for which the predicate is true. Those elements are excluded. Returns a list of subsequences."
   (& seq
      (!? (position-if predicate seq)
          (cons (subseq seq 0 !)
-               (split-if predicate (subseq seq (integer-1+ !))))
+               (split-if predicate (subseq seq (integer++ !))))
          (list seq))))
 
 (defun generic-split (obj seq &key (test #'eql))
   (& seq
      (!? (position obj seq :test test)
          (cons (subseq seq 0 !)
-               (generic-split obj (subseq seq (integer-1+ !)) :test test))
+               (generic-split obj (subseq seq (integer++ !)) :test test))
          (list seq))))
 
 (defun split (obj seq &key (test #'eql))

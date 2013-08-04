@@ -27,7 +27,7 @@
   (%format inf txt args))
 
 (defun %format-directive (inf txt args)
-  (1+! (format-info-processed-args inf))
+  (++! (format-info-processed-args inf))
   (let el (char-upcase txt.)
     (?
       (character== el #\%) (%format-directive-eol inf .txt args)
