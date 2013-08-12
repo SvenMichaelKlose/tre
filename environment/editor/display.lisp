@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008,2012–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun editor-default-color (ed)
   "Set default text color."
@@ -7,40 +7,40 @@
 
 (defun editor-scroll-up (ed n)
   (ansi-scroll-down n)
-  (1-! (editor-state-line-offset ed) n)
+  (--! (editor-state-line-offset ed) n)
   (dotimes (y n)
 	(editor-redraw-line y)))
 
 (defun editor-scroll-down (ed n)
   (ansi-scroll-up n)
-  (1+! (editor-state-line-offset ed) n)
+  (++! (editor-state-line-offset ed) n)
   (dotimes (y n)
     (editor-redraw-line ed (- (terminal-height (editor-state-terminal ed)) 2 y))))
 
 (defun editor-scroll-left (ed n)
-  (1-! (editor-state-column-offset ed) n)
+  (--! (editor-state-column-offset ed) n)
   (editor-redraw ed))
 
 (defun editor-scroll-right (ed n)
-  (1+! (editor-state-column-offset ed) n)
+  (++! (editor-state-column-offset ed) n)
   (editor-redraw ed))
 
 (defun editor-clear-bottom (ed)
   (editor-default-color ed)
-  (ansi-position 0 (1-(terminal-height (editor-state-terminal ed))))
+  (ansi-position 0 (-- (terminal-height (editor-state-terminal ed))))
   (ansi-clrln))
 
 (defun editor-expand-line (ed line &optional (i 0) (pos 0))
   (with (expand-tab
 		  #'((line i pos)
   		       (? (== 0 (mod pos (editor-conf 'tabstop)))
-      		      (editor-expand-line ed line (1+ i) pos)
-      		      (cons 32 (expand-tab line i (1+ pos))))))
+      		      (editor-expand-line ed line (++ i) pos)
+      		      (cons 32 (expand-tab line i (++ pos))))))
     (when (< i (length line))
       (with (c (elt line i))
         (? (== c 9)
-		   (cons 32 (expand-tab line i (1+ pos)))
-           (cons c (editor-expand-line ed line (1+ i) (1+ pos))))))))
+		   (cons 32 (expand-tab line i (++ pos)))
+           (cons c (editor-expand-line ed line (++ i) (++ pos))))))))
 
 (defun editor-home (ed)
   (editor-clear-bottom ed)
@@ -54,7 +54,7 @@
 	  (ansi-column 0)
 	  (princ (editor-state-mode ed)))
 
-  	(ansi-position (integer (/ (terminal-width terminal) 2)) (1- (terminal-height terminal)))
+  	(ansi-position (integer (/ (terminal-width terminal) 2)) (-- (terminal-height terminal)))
 
 	(ansi-foreground-color (ansi-color 'white t))
     (princ #\")
@@ -106,6 +106,6 @@
 (defun editor-redraw (ed)
   (ansi-home)
   (ansi-normal)
-  (dotimes (y (1- (terminal-height (editor-state-terminal ed))))
+  (dotimes (y (-- (terminal-height (editor-state-terminal ed))))
 	(editor-redraw-line ed y))
   (editor-home ed))

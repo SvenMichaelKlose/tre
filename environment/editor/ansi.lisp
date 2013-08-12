@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008,2012–2013 Sven Michael Klose <pixel@copei.de>
 
 ;;;; Primitives.
 
@@ -57,39 +57,39 @@
 	 	(mapcar #'((x) (cons head x)) cmds)))
 
 (defx def0
-	  ((ansi-reset "Reset/restart terminal." #\m)
-	   (ansi-cursor-save "Save cursor state and position. One at a time." "s")
+	  ((ansi-reset          "Reset/restart terminal." #\m)
+	   (ansi-cursor-save    "Save cursor state and position. One at a time." "s")
 	   (ansi-cursor-restore "Restore cursor state and position." "u")
-	   (ansi-home "Move cursor to the top left corner." #\H)))
+	   (ansi-home           "Move cursor to the top left corner." #\H)))
 
 (defx def1
-	  ((ansi-up (&optional (n 1)) "Move cursor up." n #\A)
-	   (ansi-down (&optional (n 1)) "Move cursor down." n #\B)
-	   (ansi-right (&optional (n 1)) "Move cursor right." n #\C)
-	   (ansi-left (&optional (n 1)) "Move cursor left." n #\D)
-	   (ansi-nextline (&optional (n 1)) "Move to next line." n #\E)
-	   (ansi-prevline (&optional (n 1)) "Move to previous line." n #\F)
-	   (ansi-column (n) "Move cursor to column N." (1+ n) #\G)
-	   (ansi-clrscr-after () "Clear screen after cursor." 0 #\J)
-	   (ansi-clrscr-before () "Clear screen before cursor." 1 #\J)
-	   (ansi-clrscr () "Clear screen." 2 #\J)
-	   (ansi-clrln-after () "Clear line after cursor." 0 #\K)
-	   (ansi-clrln-before () "Clear line before cursor." 1 #\K)
-	   (ansi-clrln () "Clear line." 2 #\K)
-	   (ansi-scroll-up (&optional (n 1)) "Scroll screen up." n #\S)
-	   (ansi-scroll-down (&optional (n 1)) "Scroll screen down." n #\T)
-	   (ansi-sgr (x) "Print special graphics redition control sequence." x #\m)))
+	  ((ansi-up (&optional (n 1))           "Move cursor up." n #\A)
+	   (ansi-down (&optional (n 1))         "Move cursor down." n #\B)
+	   (ansi-right (&optional (n 1))        "Move cursor right." n #\C)
+	   (ansi-left (&optional (n 1))         "Move cursor left." n #\D)
+	   (ansi-nextline (&optional (n 1))     "Move to next line." n #\E)
+	   (ansi-prevline (&optional (n 1))     "Move to previous line." n #\F)
+	   (ansi-column (n)                     "Move cursor to column N." (++ n) #\G)
+	   (ansi-clrscr-after ()                "Clear screen after cursor." 0 #\J)
+	   (ansi-clrscr-before ()               "Clear screen before cursor." 1 #\J)
+	   (ansi-clrscr ()                      "Clear screen." 2 #\J)
+	   (ansi-clrln-after ()                 "Clear line after cursor." 0 #\K)
+	   (ansi-clrln-before ()                "Clear line before cursor." 1 #\K)
+	   (ansi-clrln ()                       "Clear line." 2 #\K)
+	   (ansi-scroll-up (&optional (n 1))    "Scroll screen up." n #\S)
+	   (ansi-scroll-down (&optional (n 1))  "Scroll screen down." n #\T)
+	   (ansi-sgr (x)                        "Print special graphics rendition control sequence." x #\m)))
 
-(def2 ansi-position (x y) "Move cursor to absolute position." (1+ y) (1+ x) #\H)
+(def2 ansi-position (x y) "Move cursor to absolute position." (++ y) (++ x) #\H)
 
 (defs ansi-cursor-hide "Hide cursor." "25l")
 (defs ansi-cursor-show "Show cursor." "25h")
 
 (defx def-sgr
-	  ((ansi-bold "Print bold characters." "1")
-	   (ansi-negative "Print negative characters." "7")
-	   (ansi-underline-on "Print underlined characters." "21")
-	   (ansi-normal "Print normal characters." "22")))
+	  ((ansi-bold           "Print bold characters." "1")
+	   (ansi-negative       "Print negative characters." "7")
+	   (ansi-underline-on   "Print underlined characters." "21")
+	   (ansi-normal         "Print normal characters." "22")))
 
 (defvar *ansi-color-names* '(black red green yellow blue magenta cyan white))
 
@@ -115,7 +115,7 @@
 (defcol t t 9)
 
 (defmacro defmastercol (where)
-  (with (name ($ 'ansi- where -color))
+  (with (name ($ 'ansi- where '-color))
     `(defun ,name (code)
        (? (> code (length *ansi-color-names*))
 	      (,($ name '-high-raw) (- code (length *ansi-color-names*)))
@@ -132,7 +132,7 @@
 
 (defun ansi-read-natural-number (&optional (v 0))
   (with (c (read-char))
-    (? (digit-char-p  c)
+    (? (digit-char?  c)
 	   (ansi-read-natural-number (+ (- c #\0) (* 10 v)))
 	   v)))
 

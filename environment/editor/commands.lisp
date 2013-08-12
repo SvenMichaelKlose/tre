@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008,2012–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun editor-expand-pos (line p &optional (i 0) (pos 0))
   (with (expand-tab
@@ -6,15 +6,15 @@
   			   (? (== p i)
 	  			  pos
       			  (? (== 0 (mod pos (editor-conf 'tabstop)))
-          		     (editor-expand-pos line p (1+ i) pos)
-          		     (expand-tab line p i (1+ pos))))))
+          		     (editor-expand-pos line p (++ i) pos)
+          		     (expand-tab line p i (++ pos))))))
     (? (== p i)
 	   pos
        (? (< i (length line))
           (let c (elt line i)
             (? (== c 9)
-	           (expand-tab line p i (1+ pos))
-               (editor-expand-pos line p (1+ i) (1+ pos))))
+	           (expand-tab line p i (++ pos))
+               (editor-expand-pos line p (++ i) (++ pos))))
 	      pos))))
 
 (defun editor-cmd-quit (ed)
@@ -34,19 +34,19 @@
 (defun editor-cmd-left (ed &optional (nn 1))
   (let text (editor-state-text ed)
     (text-container-left text nn)
-    (with (x (editor-state-x ed)
+    (with (x  (editor-state-x ed)
 		   nx (editor-expand-pos (text-container-line text) (text-container-x text))
-		   n (- x nx))
+		   n  (- x nx))
       (desaturate! (editor-state-x ed) x n)
       (when (< x n)
         (editor-scroll-left ed (- n x))))))
 
 (defun editor-cmd-down (ed &optional (nn 1))
   (with (y		(editor-state-y ed)
-         th		(1- (terminal-height (editor-state-terminal ed)))
+         th		(-- (terminal-height (editor-state-terminal ed)))
   		 text	(editor-state-text ed)
 		 n		(text-container-down text nn))
-    (saturate! (editor-state-y ed) y n th)
+    (saturate! y n th)
     (when (saturates? y n th)
 	  (with (s	(- n (- th y)))
 		(? (>= s th)
@@ -60,7 +60,7 @@
 		   nx		(editor-expand-pos (text-container-line text) (text-container-x text))
            tw		(terminal-width (editor-state-terminal ed))
 		   n		(- nx x))
-	  (saturate! (editor-state-x ed) x n tw)
+	  (saturate! x n tw)
       (when (saturates? x n tw)
         (editor-scroll-right ed (- n (- tw x)))))))
 
@@ -102,7 +102,7 @@
 	    10		(editor-cmd-down ed)
 	    11		(editor-cmd-up ed)
 	    12		(editor-cmd-right ed)
-	    127	(editor-cmd-delete-char ed)
+	    127	    (editor-cmd-delete-char ed)
 	    (editor-cmd-insert-char ed c))
 	  (editor-input-char ed))))
 
