@@ -18,7 +18,7 @@
 (defun place-assign-stackarg (x)
   (let fi (get-funinfo .x.)
     (? (transpiler-arguments-on-stack? *transpiler*)
-       (+ (length (funinfo-vars fi)) (- (length (funinfo-args fi)) (funinfo-arg-pos fi ..x.) 1))
+       (integer (+ (length (funinfo-vars fi)) (- (length (funinfo-args fi)) (funinfo-arg-pos fi ..x.) 1)))
        (error "Cannot assign stack argument ~A." ..x.))))
 
 (define-tree-filter place-assign (x)
