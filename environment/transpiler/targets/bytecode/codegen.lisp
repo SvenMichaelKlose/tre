@@ -17,8 +17,7 @@
 
 (defun bc-quote-literal (x)
   (? (| (& x (symbol? x))
-        (number? x)
-        (string? x))
+        (number? x))
      `(%quote ,x)
      x))
 

@@ -138,8 +138,7 @@ trecode_get (treptr ** p)
             v = trecode_exec (fun);
             trestack_ptr += num_args;
             tregc_pop_secondary ();
-        } else
-            treerror_norecover (v, "Function expected in bytecode.");
+        }
     } 
 #ifdef TRE_HAVE_BYTECODE_ASSERTIONS
       else if (v != treptr_nil && v != treptr_t)
