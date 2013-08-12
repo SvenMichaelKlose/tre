@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2006,2008-2009,2011–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2006,2008-2009,2011–2013 Sven Michael Klose <pixel@copei.de>
 
 (functional find position)
 
@@ -78,15 +78,16 @@
                  (& (funcall test x obj)
                     (= *position-index* i)))
              seq :start start :end end :from-end from-end :with-index t)
-	  *position-index*))
+    (!? *position-index*
+        (integer !))))
 
 (define-test "POSITION works with character list"
   ((position 's '(l i s p)))
-  2)
+  (integer 2))
 
 (define-test "POSITION works with strings"
   ((position #\/ "lisp/foo/bar"))
-  4)
+  (integer 4))
 
 (defun position-if (pred seq &key (start nil) (end nil) (from-end nil))
   (let *position-index* nil
@@ -94,7 +95,8 @@
 				  (& (funcall pred x)
 					 (= *position-index* i)))
 			 seq :start start :end end :from-end from-end :with-index t)
-	  *position-index*))
+    (!? *position-index*
+        (integer !))))
 
 (defun some (pred &rest seqs)
   (find-if pred (apply #'append seqs)))
