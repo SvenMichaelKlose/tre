@@ -14,13 +14,13 @@
            seq)
     (? with-index
        (let idx 0
-         (dolist (i !)
-           (& (funcall pred i idx)
-              (return i))
+         (adolist !
+           (& (funcall pred ! idx)
+              (return !))
            (++! idx)))
-       (dolist (i !)
-         (& (funcall pred i)
-            (return i))))))
+       (adolist !
+         (& (funcall pred !)
+            (return !))))))
 
 (defun %find-if-sequence (pred seq start end from-end with-index)
   (& seq (integer< 0 (length seq))
@@ -36,9 +36,9 @@
            ((? from-end
 	           (integer< i e)
 			   (integer> i e)))
-	     (let elm (elt seq i)
-           (& (apply pred (cons elm (& with-index (list i))))
-		      (return elm)))))))
+	     (alet (elt seq i)
+           (& (apply pred (cons ! (& with-index (list i))))
+		      (return !)))))))
  
 (defun find-if (pred seq &key (start nil) (end nil) (from-end nil) (with-index nil))
   (? (not (atom seq) start end)
@@ -108,8 +108,8 @@
 
 (defun every (pred &rest seqs)
   (dolist (seq seqs t)
-    (dotimes (i (length seq))
-      (| (funcall pred (elt seq i))
+    (adotimes ((length seq))
+      (| (funcall pred (elt seq !))
          (return-from every nil)))))
 
 (define-test "EVERY works"
