@@ -1,7 +1,4 @@
-;;;; TRE environment
-;;;; Copyright (c) 2008 Sven Klose <pixel@copei.de>
-;;;;
-;;;; Built-in text editor for ANSI compatible terminals.
+;;;; tré – Copyright (c) 2008 Sven Michael Klose <pixel@copei.de>
 
 (env-load "editor/misc.lisp")
 (env-load "editor/ansi.lisp")

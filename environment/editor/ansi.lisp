@@ -36,33 +36,32 @@
 	 ,description
 	 ,(cons cmd codes)))
 
-(defmacro %defz (defname cmd)
+(defmacro ansi-defz (defname cmd)
   `(defmacro ,defname (name &rest args)
      `(define-ansi-cmd ,cmd ,,name () ,,@args)))
 
-(%defz defs ansi-set-flag)
-(%defz def-sgr ansi-sgr)
-(%defz def0 ansi-cmd0)
+(ansi-defz ansi-defs ansi-set-flag)
+(ansi-defz ansi-def-sgr ansi-sgr)
+(ansi-defz ansi-def0 ansi-cmd0)
 
-(defmacro def1 (&rest args)
+(defmacro ansi-def1 (&rest args)
   `(define-ansi-cmd ansi-cmd1 ,@args))
 
-(defmacro def2 (&rest args)
+(defmacro ansi-def2 (&rest args)
   `(define-ansi-cmd ansi-cmd2 ,@args))
 
 ;;;; Public functions.
 
-(defmacro defx (head cmds)
-  (cons 'progn
-	 	(mapcar #'((x) (cons head x)) cmds)))
+(defmacro ansi-defx (head cmds)
+  `(progn ,@(filter [cons head _] cmds)))
 
-(defx def0
+(ansi-defx ansi-def0
 	  ((ansi-reset          "Reset/restart terminal." #\m)
 	   (ansi-cursor-save    "Save cursor state and position. One at a time." "s")
 	   (ansi-cursor-restore "Restore cursor state and position." "u")
 	   (ansi-home           "Move cursor to the top left corner." #\H)))
 
-(defx def1
+(ansi-defx ansi-def1
 	  ((ansi-up (&optional (n 1))           "Move cursor up." n #\A)
 	   (ansi-down (&optional (n 1))         "Move cursor down." n #\B)
 	   (ansi-right (&optional (n 1))        "Move cursor right." n #\C)
@@ -80,12 +79,12 @@
 	   (ansi-scroll-down (&optional (n 1))  "Scroll screen down." n #\T)
 	   (ansi-sgr (x)                        "Print special graphics rendition control sequence." x #\m)))
 
-(def2 ansi-position (x y) "Move cursor to absolute position." (++ y) (++ x) #\H)
+(ansi-def2 ansi-position (x y) "Move cursor to absolute position." (++ y) (++ x) #\H)
 
-(defs ansi-cursor-hide "Hide cursor." "25l")
-(defs ansi-cursor-show "Show cursor." "25h")
+(ansi-defs ansi-cursor-hide "Hide cursor." "25l")
+(ansi-defs ansi-cursor-show "Show cursor." "25h")
 
-(defx def-sgr
+(ansi-defx ansi-def-sgr
 	  ((ansi-bold           "Print bold characters." "1")
 	   (ansi-negative       "Print negative characters." "7")
 	   (ansi-underline-on   "Print underlined characters." "21")

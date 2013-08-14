@@ -1,7 +1,5 @@
 ;;;;; tré – Copyright (c) 2008,2012 Sven Michael Klose <pixel@copei.de>
 
-;;;; Editor state.
-
 (defstruct editor-state
   (x 0)
   (y 0)
