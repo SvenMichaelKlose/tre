@@ -1,7 +1,8 @@
-// tré - Copyright (c) 2010-2012 Sven Michael Klose <pixel@copei.de>
+// tré – Copyright (c) 2010–2013 Sven Michael Klose <pixel@copei.de>
 
 $CARS = Array ();
 $CDRS = Array ();
+$CPRS = Array ();
 $CONSID = 0;
 
 class __cons {
@@ -12,6 +13,7 @@ class __cons {
         $this->id = ++$GLOBALS['CONSID'];
 		$GLOBALS['CARS'][$this->id] = $car;
 		$GLOBALS['CDRS'][$this->id] = $cdr;
+		$GLOBALS['CPRS'][$this->id] = NULL;
         return $this;
 	}
 
@@ -25,6 +27,11 @@ class __cons {
 		return $GLOBALS['CDRS'][$this->id];
 	}
 
+    public function p ()
+    {
+		return $GLOBALS['CPRS'][$this->id];
+	}
+
     public function sa ($x)
     {
 		return $GLOBALS['CARS'][$this->id] = $x;
@@ -33,6 +40,11 @@ class __cons {
     public function sd ($x)
     {
 		return $GLOBALS['CDRS'][$this->id] = $x;
+	}
+
+    public function sp ($x)
+    {
+		return $GLOBALS['CPRS'][$this->id] = $x;
 	}
 
     public function __toString ()
