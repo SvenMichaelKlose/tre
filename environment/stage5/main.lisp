@@ -14,6 +14,7 @@
 (env-load "stage5/make-symbols.lisp")
 (env-load "stage5/merge-unique.lisp")
 (env-load "stage5/pad-string-concat.lisp")
+(env-load "stage5/remove-empty-strings.lisp")
 (env-load "stage5/string-char.lisp" 'c)
 (env-load "stage5/string-has-whitespace-p.lisp")
 (env-load "stage5/stringlist-skip-spaces.lisp")
