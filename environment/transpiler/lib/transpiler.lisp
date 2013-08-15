@@ -298,7 +298,7 @@
 (define-slot-setter-push transpiler-add-cps-exception tr     (transpiler-cps-exceptions tr))
 (define-slot-setter-push transpiler-add-plain-arg-fun tr     (transpiler-plain-arg-funs tr))
 (define-slot-setter-push transpiler-add-emitted-decl tr      (transpiler-emitted-decls tr))
-(defun transpiler-add-delayed-var-init (tr x)    (nconc! (transpiler-delayed-var-inits tr) (transpiler-frontend tr x)))
+(defun transpiler-add-delayed-var-init (tr x)    (nconc! (transpiler-delayed-var-inits tr) (copy-tree (transpiler-frontend tr x))))
 
 (defun transpiler-add-plain-arg-funs (tr lst)
   (adolist lst

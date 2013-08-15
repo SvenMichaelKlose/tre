@@ -11,7 +11,7 @@
   (? (any-quasiquote? (cadr x.))
      (error "~A in QUASIQUOTE-SPLICE (or ',@' for short)." (cadr x.))
      (!? (backquote-1 .x)
-         `(%nconc ,(let tr *transpiler*
+         `(append ,(let tr *transpiler*
                      (? (transpiler-assert? tr)
                         (compiler-macroexpand (transpiler-macroexpand tr `(aprog1 ,(copy-tree (cadr x.))
                                                                             (| (list? !) (error ",@ expects a list instead of ~A." !)))))

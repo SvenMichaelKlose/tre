@@ -11,20 +11,16 @@
   class
   slots)
 
-(defun %quote? (x))
-
 (defmacro defclass (classes args &rest body)
   (print-definition `(defclass ,classes ,args))
   (= classes (force-list classes))
-  (print classes)
-  (print (reverse .classes))
   (& (href *classes* classes.)
      (error "Class ~A already defined." classes.))
   (= (href *classes* classes.) (make-class :members (apply #'hash-merge (filter [class-members (href *classes* _)] (reverse .classes)))
 	                                       :methods (| (apply #'hash-merge (filter [class-methods (href *classes* _)] (reverse .classes)))
                                                        (make-hash-table :test #'eq))))
-  (thisify *classes* `(defun ,classes. (this ,@args)
-			            (%thisify ,classes. ,@body))))
+  `(defun ,classes. (this ,@args)
+     (%thisify ,classes. ,@body)))
 
 (defun %new (name &rest args)
   (with (class  (href *classes* name)
@@ -41,14 +37,15 @@
      (error "Ducktype object expected instead of ~A." x)))
 
 (defun %ducktype-assert-class (class-name)
-  (| (href *classes* class-name) (error "Class ~A is not defined." class-name)))
+  (| (href *classes* class-name)
+     (error "Class ~A is not defined." class-name)))
 
 (defmacro defmethod (class-name name args &rest body)
   (print-definition `(defmethod ,class-name ,name ,args))
   (%ducktype-assert-class class-name)
   `(+! (href (class-methods (href *classes* ',class-name)) name)
-       (function ,(thisify *classes* `((this ,@args)
-                                         (%thisify ,class-name ,@body))))))
+       `(function (this ,@args)
+          (%thisify ,class-name ,@body))))
 
 (defmacro defmember (class-name &rest names)
   (print-definition `(defmember ,@names))

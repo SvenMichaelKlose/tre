@@ -89,7 +89,7 @@
                            ,@(? (vm-jump? tail.)
 						        tail
 						        `((%setq ~%ret ,@tail)))))
-            (nconc ret `(,g (identity ~%ret))))))
+            (append ret `(,g (identity ~%ret))))))
     `(identity nil)))
 
 (define-compiler-macro setq (&rest args)

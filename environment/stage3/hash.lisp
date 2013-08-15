@@ -55,7 +55,7 @@
   (let keys nil
 	(dotimes (i (length (hash-table-hash h)) keys)
 	  (push (carlist (aref (hash-table-hash h) i)) keys))
-    (apply #'nconc keys)))
+    (apply #'append keys)))
 
 (defun copy-hash-table (h)
   (when h
