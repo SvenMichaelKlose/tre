@@ -37,6 +37,7 @@
 #define NMARK_SIZE  (NUM_NUMBERS >> 3)
 
 treptr treimage_initfun;
+treptr treptr_saved_restart_stack;
 
 struct treimage_header {
     int     format_version;
@@ -45,16 +46,22 @@ struct treimage_header {
 };
 
 void
-treimage_write (FILE *f, void *p, tre_size len)
+treimage_save_stack_content ()
 {
-   fwrite (p, len, 1, f); 
+    tre_size  i;
+    tre_size  size = TRESTACK_SIZE - (((long) trestack_ptr - (long) trestack) / sizeof (treptr));
+    treptr *  s = trestack_ptr;
+
+    TRESYMBOL_VALUE(treptr_saved_restart_stack) = treptr_nil;
+
+    DOTIMES(i, size)
+        TRESYMBOL_VALUE(treptr_saved_restart_stack) = CONS(*s++, TRESYMBOL_VALUE(treptr_saved_restart_stack));
 }
 
 void
-treimage_read (FILE *f, void *p, tre_size len)
+treimage_write (FILE *f, void *p, tre_size len)
 {
-   int gcc_warns_if_return_value_is_ignored = fread (p, len, 1, f); 
-   (void) gcc_warns_if_return_value_is_ignored;
+   fwrite (p, len, 1, f); 
 }
 
 void
@@ -195,6 +202,7 @@ treimage_create (char *file, treptr init_fun)
     FILE  * f;
 
     treimage_initfun = init_fun;
+    treimage_save_stack_content ();
     tregc_force ();
     tregc_mark_only ();
 
@@ -218,6 +226,13 @@ treimage_create (char *file, treptr init_fun)
     fclose (f);
 
     return 0;
+}
+
+void
+treimage_read (FILE *f, void *p, tre_size len)
+{
+   int gcc_warns_if_return_value_is_ignored = fread (p, len, 1, f); 
+   (void) gcc_warns_if_return_value_is_ignored;
 }
 
 void
@@ -419,4 +434,7 @@ void
 treimage_init ()
 {
     treimage_initfun = treptr_nil;
+
+    treptr_saved_restart_stack = treatom_get ("*SAVED-RESTART-STACK*", TRECONTEXT_PACKAGE());
+    EXPAND_UNIVERSE(treptr_saved_restart_stack);
 }
