@@ -2,25 +2,17 @@
 
 (functional assoc rassoc acons copy-alist)
 
-(defmacro %define-assoc (name getter-fun-name)
+(defmacro %define-assoc (name getter)
   `(defun ,name (key lst &key (test #'eql))
      (& lst
         (dolist (i lst)
           (? (cons? i)
-             (? (funcall test key (,getter-fun-name i))
+             (? (funcall test key (,getter i))
                 (return i))
              (error "Pair expected instead of ~A." i))))))
 
 (%define-assoc assoc  car)
 (%define-assoc rassoc cdr)
-
-(let lst '((a . d) (b . e) (c . f))
-  (| (eq 'e (cdr (assoc 'b lst)))
-     (%error "ASSOC doesn't work with symbols.")))
-
-(let lst '((1 . a) (2 . b) (3 . c))
-  (| (eq 'b (cdr (assoc 2 lst)))
-     (%error "ASSOC doesn't work with numbers.")))
 
 (defun %=-assoc (new-value key x &key (test #'eql))
   (? (list? x)
