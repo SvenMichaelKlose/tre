@@ -7,7 +7,7 @@
 (early-defun %error-if-not-unique (x)
   (%simple-map #'((i)
 					(? (< 1 (count i x))
-					   (error "Place ~A is not unique.")))
+					   (error "Place ~A is not unique." i)))
 			   x))
 
 (early-defun %let-places (x)
