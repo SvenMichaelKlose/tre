@@ -17,9 +17,9 @@
 (defun %=-assoc (new-value key x &key (test #'eql))
   (? (list? x)
      (& x
-        (? (funcall test key (car x))
-           (rplaca x new-value)
-           (%=-assoc new-value key (cdr x) :test test)))
+        (? (funcall test key x.)
+           (= x. new-value)
+           (%=-assoc new-value key .x :test test)))
      (error "Pair expected instead of ~A." x)))
 
 (defun (= assoc) (new-value key lst &key (test #'eql))
@@ -33,15 +33,15 @@
   `(= ,place (acons ,key ,val ,place)))
 
 (defun copy-alist (x)
-  (filter [cons (car _) (cdr _)] x))
+  (filter [cons _. ._] x))
 
 (defun aremove (obj lst &key (test #'eql))
   (& lst
      (? (funcall test obj (caar lst))
-        (aremove obj (cdr lst) :test test)
+        (aremove obj .lst :test test)
         (cons (cons (caar lst)
                     (cdar lst))
-              (aremove obj (cdr lst) :test test)))))
+              (aremove obj .lst :test test)))))
 
 (defmacro aremove! (obj place &key (test #'eql))
   `(= ,place (aremove ,obj ,place :test ,test)))
