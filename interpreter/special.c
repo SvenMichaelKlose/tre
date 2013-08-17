@@ -162,30 +162,6 @@ treeval_is_jump (treptr p)
 }
 
 treptr
-trespecial_cond (treptr p)
-{
-    treptr pair;
-    treptr test;
-    treptr body;
-
-    if (TREPTR_IS_ATOM(p))
-		return treerror (p, "Expression expected.");
-
-    for (;p != treptr_nil; p = CDR(p)) {
-		pair = CAR(p);
-		if (p == treptr_nil || TREPTR_IS_ATOM(p))
-	    	return treerror (p, "Test/expression pair expected.");
-
-		test = CAR(pair);
-		body = CDR(pair);
-		if (treeval (test) != treptr_nil)
-	    	return treeval_list (body);
-    }
-
-    return treptr_nil;
-}
-
-treptr
 trespecial_if (treptr p)
 {
     treptr test;
@@ -347,7 +323,7 @@ char *tre_special_names[] = {
     "SETQ", "%SET-ATOM-FUN",
     "MACRO", "SPECIAL",
 #ifdef INTERPRETER
-    "COND", "?",
+    "?",
     "QUOTE", "%QUOTE",
     "PROGN",
     "BLOCK", "RETURN-FROM", "TAGBODY", "GO",
@@ -363,7 +339,6 @@ treevalfunc_t treeval_xlat_special[] = {
     trespecial_macro,
     trespecial_special,
 #ifdef INTERPRETER
-    trespecial_cond,
     trespecial_if,
     trespecial_quote,
     trespecial_quote,
