@@ -11,7 +11,7 @@
          (dolist (i (list ,@(mapcan ^((with-temporary (transpiler-current-pass ,tr) ,(list 'quote _.)
                                         (? (!? (transpiler-dump-passes? ,tr)
                                                (| (t? !)
-                                                  (member ',_. !)))
+                                                  (member ',_. (force-list !))))
                                            #'((x)
                                                 (format t ,(string-concat "; **** " (symbol-name _.) "~%"))
                                                 (prog1
