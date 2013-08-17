@@ -28,6 +28,7 @@
 (env-load "stage4/force-string.lisp")
 (env-load "stage4/hcache.lisp")
 (env-load "stage4/head-if.lisp")
+(env-load "stage4/keyword-copiers.lisp")
 (env-load "stage4/less-or-equal-list.lisp")
 (env-load "stage4/less-or-equal-string.lisp")
 (env-load "stage4/less-or-equal-symbol.lisp")
