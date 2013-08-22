@@ -99,5 +99,9 @@ trefunction_builtin_set_source (treptr x)
 treptr
 trefunction_builtin_make_function (treptr source)
 {
-    return trefunction_make_function (trearg_get (source));
+    treptr s = treptr_nil;
+
+    if (source != treptr_nil)
+        s = trearg_get (source);
+    return trefunction_make_function (s);
 }
