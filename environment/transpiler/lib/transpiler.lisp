@@ -142,6 +142,7 @@
   
   (current-pass nil)
   (current-section nil)
+  (current-section-data nil)
   (last-pass-result nil)
   
   (cpr-count? nil))
@@ -355,4 +356,5 @@
        (function-arguments (symbol-function x)))))
 
 (defun transpiler-add-toplevel-expression (tr x)
-  (push x (transpiler-accumulated-toplevel-expressions tr)))
+  (print x)
+  (push (copy-tree x) (transpiler-accumulated-toplevel-expressions tr)))

@@ -9,7 +9,7 @@
      (eq x y)
      (string== x y)))
 
-(defun compile-file? (section processed-sections sections-to-update)
+(defun compile-section? (section processed-sections sections-to-update)
   (| (member section sections-to-update :test #'eq-string==)
      (not (assoc section processed-sections :test #'eq-string==))))
 
@@ -21,7 +21,7 @@
 	(dolist (i sections (queue-list compiled-code))
       (with-cons section data i
         (with-temporary (transpiler-current-section tr) section
-          (let code (? (compile-file? section (transpiler-compiled-files tr) sections-to-update)
+          (let code (? (compile-section? section (transpiler-compiled-files tr) sections-to-update)
                        (with-temporary (transpiler-accumulate-toplevel-expressions? tr) (not (accumulated-toplevel? section))
                          (transpiler-make-code tr data))
                        (assoc-value section (transpiler-compiled-files tr) :test #'eq-string==))
@@ -32,8 +32,9 @@
   (let frontend-code (make-queue)
 	(dolist (i sections (queue-list frontend-code))
       (with-cons section data i
-        (with-temporary (transpiler-current-section tr) section
-          (let code (? (compile-file? section (transpiler-frontend-files tr) sections-to-update)
+        (with-temporaries ((transpiler-current-section tr) section
+                           (transpiler-current-section-data tr) data)
+          (let code (? (compile-section? section (transpiler-frontend-files tr) sections-to-update)
                        (?
                          (symbol? section) (transpiler-frontend tr (? (function? data)
                                                                       (funcall data)
@@ -77,8 +78,8 @@
       (with (compiled-before  (target-transpile-2 tr before-deps files-to-update)
 	         compiled-deps    (!? deps (transpiler-make-code tr !))
 		     compiled-after   (target-transpile-2 tr after-deps files-to-update)
-             compiled-acctop  (& (print (transpiler-accumulate-toplevel-expressions? tr))
-                                 (print (transpiler-accumulated-toplevel-expressions tr))
+             compiled-acctop  (& (transpiler-accumulate-toplevel-expressions? tr)
+                                 (transpiler-accumulated-toplevel-expressions tr)
 	                             (transpiler-make-code tr 
                                     (target-transpile-1 tr (list (cons 'accumulated-toplevel
                                                                        #'(()
