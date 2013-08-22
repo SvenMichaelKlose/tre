@@ -28,7 +28,11 @@ treatom_symbolp (treptr object)
 treptr
 treatom_functionp (treptr object)
 {
-    return TREPTR_TRUTH(TREPTR_IS_FUNCTION(object) || TREPTR_IS_MACRO(object) || TREPTR_IS_BUILTIN(object) || IS_COMPILED_FUN(object));
+    return TREPTR_TRUTH(TREPTR_IS_FUNCTION(object) ||
+           TREPTR_IS_MACRO(object) ||
+           TREPTR_IS_BUILTIN(object) ||
+           IS_COMPILED_FUN(object) ||
+           trebuiltin_is_compiled_closure (object));
 }
 
 treptr
