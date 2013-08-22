@@ -3,13 +3,10 @@
 (defun accumulate-toplevel-expressions (tr x)
   (? (transpiler-accumulate-toplevel-expressions? tr)
      (remove-if #'not
-                (print
-                (filter [? (| (lambda-expr? _)
+                (filter [? (| (named-lambda? _)
                               (%var? _))
                            _
                            (& (transpiler-add-toplevel-expression tr _)
                               nil)]
-                        (print
                         x))
-                ))
      x))
