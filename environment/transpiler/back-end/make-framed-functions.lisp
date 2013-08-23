@@ -30,7 +30,8 @@
         :body (make-framed-functions
                   `(,@(& (transpiler-needs-var-declarations? *transpiler*)
                          (funinfo-var-declarations fi))
-                    (%function-prologue ,name)
+                    ,@(& (transpiler-function-prologues? *transpiler*)
+                         `((%function-prologue ,name)))
                     ,@(& (transpiler-lambda-export? *transpiler*)
                          (funinfo-copiers-to-lexicals fi))
                     ,@(lambda-body x)

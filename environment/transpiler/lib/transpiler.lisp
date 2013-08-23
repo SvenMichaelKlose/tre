@@ -64,6 +64,7 @@
   (warn-on-unused-symbols?  nil)
   (backtrace?               nil)
   (expex-warnings?          t)
+  (function-prologues?      t)
 
   ; Generator for literal strings.
   (gen-string #'literal-string)
@@ -201,6 +202,7 @@
         :warn-on-unused-symbols? warn-on-unused-symbols?
         :backtrace?              backtrace?
         :expex-warnings?         expex-warnings?
+        :function-prologues?     function-prologues?
         :gen-string              gen-string
         :lambda-export?          lambda-export?
         :accumulate-toplevel-expressions? accumulate-toplevel-expressions?

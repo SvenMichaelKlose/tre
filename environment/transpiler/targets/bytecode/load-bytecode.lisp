@@ -1,10 +1,13 @@
 ;;;;; tré – Copyright (c) 2012–2013 Sven Michael Klose <pixel@copei.de>
 
-(defun load-bytecode (x)
+(defun bytecode-arrays (x)
+  (filter [cons _. (list-array `(,._. nil ,@.._))] x))
+
+(defun load-bytecode (x &key (temporary? nil))
   (adolist x
     (unless (symbol-function !.)
       (= (symbol-function !.) (make-function))
-      (push !. *defined-functions*)))
-  (adolist ((filter [cons _. (list-array `(,._. ,(function-body (symbol-function _.)) ,@.._))]
-                    x))
+      (unless temporary?
+        (push !. *defined-functions*))))
+  (adolist ((bytecode-arrays x))
     (= (function-bytecode (symbol-function !.)) .!)))

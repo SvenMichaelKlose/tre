@@ -23,7 +23,8 @@
               :code-concatenator #'((&rest x) (tree-list x))
               :make-text? nil
               :encapsulate-strings? nil
-              :function-name-prefix nil)
+              :function-name-prefix nil
+              :function-prologues? nil)
 	(= (transpiler-inline-exceptions !) '(error format identity))
     (transpiler-add-plain-arg-funs ! *builtins*)))
 
