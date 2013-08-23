@@ -18,6 +18,7 @@
 #include "xxx.h"
 #include "function.h"
 #include "symbol.h"
+#include "apply.h"
 
 treptr
 treatom_symbolp (treptr object)

@@ -104,8 +104,8 @@ tresymbol_builtin_usetf_symbol_function (treptr list)
 {
     TRELIST_DEFREGS();
     trearg_get2 (&car, &cdr, list);
-    return tresymbol_set_function (trearg_typed (2, TRETYPE_SYMBOL, cdr, "=-SYMBOL-FUNCTION"),
-                                   trearg_typed (1, TRETYPE_FUNCTION, car, "=-SYMBOL-FUNCTION"));
+    return tresymbol_set_function (trearg_typed (1, TRETYPE_FUNCTION, car, "=-SYMBOL-FUNCTION"),
+                                   trearg_typed (2, TRETYPE_SYMBOL, cdr, "=-SYMBOL-FUNCTION"));
 }
 
 treptr
