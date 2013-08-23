@@ -11,6 +11,7 @@ extern treptr trefuncall (treptr func, treptr args);
 extern treptr trebuiltin_call_compiled (void * fun, treptr args);
 
 extern bool   trebuiltin_is_compiled_funcall (treptr);
+extern bool   trebuiltin_is_compiled_closure (treptr);
 extern treptr trefuncall_compiled (treptr func, treptr args, bool do_eval);
 
 void treapply_init ();
