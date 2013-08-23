@@ -360,5 +360,4 @@
        (function-arguments (symbol-function x)))))
 
 (defun transpiler-add-toplevel-expression (tr x)
-  (print x)
   (push (copy-tree x) (transpiler-accumulated-toplevel-expressions tr)))
