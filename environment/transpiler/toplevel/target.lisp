@@ -50,6 +50,14 @@
      (with-temporary (transpiler-save-argument-defs-only? tr) nil
        (funcall dep-gen))))
 
+(defun target-transpile-accumulated-toplevels (tr)
+  (& (transpiler-accumulate-toplevel-expressions? tr)
+     (transpiler-accumulated-toplevel-expressions tr)
+	 (transpiler-make-code tr (target-transpile-1 tr (list (cons 'accumulated-toplevel
+                                                                 #'(()
+                                                                      (transpiler-make-toplevel-function tr))))
+                                                     (list 'accumulated-toplevel)))))
+
 (defun target-transpile (tr &key (decl-gen nil)
                                  (files-before-deps nil)
                                  (dep-gen nil)
@@ -78,13 +86,7 @@
       (with (compiled-before  (target-transpile-2 tr before-deps files-to-update)
 	         compiled-deps    (!? deps (transpiler-make-code tr !))
 		     compiled-after   (target-transpile-2 tr after-deps files-to-update)
-             compiled-acctop  (& (transpiler-accumulate-toplevel-expressions? tr)
-                                 (transpiler-accumulated-toplevel-expressions tr)
-	                             (transpiler-make-code tr 
-                                    (target-transpile-1 tr (list (cons 'accumulated-toplevel
-                                                                       #'(()
-                                                                            (transpiler-make-toplevel-function tr))))
-                                                        (list 'accumulated-toplevel)))))
+             compiled-acctop  (target-transpile-accumulated-toplevels tr))
         (& *show-transpiler-progress?* (format t " Phew!~%~F"))
         (!? compiled-deps
             (= (transpiler-imported-deps tr) (transpiler-concat-text tr (transpiler-imported-deps tr) !)))
