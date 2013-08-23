@@ -29,7 +29,7 @@
   (with-temporary *js-transpiler* (| *js-eval-transpiler* (make-js-eval-transpiler))
     (let tr *js-transpiler*
       (with-temporaries ((transpiler-dump-passes? tr) nil
-                         *expex-warn?* nil)
+                         (transpiler-expex-warnings? tr) nil)
         (+ (js-eval-transpile tr x)
            (transpiler-obfuscated-symbol-string tr '*native-eval-return-value*)
            " = "

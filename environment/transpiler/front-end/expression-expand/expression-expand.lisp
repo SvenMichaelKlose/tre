@@ -19,7 +19,6 @@
 
 (defvar *current-expex* nil)
 (defvar *expex-funinfo* nil)
-(defvar *expex-warn?* t)
 
 
 ;;;; SYMBOLS
@@ -60,7 +59,7 @@
     (funinfo-var-add *expex-funinfo* !)))
 
 (defun expex-warn (x)
-  (& *expex-warn?*
+  (& (transpiler-expex-warnings? *transpiler*)
      (symbol? x)
      (not (transpiler-defined-symbol? *expex-funinfo* x)
           (transpiler-can-import? *transpiler* x))

@@ -63,6 +63,7 @@
   (profile-num-calls?       nil)
   (warn-on-unused-symbols?  nil)
   (backtrace?               nil)
+  (expex-warnings?          t)
 
   ; Generator for literal strings.
   (gen-string #'literal-string)
@@ -199,6 +200,7 @@
         :profile-num-calls?      profile-num-calls?
         :warn-on-unused-symbols? warn-on-unused-symbols?
         :backtrace?              backtrace?
+        :expex-warnings?         expex-warnings?
         :gen-string              gen-string
         :lambda-export?          lambda-export?
         :accumulate-toplevel-expressions? accumulate-toplevel-expressions?
