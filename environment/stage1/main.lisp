@@ -30,7 +30,8 @@
 (env-load "stage1/force-list.lisp")
 (env-load "stage1/comparison.lisp")
 (env-load "stage1/conditional.lisp")
-(env-load "stage1/eval.lisp")
+(env-load "stage1/return.lisp")
+(env-load "stage1/prog1.lisp")
 
 (env-load "stage1/queue.lisp")
 (env-load "stage1/list-traversal.lisp")
