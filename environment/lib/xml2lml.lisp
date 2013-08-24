@@ -47,14 +47,14 @@
 ;;; Read functions.
 
 (defun xml-read-char (in)
-  (when (end-of-file in)
+  (when (end-of-file? in)
     (xml-error-unexpected-eof in))
   (let c (read-char in)
 	(push c *xml2lml-read*)
 	c))
 
 (defun xml-peek-char (in)
-  (when (end-of-file in)
+  (when (end-of-file? in)
     (xml-error-unexpected-eof in))
   (peek-char in))
 

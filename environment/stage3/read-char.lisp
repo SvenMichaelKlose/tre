@@ -11,7 +11,7 @@
       (prog1
         (stream-peeked-char str)
         (= (stream-peeked-char str) nil))
-    (not (end-of-file str))
+    (not (end-of-file? str))
       (= (stream-last-char str) (funcall (stream-fun-in str) str))))
 
 (defun read-char (&optional (str *standard-input*))
@@ -22,7 +22,7 @@
   (| (stream-peeked-char str)
      (= (stream-peeked-char str) (read-char-0 str))))
 
-(defun end-of-file (&optional (str *standard-input*))
+(defun end-of-file? (&optional (str *standard-input*))
   "Test if stream is at file end."
   (& (stream-fun-eof str)
      (funcall (stream-fun-eof str) str)))

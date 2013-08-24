@@ -20,6 +20,7 @@
 (env-load "stage3/print-tracer.lisp")
 (env-load "stage3/print-object.lisp" 'c)
 (env-load "stage3/print.lisp")
+(env-load "stage3/stream-predicates.lisp")
 (env-load "stage3/read-char.lisp")
 (env-load "stage3/read-hex.lisp" 'c)
 (env-load "stage3/read-number.lisp")

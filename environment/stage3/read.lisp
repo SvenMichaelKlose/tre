@@ -22,7 +22,7 @@
 	   (skip-comment str))))
 
 (defun skip-spaces (str)
-  (unless (end-of-file str)
+  (unless (end-of-file? str)
     (let c (peek-char str)
       (when (== #\; c)
         (skip-comment str))
@@ -41,7 +41,7 @@
                 (get-symbol-0 str))))))
 
 (defun get-symbol (str)
-  (unless (| (end-of-file str)
+  (unless (| (end-of-file? str)
 	         (special-char? (peek-char str)))
     (get-symbol-0 str)))
 
@@ -174,12 +174,12 @@
 (defun read (&optional (str *standard-input*))
   "Read expression from stream."
   (skip-spaces str)
-  (unless (end-of-file str)
+  (unless (end-of-file? str)
 	(read-expr str)))
 
 (defun read-all (str)
   "Read all expressions from stream."
   (unless (progn
 	        (skip-spaces str)
-	        (end-of-file str))
+	        (end-of-file? str))
     (cons (read str) (read-all str))))
