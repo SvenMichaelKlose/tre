@@ -39,6 +39,8 @@
 (& *tre-has-editor*     (env-load "editor/main.lisp"))
 (env-load "transpiler/main.lisp")
 
+(env-load "read-eval-loop.lisp")
+
 (setq *tests* (reverse *tests*))
 
 (defun dump-system ()
