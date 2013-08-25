@@ -3,7 +3,7 @@
 (defun make-c-transpiler ()
   (aprog1 (create-transpiler
               :name 'c
-              :backtrace? t
+              :backtrace? nil
 			  :separator (format nil ";~%")
 			  :inline-exceptions '(c-init error format replace-tree)
 			  :identifier-char?  [| (<= #\a _ #\z)

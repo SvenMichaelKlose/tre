@@ -10,27 +10,22 @@
       (make-symbol (symbol-name x) !)
       x))
 
-(defun shared-defun-funcall-logger (name)
-  (& *log-functions?*
-     (not (eq '%%%log name))
-     `((& (function? raw-log) (%%%log ,(symbol-name name))))))
-
 (defun shared-defun-profiling-body (tr name body)
-  (alet (body-without-noargs-tag body)
-    (? (& (transpiler-profile? tr)
-          (not (eq 'add-profile name)
-               (eq 'add-profile-call name)))
-       (? (transpiler-profile-num-calls? tr)
-          `((progn
-              (& (not *profile-lock*)
-                 (add-profile-call ',name))
-              ,@!))
-          `((let ~%profiling-timer (& (not *profile-lock*) (%%%nanotime))
-              (prog1
-                (progn ,@!)
-                  (& ~%profiling-timer
-                     (add-profile ',name (integer- (%%%nanotime) ~%profiling-timer)))))))
-       !)))
+  (? (& (transpiler-profile? tr)
+        (not (eq 'add-profile name)
+             (eq 'add-profile-call name)))
+     (? (transpiler-profile-num-calls? tr)
+        `((progn
+            (& (not *profile-lock*)
+               (add-profile-call ',name))
+            ,@body))
+        `((let ~%profiling-timer (& (not *profile-lock*) (%%%nanotime))
+            (prog1
+              (progn
+                ,@body)
+              (& ~%profiling-timer
+                 (add-profile ',name (integer- (%%%nanotime) ~%profiling-timer)))))))
+     body))
 
 (defun shared-defun-memorize-source (tr name args body)
   (acons! name (cons args body) (transpiler-memorized-sources tr))
@@ -67,10 +62,10 @@
        (redef-warn "Redefinition of function ~A." name))
 	(transpiler-add-defined-function tr name args body)
 	`((function ,name (,args
-                       ,@(& (body-has-noargs-tag? body) '(no-args))
+                       ,@(& (body-has-noargs-tag? body)
+                            '(no-args))
                        (block ,name
-                         ,@(shared-defun-backtrace tr name (+ (shared-defun-funcall-logger name)
-                                                              (shared-defun-profiling-body tr name body))))))
+                         ,@(shared-defun-backtrace tr name (shared-defun-profiling-body tr name body)))))
       ,@(& make-source-memorizer?
            (shared-defun-source-memorizer tr name args body)))))
 

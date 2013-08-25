@@ -4,7 +4,6 @@
 (env-load "transpiler/targets/shared/builtin-argdefs.lisp")
 (env-load "transpiler/targets/shared/functionals.lisp")
 (env-load "transpiler/targets/shared/noargs-tag.lisp")
-(env-load "transpiler/targets/shared/expand/log-function-calls.lisp")
 (env-load "transpiler/targets/shared/expand/defun.lisp")
 (env-load "transpiler/targets/shared/expand/opt-string-concat.lisp")
 (env-load "transpiler/targets/shared/expand/opt-filter.lisp")

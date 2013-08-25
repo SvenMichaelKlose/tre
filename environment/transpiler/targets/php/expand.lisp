@@ -4,7 +4,7 @@
   `(define-transpiler-std-macro *php-transpiler* ,@x))
 
 (define-php-std-macro define-native-php-fun (name args &body body)
-  (shared-defun name args (body-with-noargs-tag body)))
+  (shared-defun name args body))
 
 (define-php-std-macro eq (&rest x)
   (? ..x
