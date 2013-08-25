@@ -8,7 +8,7 @@
 	    (nth (integer- i 1) (cdr x))
         (car x))))
 
-(early-defun copy-list (x)
+(early-defun copy-tree (x)
   (? (atom x)
      x
      (progn
@@ -17,4 +17,5 @@
        (#'((p c)
              (rplacp c (setq *default-listprop* p)))
          *default-listprop*
-	     (cons (car x) (copy-list (cdr x)))))))
+	     (cons (copy-tree (car x))
+               (copy-tree (cdr x)))))))

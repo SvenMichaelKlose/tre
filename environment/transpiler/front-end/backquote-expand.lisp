@@ -4,20 +4,20 @@
   (? (any-quasiquote? (cadr x.))
      `(cons ,(backquote-1 (cadr x.))
             ,(backquote-1 .x))
-     `(cons ,(copy-tree (cadr x.))
+     `(cons ,(cadr x.)
             ,(backquote-1 .x))))
 
 (defun backquote-quasiquote-splice (x)
   (? (any-quasiquote? (cadr x.))
      (error "~A in QUASIQUOTE-SPLICE (or ',@' for short)." (cadr x.))
      (!? (backquote-1 .x)
-         `(append ,(let tr *transpiler*
-                     (? (transpiler-assert? tr)
-                        (compiler-macroexpand (transpiler-macroexpand tr `(aprog1 ,(copy-tree (cadr x.))
-                                                                            (| (list? !) (error ",@ expects a list instead of ~A." !)))))
-                        (copy-tree (cadr x.))))
+         `(nconc (copy-list ,(let tr *transpiler*
+                               (? (transpiler-assert? tr)
+                                  (compiler-macroexpand (transpiler-macroexpand tr `(aprog1 ,(cadr x.)
+                                                                                      (| (list? !) (error ",@ expects a list instead of ~A." !)))))
+                                  (cadr x.))))
                   ,(backquote-1 .x))
-         (copy-tree (cadr x.)))))
+         (cadr x.))))
 
 (defun quote-literal (x)
   (? (constant-literal? x)
@@ -39,14 +39,6 @@
     (quasiquote-splice? x.) (backquote-quasiquote-splice x)
     `(cons ,(backquote-1 x.)
            ,(backquote-2 .x))))
-
-;(defun backquote-0 (x)
-;  (?
-;    (atom x)       (progn
-;                     (warn "Atom ~A  is in a BACKQUOTE (or ` for short) instead of a QUOTE (or ' for short)."  x)
-;                     (quote-literal x))
-;    (backquote? x) `(cons 'BACKQUOTE ,(backquote-0 .x))
-;    (backquote-1 x)))
 
 (defun simple-quote-expand (x)
   (? (atom x)

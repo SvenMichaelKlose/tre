@@ -44,7 +44,7 @@
          *default-listprop*
          (cons (? (any-quasiquote? (car (cdr (car %gsbq))))
                   (%backquote (car (cdr (car %gsbq))))
-                  (copy-tree (%quasiquote-eval %gsbq)))
+                  (%quasiquote-eval %gsbq))
                (%backquote (cdr %gsbq))))))
 
 (%set-atom-fun %backquote-quasiquote-splice
@@ -56,13 +56,13 @@
             (#'((p c)
                   (rplacp c p))
               *default-listprop*
-              (cons (copy-tree (car (cdr (car %gsbq))))
+              (cons (car (cdr (car %gsbq)))
                     (%backquote (cdr %gsbq)))))
           (#'((%gstmp)
                 (?
                   (not %gstmp)  (%backquote (cdr %gsbq))
                   (atom %gstmp) (error "QUASIQUOTE-SPLICE expects a list instead of ~A." %gstmp)
-                  (%nconc (copy-tree %gstmp)
+                  (%nconc (copy-list %gstmp)
                           (%backquote (cdr %gsbq)))))
             (%quasiquote-eval %gsbq)))))
 

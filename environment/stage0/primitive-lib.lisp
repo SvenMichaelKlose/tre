@@ -7,7 +7,7 @@
 	(cons 'list
 	(cons 'last
 	(cons '%nconc
-	(cons 'copy-tree
+	(cons 'copy-list
 	(cons '*variables*
 		  *universe*))))))
 
@@ -15,7 +15,7 @@
 	*defined-functions*
 	(cons 'list
 	(cons 'identity
-	(cons 'copy-tree
+	(cons 'copy-list
 	(cons 'last
 	(cons '%nconc
 		  nil))))))
@@ -40,7 +40,7 @@
 (%set-atom-fun identity #'((x) x))
 (%set-atom-fun list #'((&rest x) x))
 
-(%set-atom-fun copy-tree
+(%set-atom-fun copy-list
   #'((x)
       (? x
 		 (? (atom x)
@@ -51,8 +51,8 @@
               (#'((p c)
                     (rplacp c (setq *default-listprop* p)))
                 *default-listprop*
-                (cons (copy-tree (car x))
-              	      (copy-tree (cdr x)))))))))
+                (cons (car x)
+              	      (copy-list (cdr x)))))))))
 
 (%set-atom-fun last
   #'((x)
