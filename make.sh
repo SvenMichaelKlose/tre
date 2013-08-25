@@ -211,6 +211,7 @@ boot)
 	./make.sh compiler $ARGS || exit 1
 	./make.sh all $ARGS || exit 1
 	./make.sh crunsh || exit 1
+	./make.sh precompile || exit 1
 	;;
 
 debugboot)
