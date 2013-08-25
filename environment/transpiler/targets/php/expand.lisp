@@ -4,9 +4,7 @@
   `(define-transpiler-std-macro *php-transpiler* ,@x))
 
 (define-php-std-macro define-native-php-fun (name args &body body)
-  `(%%block
-     ,(apply #'shared-defun name args (body-with-noargs-tag body))
-     (%setq ~%ret nil)))
+  (shared-defun name args (body-with-noargs-tag body)))
 
 (define-php-std-macro eq (&rest x)
   (? ..x
@@ -17,20 +15,12 @@
 (define-php-std-macro defun (name args &body body)
   (let fun-name (%defun-name name)
     `(%%block
-       ,(apply #'shared-defun fun-name args
-               (? *exec-log*
-                  `((%%native "error_log (\"" ,(symbol-name fun-name) "\")")
-                       nil ,@body)
-                  body))
-       (%setq ~%ret nil)
-       ,@(unless (simple-argument-list? args)
-           (with-gensym p
-             `((defun ,($ fun-name '_treexp) (,p)
-                 ,(compile-argument-expansion-function-body
-                      fun-name args p nil
-                      (argument-expand-names 'compile-argument-expansion args))))))
-       (%setq nil ((slot-value ',fun-name 'sf) ,(compiled-function-name-string *transpiler* fun-name)))
-       (%setq ~%ret nil))))
+       ,(shared-defun name args
+                      (? *exec-log*
+                         `((%%native "error_log (\"" ,(symbol-name fun-name) "\")")
+                              nil ,@body)
+                         body))
+       (%setq nil ((slot-value ',fun-name 'sf) ,(compiled-function-name-string *transpiler* fun-name))))))
 
 (define-php-std-macro define-external-variable (name)
   (print-definition `(define-external-variable ,name))

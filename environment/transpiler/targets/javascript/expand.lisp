@@ -51,7 +51,7 @@
   (js-make-late-symbol-function-assignment name)
   `(progn
      (%var ,(%defun-name name))
-     ,(apply #'shared-defun name args (body-with-noargs-tag body))))
+     ,(shared-defun name args (body-with-noargs-tag body))))
 
 (defun js-early-symbol-maker (g sym)
    `(,@(unless (eq g '~%tfun)
@@ -63,10 +63,10 @@
 (define-js-std-macro defun (name args &rest body)
   (with (dname (apply-current-package (transpiler-package-symbol *js-transpiler* (%defun-name name)))
          g     '~%tfun)
-      `(progn
+      `(%%block
          (%var ,dname)
          ,@(js-early-symbol-maker g dname)
-         ,(apply #'shared-defun dname args body)
+         ,(shared-defun dname args body :make-expander? nil)
          (= (symbol-function ,g) ,dname))))
 
 (define-js-std-macro early-defun (&rest x)

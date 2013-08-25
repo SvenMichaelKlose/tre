@@ -57,7 +57,7 @@
          (= *backtrace* .*backtrace*)))
      body))
 
-(defun shared-defun (name args &rest body)
+(defun shared-defun-without-expander (name args body &key (make-source-memorizer? nil))
   (= name (apply-current-package name))
   (print-definition `(defun ,name ,args))
   (| (list? args)
@@ -66,10 +66,22 @@
     (& (transpiler-defined-function tr name)
        (redef-warn "Redefinition of function ~A." name))
 	(transpiler-add-defined-function tr name args body)
-	`(%%block
-       (function ,name (,args
-                        ,@(& (body-has-noargs-tag? body) '(no-args))
-                        (block ,name
-                          ,@(shared-defun-backtrace tr name (+ (shared-defun-funcall-logger name)
-                                                               (shared-defun-profiling-body tr name body))))))
-       ,@(shared-defun-source-memorizer tr name args body))))
+	`((function ,name (,args
+                       ,@(& (body-has-noargs-tag? body) '(no-args))
+                       (block ,name
+                         ,@(shared-defun-backtrace tr name (+ (shared-defun-funcall-logger name)
+                                                              (shared-defun-profiling-body tr name body))))))
+      ,@(& make-source-memorizer?
+           (shared-defun-source-memorizer tr name args body)))))
+
+(defun shared-defun (name args body &key (make-expander? t))
+  (let fun-name (%defun-name name)
+    `(%%block
+       ,@(shared-defun-without-expander fun-name args body :make-source-memorizer? t)
+       ,@(when (& make-expander?
+                  (not (simple-argument-list? args)))
+           (with-gensym p
+             (shared-defun-without-expander (c-expander-name fun-name) (list p)
+                                            (list (compile-argument-expansion-function-body fun-name args p nil
+                                                                                            (argument-expand-names 'compile-argument-expansion args)))
+                                            :make-source-memorizer? nil))))))

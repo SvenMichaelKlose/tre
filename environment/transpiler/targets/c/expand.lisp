@@ -7,14 +7,8 @@
   ($ x '_treexp))
 
 (define-c-std-macro defun (name args &rest body)
-  `(%%block
-     ,(apply #'shared-defun name args body)
-     ,@(let fun-name (%defun-name name)
-         (c-compiled-symbol fun-name)
-         (unless (simple-argument-list? args)
-           (with-gensym p
-             `((defun ,(c-expander-name fun-name) (,p)
-                 ,(compile-argument-expansion-function-body fun-name args p nil (argument-expand-names 'compile-argument-expansion args)))))))))
+  (c-compiled-symbol (%defun-name name))
+  (shared-defun name args body))
 
 (define-c-std-macro eq (&rest x)
   (? ..x
@@ -57,7 +51,6 @@
 
 (define-c-std-macro filter (fun lst)
   (shared-opt-filter fun lst))
-
 
 (functional %+ %-)
 
