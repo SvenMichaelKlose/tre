@@ -175,7 +175,6 @@
   (aprog1
     (make-transpiler
         :name                   name
-        :std-macro-expander     std-macro-expander
         :codegen-expander       codegen-expander
         :separator              separator
         :identifier-char?       identifier-char?
@@ -256,6 +255,7 @@
         :converted-identifiers   (copy-hash-table converted-identifiers)
         :expex-initializer       expex-initializer
         :cpr-count?              cpr-count?)
+    (transpiler-copy-std-macro-expander transpiler !)
     (funcall (transpiler-expex-initializer !) (transpiler-make-expex !))))
 
 (defmacro transpiler-getter (name &rest body)

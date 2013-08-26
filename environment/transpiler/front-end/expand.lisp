@@ -15,9 +15,15 @@
                                (%%macrocall _)]))))
 
 (defun transpiler-make-std-macro-expander (tr)
-  (let expander-name ($ (transpiler-name tr) '-standard)
-    (= (transpiler-std-macro-expander tr) expander-name)
-    (make-overlayed-std-macro-expander tr expander-name)))
+  (aprog1 ($ (transpiler-name tr) (gensym) '-standard)
+    (= (transpiler-std-macro-expander tr) !)
+    (make-overlayed-std-macro-expander tr !)))
+
+(defun transpiler-copy-std-macro-expander (tr-old tr-new)
+  (with (exp-new (transpiler-make-std-macro-expander tr-new)
+         old     (expander-get (transpiler-std-macro-expander tr-old))
+         new     (expander-get exp-new))
+    (= (expander-macros new) (copy-hash-table (expander-macros old)))))
 
 (defmacro define-transpiler-std-macro (tr name &rest args-and-body)
   (print-definition `(define-transpiler-std-macro ,tr ,name ,args-and-body.))
