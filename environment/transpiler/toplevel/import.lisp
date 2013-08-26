@@ -8,10 +8,9 @@
      (transpiler-macro tr name)))
 
 (defun transpiler-can-import? (tr name)
-  (& (transpiler-import-from-environment? tr)
-     (function? (symbol-function name))
-     (not (builtin? (symbol-function name)))
-     (not (transpiler-defined? tr name))))
+  (& (function? (symbol-function name))
+     (not (builtin? (symbol-function name))
+          (transpiler-defined? tr name))))
 	
 (defun transpiler-add-wanted-function (tr x)
   (when (transpiler-can-import? tr x)
@@ -24,8 +23,7 @@
     (transpiler-add-wanted-function tr i)))
 
 (defun transpiler-must-add-wanted-variable? (tr var)
-  (& (transpiler-import-from-environment? tr)
-     (atom var)
+  (& (atom var)
      (symbol? var)
      (not (href (transpiler-wanted-variables-hash tr) var))
      (| (transpiler-host-variable? tr var)
@@ -61,12 +59,13 @@
 	          (transpiler-wanted-variables tr))))
 
 (defun transpiler-import-from-environment (tr)
-  (with (funs     (transpiler-import-wanted-functions tr)
-         exported (transpiler-import-exported-closures tr)
-         vars     (transpiler-import-wanted-variables tr))
-    (? (| funs exported vars)
-       (+ funs exported vars (transpiler-import-from-environment tr))
-       (transpiler-delayed-var-inits tr))))
+  (when (transpiler-import-from-environment? tr)
+    (with (funs     (transpiler-import-wanted-functions tr)
+           exported (transpiler-import-exported-closures tr)
+           vars     (transpiler-import-wanted-variables tr))
+      (? (| funs exported vars)
+         (+ funs exported vars (transpiler-import-from-environment tr))
+         (transpiler-delayed-var-inits tr)))))
 
 (defun transpiler-import-from-expex (x)
   (? (& (literal-symbol-function? x)
