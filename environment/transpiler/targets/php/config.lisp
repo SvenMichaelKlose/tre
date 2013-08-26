@@ -19,7 +19,8 @@
       :raw-constructor-names? t
       :expex-initializer
           #'((ex)
-               (= (expex-move-lexicals? ex)  t
+               (= (expex-inline? ex)         #'%slot-value?
+                  (expex-move-lexicals? ex)  t
     	          (expex-setter-filter ex)   (compose [mapcar [php-setter-filter *php-transpiler* _] _]
                                                       #'expex-compiled-funcall)
     	          (expex-argument-filter ex) #'php-expex-argument-filter))))

@@ -120,6 +120,10 @@
   (let s (expex-funinfo-var-add)
     (cons (expex-make-%setq ex s x) s)))
 
+(defun expex-move-inline (ex x)
+  (with ((p a) (expex-move-args ex x))
+	(cons p a)))
+
 (defun expex-move-%%block (ex x)
   (!? (%%block-body x)
       (let s (expex-funinfo-var-add)
@@ -141,6 +145,7 @@
   (?
 	(not (expex-able? ex x))       (cons nil x)
     (atom x)                       (expex-move-atom ex x)
+	(funcall (expex-inline? ex) x) (expex-move-inline ex x)
     (%%block? x)                   (expex-move-%%block ex x)
 	(expex-move-std ex x)))
 

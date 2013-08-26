@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2006–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2006-2012 Sven Michael Klose <pixel@copei.de>
 
 (defstruct expex
   (transpiler nil)
@@ -18,6 +18,7 @@
 
   (plain-arg-fun? #'((var)))
 
+  (inline? #'((x)))
   (move-lexicals? nil))
 
 (def-expex copy-expex (expex tr)
@@ -29,4 +30,5 @@
       :setter-filter setter-filter
       :expr-filter expr-filter
       :plain-arg-fun? plain-arg-fun?
+      :inline? inline?
       :move-lexicals? move-lexicals?))

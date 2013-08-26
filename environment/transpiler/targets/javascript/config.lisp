@@ -18,7 +18,8 @@
 	  :literal-conversion #'transpiler-expand-literal-characters
       :expex-initializer 
           #'((ex)
-               (= (expex-setter-filter ex)   #'expex-collect-wanted-variable
+               (= (expex-inline? ex)         #'%slot-value?
+                  (expex-setter-filter ex)   #'expex-collect-wanted-variable
                   (expex-argument-filter ex) #'expex-%setq-collect-wanted-global-variable))))
 
 (defun make-javascript-transpiler ()
