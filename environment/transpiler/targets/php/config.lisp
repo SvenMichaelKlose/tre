@@ -15,13 +15,11 @@
       :lambda-export? t
       :stack-locals? nil
       :rename-all-args? t
-      :inline-exceptions '(%slot-value error format identity %bind)
       :named-function-next #'cddr
       :raw-constructor-names? t
       :expex-initializer
           #'((ex)
-               (= (expex-inline? ex)         #'%slot-value?
-                  (expex-move-lexicals? ex)  t
+               (= (expex-move-lexicals? ex)  t
     	          (expex-setter-filter ex)   (compose [mapcar [php-setter-filter *php-transpiler* _] _]
                                                       #'expex-compiled-funcall)
     	          (expex-argument-filter ex) #'php-expex-argument-filter))))

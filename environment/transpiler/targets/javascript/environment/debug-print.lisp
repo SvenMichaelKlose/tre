@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun js-print-write (x doc)
   (= doc.body.inner-h-t-m-l
@@ -51,8 +51,6 @@
     (object? x)	   (js-print-object x doc)
 	(js-print-write (+ "[unknown type: " (string x) "]")
 					doc)))
-
-(dont-inline js-print)
 
 (defun js-print (x &optional (doc logwindow.document))
   (? (cons? x)

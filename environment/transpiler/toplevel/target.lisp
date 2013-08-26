@@ -68,8 +68,6 @@
   (with-temporaries (*recompiling?*  (? files-to-update t)
                      *transpiler*    tr
                      *assert*        (| *assert* (transpiler-assert? tr))
-                     *opt-inline?*   (unless (transpiler-inject-debugging? tr)
-                                       *opt-inline?*)
                      dep-gen         (| dep-gen #'(()
                                                     (transpiler-import-from-environment tr))))
     (& *have-compiler?* (= (transpiler-save-sources? tr) t))

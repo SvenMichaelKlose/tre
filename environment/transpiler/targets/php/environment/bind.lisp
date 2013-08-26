@@ -1,7 +1,6 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (dont-obfuscate arguments array_shift)
-(dont-inline %bind)
 
 (defun %bind (obj fun)
   (when-debug

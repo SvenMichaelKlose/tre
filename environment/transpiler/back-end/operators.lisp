@@ -3,7 +3,6 @@
 (defmacro define-transpiler-infix (tr name)
   (print-definition `(define-transpiler-infix ,tr ,name))
   (let tre (eval tr)
-    (transpiler-add-inline-exception tre name)
     `(define-expander-macro ,(transpiler-codegen-expander tre) ,name (x y)
 	   `(%%native ,,x " " ,(string-downcase (string name)) " " ,,y))))
 
@@ -15,7 +14,6 @@
 (defmacro define-transpiler-binary (tr op repl-op)
   (print-definition `(define-transpiler-binary ,tr ,op))
   (let tre (eval tr)
-    (transpiler-add-inline-exception tre op)
     (transpiler-add-plain-arg-fun tre op)
     `(define-expander-macro ,(transpiler-codegen-expander tre) ,op (&rest args)
        `("(" ,,@(transpiler-binary-expand ,repl-op args) ")"))))

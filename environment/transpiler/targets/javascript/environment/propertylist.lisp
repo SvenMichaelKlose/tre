@@ -5,8 +5,6 @@
 (defun %property-list-0 (key val)
   (acons! key val *%property-list-tmp*))
 
-(dont-inline %property-list)
-
 (defun %property-list (hash)
   (= *%property-list-tmp* nil)
   (%setq nil (%%native

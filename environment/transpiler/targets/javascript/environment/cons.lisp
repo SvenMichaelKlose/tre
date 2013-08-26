@@ -1,7 +1,5 @@
 ;;;;; tré – Copyright (c) 2008–2009,2012–2013 Sven Michael Klose <pixel@copei.de>
 
-(dont-inline %cons)
-
 (defvar *default-listprop* nil)
 
 (define-native-js-fun %cons (a d)

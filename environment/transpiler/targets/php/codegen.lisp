@@ -185,7 +185,6 @@
 (defmacro define-php-binary (op replacement-op)
   (print-definition `(define-php-binary ,op ,replacement-op))
   (let tre *php-transpiler*
-	(transpiler-add-inline-exception tre op)
 	(transpiler-add-plain-arg-fun tre op)
 	`(define-expander-macro ,(transpiler-codegen-expander tre) ,op (&rest args)
 	   `(%%native ,,@(pad (filter #'php-dollarize args) ,replacement-op)))))

@@ -12,7 +12,6 @@
 (env-load "transpiler/front-end/lambda-expand.lisp")
 (env-load "transpiler/front-end/rename-args.lisp")
 (env-load "transpiler/front-end/rename-tags.lisp")
-(env-load "transpiler/front-end/opt-inline.lisp")
 (env-load "transpiler/front-end/expand-literal-characters.lisp")
 (env-load "transpiler/front-end/define-compiled-literal.lisp")
 (env-load "transpiler/front-end/backquote-expand.lisp")

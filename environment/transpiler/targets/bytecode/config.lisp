@@ -4,7 +4,6 @@
   (aprog1 (create-transpiler
               :name 'bytecode
 			  :separator (format nil ";~%")
-			  :inline-exceptions '(bc-init error format replace-tree)
 			  :identifier-char?
 	  		      [| (<= #\a _ #\z)
 		  	  		 (<= #\A _ #\Z)
@@ -25,7 +24,6 @@
               :encapsulate-strings? nil
               :function-name-prefix nil
               :function-prologues? nil)
-	(= (transpiler-inline-exceptions !) '(error format identity))
     (transpiler-add-plain-arg-funs ! *builtins*)))
 
 (defvar *bc-transpiler* (copy-transpiler (make-bc-transpiler)))

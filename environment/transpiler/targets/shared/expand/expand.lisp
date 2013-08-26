@@ -11,11 +11,6 @@
   (apply #'transpiler-add-obfuscation-exceptions *transpiler* symbols)
   nil)
 
-(define-shared-std-macro (js php) dont-inline (&rest x)
-  (adolist (x)
-    (transpiler-add-inline-exception *transpiler* !))
-  nil)
-
 (define-shared-std-macro (js php) assert (x &optional (txt nil) &rest args)
   (& (transpiler-assert? *transpiler*)
      (make-assertion x txt args)))

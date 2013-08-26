@@ -2,11 +2,9 @@
 
 (dont-obfuscate apply call)
 
-;(cps-exception t)
-
 (defun cps-apply (continuer &rest lst)
-  (with (fun lst.
-         l (last .lst)
+  (with (fun  lst.
+         l    (last .lst)
          args (%nconc (butlast .lst) l.))
     (!? fun.tre-exp
         (? fun.tre-cps
@@ -21,20 +19,16 @@
          l (last .lst)
          args (%nconc (butlast .lst) l.))
     (when-debug
-      (unless (function? fun)
-	    (error "First argument ~A is not a function." fun))
-	  (unless (list? l)
-	    (error "Last argument is not a list.")))
+      (| (function? fun)
+	     (error "First argument ~A is not a function." fun))
+	  (| (list? l)
+	     (error "Last argument is not a list.")))
     (!? fun.tre-exp
         (!.apply nil (%%native "[" args "]"))
      (fun.apply nil (list-array args)))))
 
-(dont-inline cps-wrap)
 (defun cps-wrap  (x) x)
-
 (defun cps-return-dummy (&rest x))
-
-;(cps-exception t)
 
 (defun funcall (fun &rest args)
   (apply fun args))

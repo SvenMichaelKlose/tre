@@ -1,7 +1,6 @@
-;;;;; tré – Copyright (c) 2008–2010,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2010,2012–2013 Sven Michael Klose <pixel@copei.de>
 
 (dont-obfuscate arguments)
-(dont-inline %bind)
 
 ;; Bind function to an object.
 ;;

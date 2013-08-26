@@ -45,19 +45,18 @@
   (transpiler-make-code tr (transpiler-frontend tr (transpiler-compiled-inits tr))))
 
 (defun php-transpile (sources &key (transpiler nil) (obfuscate? nil) (print-obfuscations? nil) (files-to-update nil))
-  (with-temporary *opt-inline-max-size* 16
-    (transpiler-add-defined-variable transpiler '*KEYWORD-PACKAGE*)
-    (+ (php-prologue)
-	   (php-prepare transpiler)
-   	   (target-transpile transpiler
-           :decl-gen #'(()
-                          (php-decls transpiler))
-           :files-before-deps `((base1 . ,*php-base*))
-           :files-after-deps (+ `((base2 . ,*php-base2*))
-                                (& (eq t *have-environment-tests*)
-                                   (list (cons 'env-tests (make-environment-tests))))
-                                sources)
-           :files-to-update files-to-update
-           :obfuscate? obfuscate?
-           :print-obfuscations? print-obfuscations?)
-   (php-epilogue))))
+  (transpiler-add-defined-variable transpiler '*KEYWORD-PACKAGE*)
+  (+ (php-prologue)
+     (php-prepare transpiler)
+     (target-transpile transpiler
+         :decl-gen #'(()
+                        (php-decls transpiler))
+         :files-before-deps `((base1 . ,*php-base*))
+         :files-after-deps (+ `((base2 . ,*php-base2*))
+                              (& (eq t *have-environment-tests*)
+                                 (list (cons 'env-tests (make-environment-tests))))
+                              sources)
+         :files-to-update files-to-update
+         :obfuscate? obfuscate?
+         :print-obfuscations? print-obfuscations?)
+     (php-epilogue)))

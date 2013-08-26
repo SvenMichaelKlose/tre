@@ -5,7 +5,6 @@
 (defvar *transpiler-no-stream?* nil)
 
 (defvar *transpiler-except-cps?* t)
-(defvar *opt-inline?* nil)
 (defvar *recompiling?* nil)
 (defvar *print-executed-functions?* nil)
 
@@ -50,8 +49,6 @@
   (wanted-variables-hash (make-hash-table :test #'eq))
 
   (named-function-next nil)
-
-  (inline-exceptions nil)
 
   (assert?                  nil)
   (obfuscate?               nil)
@@ -189,7 +186,6 @@
         :wanted-variables       (copy-list wanted-variables)
         :wanted-variables-hash  (copy-hash-table wanted-variables-hash)
         :named-function-next    named-function-next
-        :inline-exceptions      (copy-list inline-exceptions)
         :assert?                assert?
         :obfuscate?             obfuscate?
         :import-from-environment? import-from-environment?
@@ -279,7 +275,7 @@
 (transpiler-getter late-symbol?            (href (transpiler-late-symbols tr) x))
 (progn
   ,@(filter  [`(transpiler-getter-list ,_)]
-            '(inline-exception cps-function plain-arg-fun emitted-decl)))
+            '(cps-function plain-arg-fun emitted-decl)))
 
 (transpiler-getter add-defined-variable (= (href (transpiler-defined-variables-hash tr) x) t)
                                         x)
@@ -299,7 +295,6 @@
 (defun transpiler-add-function-body (tr fun args) (= (href (transpiler-function-bodies tr) fun) args))
 (define-slot-setter-push transpiler-add-exported-closure tr  (transpiler-exported-closures tr))
 (define-slot-setter-push transpiler-add-cps-function tr      (transpiler-cps-functions tr))
-(define-slot-setter-push transpiler-add-inline-exception tr  (transpiler-inline-exceptions tr))
 (define-slot-setter-push transpiler-add-cps-exception tr     (transpiler-cps-exceptions tr))
 (define-slot-setter-push transpiler-add-plain-arg-fun tr     (transpiler-plain-arg-funs tr))
 (define-slot-setter-push transpiler-add-emitted-decl tr      (transpiler-emitted-decls tr))

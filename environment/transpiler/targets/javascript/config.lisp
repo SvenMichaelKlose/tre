@@ -15,12 +15,10 @@
 	  :stack-locals? nil
 	  :rename-all-args? t
 	  :rename-toplevel-function-args? t
-	  :inline-exceptions '(%slot-value error format identity %bind map apply maphash js-eval-transpile)
 	  :literal-conversion #'transpiler-expand-literal-characters
       :expex-initializer 
           #'((ex)
-               (= (expex-inline? ex)         #'%slot-value?
-                  (expex-setter-filter ex)   #'expex-collect-wanted-variable
+               (= (expex-setter-filter ex)   #'expex-collect-wanted-variable
                   (expex-argument-filter ex) #'expex-%setq-collect-wanted-global-variable))))
 
 (defun make-javascript-transpiler ()

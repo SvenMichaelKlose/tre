@@ -21,7 +21,6 @@
       (!.push i))))
 
 (dont-obfuscate *array)
-(dont-inline array-find)
 
 (defun array-find (arr obj)
   (%setq nil (%%native "return " arr ".indexOf (" obj ") != -1;"))
