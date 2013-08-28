@@ -9,7 +9,6 @@
     `(%%%bc-fun ,name
        ,@(lambda-body x))))
 
-(define-bc-macro %function-prologue (name) '(%setq nil nil))
 (define-bc-macro %function-epilogue (name) '((%%go nil) %%bc-return))
 
 (define-bc-macro %%closure (name)
@@ -31,11 +30,11 @@
      (%quote? x)))
 
 (defun bc-make-funcall (x)
-  (?
-    (eq 'cons x.)                `(cons ,(bc-quote-literal .x.) ,(bc-quote-literal ..x.))
-    (eq '=-symbol-value x.)      `(,x. 2 ,@(bc-quote-literals .x))
-    (eq '%symbol-value x.)       `(symbol-value 1 ,(bc-quote-literal .x.))
-    (eq '%make-lexical-array x.) `(make-array 1 ,(bc-quote-literal .x.))
+  (case x. :test #'eq
+    'cons                 `(cons ,(bc-quote-literal .x.) ,(bc-quote-literal ..x.))
+    '=-symbol-value       `(,x. 2 ,@(bc-quote-literals .x))
+    '%symbol-value        `(symbol-value 1 ,(bc-quote-literal .x.))
+    '%make-lexical-array  `(make-array 1 ,(bc-quote-literal .x.))
     `(,x. ,(length .x) ,@(bc-quote-literals .x))))
 
 (defun bc-make-value (x)
