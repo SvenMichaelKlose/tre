@@ -33,7 +33,6 @@
   (case x. :test #'eq
     'cons                 `(cons ,(bc-quote-literal .x.) ,(bc-quote-literal ..x.))
     '=-symbol-value       `(,x. 2 ,@(bc-quote-literals .x))
-    '%symbol-value        `(symbol-value 1 ,(bc-quote-literal .x.))
     '%make-lexical-array  `(make-array 1 ,(bc-quote-literal .x.))
     `(,x. ,(length .x) ,@(bc-quote-literals .x))))
 
