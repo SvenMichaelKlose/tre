@@ -73,8 +73,9 @@
   (let fun-name (%defun-name name)
     `(%%block
        ,@(shared-defun-without-expander fun-name args body :make-source-memorizer? t)
-       ,@(when (& make-expander?
-                  (not (simple-argument-list? args)))
+       ,@(when (& args make-expander?
+                  (not (simple-argument-list? args)
+                       (transpiler-assert? *transpiler*)))
            (with-gensym p
              (shared-defun-without-expander (c-expander-name fun-name) (list p)
                                             (list (compile-argument-expansion-function-body fun-name args p nil

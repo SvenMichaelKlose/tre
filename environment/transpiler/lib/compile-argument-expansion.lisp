@@ -5,7 +5,7 @@
 		       (= ,_ ,(assoc-value _ defaults)))]
 		  (carlist defaults)))
 
-(defun compile-argument-expansion-0 (adef p &optional (argdefs nil) (key-args nil))
+(defun compile-argument-expansion-0 (fun-name adef p)
   (with ((argdefs key-args) (make-&key-alist adef)
 
 		 key
@@ -13,7 +13,10 @@
 			    (& key-args '((keywords))))
 
 		 static
-           [`((= ,_. (car ,p))
+           [`(,@(? (transpiler-assert? *transpiler*)
+                   `((| ,p
+                        (error "Argument ~A missing in function ~A." ',_. ',fun-name))))
+              (= ,_. (car ,p))
               (= ,p (cdr ,p))
               ,@(main ._))]
 
@@ -30,8 +33,12 @@
                       (optional ._))))]
 
 		 arest
-		   [`(,@(key)
-			  (= ,_. ,p))]
+		   [(? (cons? _.)
+               (error "In function ~A: &REST argument cannot have a default value." fun-name))
+            `(,@(key)
+			  (= ,_. ,p)
+              ,@(? (transpiler-assert? *transpiler*)
+                   `((= ,p nil))))]
 
          optional-rest
 		   [case _.
@@ -42,7 +49,7 @@
 		 sub
            [`(,@(key)
 			  (with-temporary ,p (car ,p)
-			    ,@(compile-argument-expansion-0 _. p))
+			    ,@(compile-argument-expansion-0 fun-name _. p))
 			    (= ,p (cdr ,p))
 			    ,@(main ._))]
 
@@ -66,14 +73,18 @@
 											  ,p (cdr ,p)))]
 									    (carlist key-args))
 						      (return-from compexp nil)))))))
-          ,@(& argdefs (main argdefs))
+          ,@(& argdefs
+               (main argdefs))
 		  ,@(key)
 		  ,@(compile-argument-expansion-defaults key-args)))
        (main argdefs))))
 
 (defun compile-argument-expansion-function-body (fun-name adef p toplevel-continuer names)
   `(with ,(mapcan [`(,_ ',_)] names)
-     ,@(compile-argument-expansion-0 adef p)
+     ,@(compile-argument-expansion-0 fun-name adef p)
+     ,@(? (transpiler-assert? *transpiler*)
+          `((? ,p
+               (error "Too many arguments to function ~A. Extra arguments are ~A." ',fun-name ,p))))
      ((%%native ,(compiled-function-name *transpiler* fun-name)) ,@toplevel-continuer ,@names)))
 
 (defun compile-argument-expansion-cps (this-name fun-name adef names)
@@ -94,10 +105,8 @@
      (eq '&rest adef.)))
 
 (defun compile-argument-expansion (this-name fun-name adef)
-  (? (only-&rest? adef)
-	 fun-name
-     (alet (argument-expand-names 'compile-argument-expansion adef)
-       (funcall (? (in-cps-mode?)
-                   #'compile-argument-expansion-cps
-                   #'compile-argument-expansion-no-cps)
-                this-name fun-name adef !))))
+  (alet (argument-expand-names 'compile-argument-expansion adef)
+    (funcall (? (in-cps-mode?)
+                #'compile-argument-expansion-cps
+                #'compile-argument-expansion-no-cps)
+             this-name fun-name adef !)))
