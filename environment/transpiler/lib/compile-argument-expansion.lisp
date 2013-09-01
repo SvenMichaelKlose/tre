@@ -1,8 +1,8 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun compile-argument-expansion-defaults (defaults)
-  (mapcar (fn `(& (eq ,_ ,(list 'quote _))
-			      (= ,_ ,(assoc-value _ defaults))))
+  (mapcar [`(& (eq ,_ ,(list 'quote _))
+		       (= ,_ ,(assoc-value _ defaults)))]
 		  (carlist defaults)))
 
 (defun compile-argument-expansion-0 (adef p &optional (argdefs nil) (key-args nil))
@@ -60,10 +60,10 @@
 					      (while (keyword? (= v (car ,p)))
 							     nil
 						    (?
-						      ,@(mapcan (fn `((eq v ,(make-symbol (symbol-name _) *keyword-package*))
-											  (= ,p (cdr ,p)
-											     ,_ (car ,p)
-												 ,p (cdr ,p))))
+						      ,@(mapcan [`((eq v ,(make-symbol (symbol-name _) *keyword-package*))
+										   (= ,p (cdr ,p)
+										      ,_ (car ,p)
+											  ,p (cdr ,p)))]
 									    (carlist key-args))
 						      (return-from compexp nil)))))))
           ,@(& argdefs (main argdefs))
@@ -72,7 +72,7 @@
        (main argdefs))))
 
 (defun compile-argument-expansion-function-body (fun-name adef p toplevel-continuer names)
-  `(with ,(mapcan (fn `(,_ ,(list 'quote _))) names)
+  `(with ,(mapcan [`(,_ ',_)] names)
      ,@(compile-argument-expansion-0 adef p)
      ((%%native ,(compiled-function-name *transpiler* fun-name)) ,@toplevel-continuer ,@names)))
 
