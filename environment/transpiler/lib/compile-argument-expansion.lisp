@@ -7,8 +7,6 @@
 
 (defun compile-argument-expansion-0 (adef p &optional (argdefs nil) (key-args nil))
   (with ((argdefs key-args) (make-&key-alist adef)
-		 get-name    [? (cons? _.) _.. _.]
-		 get-default [? (cons? _.) (cadr _.) _.]
 
 		 key
 		   #'(()
@@ -24,10 +22,10 @@
 		   #'((def)
 			    `(,@(key)
 				  (? ,p
-				     (= ,(get-name def) (car ,p)
+				     (= ,(argdef-get-name def.) (car ,p)
 				        ,p (cdr ,p))
 					 ,@(& (cons? def.)
-					      `((= ,(get-name def) ,(get-default def)))))
+					      `((= ,(argdef-get-name def.) ,(argdef-get-default def.)))))
 				  ,@(& .def
 					   (? (argument-keyword? .def.)
 				  		  (main .def)

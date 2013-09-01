@@ -30,6 +30,22 @@
 	(values (copy-def-until-&key def)
             (reverse &keys))))
 
+(defun argdef-get-name (x)
+  (? (cons? x)
+     x.
+     x))
+
+(defun argdef-get-default (x)
+  (? (cons? x)
+     .x.
+     x))
+
+(defun argdef-get-value (defs vals)
+  (?
+    (cons? vals)  vals.
+    (cons? defs.) (cadr defs.)
+    defs.))
+
 ;; Expands argument definition and argument list to an associative list
 ;; of argument name/value pairs. Argument rest lists start with the
 ;; &REST keyword. The returned list is grouped into static, optional,
@@ -56,32 +72,13 @@
 						              "; Given arguments: ~A~%")
                        (symbol-name fun) (apply #'format nil msg args)
                        adef alst))
-		 get-name ; DEFGENERIC: Ignore types.
-		   #'((def)
-				(? (cons? def.)
-				   def..
-				   def.))
-
-		 get-default
-		   #'((def)
-				(? (cons? def.)
-				   (cadr def.)
-				   (list '%quote def.)))
-
-		 get-value
-		   #'((def vals)
-				(?
-				  (cons? vals) vals.
-				  (cons? def.) (cadr def.)
-				  def.))
-
 		 exp-static
 		   #'((def vals)
 			    (& no-static
 				   (err "static argument definition after ~A" (list no-static)))
 			    (& apply-values (not vals)
 				   (err "argument ~A missing" (list num)))
-				(cons (cons (get-name def) vals.)
+				(cons (cons (argdef-get-name def.) vals.)
 					  (exp-main .def .vals)))
 
 		 exp-optional
@@ -89,8 +86,8 @@
 				(& (argument-keyword? def.)
 				   (err "Keyword ~A after &OPTIONAL" (list def.)))
 				(= no-static '&optional)
-				(cons (cons (get-name def)
-							(get-value def vals))
+				(cons (cons (argdef-get-name def.)
+							(argdef-get-value def vals))
 					  (?
 						(argument-keyword? .def.) (exp-main .def .vals)
 						.def                      (exp-optional .def .vals)
@@ -108,7 +105,7 @@
 		 exp-rest
 		   #'((def vals)
 				(= no-static '&rest)
-  			    (= rest-arg (list (cons (get-name def)
+  			    (= rest-arg (list (cons (argdef-get-name def.)
                                         (cons '&rest vals))))
 			    nil)
 
