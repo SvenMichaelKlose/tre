@@ -13,23 +13,21 @@
 			    (& key-args '((keywords))))
 
 		 static
-		   #'((def)
-			    `((= ,def. (car ,p))
-				  (= ,p (cdr ,p))
-				  ,@(main .def)))
+           [`((= ,_. (car ,p))
+              (= ,p (cdr ,p))
+              ,@(main ._))]
 
 		 optional
-		   #'((def)
-			    `(,@(key)
-				  (? ,p
-				     (= ,(argdef-get-name def.) (car ,p)
-				        ,p (cdr ,p))
-					 ,@(& (cons? def.)
-					      `((= ,(argdef-get-name def.) ,(argdef-get-default def.)))))
-				  ,@(& .def
-					   (? (argument-keyword? .def.)
-				  		  (main .def)
-					      (optional .def)))))
+		   [`(,@(key)
+              (? ,p
+                 (= ,(argdef-get-name _.) (car ,p)
+                    ,p (cdr ,p))
+                 ,@(& (cons? _.)
+                      `((= ,(argdef-get-name _.) ,(argdef-get-default _.)))))
+              ,@(& ._
+                   (? (argument-keyword? ._.)
+                      (main ._)
+                      (optional ._))))]
 
 		 arest
 		   [`(,@(key)
