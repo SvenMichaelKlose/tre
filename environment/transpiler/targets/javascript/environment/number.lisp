@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (js-type-predicate %number? "number")
 
@@ -13,11 +13,8 @@
 (dont-obfuscate *math floor)
 
 (defun number-integer (x)
-  (declare type number x)
   (*math.floor x))
 
-(dont-obfuscate is-na-n)
-
 (defun integer? (x)
-  (& (number? x)
+  (& (%number? x)
      (%%%== (parse-int x 10) (parse-float x 10))))
