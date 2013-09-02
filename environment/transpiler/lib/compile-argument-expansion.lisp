@@ -15,7 +15,7 @@
 		 static
            [`(,@(? (transpiler-assert? *transpiler*)
                    `((| ,p
-                        (error "Argument ~A missing in function ~A." ',_. ',fun-name))))
+                        (error-arguments-missing ',_. ',fun-name))))
               (= ,_. (car ,p))
               (= ,p (cdr ,p))
               ,@(main ._))]
@@ -34,7 +34,7 @@
 
 		 arest
 		   [(? (cons? _.)
-               (error "In function ~A: &REST argument cannot have a default value." fun-name))
+               (error-&rest-has-value fun-name))
             `(,@(key)
 			  (= ,_. ,p)
               ,@(? (transpiler-assert? *transpiler*)
@@ -80,29 +80,26 @@
        (main argdefs))))
 
 (defun compile-argument-expansion-function-body (fun-name adef p toplevel-continuer names)
-  `(with ,(mapcan [`(,_ ',_)] names)
-     ,@(compile-argument-expansion-0 fun-name adef p)
-     ,@(? (transpiler-assert? *transpiler*)
-          `((? ,p
-               (error "Too many arguments to function ~A. Extra arguments are ~A." ',fun-name ,p))))
-     ((%%native ,(compiled-function-name *transpiler* fun-name)) ,@toplevel-continuer ,@names)))
+  (body-with-noargs-tag
+      `((with ,(mapcan [`(,_ ',_)] names)
+          ,@(compile-argument-expansion-0 fun-name adef p)
+          ,@(? (transpiler-assert? *transpiler*)
+               `((? ,p
+                    (error-too-many-arguments ',fun-name ,p))))
+          ((%%native ,(compiled-function-name *transpiler* fun-name)) ,@toplevel-continuer ,@names)))))
 
 (defun compile-argument-expansion-cps (this-name fun-name adef names)
   (with-gensym (toplevel-continuer p)
     `(function ,this-name
                ((,p)
                   (let ,toplevel-continuer ~%continuer
-                    ,(compile-argument-expansion-function-body fun-name adef p (list toplevel-continuer) names))))))
+                    ,@(compile-argument-expansion-function-body fun-name adef p (list toplevel-continuer) names))))))
 
 (defun compile-argument-expansion-no-cps (this-name fun-name adef names)
   (with-gensym p
     `(function ,this-name
                ((,p)
-                  ,(compile-argument-expansion-function-body fun-name adef p nil names)))))
-
-(defun only-&rest? (adef)
-  (& (== 2 (length adef))
-     (eq '&rest adef.)))
+                  ,@(compile-argument-expansion-function-body fun-name adef p nil names)))))
 
 (defun compile-argument-expansion (this-name fun-name adef)
   (alet (argument-expand-names 'compile-argument-expansion adef)
