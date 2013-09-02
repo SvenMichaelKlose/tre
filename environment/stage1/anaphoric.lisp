@@ -11,7 +11,7 @@
 
 (defmacro !? (predicate &body alternatives)
   (| alternatives
-     (error "!? expects at least one alternative."))
+     (error "!? expects at least a consequence."))
   `(%!? ,predicate ,@alternatives))
 
 (defmacro awhen (predicate &body body)
