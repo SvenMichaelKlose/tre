@@ -28,11 +28,7 @@
     opt-peephole             [? (transpiler-inject-debugging? tr)
                                 _
                                 (transpiler-opt-peephole tr _)]
-;    cps                      [? (in-cps-mode?)
-;                                (cps _)
-;                                _]
-;    middleend-graph          [(middleend-graph _)
-;                              (identity _)]
+    cps                      #'cps
     opt-find-unused-places   #'opt-places-find-used
     opt-remove-unused-places #'opt-places-remove-unused
     update-funinfo           #'transpiler-update-funinfo
