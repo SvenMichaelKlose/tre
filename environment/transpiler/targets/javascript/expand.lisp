@@ -3,7 +3,7 @@
 (defmacro define-js-std-macro (&rest x)
   `(define-transpiler-std-macro *js-transpiler* ,@x))
 
-(defun js-make-function-with-compiled-argument-expansion (x)
+(defun js-make-function-with-expander (x)
   (alet (| (lambda-name x) (gensym))
     (with-gensym g
       `(%%block
@@ -18,15 +18,17 @@
          (eq ,x. ,@..x))
      `(eq ,@x)))
 
+(defun js-requires-expander? (x)
+  (& (not (body-has-noargs-tag? (lambda-body x)))
+     (| (transpiler-assert? *transpiler*)
+        (not (simple-argument-list? (lambda-args x))))))
+
 (define-js-std-macro function (&rest x)
   (alet (cons 'function x)
     (? .x
-       (with (args (lambda-args !)
-              body (lambda-body !))
-         (? (| (body-has-noargs-tag? body)
-               (simple-argument-list? args))
-            !
-            (js-make-function-with-compiled-argument-expansion !)))
+       (? (js-requires-expander? !)
+          (js-make-function-with-expander !)
+          !)
        !)))
 
 (define-js-std-macro funcall (fun &rest args)
