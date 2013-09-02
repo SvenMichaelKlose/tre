@@ -1,8 +1,10 @@
 ;;;;; tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun copy-while (pred x)
-  (& x (funcall pred (car x))
-     (cons (car x) (copy-while pred (cdr x)))))
+  (& x
+     (funcall pred (car x))
+     (cons (car x)
+           (copy-while pred (cdr x)))))
 
 (define-test "COPY-WHILE"
   ((copy-while #'number? '(1 2 3 a)))
@@ -13,8 +15,8 @@
 		  (remove-if pred x)))
 
 (defmacro with (lst &body body)
-  (unless body
-	(error "Body expected."))
+  (| lst  (error "Pair(s) of variable names and initializers expected."))
+  (| body (error "Body expected."))
   (labels ((sub (x)
              (? x
                 `((with ,x
