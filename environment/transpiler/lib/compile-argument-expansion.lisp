@@ -88,10 +88,10 @@
 
 (defun compile-argument-expansion-function-body (fun-name adef p)
   (body-with-noargs-tag
-    (alet-if (argument-expand-names 'compile-argument-expansion adef)
-      `((with ,(mapcan [`(,_ ',_)] !)
-          ,@(compile-argument-expansion-function-body-0 fun-name adef p !)))
-       (compile-argument-expansion-function-body-0 fun-name adef p !))))
+    (!? (argument-expand-names 'compile-argument-expansion adef)
+        `((with ,(mapcan [`(,_ ',_)] !)
+            ,@(compile-argument-expansion-function-body-0 fun-name adef p !)))
+         (compile-argument-expansion-function-body-0 fun-name adef p !))))
 
 (defun compile-argument-expansion-function (this-name fun-name adef names)
   (with-gensym p
