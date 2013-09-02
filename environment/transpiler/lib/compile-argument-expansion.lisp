@@ -79,31 +79,25 @@
 		  ,@(compile-argument-expansion-defaults key-args)))
        (main argdefs))))
 
-(defun compile-argument-expansion-function-body (fun-name adef p toplevel-continuer names)
+(defun compile-argument-expansion-function-body-0 (fun-name adef p names)
+  `(,@(compile-argument-expansion-0 fun-name adef p)
+    ,@(? (transpiler-assert? *transpiler*)
+         `((? ,p
+              (error-too-many-arguments ',fun-name ,p))))
+    ((%%native ,(compiled-function-name *transpiler* fun-name)) ,@names)))
+
+(defun compile-argument-expansion-function-body (fun-name adef p)
   (body-with-noargs-tag
-      `((with ,(mapcan [`(,_ ',_)] names)
-          ,@(compile-argument-expansion-0 fun-name adef p)
-          ,@(? (transpiler-assert? *transpiler*)
-               `((? ,p
-                    (error-too-many-arguments ',fun-name ,p))))
-          ((%%native ,(compiled-function-name *transpiler* fun-name)) ,@toplevel-continuer ,@names)))))
+    (alet-if (argument-expand-names 'compile-argument-expansion adef)
+      `((with ,(mapcan [`(,_ ',_)] !)
+          ,@(compile-argument-expansion-function-body-0 fun-name adef p !)))
+       (compile-argument-expansion-function-body-0 fun-name adef p !))))
 
-(defun compile-argument-expansion-cps (this-name fun-name adef names)
-  (with-gensym (toplevel-continuer p)
-    `(function ,this-name
-               ((,p)
-                  (let ,toplevel-continuer ~%continuer
-                    ,@(compile-argument-expansion-function-body fun-name adef p (list toplevel-continuer) names))))))
-
-(defun compile-argument-expansion-no-cps (this-name fun-name adef names)
+(defun compile-argument-expansion-function (this-name fun-name adef names)
   (with-gensym p
     `(function ,this-name
                ((,p)
-                  ,@(compile-argument-expansion-function-body fun-name adef p nil names)))))
+                  ,@(compile-argument-expansion-function-body fun-name adef p)))))
 
 (defun compile-argument-expansion (this-name fun-name adef)
-  (alet (argument-expand-names 'compile-argument-expansion adef)
-    (funcall (? (in-cps-mode?)
-                #'compile-argument-expansion-cps
-                #'compile-argument-expansion-no-cps)
-             this-name fun-name adef !)))
+  (compile-argument-expansion-function this-name fun-name adef (argument-expand-names 'compile-argument-expansion adef)))

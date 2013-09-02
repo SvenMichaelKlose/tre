@@ -78,11 +78,10 @@
   (let fun-name (%defun-name name)
     `(%%block
        ,@(shared-defun-without-expander fun-name args body :source-memorizer? t :allow-backtrace? t)
-       ,@(when (& args make-expander?
+       ,@(when (& make-expander?
                   (| (not (simple-argument-list? args))
                      (transpiler-assert? *transpiler*)))
            (with-gensym p
              (shared-defun-without-expander (c-expander-name fun-name) (list p)
-                                            (compile-argument-expansion-function-body fun-name args p nil
-                                                                                      (argument-expand-names 'compile-argument-expansion args))
+                                            (compile-argument-expansion-function-body fun-name args p)
                                             :source-memorizer? nil))))))
