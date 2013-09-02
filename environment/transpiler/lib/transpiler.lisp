@@ -318,7 +318,7 @@
     (funcall (expander-lookup expander) expander name)))
 
 (defun make-global-funinfo (tr)
-  (= (transpiler-global-funinfo tr) (create-funinfo :name 'global-scope :parent nil :args nil :transpiler tr)))
+  (= (transpiler-global-funinfo tr) (create-funinfo :name 'global-scope :parent nil :args nil :body nil :transpiler tr)))
 
 (defun transpiler-package-symbol (tr x)
   (make-symbol (symbol-name x) (transpiler-current-package tr)))

@@ -12,22 +12,22 @@
 
 (defstruct funinfo
   (transpiler nil)
-  (parent nil)
-  (name nil) ; Name of the function.
+  (parent     nil)
+  (name       nil)
 
   (argdef nil) ; Argument definition.
-  (args nil) ; Expanded argument definition.
+  (args   nil) ; Expanded argument definition.
+  (body   nil) ; Expanded argument definition.
 
-  ; Lists of stack variables. The rest contains the parent environments.
   (original-vars nil)
-  (vars nil)
-  (vars-hash nil)
-  (used-vars nil)
-  (free-vars nil)
+  (vars          nil)
+  (vars-hash     nil)
+  (used-vars     nil)
+  (free-vars     nil)
 
   (lexicals nil) ; List of symbols exported to child functions.
-  (lexical nil)  ; Name of the array of lexicals.
-  (ghost nil)    ; Name of hidden argument with an array of lexicals.
+  (lexical  nil) ; Name of the array of lexicals.
+  (ghost    nil) ; Name of hidden argument with an array of lexicals.
   (local-function-args nil)
 
   ; List if variables which must not be removed by the optimizer in order
@@ -52,6 +52,7 @@
       :name         name
       :argdef        argdef
       :args         (copy-list args)
+      :body         (copy-list body)
       :vars         (copy-list vars)
       :vars-hash    (copy-hash-table vars-hash)
       :used-vars    (copy-list used-vars)
@@ -72,7 +73,7 @@
   (when (named-lambda? x)
     (get-funinfo (lambda-name x))))
 
-(defun create-funinfo (&key name parent args (transpiler *transpiler*))
+(defun create-funinfo (&key name parent args body (transpiler *transpiler*))
   (& (href (transpiler-funinfos transpiler) name)
      (error "FUNFINFO for ~A is already memorized." name))
   (with (argnames (argument-expand-names 'lambda-expand args)
@@ -80,6 +81,7 @@
                                 :argdef        args
                                 :original-vars argnames
                                 :args          argnames
+                                :body          body
                                 :parent        parent
                                 :transpiler    transpiler))
     (= (href (transpiler-funinfos transpiler) name) fi)
@@ -87,3 +89,9 @@
     (& (transpiler-copy-arguments-to-stack? transpiler)
        (funinfo-var-add-many fi argnames))
     fi))
+
+(defun print-funinfo-sources (tr)
+  (filter [(format t "Function ~A:~%" (funinfo-name _))
+           (format t "Arguments: ~A~%" (funinfo-argdef _))
+           (format t "Body: ~A~%" (funinfo-body _))]
+          (hashkeys (transpiler-funinfos tr))))

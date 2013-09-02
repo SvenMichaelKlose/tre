@@ -42,6 +42,7 @@
          body   (lambda-body x)
          new-fi (create-funinfo :name   name
                                 :args   args
+                                :body   body
                                 :parent fi))
     (funinfo-make-ghost new-fi)
     (transpiler-add-exported-closure *transpiler* `((defun ,name ,(funinfo-argdef new-fi) ,@body)))
@@ -57,6 +58,7 @@
                        (make-funinfo-sym))
              new-fi (create-funinfo :name   name
                                     :args   (lambda-args x)
+                                    :body   (lambda-body x)
                                     :parent fi))
         (funinfo-var-add fi name)
         (copy-lambda x :name name :body (lambda-expand-tree-0 new-fi (lambda-body x))))))
