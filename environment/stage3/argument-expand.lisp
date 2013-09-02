@@ -12,7 +12,7 @@
   (error "Arguments ~A missing for function ~A." fun args))
 
 (defun error-too-many-arguments (fun args)
-  (error "Too many arguments ~A for function ~A." fun args))
+  (error "Too many arguments ~A for function ~A." args fun))
 
 (defun error-&rest-has-value (fun)
   (error "In function ~A: &REST cannot have a value." fun))
