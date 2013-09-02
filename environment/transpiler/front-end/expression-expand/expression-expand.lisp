@@ -12,10 +12,6 @@
      .x.
      x))
 
-(defun %setq-cps-mode? (x)
-  (& (%setq? x)
-     (eq '%cps-mode (%setq-place x))))
-
 
 (defvar *current-expex* nil)
 (defvar *expex-funinfo* nil)
@@ -133,8 +129,6 @@
 (defun expex-move-std (ex x)
   (with (s                (expex-funinfo-var-add)
          (moved new-expr) (expex-expr ex x))
-    (& (lambda-expression-needs-cps? x)
-       (transpiler-add-cps-function *transpiler* s))
     (cons (+ moved
              (? (has-return-value? new-expr.)
                 (expex-make-%setq ex s new-expr.)
@@ -180,19 +174,9 @@
   (funinfo-var-add *expex-funinfo* .x.)
   (values nil nil))
 
-(defun expex-cps (x)
-  (& (| (%setq? x)
-        (%set-atom-fun? x))
-     (lambda-expression-needs-cps? (%setq-value x))
-     (transpiler-add-cps-function *transpiler* (%setq-place x))))
-
 (defun expex-%%go-nil (ex x)
   (with ((moved new-expr) (expex-filter-and-move-args ex (list ..x.)))
     (values moved `((%%go-nil ,.x. ,@new-expr)))))
-
-(defun expex-%setq-cps-mode (x)
-  (= *transpiler-except-cps?* (not (%setq-value x)))
-  (values nil nil))
 
 (defun expex-expr-%setq (ex x)
   (with (plc (%setq-place x)
@@ -213,14 +197,12 @@
 (defun expex-expr (ex expr)
   (with-default-listprop expr
     (let x (expex-guest-filter-expr ex expr)
-      (expex-cps x)
       (?
         (%%go-nil? x)            (expex-%%go-nil ex x)
 	    (%var? x)                (expex-var x)
 	    (named-lambda? x)        (expex-lambda ex x)
         (not (expex-able? ex x)) (values nil (list x))
         (%%block? x)             (values nil (expex-body ex (%%block-body x)))
-        (%setq-cps-mode? x)      (expex-%setq-cps-mode x)
         (%setq? x)               (expex-expr-%setq ex x)
         (expex-expr-std ex x)))))
 

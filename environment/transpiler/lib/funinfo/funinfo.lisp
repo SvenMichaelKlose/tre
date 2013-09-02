@@ -38,7 +38,7 @@
   (num-tags nil)
   
   (globals nil)
-  (needs-cps? (not *transpiler-except-cps?*)))
+  (cps? nil))
 
 (defun funinfo-topmost (fi)
   (let p (funinfo-parent fi)
@@ -64,7 +64,7 @@
       :immutables   (copy-list immutables)
       :num-tags     num-tags
       :globals      (copy-list globals)
-      :needs-cps?   needs-cps?))
+      :cps?         cps?))
 
 (defun get-funinfo (name &optional (tr *transpiler*))
   (& name (href (transpiler-funinfos tr) name)))

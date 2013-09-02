@@ -72,10 +72,6 @@
   (not (| (vm-jump? x)
           (%var? x))))
 
-(defun lambda-expression-needs-cps? (x)
-  (& (lambda-expr? x)
-     (funinfo-needs-cps? (get-lambda-funinfo x))))
-
 (defun named-lambda? (x)
   (& (function-expr? x)
      ..x))

@@ -16,8 +16,5 @@
 	  (function_exists fun-name)      (call_user_func_array fun-name (list-phphash args))
       (error (+ "Function '" fun-name "' does not exist.")))))
 
-(defmacro cps-wrap (x) x)
-(defun cps-return-dummy (&rest x))
-
 (defun funcall (fun &rest args)
   (apply fun args))

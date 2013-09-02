@@ -84,19 +84,9 @@
 (define-js-macro %function-return (name)
   `(,*js-indent* "return " ,(place-assign (place-expand-0 (get-funinfo name) '~%ret)) ,*js-separator*))
 
-(define-js-macro %function-return-cps (name)
-  (alet (get-funinfo name)
-    (? (& (funinfo-num-tags !)
-          (< 0 (funinfo-num-tags !)))
-       `(,*js-indent*  "return" ,*js-separator*)
-       "")))
-
 (define-js-macro %function-epilogue (name)
   (alet (get-funinfo name)
-    (| `(,@(? (& (transpiler-continuation-passing-style? *transpiler*)
-                 (funinfo-needs-cps? !))
-              `((%function-return-cps ,name))
-              `((%function-return ,name)))
+    (| `((%function-return ,name)
 	     ,@(& (< 0 (funinfo-num-tags !)) `("}}")))
         "")))
 

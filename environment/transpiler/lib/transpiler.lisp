@@ -4,7 +4,6 @@
 (defvar *transpiler-log* nil)
 (defvar *transpiler-no-stream?* nil)
 
-(defvar *transpiler-except-cps?* t)
 (defvar *recompiling?* nil)
 (defvar *print-executed-functions?* nil)
 
@@ -81,8 +80,6 @@
   (apply-argdefs? nil)
 
   (continuation-passing-style? nil)
-  (cps-exceptions nil)
-  (cps-functions nil)
 
   (code-concatenator #'concat-stringtree)
   (make-text? t)
@@ -206,8 +203,6 @@
         :copy-arguments-to-stack? copy-arguments-to-stack?
         :apply-argdefs?          apply-argdefs?
         :continuation-passing-style? continuation-passing-style?
-        :cps-exceptions          (copy-list cps-exceptions)
-        :cps-functions           (copy-list cps-functions)
         :code-concatenator       code-concatenator
         :make-text?              make-text?
         :encapsulate-strings?    encapsulate-strings?
@@ -272,7 +267,7 @@
 (transpiler-getter late-symbol?            (href (transpiler-late-symbols tr) x))
 (progn
   ,@(filter  [`(transpiler-getter-list ,_)]
-            '(cps-function plain-arg-fun emitted-decl)))
+            '(plain-arg-fun emitted-decl)))
 
 (transpiler-getter add-defined-variable (= (href (transpiler-defined-variables-hash tr) x) t)
                                         x)
@@ -291,8 +286,6 @@
 (defun transpiler-add-function-args (tr fun args) (= (href (transpiler-function-args tr) fun) args))
 (defun transpiler-add-function-body (tr fun args) (= (href (transpiler-function-bodies tr) fun) args))
 (define-slot-setter-push transpiler-add-exported-closure tr  (transpiler-exported-closures tr))
-(define-slot-setter-push transpiler-add-cps-function tr      (transpiler-cps-functions tr))
-(define-slot-setter-push transpiler-add-cps-exception tr     (transpiler-cps-exceptions tr))
 (define-slot-setter-push transpiler-add-plain-arg-fun tr     (transpiler-plain-arg-funs tr))
 (define-slot-setter-push transpiler-add-emitted-decl tr      (transpiler-emitted-decls tr))
 (defun transpiler-add-delayed-var-init (tr x)    (nconc! (transpiler-delayed-var-inits tr) (copy-tree (transpiler-frontend tr x))))
@@ -340,10 +333,6 @@
        (transpiler-host-variable? tr x)
        (transpiler-late-symbol? tr x)
        (funinfo-var? (transpiler-global-funinfo tr) x))))
-
-(defun in-cps-mode? ()
-  (& (transpiler-continuation-passing-style? *transpiler*)
-     (not *transpiler-except-cps?*)))
 
 (defun current-transpiler-function-arguments (x)
   (alet *transpiler*

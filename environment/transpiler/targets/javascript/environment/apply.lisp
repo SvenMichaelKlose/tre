@@ -2,18 +2,6 @@
 
 (dont-obfuscate apply call)
 
-(defun cps-apply (continuer &rest lst)
-  (with (fun  lst.
-         l    (last .lst)
-         args (%nconc (butlast .lst) l.))
-    (!? fun.tre-exp
-        (? fun.tre-cps
-	       (!.apply nil (%%native "[" continuer "," args "]"))
-	       (continuer (!.apply nil (%%native "[" args "]"))))
-        (? fun.tre-cps
-           (fun.apply nil (list-array (cons continuer args)))
-           (continuer (fun.apply nil (list-array (cons continuer args))))))))
-
 (defun apply (&rest lst)
   (with (fun lst.
          l (last .lst)
@@ -26,9 +14,6 @@
     (!? fun.tre-exp
         (!.apply nil (%%native "[" args "]"))
      (fun.apply nil (list-array args)))))
-
-(defun cps-wrap  (x) x)
-(defun cps-return-dummy (&rest x))
 
 (defun funcall (fun &rest args)
   (apply fun args))

@@ -14,8 +14,7 @@
 (defvar *js-env-path* "environment/transpiler/targets/javascript/environment/")
 
 (defvar *js-base*
-	,(list 'quote (+ (js-load-base "environment/transpiler/environment/"
-                                   "cps-disable.lisp")
+	,(list 'quote (+ (js-load-base "environment/transpiler/environment/")
 	                 (js-load-base *js-env-path*
 		                           "return-value.lisp"
                                    "log.lisp"
@@ -32,7 +31,6 @@
 
 (defvar *js-base2*
 	,(list 'quote (+ (js-load-base "environment/transpiler/environment/"
-                                   "cps-disable.lisp"
 		                           "not.lisp")
 		             (js-load-base *js-env-path*
 			                       "macro.lisp"
