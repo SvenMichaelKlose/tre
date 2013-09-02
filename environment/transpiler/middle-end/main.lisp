@@ -19,10 +19,10 @@
 (env-load "transpiler/middle-end/opt-tailcall.lisp")
 (env-load "transpiler/middle-end/link-funinfos.lisp")
 ;(env-load "transpiler/middle-end/cps.lisp")
-(env-load "transpiler/middle-end/named-functions.lisp")
 (env-load "transpiler/middle-end/quote-keywords.lisp")
 (env-load "transpiler/middle-end/make-packages.lisp")
 (env-load "transpiler/middle-end/inject.lisp")
 (env-load "transpiler/middle-end/accumulate-toplevel-expressions.lisp")
+(env-load "transpiler/middle-end/correct-functions.lisp")
 
 (env-load "transpiler/middle-end/toplevel.lisp")

@@ -12,12 +12,12 @@
     make-packages            #'make-packages
     expression-expand        [with-temporary (transpiler-expex-warnings? tr) nil
                                (transpiler-expression-expand tr _)]
+    correct-functions        [correct-functions tr _]
     accumulate-toplevel      [accumulate-toplevel-expressions tr _]
     inject-debugging         [? (transpiler-inject-debugging? tr)
                                 (inject-debugging _)
                                 _]
     quote-keywords           #'transpiler-quote-keywords
-    make-named-functions     [transpiler-make-named-functions tr _]
     link-funinfos            #'link-funinfos
     opt-peephole             [? (transpiler-inject-debugging? tr)
                                 _
