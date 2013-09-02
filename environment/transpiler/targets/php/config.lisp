@@ -15,7 +15,6 @@
       :lambda-export? t
       :stack-locals? nil
       :rename-all-args? t
-      :named-function-next #'cddr
       :raw-constructor-names? t
       :expex-initializer
           #'((ex)

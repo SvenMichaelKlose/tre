@@ -48,8 +48,6 @@
   (wanted-variables nil)
   (wanted-variables-hash (make-hash-table :test #'eq))
 
-  (named-function-next nil)
-
   (assert?                  nil)
   (obfuscate?               nil)
   (import-from-environment? t)
@@ -185,7 +183,6 @@
         :wanted-functions-hash  (copy-hash-table wanted-functions-hash)
         :wanted-variables       (copy-list wanted-variables)
         :wanted-variables-hash  (copy-hash-table wanted-variables-hash)
-        :named-function-next    named-function-next
         :assert?                assert?
         :obfuscate?             obfuscate?
         :import-from-environment? import-from-environment?
