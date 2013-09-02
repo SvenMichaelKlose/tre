@@ -74,7 +74,8 @@
 
 (defun c-compile-init-functions (tr)
   (with-temporaries ((transpiler-profile? tr)   nil
-                     (transpiler-backtrace? tr) nil)
+                     (transpiler-backtrace? tr) nil
+                     (transpiler-assert? tr)    nil)
       (transpiler-make-code tr (transpiler-frontend tr (c-make-init-functions tr)))))
 
 (defun c-decl-gen (tr)
