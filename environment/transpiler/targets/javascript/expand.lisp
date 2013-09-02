@@ -4,19 +4,14 @@
   `(define-transpiler-std-macro *js-transpiler* ,@x))
 
 (defun js-make-function-with-expander (x)
-  (alet (| (lambda-name x) (gensym))
+  (alet (| (lambda-name x)
+           (gensym))
     (with-gensym g
       `(%%block
          (%var ,g)
          ,(copy-lambda x :name ! :body (body-with-noargs-tag (lambda-body x)))
          (= (slot-value ,! 'tre-exp) ,(compile-argument-expansion g ! (lambda-args x)))
          ,!))))
-
-(define-js-std-macro eq (&rest x)
-  (? ..x
-     `(& (eq ,x. ,.x.)
-         (eq ,x. ,@..x))
-     `(eq ,@x)))
 
 (defun js-requires-expander? (x)
   (& (not (body-has-noargs-tag? (lambda-body x)))
@@ -30,15 +25,6 @@
           (js-make-function-with-expander !)
           !)
        !)))
-
-(define-js-std-macro funcall (fun &rest args)
-  (with-gensym (f e a)
-    `(with (,f ,fun
-            ,e (slot-value ,f 'tre-exp))
-       (? ,e
-          (let ,a (list ,@args)
-            ((slot-value ,e 'apply) nil (%%native "[" ,a "]")))
-          (,f ,@args)))))
 
 (defvar *late-symbol-function-assignments* nil)
 
@@ -74,9 +60,6 @@
 (define-js-std-macro early-defun (&rest x)
   `(defun ,@x))
 
-(define-js-std-macro make-string (&optional len)
-  "")
-
 (define-js-std-macro slot-value (place slot)
   `(%slot-value ,place ,.slot.))
 
@@ -86,24 +69,12 @@
     		  (error "Function must be a SLOT-VALUE, got ~A." fun))
 		  ,fun))
 
-(defun js-make-new-hash (x)
-  `(%%%make-hash-table
-	 ,@(mapcan [list (? (& (not (string? _.))
-						   (eq :class _.))
-					    "class" ; IE6 wants this.
-					    _.)
-					 ._.]
-			   (group x 2))))
-
-(defun js-make-new-object (x)
-  `(%new ,@x))
-
 (define-js-std-macro new (&rest x)
   (| x (error "Argument(s) expected."))
   (? (| (keyword? x.)
 	    (string? x.))
-	 (js-make-new-hash x)
-	 (js-make-new-object x)))
+     `(%%%make-hash-table ,@x)
+     `(%new ,@x)))
 
 (define-js-std-macro js-type-predicate (name &rest types)
   `(defun ,name (x)
