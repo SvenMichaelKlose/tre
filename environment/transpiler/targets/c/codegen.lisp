@@ -31,13 +31,7 @@
     (| fi (error "No funinfo for ~A." name))
     (c-make-function-declaration name args)
     `(,*c-newline*
-      "/*" ,*c-newline*
-      "  argdef:   " ,(late-print (funinfo-argdef fi) nil) ,*c-newline*
-      "  args:     " ,(symbol-names-string (funinfo-args fi)) ,*c-newline*
-      "  env:      " ,(symbol-names-string (funinfo-vars fi)) ,*c-newline*
-      "  lexical:  " ,(symbol-name (funinfo-lexical fi)) ,*c-newline*
-      "  lexicals: " ,(symbol-names-string (funinfo-lexicals fi)) ,*c-newline*
-      "*/" ,*c-newline*
+      ,(funinfo-comment fi)
 	  "treptr " ,(compiled-function-name *transpiler* name) " "
 	  ,@(parenthized-comma-separated-list (mapcar ^("treptr " ,_) args))
 	  ,*c-newline*

@@ -17,7 +17,7 @@
 
   (argdef nil) ; Argument definition.
   (args   nil) ; Expanded argument definition.
-  (body   nil) ; Expanded argument definition.
+  (body   nil)
 
   (original-vars nil)
   (vars          nil)
