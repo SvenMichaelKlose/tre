@@ -55,33 +55,33 @@
          (= *backtrace* .*backtrace*)))
      body))
 
-(defun shared-defun-without-expander (name args body &key (source-memorizer? nil) (allow-backtrace? nil))
+(defun shared-defun-without-expander (name args body &key (allow-source-memorizer? nil) (allow-backtrace? nil))
   (= name (apply-current-package name))
   (print-definition `(defun ,name ,args))
-  (| (list? args)
-     (error "Argument list expected instead of ~A." args))
-  (& (transpiler-defined-function *transpiler* name)
-     (redef-warn "Redefinition of function ~A." name))
-  (transpiler-add-defined-function *transpiler* name args body)
-  `((function ,name (,args
-                     ,@(& (body-has-noargs-tag? body)
-                          '(no-args))
-                     (block ,name
-                       ,@(alet (shared-defun-profiling-body name body)
+  (let body-with-block `((block ,name ,@body))
+    (| (list? args)
+       (error "Argument list expected instead of ~A." args))
+    (& (transpiler-defined-function *transpiler* name)
+       (redef-warn "Redefinition of function ~A." name))
+    (transpiler-add-defined-function *transpiler* name args body-with-block)
+    `((function ,name (,args
+                       ,@(& (body-has-noargs-tag? body)
+                            '(no-args))
+                       ,@(alet (shared-defun-profiling-body name body-with-block)
                            (? allow-backtrace?
                               (shared-defun-backtrace name !)
-                              !)))))
-      ,@(& source-memorizer?
-           (shared-defun-source-memorizer name args body))))
+                              !))))
+      ,@(& allow-source-memorizer?
+           (shared-defun-source-memorizer name args body-with-block)))))
 
 (defun shared-defun (name args body &key (make-expander? t))
   (let fun-name (%defun-name name)
     `(%%block
-       ,@(shared-defun-without-expander fun-name args body :source-memorizer? t :allow-backtrace? t)
+       ,@(shared-defun-without-expander fun-name args body :allow-source-memorizer? t :allow-backtrace? t)
        ,@(when (& make-expander?
                   (| (not (simple-argument-list? args))
                      (transpiler-assert? *transpiler*)))
            (with-gensym p
-             (shared-defun-without-expander (c-expander-name fun-name) (list p)
-                                            (compile-argument-expansion-function-body fun-name args p)
-                                            :source-memorizer? nil))))))
+             (shared-defun-without-expander (c-expander-name fun-name)
+                                            (list p)
+                                            (compile-argument-expansion-function-body fun-name args p)))))))
