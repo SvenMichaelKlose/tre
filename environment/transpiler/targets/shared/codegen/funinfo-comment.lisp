@@ -3,17 +3,21 @@
 (defun funinfo-comment (fi)
    (concat-stringtree
       `("/*" ,*c-newline*
-        ,@(filter [format nil "~A~A~%" _. ._.]
+        ,@(filter [!? ._.
+                      (format nil "~A~A~%" _. !)
+                      !]
                   `(("  name:          " ,(funinfo-name fi))
-                    ("  argdef:        " ,(funinfo-argdef fi))
-                    ("  args:          " ,(funinfo-args fi))
-                    ("  vars:          " ,(funinfo-vars fi))
-                    ("  ghost:         " ,(funinfo-ghost fi))
-                    ("  lexical:       " ,(funinfo-lexical fi))
-                    ("  lexicals:      " ,(funinfo-lexicals fi))
+                    ("  argument def:  " ,(| (funinfo-argdef fi)
+                                             "no arguments"))
+                    ("  expanded args: " ,(funinfo-args fi))
+                    ("  local vars:    " ,(funinfo-vars fi))
                     ("  used vars:     " ,(funinfo-used-vars fi))
                     ("  free vars:     " ,(funinfo-free-vars fi))
+                    ("  globals:       " ,(funinfo-globals fi))
                     ("  local funs:    " ,(funinfo-local-function-args fi))
                     ("  immutables:    " ,(funinfo-immutables fi))
-                    ("  globals:       " ,(funinfo-globals fi))))
+                    ,@(& (transpiler-lambda-export? *transpiler*)
+                         `(("  ghost:         " ,(funinfo-ghost fi))
+                           ("  lexical:       " ,(funinfo-lexical fi))
+                           ("  lexicals:      " ,(funinfo-lexicals fi))))))
         "*/" ,*c-newline*)))
