@@ -45,4 +45,5 @@
 
 (defun format (str txt &rest args)
   (with-default-stream nstr str
-    (%format (make-format-info :stream nstr :text txt :args args) (string-list txt) args)))
+    (with-temporary *print-automatic-newline?* nil
+      (%format (make-format-info :stream nstr :text txt :args args) (string-list txt) args))))
