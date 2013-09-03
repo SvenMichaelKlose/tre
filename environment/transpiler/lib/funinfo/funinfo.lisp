@@ -19,7 +19,6 @@
   (args   nil) ; Expanded argument definition.
   (body   nil)
 
-  (original-vars nil)
   (vars          nil)
   (vars-hash     nil)
   (used-vars     nil)
@@ -79,7 +78,6 @@
   (with (argnames (argument-expand-names 'lambda-expand args)
          fi       (make-funinfo :name          name
                                 :argdef        args
-                                :original-vars argnames
                                 :args          argnames
                                 :body          body
                                 :parent        parent
