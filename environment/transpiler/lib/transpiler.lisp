@@ -28,8 +28,8 @@
   codegen-expander
   separator
 
-  (identifier-char? [identity t])
-  (literal-conversion [error "TRANSPILER-LITERAL-CONVERSION is not initialized."])
+  (identifier-char?       [identity t])
+  (literal-converter      #'identity)
 
   expex
   expex-initializer
@@ -60,10 +60,8 @@
   (expex-warnings?          t)
   (function-prologues?      t)
 
-  ; Generator for literal strings.
   (gen-string #'literal-string)
 
-  ; Tells if functions must be moved out of functions.
   (lambda-export? nil)
 
   (accumulate-toplevel-expressions? nil)
@@ -72,18 +70,17 @@
   (function-name-prefix "USERFUN_")
   (needs-var-declarations? nil)
 
-  ; Tells if local variables are on the stack.
-  (stack-locals? nil)
-  (arguments-on-stack? nil)
+  (stack-locals?            nil)
+  (arguments-on-stack?      nil)
   (copy-arguments-to-stack? nil)
 
   (cps-transformation? nil)
 
-  (code-concatenator #'concat-stringtree)
-  (make-text? t)
+  (code-concatenator    #'concat-stringtree)
+  (make-text?           t)
   (encapsulate-strings? t)
-  (dump-passes? nil)
-  (inject-debugging? nil)
+  (dump-passes?         nil)
+  (inject-debugging?    nil)
 
   (predefined-symbols nil)
 
@@ -91,37 +88,37 @@
   ;;; You mustn't init these.
   ;;;
 
-  (symbol-translations nil)
-  (thisify-classes (make-hash-table :test #'eq))
-  (function-args (make-hash-table :test #'eq))
-  (function-bodies (make-hash-table :test #'eq))
-  (obfuscations (make-hash-table :test #'eq))
+  (symbol-translations    nil)
+  (thisify-classes        (make-hash-table :test #'eq))
+  (function-args          (make-hash-table :test #'eq))
+  (function-bodies        (make-hash-table :test #'eq))
+  (obfuscations           (make-hash-table :test #'eq))
   plain-arg-funs
-  (late-symbols (make-hash-table :test #'eq))
-  (exported-closures nil)
-  (delayed-var-inits nil)
-  (dot-expand? t)
+  (late-symbols           (make-hash-table :test #'eq))
+  (exported-closures      nil)
+  (delayed-var-inits      nil)
+  (dot-expand?            t)
   (raw-constructor-names? nil)
-  (memorized-sources nil)
-  (memorize-sources? t)
+  (memorized-sources      nil)
+  (memorize-sources?      t)
 
-  (funinfos (make-hash-table :test #'eq))
+  (funinfos         (make-hash-table :test #'eq))
   (funinfos-reverse (make-hash-table :test #'eq))
-  (global-funinfo nil)
+  (global-funinfo   nil)
 
   ; Literals that must be declared or cached before code with them is emitted.
-  (compiled-chars (make-hash-table :test #'==))
+  (compiled-chars   (make-hash-table :test #'==))
   (compiled-numbers (make-hash-table :test #'==))
   (compiled-strings (make-hash-table :test #'eq))
   (compiled-symbols (make-hash-table :test #'eq))
-  (compiled-decls nil)
-  (compiled-inits nil)
-  (emitted-decls nil)
-  (imported-deps "")
+  (compiled-decls   nil)
+  (compiled-inits   nil)
+  (emitted-decls    nil)
+  (imported-deps    "")
 
   (raw-decls nil)
 
-  (identifiers (make-hash-table :test #'eq))
+  (identifiers           (make-hash-table :test #'eq))
   (converted-identifiers (make-hash-table :test #'eq))
 
   ; Recompiling
@@ -130,10 +127,10 @@
 
   (current-package nil)
   
-  (current-pass nil)
-  (current-section nil)
+  (current-pass         nil)
+  (current-section      nil)
   (current-section-data nil)
-  (last-pass-result nil)
+  (last-pass-result     nil)
   
   (cpr-count? nil))
 
@@ -166,7 +163,7 @@
         :codegen-expander       codegen-expander
         :separator              separator
         :identifier-char?       identifier-char?
-        :literal-conversion     literal-conversion
+        :literal-converter      literal-converter
         :defined-functions-hash (copy-hash-table defined-functions-hash)
         :defined-variables-hash (copy-hash-table defined-variables-hash)
         :host-functions-hash    (copy-hash-table host-functions-hash)

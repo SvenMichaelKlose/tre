@@ -13,12 +13,11 @@
 (defun make-c-transpiler ()
   (create-transpiler
       :name                     'c
-      :separator                (format nil ";~%")
-      :identifier-char?         #'c-identifier-char?
       :lambda-export?           t
       :stack-locals?            t
       :copy-arguments-to-stack? t
-      :literal-conversion       #'identity
+      :separator                (format nil ";~%")
+      :identifier-char?         #'c-identifier-char?
       :expex-initializer        #'c-expex-initializer))
 
 (defvar *c-transpiler* (copy-transpiler (make-c-transpiler)))

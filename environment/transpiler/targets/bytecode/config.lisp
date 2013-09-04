@@ -11,12 +11,11 @@
 			  :lambda-export?       t
 			  :stack-locals?        t
 			  :arguments-on-stack?  t
-			  :literal-conversion   #'identity
-              :code-concatenator    #'tree-list
               :make-text?           nil
               :encapsulate-strings? nil
               :function-prologues?  nil
               :function-name-prefix nil
+              :code-concatenator    #'tree-list
               :expex-initializer    #'bc-expex-initializer)
     (transpiler-add-plain-arg-funs ! *builtins*)))
 

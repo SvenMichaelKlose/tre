@@ -16,12 +16,12 @@
 (defun make-php-transpiler-0 ()
   (create-transpiler
       :name                     'php
-      :literal-conversion       #'transpiler-expand-literal-characters
-	  :identifier-char?         #'php-identifier-char?
-      :gen-string               [literal-string _ #\" (list #\$)]
       :lambda-export?           t
       :stack-locals?            nil
       :raw-constructor-names?   t
+      :gen-string               [literal-string _ #\" (list #\$)]
+	  :identifier-char?         #'php-identifier-char?
+      :literal-converter        #'transpiler-expand-literal-characters
       :expex-initializer        #'php-expex-initializer))
 
 (defun make-php-transpiler ()

@@ -8,11 +8,11 @@
 (defun make-javascript-transpiler-0 ()
   (create-transpiler
       :name                     'js
-	  :identifier-char?         #'c-identifier-char?
 	  :lambda-export?           nil
-	  :needs-var-declarations?  t
 	  :stack-locals?            nil
-	  :literal-conversion       #'transpiler-expand-literal-characters
+	  :needs-var-declarations?  t
+	  :identifier-char?         #'c-identifier-char?
+	  :literal-converter        #'transpiler-expand-literal-characters
       :expex-initializer        #'js-expex-initializer))
 
 (defun make-javascript-transpiler ()

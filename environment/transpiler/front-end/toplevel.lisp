@@ -19,7 +19,7 @@
     transpiler-macroexpand-2  [transpiler-macroexpand tr _]
     compiler-macroexpand      #'compiler-macroexpand
     backquote-expand          #'backquote-expand
-    literal-conversion        [funcall (transpiler-literal-conversion tr) _])
+    literal-conversion        [funcall (transpiler-literal-converter tr) _])
 
 (defun transpiler-frontend-0 (tr x)
   (transpiler-frontend-2 tr (transpiler-frontend-1 tr x)))
