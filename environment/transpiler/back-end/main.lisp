@@ -3,7 +3,7 @@
 (env-load "transpiler/back-end/identifier-style-convert.lisp")
 (env-load "transpiler/back-end/macros.lisp")
 (env-load "transpiler/back-end/operators.lisp")
-(env-load "transpiler/back-end/finalize.lisp")
+(env-load "transpiler/back-end/wrap-tags.lisp")
 (env-load "transpiler/back-end/string-encapsulation.lisp")
 (env-load "transpiler/back-end/obfuscate.lisp")
 (env-load "transpiler/back-end/translate-function-names.lisp")
