@@ -100,7 +100,7 @@
         ,@(? dest
 		     `(,dest "=")
 		     '("")))
-	,(? (| (atom val) (codegen-expr? val))
+	,(? (atom|codegen-expr? val)
 		val
 		(js-call val))
     ,*js-separator*))
@@ -128,7 +128,7 @@
 ;;;; SYMBOL REPLACEMENTS
 
 (transpiler-translate-symbol *js-transpiler* nil "null")
-(transpiler-translate-symbol *js-transpiler* t "true")
+(transpiler-translate-symbol *js-transpiler* t   "true")
 
 
 ;;;; NUMBERS, ARITHMETIC AND COMPARISON
@@ -137,20 +137,20 @@
   `(define-transpiler-binary *js-transpiler* ,op ,repl-op))
 
 (mapcar-macro x
-	'((%%%+ "+")
+	'((%%%+       "+")
 	  (%%%string+ "+")
-	  (%%%- "-")
-	  (%%%/ "/")
-	  (%%%* "*")
-	  (%%%mod "%")
-	  (%%%== "==")
-	  (%%%!= "!=")
-	  (%%%< "<")
-	  (%%%> ">")
-	  (%%%<= "<=")
-	  (%%%>= ">=")
-	  (%%%eq "===")
-	  (%%%neq "!=="))
+	  (%%%-       "-")
+	  (%%%/       "/")
+	  (%%%*       "*")
+	  (%%%mod     "%")
+	  (%%%==      "==")
+	  (%%%!=      "!=")
+	  (%%%<       "<")
+	  (%%%>       ">")
+	  (%%%<=      "<=")
+	  (%%%>=      ">=")
+	  (%%%eq      "===")
+	  (%%%neq     "!=="))
   `(define-js-binary ,@x))
 
 
@@ -160,7 +160,7 @@
   `(%%native ,@(parenthized-comma-separated-list elements :type 'square)))
 
 (define-js-macro %%%aref (arr &rest idx)
-  `(%%native ,arr ,@(filter ^("[" ,_ "]") idx))) ; XXX add function C-ARRAY-SUBSCRIPT.
+  `(%%native ,arr ,@(filter ^("[" ,_ "]") idx)))
 
 (define-js-macro %%%=-aref (val &rest x)
   `(%%native (%%%aref ,@x) "=" ,val))

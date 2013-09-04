@@ -1,9 +1,7 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun c-line (&rest x)
-  `(,*c-indent*
-    ,@x
-	,*c-separator*))
+  `(,*c-indent* ,@x ,*c-separator*))
 
 (define-codegen-macro-definer define-c-macro *c-transpiler*)
 
@@ -14,7 +12,7 @@
 ;;;; SYMBOL TRANSLATIONS
 
 (transpiler-translate-symbol *c-transpiler* nil "treptr_nil")
-(transpiler-translate-symbol *c-transpiler* t "treptr_t")
+(transpiler-translate-symbol *c-transpiler* t   "treptr_t")
 
 
 ;;;; FUNCTIONS
@@ -41,7 +39,7 @@
 
 (define-c-macro %%closure (name)
   `("CONS (" ,(c-compiled-symbol '%closure) ", "
-	    "CONS (" ,(c-compiled-symbol name) "," ,(codegen-closure-lexical name) "))"))
+	       "CONS (" ,(c-compiled-symbol name) "," ,(codegen-closure-lexical name) "))"))
 
 (define-c-macro function (name &optional (x 'only-name))
   (? (eq 'only-name x)
@@ -61,10 +59,10 @@
 		'("")
 	    '("(void) "))))
 
-(defun codegen-%setq-value (val)
-   (? (| (atom val) (codegen-expr? val))
-      val
-      `(,val. ,@(parenthized-comma-separated-list .val))))
+(defun codegen-%setq-value (x)
+   (? (atom|codegen-expr? x)
+      x
+      `(,x. ,@(parenthized-comma-separated-list .x))))
 
 (define-c-macro %setq (dest val)
   (c-line `((%%native ,@(codegen-%setq-place dest val)) ,(codegen-%setq-value val))))
@@ -104,8 +102,8 @@
 (define-c-macro %%go (tag)
   (c-line `(%%native "goto l" ,tag)))
 
-(define-c-macro %%go-nil (tag val)
-  `(,*c-indent* "if (" ,val " == treptr_nil)" ,*c-newline*
+(define-c-macro %%go-nil (tag x)
+  `(,*c-indent* "if (" ,x " == treptr_nil)" ,*c-newline*
 	,*c-indent* ,@(c-line `(%%native "goto l" ,tag))))
 
 
