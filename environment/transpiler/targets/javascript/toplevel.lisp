@@ -2,10 +2,7 @@
 
 (defun js-transpile-prologue (tr)
   (+ (format nil "// tré revision ~A~%" *tre-revision*)
-     (format nil "var _I_ = 0; while (1) {switch (_I_) {case 0: ~%")
-     (? (transpiler-lambda-export? tr)
-        ,(fetch-file "environment/transpiler/targets/javascript/environment/native/closure.js")
-        "")))
+     (format nil "var _I_ = 0; while (1) {switch (_I_) {case 0: ~%")))
 
 (defun js-transpile-epilogue ()
   (format nil "}break;}~%"))
