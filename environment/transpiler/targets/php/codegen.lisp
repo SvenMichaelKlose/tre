@@ -70,6 +70,7 @@
 		 num-locals    (length (funinfo-vars fi))
 	     compiled-name (compiled-function-name *transpiler* name))
     `(,*php-newline*
+      ,(funinfo-comment fi)
 	  "function " ,compiled-name ,@(php-argument-list args)
       "{" ,(code-char 10)
 		 ,@(awhen (funinfo-globals fi)
