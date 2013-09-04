@@ -9,13 +9,10 @@
 (env-load "transpiler/lib/funinfo/local-function-args.lisp")
 (env-load "transpiler/lib/funinfo/debug.lisp")
 
+(env-load "transpiler/lib/lambda.lisp")
 (env-load "transpiler/lib/predicates.lisp")
 (env-load "transpiler/lib/tag.lisp")
-(env-load "transpiler/lib/with-lambda-call.lisp")
-(env-load "transpiler/lib/with-lambda-content.lisp")
-(env-load "transpiler/lib/expanded-lambda-args.lisp")
 (env-load "transpiler/lib/pass.lisp")
-(env-load "transpiler/lib/copy-lambda.lisp")
 (env-load "transpiler/lib/compiled-list.lisp")
 (env-load "transpiler/lib/compile-argument-expansion.lisp")
 
