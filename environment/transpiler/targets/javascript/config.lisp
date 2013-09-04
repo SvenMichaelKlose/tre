@@ -1,23 +1,19 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
+(defun js-expex-initializer (ex)
+  (= (expex-inline? ex)         #'%slot-value?
+     (expex-setter-filter ex)   #'expex-collect-wanted-variable
+     (expex-argument-filter ex) #'expex-%setq-collect-wanted-global-variable))
+
 (defun make-javascript-transpiler-0 ()
   (create-transpiler
-      :name 'js
-	  :apply-argdefs? t
-	  :identifier-char? [| (& (>= _ #\a) (<= _ #\z))
-                           (& (>= _ #\A) (<= _ #\Z))
-                           (& (>= _ #\0) (<= _ #\9))
-                           (in=? _ #\_ #\. #\$ #\#)]
-	  :lambda-export? nil
-	  :continuation-passing-style? t
-	  :needs-var-declarations? t
-	  :stack-locals? nil
-	  :literal-conversion #'transpiler-expand-literal-characters
-      :expex-initializer 
-          #'((ex)
-               (= (expex-inline? ex)         #'%slot-value?
-                  (expex-setter-filter ex)   #'expex-collect-wanted-variable
-                  (expex-argument-filter ex) #'expex-%setq-collect-wanted-global-variable))))
+      :name                     'js
+	  :identifier-char?         #'c-identifier-char?
+	  :lambda-export?           nil
+	  :needs-var-declarations?  t
+	  :stack-locals?            nil
+	  :literal-conversion       #'transpiler-expand-literal-characters
+      :expex-initializer        #'js-expex-initializer))
 
 (defun make-javascript-transpiler ()
   (aprog1 (make-javascript-transpiler-0)

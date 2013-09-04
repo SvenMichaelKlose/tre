@@ -2,26 +2,27 @@
 
 (defvar *php-version* 503)
 
+(defun php-identifier-char? (x)
+  (unless (== #\$ x)
+    (c-identifier-char? x)))
+
+(defun php-expex-initializer (ex)
+  (= (expex-inline? ex)         #'%slot-value?
+     (expex-move-lexicals? ex)  t
+     (expex-setter-filter ex)   (compose [mapcar [php-setter-filter *php-transpiler* _] _]
+                                         #'expex-compiled-funcall)
+     (expex-argument-filter ex) #'php-expex-argument-filter))
+
 (defun make-php-transpiler-0 ()
   (create-transpiler
-      :name 'php
-	  :apply-argdefs? nil
-      :literal-conversion #'transpiler-expand-literal-characters
-	  :identifier-char?  [| (& (>= _ #\a) (<= _ #\z))
-                            (& (>= _ #\A) (<= _ #\Z))
-                            (& (>= _ #\0) (<= _ #\9))
-                            (in=? _ #\_ #\. #\#)]
-      :gen-string [literal-string _ #\" (list #\$)]
-      :lambda-export? t
-      :stack-locals? nil
-      :raw-constructor-names? t
-      :expex-initializer
-          #'((ex)
-               (= (expex-inline? ex)         #'%slot-value?
-                  (expex-move-lexicals? ex)  t
-    	          (expex-setter-filter ex)   (compose [mapcar [php-setter-filter *php-transpiler* _] _]
-                                                      #'expex-compiled-funcall)
-    	          (expex-argument-filter ex) #'php-expex-argument-filter))))
+      :name                     'php
+      :literal-conversion       #'transpiler-expand-literal-characters
+	  :identifier-char?         #'php-identifier-char?
+      :gen-string               [literal-string _ #\" (list #\$)]
+      :lambda-export?           t
+      :stack-locals?            nil
+      :raw-constructor-names?   t
+      :expex-initializer        #'php-expex-initializer))
 
 (defun make-php-transpiler ()
   (aprog1 (make-php-transpiler-0)

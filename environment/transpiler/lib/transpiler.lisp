@@ -77,9 +77,7 @@
   (arguments-on-stack? nil)
   (copy-arguments-to-stack? nil)
 
-  (apply-argdefs? nil)
-
-  (continuation-passing-style? nil)
+  (cps-transformation? nil)
 
   (code-concatenator #'concat-stringtree)
   (make-text? t)
@@ -199,8 +197,7 @@
         :stack-locals?           stack-locals?
         :arguments-on-stack?     arguments-on-stack?
         :copy-arguments-to-stack? copy-arguments-to-stack?
-        :apply-argdefs?          apply-argdefs?
-        :continuation-passing-style? continuation-passing-style?
+        :cps-transformation?     cps-transformation?
         :code-concatenator       code-concatenator
         :make-text?              make-text?
         :encapsulate-strings?    encapsulate-strings?
