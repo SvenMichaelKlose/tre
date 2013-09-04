@@ -12,8 +12,6 @@
 	  :continuation-passing-style? t
 	  :needs-var-declarations? t
 	  :stack-locals? nil
-	  :rename-all-args? t
-	  :rename-toplevel-function-args? t
 	  :literal-conversion #'transpiler-expand-literal-characters
       :expex-initializer 
           #'((ex)

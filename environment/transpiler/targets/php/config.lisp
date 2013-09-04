@@ -14,7 +14,6 @@
       :gen-string [literal-string _ #\" (list #\$)]
       :lambda-export? t
       :stack-locals? nil
-      :rename-all-args? t
       :raw-constructor-names? t
       :expex-initializer
           #'((ex)

@@ -102,8 +102,6 @@
   (late-symbols (make-hash-table :test #'eq))
   (exported-closures nil)
   (delayed-var-inits nil)
-  (rename-all-args? nil)
-  (rename-toplevel-function-args? nil)
   (dot-expand? t)
   (raw-constructor-names? nil)
   (memorized-sources nil)
@@ -217,8 +215,6 @@
         :late-symbols            (copy-hash-table late-symbols)
         :exported-closures       (copy-list exported-closures)
         :delayed-var-inits       (copy-list delayed-var-inits)
-        :rename-all-args?        rename-all-args?
-        :rename-toplevel-function-args? rename-toplevel-function-args?
         :dot-expand?             dot-expand?
         :raw-constructor-names?  raw-constructor-names?
         :memorized-sources       (copy-list memorized-sources)

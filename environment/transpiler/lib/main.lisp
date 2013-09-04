@@ -13,6 +13,7 @@
 (env-load "transpiler/lib/tag.lisp")
 (env-load "transpiler/lib/with-lambda-call.lisp")
 (env-load "transpiler/lib/with-lambda-content.lisp")
+(env-load "transpiler/lib/expanded-lambda-args.lisp")
 (env-load "transpiler/lib/pass.lisp")
 (env-load "transpiler/lib/copy-lambda.lisp")
 (env-load "transpiler/lib/compiled-list.lisp")

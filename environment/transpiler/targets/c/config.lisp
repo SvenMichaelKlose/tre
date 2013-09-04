@@ -12,7 +12,6 @@
       :lambda-export? t
       :stack-locals? t
       :copy-arguments-to-stack? t
-      :rename-all-args? t
       :literal-conversion #'identity
       :expex-initializer #'((ex)
                               (= (expex-argument-filter ex) #'c-expex-argument-filter

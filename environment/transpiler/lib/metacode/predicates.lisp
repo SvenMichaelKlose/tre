@@ -76,6 +76,10 @@
   (& (function-expr? x)
      ..x))
 
+(defun any-lambda? (x)
+  (| (lambda? x)
+     (named-lambda? x)))
+
 (defun vec-function-expr? (x)
   (& (cons? x)
      (eq x. 'function)
