@@ -30,7 +30,6 @@
                          "not.lisp"
 			             "atom.lisp")
 		             (php-load-base *php-env-path*
-			             "bind.lisp"
 			             "character.lisp"
 			             "eq.lisp"
 			             "../../../environment/equality.lisp"

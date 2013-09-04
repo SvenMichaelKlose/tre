@@ -36,12 +36,6 @@
 (define-php-std-macro slot-value (place slot)
   `(%slot-value ,place ,(cadr slot)))
 
-(define-php-std-macro bind (fun &rest args)
-  `(%bind ,(? (%slot-value? fun)
- 			  .fun.
-    		  (error "Function must be a SLOT-VALUE, got ~A." fun))
-		  ,fun))
-
 (define-php-std-macro new (&rest x)
   (unless x
 	(error "Argument(s) expected."))
