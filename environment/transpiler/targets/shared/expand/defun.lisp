@@ -75,6 +75,8 @@
            (shared-defun-source-memorizer name args body-with-block)))))
 
 (defun shared-defun (name args body &key (make-expander? t))
+  (& (macro? name)
+     (transpiler-add-used-function *transpiler* name))
   (let fun-name (%defun-name name)
     `(%%block
        ,@(shared-defun-without-expander fun-name args body :allow-source-memorizer? t :allow-backtrace? t)

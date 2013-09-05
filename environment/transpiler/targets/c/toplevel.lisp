@@ -64,6 +64,7 @@
        ,@(mapcar ^(tregc_add_unremovable ,_) statements))))
 
 (defun c-make-init-functions (tr)
+  (transpiler-add-used-function tr 'c-init)
   (with-temporary *c-init-counter* 0
     (+ (mapcar [c-make-init-function tr _]
 			   (group (c-declarations-and-initialisations tr) *c-init-group-size*))

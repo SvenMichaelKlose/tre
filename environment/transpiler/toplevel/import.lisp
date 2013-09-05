@@ -67,10 +67,25 @@
          (+ funs exported vars (transpiler-import-from-environment tr))
          (transpiler-delayed-var-inits tr)))))
 
+(defun global-literal-symbol-function? (x)
+  (& (literal-symbol-function? x)
+     (not (funinfo-var-or-lexical? *expex-funinfo* .x.))))
+
+(defun transpiler-import-add-used (x)
+  (unless (member x (funinfo-names *expex-funinfo*) :test #'eq)
+    (transpiler-add-used-function *transpiler* x))
+  x)
+
 (defun transpiler-import-from-expex (x)
-  (? (& (literal-symbol-function? x)
-        (not (funinfo-var-or-lexical? *expex-funinfo* .x.)))
-     (progn
-       (transpiler-add-wanted-function *transpiler* .x.)
-       (transpiler-macroexpand *transpiler* `(symbol-function (%quote ,.x.))))
+  (? (global-literal-symbol-function? x)
+         (progn
+           (transpiler-add-wanted-function *transpiler* .x.)
+           (transpiler-import-add-used .x.)
+           (transpiler-macroexpand *transpiler* `(symbol-function (%quote ,.x.))))
+     (cons? x)
+         (progn
+           (transpiler-import-add-used (? (%%closure? x)
+                                          .x.
+                                          x.))
+           x)
      x))
