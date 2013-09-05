@@ -1,5 +1,7 @@
 ;;;;; tré – Copyright (c) 2006–2008,2011–2013 Sven Michael Klose <pixel@copei.de>
 
+(defvar *warnings* nil)
+
 (defmacro without-automatic-newline (&rest body)
   `(with-temporary *print-automatic-newline?* nil
      ,@body))
@@ -10,7 +12,7 @@
 
 (defun warn (msg &rest args)
   (without-automatic-newline
-    (apply #'format t (+ "; WARNING: " msg "~%") args)))
+    (push (apply #'format t (+ "; WARNING: " msg "~%") args) *warnings*)))
 
 (defun hint (msg &rest args)
   (without-automatic-newline

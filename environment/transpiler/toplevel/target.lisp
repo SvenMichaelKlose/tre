@@ -58,6 +58,11 @@
                                                                       (transpiler-make-toplevel-function tr))))
                                                      (list 'accumulated-toplevel)))))
 
+(defun tell-number-of-warnings ()
+  (alet (length *warnings*)
+    (unless (zero? 1)
+      (format t "; ~A warning~A.~%" ! (? (< 1 !) "s" "")))))
+
 (defun target-transpile (tr &key (decl-gen nil)
                                  (files-before-deps nil)
                                  (dep-gen nil)
@@ -65,6 +70,7 @@
                                  (files-to-update nil)
                                  (obfuscate? nil)
                                  (print-obfuscations? nil))
+  (= *warnings* nil)
   (with-temporaries (*recompiling?*  (? files-to-update t)
                      *transpiler*    tr
                      *assert*        (| *assert* (transpiler-assert? tr))
@@ -98,4 +104,6 @@
                                        compiled-acctop)
             (& print-obfuscations?
                (transpiler-obfuscate? tr)
-               (transpiler-print-obfuscations tr))))))))
+               (transpiler-print-obfuscations tr))
+            (warn-unused-functions tr)
+            (tell-number-of-warnings)))))))
