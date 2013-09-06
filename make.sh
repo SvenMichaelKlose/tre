@@ -96,7 +96,7 @@ BINDIR="/usr/local/bin/"
 basic_clean ()
 {
 	echo "Cleaning..."
-	rm -vf *.core interpreter/$COMPILED_ENV tre tmp.c __alien.tmp environment/_current-version environment/transpiler/targets/c64/tre.c64
+	rm -vf *.core interpreter/$COMPILED_ENV tre tmp.c __alien.tmp compilation.log environment/_current-version environment/transpiler/targets/c64/tre.c64
 	rm -vrf obj
     rm -vf examples/js/hello-world.js
 }
@@ -202,7 +202,7 @@ bcompiler)
 
 all)
     echo "Making everything..."
-	(echo "(compile-c-environment)" | ./tre) || exit 1
+	(echo "(compile-c-environment)" | ./tre | tee compilation.log) || exit 1
 	;;
 
 boot)
