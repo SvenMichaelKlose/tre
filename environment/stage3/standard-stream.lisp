@@ -11,3 +11,4 @@
 
 (defvar *standard-output* (make-standard-stream))
 (defvar *standard-input* (make-standard-stream))
+(defvar *standard-error* (make-standard-stream))
