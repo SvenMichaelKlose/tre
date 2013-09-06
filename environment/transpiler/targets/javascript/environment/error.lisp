@@ -6,4 +6,6 @@
   nil)
 
 (defun error (fmt &rest args)
+  (!? *backtrace*
+      (format *standard-error* "; In scope ~A:~%" *backtrace*))
   (%error (+ "Error: " (apply #'format nil fmt args))))
