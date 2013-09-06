@@ -14,6 +14,7 @@
 (defun make-c-transpiler ()
   (create-transpiler
       :name                     'c
+      :backtrace?               t
       :lambda-export?           t
       :stack-locals?            t
       :copy-arguments-to-stack? t

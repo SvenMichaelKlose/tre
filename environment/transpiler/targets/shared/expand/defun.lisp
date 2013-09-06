@@ -47,12 +47,13 @@
                                                                                (| .source body)))))))))))
 
 (defun shared-defun-backtrace (name body)
-  (? (transpiler-backtrace? *transpiler*)
+  (? (& (transpiler-backtrace? *transpiler*)
+        (not (in? name '%cons '__cons)))
      `((push ',name *backtrace*)
        (prog1
          (progn
            ,@body)
-         (= *backtrace* .*backtrace*)))
+         (%backtrace-pop)))
      body))
 
 (defun shared-defun-without-expander (name args body &key (allow-source-memorizer? nil) (allow-backtrace? nil))

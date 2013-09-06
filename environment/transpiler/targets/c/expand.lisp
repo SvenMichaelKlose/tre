@@ -69,3 +69,6 @@
 (define-c-std-macro character+ (&rest x) `(number+ ,@x))
 (define-c-std-macro integer- (&rest x) `(number- ,@x))
 (define-c-std-macro character- (&rest x) `(number- ,@x))
+
+(define-c-std-macro %backtrace-pop ()
+  `(= *backtrace* .*backtrace*))

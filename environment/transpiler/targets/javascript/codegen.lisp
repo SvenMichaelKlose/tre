@@ -249,3 +249,6 @@
 
 (define-js-macro %%%eval (x)
   `((%%native "window.eval ") ,x))
+
+(define-js-macro %backtrace-pop ()
+  `(%%native *BACKTRACE* "=" *BACKTRACE* ".__"))
