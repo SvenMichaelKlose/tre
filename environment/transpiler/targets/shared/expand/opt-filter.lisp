@@ -14,3 +14,6 @@
                           (| (atom !)
                              (%%closure? !))           `(funcall ,! ,i)
                           (error "Function or variable required instead of ~A." !))))))))
+
+(define-shared-std-macro (bc c js php) filter (&rest x)
+  (shared-opt-filter fun lsts))
