@@ -1,6 +1,6 @@
 ;;;;; tré – Copyright (c) 2010–2013 Sven Michael Klose <pixel@copei.de>
 
-(defun shared-opt-filter (fun &rest lsts)
+(defun shared-opt-filter (fun lsts)
   (with-gensym (q i)
     `(with-queue ,q
        (dolist (,i ,(? .lsts
@@ -15,5 +15,5 @@
                              (%%closure? !))           `(funcall ,! ,i)
                           (error "Function or variable required instead of ~A." !))))))))
 
-(define-shared-std-macro (bc c js php) filter (&rest x)
+(define-shared-std-macro (bc c js php) filter (fun &rest lsts)
   (shared-opt-filter fun lsts))
