@@ -76,15 +76,3 @@
        ,@(when (transpiler-needs-var-declarations? tr)
            `((%var ,name)))
 	   (%setq ,name ,val))))
-
-(define-shared-std-macro (bc c js php) =-car (val x)
-  (with-gensym g
-    `(let ,g ,val
-       (rplaca ,x ,g)
-       ,g)))
-
-(define-shared-std-macro (bc c js php) =-cdr (val x)
-  (with-gensym g
-    `(let ,g ,val
-       (rplacd ,x ,g)
-       ,g)))
