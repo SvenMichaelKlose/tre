@@ -15,11 +15,7 @@
 (define-php-std-macro defun (name args &body body)
   (let fun-name (%defun-name name)
     `(%%block
-       ,(shared-defun name args
-                      (? *exec-log*
-                         `((%%native "error_log (\"" ,(symbol-name fun-name) "\")")
-                              nil ,@body)
-                         body))
+       ,(shared-defun name args body)
        (%setq nil ((slot-value ',fun-name 'sf) ,(compiled-function-name-string *transpiler* fun-name))))))
 
 (define-php-std-macro define-external-variable (name)
