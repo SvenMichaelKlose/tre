@@ -25,8 +25,8 @@
                 (atom (car x))                 (cons (car x) (%quasiquote-expand (cdr x)))
 		        (eq (car (car x)) 'quote)      (cons (car x) (%quasiquote-expand (cdr x)))
 		        (eq (car (car x)) 'backquote)  (cons (car x) (%quasiquote-expand (cdr x)))
-		        (eq (car (car x)) 'quasiquote) (cons (eval (cadar x)) (%quasiquote-expand (cdr x)))
-		        (eq (car (car x)) 'quasiquote-splice) (append (eval (cadar x)) (%quasiquote-expand (cdr x)))
+		        (eq (car (car x)) 'quasiquote) (cons (eval (macroexpand (cadar x))) (%quasiquote-expand (cdr x)))
+		        (eq (car (car x)) 'quasiquote-splice) (append (eval (macroexpand (cadar x))) (%quasiquote-expand (cdr x)))
 		        (cons (%quasiquote-expand (car x))
 				      (%quasiquote-expand (cdr x)))))))))
 

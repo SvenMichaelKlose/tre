@@ -12,9 +12,6 @@
     dot-expand                [? (transpiler-dot-expand? tr)
                                  (dot-expand _)
                                  _]
-    transpiler-macroexpand-1  [? (transpiler-dot-expand? tr)
-                                 (transpiler-macroexpand tr _)
-                                 _]
     quasiquote-expand         #'quasiquote-expand
     transpiler-macroexpand-2  [transpiler-macroexpand tr _]
     compiler-macroexpand      #'compiler-macroexpand
