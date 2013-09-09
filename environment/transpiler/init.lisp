@@ -9,7 +9,8 @@
 	   (expex-function-collector ex)
 	       (lx (tr)
 		     #'((fun args)
-		          (transpiler-add-wanted-function ,tr fun)))
+                  (unless (funinfo-var-or-lexical? *expex-funinfo* fun)
+		            (transpiler-add-wanted-function ,tr fun))))
 
 	   (expex-argument-filter ex)
 	       (lx (tr)
