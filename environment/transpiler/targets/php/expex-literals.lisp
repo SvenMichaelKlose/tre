@@ -8,17 +8,17 @@
 
 (php-define-compiled-literal php-compiled-char (x char)
   :maker (transpiler-add-late-symbol *transpiler* ($ 'trechar_compiled_ (char-code x)))
-  :init-maker (%%native "new __character (" ,(char-code x) ")"))
+  :init-maker `(%%native "new __character (" ,(char-code x) ")"))
 
 (php-define-compiled-literal php-compiled-symbol (x symbol)
   :maker ($ 'tresymbol_compiled_ x (? (keyword? x) '_keyword ""))
-  :init-maker (%%native "new __symbol ("
-			  	            (%%string ,(symbol-name x))
-                            ","
-			   	            ,(? (keyword? x)
-                                "$KEYWORDPACKAGE"
-                                "NULL")
-				        ")"))
+  :init-maker `(%%native "new __symbol ("
+			  	             (%%string ,(symbol-name x))
+                             ","
+			   	             ,(? (keyword? x)
+                                 "$KEYWORDPACKAGE"
+                                 "NULL")
+				         ")"))
 
 (defun php-expex-add-global (x)
   (funinfo-var-add (transpiler-global-funinfo *transpiler*) x)
