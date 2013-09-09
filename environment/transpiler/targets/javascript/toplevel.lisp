@@ -53,8 +53,6 @@
 
 (defun js-transpile (sources &key (transpiler nil) (obfuscate? nil) (print-obfuscations? nil) (files-to-update nil))
   (let tr transpiler
-    (& (transpiler-lambda-export? tr)
-       (transpiler-add-wanted-function tr 'copy-array))
     (+ (js-transpile-prologue tr)
        (target-transpile tr :decl-gen            (js-make-decl-gen tr)
                             :files-before-deps   (js-files-before-deps tr)
