@@ -66,7 +66,8 @@
                                              "function-source.lisp"
                                              "function-bytecode.lisp"
                                              "dot-expand.lisp"
-                                             "math.lisp"))))
+                                             "math.lisp"
+                                             "nanotime.lisp"))))
 
 (when *have-compiler?*
   (= *js-base2* (+ *js-base2* ,(list 'quote (js-load-base *js-env-path* "native-eval.lisp")))))
