@@ -6,8 +6,7 @@
         ,@(filter [!? ._.
                       (format nil "~A~A~%" _. !)
                       !]
-                  `(("  Name:          " ,(funinfo-name fi))
-                    ("  Scope:         " ,(funinfo-names fi))
+                  `(("  Scope:         " ,(butlast (funinfo-names fi)))
                     ("  Argument def:  " ,(| (funinfo-argdef fi)
                                              "no arguments"))
                     ("  Expanded args: " ,(funinfo-args fi))
