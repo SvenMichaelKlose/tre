@@ -6,7 +6,7 @@
          (cons (subseq seq 0 (? include?
                                 (integer++ !)
                                 !))
-               (split-if predicate (subseq seq (integer++ !) :include? include?)))
+               (split-if predicate (subseq seq (integer++ !)) :include? include?))
          (list seq))))
 
 (defun generic-split (obj seq &key (test #'eql) (include? nil))
