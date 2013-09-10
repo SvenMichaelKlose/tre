@@ -70,40 +70,43 @@
                                  (files-to-update nil)
                                  (obfuscate? nil)
                                  (print-obfuscations? nil))
-  (= *warnings* nil)
-  (with-temporaries (*recompiling?*  (? files-to-update t)
-                     *transpiler*    tr
-                     *assert*        (| *assert* (transpiler-assert? tr))
-                     dep-gen         (| dep-gen #'(()
-                                                    (transpiler-import-from-environment tr))))
-    (& *have-compiler?* (= (transpiler-save-sources? tr) t))
-    (& files-to-update  (clr (transpiler-emitted-decls tr)))
-    (= (transpiler-host-functions-hash tr) (make-host-functions-hash))
-    (= (transpiler-host-variables-hash tr) (make-host-variables-hash))
-    (transpiler-switch-obfuscator tr obfuscate?)
-    (with (before-deps  (target-transpile-1 tr files-before-deps files-to-update)
-		   after-deps   (target-transpile-1 tr files-after-deps files-to-update)
-		   deps         (target-sighten-deps tr dep-gen)
-           num-exprs    (apply #'+ (mapcar [length ._] (+ before-deps deps after-deps))))
-      (& *show-transpiler-progress?*
-         (format t "; ~A top level expressions.~%; Let me think. Hmm...~F" num-exprs))
-      (with (compiled-before  (target-transpile-2 tr before-deps files-to-update)
-	         compiled-deps    (!? deps (transpiler-make-code tr !))
-		     compiled-after   (target-transpile-2 tr after-deps files-to-update)
-             compiled-acctop  (target-transpile-accumulated-toplevels tr))
+  (let start-time (nanotime)
+    (= *warnings* nil)
+    (with-temporaries (*recompiling?*  (? files-to-update t)
+                       *transpiler*    tr
+                       *assert*        (| *assert* (transpiler-assert? tr))
+                       dep-gen         (| dep-gen #'(()
+                                                      (transpiler-import-from-environment tr))))
+      (& *have-compiler?* (= (transpiler-save-sources? tr) t))
+      (& files-to-update  (clr (transpiler-emitted-decls tr)))
+      (= (transpiler-host-functions-hash tr) (make-host-functions-hash))
+      (= (transpiler-host-variables-hash tr) (make-host-variables-hash))
+      (transpiler-switch-obfuscator tr obfuscate?)
+      (with (before-deps  (target-transpile-1 tr files-before-deps files-to-update)
+		     after-deps   (target-transpile-1 tr files-after-deps files-to-update)
+		     deps         (target-sighten-deps tr dep-gen)
+             num-exprs    (apply #'+ (mapcar [length ._] (+ before-deps deps after-deps))))
+        (& *show-transpiler-progress?*
+           (format t "; ~A top level expressions.~%; Let me think. Hmm...~F" num-exprs))
+        (with (compiled-before  (target-transpile-2 tr before-deps files-to-update)
+	           compiled-deps    (!? deps (transpiler-make-code tr !))
+		         compiled-after   (target-transpile-2 tr after-deps files-to-update)
+               compiled-acctop  (target-transpile-accumulated-toplevels tr))
         (& *show-transpiler-progress?* (format t " Phew!~%~F"))
-        (!? compiled-deps
-            (= (transpiler-imported-deps tr) (transpiler-concat-text tr (transpiler-imported-deps tr) !)))
-        (let decls-and-inits (!? decl-gen (funcall !))
-	      (prog1
-	        (transpiler-concat-text tr decls-and-inits
-	                                   compiled-before
-                                       (reverse (transpiler-raw-decls tr))
-                                       (transpiler-imported-deps tr)
-	                                   compiled-after
-                                       compiled-acctop)
-            (& print-obfuscations?
-               (transpiler-obfuscate? tr)
-               (transpiler-print-obfuscations tr))
-            (warn-unused-functions tr)
-            (tell-number-of-warnings)))))))
+          (!? compiled-deps
+              (= (transpiler-imported-deps tr) (transpiler-concat-text tr (transpiler-imported-deps tr) !)))
+          (let decls-and-inits (!? decl-gen (funcall !))
+	        (prog1
+	          (transpiler-concat-text tr decls-and-inits
+	                                     compiled-before
+                                         (reverse (transpiler-raw-decls tr))
+                                         (transpiler-imported-deps tr)
+	                                     compiled-after
+                                         compiled-acctop)
+              (& print-obfuscations?
+                 (transpiler-obfuscate? tr)
+                   (transpiler-print-obfuscations tr))
+                (warn-unused-functions tr)
+              (tell-number-of-warnings)
+              (& *show-transpiler-progress?*
+                 (format t "; ~A seconds passed.~%~F" (integer (/ (- (nanotime) start-time) 1000000000)))))))))))
