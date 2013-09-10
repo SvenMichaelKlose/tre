@@ -5,7 +5,7 @@
      ,@(filter ^(,($ 'define- _ '-std-macro) ,@x)
                (? *have-c-compiler?*
                   targets
-                  (remove 'c targets)))))
+                  (remove 'bc (remove 'c targets))))))
 
 (define-shared-std-macro (js php) dont-obfuscate (&rest symbols)
   (apply #'transpiler-add-obfuscation-exceptions *transpiler* symbols)

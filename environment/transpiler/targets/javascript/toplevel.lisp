@@ -33,7 +33,7 @@
          `((environment-tests . ,(make-environment-tests))))))
 
 (defun js-environment-files ()
-  (mapcan [unless (eq 'c ._)
+  (mapcan [unless (in? ._ 'c 'bc)
             `((,(+ "environment/" _.)))]
           (reverse *environment-filenames*)))
 

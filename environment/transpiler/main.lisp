@@ -31,4 +31,4 @@
 (env-load "transpiler/compile.lisp")
 (env-load "transpiler/compile-environment.lisp" 'c)
 
-(env-load "transpiler/eval.lisp")
+(env-load "transpiler/eval.lisp" 'c)
