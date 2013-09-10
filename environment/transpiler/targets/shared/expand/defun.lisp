@@ -59,7 +59,7 @@
 (defun shared-defun-without-expander (name args body &key (allow-source-memorizer? nil) (allow-backtrace? nil))
   (= name (apply-current-package name))
   (print-definition `(defun ,name ,args))
-  (let body-with-block `((block ,name ,@body))
+  (let body-with-block `((block ,name ,@(list-without-noargs-tag body)))
     (| (list? args)
        (error "Argument list expected instead of ~A." args))
     (& (transpiler-defined-function *transpiler* name)
