@@ -13,7 +13,7 @@
                           (copy-transpiler
                             (case target
                               'c        ,(& *have-c-compiler?* '*c-transpiler*)
-                              'bytecode ,(& *have-c-compiler? '*bc-transpiler*)
+                              'bytecode ,(& *have-c-compiler?* '*bc-transpiler*)
                               'js       *js-transpiler*
                               'php      *php-transpiler*)))
            :obfuscate? obfuscate?
