@@ -21,9 +21,9 @@
 
 (defun transpiler-copy-std-macro-expander (tr-old tr-new)
   (with (exp-new (transpiler-make-std-macro-expander tr-new)
-         old     (expander-get (transpiler-std-macro-expander tr-old))
-         new     (expander-get exp-new))
-    (= (expander-macros new) (copy-hash-table (expander-macros old)))))
+         old-ex  (expander-get (transpiler-std-macro-expander tr-old))
+         new-ex  (expander-get exp-new))
+    (= (expander-macros new-ex) (copy-hash-table (expander-macros old-ex)))))
 
 (defmacro define-transpiler-std-macro (tr name &rest args-and-body)
   (print-definition `(define-transpiler-std-macro ,tr ,name ,args-and-body.))
