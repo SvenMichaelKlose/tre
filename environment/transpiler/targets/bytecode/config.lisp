@@ -20,6 +20,3 @@
     (transpiler-add-plain-arg-funs ! *builtins*)))
 
 (defvar *bc-transpiler* (copy-transpiler (make-bc-transpiler)))
-(defvar *bc-separator*  (transpiler-separator *bc-transpiler*))
-(defvar *bc-newline*    (format nil "~%"))
-(defvar *bc-indent*     "    ")

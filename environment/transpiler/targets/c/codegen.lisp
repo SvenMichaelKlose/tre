@@ -20,7 +20,7 @@
 (defun c-make-function-declaration (name args)
   (push (concat-stringtree "extern treptr " (compiled-function-name-string *transpiler* name)
   	    	               " " (parenthized-comma-separated-list (mapcar #'c-codegen-var-decl args))
-			               ";" *c-newline*)
+			               ";" *newline*)
 	    (transpiler-compiled-decls *transpiler*)))
 
 (defun c-codegen-function (name x)
@@ -28,14 +28,14 @@
          args (argument-expand-names 'unnamed-c-function (funinfo-args fi)))
     (| fi (error "No funinfo for ~A." name))
     (c-make-function-declaration name args)
-    `(,*c-newline*
+    `(,*newline*
       ,(funinfo-comment fi)
 	  "treptr " ,(compiled-function-name *transpiler* name) " "
 	  ,@(parenthized-comma-separated-list (mapcar ^("treptr " ,_) args))
-	  ,*c-newline*
-	  "{" ,*c-newline*
+	  ,*newline*
+	  "{" ,*newline*
           ,@(lambda-body x)
-	  "}" ,*c-newline*)))
+	  "}" ,*newline*)))
 
 (define-c-macro %%closure (name)
   `("CONS (" ,(c-compiled-symbol '%closure) ", "
@@ -97,13 +97,13 @@
 ;;;; CONTROL FLOW
 
 (define-c-macro %%tag (tag)
-  `(%%native "l" ,tag ":" ,*c-newline*))
+  `(%%native "l" ,tag ":" ,*newline*))
  
 (define-c-macro %%go (tag)
   (c-line `(%%native "goto l" ,tag)))
 
 (define-c-macro %%go-nil (tag x)
-  `(,*c-indent* "if (" ,x " == treptr_nil)" ,*c-newline*
+  `(,*c-indent* "if (" ,x " == treptr_nil)" ,*newline*
 	,*c-indent* ,@(c-line `(%%native "goto l" ,tag))))
 
 

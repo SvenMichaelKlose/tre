@@ -1,5 +1,6 @@
 ;;;;; tré – (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
 
+(env-load "transpiler/lib/newline.lisp")
 (env-load "transpiler/lib/expex.lisp")
 (env-load "transpiler/lib/transpiler.lisp")
 

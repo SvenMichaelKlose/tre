@@ -39,6 +39,5 @@
     (transpiler-add-plain-arg-funs ! *builtins*)))
 
 (defvar *js-transpiler* (copy-transpiler (make-javascript-transpiler)))
-(defvar *js-newline*    (format nil "~%"))
-(defvar *js-separator*  (format nil ";~%"))
+(defvar *js-separator*  (+ ";" *newline*))
 (defvar *js-indent*     "    ")

@@ -23,5 +23,4 @@
 
 (defvar *c-transpiler* (copy-transpiler (make-c-transpiler)))
 (defvar *c-separator*  (transpiler-separator *c-transpiler*))
-(defvar *c-newline*    (format nil "~%"))
 (defvar *c-indent*     "    ")

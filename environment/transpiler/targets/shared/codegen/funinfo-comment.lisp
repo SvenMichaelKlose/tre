@@ -2,7 +2,7 @@
 
 (defun funinfo-comment (fi)
    (concat-stringtree
-      `("/*" ,*c-newline*
+      `("/*" ,*newline*
         ,@(filter [!? ._.
                       (format nil "~A~A~%" _. !)
                       !]
@@ -20,4 +20,4 @@
                     ("  Ghost:         " ,(funinfo-ghost fi))
                     ("  Lexical:       " ,(funinfo-lexical fi))
                     ("  Lexicals:      " ,(funinfo-lexicals fi))))
-        "*/" ,*c-newline*)))
+        "*/" ,*newline*)))

@@ -33,7 +33,7 @@
 ;;;; CONTROL FLOW
 
 (define-js-macro %%tag (tag)
-  `(%%native "case " ,tag ":" ,*js-newline*))
+  `(%%native "case " ,tag ":" ,*newline*))
 
 (define-js-macro %%go (tag)
   `(,*js-indent* "_I_=" ,tag ";continue" ,*js-separator*))
@@ -42,13 +42,13 @@
   `("(!" ,x "&&" ,x "!==0&&" ,x "!=='')"))
 
 (define-js-macro %%go-nil (tag val)
-  `(,*js-indent* "if" ,(js-nil? val) "{_I_=" ,tag ";continue;}" ,*js-newline*))
+  `(,*js-indent* "if" ,(js-nil? val) "{_I_=" ,tag ";continue;}" ,*newline*))
 
 (define-js-macro %%call-nil (val consequence alternative)
   `(,*js-indent* "if",(js-nil? val)
                      ,consequence "();"
                  "else "
-                     ,alternative "();" ,*js-newline*))
+                     ,alternative "();" ,*newline*))
 
 (define-js-macro %set-atom-fun (plc val)
   `(%%native ,*js-indent* ,plc "=" ,val ,*js-separator*))
@@ -67,10 +67,10 @@
                                  (compiled-function-name-string *transpiler* name)
                                  name))
          `(,(funinfo-comment (get-funinfo name))
-           ,translated-name "=" "function " ,@(js-argument-list 'codegen-function-macro (lambda-args !)) ,*js-newline*
-	       "{" ,*js-newline*
+           ,translated-name "=" "function " ,@(js-argument-list 'codegen-function-macro (lambda-args !)) ,*newline*
+	       "{" ,*newline*
 		       ,@(lambda-body !)
-	       "}" ,*js-newline*))
+	       "}" ,*newline*))
        !)))
 
 (define-js-macro %function-prologue (name)
