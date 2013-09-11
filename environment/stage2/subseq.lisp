@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2007–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2007–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
 
 (functional subseq)
 
@@ -15,10 +15,10 @@
 
 (defun %subseq-sequence (maker seq start end)
   (unless (integer== start end)
-    (let seqlen (length seq)
-      (when (integer< start seqlen)
-	    (& (integer>= end seqlen)
-	       (= end seqlen))
+    (alet (length seq)
+      (when (integer< start !)
+	    (& (integer>= end !)
+	       (= end !))
   	    (with (l (integer- end start)
 	           s (funcall maker l))
           (dotimes (x l s)
