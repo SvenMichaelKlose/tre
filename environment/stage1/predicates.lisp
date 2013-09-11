@@ -1,6 +1,6 @@
-;;;;; tré – Copyright (c) 2005–2006,2008–2009,2011–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2006,2008–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
 
-(functional atom cons? symbol? number? string? function? array? zero? even? odd? end? symbol? keyword? integer?)
+(functional zero? even? odd? end? keyword?)
 
 (defun zero? (x)
   (== 0 x))
