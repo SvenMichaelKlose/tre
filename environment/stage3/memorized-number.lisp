@@ -3,5 +3,4 @@
 (defvar *memorized-numbers* (make-hash-table :test #'==))
 
 (defun memorized-number (x)
-  (| (href *memorized-numbers* x)
-     (= (href *memorized-numbers* x) x)))
+  (cache (href *memorized-numbers* x) x))

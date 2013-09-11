@@ -21,6 +21,7 @@
 (env-load "stage3/print-object.lisp" 'c)
 (env-load "stage3/print.lisp")
 (env-load "stage3/stream-predicates.lisp")
+(env-load "stage3/cache.lisp")
 (env-load "stage3/memorized-number.lisp")
 (env-load "stage3/read-char.lisp")
 (env-load "stage3/read-hex.lisp" 'c)
