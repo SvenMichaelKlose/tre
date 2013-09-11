@@ -34,7 +34,6 @@
 (env-load "stage4/list-array.lisp" 'c)
 (env-load "stage4/literal-string.lisp")
 (env-load "stage4/make-c-newlines.lisp")
-(env-load "stage4/mapatree.lisp")
 (env-load "stage4/maptree.lisp")
 (env-load "stage4/mapped-macro.lisp")
 (env-load "stage4/optional-string-downcase.lisp")
