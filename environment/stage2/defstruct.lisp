@@ -1,7 +1,7 @@
 ;;;;; tré – Copyright (c) 2005–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
 
-(defun %struct-option-keyword (e)
-  (in? e :constructor))
+(defun %struct-option-keyword? (x)
+  (eq x :constructor))
 
 (defun %struct-make-symbol (name options)
   (!? (assoc-value :constructor options)
@@ -79,7 +79,7 @@
 
 (defun %struct-sort-fields (fields-and-options)
   (with-queue (fields options)
-    (map [? (& (cons? _) (%struct-option-keyword _.))
+    (map [? (& (cons? _) (%struct-option-keyword? _.))
 	        (enqueue options _)
 	        (enqueue fields _)]
 	     fields-and-options)
