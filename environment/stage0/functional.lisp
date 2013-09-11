@@ -47,4 +47,4 @@
             slot-value %slot-value
             
             ; Not built–in (in C environment).
-            list identity last %nconc copy-list)
+            list identity last %nconc copy-list integer? character?)
