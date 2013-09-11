@@ -7,12 +7,12 @@
 
 (defun read-hex (str)
   (with (rec #'((v)
-		          (let c (char-upcase (peek-char str))
-				    (? (hex-digit-char? c)
+		          (alet (char-upcase (peek-char str))
+				    (? (hex-digit-char? !)
 					   (progn
 					     (read-char str)
 					     (rec (+ (* v 16)
-						         (- c (? (digit-char? c)
+						         (- ! (? (digit-char? !)
 								         10
 								         (- #\A 10))))))
 					   v))))

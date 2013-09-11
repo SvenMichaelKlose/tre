@@ -1,13 +1,13 @@
-;;;;; tré – Copyright (c) 2005–2006,2008,2010–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2006,2008,2010–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun make-string-stream ()
   (make-stream
       :user-detail (make-queue)
       :fun-in #'((str)
-                  (let buf (queue-list (stream-user-detail str))
-                    (when (string? buf.)
+                  (alet (queue-list (stream-user-detail str))
+                    (when (string? !.)
                       (= (stream-user-detail str) (make-queue))
-                      (enqueue-list (stream-user-detail str) (append (string-list buf.) .buf))))
+                      (enqueue-list (stream-user-detail str) (append (string-list !.) .!))))
                   (queue-pop (stream-user-detail str)))
       :fun-out #'((x str)
 				   (enqueue (stream-user-detail str) x))

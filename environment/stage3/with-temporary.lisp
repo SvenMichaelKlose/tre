@@ -10,9 +10,8 @@
          (= ,place ,old-val)))))
 
 (defmacro with-temporaries (lst &body body)
-  (? lst
-     `(with-temporary ,lst. ,.lst.
-        ,@(? ..lst
-             `((with-temporaries ,..lst ,@body))
-             body))
-     (error "Assignment list expected.")))
+  (| lst (error "Assignment list expected."))
+  `(with-temporary ,lst. ,.lst.
+     ,@(? ..lst
+          `((with-temporaries ,..lst ,@body))
+          body)))

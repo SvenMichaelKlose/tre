@@ -33,8 +33,8 @@
   (fraction-chars-0 (mod (abs x) 1)))
 
 (defun %princ-number (c str)
-  (when (< c 0)
-    (princ #\- str))
+  (& (< c 0)
+     (princ #\- str))
   (%princ-character (integer-chars c) str)
   (alet (mod c 1)
     (unless (zero? !)
