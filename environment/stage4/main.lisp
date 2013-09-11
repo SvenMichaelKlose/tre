@@ -44,7 +44,6 @@
 (env-load "stage4/print-hex.lisp")
 (env-load "stage4/print-octal.lisp")
 (env-load "stage4/remove.lisp")
-(env-load "stage4/remove-keywords.lisp")
 (env-load "stage4/remove-many.lisp")
 (env-load "stage4/remove-tail.lisp")
 (env-load "stage4/repeat.lisp")
