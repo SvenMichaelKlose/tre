@@ -15,7 +15,7 @@
 		 static
            [`(,@(? (transpiler-assert? *transpiler*)
                    `((| ,p
-                        (error-arguments-missing ',_. ',fun-name))))
+                        (error-arguments-missing ,(symbol-name _.) ',fun-name))))
               (= ,_. (car ,p))
               (= ,p (cdr ,p))
               ,@(main ._))]
@@ -83,7 +83,7 @@
   `(,@(compile-argument-expansion-0 fun-name adef p)
     ,@(? (transpiler-assert? *transpiler*)
          `((? ,p
-              (error-too-many-arguments ',fun-name ,p))))
+              (error-too-many-arguments ,(symbol-name fun-name) ,p))))
     ((%%native ,(compiled-function-name *transpiler* fun-name)) ,@names)))
 
 (defun compile-argument-expansion-function-body (fun-name adef p)
