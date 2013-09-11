@@ -28,7 +28,7 @@
 (env-load "stage1/test-arith.lisp")
 (env-load "stage1/anaphoric.lisp")
 (env-load "stage1/force-list.lisp")
-(env-load "stage1/comparison.lisp")
+(env-load "stage1/equal.lisp")
 (env-load "stage1/conditional.lisp")
 (env-load "stage1/return.lisp")
 (env-load "stage1/prog1.lisp")

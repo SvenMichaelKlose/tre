@@ -41,5 +41,3 @@
             params)
     `(dotimes (! ,(car p) ,(cadr p))
        ,@body)))
-
-; XXX tests missing

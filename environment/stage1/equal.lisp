@@ -1,10 +1,6 @@
 ;;;;; tré – Copyright (c) 2005-2006,2008-2009,2012 Sven Michael Klose <pixel@copei.de>
 
-(functional eql equal
-            == < > <= >=
-            number+ number- number== number< number> number<= number>=
-            integer+ integer- integer== integer< integer> integer<= integer>=
-            character== character> character< character<= character>=)
+(functional equal)
 
 (defun equal (x y)
   (?
