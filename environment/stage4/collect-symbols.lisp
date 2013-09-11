@@ -4,7 +4,7 @@
   (with (ret (make-queue)
   		 rec [& _
     			(? (& (symbol? _)
-					  (not (string== "" (symbol-name _))))
+					  (empty-string? (symbol-name _)))
         		   (enqueue ret _)
         		   (when (cons? _)
           		     (rec _.)
