@@ -67,7 +67,6 @@
 (env-load "stage4/empty-string.lisp")
 (env-load "stage4/with-cons.lisp")
 (env-load "stage4/null-stream.lisp")
-(env-load "stage4/define-with.lisp")
 (env-load "stage4/define-slot-setter.lisp")
 (env-load "stage4/merge.lisp")
 (env-load "stage4/number-sym.lisp")
