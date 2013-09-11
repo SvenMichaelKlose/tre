@@ -4,9 +4,9 @@
 
 (early-defun count-r (x lst init)
   (? lst
-     (? (eq x (car lst))
-	    (count-r x (cdr lst) (integer+ 1 init))
-	    (count-r x (cdr lst) init))
+     (count-r x (cdr lst) (? (eq x (car lst))
+                             (integer+ 1 init)
+                             init))
      init))
 
 (early-defun count (x lst)
