@@ -6,7 +6,7 @@
 (defun print-octal (x &optional (str *standard-output*))
   (with (rec [& (< 0 x)
                 (cons (octal-digit x)
-		        (rec (>> x 3))))
+		        (rec (>> x 3)))])
     (princ (list-string (reverse (cons (octal-digit x)
 									   (rec (>> x 3)))))
 		   (default-stream str))))
