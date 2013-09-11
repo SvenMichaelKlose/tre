@@ -21,18 +21,18 @@
 (defun %declare-statement-type-predicate (typ x)
   `(,(| (%declare-type-predicate typ)
         ($ typ '?))
-     ,x))
+    ,x))
 
 (defun %declare-statement-type-1 (typ x)
-  (unless (symbol? x)
-	(error "Symbol expected but got ~A to declare as of type ~A." x typ))
+  (| (symbol? x)
+	 (error "Symbol expected but got ~A to declare as of type ~A." x typ))
   `(unless (| ,@(filter [%declare-statement-type-predicate _ x]
                         (force-list typ)))
 	 (error "~A is not of type ~A. Object: ~A." ,(symbol-name x) (quote ,typ) ,x)))
 
 (defun %declare-statement-type (x)
-  (unless (<= 2 (length x))
-	(error "Expected type and one or more variables, but got only ~A." x))
+  (| (<= 2 (length x))
+	 (error "Expected type and one or more variables, but got only ~A." x))
   `(progn
 	 ,@(filter [%declare-statement-type-1 x. _] .x)))
 
@@ -48,9 +48,8 @@
       .x))
 
 (defmacro declare (&rest x)
-  (unless x
-	(error "Arguments expected."))
-  (let body (filter #'%declare-statement (force-tree x))
+  (| x (error "Arguments expected."))
+  (alet (filter #'%declare-statement (force-tree x))
 	(when *assert*
   	  `(progn
-	 	 ,@body))))
+	 	 ,@!))))
