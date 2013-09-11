@@ -23,7 +23,7 @@
 (defun transpiler_defmethod (class-name name args &rest body)
   (print-definition `(defmethod ,class-name ,name ,@(awhen args (list !))))
   (!? (href (transpiler-thisify-classes *transpiler*) class-name)
-      (let code (list args (append (head-atoms body :but-last t)
+      (let code (list args (append (head-if #'atom body :but-last t)
                                    (tail-after-atoms body :keep-last t)))
         (? (assoc name (class-methods !))
            (progn
