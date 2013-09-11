@@ -1,10 +1,5 @@
 ;;;;; tré – Copyright (c) 2008–2009,2012–2013 Sven Michael Klose <pixel@copei.de?
 
-(defun hex-digit-char? (x)
-  (| (digit-char? x)
-     (& (>= x #\A) (<= x #\F))
-     (& (>= x #\a) (<= x #\f))))
-
 (defun read-hex (str)
   (with (rec #'((v)
 		          (alet (char-upcase (peek-char str))

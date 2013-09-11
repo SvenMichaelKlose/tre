@@ -46,6 +46,15 @@
      (| (decimal-digit? c)
         (nondecimal-digit? c :base base))))
 
+(defun hex-digit-char? (x)
+  (| (digit-char? x)
+     (& (>= x #\A) (<= x #\F))
+     (& (>= x #\a) (<= x #\f))))
+
+(def-rest-predicate alphanumeric? c ()
+  (| (alpha-char? c)
+     (digit-char? c)))
+
 (define-test "DIGIT-CHAR? #\0"
   ((digit-char? #\0))
   t)
@@ -53,7 +62,3 @@
 (define-test "DIGIT-CHAR? #\a"
   ((digit-char? #\a))
   nil)
-
-(def-rest-predicate alphanumeric? c ()
-  (| (alpha-char? c)
-     (digit-char? c)))
