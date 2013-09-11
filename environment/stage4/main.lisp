@@ -15,7 +15,6 @@
 (env-load "stage4/define-tree-filter.lisp")
 (env-load "stage4/destructive-arith.lisp")
 (env-load "stage4/intersect.lisp")
-(env-load "stage4/enqueue-many.lisp")
 (env-load "stage4/ends-with.lisp")
 (env-load "stage4/escape-string.lisp")
 (env-load "stage4/expander.lisp")

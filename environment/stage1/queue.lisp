@@ -3,11 +3,11 @@
 (defun make-queue ()
   (cons nil nil))
 
-(defun enqueue (queue obj)
+(defun enqueue (queue &rest x)
   (rplaca queue
           (cdr (rplacd (| (car queue) queue)
-                       (list obj))))
-  obj)
+                       x)))
+  x)
 
 (defun enqueue-list (queue x)
   (rplacd queue (nconc (cdr queue) x))
