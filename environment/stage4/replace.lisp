@@ -8,8 +8,7 @@
 
 (defun replace-tree (old-elm new-elm lst &key (test #'eq))
   (mapcar [?
-            (funcall test _ old-elm)
-              new-elm
-            (cons? _) (replace-tree old-elm new-elm _ :test test)
+            (funcall test _ old-elm) new-elm
+            (cons? _)                (replace-tree old-elm new-elm _ :test test)
               _]
           lst))
