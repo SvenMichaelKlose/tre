@@ -1,11 +1,9 @@
-;;;;; TRE environment
-;;;;; Copyright (c) 2008-2009,2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008-2009,2011,2013 Sven Michael Klose <pixel@copei.de>
 
-(defun maptree (fun tree)
-  (? (atom tree)
-     (funcall fun tree)
-     (mapcar #'((x)
-                 (? (cons? x)
-                    (funcall fun (maptree fun (funcall fun x)))
-                    (funcall fun x)))
-             tree)))
+(defun maptree (fun x)
+  (? (atom x)
+     (funcall fun x)
+     (mapcar [? (cons? _)
+                (funcall fun (maptree fun (funcall fun _)))
+                (funcall fun _)]
+             x)))
