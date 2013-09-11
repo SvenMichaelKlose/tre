@@ -10,7 +10,7 @@
          (? d
             (? (%arg-keyword? d)
                (error "Keyword ~A follows keyword ~A." d a))
-            (error "Unexpected end of argument list after keyword."))))))
+            (error "Unexpected end of argument list after keyword ~A." a))))))
 
 (early-defun %defun-checked-args (args)
   (& args
@@ -24,7 +24,7 @@
            (eq (car name) '=))
         (make-symbol (string-concat "=-" (string (cadr name)))
                      (symbol-package (cadr name)))
-        (error "Illegal function name ~A. It must be symbol or of the form (= symbol)." name))))
+        (error "Illegal function name ~A. It must be a symbol or of the form (= symbol)." name))))
 
 (defmacro defun (name args &body body)
   (let name (%defun-name name)
