@@ -55,7 +55,6 @@
 (env-load "stage4/split.lisp" 'c)
 (env-load "stage4/starts-with.lisp")
 (env-load "stage4/single-quoted.lisp")
-(env-load "stage4/symbols-function-exprs.lisp")
 (env-load "stage4/symbol-names.lisp")
 (env-load "stage4/tail-after-if.lisp")
 (env-load "stage4/tree-list.lisp")
