@@ -282,9 +282,9 @@ void
 tremain_print_hardinfo (void)
 {
 	printf (TRE_INFO TRE_COPYRIGHT);
-	printf ("Object pointer size: %d\n", (int) sizeof (treptr));
-	printf ("Object index width:  %d\n", (int) TREPTR_INDEX_WIDTH);
-	printf ("Object type width:   %d\n", (int) TRETYPE_WIDTH);
+	printf ("Object pointer size: %d bytes\n", (int) sizeof (treptr));
+	printf ("Object index width:  %d bits\n", (int) TREPTR_INDEX_WIDTH);
+	printf ("Object type width:   %d bits\n", (int) TRETYPE_WIDTH);
 	printf ("Max. cells: %d\n", NUM_LISTNODES);
 	printf ("Max. atoms: %d\n", NUM_ATOMS);
 	printf ("Max. literal symbol length: %d characters\n", TRE_MAX_SYMLEN);
