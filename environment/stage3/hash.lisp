@@ -4,8 +4,8 @@
 
 (defstruct hash-table
   (:constructor %make-hash-table)
-  test              ; Function for equality test of keys.
-  size              ; Initial hash table size.
+  test
+  size
   hash)
 
 (defun make-hash-table (&key (test #'eq) (size *default-hash-size*))
@@ -70,9 +70,6 @@
            (dolist (b .l h)
              (dolist (j (hashkeys b))
                (= (href h j) (href b j))))))))
-
-(defun hash-copy (x)
-  (hash-merge nil x))
 
 (defun hash-alist (h)
   (with-queue alist
