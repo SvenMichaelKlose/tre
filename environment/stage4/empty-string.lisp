@@ -5,7 +5,7 @@
 
 (defun empty-string-or-nil? (&rest x)
   (every [| (not _)
-            (%empty-string? _)]
+            (empty-string? _)]
          x))
 
 (define-test "EMPTY-STRING? works"
