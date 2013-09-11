@@ -1,6 +1,6 @@
 ;;;;; tré – Copyright (c) 2005–2006,2009–2013 Sven Michael Klose <pixel@copei.de>
 
-(functional assoc rassoc acons copy-alist)
+(functional assoc rassoc acons copy-alist force-alist)
 
 (defmacro %define-assoc (name getter)
   `(defun ,name (key lst &key (test #'eql))
