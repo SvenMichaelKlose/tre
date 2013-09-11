@@ -51,19 +51,19 @@
        (& (cons? l)
           (list? (car l))))))
 
-(define-test "IS-LAMBDA? works"
-  ((lambda? '#'((x) x)))
-  t)
-
-(define-test "IS-LAMBDA? works with LAMBDA"
-  ((lambda? '#'(lambda (x) x)))
-  t)
-
 (defun lambda-call? (x)
   (& (cons? x)
      (cdr x)
      (lambda? (car x))))
 
-(define-test "IS-LAMBDA-CALL? works"
+(define-test "LAMBDA? works"
+  ((lambda? '#'((x) x)))
+  t)
+
+(define-test "LAMBDA? works with LAMBDA"
+  ((lambda? '#'(lambda (x) x)))
+  t)
+
+(define-test "LAMBDA-CALL? works"
   ((lambda-call? '(#'((x) x) nil)))
   t)
