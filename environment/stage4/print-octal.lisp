@@ -1,15 +1,12 @@
-;;;;; TRE environment
-;;;;; Copyright (c) 2008-2009 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2009,2013 Sven Michael Klose <pixel@copei.de>
 
 (defun octal-digit (x)
   (code-char (+ #\0 (mod x 8))))
 
-(defun print-octal-0 (x)
-  (when (< 0 x)
-    (cons (octal-digit x)
-		  (print-octal-0 (>> x 3)))))
-
 (defun print-octal (x &optional (str *standard-output*))
-  (princ (list-string (reverse (cons (octal-digit x)
-									 (print-octal-0 (>> x 3)))))
-		 str))
+  (with (rec [& (< 0 x)
+                (cons (octal-digit x)
+		        (rec (>> x 3))))
+    (princ (list-string (reverse (cons (octal-digit x)
+									   (rec (>> x 3)))))
+		   (default-stream str))))

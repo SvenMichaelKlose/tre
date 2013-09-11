@@ -1,10 +1,10 @@
-;;;;; tré - Copyright (c) 2008-2009,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2008-2009,2012–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun print-hex-digit (x &optional (str *standard-output*))
   (princ (code-char (? (< x 10)
                        (+ #\0 x)
                        (+ #\A -10 x)))
-	     str))
+	     (default-stream str)))
 
 (defun print-hexbyte (x &optional (str *standard-output*))
   (with-default-stream s str
