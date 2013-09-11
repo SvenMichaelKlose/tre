@@ -1,23 +1,17 @@
-;;;;; tré – Copyright (c) 2010,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2010,2012–2013 Sven Michael Klose <pixel@copei.de>
 
-(defun %hcache-remove (plc vals)
+(defun hcache-remove (plc &rest vals)
   (& plc vals
   	 (| (not .vals)
-	 	(%hcache-remove plc .vals))
+	 	(apply #'hcache-remove plc .vals))
 	 (| (hremove plc vals.)
 		t)))
 
-(defun hcache-remove (plc &rest vals)
-  (%hcache-remove plc vals))
-
-(defun %hcache (plc vals)
+(defun hcache (plc &rest vals)
   (& plc vals
      (| (& (not .vals)
 		   (href plc vals.))
-	  	(%hcache (href plc vals.) .vals))))
-
-(defun hcache (plc &rest vals)
-  (%hcache plc vals))
+	  	(apply #'hcache (href plc vals.) .vals))))
 
 (defun %=-hcache (x plc vals)
   (? .vals
