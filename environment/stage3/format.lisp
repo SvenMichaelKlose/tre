@@ -28,12 +28,11 @@
 
 (defun %format-directive (inf txt args)
   (++! (format-info-processed-args inf))
-  (let el (char-upcase txt.)
-    (?
-      (character== el #\%) (%format-directive-eol inf .txt args)
-      (character== el #\A) (%format-directive-placeholder inf .txt args)
-      (character== el #\F) (%format-directive-force-output inf .txt args)
-      (%format-directive-tilde inf txt args))))
+  (case (char-upcase txt.) :test #'character==
+    #\% (%format-directive-eol inf .txt args)
+    #\A (%format-directive-placeholder inf .txt args)
+    #\F (%format-directive-force-output inf .txt args)
+    (%format-directive-tilde inf txt args)))
 
 (defun %format (inf txt args)
   (when txt

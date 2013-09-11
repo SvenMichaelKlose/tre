@@ -7,6 +7,6 @@
 
 (defun issue-collected-errors ()
   (when *collected-errors*
-	(let errors (apply #'string-concat (filter [+ _ "~%"] *collected-errors*))
+	(alet (apply #'+ (filter [+ _ "~%"] *collected-errors*))
 	  (= *collected-errors* nil)
-	  (error (format nil errors)))))
+	  (error (format nil !)))))
