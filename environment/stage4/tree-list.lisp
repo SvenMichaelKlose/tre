@@ -5,7 +5,7 @@
     (with (rec [? (atom x)
                   (enqueue q x)
                   (adolist x
-                    (rec q !))])
+                    (rec !))])
       (& x
-           (rec q x)
+           (rec x)
            (queue-list q)))))
