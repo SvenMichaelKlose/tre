@@ -48,6 +48,33 @@
 (defun find (obj seq &key (start nil) (end nil) (from-end nil) (test #'eql))
   (find-if [funcall test _ obj] seq :start start :end end :from-end from-end))
 
+(defun position (obj seq &key (start nil) (end nil) (from-end nil) (test #'eql))
+  (let *position-index* nil
+    (find-if #'((x i)
+                 (& (funcall test x obj)
+                    (= *position-index* i)))
+             seq :start start :end end :from-end from-end :with-index t)
+    (!? *position-index*
+        (integer !))))
+
+(defun position-if (pred seq &key (start nil) (end nil) (from-end nil))
+  (let *position-index* nil
+    (find-if #'((x i)
+				  (& (funcall pred x)
+					 (= *position-index* i)))
+			 seq :start start :end end :from-end from-end :with-index t)
+    (!? *position-index*
+        (integer !))))
+
+(defun some (pred &rest seqs)
+  (find-if pred (apply #'append seqs)))
+
+(defun every (pred &rest seqs)
+  (dolist (seq seqs t)
+    (adotimes ((length seq))
+      (| (funcall pred (elt seq !))
+         (return-from every nil)))))
+
 (define-test "FIND finds elements"
   ((find 's '(l i s p)))
   's)
@@ -72,15 +99,6 @@
   ((find-if #'number? '(l i 5 p)))
   5)
 
-(defun position (obj seq &key (start nil) (end nil) (from-end nil) (test #'eql))
-  (let *position-index* nil
-    (find-if #'((x i)
-                 (& (funcall test x obj)
-                    (= *position-index* i)))
-             seq :start start :end end :from-end from-end :with-index t)
-    (!? *position-index*
-        (integer !))))
-
 (define-test "POSITION works with character list"
   ((position 's '(l i s p)))
   (integer 2))
@@ -89,28 +107,10 @@
   ((position #\/ "lisp/foo/bar"))
   (integer 4))
 
-(defun position-if (pred seq &key (start nil) (end nil) (from-end nil))
-  (let *position-index* nil
-    (find-if #'((x i)
-				  (& (funcall pred x)
-					 (= *position-index* i)))
-			 seq :start start :end end :from-end from-end :with-index t)
-    (!? *position-index*
-        (integer !))))
-
-(defun some (pred &rest seqs)
-  (find-if pred (apply #'append seqs)))
-
 (define-test "SOME works"
   ((& (some #'number? '(a b 3)))
       (not (some #'number? '(a b c))))
   t)
-
-(defun every (pred &rest seqs)
-  (dolist (seq seqs t)
-    (adotimes ((length seq))
-      (| (funcall pred (elt seq !))
-         (return-from every nil)))))
 
 (define-test "EVERY works"
   ((& (every #'number? '(1 2 3))
