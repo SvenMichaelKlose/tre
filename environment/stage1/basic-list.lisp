@@ -1,6 +1,6 @@
 ;;;;; tré – Copyright (c) 2005–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
 
-(functional nth copy-list)
+(functional nth copy-tree)
 
 (early-defun nth (i x)
   (? x

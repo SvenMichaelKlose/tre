@@ -44,4 +44,7 @@
             make-string string== string-concat string symbol-name
             list-string
             make-array array? aref
-            slot-value %slot-value)
+            slot-value %slot-value
+            
+            ; Not built–in (in C environment).
+            list identity last %nconc copy-list)
