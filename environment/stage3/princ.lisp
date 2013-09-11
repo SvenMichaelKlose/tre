@@ -9,6 +9,7 @@
          (= (stream-last-char str) (? (string? c)
                                       (elt c (-- (length c)))
                                       c))
+         (%track-location (stream-output-location str) c)
          (funcall (stream-fun-out str) c str)))))
 
 (defun number-digit (x)

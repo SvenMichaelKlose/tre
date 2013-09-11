@@ -2,6 +2,13 @@
 
 (defvar *default-stream-tabsize* 8)
 
+(defstruct stream-location
+  (track?   nil)
+  (id       nil)
+  (line     1)
+  (column   1)
+  (tabsize  *default-stream-tabsize*))
+
 (defstruct stream
   (handle nil)
 
@@ -12,31 +19,24 @@
   (last-char	nil)
   (peeked-char	nil)
 
-  (track-input-location?  t)
-  (in-id        nil)
-  (in-line      1)
-  (in-column    1)
-  (in-tabsize   *default-stream-tabsize*)
-
-  (track-output-location? nil)
-  (out-line     1)
-  (out-column   1)
+  (input-location         (make-stream-location))
+  (output-location        (make-stream-location :track? nil))
 
   (user-detail nil))
 
 (defun next-tabulator-column (column size)
   (++ (* size (++ (integer (/ (-- column) size))))))
 
-(defun %stream-track-input-location (str x)
-  (when (stream-track-input-location? str)
+(def-stream-location %track-location (stream-location x)
+  (when track?
     (? (string? x)
        (adolist ((string-list x))
-         (%stream-track-input-location str !))
+         (%track-location stream-location !))
        (? (== 10 x)
           (progn
-            (= (stream-in-column str) 1)
-            (++! (stream-in-line str)))
+            (= (stream-location-column stream-location) 1)
+            (++! (stream-location-line stream-location)))
           (?
-            (== 9 x) (= (stream-in-column str) (next-tabulator-column (stream-in-column str) (stream-in-tabsize str)))
-            (< 31 x) (++! (stream-in-column str))))))
+            (== 9 x) (= (stream-location-column stream-location) (next-tabulator-column column tabsize))
+            (< 31 x) (++! (stream-location-column stream-location))))))
   x)

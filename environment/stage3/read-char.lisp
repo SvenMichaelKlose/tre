@@ -11,7 +11,7 @@
       (= (stream-last-char str) (funcall (stream-fun-in str) str))))
 
 (defun read-char (&optional (str *standard-input*))
-  (%stream-track-input-location str (read-char-0 str)))
+  (%track-location (stream-input-location str) (read-char-0 str)))
 
 (defun peek-char (&optional (str *standard-input*))
   "Read character without stepping to next."
