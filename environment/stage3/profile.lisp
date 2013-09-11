@@ -1,6 +1,6 @@
 ;;;;; tré – Copyright (c) 2012 Sven Michael Klose <pixel@copei.de>
 
-(defvar *profile* (make-hash-table :test #'eq))
+(defvar *profile*      (make-hash-table :test #'eq))
 (defvar *profile-lock* t)
 
 (defun add-profile (name nsec)
