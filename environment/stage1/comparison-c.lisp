@@ -1,4 +1,6 @@
-;;;;; tré – Copyright (c) 2005–2006,2008–2009,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2006,2008–2009,2012–2013 Sven Michael Klose <pixel@copei.de>
+
+(functional >= <= character>= character<= integer>= integer<= number>= number<=)
 
 (defun >= (n &rest x)
   (dolist (i x t)
