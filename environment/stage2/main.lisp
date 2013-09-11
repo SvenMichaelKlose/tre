@@ -29,5 +29,4 @@
 (env-load "stage2/deftype.lisp" 'c)
 (env-load "stage2/defstruct.lisp")
 (env-load "stage2/abs.lisp" 'c)
-(env-load "stage2/traverse.lisp")
 (env-load "stage2/doarray.lisp")
