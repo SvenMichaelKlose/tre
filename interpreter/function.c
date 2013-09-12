@@ -15,14 +15,14 @@
 #include "alloc.h"
 #include "symbol.h"
 
-struct tre_function *
+trefunction *
 trefunction_alloc ()
 {
-    struct tre_function * i = malloc (sizeof (struct tre_function));
+    trefunction * i = malloc (sizeof (trefunction));
 
     if (!i) {
         tregc_force ();
-    	i = malloc (sizeof (struct tre_function));
+    	i = malloc (sizeof (trefunction));
         if (!i)
 	    	treerror_internal (treptr_nil, "Out of memory for more functions.");
     }
@@ -38,8 +38,8 @@ trefunction_alloc ()
 treptr
 trefunction_make (tre_type type, treptr source)
 {
-    struct tre_function * i;
-    treptr a;
+    trefunction * i;
+    treptr        a;
 
     tregc_push (source);
     i = trefunction_alloc ();

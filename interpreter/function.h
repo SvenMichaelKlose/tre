@@ -5,22 +5,24 @@
 #ifndef TRE_FUNCTION_H
 #define TRE_FUNCTION_H
 
-struct tre_function {
+struct trefunction_t {
     treptr	source;
     treptr	bytecode;
     void *  native;
     void *  native_expander;
 };
 
-#define TREPTR_FUNCTION(ptr)                ((struct tre_function *) TREATOM_DETAIL(ptr))
+typedef struct trefunction_t trefunction;
+
+#define TREPTR_FUNCTION(ptr)                ((trefunction *) TREATOM_DETAIL(ptr))
 #define TREFUNCTION_SOURCE(ptr)             (TREPTR_FUNCTION(ptr)->source)
 #define TREFUNCTION_BYTECODE(ptr)           (TREPTR_FUNCTION(ptr)->bytecode)
 #define TREFUNCTION_NATIVE(ptr)             (TREPTR_FUNCTION(ptr)->native)
 #define TREFUNCTION_NATIVE_EXPANDER(ptr)    (TREPTR_FUNCTION(ptr)->native_expander)
 
-extern treptr trefunction_make (tre_type, treptr source);
-extern struct tre_function * trefunction_alloc ();
-extern void   trefunction_free (treptr);
-extern void   trefunction_init ();
+extern treptr        trefunction_make (tre_type, treptr source);
+extern trefunction * trefunction_alloc ();
+extern void          trefunction_free (treptr);
+extern void          trefunction_init ();
 
 #endif /* #ifndef TRE_FUNCTION_H */
