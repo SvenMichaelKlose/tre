@@ -141,7 +141,7 @@ treimage_write_numbers (FILE * f)
 
     DOTIMES(i, NUM_ATOMS)
         if (tre_atom_types[i] == TRETYPE_NUMBER)
-            treimage_write (f, tre_atoms[i], sizeof (struct tre_number));
+            treimage_write (f, tre_atoms[i], sizeof (trenumber));
 }
 
 void
@@ -328,14 +328,14 @@ treimage_read_conses (FILE * f)
 void
 treimage_read_numbers (FILE *f)
 {
-    tre_size  i;
-    struct tre_number * n;
+    tre_size    i;
+    trenumber * n;
 
     DOTIMES(i, NUM_ATOMS) {
         if (tre_atom_types[i] != TRETYPE_NUMBER)
             continue;
         n = trenumber_alloc (0, 0);
-        treimage_read (f, n, sizeof (struct tre_number));
+        treimage_read (f, n, sizeof (trenumber));
         TREATOM_DETAIL(i) = n;
 	}
 }

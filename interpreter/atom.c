@@ -210,8 +210,8 @@ treatom_free (treptr x)
 treptr
 treatom_number_get (double value, int type)
 {
-    treptr atom;
-    struct tre_number * num;
+    treptr      atom;
+    trenumber * num;
 
     num = trenumber_alloc (value, type);
     atom = treatom_alloc (TRETYPE_NUMBER);

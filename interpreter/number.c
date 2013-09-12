@@ -43,14 +43,14 @@ trenumber_is_value (char * symbol)
     return TRUE;
 }
 
-struct tre_number *
+trenumber *
 trenumber_alloc (double value, int type)
 {
-    struct tre_number * i = malloc (sizeof (struct tre_number));
+    trenumber * i = malloc (sizeof (trenumber));
 
     if (!i) {
         tregc_force ();
-    	i = malloc (sizeof (struct tre_number));
+    	i = malloc (sizeof (trenumber));
         if (!i)
 	    	treerror_internal (treptr_nil, "Out of memory for more numbers.");
     }
