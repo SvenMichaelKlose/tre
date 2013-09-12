@@ -1,6 +1,9 @@
-;;;; tré – Copyright (c) 2008–2010,2013 Sven Michael Klose <pixel@copei.de>
+;;;; TRE environment
+;;;; Copyright (c) 2008-2010 Sven Klose <pixel@copei.de>
 
 (defun pad (seq p)
-  (!? seq
-      (cons !. (& .!
-                  (cons p (pad .! p))))))
+  (when seq
+    (cons seq.
+    	  (when (< 1 (length seq))
+			(cons p
+				  (pad .seq p))))))

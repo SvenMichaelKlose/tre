@@ -3,5 +3,5 @@
 (defun repeat-while-changes (fun x)
   (alet (funcall fun x)
     (? (equal x !)
-       x
-       (repeat-while-changes fun !))))
+        x
+        (repeat-while-changes fun !))))
