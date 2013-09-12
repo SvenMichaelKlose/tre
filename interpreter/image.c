@@ -40,8 +40,8 @@ treptr treimage_initfun;
 treptr treptr_saved_restart_stack;
 
 struct treimage_header {
-    int     format_version;
-    treptr  init_fun;
+    int       format_version;
+    treptr    init_fun;
     tre_size  num_strings;
 };
 
@@ -71,7 +71,7 @@ treimage_write_atoms (FILE *f)
     tre_size  j;
     tre_size  idx;
     tre_size  symlen;
-    char    c;
+    char      c;
 
     treimage_write (f, tregc_atommarks, sizeof tregc_atommarks);
 
@@ -113,10 +113,10 @@ treimage_write_atoms (FILE *f)
 void
 treimage_write_conses (FILE *f)
 {
-    tre_size i;
-    tre_size j;
-    tre_size idx = 0;
-    char   c;
+    tre_size  i;
+    tre_size  j;
+    tre_size  idx = 0;
+    char      c;
 
     treimage_write (f, tregc_listmarks, sizeof tregc_listmarks);
 
@@ -137,7 +137,7 @@ treimage_write_conses (FILE *f)
 void
 treimage_write_numbers (FILE * f)
 {
-    tre_size i;
+    tre_size  i;
 
     DOTIMES(i, NUM_ATOMS)
         if (tre_atom_types[i] == TRETYPE_NUMBER)
@@ -147,7 +147,7 @@ treimage_write_numbers (FILE * f)
 void
 treimage_write_arrays (FILE *f)
 {
-    tre_size i;
+    tre_size  i;
 
     DOTIMES(i, NUM_ATOMS) {
         if (tre_atom_types[i] == TRETYPE_ARRAY) {
@@ -162,7 +162,7 @@ treimage_write_strings (FILE *f, tre_size num)
 {
     tre_size   i;
     tre_size   j;
-    char   * s;
+    char *     s;
     tre_size * lens = malloc (sizeof (tre_size) * num);
 
     /* Make and write length index. */
@@ -198,8 +198,8 @@ treimage_count_strings (void)
 int
 treimage_create (char *file, treptr init_fun)
 {
-    struct treimage_header  h;
-    FILE  * f;
+    struct treimage_header h;
+    FILE * f;
 
     treimage_initfun = init_fun;
     treimage_save_stack_content ();
@@ -238,14 +238,15 @@ treimage_read (FILE *f, void *p, tre_size len)
 void
 treimage_read_atoms (FILE *f)
 {
-    tre_size i;
-    tre_size j;
-    tre_size idx = 0;
-    tre_size symlen;
-    treptr   package;
-    char   c;
-	char   symbol[TRE_MAX_SYMLEN + 1];
-	char * allocated_symbol;
+    tre_size  i;
+    tre_size  j;
+    tre_size  idx = 0;
+    tre_size  symlen;
+    treptr    package;
+    treptr    value;
+    treptr    fun;
+    char      c;
+	char      symbol[TRE_MAX_SYMLEN + 1];
 
     treimage_read (f, tregc_atommarks, sizeof tregc_atommarks);
 
@@ -262,12 +263,10 @@ treimage_read_atoms (FILE *f)
 						    treerror_internal (treptr_nil, "While reading image: Symbol exceeds max length %d with length of %d.", TRE_MAX_SYMLEN, symlen);
                		    treimage_read (f, symbol, symlen);
 					    symbol[symlen] = 0;
-    				    allocated_symbol = tresymbol_add (symbol);
                         treimage_read (f, &package, sizeof (treptr));
-    				    TREATOM_DETAIL(idx) = tresymbolpage_add (TRETYPE_INDEX_TO_PTR(tre_atom_types[idx], idx), allocated_symbol, package);
-                        TRESYMBOL_PACKAGE(idx) = package;
-                        treimage_read (f, &TRESYMBOL_VALUE(idx), sizeof (treptr));
-                        treimage_read (f, &TRESYMBOL_FUN(idx), sizeof (treptr));
+                        treimage_read (f, &value, sizeof (treptr));
+                        treimage_read (f, &fun, sizeof (treptr));
+    				    TREATOM_DETAIL(idx) = tresymbol_add (TRETYPE_INDEX_TO_PTR(tre_atom_types[idx], idx), symbol, value, fun, package);
                         break;
 
                     case TRETYPE_FUNCTION:
@@ -299,10 +298,10 @@ treimage_read_atoms (FILE *f)
 void
 treimage_read_conses (FILE * f)
 {
-    tre_size i;
-    tre_size j;
-    tre_size idx = 0;
-    char   c;
+    tre_size  i;
+    tre_size  j;
+    tre_size  idx = 0;
+    char      c;
 
     treimage_read (f, tregc_listmarks, sizeof tregc_listmarks);
 
@@ -329,7 +328,7 @@ treimage_read_conses (FILE * f)
 void
 treimage_read_numbers (FILE *f)
 {
-    tre_size i;
+    tre_size  i;
     struct tre_number * n;
 
     DOTIMES(i, NUM_ATOMS) {
@@ -344,8 +343,8 @@ treimage_read_numbers (FILE *f)
 void
 treimage_read_arrays (FILE *f)
 {
-    tre_size i;
-    tre_size l;
+    tre_size  i;
+    tre_size  l;
     struct tre_array * a;
     treptr sizes;
 
@@ -366,7 +365,7 @@ treimage_read_arrays (FILE *f)
 void
 treimage_read_strings (FILE *f, struct treimage_header *h)
 {
-    char *   s;
+    char *     s;
     tre_size   i;
     tre_size   j;
     tre_size   l;

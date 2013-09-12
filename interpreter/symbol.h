@@ -5,14 +5,14 @@
 #ifndef TRE_SYMBOL_H
 #define TRE_SYMBOL_H
 
-#define TREPTR_SYMBOL(ptr)      ((struct tresymbol_page *) TREATOM_DETAIL(ptr))
+#define TREPTR_SYMBOL(ptr)      ((tresymbol *) TREATOM_DETAIL(ptr))
 #define TRESYMBOL_NAME(ptr)     (TREPTR_SYMBOL(ptr)->name)
 #define TRESYMBOL_VALUE(ptr)    (TREPTR_SYMBOL(ptr)->value)
 #define TRESYMBOL_FUN(ptr)      (TREPTR_SYMBOL(ptr)->function)
 #define TRESYMBOL_PACKAGE(ptr)  (TREPTR_SYMBOL(ptr)->package)
 
-struct tresymbol_page {
-	struct tresymbol_page * entries[256];
+struct tresymbol_t {
+	struct tresymbol_t * entries[256];
 	treptr   atom;
 	tre_size num_entries;
 	char *   name;
@@ -21,22 +21,15 @@ struct tresymbol_page {
     treptr   package;
 };
 
-struct tresymbol_root {
-	treptr package;
-	struct tresymbol_page * root;
-};
+typedef struct tresymbol_t tresymbol;
 
 extern tre_size num_symbols;
 
-extern void                    tresymbolpage_remove (treptr atom);
-extern struct tresymbol_page * tresymbolpage_add (treptr atom, char * name, treptr package);
-extern treptr                  tresymbolpage_find (char * name, treptr atom);
-extern void                    tresymbolpage_set_package (tre_size root_index, treptr package);
-
-extern char * tresymbol_add (char *);
-extern void   tresymbol_free (char *);
-
-extern void   tresymbol_clear (void);
-extern void   tresymbol_init (void);
+extern tresymbol * tresymbol_add         (treptr atom, char * name, treptr value, treptr fun, treptr package);
+extern void        tresymbol_remove      (treptr atom);
+extern treptr      tresymbol_find        (char * name, treptr atom);
+extern void        tresymbol_set_package (tre_size root_index, treptr package);
+extern void        tresymbol_clear (void);
+extern void        tresymbol_init (void);
 
 #endif

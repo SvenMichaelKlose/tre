@@ -71,15 +71,8 @@ treatom_init_atom_table (void)
 void
 treatom_init_truth (void)
 {
-	tre_atoms[TREPTR_NIL_INDEX] = (void *) tresymbolpage_add (treptr_nil, tresymbol_add ("NIL"), treptr_nil);
-    TRESYMBOL_VALUE(treptr_nil) = treptr_nil;
-    TRESYMBOL_FUN(treptr_nil) = treptr_nil;
-    TRESYMBOL_PACKAGE(treptr_nil) = treptr_nil;
-
-	tre_atoms[TREPTR_T_INDEX] = (void *) tresymbolpage_add (treptr_t, tresymbol_add ("T"), treptr_nil);
-    TRESYMBOL_VALUE(treptr_t) = treptr_t;
-    TRESYMBOL_FUN(treptr_t) = treptr_nil;
-    TRESYMBOL_PACKAGE(treptr_t) = treptr_nil;
+	tre_atoms[TREPTR_NIL_INDEX] = (void *) tresymbol_add (treptr_nil, "NIL", treptr_nil, treptr_nil, treptr_nil);
+	tre_atoms[TREPTR_T_INDEX] = (void *) tresymbol_add (treptr_t, "T", treptr_t, treptr_nil, treptr_nil);
 }
 
 void
@@ -110,7 +103,7 @@ void
 treatom_init_keyword_package ()
 {
     tre_package_keyword = treatom_alloc_symbol ("", treptr_nil, treptr_nil);
-	tresymbolpage_set_package (TREPACKAGE_KEYWORD_INDEX, tre_package_keyword);
+	tresymbol_set_package (TREPACKAGE_KEYWORD_INDEX, tre_package_keyword);
 }
 
 void
@@ -192,17 +185,14 @@ treatom_alloc (int type)
 
 
 treptr
-treatom_alloc_symbol (char * symbol, treptr package, treptr value)
+treatom_alloc_symbol (char * name, treptr package, treptr value)
 {
     treptr  atom = treatom_alloc (TRETYPE_SYMBOL);
 
     if (value == treptr_invalid)
 		value = atom;
 
-	TREATOM_DETAIL(atom) = tresymbolpage_add (atom, tresymbol_add (symbol), package);
-    TRESYMBOL_VALUE(atom) = value;
-    TRESYMBOL_PACKAGE(atom) = package;
-    TRESYMBOL_FUN(atom) = treptr_nil;
+	TREATOM_DETAIL(atom) = tresymbol_add (atom, name, value, treptr_nil, package);
 
 	return atom;
 }
@@ -211,7 +201,7 @@ void
 treatom_free (treptr x)
 {
     if (TREATOM_TYPE(x) == TRETYPE_SYMBOL)
-		tresymbolpage_remove (x);
+		tresymbol_remove (x);
 
     TREATOM_TYPE(x) = TRETYPE_UNUSED;
 	trealloc_free_item (&tre_atoms_free, (void **) &tre_atoms[TREPTR_INDEX(x)]);
@@ -245,7 +235,7 @@ trechar_get (double value)
 treptr
 treatom_seek (char * symbol, treptr package)
 {
-	return tresymbolpage_find (symbol, package);
+	return tresymbol_find (symbol, package);
 }
 
 treptr
