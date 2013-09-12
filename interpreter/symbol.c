@@ -16,19 +16,6 @@
 #include "alloc.h"
 
 tre_size num_symbols;
-
-struct tresymbol_page {
-	struct tresymbol_page * entries[256];
-	treptr   atom;
-	tre_size num_entries;
-	char *   name;
-};
-
-struct tresymbol_root {
-	treptr package;
-	struct tresymbol_page * root;
-};
-
 struct tresymbol_root tresymbol_roots[MAX_PACKAGES];
 
 struct tresymbol_page *
@@ -87,17 +74,16 @@ tresymbolpage_add_rec (struct tresymbol_page * p, char * name, treptr atom, char
 		exit (-1);
 	}
 
-	p->name = tresymbol_add (name);
+	p->name = name;
 	p->atom = atom;
 
     return p;
 }
 
 struct tresymbol_page *
-tresymbolpage_add (treptr atom)
+tresymbolpage_add (treptr atom, char * name, treptr package)
 {
-	char * name = TRESYMBOL_NAME(atom);
-    return tresymbolpage_add_rec (tresymbolpage_find_root (TRESYMBOL_PACKAGE(atom)), name, atom, name);
+    return tresymbolpage_add_rec (tresymbolpage_find_root (package), name, atom, name);
 }
 
 treptr tresymbolpage_find_rec (struct tresymbol_page * p, char * np);
@@ -197,7 +183,6 @@ tresymbol_clear ()
 		if (tre_atom_types[i] != TRETYPE_SYMBOL)
 			continue;
 		tresymbolpage_remove (i);
-		tresymbol_free (tre_atoms[i].detail);
 	}
 }
 

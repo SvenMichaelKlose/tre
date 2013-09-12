@@ -21,24 +21,21 @@
 #include "symbol.h"
 
 treptr treptr_macroexpand_hook;
-struct tre_atom * treatom_macroexpand_hook;
-
 treptr treptr_current_macro;
 
 treptr
 tremacro_builtin_macroexpand_1 (treptr list)
 {
-    if (treatom_macroexpand_hook->fun == treptr_nil)
-        return list;
-    return treeval_funcall (treatom_macroexpand_hook->fun, CONS(list, treptr_nil), FALSE);
+    return treeval_funcall (TRESYMBOL_FUN(treptr_macroexpand_hook), CONS(list, treptr_nil), FALSE);
 }
 
 treptr
 tremacro_builtin_macroexpand (treptr list)
 {
-    treptr  n = CONS(trearg_get (list), treptr_nil);
+    treptr fun = TRESYMBOL_FUN(treptr_macroexpand_hook);
+    treptr n   = CONS(trearg_get (list), treptr_nil);
 
-    if (treatom_macroexpand_hook->fun == treptr_nil)
+    if (fun == treptr_nil)
         return CAR(n);
 
     do {
@@ -55,7 +52,6 @@ void
 tremacro_init (void)
 {
     treptr_macroexpand_hook = treatom_get ("*MACROEXPAND-HOOK*", TRECONTEXT_PACKAGE());
-    treatom_macroexpand_hook = & TREPTR_TO_ATOM(treptr_macroexpand_hook);
     EXPAND_UNIVERSE(treptr_macroexpand_hook);
 
     treptr_current_macro = treatom_get ("*CURRENT-MACRO*", TRECONTEXT_PACKAGE());

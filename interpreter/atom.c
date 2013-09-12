@@ -71,17 +71,15 @@ treatom_init_atom_table (void)
 void
 treatom_init_truth (void)
 {
-    ATOM_SET(TREPTR_NIL_INDEX, TRETYPE_SYMBOL);
-    ATOM_SET_NAME(TREPTR_NIL_INDEX, tresymbol_add ("NIL"));
-    tre_atoms[TREPTR_NIL_INDEX].value = TRETYPE_INDEX_TO_PTR(TRETYPE_SYMBOL, TREPTR_NIL_INDEX);
-    tre_atoms[TREPTR_NIL_INDEX].fun = treptr_nil;
-	tresymbolpage_add (treptr_nil);
+	tre_atoms[TREPTR_NIL_INDEX].detail = (void *) tresymbolpage_add (treptr_nil, tresymbol_add ("NIL"), treptr_nil);
+    TRESYMBOL_VALUE(treptr_nil) = treptr_nil;
+    TRESYMBOL_FUN(treptr_nil) = treptr_nil;
+    TRESYMBOL_PACKAGE(treptr_nil) = treptr_nil;
 
-    ATOM_SET(TREPTR_T_INDEX, TRETYPE_SYMBOL);
-    ATOM_SET_NAME(TREPTR_T_INDEX, tresymbol_add ("T"));
-    tre_atoms[TREPTR_T_INDEX].value = TRETYPE_INDEX_TO_PTR(TRETYPE_SYMBOL, TREPTR_T_INDEX);
-    tre_atoms[TREPTR_T_INDEX].fun = treptr_nil;
-	tresymbolpage_add (treptr_t);
+	tre_atoms[TREPTR_T_INDEX].detail = (void *) tresymbolpage_add (treptr_t, tresymbol_add ("T"), treptr_nil);
+    TRESYMBOL_VALUE(treptr_t) = treptr_t;
+    TRESYMBOL_FUN(treptr_t) = treptr_nil;
+    TRESYMBOL_PACKAGE(treptr_t) = treptr_nil;
 }
 
 void
@@ -197,17 +195,14 @@ treptr
 treatom_alloc_symbol (char * symbol, treptr package, treptr value)
 {
     treptr  atom = treatom_alloc (TRETYPE_SYMBOL);
-    tre_size  atomi = TREPTR_INDEX(atom);
 
     if (value == treptr_invalid)
 		value = atom;
 
-    symbol = tresymbol_add (symbol);
-    ATOM_SET_NAME(atomi, symbol);
-    tre_atoms[atomi].value = value;
-    tre_atoms[atomi].package = package;
-
-	tresymbolpage_add (atom);
+	TREATOM_DETAIL(atom) = tresymbolpage_add (atom, tresymbol_add (symbol), package);
+    TRESYMBOL_VALUE(atom) = value;
+    TRESYMBOL_PACKAGE(atom) = package;
+    TRESYMBOL_FUN(atom) = treptr_nil;
 
 	return atom;
 }
@@ -215,10 +210,8 @@ treatom_alloc_symbol (char * symbol, treptr package, treptr value)
 void
 treatom_free (treptr x)
 {
-    if (TREATOM_TYPE(x) == TRETYPE_SYMBOL) {
+    if (TREATOM_TYPE(x) == TRETYPE_SYMBOL)
 		tresymbolpage_remove (x);
-        tresymbol_free (TREATOM_DETAIL(x));
-    }
 
     TREATOM_TYPE(x) = TRETYPE_UNUSED;
 	trealloc_free_item (&tre_atoms_free, (void **) &tre_atoms[TREPTR_INDEX(x)]);
@@ -300,17 +293,17 @@ treatom_body_to_var (treptr body)
         if (tre_atom_types[a] != TRETYPE_FUNCTION && tre_atom_types[a] != TRETYPE_MACRO)
 	    	continue;
 
-        if (!TREPTR_IS_CONS(tre_atoms[a].value))
+        if (!TREPTR_IS_CONS(TRESYMBOL_VALUE(a)))
             continue;
 
-        tmp = CDR(tre_atoms[a].value);
+        tmp = CDR(TRESYMBOL_VALUE(a));
         if (NULLP(tmp) || CAR(tmp) != body)
 	    	continue;
 
         for (b = 0; b < NUM_ATOMS; b++)
             if (tre_atom_types[b] == TRETYPE_SYMBOL
 					&& tre_atoms[b].detail != NULL
-					&& tre_atoms[b].fun == TREATOM_INDEX_TO_PTR(a))
+					&& TRESYMBOL_FUN(b) == TREATOM_INDEX_TO_PTR(a))
                 return TREATOM_INDEX_TO_PTR(b);
     }
 

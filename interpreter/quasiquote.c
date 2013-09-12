@@ -19,21 +19,20 @@
 #include "symbol.h"
 
 treptr treptr_quasiquoteexpand_hook;
-struct tre_atom *treatom_quasiquoteexpand_hook;
 
 treptr
 trequasiquote_expand (treptr list)
 {
-    return treatom_quasiquoteexpand_hook->fun == treptr_nil ?
+    treptr sym = TRESYMBOL_FUN(treptr_quasiquoteexpand_hook);
+    return sym == treptr_nil ?
                list :
-               trefuncall (treatom_quasiquoteexpand_hook->fun, CONS(list, treptr_nil));
+               trefuncall (sym, CONS(list, treptr_nil));
 }
 
 void
 trequasiquote_init (void)
 {
     treptr_quasiquoteexpand_hook = treatom_get ("*QUASIQUOTEEXPAND-HOOK*", TRECONTEXT_PACKAGE());
-    treatom_quasiquoteexpand_hook = & TREPTR_TO_ATOM(treptr_quasiquoteexpand_hook);
     EXPAND_UNIVERSE(treptr_quasiquoteexpand_hook);
 }
 

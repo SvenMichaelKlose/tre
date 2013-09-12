@@ -85,7 +85,7 @@ treimage_write_atoms (FILE *f)
                     case TRETYPE_SYMBOL:
 				        symlen = strlen (TRESYMBOL_NAME(idx));
                         treimage_write (f, &symlen, sizeof (tre_size));
-                	    treimage_write (f, tre_atoms[idx].detail, symlen);
+                	    treimage_write (f, TRESYMBOL_NAME(idx), symlen);
                         treimage_write (f, &TRESYMBOL_PACKAGE(idx), sizeof (treptr));
                         treimage_write (f, &TRESYMBOL_VALUE(idx), sizeof (treptr));
                         treimage_write (f, &TRESYMBOL_FUN(idx), sizeof (treptr));
@@ -242,6 +242,7 @@ treimage_read_atoms (FILE *f)
     tre_size j;
     tre_size idx = 0;
     tre_size symlen;
+    treptr   package;
     char   c;
 	char   symbol[TRE_MAX_SYMLEN + 1];
 	char * allocated_symbol;
@@ -262,11 +263,11 @@ treimage_read_atoms (FILE *f)
                		    treimage_read (f, symbol, symlen);
 					    symbol[symlen] = 0;
     				    allocated_symbol = tresymbol_add (symbol);
-    				    ATOM_SET_NAME(idx, allocated_symbol);
-                        treimage_read (f, &TRESYMBOL_PACKAGE(idx), sizeof (treptr));
+                        treimage_read (f, &package, sizeof (treptr));
+    				    TREATOM_DETAIL(idx) = tresymbolpage_add (TRETYPE_INDEX_TO_PTR(tre_atom_types[idx], idx), allocated_symbol, package);
+                        TRESYMBOL_PACKAGE(idx) = package;
                         treimage_read (f, &TRESYMBOL_VALUE(idx), sizeof (treptr));
                         treimage_read (f, &TRESYMBOL_FUN(idx), sizeof (treptr));
-    				    tresymbolpage_add (TRETYPE_INDEX_TO_PTR(tre_atom_types[idx], idx));
                         break;
 
                     case TRETYPE_FUNCTION:

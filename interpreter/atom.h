@@ -9,9 +9,6 @@
 
 struct tre_atom {
     void *  detail;
-    treptr	value;
-    treptr	fun;
-    treptr	package;
 };
 
 typedef char tre_type;
@@ -26,9 +23,6 @@ extern treptr tre_package_keyword;
 #define TRE_ATOM(index)	(tre_atoms[index])
 
 #define ATOM_SET(index, typ) \
-	tre_atoms[index].value = treptr_nil;	\
-	tre_atoms[index].fun = treptr_nil;	\
-	tre_atoms[index].package = treptr_nil;	\
 	tre_atoms[index].detail = NULL; \
 	tre_atom_types[index] = typ
 
