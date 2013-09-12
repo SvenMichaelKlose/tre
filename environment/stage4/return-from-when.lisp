@@ -1,10 +1,9 @@
-;;;; TRE environment
-;;;; Copyright (c) 2009 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2009,2013 Sven Michael Klose <pixel@copei.de>
 
 (defmacro return-from-when (block-name x)
-  `(awhen ,x
-	 (return-from ,block-name !)))
+  `(!? ,x
+	   (return-from ,block-name !)))
 
 (defmacro return-when (x)
-  `(awhen ,x
-	 (return !)))
+  `(!? ,x
+	   (return !)))
