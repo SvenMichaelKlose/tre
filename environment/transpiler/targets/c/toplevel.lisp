@@ -28,6 +28,7 @@
 		   "builtin_stream.h"
 		   "builtin_string.h"
 		   "builtin_symbol.h"
+		   "builtin_time.h"
 		   "macro.h"
 		   "number.h"
 		   "special.h"
