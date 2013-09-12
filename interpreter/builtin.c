@@ -131,9 +131,9 @@ trebuiltin_print (treptr expr)
 treptr
 trebuiltin_load (treptr expr)
 {
-    struct  tre_stream *stream;
-    treptr  pathname = trearg_get (expr);
-    char    fname[1024];
+    trestream * stream;
+    treptr      pathname = trearg_get (expr);
+    char        fname[1024];
 
 	pathname = trearg_typed (1, TRETYPE_STRING, pathname, "LOAD");
 

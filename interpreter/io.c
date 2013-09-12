@@ -18,26 +18,26 @@
 #include "main.h"
 #include "builtin_stream.h"
 
-struct tre_stream * treio_readerstreams[TRE_MAX_NESTED_FILES];
+trestream * treio_readerstreams[TRE_MAX_NESTED_FILES];
 size_t treio_readerstreamptr;
 
-struct tre_stream  * treio_reader;
-struct tre_stream  * treio_console;
+trestream * treio_reader;
+trestream * treio_console;
 
 void
-treio_flush (struct tre_stream * s)
+treio_flush (trestream * s)
 {
     return TREIO_FLUSH(s);
 }
 
 bool
-treio_eof (struct tre_stream * s)
+treio_eof (trestream * s)
 {
     return TREIO_EOF(s);
 }
 
 int
-treio_getc (struct tre_stream * s)
+treio_getc (trestream * s)
 {
     int c;
 
@@ -65,19 +65,19 @@ treio_getc (struct tre_stream * s)
 }
 
 void
-treio_putc (struct tre_stream * s, char c)
+treio_putc (trestream * s, char c)
 {
     TREIO_PUTC(s, c);
 }
 
 void
-treio_putback (struct tre_stream * s)
+treio_putback (trestream * s)
 {
     s->putback_char = s->last_char;
 }
 
 int
-treio_getline (struct tre_stream * str, char * s, size_t maxlen)
+treio_getline (trestream * str, char * s, size_t maxlen)
 {
     int    c = 0;
     size_t i;
@@ -93,7 +93,7 @@ treio_getline (struct tre_stream * str, char * s, size_t maxlen)
 }        
 
 void
-treio_skip_spaces (struct tre_stream * s)
+treio_skip_spaces (trestream * s)
 {
     unsigned char c;
 
@@ -104,11 +104,11 @@ treio_skip_spaces (struct tre_stream * s)
     treio_putback (s);
 }
 
-struct tre_stream *
-treio_make_stream (struct treio_ops * ops, const char * name)
+trestream *
+treio_make_stream (treioops * ops, const char * name)
 {
-    struct tre_stream *s = malloc (sizeof (struct tre_stream));
-	char * n = malloc (strlen (name) + 1);
+    trestream * s = malloc (sizeof (trestream));
+	char *      n = malloc (strlen (name) + 1);
 
 	strcpy (n, name);
 
@@ -123,14 +123,14 @@ treio_make_stream (struct treio_ops * ops, const char * name)
 }
 
 void
-treio_free_stream (struct tre_stream * s)
+treio_free_stream (trestream * s)
 {
 	free (s->file_name);
 	free (s);
 }
 
 void
-treio_close_stream (struct tre_stream * s)
+treio_close_stream (trestream * s)
 {
 	(*s->ops->close) (s->detail_in);
 	treio_free_stream (s);
@@ -139,7 +139,7 @@ treio_close_stream (struct tre_stream * s)
 void
 treio_init ()
 {
-    struct tre_stream * s = treio_make_stream (&treio_ops_std, "standard input");
+    trestream * s = treio_make_stream (&treio_ops_std, "standard input");
 
     s->detail_in = stdin;
     s->detail_out = stdout;
@@ -150,14 +150,14 @@ treio_init ()
     treio_console = s;
 }
 
-struct tre_stream *
+trestream *
 treio_get_stream ()
 {
     return treio_readerstreams[treio_readerstreamptr - 1];
 }
 
 void
-treiostd_divert (struct tre_stream * s)
+treiostd_divert (trestream * s)
 {
     if (treio_readerstreamptr == TRE_MAX_NESTED_FILES)
 		treerror_internal (treptr_nil, "too many nested files");
@@ -169,7 +169,7 @@ treiostd_divert (struct tre_stream * s)
 void
 treiostd_undivert ()
 {
-    struct tre_stream *s;
+    trestream *s;
 
     if (treio_readerstreamptr < 2)
         return;	/* Don't close standard output. */

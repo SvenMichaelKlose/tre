@@ -56,7 +56,7 @@ is_symchar (unsigned char c)
 }
 
 int
-get_symbol (struct tre_stream *str, char *s, char *p)
+get_symbol (trestream * str, char *s, char *p)
 {
     size_t len = 0;
     char * os = s;
@@ -108,7 +108,7 @@ past_package_name:
 }
 
 void
-treread_comment_block (struct tre_stream * stream)
+treread_comment_block (trestream * stream)
 {
     char c;
     
@@ -123,7 +123,7 @@ treread_comment_block (struct tre_stream * stream)
 }
 
 void
-treread_token (struct tre_stream * stream)
+treread_token (trestream * stream)
 {
     char   c;
     size_t len = get_symbol (stream, TRECONTEXT_TOKEN_NAME(), TRECONTEXT_PACKAGE_NAME());
@@ -186,7 +186,7 @@ treread_token (struct tre_stream * stream)
 }
 
 treptr
-treread_string (struct tre_stream *stream)
+treread_string (trestream *stream)
 {
     char   str[TRE_MAX_STRINGLEN + 1];
     char   * i;
@@ -219,7 +219,7 @@ ishex (int c)
 }
 
 treptr
-treread_hexnum (struct tre_stream *stream)
+treread_hexnum (trestream * stream)
 {
 	long v = 0;
 	long n = 0;
@@ -250,7 +250,7 @@ treread_hexnum (struct tre_stream *stream)
 }
 
 treptr
-treread_atom (struct tre_stream *stream)
+treread_atom (trestream * stream)
 {
     if (TRECONTEXT_TOKEN() == TRETOKEN_DBLQUOTE)
 		return treread_string (stream);
@@ -272,10 +272,10 @@ treread_atom (struct tre_stream *stream)
 	);
 }
 
-treptr treread_expr (struct tre_stream *stream);
+treptr treread_expr (trestream * stream);
 
 treptr
-treread_quote (struct tre_stream *stream)
+treread_quote (trestream * stream)
 {
     treptr  atom;
     treptr  expr;
@@ -297,7 +297,7 @@ treread_quote (struct tre_stream *stream)
 }
 
 treptr
-treread_list (struct tre_stream *stream)
+treread_list (trestream * stream)
 {
     treptr  car;
     treptr  cdr;
@@ -371,7 +371,7 @@ error:
 }
 
 treptr
-treread_expr (struct tre_stream *stream)
+treread_expr (trestream * stream)
 {
     treread_token (stream);
 
@@ -399,7 +399,7 @@ treread_expr (struct tre_stream *stream)
 }
 
 treptr
-treread (struct tre_stream *stream)
+treread (trestream * stream)
 {
     treio_prompt ();
 

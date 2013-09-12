@@ -123,7 +123,7 @@ tremain_expand (treptr expr)
 }
 
 treptr
-tre_main_line (struct tre_stream *stream)
+tre_main_line (trestream * stream)
 {
     treptr  expr;
 

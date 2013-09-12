@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2008 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2008, 2013 Sven Michael Klose <pixel@copei.de>
  */
 
 #include <stdlib.h>
@@ -31,14 +31,14 @@ treiostd_flush (void * s)
     fflush (fd);
 }
 
-struct tre_stream *
+trestream *
 treiostd_open_file (char * name)
 {
 	const char * txt1 = "file '";
 	const char * txt2 = "'";
-	char       * n    = malloc (strlen (txt1) + strlen (name) + strlen (txt2) + 1);
-    struct tre_stream * s;
-    FILE * fd;
+	char *       n    = malloc (strlen (txt1) + strlen (name) + strlen (txt2) + 1);
+    trestream *  s;
+    FILE *       fd;
 
 	/* Assemble file description. */
 	stpcpy (stpcpy (stpcpy (n, txt1), name), txt2);
@@ -82,7 +82,7 @@ treiostd_putc (void * s, char c)
     fputc (c, fd);
 }
 
-struct treio_ops treio_ops_std = {
+treioops treio_ops_std = {
     treiostd_getc,
     treiostd_putc,
     treiostd_eof,

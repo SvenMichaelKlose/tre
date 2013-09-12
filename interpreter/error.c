@@ -22,9 +22,9 @@
 #include "symbol.h"
 
 void
-treerror_msg (treptr expr, const char *prefix, const char *msg, va_list ap)
+treerror_msg (treptr expr, const char * prefix, const char * msg, va_list ap)
 {
-	struct tre_stream * s = treio_get_stream ();
+	trestream * s = treio_get_stream ();
 
     fflush (stdout);
 	if (treio_readerstreamptr)
