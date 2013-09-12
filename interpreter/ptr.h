@@ -8,7 +8,7 @@
 #include "config.h"
 #include "type.h"
 
-#if NUM_LISTNODES > (32 * MEGA)
+#if NUM_LISTNODES > (256 * MEGA)
 typedef size_t treptr;
 typedef size_t tre_size;
 #else
@@ -30,8 +30,8 @@ typedef unsigned int tre_size;
 #define TREPTR_TO_ATOM(ptr)	TRE_ATOM(TREPTR_INDEX(ptr))
 
 #define TREATOM_TYPE(ptr)		        (tre_atom_types[TREPTR_INDEX(ptr)])
-#define TREATOM_DETAIL(ptr)		        (TREPTR_TO_ATOM(ptr).detail)
-#define TREATOM_SET_DETAIL(ptr, val)	(TREPTR_TO_ATOM(ptr).detail = (void *) val)
+#define TREATOM_DETAIL(ptr)		        (tre_atoms[TREPTR_INDEX(ptr)])
+#define TREATOM_SET_DETAIL(ptr, val)	(TREATOM_DETAIL(ptr) = (void *) val)
 #define TREATOM_SET_TYPE(ptr, val)	    (TREATOM_TYPE(ptr) = val)
 
 #define TREPTR_TYPE(ptr)		(ptr >> TREPTR_INDEX_WIDTH)

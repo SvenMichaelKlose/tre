@@ -141,7 +141,7 @@ treimage_write_numbers (FILE * f)
 
     DOTIMES(i, NUM_ATOMS)
         if (tre_atom_types[i] == TRETYPE_NUMBER)
-            treimage_write (f, tre_atoms[i].detail, sizeof (struct tre_number));
+            treimage_write (f, tre_atoms[i], sizeof (struct tre_number));
 }
 
 void

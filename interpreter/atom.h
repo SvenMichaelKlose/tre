@@ -7,14 +7,10 @@
 
 #include "ptr.h"
 
-struct tre_atom {
-    void *  detail;
-};
-
 typedef char tre_type;
 
 extern void * tre_atoms_free;
-extern struct tre_atom tre_atoms[NUM_ATOMS];
+extern void * tre_atoms[NUM_ATOMS];
 extern tre_type tre_atom_types[NUM_ATOMS];
 
 extern treptr treptr_universe;
@@ -23,10 +19,8 @@ extern treptr tre_package_keyword;
 #define TRE_ATOM(index)	(tre_atoms[index])
 
 #define ATOM_SET(index, typ) \
-	tre_atoms[index].detail = NULL; \
+	tre_atoms[index] = NULL; \
 	tre_atom_types[index] = typ
-
-#define ATOM_SET_NAME(index, name)     (tre_atoms[index].detail = name)
 
 #define EXPAND_UNIVERSE(ptr) \
     (TRESYMBOL_VALUE(treptr_universe) = CONS(ptr, TRESYMBOL_VALUE(treptr_universe)))

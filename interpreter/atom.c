@@ -25,7 +25,7 @@
 #include "symbol.h"
 
 void * tre_atoms_free;
-struct tre_atom tre_atoms[NUM_ATOMS];
+void * tre_atoms[NUM_ATOMS];
 tre_type tre_atom_types[NUM_ATOMS];
 
 #define TREPTR_NIL_INDEX	0
@@ -61,7 +61,7 @@ treatom_init_atom_table (void)
     tre_atoms_free = trealloc_item_init (
 		&tre_atoms[TREPTR_FIRST_INDEX],
 		NUM_ATOMS - TREPTR_FIRST_INDEX,
-		sizeof (struct tre_atom)
+		sizeof (void *)
 	);
 	DOTIMES(x, NUM_ATOMS)
 	  tre_atom_types[x] = TRETYPE_UNUSED;
@@ -71,12 +71,12 @@ treatom_init_atom_table (void)
 void
 treatom_init_truth (void)
 {
-	tre_atoms[TREPTR_NIL_INDEX].detail = (void *) tresymbolpage_add (treptr_nil, tresymbol_add ("NIL"), treptr_nil);
+	tre_atoms[TREPTR_NIL_INDEX] = (void *) tresymbolpage_add (treptr_nil, tresymbol_add ("NIL"), treptr_nil);
     TRESYMBOL_VALUE(treptr_nil) = treptr_nil;
     TRESYMBOL_FUN(treptr_nil) = treptr_nil;
     TRESYMBOL_PACKAGE(treptr_nil) = treptr_nil;
 
-	tre_atoms[TREPTR_T_INDEX].detail = (void *) tresymbolpage_add (treptr_t, tresymbol_add ("T"), treptr_nil);
+	tre_atoms[TREPTR_T_INDEX] = (void *) tresymbolpage_add (treptr_t, tresymbol_add ("T"), treptr_nil);
     TRESYMBOL_VALUE(treptr_t) = treptr_t;
     TRESYMBOL_FUN(treptr_t) = treptr_nil;
     TRESYMBOL_PACKAGE(treptr_t) = treptr_nil;
@@ -183,7 +183,7 @@ treatom_alloc (int type)
 	    	return treerror (treptr_invalid, "Atom table full.");
     }
 
-    atomi = ((size_t) item - (size_t) tre_atoms) / sizeof (struct tre_atom);
+    atomi = ((size_t) item - (size_t) tre_atoms) / sizeof (void *);
     TREGC_ALLOC_ATOM(atomi);
     ATOM_SET(atomi, type);
 
@@ -302,7 +302,7 @@ treatom_body_to_var (treptr body)
 
         for (b = 0; b < NUM_ATOMS; b++)
             if (tre_atom_types[b] == TRETYPE_SYMBOL
-					&& tre_atoms[b].detail != NULL
+					&& tre_atoms[b] != NULL
 					&& TRESYMBOL_FUN(b) == TREATOM_INDEX_TO_PTR(a))
                 return TREATOM_INDEX_TO_PTR(b);
     }
