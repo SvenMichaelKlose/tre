@@ -19,7 +19,7 @@
 #include "gc.h"
 
 trearray *
-trearray_get_raw (tre_size size)
+trearray_alloc_raw (tre_size size)
 {
     trearray *  a;
     treptr *    v;
@@ -39,6 +39,19 @@ trearray_get_raw (tre_size size)
 		v[size] = treptr_nil;
 
     return a;
+}
+
+trearray *
+trearray_alloc (tre_size size)
+{
+    trearray *  array = trearray_alloc_raw (size);
+
+    if (!array) {
+		tregc_force ();
+    	array = trearray_alloc_raw (size);
+    }
+
+    return array;
 }
 
 tre_size
@@ -65,14 +78,9 @@ trearray_get (treptr sizes)
     treptr      a;
     tre_size    size = trearray_get_size (sizes);
 
-    array = trearray_get_raw (size);
-    if (!array) {
-		tregc_force ();
-    	array = trearray_get_raw (size);
-        if (!array)
-		    return treerror (treptr_invalid, "Cannot allocate array. Out of memory.");
-	}
-
+    array = trearray_alloc (size);
+    if (!array)
+        return treerror (treptr_invalid, "Cannot allocate array. Out of memory.");
     array->sizes = trelist_copy (sizes);
     tregc_push (array->sizes);
     a = treatom_alloc (TRETYPE_ARRAY);
