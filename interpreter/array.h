@@ -5,12 +5,14 @@
 #ifndef TRE_ARRAY_H
 #define TRE_ARRAY_H
 
-struct tre_array {
+struct tre_array_t {
     treptr    sizes;
     treptr *  values;
 };
 
-#define TREPTR_ARRAY(ptr)    ((struct tre_array *) TREATOM_DETAIL(ptr))
+typedef struct tre_array_t trearray;
+
+#define TREPTR_ARRAY(ptr)    ((trearray *) TREATOM_DETAIL(ptr))
 #define TREARRAY_SIZES(ptr)  (TREPTR_ARRAY(ptr)->sizes)
 #define TREARRAY_VALUES(ptr) (TREPTR_ARRAY(ptr)->values)
 #define TREARRAY_SIZE(ptr)   (trearray_get_size (TREARRAY_SIZES(ptr)))

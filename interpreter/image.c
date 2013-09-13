@@ -345,8 +345,8 @@ treimage_read_arrays (FILE *f)
 {
     tre_size  i;
     tre_size  l;
-    struct tre_array * a;
-    treptr sizes;
+    trearray  * a;
+    treptr    sizes;
 
     DOTIMES(i, NUM_ATOMS) {
         if (tre_atom_types[i] != TRETYPE_ARRAY)
@@ -354,7 +354,7 @@ treimage_read_arrays (FILE *f)
 
         treimage_read (f, &sizes, sizeof (treptr));
         l = trearray_get_size (sizes) * sizeof (treptr);
-        a = malloc (sizeof (struct tre_array));
+        a = malloc (sizeof (trearray));
         a->sizes = sizes;
         a->values = malloc (l);
         treimage_read (f, a->values, l);

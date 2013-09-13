@@ -18,13 +18,13 @@
 #include "thread.h"
 #include "gc.h"
 
-struct tre_array *
+trearray *
 trearray_get_raw (tre_size size)
 {
-    struct tre_array * a;
-    treptr * v;
+    trearray *  a;
+    treptr *    v;
 
-    a = malloc (sizeof (struct tre_array));
+    a = malloc (sizeof (trearray));
     if (!a)
         return NULL;
 
@@ -44,9 +44,9 @@ trearray_get_raw (tre_size size)
 tre_size
 trearray_get_size (treptr sizes)
 {
-    treptr a;
-    treptr car;
-    tre_size size = 1;
+    treptr    a;
+    treptr    car;
+    tre_size  size = 1;
 
     _DOLIST(a, sizes) {
 		car = _CAR(a);
@@ -61,11 +61,10 @@ trearray_get_size (treptr sizes)
 treptr
 trearray_get (treptr sizes)
 {
-    treptr a;
-    struct tre_array * array;
-    tre_size  size = trearray_get_size (sizes);
+    trearray *  array;
+    treptr      a;
+    tre_size    size = trearray_get_size (sizes);
 
-    tregc_push (sizes);
     array = trearray_get_raw (size);
     if (!array) {
 		tregc_force ();
@@ -73,29 +72,20 @@ trearray_get (treptr sizes)
         if (!array)
 		    return treerror (treptr_invalid, "Cannot allocate array. Out of memory.");
 	}
+
     array->sizes = trelist_copy (sizes);
     tregc_push (array->sizes);
     a = treatom_alloc (TRETYPE_ARRAY);
     TREATOM_DETAIL(a) = array;
     tregc_pop ();
-    tregc_pop ();
+
     return a;
 }
 
 treptr
 trearray_make (tre_size size)
 {
-	treptr n;
-	treptr s;
-	treptr ret;
-
-	n = trenumber_get ((double) size);
-	s = CONS(n, treptr_nil);
-	tregc_push (s);
-	ret = trearray_get (s);
-	tregc_pop ();
-
-    return ret;
+    return trearray_get (CONS(trenumber_get ((double) size), treptr_nil));
 }
 
 void
@@ -108,26 +98,24 @@ trearray_free (treptr array)
 treptr
 trearray_t_get (treptr array, tre_size idx)
 {
-    tre_size   size = TRENUMBER_VAL(CAR(TREARRAY_SIZES(array)));
-    treptr * a = TREARRAY_VALUES(array);
+    tre_size  size = TRENUMBER_VAL(CAR(TREARRAY_SIZES(array)));
+    treptr *  a = TREARRAY_VALUES(array);
 
     if (size <= idx)
         return treerror (array, "Index %d is out of range.", idx);
-
     return a[idx];
 }
 
 void
 trearray_t_set (treptr array, tre_size idx, treptr val)
 {
-    tre_size   size = TRENUMBER_VAL(CAR(TREARRAY_SIZES(array)));
-    treptr * a = TREARRAY_VALUES(array);
+    tre_size  size = TRENUMBER_VAL(CAR(TREARRAY_SIZES(array)));
+    treptr *  a = TREARRAY_VALUES(array);
 
     if (size <= idx) {
         treerror (array, "Index %d is out of range.", idx);
 		return;
     }
-
     a[idx] = val;
 }
 
