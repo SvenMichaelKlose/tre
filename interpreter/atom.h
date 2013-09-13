@@ -16,8 +16,6 @@ extern tre_type tre_atom_types[NUM_ATOMS];
 extern treptr treptr_universe;
 extern treptr tre_package_keyword;
 
-#define TRE_ATOM(index)	(tre_atoms[index])
-
 #define ATOM_SET(index, typ) \
 	tre_atoms[index] = NULL; \
 	tre_atom_types[index] = typ

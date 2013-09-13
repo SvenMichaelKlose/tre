@@ -38,13 +38,11 @@ trefunction_alloc ()
 treptr
 trefunction_make (tre_type type, treptr source)
 {
-    trefunction * i;
     treptr        a;
 
-    tregc_push (source);
-    i = trefunction_alloc ();
     a = treatom_alloc (type);
-    TREATOM_DETAIL(a) = i;
+    tregc_push (a);
+    TREATOM(a) = trefunction_alloc ();
     TREFUNCTION_SOURCE(a) = source;
     tregc_pop ();
 

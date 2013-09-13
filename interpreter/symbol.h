@@ -5,7 +5,7 @@
 #ifndef TRE_SYMBOL_H
 #define TRE_SYMBOL_H
 
-#define TREPTR_SYMBOL(ptr)      ((tresymbol *) TREATOM_DETAIL(ptr))
+#define TREPTR_SYMBOL(ptr)      ((tresymbol *) TREATOM(ptr))
 #define TRESYMBOL_NAME(ptr)     (TREPTR_SYMBOL(ptr)->name)
 #define TRESYMBOL_VALUE(ptr)    (TREPTR_SYMBOL(ptr)->value)
 #define TRESYMBOL_FUN(ptr)      (TREPTR_SYMBOL(ptr)->function)

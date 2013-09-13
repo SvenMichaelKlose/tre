@@ -51,9 +51,11 @@ trestring_get (const char *str)
         if (!nstr)
             return treerror (treptr_invalid, "Out of memory.");
     }
+
     strcpy (TRESTRING_DATA(nstr), str);
     atom = treatom_alloc (TRETYPE_STRING);
-    TREATOM_SET_STRING(atom, nstr);
+    TREATOM(atom) = nstr;
+
     return atom;
 }
 
@@ -65,9 +67,11 @@ trestring_get_binary (const char *str, tre_size len)
 
     if (nstr == NULL)
         return treerror (treptr_invalid, "Out of memory.");
+
     bcopy (str, TRESTRING_DATA(nstr), len);
     atom = treatom_alloc (TRETYPE_STRING);
-    TREATOM_SET_STRING(atom, nstr);
+    TREATOM(atom) = nstr;
+
     return atom;
 }
 

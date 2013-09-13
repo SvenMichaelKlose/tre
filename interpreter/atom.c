@@ -84,7 +84,7 @@ treatom_init_builtins (void)
 
     for (i = 0; tre_builtin_names[i] != NULL; i++) {
         fun = treatom_alloc (TRETYPE_BUILTIN);
-        TREATOM_SET_DETAIL(fun, i);
+        TREATOM(fun) = (void*) i;
         name = treatom_alloc_symbol (tre_builtin_names[i], treptr_nil, treptr_nil);
         TRESYMBOL_FUN(name) = fun;
         EXPAND_UNIVERSE(name);
@@ -92,7 +92,7 @@ treatom_init_builtins (void)
 
     for (i = 0; tre_special_names[i] != NULL; i++) {
         fun = treatom_alloc (TRETYPE_SPECIAL);
-        TREATOM_SET_DETAIL(fun, i);
+        TREATOM(fun) = (void*) i;
         name = treatom_alloc_symbol (tre_special_names[i], treptr_nil, treptr_nil);
         TRESYMBOL_FUN(name) = fun;
         EXPAND_UNIVERSE(name);
@@ -192,7 +192,7 @@ treatom_alloc_symbol (char * name, treptr package, treptr value)
     if (value == treptr_invalid)
 		value = atom;
 
-	TREATOM_DETAIL(atom) = tresymbol_add (atom, name, value, treptr_nil, package);
+	TREATOM(atom) = tresymbol_add (atom, name, value, treptr_nil, package);
 
 	return atom;
 }
@@ -215,7 +215,7 @@ treatom_number_get (double value, int type)
 
     num = trenumber_alloc (value, type);
     atom = treatom_alloc (TRETYPE_NUMBER);
-    TREATOM_SET_DETAIL(atom, num);
+    TREATOM(atom) = num;
 
     return atom;
 }
@@ -293,8 +293,8 @@ treatom_body_to_var (treptr body)
         for (b = 0; b < NUM_ATOMS; b++)
             if (tre_atom_types[b] == TRETYPE_SYMBOL
 					&& tre_atoms[b] != NULL
-					&& TRESYMBOL_FUN(b) == TREATOM_INDEX_TO_PTR(a))
-                return TREATOM_INDEX_TO_PTR(b);
+					&& TRESYMBOL_FUN(b) == TREINDEX_TO_PTR(a))
+                return TREINDEX_TO_PTR(b);
     }
 
     return treptr_nil;

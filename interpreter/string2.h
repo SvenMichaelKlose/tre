@@ -7,11 +7,10 @@
 
 #include <sys/types.h>
 
-#define TRESTRING_LEN(x) (*(tre_size*)x)
-#define TRESTRING_DATA(x) (((char*) x) + sizeof (tre_size))
-#define TREPTR_STRING(ptr)              TREATOM_DETAIL(ptr)                                                             
+#define TRESTRING_LEN(x)                (*(tre_size*)x)
+#define TRESTRING_DATA(x)               (((char*) x) + sizeof (tre_size))
+#define TREPTR_STRING(ptr)              TREATOM(ptr)                                                             
 #define TREPTR_STRINGZ(ptr)             TRESTRING_DATA(TREPTR_STRING(ptr))
-#define TREATOM_SET_STRING(ptr, val)    (TREATOM_DETAIL(ptr) = (char *) val)
 
 extern treptr tre_strings;
 extern treptr trestring_get (const char *string);

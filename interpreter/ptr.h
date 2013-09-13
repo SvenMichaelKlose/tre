@@ -16,23 +16,13 @@ typedef unsigned int treptr;
 typedef unsigned int tre_size;
 #endif
 
-#define TREPTR_FLAGS	((treptr) -1 << TREPTR_INDEX_WIDTH)
+#define TREPTR_FLAGS	        ((treptr) -1 << TREPTR_INDEX_WIDTH)
 
-#define TRETYPE_INDEX_TO_PTR(type, index) \
-	(((treptr) type << TREPTR_INDEX_WIDTH) | index)
-#define TREATOM_TO_PTR(idx)	\
-	(TRETYPE_INDEX_TO_PTR(tre_atom_types[idx], idx))
+#define TRETYPE_INDEX_TO_PTR(type, index)   (((treptr) type << TREPTR_INDEX_WIDTH) | index)
+#define TREINDEX_TO_PTR(idx)	            TRETYPE_INDEX_TO_PTR(tre_atom_types[idx], idx)
 
-#define TREPTR_NIL()	TRETYPE_INDEX_TO_PTR(TRETYPE_SYMBOL, 0)
-
-#define TREATOM_INDEX_TO_PTR(index) \
-	TRETYPE_INDEX_TO_PTR(tre_atom_types[index], index)
-#define TREPTR_TO_ATOM(ptr)	TRE_ATOM(TREPTR_INDEX(ptr))
-
-#define TREATOM_TYPE(ptr)		        (tre_atom_types[TREPTR_INDEX(ptr)])
-#define TREATOM_DETAIL(ptr)		        (tre_atoms[TREPTR_INDEX(ptr)])
-#define TREATOM_SET_DETAIL(ptr, val)	(TREATOM_DETAIL(ptr) = (void *) val)
-#define TREATOM_SET_TYPE(ptr, val)	    (TREATOM_TYPE(ptr) = val)
+#define TREATOM(ptr)		    (tre_atoms[TREPTR_INDEX(ptr)])
+#define TREATOM_TYPE(ptr)		(tre_atom_types[TREPTR_INDEX(ptr)])
 
 #define TREPTR_TYPE(ptr)		(ptr >> TREPTR_INDEX_WIDTH)
 #define TREPTR_INDEX(ptr)		(ptr & ~TREPTR_FLAGS)

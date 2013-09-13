@@ -205,7 +205,7 @@ tregc_sweep (void)
 		DOTIMES(j, 8) {
 	    	if (tregc_atommarks[i] & c)
                 if (tre_atom_types[idx] != TRETYPE_UNUSED)
-	           	    treatom_remove (TREATOM_TO_PTR(idx));
+	           	    treatom_remove (TREINDEX_TO_PTR(idx));
 
 	    	c <<= 1;
             idx++;

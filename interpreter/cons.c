@@ -139,7 +139,7 @@ trecons_init ()
 
     for (i = FIRST_LISTNODE; i < LAST_LISTNODE; i++)
 		_CDR(i) = (treptr) i + 1;
-    _CDR(LAST_LISTNODE) = TREPTR_NIL();
+    _CDR(LAST_LISTNODE) = treptr_nil;
 
     tre_lists_free = FIRST_LISTNODE;
     tre_default_listprop = treptr_nil;
