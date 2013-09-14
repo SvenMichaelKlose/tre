@@ -30,10 +30,9 @@ trestream_builtin_princ (treptr args)
     char * s;
 
     trearg_get2 (&obj, &handle, args);
-    if (handle != treptr_nil)
-        str = tre_fileio_handles[(int) TRENUMBER_VAL(handle)];
-    else
- 		str = stdout;
+    str = (handle != treptr_nil) ?
+          tre_fileio_handles[(int) TRENUMBER_VAL(handle)] :
+ 		  stdout;
 
     switch (TREPTR_TYPE(obj)) {
 		case TRETYPE_STRING:
@@ -108,10 +107,10 @@ treptr
 trestream_builtin_read_char (treptr args)
 {
     FILE  * str = trestream_builtin_get_handle (args, stdin);
-    char  c;
+    int  c;
 
     c = fgetc (str);
-    return treatom_number_get ((double) abs (c), TRENUMTYPE_CHAR);
+    return treatom_number_get (c, TRENUMTYPE_CHAR);
 }
 
 treptr
