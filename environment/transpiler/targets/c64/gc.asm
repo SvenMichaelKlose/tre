@@ -120,6 +120,7 @@ find_marked:
 
     ; Copy atom.
     lda (p),y
+    and #-2         ; Remove mark bit from size.
     tay
     tax
 c:  lda (p),y

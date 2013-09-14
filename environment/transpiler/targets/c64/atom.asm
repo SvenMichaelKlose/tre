@@ -6,24 +6,21 @@ atom_alloc:
         lda #1
         sta gc_level
 retry:  ldy #0
-just_take_the_next_page:
         lda atoms_free+1
         sta p+1
+        cmp atoms_end
+        bcs out_of_atoms
         lda atoms_free
         sta p
-        cmp atom_size
-        bcs page_too_small
         lda atom_size
         sta (p),y
         adc atoms_free
         sta atoms_free
-        rts
-
-page_too_small:
-        tya
-        sta atoms_free
+        bcc done
         inc atoms_free+1
-        bne just_take_the_next_page
+done:   rts
+
+out_of_atoms:
         jsr retry ; gc
         jmp retry
 .)
