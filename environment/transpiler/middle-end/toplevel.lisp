@@ -28,7 +28,9 @@
     opt-peephole             [? (transpiler-inject-debugging? tr)
                                 _
                                 (transpiler-opt-peephole tr _)]
-    cps                      #'cps
+    cps                      [? (transpiler-cps-transformation? tr)
+                                (cps _)
+                                _]
     opt-find-unused-places   #'opt-places-find-used
     opt-remove-unused-places #'opt-places-remove-unused
     update-funinfo           #'transpiler-update-funinfo

@@ -15,18 +15,18 @@
   (parent     nil)
   (name       nil)
 
-  (argdef nil) ; Argument definition.
-  (args   nil) ; Expanded argument definition.
-  (body   nil)
+  (argdef     nil) ; Argument definition.
+  (args       nil) ; Expanded argument definition.
+  (body       nil)
 
-  (vars          nil)
-  (vars-hash     nil)
-  (used-vars     nil)
-  (free-vars     nil)
+  (vars       nil)
+  (vars-hash  nil)
+  (used-vars  nil)
+  (free-vars  nil)
 
-  (lexicals nil) ; List of symbols exported to child functions.
-  (lexical  nil) ; Name of the array of lexicals.
-  (ghost    nil) ; Name of hidden argument with an array of lexicals.
+  (lexicals   nil) ; List of symbols exported to child functions.
+  (lexical    nil) ; Name of the array of lexicals.
+  (ghost      nil) ; Name of hidden argument with an array of lexicals.
   (local-function-args nil)
 
   ; List if variables which must not be removed by the optimizer in order
@@ -34,10 +34,10 @@
   (immutables nil)
 
   ; Number of jump tags in body.
-  (num-tags nil)
+  (num-tags   nil)
   
-  (globals nil)
-  (cps? nil))
+  (globals    nil)
+  (cps?       nil))
 
 (defun funinfo-topmost (fi)
   (let p (funinfo-parent fi)
@@ -72,7 +72,7 @@
   (when (named-lambda? x)
     (get-funinfo (lambda-name x))))
 
-(defun create-funinfo (&key name parent args body (transpiler *transpiler*))
+(defun create-funinfo (&key name parent args body (transpiler *transpiler*) (cps? nil))
   (& (href (transpiler-funinfos transpiler) name)
      (error "FUNFINFO for ~A is already memorized." name))
   (with (argnames (argument-expand-names 'lambda-expand args)
@@ -81,7 +81,8 @@
                                 :args          argnames
                                 :body          body
                                 :parent        parent
-                                :transpiler    transpiler))
+                                :transpiler    transpiler
+                                :cps?          cps?))
     (= (href (transpiler-funinfos transpiler) name) fi)
     (funinfo-var-add fi '~%ret)
     (& (transpiler-copy-arguments-to-stack? transpiler)

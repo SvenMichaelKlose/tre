@@ -27,7 +27,9 @@
   x)
 
 (defun move-~%ret-to-front (x)
-  (cons '~%ret (remove '~%ret x :test #'eq)))
+  (? (member '~%ret x :test #'eq)
+     (cons '~%ret (remove '~%ret x :test #'eq))
+     x))
 
 (defun opt-places-used-vars (fi)
   (+ (funinfo-lexicals fi)

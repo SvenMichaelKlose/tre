@@ -36,6 +36,7 @@
 
   (defined-functions-hash   (make-hash-table :test #'eq))
   (defined-variables-hash   (make-hash-table :test #'eq))
+  (cps-functions-hash       (make-hash-table :test #'eq))
   (host-functions-hash      nil)
   (host-variables-hash      nil)
   (functionals-hash         nil)
@@ -168,6 +169,7 @@
         :literal-converter      literal-converter
         :defined-functions-hash (copy-hash-table defined-functions-hash)
         :defined-variables-hash (copy-hash-table defined-variables-hash)
+        :cps-functions-hash     (copy-hash-table cps-functions-hash )
         :host-functions-hash    (copy-hash-table host-functions-hash)
         :host-variables-hash    (copy-hash-table host-variables-hash)
         :functionals-hash       (copy-hash-table functionals-hash)
@@ -249,6 +251,7 @@
 (defun transpiler-defined-functions-without-builtins (tr) (remove-if #'builtin? (transpiler-defined-functions tr)))
 (transpiler-getter defined-function        (href (transpiler-defined-functions-hash tr) x))
 (transpiler-getter defined-variable        (href (transpiler-defined-variables-hash tr) x))
+(transpiler-getter cps-function?           (href (transpiler-defined-variables-hash tr) x))
 (transpiler-getter host-function?          (href (transpiler-host-functions-hash tr) x))
 (transpiler-getter host-function-arguments (href (transpiler-host-functions-hash tr) x))
 (transpiler-getter host-variable?          (href (transpiler-host-variables-hash tr) x))
@@ -262,6 +265,8 @@
             '(plain-arg-fun emitted-decl)))
 
 (transpiler-getter add-defined-variable (= (href (transpiler-defined-variables-hash tr) x) t)
+                                        x)
+(transpiler-getter add-cps-function     (= (href (transpiler-cps-functions-hash tr) x) t)
                                         x)
 (transpiler-getter switch-obfuscator (= (transpiler-obfuscate? tr) x))
 (transpiler-getter macro? (| (expander-has-macro? (transpiler-std-macro-expander tr) x)

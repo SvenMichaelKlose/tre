@@ -3,9 +3,6 @@
 (defun js-call (x)
   `(,x. ,@(parenthized-comma-separated-list .x)))
 
-(defun js-stack (x)
-  ($ '_I_S x))
-
 (defvar *js-compiled-symbols* (make-hash-table :test #'eq))
 
 (defun js-codegen-symbol-constructor-expr (tr x)
@@ -75,15 +72,15 @@
 
 (define-js-macro %function-prologue (name)
   `(%%native ""
-	   ,@(& (transpiler-stack-locals? *transpiler*)
-	        `(,*js-indent* "var _locals=[]" ,*js-separator*))
 	   ,@(& (< 0 (funinfo-num-tags (get-funinfo name)))
 	        `(,*js-indent* "var _I_=0" ,*js-separator*
 		      ,*js-indent* "while(1){" ,*js-separator*
 		      ,*js-indent* "switch(_I_){case 0:" ,*js-separator*))))
 
 (define-js-macro %function-return (name)
-  `(,*js-indent* "return " ,(place-assign (place-expand-0 (get-funinfo name) '~%ret)) ,*js-separator*))
+  (? (funinfo-cps? (get-funinfo name))
+     ""
+     `(,*js-indent* "return " ~%ret ,*js-separator*)))
 
 (define-js-macro %function-epilogue (name)
   (alet (get-funinfo name)
@@ -218,11 +215,6 @@
 
 
 ;;;; BACKEND METACODES
-
-(define-js-macro %stack (x)
-  (? (transpiler-stack-locals? *transpiler*)
-  	 `(%%native "_locals[" ,x "]")
-     (js-stack x)))
 
 (define-js-macro %vec (v i)
   `(%%native ,v "[" ,i "]"))

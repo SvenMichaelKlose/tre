@@ -43,7 +43,8 @@
          new-fi (create-funinfo :name   name
                                 :args   args
                                 :body   body
-                                :parent fi))
+                                :parent fi
+                                :cps?   (transpiler-cps-transformation? *transpiler*)))
     (funinfo-make-ghost new-fi)
     (transpiler-add-exported-closure *transpiler* `((defun ,name ,(funinfo-argdef new-fi) ,@body)))
     `(%%closure ,name)))
@@ -59,7 +60,8 @@
              new-fi (create-funinfo :name   name
                                     :args   (lambda-args x)
                                     :body   (lambda-body x)
-                                    :parent fi))
+                                    :parent fi
+                                    :cps?   (transpiler-cps-transformation? *transpiler*)))
         (funinfo-var-add fi name)
         (copy-lambda x :name name :body (lambda-expand-tree-0 new-fi (lambda-body x))))))
 
