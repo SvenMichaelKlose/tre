@@ -42,6 +42,7 @@ typedef int bool;
 
 #define TRE_MAX_NESTED_FILES	    16
 #define TRE_FILEIO_MAX_FILES        16
+#define TRE_DEFAULT_TABSIZE         8
 
 #define MAX_PACKAGES		        128
 

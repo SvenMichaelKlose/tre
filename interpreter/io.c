@@ -49,12 +49,11 @@ treio_getc (trestream * s)
 		if (c == 10) {
 			s->line++;
 			s->column = 1;
-		} else
+		} else if (c == '\t') {
+            s->column = (s->column - (s->column - 1) % TRE_DEFAULT_TABSIZE) + TRE_DEFAULT_TABSIZE + 1;
+        } else
 			s->column++;
     }
-
-    if (c == '\t')
-	c = ' ';
 
     s->last_char = c;
 
@@ -80,7 +79,7 @@ treio_getline (trestream * str, char * s, size_t maxlen)
     size_t i;
 
     for (i = 0; i < maxlen && (c = treio_getc (str)) != EOF && c!= '\n'; i++)
-        s[i] = (c == '\t') ? ' ' : c;
+        s[i] = c;
     s[i]= 0;
 
     if (c == EOF && i == 0)
@@ -95,7 +94,7 @@ treio_skip_spaces (trestream * s)
     unsigned char c;
 
     while ((c = treio_getc (s)) != 0)
-		if (c > ' ' || c == 255)
+		if (c > ' ')
 	    	break;
 
     treio_putback (s);
@@ -109,10 +108,10 @@ treio_make_stream (treioops * ops, const char * name)
 
 	strcpy (n, name);
 
+	s->file_name = n;
     s->putback_char = -1;
     s->last_char = -1;
     s->ops = ops;
-	s->file_name = n;
 	s->line = 1;
 	s->column = 1;
 
@@ -157,7 +156,7 @@ void
 treiostd_divert (trestream * s)
 {
     if (treio_readerstreamptr == TRE_MAX_NESTED_FILES)
-		treerror_internal (treptr_nil, "too many nested files");
+		treerror_internal (treptr_nil, "Too many nested files.");
 
     treio_readerstreams[treio_readerstreamptr++] = s;
     treio_reader = s;
