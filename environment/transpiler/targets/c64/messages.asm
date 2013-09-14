@@ -1,7 +1,5 @@
 ; tré – Copyright (c) 2013 Sven Michael Klose <pixel@copei.de>
 
-txt_out_of_atoms:
-        .asc "OUT OF ATOMS", 0
 txt_nocons:
         .asc "OUT OF CONSES", 0
 txt_exit:

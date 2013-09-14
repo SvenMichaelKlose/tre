@@ -5,3 +5,7 @@ or a number.
 
 Furthermore, pointers and atom length have to be even. The lowest bits are
 reserved for garbage collection.
+
+Bytecode functions are compiled to 6502 code just in time. The functions are
+loaded from disk for that. The atom pool serves as a cache of compiled functions
+controlled by a circular table. 1 byte memorizer.

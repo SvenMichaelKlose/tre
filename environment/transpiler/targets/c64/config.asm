@@ -5,11 +5,12 @@ v           = $fd   ; Return value.
 
 atom_size   = $07
 atoms_free  = $0b
+;atoms_ptr   = $0d
 atoms_ptr   = $0d
 universe    = $0f
+gc_level    = $11
 
-; $07
-; $0b-$12
+; $11-$12
 ; $14-$2a
 ; $2d-72
 ; $8b-$90

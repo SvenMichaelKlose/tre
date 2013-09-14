@@ -1,13 +1,16 @@
 ;;; tré – Copyright (c) 2013 Sven Michael Klose <pixel@copei.de>
 
 ;; Allocate a cons.
-cons:   lda free_conses+1   ; Get the new cons into our pointer.
-        beq out_of_conses
-        sta p+1
-        lda free_conses
+cons:   lda #1
+        sta gc_level
+cons_retry:
+        lda free_conses+1   ; Get high byte of next free cons.
+        beq out_of_conses   ; Out of luck when zero.
+        sta p+1             ; O.K. copy it into our pointer.
+        lda free_conses     ; Now copy the low byte.
         sta p
-        ldy #0
-        lda (p),y           ; Save the address of the next free cons.
+        ldy #0              ; Update address of next free cons.
+        lda (p),y
         sta free_conses
         iny
         lda (p),y
@@ -15,10 +18,8 @@ cons:   lda free_conses+1   ; Get the new cons into our pointer.
         rts
 
 out_of_conses:
-        lda #<txt_nocons
-        ldy #>txt_nocons
-        jsr console
-        rts
+        jsr console ; gc
+        jmp cons_retry
 
 ;; Free a cons.
 uncons: lda free_conses
@@ -30,13 +31,13 @@ uncons: lda free_conses
         lda p
         sta free_conses
         lda p+1
-        sta free_conses+1                                                                                                          
+        sta free_conses+1
         rts
 
 ;; Test if pointer is a cons.
 consp:  lda p+1
         rol         ; Move bit 7 to 0...
-        and #1      ; ...and make it NIL (0) or T (1).
+        and #1      ; ...and make it NIL (0 in high byte) or T (1 in high byte).
         sta v+1
         rts
 

@@ -1,31 +1,29 @@
 ; tré – Copyright (c) 2013 Sven Michael Klose <pixel@copei.de>
 
+; Requires atom_size to be set.
 atom_alloc:
 .(
+        lda #1
+        sta gc_level
+retry:  ldy #0
+just_take_the_next_page:
+        lda atoms_free+1
+        sta p+1
         lda atoms_free
         sta p
         cmp atom_size
         bcs page_too_small
-enough_space:
-        ldy #0
         lda atom_size
         sta (p),y
-        clc
-        adc atoms_ptr
-        sta atoms_ptr
-        bcs no_pagewrap
-        inc atoms_free+1
-no_pagewrap:
+        adc atoms_free
+        sta atoms_free
         rts
 
 page_too_small:
-        lda atoms_free+1    ; At least a single free page is required.
-        sta p+1
-        bne enough_space
-        
-out_of_atoms:
-        lda #<txt_out_of_atoms
-        ldy #>txt_out_of_atoms
-        jsr console
-        jmp exit
+        tya
+        sta atoms_free
+        inc atoms_free+1
+        bne just_take_the_next_page
+        jsr retry ; gc
+        jmp retry
 .)
