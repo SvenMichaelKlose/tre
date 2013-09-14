@@ -46,9 +46,6 @@ treio_getc (trestream * s)
         s->putback_char = -1;
     } else {
         c = TREIO_GETC(s);
-#ifdef TRE_READ_ECHO
-        putc (c, stdout);
-#endif
 		if (c == 10) {
 			s->line++;
 			s->column = 1;

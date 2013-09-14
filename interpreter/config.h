@@ -27,7 +27,6 @@ typedef int bool;
 #define TRE_VERBOSE_EVAL	      /* Print what is evaluated. */
 #define TRE_VERBOSE_READ          /* Print READ expressions in read-eval loop. */
 #define TRE_PRINT_MACROEXPANSIONS /* Print macroexpansions in read-eval loop. */
-#define TRE_READ_ECHO		      /* Echo what is READ. */
 #define TRE_NO_MANUAL_FREE	      /* Don't free internal garbage manually. */
 #define TRE_EXIT_ON_STDIO_SIGINT  /* Exit on SIGINT in stdio prompt. */
 #endif
