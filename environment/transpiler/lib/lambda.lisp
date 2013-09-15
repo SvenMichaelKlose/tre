@@ -22,7 +22,8 @@
     `(with (,g    ,x
             ,name (lambda-name ,g)
             ,args (lambda-args ,g)
-            ,body (lambda-body ,g))
+            ,body (lambda-body ,g)
+            ,fi   (get-lambda-funinfo ,g))
        ,@macro-body)))
 
 (defun copy-lambda (x &key (name nil) (args 'no-args) (body 'no-body))
