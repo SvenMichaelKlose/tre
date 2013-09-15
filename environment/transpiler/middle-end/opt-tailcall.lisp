@@ -1,13 +1,18 @@
 ;;;;; tré – Copyright (c) 2010–2013 Sven Michael Klose <pixel@copei.de>
 
+(defun atom&integer== (a b)
+  (& (number? a)
+     (number? b)
+     (integer== a b)))
+
 (defun function-exits? (x)
   (alet x.
     (?
 	  (not x)          t
+	  (%%go? !)        (!? (member .!. .x :test #'atom&integer==)
+		                   (function-exits? .!))
 	  (| (vm-jump? !)
 	     (%setq? !))   nil
-	  (%%go? !)        (!? (member .!. .x :test #'integer==)
-		                   (function-exits? .!))
 	  (function-exits? .x))))
 
 (defun opt-tailcall-make-restart (l body front-tag)
@@ -37,3 +42,6 @@
   :if-named-function  (with-compiler-tag front-tag
                         `(,front-tag
                           ,@(opt-tailcall-fun x. (lambda-body x.) front-tag))))
+
+;(compile-c-environment 'nconc)
+;(quit)
