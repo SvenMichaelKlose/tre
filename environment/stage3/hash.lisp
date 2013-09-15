@@ -6,10 +6,7 @@
   (:constructor %make-hash-table)
   test
   size
-  hash)
-
-(defun make-hash-table (&key (test #'eq) (size *default-hash-size*))
-  (%make-hash-table :test test :size size :hash (make-array size)))
+  buckets)
 
 (defun %make-hash-index-num (h k)
   (mod k (hash-table-size h)))
@@ -31,7 +28,7 @@
 
 (defmacro %with-hash-bucket (bucket idx h key &rest body)
   `(with (,idx    (%make-hash-index ,h ,key)
-	      ,bucket (aref (hash-table-hash ,h) ,idx))
+	      ,bucket (aref (hash-table-buckets ,h) ,idx))
     ,@body))
 
 (defun href (h key)
@@ -43,18 +40,18 @@
     (%with-hash-bucket b i h key
       (? (assoc key b :test tst)
          (= (cdr (assoc key b :test tst)) new-value)
-         (= (aref (hash-table-hash h) i) (acons key new-value b)))))
+         (= (aref (hash-table-buckets h) i) (acons key new-value b)))))
   new-value)
 
 (defun hremove (h key)
   (%with-hash-bucket b i h key
-    (= (aref (hash-table-hash h) i)
+    (= (aref (hash-table-buckets h) i)
 	   (remove (assoc key b :test (hash-table-test h)) b))))
 
 (defun hashkeys (h)
   (let keys nil
-	(dotimes (i (length (hash-table-hash h)) keys)
-	  (push (carlist (aref (hash-table-hash h) i)) keys))
+	(dotimes (i (length (hash-table-buckets h)) keys)
+	  (push (carlist (aref (hash-table-buckets h) i)) keys))
     (apply #'append keys)))
 
 (defun copy-hash-table (h)
@@ -80,6 +77,9 @@
   (let h (make-hash-table :test test)
     (dolist (i x h)
       (= (href h i.) .i))))
+
+(defun make-hash-table (&key (test #'eq) (size *default-hash-size*))
+  (%make-hash-table :test test :size size :buckets (make-array size)))
 
 (define-test "HREF symbol key"
   ((let h (make-hash-table :test #'eq)
