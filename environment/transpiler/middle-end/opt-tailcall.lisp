@@ -1,40 +1,39 @@
 ;;;;; tré – Copyright (c) 2010–2013 Sven Michael Klose <pixel@copei.de>
 
-(defun opt-tailcall-fun-0 (fi args x name front-tag)
-  (+ (mapcan #'((arg val)
-                  (with-gensym g ; Avoid accidential GC.
-                    (funinfo-var-add fi g)
-                    (funinfo-add-immutable fi g)
-                    `((%setq ,arg ,val)
-                      (%setq ,g ,arg))))
-             (argument-expand-names name args)
-             (cdr (%setq-value x.)))
-     `((%%go ,front-tag))
-     (opt-tailcall-fun fi args .x name front-tag)))
+(defun function-exits? (x)
+  (alet x.
+    (?
+	  (not x)          t
+	  (| (vm-jump? !)
+	     (%setq? !))   nil
+	  (%%go? !)        (!? (member .!. .x :test #'integer==)
+		                   (function-exits? .!))
+	  (function-exits? .x))))
 
-(defun function-will-exit? (fi x)
-  (?
-	(not x)          t
-	(%%go? x.)       (& (member (cadr x.) .x :test #'eq)
-		                (function-will-exit? fi .x))
-	(| (vm-jump? x.)
-	   (%setq? x.))  nil
-	(function-will-exit? fi .x)))
+(defun opt-tailcall-make-restart (l body front-tag)
+  (with-lambda name args dummy-body l 
+    (& *show-definitions?*
+       (format t "; Removing tail call in function ~A.~%" name))
+    (+ (mapcan #'((arg val)
+                    (with-gensym g ; Avoid accidential GC.
+                      `((%setq ,arg ,val))))
+               (argument-expand-names name args)
+               (cdr (%setq-value body.)))
+       `((%%go ,front-tag))
+       (opt-tailcall-fun l .body front-tag))))
 
-(defun opt-tailcall-fun (fi args x name front-tag)
-  (when x
-    (? (& (%setq-funcall-of? x. name)
-  		  (function-will-exit? fi .x))
-	   (opt-tailcall-fun-0 fi args x name front-tag)
-	   (cons x. (opt-tailcall-fun fi args .x name front-tag)))))
+(defun opt-tailcall-fun (l body front-tag)
+  (with-lambda name args dummy-body l 
+    (& body
+       (? (& (%setq-funcall-of? body. name)
+             (function-exits? .body))
+          (opt-tailcall-make-restart l body front-tag)
+          (cons (? (named-lambda? body.)
+                   (car (opt-tailcall `(,body.)))
+                   body.)
+                (opt-tailcall-fun l .body front-tag))))))
 
 (metacode-walker opt-tailcall (x)
-  :if-named-function
-      (with (front-tag (make-compiler-tag)
-             x x.)
-        `(,front-tag
-          ,@(opt-tailcall-fun (get-lambda-funinfo x)
-                              (lambda-args x)
-                              (lambda-body x)
-                              (lambda-name x)
-                              front-tag))))
+  :if-named-function  (with-compiler-tag front-tag
+                        `(,front-tag
+                          ,@(opt-tailcall-fun x. (lambda-body x.) front-tag))))
