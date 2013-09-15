@@ -57,20 +57,20 @@
      (butlast x)
      x))
 
-(defun cps-body (x)
-  (alet (cps-split-body x)
-    (+ (cps-make-funs (carlist !) (cps-tag-names !) (filter (compose #'cps
-                                                                     #'cps-body-without-tag)
-                                                            (cdrlist !)))
-       `((%setq nil (,!..))))))
-
 (defun cps-fun (x)
   (with-temporary *funinfo* (get-lambda-funinfo x)
-    (copy-lambda x :body (cps-body (lambda-body x)))))
+    (copy-lambda x :body (cps (lambda-body x)))))
 
-(defun cps (x)
+(defun cps-subfuns (x)
   (when x
     (cons (? (named-lambda? x.)
              (cps-fun x.)
              x.)
           (cps .x))))
+
+(defun cps (x)
+  (alet (cps-split-body x)
+    (+ (cps-make-funs (carlist !) (cps-tag-names !) (filter (compose #'cps-subfuns
+                                                                     #'cps-body-without-tag)
+                                                            (cdrlist !)))
+       `((%setq nil (,!..))))))
