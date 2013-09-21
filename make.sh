@@ -72,7 +72,7 @@ C_DIALECT_FLAGS="-ansi -Wall -Wextra -Werror"
 CFLAGS="-pipe $C_DIALECT_FLAGS $GNU_LIBC_FLAGS $BUILD_MACHINE_INFO $ARGS"
 
 DEBUGOPTS="-O0 -g"
-BUILDOPTS="-O2 --whole-program -march=native -mtune=native"
+BUILDOPTS="-O2 -march=native -mtune=native"
 CRUNSHOPTS="-O2 --whole-program -march=native -mtune=native"
 CRUNSHFLAGS="-DTRE_COMPILED_CRUNSHED -Iinterpreter"
 
