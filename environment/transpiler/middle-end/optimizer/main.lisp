@@ -6,4 +6,5 @@
 (env-load "transpiler/middle-end/optimizer/rename-temporaries.lisp")
 (env-load "transpiler/middle-end/optimizer/remove-code.lisp")
 (env-load "transpiler/middle-end/optimizer/remove-assignments.lisp")
+(env-load "transpiler/middle-end/optimizer/invert-jumps.lisp")
 (env-load "transpiler/middle-end/optimizer/toplevel.lisp")

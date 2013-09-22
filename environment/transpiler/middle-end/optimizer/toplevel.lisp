@@ -67,7 +67,8 @@
                            #'opt-peephole-remove-void
                            #'opt-peephole-rename-temporaries
                            #'opt-peephole-remove-code
-                           #'opt-peephole-remove-assignments)
+                           #'opt-peephole-remove-assignments
+                           #'opt-peephole-invert-jumps)
                   _])
   (? *opt-peephole?*
      (with-temporaries (*funinfo* (transpiler-global-funinfo *transpiler*)
