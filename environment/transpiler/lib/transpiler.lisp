@@ -62,6 +62,7 @@
   (backtrace?               nil)
   (expex-warnings?          t)
   (function-prologues?      t)
+  (exclude-base?            nil)
 
   (gen-string               #'literal-string)
 
@@ -189,6 +190,7 @@
         :backtrace?              backtrace?
         :expex-warnings?         expex-warnings?
         :function-prologues?     function-prologues?
+        :exclude-base?           exclude-base?
         :gen-string              gen-string
         :lambda-export?          lambda-export?
         :accumulate-toplevel-expressions? accumulate-toplevel-expressions?
