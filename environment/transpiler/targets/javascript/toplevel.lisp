@@ -23,14 +23,16 @@
                           (funinfo-vars (transpiler-global-funinfo tr))))))
 
 (defun js-files-before-deps (tr)
-  `((essential-functions-1 . ,*js-base*)
-    ,@(& (transpiler-assert? tr)
-         `((debug-printing . ,*js-base-debug-print*)))
-    (essential-functions-2 . ,*js-base2*)
-    ,@(unless *transpiler-no-stream?*
-        `((standard-streams . ,*js-base-stream*)))
-    ,@(& (t? *have-environment-tests*)
-         `((environment-tests . ,(make-environment-tests))))))
+  `((essential-functions-0 . ,*js-base0*)
+    ,@(& (not (transpiler-exclude-base? tr))
+         `((essential-functions-1 . ,*js-base*)
+           ,@(& (transpiler-assert? tr)
+                `((debug-printing . ,*js-base-debug-print*)))
+           (essential-functions-2 . ,*js-base2*)
+           ,@(unless *transpiler-no-stream?*
+               `((standard-streams . ,*js-base-stream*)))
+           ,@(& (t? *have-environment-tests*)
+                `((environment-tests . ,(make-environment-tests))))))))
 
 (defun js-environment-files ()
   (mapcan [unless (in? ._ 'c 'bc)

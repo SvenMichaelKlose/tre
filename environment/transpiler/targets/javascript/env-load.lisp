@@ -13,10 +13,11 @@
 
 (defvar *js-env-path* "environment/transpiler/targets/javascript/environment/")
 
+(defvar *js-base0*
+	,(list 'quote (+ (js-load-base *js-env-path*
+		                           "return-value.lisp"))))
 (defvar *js-base*
-	,(list 'quote (+ (js-load-base "environment/transpiler/environment/")
-	                 (js-load-base *js-env-path*
-		                           "return-value.lisp"
+	,(list 'quote (+ (js-load-base *js-env-path*
                                    "log.lisp"
 		                           "defined-functions.lisp"
 		                           "cons.lisp"

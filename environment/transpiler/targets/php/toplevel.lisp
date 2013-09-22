@@ -51,8 +51,11 @@
      (target-transpile transpiler
          :decl-gen #'(()
                         (php-decls transpiler))
-         :files-before-deps `((base1 . ,*php-base*))
-         :files-after-deps (+ `((base2 . ,*php-base2*))
+         :files-before-deps `((base0 . ,*php-base0*)
+                              ,@(& (not (transpiler-exclude-base? transpiler))
+                                   `((base1 . ,*php-base*))))
+         :files-after-deps (+ (& (not (transpiler-exclude-base? transpiler))
+                                 `((base2 . ,*php-base2*)))
                               (& (eq t *have-environment-tests*)
                                  (list (cons 'env-tests (make-environment-tests))))
                               sources)

@@ -78,9 +78,9 @@
 		      ,*js-indent* "switch(_I_){case 0:" ,*js-separator*))))
 
 (define-js-macro %function-return (name)
-  (? (funinfo-cps? (get-funinfo name))
-     ""
-     `(,*js-indent* "return " ~%ret ,*js-separator*)))
+  (? (funinfo-var? (get-funinfo name) '~%ret)
+     `(,*js-indent* "return " ~%ret ,*js-separator*)
+     ""))
 
 (define-js-macro %function-epilogue (name)
   (alet (get-funinfo name)

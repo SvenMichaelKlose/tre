@@ -9,11 +9,13 @@
 
 (defvar *php-env-path* "environment/transpiler/targets/php/environment/")
 
-(defvar *php-base*
+(defvar *php-base0*
 	,(list 'quote (php-load-base *php-env-path*
                       "../../../environment/defvar-native.lisp"
 		              "assert.lisp"
-		              "return-value.lisp"
+		              "return-value.lisp")))
+(defvar *php-base*
+	,(list 'quote (php-load-base *php-env-path*
 		              "cons.lisp"
 		              "symbol.lisp")))
 
