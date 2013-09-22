@@ -25,21 +25,19 @@
                   (~%ret? v))
                (with-cons a d _
                  (?
-                   (%setq? a)    (with-%setq place value a
-                                   (? (eq v place value)
-                                      (traverse-statements d)
-                                      (| (find-tree v value :test #'eq)
-                                         (& (%slot-value? place)
-                                            (find-tree v place :test #'eq))
-                                         (eq v place)
+                   (%setq? a)     (with-%setq place value a
+                                    (| (find-tree v value :test #'eq)
+                                       (& (%slot-value? place)
+                                          (find-tree v place :test #'eq))
+                                       (unless (eq v place)
                                          (traverse-statements d))))
-                   (%%go? a)     (traverse-tag .a.)
-                   (%%go-nil? a) (| (eq v ..a.)
-                                    (traverse-tag .a.)
-                                    (traverse-statements d))
+                   (%%go? a)      (traverse-tag .a.)
+                   (%%go-cond? a) (| (eq v ..a.)
+                                     (traverse-tag .a.)
+                                     (traverse-statements d))
                    (| (number? a)
                       (named-lambda? a))
-                                 (traverse-statements d)
+                                  (traverse-statements d)
                    (progn
                      (print _)
                      (error "Illegal metacode statement ~A." _))))])
