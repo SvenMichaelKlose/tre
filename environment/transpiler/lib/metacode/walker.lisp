@@ -12,6 +12,7 @@
 					  	    	          (if-setq nil)
 					  	    	          (if-go nil)
 					  	    	          (if-go-nil nil)
+					  	    	          (if-go-not-nil nil)
 									      (if-named-function nil))
   (with-cons x r args
     (with-gensym v
@@ -19,10 +20,11 @@
          (when ,x
            (let ,v (car ,x)
              (+ (?
-                  (atom ,v)          ,(| if-atom `(list ,v))
-                  ,@(!? if-setq      `((%setq? ,v) ,!))
-                  ,@(!? if-go        `((%%go? ,v) ,!))
-                  ,@(!? if-go-nil    `((%%go-nil? ,v) ,!))
+                  (atom ,v)           ,(| if-atom `(list ,v))
+                  ,@(!? if-setq       `((%setq? ,v) ,!))
+                  ,@(!? if-go         `((%%go? ,v) ,!))
+                  ,@(!? if-go-nil     `((%%go-nil? ,v) ,!))
+                  ,@(!? if-go-not-nil `((%%go-not-nil? ,v) ,!))
                   (named-lambda? ,v) (with-temporary *funinfo* (get-lambda-funinfo ,v)
                                        (list (copy-lambda ,v :body ,(| if-named-function `(,name (lambda-body ,v) ,@r)))))
 

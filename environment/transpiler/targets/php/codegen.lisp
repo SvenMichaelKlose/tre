@@ -60,6 +60,10 @@
   (let v (php-dollarize val)
     (php-line "if (!" v "&&!is_string(" v ")&&!is_numeric(" v ")&&!is_array(" v ")) { " (php-jump tag) "; }")))
 
+(define-php-macro %%go-not-nil (tag val)
+  (let v (php-dollarize val)
+    (php-line "if (!(!" v "&&!is_string(" v ")&&!is_numeric(" v ")&&!is_array(" v "))) { " (php-jump tag) "; }")))
+
 
 ;;;; FUNCTIONS
 

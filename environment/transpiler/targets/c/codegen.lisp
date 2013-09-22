@@ -106,6 +106,10 @@
   `(,*c-indent* "if (" ,x " == treptr_nil)" ,*newline*
 	,*c-indent* ,@(c-line `(%%native "goto l" ,tag))))
 
+(define-c-macro %%go-not-nil (tag x)
+  `(,*c-indent* "if (" ,x " != treptr_nil)" ,*newline*
+	,*c-indent* ,@(c-line `(%%native "goto l" ,tag))))
+
 
 ;;;; SYMBOLS
 

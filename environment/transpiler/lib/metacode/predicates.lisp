@@ -2,7 +2,7 @@
 
 (mapcar-macro x
 	'(%quote %new
-	  %%block %%go %%go-nil %%call-nil
+	  %%block %%go %%go-nil %%go-not-nil %%call-nil
 	  %stack %stackarg %vec %set-vec %setq %tag %%tag
 	  %%native %%string
 	  %%closure %closure
@@ -30,7 +30,11 @@
 
 (defun vm-jump? (e)
   (& (cons? e)
-     (in? e. '%%go '%%go-nil)))
+     (in? e. '%%go '%%go-nil '%%go-not-nil)))
+
+(defun %%go-cond? (x)
+  (| (%%go-nil? x)
+     (%%go-not-nil? x)))
 
 (defun %%go-tag (x)
   .x.)

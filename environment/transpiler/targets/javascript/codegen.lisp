@@ -41,6 +41,9 @@
 (define-js-macro %%go-nil (tag val)
   `(,*js-indent* "if" ,(js-nil? val) "{_I_=" ,tag ";continue;}" ,*newline*))
 
+(define-js-macro %%go-not-nil (tag val)
+  `(,*js-indent* "if(!" ,(js-nil? val) "){_I_=" ,tag ";continue;}" ,*newline*))
+
 (define-js-macro %%call-nil (val consequence alternative)
   `(,*js-indent* "if",(js-nil? val)
                      ,consequence "();"
