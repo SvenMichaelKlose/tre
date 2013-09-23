@@ -1,11 +1,11 @@
 tmp         = 2     ; Temporary byte.
-s           = 3     ; Stack pointer.
-p           = $fb   ; Address pointer.
-v           = $fd   ; Return value.
+p           = 3     ; Address pointer.
+v           = $fb   ; Return value.
+;$fd-$fe
 
+s           = 3     ; Stack pointer.
 atom_size   = $07
 atoms_free  = $0b
-;atoms_ptr   = $0d
 atoms_ptr   = $0d
 universe    = $0f
 gc_level    = $11
