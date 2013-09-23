@@ -33,7 +33,7 @@
     (& (atom x)
        (not (eq '~%RET x))
        (not (funinfo-toplevel-var? *expex-funinfo* x))
-       (expex-global-variable? x))
+       (funinfo-global-variable? *expex-funinfo* x))
       (progn
         (transpiler-add-wanted-variable *transpiler* x)
         (php-global x))

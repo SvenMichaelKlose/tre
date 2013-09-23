@@ -6,7 +6,6 @@
 (env-load "transpiler/front-end/tag-convert.lisp")
 (env-load "transpiler/front-end/expression-expand/argument-expand.lisp")
 (env-load "transpiler/front-end/expression-expand/expression-expand.lisp")
-(env-load "transpiler/front-end/expression-expand/guest-utils.lisp")
 (env-load "transpiler/front-end/expression-expand/funcalls.lisp")
 (env-load "transpiler/front-end/expression-expand/set-global-variable-value.lisp")
 (env-load "transpiler/front-end/lambda-expand.lisp")
