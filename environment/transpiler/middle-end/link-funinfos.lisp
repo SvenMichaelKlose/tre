@@ -14,9 +14,6 @@
 	 (link-funinfos-atom (funinfo-parent fi) x)
 	 (link-funinfos-make-lexicals-0 fi x)))
 
-(defun link-funinfos-emit-stackplace (fi x)
-  `(%stack ,(funinfo-name fi) ,x))
-
 (defun link-funinfos-atom (fi x)
   (?
     (| (not x)
