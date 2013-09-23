@@ -15,7 +15,7 @@
 
 (defun opt-peephole-will-be-used-again? (x v)
    (with (traversed-tags nil
-          traversed-tag? [member _ traversed-tags :test #'number==]
+          traversed-tag? [member _ traversed-tags :test #'integer==]
           traverse-tag   [unless (traversed-tag? _)
                            (push _ traversed-tags)
                            (traverse-statements (tag-code _))]
