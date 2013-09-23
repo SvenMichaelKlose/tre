@@ -2,7 +2,7 @@
 
 (defun c-expex-initializer (ex)
   (= (expex-argument-filter ex) #'c-expex-argument-filter
-     (expex-setter-filter ex)   (compose [mapcan [expex-set-global-variable-value _] _]
+     (expex-setter-filter ex)   (compose [mapcan #'expex-set-global-variable-value _]
                                          #'expex-compiled-funcall)))
 
 (defun c-identifier-char? (x)
