@@ -91,8 +91,7 @@
 
 (defun lambda-expand-tree (fi x)
   (aprog1 (lambda-expand-tree-0 fi x)
-    (with-temporary (transpiler-lambda-export? *transpiler*) t
-      (place-expand-0 fi !))))
+    (place-expand-0 fi !)))
 
 (defun transpiler-lambda-expand (tr x)
   (lambda-expand-tree (transpiler-global-funinfo tr) x))
