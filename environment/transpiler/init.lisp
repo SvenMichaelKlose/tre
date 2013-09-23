@@ -3,31 +3,7 @@
 (defun transpiler-make-expex (tr)
   (let ex (make-expex)
     (= (transpiler-expex tr) ex
-
-	   (expex-transpiler ex) tr
-
-	   (expex-function-collector ex)
-	       (lx (tr)
-		     #'((fun args)
-                  (unless (funinfo-var-or-lexical? *funinfo* fun)
-		            (transpiler-add-wanted-function ,tr fun))))
-
-	   (expex-argument-filter ex)
-	       (lx (tr)
-	    	 #'((var)
-		          (transpiler-add-wanted-variable ,tr var)))
-
-	   (expex-functionp ex)
-	       (lx (tr)
-			 #'((fun)
-		          (& (atom fun)
-		             (| (transpiler-function-arguments ,tr fun)
-			            (function? (symbol-function fun))))))
-
-	   (expex-plain-arg-fun? ex)
-	       (lx (tr)
-			 #'((fun)
-		          (transpiler-plain-arg-fun? ,tr fun))))
+	   (expex-transpiler ex) tr)
 	ex))
 
 (defun create-transpiler (&rest args)

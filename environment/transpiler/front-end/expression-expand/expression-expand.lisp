@@ -29,9 +29,6 @@
 
 ;;;; GUEST CALLBACKS
 
-(defun expex-guest-filter-expr (ex x)
-  (funcall (expex-expr-filter ex) x))
-
 (defun expex-guest-filter-setter (ex x)
   (funcall (expex-setter-filter ex) x))
 
@@ -76,7 +73,7 @@
 
 (defun expex-expandable-args? (ex fun)
   (| (transpiler-defined-function *transpiler* fun)
-     (not (funcall (expex-plain-arg-fun? ex) fun))))
+     (not (transpiler-plain-arg-fun? *transpiler* fun))))
 
 
 ;;;; ARGUMENT EXPANSION
@@ -90,7 +87,8 @@
 (defun expex-argexpand-0 (ex fun args)
   (adolist (args)
     (expex-warn !))
-  (funcall (expex-function-collector ex) fun args)
+  (| (funinfo-var-or-lexical? *funinfo* fun)
+     (transpiler-add-wanted-function *transpiler* fun))
   (let argdef (| (funinfo-get-local-function-args *funinfo* fun)
                  (current-transpiler-function-arguments fun))
     (transpiler-expand-literal-characters
@@ -98,12 +96,17 @@
    	       (expex-argument-expand fun argdef args)
 	       args))))
 
+(defun expex-function? (x)
+  (& (atom x)
+     (| (transpiler-function-arguments *transpiler* x)
+        (function? (symbol-function x)))))
+
 (defun expex-argexpand (ex x)
   (with (new? (%new? x)
 		 fun  (? new? .x. x.)
 		 args (? new? ..x .x))
 	`(,@(& new? '(%new))
-	  ,fun ,@(? (funcall (expex-functionp ex) fun)
+	  ,fun ,@(? (expex-function? fun)
 	    	    (expex-convert-quotes (expex-argexpand-0 ex fun args))
 	    	    args))))
 
@@ -194,7 +197,7 @@
 
 (defun expex-expr (ex expr)
   (with-default-listprop expr
-    (let x (expex-guest-filter-expr ex expr)
+    (let x (transpiler-import-from-expex expr)
       (?
         (%%go-nil? x)            (expex-%%go-nil ex x)
 	    (%var? x)                (expex-var x)
