@@ -9,12 +9,22 @@ cons_retry:
         sta p+1             ; O.K. copy it into our pointer.
         lda free_conses     ; Now copy the low byte.
         sta p
-        ldy #0              ; Update address of next free cons.
+        ldy #0              ; Update address of next free cons…
+        ldx ca0             ; …and copy the two arguments to the new cell.
         lda (p),y
+        stx (p),y
         sta free_conses
+        ldx ca0+1
         iny
         lda (p),y
+        stx (p),y
         sta free_conses+1
+        ldx ca1
+        iny
+        stx (p),y
+        ldx ca1+1
+        iny
+        stx (p),y
         rts
 
 out_of_conses:
