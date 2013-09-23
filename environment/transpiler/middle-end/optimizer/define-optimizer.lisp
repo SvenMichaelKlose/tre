@@ -2,7 +2,7 @@
 
 (defvar *opt-peephole?* t)
 
-(defmacro opt-peephole-fun (fun &rest body)
+(defmacro optimizer (fun &rest body)
   `(when x
 	 (with-cons a d x
 	   (?
@@ -14,7 +14,7 @@
 		 ,@body
 		 (cons a (,fun d))))))
 
-(defmacro def-opt-peephole-fun (name &rest body)
+(defmacro define-optimizer (name &rest body)
   `(defun ,name (x)
-     (opt-peephole-fun ,name
+     (optimizer ,name
        ,@body)))

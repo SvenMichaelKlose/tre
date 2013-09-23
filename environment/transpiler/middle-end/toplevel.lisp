@@ -3,11 +3,6 @@
 (defun transpiler-expression-expand (tr x)
   (expression-expand (transpiler-expex tr) x))
 
-(defun transpiler-opt-peephole (tr x)
-  (? (transpiler-inject-debugging? tr)
-     x
-     (opt-peephole x)))
-
 (transpiler-pass transpiler-middleend-0 (tr)
     make-packages            #'make-packages
     expression-expand        [with-temporary (transpiler-expex-warnings? tr) nil
@@ -19,15 +14,15 @@
                                 _]
     quote-keywords           #'transpiler-quote-keywords
     link-funinfos            #'link-funinfos
-    opt-peephole             [? (transpiler-inject-debugging? tr)
+    optimize                 [? (transpiler-inject-debugging? tr)
                                 _
-                                (transpiler-opt-peephole tr _)]
+                                (optimize _)]
     opt-tailcall             [? (transpiler-inject-debugging? tr)
                                 _
-                                (opt-tailcall _)]
-    opt-peephole             [? (transpiler-inject-debugging? tr)
-                                _
-                                (transpiler-opt-peephole tr _)]
+                                (alet (opt-tailcall _)
+                                  (? (equal ! _)
+                                     !
+                                     (optimize !)))]
     cps                      [? (transpiler-cps-transformation? tr)
                                 (cps _)
                                 _]
