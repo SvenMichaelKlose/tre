@@ -24,11 +24,10 @@
                                      !
                                      (optimize !)))]
     cps                      [? (transpiler-cps-transformation? tr)
-                                (cps _)
+                                (funcall #'cps _)
                                 _]
-    opt-find-unused-places   #'opt-places-find-used
-    opt-remove-unused-places #'opt-places-remove-unused
-    update-funinfo           #'transpiler-update-funinfo
+    optimize-funinfo-vars    #'optimize-funinfo-vars
+    update-funinfo-num-tags  #'update-funinfo-num-tags
     print-dot                [(& *show-transpiler-progress?* (princ #\.) (force-output))
                               _])
 

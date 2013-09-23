@@ -56,3 +56,6 @@
 (defun opt-places-remove-unused (x)
   (opt-places-remove-unused-0 (transpiler-global-funinfo *transpiler*) x)
   x)
+
+(defun optimize-funinfo-vars (x)
+  (opt-places-remove-unused (opt-places-find-used x)))
