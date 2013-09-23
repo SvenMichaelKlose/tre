@@ -1,10 +1,7 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun transpiler-make-expex (tr)
-  (let ex (make-expex)
-    (= (transpiler-expex tr) ex
-	   (expex-transpiler ex) tr)
-	ex))
+  (funcall (transpiler-expex-initializer tr) (= (transpiler-expex tr) (make-expex))))
 
 (defun create-transpiler (&rest args)
   (aprog1 (apply #'make-transpiler args)
@@ -12,5 +9,5 @@
     (= (transpiler-assert? !) *assert*)
 	(transpiler-make-std-macro-expander !)
 	(transpiler-make-code-expander !)
-	(funcall (transpiler-expex-initializer !) (transpiler-make-expex !))
+	(transpiler-make-expex !)
     (make-global-funinfo !)))

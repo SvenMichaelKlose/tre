@@ -240,7 +240,7 @@
         :expex-initializer       expex-initializer
         :cpr-count?              cpr-count?)
     (transpiler-copy-std-macro-expander transpiler !)
-    (funcall (transpiler-expex-initializer !) (transpiler-make-expex !))))
+    (transpiler-make-expex !)))
 
 (defmacro transpiler-getter (name &rest body)
   `(defun ,($ 'transpiler- name) (tr x)
