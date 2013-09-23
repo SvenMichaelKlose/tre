@@ -65,9 +65,7 @@
                            #'translate-tags
                            #'reduce-tags
                            #'opt-peephole-remove-void
-                           #'opt-peephole-rename-temporaries
                            #'opt-peephole-remove-code
-                           #'opt-peephole-remove-assignments
                            #'opt-peephole-invert-jumps)
                   _])
   (? *opt-peephole?*
