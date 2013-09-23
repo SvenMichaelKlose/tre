@@ -10,8 +10,7 @@
     (& (funinfo-parent !)
        (funinfo-var? ! x)
        (not (eq x (funinfo-lexical !))
-            (funinfo-lexical? ! x)
-            (funinfo-immutable? ! x)))))
+            (funinfo-lexical? ! x)))))
 
 (defun opt-peephole-will-be-used-again? (x v)
    (with (traversed-tags nil

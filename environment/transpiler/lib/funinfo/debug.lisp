@@ -9,7 +9,6 @@
     (format t "Local vars:     ~A~%" vars)
     (format t "Lexicals:       ~A~%" lexicals)
     (format t "Lexical array:  ~A~%" lexical)
-    (format t "Free vars:      ~A~%" free-vars)
     (format t "Used vars:      ~A~%" used-vars)
     (format t "-~%"))
   fi)

@@ -113,25 +113,6 @@
         (funinfo-add-used-var (funinfo-parent fi) x))))
 
 
-;;;; IMMUTABLES
-
-(defun funinfo-immutable? (fi x)
-  (member x (funinfo-immutables fi) :test #'eq))
-
-(defun funinfo-add-immutable (fi x)
-  (adjoin! x (funinfo-immutables fi) :test #'eq))
-
-
-;;;; FREE VARIABLES
-
-(defun funinfo-free-var? (fi var)
-  (member var (funinfo-free-vars fi) :test #'eq))
-
-(defun funinfo-add-free-var (fi var)
-  (adjoin! var (funinfo-free-vars fi) :test #'eq)
-  var)
-
-
 ;;;; GLOBAL VARIABLES
 
 (defun funinfo-toplevel-var? (fi x)
