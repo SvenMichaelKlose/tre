@@ -73,10 +73,10 @@
 
 (defun global-literal-symbol-function? (x)
   (& (literal-symbol-function? x)
-     (not (funinfo-var-or-lexical? *expex-funinfo* .x.))))
+     (not (funinfo-var-or-lexical? *funinfo* .x.))))
 
 (defun transpiler-import-add-used (x)
-  (unless (member x (funinfo-names *expex-funinfo*) :test #'eq)
+  (unless (member x (funinfo-names *funinfo*) :test #'eq)
     (transpiler-add-used-function *transpiler* x))
   x)
 

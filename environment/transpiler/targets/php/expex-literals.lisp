@@ -4,7 +4,7 @@
   `(define-compiled-literal ,name (,x ,table)
 	   :maker ,maker
 	   :init-maker ,init-maker
-	   :decl-maker [identity nil])) ; APPLY doesn't ignore NIL.
+	   :decl-maker [identity nil]))
 
 (php-define-compiled-literal php-compiled-char (x char)
   :maker (transpiler-add-late-symbol *transpiler* ($ 'trechar_compiled_ (char-code x)))
@@ -22,7 +22,7 @@
 
 (defun php-expex-add-global (x)
   (funinfo-var-add (transpiler-global-funinfo *transpiler*) x)
-  (adjoin! x (funinfo-globals *expex-funinfo*))
+  (adjoin! x (funinfo-globals *funinfo*))
   x)
 
 (defun php-global (x)
@@ -31,14 +31,14 @@
 (defun php-expex-argument-filter (x)
   (?
     (& (atom x)
-       (not (eq '~%RET x))
-       (not (funinfo-toplevel-var? *expex-funinfo* x))
-       (funinfo-global-variable? *expex-funinfo* x))
+       (not (eq '~%ret x))
+       (not (funinfo-toplevel-var? *funinfo* x))
+       (funinfo-global-variable? *funinfo* x))
       (progn
         (transpiler-add-wanted-variable *transpiler* x)
         (php-global x))
     (character? x) (php-expex-add-global (php-compiled-char x))
     (%quote? x)    (php-expex-add-global (php-compiled-symbol .x.))
     (keyword? x)   (php-expex-add-global (php-compiled-symbol x))
-	(atom x)       x
-    (transpiler-import-from-expex x)))
+	(cons? x)      (transpiler-import-from-expex x)
+    x))

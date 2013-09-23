@@ -38,6 +38,6 @@
     (character? x) (c-compiled-char x)
     (number? x)    (c-compiled-number x)
     (string? x)    (c-compiled-string x)
-	(funinfo-var-or-lexical? *expex-funinfo* x)  x
-	(funinfo-global-variable? *expex-funinfo* x) `(*TRESYMBOL_VALUE* ,(c-compiled-symbol x))
+	(funinfo-var-or-lexical? *funinfo* x)  x
+	(funinfo-global-variable? *funinfo* x) `(*TRESYMBOL_VALUE* ,(c-compiled-symbol x))
 	x))

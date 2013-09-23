@@ -12,9 +12,7 @@
      .x.
      x))
 
-
-(defvar *current-expex* nil)
-(defvar *expex-funinfo* nil)
+(defvar *expex* nil)
 
 
 ;;;; SYMBOLS
@@ -52,16 +50,16 @@
 
 (defun expex-funinfo-var-add ()
   (aprog1 (expex-sym)
-    (funinfo-var-add *expex-funinfo* !)))
+    (funinfo-var-add *funinfo* !)))
 
 (defun expex-warn (x)
   (& (transpiler-expex-warnings? *transpiler*)
      (symbol? x)
-     (not (transpiler-defined-symbol? *expex-funinfo* x)
+     (not (transpiler-defined-symbol? *funinfo* x)
           (transpiler-can-import? *transpiler* x))
      (error "Symbol ~A is not defined in ~A."
             (symbol-name x)
-            (funinfo-scope-description *expex-funinfo*))))
+            (funinfo-scope-description *funinfo*))))
 
 
 ;;;; PREDICATES
@@ -70,8 +68,8 @@
   (| (& (expex-move-lexicals? ex)
         (atom x)
         (not (eq '~%ret x))
-        (funinfo-parent-var? *expex-funinfo* x)
-        (not (funinfo-toplevel-var? *expex-funinfo* x)))
+        (funinfo-parent-var? *funinfo* x)
+        (not (funinfo-toplevel-var? *funinfo* x)))
      (not (| (atom x)
              (literal-symbol-function? x)
              (in? x. '%%go '%%go-nil '%%native '%%string '%quote)))))
@@ -93,7 +91,7 @@
   (adolist (args)
     (expex-warn !))
   (funcall (expex-function-collector ex) fun args)
-  (let argdef (| (funinfo-get-local-function-args *expex-funinfo* fun)
+  (let argdef (| (funinfo-get-local-function-args *funinfo* fun)
                  (current-transpiler-function-arguments fun))
     (transpiler-expand-literal-characters
 	    (? (expex-expandable-args? ex fun)
@@ -167,11 +165,11 @@
 ;;;; EXPRESSION EXPANSION
 
 (defun expex-lambda (ex x)
-  (with-temporary *expex-funinfo* (get-lambda-funinfo x)
+  (with-temporary *funinfo* (get-lambda-funinfo x)
     (values nil (list (copy-lambda x :body (expex-body ex (lambda-body x)))))))
 
 (defun expex-var (x)
-  (funinfo-var-add *expex-funinfo* .x.)
+  (funinfo-var-add *funinfo* .x.)
   (values nil nil))
 
 (defun expex-%%go-nil (ex x)
@@ -239,6 +237,6 @@
 
 (defun expression-expand (ex x)
   (& x
-	 (with-temporaries (*current-expex* ex
-	                    *expex-funinfo* (transpiler-global-funinfo *transpiler*))
+	 (with-temporaries (*expex*   ex
+	                    *funinfo* (transpiler-global-funinfo *transpiler*))
        (expex-body ex x))))

@@ -3,6 +3,6 @@
 (defun expex-set-global-variable-value (x)
   (list
     (alet (%setq-place x)
-      (? (funinfo-global-variable? *expex-funinfo* !)
+      (? (funinfo-global-variable? *funinfo* !)
 	     `(=-symbol-value ,(%setq-value x) (%quote ,!))
 	     x))))

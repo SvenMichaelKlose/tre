@@ -10,4 +10,4 @@
 
 (defun php-setter-filter (tr x)
   (aprog1 (php-local-fun-filter tr x)
-    (transpiler-add-wanted-variable tr .!.)))
+    (transpiler-add-wanted-variable tr (%setq-place !))))

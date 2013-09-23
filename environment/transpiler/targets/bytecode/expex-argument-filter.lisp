@@ -2,8 +2,6 @@
 
 (defun bc-expex-argument-filter (x)
   (?
-	(cons? x)
-      (transpiler-import-from-expex x)
-	(funinfo-global-variable? *expex-funinfo* x)
-      `(symbol-value (%quote ,x))
+	(cons? x)                               (transpiler-import-from-expex x)
+	(funinfo-global-variable? *funinfo* x)  `(symbol-value (%quote ,x))
 	x))

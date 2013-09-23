@@ -2,12 +2,12 @@
 
 (defun %setq-make-call-to-local-function (x)
   (with-%setq place value x
-    (expex-body *current-expex* (transpiler-frontend-1 *transpiler* `((%setq ,place (apply ,value. ,(compiled-list .value))))))))
+    (expex-body *expex* (transpiler-frontend-1 *transpiler* `((%setq ,place (apply ,value. ,(compiled-list .value))))))))
 
 (defun expex-compiled-funcall (x)
   (alet (%setq-value x)
     (? (& (cons? !)
           (| (function-expr? !.)
-             (funinfo-var-or-lexical? *expex-funinfo* !.)))
+             (funinfo-var-or-lexical? *funinfo* !.)))
        (%setq-make-call-to-local-function x)
        (list x))))
