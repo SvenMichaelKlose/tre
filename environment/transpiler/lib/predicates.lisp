@@ -4,11 +4,15 @@
 	'(identity %identity quote backquote quasiquote quasiquote-splice)
   `(def-head-predicate ,x))
 
-(defun literal-symbol-function? (x)
+(defun literal-function? (x)
   (& (cons? x)
      (eq 'function x.)
      (atom .x.)
      (not ..x)))
+
+(defun global-literal-function? (x)                                                                                                
+  (& (literal-function? x)
+     (not (funinfo-var-or-lexical? *funinfo* .x.))))
 
 (defun simple-argument-list? (x)
   (? x

@@ -28,9 +28,9 @@
 
 (defun expex-function-name (x)
   (?
-    (global-literal-symbol-function? x)  .x.
-    (%%closure? x)                       .x.
-    (cons? x)                            x.
+    (global-literal-function? x)  .x.
+    (%%closure? x)                .x.
+    (cons? x)                      x.
     x))
 
 (defun expex-import-function (x)
@@ -83,7 +83,7 @@
         (funinfo-parent-var? *funinfo* x)
         (not (funinfo-toplevel-var? *funinfo* x)))
      (not (| (atom x)
-             (literal-symbol-function? x)
+             (literal-function? x)
              (in? x. '%%go '%%go-nil '%%native '%%string '%quote)))))
 
 (defun expex-expandable-args? (ex fun)

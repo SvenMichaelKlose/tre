@@ -34,11 +34,11 @@
 
 (defun c-argument-filter (x)
   (?
-    (global-literal-symbol-function? x)    `(symbol-function ,(c-compiled-symbol .x.))
-	(cons? x)      x
-    (character? x) (c-compiled-char x)
-    (number? x)    (c-compiled-number x)
-    (string? x)    (c-compiled-string x)
-	(funinfo-var-or-lexical? *funinfo* x)  x
+    (global-literal-function? x)            `(symbol-function ,(c-compiled-symbol .x.))
+	(cons? x)                               x
+    (character? x)                          (c-compiled-char x)
+    (number? x)                             (c-compiled-number x)
+    (string? x)                             (c-compiled-string x)
+	(funinfo-var-or-lexical? *funinfo* x)   x
 	(funinfo-global-variable? *funinfo* x) `(symbol-value ,(c-compiled-symbol x))
 	x))

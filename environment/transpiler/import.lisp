@@ -72,10 +72,6 @@
          (+ funs exported vars (transpiler-import-from-environment tr))
          (transpiler-delayed-var-inits tr)))))
 
-(defun global-literal-symbol-function? (x)
-  (& (literal-symbol-function? x)
-     (not (funinfo-var-or-lexical? *funinfo* .x.))))
-
 (defun current-scope? (x)
   (member x (funinfo-names *funinfo*) :test #'eq))
 

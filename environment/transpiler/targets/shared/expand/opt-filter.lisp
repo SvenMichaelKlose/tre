@@ -3,10 +3,10 @@
 (defun function-to-funcall (x i)
   (alet (macroexpand x)
     (?
-      (literal-symbol-function? !) `(,.!. ,@i)
-      (function-expr? !)           `(,! ,@i)
+      (literal-function? !)  `(,.!. ,@i)
+      (function-expr? !)     `(,! ,@i)
       (| (atom !)
-         (%%closure? !))           `(funcall ,! ,@i)
+         (%%closure? !))     `(funcall ,! ,@i)
       (error "Function or variable required instead of ~A." !))))
 
 (define-shared-std-macro (bc c js php) filter (fun &rest lsts)

@@ -9,6 +9,6 @@
   (& (atom x)
      (funinfo-global-variable? *funinfo* x)
      (transpiler-add-wanted-variable *transpiler* x))
-  (? (global-literal-symbol-function? x)
+  (? (global-literal-function? x)
      `(symbol-function (%quote ,.x.))
      x))
