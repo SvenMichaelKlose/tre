@@ -2,7 +2,7 @@
 
 (defmacro php-define-compiled-literal (name (x table) &key maker init-maker)
   `(define-compiled-literal ,name (,x ,table)
-	   :maker ,maker
+	   :maker      ,maker
 	   :init-maker ,init-maker
 	   :decl-maker [identity nil]))
 
@@ -28,17 +28,14 @@
 (defun php-global (x)
   `(%%native "$GLOBALS['" ,(transpiler-obfuscated-symbol-string *transpiler* x) "']"))
 
-(defun php-expex-argument-filter (x)
+(defun php-argument-filter (x)
   (?
+    (character? x) (php-expex-add-global (php-compiled-char x))
+    (%quote? x)    (php-expex-add-global (php-compiled-symbol .x.))
+    (keyword? x)   (php-expex-add-global (php-compiled-symbol x))
     (& (atom x)
-       (not (eq '~%ret x))
-       (not (funinfo-toplevel-var? *funinfo* x))
        (funinfo-global-variable? *funinfo* x))
       (progn
         (transpiler-add-wanted-variable *transpiler* x)
         (php-global x))
-    (character? x) (php-expex-add-global (php-compiled-char x))
-    (%quote? x)    (php-expex-add-global (php-compiled-symbol .x.))
-    (keyword? x)   (php-expex-add-global (php-compiled-symbol x))
-	(cons? x)      (transpiler-import-from-expex x)
     x))

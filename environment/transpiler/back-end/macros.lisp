@@ -6,5 +6,5 @@
     (define-expander (transpiler-codegen-expander tr))))
 
 (defmacro define-codegen-macro (tr name &rest x)
-  (print-definition `(define-transpiler-macro ,tr ,x.))
+  (print-definition `(define-transpiler-macro ,tr ,name ,x.))
   `(define-expander-macro ,(transpiler-codegen-expander (eval tr)) ,name ,@x))

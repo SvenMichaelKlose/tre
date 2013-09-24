@@ -8,7 +8,8 @@
      (transpiler-macro tr x)))
 
 (defun transpiler-can-import? (tr x)
-  (& (function? (symbol-function x))
+  (& (symbol? x)
+     (function? (symbol-function x))
      (not (builtin? (symbol-function x))
           (transpiler-defined? tr x))))
 	
@@ -75,21 +76,10 @@
   (& (literal-symbol-function? x)
      (not (funinfo-var-or-lexical? *funinfo* .x.))))
 
-(defun transpiler-import-add-used (x)
-  (unless (member x (funinfo-names *funinfo*) :test #'eq)
-    (transpiler-add-used-function *transpiler* x))
-  x)
+(defun current-scope? (x)
+  (member x (funinfo-names *funinfo*) :test #'eq))
 
-(defun transpiler-import-from-expex (x)
-  (? (global-literal-symbol-function? x)
-         (progn
-           (transpiler-add-wanted-function *transpiler* .x.)
-           (transpiler-import-add-used .x.)
-           (transpiler-macroexpand *transpiler* `(symbol-function (%quote ,.x.))))
-     (cons? x)
-         (progn
-           (transpiler-import-add-used (? (%%closure? x)
-                                          .x.
-                                          x.))
-           x)
-     x))
+(defun transpiler-import-add-used (x)
+  (| (current-scope? x)
+     (transpiler-add-used-function *transpiler* x))
+  x)

@@ -7,7 +7,7 @@
 
 (defmacro c-define-compiled-literal (name (x table) &key maker init-maker)
   `(define-compiled-literal ,name (,x ,table)
-	   :maker ,maker
+	   :maker      ,maker
 	   :init-maker ,init-maker
 	   :decl-maker #'c-make-decl))
 
@@ -32,12 +32,13 @@
 
 (functional *TRESYMBOL_VALUE*)
 
-(defun c-expex-argument-filter (x)
+(defun c-argument-filter (x)
   (?
-	(cons? x)      (transpiler-import-from-expex x)
+    (global-literal-symbol-function? x)    `(symbol-function ,(c-compiled-symbol .x.))
+	(cons? x)      x
     (character? x) (c-compiled-char x)
     (number? x)    (c-compiled-number x)
     (string? x)    (c-compiled-string x)
 	(funinfo-var-or-lexical? *funinfo* x)  x
-	(funinfo-global-variable? *funinfo* x) `(*TRESYMBOL_VALUE* ,(c-compiled-symbol x))
+	(funinfo-global-variable? *funinfo* x) `(symbol-value ,(c-compiled-symbol x))
 	x))

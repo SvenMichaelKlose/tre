@@ -26,6 +26,19 @@
        !
        (expex-sym))))
 
+(defun expex-function-name (x)
+  (?
+    (global-literal-symbol-function? x)  .x.
+    (%%closure? x)                       .x.
+    (cons? x)                            x.
+    x))
+
+(defun expex-import-function (x)
+  (alet (expex-function-name x)
+    (transpiler-add-wanted-function *transpiler* !)
+    (| (member x (funinfo-names *funinfo*) :test #'eq)
+       (transpiler-import-add-used !))))
+
 
 ;;;; GUEST CALLBACKS
 
@@ -33,7 +46,9 @@
   (funcall (expex-setter-filter ex) x))
 
 (defun expex-guest-filter-arguments (ex x)
-  (filter [funcall (expex-argument-filter ex) _] x))
+  (filter [(expex-import-function _)
+           (funcall (expex-argument-filter ex) _)]
+           x))
 
 
 ;;;; UTILS
@@ -192,20 +207,20 @@
          (values moved (expex-make-%setq ex plc new-expr.))))))
 
 (defun expex-expr-std (ex x)
+  (expex-import-function x)
   (with ((moved new-expr) (expex-move-args ex (expex-argexpand ex x)))
     (values moved (list new-expr))))
 
-(defun expex-expr (ex expr)
-  (with-default-listprop expr
-    (let x (transpiler-import-from-expex expr)
-      (?
-        (%%go-nil? x)            (expex-%%go-nil ex x)
-	    (%var? x)                (expex-var x)
-	    (named-lambda? x)        (expex-lambda ex x)
-        (not (expex-able? ex x)) (values nil (list x))
-        (%%block? x)             (values nil (expex-body ex (%%block-body x)))
-        (%setq? x)               (expex-expr-%setq ex x)
-        (expex-expr-std ex x)))))
+(defun expex-expr (ex x)
+  (with-default-listprop x
+    (?
+      (%%go-nil? x)            (expex-%%go-nil ex x)
+	  (%var? x)                (expex-var x)
+	  (named-lambda? x)        (expex-lambda ex x)
+      (%%block? x)             (values nil (expex-body ex (%%block-body x)))
+      (%setq? x)               (expex-expr-%setq ex x)
+      (not (expex-able? ex x)) (values nil (list x))
+      (expex-expr-std ex x))))
 
 
 ;;;; BODY EXPANSION

@@ -1,7 +1,7 @@
 ;;;;; tré – Copyright (c) 2008–2010,2012–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun c-expex-initializer (ex)
-  (= (expex-argument-filter ex) #'c-expex-argument-filter
+  (= (expex-argument-filter ex) #'c-argument-filter
      (expex-setter-filter ex)   (compose [mapcan #'expex-set-global-variable-value _]
                                          #'expex-compiled-funcall)))
 
