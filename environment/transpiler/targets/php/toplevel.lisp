@@ -1,18 +1,10 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
-(defvar *php-goto?* t) ; PHP version <5.3 has no 'goto'.
-
 (defun php-prologue ()
-  (+ (format nil "<?php // tré revision ~A~%" *tre-revision*)
-     (? *php-goto?*
-        ""
-        "$_I_ = 0; while (1) { switch ($_I_) { case 0:")))
+  (format nil "<?php // tré revision ~A~%" *tre-revision*))
 
 (defun php-epilogue ()
-  (+ (? *php-goto?*
-        ""
-        "} break; }")
-     "?>"))
+  "?>")
 
 (defvar *php-native-environment*
         ,(apply #'+ (mapcar [fetch-file (+ "environment/transpiler/targets/php/environment/native/" _ ".php")]

@@ -44,14 +44,10 @@
 ;;;; CONTROL FLOW
 
 (define-php-macro %%tag (tag)
-  (? *php-goto?*
-     `(%%native "_I_" ,tag ":" ,*php-newline*)
-     `(%%native "case " ,tag ":" ,*php-newline*)))
+  `(%%native "_I_" ,tag ":" ,*php-newline*))
 
 (defun php-jump (tag)
-  (? *php-goto?*
-     `("goto _I_" ,tag)
-     `(" $_I_=" ,tag "; break")))
+  `("goto _I_" ,tag))
 
 (define-php-macro %%go (tag)
   (php-line (php-jump tag)))
@@ -81,12 +77,8 @@
              (php-line "global " (php-list !)))
          ,@(& *print-executed-functions?*
               `("echo \"" ,compiled-name "\\n\";"))
-         ,@(unless *php-goto?*
-             (list "    $_I_=0; while (1) { switch ($_I_) { case 0:" *php-newline*))
          ,@(lambda-body x)
        	 ,(php-line "return $" '~%ret)
-         ,@(unless *php-goto?*
-             (list "    }}" *php-newline*))
       "}" ,*php-newline*)))
 
 (define-php-macro function (&rest x)
