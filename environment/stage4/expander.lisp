@@ -30,7 +30,6 @@
                          :post (| post #'(nil)))
     (acons! expander-name ! *expanders*)
     (| pred (= (expander-pred !) (lx (!) [& (symbol? _.)
-	                                        (symbol-name _.)
 	                                        (expander-macro-function ,! _.)])))
     (| call (= (expander-call !) (lx (!) [(& *expander-print* (print _))
                                           (apply (expander-macro-function ,! _.) ._)])))
