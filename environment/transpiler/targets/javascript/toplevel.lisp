@@ -1,6 +1,6 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
-(defun js-transpile-prologue (tr)
+(defun js-transpile-prologue ()
   (+ (format nil "// tré revision ~A~%" *tre-revision*)
      (format nil "var _I_ = 0; while (1) {switch (_I_) {case 0: ~%")))
 
@@ -16,11 +16,11 @@
   (filter ^(%setq (slot-value ,_. '__source) ,(list 'quote ._))
           (transpiler-memorized-sources *transpiler*)))
 
-(defun js-make-decl-gen (tr)
+(defun js-make-decl-gen ()
   #'(()
-       (filter [transpiler-generate-code tr `((%var ,_))]
-		       (remove-if [transpiler-emitted-decl? tr _]
-                          (funinfo-vars (transpiler-global-funinfo tr))))))
+       (filter [transpiler-generate-code *transpiler* `((%var ,_))]
+		       (remove-if [transpiler-emitted-decl? *transpiler* _]
+                          (funinfo-vars (transpiler-global-funinfo *transpiler*))))))
 
 (defun js-files-before-deps (tr)
   `((essential-functions-0 . ,*js-base0*)
@@ -54,13 +54,13 @@
          (js-files-compiler))))
 
 (defun js-transpile (sources &key (transpiler nil) (obfuscate? nil) (print-obfuscations? nil) (files-to-update nil))
-  (let tr transpiler
-    (+ (js-transpile-prologue tr)
-       (target-transpile tr :decl-gen            (js-make-decl-gen tr)
-                            :files-before-deps   (js-files-before-deps tr)
-                            :files-after-deps    (+ (js-files-after-deps)
-                                                    sources)
-                            :files-to-update     files-to-update
-                            :obfuscate?          obfuscate?
-                            :print-obfuscations? print-obfuscations?)
-       (js-transpile-epilogue))))
+  (+ (js-transpile-prologue)
+     (target-transpile transpiler
+                       :decl-gen            (js-make-decl-gen)
+                       :files-before-deps   (js-files-before-deps transpiler)
+                       :files-after-deps    (+ (js-files-after-deps)
+                                               sources)
+                       :files-to-update     files-to-update
+                       :obfuscate?          obfuscate?
+                       :print-obfuscations? print-obfuscations?)
+     (js-transpile-epilogue)))

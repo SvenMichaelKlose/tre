@@ -41,49 +41,49 @@
 		   "function.h"
 		   "compiled.h"))
 
-(defun c-function-registration (tr name)
+(defun c-function-registration (name)
   `(%setq ~%ret (treatom_register_compiled_function
                     ,(c-compiled-symbol name)
                     ,name
                     ,(alet (c-expander-name name)
-                       (? (transpiler-defined-function tr !)
-                          (compiled-function-name tr !)
+                       (? (transpiler-defined-function *transpiler* !)
+                          (compiled-function-name *transpiler* !)
                           '(%%native "NULL"))))))
 
-(defun c-function-registrations (tr)
-  (filter [c-function-registration tr _]
+(defun c-function-registrations ()
+  (filter #'c-function-registration
 		  (remove-if [ends-with? (symbol-name _) "_TREEXP"]
-                     (transpiler-defined-functions-without-builtins tr))))
+                     (transpiler-defined-functions-without-builtins *transpiler*))))
 
-(defun c-declarations-and-initialisations (tr)
-  (+ (transpiler-compiled-inits tr)
-     (c-function-registrations tr)))
+(defun c-declarations-and-initialisations ()
+  (+ (transpiler-compiled-inits *transpiler*)
+     (c-function-registrations)))
 
-(defun c-make-init-function (tr statements)
+(defun c-make-init-function (statements)
   (alet ($ 'C-INIT- (++! *c-init-counter*))
     `(defun ,! ()
        ,@(mapcar ^(tregc_add_unremovable ,_) statements))))
 
-(defun c-make-init-functions (tr)
-  (transpiler-add-used-function tr 'c-init)
+(defun c-make-init-functions ()
+  (transpiler-add-used-function *transpiler* 'c-init)
   (with-temporary *c-init-counter* 0
-    (+ (mapcar [c-make-init-function tr _]
-			   (group (c-declarations-and-initialisations tr) *c-init-group-size*))
+    (+ (mapcar #'c-make-init-function
+			   (group (c-declarations-and-initialisations) *c-init-group-size*))
        `((defun c-init ()
            ,@(with-queue q
                (adotimes (*c-init-counter* (queue-list q))
                  (enqueue q `(,($ 'C-INIT- (++ !)))))))))))
 
-(defun c-compile-init-functions (tr)
-  (with-temporaries ((transpiler-profile? tr)   nil
-                     (transpiler-backtrace? tr) nil
-                     (transpiler-assert? tr)    nil)
-      (transpiler-make-code tr (transpiler-frontend tr (c-make-init-functions tr)))))
+(defun c-compile-init-functions ()
+  (alet *transpiler*
+    (with-temporaries ((transpiler-profile? !)   nil
+                       (transpiler-backtrace? !) nil
+                       (transpiler-assert? !)    nil)
+        (transpiler-make-code ! (transpiler-frontend ! (c-make-init-functions))))))
 
-(defun c-decl-gen (tr)
-  (concat-stringtree (transpiler-compiled-decls tr)
-                     (c-compile-init-functions tr)))
-
+(defun c-decl-gen ()
+  (concat-stringtree (transpiler-compiled-decls *transpiler*)
+                     (c-compile-init-functions)))
 
 (defun c-header-includes ()
   (+ (format nil "#include <stdlib.h>~%")
@@ -92,6 +92,5 @@
 (defun c-transpile (sources &key transpiler obfuscate? print-obfuscations? files-to-update)
   (let tr transpiler
     (+ (c-header-includes)
-  	   (target-transpile tr :decl-gen #'(()
-                                           (c-decl-gen tr))
+  	   (target-transpile tr :decl-gen         #'c-decl-gen
                             :files-after-deps sources))))

@@ -13,7 +13,7 @@
 (defun php-print-native-environment (out)
   (princ *php-native-environment* out))
 
-(defun php-prepare (tr)
+(defun php-prepare ()
   (with-string-stream out
     (format out (+ "mb_internal_encoding ('UTF-8');~%"
                    "if (get_magic_quotes_gpc ()) {~%"
@@ -33,25 +33,24 @@
                    "}~%"))
     (php-print-native-environment out)))
 
-(defun php-decls (tr)
-  (transpiler-make-code tr (transpiler-frontend tr (transpiler-compiled-inits tr))))
+(defun php-decls ()
+  (transpiler-make-code *transpiler* (transpiler-frontend *transpiler* (transpiler-compiled-inits *transpiler*))))
 
 (defun php-transpile (sources &key (transpiler nil) (obfuscate? nil) (print-obfuscations? nil) (files-to-update nil))
   (transpiler-add-defined-variable transpiler '*KEYWORD-PACKAGE*)
   (+ (php-prologue)
-     (php-prepare transpiler)
+     (php-prepare)
      (target-transpile transpiler
-         :decl-gen #'(()
-                        (php-decls transpiler))
-         :files-before-deps `((base0 . ,*php-base0*)
-                              ,@(& (not (transpiler-exclude-base? transpiler))
-                                   `((base1 . ,*php-base*))))
-         :files-after-deps (+ (& (not (transpiler-exclude-base? transpiler))
-                                 `((base2 . ,*php-base2*)))
-                              (& (eq t *have-environment-tests*)
-                                 (list (cons 'env-tests (make-environment-tests))))
-                              sources)
-         :files-to-update files-to-update
-         :obfuscate? obfuscate?
-         :print-obfuscations? print-obfuscations?)
+                       :decl-gen            #'php-decls
+                       :files-before-deps   `((base0 . ,*php-base0*)
+                                              ,@(& (not (transpiler-exclude-base? transpiler))
+                                                   `((base1 . ,*php-base*))))
+                       :files-after-deps    (+ (& (not (transpiler-exclude-base? transpiler))
+                                                  `((base2 . ,*php-base2*)))
+                                               (& (eq t *have-environment-tests*)
+                                                  (list (cons 'env-tests (make-environment-tests))))
+                                               sources)
+                       :files-to-update     files-to-update
+                       :obfuscate?          obfuscate?
+                       :print-obfuscations? print-obfuscations?)
      (php-epilogue)))
