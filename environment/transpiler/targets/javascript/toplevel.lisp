@@ -1,10 +1,10 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
-(defun js-transpile-prologue ()
+(defun js-prologue ()
   (+ (format nil "// tré revision ~A~%" *tre-revision*)
      (format nil "var _I_ = 0; while (1) {switch (_I_) {case 0: ~%")))
 
-(defun js-transpile-epilogue ()
+(defun js-epilogue ()
   (format nil "}break;}~%"))
 
 (defun js-emit-early-defined-functions ()
@@ -54,13 +54,13 @@
          (js-files-compiler))))
 
 (defun js-transpile (sources &key (transpiler nil) (obfuscate? nil) (print-obfuscations? nil) (files-to-update nil))
-  (+ (js-transpile-prologue)
-     (target-transpile transpiler
-                       :decl-gen            (js-make-decl-gen)
-                       :files-before-deps   (js-files-before-deps transpiler)
-                       :files-after-deps    (+ (js-files-after-deps)
-                                               sources)
-                       :files-to-update     files-to-update
-                       :obfuscate?          obfuscate?
-                       :print-obfuscations? print-obfuscations?)
-     (js-transpile-epilogue)))
+  (target-transpile transpiler
+                    :prologue-gen        #'js-prologue
+                    :epilogue-gen        #'js-epilogue
+                    :decl-gen            (js-make-decl-gen)
+                    :files-before-deps   (js-files-before-deps transpiler)
+                    :files-after-deps    (+ (js-files-after-deps)
+                                            sources)
+                    :files-to-update     files-to-update
+                    :obfuscate?          obfuscate?
+                    :print-obfuscations? print-obfuscations?))

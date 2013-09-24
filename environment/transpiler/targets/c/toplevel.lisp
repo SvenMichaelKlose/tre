@@ -90,7 +90,7 @@
      (apply #'+ (mapcar [format nil "#include \"~A\"~%" _] *c-core-headers*))))
 
 (defun c-transpile (sources &key transpiler obfuscate? print-obfuscations? files-to-update)
-  (let tr transpiler
-    (+ (c-header-includes)
-  	   (target-transpile tr :decl-gen         #'c-decl-gen
-                            :files-after-deps sources))))
+  (target-transpile transpiler
+                    :prologue-gen     #'c-header-includes
+                    :decl-gen         #'c-decl-gen
+                    :files-after-deps sources))

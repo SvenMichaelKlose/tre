@@ -45,9 +45,9 @@
             (aadjoin! code section (transpiler-frontend-files tr) :test #'eq-string==)
 	        (enqueue frontend-code (cons section code))))))))
 
-(defun target-sighten-deps (tr dep-gen)
+(defun target-sighten-deps (dep-gen)
   (& dep-gen
-     (with-temporary (transpiler-save-argument-defs-only? tr) nil
+     (with-temporary (transpiler-save-argument-defs-only? *transpiler*) nil
        (funcall dep-gen))))
 
 (defun target-transpile-accumulated-toplevels (tr)
@@ -63,12 +63,14 @@
     (unless (zero? 1)
       (format t "; ~A warning~A.~%" ! (? (< 1 !) "s" "")))))
 
-(defun target-transpile (tr &key (decl-gen nil)
-                                 (files-before-deps nil)
-                                 (dep-gen nil)
-                                 (files-after-deps nil)
-                                 (files-to-update nil)
-                                 (obfuscate? nil)
+(defun target-transpile (tr &key (prologue-gen        nil)
+                                 (epilogue-gen        nil)
+                                 (decl-gen            nil)
+                                 (files-before-deps   nil)
+                                 (dep-gen             nil)
+                                 (files-after-deps    nil)
+                                 (files-to-update     nil)
+                                 (obfuscate?          nil)
                                  (print-obfuscations? nil))
   (let start-time (nanotime)
     (= *warnings* nil)
@@ -84,29 +86,31 @@
       (transpiler-switch-obfuscator tr obfuscate?)
       (with (before-deps  (target-transpile-1 tr files-before-deps files-to-update)
 		     after-deps   (target-transpile-1 tr files-after-deps files-to-update)
-		     deps         (target-sighten-deps tr dep-gen)
+		     deps         (target-sighten-deps dep-gen)
              num-exprs    (apply #'+ (mapcar [length ._] (+ before-deps deps after-deps))))
         (& *show-transpiler-progress?*
            (format t "; ~A top level expressions.~%; Let me think. Hmm...~F" num-exprs))
         (with (compiled-before  (target-transpile-2 tr before-deps files-to-update)
 	           compiled-deps    (!? deps (transpiler-make-code tr !))
-		         compiled-after   (target-transpile-2 tr after-deps files-to-update)
+               compiled-after   (target-transpile-2 tr after-deps files-to-update)
                compiled-acctop  (target-transpile-accumulated-toplevels tr))
         (& *show-transpiler-progress?* (format t " Phew!~%~F"))
           (!? compiled-deps
               (= (transpiler-imported-deps tr) (transpiler-concat-text tr (transpiler-imported-deps tr) !)))
           (let decls-and-inits (!? decl-gen (funcall !))
 	        (prog1
-	          (transpiler-concat-text tr decls-and-inits
+	          (transpiler-concat-text tr (funcall (| prologue-gen #'(() "")))
+                                         decls-and-inits
 	                                     compiled-before
                                          (reverse (transpiler-raw-decls tr))
                                          (transpiler-imported-deps tr)
 	                                     compiled-after
-                                         compiled-acctop)
+                                         compiled-acctop
+	                                     (funcall (| epilogue-gen #'(() ""))))
               (& print-obfuscations?
                  (transpiler-obfuscate? tr)
-                   (transpiler-print-obfuscations tr))
-                (warn-unused-functions tr)
+                 (transpiler-print-obfuscations tr))
+              (warn-unused-functions tr)
               (tell-number-of-warnings)
               (& *show-transpiler-progress?*
                  (format t "; ~A seconds passed.~%~F" (integer (/ (- (nanotime) start-time) 1000000000)))))))))))
