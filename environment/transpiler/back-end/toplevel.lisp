@@ -13,7 +13,7 @@
     wrap-tags           #'wrap-tags
     codegen-expand      [expander-expand (transpiler-codegen-expander tr) _]
     obfuscate           [? (transpiler-make-text? tr)
-                           (transpiler-obfuscate tr _)
+                           (obfuscate _)
                            _]
     to-string           [? (transpiler-make-text? tr)
                            (transpiler-to-string tr _)

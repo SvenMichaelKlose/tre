@@ -7,9 +7,9 @@
 
 (defun js-codegen-symbol-constructor-expr (tr x)
   (let s (compiled-function-name-string tr 'symbol)
-    `(,s "(\"" ,(transpiler-obfuscated-symbol-name tr x) "\","
+    `(,s "(\"" ,(obfuscated-symbol-name x) "\","
 	           ,@(!? (symbol-package x)
-	                 `((,s "(\"" ,(transpiler-obfuscated-symbol-name tr !) "\",null)"))
+	                 `((,s "(\"" ,(obfuscated-symbol-name !) "\",null)"))
 	                 '(("null")))
 	     ")")))
 
@@ -18,7 +18,7 @@
     (| (href ! x)
        (= (href ! x)
           (let g (compiled-symbol-identifier x)
-            (push `("var " ,(transpiler-obfuscated-symbol-string tr g)
+            (push `("var " ,(obfuscated-symbol-string g)
                            "=" ,@(js-codegen-symbol-constructor-expr tr x)
                            ,*js-separator*)
                   (transpiler-raw-decls tr))

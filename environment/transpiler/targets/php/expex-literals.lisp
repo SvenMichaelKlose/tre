@@ -26,7 +26,7 @@
   x)
 
 (defun php-global (x)
-  `(%%native "$GLOBALS['" ,(transpiler-obfuscated-symbol-string *transpiler* x) "']"))
+  `(%%native "$GLOBALS['" ,(obfuscated-symbol-string x) "']"))
 
 (defun php-argument-filter (x)
   (?

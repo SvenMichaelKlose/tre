@@ -3,14 +3,14 @@
 (dont-obfuscate from-char-code)
 
 (defun %character (x)
-  (= this.__class ,(transpiler-obfuscated-symbol-string *transpiler* '%character)
+  (= this.__class ,(obfuscated-symbol-string '%character)
      this.v       (%wrap-char-number x))
   this)
 
 (defun character? (x)
   (& (object? x)
      x.__class
-     (%%%== x.__class ,(transpiler-obfuscated-symbol-string *transpiler* '%character))))
+     (%%%== x.__class ,(obfuscated-symbol-string '%character))))
 
 (defun code-char (x)   (new %character x))
 (defun char-code (x)   x.v)

@@ -1,6 +1,6 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
-(defvar *transpiler-obfuscation-counter* 0)
+(defvar *obfuscation-counter* 0)
 
 (defun number-sym-0 (x)
   (unless (== 0 x)
@@ -11,39 +11,39 @@
 (defun number-sym (x)
   (make-symbol (list-string (nconc (number-sym-0 x) (list #\_)))))
 
-(defun transpiler-obfuscated-sym ()
-  (++! *transpiler-obfuscation-counter*)
-  (number-sym *transpiler-obfuscation-counter*))
+(defun obfuscated-sym ()
+  (++! *obfuscation-counter*)
+  (number-sym *obfuscation-counter*))
 
-(defun transpiler-obfuscate-symbol-0 (tr x)
-  (let obs (transpiler-obfuscations tr)
+(defun obfuscate-symbol-0 (x)
+  (let obs (transpiler-obfuscations *transpiler*)
     (| (href obs x)
        (= (href obs x)
 	      (!? (symbol-package x)
-              (make-symbol (symbol-name (transpiler-obfuscated-sym)) (transpiler-obfuscate-symbol tr !))
-              (transpiler-obfuscated-sym))))))
+              (make-symbol (symbol-name (obfuscated-sym)) (obfuscate-symbol !))
+              (obfuscated-sym))))))
 
-(defun obfuscateable-symbol? (tr x)
-  (not (eq t (href (transpiler-obfuscations tr) (make-symbol (symbol-name x))))))
+(defun obfuscateable-symbol? (x)
+  (not (eq t (href (transpiler-obfuscations *transpiler*) (make-symbol (symbol-name x))))))
 
-(defun must-obfuscate-symbol? (tr x)
+(defun must-obfuscate-symbol? (x)
   (& x
-     (transpiler-obfuscate? tr)
-     (obfuscateable-symbol? tr x)))
+     (transpiler-obfuscate? *transpiler*)
+     (obfuscateable-symbol? x)))
 
-(defun transpiler-obfuscate-symbol (tr x)
-  (? (must-obfuscate-symbol? tr x)
-     (transpiler-obfuscate-symbol-0 tr x)
+(defun obfuscate-symbol (x)
+  (? (must-obfuscate-symbol? x)
+     (obfuscate-symbol-0 x)
      x))
 
-(define-tree-filter transpiler-obfuscate (tr x)
-  (symbol? x) (transpiler-obfuscate-symbol tr x))
+(define-tree-filter obfuscate (x)
+  (symbol? x) (obfuscate-symbol x))
 
-(defun transpiler-obfuscated-symbol-name (tr x)
-  (symbol-name (transpiler-obfuscate-symbol tr x)))
+(defun obfuscated-symbol-name (x)
+  (symbol-name (obfuscate-symbol x)))
 
-(defun transpiler-obfuscated-symbol-string (tr x)
-  (transpiler-symbol-string tr (transpiler-obfuscate-symbol tr x)))
+(defun obfuscated-symbol-string (x)
+  (transpiler-symbol-string *transpiler* (obfuscate-symbol x)))
 
 (defun transpiler-print-obfuscations (tr)
   (dolist (k (hashkeys (transpiler-obfuscations tr)))

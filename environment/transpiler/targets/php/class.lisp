@@ -62,7 +62,7 @@
            (dont-obfuscate is_a)
 	       (defun ,($ class-name '?) (x)
 	         (& (object? x)
-	            (is_a x ,(transpiler-obfuscated-symbol-string *transpiler* class-name))
+	            (is_a x ,(obfuscated-symbol-string class-name))
                 x))
 	       ,(assoc-value class-name *delayed-constructors*)
            ,@(php-method-functions class-name !)

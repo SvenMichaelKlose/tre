@@ -35,4 +35,4 @@
      (%%%eq t x)
      (& (object? x)
 	     x.__class
-         (%%%== x.__class ,(transpiler-obfuscated-symbol-string *transpiler* 'symbol)))))
+         (%%%== x.__class ,(obfuscated-symbol-string 'symbol)))))

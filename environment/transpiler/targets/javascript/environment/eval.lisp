@@ -31,9 +31,9 @@
       (with-temporaries ((transpiler-dump-passes? tr) nil
                          (transpiler-expex-warnings? tr) nil)
         (+ (js-eval-transpile tr x)
-           (transpiler-obfuscated-symbol-string tr '*native-eval-return-value*)
+           (obfuscated-symbol-string '*native-eval-return-value*)
            " = "
-           (transpiler-obfuscated-symbol-string tr '~%ret)
+           (obfuscated-symbol-string '~%ret)
            ";")))))
 
 (defun eval (x)

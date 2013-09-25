@@ -4,4 +4,4 @@
   (make-symbol (+ (transpiler-function-name-prefix tr) (symbol-name name)) (symbol-package name)))
 
 (defun compiled-function-name-string (tr name)
-  (transpiler-obfuscated-symbol-string tr (compiled-function-name tr name)))
+  (obfuscated-symbol-string (compiled-function-name tr name)))

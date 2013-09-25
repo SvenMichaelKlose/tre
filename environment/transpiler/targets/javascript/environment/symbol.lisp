@@ -3,7 +3,7 @@
 (defvar *symbols* (%%%make-hash-table))
 
 (define-native-js-fun %symbol (name pkg)
-  (= this.__class ,(transpiler-obfuscated-symbol-string *transpiler* 'symbol)
+  (= this.__class ,(obfuscated-symbol-string 'symbol)
      this.n name
      this.v this
      this.f nil

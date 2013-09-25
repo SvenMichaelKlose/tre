@@ -44,9 +44,9 @@
 (defun js-early-symbol-maker (g sym)
    `(,@(unless (eq g '~%tfun)
          `((%var ,g)))
-     (%setq ,g (symbol ,(transpiler-obfuscated-symbol-name *transpiler* sym)
+     (%setq ,g (symbol ,(obfuscated-symbol-name sym)
                        ,(!? (symbol-package sym)
-                            `(make-package ,(transpiler-obfuscated-symbol-name *transpiler* !)))))))
+                            `(make-package ,(obfuscated-symbol-name !)))))))
 
 (define-js-std-macro defun (name args &rest body)
   (with (dname (apply-current-package (transpiler-package-symbol *js-transpiler* (%defun-name name)))

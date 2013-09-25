@@ -19,5 +19,5 @@
   x)
 
 (define-php-macro userfun_cons (x y)
-  `("new " ,(transpiler-obfuscated-symbol-string *transpiler* '__cons)
+  `("new " ,(obfuscated-symbol-string '__cons)
                "(" ,(php-dollarize x) "," ,(php-dollarize y) ")"))
