@@ -8,5 +8,4 @@
 (env-load "transpiler/targets/shared/expand/opt-string-concat.lisp")
 (env-load "transpiler/targets/shared/codegen/define-macro-definer.lisp")
 (env-load "transpiler/targets/shared/codegen/codegen-expr-p.lisp")
-(env-load "transpiler/targets/shared/codegen/compiled-symbol-identifier.lisp")
 (env-load "transpiler/targets/shared/codegen/funinfo-comment.lisp")

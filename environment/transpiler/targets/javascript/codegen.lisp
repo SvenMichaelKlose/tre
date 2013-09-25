@@ -17,7 +17,7 @@
   (alet *js-compiled-symbols*
     (| (href ! x)
        (= (href ! x)
-          (let g (compiled-symbol-identifier x)
+          (with-gensym g
             (push `("var " ,(obfuscated-symbol-string g)
                            "=" ,@(js-codegen-symbol-constructor-expr tr x)
                            ,*js-separator*)
