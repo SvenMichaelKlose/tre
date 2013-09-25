@@ -35,9 +35,8 @@
     (| (not x)
        (number? x)
        (string? x)
-       (not (transpiler-lambda-export? *transpiler*))
-       (not (funinfo-var-or-lexical? fi x))
-       (funinfo-toplevel-var? fi x))
+       (not (funinfo-var-or-lexical? fi x)))
+;    (not (funinfo-toplevel-var? fi x))
       x
 
     (& (transpiler-stack-locals? *transpiler*)
