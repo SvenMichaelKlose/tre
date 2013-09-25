@@ -7,7 +7,7 @@
 	           `(("    int __c; for (__c = " ,! "; __c > 0; __c--)")))
           ,@(& (< 0 !)
                (c-line " *--trestack_ptr = treptr_nil"))))
-    ,@(codegen-copy-arguments-to-locals fi)))
+    ,@(copy-arguments-to-vars fi)))
 
 (define-c-macro %function-epilogue (name)
   (let fi (get-funinfo name)
