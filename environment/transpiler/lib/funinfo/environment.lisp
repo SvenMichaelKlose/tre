@@ -83,10 +83,6 @@
   (funinfo-vars-reset fi)
   (funinfo-var-add-many fi x))
 
-(defun funinfo-vars-adjoin (fi x)
-  (unless (funinfo-var? fi x)
-    (funinfo-var-add fi x)))
-
 
 ;;;; LEXICAL CONTEXT
 
