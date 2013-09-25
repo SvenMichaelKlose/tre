@@ -9,7 +9,8 @@
 ;;;; ARGUMENTS
 
 (defun funinfo-arg? (fi var)
-  (& (member var (funinfo-args fi) :test #'eq)
+  (& (symbol? var)
+     (member var (funinfo-args fi) :test #'eq)
      fi))
 
 (defun funinfo-arg-pos (fi x)
@@ -22,7 +23,8 @@
 ;;;; ARGUMENTS & VARIABLES
 
 (defun funinfo-var? (fi x)
-  (& x (atom x)
+  (& x
+     (symbol? x)
      (? (funinfo-parent fi)
         (member x (funinfo-vars fi) :test #'eq)
         (!? (funinfo-vars-hash fi)
@@ -119,7 +121,7 @@
   (!? (funinfo-parent fi)
       (& (not (funinfo-arg-or-var? fi x))
          (funinfo-toplevel-var? ! x))
-      (funinfo-arg-or-var? fi x)))
+      (funinfo-var? fi x)))
 
 (defun funinfo-global-variable? (fi x)
   (& (not (funinfo-var-or-lexical? fi x))
