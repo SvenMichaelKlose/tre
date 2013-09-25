@@ -18,7 +18,7 @@
 ;;;; FUNCTIONS
 
 (defun c-make-function-declaration (name args)
-  (push (concat-stringtree "extern treptr " (compiled-function-name-string *transpiler* name)
+  (push (concat-stringtree "extern treptr " (compiled-function-name-string name)
   	    	               " " (parenthized-comma-separated-list (mapcar #'c-codegen-var-decl args))
 			               ";" *newline*)
 	    (transpiler-compiled-decls *transpiler*)))
@@ -30,7 +30,7 @@
     (c-make-function-declaration name args)
     `(,*newline*
       ,(funinfo-comment fi)
-	  "treptr " ,(compiled-function-name *transpiler* name) " "
+	  "treptr " ,(compiled-function-name name) " "
 	  ,@(parenthized-comma-separated-list (mapcar ^("treptr " ,_) args))
 	  ,*newline*
 	  "{" ,*newline*

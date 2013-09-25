@@ -4,13 +4,13 @@
   ($ class-name '-constructor))
 
 (defun php-compiled-constructor-name (class-name)
-  (compiled-function-name *transpiler* (php-constructor-name class-name)))
+  (compiled-function-name (php-constructor-name class-name)))
 
 (defun php-method-name (class-name name)
   ($ class-name '- name))
 
 (defun php-compiled-method-name (class-name name)
-  (compiled-function-name *transpiler* (php-method-name class-name name)))
+  (compiled-function-name (php-method-name class-name name)))
 
 (defun php-constructor (class-name bases args body)
   (transpiler-add-defined-function *transpiler* class-name args body)

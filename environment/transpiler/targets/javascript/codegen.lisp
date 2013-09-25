@@ -6,7 +6,7 @@
 (defvar *js-compiled-symbols* (make-hash-table :test #'eq))
 
 (defun js-codegen-symbol-constructor-expr (tr x)
-  (let s (compiled-function-name-string tr 'symbol)
+  (let s (compiled-function-name-string 'symbol)
     `(,s "(\"" ,(obfuscated-symbol-name x) "\","
 	           ,@(!? (symbol-package x)
 	                 `((,s "(\"" ,(obfuscated-symbol-name !) "\",null)"))
@@ -64,7 +64,7 @@
     (? .x
        (with (name            (lambda-name !)
               translated-name (? (transpiler-defined-function *transpiler* name)
-                                 (compiled-function-name-string *transpiler* name)
+                                 (compiled-function-name-string name)
                                  name))
          `(,(funinfo-comment (get-funinfo name))
            ,translated-name "=" "function " ,@(js-argument-list 'codegen-function-macro (lambda-args !)) ,*newline*

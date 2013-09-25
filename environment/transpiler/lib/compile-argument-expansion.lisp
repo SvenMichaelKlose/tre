@@ -84,7 +84,7 @@
     ,@(? (transpiler-assert? *transpiler*)
          `((? ,p
               (error-too-many-arguments ,(symbol-name fun-name) ,p))))
-    ((%%native ,(compiled-function-name *transpiler* fun-name)) ,@names)))
+    ((%%native ,(compiled-function-name fun-name)) ,@names)))
 
 (defun compile-argument-expansion-function-body (fun-name adef p)
   (body-with-noargs-tag

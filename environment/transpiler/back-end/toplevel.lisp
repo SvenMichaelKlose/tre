@@ -5,7 +5,7 @@
 
 (transpiler-pass transpiler-generate-code (tr)
     function-names      [? (transpiler-function-name-prefix tr)
-                           (translate-function-names tr (transpiler-global-funinfo *transpiler*) _)
+                           (translate-function-names (transpiler-global-funinfo *transpiler*) _)
                            _]
     encapsulate-strings [? (transpiler-encapsulate-strings? tr)
                            (transpiler-encapsulate-strings _)

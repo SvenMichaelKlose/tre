@@ -68,7 +68,7 @@
 		 fi            (get-lambda-funinfo x)
          name          (funinfo-name fi)
 		 num-locals    (length (funinfo-vars fi))
-	     compiled-name (compiled-function-name *transpiler* name))
+	     compiled-name (compiled-function-name name))
     `(,*php-newline*
       ,(funinfo-comment fi)
 	  "function " ,compiled-name ,@(php-argument-list args)
@@ -97,7 +97,7 @@
   (let fi (get-funinfo name)
     (? (funinfo-ghost fi)
   	   `(%%native "new __closure("
-             (%%string ,(compiled-function-name-string *transpiler* name))
+             (%%string ,(compiled-function-name-string name))
              ","
              ,(php-dollarize (funinfo-lexical (funinfo-parent fi)))
              ")")
@@ -209,7 +209,7 @@
   (filter ^("[" ,(php-dollarize _) "]") indexes))
 
 (defun php-literal-array-element (x)
-  (list (compiled-function-name *transpiler* '%%key) " (" (php-dollarize x.) ") => " (php-dollarize .x.)))
+  (list (compiled-function-name '%%key) " (" (php-dollarize x.) ") => " (php-dollarize .x.)))
 
 (defun php-literal-array-elements (x)
   (pad (filter #'php-literal-array-element x) ","))

@@ -1,7 +1,7 @@
 ;;;;; tré – Copyright (c) 2009–2013 Sven Michael Klose <pixel@copei.de>
 
-(defun compiled-function-name (tr name)
-  (make-symbol (+ (transpiler-function-name-prefix tr) (symbol-name name)) (symbol-package name)))
+(defun compiled-function-name (name)
+  (make-symbol (+ (transpiler-function-name-prefix *transpiler*) (symbol-name name)) (symbol-package name)))
 
-(defun compiled-function-name-string (tr name)
-  (obfuscated-symbol-string (compiled-function-name tr name)))
+(defun compiled-function-name-string (name)
+  (obfuscated-symbol-string (compiled-function-name name)))

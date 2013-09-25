@@ -16,7 +16,7 @@
   (let fun-name (%defun-name name)
     `(%%block
        ,(shared-defun name args body)
-       (%setq nil ((slot-value ',fun-name 'sf) ,(compiled-function-name-string *transpiler* fun-name))))))
+       (%setq nil ((slot-value ',fun-name 'sf) ,(compiled-function-name-string fun-name))))))
 
 (define-php-std-macro define-external-variable (name)
   (print-definition `(define-external-variable ,name))

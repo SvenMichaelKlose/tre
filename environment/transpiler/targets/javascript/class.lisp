@@ -17,7 +17,7 @@
            (%thisify ,class-name ,@body)))
        ,@(js-gen-inherited-methods class-name bases)
 	   (defun ,($ class-name '?) (x)
-	     (%%native x " instanceof " ,(compiled-function-name-string *transpiler* class-name))))))
+	     (%%native x " instanceof " ,(compiled-function-name-string class-name))))))
 
 (define-js-std-macro defclass (class-name args &rest body)
   (apply #'transpiler_defclass #'js-gen-constructor class-name args body))

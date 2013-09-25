@@ -5,7 +5,7 @@
           ,(alet (%setq-value x)
              (? (& (cons? !)
                    (transpiler-defined-function *transpiler* !.))
-                `(,(compiled-function-name *transpiler* !.) ,@.!))
+                `(,(compiled-function-name !.) ,@.!))
                 !)))
 
 (defun php-setter-filter (x)
