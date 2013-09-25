@@ -36,7 +36,7 @@
 (defun expex-import-function (x)
   (alet (expex-function-name x)
     (transpiler-add-wanted-function *transpiler* !)
-    (| (member x (funinfo-names *funinfo*) :test #'eq)
+    (| (current-scope? x)
        (transpiler-import-add-used !))))
 
 
