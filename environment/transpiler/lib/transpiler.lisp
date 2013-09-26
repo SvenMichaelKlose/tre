@@ -65,6 +65,7 @@
   (exclude-base?            nil)
   (always-expand-arguments? nil)
   (count-tags?              nil)
+  (funinfo-comments?        nil)
 
   (gen-string               #'literal-string)
 
@@ -195,6 +196,7 @@
         :exclude-base?           exclude-base?
         :always-expand-arguments? always-expand-arguments?
         :count-tags?             count-tags?
+        :funinfo-comments?       funinfo-comments?
         :gen-string              gen-string
         :lambda-export?          lambda-export?
         :accumulate-toplevel-expressions? accumulate-toplevel-expressions?
