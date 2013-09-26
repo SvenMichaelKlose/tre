@@ -82,8 +82,8 @@
     `(%%block
        ,@(shared-defun-without-expander fun-name args body :allow-source-memorizer? t :allow-backtrace? t)
        ,@(when (& make-expander?
-                  (| (not (simple-argument-list? args))
-                     (transpiler-assert? *transpiler*)))
+                  (| (transpiler-always-expand-arguments? *transpiler*)
+                     (not (simple-argument-list? args))))
            (with-gensym p
              (shared-defun-without-expander (c-expander-name fun-name)
                                             (list p)

@@ -63,6 +63,7 @@
   (expex-warnings?          t)
   (function-prologues?      t)
   (exclude-base?            nil)
+  (always-expand-arguments? nil)
 
   (gen-string               #'literal-string)
 
@@ -191,6 +192,7 @@
         :expex-warnings?         expex-warnings?
         :function-prologues?     function-prologues?
         :exclude-base?           exclude-base?
+        :always-expand-arguments? always-expand-arguments?
         :gen-string              gen-string
         :lambda-export?          lambda-export?
         :accumulate-toplevel-expressions? accumulate-toplevel-expressions?
