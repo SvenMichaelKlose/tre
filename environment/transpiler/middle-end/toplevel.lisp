@@ -13,7 +13,6 @@
                                 (inject-debugging _)
                                 _]
     quote-keywords           #'transpiler-quote-keywords
-    link-funinfos            #'link-funinfos
     optimize                 [? (transpiler-inject-debugging? tr)
                                 _
                                 (optimize _)]
