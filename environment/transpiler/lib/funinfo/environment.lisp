@@ -10,8 +10,7 @@
 
 (defun funinfo-arg? (fi var)
   (& (symbol? var)
-     (member var (funinfo-args fi) :test #'eq)
-     fi))
+     (member var (funinfo-args fi) :test #'eq)))
 
 (defun funinfo-arg-pos (fi x)
   (position x (funinfo-args fi) :test #'eq))
@@ -25,11 +24,9 @@
 (defun funinfo-var? (fi x)
   (& x
      (symbol? x)
-     (? (funinfo-parent fi)
-        (member x (funinfo-vars fi) :test #'eq)
-        (!? (funinfo-vars-hash fi)
-            (href ! x)))
-     fi))
+     (!? (funinfo-vars-hash fi)
+         (href ! x)
+         (member x (funinfo-vars fi) :test #'eq))))
 
 (defun funinfo-arg-or-var? (fi x)
   (| (funinfo-arg? fi x)
@@ -109,6 +106,18 @@
      (? (funinfo-arg-or-var? fi x)
         (push x (funinfo-used-vars fi))
         (funinfo-add-used-var (funinfo-parent fi) x))))
+
+
+;;;; PLACES
+
+(defun funinfo-place? (fi x)
+  (member x (funinfo-places fi) :test #'eq))
+
+(defun funinfo-add-place (fi x)
+  (& x
+     (symbol? x)
+     (| (funinfo-place? fi x)
+        (push x (funinfo-places fi)))))
 
 
 ;;;; GLOBAL VARIABLES

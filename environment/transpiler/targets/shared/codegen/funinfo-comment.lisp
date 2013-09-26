@@ -16,6 +16,7 @@
                     ("Expanded args:   " ,(funinfo-args fi))
                     ("Local vars:      " ,(funinfo-vars fi))
                     ("Used vars:       " ,(funinfo-used-vars fi))
+                    ("Places:          " ,(funinfo-places fi))
                     ("Globals:         " ,(funinfo-globals fi))
                     ("Local funs:      " ,(funinfo-local-function-args fi))
                     ("Ghost:           " ,(funinfo-ghost fi))

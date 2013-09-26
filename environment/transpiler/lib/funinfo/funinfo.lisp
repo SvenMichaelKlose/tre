@@ -22,6 +22,7 @@
   (vars       nil)
   (vars-hash  nil)
   (used-vars  nil)
+  (places     nil)
 
   (lexicals   nil) ; List of symbols exported to child functions.
   (lexical    nil) ; Name of the array of lexicals.
@@ -50,6 +51,7 @@
       :vars         (copy-list vars)
       :vars-hash    (copy-hash-table vars-hash)
       :used-vars    (copy-list used-vars)
+      :places       (copy-list places)
       :lexicals     (copy-list lexicals)
       :lexical      lexical
       :ghost        ghost
@@ -64,6 +66,14 @@
 (defun get-lambda-funinfo (x)
   (when (named-lambda? x)
     (get-funinfo (lambda-name x))))
+
+(defmacro with-global-funinfo (&rest body)
+  `(with-temporary *funinfo* (transpiler-global-funinfo *transpiler*)
+     ,@body))
+
+(defmacro with-lambda-funinfo (x &rest body)
+  `(with-temporary *funinfo* (get-lambda-funinfo ,x)
+     ,@body))
 
 (defun create-funinfo (&key name parent args body (transpiler *transpiler*) (cps? nil))
   (& (href (transpiler-funinfos transpiler) name)

@@ -39,6 +39,9 @@
 (defun %%go-tag (x)
   .x.)
 
+(defun %%go-value (x)
+  ..x.)
+
 (defun %%block-body (x)
   .x)
 
