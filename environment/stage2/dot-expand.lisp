@@ -5,19 +5,19 @@
 	 `(,which ,(dot-expand-make-expr which (-- num) x))
 	 x))
 
-(defun dot-expand-count-start (x &optional (num 0))
+(defun dot-expand-head-length (x &optional (num 0))
   (? (== #\. (car x))
-	 (dot-expand-count-start (cdr x) (++ num))
+	 (dot-expand-head-length (cdr x) (++ num))
 	 (values num x)))
 
-(defun dot-expand-count-end (x &optional (num 0))
+(defun dot-expand-tail-length (x &optional (num 0))
   (? (== #\. (car (last x)))
-	 (dot-expand-count-end (butlast x) (++ num))
+	 (dot-expand-tail-length (butlast x) (++ num))
 	 (values num x)))
 
 (defun dot-expand-list (x)
-  (with ((num-cdrs without-start) (dot-expand-count-start x)
-		 (num-cars without-end)   (dot-expand-count-end without-start))
+  (with ((num-cdrs without-start) (dot-expand-head-length x)
+		 (num-cars without-end)   (dot-expand-tail-length without-start))
 	(dot-expand-make-expr 'car num-cars
 		                  (dot-expand-make-expr 'cdr num-cdrs
 		  	                                    (dot-expand (list-symbol without-end))))))
