@@ -76,9 +76,10 @@
 
 (defun c-compile-init-functions ()
   (alet *transpiler*
-    (with-temporaries ((transpiler-profile? !)   nil
-                       (transpiler-backtrace? !) nil
-                       (transpiler-assert? !)    nil)
+    (with-temporaries ((transpiler-profile? !)    nil
+                       (transpiler-backtrace? !)  nil
+                       (transpiler-assert? !)     nil
+                       (transpiler-always-expand-arguments? !)  nil)
         (transpiler-make-code ! (transpiler-frontend ! (c-make-init-functions))))))
 
 (defun c-decl-gen ()
