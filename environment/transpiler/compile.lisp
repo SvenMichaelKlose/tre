@@ -7,6 +7,7 @@
              'bytecode ,(& *have-c-compiler?* '#'bc-transpile)
              'js       #'js-transpile
              'php      #'php-transpile
+             'c64      #'c64-transpile
              (error "unknown target ~A"))
            sources
            :transpiler (| transpiler
@@ -16,18 +17,13 @@
                               'bytecode ,(& *have-c-compiler?* '*bc-transpiler*)
                               'js       *js-transpiler*
                               'php      *php-transpiler*)))
-           :obfuscate? obfuscate?
-           :print-obfuscations? print-obfuscations?
-           :files-to-update files-to-update))
+           ,@(keyword-copiers 'obfuscate? 'print-obfuscations? 'files-to-update)))
 
 (defun compile-files (files &key (target nil) (transpiler nil) (obfuscate? nil) (print-obfuscations? t) (files-to-update nil))
-  (compile-0 (mapcar #'list files)
-             :target target :transpiler transpiler :obfuscate? obfuscate? :print-obfuscations? print-obfuscations? :files-to-update files-to-update))
+  (compile-0 (mapcar #'list files) ,@(keyword-copiers 'target 'transpiler 'obfuscate? 'print-obfuscations? 'files-to-update )))
 
 (defun compile-sections (sections &key (target nil) (transpiler nil) (obfuscate? nil) (print-obfuscations? t) (files-to-update nil) (section-id 'compile))
-  (compile-0 sections
-             :target target :transpiler transpiler :obfuscate? obfuscate? :print-obfuscations? print-obfuscations? :files-to-update files-to-update))
+  (compile-0 sections ,@(keyword-copiers 'target 'transpiler 'obfuscate? 'print-obfuscations? 'files-to-update )))
 
 (defun compile (expression &key (target nil) (transpiler nil) (obfuscate? nil) (print-obfuscations? t) (files-to-update nil) (section-id 'compile))
-  (compile-0 (& expression `((,section-id . (,expression))))
-             :target target :transpiler transpiler :obfuscate? obfuscate? :print-obfuscations? print-obfuscations? :files-to-update files-to-update))
+  (compile-0 (& expression `((,section-id . (,expression)))) ,@(keyword-copiers 'target 'transpiler 'obfuscate? 'print-obfuscations? 'files-to-update )))
