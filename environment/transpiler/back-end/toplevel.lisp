@@ -10,7 +10,9 @@
     encapsulate-strings [? (transpiler-encapsulate-strings? tr)
                            (transpiler-encapsulate-strings _)
                            _]
-    count-tags          #'count-tags
+    count-tags          [(& (transpiler-count-tags? tr)
+                            (count-tags _))
+                         _]
     wrap-tags           #'wrap-tags
     codegen-expand      [expander-expand (transpiler-codegen-expander tr) _]
     obfuscate           [? (transpiler-make-text? tr)
