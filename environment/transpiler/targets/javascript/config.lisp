@@ -13,7 +13,8 @@
 	  :needs-var-declarations?  t
 	  :identifier-char?         #'c-identifier-char?
 	  :literal-converter        #'transpiler-expand-literal-characters
-      :expex-initializer        #'js-expex-initializer))
+      :expex-initializer        #'js-expex-initializer
+      :count-tags?              t))
 
 (defun make-javascript-transpiler ()
   (aprog1 (make-javascript-transpiler-0)

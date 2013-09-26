@@ -64,6 +64,7 @@
   (function-prologues?      t)
   (exclude-base?            nil)
   (always-expand-arguments? nil)
+  (count-tags?              nil)
 
   (gen-string               #'literal-string)
 
@@ -193,6 +194,7 @@
         :function-prologues?     function-prologues?
         :exclude-base?           exclude-base?
         :always-expand-arguments? always-expand-arguments?
+        :count-tags?             count-tags?
         :gen-string              gen-string
         :lambda-export?          lambda-export?
         :accumulate-toplevel-expressions? accumulate-toplevel-expressions?
