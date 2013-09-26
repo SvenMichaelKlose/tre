@@ -20,10 +20,10 @@
   (clr (transpiler-frontend-files tr)
        (transpiler-compiled-files tr)
        (transpiler-raw-decls tr))
-  (concat-stringtree (js-transpile-pre tr)
-   	                 (target-transpile tr :files-after-deps (list (cons 'eval (list expression)))
-		                                  :decl-gen (js-make-decl-gen tr))
-   	                 (js-transpile-post)))
+  (target-transpile tr :prologue-gen     #'js-prologue
+                       :epilogue-gen     #'js-epilogue
+                       :files-after-deps (list (cons 'eval (list expression)))
+		               :decl-gen #'js-make-decl-gen))
 
 (defun eval-compile (x)
   (with-temporary *js-transpiler* (| *js-eval-transpiler* (make-js-eval-transpiler))
