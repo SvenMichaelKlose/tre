@@ -2,7 +2,7 @@
 
 (transpiler-pass transpiler-frontend-2 (tr)
     thisify                   [thisify (transpiler-thisify-classes tr) _]
-    rename-arguments          [rename-arguments nil _]
+    rename-arguments          #'rename-arguments
     lambda-expand             [transpiler-lambda-expand tr _]
     fake-expression-expand    [(validate-metacode (transpiler-expression-expand tr (make-packages _)))
                                _])
