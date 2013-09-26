@@ -17,10 +17,10 @@
 
 ;;;; SYMBOLS
 
-(defvar *expexsym-counter* 0)
+(defvar *expex-sym-counter* 0)
 
 (defun expex-sym ()
-  (alet ($ '~E (++! *expexsym-counter*))
+  (alet ($ '~E (++! *expex-sym-counter*))
     (? (& (eq ! (symbol-value !))
           (not (symbol-function !)))
        !
@@ -257,4 +257,5 @@
   (& x
 	 (with-temporaries (*expex*   ex
 	                    *funinfo* (transpiler-global-funinfo *transpiler*))
+       (= *expex-sym-counter* 0)
        (expex-body ex x))))
