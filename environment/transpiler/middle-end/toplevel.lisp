@@ -26,7 +26,6 @@
     cps                      [? (transpiler-cps-transformation? tr)
                                 (funcall #'cps _)
                                 _]
-    optimize-funinfos        #'optimize-funinfos
     update-funinfo-num-tags  #'update-funinfo-num-tags
     print-dot                [(& *show-transpiler-progress?* (princ #\.) (force-output))
                               _])
