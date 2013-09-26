@@ -23,6 +23,7 @@
 
 (defun used-vars ()
   (alet *funinfo*
+    (= (funinfo-places !) (intersect (funinfo-places !) (funinfo-used-vars !)))
     (+ (funinfo-lexicals !)
        (intersect (funinfo-vars !) (funinfo-used-vars !) :test #'eq)
        (& (transpiler-copy-arguments-to-stack? *transpiler*)
