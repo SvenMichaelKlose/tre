@@ -20,7 +20,7 @@
 (defvar *expex-sym-counter* 0)
 
 (defun expex-sym ()
-  (alet ($ '~E (++! *expex-sym-counter*))
+  (alet ($ 'E (++! *expex-sym-counter*))
     (? (& (eq ! (symbol-value !))
           (not (symbol-function !)))
        !
