@@ -3,7 +3,7 @@
 (defvar *argument-sym-counter* 0)
 
 (defun argument-sym ()
-  (alet ($ '~A (++! *argument-sym-counter*))
+  (alet ($ 'A (++! *argument-sym-counter*))
     (? (& (eq ! (symbol-value !))
           (not (symbol-function !)))
        !
