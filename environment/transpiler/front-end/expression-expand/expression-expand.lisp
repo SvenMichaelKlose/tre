@@ -194,17 +194,21 @@
   (with ((moved new-expr) (expex-filter-and-move-args ex (list ..x.)))
     (values moved `((%%go-nil ,.x. ,@new-expr)))))
 
+(defun expex-expr-%setq-0 (ex plc val)
+;  (transpiler-add-wanted-variable *transpiler* plc)
+;  (& (cons? val)
+;     (adolist (.val)
+;       (transpiler-add-wanted-variable *transpiler* !)))
+  (with ((moved new-expr) (expex-move-args ex (list val)))
+    (values moved (expex-make-%setq ex plc new-expr.))))
+
 (defun expex-expr-%setq (ex x)
   (with (plc (%setq-place x)
          val (peel-identity (%setq-value x)))
-    (let-when fun (& (cons? val) val.)
-      (| (symbol? fun) (cons? fun)
-         (error "Function must be a symbol or expression: misplaced ~A." x)))
     (? (%setq? val)
        (values nil (expex-body ex `(,val
                                     (%setq ,plc ,(%setq-place val)))))
-       (with ((moved new-expr) (expex-move-args ex (list val)))
-         (values moved (expex-make-%setq ex plc new-expr.))))))
+       (expex-expr-%setq-0 ex plc val))))
 
 (defun expex-expr-std (ex x)
   (expex-import-function x)
