@@ -40,7 +40,6 @@
   (& x (remove-unused-vars .x)))
 
 (defun optimize-funinfos (x)
-  (with-global-funinfo
-    (collect-places x)
-    (remove-unused-vars x))
+  (collect-places x)
+  (remove-unused-vars x)
   x)

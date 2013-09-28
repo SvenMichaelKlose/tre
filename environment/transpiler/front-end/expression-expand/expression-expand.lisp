@@ -260,6 +260,5 @@
 (defun expression-expand (expex x)
   (& x
 	 (with-temporary *expex* expex
-       (with-global-funinfo
-         (= *expex-sym-counter* 0)
-         (expex-body x)))))
+       (= *expex-sym-counter* 0)
+       (expex-body x))))
