@@ -42,23 +42,23 @@
 
 ;;;; GUEST CALLBACKS
 
-(defun expex-guest-filter-setter (ex x)
-  (funcall (expex-setter-filter ex) x))
+(defun expex-guest-filter-setter (x)
+  (funcall (expex-setter-filter *expex*) x))
 
-(defun expex-guest-filter-arguments (ex x)
+(defun expex-guest-filter-arguments (x)
   (filter [(expex-import-function _)
-           (funcall (expex-argument-filter ex) _)]
+           (funcall (expex-argument-filter *expex*) _)]
            x))
 
 
 ;;;; UTILS
 
-(defun expex-make-%setq (ex plc val)
+(defun expex-make-%setq (plc val)
   (+ (? (%setq? val)
-        (expex-guest-filter-setter ex val))
-     (expex-guest-filter-setter ex `(%setq ,plc ,(? (%setq? val)
-                                                    (%setq-place val)
-                                                    (peel-identity val))))))
+        (expex-guest-filter-setter val))
+     (expex-guest-filter-setter `(%setq ,plc ,(? (%setq? val)
+                                                 (%setq-place val)
+                                                 (peel-identity val))))))
 
 (defun expex-funinfo-var-add ()
   (aprog1 (expex-sym)
@@ -76,8 +76,8 @@
 
 ;;;; PREDICATES
 
-(defun expex-able? (ex x)
-  (| (& (expex-move-lexicals? ex)
+(defun expex-able? (x)
+  (| (& (expex-move-lexicals? *expex*)
         (atom x)
         (not (eq '~%ret x))
         (funinfo-parent-var? *funinfo* x)
@@ -86,7 +86,7 @@
              (literal-function? x)
              (in? x. '%%go '%%go-nil '%%native '%%string '%quote)))))
 
-(defun expex-expandable-args? (ex fun)
+(defun expex-expandable-args? (fun)
   (| (transpiler-defined-function *transpiler* fun)
      (not (transpiler-plain-arg-fun? *transpiler* fun))))
 
@@ -99,7 +99,7 @@
 			 _]
 		  x))
 
-(defun expex-argexpand-0 (ex fun args)
+(defun expex-argexpand-0 (fun args)
   (adolist (args)
     (expex-warn !))
   (| (funinfo-var-or-lexical? *funinfo* fun)
@@ -107,7 +107,7 @@
   (let argdef (| (funinfo-get-local-function-args *funinfo* fun)
                  (current-transpiler-function-arguments fun))
     (transpiler-expand-literal-characters
-	    (? (expex-expandable-args? ex fun)
+	    (? (expex-expandable-args? fun)
    	       (expex-argument-expand fun argdef args)
 	       args))))
 
@@ -116,150 +116,150 @@
      (| (transpiler-function-arguments *transpiler* x)
         (function? (symbol-function x)))))
 
-(defun expex-argexpand (ex x)
+(defun expex-argexpand (x)
   (with (new? (%new? x)
 		 fun  (? new? .x. x.)
 		 args (? new? ..x .x))
 	`(,@(& new? '(%new))
 	  ,fun ,@(? (expex-function? fun)
-	    	    (expex-convert-quotes (expex-argexpand-0 ex fun args))
+	    	    (expex-convert-quotes (expex-argexpand-0 fun args))
 	    	    args))))
 
 
 ;;;;; MOVING SINGLE ARGUMENTS
 
-(defun expex-move-atom (ex x)
+(defun expex-move-atom (x)
   (let s (expex-funinfo-var-add)
-    (cons (expex-make-%setq ex s x) s)))
+    (cons (expex-make-%setq s x) s)))
 
-(defun expex-move-inline (ex x)
-  (with ((p a) (expex-move-args ex x))
+(defun expex-move-inline (x)
+  (with ((p a) (expex-move-args x))
 	(cons p a)))
 
-(defun expex-move-%%block (ex x)
+(defun expex-move-%%block (x)
   (!? (%%block-body x)
       (let s (expex-funinfo-var-add)
-        (cons (expex-body ex ! s) s))
+        (cons (expex-body ! s) s))
 	  (cons nil nil)))
 
-(defun expex-move-std (ex x)
+(defun expex-move-std (x)
   (with (s                (expex-funinfo-var-add)
-         (moved new-expr) (expex-expr ex x))
+         (moved new-expr) (expex-expr x))
     (cons (+ moved
              (? (has-return-value? new-expr.)
-                (expex-make-%setq ex s new-expr.)
+                (expex-make-%setq s new-expr.)
                 new-expr))
           s)))
 
-(defun expex-move (ex x)
+(defun expex-move (x)
   (?
-	(not (expex-able? ex x))       (cons nil x)
-    (atom x)                       (expex-move-atom ex x)
-	(funcall (expex-inline? ex) x) (expex-move-inline ex x)
-    (%%block? x)                   (expex-move-%%block ex x)
-	(expex-move-std ex x)))
+	(not (expex-able? x))                (cons nil x)
+    (atom x)                             (expex-move-atom x)
+	(funcall (expex-inline? *expex*) x)  (expex-move-inline x)
+    (%%block? x)                         (expex-move-%%block x)
+	(expex-move-std x)))
 
 
 ;;;; MOVING ARGUMENTS
 
-(defun expex-filter-and-move-args (ex x)
-  (with ((moved new-expr) (assoc-splice (filter [expex-move ex _] (expex-guest-filter-arguments ex x))))
+(defun expex-filter-and-move-args (x)
+  (with ((moved new-expr) (assoc-splice (filter #'expex-move (expex-guest-filter-arguments x))))
     (values (apply #'+ moved) new-expr)))
 
-(defun expex-move-slot-value (ex x)
-  (with ((moved new-expr) (expex-filter-and-move-args ex (list .x.)))
+(defun expex-move-slot-value (x)
+  (with ((moved new-expr) (expex-filter-and-move-args (list .x.)))
     (values moved `(%slot-value ,new-expr. ,..x.))))
 
-(defun expex-move-args-0 (ex x)
-  (with ((moved new-expr) (expex-filter-and-move-args ex x))
+(defun expex-move-args-0 (x)
+  (with ((moved new-expr) (expex-filter-and-move-args x))
     (values moved new-expr)))
 
-(defun expex-move-args (ex x)
+(defun expex-move-args (x)
   (? (%slot-value? x)
-	 (expex-move-slot-value ex x)
-	 (expex-move-args-0 ex x)))
+	 (expex-move-slot-value x)
+	 (expex-move-args-0 x)))
 
 
 ;;;; EXPRESSION EXPANSION
 
-(defun expex-lambda (ex x)
+(defun expex-lambda (x)
   (with-temporary *funinfo* (get-lambda-funinfo x)
-    (values nil (list (copy-lambda x :body (expex-body ex (lambda-body x)))))))
+    (values nil (list (copy-lambda x :body (expex-body (lambda-body x)))))))
 
 (defun expex-var (x)
   (funinfo-var-add *funinfo* .x.)
   (values nil nil))
 
-(defun expex-%%go-nil (ex x)
-  (with ((moved new-expr) (expex-filter-and-move-args ex (list ..x.)))
+(defun expex-%%go-nil (x)
+  (with ((moved new-expr) (expex-filter-and-move-args (list ..x.)))
     (values moved `((%%go-nil ,.x. ,@new-expr)))))
 
-(defun expex-expr-%setq-0 (ex plc val)
+(defun expex-expr-%setq-0 (plc val)
 ;  (transpiler-add-wanted-variable *transpiler* plc)
 ;  (& (cons? val)
 ;     (adolist (.val)
 ;       (transpiler-add-wanted-variable *transpiler* !)))
-  (with ((moved new-expr) (expex-move-args ex (list val)))
-    (values moved (expex-make-%setq ex plc new-expr.))))
+  (with ((moved new-expr) (expex-move-args (list val)))
+    (values moved (expex-make-%setq plc new-expr.))))
 
-(defun expex-expr-%setq (ex x)
-  (with (plc (%setq-place x)
-         val (peel-identity (%setq-value x)))
+(defun expex-expr-%setq (x)
+  (with (plc  (%setq-place x)
+         val  (peel-identity (%setq-value x)))
     (? (%setq? val)
-       (values nil (expex-body ex `(,val
-                                    (%setq ,plc ,(%setq-place val)))))
-       (expex-expr-%setq-0 ex plc val))))
+       (values nil (expex-body `(,val
+                                 (%setq ,plc ,(%setq-place val)))))
+       (expex-expr-%setq-0 plc val))))
 
-(defun expex-expr-std (ex x)
+(defun expex-expr-std (x)
   (expex-import-function x)
-  (with ((moved new-expr) (expex-move-args ex (expex-argexpand ex x)))
+  (with ((moved new-expr) (expex-move-args (expex-argexpand x)))
     (values moved (list new-expr))))
 
-(defun expex-expr (ex x)
+(defun expex-expr (x)
   (with-default-listprop x
     (?
-      (%%go-nil? x)            (expex-%%go-nil ex x)
+      (%%go-nil? x)            (expex-%%go-nil x)
 	  (%var? x)                (expex-var x)
-	  (named-lambda? x)        (expex-lambda ex x)
-      (%%block? x)             (values nil (expex-body ex (%%block-body x)))
-      (%setq? x)               (expex-expr-%setq ex x)
-      (not (expex-able? ex x)) (values nil (list x))
-      (expex-expr-std ex x))))
+	  (named-lambda? x)        (expex-lambda x)
+      (%%block? x)             (values nil (expex-body (%%block-body x)))
+      (%setq? x)               (expex-expr-%setq x)
+      (not (expex-able? x))    (values nil (list x))
+      (expex-expr-std x))))
 
 
 ;;;; BODY EXPANSION
 
-(defun expex-force-%setq (ex x)
+(defun expex-force-%setq (x)
   (| (& (metacode-expression-only x) (list x))
-     (expex-make-%setq ex '~%ret x)))
+     (expex-make-%setq '~%ret x)))
 
-(defun expex-make-return-value (ex s x)
+(defun expex-make-return-value (s x)
   (with (last (car (last x))
          wanted-return-value? #'(()
                                    (eq s (%setq-place last)))
          make-return-value    #'(()
                                    `(,last
-                                     ,@(expex-make-%setq ex s (%setq-place last)))))
+                                     ,@(expex-make-%setq s (%setq-place last)))))
     (? (has-return-value? last)
        (+ (butlast x)
           (? (%setq? last)
              (? (wanted-return-value?)
-                (expex-guest-filter-setter ex last)
+                (expex-guest-filter-setter last)
                 (make-return-value))
-             (expex-make-%setq ex s last)))
+             (expex-make-%setq s last)))
        x)))
 
-(defun expex-body (ex x &optional (s '~%ret))
-  (expex-make-return-value ex s (mapcan [with ((moved new-expr) (expex-expr ex _))
-                                          (+ moved (mapcan [expex-force-%setq ex _] new-expr))]
-                                        (distinguish-vars-from-tags (list-without-noargs-tag x)))))
+(defun expex-body (x &optional (s '~%ret))
+  (expex-make-return-value s (mapcan [with ((moved new-expr) (expex-expr _))
+                                       (+ moved (mapcan #'expex-force-%setq new-expr))]
+                                     (distinguish-vars-from-tags (list-without-noargs-tag x)))))
 
 
 ;;;; TOP LEVEL
 
-(defun expression-expand (ex x)
+(defun expression-expand (expex x)
   (& x
-	 (with-temporaries (*expex*   ex
-	                    *funinfo* (transpiler-global-funinfo *transpiler*))
-       (= *expex-sym-counter* 0)
-       (expex-body ex x))))
+	 (with-temporary *expex* expex
+       (with-global-funinfo
+         (= *expex-sym-counter* 0)
+         (expex-body x)))))
