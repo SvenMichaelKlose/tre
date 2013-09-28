@@ -4,8 +4,9 @@
     thisify                   [thisify (transpiler-thisify-classes tr) _]
     rename-arguments          #'rename-arguments
     lambda-expand             [transpiler-lambda-expand tr _]
-    fake-expression-expand    [(transpiler-expression-expand tr (make-packages _))
-                               _])
+    fake-expression-expand    [(with-temporary *expex-import?* t
+                                 (transpiler-expression-expand tr (make-packages _))
+                               _)])
 
 (transpiler-pass transpiler-frontend-1 (tr)
     file-input                #'identity

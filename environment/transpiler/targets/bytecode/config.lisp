@@ -15,6 +15,7 @@
               :encapsulate-strings? nil
               :function-prologues?  nil
               :function-name-prefix nil
+              :import-variables?    nil
               :code-concatenator    #'tree-list
               :expex-initializer    #'bc-expex-initializer)
     (transpiler-add-plain-arg-funs ! *builtins*)))

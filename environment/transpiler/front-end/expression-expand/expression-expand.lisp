@@ -5,14 +5,14 @@
 ; arguments. Every instruction which is not a jump or tag is forced
 ; into a %SETQ assignment.
 
+(defvar *expex* nil)
+(defvar *expex-import?* nil)
 
 (defun peel-identity (x)
   (? (| (identity? x)
         (%identity? x))
      .x.
      x))
-
-(defvar *expex* nil)
 
 
 ;;;; SYMBOLS
@@ -26,6 +26,8 @@
        !
        (expex-sym))))
 
+;;;; IMPORT
+
 (defun expex-function-name (x)
   (?
     (global-literal-function? x)  .x.
@@ -34,10 +36,29 @@
     x))
 
 (defun expex-import-function (x)
-  (alet (expex-function-name x)
-    (transpiler-add-wanted-function *transpiler* !)
-    (| (current-scope? x)
-       (transpiler-import-add-used !))))
+  (& *expex-import?*
+     (alet (expex-function-name x)
+       (transpiler-add-wanted-function *transpiler* !)
+       (| (current-scope? x)
+          (transpiler-import-add-used !)))))
+
+(defun expex-variable-name (x)
+  (?
+    (atom x)          x
+    (%slot-value? x)  .x.))
+
+(defun expex-import-variable (x)
+  (!? (expex-variable-name x)
+      (transpiler-add-wanted-variable *transpiler* !)))
+
+(defun expex-import-variables (place val)
+  (& *expex-import?*
+     (when (transpiler-import-variables? *transpiler*)
+       (expex-import-variable place)
+       (? (atom val)
+          (expex-import-variable val)
+          (adolist (.val)
+             (expex-import-variable !))))))
 
 
 ;;;; GUEST CALLBACKS
@@ -68,7 +89,7 @@
   (& (transpiler-expex-warnings? *transpiler*)
      (symbol? x)
      (not (transpiler-defined-symbol? *funinfo* x)
-          (transpiler-can-import? *transpiler* x))
+          (can-import-function? *transpiler* x))
      (error "Symbol ~A is not defined in ~A."
             (symbol-name x)
             (funinfo-scope-description *funinfo*))))
@@ -194,21 +215,18 @@
   (with ((moved new-expr) (expex-filter-and-move-args (list ..x.)))
     (values moved `((%%go-nil ,.x. ,@new-expr)))))
 
-(defun expex-expr-%setq-0 (plc val)
-;  (transpiler-add-wanted-variable *transpiler* plc)
-;  (& (cons? val)
-;     (adolist (.val)
-;       (transpiler-add-wanted-variable *transpiler* !)))
+(defun expex-expr-%setq-0 (place val)
+  (expex-import-variables place val)
   (with ((moved new-expr) (expex-move-args (list val)))
-    (values moved (expex-make-%setq plc new-expr.))))
+    (values moved (expex-make-%setq place new-expr.))))
 
 (defun expex-expr-%setq (x)
-  (with (plc  (%setq-place x)
-         val  (peel-identity (%setq-value x)))
+  (with (place  (%setq-place x)
+         val     (peel-identity (%setq-value x)))
     (? (%setq? val)
        (values nil (expex-body `(,val
-                                 (%setq ,plc ,(%setq-place val)))))
-       (expex-expr-%setq-0 plc val))))
+                                 (%setq ,place ,(%setq-place val)))))
+       (expex-expr-%setq-0 place val))))
 
 (defun expex-expr-std (x)
   (expex-import-function x)

@@ -30,12 +30,8 @@
 
 (defun php-argument-filter (x)
   (?
-    (character? x) (php-expex-add-global (php-compiled-char x))
-    (%quote? x)    (php-expex-add-global (php-compiled-symbol .x.))
-    (keyword? x)   (php-expex-add-global (php-compiled-symbol x))
-    (& (atom x)
-       (funinfo-global-variable? *funinfo* x))
-      (progn
-        (transpiler-add-wanted-variable *transpiler* x)
-        (php-global x))
+    (character? x)                          (php-expex-add-global (php-compiled-char x))
+    (%quote? x)                             (php-expex-add-global (php-compiled-symbol .x.))
+    (keyword? x)                            (php-expex-add-global (php-compiled-symbol x))
+    (funinfo-global-variable? *funinfo* x)  (php-global x)
     x))

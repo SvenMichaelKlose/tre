@@ -17,6 +17,7 @@
       :lambda-export?           t
       :stack-locals?            t
       :copy-arguments-to-stack? t
+      :import-variables?        nil
       :separator                (format nil ";~%")
       :identifier-char?         #'c-identifier-char?
       :expex-initializer        #'c-expex-initializer))

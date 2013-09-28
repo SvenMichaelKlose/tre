@@ -53,6 +53,7 @@
   (assert?                  nil)
   (obfuscate?               nil)
   (import-from-environment? t)
+  (import-variables?        t)
   (only-environment-macros? t)
   (save-sources?            nil)
   (save-argument-defs-only? nil)
@@ -184,6 +185,7 @@
         :assert?                assert?
         :obfuscate?             obfuscate?
         :import-from-environment? import-from-environment?
+        :import-variables?      import-variables?
         :only-environment-macros? only-environment-macros?
         :save-sources?           save-sources?
         :save-argument-defs-only? save-argument-defs-only?

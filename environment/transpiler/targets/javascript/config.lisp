@@ -2,7 +2,6 @@
 
 (defun js-expex-initializer (ex)
   (= (expex-inline? ex)         #'%slot-value?
-     (expex-setter-filter ex)   #'js-setter-filter
      (expex-argument-filter ex) #'js-argument-filter))
 
 (defun make-javascript-transpiler-0 ()

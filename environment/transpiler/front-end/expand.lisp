@@ -31,6 +31,6 @@
 
 (defun transpiler-macroexpand (tr x)
   (with-temporary *=-function?* [| (transpiler-defined-function tr _)
-                                   (transpiler-can-import? tr _)
+                                   (can-import-function? tr _)
                                    (%=-function? _)]
     (expander-expand (transpiler-std-macro-expander tr) x)))

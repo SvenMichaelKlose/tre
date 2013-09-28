@@ -7,14 +7,14 @@
      (transpiler-wanted-variable? tr x)
      (transpiler-macro tr x)))
 
-(defun transpiler-can-import? (tr x)
+(defun can-import-function? (tr x)
   (& (symbol? x)
      (function? (symbol-function x))
      (not (builtin? (symbol-function x))
           (transpiler-defined? tr x))))
 	
 (defun transpiler-add-wanted-function (tr x)
-  (when (transpiler-can-import? tr x)
+  (when (can-import-function? tr x)
     (= (href (transpiler-wanted-functions-hash tr) x) t)
     (push x (transpiler-wanted-functions tr))
     (& *show-definitions?*
@@ -25,15 +25,19 @@
   (dolist (i x x)
     (transpiler-add-wanted-function tr i)))
 
-(defun transpiler-must-add-wanted-variable? (tr x)
+(defun can-import-variable? (tr x)
   (& x
      (symbol? x)
-     (not (href (transpiler-wanted-variables-hash tr) x))
+     (not (funinfo-var-or-lexical? *funinfo* x))
+     (transpiler-import-from-environment? tr)
+     (transpiler-import-variables? tr)
+     (not (href (transpiler-wanted-variables-hash tr) x)
+          (transpiler-defined? tr x))
      (| (transpiler-host-variable? tr x)
         (assoc x *constants* :test #'eq))))
 
 (defun transpiler-add-wanted-variable (tr x)
-  (when (transpiler-must-add-wanted-variable? tr x)
+  (when (can-import-variable? tr x)
     (= (href (transpiler-wanted-variables-hash tr) x) t)
     (push x (transpiler-wanted-variables tr))
     (& *show-definitions?*
@@ -41,7 +45,7 @@
   x)
 
 (defun transpiler-import-exported-closures (tr)
-  (& (transpiler-exported-closures tr)
+  (& (transpiler-exported-closures tr) ; !? (pop...
      (+ (transpiler-frontend tr (pop (transpiler-exported-closures tr)))
         (transpiler-import-exported-closures tr))))
 
@@ -53,8 +57,8 @@
   (with-queue q
     (awhile (pop (transpiler-wanted-functions tr))
             (apply #'+ (queue-list q))
-      (unless (transpiler-defined-function tr !)
-        (enqueue q (transpiler-import-wanted-function tr !))))))
+      (| (transpiler-defined-function tr !)
+         (enqueue q (transpiler-import-wanted-function tr !))))))
 
 (defun transpiler-import-wanted-variables (tr)
   (transpiler-frontend tr
