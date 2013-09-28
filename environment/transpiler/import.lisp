@@ -26,7 +26,7 @@
     (transpiler-add-wanted-function tr i)))
 
 (defun transpiler-must-add-wanted-variable? (tr x)
-  (& (atom x)
+  (& x
      (symbol? x)
      (not (href (transpiler-wanted-variables-hash tr) x))
      (| (transpiler-host-variable? tr x)
