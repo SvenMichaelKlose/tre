@@ -89,12 +89,12 @@
 		     deps         (target-sighten-deps dep-gen)
              num-exprs    (apply #'+ (mapcar [length ._] (+ before-deps deps after-deps))))
         (& *show-transpiler-progress?*
-           (format t "; ~A top level expressions.~%; Let me think. Hmm...~F" num-exprs))
+           (format t "; ~A top level expressions.~%; Let me think. Hmm...~%" num-exprs))
         (with (compiled-before  (target-transpile-2 tr before-deps files-to-update)
 	           compiled-deps    (!? deps (transpiler-make-code tr !))
                compiled-after   (target-transpile-2 tr after-deps files-to-update)
                compiled-acctop  (target-transpile-accumulated-toplevels tr))
-        (& *show-transpiler-progress?* (format t " Phew!~%~F"))
+        (& *show-transpiler-progress?* (format t "; Phew!~%"))
           (!? compiled-deps
               (= (transpiler-imported-deps tr) (transpiler-concat-text tr (transpiler-imported-deps tr) !)))
           (let decls-and-inits (!? decl-gen (funcall !))

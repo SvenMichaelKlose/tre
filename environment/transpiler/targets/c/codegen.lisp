@@ -17,15 +17,19 @@
 
 ;;;; FUNCTIONS
 
+(defun c-arguments (fi)
+  (parenthized-comma-separated-list (mapcar #'c-codegen-var-decl (funinfo-args fi))))
+
 (defun c-make-function-declaration (name args)
   (push (concat-stringtree "extern treptr " (compiled-function-name-string name)
-  	    	               " " (parenthized-comma-separated-list (mapcar #'c-codegen-var-decl args))
+  	    	               " "
+                           (c-arguments (get-funinfo name))
 			               ";" *newline*)
 	    (transpiler-compiled-decls *transpiler*)))
 
 (defun c-codegen-function (name x)
-  (with (fi   (get-funinfo name)
-         args (argument-expand-names 'unnamed-c-function (funinfo-args fi)))
+  (with (fi    (get-funinfo name)
+         args  (funinfo-args fi))
     (| fi (error "No funinfo for ~A." name))
     (c-make-function-declaration name args)
     `(,*newline*
@@ -36,10 +40,6 @@
 	  "{" ,*newline*
           ,@(lambda-body x)
 	  "}" ,*newline*)))
-
-(define-c-macro %%closure (name)
-  `("CONS (" ,(c-compiled-symbol '%closure) ", "
-	       "CONS (" ,(c-compiled-symbol name) "," ,(codegen-closure-lexical name) "))"))
 
 (define-c-macro function (name &optional (x 'only-name))
   (? (eq 'only-name x)
@@ -66,6 +66,16 @@
 
 (define-c-macro %function-return (name)
   `(%%native ,@(c-line "return __ret")))
+
+(define-c-macro %%closure (name)
+  (alet (get-funinfo name)
+    (? (funinfo-ghost !)
+       `("CONS (" ,(c-compiled-symbol '%closure) ", "
+                "CONS (" ,(c-compiled-symbol name) "," ,(codegen-closure-lexical name) "))")
+       (progn
+         (optimizer-message "; Replaced closure object for ~A in ~A.~%"
+                            name (human-readable-funinfo-names (funinfo-parent !)))
+         `("TRESYMBOL_FUN(" ,(c-compiled-symbol name) ")")))))
 
 
 ;;;; ASSIGNMENT

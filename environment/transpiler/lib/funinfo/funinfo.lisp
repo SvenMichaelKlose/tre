@@ -22,6 +22,7 @@
   (vars       nil)
   (vars-hash  nil)
   (used-vars  nil)
+  (free-vars  nil)
   (places     nil)
 
   (lexicals   nil) ; List of symbols exported to child functions.
@@ -51,6 +52,7 @@
       :vars         (copy-list vars)
       :vars-hash    (copy-hash-table vars-hash)
       :used-vars    (copy-list used-vars)
+      :free-vars    (copy-list free-vars)
       :places       (copy-list places)
       :lexicals     (copy-list lexicals)
       :lexical      lexical
@@ -91,6 +93,10 @@
     (& (transpiler-copy-arguments-to-stack? transpiler)
        (funinfo-var-add-many fi argnames))
     fi))
+
+(defun funinfo-closure-without-free-vars? (fi)                                                                                     
+  (& (funinfo-ghost fi)
+     (not (funinfo-free-vars fi))))
 
 (defun print-funinfo-sources (tr)
   (filter [(format t "Function ~A:~%" (funinfo-name _))

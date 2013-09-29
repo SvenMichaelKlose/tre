@@ -30,7 +30,12 @@
           (funinfo-args !)))))
 
 (defun correct-funinfo ()
-  (funinfo-vars-set *funinfo* (move-~%ret-to-front (used-vars))))
+  (alet *funinfo*
+    (when (funinfo-closure-without-free-vars? !)
+       (= (funinfo-ghost !) nil)
+       (pop (funinfo-args !))
+       (optimizer-message "; Removed ghost from function ~A.~%" (funinfo-name !)))
+    (funinfo-vars-set ! (move-~%ret-to-front (used-vars)))))
 
 (defun remove-unused-vars (x)
   (& (named-lambda? x.) 

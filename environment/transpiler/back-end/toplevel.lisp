@@ -21,9 +21,7 @@
     to-string           [? (transpiler-make-text? tr)
                            (transpiler-to-string tr _)
                            _]
-    concat-stringtree   [transpiler-concat-text tr _]
-    print-o             [(& *show-transpiler-progress?* (princ #\o) (force-output))
-                         _])
+    concat-stringtree   [transpiler-concat-text tr _])
 
 (transpiler-pass transpiler-backend-make-places (tr)
     make-framed-functions  #'make-framed-functions

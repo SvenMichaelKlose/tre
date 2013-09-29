@@ -1,6 +1,7 @@
 ;;;;; tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun make-lexical-place-expr (fi var)
+  (funinfo-add-free-var fi var)
   `(%vec ,(funinfo-ghost fi)
          ,(funinfo-name (funinfo-parent fi))
          ,var))

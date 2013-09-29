@@ -64,14 +64,13 @@
 ;;;; FUNCTIONS
 
 (defun codegen-php-function (x)
-  (with (args          (argument-expand-names 'unnamed-c-function (lambda-args x))
-		 fi            (get-lambda-funinfo x)
+  (with (fi            (get-lambda-funinfo x)
          name          (funinfo-name fi)
 		 num-locals    (length (funinfo-vars fi))
 	     compiled-name (compiled-function-name name))
     `(,*php-newline*
       ,(funinfo-comment fi)
-	  "function " ,compiled-name ,@(php-argument-list args)
+	  "function " ,compiled-name ,@(php-argument-list (funinfo-args fi))
       "{" ,(code-char 10)
 		 ,@(awhen (funinfo-globals fi)
              (php-line "global " (php-list !)))
@@ -94,14 +93,14 @@
   (php-dollarize x))
 
 (define-php-macro %%closure (name)
-  (let fi (get-funinfo name)
+  (with (fi            (get-funinfo name)
+         native-name  `(%%string ,(compiled-function-name-string name)))
     (? (funinfo-ghost fi)
-  	   `(%%native "new __closure("
-             (%%string ,(compiled-function-name-string name))
-             ","
-             ,(php-dollarize (funinfo-lexical (funinfo-parent fi)))
-             ")")
-	   name)))
+  	   `(%%native "new __closure(" ,native-name "," ,(php-dollarize (funinfo-lexical (funinfo-parent fi))) ")")
+       (progn
+         (optimizer-message "; Replaced closure object for ~A in ~A.~%"
+                            name (human-readable-funinfo-names (funinfo-parent fi)))
+         native-name))))
 
 
 ;;;; ASSIGNMENTS

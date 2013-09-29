@@ -24,10 +24,7 @@
                                      (optimize !)))]
     cps                      [? (transpiler-cps-transformation? tr)
                                 (funcall #'cps _)
-                                _]
-;    update-funinfo-num-tags  #'update-funinfo-num-tags
-    print-dot                [(& *show-transpiler-progress?* (princ #\.) (force-output))
-                              _])
+                                _])
 
 (defun transpiler-middleend (tr x)
   (mapcan [transpiler-middleend-0 tr (list _)] x))

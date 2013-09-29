@@ -108,6 +108,13 @@
         (funinfo-add-used-var (funinfo-parent fi) x))))
 
 
+;;;; FREE VARIABLES
+
+(defun funinfo-add-free-var (fi x)
+  (| (member x (funinfo-free-vars fi) :test #'eq)
+     (push x (funinfo-free-vars fi))))
+
+
 ;;;; PLACES
 
 (defun funinfo-place? (fi x)
