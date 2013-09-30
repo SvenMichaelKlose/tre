@@ -3,6 +3,6 @@
 (defun funinfo-comment (fi)
   (? (transpiler-funinfo-comments? *transpiler*)
         `("/*" ,*newline*
-          ,@(print-funinfo fi nil)
+          ,(print-funinfo fi nil)
           "*/" ,*newline*)
      ""))
