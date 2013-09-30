@@ -56,5 +56,7 @@
 (defvar *universe-functions* (copy-list *defined-functions*))
 
 (env-load "version.lisp")
+(env-load "config-after-reload.lisp")
+
 (dump-system)
 (%load-launchfile)
