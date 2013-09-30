@@ -23,6 +23,7 @@
   (= (href (expander-macros expander-name) macro-name) new-function))
 
 (defun define-expander (expander-name &key (pre nil) (post nil) (pred nil) (call nil))
+  (format t "Making expander ~A.~%" expander-name)
   (aprog1 (make-expander :macros (make-hash-table :test #'eq)
                          :pred pred
                          :call call
@@ -54,7 +55,7 @@
   (with-gensym g
     `(progn
        (& (expander-has-macro? ',expander-name ',name)
-          (error "Redefinition of macro ~A in expander ~A." ',name ',expander-name))
+          (error ,(format nil "Redefinition of macro ~A in expander ~A." name expander-name)))
        (defun ,g ,args ,@body)
        (alet (expander-macros (expander-get ',expander-name))
          (= (href ! ',name) #',g)))))
