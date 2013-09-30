@@ -18,7 +18,7 @@
 (defun opt-tailcall-make-restart (l body front-tag)
   (with-lambda name args dummy-body l 
     (& *show-definitions?*
-       (format t "; Replaced tail call in function ~A.~%" name))
+       (format t "; Removed tail call in function ~A.~%" name))
     (+ (mapcan #'((arg val)
                     (with-gensym g ; Avoid accidential GC.
                       `((%setq ,arg ,val))))
