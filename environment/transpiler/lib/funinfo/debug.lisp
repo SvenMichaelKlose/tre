@@ -8,27 +8,26 @@
 (defun human-readable-funinfo-names (fi)
   (only-element-or-all-of (butlast (funinfo-names fi))))
 
-(defun print-funinfo (fi &optional (stream nil))
-  (with-default-stream s stream
-    (print (concat-stringtree
-               (filter [!? ._.
-                           (format s "  ~A~A~%" _. !)
-                           !]
-                       `(("Scope:           " ,(human-readable-funinfo-names fi))
-                         ("Argument def:    " ,(| (funinfo-argdef fi)
-                                                  "no arguments"))
-                         ("CPS transformed: " ,(funinfo-cps? fi))
-                         ("Expanded args:   " ,(funinfo-args fi))
-                         ("Local vars:      " ,(funinfo-vars fi))
-                         ("Used vars:       " ,(funinfo-used-vars fi))
-                         ("Free vars:       " ,(funinfo-free-vars fi))
-                         ("Places:          " ,(funinfo-places fi))
-                         ("Globals:         " ,(funinfo-globals fi))
-                         ("Local funs:      " ,(funinfo-local-function-args fi))
-                         ("Ghost:           " ,(funinfo-ghost fi))
-                         ("Lexical:         " ,(funinfo-lexical fi))
-                         ("Lexicals:        " ,(funinfo-lexicals fi)))))
-           s)))
+(defun print-funinfo (fi &optional (str nil))
+  (with-default-stream s str
+    (format s (concat-stringtree
+                  (filter [!? ._.
+                              (format s "  ~A~A~%" _. !)
+                              !]
+                          `(("Scope:           " ,(human-readable-funinfo-names fi))
+                            ("Argument def:    " ,(| (funinfo-argdef fi)
+                                                     "no arguments"))
+                            ("CPS transformed: " ,(funinfo-cps? fi))
+                            ("Expanded args:   " ,(funinfo-args fi))
+                            ("Local vars:      " ,(funinfo-vars fi))
+                            ("Used vars:       " ,(funinfo-used-vars fi))
+                            ("Free vars:       " ,(funinfo-free-vars fi))
+                            ("Places:          " ,(funinfo-places fi))
+                            ("Globals:         " ,(funinfo-globals fi))
+                            ("Local funs:      " ,(funinfo-local-function-args fi))
+                            ("Ghost:           " ,(funinfo-ghost fi))
+                            ("Lexical:         " ,(funinfo-lexical fi))
+                            ("Lexicals:        " ,(funinfo-lexicals fi))))))))
 
 (defun print-funinfo-stack (fi &key (include-global? nil))
   (when fi
