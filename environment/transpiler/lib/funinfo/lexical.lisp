@@ -14,8 +14,7 @@
     (with-gensym ghost
 	  (= (funinfo-ghost fi) ghost)
 	  (push ghost (funinfo-argdef fi))
-	  (push ghost (funinfo-args fi))
-	  (funinfo-var-add fi ghost))))
+	  (push ghost (funinfo-args fi)))))
 
 (defun funinfo-link-lexically (fi)
   (when (transpiler-lambda-export? *transpiler*)
