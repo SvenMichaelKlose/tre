@@ -51,20 +51,22 @@
   (used-functions           (make-hash-table :test #'eq))
 
   (assert?                  nil)
+  (profile?                 nil)
+  (profile-num-calls?       nil)
+  (always-expand-arguments? nil)
+  (backtrace?               nil)
+  (inject-debugging?        nil)
+
   (obfuscate?               nil)
   (import-from-environment? t)
   (import-variables?        t)
   (only-environment-macros? t)
   (save-sources?            nil)
   (save-argument-defs-only? nil)
-  (profile?                 nil)
-  (profile-num-calls?       nil)
   (warn-on-unused-symbols?  nil)
-  (backtrace?               nil)
   (expex-warnings?          t)
   (function-prologues?      t)
   (exclude-base?            nil)
-  (always-expand-arguments? nil)
   (count-tags?              nil)
   (funinfo-comments?        nil)
 
@@ -88,7 +90,6 @@
   (make-text?               t)
   (encapsulate-strings?     t)
   (dump-passes?             nil)
-  (inject-debugging?        nil)
 
   (predefined-symbols       nil)
 
@@ -167,86 +168,86 @@
 (def-transpiler copy-transpiler (transpiler)
   (aprog1
     (make-transpiler
-        :name                   name
-        :codegen-expander       codegen-expander
-        :separator              separator
-        :identifier-char?       identifier-char?
-        :literal-converter      literal-converter
-        :defined-functions-hash (copy-hash-table defined-functions-hash)
-        :defined-variables-hash (copy-hash-table defined-variables-hash)
-        :cps-functions-hash     (copy-hash-table cps-functions-hash )
-        :host-functions-hash    (copy-hash-table host-functions-hash)
-        :host-variables-hash    (copy-hash-table host-variables-hash)
-        :functionals-hash       (copy-hash-table functionals-hash)
-        :wanted-functions       (copy-list wanted-functions)
-        :wanted-functions-hash  (copy-hash-table wanted-functions-hash)
-        :wanted-variables       (copy-list wanted-variables)
-        :wanted-variables-hash  (copy-hash-table wanted-variables-hash)
-        :assert?                assert?
-        :obfuscate?             obfuscate?
-        :import-from-environment? import-from-environment?
-        :import-variables?      import-variables?
-        :only-environment-macros? only-environment-macros?
-        :save-sources?           save-sources?
-        :save-argument-defs-only? save-argument-defs-only?
-        :profile?                profile?
-        :profile-num-calls?      profile-num-calls?
-        :warn-on-unused-symbols? warn-on-unused-symbols?
-        :backtrace?              backtrace?
-        :expex-warnings?         expex-warnings?
-        :function-prologues?     function-prologues?
-        :exclude-base?           exclude-base?
+        :name                     name
+        :codegen-expander         codegen-expander
+        :separator                separator
+        :identifier-char?         identifier-char?
+        :literal-converter        literal-converter
+        :defined-functions-hash   (copy-hash-table defined-functions-hash)
+        :defined-variables-hash   (copy-hash-table defined-variables-hash)
+        :cps-functions-hash       (copy-hash-table cps-functions-hash )
+        :host-functions-hash      (copy-hash-table host-functions-hash)
+        :host-variables-hash      (copy-hash-table host-variables-hash)
+        :functionals-hash         (copy-hash-table functionals-hash)
+        :wanted-functions         (copy-list wanted-functions)
+        :wanted-functions-hash    (copy-hash-table wanted-functions-hash)
+        :wanted-variables         (copy-list wanted-variables)
+        :wanted-variables-hash    (copy-hash-table wanted-variables-hash)
+        :assert?                  assert?
+        :profile?                 profile?
+        :profile-num-calls?       profile-num-calls?
         :always-expand-arguments? always-expand-arguments?
-        :count-tags?             count-tags?
-        :funinfo-comments?       funinfo-comments?
-        :gen-string              gen-string
-        :lambda-export?          lambda-export?
+        :backtrace?               backtrace?
+        :inject-debugging?        inject-debugging?
+        :obfuscate?               obfuscate?
+        :import-from-environment? import-from-environment?
+        :import-variables?        import-variables?
+        :only-environment-macros? only-environment-macros?
+        :save-sources?            save-sources?
+        :save-argument-defs-only? save-argument-defs-only?
+        :warn-on-unused-symbols?  warn-on-unused-symbols?
+        :expex-warnings?          expex-warnings?
+        :function-prologues?      function-prologues?
+        :exclude-base?            exclude-base?
+        :count-tags?              count-tags?
+        :funinfo-comments?        funinfo-comments?
+        :gen-string               gen-string
+        :lambda-export?           lambda-export?
         :accumulate-toplevel-expressions? accumulate-toplevel-expressions?
         :accumulated-toplevel-expressions (copy-list accumulated-toplevel-expressions)
-        :function-name-prefix    function-name-prefix
-        :needs-var-declarations? needs-var-declarations?
-        :stack-locals?           stack-locals?
-        :arguments-on-stack?     arguments-on-stack?
+        :function-name-prefix     function-name-prefix
+        :needs-var-declarations?  needs-var-declarations?
+        :stack-locals?            stack-locals?
+        :arguments-on-stack?      arguments-on-stack?
         :copy-arguments-to-stack? copy-arguments-to-stack?
-        :cps-transformation?     cps-transformation?
-        :code-concatenator       code-concatenator
-        :make-text?              make-text?
-        :encapsulate-strings?    encapsulate-strings?
-        :dump-passes?            dump-passes?
-        :inject-debugging?       inject-debugging?
-        :symbol-translations     (copy-list symbol-translations)
-        :thisify-classes         (copy-hash-table thisify-classes)
-        :function-args           (copy-hash-table function-args)
-        :function-bodies         (copy-hash-table function-bodies)
-        :obfuscations            (copy-hash-table obfuscations)
-        :plain-arg-funs          (copy-list plain-arg-funs)
-        :late-symbols            (copy-hash-table late-symbols)
-        :exported-closures       (copy-list exported-closures)
-        :delayed-var-inits       (copy-list delayed-var-inits)
-        :dot-expand?             dot-expand?
-        :raw-constructor-names?  raw-constructor-names?
-        :memorized-sources       (copy-list memorized-sources)
-        :memorize-sources?       memorize-sources?
-        :predefined-symbols      (copy-list predefined-symbols)
-        :funinfos                (copy-hash-table funinfos)
-        :funinfos-reverse        (copy-hash-table funinfos-reverse)
-        :global-funinfo          (& global-funinfo (copy-funinfo global-funinfo))
-        :compiled-chars          (copy-hash-table compiled-chars)
-        :compiled-numbers        (copy-hash-table compiled-numbers)
-        :compiled-strings        (copy-hash-table compiled-strings)
-        :compiled-symbols        (copy-hash-table compiled-symbols)
-        :compiled-decls          (copy-list compiled-decls)
-        :compiled-inits          (copy-list compiled-inits)
-        :emitted-decls           (copy-list emitted-decls)
-        :imported-deps           imported-deps
-        :raw-decls               (copy-list raw-decls)
-        :frontend-files          (copy-alist frontend-files)
-        :compiled-files          (copy-alist compiled-files)
-        :current-package         current-package
-        :identifiers             (copy-hash-table identifiers)
-        :converted-identifiers   (copy-hash-table converted-identifiers)
-        :expex-initializer       expex-initializer
-        :cpr-count?              cpr-count?)
+        :cps-transformation?      cps-transformation?
+        :code-concatenator        code-concatenator
+        :make-text?               make-text?
+        :encapsulate-strings?     encapsulate-strings?
+        :dump-passes?             dump-passes?
+        :symbol-translations      (copy-list symbol-translations)
+        :thisify-classes          (copy-hash-table thisify-classes)
+        :function-args            (copy-hash-table function-args)
+        :function-bodies          (copy-hash-table function-bodies)
+        :obfuscations             (copy-hash-table obfuscations)
+        :plain-arg-funs           (copy-list plain-arg-funs)
+        :late-symbols             (copy-hash-table late-symbols)
+        :exported-closures        (copy-list exported-closures)
+        :delayed-var-inits        (copy-list delayed-var-inits)
+        :dot-expand?              dot-expand?
+        :raw-constructor-names?   raw-constructor-names?
+        :memorized-sources        (copy-list memorized-sources)
+        :memorize-sources?        memorize-sources?
+        :predefined-symbols       (copy-list predefined-symbols)
+        :funinfos                 (copy-hash-table funinfos)
+        :funinfos-reverse         (copy-hash-table funinfos-reverse)
+        :global-funinfo           (& global-funinfo (copy-funinfo global-funinfo))
+        :compiled-chars           (copy-hash-table compiled-chars)
+        :compiled-numbers         (copy-hash-table compiled-numbers)
+        :compiled-strings         (copy-hash-table compiled-strings)
+        :compiled-symbols         (copy-hash-table compiled-symbols)
+        :compiled-decls           (copy-list compiled-decls)
+        :compiled-inits           (copy-list compiled-inits)
+        :emitted-decls            (copy-list emitted-decls)
+        :imported-deps            imported-deps
+        :raw-decls                (copy-list raw-decls)
+        :frontend-files           (copy-alist frontend-files)
+        :compiled-files           (copy-alist compiled-files)
+        :current-package          current-package
+        :identifiers              (copy-hash-table identifiers)
+        :converted-identifiers    (copy-hash-table converted-identifiers)
+        :expex-initializer        expex-initializer
+        :cpr-count?               cpr-count?)
     (transpiler-copy-std-macro-expander transpiler !)
     (transpiler-make-expex !)))
 
