@@ -34,6 +34,7 @@
     (when (funinfo-closure-without-free-vars? !)
        (= (funinfo-ghost !) nil)
        (pop (funinfo-args !))
+       (pop (funinfo-argdef !))
        (optimizer-message "; Removed ghost from function ~A.~%" (funinfo-name !)))
     (funinfo-vars-set ! (move-~%ret-to-front (used-vars)))))
 
