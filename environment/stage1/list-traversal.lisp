@@ -1,6 +1,6 @@
 ;;;;; tré – Copyright (c) 2005–2009,2012–2013 Sven Michael Klose <pixel@copei.de>
 
-(defun %map (func lists)
+(defun %map-args (lists)
   (block nil
     (let* ((i lists)	        ; List iterator.
            (nl (make-queue)))	; Argument list.
@@ -18,14 +18,14 @@
         (go start)))))
 
 (defun map (func &rest lists)
-  (let args (%map func lists)
+  (let args (%map-args lists)
     (when args
       (apply func args)
 	  (apply #'map func lists)))
   nil)
 
 (defun mapcar (func &rest lists)
-  (let args (%map func lists)
+  (let args (%map-args lists)
     (& args
        (cons (apply func args) (apply #'mapcar func lists)))))
 
