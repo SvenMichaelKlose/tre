@@ -33,9 +33,7 @@
         (print x)
         (error "FUNINFO is missing."))
 
-    (| (not x)
-       (number? x)
-       (string? x)
+    (| (constant-literal? x)
        (not (funinfo-var-or-lexical? fi x)))
       x
 
@@ -50,10 +48,7 @@
              ,x)
 
     (& (transpiler-stack-locals? *transpiler*)
-       (| (& (transpiler-arguments-on-stack? *transpiler*)
-             (funinfo-arg? fi x)
-             (funinfo-place? fi x))
-          (funinfo-var? fi x)))
+       (funinfo-var? fi x))
        (place-expand-emit-stackplace fi x)
 
     (funinfo-arg-or-var? fi x)
