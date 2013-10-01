@@ -123,8 +123,11 @@
 (defun funinfo-add-place (fi x)
   (& x
      (symbol? x)
-     (| (funinfo-place? fi x)
-        (push x (funinfo-places fi)))))
+     (unless (funinfo-place? fi x)
+        (push x (funinfo-places fi))
+        (| (funinfo-arg-or-var? fi x)
+           (!? (funinfo-parent fi)
+               (funinfo-add-place ! x))))))
 
 
 ;;;; GLOBAL VARIABLES

@@ -67,7 +67,7 @@ OS_VERSION="unknown" #`uname -v`
 BUILD_MACHINE_INFO="-DTRE_BIG_ENDIAN -DLIBC_PATH=\"$LIBC_PATH\" -DTRE_KERNEL_IDENT=\"$KERNEL_IDENT\" -DTRE_CPU_TYPE=\"$CPU_TYPE\" -DTRE_OS_RELEASE=\"$OS_RELEASE\" -DTRE_OS_VERSION=\"$OS_VERSION\""
 
 GNU_LIBC_FLAGS="-D_GNU_SOURCE -D_BSD_SOURCE -D_SVID_SOURCE"
-C_DIALECT_FLAGS="-ansi -Wall -Wextra -Werror"
+C_DIALECT_FLAGS="-ansi -Wall -Wextra"
 
 CFLAGS="-pipe $C_DIALECT_FLAGS $GNU_LIBC_FLAGS $BUILD_MACHINE_INFO $ARGS"
 
@@ -189,13 +189,13 @@ precompile)
 
 
 compiler)
-    echo "Making just the compiler..."
+    echo "Compiling the compiler only..."
 	(echo "(compile-c-compiler)" | ./tre) || exit 1
 	./make.sh crunsh $ARGS || exit 1
     ;;
 
 bcompiler)
-    echo "Making just the compiler..."
+    echo "Compiling the bytecode compiler only..."
 	(echo "(compile-c-environment '(compile-bytecode-environment))" | ./tre) || exit 1
 	./make.sh crunsh $ARGS || exit 1
     ;;
@@ -211,6 +211,19 @@ boot)
 	./make.sh compiler $ARGS || exit 1
 	./make.sh all $ARGS || exit 1
 	./make.sh crunsh || exit 1
+	;;
+
+test)
+    echo "Making tests..."
+    mv environment/config.lisp environment/old-config.lisp
+    echo "(setq *assert* t)" >environment/config.lisp
+    echo "(= (transpiler-always-expand-arguments? *c-transpiler*) t)" >environment/config-after-reload.lisp
+	./make.sh interpreter $ARGS || exit 1
+	./make.sh compiler $ARGS || exit 1
+	./make.sh all $ARGS || exit 1
+	./make.sh crunsh || exit 1
+    mv environment/old-config.lisp environment/config.lisp
+    echo "Tests seem to have succeeded."
 	;;
 
 debugboot)
@@ -258,6 +271,7 @@ restore)
 *)
 	echo "Usage: make.sh boot|interpreter|compiler|all|bytecode|debug|build|crunsh|reload|precompile|backup|restore|install|clean|distclean [args]"
 	echo "  boot         Build everything from scratch."
+	echo "  test         Build everything from scratch in stealth mode."
 	echo "  debugboot    Like 'boot', but for debugging"
 	echo "  interpreter  Clean and build the interpreter."
 	echo "  compiler     Compile just the compiler and the C target."

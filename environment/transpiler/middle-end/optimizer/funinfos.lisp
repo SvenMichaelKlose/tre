@@ -23,20 +23,37 @@
 
 (defun used-vars ()
   (alet *funinfo*
-    (= (funinfo-places !) (intersect (funinfo-places !) (funinfo-used-vars !)))
     (+ (funinfo-lexicals !)
        (intersect (funinfo-vars !) (funinfo-used-vars !) :test #'eq)
        (& (transpiler-copy-arguments-to-stack? *transpiler*)
           (funinfo-args !)))))
 
+(defun remove-unused-ghost (fi)
+  (when (funinfo-closure-without-free-vars? fi)
+     (= (funinfo-ghost fi) nil)
+     (pop (funinfo-args fi))
+     (pop (funinfo-argdef fi))
+     (optimizer-message "; Removed ghost from function ~A.~%" (funinfo-name fi))))
+
+(defun remove-argument-stackplaces (fi)
+  (let v (used-vars)
+    (adolist ((funinfo-args fi))
+      (| (funinfo-lexical? fi !)
+         (funinfo-place? fi !)
+         (remove! ! v :test #'eq)))
+    (funinfo-vars-set fi v)))
+
+(defun warn-unused-arguments (fi)
+  (dolist (i (funinfo-args fi))
+    (| (funinfo-used-var? fi i)
+       (warn "Unused argument ~A of function ~A." i (human-readable-funinfo-names fi)))))
+
 (defun correct-funinfo ()
   (alet *funinfo*
-    (when (funinfo-closure-without-free-vars? !)
-       (= (funinfo-ghost !) nil)
-       (pop (funinfo-args !))
-       (pop (funinfo-argdef !))
-       (optimizer-message "; Removed ghost from function ~A.~%" (funinfo-name !)))
-    (funinfo-vars-set ! (move-~%ret-to-front (used-vars)))))
+    (remove-unused-ghost !)
+;    (warn-unused-arguments !)
+    (& (transpiler-stack-locals? *transpiler*)
+       (remove-argument-stackplaces !))))
 
 (defun remove-unused-vars (x)
   (& (named-lambda? x.) 

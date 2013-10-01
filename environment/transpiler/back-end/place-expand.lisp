@@ -37,7 +37,6 @@
        (number? x)
        (string? x)
        (not (funinfo-var-or-lexical? fi x)))
-;    (not (funinfo-toplevel-var? fi x))
       x
 
     (& (transpiler-stack-locals? *transpiler*)
@@ -52,7 +51,8 @@
 
     (& (transpiler-stack-locals? *transpiler*)
        (| (& (transpiler-arguments-on-stack? *transpiler*)
-             (funinfo-arg? fi x))
+             (funinfo-arg? fi x)
+             (funinfo-place? fi x))
           (funinfo-var? fi x)))
        (place-expand-emit-stackplace fi x)
 
@@ -63,9 +63,8 @@
 
 (defun place-expand-fun (x)
   (let fi (get-lambda-funinfo x)
-    (unless fi
-      (print x)
-      (error "FUNINFO missing for ~A." (lambda-name x)))
+    (| fi
+       (error "FUNINFO missing for ~A." (lambda-name x)))
     (copy-lambda x :body (place-expand-0 fi (lambda-body x)))))
 
 (defun place-expand-setter (fi x)
