@@ -56,7 +56,7 @@
   (!? (get-funinfo (lambda-name x))
       (copy-lambda x :body (lambda-expand-tree-0 ! (lambda-body x)))
       (with (name   (| (lambda-name x)
-                       (make-funinfo-sym))
+                       (funinfo-sym))
              new-fi (create-funinfo :name   name
                                     :args   (lambda-args x)
                                     :body   (lambda-body x)

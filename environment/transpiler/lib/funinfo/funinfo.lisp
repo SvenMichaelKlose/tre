@@ -1,14 +1,8 @@
 ;;;;; tré – Copyright (c) 2006–2013 Sven Michael Klose <pixel@copei.de>
 
 (defvar *funinfo*)
-(defvar *funinfo-sym-counter* 0)
 
-(defun make-funinfo-sym ()
-  (alet ($ '~F (++! *funinfo-sym-counter*))
-    (? (& (eq ! (symbol-value !))
-          (not (symbol-function !)))
-       !
-       (make-funinfo-sym))))
+(define-gensym-generator funinfo-sym ~f)
 
 (defstruct funinfo
   (transpiler nil)

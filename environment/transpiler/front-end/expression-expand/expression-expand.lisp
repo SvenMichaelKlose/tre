@@ -14,17 +14,7 @@
      .x.
      x))
 
-
-;;;; SYMBOLS
-
-(defvar *expex-sym-counter* 0)
-
-(defun expex-sym ()
-  (alet ($ 'E (++! *expex-sym-counter*))
-    (? (& (eq ! (symbol-value !))
-          (not (symbol-function !)))
-       !
-       (expex-sym))))
+(define-gensym-generator expex-sym e)
 
 ;;;; IMPORT
 

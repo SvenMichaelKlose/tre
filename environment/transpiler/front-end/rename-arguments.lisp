@@ -1,18 +1,11 @@
 ;;;;; tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
 
-(defvar *argument-sym-counter* 0)
-
-(defun argument-sym ()
-  (alet ($ 'A (++! *argument-sym-counter*))
-    (? (& (eq ! (symbol-value !))
-          (not (symbol-function !)))
-       !
-       (argument-sym))))
+(define-gensym-generator argument-sym a)
 
 (defun rename-argument (replacements x)
   (| (assoc-value x replacements :test #'eq) x))
 
-(defun rename-arguments-r (replacements x)
+(defun rename-arguments-lambda (replacements x)
   (? (get-lambda-funinfo x)
      x
      (alet (+ (list-aliases (expanded-lambda-args x) :gensym-generator #'argument-sym) replacements)
@@ -22,7 +15,7 @@
 (define-tree-filter rename-arguments-0 (replacements x)
   (atom x)         (rename-argument replacements x)
   (%quote? x)      x
-  (any-lambda? x)  (rename-arguments-r replacements x)
+  (any-lambda? x)  (rename-arguments-lambda replacements x)
   (%slot-value? x) `(%slot-value ,(rename-arguments-0 replacements .x.)
 				                 ,..x.))
 
