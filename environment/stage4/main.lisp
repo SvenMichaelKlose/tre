@@ -12,6 +12,7 @@
 (env-load "stage4/count-tree.lisp")
 (env-load "stage4/def-head-predicate.lisp")
 (env-load "stage4/define-getset-alias.lisp")
+(env-load "stage4/define-gensym-generator.lisp")
 (env-load "stage4/define-tree-filter.lisp")
 (env-load "stage4/destructive-arith.lisp")
 (env-load "stage4/intersect.lisp")
