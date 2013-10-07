@@ -14,7 +14,6 @@
 (defun make-c-transpiler ()
   (create-transpiler
       :name                     'c
-      :funinfo-comments?        t
       :lambda-export?           t
       :stack-locals?            t
       :copy-arguments-to-stack? t

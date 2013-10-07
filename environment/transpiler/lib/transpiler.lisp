@@ -67,7 +67,7 @@
   (function-prologues?      t)
   (exclude-base?            nil)
   (count-tags?              nil)
-  (funinfo-comments?        nil)
+  (funinfo-comments?        t)
 
   (gen-string               #'literal-string)
 
