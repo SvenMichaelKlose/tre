@@ -20,13 +20,15 @@
          (when ,x
            (let ,v (car ,x)
              (+ (?
-                  (atom ,v)           ,(| if-atom `(list ,v))
-                  ,@(!? if-setq       `((%setq? ,v) ,!))
-                  ,@(!? if-go         `((%%go? ,v) ,!))
-                  ,@(!? if-go-nil     `((%%go-nil? ,v) ,!))
-                  ,@(!? if-go-not-nil `((%%go-not-nil? ,v) ,!))
-                  (named-lambda? ,v) (with-temporary *funinfo* (get-lambda-funinfo ,v)
-                                       (list (copy-lambda ,v :body ,(| if-named-function `(,name (lambda-body ,v) ,@r)))))
+                  (atom ,v)             ,(| if-atom `(list ,v))
+                  ,@(!? if-setq         `((%setq? ,v) ,!))
+                  ,@(!? if-go           `((%%go? ,v) ,!))
+                  ,@(!? if-go-nil       `((%%go-nil? ,v) ,!))
+                  ,@(!? if-go-not-nil   `((%%go-not-nil? ,v) ,!))
+                  (%%call-nil? ,v)      (list ,v)
+                  (%%call-not-nil? ,v)  (list ,v)
+                  (named-lambda? ,v)    (with-temporary *funinfo* (get-lambda-funinfo ,v)
+                                          (list (copy-lambda ,v :body ,(| if-named-function `(,name (lambda-body ,v) ,@r)))))
 
                   (not (metacode-statement? ,v))
                      (error "Metacode statement expected instead of ~A." ,v)

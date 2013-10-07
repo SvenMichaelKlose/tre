@@ -2,7 +2,7 @@
 
 (mapcar-macro x
 	'(%quote %new
-	  %%block %%go %%go-nil %%go-not-nil %%call-nil
+	  %%block %%go %%go-nil %%go-not-nil %%call-nil %%call-not-nil
 	  %stack %stackarg %vec %set-vec %setq %tag %%tag
 	  %%native %%string
 	  %%closure %closure
