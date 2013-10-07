@@ -404,10 +404,9 @@ treread (trestream * stream)
     treio_prompt ();
 
     treio_skip_spaces (stream);
-    if (treio_eof (stream))
-		return treptr_invalid;
-
-    return treread_expr (stream);
+    return treio_eof (stream)  ?
+		       treptr_invalid :
+               treread_expr (stream);
 }
 
 void
