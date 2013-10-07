@@ -101,11 +101,13 @@
      t))
 
 (defun funinfo-add-used-var (fi x)
-  (& (funinfo-parent fi)
+  (& (symbol? x)
+     (funinfo-parent fi)
      (not (funinfo-used-var? fi x))
-     (? (funinfo-arg-or-var? fi x)
-        (push x (funinfo-used-vars fi))
-        (funinfo-add-used-var (funinfo-parent fi) x))))
+     (progn
+       (push x (funinfo-used-vars fi))
+       (| (funinfo-arg-or-var? fi x)
+          (funinfo-add-used-var (funinfo-parent fi) x)))))
 
 
 ;;;; FREE VARIABLES
