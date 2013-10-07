@@ -83,7 +83,8 @@
                                 :body          body
                                 :parent        parent
                                 :transpiler    transpiler
-                                :cps?          cps?))
+                                :cps?          (unless (transpiler-cps-exception? transpiler name)
+                                                 cps?)))
     (= (href (transpiler-funinfos transpiler) name) fi)
     (funinfo-var-add fi '~%ret)
     (& (transpiler-copy-arguments-to-stack? transpiler)

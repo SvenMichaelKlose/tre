@@ -2,6 +2,7 @@
 
 (defun js-prologue ()
   (+ (format nil "// tré revision ~A~%" *tre-revision*)
+     (format nil ,(fetch-file "environment/transpiler/targets/javascript/environment/native/cps-funcall.js"))
      (format nil "var _I_ = 0; while (1) {switch (_I_) {case 0: ~%")))
 
 (defun js-epilogue ()
@@ -54,6 +55,8 @@
          (js-files-compiler))))
 
 (defun js-transpile (sources &key (transpiler nil) (obfuscate? nil) (print-obfuscations? nil) (files-to-update nil))
+  (dolist (i '(%cons cons %symbol symbol))
+    (transpiler-add-cps-exception transpiler i))
   (target-transpile transpiler
                     :prologue-gen        #'js-prologue
                     :epilogue-gen        #'js-epilogue

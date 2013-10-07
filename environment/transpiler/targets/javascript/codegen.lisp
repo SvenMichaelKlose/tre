@@ -50,6 +50,12 @@
                  "else "
                      ,alternative "();" ,*newline*))
 
+(define-js-macro %%call-not-nil (val consequence alternative)
+  `(,*js-indent* "if(!",(js-nil? val) ")"
+                     ,consequence "();"
+                 "else "
+                     ,alternative "();" ,*newline*))
+
 (define-js-macro %set-atom-fun (plc val)
   `(%%native ,*js-indent* ,plc "=" ,val ,*js-separator*))
 
