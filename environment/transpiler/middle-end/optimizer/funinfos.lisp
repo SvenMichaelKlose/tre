@@ -29,11 +29,36 @@
           (funinfo-args !)))))
 
 (defun remove-unused-ghost (fi)
-  (when (funinfo-closure-without-free-vars? fi)
+  (when (& (not (funinfo-fast-lexical? fi))
+           (funinfo-closure-without-free-vars? fi))
      (= (funinfo-ghost fi) nil)
      (pop (funinfo-args fi))
      (pop (funinfo-argdef fi))
      (optimizer-message "; Removed ghost from function ~A.~%" (funinfo-name fi))))
+
+(defun remove-lexicals (fi)
+  (when (& (== 1 (length (funinfo-lexicals fi)))
+           (not (funinfo-place? fi (car (funinfo-lexicals fi)))))
+    (= (funinfo-lexicals fi) nil)
+    (= (funinfo-lexical fi) nil)
+    (optimizer-message "; Removed lexicals in ~A.~%"
+                       (human-readable-funinfo-names fi))))
+
+(defun replace-ghost (fi)
+  (when (& (funinfo-ghost fi)
+           (not (funinfo-fast-lexical? fi))
+           (funinfo-free-vars fi)
+           (not (funinfo-lexicals (funinfo-parent fi))))
+    (| (== 1 (length (funinfo-free-vars fi)))
+       (error "Too much free vars."))
+    (alet (car (funinfo-free-vars fi))
+      (= (funinfo-free-vars fi) nil)
+      (= (funinfo-ghost fi) !)
+      (= (funinfo-argdef fi) (cons ! (cdr (funinfo-argdef fi))))
+      (= (funinfo-args fi) (cons ! (cdr (funinfo-args fi))))
+      (= (funinfo-fast-lexical? fi) t)
+      (optimizer-message "; Removed array allocation for single lexical in ~A.~%"
+                         (human-readable-funinfo-names fi)))))
 
 (defun remove-argument-stackplaces (fi)
   (let v (used-vars)
@@ -51,6 +76,8 @@
 (defun correct-funinfo ()
   (alet *funinfo*
     (remove-unused-ghost !)
+;    (remove-lexicals !)
+;    (replace-ghost !)
 ;    (warn-unused-arguments !)
     (& (transpiler-stack-locals? *transpiler*)
        (remove-argument-stackplaces !))))

@@ -23,6 +23,7 @@
   (lexical    nil) ; Name of the array of lexicals.
   (ghost      nil) ; Name of hidden argument with an array of lexicals.
   (local-function-args nil)
+  (fast-lexical? nil)
 
   ; Number of jump tags in body.
   (num-tags   nil)
@@ -52,6 +53,7 @@
       :lexical      lexical
       :ghost        ghost
       :local-function-args (copy-list local-function-args)
+      :fast-lexical? fast-lexical?
       :num-tags     num-tags
       :globals      (copy-list globals)
       :cps?         cps?))
