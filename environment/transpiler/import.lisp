@@ -1,5 +1,7 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
+(defvar *can-import-function?* nil)
+
 (defun transpiler-defined? (tr x)
   (| (transpiler-defined-function tr x)
      (transpiler-defined-variable tr x)
@@ -10,6 +12,9 @@
 (defun can-import-function? (tr x)
   (& (symbol? x)
      (function? (symbol-function x))
+     (!? *can-import-function?*
+         (funcall ! x)
+         t)
      (not (builtin? (symbol-function x))
           (transpiler-defined? tr x))))
 	
