@@ -1,10 +1,11 @@
 ;;;;; tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
 
-(defun %princ-character (c str)
-  (unless (& (string? c) (zero? (length c)))
+(defun princ-character (c str)
+  (unless (& (string? c)
+             (zero? (length c)))
     (? (cons? c)
        (adolist (c c)
-         (%princ-character ! str))
+         (princ-character ! str))
        (progn
          (= (stream-last-char str) (? (string? c)
                                       (elt c (-- (length c)))
@@ -32,38 +33,23 @@
 (defun fraction-chars (x)
   (fraction-chars-0 (mod (abs x) 1)))
 
-(defun %princ-number (c str)
+(defun princ-number (c str)
   (& (< c 0)
      (princ #\- str))
-  (%princ-character (integer-chars c) str)
+  (princ-character (integer-chars c) str)
   (alet (mod c 1)
     (unless (zero? !)
       (princ #\. str)
-      (%princ-character (fraction-chars !) str))))
+      (princ-character (fraction-chars !) str))))
 
-(defun %princ-string (obj str)
-  (%princ-character obj str))
+(defun princ-string (obj str)
+  (princ-character obj str))
 
 (defun princ (obj &optional (str *standard-output*))
-  "Print object in human readable format."
   (with-default-stream s str
     (?
-      (string? obj)    (%princ-string obj s)
-      (character? obj) (%princ-character obj s)
-      (number? obj)    (%princ-number obj s)
-      (symbol? obj)    (%princ-string (symbol-name obj) s))
+      (string? obj)    (princ-string obj s)
+      (character? obj) (princ-character obj s)
+      (number? obj)    (princ-number obj s)
+      (symbol? obj)    (princ-string (symbol-name obj) s))
 	obj))
-
-(defun terpri (&optional (str *standard-output*))
-  "Open a new line."
-  (with-default-stream s str
-    (%princ-character (code-char 10) s)
-    (force-output s)
-    nil))
-
-(defun fresh-line (&optional (str *standard-output*))
-  "Open a new line if not already opened."
-  (with-default-stream s str
-    (unless (fresh-line? s)
-      (terpri s)
-      t)))
