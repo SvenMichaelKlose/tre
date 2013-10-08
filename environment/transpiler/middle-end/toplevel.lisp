@@ -22,9 +22,7 @@
                                   (? (equal ! _)
                                      !
                                      (optimize !)))]
-    cps                      [? (transpiler-cps-transformation? tr)
-                                (funcall #'cps _)
-                                _])
+    cps                      [funcall #'cps _])
 
 (defun transpiler-middleend (tr x)
   (mapcan [transpiler-middleend-0 tr (list _)] x))

@@ -50,7 +50,7 @@
                                                                 ,(| .names. 'cps-identity)
                                                                 ,@args))))
                                 (%%go? !)      `((%setq nil (,(assoc-value .!. tag-names))))
-                                (%%go-cond? !) `((,(? (%%go-nil?)
+                                (%%go-cond? !) `((,(? (%%go-nil? !)
                                                       '%%call-nil
                                                       '%%call-not-nil)
                                                    ,..!. ,(assoc-value .!. tag-names) ,.names.))
@@ -73,26 +73,30 @@
      (butlast x)
      x))
 
-(defun cps-fun (x)
-  (with-temporaries (*funinfo*       (get-lambda-funinfo x)
-                     *cps-toplevel?* nil)
-    (? (funinfo-cps? *funinfo*)
-       (copy-lambda x :args (cons '~%cont (lambda-args x)) :body (cps-body (lambda-body x)))
-       x)))
-
-(defun cps-subfuns (x)
-  (when x
-    (cons (? (named-lambda? x.)
-             (cps-fun x.)
-             x.)
-          (cps-subfuns .x))))
-
 (defun cps-body (x)
   (!? (cps-split-body x)
       (+ (cps-make-funs (carlist !) (cps-tag-names !) (filter #'cps-subfuns (cdrlist !)))
          `((%setq nil (,!..))))
       x))
 
+(defun cps-fun (x)
+  (with-temporaries (*funinfo*       (get-lambda-funinfo x)
+                     *cps-toplevel?* nil)
+    (? (funinfo-cps? *funinfo*)
+       (progn
+         (format t "; CPS transforming ~A.~%" (funinfo-name *funinfo*))
+         (copy-lambda x :args (cons '~%cont (lambda-args x)) :body (cps-body (lambda-body x))))
+       (copy-lambda x :body (cps-subfuns (lambda-body x))))))
+
+(defun cps-subfuns (x)
+  (when x
+    (cons (?
+            (named-lambda? x.) (cps-fun x.)
+            (cps-call? x.)     (alet (%setq-value x.)
+                                 `(%setq ,(%setq-place x.) (,!. cps-identity ,@.!)))
+            x.)
+          (cps-subfuns .x))))
+
 (defun cps (x)
   (with-temporary *cps-toplevel?* t
-    (cps-body x)))
+    (cps-subfuns x)))

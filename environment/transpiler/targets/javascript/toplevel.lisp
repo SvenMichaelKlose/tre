@@ -55,8 +55,6 @@
          (js-files-compiler))))
 
 (defun js-transpile (sources &key (transpiler nil) (obfuscate? nil) (print-obfuscations? nil) (files-to-update nil))
-  (dolist (i '(%cons cons %symbol symbol))
-    (transpiler-add-cps-exception transpiler i))
   (target-transpile transpiler
                     :prologue-gen        #'js-prologue
                     :epilogue-gen        #'js-epilogue
