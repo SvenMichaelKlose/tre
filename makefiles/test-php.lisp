@@ -8,7 +8,7 @@
   (with-open-file out (open ! :direction 'output)
     (format t "; Compiling to file '~A'...~%" !)
     (princ
-      (compile-files `("makefiles/test-toplevel.lisp")
-	                 :obfuscate? nil
-                     :target 'php)
+      (compile-sections `("makefiles/test-toplevel.lisp")
+	                    :obfuscate? nil
+                        :target 'php)
       out)))

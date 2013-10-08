@@ -1,6 +1,6 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
-(defun compile-0 (sources &key (target nil) (transpiler nil) (obfuscate? nil) (print-obfuscations? t) (files-to-update nil))
+(defun compile-0 (sources &key target transpiler obfuscate? print-obfuscations? files-to-update)
   (| target (error "target missing"))
   (funcall (case target
              'c        ,(& *have-c-compiler?* '#'c-transpile)
@@ -19,11 +19,15 @@
                               'php      *php-transpiler*)))
            ,@(keyword-copiers 'obfuscate? 'print-obfuscations? 'files-to-update)))
 
-(defun compile-files (files &key (target nil) (transpiler nil) (obfuscate? nil) (print-obfuscations? t) (files-to-update nil))
-  (compile-0 (mapcar #'list files) ,@(keyword-copiers 'target 'transpiler 'obfuscate? 'print-obfuscations? 'files-to-update )))
+(defun compile-sections (sections &key (target nil) (transpiler nil) (obfuscate? nil) (print-obfuscations? t) (files-to-update nil))
+  (compile-0 (filter [? (string? _)
+                        (list _)
+                        _]
+                     sections)
+             ,@(keyword-copiers 'target 'transpiler 'obfuscate? 'print-obfuscations? 'files-to-update)))
 
-(defun compile-sections (sections &key (target nil) (transpiler nil) (obfuscate? nil) (print-obfuscations? t) (files-to-update nil) (section-id 'compile))
-  (compile-0 sections ,@(keyword-copiers 'target 'transpiler 'obfuscate? 'print-obfuscations? 'files-to-update )))
-
-(defun compile (expression &key (target nil) (transpiler nil) (obfuscate? nil) (print-obfuscations? t) (files-to-update nil) (section-id 'compile))
-  (compile-0 (& expression `((,section-id . (,expression)))) ,@(keyword-copiers 'target 'transpiler 'obfuscate? 'print-obfuscations? 'files-to-update )))
+(defun compile (expression &key (target nil) (transpiler nil) (obfuscate? nil) (print-obfuscations? t))
+  (compile-0 (& expression
+                `((compile . (,expression))))
+             ,@(keyword-copiers 'target 'transpiler 'obfuscate? 'print-obfuscations?)
+             :files-to-update nil))

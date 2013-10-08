@@ -12,7 +12,7 @@
      (error "You must specify a target. It must be one of C, BYTECODE, JS or PHP."))
   (| emitter
      (error "Argument EMITTER is required, which takes the compiled code and puts it somewhere."))
-  (let code (compile-files files :target target :files-to-update files-to-update :obfuscate? obfuscate?)
+  (let code (compile-sections files :target target :files-to-update files-to-update :obfuscate? obfuscate?)
     (funcall emitter code)
     (awhen recompiler-path
       (| modified-file-getter

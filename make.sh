@@ -105,7 +105,7 @@ distclean ()
 {
 	echo "Cleaning for distribution..."
     basic_clean
-	rm -rf backup
+	rm -rf backup compiled
 }
 
 link ()
@@ -150,13 +150,12 @@ crunsh)
 	CFLAGS="$CFLAGS $CRUNSHFLAGS"
 	COPTS="$COPTS $CRUNSHOPTS"
 	crunsh_compile
-	install_it
 	;;
 
 reload)
     echo "Reloading environment from source..."
     svnversion -n >environment/_current-version
-    echo | tre -n
+    echo | ./tre -n
 	;;
 
 interpreter)
@@ -171,7 +170,6 @@ debug)
 	COPTS="$COPTS $DEBUGOPTS"
 	standard_compile
 	link
-	install_it
 	;;
 
 build)
@@ -179,7 +177,6 @@ build)
 	COPTS="$COPTS $BUILDOPTS"
 	standard_compile
 	link
-	install_it
 	;;
 
 precompile)
