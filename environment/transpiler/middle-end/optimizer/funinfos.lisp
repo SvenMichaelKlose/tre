@@ -79,8 +79,9 @@
 ;    (remove-lexicals !)
 ;    (replace-ghost !)
 ;    (warn-unused-arguments !)
-    (& (transpiler-stack-locals? *transpiler*)
-       (remove-argument-stackplaces !))))
+    (? (transpiler-stack-locals? *transpiler*)
+       (remove-argument-stackplaces !)
+       (funinfo-vars-set ! (intersect (funinfo-vars !) (funinfo-used-vars !) :test #'eq)))))
 
 (defun remove-unused-vars (x)
   (& (named-lambda? x.) 
