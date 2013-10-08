@@ -7,6 +7,11 @@
 (defun make-javascript-transpiler-0 ()
   (create-transpiler
       :name                     'js
+      :prologue-gen             #'js-prologue
+      :epilogue-gen             #'js-epilogue
+      :decl-gen                 #'js-decl-gen
+      :sections-before-deps     #'js-sections-before-deps
+      :sections-after-deps      #'js-sections-after-deps
 	  :lambda-export?           nil
 	  :stack-locals?            nil
 	  :needs-var-declarations?  t

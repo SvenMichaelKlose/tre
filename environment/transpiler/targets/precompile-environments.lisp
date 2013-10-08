@@ -3,8 +3,8 @@
 (defun precompile-environments ()
   (format t "; Initializing JavaScript/ECMAScript target...~%" *boot-image*)
   (with-temporary (transpiler-import-from-environment? *js-transpiler*) nil
-    (compile nil :target 'js :transpiler *js-transpiler*))
+    (compile nil :transpiler *js-transpiler*))
   (format t "; Initializing PHP target...~%" *boot-image*)
   (with-temporary (transpiler-import-from-environment? *php-transpiler*) nil
-  (compile nil :target 'php :transpiler *php-transpiler*))
+  (compile nil :transpiler *php-transpiler*))
   nil)

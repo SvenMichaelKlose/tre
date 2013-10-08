@@ -14,6 +14,8 @@
 (defun make-c-transpiler ()
   (create-transpiler
       :name                     'c
+      :prologue-gen             #'c-header-includes
+      :decl-gen                 #'c-decl-gen
       :lambda-export?           t
       :stack-locals?            t
       :copy-arguments-to-stack? t

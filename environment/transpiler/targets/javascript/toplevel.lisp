@@ -17,13 +17,12 @@
   (filter ^(%setq (slot-value ,_. '__source) ,(list 'quote ._))
           (transpiler-memorized-sources *transpiler*)))
 
-(defun js-make-decl-gen ()
-  #'(()
-       (filter [transpiler-generate-code *transpiler* `((%var ,_))]
-		       (remove-if [transpiler-emitted-decl? *transpiler* _]
-                          (funinfo-vars (transpiler-global-funinfo *transpiler*))))))
+(defun js-decl-gen ()
+  (filter [transpiler-generate-code *transpiler* `((%var ,_))]
+          (remove-if [transpiler-emitted-decl? *transpiler* _]
+                     (funinfo-vars (transpiler-global-funinfo *transpiler*)))))
 
-(defun js-files-before-deps (tr)
+(defun js-sections-before-deps (tr)
   `((essential-functions-0 . ,*js-base0*)
     ,@(& (not (transpiler-exclude-base? tr))
          `((essential-functions-1 . ,*js-base*)
@@ -40,7 +39,7 @@
             `((,(+ "environment/" _.)))]
           (reverse *environment-filenames*)))
 
-(defun js-files-compiler ()
+(defun js-sections-compiler ()
   (alet *js-env-path*
     `((list-of-early-defined-functions . ,#'js-emit-early-defined-functions)
       (,(+ ! "env-load-stub.lisp"))
@@ -48,20 +47,8 @@
       (,(+ ! "late-macro.lisp"))
       (,(+ ! "eval.lisp")))))
 
-(defun js-files-after-deps ()
+(defun js-sections-after-deps (tr)
   `((late-symbol-function-assignments . ,#'emit-late-symbol-function-assignments)
     (memorized-source-emitter . ,#'js-emit-memorized-sources)
     ,@(& *have-compiler?*
-         (js-files-compiler))))
-
-(defun js-transpile (sources &key (transpiler nil) (obfuscate? nil) (print-obfuscations? nil) (files-to-update nil))
-  (target-transpile transpiler
-                    :prologue-gen        #'js-prologue
-                    :epilogue-gen        #'js-epilogue
-                    :decl-gen            (js-make-decl-gen)
-                    :files-before-deps   (js-files-before-deps transpiler)
-                    :files-after-deps    (+ (js-files-after-deps)
-                                            sources)
-                    :files-to-update     files-to-update
-                    :obfuscate?          obfuscate?
-                    :print-obfuscations? print-obfuscations?))
+         (js-sections-compiler))))

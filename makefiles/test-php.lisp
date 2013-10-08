@@ -9,6 +9,5 @@
     (format t "; Compiling to file '~A'...~%" !)
     (princ
       (compile-sections `("makefiles/test-toplevel.lisp")
-	                    :obfuscate? nil
-                        :target 'php)
+                        :transpiler *php-transpiler*)
       out)))

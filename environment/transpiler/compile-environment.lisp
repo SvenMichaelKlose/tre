@@ -1,25 +1,22 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun %compile-environment-configure-transpiler (tr funs)
-  (= (transpiler-dot-expand? (copy-transpiler tr)) nil)
+  ;(= (transpiler-dot-expand? (copy-transpiler tr)) nil)
   (transpiler-add-wanted-functions tr (| (!? funs
                                              (ensure-list !))
                                          (+ *universe-functions* *macros*)))
   tr)
 
 (defun compile-c-environment (&optional (funs nil))
-  (let tr (%compile-environment-configure-transpiler *c-transpiler* funs)
-    (let code (compile-sections nil :target 'c :transpiler tr)
-      (with-open-file out (open "interpreter/_compiled-env.c" :direction 'output)
-	    (princ code out))))
+  (put-file "interpreter/_compiled-env.c"
+            (compile-sections nil :transpiler (%compile-environment-configure-transpiler *c-transpiler* funs)))
   nil)
 
 (defun compile-bytecode-environment (&optional (funs nil))
-  (let tr (%compile-environment-configure-transpiler *bc-transpiler* funs)
-    (compile-sections nil :target 'bytecode :transpiler tr)))
+  (compile-sections nil :transpiler (%compile-environment-configure-transpiler *bc-transpiler* funs)))
 
 (defun compile-c-compiler ()
-  (compile-c-environment '(c-transpile)))
+  (compile-c-environment '(target-transpile)))
 
 (defun compile-bytecode-compiler ()
-  (compile-bytecode-environment '(bc-transpile)))
+  (compile-bytecode-environment '(target-transpile)))

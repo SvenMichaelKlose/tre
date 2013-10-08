@@ -20,7 +20,7 @@
            (transpiler-raw-decls !))
       (with-temporaries (*show-definitions?* nil
                          *show-transpiler-progress?* nil)
-        (load-bytecode (bc-transpile `((eval . ((defun ,tmpfun () ,x))))
-                                     :transpiler !)
+        (load-bytecode (expr-to-code ! (compile-sections `((eval . ((defun ,tmpfun () ,x))))
+                                                         :transpiler !))
                        :temporary? t))
       (funcall (symbol-function tmpfun)))))

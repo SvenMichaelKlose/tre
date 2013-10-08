@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2011–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2011–2013 Sven Michael Klose <pixel@copei.de>
 
 (= *gensym-prefix* "~jsG")
 
@@ -20,10 +20,7 @@
   (clr (transpiler-frontend-files tr)
        (transpiler-compiled-files tr)
        (transpiler-raw-decls tr))
-  (target-transpile tr :prologue-gen     #'js-prologue
-                       :epilogue-gen     #'js-epilogue
-                       :files-after-deps (list (cons 'eval (list expression)))
-		               :decl-gen #'js-make-decl-gen))
+  (compile expression :transpiler tr))
 
 (defun eval-compile (x)
   (with-temporary *js-transpiler* (| *js-eval-transpiler* (make-js-eval-transpiler))

@@ -31,23 +31,21 @@
 (defun php-epilogue ()
   "?>")
 
-(defun php-decls ()
+(defun php-decl-gen ()
   (transpiler-make-code *transpiler* (transpiler-frontend *transpiler* (transpiler-compiled-inits *transpiler*))))
 
-(defun php-transpile (sources &key (transpiler nil) (obfuscate? nil) (print-obfuscations? nil) (files-to-update nil))
-  (transpiler-add-defined-variable transpiler '*KEYWORD-PACKAGE*)
-  (target-transpile transpiler
-                    :prologue-gen        #'php-prologue
-                    :epilogue-gen        #'php-epilogue
-                    :decl-gen            #'php-decls
-                    :files-before-deps   `((base0 . ,*php-base0*)
-                                           ,@(& (not (transpiler-exclude-base? transpiler))
-                                                `((base1 . ,*php-base*))))
-                    :files-after-deps    (+ (& (not (transpiler-exclude-base? transpiler))
-                                               `((base2 . ,*php-base2*)))
-                                            (& (eq t *have-environment-tests*)
-                                               (list (cons 'env-tests (make-environment-tests))))
-                                            sources)
-                    :files-to-update     files-to-update
-                    :obfuscate?          obfuscate?
-                    :print-obfuscations? print-obfuscations?))
+(defun php-init ()
+  (transpiler-add-defined-variable *transpiler* '*keyword-package*)
+  nil)
+
+(defun php-sections-before-deps (tr)
+  `((init . ,#'php-init)
+    (base0 . ,*php-base0*)
+    ,@(& (not (transpiler-exclude-base? tr))
+         `((base1 . ,*php-base*)))))
+
+(defun php-sections-after-deps (tr)
+  (+ (& (not (transpiler-exclude-base? tr))
+        `((base2 . ,*php-base2*)))
+     (& (eq t *have-environment-tests*)
+        (list (cons 'env-tests (make-environment-tests))))))

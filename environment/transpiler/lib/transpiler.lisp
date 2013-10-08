@@ -24,6 +24,15 @@
 
 (defstruct transpiler
   name
+
+  (sections-to-update          nil)
+
+  (prologue-gen                nil)
+  (epilogue-gen                nil)
+  (decl-gen                    nil)
+  (sections-before-deps        nil)
+  (sections-after-deps         nil)
+
   std-macro-expander
   codegen-expander
   separator
@@ -57,6 +66,7 @@
   (inject-debugging?        nil)
 
   (obfuscate?               nil)
+  (print-obfuscations?      nil)
   (import-from-environment? t)
   (import-variables?        t)
   (only-environment-macros? t)
@@ -169,6 +179,12 @@
   (aprog1
     (make-transpiler
         :name                     name
+        :sections-to-update       (copy-list sections-to-update)
+        :prologue-gen             prologue-gen
+        :epilogue-gen             epilogue-gen
+        :decl-gen                 decl-gen
+        :sections-before-deps     sections-before-deps
+        :sections-after-deps      sections-after-deps
         :codegen-expander         codegen-expander
         :separator                separator
         :identifier-char?         identifier-char?
@@ -189,6 +205,7 @@
         :backtrace?               backtrace?
         :inject-debugging?        inject-debugging?
         :obfuscate?               obfuscate?
+        :print-obfuscations?      print-obfuscations?
         :import-from-environment? import-from-environment?
         :import-variables?        import-variables?
         :only-environment-macros? only-environment-macros?
@@ -279,7 +296,6 @@
                                         x)
 (transpiler-getter add-cps-exception     (= (href (transpiler-cps-exceptions tr) x) t)
                                          x)
-(transpiler-getter switch-obfuscator (= (transpiler-obfuscate? tr) x))
 (transpiler-getter macro? (| (expander-has-macro? (transpiler-std-macro-expander tr) x)
                              (expander-has-macro? (transpiler-codegen-expander tr) x)))
 (transpiler-getter imported-variable? (& (transpiler-import-from-environment? tr)

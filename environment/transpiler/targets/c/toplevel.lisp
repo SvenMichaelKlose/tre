@@ -89,9 +89,3 @@
 (defun c-header-includes ()
   (+ (format nil "#include <stdlib.h>~%")
      (apply #'+ (mapcar [format nil "#include \"~A\"~%" _] *c-core-headers*))))
-
-(defun c-transpile (sources &key transpiler obfuscate? print-obfuscations? files-to-update)
-  (target-transpile transpiler
-                    :prologue-gen     #'c-header-includes
-                    :decl-gen         #'c-decl-gen
-                    :files-after-deps sources))

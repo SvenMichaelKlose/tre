@@ -16,6 +16,11 @@
 (defun make-php-transpiler-0 ()
   (create-transpiler
       :name                     'php
+      :prologue-gen             #'php-prologue
+      :epilogue-gen             #'php-epilogue
+      :decl-gen                 #'php-decl-gen
+      :sections-before-deps     #'php-sections-before-deps
+      :sections-after-deps      #'php-sections-after-deps
       :lambda-export?           t
       :stack-locals?            nil
       :raw-constructor-names?   t
