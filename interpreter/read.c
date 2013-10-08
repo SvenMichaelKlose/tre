@@ -305,6 +305,10 @@ treread_list (trestream * stream)
 
     /* Read CAR. */
     switch (TRECONTEXT_TOKEN()) {
+		case TRETOKEN_DOT:
+            treread_token (stream);
+            return CONS(treatom_cons, treread_list (stream));
+
 		case TRETOKEN_QUOTE:
 		case TRETOKEN_BACKQUOTE:
 		case TRETOKEN_ACCENT_CIRCONFLEX:
@@ -423,6 +427,7 @@ treread_init ()
     treatom_accent_circonflex = treatom_get ("ACCENT-CIRCONFLEX", TRECONTEXT_PACKAGE());
     treatom_square = treatom_get ("SQUARE", TRECONTEXT_PACKAGE());
     treatom_curly = treatom_get ("CURLY", TRECONTEXT_PACKAGE());
+    treatom_cons = treatom_get ("CONS", TRECONTEXT_PACKAGE());
 
     EXPAND_UNIVERSE(treatom_quote);
     EXPAND_UNIVERSE(treatom_backquote);
@@ -432,6 +437,7 @@ treread_init ()
     EXPAND_UNIVERSE(treatom_accent_circonflex);
     EXPAND_UNIVERSE(treatom_square);
     EXPAND_UNIVERSE(treatom_curly);
+    EXPAND_UNIVERSE(treatom_cons);
 }
 
 #endif /* #ifdef INTERPRETER */

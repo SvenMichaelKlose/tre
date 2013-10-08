@@ -50,6 +50,7 @@ treptr treatom_quasiquote_splice;
 treptr treatom_values;
 treptr treatom_square;
 treptr treatom_curly;
+treptr treatom_cons;
 
 treptr tre_package_keyword;
 

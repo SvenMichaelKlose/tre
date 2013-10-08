@@ -57,5 +57,6 @@ extern treptr treatom_quote;
 extern treptr treatom_values;
 extern treptr treatom_square;
 extern treptr treatom_curly;
+extern treptr treatom_cons;
 
 #endif /* #ifndef TRE_PTR_H */
