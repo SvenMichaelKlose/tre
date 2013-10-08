@@ -36,11 +36,7 @@
 
 - &REQUIRED-KEY
 
-- &SELF-OPTIONAL: Only usable when self-called.
-
-- . alias for CONS
-
-- ??? QUASIQUOTE escape for macro macros.
+- &SELF-OPTIONAL: Only when self-called.
 
 - . for &REST (implies argument definition without () == (&rest arg))
 
@@ -56,5 +52,3 @@
 
 - (fun1+fun2 ...) => (fun1 ...) (fun2 ...)
 - take list of functions
-
-- Arithmetic functions ignore NIL.
