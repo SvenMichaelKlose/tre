@@ -3,7 +3,7 @@
 (defun %compile-environment-configure-transpiler (tr funs)
   (= (transpiler-dot-expand? (copy-transpiler tr)) nil)
   (transpiler-add-wanted-functions tr (| (!? funs
-                                             (force-list !))
+                                             (ensure-list !))
                                          (+ *universe-functions* *macros*)))
   tr)
 

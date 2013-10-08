@@ -13,7 +13,7 @@
 
 (defmacro defclass (classes args &rest body)
   (print-definition `(defclass ,classes ,args))
-  (= classes (force-list classes))
+  (= classes (ensure-list classes))
   (& (href *classes* classes.)
      (error "Class ~A already defined." classes.))
   (= (href *classes* classes.) (make-class :members (apply #'hash-merge (filter [class-members (href *classes* _)] (reverse .classes)))

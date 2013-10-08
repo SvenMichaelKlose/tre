@@ -13,9 +13,9 @@
 
 (defun alien-import-print-type (data-type name &key (first t))
   (| first (format t ", "))
-  (format t "~A" (force-string data-type))
+  (format t "~A" (ensure-string data-type))
   (awhen name
-    (format t " ~A" (force-string !))))
+    (format t " ~A" (ensure-string !))))
 
 (defun alien-import-add-struct (hash desc)
   (with (struct-name (lml-get-attribute desc :name))
@@ -38,7 +38,7 @@
 	    (format t "]")))))
 
 (defun alien-import-get-type (hash tp)
-  (force-string
+  (ensure-string
     (case tp.
       'typedef	; Transcend typedefs.
 	     (alien-import-get-type-from-desc hash tp)
@@ -47,11 +47,11 @@
       'struct
          (progn
 	       (alien-import-add-struct hash tp)
-           (string-concat "struct " (force-string (lml-get-attribute tp :name))))
+           (string-concat "struct " (ensure-string (lml-get-attribute tp :name))))
       'arraytype
          (format nil " ~A[~A]"
                  (alien-import-get-type-from-desc hash tp)
-                 (++ (string-integer (force-string (lml-get-attribute tp :size)))))
+                 (++ (string-integer (ensure-string (lml-get-attribute tp :size)))))
 	  (? (lml-get-attribute tp :name)
 	     (? (eq 'CVQUALIFIEDTYPE tp.)
 	   	    (alien-import-get-type-from-desc hash tp)
@@ -67,7 +67,7 @@
 	   (let fun-name (string (lml-get-attribute x :name))
 	     (unless (href *alien-imported-functions* fun-name)
 		   (format t "Function ~A ~A ("
-				   (force-string (lml-get-attribute x :name))
+				   (ensure-string (lml-get-attribute x :name))
 				   (alien-import-get-type hash (href hash (lml-get-attribute x :returns))))
 		   (awhen (lml-get-children x)
 			 (let idx -1

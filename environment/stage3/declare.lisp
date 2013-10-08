@@ -27,7 +27,7 @@
   (| (symbol? x)
 	 (error "Symbol expected but got ~A to declare as of type ~A." x typ))
   `(unless (| ,@(filter [%declare-statement-type-predicate _ x]
-                        (force-list typ)))
+                        (ensure-list typ)))
 	 (error "~A is not of type ~A. Object: ~A." ,(symbol-name x) (quote ,typ) ,x)))
 
 (defun %declare-statement-type (x)
@@ -49,7 +49,7 @@
 
 (defmacro declare (&rest x)
   (| x (error "Arguments expected."))
-  (alet (filter #'%declare-statement (force-tree x))
+  (alet (filter #'%declare-statement (ensure-tree x))
 	(when *assert*
   	  `(progn
 	 	 ,@!))))

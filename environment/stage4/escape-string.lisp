@@ -2,7 +2,7 @@
 
 (defun escape-charlist (x &optional (quote-char #\") (chars-to-escape #\"))
   (when x
-    (= chars-to-escape (force-list chars-to-escape))
+    (= chars-to-escape (ensure-list chars-to-escape))
     (?
 	  (== quote-char x.)
         (cons #\\ (cons x. (escape-charlist .x quote-char chars-to-escape)))

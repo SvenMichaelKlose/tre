@@ -3,4 +3,4 @@
 (defun starts-with? (x head &key (ignore-case? nil))
   (unless (< (length x) (length head))
     (string== (optional-string-downcase head :convert? ignore-case?)
-              (optional-string-downcase (subseq (force-string x) 0 (length head)) :convert? ignore-case?))))
+              (optional-string-downcase (subseq (ensure-string x) 0 (length head)) :convert? ignore-case?))))

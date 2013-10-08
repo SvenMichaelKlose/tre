@@ -112,7 +112,7 @@
 	  (filter [? (< _ 256)
 				 (+ "\\" (print-octal _ nil))
 				 (+ "\\u" (print-hexword _ nil))]
-			  (force-list x))))
+			  (ensure-list x))))
 
 (defun xml2lml-entity (in)
   (xml-read-char in) ; #\&

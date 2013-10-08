@@ -1,6 +1,6 @@
 ;;;;; tré – Copyright (c) 2005–2006,2009–2013 Sven Michael Klose <pixel@copei.de>
 
-(functional assoc rassoc acons copy-alist force-alist)
+(functional assoc rassoc acons copy-alist ensure-alist)
 
 (defmacro %define-assoc (name getter)
   `(defun ,name (key lst &key (test #'eql))
@@ -52,7 +52,7 @@
 (defmacro curly (&rest x)
   `(assoc ,@x))
 
-(defun force-alist (x)
+(defun ensure-alist (x)
   (when x
     (& (atom x)  (= x (list x)))
     (& (atom x.) (= x (list x)))

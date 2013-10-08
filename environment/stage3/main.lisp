@@ -1,7 +1,7 @@
 ;;;; tré – Copyright (C) 2005–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
 
 (env-load "stage3/list-unless.lisp")
-(env-load "stage3/force-tree.lisp")
+(env-load "stage3/ensure-tree.lisp")
 (env-load "stage3/declare.lisp")
 (env-load "stage3/hash.lisp" 'c)
 (env-load "stage3/profile.lisp")
