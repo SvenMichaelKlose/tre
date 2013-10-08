@@ -150,16 +150,17 @@
 
 (defun read-cons (str)
   (with ((token pkg sym) (read-token str))
-    (unless (%read-closing-bracket? token)
-	  (read-list str token pkg sym))))
+    (? (eq token 'dot)
+       (cons 'cons (read-cons str))
+	   (read-list str token pkg sym))))
 
 (defun read-cons-slot (str)
   (read-set-listprop str)
   (with-temporary *default-listprop* *default-listprop*
     (let l (read-cons str)
-	  (? (== #\. (peek-char str))
-	     (& (read-char str)
-		    `(slot-value ,l (quote ,(read-expr str))))
+      (? (== #\. (peek-char str))
+         (& (read-char str)
+            `(slot-value ,l ',(read-expr str)))
 	     l))))
 
 (defun read-expr (str)
