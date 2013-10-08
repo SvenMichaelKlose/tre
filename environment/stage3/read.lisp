@@ -13,7 +13,8 @@
           #\' #\` #\, #\: #\; #\" #\# #\^))
 
 (defun symbol-char? (x)
-  (& (> x 32) (not (special-char? x))))
+  (& (> x 32)
+     (not (special-char? x))))
 
 (defun skip-comment (str)
   (let c (read-char str)
@@ -26,7 +27,8 @@
     (let c (peek-char str)
       (when (== #\; c)
         (skip-comment str))
-      (when (& (< c 33) (>= c 0))
+      (when (& (< c 33)
+               (>= c 0))
         (read-char str)
         (skip-spaces str)))))
 
@@ -72,7 +74,9 @@
 
 (defun read-token (str)
   (with ((pkg sym) (get-symbol-and-package str))
-	(values (? (& sym (not .sym) (== #\. sym.))
+	(values (? (& sym
+                  (not .sym)
+                  (== #\. sym.))
 		         'dot
 		       (? sym
                   (? (every [| (digit-char? _)
@@ -141,7 +145,7 @@
           (with-temporary *default-listprop* *default-listprop*
 	        (with ((token pkg sym) (read-token str))
 	          (? (eq 'dot token)
-		         (with (x (read-expr str)
+		         (with (x               (read-expr str)
 				        (token pkg sym) (read-token str))
 		           (| (%read-closing-bracket? token)
 			          (error "Only one value allowed after dotted cons."))
@@ -176,13 +180,11 @@
          (read-atom str token pkg sym)))))
 
 (defun read (&optional (str *standard-input*))
-  "Read expression from stream."
   (skip-spaces str)
   (unless (end-of-file? str)
 	(read-expr str)))
 
 (defun read-all (str)
-  "Read all expressions from stream."
   (unless (progn
 	        (skip-spaces str)
 	        (end-of-file? str))
