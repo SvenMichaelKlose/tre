@@ -100,15 +100,18 @@
      (member x (funinfo-used-vars fi) :test #'eq)
      t))
 
-(defun funinfo-add-used-var (fi x)
-  (& (symbol? x)
-     (funinfo-parent fi)
+(defun funinfo-add-used-var-0 (fi x)
+  (& (funinfo-parent fi)
      (not (funinfo-used-var? fi x))
      (progn
        (push x (funinfo-used-vars fi))
        (| (funinfo-arg-or-var? fi x)
-          (funinfo-add-used-var (funinfo-parent fi) x)))))
+          (funinfo-add-used-var-0 (funinfo-parent fi) x)))))
 
+(defun funinfo-add-used-var (fi x)
+  (& (symbol? x)
+     (funinfo-var-or-lexical? fi x)
+     (funinfo-add-used-var-0 fi x)))
 
 ;;;; FREE VARIABLES
 
