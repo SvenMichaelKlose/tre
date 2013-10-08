@@ -18,7 +18,7 @@
 		                           "return-value.lisp"))))
 (defvar *js-base*
 	,(list 'quote (+ (js-load-base *js-env-path*
-                                   "log.lisp"
+                                   "%princ.lisp"
 		                           "defined-functions.lisp"
 		                           "cons.lisp"
 		                           "symbol.lisp"

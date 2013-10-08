@@ -23,7 +23,7 @@
 	,(list 'quote (+ (php-load-base *php-env-path*
 			             "../../../environment/number-typing.lisp"
 			             "print-object.lisp"
-			             "log.lisp"
+			             "%princ.lisp"
 			             "apply.lisp"
 			             "hash.lisp"
 			             "array.lisp"
