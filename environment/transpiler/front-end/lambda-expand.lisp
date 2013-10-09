@@ -9,14 +9,11 @@
 			   stack-places values)
      ,@body))
 
-(defun lambda-call-embed-0 (fi args vals body)
-  (with ((a v) (assoc-splice (argument-expand 'dummy-in-lambda-call-embed args vals)))
-    (funinfo-var-add-many fi a)
-    (lambda-expand-tree fi (lambda-expand-make-inline-body a v body))))
-
 (defun lambda-call-embed (fi lambda-call)
   (with-lambda-call (args vals body lambda-call)
-    (lambda-call-embed-0 fi args vals body)))
+    (with ((a v) (assoc-splice (argument-expand 'dummy-in-lambda-call-embed args vals)))
+      (funinfo-var-add-many fi a)
+      (lambda-expand-tree fi (lambda-expand-make-inline-body a v body)))))
 
 
 ;;;; EXPORT

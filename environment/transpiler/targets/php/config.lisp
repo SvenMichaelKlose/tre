@@ -16,6 +16,7 @@
 (defun make-php-transpiler-0 ()
   (create-transpiler
       :name                     'php
+      :frontend-init            #'php-frontend-init
       :prologue-gen             #'php-prologue
       :epilogue-gen             #'php-epilogue
       :decl-gen                 #'php-decl-gen

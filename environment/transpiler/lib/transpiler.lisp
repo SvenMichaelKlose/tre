@@ -27,6 +27,8 @@
 
   (sections-to-update          nil)
 
+  frontend-init
+  middleend-init
   (prologue-gen                nil)
   (epilogue-gen                nil)
   (decl-gen                    nil)
@@ -180,6 +182,8 @@
     (make-transpiler
         :name                     name
         :sections-to-update       (copy-list sections-to-update)
+        :frontend-init            frontend-init
+        :middleend-init           middleend-init
         :prologue-gen             prologue-gen
         :epilogue-gen             epilogue-gen
         :decl-gen                 decl-gen

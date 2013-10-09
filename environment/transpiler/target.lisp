@@ -3,15 +3,15 @@
 (defvar *nil-symbol-name* "NIL")
 (defvar *t-symbol-name*   "T")
 
-(defun eq-string== (x y)
+(defun eq|string== (x y)
   (? (| (symbol? x)
         (symbol? y))
      (eq x y)
      (string== x y)))
 
 (defun compile-section? (section processed-sections)
-  (| (member section (transpiler-sections-to-update *transpiler*) :test #'eq-string==)
-     (not (assoc section processed-sections :test #'eq-string==))))
+  (| (member section (transpiler-sections-to-update *transpiler*) :test #'eq|string==)
+     (not (assoc section processed-sections :test #'eq|string==))))
 
 (defun accumulated-toplevel? (section)
   (not (eq 'accumulated-toplevel section)))
@@ -25,11 +25,11 @@
           (let code (? (compile-section? section (transpiler-compiled-files tr))
                        (with-temporary (transpiler-accumulate-toplevel-expressions? tr) (not (accumulated-toplevel? section))
                          (transpiler-make-code tr data))
-                       (assoc-value section (transpiler-compiled-files tr) :test #'eq-string==))
-            (aadjoin! code section (transpiler-compiled-files tr) :test #'eq-string==)
+                       (assoc-value section (transpiler-compiled-files tr) :test #'eq|string==))
+            (aadjoin! code section (transpiler-compiled-files tr) :test #'eq|string==)
 	        (enqueue compiled-code code)))))))
 
-(defun target-transpile-1 (sections)
+(def-transpiler target-transpile-1 (sections)
   (with (tr             *transpiler*
          frontend-code  (make-queue))
 	(dolist (i sections (queue-list frontend-code))
@@ -43,13 +43,13 @@
                                                                       data))
 		  			     (string? section) (transpiler-frontend-file tr section)
                          (error "Compiler input is not described by a section symbol with a function or expressions by a file name. Got ~A instead." i.))
-                       (assoc-value section (transpiler-frontend-files tr) :test #'eq-string==))
-            (aadjoin! code section (transpiler-frontend-files tr) :test #'eq-string==)
+                       (assoc-value section (transpiler-frontend-files tr) :test #'eq|string==))
+            (aadjoin! code section (transpiler-frontend-files tr) :test #'eq|string==)
 	        (enqueue frontend-code (cons section code))))))))
 
-(defun target-sighten-deps ()
-  (with-temporary (transpiler-save-argument-defs-only? *transpiler*) nil
-    (transpiler-import-from-environment *transpiler*)))
+(defun target-sighten-deps (tr)
+  (with-temporary (transpiler-save-argument-defs-only? tr) nil
+    (transpiler-import-from-environment tr)))
 
 (defun target-transpile-accumulated-toplevels (tr)
   (& (transpiler-accumulate-toplevel-expressions? tr)
@@ -64,52 +64,61 @@
     (unless (zero? 1)
       (format t "; ~A warning~A.~%" ! (? (< 1 !) "s" "")))))
 
-(defun target-transpile (tr sections)
+(def-transpiler transpile-codegen (transpiler before-deps deps after-deps)
+  (& *show-transpiler-progress?*
+     (format t "; Let me think. Hmm...~%"))
+  (!? middleend-init (funcall !))
+  (with (compiled-before  (target-transpile-2 before-deps)
+         compiled-deps    (!? deps (transpiler-make-code transpiler !))
+         compiled-after   (target-transpile-2 after-deps)
+         compiled-acctop  (target-transpile-accumulated-toplevels transpiler))
+    (& *show-transpiler-progress?*
+       (format t "; Phew!~%"))
+    (!? compiled-deps
+        (= (transpiler-imported-deps transpiler) (transpiler-concat-text transpiler imported-deps !)))
+    (transpiler-concat-text transpiler
+                            (!? prologue-gen (funcall !))
+                            (!? decl-gen (funcall !))
+                            compiled-before
+                            (reverse (transpiler-raw-decls transpiler))
+                            (transpiler-imported-deps transpiler)
+                            compiled-after
+                            compiled-acctop
+                            (!? epilogue-gen (funcall !)))))
+
+(def-transpiler transpile-0 (transpiler sections)
+  (!? frontend-init (funcall !))
+  (with (before-deps  (target-transpile-1 (!? sections-before-deps (funcall ! transpiler)))
+         after-deps   (target-transpile-1 (+ (!? sections-after-deps (funcall ! transpiler))
+                                             sections))
+		 deps         (target-sighten-deps transpiler))
+    (& *show-transpiler-progress?*
+       (let num-exprs (apply #'+ (mapcar [length ._]
+                                         (+ before-deps deps after-deps)))
+         (format t "; ~A top level expressions.~%" num-exprs)))
+    (transpile-codegen transpiler before-deps deps after-deps)))
+
+(def-transpiler transpile-print-stats (transpiler start-time)
+  (& print-obfuscations?
+     obfuscate?
+     (transpiler-print-obfuscations transpiler))
+  (warn-unused-functions transpiler)
+  (tell-number-of-warnings)
+  (& *show-transpiler-progress?*
+     (format t "; ~A seconds passed.~%~F" (integer (/ (- (nanotime) start-time) 1000000000)))))
+
+(def-transpiler target-transpile (transpiler sections)
   (let start-time (nanotime)
     (= *warnings* nil)
-    (with-temporaries (*recompiling?*  (& (transpiler-sections-to-update tr) t)
-                       *transpiler*    tr
-                       *assert*        (| *assert* (transpiler-assert? tr)))
+    (with-temporaries (*recompiling?*  (& sections-to-update t)
+                       *transpiler*    transpiler
+                       *assert*        (| *assert* assert?))
       (& *have-compiler?*
-         (= (transpiler-save-sources? tr) t))
-      (& (transpiler-sections-to-update tr)
-         (clr (transpiler-emitted-decls tr)))
-      (= (transpiler-host-functions-hash tr) (make-host-functions-hash))
-      (= (transpiler-host-variables-hash tr) (make-host-variables-hash))
-      (with (before-deps  (target-transpile-1 (!? (transpiler-sections-before-deps tr)
-                                                  (funcall ! tr)))
-		     after-deps   (target-transpile-1 (+ (!? (transpiler-sections-after-deps tr)
-                                                     (funcall ! tr))
-                                                 sections))
-		     deps         (target-sighten-deps))
-        (& *show-transpiler-progress?*
-           (let num-exprs (apply #'+ (mapcar [length ._]
-                                             (+ before-deps deps after-deps)))
-             (format t "; ~A top level expressions.~%; Let me think. Hmm...~%" num-exprs)))
-        (with (compiled-before  (target-transpile-2 before-deps)
-	           compiled-deps    (!? deps
-                                    (transpiler-make-code tr !))
-               compiled-after   (target-transpile-2 after-deps)
-               compiled-acctop  (target-transpile-accumulated-toplevels tr))
-        (& *show-transpiler-progress?* (format t "; Phew!~%"))
-          (!? compiled-deps
-              (= (transpiler-imported-deps tr) (transpiler-concat-text tr (transpiler-imported-deps tr) !)))
-          (prog1
-            (transpiler-concat-text tr (funcall (| (transpiler-prologue-gen tr)
-                                                   #'(() "")))
-                                       (!? (transpiler-decl-gen tr)
-                                           (funcall !))
-                                       compiled-before
-                                       (reverse (transpiler-raw-decls tr))
-                                       (transpiler-imported-deps tr)
-                                       compiled-after
-                                       compiled-acctop
-                                       (funcall (| (transpiler-epilogue-gen tr)
-                                                   #'(() ""))))
-              (& (transpiler-print-obfuscations? tr)
-                 (transpiler-obfuscate? tr)
-                 (transpiler-print-obfuscations tr))
-              (warn-unused-functions tr)
-              (tell-number-of-warnings)
-              (& *show-transpiler-progress?*
-                 (format t "; ~A seconds passed.~%~F" (integer (/ (- (nanotime) start-time) 1000000000))))))))))
+         (= (transpiler-save-sources? transpiler) t))
+      (& sections-to-update
+         (clr (transpiler-emitted-decls transpiler)))
+      (= (transpiler-host-functions-hash transpiler) (make-host-functions-hash))
+      (= (transpiler-host-variables-hash transpiler) (make-host-variables-hash))
+      (prog1
+        (transpile-0 transpiler sections)
+        (transpile-print-stats transpiler start-time)))))

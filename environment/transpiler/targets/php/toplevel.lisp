@@ -34,13 +34,11 @@
 (defun php-decl-gen ()
   (transpiler-make-code *transpiler* (transpiler-frontend *transpiler* (transpiler-compiled-inits *transpiler*))))
 
-(defun php-init ()
-  (transpiler-add-defined-variable *transpiler* '*keyword-package*)
-  nil)
+(defun php-frontend-init ()
+  (transpiler-add-defined-variable *transpiler* '*keyword-package*))
 
 (defun php-sections-before-deps (tr)
-  `((init . ,#'php-init)
-    (base0 . ,*php-base0*)
+  `((base0 . ,*php-base0*)
     ,@(& (not (transpiler-exclude-base? tr))
          `((base1 . ,*php-base*)))))
 
