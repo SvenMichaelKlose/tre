@@ -18,23 +18,10 @@
 
 ;;;; EXPORT
 
-(defvar *lexical-sym-counter* 0)
-
-(defun lambda-export-make-lexical-sym ()
-  (alet ($ '~L (++! *lexical-sym-counter*))
-    (? (& (eq ! (symbol-value !))
-          (not (symbol-function !)))
-       !
-       (lambda-export-make-lexical-sym))))
-
-(defun lambda-export-make-exported-name ()
-  (alet (lambda-export-make-lexical-sym)
-    (? (symbol-function !)
-       (lambda-export-make-exported-name)
-       !)))
+(define-gensym-generator closure-name ~closure-)
 
 (defun lambda-export (fi x)
-  (with (name   (lambda-export-make-exported-name)
+  (with (name   (closure-name)
          args   (lambda-args x)
          body   (lambda-body x)
          new-fi (create-funinfo :name   name
