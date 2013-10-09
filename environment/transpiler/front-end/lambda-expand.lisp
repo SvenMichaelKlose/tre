@@ -9,25 +9,25 @@
 			   stack-places values)
      ,@body))
 
-(defun lambda-call-embed (fi lambda-call)
+(defun lambda-call-embed (lambda-call)
   (with-lambda-call (args vals body lambda-call)
     (with ((a v) (assoc-splice (argument-expand 'dummy-in-lambda-call-embed args vals)))
-      (funinfo-var-add-many fi a)
-      (lambda-expand-tree fi (lambda-expand-make-inline-body a v body)))))
+      (funinfo-var-add-many *funinfo* a)
+      (lambda-expand-tree (lambda-expand-make-inline-body a v body)))))
 
 
 ;;;; EXPORT
 
 (define-gensym-generator closure-name ~closure-)
 
-(defun lambda-export (fi x)
+(defun lambda-export (x)
   (with (name    (closure-name)
          args    (lambda-args x)
          body    (lambda-body x)
          new-fi  (create-funinfo :name   name
                                  :args   args
                                  :body   body
-                                 :parent fi
+                                 :parent *funinfo*
                                  :cps?   (transpiler-cps-transformation? *transpiler*)))
     (funinfo-make-ghost new-fi)
     (transpiler-add-exported-closure *transpiler* `((defun ,name ,(funinfo-argdef new-fi) ,@body)))
@@ -36,43 +36,44 @@
 
 ;;;; PASSTHROUGH
 
-(defun lambda-expand-tree-unexported-lambda (fi x)
+(defun lambda-expand-tree-unexported-lambda (x)
   (!? (get-funinfo (lambda-name x))
-      (copy-lambda x :body (lambda-expand-tree ! (lambda-body x)))
+      (with-temporary *funinfo* !
+        (copy-lambda x :body (lambda-expand-tree (lambda-body x))))
       (with (name    (| (lambda-name x)
                         (funinfo-sym))
              new-fi  (create-funinfo :name   name
                                      :args   (lambda-args x)
                                      :body   (lambda-body x)
-                                     :parent fi
+                                     :parent *funinfo*
                                      :cps?   (transpiler-cps-transformation? *transpiler*)))
-        (funinfo-var-add fi name)
-        (copy-lambda x :name name :body (lambda-expand-tree new-fi (lambda-body x))))))
+        (funinfo-var-add *funinfo* name)
+        (with-temporary *funinfo* new-fi
+          (copy-lambda x :name name :body (lambda-expand-tree (lambda-body x)))))))
 
 
 ;;;; TOPLEVEL
 
-(defun lambda-expand-tree-cons (fi x)
+(defun lambda-expand-tree-cons (x)
   (& (%set-atom-fun? x)
      (lambda? ..x.)
-     (funinfo-add-local-function-args fi .x. (lambda-args ..x.)))
+     (funinfo-add-local-function-args *funinfo* .x. (lambda-args ..x.)))
   (?
-    (lambda-call? x)   (lambda-call-embed fi x)
-    (lambda? x)        (? (& (transpiler-lambda-export? *transpiler*)
-                             (not (eq fi (transpiler-global-funinfo *transpiler*))))
-                          (lambda-export fi x)
-                          (lambda-expand-tree-unexported-lambda fi x))
-    (named-lambda? x)  (lambda-expand-tree-unexported-lambda fi x)
-	(lambda-expand-tree fi x)))
+    (lambda-call? x)   (lambda-call-embed x)
+    (lambda? x)        (? (transpiler-lambda-export? *transpiler*)
+                          (lambda-export x)
+                          (lambda-expand-tree-unexported-lambda x))
+    (named-lambda? x)  (lambda-expand-tree-unexported-lambda x)
+	(lambda-expand-tree x)))
 
-(defun lambda-expand-tree (fi x)
+(defun lambda-expand-tree (x)
   (?
     (atom x)   x
-    (atom x.)  (listprop-cons x x. (lambda-expand-tree fi .x))
-    (listprop-cons x (lambda-expand-tree-cons fi x.)
-	                 (lambda-expand-tree fi .x))))
+    (atom x.)  (listprop-cons x x. (lambda-expand-tree .x))
+    (listprop-cons x (lambda-expand-tree-cons x.)
+	                 (lambda-expand-tree .x))))
 
 
 (defun transpiler-lambda-expand (tr x)
-  (aprog1 (lambda-expand-tree (transpiler-global-funinfo tr) x)
-    (place-expand-0 (transpiler-global-funinfo tr) !)))
+  (with-global-funinfo
+    (lambda-expand-tree x)))
