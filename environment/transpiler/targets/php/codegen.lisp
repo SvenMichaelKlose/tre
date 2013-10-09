@@ -97,10 +97,7 @@
          native-name  `(%%string ,(compiled-function-name-string name)))
     (? (funinfo-ghost fi)
   	   `(%%native "new __closure(" ,native-name "," ,(php-dollarize (funinfo-lexical (funinfo-parent fi))) ")")
-       (progn
-         (optimizer-message "; Replaced closure object for ~A in ~A.~%"
-                            name (human-readable-funinfo-names (funinfo-parent fi)))
-         native-name))))
+       native-name)))
 
 
 ;;;; ASSIGNMENTS

@@ -34,7 +34,7 @@
      (= (funinfo-ghost fi) nil)
      (pop (funinfo-args fi))
      (pop (funinfo-argdef fi))
-     (optimizer-message "; Removed ghost from function ~A.~%" (funinfo-name fi))))
+     (optimizer-message "; Turned closure ~A into regular function.~%" (funinfo-name fi))))
 
 (defun remove-lexicals (fi)
   (when (& (== 1 (length (funinfo-lexicals fi)))

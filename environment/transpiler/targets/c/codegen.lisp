@@ -72,10 +72,7 @@
     (? (funinfo-ghost !)
        `("CONS (" ,(c-compiled-symbol '%closure) ", "
                 "CONS (" ,(c-compiled-symbol name) "," ,(codegen-closure-lexical name) "))")
-       (progn
-         (optimizer-message "; Replaced closure object for ~A in ~A.~%"
-                            name (human-readable-funinfo-names (funinfo-parent !)))
-         `("TRESYMBOL_FUN(" ,(c-compiled-symbol name) ")")))))
+       `("TRESYMBOL_FUN(" ,(c-compiled-symbol name) ")"))))
 
 
 ;;;; ASSIGNMENT
