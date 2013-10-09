@@ -2,7 +2,7 @@
 
 (defun terpri (&optional (str *standard-output*))
   (with-default-stream s str
-    (princ-character (code-char 10) s)
+    (stream-princ (code-char 10) s)
     (force-output s)
     nil))
 

@@ -1,18 +1,5 @@
 ;;;;; tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
 
-(defun princ-character (c str)
-  (unless (& (string? c)
-             (zero? (length c)))
-    (? (cons? c)
-       (adolist (c c)
-         (princ-character ! str))
-       (progn
-         (= (stream-last-char str) (? (string? c)
-                                      (elt c (-- (length c)))
-                                      c))
-         (%track-location (stream-output-location str) c)
-         (funcall (stream-fun-out str) c str)))))
-
 (defun number-digit (x)
   (code-char (+ x #\0)))
 
@@ -28,28 +15,26 @@
 (defun fraction-chars-0 (x)
   (alet (mod (* x 10) 10)
     (& (< 0 !)
-       (cons (number-digit !) (fraction-chars-0 !)))))
+       (cons (number-digit !)
+             (fraction-chars-0 !)))))
 
 (defun fraction-chars (x)
   (fraction-chars-0 (mod (abs x) 1)))
 
-(defun princ-number (c str)
-  (& (< c 0)
+(defun princ-number (x str)
+  (& (< x 0)
      (princ #\- str))
-  (princ-character (integer-chars c) str)
-  (alet (mod c 1)
+  (stream-princ (integer-chars x) str)
+  (alet (mod x 1)
     (unless (zero? !)
       (princ #\. str)
-      (princ-character (fraction-chars !) str))))
+      (stream-princ (fraction-chars !) str))))
 
-(defun princ-string (obj str)
-  (princ-character obj str))
-
-(defun princ (obj &optional (str *standard-output*))
+(defun princ (x &optional (str *standard-output*))
   (with-default-stream s str
     (?
-      (string? obj)    (princ-string obj s)
-      (character? obj) (princ-character obj s)
-      (number? obj)    (princ-number obj s)
-      (symbol? obj)    (princ-string (symbol-name obj) s))
-	obj))
+      (string? x)    (stream-princ x s)
+      (character? x) (stream-princ x s)
+      (number? x)    (princ-number x s)
+      (symbol? x)    (stream-princ (symbol-name x) s))
+	x))
