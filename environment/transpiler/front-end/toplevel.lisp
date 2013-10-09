@@ -3,7 +3,7 @@
 (transpiler-pass transpiler-frontend-2 (tr)
     thisify                   [thisify (transpiler-thisify-classes tr) _]
     rename-arguments          #'rename-arguments
-    lambda-expand             [transpiler-lambda-expand tr _]
+    lambda-expand             #'lambda-expand
     fake-place-expand         [(place-expand-0 (transpiler-global-funinfo tr) _)
                                _]
     fake-expression-expand    [(with-temporary *expex-import?* t
