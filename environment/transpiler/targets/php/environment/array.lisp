@@ -1,6 +1,6 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
-(dont-obfuscate is_array g a s p r keys)
+(dont-obfuscate *arrays* is_array g a s p r keys)
 
 (defun array? (x)
   (| (is_a x "__array")
@@ -18,13 +18,13 @@
 
 (defun list-array (x)
   (let a (make-array)
-    (dolist (i x a)
-      (a.p i))))
+    (adolist (x a)
+      (a.p !))))
 
 (defun list-phphash (x)
   (let a (%%%make-hash-table)
-    (dolist (i x a)
-      (%setq (%%native "$" a "[]") i))))
+    (adolist (x a)
+      (%setq (%%native "$" a "[]") !))))
 
 (defun aref (a k)
   (href a k))
