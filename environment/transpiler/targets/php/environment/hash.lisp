@@ -1,6 +1,6 @@
 ;;;;; tré – Copyright (c) 2009,2011–2013 Sven Michael Klose <pixel@copei.de>
 
-(dont-obfuscate is_a *conses* *arrays*)
+(dont-obfuscate is_a strpos substr)
 
 (defun hash-table? (x)
   (is_a x "__array"))
@@ -14,7 +14,7 @@
     x))
 
 (defun %%unkey-get-package-boundary (x)
-  (awhen (position "~" x :test #'string==)
+  (awhen (strpos "~" x)
     (& (%%%== "%" (substr x (+ 1 !) 1))
        (%%%== "P" (substr x (+ 2 !) 1))
        (| (%%unkey-get-package-boundary (string-subseq ! 3))
@@ -47,8 +47,8 @@
 
 (defun alist-phphash (x)
   (let a (%%%make-hash-table)
-    (dolist (i x a)
-      (%%%href-set .i a i.))))
+    (adolist (x a)
+      (%%%href-set .! a !.))))
 
 (defun href (h k)
   (alet (%%key k)
