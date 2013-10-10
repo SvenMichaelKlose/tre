@@ -18,7 +18,7 @@
 (defun opt-tailcall-make-restart (l body front-tag)
   (with-lambda name args dummy-body l 
     (& *show-definitions?*
-       (format t "; Removed tail call in function ~A.~%" name))
+       (format t "; Removed tail call in ~A.~%" (human-readable-funinfo-names *funinfo*)))
     (+ (mapcan #'((arg val)
                     (with-gensym g ; Avoid accidential GC.
                       `((%setq ,arg ,val))))
@@ -33,15 +33,12 @@
        (? (& (%setq-funcall-of? body. name)
              (function-exits? .body))
           (opt-tailcall-make-restart l body front-tag)
-          (cons (? (named-lambda? body.)
-                   (car (opt-tailcall `(,body.)))
-                   body.)
-                (opt-tailcall-fun l .body front-tag))))))
+          (. (? (named-lambda? body.)
+                (car (opt-tailcall `(,body.)))
+                body.)
+             (opt-tailcall-fun l .body front-tag))))))
 
 (metacode-walker opt-tailcall (x)
   :if-named-function  (with-compiler-tag front-tag
                         `(,front-tag
                           ,@(opt-tailcall-fun x. (lambda-body x.) front-tag))))
-
-;(compile-c-environment 'nconc)
-;(quit)

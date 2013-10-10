@@ -13,7 +13,8 @@
      (= (funinfo-ghost fi) nil)
      (pop (funinfo-args fi))
      (pop (funinfo-argdef fi))
-     (optimizer-message "; Turned closure ~A into regular function.~%" (funinfo-name fi))))
+     (optimizer-message "; Turned ~A into regular function.~%"
+                        (human-readable-funinfo-names fi))))
 
 (defun remove-lexicals (fi)
   (when (& (== 1 (length (funinfo-lexicals fi)))
@@ -50,7 +51,8 @@
 (defun warn-unused-arguments (fi)
   (dolist (i (funinfo-args fi))
     (| (funinfo-used-var? fi i)
-       (warn "Unused argument ~A of function ~A." i (human-readable-funinfo-names fi)))))
+       (warn "Unused argument ~A of function ~A."
+             i (human-readable-funinfo-names fi)))))
 
 (defun correct-funinfo ()
   (alet *funinfo*
