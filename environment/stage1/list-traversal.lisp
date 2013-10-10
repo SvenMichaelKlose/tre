@@ -8,8 +8,6 @@
         start
         (? (not i)
            (return (queue-list nl)))
-        (? (atom i)
-           (error "List expected instead of ~A." i))
         (? (not (car i))	    ; Break if any list has no more elements.
            (return nil))
         (enqueue nl (caar i))	; Add head of list to list of arguments
@@ -43,8 +41,6 @@
            ,starttag
            (? (not ,tmplst)
               (go ,endtag))
-           (? (not (list? ,tmplst))
-              (error "List expected instead of ~A." ,tmplst))
            (setq ,iter (car ,tmplst))
            ,@body
            (setq ,tmplst (cdr ,tmplst))
@@ -56,5 +52,6 @@
   (let result (cons nil nil)
     (dolist (i lst (cdr result))
       (rplaca result
-              (cdr (rplacd (| (car result) result)
+              (cdr (rplacd (| (car result)
+                              result)
                            (list (funcall func i))))))))
