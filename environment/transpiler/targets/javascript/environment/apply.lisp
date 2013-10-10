@@ -3,9 +3,9 @@
 (dont-obfuscate apply call)
 
 (defun apply (&rest lst)
-  (with (fun lst.
-         l (last .lst)
-         args (%nconc (butlast .lst) l.))
+  (with (fun   lst.
+         l     (last .lst)
+         args  (%nconc (butlast .lst) l.))
     (when-debug
       (| (function? fun)
 	     (error "First argument ~A is not a function." fun))
@@ -13,7 +13,4 @@
 	     (error "Last argument is not a list.")))
     (!? fun.tre-exp
         (!.apply nil (%%native "[" args "]"))
-     (fun.apply nil (list-array args)))))
-
-(defun funcall (fun &rest args)
-  (apply fun args))
+        (fun.apply nil (list-array args)))))
