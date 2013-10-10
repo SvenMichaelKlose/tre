@@ -54,6 +54,9 @@
     (funinfo-arg-or-var? fi x)
       x
 
+    (funinfo-global-variable? fi x)
+      `(%global ,x)
+
     (make-lexical fi x)))
 
 (defun place-expand-fun (x)

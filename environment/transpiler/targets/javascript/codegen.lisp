@@ -253,3 +253,9 @@
 
 (define-js-macro %backtrace-pop ()
   `(%%native *BACKTRACE* "=" *BACKTRACE* ".__"))
+
+
+;;;; GLOBAL VARIABLES
+
+(define-js-macro %global (x)
+  x)

@@ -287,3 +287,9 @@
 
 (define-php-macro %php-class-tail ()
   `(%%native "}" ""))
+
+
+;;;; GLOBAL VARIABLES
+
+(define-php-macro %global (x)
+  `(%%native "$GLOBALS['" ,(obfuscated-symbol-string x) "']"))

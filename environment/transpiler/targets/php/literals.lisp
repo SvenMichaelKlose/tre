@@ -19,19 +19,3 @@
                                  "$KEYWORDPACKAGE"
                                  "NULL")
 				         ")"))
-
-(defun php-expex-add-global (x)
-  (funinfo-var-add (transpiler-global-funinfo *transpiler*) x)
-  (adjoin! x (funinfo-globals *funinfo*))
-  x)
-
-(defun php-global (x)
-  `(%%native "$GLOBALS['" ,(obfuscated-symbol-string x) "']"))
-
-(defun php-argument-filter (x)
-  (?
-    (character? x)                          (php-expex-add-global (php-compiled-char x))
-    (%quote? x)                             (php-expex-add-global (php-compiled-symbol .x.))
-    (keyword? x)                            (php-expex-add-global (php-compiled-symbol x))
-    (funinfo-global-variable? *funinfo* x)  (php-global x)
-    x))

@@ -157,3 +157,9 @@
 
 (define-c-macro %immediate-=-aref (val arr idx)
   (+ (c-make-aref arr idx) `("=" ,val)))
+
+
+;;;; GLOBAL VARIABLES
+
+(define-c-macro %global (x)
+  x)
