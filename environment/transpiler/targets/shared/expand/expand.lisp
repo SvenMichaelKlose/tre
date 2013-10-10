@@ -7,6 +7,12 @@
                   targets
                   (remove 'bc (remove 'c targets))))))
 
+(define-shared-std-macro (js php) defvar-native (&rest x)
+  (print-definition `(defvar-native ,@x))
+  (+! (transpiler-predefined-symbols *transpiler*) x)
+  (apply #'transpiler-add-obfuscation-exceptions *transpiler* x)
+  nil)
+
 (define-shared-std-macro (js php) dont-obfuscate (&rest symbols)
   (apply #'transpiler-add-obfuscation-exceptions *transpiler* symbols)
   nil)

@@ -43,7 +43,6 @@
 			                       "apply.lisp"
 			                       "atom.lisp")
 	 	             (js-load-base "environment/transpiler/environment/"
-                                   "defvar-native.lisp"
                                    "character.lisp"
 			                       "atom.lisp"
                                    "string.lisp")
