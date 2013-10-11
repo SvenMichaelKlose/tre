@@ -4,8 +4,7 @@
     thisify                   [thisify (transpiler-thisify-classes tr) _]
     rename-arguments          #'rename-arguments
     lambda-expand             #'lambda-expand
-    fake-place-expand         [(place-expand-0 (transpiler-global-funinfo tr) _)
-                               _]
+    fake-place-expand         #'fake-place-expand
     fake-expression-expand    [(with-temporary *expex-import?* t
                                  (transpiler-expression-expand tr (make-packages _))
                                _)])

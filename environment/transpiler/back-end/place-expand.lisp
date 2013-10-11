@@ -81,6 +81,10 @@
 (defun place-expand (x)
   (place-expand-0 (transpiler-global-funinfo *transpiler*) x))
 
+(defun fake-place-expand (x)
+  (place-expand x)
+  x)
+
 (defun place-expand-closure-lexical (fi)
   (alet (funinfo-parent fi)
     (place-expand-0 ! (funinfo-lexical !))))
