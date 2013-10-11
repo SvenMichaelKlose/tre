@@ -265,8 +265,8 @@
 
 ;;;; TOP LEVEL
 
-(defun expression-expand (expex x)
+(defun expression-expand (x)
   (& x
-	 (with-temporary *expex* expex
+	 (with-temporary *expex* (transpiler-expex *transpiler*)
        (= *expex-sym-counter* 0)
        (expex-body x))))

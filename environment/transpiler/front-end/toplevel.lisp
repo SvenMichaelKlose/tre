@@ -6,7 +6,7 @@
     lambda-expand             #'lambda-expand
     fake-place-expand         #'fake-place-expand
     fake-expression-expand    [(with-temporary *expex-import?* t
-                                 (transpiler-expression-expand tr (make-packages _))
+                                 (expression-expand (make-packages _))
                                _)])
 
 (transpiler-pass transpiler-frontend-1 (tr)
