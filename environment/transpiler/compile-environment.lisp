@@ -1,11 +1,10 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun %compile-environment-configure-transpiler (tr funs)
-  ;(= (transpiler-dot-expand? (copy-transpiler tr)) nil)
-  (transpiler-add-wanted-functions tr (| (!? funs
+  (aprog1 (copy-transpiler tr)
+    (transpiler-add-wanted-functions ! (| (!? funs
                                              (ensure-list !))
-                                         (+ *universe-functions* *macros*)))
-  tr)
+                                          (+ *universe-functions* *macros*)))))
 
 (defun compile-c-environment (&optional (funs nil))
   (put-file "interpreter/_compiled-env.c"
