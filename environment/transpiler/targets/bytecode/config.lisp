@@ -1,8 +1,7 @@
 ;;;;; tré – Copyright (c) 2008–2010,2012–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun bc-expex-initializer (ex)
-  (= (expex-argument-filter ex) #'bc-expex-argument-filter
-     (expex-setter-filter ex) (compose [mapcan [expex-set-global-variable-value _] _]
+  (= (expex-setter-filter ex) (compose [mapcan [expex-set-global-variable-value _] _]
                                        #'expex-compiled-funcall)))
 
 (defun make-bc-transpiler ()
