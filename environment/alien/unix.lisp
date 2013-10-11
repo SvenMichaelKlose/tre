@@ -8,8 +8,9 @@
 (defun unix-sh-mv (from to)
   (exec "/bin/mv" (list from to)))
 
-(defun unix-sh-cp (from to &key (recursively? nil))
+(defun unix-sh-cp (from to &key (recursively? nil) (verbose? nil))
   (exec "/bin/cp" (+ (& recursively?  (list "-r"))
+                     (& verbose?      (list "-v"))
 				     (list from to))))
 
 (defun unix-sh-mkdir (path &key (parents nil))
