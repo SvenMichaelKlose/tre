@@ -47,6 +47,7 @@
 
   (defined-functions-hash   (make-hash-table :test #'eq))
   (defined-variables-hash   (make-hash-table :test #'eq))
+  (literals                 (make-hash-table :test #'eq))
   (host-functions-hash      nil)
   (host-variables-hash      nil)
   (functionals-hash         nil)
@@ -195,6 +196,7 @@
         :literal-converter        literal-converter
         :defined-functions-hash   (copy-hash-table defined-functions-hash)
         :defined-variables-hash   (copy-hash-table defined-variables-hash)
+        :literals                 (copy-hash-table literals)
         :host-functions-hash      (copy-hash-table host-functions-hash)
         :host-variables-hash      (copy-hash-table host-variables-hash)
         :functionals-hash         (copy-hash-table functionals-hash)
@@ -283,6 +285,7 @@
 (defun transpiler-defined-functions-without-builtins (tr) (remove-if #'builtin? (transpiler-defined-functions tr)))
 (transpiler-getter defined-function        (href (transpiler-defined-functions-hash tr) x))
 (transpiler-getter defined-variable        (href (transpiler-defined-variables-hash tr) x))
+(transpiler-getter literal?                (href (transpiler-literals tr) x))
 (transpiler-getter cps-exception?          (href (transpiler-cps-exceptions tr) x))
 (transpiler-getter host-function?          (href (transpiler-host-functions-hash tr) x))
 (transpiler-getter host-function-arguments (href (transpiler-host-functions-hash tr) x))
@@ -296,8 +299,10 @@
   ,@(filter  [`(transpiler-getter-list ,_)]
             '(plain-arg-fun emitted-decl)))
 
-(transpiler-getter add-defined-variable (= (href (transpiler-defined-variables-hash tr) x) t)
-                                        x)
+(transpiler-getter add-defined-variable  (= (href (transpiler-defined-variables-hash tr) x) t)
+                                         x)
+(transpiler-getter add-literal           (= (href (transpiler-literals tr) x) t)
+                                         x)
 (transpiler-getter add-cps-exception     (= (href (transpiler-cps-exceptions tr) x) t)
                                          x)
 (transpiler-getter macro? (| (expander-has-macro? (transpiler-std-macro-expander tr) x)

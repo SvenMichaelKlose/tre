@@ -7,7 +7,10 @@
 
 (defun removable-place? (x)
   (alet *funinfo*
-    (& (funinfo-parent !)
+    (& (| (funinfo-parent !)
+          (eq '~%ret x)
+          (not (transpiler-defined-variable *transpiler* x)
+               (transpiler-literal? *transpiler* x)))
        (funinfo-var? ! x)
        (not (eq x (funinfo-lexical !))
             (funinfo-lexical? ! x)))))

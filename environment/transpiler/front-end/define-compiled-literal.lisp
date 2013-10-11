@@ -9,6 +9,7 @@
          (| (href ,slot ,x)
 	 	    (let n ,maker
               (unless (funinfo-var? (transpiler-global-funinfo tr) n)
+                (transpiler-add-literal tr n)
                 (funinfo-var-add (transpiler-global-funinfo tr) n))
 	          ,@(& decl-maker
                    `((push (funcall ,decl-maker n) (transpiler-compiled-decls tr))))
