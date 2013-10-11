@@ -7,7 +7,7 @@
 
 (defun php-argument-filter (x)
   (?
-    (character? x)                          (php-expex-add-global (php-compiled-char x))
-    (%quote? x)                             (php-expex-add-global (php-compiled-symbol .x.))
-    (keyword? x)                            (php-expex-add-global (php-compiled-symbol x))
+    (character? x)  (php-expex-add-global (php-compiled-char x))
+    (%quote? x)     (php-expex-add-global (php-compiled-symbol .x.))
+    (keyword? x)    (php-expex-add-global (php-compiled-symbol x))
     x))
