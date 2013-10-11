@@ -354,7 +354,7 @@
 
 (defun transpiler-defined-symbol? (fi x)
   (let tr *transpiler*
-    (| (funinfo-var-or-lexical? fi x)
+    (| (funinfo-find fi x)
        (function? x)
        (keyword? x)
        (member x (transpiler-predefined-symbols tr) :test #'eq)

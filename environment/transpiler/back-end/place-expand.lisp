@@ -29,7 +29,7 @@
 (defun place-expand-atom (fi x)
   (?
     (| (constant-literal? x)
-       (not (funinfo-var-or-lexical? fi x)
+       (not (funinfo-find fi x)
             (funinfo-global-variable? fi x)))
       x
 

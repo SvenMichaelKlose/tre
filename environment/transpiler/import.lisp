@@ -33,7 +33,7 @@
 (defun can-import-variable? (tr x)
   (& x
      (symbol? x)
-     (not (funinfo-var-or-lexical? *funinfo* x))
+     (not (funinfo-find *funinfo* x))
      (transpiler-import-from-environment? tr)
      (transpiler-import-variables? tr)
      (not (href (transpiler-wanted-variables-hash tr) x)

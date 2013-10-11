@@ -8,6 +8,6 @@
   (alet (%setq-value x)
     (? (& (cons? !)
           (| (function-expr? !.)
-             (funinfo-var-or-lexical? *funinfo* !.)))
+             (funinfo-find *funinfo* !.)))
        (%setq-make-call-to-local-function x)
        (list x))))

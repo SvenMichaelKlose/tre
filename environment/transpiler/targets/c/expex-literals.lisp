@@ -39,6 +39,6 @@
     (character? x)                          (c-compiled-char x)
     (number? x)                             (c-compiled-number x)
     (string? x)                             (c-compiled-string x)
-	(funinfo-var-or-lexical? *funinfo* x)   x
-	(funinfo-global-variable? *funinfo* x) `(symbol-value ,(c-compiled-symbol x))
+	(funinfo-find *funinfo* x)              x
+	(funinfo-global-variable? *funinfo* x)  `(symbol-value ,(c-compiled-symbol x))
 	x))

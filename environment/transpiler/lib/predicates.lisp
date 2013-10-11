@@ -13,7 +13,7 @@
 
 (defun global-literal-function? (x)                                                                                                
   (& (literal-function? x)
-     (not (funinfo-var-or-lexical? *funinfo* .x.))))
+     (not (funinfo-find *funinfo* .x.))))
 
 (defun simple-argument-list? (x)
   (? x

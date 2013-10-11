@@ -1,5 +1,10 @@
 ;;;;; tré – Copyright (c) 2006–2007,2009–2013 Sven Michael Klose <pixel@copei.de>
 
+(defun funinfo-find (fi x)
+  (!? (funinfo-parent fi)
+      (| (funinfo-arg-or-var? fi x)
+         (funinfo-find ! x))))
+
 
 ;;;; FUNCTION NAME
 
@@ -10,7 +15,8 @@
 
 (defun funinfo-arg? (fi var)
   (& (symbol? var)
-     (member var (funinfo-args fi) :test #'eq)))
+     (member var (funinfo-args fi) :test #'eq)
+     fi))
 
 (defun funinfo-arg-pos (fi x)
   (position x (funinfo-args fi) :test #'eq))
@@ -21,19 +27,20 @@
 
 ;;;; ARGUMENTS & VARIABLES
 
-(defun funinfo-var? (fi x)
-  (& x
-     (symbol? x)
-     (!? (funinfo-vars-hash fi)
-         (href ! x)
-         (member x (funinfo-vars fi) :test #'eq))))
-
 (defun funinfo-arg-or-var? (fi x)
   (| (funinfo-arg? fi x)
      (funinfo-var? fi x)))
 
 
 ;;;; VARIABLES
+
+(defun funinfo-var? (fi x)
+  (& x
+     (symbol? x)
+     (!? (funinfo-vars-hash fi)
+         (href ! x)
+         (member x (funinfo-vars fi) :test #'eq))
+     fi))
 
 (defun funinfo-parent-var? (fi x)
   (!? (funinfo-parent fi)
@@ -76,11 +83,6 @@
 
 ;;;; LEXICALS
 
-(defun funinfo-var-or-lexical? (fi x)
-  (!? (funinfo-parent fi)
-      (| (funinfo-arg-or-var? fi x)
-         (funinfo-var-or-lexical? ! x))))
-
 (defun funinfo-lexical-pos (fi x)
   (position x (funinfo-lexicals fi) :test #'eq))
 
@@ -108,7 +110,7 @@
 
 (defun funinfo-add-used-var (fi x)
   (& (symbol? x)
-     (funinfo-var-or-lexical? fi x)
+     (funinfo-find fi x)
      (funinfo-add-used-var-0 fi x)))
 
 ;;;; FREE VARIABLES
@@ -142,6 +144,6 @@
       (funinfo-var? fi x)))
 
 (defun funinfo-global-variable? (fi x)
-  (& (not (funinfo-var-or-lexical? fi x))
+  (& (not (funinfo-find fi x))
      (| (transpiler-defined-variable *transpiler* x)
         (transpiler-host-variable? *transpiler* x))))
