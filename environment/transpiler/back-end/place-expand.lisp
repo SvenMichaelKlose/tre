@@ -28,13 +28,9 @@
 
 (defun place-expand-atom (fi x)
   (?
-    (not fi)
-      (progn
-        (print x)
-        (error "FUNINFO is missing."))
-
     (| (constant-literal? x)
-       (not (funinfo-var-or-lexical? fi x)))
+       (not (funinfo-var-or-lexical? fi x)
+            (funinfo-global-variable? fi x)))
       x
 
     (& (transpiler-stack-locals? *transpiler*)
@@ -49,7 +45,7 @@
 
     (& (transpiler-stack-locals? *transpiler*)
        (funinfo-var? fi x))
-       (place-expand-emit-stackplace fi x)
+      (place-expand-emit-stackplace fi x)
 
     (funinfo-arg-or-var? fi x)
       x
@@ -60,22 +56,17 @@
     (make-lexical fi x)))
 
 (defun place-expand-fun (x)
-  (let fi (get-lambda-funinfo x)
-    (| fi
-       (error "FUNINFO missing for ~A." (lambda-name x)))
-    (copy-lambda x :body (place-expand-0 fi (lambda-body x)))))
+  (copy-lambda x :body (place-expand-0 (get-lambda-funinfo x) (lambda-body x))))
 
 (defun place-expand-setter (fi x)
   (let p (place-expand-0 fi (%setq-place x))
     `(%set-vec ,.p. ,..p. ,...p. ,(place-expand-0 fi (%setq-value x)))))
 
 (define-tree-filter place-expand-0 (fi x)
-  (not fi)              (error "FUNFINFO is missing.")
   (atom x)              (place-expand-atom fi x)
   (| (%quote? x)
      (%%native? x)
-     (%var? x))
-                        x
+     (%var? x))         x
   (named-lambda? x)     (place-expand-fun x)
   (& (%setq? x)
      (%vec? (place-expand-0 fi (%setq-place x))))
