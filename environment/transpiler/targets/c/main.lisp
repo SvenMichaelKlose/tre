@@ -1,7 +1,8 @@
 ;;;;; tré – Copyright (c) 2005–2011,2013 Sven Michael Klose <pixel@copei.de>
 
 (env-load "transpiler/targets/c/builtin.lisp" 'c)
-(env-load "transpiler/targets/c/expex-literals.lisp" 'c)
+(env-load "transpiler/targets/c/literals.lisp" 'c)
+(env-load "transpiler/targets/c/argument-filter.lisp" 'c)
 (env-load "transpiler/targets/c/toplevel.lisp" 'c)
 (env-load "transpiler/targets/c/config.lisp" 'c)
 (env-load "transpiler/targets/c/macros.lisp" 'c)

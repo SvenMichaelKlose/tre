@@ -29,16 +29,3 @@
 			                                       ,(? (keyword? x)
 				                                       'tre_package_keyword
 				                                       'treptr_nil))))
-
-(functional *TRESYMBOL_VALUE*)
-
-(defun c-argument-filter (x)
-  (?
-    (global-literal-function? x)            `(symbol-function ,(c-compiled-symbol .x.))
-	(cons? x)                               x
-    (character? x)                          (c-compiled-char x)
-    (number? x)                             (c-compiled-number x)
-    (string? x)                             (c-compiled-string x)
-	(funinfo-find *funinfo* x)              x
-	(funinfo-global-variable? *funinfo* x)  `(symbol-value ,(c-compiled-symbol x))
-	x))

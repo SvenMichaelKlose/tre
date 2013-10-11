@@ -162,4 +162,4 @@
 ;;;; GLOBAL VARIABLES
 
 (define-c-macro %global (x)
-  x)
+  `("TRESYMBOL_VALUE(" ,(c-compiled-symbol x) ")"))
