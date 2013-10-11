@@ -32,13 +32,8 @@
   (| (funinfo-arg? fi x)
      (funinfo-var? fi x)))
 
-(defun funinfo-var-or-lexical? (fi x)
-  (!? (funinfo-parent fi)
-      (| (funinfo-arg-or-var? fi x)
-         (funinfo-var-or-lexical? ! x))))
 
-
-;;;; ENVIRONMENT
+;;;; VARIABLES
 
 (defun funinfo-parent-var? (fi x)
   (!? (funinfo-parent fi)
@@ -53,9 +48,7 @@
   (funinfo-var-pos (get-funinfo name) x))
 
 (defun funinfo-var-add (fi x)
-  (unless (atom x)
-	(print x)
-	(error "Atom expected."))
+  (assert (atom x) (error "Atom expected instead of ~A."))
   (unless (funinfo-var? fi x)
     (? (funinfo-parent fi)
        (append! (funinfo-vars fi) (list x))
@@ -81,7 +74,12 @@
   (funinfo-var-add-many fi x))
 
 
-;;;; LEXICAL CONTEXT
+;;;; LEXICALS
+
+(defun funinfo-var-or-lexical? (fi x)
+  (!? (funinfo-parent fi)
+      (| (funinfo-arg-or-var? fi x)
+         (funinfo-var-or-lexical? ! x))))
 
 (defun funinfo-lexical-pos (fi x)
   (position x (funinfo-lexicals fi) :test #'eq))
