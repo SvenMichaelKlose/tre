@@ -5,7 +5,7 @@
 
 (defvar *js-compiled-symbols* (make-hash-table :test #'eq))
 
-(defun js-codegen-symbol-constructor-expr (tr x)
+(defun js-codegen-symbol-constructor-expr (x)
   (let s (compiled-function-name-string 'symbol)
     `(,s "(\"" ,(obfuscated-symbol-name x) "\","
 	           ,@(!? (symbol-package x)
@@ -13,15 +13,15 @@
 	                 '(("null")))
 	     ")")))
 
-(defun js-codegen-symbol-constructor (tr x)
+(defun js-codegen-symbol-constructor (x)
   (alet *js-compiled-symbols*
     (| (href ! x)
        (= (href ! x)
           (with-gensym g
             (push `("var " ,(obfuscated-symbol-string g)
-                           "=" ,@(js-codegen-symbol-constructor-expr tr x)
+                           "=" ,@(js-codegen-symbol-constructor-expr x)
                            ,*js-separator*)
-                  (transpiler-raw-decls tr))
+                  (transpiler-raw-decls *transpiler*))
             g)))))
 
 (define-codegen-macro-definer define-js-macro *js-transpiler*)
@@ -208,7 +208,7 @@
 ;;;; METACODES
 
 (define-js-macro %quote (x)
-  (js-codegen-symbol-constructor *transpiler* x))
+  (js-codegen-symbol-constructor x))
 
 (define-js-macro %slot-value (x y)
   `(%%native ,x "." ,y))
