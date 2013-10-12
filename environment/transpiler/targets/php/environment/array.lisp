@@ -1,6 +1,6 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
-(dont-obfuscate *arrays* is_array g a s p r keys)
+(dont-obfuscate *arrays* *array-id* is_array g a s p r keys)
 
 (defun array? (x)
   (| (is_a x "__array")
