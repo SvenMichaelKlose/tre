@@ -58,7 +58,7 @@
 
 (define-c-macro %function-epilogue (name)
   (let fi (get-funinfo name)
-    `((%setq "__ret" ,(place-assign (place-expand-0 fi '~%ret)))
+    `((%= "__ret" ,(place-assign (place-expand-0 fi '~%ret)))
       ,@(alet (length (funinfo-vars fi))
           (& (< 0 !)
              `(,(c-line "trestack_ptr += " !))))
@@ -77,20 +77,20 @@
 
 ;;;; ASSIGNMENT
 
-(defun codegen-%setq-place (dest val)
+(defun codegen-%=-place (dest val)
   (? dest
 	 `(,dest " = ")
 	 (? (codegen-expr? val)
 		'("")
 	    '("(void) "))))
 
-(defun codegen-%setq-value (x)
+(defun codegen-%=-value (x)
    (? (atom|codegen-expr? x)
       x
       `(,x. ,@(parenthized-comma-separated-list .x))))
 
-(define-c-macro %setq (dest val)
-  (c-line `((%%native ,@(codegen-%setq-place dest val)) ,(codegen-%setq-value val))))
+(define-c-macro %= (dest val)
+  (c-line `((%%native ,@(codegen-%=-place dest val)) ,(codegen-%=-value val))))
 
 (define-c-macro %set-atom-fun (dest val)
   `(%%native ,dest "=" ,val ,*c-separator*))
@@ -116,7 +116,7 @@
   `("_TREVEC(" ,vec "," ,index ")"))
 
 (define-c-macro %set-vec (vec index value)
-  (c-line `(%%native "_TREVEC(" ,vec "," ,index ") = " ,(codegen-%setq-value value))))
+  (c-line `(%%native "_TREVEC(" ,vec "," ,index ") = " ,(codegen-%=-value value))))
 
 
 ;;;; CONTROL FLOW

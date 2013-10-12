@@ -3,7 +3,7 @@
 (defvar *body*)
 
 (defun metacode-statement? (x)
-  (| (in? x. '%setq '%set-vec '%var '%function-prologue '%function-epilogue '%function-return '%%tag)
+  (| (in? x. '%= '%set-vec '%var '%function-prologue '%function-epilogue '%function-return '%%tag)
 	 (vm-jump? x)
      (%%call-nil? x)))
 
@@ -21,7 +21,7 @@
            (let ,v (car ,x)
              (+ (?
                   (atom ,v)             ,(| if-atom `(list ,v))
-                  ,@(!? if-setq         `((%setq? ,v) ,!))
+                  ,@(!? if-setq         `((%=? ,v) ,!))
                   ,@(!? if-go           `((%%go? ,v) ,!))
                   ,@(!? if-go-nil       `((%%go-nil? ,v) ,!))
                   ,@(!? if-go-not-nil   `((%%go-not-nil? ,v) ,!))

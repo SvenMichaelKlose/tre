@@ -100,7 +100,7 @@
 
 ;;;; ASSIGNMENT
 
-(defun js-%setq-0 (dest val)
+(defun js-%=-0 (dest val)
   `(,*js-indent*
 	(%%native
         ,@(? dest
@@ -111,10 +111,10 @@
 		(js-call val))
     ,*js-separator*))
 
-(define-js-macro %setq (dest val)
+(define-js-macro %= (dest val)
   (? (& (not dest) (atom val))
 	 '(%%native "")
-	 (js-%setq-0 dest val)))
+	 (js-%=-0 dest val)))
 
 
 ;;;; VARIABLE DECLARATIONS

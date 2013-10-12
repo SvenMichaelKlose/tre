@@ -116,7 +116,7 @@
         "=")
   	 "="))
  
-(defun php-%setq-value (val)
+(defun php-%=-value (val)
   (?
     (& (cons? val)
        (eq 'userfun_cons val.))
@@ -135,7 +135,7 @@
 	  (list val)
     `((,val. ,@(parenthized-comma-separated-list (filter #'php-codegen-argument-filter .val))))))
 
-(defun php-%setq-0 (dest val)
+(defun php-%=-0 (dest val)
   `((%%native
 	    ,*php-indent*
 	    ,@(? dest
@@ -144,16 +144,16 @@
 			   ,dest
 			   ,(php-assignment-operator val))
 	         '(""))
-        ,@(php-%setq-value val)
+        ,@(php-%=-value val)
         ,@(unless (& (not dest)
                      (%%native? val)
                      (not ..val))
             (list *php-separator*)))))
 
-(define-php-macro %setq (dest val)
+(define-php-macro %= (dest val)
   (? (& (not dest) (atom val))
      '(%%native "")
-     (php-%setq-0 dest val)))
+     (php-%=-0 dest val)))
 
 (define-php-macro %set-atom-fun (plc val)
   `(%%native ,(php-dollarize plc)
@@ -170,7 +170,7 @@
   `(%%native ,(php-dollarize v) "->g(" ,(php-dollarize i) ")"))
 
 (define-php-macro %set-vec (v i x)
-  `(%%native ,*php-indent* ,(php-dollarize v) "->s(" ,(php-dollarize i) "," ,(php-%setq-value x) ")",*php-separator*))
+  `(%%native ,*php-indent* ,(php-dollarize v) "->s(" ,(php-dollarize i) "," ,(php-%=-value x) ")",*php-separator*))
 
 
 ;;;; NUMBERS

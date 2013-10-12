@@ -14,7 +14,7 @@
 
 (defun js-emit-memorized-sources ()
   (clr (transpiler-memorize-sources? *transpiler*))
-  (filter ^(%setq (slot-value ,_. '__source) ,(list 'quote ._))
+  (filter ^(%= (slot-value ,_. '__source) ,(list 'quote ._))
           (transpiler-memorized-sources *transpiler*)))
 
 (defun js-decl-gen ()

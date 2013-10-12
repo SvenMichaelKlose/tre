@@ -3,8 +3,8 @@
 (defvar *cps-toplevel?* nil)
 
 (defun cps-call? (x)
-  (& (%setq-funcall? x)
-     (!? (get-funinfo (car (%setq-value x)))
+  (& (%=-funcall? x)
+     (!? (get-funinfo (car (%=-value x)))
          (funinfo-cps? !))))
 
 (defun cps-splitpoint? (x)
@@ -32,32 +32,32 @@
                            '(~%contret))
                    body `(,@(awhen last-place
                               (clr last-place)
-                              `((%setq ,! ~%contret)))
+                              `((%= ,! ~%contret)))
                           ,@(butlast _)
                           ,@(alet (car (last _))
                               (?
-                                (cps-call? !)  (with (val  (%setq-value !)
+                                (cps-call? !)  (with (val  (%=-value !)
                                                       name (? (%new? val)
                                                               .val.
                                                               val.)
                                                       args (? (%new? val)
                                                               ..val
                                                               .val))
-                                                 (= last-place (%setq-place !))
-                                                 `((%setq nil (,@(? (%new? val)
+                                                 (= last-place (%=-place !))
+                                                 `((%= nil (,@(? (%new? val)
                                                                     `(%new))
                                                                 ,name
                                                                 ,(| .names. 'cps-identity)
                                                                 ,@args))))
-                                (%%go? !)      `((%setq nil (,(assoc-value .!. tag-names))))
+                                (%%go? !)      `((%= nil (,(assoc-value .!. tag-names))))
                                 (%%go-cond? !) `((,(? (%%go-nil? !)
                                                       '%%call-nil
                                                       '%%call-not-nil)
                                                    ,..!. ,(assoc-value .!. tag-names) ,.names.))
                                 (+ (& ! (list !))
                                    (?
-                                     .names                `((%setq nil (,.names.)))
-                                     (not *cps-toplevel?*) `((%setq nil (~%cont ~%ret)))))))))
+                                     .names                `((%= nil (,.names.)))
+                                     (not *cps-toplevel?*) `((%= nil (~%cont ~%ret)))))))))
               (alet (create-funinfo :name   name
                                     :args   args
                                     :body   body
@@ -76,7 +76,7 @@
 (defun cps-body (x)
   (!? (cps-split-body x)
       (+ (cps-make-funs (carlist !) (cps-tag-names !) (filter #'cps-subfuns (cdrlist !)))
-         `((%setq nil (,!..))))
+         `((%= nil (,!..))))
       x))
 
 (defun cps-fun (x)
@@ -92,8 +92,8 @@
   (when x
     (cons (?
             (named-lambda? x.) (cps-fun x.)
-            (cps-call? x.)     (alet (%setq-value x.)
-                                 `(%setq ,(%setq-place x.) (,!. cps-identity ,@.!)))
+            (cps-call? x.)     (alet (%=-value x.)
+                                 `(%= ,(%=-place x.) (,!. cps-identity ,@.!)))
             x.)
           (cps-subfuns .x))))
 

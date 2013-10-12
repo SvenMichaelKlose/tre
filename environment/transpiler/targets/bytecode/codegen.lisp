@@ -40,7 +40,7 @@
      (bc-special? x)  x
      (bc-make-funcall x)))
 
-(define-bc-macro %setq (place x)
+(define-bc-macro %= (place x)
   `(,(bc-make-value x) ,place))
 
 (define-bc-macro %set-vec (vec index x)

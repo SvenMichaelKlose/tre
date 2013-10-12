@@ -37,14 +37,14 @@
   (alet *transpiler*
     (+ (& *have-compiler?*
           (not (transpiler-memorize-sources? !))
-          `((%setq *defined-functions* (cons ',name *defined-functions*))))
+          `((%= *defined-functions* (cons ',name *defined-functions*))))
        (when (transpiler-save-sources? !)
          (apply #'transpiler-add-obfuscation-exceptions ! (collect-symbols (list name args body)))
          (? (transpiler-memorize-sources? !)
             (shared-defun-memorize-source name args body)
-            `((%setq (slot-value ,name '__source) ,(let source (assoc-value name *function-sources* :test #'eq)
-                                                     `'(,(| source. args) . ,(unless (transpiler-save-argument-defs-only? !)
-                                                                               (| .source body)))))))))))
+            `((%= (slot-value ,name '__source) ,(let source (assoc-value name *function-sources* :test #'eq)
+                                                  `'(,(| source. args) . ,(unless (transpiler-save-argument-defs-only? !)
+                                                                            (| .source body)))))))))))
 
 (defun shared-defun-backtrace (name body)
   (? (& (transpiler-backtrace? *transpiler*)

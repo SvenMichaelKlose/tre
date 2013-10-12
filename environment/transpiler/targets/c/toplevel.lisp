@@ -42,13 +42,13 @@
 		   "compiled.h"))
 
 (defun c-function-registration (name)
-  `(%setq ~%ret (treatom_register_compiled_function
-                    ,(c-compiled-symbol name)
-                    ,name
-                    ,(alet (c-expander-name name)
-                       (? (transpiler-defined-function *transpiler* !)
-                          (compiled-function-name !)
-                          '(%%native "NULL"))))))
+  `(%= ~%ret (treatom_register_compiled_function
+                 ,(c-compiled-symbol name)
+                 ,name
+                 ,(alet (c-expander-name name)
+                    (? (transpiler-defined-function *transpiler* !)
+                       (compiled-function-name !)
+                       '(%%native "NULL"))))))
 
 (defun c-function-registrations ()
   (filter #'c-function-registration

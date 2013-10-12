@@ -1,7 +1,8 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun tag-code (tag)
-  (| (member-if [& (number? _) (== _ tag)]
+  (| (member-if [& (number? _)
+                   (== _ tag)]
                 *body*)
      (error "Tag ~A not found in body ~A." tag *body*)))
 
@@ -27,7 +28,7 @@
                   (~%ret? v))
                (with-cons a d _
                  (?
-                   (%setq? a)     (with-%setq place value a
+                   (%=? a)        (with-%= place value a
                                     (| (find-tree v value :test #'eq)
                                        (& (%slot-value? place)
                                           (find-tree v place :test #'eq))

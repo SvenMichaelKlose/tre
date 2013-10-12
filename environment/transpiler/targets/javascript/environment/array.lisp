@@ -23,5 +23,5 @@
 (dont-obfuscate *array)
 
 (defun array-find (arr obj)
-  (%setq nil (%%native "return " arr ".indexOf (" obj ") != -1;"))
+  (%= nil (%%native "return " arr ".indexOf (" obj ") != -1;"))
   nil)

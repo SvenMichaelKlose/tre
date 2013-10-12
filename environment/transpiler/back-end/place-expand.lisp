@@ -59,8 +59,8 @@
   (copy-lambda x :body (place-expand-0 (get-lambda-funinfo x) (lambda-body x))))
 
 (defun place-expand-setter (fi x)
-  (let p (place-expand-0 fi (%setq-place x))
-    `(%set-vec ,.p. ,..p. ,...p. ,(place-expand-0 fi (%setq-value x)))))
+  (let p (place-expand-0 fi (%=-place x))
+    `(%set-vec ,.p. ,..p. ,...p. ,(place-expand-0 fi (%=-value x)))))
 
 (define-tree-filter place-expand-0 (fi x)
   (atom x)              (place-expand-atom fi x)
@@ -68,11 +68,11 @@
      (%%native? x)
      (%var? x))         x
   (named-lambda? x)     (place-expand-fun x)
-  (& (%setq? x)
-     (%vec? (place-expand-0 fi (%setq-place x))))
+  (& (%=? x)
+     (%vec? (place-expand-0 fi (%=-place x))))
                         (place-expand-setter fi x)
   (& (%set-atom-fun? x)
-     (%vec? (place-expand-0 fi (%setq-place x))))
+     (%vec? (place-expand-0 fi (%=-place x))))
                         (place-expand-setter fi x)
   (%%closure? x)        x
   (%slot-value? x)      `(%slot-value ,(place-expand-0 fi .x.) ,..x.)

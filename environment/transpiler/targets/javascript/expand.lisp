@@ -44,7 +44,7 @@
 (defun js-early-symbol-maker (g sym)
    `(,@(unless (eq g '~%tfun)
          `((%var ,g)))
-     (%setq ,g (symbol ,(obfuscated-symbol-name sym)
+     (%= ,g (symbol ,(obfuscated-symbol-name sym)
                        ,(!? (symbol-package sym)
                             `(make-package ,(obfuscated-symbol-name !)))))))
 
@@ -100,6 +100,6 @@
   `(%%in-package ,n))
 
 (define-js-std-macro invoke-debugger ()
- `(%setq nil (%invoke-debugger)))
+ `(%= nil (%invoke-debugger)))
 
 (define-js-std-macro define-test (&rest x))

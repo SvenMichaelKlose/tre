@@ -9,11 +9,11 @@
 (defun funinfo-copiers-to-lexicals (fi)
   (let-when lexicals (funinfo-lexicals fi)
 	(let lex-sym (funinfo-lexical fi)
-      `((%setq ,lex-sym (%make-lexical-array ,(length lexicals)))
+      `((%= ,lex-sym (%make-lexical-array ,(length lexicals)))
         ,@(!? (funinfo-lexical? fi lex-sym)
 		    `((%set-vec ,lex-sym ,! ,lex-sym)))
         ,@(mapcan [& (funinfo-lexical? fi _)
-				     `((%setq ,_ ,(? (transpiler-arguments-on-stack? *transpiler*)
+				     `((%= ,_ ,(? (transpiler-arguments-on-stack? *transpiler*)
                                      `(%stackarg ,(funinfo-name fi) ,_)
                                      `(%%native ,_))))]
 				  (funinfo-args fi))))))

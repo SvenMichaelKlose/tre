@@ -8,13 +8,13 @@
                          (collect-places-r (lambda-body x.)))
     (%%go-cond? x.)    (& *funinfo*
                           (funinfo-add-used-var *funinfo* (%%go-value x.)))
-    (%setq? x.)        (awhen *funinfo*
-                          (funinfo-add-place ! (%setq-place x.))
-                          (funinfo-add-used-var ! (%setq-place x.))
-                          (? (atom (%setq-value x.))
-                             (funinfo-add-used-var ! (%setq-value x.))
-                             (dolist (i (%setq-value x.))
-                               (funinfo-add-used-var ! i)))))
+    (%=? x.)           (awhen *funinfo*
+                         (funinfo-add-place ! (%=-place x.))
+                         (funinfo-add-used-var ! (%=-place x.))
+                         (? (atom (%=-value x.))
+                            (funinfo-add-used-var ! (%=-value x.))
+                            (dolist (i (%=-value x.))
+                              (funinfo-add-used-var ! i)))))
   (& x (collect-places-r .x)))
 
 (defun collect-places (x)

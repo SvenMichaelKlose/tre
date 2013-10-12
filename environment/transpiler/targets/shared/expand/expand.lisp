@@ -30,9 +30,9 @@
   nil)
 
 (define-shared-std-macro (js php) when-debug (&body x)
-  (when (transpiler-assert? *transpiler*)
-	`(progn
-	   ,@x)))
+  (& (transpiler-assert? *transpiler*)
+	 `(progn
+	    ,@x)))
 
 (define-shared-std-macro (js php) unless-debug (&body x)
   (unless (transpiler-assert? *transpiler*)
@@ -62,23 +62,23 @@
 (define-shared-std-macro (bc c js php) defmacro (&rest x)
   (print-definition `(defmacro ,x. ,.x.))
   (eval (macroexpand `(define-transpiler-std-macro *transpiler* ,@x)))
-  (when *have-compiler?*
-    `(define-std-macro ,@x)))
+  (& *have-compiler?*
+     `(define-std-macro ,@x)))
 
 (define-shared-std-macro (bc c js php) defconstant (&rest x)
   `(defvar ,@x))
 
 (define-shared-std-macro (bc c js php) defvar (name &optional (val '%%no-value))
-  (when (eq '%%no-value val)
-    (= val `',name))
+  (& (eq '%%no-value val)
+     (= val `',name))
   (let tr *transpiler*
     (print-definition `(defvar ,name))
-    (when (transpiler-defined-variable tr name)
-      (redef-warn "redefinition of variable ~A.~%" name))
+    (& (transpiler-defined-variable tr name)
+       (redef-warn "redefinition of variable ~A.~%" name))
     (transpiler-add-defined-variable tr name)
-    (when *have-compiler?*
-      (transpiler-add-delayed-var-init tr `((= *variables* (cons (cons ',name ',val) *variables*)))))
+    (& *have-compiler?*
+       (transpiler-add-delayed-var-init tr `((= *variables* (cons (cons ',name ',val) *variables*)))))
     `(progn
-       ,@(when (transpiler-needs-var-declarations? tr)
-           `((%var ,name)))
-	   (%setq ,name ,val))))
+       ,@(& (transpiler-needs-var-declarations? tr)
+            `((%var ,name)))
+	   (%= ,name ,val))))

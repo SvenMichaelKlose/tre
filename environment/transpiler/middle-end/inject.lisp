@@ -23,10 +23,10 @@
         (find-next-location .x old))))
 
 (metacode-walker inject-debugging (x)
-	:if-cons (!? (& (%setq? x.)
+	:if-cons (!? (& (%=? x.)
                     (find-next-location x *previous-position*))
                  (progn
                    (= *previous-position* !)
-                   `((%setq nil (debugger-step ,(car !) ,(car .!) ,(cdr .!)))
+                   `((%= nil (debugger-step ,(car !) ,(car .!) ,(cdr .!)))
                      ,x.))
                  (list x.)))

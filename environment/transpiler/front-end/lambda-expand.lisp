@@ -5,7 +5,7 @@
 (defun lambda-expand-make-inline-body (stack-places values body)
   `(%%block
 	 ,@(mapcar #'((stack-place init-value)
-				    `(%setq ,stack-place ,init-value))
+				    `(%= ,stack-place ,init-value))
 			   stack-places values)
      ,@body))
 

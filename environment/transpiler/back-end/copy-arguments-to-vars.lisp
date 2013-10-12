@@ -3,5 +3,5 @@
 (defun copy-arguments-to-vars (fi)
   (& (transpiler-copy-arguments-to-stack? *transpiler*)
      (mapcan [& (funinfo-var? fi _)
-                `((%setq ,(place-assign (place-expand-0 fi _)) ,_))]
+                `((%= ,(place-assign (place-expand-0 fi _)) ,_))]
              (funinfo-local-args fi))))

@@ -63,10 +63,10 @@
 (defun hash-merge (a b)
   (when (| a b)
     (| a (= a (make-hash-table :test b.__tre-test)))
-    (%setq nil (%%native
-                   "for (var k in " b ") "
-                       "if (k != \"" '__tre-object-id "\" && k !=\"" '__tre_test "\") "
-                           a "[k] = " b "[k];"))
+    (%= nil (%%native
+                "for (var k in " b ") "
+                    "if (k != \"" '__tre-object-id "\" && k !=\"" '__tre_test "\") "
+                        a "[k] = " b "[k];"))
     a))
 
 (defun copy-hash-table (x)

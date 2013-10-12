@@ -30,7 +30,7 @@
 
 (defun php-method-function (class-name x)
   `(function ,(php-method-name class-name x.)
-             (,(cons 'this .x.)
+             (,(. 'this .x.)
               (let ~%this this
 	            (%thisify ,class-name ,@(| ..x. (list nil)))))))
 
@@ -42,7 +42,7 @@
 (defun php-method (class-name x)
   `("public function " ,x. " " ,(php-argument-list (argument-expand-names 'php-method .x.)) ,*php-newline*
     "{" ,*php-newline*
-        ,*php-indent* "return " ,(php-compiled-method-name class-name x.) ,(php-argument-list (argument-expand-names 'php-method-function-call (cons 'this .x.))) ,*php-separator*
+        ,*php-indent* "return " ,(php-compiled-method-name class-name x.) ,(php-argument-list (argument-expand-names 'php-method-function-call (. 'this .x.))) ,*php-separator*
     "}"))
 
 (defun php-members (class-name cls)
@@ -66,14 +66,14 @@
                 x))
 	       ,(assoc-value class-name *delayed-constructors*)
            ,@(php-method-functions class-name !)
-           (%setq nil (%%native
-                        (%php-class-head ,class-name)
-                        ,(alet (argument-expand-names 'php-constructor-function (transpiler-function-arguments *transpiler* class-name))
-                           `("public function __construct " ,(php-argument-list !) ,*php-newline*
-                             "{" ,*php-newline*
-                                 ,*php-indent* "return " ,(php-compiled-constructor-name class-name) ,(php-argument-list (cons 'this !)) ,*php-separator*
-                             "}")) ,*php-newline*
-                        ,@(php-members class-name !)
-	                    ,@(php-methods class-name !)
-                        (%php-class-tail))))
+           (%= nil (%%native
+                     (%php-class-head ,class-name)
+                     ,(alet (argument-expand-names 'php-constructor-function (transpiler-function-arguments *transpiler* class-name))
+                        `("public function __construct " ,(php-argument-list !) ,*php-newline*
+                          "{" ,*php-newline*
+                              ,*php-indent* "return " ,(php-compiled-constructor-name class-name) ,(php-argument-list (. 'this !)) ,*php-separator*
+                          "}")) ,*php-newline*
+                     ,@(php-members class-name !)
+	                 ,@(php-methods class-name !)
+                     (%php-class-tail))))
 	    (error "Cannot finalize undefined class ~A." class-name))))

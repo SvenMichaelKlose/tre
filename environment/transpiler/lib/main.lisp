@@ -19,5 +19,5 @@
 
 (env-load "transpiler/lib/metacode/predicates.lisp")
 (env-load "transpiler/lib/metacode/walker.lisp")
-(env-load "transpiler/lib/metacode/with-%setq.lisp")
+(env-load "transpiler/lib/metacode/with-%=.lisp")
 (env-load "transpiler/lib/metacode/validate.lisp")

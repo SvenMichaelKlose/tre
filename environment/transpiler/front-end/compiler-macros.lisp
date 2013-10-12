@@ -26,10 +26,10 @@
        ,@(mapcan [with-compiler-tag next
                    (when _.
                      `(,@(unless (t? _.)
-                           `((%setq ~%ret ,_.)
+                           `((%= ~%ret ,_.)
                              (%%go-nil ,next ~%ret)))
 				       ,@(!? (distinguish-vars-from-tags ._)
-				             `((%setq ~%ret (%%block ,@!))))
+				             `((%= ~%ret (%%block ,@!))))
                        (%%go ,end-tag)
                        ,@(unless (t? _.)
                            (list next))))]
@@ -72,7 +72,7 @@
 (define-expander-macro compiler-return return-from (block-name expr)
   (? (eq block-name *blockname*)
      `(%%block
-        (%setq ~%ret ,expr)
+        (%= ~%ret ,expr)
         (%%go ,*blockname-replacement*))
 	 `(return-from ,block-name ,expr)))
 
@@ -88,12 +88,12 @@
                            ,@head
                            ,@(? (vm-jump? tail.)
 						        tail
-						        `((%setq ~%ret ,@tail)))))
+						        `((%= ~%ret ,@tail)))))
             (append ret `(,g (identity ~%ret))))))
     `(identity nil)))
 
 (define-compiler-macro setq (&rest args)
-  `(%%block ,@(filter ^(%setq ,_. ,._.) (group args 2))))
+  `(%%block ,@(filter ^(%= ,_. ,._.) (group args 2))))
 
 (define-compiler-macro ? (&rest body)
   (with (tests (group body 2)

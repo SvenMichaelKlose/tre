@@ -3,7 +3,7 @@
 (mapcar-macro x
 	'(%quote %new
 	  %%block %%go %%go-nil %%go-not-nil %%call-nil %%call-not-nil
-	  %stack %stackarg %vec %set-vec %setq %tag %%tag
+	  %stack %stackarg %vec %set-vec %= %tag %%tag
 	  %%native %%string
 	  %%closure %closure
 	  %set-atom-fun
@@ -36,38 +36,29 @@
   (| (%%go-nil? x)
      (%%go-not-nil? x)))
 
-(defun %%go-tag (x)
-  .x.)
+(defun %%go-tag (x) .x.)
+(defun %%go-value (x) ..x.)
+(defun %%block-body (x) .x)
+(defun %=-place (x) .x.)
+(defun %=-value (x) ..x.)
 
-(defun %%go-value (x)
-  ..x.)
-
-(defun %%block-body (x)
-  .x)
-
-(defun %setq-place (x)
-  .x.)
-
-(defun %setq-value (x)
-  ..x.)
-
-(defun %setq-args (x)
-  (let v (%setq-value x)
+(defun %=-args (x)
+  (let v (%=-value x)
     (? (cons? v)
 	   .v
 	   (list v))))
 
-(defun %setq-lambda? (x)
-  (& (%setq? x)
-     (lambda? (%setq-value x))))
+(defun %=-lambda? (x)
+  (& (%=? x)
+     (lambda? (%=-value x))))
 
-(defun %setq-funcall? (x)
-  (? (%setq? x)
-     (cons? (%setq-value x))))
+(defun %=-funcall? (x)
+  (? (%=? x)
+     (cons? (%=-value x))))
 
-(defun %setq-funcall-of? (x name)                                                                                                                                             
-  (& (%setq-funcall? x)
-     (eq name (car (%setq-value x)))))
+(defun %=-funcall-of? (x name)                                                                                                                                             
+  (& (%=-funcall? x)
+     (eq name (car (%=-value x)))))
 
 (defun %slot-value-obj (x)
   .x.)
@@ -95,7 +86,7 @@
 
 (defun metacode-expression? (x)
   (| (atom x)
-     (%setq? x)
+     (%=? x)
      (vm-jump? x)
      (%var? x)
      (named-lambda? x)))
