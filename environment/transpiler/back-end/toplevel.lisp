@@ -19,7 +19,7 @@
                            (obfuscate _)
                            _]
     to-string           [? (transpiler-make-text? tr)
-                           (transpiler-to-string tr _)
+                           (transpiler-to-string _)
                            _]
     concat-stringtree   [transpiler-concat-text tr _])
 

@@ -6,7 +6,7 @@
 (define-codegen-macro-definer define-c-macro *c-transpiler*)
 
 (defun c-codegen-var-decl (name)
-  `("treptr " ,(transpiler-symbol-string *transpiler* name)))
+  `("treptr " ,(transpiler-symbol-string name)))
 
 
 ;;;; SYMBOL TRANSLATIONS

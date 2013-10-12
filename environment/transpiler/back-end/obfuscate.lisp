@@ -43,7 +43,7 @@
   (symbol-name (obfuscate-symbol x)))
 
 (defun obfuscated-symbol-string (x)
-  (transpiler-symbol-string *transpiler* (obfuscate-symbol x)))
+  (transpiler-symbol-string (obfuscate-symbol x)))
 
 (defun transpiler-print-obfuscations (tr)
   (dolist (k (hashkeys (transpiler-obfuscations tr)))
