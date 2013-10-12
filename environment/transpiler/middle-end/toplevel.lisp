@@ -2,10 +2,11 @@
 
 (transpiler-pass transpiler-middleend-0 (tr)
     make-packages            #'make-packages
-    expression-expand        [with-temporary (transpiler-expex-warnings? tr) nil
-                               (expression-expand _)]
-    correct-functions        [correct-functions tr _]
-    accumulate-toplevel      [accumulate-toplevel-expressions tr _]
+    expression-expand        #'expression-expand
+    correct-functions        #'correct-functions
+    accumulate-toplevel      [? (transpiler-accumulate-toplevel-expressions? tr)
+                                (accumulate-toplevel-expressions _)
+                                _]
     inject-debugging         [? (transpiler-inject-debugging? tr)
                                 (inject-debugging _)
                                 _]

@@ -5,9 +5,7 @@
     rename-arguments          #'rename-arguments
     lambda-expand             #'lambda-expand
     fake-place-expand         #'fake-place-expand
-    fake-expression-expand    [(with-temporary *expex-import?* t
-                                 (expression-expand (make-packages _))
-                               _)])
+    fake-expression-expand    #'fake-expression-expand)
 
 (transpiler-pass transpiler-frontend-1 (tr)
     file-input                #'identity

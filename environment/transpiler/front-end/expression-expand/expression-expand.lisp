@@ -265,8 +265,17 @@
 
 ;;;; TOP LEVEL
 
-(defun expression-expand (x)
+(defun expression-expand-0 (x)
   (& x
 	 (with-temporary *expex* (transpiler-expex *transpiler*)
        (= *expex-sym-counter* 0)
        (expex-body x))))
+
+(defun expression-expand (x)
+  (with-temporary (transpiler-expex-warnings? *transpiler*) nil
+    (expression-expand-0 x)))
+
+(defun fake-expression-expand (x)
+  (with-temporary *expex-import?* t
+    (expression-expand-0 (make-packages x)))
+  x)
