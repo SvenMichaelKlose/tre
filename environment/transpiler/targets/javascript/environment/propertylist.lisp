@@ -9,6 +9,6 @@
   (= *%property-list-tmp* nil)
   (%setq nil (%%native
                  "for (var k in " hash ") "
-                     "if (k != \"" '__tre-object-id "\" && k != \"" '__tre-test "\") "
+                     "if (k != \"" ,(obfuscated-symbol-string '__tre-object-id) "\" && k != \"" ,(obfuscated-symbol-string '__tre-test) "\") "
                          ,(compiled-function-name-string '%property-list-0) "(typeof k == \"string\" ? (" *obj-keys* "[k] || k) : k, " hash "[k]);"))
   (reverse *%property-list-tmp*))
