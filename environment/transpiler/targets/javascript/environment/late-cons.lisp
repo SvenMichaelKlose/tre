@@ -2,21 +2,18 @@
 
 (defun car (x)
   (? x
-     (? (atom x)
-        (error "Cons or NIL expected instead of ~A.")
-        x._)))
+     x._
+     (assert (not x) "Cons or NIL expected instead of ~A." x)))
 
 (defun cdr (x)
   (? x
-     (? (atom x)
-        (error "Cons or NIL expected instead of ~A.")
-        x.__)))
+     x.__
+     (assert (not x) "Cons or NIL expected instead of ~A." x)))
 
 (defun cpr (x)
   (? x
-     (? (atom x)
-        (error "Cons or NIL expected instead of ~A.")
-        x._p)))
+     x._p
+     (assert (not x) "Cons or NIL expected instead of ~A." x)))
 
 (defvar *rplaca-breakpoints* nil)
 (defvar *rplacd-breakpoints* nil)
