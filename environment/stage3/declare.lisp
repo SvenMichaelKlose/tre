@@ -40,12 +40,10 @@
   '((type .	%declare-statement-type)))
 
 (defun %declare-statement (x)
-  (funcall
-      (symbol-function
-	      (| (assoc-value x. *declare-statement-classes*)
-	         (error "Unknown declaration class ~A. Choose one of ~A instead."
-		            x. (carlist *declare-statement-classes*))))
-      .x))
+  (funcall (symbol-function (| (assoc-value x. *declare-statement-classes*)
+	                        (error "Unknown declaration class ~A. Choose one of ~A instead."
+		                           x. (carlist *declare-statement-classes*))))
+           .x))
 
 (defmacro declare (&rest x)
   (| x (error "Arguments expected."))
