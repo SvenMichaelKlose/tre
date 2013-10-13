@@ -38,7 +38,7 @@
      (~%ret? (%=-place a))
      (t|nil? (%=-value a))
      (!? (target-tag d (%=-value a))
-         (not (opt-peephole-will-be-used-again? (member ! *body*) '~%ret))))
+         (not (will-be-used-again? (member ! *body*) '~%ret))))
     (. `(%%go ,(target-tag d (%=-value a)))
        (optimize-jumps d))
   (& (%=? a)

@@ -16,7 +16,7 @@
        (not (eq x (funinfo-lexical !))
             (funinfo-lexical? ! x)))))
 
-(defun opt-peephole-will-be-used-again? (x v)
+(defun will-be-used-again? (x v)
    (with (traversed-tags nil
           traversed-tag? [member _ traversed-tags :test #'integer==]
           traverse-tag   [unless (traversed-tag? _)
