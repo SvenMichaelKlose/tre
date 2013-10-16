@@ -3,7 +3,7 @@
 (defvar *default-listprop* nil)
 
 (define-native-js-fun %cons (a d)
-  (= this.__class ,(obfuscated-symbol-string 'cons)
+  (= this.__class ,(obfuscated-identifier 'cons)
      this._  a
      this.__ d
      this._p *default-listprop*)

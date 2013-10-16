@@ -46,4 +46,4 @@
 (defun cons? (x)
   (& (object? x)
      x.__class
-     (%%%== x.__class ,(obfuscated-symbol-string 'cons))))
+     (%%%== x.__class ,(obfuscated-identifier 'cons))))

@@ -42,7 +42,7 @@
 (defun obfuscated-symbol-name (x)
   (symbol-name (obfuscate-symbol x)))
 
-(defun obfuscated-symbol-string (x)
+(defun obfuscated-identifier (x)
   (transpiler-symbol-string (obfuscate-symbol x)))
 
 (defun transpiler-print-obfuscations (tr)

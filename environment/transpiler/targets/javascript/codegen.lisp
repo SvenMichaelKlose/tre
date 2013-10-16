@@ -18,7 +18,7 @@
     (| (href ! x)
        (= (href ! x)
           (with-gensym g
-            (push `("var " ,(obfuscated-symbol-string g)
+            (push `("var " ,(obfuscated-identifier g)
                            "=" ,@(js-codegen-symbol-constructor-expr x)
                            ,*js-separator*)
                   (transpiler-raw-decls *transpiler*))
@@ -201,7 +201,7 @@
 (define-js-macro %new (&rest x)
   `(%%native "new " ,(? (transpiler-defined-function *transpiler* x.)
                         (compiled-function-name-string x.)
-                        (obfuscated-symbol-string x.))
+                        (obfuscated-identifier x.))
                     ,@(parenthized-comma-separated-list .x)))
 
 (define-js-macro delete-object (x)
