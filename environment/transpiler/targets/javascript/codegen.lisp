@@ -199,7 +199,10 @@
 ;;;; OBJECTS
 
 (define-js-macro %new (&rest x)
-  `(%%native "new " ,x. ,@(parenthized-comma-separated-list .x)))
+  `(%%native "new " ,(? (transpiler-defined-function *transpiler* x.)
+                        (compiled-function-name-string x.)
+                        (obfuscated-symbol-string x.))
+                    ,@(parenthized-comma-separated-list .x)))
 
 (define-js-macro delete-object (x)
   `(%%native "delete " ,x))

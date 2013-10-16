@@ -11,14 +11,12 @@
      (%%closure? x)
      (%function-prologue? x)
      (%function-epilogue? x)
-     (& (transpiler-raw-constructor-names? *transpiler*)
-        (%new? x))))
+     (%new? x)))
 
-(define-tree-filter translate-function-names (fi x) ; XXX use metacode-walker instead
-  (named-lambda? x)          (copy-lambda x :body (translate-function-names (get-lambda-funinfo x) (lambda-body x)))
-  (nontranslatable-name? x)  x
-  (%slot-value? x)           `(%slot-value ,(translate-function-name .x.) ,..x.)
+(define-tree-filter translate-function-names (fi x)
+  (named-lambda? x)                         (copy-lambda x :body (translate-function-names (get-lambda-funinfo x) (lambda-body x)))
+  (nontranslatable-name? x)                 x
+  (%slot-value? x)                          `(%slot-value ,(translate-function-name .x.) ,..x.)
   (& (atom x)
      (| (not (funinfo-parent fi))
-        (not (funinfo-arg-or-var? fi x))))
-                             (translate-function-name x))
+        (not (funinfo-arg-or-var? fi x))))  (translate-function-name x))

@@ -119,7 +119,6 @@
   (exported-closures        nil)
   (delayed-var-inits        nil)
   (dot-expand?              t)
-  (raw-constructor-names?   nil)
   (memorized-sources        nil)
   (memorize-sources?        t)
 
@@ -246,7 +245,6 @@
         :exported-closures        (copy-list exported-closures)
         :delayed-var-inits        (copy-list delayed-var-inits)
         :dot-expand?              dot-expand?
-        :raw-constructor-names?   raw-constructor-names?
         :memorized-sources        (copy-list memorized-sources)
         :memorize-sources?        memorize-sources?
         :predefined-symbols       (copy-list predefined-symbols)
