@@ -11,6 +11,6 @@
 	     (error "First argument ~A is not a function." fun))
 	  (| (list? l)
 	     (error "Last argument is not a list.")))
-    (!? fun.tre-exp
-        (!.apply nil (%%native "[" args "]"))
+    (? (defined? fun.tre-exp)
+        (fun.tre-exp.apply nil (%%native "[" args "]"))
         (fun.apply nil (list-array args)))))
