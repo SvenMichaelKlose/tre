@@ -76,7 +76,6 @@
   (save-sources?            nil)
   (save-argument-defs-only? nil)
   (warn-on-unused-symbols?  nil)
-  (expex-warnings?          t)
   (function-prologues?      t)
   (exclude-base?            nil)
   (count-tags?              nil)
@@ -218,7 +217,6 @@
         :save-sources?            save-sources?
         :save-argument-defs-only? save-argument-defs-only?
         :warn-on-unused-symbols?  warn-on-unused-symbols?
-        :expex-warnings?          expex-warnings?
         :function-prologues?      function-prologues?
         :exclude-base?            exclude-base?
         :count-tags?              count-tags?

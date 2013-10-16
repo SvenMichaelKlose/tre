@@ -9,7 +9,7 @@
        (clr (transpiler-only-environment-macros? !)
             (transpiler-import-from-environment? !)
             (transpiler-dump-passes? !)
-            (transpiler-expex-warnings? !))
+            (expex-warnings? (transpiler-expex !)))
        (= *eval-transpiler* !))))
 
 (defun late-eval (x)

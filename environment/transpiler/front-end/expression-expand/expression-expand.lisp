@@ -76,7 +76,7 @@
     (funinfo-var-add *funinfo* !)))
 
 (defun expex-warn (x)
-  (& (transpiler-expex-warnings? *transpiler*)
+  (& (expex-warnings? *expex*)
      (symbol? x)
      (not (transpiler-defined-symbol? *funinfo* x)
           (can-import-function? *transpiler* x))
@@ -267,15 +267,20 @@
 
 (defun expression-expand-0 (x)
   (& x
-	 (with-temporary *expex* (transpiler-expex *transpiler*)
-       (= *expex-sym-counter* 0)
-       (expex-body x))))
+     (= *expex-sym-counter* 0)
+     (expex-body x)))
+
+(defmacro with-transpiler-expex (&rest body)
+  `(with-temporary *expex* (transpiler-expex *transpiler*)
+     ,@body))
 
 (defun expression-expand (x)
-  (with-temporary (transpiler-expex-warnings? *transpiler*) nil
-    (expression-expand-0 x)))
+  (with-transpiler-expex
+    (with-temporary (expex-warnings? *expex*) nil
+      (expression-expand-0 x))))
 
 (defun fake-expression-expand (x)
-  (with-temporary *expex-import?* t
-    (expression-expand-0 (make-packages x)))
+  (with-transpiler-expex
+    (with-temporary *expex-import?* t
+      (expression-expand-0 (make-packages x))))
   x)
