@@ -2,6 +2,7 @@
 
 (transpiler-pass transpiler-middleend-0 (tr)
     make-packages            #'make-packages
+    fake-place-expand        #'fake-place-expand
     expression-expand        #'expression-expand
     correct-functions        #'correct-functions
     accumulate-toplevel      [? (transpiler-accumulate-toplevel-expressions? tr)

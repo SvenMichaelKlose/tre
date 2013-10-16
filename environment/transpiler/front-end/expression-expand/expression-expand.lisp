@@ -18,16 +18,9 @@
 
 ;;;; IMPORT
 
-(defun expex-function-name (x)
-  (?
-    (global-literal-function? x)  .x.
-    (%%closure? x)                .x.
-    (cons? x)                      x.
-    x))
-
 (defun expex-import-function (x)
   (& *expex-import?*
-     (alet (expex-function-name x)
+     (alet (metacode-function-name x)
        (transpiler-add-wanted-function *transpiler* !)
        (| (current-scope? x)
           (transpiler-import-add-used !)))))
