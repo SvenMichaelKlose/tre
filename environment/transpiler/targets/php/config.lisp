@@ -8,7 +8,6 @@
 
 (defun php-expex-initializer (ex)
   (= (expex-inline? ex)         #'%slot-value?
-     (expex-move-lexicals? ex)  t
      (expex-setter-filter ex)   (compose [mapcar #'php-setter-filter _]
                                          #'expex-compiled-funcall)
      (expex-argument-filter ex) #'php-argument-filter))

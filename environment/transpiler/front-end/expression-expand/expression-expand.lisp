@@ -81,14 +81,9 @@
 ;;;; PREDICATES
 
 (defun expex-able? (x)
-  (| (& (expex-move-lexicals? *expex*)
-        (atom x)
-        (not (eq '~%ret x))
-        (funinfo-parent-var? *funinfo* x)
-        (not (funinfo-toplevel-var? *funinfo* x)))
-     (not (| (atom x)
-             (literal-function? x)
-             (in? x. '%%go '%%go-nil '%%native '%%string '%quote)))))
+  (not (| (atom x)
+          (literal-function? x)
+          (in? x. '%%go '%%go-nil '%%native '%%string '%quote))))
 
 (defun expex-expandable-args? (fun)
   (| (transpiler-defined-function *transpiler* fun)

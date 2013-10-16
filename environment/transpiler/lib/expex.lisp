@@ -4,5 +4,4 @@
   (argument-filter  #'identity)
   (setter-filter    #'list)
   (inline?          #'((x)))
-  (move-lexicals?   nil)
   (warnings?        t))
