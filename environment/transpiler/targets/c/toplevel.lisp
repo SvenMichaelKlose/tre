@@ -1,7 +1,7 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
-(defvar *c-init-group-size* 16)
-(defvar *c-init-counter* 0)
+(defvar *c-init-group-size*  16)
+(defvar *c-init-counter*      0)
 (defvar *c-core-headers*
 	     '("ptr.h"
 		   "cons.h"
@@ -40,6 +40,10 @@
 		   "alien.h"
 		   "function.h"
 		   "compiled.h"))
+
+(defun c-header-includes ()
+  (+ (format nil "#include <stdlib.h>~%")
+     (apply #'+ (mapcar [format nil "#include \"~A\"~%" _] *c-core-headers*))))
 
 (defun c-function-registration (name)
   `(%= ~%ret (treatom_register_compiled_function
@@ -85,7 +89,3 @@
 (defun c-decl-gen ()
   (concat-stringtree (transpiler-compiled-decls *transpiler*)
                      (c-compile-init-functions)))
-
-(defun c-header-includes ()
-  (+ (format nil "#include <stdlib.h>~%")
-     (apply #'+ (mapcar [format nil "#include \"~A\"~%" _] *c-core-headers*))))
