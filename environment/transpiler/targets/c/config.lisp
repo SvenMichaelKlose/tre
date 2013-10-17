@@ -25,5 +25,6 @@
       :expex-initializer        #'c-expex-initializer))
 
 (defvar *c-transpiler* (copy-transpiler (make-c-transpiler)))
+(= *default-transpiler* *c-transpiler*)
 (defvar *c-separator*  (transpiler-separator *c-transpiler*))
 (defvar *c-indent*     "    ")

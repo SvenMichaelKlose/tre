@@ -1,6 +1,6 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
-(defvar *default-transpiler* *c-transpiler*)
+(defvar *default-transpiler* nil)
 
 (defun wrap-strings-in-lists (x)
   (filter [? (string? _)
