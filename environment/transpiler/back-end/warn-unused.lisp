@@ -6,7 +6,7 @@
       (| (funinfo-used-var? fi !)
          (warn "Unused symbol ~A in ~A.~%"
                (symbol-name !)
-               (funinfo-scope-description fi)
+               (human-readable-funinfo-names fi)
                (!? (butlast (funinfo-names fi))
                    (apply #'+ "scope of " (symbol-names-string (reverse !)))
                    "toplevel"))))))

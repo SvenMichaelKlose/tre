@@ -34,8 +34,3 @@
     (print-funinfo fi)
     (print-funinfo-stack (funinfo-parent fi) :include-global? include-global?))
   fi)
-
-(defun funinfo-scope-description (fi)
-  (!? (butlast (funinfo-names fi))
-      (+ "scope of " (symbol-names-string (reverse !)))
-      "toplevel"))

@@ -75,7 +75,7 @@
           (can-import-function? *transpiler* x))
      (error "Symbol ~A is not defined in ~A."
             (symbol-name x)
-            (funinfo-scope-description *funinfo*))))
+            (human-readable-funinfo-names *funinfo*))))
 
 
 ;;;; PREDICATES
