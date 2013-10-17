@@ -24,10 +24,10 @@
 
 (defun eval-compile (x)
   (with-temporary *js-transpiler* (| *js-eval-transpiler* (make-js-eval-transpiler))
-    (let tr *js-transpiler*
-      (with-temporaries ((transpiler-dump-passes? tr) nil
-                         (transpiler-expex-warnings? tr) nil)
-        (+ (js-eval-transpile tr x)
+    (alet *js-transpiler*
+      (with-temporaries ((transpiler-dump-passes? !)              nil
+                         (expex-warnings? (transpiler-expex? !))  nil)
+        (+ (js-eval-transpile ! x)
            (obfuscated-identifier '*native-eval-return-value*)
            " = "
            (obfuscated-identifier '~%ret)
