@@ -15,7 +15,7 @@
   (compile-sections nil :transpiler (%compile-environment-configure-transpiler *bc-transpiler* funs)))
 
 (defun compile-c-compiler ()
-  (compile-c-environment '(target-transpile)))
+  (compile-c-environment '(generic-compile)))
 
 (defun compile-bytecode-compiler ()
-  (compile-bytecode-environment '(target-transpile)))
+  (compile-bytecode-environment '(generic-compile)))

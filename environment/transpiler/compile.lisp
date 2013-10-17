@@ -9,8 +9,8 @@
           x))
 
 (defun compile-sections (sections &key (transpiler nil))
-  (target-transpile (| transpiler (copy-transpiler *default-transpiler*))
-                    (wrap-strings-in-lists sections)))
+  (generic-compile (| transpiler (copy-transpiler *default-transpiler*))
+                   (wrap-strings-in-lists sections)))
 
 (defun compile (expression &key (transpiler nil))
   (compile-sections `((compile . (,expression)))

@@ -16,7 +16,10 @@
 (defun accumulated-toplevel? (section)
   (not (eq 'accumulated-toplevel section)))
 
-(defun target-transpile-2 (sections)
+(defun compile-without-frontend (x)
+  (transpiler-backend *transpiler* (transpiler-middleend *transpiler* x)))
+
+(defun generic-compile-2 (sections)
   (with (tr             *transpiler*
          compiled-code  (make-queue))
 	(dolist (i sections (queue-list compiled-code))
@@ -24,12 +27,12 @@
         (with-temporary (transpiler-current-section tr) section
           (let code (? (compile-section? section (transpiler-compiled-files tr))
                        (with-temporary (transpiler-accumulate-toplevel-expressions? tr) (not (accumulated-toplevel? section))
-                         (transpiler-make-code tr data))
+                         (compile-without-frontend data))
                        (assoc-value section (transpiler-compiled-files tr) :test #'eq|string==))
-            (aadjoin! code section (transpiler-compiled-files tr) :test #'eq|string==)
+            (aadjoin! code sections (transpiler-compiled-files tr) :test #'eq|string==)
 	        (enqueue compiled-code code)))))))
 
-(def-transpiler target-transpile-1 (sections)
+(def-transpiler generic-compile-1 (sections)
   (with (tr             *transpiler*
          frontend-code  (make-queue))
 	(dolist (i sections (queue-list frontend-code))
@@ -47,31 +50,32 @@
             (aadjoin! code section (transpiler-frontend-files tr) :test #'eq|string==)
 	        (enqueue frontend-code (cons section code))))))))
 
-(defun target-sighten-deps (tr)
-  (with-temporary (transpiler-save-argument-defs-only? tr) nil
-    (transpiler-import-from-environment tr)))
+(defun make-toplevel-function ()
+  `((defun accumulated-toplevel ()
+      ,@(reverse (transpiler-accumulated-toplevel-expressions *transpiler*)))))
 
-(defun target-transpile-accumulated-toplevels (tr)
-  (& (transpiler-accumulate-toplevel-expressions? tr)
-     (transpiler-accumulated-toplevel-expressions tr)
-     (with-temporary (transpiler-sections-to-update tr) '(accumulated-toplevel)
-	   (transpiler-make-code tr (target-transpile-1 (list (cons 'accumulated-toplevel
-                                                                #'(()
-                                                                     (transpiler-make-toplevel-function tr)))))))))
+(defun generic-compile-accumulated-toplevels ()
+  (alet *transpiler*
+    (& (transpiler-accumulate-toplevel-expressions? !)
+       (transpiler-accumulated-toplevel-expressions !)
+       (with-temporary (transpiler-sections-to-update !) '(accumulated-toplevel)
+	     (compile-without-frontend (generic-compile-1 (list (. 'accumulated-toplevel
+                                                            #'make-toplevel-function))))))))
 
 (defun tell-number-of-warnings ()
   (alet (length *warnings*)
-    (unless (zero? 1)
-      (format t "; ~A warning~A.~%" ! (? (< 1 !) "s" "")))))
+    (format t "; ~A warning~A.~%"
+            (? (zero? !) "No" !)
+            (? (== 1 !) "" "s"))))
 
-(def-transpiler transpile-codegen (transpiler before-deps deps after-deps)
+(def-transpiler generic-codegen (transpiler before-deps deps after-deps)
   (& *show-transpiler-progress?*
      (format t "; Let me think. Hmm...~%"))
   (!? middleend-init (funcall !))
-  (with (compiled-before  (target-transpile-2 before-deps)
-         compiled-deps    (!? deps (transpiler-make-code transpiler !))
-         compiled-after   (target-transpile-2 after-deps)
-         compiled-acctop  (target-transpile-accumulated-toplevels transpiler))
+  (with (compiled-before  (generic-compile-2 before-deps)
+         compiled-deps    (!? deps (compile-without-frontend !))
+         compiled-after   (generic-compile-2 after-deps)
+         compiled-acctop  (generic-compile-accumulated-toplevels))
     (& *show-transpiler-progress?*
        (format t "; Phew!~%"))
     (!? compiled-deps
@@ -86,19 +90,23 @@
                             compiled-acctop
                             (!? epilogue-gen (funcall !)))))
 
-(def-transpiler transpile-0 (transpiler sections)
+(defun generic-import (tr)
+  (with-temporary (transpiler-save-argument-defs-only? tr) nil
+    (transpiler-import-from-environment tr)))
+
+(def-transpiler generic-compile-0 (transpiler sections)
   (!? frontend-init (funcall !))
-  (with (before-deps  (target-transpile-1 (!? sections-before-deps (funcall ! transpiler)))
-         after-deps   (target-transpile-1 (+ (!? sections-after-deps (funcall ! transpiler))
+  (with (before-deps  (generic-compile-1 (!? sections-before-deps (funcall ! transpiler)))
+         after-deps   (generic-compile-1 (+ (!? sections-after-deps (funcall ! transpiler))
                                              sections))
-		 deps         (target-sighten-deps transpiler))
+		 deps         (generic-import transpiler))
     (& *show-transpiler-progress?*
        (let num-exprs (apply #'+ (mapcar [length ._]
                                          (+ before-deps deps after-deps)))
          (format t "; ~A top level expressions.~%" num-exprs)))
-    (transpile-codegen transpiler before-deps deps after-deps)))
+    (generic-codegen transpiler before-deps deps after-deps)))
 
-(def-transpiler transpile-print-stats (transpiler start-time)
+(def-transpiler print-transpiler-stats (transpiler start-time)
   (& print-obfuscations?
      obfuscate?
      (transpiler-print-obfuscations transpiler))
@@ -107,7 +115,7 @@
   (& *show-transpiler-progress?*
      (format t "; ~A seconds passed.~%~F" (integer (/ (- (nanotime) start-time) 1000000000)))))
 
-(def-transpiler target-transpile (transpiler sections)
+(def-transpiler generic-compile (transpiler sections)
   (let start-time (nanotime)
     (= *warnings* nil)
     (with-temporaries (*recompiling?*  (& sections-to-update t)
@@ -120,5 +128,5 @@
       (= (transpiler-host-functions-hash transpiler) (make-host-functions-hash))
       (= (transpiler-host-variables-hash transpiler) (make-host-variables-hash))
       (prog1
-        (transpile-0 transpiler sections)
-        (transpile-print-stats transpiler start-time)))))
+        (generic-compile-0 transpiler sections)
+        (print-transpiler-stats transpiler start-time)))))
