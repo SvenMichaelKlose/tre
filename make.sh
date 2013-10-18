@@ -252,9 +252,9 @@ distclean)
 backup)
     echo "Making backup..."
     mkdir -p backup
-    cp -v $BINDIR/tre backup
+    cp -v tre backup
     cp -v interpreter/_compiled-env.c backup
-    cp -v ~/.tre.image backup/image
+    cp -v image backup
     echo "Backed up to backup/. Use 'restore' on occasion."
     ;;
 
@@ -262,7 +262,7 @@ restore)
     sudo cp backup/tre $BINDIR
     cp -v backup/tre .
     cp -v backup/_compiled-env.c interpreter
-    cp -v backup/image ~/.tre.image
+    cp -v backup/image .
     ;;
 
 *)
