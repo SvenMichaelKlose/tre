@@ -10,5 +10,4 @@
 (env-load "transpiler/middle-end/optimizer/jumps.lisp")
 (env-load "transpiler/middle-end/optimizer/places.lisp")
 (env-load "transpiler/middle-end/optimizer/peephole.lisp")
-(env-load "transpiler/middle-end/optimizer/tags.lisp")
 (env-load "transpiler/middle-end/optimizer/toplevel.lisp")
