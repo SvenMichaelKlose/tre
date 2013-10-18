@@ -96,7 +96,7 @@ BINDIR="/usr/local/bin/"
 basic_clean ()
 {
 	echo "Cleaning..."
-	rm -vf *.core interpreter/$COMPILED_ENV tre tmp.c __alien.tmp compilation.log environment/_current-version environment/transpiler/targets/c64/tre.c64
+	rm -vf *.core interpreter/$COMPILED_ENV tre image tmp.c __alien.tmp compilation.log environment/_current-version environment/transpiler/targets/c64/tre.c64
 	rm -vrf obj
     rm -vf examples/js/hello-world.js
 }
@@ -143,6 +143,7 @@ install_it ()
 {
 	echo "Installing $TRE to $BINDIR."
 	sudo cp $TRE $BINDIR || exit 1
+    echo '(dump-system *boot-image*)' | ./tre -i image
 }
 
 case $1 in
@@ -181,14 +182,13 @@ build)
 
 precompile)
     echo "Precompiling target core functions..."
-	echo "(precompile-environments)(dump-system)" | ./tre || exit 1
+	echo "(precompile-environments)(dump-system \"image\")" | ./tre || exit 1
 	;;
 
 
 compiler)
     echo "Compiling the compiler only..."
-	(echo "(compile-c-compiler)(dump-system)" | ./tre) || exit 1
-	./make.sh crunsh $ARGS || exit 1
+	(echo "(compile-c-compiler)(dump-system \"image\")" | ./tre -i image) || exit 1
     ;;
 
 bcompiler)
@@ -199,15 +199,16 @@ bcompiler)
 
 all)
     echo "Making everything..."
-	(echo "(compile-c-environment)(dump-system)" | ./tre | tee compilation.log) || exit 1
+	(echo "(compile-c-environment)(dump-system \"image\")" | ./tre -i image | tee compilation.log) || exit 1
 	;;
 
 boot)
     echo "Booting everything from scratch..."
 	./make.sh interpreter $ARGS || exit 1
 	./make.sh compiler $ARGS || exit 1
+	./make.sh crunsh $ARGS || exit 1
 	./make.sh all $ARGS || exit 1
-	./make.sh crunsh || exit 1
+	./make.sh crunsh $ARGS|| exit 1
 	;;
 
 test)
@@ -234,7 +235,7 @@ debugboot)
 
 bytecode)
     echo "Making bytecodes for everything..."
-	(echo "(load-bytecode (compile-bytecode-environment))(dump-system)" | ./tre) || exit 1
+	(echo "(load-bytecode (compile-bytecode-environment))(dump-system \"image\")" | ./tre) || exit 1
 	;;
 
 install)
