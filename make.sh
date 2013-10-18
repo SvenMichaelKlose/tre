@@ -141,9 +141,8 @@ crunsh_compile ()
 
 install_it ()
 {
-	echo "Installing $TRE to $BINDIR."
-	sudo cp $TRE $BINDIR || exit 1
-    echo '(dump-system *boot-image*)' | ./tre -i image
+	sudo cp -v $TRE $BINDIR || exit 1
+    cp -v image ~/.tre.image || exit 1
 }
 
 case $1 in
