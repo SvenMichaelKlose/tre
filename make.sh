@@ -187,7 +187,7 @@ precompile)
 
 compiler)
     echo "Compiling the compiler only..."
-	(echo "(compile-c-compiler)" | ./tre) || exit 1
+	(echo "(compile-c-compiler)(dump-system)" | ./tre) || exit 1
 	./make.sh crunsh $ARGS || exit 1
     ;;
 
@@ -199,7 +199,7 @@ bcompiler)
 
 all)
     echo "Making everything..."
-	(echo "(compile-c-environment)" | ./tre | tee compilation.log) || exit 1
+	(echo "(compile-c-environment)(dump-system)" | ./tre | tee compilation.log) || exit 1
 	;;
 
 boot)
