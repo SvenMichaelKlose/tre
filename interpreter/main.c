@@ -336,6 +336,7 @@ main (int argc, char *argv[])
 
     c = 2;
     treimage_load (tremain_image ? tremain_image : tremain_boot_image);
+    tremain_image = NULL;
     goto user;
 
 boot:
