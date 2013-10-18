@@ -43,7 +43,7 @@
 #endif
 
 char * tremain_self = NULL;   /* Path to running executable. */
-char * tremain_imagelaunch = NULL;
+char * tremain_image = NULL;
 char * tremain_boot_image = NULL;
 char * tremain_launchfile = NULL;
 
@@ -52,13 +52,6 @@ treptr tremain_history_2;
 treptr tremain_history_3;
 
 bool tremain_noimage = FALSE;
-
-struct tremain_arg {
-    char * option;
-    char ** value;
-} tremain_args[] = {
-    { "-i", &tremain_imagelaunch}
-};
 
 jmp_buf jmp_main;
 treptr tre_restart_fun;
@@ -303,32 +296,23 @@ tremain_print_hardinfo (void)
 void
 tremain_get_args (int argc, char *argv[])
 {
-    unsigned  i;
 	int  p;
 
     tremain_self = argv[0];
 
     for (p = 1; p < argc; p++) {
 		char * v = argv[p];
-        if (!strcmp ("-n", v)) {
+        if (!strcmp ("-n", v))
 			tremain_noimage = TRUE;
-			continue;
-		}
-        if (!strcmp ("-h", v)) {
+        else if (!strcmp ("-i", v))
+            tremain_image = argv[++p];
+        else if (!strcmp ("-H", v))
+			tremain_print_hardinfo ();
+        else if (!strcmp ("-h", v)) {
 			tremain_help ();
             exit (0);
-        }
-        if (!strcmp ("-H", v))
-			tremain_print_hardinfo ();
-        DOTIMES(i, sizeof tremain_args / sizeof (struct tremain_arg)) {
-            if (!strcmp (tremain_args[i].option, v)) {
-                * tremain_args[i].value = argv[++p];
-                goto next;
-            }
-        }
-        tremain_launchfile = v;
-next:
-        continue;
+        } else
+            tremain_launchfile = v;
     }
 }
 
@@ -351,8 +335,7 @@ main (int argc, char *argv[])
 		goto boot;
 
     c = 2;
-    treimage_load (tremain_imagelaunch ? tremain_imagelaunch : tremain_boot_image);
-    tremain_imagelaunch = NULL;
+    treimage_load (tremain_image ? tremain_image : tremain_boot_image);
     goto user;
 
 boot:
