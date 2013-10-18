@@ -43,10 +43,9 @@
 
 (setq *tests* (reverse *tests*))
 
-(defun dump-system ()
-  (format t "; Dumping environment to image '~A': " *boot-image*)
-  (force-output)
-  (sys-image-create *boot-image* #'%load-launchfile)
+(defun dump-system (path)
+  (format t "; Dumping environment to image '~A': ~F" path)
+  (sys-image-create path #'%load-launchfile)
   (format t " OK~%"))
 
 (defun %load-launchfile ()
@@ -58,5 +57,5 @@
 (env-load "version.lisp")
 (env-load "config-after-reload.lisp")
 
-(dump-system)
+(dump-system "image")
 (%load-launchfile)
