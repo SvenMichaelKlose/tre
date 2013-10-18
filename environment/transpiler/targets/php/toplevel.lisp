@@ -32,7 +32,7 @@
   "?>")
 
 (defun php-decl-gen ()
-  (compile-without-frontend (transpiler-frontend *transpiler* (transpiler-compiled-inits *transpiler*))))
+  (quick-generic-compile (transpiler-compiled-inits *transpiler*)))
 
 (defun php-frontend-init ()
   (transpiler-add-defined-variable *transpiler* '*keyword-package*))

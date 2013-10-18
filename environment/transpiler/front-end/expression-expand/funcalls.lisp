@@ -2,7 +2,7 @@
 
 (defun %=-make-call-to-local-function (x)
   (with-%= place value x
-    (expex-body (transpiler-frontend-1 *transpiler* `((%= ,place (apply ,value. ,(compiled-list .value))))))))
+    (expex-body (frontend-1 `((%= ,place (apply ,value. ,(compiled-list .value))))))))
 
 (defun expex-compiled-funcall (x)
   (alet (%=-value x)

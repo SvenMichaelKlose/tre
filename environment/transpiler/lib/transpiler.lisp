@@ -317,7 +317,7 @@
 (define-slot-setter-push transpiler-add-exported-closure tr  (transpiler-exported-closures tr))
 (define-slot-setter-push transpiler-add-plain-arg-fun tr     (transpiler-plain-arg-funs tr))
 (define-slot-setter-push transpiler-add-emitted-decl tr      (transpiler-emitted-decls tr))
-(defun transpiler-add-delayed-var-init (tr x)    (nconc! (transpiler-delayed-var-inits tr) (copy-tree (transpiler-frontend tr x))))
+(defun transpiler-add-delayed-var-init (tr x)    (nconc! (transpiler-delayed-var-inits tr) (copy-tree (frontend x))))
 
 (defun transpiler-add-plain-arg-funs (tr lst)
   (adolist lst

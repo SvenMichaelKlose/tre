@@ -17,38 +17,49 @@
   (not (eq 'accumulated-toplevel section)))
 
 (defun compile-without-frontend (x)
-  (transpiler-backend *transpiler* (transpiler-middleend *transpiler* x)))
+  (backend (middleend x)))
+
+(defun quick-generic-compile (x)
+  (backend (middleend (frontend x))))
+
+(defun map-transpiler-sections (fun sections cached-sections)
+  (with (tr       *transpiler*
+         results  nil)
+	(dolist (i sections (reverse results))
+      (with-cons section data i
+        (with-temporaries ((transpiler-current-section tr)       section
+                           (transpiler-current-section-data tr)  data)
+          (acons! section 
+                  (? (compile-section? section cached-sections)
+                     (funcall fun section data)
+                     (assoc-value section cached-sections :test #'eq|string==))
+                  results))))))
+
+(defun codegen-section (section data)
+  (with-temporary (transpiler-accumulate-toplevel-expressions? *transpiler*) (not (accumulated-toplevel? section))
+    (compile-without-frontend data)))
 
 (defun generic-compile-2 (sections)
-  (with (tr             *transpiler*
-         compiled-code  (make-queue))
-	(dolist (i sections (queue-list compiled-code))
-      (with-cons section data i
-        (with-temporary (transpiler-current-section tr) section
-          (let code (? (compile-section? section (transpiler-compiled-files tr))
-                       (with-temporary (transpiler-accumulate-toplevel-expressions? tr) (not (accumulated-toplevel? section))
-                         (compile-without-frontend data))
-                       (assoc-value section (transpiler-compiled-files tr) :test #'eq|string==))
-            (aadjoin! code sections (transpiler-compiled-files tr) :test #'eq|string==)
-	        (enqueue compiled-code code)))))))
+  (alet (map-transpiler-sections #'codegen-section sections (transpiler-compiled-files *transpiler*))
+    (= (transpiler-compiled-files *transpiler*) !)
+    (cdrlist !)))
 
-(def-transpiler generic-compile-1 (sections)
-  (with (tr             *transpiler*
-         frontend-code  (make-queue))
-	(dolist (i sections (queue-list frontend-code))
-      (with-cons section data i
-        (with-temporaries ((transpiler-current-section tr) section
-                           (transpiler-current-section-data tr) data)
-          (let code (? (compile-section? section (transpiler-frontend-files tr))
-                       (?
-                         (symbol? section) (transpiler-frontend tr (? (function? data)
-                                                                      (funcall data)
-                                                                      data))
-		  			     (string? section) (transpiler-frontend-file tr section)
-                         (error "Compiler input is not described by a section symbol with a function or expressions by a file name. Got ~A instead." i.))
-                       (assoc-value section (transpiler-frontend-files tr) :test #'eq|string==))
-            (aadjoin! code section (transpiler-frontend-files tr) :test #'eq|string==)
-	        (enqueue frontend-code (cons section code))))))))
+(defun generic-load (path)
+  (format t "(LOAD \"~A\")~%" path)
+  (force-output)
+  (frontend (read-file-all path)))
+
+(defun frontend-section (section data)
+  (?
+    (symbol? section)  (frontend (? (function? data)
+                                    (funcall data)
+                                    data))
+    (string? section)  (generic-load section)
+    (error "Don't know what to do with section ~A." section)))
+
+(defun generic-compile-1 (sections)
+  (alet (map-transpiler-sections #'frontend-section sections (transpiler-frontend-files *transpiler*))
+    (= (transpiler-frontend-files *transpiler*) !)))
 
 (defun make-toplevel-function ()
   `((defun accumulated-toplevel ()
@@ -79,9 +90,8 @@
     (& *show-transpiler-progress?*
        (format t "; Phew!~%"))
     (!? compiled-deps
-        (= (transpiler-imported-deps transpiler) (transpiler-concat-text transpiler imported-deps !)))
-    (transpiler-concat-text transpiler
-                            (!? prologue-gen (funcall !))
+        (= (transpiler-imported-deps transpiler) (transpiler-concat-text imported-deps !)))
+    (transpiler-concat-text (!? prologue-gen (funcall !))
                             (!? decl-gen (funcall !))
                             compiled-before
                             (reverse (transpiler-raw-decls transpiler))
@@ -98,12 +108,8 @@
   (!? frontend-init (funcall !))
   (with (before-deps  (generic-compile-1 (!? sections-before-deps (funcall ! transpiler)))
          after-deps   (generic-compile-1 (+ (!? sections-after-deps (funcall ! transpiler))
-                                             sections))
+                                            sections))
 		 deps         (generic-import transpiler))
-    (& *show-transpiler-progress?*
-       (let num-exprs (apply #'+ (mapcar [length ._]
-                                         (+ before-deps deps after-deps)))
-         (format t "; ~A top level expressions.~%" num-exprs)))
     (generic-codegen transpiler before-deps deps after-deps)))
 
 (def-transpiler print-transpiler-stats (transpiler start-time)

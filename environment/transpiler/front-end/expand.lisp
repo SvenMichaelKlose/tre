@@ -29,8 +29,8 @@
   (print-definition `(define-transpiler-std-macro ,tr ,name ,args-and-body.))
   `(define-expander-macro ,(transpiler-std-macro-expander (eval tr)) ,name ,@args-and-body))
 
-(defun transpiler-macroexpand (tr x)
-  (with-temporary *=-function?* [| (transpiler-defined-function tr _)
-                                   (can-import-function? tr _)
+(defun transpiler-macroexpand (x)
+  (with-temporary *=-function?* [| (transpiler-defined-function *transpiler* _)
+                                   (can-import-function? *transpiler* _)
                                    (%=-function? _)]
-    (expander-expand (transpiler-std-macro-expander tr) x)))
+    (expander-expand (transpiler-std-macro-expander *transpiler*) x)))

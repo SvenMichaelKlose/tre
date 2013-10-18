@@ -1,31 +1,30 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
-(transpiler-pass transpiler-frontend-2 (tr)
-    thisify                   [thisify (transpiler-thisify-classes tr) _]
+(transpiler-pass frontend-2 ()
+    thisify                   [thisify (transpiler-thisify-classes *transpiler*) _]
     rename-arguments          #'rename-arguments
     lambda-expand             #'lambda-expand
     fake-place-expand         #'fake-place-expand
     fake-expression-expand    #'fake-expression-expand)
 
-(transpiler-pass transpiler-frontend-1 (tr)
+(transpiler-pass frontend-1 ()
     file-input                #'identity
-    dot-expand                [? (transpiler-dot-expand? tr)
+    dot-expand                [? (transpiler-dot-expand? *transpiler*)
                                  (dot-expand _)
                                  _]
     quasiquote-expand         #'quasiquote-expand
-    transpiler-macroexpand-2  [transpiler-macroexpand tr _]
+    transpiler-macroexpand    #'transpiler-macroexpand
     compiler-macroexpand      #'compiler-macroexpand
     backquote-expand          #'backquote-expand
-    literal-conversion        [funcall (transpiler-literal-converter tr) _])
+    literal-conversion        [funcall (transpiler-literal-converter *transpiler*) _])
 
-(defun transpiler-frontend-0 (tr x)
-  (transpiler-frontend-2 tr (transpiler-frontend-1 tr x)))
+(defun frontend-0 (x)
+  (frontend-2 (frontend-1 x)))
 
-(defun transpiler-frontend (tr x)
+(defun frontend (x)
   (remove-if #'not (mapcan [(= *default-listprop* nil)
-                            (transpiler-frontend-0 tr (list _))] x)))
+                            (frontend-0 (list _))]
+                           x)))
 
-(defun transpiler-frontend-file (tr file)
-  (format t "(LOAD \"~A\")~%" file)
-  (force-output)
-  (transpiler-frontend tr (read-file-all file)))
+(defun frontend-macroexpansions (x)
+  (transpiler-macroexpand (compiler-macroexpand x)))

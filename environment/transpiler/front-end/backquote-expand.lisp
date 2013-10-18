@@ -13,8 +13,8 @@
      (!? (backquote-1 .x)
          `(nconc (copy-list ,(let tr *transpiler*
                                (? (transpiler-assert? tr)
-                                  (compiler-macroexpand (transpiler-macroexpand tr `(aprog1 ,(cadr x.)
-                                                                                      (| (list? !) (error ",@ expects a list instead of ~A." !)))))
+                                  (frontend-macroexpansions `(aprog1 ,(cadr x.)
+                                                               (| (list? !) (error ",@ expects a list instead of ~A." !))))
                                   (cadr x.))))
                   ,(backquote-1 .x))
          (cadr x.))))

@@ -18,7 +18,7 @@
           (transpiler-memorized-sources *transpiler*)))
 
 (defun js-decl-gen ()
-  (filter [transpiler-generate-code *transpiler* `((%var ,_))]
+  (filter [generate-code `((%var ,_))]
           (remove-if [transpiler-emitted-decl? *transpiler* _]
                      (funinfo-vars (transpiler-global-funinfo *transpiler*)))))
 
@@ -43,7 +43,7 @@
   (alet *js-env-path*
     `((list-of-early-defined-functions . ,#'js-emit-early-defined-functions)
       (,(+ ! "env-load-stub.lisp"))
-       ,@(js-environment-files)
+      ,@(js-environment-files)
       (,(+ ! "late-macro.lisp"))
       (,(+ ! "eval.lisp")))))
 

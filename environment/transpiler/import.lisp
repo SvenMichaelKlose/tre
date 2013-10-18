@@ -51,12 +51,12 @@
 
 (defun transpiler-import-exported-closures (tr)
   (& (transpiler-exported-closures tr) ; !? (pop...
-     (+ (transpiler-frontend tr (pop (transpiler-exported-closures tr)))
+     (+ (frontend (pop (transpiler-exported-closures tr)))
         (transpiler-import-exported-closures tr))))
 
 (defun transpiler-import-wanted-function (tr x)
-  (transpiler-frontend tr `((defun ,x ,(transpiler-host-function-arguments tr x)
-                              ,@(function-body (symbol-function x))))))
+  (frontend `((defun ,x ,(transpiler-host-function-arguments tr x)
+                ,@(function-body (symbol-function x))))))
 
 (defun transpiler-import-wanted-functions (tr)
   (with-queue q
@@ -66,7 +66,7 @@
          (enqueue q (transpiler-import-wanted-function tr !))))))
 
 (defun transpiler-import-wanted-variables (tr)
-  (transpiler-frontend tr
+  (frontend
       (mapcan [unless (transpiler-defined-variable tr _)
 				(transpiler-add-delayed-var-init tr `((= ,_ ,(assoc-value _ *variables* :test #'eq))))
 	            `((defvar ,_ nil))]
