@@ -80,22 +80,24 @@
       x))
 
 (defun cps-fun (x)
-  (with-temporaries (*funinfo*       (get-lambda-funinfo x)
-                     *cps-toplevel?* nil)
-    (? (funinfo-cps? *funinfo*)
-       (progn
-         (format t "; CPS transforming ~A.~%" (funinfo-name *funinfo*))
-         (copy-lambda x :args (cons '~%cont (lambda-args x)) :body (cps-body (lambda-body x))))
-       (copy-lambda x :body (cps-subfuns (lambda-body x))))))
+  (with-temporaries (*funinfo*        (get-lambda-funinfo x)
+                     *cps-toplevel?*  nil)
+    (with-lambda name args body x
+      (? (funinfo-cps? *funinfo*)
+         (progn
+           (format t "; CPS transforming ~A.~%" name)
+           (list (copy-lambda x :args (. '~%cont args) :body (cps-body body))
+                 `(%= (%slot-value ,name _cps-transformed?) t)))
+         (list (copy-lambda x :body (cps-subfuns body)))))))
 
 (defun cps-subfuns (x)
   (when x
-    (cons (?
-            (named-lambda? x.) (cps-fun x.)
-            (cps-call? x.)     (alet (%=-value x.)
-                                 `(%= ,(%=-place x.) (,!. cps-identity ,@.!)))
-            x.)
-          (cps-subfuns .x))))
+    (+ (?
+         (named-lambda? x.)  (cps-fun x.)
+         (cps-call? x.)      (alet (%=-value x.)
+                               `((%= ,(%=-place x.) (,!. cps-identity ,@.!))))
+         (list x.))
+       (cps-subfuns .x))))
 
 (defun cps (x)
   (with-temporary *cps-toplevel?* t
