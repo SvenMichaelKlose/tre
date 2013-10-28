@@ -5,6 +5,7 @@
 (env-load "transpiler/targets/shared/functionals.lisp")
 (env-load "transpiler/targets/shared/noargs-tag.lisp")
 (env-load "transpiler/targets/shared/expand/defun.lisp")
+(env-load "transpiler/targets/shared/expand/class.lisp")
 (env-load "transpiler/targets/shared/expand/opt-string-concat.lisp")
 (env-load "transpiler/targets/shared/codegen/define-macro-definer.lisp")
 (env-load "transpiler/targets/shared/codegen/funinfo-comment.lisp")

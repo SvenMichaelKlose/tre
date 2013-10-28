@@ -2,7 +2,7 @@
 
 (defvar *delayed-constructors* nil)
 
-(defun transpiler_defclass (constructor-maker class-name args &rest body)
+(defun generic-defclass (constructor-maker class-name args &rest body)
   (with (cname (? (cons? class-name) class-name. class-name)
 		 bases (& (cons? class-name) .class-name)
 		 classes (transpiler-thisify-classes *transpiler*))
@@ -20,7 +20,7 @@
 		    *delayed-constructors*)
 	nil))
 
-(defun transpiler_defmethod (class-name name args &rest body)
+(defun generic-defmethod (class-name name args &rest body)
   (print-definition `(defmethod ,class-name ,name ,@(awhen args (list !))))
   (!? (href (transpiler-thisify-classes *transpiler*) class-name)
       (let code (list args (append (head-if #'atom body :but-last t)
@@ -33,7 +33,7 @@
       (error "Defiinition of method ~A: class ~A is not defined." name class-name))
   nil)
 
-(defun transpiler_defmember (class-name &rest names)
+(defun generic-defmember (class-name &rest names)
   (print-definition `(defmember ,class-name ,@names))
   (!? (href (transpiler-thisify-classes *transpiler*) class-name)
       (append! (class-members !) (mapcar [list _ t] names))

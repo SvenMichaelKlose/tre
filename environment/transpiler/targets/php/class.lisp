@@ -20,13 +20,13 @@
                 (%thisify ,class-name ,@body)))))
 
 (define-php-std-macro defclass (class-name args &rest body)
-  (apply #'transpiler_defclass #'php-constructor class-name args body))
+  (apply #'generic-defclass #'php-constructor class-name args body))
 
 (define-php-std-macro defmethod (class-name name args &rest body)
-  (apply #'transpiler_defmethod class-name name args body))
+  (apply #'generic-defmethod class-name name args body))
 
 (define-php-std-macro defmember (class-name &rest names)
-  (apply #'transpiler_defmember class-name names))
+  (apply #'generic-defmember class-name names))
 
 (defun php-method-function (class-name x)
   `(function ,(php-method-name class-name x.)

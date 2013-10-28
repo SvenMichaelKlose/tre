@@ -20,13 +20,13 @@
 	     (%%native x " instanceof " ,(compiled-function-name-string class-name))))))
 
 (define-js-std-macro defclass (class-name args &rest body)
-  (apply #'transpiler_defclass #'js-gen-constructor class-name args body))
+  (apply #'generic-defclass #'js-gen-constructor class-name args body))
 
 (define-js-std-macro defmethod (class-name name args &rest body)
-  (apply #'transpiler_defmethod class-name name args body))
+  (apply #'generic-defmethod class-name name args body))
 
 (define-js-std-macro defmember (class-name &rest names)
-  (apply #'transpiler_defmember class-name names))
+  (apply #'generic-defmember class-name names))
 
 (defun js-emit-method (class-name x)
   `((%%native ,x.)

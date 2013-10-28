@@ -9,6 +9,7 @@
 (env-load "transpiler/front-end/expression-expand/funcalls.lisp")
 (env-load "transpiler/front-end/expression-expand/set-global-variable-value.lisp")
 (env-load "transpiler/front-end/lambda-expand.lisp")
+(env-load "transpiler/front-end/thisify.lisp")
 (env-load "transpiler/front-end/rename-arguments.lisp")
 (env-load "transpiler/front-end/expand-literal-characters.lisp")
 (env-load "transpiler/front-end/define-compiled-literal.lisp")
