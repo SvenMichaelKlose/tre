@@ -100,9 +100,15 @@
 
 (defun cps-subfuns (x)
   (when x
-    (+ (? (named-lambda? x.)
-          (cps-fun x.)
-          (list x.))
+    (+ (?
+         (named-lambda? x.)  (cps-fun x.)
+         (& *cps-toplevel?*
+            (cps-call? x.))  (alet (%=-value x.)
+                               `((%= nil (,!. ,(!? (%=-place x.)
+                                                   `(cps-toplevel-return-value ,!)
+                                                   'cps-identity)
+                                              ,@.!))))
+         (list x.))
        (cps-subfuns .x))))
 
 (defun cps (x)

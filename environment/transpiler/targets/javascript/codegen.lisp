@@ -264,3 +264,9 @@
 
 (define-js-macro %global (x)
   x)
+
+
+;;;; CPS FIXUPS
+
+(define-js-macro cps-toplevel-return-value (x)
+  `(%%native "function(r){" ,x "=r;}"))
