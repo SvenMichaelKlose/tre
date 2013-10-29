@@ -38,27 +38,28 @@
                           ,@(butlast _)
                           ,@(alet (car (last _))
                               (?
-                                (cps-call? !)  (with (val               (%=-value !)
-                                                      constructorcall?  (%new? val)
-                                                      name              (? constructorcall?
-                                                                           .val.
-                                                                           val.)
-                                                      args              (? constructorcall?
-                                                                           ..val
-                                                                           .val))
-                                                 (= last-place (%=-place !))
-                                                 (& (member 'cps-identity args)
-                                                    (error "Function has already been transformed."))
-                                                 `((%= nil (,@(? constructorcall?
-                                                                 `(%new))
-                                                            ,name
-                                                            ,(| .names. 'cps-identity)
-                                                            ,@args))))
-                                (%%go? !)      `((%= nil (,(assoc-value .!. tag-names))))
-                                (%%go-cond? !) `((,(? (%%go-nil? !)
-                                                      '%%call-nil
-                                                      '%%call-not-nil)
-                                                   ,..!. ,.names. ,(assoc-value .!. tag-names)))
+                                (number? !)     nil
+                                (cps-call? !)   (with (val               (%=-value !)
+                                                       constructorcall?  (%new? val)
+                                                       name              (? constructorcall?
+                                                                            .val.
+                                                                            val.)
+                                                       args              (? constructorcall?
+                                                                            ..val
+                                                                            .val))
+                                                  (= last-place (%=-place !))
+                                                  (& (member 'cps-identity args)
+                                                     (error "Function has already been transformed."))
+                                                  `((%= nil (,@(? constructorcall?
+                                                                  `(%new))
+                                                             ,name
+                                                             ,(| .names. 'cps-identity)
+                                                             ,@args))))
+                                (%%go? !)       `((%= nil (,(assoc-value .!. tag-names))))
+                                (%%go-cond? !)  `((,(? (%%go-nil? !)
+                                                       '%%call-nil
+                                                       '%%call-not-nil)
+                                                    ,..!. ,.names. ,(assoc-value .!. tag-names)))
                                 (+ (& ! (list !))
                                    (?
                                      .names                `((%= nil (,.names.)))
