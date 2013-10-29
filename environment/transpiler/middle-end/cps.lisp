@@ -58,7 +58,7 @@
                                 (%%go-cond? !) `((,(? (%%go-nil? !)
                                                       '%%call-nil
                                                       '%%call-not-nil)
-                                                   ,..!. ,(assoc-value .!. tag-names) ,.names.))
+                                                   ,..!. ,.names. ,(assoc-value .!. tag-names)))
                                 (+ (& ! (list !))
                                    (?
                                      .names                `((%= nil (,.names.)))
