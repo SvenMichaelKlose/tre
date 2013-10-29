@@ -1,5 +1,10 @@
 ;;;;; tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
 
+(defun cps-marker (name)
+  (& (transpiler-cps-transformation? *transpiler*)
+     (every [not (transpiler-cps-exception? *transpiler* _)]
+            (. name (funinfo-names *funinfo*)))))
+
 ;;;; INLINING
 
 (defun lambda-expand-make-inline-body (stack-places values body)
@@ -28,7 +33,7 @@
                                  :args   args
                                  :body   body
                                  :parent *funinfo*
-                                 :cps?   (transpiler-cps-transformation? *transpiler*)))
+                                 :cps?   (cps-marker name)))
     (funinfo-make-ghost new-fi)
     (transpiler-add-exported-closure *transpiler* `((defun ,name ,args ,@body)))
     `(%%closure ,name)))
@@ -46,7 +51,7 @@
                                      :args   (lambda-args x)
                                      :body   (lambda-body x)
                                      :parent *funinfo*
-                                     :cps?   (transpiler-cps-transformation? *transpiler*)))
+                                     :cps?   (cps-marker name)))
         (funinfo-var-add *funinfo* name)
         (with-temporary *funinfo* new-fi
           (copy-lambda x :name name :body (lambda-expand-r (lambda-body x)))))))

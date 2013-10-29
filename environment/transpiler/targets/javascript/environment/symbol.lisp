@@ -2,6 +2,8 @@
 
 (defvar *symbols* (%%%make-hash-table))
 
+(declare-cps-exception %symbol)
+
 (define-native-js-fun %symbol (name pkg)
   (= this.__class ,(obfuscated-identifier 'symbol)
      this.n name

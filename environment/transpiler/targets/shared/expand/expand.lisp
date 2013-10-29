@@ -17,6 +17,11 @@
   (apply #'transpiler-add-obfuscation-exceptions *transpiler* symbols)
   nil)
 
+(define-shared-std-macro (js php) declare-cps-exception (&rest symbols)
+  (adolist symbols
+    (transpiler-add-cps-exception *transpiler* !))
+  nil)
+
 (define-shared-std-macro (js php) assert (x &optional (txt nil) &rest args)
   (& (transpiler-assert? *transpiler*)
      (make-assertion x txt args)))
