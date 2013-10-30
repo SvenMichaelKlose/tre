@@ -29,7 +29,7 @@
 
 (defun cps-make-funs (&key names tag-names bodies)
   (let last-place nil
-    (mapcan [print (with (name         names.
+    (mapcan [with (name         names.
                    args         (? last-place
                                    '(~%contret))
                    tag-to-name  [assoc-value ._. tag-names]
@@ -58,7 +58,7 @@
                                       (clr last-place)
                                       `((%= ,! ~%contret)))
                                   ,@(butlast _)
-                                  ,@(alet (print (car (last _)))
+                                  ,@(alet (car (last _))
                                       (?
                                         (cps-call? !)   (make-call !)
                                         (%%go? !)       (make-go !)
@@ -76,7 +76,7 @@
                 (pop (funinfo-vars !)))
               (pop names)
               (funinfo-var-add *funinfo* name)
-              `((function ,name (,args ,@body))))]
+              `((function ,name (,args ,@body)))]
             bodies)))
 
 (defun cps-body-without-tag (x)
