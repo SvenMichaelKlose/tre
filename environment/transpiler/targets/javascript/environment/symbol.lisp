@@ -2,7 +2,7 @@
 
 (defvar *symbols* (%%%make-hash-table))
 
-(declare-cps-exception %symbol =-symbol-function)
+(declare-cps-exception %symbol symbol =-symbol-function)
 
 (define-native-js-fun %symbol (name pkg)
   (= this.__class ,(obfuscated-identifier 'symbol)

@@ -1,5 +1,7 @@
 ;;;;; tré – Copyright (c) 2010–2013 Sven Michael Klose <pixel@copei.de>
 
+(declare-cps-exception %property-list-0 %property-list)
+
 (defvar *%property-list-tmp* nil)
 
 (defun %property-list-0 (key val)
