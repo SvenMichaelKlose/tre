@@ -29,41 +29,46 @@
 
 (defun cps-make-funs (&key names tag-names bodies)
   (let last-place nil
-    (mapcan [with (name names.
-                   args (? last-place
-                           '(~%contret))
-                   body `(,@(awhen last-place
-                              (clr last-place)
-                              `((%= ,! ~%contret)))
-                          ,@(butlast _)
-                          ,@(alet (car (last _))
-                              (?
-                                (number? !)     nil
-                                (cps-call? !)   (with (val               (%=-value !)
-                                                       constructorcall?  (%new? val)
-                                                       name              (? constructorcall?
-                                                                            .val.
-                                                                            val.)
-                                                       args              (? constructorcall?
-                                                                            ..val
-                                                                            .val))
-                                                  (= last-place (%=-place !))
-                                                  (& (member 'cps-identity args)
-                                                     (error "Function has already been transformed."))
-                                                  `((%= nil (,@(? constructorcall?
-                                                                  `(%new))
-                                                             ,name
-                                                             ,(| .names. 'cps-identity)
-                                                             ,@args))))
-                                (%%go? !)       `((%= nil (,(assoc-value .!. tag-names))))
-                                (%%go-cond? !)  `((,(? (%%go-nil? !)
-                                                       '%%call-nil
-                                                       '%%call-not-nil)
-                                                    ,..!. ,.names. ,(assoc-value .!. tag-names)))
-                                (+ (& ! (list !))
-                                   (?
-                                     .names                `((%= nil (,.names.)))
-                                     (not *cps-toplevel?*) `((%= nil (~%cont ~%ret)))))))))
+    (mapcan [print (with (name         names.
+                   args         (? last-place
+                                   '(~%contret))
+                   tag-to-name  [assoc-value ._. tag-names]
+                   make-call    [with (val               (%=-value _)
+                                       constructorcall?  (%new? val)
+                                       name              (? constructorcall?
+                                                            .val.
+                                                            val.)
+                                       args              (? constructorcall?
+                                                            ..val
+                                                            .val))
+                                  (= last-place (%=-place _))
+                                  (& (member 'cps-identity args)
+                                     (error "Function has already been transformed."))
+                                  `((%= nil (,@(? constructorcall?
+                                                  `(%new))
+                                             ,name
+                                             ,(| .names. 'cps-identity)
+                                             ,@args)))]
+                   make-go      [`((%= nil (,(tag-to-name _))))]
+                   make-cond    [`((,(? (%%go-nil? _)
+                                        '%%call-nil
+                                        '%%call-not-nil)
+                                    ,.._. ,.names. ,(tag-to-name _)))]
+                   body         `(,@(awhen last-place
+                                      (clr last-place)
+                                      `((%= ,! ~%contret)))
+                                  ,@(butlast _)
+                                  ,@(alet (print (car (last _)))
+                                      (?
+                                        (cps-call? !)   (make-call !)
+                                        (%%go? !)       (make-go !)
+                                        (%%go-cond? !)  (make-cond !)
+                                        (+ (& !
+                                              (not (number? !))
+                                              (list !))
+                                           (?
+                                             .names                `((%= nil (,.names.)))
+                                             (not *cps-toplevel?*) `((%= nil (~%cont ~%ret)))))))))
               (alet (create-funinfo :name    name
                                     :args    args
                                     :body    body
@@ -71,7 +76,7 @@
                 (pop (funinfo-vars !)))
               (pop names)
               (funinfo-var-add *funinfo* name)
-              `((function ,name (,args ,@body)))]
+              `((function ,name (,args ,@body))))]
             bodies)))
 
 (defun cps-body-without-tag (x)
