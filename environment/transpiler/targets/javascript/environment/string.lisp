@@ -1,5 +1,7 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
+(declare-cps-exception string string?)
+
 (js-type-predicate %string? "string")
 
 (defun string? (x)

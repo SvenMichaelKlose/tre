@@ -7,6 +7,6 @@
 (env-load "transpiler/targets/javascript/expand-inline.lisp")
 (env-load "transpiler/targets/javascript/class.lisp")
 (env-load "transpiler/targets/javascript/codegen.lisp")
-(env-load "transpiler/targets/javascript/codegen-inline-cons.lisp")
+;(env-load "transpiler/targets/javascript/codegen-inline-cons.lisp")
 (env-load "transpiler/targets/javascript/env-load.lisp")
 (env-load "transpiler/targets/javascript/bytecode-to-js.lisp")

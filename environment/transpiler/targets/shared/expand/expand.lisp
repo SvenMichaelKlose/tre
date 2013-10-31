@@ -18,6 +18,7 @@
   nil)
 
 (define-shared-std-macro (js php) declare-cps-exception (&rest symbols)
+  (print-definition `(declare-cps-exception ,@symbols))
   (adolist symbols
     (transpiler-add-cps-exception *transpiler* !))
   nil)
