@@ -405,12 +405,20 @@ treread_expr (trestream * stream)
 treptr
 treread (trestream * stream)
 {
-    treio_prompt ();
+    treptr x;
 
+    treio_prompt ();
     treio_skip_spaces (stream);
-    return treio_eof (stream)  ?
-		       treptr_invalid :
-               treread_expr (stream);
+    if (treio_eof (stream))
+	    return treptr_invalid;
+
+    x = treread_expr (stream);
+
+#ifdef TRE_VERBOSE_READ
+    treprint (x);
+#endif
+
+    return x;
 }
 
 void

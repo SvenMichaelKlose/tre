@@ -150,7 +150,7 @@ trebuiltin_load (treptr expr)
 	}
 
     treiostd_divert (stream);
-    tre_main ();
+    tremain ();
     treiostd_undivert ();
 
     return treptr_nil;

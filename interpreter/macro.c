@@ -45,8 +45,12 @@ tremacro_builtin_macroexpand (treptr list)
 		tregc_pop ();
     } while (!trelist_equal (list, n));
 
+#ifdef TRE_PRINT_MACROEXPANSIONS
+    treprint (CAR(m));
+#endif
+
     return CAR(n);
-}            
+}
 
 void
 tremacro_init (void)

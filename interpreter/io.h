@@ -30,12 +30,14 @@ struct trestream_t {
 
 typedef struct trestream_t trestream;
 
-#define TREIO_OP(s) (s->ops)
-#define TREIO_GETC(s) ((*s->ops->getc) (s->detail_in))
-#define TREIO_PUTC(s, c) ((*s->ops->putc) (s->detail_out, c))
-#define TREIO_EOF(s) ((*s->ops->eof) (s->detail_in))
-#define TREIO_CLOSE(s) (treio_close_stream (s))
-#define TREIO_FLUSH(s) ((*s->ops->flush) (s->detail_out))
+#define TREIO_OP(s)       (s->ops)
+#define TREIO_GETC(s)     ((*s->ops->getc) (s->detail_in))
+#define TREIO_PUTC(s, c)  ((*s->ops->putc) (s->detail_out, c))
+#define TREIO_EOF(s)      ((*s->ops->eof) (s->detail_in))
+#define TREIO_CLOSE(s)    (treio_close_stream (s))
+#define TREIO_FLUSH(s)    ((*s->ops->flush) (s->detail_out))
+
+#define ON_STANDARD_STREAM()    (treio_readerstreamptr == 1)
 
 extern trestream * treio_reader;
 extern trestream * treio_console;

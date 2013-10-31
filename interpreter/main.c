@@ -115,57 +115,37 @@ tremain_expand (treptr expr)
     return expr;
 }
 
+void
+tremain_update_history (treptr x)
+{
+	TRESYMBOL_VALUE(tremain_history_3) = TRESYMBOL_VALUE(tremain_history_2);
+	TRESYMBOL_VALUE(tremain_history_2) = TRESYMBOL_VALUE(tremain_history);
+	TRESYMBOL_VALUE(tremain_history) = x;
+}
+
 treptr
-tre_main_line (trestream * stream)
+tremain_line (trestream * stream)
 {
     treptr  expr;
 
     expr = treread (stream);
-    if (expr == treptr_invalid)  /* End of file. */
+    if (expr == treptr_invalid)
         return expr;
 
-#ifdef TRE_VERBOSE_READ
-    treprint (expr);
-#endif
+    tremain_update_history (expr);
+    expr = treeval (tremain_expand (expr));
 
-	/* XXX The stdin prompt may have disabled the debugger. */
-	tre_interrupt_debugger = TRUE;
-
-    tregc_push (expr);
-
-	/* Update history. */
-/*
-	TREATOM_VALUE(tremain_history_3) = TREATOM_VALUE(tremain_history_2);
-	TREATOM_VALUE(tremain_history_2) = TREATOM_VALUE(tremain_history);
-	TREATOM_VALUE(tremain_history) = expr;
-*/
-
-	tregc_push (expr);
-	expr = tremain_expand (expr);
-
-#ifdef TRE_PRINT_MACROEXPANSIONS
-    treprint (expr);
-#endif
-
-    tregc_push (expr);
-	trethread_push_call (tremain_history);
-    expr = treeval (expr);
-	trethread_pop_call ();
-    tregc_pop ();
-    tregc_pop ();
-    tregc_pop ();
-
-    if (treio_readerstreamptr == 1) /* Standard input? */
+    if (ON_STANDARD_STREAM())
         treprint (expr);
 
     return expr;
 }
 
 void
-tre_main (void)
+tremain (void)
 {
     while (1)
-        if (tre_main_line (treio_reader) == treptr_invalid)
+        if (tremain_line (treio_reader) == treptr_invalid)
 	    	break;
 }
 
@@ -178,7 +158,7 @@ treptr * trestack_top_secondary;
 treptr * trestack_ptr_secondary;
 
 void
-tre_init_image_path (void)
+tremain_init_image_path (void)
 {
     char * p = getenv ("HOME");
 
@@ -190,7 +170,7 @@ tre_init_image_path (void)
 
 /* Initialise everything. */
 void
-tre_init (void)
+tremain_init (void)
 {
     tre_is_initialized = FALSE;
     tre_interrupt_debugger = FALSE;
@@ -204,7 +184,6 @@ tre_init (void)
     tredebug_init ();
     trethread_make ();
     tregc_init ();
-
     trecons_init ();
     tresymbol_init ();
     treatom_init ();
@@ -218,18 +197,17 @@ tre_init (void)
     trespecial_init ();
     treimage_init ();
 
-    MAKE_SYMBOL("*KERNEL-IDENT*", trestring_get (TRE_KERNEL_IDENT));
-    MAKE_SYMBOL("*CPU-TYPE*", trestring_get (TRE_CPU_TYPE));
-    MAKE_SYMBOL("*OS-RELEASE*", trestring_get (TRE_OS_RELEASE));
-    MAKE_SYMBOL("*OS-VERSION*", trestring_get (TRE_OS_VERSION));
-
+    MAKE_SYMBOL("*KERNEL-IDENT*",     trestring_get (TRE_KERNEL_IDENT));
+    MAKE_SYMBOL("*CPU-TYPE*",         trestring_get (TRE_CPU_TYPE));
+    MAKE_SYMBOL("*OS-RELEASE*",       trestring_get (TRE_OS_RELEASE));
+    MAKE_SYMBOL("*OS-VERSION*",       trestring_get (TRE_OS_VERSION));
     MAKE_SYMBOL("*ENVIRONMENT-PATH*", trestring_get (TRE_ENVIRONMENT));
+	MAKE_SYMBOL("*LIBC-PATH*",        trestring_get (LIBC_PATH));
+	MAKE_SYMBOL("*ENDIANESS*",        treatom_alloc_symbol (TRE_ENDIANESS_STRING, TRECONTEXT_PACKAGE(), treptr_invalid));
+	MAKE_SYMBOL("*POINTER-SIZE*",     treatom_number_get (sizeof (void *), TRENUMTYPE_INTEGER));
+	MAKE_SYMBOL("*RAND-MAX*",         treatom_number_get (RAND_MAX, TRENUMTYPE_INTEGER));
 
-	MAKE_SYMBOL("*LIBC-PATH*", trestring_get (LIBC_PATH));
-	MAKE_SYMBOL("*ENDIANESS*", treatom_alloc_symbol (TRE_ENDIANESS_STRING, TRECONTEXT_PACKAGE(), treptr_invalid));
-	MAKE_SYMBOL("*POINTER-SIZE*", treatom_number_get (sizeof (void *), TRENUMTYPE_INTEGER));
-	MAKE_SYMBOL("*RAND-MAX*", treatom_number_get (RAND_MAX, TRENUMTYPE_INTEGER));
-    tre_init_image_path ();
+    tremain_init_image_path ();
     treapply_init ();
     trecode_init ();
     tredebug_init_late ();
@@ -322,7 +300,7 @@ main (int argc, char *argv[])
     static int c = 0;
 
     tremain_get_args (argc, argv);
-    tre_init ();
+    tremain_init ();
 
     /* Return here on errors. */
     setjmp (jmp_main);
@@ -344,7 +322,7 @@ boot:
     treiostd_divert (treiostd_open_file (TRE_BOOTFILE));
     tremain_init_after_image_loaded ();
 
-    tre_main ();
+    tremain ();
 
 load_error:
     c = 2;
@@ -359,7 +337,7 @@ user:
         tre_restart_fun = treptr_nil;
     }
 
-    tre_main ();
+    tremain ();
 
     return 0;
 }

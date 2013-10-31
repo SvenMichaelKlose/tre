@@ -556,11 +556,11 @@ tredebug (void)
 
 	    case 'x':
 	        tredebug_mode = TREDEBUGM_STEP;
-			tre_main_line (treio_console);
+			tremain_line (treio_console);
 			continue;
 
 	    case '*':
-			ret = tre_main_line (treio_console);
+			ret = tremain_line (treio_console);
 			continue;
 
 	    case 'b':

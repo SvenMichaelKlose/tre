@@ -19,8 +19,9 @@ extern bool   tre_interrupt_debugger;
 
 extern void   tre_exit      (int);
 extern void   tre_restart   (treptr);
-extern treptr tre_main_line (trestream *);
-extern void   tre_main      (void);
+
+extern treptr tremain_line  (trestream *);
+extern void   tremain       (void);
 
 extern void   tremain_init_after_image_loaded (void);
 
