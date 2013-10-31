@@ -20,6 +20,9 @@
 (early-defun cddar (lst)
  (cddr (car lst)))
 
+(early-defun cdadr (lst)
+ (cdar (cdr lst)))
+
 (early-defun caadar (lst)
  (car (cadr (car lst))))
 
