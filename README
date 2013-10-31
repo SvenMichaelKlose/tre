@@ -1,4 +1,4 @@
-Copyright (c) 2005–2012 Sven Michael Klose <pixel@copei.de>
+Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
 
 ABOUT
 
@@ -7,18 +7,13 @@ ABOUT
     ECMAScript/JavaScript, PHP and a dedicated bytecode.  Except
     for PHP tré can compile itself to all other targets.
 
-PREPARE LINUX
-
-    Install libffi and headers.
-
-        # aptitude install libffi-dev
-
 BUILD & INSTALL
 
     Make sure you have libdl, libffi and their headers installed.
     Then, simply run
 
         # ./make.sh boot
+        # ./make.sh install
 
     and enjoy yourself for a couple of minutes.  The interpreter
     is rather slow, but things get boosted after the initial
@@ -32,6 +27,8 @@ COMMAND-LINE
     Invoke tré with the -h argument and it tells you all it knows
     about its command-line options and arguments.
 
+        # tre -h
+
 
 ABOUT THE INTERPRETER
 
@@ -44,13 +41,12 @@ THE DIALECT
 
     The dialect's most notable features are:
 
-      - lexical scoping (except the interpreter),
-      - a variable, function and package per symbol,
+      - lexical scoping (except for the interpreter),
       - anonymous macros (QUASIQUOTE doesn't need BACKQUOTE),
-      - a terse dot-notation for one or nested CARs and CDRs.
+      - a terse dot-notation CAR and CDR.
       - no LAMBDA symbol required in literal functions
 
 DOCUMENTATION
 
-    The most detailed documentation if the environment is the code
+    The most detailed documentation of the environment is the code
     itself.
