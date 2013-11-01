@@ -12,7 +12,8 @@
   nil)
 
 (defun compile-bytecode-environment (&optional (funs nil))
-  (compile-sections nil :transpiler (%compile-environment-configure-transpiler *bc-transpiler* funs)))
+  (alet (%compile-environment-configure-transpiler *bc-transpiler* funs)
+    (expr-to-code ! (compile-sections nil :transpiler !))))
 
 (defun compile-c-compiler ()
   (compile-c-environment '(generic-compile)))
