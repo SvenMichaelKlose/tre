@@ -71,7 +71,7 @@
   (alet (get-funinfo name)
     (? (funinfo-scope-arg !)
        `("CONS (" ,(c-compiled-symbol '%closure) ", "
-                "CONS (" ,(c-compiled-symbol name) "," ,(codegen-closure-lexical name) "))")
+                "CONS (" ,(c-compiled-symbol name) "," ,(codegen-closure-scope name) "))")
        `("TRESYMBOL_FUN(" ,(c-compiled-symbol name) ")"))))
 
 

@@ -12,7 +12,7 @@
 (define-bc-macro %function-epilogue (name) '((%%go nil) %%bc-return))
 
 (define-bc-macro %%closure (name)
-  `(%closure ,name ,(codegen-closure-lexical name)))
+  `(%closure ,name ,(codegen-closure-scope name)))
 
 (defun bc-quote-literal (x)
   (? (| (& x (symbol? x))
