@@ -3,5 +3,5 @@
 (defun codegen-closure-lexical (name)
   (alet (get-funinfo name)
     (place-assign (? (funinfo-fast-scope? !)
-                     (place-expand-0 (funinfo-parent !) (funinfo-ghost !))
+                     (place-expand-0 (funinfo-parent !) (funinfo-scope-arg !))
                      (place-expand-closure-lexical !)))))

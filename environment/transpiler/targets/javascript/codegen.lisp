@@ -242,14 +242,6 @@
 (define-js-macro %defined? (x)
   `(%%native "\"undefined\" != typeof " ,x))
 
-(define-js-macro %%closure (name)
-  (alet (get-funinfo name)
-    (? (funinfo-ghost !)
-	   (!? (codegen-closure-lexical !)
-  	  	   `(%closure ,name ,!)
-		   (error "No lexical for ghost."))
-	   name)))
-
 (define-js-macro %invoke-debugger ()
   '(%%native "null; debugger"))
 

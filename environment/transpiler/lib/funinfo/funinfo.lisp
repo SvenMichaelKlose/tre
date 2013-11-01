@@ -21,7 +21,7 @@
 
   (scoped-vars  nil) ; List of symbols exported to child functions.
   (scope        nil) ; Name of the array of scoped-vars.
-  (ghost        nil) ; Name of hidden argument with an array of scoped-vars.
+  (scope-arg    nil) ; Name of hidden argument with an array of scoped-vars.
   (local-function-args nil)
   (fast-scope?  nil)
 
@@ -51,7 +51,7 @@
       :places       (copy-list places)
       :scoped-vars  (copy-list scoped-vars)
       :scope        scope
-      :ghost        ghost
+      :scope-arg    scope-arg
       :local-function-args (copy-list local-function-args)
       :fast-scope?  fast-scope?
       :num-tags     num-tags
@@ -91,8 +91,8 @@
        (funinfo-var-add-many fi argnames))
     fi))
 
-(defun funinfo-closure-without-free-vars? (fi)                                                                                     
-  (& (funinfo-ghost fi)
+(defun funinfo-closure-without-free-vars? (fi)
+  (& (funinfo-scope-arg fi)
      (not (funinfo-free-vars fi))))
 
 (defun print-funinfo-sources (tr)

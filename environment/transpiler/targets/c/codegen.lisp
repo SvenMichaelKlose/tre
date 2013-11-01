@@ -69,7 +69,7 @@
 
 (define-c-macro %%closure (name)
   (alet (get-funinfo name)
-    (? (funinfo-ghost !)
+    (? (funinfo-scope-arg !)
        `("CONS (" ,(c-compiled-symbol '%closure) ", "
                 "CONS (" ,(c-compiled-symbol name) "," ,(codegen-closure-lexical name) "))")
        `("TRESYMBOL_FUN(" ,(c-compiled-symbol name) ")"))))

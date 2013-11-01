@@ -7,10 +7,10 @@
        (& (transpiler-copy-arguments-to-stack? *transpiler*)
           (funinfo-args !)))))
 
-(defun remove-unused-ghost (fi)
+(defun remove-unused-scope-arg (fi)
   (when (& (not (funinfo-fast-scope? fi))
            (funinfo-closure-without-free-vars? fi))
-     (= (funinfo-ghost fi) nil)
+     (= (funinfo-scope-arg fi) nil)
      (pop (funinfo-args fi))
      (pop (funinfo-argdef fi))
      (optimizer-message "; Turned ~A into regular function.~%"
@@ -21,11 +21,11 @@
            (not (funinfo-place? fi (car (funinfo-scoped-vars fi)))))
     (= (funinfo-scoped-vars fi) nil)
     (= (funinfo-scope fi) nil)
-    (optimizer-message "; Removed scoped-vars in ~A.~%"
+    (optimizer-message "; Removed scoped vars in ~A.~%"
                        (human-readable-funinfo-names fi))))
 
-(defun replace-ghost (fi)
-  (when (& (funinfo-ghost fi)
+(defun replace-scope-arg (fi)
+  (when (& (funinfo-scope-arg fi)
            (not (funinfo-fast-scope? fi))
            (funinfo-free-vars fi)
            (not (funinfo-scoped-vars (funinfo-parent fi))))
@@ -33,7 +33,7 @@
        (error "Too much free vars."))
     (alet (car (funinfo-free-vars fi))
       (= (funinfo-free-vars fi) nil)
-      (= (funinfo-ghost fi) !)
+      (= (funinfo-scope-arg fi) !)
       (= (funinfo-argdef fi) (cons ! (cdr (funinfo-argdef fi))))
       (= (funinfo-args fi) (cons ! (cdr (funinfo-args fi))))
       (= (funinfo-fast-scope? fi) t)
@@ -56,9 +56,9 @@
 
 (defun correct-funinfo ()
   (alet *funinfo*
-    (remove-unused-ghost !)
+    (remove-unused-scope-arg !)
 ;    (remove-scoped-vars !)
-;    (replace-ghost !)
+;    (replace-scope-arg !)
 ;    (warn-unused-arguments !)
     (? (transpiler-stack-locals? *transpiler*)
        (remove-argument-stackplaces !)

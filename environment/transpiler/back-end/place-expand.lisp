@@ -2,7 +2,7 @@
 
 (defun make-lexical-place-expr (fi var)
   (funinfo-add-free-var fi var)
-  `(%vec ,(funinfo-ghost fi)
+  `(%vec ,(funinfo-scope-arg fi)
          ,(funinfo-name (funinfo-parent fi))
          ,var))
 
@@ -19,7 +19,7 @@
 		   ,...ret.)))
 
 (defun make-lexical (fi x)
-  (? (eq x (funinfo-ghost fi))
+  (? (eq x (funinfo-scope-arg fi))
 	 (place-expand-atom (funinfo-parent fi) x)
 	 (make-lexical-0 fi x)))
 

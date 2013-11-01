@@ -6,22 +6,19 @@
 	  (= (funinfo-scope fi) scope)
 	  (funinfo-var-add fi scope))))
 
-(defun funinfo-make-ghost (fi)
-  (unless (funinfo-ghost fi)
-    (with-gensym ghost
-	  (= (funinfo-ghost fi) ghost)
-	  (push ghost (funinfo-argdef fi))
-	  (push ghost (funinfo-args fi)))))
-
-(defun funinfo-link-scope (fi)
-  (when (transpiler-lambda-export? *transpiler*)
-    (funinfo-make-scope (funinfo-parent fi))
-    (funinfo-make-ghost fi)))
+(defun funinfo-make-scope-arg (fi)
+  (unless (funinfo-scope-arg fi)
+    (with-gensym scope-arg
+	  (= (funinfo-scope-arg fi) scope-arg)
+	  (push scope-arg (funinfo-argdef fi))
+	  (push scope-arg (funinfo-args fi)))))
 
 (defun funinfo-setup-scope (fi var)
   (alet (funinfo-parent fi)
     (| ! (error "Couldn't find ~A in environment." var))
-    (funinfo-link-scope fi)
+    (when (transpiler-lambda-export? *transpiler*)
+      (funinfo-make-scope (funinfo-parent fi))
+      (funinfo-make-scope-arg fi))
     (? (funinfo-arg-or-var? ! var)
 	   (funinfo-add-scoped-var ! var)
        (funinfo-setup-scope ! var))))

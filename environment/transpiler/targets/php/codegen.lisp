@@ -95,7 +95,7 @@
 (define-php-macro %%closure (name)
   (with (fi            (get-funinfo name)
          native-name  `(%%string ,(compiled-function-name-string name)))
-    (? (funinfo-ghost fi)
+    (? (funinfo-scope-arg fi)
   	   `(%%native "new __closure(" ,native-name "," ,(php-dollarize (funinfo-scope (funinfo-parent fi))) ")")
        native-name)))
 

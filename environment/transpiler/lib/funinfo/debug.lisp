@@ -25,8 +25,8 @@
                             ("Places:          " ,(funinfo-places fi))
                             ("Globals:         " ,(funinfo-globals fi))
                             ("Local funs:      " ,(funinfo-local-function-args fi))
-                            ("Ghost:           " ,(funinfo-ghost fi))
-                            ("Scope:           " ,(funinfo-scope fi))
+                            ("Scope argument:  " ,(funinfo-scope-arg fi))
+                            ("Local scope:     " ,(funinfo-scope fi))
                             ("Scoped vars:     " ,(funinfo-scoped-vars fi))))))))
 
 (defun print-funinfo-stack (fi &key (include-global? nil))
