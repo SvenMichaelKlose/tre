@@ -1,27 +1,27 @@
 ;;;;; tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
 
-(defun make-lexical-place-expr (fi var)
+(defun make-scope-place-expr (fi var)
   (funinfo-add-free-var fi var)
   `(%vec ,(funinfo-scope-arg fi)
          ,(funinfo-name (funinfo-parent fi))
          ,var))
 
-(defun make-lexical-1 (fi var)
+(defun make-scope-place-1 (fi var)
   (? (funinfo-arg-or-var? (funinfo-parent fi) var)
-	 (make-lexical-place-expr fi var)
-	 (make-lexical-1 (funinfo-parent fi) var)))
+	 (make-scope-place-expr fi var)
+	 (make-scope-place-1 (funinfo-parent fi) var)))
 
-(defun make-lexical-0 (fi x)
+(defun make-scope-place-0 (fi x)
   (funinfo-setup-scope fi x)
-  (let ret (make-lexical-1 fi x)
-	`(%vec ,(place-expand-atom fi (make-lexical fi .ret.))
+  (let ret (make-scope-place-1 fi x)
+	`(%vec ,(place-expand-atom fi (make-scope-place fi .ret.))
 		   ,..ret.
 		   ,...ret.)))
 
-(defun make-lexical (fi x)
+(defun make-scope-place (fi x)
   (? (eq x (funinfo-scope-arg fi))
 	 (place-expand-atom (funinfo-parent fi) x)
-	 (make-lexical-0 fi x)))
+	 (make-scope-place-0 fi x)))
 
 (defun place-expand-emit-stackplace (fi x)
   `(%stack ,(funinfo-name fi) ,x))
@@ -53,7 +53,7 @@
     (funinfo-global-variable? fi x)
       `(%global ,x)
 
-    (make-lexical fi x)))
+    (make-scope-place fi x)))
 
 (defun place-expand-fun (x)
   (copy-lambda x :body (place-expand-0 (get-lambda-funinfo x) (lambda-body x))))
