@@ -87,8 +87,6 @@
          compiled-deps    (!? deps (compile-without-frontend !))
          compiled-after   (generic-compile-2 after-deps)
          compiled-acctop  (generic-compile-accumulated-toplevels))
-    (& *show-transpiler-progress?*
-       (format t "; Phew!~%"))
     (!? compiled-deps
         (= (transpiler-imported-deps transpiler) (transpiler-concat-text imported-deps !)))
     (transpiler-concat-text (!? prologue-gen (funcall !))
@@ -135,4 +133,6 @@
       (= (transpiler-host-variables-hash transpiler) (make-host-variables-hash))
       (prog1
         (generic-compile-0 transpiler sections)
-        (print-transpiler-stats transpiler start-time)))))
+        (print-transpiler-stats transpiler start-time)
+        (& *show-transpiler-progress?*
+           (format t "; Phew!~%"))))))
