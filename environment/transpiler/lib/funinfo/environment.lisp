@@ -22,7 +22,7 @@
   (position x (funinfo-args fi) :test #'eq))
 
 (defun funinfo-local-args (fi)
-  (remove-if [funinfo-lexical? fi _] (funinfo-args fi)))
+  (remove-if [funinfo-scoped-var? fi _] (funinfo-args fi)))
 
 
 ;;;; ARGUMENTS & VARIABLES
@@ -51,7 +51,7 @@
   (& (funinfo-parent fi)
      (position x (funinfo-vars fi) :test #'eq)))
 
-(defun funinfosym-var-pos (name x)
+(defun funinfoname-var-pos (name x)
   (funinfo-var-pos (get-funinfo name) x))
 
 (defun funinfo-var-add (fi x)
@@ -83,14 +83,17 @@
 
 ;;;; LEXICALS
 
-(defun funinfo-lexical-pos (fi x)
-  (position x (funinfo-lexicals fi) :test #'eq))
+(defun funinfo-scoped-var-index (fi x)
+  (position x (funinfo-scoped-vars fi) :test #'eq))
 
-(defun funinfosym-lexical-pos (name x)
-  (funinfo-lexical-pos (get-funinfo name) x))
+(defun funinfoname-scoped-var-index (name x)
+  (funinfo-scoped-var-index (get-funinfo name) x))
 
-(defun funinfo-lexical? (fi x)
-  (member x (funinfo-lexicals fi) :test #'eq))
+(defun funinfo-add-scoped-var (fi name)
+  (adjoin! name (funinfo-scoped-vars fi)))
+
+(defun funinfo-scoped-var? (fi x)
+  (member x (funinfo-scoped-vars fi) :test #'eq))
 
 
 ;;;; USED VARIABLES

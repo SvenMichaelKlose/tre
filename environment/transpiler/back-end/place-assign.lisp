@@ -13,7 +13,7 @@
   (& (%set-vec? x) ....x))
 
 (defun place-assign-error (x v)
-  (error "Can't assign place because the index in lexicals for ~A is missing in ~A." v x))
+  (error "Can't assign place because the index in scoped vars for ~A is missing in ~A." v x))
 
 (defun place-assign-stackarg (x)
   (let fi (get-funinfo .x.)
@@ -25,13 +25,13 @@
   (| (%quote? x)
      (%%native? x))  x
   (unassigned-%stackarg? x)    `(%stack ,(place-assign-stackarg x))
-  (unassigned-%stack? x)       `(%stack ,(| (funinfosym-var-pos .x. ..x.)
+  (unassigned-%stack? x)       `(%stack ,(| (funinfoname-var-pos .x. ..x.)
                                             (place-assign-stackarg x)))
   (unassigned-%vec? x)         `(%vec ,(place-assign .x.)
-		                              ,(| (funinfosym-lexical-pos ..x. ...x.)
+		                              ,(| (funinfoname-scoped-var-index ..x. ...x.)
                                           (place-assign-error x ...x.)))
   (unassigned-%set-vec? x)     `(%set-vec ,(place-assign .x.)
-		                                  ,(| (funinfosym-lexical-pos ..x. ...x.)
+		                                  ,(| (funinfoname-scoped-var-index ..x. ...x.)
                                               (place-assign-error x ...x.))
                                           ,(place-assign ....x.))
   (named-lambda? x)            (copy-lambda x :body (place-assign (lambda-body x)))

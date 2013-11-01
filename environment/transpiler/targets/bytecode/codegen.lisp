@@ -31,8 +31,8 @@
 
 (defun bc-make-funcall (x)
   (case x. :test #'eq
-    'cons                 `(cons ,(bc-quote-literal .x.) ,(bc-quote-literal ..x.))
-    '%make-lexical-array  `(make-array 1 ,(bc-quote-literal .x.))
+    'cons         `(cons ,(bc-quote-literal .x.) ,(bc-quote-literal ..x.))
+    '%make-scope  `(make-array 1 ,(bc-quote-literal .x.))
     `(,x. ,(length .x) ,@(bc-quote-literals .x))))
 
 (defun bc-make-value (x)

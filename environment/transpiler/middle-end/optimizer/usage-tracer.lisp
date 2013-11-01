@@ -13,8 +13,8 @@
           (not (transpiler-defined-variable *transpiler* x)
                (transpiler-literal? *transpiler* x)))
        (funinfo-var? ! x)
-       (not (eq x (funinfo-lexical !))
-            (funinfo-lexical? ! x)))))
+       (not (eq x (funinfo-scope !))
+            (funinfo-scoped-var? ! x)))))
 
 (defun will-be-used-again? (x v)
    (with (traversed-tags nil

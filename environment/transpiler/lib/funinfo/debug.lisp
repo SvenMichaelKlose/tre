@@ -26,8 +26,8 @@
                             ("Globals:         " ,(funinfo-globals fi))
                             ("Local funs:      " ,(funinfo-local-function-args fi))
                             ("Ghost:           " ,(funinfo-ghost fi))
-                            ("Lexical:         " ,(funinfo-lexical fi))
-                            ("Lexicals:        " ,(funinfo-lexicals fi))))))))
+                            ("Scope:           " ,(funinfo-scope fi))
+                            ("Scoped vars:     " ,(funinfo-scoped-vars fi))))))))
 
 (defun print-funinfo-stack (fi &key (include-global? nil))
   (when fi

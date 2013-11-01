@@ -2,13 +2,13 @@
 
 (defun used-vars ()
   (alet *funinfo*
-    (+ (funinfo-lexicals !)
+    (+ (funinfo-scoped-vars !)
        (intersect (funinfo-vars !) (funinfo-used-vars !) :test #'eq)
        (& (transpiler-copy-arguments-to-stack? *transpiler*)
           (funinfo-args !)))))
 
 (defun remove-unused-ghost (fi)
-  (when (& (not (funinfo-fast-lexical? fi))
+  (when (& (not (funinfo-fast-scope? fi))
            (funinfo-closure-without-free-vars? fi))
      (= (funinfo-ghost fi) nil)
      (pop (funinfo-args fi))
@@ -16,19 +16,19 @@
      (optimizer-message "; Turned ~A into regular function.~%"
                         (human-readable-funinfo-names fi))))
 
-(defun remove-lexicals (fi)
-  (when (& (== 1 (length (funinfo-lexicals fi)))
-           (not (funinfo-place? fi (car (funinfo-lexicals fi)))))
-    (= (funinfo-lexicals fi) nil)
-    (= (funinfo-lexical fi) nil)
-    (optimizer-message "; Removed lexicals in ~A.~%"
+(defun remove-scoped-vars (fi)
+  (when (& (== 1 (length (funinfo-scoped-vars fi)))
+           (not (funinfo-place? fi (car (funinfo-scoped-vars fi)))))
+    (= (funinfo-scoped-vars fi) nil)
+    (= (funinfo-scope fi) nil)
+    (optimizer-message "; Removed scoped-vars in ~A.~%"
                        (human-readable-funinfo-names fi))))
 
 (defun replace-ghost (fi)
   (when (& (funinfo-ghost fi)
-           (not (funinfo-fast-lexical? fi))
+           (not (funinfo-fast-scope? fi))
            (funinfo-free-vars fi)
-           (not (funinfo-lexicals (funinfo-parent fi))))
+           (not (funinfo-scoped-vars (funinfo-parent fi))))
     (| (== 1 (length (funinfo-free-vars fi)))
        (error "Too much free vars."))
     (alet (car (funinfo-free-vars fi))
@@ -36,14 +36,14 @@
       (= (funinfo-ghost fi) !)
       (= (funinfo-argdef fi) (cons ! (cdr (funinfo-argdef fi))))
       (= (funinfo-args fi) (cons ! (cdr (funinfo-args fi))))
-      (= (funinfo-fast-lexical? fi) t)
-      (optimizer-message "; Removed array allocation for single lexical in ~A.~%"
+      (= (funinfo-fast-scope? fi) t)
+      (optimizer-message "; Removed array allocation for single scoped-var in ~A.~%"
                          (human-readable-funinfo-names fi)))))
 
 (defun remove-argument-stackplaces (fi)
   (let v (used-vars)
     (adolist ((funinfo-args fi))
-      (| (funinfo-lexical? fi !)
+      (| (funinfo-scoped-var? fi !)
          (funinfo-place? fi !)
          (remove! ! v :test #'eq)))
     (funinfo-vars-set fi v)))
@@ -57,7 +57,7 @@
 (defun correct-funinfo ()
   (alet *funinfo*
     (remove-unused-ghost !)
-;    (remove-lexicals !)
+;    (remove-scoped-vars !)
 ;    (replace-ghost !)
 ;    (warn-unused-arguments !)
     (? (transpiler-stack-locals? *transpiler*)

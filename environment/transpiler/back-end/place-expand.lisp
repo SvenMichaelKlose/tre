@@ -12,7 +12,7 @@
 	 (make-lexical-1 (funinfo-parent fi) var)))
 
 (defun make-lexical-0 (fi x)
-  (funinfo-setup-lexical-links fi x)
+  (funinfo-setup-scope fi x)
   (let ret (make-lexical-1 fi x)
 	`(%vec ,(place-expand-atom fi (make-lexical fi .ret.))
 		   ,..ret.
@@ -34,12 +34,12 @@
       x
 
     (& (transpiler-stack-locals? *transpiler*)
-       (eq x (funinfo-lexical fi)))
+       (eq x (funinfo-scope fi)))
       (place-expand-emit-stackplace fi x)
 
-    (& (not (eq x (funinfo-lexical fi)))
-       (funinfo-lexical? fi x))
-      `(%vec ,(place-expand-atom fi (funinfo-lexical fi))
+    (& (not (eq x (funinfo-scope fi)))
+       (funinfo-scoped-var? fi x))
+      `(%vec ,(place-expand-atom fi (funinfo-scope fi))
              ,(funinfo-name fi)
              ,x)
 
@@ -87,4 +87,4 @@
 
 (defun place-expand-closure-lexical (fi)
   (alet (funinfo-parent fi)
-    (place-expand-0 ! (funinfo-lexical !))))
+    (place-expand-0 ! (funinfo-scope !))))

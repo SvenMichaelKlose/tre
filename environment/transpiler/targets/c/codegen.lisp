@@ -109,7 +109,7 @@
      `("trearray_make (" (%%native ,size) ")")
      `("trearray_get (CONS (" ,size ", treptr_nil))")))
 
-(define-c-macro %make-lexical-array (size)
+(define-c-macro %make-scope (size)
   (c-make-array size))
 
 (define-c-macro %vec (vec index)

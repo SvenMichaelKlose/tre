@@ -6,13 +6,13 @@
 		      `((%var ,_))]
 	        (funinfo-vars fi))))
 
-(defun funinfo-copiers-to-lexicals (fi)
-  (let-when lexicals (funinfo-lexicals fi)
-	(let lex-sym (funinfo-lexical fi)
-      `((%= ,lex-sym (%make-lexical-array ,(length lexicals)))
-        ,@(!? (funinfo-lexical? fi lex-sym)
-		    `((%set-vec ,lex-sym ,! ,lex-sym)))
-        ,@(mapcan [& (funinfo-lexical? fi _)
+(defun funinfo-copiers-to-scoped-vars (fi)
+  (let-when scoped-vars (funinfo-scoped-vars fi)
+	(let scope (funinfo-scope fi)
+      `((%= ,scope (%make-scope ,(length scoped-vars)))
+        ,@(!? (funinfo-scoped-var? fi scope)
+		    `((%set-vec ,scope ,! ,scope)))
+        ,@(mapcan [& (funinfo-scoped-var? fi _)
 				     `((%= ,_ ,(? (transpiler-arguments-on-stack? *transpiler*)
                                      `(%stackarg ,(funinfo-name fi) ,_)
                                      `(%%native ,_))))]
@@ -28,7 +28,7 @@
                     ,@(& (transpiler-function-prologues? *transpiler*)
                          `((%function-prologue ,name)))
                     ,@(& (transpiler-lambda-export? *transpiler*)
-                         (funinfo-copiers-to-lexicals fi))
+                         (funinfo-copiers-to-scoped-vars fi))
                     ,@(lambda-body x)
                     (%function-epilogue ,name))))))
 

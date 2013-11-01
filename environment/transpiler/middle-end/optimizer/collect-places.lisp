@@ -3,7 +3,7 @@
 (defun collect-places-r (x)
   (?
     (named-lambda? x.) (with-lambda-funinfo x.
-                         (!? (funinfo-lexical *funinfo*)
+                         (!? (funinfo-scope *funinfo*)
                              (= (funinfo-used-vars *funinfo*) (list !)))
                          (collect-places-r (lambda-body x.)))
     (%%go-cond? x.)    (& *funinfo*

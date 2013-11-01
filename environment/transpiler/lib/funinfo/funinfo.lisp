@@ -5,25 +5,25 @@
 (define-gensym-generator funinfo-sym ~f)
 
 (defstruct funinfo
-  (transpiler nil)
-  (parent     nil)
-  (name       nil)
+  (transpiler   nil)
+  (parent       nil)
+  (name         nil)
 
-  (argdef     nil) ; Argument definition.
-  (args       nil) ; Expanded argument definition.
-  (body       nil)
+  (argdef       nil) ; Argument definition.
+  (args         nil) ; Expanded argument definition.
+  (body         nil)
 
-  (vars       nil)
-  (vars-hash  nil)
-  (used-vars  nil)
-  (free-vars  nil)
-  (places     nil)
+  (vars         nil)
+  (vars-hash    nil)
+  (used-vars    nil)
+  (free-vars    nil)
+  (places       nil)
 
-  (lexicals   nil) ; List of symbols exported to child functions.
-  (lexical    nil) ; Name of the array of lexicals.
-  (ghost      nil) ; Name of hidden argument with an array of lexicals.
+  (scoped-vars  nil) ; List of symbols exported to child functions.
+  (scope        nil) ; Name of the array of scoped-vars.
+  (ghost        nil) ; Name of hidden argument with an array of scoped-vars.
   (local-function-args nil)
-  (fast-lexical? nil)
+  (fast-scope?  nil)
 
   ; Number of jump tags in body.
   (num-tags   nil)
@@ -49,11 +49,11 @@
       :used-vars    (copy-list used-vars)
       :free-vars    (copy-list free-vars)
       :places       (copy-list places)
-      :lexicals     (copy-list lexicals)
-      :lexical      lexical
+      :scoped-vars  (copy-list scoped-vars)
+      :scope        scope
       :ghost        ghost
       :local-function-args (copy-list local-function-args)
-      :fast-lexical? fast-lexical?
+      :fast-scope?  fast-scope?
       :num-tags     num-tags
       :globals      (copy-list globals)
       :cps?         cps?))

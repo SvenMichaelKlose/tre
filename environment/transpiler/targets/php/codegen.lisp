@@ -96,7 +96,7 @@
   (with (fi            (get-funinfo name)
          native-name  `(%%string ,(compiled-function-name-string name)))
     (? (funinfo-ghost fi)
-  	   `(%%native "new __closure(" ,native-name "," ,(php-dollarize (funinfo-lexical (funinfo-parent fi))) ")")
+  	   `(%%native "new __closure(" ,native-name "," ,(php-dollarize (funinfo-scope (funinfo-parent fi))) ")")
        native-name)))
 
 
@@ -163,7 +163,7 @@
 
 ;;;; VECTORS
 
-(define-php-macro %make-lexical-array (&rest elements)
+(define-php-macro %make-scope (&rest elements)
   `(%%native "new __l()" ""))
 
 (define-php-macro %vec (v i)
