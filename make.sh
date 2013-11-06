@@ -96,7 +96,7 @@ BINDIR="/usr/local/bin/"
 basic_clean ()
 {
 	echo "Cleaning..."
-	rm -vf *.core interpreter/$COMPILED_ENV tre image tmp.c __alien.tmp compilation.log environment/_current-version environment/transpiler/targets/c64/tre.c64
+	rm -vf *.core interpreter/$COMPILED_ENV tre image bytecode-image tmp.c __alien.tmp compilation.log environment/_current-version environment/transpiler/targets/c64/tre.c64
 	rm -vrf obj
     rm -vf examples/js/hello-world.js
 }
@@ -237,6 +237,11 @@ bytecode)
 	(echo "(load-bytecode (compile-bytecode-environment))(dump-system \"image\")" | ./tre) || exit 1
 	;;
 
+bytecode-image)
+    echo "Making bytecodes for everything..."
+	(echo "(with-output-file o \"bytecode-image\" (adolist ((compile-bytecode-environment)) (late-print ! o)))" | ./tre) || exit 1
+	;;
+
 install)
 	install_it
 	;;
@@ -267,23 +272,24 @@ restore)
 
 *)
 	echo "Usage: make.sh boot|interpreter|compiler|all|bytecode|debug|build|crunsh|reload|precompile|backup|restore|install|clean|distclean [args]"
-	echo "  boot         Build everything from scratch."
-	echo "  test         Build everything from scratch in stealth mode."
-	echo "  debugboot    Like 'boot', but for debugging"
-	echo "  interpreter  Clean and build the interpreter."
-	echo "  compiler     Compile just the compiler and the C target."
-	echo "  bcompiler    Compile just the compiler and the bytecode target."
-    echo "  all          Compile environment."
-    echo "  bytecode     Compile environment to bytecode, replacing the C functions."
-    echo "  build        Do a regular build file by file."
-    echo "  debug        Compile C sources for gdb. May the force be with you."
-    echo "  crunsh       Compile C sources as one big file for best optimization."
-    echo "  reload       Reload the environment."
-    echo "  precompile   Precompile obligatory target environments (EXPERIMENTAL)."
-    echo "  backup       Backup installation to local directory 'backup'."
-    echo "  restore      Restore the last 'backup'."
-    echo "  install      Install the compiled executable."
-    echo "  clean        Remove built files but not the backup."
-    echo "  distclean    Like 'clean' but also removes backups."
+	echo "  boot            Build everything from scratch."
+	echo "  test            Build everything from scratch in stealth mode."
+	echo "  debugboot       Like 'boot', but for debugging"
+	echo "  interpreter     Clean and build the interpreter."
+	echo "  compiler        Compile just the compiler and the C target."
+	echo "  bcompiler       Compile just the compiler and the bytecode target."
+    echo "  all             Compile environment."
+    echo "  bytecode        Compile environment to bytecode, replacing the C functions."
+    echo "  bytecode-image  Compile environment to bytecode, replacing the C functions."
+    echo "  build           Do a regular build file by file."
+    echo "  debug           Compile C sources for gdb. May the force be with you."
+    echo "  crunsh          Compile C sources as one big file for best optimization."
+    echo "  reload          Reload the environment."
+    echo "  precompile      Precompile obligatory target environments (EXPERIMENTAL)."
+    echo "  backup          Backup installation to local directory 'backup'."
+    echo "  restore         Restore the last 'backup'."
+    echo "  install         Install the compiled executable."
+    echo "  clean           Remove built files but not the backup."
+    echo "  distclean       Like 'clean' but also removes backups."
     ;;
 esac
