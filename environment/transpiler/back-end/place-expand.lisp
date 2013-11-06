@@ -12,14 +12,14 @@
 	 (make-scope-place-1 (funinfo-parent fi) var)))
 
 (defun make-scope-place (fi x)
-  (? (eq x (funinfo-scope-arg fi))
-	 (place-expand-atom (funinfo-parent fi) x)
+  (? (funinfo-scope-arg? fi x)
+	 x
      (progn
        (funinfo-setup-scope fi x)
-       (let ret (make-scope-place-1 fi x)
-	     `(%vec ,(place-expand-atom fi (make-scope-place fi .ret.))
-		        ,..ret.
-		        ,...ret.)))))
+       (alet (make-scope-place-1 fi x)
+	     `(%vec ,(place-expand-atom fi (make-scope-place fi .!.))
+		        ,..!.
+		        ,...!.)))))
 
 (defun place-expand-emit-stackplace (fi x)
   `(%stack ,(funinfo-name fi) ,x))

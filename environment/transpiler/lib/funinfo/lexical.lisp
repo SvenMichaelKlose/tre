@@ -1,5 +1,8 @@
 ;;;;; tré – Copyright (c) 2006–2007,2009,2011–2013 Sven Michael Klose <pixel@copei.de>
 
+(defun funinfo-scope-arg? (fi x)
+  (eq x (funinfo-scope-arg fi)))
+
 (defun funinfo-make-scope (fi)
   (unless (funinfo-scope fi)
     (with-gensym scope
