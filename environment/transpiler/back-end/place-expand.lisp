@@ -11,17 +11,15 @@
 	 (make-scope-place-expr fi var)
 	 (make-scope-place-1 (funinfo-parent fi) var)))
 
-(defun make-scope-place-0 (fi x)
-  (funinfo-setup-scope fi x)
-  (let ret (make-scope-place-1 fi x)
-	`(%vec ,(place-expand-atom fi (make-scope-place fi .ret.))
-		   ,..ret.
-		   ,...ret.)))
-
 (defun make-scope-place (fi x)
   (? (eq x (funinfo-scope-arg fi))
 	 (place-expand-atom (funinfo-parent fi) x)
-	 (make-scope-place-0 fi x)))
+     (progn
+       (funinfo-setup-scope fi x)
+       (let ret (make-scope-place-1 fi x)
+	     `(%vec ,(place-expand-atom fi (make-scope-place fi .ret.))
+		        ,..ret.
+		        ,...ret.)))))
 
 (defun place-expand-emit-stackplace (fi x)
   `(%stack ,(funinfo-name fi) ,x))
@@ -43,8 +41,10 @@
              ,(funinfo-name fi)
              ,x)
 
-    (& (transpiler-stack-locals? *transpiler*)
-       (funinfo-var? fi x))
+    (| (& (transpiler-stack-locals? *transpiler*)
+          (funinfo-var? fi x))
+       (& (transpiler-arguments-on-stack? *transpiler*)
+          (funinfo-arg? fi x)))
       (place-expand-emit-stackplace fi x)
 
     (funinfo-arg-or-var? fi x)
