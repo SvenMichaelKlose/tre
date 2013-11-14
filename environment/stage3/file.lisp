@@ -1,5 +1,9 @@
 ;;;;; tré – Copyright (c) 2012–2013 Sven Michael Klose <pixel@copei.de>
 
+(defun read-file (path)
+  (with-input-file f path
+    (read-all f)))
+
 (defun fetch-file (path)
   (with-input-file f path
     (apply #'+ (read-all-lines f))))
