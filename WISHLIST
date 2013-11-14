@@ -1,3 +1,5 @@
+(- SEQUENCE SYMBOL) for (REMOVE SYMBOL SEQUENCE).
+
 - Low-level packaging
 - Complete self-compilation. discard the interpreter. Fallback CL flavor
 
