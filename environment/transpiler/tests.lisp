@@ -7,10 +7,15 @@
 				         (let n ($ 'test- num)
 					       (push n names)
 				           `(defun ,n ()
-				              (print (+ "Test " ,num ", " ,_.))
-				              (unless (equal ,.._. ,._.)
-				                (print " FAILED")
-						        (print ',._.))
+				              (print ,(+ "Test " (string num) ", " _.))
+                              (with (result    ,.._.
+                                     expected  ',._.)
+				                (unless (equal result expected)
+				                  (print " FAILED")
+				                  (print " Expected:")
+                                  (print expected)
+				                  (print " Result:")
+						          (print result)))
                               (print "</br>")))]
                         *tests*))
 	`(,@funs
