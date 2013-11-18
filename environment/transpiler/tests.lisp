@@ -4,19 +4,19 @@
   (with (names  nil
 		 num    0
   		 funs   (mapcar [(++! num)
-				         (let n ($ 'test- num)
-					       (push n names)
-				           `(defun ,n ()
-				              (print ,(+ "Test " (string num) ", " _.))
-                              (with (result    ,.._.
-                                     expected  ',._.)
+				         (alet ($ 'test- num)
+					       (push ! names)
+				           `(defun ,! ()
+				              (%princ ,(+ "Test " (string num) ", " _.))
+                              (with (result    ,._.
+                                     expected  ,.._.)
 				                (unless (equal result expected)
-				                  (print " FAILED")
-				                  (print " Expected:")
-                                  (print expected)
-				                  (print " Result:")
-						          (print result)))
-                              (print "</br>")))]
+				                  (%princ " FAILED")
+				                  (%princ " Expected:")
+                                  (%princ expected)
+				                  (%princ " Result:")
+						          (%princ result)))
+                              (%princ "</br>")))]
                         *tests*))
 	`(,@funs
       (defun environment-tests ()

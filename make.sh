@@ -96,7 +96,8 @@ BINDIR="/usr/local/bin/"
 basic_clean ()
 {
 	echo "Cleaning..."
-	rm -vf *.core interpreter/$COMPILED_ENV tre image bytecode-image tmp.c __alien.tmp compilation.log environment/_current-version environment/transpiler/targets/c64/tre.c64
+	rm -vf *.core interpreter/$COMPILED_ENV tre image bytecode-image tmp.c __alien.tmp files.lisp compilation.log
+    rm -rf environment/_current-version environment/transpiler/targets/c64/tre.c64
 	rm -vrf obj
     rm -vf examples/js/hello-world.js
 }
@@ -212,15 +213,13 @@ boot)
 
 test)
     echo "Making tests..."
-    mv environment/config.lisp environment/old-config.lisp
-    echo "(setq *assert* t)" >environment/config.lisp
-    echo "(= (transpiler-always-expand-arguments? *c-transpiler*) t)" >environment/config-after-reload.lisp
 	./make.sh interpreter $ARGS || exit 1
 	./make.sh compiler $ARGS || exit 1
 	./make.sh all $ARGS || exit 1
 	./make.sh crunsh || exit 1
-    mv environment/old-config.lisp environment/config.lisp
-    echo "Tests seem to have succeeded."
+	./make.sh install || exit 1
+    tre makefiles/test-php.lisp
+    tre makefiles/test-js.lisp
 	;;
 
 debugboot)
