@@ -101,8 +101,6 @@
 (defun expex-argexpand-0 (fun args)
   (adolist (args)
     (expex-warn !))
-  (| (funinfo-find *funinfo* fun)
-     (transpiler-add-wanted-function *transpiler* fun))
   (let argdef (| (funinfo-get-local-function-args *funinfo* fun)
                  (current-transpiler-function-arguments fun))
     (transpiler-expand-literal-characters
