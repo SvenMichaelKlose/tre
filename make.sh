@@ -197,8 +197,8 @@ bcompiler)
 	./make.sh crunsh $ARGS || exit 1
     ;;
 
-all)
-    echo "Making everything..."
+environment)
+    echo "Compiling environment..."
 	(echo "(compile-c-environment)(dump-system \"image\")" | ./tre -i image | tee compilation.log) || exit 1
 	;;
 
@@ -207,7 +207,7 @@ boot)
 	./make.sh interpreter $ARGS || exit 1
 	./make.sh compiler $ARGS || exit 1
 	./make.sh crunsh $ARGS || exit 1
-	./make.sh all $ARGS || exit 1
+	./make.sh environment $ARGS || exit 1
 	./make.sh crunsh $ARGS|| exit 1
 	;;
 
@@ -215,7 +215,7 @@ test)
     echo "Making tests..."
 	./make.sh interpreter $ARGS || exit 1
 	./make.sh compiler $ARGS || exit 1
-	./make.sh all $ARGS || exit 1
+	./make.sh environment $ARGS || exit 1
 	./make.sh crunsh || exit 1
 	./make.sh install || exit 1
     tre makefiles/test-php.lisp
@@ -226,7 +226,7 @@ debugboot)
     echo "Booting everything from scratch..."
 	./make.sh interpreter $ARGS || exit 1
 	./make.sh compiler $ARGS || exit 1
-	./make.sh all $ARGS || exit 1
+	./make.sh environment $ARGS || exit 1
 	./make.sh debug || exit 1
 	./make.sh reload || exit 1
 	;;
@@ -240,6 +240,16 @@ bytecode-image)
     echo "Making bytecodes for everything..."
 	(echo "(with-output-file o \"bytecode-image\" (adolist ((compile-bytecode-environment)) (late-print ! o)))" | ./tre) || exit 1
 	;;
+
+all)
+    echo "Making all..."
+	./make.sh boot $ARGS || exit 1
+	./make.sh install || exit 1
+    tre makefiles/filelist.lisp || exit 1
+    tre makefiles/test-php.lisp || exit 1
+    tre makefiles/test-js.lisp || exit 1
+    tre makefiles/webconsole.lisp || exit 1
+    ;;
 
 install)
 	install_it
@@ -275,20 +285,21 @@ restore)
 	echo "  test            Build everything from scratch in stealth mode."
 	echo "  debugboot       Like 'boot', but for debugging"
 	echo "  interpreter     Clean and build the interpreter."
-	echo "  compiler        Compile just the compiler and the C target."
-	echo "  bcompiler       Compile just the compiler and the bytecode target."
-    echo "  all             Compile environment."
+	echo "  compiler        Compile just the compiler and the C target to C."
+	echo "  bcompiler       Compile just the compiler and the bytecode target to bytecode."
+    echo "  environment     Compile environment to C."
     echo "  bytecode        Compile environment to bytecode, replacing the C functions."
-    echo "  bytecode-image  Compile environment to bytecode, replacing the C functions."
+    echo "  bytecode-image  Compile environment to bytecode image."
+    echo "  all             Compile everything makefiles/ has to offer."
     echo "  build           Do a regular build file by file."
     echo "  debug           Compile C sources for gdb. May the force be with you."
     echo "  crunsh          Compile C sources as one big file for best optimization."
     echo "  reload          Reload the environment."
-    echo "  precompile      Precompile obligatory target environments (EXPERIMENTAL)."
     echo "  backup          Backup installation to local directory 'backup'."
     echo "  restore         Restore the last 'backup'."
     echo "  install         Install the compiled executable."
     echo "  clean           Remove built files but not the backup."
     echo "  distclean       Like 'clean' but also removes backups."
+    echo "  precompile      Precompile obligatory target environments (EXPERIMENTAL)."
     ;;
 esac

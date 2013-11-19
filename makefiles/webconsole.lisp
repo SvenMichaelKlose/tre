@@ -1,7 +1,7 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
-(load "environment/platforms/js/doctypes.lisp")
-(load "environment/platforms/js/html-script.lisp")
+(load "environment/platforms/shared/html/doctypes.lisp")
+(load "environment/platforms/shared/html/script.lisp")
 
 (= *have-compiler?* t)
 (= *have-c-compiler?* nil)
@@ -10,11 +10,24 @@
   (unix-sh-mkdir "compiled")
   (make-project
       "tré web console"
-      `(,@(filter [+ "environment/platforms/js/" _]
+      `(,@(filter [+ "environment/platforms/shared/" _]
 	              '("continued.lisp"
-	                "date.lisp"
+
+                    "url/file.lisp"
+	                "url/path-pathlist.lisp"
+	                "url/path-parent.lisp"
+	                "url/path-suffix.lisp"
+	                "url/pathname-filename.lisp"
+	                "url/unix-path.lisp"
+	                "url/url-path.lisp"
+	                "url/url-with-new-filename.lisp"
+	                "url/path-append.lisp"))
+
+        ,@(filter [+ "environment/platforms/js/" _]
+	              '("date.lisp"
 	                "wait.lisp"
 	                "slot-utils.lisp"
+
 	                "dom/get/def-aos.lisp"
 	                "dom/iteration.lisp"
 	                "dom/objects/native-symbols.lisp"
@@ -42,6 +55,7 @@
 	                "dom/move/move-element-list.lisp"
 	                "dom/viewport.lisp"
 	                "dom/ready.lisp"
+
 	                "event/log.lisp"
 	                "event/native-symbols.lisp"
 	                "event/native.lisp"
@@ -53,18 +67,9 @@
 	                "event/utils.lisp"
 	                "event/bind-event-methods.lisp"
 	                "event/keycodes.lisp"
-	                "debug/log-stream.lisp"
-	                "debug/log.lisp"))
-        ,@(filter [+ "environment/platforms/shared/" _]
-	              '("url/file.lisp"
-	                "url/path-pathlist.lisp"
-	                "url/path-parent.lisp"
-	                "url/path-suffix.lisp"
-	                "url/pathname-filename.lisp"
-	                "url/unix-path.lisp"
-	                "url/url-path.lisp"
-	                "url/url-with-new-filename.lisp"
-	                "url/path-append.lisp"))
+
+	                "log.lisp"))
+
         (toplevel . ((document-extend)
                      (event-manager.init-document document)
                      (event-manager.set-send-natively-by-default? document t)
