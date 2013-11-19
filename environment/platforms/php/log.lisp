@@ -2,6 +2,8 @@
 
 (dont-obfuscate error_log)
 
+(defvar *standard-log* *standard-output*)
+
 ,(? *transpiler-log*
     '(defun log (txt)
        (%= nil (error_log txt))

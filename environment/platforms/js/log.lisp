@@ -1,5 +1,29 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
+(defun make-log-stream ()
+  (make-stream :fun-in       #'((str))
+               :fun-out      #'((c str)
+                                  (logwindow-add-string (? (string? c)
+                                                           c
+                                                           (char-string c))))
+	           :fun-eof	  #'((str)
+                               t)))
+
+(defvar *standard-log* (make-log-stream))
+(= *standard-output* (make-log-stream))
+(= *standard-error* (make-log-stream))
+
+(defvar *logwindow* nil)
+
+(defvar *terminal-css* (new :margin "0"
+                            :background  "#000"
+                            :color       "#0f0"
+                            :white-space "pre-wrap"
+                            :font-family "monospace"
+                            :font-weight "bold"))
+ 
+(defvar *log-event-module* nil)
+
 (dont-obfuscate
 	window
 	document
@@ -7,17 +31,6 @@
     open
 	writeln
 	scroll-to)
-
-(defvar *logwindow* nil)
-
-(defvar *terminal-css* (new :margin "0"
-                            :background "#000"
-                            :color "#0f0"
-                            :white-space "pre-wrap"
-                            :font-family "monospace"
-                            :font-weight "bold"))
- 
-(defvar *log-event-module* nil)
 
 (defun open-log-window ()
   (unless *logwindow*
