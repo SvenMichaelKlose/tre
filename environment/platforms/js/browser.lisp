@@ -1,4 +1,4 @@
-;;;;; Caroshi – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (dont-obfuscate navigator user-agent index-of app-name)
 
