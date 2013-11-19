@@ -8,6 +8,7 @@
 (env-load "stage5/doseq.lisp")
 (env-load "stage5/iterate.lisp")
 (env-load "stage5/kwlist.lisp")
+(env-load "stage5/list+.lisp")
 (env-load "stage5/make-upcase-symbol.lisp")
 (env-load "stage5/make-keywords.lisp")
 (env-load "stage5/make-symbols.lisp")
