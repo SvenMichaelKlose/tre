@@ -1,5 +1,9 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
+(defmacro do-classes ((iterator element &optional result) &rest body)
+  `(dolist (,iterator ((slot-value ,element 'get-classes)) ,result)
+	 ,@body))
+
 (defmacro do-elements ((step iter elm &optional (ret nil)) &rest body)
   `(iterate ,iter ,step ,elm ,ret
      (& (document? ,iter)
