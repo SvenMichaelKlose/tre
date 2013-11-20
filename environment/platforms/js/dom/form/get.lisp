@@ -14,3 +14,11 @@
 
 (defun form-get-submit-buttons (x)
   (find-all-if #'submit-button?  (get-input-elements x)))
+
+(defun get-submit-button (form)
+  (do-elements-by-tag-name (elm form "input")
+	(& (elm.attribute-value? "type" "submit")
+	   (return elm))))
+
+(defun form-rename (x name)
+  ((ancestor-or-self-form-element x).set-name name))

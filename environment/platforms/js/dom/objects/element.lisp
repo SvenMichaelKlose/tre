@@ -307,10 +307,9 @@
 	  (number !))))
 
 (defmethod caroshi-element has-tag-name? (n)
-  (member (string-downcase tag-name) (mapcar #'string-downcase (ensure-list n)) :test #'string==))
-
-(defmethod caroshi-element has-tag-name-in? (lst)
-  (member-if (fn has-tag-name? _) lst))
+  (? (cons? n)
+     (member-if [has-tag-name? _] n)
+     (member (string-downcase tag-name) (mapcar #'string-downcase (ensure-list n)) :test #'string==)))
 
 (defmethod caroshi-element set-styles (styles)
   (caroshi-element-set-styles this styles))

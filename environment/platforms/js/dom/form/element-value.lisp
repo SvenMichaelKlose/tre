@@ -19,9 +19,10 @@
 
 (defun element-value (x)
   (?
-	(input-element-w/-value-attribute? x) (| (has-alternative-value? x) x.value)
-	(x.has-tag-name? "textarea") x.text
-	(x.has-tag-name? "select") (form-select-get-selected-option-value x)
+	(input-element-w/-value-attribute? x)  (| (has-alternative-value? x)
+                                              x.value)
+	(x.has-tag-name? "textarea")           x.text
+	(x.has-tag-name? "select")             (form-select-get-selected-option-value x)
     x.text-content))
 
 (defun set-element-value-attribute (x val)
@@ -31,8 +32,8 @@
 
 (defun (= element-value) (val x)
   (?
-	(input-element-w/-value-attribute? x) (set-element-value-attribute x val)
-	(x.has-tag-name? "textarea") (= x.text val)
+	(input-element-w/-value-attribute? x)  (set-element-value-attribute x val)
+	(x.has-tag-name? "textarea")           (= x.text val)
     (progn
 	  (x.remove-children)
 	  (x.add-text val)))
@@ -40,8 +41,8 @@
 
 (defun get-named-elements (x)
   (with-queue q
-	(x.walk (fn & (element? _)
-				  (_.has-name-attribute?)
-				 (enqueue q _)
-				nil))
+	(x.walk [& (element? _)
+			   (_.has-name-attribute?)
+			   (enqueue q _)
+			   nil])
 	(queue-list q)))
