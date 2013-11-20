@@ -124,6 +124,8 @@
 	offset-left offset-right
 	offset-top offset-bottom
 	offset-parent
+    query-selector
+    query-selector-all
     _caroshi-rotation)
   `(progn
 	 (defmember caroshi-element ,@x)
@@ -451,6 +453,12 @@
 	    (do-children (i this)
 		  (return-from-when from-point (i.seek-element x y)))
 	    this)))
+
+(defmethod caroshi-element get (css-selector)
+  (query-selector css-selector))
+
+(defmethod caroshi-element get-list (css-selector)
+  (array-list (query-selector-all css-selector)))
 
 (defmethod caroshi-element get-first-child-by-class-name (name)
   (do-elements-by-class-name (i this name)
