@@ -131,12 +131,6 @@
 	  (++! idx)
 	  (= x x.previous-sibling))))
 
-(defmethod visible-node blank-text-content? ()
-  (& (empty-string? text-content)
-	 (do-children (i this t)
-	  (& (element? i)
-		 (return nil)))))
-
 (defmethod visible-node get-document ()
   (alet this
     (while (not (document? !))
