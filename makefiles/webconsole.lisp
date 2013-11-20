@@ -8,66 +8,53 @@
 
 (unix-sh-mkdir "compiled")
 (make-project "tré web console"
-              `(,@(filter [+ "environment/platforms/shared/" _]
-                          '("continued.lisp"
+              `(,@(list+ "environment/platforms/shared/"
+                         '("continued.lisp"
 
-                            "url/file.lisp"
-                            "url/path-pathlist.lisp"
-                            "url/path-parent.lisp"
-                            "url/path-suffix.lisp"
-                            "url/pathname-filename.lisp"
-                            "url/unix-path.lisp"
-                            "url/url-path.lisp"
-                            "url/url-with-new-filename.lisp"
-                            "url/path-append.lisp"))
+                           "url/file.lisp"
+                           "url/path-pathlist.lisp"
+                           "url/path-parent.lisp"
+                           "url/path-suffix.lisp"
+                           "url/pathname-filename.lisp"
+                           "url/unix-path.lisp"
+                           "url/url-path.lisp"
+                           "url/url-with-new-filename.lisp"
+                           "url/path-append.lisp"))
 
-                ,@(filter [+ "environment/platforms/js/" _]
-                          '("date.lisp"
-                            "log.lisp"
-                            "wait.lisp"
-                            "slot-utils.lisp"))
+                ,@(list+ "environment/platforms/js/"
+                         '("date.lisp"
+                           "log.lisp"
+                           "wait.lisp"
+                           "slot-utils.lisp"))
 
-                ,@(filter [+ "environment/platforms/js/dom/" _]
-                          '("get/def-aos.lisp"
-                            "iteration.lisp"
-                            "objects/native-symbols.lisp"
-                            "objects/node-predicates.lisp"
-                            "objects/visible-node.lisp"
-                            "objects/text-node.lisp"
-                            "objects/element.lisp"
-                            "objects/get-elements-by-class-name.lisp"
-                            "objects/extend.lisp"
-                            "get/get.lisp"
-                            "get/define-element-getters.lisp"
-                            "get/document-ordered.lisp"
-                            "get/first-by.lisp"
-                            "get/last-by.lisp"
-                            "get/page-has-some-of.lisp"
-                            "name.lisp"
-                            "form/predicates.lisp"
-                            "form/get.lisp"
-                            "form/set.lisp"
-                            "form/element-value.lisp"
-                            "form/submit-button.lisp"
-                            "table/table.lisp"
-                            "table/header.lisp"
-                            "move/move-children-and-remove.lisp"
-                            "move/move-element-list.lisp"
-                            "viewport.lisp"
-                            "ready.lisp"))
+                ,@(list+ "environment/platforms/js/dom/"
+                         '("def-aos.lisp"
+                           "do.lisp"
+                           "objects/native-symbols.lisp"
+                           "objects/node-predicates.lisp"
+                           "objects/visible-node.lisp"
+                           "objects/text-node.lisp"
+                           "objects/element.lisp"
+                           "objects/extend.lisp"
+                           "get.lisp"
+                           "form/predicates.lisp"
+                           "form/get.lisp"
+                           "form/element-value.lisp"
+                           "table.lisp"
+                           "viewport.lisp"))
 
-                ,@(filter [+ "environment/platforms/js/event/" _]
-                          '("log.lisp"
-                            "native-symbols.lisp"
-                            "native.lisp"
-                            "event.lisp"
-                            "handler.lisp"
-                            "module.lisp"
-                            "hook-methods.lisp"
-                            "manager.lisp"
-                            "utils.lisp"
-                            "bind-event-methods.lisp"
-                            "keycodes.lisp"))
+                ,@(list+ "environment/platforms/js/event/"
+                         '("log.lisp"
+                           "native-symbols.lisp"
+                           "native.lisp"
+                           "event.lisp"
+                           "handler.lisp"
+                           "module.lisp"
+                           "hook-methods.lisp"
+                           "manager.lisp"
+                           "utils.lisp"
+                           "bind-event-methods.lisp"
+                           "keycodes.lisp"))
 
                 (toplevel . ((document-extend)
                              (event-manager.init-document document)
