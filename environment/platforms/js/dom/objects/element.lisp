@@ -468,7 +468,7 @@
     (do ((i this i.parent-node))
         ((not i))
       (& (member i ! :test #'eq)
-         (return i))))
+         (return i)))))
 
 (defmethod caroshi-element ancestor (css-selector)
   (!? parent-node
@@ -527,5 +527,9 @@
      (do-children (i this t)
        (& (element? i)
 	      (return nil)))))
+
+(mapcar-macro _ *all-events*
+  `(defmethod caroshi-element ,(make-symbol (string-upcase _)) (fun)
+     (*event-module*.hook ,_ fun this)))
 
 (finalize-class caroshi-element)
