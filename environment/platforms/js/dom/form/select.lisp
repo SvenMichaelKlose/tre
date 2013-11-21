@@ -5,16 +5,15 @@
      (x.has-tag-name? "select")))
 
 (defun form-select-get-options (x)
-  (let select-element (ancestor-or-self-select-element x)
-    (get-option-elements select-element)))
+  ((x.ancestor-or-self "select").get-list "option"))
 
 (defun form-select-get-select-names (x)
-  (map-select-elements (fn _.read-attribute "name") x))
+  (filter [_.get-name] (x.get-list "select")))
 
 (defun form-select-get-by-name (x name)
-  (do-select-elements (i x "select")
-    (& (i.attribute-value? "name" name)
-       (return i))))
+  (adolist ((x.get-list "select"))
+    (& (!.attribute-value? "name" name)
+       (return !))))
 
 (defun form-select-get-option-by-value (x name)
   (do-children (i x)
@@ -51,8 +50,8 @@
 	(o.read-attribute "value")))
 
 (defun form-select-add-option (x txt &optional (attrs nil))
-  (with (select-element (ancestor-or-self-select-element x)
-		 option-element (new *element "option" attrs))
+  (with (select-element  (ancestor-or-self-select-element x)
+		 option-element  (new *element "option" attrs))
 	(option-element.add-text txt)
 	(select-element.add option-element)))
 
@@ -62,9 +61,9 @@
 
 (defun form-select-option-texts-to-string-lists (options)
   (when options
-	(let option options.
-  	  (cons (string-list option.text-content)
-			(form-select-option-texts-to-string-lists .options)))))
+    (let option options.
+      (. (string-list option.text-content)
+         (form-select-option-texts-to-string-lists .options)))))
 
 (defun form-select-add-string-list-options (select-element options)
   (when options
@@ -74,8 +73,8 @@
 	(form-select-add-string-list-options select-element .options)))
 
 (defun form-select-sort (x)
-  (with (select-element (ancestor-or-self-select-element x)
-		 option-list    (form-select-option-texts-to-string-lists (form-select-get-options x))
-		 sorted-options (sort option-list :test #'<=-list))
+  (with (select-element  (x.ancestor-or-self "select")
+		 option-list     (form-select-option-texts-to-string-lists (form-select-get-options x))
+		 sorted-options  (sort option-list :test #'<=-list))
 	(select-element.remove-children)
 	(form-select-add-string-list-options select-element sorted-options)))

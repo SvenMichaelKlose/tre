@@ -2,7 +2,7 @@
 
 (load "environment/platforms/shared/html/doctypes.lisp")
 (load "environment/platforms/shared/html/script.lisp")
-(load "environment/platforms/js/events/names.lisp")
+(load "environment/platforms/js/event/names.lisp")
 
 (= *have-compiler?* t)
 (= *have-c-compiler?* nil)

@@ -1,44 +1,24 @@
 ;;;;; tré – Copyright (c) 2009–2013 Sven Michael Klose <pixel@copei.de>
 
-(define-element-getters :name tbody
-                        :plural-name tbodies
-                        :tag "tbody")
-
-(define-element-getters :name table
-                        :plural-name tables
-                        :tag "table")
-
-(define-element-getters :name th
-                        :plural-name ths
-                        :tag "th")
-
-(define-element-getters :name tr
-                        :plural-name trs
-                        :tag "tr")
-
-(define-element-getters :name td
-                        :plural-name tds
-                        :tag "td")
-
 (defun table-get-rows (x)
-  (get-first-tbody (ancestor-or-self-table x)).children-list)
+  (((x.ancestor-or-self "table").get "tbody").children-list))
 
 (defun table-num-columns (x)
-  (ancestor-or-self-tr x).children.length)
+  (x.ancestor-or-self "tr").children.length)
 
 (defun table-num-rows (x)
-  (ancestor-or-self-table x).children.length)
+  (x,ancestor-or-self "table").children.length)
 
 (defun table-get-first-row (x)
-  (get-first-tbody (ancestor-or-self-table x)).first-child)
+  ((x.ancestor-or-self "table").get "tbody").first-child)
 
 (defun table-get-column-index (cell)
   (cell.get-index))
 
 (defun table-get-column-0 (x idx)
   (when x
-	(cons (x.get-child-at idx)
-		  (table-get-column-0 x.next-sibling idx))))
+	(. (x.get-child-at idx)
+       (table-get-column-0 x.next-sibling idx))))
 
 (defun table-get-column (x)
   (table-get-column-0 (table-get-first-row x) (table-get-column-index x)))

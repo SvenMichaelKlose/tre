@@ -8,6 +8,13 @@
 
 (defmethod nodelist list () _list)
 
+(defmethod nodelist iterate (fun)
+  (adolist _list
+    (funcall fun !)))
+
+(defmethod nodelist filter (fun)
+  (filter fun _list))
+
 (defmacro def-nodelist-method (name &rest args)
   `(defmethod nodelist ,name ,args
      (dolist (i _list)

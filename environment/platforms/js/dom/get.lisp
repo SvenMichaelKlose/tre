@@ -13,23 +13,16 @@
 	   (return x))))
 
 (defun ancestor-or-self? (x elm)
-  (ancestor-or-self-if x (fn eq _ elm)))
+  (ancestor-or-self-if x [eq _ elm]))
 
 (defun ancestor-or-self-child-of (parent x)
-  (ancestor-or-self-if x (fn eq parent _.parent-node)))
-
-(dont-obfuscate unshift)
+  (ancestor-or-self-if x [eq parent _.parent-node]))
 
 (defun ancestors-or-self-if (node pred)
   (with-queue elms
     (do-self-and-ancestors (x node (queue-list elms))
 	  (& (funcall pred x)
 		 (enqueue elms x)))))
-
-(defmacro do-predicate ((fun iter init) &rest body)
-  `(,fun ,init #'((,iter)
-					(when ,iter
-		 	  		  ,@body))))
 
 (defmacro do-ancestors-unless ((iter start) &rest body)
   `(do-ancestors (,iter ,start)
@@ -45,30 +38,6 @@
   (do-self-and-ancestors-unless (x node)
 	(& (element? x)
 	   (x.get-id))))
-
-(defun ancestor-or-self-with-class (node)
-  (do-self-and-ancestors-unless (x node)
-	(& (element? x)
-       (x.has-attribute "class"))))
-
-(defun ancestor-or-self-with-class-of (node classes)
-  (do-self-and-ancestors-unless (x node)
-	(& (element? x)
-       (dolist (c (ensure-list classes))
-         (& (member c (x.get-classes) :test #'string==)
-            (return x))))))
-
-(defun ancestor-with-tag-name (node name)
-  (do-ancestors-unless (x node)
-	(x.has-tag-name? name)))
-
-(defun ancestor-or-self-with-tag-name (node name)
-  (do-self-and-ancestors-unless (x node)
-	(x.has-tag-name? name)))
-
-(defun ancestor-or-self-name (x)
-  (awhen (ancestor-or-self-if x (fn _.read-attribute "name"))
-	(!.read-attribute "name")))
 
 (defun get-first-text-node (node)
   (do-self-and-next-siblings (elm node.first-child)

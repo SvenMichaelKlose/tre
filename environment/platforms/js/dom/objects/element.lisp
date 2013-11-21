@@ -60,9 +60,10 @@
 	   (visible-node-remove-without-listeners-or-callbacks x))))
 
 (defun _caroshi-element-remove-class (elm x)
-  (elm.set-class (concat-stringtree
-					 (pad (remove x (elm.get-classes) :test #'string==)
-						  " "))))
+  (? (cons? x)
+     (adolist x (_caroshi-element-remove-class elm !))
+     (elm.set-class (appy #'string-concat (pad (remove x (elm.get-classes) :test #'string==)
+                                               " ")))))
 
 (defun caroshi-element-set-style (n k v)
   (= (aref n.style k) v))
@@ -75,27 +76,6 @@
 
 (defun caroshi-element-remove-styles (n)
   (n.remove-attribute "style"))
-
-(defun caroshi-element-get-by-class (x name)
-  (array-list (x.get-elements-by-class-name name)))
-
-(defun caroshi-element-get-by-tag (x name)
-  (array-list (x.get-elements-by-tag-name name)))
-
-(defun caroshi-element-get-by-name (x name)
-  (array-list (x.get-elements-by-name name)))
-
-(defun caroshi-element-get-first-by-class (x name)
-  (awhen (x.get-elements-by-class-name name)
-    (aref ! 0)))
-
-(defun caroshi-element-get-first-by-tag (x name)
-  (awhen (x.get-elements-by-tag-name name)
-    (aref ! 0)))
-
-(defun caroshi-element-get-first-by-name (x name)
-  (awhen (x.get-elements-by-name name)
-    (aref ! 0)))
 
 (defun caroshi-element-get-if (x predicate)
   (with-queue n
@@ -191,10 +171,6 @@
 	(doarray (x chlds elm)
 	  (& (string== cls (x.get-class))
 		 (= elm x)))))
-
-(defmethod caroshi-element remove-elements-by-class-name (cls)
-  (doarray (i (copy-array (get-elements-by-class-name cls)))
-    (i.remove)))
 
 (defmethod caroshi-element read-attribute (name)
   (declare type string name)
@@ -295,10 +271,6 @@
 
 (defmethod caroshi-element remove-class (x)
   (_caroshi-element-remove-class this x))
-
-(defmethod caroshi-element remove-classes (x)
-  (dolist (i x)
-    (_caroshi-element-remove-class this i)))
 
 (defmethod caroshi-element set-id (id)
   (write-attribute "id" id))
@@ -477,43 +449,20 @@
   (!? parent-node
       (ancestor-or-self css-selector)))
 
+(defmethod caroshi-element ancestor-or-self-if (fun)
+  (ancestor-or-self-if this fun))
+
 (defmethod caroshi-element get-first-child-by-class-name (name)
-  (do-elements-by-class-name (i this name)
-    (& (eq this i.parent-node)
-       (return i))))
+  (find-if [eq this _.parent-node]
+           (this.get-list (+ "." name))))
 
 (defmethod caroshi-element set-inner-h-t-m-l (html)
   (this.remove-children)
   (& html (= inner-h-t-m-l html))
   (dom-tree-extend this))
 
-(defmethod caroshi-element get-elements-by-name (name)
-  (let n (make-array)
-    (walk (fn & (element? _)
-                (string== name (_.get-name))
-                (n.push _)))
-    n))
-
 (defmethod caroshi-element get-if (predicate)
   (caroshi-element-get-if this predicate))
-
-(defmethod caroshi-element get-by-class (name)
-  (caroshi-element-get-by-class this name))
-
-(defmethod caroshi-element get-by-tag (name)
-  (caroshi-element-get-by-tag this name))
-
-(defmethod caroshi-element get-by-name (name)
-  (caroshi-element-get-by-name this name))
-
-(defmethod caroshi-element get-first-by-class (name)
-  (caroshi-element-get-first-by-class this name))
-
-(defmethod caroshi-element get-first-by-tag (name)
-  (caroshi-element-get-first-by-tag this name))
-
-(defmethod caroshi-element get-first-by-name (name)
-  (caroshi-element-get-first-by-name this name))
 
 (defmethod caroshi-element get-child-at (idx)
   (when-debug
