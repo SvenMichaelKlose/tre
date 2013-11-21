@@ -54,3 +54,5 @@
   (event-manager.kill this))
 
 (finalize-class event-module)
+
+(defvar *event-module* (make-event-module "default"))
