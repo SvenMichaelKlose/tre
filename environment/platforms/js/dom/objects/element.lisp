@@ -460,6 +460,20 @@
 (defmethod caroshi-element get-list (css-selector)
   (array-list (query-selector-all css-selector)))
 
+(defmethod caroshi-element get-nodes (css-selector)
+  (make-nodelist (get-list css-selector)))
+
+(defmethod caroshi-element ancestor-or-self (css-selector)
+  (alet (get-list css-selector)
+    (do ((i this i.parent-node))
+        ((not i))
+      (& (member i ! :test #'eq)
+         (return i))))
+
+(defmethod caroshi-element ancestor (css-selector)
+  (!? parent-node
+      (ancestor-or-self css-selector)))
+
 (defmethod caroshi-element get-first-child-by-class-name (name)
   (do-elements-by-class-name (i this name)
     (& (eq this i.parent-node)
