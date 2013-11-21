@@ -460,6 +460,9 @@
 (defmethod caroshi-element get-list (css-selector)
   (array-list (query-selector-all css-selector)))
 
+(defmethod caroshi-element get-last (css-selector)
+  (last (get-list css-selector)))
+
 (defmethod caroshi-element get-nodes (css-selector)
   (make-nodelist (get-list css-selector)))
 

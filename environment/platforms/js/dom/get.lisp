@@ -75,19 +75,3 @@
     (case elm.node-type
       3  (return elm)
 	  1  (get-first-text-node elm))))
-
-(mapcar-macro x
-	'(-tag -class "")
-  (let n ($ '-by x '-name)
-    `(defun ,($ 'dom-get-first n) (doc name )
-	   (aref ((slot-value doc ',($ 'get-elements n)) name)
-			 0))))
-
-(mapcar-macro x
-	'(tag class)
-  (let n ($ '-by- x '-name)
-    `(defun ,($ 'dom-get-last n) (doc name )
-	   (let-when vec ((slot-value doc ',($ 'get-elements n)) name)
-	     (let len (length vec)
-		   (unless (== 0 len)
-	         (aref vec (-- len))))))))
