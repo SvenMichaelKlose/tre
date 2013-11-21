@@ -2,6 +2,7 @@
 
 (load "environment/platforms/shared/html/doctypes.lisp")
 (load "environment/platforms/shared/html/script.lisp")
+(load "environment/platforms/js/events/names.lisp")
 
 (= *have-compiler?* t)
 (= *have-c-compiler?* nil)
@@ -51,6 +52,7 @@
                            "handler.lisp"
                            "module.lisp"
                            "hook-methods.lisp"
+                           "names.lisp"
                            "manager.lisp"
                            "utils.lisp"
                            "bind-event-methods.lisp"
