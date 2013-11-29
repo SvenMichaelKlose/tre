@@ -12,7 +12,8 @@
 (defvar *php-base0*
 	,(list 'quote (php-load-base *php-env-path*
 		              "assert.lisp"
-		              "return-value.lisp")))
+		              "return-value.lisp"
+                      "superglobals.lisp")))
 (defvar *php-base*
 	,(list 'quote (php-load-base *php-env-path*
 		              "cons.lisp"
