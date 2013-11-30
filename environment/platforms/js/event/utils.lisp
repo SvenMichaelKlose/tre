@@ -31,5 +31,7 @@
   (| (string? debug-name)
 	 (error "string expected as debug-name"))
   `(aprog1 (new event-module ,debug-name)
-     (kill+set ,place !)
+     (& ,place
+        ((slot-value ,place 'kill)))
+     (= ,place !)
      (event-manager.add !)))

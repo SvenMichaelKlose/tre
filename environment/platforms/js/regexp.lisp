@@ -1,6 +1,6 @@
-;;;;; tré – Copyright (c) 2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2012–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun regexp-match (reg str)
-  (let m (str.match reg)
-    (unless (empty-string-or-nil? m)
+  (aprog1 (str.match reg)
+    (unless (empty-string-or-nil? !)
       m)))

@@ -25,8 +25,7 @@
                 ,@(list+ "environment/platforms/js/"
                          '("date.lisp"
                            "log.lisp"
-                           "wait.lisp"
-                           "slot-utils.lisp"))
+                           "wait.lisp"))
 
                 ,@(list+ "environment/platforms/js/dom/"
                          '("def-aos.lisp"
