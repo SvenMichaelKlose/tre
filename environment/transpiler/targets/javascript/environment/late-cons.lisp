@@ -1,5 +1,7 @@
 ;;;;; tré – Copyright (c) 2008–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
 
+(declare-cps-exception car cdr cpr rplaca rplacd rplacp cons?)
+
 (defun car (x)
   (? x
      x._

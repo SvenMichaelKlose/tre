@@ -2,7 +2,7 @@
 
 (defvar *default-listprop* nil)
 
-(declare-cps-exception %cons)
+(declare-cps-exception %cons cons)
 
 (define-native-js-fun %cons (a d)
   (= this.__class ,(obfuscated-identifier 'cons)
