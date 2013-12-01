@@ -71,7 +71,8 @@
 (defun expex-warn (x)
   (& (expex-warnings? *expex*)
      (symbol? x)
-     (not (transpiler-defined-symbol? *funinfo* x)
+     (not (eq '~%cont x)
+          (transpiler-defined-symbol? *funinfo* x)
           (can-import-function? *transpiler* x))
      (error "Symbol ~A is not defined in ~A."
             (symbol-name x)

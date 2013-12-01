@@ -4,11 +4,12 @@
 
 (defun cps-call? (x)
   (& (%=-funcall? x)
-     (| (eq 'apply (car (%=-value x)))
-        (& (not (transpiler-cps-exception? *transpiler* x.))
-           (let name (car (%=-value x))
-             (!? (get-funinfo name)
-                 (funinfo-cps? !)))))))
+     (alet (car (%=-value x))
+       (| (eq 'apply !)
+          (& (not (transpiler-cps-exception? *transpiler* x.))
+             (| (funinfo-find *funinfo* !)
+                (!? (get-funinfo !)
+                    (funinfo-cps? !))))))))
 
 (defun cps-splitpoint? (x)
   (| (number? x)
@@ -101,10 +102,8 @@
         (eq 'apply (funinfo-name *funinfo*))
           (list (copy-lambda x :args (. '~%cont args)))
         (funinfo-cps? *funinfo*)
-          (progn
-            (format t "; CPS transforming ~A.~%" name)
-            (list (copy-lambda x :args (. '~%cont args) :body (cps-body body))
-                  `(%= (%slot-value ,name _cps-transformed?) t)))
+          (list (copy-lambda x :args (. '~%cont args) :body (cps-body body))
+                `(%= (%slot-value ,name _cps-transformed?) t))
         (list (copy-lambda x))))))
 
 (defun cps-subfuns (x)

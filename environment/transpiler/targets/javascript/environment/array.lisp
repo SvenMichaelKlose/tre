@@ -1,6 +1,7 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (dont-obfuscate constructor)
+(declare-cps-exception aref =-aref array? list-array array-find)
 
 (defvar *js-array-constructor* (make-array).constructor)
 

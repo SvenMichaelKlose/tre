@@ -9,7 +9,9 @@
 ;;;; FUNCTION NAME
 
 (defun funinfo-names (fi)
-  (& fi (cons (funinfo-name fi) (funinfo-names (funinfo-parent fi)))))
+  (& fi (. (funinfo-name fi)
+           (funinfo-names (funinfo-parent fi)))))
+
 
 ;;;; ARGUMENTS
 
@@ -115,6 +117,7 @@
   (& (symbol? x)
      (funinfo-find fi x)
      (funinfo-add-used-var-0 fi x)))
+
 
 ;;;; FREE VARIABLES
 
