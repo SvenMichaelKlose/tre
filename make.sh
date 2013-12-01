@@ -155,7 +155,7 @@ crunsh)
 
 reload)
     echo "Reloading environment from source..."
-    svnversion -n >environment/_current-version
+    git log | grep Author: | wc -l >environment/_current-version
     echo | ./tre -n
 	;;
 
