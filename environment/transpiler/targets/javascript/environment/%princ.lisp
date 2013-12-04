@@ -3,5 +3,5 @@
 (declare-cps-exception %princ)
 
 (define-native-js-fun %princ (txt &optional (only-standard-output nil))
-  (document.writeln (string txt))
+  (document.write (string txt))
   txt)

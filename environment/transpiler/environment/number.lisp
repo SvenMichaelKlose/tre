@@ -1,5 +1,7 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
+(declare-cps-exception %wrap-char-number + - * / mod number+ integer+ character+ number- integer- character- == < > <= >= number== number< number> number<= number >= integer== integer< integer> integer<= integer>= character== character< character> character<= character>= number? integer)
+
 (defun %wrap-char-number (x)
   (? (character? x)
 	 (char-code x)
@@ -83,6 +85,6 @@
 
 (defun integer (x)
   (?
-    (character? x) (char-code x)
-    (string? x)    (string-integer x)
+    (character? x)  (char-code x)
+    (string? x)     (string-integer x)
     (number-integer x)))

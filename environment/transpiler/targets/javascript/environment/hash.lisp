@@ -1,5 +1,7 @@
 ;;;;; tré – Copyright (c) 2009–2013 Sven Michael Klose <pixel@copei.de>
 
+(declare-cps-exception %%objkey %%make-objkey %%numkey %make-href-object-key %href-key =-href-obj %href-==? hash-table? =-href)
+
 (defvar *obj-id-counter* 0)
 (defvar *obj-keys*       (%%%make-hash-table))
 

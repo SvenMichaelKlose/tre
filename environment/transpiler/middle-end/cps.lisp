@@ -20,14 +20,23 @@
 (defvar *cps-function-counter* 0)
 
 (defun cps-split-body (x)
-  (filter [cons ($ '~CPS (++! *cps-function-counter*)) _]
+  (filter [. ($ '~CPS (++! *cps-function-counter*)) _]
           (split-if #'cps-splitpoint? x :include? t)))
 
 (defun cps-tag-names (x)
-  (mapcan [alet (car (last ._))
-            (& (number? !)
-               (list (cons ! _.)))]
-          x))
+  (with-queue q
+    (do ((i x .i))
+        ((not i) (queue-list q))
+      (!? (car (last (cdr i.)))
+          (& (number? !)
+             (enqueue q (. ! (| (caadr i)
+                                '~%cont))))))))
+
+;(defun cps-tag-names (x)
+;  (mapcan [!? (car (last ._))
+;              (& (number? !)
+;                 (list (. ! _.)))]
+;          x))
 
 (defun cps-make-funs (&key names tag-names bodies)
   (let last-place nil
@@ -51,11 +60,13 @@
                                              ,name
                                              ,(| .names. '~%cont)
                                              ,@args)))]
-                   make-go      [`((%= nil (,(tag-to-name _))))]
+                   make-go      [alet (tag-to-name _)
+                                  `((%= nil (,! ,@(& (eq '~%cont !)
+                                                     `(~%ret)))))]
                    make-cond    [`((,(? (%%go-nil? _)
                                         '%%call-nil
                                         '%%call-not-nil)
-                                    ,.._. ,.names. ,(tag-to-name _)))]
+                                    ,.._.  ,(tag-to-name _) ,.names.))]
                    body         `(,@(awhen last-place
                                       (clr last-place)
                                       `((%= ,! ~%contret)))
