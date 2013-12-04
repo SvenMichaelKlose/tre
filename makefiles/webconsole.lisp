@@ -23,7 +23,7 @@
                            "url/path-append.lisp"))
 
                 ,@(list+ "environment/platforms/js/"
-                         '("date.lisp"
+                         '("milliseconds-since-1970.lisp"
                            "log.lisp"
                            "wait.lisp"))
 
