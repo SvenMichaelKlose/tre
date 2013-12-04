@@ -10,4 +10,5 @@
 	(transpiler-make-std-macro-expander !)
 	(transpiler-make-code-expander !)
 	(transpiler-make-expex !)
-    (make-global-funinfo !)))
+    (make-global-funinfo !)
+    (transpiler-add-obfuscation-exceptions ! '%%native)))

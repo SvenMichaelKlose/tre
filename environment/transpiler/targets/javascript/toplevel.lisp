@@ -29,8 +29,7 @@
            ,@(& (transpiler-assert? tr)
                 `((debug-printing . ,*js-base-debug-print*)))
            (essential-functions-2 . ,*js-base2*)
-           ,@(unless *transpiler-no-stream?*
-               `((standard-streams . ,*js-base-stream*)))
+           (standard-streams . ,*js-base-stream*)
            ,@(& (t? *have-environment-tests*)
                 `((environment-tests . ,(make-environment-tests))))))))
 

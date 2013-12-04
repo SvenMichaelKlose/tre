@@ -2,7 +2,6 @@
 
 (defvar *transpiler* nil)
 (defvar *transpiler-log* nil)
-(defvar *transpiler-no-stream?* nil)
 
 (defvar *recompiling?* nil)
 (defvar *print-executed-functions?* nil)
