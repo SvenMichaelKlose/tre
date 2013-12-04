@@ -49,7 +49,7 @@
                                   `((%= nil (,@(? constructorcall?
                                                   `(%new))
                                              ,name
-                                             ,(| .names. 'cps-identity)
+                                             ,(| .names. '~%cont)
                                              ,@args)))]
                    make-go      [`((%= nil (,(tag-to-name _))))]
                    make-cond    [`((,(? (%%go-nil? _)
