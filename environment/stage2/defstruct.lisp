@@ -56,6 +56,7 @@
   (let sym (%struct-getter-symbol name field)
     `(progn
        (functional ,sym)
+       (declare-cps-exception ,sym ,(=-make-symbol sym))
        (defun ,sym (arr)
          ,@(%struct-assertion name sym)
          (aref arr ,index))
@@ -100,6 +101,7 @@
   (multiple-value-bind (flds opts) (%struct-sort-fields fields-and-options)
     (%struct-add-def name flds)
     `(progn
+       (declare-cps-exception ,name)
        ,(%struct-make name flds opts)
        ,(%struct? name)
        ,@(%struct-getters name flds)
