@@ -6,6 +6,7 @@
   (& (%=-funcall? x)
      (alet (car (%=-value x))
        (| (eq 'apply !)
+          (%%native? !)
           (& (not (transpiler-cps-exception? *transpiler* x.))
              (| (funinfo-find *funinfo* !)
                 (!? (get-funinfo !)
