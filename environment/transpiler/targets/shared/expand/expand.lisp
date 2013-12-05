@@ -17,6 +17,12 @@
   (apply #'transpiler-add-obfuscation-exceptions *transpiler* symbols)
   nil)
 
+(define-shared-std-macro (js php) declare-native-cps-function (&rest symbols)
+  (print-definition `(declare-native-cps-function ,@symbols))
+  (adolist symbols
+    (transpiler-add-native-cps-function *transpiler* !))
+  nil)
+
 (define-shared-std-macro (js php) declare-cps-exception (&rest symbols)
   (print-definition `(declare-cps-exception ,@symbols))
   (adolist symbols

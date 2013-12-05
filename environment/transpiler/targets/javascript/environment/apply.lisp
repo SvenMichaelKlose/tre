@@ -2,6 +2,7 @@
 
 (dont-obfuscate apply call)
 (declare-cps-exception apply %nconc last butlast)
+(declare-native-cps-function apply)
 
 (defun apply (fun &rest lst)
   (when-debug

@@ -5,7 +5,7 @@
 (defun cps-call? (x)
   (& (%=-funcall? x)
      (alet (car (%=-value x))
-       (| (eq 'apply !)
+       (| (transpiler-native-cps-function? *transpiler* !)
           (& (%%native? !)
              (not (transpiler-cps-exception? *transpiler* (real-function-name .!.))))
           (& (not (transpiler-cps-exception? *transpiler* x.))
@@ -121,17 +121,16 @@
          `((%= nil (,!..))))
       x))
 
-(defun funinfo-of-apply? ()
-  (eq 'apply (funinfo-name *funinfo*)))
-
 (defun cps-fun (x)
   (with-temporaries (*funinfo*        (get-lambda-funinfo x)
                      *cps-toplevel?*  nil)
     (with-lambda name args body x
       (?
-        (funinfo-of-apply?)       (list (copy-lambda x :args (. '~%cont args)))
-        (funinfo-cps? *funinfo*)  (list (copy-lambda x :args (. '~%cont args) :body (cps-body body))
-                                        `(%= (%slot-value ,name _cps-transformed?) t))
+        (transpiler-native-cps-function? *transpiler* (funinfo-name *funinfo*))
+          (list (copy-lambda x :args (. '~%cont args)))
+        (funinfo-cps? *funinfo*)
+          (list (copy-lambda x :args (. '~%cont args) :body (cps-body body))
+                `(%= (%slot-value ,name _cps-transformed?) t))
         (list (copy-lambda x))))))
 
 (defun cps-subfuns (x)

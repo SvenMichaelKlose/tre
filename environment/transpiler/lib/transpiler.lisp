@@ -96,6 +96,7 @@
 
   (cps-transformation?      nil)
   (cps-exceptions           (make-hash-table :test #'eq))
+  (native-cps-functions     (make-hash-table :test #'eq))
 
   (code-concatenator        #'concat-stringtree)
   (make-text?               t)
@@ -230,6 +231,7 @@
         :copy-arguments-to-stack? copy-arguments-to-stack?
         :cps-transformation?      cps-transformation?
         :cps-exceptions           (copy-hash-table cps-exceptions)
+        :native-cps-functions     (copy-hash-table native-cps-functions)
         :code-concatenator        code-concatenator
         :make-text?               make-text?
         :encapsulate-strings?     encapsulate-strings?
@@ -282,6 +284,7 @@
 (transpiler-getter defined-variable        (href (transpiler-defined-variables-hash tr) x))
 (transpiler-getter literal?                (href (transpiler-literals tr) x))
 (transpiler-getter cps-exception?          (href (transpiler-cps-exceptions tr) x))
+(transpiler-getter native-cps-function?    (href (transpiler-native-cps-functions tr) x))
 (transpiler-getter host-function?          (href (transpiler-host-functions-hash tr) x))
 (transpiler-getter host-function-arguments (href (transpiler-host-functions-hash tr) x))
 (transpiler-getter host-variable?          (href (transpiler-host-variables-hash tr) x))
@@ -300,6 +303,8 @@
                                          x)
 (transpiler-getter add-cps-exception     (= (href (transpiler-cps-exceptions tr) x) t)
                                          x)
+(transpiler-getter add-native-cps-function  (= (href (transpiler-native-cps-functions tr) x) t)
+                                            x)
 (transpiler-getter macro? (| (expander-has-macro? (transpiler-std-macro-expander tr) x)
                              (expander-has-macro? (transpiler-codegen-expander tr) x)))
 (transpiler-getter imported-variable? (& (transpiler-import-from-environment? tr)
