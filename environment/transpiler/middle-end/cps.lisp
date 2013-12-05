@@ -149,8 +149,10 @@
                                      `((%= nil (cps-methodcall
                                                 ,.slot.
                                                 ,slot
-                                                'cps-identity
-                                                ,@.val)))]
+                                                ,(!? (%=-place x.)
+                                                     `(cps-toplevel-return-value ,!)
+                                                     'cps-identity)
+                                                ,@.val))))
          (list x.))
        (cps-subfuns .x))))
 
