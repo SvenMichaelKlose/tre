@@ -4,6 +4,8 @@
 (env-load "stage1/cons.lisp")
 (env-load "stage1/gensym.lisp" 'c)
 (env-load "stage1/defmacro.lisp" 'c)
+(env-load "stage1/declare-cps-exception.lisp" 'c)
+(env-load "stage1/cps-exceptions.lisp")
 (env-load "stage1/define-test.lisp" 'c)
 
 (env-load "stage1/listp.lisp" 'c)

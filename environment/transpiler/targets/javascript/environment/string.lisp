@@ -1,6 +1,7 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
-(declare-cps-exception string string?)
+(declare-cps-exception string %string? string? string== string-concat string-upcase string-downcase string-subseq)
+(dont-obfuscate push join char-code-at to-string to-upper-case to-lower-case substr length)
 
 (js-type-predicate %string? "string")
 
@@ -8,21 +9,14 @@
   (| (%string? x)
      (instanceof x (%%native "String"))))
 
-(dont-obfuscate push join)
-
 (defun string-concat (&rest x)
-  (let-when a (remove-if #'not x)
-    (let res (make-array)
-      (dolist (i a (res.join ""))
-        (res.push i)))))
-
-(dont-obfuscate char-code-at)
+  (alet (make-array)
+    (dolist (i a (!.join ""))
+      (& i (!.push i)))))
 
 (defun %elt-string (seq idx)
   (& (%%%< idx seq.length)
      (code-char (seq.char-code-at idx))))
-
-(dont-obfuscate to-string)
 
 (defun string (x)
   (?
@@ -35,17 +29,11 @@
 (defun string== (x y)
   (%%%== x y))
 
-(dont-obfuscate to-upper-case)
-
 (defun string-upcase (x)
   (& x (x.to-upper-case)))
 
-(dont-obfuscate to-lower-case)
-
 (defun string-downcase (x)
   (& x (x.to-lower-case)))
-
-(dont-obfuscate substr length)
 
 (defun string-subseq (seq start &optional (end 99999))
   (unless (< (%%%- (length seq) 1) start end)

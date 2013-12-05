@@ -1,6 +1,7 @@
 ;;;;; tré – Copyright (c) 2005,2009,2011,2013 Sven Michael Klose <pixel@copei.de>
 
 (functional ++ -- integer++ integer--)
+(declare-cps-exception ++ -- integer++ integer--)
 
 (early-defun ++ (x)
   (number+ x 1))

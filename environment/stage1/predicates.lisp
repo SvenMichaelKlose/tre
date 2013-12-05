@@ -1,6 +1,7 @@
 ;;;;; tré – Copyright (c) 2005–2006,2008–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
 
 (functional zero? even? odd? end? keyword?)
+(declare-cps-exception zero? even? odd? end? keyword?)
 
 (defun zero? (x)
   (== 0 x))

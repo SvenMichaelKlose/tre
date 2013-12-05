@@ -1,5 +1,7 @@
 ;;;;; tré – Copyright (c) 2006–2008,2011–2013 Sven Michael Klose <pixel@copei.de>
 
+(declare-cps-exception first second third fourth fifth sixth seventh eighth ninth tenth)
+
 (defconstant *first-to-tenth*
   '(first second third fourth fifth sixth seventh eighth ninth tenth))
 

@@ -1,4 +1,6 @@
-;;;;; tré – Copyright (c) 2005–2006,2008,2010,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2006,2008,2010,2012–2013 Sven Michael Klose <pixel@copei.de>
+
+(declare-cps-exception make-queue enqueue enqueue-list queue-pop queue-list queue-front)
 
 (defun make-queue ()
   (cons nil nil))
