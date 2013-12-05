@@ -43,7 +43,6 @@
 			             "../../../environment/number.lisp"
 			             "sequence.lisp"
 			             "../../../environment/sequence.lisp"
-			             "../../../environment/character.lisp"
 			             "standard-stream.lisp"
 			             "stream.lisp"
 			             "../../../environment/print.lisp"

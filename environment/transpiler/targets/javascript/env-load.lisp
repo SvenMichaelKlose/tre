@@ -43,7 +43,6 @@
 			                       "apply.lisp"
 			                       "atom.lisp")
 	 	             (js-load-base "environment/transpiler/environment/"
-                                   "character.lisp"
 			                       "atom.lisp"
                                    "string.lisp")
 		             (js-load-base *js-env-path*
