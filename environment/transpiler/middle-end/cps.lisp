@@ -65,9 +65,9 @@
 
 (defun cps-make-funs (&key names tag-names bodies)
   (let last-place nil
-    (mapcan [with (name         names.
-                   args         (? last-place
-                                   '(~%contret))
+    (mapcan [with (name  names.
+                   args  (? last-place
+                            '(~%contret))
 
                    tag-to-name      [assoc-value ._. tag-names]
                    make-call        [(= last-place (%=-place _))
@@ -121,38 +121,31 @@
          `((%= nil (,!..))))
       x))
 
+(defun funinfo-of-apply? ()
+  (eq 'apply (funinfo-name *funinfo*)))
+
 (defun cps-fun (x)
   (with-temporaries (*funinfo*        (get-lambda-funinfo x)
                      *cps-toplevel?*  nil)
     (with-lambda name args body x
       (?
-        (eq 'apply (funinfo-name *funinfo*))
-          (list (copy-lambda x :args (. '~%cont args)))
-        (funinfo-cps? *funinfo*)
-          (list (copy-lambda x :args (. '~%cont args) :body (cps-body body))
-                `(%= (%slot-value ,name _cps-transformed?) t))
+        (funinfo-of-apply?)       (list (copy-lambda x :args (. '~%cont args)))
+        (funinfo-cps? *funinfo*)  (list (copy-lambda x :args (. '~%cont args) :body (cps-body body))
+                                        `(%= (%slot-value ,name _cps-transformed?) t))
         (list (copy-lambda x))))))
 
 (defun cps-subfuns (x)
   (when x
     (+ (?
-         (named-lambda? x.)  (cps-fun x.)
+         (named-lambda? x.)        (cps-fun x.)
          (& *cps-toplevel?*
-            (cps-call? x.))  (alet (%=-value x.)
-                               `((%= nil (,!. ,(!? (%=-place x.)
-                                                   `(cps-toplevel-return-value ,!)
-                                                   'cps-identity)
-                                              ,@.!))))
+            (cps-call? x.))        (cps-make-call x. (!? (%=-place x.)
+                                                         `(cps-toplevel-return-value ,!)
+                                                         'cps-identity))
          (& *cps-toplevel?*
-            (cps-methodcall? x.))  (with (val   (%=-value x.)
-                                          slot  val.)
-                                     `((%= nil (cps-methodcall
-                                                ,.slot.
-                                                ,slot
-                                                ,(!? (%=-place x.)
-                                                     `(cps-toplevel-return-value ,!)
-                                                     'cps-identity)
-                                                ,@.val))))
+            (cps-methodcall? x.))  (cps-make-methodcall x. (!? (%=-place x.)
+                                                               `(cps-toplevel-return-value ,!)
+                                                               'cps-identity))
          (list x.))
        (cps-subfuns .x))))
 
