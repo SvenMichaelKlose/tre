@@ -4,14 +4,15 @@ function cpsIdentity (x)
 {
 }
 
-function cpsFuncall ()
+function cpsMethodcall ()
 {
     var args = Array.prototype.slice.call (arguments);
+    var obj = args.shift ();
     var fun = args.shift ();
-    if (typeof fun.treCps != "undefined")
-        fun.apply (null, args);
+    if (typeof fun._cpsTransformedT63 != "undefined")
+        fun.apply (obj, args);
     else {
         var continuer = args.shift ();
-        continuer.call (fun.apply (null, args));
+        continuer.call (null, fun.apply (obj, args));
     }
 }

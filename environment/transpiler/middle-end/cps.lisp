@@ -11,9 +11,14 @@
                 (!? (get-funinfo !)
                     (funinfo-cps? !))))))))
 
+(defun cps-methodcall? (x)
+  (& (%=-funcall? x)
+     (%slot-value? (car (%=-value x)))))
+
 (defun cps-splitpoint? (x)
   (| (number? x)
      (cps-call? x)
+     (cps-methodcall? x)
      (%%go? x)
      (%%go-cond? x)))
 
@@ -38,50 +43,59 @@
 ;                 (list (. ! _.)))]
 ;          x))
 
+(defun cps-make-call (x continuer)
+  (with (val               (%=-value x)
+         constructorcall?  (%new? val)
+         name              (? constructorcall?
+                              .val.
+                              val.)
+         args              (? constructorcall?
+                              ..val
+                              .val))
+    `((%= nil (,@(? constructorcall?
+                    `(%new))
+               ,name ,continuer ,@args)))))
+
+(defun cps-make-methodcall (x continuer)
+  (with (val   (%=-value x)
+         slot  val.)
+    `((%= nil (cps-methodcall ,.slot. ,slot ,continuer ,@.val)))))
+
 (defun cps-make-funs (&key names tag-names bodies)
   (let last-place nil
     (mapcan [with (name         names.
                    args         (? last-place
                                    '(~%contret))
-                   tag-to-name  [assoc-value ._. tag-names]
-                   make-call    [with (val               (%=-value _)
-                                       constructorcall?  (%new? val)
-                                       name              (? constructorcall?
-                                                            .val.
-                                                            val.)
-                                       args              (? constructorcall?
-                                                            ..val
-                                                            .val))
-                                  (= last-place (%=-place _))
-                                  (& (member 'cps-identity args)
-                                     (error "Function has already been transformed."))
-                                  `((%= nil (,@(? constructorcall?
-                                                  `(%new))
-                                             ,name
-                                             ,(| .names. '~%cont)
-                                             ,@args)))]
-                   make-go      [alet (tag-to-name _)
-                                  `((%= nil (,! ,@(& (eq '~%cont !)
-                                                     `(~%ret)))))]
-                   make-cond    [`((,(? (%%go-nil? _)
-                                        '%%call-nil
-                                        '%%call-not-nil)
-                                    ,.._.  ,(tag-to-name _) ,.names.))]
-                   body         `(,@(awhen last-place
-                                      (clr last-place)
-                                      `((%= ,! ~%contret)))
-                                  ,@(butlast _)
-                                  ,@(alet (car (last _))
-                                      (?
-                                        (cps-call? !)   (make-call !)
-                                        (%%go? !)       (make-go !)
-                                        (%%go-cond? !)  (make-cond !)
-                                        (+ (& !
-                                              (not (number? !))
-                                              (list !))
-                                           (?
-                                             .names                `((%= nil (,.names.)))
-                                             (not *cps-toplevel?*) `((%= nil (~%cont ~%ret)))))))))
+
+                   tag-to-name      [assoc-value ._. tag-names]
+                   make-call        [(= last-place (%=-place _))
+                                     (cps-make-call _ (| .names. '~%cont))]
+                   make-methodcall  [(= last-place (%=-place _))
+                                     (cps-make-methodcall _ (| .names. '~%cont))]
+                   make-go          [alet (tag-to-name _)
+                                      `((%= nil (,! ,@(& (eq '~%cont !)
+                                                         `(~%ret)))))]
+                   make-cond        [`((,(? (%%go-nil? _)
+                                            '%%call-nil
+                                            '%%call-not-nil)
+                                        ,.._.  ,(tag-to-name _) ,.names.))]
+
+                   body  `(,@(awhen last-place
+                               (clr last-place)
+                               `((%= ,! ~%contret)))
+                           ,@(butlast _)
+                           ,@(alet (car (last _))
+                               (?
+                                 (cps-call? !)        (make-call !)
+                                 (cps-methodcall? !)  (make-methodcall !)
+                                 (%%go? !)            (make-go !)
+                                 (%%go-cond? !)       (make-cond !)
+                                 (+ (& !
+                                       (not (number? !))
+                                       (list !))
+                                    (?
+                                      .names                `((%= nil (,.names.)))
+                                      (not *cps-toplevel?*) `((%= nil (~%cont ~%ret)))))))))
               (alet (create-funinfo :name    name
                                     :args    args
                                     :body    body
@@ -127,6 +141,14 @@
                                                    `(cps-toplevel-return-value ,!)
                                                    'cps-identity)
                                               ,@.!))))
+         (& *cps-toplevel?*
+            (cps-methodcall? x.))  (with (val   (%=-value x.)
+                                          slot  val.)
+                                     `((%= nil (cps-methodcall
+                                                ,.slot.
+                                                ,slot
+                                                'cps-identity
+                                                ,@.val)))]
          (list x.))
        (cps-subfuns .x))))
 
