@@ -1,5 +1,7 @@
 ;;;;; tré – Copyright (c) 2010–2013 Sven Michael Klose <pixel@copei.de>
 
+(defvar *current-pass-input* nil)
+
 (defmacro transpiler-pass (name args &rest x)
   (with (cache-var ($ '*pass- name '*)
          init (gensym)
@@ -14,10 +16,11 @@
                                                     (member ',_. (ensure-list !))))
                                              #'((x)
                                                   (format t ,(string-concat "; **** " (symbol-name _.) "~%"))
-                                                  (prog1
-                                                    (print (funcall ,._. x))
-                                                    (format t ,(string-concat "; **** " (symbol-name _.) " (end)~%"))
-                                                    (force-output)))
+                                                  (with-temporary *current-pass-input* x
+                                                    (prog1
+                                                      (print (funcall ,._. x))
+                                                      (format t ,(string-concat "; **** " (symbol-name _.) " (end)~%"))
+                                                      (force-output))))
                                              ,._.)))
                                     (group x 2)))
                    ,cache-var)
