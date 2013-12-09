@@ -13,6 +13,5 @@
                    (wrap-strings-in-lists sections)))
 
 (defun compile (expression &key (transpiler nil))
-  (compile-sections `((compile . (,expression)))
-                    :transpiler transpiler))
+  (compile-sections `((t ,expression)) :transpiler transpiler))
 

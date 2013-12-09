@@ -37,14 +37,6 @@
        ,end-tag
 	   (identity ~%ret))))
 
-;;; TAGBODY tag replacement
-;;;
-;;; All tags of a tagbody are replaced by compiler-tags to avoid name-clashes
-;;; when TAGBODYs are removed. GOs are expanded beforehand
-;;; (because macro expansion is done from leave to root), and the
-;;; new tags are added to *tagbody-replacements* and used when TAGBODY
-;;; is expanded.
-
 (define-compiler-macro go (tag)
   (!? (cdr (assoc tag *tagbody-replacements* :test #'eq))
       `(%%go ,!)
