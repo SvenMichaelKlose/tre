@@ -23,7 +23,7 @@
     (= (href (transpiler-wanted-functions-hash tr) x) t)
     (push x (transpiler-wanted-functions tr))
     (& *show-definitions?*
-       (format t "; Scheduled function ~A for import from environment.~%" x)))
+       (format t "; Scheduled ~A for import from host.~%" x)))
   x)
 
 (defun transpiler-add-wanted-functions (tr x)
@@ -46,7 +46,7 @@
     (= (href (transpiler-wanted-variables-hash tr) x) t)
     (push x (transpiler-wanted-variables tr))
     (& *show-definitions?*
-       (format t "; Scheduled global variable ~A for import from environment.~%" x)))
+       (format t "; Scheduled global variable ~A for import from host.~%" x)))
   x)
 
 (defun transpiler-import-exported-closures (tr)
