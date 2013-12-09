@@ -13,7 +13,7 @@
      (= (funinfo-scope-arg fi) nil)
      (pop (funinfo-args fi))
      (pop (funinfo-argdef fi))
-     (optimizer-message "; Turned ~A into regular function.~%"
+     (optimizer-message "; Made ~A a regular function.~%"
                         (human-readable-funinfo-names fi))))
 
 (defun remove-scoped-vars (fi)
