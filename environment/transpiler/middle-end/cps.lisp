@@ -3,15 +3,21 @@
 (defvar *cps-toplevel?* nil)
 
 (defun cps-call? (x)
-  (& (%=-funcall? x)
-     (alet (car (%=-value x))
-       (| (transpiler-native-cps-function? *transpiler* !)
-          (& (%%native? !)
-             (not (transpiler-cps-exception? *transpiler* (real-function-name .!.))))
-          (funinfo-find *funinfo* !)
-          (& (not (transpiler-cps-exception? *transpiler* !))
-             (!? (get-funinfo !)
-                 (funinfo-cps? !)))))))
+  (with (call-from-argument-expander?
+             [& (%%native? _)
+                (not (transpiler-cps-exception? *transpiler* (real-function-name ._.)))]
+         call-of-local-function?
+             [funinfo-find *funinfo* _]
+         call-of-global-cps-function?
+             [& (not (transpiler-cps-exception? *transpiler* _))
+                (!? (get-funinfo _)
+                    (funinfo-cps? !))])
+    (& (%=-funcall? x)
+       (alet (car (%=-value x))
+         (| (transpiler-native-cps-function? *transpiler* !)
+            (call-from-argument-expander? !)
+            (call-of-local-function? !)
+            (call-of-global-cps-function? !))))))
 
 (defun cps-methodcall? (x)
   (& (%=-funcall? x)
