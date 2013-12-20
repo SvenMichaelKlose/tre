@@ -11,7 +11,7 @@
 
 (defun string-concat (&rest x)
   (alet (make-array)
-    (dolist (i a (!.join ""))
+    (dolist (i x (!.join ""))
       (& i (!.push i)))))
 
 (defun %elt-string (seq idx)
