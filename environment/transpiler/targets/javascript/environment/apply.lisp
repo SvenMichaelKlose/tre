@@ -15,7 +15,7 @@
         '(?
            (defined? fun.tre-exp)            (fun.tre-exp.apply nil (%%native "[" ~%cont ", " ! "]"))
            (defined? fun._cps-transformed?)  (fun.apply nil (list-array (. ~%cont !)))
-           (~%cont.apply nil (fun.apply nil (list-array !))))
+           (~%cont.call nil (fun.apply nil (list-array !))))
         '(? (defined? fun.tre-exp)
             (fun.tre-exp.apply nil (%%native "[" ! "]"))
             (fun.apply nil (list-array !))))))
