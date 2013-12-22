@@ -46,5 +46,6 @@
 (define-bc-macro %set-vec (vec index x)
   `(%bc-set-vec ,vec ,index ,(bc-make-value x)))
 
-(define-bc-macro %global  (x) x)
-(define-bc-macro identity (x) x)
+(define-bc-macro %global  (x)       `(symbol-value 1 x))
+(define-bc-macro identity (x)       x)
+(define-bc-macro %%native (&rest x) x)
