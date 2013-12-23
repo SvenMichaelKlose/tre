@@ -115,7 +115,7 @@ trelist_get (treptr car, treptr cdr)
 {
     treptr cons;
 
-    if (!tre_lists_free)
+    if (NOT(tre_lists_free))
 	    trelist_gc (car, cdr);
 
     cons = tre_lists_free;
