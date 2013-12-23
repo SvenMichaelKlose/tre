@@ -33,7 +33,7 @@ treeval_exprop (treptr x, treeval_opfunc_t func, const char * descr)
 
 	n = 2;
     x = CDR(x);
-    while (x != treptr_nil) {
+    while (NOT_NIL(x)) {
         arg = trearg_typed (n++, TRETYPE_NUMBER, CAR(x), descr);
         val = (*func) (val, TRENUMBER_VAL(arg));
         x = CDR(x);

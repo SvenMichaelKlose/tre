@@ -69,7 +69,7 @@ trecode_set_place (treptr ** p, treptr value)
 
     if (TREPTR_IS_NUMBER(v))
         trestack_ptr[TRENUMBER_INT(v)] = value;
-    else if (v != treptr_nil)
+    else if (NOT_NIL(v))
         TRESYMBOL_VALUE(v) = value;
 
     *p = x;
@@ -128,7 +128,7 @@ trecode_get (treptr ** p)
                 tregc_pop_secondary ();
                 TRELIST_FREE_TOPLEVEL_EARLY(args);
             }
-        } else if (TREFUNCTION_BYTECODE(fun) != treptr_nil) {
+        } else if (NOT_NIL(TREFUNCTION_BYTECODE(fun))) {
             tregc_push_secondary (fun);
             num_args = TRENUMBER_INT(*x++);
             old_sp = trestack_ptr;
@@ -141,7 +141,7 @@ trecode_get (treptr ** p)
         }
     } 
 #ifdef TRE_HAVE_BYTECODE_ASSERTIONS
-      else if (v != treptr_nil && v != treptr_t)
+      else if (NOT_NIL(v) && v != treptr_t)
         treerror_norecover (v, "Un%QUOTEd literal in bytecode.");
 #endif
     *p = x;

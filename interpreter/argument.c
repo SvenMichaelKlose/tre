@@ -37,7 +37,7 @@ trearg_get (treptr list)
    	if (TREPTR_IS_ATOM(list))
        	return treerror (list, "Atom instead of list - need 1 argument.");
     
-    if (CDR(list) != treptr_nil)
+    if (NOT_NIL(CDR(list)))
         trewarn (list, "Single argument expected.");
     
     return CAR(list);
@@ -67,7 +67,7 @@ trearg_get2 (treptr *a, treptr *b, treptr list)
 	} else {
 		second = CADR(list);
 
-    	if (CDR(list) && CDDR(list) != treptr_nil)
+    	if (CDR(list) && NOT_NIL(CDDR(list)))
         	trewarn (list, "no more than two args required - ignoring rest");
 	}
 
@@ -147,7 +147,7 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
 
 		/* Fetch next form and argument. */
         var = CAR(argdef);
-		val = (args != treptr_nil) ? CAR(args) : treptr_nil;
+		val = (NOT_NIL(args)) ? CAR(args) : treptr_nil;
 
 		/* Process sub-level argument list. */
         if (TREPTR_IS_CONS(var)) {
@@ -204,7 +204,7 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
 
 	        	_ADDF(dvars, CONS(form, treptr_nil));
 
-				svals = (args != treptr_nil) ?
+				svals = NOT_NIL(args) ?
                             (do_argeval ? treeval (CAR(args)) : CAR(args)) :
                             treeval (init);
 
@@ -212,7 +212,7 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
 	        	_ADDF(dvals, CONS(svals, treptr_nil));
 
 	        	argdef = CDR(argdef);
-				if (args != treptr_nil)
+				if (NOT_NIL(args))
 	            	args = CDR(args);
 	    	}
 	    	args = treptr_nil;
@@ -227,7 +227,7 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
                 treprint (original_args);
 				trewarn (args, "stale &KEY keyword in argument definition");
 			}
-	    	while (argdef != treptr_nil) {
+	    	while (NOT_NIL(argdef)) {
 	        	key = CAR(argdef);
 				init = treptr_nil;
                 if (TREPTR_IS_CONS(key)) {
@@ -286,7 +286,7 @@ next:
 		args = CDR(args);
     }
 
-    if (args != treptr_nil) {
+    if (NOT_NIL(args)) {
         treprint (original_argdef);
         treprint (original_args);
 		trewarn (args, "too many arguments (continue to ignore)");

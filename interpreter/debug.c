@@ -49,7 +49,7 @@ trefunstack_get_named_function (treptr fspos)
 
     DOLIST(p, fspos) {
 		a = treatom_body_to_var (CAR(p));
-        if (a != treptr_nil && TRESYMBOL_NAME(a))
+        if (NOT_NIL(a) && TRESYMBOL_NAME(a))
 	    	break;
     }
 
@@ -252,7 +252,7 @@ tredebug_breakpoint (void)
         printf ("Currently set breakpoints: ");
         i = 0;
 		DOTIMES(a, TREDEBUG_MAX_BREAKPOINTS) {
-            if (tredebug_breakpoints[i] != treptr_nil) {
+            if (NOT_NIL(tredebug_breakpoints[i])) {
  	        	printf ("%s ", TRESYMBOL_NAME(tredebug_breakpoints[a]));
 				i++;
 	    	}
@@ -276,7 +276,7 @@ tredebug_breakpoints_delete_all (void)
     size_t  i;
 
     DOTIMES(i, TREDEBUG_MAX_BREAKPOINTS) {
-        if (tredebug_breakpoints[i] != treptr_nil)
+        if (NOT_NIL(tredebug_breakpoints[i]))
  	    	printf ("%s ", TRESYMBOL_NAME(tredebug_breakpoints[i]));
         tredebug_breakpoints[i] = treptr_nil;
     }
@@ -293,7 +293,7 @@ tredebug_breakpoints_delete (void)
  
     i = 0;
     DOTIMES(a, TREDEBUG_MAX_BREAKPOINTS)
-        if (tredebug_breakpoints[a] != treptr_nil)
+        if (NOT_NIL(tredebug_breakpoints[a]))
 	    	i++;
 
     if (i == 0) {
@@ -357,7 +357,7 @@ tredebug_parent_funstack (treptr fspos)
     RETURN_NIL(tmp);
     body = CADR(TREFUNCTION_SOURCE(TRESYMBOL_FUN(tmp)));
 
-    while (fspos != treptr_nil && CAR(fspos) != body)
+    while (NOT_NIL(fspos) && CAR(fspos) != body)
         fspos = CDR(fspos);
 
     if (NOT(fspos))

@@ -101,7 +101,7 @@ trefunction_builtin_make_function (treptr source)
 {
     treptr s = treptr_nil;
 
-    if (source != treptr_nil)
+    if (NOT_NIL(source))
         s = trearg_get (source);
     return trefunction_make_function (s);
 }

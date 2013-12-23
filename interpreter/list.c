@@ -19,7 +19,7 @@
 treptr
 trelist_last (treptr l)
 {
-    while (CDR(l) != treptr_nil)
+    while (NOT_NIL(CDR(l)))
 		l = CDR(l);
 
     return l;
@@ -62,7 +62,7 @@ trelist_delete (tre_size i, treptr l)
     if (i == 0)
 		return CDR(l);
 
-    for (p = l; p != treptr_nil; i--, p = CDR(p)) {
+    for (p = l; NOT_NIL(p); i--, p = CDR(p)) {
 		if (i) {
 	    	f = p;
 	    	continue;
@@ -80,7 +80,7 @@ trelist_position (treptr elt, treptr l)
 {
     long c = 0;
 
-    while (l != treptr_nil) {
+    while (NOT_NIL(l)) {
 		if (CAR(l) == elt)
 	    	return c;
 
@@ -98,7 +98,7 @@ trelist_position_name (treptr elt, treptr l)
     long c = 0;
 	const char * eltname = TRESYMBOL_NAME(elt);
 
-    while (l != treptr_nil) {
+    while (NOT_NIL(l)) {
 		if (TREPTR_IS_SYMBOL(CAR(l)) && ! strcmp (TRESYMBOL_NAME(CAR(l)), eltname))
 	    	return c;
 
@@ -114,7 +114,7 @@ trelist_length (treptr p)
 {
     tre_size len = 0;
 
-    while (p != treptr_nil) {
+    while (NOT_NIL(p)) {
 		len++;
 		p = CDR(p);
     }
@@ -125,7 +125,7 @@ trelist_length (treptr p)
 treptr
 trelist_nthcdr (treptr l, tre_size idx)
 {
-    while (l != treptr_nil) {
+    while (NOT_NIL(l)) {
 		if (TREPTR_IS_ATOM(l))
 			treerror_norecover (l, "Internal NTHCDR: cons expected.");
 		if (!idx--)
@@ -167,7 +167,7 @@ struct tre_sequence_type trelist_seqtype = {
 bool
 trelist_check_type (treptr list, tre_size type)
 {
-    for (; list != treptr_nil; list = CDR(list))
+    for (; NOT_NIL(list); list = CDR(list))
         if (TREPTR_TYPE(CAR(list)) != type)
 	    	return FALSE;
     return TRUE;
@@ -193,7 +193,7 @@ trelist_append (treptr *lst, treptr lst2)
 bool
 trelist_equal (treptr la, treptr lb)
 {
-    while (la != treptr_nil && lb != treptr_nil) {
+    while (NOT_NIL(la) && NOT_NIL(lb)) {
         if (TREPTR_IS_CONS(la) != TREPTR_IS_CONS(lb))
 	    	return FALSE;
 

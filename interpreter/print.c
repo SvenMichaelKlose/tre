@@ -50,14 +50,14 @@ bool treprint_no_nl;
 treptr treprint_highlight;
 
 #define TREPRINT_HL(x,txt) \
-    if (treprint_highlight != treptr_nil && treprint_highlight == x) \
+    if (NOT_NIL(treprint_highlight) && treprint_highlight == x) \
         printf (txt) 
 
 #define TREPRINT_HLOPEN(x) \
-    if (treprint_highlight != treptr_nil && treprint_highlight == x) \
+    if (NOT_NIL(treprint_highlight) && treprint_highlight == x) \
         printf (" ---> ") 
 #define TREPRINT_HLCLOSE(x) \
-    if (treprint_highlight != treptr_nil && treprint_highlight == x) { \
+    if (NOT_NIL(treprint_highlight) && treprint_highlight == x) { \
         printf (" <--- "); \
 		treprint_highlight = treptr_nil; \
     }
@@ -201,7 +201,7 @@ treprint_cons (treptr * p, size_t * indent, int * postatom, char ** prepend)
         return 2;
 	}
 
-    if (cdr != treptr_nil && TREPTR_IS_ATOM(cdr)) {
+    if (NOT_NIL(cdr) && TREPTR_IS_ATOM(cdr)) {
     	treprint_atom (car, *indent);
    	    printf (" . ");
     	treprint_atom (cdr, *indent);

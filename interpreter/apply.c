@@ -55,7 +55,7 @@ trefuncall_ffi (void * fun, treptr x)
     args = malloc (sizeof (ffi_type *) * len);
     refs = malloc (sizeof (treptr) * len);
     values = malloc (sizeof (void *) * len);
-	for (i = 0; x != treptr_nil; i++, x = CDR(x)) {
+	for (i = 0; NOT_NIL(x); i++, x = CDR(x)) {
 		args[i] = &ffi_type_ulong;
 		refs[i] = CAR(x);
 		values[i] = &refs[i];
@@ -111,7 +111,7 @@ trefuncall_bytecode (treptr func, treptr args, treptr argdef, bool do_eval)
 treptr
 trefuncall_compiled (treptr func, treptr args, bool do_eval)
 {
-    return TREFUNCTION_BYTECODE(func) != treptr_nil ?
+    return NOT_NIL(TREFUNCTION_BYTECODE(func)) ?
                trefuncall_bytecode (func, args, TREARRAY_VALUES(TREFUNCTION_BYTECODE(func))[0], do_eval) :
                trefuncall_c (func, args, do_eval);
 }

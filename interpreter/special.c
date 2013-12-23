@@ -68,7 +68,7 @@ trespecial_setq (treptr list)
         treatom_set_value (car, cdr);
 
 		argnum++;
-    } while (list != treptr_nil);
+    } while (NOT_NIL(list));
 
     return cdr;
 }
@@ -88,7 +88,7 @@ trespecial_function_from_expr (treptr expr)
 
     if (NOT(x))
         return treerror (expr, "Argument list and body missing.");
-    if (TREPTR_IS_ATOM(CAR(x)) && CAR(x) != treptr_nil)
+    if (TREPTR_IS_ATOM(CAR(x)) && NOT_NIL(CAR(x)))
         return treerror (expr, "Argument list expected instead of atom.");
 
     return trefunction_make (TRETYPE_FUNCTION, x);
@@ -144,7 +144,7 @@ treeval_is_return (treptr x)
     		 || CAR(x) != tre_atom_evaluated_return_from
 			 || TREPTR_IS_ATOM(CDR(x))
 			 || TREPTR_IS_ATOM(CDDR(x))
-			 || CDDDR(x) != treptr_nil);
+			 || NOT_NIL(CDDDR(x)));
 }
 
 bool
@@ -170,14 +170,14 @@ trespecial_if (treptr p)
     if (TREPTR_IS_ATOM(p))
         return treerror (p, "Expression expected.");
 
-    while (p != treptr_nil) {
+    while (NOT_NIL(p)) {
         test = CAR(p);
         p = CDR(p);
         if (NOT(p))
             return treeval (test);
 
         body = CAR(p);
-        if (treeval (test) != treptr_nil)
+        if (NOT_NIL(treeval (test)))
             return treeval (body);
 
         p = CDR(p);
@@ -199,7 +199,7 @@ trespecial_progn (treptr list)
 {
     treptr last;
 
-    for (last = treptr_nil; list != treptr_nil; list = CDR(list)) {
+    for (last = treptr_nil; NOT_NIL(list); list = CDR(list)) {
 		last = treeval (CAR(list));
 		TREEVAL_RETURN_JUMP(last);
     }
@@ -221,7 +221,7 @@ trespecial_block (treptr args)
     p = CDR(args);
     RETURN_NIL(p);
 
-    while (p != treptr_nil) {
+    while (NOT_NIL(p)) {
 		last = treeval (CAR(p));
 
 		if (!treeval_is_return (last)) {

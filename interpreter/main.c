@@ -332,7 +332,7 @@ user:
 #ifdef TRE_HAVE_COMPILED_ENV
 	(void) userfun_cInit ();
 #endif
-    if (tre_restart_fun != treptr_nil) {
+    if (NOT_NIL(tre_restart_fun)) {
         treeval (CONS(tre_restart_fun, treptr_nil));
         tre_restart_fun = treptr_nil;
     }

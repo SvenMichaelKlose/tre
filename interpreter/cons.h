@@ -54,10 +54,10 @@ struct tre_list {
 #define _RPLACP(x,v) 	(_CPR(x) = v)
 
 #define DOLIST(iter,lst) \
-    for (iter = lst; iter != treptr_nil; iter = CDR(iter))
+    for (iter = lst; NOT_NIL(iter); iter = CDR(iter))
 
 #define _DOLIST(iter,lst) \
-    for (iter = lst; iter != treptr_nil; iter = _CDR(iter))
+    for (iter = lst; NOT_NIL(iter); iter = _CDR(iter))
 
 #define TRE_MARK(marks, i)     (marks[i >> 3] |= (1 << (i & 7)))
 #define TRE_UNMARK(marks, i)   (marks[i >> 3] &= ~(1 << (i & 7)))

@@ -55,18 +55,18 @@ trebuiltin_apply_args (treptr list)
     /* Handle single argument. */
     if (NOT(CDR(list))) {
         list = CAR(list);
-        if (TREPTR_IS_ATOM(list) && list != treptr_nil)
+        if (TREPTR_IS_ATOM(list) && NOT_NIL(list))
             goto error;
         return list;
     }
 
     /* Handle two or more arguments. */
     DOLIST(i, list) {
-        if (CDDR(i) != treptr_nil)
+        if (NOT_NIL(CDDR(i)))
             continue;
 
         last = CADR(i);
-        if (TREPTR_IS_ATOM(last) && last != treptr_nil)
+        if (TREPTR_IS_ATOM(last) && NOT_NIL(last))
             goto error;
 
         RPLACD(i, last);
@@ -107,7 +107,7 @@ trebuiltin_quit (treptr args)
     treptr  arg;
     int      code = 0;
 
-    if (args != treptr_nil) {
+    if (NOT_NIL(args)) {
         arg = CAR(args);
         if (TREPTR_IS_NUMBER(arg) == FALSE)
 	    	return treerror (arg, "Integer expected.");
@@ -175,17 +175,17 @@ trebuiltin_intern (treptr args)
     name = CAR(args);
     if (TREPTR_IS_CONS(CDR(args))) {
         package = CADR(args);
-        if (CDDR(args) != treptr_nil)
+        if (NOT_NIL(CDDR(args)))
 	    	treerror (args, "One or two arguments required.");
     } else
         package = treptr_nil;
 
 	name = trearg_typed (1, TRETYPE_STRING, name, "INTERN");
-    if (package != treptr_nil)
+    if (NOT_NIL(package))
 		package = trearg_typed (1, TRETYPE_STRING, package, "INTERN");
 
     n = TREPTR_STRINGZ(name);
-    if (package != treptr_nil)
+    if (NOT_NIL(package))
         p = treatom_get (TREPTR_STRINGZ(package), treptr_nil);
     else
         p = treptr_nil;

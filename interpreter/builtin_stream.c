@@ -30,9 +30,9 @@ trestream_builtin_princ (treptr args)
     char * s;
 
     trearg_get2 (&obj, &handle, args);
-    str = (handle != treptr_nil) ?
-          tre_fileio_handles[(int) TRENUMBER_VAL(handle)] :
- 		  stdout;
+    str = (NOT_NIL(handle)) ?
+              tre_fileio_handles[(int) TRENUMBER_VAL(handle)] :
+ 		      stdout;
 
     switch (TREPTR_TYPE(obj)) {
 		case TRETYPE_STRING:
@@ -63,7 +63,7 @@ trestream_builtin_get_handle_index (treptr args)
 {
 	treptr handle = trearg_get (args);
 
-	while (handle != treptr_nil && TREPTR_IS_NUMBER(handle) == FALSE)
+	while (NOT_NIL(handle) && TREPTR_IS_NUMBER(handle) == FALSE)
 		handle = trearg_correct (1, TRETYPE_NUMBER, handle, "stream handle or NIL for stdout");
     return (int) TRENUMBER_VAL(handle);
 }
@@ -73,9 +73,9 @@ trestream_builtin_get_handle (treptr args, FILE * default_stream)
 {
 	treptr handle = trearg_get (args);
 
-    return (handle != treptr_nil) ?
-           tre_fileio_handles[trestream_builtin_get_handle_index (args)] :
- 		   default_stream;
+    return (NOT_NIL(handle)) ?
+               tre_fileio_handles[trestream_builtin_get_handle_index (args)] :
+ 		       default_stream;
 }
 
 treptr

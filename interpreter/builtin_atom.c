@@ -67,10 +67,10 @@ treatom_builtin_not (treptr list)
 
 	do {
 		x = CAR(list);
-    	if (x != treptr_nil)
+    	if (NOT_NIL(x))
             return treptr_nil;
 		list = CDR(list);
-	} while (list != treptr_nil);
+	} while (NOT_NIL(list));
 
 	return treptr_t;
 }
@@ -87,7 +87,7 @@ treatom_builtin_eq (treptr list)
 		x = CAR(list);
     	RETURN_NIL(TREPTR_TRUTH(first == x));
 		list = CDR(list);
-	} while (list != treptr_nil);
+	} while (NOT_NIL(list));
 
 	return treptr_t;
 }
@@ -120,7 +120,7 @@ treatom_builtin_eql (treptr list)
 		x = CAR(list);
 		RETURN_NIL(treatom_eql (first, x));
 		list = CDR(list);
-	} while (list != treptr_nil);
+	} while (NOT_NIL(list));
 
 	return treptr_t;
 }

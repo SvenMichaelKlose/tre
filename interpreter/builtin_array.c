@@ -39,9 +39,7 @@ trearray_get_check_index (treptr indices, treptr sizes)
     tre_size  r = 1;
     tre_size  argnum = 2;
 
-    for (i = indices, s = sizes;
-			 i != treptr_nil && s != treptr_nil;
-             i = CDR(i), s = CDR(s)) {
+    for (i = indices, s = sizes; NOT_NIL(i) && NOT_NIL(s); i = CDR(i), s = CDR(s)) {
         tmp = TRENUMBER_VAL(CAR(i));
 #if 0
         if (tmp < 0)
@@ -59,7 +57,7 @@ trearray_get_check_index (treptr indices, treptr sizes)
         argnum++;
     }
 
-    if (i != treptr_nil || s != treptr_nil)
+    if (NOT_NIL(i) || NOT_NIL(s))
         return (tre_size) -1;
     return ti;
 }

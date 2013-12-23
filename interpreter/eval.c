@@ -39,7 +39,7 @@ treeval_bind (treptr la, treptr lv)
     treptr  sym;
     treptr  old = treptr_nil;
 
-    while (la != treptr_nil && lv != treptr_nil) {
+    while (NOT_NIL(la) && NOT_NIL(lv)) {
         tregc_push (old);
         sym = CAR(la);
         old = CONS(CONS(sym, TRESYMBOL_VALUE(sym)), old);
@@ -50,9 +50,9 @@ treeval_bind (treptr la, treptr lv)
         lv = CDR(lv);
     }
 
-    if (la != treptr_nil)
+    if (NOT_NIL(la))
         treerror (la, "Arguments missing.");
-    if (lv != treptr_nil)
+    if (NOT_NIL(lv))
         treerror (lv, "Too many arguments.");
 
     return old;
@@ -64,7 +64,7 @@ treeval_unbind (treptr old)
     treptr  v;
     treptr  tmp;
 
-    while (old != treptr_nil) {
+    while (NOT_NIL(old)) {
         v = CAR(old);
         TRESYMBOL_VALUE(CAR(v)) = CDR(v);
         TRELIST_FREE_EARLY(v);

@@ -73,7 +73,7 @@ tregc_pop_secondary ()
 void
 tregc_trace_list (treptr expr)
 {
-    while (expr != treptr_nil) {
+    while (NOT_NIL(expr)) {
         _TREGC_ALLOC_CONS(expr);
 		expr = _CDR(expr);
     }

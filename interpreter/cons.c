@@ -89,7 +89,7 @@ trelist_free_toplevel (treptr node)
 {
     treptr cdr;
 
-    while (node != treptr_nil) {
+    while (NOT_NIL(node)) {
         cdr = CDR(node);
         trelist_free (node);
         node = cdr;

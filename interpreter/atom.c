@@ -308,7 +308,7 @@ treatom_fun_body (treptr atomp)
         treerror_internal (atomp, "Symbol expected.");
 
     fun = TRESYMBOL_FUN(atomp);
-    if (fun != treptr_nil)
+    if (NOT_NIL(fun))
         return CDR(TRESYMBOL_VALUE(fun));
 
     return treptr_nil;
