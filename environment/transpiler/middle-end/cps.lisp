@@ -139,18 +139,19 @@
                 `(%= (%slot-value ,name _cps-transformed?) t))
         (list (copy-lambda x))))))
 
+(defun cps-return-value (x)
+  (!? (%=-place x)
+      `(cps-toplevel-return-value ,!)
+      'cps-identity))
+
 (defun cps-subfuns (x)
   (when x
     (+ (?
          (named-lambda? x.)        (cps-fun x.)
          (& *cps-toplevel?*
-            (cps-call? x.))        (cps-make-call x. (!? (%=-place x.)
-                                                         `(cps-toplevel-return-value ,!)
-                                                         'cps-identity))
+            (cps-call? x.))        (cps-make-call x. (cps-return-value x))
          (& *cps-toplevel?*
-            (cps-methodcall? x.))  (cps-make-methodcall x. (!? (%=-place x.)
-                                                               `(cps-toplevel-return-value ,!)
-                                                               'cps-identity))
+            (cps-methodcall? x.))  (cps-make-methodcall x. (cps-return-value x))
          (list x.))
        (cps-subfuns .x))))
 

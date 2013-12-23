@@ -3,8 +3,6 @@
 (defun c-make-decl (name)
   (format nil "treptr ~A;~%" (obfuscated-identifier name)))
 
-;;;;; Make declarations, initialisations and references to literals.
-
 (defmacro c-define-compiled-literal (name (x table) &key maker init-maker)
   `(define-compiled-literal ,name (,x ,table)
 	   :maker      ,maker
