@@ -288,7 +288,7 @@ treatom_body_to_var (treptr body)
             continue;
 
         tmp = CDR(TRESYMBOL_VALUE(a));
-        if (NULLP(tmp) || CAR(tmp) != body)
+        if (NOT(tmp) || CAR(tmp) != body)
 	    	continue;
 
         for (b = 0; b < NUM_ATOMS; b++)
