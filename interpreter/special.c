@@ -46,7 +46,7 @@ trespecial_setq (treptr list)
     treptr  tmp;
 	long     argnum = 1;
 
-    while (list == treptr_nil)
+    while (NOT(list))
 		list = treerror (treptr_invalid, "Arguments expected.");
 
     do {
@@ -54,7 +54,7 @@ trespecial_setq (treptr list)
 
 		argnum++;
         list = CDR(list);
-        if (list == treptr_nil) {
+        if (NOT(list)) {
 	    	cdr = treerror (list, "Even number arguments expected - please provide the missing one.");
 			list = treptr_nil;
 		} else {
@@ -86,7 +86,7 @@ trespecial_function_from_expr (treptr expr)
 {
     treptr x = trespecial_past_lambda (expr);
 
-    if (x == treptr_nil)
+    if (NOT(x))
         return treerror (expr, "Argument list and body missing.");
     if (TREPTR_IS_ATOM(CAR(x)) && CAR(x) != treptr_nil)
         return treerror (expr, "Argument list expected instead of atom.");
@@ -99,9 +99,9 @@ trespecial_function (treptr args)
 {
     treptr arg;
 
-    if (args == treptr_nil)
+    if (NOT(args))
 		return treerror (args, "Function name expected.");
-    if (CDR(args) != treptr_nil)
+    if (NOT_NIL(CDR(args)))
 		return treerror (args, "Single argument expected.");
 
     arg = FIRST(args);
@@ -173,7 +173,7 @@ trespecial_if (treptr p)
     while (p != treptr_nil) {
         test = CAR(p);
         p = CDR(p);
-        if (p == treptr_nil)
+        if (NOT(p))
             return treeval (test);
 
         body = CAR(p);
@@ -189,7 +189,7 @@ trespecial_if (treptr p)
 treptr
 trespecial_quote (treptr list)
 {
-    if (list == treptr_nil)
+    if (NOT(list))
         treerror (treptr_nil, "Argument expected.");
     return CAR(list);
 }
@@ -248,11 +248,11 @@ trespecial_return_from (treptr args)
     treptr evl;
     treptr ret;
 
-    if (args == treptr_nil)
+    if (NOT(args))
 		return treerror (treptr_invalid, "Tag and expression expected.");
-    if (CDR(args) == treptr_nil)
+    if (NOT(CDR(args)))
 		return treerror (treptr_invalid, "Expression missing after tag.");
-    if (CDDR(args) != treptr_nil)
+    if (NOT_NIL(CDDR(args)))
 		return treerror (CDDR(args), "Only two args expected.");
 
     args = trelist_copy (args);
@@ -280,7 +280,7 @@ trespecial_tagbody (treptr body)
     p = body;
     while (1) {
 tag_found:
-		if (p == treptr_nil)
+		if (NOT(p))
 	    	break;
 
 		car = CAR(p);

@@ -21,7 +21,7 @@ treimage_builtin_create (treptr list)
     treptr  file;
     treptr  init_fun = treptr_nil;
 
-    while (list == treptr_nil || TREPTR_IS_ATOM(list))
+    while (NOT(list) || TREPTR_IS_ATOM(list))
         list = treerror (treptr_invalid, "Argument list missing.");
 
     if (TREPTR_IS_CONS(CDR(list)))

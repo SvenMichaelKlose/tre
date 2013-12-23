@@ -35,7 +35,7 @@ tremacro_builtin_macroexpand (treptr list)
     treptr fun = TRESYMBOL_FUN(treptr_macroexpand_hook);
     treptr n   = CONS(trearg_get (list), treptr_nil);
 
-    if (fun == treptr_nil)
+    if (NOT(fun))
         return CAR(n);
 
     do {

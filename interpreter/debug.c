@@ -62,7 +62,7 @@ tredebug_print_function (treptr fspos, treptr expr)
     treptr par;
 
     par = trefunstack_get_named_function (fspos);
-    if (par == treptr_nil)
+    if (NOT(par))
         trewarn (treptr_nil, "couldn't lookup current function");
 
     treprint_highlight = expr;
@@ -190,14 +190,14 @@ tredebug_set_breakpoint (char *name)
     size_t  i;
 
     atom = treatom_seek (name, TRECONTEXT_PACKAGE());
-    if (atom == treptr_nil) {
+    if (NOT(atom)) {
         printf ("Couldn't breakpoint unknown atom %s.\n", name);
         return FALSE;
     }
 
     DOTIMES(i, TREDEBUG_MAX_BREAKPOINTS)
-        if (tredebug_breakpoints[i] == treptr_nil)
-   	    break;
+        if (NOT(tredebug_breakpoints[i]))
+   	        break;
 
     if (i == TREDEBUG_MAX_BREAKPOINTS) {
         printf ("Number of maximum breakpoints exceeded.\n");
@@ -360,7 +360,7 @@ tredebug_parent_funstack (treptr fspos)
     while (fspos != treptr_nil && CAR(fspos) != body)
         fspos = CDR(fspos);
 
-    if (fspos == treptr_nil)
+    if (NOT(fspos))
 		treerror_internal (fspos, "tredebug_parent_funstack() SFY");
 
     return fspos;
@@ -375,7 +375,7 @@ tredebug_lookup_bodyname (treptr body)
     bool           does_repeat;
 
     var = treatom_body_to_var (body);
-    if (var == treptr_nil)
+    if (NOT(var))
 		return;
 
     does_repeat = (former_fun == var);
@@ -400,7 +400,7 @@ tredebug_lookup_bodyname (treptr body)
 bool
 has_funstack (void)
 {
-    if (TRECONTEXT_FUNSTACK() == treptr_nil) {
+    if (NOT(TRECONTEXT_FUNSTACK())) {
         printf ("No function stack.\n");
         return FALSE;
     }
@@ -442,10 +442,9 @@ void
 tredebug_init_mirror_stack (void)
 {
     tredebug_fspos = TRECONTEXT_FUNSTACK();
-    tredebug_mirror_stack =
-        (TRECONTEXT_FUNSTACK() == treptr_nil) ?
-        treptr_nil :
-        CONS(CONS(TRECONTEXT_FUNSTACK(), TRECONTEXT_CURRENT()), treptr_nil);
+    tredebug_mirror_stack = NOT(TRECONTEXT_FUNSTACK()) ?
+                                treptr_nil :
+                                CONS(CONS(TRECONTEXT_FUNSTACK(), TRECONTEXT_CURRENT()), treptr_nil);
 }
 
 void            
@@ -458,7 +457,7 @@ tredebug_up (void)
         return;
 
     tmp = tredebug_parent_funstack (tredebug_fspos);
-    if (tmp == treptr_nil) {
+    if (NOT(tmp)) {
         printf ("You cannot go upwards further. You're already at the current expression.\n");
 		return;
     }
@@ -481,7 +480,7 @@ tredebug_down (void)
     if (!has_funstack ())
         return;
 
-    if (CDR(tredebug_mirror_stack) == treptr_nil) {
+    if (NOT(CDR(tredebug_mirror_stack))) {
         printf ("You cannot go downwards further. You're already at the current expression.\n");
         return;
     }

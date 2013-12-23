@@ -56,7 +56,7 @@ treerror_macroexpansion (void)
 {
     treptr c = TRESYMBOL_VALUE(treptr_current_macro);
 
-    if (c == treptr_nil)
+    if (NOT(c))
         return;
 
     fprintf (stderr, "; During expansion of macro %s:\n", TRESYMBOL_NAME(c));

@@ -57,7 +57,7 @@ double treeval_op_logxor     (double a, double b) { return (size_t) a ^ (size_t)
 treptr
 trenumber_builtin_plus (treptr x)
 {
-    return x == treptr_nil ?
+    return NOT(x) ?
 		       treatom_number_get (0, TRENUMTYPE_FLOAT) :
                treeval_exprop (x, treeval_op_plus, "+");
 }
@@ -83,10 +83,9 @@ trenumber_difference (treptr a, treptr b)
 treptr
 trenumber_builtin_difference (treptr x)
 {
-    if (x == treptr_nil)
+    if (NOT(x))
 		return treerror (treptr_nil, "Argument expected.");
-
-    if (CDR(x) == treptr_nil)
+    if (NOT(CDR(x)))
 		return treatom_number_get (-TRENUMBER_VAL(CAR(x)), TRENUMTYPE_FLOAT);
 
     return treeval_exprop (x, treeval_op_difference, "-");
@@ -101,7 +100,7 @@ trenumber_builtin_character_difference (treptr x)
 treptr
 trenumber_builtin_times (treptr x)
 {
-    return x == treptr_nil ?
+    return NOT(x) ?
 		       treatom_number_get (1, TRENUMTYPE_FLOAT) :
                treeval_exprop (x, treeval_op_times, "*");
 }
@@ -109,10 +108,9 @@ trenumber_builtin_times (treptr x)
 treptr
 trenumber_builtin_quotient (treptr x)
 {
-    if (x == treptr_nil)
+    if (NOT(x))
 		return treerror (treptr_nil, "Argument expected.");
-
-    if (CDR(x) == treptr_nil)
+    if (NOT(CDR(x)))
 		return treatom_number_get (1.0 / TRESYMBOL_VALUE(CAR(x)), TRENUMTYPE_FLOAT);
 
     return treeval_exprop (x, treeval_op_quotient, "/");
@@ -135,7 +133,6 @@ trenumber_mod (treptr x, treptr mod)
     return treatom_number_get (fmod (TRENUMBER_VAL(x), TRENUMBER_VAL(mod)), TRENUMTYPE_FLOAT);
 }
 
-
 treptr
 trenumber_builtin_mod (treptr x)
 {
@@ -148,7 +145,7 @@ trenumber_builtin_mod (treptr x)
 treptr
 trenumber_builtin_logxor (treptr x)
 {
-    return x == treptr_nil ?
+    return NOT(x) ?
 		       treatom_number_get (0, TRENUMTYPE_FLOAT) :
                treeval_exprop (x, treeval_op_logxor, "LOGXOR");
 }
@@ -160,7 +157,6 @@ trenumber_equal (treptr a, treptr b)
                trestring_builtin_compare (CONS(a, CONS(b, treptr_nil))) :
                TREPTR_TRUTH(TRENUMBER_VAL(a) == TRENUMBER_VAL(b));
 }
-
 
 treptr
 trenumber_builtin_number_equal (treptr x)
@@ -176,7 +172,6 @@ trenumber_lessp (treptr a, treptr b)
     return TREPTR_TRUTH(TRENUMBER_VAL(a) < TRENUMBER_VAL(b));
 }
 
-
 treptr
 trenumber_builtin_lessp (treptr x)
 {
@@ -190,7 +185,6 @@ trenumber_greaterp (treptr a, treptr b)
 {
     return TREPTR_TRUTH(TRENUMBER_VAL(a) > TRENUMBER_VAL(b));
 }
-
 
 treptr
 trenumber_builtin_greaterp (treptr x)

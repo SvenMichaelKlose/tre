@@ -141,7 +141,7 @@ trelist_nth (treptr l, tre_size idx)
 {
 	l = trelist_nthcdr (l, idx);
 
-    if (l == treptr_nil)
+    if (NOT(l))
 		return l;
     return CAR(l);
 }
@@ -178,10 +178,10 @@ trelist_append (treptr *lst, treptr lst2)
 {
     treptr tmp;
 
-    if (lst2 == treptr_nil)
+    if (NOT(lst2))
 		return;
 
-    if (*lst == treptr_nil) {
+    if (NOT(*lst)) {
         *lst = lst2;
 		return;
     }

@@ -23,7 +23,7 @@ tre_enqueue (treptr queue, treptr value)
     treptr new;
 
     treptr last = CAR(queue);
-    if (last == treptr_nil)
+    if (NOT(last))
         last = queue;
 
     tregc_push (value);
@@ -44,13 +44,13 @@ tre_queue_list (treptr queue)
 bool
 tre_queue_is_empty (treptr queue)
 {
-   return CAR(queue) == treptr_nil;
+   return NOT(CAR(queue));
 }
 
 void
 tre_queue_pop (treptr queue)
 {
     RPLACD(queue, CDR(CDR(queue)));
-    if (CDR(queue) == treptr_nil)
+    if (NOT(CDR(queue)))
         RPLACA(queue, treptr_nil);
 }

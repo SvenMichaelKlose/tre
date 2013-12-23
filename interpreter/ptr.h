@@ -42,6 +42,7 @@ typedef unsigned int tre_size;
 #define TREPTR_TRUTH(test)  ((test) ? treptr_t : treptr_nil)
 
 #define NOT(x)              (x == treptr_nil)
+#define NOT_NIL(x)          (x != treptr_nil)
 
 extern const treptr treptr_nil;
 extern const treptr treptr_t;

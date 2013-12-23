@@ -97,7 +97,7 @@ tresequence_builtin_length (treptr args)
     treptr seq = trearg_get (args);
     struct tre_sequence_type *t;
 
-    if (seq == treptr_nil)
+    if (NOT(seq))
 		return treatom_number_get (0, TRENUMTYPE_INTEGER);
 
     t = tresequence_get_type (seq);

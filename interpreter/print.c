@@ -185,7 +185,7 @@ treprint_cons (treptr * p, size_t * indent, int * postatom, char ** prepend)
     treptr    car;
     treptr    cdr;
 
-	if (*p == treptr_nil)
+	if (NOT(*p))
 		return 0;
 
     car = _CAR(*p);

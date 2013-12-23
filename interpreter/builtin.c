@@ -53,7 +53,7 @@ trebuiltin_apply_args (treptr list)
     RETURN_NIL(list); /* No arguments. */
 
     /* Handle single argument. */
-    if (CDR(list) == treptr_nil) {
+    if (NOT(CDR(list))) {
         list = CAR(list);
         if (TREPTR_IS_ATOM(list) && list != treptr_nil)
             goto error;
@@ -82,7 +82,7 @@ error:
 treptr
 trebuiltin_apply (treptr list)
 {
-    if (list == treptr_nil)
+    if (NOT(list))
         return treerror (list, "Arguments expected.");
     return trefuncall (CAR(list), trebuiltin_apply_args (trelist_copy (CDR(list))));
 }
@@ -90,7 +90,7 @@ trebuiltin_apply (treptr list)
 treptr
 trebuiltin_funcall (treptr list)
 {
-    if (list == treptr_nil)
+    if (NOT(list))
         return treerror (list, "Arguments expected.");
     return trefuncall (CAR(list), CDR(list));
 }

@@ -68,7 +68,6 @@ treatom_init_atom_table (void)
 	  tre_atom_types[x] = TRETYPE_UNUSED;
 }
 
-
 void
 treatom_init_truth (void)
 {
@@ -137,7 +136,7 @@ treatom_set_value (treptr atom, treptr value)
 treptr
 treatom_register_compiled_function (treptr sym, void * fun, void * expander_fun)
 {
-    if (TRESYMBOL_FUN(sym) == treptr_nil)
+    if (NOT(TRESYMBOL_FUN(sym)))
         TRESYMBOL_FUN(sym) = trefunction_make (TRETYPE_FUNCTION, treptr_nil);
 
     TREFUNCTION_NATIVE(TRESYMBOL_FUN(sym)) = fun;
@@ -183,7 +182,6 @@ treatom_alloc (int type)
 
 	return TRETYPE_INDEX_TO_PTR(type, atomi);
 }
-
 
 treptr
 treatom_alloc_symbol (char * name, treptr package, treptr value)

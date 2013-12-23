@@ -72,7 +72,7 @@ trestring_builtin_list_string (treptr list)
 
 	i = 0;
     DOLIST(p, arg) {
-		if (CAR(p) == treptr_nil)
+		if (NOT(CAR(p)))
 			continue;
 		if (TREPTR_IS_NUMBER(CAR(p)) == FALSE)
 			treerror_norecover (CAR(p), "Number expected.");
@@ -104,7 +104,7 @@ trestring_builtin_compare (treptr list)
 		car = CAR(p);
 		if (TREPTR_IS_STRING(car) == FALSE)
 			treerror_norecover (list, "String expected.");
-		if (car == treptr_nil)
+		if (NOT(car))
 			continue;
 		y = TREPTR_STRINGZ(car);
 		if (len != strlen (y))
@@ -129,7 +129,7 @@ trestring_builtin_concat (treptr list)
 	int	      argnum = 1;
 
     DOLIST(p, list) {
-		if (CAR(p) == treptr_nil)
+		if (NOT(CAR(p)))
 			continue;
         car = trearg_typed (argnum++, TRETYPE_STRING, CAR(p), "STRING-CONCAT");
 	   	len += strlen (TREPTR_STRINGZ(car));
@@ -145,7 +145,7 @@ trestring_builtin_concat (treptr list)
     newp = TRESTRING_DATA(news);
 
     DOLIST(p, list) {
-		if (CAR(p) == treptr_nil)
+		if (NOT(CAR(p)))
 			continue;
 		newp = stpcpy (newp, TREPTR_STRINGZ(CAR(p)));
 	}

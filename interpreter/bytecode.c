@@ -92,7 +92,7 @@ trecode_get (treptr ** p)
 
     v = *x++;
 
-    if (v == treptr_nil) {
+    if (NOT(v)) {
         /* Return NIL. */
     } else if (TREPTR_IS_NUMBER(v)) {
         v = trestack_ptr[TRENUMBER_INT(v)];
@@ -184,13 +184,13 @@ trecode_exec (treptr fun)
         if (v == treptr_jmp) {
             x++;
             dest = *x++;
-            if (dest == treptr_nil)
+            if (NOT(dest))
                 break;
             x = &code[TRENUMBER_INT(dest)];
         } else if (v == treptr_cond) {
             x++;
             dest = *x++;
-            if (trecode_get (&x) == treptr_nil)
+            if (NOT(trecode_get (&x)))
                 x = &code[TRENUMBER_INT(dest)];
         } else if (v == treptr_set_vec) {
             x++;
@@ -219,7 +219,7 @@ trecode_call (treptr fun, treptr args)
     if (!(TREPTR_IS_FUNCTION(fun) || TREPTR_IS_MACRO(fun)))
         treerror_norecover (fun, "Function expected.");
 
-    if (TREFUNCTION_BYTECODE(fun) == treptr_nil)
+    if (NOT(TREFUNCTION_BYTECODE(fun)))
         treerror_norecover (fun, "Function has no bytecode.");
 #endif
 

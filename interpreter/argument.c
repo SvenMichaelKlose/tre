@@ -31,7 +31,7 @@ treptr tre_atom_key;
 treptr
 trearg_get (treptr list)
 {
-   	if (list == treptr_nil)
+   	if (NOT(list))
        	return treerror (treptr_invalid, "Argument expected.");
 
    	if (TREPTR_IS_ATOM(list))
@@ -52,7 +52,7 @@ trearg_get2 (treptr *a, treptr *b, treptr list)
     *b = treptr_nil;
 
 	do {
-   		while (list == treptr_nil)
+   		while (NOT(list))
         	list = treerror (treptr_invalid, "Two arguments expected.");
 
    		if (TREPTR_IS_CONS(list))
@@ -61,8 +61,8 @@ trearg_get2 (treptr *a, treptr *b, treptr list)
        	list = treerror (list, "Atom instead of list - need two arguments.");
 	} while (TRUE);
 
-    if (CDR(list) == treptr_nil) {
-    	while (second == treptr_nil)
+    if (NOT(CDR(list))) {
+    	while (NOT(second))
         	second = treerror (treptr_invalid, "Second argument missing.");
 	} else {
 		second = CADR(list);
@@ -136,7 +136,7 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
     tregc_push (args);
 
     while (1) {
-        if (argdef == treptr_nil)
+        if (NOT(argdef))
 	    	break;
 
         while (TREPTR_IS_ATOM(argdef)) {
@@ -183,8 +183,8 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
 		if (var == tre_atom_optional) {
             argdef = CDR(argdef);
 	    	while (1) {
-                if (argdef == treptr_nil) {
-		    		if (args != treptr_nil) {
+                if (NOT(argdef)) {
+		    		if (NOT_NIL(args)) {
                         treprint (original_argdef);
                         treprint (original_args);
 						trewarn (args, "stale &OPTIONAL keyword in argument definition");
@@ -222,7 +222,7 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
         /* Process &KEY argument. */
 		if (var == tre_atom_key) {
             argdef = CDR(argdef);
-            if (argdef == treptr_nil && args != treptr_nil) {
+            if (NOT(argdef) && NOT_NIL(args)) {
                 treprint (original_argdef);
                 treprint (original_args);
 				trewarn (args, "stale &KEY keyword in argument definition");
@@ -242,7 +242,7 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
 		    		svals = trelist_nth (args, kpos + 1);
 
 		    		/* Remove keyword and value from argument list. */
-        	    	while (CDR(args) == treptr_nil) {
+        	    	while (NOT(CDR(args))) {
                         treprint (original_argdef);
                         treprint (original_args);
 	    	        	RPLACD(args, CONS(treerror (args, "Missing argument after keyword."), treptr_nil));
@@ -266,7 +266,7 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
 	    	break;
         }
 
-        if (args == treptr_nil) {
+        if (NOT(args)) {
             treprint (original_argdef);
             treprint (original_args);
 	    	val = treerror (argdef, "Missing argument.");

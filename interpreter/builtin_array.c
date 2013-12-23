@@ -19,7 +19,7 @@ trearray_builtin_make (treptr sizes)
 {
     treptr  i;
 
-    if (sizes == treptr_nil)
+    if (NOT(sizes))
 		return treerror (sizes, "Size(s) expexted.");
 
     DOLIST(i, sizes)
@@ -71,7 +71,7 @@ trearray_get_elt (treptr array, treptr indexes)
     treptr *  elts;
     tre_size  idx;
 
-    if (indexes == treptr_nil)
+    if (NOT(indexes))
 		treerror (indexes, "Index(es) expexted.");
 
     if (trelist_check_type (indexes, TRETYPE_NUMBER) == FALSE)
@@ -103,7 +103,7 @@ trearray_aref (treptr array, treptr indexes)
 {
     treptr *  elts;
 
-    if (array == treptr_nil)
+    if (NOT(array))
 		treerror (array, "Array expexted.");
 
     elts = trearray_get_elt (array, indexes);

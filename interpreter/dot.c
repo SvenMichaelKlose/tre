@@ -23,7 +23,7 @@ treptr treptr_dotexpand_hook;
 treptr
 tredot_expand (treptr list)
 {
-    return TRESYMBOL_FUN(treptr_dotexpand_hook) == treptr_nil ?
+    return NOT(TRESYMBOL_FUN(treptr_dotexpand_hook)) ?
                list :
                trefuncall (TRESYMBOL_FUN(treptr_dotexpand_hook), CONS(list, treptr_nil));
 }
