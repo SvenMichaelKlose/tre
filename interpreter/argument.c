@@ -295,9 +295,6 @@ next:
     *rvars = CDR(vars);
     *rvals = CDR(vals);
 
-    TRELIST_FREE_EARLY(vars);
-    TRELIST_FREE_EARLY(vals);
-
     tregc_pop ();
     tregc_pop ();
     tregc_pop ();

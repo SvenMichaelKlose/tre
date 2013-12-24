@@ -62,15 +62,11 @@ void
 treeval_unbind (treptr old)
 {
     treptr  v;
-    treptr  tmp;
 
     while (NOT_NIL(old)) {
         v = CAR(old);
         TRESYMBOL_VALUE(CAR(v)) = CDR(v);
-        TRELIST_FREE_EARLY(v);
-        tmp = CDR(old);
-        TRELIST_FREE_EARLY(old);
-        old = tmp;
+        old = CDR(old);
     }
 }
 
@@ -103,8 +99,6 @@ treeval_funcall (treptr func, treptr args, bool do_argeval)
 
     tregc_pop ();
     tregc_pop ();
-    TRELIST_FREE_TOPLEVEL_EARLY(expvals);
-    TRELIST_FREE_TOPLEVEL_EARLY(expforms);
 
     return ret;
 }
@@ -121,7 +115,6 @@ treeval_xlat_function (treevalfunc_t *xlat, treptr func, treptr args, bool do_ar
     ret = xlat[(size_t) TREATOM(func)] (evaldargs);
 
     tregc_pop ();
-    TRELIST_FREE_TOPLEVEL_EARLY(evaldargs);
 
     return ret;
 }
@@ -135,9 +128,6 @@ treeval_expr (treptr x)
 
     fun = CAR(x);
     args = CDR(x);
-
-    tredebug_chk_breakpoints (x);
-	TREDEBUG_STEP();
 
     fun = TREPTR_TYPE(fun) == TRETYPE_SYMBOL ? TRESYMBOL_FUN(fun) : treeval (fun);
 
@@ -153,7 +143,6 @@ treeval_expr (treptr x)
         case TRETYPE_SPECIAL:     v = trespecial (fun, args); break;
         default:                  treerror_norecover (CAR(x), "Function expected instead of %s.", treerror_typename (TREPTR_TYPE(CAR(x))));
     }
-    tredebug_chk_next ();
     tregc_pop ();
 
     return v;

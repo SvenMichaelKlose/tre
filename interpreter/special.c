@@ -233,8 +233,6 @@ trespecial_block (treptr args)
 	    	return last;
 
         p = CADDR(last);
-		TRELIST_FREE_EARLY(CDR(last));
-		TRELIST_FREE_EARLY(last);
 		return p;
     }
 
@@ -299,7 +297,6 @@ tag_found:
 				    continue;
 
 	    	    p = CDR(p);
-	    	    TRELIST_FREE_EARLY(res);
 	    	    goto tag_found;
 		    }
 		    return res;

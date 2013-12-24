@@ -126,7 +126,6 @@ trecode_get (treptr ** p)
                 tregc_push_secondary (args);
                 v = treeval_xlat_function (treeval_xlat_builtin, fun, args, FALSE);
                 tregc_pop_secondary ();
-                TRELIST_FREE_TOPLEVEL_EARLY(args);
             }
         } else if (NOT_NIL(TREFUNCTION_BYTECODE(fun))) {
             tregc_push_secondary (fun);

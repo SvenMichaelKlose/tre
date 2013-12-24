@@ -25,15 +25,10 @@ trethread_make ()
 void
 trethread_push_call (treptr list)
 {
-    TRECONTEXT_FUNSTACK() = CONS(list, TRECONTEXT_FUNSTACK());
+    (void) list;
 }
 
 void
 trethread_pop_call ()
 {
-    treptr tmp;
-
-    tmp = TRECONTEXT_FUNSTACK();
-    TRECONTEXT_FUNSTACK() = CDR(TRECONTEXT_FUNSTACK());
-    TRELIST_FREE_EARLY(tmp);
 }

@@ -63,14 +63,6 @@ struct tre_list {
 #define TRE_UNMARK(marks, i)   (marks[i >> 3] &= ~(1 << (i & 7)))
 #define TRE_GETMARK(marks, i)  (marks[i >> 3] & (1 << (i & 7)))
 
-#ifndef TRE_NO_MANUAL_FREE
-#define TRELIST_FREE_EARLY(l)		trelist_free (l)
-#define TRELIST_FREE_TOPLEVEL_EARLY(l)	trelist_free_toplevel (l)
-#else
-#define TRELIST_FREE_EARLY(l)
-#define TRELIST_FREE_TOPLEVEL_EARLY(l)
-#endif
-
 extern void trecons_init (void);
 
 extern struct tre_list tre_lists[NUM_LISTNODES];
