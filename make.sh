@@ -245,6 +245,7 @@ all)
     echo "Making all..."
 	./make.sh boot $ARGS || exit 1
 	./make.sh install || exit 1
+	./make.sh bytecode-image || exit 1
     tre makefiles/filelist.lisp || exit 1
     tre makefiles/test-php.lisp || exit 1
     tre makefiles/test-js.lisp || exit 1
