@@ -27,7 +27,6 @@ typedef int bool;
 #define TRE_VERBOSE_EVAL	      /* Print what is evaluated. */
 #define TRE_VERBOSE_READ          /* Print READ expressions in read-eval loop. */
 #define TRE_PRINT_MACROEXPANSIONS /* Print macroexpansions in read-eval loop. */
-#define TRE_NO_MANUAL_FREE	      /* Don't free internal garbage manually. */
 #define TRE_EXIT_ON_STDIO_SIGINT  /* Exit on SIGINT in stdio prompt. */
 #endif
 
@@ -54,7 +53,7 @@ typedef int bool;
 #endif
 
 #ifndef NUM_ATOMS
-#define NUM_ATOMS	                (NUM_LISTNODES / 8)
+#define NUM_ATOMS	                (NUM_LISTNODES / 16)
 #endif
 
 #define TRESTACK_SIZE	            (512 * KILO)
