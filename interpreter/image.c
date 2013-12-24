@@ -306,7 +306,7 @@ treimage_read_conses (FILE * f)
     treimage_read (f, tregc_listmarks, sizeof tregc_listmarks);
 
     trelist_num_used = 0;
-    tre_lists_free = treptr_nil;
+    tre_lists_free = 0;
     DOTIMES(i, sizeof tregc_listmarks) {
         c = 1;
         DOTIMES(j, 8) {

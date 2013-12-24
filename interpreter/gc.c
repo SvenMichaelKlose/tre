@@ -115,7 +115,7 @@ void
 tregc_trace_array (treptr arr)
 {
     tre_size    size = TREARRAY_SIZE(arr);
-    treptr *  i = TREARRAY_VALUES(arr);
+    treptr *    i = TREARRAY_VALUES(arr);
     tre_size    counter = size;
 
     tregc_trace_tree (TREARRAY_SIZES(arr));
@@ -188,7 +188,6 @@ tregc_mark (bool do_mark_only)
 
     tregc_mark_stack ();
     tregc_trace_list (TRECONTEXT_FUNSTACK());
-    tregc_trace_list (tre_lists_free);
 }
  
 void
@@ -203,9 +202,8 @@ tregc_sweep (void)
     DOTIMES(i, sizeof (tregc_atommarks)) {
 		c = 1;
 		DOTIMES(j, 8) {
-	    	if (tregc_atommarks[i] & c)
-                if (tre_atom_types[idx] != TRETYPE_UNUSED)
-	           	    treatom_remove (TREINDEX_TO_PTR(idx));
+	    	if ((tregc_atommarks[i] & c) && tre_atom_types[idx] != TRETYPE_UNUSED)
+                treatom_remove (TREINDEX_TO_PTR(idx));
 
 	    	c <<= 1;
             idx++;

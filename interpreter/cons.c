@@ -68,6 +68,7 @@ trelist_free (treptr node)
 {
     _CDR(node) = tre_lists_free;
     tre_lists_free = node;
+
 #ifdef TRE_VERBOSE_GC
     trelist_num_used--;
 #endif
@@ -115,7 +116,7 @@ trelist_get (treptr car, treptr cdr)
 {
     treptr cons;
 
-    if (NOT(tre_lists_free))
+    if (!tre_lists_free)
 	    trelist_gc (car, cdr);
 
     cons = tre_lists_free;
@@ -139,7 +140,7 @@ trecons_init ()
 
     for (i = FIRST_LISTNODE; i < LAST_LISTNODE; i++)
 		_CDR(i) = (treptr) i + 1;
-    _CDR(LAST_LISTNODE) = treptr_nil;
+    _CDR(LAST_LISTNODE) = 0;
 
     tre_lists_free = FIRST_LISTNODE;
     tre_default_listprop = treptr_nil;
