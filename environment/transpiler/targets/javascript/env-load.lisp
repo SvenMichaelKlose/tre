@@ -32,7 +32,8 @@
 
 (defvar *js-base2*
 	,(list 'quote (+ (js-load-base "environment/transpiler/environment/"
-		                           "not.lisp")
+		                           "not.lisp"
+                                   "cps-exceptions.lisp")
 		             (js-load-base *js-env-path*
 			                       "macro.lisp"
 			                       "array.lisp"

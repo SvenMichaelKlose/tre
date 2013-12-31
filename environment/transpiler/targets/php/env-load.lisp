@@ -30,7 +30,8 @@
 			             "atom.lisp")
 		             (php-load-base "environment/transpiler/environment/"
                          "not.lisp"
-			             "atom.lisp")
+			             "atom.lisp"
+                         "cps-exceptions.lisp")
 		             (php-load-base *php-env-path*
 			             "character.lisp"
 			             "eq.lisp"
