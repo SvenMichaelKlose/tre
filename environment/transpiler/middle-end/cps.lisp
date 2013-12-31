@@ -2,26 +2,50 @@
 
 (defvar *cps-toplevel?* nil)
 
+(defun call-from-argument-expander? (x)
+  (& (%%native? x)
+     (alet (real-function-name .x.)
+       (| (transpiler-native-cps-function? *transpiler* !)
+          (not (transpiler-cps-exception? *transpiler* (real-function-name !)))))))
+
+(defun call-to-non-cps-from-expander? (x)
+  (& (%=-funcall? x)
+     (alet (car (%=-value x))
+       (& (%%native? !)
+          (transpiler-cps-exception? *transpiler* (real-function-name .!.))))))
+
+(defun call-to-non-cps-from-expander (x)
+  (with-gensym g
+    (funinfo-var-add *funinfo* g)
+    `((%= ,g ,(%=-value x))
+      (%= nil (~%cont ,g)))))
+
+(defun call-of-global-cps-function? (name)
+  (& (not (transpiler-cps-exception? *transpiler* name))
+     (!? (get-funinfo name)
+         (funinfo-cps? !))))
+
+(defun call-of-local-function? (name)
+  (funinfo-find *funinfo* name))
+
 (defun cps-call? (x)
-  (with (call-from-argument-expander?
-             [& (%%native? _)
-                (not (transpiler-cps-exception? *transpiler* (real-function-name ._.)))]
-         call-of-local-function?
-             [funinfo-find *funinfo* _]
-         call-of-global-cps-function?
-             [& (not (transpiler-cps-exception? *transpiler* _))
-                (!? (get-funinfo _)
-                    (funinfo-cps? !))])
-    (& (%=-funcall? x)
-       (alet (car (%=-value x))
-         (| (transpiler-native-cps-function? *transpiler* !)
-            (call-from-argument-expander? !)
-            (call-of-local-function? !)
-            (call-of-global-cps-function? !))))))
+  (& (%=-funcall? x)
+     (alet (car (%=-value x))
+       (| (transpiler-native-cps-function? *transpiler* !)
+          (call-from-argument-expander? !)
+          (call-of-local-function? !)
+          (call-of-global-cps-function? !)))))
 
 (defun cps-methodcall? (x)
   (& (%=-funcall? x)
      (%slot-value? (car (%=-value x)))))
+
+(defun native-cps-funcall? (x)
+  (& (%=-funcall? x)
+     (transpiler-native-cps-function? *transpiler* (alet (car (%=-value x))
+                                                     (? (%%native? !)
+                                                        (real-function-name .!.)
+                                                        !)))))
 
 (defun cps-splitpoint? (x)
   (| (number? x)
@@ -44,12 +68,6 @@
           (& (number? !)
              (enqueue q (. ! (| (caadr i)
                                 '~%cont))))))))
-
-;(defun cps-tag-names (x)
-;  (mapcan [!? (car (last ._))
-;              (& (number? !)
-;                 (list (. ! _.)))]
-;          x))
 
 (defun cps-make-call (x continuer)
   (with (val               (%=-value x)
@@ -94,12 +112,12 @@
                            ,@(butlast _)
                            ,@(alet (car (last _))
                                (?
+                                 (call-to-non-cps-from-expander? !) (call-to-non-cps-from-expander !)
                                  (cps-call? !)        (make-call !)
                                  (cps-methodcall? !)  (make-methodcall !)
                                  (%%go? !)            (make-go !)
                                  (%%go-cond? !)       (make-cond !)
-                                 (+ (& !
-                                       (not (number? !))
+                                 (+ (& (not (number? !))
                                        (list !))
                                     (?
                                       .names                `((%= nil (,.names.)))
@@ -119,42 +137,49 @@
      (butlast x)
      x))
 
+(defun cps-body-0 (x)
+  (mapcan [? (named-lambda? _)
+             (cps-fun _)
+             (list _)]
+          x))
+
 (defun cps-body (x)
   (!? (cps-split-body x)
       (+ (cps-make-funs :names     (carlist !)
                         :tag-names (cps-tag-names !)
-                        :bodies    (filter #'cps-subfuns (cdrlist !)))
+                        :bodies    (filter #'cps-body-0 (cdrlist !)))
          `((%= nil (,!..))))
       x))
 
 (defun cps-fun (x)
-  (with-temporaries (*funinfo*        (get-lambda-funinfo x)
-                     *cps-toplevel?*  nil)
+  (with-temporary *funinfo* (get-lambda-funinfo x)
     (with-lambda name args body x
       (?
-        (transpiler-native-cps-function? *transpiler* (funinfo-name *funinfo*))
+        (eq 'apply (funinfo-name *funinfo*))
           (list (copy-lambda x :args (. '~%cont args)))
+        (transpiler-native-cps-function? *transpiler* (funinfo-name *funinfo*))
+          (list (copy-lambda x :args (. '~%cont args) :body (cps-passthrough body)))
         (funinfo-cps? *funinfo*)
-          (list (copy-lambda x :args (. '~%cont args) :body (cps-body body))
-                `(%= (%slot-value ,name _cps-transformed?) t))
-        (list (copy-lambda x))))))
+          (with-temporary *cps-toplevel?* nil
+            (list (copy-lambda x :args (. '~%cont args) :body (cps-body body))
+                  `(%= (%slot-value ,name _cps-transformed?) t)))
+        (list (copy-lambda x :body (cps-passthrough body)))))))
 
 (defun cps-return-value (x)
   (!? (%=-place x)
       `(cps-toplevel-return-value ,!)
       'cps-identity))
 
-(defun cps-subfuns (x)
-  (when x
-    (+ (?
-         (named-lambda? x.)        (cps-fun x.)
-         (& *cps-toplevel?*
-            (cps-call? x.))        (cps-make-call x. (cps-return-value x))
-         (& *cps-toplevel?*
-            (cps-methodcall? x.))  (cps-make-methodcall x. (cps-return-value x))
-         (list x.))
-       (cps-subfuns .x))))
+(defun cps-passthrough (x)
+  (with-temporary *cps-toplevel?* t
+    (mapcan [?
+              (native-cps-funcall? _)  (let v (%=-value _)
+                                         `((%= ,(%=-place _) (,v. ,(cps-return-value _) ,@.v))))
+              (cps-call? _)            (cps-make-call _ (cps-return-value _))
+              (cps-methodcall? _)      (cps-make-methodcall _ (cps-return-value _))
+              (named-lambda? _)        (cps-fun _)
+              (list _)]
+            x)))
 
 (defun cps (x)
-  (with-temporary *cps-toplevel?* t
-    (cps-subfuns x)))
+  (cps-passthrough x))
