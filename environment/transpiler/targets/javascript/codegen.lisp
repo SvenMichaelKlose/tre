@@ -72,7 +72,8 @@
               translated-name (? (transpiler-defined-function *transpiler* name)
                                  (compiled-function-name-string name)
                                  name))
-         `(,(funinfo-comment (get-funinfo name))
+         `(,*newline*
+           ,(funinfo-comment (get-funinfo name))
            ,translated-name "=" "function " ,@(js-argument-list 'codegen-function-macro (lambda-args !)) ,*newline*
 	       "{" ,*newline*
 		       ,@(lambda-body !)
