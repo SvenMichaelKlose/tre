@@ -30,7 +30,10 @@
 
 (defun cps-call? (x)
   (& (%=-funcall? x)
-     (alet (car (%=-value x))
+     (alet (alet (%=-value x)
+             (? (%new? !)
+                .!.
+                !.))
        (| (transpiler-native-cps-function? *transpiler* !)
           (call-from-argument-expander? !)
           (call-of-local-function? !)
@@ -151,6 +154,17 @@
          `((%= nil (,!..))))
       x))
 
+(defun cps-add-this (x)
+  (funinfo-var-add *funinfo* '~%this)
+  (. '(%= ~%this this)
+     x))
+
+(defun cps-body-with-this (x)
+  (? (& (funinfo-toplevel? *funinfo*)
+        (find-tree '~%this x))
+     (cps-add-this x)
+     x))
+
 (defun cps-fun (x)
   (with-temporary *funinfo* (get-lambda-funinfo x)
     (with-lambda name args body x
@@ -161,9 +175,10 @@
           (list (copy-lambda x :args (. '~%cont args) :body (cps-passthrough body)))
         (funinfo-cps? *funinfo*)
           (with-temporary *cps-toplevel?* nil
-            (list (copy-lambda x :args (. '~%cont args) :body (cps-body body))
+            (list (copy-lambda x :args (. '~%cont args)
+                                 :body (cps-body-with-this (cps-body body)))
                   `(%= (%slot-value ,name _cps-transformed?) t)))
-        (list (copy-lambda x :body (cps-passthrough body)))))))
+        (list (copy-lambda x :body (cps-passthrough (cps-body-with-this body))))))))
 
 (defun cps-return-value (x)
   (!? (%=-place x)
