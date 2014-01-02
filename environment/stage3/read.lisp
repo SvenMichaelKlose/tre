@@ -107,6 +107,25 @@
 			        -1	'eof)))
 		     pkg sym)))
 
+(defun read-slot-value (x)
+  (? x
+     (? .x
+        `(slot-value ,(read-slot-value (butlast x)) ',(make-symbol (car (last x))))
+        (? (string? x.)
+           (make-symbol x.)
+           x.))))
+
+(defun read-symbol-or-slot-value (sym pkg)
+  (alet (filter [& _ (list-string _)]
+                (split #\. sym))
+    (? (& .! !. (car (last !)))
+       (read-slot-value !)
+       (make-symbol (list-string sym)
+                    (?
+                      (not pkg)   nil
+                      (eq t pkg)  *keyword-package*
+                      (make-package (list-string pkg)))))))
+
 (defun read-atom (str token pkg sym)
   (case token
     'dblquote  (read-string str)
@@ -115,11 +134,7 @@
                  (read-number s))
     'hexnum    (read-hex str)
 	'function  `(function ,(read-expr str))
-    'symbol    (make-symbol (list-string sym)
-						    (?
-							  (not pkg)	    nil
-							  (eq t pkg)	*keyword-package*
-							  (make-package (list-string pkg))))
+    'symbol    (read-symbol-or-slot-value sym pkg)
 	(error "Syntax error: token ~A, sym ~A." token sym)))
 
 (defun read-quote (str token)
@@ -155,17 +170,19 @@
 (defun read-cons (str)
   (with ((token pkg sym) (read-token str))
     (? (eq token 'dot)
-       (cons 'cons (read-cons str))
+       (. 'cons (read-cons str))
 	   (read-list str token pkg sym))))
 
 (defun read-cons-slot (str)
   (read-set-listprop str)
   (with-temporary *default-listprop* *default-listprop*
-    (let l (read-cons str)
+    (alet (read-cons str)
       (? (== #\. (peek-char str))
-         (& (read-char str)
-            `(slot-value ,l ',(read-expr str)))
-	     l))))
+         (progn
+           (read-char str)
+           (with ((token pkg sym) (read-token str))
+             (read-slot-value (list ! (list-string sym)))))
+         !))))
 
 (defun read-expr (str)
   (with ((token pkg sym) (read-token str))
