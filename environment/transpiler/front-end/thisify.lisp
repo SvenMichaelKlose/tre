@@ -38,6 +38,7 @@
 (defun thisify (classes x)
   (?
 	 (atom x)        x
-	 (%thisify? x.)  (+ (thisify-list classes (cddr x.) (cadr x.))
-			            (thisify classes .x))
+	 (%thisify? x.)  `((%%block
+                         ,@(+ (thisify-list classes (cddr x.) (cadr x.))
+			                  (thisify classes .x))))
      (listprop-cons x (thisify classes x.) (thisify classes .x))))
