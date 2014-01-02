@@ -11,7 +11,7 @@
 (defun js-gen-constructor (class-name bases args body)
   (let magic (list 'quote ($ '__ class-name))
     `(progn
-       (declare-cps-exception ,class-name)
+;       (declare-cps-exception ,class-name)
        (defun ,class-name ,args
          ,@(js-gen-inherited-constructor-calls bases)
          (%thisify ,class-name ,@body))
