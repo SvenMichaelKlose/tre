@@ -49,7 +49,7 @@ typedef int bool;
 #define TREDEBUG_MAX_BREAKPOINTS	16
 
 #ifndef NUM_LISTNODES
-#define NUM_LISTNODES	            (128 * MEGA)
+#define NUM_LISTNODES	            (64 * MEGA)
 #endif
 
 #ifndef NUM_ATOMS
