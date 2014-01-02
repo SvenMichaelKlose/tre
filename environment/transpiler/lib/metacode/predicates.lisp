@@ -48,10 +48,6 @@
 	   .v
 	   (list v))))
 
-(defun %=-lambda? (x)
-  (& (%=? x)
-     (lambda? (%=-value x))))
-
 (defun %=-funcall? (x)
   (? (%=? x)
      (cons? (%=-value x))))

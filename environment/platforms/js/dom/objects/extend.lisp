@@ -1,10 +1,13 @@
 ;;;;; tré – Copyright (c) 2008,2009,2011–2013 Sven Michael Klose <pixel@copei.de>
 
 (defun dom-extend (x)
-   (?
-     (not x)      nil
-     (element? x) (hash-merge x caroshi-element.prototype)
-     (text? x)    (& *extended-textnodes?* (hash-merge x *text-node.prototype))))
+  (?
+    (not x)       nil
+    (element? x)  (progn
+                    (alert x.tag-name)
+                    (hash-merge x caroshi-element.prototype))
+    (text? x)     (& *extended-textnodes?*
+                     (hash-merge x *text-node.prototype))))
 
 (defun dom-tree-extend (root)
   (when root
