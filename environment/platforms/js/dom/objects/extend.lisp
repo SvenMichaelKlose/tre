@@ -3,9 +3,7 @@
 (defun dom-extend (x)
   (?
     (not x)       nil
-    (element? x)  (progn
-                    (alert x.tag-name)
-                    (hash-merge x caroshi-element.prototype))
+    (element? x)  (hash-merge x caroshi-element.prototype)
     (text? x)     (& *extended-textnodes?*
                      (hash-merge x *text-node.prototype))))
 
