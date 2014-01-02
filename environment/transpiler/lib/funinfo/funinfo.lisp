@@ -37,6 +37,10 @@
 	   (funinfo-topmost p)
 	   fi)))
 
+(defun funinfo-toplevel? (fi)
+  (!? (funinfo-parent fi)
+      (not (funinfo-parent !))))
+
 (def-funinfo copy-funinfo (funinfo)
   (make-funinfo
       :parent       parent
