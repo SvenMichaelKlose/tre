@@ -47,14 +47,18 @@
         (copy-lambda x :body (lambda-expand-r (lambda-body x))))
       (with (name    (| (lambda-name x)
                         (funinfo-sym))
+             args    (? (& (not (transpiler-cps-transformation? *transpiler*))
+                           (transpiler-native-cps-function? *transpiler* name))
+                        (. '~%cont (lambda-args x))
+                        (lambda-args x))
              new-fi  (create-funinfo :name   name
-                                     :args   (lambda-args x)
+                                     :args   args
                                      :body   (lambda-body x)
                                      :parent *funinfo*
                                      :cps?   (cps-marker name)))
         (funinfo-var-add *funinfo* name)
         (with-temporary *funinfo* new-fi
-          (copy-lambda x :name name :body (lambda-expand-r (lambda-body x)))))))
+          (copy-lambda x :name name :args args :body (lambda-expand-r (lambda-body x)))))))
 
 
 ;;;; TOPLEVEL
@@ -69,7 +73,7 @@
                           (lambda-export x)
                           (lambda-expand-r-unexported-lambda x))
     (named-lambda? x)  (lambda-expand-r-unexported-lambda x)
-	(lambda-expand-r x)))
+    (lambda-expand-r x)))
 
 (defun lambda-expand-r (x)
   (?
