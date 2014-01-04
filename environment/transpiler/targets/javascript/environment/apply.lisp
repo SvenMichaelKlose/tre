@@ -1,8 +1,11 @@
 ;;;;; tré – Copyright (c) 2008–2010,2013 Sven Michael Klose <pixel@copei.de>
 
 (dont-obfuscate apply call)
-(declare-cps-exception apply %nconc last butlast)
-(declare-native-cps-function apply)
+
+,(& (transpiler-cps-transformation? *transpiler*)
+    '(progn
+       (declare-cps-exception apply methodapply %nconc last butlast)
+       (declare-native-cps-function apply methodapply)))
 
 (defun apply (fun &rest lst)
   (when-debug
@@ -19,3 +22,10 @@
         '(? (defined? fun.tre-exp)
             (fun.tre-exp.apply nil (%%native "[" ! "]"))
             (fun.apply nil (list-array !))))))
+
+(defun methodapply (obj fun &rest lst)
+  ,(? (transpiler-cps-transformation? *transpiler*)
+      '(? (defined? fun._cps-transformed?)
+          (fun.apply obj (list-array (. ~%cont lst)))
+          (~%cont.call nil (fun.apply obj (list-array lst)))))
+      '(fun.apply obj (list-array lst)))
