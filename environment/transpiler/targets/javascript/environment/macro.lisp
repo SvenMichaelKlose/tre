@@ -21,5 +21,6 @@
 	   (expander-has-macro? 'standard-macros name))
     '(defun macro? (x)))
 
-(defun macroexpand (x)
-  (expander-expand 'standard-macros x))
+,(? *have-compiler?*
+    (defun macroexpand (x)
+      (expander-expand 'standard-macros x)))
