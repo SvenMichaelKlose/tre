@@ -58,6 +58,8 @@
 ;;;; UTILS
 
 (defun expex-make-%= (plc val)
+  (when (atom val)
+    (= val (funcall (expex-argument-filter *expex*) val)))
   (+ (? (%=? val)
         (expex-guest-filter-setter val))
      (expex-guest-filter-setter `(%= ,plc ,(? (%=? val)
@@ -129,30 +131,30 @@
 
 (defun expex-move-atom (x)
   (let s (expex-funinfo-var-add)
-    (cons (expex-make-%= s x) s)))
+    (. (expex-make-%= s x) s)))
 
 (defun expex-move-inline (x)
   (with ((p a) (expex-move-args x))
-	(cons p a)))
+	(. p a)))
 
 (defun expex-move-%%block (x)
   (!? (%%block-body x)
       (let s (expex-funinfo-var-add)
-        (cons (expex-body ! s) s))
-	  (cons nil nil)))
+        (. (expex-body ! s) s))
+	  (. nil nil)))
 
 (defun expex-move-std (x)
   (with (s                (expex-funinfo-var-add)
          (moved new-expr) (expex-expr x))
-    (cons (+ moved
-             (? (has-return-value? new-expr.)
-                (expex-make-%= s new-expr.)
-                new-expr))
-          s)))
+    (. (+ moved
+          (? (has-return-value? new-expr.)
+             (expex-make-%= s new-expr.)
+             new-expr))
+       s)))
 
 (defun expex-move (x)
   (?
-	(not (expex-able? x))                (cons nil x)
+	(not (expex-able? x))                (. nil x)
     (atom x)                             (expex-move-atom x)
 	(funcall (expex-inline? *expex*) x)  (expex-move-inline x)
     (%%block? x)                         (expex-move-%%block x)
@@ -226,7 +228,8 @@
 ;;;; BODY EXPANSION
 
 (defun expex-force-%= (x)
-  (| (& (metacode-expression-only x) (list x))
+  (| (& (metacode-expression-only x)
+        (list x))
      (expex-make-%= '~%ret x)))
 
 (defun expex-make-return-value (s x)
