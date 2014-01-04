@@ -39,8 +39,8 @@
          (skip-comment str)
          (get-symbol-0 str))
        (& (symbol-char? c)
-          (cons (char-upcase (read-char str))
-                (get-symbol-0 str))))))
+          (. (char-upcase (read-char str))
+             (get-symbol-0 str))))))
 
 (defun get-symbol (str)
   (unless (| (end-of-file? str)
@@ -58,10 +58,10 @@
 (defun read-string-0 (str)
   (let c (read-char str)
     (unless (== c 34) ; " - vim syntax highlighting fscks up.
-      (cons (? (== c #\\)
-               (read-char str)
-               c)
-            (read-string-0 str)))))
+      (. (? (== c #\\)
+            (read-char str)
+            c)
+         (read-string-0 str)))))
 
 (defun read-string (str)
   (list-string (read-string-0 str)))
@@ -72,6 +72,17 @@
 	     (read-char str)
     nil))
 
+(defun list-number? (x)
+  (& (| (& .x
+           (| (== #\- x.)
+              (== #\. x.)))
+        (digit-char? x.))
+     (? .x
+        (every [| (digit-char? _)
+                  (== #\. _)]
+               .x)
+        t)))
+
 (defun read-token (str)
   (with ((pkg sym) (get-symbol-and-package str))
 	(values (? (& sym
@@ -79,9 +90,7 @@
                   (== #\. sym.))
 		         'dot
 		       (? sym
-                  (? (every [| (digit-char? _)
-                               (eq #\. _)]
-                            sym)
+                  (? (list-number? sym)
                      'number
 			         'symbol)
 			      (case (read-char str)
@@ -142,30 +151,30 @@
 
 (defun read-set-listprop (str))
 ;  (alet (stream-input-location str)
-;    (= *default-listprop* (cons (stream-location-id !)
-;                                (cons (memorized-number (stream-location-column !))
-;                                      (memorized-number (stream-location-line !)))))))
+;    (= *default-listprop* (. (stream-location-id !)
+;                             (. (memorized-number (stream-location-column !))
+;                                (memorized-number (stream-location-line !)))))))
 
 (defun read-list (str token pkg sym)
   (| token (error "Missing closing bracket."))
   (unless (%read-closing-bracket? token)
-    (cons (with-temporary *default-listprop* *default-listprop*
-            (case token
-		      'bracket-open        (read-cons-slot str)
-		      'square-bracket-open (cons 'square (read-cons-slot str))
-		      'curly-bracket-open  (cons 'curly (read-cons-slot str))
-		      (? (token-is-quote? token)
-                 (read-quote str token)
-		         (read-atom str token pkg sym))))
-          (with-temporary *default-listprop* *default-listprop*
-	        (with ((token pkg sym) (read-token str))
-	          (? (eq 'dot token)
-		         (with (x               (read-expr str)
-				        (token pkg sym) (read-token str))
-		           (| (%read-closing-bracket? token)
-			          (error "Only one value allowed after dotted cons."))
-			       x)
-		         (read-list str token pkg sym)))))))
+    (. (with-temporary *default-listprop* *default-listprop*
+         (case token
+           'bracket-open        (read-cons-slot str)
+           'square-bracket-open (. 'square (read-cons-slot str))
+           'curly-bracket-open  (. 'curly (read-cons-slot str))
+           (? (token-is-quote? token)
+              (read-quote str token)
+              (read-atom str token pkg sym))))
+       (with-temporary *default-listprop* *default-listprop*
+         (with ((token pkg sym) (read-token str))
+           (? (eq 'dot token)
+              (with (x                (read-expr str)
+                     (token pkg sym)  (read-token str))
+                (| (%read-closing-bracket? token)
+                   (error "Only one value allowed after dotted cons."))
+                x)
+              (read-list str token pkg sym)))))))
 
 (defun read-cons (str)
   (with ((token pkg sym) (read-token str))
@@ -190,8 +199,8 @@
       nil                  nil
       'eof                 nil
       'bracket-open        (read-cons-slot str)
-      'square-bracket-open (cons 'square (read-cons-slot str))
-      'curly-bracket-open  (cons 'curly (read-cons-slot str))
+      'square-bracket-open (. 'square (read-cons-slot str))
+      'curly-bracket-open  (. 'curly (read-cons-slot str))
       (? (token-is-quote? token)
          (read-quote str token)
          (read-atom str token pkg sym)))))
@@ -205,4 +214,4 @@
   (unless (progn
 	        (skip-spaces str)
 	        (end-of-file? str))
-    (cons (read str) (read-all str))))
+    (. (read str) (read-all str))))
