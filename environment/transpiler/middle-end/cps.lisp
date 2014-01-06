@@ -18,7 +18,7 @@
   (with-gensym g
     (funinfo-var-add *funinfo* g)
     `((%= ,g ,(%=-value x))
-      (%= nil (~%cont ,g)))))
+      (%= nil (%cps-step ~%cont ,g)))))
 
 (defun call-of-global-cps-function? (name)
   (& (not (transpiler-cps-exception? *transpiler* name))
@@ -102,8 +102,8 @@
                    make-methodcall  [(= last-place (%=-place _))
                                      (cps-make-methodcall _ (| .names. '~%cont))]
                    make-go          [alet (tag-to-name _)
-                                      `((%= nil (,! ,@(& (eq '~%cont !)
-                                                         `(~%ret)))))]
+                                      `((%= nil (%cps-step ,! ,@(& (eq '~%cont !)
+                                                                   `(~%ret)))))]
                    make-cond        [`((,(? (%%go-nil? _)
                                             '%%call-nil
                                             '%%call-not-nil)
@@ -123,8 +123,8 @@
                                  (+ (& (not (number? !))
                                        (list !))
                                     (?
-                                      .names                `((%= nil (,.names.)))
-                                      (not *cps-toplevel?*) `((%= nil (~%cont ~%ret)))))))))
+                                      .names                `((%= nil (%cps-step ,.names.)))
+                                      (not *cps-toplevel?*) `((%= nil (%cps-step ~%cont ~%ret)))))))))
               (alet (create-funinfo :name    name
                                     :args    args
                                     :body    body
@@ -165,6 +165,10 @@
      (cps-add-this x)
      x))
 
+(defun in-cps-wrapper? ()
+  (!? (funinfo-topmost *funinfo*)
+      (transpiler-cps-wrapper? *transpiler* (funinfo-name !))))
+
 (defun cps-fun (x)
   (with-temporary *funinfo* (get-lambda-funinfo x)
     (with-lambda name args body x
@@ -178,7 +182,11 @@
             (list (copy-lambda x :args (. '~%cont args)
                                  :body (cps-body-with-this (cps-body body)))
                   `(%= (%slot-value ,name _cps-transformed?) t)))
-        (list (copy-lambda x :body (cps-passthrough (cps-body-with-this body))))))))
+        (list (copy-lambda x :body (+ (unless (in-cps-wrapper?)
+                                        '((%= (%global *cps-step?*) (%%%+ (%global *cps-step?*) 1))))
+                                      (cps-passthrough (cps-body-with-this body))
+                                      (unless (in-cps-wrapper?)
+                                        '((%= (%global *cps-step?*) (%%%- (%global *cps-step?*) 1)))))))))))
 
 (defun cps-return-value (x)
   (!? (%=-place x)
@@ -189,7 +197,7 @@
   (with-temporary *cps-toplevel?* t
     (mapcan [?
               (native-cps-funcall? _)  (let v (%=-value _)
-                                         `((%= ,(%=-place _) (,v. ,(cps-return-value _) ,@.v))))
+                                         `((%= nil (,v. ,(cps-return-value _) ,@.v))))
               (cps-call? _)            (cps-make-call _ (cps-return-value _))
               (cps-methodcall? _)      (cps-make-methodcall _ (cps-return-value _))
               (named-lambda? _)        (cps-fun _)

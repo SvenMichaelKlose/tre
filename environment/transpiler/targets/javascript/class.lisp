@@ -11,10 +11,10 @@
 (defun js-gen-constructor (class-name bases args body)
   (let magic (list 'quote ($ '__ class-name))
     `(progn
-;       (declare-cps-exception ,class-name)
        (defun ,class-name ,args
-         ,@(js-gen-inherited-constructor-calls bases)
-         (%thisify ,class-name ,@body))
+         (%thisify ,class-name
+;           ,@(js-gen-inherited-constructor-calls bases)
+           ,@body))
        ,@(js-gen-inherited-methods class-name bases)
        (declare-cps-exception ,($ class-name '?))
 	   (defun ,($ class-name '?) (x)

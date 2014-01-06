@@ -263,3 +263,6 @@
 
 (define-js-macro cps-toplevel-return-value (x)
   `(%%native "function(r){" ,x "=r;}"))
+
+;(define-js-macro %cps-step (&rest args)
+;  args)

@@ -1,10 +1,20 @@
 ;;;;; tré – Copyright (c) 2008,2010,2012–2013 Sven Michael Klose <pixel@copei.de>
 
 (dont-obfuscate clear-timeout set-timeout)
+(declare-cps-exception wait)
+(declare-cps-wrapper wait)
+(declare-native-cps-function wait)
 
-(defun wait (fun millisecs)
-  (with (timeout-id nil
-		 our-fun    #'(()
-				         (window.clear-timeout timeout-id)
-					     (funcall fun)))
-    (= timeout-id (window.set-timeout our-fun millisecs))))
+(defun wait (millisecs)
+  (let timeout-id nil
+    (= timeout-id (window.set-timeout #'(()
+				                           (window.clear-timeout timeout-id)
+					                       (funcall ~%cont))
+                                      millisecs))))
+
+(defmacro do-wait (millisecs &rest body)
+  (? (transpiler-cps-transformation? *transpiler*)
+     `(progn
+        (wait ,millisecs)
+        ,@body)
+     `(funcall #'wait #'(() ,@body) ,millisecs)))

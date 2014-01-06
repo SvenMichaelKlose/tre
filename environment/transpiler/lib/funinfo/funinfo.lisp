@@ -26,16 +26,17 @@
   (fast-scope?  nil)
 
   ; Number of jump tags in body.
-  (num-tags   nil)
+  (num-tags     nil)
   
-  (globals    nil)
-  (cps?       nil))
+  (globals      nil)
+  (cps?         nil))
 
 (defun funinfo-topmost (fi)
-  (let p (funinfo-parent fi)
-    (? (& p (funinfo-parent p))
-	   (funinfo-topmost p)
-	   fi)))
+  (awhen (funinfo-parent fi)
+    (? (& !
+          (not (funinfo-parent !)))
+       fi
+       (funinfo-topmost !))))
 
 (defun funinfo-toplevel? (fi)
   (!? (funinfo-parent fi)

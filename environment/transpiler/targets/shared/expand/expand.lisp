@@ -29,6 +29,12 @@
     (transpiler-add-cps-exception *transpiler* !))
   nil)
 
+(define-shared-std-macro (js php) declare-cps-wrapper (&rest symbols)
+  (print-definition `(declare-cps-wrapper ,@symbols))
+  (adolist symbols
+    (transpiler-add-cps-wrapper *transpiler* !))
+  nil)
+
 (define-shared-std-macro (js php) assert (x &optional (txt nil) &rest args)
   (& (transpiler-assert? *transpiler*)
      (make-assertion x txt args)))
