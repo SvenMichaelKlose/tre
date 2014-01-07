@@ -196,11 +196,11 @@
 (defun read-expr (str)
   (with ((token pkg sym) (read-token str))
     (case token
-      nil                  nil
-      'eof                 nil
-      'bracket-open        (read-cons-slot str)
-      'square-bracket-open (. 'square (read-cons-slot str))
-      'curly-bracket-open  (. 'curly (read-cons-slot str))
+      nil                   nil
+      'eof                  nil
+      'bracket-open         (read-cons-slot str)
+      'square-bracket-open  (. 'square (read-cons-slot str))
+      'curly-bracket-open   (. 'curly (read-cons-slot str))
       (? (token-is-quote? token)
          (read-quote str token)
          (read-atom str token pkg sym)))))
