@@ -96,7 +96,7 @@ BINDIR="/usr/local/bin/"
 basic_clean ()
 {
 	echo "Cleaning..."
-	rm -vf *.core interpreter/$COMPILED_ENV tre image bytecode-image tmp.c __alien.tmp files.lisp compilation.log
+	rm -vf *.core interpreter/$COMPILED_ENV tre image bytecode-image tmp.c __alien.tmp files.lisp boot.log
     rm -rf environment/_current-version environment/transpiler/targets/c64/tre.c64
 	rm -vrf obj
     rm -vf examples/js/hello-world.js
@@ -199,7 +199,7 @@ bcompiler)
 
 environment)
     echo "Compiling environment..."
-	(echo "(compile-c-environment)(dump-system \"image\")" | ./tre -i image | tee compilation.log) || exit 1
+	(echo "(compile-c-environment)(dump-system \"image\")" | ./tre -i image | tee boot.log) || exit 1
 	;;
 
 boot)
