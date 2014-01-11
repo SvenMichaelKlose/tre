@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2009–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2009–2014 Sven Michael Klose <pixel@copei.de>
 
 (declare-cps-exception %%objkey %%make-objkey %%numkey %make-href-object-key %href-key =-href-obj %href-==? hash-table? =-href)
 
@@ -46,7 +46,7 @@
 (defun %href-user (hash key)
   (adolist ((hashkeys hash))
     (& (funcall hash.__tre-test ! key)
-       (return (%%%aref hash (%href-key key))))))
+       (return (%%%aref hash (%href-key !))))))
 
 (defun href (hash key)
   (!? hash.__tre-test
