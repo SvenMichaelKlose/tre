@@ -18,8 +18,8 @@
       (clr (transpiler-frontend-files !)
            (transpiler-compiled-files !)
            (transpiler-raw-decls !))
-      (with-temporaries (*show-definitions?* nil
-                         *show-transpiler-progress?* nil)
+      (with-temporaries (*show-definitions?*          nil
+                         *show-transpiler-progress?*  nil)
         (load-bytecode (expr-to-code ! (compile-sections `((eval . ((defun ,tmpfun () ,x))))
                                                          :transpiler !))
                        :temporary? t))

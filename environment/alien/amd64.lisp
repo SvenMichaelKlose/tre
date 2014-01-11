@@ -42,7 +42,6 @@
                 (x86-push-const-dword (>> val 32)))))
 
 (defun make-c-call-target-amd64 ()
-  (make-c-call-target
-      :put-arg   #'amd64-c-call-put-arg
-      :call      #'amd64-c-call
-      :epilogue  #'amd64-c-call-epilogue))
+  (make-c-call-target :put-arg   #'amd64-c-call-put-arg
+                      :call      #'amd64-c-call
+                      :epilogue  #'amd64-c-call-epilogue))

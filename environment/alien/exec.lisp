@@ -7,9 +7,9 @@
       (alien-dlclose !))))
 
 (defun wait ()
-  (with (libc	(alien-dlopen *libc-path*)
-	     fun	(alien-dlsym libc "wait")
-		 status (%malloc *pointer-size*))
+  (with (libc	 (alien-dlopen *libc-path*)
+	     fun	 (alien-dlsym libc "wait")
+		 status  (%malloc *pointer-size*))
     (alet (make-c-call :funptr fun)
       (c-call-add-arg ! status)
       (c-call-do !)
@@ -19,18 +19,18 @@
 	  (%free status))))
 
 (defun execve (path args &optional (environment nil) &key (wait? t))
-  (with (libc     (alien-dlopen *libc-path*)
-         cexecve  (alien-dlsym libc "execve")
-         cperror  (alien-dlsym libc "perror")
-         cpath    (%malloc-string path :null-terminated t)
-         argptrs  (filter [%malloc-string _ :null-terminated t] args)
-         argv     (%malloc (* *pointer-size* (++ (length args))))
-         environv (? environment
+  (with (libc      (alien-dlopen *libc-path*)
+         cexecve   (alien-dlsym libc "execve")
+         cperror   (alien-dlsym libc "perror")
+         cpath     (%malloc-string path :null-terminated t)
+         argptrs   (filter [%malloc-string _ :null-terminated t] args)
+         argv      (%malloc (* *pointer-size* (++ (length args))))
+         environv  (? environment
                      (%malloc (* *pointer-size* (++ (length environment))))
                       0)
-         envptrs  (& environment
-                     (filter [%malloc-string (string-concat _. "=" ._) :null-terminated t]
-                             environment)))
+         envptrs   (& environment
+                      (filter [%malloc-string (string-concat _. "=" ._) :null-terminated t]
+                              environment)))
 	(%put-pointer-list argv argptrs :null-terminated t)
 	(& environment
 	   (%put-pointer-list environv envptrs :null-terminated t))
@@ -52,4 +52,4 @@
 	(& wait? (wait))))
 
 (defun exec (bin args)
-  (execve bin (cons bin args) nil))
+  (execve bin (. bin args) nil))

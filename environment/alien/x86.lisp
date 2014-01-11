@@ -18,7 +18,6 @@
      (x86-ret)))
 
 (defun make-c-call-target-x86 ()
-  (make-c-call-target
-	:put-arg	#'x86-c-call-put-arg
-	:call		#'x86-c-call
-	:epilogue	#'x86-c-call-epilogue))
+  (make-c-call-target :put-arg	#'x86-c-call-put-arg
+	                  :call		#'x86-c-call
+	                  :epilogue	#'x86-c-call-epilogue))

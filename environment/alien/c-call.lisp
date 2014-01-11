@@ -22,25 +22,20 @@
   (funcall (c-call-target-epilogue target) num-args))
 
 (defun c-call-do (cc)
-  "Execute C-CALL. See also MAKE-C-CALL and C-CALL-ADD-ARG."
-  (with (args (c-call-args cc)
-		 code (%malloc-exec 65536) ; XXX
-		 p code
-		 target (?
-				  (in=? *cpu-type* "i386" "i486" "i586" "i686") (make-c-call-target-x86)
-				  (in=? *cpu-type* "amd64" "x86_64") (make-c-call-target-amd64)
-				  (error "Unsupported *CPU-TYPE*.")))
-
+  (with (args    (c-call-args cc)
+		 code    (%malloc-exec 65536) ; XXX
+		 p       code
+		 target  (?
+				   (in=? *cpu-type* "i386" "i486" "i586" "i686") (make-c-call-target-x86)
+				   (in=? *cpu-type* "amd64" "x86_64") (make-c-call-target-amd64)
+				   (error "Unsupported *CPU-TYPE*.")))
 	(when (== -1 code)
 	  (error "Couldn't allocate trampoline."))
-
 	(do ((i (reverse args) (cdr i))
 		 (argnum (-- (length args)) (-- argnum)))
 		((not i))
 	  (= p (c-call-put-arg target p (car i) argnum)))
-
 	(%put-list p (append (c-call-call cc target)
                          (c-call-epilogue target (length args))))
-
 	(alien-call code)
 	(%free-exec code 65536))) ; XXX

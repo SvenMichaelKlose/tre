@@ -34,7 +34,7 @@
 (defmacro define-ansi-cmd (cmd name args description &rest codes)
   `(defun ,name ,args
 	 ,description
-	 ,(cons cmd codes)))
+	 ,(. cmd codes)))
 
 (defmacro ansi-defz (defname cmd)
   `(defmacro ,defname (name &rest args)
