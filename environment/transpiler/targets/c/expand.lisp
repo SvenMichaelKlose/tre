@@ -71,21 +71,17 @@
   `(= *backtrace* .*backtrace*))
 
 (define-c-std-macro catch (catcher &body body)
-  (with-gensym g
-    (with-compiler-tag (body-start end)
-      `(%%block
-         (%var ,g)
-         (treexception_catch_enter)
-         (%= ~%ret (%catch-enter))
-         (%%go-nil ,body-start ~%ret)
-         (treexception_catch_leave)
-         (%= ,g ,catcher)
-         (%%go ,end)
-         ,body-start
-         (%= ,g (%%block ,@body))
-         (treexception_catch_leave)
-         ,end
-         (identity ,g)))))
+  (with-compiler-tag (body-start end)
+    `(%%block
+       (treexception_catch_enter)
+       (%%go-nil ,body-start (%catch-enter))
+       (treexception_catch_leave)
+       ,catcher
+       (%%go ,end)
+       ,body-start
+       ,@body
+       (treexception_catch_leave)
+       ,end)))
 
 (define-c-std-macro throw ()
   `(%= nil (treexception_throw)))
