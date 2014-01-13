@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2007,2009,2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2007,2009,2012,2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #ifndef TRE_SPECIAL_H
@@ -20,6 +20,7 @@ extern char * tre_special_names[];
 extern treevalfunc_t treeval_xlat_special[];
 
 extern treptr trespecial (treptr func, treptr expr);
+extern treptr trespecial_progn (treptr func);
 extern void   trespecial_init (void);
 
 #endif	/* #ifndef TRE_SPECIAL_H */

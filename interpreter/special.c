@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #include <stdio.h>
@@ -14,6 +14,7 @@
 #include "eval.h"
 #include "builtin.h"
 #include "special.h"
+#include "special_exception.h"
 #include "error.h"
 #include "gc.h"
 #include "debug.h"
@@ -325,6 +326,7 @@ char *tre_special_names[] = {
     "PROGN",
     "BLOCK", "RETURN-FROM", "TAGBODY", "GO",
     "FUNCTION",
+    "CATCH", "THROW",
 #endif /* #ifdef INTERPRETER */
     "SET-BREAKPOINT", "REMOVE-BREAKPOINT",
     NULL
@@ -345,6 +347,8 @@ treevalfunc_t treeval_xlat_special[] = {
     trespecial_tagbody,
     trespecial_go,
     trespecial_function,
+    trespecial_catch,
+    trespecial_throw,
     tredebug_builtin_set_breakpoint,
     tredebug_builtin_remove_breakpoint,
 #endif /* #ifdef INTERPRETER */

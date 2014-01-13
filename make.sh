@@ -1,5 +1,5 @@
 #!/bin/sh
-# tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
+# tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
 
 ARGS="$2 $3 $4 $5 $6 $7 $8 $9"
 
@@ -35,6 +35,7 @@ FILES="
 	dot.c
 	error.c
 	eval.c
+	exception.c
 	function.c
 	gc.c
 	image.c
@@ -49,6 +50,7 @@ FILES="
 	queue.c
 	read.c
 	special.c
+	special_exception.c
 	stream.c
 	string.c
 	symbol.c
@@ -96,7 +98,7 @@ BINDIR="/usr/local/bin/"
 basic_clean ()
 {
 	echo "Cleaning..."
-	rm -vf *.core interpreter/$COMPILED_ENV tre image bytecode-image tmp.c __alien.tmp files.lisp boot.log
+	rm -vf *.core interpreter/$COMPILED_ENV tre image bytecode-image tmp.c __alien.tmp files.lisp boot.log _phptest.log
     rm -rf environment/_current-version environment/transpiler/targets/c64/tre.c64
 	rm -vrf obj
     rm -vf examples/js/hello-world.js
@@ -211,15 +213,29 @@ boot)
 	./make.sh crunsh $ARGS|| exit 1
 	;;
 
-test)
-    echo "Making tests..."
-	./make.sh interpreter $ARGS || exit 1
-	./make.sh compiler $ARGS || exit 1
-	./make.sh environment $ARGS || exit 1
-	./make.sh crunsh || exit 1
-	./make.sh install || exit 1
+phptest)
+    echo "PHP target tests..."
     tre makefiles/test-php.lisp
+    php compiled/test.php >_phptest.log
+    cmp makefiles/test-php.correct-output _phptest.log || (diff makefiles/test-php.correct-output _phptest.log; exit 1)
+    echo "PHP target tests passed."
+	;;
+
+jstest)
+    echo "JS target tests..."
     tre makefiles/test-js.lisp
+    chromium-browser compiled/test.html
+	;;
+
+updatetests)
+    echo "Updateing PHP target test data..."
+    tre makefiles/test-php.lisp
+    php compiled/test.php >makefiles/test-php.correct-output
+    ;;
+
+tests)
+    echo "Making tests..."
+	./make.sh phptest || exit 1
 	;;
 
 debugboot)
@@ -245,11 +261,7 @@ all)
     echo "Making all..."
 	./make.sh boot $ARGS || exit 1
 	./make.sh install || exit 1
-	./make.sh bytecode-image || exit 1
-    tre makefiles/filelist.lisp || exit 1
-    tre makefiles/test-php.lisp || exit 1
-    tre makefiles/test-js.lisp || exit 1
-    tre makefiles/webconsole.lisp || exit 1
+	./make.sh tests || exit 1
     ;;
 
 install)
@@ -283,7 +295,7 @@ restore)
 *)
 	echo "Usage: make.sh boot|interpreter|compiler|all|bytecode|debug|build|crunsh|reload|precompile|backup|restore|install|clean|distclean [args]"
 	echo "  boot            Build everything from scratch."
-	echo "  test            Build everything from scratch in stealth mode."
+	echo "  tests           Run automatic tests (not so many at the moment)."
 	echo "  debugboot       Like 'boot', but for debugging"
 	echo "  interpreter     Clean and build the interpreter."
 	echo "  compiler        Compile just the compiler and the C target to C."
