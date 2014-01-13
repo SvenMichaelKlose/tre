@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun argument-rest-keyword? (x) (in? x '&rest '&body))
 (defun argument-keyword? (x)      (in? x '&rest '&body '&optional '&key))
@@ -9,13 +9,13 @@
   x)
 
 (defun error-arguments-missing (fun args)
-  (error "Arguments ~A missing for function ~A." fun args))
+  (throw "Arguments ~A missing for function ~A." fun args))
 
 (defun error-too-many-arguments (fun args)
-  (error "Too many arguments ~A for function ~A." args fun))
+  (throw "Too many arguments ~A for function ~A." args fun))
 
 (defun error-&rest-has-value (fun)
-  (error "In function ~A: &REST cannot have a value." fun))
+  (throw "In function ~A: &REST cannot have a value." fun))
 
 (defun make-&key-alist (def)
   (with (&keys nil
@@ -25,8 +25,8 @@
 				(copy-def-until-&key _)
 				(alet _.
                   (push (? (cons? !)
-                           (cons !. .!.) ; with default value
-                           (cons ! !))   ; with itself
+                           (. !. .!.) ; with default value
+                           (. ! !))   ; with itself
                         &keys)
                   (make-&key-descr ._)))]
 
@@ -34,7 +34,7 @@
 		   [when _
 		     (? (eq '&key _.)
 				(make-&key-descr ._)
-				(cons _. (copy-def-until-&key ._)))])
+				(. _. (copy-def-until-&key ._)))])
 
 	(values (copy-def-until-&key def)
             (reverse &keys))))
@@ -68,39 +68,36 @@
 ;; returned.
 ;;
 ;; 'fun' is only used for error messages.
-(defun argument-expand-0 (fun adef alst apply-values
-						 &optional (no-static nil)
-								   (argdefs   nil)
-								   (key-args  nil)
-								   (num       nil)
-								   (rest-arg  nil))
+(defun argument-expand-0 (fun adef alst apply-values &optional (no-static nil) (argdefs nil) (key-args nil) (num nil) (rest-arg nil))
   (with (err
 		   #'((msg args)
-				(error (string-concat "; Call of function ~A: ~A~%"
-					                  "; Argument definition: ~A~%"
-						              "; Given arguments: ~A~%")
-                       (symbol-name fun) (apply #'format nil msg args)
-                       adef alst))
+				(throw (+ "; Call of function ~A: ~A~%"
+					      "; Argument definition: ~A~%"
+						  "; Given arguments: ~A~%")
+                       (symbol-name fun)
+                       (apply #'format nil msg args)
+                       adef
+                       alst))
 		 exp-static
 		   #'((def vals)
 			    (& no-static
 				   (err "static argument definition after ~A" (list no-static)))
 			    (& apply-values (not vals)
 				   (err "argument ~A missing" (list num)))
-				(cons (cons (argdef-get-name def.) vals.)
-					  (exp-main .def .vals)))
+				(. (. (argdef-get-name def.) vals.)
+                   (exp-main .def .vals)))
 
 		 exp-optional
 		   #'((def vals)
 				(& (argument-keyword? def.)
 				   (err "Keyword ~A after &OPTIONAL" (list def.)))
 				(= no-static '&optional)
-				(cons (cons (argdef-get-name def.)
-							(argdef-get-value def vals))
-					  (?
-						(argument-keyword? .def.) (exp-main .def .vals)
-						.def                      (exp-optional .def .vals)
-					  	(exp-main .def .vals))))
+				(. (. (argdef-get-name def.)
+				      (argdef-get-value def vals))
+				   (?
+					 (argument-keyword? .def.)  (exp-main .def .vals)
+					 .def                       (exp-optional .def .vals)
+					 (exp-main .def .vals))))
 
 		 exp-key
 		   #'((def vals)
@@ -114,8 +111,8 @@
 		 exp-rest
 		   #'((def vals)
 				(= no-static '&rest)
-  			    (= rest-arg (list (cons (argdef-get-name def.)
-                                        (cons '&rest vals))))
+  			    (= rest-arg (list (. (argdef-get-name def.)
+                                     (. '&rest vals))))
 			    nil)
 
          exp-optional-rest

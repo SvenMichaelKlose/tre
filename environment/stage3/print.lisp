@@ -1,48 +1,54 @@
-;;;;; trè – Copyright (c) 2005–2012 Sven Michael Klose <pixel@copei.de>
+;;;;; trè – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
+
+(defstruct print-info
+  (pretty-print?  nil)
+  (indentation    0))
 
 (defvar *print-automatic-newline?* t)
 
-(defun %print-first-occurence (x str info)
-  (hremove (print-info-first-occurences info) x)
-  (princ "(%%reference " str)
-  (princ (%%id x) str)
-  (princ " " str)
-  (%late-print x str info)
-  (princ ")" str))
-
-(defun %print-circularity (x str)
-  (princ "(%%circular " str)
-  (princ (%%id x) str)
-  (princ ")" str))
-
-(defun %print-check-circularity (x str info)
-  (? *print-circularities?*
-     (?
-       (href (print-info-first-occurences info) x) (%print-first-occurence x str info)
-       (href (print-info-visited info) x) (%print-circularity x str))))
-
-(defun %print-rest-0 (c str info)
-;  (= (href (print-info-visited info) c) t)
-  (%late-print c. str info)
-  (let x .c
-    (? x
-       (? (cons? x)
-          (progn
-            (princ #\  str)
-            (%print-rest x str info))
-          (progn
-		    (princ " . " str)
-            (%print-atom x str info)
-            (princ ")" str)))
-       (princ ")" str))))
+(defun %print-indentation (str info)
+  (adotimes ((print-info-indentation info))
+    (princ " " str)))
 
 (defun %print-rest (x str info)
-;  (| (%print-check-circularity x str info)
-     (%print-rest-0 x str info));)
+  (when x
+    (? (cons? x)
+       (progn
+         (princ " " str)
+         (%late-print x. str info)
+         (%print-rest .x str info))
+       (progn
+         (princ " . " str)
+         (%print-atom x str info)
+         (princ ")" str))))
+  (princ ")" str))
+
+(defun %print-body (x str info)
+  (with-temporary (print-info-indentation info) (+ 2 (print-info-indentation info))
+    (adolist x
+      (%print-indentation str info)
+      (%late-print ! str info)
+      (terpri str))))
+
+(defun %print-call (x argdef str info)
+  (adolist ((%print-get-args .x argdef))
+    (? (& (cons? .!)
+          (eq '&body .!.))
+       (%print-body ..! str info)
+       (with-temporary *print-automatic-newline?* nil
+         (princ " " str)
+         (%late-print .! str info)))))
 
 (defun %print-cons (x str info)
-  (princ #\( str)
-  (%print-rest x str info))
+  (princ "(" str)
+  (%late-print x. str info)
+  (!? (& (print-info-pretty-print? info)
+         (symbol? x.)
+         (!? (symbol-function x.)
+             (& (function? !)
+                (function-arguments !))))
+      (%print-call .x ! str info)
+      (%print-rest .x str info)))
 
 (defun %print-string (x str)
   (princ #\" str)
@@ -59,28 +65,18 @@
 	(princ #\: str))
   (princ (symbol-name x) str))
 
-(defun %print-array-0 (x str info)
-;  (& *print-circularities?*
-;     (= (href (print-info-visited info) x) t))
+(defun %print-array (x str info)
   (princ "#(" str)
   (dotimes (i (length x))
     (%late-print (aref x i) str info)
     (princ " " str))
   (princ ")" str))
 
-(defun %print-array (x str info)
-;  (| (%print-check-circularity x str info)
-     (%print-array-0 x str info));)
-
-(defun %print-function-0 (x str info)
-  (princ "#'" str)
-  (%late-print (cons (function-arguments x)
-                     (function-body x))
-               str info))
-
 (defun %print-function (x str info)
-;  (| (%print-check-circularity x str info)
-     (%print-function-0 x str info));)
+  (princ "#'" str)
+  (%late-print (. (function-arguments x)
+                  (function-body x))
+               str info))
 
 (defun %print-character (x str)
   (princ #\# str)
@@ -89,13 +85,13 @@
 
 (defun %print-atom (x str info)
   (?
-    (character? x) (%print-character x str)
-    (number? x)    (princ x str)
-    (string? x)    (%print-string x str)
-    (array? x)     (%print-array x str info)
-    (function? x)  (%print-function x str info)
-    (symbol? x)    (%print-symbol x str)
-    (object? x)    (%print-object x str info)
+    (character? x)  (%print-character x str)
+    (number? x)     (princ x str)
+    (string? x)     (%print-string x str)
+    (array? x)      (%print-array x str info)
+    (function? x)   (%print-function x str info)
+    (symbol? x)     (%print-symbol x str)
+    (object? x)     (%print-object x str info)
     "UNKNOWN OBJECT"))
 
 (defun %late-print (x str info)
@@ -103,9 +99,9 @@
      (%print-cons x str info)
      (%print-atom x str info)))
 
-(defun late-print (x &optional (str *standard-output*))
+(defun late-print (x &optional (str *standard-output*) (print-info nil))
   (with-default-stream s str
-    (%late-print x s (print-trace x))
+    (%late-print x s (| print-info (make-print-info)))
     (when *print-automatic-newline?*
 	  (terpri s)))
   x)

@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun php-load-base (dir-path &rest files)
   (with-temporary *have-compiler?* nil
@@ -25,6 +25,7 @@
 			             "print-object.lisp"
 			             "%princ.lisp"
 			             "apply.lisp"
+			             "exception.lisp"
 			             "hash.lisp"
 			             "array.lisp"
 			             "atom.lisp")
