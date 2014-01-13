@@ -163,3 +163,9 @@
 
 (define-c-macro %global (x)
   `("TRESYMBOL_VALUE(" ,(c-compiled-symbol x) ")"))
+
+
+;;;; EXCEPTIONS
+
+(define-c-macro %catch-enter ()
+  "(setjmp (catchers[current_catcher].jmp) ? treptr_t : treptr_nil)")

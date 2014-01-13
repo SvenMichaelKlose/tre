@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defvar *c-init-group-size*  16)
 (defvar *c-init-counter*      0)
@@ -11,6 +11,7 @@
 		   "array.h"
 		   "atom.h"
 		   "eval.h"
+		   "exception.h"
 		   "gc.h"
 		   "builtin_arith.h"
 		   "builtin_array.h"
@@ -32,6 +33,7 @@
 		   "macro.h"
 		   "number.h"
 		   "special.h"
+		   "special_exception.h"
 		   "string2.h"
 		   "symbol.h"
 		   "io.h"
