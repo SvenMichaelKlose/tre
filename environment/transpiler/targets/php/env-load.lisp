@@ -25,13 +25,13 @@
 			             "print-object.lisp"
 			             "%princ.lisp"
 			             "apply.lisp"
-			             "exception.lisp"
 			             "hash.lisp"
 			             "array.lisp"
 			             "atom.lisp")
 		             (php-load-base "environment/transpiler/environment/"
                          "not.lisp"
 			             "atom.lisp"
+			             "exception.lisp"
                          "cps-exceptions.lisp")
 		             (php-load-base *php-env-path*
 			             "character.lisp"
