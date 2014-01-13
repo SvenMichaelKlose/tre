@@ -18,6 +18,7 @@
 (env-load "stage3/princ.lisp")
 (env-load "stage3/line.lisp")
 (env-load "stage3/force-output.lisp" 'c)
+(env-load "stage3/argument-expand.lisp")
 (env-load "stage3/print-tracer.lisp")
 (env-load "stage3/print-object.lisp" 'c)
 (env-load "stage3/print.lisp")
@@ -39,5 +40,4 @@
 (env-load "stage3/assert-c.lisp" 'c)
 (env-load "stage3/loop.lisp")
 (env-load "stage3/collected-errors.lisp")
-(env-load "stage3/argument-expand.lisp")
 (env-load "stage3/string-integer.lisp" 'c)

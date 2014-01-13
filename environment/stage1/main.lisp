@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
 
 (env-load "stage1/basic-list.lisp" 'c)
 (env-load "stage1/cons.lisp")
@@ -58,3 +58,4 @@
 (env-load "stage1/test-block.lisp")
 (env-load "stage1/dollar.lisp")
 (env-load "stage1/test-dollar.lisp")
+(env-load "stage1/let-if.lisp")
