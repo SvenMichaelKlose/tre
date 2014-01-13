@@ -28,7 +28,7 @@
                   (? (eq ,argname ',argname)
                      ,(& (cons? _)
                          (cadr _))
-                     ,argname))}
+                     ,argname))]
             fields)))
 
 (defun %struct-make (name fields options)

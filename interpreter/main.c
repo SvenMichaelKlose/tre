@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #include <setjmp.h>
@@ -43,8 +43,8 @@
 #endif
 
 char * tremain_self = NULL;   /* Path to running executable. */
-char * tremain_image = NULL;
-char * tremain_boot_image = NULL;
+char * tremain_userimage = NULL;
+char * tremain_bootimage = NULL;
 char * tremain_launchfile = NULL;
 
 treptr tremain_history;
@@ -162,10 +162,10 @@ tremain_init_image_path (void)
 {
     char * p = getenv ("HOME");
 
-    tremain_boot_image = malloc (4096);
-    strcpy (tremain_boot_image, p);
-    strcpy (&tremain_boot_image[strlen (p)], "/.tre.image");
-	MAKE_SYMBOL("*BOOT-IMAGE*", trestring_get (tremain_boot_image));
+    tremain_bootimage = malloc (4096);
+    strcpy (tremain_bootimage, p);
+    strcpy (&tremain_bootimage[strlen (p)], "/.tre.image");
+	MAKE_SYMBOL("*BOOT-IMAGE*", trestring_get (tremain_bootimage));
 }
 
 /* Initialise everything. */
@@ -283,7 +283,7 @@ tremain_get_args (int argc, char *argv[])
         if (!strcmp ("-n", v))
 			tremain_noimage = TRUE;
         else if (!strcmp ("-i", v))
-            tremain_image = argv[++p];
+            tremain_userimage = argv[++p];
         else if (!strcmp ("-H", v))
 			tremain_print_hardinfo ();
         else if (!strcmp ("-h", v)) {
@@ -302,28 +302,24 @@ main (int argc, char *argv[])
     tremain_get_args (argc, argv);
     tremain_init ();
 
-    /* Return here on errors. */
     setjmp (jmp_main);
     if (c == 1)
 		goto load_error;
     if (c == 2)
 		goto user;
-
 	if (tremain_noimage)
-		goto boot;
+		goto load_environment_from_source;
 
     c = 2;
-    treimage_load (tremain_image ? tremain_image : tremain_boot_image);
-    tremain_image = NULL;
+    treimage_load (tremain_userimage ? tremain_userimage : tremain_bootimage);
+    tremain_userimage = NULL;
     goto user;
 
-boot:
+load_environment_from_source:
     c = 1;
     treiostd_divert (treiostd_open_file (TRE_BOOTFILE));
     tremain_init_after_image_loaded ();
-
     tremain ();
-
 load_error:
     c = 2;
     treiostd_undivert ();
@@ -332,6 +328,7 @@ user:
 #ifdef TRE_HAVE_COMPILED_ENV
 	(void) userfun_cInit ();
 #endif
+
     if (NOT_NIL(tre_restart_fun)) {
         treeval (CONS(tre_restart_fun, treptr_nil));
         tre_restart_fun = treptr_nil;
