@@ -16,7 +16,6 @@ trespecial_catch (treptr x)
 {
     treptr ret;
 
-    printf ("CATCH\n");
     if (NOT(x))
         treerror (x, "Catcher expected.");
     if (NOT(CDR(x)))
@@ -37,9 +36,7 @@ trespecial_catch (treptr x)
 treptr
 trespecial_throw (treptr x)
 {
-    (void) x;
-
-    treexception_throw ();
+    treexception_throw (treeval_args (x));
 
     /*NOTREACHED*/
     return treptr_nil;

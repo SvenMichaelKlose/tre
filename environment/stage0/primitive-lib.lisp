@@ -35,7 +35,8 @@
 	(cons (cons '*have-environment-tests* nil)
 	(cons (cons '*rand-max* nil)
 	(cons (cons '*default-listprop* nil)
-		  *variables*))))))))))))))
+	(cons (cons '*exception* nil)
+		  *variables*)))))))))))))))
 
 (%set-atom-fun identity #'((x) x))
 (%set-atom-fun list #'((&rest x) x))

@@ -22,6 +22,7 @@ extern int current_catcher;
 
 extern void treexception_catch_enter ();
 extern void treexception_catch_leave ();
-extern void treexception_throw ();
+extern void treexception_throw (treptr);
+extern void treexception_init ();
 
 #endif	/* #ifndef TRE_EXCEPTION_H */

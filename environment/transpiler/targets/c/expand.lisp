@@ -83,5 +83,5 @@
        (treexception_catch_leave)
        ,end)))
 
-(define-c-std-macro throw ()
-  `(%= nil (treexception_throw)))
+(define-c-std-macro throw (&rest x)
+  `(%= nil (treexception_throw ,(compiled-list x))))

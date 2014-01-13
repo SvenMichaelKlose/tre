@@ -37,6 +37,7 @@
 #include "builtin_list.h"
 #include "bytecode.h"
 #include "function.h"
+#include "exception.h"
 
 #ifdef TRE_HAVE_COMPILED_ENV
 	treptr userfun_cInit (void);
@@ -196,6 +197,7 @@ tremain_init (void)
     tredot_init ();
     trespecial_init ();
     treimage_init ();
+    treexception_init ();
 
     MAKE_SYMBOL("*KERNEL-IDENT*",     trestring_get (TRE_KERNEL_IDENT));
     MAKE_SYMBOL("*CPU-TYPE*",         trestring_get (TRE_CPU_TYPE));
