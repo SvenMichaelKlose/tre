@@ -55,8 +55,6 @@
 
 (finalize-class event-module)
 
-(defvar *event-module* (make-event-module "default"))
-
 (defmacro with-event-module (x &rest body)
   `(with-temporary *event-module* ,x
      ,@body))

@@ -2,11 +2,14 @@
 
 (dont-obfuscate add-event-listener attach-event)
 
+(declare-cps-exception native-add-event-listener)
+
 (defun native-add-event-listener (elm typ fun)
-  (?
-    elm.add-event-listener (elm.add-event-listener typ fun false)
-    elm.attach-event       (elm.attach-event (+ "on" typ) fun)
-    (error "Can't determine function to add the event listener for '~A' on DOM object ~A." typ elm)))
+  (with (f [funcall fun _])
+    (?
+      elm.add-event-listener (elm.add-event-listener typ f false)
+      elm.attach-event       (elm.attach-event (+ "on" typ) f)
+      (error "Can't determine function to add the event listener for '~A' on DOM object ~A." typ elm))))
 
 (dont-obfuscate remove-event-listener detach-event)
 

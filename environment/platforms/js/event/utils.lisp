@@ -21,7 +21,8 @@
   (event-manager.fire-on-element elm (new caroshi-event :new-type "text-modified")))
 
 (defun force-mousemove-event ()
-  (wait #'fire-mousemove-event 1))
+  (wait 1)
+  (fire-mousemove-event))
 
 (defun swallow-event (evt)
   (evt.discard)

@@ -2,7 +2,7 @@
 
 (defun bind-event-listener (obj fun)
   (assert (function? fun) "BIND-EVENT-LISTENER requires a function")
-  [fun.apply obj (make-array (new caroshi-event :native-event _))])
+  [methodapply obj fun (make-array (new caroshi-event :native-event _))])
 
 (defclass _event-manager ()
   (clr _modules
@@ -313,3 +313,5 @@
 (finalize-class _event-manager)
 
 (defvar event-manager (new _event-manager))
+(defvar *default-event-module* (aprog1 (new event-module "default")
+                                 (event-manager.add !)))
