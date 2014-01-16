@@ -1,8 +1,8 @@
-;;;;; tré – Copyright (c) 2006–2008,2011–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2006–2008,2011–2014 Sven Michael Klose <pixel@copei.de>
 
 (defvar *warnings* nil)
 
-(defmacro without-automatic-newline (&rest body)
+(defmacro without-automatic-newline (&body body)
   `(with-temporary *print-automatic-newline?* nil
      ,@body))
 

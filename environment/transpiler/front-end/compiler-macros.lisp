@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2006–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2006–2014 Sven Michael Klose <pixel@copei.de>
 
 (defvar *tagbody-replacements*)
 
@@ -7,9 +7,9 @@
 
 (define-expander 'compiler :pre  #'init-compiler-macros)
 
-(defmacro define-compiler-macro (&rest x)
-  (print-definition `(define-compiler-macro ,x.))
-  `(define-expander-macro compiler ,@x))
+(defmacro define-compiler-macro (name args &body x)
+  (print-definition `(define-compiler-macro ,name ,args))
+  `(define-expander-macro compiler ,name ,args ,@x))
 
 (defun compiler-macroexpand (x)
   (expander-expand 'compiler x))
@@ -44,16 +44,16 @@
         (acons! tag g *tagbody-replacements*)
         `(%%go ,g))))
 
-(define-compiler-macro tagbody (&rest args)
+(define-compiler-macro tagbody (&body body)
   `(%%block
      ,@(filter [(? (cons? _)
 		           _
 		     	   (| (assoc-value _ *tagbody-replacements* :test #'eq)
 		       	      _))]
-               args)
+               body)
      (identity nil)))
 
-(define-compiler-macro progn (&rest body)
+(define-compiler-macro progn (&body body)
   (!? body
       `(%%block ,@(distinguish-vars-from-tags body))))
 
@@ -68,7 +68,7 @@
         (%%go ,*blockname-replacement*))
 	 `(return-from ,block-name ,expr)))
 
-(define-compiler-macro block (block-name &rest body)
+(define-compiler-macro block (block-name &body body)
   (? body
 	 (with-compiler-tag g
 	   (with-temporaries (*blockname* block-name
@@ -87,7 +87,7 @@
 (define-compiler-macro setq (&rest args)
   `(%%block ,@(filter ^(%= ,_. ,._.) (group args 2))))
 
-(define-compiler-macro ? (&rest body)
+(define-compiler-macro ? (&body body)
   (with (tests (group body 2)
 		 end   (car (last tests)))
     (unless body
@@ -97,7 +97,7 @@
 			 (+ (butlast tests) (list (cons t end)))
 			 tests))))
 
-(define-compiler-macro %%block (&rest body)
+(define-compiler-macro %%block (&body body)
    (?
      .body            `(%%block ,@(compress-%%blocks body))
      (vm-jump? body.) `(%%block ,body.)

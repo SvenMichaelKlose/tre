@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun child-of-ancestor-if (node pred)
   (let child node
@@ -24,12 +24,12 @@
 	  (& (funcall pred x)
 		 (enqueue elms x)))))
 
-(defmacro do-ancestors-unless ((iter start) &rest body)
+(defmacro do-ancestors-unless ((iter start) &body body)
   `(do-ancestors (,iter ,start)
      (& (progn ,@body)
 	    (return ,iter))))
 
-(defmacro do-self-and-ancestors-unless ((iter start) &rest body)
+(defmacro do-self-and-ancestors-unless ((iter start) &body body)
   `(do-self-and-ancestors (,iter ,start)
      (& (progn ,@body)
 	    (return ,iter))))

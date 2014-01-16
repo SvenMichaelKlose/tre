@@ -31,12 +31,12 @@
   (apply #'nconc (apply #'mapcar func lists)))
 
 (defmacro dolist ((iter lst &rest result) &body body)
-  (let* ((starttag (gensym))
-         (endtag (gensym))
-	     (tmplst (gensym)))
+  (let* ((starttag  (gensym))
+         (endtag    (gensym))
+	     (tmplst    (gensym)))
     `(block nil
-       (let* ((,tmplst ,lst)
-	          (,iter nil))
+       (let* ((,tmplst  ,lst)
+	          (,iter    nil))
          (tagbody
            ,starttag
            (? (not ,tmplst)

@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2006–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2006–2014 Sven Michael Klose <pixel@copei.de>
 
 ; This pass converts the input into a sequence of statements without
 ; %%BLOCKs, it expands arguments and moves statements out of
@@ -261,7 +261,7 @@
      (= *expex-sym-counter* 0)
      (expex-body x)))
 
-(defmacro with-transpiler-expex (&rest body)
+(defmacro with-transpiler-expex (&body body)
   `(with-temporary *expex* (transpiler-expex *transpiler*)
      ,@body))
 

@@ -111,15 +111,15 @@
 		 exp-rest
 		   #'((def vals)
 				(= no-static '&rest)
-  			    (= rest-arg (list (. (argdef-get-name def.)
-                                     (. '&rest vals))))
+  			    (= rest-arg (list (. (argdef-get-name .def.)
+                                     (. def. vals))))
 			    nil)
 
          exp-optional-rest
 		   #'((def vals)
 		        (case def.
-				  '&rest     (exp-rest .def vals)
-				  '&body     (exp-rest .def vals)
+				  '&rest     (exp-rest def vals)
+				  '&body     (exp-rest def vals)
 				  '&optional (exp-optional .def vals)))
 
 		 exp-sub

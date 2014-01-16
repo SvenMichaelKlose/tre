@@ -1,6 +1,6 @@
-;;;;; tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
 
-(defmacro with-lambda-call ((args vals body x) &rest exec-body)
+(defmacro with-lambda-call ((args vals body x) &body exec-body)
   (with-gensym (tmp fun)
     `(with (,tmp ,x
             ,fun (cadar ,tmp)
@@ -9,7 +9,7 @@
             ,body (lambda-body ,fun))
        ,@exec-body)))
 
-(defmacro with-lambda (name args body x &rest macro-body)
+(defmacro with-lambda (name args body x &body macro-body)
   (with-gensym g
     `(with (,g    ,x
             ,name (lambda-name ,g)
@@ -17,7 +17,7 @@
             ,body (lambda-body ,g))
        ,@macro-body)))
 
-(defmacro with-lambda&fi (name args body fi x &rest macro-body)
+(defmacro with-lambda&fi (name args body fi x &body macro-body)
   (with-gensym g
     `(with (,g    ,x
             ,name (lambda-name ,g)

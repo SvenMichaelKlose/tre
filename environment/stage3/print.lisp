@@ -19,36 +19,51 @@
          (%print-rest .x str info))
        (progn
          (princ " . " str)
-         (%print-atom x str info)
-         (princ ")" str))))
-  (princ ")" str))
+         (%print-atom x str info)))))
 
 (defun %print-body (x str info)
+  (terpri str)
   (with-temporary (print-info-indentation info) (+ 2 (print-info-indentation info))
     (adolist x
       (%print-indentation str info)
       (%late-print ! str info)
-      (terpri str))))
+      (unless (eq ! (car (last x)))
+        (terpri str)))))
 
 (defun %print-call (x argdef str info)
-  (adolist ((%print-get-args .x argdef))
-    (? (& (cons? .!)
-          (eq '&body .!.))
-       (%print-body ..! str info)
+  (adolist ((%print-get-args x argdef))
+    (? (cons? .!)
+       (?
+         (eq '&body .!.) (%print-body ..! str info)
+         (eq '&rest .!.) (%print-rest ..! str info)
+         (progn
+           (princ " " str)
+           (%print-cons .! str info)))
        (with-temporary *print-automatic-newline?* nil
          (princ " " str)
          (%late-print .! str info)))))
 
+(defun %print-quote (abbreviation x str info)
+  (princ abbreviation)
+  (%late-print .x. str info))
+
 (defun %print-cons (x str info)
-  (princ "(" str)
-  (%late-print x. str info)
-  (!? (& (print-info-pretty-print? info)
-         (symbol? x.)
-         (!? (symbol-function x.)
-             (& (function? !)
-                (function-arguments !))))
-      (%print-call .x ! str info)
-      (%print-rest .x str info)))
+  (case x.
+    'quote              (%print-quote "'" x str info)
+    'backquote          (%print-quote "`" x str info)
+    'quasiquote         (%print-quote "," x str info)
+    'quasiquote-splice  (%print-quote ",@" x str info)
+    (progn
+      (princ "(" str)
+      (%late-print x. str info)
+      (!? (& (print-info-pretty-print? info)
+             (symbol? x.)
+             (!? (symbol-function x.)
+                 (& (function? !)
+                    (function-arguments !))))
+          (%print-call .x ! str info)
+          (%print-rest .x str info))
+      (princ ")" str))))
 
 (defun %print-string (x str)
   (princ #\" str)

@@ -1,8 +1,8 @@
-;;;;; tré – Copyright (c) 2005–2009,2012–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2009,2012–2014 Sven Michael Klose <pixel@copei.de>
 
 ;;; Macros and functions that don't belong here.
 
-(defmacro with-queue-string-while (q pred &rest body)
+(defmacro with-queue-string-while (q pred &body body)
   `(with-queue ,q
      (while ,pred (queue-string ,q)
        ,@body)))

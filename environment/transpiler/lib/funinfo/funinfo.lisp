@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2006–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2006–2014 Sven Michael Klose <pixel@copei.de>
 
 (defvar *funinfo*)
 
@@ -70,11 +70,11 @@
   (when (named-lambda? x)
     (get-funinfo (lambda-name x))))
 
-(defmacro with-global-funinfo (&rest body)
+(defmacro with-global-funinfo (&body body)
   `(with-temporary *funinfo* (transpiler-global-funinfo *transpiler*)
      ,@body))
 
-(defmacro with-lambda-funinfo (x &rest body)
+(defmacro with-lambda-funinfo (x &body body)
   `(with-temporary *funinfo* (get-lambda-funinfo ,x)
      ,@body))
 

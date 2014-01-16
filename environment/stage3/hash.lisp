@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2006,2008–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2006,2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defvar *default-hash-size* 2039)
 
@@ -26,7 +26,7 @@
     (string? key) (%make-hash-index-string h key)
     (%make-hash-index-num h (%%id key))))
 
-(defmacro %with-hash-bucket (bucket idx h key &rest body)
+(defmacro %with-hash-bucket (bucket idx h key &body body)
   `(with (,idx    (%make-hash-index ,h ,key)
 	      ,bucket (aref (hash-table-buckets ,h) ,idx))
     ,@body))

@@ -20,10 +20,10 @@
 	   (defun ,($ class-name '?) (x)
 	     (%%native x " instanceof " ,(compiled-function-name-string class-name))))))
 
-(define-js-std-macro defclass (class-name args &rest body)
+(define-js-std-macro defclass (class-name args &body body)
   (apply #'generic-defclass #'js-gen-constructor class-name args body))
 
-(define-js-std-macro defmethod (class-name name args &rest body)
+(define-js-std-macro defmethod (class-name name args &body body)
   (apply #'generic-defmethod class-name name args body))
 
 (define-js-std-macro defmember (class-name &rest names)

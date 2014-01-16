@@ -1,12 +1,12 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
-(defmacro define-c-std-macro (&rest x)
-  `(define-transpiler-std-macro *c-transpiler* ,@x))
+(defmacro define-c-std-macro (name args &body body)
+  `(define-transpiler-std-macro *c-transpiler* ,name ,args ,@body))
 
 (defun c-expander-name (x)
   ($ x '_treexp))
 
-(define-c-std-macro defun (name args &rest body)
+(define-c-std-macro defun (name args &body body)
   (c-compiled-symbol (%defun-name name))
   (shared-defun name args body))
 
@@ -62,9 +62,9 @@
      `(%- ,x. (number+ ,@.x))
      `(%- ,@x)))
 
-(define-c-std-macro integer+ (&rest x) `(number+ ,@x))
+(define-c-std-macro integer+   (&rest x) `(number+ ,@x))
 (define-c-std-macro character+ (&rest x) `(number+ ,@x))
-(define-c-std-macro integer- (&rest x) `(number- ,@x))
+(define-c-std-macro integer-   (&rest x) `(number- ,@x))
 (define-c-std-macro character- (&rest x) `(number- ,@x))
 
 (define-c-std-macro %backtrace-pop ()

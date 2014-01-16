@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defclass event-module (name)
   (log-events "New event module `~A'.~%" name)
@@ -55,6 +55,6 @@
 
 (finalize-class event-module)
 
-(defmacro with-event-module (x &rest body)
+(defmacro with-event-module (x &body body)
   `(with-temporary *event-module* ,x
      ,@body))

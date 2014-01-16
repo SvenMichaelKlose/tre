@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2006,2009,2012–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2006,2009,2012–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun multiple-value-bind-0 (forms gl body)
   (? forms
@@ -12,17 +12,17 @@
 	       ,@(multiple-value-bind-0 (cdr forms) gn body))))
 	 body))
 
-(defmacro multiple-value-bind (forms expr &rest body)
+(defmacro multiple-value-bind (forms expr &body body)
   (with-gensym (g gl)
-    `(let* ((,g ,expr)
-	        (,gl (cdr ,g)))
+    `(let* ((,g   ,expr)
+	        (,gl  (cdr ,g)))
 	   ,@(& *assert*
             `((unless (eq (car ,g) 'values)
          	    (error "VALUES expected instead of ~A." ,g))))
        ,@(multiple-value-bind-0 forms gl body))))
 
 (defun values (&rest vals)
-  (cons 'values vals))
+  (. 'values vals))
 
 (defun values? (x)
   (& (cons? x)

@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2012–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2012–2014 Sven Michael Klose <pixel@copei.de>
 
 (defmacro make-default-listprop (x)
   (with-gensym g
@@ -11,9 +11,9 @@
     `(progn
        (make-default-listprop ,x)
        (let ,g *default-listprop*
-         (rplacp (cons ,a ,d) ,g)))))
+         (rplacp (. ,a ,d) ,g)))))
 
-(defmacro with-default-listprop (x &rest body)
+(defmacro with-default-listprop (x &body body)
   (with-gensym g
     `(let ,g *default-listprop*
        (make-default-listprop ,x)

@@ -1,8 +1,8 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defvar *delayed-constructors* nil)
 
-(defun generic-defclass (constructor-maker class-name args &rest body)
+(defun generic-defclass (constructor-maker class-name args &body body)
   (with (cname (? (cons? class-name) class-name. class-name)
 		 bases (& (cons? class-name) .class-name)
 		 classes (transpiler-thisify-classes *transpiler*))
@@ -20,7 +20,7 @@
 		    *delayed-constructors*)
 	nil))
 
-(defun generic-defmethod (class-name name args &rest body)
+(defun generic-defmethod (class-name name args &body body)
   (print-definition `(defmethod ,class-name ,name ,@(awhen args (list !))))
   (!? (href (transpiler-thisify-classes *transpiler*) class-name)
       (let code (list args (append (head-if #'atom body :but-last t)

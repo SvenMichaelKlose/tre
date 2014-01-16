@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008,2010,2012–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008,2010,2012–2014 Sven Michael Klose <pixel@copei.de>
 
 (dont-obfuscate clear-timeout set-timeout)
 (declare-cps-exception wait)
@@ -12,7 +12,7 @@
 					                       (funcall ~%cont))
                                       millisecs))))
 
-(defmacro do-wait (millisecs &rest body)
+(defmacro do-wait (millisecs &body body)
   (? (transpiler-cps-transformation? *transpiler*)
      `(progn
         (wait ,millisecs)

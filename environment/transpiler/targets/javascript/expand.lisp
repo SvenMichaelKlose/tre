@@ -1,7 +1,7 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
-(defmacro define-js-std-macro (&rest x)
-  `(define-transpiler-std-macro *js-transpiler* ,@x))
+(defmacro define-js-std-macro (name args &body body)
+  `(define-transpiler-std-macro *js-transpiler* ,name ,args ,@body))
 
 (defun js-make-function-with-expander (x)
   (alet (| (lambda-name x)
@@ -35,7 +35,7 @@
 (defun emit-late-symbol-function-assignments ()
   (reverse *late-symbol-function-assignments*))
 
-(define-js-std-macro define-native-js-fun (name args &rest body)
+(define-js-std-macro define-native-js-fun (name args &body body)
   (js-make-late-symbol-function-assignment name)
   `(progn
      (%var ,(%defun-name name))
@@ -48,7 +48,7 @@
                        ,(!? (symbol-package sym)
                             `(make-package ,(obfuscated-symbol-name !)))))))
 
-(define-js-std-macro defun (name args &rest body)
+(define-js-std-macro defun (name args &body body)
   (with (dname (apply-current-package (transpiler-package-symbol *js-transpiler* (%defun-name name)))
          g     '~%tfun)
       `(%%block
@@ -57,8 +57,8 @@
          ,(shared-defun dname args body :make-expander? nil)
          (= (symbol-function ,g) ,dname))))
 
-(define-js-std-macro early-defun (&rest x)
-  `(defun ,@x))
+(define-js-std-macro early-defun (name args &body body)
+  `(defun ,name ,args ,@body))
 
 (define-js-std-macro slot-value (place slot)
   `(%slot-value ,place ,.slot.))

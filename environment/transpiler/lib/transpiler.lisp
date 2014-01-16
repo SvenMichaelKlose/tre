@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defvar *transpiler* nil)
 (defvar *transpiler-log* nil)
@@ -273,7 +273,7 @@
     (transpiler-copy-std-macro-expander transpiler !)
     (transpiler-make-expex !)))
 
-(defmacro transpiler-getter (name &rest body)
+(defmacro transpiler-getter (name &body body)
   `(defun ,($ 'transpiler- name) (tr x)
      ,@body))
 

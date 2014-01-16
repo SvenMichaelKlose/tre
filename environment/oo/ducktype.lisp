@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
 
 (defvar *classes* (make-hash-table :test #'eq))
 
@@ -11,7 +11,7 @@
   class
   slots)
 
-(defmacro defclass (classes args &rest body)
+(defmacro defclass (classes args &body body)
   (print-definition `(defclass ,classes ,args))
   (= classes (ensure-list classes))
   (& (href *classes* classes.)
@@ -40,7 +40,7 @@
   (| (href *classes* class-name)
      (error "Class ~A is not defined." class-name)))
 
-(defmacro defmethod (class-name name args &rest body)
+(defmacro defmethod (class-name name args &body body)
   (print-definition `(defmethod ,class-name ,name ,args))
   (%ducktype-assert-class class-name)
   `(+! (href (class-methods (href *classes* ',class-name)) name)

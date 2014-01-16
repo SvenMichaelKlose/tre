@@ -1,4 +1,4 @@
-;;;;; Caroshi – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; Caroshi – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun php-constructor-name (class-name)
   ($ class-name '-constructor))
@@ -19,10 +19,10 @@
               (let ~%this this
                 (%thisify ,class-name ,@body)))))
 
-(define-php-std-macro defclass (class-name args &rest body)
+(define-php-std-macro defclass (class-name args &body body)
   (apply #'generic-defclass #'php-constructor class-name args body))
 
-(define-php-std-macro defmethod (class-name name args &rest body)
+(define-php-std-macro defmethod (class-name name args &body body)
   (apply #'generic-defmethod class-name name args body))
 
 (define-php-std-macro defmember (class-name &rest names)
