@@ -2,6 +2,7 @@
 
 (defstruct print-info
   (pretty-print?  nil)
+  (downcase?      nil)
   (indentation    0)
   (no-padding?    t))
 
@@ -61,7 +62,7 @@
   (%print-args (%print-get-args x argdef) str info))
 
 (defun %print-abbreviation (abbreviation x str info)
-  (princ abbreviation)
+  (princ abbreviation str)
   (%with-brackets str info
     (%late-print .x. str info)))
 
@@ -99,11 +100,14 @@
       (princ i str)))
   (princ #\" str))
 
-(defun %print-symbol (x str)
-  (awhen (symbol-package x)
-    (princ (symbol-name !) str)
-    (princ #\: str))
-  (princ (symbol-name x) str))
+(defun %print-symbol (x str info)
+  (with (conv [? (print-info-downcase? info)
+                 (string-downcase _)
+                 _])
+    (princ (conv (symbol-name x)) str)
+    (awhen (symbol-package x)
+      (princ #\: str)
+      (princ (conv (symbol-name !)) str))))
 
 (defun %print-array (x str info)
   (princ "#" str)
@@ -125,7 +129,7 @@
 (defun %print-atom (x str info)
   (%with-padding str info
     (?
-      (symbol? x)     (%print-symbol x str)
+      (symbol? x)     (%print-symbol x str info)
       (character? x)  (%print-character x str)
       (number? x)     (princ x str)
       (string? x)     (%print-string x str)
