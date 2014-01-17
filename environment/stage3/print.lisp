@@ -122,8 +122,7 @@
                str info))
 
 (defun %print-character (x str)
-  (princ #\# str)
-  (princ #\\ str)
+  (princ "#\\" str)
   (princ x str))
 
 (defun %print-atom (x str info)
