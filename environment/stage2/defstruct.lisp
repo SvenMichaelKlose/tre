@@ -114,4 +114,5 @@
               ,,@body))))))
 
 (defmacro defstruct (name &body fields-and-options)
+  (print-definition `(defstruct ,name))
   (apply #'%defstruct-expander name fields-and-options))
