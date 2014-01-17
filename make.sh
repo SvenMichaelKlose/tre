@@ -75,7 +75,7 @@ CFLAGS="-pipe $C_DIALECT_FLAGS $GNU_LIBC_FLAGS $BUILD_MACHINE_INFO $ARGS"
 
 DEBUGOPTS="-O0 -g"
 BUILDOPTS="-O2 -march=native -mtune=native"
-CRUNSHOPTS="-O2 --whole-program -march=native -mtune=native"
+CRUNSHOPTS="-O2" # --whole-program -march=native -mtune=native"
 CRUNSHFLAGS="-DTRE_COMPILED_CRUNSHED -Iinterpreter"
 
 LIBFLAGS="-lm -lffi -ldl -lrt"
@@ -224,7 +224,7 @@ phptest)
 jstest)
     echo "JS target tests..."
     tre makefiles/test-js.lisp
-    chromium-browser compiled/test.html
+    chromium-browser compiled/test.html &
 	;;
 
 updatetests)
@@ -263,6 +263,8 @@ all)
 	./make.sh boot $ARGS || exit 1
 	./make.sh install || exit 1
 	./make.sh tests || exit 1
+	./make.sh bytecode-image || exit 1
+    tre makefiles/webconsole.lisp || exit 1
     ;;
 
 install)
