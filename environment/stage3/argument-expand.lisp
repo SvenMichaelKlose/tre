@@ -53,7 +53,7 @@
     (cons? defs.) (cadr defs.)
     defs.))
 
-(defun argument-expand-0 (fun adef alst apply-values?)
+(defun argument-expand-0 (fun adef alst apply-values? concatenate-sublists?)
   (with ((a k)      (make-&key-alist adef)
 	     argdefs    a
 	     key-args   k
@@ -119,8 +119,11 @@
 				   (err "static sublevel argument definition after ~A" (list no-static)))
 				(& apply-values? (atom vals.)
 				   (err "sublist expected for argument ~A" (list num)))
-				(%nconc (argument-expand-0 fun def. vals. apply-values?)
-					    (exp-main .def .vals)))
+                (? concatenate-sublists?
+				   (%nconc (argument-expand-0 fun def. vals. apply-values? concatenate-sublists?)
+					       (exp-main .def .vals))
+				   (. (. '&sublist (argument-expand-0 fun def. vals. apply-values? concatenate-sublists?))
+					  (exp-main .def .vals))))
 
 		 exp-check-too-many
            #'((def vals)
@@ -147,18 +150,18 @@
 	 (%nconc (exp-main argdefs alst)
 			 (%nconc key-args rest-arg))))
 
-(defun argument-expand (fun def vals &optional (apply-values? t))
+(defun argument-expand (fun def vals &key (apply-values? t) (concatenate-sublists? t))
   (? apply-values?
-	 (argument-expand-0 fun def vals apply-values?)
-	 (carlist (argument-expand-0 fun def vals apply-values?))))
+	 (argument-expand-0 fun def vals apply-values? concatenate-sublists?)
+	 (carlist (argument-expand-0 fun def vals apply-values? concatenate-sublists?))))
 
 (defun argument-expand-names (fun def)
-  (argument-expand fun def nil nil))
+  (argument-expand fun def nil :apply-values? nil))
 
 ;;; Tests
 
 (define-test "argument expansion works with simple list"
-  ((equal (argument-expand 'test '(a b) '(2 3) t)
+  ((equal (argument-expand 'test '(a b) '(2 3))
 	      '((a . 2) (b . 3))))
   t)
 
@@ -168,7 +171,7 @@
   t)
 
 (define-test "argument expansion can handle nested lists"
-  ((equal (argument-expand 'test '(a (b c) d) '(23 (2 3) 42) t)
+  ((equal (argument-expand 'test '(a (b c) d) '(23 (2 3) 42))
 	      '((a . 23) (b . 2) (c . 3) (d . 42))))
   t)
 
@@ -178,7 +181,7 @@
   t)
 
 (define-test "argument expansion can handle &REST keyword"
-  ((equal (argument-expand 'test '(a b &rest c) '(23 5 42 65) t)
+  ((equal (argument-expand 'test '(a b &rest c) '(23 5 42 65))
 		  '((a . 23) (b . 5) (c &rest 42 65))))
   t)
 
@@ -188,7 +191,7 @@
   t)
 
 (define-test "argument expansion can handle missing &REST"
-  ((equal (argument-expand 'test '(a b &rest c) '(23 5) t)
+  ((equal (argument-expand 'test '(a b &rest c) '(23 5))
 		  '((a . 23) (b . 5) (c &rest))))
   t)
 
@@ -198,7 +201,8 @@
   t)
 
 (define-test "argument expansion can handle &OPTIONAL keyword"
-  ((equal (argument-expand 'test '(a b &optional c d) '(23 2 3 42) t)
+  ((equal (argument-expand 'test '(a b &optional c d)
+                                 '(23 2 3 42))
 		  '((a . 23) (b . 2) (c . 3) (d . 42))))
   t)
 
@@ -208,7 +212,8 @@
   t)
 
 (define-test "argument expansion can handle &OPTIONAL keyword with init forms"
-  ((equal (argument-expand 'test '(a b &optional (c 3) (d 42)) '(23 2) t)
+  ((equal (argument-expand 'test '(a b &optional (c 3) (d 42))
+                                 '(23 2))
 		  '((a . 23) (b . 2) (c . 3) (d . 42))))
   t)
 
@@ -219,13 +224,13 @@
 
 (define-test "argument expansion can handle &KEY keyword"
   ((equal (argument-expand 'test '(a b &key c d)
-								 '(23 2 :c 3 :d 42) t)
+                                 '(23 2 :c 3 :d 42))
 		  '((a . 23) (b . 2) (c . 3) (d . 42))))
   t)
 
 (define-test "argument expansion can handle &KEY keyword with overloaded init forms"
   ((equal (argument-expand 'test '(a b &key (c 3) (d 42))
-								 '(23 2 :c 5 :d 65) t)
+                                 '(23 2 :c 5 :d 65))
 		  '((a . 23) (b . 2) (c . 5) (d . 65))))
   t)
 
@@ -241,7 +246,7 @@
 
 (define-test "argument expansion can handle &OPTIONAL and &KEY keyword with init forms with :apply-values?"
   ((equal (argument-expand 'test '(a b &optional (c 3) &key (d 42))
-								 '(23 2 3 :d 65) t)
+								 '(23 2 3 :d 65))
 		  '((a . 23) (b . 2) (c . 3) (d . 65))))
   t)
 
