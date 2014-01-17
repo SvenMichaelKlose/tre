@@ -4,4 +4,4 @@
 
 (defun %print-get-args (args def)
   (catch nil
-    (argument-expand 'print def args)))
+    (argument-expand 'print def args :concatenate-sublists? nil)))
