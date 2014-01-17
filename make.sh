@@ -236,6 +236,7 @@ updatetests)
 tests)
     echo "Making tests..."
 	./make.sh phptest || exit 1
+	./make.sh jstest || exit 1
 	;;
 
 debugboot)
