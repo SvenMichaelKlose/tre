@@ -43,16 +43,17 @@
          (princ " " str)
          (%late-print .! str info)))))
 
-(defun %print-quote (abbreviation x str info)
+(defun %print-abbreviation (abbreviation x str info)
   (princ abbreviation)
   (%late-print .x. str info))
 
 (defun %print-cons (x str info)
   (case x.
-    'quote              (%print-quote "'" x str info)
-    'backquote          (%print-quote "`" x str info)
-    'quasiquote         (%print-quote "," x str info)
-    'quasiquote-splice  (%print-quote ",@" x str info)
+    'quote              (%print-abbreviation "'" x str info)
+    'backquote          (%print-abbreviation "`" x str info)
+    'quasiquote         (%print-abbreviation "," x str info)
+    'quasiquote-splice  (%print-abbreviation ",@" x str info)
+    'function           (%print-abbreviation "#'" x str info)
     (progn
       (princ "(" str)
       (%late-print x. str info)
