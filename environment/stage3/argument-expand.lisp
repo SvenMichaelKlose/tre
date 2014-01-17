@@ -122,7 +122,7 @@
                 (? concatenate-sublists?
 				   (%nconc (argument-expand-0 fun def. vals. apply-values? concatenate-sublists?)
 					       (exp-main .def .vals))
-				   (. (. '&sublist (argument-expand-0 fun def. vals. apply-values? concatenate-sublists?))
+				   (. (. nil (argument-expand-0 fun def. vals. apply-values? concatenate-sublists?))
 					  (exp-main .def .vals))))
 
 		 exp-check-too-many
