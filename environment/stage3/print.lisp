@@ -62,7 +62,8 @@
 
 (defun %print-abbreviation (abbreviation x str info)
   (princ abbreviation)
-  (%late-print .x. str info))
+  (%with-brackets str info
+    (%late-print .x. str info)))
 
 (defconstant *printer-abbreviations* '((quote              "'")
                                        (backquote          "`")
@@ -78,16 +79,16 @@
             (function-arguments !)))))
 
 (defun %print-list (x str info)
-  (%late-print x. str info)
-  (!? (%print-call? x info)
-      (%print-call .x ! str info)
-      (%print-rest .x str info)))
+  (%with-brackets str info
+    (%late-print x. str info)
+    (!? (%print-call? x info)
+        (%print-call .x ! str info)
+        (%print-rest .x str info))))
 
 (defun %print-cons (x str info)
-  (%with-brackets str info
-    (!? (assoc x. *printer-abbreviations* :test #'eq)
-        (%print-abbreviation .!. x str info)
-        (%print-list x str info))))
+  (!? (assoc x. *printer-abbreviations* :test #'eq)
+      (%print-abbreviation .!. x str info)
+      (%print-list x str info)))
 
 (defun %print-string (x str)
   (princ #\" str)
