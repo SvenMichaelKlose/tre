@@ -275,11 +275,10 @@ tregc_print_stats ()
             c[(int) tre_atom_types[i]]++;
         }
 
-    printf (": %ld cons, %ld atoms. %ld syms, "
-            "(%ld var, %ld num, %ld arr, %ld str, "
+    printf (": %ld cons, %ld atoms "
+            "(%ld sym, %ld num, %ld arr, %ld str, "
             "%ld fun, %ld mac, %ld usr, %ld blt, %ld spc).\n",
-            (long) trelist_num_used, atoms, (long) num_symbols,
-            c[TRETYPE_SYMBOL], c[TRETYPE_NUMBER], c[TRETYPE_ARRAY], c[TRETYPE_STRING],
+            (long) trelist_num_used, atoms, c[TRETYPE_SYMBOL], c[TRETYPE_NUMBER], c[TRETYPE_ARRAY], c[TRETYPE_STRING],
             c[TRETYPE_FUNCTION], c[TRETYPE_MACRO], c[TRETYPE_USERSPECIAL],
             c[TRETYPE_BUILTIN], c[TRETYPE_SPECIAL]);
     fflush (stdout);
