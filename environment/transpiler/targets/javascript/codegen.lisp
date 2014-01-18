@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun js-call (x)
   `(,x. ,@(parenthized-comma-separated-list .x)))
@@ -253,16 +253,7 @@
   `(%%native *BACKTRACE* "=" *BACKTRACE* ".__"))
 
 
-;;;; GLOBAL VARIABLES
-
-(define-js-macro %global (x)
-  x)
-
-
 ;;;; CPS FIXUPS
 
 (define-js-macro cps-toplevel-return-value (x)
   `(%%native "function(r){" ,x "=r;}"))
-
-;(define-js-macro %cps-step (&rest args)
-;  args)
