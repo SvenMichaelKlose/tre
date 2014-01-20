@@ -1,8 +1,9 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun js-prologue ()
   (+ (format nil "// tré revision ~A~%" *tre-revision*)
-     (format nil ,(fetch-file "environment/transpiler/targets/javascript/environment/native/cps.js"))
+     (& (transpiler-cps-transformation? *transpiler*)
+        (format nil ,(fetch-file "environment/transpiler/targets/javascript/environment/native/cps.js")))
      (format nil "var _I_ = 0; while (1) {switch (_I_) {case 0: ~%")))
 
 (defun js-epilogue ()
