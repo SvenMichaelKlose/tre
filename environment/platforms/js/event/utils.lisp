@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2011,2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2011,2013–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun fire-mousemove-event ()
   (alet event-manager
@@ -21,8 +21,8 @@
   (event-manager.fire-on-element elm (new caroshi-event :new-type "text-modified")))
 
 (defun force-mousemove-event ()
-  (wait 1)
-  (fire-mousemove-event))
+  (do-wait 1
+    (fire-mousemove-event)))
 
 (defun swallow-event (evt)
   (evt.discard)
