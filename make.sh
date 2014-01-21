@@ -258,12 +258,17 @@ bytecode-image)
 	(echo "(with-output-file o \"bytecode-image\" (adolist ((compile-bytecode-environment)) (late-print ! o)))" | ./tre) || exit 1
 	;;
 
+jsdebugger)
+    tre makefiles/debugger-js.lisp || exit 1
+    ;;
+
 all)
     echo "Making all..."
 	./make.sh boot $ARGS || exit 1
 	./make.sh install || exit 1
 	./make.sh tests || exit 1
 	./make.sh bytecode-image || exit 1
+	./make.sh jsdebugger || exit 1
     tre makefiles/webconsole.lisp || exit 1
     ;;
 
