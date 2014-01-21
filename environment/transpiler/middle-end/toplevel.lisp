@@ -1,8 +1,7 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (transpiler-pass middleend-0 ()
     make-packages            #'make-packages
-    fake-place-expand        #'fake-place-expand
     expression-expand        #'expression-expand
     correct-functions        #'correct-functions
     accumulate-toplevel      [? (transpiler-accumulate-toplevel-expressions? *transpiler*)
