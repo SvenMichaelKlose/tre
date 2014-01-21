@@ -1,4 +1,4 @@
-;;;;; tré – (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
 
 (env-load "transpiler/middle-end/make-packages.lisp")
 (env-load "transpiler/middle-end/correct-functions.lisp")

@@ -10,6 +10,7 @@
     inject-debugging         [? (transpiler-inject-debugging? *transpiler*)
                                 (inject-debugging _)
                                 _]
+    quote-keywords           #'quote-keywords
     optimize                 [? (transpiler-inject-debugging? *transpiler*)
                                 _
                                 (optimize _)]
