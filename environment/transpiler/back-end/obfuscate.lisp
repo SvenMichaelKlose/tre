@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defvar *obfuscation-counter* 0)
 
@@ -43,7 +43,7 @@
   (symbol-name (obfuscate-symbol x)))
 
 (defun obfuscated-identifier (x)
-  (transpiler-symbol-string (obfuscate-symbol x)))
+  (convert-identifier (obfuscate-symbol x)))
 
 (defun transpiler-print-obfuscations (tr)
   (dolist (k (hashkeys (transpiler-obfuscations tr)))

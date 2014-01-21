@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun transpiler-translate-symbol (tr from to)
   (acons! from to (transpiler-symbol-translations tr)))
@@ -12,7 +12,7 @@
        (== (elt x 0) #\*)
        (== (elt x (-- l)) #\*))))
 
-(defun transpiler-symbol-string-r (s)
+(defun convert-identifier-r (s)
   (with (encapsulate-char
 		   [string-list (string-concat "T" (format nil "~A" (char-code _)))]
 				
@@ -55,26 +55,26 @@
                                  (convert-global str)
     	                         (convert-camel (string-list str) 0))))))))
 
-(defun transpiler-symbol-string-1 (s)
+(defun convert-identifier-1 (s)
   (!? (symbol-package s)
-      (transpiler-symbol-string-r (make-symbol (string-concat (symbol-name !) ":" (symbol-name s))))
-      (transpiler-symbol-string-r s)))
+      (convert-identifier-r (make-symbol (string-concat (symbol-name !) ":" (symbol-name s))))
+      (convert-identifier-r s)))
 
 (defun transpiler-dot-symbol-string (sl)
-  (apply #'string-concat (pad (filter [transpiler-symbol-string-0 (make-symbol (list-string _))]
+  (apply #'string-concat (pad (filter [convert-identifier-0 (make-symbol (list-string _))]
 		                              (split #\. sl))
                               ".")))
 
-(defun transpiler-symbol-string-0 (s)
+(defun convert-identifier-0 (s)
   (let sl (string-list (symbol-name s))
     (? (position #\. sl)
 	   (transpiler-dot-symbol-string sl)
-	   (transpiler-symbol-string-1 s))))
+	   (convert-identifier-1 s))))
 
-(defun transpiler-symbol-string (s)
+(defun convert-identifier (s)
   (let tr *transpiler*
     (| (href (transpiler-identifiers tr) s)
-       (let n (transpiler-symbol-string-0 s)
+       (let n (convert-identifier-0 s)
          (awhen (href (transpiler-converted-identifiers tr) n)
            (error "Identifier conversion clash. Symbols ~A and ~A are both converted to ~A."
                   (symbol-name s) (symbol-name !) (symbol-name n)))
@@ -82,18 +82,18 @@
          (= (href (transpiler-converted-identifiers tr) n) s)
          n))))
 
-(defun transpiler-to-string-cons (x)
+(defun convert-identifiers-cons (x)
   (?
     (%%string? x) (funcall (transpiler-gen-string *transpiler*) .x.)
-    (%%native? x) (transpiler-to-string .x)
+    (%%native? x) (convert-identifiers .x)
     x))
 
-(defun transpiler-to-string (x)
+(defun convert-identifiers (x)
   (maptree [?
-             (cons? _)    (transpiler-to-string-cons _)
+             (cons? _)    (convert-identifiers-cons _)
              (string? _)  _
              (symbol? _)  (| (assoc-value _ (transpiler-symbol-translations *transpiler*) :test #'eq)
-                             (transpiler-symbol-string _))
+                             (convert-identifier _))
              (number? _)  (princ _ nil)
              (error "Cannot translate ~A to string." _)]
            x))

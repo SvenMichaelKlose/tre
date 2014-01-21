@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2010,2012–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2010,2012–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun bc-expex-initializer (ex)
   (= (expex-setter-filter ex) (compose [mapcan [expex-set-global-variable-value _] _]
@@ -15,8 +15,8 @@
               :function-prologues?  nil
               :function-name-prefix nil
               :import-variables?    nil
-              :code-concatenator    #'tree-list
-              :expex-initializer    #'bc-expex-initializer)
+              :expex-initializer    #'bc-expex-initializer
+              :postprocessor        #'tree-list)
     (transpiler-add-plain-arg-funs ! *builtins*)))
 
 (defvar *bc-transpiler* (copy-transpiler (make-bc-transpiler)))

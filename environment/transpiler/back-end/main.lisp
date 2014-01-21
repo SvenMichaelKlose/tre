@@ -1,11 +1,11 @@
-;;;;; tré – Copyright (c) 2005–2010,2012–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2010,2012–2014 Sven Michael Klose <pixel@copei.de>
 
-(env-load "transpiler/back-end/identifier-style-convert.lisp")
+(env-load "transpiler/back-end/convert-identifiers.lisp")
 (env-load "transpiler/back-end/macros.lisp")
 (env-load "transpiler/back-end/operators.lisp")
 (env-load "transpiler/back-end/count-tags.lisp")
 (env-load "transpiler/back-end/wrap-tags.lisp")
-(env-load "transpiler/back-end/string-encapsulation.lisp")
+(env-load "transpiler/back-end/encapsulate-strings.lisp")
 (env-load "transpiler/back-end/obfuscate.lisp")
 (env-load "transpiler/back-end/translate-function-names.lisp")
 (env-load "transpiler/back-end/function-name.lisp")

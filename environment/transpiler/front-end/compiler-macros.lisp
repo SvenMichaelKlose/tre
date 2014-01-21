@@ -3,7 +3,7 @@
 (defvar *tagbody-replacements*)
 
 (defun init-compiler-macros ()
-  (setq *tagbody-replacements* nil))
+  (= *tagbody-replacements* nil))
 
 (define-expander 'compiler :pre  #'init-compiler-macros)
 
@@ -13,12 +13,6 @@
 
 (defun compiler-macroexpand (x)
   (expander-expand 'compiler x))
-
-(defun compress-%%blocks (body)
-  (mapcan [? (%%block? _)
-             ._
-             (list _)]
-          body))
 
 (define-compiler-macro cond (&rest args)
   (with-compiler-tag end-tag
@@ -96,6 +90,13 @@
         ,@(? (== 1 (length end))
 			 (+ (butlast tests) (list (cons t end)))
 			 tests))))
+
+; XXX the expression expansion should be redone from scratch and then it should be able to deal with this.
+(defun compress-%%blocks (body)
+  (mapcan [? (%%block? _)
+             ._
+             (list _)]
+          body))
 
 (define-compiler-macro %%block (&body body)
    (?

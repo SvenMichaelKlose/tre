@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defvar *nil-symbol-name* "NIL")
 (defvar *t-symbol-name*   "T")
@@ -88,8 +88,8 @@
          compiled-after   (generic-compile-2 after-deps)
          compiled-acctop  (generic-compile-accumulated-toplevels))
     (!? compiled-deps
-        (= (transpiler-imported-deps transpiler) (transpiler-concat-text imported-deps !)))
-    (transpiler-concat-text (!? prologue-gen (funcall !))
+        (= (transpiler-imported-deps transpiler) (transpiler-postprocess imported-deps !)))
+    (transpiler-postprocess (!? prologue-gen (funcall !))
                             (!? decl-gen (funcall !))
                             compiled-before
                             (reverse (transpiler-raw-decls transpiler))

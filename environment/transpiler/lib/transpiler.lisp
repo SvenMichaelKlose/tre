@@ -99,12 +99,13 @@
   (cps-wrappers             (make-hash-table :test #'eq))
   (native-cps-functions     (make-hash-table :test #'eq))
 
-  (code-concatenator        #'concat-stringtree)
   (make-text?               t)
   (encapsulate-strings?     t)
   (dump-passes?             nil)
 
   (predefined-symbols       nil)
+
+  (postprocessor            #'concat-stringtree)
 
   ;;;
   ;;; You mustn't init these.
@@ -234,7 +235,7 @@
         :cps-exceptions           (copy-hash-table cps-exceptions)
         :cps-wrappers             (copy-hash-table cps-wrappers)
         :native-cps-functions     (copy-hash-table native-cps-functions)
-        :code-concatenator        code-concatenator
+        :postprocessor            postprocessor
         :make-text?               make-text?
         :encapsulate-strings?     encapsulate-strings?
         :dump-passes?             dump-passes?
