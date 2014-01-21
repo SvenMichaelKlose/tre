@@ -77,9 +77,7 @@ trespecial_setq (treptr list)
 treptr
 trespecial_past_lambda (treptr x)
 {
-	return (TREPTR_IS_ATOM(FIRST(x)) && FIRST(x) == treatom_lambda)
-			? CDR(x)
-			: x;
+	return (TREPTR_IS_ATOM(FIRST(x)) && FIRST(x) == treatom_lambda) ? CDR(x) : x;
 }
 
 treptr

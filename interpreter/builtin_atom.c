@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #include <string.h>
@@ -19,6 +19,7 @@
 #include "function.h"
 #include "symbol.h"
 #include "apply.h"
+#include "builtin_string.h"
 
 treptr
 treatom_symbolp (treptr object)
@@ -95,13 +96,21 @@ treatom_builtin_eq (treptr list)
 treptr
 treatom_eql (treptr x, treptr y)
 {
-
+    treptr tmp;
    	if (TREPTR_IS_NUMBER(x)) {
        	if (TREPTR_IS_NUMBER(y) == FALSE)
     		return treptr_nil;
        	if (TRENUMBER_TYPE(x) != TRENUMBER_TYPE(y))
     		return treptr_nil;
        	RETURN_NIL(TREPTR_TRUTH(TRENUMBER_VAL(x) == TRENUMBER_VAL(y)));
+   	} else if (TREPTR_IS_STRING(x)) {
+       	if (TREPTR_IS_STRING(y) == FALSE)
+    		return treptr_nil;
+        tmp = CONS(y, treptr_nil);
+        tregc_push (tmp);
+        tmp = trestring_builtin_compare (CONS(x, tmp));
+        tregc_pop ();
+        return tmp;
    	} else
    		RETURN_NIL(TREPTR_TRUTH(x == y));
 
