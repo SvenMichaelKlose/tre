@@ -18,10 +18,14 @@
   (filter ^(%= (slot-value ,_. '__source) ,(list 'quote ._))
           (transpiler-memorized-sources *transpiler*)))
 
-(defun js-decl-gen ()
+(defun js-var-decls ()
   (filter [generate-code `((%var ,_))]
           (remove-if [transpiler-emitted-decl? *transpiler* _]
                      (funinfo-vars (transpiler-global-funinfo *transpiler*)))))
+
+(defun gen-funinfo-inits ()
+  (filter [`(push '',(compiled-list `(,_. ,(funinfo-args ._))) *application-funinfos*)]
+          (hash-alist (transpiler-funinfos *transpiler*))))
 
 (defun js-sections-before-deps (tr)
   `((essential-functions-0 . ,*js-base0*)
@@ -35,7 +39,7 @@
                 `((environment-tests . ,(make-environment-tests))))))))
 
 (defun js-environment-files ()
-  (mapcan [unless (in? ._ 'c 'bc)
+  (mapcan [& (in? ._ nil 'js)
             `((,(+ "environment/" _.)))]
           (reverse *environment-filenames*)))
 
@@ -52,3 +56,6 @@
     (memorized-source-emitter . ,#'js-emit-memorized-sources)
     ,@(& *have-compiler?*
          (js-sections-compiler))))
+
+(defun js-ending-sections (tr)
+  `((funinfo-inits . ,#'gen-funinfo-inits)))

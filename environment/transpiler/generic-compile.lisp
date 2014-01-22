@@ -78,7 +78,7 @@
      (format t "; Let me think. Hmm...~%"))
   (!? middleend-init (funcall !))
   (with (compiled-before  (generic-compile-2 before-deps)
-         compiled-deps    (!? deps (backend (middleend !)))
+         compiled-deps    (backend (middleend deps))
          compiled-after   (generic-compile-2 after-deps)
          compiled-acctop  (generic-compile-accumulated-toplevels))
     (!? compiled-deps
@@ -100,13 +100,14 @@
   (!? frontend-init (funcall !))
   (with (before-deps  (generic-compile-1 (!? sections-before-deps (funcall ! transpiler)))
          after-deps   (generic-compile-1 (+ (!? sections-after-deps (funcall ! transpiler))
-                                            sections))
-		 deps         (generic-import transpiler))
+                                            sections
+                                            (!? ending-sections (funcall ! transpiler))))
+         deps         (generic-import transpiler))
     (generic-codegen transpiler before-deps deps after-deps)))
 
 (def-transpiler print-transpiler-stats (transpiler start-time)
-  (& print-obfuscations?
-     obfuscate?
+  (& obfuscate?
+     print-obfuscations?
      (transpiler-print-obfuscations transpiler))
   (warn-unused-functions transpiler)
   (tell-number-of-warnings)

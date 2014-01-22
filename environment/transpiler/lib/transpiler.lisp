@@ -33,6 +33,7 @@
   (decl-gen                    nil)
   (sections-before-deps        nil)
   (sections-after-deps         nil)
+  (ending-sections             nil)
 
   std-macro-expander
   codegen-expander
@@ -190,6 +191,7 @@
         :decl-gen                 decl-gen
         :sections-before-deps     sections-before-deps
         :sections-after-deps      sections-after-deps
+        :ending-sections          ending-sections
         :codegen-expander         codegen-expander
         :separator                separator
         :identifier-char?         identifier-char?
