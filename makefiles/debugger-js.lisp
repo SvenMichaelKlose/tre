@@ -34,11 +34,10 @@
                           "keycodes.lisp"))
                  (list+ "environment/transpiler/"
                         '("lib/funinfo/funinfo.lisp"))
-                 (list+ "environment/transpiler/debugger/"
+                 (list+ "environment/debugger/"
                         '("scope.lisp"
                           "window.lisp"
                           "toplevel.lisp")))
               :transpiler *js-transpiler*
-              :emitter     [make-html-script "compiled/debugger.html" _
-                                             :internal-stylesheet (fetch-file "environment/transpiler/debugger/style.css"]))
+              :emitter     [make-html-script "compiled/debugger.html" _])
 (quit)

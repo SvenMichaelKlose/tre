@@ -1,7 +1,7 @@
 ;;;;; tré – Copyright (c) 2014 Sven Michael Klose <pixel@copei.de>
 
 (defvar *debugger-window* nil)
-(defvar *debugger-window-style* ,(fetch-file "environment/transpiler/debugger/style.css"))
+(defvar *debugger-window-style* ,(fetch-file "environment/debugger/style.css"))
 
 (defun open-debugger-window ()
   (unless *debugger-window*
