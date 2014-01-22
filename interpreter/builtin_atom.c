@@ -19,6 +19,7 @@
 #include "function.h"
 #include "symbol.h"
 #include "apply.h"
+#include "gc.h"
 #include "builtin_string.h"
 
 treptr
