@@ -16,12 +16,6 @@
 (defun accumulated-toplevel? (section)
   (not (eq 'accumulated-toplevel section)))
 
-(defun compile-without-frontend (x)
-  (backend (middleend x)))
-
-(defun quick-generic-compile (x)
-  (backend (middleend (frontend x))))
-
 (defun map-transpiler-sections (fun sections cached-sections)
   (with (tr       *transpiler*
          results  nil)
@@ -37,7 +31,7 @@
 
 (defun codegen-section (section data)
   (with-temporary (transpiler-accumulate-toplevel-expressions? *transpiler*) (not (accumulated-toplevel? section))
-    (compile-without-frontend data)))
+    (backend (middleend data))))
 
 (defun generic-compile-2 (sections)
   (alet (map-transpiler-sections #'codegen-section sections (transpiler-compiled-files *transpiler*))
@@ -70,8 +64,8 @@
     (& (transpiler-accumulate-toplevel-expressions? !)
        (transpiler-accumulated-toplevel-expressions !)
        (with-temporary (transpiler-sections-to-update !) '(accumulated-toplevel)
-	     (compile-without-frontend (generic-compile-1 (list (. 'accumulated-toplevel
-                                                            #'make-toplevel-function))))))))
+	     (backend (middleend (generic-compile-1 (list (. 'accumulated-toplevel
+                                                         #'make-toplevel-function)))))))))
 
 (defun tell-number-of-warnings ()
   (alet (length *warnings*)
@@ -84,7 +78,7 @@
      (format t "; Let me think. Hmm...~%"))
   (!? middleend-init (funcall !))
   (with (compiled-before  (generic-compile-2 before-deps)
-         compiled-deps    (!? deps (compile-without-frontend !))
+         compiled-deps    (!? deps (backend (middleend !)))
          compiled-after   (generic-compile-2 after-deps)
          compiled-acctop  (generic-compile-accumulated-toplevels))
     (!? compiled-deps

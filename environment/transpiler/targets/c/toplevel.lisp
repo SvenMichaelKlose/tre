@@ -86,7 +86,7 @@
                        (transpiler-backtrace? !)  nil
                        (transpiler-assert? !)     nil
                        (transpiler-always-expand-arguments? !)  nil)
-        (quick-generic-compile (c-make-init-functions)))))
+        (backend (middleend (frontend (c-make-init-functions)))))))
 
 (defun c-decl-gen ()
   (concat-stringtree (transpiler-compiled-decls *transpiler*)
