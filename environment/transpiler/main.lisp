@@ -15,8 +15,6 @@
 (env-load "transpiler/import.lisp")
 (env-load "transpiler/generic-compile.lisp")
 
-(env-load "transpiler/debugger/main.lisp")
-
 (env-load "transpiler/targets/shared/main.lisp")
 (env-load "transpiler/targets/c/main.lisp")
 (env-load "transpiler/targets/bytecode/main.lisp")
