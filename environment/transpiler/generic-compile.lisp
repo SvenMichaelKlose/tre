@@ -3,15 +3,9 @@
 (defvar *nil-symbol-name* "NIL")
 (defvar *t-symbol-name*   "T")
 
-(defun eq|string== (x y)
-  (? (| (symbol? x)
-        (symbol? y))
-     (eq x y)
-     (string== x y)))
-
 (defun compile-section? (section processed-sections)
-  (| (member section (transpiler-sections-to-update *transpiler*) :test #'eq|string==)
-     (not (assoc section processed-sections :test #'eq|string==))))
+  (| (member section (transpiler-sections-to-update *transpiler*))
+     (not (assoc section processed-sections))))
 
 (defun accumulated-toplevel? (section)
   (not (eq 'accumulated-toplevel section)))
@@ -26,7 +20,7 @@
           (acons! section 
                   (? (compile-section? section cached-sections)
                      (funcall fun section data)
-                     (assoc-value section cached-sections :test #'eq|string==))
+                     (assoc-value section cached-sections))
                   results))))))
 
 (defun codegen-section (section data)
