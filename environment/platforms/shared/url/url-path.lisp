@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2009–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2009–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun butlast-path-component (x)
   (apply #'+ (pad (butlast (path-pathlist x)) "/")))
@@ -13,7 +13,7 @@
 
 (defun url-has-schema? (x)
   (alet (split #\/ x)
-    (& (ends-with? !. ":")
+    (& (tail? !. ":")
 	   (empty-string? .!.))))
 
 (defun url-without-schema (x)

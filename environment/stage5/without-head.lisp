@@ -1,7 +1,6 @@
-;;;;; TRE environment
-;;;;; Copyright (c) 2011 Sven Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2011,2014 Sven Michael Klose <pixel@copei.de>
 
 (defun without-head (x head)
-  (? (starts-with? x head)
+  (? (head? x head)
      (subseq x (length head))
      x))

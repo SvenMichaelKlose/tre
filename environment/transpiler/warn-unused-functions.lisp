@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2013–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun warn-unused-functions (tr)
   (alet (transpiler-defined-functions-hash tr)
@@ -9,6 +9,6 @@
       (hremove ! i))
     (dolist (i (hashkeys !))
       (alet (symbol-name i)
-        (unless (| (ends-with? ! "_TREEXP")
-                   (starts-with? ! "~"))
+        (unless (| (tail? ! "_TREEXP")
+                   (head? ! "~"))
           (warn "Unused function ~A." i))))))

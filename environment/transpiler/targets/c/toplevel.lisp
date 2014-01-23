@@ -58,7 +58,7 @@
 
 (defun c-function-registrations ()
   (filter #'c-function-registration
-		  (remove-if [ends-with? (symbol-name _) "_TREEXP"]
+		  (remove-if [tail? (symbol-name _) "_TREEXP"]
                      (transpiler-defined-functions-without-builtins *transpiler*))))
 
 (defun c-declarations-and-initialisations ()
