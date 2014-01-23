@@ -20,5 +20,4 @@
 (env-load "stage5/trim-spaces.lisp")
 (env-load "stage5/without-head.lisp")
 (env-load "stage5/without-tail.lisp")
-(env-load "stage5/read-binary-file.lisp")
 (env-load "stage5/orize.lisp")
