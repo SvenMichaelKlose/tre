@@ -1,5 +1,17 @@
 ;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
+(defun collect-symbols (x)
+  (with (ret (make-queue)
+  		 rec [& _
+    			(? (& (symbol? _)
+					  (empty-string? (symbol-name _)))
+        		   (enqueue ret _)
+        		   (when (cons? _)
+          		     (rec _.)
+          		     (rec ._)))])
+	(rec x)
+	(queue-list ret)))
+
 (defvar *allow-redefinitions?* nil)
 
 (defun redef-warn (&rest args)

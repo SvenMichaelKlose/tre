@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2010,2012–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2010,2012–2014 Sven Michael Klose <pixel@copei.de>
 
 ; XXX This doesn't work yet!
 
@@ -13,9 +13,9 @@
 
 (defun alien-import-print-type (data-type name &key (first t))
   (| first (format t ", "))
-  (format t "~A" (ensure-string data-type))
+  (format t "~A" (string data-type))
   (awhen name
-    (format t " ~A" (ensure-string !))))
+    (format t " ~A" (string !))))
 
 (defun alien-import-add-struct (hash desc)
   (with (struct-name (lml-get-attribute desc :name))
@@ -38,7 +38,7 @@
 	    (format t "]")))))
 
 (defun alien-import-get-type (hash tp)
-  (ensure-string
+  (string
     (case tp.
       'typedef	; Transcend typedefs.
 	     (alien-import-get-type-from-desc hash tp)
@@ -47,11 +47,11 @@
       'struct
          (progn
 	       (alien-import-add-struct hash tp)
-           (string-concat "struct " (ensure-string (lml-get-attribute tp :name))))
+           (string-concat "struct " (string (lml-get-attribute tp :name))))
       'arraytype
          (format nil " ~A[~A]"
                  (alien-import-get-type-from-desc hash tp)
-                 (++ (string-integer (ensure-string (lml-get-attribute tp :size)))))
+                 (++ (string-integer (string (lml-get-attribute tp :size)))))
 	  (? (lml-get-attribute tp :name)
 	     (? (eq 'CVQUALIFIEDTYPE tp.)
 	   	    (alien-import-get-type-from-desc hash tp)
@@ -67,7 +67,7 @@
 	   (let fun-name (string (lml-get-attribute x :name))
 	     (unless (href *alien-imported-functions* fun-name)
 		   (format t "Function ~A ~A ("
-				   (ensure-string (lml-get-attribute x :name))
+				   (string (lml-get-attribute x :name))
 				   (alien-import-get-type hash (href hash (lml-get-attribute x :returns))))
 		   (awhen (lml-get-children x)
 			 (let idx -1

@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun bind-event-listener (obj fun)
   (assert (function? fun) "BIND-EVENT-LISTENER requires a function")
@@ -161,7 +161,8 @@
   (adolist handlers
 	(log-events "Calling handler for ~A event/module `~A'.~%" event.type (module.get-name))
     (!.callback evt this)
-	(return-when evt._stop)))
+	(!? evt._stop
+        (return !))))
 
 (defmethod _event-manager _find-handlers (evt module elm)
   (_find-handlers-of-element (_find-handlers-of-type module._handlers evt.type) elm))
@@ -171,7 +172,8 @@
 	(evt._reset-flags)
     (unless (| !._killed? (member ! (queue-list stopped-modules) :test #'eq))
       (_call-handlers evt ! (_find-handlers evt ! elm))
-      (return-when evt._stop)
+      (!? evt._stop
+          (return !))
 	  (when evt._stop-bubbling
 		(enqueue stopped-modules !)))))
 
@@ -181,8 +183,9 @@
 	(loop
       (when (evt.element)._hooked?
         (_handle-modules evt (evt.element) modules stopped-modules))
-      (return-when (| evt._stop
-                      (not (evt.bubble)))))
+      (!? (| evt._stop
+             (not (evt.bubble)))
+          (return !)))
     (unless evt._stop
       (= evt._element init-elm)
       (_handle-modules evt nil modules stopped-modules))))

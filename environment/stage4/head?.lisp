@@ -4,4 +4,4 @@
   (alet (length head)
     (unless (< (length x) !)
       (string== (optional-string-downcase head :convert? ignore-case?)
-                (optional-string-downcase (subseq (ensure-string x) 0 !) :convert? ignore-case?)))))
+                (optional-string-downcase (subseq (string x) 0 !) :convert? ignore-case?)))))

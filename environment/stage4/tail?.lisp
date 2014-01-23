@@ -3,6 +3,6 @@
 (defun tail? (x tail &key (ignore-case? nil))
   (alet (length tail)
     (unless (< (length x) !)
-      (let s (ensure-string x)
+      (let s (string x)
         (string== (optional-string-downcase tail :convert? ignore-case?)
     		      (optional-string-downcase (subseq s (- (length s) !)) :convert? ignore-case?))))))

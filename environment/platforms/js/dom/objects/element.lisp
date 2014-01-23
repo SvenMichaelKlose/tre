@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (dont-obfuscate
 	node-name
@@ -410,7 +410,7 @@
 
 (defmethod caroshi-element find-element-at (x y)
   (do-children (i this this)
-    (dom-extend i) ; XXX FF extension creates progress H2 which is unextended in the client's scope.
+    (dom-extend i)
 	(& (element? i)
 	   (i.inside? x y)
 	   (return (| (i.find-element-at x y)
@@ -420,7 +420,8 @@
   (& (inside? x y)
 	 (? (& (element? this) first-child)
 	    (do-children (i this)
-		  (return-from-when from-point (i.seek-element x y)))
+		  (!? (i.seek-element x y)
+              (return-from from-point !)))
 	    this)))
 
 (defmethod caroshi-element get (css-selector)
