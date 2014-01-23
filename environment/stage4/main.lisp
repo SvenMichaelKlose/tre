@@ -1,7 +1,6 @@
 ;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (env-load "stage4/make-keyword.lisp")
-(env-load "stage4/aadjoin.lisp")
 (env-load "stage4/clr.lisp")
 (env-load "stage4/collect-symbols.lisp")
 (env-load "stage4/compose.lisp")
@@ -9,7 +8,6 @@
 (env-load "stage4/concat-stringtree.lisp")
 (env-load "stage4/copy.lisp")
 (env-load "stage4/count-if.lisp")
-(env-load "stage4/count-tree.lisp")
 (env-load "stage4/def-head-predicate.lisp")
 (env-load "stage4/define-getset-alias.lisp")
 (env-load "stage4/define-gensym-generator.lisp")
@@ -19,7 +17,6 @@
 (env-load "stage4/ends-with.lisp")
 (env-load "stage4/escape-string.lisp")
 (env-load "stage4/expander.lisp")
-(env-load "stage4/find-all-if.lisp")
 (env-load "stage4/find-tree.lisp")
 (env-load "stage4/ensure-string.lisp")
 (env-load "stage4/ensure-downcase-string.lisp")

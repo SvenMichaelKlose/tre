@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun two-subsequent-tags? (a d)
   (& a (atom a)
@@ -12,8 +12,8 @@
 
 (defun tags-lambda (x)
   (with (body x
-		 spare-tags (find-all-if [has-no-jumps-to body _]
-		  				         (find-all-if #'number? x)))
+		 spare-tags (remove-if-not [has-no-jumps-to body _]
+		  				           (remove-if-not #'number? x)))
     (remove-if [member _ spare-tags] x)))
 
 (defun remove-spare-tags-body (x)
