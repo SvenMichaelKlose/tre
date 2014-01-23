@@ -1,5 +1,6 @@
-;;;; tré – Copyright (c) 2008,2011,2013 Sven Michael Klose <pixel@copei.de>
+;;;; tré – Copyright (c) 2008,2011,2013–2014 Sven Michael Klose <pixel@copei.de>
 
+(env-load "math/pi.lisp" 'c)
 (env-load "math/precision.lisp")
 (env-load "math/half.lisp")
 (env-load "math/min.lisp")
