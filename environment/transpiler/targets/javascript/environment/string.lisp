@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (declare-cps-exception string %string? string? string== string-concat string-upcase string-downcase string-subseq)
 (dont-obfuscate push join char-code-at to-string to-upper-case to-lower-case substr length)
@@ -17,14 +17,6 @@
 (defun %elt-string (seq idx)
   (& (%%%< idx seq.length)
      (code-char (seq.char-code-at idx))))
-
-(defun string (x)
-  (?
-	(string? x)    x
-	(character? x) (char-string x)
-    (symbol? x)    (symbol-name x)
-	(not x)        ,*nil-symbol-name*
-   	(x.to-string)))
 
 (defun string== (x y)
   (%%%== x y))
