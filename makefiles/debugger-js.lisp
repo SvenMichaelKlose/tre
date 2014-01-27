@@ -1,5 +1,7 @@
 ;;;;; tré – Copyright (c) 2014 Sven Michael Klose <pixel@copei.de>
 
+(load "environment/platforms/shared/lml.lisp")
+(load "environment/platforms/shared/lml2xml.lisp")
 (load "environment/platforms/shared/html/doctypes.lisp")
 (load "environment/platforms/shared/html/script.lisp")
 (load "environment/platforms/js/event/names.lisp")

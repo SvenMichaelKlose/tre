@@ -3,6 +3,8 @@
 (= *have-environment-tests* t)
 (= *transpiler-assert* t)
 
+(load "environment/platforms/shared/lml.lisp")
+(load "environment/platforms/shared/lml2xml.lisp")
 (load "environment/platforms/shared/html/doctypes.lisp")
 (load "environment/platforms/shared/html/script.lisp")
 
