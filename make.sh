@@ -74,8 +74,8 @@ C_DIALECT_FLAGS="-ansi -Wall -Wextra"
 CFLAGS="-pipe $C_DIALECT_FLAGS $GNU_LIBC_FLAGS $BUILD_MACHINE_INFO $ARGS"
 
 DEBUGOPTS="-O0 -g"
-BUILDOPTS="-O2 -march=native -mtune=native"
-CRUNSHOPTS="-O2" # --whole-program -march=native -mtune=native"
+BUILDOPTS="-Ofast -march=native -mtune=native"
+CRUNSHOPTS="-Ofast" # --whole-program -march=native -mtune=native"
 CRUNSHFLAGS="-DTRE_COMPILED_CRUNSHED -Iinterpreter"
 
 LIBFLAGS="-lm -lffi -ldl -lrt"
@@ -98,7 +98,7 @@ BINDIR="/usr/local/bin/"
 basic_clean ()
 {
 	echo "Cleaning..."
-	rm -vf *.core interpreter/$COMPILED_ENV tre image bytecode-image tmp.c __alien.tmp files.lisp boot.log _phptest.log
+	rm -vf *.core interpreter/$COMPILED_ENV tre image bytecode-image tmp.c __alien.tmp files.lisp boot.log _phptest.log profile.lisp
     rm -rf environment/_current-version environment/transpiler/targets/c64/tre.c64
 	rm -vrf obj
     rm -vf examples/js/hello-world.js
@@ -271,6 +271,21 @@ all)
 	./make.sh jsdebugger || exit 1
     tre makefiles/webconsole.lisp || exit 1
     ;;
+
+profile)
+    echo "(= (transpiler-profile? *c-transpiler*) t)(compile-c-environment)" | ./tre -i image || exit -1
+    ./make.sh crunsh || exit 1
+    echo "(with-profile (compile-c-environment))(print-file \"profile.log\" (profile))" | ./tre -i image || exit -1
+    ;;
+
+releasetests)
+    echo "Making release tests..."
+	./make.sh distclean || exit 1
+	./make.sh debug -Werror || exit 1
+	./make.sh build || exit 1
+    ./make.sh all || exit 1
+    ./make.sh profile || exit 1
+	;;
 
 install)
 	install_it
