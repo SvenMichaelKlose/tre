@@ -62,3 +62,4 @@
 (env-load "stage1/with-queue.lisp")
 (env-load "stage1/tree-list.lisp")
 (env-load "stage1/tree-size.lisp")
+(env-load "stage1/tree-find.lisp")

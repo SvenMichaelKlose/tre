@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2013–2014 Sven Michael Klose <pixel@copei.de>
 
 (defvar *cps-toplevel?* nil)
 
@@ -161,7 +161,7 @@
 
 (defun cps-body-with-this (x)
   (? (& (funinfo-toplevel? *funinfo*)
-        (find-tree '~%this x))
+        (tree-find '~%this x))
      (cps-add-this x)
      x))
 

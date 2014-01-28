@@ -16,7 +16,6 @@
 (env-load "stage4/tail?.lisp")
 (env-load "stage4/escape-string.lisp")
 (env-load "stage4/expander.lisp")
-(env-load "stage4/find-tree.lisp")
 (env-load "stage4/hcache.lisp")
 (env-load "stage4/head-if.lisp")
 (env-load "stage4/keyword-copiers.lisp")

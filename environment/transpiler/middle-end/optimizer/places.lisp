@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (define-optimizer optimize-places
   (& (%=? a)
@@ -11,7 +11,7 @@
      (%=? d.)
      (atom (%=-value a))
      (cons? (%=-value d.))
-     (find-tree (%=-place a) (%=-value d.) :test #'eq)
+     (tree-find (%=-place a) (%=-value d.) :test #'eq)
      (not (will-be-used-again? .d (%=-place a))))
     (.  (replace-tree (%=-place a) (%=-value a)
                       `(%= ,(%=-place d.) ,(%=-value d.))

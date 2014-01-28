@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun tag-code (tag)
   (| (member-if [& (number? _)
@@ -29,9 +29,9 @@
                (with-cons a d _
                  (?
                    (%=? a)        (with-%= place value a
-                                    (| (find-tree v value :test #'eq)
+                                    (| (tree-find v value :test #'eq)
                                        (& (%slot-value? place)
-                                          (find-tree v place :test #'eq))
+                                          (tree-find v place :test #'eq))
                                        (unless (eq v place)
                                          (traverse-statements d))))
                    (%%go? a)      (traverse-tag .a.)
