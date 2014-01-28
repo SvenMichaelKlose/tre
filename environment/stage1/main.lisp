@@ -59,3 +59,6 @@
 (env-load "stage1/dollar.lisp")
 (env-load "stage1/test-dollar.lisp")
 (env-load "stage1/let-if.lisp")
+(env-load "stage1/with-queue.lisp")
+(env-load "stage1/tree-list.lisp")
+(env-load "stage1/tree-size.lisp")

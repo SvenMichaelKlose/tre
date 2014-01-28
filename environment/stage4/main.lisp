@@ -43,8 +43,6 @@
 (env-load "stage4/split.lisp" 'c)
 (env-load "stage4/head?.lisp")
 (env-load "stage4/symbol-names.lisp")
-(env-load "stage4/tree-list.lisp")
-(env-load "stage4/tree-size.lisp")
 (env-load "stage4/trim.lisp")
 (env-load "stage4/empty-string.lisp")
 (env-load "stage4/with-cons.lisp")

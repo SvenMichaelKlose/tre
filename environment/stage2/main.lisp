@@ -5,7 +5,6 @@
 (env-load "stage2/nthcdr.lisp")
 (env-load "stage2/multiple-value-bind.lisp")
 (env-load "stage2/while.lisp")
-(env-load "stage2/with-queue.lisp")
 (env-load "stage2/with.lisp")
 (env-load "stage2/array.lisp")
 (env-load "stage2/subseq-c.lisp" 'c)
