@@ -30,3 +30,4 @@
 (env-load "stage2/defstruct.lisp")
 (env-load "stage2/abs.lisp" 'c)
 (env-load "stage2/doarray.lisp")
+(env-load "stage2/list-array.lisp" 'c)
