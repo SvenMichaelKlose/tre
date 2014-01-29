@@ -1,7 +1,7 @@
 ;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun js-call (x)
-  `(,x. ,@(parenthized-comma-separated-list .x)))
+  `(,x. ,@(c-list .x)))
 
 (defvar *js-compiled-symbols* (make-hash-table :test #'eq))
 
@@ -63,7 +63,7 @@
 ;;;; FUNCTIONS
 
 (defun js-argument-list (debug-section args)
-  (parenthized-comma-separated-list (argument-expand-names debug-section args)))
+  (c-list (argument-expand-names debug-section args)))
 
 (define-js-macro function (&rest x)
   (alet (cons 'function x)
@@ -166,7 +166,7 @@
 ;;;; ARRAYS
 
 (define-js-macro make-array (&rest elements)
-  `(%%native ,@(parenthized-comma-separated-list elements :type 'square)))
+  `(%%native ,@(c-list elements :type 'square)))
 
 (define-js-macro %%%aref (arr &rest idx)
   `(%%native ,arr ,@(filter ^("[" ,_ "]") idx)))
@@ -187,7 +187,7 @@
   `(,(symbol-without-package name) ":" ,value))
 
 (define-js-macro %%%make-hash-table (&rest args)
-  (parenthized-comma-separated-list (filter [js-literal-hash-entry _. ._] (group args 2)) :type 'curly))
+  (c-list (filter [js-literal-hash-entry _. ._] (group args 2)) :type 'curly))
 
 (define-js-macro href (arr &rest idx)
   `(aref ,arr ,@idx))
@@ -205,7 +205,7 @@
   `(%%native "new " ,(? (transpiler-defined-function *transpiler* x.)
                         (compiled-function-name-string x.)
                         (obfuscated-identifier x.))
-                    ,@(parenthized-comma-separated-list .x)))
+                    ,@(c-list .x)))
 
 (define-js-macro delete-object (x)
   `(%%native "delete " ,x))

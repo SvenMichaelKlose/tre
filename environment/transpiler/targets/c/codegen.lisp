@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun c-line (&rest x)
   `(,*c-indent* ,@x ,*c-separator*))
@@ -18,7 +18,7 @@
 ;;;; FUNCTIONS
 
 (defun c-arguments (fi)
-  (parenthized-comma-separated-list (mapcar #'c-codegen-var-decl (funinfo-args fi))))
+  (c-list (mapcar #'c-codegen-var-decl (funinfo-args fi))))
 
 (defun c-make-function-declaration (name args)
   (push (concat-stringtree "extern treptr " (compiled-function-name-string name)
@@ -35,7 +35,7 @@
     `(,*newline*
       ,(funinfo-comment fi)
 	  "treptr " ,(compiled-function-name name) " "
-	  ,@(parenthized-comma-separated-list (mapcar ^("treptr " ,_) args))
+	  ,@(c-list (mapcar ^("treptr " ,_) args))
 	  ,*newline*
 	  "{" ,*newline*
           ,@(lambda-body x)
@@ -87,7 +87,7 @@
 (defun codegen-%=-value (x)
    (? (atom|codegen-expr? x)
       x
-      `(,x. ,@(parenthized-comma-separated-list .x))))
+      `(,x. ,@(c-list .x))))
 
 (define-c-macro %= (dest val)
   (c-line `((%%native ,@(codegen-%=-place dest val)) ,(codegen-%=-value val))))

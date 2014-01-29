@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 ;;;; CODE GENERATION HELPERS
 
@@ -21,7 +21,7 @@
   (pad (filter #'php-dollarize x) ","))
 
 (defun php-argument-list (x)
-  (parenthized-comma-separated-list (filter #'php-dollarize x)))
+  (c-list (filter #'php-dollarize x)))
 
 (define-codegen-macro-definer define-php-macro *php-transpiler*)
 
@@ -133,7 +133,7 @@
       (list "$" val)
 	(codegen-expr? val)
 	  (list val)
-    `((,val. ,@(parenthized-comma-separated-list (filter #'php-codegen-argument-filter .val))))))
+    `((,val. ,@(c-list (filter #'php-codegen-argument-filter .val))))))
 
 (defun php-%=-0 (dest val)
   `((%%native
