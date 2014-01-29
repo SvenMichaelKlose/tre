@@ -12,4 +12,3 @@
 (env-load "math/get-angle.lisp")
 (env-load "math/english-numbers.lisp")
 (env-load "math/levenshtein.lisp" 'c)
-(env-load "math/dct.lisp" 'c)

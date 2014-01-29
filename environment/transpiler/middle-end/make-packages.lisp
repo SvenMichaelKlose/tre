@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2011–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2011–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun process-%%in-package (x)
   (?
@@ -13,7 +13,8 @@
   (let tr *transpiler*
     (?
       (not x)            x
-      (symbol-without-package? x)
+      (& (symbol? x)
+         (not(symbol-package x)))
                          (alet (transpiler-package-symbol tr x)
                            (? (transpiler-defined-function tr !)
                               !
