@@ -23,7 +23,6 @@
 (env-load "stage4/less-or-equal-string.lisp")
 (env-load "stage4/less-or-equal-symbol.lisp")
 (env-load "stage4/let-when.lisp")
-(env-load "stage4/list-aliases.lisp")
 (env-load "stage4/literal-string.lisp")
 (env-load "stage4/maptree.lisp")
 (env-load "stage4/mapped-macro.lisp")

@@ -1,6 +1,11 @@
-;;;;; tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
 
 (define-gensym-generator argument-sym a)
+
+(defun list-aliases (x &key (gensym-generator #'gensym))
+  (when x
+    (. (. x. (funcall gensym-generator))
+       (list-aliases .x))))
 
 (defun rename-argument (replacements x)
   (| (assoc-value x replacements :test #'eq) x))
@@ -13,11 +18,11 @@
                       :body (rename-arguments-0 ! (lambda-body x))))))
 
 (define-tree-filter rename-arguments-0 (replacements x)
-  (atom x)         (rename-argument replacements x)
-  (%quote? x)      x
-  (any-lambda? x)  (rename-arguments-lambda replacements x)
-  (%slot-value? x) `(%slot-value ,(rename-arguments-0 replacements .x.)
-				                 ,..x.))
+  (atom x)          (rename-argument replacements x)
+  (%quote? x)       x
+  (any-lambda? x)   (rename-arguments-lambda replacements x)
+  (%slot-value? x)  `(%slot-value ,(rename-arguments-0 replacements .x.)
+				                  ,..x.))
 
 (defun rename-arguments (x)
   (= *argument-sym-counter* 0)
