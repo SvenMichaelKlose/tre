@@ -274,7 +274,7 @@
 
 (defmethod caroshi-element get-id (id)
   (awhen (read-attribute "id")
-	(unless (empty-string-or-nil? !)
+	(unless (empty-string? !)
 	  (number !))))
 
 (defmethod caroshi-element has-tag-name? (n)

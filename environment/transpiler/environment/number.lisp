@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (declare-cps-exception %wrap-char-number + - * / mod number+ integer+ character+ number- integer- character- == < > <= >= number== number< number> number<= number >= integer== integer< integer> integer<= integer>= character== character< character> character<= character>= number? integer)
 
@@ -6,6 +6,10 @@
   (? (character? x)
 	 (char-code x)
 	 x))
+
+(defun number== (x &rest y)
+  (alet (%wrap-char-number x)
+    (every [%%%== ! (%wrap-char-number _)] y)))
 
 (defmacro def-simple-op (op)
   `(defun ,op (&rest x)

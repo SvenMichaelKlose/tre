@@ -2,6 +2,14 @@
 
 (functional string-concat string== string-upcase string-downcase list-string string-list queue-string)
 
+(defun string<= (a b)
+  (with (la  (length a)
+         lb  (length b))
+    (dotimes (i la (<= la lb))
+      (& (> (elt a i)
+            (elt b i))
+         (return nil)))))
+
 (defun string-list (x)
   (let* ((l (length x))
 		 (s))
