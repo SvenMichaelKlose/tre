@@ -28,7 +28,6 @@
 (env-load "stage4/mapped-macro.lisp")
 (env-load "stage4/optional-string-downcase.lisp")
 (env-load "stage4/pad.lisp")
-(env-load "stage4/pair.lisp")
 (env-load "stage4/parenthized-comma-separated-list.lisp")
 (env-load "stage4/permutate.lisp")
 (env-load "stage4/remove.lisp")
