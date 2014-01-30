@@ -1,8 +1,5 @@
 ;;;;; tré – Copyright (c) 2005–2011,2013–2014 Sven Michael Klose <pixel@copei.de>
 
-(env-load "stage2/with-gensym.lisp")
-(env-load "stage2/list-manipulation.lisp")
-(env-load "stage2/nthcdr.lisp")
 (env-load "stage2/multiple-value-bind.lisp")
 (env-load "stage2/while.lisp")
 (env-load "stage2/with.lisp")
@@ -17,7 +14,6 @@
 (env-load "stage2/string.lisp")
 (env-load "stage2/string-c.lisp" 'c)
 (env-load "stage2/search-sequence.lisp")
-(env-load "stage2/butlast.lisp" 'c)
 (env-load "stage2/list-symbol.lisp")
 (env-load "stage2/dot-expand.lisp")
 (env-load "stage2/define-mapped-fun.lisp")

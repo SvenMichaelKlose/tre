@@ -29,7 +29,7 @@
     (php-print-native-environment out)))
 
 (defun php-epilogue ()
-  "?>")
+  (format nil "?>~%"))
 
 (defun php-decl-gen ()
   (backend (middleend (frontend (transpiler-compiled-inits *transpiler*)))))
