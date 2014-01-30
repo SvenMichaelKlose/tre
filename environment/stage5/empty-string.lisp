@@ -2,7 +2,7 @@
 
 (defun empty-string? (&rest x)
   (every [& (string? _)
-            (string== "" (| (trim " " _) ""))] x))
+            (string== "" (| (trim _ " ") ""))] x))
 
 (define-test "EMPTY-STRING? works"
   ((empty-string? "  " ""))

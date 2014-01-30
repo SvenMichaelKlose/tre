@@ -25,7 +25,7 @@
   	    (= (href *alien-structs* struct-name) t)
 	    (format t "[")
 		(let idx -1
-		  (dolist (x (split #\ (trim #\ (lml-get-attribute desc :members))))
+		  (dolist (x (split #\  (trim (lml-get-attribute desc :members) " ")))
 			(++! idx)
 		    (with (field (href hash x))
 			  (? (eq 'field field.)
