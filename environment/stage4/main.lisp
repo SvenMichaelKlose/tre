@@ -1,6 +1,5 @@
 ;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
-(env-load "stage4/make-keyword.lisp")
 (env-load "stage4/clr.lisp")
 (env-load "stage4/compose.lisp")
 (env-load "stage4/copy.lisp")

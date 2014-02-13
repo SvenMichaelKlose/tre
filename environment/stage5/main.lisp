@@ -6,7 +6,7 @@
 (env-load "stage5/empty-string.lisp")
 (env-load "stage5/iterate.lisp")
 (env-load "stage5/list+.lisp")
-(env-load "stage5/make-keywords.lisp")
+(env-load "stage5/make-keyword.lisp")
 (env-load "stage5/make-symbols.lisp")
 (env-load "stage5/symbol-names.lisp")
 (env-load "stage5/toggle.lisp")
