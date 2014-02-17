@@ -255,6 +255,8 @@
 (define-js-macro %backtrace-pop ()
   `(%%native *BACKTRACE* "=" *BACKTRACE* ".__"))
 
+(define-js-macro %global (x)
+  x)
 
 ;;;; CPS FIXUPS
 
