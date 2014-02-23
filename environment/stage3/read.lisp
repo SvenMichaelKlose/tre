@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008,2010,2012–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008,2010,2012–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun token-is-quote? (x)
   (in? x 'quote 'backquote 'quasiquote 'quasiquote-splice 'accent-circonflex))
@@ -27,8 +27,7 @@
     (let c (peek-char str)
       (when (== #\; c)
         (skip-comment str))
-      (when (& (< c 33)
-               (>= c 0))
+      (when (whitespace? c)
         (read-char str)
         (skip-spaces str)))))
 

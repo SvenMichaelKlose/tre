@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2006,2008–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2006,2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (functional char-upcase char-downcase lower-case? upper-case? alpha-char? digit-char? alphanumeric?
             char-code code-char)
@@ -54,6 +54,10 @@
 (def-rest-predicate alphanumeric? c ()
   (| (alpha-char? c)
      (digit-char? c)))
+
+(defun whitespace? (x)
+  (& (< x 33)
+     (>= x 0)))
 
 (define-test "DIGIT-CHAR? #\0"
   ((digit-char? #\0))
