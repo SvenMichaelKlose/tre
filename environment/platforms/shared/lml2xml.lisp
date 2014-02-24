@@ -78,4 +78,5 @@
 
 (defun lml2xml (x &optional (str nil))
   (with-default-stream s str
-	(lml2xml-0 s x)))
+	(lml2xml-0 s x))
+  nil)
