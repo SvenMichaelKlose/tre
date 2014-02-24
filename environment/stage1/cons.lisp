@@ -1,6 +1,6 @@
-;;;;; tré – Copyright (C) 2005–2006,2011,2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (C) 2005–2006,2011,2013–2014 Sven Michael Klose <pixel@copei.de>
 
-(functional caar cadr cdar cddr cadar cddar caadar caddr caadr cdddr cdadar caaddr caddar cdddar cadadr cadaddr cadadar cddadar)
+(functional caar cadr cdar cddr cadar cddar caadar caddr caadr cdddr cdadar caaddr caddar cdddar cddddr cadadr cadaddr cadadar cddadar)
 
 (early-defun caar (lst)
   (car (car lst)))
@@ -23,9 +23,6 @@
 (early-defun cdadr (lst)
  (cdar (cdr lst)))
 
-(early-defun caadar (lst)
- (car (cadr (car lst))))
-
 (early-defun caddr (lst)
  (car (cddr lst)))
 
@@ -34,6 +31,12 @@
 
 (early-defun cdddr (lst)
  (cdr (cdr (cdr lst))))
+
+(early-defun cddddr (lst)
+ (cdr (cdr (cdr (cdr lst)))))
+
+(early-defun caadar (lst)
+ (car (cadr (car lst))))
 
 (early-defun cdadar (lst)
  (cdr (cadr (car lst))))
