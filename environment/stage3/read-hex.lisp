@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2009,2012–2013 Sven Michael Klose <pixel@copei.de?
+;;;;; tré – Copyright (c) 2008–2009,2012–2014 Sven Michael Klose <pixel@copei.de?
 
 (defun read-hex (str)
   (with (rec #'((v)
@@ -8,7 +8,7 @@
 					     (read-char str)
 					     (rec (+ (* v 16)
 						         (- ! (? (digit-char? !)
-								         10
+								         #\0
 								         (- #\A 10))))))
 					   v))))
     (| (hex-digit-char? (peek-char str))
