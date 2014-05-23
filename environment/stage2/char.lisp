@@ -59,6 +59,9 @@
   (& (< x 33)
      (>= x 0)))
 
+(defun control-char? (x)
+  (< x 32))
+
 (define-test "DIGIT-CHAR? #\0"
   ((digit-char? #\0))
   t)
