@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #include <stdlib.h>
@@ -303,7 +303,7 @@ char *tre_builtin_names[] = {
 	"INTEGER+", "INTEGER-",
 	"CHARACTER+", "CHARACTER-",
 	"*", "/", "MOD",
-    "LOGXOR", "SQRT", "SIN", "COS", "ATAN", "ATAN2", "RANDOM", "EXP", "POW", "ROUND",
+    "LOGXOR", "SQRT", "SIN", "COS", "ATAN", "ATAN2", "RANDOM", "EXP", "POW", "ROUND", "FLOOR",
     "NUMBER?",
     "==", "<", ">",
     "NUMBER==", "NUMBER<", "NUMBER>",
@@ -405,6 +405,7 @@ treevalfunc_t treeval_xlat_builtin[] = {
     trenumber_builtin_exp,
     trenumber_builtin_pow,
     trenumber_builtin_round,
+    trenumber_builtin_floor,
     trenumber_builtin_numberp,
     trenumber_builtin_number_equal,
     trenumber_builtin_lessp,

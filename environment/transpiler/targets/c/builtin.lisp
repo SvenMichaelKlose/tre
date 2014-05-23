@@ -68,6 +68,7 @@
 		(EXP            builtin_exp)
 		(POW            builtin_pow)
 		(ROUND          builtin_round)
+		(FLOOR          builtin_floor)
 		(==             equal)
 		(<              lessp)
 		(>              greaterp)

@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2009–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2009–2014 Sven Michael Klose <pixel@copei.de>
 
 (defvar *builtin-argdefs*
 	'((NOT          &rest objects)
@@ -21,6 +21,7 @@
       (EXP          &rest x) ;x)
       (POW          &rest x) ;a b)
       (ROUND        &rest x) ;x)
+      (FLOOR        &rest x) ;x)
       (%+           a b)
       (%-           a b)
       (NUMBER+      &rest numbers)

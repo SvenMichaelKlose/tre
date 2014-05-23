@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2010,2012–2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2010,2012–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #include <math.h>
@@ -304,7 +304,19 @@ trenumber_round (treptr x)
 }
 
 treptr
+trenumber_floor (treptr x)
+{
+    return treatom_number_get (floor (TRENUMBER_VAL(x)), TRENUMTYPE_FLOAT);
+}
+
+treptr
 trenumber_builtin_round (treptr x)
 {
     return trenumber_round (trearg_get (x));
+}
+
+treptr
+trenumber_builtin_floor (treptr x)
+{
+    return trenumber_floor (trearg_get (x));
 }
