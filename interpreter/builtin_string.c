@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2009,2012–2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2009,2012–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #include <stdlib.h>
@@ -99,7 +99,7 @@ trestring_builtin_compare (treptr list)
 		treerror_norecover (list, "String expected as first argument.");
 
 	x = TREPTR_STRINGZ(CAR(list));
-	len = strlen (x);
+	len = TRESTRING_LEN(x);
     DOLIST(p, CDR(list)) {
 		car = CAR(p);
 		if (TREPTR_IS_STRING(car) == FALSE)
@@ -107,7 +107,7 @@ trestring_builtin_compare (treptr list)
 		if (NOT(car))
 			continue;
 		y = TREPTR_STRINGZ(car);
-		if (len != strlen (y))
+		if (len != TRESTRING_LEN(y))
 			return treptr_nil;
 		if (strcmp (x, y))
 			return treptr_nil;
@@ -132,7 +132,7 @@ trestring_builtin_concat (treptr list)
 		if (NOT(CAR(p)))
 			continue;
         car = trearg_typed (argnum++, TRETYPE_STRING, CAR(p), "STRING-CONCAT");
-	   	len += strlen (TREPTR_STRINGZ(car));
+	   	len += TREPTR_STRINGLEN(car);
     }
 
     news = trestring_get_raw (len);

@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2006–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2006–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #include <stdlib.h>
@@ -27,7 +27,6 @@ trestream_builtin_princ (treptr args)
     treptr obj;
     treptr handle;
     FILE * str;
-    char * s;
 
     trearg_get2 (&obj, &handle, args);
     str = (NOT_NIL(handle)) ?
@@ -36,8 +35,7 @@ trestream_builtin_princ (treptr args)
 
     switch (TREPTR_TYPE(obj)) {
 		case TRETYPE_STRING:
-	    	s = TREPTR_STRINGZ(obj);
-	    	fwrite (s, strlen (s), 1, str);
+	    	fwrite (TREPTR_STRINGZ(obj), TREPTR_STRINGLEN(obj), 1, str);
 	    	break;
 
 		case TRETYPE_SYMBOL:

@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 /*
@@ -144,7 +144,9 @@ treprint_atom (treptr atom, size_t indent)
 	    	break;
 
 		case TRETYPE_STRING:
-            printf ("\"%s\"", (char *) TREPTR_STRINGZ(atom));
+	        printf ("\"");
+            fwrite (TREPTR_STRINGZ(atom), TREPTR_STRINGLEN(atom), 1, stdout);
+	        printf ("\"");
 	    	break;
 
 		case TRETYPE_FUNCTION:

@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #include <string.h>
@@ -44,7 +44,7 @@ treptr
 tresymbol_builtin_make_package (treptr args)
 {
 	treptr name = trearg_typed (1, TRETYPE_STRING, trearg_get (args), "MAKE-PACKAGE");
-	return strlen (TREPTR_STRINGZ(name)) == 0 ?
+	return TREPTR_STRINGLEN(name) == 0 ?
 		       tre_package_keyword :
 	           treatom_get (TREPTR_STRINGZ(name), TRECONTEXT_PACKAGE());
 }
