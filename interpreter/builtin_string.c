@@ -147,7 +147,9 @@ trestring_builtin_concat (treptr list)
     DOLIST(p, list) {
 		if (NOT(CAR(p)))
 			continue;
-		newp = stpcpy (newp, TREPTR_STRINGZ(CAR(p)));
+		len = TREPTR_STRINGLEN(CAR(p));
+		memcpy (newp, TREPTR_STRINGZ(CAR(p)), len);
+		newp += len;
 	}
 
     atom = treatom_alloc (TRETYPE_STRING);
