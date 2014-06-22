@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
 
 (setq *milestone* nil)
 
@@ -38,6 +38,11 @@
 (env-load "transpiler/main.lisp")
 
 (env-load "read-eval-loop.lisp")
+
+(env-load "platforms/shared/html/doctypes.lisp")
+(env-load "platforms/shared/html/script.lisp")
+(env-load "platforms/shared/lml.lisp")
+(env-load "platforms/shared/lml2xml.lisp")
 
 (setq *tests* (reverse *tests*))
 
