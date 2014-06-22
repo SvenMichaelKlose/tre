@@ -13,7 +13,7 @@
                   (head
                     (title ,title)
                     (meta :http-equiv "Content-Type" :content "text/html; charset=utf-8")
-                    ,@(& no-cache
+                    ,@(& no-cache?
                          `((meta :http-equiv "pragma" :content "no-cache")))
                     ,@(& (| copyright-title
                             copyright-href)
