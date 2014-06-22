@@ -19,11 +19,10 @@
 	s))
 
 (defun queue-string (x)
-  (let str ""
-    (adolist ((queue-list x) str)
-      (= str (string-concat str (?
-                                  (string? !)    !
-                                  (character? !) (string !)))))))
+  (apply #'string-concat (filter [?
+                                   (string? _)    _
+                                   (character? _) (string _)]
+                                 (queue-list x))))
 
 (define-test "ELT on string returns char"
   ((character? (elt "LISP" 0)))
