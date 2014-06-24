@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2009–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2009–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun used-vars ()
   (alet *funinfo*
@@ -8,7 +8,8 @@
           (funinfo-args !)))))
 
 (defun remove-unused-scope-arg (fi)
-  (when (& (not (funinfo-fast-scope? fi))
+  (when (& (transpiler-optimize-closures? *transpiler*)
+           (not (funinfo-fast-scope? fi))
            (funinfo-closure-without-free-vars? fi))
      (= (funinfo-scope-arg fi) nil)
      (pop (funinfo-args fi))
@@ -19,50 +20,48 @@
 (defun remove-scoped-vars (fi)
   (when (& (== 1 (length (funinfo-scoped-vars fi)))
            (not (funinfo-place? fi (car (funinfo-scoped-vars fi)))))
+    (optimizer-message "; Unscoping ~A in ~A.~%"
+                       (alet (funinfo-scoped-vars fi) (? .! ! !.))
+                       (human-readable-funinfo-names fi))
     (= (funinfo-scoped-vars fi) nil)
-    (= (funinfo-scope fi) nil)
-    (optimizer-message "; Removed scoped vars in ~A.~%"
-                       (human-readable-funinfo-names fi))))
+    (= (funinfo-scope fi) nil)))
 
 (defun replace-scope-arg (fi)
   (when (& (funinfo-scope-arg fi)
            (not (funinfo-fast-scope? fi))
-           (funinfo-free-vars fi)
+           (== 1 (length (funinfo-free-vars fi)))
            (not (funinfo-scoped-vars (funinfo-parent fi))))
-    (| (== 1 (length (funinfo-free-vars fi)))
-       (error "Too much free vars."))
     (alet (car (funinfo-free-vars fi))
       (= (funinfo-free-vars fi) nil)
       (= (funinfo-scope-arg fi) !)
       (= (funinfo-argdef fi) (cons ! (cdr (funinfo-argdef fi))))
       (= (funinfo-args fi) (cons ! (cdr (funinfo-args fi))))
       (= (funinfo-fast-scope? fi) t)
-      (optimizer-message "; Removed array allocation for single scoped-var in ~A.~%"
+      (optimizer-message "; Removed array allocation for sole scoped var in ~A.~%"
                          (human-readable-funinfo-names fi)))))
 
 (defun remove-argument-stackplaces (fi)
-  (let v (used-vars)
-    (adolist ((funinfo-args fi))
-      (| (funinfo-scoped-var? fi !)
-         (funinfo-place? fi !)
-         (remove! ! v :test #'eq)))
-    (funinfo-vars-set fi v)))
+  (funinfo-vars-set fi (remove-if [& (funinfo-arg? fi _)
+                                     (not (funinfo-scoped-var? fi _)
+                                          (funinfo-place? fi _))]
+                                  (funinfo-vars fi))))
 
 (defun warn-unused-arguments (fi)
-  (dolist (i (funinfo-args fi))
-    (| (funinfo-used-var? fi i)
+  (adolist ((funinfo-args fi))
+    (| (funinfo-used-var? fi !)
        (warn "Unused argument ~A of function ~A."
-             i (human-readable-funinfo-names fi)))))
+             ! (human-readable-funinfo-names fi)))))
 
 (defun correct-funinfo ()
   (alet *funinfo*
-    (remove-unused-scope-arg !)
-;    (remove-scoped-vars !)
-;    (replace-scope-arg !)
+    (when (transpiler-lambda-export? *transpiler*)
+      (remove-unused-scope-arg !)
+      (remove-scoped-vars !)
+      (replace-scope-arg !))
+    (funinfo-vars-set ! (intersect (funinfo-vars !) (funinfo-used-vars !) :test #'eq))
+    (when (transpiler-stack-locals? *transpiler*)
+        (remove-argument-stackplaces !))))
 ;    (warn-unused-arguments !)
-    (? (transpiler-stack-locals? *transpiler*)
-       (remove-argument-stackplaces !)
-       (funinfo-vars-set ! (intersect (funinfo-vars !) (funinfo-used-vars !) :test #'eq)))))
 
 (defun remove-unused-vars (x)
   (& (named-lambda? x.) 
