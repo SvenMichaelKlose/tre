@@ -29,15 +29,15 @@
 (defun replace-scope-arg (fi)
   (when (& (funinfo-scope-arg fi)
            (not (funinfo-fast-scope? fi))
-           (== 1 (length (funinfo-free-vars fi)))
+           (sole? (funinfo-free-vars fi))
            (not (funinfo-scoped-vars (funinfo-parent fi))))
     (alet (car (funinfo-free-vars fi))
       (optimizer-message "; Removing array allocation for sole scoped ~A in ~A.~%"
                          ! (human-readable-funinfo-names fi))
       (= (funinfo-free-vars fi) nil)
       (= (funinfo-scope-arg fi) !)
-      (= (funinfo-argdef fi) (cons ! (cdr (funinfo-argdef fi))))
-      (= (funinfo-args fi) (cons ! (cdr (funinfo-args fi))))
+      (= (funinfo-argdef fi) (. ! (cdr (funinfo-argdef fi))))
+      (= (funinfo-args fi) (. ! (cdr (funinfo-args fi))))
       (= (funinfo-fast-scope? fi) t))))
 
 (defun remove-argument-stackplaces (fi)
@@ -60,14 +60,14 @@
       (replace-scope-arg !))
     (funinfo-vars-set ! (intersect (funinfo-vars !) (funinfo-used-vars !) :test #'eq))
     (when (transpiler-stack-locals? *transpiler*)
-        (remove-argument-stackplaces !))
-    (warn-unused-arguments !)))
+      (remove-argument-stackplaces !))))
 
 (defun remove-unused-vars (x)
   (& (named-lambda? x.) 
      (with-lambda-funinfo x.
        (correct-funinfo)
-       (remove-unused-vars (lambda-body x.))))
+       (remove-unused-vars (lambda-body x.))
+       (warn-unused-arguments *funinfo*)))
   (& x (remove-unused-vars .x)))
 
 (defun optimize-funinfos (x)

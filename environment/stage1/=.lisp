@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
 
 (defvar *=-function?* #'%=-function?)
 
@@ -31,7 +31,7 @@
 
 (defmacro = (&rest args)
   (? args
-    (? (== 1 (length args))
+    (? (sole? args)
        `(= ,(car args))
        `(progn
 		  ,@(=-0 args)))

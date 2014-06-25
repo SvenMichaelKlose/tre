@@ -87,7 +87,7 @@
     (unless body
       (error "Body is missing."))
     `(cond
-        ,@(? (== 1 (length end))
+        ,@(? (sole? end)
 			 (+ (butlast tests) (list (cons t end)))
 			 tests))))
 
