@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #include <stdio.h>
@@ -240,14 +240,14 @@ tregc_force ()
 		return;
 
 #ifdef TRE_VERBOSE_GC
-    printf ("before gc");
+    printf ("; Before gc");
     tregc_print_stats ();
 #endif
 
     tregc_pass (FALSE);
 
 #ifdef TRE_VERBOSE_GC
-    printf (" after gc");
+    printf ("; After gc");
     tregc_print_stats ();
 	fflush (stdout);
 #endif
@@ -277,10 +277,9 @@ tregc_print_stats ()
 
     printf (": %ld cons, %ld atoms "
             "(%ld sym, %ld num, %ld arr, %ld str, "
-            "%ld fun, %ld mac, %ld usr, %ld blt, %ld spc).\n",
+            "%ld fun, %ld mac).\n",
             (long) trelist_num_used, atoms, c[TRETYPE_SYMBOL], c[TRETYPE_NUMBER], c[TRETYPE_ARRAY], c[TRETYPE_STRING],
-            c[TRETYPE_FUNCTION], c[TRETYPE_MACRO], c[TRETYPE_USERSPECIAL],
-            c[TRETYPE_BUILTIN], c[TRETYPE_SPECIAL]);
+            c[TRETYPE_FUNCTION], c[TRETYPE_MACRO]);
     fflush (stdout);
 }
 
