@@ -1,9 +1,11 @@
 /*
- * tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #ifndef TRE_TRE_H
 #define TRE_TRE_H
+
+#include "_revision.h"
 
 typedef int bool;
 
@@ -11,15 +13,12 @@ typedef int bool;
 #define MEGA	(1024 * 1024)
 
 #ifndef TRE_INFO
-#define TRE_INFO \
-	"tré " TRE_VERSION " (" __DATE__ " " __TIME__ ")\n"
+#define TRE_INFO    "tré (revision " TRE_REVISION_STRING " " __DATE__ " " __TIME__ ")\n"
 #endif
 
 #ifndef TRE_COPYRIGHT
 #define TRE_COPYRIGHT "Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>\n"
 #endif
-
-#define TRE_VERSION	"current"
 
 #if 0
 #define TRE_GC_DEBUG		      /* Run garbage collector everywhere. */
