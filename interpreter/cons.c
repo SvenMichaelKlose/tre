@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2009,2012–2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2009,2012–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #include <string.h>
@@ -68,10 +68,7 @@ trelist_free (treptr node)
 {
     _CDR(node) = tre_lists_free;
     tre_lists_free = node;
-
-#ifdef TRE_VERBOSE_GC
     trelist_num_used--;
-#endif
 }
 
 void
@@ -126,9 +123,7 @@ trelist_get (treptr car, treptr cdr)
     _CDR(cons) = cdr;
     _CPR(cons) = TRESYMBOL_VALUE(tre_default_listprop);
 
-#ifdef TRE_VERBOSE_GC
     trelist_num_used++;
-#endif
 
     return cons;
 }
