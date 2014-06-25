@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2012–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2012–2014 Sven Michael Klose <pixel@copei.de>
 
 (def-head-predicate %%bc-return)
 
@@ -29,13 +29,14 @@
              (%%tag? _)  (f .._)
              (. _.
                 (case _. :test #'eq
-                  '%quote    (. ._.
-                                (f .._))
-                  '%%go-nil  (with ((cnd n) (get-bc-value .._))
-                               `(,(tag-index _) ,@cnd ,@(f n)))
-                  '%%go      (. (tag-index _)
-                                (f .._))
-                  (f ._)))])
+                  '%quote        (. ._.
+                                    (f .._))
+                  '%%go          (. (tag-index _)
+                                    (f .._))
+                  (? (in? _. '%%go-nil '%%go-not-nil)
+                     (with ((cnd n) (get-bc-value .._))
+                       `(,(tag-index _) ,@cnd ,@(f n)))
+                     (f ._)))]))
     (f x)))
 
 (defun make-bytecode-function (fi x)
