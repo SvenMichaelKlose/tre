@@ -124,8 +124,11 @@
 
 ;;;; FREE VARIABLES
 
+(defun funinfo-free-var? (fi x)
+  (member x (funinfo-free-vars fi) :test #'eq))
+
 (defun funinfo-add-free-var (fi x)
-  (| (member x (funinfo-free-vars fi) :test #'eq)
+  (| (funinfo-free-var? fi x)
      (push x (funinfo-free-vars fi))))
 
 
