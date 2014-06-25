@@ -9,7 +9,7 @@
       :name                     'js
       :prologue-gen             #'js-prologue
       :epilogue-gen             #'js-epilogue
-      :decl-gen                 #'js-decl-gen
+      :decl-gen                 #'js-var-decls
       :sections-before-deps     #'js-sections-before-deps
       :sections-after-deps      #'js-sections-after-deps
 	  :lambda-export?           nil
