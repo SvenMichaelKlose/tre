@@ -21,10 +21,10 @@
 
 (defun remove-spare-tags (x)
   (with-cons a d x
-	 (cons (? (named-lambda? a)
-              (remove-spare-tags-body a)
-			  a)
-		   (remove-spare-tags d))))
+	 (. (? (named-lambda? a)
+           (remove-spare-tags-body a)
+           a)
+		(remove-spare-tags d))))
    
 (defun optimize-tags (statements)
   (with (removed-tags nil
