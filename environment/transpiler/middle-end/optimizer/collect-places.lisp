@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2009–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2009–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun collect-places-r (x)
   (?
@@ -6,8 +6,7 @@
                          (!? (funinfo-scope *funinfo*)
                              (= (funinfo-used-vars *funinfo*) (list !)))
                          (collect-places-r (lambda-body x.)))
-    (%%go-cond? x.)    (& *funinfo*
-                          (funinfo-add-used-var *funinfo* (%%go-value x.)))
+    (%%go-cond? x.)    (funinfo-add-used-var *funinfo* (%%go-value x.))
     (%=? x.)           (awhen *funinfo*
                          (funinfo-add-place ! (%=-place x.))
                          (funinfo-add-used-var ! (%=-place x.))

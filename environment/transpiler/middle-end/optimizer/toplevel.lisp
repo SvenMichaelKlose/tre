@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun optimizer-passes ()
   (compose #'optimize-jumps
@@ -10,7 +10,5 @@
   (? *opt-peephole?*
      (with-temporaries (*funinfo* (transpiler-global-funinfo *transpiler*)
                         *body*    statements)
-       (aprog1
-         (repeat-while-changes (optimizer-passes) statements)
-         (optimize-funinfos !)))
+       (optimize-funinfos (repeat-while-changes (optimizer-passes) statements)))
      statements))
