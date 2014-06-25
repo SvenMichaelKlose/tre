@@ -8,8 +8,7 @@
           (funinfo-args !)))))
 
 (defun remove-unused-scope-arg (fi)
-  (when (& (transpiler-optimize-closures? *transpiler*)
-           (not (funinfo-fast-scope? fi))
+  (when (& (not (funinfo-fast-scope? fi))
            (funinfo-closure-without-free-vars? fi))
      (= (funinfo-scope-arg fi) nil)
      (pop (funinfo-args fi))
