@@ -203,7 +203,7 @@ compiler)
 
 bcompiler)
     echo "Compiling the bytecode compiler only..."
-	(echo "(compile-c-environment '(compile-bytecode-environment))" | ./tre) || exit 1
+	(echo "(compile-c-environment '(compile-bytecode-environment))" | ./tre -i image) || exit 1
 	./make.sh crunsh $ARGS || exit 1
     ;;
 
@@ -258,12 +258,12 @@ debugboot)
 
 bytecode)
     echo "Making bytecodes for everything..."
-	(echo "(load-bytecode (compile-bytecode-environment))(dump-system \"image\")" | ./tre) || exit 1
+	(echo "(load-bytecode (compile-bytecode-environment))(dump-system \"image\")" | ./tre -i image) || exit 1
 	;;
 
 bytecode-image)
     echo "Making bytecodes for everything..."
-	(echo "(with-output-file o \"bytecode-image\" (adolist ((compile-bytecode-environment)) (late-print ! o)))" | ./tre) || exit 1
+	(echo "(with-output-file o \"bytecode-image\" (adolist ((compile-bytecode-environment)) (late-print ! o)))" | ./tre -i image) || exit 1
 	;;
 
 jsdebugger)
