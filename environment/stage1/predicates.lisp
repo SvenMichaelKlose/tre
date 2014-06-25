@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2006,2008–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2006,2008–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
 
 (functional zero? even? odd? end? keyword?)
 (declare-cps-exception zero? even? odd? end? keyword?)
@@ -18,6 +18,9 @@
 (defun keyword? (x)
   (& (symbol? x)
      (eq *keyword-package* (symbol-package x))))
+
+(defun sole? (x)
+  (== 1 (length x)))
 
 (define-test "NOT works with NIL"
   ((not nil))
