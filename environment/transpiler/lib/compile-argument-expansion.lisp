@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun compile-argument-expansion-defaults (defaults)
   (mapcar [`(& (eq ,_ ,(list 'quote _))
@@ -93,11 +93,11 @@
             ,@(compile-argument-expansion-function-body-0 fun-name adef p !)))
          (compile-argument-expansion-function-body-0 fun-name adef p !))))
 
-(defun compile-argument-expansion-function (this-name fun-name adef names)
+(defun compile-argument-expansion-function (this-name fun-name adef)
   (with-gensym p
     `(function ,this-name
                ((,p)
                   ,@(compile-argument-expansion-function-body fun-name adef p)))))
 
 (defun compile-argument-expansion (this-name fun-name adef)
-  (compile-argument-expansion-function this-name fun-name adef (argument-expand-names 'compile-argument-expansion adef)))
+  (compile-argument-expansion-function this-name fun-name adef))
