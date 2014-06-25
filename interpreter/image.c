@@ -27,11 +27,12 @@
 #include "image.h"
 #include "alloc.h"
 #include "function.h"
+#include "_revision.h"
 
 #ifdef TRE_COMPILED_CRUNSHED
-#define TRE_IMAGE_FORMAT_VERSION    -1
+#define TRE_IMAGE_FORMAT_VERSION    (TRE_REVISION | (1 << 31))
 #else
-#define TRE_IMAGE_FORMAT_VERSION    1
+#define TRE_IMAGE_FORMAT_VERSION    TRE_REVISION
 #endif
 
 #define NMARK_SIZE  (NUM_NUMBERS >> 3)

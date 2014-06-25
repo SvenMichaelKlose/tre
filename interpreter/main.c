@@ -299,7 +299,8 @@ tremain_get_args (int argc, char *argv[])
 int
 main (int argc, char *argv[])
 {
-    static int c = 0;
+    static int  c = 0;
+    char *      path;
 
     tremain_get_args (argc, argv);
     tremain_init ();
@@ -313,7 +314,9 @@ main (int argc, char *argv[])
 		goto load_environment_from_source;
 
     c = 2;
-    treimage_load (tremain_userimage ? tremain_userimage : tremain_bootimage);
+    path = tremain_userimage ? tremain_userimage : tremain_bootimage;
+    if (treimage_load (path) == -2)
+        treerror_norecover (treptr_invalid, "tré image '%s' has an incompatible format version.", path);
     tremain_userimage = NULL;
     goto user;
 

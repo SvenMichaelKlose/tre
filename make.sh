@@ -99,7 +99,7 @@ basic_clean ()
 {
 	echo "Cleaning..."
 	rm -vf *.core interpreter/$COMPILED_ENV tre image bytecode-image tmp.c __alien.tmp files.lisp boot.log _phptest.log profile.lisp
-    rm -rf environment/_current-version environment/transpiler/targets/c64/tre.c64
+    rm -rf interpreter/_revision.h environment/_current-version environment/transpiler/targets/c64/tre.c64
 	rm -vrf obj
     rm -vf examples/js/hello-world.js
 }
@@ -118,8 +118,15 @@ link ()
 	$LD -o $TRE $OBJS $LIBFLAGS || exit 1
 }
 
+make_revision_header ()
+{
+    echo -n "#define TRE_REVISION " >interpreter/_revision.h
+    git log | grep Author: | wc -l >>interpreter/_revision.h
+}
+
 standard_compile ()
 {
+    make_revision_header
 	mkdir -p obj
 	for f in $FILES; do
 		echo "Compiling $f"
@@ -129,6 +136,7 @@ standard_compile ()
 
 crunsh_compile ()
 {
+    make_revision_header
 	rm -f $CRUNSHTMP
 	echo "Compiling as one file for best optimisation..."
 	echo -n "Concatenating sources:"
