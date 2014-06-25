@@ -22,9 +22,6 @@
 (define-c-std-macro =-slot-value (val obj slot)
   `(=-%slot-value ,val ,obj (%quote ,slot)))
 
-(defun single? (x)
-  (== 1 (length x)))
-
 (defun make-number-%%native (x)
   (? (number? x)
      `(%%native ,x)
@@ -32,7 +29,7 @@
 
 (defun c-fast-aref? (idx)
   (& (not (transpiler-assert? *transpiler*))
-     (single? idx)))
+     (sole? idx)))
 
 (define-c-std-macro =-aref (val arr &rest idx)
   (? (c-fast-aref? idx)
