@@ -92,7 +92,7 @@ if [ -f interpreter/$COMPILED_ENV ]; then
 fi
 
 CRUNSHTMP="tmp.c"
-TRE="./tre"
+TRE="./tre -i image"
 BINDIR="/usr/local/bin/"
 
 basic_clean ()
@@ -115,7 +115,7 @@ link ()
 {
 	echo "Linking..."
 	OBJS=`find obj -name \*.o`
-	$LD -o $TRE $OBJS $LIBFLAGS || exit 1
+	$LD -o tre $OBJS $LIBFLAGS || exit 1
 }
 
 make_revision_header ()
@@ -148,7 +148,7 @@ crunsh_compile ()
 	done
 	echo
 	echo "Compiling..."
-	$CC $CFLAGS $COPTS -o $TRE $CRUNSHTMP $LIBFLAGS || exit 1
+	$CC $CFLAGS $COPTS -o tre $CRUNSHTMP $LIBFLAGS || exit 1
 	rm $CRUNSHTMP
 }
 
@@ -194,24 +194,24 @@ build)
 
 precompile)
     echo "Precompiling target core functions..."
-	echo "(precompile-environments)(dump-system \"image\")" | ./tre -i image || exit 1
+	echo "(precompile-environments)(dump-system \"image\")" | $TRE || exit 1
 	;;
 
 
 compiler)
     echo "Compiling the compiler only..."
-	(echo "(compile-c-compiler)(dump-system \"image\")" | ./tre -i image) || exit 1
+	(echo "(compile-c-compiler)(dump-system \"image\")" | $TRE) || exit 1
     ;;
 
 bcompiler)
     echo "Compiling the bytecode compiler only..."
-	(echo "(compile-c-environment '(compile-bytecode-environment))" | ./tre -i image) || exit 1
+	(echo "(compile-c-environment '(compile-bytecode-environment))" | $TRE) || exit 1
 	./make.sh crunsh $ARGS || exit 1
     ;;
 
 environment)
     echo "Compiling environment..."
-	(echo "(compile-c-environment)(dump-system \"image\")" | ./tre -i image | tee boot.log) || exit 1
+	(echo "(compile-c-environment)(dump-system \"image\")" | $TRE | tee boot.log) || exit 1
 	;;
 
 boot)
@@ -225,7 +225,7 @@ boot)
 
 phptest)
     echo "PHP target tests..."
-    ./tre -i image makefiles/test-php.lisp
+    $TRE makefiles/test-php.lisp
     php compiled/test.php >_phptest.log
     cmp makefiles/test-php.correct-output _phptest.log || (diff makefiles/test-php.correct-output _phptest.log; exit 1)
     echo "PHP target tests passed."
@@ -233,13 +233,13 @@ phptest)
 
 jstest)
     echo "JS target tests..."
-    ./tre -i image makefiles/test-js.lisp
+    $TRE makefiles/test-js.lisp
     chromium-browser compiled/test.html &
 	;;
 
 updatetests)
     echo "Updateing PHP target test data..."
-    ./tre -i image makefiles/test-php.lisp
+    $TRE makefiles/test-php.lisp
     php compiled/test.php >makefiles/test-php.correct-output
     ;;
 
@@ -260,16 +260,16 @@ debugboot)
 
 bytecode)
     echo "Making bytecodes for everything..."
-	(echo "(load-bytecode (compile-bytecode-environment))(dump-system \"image\")" | ./tre -i image) || exit 1
+	(echo "(load-bytecode (compile-bytecode-environment))(dump-system \"image\")" | $TRE) || exit 1
 	;;
 
 bytecode-image)
     echo "Making bytecodes for everything..."
-	(echo "(with-output-file o \"bytecode-image\" (adolist ((compile-bytecode-environment)) (late-print ! o)))" | ./tre -i image) || exit 1
+	(echo "(with-output-file o \"bytecode-image\" (adolist ((compile-bytecode-environment)) (late-print ! o)))" | $TRE) || exit 1
 	;;
 
 jsdebugger)
-    ./tre -i image makefiles/debugger-js.lisp || exit 1
+    $TRE makefiles/debugger-js.lisp || exit 1
     ;;
 
 all)
@@ -278,14 +278,14 @@ all)
 	./make.sh tests || exit 1
 	./make.sh bytecode-image || exit 1
 	./make.sh jsdebugger || exit 1
-    ./tre -i image makefiles/webconsole.lisp || exit 1
+    $TRE makefiles/webconsole.lisp || exit 1
 	./make.sh jsdebugger || exit 1
     ;;
 
 profile)
-    echo "(= (transpiler-profile? *c-transpiler*) t)(compile-c-environment)" | ./tre -i image || exit -1
+    echo "(= (transpiler-profile? *c-transpiler*) t)(compile-c-environment)" | $TRE || exit -1
     ./make.sh crunsh || exit 1
-    echo "(with-profile (compile-c-environment))(with-output-file o \"profile.log\" (adolist ((profile)) (late-print ! o)))" | ./tre -i image || exit -1
+    echo "(with-profile (compile-c-environment))(with-output-file o \"profile.log\" (adolist ((profile)) (late-print ! o)))" | $TRE || exit -1
     ;;
 
 releasetests)
@@ -294,8 +294,6 @@ releasetests)
 	./make.sh debug -Werror || exit 1
 	./make.sh build -Werror || exit 1
     ./make.sh all || exit 1
-    ./make.sh backup || exit 1
-    ./make.sh profile || exit 1
 	;;
 
 install)
