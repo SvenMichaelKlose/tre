@@ -60,7 +60,7 @@ FILES="
 CC=cc
 LD=cc
 
-LIBC_PATH=`find /lib -name libc.so.* | head -n 1`
+LIBC_PATH=`find /lib/x86_64-linux-gnu/ -name libc.so.* | head -n 1`
 LIBDL_PATH=`find /lib -name libdl.so.* | head -n 1`
 KERNEL_IDENT=`uname -i`
 CPU_TYPE=`uname -m`
@@ -184,7 +184,7 @@ build)
 
 precompile)
     echo "Precompiling target core functions..."
-	echo "(precompile-environments)(dump-system \"image\")" | ./tre || exit 1
+	echo "(precompile-environments)(dump-system \"image\")" | ./tre -i image || exit 1
 	;;
 
 
@@ -215,7 +215,7 @@ boot)
 
 phptest)
     echo "PHP target tests..."
-    tre makefiles/test-php.lisp
+    ./tre -i image makefiles/test-php.lisp
     php compiled/test.php >_phptest.log
     cmp makefiles/test-php.correct-output _phptest.log || (diff makefiles/test-php.correct-output _phptest.log; exit 1)
     echo "PHP target tests passed."
@@ -223,13 +223,13 @@ phptest)
 
 jstest)
     echo "JS target tests..."
-    tre makefiles/test-js.lisp
+    ./tre -i image makefiles/test-js.lisp
     chromium-browser compiled/test.html &
 	;;
 
 updatetests)
     echo "Updateing PHP target test data..."
-    tre makefiles/test-php.lisp
+    ./tre -i image makefiles/test-php.lisp
     php compiled/test.php >makefiles/test-php.correct-output
     ;;
 
@@ -259,31 +259,32 @@ bytecode-image)
 	;;
 
 jsdebugger)
-    tre makefiles/debugger-js.lisp || exit 1
+    ./tre -i image makefiles/debugger-js.lisp || exit 1
     ;;
 
 all)
     echo "Making all..."
 	./make.sh boot $ARGS || exit 1
-	./make.sh install || exit 1
 	./make.sh tests || exit 1
 	./make.sh bytecode-image || exit 1
 	./make.sh jsdebugger || exit 1
-    tre makefiles/webconsole.lisp || exit 1
+    ./tre -i image makefiles/webconsole.lisp || exit 1
+	./make.sh jsdebugger || exit 1
     ;;
 
 profile)
     echo "(= (transpiler-profile? *c-transpiler*) t)(compile-c-environment)" | ./tre -i image || exit -1
     ./make.sh crunsh || exit 1
-    echo "(with-profile (compile-c-environment))(print-file \"profile.log\" (profile))" | ./tre -i image || exit -1
+    echo "(with-profile (compile-c-environment))(with-output-file o \"profile.log\" (adolist ((profile)) (late-print ! o)))" | ./tre -i image || exit -1
     ;;
 
 releasetests)
     echo "Making release tests..."
 	./make.sh distclean || exit 1
 	./make.sh debug -Werror || exit 1
-	./make.sh build || exit 1
+	./make.sh build -Werror || exit 1
     ./make.sh all || exit 1
+    ./make.sh backup || exit 1
     ./make.sh profile || exit 1
 	;;
 
@@ -309,7 +310,6 @@ backup)
     ;;
 
 restore)
-    sudo cp backup/tre $BINDIR
     cp -v backup/tre .
     cp -v backup/_compiled-env.c interpreter
     cp -v backup/image .
