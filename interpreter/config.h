@@ -13,7 +13,7 @@ typedef int bool;
 #define MEGA	(1024 * 1024)
 
 #ifndef TRE_INFO
-#define TRE_INFO    "tré (revision " TRE_REVISION_STRING " " __DATE__ " " __TIME__ ")\n"
+#define TRE_INFO    "tré " TRE_REVISION_STRING "- " __DATE__ ", " __TIME__ ")\n"
 #endif
 
 #ifndef TRE_COPYRIGHT
