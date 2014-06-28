@@ -17,7 +17,7 @@ typedef int bool;
 #endif
 
 #ifndef TRE_COPYRIGHT
-#define TRE_COPYRIGHT "Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>\n"
+#define TRE_COPYRIGHT "Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>\n"
 #endif
 
 #if 0
