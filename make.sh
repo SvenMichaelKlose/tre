@@ -154,7 +154,7 @@ crunsh_compile ()
 
 install_it ()
 {
-	sudo cp -v $TRE $BINDIR || exit 1
+	sudo cp -v tre $BINDIR || exit 1
     cp -v image ~/.tre.image || exit 1
 }
 
