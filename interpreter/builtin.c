@@ -145,7 +145,7 @@ trebuiltin_load (treptr expr)
 
     stream = treiostd_open_file (fname);
     if (stream == NULL) {
-        treerror_norecover (treptr_invalid, "Couldn't load file %s.", fname);
+        treerror_norecover (treptr_invalid, "Couldn't load file '%s'.", fname);
 		return treptr_nil;
 	}
 
