@@ -47,8 +47,8 @@ treevalfunc_t treeval_xlat_builtin[];
 treptr
 trebuiltin_apply_args (treptr list)
 {
-    treptr i;
-    treptr last;
+    treptr  i;
+    treptr  last;
 
     RETURN_NIL(list); /* No arguments. */
 
@@ -82,17 +82,17 @@ error:
 treptr
 trebuiltin_apply (treptr list)
 {
-    if (NOT(list))
-        return treerror (list, "Arguments expected.");
-    return trefuncall (CAR(list), trebuiltin_apply_args (trelist_copy (CDR(list))));
+    return NOT(list) ?
+               treerror (list, "Arguments expected.") :
+               trefuncall (CAR(list), trebuiltin_apply_args (trelist_copy (CDR(list))));
 }
 
 treptr
 trebuiltin_funcall (treptr list)
 {
-    if (NOT(list))
-        return treerror (list, "Arguments expected.");
-    return trefuncall (CAR(list), CDR(list));
+    return NOT(list) ?
+               treerror (list, "Arguments expected.") :
+               trefuncall (CAR(list), CDR(list));
 }
 
 treptr
@@ -105,7 +105,7 @@ treptr
 trebuiltin_quit (treptr args)
 {
     treptr  arg;
-    int      code = 0;
+    int     code = 0;
 
     if (NOT_NIL(args)) {
         arg = CAR(args);
@@ -131,9 +131,9 @@ trebuiltin_print (treptr expr)
 treptr
 trebuiltin_load (treptr expr)
 {
-    trestream * stream;
-    treptr      pathname = trearg_get (expr);
-    char        fname[1024];
+    trestream  * stream;
+    treptr     pathname = trearg_get (expr);
+    char       fname[1024];
 
 	pathname = trearg_typed (1, TRETYPE_STRING, pathname, "LOAD");
 
@@ -170,7 +170,7 @@ trebuiltin_intern (treptr args)
     treptr  name;
     treptr  package;
     treptr  p;
-    char     *n;
+    char    * n;
 
     name = CAR(args);
     if (TREPTR_IS_CONS(CDR(args))) {
@@ -185,10 +185,9 @@ trebuiltin_intern (treptr args)
 		package = trearg_typed (1, TRETYPE_STRING, package, "INTERN");
 
     n = TREPTR_STRINGZ(name);
-    if (NOT_NIL(package))
-        p = treatom_get (TREPTR_STRINGZ(package), treptr_nil);
-    else
-        p = treptr_nil;
+    p = NOT_NIL(package) ?
+            treatom_get (TREPTR_STRINGZ(package), treptr_nil) :
+            treptr_nil;
 
     return treatom_get (n, p);
 }
@@ -229,8 +228,7 @@ trebuiltin_free (treptr args)
 {
     treptr  ptr;
 
-    ptr = trearg_get (args);
-	ptr = trearg_typed (1, TRETYPE_NUMBER, ptr, "%FREE");
+	ptr = trearg_typed (1, TRETYPE_NUMBER, trearg_get (args), "%FREE");
 
 	free ((void *) (long) TRENUMBER_VAL(ptr));
 
@@ -255,10 +253,10 @@ trebuiltin_free_exec (treptr args)
 treptr
 trebuiltin_set (treptr args)
 {
-    treptr ptr;
-    treptr val;
-	char   c;
-	char   * p;
+    treptr  ptr;
+    treptr  val;
+	char    c;
+	char    * p;
 
     trearg_get2 (&ptr, &val, args);
 
@@ -275,8 +273,8 @@ trebuiltin_set (treptr args)
 treptr
 trebuiltin_get (treptr args)
 {
-    treptr ptr = trearg_get (args);
-	char   * p;
+    treptr  ptr = trearg_get (args);
+	char    * p;
 
 	ptr = trearg_typed (1, TRETYPE_NUMBER, ptr, "%%GET");
 
