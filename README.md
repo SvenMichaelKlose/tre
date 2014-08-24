@@ -51,3 +51,9 @@ The dialect's most notable features are:
 - anonymous macros (QUASIQUOTE doesn't need BACKQUOTE),
 - a terse dot-notation CAR and CDR.
 - no LAMBDA symbol required in literal functions
+
+
+# Documentation
+
+You'll find Markdown files here and there.  Their number is growing,
+so keep looking out.
