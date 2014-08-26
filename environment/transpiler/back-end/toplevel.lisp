@@ -11,8 +11,8 @@
                               (transpiler-encapsulate-strings _)
                               _]
     count-tags             [(& (transpiler-count-tags? *transpiler*)
-                              (count-tags _))
-                              _]
+                               (count-tags _))
+                            _]
     wrap-tags              #'wrap-tags
     codegen-expand         [expander-expand (transpiler-codegen-expander *transpiler*) _]
     obfuscate              [? (transpiler-make-text? *transpiler*)
