@@ -5,36 +5,6 @@
      (while ,pred (queue-string ,q)
        ,@body)))
 
-(defun print-hex-digit (x &optional (str *standard-output*))
-  (princ (code-char (? (< x 10)
-                       (+ #\0 x)
-                       (+ #\A -10 x)))
-	     (default-stream str)))
-
-(defun print-hexbyte (x &optional (str *standard-output*))
-  (with-default-stream s str
-    (print-hex-digit (>> x 4) s)
-    (print-hex-digit (mod x 16) s)))
-
-(defun print-hexword (x &optional (str *standard-output*))
-  (with-default-stream s str
-    (print-hex-digit (mod (>> x 12) 16) s)
-    (print-hex-digit (mod (>> x 8) 16) s)
-    (print-hex-digit (mod (>> x 4) 16) s)
-    (print-hex-digit (mod x 16) s)))
-
-(defun octal-digit (x)
-  (code-char (+ #\0 (mod x 8))))
-
-(defun print-octal (x &optional (str *standard-output*))
-  (with (rec [& (< 0 x)
-                (cons (octal-digit x)
-		        (rec (>> x 3)))])
-    (princ (list-string (reverse (cons (octal-digit x)
-									   (rec (>> x 3)))))
-		   (default-stream str))))
-
-
 (defvar *xml2lml-read* nil)
 
 (defun xml-error (form &rest args)
@@ -45,7 +15,6 @@
 
 (defun xml-error-unexpected-eof (in)
   (xml-error "Unexpected end of file."))
-
 
 (defun xml-special-char? (x)
   (in=? x #\< #\> #\/ #\: #\=))
@@ -60,14 +29,12 @@
   (not (| (xml-special-char? x)
 		  (xml-whitespace? x))))
 
-
 (defun xml-string-trailing-whitespaces (s)
   (do ((i (-- (length s)) (-- i))
        (n 0 (++ n)))
       ((< i 0) t)
     (unless (xml-whitespace? (elt s i))
       (return n))))
-
 
 (defun xml-read-char (in)
   (when (end-of-file? in)
@@ -272,7 +239,6 @@
 	(== #\! (xml-peek-char in))
 	  (xml2lml-comment-or-decl in)
     (xml2lml-cont-std in)))
-
 
 (defun xml2lml (in)
   (xml-init-tables)
