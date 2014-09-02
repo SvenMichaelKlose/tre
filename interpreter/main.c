@@ -72,15 +72,15 @@ tre_signal (int signum)
 {
 	switch (signum) {
 	case SIGINT:
-		if (! tre_interrupt_debugger)
-#ifdef TRE_EXIT_ON_STDIO_SIGINT
-			exit (-1);
+#ifdef TRE_EXIT_ON_SIGINT
+		exit (-1);
 #else
+		if (! tre_interrupt_debugger)
 			break;
-#endif
 		printf ("*USER-BREAK*");
 		fflush (stdout);
 		tredebug_mode = TREDEBUGM_STEP;
+#endif
 		break;
 	}
 }
