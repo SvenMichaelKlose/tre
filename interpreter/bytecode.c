@@ -2,10 +2,6 @@
  * tré – Copyright (c) 2012–2014 Sven Michael Klose <pixel@copei.de>
  */
 
-/*
-#define BD
- */
-
 #include <string.h>
 #include <strings.h>
 #include <stdlib.h>
@@ -72,24 +68,11 @@ trecode_set_place (treptr ** p, treptr value)
     treptr * x = *p;
     treptr v = *x++;
 
-#ifdef BD
-    printf ("Place ");
-#endif
-
     if (TREPTR_IS_NUMBER(v)) {
-#ifdef BD
-        printf ("stack ");
-#endif
         trestack_ptr[TRENUMBER_INT(v)] = value;
     } else if (NOT_NIL(v)) {
-#ifdef BD
-        printf ("symbol value ");
-#endif
         TRESYMBOL_VALUE(v) = value;
     }
-#ifdef BD
-    treprint (v);
-#endif
 
     *p = x;
 }
@@ -109,34 +92,18 @@ trecode_get (treptr ** p)
     int     num_args;
     int     i;
 
-#ifdef BD
-    printf ("Get ");
-#endif
     v = *x++;
 
     if (NOT(v)) {
         /* Return NIL. */
     } else if (TREPTR_IS_NUMBER(v)) {
-#ifdef BD
-        printf ("stack ");
-        treprint (v);
-#endif
         v = trestack_ptr[TRENUMBER_INT(v)];
     } else if (v == treptr_quote) {
-#ifdef BD
-        printf ("quote ");
-#endif
         v = *x++;
     } else if (v == treptr_vec) {
-#ifdef BD
-        printf ("vec ");
-#endif
         vec = trecode_get (&x);
         v = _TREVEC(vec, TRENUMBER_INT(*x++));
     } else if (v == treptr_closure) {
-#ifdef BD
-        printf ("closure ");
-#endif
         fun = *x++;
         tregc_push_secondary (fun);
         lex = trecode_get (&x);
@@ -145,10 +112,6 @@ trecode_get (treptr ** p)
         tregc_pop_secondary ();
         tregc_pop_secondary ();
     } else if (TREPTR_IS_SYMBOL(v) && TRESYMBOL_FUN(v)) {
-#ifdef BD
-        printf ("function ");
-        treprint (v);
-#endif
         fun = TRESYMBOL_FUN(v);
         if (TREPTR_IS_BUILTIN(fun)) {
             if (v == treptr_cons) {
@@ -161,9 +124,6 @@ trecode_get (treptr ** p)
                 trecode_set_place (&x, trecode_get (&x));
             } else {
                 num_args = TRENUMBER_INT(*x++);
-#ifdef BD
-                printf ("%d arguments.\n", num_args);
-#endif
                 args = trecode_list (&x, num_args);
                 tregc_push_secondary (args);
                 v = treeval_xlat_function (treeval_xlat_builtin, fun, args, FALSE);
@@ -172,9 +132,6 @@ trecode_get (treptr ** p)
         } else if (NOT_NIL(TREFUNCTION_BYTECODE(fun))) {
             tregc_push_secondary (fun);
             num_args = TRENUMBER_INT(*x++);
-#ifdef BD
-            printf ("%d arguments.\n", num_args);
-#endif
             old_sp = trestack_ptr;
             DOTIMES(i, num_args)
                 *--old_sp = trecode_get (&x);
@@ -190,18 +147,12 @@ trecode_get (treptr ** p)
 #endif
     *p = x;
 
-#ifdef BD
-    treprint (v);
-#endif
     return v;
 }
 
 void
 trecode_set (treptr ** x)
 {
-#ifdef BD
-    printf ("Set.\n");
-#endif
     trecode_set_place (x, trecode_get (x));
 }
 
@@ -217,10 +168,6 @@ trecode_exec (treptr fun)
     int      vec;
 
     fun = TREFUNCTION_BYTECODE(fun);
-#ifdef BD
-    printf ("Executing function.\n");
-    treprint (fun);
-#endif
 #ifdef TRE_HAVE_BYTECODE_ASSERTIONS
     if (TREPTR_IS_ARRAY(fun) == FALSE)
         treerror_norecover (fun, "Bytecode function in form of an array expected.");
@@ -234,45 +181,24 @@ trecode_exec (treptr fun)
         *--trestack_ptr = treptr_nil;
 
     while (1) {
-#ifdef BD
-        printf ("Loop start.\n");
-#endif
         v = *x;
-#ifdef BD
-treprint (v);
-#endif
         if (v == treptr_jmp) {
             x++;
             dest = *x++;
-#ifdef BD
-            printf ("Jump.\n");
-            treprint (dest);
-#endif
             if (NOT(dest))
                 break;
             x = &code[TRENUMBER_INT(dest)];
         } else if (v == treptr_cond) {
             x++;
             dest = *x++;
-#ifdef BD
-            printf ("Conditional.\n");
-            treprint (dest);
-#endif
             if (NOT(trecode_get (&x)))
                 x = &code[TRENUMBER_INT(dest)];
         } else if (v == treptr_cond_not_nil) {
             x++;
             dest = *x++;
-#ifdef BD
-            printf ("Conditional not nil.\n");
-            treprint (dest);
-#endif
             if (!NOT(trecode_get (&x)))
                 x = &code[TRENUMBER_INT(dest)];
         } else if (v == treptr_set_vec) {
-#ifdef BD
-            printf ("Set vector.\n");
-#endif
             x++;
             vec = trecode_get (&x);
             tregc_push_secondary (vec);
@@ -281,14 +207,8 @@ treprint (v);
             tregc_pop_secondary ();
         } else
             trecode_set (&x);
-#ifdef BD
-        printf ("Loop end.\n");
-#endif
     }
 
-#ifdef BD
-    printf ("Return from function.\n");
-#endif
     v = *trestack_ptr;
     trestack_ptr += num_locals;
     return v;
