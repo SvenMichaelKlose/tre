@@ -330,7 +330,7 @@ restore)
 	echo "  debugboot       Like 'boot', but for debugging"
 	echo "  interpreter     Clean and build the interpreter."
 	echo "  compiler        Compile just the compiler and the C target to C."
-	echo "  bcompiler       Compile just the compiler and the bytecode target to bytecode."
+	echo "  bcompiler       Compile just the compiler and the bytecode target to C."
     echo "  environment     Compile environment to C."
     echo "  bytecode        Compile environment to bytecode, replacing the C functions."
     echo "  bytecode-image  Compile environment to bytecode image."
