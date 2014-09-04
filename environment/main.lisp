@@ -44,8 +44,6 @@
 (env-load "platforms/shared/lml.lisp")
 (env-load "platforms/shared/lml2xml.lisp")
 
-(env-load "bytecode-interpreter-tests.lisp")
-
 (setq *tests* (reverse *tests*))
 
 (defun dump-system (path)
