@@ -13,6 +13,7 @@
       "tré JavaScript target test"
       `((toplevel . ((environment-tests))))
       :transpiler *js-transpiler*
-      :emitter     [make-html-script "compiled/test.html" _])
+      :emitter     [(make-html-script "compiled/test.html" _)
+                    (put-file "compiled/test.js" _)])
 
 (quit)

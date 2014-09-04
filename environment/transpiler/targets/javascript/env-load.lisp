@@ -80,7 +80,9 @@
 (defvar *js-base-stream*
 	,(list 'quote (+ (js-load-base *js-env-path*
 			                       "error.lisp"
-			                       "stream.lisp"
+                                   "../../../../stage3/stream.lisp"
+			                       "%force-output.lisp"
+			                       "standard-stream.lisp"
 			                       "../../../environment/print.lisp"))))
 
 (defvar *js-base-eval* ,(list 'quote (js-load-base *js-env-path* "eval.lisp")))

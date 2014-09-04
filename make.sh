@@ -98,7 +98,7 @@ BINDIR="/usr/local/bin/"
 basic_clean ()
 {
 	echo "Cleaning..."
-	rm -vf *.core interpreter/$COMPILED_ENV tre image bytecode-image tmp.c __alien.tmp files.lisp boot.log _phptest.log bytecode-interpreter-tests.log.lisp profile.lisp
+	rm -vf *.core interpreter/$COMPILED_ENV tre image bytecode-image tmp.c __alien.tmp files.lisp boot.log _phptests.log bytecode-interpreter-tests.log.lisp profile.lisp
     rm -rf interpreter/_revision.h environment/_current-version environment/transpiler/targets/c64/tre.c64
 	rm -vrf obj
     rm -vf examples/js/hello-world.js
@@ -223,17 +223,20 @@ boot)
 	./make.sh crunsh $ARGS|| exit 1
 	;;
 
-phptest)
+phptests)
     echo "PHP target tests..."
     $TRE makefiles/test-php.lisp
-    php compiled/test.php >_phptest.log
-    cmp makefiles/test-php.correct-output _phptest.log || (diff makefiles/test-php.correct-output _phptest.log; exit 1)
+    php compiled/test.php >_phptests.log || exit 1
+    cmp makefiles/test-php.correct-output _phptests.log || (diff makefiles/test-php.correct-output _phptests.log; exit 1)
     echo "PHP target tests passed."
 	;;
 
-jstest)
-    echo "JS target tests..."
+jstests)
+    echo "JavaScript target tests..."
     $TRE makefiles/test-js.lisp
+    nodejs compiled/test.js >_nodejstests.log || exit 1
+    cmp makefiles/test-js.correct-output _nodejstests.log || (diff makefiles/test-js.correct-output _nodejstests.log; exit 1)
+    echo "JavaScript target tests passed (node.js only)."
     chromium-browser compiled/test.html &
 	;;
 
@@ -241,12 +244,14 @@ updatetests)
     echo "Updateing PHP target test data..."
     $TRE makefiles/test-php.lisp
     php compiled/test.php >makefiles/test-php.correct-output
+    echo "Updateing JavaScript target test data (node.js only)..."
+    nodejs compiled/test.js >makefiles/test-js.correct-output
     ;;
 
 tests)
     echo "Making tests..."
-	./make.sh phptest || exit 1
-	./make.sh jstest || exit 1
+	./make.sh phptests || exit 1
+	./make.sh jstests || exit 1
 	;;
 
 debugboot)
@@ -332,7 +337,8 @@ restore)
 	echo "  compiler        Compile just the compiler and the C target to C."
 	echo "  bcompiler       Compile just the compiler and the bytecode target to C."
     echo "  environment     Compile environment to C."
-    echo "  bytecode        Compile environment to bytecode, replacing the C functions."
+    echo "  bytecode        Compile environment to bytecode, replacing the C"
+    echo "                  functions."
     echo "  bytecode-image  Compile environment to bytecode image."
     echo "  all             Compile everything makefiles/ has to offer."
     echo "  build           Do a regular build file by file."
@@ -345,5 +351,11 @@ restore)
     echo "  clean           Remove built files but not the backup."
     echo "  distclean       Like 'clean' but also removes backups."
     echo "  precompile      Precompile obligatory target environments (EXPERIMENTAL)."
+    echo "  jstests         Compile JavaScript target tests and run them with"
+    echo "                  Chromium and node.js."
+    echo "  phptests        Compile PHP target tests and run them with the"
+    echo "                  command-line version of PHP."
+    echo "  updatetests     Generate new test reference files."
+    echo "  releasetests    Run 'all' and everything that's hardly used."
     ;;
 esac

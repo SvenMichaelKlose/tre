@@ -6,7 +6,7 @@
 (env-load "stage3/hash.lisp" 'c)
 (env-load "stage3/profile.lisp")
 (env-load "stage3/with-struct.lisp")
-(env-load "stage3/stream.lisp")
+(env-load "stage3/stream.lisp" 'c)
 (env-load "stage3/standard-stream.lisp" 'c)
 (env-load "stage3/default-stream.lisp")
 (env-load "stage3/open.lisp")
