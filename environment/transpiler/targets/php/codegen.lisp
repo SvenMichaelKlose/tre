@@ -60,6 +60,9 @@
   (let v (php-dollarize val)
     (php-line "if (!(!" v "&&!is_string(" v ")&&!is_numeric(" v ")&&!is_array(" v "))) { " (php-jump tag) "; }")))
 
+(define-php-macro return-from (block-name x)
+  (error "Cannot return from unknown BLOCK ~A." block-name))
+
 
 ;;;; FUNCTIONS
 

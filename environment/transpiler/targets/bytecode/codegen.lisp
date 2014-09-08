@@ -49,3 +49,6 @@
 (define-bc-macro %global  (x)       `(symbol-value x))
 (define-bc-macro identity (x)       x)
 (define-bc-macro %%native (&rest x) x)
+
+(define-bc-macro return-from (block-name x)
+  (error "Cannot return from unknown BLOCK ~A." block-name))

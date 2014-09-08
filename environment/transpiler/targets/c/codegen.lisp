@@ -135,6 +135,8 @@
   `(,*c-indent* "if (" ,x " != treptr_nil)" ,*newline*
 	,*c-indent* ,@(c-line `(%%native "goto l" ,tag))))
 
+(define-c-macro return-from (block-name x)
+  (error "Cannot return from unknown BLOCK ~A." block-name))
 
 ;;;; SYMBOLS
 

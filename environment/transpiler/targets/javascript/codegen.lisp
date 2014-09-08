@@ -59,6 +59,9 @@
 (define-js-macro %set-atom-fun (plc val)
   `(%%native ,*js-indent* ,plc "=" ,val ,*js-separator*))
 
+(define-js-macro return-from (block-name x)
+  (error "Cannot return from unknown BLOCK ~A." block-name))
+
 
 ;;;; FUNCTIONS
 
