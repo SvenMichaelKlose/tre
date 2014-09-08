@@ -1,4 +1,4 @@
-;;;; tré – Copyright (c) 2005–2008,2010–2013 Sven Michael Klose <pixel@copei.de>
+;;;; tré – Copyright (c) 2005–2008,2010–2014 Sven Michael Klose <pixel@hugbox.org>
 
 (defvar *function-sources* nil)
 
@@ -36,5 +36,6 @@
        (%set-atom-fun ,name
            #'(,(%defun-checked-args args)
                (block ,name
-                 ,@(%add-documentation name body))))
+                 (block nil
+                   ,@(%add-documentation name body)))))
 	   (return-from nil ',name))))

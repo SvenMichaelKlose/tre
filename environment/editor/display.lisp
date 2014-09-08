@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008,2012–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008,2012–2014 Sven Michael Klose <pixel@hugbox.org>
 
 (defun editor-default-color (ed)
   "Set default text color."
@@ -35,12 +35,12 @@
 		  #'((line i pos)
   		       (? (== 0 (mod pos (editor-conf 'tabstop)))
       		      (editor-expand-line ed line (++ i) pos)
-      		      (cons 32 (expand-tab line i (++ pos))))))
+      		      (. 32 (expand-tab line i (++ pos))))))
     (when (< i (length line))
       (with (c (elt line i))
         (? (== c 9)
-		   (cons 32 (expand-tab line i (++ pos)))
-           (cons c (editor-expand-line ed line (++ i) (++ pos))))))))
+		   (. 32 (expand-tab line i (++ pos)))
+           (. c (editor-expand-line ed line (++ i) (++ pos))))))))
 
 (defun editor-home (ed)
   (editor-clear-bottom ed)
@@ -91,7 +91,7 @@
     (dotimes (x (terminal-width (editor-state-terminal ed)))
       (with (xl (+ x (editor-state-column-offset ed)))
 	    (when (>= xl (length line))
-		  (return-from editor-draw-line nil))
+		  (return))
 	    (princ (elt line xl))))))
 
 (defun editor-redraw-line (ed &optional (n nil))

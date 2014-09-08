@@ -418,10 +418,11 @@
 
 (defmethod caroshi-element from-point (x y)
   (& (inside? x y)
-	 (? (& (element? this) first-child)
+	 (? (& (element? this)
+           first-child)
 	    (do-children (i this)
 		  (!? (i.seek-element x y)
-              (return-from from-point !)))
+              (return !)))
 	    this)))
 
 (defmethod caroshi-element get (css-selector)

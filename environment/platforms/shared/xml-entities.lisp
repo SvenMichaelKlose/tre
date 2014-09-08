@@ -1,4 +1,4 @@
-;;;; tré – Copyright (c) 2009,2011–2013 Sven Michael Klose <pixel@copei.de>
+;;;; tré – Copyright (c) 2009,2011–2014 Sven Michael Klose <pixel@hugbox.org>
 
 (defvar *xml-entities*
 		'(("amp" . 38)
@@ -120,10 +120,9 @@
     (when (== #\& x.)
 	  (awhen (position #\; .x :test #'==)
 	    (let-when n (href *xml-entities-hash* (list-string (subseq .x 0 !)))
-	      (return-from xml-entities-charlist-to-unicode
-					   (cons (code-char n)
-						     (xml-entities-charlist-to-unicode (nthcdr (++ !) .x)))))))
-    (cons x. (xml-entities-charlist-to-unicode .x))))
+	      (return (. (code-char n)
+                     (xml-entities-charlist-to-unicode (nthcdr (++ !) .x)))))))
+    (. x. (xml-entities-charlist-to-unicode .x))))
 
 (defun xml-entities-to-unicode (str)
   (list-string (xml-entities-charlist-to-unicode (string-list str))))

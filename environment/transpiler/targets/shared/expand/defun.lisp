@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun collect-symbols (x)
   (with (ret (make-queue)
@@ -71,7 +71,9 @@
 (defun shared-defun-without-expander (name args body &key (allow-source-memorizer? nil) (allow-backtrace? nil))
   (= name (apply-current-package name))
   (print-definition `(defun ,name ,args))
-  (let body-with-block `((block ,name ,@(list-without-noargs-tag body)))
+  (let body-with-block `((block ,name
+                           (block nil
+                             ,@(list-without-noargs-tag body))))
     (| (list? args)
        (error "Argument list expected instead of ~A." args))
     (& (transpiler-defined-function *transpiler* name)
