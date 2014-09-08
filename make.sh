@@ -284,7 +284,6 @@ all)
 	./make.sh bytecode-image || exit 1
 	./make.sh jsdebugger || exit 1
     $TRE makefiles/webconsole.lisp || exit 1
-	./make.sh jsdebugger || exit 1
     ;;
 
 profile)
@@ -297,7 +296,11 @@ releasetests)
     echo "Making release tests..."
 	./make.sh distclean || exit 1
 	./make.sh debug -Werror || exit 1
+	./make.sh reload || exit 1
+	./make.sh distclean || exit 1
 	./make.sh build -Werror || exit 1
+	./make.sh reload || exit 1
+	./make.sh distclean || exit 1
     ./make.sh all || exit 1
 	;;
 
