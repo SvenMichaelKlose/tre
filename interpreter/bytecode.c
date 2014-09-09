@@ -121,7 +121,7 @@ trecode_get (treptr ** p)
                 v = CONS(car, cdr);
                 tregc_pop_secondary ();
             } else if (v == treptr_set_atom_fun) {
-                treerror_norecover (v, "shouldn't be in the bytecode interpreter at all");
+                treerror_norecover (v, "%SET-ATOM-FUN shouldn't be in the bytecode interpreter at all");
                 trecode_set_place (&x, trecode_get (&x));
             } else {
                 num_args = TRENUMBER_INT(*x++);
