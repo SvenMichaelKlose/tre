@@ -77,12 +77,16 @@
 	             ,(list 'quote (js-load-base "environment/transpiler/environment/"
                                              "setf-function-p.lisp"))))
 
-(defvar *js-base-stream*
-	,(list 'quote (+ (js-load-base *js-env-path*
-			                       "error.lisp"
-                                   "../../../../stage3/stream.lisp"
-			                       "%force-output.lisp"
-			                       "standard-stream.lisp"
-			                       "../../../environment/print.lisp"))))
+(defun js-base-stream ()
+  (+ ,(list 'quote (js-load-base *js-env-path* "error.lisp"))
+     ,(list 'quote (js-load-base *js-env-path* "../../../../stage3/stream.lisp"))
+     (when (eq 'browser (transpiler-configuration *transpiler* 'environment))
+       ,(list 'quote (js-load-base *js-env-path* "%force-output.lisp")))
+     ,(list 'quote (js-load-base *js-env-path* "standard-stream.lisp"))
+     ,(list 'quote (js-load-base *js-env-path* "../../../environment/print.lisp"))))
+
+(defun js-base-nodejs ()
+  (+ ,(list 'quote (js-load-base (+ *js-env-path* "node.js/")
+                                 "file.lisp"))))
 
 (defvar *js-base-eval* ,(list 'quote (js-load-base *js-env-path* "eval.lisp")))

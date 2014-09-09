@@ -2,6 +2,8 @@
 
 (defun js-prologue ()
   (+ (format nil "// tré revision ~A~%" *tre-revision*)
+     (& (eq 'nodejs (transpiler-configuration *transpiler* 'environment))
+        (format nil "var fs = require ('fs');~%"))
      (& (transpiler-cps-transformation? *transpiler*)
         (format nil ,(fetch-file "environment/transpiler/targets/javascript/environment/native/cps.js")))
      (format nil "var _I_ = 0; while (1) {switch (_I_) {case 0: ~%")))
@@ -34,7 +36,9 @@
            ,@(& (transpiler-assert? tr)
                 `((debug-printing . ,*js-base-debug-print*)))
            (essential-functions-2 . ,*js-base2*)
-           (standard-streams . ,*js-base-stream*)
+           (standard-streams . ,(js-base-stream))
+           ,@(& (eq 'nodejs (transpiler-configuration *transpiler* 'environment))
+                `((nodejs-base . ,(js-base-nodejs))))
            ,@(& (t? *have-environment-tests*)
                 `((environment-tests . ,(make-environment-tests))))))))
 

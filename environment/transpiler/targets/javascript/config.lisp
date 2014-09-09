@@ -19,7 +19,8 @@
 	  :identifier-char?         #'c-identifier-char?
 	  :literal-converter        #'transpiler-expand-literal-characters
       :expex-initializer        #'js-expex-initializer
-      :ending-sections          #'js-ending-sections))
+      :ending-sections          #'js-ending-sections
+      :configurations           '((environment . browser))))
 
 (defun make-javascript-transpiler ()
   (aprog1 (make-javascript-transpiler-0)
