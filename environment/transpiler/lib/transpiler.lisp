@@ -108,6 +108,8 @@
 
   (postprocessor            #'concat-stringtree)
 
+  (configurations           nil)
+
   ;;;
   ;;; You mustn't init these.
   ;;;
@@ -238,6 +240,7 @@
         :cps-wrappers             (copy-hash-table cps-wrappers)
         :native-cps-functions     (copy-hash-table native-cps-functions)
         :postprocessor            postprocessor
+        :configurations           (copy-alist configurations)
         :make-text?               make-text?
         :encapsulate-strings?     encapsulate-strings?
         :dump-passes?             dump-passes?
@@ -387,3 +390,15 @@
 (defun transpiler-add-used-function (tr x)
   (= (href (transpiler-used-functions tr) x) t)
   x)
+
+(defun transpiler-configuration-item (tr x)
+  (alet (transpiler-configurations tr)
+    (| (assoc x ! :test #'eq)
+       (error "Transpiler ~A has no configuration item ~A. Available items are ~A."
+              (transpiler-name tr) x (carlist !)))))
+
+(defun transpiler-configuration (tr x)
+  (cdr (transpiler-configuration-item tr x)))
+
+(defun (= transpiler-configuration) (value tr x)
+  (= (cdr (transpiler-configuration-item tr x)) value))
