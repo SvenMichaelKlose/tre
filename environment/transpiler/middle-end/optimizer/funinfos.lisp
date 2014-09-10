@@ -53,12 +53,12 @@
 
 (defun correct-funinfo ()
   (alet *funinfo*
-#|
-    (when (transpiler-lambda-export? *transpiler*)
+;#| XXX confuses READ
+;    (when (transpiler-lambda-export? *transpiler*)
 ;      (remove-unused-scope-arg !)
-      (remove-scoped-vars !)
-      (replace-scope-arg !))
-|#
+;      (remove-scoped-vars !)
+;      (replace-scope-arg !))
+;|#
     (funinfo-vars-set ! (intersect (funinfo-vars !) (funinfo-used-vars !) :test #'eq))
     (when (transpiler-stack-locals? *transpiler*)
       (remove-argument-stackplaces !))))
