@@ -9,7 +9,7 @@
 (= *have-compiler?* t)
 (= *have-c-compiler?* nil)
 
-(unix-sh-mkdir "compiled")
+(unix-sh-mkdir "compiled" :parents t)
 (make-project "tré web console"
               `(,@(list+ "environment/platforms/shared/"
                          '("continued.lisp"

@@ -8,7 +8,7 @@
 (load "environment/platforms/shared/html/doctypes.lisp")
 (load "environment/platforms/shared/html/script.lisp")
 
-(unix-sh-mkdir "compiled")
+(unix-sh-mkdir "compiled" :parents t)
 (make-project
       "tré JavaScript target test"
       `((toplevel . ((environment-tests))))

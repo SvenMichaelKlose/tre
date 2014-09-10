@@ -8,7 +8,7 @@
 
 (defvar *log-events?* nil)
 
-(unix-sh-mkdir "compiled")
+(unix-sh-mkdir "compiled" :parents t)
 (make-project "tré debugger"
               (+ '("environment/platforms/shared/lml2dom.lisp")
                  (list+ "environment/platforms/js/dom/"

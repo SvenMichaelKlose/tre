@@ -7,7 +7,7 @@
   ;(= (transpiler-backtrace? !) nil)
   ;(= (transpiler-dump-passes? !) t))
 
-(unix-sh-mkdir "compiled")
+(unix-sh-mkdir "compiled" :parents t)
 (make-project "Single–file test."
               '("lambda.lisp")
               :transpiler  *c-transpiler*

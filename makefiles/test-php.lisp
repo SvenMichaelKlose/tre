@@ -2,7 +2,7 @@
 
 (= *have-environment-tests* t)
 
-(unix-sh-mkdir "compiled")
+(unix-sh-mkdir "compiled" :parents t)
 (make-project "PHP target test"
               `((toplevel . ((environment-tests))))
               :transpiler  *php-transpiler*
