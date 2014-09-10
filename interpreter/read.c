@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2008,2010,2012–2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2008,2010,2012–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -415,7 +415,8 @@ treread (trestream * stream)
     x = treread_expr (stream);
 
 #ifdef TRE_VERBOSE_READ
-    treprint (x);
+    if (x != (treptr) -1)
+        treprint (x);
 #endif
 
     return x;
