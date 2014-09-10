@@ -3,11 +3,9 @@
 (defun fetch-file (path)
   (with-input-file in path
     (with-queue q
-      (loop
-        (alet (read-char in)
-          (? (end-of-file? in)
-             (return (list-string (queue-list q)))
-             (enqueue q !)))))))
+      (awhile (read-char in)
+              (list-string (queue-list q))
+        (enqueue q !)))))
 
 (defun fetch-all-lines (path)
   (with-input-file in path

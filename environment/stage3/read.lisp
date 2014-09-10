@@ -17,23 +17,22 @@
      (not (special-char? x))))
 
 (defun skip-comment (str)
-  (let c (read-char str)
-	(? (in=? c 10 -1)
+  (let-when c (read-char str)
+	(? (in=? c 10)
 	   (skip-spaces str)
 	   (skip-comment str))))
 
 (defun skip-spaces (str)
-  (unless (end-of-file? str)
-    (let c (peek-char str)
-      (when (== #\; c)
-        (skip-comment str))
-      (when (whitespace? c)
-        (read-char str)
-        (skip-spaces str)))))
+ (let-when c (peek-char str)
+   (when (== #\; c)
+     (skip-comment str))
+   (when (whitespace? c)
+     (read-char str)
+     (skip-spaces str))))
 
 (defun get-symbol-0 (str)
   (let c (char-upcase (peek-char str))
-    (? (== 59 c) ; #\; - vim syntax highlighting fscks up.
+    (? (== #\; c)
        (progn
          (skip-comment str)
          (get-symbol-0 str))
@@ -42,9 +41,9 @@
              (get-symbol-0 str))))))
 
 (defun get-symbol (str)
-  (unless (| (end-of-file? str)
-	         (special-char? (peek-char str)))
-    (get-symbol-0 str)))
+  (let-when c (peek-char str)
+    (unless (special-char? c)
+      (get-symbol-0 str))))
 
 (defun get-symbol-and-package (str)
   (skip-spaces str)
@@ -56,7 +55,7 @@
 
 (defun read-string-0 (str)
   (let c (read-char str)
-    (unless (== c 34) ; " - vim syntax highlighting fscks up.
+    (unless (== c #\")
       (. (? (== c #\\)
             (read-char str)
             c)
@@ -206,11 +205,11 @@
 
 (defun read (&optional (str *standard-input*))
   (skip-spaces str)
-  (unless (end-of-file? str)
-	(read-expr str)))
+  (& (peek-char str)
+	 (read-expr str)))
 
 (defun read-all (str)
-  (unless (progn
-	        (skip-spaces str)
-	        (end-of-file? str))
-    (. (read str) (read-all str))))
+  (skip-spaces str)
+  (& (peek-char str)
+     (. (read str)
+        (read-all str))))

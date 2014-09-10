@@ -1,5 +1,6 @@
 ;;;; tré – Copyright (C) 2005–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
 
+(env-load "stage3/let-when.lisp")
 (env-load "stage3/list-unless.lisp")
 (env-load "stage3/ensure-tree.lisp")
 (env-load "stage3/declare.lisp")

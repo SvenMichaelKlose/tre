@@ -37,6 +37,24 @@ treio_eof (trestream * s)
 }
 
 int
+tabulate (int column, int width)
+{
+    return (column - (column - 1) % width) + width + 1;
+}
+
+void
+treio_track_location (trestream * s, int c)
+{
+    if (c == 10) {
+        s->line++;
+        s->column = 1;
+    } else if (c == '\t') {
+        s->column = tabulate (s->column, TRE_DEFAULT_TABSIZE);
+    } else
+        s->column++;
+}
+
+int
 treio_getc (trestream * s)
 {
     int c;
@@ -46,13 +64,7 @@ treio_getc (trestream * s)
         s->putback_char = -1;
     } else {
         c = TREIO_GETC(s);
-		if (c == 10) {
-			s->line++;
-			s->column = 1;
-		} else if (c == '\t') {
-            s->column = (s->column - (s->column - 1) % TRE_DEFAULT_TABSIZE) + TRE_DEFAULT_TABSIZE + 1;
-        } else
-			s->column++;
+        treio_track_location (s, c);
     }
 
     s->last_char = c;

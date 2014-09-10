@@ -2,7 +2,7 @@
 
 (defun read-binary (&optional (in *standard-input*))
   (let n 0
-    (while (& (not (end-of-file? in))
-              (in=? (peek-char in) #\0 #\1))
+    (while (!? (peek-char in)
+               (in=? ! #\0 #\1))
            n
       (= n (bit-or (<< n 1) (- (read-char in) #\0))))))

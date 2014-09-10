@@ -32,13 +32,14 @@
     (? (string? x)
        (adolist ((string-list x))
          (%track-location stream-location !))
-       (? (== 10 x)
-          (progn
-            (= (stream-location-column stream-location) 1)
-            (++! (stream-location-line stream-location)))
-          (?
-            (== 9 x) (= (stream-location-column stream-location) (next-tabulator-column column tabsize))
-            (< 31 x) (++! (stream-location-column stream-location))))))
+       (when x
+         (? (== 10 x)
+            (progn
+              (= (stream-location-column stream-location) 1)
+              (++! (stream-location-line stream-location)))
+            (?
+              (== 9 x) (= (stream-location-column stream-location) (next-tabulator-column column tabsize))
+              (< 31 x) (++! (stream-location-column stream-location)))))))
   x)
 
 (defun stream-princ (x str)
