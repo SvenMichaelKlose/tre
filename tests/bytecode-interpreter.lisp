@@ -46,3 +46,4 @@
   (terpri))
 
 (bytecode-interpreter-tests)
+(quit)
