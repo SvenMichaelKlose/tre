@@ -341,7 +341,8 @@ char *tre_builtin_names[] = {
     "MACROEXPAND-1", "MACROEXPAND",
 
     "%PRINC", "%FORCE-OUTPUT", "%READ-CHAR",
-    "%FOPEN", "%FEOF", "%FCLOSE", "%TERMINAL-RAW", "%TERMINAL-NORMAL",
+    "FILE-EXISTS?", "%FOPEN", "%FEOF", "%FCLOSE",
+    "%TERMINAL-RAW", "%TERMINAL-NORMAL",
 
 	"END-DEBUG", "INVOKE-DEBUGGER",
 
@@ -484,6 +485,7 @@ treevalfunc_t treeval_xlat_builtin[] = {
     trestream_builtin_princ,
     trestream_builtin_force_output,
     trestream_builtin_read_char,
+    trestream_builtin_file_exists,
     trestream_builtin_fopen,
     trestream_builtin_feof,
     trestream_builtin_fclose,

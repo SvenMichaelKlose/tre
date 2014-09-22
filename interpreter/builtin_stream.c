@@ -77,6 +77,16 @@ trestream_builtin_get_handle (treptr args, FILE * default_stream)
 }
 
 treptr
+trestream_builtin_file_exists (treptr args)
+{
+    treptr fname = trearg_typed (1, TRETYPE_STRING, trearg_get (args), "pathname");
+
+    if (access (TREPTR_STRINGZ(fname), F_OK) != -1)
+        return treptr_t;
+    return treptr_nil;
+}
+
+treptr
 trestream_builtin_force_output (treptr args)
 {
     FILE  * str = trestream_builtin_get_handle (args, stdout);
