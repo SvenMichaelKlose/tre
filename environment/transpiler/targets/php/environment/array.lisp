@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (dont-obfuscate *arrays* *array-id* is_array g a s p r keys)
 
@@ -27,7 +27,11 @@
       (%= (%%native "$" a "[]") !))))
 
 (defun aref (a k)
-  (href a k))
+  (? (is_array a)
+     (php-aref a k)
+     (href a k)))
 
 (defun (= aref) (v a k)
-  (=-href v a k))
+  (? (is_array a)
+     (=-php-aref v a k)
+     (=-href v a k)))
