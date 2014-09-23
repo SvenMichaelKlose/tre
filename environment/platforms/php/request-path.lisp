@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2012–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2012–2014 Sven Michael Klose <pixel@copei.de>
 
 (defvar *request-path-offset* nil)
 (defvar *base-url* nil)
@@ -17,13 +17,13 @@
 (dont-obfuscate parse_url)
 
 (defun request-uri () 
-  (href *_SERVER* "REQUEST_URI"))
+  (aref *_SERVER* "REQUEST_URI"))
 
 (defun parse-url ()
   (parse_url (request-uri)))
 
 (defun request-path ()
-  (href (parse-url) "path"))
+  (aref (parse-url) "path"))
 
 (defun request-path-components ()
   (subseq (path-pathlist (request-uri)) *request-path-offset*))
