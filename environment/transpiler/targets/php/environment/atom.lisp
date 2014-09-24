@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2011–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2011–2014 Sven Michael Klose <pixel@copei.de>
 
 (dont-obfuscate is_object isset function_exists)
 
@@ -11,3 +11,4 @@
     (string? x)          (function_exists x)))
 
 (defun builtin? (x))
+(defun function-bytecode (x))
