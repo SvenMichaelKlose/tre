@@ -1,10 +1,10 @@
-# Copyright (c) 2012 Sven Michael Klose <pixel@copei.de>
+# Copyright (c) 2012,2014 Sven Michael Klose <pixel@copei.de>
 
 function tre_backtrace ($msg)
 {
     header ("HTTP/1.0 404 Not Found");
     header ("Status: 404 Not Found");
-    echo "<html><body>$msg<pre>";
+    echo "<html><body><p>$msg</p><pre>";
     debug_print_backtrace ();
     echo "</pre></body></html>";
     die ();
