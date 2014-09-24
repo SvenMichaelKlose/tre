@@ -19,3 +19,6 @@
   (? (== start end)
 	 ""
      (substr seq start (- end start))))
+
+(defun number-string (x)
+    (%%native "(string)$" x))

@@ -8,4 +8,5 @@
     (string? x)    x
     (character? x) (char-string x)
     (symbol? x)    (symbol-name x)
+    (number? x)    (number-string x)
     (not x)        "NIL"))
