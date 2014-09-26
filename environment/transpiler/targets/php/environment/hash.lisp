@@ -50,6 +50,11 @@
     (adolist (x a)
       (%%%href-set .! a !.))))
 
+(defun phphash-alist (x)
+  (with-queue q
+    (adolist ((hashkeys x) (queue-list q))
+      (enqueue q (. ! (aref x !))))))
+
 (defun %href-error (h)
   (error "HREF expects an hash table instead of ~A." h))
 
