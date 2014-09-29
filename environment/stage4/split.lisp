@@ -3,19 +3,19 @@
 (defun split-if (predicate seq &key (include? nil))
   (& seq
      (!? (position-if predicate seq)
-         (cons (subseq seq 0 (? include?
-                                (integer++ !)
-                                !))
-               (split-if predicate (subseq seq (integer++ !)) :include? include?))
+         (. (subseq seq 0 (? include?
+                             (integer++ !)
+                             !))
+            (split-if predicate (subseq seq (integer++ !)) :include? include?))
          (list seq))))
 
 (defun generic-split (obj seq &key (test #'eql) (include? nil))
   (& seq
      (!? (position obj seq :test test)
-         (cons (subseq seq 0 (? include?
-                                (integer++ !)
-                                !))
-               (generic-split obj (subseq seq (integer++ !)) :test test :include? include?))
+         (. (subseq seq 0 (? include?
+                             (integer++ !)
+                             !))
+            (generic-split obj (subseq seq (integer++ !)) :test test :include? include?))
          (list seq))))
 
 (defun split (obj seq &key (test #'eql) (include? nil))
