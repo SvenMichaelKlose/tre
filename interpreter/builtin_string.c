@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2009,2012–2014 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2009,2012–2014 Sven Michael Klose <pixel@hugbox.org>
  */
 
 #include <stdlib.h>
@@ -36,7 +36,7 @@ trestring_builtin_stringp (treptr list)
 treptr
 trestring_builtin_make (treptr list)
 {
-    char * str;
+    char *  str;
     treptr  arg = trearg_typed (1, TRETYPE_NUMBER, trearg_get (list), "MAKE-STRING");
     treptr  atom;
 
@@ -49,14 +49,13 @@ trestring_builtin_make (treptr list)
 treptr
 trestring_builtin_list_string (treptr list)
 {
-    char *  news;
-    treptr  p;
-    treptr  atom;
-    char *  newp;
+	treptr    arg;
+    treptr    atom;
+	int	      i;
     tre_size  len = 0;
-	int	    i;
-
-	treptr arg;
+    char *    news;
+    char *    newp;
+    treptr    p;
 
 	arg = trearg_get (list);
 	len = trelist_length (arg);
@@ -93,7 +92,7 @@ trestring_builtin_compare (treptr list)
 	char *    y;
 	treptr    p;
 	treptr    car;
-	unsigned  len;
+	tre_size  len;
 
 	if (TREPTR_IS_STRING(CAR(list)) == FALSE)
 		treerror_norecover (list, "String expected as first argument.");
