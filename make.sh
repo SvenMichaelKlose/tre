@@ -60,8 +60,8 @@ FILES="
 CC=cc
 LD=cc
 
-LIBC_PATH=`find /lib/x86_64-linux-gnu/ -name libc.so.* | head -n 1`
-LIBDL_PATH=`find /lib -name libdl.so.* | head -n 1`
+LIBC_PATH=`find /lib64 /lib/x86_64-linux-gnu/ /lib -name libc.so.* | head -n 1`
+LIBDL_PATH=`find /lib64 /lib -name libdl.so.* | head -n 1`
 KERNEL_IDENT=`uname -i`
 CPU_TYPE=`uname -m`
 OS_RELEASE=`uname -r`
