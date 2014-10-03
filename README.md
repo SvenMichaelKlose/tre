@@ -11,8 +11,8 @@ PHP tré can compile itself to all other targets.
 
 # Building and installing
 
-Make sure you have libdl, libffi and their headers installed.
-Then, simply run
+Make sure you have binutils, git, gcc, and the development
+version of libc, libdl, libffi installed.  Then, simply run
 
 ```
 ./make.sh boot
