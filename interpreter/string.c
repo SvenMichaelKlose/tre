@@ -36,7 +36,7 @@ void
 trestring_copy (char *to, treptr str)
 {
     char * s = TREPTR_STRING(str);
-    strncpy (to, TRESTRING_DATA(s), TRESTRING_LEN(s) + 1);
+    memcpy (to, TRESTRING_DATA(s), TRESTRING_LEN(s) + 1);
 }
 
 treptr
@@ -48,7 +48,7 @@ trestring_get_binary (const char *str, tre_size len)
     if (nstr == NULL)
         return treerror (treptr_invalid, "Out of memory.");
 
-    bcopy (str, TRESTRING_DATA(nstr), len);
+    memcpy (TRESTRING_DATA(nstr), str, len);
     atom = treatom_alloc (TRETYPE_STRING);
     TREATOM(atom) = nstr;
 
