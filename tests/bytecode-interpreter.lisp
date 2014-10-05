@@ -22,6 +22,15 @@
     (fun2 #'(() (fun 65)))
     a))
 
+(defun @bc-test-closure ()
+  (with (a 42
+         fun #'((x)
+                  (= a x))
+         fun2 #'((f)
+                  (apply f)))
+    (fun2 #'(() (fun 65)))
+    a))
+
 (defun bytecode-interpreter-tests ()
   (load-bytecode (compile-bytecode-environment '(@bc-test-%set-atom-fun
                                                  @bc-test-set-lexical
