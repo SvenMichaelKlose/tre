@@ -98,7 +98,7 @@ trestring_builtin_compare (treptr list)
 		treerror_norecover (list, "String expected as first argument.");
 
 	x = TREPTR_STRINGZ(CAR(list));
-	len = TRESTRING_LEN(x);
+	len = TREPTR_STRINGLEN(CAR(list));
     DOLIST(p, CDR(list)) {
 		car = CAR(p);
 		if (TREPTR_IS_STRING(car) == FALSE)
@@ -106,9 +106,9 @@ trestring_builtin_compare (treptr list)
 		if (NOT(car))
 			continue;
 		y = TREPTR_STRINGZ(car);
-		if (len != TRESTRING_LEN(y))
+		if (len != TREPTR_STRINGLEN(car))
 			return treptr_nil;
-		if (strcmp (x, y))
+		if (memcmp (x, y, len))
 			return treptr_nil;
 	}
 
