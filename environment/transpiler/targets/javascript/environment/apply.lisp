@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2010,2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2010,2013–2014 Sven Michael Klose <pixel@copei.de>
 
 (dont-obfuscate apply call)
 
@@ -8,11 +8,8 @@
        (declare-native-cps-function apply methodapply)))
 
 (defun apply (fun &rest lst)
-  (when-debug
-    (| (function? fun)
-	   (error "First argument ~A is not a function." fun))
-	(| (list? (car (last lst)))
-	   (error "Last argument is not a list.")))
+  (assert (function? fun) "First argument ~A is not a function." fun)
+  (assert (list? (car (last lst))) "Last argument ~A is not a list." (last lst))
   (alet (%nconc (butlast lst) (car (last lst)))
     ,(? (transpiler-cps-transformation? *transpiler*)
         '(?

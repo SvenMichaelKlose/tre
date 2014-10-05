@@ -464,9 +464,7 @@
   (caroshi-element-get-if this predicate))
 
 (defmethod caroshi-element get-child-at (idx)
-  (when-debug
-	(unless (integer<= 0 idx)
-	  (error (+ "caroshi-element get-child-at " idx " is not a positive integer"))))
+  (assert (integer<= 0 idx) (+ "caroshi-element get-child-at " idx " is not a positive integer"))
   (let x first-child
     (while (< 0 idx)
 		   x

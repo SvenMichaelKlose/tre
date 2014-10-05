@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
 
 (declare-cps-exception car cdr cpr rplaca rplacd rplacp cons?)
 
@@ -21,9 +21,13 @@
 (defvar *rplacd-breakpoints* nil)
 (defvar *rplacp-breakpoints* nil)
 
+(defmacro when-rplac-breakpoints (&body body)
+  (when (transpiler-configuration *transpiler* 'rplac-breakpoints)
+    body))
+
 (defun rplaca (x val)
   (declare type cons x)
-  (when-debug
+  (when-rplac-breakpoints
     (& (member x *rplaca-breakpoints* :test #'eq)
        (invoke-debugger)))
   (= x._ val)
@@ -31,7 +35,7 @@
 
 (defun rplacd (x val)
   (declare type cons x)
-  (when-debug
+  (when-rplac-breakpoints
     (& (member x *rplacd-breakpoints* :test #'eq)
        (invoke-debugger)))
   (= x.__ val)
@@ -39,7 +43,7 @@
 
 (defun rplacp (x val)
   (declare type cons x)
-  (when-debug
+  (when-rplac-breakpoints
     (& (member x *rplacp-breakpoints* :test #'eq)
        (invoke-debugger)))
   (= x._p val)
