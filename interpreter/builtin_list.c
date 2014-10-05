@@ -35,37 +35,21 @@ trelist_builtin_cons (treptr list)
 }
 
 treptr
-trelist_builtin_cxr_arg (treptr list, const char * descr)
+trelist_builtin_car (treptr x)
 {
-    treptr arg = trearg_get (list);
-
-    RETURN_NIL(arg);
-	return trearg_typed (1, TRETYPE_CONS, arg, descr);
+    return CAR(trearg_get (x));
 }
 
 treptr
-trelist_builtin_car (treptr list)
+trelist_builtin_cdr (treptr x)
 {
-    treptr arg = trelist_builtin_cxr_arg (list, "CAR");
-
-    RETURN_NIL(arg);
-    return CAR(arg);
+    return CDR(trearg_get (x));
 }
 
 treptr
-trelist_builtin_cdr (treptr list)
+trelist_builtin_cpr (treptr x)
 {
-    treptr arg = trelist_builtin_cxr_arg (list, "CDR");
-    RETURN_NIL(arg);
-    return CDR(arg);
-}
-
-treptr
-trelist_builtin_cpr (treptr list)
-{
-    treptr arg = trelist_builtin_cxr_arg (list, "property");
-    RETURN_NIL(arg);
-    return CPR(arg);
+    return CPR(trearg_get (x));
 }
 
 #define TRELISTARG_GET2(cons, new, list) \
@@ -101,8 +85,8 @@ trelist_builtin_rplacp (treptr list)
 treptr
 trelist_consp (treptr object)
 {
-   if (ATOMP(object))
-       return treptr_nil;
+    if (ATOMP(object))
+        return treptr_nil;
     return treptr_t;
 }
 
