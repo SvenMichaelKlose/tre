@@ -21,7 +21,7 @@ struct tre_list {
 
 #define CONS(a,d)	trelist_get (a, d)
 
-#ifdef TRE_NO_LIST_ASSERTIONS
+#ifdef TRE_NO_ASSERTIONS
 #define CAR(x) 		_CAR(x)
 #define CDR(x) 		_CDR(x)
 #define CPR(x) 		_CPR(x)

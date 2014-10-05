@@ -12,6 +12,19 @@
     if (!pred(x)) \
         treerror_norecover (x, type " expected.");
 
+#ifdef TRE_NO_ASSERTIONS
+#define ASSERT_CONSP(x)
+#define ASSERT_ATOMP(x)
+#define ASSERT_LISTP(x)
+#define ASSERT_SYMBOLP(x)
+#define ASSERT_NUMBERP(x)
+#define ASSERT_STRINGP(x)
+#define ASSERT_ARRAYP(x)
+#define ASSERT_BUILTINP(x)
+#define ASSERT_SPECIALP(x)
+#define ASSERT_MACROP(x)
+#define ASSERT_FUNCTIONP(x)
+#else
 #define ASSERT_CONSP(x)     _ASSERT(x, CONSP,     "Cons")
 #define ASSERT_ATOMP(x)     _ASSERT(x, ATOMP,     "Atom")
 #define ASSERT_LISTP(x)     _ASSERT(x, LISTP,     "List")
@@ -23,5 +36,6 @@
 #define ASSERT_SPECIALP(x)  _ASSERT(x, SPECIALP,  "Special form")
 #define ASSERT_MACROP(x)    _ASSERT(x, MACROP,    "Macro")
 #define ASSERT_FUNCTIONP(x)	_ASSERT(x, FUNCTIONP, "Function")
+#endif
 
 #endif /* #ifndef TRE_ASSERT_H */

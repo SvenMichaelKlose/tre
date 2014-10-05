@@ -218,7 +218,7 @@ environment)
 
 boot)
     echo "Booting everything from scratch..."
-	./make.sh interpreter $ARGS || exit 1
+	./make.sh interpreter -DTRE_NO_ASSERTIONS -DNDEBUG $ARGS || exit 1
 	./make.sh compiler $ARGS || exit 1
 	./make.sh crunsh $ARGS || exit 1
 	./make.sh environment $ARGS || exit 1

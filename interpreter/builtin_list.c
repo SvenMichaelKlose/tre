@@ -37,19 +37,25 @@ trelist_builtin_cons (treptr list)
 treptr
 trelist_builtin_car (treptr x)
 {
-    return CAR(trearg_get (x));
+    treptr arg = trearg_get (x);
+    RETURN_NIL(arg);
+    return CAR(arg);
 }
 
 treptr
 trelist_builtin_cdr (treptr x)
 {
-    return CDR(trearg_get (x));
+    treptr arg = trearg_get (x);
+    RETURN_NIL(arg);
+    return CDR(arg);
 }
 
 treptr
 trelist_builtin_cpr (treptr x)
 {
-    return CPR(trearg_get (x));
+    treptr arg = trearg_get (x);
+    RETURN_NIL(arg);
+    return CPR(arg);
 }
 
 #define TRELISTARG_GET2(cons, new, list) \
