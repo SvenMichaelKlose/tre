@@ -72,7 +72,7 @@ trestring_t_get (treptr str, tre_size idx)
 {
     char * s = TREPTR_STRING(str);
 
-    if (TRESTRING_LEN(s)< idx) {
+    if (TRESTRING_LEN(s) < idx) {
         trewarn (TRECONTEXT_CURRENT(), "index out of range");
 		return treptr_nil;
     }
@@ -83,7 +83,7 @@ trestring_t_get (treptr str, tre_size idx)
 tre_size
 trestring_t_length (treptr str)
 {
-    return TRESTRING_LEN(TREPTR_STRING(str));
+    return TREPTR_STRINGLEN(str);
 }
 
 struct tre_sequence_type trestring_seqtype = {
