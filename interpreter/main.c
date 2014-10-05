@@ -240,7 +240,6 @@ void
 tremain_help (void)
 {
 	printf (TRE_INFO
-			TRE_COPYRIGHT
             "Usage: tre [OPTION]... [source-file]\n"
             "\n"
             " -h  Print this help message.\n"
@@ -254,7 +253,7 @@ tremain_help (void)
 void
 tremain_print_hardinfo (void)
 {
-	printf (TRE_INFO TRE_COPYRIGHT);
+	printf (TRE_INFO);
 	printf ("Object pointer size:        %d bytes\n", (int) sizeof (treptr));
 	printf ("Object index width:         %d bits\n", (int) TREPTR_INDEX_WIDTH);
 	printf ("Object type width:          %d bits\n", (int) TRETYPE_WIDTH);
