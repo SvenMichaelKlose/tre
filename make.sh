@@ -257,15 +257,6 @@ tests)
 	./make.sh jstests || exit 1
 	;;
 
-debugboot)
-    echo "Booting everything from scratch..."
-	./make.sh interpreter $ARGS || exit 1
-	./make.sh compiler $ARGS || exit 1
-	./make.sh environment $ARGS || exit 1
-	./make.sh debug || exit 1
-	./make.sh reload || exit 1
-	;;
-
 bytecode)
     echo "Making bytecodes for everything..."
 	(echo "(load-bytecode (compile-bytecode-environment))(dump-system \"image\")" | $TRE) || exit 1
@@ -335,32 +326,32 @@ restore)
     ;;
 
 *)
-	echo "Usage: make.sh boot|interpreter|compiler|all|bytecode|debug|build|crunsh|reload|precompile|backup|restore|install|clean|distclean [args]"
-	echo "  boot            Build everything from scratch."
-	echo "  tests           Run automatic tests (not so many at the moment)."
-	echo "  debugboot       Like 'boot', but for debugging"
-	echo "  interpreter     Clean and build the interpreter."
-	echo "  compiler        Compile just the compiler and the C target to C."
-	echo "  bcompiler       Compile just the compiler and the bytecode target to C."
+	echo "Usage: make.sh [target]"
+	echo "Targets:"
+	echo "  boot            Build compiled environment from scratch."
+	echo "  interpreter     Build interpreter (and compiled environment)."
+	echo "  compiler        Compile compiler and C target to C."
+	echo "  bcompiler       Compile compiler and bytecode target to C."
     echo "  environment     Compile environment to C."
-    echo "  bytecode        Compile environment to bytecode, replacing the C"
-    echo "                  functions."
-    echo "  bytecode-image  Compile environment to bytecode image."
+    echo "  bytecode        Compile environment to bytecode, replacing the functions."
+    echo "  bytecode-image  Compile environment to PRINTed bytecode image."
     echo "  all             Compile everything makefiles/ has to offer."
     echo "  build           Do a regular build file by file."
-    echo "  debug           Compile C sources for gdb. May the force be with you."
+    echo "  debug           Compile C sources for gdb. May the source be with you."
     echo "  crunsh          Compile C sources as one big file for best optimization."
     echo "  reload          Reload the environment."
     echo "  backup          Backup installation to local directory 'backup'."
     echo "  restore         Restore the last 'backup'."
-    echo "  install         Install the compiled executable."
+    echo "  install         Install compiled executable and environment image."
     echo "  clean           Remove built files but not the backup."
     echo "  distclean       Like 'clean' but also removes backups."
     echo "  precompile      Precompile obligatory target environments (EXPERIMENTAL)."
+    echo "  profile         Make a profile of the compiler compiling itself."
     echo "  jstests         Compile JavaScript target tests and run them with"
     echo "                  Chromium and node.js."
     echo "  phptests        Compile PHP target tests and run them with the"
     echo "                  command-line version of PHP."
+	echo "  tests           Run all tests."
     echo "  updatetests     Generate new test reference files."
     echo "  releasetests    Run 'all' and everything that's hardly used."
     ;;
