@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #ifndef TRE_PTR_H
@@ -43,6 +43,7 @@ typedef unsigned int tre_size;
 
 #define NOT(x)              (x == treptr_nil)
 #define NOT_NIL(x)          (x != treptr_nil)
+#define LISTP(x)            (NOT(x) || TREPTR_IS_CONS(x))
 
 extern const treptr treptr_nil;
 extern const treptr treptr_t;
