@@ -21,30 +21,48 @@ treptr tre_listprops[NUM_LISTNODES];
 treptr tre_default_listprop;
 tre_size trelist_num_used;
 
-treptr
-trelist_car (treptr cons)
+void
+trelist_assert (treptr x)
 {
-    RETURN_NIL(cons);
-    return _CAR(cons);
+    if (!LISTP(x))
+        treerror_norecover (x, "List expected.");
 }
 
 treptr
-trelist_cdr (treptr cons)
+trelist_car (treptr x)
 {
-    RETURN_NIL(cons);
-    return _CDR(cons);
+    trelist_assert (x);
+    RETURN_NIL(x);
+    return _CAR(x);
 }
 
 treptr
-trelist_cpr (treptr cons)
+trelist_cdr (treptr x)
 {
-    RETURN_NIL(cons);
-    return _CPR(cons);
+    trelist_assert (x);
+    RETURN_NIL(x);
+    return _CDR(x);
+}
+
+treptr
+trelist_cpr (treptr x)
+{
+    trelist_assert (x);
+    RETURN_NIL(x);
+    return _CPR(x);
+}
+
+void
+trelist_rplac_assert (treptr x)
+{
+    if (!TREPTR_IS_CONS(x))
+        treerror_norecover (x, "Cons expected.");
 }
 
 treptr
 trelist_rplaca (treptr cons, treptr val)
 {
+    trelist_rplac_assert (cons);
     _CAR(cons) = val;
     return cons;
 }
@@ -52,6 +70,7 @@ trelist_rplaca (treptr cons, treptr val)
 treptr
 trelist_rplacd (treptr cons, treptr val)
 {
+    trelist_rplac_assert (cons);
     _CDR(cons) = val;
     return cons;
 }
@@ -59,6 +78,7 @@ trelist_rplacd (treptr cons, treptr val)
 treptr
 trelist_rplacp (treptr cons, treptr val)
 {
+    trelist_rplac_assert (cons);
     _CPR(cons) = val;
     return cons;
 }

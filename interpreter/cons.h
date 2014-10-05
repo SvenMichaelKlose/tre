@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #ifndef TRE_CONS_H
@@ -21,14 +21,14 @@ struct tre_list {
 
 #define CONS(a,d)	trelist_get (a, d)
 
-#ifdef TRE_LIST_DIAGNOSTICS
-#define CAR(x) 		(trelist_car (x))
-#define CDR(x) 		(trelist_cdr (x))
-#define CPR(x) 		(trelist_cpr (x))
-#else
+#ifdef TRE_NO_LIST_ASSERTIONS
 #define CAR(x) 		_CAR(x)
 #define CDR(x) 		_CDR(x)
 #define CPR(x) 		_CPR(x)
+#else
+#define CAR(x) 		(trelist_car (x))
+#define CDR(x) 		(trelist_cdr (x))
+#define CPR(x) 		(trelist_cpr (x))
 #endif
 
 #define CADR(x) 	CAR(CDR(x))
