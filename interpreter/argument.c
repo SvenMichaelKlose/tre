@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2008,2012–2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2008,2012–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -34,7 +34,7 @@ trearg_get (treptr list)
    	if (NOT(list))
        	return treerror (treptr_invalid, "Argument expected.");
 
-   	if (TREPTR_IS_ATOM(list))
+   	if (ATOMP(list))
        	return treerror (list, "Atom instead of list - need 1 argument.");
     
     if (NOT_NIL(CDR(list)))
@@ -55,7 +55,7 @@ trearg_get2 (treptr *a, treptr *b, treptr list)
    		while (NOT(list))
         	list = treerror (treptr_invalid, "Two arguments expected.");
 
-   		if (TREPTR_IS_CONS(list))
+   		if (CONSP(list))
 			break;
 
        	list = treerror (list, "Atom instead of list - need two arguments.");
@@ -139,7 +139,7 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
         if (NOT(argdef))
 	    	break;
 
-        while (TREPTR_IS_ATOM(argdef)) {
+        while (ATOMP(argdef)) {
             treprint (original_argdef);
             treprint (original_args);
 	    	argdef = treerror (iargdef, "Argument definition must be a list.");
@@ -150,8 +150,8 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
 		val = (NOT_NIL(args)) ? CAR(args) : treptr_nil;
 
 		/* Process sub-level argument list. */
-        if (TREPTR_IS_CONS(var)) {
-            while (TREPTR_IS_ATOM(val)) {
+        if (CONSP(var)) {
+            while (ATOMP(val)) {
                 treprint (original_argdef);
                 treprint (original_args);
 	        	val = treerror (val, "List type argument expected.");
@@ -197,7 +197,7 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
 
 				/* Get init value. */
 				init = treptr_nil;
-				if (TREPTR_IS_CONS(form)) {
+				if (CONSP(form)) {
 		    		init = CADR(form);
 		    		form = CAR(form);
 				}
@@ -230,7 +230,7 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
 	    	while (NOT_NIL(argdef)) {
 	        	key = CAR(argdef);
 				init = treptr_nil;
-                if (TREPTR_IS_CONS(key)) {
+                if (CONSP(key)) {
 		    		init = CADR(key);
 		    		key = CAR(key);
  				}

@@ -55,7 +55,7 @@ trebuiltin_apply_args (treptr list)
     /* Handle single argument. */
     if (NOT(CDR(list))) {
         list = CAR(list);
-        if (TREPTR_IS_ATOM(list) && NOT_NIL(list))
+        if (ATOMP(list) && NOT_NIL(list))
             goto error;
         return list;
     }
@@ -66,7 +66,7 @@ trebuiltin_apply_args (treptr list)
             continue;
 
         last = CADR(i);
-        if (TREPTR_IS_ATOM(last) && NOT_NIL(last))
+        if (ATOMP(last) && NOT_NIL(last))
             goto error;
 
         RPLACD(i, last);
@@ -109,7 +109,7 @@ trebuiltin_quit (treptr args)
 
     if (NOT_NIL(args)) {
         arg = CAR(args);
-        if (TREPTR_IS_NUMBER(arg) == FALSE)
+        if (NUMBERP(arg) == FALSE)
 	    	return treerror (arg, "Integer expected.");
         code = TRENUMBER_VAL(arg);
     }
@@ -173,7 +173,7 @@ trebuiltin_intern (treptr args)
     char    * n;
 
     name = CAR(args);
-    if (TREPTR_IS_CONS(CDR(args))) {
+    if (CONSP(CDR(args))) {
         package = CADR(args);
         if (NOT_NIL(CDDR(args)))
 	    	treerror (args, "One or two arguments required.");

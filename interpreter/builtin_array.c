@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2008,2012–2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2008,2012–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #include <stdlib.h>
@@ -23,7 +23,7 @@ trearray_builtin_make (treptr sizes)
 		return treerror (sizes, "Size(s) expexted.");
 
     DOLIST(i, sizes)
-        if (TREPTR_IS_NUMBER(CAR(i)) == FALSE)
+        if (NUMBERP(CAR(i)) == FALSE)
 	    	return treerror (CAR(i), "Integer expected.");
 
     return trearray_get (sizes);
@@ -87,7 +87,7 @@ trearray_get_elt (treptr array, treptr indexes)
 treptr
 trearray_p (treptr x)
 {
-    return TREPTR_TRUTH(TREPTR_IS_ARRAY(x));
+    return TREPTR_TRUTH(ARRAYP(x));
 }
 
 treptr

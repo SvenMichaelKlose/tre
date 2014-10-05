@@ -21,29 +21,29 @@ typedef unsigned int tre_size;
 #define TRETYPE_INDEX_TO_PTR(type, index)   (((treptr) type << TREPTR_INDEX_WIDTH) | index)
 #define TREINDEX_TO_PTR(idx)	            TRETYPE_INDEX_TO_PTR(tre_atom_types[idx], idx)
 
-#define TREATOM(ptr)		    (tre_atoms[TREPTR_INDEX(ptr)])
-#define TREATOM_TYPE(ptr)		(tre_atom_types[TREPTR_INDEX(ptr)])
+#define TREATOM(ptr)		(tre_atoms[TREPTR_INDEX(ptr)])
+#define TREATOM_TYPE(ptr)	(tre_atom_types[TREPTR_INDEX(ptr)])
 
-#define TREPTR_TYPE(ptr)		(ptr >> TREPTR_INDEX_WIDTH)
-#define TREPTR_INDEX(ptr)		(ptr & ~TREPTR_FLAGS)
-#define TREPTR_IS_CONS(ptr)		((ptr & TREPTR_FLAGS) == TRETYPE_CONS)
-#define TREPTR_IS_ATOM(ptr)		(TREPTR_IS_CONS(ptr) == FALSE)
-#define TREPTR_IS_SYMBOL(ptr)	(TREPTR_TYPE(ptr) == TRETYPE_SYMBOL)
-#define TREPTR_IS_NUMBER(ptr)	(TREPTR_TYPE(ptr) == TRETYPE_NUMBER)
-#define TREPTR_IS_STRING(ptr)	(TREPTR_TYPE(ptr) == TRETYPE_STRING)
-#define TREPTR_IS_ARRAY(ptr)	(TREPTR_TYPE(ptr) == TRETYPE_ARRAY)
-#define TREPTR_IS_BUILTIN(ptr)	(TREPTR_TYPE(ptr) == TRETYPE_BUILTIN)
-#define TREPTR_IS_SPECIAL(ptr)	(TREPTR_TYPE(ptr) == TRETYPE_SPECIAL)
-#define TREPTR_IS_MACRO(ptr)	(TREPTR_TYPE(ptr) == TRETYPE_MACRO)
-#define TREPTR_IS_FUNCTION(ptr)	(TREPTR_TYPE(ptr) == TRETYPE_FUNCTION)
+#define TREPTR_TYPE(ptr)	(ptr >> TREPTR_INDEX_WIDTH)
+#define TREPTR_INDEX(ptr)	(ptr & ~TREPTR_FLAGS)
+#define CONSP(ptr)		    ((ptr & TREPTR_FLAGS) == TRETYPE_CONS)
+#define ATOMP(ptr)		    (CONSP(ptr) == FALSE)
+#define SYMBOLP(ptr)	    (TREPTR_TYPE(ptr) == TRETYPE_SYMBOL)
+#define NUMBERP(ptr)	    (TREPTR_TYPE(ptr) == TRETYPE_NUMBER)
+#define STRINGP(ptr)        (TREPTR_TYPE(ptr) == TRETYPE_STRING)
+#define ARRAYP(ptr)	        (TREPTR_TYPE(ptr) == TRETYPE_ARRAY)
+#define BUILTINP(ptr)	    (TREPTR_TYPE(ptr) == TRETYPE_BUILTIN)
+#define SPECIALP(ptr)	    (TREPTR_TYPE(ptr) == TRETYPE_SPECIAL)
+#define MACROP(ptr)	        (TREPTR_TYPE(ptr) == TRETYPE_MACRO)
+#define FUNCTIONP(ptr)	    (TREPTR_TYPE(ptr) == TRETYPE_FUNCTION)
 
-#define IS_COMPILED_FUN(x)  ((TREPTR_IS_FUNCTION(x) || TREPTR_IS_MACRO(x)) && (TREFUNCTION_BYTECODE(x) != treptr_nil || TREFUNCTION_NATIVE(x)))
+#define COMPILED_FUNCTIONP(x)  ((FUNCTIONP(x) || MACROP(x)) && (TREFUNCTION_BYTECODE(x) != treptr_nil || TREFUNCTION_NATIVE(x)))
 
 #define TREPTR_TRUTH(test)  ((test) ? treptr_t : treptr_nil)
 
 #define NOT(x)              (x == treptr_nil)
 #define NOT_NIL(x)          (x != treptr_nil)
-#define LISTP(x)            (NOT(x) || TREPTR_IS_CONS(x))
+#define LISTP(x)            (NOT(x) || CONSP(x))
 
 extern const treptr treptr_nil;
 extern const treptr treptr_t;

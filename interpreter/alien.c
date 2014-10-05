@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2008,2013 Sven Michael Klose <pixel@copei.de
+ * tré – Copyright (c) 2005–2008,2013–2014 Sven Michael Klose <pixel@copei.de
  */
 
 #include <dlfcn.h>
@@ -21,7 +21,7 @@ trealien_builtin_dlopen (treptr args)
     void    * hdl;
 
 retry:
-    while (TREPTR_IS_STRING(path) == FALSE)
+    while (STRINGP(path) == FALSE)
         path = treerror (path, "Path to shared object expected.");
 
     hdl = dlopen (TREPTR_STRINGZ(path), RTLD_NOW);
@@ -39,7 +39,7 @@ trealien_builtin_dlclose (treptr args)
     treptr  hdl = trearg_get (args);
     long    ret;
 
-    while (TREPTR_IS_NUMBER(hdl) == FALSE)
+    while (NUMBERP(hdl) == FALSE)
         hdl = treerror (hdl, "Number handle expected.");
 
     ret = dlclose ((void *) (long) TRENUMBER_VAL(hdl));
@@ -58,10 +58,10 @@ trealien_builtin_dlsym (treptr args)
 
     trearg_get2 (&hdl, &sym, args);
 
-    while (TREPTR_IS_NUMBER(hdl) == FALSE)
+    while (NUMBERP(hdl) == FALSE)
         hdl = treerror (hdl, "Number handle expected.");
 
-    while (TREPTR_IS_STRING(sym) == FALSE)
+    while (STRINGP(sym) == FALSE)
         sym = treerror (sym, "Symbol string expected.");
 
     ret = dlsym ((void *) (long) TRENUMBER_VAL(hdl), TREPTR_STRINGZ(sym));
@@ -79,7 +79,7 @@ trealien_builtin_call (treptr args)
     long    (* fun) (void);
 
     ptr = trearg_get (args);
-    while (TREPTR_IS_NUMBER(ptr) == FALSE)
+    while (NUMBERP(ptr) == FALSE)
         ptr = treerror (ptr, "Number expected.");
 
     fun = (void *) (long) TRENUMBER_VAL(ptr);

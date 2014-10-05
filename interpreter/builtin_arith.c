@@ -27,7 +27,7 @@ treeval_exprop (treptr x, treeval_opfunc_t func, const char * descr)
 	long    n = 1;
 
     arg = CAR(x);
-    if (TREPTR_IS_NUMBER(arg) == FALSE)
+    if (NUMBERP(arg) == FALSE)
         return treerror (arg, "Not a number.");
     val = TRENUMBER_VAL(arg);
 
@@ -153,7 +153,7 @@ trenumber_builtin_logxor (treptr x)
 treptr
 trenumber_equal (treptr a, treptr b)
 {
-    return TREPTR_IS_STRING(a) || TREPTR_IS_STRING(b) ?
+    return STRINGP(a) || STRINGP(b) ?
                trestring_builtin_compare (CONS(a, CONS(b, treptr_nil))) :
                TREPTR_TRUTH(TRENUMBER_VAL(a) == TRENUMBER_VAL(b));
 }

@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2007,2011–2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2007,2011–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #include <stdio.h>
@@ -21,10 +21,10 @@ treimage_builtin_create (treptr list)
     treptr  file;
     treptr  init_fun = treptr_nil;
 
-    while (NOT(list) || TREPTR_IS_ATOM(list))
+    while (NOT(list) || ATOMP(list))
         list = treerror (treptr_invalid, "Argument list missing.");
 
-    if (TREPTR_IS_CONS(CDR(list)))
+    if (CONSP(CDR(list)))
         init_fun = CADR(list);
 
 	file = CAR(list);

@@ -77,7 +77,7 @@ trespecial_setq (treptr list)
 treptr
 trespecial_past_lambda (treptr x)
 {
-	return (TREPTR_IS_ATOM(FIRST(x)) && FIRST(x) == treatom_lambda) ? CDR(x) : x;
+	return (ATOMP(FIRST(x)) && FIRST(x) == treatom_lambda) ? CDR(x) : x;
 }
 
 treptr
@@ -87,7 +87,7 @@ trespecial_function_from_expr (treptr expr)
 
     if (NOT(x))
         return treerror (expr, "Argument list and body missing.");
-    if (TREPTR_IS_ATOM(CAR(x)) && NOT_NIL(CAR(x)))
+    if (ATOMP(CAR(x)) && NOT_NIL(CAR(x)))
         return treerror (expr, "Argument list expected instead of atom.");
 
     return trefunction_make (TRETYPE_FUNCTION, x);
@@ -139,19 +139,19 @@ trespecial_special (treptr list)
 bool
 treeval_is_return (treptr x)
 {
-	return !(TREPTR_IS_ATOM(x)
+	return !(ATOMP(x)
     		 || CAR(x) != tre_atom_evaluated_return_from
-			 || TREPTR_IS_ATOM(CDR(x))
-			 || TREPTR_IS_ATOM(CDDR(x))
+			 || ATOMP(CDR(x))
+			 || ATOMP(CDDR(x))
 			 || NOT_NIL(CDDDR(x)));
 }
 
 bool
 treeval_is_go (treptr x)
 {
-	return !(TREPTR_IS_ATOM(x)
+	return !(ATOMP(x)
     		 || CAR(x) != tre_atom_evaluated_go
-			 || TREPTR_IS_CONS(CDR(x)));
+			 || CONSP(CDR(x)));
 }
 
 bool
@@ -166,7 +166,7 @@ trespecial_if (treptr p)
     treptr test;
     treptr body;
 
-    if (TREPTR_IS_ATOM(p))
+    if (ATOMP(p))
         return treerror (p, "Expression expected.");
 
     while (NOT_NIL(p)) {
@@ -214,7 +214,7 @@ trespecial_block (treptr args)
     treptr last = treptr_nil;
 
     tag = CAR(args);
-    if (TREPTR_IS_CONS(tag))
+    if (CONSP(tag))
 		return treerror (tag, "Tag expected instead of an expression.");
 
     p = CDR(args);
@@ -281,7 +281,7 @@ tag_found:
 	    	break;
 
 		car = CAR(p);
-		if (TREPTR_IS_ATOM(car))
+		if (ATOMP(car))
             goto next;
 
         res = treeval (car);

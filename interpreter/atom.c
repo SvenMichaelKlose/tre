@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2009,2012–2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2009,2012–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #include <stdlib.h>
@@ -153,7 +153,7 @@ treatom_get_value (treptr atom)
 treptr
 treatom_get_function (treptr atom)
 {
-	return TREPTR_IS_BUILTIN(atom) ? atom : TRESYMBOL_FUN(atom);
+	return BUILTINP(atom) ? atom : TRESYMBOL_FUN(atom);
 }
 
 treptr
@@ -282,7 +282,7 @@ treatom_body_to_var (treptr body)
         if (tre_atom_types[a] != TRETYPE_FUNCTION && tre_atom_types[a] != TRETYPE_MACRO)
 	    	continue;
 
-        if (!TREPTR_IS_CONS(TRESYMBOL_VALUE(a)))
+        if (CONSP(TRESYMBOL_VALUE(a)) == FALSE)
             continue;
 
         tmp = CDR(TRESYMBOL_VALUE(a));
@@ -304,7 +304,7 @@ treatom_fun_body (treptr atomp)
 {
     treptr fun;
 
-    if (TREPTR_IS_SYMBOL(atomp) == FALSE)
+    if (SYMBOLP(atomp) == FALSE)
         treerror_internal (atomp, "Symbol expected.");
 
     fun = TRESYMBOL_FUN(atomp);

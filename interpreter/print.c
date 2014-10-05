@@ -87,7 +87,7 @@ treprint_chk_atom_mark (treptr atom)
 {
     bool mark;
 
-    if (TREPTR_IS_CONS(atom))
+    if (CONSP(atom))
     	return FALSE;
 
     mark = TREPRINT_GET_MARK_ATOM(atom);
@@ -198,17 +198,17 @@ treprint_cons (treptr * p, size_t * indent, int * postatom, char ** prepend)
     if (*postatom)
     	printf (" ");
 
-    if (TREPTR_IS_CONS(car) && TREPRINT_GET_MARK_CONS(car)) {
+    if (CONSP(car) && TREPRINT_GET_MARK_CONS(car)) {
         printf ("unprintable-circularity");
         return 2;
 	}
 
-    if (NOT_NIL(cdr) && TREPTR_IS_ATOM(cdr)) {
+    if (NOT_NIL(cdr) && ATOMP(cdr)) {
     	treprint_atom (car, *indent);
    	    printf (" . ");
     	treprint_atom (cdr, *indent);
 		return 0;
-    } else if (TREPTR_IS_CONS(car))
+    } else if (CONSP(car))
     	treprint_indent (car, *indent + *postatom, FALSE, *prepend);
 	else {
         printf ("%s", *prepend);
@@ -222,7 +222,7 @@ treprint_cons (treptr * p, size_t * indent, int * postatom, char ** prepend)
     TREPRINT_HLCLOSE(*p);
     *p = _CDR(*p);
 
-    if (TREPTR_IS_CONS(*p) && TREPRINT_GET_MARK_CONS(*p)) {
+    if (CONSP(*p) && TREPRINT_GET_MARK_CONS(*p)) {
         printf ("unprintable-circularity");
 		return 0;
 	}
@@ -237,7 +237,7 @@ treprint_indent (treptr p, size_t indent, bool nobracket, char * prepend)
     size_t i;
 	int	   ret;
 
-    if (TREPTR_IS_ATOM(p)) {
+    if (ATOMP(p)) {
 		treprint_atom (p, indent);
 		return;
     }

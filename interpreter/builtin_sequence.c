@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2009,2012–2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2009,2012–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #include <stdlib.h>
@@ -56,7 +56,7 @@ tresequence_builtin_set_elt (treptr args)
     treptr  seq = CADR(args);
     treptr  idx = CADDR(args);
 
-    if (TREPTR_IS_NUMBER(idx) == FALSE)
+    if (NUMBERP(idx) == FALSE)
 		return treerror (idx, "Index must be an integer.");
 
     t = tresequence_get_type (seq);
@@ -79,7 +79,7 @@ tresequence_builtin_elt (treptr args)
 
     trearg_get2 (&seq, &idx, args);
 
-    if (TREPTR_IS_NUMBER(idx) == FALSE)
+    if (NUMBERP(idx) == FALSE)
 		return treerror (idx, "Index must be an integer.");
 
 	RETURN_NIL(seq);

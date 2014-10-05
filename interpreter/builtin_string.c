@@ -24,7 +24,7 @@
 treptr
 trestring_p (treptr object)
 {
-    return TREPTR_TRUTH(TREPTR_IS_STRING(object));
+    return TREPTR_TRUTH(STRINGP(object));
 }
 
 treptr
@@ -73,7 +73,7 @@ trestring_builtin_list_string (treptr list)
     DOLIST(p, arg) {
 		if (NOT(CAR(p)))
 			continue;
-		if (TREPTR_IS_NUMBER(CAR(p)) == FALSE)
+		if (NUMBERP(CAR(p)) == FALSE)
 			treerror_norecover (CAR(p), "Number expected.");
 		newp[i++] = (unsigned char) TRENUMBER_VAL(CAR(p));
 	}
@@ -94,14 +94,14 @@ trestring_builtin_compare (treptr list)
 	treptr    car;
 	tre_size  len;
 
-	if (TREPTR_IS_STRING(CAR(list)) == FALSE)
+	if (STRINGP(CAR(list)) == FALSE)
 		treerror_norecover (list, "String expected as first argument.");
 
 	x = TREPTR_STRINGZ(CAR(list));
 	len = TREPTR_STRINGLEN(CAR(list));
     DOLIST(p, CDR(list)) {
 		car = CAR(p);
-		if (TREPTR_IS_STRING(car) == FALSE)
+		if (STRINGP(car) == FALSE)
 			treerror_norecover (list, "String expected.");
 		if (NOT(car))
 			continue;
@@ -176,7 +176,7 @@ trestring_builtin_string (treptr list)
            	snprintf (buf, TRE_MAX_STRINGLEN, "%g", TRENUMBER_VAL(arg));
            	return trestring_get (buf);
     	}
-   		if (TREPTR_IS_ATOM(arg) && TRESYMBOL_NAME(arg)) {
+   		if (ATOMP(arg) && TRESYMBOL_NAME(arg)) {
    			strncpy (buf, TRESYMBOL_NAME(arg), TRE_MAX_STRINGLEN);
        		return trestring_get (buf);
 		}

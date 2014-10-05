@@ -95,7 +95,7 @@ tregc_trace_tree (treptr p)
         tregc_trace_object (_CAR(i));
         tregc_trace_object (_CPR(i));
 
-        if (TREPTR_IS_ATOM(_CDR(i))) {
+        if (ATOMP(_CDR(i))) {
             tregc_trace_object (_CDR(i));
 	    	return;
 		}
@@ -105,7 +105,7 @@ tregc_trace_tree (treptr p)
 void
 tregc_trace_object (treptr p)
 {
-    if (TREPTR_IS_CONS(p))
+    if (CONSP(p))
         tregc_trace_tree (p);
     else
         tregc_trace_atom (p);

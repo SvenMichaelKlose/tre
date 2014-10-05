@@ -61,7 +61,7 @@ trestream_builtin_get_handle_index (treptr args)
 {
 	treptr handle = trearg_get (args);
 
-	while (NOT_NIL(handle) && TREPTR_IS_NUMBER(handle) == FALSE)
+	while (NOT_NIL(handle) && NUMBERP(handle) == FALSE)
 		handle = trearg_correct (1, TRETYPE_NUMBER, handle, "stream handle or NIL for stdout");
     return (int) TRENUMBER_VAL(handle);
 }

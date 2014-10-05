@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2009,2012–2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2009,2012–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #include <string.h>
@@ -32,7 +32,7 @@ trelist_copy_tree (treptr l)
     treptr cdr;
     treptr ret;
 
-    if (TREPTR_IS_ATOM(l))
+    if (ATOMP(l))
 		return l;
 
     car = trelist_copy_tree (CAR(l));
@@ -47,7 +47,7 @@ trelist_copy_tree (treptr l)
 treptr
 trelist_copy (treptr l)
 {
-    if (TREPTR_IS_ATOM(l))
+    if (ATOMP(l))
 		return l;
 
     return CONS(CAR(l), trelist_copy (CDR(l)));
@@ -99,7 +99,7 @@ trelist_position_name (treptr elt, treptr l)
 	const char * eltname = TRESYMBOL_NAME(elt);
 
     while (NOT_NIL(l)) {
-		if (TREPTR_IS_SYMBOL(CAR(l)) && ! strcmp (TRESYMBOL_NAME(CAR(l)), eltname))
+		if (SYMBOLP(CAR(l)) && ! strcmp (TRESYMBOL_NAME(CAR(l)), eltname))
 	    	return c;
 
         l = CDR(l);
@@ -126,7 +126,7 @@ treptr
 trelist_nthcdr (treptr l, tre_size idx)
 {
     while (NOT_NIL(l)) {
-		if (TREPTR_IS_ATOM(l))
+		if (ATOMP(l))
 			treerror_norecover (l, "Internal NTHCDR: cons expected.");
 		if (!idx--)
 			break;
@@ -194,10 +194,10 @@ bool
 trelist_equal (treptr la, treptr lb)
 {
     while (NOT_NIL(la) && NOT_NIL(lb)) {
-        if (TREPTR_IS_CONS(la) != TREPTR_IS_CONS(lb))
+        if (CONSP(la) != CONSP(lb))
 	    	return FALSE;
 
-        if (TREPTR_IS_ATOM(la))
+        if (ATOMP(la))
 	    	return la == lb;
 
         if (trelist_equal (CAR(la), CAR(lb)) == FALSE)

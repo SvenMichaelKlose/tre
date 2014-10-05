@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -131,7 +131,7 @@ treeval_expr (treptr x)
 
     fun = TREPTR_TYPE(fun) == TRETYPE_SYMBOL ? TRESYMBOL_FUN(fun) : treeval (fun);
 
-	if (IS_COMPILED_FUN(fun))
+	if (COMPILED_FUNCTIONP(fun))
 		return trefuncall_compiled (fun, args, TRUE);
 
     tregc_push (fun);

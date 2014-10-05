@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2010,2012–2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2010,2012–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #include <stdlib.h>
@@ -101,7 +101,7 @@ trelist_builtin_rplacp (treptr list)
 treptr
 trelist_consp (treptr object)
 {
-   if (TREPTR_IS_ATOM(object))
+   if (ATOMP(object))
        return treptr_nil;
     return treptr_t;
 }

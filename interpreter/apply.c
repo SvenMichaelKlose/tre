@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #include <stdlib.h>
@@ -37,7 +37,7 @@ treptr treatom_closure;
 bool
 trebuiltin_is_compiled_closure (treptr x)
 {
-	return TREPTR_IS_CONS(x) && CAR(x) == treatom_closure;
+	return CONSP(x) && CAR(x) == treatom_closure;
 }
 
 treptr
@@ -123,13 +123,13 @@ trefuncall (treptr func, treptr args)
 		return trefuncall_compiled (TRESYMBOL_FUN(CLOSURE_FUNCTION(func)),
 		                            CONS(CLOSURE_LEXICALS(func), args),
                                     FALSE);
-	if (IS_COMPILED_FUN(func))
+	if (COMPILED_FUNCTIONP(func))
 		return trefuncall_compiled (func, args, FALSE);
-    if (TREPTR_IS_FUNCTION(func) || TREPTR_IS_MACRO(func))
+    if (FUNCTIONP(func) || MACROP(func))
         return treeval_funcall (func, args, FALSE);
-    if (TREPTR_IS_BUILTIN(func))
+    if (BUILTINP(func))
         return treeval_xlat_function (treeval_xlat_builtin, func, args, FALSE);
-    if (TREPTR_IS_SPECIAL(func))
+    if (SPECIALP(func))
         return trespecial (func, args);
     return treerror (func, "Function expected.");
 }

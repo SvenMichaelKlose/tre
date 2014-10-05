@@ -55,7 +55,7 @@ trelist_cpr (treptr x)
 void
 trelist_rplac_assert (treptr x)
 {
-    if (!TREPTR_IS_CONS(x))
+    if (CONSP(x) == FALSE)
         treerror_norecover (x, "Cons expected.");
 }
 
@@ -94,7 +94,7 @@ trelist_free (treptr node)
 void
 trelist_free_expr (treptr node)
 {
-    if (TREPTR_IS_ATOM(node))
+    if (ATOMP(node))
 		return;
 
 	trelist_free_expr (CAR(node));

@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2008,2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2008,2013–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #include <stdio.h>
@@ -15,7 +15,7 @@
 treptr
 treerror_error (treptr message)
 {
-    return TREPTR_IS_STRING(message) == FALSE ?
+    return STRINGP(message) == FALSE ?
                treerror (message, "String expected.") :
                treerror (treptr_invalid, TREPTR_STRINGZ(message));
 }

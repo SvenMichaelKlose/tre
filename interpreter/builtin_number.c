@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2010,2012–2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2010,2012–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #include <ctype.h>
@@ -17,7 +17,7 @@
 treptr
 trenumber_numberp (treptr object)
 {
-    return TREPTR_TRUTH(TREPTR_IS_NUMBER(object));
+    return TREPTR_TRUTH(NUMBERP(object));
 }
 
 treptr
@@ -43,7 +43,7 @@ trenumber_arg_get2 (treptr * first, treptr * second, treptr args)
 treptr
 trenumber_characterp (treptr object)
 {
-    return TREPTR_TRUTH(TREPTR_IS_NUMBER(object) && (TRENUMBER_TYPE(object) == TRENUMTYPE_CHAR));
+    return TREPTR_TRUTH(NUMBERP(object) && (TRENUMBER_TYPE(object) == TRENUMTYPE_CHAR));
 }
 
 treptr

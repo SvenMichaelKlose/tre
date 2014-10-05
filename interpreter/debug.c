@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -204,13 +204,12 @@ tredebug_set_breakpoint (char *name)
         return FALSE;
     }
 
-    if (TREPTR_IS_SYMBOL(atom))
+    if (SYMBOLP(atom))
         fatom = TRESYMBOL_FUN(atom);
     else
         fatom = atom;
 
-    if (!(TREPTR_IS_FUNCTION(fatom) || TREPTR_IS_BUILTIN(fatom) ||
-	TREPTR_IS_SPECIAL(fatom))) {
+    if (!(FUNCTIONP(fatom) || BUILTINP(fatom) || SPECIALP(fatom))) {
         printf ("Oject '%s' is not a function.\n", name);
         return FALSE;
     }

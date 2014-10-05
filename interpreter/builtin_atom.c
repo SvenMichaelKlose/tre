@@ -25,29 +25,29 @@
 treptr
 treatom_symbolp (treptr object)
 {
-    return TREPTR_TRUTH(TREPTR_IS_SYMBOL(object));
+    return TREPTR_TRUTH(SYMBOLP(object));
 }
 
 treptr
 treatom_functionp (treptr object)
 {
-    return TREPTR_TRUTH(TREPTR_IS_FUNCTION(object) ||
-           TREPTR_IS_MACRO(object) ||
-           TREPTR_IS_BUILTIN(object) ||
-           IS_COMPILED_FUN(object) ||
+    return TREPTR_TRUTH(FUNCTIONP(object) ||
+           MACROP(object) ||
+           BUILTINP(object) ||
+           COMPILED_FUNCTIONP(object) ||
            trebuiltin_is_compiled_closure (object));
 }
 
 treptr
 treatom_builtinp (treptr object)
 {
-    return TREPTR_TRUTH(TREPTR_IS_BUILTIN(object));
+    return TREPTR_TRUTH(BUILTINP(object));
 }
 
 treptr
 treatom_macrop (treptr object)
 {
-    return TREPTR_TRUTH(TREPTR_IS_MACRO(object));
+    return TREPTR_TRUTH(MACROP(object));
 }
 
 treptr
@@ -98,14 +98,14 @@ treptr
 treatom_eql (treptr x, treptr y)
 {
     treptr tmp;
-   	if (TREPTR_IS_NUMBER(x)) {
-       	if (TREPTR_IS_NUMBER(y) == FALSE)
+   	if (NUMBERP(x)) {
+       	if (NUMBERP(y) == FALSE)
     		return treptr_nil;
        	if (TRENUMBER_TYPE(x) != TRENUMBER_TYPE(y))
     		return treptr_nil;
        	RETURN_NIL(TREPTR_TRUTH(TRENUMBER_VAL(x) == TRENUMBER_VAL(y)));
-   	} else if (TREPTR_IS_STRING(x)) {
-       	if (TREPTR_IS_STRING(y) == FALSE)
+   	} else if (STRINGP(x)) {
+       	if (STRINGP(y) == FALSE)
     		return treptr_nil;
         tmp = CONS(y, treptr_nil);
         tregc_push (tmp);
@@ -141,7 +141,7 @@ treatom_builtin_atom (treptr list)
     treptr x;
 
 	DOLIST(x, list)
-        if (TREPTR_IS_CONS(CAR(x)))
+        if (CONSP(CAR(x)))
 		    return treptr_nil;
     return treptr_t;
 }
