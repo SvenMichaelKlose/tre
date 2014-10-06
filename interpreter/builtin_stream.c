@@ -29,9 +29,11 @@ trestream_builtin_princ (treptr args)
     FILE * str;
 
     trearg_get2 (&obj, &handle, args);
-    str = (NOT_NIL(handle)) ?
-              tre_fileio_handles[(int) TRENUMBER_VAL(handle)] :
- 		      stdout;
+    if (NOT_NIL(handle)) {
+        ASSERT_NUMBER(handle);
+        str = tre_fileio_handles[(int) TRENUMBER_VAL(handle)];
+    } else
+ 		str = stdout;
 
     switch (TREPTR_TYPE(obj)) {
 		case TRETYPE_STRING:
@@ -60,9 +62,8 @@ int
 trestream_builtin_get_handle_index (treptr args)
 {
 	treptr handle = trearg_get (args);
+    ASSERT_NUMBER(handle);
 
-	while (NOT_NIL(handle) && NUMBERP(handle) == FALSE)
-		handle = trearg_correct (1, TRETYPE_NUMBER, handle, "stream handle or NIL for stdout");
     return (int) TRENUMBER_VAL(handle);
 }
 
@@ -79,7 +80,8 @@ trestream_builtin_get_handle (treptr args, FILE * default_stream)
 treptr
 trestream_builtin_file_exists (treptr args)
 {
-    treptr fname = trearg_typed (1, TRETYPE_STRING, trearg_get (args), "pathname");
+    treptr fname = trearg_get (args);
+    ASSERT_STRING(fname);
 
     if (access (TREPTR_STRINGZ(fname), F_OK) != -1)
         return treptr_t;
@@ -124,12 +126,12 @@ trestream_builtin_read_char (treptr args)
 }
 
 treptr
-trestream_builtin_terminal_raw (treptr dummy)
+trestream_builtin_terminal_raw (treptr no_args)
 {
     struct termios settings;
     long desc = STDIN_FILENO;
 
-    (void) dummy;
+    (void) no_args;
 
     (void) tcgetattr (desc, &settings);
     settings.c_lflag &= ~(ICANON | ECHO);
@@ -141,12 +143,12 @@ trestream_builtin_terminal_raw (treptr dummy)
 }
 
 treptr
-trestream_builtin_terminal_normal (treptr dummy)
+trestream_builtin_terminal_normal (treptr no_args)
 {
     struct termios settings;
     long desc = STDIN_FILENO;
 
-    (void) dummy;
+    (void) no_args;
 
     (void) tcgetattr (desc, &settings);
     settings.c_lflag |= ICANON | ECHO;
