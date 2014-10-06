@@ -44,5 +44,7 @@ trebacktrace_push (treptr x)
 void
 trebacktrace_pop ()
 {
-    TRESYMBOL_VALUE(treptr_backtrace) = _CDR(TRESYMBOL_VALUE(treptr_backtrace));
+    treptr ancestors = _CDR(TRESYMBOL_VALUE(treptr_backtrace));
+    trelist_free (TRESYMBOL_VALUE(treptr_backtrace));
+    TRESYMBOL_VALUE(treptr_backtrace) = ancestors;
 }
