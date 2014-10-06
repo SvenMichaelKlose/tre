@@ -144,10 +144,12 @@ trestring_builtin_concat (treptr list)
     newp = TRESTRING_DATA(news);
 
     DOLIST(p, list) {
-		if (NOT(CAR(p)))
+        car = CAR(p);
+		if (NOT(car))
 			continue;
-		len = TREPTR_STRINGLEN(CAR(p));
-		memcpy (newp, TREPTR_STRINGZ(CAR(p)), len);
+
+		len = TREPTR_STRINGLEN(car);
+		memcpy (newp, TREPTR_STRINGZ(car), len);
 		newp += len;
 	}
 
@@ -163,11 +165,11 @@ trestring_builtin_string (treptr list)
     char    buf[TRE_MAX_STRINGLEN];
     treptr  arg = trearg_get (list);
 
-   	if (TREPTR_TYPE(arg) == TRETYPE_STRING)
+   	if (STRINGP(arg))
 		return arg;
 
 	while (TRUE) {
-       	if (TREPTR_TYPE(arg) == TRETYPE_NUMBER) {
+       	if (NUMBERP(arg)) {
 			if (TRENUMBER_TYPE(arg) == TRENUMTYPE_CHAR) {
 				buf[0] = TRENUMBER_VAL(arg);
 				buf[1] = 0;
