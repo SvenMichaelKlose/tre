@@ -92,8 +92,7 @@ trearg_typed (tre_size argnum, unsigned type, treptr x, const char * descr)
 	if (type == TRETYPE_FUNCTION && (FUNCTIONP(x) || MACROP(x)))
         return x;
 
-	while ((type == TRETYPE_ATOM && CONSP(x))
-		   || (type != TRETYPE_ATOM && TREPTR_TYPE(x) != type))
+	while (TREPTR_TYPE(x) != type)
 		x = trearg_correct (argnum, type, x, descr);
 
 	return x;
