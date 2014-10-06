@@ -147,7 +147,7 @@ trefuncall (treptr func, treptr args)
 	if (COMPILED_FUNCTIONP(func))
 		return trefuncall_compiled (func, args, FALSE);
 
-    trebacktrace_push (BUILTINP(func) ? treptr_nil : TREFUNCTION_NAME(func));
+    trebacktrace_push (BUILTINP(func) ? func : TREFUNCTION_NAME(func));
     v = trefuncall_interpreted (func, args);
     trebacktrace_pop ();
 

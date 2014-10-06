@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2007,2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2007,2013–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #ifndef TRE_THREAD_H
@@ -29,7 +29,5 @@ extern struct tre_thread_context tre_context;
 #define TRECONTEXT_CURRENT()		(CAR(TRECONTEXT_FUNSTACK()))
 
 extern void trethread_make (void);
-extern void trethread_push_call (treptr list);
-extern void trethread_pop_call (void);
 
 #endif	/* #ifndef TRE_THREAD_H */

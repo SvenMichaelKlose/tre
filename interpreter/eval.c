@@ -19,7 +19,6 @@
 #include "gc.h"
 #include "print.h"
 #include "debug.h"
-#include "thread.h"
 #include "argument.h"
 #include "string2.h"
 #include "xxx.h"
@@ -27,6 +26,7 @@
 #include "symbol.h"
 #include "function.h"
 #include "backtrace.h"
+#include "thread.h"
 
 treptr treopt_verbose_eval;
 treptr treeval_slot_value;
@@ -133,14 +133,13 @@ treeval_expr (treptr x)
 
     fun = SYMBOLP(first) ? TRESYMBOL_FUN(first) : treeval (first);
 
-	if (COMPILED_FUNCTIONP(fun))
+	if (COMPILED_FUNCTIONP(fun) || ARRAYP(fun))
 		return trefuncall_compiled (fun, args, TRUE);
 
-    trebacktrace_push (SYMBOLP(first) ? first : treptr_nil);
+    trebacktrace_push ((BUILTINP(fun) || SPECIALP(fun)) ? fun : TREFUNCTION_NAME(fun));
 
     switch (TREPTR_TYPE(fun)) {
         case TRETYPE_FUNCTION:    v = treeval_funcall (fun, args, TRUE); break;
-        case TRETYPE_ARRAY:       v = trefuncall_compiled (fun, args, TRUE); break;
         case TRETYPE_USERSPECIAL: v = treeval_funcall (fun, args, FALSE); break;
         case TRETYPE_BUILTIN:     v = trebuiltin (fun, args); break;
         case TRETYPE_SPECIAL:     v = trespecial (fun, args); break;
@@ -165,14 +164,12 @@ treeval (treptr x)
 #endif
 
     tregc_push (x);
-    trethread_push_call (x);
 
     switch (TREPTR_TYPE(x)) {
         case TRETYPE_CONS:   val = treeval_expr (x); break;
         case TRETYPE_SYMBOL: val = TRESYMBOL_VALUE(x); break;
     }
 
-    trethread_pop_call ();
     tregc_pop ();
 
     return val;

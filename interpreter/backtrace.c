@@ -16,9 +16,9 @@ treptr
 trebacktrace_r (treptr x)
 {
     RETURN_NIL(x);
-    if (_CDR(x) && _CAR(x) == _CAR(_CDR(x)))
+    if (NOT_NIL(_CDR(x)) && _CAR(x) == _CAR(_CDR(x)))
         return trebacktrace_r (_CDR(x));
-    return CONS(_CAR(x), treptr_nil);
+    return CONS(_CAR(x), trebacktrace_r (_CDR(x)));
 }
 
 treptr
