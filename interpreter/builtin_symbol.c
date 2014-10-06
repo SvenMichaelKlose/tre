@@ -18,10 +18,13 @@
 #include "xxx.h"
 #include "function.h"
 #include "symbol.h"
+#include "assert.h"
 
 treptr
 tresymbol_make (treptr name, treptr package)
 {
+    ASSERT_STRING(name);
+    ASSERT_SYMBOL(package);
     return treatom_get (TREPTR_STRINGZ(name), package);
 }
 
@@ -50,26 +53,22 @@ tresymbol_builtin_make_package (treptr args)
 }
 
 treptr
-tresymbol_builtin_arg (treptr list, int type, const char * descr)
-{
-    return trearg_typed (1, type, trearg_get (list), descr);
-}
-
-treptr
 tresymbol_value (treptr symbol)
 {
+    ASSERT_SYMBOL(symbol);
     return TRESYMBOL_VALUE(symbol);
 }
 
 treptr
 tresymbol_builtin_symbol_value (treptr list)
 {
-    return tresymbol_value (tresymbol_builtin_arg (list, TRETYPE_SYMBOL, "SYMBOL-VALUE"));
+    return tresymbol_value (trearg_get (list));
 }
 
 treptr
 tresymbol_set_value (treptr value, treptr symbol)
 {
+    ASSERT_SYMBOL(symbol);
     return treatom_set_value (symbol, value);
 }
 
@@ -78,24 +77,26 @@ tresymbol_builtin_usetf_symbol_value (treptr list)
 {
     TRELIST_DEFREGS();
     trearg_get2 (&car, &cdr, list);
-    return tresymbol_set_value (car, trearg_typed (2, TRETYPE_SYMBOL, cdr, "=-SYMBOL-VALUE"));
+    return tresymbol_set_value (car, cdr);
 }
 
 treptr
 tresymbol_function (treptr symbol)
 {
+    ASSERT_SYMBOL(symbol);
     return TRESYMBOL_FUN(symbol);
 }
 
 treptr
 tresymbol_builtin_symbol_function (treptr list)
 {
-    return tresymbol_function (tresymbol_builtin_arg (list, TRETYPE_SYMBOL, "SYMBOL-FUNCTION"));
+    return tresymbol_function (trearg_get (list));
 }
 
 treptr
 tresymbol_set_function (treptr function, treptr symbol)
 {
+    ASSERT_SYMBOL(symbol);
     return treatom_set_function (symbol, function);
 }
 
@@ -104,20 +105,20 @@ tresymbol_builtin_usetf_symbol_function (treptr list)
 {
     TRELIST_DEFREGS();
     trearg_get2 (&car, &cdr, list);
-    return tresymbol_set_function (trearg_typed (1, TRETYPE_FUNCTION, car, "=-SYMBOL-FUNCTION"),
-                                   trearg_typed (2, TRETYPE_SYMBOL, cdr, "=-SYMBOL-FUNCTION"));
+    return tresymbol_set_function (car, cdr);
 }
 
 treptr
 tresymbol_package (treptr symbol)
 {
+    ASSERT_SYMBOL(symbol);
     return TRESYMBOL_PACKAGE(symbol);
 }
 
 treptr
 tresymbol_builtin_symbol_package (treptr list)
 {
-    return tresymbol_package (tresymbol_builtin_arg (list, TRETYPE_SYMBOL, "SYMBOL-PACKAGE"));
+    return tresymbol_package (trearg_get (list));
 }
 
 treptr
@@ -125,5 +126,5 @@ tresymbol_builtin_set_atom_fun (treptr list)
 {
     TRELIST_DEFREGS();
     trearg_get2 (&car, &cdr, list);
-    return treatom_set_function (trearg_typed (1, TRETYPE_SYMBOL, car, "%SET-ATOM-FUN"), treeval (cdr));
+    return treatom_set_function (car, treeval (cdr));
 }
