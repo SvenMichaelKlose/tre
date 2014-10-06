@@ -66,7 +66,7 @@ trespecial_setq (treptr list)
 
 		TREEVAL_RETURN_JUMP(cdr);
 
-        treatom_set_value (car, cdr);
+        tresymbol_set_value (cdr, car);
 
 		argnum++;
     } while (NOT_NIL(list));

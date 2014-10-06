@@ -25,6 +25,7 @@
 #include "apply.h"
 #include "function.h"
 #include "symbol.h"
+#include "backtrace.h"
 
 #include "builtin_debug.h"
 #include "builtin_atom.h"
@@ -111,20 +112,20 @@ trefuncall_bytecode (treptr func, treptr args, treptr argdef, bool do_eval)
 treptr
 trefuncall_compiled (treptr func, treptr args, bool do_eval)
 {
-    return NOT_NIL(TREFUNCTION_BYTECODE(func)) ?
-               trefuncall_bytecode (func, args, TREARRAY_VALUES(TREFUNCTION_BYTECODE(func))[0], do_eval) :
-               trefuncall_c (func, args, do_eval);
+    treptr v;
+
+    trebacktrace_push (treptr_nil);
+    v = NOT_NIL(TREFUNCTION_BYTECODE(func)) ?
+            trefuncall_bytecode (func, args, TREARRAY_VALUES(TREFUNCTION_BYTECODE(func))[0], do_eval) :
+            trefuncall_c (func, args, do_eval);
+    trebacktrace_pop ();
+
+    return v;
 }
 
 treptr
-trefuncall (treptr func, treptr args)
+trefuncall_interpreted (treptr func, treptr args)
 {
-	if (trebuiltin_is_compiled_closure (func))
-		return trefuncall_compiled (TRESYMBOL_FUN(CLOSURE_FUNCTION(func)),
-		                            CONS(CLOSURE_LEXICALS(func), args),
-                                    FALSE);
-	if (COMPILED_FUNCTIONP(func))
-		return trefuncall_compiled (func, args, FALSE);
     if (FUNCTIONP(func) || MACROP(func))
         return treeval_funcall (func, args, FALSE);
     if (BUILTINP(func))
@@ -132,6 +133,25 @@ trefuncall (treptr func, treptr args)
     if (SPECIALP(func))
         return trespecial (func, args);
     return treerror (func, "Function expected.");
+}
+
+treptr
+trefuncall (treptr func, treptr args)
+{
+    treptr v;
+
+	if (trebuiltin_is_compiled_closure (func))
+		return trefuncall_compiled (TRESYMBOL_FUN(CLOSURE_FUNCTION(func)),
+		                            CONS(CLOSURE_LEXICALS(func), args),
+                                    FALSE);
+	if (COMPILED_FUNCTIONP(func))
+		return trefuncall_compiled (func, args, FALSE);
+
+    trebacktrace_push (BUILTINP(func) ? treptr_nil : TREFUNCTION_NAME(func));
+    v = trefuncall_interpreted (func, args);
+    trebacktrace_pop ();
+
+    return v;
 }
 
 void

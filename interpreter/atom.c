@@ -24,6 +24,8 @@
 #include "function.h"
 #include "symbol.h"
 
+#include "builtin_symbol.h"
+
 void * tre_atoms_free;
 void * tre_atoms[NUM_ATOMS];
 tre_type tre_atom_types[NUM_ATOMS];
@@ -86,7 +88,7 @@ treatom_init_builtins (void)
         fun = treatom_alloc (TRETYPE_BUILTIN);
         TREATOM(fun) = (void*) i;
         name = treatom_alloc_symbol (tre_builtin_names[i], treptr_nil, treptr_nil);
-        TRESYMBOL_FUN(name) = fun;
+        tresymbol_set_function(fun, name);
         EXPAND_UNIVERSE(name);
     }
 
@@ -94,7 +96,7 @@ treatom_init_builtins (void)
         fun = treatom_alloc (TRETYPE_SPECIAL);
         TREATOM(fun) = (void*) i;
         name = treatom_alloc_symbol (tre_special_names[i], treptr_nil, treptr_nil);
-        TRESYMBOL_FUN(name) = fun;
+        tresymbol_set_function(fun, name);
         EXPAND_UNIVERSE(name);
     }
 }
@@ -128,38 +130,14 @@ treatom_init (void)
 }
 
 treptr
-treatom_set_value (treptr atom, treptr value)
-{
-    return TRESYMBOL_VALUE(atom) = value;
-}
-
-treptr
 treatom_register_compiled_function (treptr sym, void * fun, void * expander_fun)
 {
     if (NOT(TRESYMBOL_FUN(sym)))
-        TRESYMBOL_FUN(sym) = trefunction_make (TRETYPE_FUNCTION, treptr_nil);
+        tresymbol_set_function (trefunction_make (TRETYPE_FUNCTION, treptr_nil), sym);
 
     TREFUNCTION_NATIVE(TRESYMBOL_FUN(sym)) = fun;
     TREFUNCTION_NATIVE_EXPANDER(TRESYMBOL_FUN(sym)) = expander_fun;
 	return sym;
-}
-
-treptr
-treatom_get_value (treptr atom)
-{
-    return TRESYMBOL_VALUE(atom);
-}
-
-treptr
-treatom_get_function (treptr atom)
-{
-	return BUILTINP(atom) ? atom : TRESYMBOL_FUN(atom);
-}
-
-treptr
-treatom_set_function (treptr atom, treptr value)
-{
-    return TRESYMBOL_FUN(atom) = value;
 }
 
 treptr

@@ -1,11 +1,12 @@
 /*
- * tré – Copyright (c) 2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2013–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #ifndef TRE_FUNCTION_H
 #define TRE_FUNCTION_H
 
 struct trefunction_t {
+    treptr	name;
     treptr	source;
     treptr	bytecode;
     void *  native;
@@ -15,6 +16,7 @@ struct trefunction_t {
 typedef struct trefunction_t trefunction;
 
 #define TREPTR_FUNCTION(ptr)                ((trefunction *) TREATOM(ptr))
+#define TREFUNCTION_NAME(ptr)               (TREPTR_FUNCTION(ptr)->name)
 #define TREFUNCTION_SOURCE(ptr)             (TREPTR_FUNCTION(ptr)->source)
 #define TREFUNCTION_BYTECODE(ptr)           (TREPTR_FUNCTION(ptr)->bytecode)
 #define TREFUNCTION_NATIVE(ptr)             (TREPTR_FUNCTION(ptr)->native)

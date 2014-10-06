@@ -225,7 +225,7 @@ treeval_init ()
 	EXPAND_UNIVERSE(treeval_function_symbol);
 
     treopt_verbose_eval = treatom_get ("*VERBOSE-EVAL*", TRECONTEXT_PACKAGE());
-    treatom_set_value (treopt_verbose_eval, treptr_nil);
+    TRESYMBOL_VALUE(treopt_verbose_eval) = treptr_nil;
 	EXPAND_UNIVERSE(treopt_verbose_eval);
 }
 

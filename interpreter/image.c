@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2007–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2007–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #include <string.h>
@@ -94,6 +94,7 @@ treimage_write_atoms (FILE *f)
                     case TRETYPE_FUNCTION:
                     case TRETYPE_MACRO:
                     case TRETYPE_USERSPECIAL:
+                        treimage_write (f, &TREFUNCTION_NAME(idx), sizeof (treptr));
                         treimage_write (f, &TREFUNCTION_SOURCE(idx), sizeof (treptr));
                         treimage_write (f, &TREFUNCTION_BYTECODE(idx), sizeof (treptr));
                         break;
@@ -273,6 +274,7 @@ treimage_read_atoms (FILE *f)
                     case TRETYPE_MACRO:
                     case TRETYPE_USERSPECIAL:
                         TREATOM(idx) = trefunction_alloc ();
+                        treimage_read (f, &TREFUNCTION_NAME(idx), sizeof (treptr));
                         treimage_read (f, &TREFUNCTION_SOURCE(idx), sizeof (treptr));
                         treimage_read (f, &TREFUNCTION_BYTECODE(idx), sizeof (treptr));
                         break;

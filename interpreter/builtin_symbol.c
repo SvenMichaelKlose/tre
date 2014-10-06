@@ -69,7 +69,7 @@ treptr
 tresymbol_set_value (treptr value, treptr symbol)
 {
     ASSERT_SYMBOL(symbol);
-    return treatom_set_value (symbol, value);
+    return TRESYMBOL_VALUE(symbol) = value;
 }
 
 treptr
@@ -97,7 +97,9 @@ treptr
 tresymbol_set_function (treptr function, treptr symbol)
 {
     ASSERT_SYMBOL(symbol);
-    return treatom_set_function (symbol, function);
+    if (CALLABLEP(function))
+        TREFUNCTION_NAME(function) = symbol;
+    return TRESYMBOL_FUN(symbol) = function;
 }
 
 treptr
@@ -126,5 +128,5 @@ tresymbol_builtin_set_atom_fun (treptr list)
 {
     TRELIST_DEFREGS();
     trearg_get2 (&car, &cdr, list);
-    return treatom_set_function (car, treeval (cdr));
+    return tresymbol_set_function (treeval (cdr), car);
 }

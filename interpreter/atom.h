@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005-2007,2009,2011–2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005-2007,2009,2011–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #ifndef TRE_ATOM_H
@@ -36,30 +36,23 @@ extern treptr tre_package_keyword;
 
 extern void treatom_init (void);
 
-extern treptr treatom_seek (char *, treptr package);
 #define ATOM_NOT_FOUND  treptr_invalid
+extern treptr treatom_seek (char *, treptr package);
 
 extern treptr treatom_get (char *, treptr package);
-
 extern treptr treatom_number_get (double, int type);
-
-/* for compiled code */
-extern treptr trenumber_get (double);
-extern treptr trechar_get (double);
-extern treptr treatom_get_value (treptr atom);
-extern treptr treatom_get_function (treptr atom);
-extern treptr treatom_register_compiled_function (treptr sym, void * fun, void * expander_fun);
 
 extern treptr treatom_alloc (int type);
 extern treptr treatom_alloc_symbol (char * symbol, treptr package, treptr value);
 extern void   treatom_remove (treptr);
 
-extern treptr treatom_set_value (treptr atom, treptr value);
-extern treptr treatom_sym_set_value (char * symbol, treptr value);
-extern treptr treatom_set_function (treptr atom, treptr value);
-
 extern treptr treatom_body_to_var (treptr body);
 
 extern treptr treatom_fun_body (treptr atomp);
+
+/* for compiled code */
+extern treptr treatom_register_compiled_function (treptr sym, void * fun, void * expander_fun);
+extern treptr trenumber_get (double);
+extern treptr trechar_get (double);
 
 #endif

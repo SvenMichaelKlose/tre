@@ -23,6 +23,7 @@
 		(%ERROR         builtin_error   &rest x))
 
 	(trefunction_
+		(FUNCTION-NAME          name            fun)
 		(FUNCTION-NATIVE        native          fun)
 		(FUNCTION-BYTECODE      bytecode        fun)
 		(=-FUNCTION-BYTECODE    set_bytecode    bytecode fun)
@@ -183,4 +184,4 @@
   (href *c-builtins* x))
 
 (defun c-builtin-argdef (x)
-  (href *c-builtin-argefs* x))
+  (href *c-builtin-argdefs* x))
