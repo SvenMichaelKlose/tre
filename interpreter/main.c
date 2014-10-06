@@ -38,6 +38,7 @@
 #include "bytecode.h"
 #include "function.h"
 #include "exception.h"
+#include "backtrace.h"
 
 #ifdef TRE_HAVE_COMPILED_ENV
 	treptr userfun_cInit (void);
@@ -191,6 +192,7 @@ tremain_init (void)
     trenumber_init ();
     treread_init ();
     trearg_init ();
+    trebacktrace_init ();
     treeval_init ();
     tremacro_init ();
     trequasiquote_init ();

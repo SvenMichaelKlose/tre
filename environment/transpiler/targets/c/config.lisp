@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2010,2012–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2010,2012–2014 Sven Michael Klose <pixel@hugbox.org>
 
 (defun c-expex-initializer (ex)
   (= (expex-argument-filter ex) #'c-argument-filter
@@ -22,7 +22,8 @@
       :import-variables?        nil
       :separator                (format nil ";~%")
       :identifier-char?         #'c-identifier-char?
-      :expex-initializer        #'c-expex-initializer))
+      :expex-initializer        #'c-expex-initializer
+      :backtrace?		t))
 
 (defvar *c-transpiler* (copy-transpiler (make-c-transpiler)))
 (= *default-transpiler* *c-transpiler*)

@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2006–2009,2012–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2006–2009,2012–2014 Sven Michael Klose <pixel@copei.de>
 
 (setq *show-definitions?* t)
 
@@ -36,7 +36,8 @@
 	(cons (cons '*rand-max* nil)
 	(cons (cons '*default-listprop* nil)
 	(cons (cons '*exception* nil)
-		  *variables*)))))))))))))))
+	(cons (cons '*backtrace* nil)
+		  *variables*))))))))))))))))
 
 (%set-atom-fun identity #'((x) x))
 (%set-atom-fun list #'((&rest x) x))

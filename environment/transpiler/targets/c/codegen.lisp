@@ -171,3 +171,8 @@
 
 (define-c-macro %catch-enter ()
   "(setjmp (catchers[current_catcher].jmp) ? treptr_t : treptr_nil)")
+
+;;;; BACKTRACE
+
+(define-c-macro %backtrace-pop ()
+  "NULL; TRESYMBOL_VALUE(treptr_backtrace) = _CDR(TRESYMBOL_VALUE(treptr_backtrace))")

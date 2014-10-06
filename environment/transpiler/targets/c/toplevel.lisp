@@ -13,6 +13,7 @@
 		   "eval.h"
 		   "exception.h"
 		   "gc.h"
+		   "backtrace.h"
 		   "builtin_arith.h"
 		   "builtin_array.h"
 		   "builtin_atom.h"
