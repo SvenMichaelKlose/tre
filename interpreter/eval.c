@@ -26,6 +26,7 @@
 #include "apply.h"
 #include "symbol.h"
 #include "function.h"
+#include "backtrace.h"
 
 treptr treopt_verbose_eval;
 treptr treeval_slot_value;
@@ -122,19 +123,21 @@ treeval_xlat_function (treevalfunc_t *xlat, treptr func, treptr args, bool do_ar
 treptr
 treeval_expr (treptr x)
 {
-    treptr  fun;
+    treptr  first;
     treptr  args;
+    treptr  fun;
     treptr  v = treptr_invalid;
 
-    fun = CAR(x);
+    first = CAR(x);
     args = CDR(x);
 
-    fun = TREPTR_TYPE(fun) == TRETYPE_SYMBOL ? TRESYMBOL_FUN(fun) : treeval (fun);
+    fun = SYMBOLP(first) ? TRESYMBOL_FUN(first) : treeval (first);
 
 	if (COMPILED_FUNCTIONP(fun))
 		return trefuncall_compiled (fun, args, TRUE);
 
-    tregc_push (fun);
+    trebacktrace_push (SYMBOLP(first) ? first : treptr_nil);
+
     switch (TREPTR_TYPE(fun)) {
         case TRETYPE_FUNCTION:    v = treeval_funcall (fun, args, TRUE); break;
         case TRETYPE_ARRAY:       v = trefuncall_compiled (fun, args, TRUE); break;
@@ -143,7 +146,8 @@ treeval_expr (treptr x)
         case TRETYPE_SPECIAL:     v = trespecial (fun, args); break;
         default:                  treerror_norecover (CAR(x), "Function expected instead of %s.", treerror_typename (TREPTR_TYPE(CAR(x))));
     }
-    tregc_pop ();
+
+    trebacktrace_pop ();
 
     return v;
 }

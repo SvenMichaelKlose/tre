@@ -34,3 +34,15 @@ trebacktrace_init ()
     EXPAND_UNIVERSE(treptr_backtrace);
     TRESYMBOL_VALUE(treptr_backtrace) = treptr_nil;
 }
+
+void
+trebacktrace_push (treptr x)
+{
+    TRESYMBOL_VALUE(treptr_backtrace) = trelist_get (x, TRESYMBOL_VALUE(treptr_backtrace));
+}
+
+void
+trebacktrace_pop ()
+{
+    TRESYMBOL_VALUE(treptr_backtrace) = _CDR(TRESYMBOL_VALUE(treptr_backtrace));
+}

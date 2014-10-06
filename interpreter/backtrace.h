@@ -7,6 +7,9 @@
 
 extern treptr  treptr_backtrace;
 
+extern void    trebacktrace_push (treptr);
+extern void    trebacktrace_pop (void);
+
 extern treptr  trebacktrace (void);
 extern void    trebacktrace_init (void);
 
