@@ -33,13 +33,11 @@ trearg_get (treptr list)
 {
    	if (NOT(list))
        	return treerror (treptr_invalid, "Argument expected.");
-
    	if (ATOMP(list))
        	return treerror (list, "Atom instead of list - need 1 argument.");
-    
     if (NOT_NIL(CDR(list)))
         trewarn (list, "Single argument expected.");
-    
+
     return CAR(list);
 }
 
@@ -54,10 +52,8 @@ trearg_get2 (treptr *a, treptr *b, treptr list)
 	do {
    		while (NOT(list))
         	list = treerror (treptr_invalid, "Two arguments expected.");
-
    		if (CONSP(list))
 			break;
-
        	list = treerror (list, "Atom instead of list - need two arguments.");
 	} while (TRUE);
 
@@ -65,10 +61,9 @@ trearg_get2 (treptr *a, treptr *b, treptr list)
     	while (NOT(second))
         	second = treerror (treptr_invalid, "Second argument missing.");
 	} else {
-		second = CADR(list);
-
     	if (CDR(list) && NOT_NIL(CDDR(list)))
         	trewarn (list, "no more than two args required - ignoring rest");
+		second = CADR(list);
 	}
 
     *a = CAR(list);
@@ -94,10 +89,10 @@ trearg_correct (tre_size argnum, unsigned type, treptr x, const char * descr)
 treptr
 trearg_typed (tre_size argnum, unsigned type, treptr x, const char * descr)
 {
-	if (type == TRETYPE_FUNCTION && (TREPTR_TYPE(x) == TRETYPE_FUNCTION || TREPTR_TYPE(x) == TRETYPE_MACRO))
+	if (type == TRETYPE_FUNCTION && (FUNCTIONP(x) || MACROP(x)))
         return x;
 
-	while ((type == TRETYPE_ATOM && TREPTR_TYPE(x) == TRETYPE_CONS)
+	while ((type == TRETYPE_ATOM && CONSP(x))
 		   || (type != TRETYPE_ATOM && TREPTR_TYPE(x) != type))
 		x = trearg_correct (argnum, type, x, descr);
 
