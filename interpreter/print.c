@@ -27,6 +27,8 @@
 #include "array.h"
 #include "symbol.h"
 #include "function.h"
+#include "builtin.h"
+#include "special.h"
 
 char treprint_marks_cons[NUM_LISTNODES >> 3];
 char treprint_marks_atoms[NUM_ATOMS >> 3];
@@ -124,11 +126,11 @@ treprint_atom (treptr atom, size_t indent)
 	    	break;
 
 		case TRETYPE_BUILTIN:
-           	printf ("unprintable-builtin");
+           	printf ("{%s}", tre_builtin_names[(size_t) TREATOM(atom)]);
             break;
 
 		case TRETYPE_SPECIAL:
-           	printf ("unprintable-special-form");
+           	printf ("{%s}", tre_special_names[(size_t) TREATOM(atom)]);
             break;
 
 		case TRETYPE_NUMBER:
