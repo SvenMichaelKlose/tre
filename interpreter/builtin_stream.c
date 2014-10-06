@@ -20,6 +20,7 @@
 #include "string2.h"
 #include "symbol.h"
 #include "builtin_stream.h"
+#include "assert.h"
 
 treptr
 trestream_builtin_princ (treptr args)

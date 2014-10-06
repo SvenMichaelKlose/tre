@@ -14,6 +14,7 @@
 #include "io.h"
 #include "xxx.h"
 #include "symbol.h"
+#include "assert.h"
 
 treptr tre_lists_free;
 struct tre_list tre_lists[NUM_LISTNODES];
