@@ -219,7 +219,8 @@ environment)
 
 boot)
     echo "Booting everything from scratch..."
-	./make.sh interpreter $ARGS || exit 1
+	./make.sh interpreter -DTRE_NO_ASSERTIONS -DNDEBUG $ARGS || exit 1
+	(echo "(= (transpiler-backtrace? *c-transpiler*) nil)(compile-c-compiler)(dump-system \"image\")" | $TRE) || exit 1
 	./make.sh compiler $ARGS || exit 1
 	./make.sh crunsh $ARGS || exit 1
 	./make.sh environment $ARGS || exit 1
@@ -289,9 +290,6 @@ profile)
 
 releasetests)
     echo "Making release tests..."
-	./make.sh distclean || exit 1
-	./make.sh debug -Werror || exit 1
-	./make.sh reload || exit 1
 	./make.sh distclean || exit 1
 	./make.sh build -Werror || exit 1
 	./make.sh reload || exit 1
