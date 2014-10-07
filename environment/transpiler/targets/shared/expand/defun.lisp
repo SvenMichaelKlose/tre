@@ -61,10 +61,8 @@
 (defun shared-defun-backtrace (name body)
   (? (& (transpiler-backtrace? *transpiler*)
         (not (in? name '%cons '__cons)))
-     `((push ',name *backtrace*)
-       (prog1
-         (progn
-           ,@body)
+     `((setq nil (%backtrace-push ',name))
+       (prog1 (progn ,@body)
          (%backtrace-pop)))
      body))
 

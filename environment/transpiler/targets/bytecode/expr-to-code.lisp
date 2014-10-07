@@ -42,7 +42,7 @@
 (defun make-bytecode-function (fi x)
   `(,(funinfo-name fi)
     ,(funinfo-argdef fi)
-    ,(length (funinfo-vars fi))
+    ,(funinfo-framesize fi)
     ,@(translate-jumps (get-tag-indexes x) x)))
 
 (defun get-next-function (x)
@@ -64,5 +64,6 @@
 
 (defun expr-to-code (tr expr)
   (!? (get-next-function expr)
-      (. (make-bytecode-function (get-funinfo !. tr) (copy-until-%bc-return .!))
+      (. (make-bytecode-function (get-funinfo !. tr)
+                                 (copy-until-%bc-return .!))
          (expr-to-code tr (next-%bc-return ..!)))))

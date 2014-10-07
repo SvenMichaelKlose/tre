@@ -31,6 +31,14 @@
   (globals      nil)
   (cps?         nil))
 
+(defun funinfo-framesize (fi)
+  (alet (funinfo-transpiler fi)
+    (& (transpiler-stack-locals? !)
+       (+ (length (funinfo-vars fi))
+          (? (transpiler-arguments-on-stack? !)
+             (length (funinfo-args fi))
+             0)))))
+
 (defun funinfo-topmost (fi)
   (awhen (funinfo-parent fi)
     (? (& !

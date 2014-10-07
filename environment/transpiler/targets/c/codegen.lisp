@@ -49,7 +49,7 @@
 (define-c-macro %function-prologue (name)
   (let fi (get-funinfo name)
     `(,@(c-line "treptr __ret")
-      ,@(alet (length (funinfo-vars fi))
+      ,@(alet (funinfo-framesize fi)
           `(,@(& (< 1 !)
 	             `(("    int __c; for (__c = " ,! "; __c > 0; __c--)")))
             ,@(& (< 0 !)
@@ -59,7 +59,7 @@
 (define-c-macro %function-epilogue (name)
   (let fi (get-funinfo name)
     `((%= "__ret" ,(place-assign (place-expand-0 fi '~%ret)))
-      ,@(alet (length (funinfo-vars fi))
+      ,@(alet (funinfo-framesize fi)
           (& (< 0 !)
              `(,(c-line "trestack_ptr += " !))))
       (%function-return ,name))))
@@ -172,7 +172,11 @@
 (define-c-macro %catch-enter ()
   "(setjmp (catchers[current_catcher].jmp) ? treptr_t : treptr_nil)")
 
+
 ;;;; BACKTRACE
 
+(define-c-macro %backtrace-push (name)
+  `("trebacktrace_push (" ,name ");"))
+
 (define-c-macro %backtrace-pop ()
-  "NULL; TRESYMBOL_VALUE(treptr_backtrace) = _CDR(TRESYMBOL_VALUE(treptr_backtrace))")
+  "NULL; trebacktrace_pop();")
