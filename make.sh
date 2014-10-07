@@ -217,6 +217,15 @@ environment)
 	(echo "(compile-c-environment)" | $TRE | tee boot.log) || exit 1
 	;;
 
+devboot)
+    echo "Booting everything from scratch..."
+	./make.sh interpreter $ARGS || exit 1
+	./make.sh compiler $ARGS || exit 1
+	./make.sh crunsh $ARGS || exit 1
+	./make.sh environment $ARGS || exit 1
+	./make.sh crunsh $ARGS|| exit 1
+	;;
+
 boot)
     echo "Booting everything from scratch..."
 	./make.sh interpreter -DTRE_NO_ASSERTIONS -DNDEBUG $ARGS || exit 1
@@ -327,6 +336,7 @@ restore)
 	echo "Usage: make.sh [target]"
 	echo "Targets:"
 	echo "  boot            Build compiled environment from scratch."
+	echo "  devboot         Like 'boot' but with sanity checks from the beginning."
 	echo "  interpreter     Build interpreter (and compiled environment)."
 	echo "  compiler        Compile compiler and C target to C."
 	echo "  bcompiler       Compile compiler and bytecode target to C."
