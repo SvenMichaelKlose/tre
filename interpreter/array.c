@@ -17,6 +17,7 @@
 #include "util.h"
 #include "thread.h"
 #include "gc.h"
+#include "assert.h"
 
 trearray *
 trearray_alloc_raw (tre_size size)
@@ -106,9 +107,12 @@ trearray_free (treptr array)
 treptr
 trearray_t_get (treptr array, tre_size idx)
 {
-    tre_size  size = TRENUMBER_VAL(CAR(TREARRAY_SIZES(array)));
-    treptr *  a = TREARRAY_VALUES(array);
+    tre_size  size;
+    treptr *  a;
+    ASSERT_ARRAY(array);
 
+    size = TRENUMBER_VAL(CAR(TREARRAY_SIZES(array)));
+    a = TREARRAY_VALUES(array);
     if (size <= idx)
         return treerror (array, "Index %d is out of range.", idx);
     return a[idx];
@@ -117,9 +121,12 @@ trearray_t_get (treptr array, tre_size idx)
 void
 trearray_t_set (treptr array, tre_size idx, treptr val)
 {
-    tre_size  size = TRENUMBER_VAL(CAR(TREARRAY_SIZES(array)));
-    treptr *  a = TREARRAY_VALUES(array);
+    tre_size  size;
+    treptr *  a;
+    ASSERT_ARRAY(array);
 
+    size = TRENUMBER_VAL(CAR(TREARRAY_SIZES(array)));
+    a = TREARRAY_VALUES(array);
     if (size <= idx) {
         treerror (array, "Index %d is out of range.", idx);
 		return;
@@ -130,6 +137,7 @@ trearray_t_set (treptr array, tre_size idx, treptr val)
 tre_size
 trearray_t_length (treptr array)
 {
+    ASSERT_ARRAY(array);
     return TREARRAY_SIZE(array);
 }
 
