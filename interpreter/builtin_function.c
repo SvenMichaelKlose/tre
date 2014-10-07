@@ -43,8 +43,18 @@ trefunction_set_bytecode (treptr array, treptr fun)
 }
 
 treptr
+trefunction_core_name (char ** map, treptr fun)
+{
+        return treatom_get (map[(size_t) TREATOM(fun)], TRECONTEXT_PACKAGE());
+}
+
+treptr
 trefunction_name (treptr fun)
 {
+    if (BUILTINP(fun))
+        return trefunction_core_name (tre_builtin_names, fun);
+    if (SPECIALP(fun))
+        return trefunction_core_name (tre_special_names, fun);
     ASSERT_CALLABLE(fun);
 	return TREFUNCTION_NAME(fun);
 }
