@@ -9,6 +9,7 @@
 		   "alloc.h"
 		   "apply.h"
 		   "array.h"
+		   "assert.h"
 		   "atom.h"
 		   "eval.h"
 		   "exception.h"
