@@ -19,6 +19,8 @@
 #include "function.h"
 #include "symbol.h"
 #include "assert.h"
+#include "builtin.h"
+#include "special.h"
 
 treptr
 trefunction_native (treptr fun)
