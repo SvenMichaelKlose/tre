@@ -47,24 +47,14 @@
 (defun %struct-getter-symbol (name field)
   ($ name "-" field))
 
-(defun %struct-assertion (name sym)
-  (when *assert*
-    `((| (& (array? arr)
-            (eq (aref arr 0) 'struct)
-            (eq (aref arr 1) ',name))
-         (error "STRUCT slot ~A: Need a ~A instead of ~A."
-                ,(symbol-name sym) ,(symbol-name name) arr)))))
-
 (defun %struct-single-get (name field index)
   (let sym (%struct-getter-symbol name field)
     `(progn
        (functional ,sym)
        (declare-cps-exception ,sym ,(=-make-symbol sym))
        (defun ,sym (arr)
-         ,@(%struct-assertion name sym)
          (aref arr ,index))
        (defun (= ,sym) (val arr)
-         ,@(%struct-assertion name sym)
          (= (aref arr ,index) val)))))
 
 (defun %struct-getters (name fields)
