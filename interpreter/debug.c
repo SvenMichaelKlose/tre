@@ -27,6 +27,7 @@
 #include "gc.h"
 #include "symbol.h"
 #include "function.h"
+#include "backtrace.h"
 
 int    tredebug_mode;
 treptr tredebug_next;
@@ -409,32 +410,8 @@ has_funstack (void)
 void
 tredebug_trace (void)
 {
-    treptr  st = TRECONTEXT_FUNSTACK();
-    treptr  i;
-    treptr  x;
-
-    if (!has_funstack ())
-        return;
-
     printf ("Function-call backtrace:\n");
-    DOLIST(i, st) {
-		fflush (stdout);
-		x = CAR(i);
-
-		switch (TREPTR_TYPE(x)) {
-			case TRETYPE_CONS:
-			case TRETYPE_FUNCTION:
-			case TRETYPE_USERSPECIAL:
-			case TRETYPE_MACRO:
-        		tredebug_lookup_bodyname (x);
-				break;
-
-			case TRETYPE_BUILTIN:
-    			printf ("*BUILT IN FUNCTION* ");
-				break;
-		}
-	}
-    printnl ();
+    treprint (TRESYMBOL_VALUE(treptr_backtrace));
 }
 
 void
