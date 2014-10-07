@@ -24,8 +24,6 @@ typedef int bool;
 #define TRE_PRINT_MACROEXPANSIONS /* Print macroexpansions in read-eval loop. */
 #endif
 
-#define TRE_EXIT_ON_SIGINT        /* Exit on SIGINT instead of invoking the debugger. */
-
 #define INTERPRETER
 
 #ifndef TRE_QUIET_LOAD

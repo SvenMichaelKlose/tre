@@ -81,6 +81,7 @@ tre_signal (int signum)
 		printf ("*USER-BREAK*");
 		fflush (stdout);
 		tredebug_mode = TREDEBUGM_STEP;
+        tredebug ();
 #endif
 		break;
 	}
