@@ -197,13 +197,13 @@ build)
 
 precompile)
     echo "Precompiling target core functions..."
-	echo "(precompile-environments)(dump-system \"image\")" | $TRE || exit 1
+	echo "(precompile-environments)" | $TRE || exit 1
 	;;
 
 
 compiler)
     echo "Compiling the compiler only..."
-	(echo "(compile-c-compiler)(dump-system \"image\")" | $TRE) || exit 1
+	(echo "(compile-c-compiler)" | $TRE) || exit 1
     ;;
 
 bcompiler)
@@ -214,7 +214,7 @@ bcompiler)
 
 environment)
     echo "Compiling environment..."
-	(echo "(compile-c-environment)(dump-system \"image\")" | $TRE | tee boot.log) || exit 1
+	(echo "(compile-c-environment)" | $TRE | tee boot.log) || exit 1
 	;;
 
 boot)
@@ -237,7 +237,7 @@ phptests)
 jstests)
     echo "JavaScript target tests..."
     $TRE makefiles/test-js.lisp
-    nodejs compiled/test.js >_nodejstests.log || exit 1
+    (nodejs compiled/test.js >_nodejstests.log || node compiled/test.js >_nodejstests.log) || exit 1
     cmp makefiles/test-js.correct-output _nodejstests.log || (diff makefiles/test-js.correct-output _nodejstests.log; exit 1)
     echo "JavaScript target tests passed (node.js only)."
     chromium-browser compiled/test.html &
