@@ -10,8 +10,7 @@
 (defun php-prologue ()
   (with-string-stream out
     (format out "<?php // tré revision ~A~%" *tre-revision*)
-    (format out (+ "mb_internal_encoding ('UTF-8');~%"
-                   "if (get_magic_quotes_gpc ()) {~%"
+    (format out (+ "if (get_magic_quotes_gpc ()) {~%"
                    "    $vars = array (&$_GET, &$_POST, &$_COOKIE, &$_REQUEST);~%"
                    "    while (list ($key, $val) = each ($vars)) {~%"
                    "        foreach ($val as $k => $v) {~%"
