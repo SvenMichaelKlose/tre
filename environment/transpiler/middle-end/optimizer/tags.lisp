@@ -4,7 +4,7 @@
   (& a (atom a)
      d. (atom d.)))
 
-(defun has-no-jumps-to (x tag)
+(defun has-no-jumps-to? (x tag)
   (dolist (i x t)
     (& (vm-jump? i)
        (== (%%go-tag i) tag)
@@ -12,7 +12,7 @@
 
 (defun tags-lambda (x)
   (with (body x
-		 spare-tags (remove-if-not [has-no-jumps-to body _]
+		 spare-tags (remove-if-not [has-no-jumps-to? body _]
 		  				           (remove-if-not #'number? x)))
     (remove-if [member _ spare-tags] x)))
 

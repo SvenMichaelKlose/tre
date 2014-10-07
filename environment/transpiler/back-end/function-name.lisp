@@ -6,7 +6,8 @@
   (href *compiled-function-names* x))
 
 (defun compiled-function-name (name)
-  (aprog1 (make-symbol (+ (transpiler-function-name-prefix *transpiler*) (symbol-name name)) (symbol-package name))
+  (aprog1 (make-symbol (+ (transpiler-function-name-prefix *transpiler*) (symbol-name name))
+                       (symbol-package name))
     (let-when n (real-function-name name)
       (| (eq n name)
          (error "Compiled function name clash ~A for ~A and ~A." ! name n)))
