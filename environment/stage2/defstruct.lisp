@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun %struct-option-keyword? (x)
   (eq x :constructor))
@@ -40,7 +40,7 @@
     `(defun ,sym ,(%struct-make-args fields)
        (let ,g (make-array ,(+ 2 (length fields)))
          ,@(? user-init
-	          (nconc type-init user-init)
+	          (append type-init user-init)
 	          type-init)
 	     ,g))))
 
@@ -49,8 +49,11 @@
 
 (defun %struct-assertion (name sym)
   (when *assert*
-    `((unless (,(%struct?-symbol name) arr)
-        (error ,(string-concat "In " (symbol-name sym) ": Expected a " (symbol-name name) " structure instead of ~A.") arr)))))
+    `((| (& (array? arr)
+            (eq (aref arr 0) 'struct)
+            (eq (aref arr 1) ',name))
+         (error "STRUCT slot ~A: Need a ~A instead of ~A."
+                ,(symbol-name sym) ,(symbol-name name) arr)))))
 
 (defun %struct-single-get (name field index)
   (let sym (%struct-getter-symbol name field)
@@ -75,7 +78,8 @@
 (defun %struct? (name)
   (let sym (%struct?-symbol name)
     `(defun ,sym (x)
-       (& (struct? x)
+       (& (array? x)
+          (eq 'struct (aref x 0))
           (eq ',name (aref x 1))))))
 
 (defun %struct-sort-fields (fields-and-options)
