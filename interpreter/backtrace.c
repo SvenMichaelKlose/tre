@@ -12,11 +12,14 @@
 
 treptr treptr_backtrace;
 
+#define TRE_BACKTRACE_FILTER(x) \
+    (SPECIALP(_CAR(x)) || (NOT_NIL(_CDR(x)) && _CAR(x) == _CAR(_CDR(x))))
+
 treptr
 trebacktrace_r (treptr x)
 {
     RETURN_NIL(x);
-    if (NOT_NIL(_CDR(x)) && _CAR(x) == _CAR(_CDR(x)))
+    if (TRE_BACKTRACE_FILTER(x))
         return trebacktrace_r (_CDR(x));
     return CONS(_CAR(x), trebacktrace_r (_CDR(x)));
 }
