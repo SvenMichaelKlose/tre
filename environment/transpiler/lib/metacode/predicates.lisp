@@ -10,7 +10,8 @@
 	  %function-prologue
 	  %function-epilogue
 	  %function-return
-      %var %global)
+      %var %global
+      %backtrace-pop)
   `(def-head-predicate ,x))
 
 (defun atomic? (x)
