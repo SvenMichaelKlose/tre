@@ -132,11 +132,15 @@ treatom_init (void)
 treptr
 treatom_register_compiled_function (treptr sym, void * fun, void * expander_fun)
 {
+    if (BUILTINP(TRESYMBOL_FUN(sym)))
+        return sym;
+
     if (NOT(TRESYMBOL_FUN(sym)))
         tresymbol_set_function (trefunction_make (TRETYPE_FUNCTION, treptr_nil), sym);
 
     TREFUNCTION_NATIVE(TRESYMBOL_FUN(sym)) = fun;
     TREFUNCTION_NATIVE_EXPANDER(TRESYMBOL_FUN(sym)) = expander_fun;
+
 	return sym;
 }
 

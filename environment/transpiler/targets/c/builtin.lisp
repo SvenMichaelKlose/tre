@@ -23,13 +23,12 @@
 		(%ERROR         builtin_error   &rest x))
 
 	(trefunction_
-		(FUNCTION-NAME          name            fun)
 		(FUNCTION-NATIVE        native          fun)
 		(FUNCTION-BYTECODE      bytecode        fun)
 		(=-FUNCTION-BYTECODE    set_bytecode    bytecode fun)
 		(FUNCTION-SOURCE        source          fun)
 		(=-FUNCTION-SOURCE      set_source      source-expr fun)
-		(MAKE-FUNCTION          make_function   source-expr))
+		(MAKE-FUNCTION          make_function   &optional (source-expr nil)))
 
     (trebuiltin_
 		(QUIT           nil         &rest x)
@@ -42,10 +41,10 @@
 		(INTERN         nil         &rest x)
 		(%MALLOC        malloc      &rest x)
 		(%MALLOC-EXEC   malloc_exec &rest x)
-		(%FREE free     nil         &rest x)
+		(%FREE          free        &rest x)
 		(%FREE-EXEC     free_exec   &rest x)
-		(%%SET set      nil         &rest x)
-		(%%GET get      nil         &rest x))
+		(%%SET          set         &rest x)
+		(%%GET          get         &rest x))
 
 	(trenumber_
 		(%+             plus                    a b)
@@ -168,7 +167,7 @@
 (defvar *c-builtin-argdefs* (make-hash-table :test #'eq))
 
 (defvar *c-builtins*
-  (let h (make-hash-table :test #'eq)
+  (let h (make-hash-table)
 	(dolist (grp *c-builtins-descr* h)
 	  (let head (string-downcase (symbol-name grp.))
 		(dolist (f .grp)
@@ -185,3 +184,11 @@
 
 (defun c-builtin-argdef (x)
   (href *c-builtin-argdefs* x))
+
+(defun c-make-builtin-wrappers (tr)
+  (& (transpiler-backtrace? tr)
+     (filter [alet (c-builtin-argdef _)
+               `(defun ,_ ,!
+                  (,(make-symbol (c-builtin-name _))
+                   ,@(argument-expand-names 'builtin-wrapper !)))]
+             (remove 'cons (c-builtin-names)))))
