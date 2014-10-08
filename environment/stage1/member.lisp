@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2006,2008,2010–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2006,2008,2010–2014 Sven Michael Klose <pixel@copei.de>
 
 (functional member)
 
@@ -7,16 +7,13 @@
       ((not i))
     (? (funcall test elm (car i))
        (return-from member i))))
-(defun %member-if-r (pred lst)
-  (? lst
-     (? (funcall pred (car lst))
-	    lst
-        (%member-if-r pred (cdr lst)))))
 
 (defun member-if (pred &rest lsts)
-  (| (%member-if-r pred (car lsts))
-     (? (cdr lsts)
-        (apply #'member-if pred (cdr lsts)))))
+  (dolist (i lsts)
+    (do ((j i (cdr j)))
+        ((not j))
+      (? (funcall pred (car j))
+         (return-from member-if j)))))
 
 (defun member-if-not (pred &rest lsts)
   (member-if #'((_) (not (funcall pred _))) lsts))
