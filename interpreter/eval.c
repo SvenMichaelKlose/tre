@@ -72,9 +72,8 @@ treeval_unbind (treptr old)
 }
 
 treptr
-treeval_funcall (treptr func, treptr args, bool do_argeval)
+treeval_funcall_raw (treptr funcdef, treptr args, bool do_argeval)
 {
-    treptr  funcdef;
     treptr  expforms;
     treptr  expvals;
     treptr  ret;
@@ -82,7 +81,6 @@ treeval_funcall (treptr func, treptr args, bool do_argeval)
     treptr  body;
     treptr  old_bindings;
 
-    funcdef = TREFUNCTION_SOURCE(func);
     argdef = CAR(funcdef);
     body = CDR(funcdef);
 
@@ -104,6 +102,13 @@ treeval_funcall (treptr func, treptr args, bool do_argeval)
     return ret;
 }
 
+
+treptr
+treeval_funcall (treptr func, treptr args, bool do_argeval)
+{
+    return treeval_funcall_raw (TREFUNCTION_SOURCE(func), args, do_argeval);
+}
+
 treptr
 treeval_xlat_function (treevalfunc_t *xlat, treptr func, treptr args, bool do_argeval)
 {
@@ -120,6 +125,9 @@ treeval_xlat_function (treevalfunc_t *xlat, treptr func, treptr args, bool do_ar
     return ret;
 }
 
+#define FUNCTIONEXPRP(x) \
+    (CONSP(x) && CONSP(_CDR(x)) && CONSP(_CADR(x)) && _CAR(x) == treatom_function)
+
 treptr
 treeval_expr (treptr x)
 {
@@ -131,10 +139,16 @@ treeval_expr (treptr x)
     first = CAR(x);
     args = CDR(x);
 
-    fun = SYMBOLP(first) ? TRESYMBOL_FUN(first) : treeval (first);
+    if (SYMBOLP(first))
+        fun = TRESYMBOL_FUN(first);
+    else if (FUNCTIONEXPRP(first))
+        return treeval_funcall_raw (_CADR(first), args, TRUE);
+    else
+        fun = treeval (first);
 
-	if (COMPILED_FUNCTIONP(fun) || ARRAYP(fun))
+	if (COMPILED_FUNCTIONP(fun) || ARRAYP(fun)) {
 		return trefuncall_compiled (fun, args, TRUE);
+    }
 
     trebacktrace_push ((BUILTINP(fun) || SPECIALP(fun)) ? fun : TREFUNCTION_NAME(fun));
 

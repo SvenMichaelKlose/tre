@@ -19,6 +19,8 @@ struct tre_list {
 #define _CDR(x) 	(tre_lists[x].cdr)
 #define _CPR(x) 	(tre_listprops[x])
 
+#define _CADR(x) 	_CAR(_CDR(x))
+
 #define CONS(a,d)	trelist_get (a, d)
 
 #ifdef TRE_NO_ASSERTIONS
