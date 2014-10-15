@@ -41,7 +41,7 @@ trebacktrace_init ()
 void
 trebacktrace_push (treptr x)
 {
-    TRESYMBOL_VALUE(treptr_backtrace) = trelist_get (x, TRESYMBOL_VALUE(treptr_backtrace));
+    TRESYMBOL_VALUE(treptr_backtrace) = CONS(x, TRESYMBOL_VALUE(treptr_backtrace));
 }
 
 void
