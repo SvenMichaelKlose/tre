@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2009,2012–2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2009,2012–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -26,17 +26,24 @@ treptr treptr_current_macro;
 treptr
 tremacro_builtin_macroexpand_1 (treptr list)
 {
-    return treeval_funcall (TRESYMBOL_FUN(treptr_macroexpand_hook), CONS(list, treptr_nil), FALSE);
+    treptr args = CONS(list, treptr_nil);
+    treptr ret;
+
+    tregc_push (args);
+    ret = treeval_funcall (TRESYMBOL_FUN(treptr_macroexpand_hook), args, FALSE);
+    tregc_pop ();
+
+    return ret;
 }
 
 treptr
 tremacro_builtin_macroexpand (treptr list)
 {
     treptr fun = TRESYMBOL_FUN(treptr_macroexpand_hook);
-    treptr n   = CONS(trearg_get (list), treptr_nil);
+    treptr n   = trearg_get (list);
 
     if (NOT(fun))
-        return CAR(n);
+        return n;
 
     do {
 		list = n;
@@ -46,10 +53,10 @@ tremacro_builtin_macroexpand (treptr list)
     } while (!trelist_equal (list, n));
 
 #ifdef TRE_PRINT_MACROEXPANSIONS
-    treprint (CAR(m));
+    treprint (n);
 #endif
 
-    return CAR(n);
+    return n;
 }
 
 void
