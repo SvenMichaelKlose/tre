@@ -1,6 +1,7 @@
 ;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (transpiler-pass middleend-0 ()
+    print-dot                [(format t ".~F") _]
     make-packages            #'make-packages
     expression-expand        #'expression-expand
     correct-functions        #'correct-functions

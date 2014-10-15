@@ -4,6 +4,7 @@
   (apply (transpiler-postprocessor *transpiler*) x))
 
 (transpiler-pass generate-code ()
+    print-o                [(format t "o~F") _]
     function-names         [? (transpiler-function-name-prefix *transpiler*)
                               (translate-function-names (transpiler-global-funinfo *transpiler*) _)
                               _]
