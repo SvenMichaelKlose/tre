@@ -328,7 +328,6 @@ restore)
 	echo "Usage: make.sh [target]"
 	echo "Targets:"
 	echo "  boot            Build compiled environment from scratch."
-	echo "  devboot         Like 'boot' but with sanity checks from the beginning."
 	echo "  interpreter     Build interpreter (and compiled environment)."
 	echo "  compiler        Compile compiler and C target to C."
 	echo "  bcompiler       Compile compiler and bytecode target to C."
