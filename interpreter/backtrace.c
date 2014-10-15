@@ -10,7 +10,7 @@
 #include "symbol.h"
 #include "thread.h"
 
-treptr treptr_backtrace;
+treptr treptr_backtrace = 0;
 
 #define TRE_BACKTRACE_FILTER(x) \
     (SPECIALP(_CAR(x)) || (NOT_NIL(_CDR(x)) && _CAR(x) == _CAR(_CDR(x))))
@@ -34,7 +34,6 @@ void
 trebacktrace_init ()
 {
     treptr_backtrace = treatom_get ("*BACKTRACE*", TRECONTEXT_PACKAGE());
-    EXPAND_UNIVERSE(treptr_backtrace);
     TRESYMBOL_VALUE(treptr_backtrace) = treptr_nil;
 }
 

@@ -27,6 +27,7 @@
 #include "image.h"
 #include "alloc.h"
 #include "function.h"
+#include "backtrace.h"
 
 #ifdef TRE_COMPILED_CRUNSHED
 #define TRE_IMAGE_FORMAT_VERSION    (TRE_REVISION | (1 << 31))
@@ -419,6 +420,7 @@ treimage_load (char *file)
     fclose (f);
 
     tregc_init ();
+    trebacktrace_init ();
     trethread_make ();
     TRECONTEXT_FUNSTACK() = treptr_nil;
 
