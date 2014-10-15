@@ -7,6 +7,7 @@
 #include <string.h>
 #include <signal.h>
 #include <locale.h>
+#include <unistd.h>
 
 #include "config.h"
 #include "atom.h"
@@ -168,7 +169,14 @@ tremain_init_image_path (void)
     tremain_bootimage = malloc (4096);
     strcpy (tremain_bootimage, p);
     strcpy (&tremain_bootimage[strlen (p)], "/.tre.image");
+    if (access (tremain_bootimage, F_OK) == -1) {
+        free (tremain_bootimage);
+        tremain_bootimage = TRE_DEFAULT_IMAGE;
+    }
+
+/*
 	MAKE_SYMBOL("*BOOT-IMAGE*", trestring_get (tremain_bootimage));
+*/
 }
 
 /* Initialise everything. */
