@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2007,2009,2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2007,2009,2013–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #ifndef TRE_GC_H
@@ -12,7 +12,7 @@ extern char   tregc_atommarks[NUM_ATOMS >> 3];
 
 extern void   tregc_trace_object (treptr);
 extern void   tregc_force ();
-extern void   tregc_mark_only ();
+extern void   tregc_mark ();
 extern void   tregc_init (void);
 
 extern void   tregc_push (treptr);

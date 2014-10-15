@@ -70,15 +70,6 @@ tregc_pop_secondary ()
     trestack_ptr_secondary++;
 }
 
-void
-tregc_trace_list (treptr expr)
-{
-    while (NOT_NIL(expr)) {
-        _TREGC_ALLOC_CONS(expr);
-		expr = _CDR(expr);
-    }
-}
-
 void tregc_trace_atom (treptr);
 
 void
@@ -140,9 +131,7 @@ tregc_trace_atom (treptr a)
             tregc_trace_object (TRESYMBOL_PACKAGE(a));
 	    	break;
 
-        case TRETYPE_FUNCTION:
-        case TRETYPE_MACRO:
-        case TRETYPE_USERSPECIAL:
+        case TRETYPE_FUNCTION: case TRETYPE_MACRO: case TRETYPE_USERSPECIAL:
             tregc_trace_object (TREFUNCTION_SOURCE(a));
             tregc_trace_object (TREFUNCTION_BYTECODE(a));
 	    	break;
@@ -172,22 +161,19 @@ tregc_mark_stack (void)
 }
 
 void
-tregc_mark (bool do_mark_only)
+tregc_mark ()
 {
+    treptr universe = TRESYMBOL_VALUE(treatom_get ("*UNIVERSE*", TRECONTEXT_PACKAGE()));
 	tregc_init_maps ();
 
-    tregc_trace_object (treptr_universe);
+    tregc_trace_object (universe);
     tregc_trace_object (treimage_initfun);
     tregc_trace_tree (tregc_unremovables);
 
     tregc_trace_atom (tre_atom_evaluated_go);
     tregc_trace_atom (tre_atom_evaluated_return_from);
 
-    if (do_mark_only)
-        return;
-
     tregc_mark_stack ();
-    tregc_trace_list (TRECONTEXT_FUNSTACK());
 }
  
 void
@@ -224,12 +210,11 @@ tregc_sweep (void)
 }
 
 void
-tregc_pass (bool do_mark_only)
+tregc_pass ()
 {
     tregc_running = TRUE;
-    tregc_mark (do_mark_only);
-    if (!do_mark_only)
-        tregc_sweep ();
+    tregc_mark ();
+    tregc_sweep ();
     tregc_running = FALSE;
 }
 
@@ -251,12 +236,6 @@ tregc_force ()
     tregc_print_stats ();
 	fflush (stdout);
 #endif
-}
-
-void
-tregc_mark_only ()
-{
-    tregc_pass (TRUE);
 }
 
 void

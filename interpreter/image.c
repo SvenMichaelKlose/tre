@@ -205,7 +205,6 @@ treimage_create (char *file, treptr init_fun)
     treimage_initfun = init_fun;
     treimage_save_stack_content ();
     tregc_force ();
-    tregc_mark_only ();
 
     h.format_version = TRE_IMAGE_FORMAT_VERSION;
     h.init_fun = init_fun;
