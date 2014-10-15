@@ -75,8 +75,8 @@ C_DIALECT_FLAGS="-ansi -Wall -Wextra"
 CFLAGS="-pipe $C_DIALECT_FLAGS $GNU_LIBC_FLAGS $BUILD_MACHINE_INFO $ARGS"
 
 DEBUGOPTS="-O0 -g"
-BUILDOPTS="-Ofast -march=native -mtune=native"
-CRUNSHOPTS="-Ofast --whole-program -mtune=native"
+BUILDOPTS="-Ofast -mtune=native"
+CRUNSHOPTS="-Ofast -mtune=native"
 CRUNSHFLAGS="-DTRE_COMPILED_CRUNSHED -Iinterpreter"
 
 LIBFLAGS="-lm -lffi -ldl -lrt"
@@ -100,7 +100,7 @@ basic_clean ()
 {
 	echo "Cleaning..."
 	rm -vf *.core interpreter/$COMPILED_ENV tre image bytecode-image tmp.c __alien.tmp files.lisp boot.log _nodejstests.log _phptests.log _bytecode-interpreter-tests.log profile.lisp
-    rm -rf interpreter/_revision.h environment/_current-version environment/transpiler/targets/c64/tre.c64
+    rm -vrf interpreter/_revision.h environment/_current-version environment/transpiler/targets/c64/tre.c64
 	rm -vrf obj
     rm -vf examples/js/hello-world.js
 }
@@ -109,7 +109,7 @@ distclean ()
 {
 	echo "Cleaning for distribution..."
     basic_clean
-	rm -rf backup compiled
+	rm -vrf backup compiled
 }
 
 link ()
@@ -123,6 +123,7 @@ make_revision_header ()
 {
     REV=`git log | grep Author: | wc -l`
     REV=`expr 3290 + $REV`
+    echo $REV >environment/_current-version
     echo "#ifndef TRE_REVISION" >interpreter/_revision.h
     echo "#define TRE_REVISION $REV" >>interpreter/_revision.h
     echo "#define TRE_REVISION_STRING \"$REV\"" >>interpreter/_revision.h
@@ -170,7 +171,6 @@ crunsh)
 
 reload)
     echo "Reloading environment from source..."
-    git log | grep Author: | wc -l >environment/_current-version
     echo | ./tre -n
 	;;
 
