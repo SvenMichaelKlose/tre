@@ -58,8 +58,8 @@ FILES="
 	thread.c
 	util.c"
 
-CC=cc
-LD=cc
+CC=gcc
+LD=gcc
 
 LIBC_PATH=`find /lib64 /lib/x86_64-linux-gnu/ /lib -name libc.so.* | head -n 1`
 LIBDL_PATH=`find /lib64 /lib -name libdl.so.* | head -n 1`
