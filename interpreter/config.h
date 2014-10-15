@@ -16,9 +16,9 @@ typedef int bool;
 #define TRE_INFO    "tré " TRE_REVISION_STRING " - " __DATE__ ", " __TIME__ ")\n"
 #endif
 
+#define TRE_VERBOSE_GC 		      /* Print statistics after GC. */
 #if 0
 #define TRE_GC_DEBUG		      /* Run garbage collector everywhere. */
-#define TRE_VERBOSE_GC 		      /* Print statistics after GC. */
 #define TRE_VERBOSE_EVAL	      /* Print what is evaluated. */
 #define TRE_VERBOSE_READ          /* Print READ expressions in read-eval loop. */
 #define TRE_PRINT_MACROEXPANSIONS /* Print macroexpansions in read-eval loop. */
@@ -75,6 +75,10 @@ typedef int bool;
 
 #ifndef TRE_IMAGE_HEADER
 #define TRE_IMAGE_HEADER  "#!/usr/local/bin/tre -i\n" TRE_INFO
+#endif
+
+#ifndef TRE_DEFAULT_IMAGE
+#define TRE_DEFAULT_IMAGE "/usr/local/lib/tre/image"
 #endif
 
 #define TREPTR_INDEX_WIDTH	(sizeof (treptr) * 8 - TRETYPE_WIDTH)
