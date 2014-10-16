@@ -222,9 +222,9 @@ environment)
 
 boot)
     echo "Booting everything from scratch..."
-	./make.sh interpreter $ARGS || exit 1
-	./make.sh compiler $ARGS || exit 1
-	./make.sh crunsh $ARGS || exit 1
+	./make.sh interpreter -DTRE_NO_ASSERTIONS -DNDEBUG $ARGS || exit 1
+	(echo "(= (transpiler-backtrace? *c-transpiler*) nil)(compile-c-compiler)" | $TRE) || exit 1
+	./make.sh crunsh -DTRE_NO_ASSERTIONS -DNDEBUG $ARGS || exit 1
 	./make.sh environment $ARGS || exit 1
 	./make.sh crunsh $ARGS|| exit 1
 	;;
