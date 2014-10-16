@@ -88,8 +88,8 @@ treatom_register_compiled_function (treptr sym, void * fun, void * expander_fun)
     if (NOT(SYMBOL_FUNCTION(sym)))
         tresymbol_set_function (trefunction_make (TRETYPE_FUNCTION, treptr_nil), sym);
 
-    TREFUNCTION_NATIVE(SYMBOL_FUNCTION(sym)) = fun;
-    TREFUNCTION_NATIVE_EXPANDER(SYMBOL_FUNCTION(sym)) = expander_fun;
+    FUNCTION_NATIVE(SYMBOL_FUNCTION(sym)) = fun;
+    FUNCTION_NATIVE_EXPANDER(SYMBOL_FUNCTION(sym)) = expander_fun;
 
 	return sym;
 }

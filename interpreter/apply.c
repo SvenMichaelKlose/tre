@@ -82,9 +82,9 @@ trefuncall_c (treptr func, treptr args, bool do_eval)
     treptr a = do_eval ? treeval_args (args) : args;
 
     tregc_push (a);
-    ret = (TREFUNCTION_NATIVE_EXPANDER(func)) ?
-              trefuncall_ffi (TREFUNCTION_NATIVE_EXPANDER(func), CONS(a, treptr_nil)) :
-              trefuncall_ffi (TREFUNCTION_NATIVE(func), a);
+    ret = (FUNCTION_NATIVE_EXPANDER(func)) ?
+              trefuncall_ffi (FUNCTION_NATIVE_EXPANDER(func), CONS(a, treptr_nil)) :
+              trefuncall_ffi (FUNCTION_NATIVE(func), a);
     tregc_pop ();
 
     return ret;
@@ -116,8 +116,8 @@ trefuncall_compiled (treptr func, treptr args, bool do_eval)
     treptr v;
 
     trebacktrace_push (treptr_nil);
-    v = NOT_NIL(TREFUNCTION_BYTECODE(func)) ?
-            trefuncall_bytecode (func, args, TREARRAY_VALUES(TREFUNCTION_BYTECODE(func))[0], do_eval) :
+    v = NOT_NIL(FUNCTION_BYTECODE(func)) ?
+            trefuncall_bytecode (func, args, TREARRAY_VALUES(FUNCTION_BYTECODE(func))[0], do_eval) :
             trefuncall_c (func, args, do_eval);
     trebacktrace_pop ();
 
@@ -148,7 +148,7 @@ trefuncall (treptr func, treptr args)
 	if (COMPILED_FUNCTIONP(func))
 		return trefuncall_compiled (func, args, FALSE);
 
-    trebacktrace_push (BUILTINP(func) ? func : TREFUNCTION_NAME(func));
+    trebacktrace_push (BUILTINP(func) ? func : FUNCTION_NAME(func));
     v = trefuncall_interpreted (func, args);
     trebacktrace_pop ();
 

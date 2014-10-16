@@ -44,7 +44,7 @@ trefunction_make (tre_type type, treptr source)
     a = treatom_alloc (type);
     tregc_push (a);
     TREATOM(a) = trefunction_alloc ();
-    TREFUNCTION_SOURCE(a) = source;
+    FUNCTION_SOURCE(a) = source;
     tregc_pop ();
 
     return a;                                                                                                                      

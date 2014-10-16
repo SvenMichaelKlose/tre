@@ -107,7 +107,7 @@ treeval_funcall_raw (treptr funcdef, treptr args, bool do_argeval)
 treptr
 treeval_funcall (treptr func, treptr args, bool do_argeval)
 {
-    return treeval_funcall_raw (TREFUNCTION_SOURCE(func), args, do_argeval);
+    return treeval_funcall_raw (FUNCTION_SOURCE(func), args, do_argeval);
 }
 
 treptr
@@ -151,7 +151,7 @@ treeval_expr (treptr x)
 		return trefuncall_compiled (fun, args, TRUE);
     }
 
-    trebacktrace_push ((BUILTINP(fun) || SPECIALP(fun)) ? fun : TREFUNCTION_NAME(fun));
+    trebacktrace_push ((BUILTINP(fun) || SPECIALP(fun)) ? fun : FUNCTION_NAME(fun));
 
     switch (TREPTR_TYPE(fun)) {
         case TRETYPE_FUNCTION:    v = treeval_funcall (fun, args, TRUE); break;

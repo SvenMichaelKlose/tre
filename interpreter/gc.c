@@ -133,8 +133,8 @@ tregc_trace_atom (treptr a)
 	    	break;
 
         case TRETYPE_FUNCTION: case TRETYPE_MACRO: case TRETYPE_USERSPECIAL:
-            tregc_trace_object (TREFUNCTION_SOURCE(a));
-            tregc_trace_object (TREFUNCTION_BYTECODE(a));
+            tregc_trace_object (FUNCTION_SOURCE(a));
+            tregc_trace_object (FUNCTION_BYTECODE(a));
 	    	break;
 
         case TRETYPE_ARRAY:

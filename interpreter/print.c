@@ -153,19 +153,19 @@ treprint_atom (treptr atom, size_t indent)
 
 		case TRETYPE_FUNCTION:
 	        printf ("#'(");
-	        treprint_indent (TREFUNCTION_SOURCE(atom), indent, TRUE, "");
+	        treprint_indent (FUNCTION_SOURCE(atom), indent, TRUE, "");
 	        printf (")");
 	    	break;
 
 		case TRETYPE_MACRO:
 	        printf ("(MACRO");
-	       	treprint_r (TREFUNCTION_SOURCE(atom));
+	       	treprint_r (FUNCTION_SOURCE(atom));
 	       	printf (")");
 	    	break;
 
 		case TRETYPE_USERSPECIAL:
 	       	printf ("(SPECIAL");
-	       	treprint_r (TREFUNCTION_SOURCE(atom));
+	       	treprint_r (FUNCTION_SOURCE(atom));
 	       	printf (")");
 	    	break;
 

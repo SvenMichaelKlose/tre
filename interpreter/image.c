@@ -96,9 +96,9 @@ treimage_write_atoms (FILE *f)
                     case TRETYPE_FUNCTION:
                     case TRETYPE_MACRO:
                     case TRETYPE_USERSPECIAL:
-                        treimage_write (f, &TREFUNCTION_NAME(idx), sizeof (treptr));
-                        treimage_write (f, &TREFUNCTION_SOURCE(idx), sizeof (treptr));
-                        treimage_write (f, &TREFUNCTION_BYTECODE(idx), sizeof (treptr));
+                        treimage_write (f, &FUNCTION_NAME(idx), sizeof (treptr));
+                        treimage_write (f, &FUNCTION_SOURCE(idx), sizeof (treptr));
+                        treimage_write (f, &FUNCTION_BYTECODE(idx), sizeof (treptr));
                         break;
 
                     case TRETYPE_BUILTIN:
@@ -275,9 +275,9 @@ treimage_read_atoms (FILE *f)
                     case TRETYPE_MACRO:
                     case TRETYPE_USERSPECIAL:
                         TREATOM(idx) = trefunction_alloc ();
-                        treimage_read (f, &TREFUNCTION_NAME(idx), sizeof (treptr));
-                        treimage_read (f, &TREFUNCTION_SOURCE(idx), sizeof (treptr));
-                        treimage_read (f, &TREFUNCTION_BYTECODE(idx), sizeof (treptr));
+                        treimage_read (f, &FUNCTION_NAME(idx), sizeof (treptr));
+                        treimage_read (f, &FUNCTION_SOURCE(idx), sizeof (treptr));
+                        treimage_read (f, &FUNCTION_BYTECODE(idx), sizeof (treptr));
                         break;
 
                     case TRETYPE_BUILTIN:

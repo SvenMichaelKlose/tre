@@ -16,11 +16,11 @@ struct trefunction_t {
 typedef struct trefunction_t trefunction;
 
 #define TREPTR_FUNCTION(ptr)                ((trefunction *) TREATOM(ptr))
-#define TREFUNCTION_NAME(ptr)               (TREPTR_FUNCTION(ptr)->name)
-#define TREFUNCTION_SOURCE(ptr)             (TREPTR_FUNCTION(ptr)->source)
-#define TREFUNCTION_BYTECODE(ptr)           (TREPTR_FUNCTION(ptr)->bytecode)
-#define TREFUNCTION_NATIVE(ptr)             (TREPTR_FUNCTION(ptr)->native)
-#define TREFUNCTION_NATIVE_EXPANDER(ptr)    (TREPTR_FUNCTION(ptr)->native_expander)
+#define FUNCTION_NAME(ptr)               (TREPTR_FUNCTION(ptr)->name)
+#define FUNCTION_SOURCE(ptr)             (TREPTR_FUNCTION(ptr)->source)
+#define FUNCTION_BYTECODE(ptr)           (TREPTR_FUNCTION(ptr)->bytecode)
+#define FUNCTION_NATIVE(ptr)             (TREPTR_FUNCTION(ptr)->native)
+#define FUNCTION_NATIVE_EXPANDER(ptr)    (TREPTR_FUNCTION(ptr)->native_expander)
 
 extern treptr        trefunction_make (tre_type, treptr source);
 extern trefunction * trefunction_alloc ();

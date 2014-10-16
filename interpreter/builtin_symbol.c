@@ -99,7 +99,7 @@ tresymbol_set_function (treptr function, treptr symbol)
 {
     ASSERT_SYMBOL(symbol);
     if (CALLABLEP(function))
-        TREFUNCTION_NAME(function) = symbol;
+        FUNCTION_NAME(function) = symbol;
     return SYMBOL_FUNCTION(symbol) = function;
 }
 

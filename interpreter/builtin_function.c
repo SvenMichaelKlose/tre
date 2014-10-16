@@ -27,14 +27,14 @@ treptr
 trefunction_native (treptr fun)
 {
     ASSERT_CALLABLE(fun);
-	return TREFUNCTION_NATIVE(fun) ? number_get_float ((double) (long) TREFUNCTION_NATIVE(fun)) : treptr_nil;
+	return FUNCTION_NATIVE(fun) ? number_get_float ((double) (long) FUNCTION_NATIVE(fun)) : treptr_nil;
 }
 
 treptr
 trefunction_bytecode (treptr fun)
 {
     ASSERT_CALLABLE(fun);
-	return TREFUNCTION_BYTECODE(fun) ? TREFUNCTION_BYTECODE(fun) : treptr_nil;
+	return FUNCTION_BYTECODE(fun) ? FUNCTION_BYTECODE(fun) : treptr_nil;
 }
 
 treptr
@@ -42,7 +42,7 @@ trefunction_set_bytecode (treptr array, treptr fun)
 {
     ASSERT_ARRAY(array);
     ASSERT_CALLABLE(fun);
-    return TREFUNCTION_BYTECODE(fun) = array;
+    return FUNCTION_BYTECODE(fun) = array;
 }
 
 treptr
@@ -59,21 +59,21 @@ trefunction_name (treptr fun)
     if (SPECIALP(fun))
         return trefunction_core_name (tre_special_names, fun);
     ASSERT_CALLABLE(fun);
-	return TREFUNCTION_NAME(fun);
+	return FUNCTION_NAME(fun);
 }
 
 treptr
 trefunction_source (treptr fun)
 {
     ASSERT_CALLABLE(fun);
-	return TREFUNCTION_SOURCE(fun);
+	return FUNCTION_SOURCE(fun);
 }
 
 treptr
 trefunction_set_source (treptr list, treptr fun)
 {
     ASSERT_CALLABLE(fun);
-    return TREFUNCTION_SOURCE(fun) = list;
+    return FUNCTION_SOURCE(fun) = list;
 }
 
 treptr

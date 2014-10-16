@@ -70,7 +70,7 @@ tredebug_print_function (treptr fspos, treptr expr)
     treprint_highlight = expr;
 
     printf ("*** In %s:\n", SYMBOL_NAME(par));
-    treprint (TREFUNCTION_SOURCE(SYMBOL_FUNCTION(par)));
+    treprint (FUNCTION_SOURCE(SYMBOL_FUNCTION(par)));
 
     treprint_highlight = treptr_nil;
 }
@@ -356,7 +356,7 @@ tredebug_parent_funstack (treptr fspos)
 
     tmp = trefunstack_get_named_function (fspos);
     RETURN_NIL(tmp);
-    body = CADR(TREFUNCTION_SOURCE(SYMBOL_FUNCTION(tmp)));
+    body = CADR(FUNCTION_SOURCE(SYMBOL_FUNCTION(tmp)));
 
     while (NOT_NIL(fspos) && CAR(fspos) != body)
         fspos = CDR(fspos);

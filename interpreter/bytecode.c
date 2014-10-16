@@ -130,7 +130,7 @@ trecode_get (treptr ** p)
                 v = treeval_xlat_function (treeval_xlat_builtin, fun, args, FALSE);
                 tregc_pop_secondary ();
             }
-        } else if (NOT_NIL(TREFUNCTION_BYTECODE(fun))) {
+        } else if (NOT_NIL(FUNCTION_BYTECODE(fun))) {
             tregc_push_secondary (fun);
             num_args = TRENUMBER_INT(*x++);
             old_sp = trestack_ptr;
@@ -168,7 +168,7 @@ trecode_exec (treptr fun)
     int      i;
     int      vec;
 
-    fun = TREFUNCTION_BYTECODE(fun);
+    fun = FUNCTION_BYTECODE(fun);
 #ifdef TRE_HAVE_BYTECODE_ASSERTIONS
     if (TREPTR_IS_ARRAY(fun) == FALSE)
         treerror_norecover (fun, "Bytecode function in form of an array expected.");
@@ -226,7 +226,7 @@ trecode_call (treptr fun, treptr args)
     if (!(TREPTR_IS_FUNCTION(fun) || TREPTR_IS_MACRO(fun)))
         treerror_norecover (fun, "Function expected.");
 
-    if (NOT(TREFUNCTION_BYTECODE(fun)))
+    if (NOT(FUNCTION_BYTECODE(fun)))
         treerror_norecover (fun, "Function has no bytecode.");
 #endif
 

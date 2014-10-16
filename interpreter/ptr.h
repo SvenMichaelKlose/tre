@@ -38,7 +38,7 @@ typedef unsigned int tre_size;
 #define FUNCTIONP(ptr)	    (TREPTR_TYPE(ptr) == TRETYPE_FUNCTION)
 
 #define CALLABLEP(x)           (FUNCTIONP(x) || MACROP(x))
-#define COMPILED_FUNCTIONP(x)  ((FUNCTIONP(x) || MACROP(x)) && (TREFUNCTION_BYTECODE(x) != treptr_nil || TREFUNCTION_NATIVE(x)))
+#define COMPILED_FUNCTIONP(x)  ((FUNCTIONP(x) || MACROP(x)) && (FUNCTION_BYTECODE(x) != treptr_nil || FUNCTION_NATIVE(x)))
 
 #define TREPTR_TRUTH(test)  ((test) ? treptr_t : treptr_nil)
 
