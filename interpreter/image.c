@@ -54,10 +54,10 @@ treimage_save_stack_content ()
     tre_size  size = TRESTACK_SIZE - (((long) trestack_ptr - (long) trestack) / sizeof (treptr));
     treptr *  s = trestack_ptr;
 
-    TRESYMBOL_VALUE(treptr_saved_restart_stack) = treptr_nil;
+    SYMBOL_VALUE(treptr_saved_restart_stack) = treptr_nil;
 
     DOTIMES(i, size)
-        TRESYMBOL_VALUE(treptr_saved_restart_stack) = CONS(*s++, TRESYMBOL_VALUE(treptr_saved_restart_stack));
+        SYMBOL_VALUE(treptr_saved_restart_stack) = CONS(*s++, SYMBOL_VALUE(treptr_saved_restart_stack));
 }
 
 void
@@ -85,12 +85,12 @@ treimage_write_atoms (FILE *f)
                 treimage_write (f, &tre_atom_types[idx], sizeof (tre_type));
                 switch (tre_atom_types[idx]) {
                     case TRETYPE_SYMBOL:
-				        symlen = strlen (TRESYMBOL_NAME(idx));
+				        symlen = strlen (SYMBOL_NAME(idx));
                         treimage_write (f, &symlen, sizeof (tre_size));
-                	    treimage_write (f, TRESYMBOL_NAME(idx), symlen);
-                        treimage_write (f, &TRESYMBOL_PACKAGE(idx), sizeof (treptr));
-                        treimage_write (f, &TRESYMBOL_VALUE(idx), sizeof (treptr));
-                        treimage_write (f, &TRESYMBOL_FUN(idx), sizeof (treptr));
+                	    treimage_write (f, SYMBOL_NAME(idx), symlen);
+                        treimage_write (f, &SYMBOL_PACKAGE(idx), sizeof (treptr));
+                        treimage_write (f, &SYMBOL_VALUE(idx), sizeof (treptr));
+                        treimage_write (f, &SYMBOL_FUNCTION(idx), sizeof (treptr));
                         break;
 
                     case TRETYPE_FUNCTION:

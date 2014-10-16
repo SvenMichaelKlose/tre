@@ -298,7 +298,7 @@ next:
 treptr
 trearg_get_keyword (treptr a)
 {
-    return symbol_get_packaged (TRESYMBOL_NAME(a), tre_package_keyword);
+    return symbol_get_packaged (SYMBOL_NAME(a), tre_package_keyword);
 }
 
 void

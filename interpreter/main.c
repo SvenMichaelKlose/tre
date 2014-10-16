@@ -124,9 +124,9 @@ tremain_expand (treptr expr)
 void
 tremain_update_history (treptr x)
 {
-	TRESYMBOL_VALUE(tremain_history_3) = TRESYMBOL_VALUE(tremain_history_2);
-	TRESYMBOL_VALUE(tremain_history_2) = TRESYMBOL_VALUE(tremain_history);
-	TRESYMBOL_VALUE(tremain_history) = x;
+	SYMBOL_VALUE(tremain_history_3) = SYMBOL_VALUE(tremain_history_2);
+	SYMBOL_VALUE(tremain_history_2) = SYMBOL_VALUE(tremain_history);
+	SYMBOL_VALUE(tremain_history) = x;
 }
 
 treptr

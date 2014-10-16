@@ -58,12 +58,12 @@ treerror_internal (treptr expr, const char *msg, ...)
 void
 treerror_macroexpansion (void)
 {
-    treptr c = TRESYMBOL_VALUE(treptr_current_macro);
+    treptr c = SYMBOL_VALUE(treptr_current_macro);
 
     if (NOT(c))
         return;
 
-    fprintf (stderr, "; During expansion of macro %s:\n", TRESYMBOL_NAME(c));
+    fprintf (stderr, "; During expansion of macro %s:\n", SYMBOL_NAME(c));
 }
 
 treptr

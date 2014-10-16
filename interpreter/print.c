@@ -120,9 +120,9 @@ treprint_atom (treptr atom, size_t indent)
 
     switch (TREPTR_TYPE(atom)) {
 		case TRETYPE_SYMBOL:
-	    	if (TRESYMBOL_PACKAGE(atom) != TRECONTEXT_PACKAGE())
-                printf ("%s:", TRESYMBOL_NAME(TRESYMBOL_PACKAGE(atom)));
-           	printf ("%s", TRESYMBOL_NAME(atom));
+	    	if (SYMBOL_PACKAGE(atom) != TRECONTEXT_PACKAGE())
+                printf ("%s:", SYMBOL_NAME(SYMBOL_PACKAGE(atom)));
+           	printf ("%s", SYMBOL_NAME(atom));
 	    	break;
 
 		case TRETYPE_BUILTIN:

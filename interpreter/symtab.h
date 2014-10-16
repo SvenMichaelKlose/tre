@@ -5,11 +5,11 @@
 #ifndef TRE_SYMTAB_H
 #define TRE_SYMTAB_H
 
-#define TREPTR_SYMBOL(ptr)      ((tresymbol *) TREATOM(ptr))
-#define TRESYMBOL_NAME(ptr)     (TREPTR_SYMBOL(ptr)->name)
-#define TRESYMBOL_VALUE(ptr)    (TREPTR_SYMBOL(ptr)->value)
-#define TRESYMBOL_FUN(ptr)      (TREPTR_SYMBOL(ptr)->function)
-#define TRESYMBOL_PACKAGE(ptr)  (TREPTR_SYMBOL(ptr)->package)
+#define TREPTR_SYMBOL(ptr)    ((tresymbol *) TREATOM(ptr))
+#define SYMBOL_NAME(ptr)      (TREPTR_SYMBOL(ptr)->name)
+#define SYMBOL_VALUE(ptr)     (TREPTR_SYMBOL(ptr)->value)
+#define SYMBOL_FUNCTION(ptr)  (TREPTR_SYMBOL(ptr)->function)
+#define SYMBOL_PACKAGE(ptr)   (TREPTR_SYMBOL(ptr)->package)
 
 struct tresymbol_t {
 	struct tresymbol_t * entries[256];

@@ -51,7 +51,7 @@ trefunstack_get_named_function (treptr fspos)
 
     DOLIST(p, fspos) {
 		a = treatom_body_to_var (CAR(p));
-        if (NOT_NIL(a) && TRESYMBOL_NAME(a))
+        if (NOT_NIL(a) && SYMBOL_NAME(a))
 	    	break;
     }
 
@@ -69,8 +69,8 @@ tredebug_print_function (treptr fspos, treptr expr)
 
     treprint_highlight = expr;
 
-    printf ("*** In %s:\n", TRESYMBOL_NAME(par));
-    treprint (TREFUNCTION_SOURCE(TRESYMBOL_FUN(par)));
+    printf ("*** In %s:\n", SYMBOL_NAME(par));
+    treprint (TREFUNCTION_SOURCE(SYMBOL_FUNCTION(par)));
 
     treprint_highlight = treptr_nil;
 }
@@ -207,7 +207,7 @@ tredebug_set_breakpoint (char *name)
     }
 
     if (SYMBOLP(atom))
-        fatom = TRESYMBOL_FUN(atom);
+        fatom = SYMBOL_FUNCTION(atom);
     else
         fatom = atom;
 
@@ -228,7 +228,7 @@ tredebug_remove_breakpoint (char *name)
     size_t  j;
 
     DOTIMES(j, TREDEBUG_MAX_BREAKPOINTS) {
-        if (!strcmp (name, TRESYMBOL_NAME(tredebug_breakpoints[j]))) {
+        if (!strcmp (name, SYMBOL_NAME(tredebug_breakpoints[j]))) {
 	    	tredebug_breakpoints[j] = treptr_nil;
 	    	c = TRUE;
 		}
@@ -254,7 +254,7 @@ tredebug_breakpoint (void)
         i = 0;
 		DOTIMES(a, TREDEBUG_MAX_BREAKPOINTS) {
             if (NOT_NIL(tredebug_breakpoints[i])) {
- 	        	printf ("%s ", TRESYMBOL_NAME(tredebug_breakpoints[a]));
+ 	        	printf ("%s ", SYMBOL_NAME(tredebug_breakpoints[a]));
 				i++;
 	    	}
 		}
@@ -278,7 +278,7 @@ tredebug_breakpoints_delete_all (void)
 
     DOTIMES(i, TREDEBUG_MAX_BREAKPOINTS) {
         if (NOT_NIL(tredebug_breakpoints[i]))
- 	    	printf ("%s ", TRESYMBOL_NAME(tredebug_breakpoints[i]));
+ 	    	printf ("%s ", SYMBOL_NAME(tredebug_breakpoints[i]));
         tredebug_breakpoints[i] = treptr_nil;
     }
 }
@@ -339,10 +339,10 @@ tredebug_print (void)
 	    	printf ("Symbol not found.\n");
 	    	return;
 		}
-        printf ("Value of symbol '%s':\n", TRESYMBOL_NAME(atom));
-		treprint (TRESYMBOL_VALUE(atom));
-        printf ("Function of symbol '%s':\n", TRESYMBOL_NAME(atom));
-		treprint (TRESYMBOL_FUN(atom));
+        printf ("Value of symbol '%s':\n", SYMBOL_NAME(atom));
+		treprint (SYMBOL_VALUE(atom));
+        printf ("Function of symbol '%s':\n", SYMBOL_NAME(atom));
+		treprint (SYMBOL_FUNCTION(atom));
     }
 }
 
@@ -356,7 +356,7 @@ tredebug_parent_funstack (treptr fspos)
 
     tmp = trefunstack_get_named_function (fspos);
     RETURN_NIL(tmp);
-    body = CADR(TREFUNCTION_SOURCE(TRESYMBOL_FUN(tmp)));
+    body = CADR(TREFUNCTION_SOURCE(SYMBOL_FUNCTION(tmp)));
 
     while (NOT_NIL(fspos) && CAR(fspos) != body)
         fspos = CDR(fspos);
@@ -389,7 +389,7 @@ tredebug_lookup_bodyname (treptr body)
     if (repetitions > 0 && does_repeat)
 		return;
 
-    printf ("%s ", TRESYMBOL_NAME(var));
+    printf ("%s ", SYMBOL_NAME(var));
 
     if (!does_repeat) {
         if (repetitions > 0)
@@ -412,7 +412,7 @@ void
 tredebug_trace (void)
 {
     printf ("Function-call backtrace:\n");
-    treprint (TRESYMBOL_VALUE(treptr_backtrace));
+    treprint (SYMBOL_VALUE(treptr_backtrace));
 }
 
 void

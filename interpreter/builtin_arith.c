@@ -119,7 +119,7 @@ trenumber_builtin_quotient (treptr x)
     if (NOT(x))
 		return treerror (treptr_nil, "Argument expected.");
     if (NOT(CDR(x)))
-		return number_get_float (1.0 / TRESYMBOL_VALUE(CAR(x)));
+		return number_get_float (1.0 / SYMBOL_VALUE(CAR(x)));
 
     return treeval_exprop (x, treeval_op_quotient, "/");
 }

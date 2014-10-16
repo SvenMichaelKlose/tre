@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2007,2012–2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2007,2012–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -55,14 +55,14 @@ tredebug_breakpoint_arg (treptr args)
 treptr
 tredebug_builtin_set_breakpoint (treptr args)
 {
-    tredebug_set_breakpoint (TRESYMBOL_NAME(tredebug_breakpoint_arg (args)));
+    tredebug_set_breakpoint (SYMBOL_NAME(tredebug_breakpoint_arg (args)));
     return treptr_nil;
 }
 
 treptr
 tredebug_builtin_remove_breakpoint (treptr args)
 {
-    tredebug_remove_breakpoint (TRESYMBOL_NAME(tredebug_breakpoint_arg (args)));
+    tredebug_remove_breakpoint (SYMBOL_NAME(tredebug_breakpoint_arg (args)));
     return treptr_nil;
 }
 

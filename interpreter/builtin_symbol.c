@@ -57,7 +57,7 @@ treptr
 tresymbol_value (treptr symbol)
 {
     ASSERT_SYMBOL(symbol);
-    return TRESYMBOL_VALUE(symbol);
+    return SYMBOL_VALUE(symbol);
 }
 
 treptr
@@ -70,7 +70,7 @@ treptr
 tresymbol_set_value (treptr value, treptr symbol)
 {
     ASSERT_SYMBOL(symbol);
-    return TRESYMBOL_VALUE(symbol) = value;
+    return SYMBOL_VALUE(symbol) = value;
 }
 
 treptr
@@ -85,7 +85,7 @@ treptr
 tresymbol_function (treptr symbol)
 {
     ASSERT_SYMBOL(symbol);
-    return TRESYMBOL_FUN(symbol);
+    return SYMBOL_FUNCTION(symbol);
 }
 
 treptr
@@ -100,7 +100,7 @@ tresymbol_set_function (treptr function, treptr symbol)
     ASSERT_SYMBOL(symbol);
     if (CALLABLEP(function))
         TREFUNCTION_NAME(function) = symbol;
-    return TRESYMBOL_FUN(symbol) = function;
+    return SYMBOL_FUNCTION(symbol) = function;
 }
 
 treptr
@@ -115,7 +115,7 @@ treptr
 tresymbol_package (treptr symbol)
 {
     ASSERT_SYMBOL(symbol);
-    return TRESYMBOL_PACKAGE(symbol);
+    return SYMBOL_PACKAGE(symbol);
 }
 
 treptr

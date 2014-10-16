@@ -82,14 +82,14 @@ treatom_init (void)
 treptr
 treatom_register_compiled_function (treptr sym, void * fun, void * expander_fun)
 {
-    if (BUILTINP(TRESYMBOL_FUN(sym)))
+    if (BUILTINP(SYMBOL_FUNCTION(sym)))
         return sym;
 
-    if (NOT(TRESYMBOL_FUN(sym)))
+    if (NOT(SYMBOL_FUNCTION(sym)))
         tresymbol_set_function (trefunction_make (TRETYPE_FUNCTION, treptr_nil), sym);
 
-    TREFUNCTION_NATIVE(TRESYMBOL_FUN(sym)) = fun;
-    TREFUNCTION_NATIVE_EXPANDER(TRESYMBOL_FUN(sym)) = expander_fun;
+    TREFUNCTION_NATIVE(SYMBOL_FUNCTION(sym)) = fun;
+    TREFUNCTION_NATIVE_EXPANDER(SYMBOL_FUNCTION(sym)) = expander_fun;
 
 	return sym;
 }
@@ -182,17 +182,17 @@ treatom_body_to_var (treptr body)
         if (tre_atom_types[a] != TRETYPE_FUNCTION && tre_atom_types[a] != TRETYPE_MACRO)
 	    	continue;
 
-        if (CONSP(TRESYMBOL_VALUE(a)) == FALSE)
+        if (CONSP(SYMBOL_VALUE(a)) == FALSE)
             continue;
 
-        tmp = CDR(TRESYMBOL_VALUE(a));
+        tmp = CDR(SYMBOL_VALUE(a));
         if (NOT(tmp) || CAR(tmp) != body)
 	    	continue;
 
         for (b = 0; b < NUM_ATOMS; b++)
             if (tre_atom_types[b] == TRETYPE_SYMBOL
 					&& tre_atoms[b] != NULL
-					&& TRESYMBOL_FUN(b) == TREINDEX_TO_PTR(a))
+					&& SYMBOL_FUNCTION(b) == TREINDEX_TO_PTR(a))
                 return TREINDEX_TO_PTR(b);
     }
 
@@ -207,9 +207,9 @@ treatom_fun_body (treptr atomp)
     if (SYMBOLP(atomp) == FALSE)
         treerror_internal (atomp, "Symbol expected.");
 
-    fun = TRESYMBOL_FUN(atomp);
+    fun = SYMBOL_FUNCTION(atomp);
     if (NOT_NIL(fun))
-        return CDR(TRESYMBOL_VALUE(fun));
+        return CDR(SYMBOL_VALUE(fun));
 
     return treptr_nil;
 }

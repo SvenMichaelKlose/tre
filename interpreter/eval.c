@@ -44,8 +44,8 @@ treeval_bind (treptr la, treptr lv)
     while (NOT_NIL(la) && NOT_NIL(lv)) {
         tregc_push (old);
         sym = CAR(la);
-        old = CONS(CONS(sym, TRESYMBOL_VALUE(sym)), old);
-		TRESYMBOL_VALUE(sym) = CAR(lv);
+        old = CONS(CONS(sym, SYMBOL_VALUE(sym)), old);
+		SYMBOL_VALUE(sym) = CAR(lv);
         tregc_pop ();
 
         la = CDR(la);
@@ -67,7 +67,7 @@ treeval_unbind (treptr old)
 
     while (NOT_NIL(old)) {
         v = CAR(old);
-        TRESYMBOL_VALUE(CAR(v)) = CDR(v);
+        SYMBOL_VALUE(CAR(v)) = CDR(v);
         old = CDR(old);
     }
 }
@@ -141,7 +141,7 @@ treeval_expr (treptr x)
     args = CDR(x);
 
     if (SYMBOLP(first))
-        fun = TRESYMBOL_FUN(first);
+        fun = SYMBOL_FUNCTION(first);
     else if (FUNCTIONEXPRP(first))
         return treeval_funcall_raw (_CADR(first), args, TRUE);
     else
@@ -182,7 +182,7 @@ treeval (treptr x)
 
     switch (TREPTR_TYPE(x)) {
         case TRETYPE_CONS:   val = treeval_expr (x); break;
-        case TRETYPE_SYMBOL: val = TRESYMBOL_VALUE(x); break;
+        case TRETYPE_SYMBOL: val = SYMBOL_VALUE(x); break;
     }
 
     tregc_pop ();
@@ -237,7 +237,7 @@ treeval_init ()
 	EXPAND_UNIVERSE(treeval_function_symbol);
 
     treopt_verbose_eval = symbol_get ("*VERBOSE-EVAL*");
-    TRESYMBOL_VALUE(treopt_verbose_eval) = treptr_nil;
+    SYMBOL_VALUE(treopt_verbose_eval) = treptr_nil;
 	EXPAND_UNIVERSE(treopt_verbose_eval);
 }
 

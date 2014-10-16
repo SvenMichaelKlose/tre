@@ -9,7 +9,7 @@ extern treptr treptr_universe;
 extern treptr tre_package_keyword;
 
 #define EXPAND_UNIVERSE(ptr) \
-    (TRESYMBOL_VALUE(treptr_universe) = CONS(ptr, TRESYMBOL_VALUE(treptr_universe)))
+    (SYMBOL_VALUE(treptr_universe) = CONS(ptr, SYMBOL_VALUE(treptr_universe)))
 
 #define MAKE_HOOK_SYMBOL(var, symbol_name) \
     var = symbol_alloc (symbol_name, treptr_nil); \
@@ -19,7 +19,7 @@ extern treptr tre_package_keyword;
     if (symtab_find (symbol_name, TRECONTEXT_PACKAGE()) == treptr_invalid) { \
         EXPAND_UNIVERSE(symbol_alloc (symbol_name, init)); \
     } else { \
-        TRESYMBOL_VALUE(symbol_get (symbol_name)) = init; \
+        SYMBOL_VALUE(symbol_get (symbol_name)) = init; \
     }
 
 extern void tresymbol_init (void);

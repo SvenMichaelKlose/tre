@@ -142,7 +142,7 @@ trefuncall (treptr func, treptr args)
     treptr v;
 
 	if (trebuiltin_is_compiled_closure (func))
-		return trefuncall_compiled (TRESYMBOL_FUN(CLOSURE_FUNCTION(func)),
+		return trefuncall_compiled (SYMBOL_FUNCTION(CLOSURE_FUNCTION(func)),
 		                            CONS(CLOSURE_LEXICALS(func), args),
                                     FALSE);
 	if (COMPILED_FUNCTIONP(func))

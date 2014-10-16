@@ -96,10 +96,10 @@ long
 trelist_position_name (treptr elt, treptr l)
 {
     long c = 0;
-	const char * eltname = TRESYMBOL_NAME(elt);
+	const char * eltname = SYMBOL_NAME(elt);
 
     while (NOT_NIL(l)) {
-		if (SYMBOLP(CAR(l)) && ! strcmp (TRESYMBOL_NAME(CAR(l)), eltname))
+		if (SYMBOLP(CAR(l)) && ! strcmp (SYMBOL_NAME(CAR(l)), eltname))
 	    	return c;
 
         l = CDR(l);

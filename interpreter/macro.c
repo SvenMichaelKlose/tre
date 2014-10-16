@@ -31,7 +31,7 @@ tremacro_builtin_macroexpand_1 (treptr list)
     treptr ret;
 
     tregc_push (args);
-    ret = treeval_funcall (TRESYMBOL_FUN(treptr_macroexpand_hook), args, FALSE);
+    ret = treeval_funcall (SYMBOL_FUNCTION(treptr_macroexpand_hook), args, FALSE);
     tregc_pop ();
 
     return ret;
@@ -40,7 +40,7 @@ tremacro_builtin_macroexpand_1 (treptr list)
 treptr
 tremacro_builtin_macroexpand (treptr list)
 {
-    treptr fun = TRESYMBOL_FUN(treptr_macroexpand_hook);
+    treptr fun = SYMBOL_FUNCTION(treptr_macroexpand_hook);
     treptr n   = trearg_get (list);
 
     if (NOT(fun))

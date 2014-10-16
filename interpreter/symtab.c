@@ -168,7 +168,7 @@ symtab_remove_rec (tresymbol * p, char * np)
 void
 symtab_remove (treptr atom)
 {
-	(void) symtab_remove_rec (symtab_find_root (TRESYMBOL_PACKAGE(atom)), TRESYMBOL_NAME(atom));
+	(void) symtab_remove_rec (symtab_find_root (SYMBOL_PACKAGE(atom)), SYMBOL_NAME(atom));
 }
 
 void

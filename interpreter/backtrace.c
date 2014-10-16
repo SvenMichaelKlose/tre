@@ -28,14 +28,14 @@ trebacktrace_r (treptr x)
 treptr
 trebacktrace ()
 {
-    return trebacktrace_r (TRESYMBOL_VALUE(treptr_backtrace));
+    return trebacktrace_r (SYMBOL_VALUE(treptr_backtrace));
 }
 
 void
 trebacktrace_init ()
 {
     treptr_backtrace = symbol_get ("*BACKTRACE*");
-    TRESYMBOL_VALUE(treptr_backtrace) = treptr_nil;
+    SYMBOL_VALUE(treptr_backtrace) = treptr_nil;
 }
 
 void
@@ -43,7 +43,7 @@ trebacktrace_push (treptr x)
 {
     (void) x;
 /*
-    TRESYMBOL_VALUE(treptr_backtrace) = CONS(x, TRESYMBOL_VALUE(treptr_backtrace));
+    SYMBOL_VALUE(treptr_backtrace) = CONS(x, SYMBOL_VALUE(treptr_backtrace));
 */
 }
 
@@ -51,8 +51,8 @@ void
 trebacktrace_pop ()
 {
 /*
-    treptr ancestors = _CDR(TRESYMBOL_VALUE(treptr_backtrace));
-    trelist_free (TRESYMBOL_VALUE(treptr_backtrace));
-    TRESYMBOL_VALUE(treptr_backtrace) = ancestors;
+    treptr ancestors = _CDR(SYMBOL_VALUE(treptr_backtrace));
+    trelist_free (SYMBOL_VALUE(treptr_backtrace));
+    SYMBOL_VALUE(treptr_backtrace) = ancestors;
 */
 }

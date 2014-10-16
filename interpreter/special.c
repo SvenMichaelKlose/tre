@@ -111,7 +111,7 @@ trespecial_function (treptr args)
 			return trespecial_function_from_expr (arg);
 
         case TRETYPE_SYMBOL:
-            return TRESYMBOL_FUN(arg);
+            return SYMBOL_FUNCTION(arg);
 
         case TRETYPE_FUNCTION:
         case TRETYPE_BUILTIN:

@@ -128,7 +128,7 @@ cons (treptr car, treptr cdr)
 
     _CAR(cons) = car;
     _CDR(cons) = cdr;
-    _CPR(cons) = TRESYMBOL_VALUE(tre_default_listprop);
+    _CPR(cons) = SYMBOL_VALUE(tre_default_listprop);
 
     trelist_num_used++;
 

@@ -24,7 +24,7 @@ treptr treptr_quasiquoteexpand_hook;
 treptr
 trequasiquote_expand (treptr list)
 {
-    treptr sym = TRESYMBOL_FUN(treptr_quasiquoteexpand_hook);
+    treptr sym = SYMBOL_FUNCTION(treptr_quasiquoteexpand_hook);
     return NOT(sym) ?
                list :
                trefuncall (sym, CONS(list, treptr_nil));

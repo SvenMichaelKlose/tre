@@ -42,7 +42,7 @@ trestream_builtin_princ (treptr args)
 	    	break;
 
 		case TRETYPE_SYMBOL:
-	    	fprintf (str, "%s", TRESYMBOL_NAME(obj));
+	    	fprintf (str, "%s", SYMBOL_NAME(obj));
 	    	break;
 
 		case TRETYPE_NUMBER:

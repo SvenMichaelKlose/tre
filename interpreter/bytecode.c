@@ -71,7 +71,7 @@ trecode_set_place (treptr ** p, treptr value)
     if (NUMBERP(v)) {
         trestack_ptr[TRENUMBER_INT(v)] = value;
     } else if (NOT_NIL(v)) {
-        TRESYMBOL_VALUE(v) = value;
+        SYMBOL_VALUE(v) = value;
     }
 
     *p = x;
@@ -111,8 +111,8 @@ trecode_get (treptr ** p)
         v = CONS(treptr_closure, CONS(fun, lex));
         tregc_pop_secondary ();
         tregc_pop_secondary ();
-    } else if (SYMBOLP(v) && TRESYMBOL_FUN(v)) {
-        fun = TRESYMBOL_FUN(v);
+    } else if (SYMBOLP(v) && SYMBOL_FUNCTION(v)) {
+        fun = SYMBOL_FUNCTION(v);
         if (BUILTINP(fun)) {
             if (v == treptr_cons) {
                 car = trecode_get (&x);

@@ -127,9 +127,9 @@ tregc_trace_atom (treptr a)
 
     switch (TREATOM_TYPE(a)) {
         case TRETYPE_SYMBOL:
-            tregc_trace_object (TRESYMBOL_VALUE(a));
-            tregc_trace_object (TRESYMBOL_FUN(a));
-            tregc_trace_object (TRESYMBOL_PACKAGE(a));
+            tregc_trace_object (SYMBOL_VALUE(a));
+            tregc_trace_object (SYMBOL_FUNCTION(a));
+            tregc_trace_object (SYMBOL_PACKAGE(a));
 	    	break;
 
         case TRETYPE_FUNCTION: case TRETYPE_MACRO: case TRETYPE_USERSPECIAL:
@@ -164,7 +164,7 @@ tregc_mark_stack (void)
 void
 tregc_mark ()
 {
-    treptr universe = TRESYMBOL_VALUE(symbol_get ("*UNIVERSE*"));
+    treptr universe = SYMBOL_VALUE(symbol_get ("*UNIVERSE*"));
 	tregc_init_maps ();
 
     tregc_trace_object (universe);

@@ -178,8 +178,8 @@ trestring_builtin_string (treptr list)
            	snprintf (buf, TRE_MAX_STRINGLEN, "%g", TRENUMBER_VAL(arg));
            	return trestring_get (buf);
     	}
-   		if (ATOMP(arg) && TRESYMBOL_NAME(arg)) {
-   			strncpy (buf, TRESYMBOL_NAME(arg), TRE_MAX_STRINGLEN);
+   		if (ATOMP(arg) && SYMBOL_NAME(arg)) {
+   			strncpy (buf, SYMBOL_NAME(arg), TRE_MAX_STRINGLEN);
        		return trestring_get (buf);
 		}
     	arg = treerror (arg, "String, number or named atom expected.");
@@ -194,7 +194,7 @@ trestring_symbol_name (treptr symbol)
 {
     char    buf[TRE_MAX_STRINGLEN];
     treptr  sym = trearg_typed (1, TRETYPE_SYMBOL, symbol, "SYMBOL-NAME");
-    char *  an = TRESYMBOL_NAME(sym);
+    char *  an = SYMBOL_NAME(sym);
 
     buf[0] = 0;
     if (an)
