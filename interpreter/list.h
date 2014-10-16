@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #ifndef TRE_LIST_H
@@ -19,9 +19,7 @@ extern struct tre_sequence_type trelist_seqtype;
 extern treptr   trelist_copy (treptr);
 extern treptr   trelist_copy_tree (treptr);
 extern treptr   trelist_delete (tre_size, treptr);
-extern void     trelist_append (treptr *lst, treptr lst2);
 extern long     trelist_position (treptr elt, treptr lst);
-extern long     trelist_position_name (treptr elt, treptr lst);
 extern tre_size trelist_length (treptr);
 extern bool     trelist_equal (treptr, treptr);
 extern treptr   trelist_nth (treptr, tre_size);

@@ -91,24 +91,6 @@ trelist_position (treptr elt, treptr l)
     return -1;
 }
 
-
-long
-trelist_position_name (treptr elt, treptr l)
-{
-    long c = 0;
-	const char * eltname = SYMBOL_NAME(elt);
-
-    while (NOT_NIL(l)) {
-		if (SYMBOLP(CAR(l)) && ! strcmp (SYMBOL_NAME(CAR(l)), eltname))
-	    	return c;
-
-        l = CDR(l);
-		c++;
-    }
-
-    return -1;
-}
-
 tre_size
 trelist_length (treptr p)
 {
@@ -171,23 +153,6 @@ trelist_check_type (treptr list, tre_size type)
         if (TREPTR_TYPE(CAR(list)) != type)
 	    	return FALSE;
     return TRUE;
-}
-
-void
-trelist_append (treptr *lst, treptr lst2)
-{
-    treptr tmp;
-
-    if (NOT(lst2))
-		return;
-
-    if (NOT(*lst)) {
-        *lst = lst2;
-		return;
-    }
-
-    tmp = trelist_last (*lst);
-    RPLACD(tmp, lst2);
 }
 
 bool
