@@ -43,11 +43,11 @@ typedef int bool;
 #define TREDEBUG_MAX_BREAKPOINTS	16
 
 #ifndef NUM_LISTNODES
-#define NUM_LISTNODES	            (64 * MEGA)
+#define NUM_LISTNODES	            (32 * MEGA)
 #endif
 
 #ifndef NUM_ATOMS
-#define NUM_ATOMS	                (NUM_LISTNODES / 16)
+#define NUM_ATOMS	                (NUM_LISTNODES / 64)
 #endif
 
 #define TRESTACK_SIZE	            (512 * KILO)
