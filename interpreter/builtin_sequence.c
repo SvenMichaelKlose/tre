@@ -98,12 +98,12 @@ tresequence_builtin_length (treptr args)
     struct tre_sequence_type *t;
 
     if (NOT(seq))
-		return treatom_number_get (0, TRENUMTYPE_INTEGER);
+		return number_get_integer (0);
 
     t = tresequence_get_type (seq);
     if (t == NULL)
         return treerror (seq, "Sequence expected.");
 
-    ret = treatom_number_get ((double) (*t->length) (seq), TRENUMTYPE_INTEGER);
+    ret = number_get_integer ((double) (*t->length) (seq));
 	return ret;
 }

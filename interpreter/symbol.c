@@ -40,7 +40,7 @@ symbol_get (char * symbol, treptr package)
     if (trenumber_is_value (symbol)) {
 		if (sscanf (symbol, "%lf", &dvalue) != 1)
 			treerror (treptr_nil, "Illegal number format %s.", symbol);
-        return treatom_number_get (dvalue, TRENUMTYPE_FLOAT);
+        return number_get_float (dvalue);
 	}
 
     return symbol_alloc (symbol, package, treptr_invalid);

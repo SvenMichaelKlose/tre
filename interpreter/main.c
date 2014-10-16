@@ -220,8 +220,8 @@ tremain_init (void)
     MAKE_SYMBOL("*ENVIRONMENT-PATH*", trestring_get (TRE_ENVIRONMENT));
 	MAKE_SYMBOL("*LIBC-PATH*",        trestring_get (LIBC_PATH));
 	MAKE_SYMBOL("*ENDIANESS*",        symbol_alloc (TRE_ENDIANESS_STRING, TRECONTEXT_PACKAGE(), treptr_invalid));
-	MAKE_SYMBOL("*POINTER-SIZE*",     treatom_number_get (sizeof (void *), TRENUMTYPE_INTEGER));
-	MAKE_SYMBOL("*RAND-MAX*",         treatom_number_get (RAND_MAX, TRENUMTYPE_INTEGER));
+	MAKE_SYMBOL("*POINTER-SIZE*",     number_get_integer (sizeof (void *)));
+	MAKE_SYMBOL("*RAND-MAX*",         number_get_integer (RAND_MAX));
 
     tremain_init_image_path ();
     treapply_init ();

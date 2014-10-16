@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2012–2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2012–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #include <time.h>
@@ -18,5 +18,5 @@ tretime_builtin_nanotime (treptr dummy)
     (void) dummy;
 
     clock_gettime (CLOCK_PROCESS_CPUTIME_ID, &ts);
-    return treatom_number_get (ts.tv_nsec + (ts.tv_sec * 1000000000), TRENUMTYPE_FLOAT);
+    return number_get_float (ts.tv_nsec + (ts.tv_sec * 1000000000));
 }

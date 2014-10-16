@@ -77,7 +77,7 @@ trestring_t_get (treptr str, tre_size idx)
 		return treptr_nil;
     }
 
-    return treatom_number_get ((double) TRESTRING_DATA(s)[idx], TRENUMTYPE_CHAR);
+    return number_get_char ((double) TRESTRING_DATA(s)[idx]);
 }
 
 tre_size

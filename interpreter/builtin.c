@@ -21,6 +21,7 @@
 #include "io_std.h"
 #include "thread.h"
 #include "special.h"
+#include "symtab.h"
 #include "symbol.h"
 #include "alien.h"
 #include "apply.h"
@@ -204,7 +205,7 @@ trebuiltin_malloc (treptr args)
 
 	ret = malloc ((size_t) TRENUMBER_VAL(len));
 
-	return treatom_number_get ((double) (long) ret, TRENUMTYPE_INTEGER);
+	return number_get_integer ((double) (long) ret);
 }
 
 treptr
@@ -221,7 +222,7 @@ trebuiltin_malloc_exec (treptr args)
 				MAP_PRIVATE | MAP_ANON,
 				-1, 0);
 
-	return treatom_number_get ((double) (long) ret, TRENUMTYPE_INTEGER);
+	return number_get_integer ((double) (long) ret);
 }
 
 treptr
@@ -281,7 +282,7 @@ trebuiltin_get (treptr args)
 
 	p = TRENUMBER_CHARPTR(ptr);
 
-	return treatom_number_get ((double) * p, TRENUMTYPE_FLOAT);
+	return number_get_float ((double) * p);
 }
 
 

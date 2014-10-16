@@ -94,7 +94,7 @@ trearray_get (treptr sizes)
 treptr
 trearray_make (tre_size size)
 {
-    return trearray_get (CONS(trenumber_get ((double) size), treptr_nil));
+    return trearray_get (CONS(number_get_float ((double) size), treptr_nil));
 }
 
 void

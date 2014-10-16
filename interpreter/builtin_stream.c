@@ -123,7 +123,7 @@ trestream_builtin_read_char (treptr args)
     c = fgetc (str);
     if (c == EOF)
         return treptr_nil;
-    return treatom_number_get (c, TRENUMTYPE_CHAR);
+    return number_get_char (c);
 }
 
 treptr

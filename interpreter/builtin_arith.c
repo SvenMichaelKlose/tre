@@ -40,7 +40,7 @@ treeval_exprop (treptr x, treeval_opfunc_t func, const char * descr)
         x = CDR(x);
     }
 
-    return treatom_number_get (val, TRENUMTYPE_FLOAT);
+    return number_get_float (val);
 }
 
 double treeval_op_plus       (double a, double b);
@@ -59,7 +59,7 @@ treptr
 trenumber_builtin_plus (treptr x)
 {
     return NOT(x) ?
-		       treatom_number_get (0, TRENUMTYPE_FLOAT) :
+		       number_get_float (0) :
                treeval_exprop (x, treeval_op_plus, "+");
 }
 
@@ -68,7 +68,7 @@ trenumber_plus (treptr a, treptr b)
 {
     ASSERT_NUMBER(a);
     ASSERT_NUMBER(b);
-    return treatom_number_get (TRENUMBER_VAL(a) + TRENUMBER_VAL(b), TRENUMTYPE_FLOAT);
+    return number_get_float (TRENUMBER_VAL(a) + TRENUMBER_VAL(b));
 }
 
 treptr
@@ -82,7 +82,7 @@ trenumber_difference (treptr a, treptr b)
 {
     ASSERT_NUMBER(a);
     ASSERT_NUMBER(b);
-    return treatom_number_get (TRENUMBER_VAL(a) - TRENUMBER_VAL(b), TRENUMTYPE_FLOAT);
+    return number_get_float (TRENUMBER_VAL(a) - TRENUMBER_VAL(b));
 }
 
 treptr
@@ -91,7 +91,7 @@ trenumber_builtin_difference (treptr x)
     if (NOT(x))
 		return treerror (treptr_nil, "Argument expected.");
     if (NOT(CDR(x)))
-		return treatom_number_get (-TRENUMBER_VAL(CAR(x)), TRENUMTYPE_FLOAT);
+		return number_get_float (-TRENUMBER_VAL(CAR(x)));
 
     return treeval_exprop (x, treeval_op_difference, "-");
 }
@@ -106,7 +106,7 @@ treptr
 trenumber_builtin_times (treptr x)
 {
     return NOT(x) ?
-		       treatom_number_get (1, TRENUMTYPE_FLOAT) :
+		       number_get_float (1) :
                treeval_exprop (x, treeval_op_times, "*");
 }
 
@@ -116,7 +116,7 @@ trenumber_builtin_quotient (treptr x)
     if (NOT(x))
 		return treerror (treptr_nil, "Argument expected.");
     if (NOT(CDR(x)))
-		return treatom_number_get (1.0 / TRESYMBOL_VALUE(CAR(x)), TRENUMTYPE_FLOAT);
+		return number_get_float (1.0 / TRESYMBOL_VALUE(CAR(x)));
 
     return treeval_exprop (x, treeval_op_quotient, "/");
 }
@@ -137,7 +137,7 @@ trenumber_mod (treptr x, treptr mod)
 {
     ASSERT_NUMBER(x);
     ASSERT_NUMBER(mod);
-    return treatom_number_get (fmod (TRENUMBER_VAL(x), TRENUMBER_VAL(mod)), TRENUMTYPE_FLOAT);
+    return number_get_float (fmod (TRENUMBER_VAL(x), TRENUMBER_VAL(mod)));
 }
 
 treptr
@@ -153,7 +153,7 @@ treptr
 trenumber_builtin_logxor (treptr x)
 {
     return NOT(x) ?
-		       treatom_number_get (0, TRENUMTYPE_FLOAT) :
+		       number_get_float (0) :
                treeval_exprop (x, treeval_op_logxor, "LOGXOR");
 }
 
@@ -209,7 +209,7 @@ treptr
 trenumber_sqrt (treptr x)
 {
     ASSERT_NUMBER(x);
-    return treatom_number_get (sqrt (TRENUMBER_VAL(x)), TRENUMTYPE_FLOAT);
+    return number_get_float (sqrt (TRENUMBER_VAL(x)));
 }
 
 treptr
@@ -222,7 +222,7 @@ treptr
 trenumber_sin (treptr x)
 {
     ASSERT_NUMBER(x);
-    return treatom_number_get (sin (TRENUMBER_VAL(x)), TRENUMTYPE_FLOAT);
+    return number_get_float (sin (TRENUMBER_VAL(x)));
 }
 
 treptr
@@ -235,7 +235,7 @@ treptr
 trenumber_cos (treptr x)
 {
     ASSERT_NUMBER(x);
-    return treatom_number_get (cos (TRENUMBER_VAL(x)), TRENUMTYPE_FLOAT);
+    return number_get_float (cos (TRENUMBER_VAL(x)));
 }
 
 treptr
@@ -248,7 +248,7 @@ treptr
 trenumber_atan (treptr x)
 {
     ASSERT_NUMBER(x);
-    return treatom_number_get (atan (TRENUMBER_VAL(x)), TRENUMTYPE_FLOAT);
+    return number_get_float (atan (TRENUMBER_VAL(x)));
 }
 
 treptr
@@ -262,7 +262,7 @@ trenumber_atan2 (treptr a, treptr b)
 {
     ASSERT_NUMBER(a);
     ASSERT_NUMBER(b);
-    return treatom_number_get (atan2 (TRENUMBER_VAL(a), TRENUMBER_VAL(b)), TRENUMTYPE_FLOAT);
+    return number_get_float (atan2 (TRENUMBER_VAL(a), TRENUMBER_VAL(b)));
 }
 
 treptr
@@ -277,7 +277,7 @@ trenumber_builtin_atan2 (treptr x)
 treptr
 trenumber_random ()
 {
-    return treatom_number_get ((float) random (), TRENUMTYPE_FLOAT);
+    return number_get_float ((float) random ());
 }
 
 treptr
@@ -291,7 +291,7 @@ treptr
 trenumber_exp (treptr x)
 {
     ASSERT_NUMBER(x);
-    return treatom_number_get (expf (TRENUMBER_VAL(x)), TRENUMTYPE_FLOAT);
+    return number_get_float (expf (TRENUMBER_VAL(x)));
 }
 
 treptr
@@ -305,7 +305,7 @@ trenumber_pow (treptr a, treptr b)
 {
     ASSERT_NUMBER(a);
     ASSERT_NUMBER(b);
-    return treatom_number_get (pow (TRENUMBER_VAL(a), TRENUMBER_VAL(b)), TRENUMTYPE_FLOAT);
+    return number_get_float (pow (TRENUMBER_VAL(a), TRENUMBER_VAL(b)));
 }
 
 treptr
@@ -321,7 +321,7 @@ treptr
 trenumber_round (treptr x)
 {
     ASSERT_NUMBER(x);
-    return treatom_number_get (round (TRENUMBER_VAL(x)), TRENUMTYPE_FLOAT);
+    return number_get_float (round (TRENUMBER_VAL(x)));
 }
 
 treptr
@@ -334,7 +334,7 @@ treptr
 trenumber_floor (treptr x)
 {
     ASSERT_NUMBER(x);
-    return treatom_number_get (floor (TRENUMBER_VAL(x)), TRENUMTYPE_FLOAT);
+    return number_get_float (floor (TRENUMBER_VAL(x)));
 }
 
 treptr

@@ -53,13 +53,13 @@ treatom_macrop (treptr object)
 treptr
 treatom_type_id (treptr object)
 {
-	return treatom_number_get (TREPTR_TYPE(object), TRENUMTYPE_INTEGER);
+	return number_get_integer (TREPTR_TYPE(object));
 }
 
 treptr
 treatom_id (treptr object)
 {
-    return treatom_number_get (object, TRENUMTYPE_INTEGER);
+    return number_get_integer (object);
 }
 
 treptr

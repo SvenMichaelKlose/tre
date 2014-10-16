@@ -30,7 +30,7 @@ retry:
 		goto retry;
 	}
 
-    return treatom_number_get ((double) (long) hdl, TRENUMTYPE_INTEGER);
+    return number_get ((double) (long) hdl, TRENUMTYPE_INTEGER);
 }
 
 treptr
@@ -46,7 +46,7 @@ trealien_builtin_dlclose (treptr args)
     if (ret == -1)
         return trestring_get (dlerror ());
 
-    return treatom_number_get ((double) ret, TRENUMTYPE_INTEGER);
+    return number_get ((double) ret, TRENUMTYPE_INTEGER);
 }
 
 treptr
@@ -68,7 +68,7 @@ trealien_builtin_dlsym (treptr args)
     if (ret == NULL)
         return trestring_get (dlerror ());
 
-    return treatom_number_get ((double) (long) ret, TRENUMTYPE_INTEGER);
+    return number_get ((double) (long) ret, TRENUMTYPE_INTEGER);
 }
 
 treptr
@@ -84,5 +84,5 @@ trealien_builtin_call (treptr args)
 
     fun = (void *) (long) TRENUMBER_VAL(ptr);
     ret = (* fun) ();
-    return treatom_number_get ((double) ret, TRENUMTYPE_INTEGER);
+    return number_get ((double) ret, TRENUMTYPE_INTEGER);
 }

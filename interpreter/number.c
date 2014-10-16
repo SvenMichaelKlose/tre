@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2009,2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2009,2013–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #include <ctype.h>
@@ -69,4 +69,35 @@ trenumber_free (treptr n)
 void
 trenumber_init ()
 {
+}
+
+treptr
+number_get (double value, int type)
+{
+    treptr      atom;
+    trenumber * num;
+
+    num = trenumber_alloc (value, type);
+    atom = treatom_alloc (TRETYPE_NUMBER);
+    TREATOM(atom) = num;
+
+    return atom;
+}
+
+treptr
+number_get_float (double value)
+{
+    return number_get (value, TRENUMTYPE_FLOAT);
+}
+
+treptr
+number_get_integer (double value)
+{
+    return number_get (value, TRENUMTYPE_INTEGER);
+}
+
+treptr
+number_get_char (double value)
+{
+    return number_get (value, TRENUMTYPE_CHAR);
 }

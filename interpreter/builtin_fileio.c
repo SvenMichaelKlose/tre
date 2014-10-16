@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2008,2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2008,2013–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #include <stdio.h>
@@ -29,7 +29,7 @@ trestream_fopen_wrapper (treptr path, treptr mode)
     handle = trestream_fopen (path, mode);
     RETURN_NIL(handle);
 
-    return treatom_number_get ((double) handle, TRENUMTYPE_INTEGER);
+    return number_get_integer ((double) handle);
 }
 
 treptr

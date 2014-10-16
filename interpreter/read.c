@@ -242,12 +242,12 @@ treread_hexnum (trestream * stream)
 	treio_putback (stream);
 
 	if (! n)
-		return treerror (treatom_number_get ((double) c, TRENUMTYPE_CHAR), "Missing characters after initiating hexadecimal number.");
+		return treerror (number_get_char ((double) c), "Missing characters after initiating hexadecimal number.");
 
 	if (! isspace (c) && isalpha (c))
-		return treerror (treatom_number_get ((double) c, TRENUMTYPE_CHAR), "Illegal character for hexadecimal number.");
+		return treerror (number_get_char ((double) c), "Illegal character for hexadecimal number.");
 
-	return treatom_number_get ((double) v, TRENUMTYPE_INTEGER);
+	return number_get_integer ((double) v);
 }
 
 treptr
@@ -257,7 +257,7 @@ treread_atom (trestream * stream)
 		return treread_string (stream);
 
     if (TRECONTEXT_TOKEN() == TRETOKEN_CHAR)
-        return treatom_number_get ((double) treio_getc (stream), TRENUMTYPE_CHAR);
+        return number_get_char ((double) treio_getc (stream));
 
     if (TRECONTEXT_TOKEN() == TRETOKEN_HEXNUM)
         return treread_hexnum (stream);

@@ -11,11 +11,11 @@
 
 (c-define-compiled-literal c-compiled-number (x number)
   :maker ($ 'trenumber_compiled_ (gensym-number))
-  :init-maker `(tregc_add_unremovable (trenumber_get (%%native ,x))))
+  :init-maker `(tregc_add_unremovable (number_get_float (%%native ,x))))
 
 (c-define-compiled-literal c-compiled-char (x char)
   :maker ($ 'trechar_compiled_ (char-code x))
-  :init-maker `(tregc_add_unremovable (trechar_get (%%native ,(char-code x)))))
+  :init-maker `(tregc_add_unremovable (number_get_char (%%native ,(char-code x)))))
 
 (c-define-compiled-literal c-compiled-string (x string)
   :maker ($ 'trestring_compiled_ (gensym-number))

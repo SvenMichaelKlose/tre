@@ -19,8 +19,6 @@ extern tre_type tre_atom_types[NUM_ATOMS];
 
 extern void treatom_init (void);
 
-extern treptr treatom_number_get (double, int type);
-
 extern treptr treatom_alloc (int type);
 extern void   treatom_remove (treptr);
 
@@ -30,7 +28,5 @@ extern treptr treatom_fun_body (treptr atomp);
 
 /* for compiled code */
 extern treptr treatom_register_compiled_function (treptr sym, void * fun, void * expander_fun);
-extern treptr trenumber_get (double);
-extern treptr trechar_get (double);
 
 #endif

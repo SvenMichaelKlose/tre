@@ -27,7 +27,7 @@ treptr
 trefunction_native (treptr fun)
 {
     ASSERT_CALLABLE(fun);
-	return TREFUNCTION_NATIVE(fun) ? trenumber_get ((double) (long) TREFUNCTION_NATIVE(fun)) : treptr_nil;
+	return TREFUNCTION_NATIVE(fun) ? number_get_float ((double) (long) TREFUNCTION_NATIVE(fun)) : treptr_nil;
 }
 
 treptr
