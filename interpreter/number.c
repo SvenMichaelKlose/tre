@@ -14,6 +14,11 @@
 #include "gc.h"
 #include "argument.h"
 #include "alloc.h"
+#include "cons.h"
+#include "symtab.h"
+#include "symbol.h"
+
+treptr number_chars[256];
 
 bool
 trenumber_is_value (char * symbol)
@@ -66,11 +71,6 @@ trenumber_free (treptr n)
 	free (TREPTR_NUMBER(n));
 }
 
-void
-trenumber_init ()
-{
-}
-
 treptr
 number_get (double value, int type)
 {
@@ -99,5 +99,16 @@ number_get_integer (double value)
 treptr
 number_get_char (double value)
 {
-    return number_get (value, TRENUMTYPE_CHAR);
+    if (value < 0 || value > 255)
+        return number_get (value, TRENUMTYPE_CHAR);
+    return number_chars[(size_t) value];
+}
+
+void
+trenumber_init ()
+{
+    int i;
+
+    for (i = 0; i < 256; i++)
+        EXPAND_UNIVERSE(number_chars[i] = number_get ((double) i, TRENUMTYPE_CHAR));
 }
