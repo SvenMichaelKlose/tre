@@ -15,7 +15,7 @@
 #define TREPACKAGE_KEYWORD_INDEX    1
 
 treptr
-symbol_alloc (char * name, treptr package, treptr value)
+symbol_alloc_packaged (char * name, treptr package, treptr value)
 {
     treptr  atom = treatom_alloc (TRETYPE_SYMBOL);
 
@@ -28,28 +28,41 @@ symbol_alloc (char * name, treptr package, treptr value)
 }
 
 treptr
-symbol_get (char * symbol, treptr package)
+symbol_alloc (char * name, treptr value)
+{
+    return symbol_alloc_packaged (name, TRECONTEXT_PACKAGE(), value);
+}
+
+treptr
+symbol_get_packaged (char * name, treptr package)
 {   
     treptr  atom;
 
-    atom = symtab_find (symbol, package);
+    atom = symtab_find (name, package);
     if (atom == treptr_invalid)
-        return symbol_alloc (symbol, package, treptr_invalid);
+        return symbol_alloc_packaged (name, package, treptr_invalid);
     return atom;
+}
+
+
+treptr
+symbol_get (char * name)
+{   
+    return symbol_get_packaged (name, TRECONTEXT_PACKAGE());
 }
 
 void
 tresymbol_init (void)
 {
-    tre_package_keyword = symbol_alloc ("", treptr_nil, treptr_nil);
+    tre_package_keyword = symbol_alloc_packaged ("", treptr_nil, treptr_nil);
 	symtab_set_package (TREPACKAGE_KEYWORD_INDEX, tre_package_keyword);
 
-    treptr_universe = symbol_alloc ("*UNIVERSE*", treptr_nil, treptr_nil);
+    treptr_universe = symbol_alloc_packaged ("*UNIVERSE*", treptr_nil, treptr_nil);
     EXPAND_UNIVERSE(treptr_t);
 
     EXPAND_UNIVERSE(tre_package_keyword);
 
 	MAKE_SYMBOL("*KEYWORD-PACKAGE*", tre_package_keyword);
-    tre_default_listprop = symbol_alloc ("*DEFAULT-LISTPROP*", treptr_nil, treptr_nil);
+    tre_default_listprop = symbol_alloc_packaged ("*DEFAULT-LISTPROP*", treptr_nil, treptr_nil);
     EXPAND_UNIVERSE(tre_default_listprop);
 }

@@ -188,10 +188,10 @@ trebuiltin_intern (treptr args)
 
     n = TREPTR_STRINGZ(name);
     p = NOT_NIL(package) ?
-            symbol_get (TREPTR_STRINGZ(package), treptr_nil) :
+            symbol_get (TREPTR_STRINGZ(package)) :
             treptr_nil;
 
-    return symbol_get (n, p);
+    return symbol_get_packaged (n, p);
 }
 
 treptr
@@ -534,7 +534,7 @@ trebuiltin_init ()
     for (i = 0; tre_builtin_names[i] != NULL; i++) {
         fun = treatom_alloc (TRETYPE_BUILTIN);
         TREATOM(fun) = (void*) i;
-        name = symbol_alloc (tre_builtin_names[i], treptr_nil, treptr_nil);
+        name = symbol_alloc (tre_builtin_names[i], treptr_nil);
         tresymbol_set_function(fun, name);
         EXPAND_UNIVERSE(name);
     }

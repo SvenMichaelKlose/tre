@@ -158,6 +158,6 @@ trefuncall (treptr func, treptr args)
 void
 treapply_init ()
 {
-    treatom_closure = symbol_get ("%CLOSURE", TRECONTEXT_PACKAGE());
+    treatom_closure = symbol_get ("%CLOSURE");
     EXPAND_UNIVERSE(treatom_closure);
 }

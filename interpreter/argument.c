@@ -298,16 +298,16 @@ next:
 treptr
 trearg_get_keyword (treptr a)
 {
-    return symbol_get (TRESYMBOL_NAME(a), tre_package_keyword);
+    return symbol_get_packaged (TRESYMBOL_NAME(a), tre_package_keyword);
 }
 
 void
 trearg_init (void)
 {
-    tre_atom_rest = symbol_get ("&REST", treptr_nil);
-    tre_atom_body = symbol_get ("&BODY", treptr_nil);
-    tre_atom_optional = symbol_get ("&OPTIONAL", treptr_nil);
-    tre_atom_key = symbol_get ("&KEY", treptr_nil);
+    tre_atom_rest = symbol_get ("&REST");
+    tre_atom_body = symbol_get ("&BODY");
+    tre_atom_optional = symbol_get ("&OPTIONAL");
+    tre_atom_key = symbol_get ("&KEY");
     EXPAND_UNIVERSE(tre_atom_rest);
     EXPAND_UNIVERSE(tre_atom_body);
     EXPAND_UNIVERSE(tre_atom_optional);

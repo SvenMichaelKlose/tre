@@ -12,19 +12,21 @@ extern treptr tre_package_keyword;
     (TRESYMBOL_VALUE(treptr_universe) = CONS(ptr, TRESYMBOL_VALUE(treptr_universe)))
 
 #define MAKE_HOOK_SYMBOL(var, symbol_name) \
-    var = symbol_alloc (symbol_name, TRECONTEXT_PACKAGE(), treptr_nil); \
+    var = symbol_alloc (symbol_name, treptr_nil); \
     EXPAND_UNIVERSE(var)
 
 #define MAKE_SYMBOL(symbol_name, init) \
     if (symtab_find (symbol_name, TRECONTEXT_PACKAGE()) == treptr_invalid) { \
-        EXPAND_UNIVERSE(symbol_alloc (symbol_name, TRECONTEXT_PACKAGE(), init)); \
+        EXPAND_UNIVERSE(symbol_alloc (symbol_name, init)); \
     } else { \
-        TRESYMBOL_VALUE(symbol_get (symbol_name, TRECONTEXT_PACKAGE())) = init; \
+        TRESYMBOL_VALUE(symbol_get (symbol_name)) = init; \
     }
 
 extern void tresymbol_init (void);
 
-extern treptr symbol_alloc  (char * symbol, treptr package, treptr value);
-extern treptr symbol_get    (char *, treptr package);
+extern treptr symbol_alloc_packaged  (char * name, treptr package, treptr value);
+extern treptr symbol_alloc           (char * name, treptr value);
+extern treptr symbol_get_packaged    (char *, treptr package);
+extern treptr symbol_get             (char *);
 
 #endif

@@ -48,7 +48,7 @@ trefunction_set_bytecode (treptr array, treptr fun)
 treptr
 trefunction_core_name (char ** map, treptr fun)
 {
-        return symbol_get (map[(size_t) TREATOM(fun)], TRECONTEXT_PACKAGE());
+        return symbol_get (map[(size_t) TREATOM(fun)]);
 }
 
 treptr

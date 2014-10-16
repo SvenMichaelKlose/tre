@@ -26,7 +26,7 @@ tresymbol_make (treptr name, treptr package)
 {
     ASSERT_STRING(name);
     ASSERT_SYMBOL(package);
-    return symbol_get (TREPTR_STRINGZ(name), package);
+    return symbol_get_packaged (TREPTR_STRINGZ(name), package);
 }
 
 treptr
@@ -50,7 +50,7 @@ tresymbol_builtin_make_package (treptr args)
 	treptr name = trearg_typed (1, TRETYPE_STRING, trearg_get (args), "MAKE-PACKAGE");
 	return TREPTR_STRINGLEN(name) == 0 ?
 		       tre_package_keyword :
-	           symbol_get (TREPTR_STRINGZ(name), TRECONTEXT_PACKAGE());
+	           symbol_get (TREPTR_STRINGZ(name));
 }
 
 treptr

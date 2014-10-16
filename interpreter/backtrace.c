@@ -34,7 +34,7 @@ trebacktrace ()
 void
 trebacktrace_init ()
 {
-    treptr_backtrace = symbol_get ("*BACKTRACE*", TRECONTEXT_PACKAGE());
+    treptr_backtrace = symbol_get ("*BACKTRACE*");
     TRESYMBOL_VALUE(treptr_backtrace) = treptr_nil;
 }
 

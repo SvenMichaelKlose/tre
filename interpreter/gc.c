@@ -164,7 +164,7 @@ tregc_mark_stack (void)
 void
 tregc_mark ()
 {
-    treptr universe = TRESYMBOL_VALUE(symbol_get ("*UNIVERSE*", TRECONTEXT_PACKAGE()));
+    treptr universe = TRESYMBOL_VALUE(symbol_get ("*UNIVERSE*"));
 	tregc_init_maps ();
 
     tregc_trace_object (universe);

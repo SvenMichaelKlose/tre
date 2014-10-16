@@ -221,7 +221,7 @@ tremain_init (void)
     MAKE_SYMBOL("*OS-VERSION*",       trestring_get (TRE_OS_VERSION));
     MAKE_SYMBOL("*ENVIRONMENT-PATH*", trestring_get (TRE_ENVIRONMENT));
 	MAKE_SYMBOL("*LIBC-PATH*",        trestring_get (LIBC_PATH));
-	MAKE_SYMBOL("*ENDIANESS*",        symbol_alloc (TRE_ENDIANESS_STRING, TRECONTEXT_PACKAGE(), treptr_invalid));
+	MAKE_SYMBOL("*ENDIANESS*",        symbol_alloc (TRE_ENDIANESS_STRING, treptr_nil));
 	MAKE_SYMBOL("*POINTER-SIZE*",     number_get_integer (sizeof (void *)));
 	MAKE_SYMBOL("*RAND-MAX*",         number_get_integer (RAND_MAX));
 

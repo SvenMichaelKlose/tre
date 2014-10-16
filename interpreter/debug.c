@@ -586,7 +586,7 @@ void
 tredebug_init_late (void)
 {
     MAKE_SYMBOL("*MILESTONE*", treptr_nil);
-    treptr_milestone = symbol_get ("*MILESTONE*", TRECONTEXT_PACKAGE());
+    treptr_milestone = symbol_get ("*MILESTONE*");
 }
 
 treptr

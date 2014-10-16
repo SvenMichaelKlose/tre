@@ -274,11 +274,11 @@ treread_atom (trestream * stream)
         return number_get_float (number);
     }
 
-    return symbol_get (
+    return symbol_get_packaged (
 		name,
     	(*TRECONTEXT_PACKAGE_NAME() == -1) ?
             treptr_nil :
-            symbol_get (TRECONTEXT_PACKAGE_NAME(), treptr_nil)
+            symbol_get (TRECONTEXT_PACKAGE_NAME())
 	);
 }
 
@@ -438,15 +438,15 @@ treread_init ()
     TRECONTEXT_TOKEN() = (int) -1;
     TRECONTEXT_TOKEN_NAME()[0] = 0;
 
-    treatom_quote = symbol_get ("QUOTE", TRECONTEXT_PACKAGE());
-    treatom_backquote = symbol_get ("BACKQUOTE", TRECONTEXT_PACKAGE());
-    treatom_quasiquote = symbol_get ("QUASIQUOTE", TRECONTEXT_PACKAGE());
-    treatom_quasiquote_splice = symbol_get ("QUASIQUOTE-SPLICE", TRECONTEXT_PACKAGE());
-    treatom_function = symbol_get ("FUNCTION", TRECONTEXT_PACKAGE());
-    treatom_accent_circonflex = symbol_get ("ACCENT-CIRCONFLEX", TRECONTEXT_PACKAGE());
-    treatom_square = symbol_get ("SQUARE", TRECONTEXT_PACKAGE());
-    treatom_curly = symbol_get ("CURLY", TRECONTEXT_PACKAGE());
-    treatom_cons = symbol_get ("CONS", TRECONTEXT_PACKAGE());
+    treatom_quote = symbol_get ("QUOTE");
+    treatom_backquote = symbol_get ("BACKQUOTE");
+    treatom_quasiquote = symbol_get ("QUASIQUOTE");
+    treatom_quasiquote_splice = symbol_get ("QUASIQUOTE-SPLICE");
+    treatom_function = symbol_get ("FUNCTION");
+    treatom_accent_circonflex = symbol_get ("ACCENT-CIRCONFLEX");
+    treatom_square = symbol_get ("SQUARE");
+    treatom_curly = symbol_get ("CURLY");
+    treatom_cons = symbol_get ("CONS");
 
     EXPAND_UNIVERSE(treatom_quote);
     EXPAND_UNIVERSE(treatom_backquote);

@@ -106,6 +106,6 @@ trelist_builtin_consp (treptr list)
 void
 trelist_builtin_init ()
 {
-	trelist_builtin_eq_symbol = symbol_get ("EQ", treptr_nil);
-	trelist_builtin_test_symbol = symbol_get ("TEST", tre_package_keyword);
+	trelist_builtin_eq_symbol = symbol_get ("EQ");
+	trelist_builtin_test_symbol = symbol_get_packaged ("TEST", tre_package_keyword);
 }

@@ -32,7 +32,7 @@ tredot_expand (treptr list)
 void
 tredot_init (void)
 {
-    treptr_dotexpand_hook = symbol_get ("*DOTEXPAND-HOOK*", TRECONTEXT_PACKAGE());
+    treptr_dotexpand_hook = symbol_get ("*DOTEXPAND-HOOK*");
     EXPAND_UNIVERSE(treptr_dotexpand_hook);
 }
 

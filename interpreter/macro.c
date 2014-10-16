@@ -63,10 +63,10 @@ tremacro_builtin_macroexpand (treptr list)
 void
 tremacro_init (void)
 {
-    treptr_macroexpand_hook = symbol_get ("*MACROEXPAND-HOOK*", TRECONTEXT_PACKAGE());
+    treptr_macroexpand_hook = symbol_get ("*MACROEXPAND-HOOK*");
     EXPAND_UNIVERSE(treptr_macroexpand_hook);
 
-    treptr_current_macro = symbol_get ("*CURRENT-MACRO*", TRECONTEXT_PACKAGE());
+    treptr_current_macro = symbol_get ("*CURRENT-MACRO*");
     EXPAND_UNIVERSE(treptr_current_macro);
 }
 

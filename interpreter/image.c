@@ -439,6 +439,6 @@ treimage_init ()
 {
     treimage_initfun = treptr_nil;
 
-    treptr_saved_restart_stack = symbol_get ("*SAVED-RESTART-STACK*", TRECONTEXT_PACKAGE());
+    treptr_saved_restart_stack = symbol_get ("*SAVED-RESTART-STACK*");
     EXPAND_UNIVERSE(treptr_saved_restart_stack);
 }

@@ -231,12 +231,12 @@ treeval_init ()
 {
 	treeval_recursions = 0;
 
-    treeval_slot_value = symbol_get ("%SLOT-VALUE", TRECONTEXT_PACKAGE());
+    treeval_slot_value = symbol_get ("%SLOT-VALUE");
 	EXPAND_UNIVERSE(treeval_slot_value);
-    treeval_function_symbol = symbol_get ("FUNCTION", TRECONTEXT_PACKAGE());
+    treeval_function_symbol = symbol_get ("FUNCTION");
 	EXPAND_UNIVERSE(treeval_function_symbol);
 
-    treopt_verbose_eval = symbol_get ("*VERBOSE-EVAL*", TRECONTEXT_PACKAGE());
+    treopt_verbose_eval = symbol_get ("*VERBOSE-EVAL*");
     TRESYMBOL_VALUE(treopt_verbose_eval) = treptr_nil;
 	EXPAND_UNIVERSE(treopt_verbose_eval);
 }

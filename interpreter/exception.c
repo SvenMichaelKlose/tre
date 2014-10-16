@@ -45,5 +45,5 @@ void
 treexception_init ()
 {
     MAKE_SYMBOL("*EXCEPTION*", treptr_nil);
-    treptr_exception = symbol_get ("*EXCEPTION*", TRECONTEXT_PACKAGE());
+    treptr_exception = symbol_get ("*EXCEPTION*");
 }
