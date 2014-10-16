@@ -202,7 +202,7 @@ tregc_sweep (void)
         c = 1;
 		DOTIMES(j, 8) {
 	    	if (tregc_listmarks[i] & c)
-	        	trelist_free (idx);
+	        	cons_free (idx);
 
 	    	c <<= 1;
             idx++;

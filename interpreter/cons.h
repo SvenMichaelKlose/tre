@@ -67,16 +67,13 @@ struct tre_list {
 
 extern void trecons_init (void);
 
-extern struct tre_list tre_lists[NUM_LISTNODES];
-extern treptr tre_listprops[NUM_LISTNODES];
-extern treptr tre_default_listprop;
-extern treptr tre_lists_free;
+extern struct   tre_list tre_lists[NUM_LISTNODES];
+extern treptr   tre_listprops[NUM_LISTNODES];
+extern treptr   tre_default_listprop;
+extern treptr   tre_lists_free;
 extern tre_size trelist_num_used;
 
 extern treptr cons (treptr car, treptr cdr);
-extern void   trelist_free (treptr);
-extern void   trelist_free_expr (treptr);
-extern void   trelist_free_toplevel (treptr);
 
 extern treptr car (treptr);
 extern treptr cdr (treptr);
@@ -85,5 +82,9 @@ extern treptr cpr (treptr);
 extern treptr rplaca (treptr, treptr);
 extern treptr rplacd (treptr, treptr);
 extern treptr rplacp (treptr, treptr);
+
+extern void   cons_free (treptr);
+extern void   cons_free_list (treptr);
+extern void   cons_free_tree (treptr);
 
 #endif 	/* #ifndef TRE_CONS_H */

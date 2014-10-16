@@ -71,7 +71,7 @@ rplacp (treptr cons, treptr val)
 }
 
 void
-trelist_free (treptr x)
+cons_free (treptr x)
 {
     _CDR(x) = tre_lists_free;
     tre_lists_free = x;
@@ -79,26 +79,26 @@ trelist_free (treptr x)
 }
 
 void
-trelist_free_expr (treptr x)
-{
-    if (ATOMP(x))
-		return;
-
-	trelist_free_expr (CAR(x));
-	trelist_free_expr (CDR(x));
-    trelist_free (x);
-}
-
-void
-trelist_free_toplevel (treptr x)
+cons_free_list (treptr x)
 {
     treptr d;
 
     while (NOT_NIL(x)) {
         d = CDR(x);
-        trelist_free (x);
+        cons_free (x);
         x = d;
     }
+}
+
+void
+cons_free_tree (treptr x)
+{
+    if (ATOMP(x))
+		return;
+
+	cons_free_tree (CAR(x));
+	cons_free_tree (CDR(x));
+    cons_free (x);
 }
 
 void

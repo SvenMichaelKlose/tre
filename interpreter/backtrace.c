@@ -52,7 +52,7 @@ trebacktrace_pop ()
 {
 /*
     treptr ancestors = _CDR(SYMBOL_VALUE(treptr_backtrace));
-    trelist_free (SYMBOL_VALUE(treptr_backtrace));
+    cons_free (SYMBOL_VALUE(treptr_backtrace));
     SYMBOL_VALUE(treptr_backtrace) = ancestors;
 */
 }
