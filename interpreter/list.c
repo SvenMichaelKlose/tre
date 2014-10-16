@@ -14,7 +14,7 @@
 #include "number.h"
 #include "io.h"
 #include "xxx.h"
-#include "symbol.h"
+#include "symtab.h"
 
 treptr
 trelist_last (treptr l)

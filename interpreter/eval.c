@@ -23,7 +23,7 @@
 #include "string2.h"
 #include "xxx.h"
 #include "apply.h"
-#include "symbol.h"
+#include "symtab.h"
 #include "function.h"
 #include "backtrace.h"
 #include "thread.h"

@@ -18,7 +18,7 @@
 #include "argument.h"
 #include "stream.h"
 #include "string2.h"
-#include "symbol.h"
+#include "symtab.h"
 #include "builtin_stream.h"
 #include "assert.h"
 

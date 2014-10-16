@@ -21,7 +21,7 @@
 #include "special.h"
 #include "io.h"
 #include "main.h"
-#include "symbol.h"
+#include "symtab.h"
 #include "print.h"
 #include "thread.h"
 #include "image.h"
@@ -29,7 +29,6 @@
 #include "compiled.h"
 #include "bytecode.h"
 #include "queue.h"
-#include "symbol.h"
 #include "function.h"
 
 treptr treptr_jmp;

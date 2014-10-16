@@ -14,7 +14,7 @@
 #include "error.h"
 #include "number.h"
 #include "argument.h"
-#include "symbol.h"
+#include "symtab.h"
 #include "builtin.h"
 #include "builtin_number.h"
 #include "builtin_string.h"

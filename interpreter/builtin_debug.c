@@ -20,7 +20,7 @@
 #include "main.h"
 #include "builtin_debug.h"
 #include "argument.h"
-#include "symbol.h"
+#include "symtab.h"
 
 treptr
 tredebug_builtin_end_debug (treptr no_args)

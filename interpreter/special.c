@@ -27,7 +27,7 @@
 #include "io.h"
 #include "main.h"
 #include "print.h"
-#include "symbol.h"
+#include "symtab.h"
 #include "function.h"
 
 #include "builtin_debug.h"

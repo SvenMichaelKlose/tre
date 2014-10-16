@@ -24,7 +24,7 @@
 #include "special.h"
 #include "apply.h"
 #include "function.h"
-#include "symbol.h"
+#include "symtab.h"
 #include "backtrace.h"
 
 #include "builtin_debug.h"

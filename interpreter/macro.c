@@ -18,7 +18,7 @@
 #include "thread.h"
 #include "debug.h"
 #include "argument.h"
-#include "symbol.h"
+#include "symtab.h"
 
 treptr treptr_macroexpand_hook;
 treptr treptr_current_macro;

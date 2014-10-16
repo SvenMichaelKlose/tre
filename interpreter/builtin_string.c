@@ -18,7 +18,7 @@
 #include "thread.h"
 #include "argument.h"
 #include "gc.h"
-#include "symbol.h"
+#include "symtab.h"
 #include "builtin_string.h"
 
 treptr

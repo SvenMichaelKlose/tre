@@ -18,7 +18,7 @@
 #include "array.h"
 #include "string2.h"
 #include "alloc.h"
-#include "symbol.h"
+#include "symtab.h"
 #include "xxx.h"
 #include "special.h"
 #include "image.h"

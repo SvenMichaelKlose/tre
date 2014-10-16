@@ -21,7 +21,7 @@
 #include "debug.h"
 #include "thread.h"
 #include "xxx.h"
-#include "symbol.h"
+#include "symtab.h"
 
 treptr tre_atom_rest;
 treptr tre_atom_body;

@@ -7,7 +7,7 @@
 #include "ptr.h"
 #include "cons.h"
 #include "atom.h"
-#include "symbol.h"
+#include "symtab.h"
 #include "thread.h"
 
 treptr treptr_backtrace = 0;

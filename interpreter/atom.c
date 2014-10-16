@@ -17,12 +17,11 @@
 #include "builtin.h"
 #include "special.h"
 #include "io.h"
-#include "symbol.h"
+#include "symtab.h"
 #include "thread.h"
 #include "alloc.h"
 #include "util.h"
 #include "function.h"
-#include "symbol.h"
 
 #include "builtin_symbol.h"
 
@@ -73,8 +72,8 @@ treatom_init_atom_table (void)
 void
 treatom_init_truth (void)
 {
-	tre_atoms[TREPTR_NIL_INDEX] = (void *) tresymbol_add (treptr_nil, "NIL", treptr_nil, treptr_nil, treptr_nil);
-	tre_atoms[TREPTR_T_INDEX] = (void *) tresymbol_add (treptr_t, "T", treptr_t, treptr_nil, treptr_nil);
+	tre_atoms[TREPTR_NIL_INDEX] = (void *) symtab_add (treptr_nil, "NIL", treptr_nil, treptr_nil, treptr_nil);
+	tre_atoms[TREPTR_T_INDEX] = (void *) symtab_add (treptr_t, "T", treptr_t, treptr_nil, treptr_nil);
 }
 
 void
@@ -105,7 +104,7 @@ void
 treatom_init_keyword_package ()
 {
     tre_package_keyword = treatom_alloc_symbol ("", treptr_nil, treptr_nil);
-	tresymbol_set_package (TREPACKAGE_KEYWORD_INDEX, tre_package_keyword);
+	symtab_set_package (TREPACKAGE_KEYWORD_INDEX, tre_package_keyword);
 }
 
 void
@@ -173,7 +172,7 @@ treatom_alloc_symbol (char * name, treptr package, treptr value)
     if (value == treptr_invalid)
 		value = atom;
 
-	TREATOM(atom) = tresymbol_add (atom, name, value, treptr_nil, package);
+	TREATOM(atom) = symtab_add (atom, name, value, treptr_nil, package);
 
 	return atom;
 }
@@ -182,7 +181,7 @@ void
 treatom_free (treptr x)
 {
     if (TREATOM_TYPE(x) == TRETYPE_SYMBOL)
-		tresymbol_remove (x);
+		symtab_remove (x);
 
     TREATOM_TYPE(x) = TRETYPE_UNUSED;
 	trealloc_free_item (&tre_atoms_free, (void **) &tre_atoms[TREPTR_INDEX(x)]);
@@ -216,7 +215,7 @@ trechar_get (double value)
 treptr
 treatom_seek (char * symbol, treptr package)
 {
-	return tresymbol_find (symbol, package);
+	return symtab_find (symbol, package);
 }
 
 treptr

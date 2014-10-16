@@ -54,7 +54,7 @@ FILES="
 	special_exception.c
 	stream.c
 	string.c
-	symbol.c
+	symtab.c
 	thread.c
 	util.c"
 

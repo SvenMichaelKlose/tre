@@ -16,7 +16,7 @@
 #include "print.h"
 #include "thread.h"
 #include "apply.h"
-#include "symbol.h"
+#include "symtab.h"
 
 treptr treptr_dotexpand_hook;
 

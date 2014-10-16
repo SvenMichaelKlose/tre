@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2008,2012–2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2008,2012–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -16,7 +16,7 @@
 #include "print.h"
 #include "thread.h"
 #include "apply.h"
-#include "symbol.h"
+#include "symtab.h"
 
 treptr treptr_quasiquoteexpand_hook;
 

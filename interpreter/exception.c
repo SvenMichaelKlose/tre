@@ -5,7 +5,7 @@
 #include "ptr.h"
 #include "atom.h"
 #include "thread.h"
-#include "symbol.h"
+#include "symtab.h"
 #include "cons.h"
 #include "error.h"
 #include "io.h"

@@ -13,7 +13,7 @@
 #include "number.h"
 #include "io.h"
 #include "xxx.h"
-#include "symbol.h"
+#include "symtab.h"
 #include "assert.h"
 
 treptr tre_lists_free;

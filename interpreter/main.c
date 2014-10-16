@@ -28,7 +28,7 @@
 #include "error.h"
 #include "argument.h"
 #include "alloc.h"
-#include "symbol.h"
+#include "symtab.h"
 #include "string2.h"
 #include "image.h"
 #include "util.h"
@@ -196,7 +196,7 @@ tremain_init (void)
     trethread_make ();
     tregc_init ();
     trecons_init ();
-    tresymbol_init ();
+    symtab_init ();
     treatom_init ();
     trenumber_init ();
     treread_init ();

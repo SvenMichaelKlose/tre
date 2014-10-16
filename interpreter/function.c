@@ -13,7 +13,7 @@
 #include "eval.h"
 #include "gc.h"
 #include "alloc.h"
-#include "symbol.h"
+#include "symtab.h"
 
 trefunction *
 trefunction_alloc ()

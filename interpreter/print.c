@@ -25,7 +25,7 @@
 #include "string2.h"
 #include "thread.h"
 #include "array.h"
-#include "symbol.h"
+#include "symtab.h"
 #include "function.h"
 #include "builtin.h"
 #include "special.h"

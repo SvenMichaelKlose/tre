@@ -17,7 +17,7 @@
 #include "thread.h"
 #include "xxx.h"
 #include "function.h"
-#include "symbol.h"
+#include "symtab.h"
 #include "assert.h"
 #include "builtin.h"
 #include "special.h"

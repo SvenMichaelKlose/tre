@@ -21,7 +21,7 @@
 #include "special.h"
 #include "io.h"
 #include "main.h"
-#include "symbol.h"
+#include "symtab.h"
 #include "print.h"
 #include "thread.h"
 #include "image.h"
@@ -267,7 +267,7 @@ treimage_read_atoms (FILE *f)
                         treimage_read (f, &package, sizeof (treptr));
                         treimage_read (f, &value, sizeof (treptr));
                         treimage_read (f, &fun, sizeof (treptr));
-    				    TREATOM(idx) = tresymbol_add (TRETYPE_INDEX_TO_PTR(tre_atom_types[idx], idx), symbol, value, fun, package);
+    				    TREATOM(idx) = symtab_add (TRETYPE_INDEX_TO_PTR(tre_atom_types[idx], idx), symbol, value, fun, package);
                         break;
 
                     case TRETYPE_FUNCTION:
@@ -411,7 +411,7 @@ treimage_load (char *file)
     if (h.format_version != TRE_IMAGE_FORMAT_VERSION)
         goto error;
 
-	tresymbol_clear ();
+	symtab_clear ();
     treimage_read_atoms (f);
     treimage_read_conses (f);
     treimage_read_numbers (f);

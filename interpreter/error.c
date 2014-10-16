@@ -19,7 +19,7 @@
 #include "string2.h"
 #include "macro.h"
 #include "xxx.h"
-#include "symbol.h"
+#include "symtab.h"
 #include "backtrace.h"
 
 void

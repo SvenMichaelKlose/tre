@@ -25,7 +25,7 @@
 #include "builtin_stream.h"
 #include "xxx.h"
 #include "gc.h"
-#include "symbol.h"
+#include "symtab.h"
 #include "function.h"
 #include "backtrace.h"
 
