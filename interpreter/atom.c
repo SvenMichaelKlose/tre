@@ -14,8 +14,6 @@
 #include "error.h"
 #include "array.h"
 #include "gc.h"
-#include "builtin.h"
-#include "special.h"
 #include "io.h"
 #include "symtab.h"
 #include "thread.h"
@@ -32,8 +30,6 @@ tre_type tre_atom_types[NUM_ATOMS];
 #define TREPTR_NIL_INDEX	0
 #define TREPTR_T_INDEX		1
 #define TREPTR_FIRST_INDEX	2
-
-#define TREPACKAGE_KEYWORD_INDEX	1
 
 const treptr treptr_nil = TRETYPE_INDEX_TO_PTR(TRETYPE_SYMBOL, TREPTR_NIL_INDEX);
 const treptr treptr_t = TRETYPE_INDEX_TO_PTR(TRETYPE_SYMBOL, TREPTR_T_INDEX);
@@ -77,55 +73,10 @@ treatom_init_truth (void)
 }
 
 void
-treatom_init_builtins (void)
-{
-    treptr name;
-    treptr fun;
-    size_t i;
-
-    for (i = 0; tre_builtin_names[i] != NULL; i++) {
-        fun = treatom_alloc (TRETYPE_BUILTIN);
-        TREATOM(fun) = (void*) i;
-        name = treatom_alloc_symbol (tre_builtin_names[i], treptr_nil, treptr_nil);
-        tresymbol_set_function(fun, name);
-        EXPAND_UNIVERSE(name);
-    }
-
-    for (i = 0; tre_special_names[i] != NULL; i++) {
-        fun = treatom_alloc (TRETYPE_SPECIAL);
-        TREATOM(fun) = (void*) i;
-        name = treatom_alloc_symbol (tre_special_names[i], treptr_nil, treptr_nil);
-        tresymbol_set_function(fun, name);
-        EXPAND_UNIVERSE(name);
-    }
-}
-
-void
-treatom_init_keyword_package ()
-{
-    tre_package_keyword = treatom_alloc_symbol ("", treptr_nil, treptr_nil);
-	symtab_set_package (TREPACKAGE_KEYWORD_INDEX, tre_package_keyword);
-}
-
-void
-treatom_init_big_bang ()
-{
-    treptr_universe = treatom_alloc_symbol ("*UNIVERSE*", treptr_nil, treptr_nil);
-    EXPAND_UNIVERSE(treptr_t);
-    EXPAND_UNIVERSE(tre_package_keyword);
-	MAKE_SYMBOL("*KEYWORD-PACKAGE*", tre_package_keyword);
-    tre_default_listprop = treatom_alloc_symbol ("*DEFAULT-LISTPROP*", treptr_nil, treptr_nil);
-    EXPAND_UNIVERSE(tre_default_listprop);
-}
-
-void
 treatom_init (void)
 {
     treatom_init_atom_table ();
     treatom_init_truth ();
-	treatom_init_keyword_package ();
-    treatom_init_big_bang ();
-    treatom_init_builtins ();
 }
 
 treptr
@@ -162,19 +113,6 @@ treatom_alloc (int type)
     ATOM_SET(atomi, type);
 
 	return TRETYPE_INDEX_TO_PTR(type, atomi);
-}
-
-treptr
-treatom_alloc_symbol (char * name, treptr package, treptr value)
-{
-    treptr  atom = treatom_alloc (TRETYPE_SYMBOL);
-
-    if (value == treptr_invalid)
-		value = atom;
-
-	TREATOM(atom) = symtab_add (atom, name, value, treptr_nil, package);
-
-	return atom;
 }
 
 void
@@ -216,25 +154,6 @@ treptr
 treatom_seek (char * symbol, treptr package)
 {
 	return symtab_find (symbol, package);
-}
-
-treptr
-treatom_get (char * symbol, treptr package)
-{   
-    treptr  atom;
-	double  dvalue;
-
-    atom = treatom_seek (symbol, package);
-    if (atom != ATOM_NOT_FOUND)
-		return atom;
-
-    if (trenumber_is_value (symbol)) {
-		if (sscanf (symbol, "%lf", &dvalue) != 1)
-			treerror (treptr_nil, "Illegal number format %s.", symbol);
-        return treatom_number_get (dvalue, TRENUMTYPE_FLOAT);
-	}
-
-    return treatom_alloc_symbol (symbol, package, treptr_invalid);
 }
 
 void

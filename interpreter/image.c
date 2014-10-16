@@ -28,6 +28,7 @@
 #include "alloc.h"
 #include "function.h"
 #include "backtrace.h"
+#include "symbol.h"
 
 #ifdef TRE_COMPILED_CRUNSHED
 #define TRE_IMAGE_FORMAT_VERSION    (TRE_REVISION | (1 << 31))
@@ -438,6 +439,6 @@ treimage_init ()
 {
     treimage_initfun = treptr_nil;
 
-    treptr_saved_restart_stack = treatom_get ("*SAVED-RESTART-STACK*", TRECONTEXT_PACKAGE());
+    treptr_saved_restart_stack = symbol_get ("*SAVED-RESTART-STACK*", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treptr_saved_restart_stack);
 }

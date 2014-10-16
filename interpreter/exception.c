@@ -11,6 +11,7 @@
 #include "io.h"
 #include "main.h"
 #include "exception.h"
+#include "symbol.h"
 
 trecatch catchers[TRE_NUM_CATCHERS];
 int current_catcher = 0;
@@ -44,5 +45,5 @@ void
 treexception_init ()
 {
     MAKE_SYMBOL("*EXCEPTION*", treptr_nil);
-    treptr_exception = treatom_get ("*EXCEPTION*", TRECONTEXT_PACKAGE());
+    treptr_exception = symbol_get ("*EXCEPTION*", TRECONTEXT_PACKAGE());
 }

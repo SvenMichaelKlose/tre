@@ -26,6 +26,7 @@
 #include "function.h"
 #include "symtab.h"
 #include "backtrace.h"
+#include "symbol.h"
 
 #include "builtin_debug.h"
 #include "builtin_atom.h"
@@ -157,6 +158,6 @@ trefuncall (treptr func, treptr args)
 void
 treapply_init ()
 {
-    treatom_closure = treatom_get ("%CLOSURE", TRECONTEXT_PACKAGE());
+    treatom_closure = symbol_get ("%CLOSURE", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treatom_closure);
 }

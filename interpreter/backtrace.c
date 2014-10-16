@@ -8,6 +8,7 @@
 #include "cons.h"
 #include "atom.h"
 #include "symtab.h"
+#include "symbol.h"
 #include "thread.h"
 
 treptr treptr_backtrace = 0;
@@ -33,7 +34,7 @@ trebacktrace ()
 void
 trebacktrace_init ()
 {
-    treptr_backtrace = treatom_get ("*BACKTRACE*", TRECONTEXT_PACKAGE());
+    treptr_backtrace = symbol_get ("*BACKTRACE*", TRECONTEXT_PACKAGE());
     TRESYMBOL_VALUE(treptr_backtrace) = treptr_nil;
 }
 

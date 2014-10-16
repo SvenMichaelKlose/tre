@@ -21,6 +21,7 @@
 #include "io_std.h"
 #include "thread.h"
 #include "special.h"
+#include "symbol.h"
 #include "alien.h"
 #include "apply.h"
 #include "builtin_arith.h"
@@ -186,10 +187,10 @@ trebuiltin_intern (treptr args)
 
     n = TREPTR_STRINGZ(name);
     p = NOT_NIL(package) ?
-            treatom_get (TREPTR_STRINGZ(package), treptr_nil) :
+            symbol_get (TREPTR_STRINGZ(package), treptr_nil) :
             treptr_nil;
 
-    return treatom_get (n, p);
+    return symbol_get (n, p);
 }
 
 treptr
@@ -520,4 +521,20 @@ treptr
 trebuiltin (treptr func, treptr args)
 {
     return treeval_xlat_function (treeval_xlat_builtin, func, args, TRUE);
+}
+
+void
+trebuiltin_init ()
+{
+    treptr name;
+    treptr fun;
+    size_t i;
+
+    for (i = 0; tre_builtin_names[i] != NULL; i++) {
+        fun = treatom_alloc (TRETYPE_BUILTIN);
+        TREATOM(fun) = (void*) i;
+        name = symbol_alloc (tre_builtin_names[i], treptr_nil, treptr_nil);
+        tresymbol_set_function(fun, name);
+        EXPAND_UNIVERSE(name);
+    }
 }

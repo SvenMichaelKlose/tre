@@ -28,6 +28,7 @@
 #include "main.h"
 #include "print.h"
 #include "symtab.h"
+#include "symbol.h"
 #include "function.h"
 
 #include "builtin_debug.h"
@@ -363,13 +364,25 @@ void
 trespecial_init ()
 {
 #ifdef INTERPRETER
-    tre_atom_evaluated_go = treatom_get ("%%EVALD-GO", TRECONTEXT_PACKAGE());
+    treptr name;
+    treptr fun;
+    size_t i;
+
+    for (i = 0; tre_special_names[i] != NULL; i++) {
+        fun = treatom_alloc (TRETYPE_SPECIAL);
+        TREATOM(fun) = (void*) i;
+        name = symbol_alloc (tre_special_names[i], treptr_nil, treptr_nil);
+        tresymbol_set_function(fun, name);
+        EXPAND_UNIVERSE(name);
+    }
+
+    tre_atom_evaluated_go = symbol_get ("%%EVALD-GO", TRECONTEXT_PACKAGE());
 	EXPAND_UNIVERSE(tre_atom_evaluated_go);
 
-    tre_atom_evaluated_return_from = treatom_get ("%%EVALD-RETURN-FROM", TRECONTEXT_PACKAGE());
+    tre_atom_evaluated_return_from = symbol_get ("%%EVALD-RETURN-FROM", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(tre_atom_evaluated_return_from);
 
-    treatom_lambda = treatom_get ("LAMBDA", TRECONTEXT_PACKAGE());
+    treatom_lambda = symbol_get ("LAMBDA", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treatom_lambda);
 #endif /* #ifdef INTERPRETER */
 }

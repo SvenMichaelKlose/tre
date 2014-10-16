@@ -13,37 +13,15 @@ extern void * tre_atoms_free;
 extern void * tre_atoms[NUM_ATOMS];
 extern tre_type tre_atom_types[NUM_ATOMS];
 
-extern treptr treptr_universe;
-extern treptr tre_package_keyword;
-
 #define ATOM_SET(index, typ) \
 	tre_atoms[index] = NULL; \
 	tre_atom_types[index] = typ
 
-#define EXPAND_UNIVERSE(ptr) \
-    (TRESYMBOL_VALUE(treptr_universe) = CONS(ptr, TRESYMBOL_VALUE(treptr_universe)))
-
-#define MAKE_HOOK_SYMBOL(var, symbol_name) \
-    var = treatom_alloc_symbol (symbol_name, TRECONTEXT_PACKAGE(), treptr_nil); \
-    EXPAND_UNIVERSE(var)
-
-#define MAKE_SYMBOL(symbol_name, init) \
-    if (treatom_seek (symbol_name, TRECONTEXT_PACKAGE()) == ATOM_NOT_FOUND) { \
-        EXPAND_UNIVERSE(treatom_alloc_symbol (symbol_name, TRECONTEXT_PACKAGE(), init)); \
-    } else { \
-        TRESYMBOL_VALUE(treatom_get (symbol_name, TRECONTEXT_PACKAGE())) = init; \
-    }
-
 extern void treatom_init (void);
 
-#define ATOM_NOT_FOUND  treptr_invalid
-extern treptr treatom_seek (char *, treptr package);
-
-extern treptr treatom_get (char *, treptr package);
 extern treptr treatom_number_get (double, int type);
 
 extern treptr treatom_alloc (int type);
-extern treptr treatom_alloc_symbol (char * symbol, treptr package, treptr value);
 extern void   treatom_remove (treptr);
 
 extern treptr treatom_body_to_var (treptr body);

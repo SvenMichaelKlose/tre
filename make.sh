@@ -55,6 +55,7 @@ FILES="
 	stream.c
 	string.c
 	symtab.c
+	symbol.c
 	thread.c
 	util.c"
 

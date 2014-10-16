@@ -20,6 +20,7 @@
 #include "number.h"
 #include "error.h"
 #include "symtab.h"
+#include "symbol.h"
 
 #define TRETOKEN_EOF			       0
 #define TRETOKEN_BRACKET_OPEN	       1
@@ -264,11 +265,11 @@ treread_atom (trestream * stream)
     if (TRECONTEXT_TOKEN() < TRETOKEN_SYMBOL)
 		return treerror (treptr_invalid, "Syntax error.");
 
-    return treatom_get (
+    return symbol_get (
 		TRECONTEXT_TOKEN_NAME(),
     	(*TRECONTEXT_PACKAGE_NAME() == -1)
 	   		? treptr_nil
-	   		: treatom_get (TRECONTEXT_PACKAGE_NAME(), treptr_nil)
+	   		: symbol_get (TRECONTEXT_PACKAGE_NAME(), treptr_nil)
 	);
 }
 
@@ -428,15 +429,15 @@ treread_init ()
     TRECONTEXT_TOKEN() = (int) -1;
     TRECONTEXT_TOKEN_NAME()[0] = 0;
 
-    treatom_quote = treatom_get ("QUOTE", TRECONTEXT_PACKAGE());
-    treatom_backquote = treatom_get ("BACKQUOTE", TRECONTEXT_PACKAGE());
-    treatom_quasiquote = treatom_get ("QUASIQUOTE", TRECONTEXT_PACKAGE());
-    treatom_quasiquote_splice = treatom_get ("QUASIQUOTE-SPLICE", TRECONTEXT_PACKAGE());
-    treatom_function = treatom_get ("FUNCTION", TRECONTEXT_PACKAGE());
-    treatom_accent_circonflex = treatom_get ("ACCENT-CIRCONFLEX", TRECONTEXT_PACKAGE());
-    treatom_square = treatom_get ("SQUARE", TRECONTEXT_PACKAGE());
-    treatom_curly = treatom_get ("CURLY", TRECONTEXT_PACKAGE());
-    treatom_cons = treatom_get ("CONS", TRECONTEXT_PACKAGE());
+    treatom_quote = symbol_get ("QUOTE", TRECONTEXT_PACKAGE());
+    treatom_backquote = symbol_get ("BACKQUOTE", TRECONTEXT_PACKAGE());
+    treatom_quasiquote = symbol_get ("QUASIQUOTE", TRECONTEXT_PACKAGE());
+    treatom_quasiquote_splice = symbol_get ("QUASIQUOTE-SPLICE", TRECONTEXT_PACKAGE());
+    treatom_function = symbol_get ("FUNCTION", TRECONTEXT_PACKAGE());
+    treatom_accent_circonflex = symbol_get ("ACCENT-CIRCONFLEX", TRECONTEXT_PACKAGE());
+    treatom_square = symbol_get ("SQUARE", TRECONTEXT_PACKAGE());
+    treatom_curly = symbol_get ("CURLY", TRECONTEXT_PACKAGE());
+    treatom_cons = symbol_get ("CONS", TRECONTEXT_PACKAGE());
 
     EXPAND_UNIVERSE(treatom_quote);
     EXPAND_UNIVERSE(treatom_backquote);

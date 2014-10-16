@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2008,2012–2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2008,2012–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #include "config.h"
@@ -17,6 +17,7 @@
 #include "thread.h"
 #include "apply.h"
 #include "symtab.h"
+#include "symbol.h"
 
 treptr treptr_dotexpand_hook;
 
@@ -31,7 +32,7 @@ tredot_expand (treptr list)
 void
 tredot_init (void)
 {
-    treptr_dotexpand_hook = treatom_get ("*DOTEXPAND-HOOK*", TRECONTEXT_PACKAGE());
+    treptr_dotexpand_hook = symbol_get ("*DOTEXPAND-HOOK*", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treptr_dotexpand_hook);
 }
 

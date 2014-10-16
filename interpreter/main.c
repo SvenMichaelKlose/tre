@@ -40,6 +40,7 @@
 #include "function.h"
 #include "exception.h"
 #include "backtrace.h"
+#include "symbol.h"
 
 #ifdef TRE_HAVE_COMPILED_ENV
 	treptr userfun_cInit (void);
@@ -198,6 +199,9 @@ tremain_init (void)
     trecons_init ();
     symtab_init ();
     treatom_init ();
+    tresymbol_init ();
+    trebuiltin_init ();
+    trespecial_init ();
     trenumber_init ();
     treread_init ();
     trearg_init ();
@@ -206,7 +210,6 @@ tremain_init (void)
     tremacro_init ();
     trequasiquote_init ();
     tredot_init ();
-    trespecial_init ();
     treimage_init ();
     treexception_init ();
 
@@ -216,7 +219,7 @@ tremain_init (void)
     MAKE_SYMBOL("*OS-VERSION*",       trestring_get (TRE_OS_VERSION));
     MAKE_SYMBOL("*ENVIRONMENT-PATH*", trestring_get (TRE_ENVIRONMENT));
 	MAKE_SYMBOL("*LIBC-PATH*",        trestring_get (LIBC_PATH));
-	MAKE_SYMBOL("*ENDIANESS*",        treatom_alloc_symbol (TRE_ENDIANESS_STRING, TRECONTEXT_PACKAGE(), treptr_invalid));
+	MAKE_SYMBOL("*ENDIANESS*",        symbol_alloc (TRE_ENDIANESS_STRING, TRECONTEXT_PACKAGE(), treptr_invalid));
 	MAKE_SYMBOL("*POINTER-SIZE*",     treatom_number_get (sizeof (void *), TRENUMTYPE_INTEGER));
 	MAKE_SYMBOL("*RAND-MAX*",         treatom_number_get (RAND_MAX, TRENUMTYPE_INTEGER));
 

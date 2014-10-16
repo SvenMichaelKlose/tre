@@ -38,6 +38,7 @@
 		   "special_exception.h"
 		   "string2.h"
 		   "symtab.h"
+		   "symbol.h"
 		   "io.h"
 		   "main.h"
 		   "xxx.h"

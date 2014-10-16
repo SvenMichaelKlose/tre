@@ -21,6 +21,7 @@
 #include "assert.h"
 #include "builtin.h"
 #include "special.h"
+#include "symbol.h"
 
 treptr
 trefunction_native (treptr fun)
@@ -47,7 +48,7 @@ trefunction_set_bytecode (treptr array, treptr fun)
 treptr
 trefunction_core_name (char ** map, treptr fun)
 {
-        return treatom_get (map[(size_t) TREATOM(fun)], TRECONTEXT_PACKAGE());
+        return symbol_get (map[(size_t) TREATOM(fun)], TRECONTEXT_PACKAGE());
 }
 
 treptr

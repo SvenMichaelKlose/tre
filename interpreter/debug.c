@@ -28,6 +28,7 @@
 #include "symtab.h"
 #include "function.h"
 #include "backtrace.h"
+#include "symbol.h"
 
 int    tredebug_mode;
 treptr tredebug_next;
@@ -190,7 +191,7 @@ tredebug_set_breakpoint (char *name)
     treptr  fatom;
     size_t  i;
 
-    atom = treatom_seek (name, TRECONTEXT_PACKAGE());
+    atom = symtab_find (name, TRECONTEXT_PACKAGE());
     if (NOT(atom)) {
         printf ("Couldn't breakpoint unknown atom %s.\n", name);
         return FALSE;
@@ -333,8 +334,8 @@ tredebug_print (void)
     }
 
     DOTIMES(i, tredebug_argc) {
-	atom = treatom_seek (tredebug_argv[i], TRECONTEXT_PACKAGE());
-        if (atom == ATOM_NOT_FOUND) {
+	atom = symtab_find (tredebug_argv[i], TRECONTEXT_PACKAGE());
+        if (atom == treptr_invalid) {
 	    	printf ("Symbol not found.\n");
 	    	return;
 		}
@@ -585,7 +586,7 @@ void
 tredebug_init_late (void)
 {
     MAKE_SYMBOL("*MILESTONE*", treptr_nil);
-    treptr_milestone = treatom_get ("*MILESTONE*", TRECONTEXT_PACKAGE());
+    treptr_milestone = symbol_get ("*MILESTONE*", TRECONTEXT_PACKAGE());
 }
 
 treptr

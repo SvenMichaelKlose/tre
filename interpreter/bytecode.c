@@ -30,6 +30,7 @@
 #include "bytecode.h"
 #include "queue.h"
 #include "function.h"
+#include "symbol.h"
 
 treptr treptr_jmp;
 treptr treptr_cond;
@@ -244,24 +245,24 @@ trecode_call (treptr fun, treptr args)
 void
 trecode_init ()
 {
-    treptr_set_vec = treatom_get ("%BC-SET-VEC", TRECONTEXT_PACKAGE());
+    treptr_set_vec = symbol_get ("%BC-SET-VEC", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treptr_set_vec);
-    treptr_jmp = treatom_get ("%%GO", TRECONTEXT_PACKAGE());
+    treptr_jmp = symbol_get ("%%GO", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treptr_jmp);
-    treptr_cond = treatom_get ("%%GO-NIL", TRECONTEXT_PACKAGE());
+    treptr_cond = symbol_get ("%%GO-NIL", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treptr_cond);
-    treptr_cond_not_nil = treatom_get ("%%GO-NOT-NIL", TRECONTEXT_PACKAGE());
+    treptr_cond_not_nil = symbol_get ("%%GO-NOT-NIL", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treptr_cond_not_nil);
-    treptr_vec = treatom_get ("%VEC", TRECONTEXT_PACKAGE());
+    treptr_vec = symbol_get ("%VEC", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treptr_vec);
-    treptr_set_atom_fun = treatom_get ("%SET-ATOM-FUN", TRECONTEXT_PACKAGE());
+    treptr_set_atom_fun = symbol_get ("%SET-ATOM-FUN", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treptr_set_atom_fun);
-    treptr_cons = treatom_get ("CONS", TRECONTEXT_PACKAGE());
+    treptr_cons = symbol_get ("CONS", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treptr_cons);
-    treptr_quote = treatom_get ("%QUOTE", TRECONTEXT_PACKAGE());
+    treptr_quote = symbol_get ("%QUOTE", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treptr_quote);
-    treptr_closure = treatom_get ("%CLOSURE", TRECONTEXT_PACKAGE());
+    treptr_closure = symbol_get ("%CLOSURE", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treptr_closure);
-    treptr_quote = treatom_get ("%QUOTE", TRECONTEXT_PACKAGE());
+    treptr_quote = symbol_get ("%QUOTE", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treptr_quote);
 }

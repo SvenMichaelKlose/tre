@@ -22,6 +22,7 @@
 #include "thread.h"
 #include "xxx.h"
 #include "symtab.h"
+#include "symbol.h"
 
 treptr tre_atom_rest;
 treptr tre_atom_body;
@@ -297,16 +298,16 @@ next:
 treptr
 trearg_get_keyword (treptr a)
 {
-    return treatom_get (TRESYMBOL_NAME(a), tre_package_keyword);
+    return symbol_get (TRESYMBOL_NAME(a), tre_package_keyword);
 }
 
 void
 trearg_init (void)
 {
-    tre_atom_rest = treatom_get ("&REST", treptr_nil);
-    tre_atom_body = treatom_get ("&BODY", treptr_nil);
-    tre_atom_optional = treatom_get ("&OPTIONAL", treptr_nil);
-    tre_atom_key = treatom_get ("&KEY", treptr_nil);
+    tre_atom_rest = symbol_get ("&REST", treptr_nil);
+    tre_atom_body = symbol_get ("&BODY", treptr_nil);
+    tre_atom_optional = symbol_get ("&OPTIONAL", treptr_nil);
+    tre_atom_key = symbol_get ("&KEY", treptr_nil);
     EXPAND_UNIVERSE(tre_atom_rest);
     EXPAND_UNIVERSE(tre_atom_body);
     EXPAND_UNIVERSE(tre_atom_optional);

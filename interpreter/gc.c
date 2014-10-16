@@ -23,6 +23,7 @@
 #include "special.h"
 #include "image.h"
 #include "function.h"
+#include "symbol.h"
 
 #include "io.h"
 #include "main.h"
@@ -163,7 +164,7 @@ tregc_mark_stack (void)
 void
 tregc_mark ()
 {
-    treptr universe = TRESYMBOL_VALUE(treatom_get ("*UNIVERSE*", TRECONTEXT_PACKAGE()));
+    treptr universe = TRESYMBOL_VALUE(symbol_get ("*UNIVERSE*", TRECONTEXT_PACKAGE()));
 	tregc_init_maps ();
 
     tregc_trace_object (universe);

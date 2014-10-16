@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2009–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2009–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun c-make-decl (name)
   (format nil "treptr ~A;~%" (obfuscated-identifier name)))
@@ -23,7 +23,7 @@
 
 (c-define-compiled-literal c-compiled-symbol (x symbol)
   :maker ($ 'tresymbol_compiled_ x (? (keyword? x) '_keyword ""))
-  :init-maker `(tregc_add_unremovable (treatom_get (%%native (%%string ,(symbol-name x)))
-			                                       ,(? (keyword? x)
-				                                       'tre_package_keyword
-				                                       'treptr_nil))))
+  :init-maker `(tregc_add_unremovable (symbol_get (%%native (%%string ,(symbol-name x)))
+			                                      ,(? (keyword? x)
+				                                      'tre_package_keyword
+				                                      'treptr_nil))))

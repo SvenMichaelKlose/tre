@@ -17,6 +17,7 @@
 #include "thread.h"
 #include "apply.h"
 #include "symtab.h"
+#include "symbol.h"
 
 treptr treptr_quasiquoteexpand_hook;
 
@@ -32,7 +33,7 @@ trequasiquote_expand (treptr list)
 void
 trequasiquote_init (void)
 {
-    treptr_quasiquoteexpand_hook = treatom_get ("*QUASIQUOTEEXPAND-HOOK*", TRECONTEXT_PACKAGE());
+    treptr_quasiquoteexpand_hook = symbol_get ("*QUASIQUOTEEXPAND-HOOK*", TRECONTEXT_PACKAGE());
     EXPAND_UNIVERSE(treptr_quasiquoteexpand_hook);
 }
 
