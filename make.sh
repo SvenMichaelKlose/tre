@@ -80,7 +80,7 @@ BUILDOPTS="-Ofast -mtune=native"
 CRUNSHOPTS="-Ofast -mtune=native --whole-program"
 CRUNSHFLAGS="-DTRE_COMPILED_CRUNSHED -Iinterpreter"
 
-LIBFLAGS="-lm -lffi -ldl -lrt"
+LIBFLAGS="-lm -lffi -lrt"
 
 if [ -f /lib/x86_64-linux-gnu/libdl.so* ]; then
 	LIBFLAGS="$LIBFLAGS -ldl";
