@@ -206,8 +206,8 @@ treeval_list (treptr x)
 treptr
 treeval_args (treptr x)
 {
-    treptr  car;
-    treptr  cdr;
+    treptr  a;
+    treptr  d;
     treptr  val;
 
     RETURN_NIL(x);
@@ -216,10 +216,10 @@ treeval_args (treptr x)
 		return x;
 
     tregc_push (x);
-    car = treeval (CAR(x));
-    tregc_push (car);
-    cdr = treeval_args (CDR(x));
-    val = CONS(car, cdr);
+    a = treeval (CAR(x));
+    tregc_push (a);
+    d = treeval_args (CDR(x));
+    val = CONS(a, d);
     tregc_pop ();
     tregc_pop ();
 

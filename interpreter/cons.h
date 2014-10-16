@@ -21,16 +21,16 @@ struct tre_list {
 
 #define _CADR(x) 	_CAR(_CDR(x))
 
-#define CONS(a,d)	trelist_get (a, d)
+#define CONS(a, d)  cons (a, d)
 
 #ifdef TRE_NO_ASSERTIONS
 #define CAR(x) 		_CAR(x)
 #define CDR(x) 		_CDR(x)
 #define CPR(x) 		_CPR(x)
 #else
-#define CAR(x) 		(trelist_car (x))
-#define CDR(x) 		(trelist_cdr (x))
-#define CPR(x) 		(trelist_cpr (x))
+#define CAR(x) 		(car (x))
+#define CDR(x) 		(cdr (x))
+#define CPR(x) 		(cpr (x))
 #endif
 
 #define CADR(x) 	CAR(CDR(x))
@@ -47,9 +47,9 @@ struct tre_list {
 #define SECOND(x) 	CADR(x)
 #define THIRD(x) 	CADDR(x)
 
-#define RPLACA(x,v) 	(trelist_rplaca (x, v))
-#define RPLACD(x,v) 	(trelist_rplacd (x, v))
-#define RPLACP(x,v) 	(trelist_rplacp (x, v))
+#define RPLACA(x,v) 	(rplaca (x, v))
+#define RPLACD(x,v) 	(rplacd (x, v))
+#define RPLACP(x,v) 	(rplacp (x, v))
 
 #define _RPLACA(x,v) 	(_CAR(x) = v)
 #define _RPLACD(x,v) 	(_CDR(x) = v)
@@ -73,17 +73,17 @@ extern treptr tre_default_listprop;
 extern treptr tre_lists_free;
 extern tre_size trelist_num_used;
 
-extern treptr trelist_get (treptr car, treptr cdr);
+extern treptr cons (treptr car, treptr cdr);
 extern void   trelist_free (treptr);
 extern void   trelist_free_expr (treptr);
 extern void   trelist_free_toplevel (treptr);
 
-extern treptr trelist_car (treptr);
-extern treptr trelist_cdr (treptr);
-extern treptr trelist_cpr (treptr);
+extern treptr car (treptr);
+extern treptr cdr (treptr);
+extern treptr cpr (treptr);
 
-extern treptr trelist_rplaca (treptr, treptr);
-extern treptr trelist_rplacd (treptr, treptr);
-extern treptr trelist_rplacp (treptr, treptr);
+extern treptr rplaca (treptr, treptr);
+extern treptr rplacd (treptr, treptr);
+extern treptr rplacp (treptr, treptr);
 
 #endif 	/* #ifndef TRE_CONS_H */

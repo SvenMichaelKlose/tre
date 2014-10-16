@@ -91,7 +91,7 @@ trestring_builtin_compare (treptr list)
 	char *    x;
 	char *    y;
 	treptr    p;
-	treptr    car;
+	treptr    a;
 	tre_size  len;
 
 	if (STRINGP(CAR(list)) == FALSE)
@@ -100,13 +100,13 @@ trestring_builtin_compare (treptr list)
 	x = TREPTR_STRINGZ(CAR(list));
 	len = TREPTR_STRINGLEN(CAR(list));
     DOLIST(p, CDR(list)) {
-		car = CAR(p);
-		if (STRINGP(car) == FALSE)
+		a = CAR(p);
+		if (STRINGP(a) == FALSE)
 			treerror_norecover (list, "String expected.");
-		if (NOT(car))
+		if (NOT(a))
 			continue;
-		y = TREPTR_STRINGZ(car);
-		if (len != TREPTR_STRINGLEN(car))
+		y = TREPTR_STRINGZ(a);
+		if (len != TREPTR_STRINGLEN(a))
 			return treptr_nil;
 		if (memcmp (x, y, len))
 			return treptr_nil;
@@ -121,7 +121,7 @@ trestring_builtin_concat (treptr list)
 {
     char *    news;
     treptr    p;
-    treptr    car;
+    treptr    a;
     treptr    atom;
     char *    newp;
     tre_size  len = 0;
@@ -130,8 +130,8 @@ trestring_builtin_concat (treptr list)
     DOLIST(p, list) {
 		if (NOT(CAR(p)))
 			continue;
-        car = trearg_typed (argnum++, TRETYPE_STRING, CAR(p), "STRING-CONCAT");
-	   	len += TREPTR_STRINGLEN(car);
+        a = trearg_typed (argnum++, TRETYPE_STRING, CAR(p), "STRING-CONCAT");
+	   	len += TREPTR_STRINGLEN(a);
     }
 
     news = trestring_get_raw (len);
@@ -144,12 +144,12 @@ trestring_builtin_concat (treptr list)
     newp = TRESTRING_DATA(news);
 
     DOLIST(p, list) {
-        car = CAR(p);
-		if (NOT(car))
+        a = CAR(p);
+		if (NOT(a))
 			continue;
 
-		len = TREPTR_STRINGLEN(car);
-		memcpy (newp, TREPTR_STRINGZ(car), len);
+		len = TREPTR_STRINGLEN(a);
+		memcpy (newp, TREPTR_STRINGZ(a), len);
 		newp += len;
 	}
 

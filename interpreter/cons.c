@@ -23,7 +23,7 @@ treptr tre_default_listprop;
 tre_size trelist_num_used;
 
 treptr
-trelist_car (treptr x)
+car (treptr x)
 {
     ASSERT_LIST(x);
     RETURN_NIL(x);
@@ -31,7 +31,7 @@ trelist_car (treptr x)
 }
 
 treptr
-trelist_cdr (treptr x)
+cdr (treptr x)
 {
     ASSERT_LIST(x);
     RETURN_NIL(x);
@@ -39,7 +39,7 @@ trelist_cdr (treptr x)
 }
 
 treptr
-trelist_cpr (treptr x)
+cpr (treptr x)
 {
     ASSERT_LIST(x);
     RETURN_NIL(x);
@@ -47,7 +47,7 @@ trelist_cpr (treptr x)
 }
 
 treptr
-trelist_rplaca (treptr cons, treptr val)
+rplaca (treptr cons, treptr val)
 {
     ASSERT_CONS(cons);
     _CAR(cons) = val;
@@ -55,7 +55,7 @@ trelist_rplaca (treptr cons, treptr val)
 }
 
 treptr
-trelist_rplacd (treptr cons, treptr val)
+rplacd (treptr cons, treptr val)
 {
     ASSERT_CONS(cons);
     _CDR(cons) = val;
@@ -63,7 +63,7 @@ trelist_rplacd (treptr cons, treptr val)
 }
 
 treptr
-trelist_rplacp (treptr cons, treptr val)
+rplacp (treptr cons, treptr val)
 {
     ASSERT_CONS(cons);
     _CPR(cons) = val;
@@ -71,33 +71,33 @@ trelist_rplacp (treptr cons, treptr val)
 }
 
 void
-trelist_free (treptr node)
+trelist_free (treptr x)
 {
-    _CDR(node) = tre_lists_free;
-    tre_lists_free = node;
+    _CDR(x) = tre_lists_free;
+    tre_lists_free = x;
     trelist_num_used--;
 }
 
 void
-trelist_free_expr (treptr node)
+trelist_free_expr (treptr x)
 {
-    if (ATOMP(node))
+    if (ATOMP(x))
 		return;
 
-	trelist_free_expr (CAR(node));
-	trelist_free_expr (CDR(node));
-    trelist_free (node);
+	trelist_free_expr (CAR(x));
+	trelist_free_expr (CDR(x));
+    trelist_free (x);
 }
 
 void
-trelist_free_toplevel (treptr node)
+trelist_free_toplevel (treptr x)
 {
-    treptr cdr;
+    treptr d;
 
-    while (NOT_NIL(node)) {
-        cdr = CDR(node);
-        trelist_free (node);
-        node = cdr;
+    while (NOT_NIL(x)) {
+        d = CDR(x);
+        trelist_free (x);
+        x = d;
     }
 }
 
@@ -116,7 +116,7 @@ trelist_gc (treptr car, treptr cdr)
 }
 
 treptr
-trelist_get (treptr car, treptr cdr)
+cons (treptr car, treptr cdr)
 {
     treptr cons;
 

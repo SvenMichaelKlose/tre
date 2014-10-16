@@ -28,17 +28,17 @@ trelist_last (treptr l)
 treptr
 trelist_copy_tree (treptr l)
 {
-    treptr car;
-    treptr cdr;
+    treptr a;
+    treptr d;
     treptr ret;
 
     if (ATOMP(l))
 		return l;
 
-    car = trelist_copy_tree (CAR(l));
-    tregc_push (car);
-    cdr = trelist_copy_tree (CDR(l));
-    ret = CONS(car, cdr);
+    a = trelist_copy_tree (CAR(l));
+    tregc_push (a);
+    d = trelist_copy_tree (CDR(l));
+    ret = CONS(a, d);
     tregc_pop ();
 
     return ret;

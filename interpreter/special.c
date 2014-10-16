@@ -43,36 +43,36 @@ treptr tre_atom_evaluated_return_from;
 treptr
 trespecial_setq (treptr list)
 {
-    treptr  car;
-    treptr  cdr;
+    treptr  a;
+    treptr  d;
     treptr  tmp;
-	long     argnum = 1;
+	long    argnum = 1;
 
     while (NOT(list))
 		list = treerror (treptr_invalid, "Arguments expected.");
 
     do {
-		car = trearg_typed (argnum, TRETYPE_SYMBOL, CAR(list), "SETQ place");
+		a = trearg_typed (argnum, TRETYPE_SYMBOL, CAR(list), "SETQ place");
 
 		argnum++;
         list = CDR(list);
         if (NOT(list)) {
-	    	cdr = treerror (list, "Even number arguments expected - please provide the missing one.");
+	    	d = treerror (list, "Even number arguments expected - please provide the missing one.");
 			list = treptr_nil;
 		} else {
         	tmp = CDR(list);
-        	cdr = treeval (CAR(list));
+        	d = treeval (CAR(list));
         	list = tmp;
 		}
 
-		TREEVAL_RETURN_JUMP(cdr);
+		TREEVAL_RETURN_JUMP(d);
 
-        tresymbol_set_value (cdr, car);
+        tresymbol_set_value (d, a);
 
 		argnum++;
     } while (NOT_NIL(list));
 
-    return cdr;
+    return d;
 }
 
 treptr
@@ -273,7 +273,7 @@ trespecial_tagbody (treptr body)
     treptr res = treptr_nil;
     treptr tag;
     treptr p;
-    treptr car;
+    treptr a;
 
     p = body;
     while (1) {
@@ -281,11 +281,11 @@ tag_found:
 		if (NOT(p))
 	    	break;
 
-		car = CAR(p);
-		if (ATOMP(car))
+		a = CAR(p);
+		if (ATOMP(a))
             goto next;
 
-        res = treeval (car);
+        res = treeval (a);
 
         if (treeval_is_return (res))
             return res;

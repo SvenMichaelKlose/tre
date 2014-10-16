@@ -102,14 +102,14 @@
 		(SYMBOL-PACKAGE     builtin_symbol_package  &rest x))
 
 	(trelist_
-		(CONS               get     a b)
-    	(CAR                nil     x)
-		(CDR                nil     x)
-		(CPR                nil     x)
-		(RPLACA             nil     x v)
-		(RPLACD             nil     x v)
-		(RPLACP             nil     x v)
-   	    (CONS?              consp   x))
+		(CONS               (cons)    a b)
+    	(CAR                (car)     x)
+		(CDR                (cdr)     x)
+		(CPR                (cpr)     x)
+		(RPLACA             (rplaca)  x v)
+		(RPLACD             (rplacd)  x v)
+		(RPLACP             (rplacp)  x v)
+   	    (CONS?              consp     x))
 
 	(tresequence_
     	(ELT                builtin_elt     &rest x)
@@ -173,7 +173,9 @@
 		(dolist (f .grp)
           (& (href h f.)
              (error "Built-in function ~A is defined more than once." f.))
-		  (= (href h f.) (+ head (string-downcase (symbol-name (| .f. f.)))))
+		  (= (href h f.) (? (cons? .f.)
+                            (string-downcase (symbol-name (car .f.)))
+                            (+ head (string-downcase (symbol-name (| .f. f.))))))
 		  (= (href *c-builtin-argdefs* f.) ..f))))))
 
 (defun c-builtin-names ()
