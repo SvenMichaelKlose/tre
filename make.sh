@@ -159,8 +159,9 @@ crunsh_compile ()
 install_it ()
 {
 	sudo cp -v tre $BINDIR || exit 1
-    mkdir -p /usr/local/lib/tre
-    cp -v image /usr/local/lib/tre || exit 1
+    sudo mkdir -p /usr/local/lib/tre
+    sudo cp -v image /usr/local/lib/tre || exit 1
+    sudo cp -rv environment /usr/local/lib/tre || exit 1
 }
 
 case $1 in
