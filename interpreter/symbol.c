@@ -31,19 +31,11 @@ treptr
 symbol_get (char * symbol, treptr package)
 {   
     treptr  atom;
-	double  dvalue;
 
     atom = symtab_find (symbol, package);
-    if (atom != treptr_invalid)
-		return atom;
-
-    if (trenumber_is_value (symbol)) {
-		if (sscanf (symbol, "%lf", &dvalue) != 1)
-			treerror (treptr_nil, "Illegal number format %s.", symbol);
-        return number_get_float (dvalue);
-	}
-
-    return symbol_alloc (symbol, package, treptr_invalid);
+    if (atom == treptr_invalid)
+        return symbol_alloc (symbol, package, treptr_invalid);
+    return atom;
 }
 
 void

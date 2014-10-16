@@ -253,6 +253,9 @@ treread_hexnum (trestream * stream)
 treptr
 treread_atom (trestream * stream)
 {
+    char * name = TRECONTEXT_TOKEN_NAME();
+    double number;
+
     if (TRECONTEXT_TOKEN() == TRETOKEN_DBLQUOTE)
 		return treread_string (stream);
 
@@ -265,11 +268,17 @@ treread_atom (trestream * stream)
     if (TRECONTEXT_TOKEN() < TRETOKEN_SYMBOL)
 		return treerror (treptr_invalid, "Syntax error.");
 
+    if (trenumber_is_value (name)) {
+        if (sscanf (name, "%lf", &number) != 1)
+            treerror (treptr_nil, "Illegal number format %s.", name);
+        return number_get_float (number);
+    }
+
     return symbol_get (
-		TRECONTEXT_TOKEN_NAME(),
-    	(*TRECONTEXT_PACKAGE_NAME() == -1)
-	   		? treptr_nil
-	   		: symbol_get (TRECONTEXT_PACKAGE_NAME(), treptr_nil)
+		name,
+    	(*TRECONTEXT_PACKAGE_NAME() == -1) ?
+            treptr_nil :
+            symbol_get (TRECONTEXT_PACKAGE_NAME(), treptr_nil)
 	);
 }
 
