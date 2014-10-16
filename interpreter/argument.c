@@ -119,6 +119,7 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
     treptr form;
     treptr init;
     treptr key;
+    treptr kw;
     treptr original_argdef = argdef;
     treptr original_args = args;
     tre_size kpos;
@@ -231,7 +232,8 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
  				}
 
                 /* Get position of key in argument list. */
-				kpos = (tre_size) trelist_position_name (key, args);
+                kw = symbol_get_packaged (SYMBOL_NAME(key), tre_package_keyword);
+				kpos = (tre_size) trelist_position (kw, args);
 	 			if (kpos != (tre_size) -1) {
 		    		/* Get argument after key. */
 		    		svals = trelist_nth (args, kpos + 1);
