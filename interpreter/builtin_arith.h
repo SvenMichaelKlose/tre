@@ -44,4 +44,6 @@ extern treptr trenumber_builtin_number_equal (treptr);
 extern treptr trenumber_builtin_lessp (treptr);
 extern treptr trenumber_builtin_greaterp (treptr);
 
+extern void   trebuiltin_arith_init (void);
+
 #endif	/* #ifndef TRE_BUILTIN_ARITH_H */

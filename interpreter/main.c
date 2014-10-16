@@ -35,6 +35,7 @@
 #include "dot.h"
 #include "quasiquote.h"
 #include "apply.h"
+#include "builtin_arith.h"
 #include "builtin_list.h"
 #include "bytecode.h"
 #include "function.h"
@@ -201,6 +202,7 @@ tremain_init (void)
     treatom_init ();
     tresymbol_init ();
     trebuiltin_init ();
+    trebuiltin_arith_init ();
     trespecial_init ();
     trenumber_init ();
     treread_init ();

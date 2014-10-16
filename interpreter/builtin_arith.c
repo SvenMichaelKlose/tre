@@ -20,6 +20,9 @@
 #include "builtin_string.h"
 #include "assert.h"
 
+treptr treptr_number_zero;
+treptr treptr_number_one;
+
 treptr
 treeval_exprop (treptr x, treeval_opfunc_t func, const char * descr)
 {
@@ -59,7 +62,7 @@ treptr
 trenumber_builtin_plus (treptr x)
 {
     return NOT(x) ?
-		       number_get_float (0) :
+		       treptr_number_zero :
                treeval_exprop (x, treeval_op_plus, "+");
 }
 
@@ -106,7 +109,7 @@ treptr
 trenumber_builtin_times (treptr x)
 {
     return NOT(x) ?
-		       number_get_float (1) :
+		       treptr_number_one :
                treeval_exprop (x, treeval_op_times, "*");
 }
 
@@ -153,7 +156,7 @@ treptr
 trenumber_builtin_logxor (treptr x)
 {
     return NOT(x) ?
-		       number_get_float (0) :
+		       treptr_number_zero :
                treeval_exprop (x, treeval_op_logxor, "LOGXOR");
 }
 
@@ -341,4 +344,11 @@ treptr
 trenumber_builtin_floor (treptr x)
 {
     return trenumber_floor (trearg_get (x));
+}
+
+void
+trebuiltin_arith_init ()
+{
+    treptr_number_zero = number_get_float (0);
+    treptr_number_one = number_get_float (1);
 }
