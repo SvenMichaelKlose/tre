@@ -23,7 +23,7 @@
 
 (c-define-compiled-literal c-compiled-symbol (x symbol)
   :maker ($ 'tresymbol_compiled_ x (? (keyword? x) '_keyword ""))
-  :init-maker `(tregc_add_unremovable (symbol_get (%%native (%%string ,(symbol-name x)))
-			                                      ,(? (keyword? x)
-				                                      'tre_package_keyword
-				                                      'treptr_nil))))
+  :init-maker `(tregc_add_unremovable (symbol_get_packaged (%%native (%%string ,(symbol-name x)))
+			                                               ,(? (keyword? x)
+				                                               'tre_package_keyword
+				                                               'treptr_nil))))
