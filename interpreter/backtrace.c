@@ -40,13 +40,17 @@ trebacktrace_init ()
 void
 trebacktrace_push (treptr x)
 {
+/*
     TRESYMBOL_VALUE(treptr_backtrace) = CONS(x, TRESYMBOL_VALUE(treptr_backtrace));
+*/
 }
 
 void
 trebacktrace_pop ()
 {
+/*
     treptr ancestors = _CDR(TRESYMBOL_VALUE(treptr_backtrace));
     trelist_free (TRESYMBOL_VALUE(treptr_backtrace));
     TRESYMBOL_VALUE(treptr_backtrace) = ancestors;
+*/
 }
