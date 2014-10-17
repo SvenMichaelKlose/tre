@@ -224,6 +224,15 @@ environment)
 	(echo "(compile-c-environment)" | $TRE | tee boot.log) || exit 1
 	;;
 
+devboot)
+    echo "Carefully booting everything from scratch..."
+	./make.sh interpreter $ARGS || exit 1
+	./make.sh compiler $ARGS || exit 1
+	./make.sh crunsh $ARGS || exit 1
+	./make.sh environment $ARGS || exit 1
+	./make.sh crunsh $ARGS|| exit 1
+	;;
+
 boot)
     echo "Booting everything from scratch..."
 	./make.sh interpreter -DTRE_NO_BACKTRACE -DTRE_NO_ASSERTIONS -DNDEBUG $ARGS || exit 1
@@ -297,10 +306,10 @@ profile)
 releasetests)
     echo "Making release tests..."
 	./make.sh distclean || exit 1
-	./make.sh build -Werror || exit 1
+	./make.sh build $ARGS || exit 1
 	./make.sh reload || exit 1
 	./make.sh distclean || exit 1
-    ./make.sh all || exit 1
+    ./make.sh all $ARGS || exit 1
 	;;
 
 install)
@@ -334,6 +343,7 @@ restore)
 	echo "Usage: make.sh [target]"
 	echo "Targets:"
 	echo "  boot            Build compiled environment from scratch."
+	echo "  devboot         Carefully build compiled environment from scratch."
 	echo "  interpreter     Build interpreter (and compiled environment)."
 	echo "  compiler        Compile compiler and C target to C."
 	echo "  bcompiler       Compile compiler and bytecode target to C."
