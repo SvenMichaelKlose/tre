@@ -27,7 +27,7 @@
   (not (eq t (href (transpiler-obfuscations *transpiler*) (make-symbol (symbol-name x))))))
 
 (defun must-obfuscate-symbol? (x)
-  (& x
+  (& x 
      (transpiler-obfuscate? *transpiler*)
      (obfuscateable-symbol? x)))
 
@@ -36,8 +36,13 @@
      (obfuscate-symbol-0 x)
      x))
 
-(define-tree-filter obfuscate (x)
+(define-tree-filter obfuscate-0 (x)
   (symbol? x) (obfuscate-symbol x))
+
+(defun obfuscate (x)
+  (? (transpiler-obfuscate? *transpiler*)
+     (obfuscate-0 x)
+     x))
 
 (defun obfuscated-symbol-name (x)
   (symbol-name (obfuscate-symbol x)))
