@@ -48,22 +48,23 @@ trespecial_setq (treptr list)
     treptr  tmp;
 	long    argnum = 1;
 
+#ifndef TRE_NO_ASSERTIONS
     while (NOT(list))
 		list = treerror (treptr_invalid, "Arguments expected.");
+#endif
 
     do {
 		a = trearg_typed (argnum, TRETYPE_SYMBOL, CAR(list), "SETQ place");
 
 		argnum++;
         list = CDR(list);
+#ifndef TRE_NO_ASSERTIONS
         if (NOT(list)) {
-	    	d = treerror (list, "Even number arguments expected - please provide the missing one.");
-			list = treptr_nil;
-		} else {
-        	tmp = CDR(list);
-        	d = treeval (CAR(list));
-        	list = tmp;
-		}
+	    	treerror_norecover (treptr_invalid, "Even number arguments expected - please provide the missing one.");
+#endif
+       	tmp = CDR(list);
+       	d = treeval (CAR(list));
+       	list = tmp;
 
 		TREEVAL_RETURN_JUMP(d);
 
@@ -86,10 +87,12 @@ trespecial_function_from_expr (treptr expr)
 {
     treptr x = trespecial_past_lambda (expr);
 
+#ifndef TRE_NO_ASSERTIONS
     if (NOT(x))
         return treerror (expr, "Argument list and body missing.");
     if (ATOMP(CAR(x)) && NOT_NIL(CAR(x)))
         return treerror (expr, "Argument list expected instead of atom.");
+#endif
 
     return trefunction_make (TRETYPE_FUNCTION, x);
 }
@@ -99,10 +102,12 @@ trespecial_function (treptr args)
 {
     treptr arg;
 
+#ifndef TRE_NO_ASSERTIONS
     if (NOT(args))
 		return treerror (args, "Function name expected.");
     if (NOT_NIL(CDR(args)))
 		return treerror (args, "Single argument expected.");
+#endif
 
     arg = FIRST(args);
 
@@ -167,8 +172,10 @@ trespecial_if (treptr p)
     treptr test;
     treptr body;
 
+#ifndef TRE_NO_ASSERTIONS
     if (ATOMP(p))
         return treerror (p, "Expression expected.");
+#endif
 
     while (NOT_NIL(p)) {
         test = CAR(p);
@@ -189,8 +196,10 @@ trespecial_if (treptr p)
 treptr
 trespecial_quote (treptr list)
 {
+#ifndef TRE_NO_ASSERTIONS
     if (NOT(list))
         treerror (treptr_nil, "Argument expected.");
+#endif
     return CAR(list);
 }
 
@@ -215,8 +224,10 @@ trespecial_block (treptr args)
     treptr last = treptr_nil;
 
     tag = CAR(args);
+#ifndef TRE_NO_ASSERTIONS
     if (CONSP(tag))
 		return treerror (tag, "Tag expected instead of an expression.");
+#endif
 
     p = CDR(args);
     RETURN_NIL(p);
@@ -246,12 +257,14 @@ trespecial_return_from (treptr args)
     treptr evl;
     treptr ret;
 
+#ifndef TRE_NO_ASSERTIONS
     if (NOT(args))
 		return treerror (treptr_invalid, "Tag and expression expected.");
     if (NOT(CDR(args)))
 		return treerror (treptr_invalid, "Expression missing after tag.");
     if (NOT_NIL(CDDR(args)))
 		return treerror (CDDR(args), "Only two args expected.");
+#endif
 
     args = trelist_copy (args);
     tregc_push (args);

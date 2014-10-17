@@ -73,8 +73,7 @@ trestring_builtin_list_string (treptr list)
     DOLIST(p, arg) {
 		if (NOT(CAR(p)))
 			continue;
-		if (NUMBERP(CAR(p)) == FALSE)
-			treerror_norecover (CAR(p), "Number expected.");
+        ASSERT_NUMBER(CAR(p));
 		newp[i++] = (unsigned char) TRENUMBER_VAL(CAR(p));
 	}
 
@@ -94,15 +93,13 @@ trestring_builtin_compare (treptr list)
 	treptr    a;
 	tre_size  len;
 
-	if (STRINGP(CAR(list)) == FALSE)
-		treerror_norecover (list, "String expected as first argument.");
+    ASSERT_STRING(CAR(list));
 
 	x = TREPTR_STRINGZ(CAR(list));
 	len = TREPTR_STRINGLEN(CAR(list));
     DOLIST(p, CDR(list)) {
 		a = CAR(p);
-		if (STRINGP(a) == FALSE)
-			treerror_norecover (list, "String expected.");
+        ASSERT_STRING(a);
 		if (NOT(a))
 			continue;
 		y = TREPTR_STRINGZ(a);

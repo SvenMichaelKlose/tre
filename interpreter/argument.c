@@ -32,12 +32,14 @@ treptr tre_atom_key;
 treptr
 trearg_get (treptr list)
 {
+#ifndef TRE_NO_ASSERTIONS
    	if (NOT(list))
        	return treerror (treptr_invalid, "Argument expected.");
    	if (ATOMP(list))
        	return treerror (list, "Atom instead of list - need 1 argument.");
     if (NOT_NIL(CDR(list)))
         trewarn (list, "Single argument expected.");
+#endif
 
     return CAR(list);
 }
@@ -45,6 +47,7 @@ trearg_get (treptr list)
 void
 trearg_get2 (treptr *a, treptr *b, treptr list)
 {
+#ifndef TRE_NO_ASSERTIONS
     treptr  second = treptr_nil;
 
     *a = treptr_nil;
@@ -69,6 +72,10 @@ trearg_get2 (treptr *a, treptr *b, treptr list)
 
     *a = CAR(list);
     *b = second;
+#else
+    *a = CAR(list);
+    *b = CADR(list);
+#endif
 }
 
 treptr
@@ -90,11 +97,17 @@ trearg_correct (tre_size argnum, unsigned type, treptr x, const char * descr)
 treptr
 trearg_typed (tre_size argnum, unsigned type, treptr x, const char * descr)
 {
+#ifdef TRE_NO_ASSERTIONS
+    (void) argnum;
+    (void) type;
+    (void) descr;
+#else
 	if (type == TRETYPE_FUNCTION && (FUNCTIONP(x) || MACROP(x)))
         return x;
 
 	while (TREPTR_TYPE(x) != type)
 		x = trearg_correct (argnum, type, x, descr);
+#endif
 
 	return x;
 }
@@ -135,11 +148,13 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
         if (NOT(argdef))
 	    	break;
 
+#ifndef TRE_NO_ASSERTIONS
         while (ATOMP(argdef)) {
             treprint (original_argdef);
             treprint (original_args);
 	    	argdef = treerror (iargdef, "Argument definition must be a list.");
         }
+#endif
 
 		/* Fetch next form and argument. */
         var = CAR(argdef);
@@ -147,11 +162,13 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
 
 		/* Process sub-level argument list. */
         if (CONSP(var)) {
+#ifndef TRE_NO_ASSERTIONS
             while (ATOMP(val)) {
                 treprint (original_argdef);
                 treprint (original_args);
 	        	val = treerror (val, "List type argument expected.");
             }
+#endif
 
 	    	trearg_expand (&svars, &svals, var, val, do_argeval);
             RPLACD(dvars, svars);
@@ -180,11 +197,13 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
             argdef = CDR(argdef);
 	    	while (1) {
                 if (NOT(argdef)) {
+#ifndef TRE_NO_ASSERTIONS
 		    		if (NOT_NIL(args)) {
                         treprint (original_argdef);
                         treprint (original_args);
-						trewarn (args, "stale &OPTIONAL keyword in argument definition");
+						treerror_norecover (args, "stale &OPTIONAL keyword in argument definition");
                     }
+#endif
 		    		break;
 				}
 
@@ -218,11 +237,13 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
         /* Process &KEY argument. */
 		if (var == tre_atom_key) {
             argdef = CDR(argdef);
+#ifndef TRE_NO_ASSERTIONS
             if (NOT(argdef) && NOT_NIL(args)) {
                 treprint (original_argdef);
                 treprint (original_args);
-				trewarn (args, "stale &KEY keyword in argument definition");
+				treerror_norecover (args, "stale &KEY keyword in argument definition");
 			}
+#endif
 	    	while (NOT_NIL(argdef)) {
 	        	key = CAR(argdef);
 				init = treptr_nil;
@@ -239,11 +260,13 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
 		    		svals = trelist_nth (args, kpos + 1);
 
 		    		/* Remove keyword and value from argument list. */
+#ifndef TRE_NO_ASSERTIONS
         	    	while (NOT(CDR(args))) {
                         treprint (original_argdef);
                         treprint (original_args);
 	    	        	RPLACD(args, CONS(treerror (args, "Missing argument after keyword."), treptr_nil));
                     }
+#endif
 		    		args = trelist_delete (kpos, args);
 		    		args = trelist_delete (kpos, args);
 
@@ -263,11 +286,13 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
 	    	break;
         }
 
+#ifndef TRE_NO_ASSERTIONS
         if (NOT(args)) {
             treprint (original_argdef);
             treprint (original_args);
 	    	val = treerror (argdef, "Missing argument.");
         }
+#endif
 
 		/* Evaluate single argument if so desired. */
         if (do_argeval)
@@ -283,11 +308,13 @@ next:
 		args = CDR(args);
     }
 
+#ifndef TRE_NO_ASSERTIONS
     if (NOT_NIL(args)) {
         treprint (original_argdef);
         treprint (original_args);
 		trewarn (args, "too many arguments (continue to ignore)");
     }
+#endif
 
     *rvars = CDR(vars);
     *rvals = CDR(vals);

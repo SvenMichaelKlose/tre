@@ -108,8 +108,10 @@ treptr
 trelist_nthcdr (treptr l, tre_size idx)
 {
     while (NOT_NIL(l)) {
+#ifndef TRE_NO_ASSERTIONS
 		if (ATOMP(l))
 			treerror_norecover (l, "Internal NTHCDR: cons expected.");
+#endif
 		if (!idx--)
 			break;
         l = CDR(l);
