@@ -24,7 +24,7 @@
       :separator                (format nil ";~%")
       :identifier-char?         #'c-identifier-char?
       :expex-initializer        #'c-expex-initializer
-      :backtrace?		        nil))
+      :backtrace?		        t))
 
 (defvar *c-transpiler* (copy-transpiler (make-c-transpiler)))
 (defvar *c-separator*  (transpiler-separator *c-transpiler*))
