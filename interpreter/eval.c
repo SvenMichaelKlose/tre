@@ -147,9 +147,8 @@ treeval_expr (treptr x)
     else
         fun = treeval (first);
 
-	if (COMPILED_FUNCTIONP(fun) || ARRAYP(fun)) {
+	if (COMPILED_FUNCTIONP(fun) || ARRAYP(fun))
 		return trefuncall_compiled (fun, args, TRUE);
-    }
 
     trebacktrace_push ((BUILTINP(fun) || SPECIALP(fun)) ? fun : FUNCTION_NAME(fun));
 
@@ -158,7 +157,9 @@ treeval_expr (treptr x)
         case TRETYPE_USERSPECIAL: v = treeval_funcall (fun, args, FALSE); break;
         case TRETYPE_BUILTIN:     v = trebuiltin (fun, args); break;
         case TRETYPE_SPECIAL:     v = trespecial (fun, args); break;
-        default:                  treerror_norecover (CAR(x), "Function expected instead of %s.", treerror_typename (TREPTR_TYPE(CAR(x))));
+        default:
+            treerror_norecover (CAR(x), "Function expected instead of %s.",
+                                        treerror_typename (TREPTR_TYPE(CAR(x))));
     }
 
     trebacktrace_pop ();
