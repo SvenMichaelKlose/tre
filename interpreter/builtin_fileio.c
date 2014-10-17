@@ -11,12 +11,47 @@
 #include "error.h"
 #include "number.h"
 #include "util.h"
-#include "stream.h"
 #include "argument.h"
 #include "builtin_fileio.h"
 #include "xxx.h"
+#include "string2.h"
 
 FILE * tre_fileio_handles[TRE_FILEIO_MAX_FILES];
+
+long
+trestream_fopen (treptr path, treptr mode)
+{
+    char * spath = TREPTR_STRINGZ(path);
+    char * smode = TREPTR_STRINGZ(mode);
+    FILE * file  = fopen (spath, smode);
+    size_t i;
+
+    if (file == NULL)
+        return treptr_nil;
+
+    DOTIMES(i, TRE_FILEIO_MAX_FILES) {
+        if (tre_fileio_handles[i] != NULL)
+            continue;
+
+        tre_fileio_handles[i] = file;
+        break;
+    }
+
+    if (i == TRE_FILEIO_MAX_FILES)
+        return treptr_nil;
+
+    return i;
+}
+
+long
+trestream_fclose (long handle)
+{
+	if (tre_fileio_handles[handle] == NULL || fclose (tre_fileio_handles[handle]))
+		return -1;
+
+	tre_fileio_handles[handle] = NULL;
+	return 0;
+}
 
 treptr
 trestream_fopen_wrapper (treptr path, treptr mode)

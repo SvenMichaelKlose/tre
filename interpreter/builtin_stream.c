@@ -16,7 +16,7 @@
 #include "number.h"
 #include "util.h"
 #include "argument.h"
-#include "stream.h"
+#include "builtin_fileio.h"
 #include "string2.h"
 #include "symtab.h"
 #include "builtin_stream.h"
