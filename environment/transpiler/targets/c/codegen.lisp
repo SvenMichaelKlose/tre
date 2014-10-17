@@ -176,7 +176,7 @@
 ;;;; BACKTRACE
 
 (define-c-macro %backtrace-push (name)
-  `("trebacktrace_push (" ,name ");"))
+  `("trebacktrace_push (" ,name ")"))
 
 (define-c-macro %backtrace-pop ()
-  "NULL; trebacktrace_pop();")
+  "NULL; trebacktrace_pop()")
