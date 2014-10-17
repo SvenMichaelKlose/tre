@@ -25,24 +25,24 @@ tre_size trelist_num_used;
 treptr
 car (treptr x)
 {
-    ASSERT_LIST(x);
     RETURN_NIL(x);
+    ASSERT_CONS(x);
     return _CAR(x);
 }
 
 treptr
 cdr (treptr x)
 {
-    ASSERT_LIST(x);
     RETURN_NIL(x);
+    ASSERT_CONS(x);
     return _CDR(x);
 }
 
 treptr
 cpr (treptr x)
 {
-    ASSERT_LIST(x);
     RETURN_NIL(x);
+    ASSERT_CONS(x);
     return _CPR(x);
 }
 
