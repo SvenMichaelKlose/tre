@@ -65,7 +65,6 @@ treiostd_close (void * s)
     fclose (fd);
 }
 
-/* Get character from input stream. */
 int
 treiostd_getc (void * s)
 {
