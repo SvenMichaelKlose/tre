@@ -18,7 +18,6 @@ typedef int bool;
 
 #define TRE_VERBOSE_GC 		      /* Print statistics after GC. */
 #if 0
-#define TRE_GC_DEBUG		      /* Run garbage collector everywhere. */
 #define TRE_VERBOSE_EVAL	      /* Print what is evaluated. */
 #define TRE_VERBOSE_READ          /* Print READ expressions in read-eval loop. */
 #define TRE_PRINT_MACROEXPANSIONS /* Print macroexpansions in read-eval loop. */
