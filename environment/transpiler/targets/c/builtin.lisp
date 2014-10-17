@@ -38,7 +38,6 @@
 		(PRINT          nil         &rest x)
 		(GC             nil         &rest x)
 		(DEBUG          nil         &rest x)
-		(INTERN         nil         &rest x)
 		(%MALLOC        malloc      &rest x)
 		(%MALLOC-EXEC   malloc_exec &rest x)
 		(%FREE          free        &rest x)

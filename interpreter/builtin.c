@@ -112,34 +112,6 @@ trebuiltin_gc (treptr no_args)
     return treptr_nil;
 }
 
-treptr
-trebuiltin_intern (treptr args)
-{
-    treptr  name;
-    treptr  package;
-    treptr  p;
-    char    * n;
-
-    name = CAR(args);
-    if (CONSP(CDR(args))) {
-        package = CADR(args);
-        if (NOT_NIL(CDDR(args)))
-	    	treerror (args, "One or two arguments required.");
-    } else
-        package = treptr_nil;
-
-	name = trearg_typed (1, TRETYPE_STRING, name, "INTERN");
-    if (NOT_NIL(package))
-		package = trearg_typed (1, TRETYPE_STRING, package, "INTERN");
-
-    n = TREPTR_STRINGZ(name);
-    p = NOT_NIL(package) ?
-            symbol_get (TREPTR_STRINGZ(package)) :
-            treptr_nil;
-
-    return symbol_get_packaged (n, p);
-}
-
 char *tre_builtin_names[] = {
     "QUIT",
     "LOAD",
@@ -147,7 +119,6 @@ char *tre_builtin_names[] = {
     "PRINT",
     "GC",
     "DEBUG",
-    "INTERN",
 	"%MALLOC", "%MALLOC-EXEC", "%FREE", "%FREE-EXEC",
 	"%%SET", "%%GET",
 
@@ -231,7 +202,6 @@ treevalfunc_t treeval_xlat_builtin[] = {
     trebuiltin_print,
     trebuiltin_gc,
     trebuiltin_debug,
-    trebuiltin_intern,
 	trebuiltin_malloc,
 	trebuiltin_malloc_exec,
 	trebuiltin_free,
