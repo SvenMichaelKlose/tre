@@ -178,7 +178,6 @@ tremain (void)
         }
 
         line = linenoise ("* ");
-printf (">%s<\n", line);
         if (!line)
             break;
 
