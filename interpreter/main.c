@@ -39,6 +39,7 @@
 #include "builtin_arith.h"
 #include "builtin_list.h"
 #include "builtin_stream.h"
+#include "builtin_terminal.h"
 #include "bytecode.h"
 #include "function.h"
 #include "exception.h"
@@ -150,7 +151,7 @@ tremain_line (trestream * stream)
 void
 tremain_prompt ()
 {
-    (void) trestream_builtin_terminal_normal (treptr_nil);
+    (void) treterminal_builtin_normal (treptr_nil);
     printf ("* ");
     tre_interrupt_debugger = FALSE;
     treio_flush (treio_console);
@@ -159,7 +160,7 @@ tremain_prompt ()
 void
 tremain (void)
 {
-    treptr       x;
+    treptr       x = treptr_invalid;
     char *       p = getenv ("HOME");
     char *       line;
     char *       history_path = malloc (4096);
@@ -177,21 +178,27 @@ tremain (void)
         }
 
         line = linenoise ("* ");
+printf (">%s<\n", line);
         if (!line)
-            return;
+            break;
 
         linenoiseHistoryAdd (line);
         linenoiseHistorySave (history_path);
 
         s = trestream_string_make (line);
         treiostd_divert (s);
-        x = tremain_line (treio_reader);
+        while (!treio_eof (s)) {
+            x = tremain_line (treio_reader);
+            if (x != treptr_invalid)
+                treprint (x);
+        }
         treiostd_undivert ();
 
         if (x == treptr_invalid)
             break;
-        treprint (x);
     }
+
+    free (history_path);
 }
 
 treptr * trestack;
