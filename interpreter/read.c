@@ -424,11 +424,6 @@ treread (trestream * stream)
 
     x = treread_expr (stream);
 
-#ifdef TRE_VERBOSE_READ
-    if (x != (treptr) -1)
-        treprint (x);
-#endif
-
     return x;
 }
 

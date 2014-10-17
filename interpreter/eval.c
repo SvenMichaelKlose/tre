@@ -173,11 +173,6 @@ treeval (treptr x)
 
     RETURN_NIL(x);
 
-#ifdef TRE_VERBOSE_EVAL
-	treprint (x);
-    fflush (stdout);
-#endif
-
     tregc_push (x);
 
     switch (TREPTR_TYPE(x)) {

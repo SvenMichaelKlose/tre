@@ -17,12 +17,7 @@ typedef int bool;
 #endif
 
 #define TRE_VERBOSE_GC 		      /* Print statistics after GC. */
-#if 0
-#define TRE_VERBOSE_EVAL	      /* Print what is evaluated. */
-#define TRE_VERBOSE_READ          /* Print READ expressions in read-eval loop. */
-#define TRE_PRINT_MACROEXPANSIONS /* Print macroexpansions in read-eval loop. */
 #define TRE_NO_BACKTRACE          /* Switch off backtracing. */
-#endif
 
 #define INTERPRETER
 
