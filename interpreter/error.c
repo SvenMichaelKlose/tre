@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <stdarg.h>
+#include <stdlib.h>
 
 #include "config.h"
 #include "atom.h"
@@ -51,7 +52,7 @@ treerror_internal (treptr expr, const char *msg, ...)
 
     treerror_msg (expr, "INTERNAL INTERPRETER ERROR", msg, ap);
 
-	CRASH();
+	exit (1);
 }
 
 void
