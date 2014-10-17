@@ -59,14 +59,16 @@ tre_size
 trearray_get_size (treptr sizes)
 {
     treptr    a;
-    treptr    car;
+    treptr    v;
     tre_size  size = 1;
 
     _DOLIST(a, sizes) {
-		car = _CAR(a);
-		if (NUMBERP(car) == FALSE)
-	    	return treerror (car, "Number expected for array size.");
-		size *= TRENUMBER_VAL(car);
+		v = CAR(a);
+#ifndef TRE_NO_ASSERTIONS
+		if (NUMBERP(v) == FALSE)
+	    	return treerror (sizes, "Numbers expected as array dimensions.");
+#endif
+		size *= TRENUMBER_VAL(v);
     }
 
     return size;
@@ -107,30 +109,42 @@ trearray_free (treptr array)
 treptr
 trearray_t_get (treptr array, tre_size idx)
 {
+#ifndef TRE_NO_ASSERTIONS
     tre_size  size;
+#endif
     treptr *  a;
+
     ASSERT_ARRAY(array);
 
-    size = TRENUMBER_VAL(CAR(TREARRAY_SIZES(array)));
     a = TREARRAY_VALUES(array);
+#ifndef TRE_NO_ASSERTIONS
+    size = TRENUMBER_VAL(CAR(TREARRAY_SIZES(array)));
     if (size <= idx)
         return treerror (array, "Index %d is out of range.", idx);
+#endif
+
     return a[idx];
 }
 
 void
 trearray_t_set (treptr array, tre_size idx, treptr val)
 {
-    tre_size  size;
     treptr *  a;
+#ifndef TRE_NO_ASSERTIONS
+    tre_size  size;
+#endif
+
     ASSERT_ARRAY(array);
 
-    size = TRENUMBER_VAL(CAR(TREARRAY_SIZES(array)));
     a = TREARRAY_VALUES(array);
+#ifndef TRE_NO_ASSERTIONS
+    size = TRENUMBER_VAL(CAR(TREARRAY_SIZES(array)));
     if (size <= idx) {
         treerror (array, "Index %d is out of range.", idx);
 		return;
     }
+#endif
+
     a[idx] = val;
 }
 

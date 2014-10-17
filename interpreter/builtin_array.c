@@ -13,10 +13,12 @@
 #include "number.h"
 #include "error.h"
 #include "array.h"
+#include "assert.h"
 
 treptr
 trearray_builtin_make (treptr sizes)
 {
+#ifndef TRE_NO_ASSERTIONS
     treptr  i;
 
     if (NOT(sizes))
@@ -25,6 +27,7 @@ trearray_builtin_make (treptr sizes)
     DOLIST(i, sizes)
         if (NUMBERP(CAR(i)) == FALSE)
 	    	return treerror (CAR(i), "Integer expected.");
+#endif
 
     return trearray_get (sizes);
 }
@@ -41,24 +44,25 @@ trearray_get_check_index (treptr indices, treptr sizes)
 
     for (i = indices, s = sizes; NOT_NIL(i) && NOT_NIL(s); i = CDR(i), s = CDR(s)) {
         tmp = TRENUMBER_VAL(CAR(i));
-#if 0
-        if (tmp < 0)
-	    	return (tre_size) -1;
-#endif
 
         ti += (long) tmp * r;
         r *= TRENUMBER_VAL(CAR(s));
+#ifndef TRE_NO_ASSERTIONS
 		if (ti >= r) {
 	    	trewarn (treptr_invalid, "index %d (arg %d) is larger than %d",
 		      		 (tre_size) tmp, argnum, r - 1);
 	    	return (tre_size) -1;
 		}
+#endif
 
         argnum++;
     }
 
+#ifndef TRE_NO_ASSERTIONS
     if (NOT_NIL(i) || NOT_NIL(s))
         return (tre_size) -1;
+#endif
+
     return ti;
 }
 
@@ -69,9 +73,9 @@ trearray_get_elt (treptr array, treptr indexes)
     treptr *  elts;
     tre_size  idx;
 
+    ASSERT_ARRAY(array);
     if (NOT(indexes))
 		treerror (indexes, "Index(es) expexted.");
-
     if (trelist_check_type (indexes, TRETYPE_NUMBER) == FALSE)
 		treerror (indexes, "Integer expected.");
 
@@ -99,12 +103,8 @@ trearray_builtin_p (treptr x)
 treptr
 trearray_aref (treptr array, treptr indexes)
 {
-    treptr *  elts;
+    treptr * elts = trearray_get_elt (array, indexes);
 
-    if (NOT(array))
-		treerror (array, "Array expexted.");
-
-    elts = trearray_get_elt (array, indexes);
     return !elts ?
                treerror (treptr_invalid, "Index error.") :
                *elts;
