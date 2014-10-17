@@ -69,7 +69,7 @@
 
 (def-transpiler generic-codegen (transpiler before-deps deps after-deps)
   (& *show-transpiler-progress?*
-     (format t "; Let me think. Hmm...~%"))
+     (format t "; Let me think. Hmm...~F"))
   (!? middleend-init (funcall !))
   (with (compiled-before  (generic-compile-2 before-deps)
          compiled-deps    (backend (middleend deps))
