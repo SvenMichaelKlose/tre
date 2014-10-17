@@ -23,6 +23,7 @@
 #include "util.h"
 #include "builtin_debug.h"
 #include "builtin_stream.h"
+#include "builtin_terminal.h"
 #include "xxx.h"
 #include "gc.h"
 #include "symtab.h"
@@ -147,7 +148,7 @@ char   tredebug_argvbuf[256];
 void
 tredebug_prompt (void)
 {
-	(void) trestream_builtin_terminal_normal (treptr_nil);
+	(void) treterminal_builtin_normal (treptr_nil);
     printf (":%ld] ", (long) tredebug_level);
 }
 

@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
-#include <termios.h>
 #include <string.h>
 
 #include "config.h"
@@ -124,38 +123,4 @@ trestream_builtin_read_char (treptr args)
     if (c == EOF)
         return treptr_nil;
     return number_get_char (c);
-}
-
-treptr
-trestream_builtin_terminal_raw (treptr no_args)
-{
-    struct termios settings;
-    long desc = STDIN_FILENO;
-
-    (void) no_args;
-
-    (void) tcgetattr (desc, &settings);
-    settings.c_lflag &= ~(ICANON | ECHO);
-    settings.c_cc[VMIN] = 1;
-    settings.c_cc[VTIME] = 0;
-    (void) tcsetattr (desc, TCSANOW, &settings);
-
-	return treptr_nil;
-}
-
-treptr
-trestream_builtin_terminal_normal (treptr no_args)
-{
-    struct termios settings;
-    long desc = STDIN_FILENO;
-
-    (void) no_args;
-
-    (void) tcgetattr (desc, &settings);
-    settings.c_lflag |= ICANON | ECHO;
-    settings.c_cc[VMIN] = 1;
-    settings.c_cc[VTIME] = 0;
-    (void) tcsetattr (desc, TCSANOW, &settings);
-
-	return treptr_nil;
 }

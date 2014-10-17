@@ -30,6 +30,7 @@ FILES="
 	builtin_stream.c
 	builtin_string.c
 	builtin_symbol.c
+	builtin_terminal.c
 	builtin_time.c
 
 	bytecode.c

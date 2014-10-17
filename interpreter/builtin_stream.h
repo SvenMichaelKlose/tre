@@ -11,7 +11,5 @@ extern treptr trestream_builtin_read_char (treptr);
 extern treptr trestream_builtin_file_exists (treptr);
 extern treptr trestream_builtin_feof (treptr);
 extern treptr trestream_builtin_fclose (treptr);
-extern treptr trestream_builtin_terminal_raw (treptr);
-extern treptr trestream_builtin_terminal_normal (treptr);
 
 #endif /* #ifndef TRE_BUILTIN_STREAM_H */

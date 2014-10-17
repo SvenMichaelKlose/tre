@@ -42,6 +42,7 @@
 #include "builtin_stream.h"
 #include "builtin_string.h"
 #include "builtin_symbol.h"
+#include "builtin_terminal.h"
 #include "builtin_time.h"
 #include "main.h"
 #include "xxx.h"
@@ -345,8 +346,9 @@ treevalfunc_t treeval_xlat_builtin[] = {
     trestream_builtin_fopen,
     trestream_builtin_feof,
     trestream_builtin_fclose,
-    trestream_builtin_terminal_raw,
-    trestream_builtin_terminal_normal,
+
+    treterminal_builtin_raw,
+    treterminal_builtin_normal,
 
     tredebug_builtin_end_debug,
     tredebug_builtin_invoke_debugger,

@@ -135,9 +135,11 @@
 		(%READ-CHAR         builtin_read_char       &rest x)
     	(%FOPEN             builtin_fopen           &rest x)
 		(%FEOF              builtin_feof            &rest x)
-		(%FCLOSE            builtin_fclose          &rest x)
-		(%TERMINAL-RAW      builtin_terminal_raw    &rest x)
-		(%TERMINAL-NORMAL   builtin_terminal_normal &rest x))
+		(%FCLOSE            builtin_fclose          &rest x))
+
+	(treterminal_
+		(%TERMINAL-RAW      builtin_raw             &rest x)
+		(%TERMINAL-NORMAL   builtin_normal          &rest x))
 
 	(tredebug_
 		(END-DEBUG          builtin_end_debug       &rest x)
