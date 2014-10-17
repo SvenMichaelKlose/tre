@@ -13,6 +13,7 @@ FILES="
     backtrace.c
 
 	builtin.c
+	builtin_apply.c
 	builtin_arith.c
     builtin_array.c
     builtin_atom.c
@@ -22,6 +23,7 @@ FILES="
 	builtin_function.c
 	builtin_image.c
 	builtin_list.c
+	builtin_memory.c
 	builtin_net.c
 	builtin_number.c
 	builtin_sequence.c
@@ -222,9 +224,9 @@ environment)
 
 boot)
     echo "Booting everything from scratch..."
-	./make.sh interpreter -DTRE_NO_ASSERTIONS -DNDEBUG $ARGS || exit 1
+	./make.sh interpreter -DTRE_NO_BACKTRACE -DTRE_NO_ASSERTIONS -DNDEBUG $ARGS || exit 1
 	(echo "(= (transpiler-backtrace? *c-transpiler*) nil)(compile-c-compiler)" | $TRE) || exit 1
-	./make.sh crunsh -DTRE_NO_ASSERTIONS -DNDEBUG $ARGS || exit 1
+	./make.sh crunsh -DTRE_NO_BACKTRACE -DTRE_NO_ASSERTIONS -DNDEBUG $ARGS || exit 1
 	./make.sh environment $ARGS || exit 1
 	./make.sh crunsh $ARGS|| exit 1
 	;;

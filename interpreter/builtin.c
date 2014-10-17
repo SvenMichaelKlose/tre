@@ -25,6 +25,7 @@
 #include "symbol.h"
 #include "alien.h"
 #include "apply.h"
+#include "builtin_apply.h"
 #include "builtin_arith.h"
 #include "builtin_array.h"
 #include "builtin_atom.h"
@@ -34,6 +35,7 @@
 #include "builtin_function.h"
 #include "builtin_image.h"
 #include "builtin_list.h"
+#include "builtin_memory.h"
 #include "builtin_net.h"
 #include "builtin_number.h"
 #include "builtin_sequence.h"
@@ -45,63 +47,6 @@
 #include "xxx.h"
 
 treevalfunc_t treeval_xlat_builtin[];
-
-treptr
-trebuiltin_apply_args (treptr list)
-{
-    treptr  i;
-    treptr  last;
-
-    RETURN_NIL(list); /* No arguments. */
-
-    /* Handle single argument. */
-    if (NOT(CDR(list))) {
-        list = CAR(list);
-        if (ATOMP(list) && NOT_NIL(list))
-            goto error;
-        return list;
-    }
-
-    /* Handle two or more arguments. */
-    DOLIST(i, list) {
-        if (NOT_NIL(CDDR(i)))
-            continue;
-
-        last = CADR(i);
-        if (ATOMP(last) && NOT_NIL(last))
-            goto error;
-
-        RPLACD(i, last);
-        break;
-    }
-
-    return list;
-                                                                                                                                                               
-error:
-    return treerror (list, "Last argument must be a list - please provide a new argument list.");
-}
-
-treptr
-trebuiltin_apply (treptr list)
-{
-    return NOT(list) ?
-               treerror (list, "Arguments expected.") :
-               trefuncall (CAR(list), trebuiltin_apply_args (trelist_copy (CDR(list))));
-}
-
-treptr
-trebuiltin_funcall (treptr list)
-{
-    return NOT(list) ?
-               treerror (list, "Arguments expected.") :
-               trefuncall (CAR(list), CDR(list));
-}
-
-treptr
-trebuiltin_eval (treptr list)
-{
-    return treeval (trearg_get (list));
-}
 
 treptr
 trebuiltin_quit (treptr args)
@@ -193,98 +138,6 @@ trebuiltin_intern (treptr args)
 
     return symbol_get_packaged (n, p);
 }
-
-treptr
-trebuiltin_malloc (treptr args)
-{
-    treptr  len;
-    void    * ret;
-
-    len = trearg_get (args);
-	len = trearg_typed (1, TRETYPE_NUMBER, len, "%MALLOC");
-
-	ret = malloc ((size_t) TRENUMBER_VAL(len));
-
-	return number_get_integer ((double) (long) ret);
-}
-
-treptr
-trebuiltin_malloc_exec (treptr args)
-{
-    treptr  len;
-    void    * ret;
-
-    len = trearg_get (args);
-	len = trearg_typed (1, TRETYPE_NUMBER, len, "%MALLOC-EXEC");
-
-	ret = mmap (NULL, (size_t) TRENUMBER_VAL(len),
-				PROT_READ | PROT_WRITE | PROT_EXEC,
-				MAP_PRIVATE | MAP_ANON,
-				-1, 0);
-
-	return number_get_integer ((double) (long) ret);
-}
-
-treptr
-trebuiltin_free (treptr args)
-{
-    treptr  ptr;
-
-	ptr = trearg_typed (1, TRETYPE_NUMBER, trearg_get (args), "%FREE");
-
-	free ((void *) (long) TRENUMBER_VAL(ptr));
-
-	return treptr_nil;
-}
-
-treptr
-trebuiltin_free_exec (treptr args)
-{
-    treptr  ptr;
-    treptr  len;
-
-    trearg_get2 (&ptr, &len, args);
-	ptr = trearg_typed (1, TRETYPE_NUMBER, ptr, "%FREE-EXEC");
-	len = trearg_typed (1, TRETYPE_NUMBER, len, "%FREE-EXEC");
-
-	munmap ((void *) (long) TRENUMBER_VAL(ptr), (size_t) TRENUMBER_VAL(len));
-
-	return treptr_nil;
-}
-
-treptr
-trebuiltin_set (treptr args)
-{
-    treptr  ptr;
-    treptr  val;
-	char    c;
-	char    * p;
-
-    trearg_get2 (&ptr, &val, args);
-
-	ptr = trearg_typed (1, TRETYPE_NUMBER, ptr, "%%SET");
-	val = trearg_typed (2, TRETYPE_NUMBER, val, "%%SET");
-
-	c = (char) TRENUMBER_VAL(val);
-	p = TRENUMBER_CHARPTR(ptr);
-	* p = c;
-
-    return val;
-}
-
-treptr
-trebuiltin_get (treptr args)
-{
-    treptr  ptr = trearg_get (args);
-	char    * p;
-
-	ptr = trearg_typed (1, TRETYPE_NUMBER, ptr, "%%GET");
-
-	p = TRENUMBER_CHARPTR(ptr);
-
-	return number_get_float ((double) * p);
-}
-
 
 char *tre_builtin_names[] = {
     "QUIT",
