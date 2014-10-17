@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2008,2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2008,2013–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #ifndef TRE_IO_H
@@ -30,19 +30,10 @@ struct trestream_t {
 
 typedef struct trestream_t trestream;
 
-#define TREIO_OP(s)       (s->ops)
-#define TREIO_GETC(s)     ((*s->ops->getc) (s->detail_in))
-#define TREIO_PUTC(s, c)  ((*s->ops->putc) (s->detail_out, c))
-#define TREIO_EOF(s)      ((*s->ops->eof) (s->detail_in))
-#define TREIO_CLOSE(s)    (treio_close_stream (s))
-#define TREIO_FLUSH(s)    ((*s->ops->flush) (s->detail_out))
-
-#define ON_STANDARD_STREAM()    (treio_readerstreamptr == 1)
-
 extern trestream * treio_reader;
 extern trestream * treio_console;
 
-extern size_t treio_readerstreamptr;
+extern bool on_standard_stream (void);
 
 extern trestream * treio_make_stream  (treioops *, const char * name);
 extern void        treio_free_stream  (trestream *);
@@ -62,6 +53,6 @@ extern void        treiostd_divert       (trestream *);
 extern void        treiostd_undivert     (void);
 extern void        treiostd_undivert_all (void);
 
-extern void treio_init (void);
+extern void trestream_init (void);
 
 #endif

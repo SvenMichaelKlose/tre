@@ -141,7 +141,7 @@ tremain_line (trestream * stream)
     tremain_update_history (expr);
     expr = treeval (tremain_expand (expr));
 
-    if (ON_STANDARD_STREAM())
+    if (on_standard_stream ())
         treprint (expr);
 
     return expr;
@@ -181,7 +181,7 @@ tremain_init_image_path (void)
 */
 }
 
-/* Initialise everything. */
+/* Initialize everything. */
 void
 tremain_init (void)
 {
@@ -193,7 +193,7 @@ tremain_init (void)
 	trestack_secondary = malloc (sizeof (treptr) * TRESTACK_SIZE_SECONDARY);
 	trestack_top_secondary = trestack_ptr_secondary = &trestack[TRESTACK_SIZE_SECONDARY];
 
-    treio_init ();
+    trestream_init ();
     tredebug_init ();
     trethread_make ();
     tregc_init ();
