@@ -73,6 +73,10 @@ rplacp (treptr cons, treptr val)
 void
 cons_free (treptr x)
 {
+#ifndef TRE_NO_ASSERTIONS
+    if (!CONSP(x))
+        treerror_internal ("cons_free() expects a cons.");
+#endif
     _CDR(x) = tre_lists_free;
     tre_lists_free = x;
     trelist_num_used--;
