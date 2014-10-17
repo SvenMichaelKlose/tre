@@ -56,10 +56,10 @@ struct tre_list {
 #define _RPLACP(x,v) 	(_CPR(x) = v)
 
 #ifdef TRE_NO_ASSERTIONS
+#define DOLIST(iter, lst) _DOLIST(iter, lst)
+#else
 #define DOLIST(iter, lst) \
     for (iter = lst; NOT_NIL(iter); iter = CDR(iter))
-#else
-#define DOLIST(iter, lst) _DOLIST(iter, lst)
 #endif
 
 #define _DOLIST(iter,lst) \
