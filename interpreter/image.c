@@ -103,7 +103,7 @@ treimage_write_atoms (FILE *f)
 
                     case TRETYPE_BUILTIN:
                     case TRETYPE_SPECIAL:
-                        treimage_write (f, &TREATOM(idx), sizeof (void *));
+                        treimage_write (f, &ATOM(idx), sizeof (void *));
                         break;
                 }
             }
@@ -268,13 +268,13 @@ treimage_read_atoms (FILE *f)
                         treimage_read (f, &package, sizeof (treptr));
                         treimage_read (f, &value, sizeof (treptr));
                         treimage_read (f, &fun, sizeof (treptr));
-    				    TREATOM(idx) = symtab_add (TRETYPE_INDEX_TO_PTR(tre_atom_types[idx], idx), symbol, value, fun, package);
+    				    ATOM(idx) = symtab_add (TRETYPE_INDEX_TO_PTR(tre_atom_types[idx], idx), symbol, value, fun, package);
                         break;
 
                     case TRETYPE_FUNCTION:
                     case TRETYPE_MACRO:
                     case TRETYPE_USERSPECIAL:
-                        TREATOM(idx) = trefunction_alloc ();
+                        ATOM(idx) = trefunction_alloc ();
                         treimage_read (f, &FUNCTION_NAME(idx), sizeof (treptr));
                         treimage_read (f, &FUNCTION_SOURCE(idx), sizeof (treptr));
                         treimage_read (f, &FUNCTION_BYTECODE(idx), sizeof (treptr));
@@ -282,7 +282,7 @@ treimage_read_atoms (FILE *f)
 
                     case TRETYPE_BUILTIN:
                     case TRETYPE_SPECIAL:
-                        treimage_read (f, &TREATOM(idx), sizeof (void *));
+                        treimage_read (f, &ATOM(idx), sizeof (void *));
                         break;
                 }
             } else {
@@ -339,7 +339,7 @@ treimage_read_numbers (FILE *f)
             continue;
         n = trenumber_alloc (0, 0);
         treimage_read (f, n, sizeof (trenumber));
-        TREATOM(i) = n;
+        ATOM(i) = n;
 	}
 }
 
@@ -361,7 +361,7 @@ treimage_read_arrays (FILE *f)
         a->sizes = sizes;
         a->values = malloc (l);
         treimage_read (f, a->values, l);
-        TREATOM(i) = a;
+        ATOM(i) = a;
     }
 }
 
@@ -385,7 +385,7 @@ treimage_read_strings (FILE *f, struct treimage_header *h)
         l = lens[j++];
         s = malloc (l + 1 + sizeof (tre_size));
         TRESTRING_LEN(s) = l;
-        TREATOM(i) = s;
+        ATOM(i) = s;
         treimage_read (f, TRESTRING_DATA(s), l);
         (TRESTRING_DATA(s))[l] = 0;
     }

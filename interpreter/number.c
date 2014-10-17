@@ -79,7 +79,7 @@ number_get (double value, int type)
 
     num = trenumber_alloc (value, type);
     atom = treatom_alloc (TRETYPE_NUMBER);
-    TREATOM(atom) = num;
+    ATOM(atom) = num;
 
     return atom;
 }

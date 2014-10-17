@@ -43,7 +43,7 @@ trestring_builtin_make (treptr list)
 
     str = trestring_get_raw ((tre_size) TRENUMBER_VAL(arg));
     atom = treatom_alloc (TRETYPE_STRING);
-    TREATOM(atom) = str;
+    ATOM(atom) = str;
     return atom;
 }
 
@@ -79,7 +79,7 @@ trestring_builtin_list_string (treptr list)
 	}
 
     atom = treatom_alloc (TRETYPE_STRING);
-    TREATOM(atom) = news;
+    ATOM(atom) = news;
 
     return atom;
 }
@@ -152,7 +152,7 @@ trestring_builtin_concat (treptr list)
 	}
 
     atom = treatom_alloc (TRETYPE_STRING);
-    TREATOM(atom) = news;
+    ATOM(atom) = news;
 
     return atom;
 }

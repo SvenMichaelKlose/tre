@@ -358,7 +358,7 @@ trebuiltin_init ()
 
     for (i = 0; tre_builtin_names[i] != NULL; i++) {
         fun = treatom_alloc (TRETYPE_BUILTIN);
-        TREATOM(fun) = (void*) i;
+        ATOM(fun) = (void*) i;
         name = symbol_alloc (tre_builtin_names[i], treptr_nil);
         tresymbol_set_function(fun, name);
         EXPAND_UNIVERSE(name);

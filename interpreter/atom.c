@@ -118,10 +118,10 @@ treatom_alloc (int type)
 void
 treatom_free (treptr x)
 {
-    if (TREATOM_TYPE(x) == TRETYPE_SYMBOL)
+    if (ATOM_TYPE(x) == TRETYPE_SYMBOL)
 		symtab_remove (x);
 
-    TREATOM_TYPE(x) = TRETYPE_UNUSED;
+    ATOM_TYPE(x) = TRETYPE_UNUSED;
 	trealloc_free_item (&tre_atoms_free, (void **) &tre_atoms[TREPTR_INDEX(x)]);
 }
 
@@ -133,7 +133,7 @@ treatom_number_get (double value, int type)
 
     num = trenumber_alloc (value, type);
     atom = treatom_alloc (TRETYPE_NUMBER);
-    TREATOM(atom) = num;
+    ATOM(atom) = num;
 
     return atom;
 }

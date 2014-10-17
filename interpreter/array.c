@@ -87,7 +87,7 @@ trearray_get (treptr sizes)
     array->sizes = trelist_copy (sizes);
     tregc_push (array->sizes);
     a = treatom_alloc (TRETYPE_ARRAY);
-    TREATOM(a) = array;
+    ATOM(a) = array;
     tregc_pop ();
 
     return a;

@@ -124,7 +124,7 @@ tregc_trace_atom (treptr a)
 		return;
     _TREGC_ALLOC_ATOM(ai);
 
-    switch (TREATOM_TYPE(a)) {
+    switch (ATOM_TYPE(a)) {
         case TRETYPE_SYMBOL:
             tregc_trace_object (SYMBOL_VALUE(a));
             tregc_trace_object (SYMBOL_FUNCTION(a));

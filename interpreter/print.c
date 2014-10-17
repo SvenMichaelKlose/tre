@@ -126,11 +126,11 @@ treprint_atom (treptr atom, size_t indent)
 	    	break;
 
 		case TRETYPE_BUILTIN:
-           	printf ("{%s}", tre_builtin_names[(size_t) TREATOM(atom)]);
+           	printf ("{%s}", tre_builtin_names[(size_t) ATOM(atom)]);
             break;
 
 		case TRETYPE_SPECIAL:
-           	printf ("{%s}", tre_special_names[(size_t) TREATOM(atom)]);
+           	printf ("{%s}", tre_special_names[(size_t) ATOM(atom)]);
             break;
 
 		case TRETYPE_NUMBER:

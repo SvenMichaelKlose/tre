@@ -16,7 +16,7 @@ struct trenumber_t {
 
 typedef struct trenumber_t trenumber;
 
-#define TREPTR_NUMBER(ptr)     ((trenumber *) TREATOM(ptr))
+#define TREPTR_NUMBER(ptr)     ((trenumber *) ATOM(ptr))
 #define TRENUMBER_VAL(ptr)     TREPTR_NUMBER(ptr)->value
 #define TRENUMBER_INT(ptr)     ((int) TRENUMBER_VAL(ptr))
 #define TRENUMBER_CHARPTR(ptr) ((char *) (long) TREPTR_NUMBER(ptr)->value)

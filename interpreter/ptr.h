@@ -21,9 +21,6 @@ typedef unsigned int tre_size;
 #define TRETYPE_INDEX_TO_PTR(type, index)   (((treptr) type << TREPTR_INDEX_WIDTH) | index)
 #define TREINDEX_TO_PTR(idx)	            TRETYPE_INDEX_TO_PTR(tre_atom_types[idx], idx)
 
-#define TREATOM(ptr)		(tre_atoms[TREPTR_INDEX(ptr)])
-#define TREATOM_TYPE(ptr)	(tre_atom_types[TREPTR_INDEX(ptr)])
-
 #define TREPTR_TYPE(ptr)	(ptr >> TREPTR_INDEX_WIDTH)
 #define TREPTR_INDEX(ptr)	(ptr & ~TREPTR_FLAGS)
 #define CONSP(ptr)		    ((ptr & TREPTR_FLAGS) == TRETYPE_CONS)

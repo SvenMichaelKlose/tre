@@ -43,7 +43,7 @@ trefunction_make (tre_type type, treptr source)
 
     a = treatom_alloc (type);
     tregc_push (a);
-    TREATOM(a) = trefunction_alloc ();
+    ATOM(a) = trefunction_alloc ();
     FUNCTION_SOURCE(a) = source;
     tregc_pop ();
 

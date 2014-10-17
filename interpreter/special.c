@@ -383,7 +383,7 @@ trespecial_init ()
 
     for (i = 0; tre_special_names[i] != NULL; i++) {
         fun = treatom_alloc (TRETYPE_SPECIAL);
-        TREATOM(fun) = (void*) i;
+        ATOM(fun) = (void*) i;
         name = symbol_alloc (tre_special_names[i], treptr_nil);
         tresymbol_set_function (fun, name);
         EXPAND_UNIVERSE(name);

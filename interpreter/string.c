@@ -50,7 +50,7 @@ trestring_get_binary (const char *str, tre_size len)
 
     memcpy (TRESTRING_DATA(nstr), str, len);
     atom = treatom_alloc (TRETYPE_STRING);
-    TREATOM(atom) = nstr;
+    ATOM(atom) = nstr;
 
     return atom;
 }

@@ -5,7 +5,7 @@
 #ifndef TRE_SYMTAB_H
 #define TRE_SYMTAB_H
 
-#define TREPTR_SYMBOL(ptr)    ((tresymbol *) TREATOM(ptr))
+#define TREPTR_SYMBOL(ptr)    ((tresymbol *) ATOM(ptr))
 #define SYMBOL_NAME(ptr)      (TREPTR_SYMBOL(ptr)->name)
 #define SYMBOL_VALUE(ptr)     (TREPTR_SYMBOL(ptr)->value)
 #define SYMBOL_FUNCTION(ptr)  (TREPTR_SYMBOL(ptr)->function)

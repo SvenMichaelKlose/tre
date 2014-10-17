@@ -22,7 +22,7 @@ symbol_alloc_packaged (char * name, treptr package, treptr value)
     if (value == treptr_invalid)
 		value = atom;
 
-	TREATOM(atom) = symtab_add (atom, name, value, treptr_nil, package);
+	ATOM(atom) = symtab_add (atom, name, value, treptr_nil, package);
 
 	return atom;
 }

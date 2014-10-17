@@ -15,7 +15,7 @@ struct trefunction_t {
 
 typedef struct trefunction_t trefunction;
 
-#define TREPTR_FUNCTION(ptr)                ((trefunction *) TREATOM(ptr))
+#define TREPTR_FUNCTION(ptr)                ((trefunction *) ATOM(ptr))
 #define FUNCTION_NAME(ptr)               (TREPTR_FUNCTION(ptr)->name)
 #define FUNCTION_SOURCE(ptr)             (TREPTR_FUNCTION(ptr)->source)
 #define FUNCTION_BYTECODE(ptr)           (TREPTR_FUNCTION(ptr)->bytecode)
