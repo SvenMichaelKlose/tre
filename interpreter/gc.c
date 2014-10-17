@@ -229,7 +229,7 @@ tregc_force ()
     tregc_print_stats ();
 #endif
 
-    tregc_pass (FALSE);
+    tregc_pass ();
 
 #ifdef TRE_VERBOSE_GC
     printf ("; After gc");
