@@ -264,7 +264,7 @@ updatetests)
     $TRE makefiles/test-php.lisp
     php compiled/test.php >makefiles/test-php.correct-output
     echo "Updateing JavaScript target test data (node.js only)..."
-    nodejs compiled/test.js >makefiles/test-js.correct-output
+    nodejs compiled/test.js >makefiles/test-js.correct-output || node compiled/test.js >makefiles/test-js.correct-output
     ;;
 
 tests)
