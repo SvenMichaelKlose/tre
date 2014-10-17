@@ -5,7 +5,7 @@
 #include "ptr.h"
 #include "cons.h"
 #include "error.h"
-#include "io.h"
+#include "stream.h"
 #include "main.h"
 #include "eval.h"
 #include "special.h"

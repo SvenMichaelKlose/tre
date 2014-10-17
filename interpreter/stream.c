@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2008,2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2008,2013–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #include <stdlib.h>
@@ -9,8 +9,8 @@
 
 #include "config.h"
 #include "atom.h"
-#include "io.h"
-#include "io_std.h"
+#include "stream.h"
+#include "stream_file.h"
 #include "error.h"
 #include "string2.h"
 #include "thread.h"

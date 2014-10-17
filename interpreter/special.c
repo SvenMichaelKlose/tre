@@ -24,7 +24,7 @@
 #include "eval.h"
 #include "bytecode.h"
 #include "array.h"
-#include "io.h"
+#include "stream.h"
 #include "main.h"
 #include "print.h"
 #include "symtab.h"

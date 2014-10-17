@@ -24,8 +24,7 @@
 #include "image.h"
 #include "function.h"
 #include "symbol.h"
-
-#include "io.h"
+#include "stream.h"
 #include "main.h"
 
 char tregc_listmarks[NUM_LISTNODES >> 3];

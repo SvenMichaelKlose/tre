@@ -12,7 +12,7 @@
 #include "atom.h"
 #include "cons.h"
 #include "list.h"
-#include "io.h"
+#include "stream.h"
 #include "read.h"
 #include "string2.h"
 #include "gc.h"

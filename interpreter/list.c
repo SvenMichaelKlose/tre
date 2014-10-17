@@ -12,7 +12,7 @@
 #include "gc.h"
 #include "builtin_sequence.h"
 #include "number.h"
-#include "io.h"
+#include "stream.h"
 #include "xxx.h"
 #include "symtab.h"
 

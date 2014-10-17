@@ -21,7 +21,7 @@
 #include "error.h"
 #include "util.h"
 #include "eval.h"
-#include "io.h"
+#include "stream.h"
 #include "string2.h"
 #include "thread.h"
 #include "array.h"

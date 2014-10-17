@@ -42,8 +42,6 @@ FILES="
 	function.c
 	gc.c
 	image.c
-	io.c
-	io_std.c
 	list.c
 	macro.c
 	main.c
@@ -54,6 +52,8 @@ FILES="
 	read.c
 	special.c
 	special_exception.c
+	stream.c
+	stream_file.c
 	string.c
 	symtab.c
 	symbol.c

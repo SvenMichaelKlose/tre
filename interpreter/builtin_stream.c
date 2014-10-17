@@ -11,7 +11,7 @@
 #include "config.h"
 #include "atom.h"
 #include "eval.h"
-#include "io.h"
+#include "stream.h"
 #include "error.h"
 #include "number.h"
 #include "util.h"

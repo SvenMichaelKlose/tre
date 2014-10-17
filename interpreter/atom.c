@@ -14,7 +14,7 @@
 #include "error.h"
 #include "array.h"
 #include "gc.h"
-#include "io.h"
+#include "stream.h"
 #include "symtab.h"
 #include "thread.h"
 #include "alloc.h"

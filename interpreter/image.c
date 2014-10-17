@@ -19,7 +19,7 @@
 #include "util.h"
 #include "builtin.h"
 #include "special.h"
-#include "io.h"
+#include "stream.h"
 #include "main.h"
 #include "symtab.h"
 #include "print.h"

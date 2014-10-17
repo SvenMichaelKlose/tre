@@ -8,7 +8,7 @@
 #include "symtab.h"
 #include "cons.h"
 #include "error.h"
-#include "io.h"
+#include "stream.h"
 #include "main.h"
 #include "exception.h"
 #include "symbol.h"

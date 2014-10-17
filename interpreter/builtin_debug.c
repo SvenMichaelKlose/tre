@@ -16,7 +16,7 @@
 #include "error.h"
 #include "debug.h"
 #include "thread.h"
-#include "io.h"
+#include "stream.h"
 #include "main.h"
 #include "builtin_debug.h"
 #include "argument.h"

@@ -17,7 +17,7 @@
 #include "eval.h"
 #include "print.h"
 #include "debug.h"
-#include "io.h"
+#include "stream.h"
 #include "main.h"
 #include "thread.h"
 #include "util.h"

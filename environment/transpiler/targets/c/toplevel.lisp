@@ -41,11 +41,11 @@
 		   "string2.h"
 		   "symtab.h"
 		   "symbol.h"
-		   "io.h"
 		   "main.h"
 		   "xxx.h"
 		   "alien.h"
 		   "function.h"
+		   "stream.h"
 		   "compiled.h"))
 
 (defun c-header-includes ()
