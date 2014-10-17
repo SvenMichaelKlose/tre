@@ -42,17 +42,17 @@ void
 trebacktrace_push (treptr x)
 {
     (void) x;
-/*
+#ifndef TRE_NO_BACKTRACE
     SYMBOL_VALUE(treptr_backtrace) = CONS(x, SYMBOL_VALUE(treptr_backtrace));
-*/
+#endif
 }
 
 void
 trebacktrace_pop ()
 {
-/*
+#ifndef TRE_NO_BACKTRACE
     treptr ancestors = _CDR(SYMBOL_VALUE(treptr_backtrace));
     cons_free (SYMBOL_VALUE(treptr_backtrace));
     SYMBOL_VALUE(treptr_backtrace) = ancestors;
-*/
+#endif
 }
