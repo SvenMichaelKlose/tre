@@ -98,13 +98,11 @@ trefuncall_bytecode (treptr func, treptr args, treptr argdef, bool do_eval)
     treptr  expvals;
 	treptr  result;
 
-   	tregc_push (args);
    	trearg_expand (&expforms, &expvals, argdef, args, do_eval);
    	tregc_push (expvals);
 
     result = trecode_call (func, expvals);
 
-	tregc_pop ();
 	tregc_pop ();
 
 	return result;
@@ -115,11 +113,13 @@ trefuncall_compiled (treptr func, treptr args, bool do_eval)
 {
     treptr v;
 
+    tregc_push (args);
     trebacktrace_push (treptr_nil);
     v = NOT_NIL(FUNCTION_BYTECODE(func)) ?
             trefuncall_bytecode (func, args, TREARRAY_VALUES(FUNCTION_BYTECODE(func))[0], do_eval) :
             trefuncall_c (func, args, do_eval);
     trebacktrace_pop ();
+    tregc_pop ();
 
     return v;
 }
@@ -148,9 +148,11 @@ trefuncall (treptr func, treptr args)
 	if (COMPILED_FUNCTIONP(func))
 		return trefuncall_compiled (func, args, FALSE);
 
+    tregc_push (args);
     trebacktrace_push (BUILTINP(func) ? func : FUNCTION_NAME(func));
     v = trefuncall_interpreted (func, args);
     trebacktrace_pop ();
+    tregc_pop ();
 
     return v;
 }
