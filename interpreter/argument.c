@@ -133,8 +133,10 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
     treptr init;
     treptr key;
     treptr kw;
+#ifndef TRE_NO_ASSERTIONS
     treptr original_argdef = argdef;
     treptr original_args = args;
+#endif
     tre_size kpos;
 
     dvars = vars = CONS(treptr_nil, treptr_nil);

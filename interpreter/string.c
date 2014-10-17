@@ -73,10 +73,8 @@ trestring_t_get (treptr str, tre_size idx)
     char * s = TREPTR_STRING(str);
 
 #ifndef TRE_NO_ASSERTIONS
-    if (TRESTRING_LEN(s) < idx) {
-        treerror_ (TRECONTEXT_CURRENT(), "index out of range");
-		return treptr_nil;
-    }
+    if (TRESTRING_LEN(s) < idx)
+        treerror_norecover (TRECONTEXT_CURRENT(), "index out of range");
 #endif
 
     return number_get_char ((double) TRESTRING_DATA(s)[idx]);

@@ -59,7 +59,7 @@ trespecial_setq (treptr list)
 		argnum++;
         list = CDR(list);
 #ifndef TRE_NO_ASSERTIONS
-        if (NOT(list)) {
+        if (NOT(list))
 	    	treerror_norecover (treptr_invalid, "Even number arguments expected - please provide the missing one.");
 #endif
        	tmp = CDR(list);

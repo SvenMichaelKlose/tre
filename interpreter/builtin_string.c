@@ -20,6 +20,7 @@
 #include "gc.h"
 #include "symtab.h"
 #include "builtin_string.h"
+#include "assert.h"
 
 treptr
 trestring_p (treptr object)
