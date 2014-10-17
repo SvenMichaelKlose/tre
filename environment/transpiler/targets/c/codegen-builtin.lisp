@@ -2,5 +2,5 @@
 
 ,`(progn
     ,@(macroexpand (mapcar [`(define-c-macro ,_ (&rest x)
-                               `(,(make-symbol (c-builtin-name _)) ,,@x))]
+                               `(%%native ,(make-symbol (c-builtin-name _)) ,,(c-list x)))]
                            (c-builtin-names))))
