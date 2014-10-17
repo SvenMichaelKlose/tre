@@ -75,7 +75,7 @@ cons_free (treptr x)
 {
 #ifndef TRE_NO_ASSERTIONS
     if (!CONSP(x))
-        treerror_internal ("cons_free() expects a cons.");
+        treerror_internal (x, "cons_free() expects a cons.");
 #endif
     _CDR(x) = tre_lists_free;
     tre_lists_free = x;
