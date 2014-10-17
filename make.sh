@@ -126,7 +126,7 @@ link ()
 
 make_revision_header ()
 {
-    REV=`git log | grep Author: | wc -l`
+    REV=`git log --pretty=oneline | wc -l`
     REV=`expr 3290 + $REV`
     echo $REV >environment/_current-version
     echo "#ifndef TRE_REVISION" >interpreter/_revision.h
