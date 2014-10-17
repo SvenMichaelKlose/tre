@@ -88,6 +88,8 @@ treerror_norecover (treptr expr, const char *msg, ...)
     treerror_msg (expr, "UNRECOVERABLE ERROR", msg, ap);
 
     tredebug ();
+
+	exit (1);
 }
 
 void
