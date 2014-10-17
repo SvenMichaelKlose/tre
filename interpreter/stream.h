@@ -33,11 +33,10 @@ typedef struct trestream_t trestream;
 extern trestream * treio_reader;
 extern trestream * treio_console;
 
-extern bool on_standard_stream (void);
-
 extern trestream * treio_make_stream  (treioops *, const char * name);
 extern void        treio_free_stream  (trestream *);
 extern void        treio_close_stream (trestream *);
+extern bool        is_standard_stream (trestream *);
 
 extern int  treio_getc        (trestream *);
 extern int  treio_getline     (trestream *, char *s, size_t maxlen);
@@ -46,7 +45,6 @@ extern void treio_putc        (trestream *, char);
 extern void treio_flush       (trestream *);
 extern void treio_skip_spaces (trestream *);
 extern int  treio_eof         (trestream *);
-extern void treio_prompt      (void);
 
 extern trestream * treio_get_stream      ();
 extern void        treiostd_divert       (trestream *);

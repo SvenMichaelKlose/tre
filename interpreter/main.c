@@ -16,6 +16,7 @@
 #include "number.h"
 #include "stream.h"
 #include "stream_file.h"
+#include "stream_string.h"
 #include "read.h"
 #include "gc.h"
 #include "eval.h"
@@ -37,11 +38,13 @@
 #include "apply.h"
 #include "builtin_arith.h"
 #include "builtin_list.h"
+#include "builtin_stream.h"
 #include "bytecode.h"
 #include "function.h"
 #include "exception.h"
 #include "backtrace.h"
 #include "symbol.h"
+#include "linenoise.h"
 
 #ifdef TRE_HAVE_COMPILED_ENV
 	treptr userfun_cInit (void);
@@ -141,18 +144,54 @@ tremain_line (trestream * stream)
     tremain_update_history (expr);
     expr = treeval (tremain_expand (expr));
 
-    if (on_standard_stream ())
-        treprint (expr);
-
     return expr;
+}
+
+void
+tremain_prompt ()
+{
+    (void) trestream_builtin_terminal_normal (treptr_nil);
+    printf ("* ");
+    tre_interrupt_debugger = FALSE;
+    treio_flush (treio_console);
 }
 
 void
 tremain (void)
 {
-    while (1)
-        if (tremain_line (treio_reader) == treptr_invalid)
-	    	break;
+    treptr       x;
+    char *       p = getenv ("HOME");
+    char *       line;
+    char *       history_path = malloc (4096);
+    trestream *  s;
+
+    strcpy (history_path, p);
+    strcpy (&history_path[strlen (p)], "/.tre-history.lisp");
+    linenoiseHistoryLoad (history_path);
+
+    while (1) {
+        if (!is_standard_stream (treio_reader)) {
+            if (tremain_line (treio_reader) == treptr_invalid)
+                break;
+            continue;
+        }
+
+        line = linenoise ("* ");
+        if (!line)
+            return;
+
+        linenoiseHistoryAdd (line);
+        linenoiseHistorySave (history_path);
+
+        s = trestream_string_make (line);
+        treiostd_divert (s);
+        x = tremain_line (treio_reader);
+        treiostd_undivert ();
+
+        if (x == treptr_invalid)
+            break;
+        treprint (x);
+    }
 }
 
 treptr * trestack;

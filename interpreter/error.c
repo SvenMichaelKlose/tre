@@ -28,9 +28,8 @@ treerror_msg (treptr expr, const char * prefix, const char * msg, va_list ap)
 	trestream * s = treio_get_stream ();
 
     fflush (stdout);
-	if (!on_standard_stream ())
-		fprintf (stderr, "; Break on line %ld, column %ld in file '%s'.\n",
-                         (long) s->line, (long) s->column, s->file_name);
+    fprintf (stderr, "; Break on line %ld, column %ld in file '%s'.\n",
+                     (long) s->line, (long) s->column, s->file_name);
     fprintf (stderr, "; %s: ", prefix);
     vfprintf (stderr, msg, ap);
     fprintf (stderr, "\n");

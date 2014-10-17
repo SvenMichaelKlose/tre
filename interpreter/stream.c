@@ -32,9 +32,9 @@ trestream * treio_reader;
 trestream * treio_console;
 
 bool
-on_standard_stream ()
+is_standard_stream (trestream * s)
 {
-    return tre_stream_stack_ptr == 1;
+    return s->detail_in == stdin;
 }
 
 void
@@ -191,18 +191,6 @@ treiostd_undivert_all ()
 {
     while (tre_stream_stack_ptr > 1)
         treiostd_undivert ();
-}
-
-void
-treio_prompt ()
-{
-    if (tre_stream_stack_ptr != 1)
-        return;
-
-	(void) trestream_builtin_terminal_normal (treptr_nil);
-    printf ("* ");
-	tre_interrupt_debugger = FALSE;
-    STREAM_FLUSH(treio_console);
 }
 
 void

@@ -42,6 +42,7 @@ FILES="
 	function.c
 	gc.c
 	image.c
+	linenoise.c
 	list.c
 	macro.c
 	main.c
@@ -54,6 +55,7 @@ FILES="
 	special_exception.c
 	stream.c
 	stream_file.c
+	stream_string.c
 	string.c
 	symtab.c
 	symbol.c

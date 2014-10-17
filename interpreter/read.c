@@ -417,7 +417,6 @@ treread (trestream * stream)
 {
     treptr x;
 
-    treio_prompt ();
     treio_skip_spaces (stream);
     if (treio_eof (stream))
 	    return treptr_invalid;
