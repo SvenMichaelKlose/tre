@@ -9,7 +9,7 @@
 #include "atom.h"
 #include "symtab.h"
 #include "symbol.h"
-#include "thread.h"
+#include "backtrace.h"
 
 treptr treptr_backtrace = 0;
 
