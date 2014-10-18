@@ -308,7 +308,7 @@ treimage_read_conses (FILE * f)
 
     treimage_read (f, tregc_listmarks, sizeof tregc_listmarks);
 
-    list_num_used = 0;
+    conses_used = 0;
     tre_lists_free = 0;
     DOTIMES(i, sizeof tregc_listmarks) {
         c = 1;
@@ -316,7 +316,7 @@ treimage_read_conses (FILE * f)
             if (!(tregc_listmarks[i] & c)) {
                 treimage_read (f, &tre_lists[idx], sizeof (struct tre_list));
                 treimage_read (f, &tre_listprops[idx], sizeof (treptr));
-                list_num_used++;
+                conses_used++;
             } else {
                 _CDR(idx) = tre_lists_free;
                 tre_lists_free = idx;
