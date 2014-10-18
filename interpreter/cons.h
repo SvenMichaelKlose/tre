@@ -74,7 +74,7 @@ extern void trecons_init (void);
 extern struct   tre_list tre_lists[NUM_LISTNODES];
 extern treptr   tre_listprops[NUM_LISTNODES];
 extern treptr   tre_default_listprop;
-extern treptr   tre_lists_free;
+extern treptr   conses_free;
 extern tre_size conses_used;
 
 extern treptr cons (treptr car, treptr cdr);

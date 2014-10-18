@@ -16,7 +16,7 @@
 #include "symtab.h"
 #include "assert.h"
 
-treptr tre_lists_free;
+treptr conses_free;
 struct tre_list tre_lists[NUM_LISTNODES];
 treptr tre_listprops[NUM_LISTNODES];
 treptr tre_default_listprop;
@@ -73,8 +73,8 @@ rplacp (treptr cons, treptr val)
 void
 cons_free (treptr x)
 {
-    _CDR(x) = tre_lists_free;
-    tre_lists_free = x;
+    _CDR(x) = conses_free;
+    conses_free = x;
     conses_used--;
 }
 
@@ -108,7 +108,7 @@ list_gc (treptr car, treptr cdr)
     tregc_push (cdr);
 
 	tregc_force ();
-   	if (!tre_lists_free)
+   	if (!conses_free)
     	treerror_internal (treptr_invalid, "Out of conses.");
 
     tregc_pop ();
@@ -120,11 +120,11 @@ cons (treptr car, treptr cdr)
 {
     treptr cons;
 
-    if (!tre_lists_free)
+    if (!conses_free)
 	    list_gc (car, cdr);
 
-    cons = tre_lists_free;
-    tre_lists_free = _CDR(cons);
+    cons = conses_free;
+    conses_free = _CDR(cons);
 
     _CAR(cons) = car;
     _CDR(cons) = cdr;
@@ -144,7 +144,7 @@ trecons_init ()
 		_CDR(i) = (treptr) i + 1;
     _CDR(LAST_LISTNODE) = 0;
 
-    tre_lists_free = FIRST_LISTNODE;
+    conses_free = FIRST_LISTNODE;
     tre_default_listprop = treptr_nil;
     conses_used = 0;
 }
