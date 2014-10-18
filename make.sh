@@ -251,27 +251,27 @@ boot)
 
 phptests)
     echo "PHP target tests..."
-    $TRE makefiles/test-php.lisp
+    $TRE tests/php.lisp
     php compiled/test.php >_phptests.log || exit 1
-    cmp makefiles/test-php.correct-output _phptests.log || (diff makefiles/test-php.correct-output _phptests.log; exit 1)
+    cmp tests/php.correct-output _phptests.log || (diff tests/php.correct-output _phptests.log; exit 1)
     echo "PHP target tests passed."
 	;;
 
 jstests)
     echo "JavaScript target tests..."
-    $TRE makefiles/test-js.lisp
+    $TRE tests/js.lisp
     (nodejs compiled/test.js >_nodejstests.log || node compiled/test.js >_nodejstests.log) || exit 1
-    cmp makefiles/test-js.correct-output _nodejstests.log || (diff makefiles/test-js.correct-output _nodejstests.log; exit 1)
-    echo "JavaScript target tests passed (node.js only)."
+    cmp tests/js.correct-output _nodejstests.log || (diff tests/js.correct-output _nodejstests.log; exit 1)
+    echo "JavaScript target tests passed in node.js."
     chromium-browser compiled/test.html &
 	;;
 
 updatetests)
-    echo "Updateing PHP target test data..."
-    $TRE makefiles/test-php.lisp
-    php compiled/test.php >makefiles/test-php.correct-output
-    echo "Updateing JavaScript target test data (node.js only)..."
-    nodejs compiled/test.js >makefiles/test-js.correct-output || node compiled/test.js >makefiles/test-js.correct-output
+    echo "Updating PHP target test data..."
+    $TRE tests/php.lisp
+    php compiled/test.php >tests/php.correct-output
+    echo "Updating JavaScript target test data (node.js only)..."
+    nodejs compiled/test.js >tests/js.correct-output || node compiled/test.js >tests/js.correct-output
     ;;
 
 tests)
