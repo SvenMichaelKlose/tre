@@ -207,21 +207,21 @@ filter (treptr fun, treptr x)
 }
 
 treptr
-carlist (treptr x)
+cdrlist (treptr x)
 {
     treptr  q = tre_make_queue ();
     treptr  i;
 
     tregc_push (q);
     DOLIST(i, x)
-        tre_enqueue (q, CAAR(i));
+        tre_enqueue (q, CDAR(i));
     tregc_pop ();
 
     return tre_queue_list (q);
 }
 
 treptr
-mapcar_cdrlist (treptr x)
+mapcar_carlist (treptr x)
 {
     treptr  q = tre_make_queue ();
     treptr  i;
@@ -231,7 +231,7 @@ mapcar_cdrlist (treptr x)
         if (NOT(CAR(i)))
             goto skip_rest;
         ASSERT_CONS(CAR(i));
-        tre_enqueue (q, CDAR(i));
+        tre_enqueue (q, CAAR(i));
     }
     tregc_pop ();
 
@@ -250,14 +250,18 @@ mapcar (treptr fun, treptr x)
 
     tregc_push (q);
     while (1) {
-        args = carlist (x);
-        if (NOT(args)) {
-            tregc_pop ();
+        tregc_push (x);
+        args = mapcar_carlist (x);
+        tregc_push (args);
+        if (NOT(args))
             break;
-        }
         tre_enqueue (q, funcall (fun, args));
-        x = mapcar_cdrlist (x);
+        x = cdrlist (x);
+        tregc_pop ();
+        tregc_pop ();
     }
+    tregc_pop ();
+    tregc_pop ();
     tregc_pop ();
 
     return tre_queue_list (q);

@@ -22,11 +22,5 @@
 	  (apply #'map func lists)))
   nil)
 
-(defun mapcar (func &rest lists)
-  (let args (%map-args lists)
-    (& args
-       (. (apply func args)
-          (apply #'mapcar func lists)))))
-
 (defun mapcan (func &rest lists)
   (apply #'nconc (apply #'mapcar func lists)))
