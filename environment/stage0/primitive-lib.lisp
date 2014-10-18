@@ -37,7 +37,8 @@
 	(cons (cons '*default-listprop* nil)
 	(cons (cons '*exception* nil)
 	(cons (cons '*backtrace* nil)
-		  *variables*))))))))))))))))
+	(cons (cons '*assert* nil)
+		  *variables*)))))))))))))))))
 
 (%set-atom-fun identity #'((x) x))
 (%set-atom-fun list #'((&rest x) x))

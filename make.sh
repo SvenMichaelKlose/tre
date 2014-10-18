@@ -178,14 +178,18 @@ crunsh)
 
 reload)
     echo "Reloading environment from source..."
-    echo | ./tre -n
+    echo | ./tre -n || exit 1
+	;;
+
+reloadnoassert)
+    echo "Reloading environment from source..."
+    echo | ./tre -n -e "(setq *assert* nil)" || exit 1
 	;;
 
 interpreter)
     echo "Making interpreter..."
 	basic_clean
 	./make.sh crunsh $ARGS || exit 1
-	./make.sh reload $ARGS || exit 1
 	;;
 
 debug)
@@ -227,6 +231,7 @@ environment)
 devboot)
     echo "Carefully booting everything from scratch..."
 	./make.sh interpreter $ARGS || exit 1
+	./make.sh reloadnoassert $ARGS || exit 1
 	./make.sh compiler $ARGS || exit 1
 	./make.sh crunsh $ARGS || exit 1
 	./make.sh environment $ARGS || exit 1
@@ -236,8 +241,10 @@ devboot)
 boot)
     echo "Booting everything from scratch..."
 	./make.sh interpreter -DTRE_NO_BACKTRACE -DTRE_NO_ASSERTIONS -DNDEBUG $ARGS || exit 1
+	./make.sh reloadnoassert $ARGS || exit 1
 	(echo "(= (transpiler-backtrace? *c-transpiler*) nil)(compile-c-compiler)" | $TRE) || exit 1
 	./make.sh crunsh -DTRE_NO_BACKTRACE -DTRE_NO_ASSERTIONS -DNDEBUG $ARGS || exit 1
+	./make.sh reload $ARGS || exit 1
 	./make.sh environment $ARGS || exit 1
 	./make.sh crunsh $ARGS|| exit 1
 	;;

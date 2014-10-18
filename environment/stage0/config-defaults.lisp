@@ -1,6 +1,8 @@
 ;;;; tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
 
-(defvar *assert*          t)
+(? (eq *assert* '*assert*)
+   (setq *assert* t))
+
 (defvar *tre-has-math*    t)
 (defvar *tre-has-alien*   t)
 (defvar *tre-has-class*   t)
