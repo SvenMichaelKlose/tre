@@ -4,9 +4,9 @@
   (& head
 	 (!? tail-permutations
 	     (mapcan #'((h)
-	 	              (mapcar [. h (copy-list _)] !))
+	 	              (filter [. h (copy-list _)] !))
 		         head)
-		(mapcar #'list head))))
+		(filter #'list head))))
 
 (defun permutate (x)
   (& x (permutate-1 x. (permutate .x))))

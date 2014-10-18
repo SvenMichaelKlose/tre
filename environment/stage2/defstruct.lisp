@@ -17,13 +17,13 @@
      field))
 
 (defun %struct-make-args (fields)
-  `(&key ,@(mapcar [let n (%struct-field-name _)
+  `(&key ,@(filter [let n (%struct-field-name _)
                      `(,n ',n)]
 				   fields)))
 
 (defun %struct-make-init (fields g)
   (let index 1
-    (mapcar [let argname (%struct-field-name _)
+    (filter [let argname (%struct-field-name _)
               `(= (aref ,g ,(++! index))
                   (? (eq ,argname ',argname)
                      ,(& (cons? _)
@@ -59,7 +59,7 @@
 
 (defun %struct-getters (name fields)
   (let index 1
-    (mapcar [%struct-single-get name (%struct-field-name _) (++! index)] fields)))
+    (filter [%struct-single-get name (%struct-field-name _) (++! index)] fields)))
 
 (defun struct? (x)
   (& (array? x)

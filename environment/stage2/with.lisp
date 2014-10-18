@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun copy-while (pred x)
   (& x
@@ -32,7 +32,7 @@
 	    ; Accumulate this and all following functions into a LABEL,
         ; so they can call each other.
 		(lambda? val) (multiple-value-bind (funs others) (separate [lambda? (cadr _)] (group alst 2))
-		                `(labels ,(mapcar ^(,(car _) ,@(past-lambda (cadr _))) funs)
+		                `(labels ,(filter ^(,(car _) ,@(past-lambda (cadr _))) funs)
 			               ,@(sub (apply #'append others))))
 
         `(let ,plc ,val
