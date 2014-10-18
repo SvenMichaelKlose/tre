@@ -48,10 +48,10 @@ void
 trearg_get2 (treptr *a, treptr *b, treptr list)
 {
 #ifndef TRE_NO_ASSERTIONS
-    treptr  second = treptr_nil;
+    treptr  second = NIL;
 
-    *a = treptr_nil;
-    *b = treptr_nil;
+    *a = NIL;
+    *b = NIL;
 
 	do {
    		while (NOT(list))
@@ -139,9 +139,9 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
 #endif
     tre_size kpos;
 
-    dvars = vars = CONS(treptr_nil, treptr_nil);
+    dvars = vars = CONS(NIL, NIL);
     tregc_push (dvars);
-    dvals = vals = CONS(treptr_nil, treptr_nil);
+    dvals = vals = CONS(NIL, NIL);
     tregc_push (dvals);
     args = list_copy (args);
     tregc_push (args);
@@ -160,7 +160,7 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
 
 		/* Fetch next form and argument. */
         var = CAR(argdef);
-		val = (NOT_NIL(args)) ? CAR(args) : treptr_nil;
+		val = (NOT_NIL(args)) ? CAR(args) : NIL;
 
 		/* Process sub-level argument list. */
         if (CONSP(var)) {
@@ -189,8 +189,8 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
 	    	svals = (do_argeval) ? eval_args (args) : args;
 
 	    	/* Add arguments as a list. */
-	    	_ADDF(dvals, CONS(svals, treptr_nil));
-	    	args = treptr_nil;
+	    	_ADDF(dvals, CONS(svals, NIL));
+	    	args = NIL;
 	    	break;
         }
 
@@ -213,26 +213,26 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
 				form = CAR(argdef);
 
 				/* Get init value. */
-				init = treptr_nil;
+				init = NIL;
 				if (CONSP(form)) {
 		    		init = CADR(form);
 		    		form = CAR(form);
 				}
 
-	        	_ADDF(dvars, CONS(form, treptr_nil));
+	        	_ADDF(dvars, CONS(form, NIL));
 
 				svals = NOT_NIL(args) ?
                             (do_argeval ? eval (CAR(args)) : CAR(args)) :
                             eval (init);
 
 	        	/* Add argument as a list. */
-	        	_ADDF(dvals, CONS(svals, treptr_nil));
+	        	_ADDF(dvals, CONS(svals, NIL));
 
 	        	argdef = CDR(argdef);
 				if (NOT_NIL(args))
 	            	args = CDR(args);
 	    	}
-	    	args = treptr_nil;
+	    	args = NIL;
 	    	break;
         }
 
@@ -248,7 +248,7 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
 #endif
 	    	while (NOT_NIL(argdef)) {
 	        	key = CAR(argdef);
-				init = treptr_nil;
+				init = NIL;
                 if (CONSP(key)) {
 		    		init = CADR(key);
 		    		key = CAR(key);
@@ -266,7 +266,7 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
         	    	while (NOT(CDR(args))) {
                         treprint (original_argdef);
                         treprint (original_args);
-	    	        	RPLACD(args, CONS(treerror (args, "Missing argument after keyword."), treptr_nil));
+	    	        	RPLACD(args, CONS(treerror (args, "Missing argument after keyword."), NIL));
                     }
 #endif
 		    		args = list_delete (kpos, args);
@@ -279,8 +279,8 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
 		    		svals = eval (init);
 
 				tregc_push (svals);
-				_ADDF(dvars, CONS(key, treptr_nil));
-				_ADDF(dvals, CONS(svals, treptr_nil));
+				_ADDF(dvars, CONS(key, NIL));
+				_ADDF(dvals, CONS(svals, NIL));
 				tregc_pop ();
 
 	        	argdef = CDR(argdef);
@@ -301,8 +301,8 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
 	    	val = eval (CAR(args));
 
         tregc_push (val);
-        _ADDF(dvars, CONS(var, treptr_nil));
-        _ADDF(dvals, CONS(val, treptr_nil));
+        _ADDF(dvars, CONS(var, NIL));
+        _ADDF(dvals, CONS(val, NIL));
         tregc_pop ();
 
 next:

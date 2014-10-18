@@ -34,12 +34,12 @@ trefunction_alloc ()
         tregc_force ();
     	i = malloc (sizeof (trefunction));
         if (!i)
-	    	treerror_internal (treptr_nil, "Out of memory for more functions.");
+	    	treerror_internal (NIL, "Out of memory for more functions.");
     }
 
-    i->name = treptr_nil;
-    i->source = treptr_nil;
-    i->bytecode = treptr_nil;
+    i->name = NIL;
+    i->source = NIL;
+    i->bytecode = NIL;
     i->native = NULL;
     i->native_expander = NULL;
 

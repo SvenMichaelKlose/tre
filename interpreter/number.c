@@ -57,7 +57,7 @@ trenumber_alloc (double value, int type)
         tregc_force ();
     	i = malloc (sizeof (trenumber));
         if (!i)
-	    	treerror_internal (treptr_nil, "Out of memory for more numbers.");
+	    	treerror_internal (NIL, "Out of memory for more numbers.");
     }
     i->value = value;
     i->type = type;

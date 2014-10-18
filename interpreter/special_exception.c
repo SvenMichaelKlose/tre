@@ -39,5 +39,5 @@ trespecial_throw (treptr x)
     treexception_throw (eval_args (x));
 
     /*NOTREACHED*/
-    return treptr_nil;
+    return NIL;
 }

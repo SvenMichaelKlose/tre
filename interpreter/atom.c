@@ -31,7 +31,7 @@ tre_type tre_atom_types[NUM_ATOMS];
 #define TREPTR_T_INDEX		1
 #define TREPTR_FIRST_INDEX	2
 
-const treptr treptr_nil = TRETYPE_INDEX_TO_PTR(TRETYPE_SYMBOL, TREPTR_NIL_INDEX);
+const treptr NIL = TRETYPE_INDEX_TO_PTR(TRETYPE_SYMBOL, TREPTR_NIL_INDEX);
 const treptr treptr_t = TRETYPE_INDEX_TO_PTR(TRETYPE_SYMBOL, TREPTR_T_INDEX);
 const treptr treptr_invalid = (treptr) -1;
 
@@ -68,8 +68,8 @@ treatom_init_atom_table (void)
 void
 treatom_init_truth (void)
 {
-	tre_atoms[TREPTR_NIL_INDEX] = (void *) symtab_add (treptr_nil, "NIL", treptr_nil, treptr_nil, treptr_nil);
-	tre_atoms[TREPTR_T_INDEX] = (void *) symtab_add (treptr_t, "T", treptr_t, treptr_nil, treptr_nil);
+	tre_atoms[TREPTR_NIL_INDEX] = (void *) symtab_add (NIL, "NIL", NIL, NIL, NIL);
+	tre_atoms[TREPTR_T_INDEX] = (void *) symtab_add (treptr_t, "T", treptr_t, NIL, NIL);
 }
 
 void
@@ -86,7 +86,7 @@ treatom_register_compiled_function (treptr sym, void * fun, void * expander_fun)
         return sym;
 
     if (NOT(SYMBOL_FUNCTION(sym)))
-        tresymbol_set_function (trefunction_make (TRETYPE_FUNCTION, treptr_nil), sym);
+        tresymbol_set_function (trefunction_make (TRETYPE_FUNCTION, NIL), sym);
 
     FUNCTION_NATIVE(SYMBOL_FUNCTION(sym)) = fun;
     FUNCTION_NATIVE_EXPANDER(SYMBOL_FUNCTION(sym)) = expander_fun;
@@ -196,7 +196,7 @@ treatom_body_to_var (treptr body)
                 return TREINDEX_TO_PTR(b);
     }
 
-    return treptr_nil;
+    return NIL;
 }
 
 treptr
@@ -211,5 +211,5 @@ treatom_fun_body (treptr atomp)
     if (NOT_NIL(fun))
         return CDR(SYMBOL_VALUE(fun));
 
-    return treptr_nil;
+    return NIL;
 }

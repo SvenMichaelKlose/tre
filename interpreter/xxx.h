@@ -5,7 +5,7 @@
 #ifndef TRE_XXX_H
 #define TRE_XXX_H
 
-#define RETURN_NIL(x)	    if (NOT(x)) return treptr_nil;
+#define RETURN_NIL(x)	    if (NOT(x)) return NIL;
 #define RETURN_IF_NULL(x)   if (x == NULL) return;
 #define RETURN_IF_NIL(x)    if (NOT(x)) return;
 

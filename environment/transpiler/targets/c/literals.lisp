@@ -26,4 +26,4 @@
   :init-maker `(tregc_add_unremovable (symbol_get_packaged (%%native (%%string ,(symbol-name x)))
 			                                               ,(? (keyword? x)
 				                                               'tre_package_keyword
-				                                               'treptr_nil))))
+				                                               'NIL))))

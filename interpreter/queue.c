@@ -14,7 +14,7 @@
 treptr
 tre_make_queue ()
 {
-    return CONS(treptr_nil, treptr_nil);
+    return CONS(NIL, NIL);
 }
 
 void
@@ -28,7 +28,7 @@ tre_enqueue (treptr queue, treptr value)
 
     tregc_push (value);
 
-    new = CONS(value, treptr_nil);
+    new = CONS(value, NIL);
     RPLACD(last, new);
     RPLACA(queue, new);
 
@@ -52,5 +52,5 @@ tre_queue_pop (treptr queue)
 {
     RPLACD(queue, CDR(CDR(queue)));
     if (NOT(CDR(queue)))
-        RPLACA(queue, treptr_nil);
+        RPLACA(queue, NIL);
 }

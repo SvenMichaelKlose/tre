@@ -199,5 +199,5 @@ symtab_init ()
 {
     num_symbols = 0;
 	symtab_init_packages ();
-    symtab_set_package (0, treptr_nil);
+    symtab_set_package (0, NIL);
 }

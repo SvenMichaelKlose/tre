@@ -105,9 +105,9 @@ trestring_builtin_compare (treptr list)
 			continue;
 		y = TREPTR_STRINGZ(a);
 		if (len != TREPTR_STRINGLEN(a))
-			return treptr_nil;
+			return NIL;
 		if (memcmp (x, y, len))
-			return treptr_nil;
+			return NIL;
 	}
 
     return treptr_t;

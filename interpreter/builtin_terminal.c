@@ -22,7 +22,7 @@ treterminal_builtin_raw (treptr no_args)
     settings.c_cc[VTIME] = 0;
     (void) tcsetattr (desc, TCSANOW, &settings);
 
-	return treptr_nil;
+	return NIL;
 }
 
 treptr
@@ -39,5 +39,5 @@ treterminal_builtin_normal (treptr no_args)
     settings.c_cc[VTIME] = 0;
     (void) tcsetattr (desc, TCSANOW, &settings);
 
-	return treptr_nil;
+	return NIL;
 }

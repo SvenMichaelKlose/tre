@@ -81,7 +81,7 @@ treptr
 trecode_get (treptr ** p)
 {
     treptr  v;
-    treptr  fun = treptr_nil;
+    treptr  fun = NIL;
     treptr  args;
     treptr  car;
     treptr  cdr;
@@ -179,7 +179,7 @@ trecode_exec (treptr fun)
     code = x;
 
     DOTIMES(i, num_locals)
-        *--trestack_ptr = treptr_nil;
+        *--trestack_ptr = NIL;
 
     while (1) {
         v = *x;

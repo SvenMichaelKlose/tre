@@ -167,7 +167,7 @@ void
 treiostd_divert (trestream * s)
 {
     if (tre_stream_stack_ptr == TRE_MAX_NESTED_FILES)
-		treerror_internal (treptr_nil, "Too many nested files.");
+		treerror_internal (NIL, "Too many nested files.");
 
     tre_stream_stack[tre_stream_stack_ptr++] = s;
     treio_reader = s;

@@ -35,15 +35,15 @@ typedef unsigned int tre_size;
 #define FUNCTIONP(ptr)	    (TREPTR_TYPE(ptr) == TRETYPE_FUNCTION)
 
 #define CALLABLEP(x)           (FUNCTIONP(x) || MACROP(x))
-#define COMPILED_FUNCTIONP(x)  ((FUNCTIONP(x) || MACROP(x)) && (FUNCTION_BYTECODE(x) != treptr_nil || FUNCTION_NATIVE(x)))
+#define COMPILED_FUNCTIONP(x)  ((FUNCTIONP(x) || MACROP(x)) && (FUNCTION_BYTECODE(x) != NIL || FUNCTION_NATIVE(x)))
 
-#define TREPTR_TRUTH(test)  ((test) ? treptr_t : treptr_nil)
+#define TREPTR_TRUTH(test)  ((test) ? treptr_t : NIL)
 
-#define NOT(x)              (x == treptr_nil)
-#define NOT_NIL(x)          (x != treptr_nil)
+#define NOT(x)              (x == NIL)
+#define NOT_NIL(x)          (x != NIL)
 #define LISTP(x)            (NOT(x) || CONSP(x))
 
-extern const treptr treptr_nil;
+extern const treptr NIL;
 extern const treptr treptr_t;
 extern const treptr treptr_invalid;
 

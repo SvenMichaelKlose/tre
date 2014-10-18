@@ -12,7 +12,7 @@ extern treptr tre_package_keyword;
     (SYMBOL_VALUE(treptr_universe) = CONS(ptr, SYMBOL_VALUE(treptr_universe)))
 
 #define MAKE_HOOK_SYMBOL(var, symbol_name) \
-    var = symbol_alloc (symbol_name, treptr_nil); \
+    var = symbol_alloc (symbol_name, NIL); \
     EXPAND_UNIVERSE(var)
 
 #define MAKE_SYMBOL(symbol_name, init) \

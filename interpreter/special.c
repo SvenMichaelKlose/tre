@@ -190,7 +190,7 @@ trespecial_if (treptr p)
         p = CDR(p);
     }
 
-    return treptr_nil;
+    return NIL;
 }
 
 treptr
@@ -198,7 +198,7 @@ trespecial_quote (treptr list)
 {
 #ifndef TRE_NO_ASSERTIONS
     if (NOT(list))
-        treerror (treptr_nil, "Argument expected.");
+        treerror (NIL, "Argument expected.");
 #endif
     return CAR(list);
 }
@@ -208,7 +208,7 @@ trespecial_progn (treptr list)
 {
     treptr last;
 
-    for (last = treptr_nil; NOT_NIL(list); list = CDR(list)) {
+    for (last = NIL; NOT_NIL(list); list = CDR(list)) {
 		last = eval (CAR(list));
 		TREEVAL_RETURN_JUMP(last);
     }
@@ -221,7 +221,7 @@ trespecial_block (treptr args)
 {
     treptr tag;
     treptr p;
-    treptr last = treptr_nil;
+    treptr last = NIL;
 
     tag = CAR(args);
 #ifndef TRE_NO_ASSERTIONS
@@ -283,7 +283,7 @@ trespecial_return_from (treptr args)
 treptr
 trespecial_tagbody (treptr body)
 {
-    treptr res = treptr_nil;
+    treptr res = NIL;
     treptr tag;
     treptr p;
     treptr a;
@@ -318,7 +318,7 @@ next:
         p = CDR(p);
     }
 
-    return treptr_nil;
+    return NIL;
 }
 
 treptr
@@ -384,7 +384,7 @@ trespecial_init ()
     for (i = 0; tre_special_names[i] != NULL; i++) {
         fun = treatom_alloc (TRETYPE_SPECIAL);
         ATOM(fun) = (void*) i;
-        name = symbol_alloc (tre_special_names[i], treptr_nil);
+        name = symbol_alloc (tre_special_names[i], NIL);
         tresymbol_set_function (fun, name);
         EXPAND_UNIVERSE(name);
     }

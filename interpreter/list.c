@@ -71,7 +71,7 @@ treptr
 list_delete (tre_size i, treptr x)
 {
     treptr  p;
-    treptr  f = treptr_nil;
+    treptr  f = NIL;
 
     if (i == 0)
 		return CDR(x);

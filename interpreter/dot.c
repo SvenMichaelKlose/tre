@@ -26,7 +26,7 @@ tredot_expand (treptr list)
 {
     return NOT(SYMBOL_FUNCTION(treptr_dotexpand_hook)) ?
                list :
-               funcall (SYMBOL_FUNCTION(treptr_dotexpand_hook), CONS(list, treptr_nil));
+               funcall (SYMBOL_FUNCTION(treptr_dotexpand_hook), CONS(list, NIL));
 }
 
 void

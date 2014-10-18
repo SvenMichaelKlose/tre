@@ -27,7 +27,7 @@ trequasiquote_expand (treptr list)
     treptr sym = SYMBOL_FUNCTION(treptr_quasiquoteexpand_hook);
     return NOT(sym) ?
                list :
-               funcall (sym, CONS(list, treptr_nil));
+               funcall (sym, CONS(list, NIL));
 }
 
 void

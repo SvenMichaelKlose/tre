@@ -58,7 +58,7 @@ funcall_ffi (void * fun, treptr x)
 	if (ffi_prep_cif (&cif, FFI_DEFAULT_ABI, i, &ffi_type_ulong, args) == FFI_OK)
 		ffi_call (&cif, fun, &rc, values);
 	else
-        treerror_norecover (treptr_nil, "libffi: cif is not O.K.");
+        treerror_norecover (NIL, "libffi: cif is not O.K.");
 
     free (args);
     free (refs);
@@ -75,7 +75,7 @@ funcall_c (treptr func, treptr args, bool do_eval)
 
     tregc_push (a);
     ret = (FUNCTION_NATIVE_EXPANDER(func)) ?
-              funcall_ffi (FUNCTION_NATIVE_EXPANDER(func), CONS(a, treptr_nil)) :
+              funcall_ffi (FUNCTION_NATIVE_EXPANDER(func), CONS(a, NIL)) :
               funcall_ffi (FUNCTION_NATIVE(func), a);
     tregc_pop ();
 
@@ -106,7 +106,7 @@ funcall_compiled (treptr func, treptr args, bool do_eval)
     treptr v;
 
     tregc_push (args);
-    trebacktrace_push (treptr_nil);
+    trebacktrace_push (NIL);
     v = NOT_NIL(FUNCTION_BYTECODE(func)) ?
             funcall_bytecode (func, args, TREARRAY_VALUES(FUNCTION_BYTECODE(func))[0], do_eval) :
             funcall_c (func, args, do_eval);

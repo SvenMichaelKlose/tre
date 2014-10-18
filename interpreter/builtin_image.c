@@ -19,7 +19,7 @@ treptr
 treimage_builtin_create (treptr list)
 {
     treptr  file;
-    treptr  init_fun = treptr_nil;
+    treptr  init_fun = NIL;
 
     while (NOT(list) || ATOMP(list))
         list = treerror (treptr_invalid, "Argument list missing.");
@@ -37,7 +37,7 @@ treimage_builtin_create (treptr list)
        	file = treerror (file, "Cannot create image - please provide a new path.");
 	}
 
-    return treptr_nil;
+    return NIL;
 }
 
 treptr

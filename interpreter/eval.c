@@ -39,7 +39,7 @@ treptr
 eval_bind (treptr la, treptr lv)
 {
     treptr  sym;
-    treptr  old = treptr_nil;
+    treptr  old = NIL;
 
     while (NOT_NIL(la) && NOT_NIL(lv)) {
         tregc_push (old);
@@ -189,7 +189,7 @@ eval (treptr x)
 treptr
 eval_list (treptr x)
 {
-    treptr res = treptr_nil;
+    treptr res = NIL;
 
     DOLIST (x, x) {
         res = eval (CAR(x));
@@ -233,7 +233,7 @@ eval_init ()
 	EXPAND_UNIVERSE(eval_function_symbol);
 
     treopt_verbose_eval = symbol_get ("*VERBOSE-EVAL*");
-    SYMBOL_VALUE(treopt_verbose_eval) = treptr_nil;
+    SYMBOL_VALUE(treopt_verbose_eval) = NIL;
 	EXPAND_UNIVERSE(treopt_verbose_eval);
 }
 

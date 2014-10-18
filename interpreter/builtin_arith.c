@@ -92,7 +92,7 @@ treptr
 trenumber_builtin_difference (treptr x)
 {
     if (NOT(x))
-		return treerror (treptr_nil, "Argument expected.");
+		return treerror (NIL, "Argument expected.");
     if (NOT(CDR(x)))
 		return number_get_float (-TRENUMBER_VAL(CAR(x)));
 
@@ -117,7 +117,7 @@ treptr
 trenumber_builtin_quotient (treptr x)
 {
     if (NOT(x))
-		return treerror (treptr_nil, "Argument expected.");
+		return treerror (NIL, "Argument expected.");
     if (NOT(CDR(x)))
 		return number_get_float (1.0 / SYMBOL_VALUE(CAR(x)));
 
@@ -164,7 +164,7 @@ treptr
 trenumber_equal (treptr a, treptr b)
 {
     return STRINGP(a) || STRINGP(b) ?
-               trestring_builtin_compare (CONS(a, CONS(b, treptr_nil))) :
+               trestring_builtin_compare (CONS(a, CONS(b, NIL))) :
                TREPTR_TRUTH(TRENUMBER_VAL(a) == TRENUMBER_VAL(b));
 }
 

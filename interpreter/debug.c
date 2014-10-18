@@ -48,7 +48,7 @@ treptr
 trefunstack_get_named_function (treptr fspos)
 {
     treptr  p;
-    treptr  a = treptr_nil;
+    treptr  a = NIL;
 
     DOLIST(p, fspos) {
 		a = treatom_body_to_var (CAR(p));
@@ -66,14 +66,14 @@ tredebug_print_function (treptr fspos, treptr expr)
 
     par = trefunstack_get_named_function (fspos);
     if (NOT(par))
-        trewarn (treptr_nil, "couldn't lookup current function");
+        trewarn (NIL, "couldn't lookup current function");
 
     treprint_highlight = expr;
 
     printf ("*** In %s:\n", SYMBOL_NAME(par));
     treprint (FUNCTION_SOURCE(SYMBOL_FUNCTION(par)));
 
-    treprint_highlight = treptr_nil;
+    treprint_highlight = NIL;
 }
 
 void
@@ -148,7 +148,7 @@ char   tredebug_argvbuf[256];
 void
 tredebug_prompt (void)
 {
-	(void) treterminal_builtin_normal (treptr_nil);
+	(void) treterminal_builtin_normal (NIL);
     printf (":%ld] ", (long) tredebug_level);
 }
 
@@ -230,7 +230,7 @@ tredebug_remove_breakpoint (char *name)
 
     DOTIMES(j, TREDEBUG_MAX_BREAKPOINTS) {
         if (!strcmp (name, SYMBOL_NAME(tredebug_breakpoints[j]))) {
-	    	tredebug_breakpoints[j] = treptr_nil;
+	    	tredebug_breakpoints[j] = NIL;
 	    	c = TRUE;
 		}
     }
@@ -280,7 +280,7 @@ tredebug_breakpoints_delete_all (void)
     DOTIMES(i, TREDEBUG_MAX_BREAKPOINTS) {
         if (NOT_NIL(tredebug_breakpoints[i]))
  	    	printf ("%s ", SYMBOL_NAME(tredebug_breakpoints[i]));
-        tredebug_breakpoints[i] = treptr_nil;
+        tredebug_breakpoints[i] = NIL;
     }
 }
 
@@ -421,8 +421,8 @@ tredebug_init_mirror_stack (void)
 {
     tredebug_fspos = TRECONTEXT_FUNSTACK();
     tredebug_mirror_stack = NOT(TRECONTEXT_FUNSTACK()) ?
-                                treptr_nil :
-                                CONS(CONS(TRECONTEXT_FUNSTACK(), TRECONTEXT_CURRENT()), treptr_nil);
+                                NIL :
+                                CONS(CONS(TRECONTEXT_FUNSTACK(), TRECONTEXT_CURRENT()), NIL);
 }
 
 void            
@@ -487,7 +487,7 @@ tredebug (void)
 
     tredebug_mode = 0;
     tredebug_level++;
-    tredebug_next = treptr_nil;
+    tredebug_next = NIL;
     tredebug_init_mirror_stack ();
 
     while (1) {
@@ -555,7 +555,7 @@ tredebug (void)
 	    case 'q':
 			printf ("Terminating program.\n");
 			tredebug_level = 0;
-			tredebug_builtin_end_debug (treptr_nil);
+			tredebug_builtin_end_debug (NIL);
 
 	    default:
 			printf ("Unknown command '%c'. Type 'h' for help.\n", c);
@@ -564,7 +564,7 @@ tredebug (void)
 
 end:
     fflush (stdout);
-    return ret ? ret : treptr_nil;
+    return ret ? ret : NIL;
 }
 
 void
@@ -573,11 +573,11 @@ tredebug_init (void)
     size_t  i;
 
     tredebug_mode = 0;
-    tredebug_next = treptr_nil;
+    tredebug_next = NIL;
     tredebug_num_breakpoints = 0;
 
     DOTIMES(i, TREDEBUG_MAX_BREAKPOINTS)
-        tredebug_breakpoints[i] = treptr_nil;
+        tredebug_breakpoints[i] = NIL;
 
 
     tredebug_level = 0;
@@ -586,7 +586,7 @@ tredebug_init (void)
 void
 tredebug_init_late (void)
 {
-    MAKE_SYMBOL("*MILESTONE*", treptr_nil);
+    MAKE_SYMBOL("*MILESTONE*", NIL);
     treptr_milestone = symbol_get ("*MILESTONE*");
 }
 

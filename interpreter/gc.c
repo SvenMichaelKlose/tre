@@ -266,5 +266,5 @@ void
 tregc_init ()
 {
     tregc_running = FALSE;
-    tregc_unremovables = treptr_nil;
+    tregc_unremovables = NIL;
 }

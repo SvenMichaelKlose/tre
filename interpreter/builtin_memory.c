@@ -49,7 +49,7 @@ trebuiltin_free (treptr args)
 
 	free ((void *) (long) TRENUMBER_VAL(ptr));
 
-	return treptr_nil;
+	return NIL;
 }
 
 treptr
@@ -64,7 +64,7 @@ trebuiltin_free_exec (treptr args)
 
 	munmap ((void *) (long) TRENUMBER_VAL(ptr), (size_t) TRENUMBER_VAL(len));
 
-	return treptr_nil;
+	return NIL;
 }
 
 treptr

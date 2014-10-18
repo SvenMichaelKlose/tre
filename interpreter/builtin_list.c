@@ -93,7 +93,7 @@ treptr
 list_consp (treptr x)
 {
     if (ATOMP(x))
-        return treptr_nil;
+        return NIL;
     return treptr_t;
 }
 

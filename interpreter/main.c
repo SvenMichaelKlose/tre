@@ -113,7 +113,7 @@ tremain_expand (treptr expr)
 		tregc_push (expr);
 		expr = tredot_expand (expr);
 
-    	expr = tremacro_builtin_macroexpand (CONS(expr, treptr_nil));
+    	expr = tremacro_builtin_macroexpand (CONS(expr, NIL));
 
 		tregc_push (expr);
 		expr = trequasiquote_expand (expr);
@@ -151,7 +151,7 @@ tremain_line (trestream * stream)
 void
 tremain_prompt ()
 {
-    (void) treterminal_builtin_normal (treptr_nil);
+    (void) treterminal_builtin_normal (NIL);
     printf ("* ");
     tre_interrupt_debugger = FALSE;
     treio_flush (treio_console);
@@ -267,7 +267,7 @@ tremain_init (void)
     MAKE_SYMBOL("*OS-VERSION*",       trestring_get (TRE_OS_VERSION));
     MAKE_SYMBOL("*ENVIRONMENT-PATH*", trestring_get (TRE_ENVIRONMENT));
 	MAKE_SYMBOL("*LIBC-PATH*",        trestring_get (LIBC_PATH));
-	MAKE_SYMBOL("*ENDIANESS*",        symbol_alloc (TRE_ENDIANESS_STRING, treptr_nil));
+	MAKE_SYMBOL("*ENDIANESS*",        symbol_alloc (TRE_ENDIANESS_STRING, NIL));
 	MAKE_SYMBOL("*POINTER-SIZE*",     number_get_integer (sizeof (void *)));
 	MAKE_SYMBOL("*RAND-MAX*",         number_get_integer (RAND_MAX));
 
@@ -280,7 +280,7 @@ tremain_init (void)
 	MAKE_HOOK_SYMBOL(tremain_history_2, "__");
 	MAKE_HOOK_SYMBOL(tremain_history_3, "___");
 
-    tre_restart_fun = treptr_nil;
+    tre_restart_fun = NIL;
 
 	signal (SIGINT, tre_signal);
 
@@ -295,7 +295,7 @@ tremain_init_after_image_loaded ()
      * to evaluate after the environment is set up. */
     MAKE_SYMBOL("%LAUNCHFILE", (tremain_launchfile ?
                 				    trestring_get (tremain_launchfile) :
-                				    treptr_nil));
+                				    NIL));
 }
 
 void
@@ -423,8 +423,8 @@ user:
 #endif
 
     if (NOT_NIL(tre_restart_fun)) {
-        eval (CONS(tre_restart_fun, treptr_nil));
-        tre_restart_fun = treptr_nil;
+        eval (CONS(tre_restart_fun, NIL));
+        tre_restart_fun = NIL;
     }
 
     tremain ();

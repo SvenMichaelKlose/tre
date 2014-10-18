@@ -145,6 +145,6 @@ trecons_init ()
     _CDR(LAST_LISTNODE) = 0;
 
     conses_free = FIRST_LISTNODE;
-    tre_default_listprop = treptr_nil;
+    tre_default_listprop = NIL;
     conses_used = 0;
 }

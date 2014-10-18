@@ -27,7 +27,7 @@ treptr treptr_current_macro;
 treptr
 tremacro_builtin_macroexpand_1 (treptr list)
 {
-    treptr args = CONS(list, treptr_nil);
+    treptr args = CONS(list, NIL);
     treptr ret;
 
     tregc_push (args);

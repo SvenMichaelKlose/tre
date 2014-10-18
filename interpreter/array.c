@@ -37,7 +37,7 @@ trearray_alloc_raw (tre_size size)
     a->values = v;
 
     while (size--)
-		v[size] = treptr_nil;
+		v[size] = NIL;
 
     return a;
 }
@@ -96,7 +96,7 @@ trearray_get (treptr sizes)
 treptr
 trearray_make (tre_size size)
 {
-    return trearray_get (CONS(number_get_float ((double) size), treptr_nil));
+    return trearray_get (CONS(number_get_float ((double) size), NIL));
 }
 
 void

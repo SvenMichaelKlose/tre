@@ -65,7 +65,7 @@ trebuiltin_quit (treptr args)
     tre_exit (code);
 
     /*NOTREACHED*/
-    return treptr_nil;
+    return NIL;
 }
 
 treptr
@@ -94,14 +94,14 @@ trebuiltin_load (treptr expr)
     stream = treiostd_open_file (fname);
     if (stream == NULL) {
         treerror_norecover (treptr_invalid, "Couldn't load file '%s'.", fname);
-		return treptr_nil;
+		return NIL;
 	}
 
     treiostd_divert (stream);
     tremain ();
     treiostd_undivert ();
 
-    return treptr_nil;
+    return NIL;
 }
 
 treptr
@@ -109,7 +109,7 @@ trebuiltin_gc (treptr no_args)
 {
     (void) no_args;
     tregc_force ();
-    return treptr_nil;
+    return NIL;
 }
 
 char *tre_builtin_names[] = {
@@ -193,7 +193,7 @@ trebuiltin_debug (treptr no_args)
     (void) no_args;
 
     printf ("(DEBUG) called!");
-    return treptr_nil;
+    return NIL;
 }
 
 evalfunc_t eval_xlat_builtin[] = {
@@ -365,7 +365,7 @@ trebuiltin_init ()
     for (i = 0; tre_builtin_names[i] != NULL; i++) {
         fun = treatom_alloc (TRETYPE_BUILTIN);
         ATOM(fun) = (void*) i;
-        name = symbol_alloc (tre_builtin_names[i], treptr_nil);
+        name = symbol_alloc (tre_builtin_names[i], NIL);
         tresymbol_set_function(fun, name);
         EXPAND_UNIVERSE(name);
     }

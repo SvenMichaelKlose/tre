@@ -44,6 +44,6 @@ treexception_throw (treptr x)
 void
 treexception_init ()
 {
-    MAKE_SYMBOL("*EXCEPTION*", treptr_nil);
+    MAKE_SYMBOL("*EXCEPTION*", NIL);
     treptr_exception = symbol_get ("*EXCEPTION*");
 }

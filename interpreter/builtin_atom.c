@@ -70,7 +70,7 @@ treatom_builtin_not (treptr list)
 	do {
 		x = CAR(list);
     	if (NOT_NIL(x))
-            return treptr_nil;
+            return NIL;
 		list = CDR(list);
 	} while (NOT_NIL(list));
 
@@ -100,14 +100,14 @@ treatom_eql (treptr x, treptr y)
     treptr tmp;
    	if (NUMBERP(x)) {
        	if (NUMBERP(y) == FALSE)
-    		return treptr_nil;
+    		return NIL;
        	if (TRENUMBER_TYPE(x) != TRENUMBER_TYPE(y))
-    		return treptr_nil;
+    		return NIL;
        	RETURN_NIL(TREPTR_TRUTH(TRENUMBER_VAL(x) == TRENUMBER_VAL(y)));
    	} else if (STRINGP(x)) {
        	if (STRINGP(y) == FALSE)
-    		return treptr_nil;
-        tmp = CONS(y, treptr_nil);
+    		return NIL;
+        tmp = CONS(y, NIL);
         tregc_push (tmp);
         tmp = trestring_builtin_compare (CONS(x, tmp));
         tregc_pop ();
@@ -142,7 +142,7 @@ treatom_builtin_atom (treptr list)
 
 	DOLIST(x, list)
         if (CONSP(CAR(x)))
-		    return treptr_nil;
+		    return NIL;
     return treptr_t;
 }
 

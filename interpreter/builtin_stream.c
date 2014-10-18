@@ -85,7 +85,7 @@ trestream_builtin_file_exists (treptr args)
 
     if (access (TREPTR_STRINGZ(fname), F_OK) != -1)
         return treptr_t;
-    return treptr_nil;
+    return NIL;
 }
 
 treptr
@@ -94,7 +94,7 @@ trestream_builtin_force_output (treptr args)
     FILE  * str = trestream_builtin_get_handle (args, stdout);
 
     fflush (str);
-    return treptr_nil;
+    return NIL;
 }
 
 treptr
@@ -121,6 +121,6 @@ trestream_builtin_read_char (treptr args)
 
     c = fgetc (str);
     if (c == EOF)
-        return treptr_nil;
+        return NIL;
     return number_get_char (c);
 }

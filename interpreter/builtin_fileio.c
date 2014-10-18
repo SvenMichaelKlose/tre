@@ -27,7 +27,7 @@ trestream_fopen (treptr path, treptr mode)
     size_t i;
 
     if (file == NULL)
-        return treptr_nil;
+        return NIL;
 
     DOTIMES(i, TRE_FILEIO_MAX_FILES) {
         if (tre_fileio_handles[i] != NULL)
@@ -38,7 +38,7 @@ trestream_fopen (treptr path, treptr mode)
     }
 
     if (i == TRE_FILEIO_MAX_FILES)
-        return treptr_nil;
+        return NIL;
 
     return i;
 }

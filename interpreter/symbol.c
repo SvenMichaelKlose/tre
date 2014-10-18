@@ -22,7 +22,7 @@ symbol_alloc_packaged (char * name, treptr package, treptr value)
     if (value == treptr_invalid)
 		value = atom;
 
-	ATOM(atom) = symtab_add (atom, name, value, treptr_nil, package);
+	ATOM(atom) = symtab_add (atom, name, value, NIL, package);
 
 	return atom;
 }
@@ -54,15 +54,15 @@ symbol_get (char * name)
 void
 tresymbol_init (void)
 {
-    tre_package_keyword = symbol_alloc_packaged ("", treptr_nil, treptr_nil);
+    tre_package_keyword = symbol_alloc_packaged ("", NIL, NIL);
 	symtab_set_package (TREPACKAGE_KEYWORD_INDEX, tre_package_keyword);
 
-    treptr_universe = symbol_alloc_packaged ("*UNIVERSE*", treptr_nil, treptr_nil);
+    treptr_universe = symbol_alloc_packaged ("*UNIVERSE*", NIL, NIL);
     EXPAND_UNIVERSE(treptr_t);
 
     EXPAND_UNIVERSE(tre_package_keyword);
 
 	MAKE_SYMBOL("*KEYWORD-PACKAGE*", tre_package_keyword);
-    tre_default_listprop = symbol_alloc_packaged ("*DEFAULT-LISTPROP*", treptr_nil, treptr_nil);
+    tre_default_listprop = symbol_alloc_packaged ("*DEFAULT-LISTPROP*", NIL, NIL);
     EXPAND_UNIVERSE(tre_default_listprop);
 }

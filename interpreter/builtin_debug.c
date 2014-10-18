@@ -27,10 +27,10 @@ tredebug_builtin_end_debug (treptr no_args)
 {
     (void) no_args;
 
-    tre_restart (treptr_nil);
+    tre_restart (NIL);
 
     /*NOTREACHED*/
-    return treptr_nil;
+    return NIL;
 }
 
 treptr
@@ -43,7 +43,7 @@ tredebug_builtin_invoke_debugger (treptr no_args)
 
     tredebug ();
 
-    return treptr_nil;
+    return NIL;
 }
 
 treptr
@@ -56,14 +56,14 @@ treptr
 tredebug_builtin_set_breakpoint (treptr args)
 {
     tredebug_set_breakpoint (SYMBOL_NAME(tredebug_breakpoint_arg (args)));
-    return treptr_nil;
+    return NIL;
 }
 
 treptr
 tredebug_builtin_remove_breakpoint (treptr args)
 {
     tredebug_remove_breakpoint (SYMBOL_NAME(tredebug_breakpoint_arg (args)));
-    return treptr_nil;
+    return NIL;
 }
 
 #endif /* #ifdef INTERPRETER */

@@ -54,7 +54,7 @@ treimage_save_stack_content ()
     tre_size  size = TRESTACK_SIZE - (((long) trestack_ptr - (long) trestack) / sizeof (treptr));
     treptr *  s = trestack_ptr;
 
-    SYMBOL_VALUE(treptr_saved_restart_stack) = treptr_nil;
+    SYMBOL_VALUE(treptr_saved_restart_stack) = NIL;
 
     DOTIMES(i, size)
         SYMBOL_VALUE(treptr_saved_restart_stack) = CONS(*s++, SYMBOL_VALUE(treptr_saved_restart_stack));
@@ -262,7 +262,7 @@ treimage_read_atoms (FILE *f)
                     case TRETYPE_SYMBOL:
                         treimage_read (f, &symlen, sizeof (tre_size));
 					    if (symlen > TRE_MAX_SYMLEN)
-						    treerror_internal (treptr_nil, "While reading image: Symbol exceeds max length %d with length of %d.", TRE_MAX_SYMLEN, symlen);
+						    treerror_internal (NIL, "While reading image: Symbol exceeds max length %d with length of %d.", TRE_MAX_SYMLEN, symlen);
                		    treimage_read (f, symbol, symlen);
 					    symbol[symlen] = 0;
                         treimage_read (f, &package, sizeof (treptr));
@@ -423,7 +423,7 @@ treimage_load (char *file)
     tregc_init ();
     trebacktrace_init ();
     trethread_make ();
-    TRECONTEXT_FUNSTACK() = treptr_nil;
+    TRECONTEXT_FUNSTACK() = NIL;
 
 	tremain_init_after_image_loaded ();
     tre_restart (h.init_fun);
@@ -437,7 +437,7 @@ error:
 void
 treimage_init ()
 {
-    treimage_initfun = treptr_nil;
+    treimage_initfun = NIL;
 
     treptr_saved_restart_stack = symbol_get ("*SAVED-RESTART-STACK*");
     EXPAND_UNIVERSE(treptr_saved_restart_stack);

@@ -27,14 +27,14 @@ treptr
 trefunction_native (treptr fun)
 {
     ASSERT_CALLABLE(fun);
-	return FUNCTION_NATIVE(fun) ? number_get_float ((double) (long) FUNCTION_NATIVE(fun)) : treptr_nil;
+	return FUNCTION_NATIVE(fun) ? number_get_float ((double) (long) FUNCTION_NATIVE(fun)) : NIL;
 }
 
 treptr
 trefunction_bytecode (treptr fun)
 {
     ASSERT_CALLABLE(fun);
-	return FUNCTION_BYTECODE(fun) ? FUNCTION_BYTECODE(fun) : treptr_nil;
+	return FUNCTION_BYTECODE(fun) ? FUNCTION_BYTECODE(fun) : NIL;
 }
 
 treptr
@@ -125,7 +125,7 @@ trefunction_builtin_set_source (treptr x)
 treptr
 trefunction_builtin_make_function (treptr source)
 {
-    treptr s = treptr_nil;
+    treptr s = NIL;
 
     if (NOT_NIL(source))
         s = trearg_get (source);

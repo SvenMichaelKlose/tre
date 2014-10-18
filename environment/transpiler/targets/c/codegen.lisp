@@ -11,7 +11,7 @@
 
 ;;;; SYMBOL TRANSLATIONS
 
-(transpiler-translate-symbol *c-transpiler* nil "treptr_nil")
+(transpiler-translate-symbol *c-transpiler* nil "NIL")
 (transpiler-translate-symbol *c-transpiler* t   "treptr_t")
 
 
@@ -53,7 +53,7 @@
           `(,@(& (< 1 !)
 	             `(("    int __c; for (__c = " ,! "; __c > 0; __c--)")))
             ,@(& (< 0 !)
-                 (c-line " *--trestack_ptr = treptr_nil"))))
+                 (c-line " *--trestack_ptr = NIL"))))
       ,@(copy-arguments-to-vars fi))))
 
 (define-c-macro %function-epilogue (name)
@@ -107,7 +107,7 @@
 (defun c-make-array (size)
   (? (number? size)
      `("trearray_make (" (%%native ,size) ")")
-     `("trearray_get (CONS (" ,size ", treptr_nil))")))
+     `("trearray_get (CONS (" ,size ", NIL))")))
 
 (define-c-macro %make-scope (size)
   (c-make-array size))
@@ -128,11 +128,11 @@
   (c-line `(%%native "goto l" ,tag)))
 
 (define-c-macro %%go-nil (tag x)
-  `(,*c-indent* "if (" ,x " == treptr_nil)" ,*newline*
+  `(,*c-indent* "if (" ,x " == NIL)" ,*newline*
 	,*c-indent* ,@(c-line `(%%native "goto l" ,tag))))
 
 (define-c-macro %%go-not-nil (tag x)
-  `(,*c-indent* "if (" ,x " != treptr_nil)" ,*newline*
+  `(,*c-indent* "if (" ,x " != NIL)" ,*newline*
 	,*c-indent* ,@(c-line `(%%native "goto l" ,tag))))
 
 (define-c-macro return-from (block-name x)
@@ -170,7 +170,7 @@
 ;;;; EXCEPTIONS
 
 (define-c-macro %catch-enter ()
-  "(setjmp (catchers[current_catcher].jmp) ? treptr_t : treptr_nil)")
+  "(setjmp (catchers[current_catcher].jmp) ? treptr_t : NIL)")
 
 
 ;;;; BACKTRACE

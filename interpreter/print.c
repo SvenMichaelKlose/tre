@@ -61,7 +61,7 @@ treptr treprint_highlight;
 #define TREPRINT_HLCLOSE(x) \
     if (NOT_NIL(treprint_highlight) && treprint_highlight == x) { \
         printf (" <--- "); \
-		treprint_highlight = treptr_nil; \
+		treprint_highlight = NIL; \
     }
 
 void treprint_r (treptr);
@@ -252,11 +252,11 @@ treprint_indent (treptr p, size_t indent, bool nobracket, char * prepend)
 
     if (_CAR(p) == p) {
 		printf ("cons self-referenced in CAR");
-        _CAR(p) = treptr_nil;
+        _CAR(p) = NIL;
     }
     if (_CDR(p) == p) {
 		printf ("cons self-referenced in CDR");
-        _CDR(p) = treptr_nil;
+        _CDR(p) = NIL;
     }
 
     /* Indent line. */

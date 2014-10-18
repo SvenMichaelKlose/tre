@@ -270,14 +270,14 @@ treread_atom (trestream * stream)
 
     if (trenumber_is_value (name)) {
         if (sscanf (name, "%lf", &number) != 1)
-            treerror (treptr_nil, "Illegal number format %s.", name);
+            treerror (NIL, "Illegal number format %s.", name);
         return number_get_float (number);
     }
 
     return symbol_get_packaged (
 		name,
     	(*TRECONTEXT_PACKAGE_NAME() == -1) ?
-            treptr_nil :
+            NIL :
             symbol_get (TRECONTEXT_PACKAGE_NAME())
 	);
 }
@@ -302,7 +302,7 @@ treread_quote (trestream * stream)
     }
 
     expr = treread_expr (stream);
-    expr = CONS(expr, treptr_nil);
+    expr = CONS(expr, NIL);
     return CONS(atom, expr);
 }
 
@@ -346,7 +346,7 @@ treread_list (trestream * stream)
 		case TRETOKEN_BRACKET_CLOSE:
 		case TRETOKEN_SQUARE_BRACKET_CLOSE:
 		case TRETOKEN_CURLY_BRACKET_CLOSE:
-	    	return treptr_nil;
+	    	return NIL;
 
 		default:
 	    	car = treread_atom (stream);
@@ -368,7 +368,7 @@ treread_list (trestream * stream)
 		case TRETOKEN_BRACKET_CLOSE:
 		case TRETOKEN_SQUARE_BRACKET_CLOSE:
 		case TRETOKEN_CURLY_BRACKET_CLOSE:
-	    	cdr = treptr_nil;
+	    	cdr = NIL;
 	    	break;
 
 		default:
@@ -399,7 +399,7 @@ treread_expr (trestream * stream)
 		case TRETOKEN_BRACKET_OPEN:
             treread_token (stream);
             if (TRECONTEXT_TOKEN() == TRETOKEN_BRACKET_CLOSE)
-                return treptr_nil;
+                return NIL;
             return treread_list (stream);
 
 		case TRETOKEN_SQUARE_BRACKET_OPEN:
