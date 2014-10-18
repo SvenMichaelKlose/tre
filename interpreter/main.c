@@ -346,7 +346,7 @@ tremain_exec_init_expr ()
     if (!tremain_init_expr)
         return;
 
-    expr = malloc (strlen (tremain_init_expr));
+    expr = malloc (strlen (tremain_init_expr) + 1);
     strcpy (expr, tremain_init_expr);
     s = trestream_string_make (expr);
     treiostd_divert (s);
