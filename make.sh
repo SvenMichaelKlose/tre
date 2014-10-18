@@ -183,7 +183,7 @@ reload)
 
 reloadnoassert)
     echo "Reloading environment from source..."
-    echo | ./tre -n -e "(setq *assert* nil)" || exit 1
+    echo | ./tre -n -e "(setq *assert* nil)(setq *targets* '(c))" || exit 1
 	;;
 
 interpreter)
