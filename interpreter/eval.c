@@ -127,7 +127,7 @@ eval_xlat_function (evalfunc_t *xlat, treptr func, treptr args, bool do_argeval)
 }
 
 #define FUNCTIONEXPRP(x) \
-    (CONSP(x) && CONSP(_CDR(x)) && CONSP(_CADR(x)) && _CAR(x) == treatom_function)
+    (CONSP(x) && CONSP(_CDR(x)) && CONSP(_CADR(x)) && _CAR(x) == atom_function)
 
 treptr
 eval_expr (treptr x)

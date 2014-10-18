@@ -245,7 +245,7 @@ tremain_init (void)
     tregc_init ();
     trecons_init ();
     symtab_init ();
-    treatom_init ();
+    atom_init ();
     tresymbol_init ();
     trebuiltin_init ();
     trebuiltin_arith_init ();

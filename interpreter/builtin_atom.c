@@ -23,13 +23,13 @@
 #include "builtin_string.h"
 
 treptr
-treatom_symbolp (treptr x)
+atom_symbolp (treptr x)
 {
     return TREPTR_TRUTH(SYMBOLP(x));
 }
 
 treptr
-treatom_functionp (treptr x)
+atom_functionp (treptr x)
 {
     return TREPTR_TRUTH(FUNCTIONP(x) ||
            MACROP(x) ||
@@ -39,31 +39,31 @@ treatom_functionp (treptr x)
 }
 
 treptr
-treatom_builtinp (treptr x)
+atom_builtinp (treptr x)
 {
     return TREPTR_TRUTH(BUILTINP(x));
 }
 
 treptr
-treatom_macrop (treptr x)
+atom_macrop (treptr x)
 {
     return TREPTR_TRUTH(MACROP(x));
 }
 
 treptr
-treatom_type_id (treptr x)
+atom_type_id (treptr x)
 {
 	return number_get_integer (TREPTR_TYPE(x));
 }
 
 treptr
-treatom_id (treptr x)
+atom_id (treptr x)
 {
     return number_get_integer (x);
 }
 
 treptr
-treatom_builtin_not (treptr list)
+atom_builtin_not (treptr list)
 {
 	treptr x;
 
@@ -78,7 +78,7 @@ treatom_builtin_not (treptr list)
 }
 
 treptr
-treatom_builtin_eq (treptr list)
+atom_builtin_eq (treptr list)
 {
 	treptr first;
 	treptr x;
@@ -95,7 +95,7 @@ treatom_builtin_eq (treptr list)
 }
 
 treptr
-treatom_eql (treptr x, treptr y)
+atom_eql (treptr x, treptr y)
 {
     treptr tmp;
    	if (NUMBERP(x)) {
@@ -119,7 +119,7 @@ treatom_eql (treptr x, treptr y)
 }
 
 treptr
-treatom_builtin_eql (treptr list)
+atom_builtin_eql (treptr list)
 {
 	treptr first;
 	treptr x;
@@ -128,7 +128,7 @@ treatom_builtin_eql (treptr list)
 	list = CDR(list);
 	do {
 		x = CAR(list);
-		RETURN_NIL(treatom_eql (first, x));
+		RETURN_NIL(atom_eql (first, x));
 		list = CDR(list);
 	} while (NOT_NIL(list));
 
@@ -136,7 +136,7 @@ treatom_builtin_eql (treptr list)
 }
 
 treptr
-treatom_builtin_atom (treptr list)
+atom_builtin_atom (treptr list)
 {
     treptr x;
 
@@ -147,43 +147,43 @@ treatom_builtin_atom (treptr list)
 }
 
 treptr
-treatom_builtin_arg (treptr list, int type, const char * descr)
+atom_builtin_arg (treptr list, int type, const char * descr)
 {
     return trearg_typed (1, type, trearg_get (list), descr);
 }
 
 treptr
-treatom_builtin_symbolp (treptr x)
+atom_builtin_symbolp (treptr x)
 {
-    return treatom_symbolp (trearg_get (x));
+    return atom_symbolp (trearg_get (x));
 }
 
 treptr
-treatom_builtin_functionp (treptr x)
+atom_builtin_functionp (treptr x)
 {
-    return treatom_functionp (trearg_get (x));
+    return atom_functionp (trearg_get (x));
 }
 
 treptr
-treatom_builtin_builtinp (treptr x)
+atom_builtin_builtinp (treptr x)
 {
-    return treatom_builtinp (trearg_get (x));
+    return atom_builtinp (trearg_get (x));
 }
 
 treptr
-treatom_builtin_macrop (treptr x)
+atom_builtin_macrop (treptr x)
 {
-    return treatom_macrop (trearg_get (x));
+    return atom_macrop (trearg_get (x));
 }
 
 treptr
-treatom_builtin_type_id (treptr x)
+atom_builtin_type_id (treptr x)
 {
-    return treatom_type_id (trearg_get (x));
+    return atom_type_id (trearg_get (x));
 }
 
 treptr
-treatom_builtin_id (treptr x)
+atom_builtin_id (treptr x)
 {
-    return treatom_id (trearg_get (x));
+    return atom_id (trearg_get (x));
 }

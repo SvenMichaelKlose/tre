@@ -25,6 +25,21 @@ is_compiled_closure (treptr x)
     return CONSP(x) && CAR(x) == treptr_closure;
 }
 
+treptr
+register_compiled_function (treptr sym, void * fun, void * argument_expander)
+{
+    if (BUILTINP(SYMBOL_FUNCTION(sym)))
+        return sym;
+
+    if (NOT(SYMBOL_FUNCTION(sym)))
+        tresymbol_set_function (trefunction_make (TRETYPE_FUNCTION, NIL), sym);
+
+    FUNCTION_NATIVE(SYMBOL_FUNCTION(sym)) = fun;
+    FUNCTION_NATIVE_EXPANDER(SYMBOL_FUNCTION(sym)) = argument_expander;
+
+    return sym;
+}
+
 trefunction *
 trefunction_alloc ()
 {
@@ -51,7 +66,7 @@ trefunction_make (tre_type type, treptr source)
 {
     treptr        a;
 
-    a = treatom_alloc (type);
+    a = atom_alloc (type);
     tregc_push (a);
     ATOM(a) = trefunction_alloc ();
     FUNCTION_SOURCE(a) = source;

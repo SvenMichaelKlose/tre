@@ -49,7 +49,7 @@ trestring_get_binary (const char *str, tre_size len)
         return treerror (treptr_invalid, "Out of memory.");
 
     memcpy (TRESTRING_DATA(nstr), str, len);
-    atom = treatom_alloc (TRETYPE_STRING);
+    atom = atom_alloc (TRETYPE_STRING);
     ATOM(atom) = nstr;
 
     return atom;

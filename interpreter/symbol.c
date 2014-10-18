@@ -17,7 +17,7 @@
 treptr
 symbol_alloc_packaged (char * name, treptr package, treptr value)
 {
-    treptr  atom = treatom_alloc (TRETYPE_SYMBOL);
+    treptr  atom = atom_alloc (TRETYPE_SYMBOL);
 
     if (value == treptr_invalid)
 		value = atom;

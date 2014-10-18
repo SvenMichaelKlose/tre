@@ -37,22 +37,22 @@ const treptr treptr_invalid = (treptr) -1;
 
 treptr treptr_universe;
 
-treptr treatom_accent_circonflex;
-treptr treatom_backquote;
-treptr treatom_function;
-treptr treatom_lambda;
-treptr treatom_quote;
-treptr treatom_quasiquote;
-treptr treatom_quasiquote_splice;
-treptr treatom_values;
-treptr treatom_square;
-treptr treatom_curly;
-treptr treatom_cons;
+treptr atom_accent_circonflex;
+treptr atom_backquote;
+treptr atom_function;
+treptr atom_lambda;
+treptr atom_quote;
+treptr atom_quasiquote;
+treptr atom_quasiquote_splice;
+treptr atom_values;
+treptr atom_square;
+treptr atom_curly;
+treptr atom_cons;
 
 treptr tre_package_keyword;
 
 void
-treatom_init_atom_table (void)
+atom_init_atom_table (void)
 {
 	tre_size x;
 
@@ -66,36 +66,21 @@ treatom_init_atom_table (void)
 }
 
 void
-treatom_init_truth (void)
+atom_init_truth (void)
 {
 	tre_atoms[TREPTR_NIL_INDEX] = (void *) symtab_add (NIL, "NIL", NIL, NIL, NIL);
 	tre_atoms[TREPTR_T_INDEX] = (void *) symtab_add (treptr_t, "T", treptr_t, NIL, NIL);
 }
 
 void
-treatom_init (void)
+atom_init (void)
 {
-    treatom_init_atom_table ();
-    treatom_init_truth ();
+    atom_init_atom_table ();
+    atom_init_truth ();
 }
 
 treptr
-treatom_register_compiled_function (treptr sym, void * fun, void * expander_fun)
-{
-    if (BUILTINP(SYMBOL_FUNCTION(sym)))
-        return sym;
-
-    if (NOT(SYMBOL_FUNCTION(sym)))
-        tresymbol_set_function (trefunction_make (TRETYPE_FUNCTION, NIL), sym);
-
-    FUNCTION_NATIVE(SYMBOL_FUNCTION(sym)) = fun;
-    FUNCTION_NATIVE_EXPANDER(SYMBOL_FUNCTION(sym)) = expander_fun;
-
-	return sym;
-}
-
-treptr
-treatom_alloc (int type)
+atom_alloc (int type)
 {
     size_t atomi;
 	void * item;
@@ -116,7 +101,7 @@ treatom_alloc (int type)
 }
 
 void
-treatom_free (treptr x)
+atom_free (treptr x)
 {
     if (ATOM_TYPE(x) == TRETYPE_SYMBOL)
 		symtab_remove (x);
@@ -126,13 +111,13 @@ treatom_free (treptr x)
 }
 
 treptr
-treatom_number_get (double value, int type)
+atom_number_get (double value, int type)
 {
     treptr      atom;
     trenumber * num;
 
     num = trenumber_alloc (value, type);
-    atom = treatom_alloc (TRETYPE_NUMBER);
+    atom = atom_alloc (TRETYPE_NUMBER);
     ATOM(atom) = num;
 
     return atom;
@@ -141,23 +126,23 @@ treatom_number_get (double value, int type)
 treptr
 trenumber_get (double value)
 {
-    return treatom_number_get (value, TRENUMTYPE_FLOAT);
+    return atom_number_get (value, TRENUMTYPE_FLOAT);
 }
 
 treptr
 trechar_get (double value)
 {
-    return treatom_number_get (value, TRENUMTYPE_CHAR);
+    return atom_number_get (value, TRENUMTYPE_CHAR);
 }
 
 treptr
-treatom_seek (char * symbol, treptr package)
+atom_seek (char * symbol, treptr package)
 {
 	return symtab_find (symbol, package);
 }
 
 void
-treatom_remove (treptr x)
+atom_remove (treptr x)
 {
     switch (TREPTR_TYPE(x)) {
         case TRETYPE_NUMBER:      trenumber_free (x); break;
@@ -168,11 +153,11 @@ treatom_remove (treptr x)
         case TRETYPE_USERSPECIAL: trefunction_free (x); break;
     }
 
-    treatom_free (x);
+    atom_free (x);
 }
 
 treptr
-treatom_body_to_var (treptr body)
+atom_body_to_var (treptr body)
 {        
     tre_size a;
     tre_size b; 
@@ -200,7 +185,7 @@ treatom_body_to_var (treptr body)
 }
 
 treptr
-treatom_fun_body (treptr atomp)
+atom_fun_body (treptr atomp)
 {
     treptr fun;
 

@@ -189,7 +189,7 @@ tregc_sweep (void)
 		c = 1;
 		DOTIMES(j, 8) {
 	    	if ((tregc_atommarks[i] & c) && tre_atom_types[idx] != TRETYPE_UNUSED)
-                treatom_remove (TREINDEX_TO_PTR(idx));
+                atom_remove (TREINDEX_TO_PTR(idx));
 
 	    	c <<= 1;
             idx++;

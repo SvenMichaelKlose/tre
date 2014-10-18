@@ -2,7 +2,7 @@
 
 (defvar *c-builtins-descr*
 	`(
-	(treatom_
+	(atom_
 		(EQ             builtin_eq      &rest x)
 		(EQL            builtin_eql     &rest x)
 		(ATOM           builtin_atom    &rest x)

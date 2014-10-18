@@ -20,16 +20,12 @@ extern tre_type tre_atom_types[NUM_ATOMS];
 	tre_atoms[index] = NULL; \
 	tre_atom_types[index] = typ
 
-extern void treatom_init (void);
+extern treptr atom_alloc (int type);
+extern void   atom_remove (treptr);
 
-extern treptr treatom_alloc (int type);
-extern void   treatom_remove (treptr);
+extern treptr atom_body_to_var (treptr body);
+extern treptr atom_fun_body (treptr atomp);
 
-extern treptr treatom_body_to_var (treptr body);
-
-extern treptr treatom_fun_body (treptr atomp);
-
-/* for compiled code */
-extern treptr treatom_register_compiled_function (treptr sym, void * fun, void * expander_fun);
+extern void atom_init (void);
 
 #endif

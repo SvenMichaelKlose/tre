@@ -255,16 +255,16 @@ evalfunc_t eval_xlat_builtin[] = {
     trenumber_builtin_float,
     trenumber_builtin_characterp,
 
-    treatom_builtin_not,
-    treatom_builtin_eq,
-    treatom_builtin_eql,
-    treatom_builtin_atom,
-    treatom_builtin_symbolp,
-    treatom_builtin_functionp,
-    treatom_builtin_builtinp,
-    treatom_builtin_macrop,
-    treatom_builtin_type_id,
-    treatom_builtin_id,
+    atom_builtin_not,
+    atom_builtin_eq,
+    atom_builtin_eql,
+    atom_builtin_atom,
+    atom_builtin_symbolp,
+    atom_builtin_functionp,
+    atom_builtin_builtinp,
+    atom_builtin_macrop,
+    atom_builtin_type_id,
+    atom_builtin_id,
 
     tresymbol_builtin_make_symbol,
     tresymbol_builtin_make_package,
@@ -365,7 +365,7 @@ trebuiltin_init ()
     size_t i;
 
     for (i = 0; tre_builtin_names[i] != NULL; i++) {
-        fun = treatom_alloc (TRETYPE_BUILTIN);
+        fun = atom_alloc (TRETYPE_BUILTIN);
         ATOM(fun) = (void*) i;
         name = symbol_alloc (tre_builtin_names[i], NIL);
         tresymbol_set_function(fun, name);

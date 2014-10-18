@@ -51,7 +51,7 @@ trefunstack_get_named_function (treptr fspos)
     treptr  a = NIL;
 
     DOLIST(p, fspos) {
-		a = treatom_body_to_var (CAR(p));
+		a = atom_body_to_var (CAR(p));
         if (NOT_NIL(a) && SYMBOL_NAME(a))
 	    	break;
     }
@@ -376,7 +376,7 @@ tredebug_lookup_bodyname (treptr body)
     static size_t  repetitions = 0;
     bool           does_repeat;
 
-    var = treatom_body_to_var (body);
+    var = atom_body_to_var (body);
     if (NOT(var))
 		return;
 

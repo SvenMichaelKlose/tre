@@ -291,12 +291,12 @@ treread_quote (trestream * stream)
     treptr  expr;
 
     switch (TRECONTEXT_TOKEN()) {
-		case TRETOKEN_QUOTE: atom = treatom_quote; break;
-		case TRETOKEN_BACKQUOTE: atom = treatom_backquote; break;
-		case TRETOKEN_QUASIQUOTE: atom = treatom_quasiquote; break;
-		case TRETOKEN_QUASIQUOTE_SPLICE: atom = treatom_quasiquote_splice; break;
-		case TRETOKEN_FUNCTION: atom = treatom_function; break;
-		case TRETOKEN_ACCENT_CIRCONFLEX: atom = treatom_accent_circonflex; break;
+		case TRETOKEN_QUOTE: atom = atom_quote; break;
+		case TRETOKEN_BACKQUOTE: atom = atom_backquote; break;
+		case TRETOKEN_QUASIQUOTE: atom = atom_quasiquote; break;
+		case TRETOKEN_QUASIQUOTE_SPLICE: atom = atom_quasiquote_splice; break;
+		case TRETOKEN_FUNCTION: atom = atom_function; break;
+		case TRETOKEN_ACCENT_CIRCONFLEX: atom = atom_accent_circonflex; break;
 		default:
 	    	return treerror (treptr_invalid, "Unsupported token.");
     }
@@ -317,7 +317,7 @@ treread_list (trestream * stream)
     switch (TRECONTEXT_TOKEN()) {
 		case TRETOKEN_DOT:
             treread_token (stream);
-            return CONS(treatom_cons, treread_list (stream));
+            return CONS(atom_cons, treread_list (stream));
 
 		case TRETOKEN_QUOTE:
 		case TRETOKEN_BACKQUOTE:
@@ -335,12 +335,12 @@ treread_list (trestream * stream)
 
         case TRETOKEN_SQUARE_BRACKET_OPEN:
             treread_token (stream);
-            car = CONS(treatom_square, treread_list (stream));
+            car = CONS(atom_square, treread_list (stream));
             break;
 
         case TRETOKEN_CURLY_BRACKET_OPEN:
             treread_token (stream);
-            car = CONS(treatom_curly, treread_list (stream));
+            car = CONS(atom_curly, treread_list (stream));
             break;
 
 		case TRETOKEN_BRACKET_CLOSE:
@@ -404,10 +404,10 @@ treread_expr (trestream * stream)
 
 		case TRETOKEN_SQUARE_BRACKET_OPEN:
             treread_token (stream);
-            return CONS(treatom_square, treread_list (stream));
+            return CONS(atom_square, treread_list (stream));
 		case TRETOKEN_CURLY_BRACKET_OPEN:
             treread_token (stream);
-            return CONS(treatom_curly, treread_list (stream));
+            return CONS(atom_curly, treread_list (stream));
     }
     return treread_atom (stream);
 }
@@ -432,25 +432,25 @@ treread_init ()
     TRECONTEXT_TOKEN() = (int) -1;
     TRECONTEXT_TOKEN_NAME()[0] = 0;
 
-    treatom_quote = symbol_get ("QUOTE");
-    treatom_backquote = symbol_get ("BACKQUOTE");
-    treatom_quasiquote = symbol_get ("QUASIQUOTE");
-    treatom_quasiquote_splice = symbol_get ("QUASIQUOTE-SPLICE");
-    treatom_function = symbol_get ("FUNCTION");
-    treatom_accent_circonflex = symbol_get ("ACCENT-CIRCONFLEX");
-    treatom_square = symbol_get ("SQUARE");
-    treatom_curly = symbol_get ("CURLY");
-    treatom_cons = symbol_get ("CONS");
+    atom_quote = symbol_get ("QUOTE");
+    atom_backquote = symbol_get ("BACKQUOTE");
+    atom_quasiquote = symbol_get ("QUASIQUOTE");
+    atom_quasiquote_splice = symbol_get ("QUASIQUOTE-SPLICE");
+    atom_function = symbol_get ("FUNCTION");
+    atom_accent_circonflex = symbol_get ("ACCENT-CIRCONFLEX");
+    atom_square = symbol_get ("SQUARE");
+    atom_curly = symbol_get ("CURLY");
+    atom_cons = symbol_get ("CONS");
 
-    EXPAND_UNIVERSE(treatom_quote);
-    EXPAND_UNIVERSE(treatom_backquote);
-    EXPAND_UNIVERSE(treatom_quasiquote);
-    EXPAND_UNIVERSE(treatom_quasiquote_splice);
-    EXPAND_UNIVERSE(treatom_function);
-    EXPAND_UNIVERSE(treatom_accent_circonflex);
-    EXPAND_UNIVERSE(treatom_square);
-    EXPAND_UNIVERSE(treatom_curly);
-    EXPAND_UNIVERSE(treatom_cons);
+    EXPAND_UNIVERSE(atom_quote);
+    EXPAND_UNIVERSE(atom_backquote);
+    EXPAND_UNIVERSE(atom_quasiquote);
+    EXPAND_UNIVERSE(atom_quasiquote_splice);
+    EXPAND_UNIVERSE(atom_function);
+    EXPAND_UNIVERSE(atom_accent_circonflex);
+    EXPAND_UNIVERSE(atom_square);
+    EXPAND_UNIVERSE(atom_curly);
+    EXPAND_UNIVERSE(atom_cons);
 }
 
 #endif /* #ifdef INTERPRETER */

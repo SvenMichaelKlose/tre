@@ -79,7 +79,7 @@ trespecial_setq (treptr list)
 treptr
 trespecial_past_lambda (treptr x)
 {
-	return (ATOMP(FIRST(x)) && FIRST(x) == treatom_lambda) ? CDR(x) : x;
+	return (ATOMP(FIRST(x)) && FIRST(x) == atom_lambda) ? CDR(x) : x;
 }
 
 treptr
@@ -382,7 +382,7 @@ trespecial_init ()
     size_t i;
 
     for (i = 0; tre_special_names[i] != NULL; i++) {
-        fun = treatom_alloc (TRETYPE_SPECIAL);
+        fun = atom_alloc (TRETYPE_SPECIAL);
         ATOM(fun) = (void*) i;
         name = symbol_alloc (tre_special_names[i], NIL);
         tresymbol_set_function (fun, name);
@@ -395,7 +395,7 @@ trespecial_init ()
     tre_atom_evaluated_return_from = symbol_get ("%%EVALD-RETURN-FROM");
     EXPAND_UNIVERSE(tre_atom_evaluated_return_from);
 
-    treatom_lambda = symbol_get ("LAMBDA");
-    EXPAND_UNIVERSE(treatom_lambda);
+    atom_lambda = symbol_get ("LAMBDA");
+    EXPAND_UNIVERSE(atom_lambda);
 #endif /* #ifdef INTERPRETER */
 }

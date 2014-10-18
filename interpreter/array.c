@@ -86,7 +86,7 @@ trearray_get (treptr sizes)
         return treerror (treptr_invalid, "Cannot allocate array. Out of memory.");
     array->sizes = list_copy (sizes);
     tregc_push (array->sizes);
-    a = treatom_alloc (TRETYPE_ARRAY);
+    a = atom_alloc (TRETYPE_ARRAY);
     ATOM(a) = array;
     tregc_pop ();
 

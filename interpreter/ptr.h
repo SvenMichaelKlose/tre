@@ -48,16 +48,16 @@ extern const treptr NIL;
 extern const treptr treptr_t;
 extern const treptr treptr_invalid;
 
-extern treptr treatom_accent_circonflex;
-extern treptr treatom_function;
-extern treptr treatom_backquote;
-extern treptr treatom_lambda;
-extern treptr treatom_quasiquote;
-extern treptr treatom_quasiquote_splice;
-extern treptr treatom_quote;
-extern treptr treatom_values;
-extern treptr treatom_square;
-extern treptr treatom_curly;
-extern treptr treatom_cons;
+extern treptr atom_accent_circonflex;
+extern treptr atom_function;
+extern treptr atom_backquote;
+extern treptr atom_lambda;
+extern treptr atom_quasiquote;
+extern treptr atom_quasiquote_splice;
+extern treptr atom_quote;
+extern treptr atom_values;
+extern treptr atom_square;
+extern treptr atom_curly;
+extern treptr atom_cons;
 
 #endif /* #ifndef TRE_PTR_H */

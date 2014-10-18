@@ -22,7 +22,8 @@ typedef struct trefunction_t trefunction;
 #define FUNCTION_NATIVE(ptr)             (TREPTR_FUNCTION(ptr)->native)
 #define FUNCTION_NATIVE_EXPANDER(ptr)    (TREPTR_FUNCTION(ptr)->native_expander)
 
-extern bool is_compiled_closure (treptr);
+extern bool          is_compiled_closure (treptr);
+extern treptr        register_compiled_function (treptr sym, void * fun, void * argument_expander);
 
 extern treptr        trefunction_make (tre_type, treptr source);
 extern trefunction * trefunction_alloc ();

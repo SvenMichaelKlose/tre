@@ -54,7 +54,7 @@
      (apply #'+ (mapcar [format nil "#include \"~A\"~%" _] *c-core-headers*))))
 
 (defun c-function-registration (name)
-  `(%= ~%ret (treatom_register_compiled_function
+  `(%= ~%ret (register_compiled_function
                  ,(c-compiled-symbol name)
                  ,name
                  ,(alet (c-expander-name name)
