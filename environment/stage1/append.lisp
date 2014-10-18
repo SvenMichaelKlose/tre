@@ -4,7 +4,7 @@
 
 (defun append (&rest lsts)
   (when lsts
-	(? (car lsts) ; Ignore empty lists.
+	(? (car lsts)
    	   (let n (copy-list (car lsts))
          (rplacd (last n) (apply #'append (cdr lsts)))
          n)
