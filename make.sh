@@ -298,8 +298,10 @@ jsdebugger)
 all)
     echo "Making all..."
 	./make.sh boot $ARGS || exit 1
+	./make.sh environment $ARGS || exit 1
+	./make.sh crunsh $ARGS || exit 1
 	./make.sh tests || exit 1
-#	./make.sh bytecode-image || exit 1
+	./make.sh bytecode-image || exit 1
 #   ./make.sh jsdebugger || exit 1
     $TRE makefiles/webconsole.lisp || exit 1
     ;;
