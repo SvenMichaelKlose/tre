@@ -120,7 +120,7 @@ tremain_expand (treptr expr)
 
 		tregc_pop ();
 		tregc_pop ();
-    } while (!trelist_equal (expr, old));
+    } while (!list_equal (expr, old));
 
     return expr;
 }

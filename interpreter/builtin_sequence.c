@@ -23,7 +23,7 @@
 #include "xxx.h"
 
 struct tre_sequence_type * tre_sequence_types [] = {
-	&trelist_seqtype,	/* #define TRETYPE_CONS        0 */
+	&list_seqtype,	/* #define TRETYPE_CONS        0 */
 	NULL,	            /* #define TRETYPE_SYMBOL      1 */
 	NULL,	            /* #define TRETYPE_NUMBER      2 */
 	&trestring_seqtype,	/* #define TRETYPE_STRING      3 */

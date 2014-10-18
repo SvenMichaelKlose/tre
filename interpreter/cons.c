@@ -20,7 +20,7 @@ treptr tre_lists_free;
 struct tre_list tre_lists[NUM_LISTNODES];
 treptr tre_listprops[NUM_LISTNODES];
 treptr tre_default_listprop;
-tre_size trelist_num_used;
+tre_size list_num_used;
 
 treptr
 car (treptr x)
@@ -75,7 +75,7 @@ cons_free (treptr x)
 {
     _CDR(x) = tre_lists_free;
     tre_lists_free = x;
-    trelist_num_used--;
+    list_num_used--;
 }
 
 void
@@ -102,7 +102,7 @@ cons_free_tree (treptr x)
 }
 
 void
-trelist_gc (treptr car, treptr cdr)
+list_gc (treptr car, treptr cdr)
 {
     tregc_push (car);
     tregc_push (cdr);
@@ -121,7 +121,7 @@ cons (treptr car, treptr cdr)
     treptr cons;
 
     if (!tre_lists_free)
-	    trelist_gc (car, cdr);
+	    list_gc (car, cdr);
 
     cons = tre_lists_free;
     tre_lists_free = _CDR(cons);
@@ -130,7 +130,7 @@ cons (treptr car, treptr cdr)
     _CDR(cons) = cdr;
     _CPR(cons) = SYMBOL_VALUE(tre_default_listprop);
 
-    trelist_num_used++;
+    list_num_used++;
 
     return cons;
 }
@@ -146,5 +146,5 @@ trecons_init ()
 
     tre_lists_free = FIRST_LISTNODE;
     tre_default_listprop = treptr_nil;
-    trelist_num_used = 0;
+    list_num_used = 0;
 }

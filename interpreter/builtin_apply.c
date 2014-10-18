@@ -51,7 +51,7 @@ trebuiltin_apply (treptr list)
 {
     return NOT(list) ?
                treerror (list, "Arguments expected.") :
-               funcall (CAR(list), trebuiltin_apply_args (trelist_copy (CDR(list))));
+               funcall (CAR(list), trebuiltin_apply_args (list_copy (CDR(list))));
 }
 
 treptr

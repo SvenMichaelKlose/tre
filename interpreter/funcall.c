@@ -43,7 +43,7 @@ funcall_ffi (void * fun, treptr x)
 	void **     values;
 	treptr      rc;
 	int         i;
-    int         len = trelist_length (x) + 1;
+    int         len = list_length (x) + 1;
 
     tregc_push (x);
     args = malloc (sizeof (ffi_type *) * len);

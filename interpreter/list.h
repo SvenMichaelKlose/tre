@@ -14,16 +14,16 @@
 	treptr car;	\
 	treptr cdr
 
-extern struct tre_sequence_type trelist_seqtype;
+extern struct tre_sequence_type list_seqtype;
 
-extern treptr   trelist_copy (treptr);
-extern treptr   trelist_copy_tree (treptr);
-extern treptr   trelist_delete (tre_size, treptr);
-extern long     trelist_position (treptr elt, treptr lst);
-extern tre_size trelist_length (treptr);
-extern bool     trelist_equal (treptr, treptr);
-extern treptr   trelist_nth (treptr, tre_size);
-extern treptr   trelist_last (treptr);
-extern bool     trelist_check_type (treptr, tre_size atom_type);
+extern treptr   list_copy (treptr);
+extern treptr   list_copy_tree (treptr);
+extern treptr   list_delete (tre_size, treptr);
+extern long     list_position (treptr elt, treptr lst);
+extern tre_size list_length (treptr);
+extern bool     list_equal (treptr, treptr);
+extern treptr   list_nth (treptr, tre_size);
+extern treptr   last (treptr);
+extern bool     list_check_type (treptr, tre_size atom_type);
 
 #endif 	/* #ifndef TRE_LIST_H */

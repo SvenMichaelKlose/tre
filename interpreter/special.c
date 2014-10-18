@@ -133,13 +133,13 @@ trespecial_function (treptr args)
 treptr
 trespecial_macro (treptr list)
 {
-    return trefunction_make (TRETYPE_MACRO, trelist_copy_tree (list));
+    return trefunction_make (TRETYPE_MACRO, list_copy_tree (list));
 }
 
 treptr
 trespecial_special (treptr list)
 {
-    return trefunction_make (TRETYPE_USERSPECIAL, trelist_copy_tree (list));
+    return trefunction_make (TRETYPE_USERSPECIAL, list_copy_tree (list));
 }
 
 bool
@@ -266,7 +266,7 @@ trespecial_return_from (treptr args)
 		return treerror (CDDR(args), "Only two args expected.");
 #endif
 
-    args = trelist_copy (args);
+    args = list_copy (args);
     tregc_push (args);
 
     tmp = CDR(args);

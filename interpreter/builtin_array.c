@@ -76,7 +76,7 @@ trearray_get_elt (treptr array, treptr indexes)
     ASSERT_ARRAY(array);
     if (NOT(indexes))
 		treerror (indexes, "Index(es) expexted.");
-    if (trelist_check_type (indexes, TRETYPE_NUMBER) == FALSE)
+    if (list_check_type (indexes, TRETYPE_NUMBER) == FALSE)
 		treerror (indexes, "Integer expected.");
 
     sizes = TREARRAY_SIZES(array);

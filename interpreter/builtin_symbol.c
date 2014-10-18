@@ -32,7 +32,7 @@ tresymbol_make (treptr name, treptr package)
 treptr
 tresymbol_builtin_make_symbol (treptr args)
 {
-	size_t num_args = trelist_length (args);
+	size_t num_args = list_length (args);
 	treptr name;
 	treptr package;
 

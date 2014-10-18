@@ -116,7 +116,7 @@ eval_xlat_function (evalfunc_t *xlat, treptr func, treptr args, bool do_argeval)
     treptr  evaldargs;
     treptr  ret;
 
-    evaldargs = (do_argeval) ? eval_args (args) : trelist_copy (args);
+    evaldargs = (do_argeval) ? eval_args (args) : list_copy (args);
     tregc_push (evaldargs);
 
     ret = xlat[(size_t) ATOM(func)] (evaldargs);

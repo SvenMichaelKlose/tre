@@ -17,7 +17,7 @@
 #include "symtab.h"
 
 treptr
-trelist_last (treptr l)
+last (treptr l)
 {
     while (NOT_NIL(CDR(l)))
 		l = CDR(l);
@@ -26,7 +26,7 @@ trelist_last (treptr l)
 }
 
 treptr
-trelist_copy_tree (treptr l)
+list_copy_tree (treptr l)
 {
     treptr a;
     treptr d;
@@ -35,9 +35,9 @@ trelist_copy_tree (treptr l)
     if (ATOMP(l))
 		return l;
 
-    a = trelist_copy_tree (CAR(l));
+    a = list_copy_tree (CAR(l));
     tregc_push (a);
-    d = trelist_copy_tree (CDR(l));
+    d = list_copy_tree (CDR(l));
     ret = CONS(a, d);
     tregc_pop ();
 
@@ -45,16 +45,16 @@ trelist_copy_tree (treptr l)
 }
 
 treptr
-trelist_copy (treptr l)
+list_copy (treptr l)
 {
     if (ATOMP(l))
 		return l;
 
-    return CONS(CAR(l), trelist_copy (CDR(l)));
+    return CONS(CAR(l), list_copy (CDR(l)));
 }
 
 treptr
-trelist_delete (tre_size i, treptr l)
+list_delete (tre_size i, treptr l)
 {
     treptr  p;
     treptr  f = treptr_nil;
@@ -72,11 +72,11 @@ trelist_delete (tre_size i, treptr l)
 		return l;
     }
 
-    return treerror (l, "trelist_delete: Index '%d' out of range.", i);
+    return treerror (l, "list_delete: Index '%d' out of range.", i);
 }
 
 long
-trelist_position (treptr elt, treptr l)
+list_position (treptr elt, treptr l)
 {
     long c = 0;
 
@@ -92,7 +92,7 @@ trelist_position (treptr elt, treptr l)
 }
 
 tre_size
-trelist_length (treptr p)
+list_length (treptr p)
 {
     tre_size len = 0;
 
@@ -105,7 +105,7 @@ trelist_length (treptr p)
 }
 
 treptr
-trelist_nthcdr (treptr l, tre_size idx)
+list_nthcdr (treptr l, tre_size idx)
 {
     while (NOT_NIL(l)) {
 #ifndef TRE_NO_ASSERTIONS
@@ -121,9 +121,9 @@ trelist_nthcdr (treptr l, tre_size idx)
 }
 
 treptr
-trelist_nth (treptr l, tre_size idx)
+list_nth (treptr l, tre_size idx)
 {
-	l = trelist_nthcdr (l, idx);
+	l = list_nthcdr (l, idx);
 
     if (NOT(l))
 		return l;
@@ -131,25 +131,25 @@ trelist_nth (treptr l, tre_size idx)
 }
 
 void
-trelist_t_set (treptr s, tre_size idx, treptr val)
+list_t_set (treptr s, tre_size idx, treptr val)
 {
-    RPLACA(trelist_nthcdr (s, idx), val);
+    RPLACA(list_nthcdr (s, idx), val);
 }
 
 treptr
-trelist_t_get (treptr s, tre_size idx)
+list_t_get (treptr s, tre_size idx)
 {
-    return trelist_nth (s, idx);
+    return list_nth (s, idx);
 }
 
-struct tre_sequence_type trelist_seqtype = {
-	trelist_t_set,
-	trelist_t_get,
-	trelist_length
+struct tre_sequence_type list_seqtype = {
+	list_t_set,
+	list_t_get,
+	list_length
 };
 
 bool
-trelist_check_type (treptr list, tre_size type)
+list_check_type (treptr list, tre_size type)
 {
     for (; NOT_NIL(list); list = CDR(list))
         if (TREPTR_TYPE(CAR(list)) != type)
@@ -158,7 +158,7 @@ trelist_check_type (treptr list, tre_size type)
 }
 
 bool
-trelist_equal (treptr la, treptr lb)
+list_equal (treptr la, treptr lb)
 {
     while (NOT_NIL(la) && NOT_NIL(lb)) {
         if (CONSP(la) != CONSP(lb))
@@ -167,7 +167,7 @@ trelist_equal (treptr la, treptr lb)
         if (ATOMP(la))
 	    	return la == lb;
 
-        if (trelist_equal (CAR(la), CAR(lb)) == FALSE)
+        if (list_equal (CAR(la), CAR(lb)) == FALSE)
 	    	return FALSE;
 
 		la = CDR(la);

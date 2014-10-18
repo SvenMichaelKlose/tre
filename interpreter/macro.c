@@ -51,7 +51,7 @@ tremacro_builtin_macroexpand (treptr list)
 		tregc_push (list);
         n = tremacro_builtin_macroexpand_1 (list);
 		tregc_pop ();
-    } while (!trelist_equal (list, n));
+    } while (!list_equal (list, n));
 
     return n;
 }

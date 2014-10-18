@@ -143,7 +143,7 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
     tregc_push (dvars);
     dvals = vals = CONS(treptr_nil, treptr_nil);
     tregc_push (dvals);
-    args = trelist_copy (args);
+    args = list_copy (args);
     tregc_push (args);
 
     while (1) {
@@ -175,15 +175,15 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
 	    	trearg_expand (&svars, &svals, var, val, do_argeval);
             RPLACD(dvars, svars);
             RPLACD(dvals, svals);
-	    	dvars = trelist_last (dvars);
-	    	dvals = trelist_last (dvals);
+	    	dvars = last (dvars);
+	    	dvals = last (dvals);
 	    	goto next;
         }
 
         /* Process &REST argument. */
 		if (var == tre_atom_rest || var == tre_atom_body) {
 	    	/* Get form after keyword. */
-	    	_ADDF(dvars, trelist_copy (CDR(argdef)));
+	    	_ADDF(dvars, list_copy (CDR(argdef)));
 
 	    	/* Evaluate following arguments if so desired. */
 	    	svals = (do_argeval) ? eval_args (args) : args;
@@ -256,10 +256,10 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
 
                 /* Get position of key in argument list. */
                 kw = symbol_get_packaged (SYMBOL_NAME(key), tre_package_keyword);
-				kpos = (tre_size) trelist_position (kw, args);
+				kpos = (tre_size) list_position (kw, args);
 	 			if (kpos != (tre_size) -1) {
 		    		/* Get argument after key. */
-		    		svals = trelist_nth (args, kpos + 1);
+		    		svals = list_nth (args, kpos + 1);
 
 		    		/* Remove keyword and value from argument list. */
 #ifndef TRE_NO_ASSERTIONS
@@ -269,8 +269,8 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
 	    	        	RPLACD(args, CONS(treerror (args, "Missing argument after keyword."), treptr_nil));
                     }
 #endif
-		    		args = trelist_delete (kpos, args);
-		    		args = trelist_delete (kpos, args);
+		    		args = list_delete (kpos, args);
+		    		args = list_delete (kpos, args);
 
 					/* Evaluate value. */
   					if (do_argeval)

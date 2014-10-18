@@ -59,7 +59,7 @@ trestring_builtin_list_string (treptr list)
     treptr    p;
 
 	arg = trearg_get (list);
-	len = trelist_length (arg);
+	len = list_length (arg);
 
     news = trestring_get_raw (len);
     if (news == NULL) {

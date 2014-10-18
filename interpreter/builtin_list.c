@@ -23,11 +23,11 @@
 
 #include "builtin_atom.h"
 
-treptr trelist_builtin_eq_symbol;
-treptr trelist_builtin_test_symbol;
+treptr list_builtin_eq_symbol;
+treptr list_builtin_test_symbol;
 
 treptr
-trelist_builtin_cons (treptr list)
+list_builtin_cons (treptr list)
 {
     TRELIST_DEFREGS();
     trearg_get2 (&car, &cdr, list);
@@ -35,7 +35,7 @@ trelist_builtin_cons (treptr list)
 }
 
 treptr
-trelist_builtin_car (treptr x)
+list_builtin_car (treptr x)
 {
     treptr arg = trearg_get (x);
     RETURN_NIL(arg);
@@ -43,7 +43,7 @@ trelist_builtin_car (treptr x)
 }
 
 treptr
-trelist_builtin_cdr (treptr x)
+list_builtin_cdr (treptr x)
 {
     treptr arg = trearg_get (x);
     RETURN_NIL(arg);
@@ -51,7 +51,7 @@ trelist_builtin_cdr (treptr x)
 }
 
 treptr
-trelist_builtin_cpr (treptr x)
+list_builtin_cpr (treptr x)
 {
     treptr arg = trearg_get (x);
     RETURN_NIL(arg);
@@ -65,7 +65,7 @@ trelist_builtin_cpr (treptr x)
 	cons = trearg_typed (1, TRETYPE_CONS, cons, NULL);
 
 treptr
-trelist_builtin_rplaca (treptr list)
+list_builtin_rplaca (treptr list)
 {
     TRELISTARG_GET2(cons, new, list);
     RPLACA(cons, new);
@@ -73,7 +73,7 @@ trelist_builtin_rplaca (treptr list)
 }
 
 treptr
-trelist_builtin_rplacd (treptr list)
+list_builtin_rplacd (treptr list)
 {
     TRELISTARG_GET2(cons, new, list);
     RPLACD(cons, new);
@@ -81,7 +81,7 @@ trelist_builtin_rplacd (treptr list)
 }
 
 treptr
-trelist_builtin_rplacp (treptr list)
+list_builtin_rplacp (treptr list)
 {
     TRELISTARG_GET2(cons, new, list);
     RPLACP(cons, new);
@@ -89,7 +89,7 @@ trelist_builtin_rplacp (treptr list)
 }
 
 treptr
-trelist_consp (treptr x)
+list_consp (treptr x)
 {
     if (ATOMP(x))
         return treptr_nil;
@@ -97,14 +97,14 @@ trelist_consp (treptr x)
 }
 
 treptr
-trelist_builtin_consp (treptr list)
+list_builtin_consp (treptr list)
 {
-    return trelist_consp (CAR(list));
+    return list_consp (CAR(list));
 }
 
 void
-trelist_builtin_init ()
+list_builtin_init ()
 {
-	trelist_builtin_eq_symbol = symbol_get ("EQ");
-	trelist_builtin_test_symbol = symbol_get_packaged ("TEST", tre_package_keyword);
+	list_builtin_eq_symbol = symbol_get ("EQ");
+	list_builtin_test_symbol = symbol_get_packaged ("TEST", tre_package_keyword);
 }
