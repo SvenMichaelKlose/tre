@@ -48,13 +48,14 @@
 #include "linenoise.h"
 
 #ifdef TRE_HAVE_COMPILED_ENV
-	treptr userfun_cInit (void);
+treptr userfun_cInit (void);
 #endif
 
 char * tremain_self = NULL;   /* Path to running executable. */
 char * tremain_userimage = NULL;
 char * tremain_bootimage = NULL;
 char * tremain_launchfile = NULL;
+char * tremain_init_expr = NULL;
 
 treptr tremain_history;
 treptr tremain_history_2;
@@ -169,6 +170,7 @@ tremain (void)
     strcpy (history_path, p);
     strcpy (&history_path[strlen (p)], "/.tre-history.lisp");
     linenoiseHistoryLoad (history_path);
+    linenoiseSetMultiLine (1);
 
     while (1) {
         if (!is_standard_stream (treio_reader)) {
@@ -303,10 +305,11 @@ tremain_help (void)
 	printf (TRE_INFO
             "Usage: tre [OPTION]... [source-file]\n"
             "\n"
-            " -h  Print this help message.\n"
-            " -i  Load image file before source-file.\n"
-            " -n  Load default environment and make a new default image.\n"
-            " -H  Print info about hard-coded limits and exit.\n"
+            " -h        Print this help message.\n"
+            " -i <path> Load image file before source-file.\n"
+            " -e <expr> Expressions to execute before any others are read.\n"
+            " -n        Load default environment and make a new default image.\n"
+            " -H        Print info about hard-coded limits and exit.\n"
             "\n"
             "See MANUAL for details.\n");
 }
@@ -334,6 +337,28 @@ tremain_print_hardinfo (void)
 }
 
 void
+tremain_exec_init_expr ()
+{
+    trestream *  s;
+    treptr       x;
+    char *       expr;
+
+    if (!tremain_init_expr)
+        return;
+
+    expr = malloc (strlen (tremain_init_expr));
+    strcpy (expr, tremain_init_expr);
+    s = trestream_string_make (expr);
+    treiostd_divert (s);
+    while (!treio_eof (s)) {
+        x = tremain_line (treio_reader);
+        if (x != treptr_invalid)
+            treprint (x);
+    }
+    treiostd_undivert ();
+}
+
+void
 tremain_get_args (int argc, char *argv[])
 {
 	int  p;
@@ -346,6 +371,8 @@ tremain_get_args (int argc, char *argv[])
 			tremain_noimage = TRUE;
         else if (!strcmp ("-i", v))
             tremain_userimage = argv[++p];
+        else if (!strcmp ("-e", v))
+            tremain_init_expr = argv[++p];
         else if (!strcmp ("-H", v))
 			tremain_print_hardinfo ();
         else if (!strcmp ("-h", v)) {
@@ -378,9 +405,11 @@ main (int argc, char *argv[])
     if (treimage_load (path) == -2)
         treerror_norecover (treptr_invalid, "tré image '%s' has an incompatible format version.", path);
     tremain_userimage = NULL;
+    tremain_exec_init_expr ();
     goto user;
 
 load_environment_from_source:
+    tremain_exec_init_expr ();
     c = 1;
     treiostd_divert (treiostd_open_file (TRE_BOOTFILE));
     tremain_init_after_image_loaded ();
