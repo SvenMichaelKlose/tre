@@ -128,7 +128,6 @@ list_builtin_nthcdr (treptr x)
     return nthcdr ((tre_size) TRENUMBER_VAL(idx), list);
 }
 
-
 treptr
 list_builtin_nth (treptr x)
 {
@@ -140,6 +139,32 @@ list_builtin_nth (treptr x)
     ASSERT_LIST(list);
 
     return nth ((tre_size) TRENUMBER_VAL(idx), list);
+}
+
+treptr
+list_builtin_filter (treptr x)
+{
+    treptr  predicate;
+    treptr  list;
+
+    trearg_get2 (&predicate, &list, x);
+    ASSERT_ANY_FUNCTION(predicate);
+    ASSERT_LIST(list);
+
+    return filter (predicate, list);
+}
+
+treptr
+list_builtin_mapcar (treptr x)
+{
+    treptr  predicate;
+    treptr  list;
+
+    trearg_get2 (&predicate, &list, x);
+    ASSERT_ANY_FUNCTION(predicate);
+    ASSERT_LIST(list);
+
+    return mapcar (predicate, list);
 }
 
 void

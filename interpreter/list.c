@@ -17,6 +17,7 @@
 #include "symtab.h"
 #include "assert.h"
 #include "queue.h"
+#include "funcall.h"
 
 treptr
 last (treptr x)
@@ -189,4 +190,75 @@ list_equal (treptr la, treptr lb)
     }
 
     return TRUE;
+}
+
+treptr
+filter (treptr fun, treptr x)
+{
+    treptr  q = tre_make_queue ();
+    treptr  i;
+
+    tregc_push (q);
+    DOLIST(i, x)
+        tre_enqueue (q, funcall (fun, CONS(CAR(i), NIL)));
+    tregc_pop ();
+
+    return tre_queue_list (q);
+}
+
+treptr
+carlist (treptr x)
+{
+    treptr  q = tre_make_queue ();
+    treptr  i;
+
+    tregc_push (q);
+    DOLIST(i, x)
+        tre_enqueue (q, CAAR(i));
+    tregc_pop ();
+
+    return tre_queue_list (q);
+}
+
+treptr
+mapcar_cdrlist (treptr x)
+{
+    treptr  q = tre_make_queue ();
+    treptr  i;
+
+    tregc_push (q);
+    DOLIST(i, x) {
+        if (NOT(CAR(i)))
+            goto skip_rest;
+        ASSERT_CONS(CAR(i));
+        tre_enqueue (q, CDAR(i));
+    }
+    tregc_pop ();
+
+    return tre_queue_list (q);
+
+skip_rest:
+    tregc_pop ();
+    return NIL;
+}
+
+treptr
+mapcar (treptr fun, treptr x)
+{
+    treptr  q = tre_make_queue ();
+    treptr  args;
+
+    tregc_push (q);
+    while (1) {
+        args = carlist (x);
+        if (NOT(args)) {
+            tregc_pop ();
+            break;
+        }
+        tre_enqueue (q, funcall (fun, args));
+        x = mapcar_cdrlist (x);
+    }
+    tregc_pop ();
+
+    return tre_queue_list (q);
 }

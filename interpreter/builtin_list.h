@@ -19,5 +19,7 @@ extern treptr list_builtin_last       (treptr);
 extern treptr list_builtin_copy_list  (treptr);
 extern treptr list_builtin_nthcdr     (treptr);
 extern treptr list_builtin_nth        (treptr);
+extern treptr list_builtin_filter     (treptr);
+extern treptr list_builtin_mapcar     (treptr);
 
 #endif	/* #ifndef TRE_BUILTIN_LIST_H */

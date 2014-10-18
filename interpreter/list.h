@@ -25,6 +25,8 @@ extern bool     list_equal (treptr, treptr);
 extern treptr   nthcdr (tre_size, treptr);
 extern treptr   nth (tre_size, treptr);
 extern treptr   last (treptr);
+extern treptr   filter (treptr fun, treptr);
+extern treptr   mapcar (treptr fun, treptr);
 extern bool     list_check_type (treptr, tre_size atom_type);
 
 #endif 	/* #ifndef TRE_LIST_H */

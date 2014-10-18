@@ -25,6 +25,7 @@
 #define ASSERT_MACRO(x)
 #define ASSERT_FUNCTION(x)
 #define ASSERT_CALLABLE(x)
+#define ASSERT_ANY_FUNCTION(x)
 #else
 #define ASSERT_CONS(x)     _ASSERT(x, CONSP,     "Cons")
 #define ASSERT_ATOM(x)     _ASSERT(x, ATOMP,     "Atom")
@@ -38,6 +39,7 @@
 #define ASSERT_MACRO(x)    _ASSERT(x, MACROP,    "Macro")
 #define ASSERT_FUNCTION(x)	_ASSERT(x, FUNCTIONP, "Function")
 #define ASSERT_CALLABLE(x)	_ASSERT(x, CALLABLEP, "Function or macro")
+#define ASSERT_ANY_FUNCTION(x)	_ASSERT(x, ANY_FUNCTIONP, "Any kind of function")
 #endif
 
 #endif /* #ifndef TRE_ASSERT_H */

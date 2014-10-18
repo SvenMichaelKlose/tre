@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2009–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2009–2014 Sven Michael Klose <pixel@copei.de>
 
 (defvar *builtins*
 	'(APPLY EVAL
@@ -15,7 +15,7 @@
       SYMBOL-FUNCTION =-SYMBOL-FUNCTION SYMBOL-PACKAGE
       FUNCTION? BUILTIN? MACRO? %ATOM-LIST
       NOT CONS CAR CDR CPR RPLACA RPLACD RPLACP CONS?
-      LAST COPY-LIST NTHCDR NTH
+      LAST COPY-LIST NTHCDR NTH FILTER ;MAPCAR
       ELT %SET-ELT LENGTH
       STRING? MAKE-STRING STRING== STRING-CONCAT STRING LIST-STRING
       MAKE-ARRAY ARRAY? AREF =-AREF

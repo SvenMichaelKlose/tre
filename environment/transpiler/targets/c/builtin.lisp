@@ -112,7 +112,9 @@
    	    (LAST               (last)       x)
    	    (COPY-LIST          (list_copy)  x)
    	    (NTHCDR             (nthcdr)     i x)
-   	    (NTH                (nth)        i x))
+   	    (NTH                (nth)        i x)
+   	    (FILTER             (filter)     fun x))
+;   	    (MAPCAR             (mapcar)     fun &rest x))
 
 	(tresequence_
     	(ELT                builtin_elt     &rest x)

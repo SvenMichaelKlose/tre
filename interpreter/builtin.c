@@ -157,7 +157,7 @@ char *tre_builtin_names[] = {
 
     "CONS?",
 
-    "LAST", "COPY-LIST", "NTHCDR", "NTH",
+    "LAST", "COPY-LIST", "NTHCDR", "NTH", "FILTER", /*"MAPCAR",*/
 
     "ELT", "%SET-ELT", "LENGTH",
 
@@ -294,6 +294,8 @@ evalfunc_t eval_xlat_builtin[] = {
     list_builtin_copy_list,
     list_builtin_nthcdr,
     list_builtin_nth,
+    list_builtin_filter,
+    /*list_builtin_mapcar,*/
 
     tresequence_builtin_elt,
     tresequence_builtin_set_elt,

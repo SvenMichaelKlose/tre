@@ -30,11 +30,3 @@
 
 (defun mapcan (func &rest lists)
   (apply #'nconc (apply #'mapcar func lists)))
-
-(defun filter (func lst)
-  (let result (. nil nil)
-    (dolist (i lst (cdr result))
-      (rplaca result
-              (cdr (rplacd (| (car result)
-                              result)
-                           (list (funcall func i))))))))
