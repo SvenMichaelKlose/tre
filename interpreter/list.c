@@ -15,29 +15,34 @@
 #include "stream.h"
 #include "xxx.h"
 #include "symtab.h"
+#include "assert.h"
 
 treptr
-last (treptr l)
+last (treptr x)
 {
-    while (NOT_NIL(CDR(l)))
-		l = CDR(l);
+    if (NOT(x))
+        return x;
+    ASSERT_CONS(x);
 
-    return l;
+    while (NOT_NIL(CDR(x)))
+		x = CDR(x);
+
+    return x;
 }
 
 treptr
-list_copy_tree (treptr l)
+list_copy_tree (treptr x)
 {
     treptr a;
     treptr d;
     treptr ret;
 
-    if (ATOMP(l))
-		return l;
+    if (ATOMP(x))
+		return x;
 
-    a = list_copy_tree (CAR(l));
+    a = list_copy_tree (CAR(x));
     tregc_push (a);
-    d = list_copy_tree (CDR(l));
+    d = list_copy_tree (CDR(x));
     ret = CONS(a, d);
     tregc_pop ();
 
@@ -45,46 +50,46 @@ list_copy_tree (treptr l)
 }
 
 treptr
-list_copy (treptr l)
+list_copy (treptr x)
 {
-    if (ATOMP(l))
-		return l;
+    if (ATOMP(x))
+		return x;
 
-    return CONS(CAR(l), list_copy (CDR(l)));
+    return CONS(CAR(x), list_copy (CDR(x)));
 }
 
 treptr
-list_delete (tre_size i, treptr l)
+list_delete (tre_size i, treptr x)
 {
     treptr  p;
     treptr  f = treptr_nil;
 
     if (i == 0)
-		return CDR(l);
+		return CDR(x);
 
-    for (p = l; NOT_NIL(p); i--, p = CDR(p)) {
+    for (p = x; NOT_NIL(p); i--, p = CDR(p)) {
 		if (i) {
 	    	f = p;
 	    	continue;
 		}
 
 		RPLACD(f, CDR(p));
-		return l;
+		return x;
     }
 
-    return treerror (l, "list_delete: Index '%d' out of range.", i);
+    return treerror (x, "list_delete: Index '%d' out of range.", i);
 }
 
 long
-list_position (treptr elt, treptr l)
+list_position (treptr elt, treptr x)
 {
     long c = 0;
 
-    while (NOT_NIL(l)) {
-		if (CAR(l) == elt)
+    while (NOT_NIL(x)) {
+		if (CAR(x) == elt)
 	    	return c;
 
-        l = CDR(l);
+        x = CDR(x);
 		c++;
     }
 
@@ -105,29 +110,29 @@ list_length (treptr p)
 }
 
 treptr
-list_nthcdr (treptr l, tre_size idx)
+list_nthcdr (treptr x, tre_size idx)
 {
-    while (NOT_NIL(l)) {
+    while (NOT_NIL(x)) {
 #ifndef TRE_NO_ASSERTIONS
-		if (ATOMP(l))
-			treerror_norecover (l, "Internal NTHCDR: cons expected.");
+		if (ATOMP(x))
+			treerror_norecover (x, "Internal NTHCDR: cons expected.");
 #endif
 		if (!idx--)
 			break;
-        l = CDR(l);
+        x = CDR(x);
 	}
 
-	return l;
+	return x;
 }
 
 treptr
-list_nth (treptr l, tre_size idx)
+list_nth (treptr x, tre_size idx)
 {
-	l = list_nthcdr (l, idx);
+	x = list_nthcdr (x, idx);
 
-    if (NOT(l))
-		return l;
-    return CAR(l);
+    if (NOT(x))
+		return x;
+    return CAR(x);
 }
 
 void

@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (declare-cps-exception list-length)
 
@@ -8,3 +8,9 @@
            len
       (= x .x)
       (++! len))))
+
+(defun last (x)
+  (& x
+     (? .x
+        (last .x)
+        x)))

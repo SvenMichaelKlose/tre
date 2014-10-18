@@ -99,7 +99,13 @@ list_consp (treptr x)
 treptr
 list_builtin_consp (treptr list)
 {
-    return list_consp (CAR(list));
+    return list_consp (trearg_get (list));
+}
+
+treptr
+list_builtin_last (treptr list)
+{
+    return last (trearg_get (list));
 }
 
 void

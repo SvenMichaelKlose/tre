@@ -100,7 +100,7 @@
 		(=-SYMBOL-FUNCTION  set_function            fun x)
 		(SYMBOL-PACKAGE     builtin_symbol_package  &rest x))
 
-	(trelist_
+	(list_
 		(CONS               (cons)    a b)
     	(CAR                (car)     x)
 		(CDR                (cdr)     x)
@@ -108,7 +108,8 @@
 		(RPLACA             (rplaca)  x v)
 		(RPLACD             (rplacd)  x v)
 		(RPLACP             (rplacp)  x v)
-   	    (CONS?              consp     x))
+   	    (CONS?              consp   x)
+   	    (LAST               (last)    x))
 
 	(tresequence_
     	(ELT                builtin_elt     &rest x)

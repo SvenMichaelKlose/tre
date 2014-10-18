@@ -5,20 +5,18 @@
 (setq
 	*universe* ; The garbage collector roots here.
 	(cons 'list
-	(cons 'last
 	(cons '%nconc
 	(cons 'copy-list
 	(cons '*variables*
-		  *universe*))))))
+		  *universe*)))))
 
 (setq
 	*defined-functions*
 	(cons 'list
 	(cons 'identity
 	(cons 'copy-list
-	(cons 'last
 	(cons '%nconc
-		  nil))))))
+		  nil)))))
 
 (setq
 	*variables*
@@ -57,13 +55,6 @@
                 *default-listprop*
                 (cons (car x)
               	      (copy-list (cdr x)))))))))
-
-(%set-atom-fun last
-  #'((x)
-      (? x
-		 (? (cdr x)
-            (last (cdr x))
-            x))))
 
 (%set-atom-fun %nconc
   #'((a b)
