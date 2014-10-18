@@ -179,4 +179,4 @@
   `("trebacktrace_push (" ,name ")"))
 
 (define-c-macro %backtrace-pop ()
-  "NULL; trebacktrace_pop()")
+  "NIL; trebacktrace_pop()")
