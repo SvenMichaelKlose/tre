@@ -31,7 +31,7 @@ tremacro_builtin_macroexpand_1 (treptr list)
     treptr ret;
 
     tregc_push (args);
-    ret = treeval_funcall (SYMBOL_FUNCTION(treptr_macroexpand_hook), args, FALSE);
+    ret = eval_funcall (SYMBOL_FUNCTION(treptr_macroexpand_hook), args, FALSE);
     tregc_pop ();
 
     return ret;

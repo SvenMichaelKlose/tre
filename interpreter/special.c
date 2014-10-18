@@ -63,7 +63,7 @@ trespecial_setq (treptr list)
 	    	treerror_norecover (treptr_invalid, "Even number arguments expected - please provide the missing one.");
 #endif
        	tmp = CDR(list);
-       	d = treeval (CAR(list));
+       	d = eval (CAR(list));
        	list = tmp;
 
 		TREEVAL_RETURN_JUMP(d);
@@ -143,7 +143,7 @@ trespecial_special (treptr list)
 }
 
 bool
-treeval_is_return (treptr x)
+eval_is_return (treptr x)
 {
 	return !(ATOMP(x)
     		 || CAR(x) != tre_atom_evaluated_return_from
@@ -153,7 +153,7 @@ treeval_is_return (treptr x)
 }
 
 bool
-treeval_is_go (treptr x)
+eval_is_go (treptr x)
 {
 	return !(ATOMP(x)
     		 || CAR(x) != tre_atom_evaluated_go
@@ -161,9 +161,9 @@ treeval_is_go (treptr x)
 }
 
 bool
-treeval_is_jump (treptr p)
+eval_is_jump (treptr p)
 {
-    return treeval_is_return (p) || treeval_is_go (p);
+    return eval_is_return (p) || eval_is_go (p);
 }
 
 treptr
@@ -181,11 +181,11 @@ trespecial_if (treptr p)
         test = CAR(p);
         p = CDR(p);
         if (NOT(p))
-            return treeval (test);
+            return eval (test);
 
         body = CAR(p);
-        if (NOT_NIL(treeval (test)))
-            return treeval (body);
+        if (NOT_NIL(eval (test)))
+            return eval (body);
 
         p = CDR(p);
     }
@@ -209,7 +209,7 @@ trespecial_progn (treptr list)
     treptr last;
 
     for (last = treptr_nil; NOT_NIL(list); list = CDR(list)) {
-		last = treeval (CAR(list));
+		last = eval (CAR(list));
 		TREEVAL_RETURN_JUMP(last);
     }
 
@@ -233,9 +233,9 @@ trespecial_block (treptr args)
     RETURN_NIL(p);
 
     while (NOT_NIL(p)) {
-		last = treeval (CAR(p));
+		last = eval (CAR(p));
 
-		if (!treeval_is_return (last)) {
+		if (!eval_is_return (last)) {
             p = CDR(p);
 	    	continue;
         }
@@ -270,7 +270,7 @@ trespecial_return_from (treptr args)
     tregc_push (args);
 
     tmp = CDR(args);
-	evl = treeval (CAR(tmp));
+	evl = eval (CAR(tmp));
 	tregc_push (evl);
     RPLACA(tmp, evl);
     ret = CONS(tre_atom_evaluated_return_from, args);
@@ -298,12 +298,12 @@ tag_found:
 		if (ATOMP(a))
             goto next;
 
-        res = treeval (a);
+        res = eval (a);
 
-        if (treeval_is_return (res))
+        if (eval_is_return (res))
             return res;
 
-		if (treeval_is_go (res)) {
+		if (eval_is_go (res)) {
             tag = CDR(res);
 		    DOLIST(p, body) {
 	    	    if (CAR(p) != tag)
@@ -344,7 +344,7 @@ char *tre_special_names[] = {
     NULL
 };
 
-treevalfunc_t treeval_xlat_special[] = {
+evalfunc_t eval_xlat_special[] = {
     trespecial_setq,
     tresymbol_builtin_set_atom_fun,
     trespecial_macro,
@@ -370,7 +370,7 @@ treevalfunc_t treeval_xlat_special[] = {
 treptr
 trespecial (treptr func, treptr args)
 {
-    return treeval_xlat_function (treeval_xlat_special, func, args, FALSE);
+    return eval_xlat_function (eval_xlat_special, func, args, FALSE);
 }
 
 void

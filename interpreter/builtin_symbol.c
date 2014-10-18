@@ -129,5 +129,5 @@ tresymbol_builtin_set_atom_fun (treptr list)
 {
     TRELIST_DEFREGS();
     trearg_get2 (&car, &cdr, list);
-    return tresymbol_set_function (treeval (cdr), car);
+    return tresymbol_set_function (eval (cdr), car);
 }

@@ -8,20 +8,20 @@
 #define TRE_EVAL_H
 
 #define TREEVAL_RETURN_JUMP(p) \
-        if (treeval_is_jump (p)) { return p; }
+        if (eval_is_jump (p)) { return p; }
 
-typedef treptr (*treevalfunc_t) (treptr);
-typedef double (*treeval_opfunc_t) (double, double);
+typedef treptr (*evalfunc_t) (treptr);
+typedef double (*eval_opfunc_t) (double, double);
 
-extern treptr treeval (treptr);
-extern treptr treeval_args (treptr p);
-extern treptr treeval_list (treptr);
-extern treptr treeval_funcall (treptr func, treptr args, bool evalargs);
-extern treptr treeval_xlat_function (treevalfunc_t *, treptr func, treptr expr, bool do_argeval);
+extern treptr eval (treptr);
+extern treptr eval_args (treptr p);
+extern treptr eval_list (treptr);
+extern treptr eval_funcall (treptr func, treptr args, bool evalargs);
+extern treptr eval_xlat_function (evalfunc_t *, treptr func, treptr expr, bool do_argeval);
 
-extern void treeval_set_stackplace (treptr plc, treptr val);
+extern void eval_set_stackplace (treptr plc, treptr val);
 
-extern void treeval_init (void);
+extern void eval_init (void);
 
 #endif 	/* #ifndef TRE_EVAL_H */
 

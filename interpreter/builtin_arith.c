@@ -24,7 +24,7 @@ treptr treptr_number_zero;
 treptr treptr_number_one;
 
 treptr
-treeval_exprop (treptr x, treeval_opfunc_t func, const char * descr)
+eval_exprop (treptr x, eval_opfunc_t func, const char * descr)
 {
     treptr  arg;
     double  val;
@@ -46,24 +46,24 @@ treeval_exprop (treptr x, treeval_opfunc_t func, const char * descr)
     return number_get_float (val);
 }
 
-double treeval_op_plus       (double a, double b);
-double treeval_op_difference (double a, double b);
-double treeval_op_times      (double a, double b);
-double treeval_op_quotient   (double a, double b);
-double treeval_op_logxor     (double a, double b);
+double eval_op_plus       (double a, double b);
+double eval_op_difference (double a, double b);
+double eval_op_times      (double a, double b);
+double eval_op_quotient   (double a, double b);
+double eval_op_logxor     (double a, double b);
 
-double treeval_op_plus       (double a, double b) { return a + b; }
-double treeval_op_difference (double a, double b) { return a - b; }
-double treeval_op_times      (double a, double b) { return a * b; }
-double treeval_op_quotient   (double a, double b) { return a / b; }
-double treeval_op_logxor     (double a, double b) { return (size_t) a ^ (size_t) b; }
+double eval_op_plus       (double a, double b) { return a + b; }
+double eval_op_difference (double a, double b) { return a - b; }
+double eval_op_times      (double a, double b) { return a * b; }
+double eval_op_quotient   (double a, double b) { return a / b; }
+double eval_op_logxor     (double a, double b) { return (size_t) a ^ (size_t) b; }
 
 treptr
 trenumber_builtin_plus (treptr x)
 {
     return NOT(x) ?
 		       treptr_number_zero :
-               treeval_exprop (x, treeval_op_plus, "+");
+               eval_exprop (x, eval_op_plus, "+");
 }
 
 treptr
@@ -96,7 +96,7 @@ trenumber_builtin_difference (treptr x)
     if (NOT(CDR(x)))
 		return number_get_float (-TRENUMBER_VAL(CAR(x)));
 
-    return treeval_exprop (x, treeval_op_difference, "-");
+    return eval_exprop (x, eval_op_difference, "-");
 }
 
 treptr
@@ -110,7 +110,7 @@ trenumber_builtin_times (treptr x)
 {
     return NOT(x) ?
 		       treptr_number_one :
-               treeval_exprop (x, treeval_op_times, "*");
+               eval_exprop (x, eval_op_times, "*");
 }
 
 treptr
@@ -121,7 +121,7 @@ trenumber_builtin_quotient (treptr x)
     if (NOT(CDR(x)))
 		return number_get_float (1.0 / SYMBOL_VALUE(CAR(x)));
 
-    return treeval_exprop (x, treeval_op_quotient, "/");
+    return eval_exprop (x, eval_op_quotient, "/");
 }
 
 void
@@ -157,7 +157,7 @@ trenumber_builtin_logxor (treptr x)
 {
     return NOT(x) ?
 		       treptr_number_zero :
-               treeval_exprop (x, treeval_op_logxor, "LOGXOR");
+               eval_exprop (x, eval_op_logxor, "LOGXOR");
 }
 
 treptr

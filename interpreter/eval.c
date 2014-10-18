@@ -30,13 +30,13 @@
 #include "symbol.h"
 
 treptr treopt_verbose_eval;
-treptr treeval_slot_value;
-treptr treeval_function_symbol;
+treptr eval_slot_value;
+treptr eval_function_symbol;
 
-unsigned treeval_recursions;
+unsigned eval_recursions;
 
 treptr
-treeval_bind (treptr la, treptr lv)
+eval_bind (treptr la, treptr lv)
 {
     treptr  sym;
     treptr  old = treptr_nil;
@@ -61,7 +61,7 @@ treeval_bind (treptr la, treptr lv)
 }
 
 void
-treeval_unbind (treptr old)
+eval_unbind (treptr old)
 {
     treptr  v;
 
@@ -73,7 +73,7 @@ treeval_unbind (treptr old)
 }
 
 treptr
-treeval_funcall_raw (treptr funcdef, treptr args, bool do_argeval)
+eval_funcall_raw (treptr funcdef, treptr args, bool do_argeval)
 {
     treptr  expforms;
     treptr  expvals;
@@ -89,13 +89,13 @@ treeval_funcall_raw (treptr funcdef, treptr args, bool do_argeval)
     tregc_push (expforms);
     tregc_push (expvals);
 
-    old_bindings = treeval_bind (expforms, expvals);
+    old_bindings = eval_bind (expforms, expvals);
     tregc_push (old_bindings);
 
-    ret = treeval_list (body);
+    ret = eval_list (body);
 
     tregc_pop ();
-    treeval_unbind (old_bindings);
+    eval_unbind (old_bindings);
 
     tregc_pop ();
     tregc_pop ();
@@ -105,18 +105,18 @@ treeval_funcall_raw (treptr funcdef, treptr args, bool do_argeval)
 
 
 treptr
-treeval_funcall (treptr func, treptr args, bool do_argeval)
+eval_funcall (treptr func, treptr args, bool do_argeval)
 {
-    return treeval_funcall_raw (FUNCTION_SOURCE(func), args, do_argeval);
+    return eval_funcall_raw (FUNCTION_SOURCE(func), args, do_argeval);
 }
 
 treptr
-treeval_xlat_function (treevalfunc_t *xlat, treptr func, treptr args, bool do_argeval)
+eval_xlat_function (evalfunc_t *xlat, treptr func, treptr args, bool do_argeval)
 {
     treptr  evaldargs;
     treptr  ret;
 
-    evaldargs = (do_argeval) ? treeval_args (args) : trelist_copy (args);
+    evaldargs = (do_argeval) ? eval_args (args) : trelist_copy (args);
     tregc_push (evaldargs);
 
     ret = xlat[(size_t) ATOM(func)] (evaldargs);
@@ -130,7 +130,7 @@ treeval_xlat_function (treevalfunc_t *xlat, treptr func, treptr args, bool do_ar
     (CONSP(x) && CONSP(_CDR(x)) && CONSP(_CADR(x)) && _CAR(x) == treatom_function)
 
 treptr
-treeval_expr (treptr x)
+eval_expr (treptr x)
 {
     treptr  first;
     treptr  args;
@@ -143,9 +143,9 @@ treeval_expr (treptr x)
     if (SYMBOLP(first))
         fun = SYMBOL_FUNCTION(first);
     else if (FUNCTIONEXPRP(first))
-        return treeval_funcall_raw (_CADR(first), args, TRUE);
+        return eval_funcall_raw (_CADR(first), args, TRUE);
     else
-        fun = treeval (first);
+        fun = eval (first);
 
 	if (COMPILED_FUNCTIONP(fun) || ARRAYP(fun))
 		return trefuncall_compiled (fun, args, TRUE);
@@ -153,8 +153,8 @@ treeval_expr (treptr x)
     trebacktrace_push ((BUILTINP(fun) || SPECIALP(fun)) ? fun : FUNCTION_NAME(fun));
 
     switch (TREPTR_TYPE(fun)) {
-        case TRETYPE_FUNCTION:    v = treeval_funcall (fun, args, TRUE); break;
-        case TRETYPE_USERSPECIAL: v = treeval_funcall (fun, args, FALSE); break;
+        case TRETYPE_FUNCTION:    v = eval_funcall (fun, args, TRUE); break;
+        case TRETYPE_USERSPECIAL: v = eval_funcall (fun, args, FALSE); break;
         case TRETYPE_BUILTIN:     v = trebuiltin (fun, args); break;
         case TRETYPE_SPECIAL:     v = trespecial (fun, args); break;
         default:
@@ -168,7 +168,7 @@ treeval_expr (treptr x)
 }
 
 treptr
-treeval (treptr x)
+eval (treptr x)
 {
     treptr val = x;
 
@@ -177,7 +177,7 @@ treeval (treptr x)
     tregc_push (x);
 
     switch (TREPTR_TYPE(x)) {
-        case TRETYPE_CONS:   val = treeval_expr (x); break;
+        case TRETYPE_CONS:   val = eval_expr (x); break;
         case TRETYPE_SYMBOL: val = SYMBOL_VALUE(x); break;
     }
 
@@ -187,12 +187,12 @@ treeval (treptr x)
 }
 
 treptr
-treeval_list (treptr x)
+eval_list (treptr x)
 {
     treptr res = treptr_nil;
 
     DOLIST (x, x) {
-        res = treeval (CAR(x));
+        res = eval (CAR(x));
         TREEVAL_RETURN_JUMP(res);
     }
 
@@ -200,7 +200,7 @@ treeval_list (treptr x)
 }
 
 treptr
-treeval_args (treptr x)
+eval_args (treptr x)
 {
     treptr  a;
     treptr  d;
@@ -212,9 +212,9 @@ treeval_args (treptr x)
 		return x;
 
     tregc_push (x);
-    a = treeval (CAR(x));
+    a = eval (CAR(x));
     tregc_push (a);
-    d = treeval_args (CDR(x));
+    d = eval_args (CDR(x));
     val = CONS(a, d);
     tregc_pop ();
     tregc_pop ();
@@ -223,14 +223,14 @@ treeval_args (treptr x)
 }
 
 void
-treeval_init ()
+eval_init ()
 {
-	treeval_recursions = 0;
+	eval_recursions = 0;
 
-    treeval_slot_value = symbol_get ("%SLOT-VALUE");
-	EXPAND_UNIVERSE(treeval_slot_value);
-    treeval_function_symbol = symbol_get ("FUNCTION");
-	EXPAND_UNIVERSE(treeval_function_symbol);
+    eval_slot_value = symbol_get ("%SLOT-VALUE");
+	EXPAND_UNIVERSE(eval_slot_value);
+    eval_function_symbol = symbol_get ("FUNCTION");
+	EXPAND_UNIVERSE(eval_function_symbol);
 
     treopt_verbose_eval = symbol_get ("*VERBOSE-EVAL*");
     SYMBOL_VALUE(treopt_verbose_eval) = treptr_nil;

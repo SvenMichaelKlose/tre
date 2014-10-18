@@ -186,7 +186,7 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
 	    	_ADDF(dvars, trelist_copy (CDR(argdef)));
 
 	    	/* Evaluate following arguments if so desired. */
-	    	svals = (do_argeval) ? treeval_args (args) : args;
+	    	svals = (do_argeval) ? eval_args (args) : args;
 
 	    	/* Add arguments as a list. */
 	    	_ADDF(dvals, CONS(svals, treptr_nil));
@@ -222,8 +222,8 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
 	        	_ADDF(dvars, CONS(form, treptr_nil));
 
 				svals = NOT_NIL(args) ?
-                            (do_argeval ? treeval (CAR(args)) : CAR(args)) :
-                            treeval (init);
+                            (do_argeval ? eval (CAR(args)) : CAR(args)) :
+                            eval (init);
 
 	        	/* Add argument as a list. */
 	        	_ADDF(dvals, CONS(svals, treptr_nil));
@@ -274,9 +274,9 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
 
 					/* Evaluate value. */
   					if (do_argeval)
-		    			svals = treeval (svals);
+		    			svals = eval (svals);
 				} else
-		    		svals = treeval (init);
+		    		svals = eval (init);
 
 				tregc_push (svals);
 				_ADDF(dvars, CONS(key, treptr_nil));
@@ -298,7 +298,7 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
 
 		/* Evaluate single argument if so desired. */
         if (do_argeval)
-	    	val = treeval (CAR(args));
+	    	val = eval (CAR(args));
 
         tregc_push (val);
         _ADDF(dvars, CONS(var, treptr_nil));

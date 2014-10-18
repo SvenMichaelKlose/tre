@@ -79,7 +79,7 @@ treptr
 trefuncall_c (treptr func, treptr args, bool do_eval)
 {
     treptr ret;
-    treptr a = do_eval ? treeval_args (args) : args;
+    treptr a = do_eval ? eval_args (args) : args;
 
     tregc_push (a);
     ret = (FUNCTION_NATIVE_EXPANDER(func)) ?
@@ -128,9 +128,9 @@ treptr
 trefuncall_interpreted (treptr func, treptr args)
 {
     if (FUNCTIONP(func) || MACROP(func))
-        return treeval_funcall (func, args, FALSE);
+        return eval_funcall (func, args, FALSE);
     if (BUILTINP(func))
-        return treeval_xlat_function (treeval_xlat_builtin, func, args, FALSE);
+        return eval_xlat_function (eval_xlat_builtin, func, args, FALSE);
     if (SPECIALP(func))
         return trespecial (func, args);
     return treerror (func, "Function expected.");

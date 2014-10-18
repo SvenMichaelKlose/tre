@@ -144,7 +144,7 @@ tremain_line (trestream * stream)
         return expr;
 
     tremain_update_history (expr);
-    expr = treeval (tremain_expand (expr));
+    expr = eval (tremain_expand (expr));
 
     return expr;
 }
@@ -255,7 +255,7 @@ tremain_init (void)
     treread_init ();
     trearg_init ();
     trebacktrace_init ();
-    treeval_init ();
+    eval_init ();
     tremacro_init ();
     trequasiquote_init ();
     tredot_init ();
@@ -424,7 +424,7 @@ user:
 #endif
 
     if (NOT_NIL(tre_restart_fun)) {
-        treeval (CONS(tre_restart_fun, treptr_nil));
+        eval (CONS(tre_restart_fun, treptr_nil));
         tre_restart_fun = treptr_nil;
     }
 

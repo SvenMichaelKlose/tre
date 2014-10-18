@@ -65,5 +65,5 @@ trebuiltin_funcall (treptr list)
 treptr
 trebuiltin_eval (treptr list)
 {
-    return treeval (trearg_get (list));
+    return eval (trearg_get (list));
 }

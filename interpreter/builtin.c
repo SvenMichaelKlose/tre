@@ -47,7 +47,7 @@
 #include "main.h"
 #include "xxx.h"
 
-treevalfunc_t treeval_xlat_builtin[];
+evalfunc_t eval_xlat_builtin[];
 
 treptr
 trebuiltin_quit (treptr args)
@@ -194,7 +194,7 @@ trebuiltin_debug (treptr no_args)
     return treptr_nil;
 }
 
-treevalfunc_t treeval_xlat_builtin[] = {
+evalfunc_t eval_xlat_builtin[] = {
     trebuiltin_quit,
     trebuiltin_load,
     trebuiltin_eval,
@@ -346,7 +346,7 @@ treevalfunc_t treeval_xlat_builtin[] = {
 treptr
 trebuiltin (treptr func, treptr args)
 {
-    return treeval_xlat_function (treeval_xlat_builtin, func, args, TRUE);
+    return eval_xlat_function (eval_xlat_builtin, func, args, TRUE);
 }
 
 void

@@ -127,7 +127,7 @@ trecode_get (treptr ** p)
                 num_args = TRENUMBER_INT(*x++);
                 args = trecode_list (&x, num_args);
                 tregc_push_secondary (args);
-                v = treeval_xlat_function (treeval_xlat_builtin, fun, args, FALSE);
+                v = eval_xlat_function (eval_xlat_builtin, fun, args, FALSE);
                 tregc_pop_secondary ();
             }
         } else if (NOT_NIL(FUNCTION_BYTECODE(fun))) {

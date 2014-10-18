@@ -25,7 +25,7 @@ trespecial_catch (treptr x)
     catchers[current_catcher].catcher = CAR(x);
     if (setjmp (catchers[current_catcher].jmp)) {
         treexception_catch_leave ();
-        ret = treeval (catchers[current_catcher + 1].catcher);
+        ret = eval (catchers[current_catcher + 1].catcher);
     } else {
         ret = trespecial_progn (CDR(x));
         treexception_catch_leave ();
@@ -36,7 +36,7 @@ trespecial_catch (treptr x)
 treptr
 trespecial_throw (treptr x)
 {
-    treexception_throw (treeval_args (x));
+    treexception_throw (eval_args (x));
 
     /*NOTREACHED*/
     return treptr_nil;

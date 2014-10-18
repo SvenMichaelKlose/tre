@@ -13,7 +13,7 @@ extern treptr * trestack_secondary;
 extern treptr * trestack_top_secondary;
 extern treptr * trestack_ptr_secondary;
 
-extern treptr treeval_toplevel_current;
+extern treptr eval_toplevel_current;
 extern bool   tre_is_initialized;
 extern bool   tre_interrupt_debugger;
 

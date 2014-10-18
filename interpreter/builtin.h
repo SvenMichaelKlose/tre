@@ -6,7 +6,7 @@
 #define TRE_BUILTIN_H
 
 extern char *tre_builtin_names[];
-extern treevalfunc_t treeval_xlat_builtin[];
+extern evalfunc_t eval_xlat_builtin[];
 
 extern treptr trebuiltin (treptr func, treptr expr);
 
