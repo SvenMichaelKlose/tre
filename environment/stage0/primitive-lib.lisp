@@ -38,7 +38,8 @@
 	(cons (cons '*exception* nil)
 	(cons (cons '*backtrace* nil)
 	(cons (cons '*assert* nil)
-		  *variables*)))))))))))))))))
+	(cons (cons '*targets* nil)
+		  *variables*))))))))))))))))))
 
 (%set-atom-fun identity #'((x) x))
 (%set-atom-fun list #'((&rest x) x))

@@ -1,11 +1,9 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defmacro define-shared-std-macro (targets &rest x)
   `(progn
-     ,@(filter ^(,($ 'define- _ '-std-macro) ,@x)
-               (? *have-c-compiler?*
-                  targets
-                  (remove 'bc (remove 'c targets))))))
+     ,@(filter [`(,($ 'define- _ '-std-macro) ,@x)]
+               (intersect *targets* targets))))
 
 (define-shared-std-macro (js php) defvar-native (&rest x)
   (print-definition `(defvar-native ,@x))
