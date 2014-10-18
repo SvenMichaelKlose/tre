@@ -6,7 +6,6 @@ ARGS="$2 $3 $4 $5 $6 $7 $8 $9"
 FILES="
     alien.c
     alloc.c
-    apply.c
     argument.c
     array.c
     atom.c
@@ -40,6 +39,7 @@ FILES="
 	error.c
 	eval.c
 	exception.c
+	funcall.c
 	function.c
 	gc.c
 	image.c

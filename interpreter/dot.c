@@ -15,7 +15,7 @@
 #include "gc.h"
 #include "print.h"
 #include "thread.h"
-#include "apply.h"
+#include "funcall.h"
 #include "symtab.h"
 #include "symbol.h"
 
@@ -26,7 +26,7 @@ tredot_expand (treptr list)
 {
     return NOT(SYMBOL_FUNCTION(treptr_dotexpand_hook)) ?
                list :
-               trefuncall (SYMBOL_FUNCTION(treptr_dotexpand_hook), CONS(list, treptr_nil));
+               funcall (SYMBOL_FUNCTION(treptr_dotexpand_hook), CONS(list, treptr_nil));
 }
 
 void

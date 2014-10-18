@@ -15,7 +15,7 @@
 #include "gc.h"
 #include "print.h"
 #include "thread.h"
-#include "apply.h"
+#include "funcall.h"
 #include "symtab.h"
 #include "symbol.h"
 
@@ -27,7 +27,7 @@ trequasiquote_expand (treptr list)
     treptr sym = SYMBOL_FUNCTION(treptr_quasiquoteexpand_hook);
     return NOT(sym) ?
                list :
-               trefuncall (sym, CONS(list, treptr_nil));
+               funcall (sym, CONS(list, treptr_nil));
 }
 
 void

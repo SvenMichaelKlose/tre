@@ -18,48 +18,48 @@
 #include "xxx.h"
 #include "function.h"
 #include "symtab.h"
-#include "apply.h"
+#include "funcall.h"
 #include "gc.h"
 #include "builtin_string.h"
 
 treptr
-treatom_symbolp (treptr object)
+treatom_symbolp (treptr x)
 {
-    return TREPTR_TRUTH(SYMBOLP(object));
+    return TREPTR_TRUTH(SYMBOLP(x));
 }
 
 treptr
-treatom_functionp (treptr object)
+treatom_functionp (treptr x)
 {
-    return TREPTR_TRUTH(FUNCTIONP(object) ||
-           MACROP(object) ||
-           BUILTINP(object) ||
-           COMPILED_FUNCTIONP(object) ||
-           trebuiltin_is_compiled_closure (object));
+    return TREPTR_TRUTH(FUNCTIONP(x) ||
+           MACROP(x) ||
+           BUILTINP(x) ||
+           COMPILED_FUNCTIONP(x) ||
+           is_compiled_closure (x));
 }
 
 treptr
-treatom_builtinp (treptr object)
+treatom_builtinp (treptr x)
 {
-    return TREPTR_TRUTH(BUILTINP(object));
+    return TREPTR_TRUTH(BUILTINP(x));
 }
 
 treptr
-treatom_macrop (treptr object)
+treatom_macrop (treptr x)
 {
-    return TREPTR_TRUTH(MACROP(object));
+    return TREPTR_TRUTH(MACROP(x));
 }
 
 treptr
-treatom_type_id (treptr object)
+treatom_type_id (treptr x)
 {
-	return number_get_integer (TREPTR_TYPE(object));
+	return number_get_integer (TREPTR_TYPE(x));
 }
 
 treptr
-treatom_id (treptr object)
+treatom_id (treptr x)
 {
-    return number_get_integer (object);
+    return number_get_integer (x);
 }
 
 treptr

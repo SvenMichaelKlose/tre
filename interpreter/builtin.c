@@ -24,7 +24,7 @@
 #include "symtab.h"
 #include "symbol.h"
 #include "alien.h"
-#include "apply.h"
+#include "funcall.h"
 #include "builtin_apply.h"
 #include "builtin_arith.h"
 #include "builtin_array.h"

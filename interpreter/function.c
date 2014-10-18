@@ -7,6 +7,7 @@
 
 #include "config.h"
 #include "atom.h"
+#include "cons.h"
 #include "list.h"
 #include "function.h"
 #include "error.h"
@@ -14,6 +15,15 @@
 #include "gc.h"
 #include "alloc.h"
 #include "symtab.h"
+#include "symbol.h"
+
+treptr treptr_closure;
+
+bool
+is_compiled_closure (treptr x)
+{
+    return CONSP(x) && CAR(x) == treptr_closure;
+}
 
 trefunction *
 trefunction_alloc ()
@@ -54,4 +64,11 @@ void
 trefunction_free (treptr x)
 {
 	free (TREPTR_FUNCTION(x));
+}
+
+void
+function_init ()
+{
+    treptr_closure = symbol_get ("%CLOSURE");
+    EXPAND_UNIVERSE(treptr_closure);
 }

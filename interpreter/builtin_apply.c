@@ -6,7 +6,7 @@
 #include "xxx.h"
 #include "cons.h"
 #include "error.h"
-#include "apply.h"
+#include "funcall.h"
 #include "list.h"
 #include "eval.h"
 #include "argument.h"
@@ -51,7 +51,7 @@ trebuiltin_apply (treptr list)
 {
     return NOT(list) ?
                treerror (list, "Arguments expected.") :
-               trefuncall (CAR(list), trebuiltin_apply_args (trelist_copy (CDR(list))));
+               funcall (CAR(list), trebuiltin_apply_args (trelist_copy (CDR(list))));
 }
 
 treptr
@@ -59,7 +59,7 @@ trebuiltin_funcall (treptr list)
 {
     return NOT(list) ?
                treerror (list, "Arguments expected.") :
-               trefuncall (CAR(list), CDR(list));
+               funcall (CAR(list), CDR(list));
 }
 
 treptr

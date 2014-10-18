@@ -35,7 +35,6 @@
 #include "util.h"
 #include "dot.h"
 #include "quasiquote.h"
-#include "apply.h"
 #include "builtin_arith.h"
 #include "builtin_list.h"
 #include "builtin_stream.h"
@@ -273,7 +272,7 @@ tremain_init (void)
 	MAKE_SYMBOL("*RAND-MAX*",         number_get_integer (RAND_MAX));
 
     tremain_init_image_path ();
-    treapply_init ();
+    function_init ();
     trecode_init ();
     tredebug_init_late ();
 

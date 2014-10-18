@@ -18,7 +18,6 @@
 #include "special.h"
 #include "gc.h"
 #include "thread.h"
-#include "apply.h"
 #include "function.h"
 #include "symbol.h"
 
@@ -90,9 +89,9 @@ trelist_builtin_rplacp (treptr list)
 }
 
 treptr
-trelist_consp (treptr object)
+trelist_consp (treptr x)
 {
-    if (ATOMP(object))
+    if (ATOMP(x))
         return treptr_nil;
     return treptr_t;
 }

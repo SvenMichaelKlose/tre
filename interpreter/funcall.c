@@ -22,7 +22,7 @@
 #include "thread.h"
 #include "builtin.h"
 #include "special.h"
-#include "apply.h"
+#include "funcall.h"
 #include "function.h"
 #include "symtab.h"
 #include "backtrace.h"
@@ -34,16 +34,8 @@
 #define CLOSURE_FUNCTION(x)  CAR(CDR(x))
 #define CLOSURE_LEXICALS(x)  CDR(CDR(x))
 
-treptr treatom_closure;
-
-bool
-trebuiltin_is_compiled_closure (treptr x)
-{
-	return CONSP(x) && CAR(x) == treatom_closure;
-}
-
 treptr
-trefuncall_ffi (void * fun, treptr x)
+funcall_ffi (void * fun, treptr x)
 {
 	ffi_cif     cif;
 	ffi_type ** args;
@@ -76,15 +68,15 @@ trefuncall_ffi (void * fun, treptr x)
 }
 
 treptr
-trefuncall_c (treptr func, treptr args, bool do_eval)
+funcall_c (treptr func, treptr args, bool do_eval)
 {
     treptr ret;
     treptr a = do_eval ? eval_args (args) : args;
 
     tregc_push (a);
     ret = (FUNCTION_NATIVE_EXPANDER(func)) ?
-              trefuncall_ffi (FUNCTION_NATIVE_EXPANDER(func), CONS(a, treptr_nil)) :
-              trefuncall_ffi (FUNCTION_NATIVE(func), a);
+              funcall_ffi (FUNCTION_NATIVE_EXPANDER(func), CONS(a, treptr_nil)) :
+              funcall_ffi (FUNCTION_NATIVE(func), a);
     tregc_pop ();
 
     return ret;
@@ -92,7 +84,7 @@ trefuncall_c (treptr func, treptr args, bool do_eval)
 
 
 treptr
-trefuncall_bytecode (treptr func, treptr args, treptr argdef, bool do_eval)
+funcall_bytecode (treptr func, treptr args, treptr argdef, bool do_eval)
 {
     treptr  expforms;
     treptr  expvals;
@@ -109,15 +101,15 @@ trefuncall_bytecode (treptr func, treptr args, treptr argdef, bool do_eval)
 }
 
 treptr
-trefuncall_compiled (treptr func, treptr args, bool do_eval)
+funcall_compiled (treptr func, treptr args, bool do_eval)
 {
     treptr v;
 
     tregc_push (args);
     trebacktrace_push (treptr_nil);
     v = NOT_NIL(FUNCTION_BYTECODE(func)) ?
-            trefuncall_bytecode (func, args, TREARRAY_VALUES(FUNCTION_BYTECODE(func))[0], do_eval) :
-            trefuncall_c (func, args, do_eval);
+            funcall_bytecode (func, args, TREARRAY_VALUES(FUNCTION_BYTECODE(func))[0], do_eval) :
+            funcall_c (func, args, do_eval);
     trebacktrace_pop ();
     tregc_pop ();
 
@@ -125,7 +117,7 @@ trefuncall_compiled (treptr func, treptr args, bool do_eval)
 }
 
 treptr
-trefuncall_interpreted (treptr func, treptr args)
+funcall_interpreted (treptr func, treptr args)
 {
     if (FUNCTIONP(func) || MACROP(func))
         return eval_funcall (func, args, FALSE);
@@ -137,29 +129,22 @@ trefuncall_interpreted (treptr func, treptr args)
 }
 
 treptr
-trefuncall (treptr func, treptr args)
+funcall (treptr func, treptr args)
 {
     treptr v;
 
-	if (trebuiltin_is_compiled_closure (func))
-		return trefuncall_compiled (SYMBOL_FUNCTION(CLOSURE_FUNCTION(func)),
+	if (is_compiled_closure (func))
+		return funcall_compiled (SYMBOL_FUNCTION(CLOSURE_FUNCTION(func)),
 		                            CONS(CLOSURE_LEXICALS(func), args),
                                     FALSE);
 	if (COMPILED_FUNCTIONP(func))
-		return trefuncall_compiled (func, args, FALSE);
+		return funcall_compiled (func, args, FALSE);
 
     tregc_push (args);
     trebacktrace_push (BUILTINP(func) ? func : FUNCTION_NAME(func));
-    v = trefuncall_interpreted (func, args);
+    v = funcall_interpreted (func, args);
     trebacktrace_pop ();
     tregc_pop ();
 
     return v;
-}
-
-void
-treapply_init ()
-{
-    treatom_closure = symbol_get ("%CLOSURE");
-    EXPAND_UNIVERSE(treatom_closure);
 }

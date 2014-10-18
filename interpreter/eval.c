@@ -22,7 +22,7 @@
 #include "argument.h"
 #include "string2.h"
 #include "xxx.h"
-#include "apply.h"
+#include "funcall.h"
 #include "symtab.h"
 #include "function.h"
 #include "backtrace.h"
@@ -148,7 +148,7 @@ eval_expr (treptr x)
         fun = eval (first);
 
 	if (COMPILED_FUNCTIONP(fun) || ARRAYP(fun))
-		return trefuncall_compiled (fun, args, TRUE);
+		return funcall_compiled (fun, args, TRUE);
 
     trebacktrace_push ((BUILTINP(fun) || SPECIALP(fun)) ? fun : FUNCTION_NAME(fun));
 
