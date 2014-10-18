@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
 
 (declare-cps-exception list-length)
 
@@ -14,3 +14,21 @@
      (? .x
         (last .x)
         x)))
+
+(defun copy-list (x)
+  (? (atom? x)
+     x
+     (. x. (copy-list .x))))
+
+(functional nthcdr)
+
+(defun nthcdr (idx x)
+  (& x
+     (? (zero? idx)
+        x
+        (nthcdr (-- idx) .x))))
+
+(functional nth)
+
+(defun nth (i x)
+  (car (nthcdr i x)))

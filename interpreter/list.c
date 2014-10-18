@@ -16,6 +16,7 @@
 #include "xxx.h"
 #include "symtab.h"
 #include "assert.h"
+#include "queue.h"
 
 treptr
 last (treptr x)
@@ -52,10 +53,18 @@ list_copy_tree (treptr x)
 treptr
 list_copy (treptr x)
 {
-    if (ATOMP(x))
-		return x;
+    treptr q;
+    treptr i;
 
-    return CONS(CAR(x), list_copy (CDR(x)));
+    ASSERT_LIST(x);
+
+    q = tre_make_queue ();
+    tregc_push (q);
+    DOLIST(i, x)
+        tre_enqueue (q, CAR(i));
+    tregc_pop ();
+
+    return tre_queue_list (q);
 }
 
 treptr
@@ -110,7 +119,7 @@ list_length (treptr p)
 }
 
 treptr
-list_nthcdr (treptr x, tre_size idx)
+nthcdr (tre_size idx, treptr x)
 {
     while (NOT_NIL(x)) {
 #ifndef TRE_NO_ASSERTIONS
@@ -126,9 +135,9 @@ list_nthcdr (treptr x, tre_size idx)
 }
 
 treptr
-list_nth (treptr x, tre_size idx)
+nth (tre_size idx, treptr x)
 {
-	x = list_nthcdr (x, idx);
+	x = nthcdr (idx, x);
 
     if (NOT(x))
 		return x;
@@ -138,13 +147,13 @@ list_nth (treptr x, tre_size idx)
 void
 list_t_set (treptr s, tre_size idx, treptr val)
 {
-    RPLACA(list_nthcdr (s, idx), val);
+    RPLACA(nthcdr (idx, s), val);
 }
 
 treptr
 list_t_get (treptr s, tre_size idx)
 {
-    return list_nth (s, idx);
+    return nth (idx, s);
 }
 
 struct tre_sequence_type list_seqtype = {

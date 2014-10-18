@@ -20,6 +20,7 @@
 #include "thread.h"
 #include "function.h"
 #include "symbol.h"
+#include "assert.h"
 
 #include "builtin_atom.h"
 
@@ -106,6 +107,39 @@ treptr
 list_builtin_last (treptr list)
 {
     return last (trearg_get (list));
+}
+
+treptr
+list_builtin_copy_list (treptr list)
+{
+    return list_copy (trearg_get (list));
+}
+
+treptr
+list_builtin_nthcdr (treptr x)
+{
+    treptr  idx;
+    treptr  list;
+
+    trearg_get2 (&idx, &list, x);
+    ASSERT_NUMBER(idx);
+    ASSERT_LIST(list);
+
+    return nthcdr ((tre_size) TRENUMBER_VAL(idx), list);
+}
+
+
+treptr
+list_builtin_nth (treptr x)
+{
+    treptr  idx;
+    treptr  list;
+
+    trearg_get2 (&idx, &list, x);
+    ASSERT_NUMBER(idx);
+    ASSERT_LIST(list);
+
+    return nth ((tre_size) TRENUMBER_VAL(idx), list);
 }
 
 void

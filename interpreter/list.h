@@ -22,7 +22,8 @@ extern treptr   list_delete (tre_size, treptr);
 extern long     list_position (treptr elt, treptr lst);
 extern tre_size list_length (treptr);
 extern bool     list_equal (treptr, treptr);
-extern treptr   list_nth (treptr, tre_size);
+extern treptr   nthcdr (tre_size, treptr);
+extern treptr   nth (tre_size, treptr);
 extern treptr   last (treptr);
 extern bool     list_check_type (treptr, tre_size atom_type);
 

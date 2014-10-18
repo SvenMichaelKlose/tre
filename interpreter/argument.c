@@ -259,7 +259,7 @@ trearg_expand (treptr * rvars, treptr * rvals, treptr iargdef, treptr args, bool
 				kpos = (tre_size) list_position (kw, args);
 	 			if (kpos != (tre_size) -1) {
 		    		/* Get argument after key. */
-		    		svals = list_nth (args, kpos + 1);
+		    		svals = nth (kpos + 1, args);
 
 		    		/* Remove keyword and value from argument list. */
 #ifndef TRE_NO_ASSERTIONS

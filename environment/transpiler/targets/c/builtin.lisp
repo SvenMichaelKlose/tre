@@ -101,15 +101,18 @@
 		(SYMBOL-PACKAGE     builtin_symbol_package  &rest x))
 
 	(list_
-		(CONS               (cons)    a b)
-    	(CAR                (car)     x)
-		(CDR                (cdr)     x)
-		(CPR                (cpr)     x)
-		(RPLACA             (rplaca)  x v)
-		(RPLACD             (rplacd)  x v)
-		(RPLACP             (rplacp)  x v)
-   	    (CONS?              consp   x)
-   	    (LAST               (last)    x))
+		(CONS               (cons)       a b)
+    	(CAR                (car)        x)
+		(CDR                (cdr)        x)
+		(CPR                (cpr)        x)
+		(RPLACA             (rplaca)     x v)
+		(RPLACD             (rplacd)     x v)
+		(RPLACP             (rplacp)     x v)
+   	    (CONS?              consp        x)
+   	    (LAST               (last)       x)
+   	    (COPY-LIST          (list_copy)  x)
+   	    (NTHCDR             (nthcdr)     i x)
+   	    (NTH                (nth)        i x))
 
 	(tresequence_
     	(ELT                builtin_elt     &rest x)
