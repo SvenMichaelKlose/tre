@@ -104,7 +104,7 @@ BINDIR="/usr/local/bin/"
 basic_clean ()
 {
 	echo "Cleaning..."
-	rm -vf *.core interpreter/$COMPILED_ENV tre image bytecode-image tmp.c __alien.tmp files.lisp boot.log _nodejstests.log _phptests.log _bytecode-interpreter-tests.log profile.lisp
+	rm -vf *.core interpreter/$COMPILED_ENV tre image bytecode-image $CRUNSHTMP __alien.tmp files.lisp boot.log _nodejstests.log _phptests.log _bytecode-interpreter-tests.log profile.lisp
     rm -vrf interpreter/_revision.h environment/_current-version environment/transpiler/targets/c64/tre.c64
 	rm -vrf obj
     rm -vf examples/js/hello-world.js
