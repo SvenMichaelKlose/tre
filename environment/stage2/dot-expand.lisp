@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun dot-expand-make-expr (which num x)
   (? (< 0 num)
@@ -22,25 +22,37 @@
 		                  (dot-expand-make-expr 'cdr num-cdrs
 		  	                                    (dot-expand (list-symbol without-end))))))
 
+(defun dot-position (x)
+  (position #\. x :test #'==))
+
+(defun no-dot-notation? (x)
+  (with (sl  (string-list (symbol-name x))
+         l   (length sl)
+         p   (dot-position sl))
+    (| (== 1 l)
+       (not p))))
+
+(defun has-dot-notation? (x)
+  (with (sl  (string-list (symbol-name x)))
+    (| (== #\. (car sl))
+       (== #\. (car (last sl))))))
+
+(defun dot-expand-conv (x)
+  (with (sl  (string-list (symbol-name x))
+         p   (dot-position sl))
+    (?
+      (no-dot-notation? x)   x
+      (has-dot-notation? x)  (dot-expand-list sl)
+      `(%slot-value ,(list-symbol (subseq sl 0 p))
+                    ,(dot-expand-conv (list-symbol (subseq sl (++ p))))))))
+
 (defun dot-expand (x)
-  (with (dot-position [position #\. _ :test #'==]
-		 conv
-			#'((x)
-				 (with (sl (string-list (symbol-name x))
-						l  (length sl)
-					    p  (dot-position sl))
-				   (?
-					 (| (== 1 l) (not p)) x
-					 (| (== #\. (car sl)) (== #\. (car (last sl)))) (dot-expand-list sl)
-					 `(%slot-value ,(list-symbol (subseq sl 0 p))
-						           ,(conv (list-symbol (subseq sl (++ p))))))))
-		 label?
-		   [not (| (cons? _)
-				   (number? _)
-				   (string? _))])
+  (with (label?  [not (| (cons? _)
+				         (number? _)
+				         (string? _))])
     (when x
       (?
-		(label? x) (conv x)
+		(label? x) (dot-expand-conv x)
 		(cons? x)  (listprop-cons x (dot-expand (car x))
                                     (dot-expand (cdr x)))
       	x))))
