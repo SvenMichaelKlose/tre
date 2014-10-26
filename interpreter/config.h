@@ -13,7 +13,7 @@ typedef int bool;
 #define MEGA	(1024 * 1024)
 
 #ifndef TRE_INFO
-#define TRE_INFO    "tré " TRE_REVISION_STRING " - " __DATE__ ", " __TIME__ ")\n"
+#define TRE_INFO    "tré " TRE_REVISION_STRING " - " __DATE__ ", " __TIME__ "\n"
 #endif
 
 #if 0
@@ -27,8 +27,8 @@ typedef int bool;
 #define TRE_VERBOSE_LOAD	        /* Print what files are loaded. */
 #endif
 
-#define TRE_MAX_SYMLEN		        (4 * KILO)
-#define TRE_MAX_STRINGLEN	        (64 * KILO)
+#define TRE_MAX_SYMLEN		        128
+#define TRE_MAX_STRINGLEN	        512
 
 #define TRE_MAX_NESTED_FILES	    16
 #define TRE_FILEIO_MAX_FILES        16
