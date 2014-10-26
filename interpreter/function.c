@@ -16,6 +16,7 @@
 #include "alloc.h"
 #include "symtab.h"
 #include "symbol.h"
+#include "builtin_symbol.h"
 
 treptr treptr_closure;
 
