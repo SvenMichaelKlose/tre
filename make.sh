@@ -322,8 +322,8 @@ releasetests)
     ./make.sh backup || exit 1
     echo "(= (transpiler-inject-debugging? *c-transpiler*) t)(compile-c-environment)" | $TRE || exit -1
     ./make.sh crunsh $ARGS || exit 1
+    ./make.sh environment $ARGS || exit 1
     ./make.sh restore || exit 1
-    ./make.sh profile $ARGS || exit 1
 	;;
 
 install)
