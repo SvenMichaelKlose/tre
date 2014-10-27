@@ -1,17 +1,31 @@
-;;;;; tré – Copyright (c) 2007–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2007–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
 
 (functional subseq)
 
-(defun list-subseq (seq start end)
-  (unless (integer== start end)
-    (labels ((copy (lst len)
-               (& lst (integer< 0 len)
-                  (cons (car lst)
-				        (copy (cdr lst) (integer-- len))))))
-      (when seq
-        (& (integer> start end)
-           (xchg start end))
-        (copy (nthcdr start seq) (integer- end start))))))
+(defun copy-num (lst len)
+  (& lst
+     (integer< 0 len)
+     (cons (car lst)
+		   (copy-num (cdr lst) (integer-- len)))))
+
+(defun list-subseq (seq start &optional (end 999999))
+  (when (& seq
+           (not (integer== start end)))
+    (& (integer> start end)
+       (xchg start end))
+    (copy-num (nthcdr start seq) (integer- end start))))
+
+(define-test "LIST-SUBSEQ basically works"
+  ((list-subseq '(a b c) 0 1))
+  '(a))
+
+(define-test "LIST-SUBSEQ basically works"
+  ((list-subseq '(1 2 3 4) 1 3))
+  '(2 3))
+
+(define-test "LIST-SUBSEQ works without end"
+  ((list-subseq '(1 2 3 4) 2))
+  '(3 4))
 
 (defun %subseq-sequence (maker seq start end)
   (unless (integer== start end)
@@ -33,14 +47,6 @@
 	  (string? seq) (string-subseq seq start end)
 	  (array? seq)  (%subseq-sequence #'make-array seq start end)
       (error "Type of ~A not supported." seq))))
-
-(define-test "SUBSEQ basically works"
-  ((subseq '(1 2 3 4) 1 3))
-  '(2 3))
-
-(define-test "SUBSEQ works without end"
-  ((subseq '(1 2 3 4) 2))
-  '(3 4))
 
 (define-test "SUBSEQ returns NIL when totally out of range"
   ((subseq "lisp" 10))
