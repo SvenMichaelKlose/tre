@@ -104,6 +104,12 @@ number_get_char (double value)
     return number_chars[(size_t) value];
 }
 
+float
+trenumber_value (treptr x)
+{
+    return TRENUMBER_VAL(x);
+}
+
 void
 trenumber_init ()
 {

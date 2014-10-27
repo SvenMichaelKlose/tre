@@ -32,6 +32,8 @@ extern treptr       number_get_float (double);
 extern treptr       number_get_integer (double);
 extern treptr       number_get_char (double);
 
+extern float        number_value (treptr);
+
 extern void   trenumber_init (void);
 
 #endif
