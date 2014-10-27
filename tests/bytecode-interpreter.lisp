@@ -36,16 +36,19 @@
                                                  @bc-test-set-lexical
                                                  @bc-test-closure)))
 
+  (print '@bc-test-%set-atom-fun)
   (alet (@bc-test-%set-atom-fun)
     (unless (eq 'wannabe-fun !)
       (print !)
       (error "%SET-ATOM-FUN isn't handled correctly by the bytecode interpreter.")))
 
+  (print '@bc-test-set-lexical)
   (alet (@bc-test-set-lexical)
     (unless (== 65 !)
       (print !)
       (error "Lexicals aren't set correctly by the bytecode interpreter.")))
 
+  (print '@bc-test-closure)
   (alet (@bc-test-closure)
     (unless (== 65 !)
       (print !)
