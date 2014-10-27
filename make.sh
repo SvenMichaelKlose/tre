@@ -49,6 +49,7 @@ FILES="
 	main.c
 	number.c
 	print.c
+	ptr.c
 	quasiquote.c
 	queue.c
 	read.c
@@ -61,6 +62,7 @@ FILES="
 	symtab.c
 	symbol.c
 	thread.c
+	type.c
 	util.c"
 
 CC=gcc
