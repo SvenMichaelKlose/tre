@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008,2011–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008,2011–2014 Sven Michael Klose <pixel@copei.de>
 
 (defstruct c-call-target
   put-arg
@@ -21,13 +21,22 @@
 (defun c-call-epilogue (target num-args)
   (funcall (c-call-target-epilogue target) num-args))
 
+(defun cpu-type? (x)
+  (string== x *cpu-type*))
+
+(defun cpu-type-x86? ()
+  (some #'cpu-type? '("i386" "i486" "i586" "i686")))
+
+(defun cpu-type-amd64? ()
+  (some #'cpu-type? '("amd64" "x86_64")))
+
 (defun c-call-do (cc)
   (with (args    (c-call-args cc)
 		 code    (%malloc-exec 65536) ; XXX
 		 p       code
 		 target  (?
-				   (in=? *cpu-type* "i386" "i486" "i586" "i686") (make-c-call-target-x86)
-				   (in=? *cpu-type* "amd64" "x86_64") (make-c-call-target-amd64)
+                   (cpu-type-x86?)    (make-c-call-target-x86)
+                   (cpu-type-amd64?)  (make-c-call-target-amd64)
 				   (error "Unsupported *CPU-TYPE*.")))
 	(when (== -1 code)
 	  (error "Couldn't allocate trampoline."))
