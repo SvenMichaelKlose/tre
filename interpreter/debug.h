@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2007,2012 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2007,2012,2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #ifdef INTERPRETER
@@ -29,9 +29,6 @@ extern bool   tredebug_remove_breakpoint (char *);
 extern void   tredebug_chk_next (void);
 
 extern void   tredebug_cnt (void);
-
-extern treptr treptr_index (treptr);
-extern treptr treptr_type (treptr);
 
 #endif	/* #ifndef TRE_DEBUG_H */
 

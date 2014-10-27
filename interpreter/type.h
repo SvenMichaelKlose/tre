@@ -20,11 +20,12 @@
 #define TRETYPE_FUNCTION	8
 #define TRETYPE_USERSPECIAL	9
 #define TRETYPE_MAXTYPE		9
-#define TRETYPE_ATOM		10 /* parameter dummy */
-#define TRETYPE_UNUSED		-1
+#define TRETYPE_UNUSED		10
 
 #define TRETYPE_WIDTH		4
 
 #define TRETYPECHK(argnum, object, type, descr) (trearg_typed (argnum, type, object, descr))
+
+extern const char * tretype_name (unsigned);
 
 #endif /* #ifndef TRE_TYPE_H */

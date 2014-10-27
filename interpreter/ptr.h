@@ -60,4 +60,8 @@ extern treptr atom_square;
 extern treptr atom_curly;
 extern treptr atom_cons;
 
+extern treptr        treptr_type (treptr);
+extern const char *  treptr_typename (treptr);
+extern treptr        treptr_index (treptr);
+
 #endif /* #ifndef TRE_PTR_H */

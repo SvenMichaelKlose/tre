@@ -103,27 +103,3 @@ trewarn (treptr expr, const char *msg, ...)
 
     tredebug ();
 }
-
-const char *
-treerror_typename (size_t t)
-{
-	/* !!! Keep this in sync with type.h! */
-	static const char * type_names[] = {
-		"cons",
-		"symbol",
-		"number",
-		"string",
-		"array",
-		"built-in function",
-		"built-in special form",
-		"macro",
-		"function",
-		"special form",
-		"atom"
-	};
-
-	if (t > TRETYPE_ATOM)
-		treerror_internal (t, "Unknown type index %u.", t);
-
-	return type_names[t];
-}

@@ -88,8 +88,8 @@ trearg_correct (tre_size argnum, unsigned type, treptr x, const char * descr)
 
 	snprintf (buf, 4096, "Argument %ld to %s: %s expected instead of %s.",
 			  (long) argnum, descr,
-			  treerror_typename (type),
-			  treerror_typename (TREPTR_TYPE(x)));
+			  tretype_name (type),
+			  treptr_typename (x));
 
 	return treerror (x, buf);
 }

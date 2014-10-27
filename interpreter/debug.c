@@ -590,16 +590,4 @@ tredebug_init_late (void)
     treptr_milestone = symbol_get ("*MILESTONE*");
 }
 
-treptr
-treptr_index (treptr x)
-{
-    return TREPTR_INDEX(x);
-}
-
-treptr
-treptr_type (treptr x)
-{
-    return TREPTR_TYPE(x);
-}
-
 #endif /* #ifdef INTERPRETER */

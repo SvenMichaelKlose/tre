@@ -163,7 +163,7 @@ eval_expr (treptr x)
         case TRETYPE_SPECIAL:     v = trespecial (fun, args); break;
         default:
             treerror_norecover (CAR(x), "Function expected instead of %s.",
-                                        treerror_typename (TREPTR_TYPE(CAR(x))));
+                                        treptr_typename (CAR(x)));
     }
 
     trebacktrace_pop ();
