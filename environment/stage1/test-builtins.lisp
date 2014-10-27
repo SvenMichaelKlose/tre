@@ -124,9 +124,9 @@
   ((function? #'car))
   t)
 
-;(define-test "FUNCTION? doesn't recognize built-in special forms"
-;  ((function? #'block))
-;  nil)
+(define-test "FUNCTION? doesn't recognize built-in special forms"
+  ((function? #'block))
+  nil)
 
 (define-test "STRING? recognizes strings"
   ((string? "some string"))
@@ -161,7 +161,7 @@
   ((last '(1 2 3)))
   '(3))
 
-(define-test "LAST return NIL for empty list"
+(define-test "LAST returns NIL for empty list"
   ((last nil))
   nil)
 
@@ -173,7 +173,7 @@
   ((== #\A #\A))
   t)
 
-(define-test "if 0 is a boolean 'true'"
+(define-test "0 is a boolean T"
   ((? 0 t))
   t)
 
@@ -181,7 +181,7 @@
   ((character? (elt "fnord" 0)))
   t)
 
-(define-test "NTHCDR works at start"
+(define-test "NTHCDR works at the start"
   ((nthcdr 0 '(a b c)))
   '(a b c))
 
@@ -196,13 +196,3 @@
 (define-test "NTHCDR works beyond the end"
   ((nthcdr 3 '(a b c)))
   nil)
-
-; + - * / MOD
-; LOGXOR
-; MAKE-SYMBOL ATOM SYMBOL-VALUE %TYPE-ID
-; SYMBOL-FUNCTION SYMBOL-PACKAGE
-; BOUNDP FBOUNDP
-; MACRO? STRING?
-; == < >
-; BIT-OR BIT-AND
-; << >>
