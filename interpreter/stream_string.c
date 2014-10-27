@@ -49,7 +49,7 @@ trestream_string_flush (void * s)
 trestream *
 trestream_string_make (char * string)
 {
-    trestream * s = treio_make_stream (&treio_ops_string, "String in memory.");
+    trestream * s = treio_make_stream (&treio_ops_string, "string stream");
     trestream_string * d = malloc (sizeof (trestream_string));
 
     d->data = string;
