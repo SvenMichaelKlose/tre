@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2009,2012–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2009,2012–2014 Sven Michael Klose <pixel@copei.de>
 
 (defvar *tests* nil)
 
@@ -10,11 +10,11 @@
       		    (test-equal (cdr x) (cdr y))))
 
 (early-defun do-test (test)
+  (print (car test))
   (? (test-equal (eval (macroexpand (car (cdr test))))
                  (eval (macroexpand (car (cdr (cdr test))))))
 	 nil
      (progn
-	   (print (car test))
 	   (print 'FAILED-RESULT)
 	   (print (eval (macroexpand (car (cdr test)))))
 	   (print 'WANTED-RESULT)
