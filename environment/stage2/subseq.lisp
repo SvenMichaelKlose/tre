@@ -8,6 +8,10 @@
      (cons (car lst)
 		   (copy-num (cdr lst) (integer-- len)))))
 
+(define-test "COPY-NUM"
+  ((copy-num '(a b c) 2))
+  '(a b))
+
 (defun list-subseq (seq start &optional (end 999999))
   (when (& seq
            (not (integer== start end)))
@@ -15,15 +19,15 @@
        (xchg start end))
     (copy-num (nthcdr start seq) (integer- end start))))
 
-(define-test "LIST-SUBSEQ basically works"
+(define-test "LIST-SUBSEQ work at the beginning"
   ((list-subseq '(a b c) 0 1))
   '(a))
 
-(define-test "LIST-SUBSEQ basically works"
+(define-test "LIST-SUBSEQ works in the middle"
   ((list-subseq '(1 2 3 4) 1 3))
   '(2 3))
 
-(define-test "LIST-SUBSEQ works without end"
+(define-test "LIST-SUBSEQ works at the end"
   ((list-subseq '(1 2 3 4) 2))
   '(3 4))
 
