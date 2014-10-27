@@ -234,8 +234,10 @@ devboot)
 	./make.sh reloadnoassert $ARGS || exit 1
 	./make.sh compiler $ARGS || exit 1
 	./make.sh crunsh $ARGS || exit 1
+	./make.sh ctests $ARGS || exit 1
 	./make.sh environment $ARGS || exit 1
 	./make.sh crunsh $ARGS|| exit 1
+	./make.sh ctests $ARGS || exit 1
 	;;
 
 boot)
@@ -244,9 +246,18 @@ boot)
 	./make.sh reloadnoassert $ARGS || exit 1
 	(echo "(= (transpiler-backtrace? *c-transpiler*) nil)(compile-c-compiler)" | $TRE) || exit 1
 	./make.sh crunsh -DTRE_NO_BACKTRACE -DTRE_NO_ASSERTIONS -DNDEBUG $ARGS || exit 1
+	./make.sh ctests $ARGS || exit 1
 	./make.sh reload $ARGS || exit 1
+	./make.sh ctests $ARGS || exit 1
 	./make.sh environment $ARGS || exit 1
 	./make.sh crunsh $ARGS|| exit 1
+	./make.sh ctests $ARGS || exit 1
+	;;
+
+ctests)
+    echo "Environment tests..."
+    (echo "(do-tests)" | $TRE) || exit 1
+    echo "Environment tests passed."
 	;;
 
 phptests)
@@ -376,6 +387,7 @@ restore)
     echo "  distclean       Like 'clean' but also removes backups."
     echo "  precompile      Precompile obligatory target environments (EXPERIMENTAL)."
     echo "  profile         Make a profile of the compiler compiling itself."
+    echo "  ctests          Run C environemnt tests."
     echo "  jstests         Compile JavaScript target tests and run them with"
     echo "                  Chromium and node.js."
     echo "  phptests        Compile PHP target tests and run them with the"
