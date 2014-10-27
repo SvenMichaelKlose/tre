@@ -43,8 +43,3 @@
 (define-test "INTEGER< to be NIL"
   ((integer< 1 0))
   nil)
-
-(define-test "== empty string"
-  ((let s ""
-	 (== "" s)))
-  t)
