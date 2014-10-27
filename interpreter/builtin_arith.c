@@ -163,9 +163,9 @@ trenumber_builtin_logxor (treptr x)
 treptr
 trenumber_equal (treptr a, treptr b)
 {
-    return STRINGP(a) || STRINGP(b) ?
-               trestring_builtin_compare (CONS(a, CONS(b, NIL))) :
-               TREPTR_TRUTH(TRENUMBER_VAL(a) == TRENUMBER_VAL(b));
+    ASSERT_NUMBER(a);
+    ASSERT_NUMBER(b);
+    return TREPTR_TRUTH(TRENUMBER_VAL(a) == TRENUMBER_VAL(b));
 }
 
 treptr
