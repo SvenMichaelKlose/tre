@@ -126,7 +126,7 @@ link ()
 
 make_revision_header ()
 {
-    REV=`git log --pretty=oneline | wc -l`
+    REV=`git log --pretty=oneline | wc -l` || exit 1
     REV=`expr 3290 + $REV`
     echo $REV >environment/_current-version
     echo "#ifndef TRE_REVISION" >interpreter/_revision.h
@@ -262,7 +262,7 @@ ctests)
 
 phptests)
     echo "PHP target tests..."
-    $TRE tests/php.lisp
+    $TRE tests/php.lisp || exit 1
     php compiled/test.php >_phptests.log || exit 1
     cmp tests/php.correct-output _phptests.log || (diff tests/php.correct-output _phptests.log; exit 1)
     echo "PHP target tests passed."
@@ -270,7 +270,7 @@ phptests)
 
 jstests)
     echo "JavaScript target tests..."
-    $TRE tests/js.lisp
+    $TRE tests/js.lisp || exit 1
     (nodejs compiled/test.js >_nodejstests.log || node compiled/test.js >_nodejstests.log) || exit 1
     cmp tests/js.correct-output _nodejstests.log || (diff tests/js.correct-output _nodejstests.log; exit 1)
     echo "JavaScript target tests passed in node.js."
@@ -279,10 +279,10 @@ jstests)
 
 updatetests)
     echo "Updating PHP target test data..."
-    $TRE tests/php.lisp
-    php compiled/test.php >tests/php.correct-output
+    $TRE tests/php.lisp || exit 1
+    php compiled/test.php >tests/php.correct-output || exit 1
     echo "Updating JavaScript target test data (node.js only)..."
-    nodejs compiled/test.js >tests/js.correct-output || node compiled/test.js >tests/js.correct-output
+    (nodejs compiled/test.js >tests/js.correct-output || node compiled/test.js >tests/js.correct-output) || exit 1
     ;;
 
 tests)
