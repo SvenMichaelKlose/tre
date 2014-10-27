@@ -136,6 +136,14 @@ nthcdr (tre_size idx, treptr x)
 }
 
 treptr
+trelist_nthcdr (treptr idx, treptr x)
+{
+    ASSERT_NUMBER(idx);
+
+    return nthcdr ((tre_size) TRENUMBER_VAL(idx), x);
+}
+
+treptr
 nth (tre_size idx, treptr x)
 {
 	x = nthcdr (idx, x);
@@ -143,6 +151,14 @@ nth (tre_size idx, treptr x)
     if (NOT(x))
 		return x;
     return CAR(x);
+}
+
+treptr
+trelist_nth (treptr idx, treptr x)
+{
+    ASSERT_NUMBER(idx);
+
+    return nth ((tre_size) TRENUMBER_VAL(idx), x);
 }
 
 void

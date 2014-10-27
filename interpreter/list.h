@@ -29,4 +29,7 @@ extern treptr   filter (treptr fun, treptr);
 extern treptr   mapcar (treptr fun, treptr);
 extern bool     list_check_type (treptr, tre_size atom_type);
 
+extern treptr   trelist_nthcdr (treptr index, treptr);
+extern treptr   trelist_nth (treptr index, treptr);
+
 #endif 	/* #ifndef TRE_LIST_H */

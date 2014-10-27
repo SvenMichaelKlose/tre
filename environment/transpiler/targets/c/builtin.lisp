@@ -111,8 +111,8 @@
    	    (CONS?              consp        x)
    	    (LAST               (last)       x)
    	    (COPY-LIST          (list_copy)  x)
-   	    (NTHCDR             (nthcdr)     i x)
-   	    (NTH                (nth)        i x)
+   	    (NTHCDR             (trelist_nthcdr)  i x)
+   	    (NTH                (trelist_nth)     i x)
    	    (FILTER             (filter)     fun x)
    	    (MAPCAR             (mapcar)     fun &rest x))
 

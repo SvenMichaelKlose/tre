@@ -19,7 +19,6 @@
        (xchg start end))
     (copy-num (nthcdr start seq) (integer- end start))))
 
-#|
 (define-test "LIST-SUBSEQ work at the beginning"
   ((list-subseq '(a b c) 0 1))
   '(a))
@@ -31,7 +30,6 @@
 (define-test "LIST-SUBSEQ works at the end"
   ((list-subseq '(1 2 3 4) 2))
   '(3 4))
-|#
 
 (defun %subseq-sequence (maker seq start end)
   (unless (integer== start end)
