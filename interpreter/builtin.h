@@ -22,6 +22,8 @@ extern treptr trebuiltin_free (treptr);
 extern treptr trebuiltin_free_exec (treptr);
 extern treptr trebuiltin_load (treptr);
 extern treptr trebuiltin_quit (treptr);
+extern treptr trebuiltin_debug (treptr);
+extern treptr trebuiltin_gc (treptr);
 
 extern void   trebuiltin_init (void);
 

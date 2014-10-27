@@ -23,6 +23,7 @@
 		   "builtin_error.h"
 		   "builtin_fileio.h"
 		   "builtin_function.h"
+		   "builtin_gc.h"
 		   "builtin.h"
 		   "builtin_image.h"
 		   "builtin_list.h"
@@ -42,15 +43,16 @@
 		   "string2.h"
 		   "symtab.h"
 		   "symbol.h"
-		   "main.h"
 		   "xxx.h"
 		   "alien.h"
 		   "function.h"
 		   "stream.h"
+		   "main.h"
 		   "compiled.h"))
 
 (defun c-header-includes ()
   (+ (format nil "#include <stdlib.h>~%")
+     (format nil "#include <stdio.h>~%")
      (apply #'+ (mapcar [format nil "#include \"~A\"~%" _] *c-core-headers*))))
 
 (defun c-function-registration (name)
