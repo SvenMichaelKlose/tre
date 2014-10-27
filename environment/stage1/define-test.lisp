@@ -21,7 +21,7 @@
 	   (print (eval (macroexpand (car (cdr (cdr test))))))
 	   (invoke-debugger))))
 
-(early-defun do-tests (tests)
+(early-defun do-tests (&optional (tests *tests*))
   (? (not tests)
      nil
      (progn
