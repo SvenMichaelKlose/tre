@@ -23,7 +23,6 @@
 		   "builtin_error.h"
 		   "builtin_fileio.h"
 		   "builtin_function.h"
-		   "builtin_gc.h"
 		   "builtin.h"
 		   "builtin_image.h"
 		   "builtin_list.h"
