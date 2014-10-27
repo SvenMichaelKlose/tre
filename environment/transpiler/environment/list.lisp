@@ -16,7 +16,7 @@
         x)))
 
 (defun copy-list (x)
-  (? (atom? x)
+  (? (atom x)
      x
      (. x. (copy-list .x))))
 
