@@ -13,7 +13,7 @@
   (print (car test))
   (? (test-equal (eval (macroexpand (car (cdr test))))
                  (eval (macroexpand (car (cdr (cdr test))))))
-	 nil
+	 (print 'OK)
      (progn
 	   (print 'FAILED-RESULT)
 	   (print (eval (macroexpand (car (cdr test)))))
