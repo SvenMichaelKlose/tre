@@ -20,6 +20,14 @@
   ((== 66 (+ 65 (code-char 1))))
   t)
 
+(define-test "INTEGER== to be T"
+  ((integer== 0 0))
+  t)
+
+(define-test "INTEGER== to be NIL"
+  ((integer== 0 1))
+  nil)
+
 (define-test "== empty string"
   ((let s ""
 	 (== "" s)))
