@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (C) 2006,2009,2011–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (C) 2006,2009,2011–2014 Sven Michael Klose <pixel@copei.de>
 
 (define-test "CAR accepts NIL"
   ((car nil))
@@ -180,6 +180,22 @@
 (define-test "ELT returns CHARACTER of STRING"
   ((character? (elt "fnord" 0)))
   t)
+
+(define-test "NTHCDR works at start"
+  ((nthcdr 0 '(a b c)))
+  '(a b c))
+
+(define-test "NTHCDR works in the middle"
+  ((nthcdr 1 '(a b c)))
+  '(b c))
+
+(define-test "NTHCDR works at the end"
+  ((nthcdr 2 '(a b c)))
+  '(c))
+
+(define-test "NTHCDR works beyond the end"
+  ((nthcdr 3 '(a b c)))
+  nil)
 
 ; + - * / MOD
 ; LOGXOR
