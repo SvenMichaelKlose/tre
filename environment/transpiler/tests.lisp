@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun make-environment-tests ()
   (with (names  nil
@@ -16,7 +16,8 @@
                                   (%princ expected)
 				                  (%princ " Result:")
 						          (%princ result)))
-                              (%princ "</br>")))]
+                              (%princ "<br>
+")))]
                         *tests*))
 	`(,@funs
       (defun environment-tests ()
