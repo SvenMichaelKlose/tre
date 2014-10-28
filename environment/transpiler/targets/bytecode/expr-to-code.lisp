@@ -23,7 +23,7 @@
     (queue-list indexes)))
 
 (defun translate-jumps (indexes x)
-  (with (tag-index [assoc-value ._. indexes :test #'==]
+  (with (tag-index [& ._. (assoc-value ._. indexes :test #'==)]
          f [?
              (not _)     _
              (%%tag? _)  (f .._)
