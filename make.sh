@@ -84,7 +84,7 @@ CFLAGS="-pipe -DDEVELOPMENT $C_DIALECT_FLAGS $GNU_LIBC_FLAGS $BUILD_MACHINE_INFO
 DEBUGOPTS="-O0 -g"
 BUILDOPTS="-Ofast -mtune=native"
 CRUNSHOPTS="-Ofast -mtune=native --whole-program"
-CRUNSHFLAGS="-DTRE_COMPILED_CRUNSHED -Iinterpreter"
+CRUNSHFLAGS="-DTRE_COMPILED_CRUNSHED -Iinterpreter -Wno-unused-parameter"
 
 LIBFLAGS="-lm -lffi -lrt"
 
