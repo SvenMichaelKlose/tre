@@ -270,6 +270,11 @@ tremain_init (void)
 	MAKE_SYMBOL("*ENDIANESS*",        symbol_alloc (TRE_ENDIANESS_STRING, NIL));
 	MAKE_SYMBOL("*POINTER-SIZE*",     number_get_integer (sizeof (void *)));
 	MAKE_SYMBOL("*RAND-MAX*",         number_get_integer (RAND_MAX));
+#ifdef DEVELOPMENT
+	MAKE_SYMBOL("*DEVELOPMENT?*",     treptr_t);
+#else
+	MAKE_SYMBOL("*DEVELOPMENT?*",     NIL);
+#endif
 
     tremain_init_image_path ();
     function_init ();

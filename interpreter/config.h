@@ -16,8 +16,11 @@ typedef int bool;
 #define TRE_INFO    "tré " TRE_REVISION_STRING " - " __DATE__ ", " __TIME__ "\n"
 #endif
 
-#if 0
+#ifdef DEVELOPMENT
 #define TRE_VERBOSE_GC 		      /* Print statistics after GC. */
+#endif
+
+#if 0
 #define TRE_NO_BACKTRACE          /* Don't backtrace. */
 #endif
 
