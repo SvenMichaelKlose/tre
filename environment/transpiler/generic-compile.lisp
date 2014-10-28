@@ -11,17 +11,14 @@
   (not (eq 'accumulated-toplevel section)))
 
 (defun map-transpiler-sections (fun sections cached-sections)
-  (with (tr       *transpiler*
-         results  nil)
-	(dolist (i sections (reverse results))
+  (with-queue results
+	(dolist (i sections (queue-list results))
       (with-cons section data i
-        (with-temporaries ((transpiler-current-section tr)       section
-                           (transpiler-current-section-data tr)  data)
-          (acons! section 
-                  (? (compile-section? section cached-sections)
-                     (funcall fun section data)
-                     (assoc-value section cached-sections))
-                  results))))))
+        (with-temporaries ((transpiler-current-section *transpiler*)       section
+                           (transpiler-current-section-data *transpiler*)  data)
+          (enqueue results (. section (? (compile-section? section cached-sections)
+                                         (funcall fun section data)
+                                         (assoc-value section cached-sections)))))))))
 
 (defun codegen-section (section data)
   (with-temporary (transpiler-accumulate-toplevel-expressions? *transpiler*) (not (accumulated-toplevel? section))
