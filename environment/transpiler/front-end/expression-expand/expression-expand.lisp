@@ -70,17 +70,6 @@
   (aprog1 (expex-sym)
     (funinfo-var-add *funinfo* !)))
 
-(defun expex-warn (x)
-  (& (expex-warnings? *expex*)
-     (symbol? x)
-     (not (eq '~%cont x)
-          (eq '~%this x)
-          (transpiler-defined-symbol? *funinfo* x)
-          (can-import-function? *transpiler* x))
-     (error "Symbol ~A is not defined in ~A."
-            (symbol-name x)
-            (human-readable-funinfo-names *funinfo*))))
-
 
 ;;;; PREDICATES
 
@@ -103,8 +92,6 @@
 		  x))
 
 (defun expex-argexpand-0 (fun args)
-  (adolist (args)
-    (expex-warn !))
   (let argdef (| (funinfo-get-local-function-args *funinfo* fun)
                  (current-transpiler-function-arguments fun))
     (transpiler-expand-literal-characters
@@ -118,13 +105,13 @@
         (function? (symbol-function x)))))
 
 (defun expex-argexpand (x)
-  (with (new? (%new? x)
-		 fun  (? new? .x. x.)
-		 args (? new? ..x .x))
-	`(,@(& new? '(%new))
-	  ,fun ,@(? (expex-function? fun)
-	    	    (expex-convert-quotes (expex-argexpand-0 fun args))
-	    	    args))))
+  (with (new?   (%new? x)
+		 fun    (? new? .x. x.)
+		 args   (? new? ..x .x)
+	     eargs  (? (expex-function? fun)
+	    	       (expex-convert-quotes (expex-argexpand-0 fun args))
+	    	       args))
+	`(,@(& new? '(%new)) ,fun ,@eargs)))
 
 
 ;;;;; MOVING SINGLE ARGUMENTS
@@ -267,8 +254,7 @@
 
 (defun expression-expand (x)
   (with-transpiler-expex
-    (with-temporary (expex-warnings? *expex*) nil
-      (expression-expand-0 x))))
+    (expression-expand-0 x)))
 
 (defun fake-expression-expand (x)
   (with-transpiler-expex
