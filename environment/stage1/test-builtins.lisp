@@ -124,10 +124,6 @@
   ((function? #'car))
   t)
 
-(define-test "FUNCTION? doesn't recognize built-in special forms"
-  ((function? #'block))
-  nil)
-
 (define-test "STRING? recognizes strings"
   ((string? "some string"))
   t)
