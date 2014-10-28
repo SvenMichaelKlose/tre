@@ -10,7 +10,6 @@
 (env-load "transpiler/front-end/main.lisp")
 
 (env-load "transpiler/warn-unused-functions.lisp")
-(env-load "transpiler/init.lisp")
 (env-load "transpiler/tests.lisp")
 (env-load "transpiler/import.lisp")
 (env-load "transpiler/generic-compile.lisp")
