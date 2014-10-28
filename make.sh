@@ -280,8 +280,9 @@ jstests)
 	;;
 
 updatetests)
-    echo "Updating PHP target test data..."
     $TRE tests/php.lisp || exit 1
+    $TRE tests/js.lisp || exit 1
+    echo "Updating PHP target test data..."
     php compiled/test.php >tests/php.correct-output || exit 1
     echo "Updating JavaScript target test data (node.js only)..."
     (nodejs compiled/test.js >tests/js.correct-output || node compiled/test.js >tests/js.correct-output) || exit 1
