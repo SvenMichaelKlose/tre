@@ -32,3 +32,6 @@
     (? (integer== start end)
 	   ""
        (seq.substr start (- end start)))))
+
+(defun number-string (x)
+  (format nil "~A" x))
