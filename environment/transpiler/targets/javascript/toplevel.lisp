@@ -62,4 +62,4 @@
          (js-sections-compiler))))
 
 (defun js-ending-sections (tr)
-  `((funinfo-inits . ,#'gen-funinfo-inits)))
+  );`((funinfo-inits . ,#'gen-funinfo-inits)))
