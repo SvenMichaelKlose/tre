@@ -39,12 +39,6 @@ treptr tregc_unremovables;
 
 bool tregc_running;
 
-void
-tregc_push (treptr expr)
-{
-    *--trestack_ptr = expr;
-}
-
 treptr
 tregc_add_unremovable (treptr expr)
 {
@@ -53,20 +47,42 @@ tregc_add_unremovable (treptr expr)
 }
 
 void
+tregc_push (treptr expr)
+{
+#ifndef TRE_NO_ASSERTIONS
+    if (trestack_ptr == trestack)
+        treerror_norecover (treptr_invalid, "GC stack overflow.");
+#endif
+    *--trestack_ptr = expr;
+}
+
+void
 tregc_pop ()
 {
+#ifndef TRE_NO_ASSERTIONS
+    if (trestack_ptr == &trestack[TRESTACK_SIZE])
+        treerror_norecover (treptr_invalid, "GC stack underflow.");
+#endif
     trestack_ptr++;
 }
 
 void
 tregc_push_secondary (treptr expr)
 {
+#ifndef TRE_NO_ASSERTIONS
+    if (trestack_ptr_secondary == trestack_secondary)
+        treerror_norecover (treptr_invalid, "Secondary GC stack overflow.");
+#endif
     *--trestack_ptr_secondary = expr;
 }
 
 void
 tregc_pop_secondary ()
 {
+#ifndef TRE_NO_ASSERTIONS
+    if (trestack_ptr_secondary == &trestack_secondary[TRESTACK_SIZE_SECONDARY])
+        treerror_norecover (treptr_invalid, "Secondary GC stack underflow.");
+#endif
     trestack_ptr_secondary++;
 }
 
