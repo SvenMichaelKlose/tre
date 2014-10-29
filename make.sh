@@ -106,8 +106,9 @@ BINDIR="/usr/local/bin/"
 basic_clean ()
 {
 	echo "Cleaning..."
-	rm -vf *.core interpreter/$COMPILED_ENV tre image bytecode-image $CRUNSHTMP __alien.tmp files.lisp boot.log _nodejstests.log _phptests.log _bytecode-interpreter-tests.log profile.lisp
-    rm -vrf interpreter/_revision.h environment/_current-version environment/transpiler/targets/c64/tre.c64
+	rm -vf *.core interpreter/$COMPILED_ENV tre image bytecode-image $CRUNSHTMP __alien.tmp files.lisp
+    rm -vf boot.log _nodejstests.log _phptests.log _bytecode-interpreter-tests.log profile.lisp make.log
+    rm -vrf interpreter/_revision.h environment/_current-version
 	rm -vrf obj
     rm -vf examples/js/hello-world.js
 }
@@ -310,14 +311,19 @@ jsdebugger)
     ;;
 
 all)
-    echo "Making all..."
+    echo "Making all..." >>make.log
+    echo "Regular boot." >>make.log
 	./make.sh boot $ARGS || exit 1
+    echo "Transpile environment with booted version." >>make.log
 	./make.sh environment $ARGS || exit 1
+    echo "Compiling the transpiled." >>make.log
 	./make.sh crunsh $ARGS || exit 1
+    echo "Testing it." >>make.log
 	./make.sh tests || exit 1
 #	./make.sh bytecode-image || exit 1
 #   ./make.sh jsdebugger || exit 1
 #    $TRE makefiles/webconsole.lisp || exit 1
+    echo "All done." >>make.log
     ;;
 
 profile)
@@ -328,11 +334,15 @@ profile)
 
 releasetests)
     echo "Making release tests..."
+    echo "Making release tests..." >>make.log
+    echo "Checking regular build." >>make.log
 	./make.sh distclean || exit 1
 	./make.sh build $ARGS || exit 1
+    echo "Checking regular build's reload." >>make.log
 	./make.sh reload || exit 1
 	./make.sh distclean || exit 1
     ./make.sh all $ARGS || exit 1
+    echo "Release tests done." >>make.log
 	;;
 
 install)
