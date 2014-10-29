@@ -235,13 +235,10 @@
                                      (distinguish-vars-from-tags (list-without-noargs-tag x)))))
 
 
-;;;; TOP LEVEL
-
-(defun expression-expand-0 (x)
-  (& x
-     (= *expex-sym-counter* 0)
-     (expex-body x)))
+;;;; TOPLEVEL
 
 (defun expression-expand (x)
   (with-temporary *expex* (transpiler-expex *transpiler*)
-    (expression-expand-0 x)))
+    (& x
+       (= *expex-sym-counter* 0)
+       (expex-body x))))
