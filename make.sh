@@ -333,6 +333,7 @@ releasetests)
 	./make.sh build $ARGS || exit 1
 	./make.sh reload || exit 1
 	./make.sh distclean || exit 1
+	./make.sh interpreter $ARGS || exit 1
     echo | ./tre -n -e "(setq *targets* '(c))" || exit 1
 	./make.sh compiler $ARGS || exit 1
 	./make.sh crunsh $ARGS || exit 1
