@@ -26,6 +26,8 @@ typedef int bool;
 
 #define INTERPRETER
 
+#define TRE_HISTORY_SIZE            1000
+
 #ifndef TRE_QUIET_LOAD
 #define TRE_VERBOSE_LOAD	        /* Print what files are loaded. */
 #endif

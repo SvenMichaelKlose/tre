@@ -168,6 +168,7 @@ tremain (void)
 
     strcpy (history_path, p);
     strcpy (&history_path[strlen (p)], "/.tre-history.lisp");
+    linenoiseHistorySetMaxLen (TRE_HISTORY_SIZE);
     linenoiseHistoryLoad (history_path);
     linenoiseSetMultiLine (1);
 
