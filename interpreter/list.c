@@ -214,6 +214,7 @@ filter (treptr fun, treptr x)
     treptr  q = tre_make_queue ();
     treptr  i;
 
+    ASSERT_LIST(x);
     tregc_push (q);
     DOLIST(i, x)
         tre_enqueue (q, funcall (fun, CONS(CAR(i), NIL)));
@@ -264,6 +265,7 @@ mapcar (treptr fun, treptr x)
     treptr  q = tre_make_queue ();
     treptr  args;
 
+    ASSERT_LIST(x);
     tregc_push (q);
     while (1) {
         tregc_push (x);
