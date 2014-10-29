@@ -2,8 +2,9 @@
 
 (defun js-prologue ()
   (+ (format nil "// tré revision ~A~%" *tre-revision*)
-     (& (eq 'nodejs (transpiler-configuration *transpiler* 'environment))
-        (format nil "var fs = require ('fs');~%"))
+     (when (eq 'nodejs (transpiler-configuration *transpiler* 'environment))
+        (+ (format nil "var fs = require ('fs');~%")
+           (format nil "var http = require ('http');~%")))
      (& (transpiler-cps-transformation? *transpiler*)
         (format nil ,(fetch-file "environment/transpiler/targets/javascript/environment/native/cps.js")))
      (format nil "var _I_ = 0; while (1) {switch (_I_) {case 0: ~%")))
