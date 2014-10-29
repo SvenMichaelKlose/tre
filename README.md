@@ -1,13 +1,16 @@
-# Copyright
-
-Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
-
 # Overview
 
 This is tré, a metamorphic transpiler for a dialect of the Lisp
 family of programming languages.  It can generate C,
 ECMAScript/JavaScript, PHP and a dedicated bytecode.  Except for
 PHP tré can compile itself to all other targets.
+
+
+# IMPORTANT:
+
+The bytecode target is currently broken.
+The JavaScript target works but just not for the whole transpiler.
+
 
 # Building and installing
 
