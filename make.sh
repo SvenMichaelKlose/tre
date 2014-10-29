@@ -107,7 +107,7 @@ basic_clean ()
 {
 	echo "Cleaning..."
 	rm -vf *.core interpreter/$COMPILED_ENV tre image bytecode-image $CRUNSHTMP __alien.tmp files.lisp
-    rm -vf boot.log _nodejstests.log _phptests.log _bytecode-interpreter-tests.log profile.lisp make.log
+    rm -vf boot.log _nodejstests.log _phptests.log _bytecode-interpreter-tests.log profile.lisp
     rm -vrf interpreter/_revision.h environment/_current-version
 	rm -vrf obj
     rm -vf examples/js/hello-world.js
@@ -117,7 +117,7 @@ distclean ()
 {
 	echo "Cleaning for distribution..."
     basic_clean
-	rm -vrf backup compiled
+	rm -vrf backup compiled make.log
 }
 
 link ()
@@ -340,7 +340,7 @@ releasetests)
 	./make.sh build $ARGS || exit 1
     echo "Checking regular build's reload." >>make.log
 	./make.sh reload || exit 1
-	./make.sh distclean || exit 1
+	./make.sh clean || exit 1
     ./make.sh all $ARGS || exit 1
     echo "Release tests done." >>make.log
 	;;
