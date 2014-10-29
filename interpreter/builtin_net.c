@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2011–2013 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2011–2014 Sven Michael Klose <pixel@copei.de>
  */
 
 #include <stdio.h>
