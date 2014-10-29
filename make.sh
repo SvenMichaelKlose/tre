@@ -233,7 +233,7 @@ environment)
 devboot)
     echo "Carefully booting everything from scratch..."
 	./make.sh interpreter $ARGS || exit 1
-	./make.sh reloadnoassert $ARGS || exit 1
+    echo | ./tre -n -e "(setq *targets* '(c))" || exit 1
 	./make.sh compiler $ARGS || exit 1
 	./make.sh crunsh $ARGS || exit 1
 	./make.sh ctests $ARGS || exit 1
