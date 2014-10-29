@@ -121,11 +121,7 @@ eval_xlat_function (evalfunc_t *xlat, treptr func, treptr args, bool do_argeval)
 
     ret = xlat[(size_t) ATOM(func)] (evaldargs);
 
-    if (do_argeval) {
-        cons_free_list (evaldargs);
-        tregc_pop ();
-    } else
-        tregc_pop ();
+    tregc_pop ();
 
     return ret;
 }
