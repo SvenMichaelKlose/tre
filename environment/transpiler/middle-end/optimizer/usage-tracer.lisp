@@ -24,7 +24,8 @@
                            (traverse-statements (tag-code _))]
           traverse-statements
             [? (| (not _)
-                  (%backtrace-pop? _.))
+                  (& (%=? _.)
+                     (%backtrace-pop? (%=-value _.))))
                (& (funinfo-parent *funinfo*)
                   (~%ret? v))
                (with-cons a d _
