@@ -238,6 +238,7 @@ devboot)
 	./make.sh compiler $ARGS || exit 1
 	./make.sh crunsh $ARGS || exit 1
 	./make.sh ctests $ARGS || exit 1
+	./make.sh reload $ARGS || exit 1
 	./make.sh environment $ARGS || exit 1
 	./make.sh crunsh $ARGS|| exit 1
 	./make.sh tests $ARGS || exit 1
