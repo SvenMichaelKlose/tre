@@ -271,10 +271,11 @@ tregc_print_stats ()
         }
 
     printf (": %ld cons, %ld atoms "
-            "(%ld sym, %ld num, %ld arr, %ld str, "
-            "%ld fun, %ld mac).\n",
+            "(%ld sym %ld num %ld arr %ld str "
+            "%ld fun %ld mac); stack: %ld\n",
             (long) conses_used, atoms, c[TRETYPE_SYMBOL], c[TRETYPE_NUMBER], c[TRETYPE_ARRAY], c[TRETYPE_STRING],
-            c[TRETYPE_FUNCTION], c[TRETYPE_MACRO]);
+            c[TRETYPE_FUNCTION], c[TRETYPE_MACRO],
+            (&trestack[TRESTACK_SIZE] - trestack_ptr) / sizeof (treptr));
     fflush (stdout);
 }
 
