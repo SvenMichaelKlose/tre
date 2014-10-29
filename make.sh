@@ -290,7 +290,8 @@ updatetests)
 
 tests)
     echo "Making tests..."
-    ./tests/bytecode-interpreter.sh || exit 1
+#    ./tests/bytecode-interpreter.sh || exit 1
+	./make.sh ctests || exit 1
 	./make.sh phptests || exit 1
 	./make.sh jstests || exit 1
 	;;
