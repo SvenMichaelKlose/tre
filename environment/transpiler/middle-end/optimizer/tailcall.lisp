@@ -22,7 +22,7 @@
     (+ (mapcan #'((arg val)
                     (with-gensym g ; Avoid accidential GC.
                       `((%= ,arg ,val))))
-               (argument-expand-names name args)
+               (funinfo-args *funinfo*)
                (cdr (%=-value body.)))
        `((%%go ,front-tag))
        (opt-tailcall-fun l .body front-tag))))
