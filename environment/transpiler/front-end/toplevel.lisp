@@ -1,11 +1,13 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (transpiler-pass frontend-2 ()
     thisify                   [thisify (transpiler-thisify-classes *transpiler*) _]
     rename-arguments          #'rename-arguments
     lambda-expand             #'lambda-expand
     fake-place-expand         #'fake-place-expand
-    fake-expression-expand    #'fake-expression-expand)
+    fake-expression-expand    [(with-temporary *expex-import?* t
+                                 (expression-expand (make-packages _)))
+                               _])
 
 (transpiler-pass frontend-1 ()
     file-input                #'identity

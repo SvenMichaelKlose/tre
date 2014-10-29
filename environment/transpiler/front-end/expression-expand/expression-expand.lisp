@@ -242,16 +242,6 @@
      (= *expex-sym-counter* 0)
      (expex-body x)))
 
-(defmacro with-transpiler-expex (&body body)
-  `(with-temporary *expex* (transpiler-expex *transpiler*)
-     ,@body))
-
 (defun expression-expand (x)
-  (with-transpiler-expex
+  (with-temporary *expex* (transpiler-expex *transpiler*)
     (expression-expand-0 x)))
-
-(defun fake-expression-expand (x)
-  (with-transpiler-expex
-    (with-temporary *expex-import?* t
-      (expression-expand-0 (make-packages x))))
-  x)
