@@ -490,6 +490,9 @@ tredebug (void)
     tredebug_next = NIL;
     tredebug_init_mirror_stack ();
 
+    printf ("Backtrace: ");
+    treprint (trebacktrace ());
+
     while (1) {
         if (ret) {
             printf ("Return value:\n");

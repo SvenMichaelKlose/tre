@@ -21,7 +21,6 @@
 #include "macro.h"
 #include "xxx.h"
 #include "symtab.h"
-#include "backtrace.h"
 
 void
 treerror_msg (treptr expr, const char * prefix, const char * msg, va_list ap)
@@ -39,8 +38,6 @@ treerror_msg (treptr expr, const char * prefix, const char * msg, va_list ap)
 		fprintf (stderr, "; Misplaced object:\n");
         treprint (expr);
     }
-	fprintf (stderr, "; Backtrace: ");
-    treprint (trebacktrace());
     fflush (stderr);
 }
 
