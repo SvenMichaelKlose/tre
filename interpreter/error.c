@@ -48,6 +48,8 @@ treerror_internal (treptr expr, const char *msg, ...)
     va_start(ap, msg);
 
     treerror_msg (expr, "INTERNAL INTERPRETER ERROR", msg, ap);
+    printf ("Backtrace: ");
+    treprint (trebacktrace ());
 
 	exit (1);
 }
