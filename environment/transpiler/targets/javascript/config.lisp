@@ -21,6 +21,7 @@
       :expex-initializer        #'js-expex-initializer
       :ending-sections          #'js-ending-sections
       :configurations           '((environment       . browser)
+                                  (nodejs-requirements . nil)
                                   (rplac-breakpoints . nil))))
 
 (defun make-javascript-transpiler ()
