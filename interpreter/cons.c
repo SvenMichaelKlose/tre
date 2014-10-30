@@ -22,11 +22,27 @@ treptr tre_listprops[NUM_LISTNODES];
 treptr tre_default_listprop;
 tre_size conses_used;
 
+void
+check_cell_index (treptr x)
+{
+    if (TREPTR_INDEX(x) >= NUM_LISTNODES)
+        treerror_internal (treptr_invalid, "Cell index out of range.");
+}
+
+#ifdef DEVELOPMENT
+#define CHECK_CELL_INDEX(x) check_cell_index (x)
+#else
+#define CHECK_CELL_INDEX(x)
+#endif
+
 treptr
 car (treptr x)
 {
     RETURN_NIL(x);
+
     ASSERT_CONS(x);
+    CHECK_CELL_INDEX(x);
+
     return _CAR(x);
 }
 
@@ -34,7 +50,10 @@ treptr
 cdr (treptr x)
 {
     RETURN_NIL(x);
+
     ASSERT_CONS(x);
+    CHECK_CELL_INDEX(x);
+
     return _CDR(x);
 }
 
@@ -42,7 +61,10 @@ treptr
 cpr (treptr x)
 {
     RETURN_NIL(x);
+
     ASSERT_CONS(x);
+    CHECK_CELL_INDEX(x);
+
     return _CPR(x);
 }
 
@@ -50,6 +72,7 @@ treptr
 rplaca (treptr cons, treptr val)
 {
     ASSERT_CONS(cons);
+    CHECK_CELL_INDEX(cons);
     _CAR(cons) = val;
     return cons;
 }
@@ -58,6 +81,7 @@ treptr
 rplacd (treptr cons, treptr val)
 {
     ASSERT_CONS(cons);
+    CHECK_CELL_INDEX(cons);
     _CDR(cons) = val;
     return cons;
 }
@@ -66,6 +90,7 @@ treptr
 rplacp (treptr cons, treptr val)
 {
     ASSERT_CONS(cons);
+    CHECK_CELL_INDEX(cons);
     _CPR(cons) = val;
     return cons;
 }
@@ -73,6 +98,7 @@ rplacp (treptr cons, treptr val)
 void
 cons_free (treptr x)
 {
+    CHECK_CELL_INDEX(x);
     _CDR(x) = conses_free;
     conses_free = x;
     conses_used--;
