@@ -312,11 +312,11 @@ tremain_help (void)
             "\n"
             " -h        Print this help message.\n"
             " -i <path> Load image file before source-file.\n"
-            " -e <expr> Expressions to execute before any others are read.\n"
+            " -e <expr> Expressions to evaluate before any others are read.\n"
             " -n        Load default environment and make a new default image.\n"
             " -H        Print info about hard-coded limits and exit.\n"
             "\n"
-            "See MANUAL for details.\n");
+            "Repository: https://github.com/SvenMichaelKlose/tre/\n");
 }
 
 void
