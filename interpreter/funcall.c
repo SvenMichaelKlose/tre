@@ -37,34 +37,35 @@
 treptr
 funcall_ffi (void * fun, treptr x)
 {
-	ffi_cif     cif;
-	ffi_type ** args;
-	treptr *    refs;
-	void **     values;
-	treptr      rc;
-	int         i;
+    ffi_cif     cif;
+    ffi_type ** args;
+    treptr *    refs;
+    void **     values;
+    treptr      rc;
+    int         i;
     int         len = list_length (x) + 1;
 
     tregc_push (x);
     args = malloc (sizeof (ffi_type *) * len);
     refs = malloc (sizeof (treptr) * len);
     values = malloc (sizeof (void *) * len);
-	for (i = 0; NOT_NIL(x); i++, x = CDR(x)) {
-		args[i] = &ffi_type_ulong;
-		refs[i] = CAR(x);
-		values[i] = &refs[i];
-	}
+    for (i = 0; NOT_NIL(x); i++, x = CDR(x)) {
+        args[i] = &ffi_type_ulong;
+        refs[i] = CAR(x);
+        values[i] = &refs[i];
+    }
 
-	if (ffi_prep_cif (&cif, FFI_DEFAULT_ABI, i, &ffi_type_ulong, args) == FFI_OK)
-		ffi_call (&cif, fun, &rc, values);
-	else
+    if (ffi_prep_cif (&cif, FFI_DEFAULT_ABI, i, &ffi_type_ulong, args) == FFI_OK)
+        ffi_call (&cif, fun, &rc, values);
+    else
         treerror_norecover (NIL, "libffi: cif is not O.K.");
 
     free (args);
     free (refs);
     free (values);
     tregc_pop ();
-	return rc;
+
+    return rc;
 }
 
 treptr
@@ -74,7 +75,7 @@ funcall_c (treptr func, treptr args, bool do_eval)
     treptr a = do_eval ? eval_args (args) : args;
 
     tregc_push (a);
-    ret = (FUNCTION_NATIVE_EXPANDER(func)) ?
+    ret = FUNCTION_NATIVE_EXPANDER(func) ?
               funcall_ffi (FUNCTION_NATIVE_EXPANDER(func), CONS(a, NIL)) :
               funcall_ffi (FUNCTION_NATIVE(func), a);
     tregc_pop ();
@@ -92,9 +93,7 @@ funcall_bytecode (treptr func, treptr args, treptr argdef, bool do_eval)
 
    	trearg_expand (&expforms, &expvals, argdef, args, do_eval);
    	tregc_push (expvals);
-
     result = trecode_call (func, expvals);
-
 	tregc_pop ();
 
 	return result;
@@ -107,9 +106,9 @@ funcall_compiled (treptr func, treptr args, bool do_eval)
 
     tregc_push (args);
     trebacktrace_push (NIL);
-    v = NOT_NIL(FUNCTION_BYTECODE(func)) ?
-            funcall_bytecode (func, args, TREARRAY_VALUES(FUNCTION_BYTECODE(func))[0], do_eval) :
-            funcall_c (func, args, do_eval);
+    v = NOT(FUNCTION_BYTECODE(func)) ?
+            funcall_c (func, args, do_eval) :
+            funcall_bytecode (func, args, TREARRAY_VALUES(FUNCTION_BYTECODE(func))[0], do_eval);
     trebacktrace_pop ();
     tregc_pop ();
 
