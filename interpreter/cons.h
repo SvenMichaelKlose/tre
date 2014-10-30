@@ -59,7 +59,10 @@ struct tre_list {
 #define DOLIST(iter, lst) _DOLIST(iter, lst)
 #else
 #define DOLIST(iter, lst) \
-    for (iter = lst; NOT_NIL(iter); iter = CDR(iter))
+    if (!LISTP(lst)) \
+        treerror_norecover (lst, "DOLIST expects a list."); \
+    else \
+        for (iter = lst; NOT_NIL(iter); iter = CDR(iter))
 #endif
 
 #define _DOLIST(iter,lst) \
