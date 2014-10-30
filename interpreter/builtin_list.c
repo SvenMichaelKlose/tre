@@ -144,14 +144,33 @@ list_builtin_nth (treptr x)
 treptr
 list_builtin_filter (treptr x)
 {
-    treptr  predicate;
+    treptr  fun;
     treptr  list;
 
-    trearg_get2 (&predicate, &list, x);
-    ASSERT_ANY_FUNCTION(predicate);
+    trearg_get2 (&fun, &list, x);
+    ASSERT_ANY_FUNCTION(fun);
     ASSERT_LIST(list);
 
-    return filter (predicate, list);
+    return filter (fun, list);
+}
+
+treptr
+list_builtin_mapcar (treptr x)
+{
+    treptr  fun;
+    treptr  lists;
+
+#ifndef TRE_NO_ASSERTIONS
+    if (NOT(CDR(x)))
+        treerror_norecover (x, "At least one function followed by one or more lists expected.");
+#endif
+
+    fun = CAR(x);
+    ASSERT_ANY_FUNCTION(fun);
+    lists = CDR(x);
+    ASSERT_LIST(lists);
+
+    return mapcar (fun, lists);
 }
 
 void

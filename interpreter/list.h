@@ -28,6 +28,7 @@ extern treptr   nthcdr (tre_size, treptr);
 extern treptr   nth (tre_size, treptr);
 extern treptr   last (treptr);
 extern treptr   filter (treptr fun, treptr);
+extern treptr   mapcar (treptr fun, treptr);
 
 extern treptr   trelist_nthcdr (treptr index, treptr);
 extern treptr   trelist_nth (treptr index, treptr);

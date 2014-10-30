@@ -39,7 +39,6 @@
 (env-load "stage1/queue.lisp")
 (env-load "stage1/dolist.lisp")
 (env-load "stage1/map.lisp")
-(env-load "stage1/mapcar.lisp")
 (env-load "stage1/tp.lisp")
 (env-load "stage1/comparison-c.lisp" 'c)
 (env-load "stage1/funcall.lisp" 'c)
