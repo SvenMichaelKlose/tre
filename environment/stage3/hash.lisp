@@ -56,10 +56,12 @@
 
 (defun copy-hash-table (h)
   (when h
-    (let n (make-hash-table :test (hash-table-test h)
-                            :size (hash-table-size h))
-      (dolist (i (hashkeys h) n)
-        (= (href n i) (href h i))))))
+    (with (n  (make-hash-table :test (hash-table-test h)
+                               :size (hash-table-size h))
+           nb (hash-table-buckets n)
+           hb (hash-table-buckets h))
+      (dotimes (i size n)
+        (= (aref nb i) (copy-alist (aref hb i)))))))
 
 (defun hash-merge (&rest lst)
   (let l (remove-if #'not lst)
