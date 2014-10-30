@@ -91,6 +91,7 @@ funcall_bytecode (treptr func, treptr args, treptr argdef, bool do_eval)
     treptr  expvals;
 	treptr  result;
 
+    /* XXX Nah! Needs expanders like in funcall_c(). */
    	trearg_expand (&expforms, &expvals, argdef, args, do_eval);
    	tregc_push (expvals);
     result = trecode_call (func, expvals);
