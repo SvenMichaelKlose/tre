@@ -113,8 +113,7 @@
    	    (COPY-LIST          (list_copy)  x)
    	    (NTHCDR             (trelist_nthcdr)  i x)
    	    (NTH                (trelist_nth)     i x)
-   	    (FILTER             (filter)     fun x)
-   	    (MAPCAR             (mapcar)     fun &rest x))
+   	    (FILTER             (filter)     fun x))
 
 	(tresequence_
     	(ELT                builtin_elt     &rest x)

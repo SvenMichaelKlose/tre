@@ -107,7 +107,6 @@
       (NTHCDR           index x)
       (NTH              index x)
       (FILTER           fun x)
-      (MAPCAR           fun &rest x)
       (ELT              &rest x) ;sequence index)
       (%SET-ELT         &rest x) ;object sequence index)
       (LENGTH           &rest x) ;sequence)

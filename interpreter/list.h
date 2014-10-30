@@ -16,6 +16,8 @@
 
 extern struct tre_sequence_type list_seqtype;
 
+extern bool     list_check_type (treptr, tre_size atom_type);
+
 extern treptr   list_copy (treptr);
 extern treptr   list_copy_tree (treptr);
 extern treptr   list_delete (tre_size, treptr);
@@ -26,8 +28,6 @@ extern treptr   nthcdr (tre_size, treptr);
 extern treptr   nth (tre_size, treptr);
 extern treptr   last (treptr);
 extern treptr   filter (treptr fun, treptr);
-extern treptr   mapcar (treptr fun, treptr);
-extern bool     list_check_type (treptr, tre_size atom_type);
 
 extern treptr   trelist_nthcdr (treptr index, treptr);
 extern treptr   trelist_nth (treptr index, treptr);

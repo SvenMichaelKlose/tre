@@ -154,18 +154,6 @@ list_builtin_filter (treptr x)
     return filter (predicate, list);
 }
 
-treptr
-list_builtin_mapcar (treptr x)
-{
-    treptr  predicate = CAR(x);
-    treptr  list = CDR(x);
-
-    ASSERT_ANY_FUNCTION(predicate);
-    ASSERT_LIST(list);
-
-    return mapcar (predicate, list);
-}
-
 void
 list_builtin_init ()
 {

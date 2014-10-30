@@ -40,9 +40,3 @@
               (cdr (rplacd (| result.
                               result)
                            (list (funcall func i))))))))
-
-(defun mapcar (func &rest lists)
-  (let args (%map-args lists)
-    (& args
-       (. (apply func args)
-          (apply #'mapcar func lists)))))
