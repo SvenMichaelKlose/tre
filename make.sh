@@ -231,30 +231,19 @@ environment)
 	(echo "(compile-c-environment)" | $TRE | tee boot.log) || exit 1
 	;;
 
-devboot)
-    echo "Carefully booting everything from scratch..."
+boot)
+    echo "Booting C target via the interpreter..."
 	./make.sh interpreter $ARGS || exit 1
-    echo | ./tre -n -e "(setq *targets* '(c))" || exit 1
+	./make.sh reload $ARGS || exit 1
+    echo "Compiling only the C target..."
 	./make.sh compiler $ARGS || exit 1
 	./make.sh crunsh $ARGS || exit 1
 	./make.sh ctests $ARGS || exit 1
-	./make.sh reload $ARGS || exit 1
+    echo "Compiling everything..."
 	./make.sh environment $ARGS || exit 1
 	./make.sh crunsh $ARGS|| exit 1
 	./make.sh tests $ARGS || exit 1
-	;;
-
-boot)
-    echo "Booting everything from scratch..."
-	./make.sh interpreter -DTRE_NO_BACKTRACE -DTRE_NO_ASSERTIONS -DNDEBUG $ARGS || exit 1
-	./make.sh reloadnoassert $ARGS || exit 1
-	(echo "(= (transpiler-backtrace? *c-transpiler*) nil)(compile-c-compiler)" | $TRE) || exit 1
-	./make.sh crunsh -DTRE_NO_BACKTRACE -DTRE_NO_ASSERTIONS -DNDEBUG $ARGS || exit 1
-	./make.sh ctests $ARGS || exit 1
-	./make.sh reload $ARGS || exit 1
-	./make.sh environment $ARGS || exit 1
-	./make.sh crunsh $ARGS|| exit 1
-	./make.sh tests $ARGS || exit 1
+    echo "Boot complete."
 	;;
 
 ctests)
@@ -334,8 +323,7 @@ profile)
     ;;
 
 releasetests)
-    echo "Making release tests..."
-    echo "Making release tests..." >>make.log
+    echo "Making release tests..." | tee make.log
     echo "Checking regular build." >>make.log
 	./make.sh distclean || exit 1
 	./make.sh build $ARGS || exit 1
@@ -377,7 +365,6 @@ restore)
 	echo "Usage: make.sh [target]"
 	echo "Targets:"
 	echo "  boot            Build compiled environment from scratch."
-	echo "  devboot         Carefully build compiled environment from scratch."
 	echo "  interpreter     Build interpreter (and compiled environment)."
 	echo "  compiler        Compile compiler and C target to C."
 	echo "  bcompiler       Compile compiler and bytecode target to C."
