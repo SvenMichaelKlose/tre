@@ -23,8 +23,8 @@
 
 #include "builtin_symbol.h"
 
-void * tre_atoms_free;
-void * tre_atoms[NUM_ATOMS];
+void * atoms_free;
+void * atoms[NUM_ATOMS];
 tre_type tre_atom_types[NUM_ATOMS];
 
 #define TREPTR_NIL_INDEX	0
@@ -56,8 +56,8 @@ atom_init_atom_table (void)
 {
 	tre_size x;
 
-    tre_atoms_free = trealloc_item_init (
-		&tre_atoms[TREPTR_FIRST_INDEX],
+    atoms_free = trealloc_item_init (
+		&atoms[TREPTR_FIRST_INDEX],
 		NUM_ATOMS - TREPTR_FIRST_INDEX,
 		sizeof (void *)
 	);
@@ -68,8 +68,8 @@ atom_init_atom_table (void)
 void
 atom_init_truth (void)
 {
-	tre_atoms[TREPTR_NIL_INDEX] = (void *) symtab_add (NIL, "NIL", NIL, NIL, NIL);
-	tre_atoms[TREPTR_T_INDEX] = (void *) symtab_add (treptr_t, "T", treptr_t, NIL, NIL);
+	atoms[TREPTR_NIL_INDEX] = (void *) symtab_add (NIL, "NIL", NIL, NIL, NIL);
+	atoms[TREPTR_T_INDEX] = (void *) symtab_add (treptr_t, "T", treptr_t, NIL, NIL);
 }
 
 void
@@ -85,15 +85,15 @@ atom_alloc (int type)
     size_t atomi;
 	void * item;
 
-	item = trealloc_item (&tre_atoms_free);
+	item = trealloc_item (&atoms_free);
 	if (!item) {
         tregc_force ();
-		item = trealloc_item (&tre_atoms_free);
+		item = trealloc_item (&atoms_free);
     	if (!item)
 	    	return treerror (treptr_invalid, "Atom table full.");
     }
 
-    atomi = ((size_t) item - (size_t) tre_atoms) / sizeof (void *);
+    atomi = ((size_t) item - (size_t) atoms) / sizeof (void *);
     TREGC_ALLOC_ATOM(atomi);
     ATOM_SET(atomi, type);
 
@@ -107,7 +107,7 @@ atom_free (treptr x)
 		symtab_remove (x);
 
     ATOM_TYPE(x) = TRETYPE_UNUSED;
-	trealloc_free_item (&tre_atoms_free, (void **) &tre_atoms[TREPTR_INDEX(x)]);
+	trealloc_free_item (&atoms_free, (void **) &atoms[TREPTR_INDEX(x)]);
 }
 
 treptr
@@ -176,7 +176,7 @@ atom_body_to_var (treptr body)
 
         for (b = 0; b < NUM_ATOMS; b++)
             if (tre_atom_types[b] == TRETYPE_SYMBOL
-					&& tre_atoms[b] != NULL
+					&& atoms[b] != NULL
 					&& SYMBOL_FUNCTION(b) == TREINDEX_TO_PTR(a))
                 return TREINDEX_TO_PTR(b);
     }

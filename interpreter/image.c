@@ -144,7 +144,7 @@ treimage_write_numbers (FILE * f)
 
     DOTIMES(i, NUM_ATOMS)
         if (tre_atom_types[i] == TRETYPE_NUMBER)
-            treimage_write (f, tre_atoms[i], sizeof (trenumber));
+            treimage_write (f, atoms[i], sizeof (trenumber));
 }
 
 void
@@ -252,7 +252,7 @@ treimage_read_atoms (FILE *f)
 
     treimage_read (f, tregc_atommarks, sizeof tregc_atommarks);
 
-    tre_atoms_free = NULL;
+    atoms_free = NULL;
     DOTIMES(i, sizeof tregc_atommarks) {
         c = 1;
         DOTIMES(j, 8) {
@@ -286,9 +286,9 @@ treimage_read_atoms (FILE *f)
                         break;
                 }
             } else {
-                *(void **) &tre_atoms[idx] = tre_atoms_free;
+                *(void **) &atoms[idx] = atoms_free;
                 tre_atom_types[idx] = TRETYPE_UNUSED;
-                tre_atoms_free = &tre_atoms[idx];
+                atoms_free = &atoms[idx];
             }
 
             c <<= 1;

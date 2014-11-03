@@ -9,15 +9,15 @@
 
 typedef char tre_type;
 
-extern void * tre_atoms_free;
-extern void * tre_atoms[NUM_ATOMS];
+extern void * atoms_free;
+extern void * atoms[NUM_ATOMS];
 extern tre_type tre_atom_types[NUM_ATOMS];
 
-#define ATOM(ptr)        (tre_atoms[TREPTR_INDEX(ptr)])
+#define ATOM(ptr)        (atoms[TREPTR_INDEX(ptr)])
 #define ATOM_TYPE(ptr)   (tre_atom_types[TREPTR_INDEX(ptr)])
 
 #define ATOM_SET(index, typ) \
-	tre_atoms[index] = NULL; \
+	atoms[index] = NULL; \
 	tre_atom_types[index] = typ
 
 extern treptr atom_alloc (int type);
