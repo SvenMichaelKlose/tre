@@ -17,8 +17,8 @@
 #include "assert.h"
 
 treptr conses_free;
-struct tre_list tre_lists[NUM_LISTNODES];
-treptr tre_listprops[NUM_LISTNODES];
+struct tre_list conses[NUM_LISTNODES];
+treptr conses_props[NUM_LISTNODES];
 treptr tre_default_listprop;
 tre_size conses_used;
 

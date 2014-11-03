@@ -15,9 +15,9 @@ struct tre_list {
     treptr cdr;
 };
 
-#define _CAR(x) 	(tre_lists[x].car)
-#define _CDR(x) 	(tre_lists[x].cdr)
-#define _CPR(x) 	(tre_listprops[x])
+#define _CAR(x) 	(conses[x].car)
+#define _CDR(x) 	(conses[x].cdr)
+#define _CPR(x) 	(conses_props[x])
 
 #define _CADR(x) 	_CAR(_CDR(x))
 
@@ -74,8 +74,8 @@ struct tre_list {
 
 extern void trecons_init (void);
 
-extern struct   tre_list tre_lists[NUM_LISTNODES];
-extern treptr   tre_listprops[NUM_LISTNODES];
+extern struct   tre_list conses[NUM_LISTNODES];
+extern treptr   conses_props[NUM_LISTNODES];
 extern treptr   tre_default_listprop;
 extern treptr   conses_free;
 extern tre_size conses_used;
