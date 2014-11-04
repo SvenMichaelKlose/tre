@@ -127,7 +127,7 @@ treimage_write_conses (FILE *f)
         c = 1;
         DOTIMES(j, 8) {
             if (!(tregc_listmarks[i] & c)) {
-                treimage_write (f, &conses[idx], sizeof (struct tre_list));
+                treimage_write (f, &conses[idx], sizeof (struct cons));
                 treimage_write (f, &conses_props[idx], sizeof (treptr));
             }
 
@@ -314,7 +314,7 @@ treimage_read_conses (FILE * f)
         c = 1;
         DOTIMES(j, 8) {
             if (!(tregc_listmarks[i] & c)) {
-                treimage_read (f, &conses[idx], sizeof (struct tre_list));
+                treimage_read (f, &conses[idx], sizeof (struct cons));
                 treimage_read (f, &conses_props[idx], sizeof (treptr));
                 conses_used++;
             } else {

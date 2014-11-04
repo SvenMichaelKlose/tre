@@ -10,7 +10,7 @@
 #define FIRST_LISTNODE	1
 #define LAST_LISTNODE	(NUM_LISTNODES - 1)
 
-struct tre_list {
+struct cons {
     treptr car;
     treptr cdr;
 };
@@ -74,7 +74,7 @@ struct tre_list {
 
 extern void trecons_init (void);
 
-extern struct   tre_list conses[NUM_LISTNODES];
+extern struct   cons conses[NUM_LISTNODES];
 extern treptr   conses_props[NUM_LISTNODES];
 extern treptr   tre_default_listprop;
 extern treptr   conses_free;
