@@ -170,7 +170,7 @@ char *tre_builtin_names[] = {
     "MACROEXPAND-1", "MACROEXPAND",
 
     "%PRINC", "%FORCE-OUTPUT", "%READ-CHAR",
-    "FILE-EXISTS?", "%FOPEN", "%FEOF", "%FCLOSE",
+    "FILE-EXISTS?", "%FOPEN", "%FEOF", "%FCLOSE", "%DIRECTORY",
     "%TERMINAL-RAW", "%TERMINAL-NORMAL",
 
 	"END-DEBUG", "INVOKE-DEBUGGER",
@@ -324,6 +324,7 @@ evalfunc_t eval_xlat_builtin[] = {
     trestream_builtin_fopen,
     trestream_builtin_feof,
     trestream_builtin_fclose,
+    trestream_builtin_directory,
 
     treterminal_builtin_raw,
     treterminal_builtin_normal,

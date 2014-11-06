@@ -140,7 +140,8 @@
 		(%READ-CHAR         builtin_read_char       &rest x)
     	(%FOPEN             builtin_fopen           &rest x)
 		(%FEOF              builtin_feof            &rest x)
-		(%FCLOSE            builtin_fclose          &rest x))
+		(%FCLOSE            builtin_fclose          &rest x)
+		(%DIRECTORY         builtin_directory       &rest x))
 
 	(treterminal_
 		(%TERMINAL-RAW      builtin_raw             &rest x)

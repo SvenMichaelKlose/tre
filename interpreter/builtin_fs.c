@@ -2,7 +2,10 @@
  * tré – Copyright (c) 2005–2008,2013–2014 Sven Michael Klose <pixel@copei.de>
  */
 
+#include <sys/types.h>
+#include <dirent.h>
 #include <stdio.h>
+#include <errno.h>
 
 #include "config.h"
 #include "atom.h"
@@ -15,6 +18,8 @@
 #include "builtin_fs.h"
 #include "xxx.h"
 #include "string2.h"
+#include "queue.h"
+#include "assert.h"
 
 FILE * tre_fileio_handles[TRE_FILEIO_MAX_FILES];
 
@@ -56,7 +61,7 @@ trestream_fclose (long handle)
 treptr
 trestream_fopen_wrapper (treptr path, treptr mode)
 {
-    treptr  handle;
+    treptr handle;
 
 	path = trearg_typed (1, TRETYPE_STRING, path, "pathname");
 	mode = trearg_typed (2, TRETYPE_STRING, mode, "access mode");
@@ -70,9 +75,30 @@ trestream_fopen_wrapper (treptr path, treptr mode)
 treptr
 trestream_builtin_fopen (treptr x)
 {
-    treptr  path;
-    treptr  mode;
+    treptr path;
+    treptr mode;
 
     trearg_get2 (&path, &mode, x);
     return trestream_fopen_wrapper (path, mode);
+}
+
+treptr
+trestream_builtin_directory (treptr x)
+{
+    treptr path = trearg_get (x);
+    treptr l    = tre_make_queue ();
+    DIR * d;
+    struct dirent * e;
+ 
+    tregc_push (l);
+    ASSERT_STRING(path);
+    if (!(d = opendir (TREPTR_STRINGZ(path))))
+        return trenumber_get (errno);
+
+    while ((e = readdir (d)) != NULL)
+        tre_enqueue (l, trestring_get (&e->d_name[0]));
+
+    closedir (d);
+    tregc_pop ();
+    return tre_queue_list (l);
 }
