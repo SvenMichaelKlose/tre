@@ -106,18 +106,18 @@ BINDIR="/usr/local/bin/"
 basic_clean ()
 {
 	echo "Cleaning..."
-	rm -vf *.core obj interpreter/$COMPILED_ENV tre image bytecode-image $CRUNSHTMP __alien.tmp files.lisp
-    rm -vf boot.log _nodejstests.log _phptests.log _bytecode-interpreter-tests.log profile.lisp
+	rm -vf *.core obj compiled interpreter/$COMPILED_ENV tre image bytecode-image $CRUNSHTMP __alien.tmp files.lisp
     rm -vrf interpreter/_revision.h environment/_current-version
     rm -vf examples/js/hello-world.js
-    rm -vf gmon.out tmp.gcda
+    rm -vf gmon.out tmp.gcda profile.lisp
 }
 
 distclean ()
 {
 	echo "Cleaning for distribution..."
     basic_clean
-	rm -vrf backup compiled make.log
+	rm -vrf backup make.log boot.log
+	rm -vrf _nodejstests.log _phptests.log _bytecode-interpreter-tests.log
 }
 
 link ()
