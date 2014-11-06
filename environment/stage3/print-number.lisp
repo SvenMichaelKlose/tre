@@ -10,7 +10,7 @@
                 (. (digit (mod x r))
                    (unless (zero? (--! n))
                      (f (integer (/ x r)))))))
-    (list-string (reverse (f n)))))
+    (list-string (reverse (f x)))))
 
 (defun print-hex (x n str)
   (princ (integer-string x n 16) (default-stream str)))
