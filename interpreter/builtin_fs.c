@@ -3,9 +3,11 @@
  */
 
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <dirent.h>
 #include <stdio.h>
 #include <errno.h>
+#include <unistd.h>
 
 #include "config.h"
 #include "atom.h"
@@ -20,6 +22,7 @@
 #include "string2.h"
 #include "queue.h"
 #include "assert.h"
+#include "gc.h"
 
 FILE * tre_fileio_handles[TRE_FILEIO_MAX_FILES];
 
@@ -90,15 +93,45 @@ trestream_builtin_directory (treptr x)
     DIR * d;
     struct dirent * e;
  
-    tregc_push (l);
     ASSERT_STRING(path);
     if (!(d = opendir (TREPTR_STRINGZ(path))))
-        return trenumber_get (errno);
+        return number_get_integer (errno);
+    tregc_push (l);
 
     while ((e = readdir (d)) != NULL)
         tre_enqueue (l, trestring_get (&e->d_name[0]));
 
     closedir (d);
+    tregc_pop ();
+    return tre_queue_list (l);
+}
+
+treptr
+trestream_builtin_stat (treptr x)
+{
+    treptr path = trearg_get (x);
+    treptr l    = tre_make_queue ();
+    struct stat buf;
+ 
+    ASSERT_STRING(path);
+    if (stat (TREPTR_STRINGZ(path), &buf))
+        return number_get_integer (errno);
+    tregc_push (l);
+
+    tre_enqueue (l, number_get_integer (buf.st_dev));
+    tre_enqueue (l, number_get_integer (buf.st_ino));
+    tre_enqueue (l, number_get_integer (buf.st_mode));
+    tre_enqueue (l, number_get_integer (buf.st_nlink));
+    tre_enqueue (l, number_get_integer (buf.st_uid));
+    tre_enqueue (l, number_get_integer (buf.st_gid));
+    tre_enqueue (l, number_get_integer (buf.st_rdev));
+    tre_enqueue (l, number_get_integer (buf.st_size));
+    tre_enqueue (l, number_get_integer (buf.st_blksize));
+    tre_enqueue (l, number_get_integer (buf.st_blocks));
+    tre_enqueue (l, number_get_integer (buf.st_atime));
+    tre_enqueue (l, number_get_integer (buf.st_mtime));
+    tre_enqueue (l, number_get_integer (buf.st_ctime));
+
     tregc_pop ();
     return tre_queue_list (l);
 }

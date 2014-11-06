@@ -20,7 +20,8 @@
 		(=-AREF         set_aref        value arr &rest keys))
 
 	(treerror_
-		(%ERROR         builtin_error   &rest x))
+		(%ERROR         builtin_error     &rest x)
+		(%STRERROR      builtin_strerror  &rest x))
 
 	(trefunction_
 		(FUNCTION-NATIVE        native          fun)
@@ -141,7 +142,8 @@
     	(%FOPEN             builtin_fopen           &rest x)
 		(%FEOF              builtin_feof            &rest x)
 		(%FCLOSE            builtin_fclose          &rest x)
-		(%DIRECTORY         builtin_directory       &rest x))
+		(%DIRECTORY         builtin_directory       &rest x)
+		(%STAT              builtin_stat            &rest x))
 
 	(treterminal_
 		(%TERMINAL-RAW      builtin_raw             &rest x)

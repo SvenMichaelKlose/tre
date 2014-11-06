@@ -122,7 +122,7 @@ char *tre_builtin_names[] = {
 	"%MALLOC", "%MALLOC-EXEC", "%FREE", "%FREE-EXEC",
 	"%%SET", "%%GET",
 
-	"%ERROR",
+	"%ERROR", "%STRERROR",
 
 	"NUMBER+", "NUMBER-",
 	"INTEGER+", "INTEGER-",
@@ -170,7 +170,7 @@ char *tre_builtin_names[] = {
     "MACROEXPAND-1", "MACROEXPAND",
 
     "%PRINC", "%FORCE-OUTPUT", "%READ-CHAR",
-    "FILE-EXISTS?", "%FOPEN", "%FEOF", "%FCLOSE", "%DIRECTORY",
+    "FILE-EXISTS?", "%FOPEN", "%FEOF", "%FCLOSE", "%DIRECTORY", "%STAT",
     "%TERMINAL-RAW", "%TERMINAL-NORMAL",
 
 	"END-DEBUG", "INVOKE-DEBUGGER",
@@ -212,6 +212,7 @@ evalfunc_t eval_xlat_builtin[] = {
 	trebuiltin_get,
 
     treerror_builtin_error,
+    treerror_builtin_strerror,
 
     trenumber_builtin_plus,
     trenumber_builtin_difference,
@@ -325,6 +326,7 @@ evalfunc_t eval_xlat_builtin[] = {
     trestream_builtin_feof,
     trestream_builtin_fclose,
     trestream_builtin_directory,
+    trestream_builtin_stat,
 
     treterminal_builtin_raw,
     treterminal_builtin_normal,
