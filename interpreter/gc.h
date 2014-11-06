@@ -10,9 +10,7 @@ extern int    tregc_running;
 extern char   tregc_listmarks[NUM_LISTNODES >> 3];
 extern char   tregc_atommarks[NUM_ATOMS >> 3];
 
-extern void   tregc_trace_object (treptr);
-extern void   tregc_force ();
-extern void   tregc_mark ();
+extern void   tregc ();
 extern void   tregc_init (void);
 
 extern void   tregc_push (treptr);

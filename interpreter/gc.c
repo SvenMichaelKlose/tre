@@ -87,6 +87,7 @@ tregc_pop_secondary ()
 }
 
 void tregc_trace_atom (treptr);
+void tregc_trace_object (treptr);
 
 void
 tregc_trace_tree (treptr p)
@@ -235,7 +236,7 @@ tregc_pass ()
 }
 
 void
-tregc_force ()
+tregc ()
 {
     if (tregc_running)
 		return;

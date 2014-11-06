@@ -47,7 +47,7 @@ trefunction_alloc ()
     trefunction * i = malloc (sizeof (trefunction));
 
     if (!i) {
-        tregc_force ();
+        tregc ();
     	i = malloc (sizeof (trefunction));
         if (!i)
 	    	treerror_internal (NIL, "Out of memory for more functions.");

@@ -87,7 +87,7 @@ atom_alloc (int type)
 
 	item = trealloc_item (&atoms_free);
 	if (!item) {
-        tregc_force ();
+        tregc ();
 		item = trealloc_item (&atoms_free);
     	if (!item)
 	    	return treerror (treptr_invalid, "Atom table full.");

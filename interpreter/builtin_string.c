@@ -63,7 +63,7 @@ trestring_builtin_list_string (treptr list)
 
     news = trestring_get_raw (len);
     if (news == NULL) {
-		tregc_force ();
+		tregc ();
     	news = trestring_get_raw (len);
     	if (news == NULL)
 			treerror_norecover (treptr_invalid, "Out of memory.");
@@ -134,7 +134,7 @@ trestring_builtin_concat (treptr list)
 
     news = trestring_get_raw (len);
     if (news == NULL) {
-		tregc_force ();
+		tregc ();
     	news = trestring_get_raw (len);
     	if (news == NULL)
 			treerror_norecover (treptr_invalid, "Out of memory.");

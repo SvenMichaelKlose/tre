@@ -48,7 +48,7 @@ trearray_alloc (tre_size size)
     trearray *  array = trearray_alloc_raw (size);
 
     if (!array) {
-		tregc_force ();
+		tregc ();
     	array = trearray_alloc_raw (size);
     }
 

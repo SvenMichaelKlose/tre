@@ -483,7 +483,7 @@ tredebug (void)
     if (f_print)
         tredebug_print ();
     f_print = FALSE;
-	tregc_force ();
+	tregc ();
 
     tredebug_mode = 0;
     tredebug_level++;

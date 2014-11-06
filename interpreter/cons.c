@@ -133,7 +133,7 @@ list_gc (treptr car, treptr cdr)
     tregc_push (car);
     tregc_push (cdr);
 
-	tregc_force ();
+	tregc ();
    	if (!conses_free)
     	treerror_internal (treptr_invalid, "Out of conses.");
 

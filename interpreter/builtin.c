@@ -108,7 +108,7 @@ treptr
 trebuiltin_gc (treptr no_args)
 {
     (void) no_args;
-    tregc_force ();
+    tregc ();
     return NIL;
 }
 
