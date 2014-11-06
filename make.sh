@@ -384,7 +384,7 @@ restore)
     echo "  build           Do a regular build file by file."
     echo "  debug           Compile C sources for gdb. May the source be with you."
     echo "  crunsh          Compile C sources as one big file for best optimization."
-    echo "  pdo             Compile C sources with profile-guided optimizations."
+    echo "  pgo             Compile C sources with profile-guided optimizations."
     echo "  reload          Reload the environment."
     echo "  backup          Backup installation to local directory 'backup'."
     echo "  restore         Restore the last 'backup'."
