@@ -15,11 +15,11 @@
 #include "number.h"
 #include "util.h"
 #include "argument.h"
-#include "builtin_fileio.h"
 #include "string2.h"
 #include "symtab.h"
-#include "builtin_stream.h"
 #include "assert.h"
+#include "builtin_stream.h"
+#include "builtin_fs.h"
 
 treptr
 trestream_builtin_princ (treptr args)

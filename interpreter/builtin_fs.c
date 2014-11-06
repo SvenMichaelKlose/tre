@@ -12,7 +12,7 @@
 #include "number.h"
 #include "util.h"
 #include "argument.h"
-#include "builtin_fileio.h"
+#include "builtin_fs.h"
 #include "xxx.h"
 #include "string2.h"
 

@@ -31,7 +31,7 @@
 #include "builtin_atom.h"
 #include "builtin_debug.h"
 #include "builtin_error.h"
-#include "builtin_fileio.h"
+#include "builtin_fs.h"
 #include "builtin_function.h"
 #include "builtin_image.h"
 #include "builtin_list.h"

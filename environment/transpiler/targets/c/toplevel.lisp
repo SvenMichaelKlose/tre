@@ -21,7 +21,7 @@
 		   "builtin_atom.h"
 		   "builtin_debug.h"
 		   "builtin_error.h"
-		   "builtin_fileio.h"
+		   "builtin_fs.h"
 		   "builtin_function.h"
 		   "builtin.h"
 		   "builtin_image.h"

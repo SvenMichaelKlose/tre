@@ -18,7 +18,7 @@ FILES="
     builtin_atom.c
 	builtin_debug.c
 	builtin_error.c
-	builtin_fileio.c
+	builtin_fs.c
 	builtin_function.c
 	builtin_image.c
 	builtin_list.c

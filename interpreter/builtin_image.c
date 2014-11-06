@@ -13,7 +13,6 @@
 #include "util.h"
 #include "argument.h"
 #include "image.h"
-#include "builtin_fileio.h"
 
 treptr
 treimage_builtin_create (treptr list)
