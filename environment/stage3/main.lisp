@@ -43,5 +43,6 @@
 (env-load "stage3/assert-c.lisp" 'c)
 (env-load "stage3/collected-errors.lisp")
 (env-load "stage3/string-integer.lisp" 'c)
-(env-load "stage3/stat.lisp")
+(env-load "stage3/dirent.lisp")
+(env-load "stage3/stat.lisp" 'c)
 (env-load "stage3/directory.lisp" 'c)

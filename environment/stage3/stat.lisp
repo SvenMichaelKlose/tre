@@ -18,22 +18,21 @@
                             whiteout))
 
 (defun stat (pathname)
-  (alet (%stat pathname)
-    (& (number? !)
-       (error (%strerror !)))
-    (list (. 'type     (elt *stat-types* (>> ..!. 12)))
-          (. 'perm     (bit-and (>> ..!. 6) 511))
-;          (. 'sticky   (not (zero? (bit-and (>> ..!. 9) 1))))
-;          (. 'dev      !.)
-;          (. 'inode    .!.)
-          (. 'mode     ..!.)
-;          (. 'nlink    ...!.)
-          (. 'uid      ....!.)
-          (. 'gid      .....!.)
-;          (. 'rdev     ......!.)
-          (. 'size     .......!.)
-;          (. 'blksize  ........!.)
-;          (. 'blocks   .........!.)
-          (. 'atime    ..........!.)
-          (. 'mtime    ...........!.)
-          (. 'ctime    ............!.))))
+  (let original (readlink pathname)
+    (when (& original (not (file-exists? original)))
+      (return (make-dirent :type 'symbolic-link
+                           :original original)))
+    (alet (%stat pathname)
+      (& (number? !)
+         (error (%strerror !)))
+      (make-dirent :type            (elt *stat-types* (>> ..!. 12))
+                   :permissions     (bit-and (>> ..!. 6) 511)
+                   :mode            ..!.
+                   :uid             ....!.
+                   :gid             .....!.
+                   :size            .......!.
+                   :atime           ..........!.
+                   :mtime           ...........!.
+                   :ctime           ............!.
+                   :symbolic-link?  (? original t nil)
+                   :original        original))))
