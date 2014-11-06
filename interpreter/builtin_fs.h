@@ -11,6 +11,7 @@ extern treptr trestream_fopen_wrapper (treptr, treptr);
 extern treptr trestream_builtin_fopen (treptr);
 extern treptr trestream_builtin_directory (treptr);
 extern treptr trestream_builtin_stat (treptr);
+extern treptr trestream_builtin_readlink (treptr);
 extern long   trestream_fclose (long handle);
 
 #endif	/* #ifndef TRE_BUILTIN_FILEIO_H */

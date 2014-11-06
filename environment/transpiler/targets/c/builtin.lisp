@@ -143,7 +143,8 @@
 		(%FEOF              builtin_feof            &rest x)
 		(%FCLOSE            builtin_fclose          &rest x)
 		(%DIRECTORY         builtin_directory       &rest x)
-		(%STAT              builtin_stat            &rest x))
+		(%STAT              builtin_stat            &rest x)
+		(READLINK           builtin_readlink        &rest x))
 
 	(treterminal_
 		(%TERMINAL-RAW      builtin_raw             &rest x)

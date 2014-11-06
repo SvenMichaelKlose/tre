@@ -5,6 +5,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <dirent.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
 #include <unistd.h>
@@ -134,4 +135,24 @@ trestream_builtin_stat (treptr x)
 
     tregc_pop ();
     return tre_queue_list (l);
+}
+
+treptr
+trestream_builtin_readlink (treptr x)
+{
+    treptr   path = trearg_get (x);
+    char *   buf = malloc (1024);
+    ssize_t  len;
+    treptr   dest;
+ 
+    ASSERT_STRING(path);
+    len = readlink (TREPTR_STRINGZ(path), buf, 1024);
+    if (len == -1) {
+        free (buf);
+        return NIL;
+    }
+
+    dest = trestring_get (buf);
+    free (buf);
+    return dest;
 }

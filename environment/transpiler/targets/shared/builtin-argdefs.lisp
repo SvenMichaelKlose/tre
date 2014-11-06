@@ -126,6 +126,7 @@
       (%FCLOSE          &rest x) ;stream-handle)
       (%DIRECTORY       &rest x) ;pathname)
       (%STAT            &rest x) ;pathname)
+      (READLINK         &rest x) ;pathname)
       (%TERMINAL-RAW)
       (%TERMINAL-NORMAL)
       (END-DEBUG)
