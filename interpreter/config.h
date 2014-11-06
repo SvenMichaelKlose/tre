@@ -49,7 +49,7 @@ typedef int bool;
 #endif
 
 #ifndef NUM_ATOMS
-#define NUM_ATOMS	                (NUM_LISTNODES / 16)
+#define NUM_ATOMS	                (NUM_LISTNODES / 8)
 #endif
 
 #define TRESTACK_SIZE	            (128 * KILO)
