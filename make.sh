@@ -83,7 +83,7 @@ CFLAGS="-pipe $C_DIALECT_FLAGS $GNU_LIBC_FLAGS $BUILD_MACHINE_INFO $ARGS"
 
 DEBUGOPTS="-O0 -g"
 BUILDOPTS="-O2 -march=native"
-CRUNSHOPTS="-O2 -march=native --whole-program"
+CRUNSHOPTS="-O2 -march=native -fwhole-program"
 CRUNSHFLAGS="-DTRE_COMPILED_CRUNSHED -Iinterpreter -Wno-unused-parameter"
 
 LIBFLAGS="-lm -lffi -lrt"
@@ -106,11 +106,11 @@ BINDIR="/usr/local/bin/"
 basic_clean ()
 {
 	echo "Cleaning..."
-	rm -vf *.core interpreter/$COMPILED_ENV tre image bytecode-image $CRUNSHTMP __alien.tmp files.lisp
+	rm -vf *.core obj interpreter/$COMPILED_ENV tre image bytecode-image $CRUNSHTMP __alien.tmp files.lisp
     rm -vf boot.log _nodejstests.log _phptests.log _bytecode-interpreter-tests.log profile.lisp
     rm -vrf interpreter/_revision.h environment/_current-version
-	rm -vrf obj
     rm -vf examples/js/hello-world.js
+    rm -vf gmon.out tmp.gcda
 }
 
 distclean ()
@@ -241,9 +241,18 @@ boot)
 	./make.sh ctests $ARGS || exit 1
     echo "Compiling everything..."
 	./make.sh environment $ARGS || exit 1
-	./make.sh crunsh $ARGS|| exit 1
+	./make.sh crunsh $ARGS || exit 1
 	./make.sh tests $ARGS || exit 1
     echo "Boot complete."
+	;;
+
+pgo)
+    echo "Profile-guided optimization..."
+	./make.sh crunsh -pg -fprofile-generate $ARGS || exit 1
+    mv interpreter/_compiled-env.c _ce.c
+	./make.sh environment $ARGS || exit 1
+    mv _ce.c interpreter/_compiled-env.c
+	./make.sh crunsh -fprofile-use $ARGS || exit 1
 	;;
 
 ctests)
@@ -375,6 +384,7 @@ restore)
     echo "  build           Do a regular build file by file."
     echo "  debug           Compile C sources for gdb. May the source be with you."
     echo "  crunsh          Compile C sources as one big file for best optimization."
+    echo "  pdo             Compile C sources with profile-guided optimizations."
     echo "  reload          Reload the environment."
     echo "  backup          Backup installation to local directory 'backup'."
     echo "  restore         Restore the last 'backup'."
