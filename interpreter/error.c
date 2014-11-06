@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
+#include <errno.h>
+#include <string.h>
 
 #include "config.h"
 #include "atom.h"
@@ -90,7 +92,16 @@ treerror_norecover (treptr expr, const char *msg, ...)
     treerror_msg (expr, "UNRECOVERABLE ERROR", msg, ap);
 
     tredebug ();
+	exit (1);
+}
 
+void
+treerror_libc ()
+{
+    treerror_macroexpansion ();
+    treerror_msg (treptr_invalid, "LIBC ERROR", strerror (errno), NULL);
+
+    tredebug ();
 	exit (1);
 }
 
