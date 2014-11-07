@@ -51,6 +51,7 @@
       (%ERROR       &rest x) ;message-string)
       (%STRERROR    &rest x) ;libc-errno)
 
+      (FILE-EXISTS? &rest x) ;pathname)
       (%FOPEN       &rest x) ;path access-mode)
 
       (NUMBER?      object)

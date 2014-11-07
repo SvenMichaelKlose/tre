@@ -139,6 +139,7 @@
     	(%PRINC             builtin_princ           &rest x)
 		(%FORCE-OUTPUT      builtin_force_output    &rest x)
 		(%READ-CHAR         builtin_read_char       &rest x)
+    	(FILE-EXISTS?       builtin_file_exists     &rest x)
     	(%FOPEN             builtin_fopen           &rest x)
 		(%FEOF              builtin_feof            &rest x)
 		(%FCLOSE            builtin_fclose          &rest x)
