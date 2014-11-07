@@ -113,13 +113,13 @@ eval_funcall (treptr func, treptr args, bool do_argeval)
 treptr
 eval_xlat_function (evalfunc_t *xlat, treptr func, treptr args, bool do_argeval)
 {
-    treptr  evaldargs;
+    treptr  evaluated_args;
     treptr  ret;
 
-    evaldargs = (do_argeval) ? eval_args (args) : args;
-    tregc_push (evaldargs);
+    evaluated_args = (do_argeval) ? eval_args (args) : args;
+    tregc_push (evaluated_args);
 
-    ret = xlat[(size_t) ATOM(func)] (evaldargs);
+    ret = xlat[(size_t) ATOM(func)] (evaluated_args);
 
     tregc_pop ();
 
