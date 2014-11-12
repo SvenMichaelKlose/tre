@@ -86,12 +86,12 @@
 	(values (? (& sym
                   (not .sym)
                   (== #\. sym.))
-		         'dot
+		       'dot
 		       (? sym
                   (? (list-number? sym)
                      'number
 			         'symbol)
-			      (case (read-char str)
+			      (case (read-char str) :test #'character==
 			        #\(	 'bracket-open
 			        #\)	 'bracket-close
 			        #\[	 'square-bracket-open
@@ -105,7 +105,7 @@
 			        #\,	 (? (== #\@ (peek-char str))
 				            (& (read-char str) 'quasiquote-splice)
 				            'quasiquote)
-			        #\#	(case (read-char str)
+			        #\#	(case (read-char str) :test #'character==
 				          #\\  'char
 				          #\x  'hexnum
 				          #\'  'function
@@ -134,7 +134,7 @@
                       (make-package (list-string pkg)))))))
 
 (defun read-atom (str token pkg sym)
-  (case token
+  (case token :test #'eq
     'dblquote  (read-string str)
     'char      (code-char (read-char str))
     'number    (with-stream-string s (list-string sym)
@@ -157,7 +157,7 @@
   (| token (error "Missing closing bracket."))
   (unless (%read-closing-bracket? token)
     (. (with-temporary *default-listprop* *default-listprop*
-         (case token
+         (case token :test #'eq
            'bracket-open        (read-cons-slot str)
            'square-bracket-open (. 'square (read-cons-slot str))
            'curly-bracket-open  (. 'curly (read-cons-slot str))
@@ -193,7 +193,7 @@
 
 (defun read-expr (str)
   (with ((token pkg sym) (read-token str))
-    (case token
+    (case token :test #'eq
       nil                   nil
       'eof                  nil
       'bracket-open         (read-cons-slot str)
