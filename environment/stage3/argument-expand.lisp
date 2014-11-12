@@ -7,13 +7,13 @@
 (defun argument-def-without-type (x)  x)
 
 (defun error-arguments-missing (fun args)
-  (throw "Arguments ~A missing for function ~A." fun args))
+  (error "Arguments ~A missing for function ~A." fun args))
 
 (defun error-too-many-arguments (fun args)
-  (throw "Too many arguments ~A for function ~A." args fun))
+  (error "Too many arguments ~A for function ~A." args fun))
 
 (defun error-&rest-has-value (fun)
-  (throw "In function ~A: &REST cannot have a value." fun))
+  (error "In function ~A: &REST cannot have a value." fun))
 
 (defun make-&key-alist (def)
   (with (&keys nil
