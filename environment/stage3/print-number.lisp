@@ -3,7 +3,7 @@
 (defun digit (x)
   (code-char (? (< x 10)
                 (+ #\0 x)
-                (+ #\A -10 x))))
+                (+ #\a -10 x))))
 
 (defun integer-string (x n r)
   (with (f #'((x)

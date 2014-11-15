@@ -62,9 +62,7 @@
 	     rest-arg   nil
          err
 		   #'((msg args)
-				(throw (+ "; Call of function ~A: ~A~%"
-					      "; Argument definition: ~A~%"
-						  "; Given arguments: ~A~%")
+				(error "; Call of function ~A: ~A~%; Argument definition: ~A~%; Given arguments: ~A~%"
                        (symbol-name fun)
                        (apply #'format nil msg args)
                        adef
