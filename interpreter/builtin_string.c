@@ -180,7 +180,7 @@ trestring_builtin_string (treptr list)
    			strncpy (buf, SYMBOL_NAME(arg), TRE_MAX_STRINGLEN);
        		return trestring_get (buf);
 		}
-    	arg = treerror (arg, "String, number or named atom expected.");
+    	arg = treerror (arg, "String, number or symbol expected.");
 	}
 
 	/*NOTREACHED*/
