@@ -1,10 +1,10 @@
-;;;;; tré – Copyright (c) 2008–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
 
 (defmacro define-transpiler-infix (tr name)
   (print-definition `(define-transpiler-infix ,tr ,name))
   (let tre (eval tr)
     `(define-expander-macro ,(transpiler-codegen-expander tre) ,name (x y)
-	   `(%%native ,,x " " ,(string-downcase (string name)) " " ,,y))))
+	   `(%%native ,,x " " ,(downcase (string name)) " " ,,y))))
 
 (defun transpiler-binary-expand (op x)
   (? .x

@@ -1,6 +1,6 @@
 ;;;; tré – Copyright (c) 2005–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
 
-(functional string-concat string== string-upcase string-downcase list-string string-list queue-string)
+(functional string-concat string== upcase downcase list-string string-list queue-string)
 
 (defun string<= (a b)
   (with (la  (length a)

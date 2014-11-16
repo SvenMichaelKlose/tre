@@ -93,7 +93,7 @@
         (= (href *xml-unified-strings* s) s))))
 
 (defun xml2lml-unify-identifier (in)
-  (xml-unify-string (string-upcase (xml2lml-identifier in))))
+  (xml-unify-string (upcase (xml2lml-identifier in))))
 
 (defun charlist-to-octalstring (x)
   (concat-stringtree
@@ -138,7 +138,7 @@
     (? (every [& (alpha-char? _)
 			     (lower-case? _)]
 		      (string-list s))
-       (make-symbol (string-upcase s))
+       (make-symbol (upcase s))
        s)))
 
 (defun xml2lml-quoted-string (in)

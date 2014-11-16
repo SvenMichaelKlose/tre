@@ -1,20 +1,20 @@
-;;;; tré – Copyright (c) 2005–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
+;;;; tré – Copyright (c) 2005–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
 
-(defun string-upcase (str)
+(defun upcase (str)
   (list-string (filter [char-upcase _] (string-list str))))
 
-(defun string-downcase (str)
+(defun downcase (str)
   (list-string (filter [char-downcase _] (string-list str))))
 
 (defun char-code (chr)
   (integer chr))
 
-(define-test "STRING-UPCASE works"
-  ((string== (string-upcase "lisp")
+(define-test "UPCASE works"
+  ((string== (upcase "lisp")
 	    "LISP"))
   t)
 
-(define-test "STRING-DOWNCASE works"
-  ((string== (string-downcase "LISP")
+(define-test "DOWNCASE works"
+  ((string== (downcase "LISP")
 	    "lisp"))
   t)

@@ -1,7 +1,7 @@
-;;;;; tré – Copyright (c) 2009,2012–2013 Sven Michael Klose
+;;;;; tré – Copyright (c) 2009,2012–2014 Sven Michael Klose
 
 (defmacro define-file-ending-predicate (name)
-  (let sname (string-downcase (symbol-name name))
+  (let sname (downcase (symbol-name name))
     `(defun ,($ name '-suffix?) (x)
 	   (== ,(+ "." sname)
 		   (x.substr (- (length x) ,(++ (length sname))))))))

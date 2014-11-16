@@ -27,16 +27,16 @@
                               (not (alphanumeric? .x.)))
                            (+ (string-list "T45")
                               (convert-camel .x (++ pos)))
-					       (cons (char-upcase (cadr x))
-						         (convert-camel ..x (++ pos))))
-					    (cons c (convert-camel .x (++ pos)))))))
+					       (. (char-upcase (cadr x))
+						      (convert-camel ..x (++ pos))))
+					    (. c (convert-camel .x (++ pos)))))))
 
          convert-special2
            [& _
               (? (transpiler-special-char? _.)
                  (+ (encapsulate-char _.)
                     (convert-special2 ._))
-                 (cons _. (convert-special2 ._)))]
+                 (. _. (convert-special2 ._)))]
 
 		 convert-special
            [& _
@@ -46,7 +46,7 @@
                  (convert-special2 _))]
          convert-global
            [remove-if [== _ #\-]
-                      (string-list (string-upcase (subseq _ 1 (-- (length _)))))])
+                      (string-list (upcase (subseq _ 1 (-- (length _)))))])
 	(? (| (string? s) (number? s))
 	   (string s)
        (list-string

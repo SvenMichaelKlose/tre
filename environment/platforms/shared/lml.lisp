@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (C) 2006–2008,2011–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (C) 2006–2008,2011–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun string-or-cons? (expr)
   (| (string? expr) (cons? expr)))
@@ -24,7 +24,7 @@
 
 (defun lml-attr-string (x)
   (& (cons? x) (error "Cannot take cons as a LML attribute."))
-  (string-downcase (string-or-empty-string x)))
+  (downcase (string-or-empty-string x)))
 
 (defun lml-attr-value-string (x)
   (? (string? x)

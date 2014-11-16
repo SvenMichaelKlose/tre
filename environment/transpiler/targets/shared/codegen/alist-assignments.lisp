@@ -18,4 +18,4 @@
                            (kwlist-alist x))))
 
 (define-filter alist-cassignments (x)
-  (list (string-downcase (symbol-name x.)) "=" .x))
+  (list (downcase (symbol-name x.)) "=" .x))

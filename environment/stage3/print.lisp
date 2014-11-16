@@ -102,7 +102,7 @@
 
 (defun %print-symbol (x str info)
   (with (conv [? (print-info-downcase? info)
-                 (string-downcase _)
+                 (downcase _)
                  _])
     (princ (conv (symbol-name x)) str)
     (awhen (symbol-package x)

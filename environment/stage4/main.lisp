@@ -18,7 +18,7 @@
 (env-load "stage4/keyword-copiers.lisp")
 (env-load "stage4/maptree.lisp")
 (env-load "stage4/mapped-macro.lisp")
-(env-load "stage4/optional-string-downcase.lisp")
+(env-load "stage4/optional-downcase.lisp")
 (env-load "stage4/pad.lisp")
 (env-load "stage4/permutate.lisp")
 (env-load "stage4/remove.lisp")

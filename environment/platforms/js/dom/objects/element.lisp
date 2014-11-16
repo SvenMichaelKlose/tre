@@ -24,7 +24,7 @@
 (defun make-attribute-xlat ()
   (maphash #'((k v)
 		        (= (aref *attribute-xlat-rev* v) k)
-		        (= (aref *attribute-xlat-rev* (string-downcase v)) k))
+		        (= (aref *attribute-xlat-rev* (downcase v)) k))
 	   	   *attribute-xlat*))
 (make-attribute-xlat)
 
@@ -196,8 +196,8 @@
 
 (defmethod caroshi-element attribute-value? (name val)
   (& (has-attribute? name)
-     (string== (string-downcase (read-attribute name))
-               (string-downcase val))))
+     (string== (downcase (read-attribute name))
+               (downcase val))))
 
 (defmethod caroshi-element write-attribute (name value)
   (set-attribute name value)
@@ -215,7 +215,7 @@
   (has-attribute? "name"))
 
 (defmethod caroshi-element has-name? (x)
-  (member (string-downcase (get-name)) (mapcar #'string-downcase (ensure-list x)) :test #'string==))
+  (member (downcase (get-name)) (mapcar #'downcase (ensure-list x)) :test #'string==))
 
 (defmethod caroshi-element get-name ()
   (read-attribute "name"))
@@ -280,7 +280,7 @@
 (defmethod caroshi-element has-tag-name? (n)
   (? (cons? n)
      (member-if [has-tag-name? _] n)
-     (member (string-downcase tag-name) (mapcar #'string-downcase (ensure-list n)) :test #'string==)))
+     (member (downcase tag-name) (mapcar #'downcase (ensure-list n)) :test #'string==)))
 
 (defmethod caroshi-element set-styles (styles)
   (caroshi-element-set-styles this styles))
@@ -478,7 +478,7 @@
 	      (return nil)))))
 
 (mapcar-macro _ *all-events*
-  `(defmethod caroshi-element ,(make-symbol (string-upcase _)) (fun)
+  `(defmethod caroshi-element ,(make-symbol (upcase _)) (fun)
      (*event-module*.hook ,_ fun this)))
 
 (finalize-class caroshi-element)

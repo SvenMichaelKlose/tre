@@ -181,13 +181,13 @@
 (defvar *c-builtins*
   (let h (make-hash-table)
 	(dolist (grp *c-builtins-descr* h)
-	  (let head (string-downcase (symbol-name grp.))
+	  (let head (downcase (symbol-name grp.))
 		(dolist (f .grp)
           (& (href h f.)
              (error "Built-in function ~A is defined more than once." f.))
 		  (= (href h f.) (? (cons? .f.)
-                            (string-downcase (symbol-name (car .f.)))
-                            (+ head (string-downcase (symbol-name (| .f. f.))))))
+                            (downcase (symbol-name (car .f.)))
+                            (+ head (downcase (symbol-name (| .f. f.))))))
 		  (= (href *c-builtin-argdefs* f.) ..f))))))
 
 (defun c-builtin-names ()

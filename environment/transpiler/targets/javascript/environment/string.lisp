@@ -1,6 +1,6 @@
 ;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
-(declare-cps-exception string %string? string? string== string-concat string-upcase string-downcase string-subseq)
+(declare-cps-exception string %string? string? string== string-concat upcase downcase string-subseq)
 (dont-obfuscate push join char-code-at to-string to-upper-case to-lower-case substr length)
 
 (js-type-predicate %string? "string")
@@ -21,10 +21,10 @@
 (defun string== (x y)
   (%%%== x y))
 
-(defun string-upcase (x)
+(defun upcase (x)
   (& x (x.to-upper-case)))
 
-(defun string-downcase (x)
+(defun downcase (x)
   (& x (x.to-lower-case)))
 
 (defun string-subseq (seq start &optional (end 99999))

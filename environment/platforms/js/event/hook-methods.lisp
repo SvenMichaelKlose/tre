@@ -1,9 +1,9 @@
-;;;; tré – Copyright (c) 2011–2012 Sven Michael Klose <pixel@copei.de>
+;;;; tré – Copyright (c) 2011–2012,2014 Sven Michael Klose <pixel@copei.de>
 
 (progn
-  ,@(mapcar (fn `(= (slot-value userfun_event-module.prototype ,(list 'quote (make-symbol (string-upcase _))))
-                    #'((fun elm)
-                         (this.hook ,_ fun elm))))
+  ,@(filter [= (slot-value userfun_event-module.prototype ,(list 'quote (make-symbol (upcase _))))
+               #'((fun elm)
+                   (this.hook ,_ fun elm))]
             '("click" "dblclick"
               "mousemove" "mouseover" "mouseout"
               "mousedownright" "mousedownleft"
