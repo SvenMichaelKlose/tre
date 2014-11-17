@@ -106,8 +106,9 @@ BINDIR="/usr/local/bin/"
 basic_clean ()
 {
 	echo "Cleaning..."
+	rm -vrf obj compiled
 	rm -vf *.core obj compiled interpreter/$COMPILED_ENV tre image bytecode-image $CRUNSHTMP __alien.tmp files.lisp
-    rm -vrf interpreter/_revision.h environment/_current-version
+    rm -vf interpreter/_revision.h environment/_current-version
     rm -vf examples/js/hello-world.js
     rm -vf gmon.out tmp.gcda profile.lisp
 }
