@@ -124,8 +124,8 @@ Test 123, ELT on string returns right char<br>
 Test 124, STRING== works<br>
 Test 125, LIST-STRING works<br>
 Test 126, STRING-LIST works<br>
-Test 127, STRING-UPCASE works<br>
-Test 128, STRING-DOWNCASE works<br>
+Test 127, UPCASE works<br>
+Test 128, DOWNCASE works<br>
 Test 129, FIND finds elements<br>
 Test 130, FIND accepts :FROM-END<br>
 Test 131, FIND accepts :END<br>

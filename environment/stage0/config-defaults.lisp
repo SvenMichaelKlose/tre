@@ -8,7 +8,6 @@
 (defvar *tre-has-math*    t)
 (defvar *tre-has-alien*   t)
 (defvar *tre-has-class*   t)
-(defvar *tre-has-editor*  nil)
 
 (defvar *print-circularities?*      nil)
 (defvar *have-compiler?*            nil)

@@ -34,7 +34,6 @@
 (when *tre-has-class*   (env-load "oo/class.lisp"))
 ;                        (env-load "oo/ducktype.lisp")
 ;                        (env-load "oo/ducktype-test.lisp")
-(& *tre-has-editor*     (env-load "editor/main.lisp"))
 (env-load "transpiler/main.lisp")
 
 (env-load "read-eval-loop.lisp")
