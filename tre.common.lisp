@@ -56,10 +56,7 @@
       *default-listprop*))
 
 (defconstant +implementations+
-    '(cpr rplacp
-      %load atan2 pow quit
-      %set-atom-fun string-concat env-load
-      %defvar %defun))
+    '(%set-atom-fun cpr rplacp %load atan2 pow quit string-concat env-load %defvar %defun))
 
 (defun make-keyword (x)
   (values (intern (symbol-name x) "KEYWORD")))
@@ -167,11 +164,10 @@
 (defun pow (x) (error "Not implemented."))
 (defun quit (x) (error "Not implemented."))
 
-(defun %set-atom-fun (x v) (setf (symbol-function x) v))
-
 (defun string-concat (&rest x)
   (apply #'concatenate 'string x))
 
+(defmacro %set-atom-fun (x v) `(setf (symbol-function ,x) ,v))
 (defmacro %defvar (&rest x) `(defvar ,@x))
 (defmacro %defun (&rest x) `(defun ,@x))
 (defmacro %defmacro (&rest x) `(defmacro ,@x))
