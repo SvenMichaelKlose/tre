@@ -1,22 +1,8 @@
-;;;;; tré – Copyright (c) 2007,2011–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2007,2011–2014 Sven Michael Klose <pixel@copei.de>
 
-(functional group-head group-tail group)
+(functional group)
 
-(defun group-head (l size)
-  (let result (make-queue)
-    (while (& l (< 0 size))
-           (queue-list result)
-      (enqueue result (car l))
-      (= l (cdr l))
-      (--! size))))
-
-(defun group-tail (l size)
-  (dotimes (i size l)
-    (= l (cdr l))))
-
-(defun group (l size)
-  (let result (make-queue)
-    (while l
-           (queue-list result)
-      (enqueue result (group-head l size))
-      (= l (group-tail l size)))))
+(defun group (x size)
+  (when x
+    (cons (subseq x 0 size)
+          (group (nthcdr size x) size))))
