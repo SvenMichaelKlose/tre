@@ -72,7 +72,7 @@ typedef int bool;
 #endif
 
 #ifndef TRE_BOOTFILE
-#define TRE_BOOTFILE	"environment/main.lisp"
+#define TRE_BOOTFILE	"environment/env-load-c.lisp"
 #endif
 
 #ifndef TRE_IMAGE_HEADER
