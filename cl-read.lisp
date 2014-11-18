@@ -1,5 +1,27 @@
 ;;;;; tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
 
+(in-package :tre-core)
+
+(defmacro alet (x &rest body)
+  `(let ((! ,x))
+     ,@body))
+
+(defun peek-char (str)
+  (print 'peek)
+  (print
+  (alet (cl-peek-char nil str nil 'eof)
+    (unless (eq ! 'eof)
+      !)))
+  )
+
+(defun read-char (str)
+  (print 'read)
+  (print
+  (alet (cl-read-char str nil 'eof)
+    (unless (eq ! 'eof)
+      !)))
+  )
+
 (defmacro in? (obj &rest lst)
   `(or ,@(filter #'(lambda (x) `(eq ,obj ,x)) lst)))
 
@@ -35,17 +57,17 @@
   (apply #'concatenate 'string x))
 
 (defun whitespace? (x)
-  (and (< x 33)
-       (>= x 0)))
+  (and (char< x (code-char 33))
+       (char>= x (code-char 0))))
 
 (defun decimal-digit? (x)
-  (<= x 0 9))
+  (char <= x (code-char 0) (code-char 9)))
 
 (defun %nondecimal-digit? (x start base)
-  (<= x start (+ start (- base 10))))
+  (<= (char-code x) start (+ start (- base 10))))
 
 (defun nondecimal-digit? (x &key (base 10))
-  (and (< 10 base)
+  (and (char< (code-char 10) (code-char base))
        (or (%nondecimal-digit? x #\a base)
            (%nondecimal-digit? x #\A base))))
 
@@ -56,9 +78,60 @@
 
 (load "environment/stage2/while.lisp")
 
-(defmacro alet (x &rest body)
-  `(let ((! ,x))
-     ,@body))
+(defun split (obj seq &key (test #'eql) (include? nil))
+  (and seq
+       (alet (position obj seq :test test)
+         (? !
+            (cons (subseq seq 0 (? include? (+ 1 !) !))
+                  (split obj (subseq seq (+ 1 !)) :test test :include? include?))
+            (list seq)))))
+
+(defun digit-number (x)
+  (- x (char-code #\0)))
+
+(defmacro awhen (x &rest body)
+  `(alet ,x
+     (when !
+       ,@body)))
+
+(defun peek-digit (str)
+  (awhen (peek-char str)
+    (and (digit-char? !) !)))
+
+(defun peek-dot (str)
+  (awhen (peek-char str)
+    (char= #\. !)))
+
+(defun read-decimal-places-0 (str v s)
+  (? (peek-digit str)
+     (read-decimal-places-0 str (+ v (* s (digit-number (read-char str)))) (/ s 10))
+     v))
+
+(defun read-decimal-places (&optional (str *standard-input*))
+  (and (awhen (peek-char str)
+         (digit-char? !))
+     (read-decimal-places-0 str 0 0.1)))
+
+(defun read-integer-0 (str v)
+  (? (peek-digit str)
+     (read-integer-0 str (+ (* v 10) (digit-number (read-char str))))
+     v))
+
+(defun read-integer (&optional (str *standard-input*))
+  (and (peek-digit str)
+     (read-integer-0 str 0)))
+
+(defun read-number (&optional (str *standard-input*))
+  (* (? (char= #\- (peek-char str))
+        (progn
+          (read-char str)
+          -1)
+        1)
+     (+ (read-integer str)
+        (or (and (peek-dot str)
+              (read-char str)
+              (read-decimal-places str))
+           0))))
 
 (defun token-is-quote? (x)
   (in? x 'quote 'backquote 'quasiquote 'quasiquote-splice 'accent-circonflex))
@@ -73,18 +146,20 @@
           #\' #\` #\, #\: #\; #\" #\# #\^))
 
 (defun symbol-char? (x)
-  (and (> x 32)
+  (and (char> x (code-char 32))
        (not (special-char? x))))
 
 (defun skip-comment (str)
+  (print 'skip-comment)
   (let-when c (read-char str)
-	(? (in=? c 10)
+	(? (char= c (code-char 10))
 	   (skip-spaces str)
 	   (skip-comment str))))
 
 (defun skip-spaces (str)
+  (print 'skip-spaces)
  (let-when c (peek-char str)
-   (when (eql #\; c)
+   (when (char= #\; c)
      (skip-comment str))
    (when (whitespace? c)
      (read-char str)
@@ -92,7 +167,7 @@
 
 (defun get-symbol-0 (str)
   (let ((c (char-upcase (peek-char str))))
-    (? (equal #\; c)
+    (? (char= #\; c)
        (progn
          (skip-comment str)
          (get-symbol-0 str))
@@ -108,15 +183,15 @@
 (defun get-symbol-and-package (str)
   (skip-spaces str)
   (let ((sym (get-symbol str)))
-	(? (eql (peek-char str) #\:)
+	(? (char= (peek-char str) #\:)
 	   (values (or sym t) (and (read-char str)
-				            (get-symbol str)))
+				               (get-symbol str)))
 	   (values nil sym))))
 
 (defun read-string-0 (str)
   (let ((c (read-char str)))
-    (unless (eql c #\")
-      (cons (? (eql c #\\)
+    (unless (char= c #\")
+      (cons (? (char= c #\\)
                (read-char str)
                c)
          (read-string-0 str)))))
@@ -125,28 +200,28 @@
   (list-string (read-string-0 str)))
 
 (defun read-comment-block (str)
-  (while (not (and (eql #\| (read-char str))
-			     (eql #\# (peek-char str))))
+  (while (not (and (char= #\| (read-char str))
+			       (char= #\# (peek-char str))))
 	     (read-char str)
     nil))
 
 (defun list-number? (x)
   (and (or (and (cdr x)
-           (or (eql #\- (car x))
-              (eql #\. (car x))))
-        (digit-char? (car x)))
-     (? (cdr x)
-        (every #'(lambda (_)
-                   (or (digit-char? _)
-                       (eql #\. _)))
-               (cdr x))
-        t)))
+                (or (char= #\- (car x))
+                    (char= #\. (car x))))
+           (digit-char? (car x)))
+       (? (cdr x)
+          (every #'(lambda (_)
+                     (or (digit-char? _)
+                         (char= #\. _)))
+                 (cdr x))
+          t)))
 
 (defun read-token (str)
   (multiple-value-bind (pkg sym) (get-symbol-and-package str)
 	(values (? (and sym
-                  (not (cdr sym))
-                  (eql #\. (car sym)))
+                    (not (cdr sym))
+                    (char= #\. (car sym)))
 		       'dot
 		       (? sym
                   (? (list-number? sym)
@@ -163,7 +238,7 @@
 			        (#\`	 'backquote)
 			        (#\^	 'accent-circonflex)
 			        (#\"	 'dblquote)
-			        (#\,	 (? (eql #\@ (peek-char str))
+			        (#\,	 (? (char= #\@ (peek-char str))
 				                (and (read-char str) 'quasiquote-splice)
 				                'quasiquote))
 			        (#\#	(case (read-char str)
@@ -237,7 +312,7 @@
 
 (defun read-cons-slot (str)
   (alet (read-cons str)
-    (? (eql #\. (peek-char str))
+    (? (char= #\. (peek-char str))
        (progn
          (read-char str)
          (multiple-value-bind (token pkg sym) (read-token str)
@@ -248,19 +323,19 @@
 (defun read-expr (str)
   (multiple-value-bind (token pkg sym) (read-token str)
     (case token
-      (nil                  nil
-      (eof                  nil
-      (bracket-open         (read-cons-slot str)
-      (square-bracket-open  (cons 'square (read-cons-slot str))
-      (curly-bracket-open   (cons 'curly (read-cons-slot str))
+      (nil                  nil)
+      (eof                  nil)
+      (bracket-open         (read-cons-slot str))
+      (square-bracket-open  (cons 'square (read-cons-slot str)))
+      (curly-bracket-open   (cons 'curly (read-cons-slot str)))
       (t (? (token-is-quote? token)
             (read-quote str token)
-            (read-atom str token pkg sym)))))
+            (read-atom str token pkg sym))))))
 
 (defun read (&optional (str *standard-input*))
   (skip-spaces str)
   (and (peek-char str)
-	 (read-expr str)))
+	   (read-expr str)))
 
 (defun read-all (str)
   (skip-spaces str)

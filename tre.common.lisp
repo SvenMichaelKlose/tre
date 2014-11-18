@@ -12,7 +12,9 @@
 
 (defpackage :tre-init
   (:use :common-lisp)
-  (:export :+renamed-imports+ :make-keyword))
+  (:export :+renamed-imports+
+           :make-keyword
+           :cl-peek-char :cl-read-char))
 
 (in-package :tre-init)
 
@@ -92,13 +94,20 @@
                          (mapcar #'car +renamed-imports+)
                          +implementations+)))
 
+(defun cl-peek-char (&rest x)
+  (apply #'peek-char x))
+
+(defun cl-read-char (&rest x)
+  (apply #'read-char x))
+
 
 ;;;; The core package where the action happens.
 
 (defmacro define-core-package ()
   `(defpackage :tre-core
      (:use :common-lisp :tre-init)
-     (:shadow :*macroexpand-hook* :read)
+     (:shadow :*macroexpand-hook*
+              :read :peek-char :read-char)
      (:export ,@(all-exports))))
 
 (define-core-package)
@@ -281,16 +290,15 @@
 
 ;;; Loader
 
-(defun read-file (pathname)
-  (with-open-file (s pathname)
-    (do ((result nil (cons next result))
-         (next (read s) (read s)))
-        ((equal next 'eof) (reverse result)))))
+(defun %load-r (s)
+  (when (peek-char s)
+    (cons (print (read s))
+          (%load-r s))))
 
 (defun %load (pathname)
   (print `(%load ,pathname))
-  (dolist (i (read-file pathname))
-    (%eval i)))
+  (with-open-file (s pathname)
+    (%load-r s)))
 
 
 ;;;; The user package.
