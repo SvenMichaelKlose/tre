@@ -8,9 +8,7 @@
 
 (%defmacro defvar (name &optional (init nil))
   (print-definition `(defvar ,name))
-  `(setq *universe* (cons ',name *universe*)
-         *variables* (cons (cons ',name ',init) *variables*)
-         ,name ,init))
+  `(%defvar ,name ,init))
 
 (defvar *constants* nil)
 
@@ -18,5 +16,4 @@
   (print-definition `(defconstant ,name))
   `(progn
      (defvar ,name ,init)
-     (setq *constants* (cons (cons ',name ',init) *constants*)
-           ,name ,init)))
+     (setq *constants* (cons (cons ',name ',init) *constants*))))

@@ -14,10 +14,8 @@
 (setq *universe* (cons 'defmacro *universe*))
 
 (%defmacro defmacro (name args &body body)
-    `(block nil
-	   (print-definition `(defmacro ,name ,args))
-       (setq *universe* (cons ',name *universe*))
-       (setq *macros* (cons ',name *macros*))
-       (%defun ,name ,args
-         (block ,name
-	       ,@(%add-documentation name body)))))
+  (print-definition `(defmacro ,name ,args))
+  `(block nil
+     (%defmacro ,name ,args
+       (block ,name
+         ,@(%add-documentation name body)))))

@@ -77,7 +77,7 @@
       %defun early-defun %defvar %defmacro
       ? functional
       builtin? macro?
-      %%macroexpand
+      %%macroexpand %%macrocall %%%macro?
       &rest &body &optional &key))
 
 (defun make-keyword (x)
@@ -200,33 +200,6 @@
 (defun %nconc (&rest x) x (apply #'nconc x))
 (defun string-concat (&rest x) x (apply #'concatenate 'string x))
 
-(defun function-expr? (x)
-  (and (consp x)
-       (eq 'function (car x))
-       (not (atom (cadr x)))))
-
-(defun make-cl-lambdas (x)
-  (cond
-    ((atom x) x)
-    ((and (function-expr? (car x)) `(labels ((~ja ,@(make-cl-lambdas (cadar x))))
-                                      (~ja ,@(cdr x)))))
-    ((function-expr? x) `#'(lambda ,@(make-cl-lambdas (cadr x))))
-    (t (mapcar #'make-cl-lambdas x))))
-
-(defun %eval (x)
-  (eval (macroexpand (make-cl-lambdas (%%macroexpand x)))))
-
-(defun read-file (pathname)
-  (with-open-file (s pathname)
-    (do ((result nil (cons next result))
-         (next (read s nil 'eof) (read s nil 'eof)))
-        ((equal next 'eof) (reverse result)))))
-
-(defun %load (pathname)
-  (print `(%load ,pathname))
-  (dolist (i (read-file pathname))
-    (%eval i)))
-
 (defun %%macroexpand (x)
   (if *macroexpand-hook*
       (funcall *macroexpand-hook* x)
@@ -274,6 +247,44 @@
 (defmacro %defmacro (name args &body body)
   (print `(%defmacro ,name ,args))
   `(push (cons ',name #'(lambda ,(convert-&body args) ,@body)) *macros*))
+
+(defun %%macrocall (x)
+  (apply (cdr (assoc (car x) *macros* :test #'eq)) (cdr x)))
+
+(defun %%%macro? (x)
+  (assoc x *macros* :test #'eq))
+
+(defun function-expr? (x)
+  (and (consp x)
+       (eq 'function (car x))
+       (not (atom (cadr x)))))
+
+(defun make-cl-lambdas (x)
+  (cond
+    ((atom x) x)
+    ((and (function-expr? (car x)) `(labels ((~ja ,@(make-cl-lambdas (cadar x))))
+                                      (~ja ,@(cdr x)))))
+    ((function-expr? x) `#'(lambda ,@(make-cl-lambdas (cadr x))))
+    (t (mapcar #'make-cl-lambdas x))))
+
+(defun quasiquote-expand (x)
+  (if *quasiquoteexpand-hook*
+      (funcall *quasiquoteexpand-hook* x)
+      x))
+
+(defun %eval (x)
+  (eval (make-cl-lambdas (quasiquote-expand (%%macroexpand x)))))
+
+(defun read-file (pathname)
+  (with-open-file (s pathname)
+    (do ((result nil (cons next result))
+         (next (read s nil 'eof) (read s nil 'eof)))
+        ((equal next 'eof) (reverse result)))))
+
+(defun %load (pathname)
+  (print `(%load ,pathname))
+  (dolist (i (read-file pathname))
+    (%eval i)))
 
 
 ;;;; The user package.

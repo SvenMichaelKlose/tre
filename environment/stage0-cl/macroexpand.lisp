@@ -9,43 +9,30 @@
 (%defun %macroexpand-backquote (%g)
   (?
     (atom %g) %g
-    (progn
-      (? (cpr %g)
-         (setq *default-listprop* (cpr %g)))
-      (#'((p c)
-            (rplacp c (setq *default-listprop* p)))
-        *default-listprop*
-        (?
-          (atom (car %g))
-              (cons (car %g)
-                    (%macroexpand-backquote (cdr %g)))
+    (atom (car %g))
+        (cons (car %g)
+              (%macroexpand-backquote (cdr %g)))
 
-           (eq (car (car %g)) 'QUASIQUOTE)
-              (cons (cons 'QUASIQUOTE
-     	                  (%macroexpand (cdr (car %g))))
-                    (%macroexpand-backquote (cdr %g)))
+    (eq (car (car %g)) 'QUASIQUOTE)
+        (cons (cons 'QUASIQUOTE
+                    (%macroexpand (cdr (car %g))))
+              (%macroexpand-backquote (cdr %g)))
 
-           (eq (car (car %g)) 'QUASIQUOTE-SPLICE)
-              (cons (cons 'QUASIQUOTE-SPLICE
-     	                  (%macroexpand (cdr (car %g))))
-                    (%macroexpand-backquote (cdr %g)))
+    (eq (car (car %g)) 'QUASIQUOTE-SPLICE)
+        (cons (cons 'QUASIQUOTE-SPLICE
+                    (%macroexpand (cdr (car %g))))
+              (%macroexpand-backquote (cdr %g)))
 
-           (cons (%macroexpand-backquote (car %g))
-                 (%macroexpand-backquote (cdr %g))))))))
+    (cons (%macroexpand-backquote (car %g))
+          (%macroexpand-backquote (cdr %g)))))
 
 (setq *macroexpand-backquote-diversion* #'%macroexpand-backquote)
 
 (%defun %macroexpand-rest (%g)
   (? (atom %g)
      %g
-     (progn
-       (? (cpr %g)
-          (setq *default-listprop* (cpr %g)))
-       (#'((p c)
-             (rplacp c (setq *default-listprop* p)))
-  	     *default-listprop*
-         (cons (%macroexpand (car %g))
-               (%macroexpand-rest (cdr %g)))))))
+     (cons (%macroexpand (car %g))
+           (%macroexpand-rest (cdr %g)))))
 
 (%defun %macroexpand-xlat (%g)
   (? *macroexpand-print?*
@@ -69,30 +56,18 @@
 (%defun %macroexpand (%g)
   (?
     (atom %g) %g
-    (progn
-      (? (cpr %g)
-         (setq *default-listprop* (cpr %g)))
-      (#'((p c)
-            (? (cons? c)
-               (rplacp c (setq *default-listprop* p))
-               c))
-        *default-listprop*
-        (?
-          (eq (car %g) 'QUOTE)             %g
-          (eq (car %g) 'BACKQUOTE)         (cons 'BACKQUOTE
-                                                 (apply *macroexpand-backquote-diversion* (list (cdr %g))))
-          (eq (car %g) 'QUASIQUOTE)        (cons 'QUASIQUOTE
-                                                 (%macroexpand (cdr %g)))
-          (eq (car %g) 'QUASIQUOTE-SPLICE) (cons 'QUASIQUOTE-SPLICE
-                                                 (%macroexpand (cdr %g)))
-          (%macroexpand-call (%macroexpand-rest %g)))))))
+    (eq (car %g) 'QUOTE)             %g
+    (eq (car %g) 'BACKQUOTE)         (cons 'BACKQUOTE
+                                           (apply *macroexpand-backquote-diversion* (list (cdr %g))))
+    (eq (car %g) 'QUASIQUOTE)        (cons 'QUASIQUOTE
+                                           (%macroexpand (cdr %g)))
+    (eq (car %g) 'QUASIQUOTE-SPLICE) (cons 'QUASIQUOTE-SPLICE
+                                           (%macroexpand (cdr %g)))
+    (%macroexpand-call (%macroexpand-rest %g))))
 
 (%defun %%macro? (%g)
   (? (symbol? (car %g))
-     (macro? (symbol-function (car %g)))))
-
-(%defun %%macrocall (%g)
-  (apply (symbol-function (car %g)) (cdr %g)))
+     (%%%macro? (car %g))))
 
 (%defun %%env-macro? (%g)
   (%%macro? %g))
