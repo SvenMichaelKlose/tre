@@ -12,7 +12,7 @@
 
 (defpackage :tre-init
   (:use :common-lisp)
-  (:export :+renamed-imports+))
+  (:export :+renamed-imports+ :make-keyword))
 
 (in-package :tre-init)
 
@@ -98,7 +98,7 @@
 (defmacro define-core-package ()
   `(defpackage :tre-core
      (:use :common-lisp :tre-init)
-     (:shadow :*macroexpand-hook*)
+     (:shadow :*macroexpand-hook* :read)
      (:export ,@(all-exports))))
 
 (define-core-package)
@@ -275,10 +275,16 @@
 (defun %eval (x)
   (eval (make-cl-lambdas (quasiquote-expand (%%macroexpand x)))))
 
+;;; Reader
+
+(load "cl-read.lisp")
+
+;;; Loader
+
 (defun read-file (pathname)
   (with-open-file (s pathname)
     (do ((result nil (cons next result))
-         (next (read s nil 'eof) (read s nil 'eof)))
+         (next (read s) (read s)))
         ((equal next 'eof) (reverse result)))))
 
 (defun %load (pathname)
