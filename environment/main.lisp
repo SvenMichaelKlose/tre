@@ -1,6 +1,5 @@
 ;;;;; tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
 
-(env-load "stage0/main.lisp" 'c)
 (env-load "stage1/main.lisp")
 (env-load "stage2/main.lisp")
 (env-load "stage3/main.lisp")

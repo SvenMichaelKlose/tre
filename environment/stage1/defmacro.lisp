@@ -13,13 +13,11 @@
 
 (setq *universe* (cons 'defmacro *universe*))
 
-(%set-atom-fun defmacro
-  (macro (name args &body body)
+(%defmacro defmacro (name args &body body)
     `(block nil
 	   (print-definition `(defmacro ,name ,args))
        (setq *universe* (cons ',name *universe*))
        (setq *macros* (cons ',name *macros*))
-       (%set-atom-fun ,name
-         			  (macro ,args
-	       			    (block ,name
-	         			  ,@(%add-documentation name body)))))))
+       (%defun ,name ,args
+         (block ,name
+	       ,@(%add-documentation name body)))))

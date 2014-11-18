@@ -10,28 +10,28 @@
   (?
     (atom %g) %g
     (progn
-       (? (cpr %g)
-          (setq *default-listprop* (cpr %g)))
-       (#'((p c)
-             (rplacp c (setq *default-listprop* p)))
-         *default-listprop*
-         (?
-           (atom (car %g))
-         (cons (car %g)
-                   (%macroexpand-backquote (cdr %g)))
+      (? (cpr %g)
+         (setq *default-listprop* (cpr %g)))
+      (#'((p c)
+            (rplacp c (setq *default-listprop* p)))
+        *default-listprop*
+        (?
+          (atom (car %g))
+              (cons (car %g)
+                    (%macroexpand-backquote (cdr %g)))
 
            (eq (car (car %g)) 'QUASIQUOTE)
-         (cons (cons 'QUASIQUOTE
-     	          (%macroexpand (cdr (car %g))))
-                (%macroexpand-backquote (cdr %g)))
+              (cons (cons 'QUASIQUOTE
+     	                  (%macroexpand (cdr (car %g))))
+                    (%macroexpand-backquote (cdr %g)))
 
            (eq (car (car %g)) 'QUASIQUOTE-SPLICE)
-         (cons (cons 'QUASIQUOTE-SPLICE
-     	          (%macroexpand (cdr (car %g))))
-                (%macroexpand-backquote (cdr %g)))
+              (cons (cons 'QUASIQUOTE-SPLICE
+     	                  (%macroexpand (cdr (car %g))))
+                    (%macroexpand-backquote (cdr %g)))
 
            (cons (%macroexpand-backquote (car %g))
-              (%macroexpand-backquote (cdr %g))))))))
+                 (%macroexpand-backquote (cdr %g))))))))
 
 (setq *macroexpand-backquote-diversion* #'%macroexpand-backquote)
 
@@ -43,7 +43,7 @@
           (setq *default-listprop* (cpr %g)))
        (#'((p c)
              (rplacp c (setq *default-listprop* p)))
-  	      *default-listprop*
+  	     *default-listprop*
          (cons (%macroexpand (car %g))
                (%macroexpand-rest (cdr %g)))))))
 
@@ -79,9 +79,12 @@
         *default-listprop*
         (?
           (eq (car %g) 'QUOTE)             %g
-          (eq (car %g) 'BACKQUOTE)         (cons 'BACKQUOTE (apply *macroexpand-backquote-diversion* (list (cdr %g))))
-          (eq (car %g) 'QUASIQUOTE)        (cons 'QUASIQUOTE (%macroexpand (cdr %g)))
-          (eq (car %g) 'QUASIQUOTE-SPLICE) (cons 'QUASIQUOTE-SPLICE (%macroexpand (cdr %g)))
+          (eq (car %g) 'BACKQUOTE)         (cons 'BACKQUOTE
+                                                 (apply *macroexpand-backquote-diversion* (list (cdr %g))))
+          (eq (car %g) 'QUASIQUOTE)        (cons 'QUASIQUOTE
+                                                 (%macroexpand (cdr %g)))
+          (eq (car %g) 'QUASIQUOTE-SPLICE) (cons 'QUASIQUOTE-SPLICE
+                                                 (%macroexpand (cdr %g)))
           (%macroexpand-call (%macroexpand-rest %g)))))))
 
 (%defun %%macro? (%g)
@@ -97,7 +100,7 @@
 (%defun %%env-macrocall (%g)
   (%%macrocall %g))
 
-(%defun *macroexpand-hook* (%g)
+(%defun native-macroexpand (%g)
   (#'((%gp %gc %gcm)
         (setq *macro?-diversion*    #'%%macro?
               *macrocall-diversion* #'%%macrocall
@@ -106,6 +109,8 @@
               (setq *macro?-diversion*    %gp
                     *macrocall-diversion* %gc
                     *current-macro*       %gcm)
-       %g)
-       (%macroexpand %g)))
+              %g)
+          (%macroexpand %g)))
      *macro?-diversion* *macrocall-diversion* *current-macro*))
+
+(setq *macroexpand-hook* #'native-macroexpand)
