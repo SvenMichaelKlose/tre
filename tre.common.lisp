@@ -2,7 +2,10 @@
 
 ;;;; Initialization package
 
-(defpackage :tre-init (:use :common-lisp))
+(defpackage :tre-init
+  (:use :common-lisp)
+  (:export :+renamed-imports+))
+
 (in-package :tre-init)
 
 (format t "; tré – Copyright (c) 2005-2014 Sven Michael Klose <pixel@hugbox.org>~%")
@@ -67,6 +70,7 @@
     '(%set-atom-fun cpr rplacp %load atan2 pow quit string-concat %load
       %defun early-defun %defvar %defmacro
       ? functional
+      builtin? macro?
       %%macroexpand
       &rest &body &optional &key))
 
@@ -82,22 +86,26 @@
                          (mapcar #'car +renamed-imports+)
                          +implementations+)))
 
+(format t "; Symbols provided to package TRE: ~A~%" (all-exports))
+
 (defmacro define-core-package ()
-  (format t "; Symbols provided to package TRE: ~A~%" (all-exports))
+  `(defpackage :tre-core
+     (:use :common-lisp :tre-init)
+     (:shadow :*macroexpand-hook*)
+     (:export ,@(all-exports))))
+
+(define-core-package)
+
+(in-package :tre-core)
+
+(defmacro define-wrappers ()
   `(progn
-     (defpackage :tre-core
-       (:use :common-lisp :tre-init)
-       (:import-from :tre-init *core-macros*)
-       (:shadow :*macroexpand-hook*)
-       (:export ,@(all-exports)))
-     (in-package :tre-core)
      ,@(mapcar #'(lambda (x)
-                   `(defun ,(car x) (&rest x)
+                   `(defun ,(values (intern (symbol-name (car x)) "TRE-CORE")) (&rest x)
                       (apply (function ,(cadr x)) x)))
                +renamed-imports+)))
 
-(define-core-package)
-(in-package :tre-core)
+(define-wrappers)
 
 (defvar *universe* nil)
 (defvar *variables* nil)
@@ -179,12 +187,6 @@
 (defun %nconc (&rest x) x (apply #'nconc x))
 (defun string-concat (&rest x) x (apply #'concatenate 'string x))
 
-(defun read-file (pathname)
-  (with-open-file (s pathname)
-    (do ((result nil (cons next result))
-         (next (read s nil 'eof) (read s nil 'eof)))
-        ((equal next 'eof) (reverse result)))))
-
 (defun function-expr? (x)
   (and (consp x)
        (eq 'function (car x))
@@ -205,6 +207,12 @@
 
 (defun %eval (x)
   (eval (macroexpand (make-lambda (%%macroexpand x)))))
+
+(defun read-file (pathname)
+  (with-open-file (s pathname)
+    (do ((result nil (cons next result))
+         (next (read s nil 'eof) (read s nil 'eof)))
+        ((equal next 'eof) (reverse result)))))
 
 (defun %load (pathname)
   (print `(%load ,pathname))
