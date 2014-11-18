@@ -20,7 +20,7 @@
 
 ;;; Symbols directly imported from package CL-USER.
 (defconstant +direct-imports+
-    '(nil t not eq eql atom setq
+    '(nil t not eq eql atom setq quote
       cons car cdr rplaca rplacd
       apply eval
       progn block
@@ -111,6 +111,8 @@
      (:export ,@(all-exports))))
 
 (define-core-package)
+
+(defpackage :tre (:use :tre-core))
 
 (in-package :tre-core)
 
@@ -292,7 +294,7 @@
 
 (defun %load-r (s)
   (when (peek-char s)
-    (cons (print (read s))
+    (cons (read s)
           (%load-r s))))
 
 (defun %load (pathname)
@@ -304,7 +306,6 @@
 
 ;;;; The user package.
 
-(defpackage :tre (:use :tre-core))
 (in-package :tre)
 
 (defun macroexpand (x)

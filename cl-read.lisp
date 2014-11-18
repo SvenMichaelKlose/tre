@@ -13,8 +13,7 @@
 
 (defun read-char (str)
   (alet (cl-read-char str nil 'eof)
-    (unless (eq ! 'eof)
-      !)))
+    (unless (eq ! 'eof) !)))
 
 (defmacro in? (obj &rest lst)
   `(or ,@(filter #'(lambda (x) `(eq ,obj ,x)) lst)))
