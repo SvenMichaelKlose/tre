@@ -1,4 +1,12 @@
 ;;;;; tré – Copyright (c) 2014 Sven Michael Klose <pixel@copei.de>
+;;;;;
+;;;;; Common Lisp replacement for the C core.
+;;;;;
+;;;;; *** UNDER CONTRUCTION!!! ***
+;;;;;
+;;;;; The interpreter is spoiling everthing. Don't try to use
+;;;;; tré before this thing here is working.
+
 
 ;;;; Initialization package
 
@@ -7,8 +15,6 @@
   (:export :+renamed-imports+))
 
 (in-package :tre-init)
-
-(format t "; tré – Copyright (c) 2005-2014 Sven Michael Klose <pixel@hugbox.org>~%")
 
 ;;; Symbols directly imported from package CL-USER.
 (defconstant +direct-imports+
@@ -86,7 +92,8 @@
                          (mapcar #'car +renamed-imports+)
                          +implementations+)))
 
-(format t "; Symbols provided to package TRE: ~A~%" (all-exports))
+
+;;;; The core package where the action happens.
 
 (defmacro define-core-package ()
   `(defpackage :tre-core
@@ -98,6 +105,8 @@
 
 (in-package :tre-core)
 
+;;; Wrapped functions.
+
 (defmacro define-wrappers ()
   `(progn
      ,@(mapcar #'(lambda (x)
@@ -106,6 +115,8 @@
                +renamed-imports+)))
 
 (define-wrappers)
+
+;;; Global variables.
 
 (defvar *universe* nil)
 (defvar *variables* nil)
@@ -119,6 +130,8 @@
 (defvar *macros* nil)
 (defvar *builtins* (make-hash-table :test #'eq))
 (defvar *function-sources* (make-hash-table :test #'eq))
+
+;;; Implementations.
 
 (defun cpr (x) x nil)
 (defun rplacp (v x) v x)
@@ -192,21 +205,16 @@
        (eq 'function (car x))
        (not (atom (cadr x)))))
 
-(defun make-lambda (x)
+(defun make-cl-lambdas (x)
   (cond
     ((atom x) x)
-    ((and (function-expr? (car x)) `(labels ((~ja ,@(make-lambda (cadar x))))
+    ((and (function-expr? (car x)) `(labels ((~ja ,@(make-cl-lambdas (cadar x))))
                                       (~ja ,@(cdr x)))))
-    ((function-expr? x) `#'(lambda ,@(make-lambda (cadr x))))
-    (t (mapcar #'make-lambda x))))
-
-(defun %%macroexpand (x)
-  (if *macroexpand-hook*
-      (funcall *macroexpand-hook* x)
-      x))
+    ((function-expr? x) `#'(lambda ,@(make-cl-lambdas (cadr x))))
+    (t (mapcar #'make-cl-lambdas x))))
 
 (defun %eval (x)
-  (eval (macroexpand (make-lambda (%%macroexpand x)))))
+  (eval (macroexpand (make-cl-lambdas (%%macroexpand x)))))
 
 (defun read-file (pathname)
   (with-open-file (s pathname)
@@ -219,6 +227,11 @@
   (dolist (i (read-file pathname))
     (%eval i)))
 
+(defun %%macroexpand (x)
+  (if *macroexpand-hook*
+      (funcall *macroexpand-hook* x)
+      x))
+
 (defun group (x size)
   (cond
     ((not x) nil)
@@ -226,11 +239,7 @@
     (t (cons (subseq x 0 size)
              (group (nthcdr size x) size)))))
 
-(defmacro %%defmacro (name args &body body)
-  (print `(%%defmacro ,name ,args))
-  `(defmacro ,name ,args ,@body))
-
-(%%defmacro ? (&body body)
+(defmacro ? (&body body)
   (let* ((tests (group body 2))
          (end   (car (last tests))))
     (unless body
@@ -240,34 +249,34 @@
              (append (butlast tests) (list (cons t end)))
              tests))))
 
-(%%defmacro %set-atom-fun (x v) `(setf (symbol-function ',x) ,v))
+(defmacro %set-atom-fun (x v) `(setf (symbol-function ',x) ,v))
 
-(%%defmacro %defvar (name &optional (init nil))
+(defmacro %defvar (name &optional (init nil))
   (print `(%defvar ,name))
   `(progn
      (push ',name *variables*)
      (defvar ,name ,init)))
 
-(%%defmacro %defun (name args &body body)
+(defmacro %defun (name args &body body)
   (print `(%defun ,name ,args))
   `(progn
      (push ',name *defined-functions*)
      (defun ,name ,args ,@body)))
 
-(%%defmacro early-defun (name args &body body)
+(defmacro early-defun (name args &body body)
   `(%defun ,name ,args ,@body))
 
+;; CL only accepts &BODY keywords in macros.
+;; We turn tré macros into functions so this does the fixing.
 (defun convert-&body (x)
   (mapcar #'(lambda (x) (if (eq '&body x) '&rest x)) x))
 
-(%%defmacro %defmacro (name args &body body)
+(defmacro %defmacro (name args &body body)
   (print `(%defmacro ,name ,args))
   `(push (cons ',name #'(lambda ,(convert-&body args) ,@body)) *macros*))
 
-(%%defmacro functional (&rest x)
-  (print `(functional ,@x))
-  nil)
 
+;;;; The user package.
 
 (defpackage :tre (:use :tre-core))
 (in-package :tre)

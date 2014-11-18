@@ -1,5 +1,9 @@
 # Overview
 
+DO NOT TRY OUT TRÉ RIGHT NOW!
+
+It's broken until it's been moved on top of Common Lisp.
+
 This is tré, a metamorphic transpiler for a dialect of the Lisp
 family of programming languages.  It can generate C,
 ECMAScript/JavaScript, PHP and a dedicated bytecode.  Except for
