@@ -297,8 +297,9 @@
 
 (defun %load (pathname)
   (print `(%load ,pathname))
-  (with-open-file (s pathname)
-    (%load-r s)))
+  (dolist (i (with-open-file (s pathname)
+               (%load-r s)))
+    (%eval i)))
 
 
 ;;;; The user package.

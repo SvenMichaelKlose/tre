@@ -7,26 +7,20 @@
      ,@body))
 
 (defun peek-char (str)
-  (print 'peek)
-  (print
   (alet (cl-peek-char nil str nil 'eof)
     (unless (eq ! 'eof)
       !)))
-  )
 
 (defun read-char (str)
-  (print 'read)
-  (print
   (alet (cl-read-char str nil 'eof)
     (unless (eq ! 'eof)
       !)))
-  )
 
 (defmacro in? (obj &rest lst)
   `(or ,@(filter #'(lambda (x) `(eq ,obj ,x)) lst)))
 
 (defmacro in=? (obj &rest lst)
-  `(or ,@(filter #'(lambda (x) `(eql ,obj ,x)) lst)))
+  `(or ,@(filter #'(lambda (x) `(char= ,obj ,x)) lst)))
 
 (defmacro let-when (x expr &body body)
   `(let ((,x ,expr))
@@ -54,14 +48,14 @@
           body)))
 
 (defun list-string (x)
-  (apply #'concatenate 'string x))
+  (apply #'concatenate 'string (mapcar #'string x)))
 
 (defun whitespace? (x)
   (and (char< x (code-char 33))
        (char>= x (code-char 0))))
 
 (defun decimal-digit? (x)
-  (char <= x (code-char 0) (code-char 9)))
+  (char<= x (code-char 0) (code-char 9)))
 
 (defun %nondecimal-digit? (x start base)
   (<= (char-code x) start (+ start (- base 10))))
@@ -133,6 +127,10 @@
               (read-decimal-places str))
            0))))
 
+(defmacro with-stream-string (str x &body body)
+  `(let ((,str (make-string-input-stream ,x)))
+     ,@body))
+
 (defun token-is-quote? (x)
   (in? x 'quote 'backquote 'quasiquote 'quasiquote-splice 'accent-circonflex))
 
@@ -150,14 +148,12 @@
        (not (special-char? x))))
 
 (defun skip-comment (str)
-  (print 'skip-comment)
   (let-when c (read-char str)
 	(? (char= c (code-char 10))
 	   (skip-spaces str)
 	   (skip-comment str))))
 
 (defun skip-spaces (str)
-  (print 'skip-spaces)
  (let-when c (peek-char str)
    (when (char= #\; c)
      (skip-comment str))
@@ -247,24 +243,24 @@
 				              (#\'  'function)
 				              (#\|  (read-comment-block str))
 				              (t    (error "Invalid character after '#'."))))
-			        (-1	'eof)))
-		     pkg sym))))
+			        (-1	'eof))))
+		     pkg sym)))
 
 (defun read-slot-value (x)
   (? x
      (? (cdr x)
-        `(slot-value ,(read-slot-value (butlast x)) ',(make-symbol (car (last x))))
+        `(slot-value ,(read-slot-value (butlast x)) ',(intern (car (last x)) :tre))
         (? (string? (car x))
-           (make-symbol (car x))
+           (intern (car x) :tre)
            (car x)))))
 
 (defun read-symbol-or-slot-value (sym pkg)
   (alet (filter #'(lambda (_)
                     (and _ (list-string _)))
-                (split #\. sym))
+                (split #\. sym :test #'char=))
     (? (and (cdr !) (car !) (car (last !)))
        (read-slot-value !)
-       (alet (make-symbol (list-string sym))
+       (alet (intern (list-string sym) :tre)
          (?
            (not pkg)   !
            (eq t pkg)  (make-keyword !)
@@ -276,7 +272,7 @@
     (char      (code-char (read-char str)))
     (number    (with-stream-string s (list-string sym)
                  (read-number s)))
-    (hexnum    (read-hex str))
+    (hexnum    (error "Reading hexadecimals is not supported by the early reader."))
 	(function  `(function ,(read-expr str)))
     (symbol    (read-symbol-or-slot-value sym pkg))
 	(t (error "Syntax error: token ~A, sym ~A." token sym))))
@@ -292,11 +288,11 @@
             (square-bracket-open (cons 'square (read-cons-slot str)))
             (curly-bracket-open  (cons 'curly (read-cons-slot str)))
             (t (? (token-is-quote? token)
-                 (read-quote str token)
-                 (read-atom str token pkg sym))))
+                  (read-quote str token)
+                  (read-atom str token pkg sym))))
           (multiple-value-bind (token pkg sym) (read-token str)
             (? (eq 'dot token)
-               (let ((x                (read-expr str)))
+               (let ((x (read-expr str)))
                  (multiple-value-bind (token pkg sym)  (read-token str)
                    pkg sym
                    (or (%read-closing-bracket? token)
