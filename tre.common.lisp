@@ -112,7 +112,9 @@
 
 (define-core-package)
 
-(defpackage :tre (:use :tre-core))
+(defpackage :tre
+  (:use :tre-core)
+  (:export :%backquote))
 
 (in-package :tre-core)
 
@@ -284,10 +286,12 @@
       x))
 
 (defun %eval (x)
-  (eval (make-cl-lambdas (quasiquote-expand (%%macroexpand x)))))
+  (eval (print (backquote-expand (print (make-cl-lambdas (quasiquote-expand (%%macroexpand x))))))))
 
 ;;; Reader
 
+(load "tree-walk.lisp")
+(load "backquote-expand.lisp")
 (load "cl-read.lisp")
 
 ;;; Loader
