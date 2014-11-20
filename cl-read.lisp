@@ -54,7 +54,7 @@
        (char>= x (code-char 0))))
 
 (defun decimal-digit? (x)
-  (char<= x (code-char 0) (code-char 9)))
+  (char<= #\0 x #\9))
 
 (defun %nondecimal-digit? (x start base)
   (<= (char-code x) start (+ start (- base 10))))
@@ -80,7 +80,7 @@
             (list seq)))))
 
 (defun digit-number (x)
-  (- x (char-code #\0)))
+  (- (char-code x) (char-code #\0)))
 
 (defmacro awhen (x &rest body)
   `(alet ,x
@@ -112,7 +112,7 @@
 
 (defun read-integer (&optional (str *standard-input*))
   (and (peek-digit str)
-     (read-integer-0 str 0)))
+       (read-integer-0 str 0)))
 
 (defun read-number (&optional (str *standard-input*))
   (* (? (char= #\- (peek-char str))
@@ -122,8 +122,8 @@
         1)
      (+ (read-integer str)
         (or (and (peek-dot str)
-              (read-char str)
-              (read-decimal-places str))
+                 (read-char str)
+                 (read-decimal-places str))
            0))))
 
 (defmacro with-stream-string (str x &body body)
@@ -131,7 +131,7 @@
      ,@body))
 
 (defun token-is-quote? (x)
-  (in? x 'quote 'backquote 'quasiquote 'quasiquote-splice 'accent-circonflex))
+  (in? x 'quote 'backquote 'tre:quasiquote 'tre:quasiquote-splice 'accent-circonflex))
 
 (defun %read-closing-bracket? (x)
   (in? x 'bracket-close 'square-bracket-close 'curly-bracket-close))
@@ -234,8 +234,9 @@
 			        (#\^	 'accent-circonflex)
 			        (#\"	 'dblquote)
 			        (#\,	 (? (char= #\@ (peek-char str))
-				                (and (read-char str) 'quasiquote-splice)
-				                'quasiquote))
+				                (and (read-char str)
+                                     'tre:quasiquote-splice)
+				                'tre:quasiquote))
 			        (#\#	(case (read-char str)
 				              (#\\  'char)
 				              (#\x  'hexnum)

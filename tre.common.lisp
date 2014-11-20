@@ -114,7 +114,7 @@
 
 (defpackage :tre
   (:use :tre-core)
-  (:export :%backquote))
+  (:export :%backquote :quasiquote :quasiquote-splice))
 
 (in-package :tre-core)
 
@@ -286,7 +286,7 @@
       x))
 
 (defun %eval (x)
-  (eval (print (backquote-expand (print (make-cl-lambdas (quasiquote-expand (%%macroexpand x))))))))
+  (eval (backquote-expand (make-cl-lambdas (%%macroexpand x)))))
 
 ;;; Reader
 

@@ -15,16 +15,16 @@
 
 (defun quasiquote? (x)
   (and (consp x)
-       (eq 'quasiquote (car x))))
+       (eq 'tre:quasiquote (car x))))
 
 (defun quasiquote-splice? (x)
   (and (consp x)
-       (eq 'quasiquote-splice (car x))))
+       (eq 'tre:quasiquote-splice (car x))))
 
 (defun any-quasiquote? (x)
   (and (consp x)
-       (or (quasiquote (car x))
-           (quasiquote-splice (car x)))))
+       (or (quasiquote? (car x))
+           (quasiquote-splice? (car x)))))
 
 (defun constant-literal? (x)
   (or (not x)
