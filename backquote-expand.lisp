@@ -11,7 +11,7 @@
 
 (defun backquote? (x)
   (and (consp x)
-       (eq 'backquote (car x))))
+       (eq 'tre:backquote (car x))))
 
 (defun quasiquote? (x)
   (and (consp x)

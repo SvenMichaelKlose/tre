@@ -131,7 +131,7 @@
      ,@body))
 
 (defun token-is-quote? (x)
-  (in? x 'quote 'backquote 'tre:quasiquote 'tre:quasiquote-splice 'accent-circonflex))
+  (in? x 'quote 'tre:backquote 'tre:quasiquote 'tre:quasiquote-splice 'accent-circonflex))
 
 (defun %read-closing-bracket? (x)
   (in? x 'bracket-close 'square-bracket-close 'curly-bracket-close))
@@ -230,7 +230,7 @@
 			        (#\{	 'curly-bracket-open)
 			        (#\}	 'curly-bracket-close)
 			        (#\'	 'quote)
-			        (#\`	 'backquote)
+			        (#\`	 'tre:backquote)
 			        (#\^	 'accent-circonflex)
 			        (#\"	 'dblquote)
 			        (#\,	 (? (char= #\@ (peek-char str))
