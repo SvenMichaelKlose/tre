@@ -22,7 +22,7 @@
 (defconstant +direct-imports+
     '(nil t not eq eql atom setq quote
       cons car cdr rplaca rplacd
-      apply eval
+      apply
       progn block
       * / < >
       mod sqrt sin cos atan exp round floor
@@ -76,7 +76,7 @@
 ;;; Things we have to implement ourselves.
 (defconstant +implementations+
     '(%set-atom-fun cpr rplacp %load atan2 pow quit string-concat %load
-      %defun early-defun %defvar %defmacro
+      %eval %defun early-defun %defvar %defmacro
       ? functional
       builtin? macro?
       %%macroexpand %%macrocall %%%macro?
@@ -114,7 +114,7 @@
 
 (defpackage :tre
   (:use :tre-core)
-  (:export :%backquote :quasiquote :quasiquote-splice))
+  (:export :%backquote :backquote :quasiquote :quasiquote-splice))
 
 (in-package :tre-core)
 
@@ -286,7 +286,7 @@
       x))
 
 (defun %eval (x)
-  (eval (backquote-expand (make-cl-lambdas (%%macroexpand x)))))
+  (eval (make-cl-lambdas (car (backquote-expand (list x))))))
 
 ;;; Reader
 
@@ -305,14 +305,14 @@
   (print `(%load ,pathname))
   (dolist (i (with-open-file (s pathname)
                (%load-r s)))
-    (%eval i)))
+    (%eval (quasiquote-expand (%%macroexpand i)))))
 
 
 ;;;; The user package.
 
 (in-package :tre)
 
-(defun macroexpand (x)
-  (%%macroexpand x))
+(defun eval (x) (%eval x))
+(defun macroexpand (x) (%%macroexpand x))
 
 (%load "environment/env-load-cl.lisp")
