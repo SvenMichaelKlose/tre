@@ -73,7 +73,7 @@ CFLAGS="-pipe $C_DIALECT_FLAGS $GNU_LIBC_FLAGS $BUILD_MACHINE_INFO $ARGS"
 DEBUGOPTS="-O0 -g"
 BUILDOPTS="-O2 -march=native"
 CRUNSHOPTS="-O2 -march=native -fwhole-program"
-CRUNSHFLAGS="-DTRE_COMPILED_CRUNSHED -Iinterpreter -Wno-unused-parameter"
+CRUNSHFLAGS="-DTRE_COMPILED_CRUNSHED -Ienvironment/transpiler/targets/c/native -Wno-unused-parameter"
 
 LIBFLAGS="-lm -lffi -lrt"
 
@@ -83,7 +83,7 @@ fi
 
 COMPILED_ENV=${COMPILED_ENV:-"_compiled-env.c"}
 
-if [ -f interpreter/$COMPILED_ENV ]; then
+if [ -f environment/transpiler/targets/c/native/$COMPILED_ENV ]; then
 	FILES="$FILES $COMPILED_ENV";
 	CFLAGS="$CFLAGS -DTRE_HAVE_COMPILED_ENV";
 fi
@@ -96,8 +96,8 @@ basic_clean ()
 {
 	echo "Cleaning..."
 	rm -vrf obj compiled
-	rm -vf *.core obj compiled interpreter/$COMPILED_ENV tre image bytecode-image $CRUNSHTMP __alien.tmp files.lisp
-    rm -vf interpreter/_revision.h environment/_current-version
+	rm -vf *.core obj compiled environment/transpiler/targets/c/native/$COMPILED_ENV tre image bytecode-image $CRUNSHTMP __alien.tmp files.lisp
+    rm -vf environment/transpiler/targets/c/native/_revision.h environment/_current-version
     rm -vf examples/js/hello-world.js
     rm -vf gmon.out tmp.gcda profile.lisp
 }
@@ -122,10 +122,10 @@ make_revision_header ()
     REV=`git log --pretty=oneline | wc -l` || exit 1
     REV=`expr 3290 + $REV`
     echo $REV >environment/_current-version
-    echo "#ifndef TRE_REVISION" >interpreter/_revision.h
-    echo "#define TRE_REVISION $REV" >>interpreter/_revision.h
-    echo "#define TRE_REVISION_STRING \"$REV\"" >>interpreter/_revision.h
-    echo "#endif" >>interpreter/_revision.h
+    echo "#ifndef TRE_REVISION" >environment/transpiler/targets/c/native/_revision.h
+    echo "#define TRE_REVISION $REV" >>environment/transpiler/targets/c/native/_revision.h
+    echo "#define TRE_REVISION_STRING \"$REV\"" >>environment/transpiler/targets/c/native/_revision.h
+    echo "#endif" >>environment/transpiler/targets/c/native/_revision.h
 }
 
 standard_compile ()
@@ -134,7 +134,7 @@ standard_compile ()
 	mkdir -p obj
 	for f in $FILES; do
 		echo "Compiling $f"
-		$CC $CFLAGS $COPTS -c -o obj/$f.o interpreter/$f || exit 1
+		$CC $CFLAGS $COPTS -c -o obj/$f.o environment/transpiler/targets/c/native/$f || exit 1
 	done
 }
 
@@ -146,7 +146,7 @@ crunsh_compile ()
 	echo -n "Concatenating sources:"
 	for f in $FILES; do
 		echo -n " $f"
-		cat interpreter/$f >>$CRUNSHTMP
+		cat environment/transpiler/targets/c/native/$f >>$CRUNSHTMP
 	done
 	echo
 	echo "Compiling..."
@@ -239,9 +239,9 @@ boot)
 pgo)
     echo "Profile-guided optimization..."
 	./make.sh crunsh -pg -fprofile-generate $ARGS || exit 1
-    mv interpreter/_compiled-env.c _ce.c
+    mv environment/transpiler/targets/c/native/_compiled-env.c _ce.c
 	./make.sh environment $ARGS || exit 1
-    mv _ce.c interpreter/_compiled-env.c
+    mv _ce.c environment/transpiler/targets/c/native/_compiled-env.c
 	./make.sh crunsh -fprofile-use $ARGS || exit 1
 	;;
 
@@ -349,14 +349,14 @@ backup)
     echo "Making backup..."
     mkdir -p backup
     cp -v tre backup
-    cp -v interpreter/_compiled-env.c backup
+    cp -v environment/transpiler/targets/c/native/_compiled-env.c backup
     cp -v image backup
     echo "Backed up to backup/. Use 'restore' on occasion."
     ;;
 
 restore)
     cp -v backup/tre .
-    cp -v backup/_compiled-env.c interpreter
+    cp -v backup/_compiled-env.c environment/transpiler/targets/c/native
     cp -v backup/image .
     ;;
 
