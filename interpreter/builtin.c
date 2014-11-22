@@ -69,42 +69,6 @@ trebuiltin_quit (treptr args)
 }
 
 treptr
-trebuiltin_print (treptr expr)
-{
-    expr = trearg_get (expr);
-    treprint (expr);
-    return expr;
-}
-
-treptr
-trebuiltin_load (treptr expr)
-{
-    trestream  * stream;
-    treptr     pathname = trearg_get (expr);
-    char       fname[1024];
-
-	pathname = trearg_typed (1, TRETYPE_STRING, pathname, "LOAD");
-
-    trestring_copy (fname, pathname);
-
-#ifdef TRE_VERBOSE_LOAD
-    printf ("(load \"%s\")\n", fname);
-#endif
-
-    stream = treiostd_open_file (fname);
-    if (stream == NULL) {
-        treerror_norecover (treptr_invalid, "Couldn't load file '%s'.", fname);
-		return NIL;
-	}
-
-    treiostd_divert (stream);
-    tremain ();
-    treiostd_undivert ();
-
-    return NIL;
-}
-
-treptr
 trebuiltin_gc (treptr no_args)
 {
     (void) no_args;
@@ -354,12 +318,6 @@ evalfunc_t eval_xlat_builtin[] = {
 
     NULL
 };
-
-treptr
-trebuiltin (treptr func, treptr args)
-{
-    return eval_xlat_function (eval_xlat_builtin, func, args, TRUE);
-}
 
 void
 trebuiltin_init ()

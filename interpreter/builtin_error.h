@@ -6,7 +6,6 @@
 #define TRE_BUILTIN_ERROR_H
 
 extern treptr treerror_error (treptr);
-extern treptr treerror_builtin_error (treptr);
 extern treptr treerror_builtin_strerror (treptr);
 
 #endif	/* #ifndef TRE_BUILTIN_ERROR_H */

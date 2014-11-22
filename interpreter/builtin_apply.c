@@ -61,9 +61,3 @@ trebuiltin_funcall (treptr list)
                treerror (list, "Arguments expected.") :
                funcall (CAR(list), CDR(list));
 }
-
-treptr
-trebuiltin_eval (treptr list)
-{
-    return eval (trearg_get (list));
-}

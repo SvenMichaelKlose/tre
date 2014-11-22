@@ -6,7 +6,6 @@ ARGS="$2 $3 $4 $5 $6 $7 $8 $9"
 FILES="
     alien.c
     alloc.c
-    argument.c
     array.c
     atom.c
     backtrace.c
@@ -16,11 +15,9 @@ FILES="
 	builtin_arith.c
     builtin_array.c
     builtin_atom.c
-	builtin_debug.c
 	builtin_error.c
 	builtin_fs.c
 	builtin_function.c
-	builtin_image.c
 	builtin_list.c
 	builtin_memory.c
 	builtin_net.c
@@ -34,10 +31,7 @@ FILES="
 
 	bytecode.c
 	cons.c
-	debug.c
-	dot.c
 	error.c
-	eval.c
 	exception.c
 	funcall.c
 	function.c
@@ -45,15 +39,10 @@ FILES="
 	image.c
 	linenoise.c
 	list.c
-	macro.c
 	main.c
 	number.c
-	print.c
 	ptr.c
-	quasiquote.c
 	queue.c
-	read.c
-	special.c
 	special_exception.c
 	stream.c
 	stream_file.c

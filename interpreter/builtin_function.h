@@ -13,12 +13,4 @@ extern treptr trefunction_source (treptr);
 extern treptr trefunction_set_source (treptr, treptr);
 extern treptr trefunction_make_function (treptr source);
 
-extern treptr trefunction_builtin_function_name (treptr);
-extern treptr trefunction_builtin_function_native (treptr);
-extern treptr trefunction_builtin_function_bytecode (treptr);
-extern treptr trefunction_builtin_set_bytecode (treptr);
-extern treptr trefunction_builtin_function_source (treptr);
-extern treptr trefunction_builtin_set_source (treptr);
-extern treptr trefunction_builtin_make_function (treptr);
-
 #endif	/* #ifndef TRE_BUILTIN_FUNCTION_H */

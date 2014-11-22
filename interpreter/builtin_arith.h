@@ -22,28 +22,6 @@ extern treptr trenumber_equal (treptr, treptr);
 extern treptr trenumber_lessp (treptr, treptr);
 extern treptr trenumber_greaterp (treptr, treptr);
 
-extern treptr trenumber_builtin_plus (treptr);
-extern treptr trenumber_builtin_character_plus (treptr);
-extern treptr trenumber_builtin_difference (treptr);
-extern treptr trenumber_builtin_character_difference (treptr);
-extern treptr trenumber_builtin_times (treptr);
-extern treptr trenumber_builtin_quotient (treptr);
-extern treptr trenumber_builtin_mod (treptr);
-extern treptr trenumber_builtin_logxor (treptr);
-extern treptr trenumber_builtin_sqrt (treptr);
-extern treptr trenumber_builtin_sin (treptr);
-extern treptr trenumber_builtin_cos (treptr);
-extern treptr trenumber_builtin_atan (treptr);
-extern treptr trenumber_builtin_atan2 (treptr);
-extern treptr trenumber_builtin_random (treptr);
-extern treptr trenumber_builtin_exp (treptr);
-extern treptr trenumber_builtin_pow (treptr);
-extern treptr trenumber_builtin_round (treptr);
-extern treptr trenumber_builtin_floor (treptr);
-extern treptr trenumber_builtin_number_equal (treptr);
-extern treptr trenumber_builtin_lessp (treptr);
-extern treptr trenumber_builtin_greaterp (treptr);
-
 extern void   trebuiltin_arith_init (void);
 
 #endif	/* #ifndef TRE_BUILTIN_ARITH_H */

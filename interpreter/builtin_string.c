@@ -29,12 +29,6 @@ trestring_p (treptr object)
 }
 
 treptr
-trestring_builtin_stringp (treptr list)
-{
-    return trestring_p (trearg_get (list));
-}
-
-treptr
 trestring_builtin_make (treptr list)
 {
     char *  str;
@@ -198,10 +192,4 @@ trestring_symbol_name (treptr symbol)
     if (an)
         strcpy (buf, an);
     return trestring_get (buf);
-}
-
-treptr
-trestring_builtin_symbol_name (treptr list)
-{
-    return trestring_symbol_name (trearg_get (list));
 }

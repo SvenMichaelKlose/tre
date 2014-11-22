@@ -30,21 +30,6 @@ tresymbol_make (treptr name, treptr package)
 }
 
 treptr
-tresymbol_builtin_make_symbol (treptr args)
-{
-	size_t num_args = list_length (args);
-	treptr name;
-	treptr package;
-
-	if (num_args == 0 || num_args > 2)
-		args = treerror (NIL, "Name and optional package required.");
-    name = trearg_typed (1, TRETYPE_STRING, CAR(args), "MAKE-SYMBOL");
-	package = num_args == 2 ? CADR(args) : TRECONTEXT_PACKAGE();
-
-    return tresymbol_make (name, package);
-}
-
-treptr
 tresymbol_builtin_make_package (treptr args)
 {
 	treptr name = trearg_typed (1, TRETYPE_STRING, trearg_get (args), "MAKE-PACKAGE");
@@ -61,12 +46,6 @@ tresymbol_value (treptr symbol)
 }
 
 treptr
-tresymbol_builtin_symbol_value (treptr list)
-{
-    return tresymbol_value (trearg_get (list));
-}
-
-treptr
 tresymbol_set_value (treptr value, treptr symbol)
 {
     ASSERT_SYMBOL(symbol);
@@ -74,24 +53,10 @@ tresymbol_set_value (treptr value, treptr symbol)
 }
 
 treptr
-tresymbol_builtin_usetf_symbol_value (treptr list)
-{
-    TRELIST_DEFREGS();
-    trearg_get2 (&car, &cdr, list);
-    return tresymbol_set_value (car, cdr);
-}
-
-treptr
 tresymbol_function (treptr symbol)
 {
     ASSERT_SYMBOL(symbol);
     return SYMBOL_FUNCTION(symbol);
-}
-
-treptr
-tresymbol_builtin_symbol_function (treptr list)
-{
-    return tresymbol_function (trearg_get (list));
 }
 
 treptr
@@ -104,30 +69,8 @@ tresymbol_set_function (treptr function, treptr symbol)
 }
 
 treptr
-tresymbol_builtin_usetf_symbol_function (treptr list)
-{
-    TRELIST_DEFREGS();
-    trearg_get2 (&car, &cdr, list);
-    return tresymbol_set_function (car, cdr);
-}
-
-treptr
 tresymbol_package (treptr symbol)
 {
     ASSERT_SYMBOL(symbol);
     return SYMBOL_PACKAGE(symbol);
-}
-
-treptr
-tresymbol_builtin_symbol_package (treptr list)
-{
-    return tresymbol_package (trearg_get (list));
-}
-
-treptr
-tresymbol_builtin_set_atom_fun (treptr list)
-{
-    TRELIST_DEFREGS();
-    trearg_get2 (&car, &cdr, list);
-    return tresymbol_set_function (eval (cdr), car);
 }

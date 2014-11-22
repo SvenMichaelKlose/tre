@@ -24,8 +24,6 @@ typedef int bool;
 #define TRE_NO_BACKTRACE          /* Don't backtrace. */
 #endif
 
-#define INTERPRETER
-
 #define TRE_HISTORY_SIZE            1000
 
 #ifndef TRE_QUIET_LOAD

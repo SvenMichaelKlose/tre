@@ -95,12 +95,6 @@ trearray_p (treptr x)
 }
 
 treptr
-trearray_builtin_p (treptr x)
-{
-    return trearray_p (trearg_get (x));
-}
-
-treptr
 trearray_aref (treptr array, treptr indexes)
 {
     treptr * elts = trearray_get_elt (array, indexes);
@@ -111,12 +105,6 @@ trearray_aref (treptr array, treptr indexes)
 }
 
 treptr
-trearray_builtin_aref (treptr x)
-{
-    return trearray_aref (CAR(x), CDR(x));
-}
-
-treptr
 trearray_set_aref (treptr val, treptr array, treptr indexes)
 {
     treptr *  elts = trearray_get_elt (array, indexes);
@@ -124,10 +112,4 @@ trearray_set_aref (treptr val, treptr array, treptr indexes)
     if (!elts)
         return treerror (treptr_invalid, "Index error.");
     return *elts = val;
-}
-
-treptr
-trearray_builtin_set_aref (treptr x)
-{
-    return trearray_set_aref (CAR(x), CADR(x), CDDR(x));
 }

@@ -24,12 +24,6 @@ treerror_error (treptr message)
 }
 
 treptr
-treerror_builtin_error (treptr x)
-{
-    return treerror_error (trearg_get (x));
-}
-
-treptr
 treerror_builtin_strerror (treptr x)
 {
     treptr err = trearg_get (x);
