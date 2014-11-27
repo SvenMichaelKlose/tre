@@ -269,7 +269,7 @@
 (defun read-atom (str token pkg sym)
   (case token
     (dblquote  (read-string str))
-    (char      (code-char (read-char str)))
+    (char      (read-char str))
     (number    (with-stream-string s (list-string sym)
                  (read-number s)))
     (hexnum    (error "Reading hexadecimals is not supported by the early reader."))
