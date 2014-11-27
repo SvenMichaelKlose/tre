@@ -29,7 +29,7 @@
       * / < >
       mod sqrt sin cos atan exp round floor
       last copy-list nthcdr nth member mapcar elt length make-string
-      make-array aref code-char char-code integer
+      make-array aref code-char char-code
       make-package
       logxor bit-and
       print
@@ -77,7 +77,7 @@
     '(%set-atom-fun cpr rplacp %load atan2 pow quit string-concat %load
       %eval %defun early-defun %defvar %defmacro %string %make-symbol
       %symbol-name %symbol-value %symbol-function %symbol-package
-      %number? ==
+      %number? == %integer
       ? functional
       builtin? macro?
       %%macroexpand %%macrocall %%%macro?
@@ -265,6 +265,9 @@
         (char-code b)
         b)))
 
+(defun %integer (x)
+  (floor x))
+
 (defun %%macroexpand (x)
   (? *macroexpand-hook*
       (funcall *macroexpand-hook* x)
@@ -361,5 +364,6 @@
 (defun symbol-function (x) (%symbol-function x))
 (defun symbol-package (x) (%symbol-package x))
 (defun number? (x) (%number? x))
+(defun integer (x) (%integer x))
 
 (%load "environment/env-load-cl.lisp")
