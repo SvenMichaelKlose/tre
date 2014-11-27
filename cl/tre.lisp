@@ -35,7 +35,8 @@
       defvar
       defun
       identity list copy-list
-      &rest &body &optional &key))
+      &rest &body &optional &key
+      labels))
 
 ;;; Functions we import from CL-USER, wrap and export to package TRE.
 (defconstant +renamed-imports+
