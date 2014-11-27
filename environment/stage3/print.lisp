@@ -107,7 +107,7 @@
     (princ (conv (symbol-name x)) str)
     (awhen (symbol-package x)
       (princ #\: str)
-      (princ (conv (symbol-name !)) str))))
+      (princ (conv (package-name !)) str))))
 
 (defun %print-array (x str info)
   (princ "#" str)
