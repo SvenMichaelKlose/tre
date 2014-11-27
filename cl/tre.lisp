@@ -78,7 +78,8 @@
       href =-href
       ? functional
       builtin? macro?
-      %%macroexpand %%macrocall %%%macro?))
+      %%macroexpand %%macrocall %%%macro?
+      %princ %force-output))
 
 (defun make-keyword (x)
   (values (intern (symbol-name x) "KEYWORD")))
@@ -287,8 +288,7 @@
 (defun %< (&rest x) (apply #'< (chars-to-numbers x)))
 (defun %> (&rest x) (apply #'> (chars-to-numbers x)))
 
-(defun string== (a b)
-  (string= a b))
+(defun string== (a b) (string= a b))
 
 (defun list-string (x)
   (apply #'concatenate 'string (mapcar #'(lambda (x)
@@ -297,8 +297,10 @@
                                                       x)))
                                        x)))
 
-(defun =-aref (v x i)
-  (setf (aref x i) v))
+(defun =-aref (v x i) (setf (aref x i) v))
+
+(defun %princ (x stream) (princ x stream))
+(defun %force-output (stream) (force-output stream))
 
 (defmacro %set-atom-fun (x v) `(setf (symbol-function ',x) ,v))
 
