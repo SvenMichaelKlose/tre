@@ -7,6 +7,8 @@
 ;;;;; The interpreter is spoiling everthing. Don't try to use
 ;;;;; tré before this thing here is working.
 
+(proclaim '(optimize (debug 3)))
+
 
 ;;;; Initialization package
 
@@ -28,8 +30,7 @@
       mod sqrt sin cos atan exp round floor
       last copy-list nthcdr nth member mapcar elt length make-string
       make-array aref code-char char-code integer
-      make-symbol make-package
-      symbol-name symbol-value symbol-function symbol-package
+      make-package
       logxor bit-and
       print
       defvar
@@ -76,7 +77,8 @@
 ;;; Things we have to implement ourselves.
 (defconstant +implementations+
     '(%set-atom-fun cpr rplacp %load atan2 pow quit string-concat %load
-      %eval %defun early-defun %defvar %defmacro %string
+      %eval %defun early-defun %defvar %defmacro %string %make-symbol
+      %symbol-name %symbol-value %symbol-function %symbol-package
       ? functional
       builtin? macro?
       %%macroexpand %%macrocall %%%macro?
@@ -235,6 +237,22 @@
      (format nil "~A" x)
      (string x)))
 
+(defun %make-symbol (x)
+  (intern x "TRE"))
+
+(defun %symbol-value (x)
+  (? (boundp x)
+     (symbol-value x)
+     x))
+
+(defun %symbol-function (x)
+  (? (boundp x)
+     (symbol-function x)))
+
+(defun %symbol-package (x)
+  (? (boundp x)
+     (symbol-package x)))
+
 (defun %%macroexpand (x)
   (? *macroexpand-hook*
       (funcall *macroexpand-hook* x)
@@ -326,5 +344,9 @@
 (defun eval (x) (%eval x))
 (defun macroexpand (x) (%%macroexpand x))
 (defun string (x) (%string x))
+(defun make-symbol (x) (%make-symbol x))
+(defun symbol-value (x) (%symbol-value x))
+(defun symbol-function (x) (%symbol-function x))
+(defun symbol-package (x) (%symbol-package x))
 
 (%load "environment/env-load-cl.lisp")
