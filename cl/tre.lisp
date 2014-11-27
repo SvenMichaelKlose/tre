@@ -72,6 +72,7 @@
       %symbol-name %symbol-value %symbol-function %symbol-package
       %number? == %integer %+ %-
       string==
+      =-aref
       ? functional
       builtin? macro?
       %%macroexpand %%macrocall %%%macro?))
@@ -277,6 +278,9 @@
 
 (defun string== (a b)
   (string-equal a b))
+
+(defun =-aref (v x i)
+  (setf (aref x i) v))
 
 (defun %%macroexpand (x)
   (? *macroexpand-hook*
