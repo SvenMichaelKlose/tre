@@ -30,7 +30,7 @@
       mod sqrt sin cos atan exp round floor
       last copy-list nthcdr nth mapcar elt length make-string
       make-array aref code-char char-code
-      make-package
+      symbol-name make-package
       logxor bit-and
       print
       defvar
