@@ -29,15 +29,14 @@
       mod sqrt sin cos atan exp round floor
       last copy-list nthcdr nth mapcar elt length make-string
       make-array aref code-char char-code
-      symbol-name make-package
+      symbol-name make-package package-name
       logxor bit-and
       print
       defvar
       defun
       identity list copy-list
       &rest &body &optional &key
-      labels
-      make-hash-table))
+      labels))
 
 ;;; Functions we import from CL-USER, wrap and export to package TRE.
 (defconstant +renamed-imports+
@@ -75,7 +74,7 @@
       %number? == %integer %+ %- %* %/ %< %>
       string== list-string
       =-aref
-      href =-href
+      %make-hash-table href =-href
       ? functional
       builtin? macro?
       %%macroexpand %%macrocall %%%macro?
@@ -149,6 +148,23 @@
 
 ;;; Implementations.
 
+(defun group (x size)
+  (cond
+    ((not x) nil)
+    ((< (length x) size) (list x))
+    (t (cons (subseq x 0 size)
+             (group (nthcdr size x) size)))))
+
+(defmacro ? (&body body)
+  (let* ((tests (group body 2))
+         (end   (car (last tests))))
+    (unless body
+      (error "Body is missing."))
+    `(cond
+       ,@(if (= 1 (length end))
+             (append (butlast tests) (list (cons t end)))
+             tests))))
+
 (defun %not (&rest x) (every #'not x))
 
 (defun cpr (x) x nil)
@@ -158,6 +174,11 @@
 (defun macro? (x) (rassoc x *macros* :test #'eq))
 
 (defun =-aref (v x &rest indexes) v x (apply #'aref x indexes))
+
+(defun %make-hash-table (&key (test #'eql))
+  (make-hash-table :test (? (eq test #'==)
+                            #'eql
+                            test)))
 
 (defun href (x i) (gethash i x))
 (defun =-href (x i) (setf (gethash i x) v))
@@ -220,23 +241,6 @@
 (defun quit (x) x (error "Not implemented."))
 (defun %nconc (&rest x) x (apply #'nconc x))
 (defun string-concat (&rest x) x (apply #'concatenate 'string x))
-
-(defun group (x size)
-  (cond
-    ((not x) nil)
-    ((< (length x) size) (list x))
-    (t (cons (subseq x 0 size)
-             (group (nthcdr size x) size)))))
-
-(defmacro ? (&body body)
-  (let* ((tests (group body 2))
-         (end   (car (last tests))))
-    (unless body
-      (error "Body is missing."))
-    `(cond
-       ,@(if (= 1 (length end))
-             (append (butlast tests) (list (cons t end)))
-             tests))))
 
 (defun %string (x)
   (? (numberp x)
@@ -416,5 +420,6 @@
 (defun < (&rest x) (apply #'%< x))
 (defun > (&rest x) (apply #'%> x))
 (defun filter (fun x) (mapcar fun x))
+(defun make-hash-table (&key (test #'eql)) (%make-hash-table :test test))
 
 (%load "environment/env-load-cl.lisp")
