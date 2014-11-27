@@ -26,7 +26,7 @@
       progn block
       * / < >
       mod sqrt sin cos atan exp round floor
-      last copy-list nthcdr nth member mapcar elt length make-string string
+      last copy-list nthcdr nth member mapcar elt length make-string
       make-array aref code-char char-code integer
       make-symbol make-package
       symbol-name symbol-value symbol-function symbol-package
@@ -76,7 +76,7 @@
 ;;; Things we have to implement ourselves.
 (defconstant +implementations+
     '(%set-atom-fun cpr rplacp %load atan2 pow quit string-concat %load
-      %eval %defun early-defun %defvar %defmacro
+      %eval %defun early-defun %defvar %defmacro %string
       ? functional
       builtin? macro?
       %%macroexpand %%macrocall %%%macro?
@@ -230,6 +230,11 @@
              (append (butlast tests) (list (cons t end)))
              tests))))
 
+(defun %string (x)
+  (? (number? x)
+     (format nix "~A" x)
+     (string x)))
+
 (defun %%macroexpand (x)
   (? *macroexpand-hook*
       (funcall *macroexpand-hook* x)
@@ -320,5 +325,6 @@
 
 (defun eval (x) (%eval x))
 (defun macroexpand (x) (%%macroexpand x))
+(defun string (x) (%string x))
 
 (%load "environment/env-load-cl.lisp")
