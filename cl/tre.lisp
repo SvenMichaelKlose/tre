@@ -108,7 +108,8 @@
 
 (defpackage :tre
   (:use :tre-core)
-  (:export :%backquote :backquote :quasiquote :quasiquote-splice :square :curly))
+  (:export :%backquote :backquote :quasiquote :quasiquote-splice
+           :square :curly :accent-circonflex))
 
 (in-package :tre-core)
 
