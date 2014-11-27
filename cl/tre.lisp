@@ -72,7 +72,7 @@
     '(*universe* *variables* *defined-functions*
       *environment-path* *environment-filenames*
       *macroexpand-hook* *quasiquoteexpand-hook*
-      *default-listprop*))
+      *default-listprop* *keyword-package*))
 
 ;;; Things we have to implement ourselves.
 (defconstant +implementations+
@@ -140,6 +140,7 @@
 (defvar *environment-filenames* nil)
 (defvar *quasiquoteexpand-hook* nil)
 (defvar *default-listprop* nil)
+(defvar *keyword-package* (find-package "KEYWORD"))
 (defvar *macroexpand-hook* nil)
 
 (defvar *macros* nil)
