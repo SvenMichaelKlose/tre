@@ -28,7 +28,7 @@
       progn block return return-from
       * / < >
       mod sqrt sin cos atan exp round floor
-      last copy-list nthcdr nth member mapcar elt length make-string
+      last copy-list nthcdr nth mapcar elt length make-string
       make-array aref code-char char-code
       make-package
       logxor bit-and
