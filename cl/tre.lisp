@@ -178,7 +178,7 @@
                             test)))
 
 (defun href (x i) (gethash i x))
-(defun =-href (x i) (setf (gethash i x) v))
+(defun =-href (v x i) (setf (gethash i x) v))
 
 (defun file-exists? (pathname) pathname (error "Not implemented."))
 (defun %fopen (pathname access-mode) pathname access-mode (error "Not implemented."))
