@@ -22,7 +22,7 @@
 
 ;;; Symbols directly imported from package CL-USER.
 (defconstant +direct-imports+
-    '(nil t not eq eql atom setq quote
+    '(nil t eq eql atom setq quote
       cons car cdr rplaca rplacd
       apply function
       progn block return return-from tagbody go
@@ -66,7 +66,7 @@
 
 ;;; Things we have to implement ourselves.
 (defconstant +implementations+
-    '(%set-atom-fun cpr rplacp %load atan2 pow quit string-concat %load
+    '(%set-atom-fun %not cpr rplacp %load atan2 pow quit string-concat %load
       %eval %defun early-defun %defvar %defmacro %string %make-symbol
       %symbol-name %symbol-value %symbol-function %symbol-package
       %number? == %integer %+ %- %* %/ %< %>
@@ -141,6 +141,8 @@
 (defvar *function-sources* (make-hash-table :test #'eq))
 
 ;;; Implementations.
+
+(defun %not (&rest x) (every #'not x))
 
 (defun cpr (x) x nil)
 (defun rplacp (v x) v x)
@@ -380,6 +382,7 @@
 (defun eval (x) (%eval x))
 (defun macroexpand (x) (%%macroexpand x))
 (defun string (x) (%string x))
+(defun not (&rest x) (apply #'%not x))
 (defun make-symbol (x) (%make-symbol x))
 (defun symbol-value (x) (%symbol-value x))
 (defun symbol-function (x) (%symbol-function x))
