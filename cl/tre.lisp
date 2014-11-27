@@ -338,13 +338,13 @@
        (eq 'function (car x))
        (not (atom (cadr x)))))
 
-(defun make-cl-lambdas (x)
+(defun make-lambdas (x)
   (cond
-    ((atom x) x)
-    ((and (function-expr? (car x)) `(labels ((~ja ,@(make-cl-lambdas (cadar x))))
-                                      (~ja ,@(cdr x)))))
-    ((function-expr? x) `#'(lambda ,@(make-cl-lambdas (cadr x))))
-    (t (mapcar #'make-cl-lambdas x))))
+    ((atom x)                  x)
+    ((function-expr? (car x))  `(labels ((~ja ,@(make-lambdas (cadar x))))
+                                  (~ja ,@(make-lambdas (cdr x)))))
+    ((function-expr? x)        `#'(lambda ,@(make-lambdas (cadr x))))
+    (t (mapcar #'make-lambdas x))))
 
 (defun quasiquote-expand (x)
   (if *quasiquoteexpand-hook*
@@ -352,7 +352,7 @@
       x))
 
 (defun %eval (x)
-  (eval (make-cl-lambdas (car (backquote-expand (list x))))))
+  (eval (make-lambdas (car (backquote-expand (list x))))))
 
 
 ;;; Loader
