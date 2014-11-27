@@ -314,7 +314,7 @@
 
 (defun %%macrocall (x)
   (alet (cdr (assoc (car x) *macros* :test #'eq))
-    (apply (cdr !) (print (cdrlist (argument-expand (car x) (car !) (cdr x)))))))
+    (apply (cdr !) (cdrlist (argument-expand (car x) (car !) (cdr x))))))
 
 (defun %%%macro? (x)
   (assoc x *macros* :test #'eq))
