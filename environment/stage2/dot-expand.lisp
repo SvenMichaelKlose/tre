@@ -57,4 +57,4 @@
                                     (dot-expand (cdr x)))
       	x))))
 
-(%set-atom-fun *dotexpand-hook* #'dot-expand)
+(= *dotexpand-hook* #'dot-expand)

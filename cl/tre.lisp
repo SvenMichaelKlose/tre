@@ -61,7 +61,7 @@
 (defconstant +core-variables+
     '(*universe* *variables* *defined-functions*
       *environment-path* *environment-filenames*
-      *macroexpand-hook* *quasiquoteexpand-hook*
+      *macroexpand-hook* *quasiquoteexpand-hook* *dotexpand-hook*
       *default-listprop* *keyword-package*))
 
 ;;; Things we have to implement ourselves.
@@ -132,6 +132,7 @@
 (defvar *environment-path* ".")
 (defvar *environment-filenames* nil)
 (defvar *quasiquoteexpand-hook* nil)
+(defvar *dotexpand-hook* nil)
 (defvar *default-listprop* nil)
 (defvar *keyword-package* (find-package "KEYWORD"))
 (defvar *macroexpand-hook* nil)
@@ -291,11 +292,6 @@
 (defun =-aref (v x i)
   (setf (aref x i) v))
 
-(defun %%macroexpand (x)
-  (? *macroexpand-hook*
-      (funcall *macroexpand-hook* x)
-      x))
-
 (defmacro %set-atom-fun (x v) `(setf (symbol-function ',x) ,v))
 
 (defmacro %defvar (name &optional (init nil))
@@ -317,6 +313,11 @@
 (load "cl/backquote-expand.lisp")
 (load "cl/read.lisp")
 (load "cl/argument-expand.lisp")
+
+(defun %%macroexpand (x)
+  (!? *macroexpand-hook*
+      (funcall ! x)
+      x))
 
 (defmacro %defmacro (name args &body body)
   (print `(%defmacro ,name ,args))
@@ -347,12 +348,17 @@
     (t (mapcar #'make-lambdas x))))
 
 (defun quasiquote-expand (x)
-  (if *quasiquoteexpand-hook*
-      (funcall *quasiquoteexpand-hook* x)
+  (!? *quasiquoteexpand-hook*
+      (funcall ! x)
+      x))
+
+(defun dot-expand (x)
+  (!? *dotexpand-hook*
+      (funcall ! x)
       x))
 
 (defun %eval (x)
-  (eval (make-lambdas (car (backquote-expand (list x))))))
+  (eval (print (make-lambdas (car (backquote-expand (list x)))))))
 
 
 ;;; Loader
@@ -363,7 +369,7 @@
           (%load-r s))))
 
 (defun %expand (x)
-  (alet (quasiquote-expand (%%macroexpand x))
+  (alet (quasiquote-expand (%%macroexpand (dot-expand x)))
     (? (equal x !)
        x
        (%expand !))))
