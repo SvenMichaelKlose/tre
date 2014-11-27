@@ -26,7 +26,6 @@
       cons car cdr rplaca rplacd
       apply function
       progn block return return-from tagbody go
-      * / < >
       mod sqrt sin cos atan exp round floor
       last copy-list nthcdr nth mapcar elt length make-string
       make-array aref code-char char-code
@@ -70,7 +69,7 @@
     '(%set-atom-fun cpr rplacp %load atan2 pow quit string-concat %load
       %eval %defun early-defun %defvar %defmacro %string %make-symbol
       %symbol-name %symbol-value %symbol-function %symbol-package
-      %number? == %integer %+ %-
+      %number? == %integer %+ %- %* %/ %< %>
       string==
       =-aref
       ? functional
@@ -270,11 +269,12 @@
                  x))
           x))
 
-(defun %+ (&rest x)
-  (apply #'+ (chars-to-numbers x)))
-
-(defun %- (&rest x)
-  (apply #'- (chars-to-numbers x)))
+(defun %+ (&rest x) (apply #'+ (chars-to-numbers x)))
+(defun %- (&rest x) (apply #'- (chars-to-numbers x)))
+(defun %* (&rest x) (apply #'* (chars-to-numbers x)))
+(defun %/ (&rest x) (apply #'/ (chars-to-numbers x)))
+(defun %< (&rest x) (apply #'< (chars-to-numbers x)))
+(defun %> (&rest x) (apply #'> (chars-to-numbers x)))
 
 (defun string== (a b)
   (string-equal a b))
@@ -385,6 +385,10 @@
 (defun number- (&rest x) (apply #'%- x))
 (defun integer- (&rest x) (apply #'%- x))
 (defun character- (&rest x) (apply #'%- x))
+(defun * (&rest x) (apply #'%* x))
+(defun / (&rest x) (apply #'%/ x))
+(defun < (&rest x) (apply #'%< x))
+(defun > (&rest x) (apply #'%> x))
 (defun filter (fun x) (mapcar fun x))
 
 (%load "environment/env-load-cl.lisp")
