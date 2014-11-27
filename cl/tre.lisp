@@ -46,9 +46,6 @@
       (string? stringp)
       (array? arrayp)
       (character? characterp)
-      (number== =)
-      (integer== =)
-      (character== =)
       (number< <)
       (integer< <)
       (character< <)
@@ -71,7 +68,7 @@
     '(%set-atom-fun %not cpr rplacp %load atan2 pow quit string-concat %load
       %eval %defun early-defun %defvar %defmacro %string %make-symbol
       %symbol-name %symbol-value %symbol-function %symbol-package
-      %number? == %integer %+ %- %* %/ %< %>
+      %number? == number== integer== character== %integer %+ %- %* %/ %< %>
       string== list-string
       =-aref
       %make-hash-table href =-href
@@ -279,6 +276,9 @@
 
 
 (defun == (&rest x) (apply #'= (chars-to-numbers x)))
+(defun number== (&rest x) (apply #'= (chars-to-numbers x)))
+(defun integer== (&rest x) (apply #'= (chars-to-numbers x)))
+(defun character== (&rest x) (apply #'= (chars-to-numbers x)))
 (defun %+ (&rest x) (apply #'+ (chars-to-numbers x)))
 (defun %- (&rest x) (apply #'- (chars-to-numbers x)))
 (defun %* (&rest x) (apply #'* (chars-to-numbers x)))
