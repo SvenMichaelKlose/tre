@@ -35,7 +35,8 @@
       print
       defvar
       defun
-      identity list copy-list))
+      identity list copy-list
+      &rest &body &optional &key))
 
 ;;; Functions we import from CL-USER, wrap and export to package TRE.
 (defconstant +renamed-imports+
@@ -72,8 +73,7 @@
       %number? == %integer %+ %-
       ? functional
       builtin? macro?
-      %%macroexpand %%macrocall %%%macro?
-      &rest &body &optional &key))
+      %%macroexpand %%macrocall %%%macro?))
 
 (defun make-keyword (x)
   (values (intern (symbol-name x) "KEYWORD")))
@@ -300,17 +300,17 @@
 (load "cl/read.lisp")
 (load "cl/argument-expand.lisp")
 
-;; CL only accepts &BODY keywords in macros.
-;; We turn tré macros into functions so this does the fixing.
-(defun convert-&body (x)
-  (mapcar #'(lambda (x) (if (eq '&body x) '&rest x)) x))
-
 (defmacro %defmacro (name args &body body)
   (print `(%defmacro ,name ,args))
-  `(push (cons ',name #'(lambda ,(convert-&body args) ,@body)) *macros*))
+  `(push (cons ',name
+               (cons ',args
+                     #'(lambda ,(argument-expand-names '%defmacro args)
+                         ,@body)))
+         *macros*))
 
 (defun %%macrocall (x)
-  (apply (cdr (assoc (car x) *macros* :test #'eq)) (cdr x)))
+  (alet (cdr (assoc (car x) *macros* :test #'eq))
+    (apply (cdr !) (print (cdrlist (argument-expand (car x) (car !) (cdr x)))))))
 
 (defun %%%macro? (x)
   (assoc x *macros* :test #'eq))
