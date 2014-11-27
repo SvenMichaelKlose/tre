@@ -36,7 +36,8 @@
       defun
       identity list copy-list
       &rest &body &optional &key
-      labels))
+      labels
+      make-hash-table))
 
 ;;; Functions we import from CL-USER, wrap and export to package TRE.
 (defconstant +renamed-imports+
@@ -63,7 +64,8 @@
     '(*universe* *variables* *defined-functions*
       *environment-path* *environment-filenames*
       *macroexpand-hook* *quasiquoteexpand-hook* *dotexpand-hook*
-      *default-listprop* *keyword-package*))
+      *default-listprop* *keyword-package*
+      *pointer-size*))
 
 ;;; Things we have to implement ourselves.
 (defconstant +implementations+
@@ -73,6 +75,7 @@
       %number? == %integer %+ %- %* %/ %< %>
       string== list-string
       =-aref
+      href =-href
       ? functional
       builtin? macro?
       %%macroexpand %%macrocall %%%macro?))
@@ -132,11 +135,12 @@
 (defvar *defined-functions* nil)
 (defvar *environment-path* ".")
 (defvar *environment-filenames* nil)
+(defvar *macroexpand-hook* nil)
 (defvar *quasiquoteexpand-hook* nil)
 (defvar *dotexpand-hook* nil)
 (defvar *default-listprop* nil)
 (defvar *keyword-package* (find-package "KEYWORD"))
-(defvar *macroexpand-hook* nil)
+(defvar *pointer-size* 4)
 
 (defvar *macros* nil)
 (defvar *builtins* (make-hash-table :test #'eq))
@@ -153,6 +157,9 @@
 (defun macro? (x) (rassoc x *macros* :test #'eq))
 
 (defun =-aref (v x &rest indexes) v x (apply #'aref x indexes))
+
+(defun href (x i) (gethash i x))
+(defun =-href (x i) (setf (gethash i x) v))
 
 (defun file-exists? (pathname) pathname (error "Not implemented."))
 (defun %fopen (pathname access-mode) pathname access-mode (error "Not implemented."))
@@ -359,7 +366,7 @@
       x))
 
 (defun %eval (x)
-  (eval (print (make-lambdas (car (backquote-expand (list x)))))))
+  (eval (make-lambdas (car (backquote-expand (list x))))))
 
 
 ;;; Loader
