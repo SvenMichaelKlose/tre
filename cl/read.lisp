@@ -46,9 +46,6 @@
           `((with-temporaries ,(cddr lst) ,@body))
           body)))
 
-(defun list-string (x)
-  (apply #'concatenate 'string (mapcar #'string x)))
-
 (defun whitespace? (x)
   (and (char< x (code-char 33))
        (char>= x (code-char 0))))

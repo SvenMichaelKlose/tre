@@ -70,7 +70,7 @@
       %eval %defun early-defun %defvar %defmacro %string %make-symbol
       %symbol-name %symbol-value %symbol-function %symbol-package
       %number? == %integer %+ %- %* %/ %< %>
-      string==
+      string== list-string
       =-aref
       ? functional
       builtin? macro?
@@ -278,6 +278,9 @@
 
 (defun string== (a b)
   (string= a b))
+
+(defun list-string (x)                                                                              
+  (apply #'concatenate 'string (mapcar #'string x)))
 
 (defun =-aref (v x i)
   (setf (aref x i) v))
