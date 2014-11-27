@@ -380,5 +380,6 @@
 (defun number- (&rest x) (apply #'%- x))
 (defun integer- (&rest x) (apply #'%- x))
 (defun character- (&rest x) (apply #'%- x))
+(defun filter (fun x) (mapcar fun x))
 
 (%load "environment/env-load-cl.lisp")
