@@ -239,7 +239,7 @@
      x))
 
 (defun %symbol-function (x)
-  (? (boundp x)
+  (? (fboundp x)
      (symbol-function x)))
 
 (defun %symbol-package (x)
