@@ -222,8 +222,8 @@ environment)
 	;;
 
 boot)
-    echo "Booting C target via the interpreter..."
-	./make.sh interpreter $ARGS || exit 1
+    echo "Booting C target via sbcl"
+    echo "(load \"cl/tre.lisp\")" | sbcl
 	./make.sh reload $ARGS || exit 1
     echo "Compiling only the C target..."
 	./make.sh compiler $ARGS || exit 1
