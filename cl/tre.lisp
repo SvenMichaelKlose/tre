@@ -232,7 +232,7 @@
 
 (defun %string (x)
   (? (number? x)
-     (format nix "~A" x)
+     (format nil "~A" x)
      (string x)))
 
 (defun %%macroexpand (x)
