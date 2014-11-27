@@ -45,14 +45,6 @@
       (string? stringp)
       (array? arrayp)
       (character? characterp)
-      (%+ +)
-      (%- -)
-      (number+ +)
-      (integer+ +)
-      (character+ +)
-      (number- -)
-      (integer- -)
-      (character- -)
       (number== =)
       (integer== =)
       (character== =)
@@ -77,7 +69,7 @@
     '(%set-atom-fun cpr rplacp %load atan2 pow quit string-concat %load
       %eval %defun early-defun %defvar %defmacro %string %make-symbol
       %symbol-name %symbol-value %symbol-function %symbol-package
-      %number? == %integer
+      %number? == %integer %+ %-
       ? functional
       builtin? macro?
       %%macroexpand %%macrocall %%%macro?
@@ -268,6 +260,19 @@
 (defun %integer (x)
   (floor x))
 
+(defun chars-to-numbers (x)
+  (mapcar #'(lambda (x)
+              (? (characterp x)
+                 (char-code x)
+                 x))
+          x))
+
+(defun %+ (&rest x)
+  (apply #'+ (chars-to-numbers x)))
+
+(defun %- (&rest x)
+  (apply #'- (chars-to-numbers x)))
+
 (defun %%macroexpand (x)
   (? *macroexpand-hook*
       (funcall *macroexpand-hook* x)
@@ -365,5 +370,11 @@
 (defun symbol-package (x) (%symbol-package x))
 (defun number? (x) (%number? x))
 (defun integer (x) (%integer x))
+(defun number+ (&rest x) (apply #'%+ x))
+(defun integer+ (&rest x) (apply #'%+ x))
+(defun character+ (&rest x) (apply #'%+ x))
+(defun number- (&rest x) (apply #'%- x))
+(defun integer- (&rest x) (apply #'%- x))
+(defun character- (&rest x) (apply #'%- x))
 
 (%load "environment/env-load-cl.lisp")
