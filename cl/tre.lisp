@@ -71,6 +71,7 @@
       %eval %defun early-defun %defvar %defmacro %string %make-symbol
       %symbol-name %symbol-value %symbol-function %symbol-package
       %number? == %integer %+ %-
+      string==
       ? functional
       builtin? macro?
       %%macroexpand %%macrocall %%%macro?))
@@ -272,6 +273,9 @@
 
 (defun %- (&rest x)
   (apply #'- (chars-to-numbers x)))
+
+(defun string== (a b)
+  (string-equal a b))
 
 (defun %%macroexpand (x)
   (? *macroexpand-hook*
