@@ -22,8 +22,8 @@
      name
      (? (& (cons? name)
            (eq (car name) '=))
-        (make-symbol (string-concat "=-" (string (cadr name)))
-                     (symbol-package (cadr name)))
+        (make-symbol (string-concat "=-" (string (cadr name))))
+;                     (symbol-package (cadr name)))
         (error "Illegal function name ~A. It must be a symbol or of the form (= symbol)." name))))
 
 (defmacro defun (name args &body body)
