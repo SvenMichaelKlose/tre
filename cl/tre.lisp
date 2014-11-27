@@ -53,7 +53,6 @@
       (number- -)
       (integer- -)
       (character- -)
-      (== =)
       (number== =)
       (integer== =)
       (character== =)
@@ -78,7 +77,7 @@
     '(%set-atom-fun cpr rplacp %load atan2 pow quit string-concat %load
       %eval %defun early-defun %defvar %defmacro %string %make-symbol
       %symbol-name %symbol-value %symbol-function %symbol-package
-      %number?
+      %number? ==
       ? functional
       builtin? macro?
       %%macroexpand %%macrocall %%%macro?
@@ -257,6 +256,14 @@
 (defun %number? (x)
   (or (numberp x)
       (characterp x)))
+
+(defun == (a b)
+  (= (? (characterp a)
+        (char-code a)
+        a)
+     (? (characterp b)
+        (char-code b)
+        b)))
 
 (defun %%macroexpand (x)
   (? *macroexpand-hook*
