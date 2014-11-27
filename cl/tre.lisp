@@ -24,7 +24,7 @@
 (defconstant +direct-imports+
     '(nil t not eq eql atom setq quote
       cons car cdr rplaca rplacd
-      apply
+      apply function
       progn block return return-from tagbody go
       * / < >
       mod sqrt sin cos atan exp round floor
