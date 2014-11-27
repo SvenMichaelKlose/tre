@@ -147,7 +147,7 @@
 (defun %not (&rest x) (every #'not x))
 
 (defun cpr (x) x nil)
-(defun rplacp (v x) v x)
+(defun rplacp (v x) x v)
 
 (defun builtin? (x) (gethash x *builtins*))
 (defun macro? (x) (rassoc x *macros* :test #'eq))
