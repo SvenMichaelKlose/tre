@@ -277,7 +277,7 @@
 (defun %> (&rest x) (apply #'> (chars-to-numbers x)))
 
 (defun string== (a b)
-  (string-equal a b))
+  (string= a b))
 
 (defun =-aref (v x i)
   (setf (aref x i) v))
