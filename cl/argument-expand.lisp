@@ -1,5 +1,7 @@
 ;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
+(defun carlist (x) (mapcar #'car x))
+
 (defun argument-rest-keyword? (x)     (in? x '&rest '&body))
 (defun argument-keyword? (x)          (in? x '&rest '&body '&optional '&key))
 (defun argument-name? (x)             (atom x))
@@ -54,12 +56,12 @@
     (car defs)))
 
 (defun argument-expand-0 (fun adef alst apply-values? concatenate-sublists?)
-  (let ((argdefs    a)
-	    (key-args   k)
-	    (num        0)
-	    (no-static  nil)
-	    (rest-arg   nil))
-    (multiple-value-bind (a k) (make-&key-alist adef)
+  (multiple-value-bind (a k) (make-&key-alist adef)
+    (let ((argdefs    a)
+	      (key-args   k)
+	      (num        0)
+	      (no-static  nil)
+	      (rest-arg   nil))
       (labels ((err (msg args)
 				 (error "; Call of function ~A: ~A~%; Argument definition: ~A~%; Given arguments: ~A~%"
                         (symbol-name fun)
@@ -100,10 +102,11 @@
 			     nil)
 
                (exp-optional-rest (def vals)
-		         (case (car def)
-				   &rest     (exp-rest def vals)
-				   &body     (exp-rest def vals)
-				   &optional (exp-optional (cdr def) vals)))
+		         (alet (car def)
+				   (?
+                     (eq ! '&rest)     (exp-rest def vals)
+                     (eq ! '&body)     (exp-rest def vals)
+                     (eq ! '&optional) (exp-optional (cdr def) vals))))
 
 		       (exp-sub (def vals)
 			     (and no-static
@@ -129,7 +132,7 @@
 
                (exp-main (def vals)
 			     (setf num (+ 1 num))
-			     (? (keyword? (car vals))
+			     (? (keywordp (car vals))
 				    (exp-key def vals)
 				    (or (exp-check-too-many def vals)
 			            (and def
