@@ -295,6 +295,11 @@
 (defmacro early-defun (name args &body body)
   `(%defun ,name ,args ,@body))
 
+(load "cl/tree-walk.lisp")
+(load "cl/backquote-expand.lisp")
+(load "cl/read.lisp")
+(load "cl/argument-expand.lisp")
+
 ;; CL only accepts &BODY keywords in macros.
 ;; We turn tré macros into functions so this does the fixing.
 (defun convert-&body (x)
@@ -331,11 +336,6 @@
 (defun %eval (x)
   (eval (make-cl-lambdas (car (backquote-expand (list x))))))
 
-;;; Reader
-
-(load "cl/tree-walk.lisp")
-(load "cl/backquote-expand.lisp")
-(load "cl/read.lisp")
 
 ;;; Loader
 
