@@ -267,14 +267,6 @@
   (or (numberp x)
       (characterp x)))
 
-(defun == (a b)
-  (= (? (characterp a)
-        (char-code a)
-        a)
-     (? (characterp b)
-        (char-code b)
-        b)))
-
 (defun %integer (x)
   (floor x))
 
@@ -285,6 +277,8 @@
                  x))
           x))
 
+
+(defun == (&rest x) (apply #'= (chars-to-numbers x)))
 (defun %+ (&rest x) (apply #'+ (chars-to-numbers x)))
 (defun %- (&rest x) (apply #'- (chars-to-numbers x)))
 (defun %* (&rest x) (apply #'* (chars-to-numbers x)))
