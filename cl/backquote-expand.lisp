@@ -22,9 +22,8 @@
        (eq 'tre:quasiquote-splice (car x))))
 
 (defun any-quasiquote? (x)
-  (and (consp x)
-       (or (quasiquote? (car x))
-           (quasiquote-splice? (car x)))))
+  (or (quasiquote? x)
+      (quasiquote-splice? x)))
 
 (defun constant-literal? (x)
   (or (not x)
@@ -53,21 +52,15 @@
      x
      `(quote ,x)))
 
-(defun backquote-2 (x)
-  (?
-    (atom x)        x
-    (quasiquote? x) (cadr x)
-    (backquote-1 x)))
-
 (defun backquote-1 (x)
   (?
     (atom x)                (quote-literal x)
     (atom (car x))           `(cons ,(quote-literal (car x))
-                                    ,(backquote-2 (cdr x)))
+                                    ,(backquote-1 (cdr x)))
     (quasiquote? (car x))        (backquote-quasiquote x)
     (quasiquote-splice? (car x)) (backquote-quasiquote-splice x)
     `(cons ,(backquote-1 (car x))
-           ,(backquote-2 (cdr x)))))
+           ,(backquote-1 (cdr x)))))
 
 (defun simple-quote-expand (x)
   (? (atom x)
@@ -75,8 +68,8 @@
      `(cons ,(simple-quote-expand (car x))
             ,(simple-quote-expand (cdr x)))))
 
-(defun backquote-expand (l)
-  (tree-walk l
+(defun backquote-expand (x)
+  (tree-walk x
 	  :ascending #'(lambda (_)
                      (?
                        (quote? _)     (simple-quote-expand (cadr _))

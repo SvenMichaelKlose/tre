@@ -213,11 +213,6 @@
 (defun %nconc (&rest x) x (apply #'nconc x))
 (defun string-concat (&rest x) x (apply #'concatenate 'string x))
 
-(defun %%macroexpand (x)
-  (if *macroexpand-hook*
-      (funcall *macroexpand-hook* x)
-      x))
-
 (defun group (x size)
   (cond
     ((not x) nil)
@@ -234,6 +229,11 @@
        ,@(if (= 1 (length end))
              (append (butlast tests) (list (cons t end)))
              tests))))
+
+(defun %%macroexpand (x)
+  (? *macroexpand-hook*
+      (funcall *macroexpand-hook* x)
+      x))
 
 (defmacro %set-atom-fun (x v) `(setf (symbol-function ',x) ,v))
 
@@ -301,14 +301,20 @@
     (cons (read s)
           (%load-r s))))
 
+(defun %expand (x)
+  (alet (quasiquote-expand (%%macroexpand x))
+    (? (equal x !)
+       x
+       (%expand !))))
+
 (defun %load (pathname)
   (print `(%load ,pathname))
   (dolist (i (with-open-file (s pathname)
                (%load-r s)))
-    (%eval (quasiquote-expand (%%macroexpand i)))))
+    (%eval (%expand i))))
 
 
-;;;; The user package.
+;;;; User package.
 
 (in-package :tre)
 
