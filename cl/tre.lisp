@@ -279,8 +279,12 @@
 (defun string== (a b)
   (string= a b))
 
-(defun list-string (x)                                                                              
-  (apply #'concatenate 'string (mapcar #'string x)))
+(defun list-string (x)
+  (apply #'concatenate 'string (mapcar #'(lambda (x)
+                                           (string (? (numberp x)
+                                                      (code-char x)
+                                                      x)))
+                                       x)))
 
 (defun =-aref (v x i)
   (setf (aref x i) v))
