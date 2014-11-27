@@ -22,7 +22,6 @@
 (env-load "stage1/require.lisp" 'c)
 (env-load "stage1/fn.lisp")
 (env-load "stage1/accent-circonflex.lisp")
-(env-load "stage1/lx.lisp")
 (env-load "stage1/predicates-c.lisp" 'c)
 (env-load "stage1/predicates.lisp")
 (env-load "stage1/test-builtins.lisp")

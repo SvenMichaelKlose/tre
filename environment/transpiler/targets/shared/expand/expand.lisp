@@ -50,10 +50,6 @@
                     `(not ,@!)
                     t)))
 
-(define-shared-std-macro (bc c js php) %lx (lexicals fun)
-  (eval (macroexpand `(with ,(mapcan ^(,_ ',_) .lexicals.)
-                        ,fun))))
-
 (define-shared-std-macro (bc c js php) mapcar (fun &rest lsts)
   `(,(? .lsts
         'mapcar

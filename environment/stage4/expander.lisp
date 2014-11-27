@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2006–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2006–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
 
 (defvar *expanders* nil)
 
@@ -30,10 +30,10 @@
                          :pre (| pre #'(nil))
                          :post (| post #'(nil)))
     (acons! expander-name ! *expanders*)
-    (| pred (= (expander-pred !) (lx (!) [& (symbol? _.)
-	                                        (expander-macro-function ,! _.)])))
-    (| call (= (expander-call !) (lx (!) [(& *expander-print* (print _))
-                                          (apply (expander-macro-function ,! _.) ._)])))
+    (| pred (= (expander-pred !) [& (symbol? _.)
+	                                (expander-macro-function ! _.)]))
+    (| call (= (expander-call !) [& *expander-print* (print _))
+                                    (apply (expander-macro-function ! _.) ._)])
     (= (expander-lookup !)
        #'((expander name)
            (href (expander-macros expander) name)))))
