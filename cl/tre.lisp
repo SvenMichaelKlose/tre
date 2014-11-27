@@ -25,7 +25,7 @@
     '(nil t not eq eql atom setq quote
       cons car cdr rplaca rplacd
       apply
-      progn block
+      progn block return return-from
       * / < >
       mod sqrt sin cos atan exp round floor
       last copy-list nthcdr nth member mapcar elt length make-string
