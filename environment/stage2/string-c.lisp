@@ -6,8 +6,8 @@
 (defun downcase (str)
   (list-string (filter [char-downcase _] (string-list str))))
 
-(defun char-code (chr)
-  (integer chr))
+;(defun char-code (chr)
+;  (integer chr))
 
 (define-test "UPCASE works"
   ((string== (upcase "lisp")
