@@ -290,9 +290,9 @@
 
 ;;; Reader
 
-(load "tree-walk.lisp")
-(load "backquote-expand.lisp")
-(load "cl-read.lisp")
+(load "cl/tree-walk.lisp")
+(load "cl/backquote-expand.lisp")
+(load "cl/read.lisp")
 
 ;;; Loader
 
