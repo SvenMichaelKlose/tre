@@ -349,7 +349,9 @@
 
 (defun make-lambdas (x)
   (cond
-    ((atom x)                  x)
+    ((atom x)                  (? (eq '&body x)
+                                  '&rest
+                                  x))
     ((function-expr? (car x))  `(labels ((~ja ,@(make-lambdas (cadar x))))
                                   (~ja ,@(make-lambdas (cdr x)))))
     ((function-expr? x)        `#'(lambda ,@(make-lambdas (cadr x))))
