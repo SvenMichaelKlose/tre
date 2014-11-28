@@ -26,4 +26,4 @@
 
 (defun values? (x)
   (& (cons? x)
-     (eq 'values x.)))
+     (eq 'values (car x))))
