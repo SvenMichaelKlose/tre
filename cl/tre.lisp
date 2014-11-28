@@ -146,7 +146,7 @@
 
 (defvar *macros* nil)
 (defvar *builtins* (make-hash-table :test #'eq))
-(defvar *function-sources* (make-hash-table :test #'eq))
+(defvar *function-sources* nil)
 
 ;;; Implementations.
 
@@ -332,10 +332,11 @@
 
 (defmacro %defun (name args &body body)
   (print `(%defun ,name ,args))
-  (setf (gethash name *function-sources*) (cons args body))
+  (push (cons args body) *function-sources*)
   `(progn
      (push ',name *defined-functions*)
-     (defun ,name ,args ,@body)))
+     (defun ,name ,args ,@body)
+     (setf (gethash #',name *function-atom-sources*) ',(cons args body))))
 
 (defmacro early-defun (name args &body body)
   `(%defun ,name ,args ,@body))
