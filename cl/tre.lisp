@@ -61,7 +61,8 @@
       *environment-path* *environment-filenames*
       *macroexpand-hook* *quasiquoteexpand-hook* *dotexpand-hook*
       *default-listprop* *keyword-package*
-      *pointer-size*))
+      *pointer-size*
+      *assert* *targets*))
 
 ;;; Things we have to implement ourselves.
 (defconstant +implementations+
@@ -139,6 +140,8 @@
 (defvar *default-listprop* nil)
 (defvar *keyword-package* (find-package "KEYWORD"))
 (defvar *pointer-size* 4)
+(defvar *assert* '*assert*)
+(defvar *targets* '*targets*)
 
 (defvar *macros* nil)
 (defvar *builtins* (make-hash-table :test #'eq))
@@ -422,5 +425,9 @@
 (defun > (&rest x) (apply #'%> x))
 (defun filter (fun x) (mapcar fun x))
 (defun make-hash-table (&key (test #'eql)) (%make-hash-table :test test))
+
+;;; Temporary wrappers
+
+(defun function-bytecode (x) nil)
 
 (%load "environment/env-load-cl.lisp")
