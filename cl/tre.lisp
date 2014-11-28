@@ -387,10 +387,9 @@
                                   x))
     ((function-expr? (car x))  `(labels ((~ja ,@(make-lambdas (cadar x))))
                                   (~ja ,@(make-lambdas (cdr x)))))
-    ((function-expr? x)        `(progn
-                                  (let ((~jb #'(lambda ,@(make-lambdas (cadr x)))))
-                                    (setf (gethash ~jb *function-atom-sources*) ',(cadr x))
-                                    ~jb)))
+    ((function-expr? x)        `(let ((~jb #'(lambda ,@(make-lambdas (cadr x)))))
+                                  (setf (gethash ~jb *function-atom-sources*) ',(cadr x))
+                                  ~jb))
     (t (mapcar #'make-lambdas x))))
 
 (defun quasiquote-expand (x)
