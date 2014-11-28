@@ -2,12 +2,6 @@
 
 (functional find position)
 
-(defmacro xchg (a b)
-  (with-gensym g
-    `(let ,g ,a
-	   (= ,a ,b
-	   	  ,b ,g))))
-
 (defun %find-if-list (pred seq from-end with-index)
   (alet (? from-end
            (reverse seq)

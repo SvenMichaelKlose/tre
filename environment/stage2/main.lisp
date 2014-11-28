@@ -4,6 +4,7 @@
 (env-load "stage2/while.lisp")
 (env-load "stage2/with.lisp")
 (env-load "stage2/array.lisp")
+(env-load "stage2/xchg.lisp")
 (env-load "stage2/subseq-c.lisp" 'c)
 (env-load "stage2/subseq.lisp")
 (env-load "stage2/group.lisp")
