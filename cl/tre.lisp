@@ -73,7 +73,7 @@
       %number? == number== integer== character== %integer %+ %- %* %/ %< %>
       string== list-string
       =-aref
-      %make-hash-table href =-href
+      %make-hash-table href =-href copy-hash-table
       ? functional
       builtin? macro?
       %%macroexpand %%macrocall %%%macro?
@@ -184,6 +184,14 @@
 
 (defun href (x i) (gethash i x))
 (defun =-href (v x i) (setf (gethash i x) v))
+
+(defun copy-hash-table (x)
+  (let ((n (make-hash-table :test (hash-table-test x)
+                            :size (hash-table-size x))))
+    (maphash #'(lambda (k v)
+                 (setf (gethash k n) v))
+             x)
+    n))
 
 (defun file-exists? (pathname) pathname (error "Not implemented."))
 (defun %fopen (pathname access-mode) pathname access-mode (error "Not implemented."))
