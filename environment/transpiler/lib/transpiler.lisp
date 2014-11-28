@@ -39,7 +39,7 @@
   codegen-expander
   separator
 
-  (identifier-char?         [identity t])
+  (identifier-char?         [_ (identity t)])
   (literal-converter        #'identity)
 
   expex

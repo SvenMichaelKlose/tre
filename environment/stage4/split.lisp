@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2009,2011–2014 Sven Michael Klose <pixel@hugbox.org>
 
 (defun split-if (predicate seq &key (include? nil))
   (& seq
@@ -30,5 +30,6 @@
 
 (define-test "SPLIT works on string with gaps"
   ((let x (split #\/ "file:///home/pixel/foo//bar")
+     x
 	 t))
   t)

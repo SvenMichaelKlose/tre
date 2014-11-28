@@ -16,7 +16,7 @@
   (error "In function ~A: &REST cannot have a value." fun))
 
 (defun make-&key-alist (def)
-  (with (&keys nil
+  (with (keys nil
 		 make-&key-descr
 		   [when _
 			 (? (argument-keyword? _.)
@@ -25,7 +25,7 @@
                   (push (? (cons? !)
                            (. !. .!.) ; with default value
                            (. ! !))   ; with itself
-                        &keys)
+                        keys)
                   (make-&key-descr ._)))]
 
 		 copy-def-until-&key
@@ -35,7 +35,7 @@
 				(. _. (copy-def-until-&key ._)))])
 
 	(values (copy-def-until-&key def)
-            (reverse &keys))))
+            (reverse keys))))
 
 (defun argdef-get-name (x)
   (? (cons? x)

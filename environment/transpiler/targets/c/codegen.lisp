@@ -20,7 +20,7 @@
 (defun c-arguments (fi)
   (c-list (mapcar #'c-codegen-var-decl (funinfo-args fi))))
 
-(defun c-make-function-declaration (name args)
+(defun c-make-function-declaration (name)
   (push (concat-stringtree "extern treptr " (compiled-function-name-string name)
   	    	               " "
                            (c-arguments (get-funinfo name))
@@ -31,7 +31,7 @@
   (with (fi    (get-funinfo name)
          args  (funinfo-args fi))
     (| fi (error "No funinfo for ~A." name))
-    (c-make-function-declaration name args)
+    (c-make-function-declaration name)
     `(,*newline*
       ,(funinfo-comment fi)
 	  "treptr " ,(compiled-function-name name) " "
@@ -65,6 +65,7 @@
       (%function-return ,name))))
 
 (define-c-macro %function-return (name)
+  name
   `(%%native ,@(c-line "return __ret")))
 
 (define-c-macro %%closure (name)
@@ -136,7 +137,9 @@
 	,*c-indent* ,@(c-line `(%%native "goto l" ,tag))))
 
 (define-c-macro return-from (block-name x)
+  x
   (error "Cannot return from unknown BLOCK ~A." block-name))
+
 
 ;;;; SYMBOLS
 

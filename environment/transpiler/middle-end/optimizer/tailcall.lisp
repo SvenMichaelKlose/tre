@@ -16,18 +16,18 @@
 	  (function-exits? .x))))
 
 (defun opt-tailcall-make-restart (l body front-tag)
-  (with-lambda name args dummy-body l 
-    (& *show-definitions?*
-       (format t "; Removed tail call in ~A.~%" (human-readable-funinfo-names *funinfo*)))
-    (+ (mapcan #'((arg val)
-                    `((%= ,arg ,val)))
-               (funinfo-args *funinfo*)
-               (cdr (%=-value body.)))
-       `((%%go ,front-tag))
-       (opt-tailcall-fun l .body front-tag))))
+  (& *show-definitions?*
+     (format t "; Removed tail call in ~A.~%" (human-readable-funinfo-names *funinfo*)))
+  (+ (mapcan #'((arg val)
+                  `((%= ,arg ,val)))
+             (funinfo-args *funinfo*)
+             (cdr (%=-value body.)))
+     `((%%go ,front-tag))
+     (opt-tailcall-fun l .body front-tag)))
 
 (defun opt-tailcall-fun (l body front-tag)
   (with-lambda name args dummy-body l 
+    args dummy-body
     (& body
        (? (& (%=-funcall-of? body. name)
              (function-exits? .body))

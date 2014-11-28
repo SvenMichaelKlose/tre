@@ -22,14 +22,14 @@
 
 (setq *tests* (reverse *tests*))
 
+(defun %load-launchfile ()
+  (awhen %LAUNCHFILE
+    (load !)))
+
 (defun dump-system (path)
   (format t "; Dumping environment to image '~A': ~F" path)
   (sys-image-create path #'%load-launchfile)
   (format t " OK~%"))
-
-(defun %load-launchfile ()
-  (awhen %LAUNCHFILE
-    (load !)))
 
 (defvar *universe-functions* (copy-list *defined-functions*))
 

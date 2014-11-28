@@ -1,3 +1,3 @@
-;;;;; tré - Copyright (c) 2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2012,2014 Sven Michael Klose <pixel@hugbox.org>
 
-(defmacro in-package (x))
+(defmacro in-package (x) x nil)
