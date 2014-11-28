@@ -75,7 +75,8 @@
       ? functional
       builtin? macro?
       %%macroexpand %%macrocall %%%macro?
-      %princ %force-output))
+      %princ %force-output
+      sys-image-create))
 
 (defun make-keyword (x)
   (values (intern (symbol-name x) "KEYWORD")))
@@ -182,6 +183,8 @@
 
 (defun file-exists? (pathname) pathname (error "Not implemented."))
 (defun %fopen (pathname access-mode) pathname access-mode (error "Not implemented."))
+
+(defun sys-image-create (pathname fun) (sb-ext:save-lisp-and-die pathname :toplevel fun))
 
 (defun quit (x) x (error "Not implemented."))
 
