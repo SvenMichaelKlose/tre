@@ -20,13 +20,13 @@
 	    seq)))
 
 (define-test "TRIM-HEAD works"
-  ((trim-head "  " " "))
+  ((trim-head "  " " " :test #'string==))
   nil)
 
 (define-test "TRIM-TAIL works"
-  ((trim-tail "  " " "))
+  ((trim-tail "  " " " :test #'string==))
   nil)
 
 (define-test "TRIM works"
-  ((trim "  " " "))
+  ((trim "  " " " :test #'string==))
   nil)

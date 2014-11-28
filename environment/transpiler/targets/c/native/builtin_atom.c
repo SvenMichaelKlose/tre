@@ -104,7 +104,7 @@ atom_eql (treptr x, treptr y)
        	if (TRENUMBER_TYPE(x) != TRENUMBER_TYPE(y))
     		return NIL;
        	RETURN_NIL(TREPTR_TRUTH(TRENUMBER_VAL(x) == TRENUMBER_VAL(y)));
-   	} else if (STRINGP(x)) {
+   	} else if (STRINGP(x)) { /* XXX Should EQL also compare strings? */
        	if (STRINGP(y) == FALSE)
     		return NIL;
         tmp = CONS(y, NIL);
