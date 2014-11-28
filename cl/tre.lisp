@@ -78,7 +78,7 @@
       builtin? macro?
       %%macroexpand %%macrocall %%%macro?
       %princ %force-output
-      %fopen %fclose
+      %fopen %fclose %read-char
       sys-image-create))
 
 (defun make-keyword (x)
@@ -233,7 +233,6 @@
 (defun filter (fun x) (mapcar fun x))
 (defun %set-elt (object sequence index) object sequence index (error "Not implemented."))
 
-(defun %fclose (stream-handle) stream-handle (error "Not implemented."))
 (defun %directory (pathname) pathname (error "Not implemented."))
 (defun %stat (pathname) pathname (error "Not implemented."))
 (defun readlink (pathname) pathname (error "Not implemented."))
@@ -434,8 +433,11 @@
                                :output
                                :input)))
 
-(defun %fclose (x)
-  (close x))
+(defun %fclose (stream) (close stream))
+
+(defun %read-char (str)
+  (alet (cl-read-char str nil 'eof)
+    (unless (eq ! 'eof) !)))
 
 ;;;; User package.
 
