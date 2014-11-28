@@ -89,7 +89,7 @@
 					     (exp-main (cdr def) (cdr vals)))))
 
 		       (exp-key (def vals)
-			     (let ((k (assoc ($ (car vals)) key-args :test #'eq)))
+			     (let ((k (assoc (tre:$ (car vals)) key-args :test #'eq)))
 				   (? k
 			          (alet vals
 					    (rplacd k (cadr !)) ; check if key-value exists.
