@@ -16,6 +16,7 @@
       (with-cons section data i
         (with-temporaries ((transpiler-current-section *transpiler*)       section
                            (transpiler-current-section-data *transpiler*)  data)
+          (format t "; Working section ~A...~%" section)
           (enqueue results (. section (? (compile-section? section cached-sections)
                                          (funcall fun section data)
                                          (assoc-value section cached-sections)))))))))
@@ -43,6 +44,7 @@
     (error "Don't know what to do with section ~A." section)))
 
 (defun generic-compile-1 (sections)
+  (format t "; Front end...~%")
   (alet (map-transpiler-sections #'frontend-section sections (transpiler-frontend-files *transpiler*))
     (= (transpiler-frontend-files *transpiler*) !)))
 
@@ -51,6 +53,7 @@
       ,@(reverse (transpiler-accumulated-toplevel-expressions *transpiler*)))))
 
 (defun generic-compile-accumulated-toplevels ()
+  (format t "; Compiling accumulated top–level expressions...~%")
   (alet *transpiler*
     (& (transpiler-accumulate-toplevel-expressions? !)
        (transpiler-accumulated-toplevel-expressions !)
@@ -67,6 +70,7 @@
 (def-transpiler generic-codegen (transpiler before-deps deps after-deps)
   (& *show-transpiler-progress?*
      (format t "; Let me think. Hmm...~F"))
+  (format t "; Generating code...~%")
   (!? middleend-init (funcall !))
   (with (compiled-before  (generic-compile-2 before-deps)
          compiled-deps    (backend (middleend deps))

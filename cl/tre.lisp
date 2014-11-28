@@ -2,12 +2,12 @@
 ;;;;;
 ;;;;; Common Lisp replacement for the C core.
 ;;;;;
-;;;;; *** UNDER CONTRUCTION!!! ***
+;;;;; *** UNDER CONSTRUCTION!!! ***
 ;;;;;
 ;;;;; The interpreter is spoiling everthing. Don't try to use
 ;;;;; tré before this thing here is working.
 
-;(proclaim '(optimize (debug 3)))
+(proclaim '(optimize (debug 3)))
 
 
 ;;;; Initialization package
