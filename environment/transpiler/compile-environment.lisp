@@ -7,7 +7,7 @@
                                           (+ *universe-functions* *macros*)))))
 
 (defun compile-c-environment (&optional (funs nil))
-  (put-file "interpreter/_compiled-env.c"
+  (put-file "_compiled-env.c"
             (compile-sections nil :transpiler (%environment-transpiler *c-transpiler* funs)))
   nil)
 
