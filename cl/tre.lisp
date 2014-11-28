@@ -28,7 +28,7 @@
       progn block return return-from tagbody go
       mod sqrt sin cos atan exp round floor
       last copy-list nthcdr nth mapcar elt length make-string
-      make-array aref code-char char-code
+      aref code-char char-code
       symbol-name make-package package-name
       logxor bit-and
       print
@@ -72,7 +72,7 @@
       function-source
       %number? == number== integer== character== %integer %+ %- %* %/ %< %>
       string== list-string
-      =-aref
+      %make-array =-aref
       %make-hash-table href =-href copy-hash-table hashkeys hremove
       ? functional
       builtin? macro?
@@ -176,6 +176,7 @@
 (defun builtin? (x) (gethash x *builtins*))
 (defun macro? (x) (rassoc x *macros* :test #'eq))
 
+(defun %make-array (dimensions) (make-array dimensions))
 (defun =-aref (v x &rest indexes) v x (apply #'aref x indexes))
 
 (defun %make-hash-table (&key (test #'eql))
@@ -198,6 +199,7 @@
 (defun hashkeys (x)
   (let ((n nil))
     (maphash #'(lambda (k v)
+                 v
                  (push k n))
              x)
     n))
@@ -460,12 +462,13 @@
 (defun < (&rest x) (apply #'%< x))
 (defun > (&rest x) (apply #'%> x))
 (defun filter (fun x) (mapcar fun x))
+(defun make-array (&optional (dimensions 1)) (%make-array dimensions))
 (defun make-hash-table (&key (test #'eql)) (%make-hash-table :test test))
 
 (defun nanotime () 0)
 
 ;;; Temporary wrappers
 
-(defun function-bytecode (x) nil)
+(defun function-bytecode (x) x nil)
 
 (%load "environment/env-load-cl.lisp")
