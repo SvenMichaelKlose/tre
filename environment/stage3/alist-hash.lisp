@@ -4,3 +4,8 @@
   (let h (make-hash-table :test test)
     (dolist (i x h)
       (= (href h i.) .i))))
+
+(defun hash-alist (x)
+  (with-queue alist
+    (dolist (i (hashkeys x) (queue-list alist))
+      (enqueue alist (cons i (href x i))))))

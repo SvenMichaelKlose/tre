@@ -71,11 +71,6 @@
              (dolist (j (hashkeys b))
                (= (href h j) (href b j))))))))
 
-(defun hash-alist (h)
-  (with-queue alist
-    (dolist (i (hashkeys h) (queue-list alist))
-      (enqueue alist (cons i (href h i))))))
-
 (defun make-hash-table (&key (test #'eq) (size *default-hash-size*))
   (%make-hash-table :test test :size size :buckets (make-array size)))
 
