@@ -387,7 +387,7 @@
                                   (~ja ,@(make-lambdas (cdr x)))))
     ((function-expr? x)        `(progn
                                   (let ((~jb #'(lambda ,@(make-lambdas (cadr x)))))
-                                    (setf (gethash ~jb *function-sources*) ',x)
+                                    (setf (gethash ~jb *function-atom-sources*) ',(cadr x))
                                     ~jb)))
     (t (mapcar #'make-lambdas x))))
 
