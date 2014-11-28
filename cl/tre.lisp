@@ -73,7 +73,7 @@
       %number? == number== integer== character== %integer %+ %- %* %/ %< %>
       string== list-string
       =-aref
-      %make-hash-table href =-href copy-hash-table
+      %make-hash-table href =-href copy-hash-table hashkeys
       ? functional
       builtin? macro?
       %%macroexpand %%macrocall %%%macro?
@@ -190,6 +190,13 @@
                             :size (hash-table-size x))))
     (maphash #'(lambda (k v)
                  (setf (gethash k n) v))
+             x)
+    n))
+
+(defun hashkeys (x)
+  (let ((n nil))
+    (maphash #'(lambda (k v)
+                 (push k n))
              x)
     n))
 
