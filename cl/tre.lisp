@@ -244,8 +244,10 @@
      (format nil "~A" x)
      (string x)))
 
-(defun %make-symbol (x)
-  (intern x "TRE"))
+(defun %make-symbol (x package)
+  (intern x (? package
+               (package-name package)
+               "TRE")))
 
 (defun %symbol-value (x)
   (? (boundp x)
@@ -399,7 +401,7 @@
 (defun macroexpand (x) (%%macroexpand x))
 (defun string (x) (%string x))
 (defun not (&rest x) (apply #'%not x))
-(defun make-symbol (x) (%make-symbol x))
+(defun make-symbol (x &optional (package nil)) (%make-symbol x package))
 (defun symbol-value (x) (%symbol-value x))
 (defun symbol-function (x) (%symbol-function x))
 (defun symbol-package (x) (%symbol-package x))
