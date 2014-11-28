@@ -73,7 +73,7 @@
       %number? == number== integer== character== %integer %+ %- %* %/ %< %>
       string== list-string
       %make-array =-aref
-      %make-hash-table href =-href copy-hash-table hashkeys hremove
+      %make-hash-table href =-href copy-hash-table hashkeys hremove hash-table?
       ? functional
       builtin? macro?
       %%macroexpand %%macrocall %%%macro?
@@ -184,6 +184,7 @@
                             #'eql
                             test)))
 
+(defun hash-table? (x) (hash-table-p x))
 (defun href (x i) (gethash i x))
 (defun =-href (v x i) (setf (gethash i x) v))
 (defun hremove (x k) (remhash k x))
