@@ -312,7 +312,7 @@
 (defmacro %defvar (name &optional (init nil))
   (print `(%defvar ,name))
   `(progn
-     (push ',name *variables*)
+     (push (cons ',name ',init) *variables*)
      (defvar ,name ,init)))
 
 (defmacro %defun (name args &body body)
