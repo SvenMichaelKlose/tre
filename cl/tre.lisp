@@ -78,6 +78,7 @@
       builtin? macro?
       %%macroexpand %%macrocall %%%macro?
       %princ %force-output
+      %fopen %fclose
       sys-image-create))
 
 (defun make-keyword (x)
@@ -426,6 +427,13 @@
                (%load-r s)))
     (%eval (%expand i))))
 
+(defun %fopen (pathname mode)
+  (open pathname :direction (? (find #\w mode :test #'equal)
+                               :output
+                               :input)))
+
+(defun %fclose (x)
+  (close x))
 
 ;;;; User package.
 
