@@ -36,5 +36,6 @@
 (env-load "version.lisp")
 (env-load "config-after-reload.lisp")
 
+(compile-c-environment)
 ;(dump-system "image")
 ;(%load-launchfile)
