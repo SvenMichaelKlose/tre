@@ -18,3 +18,5 @@
 (%defvar *assert* nil)
 (%defvar *targets* nil)
 (%defvar *development?* nil)
+
+(%defun identity (x) x)

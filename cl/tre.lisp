@@ -34,7 +34,7 @@
       print
       defvar
       defun
-      identity list copy-list
+      list copy-list
       &rest &body &optional &key
       labels))
 
@@ -332,6 +332,7 @@
 
 (defmacro %defun (name args &body body)
   (print `(%defun ,name ,args))
+  (setf (gethash name *function-sources*) (cons args body))
   `(progn
      (push ',name *defined-functions*)
      (defun ,name ,args ,@body)))
