@@ -69,6 +69,7 @@
     '(%set-atom-fun %not cpr rplacp %load atan2 pow quit string-concat %load
       %eval %defun early-defun %defvar %defmacro %string %make-symbol
       %symbol-name %symbol-value %symbol-function %symbol-package
+      function-source
       %number? == number== integer== character== %integer %+ %- %* %/ %< %>
       string== list-string
       =-aref
@@ -201,8 +202,6 @@
 (defun function-native (x) x)
 (defun function-bytecode (x) x (error "Not implemented."))
 (defun =-function-bytecode (v x) v x (error "Not implemented."))
-(defun function-source (x) x (gethash x *function-sources*))
-(defun =-function-source (v x) v x (setf (gethash x *function-sources*) v))
 
 (defun bit-or (a b) (bit-or a b))
 (defun << (x num-bits-to-left) x num-bits-to-left (error "Not implemented."))
@@ -355,6 +354,15 @@
        (eq 'function (car x))
        (not (atom (cadr x)))))
 
+(defvar *function-atom-sources* (make-hash-table :test #'eq))
+
+(defun function-source (x)
+  (or (functionp x)
+      (error "Not a function."))
+  (gethash x *function-atom-sources*))
+
+(defun =-function-source (v x) v x (setf (gethash x *function-atom-sources*) v))
+
 (defun make-lambdas (x)
   (cond
     ((atom x)                  (? (eq '&body x)
@@ -362,7 +370,10 @@
                                   x))
     ((function-expr? (car x))  `(labels ((~ja ,@(make-lambdas (cadar x))))
                                   (~ja ,@(make-lambdas (cdr x)))))
-    ((function-expr? x)        `#'(lambda ,@(make-lambdas (cadr x))))
+    ((function-expr? x)        `(progn
+                                  (let ((~jb #'(lambda ,@(make-lambdas (cadr x)))))
+                                    (setf (gethash ~jb *function-sources*) ',x)
+                                    ~jb)))
     (t (mapcar #'make-lambdas x))))
 
 (defun quasiquote-expand (x)
