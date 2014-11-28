@@ -452,6 +452,8 @@
 (defun filter (fun x) (mapcar fun x))
 (defun make-hash-table (&key (test #'eql)) (%make-hash-table :test test))
 
+(defun nanotime () 0)
+
 ;;; Temporary wrappers
 
 (defun function-bytecode (x) nil)
