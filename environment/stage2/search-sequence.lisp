@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2006,2008-2009,2011–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2006,2008-2009,2011–2014 Sven Michael Klose <pixel@hugbox.org>
 
 (functional find position)
 
@@ -43,21 +43,21 @@
   (find-if [funcall test _ obj] seq :start start :end end :from-end from-end))
 
 (defun position (obj seq &key (start nil) (end nil) (from-end nil) (test #'eql))
-  (let *position-index* nil
+  (let position-index nil
     (find-if #'((x i)
                  (& (funcall test x obj)
-                    (= *position-index* i)))
+                    (= position-index i)))
              seq :start start :end end :from-end from-end :with-index t)
-    (!? *position-index*
+    (!? position-index
         (integer !))))
 
 (defun position-if (pred seq &key (start nil) (end nil) (from-end nil))
-  (let *position-index* nil
+  (let position-index nil
     (find-if #'((x i)
 				  (& (funcall pred x)
-					 (= *position-index* i)))
+					 (= position-index i)))
 			 seq :start start :end end :from-end from-end :with-index t)
-    (!? *position-index*
+    (!? position-index
         (integer !))))
 
 (defun some (pred &rest seqs)

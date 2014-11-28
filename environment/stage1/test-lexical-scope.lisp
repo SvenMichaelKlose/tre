@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008,2012–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008,2012–2014 Sven Michael Klose <pixel@hugbox.org>
 
 (defun lexical2 ()
   (labels ((x () 2))
@@ -9,6 +9,7 @@
 
 (defun lexical-test ()
   (labels ((x (cnt)
+                cnt
 	            (unless (== 2 (lexical2))
                   (print (lexical2))
                   (%error "LEXICAL-TEST: Parent (X) called."))

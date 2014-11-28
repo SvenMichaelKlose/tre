@@ -1,4 +1,4 @@
-;;;; tré – Copyright (c) 2005–2006,2008,2012–2013 Sven Michael Klose <pixel@copei.de>
+;;;; tré – Copyright (c) 2005–2006,2008,2012–2014 Sven Michael Klose <pixel@hugbox.org>
 
 (early-defun %chk-place (x)
   (? (%arg-keyword? x)
@@ -17,7 +17,9 @@
   (? (atom x)
      (error "Assignment list expected instead of atom ~A." x))
   (%simple-map #'%chk-place x)
-  (%simple-map #'((p) (%error-if-not-unique (%let-places x)))
+  (%simple-map #'((p)
+                    p
+                    (%error-if-not-unique (%let-places x)))
 			   x))
 
 (defmacro let* (alst &body body)
