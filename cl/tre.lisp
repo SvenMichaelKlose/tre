@@ -7,7 +7,7 @@
 ;;;;; The interpreter is spoiling everthing. Don't try to use
 ;;;;; tré before this thing here is working.
 
-(proclaim '(optimize (debug 3)))
+;(proclaim '(optimize (debug 3)))
 
 
 ;;;; Initialization package
@@ -73,7 +73,7 @@
       %number? == number== integer== character== %integer %+ %- %* %/ %< %>
       string== list-string
       =-aref
-      %make-hash-table href =-href copy-hash-table hashkeys
+      %make-hash-table href =-href copy-hash-table hashkeys hremove
       ? functional
       builtin? macro?
       %%macroexpand %%macrocall %%%macro?
@@ -184,6 +184,7 @@
 
 (defun href (x i) (gethash i x))
 (defun =-href (v x i) (setf (gethash i x) v))
+(defun hremove (x k) (remhash k x))
 
 (defun copy-hash-table (x)
   (let ((n (make-hash-table :test (hash-table-test x)
