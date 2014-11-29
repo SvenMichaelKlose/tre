@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2012–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2012–2014 Sven Michael Klose <pixel@hugbox.org>
 
 (defun bytecode-arrays (x)
   (filter [cons _. (list-array `(,._. nil ,@.._))] x))
@@ -8,6 +8,6 @@
     (unless (symbol-function !.)
       (= (symbol-function !.) (make-function))
       (unless temporary?
-        (push !. *defined-functions*))))
+        (push ! *functions*))))
   (adolist ((bytecode-arrays x))
     (= (function-bytecode (symbol-function !.)) .!)))

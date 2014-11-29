@@ -28,11 +28,9 @@
 
 (defmacro defun (name args &body body)
   (let name (%defun-name name)
-    (setq *function-sources* (cons (cons name (cons args body)) *function-sources*))
     `(block nil
 	   (print-definition `(defun ,name ,args))
-       (setq *universe* (cons ',name *universe*)
-       		 *defined-functions* (cons ',name *defined-functions*))
+       (setq *universe* (cons ',name *universe*))
        (%set-atom-fun ,name
            #'(,(%defun-checked-args args)
                (block ,name

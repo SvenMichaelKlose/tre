@@ -78,7 +78,7 @@
 
 ;;; Global variables provided by all tré cores.
 (defconstant +core-variables+
-    '(*universe* *variables* *defined-functions*
+    '(*universe* *variables* *functions*
       *environment-path* *environment-filenames*
       *macroexpand-hook* *quasiquoteexpand-hook* *dotexpand-hook*
       *default-listprop* *keyword-package*
@@ -138,7 +138,7 @@
 
 (defvar *universe* nil)
 (defvar *variables* nil)
-(defvar *defined-functions* nil)
+(defvar *functions* nil)
 (defvar *environment-path* ".")
 (defvar *environment-filenames* nil)
 (defvar *macroexpand-hook* nil)
@@ -152,7 +152,7 @@
 
 (defvar *macros* nil)
 (defvar *builtins* (make-hash-table :test #'eq))
-(defvar *function-sources* nil)
+(defvar *functions* nil)
 
 ;;; Implementations.
 
@@ -341,9 +341,8 @@
 
 (defmacro %defun (name args &body body)
   (print `(%defun ,name ,args))
-  (push (cons args body) *function-sources*)
+  (push (cons name (cons args body)) *functions*)
   `(progn
-     (push ',name *defined-functions*)
      (defun ,name ,args ,@body)
      (setf (gethash #',name *function-atom-sources*) ',(cons args body))))
 

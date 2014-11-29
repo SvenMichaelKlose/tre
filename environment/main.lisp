@@ -36,6 +36,7 @@
 (env-load "version.lisp")
 (env-load "config-after-reload.lisp")
 
+;(= (transpiler-dump-passes? *c-transpiler*) t)
 (compile-c-environment)
 ;(dump-system "image")
 ;(%load-launchfile)

@@ -7,8 +7,8 @@
 (defvar *print-executed-functions?* nil)
 
 (defun make-host-functions-and-macros-hash ()
-  (filter [cons _ (function-arguments (symbol-function _))]
-          (+ *defined-functions* *macros*)))
+  (filter [cons _. ._.]
+          (+ *functions* *macros*)))
 
 (defun make-host-functions-hash ()
   (alist-hash (+ (make-host-functions-and-macros-hash)

@@ -15,7 +15,7 @@
   (format nil "}break;}~%"))
 
 (defun js-emit-early-defined-functions ()
-  (mapcar ^(push ',_. *defined-functions*)
+  (mapcar ^(push ',_ *functions*)
           (transpiler-memorized-sources *js-transpiler*)))
 
 (defun js-emit-memorized-sources ()

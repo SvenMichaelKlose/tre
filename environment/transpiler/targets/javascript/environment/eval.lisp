@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2011–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2011–2014 Sven Michael Klose <pixel@copei.de>
 
 (= *gensym-prefix* "~jsG")
 
@@ -11,8 +11,8 @@
   (let tr (copy-transpiler *js-transpiler*)
     (transpiler-reset tr)
     (= (transpiler-only-environment-macros? tr) nil)
-    (dolist (i *defined-functions*)
-      (let-when f (symbol-function i)
+    (dolist (i *functions*)
+      (let-when f (symbol-function i.)
         (transpiler-add-defined-function tr i (car f.__source) (cdr f.__source))))
     (= *js-eval-transpiler* tr)))
 

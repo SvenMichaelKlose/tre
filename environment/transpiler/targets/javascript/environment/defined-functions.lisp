@@ -1,3 +1,3 @@
-;;;;; tré - Copyright (c) 2011 Sven Klose <pixel@copei.de>
+;;;;; tré - Copyright (c) 2011,2014 Sven Michael Klose <pixel@hugbox.org>
 
-(defvar *defined-functions* nil)
+(defvar *functions* nil)
