@@ -78,7 +78,7 @@
 
 ;;; Global variables provided by all tré cores.
 (defconstant +core-variables+
-    '(*universe* *variables* *functions*
+    '(*universe* *variables* *functions* *macros*
       *environment-path* *environment-filenames*
       *macroexpand-hook* *quasiquoteexpand-hook* *dotexpand-hook*
       *default-listprop* *keyword-package*
