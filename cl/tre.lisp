@@ -15,6 +15,7 @@
 (defpackage :tre-init
   (:use :common-lisp)
   (:export :+renamed-imports+
+           :+builtins+
            :make-keyword
            :cl-peek-char :cl-read-char))
 
@@ -55,18 +56,9 @@
       (%error error)
       (%nconc nconc)))
 
-;;; Global variables provided by all tré cores.
-(defconstant +core-variables+
-    '(*universe* *variables* *defined-functions*
-      *environment-path* *environment-filenames*
-      *macroexpand-hook* *quasiquoteexpand-hook* *dotexpand-hook*
-      *default-listprop* *keyword-package*
-      *pointer-size*
-      *assert* *targets*))
-
 ;;; Things we have to implement ourselves.
 (defconstant +implementations+
-    '(%set-atom-fun %not cpr rplacp %load atan2 pow quit string-concat %load
+    '(%set-atom-fun %not cpr rplacp %load atan2 pow quit string-concat
       %eval %defun early-defun %defvar %defmacro %string %make-symbol
       %symbol-name %symbol-value %symbol-function %symbol-package
       function-source
@@ -80,6 +72,20 @@
       %princ %force-output
       %fopen %fclose %read-char
       sys-image-create))
+
+(defconstant +builtins+
+      (append +direct-imports+
+              (mapcar #'car +renamed-imports+)
+              +implementations+))
+
+;;; Global variables provided by all tré cores.
+(defconstant +core-variables+
+    '(*universe* *variables* *defined-functions*
+      *environment-path* *environment-filenames*
+      *macroexpand-hook* *quasiquoteexpand-hook* *dotexpand-hook*
+      *default-listprop* *keyword-package*
+      *pointer-size*
+      *assert* *targets*))
 
 (defun make-keyword (x)
   (values (intern (symbol-name x) "KEYWORD")))
@@ -107,7 +113,8 @@
      (:use :common-lisp :tre-init)
      (:shadow :*macroexpand-hook*
               :read :peek-char :read-char)
-     (:export ,@(all-exports))))
+     (:export ,@(all-exports)
+              +builtins+)))
 
 (define-core-package)
 
@@ -440,6 +447,13 @@
   (alet (cl-read-char str nil 'eof)
     (unless (eq ! 'eof) !)))
 
+(dolist (i +builtins+)
+  (let ((s (find-symbol (symbol-name i) "TRE")))
+    (print s)
+    (and (fboundp s)
+         (setf (gethash (symbol-function s) *builtins*) t))))
+
+
 ;;;; User package.
 
 (in-package :tre)
@@ -473,5 +487,6 @@
 ;;; Temporary wrappers
 
 (defun function-bytecode (x) x nil)
+
 
 (%load "environment/env-load-cl.lisp")
