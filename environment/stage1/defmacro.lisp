@@ -11,8 +11,6 @@
        (cdr body))
      body))
 
-(setq *universe* (cons 'defmacro *universe*))
-
 (%defmacro defmacro (name args &body body)
   (print-definition `(defmacro ,name ,args))
   `(block nil
