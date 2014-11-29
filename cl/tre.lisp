@@ -33,8 +33,6 @@
       symbol-name make-package package-name
       logxor bit-and
       print
-      defvar
-      defun
       list copy-list
       &rest &body &optional &key
       labels))
@@ -458,35 +456,35 @@
 
 (in-package :tre)
 
-(defun eval (x) (%eval x))
-(defun macroexpand (x) (%%macroexpand x))
-(defun string (x) (%string x))
-(defun not (&rest x) (apply #'%not x))
-(defun make-symbol (x &optional (package nil)) (%make-symbol x package))
-(defun symbol-value (x) (%symbol-value x))
-(defun symbol-function (x) (%symbol-function x))
-(defun symbol-package (x) (%symbol-package x))
-(defun number? (x) (%number? x))
-(defun integer (x) (%integer x))
-(defun number+ (&rest x) (apply #'%+ x))
-(defun integer+ (&rest x) (apply #'%+ x))
-(defun character+ (&rest x) (apply #'%+ x))
-(defun number- (&rest x) (apply #'%- x))
-(defun integer- (&rest x) (apply #'%- x))
-(defun character- (&rest x) (apply #'%- x))
-(defun * (&rest x) (apply #'%* x))
-(defun / (&rest x) (apply #'%/ x))
-(defun < (&rest x) (apply #'%< x))
-(defun > (&rest x) (apply #'%> x))
-(defun filter (fun x) (mapcar fun x))
-(defun make-array (&optional (dimensions 1)) (%make-array dimensions))
-(defun make-hash-table (&key (test #'eql)) (%make-hash-table :test test))
+(%defun eval (x) (%eval x))
+(%defun macroexpand (x) (%%macroexpand x))
+(%defun string (x) (%string x))
+(%defun not (&rest x) (apply #'%not x))
+(%defun make-symbol (x &optional (package nil)) (%make-symbol x package))
+(%defun symbol-value (x) (%symbol-value x))
+(%defun symbol-function (x) (%symbol-function x))
+(%defun symbol-package (x) (%symbol-package x))
+(%defun number? (x) (%number? x))
+(%defun integer (x) (%integer x))
+(%defun number+ (&rest x) (apply #'%+ x))
+(%defun integer+ (&rest x) (apply #'%+ x))
+(%defun character+ (&rest x) (apply #'%+ x))
+(%defun number- (&rest x) (apply #'%- x))
+(%defun integer- (&rest x) (apply #'%- x))
+(%defun character- (&rest x) (apply #'%- x))
+(%defun * (&rest x) (apply #'%* x))
+(%defun / (&rest x) (apply #'%/ x))
+(%defun < (&rest x) (apply #'%< x))
+(%defun > (&rest x) (apply #'%> x))
+(%defun filter (fun x) (mapcar fun x))
+(%defun make-array (&optional (dimensions 1)) (%make-array dimensions))
+(%defun make-hash-table (&key (test #'eql)) (%make-hash-table :test test))
 
-(defun nanotime () 0)
+(%defun nanotime () 0)
 
 ;;; Temporary wrappers
 
-(defun function-bytecode (x) x nil)
+(%defun function-bytecode (x) x nil)
 
 
 (%load "environment/env-load-cl.lisp")
