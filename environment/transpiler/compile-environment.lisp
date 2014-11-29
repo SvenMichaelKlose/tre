@@ -4,7 +4,7 @@
   (aprog1 (copy-transpiler tr)
     (transpiler-add-wanted-functions ! (| (!? funs
                                              (ensure-list !))
-                                          (+ *universe-functions* *macros*)))))
+                                          (carlist (+ *functions* *macros*))))))
 
 (defun compile-c-environment (&optional (funs nil))
   (put-file "_compiled-env.c"

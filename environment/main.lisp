@@ -31,8 +31,6 @@
   (sys-image-create path #'%load-launchfile)
   (format t " OK~%"))
 
-(defvar *universe-functions* (copy-list *defined-functions*))
-
 (env-load "version.lisp")
 (env-load "config-after-reload.lisp")
 
