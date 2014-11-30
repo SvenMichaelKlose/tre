@@ -393,6 +393,7 @@
     ((atom x)                  (? (eq '&body x)
                                   '&rest
                                   x))
+    ((eq 'quote (car x))       x)
     ((function-expr? (car x))  `(labels ((~ja ,@(make-lambdas (cadar x))))
                                   (~ja ,@(make-lambdas (cdr x)))))
     ((function-expr? x)        `(let ((~jb #'(lambda ,@(make-lambdas (cadr x)))))
