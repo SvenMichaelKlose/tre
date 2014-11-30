@@ -66,7 +66,7 @@
       %make-hash-table href =-href copy-hash-table hashkeys hremove hash-table?
       ? functional
       builtin? macro?
-      %%macroexpand %%macrocall %%%macro?
+      %%macrocall %%%macro?
       %princ %force-output
       %fopen %fclose %read-char
       sys-image-create))
@@ -80,7 +80,7 @@
 (defconstant +core-variables+
     '(*universe* *variables* *functions* *macros*
       *environment-path* *environment-filenames*
-      *macroexpand-hook* *quasiquoteexpand-hook* *dotexpand-hook*
+      *quasiquoteexpand-hook* *dotexpand-hook*
       *default-listprop* *keyword-package*
       *pointer-size*
       *assert* *targets*))
@@ -109,8 +109,7 @@
 (defmacro define-core-package ()
   `(defpackage :tre-core
      (:use :common-lisp :tre-init)
-     (:shadow :*macroexpand-hook*
-              :read :peek-char :read-char)
+     (:shadow :read :peek-char :read-char)
      (:export ,@(all-exports)
               +builtins+)))
 
@@ -119,6 +118,7 @@
 (defpackage :tre
   (:use :tre-core)
   (:export :%backquote :backquote :quasiquote :quasiquote-splice
+           :macroexpand
            :square :curly :accent-circonflex $))
 
 (in-package :tre-core)
@@ -141,7 +141,6 @@
 (defvar *functions* nil)
 (defvar *environment-path* ".")
 (defvar *environment-filenames* nil)
-(defvar *macroexpand-hook* nil)
 (defvar *quasiquoteexpand-hook* nil)
 (defvar *dotexpand-hook* nil)
 (defvar *default-listprop* nil)
@@ -354,11 +353,6 @@
 (load "cl/read.lisp")
 (load "cl/argument-expand.lisp")
 
-(defun %%macroexpand (x)
-  (!? *macroexpand-hook*
-      (funcall ! x)
-      x))
-
 (defmacro %defmacro (name args &body body)
   (print `(%defmacro ,name ,args))
   `(push (cons ',name
@@ -413,7 +407,7 @@
       x))
 
 (defun %eval (x)
-  (eval (make-lambdas (macroexpand (car (backquote-expand (list x)))))))
+  (eval (make-lambdas (print (macroexpand (car (backquote-expand (list x))))))))
 
 
 ;;; Loader
@@ -424,7 +418,7 @@
           (%load-r s))))
 
 (defun %expand (x)
-  (alet (quasiquote-expand (%%macroexpand (dot-expand x)))
+  (alet (quasiquote-expand (tre:macroexpand (dot-expand x)))
     (? (equal x !)
        x
        (%expand !))))
@@ -457,7 +451,6 @@
 (in-package :tre)
 
 (%defun eval (x) (%eval x))
-(%defun macroexpand (x) (%%macroexpand x))
 (%defun string (x) (%string x))
 (%defun not (&rest x) (apply #'%not x))
 (%defun make-symbol (x &optional (package nil)) (%make-symbol x package))
@@ -479,6 +472,13 @@
 (%defun filter (fun x) (mapcar fun x))
 (%defun make-array (&optional (dimensions 1)) (%make-array dimensions))
 (%defun make-hash-table (&key (test #'eql)) (%make-hash-table :test test))
+
+(%defvar *macroexpand-hook* nil)
+
+(%defun macroexpand (x)
+  (? *macroexpand-hook*
+     (apply *macroexpand-hook* (list x))
+     x))
 
 (%defun nanotime () 0)
 
