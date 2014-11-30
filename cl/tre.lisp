@@ -23,7 +23,7 @@
 
 ;;; Symbols directly imported from package CL-USER.
 (defconstant +direct-imports+
-    '(nil t eq eql atom setq quote
+    '(nil t atom setq quote
       cons car cdr rplaca rplacd
       apply function
       progn block return return-from tagbody go
@@ -56,7 +56,7 @@
 
 ;;; Things we have to implement ourselves.
 (defconstant +implementations+
-    '(%set-atom-fun %not cpr rplacp %load atan2 pow quit string-concat
+    '(%set-atom-fun %eq %eql %not cpr rplacp %load atan2 pow quit string-concat
       %eval %defun %defun-quiet early-defun %defvar %defmacro %string %make-symbol
       %symbol-name %symbol-value %symbol-function %symbol-package
       function-source
@@ -118,7 +118,7 @@
 (defpackage :tre
   (:use :tre-core)
   (:export :%backquote :backquote :quasiquote :quasiquote-splice
-           :macroexpand
+           :macroexpand :eq :eql
            :square :curly :accent-circonflex $))
 
 (in-package :tre-core)
@@ -184,9 +184,11 @@
 (defun =-aref (v x &rest indexes) v x (apply #'aref x indexes))
 
 (defun %make-hash-table (&key (test #'eql))
-  (make-hash-table :test (? (eq test #'==)
-                            #'eql
-                            test)))
+  (make-hash-table :test (?
+                           (eq test #'tre:eq)       #'eq
+                           (or (eq test #'tre:eql)
+                               (eq test #'==))      #'eql
+                           test)))
 
 (defun hash-table? (x) (hash-table-p x))
 (defun href (x i) (gethash i x))
@@ -368,12 +370,6 @@
 (defun %%%macro? (x)
   (assoc x *macros* :test #'eq))
 
-(defun function-expr? (x)
-  (and (consp x)
-       (eq 'function (car x))
-       (not (atom (cadr x)))
-       (not (eq 'lambda (caadr x)))))
-
 (defvar *function-atom-sources* (make-hash-table :test #'eq))
 
 (defun function-source (x)
@@ -382,6 +378,23 @@
   (gethash x *function-atom-sources*))
 
 (defun =-function-source (v x) (setf (gethash x *function-atom-sources*) v))
+
+(defun variable-compare (predicate x)
+  (? (cdr x)
+     (alet (car x)
+       (dolist (i (cdr x) t)
+         (or (funcall predicate ! i)
+             (return nil))))
+     (error "At least 2 arguments required.")))
+
+(defun %eq (x) (variable-compare #'eq x))
+(defun %eql (x) (variable-compare #'eql x))
+
+(defun function-expr? (x)
+  (and (consp x)
+       (eq 'function (car x))
+       (not (atom (cadr x)))
+       (not (eq 'lambda (caadr x)))))
 
 (defun make-lambdas (x)
   (cond
@@ -452,6 +465,8 @@
 
 (%defun eval (x) (%eval x))
 (%defun string (x) (%string x))
+(%defun eq (&rest x) (apply #'%eq (list x)))
+(%defun eql (&rest x) (apply #'%eql (list x)))
 (%defun not (&rest x) (apply #'%not x))
 (%defun make-symbol (x &optional (package nil)) (%make-symbol x package))
 (%defun symbol-value (x) (%symbol-value x))
