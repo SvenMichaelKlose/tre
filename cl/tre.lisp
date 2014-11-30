@@ -377,7 +377,8 @@
 (defun function-expr? (x)
   (and (consp x)
        (eq 'function (car x))
-       (not (atom (cadr x)))))
+       (not (atom (cadr x)))
+       (not (eq 'lambda (caadr x)))))
 
 (defvar *function-atom-sources* (make-hash-table :test #'eq))
 
@@ -412,7 +413,7 @@
       x))
 
 (defun %eval (x)
-  (eval (make-lambdas (car (backquote-expand (list x))))))
+  (eval (make-lambdas (macroexpand (car (backquote-expand (list x)))))))
 
 
 ;;; Loader
@@ -447,7 +448,6 @@
 
 (dolist (i +builtins+)
   (let ((s (find-symbol (symbol-name i) "TRE")))
-    (print s)
     (and (fboundp s)
          (setf (gethash (symbol-function s) *builtins*) t))))
 
