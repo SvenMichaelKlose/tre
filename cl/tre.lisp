@@ -386,7 +386,7 @@
       (error "Not a function."))
   (gethash x *function-atom-sources*))
 
-(defun =-function-source (v x) v x (setf (gethash x *function-atom-sources*) v))
+(defun =-function-source (v x) (setf (gethash x *function-atom-sources*) v))
 
 (defun make-lambdas (x)
   (cond
