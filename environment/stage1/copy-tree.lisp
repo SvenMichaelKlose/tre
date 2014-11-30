@@ -1,8 +1,8 @@
-;;;;; tré – Copyright (c) 2005–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
 
 (functional copy-tree)
 
-(early-defun copy-tree (x)
+(%defun copy-tree (x)
   (? (atom x)
      x
      (progn

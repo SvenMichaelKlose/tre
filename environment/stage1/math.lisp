@@ -1,19 +1,12 @@
-;;;;; tré – Copyright (c) 2005,2009,2011,2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005,2009,2011,2013–2014 Sven Michael Klose <pixel@hugbox.org>
 
 (functional ++ -- integer++ integer--)
 (declare-cps-exception ++ -- integer++ integer--)
 
-(early-defun ++ (x)
-  (number+ x 1))
-
-(early-defun -- (x)
-  (number- x 1))
-
-(early-defun integer++ (x)
-  (integer+ x 1))
-
-(early-defun integer-- (x)
-  (integer- x 1))
+(%defun ++ (x) (number+ x 1))
+(%defun -- (x) (number- x 1))
+(%defun integer++ (x) (integer+ x 1))
+(%defun integer-- (x) (integer- x 1))
 
 (define-test "++"
   ((++ 1))

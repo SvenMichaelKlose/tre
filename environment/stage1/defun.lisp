@@ -2,7 +2,7 @@
 
 (defvar *function-sources* nil)
 
-(early-defun %defun-arg-keyword (args)
+(%defun %defun-arg-keyword (args)
   (let a (car args)
 	(let d (& (cdr args)
 			  (cadr args))
@@ -12,12 +12,12 @@
                (error "Keyword ~A follows keyword ~A." d a))
             (error "Unexpected end of argument list after keyword ~A." a))))))
 
-(early-defun %defun-checked-args (args)
+(%defun %defun-checked-args (args)
   (& args
      (| (%defun-arg-keyword args)
         (cons (car args) (%defun-checked-args (cdr args))))))
 
-(early-defun %defun-name (name)
+(%defun %defun-name (name)
   (? (symbol? name)
      name
      (? (& (cons? name)

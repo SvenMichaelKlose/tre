@@ -1,12 +1,12 @@
-;;;;; tré – Copyright (c) 2005,2008–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005,2008–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
 
-(early-defun %simple-map (func lst)
+(%defun %simple-map (func lst)
   (? lst
      (? (cons? lst)
         (apply func (list (car lst)))
         (%simple-map func (cdr lst)))))
 
-(early-defun %simple-mapcar (func lst)
+(%defun %simple-mapcar (func lst)
   (? lst
      (? (cons? lst)
         (cons (apply func (list (car lst)))

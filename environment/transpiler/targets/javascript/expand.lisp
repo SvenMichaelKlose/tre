@@ -57,7 +57,7 @@
          ,(shared-defun dname args body :make-expander? nil)
          (= (symbol-function ,g) ,dname))))
 
-(define-js-std-macro early-defun (name args &body body)
+(define-js-std-macro %defun (name args &body body)
   `(defun ,name ,args ,@body))
 
 (define-js-std-macro slot-value (place slot)

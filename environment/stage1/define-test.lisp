@@ -2,14 +2,14 @@
 
 (defvar *tests* nil)
 
-(early-defun test-equal (x y)
+(%defun test-equal (x y)
   (?
     (atom x)	(eql x y)
     (atom y)	(eql x y)
     (test-equal (car x) (car y))
       		    (test-equal (cdr x) (cdr y))))
 
-(early-defun do-test (test)
+(%defun do-test (test)
   (print (car test))
   (? (test-equal (eval (macroexpand (car (cdr test))))
                  (eval (macroexpand (car (cdr (cdr test))))))
@@ -21,7 +21,7 @@
 	   (print (eval (macroexpand (car (cdr (cdr test))))))
 	   (invoke-debugger))))
 
-(early-defun do-tests (&optional (tests *tests*))
+(%defun do-tests (&optional (tests *tests*))
   (? (not tests)
      nil
      (progn
