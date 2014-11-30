@@ -349,9 +349,6 @@
   (print `(%defun ,name ,args))
   `(%defun-quiet ,name ,args ,@body))
 
-(defmacro early-defun (name args &body body)
-  `(%defun ,name ,args ,@body))
-
 (load "cl/tree-walk.lisp")
 (load "cl/backquote-expand.lisp")
 (load "cl/read.lisp")
