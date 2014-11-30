@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defvar *can-import-function?* nil)
 
@@ -50,13 +50,13 @@
   x)
 
 (defun transpiler-import-exported-closures (tr)
-  (& (transpiler-exported-closures tr) ; !? (pop...
+  (& (transpiler-exported-closures tr)
      (+ (frontend (pop (transpiler-exported-closures tr)))
         (transpiler-import-exported-closures tr))))
 
 (defun transpiler-import-wanted-function (tr x)
   (frontend `((defun ,x ,(transpiler-host-function-arguments tr x)
-                ,@(function-body (symbol-function x))))))
+                ,@(transpiler-host-function-body tr x)))))
 
 (defun transpiler-import-wanted-functions (tr)
   (with-queue q

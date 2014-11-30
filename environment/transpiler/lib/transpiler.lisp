@@ -6,14 +6,8 @@
 (defvar *recompiling?* nil)
 (defvar *print-executed-functions?* nil)
 
-(defun make-host-functions-and-macros-hash ()
-  (filter [cons _. ._.]
-          (+ *functions* *macros*)))
-
 (defun make-host-functions-hash ()
-  (alist-hash (+ (make-host-functions-and-macros-hash)
-                 *builtin-argdefs*)
-              :test #'eq))
+  (alist-hash (+ *functions* *macros* *builtin-argdefs*) :test #'eq))
 
 (defun make-host-variables-hash ()
   (alist-hash (filter [cons _. t] *variables*) :test #'eq))
@@ -295,7 +289,8 @@
 (transpiler-getter cps-wrapper?            (href (transpiler-cps-wrappers tr) x))
 (transpiler-getter native-cps-function?    (href (transpiler-native-cps-functions tr) x))
 (transpiler-getter host-function?          (href (transpiler-host-functions-hash tr) x))
-(transpiler-getter host-function-arguments (href (transpiler-host-functions-hash tr) x))
+(transpiler-getter host-function-arguments (car (transpiler-host-function? tr x)))
+(transpiler-getter host-function-body      (cdr (transpiler-host-function? tr x)))
 (transpiler-getter host-variable?          (href (transpiler-host-variables-hash tr) x))
 (transpiler-getter function-body           (href (transpiler-function-bodies tr) x))
 (transpiler-getter function-arguments      (href (transpiler-function-args tr) x))
