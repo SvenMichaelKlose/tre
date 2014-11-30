@@ -30,10 +30,8 @@
   (let name (%defun-name name)
     `(block nil
 	   (print-definition `(defun ,name ,args))
-       (setq *universe* (cons ',name *universe*))
-       (%set-atom-fun ,name
-           #'(,(%defun-checked-args args)
-               (block ,name
-                 (block nil
-                   ,@(%add-documentation name body)))))
+       (%defun-quiet ,name ,(%defun-checked-args args)
+         (block ,name
+           (block nil
+             ,@(%add-documentation name body))))
 	   (return-from nil ',name))))

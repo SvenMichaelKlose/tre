@@ -57,7 +57,7 @@
 ;;; Things we have to implement ourselves.
 (defconstant +implementations+
     '(%set-atom-fun %not cpr rplacp %load atan2 pow quit string-concat
-      %eval %defun early-defun %defvar %defmacro %string %make-symbol
+      %eval %defun %defun-quiet early-defun %defvar %defmacro %string %make-symbol
       %symbol-name %symbol-value %symbol-function %symbol-package
       function-source
       %number? == number== integer== character== %integer %+ %- %* %/ %< %>
@@ -339,12 +339,15 @@
      (push (cons ',name ',init) *variables*)
      (defvar ,name ,init)))
 
-(defmacro %defun (name args &body body)
-  (print `(%defun ,name ,args))
+(defmacro %defun-quiet (name args &body body)
   (push (cons name (cons args body)) *functions*)
   `(progn
      (defun ,name ,args ,@body)
      (setf (gethash #',name *function-atom-sources*) ',(cons args body))))
+
+(defmacro %defun (name args &body body)
+  (print `(%defun ,name ,args))
+  `(%defun-quiet ,name ,args ,@body))
 
 (defmacro early-defun (name args &body body)
   `(%defun ,name ,args ,@body))
