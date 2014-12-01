@@ -1,10 +1,5 @@
 ;;;;; tré – Copyright (c) 2006–2014 Sven Michael Klose <pixel@copei.de>
 
-(defmacro !? (x &rest y)
-  `(let ((! ,x))
-     (? !
-        ,@y)))
-
 (defun quote? (x)
   (and (consp x)
        (eq 'quote (car x))))

@@ -155,22 +155,12 @@
 
 ;;; Implementations.
 
-(defun group (x size)
-  (cond
-    ((not x) nil)
-    ((< (length x) size) (list x))
-    (t (cons (subseq x 0 size)
-             (group (nthcdr size x) size)))))
-
-(defmacro ? (&body body)
-  (let* ((tests (group body 2))
-         (end   (car (last tests))))
-    (unless body
-      (error "Body is missing."))
-    `(cond
-       ,@(if (= 1 (length end))
-             (append (butlast tests) (list (cons t end)))
-             tests))))
+(load "cl/utils.lisp")
+(load "environment/stage2/while.lisp")
+(load "cl/tree-walk.lisp")
+(load "cl/backquote-expand.lisp")
+(load "cl/read.lisp")
+(load "cl/argument-expand.lisp")
 
 (defun %not (&rest x) (every #'not x))
 
@@ -214,7 +204,7 @@
 (defun file-exists? (pathname) pathname (error "Not implemented."))
 (defun %fopen (pathname access-mode) pathname access-mode (error "Not implemented."))
 
-(defun sys-image-create (pathname fun) (sb-ext:save-lisp-and-die pathname :toplevel fun))
+;(defun sys-image-create (pathname fun) (sb-ext:save-lisp-and-die pathname :toplevel fun))
 
 (defun quit (x) x (error "Not implemented."))
 
@@ -349,11 +339,6 @@
 (defmacro %defun (name args &body body)
   (print `(%defun ,name ,args))
   `(%defun-quiet ,name ,args ,@body))
-
-(load "cl/tree-walk.lisp")
-(load "cl/backquote-expand.lisp")
-(load "cl/read.lisp")
-(load "cl/argument-expand.lisp")
 
 (defmacro %defmacro (name args &body body)
   (print `(%defmacro ,name ,args))

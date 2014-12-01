@@ -6,7 +6,7 @@
 (env-load "stage4/main.lisp")
 (env-load "stage5/main.lisp")
 (env-load "lib/main.lisp")
-(& *tre-has-math*       (env-load "math/main.lisp"))
+;(& *tre-has-math*       (env-load "math/main.lisp"))
 ;(& *tre-has-alien*      (env-load "alien/main.lisp" 'c))
 (when *tre-has-class*   (env-load "oo/class.lisp"))
 ;                        (env-load "oo/ducktype.lisp")

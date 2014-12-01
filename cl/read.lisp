@@ -2,10 +2,6 @@
 
 (in-package :tre-core)
 
-(defmacro alet (x &rest body)
-  `(let ((! ,x))
-     ,@body))
-
 (defun peek-char (str)
   (alet (cl-peek-char nil str nil 'eof)
     (unless (eq ! 'eof)
@@ -14,37 +10,6 @@
 (defun read-char (str)
   (alet (cl-read-char str nil 'eof)
     (unless (eq ! 'eof) !)))
-
-(defmacro in? (obj &rest lst)
-  `(or ,@(filter #'(lambda (x) `(eq ,obj ,x)) lst)))
-
-(defmacro in=? (obj &rest lst)
-  `(or ,@(filter #'(lambda (x) `(char= ,obj ,x)) lst)))
-
-(defmacro let-when (x expr &body body)
-  `(let ((,x ,expr))
-	 (when ,x
-	   ,@body)))
-
-(defmacro with-gensym (x &rest body)
-  `(let ((,x (gensym)))
-     ,@body))
-
-(defmacro with-temporary (place val &body body)
-  (with-gensym old-val
-    `(let ((,old-val ,place))
-       (setf ,place ,val)
-       (prog1
-         (progn
-           ,@body)
-         (setf ,place ,old-val)))))
-
-(defmacro with-temporaries (lst &body body)
-  (or lst (error "Assignment list expected."))
-  `(with-temporary ,(car lst) ,(cadr lst)
-     ,@(? (cddr lst)
-          `((with-temporaries ,(cddr lst) ,@body))
-          body)))
 
 (defun whitespace? (x)
   (and (char< x (code-char 33))
@@ -66,23 +31,8 @@
        (or (decimal-digit? c)
            (nondecimal-digit? c :base base))))
 
-(load "environment/stage2/while.lisp")
-
-(defun split (obj seq &key (test #'eql) (include? nil))
-  (and seq
-       (alet (position obj seq :test test)
-         (? !
-            (cons (subseq seq 0 (? include? (+ 1 !) !))
-                  (split obj (subseq seq (+ 1 !)) :test test :include? include?))
-            (list seq)))))
-
 (defun digit-number (x)
   (- (char-code x) (char-code #\0)))
-
-(defmacro awhen (x &rest body)
-  `(alet ,x
-     (when !
-       ,@body)))
 
 (defun peek-digit (str)
   (awhen (peek-char str)
@@ -122,10 +72,6 @@
                  (read-char str)
                  (read-decimal-places str))
            0))))
-
-(defmacro with-stream-string (str x &body body)
-  `(let ((,str (make-string-input-stream ,x)))
-     ,@body))
 
 (defun token-is-quote? (x)
   (in? x 'quote 'tre:backquote 'tre:quasiquote 'tre:quasiquote-splice 'tre:accent-circonflex))
