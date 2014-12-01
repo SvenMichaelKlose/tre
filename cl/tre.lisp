@@ -157,7 +157,6 @@
 
 (load "cl/utils.lisp")
 (load "environment/stage2/while.lisp")
-(load "cl/tree-walk.lisp")
 (load "cl/backquote-expand.lisp")
 (load "cl/read.lisp")
 (load "cl/argument-expand.lisp")
