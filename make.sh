@@ -223,7 +223,7 @@ environment)
 
 boot)
     echo "Booting C target via sbcl"
-    echo "(load \"cl/tre.lisp\")" | sbcl
+    echo "(load \"cl/main.lisp\")" | sbcl
 	./make.sh reload $ARGS || exit 1
     echo "Compiling only the C target..."
 	./make.sh compiler $ARGS || exit 1
