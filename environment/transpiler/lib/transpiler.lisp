@@ -113,7 +113,7 @@
   (function-args            (make-hash-table :test #'eq))
   (function-bodies          (make-hash-table :test #'eq))
   (obfuscations             (make-hash-table :test #'eq))
-  plain-arg-funs
+  (plain-arg-funs           nil)
   (late-symbols             (make-hash-table :test #'eq))
   (exported-closures        nil)
   (delayed-var-inits        nil)
