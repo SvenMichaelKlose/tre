@@ -20,3 +20,5 @@
 
 (defun %%%macro? (x)
   (assoc x *macros* :test #'eq))
+
+(defun %equal (a b) (equal a b))

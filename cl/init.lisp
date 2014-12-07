@@ -44,7 +44,7 @@
 
 ;;; Things we have to implement ourselves.
 (defconstant +implementations+
-    '(%set-atom-fun %eq %eql %not cpr rplacp %load atan2 pow quit string-concat
+    '(%set-atom-fun %eq %eql %equal %not cpr rplacp %load atan2 pow quit string-concat
       %eval %defun %defun-quiet early-defun %defvar %defmacro %string %make-symbol
       %symbol-name %symbol-value %symbol-function %symbol-package
       function-source
