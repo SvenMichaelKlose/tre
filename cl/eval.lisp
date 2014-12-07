@@ -35,4 +35,4 @@
       x))
 
 (defun %eval (x)
-  (eval (make-lambdas (print (macroexpand (car (backquote-expand (list x))))))))
+  (eval (make-lambdas (macroexpand (car (backquote-expand (list x)))))))
