@@ -10,6 +10,16 @@
     (cons (read s)
           (%load-r s))))
 
+(defun quasiquote-expand (x)
+  (!? *quasiquoteexpand-hook*
+      (funcall ! x)
+      x))
+
+(defun dot-expand (x)
+  (!? *dotexpand-hook*
+      (funcall ! x)
+      x))
+
 (defun %expand (x)
   (alet (quasiquote-expand (tre:macroexpand (dot-expand x)))
     (? (equal x !)

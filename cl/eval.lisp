@@ -24,15 +24,5 @@
                                   ~jb))
     (t (mapcar #'make-lambdas x))))
 
-(defun quasiquote-expand (x)
-  (!? *quasiquoteexpand-hook*
-      (funcall ! x)
-      x))
-
-(defun dot-expand (x)
-  (!? *dotexpand-hook*
-      (funcall ! x)
-      x))
-
 (defun %eval (x)
   (eval (make-lambdas (macroexpand (car (backquote-expand (list x)))))))
