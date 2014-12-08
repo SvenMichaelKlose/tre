@@ -25,4 +25,4 @@
     (t (mapcar #'make-lambdas x))))
 
 (defun %eval (x)
-  (eval (make-lambdas (macroexpand (car (backquote-expand (list x)))))))
+  (eval (make-lambdas (common-lisp:macroexpand (car (backquote-expand (list x)))))))
