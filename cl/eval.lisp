@@ -19,9 +19,10 @@
     ((eq 'quote (car x))       x)
     ((function-expr? (car x))  `(labels ((~local-var-fun ,@(make-lambdas (cadar x))))
                                   (~local-var-fun ,@(make-lambdas (cdr x)))))
-    ((function-expr? x)        `(let ((~anonymous-fun #'(lambda ,@(make-lambdas (cadr x)))))
-                                  (setf (gethash ~anonymous-fun *function-atom-sources*) ',(cadr x))
-                                  ~anonymous-fun))
+;    ((function-expr? x)        `(let ((~anonymous-fun #'(lambda ,@(make-lambdas (cadr x)))))
+;                                  (setf (gethash ~anonymous-fun *function-atom-sources*) ',(cadr x))
+;                                  ~anonymous-fun))
+    ((function-expr? x)        `#'(lambda ,@(make-lambdas (cadr x))))
     (t (mapcar #'make-lambdas x))))
 
 (defun tre2cl (x)
