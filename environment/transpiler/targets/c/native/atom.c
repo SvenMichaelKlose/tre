@@ -10,7 +10,6 @@
 #include "cons.h"
 #include "list.h"
 #include "string2.h"
-#include "eval.h"
 #include "error.h"
 #include "array.h"
 #include "gc.h"

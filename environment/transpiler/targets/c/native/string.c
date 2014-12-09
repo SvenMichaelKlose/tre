@@ -11,7 +11,6 @@
 #include "list.h"
 #include "number.h"
 #include "error.h"
-#include "eval.h"
 #include "builtin_sequence.h"
 #include "thread.h"
 #include "string2.h"

@@ -11,7 +11,6 @@
 #include "list.h"
 #include "function.h"
 #include "error.h"
-#include "eval.h"
 #include "gc.h"
 #include "alloc.h"
 #include "symtab.h"

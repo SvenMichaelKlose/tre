@@ -6,7 +6,6 @@
 #include <sys/mman.h>
 
 #include "atom.h"
-#include "argument.h"
 #include "number.h"
 
 treptr

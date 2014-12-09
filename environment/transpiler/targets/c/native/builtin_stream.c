@@ -9,12 +9,10 @@
 
 #include "config.h"
 #include "atom.h"
-#include "eval.h"
 #include "stream.h"
 #include "error.h"
 #include "number.h"
 #include "util.h"
-#include "argument.h"
 #include "string2.h"
 #include "symtab.h"
 #include "assert.h"

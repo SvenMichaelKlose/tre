@@ -8,8 +8,6 @@
 #include "error.h"
 #include "funcall.h"
 #include "list.h"
-#include "eval.h"
-#include "argument.h"
 
 treptr
 trebuiltin_apply_args (treptr list)

@@ -9,9 +9,7 @@
 #include "cons.h"
 #include "list.h"
 #include "number.h"
-#include "eval.h"
 #include "error.h"
-#include "argument.h"
 #include "builtin_function.h"
 #include "string2.h"
 #include "thread.h"
@@ -20,7 +18,6 @@
 #include "symtab.h"
 #include "assert.h"
 #include "builtin.h"
-#include "special.h"
 #include "symbol.h"
 
 treptr

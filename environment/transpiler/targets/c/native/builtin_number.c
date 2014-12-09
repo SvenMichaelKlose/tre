@@ -10,9 +10,7 @@
 #include "list.h"
 #include "number.h"
 #include "error.h"
-#include "eval.h"
 #include "gc.h"
-#include "argument.h"
 
 treptr
 trenumber_numberp (treptr object)

@@ -12,13 +12,10 @@
 #include "list.h"
 #include "number.h"
 #include "string2.h"
-#include "eval.h"
 #include "error.h"
-#include "print.h"
 #include "gc.h"
 #include "ptr.h"
 #include "builtin_sequence.h"
-#include "argument.h"
 #include "array.h"
 #include "xxx.h"
 
