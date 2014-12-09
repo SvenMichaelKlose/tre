@@ -27,6 +27,7 @@
 (%defun filter (fun x) (mapcar fun x))
 (%defun make-array (&optional (dimensions 1)) (%make-array dimensions))
 (%defun make-hash-table (&key (test #'eql)) (%make-hash-table :test test))
+(%defun load (pathname) (%load pathname))
 
 (%defvar *macroexpand-hook* nil)
 
