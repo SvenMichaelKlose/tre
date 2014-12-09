@@ -3,7 +3,6 @@
 (in-package :tre-core)
 
 (defun file-exists? (pathname) pathname (error "Not implemented."))
-(defun %fopen (pathname access-mode) pathname access-mode (error "Not implemented."))
 
 (defun quit (x) x (error "Not implemented."))
 
