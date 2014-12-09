@@ -23,13 +23,7 @@ variants) are the fastest. All other test functions are
 iterated over the array.
 
 
-# Interpreter
-
-An interpreter without lexical scoping to boot the compiler
-with the C target.
-
-
-# C target
+# C/SBCL target
 
 The C target has no dynamically sized arrays.
 

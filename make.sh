@@ -179,12 +179,6 @@ reloadnoassert)
     echo | ./tre -n -e "(setq *assert* nil)(setq *targets* '(c))" || exit 1
 	;;
 
-interpreter)
-    echo "Making interpreter..."
-	basic_clean
-	./make.sh crunsh $ARGS || exit 1
-	;;
-
 debug)
     echo "Making debuggable version..."
 	COPTS="$COPTS $DEBUGOPTS"
@@ -271,7 +265,6 @@ updatetests)
 
 tests)
     echo "Making tests..."
-#    ./tests/bytecode-interpreter.sh || exit 1
 	./make.sh ctests || exit 1
 	./make.sh phptests || exit 1
 	./make.sh jstests || exit 1
@@ -356,7 +349,6 @@ restore)
 	echo "Usage: make.sh [target]"
 	echo "Targets:"
 	echo "  boot            Build compiled environment from scratch."
-	echo "  interpreter     Build interpreter (and compiled environment)."
 	echo "  compiler        Compile compiler and C target to C."
 	echo "  bcompiler       Compile compiler and bytecode target to C."
     echo "  environment     Compile environment to C."
