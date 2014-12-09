@@ -17,6 +17,7 @@
 
 ;;; Global variables.
 
+(defvar *launchfile* nil)
 (defvar *universe* nil)
 (defvar *pointer-size* 4)
 (defvar *assert* '*assert*)

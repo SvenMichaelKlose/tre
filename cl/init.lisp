@@ -71,7 +71,7 @@
       *environment-path* *environment-filenames*
       *quasiquoteexpand-hook* *dotexpand-hook*
       *default-listprop* *keyword-package*
-      *pointer-size*
+      *pointer-size* *launchfile*
       *assert* *targets*))
 
 (defun make-keyword (x) (values (intern (symbol-name x) "KEYWORD")))

@@ -297,11 +297,7 @@ tremain_init (void)
 void
 tremain_init_after_image_loaded ()
 {
-    /* Create global symbol %LAUNCHFILE which contains the source file
-     * to evaluate after the environment is set up. */
-    MAKE_SYMBOL("%LAUNCHFILE", (tremain_launchfile ?
-                				    trestring_get (tremain_launchfile) :
-                				    NIL));
+    MAKE_SYMBOL("*LAUNCHFILE*", (tremain_launchfile ? trestring_get (tremain_launchfile) : NIL));
 }
 
 void

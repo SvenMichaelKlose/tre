@@ -23,8 +23,9 @@
 (setq *tests* (reverse *tests*))
 
 (defun %load-launchfile ()
-  (awhen %LAUNCHFILE
-    (load !)))
+  (awhen *launchfile*
+    (load !))
+  (read-eval-loop))
 
 (defun dump-system (path)
   (format t "; Dumping environment to image '~A': ~F" path)
@@ -34,7 +35,4 @@
 (env-load "version.lisp")
 (env-load "config-after-reload.lisp")
 
-;(= (transpiler-dump-passes? *c-transpiler*) t)
-(compile-c-environment)
-;(dump-system "image")
-;(%load-launchfile)
+(dump-system "image")

@@ -2,9 +2,6 @@
 
 (in-package :tre-core)
 
-(defvar *environment-path* ".")                                                                                                                                                                       
-(defvar *environment-filenames* nil)
-
 (defun %load-r (s)
   (when (peek-char s)
     (cons (read s)
@@ -31,6 +28,9 @@
   (dolist (i (with-open-file (s pathname)
                (%load-r s)))
     (%eval (%expand i))))
+
+(defvar *environment-path* ".")
+(defvar *environment-filenames* nil)
 
 (%defun env-load (pathname &optional (target nil))
   (setq *environment-filenames* (cons (cons pathname target) *environment-filenames*))
