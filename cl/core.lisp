@@ -59,3 +59,5 @@
                              #+LISPWORKS system:*line-arguments-list*
                              #+CMU extensions:*command-line-words*
                              nil))))
+
+(defun quit (&optional exit-code) (sb-ext:quit :unix-status exit-code))

@@ -58,7 +58,7 @@
       %%macrocall %%%macro?
       %princ %force-output
       %fopen %fclose %read-char
-      sys-image-create tre2cl
+      quit sys-image-create tre2cl
       unix-sh-mkdir
       %start-core))
 

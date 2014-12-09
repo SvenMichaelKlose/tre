@@ -4,8 +4,6 @@
 
 (defun file-exists? (pathname) pathname (error "Not implemented."))
 
-(defun quit (x) x (error "Not implemented."))
-
 (defun %malloc (num-bytes) num-bytes (error "Not implemented."))
 (defun %malloc-exec (num-bytes) num-bytes (error "Not implemented."))
 (defun %free (address) address (error "Not implemented."))
