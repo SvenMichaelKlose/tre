@@ -15,3 +15,6 @@
 (defun %read-char (str)
   (alet (cl-read-char str nil 'eof)
     (unless (eq ! 'eof) !)))
+
+(defun unix-sh-mkdir (pathname &key (parents nil))
+  (ensure-directories-exist pathname))
