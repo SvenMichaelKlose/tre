@@ -216,10 +216,7 @@ environment)
 	;;
 
 boot)
-    echo "Booting C target via SBCL"
     echo "(load \"cl/main.lisp\")" | sbcl
-	./make.sh tests $ARGS || exit 1
-    echo "Boot complete."
 	;;
 
 pgo)
