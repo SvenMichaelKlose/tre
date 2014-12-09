@@ -17,6 +17,6 @@
 (%defvar *backtrace* nil)
 (%defvar *assert* nil)
 (%defvar *targets* nil)
-(%defvar *development?* nil)
+(%defvar *development?* t)
 
 (%defun identity (x) x)
