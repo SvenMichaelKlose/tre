@@ -8,6 +8,7 @@
 (%defun eql (&rest x) (apply #'%eql (list x)))
 (%defun not (&rest x) (apply #'%not x))
 (%defun make-symbol (x &optional (package nil)) (%make-symbol x package))
+(%defun symbol-name (x) (%symbol-name x))
 (%defun symbol-value (x) (%symbol-value x))
 (%defun symbol-function (x) (%symbol-function x))
 (%defun symbol-package (x) (%symbol-package x))

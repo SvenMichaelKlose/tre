@@ -9,6 +9,11 @@
                (package-name package)
                "TRE")))
 
+(defun %symbol-name (x)
+  (? (packagep x)
+     (package-name x)
+     (symbol-name x)))
+
 (defun %symbol-value (x)
   (? (boundp x)
      (symbol-value x)

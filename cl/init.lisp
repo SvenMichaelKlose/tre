@@ -18,7 +18,7 @@
       mod sqrt sin cos atan exp round floor
       last copy-list nthcdr nth mapcar elt length make-string
       aref code-char char-code
-      symbol-name make-package package-name
+      make-package package-name
       logxor bit-and
       print
       list copy-list
