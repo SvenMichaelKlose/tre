@@ -58,7 +58,7 @@
       %%macrocall %%%macro?
       %princ %force-output
       %fopen %fclose %read-char
-      sys-image-create tre2cl))
+      sys-image-create tre2cl %start-core))
 
 (defconstant +builtins+
       (append +direct-imports+

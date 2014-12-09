@@ -23,6 +23,7 @@
 (setq *tests* (reverse *tests*))
 
 (defun %load-launchfile ()
+  (%start-core)
   (awhen *launchfile*
     (load !))
   (read-eval-loop))

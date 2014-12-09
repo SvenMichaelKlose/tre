@@ -18,6 +18,7 @@
 ;;; Global variables.
 
 (defvar *launchfile* nil)
+
 (defvar *universe* nil)
 (defvar *pointer-size* 4)
 (defvar *assert* '*assert*)
@@ -51,3 +52,10 @@
 
 (load "cl/not-implemented.lisp")
 (load "cl/builtins.lisp")
+
+(defun %start-core ()
+  (setf *launchfile* (cadr (or
+                             #+SBCL sb-ext:*posix-argv*
+                             #+LISPWORKS system:*line-arguments-list*
+                             #+CMU extensions:*command-line-words*
+                             nil))))

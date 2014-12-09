@@ -27,7 +27,6 @@
 #include "builtin_error.h"
 #include "builtin_fs.h"
 #include "builtin_function.h"
-#include "builtin_image.h"
 #include "builtin_list.h"
 #include "builtin_memory.h"
 #include "builtin_net.h"
