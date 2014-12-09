@@ -18,6 +18,16 @@
   (print `(%defun ,name ,args))
   `(%defun-quiet ,name ,args ,@body))
 
+(%defmacro %defun-quiet (name args &body body)
+  (push (cons name (cons args body)) *functions*)
+  `(progn
+     (defun ,name ,args ,@body)
+     (setf (gethash #',name *function-atom-sources*) ',(cons args body))))
+
+(%defmacro %defun (name args &body body)
+  (print `(%defun ,name ,args))
+  `(%defun-quiet ,name ,args ,@body))
+
 (defvar *function-atom-sources* (make-hash-table :test #'eq))
 
 (defun function-source (x)

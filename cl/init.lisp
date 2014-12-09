@@ -44,12 +44,13 @@
 
 ;;; Things we have to implement ourselves.
 (defconstant +implementations+
-    '(%set-atom-fun %eq %eql %equal %not cpr rplacp %load atan2 pow quit string-concat
+    '(%set-atom-fun %eq %eql %equal %not cpr rplacp %load env-load
       %eval %defun %defun-quiet early-defun %defvar %defmacro %string %make-symbol
       %symbol-name %symbol-value %symbol-function %symbol-package
       function-source
       %number? == number== integer== character== %integer %+ %- %* %/ %< %>
-      string== list-string
+      atan2 pow quit
+      string-concat string== list-string
       %make-array =-aref
       %make-hash-table href =-href copy-hash-table hashkeys hremove hash-table?
       ? functional

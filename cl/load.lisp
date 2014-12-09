@@ -32,8 +32,6 @@
                (%load-r s)))
     (%eval (%expand i))))
 
-(in-package :tre)
-
 (%defun env-load (pathname &optional (target nil))
   (setq *environment-filenames* (cons (cons pathname target) *environment-filenames*))
   (%load (string-concat *environment-path* "/environment/" pathname)))
