@@ -17,12 +17,12 @@
                                   '&rest
                                   x))
     ((eq 'quote (car x))       x)
-    ((function-expr? (car x))  `(labels ((~ja ,@(make-lambdas (cadar x))))
-                                  (~ja ,@(make-lambdas (cdr x)))))
-    ((function-expr? x)        `(let ((~jb #'(lambda ,@(make-lambdas (cadr x)))))
-                                  (setf (gethash ~jb *function-atom-sources*) ',(cadr x))
-                                  ~jb))
+    ((function-expr? (car x))  `(labels ((~local-var-fun ,@(make-lambdas (cadar x))))
+                                  (~local-var-fun ,@(make-lambdas (cdr x)))))
+    ((function-expr? x)        `(let ((~anonymous-fun #'(lambda ,@(make-lambdas (cadr x)))))
+                                  (setf (gethash ~anonymous-fun *function-atom-sources*) ',(cadr x))
+                                  ~anonymous-fun))
     (t (mapcar #'make-lambdas x))))
 
 (defun %eval (x)
-  (eval (make-lambdas (common-lisp:macroexpand (car (backquote-expand (list x)))))))
+  (eval (make-lambdas (macroexpand (car (backquote-expand (list x)))))))
