@@ -24,5 +24,8 @@
                                   ~anonymous-fun))
     (t (mapcar #'make-lambdas x))))
 
+(defun tre2cl (x)
+  (make-lambdas (early-macroexpand (car (backquote-expand (list x))))))
+
 (defun %eval (x)
-  (eval (make-lambdas (early-macroexpand (car (backquote-expand (list x)))))))
+  (eval (tre2cl x)))
