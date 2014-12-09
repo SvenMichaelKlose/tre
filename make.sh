@@ -96,7 +96,7 @@ basic_clean ()
 {
 	echo "Cleaning..."
 	rm -vrf obj compiled
-	rm -vf *.core obj compiled environment/transpiler/targets/c/native/$COMPILED_ENV tre image bytecode-image $CRUNSHTMP __alien.tmp files.lisp
+	rm -vf *.core obj compiled environment/transpiler/targets/c/native/$COMPILED_ENV image bytecode-image $CRUNSHTMP __alien.tmp files.lisp
     rm -vf environment/transpiler/targets/c/native/_revision.h environment/_current-version
     rm -vf examples/js/hello-world.js
     rm -vf gmon.out tmp.gcda profile.lisp
