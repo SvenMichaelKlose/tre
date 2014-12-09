@@ -89,7 +89,7 @@ if [ -f environment/transpiler/targets/c/native/$COMPILED_ENV ]; then
 fi
 
 CRUNSHTMP="tmp.c"
-TRE="./tre -i image"
+TRE="sbcl --core image"
 BINDIR="/usr/local/bin/"
 
 basic_clean ()
@@ -224,10 +224,6 @@ environment)
 boot)
     echo "Booting C target via SBCL"
     echo "(load \"cl/main.lisp\")" | sbcl
-    echo "Compiling everything..."
-    rm -f environment/transpiler/targets/c/native/_compiled-env.c
-    echo "(compile-c-environment)" | sbcl --core image
-	./make.sh crunsh $ARGS || exit 1
 	./make.sh tests $ARGS || exit 1
     echo "Boot complete."
 	;;
