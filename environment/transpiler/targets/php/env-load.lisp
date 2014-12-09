@@ -28,7 +28,7 @@
 			             "hash.lisp"
 			             "array.lisp"
 			             "function.lisp"
-			             "object?.lisp")
+			             "objectp.lisp")
 		             (php-load-base "environment/transpiler/environment/"
                          "not.lisp"
 			             "atom.lisp"
