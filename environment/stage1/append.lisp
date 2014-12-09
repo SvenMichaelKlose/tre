@@ -1,14 +1,17 @@
-;;;;; tré – Copyright (c) 2005–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
 
 (functional append)
 
-(defun append (&rest lsts)
-  (when lsts
-	(? (car lsts)
-   	   (let n (copy-list (car lsts))
-         (rplacd (last n) (apply #'append (cdr lsts)))
-         n)
-	   (apply #'append (cdr lsts)))))
+(defun append (&rest lists)
+  (when lists
+    (let f nil
+      (let l nil
+        (dolist (i lists f)
+          (when i
+            (? l
+               (setq l (last (rplacd l (copy-list i))))
+               (setq f (copy-list i)
+                     l (last f)))))))))
 
 (defmacro append! (place &rest args)
   `(= ,place (append ,place ,@args)))
