@@ -7,7 +7,7 @@
                                           (carlist (+ *functions* *macros*))))))
 
 (defun compile-c-environment (&optional (funs nil))
-  (put-file "_compiled-env.c"
+  (put-file "environment/transpiler/targets/c/native/_compiled-env.c"
             (compile-sections nil :transpiler (%environment-transpiler *c-transpiler* funs)))
   nil)
 

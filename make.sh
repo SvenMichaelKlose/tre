@@ -222,15 +222,11 @@ environment)
 	;;
 
 boot)
-    echo "Booting C target via sbcl"
+    echo "Booting C target via SBCL"
     echo "(load \"cl/main.lisp\")" | sbcl
-	./make.sh reload $ARGS || exit 1
-    echo "Compiling only the C target..."
-	./make.sh compiler $ARGS || exit 1
-	./make.sh crunsh $ARGS || exit 1
-	./make.sh ctests $ARGS || exit 1
     echo "Compiling everything..."
-	./make.sh environment $ARGS || exit 1
+    rm -f environment/transpiler/targets/c/native/_compiled-env.c
+    echo "(compile-c-environment)" | sbcl --core image
 	./make.sh crunsh $ARGS || exit 1
 	./make.sh tests $ARGS || exit 1
     echo "Boot complete."
