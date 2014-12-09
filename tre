@@ -1,2 +1,2 @@
 #!/bin/sh
-sbcl --core image $1 $2 $3 $4
+sbcl --core /usr/local/lib/tre/image $1 $2 $3 $4
