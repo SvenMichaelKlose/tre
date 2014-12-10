@@ -17,7 +17,7 @@
       progn block return return-from tagbody go
       mod sqrt sin cos atan exp round floor
       last copy-list nthcdr nth mapcar elt length make-string
-      aref code-char char-code
+      aref char-code
       make-package package-name
       logxor bit-and
       print
@@ -33,6 +33,7 @@
       (string? stringp)
       (array? arrayp)
       (character? characterp)
+      (%code-char code-char)
       (number< <)
       (integer< <)
       (character< <)

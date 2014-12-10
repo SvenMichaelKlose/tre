@@ -14,6 +14,7 @@
 (%defun symbol-package (x) (%symbol-package x))
 (%defun number? (x) (%number? x))
 (%defun integer (x) (%integer x))
+(%defun code-char (x) (%code-char (%integer x)))
 (%defun number+ (&rest x) (apply #'%+ x))
 (%defun integer+ (&rest x) (apply #'%+ x))
 (%defun character+ (&rest x) (apply #'%+ x))
@@ -48,5 +49,5 @@
 (%defun function-bytecode (x) x nil)
 
 
-(env-load "stage0-cl/main.lisp")
+(env-load "stage0/main.lisp")
 (env-load "main.lisp")
