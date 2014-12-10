@@ -1,7 +1,6 @@
 ;;;;; tré – Copyright (c) 2008,2011–2014 Sven Michael Klose <pixel@copei.de>
 
 (= *have-environment-tests* t)
-(= *transpiler-assert* t)
 
 (load "environment/platforms/shared/lml.lisp")
 (load "environment/platforms/shared/lml2xml.lisp")
