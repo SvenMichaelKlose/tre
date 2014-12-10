@@ -1,30 +1,16 @@
-;;;;; tré – Copyright (c) 2009,2011–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2009,2011–2014 Sven Michael Klose <pixel@copei.de>
 
-(setq
-	*universe*
-	(cons '+
-	(cons '-
-		  *universe*)))
+(%defun + (&rest x)
+  (#'((a)
+        (? a
+           (apply (?
+                    (cons? a)   #'append
+                    (string? a) #'string-concat
+                    #'number+)
+                  x)
+           (? (cdr x)
+              (apply #'+ (cdr x)))))
+    (car x)))
 
-(setq
-	*defined-functions*
-	(cons '+
-	(cons '-
-		  *defined-functions*)))
-
-(%set-atom-fun +
-  #'((&rest x)
-       (#'((a)
-             (? a
-                (apply (?
-                         (cons? a)   #'append
-                         (string? a) #'string-concat
-                         #'number+)
-                       x)
-                (? (cdr x)
-                   (apply #'+ (cdr x)))))
-            (car x))))
-
-(%set-atom-fun -
-  #'((&rest x)
-	   (apply #'number- x)))
+(%defun - (&rest x)
+  (apply #'number- x))

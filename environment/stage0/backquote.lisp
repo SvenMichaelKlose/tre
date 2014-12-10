@@ -1,42 +1,15 @@
-;;;;; tré – Copyright (c) 2006–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2006–2014 Sven Michael Klose <pixel@copei.de>
 
-;;;; XXX Never use %GSBQ anywhere within your QUASIQUOTEs.
-;;;; XXX Solve this issue with packaging.
-
-(setq *UNIVERSE*
-	  (cons 'any-quasiquote?
-      (cons '%quasiquote-eval
-      (cons '%backquote-quasiquote
-	  (cons '%backquote-quasiquote-splice
-	  (cons '%backquote
-	  (cons 'backquote
-	  (cons 'quasiquote
-	  (cons 'quasiquote-splice
-		    *UNIVERSE*)))))))))
-
-(setq *defined-functions*
-	  (cons 'any-quasiquote?
-      (cons '%quasiquote-eval
-      (cons '%backquote-quasiquote
-	  (cons '%backquote-quasiquote-splice
-	  (cons '%backquote
-	  (cons 'quasiquote
-	  (cons 'quasiquote-splice
-		    *defined-functions*))))))))
-
-(%set-atom-fun any-quasiquote?
-  #'((x)
+(%defun any-quasiquote? (x)
        (? (cons? x)
           (?
             (eq (car x) 'quasiquote)         t
-            (eq (car x) 'quasiquote-splice)  t))))
+            (eq (car x) 'quasiquote-splice)  t)))
 
-(%set-atom-fun %quasiquote-eval
-  #'((%gsbq)
-       (eval (car (cdr (car %gsbq))))))
+(%defun %quasiquote-eval (%gsbq)
+  (eval (car (cdr (car %gsbq)))))
 
-(%set-atom-fun %backquote-quasiquote
-  #'((%gsbq)
+(%defun %backquote-quasiquote (%gsbq)
        (? (cpr %gsbq)
           (setq *default-listprop* (cpr %gsbq)))
        (#'((p c)
@@ -45,10 +18,9 @@
          (cons (? (any-quasiquote? (car (cdr (car %gsbq))))
                   (%backquote (car (cdr (car %gsbq))))
                   (%quasiquote-eval %gsbq))
-               (%backquote (cdr %gsbq))))))
+               (%backquote (cdr %gsbq)))))
 
-(%set-atom-fun %backquote-quasiquote-splice
-  #'((%gsbq)
+(%defun %backquote-quasiquote-splice (%gsbq)
        (? (any-quasiquote? (car (cdr (car %gsbq))))
           (progn
             (? (cpr %gsbq)
@@ -64,11 +36,10 @@
                   (atom %gstmp) (error "QUASIQUOTE-SPLICE expects a list instead of ~A." %gstmp)
                   (%nconc (copy-list %gstmp)
                           (%backquote (cdr %gsbq)))))
-            (%quasiquote-eval %gsbq)))))
+            (%quasiquote-eval %gsbq))))
 
 ;; Expand BACKQUOTE arguments.
-(%set-atom-fun %backquote
-  #'((%gsbq)
+(%defun %backquote (%gsbq)
        (?
          (atom %gsbq) %gsbq
          (progn
@@ -84,15 +55,12 @@
                (eq 'QUASIQUOTE (car (car %gsbq)))        (%backquote-quasiquote %gsbq)
                (eq 'QUASIQUOTE-SPLICE (car (car %gsbq))) (%backquote-quasiquote-splice %gsbq)
                (cons (%backquote (car %gsbq))
-                     (%backquote (cdr %gsbq)))))))))
+                     (%backquote (cdr %gsbq))))))))
 
-(%set-atom-fun backquote
-  (special (%gsbq) (%backquote %gsbq)))
+(%defun quasiquote (x)
+  x
+  (%error "QUASIQUOTE (or ',' for short) outside backquote."))
 
-(%set-atom-fun quasiquote
-  #'((x)
-	   (%error "QUASIQUOTE (or ',' for short) outside backquote.")))
-
-(%set-atom-fun quasiquote-splice
-  #'((x)
-	   (%error "QUASIQUOTE-SPLICE (or ',@' for short) outside backquote.")))
+(%defun quasiquote-splice (x)
+  x
+  (%error "QUASIQUOTE-SPLICE (or ',@' for short) outside backquote."))
