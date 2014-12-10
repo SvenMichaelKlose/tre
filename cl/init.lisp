@@ -75,7 +75,8 @@
       *quasiquoteexpand-hook* *dotexpand-hook*
       *default-listprop* *keyword-package*
       *pointer-size* *launchfile*
-      *assert* *targets*))
+      *assert* *targets*
+      *endianess* *cpu-type* *libc-path* *rand-max*))
 
 (defun make-keyword (x) (values (intern (symbol-name x) "KEYWORD")))
 (defun make-keywords (x) (mapcar #'make-keyword x))

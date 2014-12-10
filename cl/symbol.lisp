@@ -2,7 +2,7 @@
 
 (in-package :tre-core)
 
-(defvar *keyword-package* (find-package "KEYWORD"))                                                                                                                                                   
+(defvar *keyword-package* (find-package "KEYWORD"))
 
 (defun %make-symbol (x package)
   (intern x (? package
