@@ -8,7 +8,8 @@
 (defun %fopen (pathname mode)
   (open pathname :direction (? (find #\w mode :test #'equal)
                                :output
-                               :input)))
+                               :input)
+                 :if-exists :supersede))
 
 (defun %fclose (stream) (close stream))
 
