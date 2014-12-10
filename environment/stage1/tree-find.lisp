@@ -3,5 +3,6 @@
 (defun tree-find (v x &key (test #'eql))
   (| (funcall test v x)
      (& (cons? x)
-        (| (tree-find v (car x) :test test)   
-           (tree-find v (cdr x) :test test)))))
+        (dolist (i x)
+          (& (tree-find v i)
+             (return t))))))
