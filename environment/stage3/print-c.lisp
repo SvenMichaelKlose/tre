@@ -3,5 +3,4 @@
 (defun %print-object (x str info))
 
 (defun %print-get-args (args def)
-  (catch nil
-    (argument-expand 'print def args :concatenate-sublists? nil)))
+  (argument-expand 'print def args :concatenate-sublists? nil))
