@@ -275,4 +275,4 @@
 
 (in-package :tre-parallel)
 
-(%defun read (x &optional str) (common-lisp:read x str))
+(%defun read (str) (tre-core:read str))
