@@ -104,10 +104,10 @@
   (with (conv [? (print-info-downcase? info)
                  (downcase _)
                  _])
-    (princ (conv (symbol-name x)) str)
     (awhen (symbol-package x)
-      (princ #\: str)
-      (princ (conv (package-name !)) str))))
+      (princ (conv (package-name !)) str)
+      (princ #\: str))
+    (princ (conv (symbol-name x)) str)))
 
 (defun %print-array (x str info)
   (princ "#" str)
