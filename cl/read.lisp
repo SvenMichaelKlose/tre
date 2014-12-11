@@ -282,8 +282,6 @@
        (cons (read str)
              (read-all str))))
 
-(in-package :tre-parallel
-    (:use :common-lisp :tre-core)
-    (:export :read))
+(in-package :tre-parallel)
 
 (defun read (x &optional str) (common-lisp:read x str))
