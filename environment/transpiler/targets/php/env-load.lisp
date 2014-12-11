@@ -4,7 +4,7 @@
   (with-temporary *have-compiler?* nil
     (mapcan [alet (+ dir-path _)
               (format t  "(php-load-base \"~A\")~%" !)
-              (read-file-all !)]
+              (read-file !)]
             files)))
 
 (defvar *php-env-path* "environment/transpiler/targets/php/environment/")

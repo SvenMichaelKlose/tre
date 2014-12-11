@@ -3,7 +3,7 @@
 (defun js-load-base (dir-path &rest files)
   (mapcan [let f (+ dir-path _)
 			(format t  "(js-load-base \"~A\")~%" f)
-  			(read-file-all f)]
+  			(read-file f)]
 		  files))
 
 ;;;; First part of the core functions

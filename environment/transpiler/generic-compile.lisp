@@ -39,7 +39,7 @@
 (defun generic-load (path)
   (format t "(LOAD \"~A\")~%" path)
   (force-output)
-  (frontend (read-file-all path)))
+  (frontend (read-file path)))
 
 (defun frontend-section (section data)
   (development-message "; Frontend ~A~%" section)
