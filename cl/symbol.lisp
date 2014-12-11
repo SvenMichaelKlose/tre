@@ -26,3 +26,6 @@
 (defun %symbol-package (x)
   (? (boundp x)
      (symbol-package x)))
+
+(defun =-symbol-function (v x)
+  (setf (symbol-function x) v))

@@ -48,6 +48,7 @@
     '(%set-atom-fun %eq %eql %equal %not cpr rplacp %load env-load
       %eval %defun %defun-quiet early-defun %defvar %defmacro %string %make-symbol
       %symbol-name %symbol-value %symbol-function %symbol-package
+      =-symbol-function
       function-source
       %number? == number== integer== character== %integer %+ %- %* %/ %< %>
       atan2 pow quit
