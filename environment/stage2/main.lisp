@@ -12,6 +12,7 @@
 (env-load "stage2/make-default-listprop.lisp")
 (env-load "stage2/range.lisp")
 (env-load "stage2/char.lisp")
+(env-load "stage2/char-predicates.lisp")
 (env-load "stage2/string.lisp")
 (env-load "stage2/string-c.lisp" 'c)
 (env-load "stage2/search-sequence.lisp")
