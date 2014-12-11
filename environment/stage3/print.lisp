@@ -101,14 +101,29 @@
       (princ i str)))
   (princ #\" str))
 
+(defun %print-escaped-symbol (x str)
+  (princ #\| str)
+  (dolist (i (string-list x))
+    (?
+      (== i #\|)  (princ "\\|" str)
+      (princ i str)))
+  (princ #\| str))
+
+(defun symbol-char-needs-escaping? (x)
+  (| (== #\| x)
+     (lower-case? x)))
+
+(defun %print-symbol-component (x str)
+  (? (some #'symbol-char-needs-escaping?
+           (string-list x))
+     (%print-escaped-symbol x str)
+     (princ x str)))
+
 (defun %print-symbol (x str info)
-  (with (conv [? (print-info-downcase? info)
-                 (downcase _)
-                 _])
-    (awhen (symbol-package x)
-      (princ (conv (package-name !)) str)
-      (princ #\: str))
-    (princ (conv (symbol-name x)) str)))
+  (awhen (symbol-package x)
+    (%print-symbol-component (package-name !) str)
+    (princ #\: str))
+  (%print-symbol-component (symbol-name x) str))
 
 (defun %print-array (x str info)
   (princ "#" str)
