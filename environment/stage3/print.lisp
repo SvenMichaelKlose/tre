@@ -121,8 +121,10 @@
 
 (defun %print-symbol (x str info)
   (awhen (symbol-package x)
-    (%print-symbol-component (package-name !) str)
-    (princ #\: str))
+    (unless (| (string== (package-name !) "TRE")
+               (string== (package-name !) "TRE-CORE"))
+      (%print-symbol-component (package-name !) str)
+      (princ #\: str)))
   (%print-symbol-component (symbol-name x) str))
 
 (defun %print-array (x str info)
