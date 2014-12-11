@@ -31,10 +31,12 @@
 
 ;;; Implementations.
 
+(defun print-definition (x) (print x))
+
 (load "cl/utils.lisp")
+(load "cl/stream-wrapper.lisp")
+(load "cl/function-source.lisp")
 (load "environment/stage2/while.lisp")
-(load "cl/backquote-expand.lisp")
-(load "cl/read.lisp")
 (load "cl/argument-expand.lisp")
 
 (load "cl/array.lisp")
@@ -48,10 +50,12 @@
 (load "cl/symbol.lisp")
 (load "cl/variable.lisp")
 
+(load "cl/backquote-expand.lisp")
 (load "cl/macroexpand.lisp")
 (load "cl/macro.lisp")
 (load "cl/function.lisp")
 (load "cl/eval.lisp")
+(load "cl/read.lisp")
 (load "cl/load.lisp")
 
 (load "cl/not-implemented.lisp")

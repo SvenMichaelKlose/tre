@@ -2,15 +2,6 @@
 
 (in-package :tre-core)
 
-(defun peek-char (str)
-  (alet (cl-peek-char nil str nil 'eof)
-    (unless (eq ! 'eof)
-      !)))
-
-(defun read-char (str)
-  (alet (cl-read-char str nil 'eof)
-    (unless (eq ! 'eof) !)))
-
 (defun whitespace? (x)
   (and (char< x (code-char 33))
        (char>= x (code-char 0))))
