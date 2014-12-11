@@ -62,7 +62,7 @@
       %fopen %fclose %read-char
       quit sys-image-create tre2cl
       unix-sh-mkdir
-      %start-core))
+      %start-core make-lambdas))
 
 (defconstant +builtins+
       (append +direct-imports+
@@ -71,7 +71,7 @@
 
 ;;; Global variables provided by all tré cores.
 (defconstant +core-variables+
-    '(*universe* *variables* *functions* *macros*
+    '(*universe* *variables* *functions* *function-atom-sources* *macros*
       *environment-path* *environment-filenames*
       *quasiquoteexpand-hook* *dotexpand-hook*
       *default-listprop* *keyword-package*
@@ -108,3 +108,7 @@
   (:export :%backquote :backquote :quasiquote :quasiquote-splice
            :macroexpand :eq :eql
            :square :curly :accent-circonflex $))
+
+(defpackage :tre-parallel
+  (:use :tre-core)
+  (:export :read))

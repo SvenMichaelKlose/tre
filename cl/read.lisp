@@ -281,3 +281,9 @@
   (and (peek-char str)
        (cons (read str)
              (read-all str))))
+
+(in-package :tre-parallel
+    (:use :common-lisp :tre-core)
+    (:export :read))
+
+(defun read (x &optional str) (common-lisp:read x str))
