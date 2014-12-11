@@ -20,12 +20,19 @@
                                          (funcall fun section data)
                                          (assoc-value section cached-sections)))))))))
 
+(defun development-message (fmt &rest args)
+  (& *development?*
+     (apply #'format t fmt args)))
+
 (defun codegen-section (section data)
+  (development-message "; Middle-/backend ~A~%" section)
   (with-temporary (transpiler-accumulate-toplevel-expressions? *transpiler*) (not (accumulated-toplevel? section))
     (backend (middleend data))))
 
 (defun generic-compile-2 (sections)
-  (alet (map-transpiler-sections #'codegen-section sections (transpiler-compiled-files *transpiler*))
+  (alet (map-transpiler-sections #'codegen-section
+                                 sections
+                                 (transpiler-compiled-files *transpiler*))
     (= (transpiler-compiled-files *transpiler*) !)
     (cdrlist !)))
 
@@ -35,6 +42,7 @@
   (frontend (read-file-all path)))
 
 (defun frontend-section (section data)
+  (development-message "; Frontend ~A~%" section)
   (?
     (symbol? section)  (frontend (? (function? data)
                                     (funcall data)
@@ -43,7 +51,9 @@
     (error "Don't know what to do with section ~A." section)))
 
 (defun generic-compile-1 (sections)
-  (alet (map-transpiler-sections #'frontend-section sections (transpiler-frontend-files *transpiler*))
+  (alet (map-transpiler-sections #'frontend-section
+                                 sections
+                                 (transpiler-frontend-files *transpiler*))
     (= (transpiler-frontend-files *transpiler*) !)))
 
 (defun make-toplevel-function ()
