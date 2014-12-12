@@ -37,4 +37,17 @@
 (env-load "config-after-reload.lisp")
 
 ;(= (transpiler-dump-passes? *c-transpiler*) t)
+
+(defun expr2cl (x)                 (make-lambdas (print (macroexpand x))))
+(defun file2cl (pathname)          (expr2cl (read-file pathname)))
+(defun files2cl (&rest pathnames)  (. 'progn (mapcan #'file2cl pathnames)))
+
+(print-file "cl/read.lisp"
+            `(progn
+               (in-package :tre-parallel)
+               ,@(expr2cl (cdr (read-file "cl/user.lisp")))
+               ,@(files2cl "environment/stage0/functional.lisp"
+                           "environment/stage2/char-predicates.lisp"
+                           "environment/stage3/read.lisp")))
+
 (dump-system "image")

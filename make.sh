@@ -216,6 +216,7 @@ environment)
 	;;
 
 boot)
+    echo "(load \"cl-old-reader/main.lisp\")" | sbcl
     echo "(load \"cl/main.lisp\")" | sbcl
 	;;
 

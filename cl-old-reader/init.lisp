@@ -103,10 +103,6 @@
 
 (define-core-package)
 
-(defpackage :tre-parallel
-  (:use :tre-core)
-  (:export :read))
-
 (defpackage :tre
   (:use :tre-core)
   (:export :%backquote :backquote :quasiquote :quasiquote-splice
