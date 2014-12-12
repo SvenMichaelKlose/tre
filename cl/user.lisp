@@ -47,7 +47,3 @@
 
 (%defun nanotime () 0)
 (%defun function-bytecode (x) x nil)
-
-
-(env-load "stage0/main.lisp")
-(env-load "main.lisp")
