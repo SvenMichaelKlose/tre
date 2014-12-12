@@ -34,7 +34,6 @@
 (defun print-definition (x) (print x))
 
 (load "cl/utils.lisp")
-(load "cl/stream-wrapper.lisp")
 (load "cl/function-source.lisp")
 (load "environment/stage2/while.lisp")
 (load "cl/argument-expand.lisp")

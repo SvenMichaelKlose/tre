@@ -11,7 +11,7 @@
 
 ;;; Symbols directly imported from package CL-USER.
 (defconstant +direct-imports+
-    '(nil t atom setq quote
+    '(nil t atom setq quote lambda
       cons car cdr rplaca rplacd
       apply function
       progn block return return-from tagbody go
@@ -99,16 +99,18 @@
      (:use :common-lisp :tre-init)
      (:shadow :peek-char :read-char :read)
      (:export ,@(all-exports)
-              +builtins+)))
+              +builtins+
+              :defun :gethash :setf :cl-read-char :cl-peek-char)))
 
 (define-core-package)
 
 (defpackage :tre-parallel
   (:use :tre-core)
-  (:export :read))
+  (:export :read :peek-char))
 
 (defpackage :tre
   (:use :tre-core)
+  (:shadow :defun :gethash :setf)
   (:export :%backquote :backquote :quasiquote :quasiquote-splice
            :macroexpand :eq :eql
            :square :curly :accent-circonflex $))

@@ -3,8 +3,8 @@
 (in-package :tre-core)
 
 (defun %load-r (s)
-  (when (peek-char s)
-    (cons (read s)
+  (when (tre-parallel:peek-char s)
+    (cons (print (tre-parallel:read s))
           (%load-r s))))
 
 (defun quasiquote-expand (x)

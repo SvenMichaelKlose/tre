@@ -1,7 +1,5 @@
 ;;;;; tré – Copyright (c) 2014 Sven Michael Klose <pixel@hugbox.org>
 
-(in-package :tre-core)
-
 (defun peek-char (str)
   (alet (cl-peek-char nil str nil 'eof)
     (unless (eq ! 'eof)
