@@ -123,7 +123,8 @@
   (awhen (symbol-package x)
     (unless (| (string== (package-name !) "TRE")
                (string== (package-name !) "TRE-CORE"))
-      (%print-symbol-component (package-name !) str)
+      (unless (keyword? x)
+        (%print-symbol-component (package-name !) str))
       (princ #\: str)))
   (%print-symbol-component (symbol-name x) str))
 
