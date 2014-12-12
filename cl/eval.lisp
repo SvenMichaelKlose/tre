@@ -17,14 +17,16 @@
        (not (eq 'lambda (caadr x)))))
 
 (defun make-variable-function (x)
-  `(labels ((~local-var-fun ,@(make-lambdas (cadar x))))
-     (~local-var-fun ,@(make-lambdas (cdr x)))))
+  (let ((g (gensym)))
+    `(labels ((,g ,@(make-lambdas (cadar x))))
+       (,g ,@(make-lambdas (cdr x))))))
 
 (defun make-anonymous-function (x)
   (? +anonymous-function-sources?+
-     `(let ((~anonymous-fun #'(lambda ,@(make-lambdas (cadr x)))))
-        (setf (gethash ~anonymous-fun *function-atom-sources*) ',(cadr x))
-        ~anonymous-fun)
+     (let ((g (gensym)))
+       `(let ((,g #'(lambda ,@(make-lambdas (cadr x)))))
+          (setf (gethash ~anonymous-fun *function-atom-sources*) ',(cadr x))
+          ,g))
      `#'(lambda ,@(make-lambdas (cadr x)))))
 
 (defun &body-to-&rest (x)
