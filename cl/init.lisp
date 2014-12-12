@@ -97,7 +97,7 @@
 (defmacro define-core-package ()
   `(defpackage :tre-core
      (:use :common-lisp :tre-init)
-     (:shadow :read :peek-char :read-char)
+     (:shadow :peek-char :read-char :read)
      (:export ,@(all-exports)
               +builtins+)))
 
@@ -108,7 +108,3 @@
   (:export :%backquote :backquote :quasiquote :quasiquote-splice
            :macroexpand :eq :eql
            :square :curly :accent-circonflex $))
-
-(defpackage :tre-parallel
-  (:use :tre-core)
-  (:export :read))

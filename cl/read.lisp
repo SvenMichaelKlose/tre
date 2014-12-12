@@ -81,18 +81,20 @@
        (not (special-char? x))))
 
 (defun skip-comment (str)
-  (let-when c (read-char str)
-	(? (char= c (code-char 10))
-	   (skip-spaces str)
-	   (skip-comment str))))
+  (let ((c (read-char str)))
+    (when c
+	  (? (char= c (code-char 10))
+	     (skip-spaces str)
+	     (skip-comment str)))))
 
 (defun skip-spaces (str)
- (let-when c (peek-char str)
-   (when (char= #\; c)
-     (skip-comment str))
-   (when (whitespace? c)
-     (read-char str)
-     (skip-spaces str))))
+  (let ((c (peek-char str)))
+    (when c
+      (when (char= #\; c)
+        (skip-comment str))
+      (when (whitespace? c)
+        (read-char str)
+        (skip-spaces str)))))
 
 (defun get-symbol-0 (str)
   (let ((c (char-upcase (peek-char str))))
@@ -105,9 +107,10 @@
                 (get-symbol-0 str))))))
 
 (defun get-symbol (str)
-  (let-when c (peek-char str)
-    (unless (special-char? c)
-      (get-symbol-0 str))))
+  (let ((c (peek-char str)))
+    (when c
+      (unless (special-char? c)
+        (get-symbol-0 str)))))
 
 (defun get-symbol-and-package (str)
   (skip-spaces str)
@@ -272,7 +275,3 @@
   (and (peek-char str)
        (cons (read str)
              (read-all str))))
-
-(in-package :tre-parallel)
-
-(%defun read (str) (tre-core:read str))
