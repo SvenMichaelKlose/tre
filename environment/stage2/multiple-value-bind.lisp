@@ -20,10 +20,3 @@
             `((unless (eq (car ,g) 'values)
          	    (error "VALUES expected instead of ~A." ,g))))
        ,@(multiple-value-bind-0 forms gl body))))
-
-(defun values (&rest vals)
-  (. 'values vals))
-
-(defun values? (x)
-  (& (cons? x)
-     (eq 'values (car x))))

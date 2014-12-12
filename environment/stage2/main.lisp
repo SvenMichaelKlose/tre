@@ -1,6 +1,7 @@
 ;;;;; tré – Copyright (c) 2005–2011,2013–2014 Sven Michael Klose <pixel@copei.de>
 
 (env-load "stage2/multiple-value-bind.lisp")
+(env-load "stage2/values.lisp")
 (env-load "stage2/while.lisp")
 (env-load "stage2/with.lisp")
 (env-load "stage2/array.lisp")
