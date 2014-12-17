@@ -18,7 +18,7 @@
       mod sqrt sin cos atan exp round floor
       last copy-list nthcdr nth mapcar elt length make-string
       aref char-code
-      make-package package-name
+      make-package package-name find-package
       logxor bit-and
       print
       list copy-list
@@ -100,17 +100,19 @@
      (:shadow :peek-char :read-char :read)
      (:export ,@(all-exports)
               +builtins+
-              :defun :gethash :setf :cl-read-char :cl-peek-char)))
+              :defun :gethash :setf :cl-read-char :cl-peek-char
+              :%backquote :backquote :quasiquote :quasiquote-splice)))
 
 (define-core-package)
 
 (defpackage :tre-parallel
   (:use :tre-core)
-  (:export :read :peek-char))
+  (:export :%load))
 
 (defpackage :tre
   (:use :tre-core)
   (:shadow :defun :gethash :setf)
   (:export :%backquote :backquote :quasiquote :quasiquote-splice
+           :_ :square :accent-circonflex
            :macroexpand :eq :eql
            :square :curly :accent-circonflex $))

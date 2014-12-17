@@ -11,12 +11,12 @@
 
     (eq (car (car x)) 'QUASIQUOTE)
         (cons (cons 'QUASIQUOTE
-                    (%macroexpand (cdr (car x))))
+                    (early-macroexpand (cdr (car x))))
               (%macroexpand-backquote (cdr x)))
 
     (eq (car (car x)) 'QUASIQUOTE-SPLICE)
         (cons (cons 'QUASIQUOTE-SPLICE
-                    (%macroexpand (cdr (car x))))
+                    (early-macroexpand (cdr (car x))))
               (%macroexpand-backquote (cdr x)))
 
     (cons (%macroexpand-backquote (car x))

@@ -29,6 +29,17 @@
           ,g))
      `#'(lambda ,@(make-lambdas (cadr x)))))
 
+(defun _-to-_ (x)
+  (? (atom x)
+     (? (and (symbolp x)
+             (or (equal (symbol-name x) "_")
+                 (equal (symbol-name x) "SQUARE")
+                 (equal (symbol-name x) "ACCENT-CIRCONFLEX")))
+        (find-symbol (symbol-name x) "TRE")
+        x)
+     (cons (_-to-_ (car x))
+           (_-to-_ (cdr x)))))
+
 (defun &body-to-&rest (x)
   (? (eq '&body x)
      '&rest
@@ -36,14 +47,14 @@
 
 (defun make-lambdas (x)
   (cond
-    ((atom x)                  (&body-to-&rest x))
+    ((atom x)                  (_-to-_ (&body-to-&rest x)))
     ((eq 'quote (car x))       x)
     ((function-expr? (car x))  (make-variable-function x))
     ((function-expr? x)        (make-anonymous-function x))
     (t (mapcar #'make-lambdas x))))
 
 (defun tre2cl (x)
-  (make-lambdas (early-macroexpand (car (backquote-expand (list x))))))
+  (make-lambdas (backquote-expand (early-macroexpand (car (backquote-expand (list x)))))))
 
 (defun %eval (x)
   (eval (tre2cl x)))

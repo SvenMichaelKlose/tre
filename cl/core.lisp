@@ -54,8 +54,11 @@
 (load "cl/macro.lisp")
 (load "cl/function.lisp")
 (load "cl/eval.lisp")
-(load "cl/read.lisp")
-(load "cl/load.lisp")
+(load "cl/user.lisp")
+
+(load "cl/generated-from-environment.lisp")
+
+(load "cl/env-load.lisp")
 
 (load "cl/not-implemented.lisp")
 (load "cl/builtins.lisp")

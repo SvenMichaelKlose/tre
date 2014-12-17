@@ -4,7 +4,6 @@
 
 (load "cl/init.lisp")
 (load "cl/core.lisp")
-(load "cl/user.lisp")
 
 (in-package :tre)
 
