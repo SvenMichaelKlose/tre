@@ -10,6 +10,7 @@
 (env-load "stage3/stream.lisp" 'c)
 (env-load "stage3/standard-stream.lisp" 'c)
 (env-load "stage3/default-stream.lisp")
+(env-load "stage3/stream-stream.lisp")
 (env-load "stage3/open.lisp")
 (env-load "stage3/with-file.lisp")
 (env-load "stage3/string-stream.lisp")
