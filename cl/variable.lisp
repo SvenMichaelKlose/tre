@@ -3,6 +3,7 @@
 (in-package :tre-core)
 
 (defvar *variables* nil)
+(push '*variables* *universe*)
 
 (defmacro %defvar (name &optional (init nil))
   (print `(%defvar ,name))

@@ -3,6 +3,7 @@
 (in-package :tre-core)
 
 (defvar *functions* nil)
+(push '*functions* *universe*)
 
 (defun function-native (x) x)
 
