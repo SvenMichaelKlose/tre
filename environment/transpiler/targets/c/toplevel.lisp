@@ -69,7 +69,8 @@
 (defun c-make-init-function (statements)
   (alet ($ 'C-INIT- (++! *c-init-counter*))
     `(defun ,! ()
-       ,@(mapcar ^(tregc_add_unremovable ,_) statements))))
+       ,@(mapcar [`(tregc_add_unremovable ,_)]
+                 statements))))
 
 (defun c-make-init-functions ()
   (transpiler-add-used-function *transpiler* 'c-init)

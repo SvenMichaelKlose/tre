@@ -35,7 +35,7 @@
     `(,*newline*
       ,(funinfo-comment fi)
 	  "treptr " ,(compiled-function-name name) " "
-	  ,@(c-list (mapcar ^("treptr " ,_) args))
+	  ,@(c-list (mapcar [`("treptr " ,_)] args))
 	  ,*newline*
 	  "{" ,*newline*
           ,@(lambda-body x)

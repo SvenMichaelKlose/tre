@@ -47,7 +47,7 @@
 
 (defun php-members (class-name cls)
   (awhen (class-members cls)
-	(mapcar ^(%%native "var $" ,_. ,*php-separator*)
+	(mapcar [`(%%native "var $" ,_. ,*php-separator*)]
             (reverse !))))
 
 (defun php-methods (class-name cls)

@@ -79,7 +79,8 @@
     `(identity nil)))
 
 (define-compiler-macro setq (&rest args)
-  `(%%block ,@(filter ^(%= ,_. ,._.) (group args 2))))
+  `(%%block ,@(filter [`(%= ,_. ,._.)]
+                      (group args 2))))
 
 (define-compiler-macro ? (&body body)
   (with (tests (group body 2)

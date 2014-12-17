@@ -172,7 +172,7 @@
   `(%%native ,@(c-list elements :type 'square)))
 
 (define-js-macro %%%aref (arr &rest idx)
-  `(%%native ,arr ,@(filter ^("[" ,_ "]") idx)))
+  `(%%native ,arr ,@(filter [`("[" ,_ "]")] idx)))
 
 (define-js-macro %%%=-aref (val &rest x)
   `(%%native (%%%aref ,@x) "=" ,val))

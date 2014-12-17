@@ -17,7 +17,7 @@
 (defun quote-literal (x)
   (? (constant-literal? x)
      x
-     `(%quote ,x)))
+     `(quote ,x)))
 
 (defun backquote-2 (x)
   (?

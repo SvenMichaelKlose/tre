@@ -205,7 +205,8 @@
 ;;;; ARRAYS
 
 (defun php-array-subscript (indexes)
-  (filter ^("[" ,(php-dollarize _) "]") indexes))
+  (filter [`("[" ,(php-dollarize _) "]")]
+          indexes))
 
 (defun php-literal-array-element (x)
   (list (compiled-function-name '%%key) " (" (php-dollarize x.) ") => " (php-dollarize .x.)))

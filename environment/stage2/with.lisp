@@ -32,7 +32,7 @@
 	    ; Accumulate this and all following functions into a LABEL,
         ; so they can call each other.
 		(lambda? val) (multiple-value-bind (funs others) (separate [lambda? (cadr _)] (group alst 2))
-		                `(labels ,(filter ^(,(car _) ,@(past-lambda (cadr _))) funs)
+		                `(labels ,(filter [`(,(car _) ,@(past-lambda (cadr _)))] funs)
 			               ,@(sub (apply #'append others))))
 
         `(let ,plc ,val

@@ -15,12 +15,12 @@
   (format nil "}break;}~%"))
 
 (defun js-emit-early-defined-functions ()
-  (mapcar ^(push ',_ *functions*)
+  (mapcar [`(push ',_ *functions*)]
           (transpiler-memorized-sources *js-transpiler*)))
 
 (defun js-emit-memorized-sources ()
   (clr (transpiler-memorize-sources? *transpiler*))
-  (filter ^(%= (slot-value ,_. '__source) ,(list 'quote ._))
+  (filter [`(%= (slot-value ,_. '__source) ,(list 'quote ._))]
           (transpiler-memorized-sources *transpiler*)))
 
 (defun js-var-decls ()

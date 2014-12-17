@@ -1,12 +1,13 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun js-gen-inherited-methods (class-name bases)
-  (filter ^(hash-merge (slot-value ,class-name 'prototype)
-                       (slot-value ,_ 'prototype))
+  (filter [`(hash-merge (slot-value ,class-name 'prototype)
+                        (slot-value ,_ 'prototype))]
           bases))
 
 (defun js-gen-inherited-constructor-calls (bases)
-  (filter ^((slot-value ,_ 'CALL) this) bases))
+  (filter [`((slot-value ,_ 'CALL) this)]
+          bases))
 
 (defun js-gen-constructor (class-name bases args body)
   (let magic (list 'quote ($ '__ class-name))

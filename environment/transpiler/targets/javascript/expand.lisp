@@ -82,7 +82,8 @@
      (defun ,name (x)
        (when x
 	     ,(? (< 1 (length types))
-       	     `(| ,@(filter ^(%%%== (%js-typeof x) ,_) types))
+       	     `(| ,@(filter [`(%%%== (%js-typeof x) ,_)]
+                           types))
              `(%%%== (%js-typeof x) ,types.))))))
 
 (define-js-std-macro %href (hash key)

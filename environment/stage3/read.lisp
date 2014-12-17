@@ -131,7 +131,7 @@
                     (?
                       (not pkg)   nil
                       (eq t pkg)  *keyword-package*
-                      (make-package (list-string pkg)))))))
+                      (find-package (list-string pkg)))))))
 
 (defun read-atom (str token pkg sym)
   (case token :test #'eq
@@ -147,11 +147,11 @@
 (defun read-quote (str token)
   (list token (read-expr str)))
 
-(defun read-set-listprop (str))
-;  (alet (stream-input-location str)
-;    (= *default-listprop* (cons (stream-location-id !)
-;                                (cons (memorized-number (stream-location-column !))
-;                                      (memorized-number (stream-location-line !)))))))
+(defun read-set-listprop (str)
+  (alet (stream-input-location str)
+    (= *default-listprop* (cons (stream-location-id !)
+                                (cons (memorized-number (stream-location-column !))
+                                      (memorized-number (stream-location-line !)))))))
 
 (defun read-list (str token pkg sym)
   (| token (error "Missing closing bracket."))
