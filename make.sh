@@ -223,6 +223,7 @@ boot)
 	./make.sh core-sbcl $ARGS || exit 1
 	./make.sh core-sbcl $ARGS || exit 1
 	./make.sh core-sbcl $ARGS || exit 1
+	./make.sh ctests $ARGS || exit 1
 	;;
 
 pgo)
