@@ -10,8 +10,7 @@
   (with-output-file o "cl/generated-from-environment.lisp"
     (adolist (`((in-package :tre-parallel)
                 ,@(expr2cl (cdr (read-file "cl/user.lisp")))
-                ,@(files2cl "environment/stage0/config-defaults.lisp"
-                            "environment/stage0/functional.lisp"
+                ,@(files2cl "environment/stage0/functional.lisp"
                             "environment/stage0/print-definition.lisp"
                             "environment/stage0/quasiquote.lisp"
                             "environment/stage0/primitive-lib.lisp"

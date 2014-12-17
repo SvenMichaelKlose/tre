@@ -114,5 +114,5 @@
   (:shadow :defun :gethash :setf)
   (:export :%backquote :backquote :quasiquote :quasiquote-splice
            :_ :square :accent-circonflex
-           :macroexpand :eq :eql
+           :macroexpand :eq :eql :make-symbol
            :square :curly :accent-circonflex $))

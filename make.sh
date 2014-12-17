@@ -215,10 +215,14 @@ environment)
 	(echo "(compile-c-environment)" | $TRE | tee boot.log) || exit 1
 	;;
 
+core-sbcl)
+    echo "(load \"cl/main.lisp\")" | sbcl
+	;;
+
 boot)
-    echo "(load \"cl-old-reader/main.lisp\")" | sbcl
-    echo "(load \"cl/main.lisp\")" | sbcl
-    echo "(load \"cl/main.lisp\")" | sbcl
+	./make.sh core-sbcl $ARGS || exit 1
+	./make.sh core-sbcl $ARGS || exit 1
+	./make.sh core-sbcl $ARGS || exit 1
 	;;
 
 pgo)

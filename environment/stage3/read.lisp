@@ -117,9 +117,9 @@
 (defun read-slot-value (x)
   (? x
      (? (cdr x)
-        `(slot-value ,(read-slot-value (butlast x)) ',(make-symbol (car (last x))))
+        `(slot-value ,(read-slot-value (butlast x)) ',(tre:make-symbol (car (last x))))
         (? (string? (car x))
-           (make-symbol (car x))
+           (tre:make-symbol (car x))
            (car x)))))
 
 (defun read-symbol-or-slot-value (sym pkg)
@@ -127,11 +127,11 @@
                 (split #\. sym))
     (? (& (cdr !) (car !) (car (last !)))
        (read-slot-value !)
-       (make-symbol (list-string sym)
-                    (?
-                      (not pkg)   nil
-                      (eq t pkg)  *keyword-package*
-                      (find-package (list-string pkg)))))))
+       (tre:make-symbol (list-string sym)
+                        (?
+                          (not pkg)   nil
+                          (eq t pkg)  *keyword-package*
+                          (find-package (list-string pkg)))))))
 
 (defun read-atom (str token pkg sym)
   (case token :test #'eq
