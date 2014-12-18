@@ -6,7 +6,9 @@
 
 (defun %make-symbol (x package)
   (intern x (? package
-               (package-name package)
+               (? (packagep package)
+                  (package-name package)
+                  x)
                "TRE")))
 
 (defun %symbol-name (x)
