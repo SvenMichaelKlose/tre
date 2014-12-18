@@ -23,7 +23,8 @@
       print
       list copy-list
       &rest &body &optional &key
-      labels))
+      labels
+      *package*))
 
 ;;; Functions we import from CL-USER, wrap and export to package TRE.
 (defconstant +renamed-imports+
