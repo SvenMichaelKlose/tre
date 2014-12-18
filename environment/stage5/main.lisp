@@ -1,6 +1,6 @@
 ;;;; tré – Copyright (c) 2010–2014 Sven Michael Klose <pixel@copei.de>
 
-(env-load "stage5/in-package.lisp" 'c)
+(env-load "stage5/in-package.lisp" :c)
 (env-load "stage5/concat-stringtree.lisp")
 (env-load "stage5/escape-string.lisp")
 (env-load "stage5/empty-string.lisp")

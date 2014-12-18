@@ -1,6 +1,6 @@
-;;;; tré transpiler – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
+;;;; tré transpiler – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
 
-(env-load "transpiler/front-end/arith-wrappers.lisp" 'c)
+(env-load "transpiler/front-end/arith-wrappers.lisp" :c)
 
 (env-load "transpiler/front-end/cpr-count.lisp")
 (env-load "transpiler/front-end/tag-convert.lisp")
