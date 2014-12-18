@@ -3,4 +3,6 @@
 (in-package :tre-core)
 
 (defun sys-image-create (pathname fun)
-  (sb-ext:save-lisp-and-die pathname :toplevel fun))
+  (sb-ext:save-lisp-and-die pathname :toplevel #'(lambda ()
+                                                   (in-package :tre)
+                                                   (funcall fun))))
