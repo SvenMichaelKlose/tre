@@ -1,5 +1,7 @@
 ;;;;; tré – Copyright (c) 2006–2014 Sven Michael Klose <pixel@copei.de>
 
+(in-package :tre-core)
+
 (defun quote? (x)
   (and (consp x)
        (eq 'quote (car x))))
