@@ -20,8 +20,7 @@
                                                  (with-temporary *current-pass-input* x
                                                    (prog1
                                                      (print (funcall ,._. x))
-                                                     (format t ,(string-concat "; **** " (symbol-name _.) " (end)~%"))
-                                                     (force-output))))
+                                                     (format t ,(string-concat "; **** " (symbol-name _.) " (end)~%")))))
                                             ,._.)))]
                                     (group x 2)))
                    ,cache-var)
