@@ -113,7 +113,7 @@
      (transpiler-print-obfuscations transpiler))
   (warn-unused-functions transpiler)
   (tell-number-of-warnings)
-  (print-status " ~A seconds passed.~%~F"
+  (print-status "~A seconds passed.~%~F"
                 (integer (/ (- (nanotime) start-time) 1000000000))))
 
 (def-transpiler generic-compile (transpiler sections)
