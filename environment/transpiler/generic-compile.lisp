@@ -21,11 +21,13 @@
                                          (assoc-value section cached-sections)))))))))
 
 (defun development-message (fmt &rest args)
-  (& *development?*
-     (apply #'format t fmt args)))
+  (when *development?*
+    (fresh-line)
+    (princ "; ")
+    (apply #'format t fmt args)))
 
 (defun codegen-section (section data)
-  (development-message "; Middle-/backend ~A~%" section)
+  (development-message "Middle-/backend ~A~%" section)
   (with-temporary (transpiler-accumulate-toplevel-expressions? *transpiler*) (not (accumulated-toplevel? section))
     (backend (middleend data))))
 
@@ -37,12 +39,11 @@
     (cdrlist !)))
 
 (defun generic-load (path)
-  (format t "(LOAD \"~A\")~%" path)
-  (force-output)
+  (print-definition `(load ,path))
   (frontend (read-file path)))
 
 (defun frontend-section (section data)
-  (development-message "; Frontend ~A~%" section)
+  (development-message "Frontend ~A~%" section)
   (?
     (symbol? section)  (frontend (? (function? data)
                                     (funcall data)
@@ -70,13 +71,13 @@
 
 (defun tell-number-of-warnings ()
   (alet (length *warnings*)
+    (fresh-line)
     (format t "; ~A warning~A.~%"
             (? (zero? !) "No" !)
             (? (== 1 !) "" "s"))))
 
 (def-transpiler generic-codegen (transpiler before-deps deps after-deps)
-  (& *show-transpiler-progress?*
-     (format t "; Let me think. Hmm...~F"))
+  (print-status "Let me think. Hmm...~F")
   (!? middleend-init (funcall !))
   (with (compiled-before  (generic-compile-2 before-deps)
          compiled-deps    (backend (middleend deps))
@@ -112,8 +113,8 @@
      (transpiler-print-obfuscations transpiler))
   (warn-unused-functions transpiler)
   (tell-number-of-warnings)
-  (& *show-transpiler-progress?*
-     (format t "; ~A seconds passed.~%~F" (integer (/ (- (nanotime) start-time) 1000000000)))))
+  (print-status " ~A seconds passed.~%~F"
+                (integer (/ (- (nanotime) start-time) 1000000000))))
 
 (def-transpiler generic-compile (transpiler sections)
   (let start-time (nanotime)
@@ -130,5 +131,4 @@
       (prog1
         (generic-compile-0 transpiler sections)
         (print-transpiler-stats transpiler start-time)
-        (& *show-transpiler-progress?*
-           (format t "; Phew!~%"))))))
+        (print-status "Phew!~%")))))

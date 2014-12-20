@@ -4,6 +4,7 @@
 
 (defmacro without-automatic-newline (&body body)
   `(with-temporary *print-automatic-newline?* nil
+     (fresh-line)
      ,@body))
 
 (defun error (msg &rest args)

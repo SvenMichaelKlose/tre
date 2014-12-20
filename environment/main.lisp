@@ -29,9 +29,9 @@
   (read-eval-loop))
 
 (defun dump-system (path)
-  (format t "; Dumping environment to image '~A': ~F" path)
+  (print-note "; Dumping environment to image '~A' ~F" path)
   (sys-image-create path #'%load-launchfile)
-  (format t " OK~%"))
+  (fresh-line))
 
 (env-load "generate-cl-core.lisp")
 (env-load "version.lisp")

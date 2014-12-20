@@ -15,6 +15,7 @@
                                                 (| (t? !)
                                                    (member ',_. (ensure-list !))))
                                             #'((x)
+                                                 (fresh-line)
                                                  (format t ,(string-concat "; **** " (symbol-name _.) "~%"))
                                                  (with-temporary *current-pass-input* x
                                                    (prog1
