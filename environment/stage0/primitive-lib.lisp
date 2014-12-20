@@ -10,9 +10,9 @@
                     (string? a) #'string-concat
                     #'number+)
                   x)
-           (? (cdr x)
-              (apply #'+ (cdr x)))))
-    (car x)))
+           (? .x
+              (apply #'+ .x))))
+    x.))
 
 (%defun - (&rest x)
   (apply #'number- x))

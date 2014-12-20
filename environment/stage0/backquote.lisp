@@ -3,8 +3,8 @@
 (%defun any-quasiquote? (x)
   (? (cons? x)
      (?
-       (eq (car x) 'quasiquote)         t
-       (eq (car x) 'quasiquote-splice)  t)))
+       (eq x. 'quasiquote)         t
+       (eq x. 'quasiquote-splice)  t)))
 
 (%defun %quasiquote-eval (x)
   (eval (car (cdr (car x)))))
@@ -15,27 +15,27 @@
      (#'((p c)
            (rplacp c p))
        *default-listprop*
-       (cons (? (any-quasiquote? (car (cdr (car x))))
-                (%backquote (car (cdr (car x))))
-                (%quasiquote-eval x))
-             (%backquote (cdr x)))))
+       (. (? (any-quasiquote? (car (cdr x.)))
+             (%backquote (car (cdr x.)))
+             (%quasiquote-eval x))
+          (%backquote .x))))
 
 (%defun %backquote-quasiquote-splice (x)
-  (? (any-quasiquote? (car (cdr (car x))))
+  (? (any-quasiquote? (car (cdr x.)))
      (progn
        (? (cpr x)
           (setq *default-listprop* (cpr x)))
        (#'((p c)
              (rplacp c p))
          *default-listprop*
-         (cons (car (cdr (car x)))
-               (%backquote (cdr x)))))
+         (cons (car (cdr x.))
+               (%backquote .x))))
      (#'((evaluated)
            (?
-             (not evaluated)  (%backquote (cdr x))
+             (not evaluated)  (%backquote .x)
              (atom evaluated) (error "QUASIQUOTE-SPLICE expects a list instead of ~A." evaluated)
              (%nconc (copy-list evaluated)
-                     (%backquote (cdr x)))))
+                     (%backquote .x))))
        (%quasiquote-eval x))))
 
 ;; Expand BACKQUOTE arguments.
@@ -50,12 +50,11 @@
                (rplacp c (setq *default-listprop* p))))
         *default-listprop*
         (?
-          (atom (car x))                        (cons (car x)
-                                                      (%backquote (cdr x)))
-          (eq 'QUASIQUOTE (car (car x)))        (%backquote-quasiquote x)
-          (eq 'QUASIQUOTE-SPLICE (car (car x))) (%backquote-quasiquote-splice x)
-          (cons (%backquote (car x))
-                (%backquote (cdr x))))))))
+          (atom x.)                    (. x. (%backquote .x))
+          (eq 'QUASIQUOTE x..)         (%backquote-quasiquote x)
+          (eq 'QUASIQUOTE-SPLICE x..)  (%backquote-quasiquote-splice x)
+          (. (%backquote x.)
+             (%backquote .x)))))))
 
 (%defun quasiquote (x)
   x

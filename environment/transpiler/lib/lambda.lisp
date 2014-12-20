@@ -5,7 +5,7 @@
     `(with (,tmp ,x
             ,fun (cadar ,tmp)
             ,args (lambda-args ,fun)
-            ,vals (lambda-call-vals ,tmp)
+            ,vals (cdr ,tmp)
             ,body (lambda-body ,fun))
        ,@exec-body)))
 

@@ -6,39 +6,36 @@
   (?
     (atom x)	(eql x y)
     (atom y)	(eql x y)
-    (test-equal (car x) (car y))
-      		    (test-equal (cdr x) (cdr y))))
+    (test-equal x. y.)
+      		    (test-equal .x .y)))
 
 (%defun do-test (test)
-  (print (car test))
-  (? (test-equal (eval (macroexpand (car (cdr test))))
-                 (eval (macroexpand (car (cdr (cdr test))))))
+  (print test.)
+  (? (test-equal (eval (macroexpand .test.))
+                 (eval (macroexpand ..test.)))
 	 (print 'OK)
      (progn
 	   (print 'FAILED-RESULT)
-	   (print (eval (macroexpand (car (cdr test)))))
+	   (print (eval (macroexpand .test.)))
 	   (print 'WANTED-RESULT)
-	   (print (eval (macroexpand (car (cdr (cdr test))))))
+	   (print (eval (macroexpand ..test.)))
 	   (invoke-debugger))))
 
 (%defun do-tests (&optional (tests *tests*))
   (? (not tests)
      nil
      (progn
-	   (do-test (car tests))
-	   (do-tests (cdr tests)))))
+	   (do-test tests.)
+	   (do-tests .tests))))
 
 ;; Add test to global list.
 (defmacro define-test (description expr result)
   (print-definition (list 'define-test description))
-  (setq *tests* (cons (cons description
-		    				(cons (cons (quote block)
-								        (cons nil
-                                              expr))
-				    		      (cons result
-                                        nil)))
-                      *tests*))
-  (do-test (car *tests*))
+  (setq *tests* (. (. description
+                      (. (. 'block (. nil expr))
+                         (. result nil)))
+                   *tests*))
+  (do-test *tests*.)
   nil)
 
 (define-test "APPLY one argument"

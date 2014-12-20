@@ -5,16 +5,16 @@
 
 (%defun %quasiquote-expand (x)
   (?
-    (atom x) x
-    (atom (car x))                 (cons (car x) (%quasiquote-expand (cdr x)))
-	(eq (car (car x)) 'quote)      (cons (car x) (%quasiquote-expand (cdr x)))
-	(eq (car (car x)) 'backquote)  (cons (car x) (%quasiquote-expand (cdr x)))
-	(eq (car (car x)) 'quasiquote) (cons (eval (macroexpand (car (cdr (car x)))))
-                                         (%quasiquote-expand (cdr x)))
-	(eq (car (car x)) 'quasiquote-splice) (append (eval (macroexpand (car (cdr (car x)))))
-                                                  (%quasiquote-expand (cdr x)))
-	(cons (%quasiquote-expand (car x))
-		  (%quasiquote-expand (cdr x)))))
+    (atom x)                     x
+    (atom x.)                    (. x. (%quasiquote-expand .x))
+    (eq x.. 'quote)              (. x. (%quasiquote-expand .x))
+    (eq x.. 'backquote)          (. x. (%quasiquote-expand .x))
+    (eq x.. 'quasiquote)         (. (eval (macroexpand (car (cdr x.))))
+                                    (%quasiquote-expand .x))
+    (eq x.. 'quasiquote-splice)  (append (eval (macroexpand (car (cdr x.))))
+                                         (%quasiquote-expand .x))
+    (. (%quasiquote-expand x.)
+       (%quasiquote-expand .x))))
 
 (%defun quasiquote-expand (x)
   (car (%quasiquote-expand (list x))))

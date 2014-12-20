@@ -10,4 +10,4 @@
   (print-definition `(defconstant ,name))
   `(progn
      (defvar ,name ,init)
-     (setq *constants* (cons (cons ',name ',init) *constants*))))
+     (setq *constants* (. (. ',name ',init) *constants*))))

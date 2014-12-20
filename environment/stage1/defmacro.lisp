@@ -3,11 +3,11 @@
 (defvar *documentation* nil)
 
 (%defun %add-documentation (name body)
-  (? (? (string? (car body))
-        (cdr body))
+  (? (? (string? body.)
+        .body)
      (progn
-       (setq *documentation* (cons (cons name (car body)) *documentation*))
-       (cdr body))
+       (setq *documentation* (. (. name body.) *documentation*))
+       .body)
      body))
 
 (%defmacro defmacro (name args &body body)

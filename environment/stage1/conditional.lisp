@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2008,2011–2013 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2005–2008,2011–2014 Sven Michael Klose <pixel@copei.de>
 
 (defmacro when (predicate &body body)
   `(& ,predicate
@@ -10,27 +10,32 @@
 
 (defun group2 (x)
   (? x
-     (cons (? (cdr x)
-  		      (list (car x) (cadr x))
-  		      (list (car x)))
-           (group2 (cddr x)))))
+     (cons (? .x
+  		      (list x. .x.)
+  		      (list x.))
+               (group2 ..x))))
+
+(defun %case-test (cases)
+  (? (eq :test .cases.)
+     (? (atom ..cases.)
+        ..cases.
+        (? (eq 'function (caar ..cases))
+           (cadar ..cases)
+           (error ":TEST must be a function.")))
+        'equal))
+ 
+(defun %case (g cases)
+  (let test (%case-test cases)
+    (%simple-mapcar #'((x)
+                         (? .x
+                            `((,test ,g ,x.) ,.x.)
+                            (list x.)))
+                    (group2 (? (eq :test .cases.)
+                               ...cases
+                               .cases)))))
 
 (defmacro case (&body cases)
   (let g (gensym)
-    (let op (? (eq :test (cadr cases))
-               (? (atom (caddr cases))
-                  (caddr cases)
-                  (? (eq 'function (caaddr cases))
-                     (cadaddr cases)
-                     (error ":TEST must be a function.")))
-               'equal)
-        `(let ,g ,(car cases)
-           (? 
-             ,@(apply #'append (%simple-mapcar
-						          #'((x)
-              				          (? (cdr x)
-                   				         `((,op ,g ,(car x)) ,(cadr x))
-	   	          				         (list (car x))))
-       				              (group2 (? (eq :test (cadr cases))
-                                             (cdddr cases)
-                                             (cdr cases))))))))))
+    `(let ,g ,cases.
+       (? 
+         ,@(apply #'append (%case g cases))))))

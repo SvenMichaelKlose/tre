@@ -1,10 +1,10 @@
-;;;;; tré – Copyright (c) 2005–2008,2010–2012 Sven Michael Klose <pixel@copei.de>
+;;;; tré – Copyright (c) 2005–2008,2010–2012,2014 Sven Michael Klose <pixel@copei.de>
 
 (defmacro do (binds (test &rest result) &body body)
   (let tag (gensym)
     `(block nil
        (let* ,(mapcar #'((b)
-						  `(,(car b) ,(cadr b)))
+						  `(,b. ,.b.))
 					 binds)
          (tagbody
            ,tag
@@ -12,7 +12,7 @@
               (return (progn ,@result)))
            ,@body
            ,@(mapcar #'((b)
-						  (& (caddr b)
-						     `(setq ,(car b) ,(caddr b))))
+						  (& ..b.
+						     `(setq ,b. ,..b.)))
 					 binds)
            (go ,tag))))))

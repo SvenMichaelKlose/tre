@@ -3,9 +3,8 @@
 (defvar *function-sources* nil)
 
 (%defun %defun-arg-keyword (args)
-  (let a (car args)
-	(let d (& (cdr args)
-			  (cadr args))
+  (let a args.
+	(let d (& .args .args.)
       (? (%arg-keyword? a)
          (? d
             (? (%arg-keyword? d)
@@ -15,14 +14,14 @@
 (%defun %defun-checked-args (args)
   (& args
      (| (%defun-arg-keyword args)
-        (cons (car args) (%defun-checked-args (cdr args))))))
+        (. args. (%defun-checked-args .args)))))
 
 (%defun %defun-name (name)
   (? (symbol? name)
      name
      (? (& (cons? name)
-           (eq (car name) '=))
-        (make-symbol (string-concat "=-" (string (cadr name))))
+           (eq name. '=))
+        (make-symbol (string-concat "=-" (string .name.)))
 ;                     (symbol-package (cadr name)))
         (error "Illegal function name ~A. It must be a symbol or of the form (= symbol)." name))))
 

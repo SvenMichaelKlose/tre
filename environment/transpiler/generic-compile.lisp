@@ -95,6 +95,7 @@
                             (!? epilogue-gen (funcall !)))))
 
 (defun generic-import (tr)
+  (print-status "Importing variables and names functions from environment...~%")
   (with-temporary (transpiler-save-argument-defs-only? tr) nil
     (transpiler-import-from-environment tr)))
 

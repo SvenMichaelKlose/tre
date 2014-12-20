@@ -1,12 +1,12 @@
-;;;; tré – Copyright (c) 2005–2006,2008–2013 Sven Michael Klose <pixel@copei.de>
+;;;; tré – Copyright (c) 2005–2006,2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defmacro %!? (predicate &body alternatives)
   (? alternatives
      `(let ! ,predicate
         (? !
-		   ,(car alternatives)
-		   ,@(? (cdr alternatives)
-                `((%!? ,@(cdr alternatives))))))
+		   ,alternatives.
+		   ,@(? .alternatives
+                `((%!? ,@.alternatives)))))
      predicate))
 
 (defmacro !? (predicate &body alternatives)
@@ -32,12 +32,12 @@
   (let p (? (atom params)
             (list params)
             params)
-    `(dolist (! ,(car p) ,(cadr p))
+    `(dolist (! ,p. ,.p.)
        ,@body)))
 
 (defmacro adotimes (params &body body)
   (let p (? (atom params)
             (list params)
             params)
-    `(dotimes (! ,(car p) ,(cadr p))
+    `(dotimes (! ,p. ,.p.)
        ,@body)))
