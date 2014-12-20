@@ -31,7 +31,9 @@
 
 ;;; Implementations.
 
-(defun print-definition (x) (print x))
+(defun print-definition (x)
+  (print x)
+  (fresh-line))
 
 (load "cl/list.lisp")
 (load "cl/utils.lisp")

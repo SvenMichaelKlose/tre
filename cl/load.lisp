@@ -12,7 +12,7 @@
        (%expand !))))
 
 (defun %load (pathname)
-  (print `(%load ,pathname))
+  (print-definition `(%load ,pathname))
   (dolist (i (with-input-file s pathname
                (%load-r s)))
     (%eval (%expand i))))
