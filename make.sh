@@ -100,6 +100,8 @@ basic_clean ()
     rm -vf environment/transpiler/targets/c/native/_revision.h environment/_current-version
     rm -vf examples/js/hello-world.js
     rm -vf gmon.out tmp.gcda profile.lisp
+	echo "Checking out early reader..."
+    git checkout -- cl/generated-from-environment.lisp
 }
 
 distclean ()
