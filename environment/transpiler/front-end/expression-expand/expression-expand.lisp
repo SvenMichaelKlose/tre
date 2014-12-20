@@ -96,7 +96,7 @@
 (defun expex-function? (x)
   (& (atom x)
      (| (transpiler-function-arguments *transpiler* x)
-        (function? (symbol-function x)))))
+        (fbound? x))))
 
 (defun expex-argexpand (x)
   (with (new?   (%new? x)

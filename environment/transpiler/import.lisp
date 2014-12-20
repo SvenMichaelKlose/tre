@@ -11,7 +11,7 @@
 
 (defun can-import-function? (tr x)
   (& (symbol? x)
-     (function? (symbol-function x))
+     (fbound? x)
      (!? *can-import-function?*
          (funcall ! x)
          t)

@@ -45,6 +45,7 @@
 (env-load "stage1/dotimes.lisp")
 (env-load "stage1/member.lisp")
 (env-load "stage1/slot-value-p.lisp")
+(env-load "stage1/fboundp.lisp")
 (env-load "stage1/setf-function-p.lisp" :c)
 (env-load "stage1/=.lisp")
 (env-load "stage1/=-cxr.lisp" :c)
