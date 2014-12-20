@@ -61,7 +61,7 @@
       (| (transpiler-defined-function tr !)
          (enqueue q (transpiler-import-wanted-function tr !))))))
 
-(defun generate-imported-defvars (x)
+(defun generate-imported-defvars (tr x)
   (mapcan [unless (transpiler-defined-variable tr _)
             (transpiler-add-delayed-var-init tr `((= ,_ ,(assoc-value _ *variables* :test #'eq))))
             `((defvar ,_ nil))]
@@ -70,7 +70,7 @@
 (defun transpiler-import-wanted-variables (tr)
   (awhen (transpiler-wanted-variables tr)
     (print-note "Importing variables ~A.~%" !)
-    (frontend (generate-imported-defvars !))))
+    (frontend (generate-imported-defvars tr !))))
 
 (defun transpiler-import-from-environment (tr)
   (when (transpiler-import-from-environment? tr)
