@@ -16,8 +16,7 @@
 	  (function-exits? .x))))
 
 (defun opt-tailcall-make-restart (l body front-tag)
-  (& *show-definitions?*
-     (format t "; Removed tail call in ~A.~%" (human-readable-funinfo-names *funinfo*)))
+  (print-note "Removed tail call in ~A.~%" (human-readable-funinfo-names *funinfo*))
   (+ (mapcan #'((arg val)
                   `((%= ,arg ,val)))
              (funinfo-args *funinfo*)
