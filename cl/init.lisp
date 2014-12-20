@@ -46,9 +46,10 @@
 
 ;;; Things we have to implement ourselves.
 (defconstant +implementations+
-    '(%set-atom-fun %eq %eql %equal %not cpr rplacp %load env-load
-      %eval %defun %defun-quiet early-defun %defvar %defmacro %string %make-symbol
-      %symbol-name %symbol-value %symbol-function %symbol-package
+    '(%set-atom-fun %eq %eql %equal %not cpr rplacp append
+      %load env-load
+      %eval %defun %defun-quiet early-defun %defvar %defmacro %string
+      %make-symbol %symbol-name %symbol-value %symbol-function %symbol-package
       =-symbol-function
       function-source
       %number? == number== integer== character== %integer %+ %- %* %/ %< %>
@@ -98,7 +99,7 @@
 (defmacro define-core-package ()
   `(defpackage :tre-core
      (:use :common-lisp :tre-init)
-     (:shadow :peek-char :read-char :read)
+     (:shadow :peek-char :read-char :read :append)
      (:export ,@(all-exports)
               +builtins+
               :defun :gethash :setf :cl-read-char :cl-peek-char

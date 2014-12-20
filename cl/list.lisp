@@ -9,3 +9,4 @@
 
 (defun filter (fun x) (mapcar fun x))
 (defun %nconc (&rest x) x (apply #'nconc x))
+(defun append (&rest x) x (apply #'nconc (mapcar #'copy-list x)))

@@ -58,6 +58,7 @@
 		                                     "late-cons.lisp"
 		                                     "late-symbol.lisp"
 		                                     "../../../environment/list.lisp"
+		                                     "../../../environment/append.lisp"
 		                                     "../../../environment/sequence.lisp"
 		                                     "sequence.lisp"
 		                                     "../../../environment/list-string.lisp"

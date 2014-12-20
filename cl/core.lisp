@@ -33,6 +33,7 @@
 
 (defun print-definition (x) (print x))
 
+(load "cl/list.lisp")
 (load "cl/utils.lisp")
 (load "cl/function-source.lisp")
 (load "environment/stage2/while.lisp")
@@ -42,7 +43,6 @@
 (load "cl/file.lisp")
 (load "cl/hash-table.lisp")
 (load "cl/image.lisp")
-(load "cl/list.lisp")
 (load "cl/number.lisp")
 (load "cl/object.lisp")
 (load "cl/string.lisp")
@@ -56,6 +56,7 @@
 (load "cl/eval.lisp")
 (load "cl/user.lisp")
 
+(load "cl/config-defaults.lisp")
 (load "cl/generated-from-environment.lisp")
 
 (load "cl/env-load.lisp")
