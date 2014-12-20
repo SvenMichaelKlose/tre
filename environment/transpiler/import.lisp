@@ -30,12 +30,10 @@
     (transpiler-add-wanted-function tr i)))
 
 (defun can-import-variable? (tr x)
-  (& x
-     (symbol? x)
-     (not (funinfo-find *funinfo* x))
+  (& (transpiler-import-variables? tr)
      (transpiler-import-from-environment? tr)
-     (transpiler-import-variables? tr)
-     (not (href (transpiler-wanted-variables-hash tr) x)
+     x (symbol? x)
+     (not (funinfo-find *funinfo* x)
           (transpiler-defined? tr x))
      (| (transpiler-host-variable? tr x)
         (assoc x *constants* :test #'eq))))
@@ -44,7 +42,7 @@
   (when (can-import-variable? tr x)
     (= (href (transpiler-wanted-variables-hash tr) x) t)
     (push x (transpiler-wanted-variables tr))
-    (print-note "Scheduled global variable ~A for import from host.~%" x))
+    (print-note "Scheduled ~A for import from host.~%" x))
   x)
 
 (defun transpiler-import-exported-closures (tr)
@@ -63,12 +61,16 @@
       (| (transpiler-defined-function tr !)
          (enqueue q (transpiler-import-wanted-function tr !))))))
 
+(defun generate-imported-defvars (x)
+  (mapcan [unless (transpiler-defined-variable tr _)
+            (transpiler-add-delayed-var-init tr `((= ,_ ,(assoc-value _ *variables* :test #'eq))))
+            `((defvar ,_ nil))]
+          !))
+
 (defun transpiler-import-wanted-variables (tr)
-  (frontend
-      (mapcan [unless (transpiler-defined-variable tr _)
-				(transpiler-add-delayed-var-init tr `((= ,_ ,(assoc-value _ *variables* :test #'eq))))
-	            `((defvar ,_ nil))]
-	          (transpiler-wanted-variables tr))))
+  (awhen (transpiler-wanted-variables tr)
+    (print-note "Importing variables ~A.~%" !)
+    (frontend (generate-imported-defvars !))))
 
 (defun transpiler-import-from-environment (tr)
   (when (transpiler-import-from-environment? tr)
