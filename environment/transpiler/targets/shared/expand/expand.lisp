@@ -3,7 +3,7 @@
 (defmacro define-shared-std-macro (targets &rest x)
   `(progn
      ,@(filter [`(,($ 'define- _ '-std-macro) ,@x)]
-               (intersect *targets* targets))))
+               (intersect *targets* (make-keywords targets)))))
 
 (define-shared-std-macro (js php) defvar-native (&rest x)
   (print-definition `(defvar-native ,@x))
