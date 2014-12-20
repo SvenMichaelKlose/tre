@@ -27,7 +27,7 @@
   new-value)
 
 (defun acons (key val lst)
-  (cons (cons key val) lst))
+  (. (. key val) lst))
 
 (defmacro acons! (key val place)
   `(= ,place (acons ,key ,val ,place)))
@@ -39,9 +39,9 @@
   (& lst
      (? (funcall test obj (caar lst))
         (aremove obj .lst :test test)
-        (cons (cons (caar lst)
-                    (cdar lst))
-              (aremove obj .lst :test test)))))
+        (. (. (caar lst)
+              (cdar lst))
+           (aremove obj .lst :test test)))))
 
 (defmacro aremove! (obj place &key (test #'eql))
   `(= ,place (aremove ,obj ,place :test ,test)))

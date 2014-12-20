@@ -8,4 +8,4 @@
 (defun hash-alist (x)
   (with-queue alist
     (dolist (i (hashkeys x) (queue-list alist))
-      (enqueue alist (cons i (href x i))))))
+      (enqueue alist (. i (href x i))))))

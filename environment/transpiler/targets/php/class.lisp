@@ -15,7 +15,7 @@
 (defun php-constructor (class-name bases args body)
   (transpiler-add-defined-function *transpiler* class-name args body)
   `(function ,(php-constructor-name class-name)
-             (,(cons 'this args)
+             (,(. 'this args)
               (let ~%this this
                 (%thisify ,class-name ,@body)))))
 

@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2006,2008-2009,2011–2014 Sven Michael Klose <pixel@hugbox.org>
+;;;; tré – Copyright (c) 2005–2006,2008-2009,2011–2014 Sven Michael Klose <pixel@hugbox.org>
 
 (functional find position)
 
@@ -31,7 +31,7 @@
 	           (integer< i e)
 			   (integer> i e)))
 	     (alet (elt seq i)
-           (& (apply pred (cons ! (& with-index (list i))))
+           (& (apply pred (. ! (& with-index (list i))))
 		      (return !)))))))
  
 (defun find-if (pred seq &key (start nil) (end nil) (from-end nil) (with-index nil))

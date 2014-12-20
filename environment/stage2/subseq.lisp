@@ -1,12 +1,11 @@
-;;;;; tré – Copyright (c) 2007–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
+;;;; tré – Copyright (c) 2007–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
 
 (functional subseq)
 
 (defun copy-num (lst len)
   (& lst
      (integer< 0 len)
-     (cons (car lst)
-		   (copy-num (cdr lst) (integer-- len)))))
+     (. lst. (copy-num .lst (integer-- len)))))
 
 (define-test "COPY-NUM"
   ((copy-num '(a b c) 2))

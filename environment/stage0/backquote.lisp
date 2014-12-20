@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2006–2014 Sven Michael Klose <pixel@copei.de>
+;;;; tré – Copyright (c) 2006–2014 Sven Michael Klose <pixel@copei.de>
 
 (%defun any-quasiquote? (x)
   (? (cons? x)
@@ -28,8 +28,8 @@
        (#'((p c)
              (rplacp c p))
          *default-listprop*
-         (cons (car (cdr x.))
-               (%backquote .x))))
+         (. (car (cdr x.))
+            (%backquote .x))))
      (#'((evaluated)
            (?
              (not evaluated)  (%backquote .x)

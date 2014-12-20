@@ -95,7 +95,7 @@
   (? (cons? typ)
      (adolist typ
        (_dochook doc ! fun))
-     (push (cons typ (native-add-event-listener doc typ fun))
+     (push (. typ (native-add-event-listener doc typ fun))
            (href _original-listeners doc))))
 
 (defmethod _event-manager _non-generic-event (x)

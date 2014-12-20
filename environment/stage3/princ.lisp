@@ -1,13 +1,13 @@
-;;;;; tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
+;;;; tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun number-digit (x)
   (code-char (+ x #\0)))
 
 (defun integer-chars-0 (x)
   (alet (integer (mod x 10))
-    (cons (number-digit !)
-          (& (<= 10 x)
-             (integer-chars-0 (/ (- x !) 10))))))
+    (. (number-digit !)
+       (& (<= 10 x)
+          (integer-chars-0 (/ (- x !) 10))))))
 
 (defun integer-chars (x)
   (reverse (integer-chars-0 (integer (abs x)))))
@@ -15,8 +15,8 @@
 (defun fraction-chars-0 (x)
   (alet (mod (* x 10) 10)
     (& (< 0 !)
-       (cons (number-digit !)
-             (fraction-chars-0 !)))))
+       (. (number-digit !)
+          (fraction-chars-0 !)))))
 
 (defun fraction-chars (x)
   (fraction-chars-0 (mod (abs x) 1)))

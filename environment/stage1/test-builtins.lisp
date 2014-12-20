@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (C) 2006,2009,2011–2014 Sven Michael Klose <pixel@copei.de>
+;;;; tré – Copyright (C) 2006,2009,2011–2014 Sven Michael Klose <pixel@copei.de>
 
 (define-test "CAR accepts NIL"
   ((car nil))
@@ -9,23 +9,23 @@
   nil)
 
 (define-test "RPLACA returns cons"
-  ((rplaca (cons nil nil) 42))
-  (cons 42 nil))
+  ((rplaca (. nil nil) 42))
+  (. 42 nil))
 
 (define-test "RPLACD returns cons"
-  ((rplacd (cons nil nil) 42))
-  (cons nil 42))
+  ((rplacd (. nil nil) 42))
+  (. nil 42))
 
 (define-test "ATOM recognizes atoms"
   ((atom nil))
   t)
 
 (define-test "ATOM fails on conses"
-  ((atom (cons 23 42)))
+  ((atom (. 23 42)))
   nil)
 
 (define-test "CONS?"
-  ((cons? (cons 1 1)))
+  ((cons? (. 1 1)))
   t)
 
 (define-test "CONS? fails on atoms"

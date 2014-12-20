@@ -89,7 +89,7 @@
       (error "Body is missing."))
     `(cond
         ,@(? (sole? end)
-			 (+ (butlast tests) (list (cons t end)))
+			 (+ (butlast tests) (list (. t end)))
 			 tests))))
 
 ; XXX the expression expansion should be redone from scratch and then it should be able to deal with this.

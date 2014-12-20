@@ -1,10 +1,9 @@
-;;;;; tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
+;;;; tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun copy-while (pred x)
   (& x
-     (funcall pred (car x))
-     (cons (car x)
-           (copy-while pred (cdr x)))))
+     (funcall pred x.)
+     (. x. (copy-while pred .x))))
 
 (define-test "COPY-WHILE"
   ((copy-while #'number? '(1 2 3 a)))
@@ -19,21 +18,20 @@
   (| body (error "Body expected."))
   (labels ((sub (x)
              (? x
-                `((with ,x
-					,@body))
+                `((with ,x ,@body))
                 body)))
     (let* ((alst (macroexpand lst))
-           (plc (car alst))
-           (val (cadr alst)))
+           (plc alst.)
+           (val .alst.))
       (?
 	    (cons? plc) `(multiple-value-bind ,plc ,val
-		               ,@(sub (cddr alst)))
+		               ,@(sub ..alst))
 
 	    ; Accumulate this and all following functions into a LABEL,
         ; so they can call each other.
-		(lambda? val) (multiple-value-bind (funs others) (separate [lambda? (cadr _)] (group alst 2))
-		                `(labels ,(filter [`(,(car _) ,@(past-lambda (cadr _)))] funs)
+		(lambda? val) (multiple-value-bind (funs others) (separate [lambda? ._.] (group alst 2))
+		                `(labels ,(filter [`(,_. ,@(past-lambda ._.))] funs)
 			               ,@(sub (apply #'append others))))
 
         `(let ,plc ,val
-		   ,@(sub (cddr alst)))))))
+		   ,@(sub ..alst))))))

@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2009–2010,2012 Sven Michael Klose <pixel@copei.de>
+;;;;; tré – Copyright (c) 2009–2010,2012,2014 Sven Michael Klose <pixel@copei.de>
 
 (defvar *base64-key*
   		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=")
@@ -39,7 +39,7 @@
   (when x
     (? (| (alphanumeric? x.)
           (in=? x. #\+ #\/ #\=))
-       (cons x. (base64-compress .x))
+       (. x. (base64-compress .x))
        (base64-compress .x))))
 
 (defun base64-decode (x)

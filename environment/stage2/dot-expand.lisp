@@ -6,8 +6,8 @@
 	 x))
 
 (defun dot-expand-head-length (x &optional (num 0))
-  (? (== #\. (car x))
-	 (dot-expand-head-length (cdr x) (++ num))
+  (? (== #\. x.)
+	 (dot-expand-head-length .x (++ num))
 	 (values num x)))
 
 (defun dot-expand-tail-length (x &optional (num 0))
@@ -34,7 +34,7 @@
 
 (defun has-dot-notation? (x)
   (with (sl  (string-list (symbol-name x)))
-    (| (== #\. (car sl))
+    (| (== #\. sl.)
        (== #\. (car (last sl))))))
 
 (defun dot-expand-conv (x)
@@ -53,8 +53,8 @@
     (when x
       (?
 		(label? x) (dot-expand-conv x)
-		(cons? x)  (listprop-cons x (dot-expand (car x))
-                                    (dot-expand (cdr x)))
+		(cons? x)  (listprop-cons x (dot-expand x.)
+                                    (dot-expand .x))
       	x))))
 
 (= *dotexpand-hook* #'dot-expand)

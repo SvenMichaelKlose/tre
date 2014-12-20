@@ -1,15 +1,15 @@
-;;;;; tré – Copyright (c) 2005–2006,2009,2012–2014 Sven Michael Klose <pixel@copei.de>
+;;;; tré – Copyright (c) 2005–2006,2009,2012–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun multiple-value-bind-0 (forms gl body)
   (? forms
      (with-gensym gn
-       `((let* ((,(car forms) (car ,gl))
-		        ,@(& (cdr forms)
+       `((let* ((,forms. (car ,gl))
+		        ,@(& .forms
 			         `((,gn ,(? *assert*
 						        `(| (cdr ,gl)
                                     (%error "Not enough VALUES."))
 						        `(cdr ,gl))))))
-	       ,@(multiple-value-bind-0 (cdr forms) gn body))))
+	       ,@(multiple-value-bind-0 .forms gn body))))
 	 body))
 
 (defmacro multiple-value-bind (forms expr &body body)

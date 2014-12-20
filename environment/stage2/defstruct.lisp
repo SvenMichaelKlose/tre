@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
+;;;; tré – Copyright (c) 2005–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun %struct-option-keyword? (x)
   (eq x :constructor))
@@ -27,7 +27,7 @@
               `(= (aref ,g ,(++! index))
                   (? (eq ,argname ',argname)
                      ,(& (cons? _)
-                         (cadr _))
+                         ._.)
                      ,argname))]
             fields)))
 

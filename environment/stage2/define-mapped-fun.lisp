@@ -1,12 +1,12 @@
-;;;;; tré – Copyright (c) 2006,2009,2012–2013 Sven Michael Klose <pixel@copei.de>
+;;;; tré – Copyright (c) 2006,2009,2012–2014 Sven Michael Klose <pixel@copei.de>
 
 (defmacro define-mapped-fun (mapfun name &rest fun)
   (with-gensym g
     `(defun ,name (,g)
-       (,mapfun ,(? (& (not (cdr fun))
-                       (cons? (car fun))
-                       (eq 'function (caar fun)))
-                    (car fun)
+       (,mapfun ,(? (& (not .fun)
+                       (cons? fun.)
+                       (eq 'function fun..))
+                    fun.
                     `#'(,@fun))
                 ,g))))
 

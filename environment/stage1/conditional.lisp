@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2008,2011–2014 Sven Michael Klose <pixel@copei.de>
+;;;; tré – Copyright (c) 2005–2008,2011–2014 Sven Michael Klose <pixel@copei.de>
 
 (defmacro when (predicate &body body)
   `(& ,predicate
@@ -10,10 +10,10 @@
 
 (defun group2 (x)
   (? x
-     (cons (? .x
-  		      (list x. .x.)
-  		      (list x.))
-               (group2 ..x))))
+     (. (? .x
+  		   (list x. .x.)
+  		   (list x.))
+        (group2 ..x))))
 
 (defun %case-test (cases)
   (? (eq :test .cases.)

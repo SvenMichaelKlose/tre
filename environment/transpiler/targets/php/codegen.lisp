@@ -85,7 +85,7 @@
 
 (define-php-macro function (&rest x)
   (? .x
-     (codegen-php-function (cons 'function x))
+     (codegen-php-function (. 'function x))
      `(%%native (%%string ,(obfuscated-identifier x.)))))
 
 (define-php-macro %function-prologue (name) '(%%native ""))
