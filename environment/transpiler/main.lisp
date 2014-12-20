@@ -15,9 +15,7 @@
 (env-load "transpiler/generic-compile.lisp")
 
 (defun has-target? (name)
-  (print name)
-  (print *targets*)
-  (print (member name *targets*)))
+  (member name *targets*))
 
 (env-load "transpiler/targets/shared/main.lisp")
 (? (has-target? :c)
