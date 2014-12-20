@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
+;;;; tré – Copyright (c) 2005–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
 
 (defvar *=-function?* #'%=-function?)
 
@@ -13,26 +13,26 @@
 	   (? (member p *constants* :test #'eq)
 		  (error "Cannot set constant ~A." p))
        (list 'setq p val))
-     (let* ((fun (car p))
-	        (args (cdr p))
-	        (setfun (=-make-symbol fun)))
-       (? (funcall *=-function?* setfun)
-		  (? (member (car args) *constants* :test #'eq)
+     (let* ((fun     p.)
+	        (args    .p)
+	        (setter  (=-make-symbol fun)))
+       (? (funcall *=-function?* setter)
+		  (? (member args. *constants* :test #'eq)
 		   	 (error "Cannot set constant ~A." args)
-	         `(,setfun ,val ,@args))
+	         `(,setter ,val ,@args))
           (error "Place ~A isn't settable." p)))))
 
 (defun =-0 (args)
-  (? (not (cdr args))
-     (error "Pair expected instead of single ~A." (car args))
-     (. (=-complement (car args) (cadr args))
-        (? (cddr args)
-           (=-0 (cddr args))))))
+  (? (not .args)
+     (error "Pair expected instead of single ~A." args.)
+     (. (=-complement args. .args.)
+        (? ..args
+           (=-0 ..args)))))
 
 (defmacro = (&rest args)
   (? args
     (? (sole? args)
-       `(= ,(car args))
+       `(= ,args.)
        `(progn
 		  ,@(=-0 args)))
     (error "Arguments expected.")))

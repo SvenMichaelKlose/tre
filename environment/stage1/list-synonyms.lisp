@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2006–2008,2011–2013 Sven Michael Klose <pixel@copei.de>
+;;;; tré – Copyright (c) 2006–2008,2011–2014 Sven Michael Klose <pixel@copei.de>
 
 (declare-cps-exception first second third fourth fifth sixth seventh eighth ninth tenth)
 
@@ -30,5 +30,4 @@
 
 (functional rest)
 
-(defun rest (x)
-  (cdr x))
+(defun rest (x) .x)

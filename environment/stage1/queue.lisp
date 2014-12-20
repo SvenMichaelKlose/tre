@@ -1,34 +1,29 @@
-;;;;; tré – Copyright (c) 2005–2006,2008,2010,2012–2013 Sven Michael Klose <pixel@copei.de>
+;;;; tré – Copyright (c) 2005–2006,2008,2010,2012–2014 Sven Michael Klose <pixel@copei.de>
 
-(declare-cps-exception make-queue enqueue enqueue-list queue-pop queue-list queue-front)
-
-(defun make-queue ()
-  (cons nil nil))
-
-(defun enqueue (queue &rest x)
-  (rplaca queue
-          (cdr (rplacd (| (car queue) queue)
-                       x)))
-  x)
-
-(defun enqueue-list (queue x)
-  (rplacd queue (nconc (cdr queue) x))
-  (rplaca queue (last x)))
-
-(defun queue-pop (queue)
-  (prog1 (cadr queue)
-    (? (not (cddr queue))
-       (rplaca queue nil))
-    (? (cdr queue)
-       (rplacd queue (cddr queue)))))
-
+(declare-cps-exception make-queue enqueue enqueue-list
+                       queue-pop queue-list queue-front)
 (functional queue-list queue-front)
 
-(defun queue-list (queue)
-  (cdr queue))
+(defun make-queue ()
+  (. nil nil))
 
-(defun queue-front (queue)
-  (car (cdr queue)))
+(defun enqueue (x &rest vals)
+  (rplaca x (cdr (rplacd (| x. x) vals)))
+  vals)
+
+(defun enqueue-list (x vals)
+  (rplacd x (nconc .x vals))
+  (rplaca x (last vals)))
+
+(defun queue-pop (x)
+  (prog1 .x.
+    (? (not ..x)
+       (rplaca x nil))
+    (? .x
+       (rplacd x ..x))))
+
+(defun queue-list (x) .x)
+(defun queue-front (x) .x.)
 
 (define-test "ENQUEUE and QUEUE-LIST work"
   ((let q (make-queue)

@@ -3,14 +3,14 @@
 (%defun %simple-map (func lst)
   (? lst
      (? (cons? lst)
-        (apply func (list (car lst)))
-        (%simple-map func (cdr lst)))))
+        (apply func (list lst.))
+        (%simple-map func .lst))))
 
 (%defun %simple-mapcar (func lst)
   (? lst
      (? (cons? lst)
-        (cons (apply func (list (car lst)))
-              (%simple-mapcar func (cdr lst))))))
+        (. (apply func (list lst.))
+           (%simple-mapcar func .lst)))))
 
 (define-test "%SIMPLE-MAPCAR"
   ((%simple-mapcar #'identity '(1 2 3)))
