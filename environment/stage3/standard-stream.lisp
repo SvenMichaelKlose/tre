@@ -2,15 +2,9 @@
 
 (defun make-standard-stream ()
   (make-stream
-      :fun-in  #'((str)
-                    str
-                    (%read-char nil))
-      :fun-out #'((c str)
-                    str
-                    (%princ c nil))
-      :fun-eof #'((str)
-                    str
-                    (%feof nil))))
+      :fun-in  [_ (%read-char nil)]
+      :fun-out #'((c str) str (%princ c nil))
+      :fun-eof [_ (%feof nil)]))
 
 (defvar *standard-output* (make-standard-stream))
 (defvar *standard-input* (make-standard-stream))
