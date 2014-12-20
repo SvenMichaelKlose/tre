@@ -89,7 +89,7 @@ if [ -f environment/transpiler/targets/c/native/$COMPILED_ENV ]; then
 fi
 
 CRUNSHTMP="tmp.c"
-TRE="sbcl --core image"
+TRE="sbcl --noinform --core image"
 BINDIR="/usr/local/bin/"
 
 basic_clean ()
@@ -216,7 +216,7 @@ environment)
 	;;
 
 core-sbcl)
-    echo "(load \"cl/main.lisp\")" | sbcl
+    echo "(load \"cl/main.lisp\")" | sbcl --noinform
 	;;
 
 boot)
