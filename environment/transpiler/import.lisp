@@ -65,7 +65,7 @@
   (mapcan [unless (transpiler-defined-variable tr _)
             (transpiler-add-delayed-var-init tr `((= ,_ ,(assoc-value _ *variables* :test #'eq))))
             `((defvar ,_ nil))]
-          !))
+          x))
 
 (defun transpiler-import-wanted-variables (tr)
   (awhen (transpiler-wanted-variables tr)
