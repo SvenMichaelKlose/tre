@@ -9,10 +9,11 @@
 (%defvar *tre-has-alien*   t)
 (%defvar *tre-has-class*   t)
 
-(%defvar *show-definitions?*          t)
+(%defvar *print-definitions?*         t)
+(%defvar *print-notes?*               t)
+(%defvar *print-status?*              t)
 (%defvar *have-environment-tests*     nil)
 (%defvar *development?*               t)
 (%defvar *print-circularities?*       nil)
 (%defvar *have-compiler?*             nil)
 (%defvar *have-c-compiler?*           t)
-(%defvar *show-transpiler-progress?*  t)

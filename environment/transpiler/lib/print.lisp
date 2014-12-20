@@ -6,9 +6,9 @@
   (apply #'format t fmt args))
 
 (defun print-note (fmt &rest args)
-  (& *show-definitions?*
+  (& *print-notes?*
      (apply #'%print-note fmt args)))
 
 (defun print-status (fmt &rest args)
-  (& *show-definitions?*
+  (& *print-status?*
      (apply #'%print-note fmt args)))
