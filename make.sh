@@ -247,6 +247,7 @@ ctests)
 
 phptests)
     echo "PHP target tests..."
+    mkdir compiled
     $TRE tests/php.lisp || exit 1
     php compiled/test.php >_phptests.log || exit 1
     cmp tests/php.correct-output _phptests.log || (diff tests/php.correct-output _phptests.log; exit 1)
@@ -255,6 +256,7 @@ phptests)
 
 jstests)
     echo "JavaScript target tests..."
+    mkdir compiled
     $TRE tests/js.lisp || exit 1
     (nodejs compiled/test.js >_nodejstests.log || node compiled/test.js >_nodejstests.log) || exit 1
     cmp tests/js.correct-output _nodejstests.log || (diff tests/js.correct-output _nodejstests.log; exit 1)
