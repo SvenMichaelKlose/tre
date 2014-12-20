@@ -101,9 +101,10 @@
      (:use :common-lisp :tre-init)
      (:shadow :peek-char :read-char :read :append)
      (:export ,@(all-exports)
-              +builtins+
+              :+builtins+
               :defun :gethash :setf :cl-read-char :cl-peek-char
-              :%backquote :backquote :quasiquote :quasiquote-splice)))
+              :%backquote :backquote :quasiquote :quasiquote-splice
+              :*standard-input* :*standard-output*)))
 
 (define-core-package)
 
@@ -113,7 +114,8 @@
 
 (defpackage :tre
   (:use :tre-core)
-  (:shadow :defun :gethash :setf)
+  (:shadow :defun :gethash :setf
+           :*standard-input* :*standard-output*)
   (:export :%backquote :backquote :quasiquote :quasiquote-splice
            :_ :square :accent-circonflex
            :macroexpand :eq :eql :make-symbol
