@@ -31,7 +31,7 @@
          replace-tag
            #'((old-dest new-dest)
 			    (= removed-tags (filter [? (eq ._ old-dest)
-                                           (cons _. new-dest)
+                                           (. _. new-dest)
                                            _]
                                         removed-tags)))
 

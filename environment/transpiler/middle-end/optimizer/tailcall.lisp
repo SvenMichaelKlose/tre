@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2010–2014 Sven Michael Klose <pixel@copei.de>
+;;;; tré – Copyright (c) 2010–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun atom&integer== (a b)
   (& (number? a)
@@ -12,11 +12,12 @@
 	  (%%go? !)        (!? (member .!. .x :test #'atom&integer==)
 		                   (function-exits? .!))
 	  (| (vm-jump? !)
-	     (%=? !))   nil
+	     (%=? !))      nil
 	  (function-exits? .x))))
 
 (defun opt-tailcall-make-restart (l body front-tag)
-  (print-note "Removed tail call in ~A.~%" (human-readable-funinfo-names *funinfo*))
+  (print-note "Removed tail call in ~A.~%"
+              (human-readable-funinfo-names *funinfo*))
   (+ (mapcan #'((arg val)
                   `((%= ,arg ,val)))
              (funinfo-args *funinfo*)
@@ -37,6 +38,7 @@
              (opt-tailcall-fun l .body front-tag))))))
 
 (metacode-walker opt-tailcall (x)
-  :if-named-function  (with-compiler-tag front-tag
-                        `(,front-tag
-                          ,@(opt-tailcall-fun x. (lambda-body x.) front-tag))))
+  :if-named-function
+    (with-compiler-tag front-tag
+      `(,front-tag
+        ,@(opt-tailcall-fun x. (lambda-body x.) front-tag))))

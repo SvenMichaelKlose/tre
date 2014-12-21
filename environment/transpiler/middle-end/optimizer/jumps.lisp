@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun inverted-%%go (x)
   (case x :test #'eq
@@ -18,14 +18,18 @@
      (%%go? x)))
 
 (defun target-tag (x constant)
-  (& x (?
-         (number? x.)                 (target-tag .x constant)
-         (constant-jump? x. constant) (| (target-tag (member (%%go-tag x.) *body*) constant)
-                                         (%%go-tag x.)))))
+  (& x
+     (?
+       (number? x.)                 (target-tag .x constant)
+       (constant-jump? x. constant) (| (target-tag (member (%%go-tag x.) *body*) constant)
+                                       (%%go-tag x.)))))
 
-(defun t|nil? (x)
-  (| (not x)
-     (t? x)))
+(defun setting-ret-to-bool? (x)
+  (& (%=? x)
+     (~%ret? (%=-place x))
+     (alet (%=-value x)
+       (| (not !)
+          (t? !)))))
 
 (define-optimizer optimize-jumps
   (& (%%go-cond? a)
@@ -34,16 +38,12 @@
           (eq a. dest..))))
     (. `(,a. ,(%%go-tag (cadr (tag-code (%%go-tag a)))) ,(%%go-value a))
        (optimize-jumps d))
-  (& (%=? a)
-     (~%ret? (%=-place a))
-     (t|nil? (%=-value a))
+  (& (setting-ret-to-bool? a)
      (!? (target-tag d (%=-value a))
          (not (will-be-used-again? (member ! *body*) '~%ret))))
     (. `(%%go ,(target-tag d (%=-value a)))
        (optimize-jumps d))
-  (& (%=? a)
-     (~%ret? (%=-place a))
-     (t|nil? (%=-value a))
+  (& (setting-ret-to-bool? a)
      (? (%=-value a)
         (%%go-nil? d.)
         (%%go-not-nil? d.)))
