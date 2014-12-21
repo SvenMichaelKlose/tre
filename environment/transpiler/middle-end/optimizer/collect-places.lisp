@@ -14,7 +14,8 @@
                            (funinfo-add-used-var fi p)
                            (? (atom v)
                               (funinfo-add-used-var fi v)
-                              (adolist v (funinfo-add-used-var fi !))))))
+                              (adolist v
+                                (funinfo-add-used-var fi !))))))
   (& x (collect-places-r .x)))
 
 (defun collect-places (x)

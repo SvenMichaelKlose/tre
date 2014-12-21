@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun assignment-to-self? (x)
   (& (%=? x)
@@ -27,10 +27,10 @@
      (identity? ..x.)))
 
 (define-optimizer opt-peephole
-  (reversed-assignments? a d)          (. a (opt-peephole .d))
+  (reversed-assignments? a d)        (. a (opt-peephole .d))
   (| (jump-to-following-tag? a d)
      (unused-atom-or-functional? a)
-     (assignment-to-self? a))          (opt-peephole d)
-  (%%go? a)                            (. a (opt-peephole (member-if #'atom d)))
-  (%=-identity? a)                     (. `(%= ,.a. ,(cadr ..a.))
-                                          (opt-peephole d)))
+     (assignment-to-self? a))        (opt-peephole d)
+  (%%go? a)                          (. a (opt-peephole (member-if #'atom d)))
+  (%=-identity? a)                   (. `(%= ,.a. ,(cadr ..a.))
+                                        (opt-peephole d)))

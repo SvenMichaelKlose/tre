@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2009–2014 Sven Michael Klose <pixel@copei.de>
+;;;; tré – Copyright (c) 2009–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun used-vars ()
   (alet *funinfo*

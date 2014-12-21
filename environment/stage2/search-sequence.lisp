@@ -20,7 +20,7 @@
   (& seq (integer< 0 (length seq))
      (let* ((e (| end (integer-- (length seq))))
 	 	    (s (| start 0)))
-       ; Make sure the start and end indices are sane.
+       ; Make sure the start and end indexes are sane.
        (& (| (& (integer> s e) (not from-end))
              (& (integer< s e) from-end))
           (xchg s e))
