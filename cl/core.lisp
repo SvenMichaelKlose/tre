@@ -8,7 +8,7 @@
 (defmacro define-wrappers ()
   `(progn
      ,@(mapcar #'(lambda (x)
-                   `(defun ,(values (intern (symbol-name (car x)) "TRE-CORE")) (&rest x)
+                   `(defun ,(cl:values (intern (symbol-name (car x)) "TRE-CORE")) (&rest x)
                       (apply (function ,(cadr x)) x)))
                +renamed-imports+)))
 
@@ -34,6 +34,8 @@
 (defun print-definition (x)
   (print x)
   (fresh-line))
+
+(defun values (&rest x) `(values ,@x))
 
 (load "cl/list.lisp")
 (load "cl/utils.lisp")
