@@ -1,13 +1,12 @@
+# IMPORTANT:
+
+!!! Under reconstruction with help of SBCL !!!
+
+
 # Overview
 
 This is tré, a metamorphic Lisp transpiler.  It can generate C,
 ECMAScript/JavaScript, PHP and a dedicated bytecode.
-
-
-# IMPORTANT:
-
-The C and bytecode target is currently broken.
-The JavaScript target works but just not for the whole transpiler.
 
 
 # Building and installing
