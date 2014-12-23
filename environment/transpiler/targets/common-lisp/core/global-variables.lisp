@@ -9,3 +9,6 @@
 (defvar *cpu-type* nil)
 (defvar *libc-path* nil)
 (defvar *rand-max* nil)
+
+(defvar *quasiquoteexpand-hook* nil)
+(defvar *dotexpand-hook* nil)
