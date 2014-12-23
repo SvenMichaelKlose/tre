@@ -6,3 +6,10 @@
                                           (cl:in-package :tre)
                                           (cl:funcall fun))
                             :purify t))
+
+(defun %start-core ()
+  (setf *launchfile* (cadr (or
+                             #+SBCL sb-ext:*posix-argv*
+                             #+LISPWORKS system:*line-arguments-list*
+                             #+CMU extensions:*command-line-words*
+                             nil))))

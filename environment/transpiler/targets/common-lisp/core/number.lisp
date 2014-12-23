@@ -26,3 +26,15 @@
 (defun %> (&rest x) (apply #'> (chars-to-numbers x)))
 
 (defun bit-or (a b) (cl:bit-or a b))
+
+(defun code-char (x) (cl:code-char (cl:floor x)))
+(defun number+ (&rest x) (apply #'%+ x))
+(defun integer+ (&rest x) (apply #'%+ x))
+(defun character+ (&rest x) (apply #'%+ x))
+(defun number- (&rest x) (apply #'%- x))
+(defun integer- (&rest x) (apply #'%- x))
+(defun character- (&rest x) (apply #'%- x))
+(defun * (&rest x) (apply #'%* x))
+(defun / (&rest x) (apply #'%/ x))
+(defun < (&rest x) (apply #'%< x))
+(defun > (&rest x) (apply #'%> x))

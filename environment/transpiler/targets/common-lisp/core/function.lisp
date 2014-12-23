@@ -35,3 +35,5 @@
   (gethash x *function-atom-sources*))
 
 (defun =-function-source (v x) (setf (gethash x *function-atom-sources*) v))
+
+(defun function-bytecode (x) x nil)

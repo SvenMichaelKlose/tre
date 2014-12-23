@@ -1,6 +1,6 @@
 ;;;;; tré – Copyright (c) 2014 Sven Michael Klose <pixel@copei.de>
 
-(defun %make-hash-table (&key (test #'eql))
+(defun make-hash-table (&key (test #'eql))
   (cl:make-hash-table :test (?
                            (eq test #'eq)       #'cl:eq
                            (or (eq test #'eql)
