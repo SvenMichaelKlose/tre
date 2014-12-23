@@ -4,7 +4,6 @@
 (defun argument-keyword? (x)          (in? x '&rest '&body '&optional '&key))
 (defun argument-name? (x)             (atom x))
 (defun argument-name (x)              x)
-(defun argument-def-without-type (x)  x)
 
 (defun error-arguments-missing (fun args)
   (error "Arguments ~A missing for function ~A." fun args))
