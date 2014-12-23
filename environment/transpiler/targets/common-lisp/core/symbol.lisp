@@ -1,33 +1,31 @@
 ;;;;; tré – Copyright (c) 2014 Sven Michael Klose <pixel@copei.de>
 
-(in-package :tre-core)
-
 (defvar *keyword-package* (find-package "KEYWORD"))
 
-(defun %make-symbol (x package)
-  (intern x (? package
-               (? (packagep package)
-                  (package-name package)
-                  x)
-               "TRE")))
+(defun make-symbol (x &optional (package nil))
+  (cl:intern x (? package
+                  (? (cl:packagep package)
+                     (cl:package-name package)
+                     x)
+                  "TRE")))
 
-(defun %symbol-name (x)
-  (? (packagep x)
-     (package-name x)
-     (symbol-name x)))
+(defun symbol-name (x)
+  (? (cl:packagep x)
+     (cl:package-name x)
+     (cl:symbol-name x)))
 
-(defun %symbol-value (x)
-  (? (boundp x)
-     (symbol-value x)
+(defun symbol-value (x)
+  (? (cl:boundp x)
+     (cl:symbol-value x)
      x))
 
-(defun %symbol-function (x)
-  (? (fboundp x)
-     (symbol-function x)))
+(defun symbol-function (x)
+  (? (cl:fboundp x)
+     (cl:symbol-function x)))
 
-(defun %symbol-package (x)
-  (? (boundp x)
-     (symbol-package x)))
+(defun symbol-package (x)
+  (? (cl:boundp x)
+     (cl:symbol-package x)))
 
 (defun =-symbol-function (v x)
-  (setf (symbol-function x) v))
+  (cl:setf (cl:symbol-function x) v))

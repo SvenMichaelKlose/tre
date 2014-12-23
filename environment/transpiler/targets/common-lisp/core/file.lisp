@@ -1,21 +1,19 @@
 ;;;;; tré – Copyright (c) 2014 Sven Michael Klose <pixel@copei.de>
 
-(in-package :tre-core)
-
-(defun %princ (x stream) (princ x stream))
-(defun %force-output (stream) (force-output stream))
+(defun %princ (x stream) (cl:princ x stream))
+(defun %force-output (stream) (cl:force-output stream))
 
 (defun %fopen (pathname mode)
-  (open pathname :direction (? (find #\w mode :test #'equal)
+  (cl:open pathname :direction (? (cl:find #\w mode :test #'cl:equal)
                                :output
                                :input)
                  :if-exists :supersede))
 
-(defun %fclose (stream) (close stream))
+(defun %fclose (stream) (cl:close stream))
 
-(defun %read-char (str)
-  (alet (cl-read-char str nil 'eof)
+(defun read-char (str)
+  (alet (cl:read-char str nil 'eof)
     (unless (eq ! 'eof) !)))
 
 (defun unix-sh-mkdir (pathname &key (parents nil))
-  (ensure-directories-exist pathname))
+  (cl:ensure-directories-exist pathname))
