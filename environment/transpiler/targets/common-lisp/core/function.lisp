@@ -1,23 +1,11 @@
 ; tré – Copyright (c) 2014 Sven Michael Klose <pixel@copei.de>
 
 (defvar *functions* nil)
+(defvar *function-atom-sources* (make-hash-table :test #'eq))
+
 (push '*functions* *universe*)
 
 (defbuiltin function-native (x) x)
-
-(defmacro %set-atom-fun (x v) `(setf (symbol-function ',x) ,v))
-
-(defmacro %defun-quiet (name args &body body)
-  `(progn
-     (cl:push (. name ',(. args body)) *functions*)
-     (cl:defun ,name ,args ,@body)
-     (cl:setf (cl:gethash #',name *function-atom-sources*) ',(. args body))))
-
-(defmacro %defun (name args &body body)
-  (print `(%defun ,name ,args))
-  `(%defun-quiet ,name ,args ,@body))
-
-(defvar *function-atom-sources* (make-hash-table :test #'eq))
 
 (defbuiltin function-source (x)
   (| (cl:functionp x)

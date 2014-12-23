@@ -2,15 +2,7 @@
 
 (defvar *macros* nil)
 
-(defun macro? (x) (cl:rassoc x *macros* :test #'eq))
-
-(defmacro %defmacro (name args &body body)
-  (cl:print `(%defmacro ,name ,args))
-  `(cl:push (. ',name
-               (. ',args
-                  #'(lambda ,(argument-expand-names '%defmacro args)
-                      ,@body)))
-            *macros*))
+(defbuiltin macro? (x) (cl:rassoc x *macros* :test #'eq))
 
 (defun %%macrocall (x)
   (alet (cdr (cl:assoc x. *macros* :test #'eq))

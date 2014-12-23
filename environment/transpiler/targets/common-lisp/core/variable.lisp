@@ -2,9 +2,3 @@
 
 (defvar *variables* nil)
 (push '*variables* *universe*)
-
-(defmacro %defvar (name &optional (init nil))
-  (print `(%defvar ,name))
-  `(progn
-     (push (cons ',name ',init) *variables*)
-     (defvar ,name ,init)))
