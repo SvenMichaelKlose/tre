@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2014 Sven Michael Klose <pixel@copei.de>
 
 ; Usually every function keeps its source code.
 ; If we do this in SBCL, anonymous functions won't get garbage collected,
@@ -34,5 +34,5 @@
 (defun tre2cl (x)
   (make-lambdas (backquote-expand (early-macroexpand (car (backquote-expand (list x)))))))
 
-(defun eval (x)
+(defbuiltin eval (x)
   (cl:eval (tre2cl x)))

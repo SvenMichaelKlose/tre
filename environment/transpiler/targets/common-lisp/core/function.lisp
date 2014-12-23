@@ -1,9 +1,9 @@
-;;;;; tré – Copyright (c) 2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2014 Sven Michael Klose <pixel@copei.de>
 
 (defvar *functions* nil)
 (push '*functions* *universe*)
 
-(defun function-native (x) x)
+(defbuiltin function-native (x) x)
 
 (defmacro %set-atom-fun (x v) `(setf (symbol-function ',x) ,v))
 
@@ -19,12 +19,12 @@
 
 (defvar *function-atom-sources* (make-hash-table :test #'eq))
 
-(defun function-source (x)
+(defbuiltin function-source (x)
   (| (cl:functionp x)
      (cl:error "Not a function."))
   (cl:gethash x *function-atom-sources*))
 
-(defun =-function-source (v x)
+(defbuiltin =-function-source (v x)
   (cl:setf (cl:gethash x *function-atom-sources*) v))
 
-(defun function-bytecode (x) x nil)
+(defbuiltin function-bytecode (x) x nil)

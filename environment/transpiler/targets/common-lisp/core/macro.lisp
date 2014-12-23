@@ -1,16 +1,16 @@
-;;;;; tré – Copyright (c) 2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2014 Sven Michael Klose <pixel@copei.de>
 
 (defvar *macros* nil)
 
 (defun macro? (x) (cl:rassoc x *macros* :test #'eq))
 
 (defmacro %defmacro (name args &body body)
-  (print `(%defmacro ,name ,args))
-  `(push (. ',name
-            (. ',args
-               #'(lambda ,(argument-expand-names '%defmacro args)
-                   ,@body)))
-         *macros*))
+  (cl:print `(%defmacro ,name ,args))
+  `(cl:push (. ',name
+               (. ',args
+                  #'(lambda ,(argument-expand-names '%defmacro args)
+                      ,@body)))
+            *macros*))
 
 (defun %%macrocall (x)
   (alet (cdr (cl:assoc x. *macros* :test #'eq))
@@ -21,7 +21,7 @@
 
 (defvar *macroexpand-hook* nil)
 
-(defun macroexpand-1 (x)
+(defbuiltin macroexpand-1 (x)
   (? *macroexpand-hook*
      (apply *macroexpand-hook* (list x))
      x))
@@ -31,5 +31,5 @@
      old
      (macroexpand x)))
 
-(defun macroexpand (x)
+(defbuitin macroexpand (x)
   (macroexpand-0 x (macroexpand-1 x)))
