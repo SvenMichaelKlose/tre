@@ -19,7 +19,7 @@
 (defun %%%macro? (x)
   (assoc x *macros* :test #'eq))
 
-(defvar *macroexpand-hook* nil)                                                                                                                              
+(defvar *macroexpand-hook* nil)
 
 (defun macroexpand-1 (x)
   (? *macroexpand-hook*
