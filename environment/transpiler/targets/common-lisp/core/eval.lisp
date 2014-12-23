@@ -18,11 +18,6 @@
           ,g))
      `#'(lambda ,@(make-lambdas .x.))))
 
-(defun &body-to-&rest (x)
-  (? (eq '&body x)
-     '&rest
-     x))
-
 (defun make-lambdas (x)
   (cond
     ((atom x)           x)
