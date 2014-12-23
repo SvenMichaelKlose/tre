@@ -224,10 +224,7 @@ core-sbcl)
 boot)
     git checkout -- cl/generated-from-environment.lisp
 	./make.sh core-sbcl $ARGS || exit 1
-	./make.sh core-sbcl $ARGS || exit 1
-	./make.sh core-sbcl $ARGS || exit 1
 	./make.sh ctests $ARGS || exit 1
-	./make.sh environment $ARGS || exit 1
 	;;
 
 pgo)
