@@ -35,8 +35,6 @@
   (print x)
   (fresh-line))
 
-(defun values (&rest x) `(values ,@x))
-
 (load "cl/list.lisp")
 (load "cl/utils.lisp")
 (load "cl/function-source.lisp")
