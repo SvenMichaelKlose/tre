@@ -72,22 +72,22 @@
     nil))
 
 (defun list-number? (x)
-  (& (| (& (cdr x)
-           (| (== #\- (car x))
-              (== #\. (car x))))
-        (digit-char? (car x)))
-     (? (cdr x)
+  (& (| (& .x
+           (| (== #\- x.)
+              (== #\. x.)))
+        (digit-char? x.))
+     (? .x
         (every [| (digit-char? _)
                   (== #\. _)]
-               (cdr x))
+               .x)
         t)))
 
 (defun read-token (str)
   (awhen (get-symbol-and-package str)
     (with ((pkg sym) !)
 	  (values (? (& sym
-                    (not (cdr sym))
-                    (== #\. (car sym)))
+                    (not .sym)
+                    (== #\. sym.))
 		         'dot
 		         (? sym
                     (? (list-number? sym)
@@ -119,16 +119,16 @@
 
 (defun read-slot-value (x)
   (? x
-     (? (cdr x)
+     (? .x
         `(slot-value ,(read-slot-value (butlast x)) ',(tre:make-symbol (car (last x))))
-        (? (string? (car x))
-           (tre:make-symbol (car x))
-           (car x)))))
+        (? (string? x.)
+           (tre:make-symbol x.)
+           x.))))
 
 (defun read-symbol-or-slot-value (sym pkg)
   (alet (filter [& _ (list-string _)]
                 (split #\. sym))
-    (? (& (cdr !) (car !) (car (last !)))
+    (? (& .! !. (car (last !)))
        (read-slot-value !)
        (tre:make-symbol (list-string sym)
                         (?
