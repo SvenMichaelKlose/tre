@@ -14,6 +14,5 @@
 (%defvar *print-status?*              t)
 (%defvar *have-environment-tests*     nil)
 (%defvar *development?*               t)
-(%defvar *print-circularities?*       nil)
 (%defvar *have-compiler?*             nil)
 (%defvar *have-c-compiler?*           t)
