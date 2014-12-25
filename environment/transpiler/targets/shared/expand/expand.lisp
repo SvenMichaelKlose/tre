@@ -56,7 +56,7 @@
         'filter)
         ,fun ,@lsts))
 
-(define-shared-std-macro (bc c js php) defmacro (&rest x)
+(define-shared-std-macro (bc c cl js php) defmacro (&rest x)
   (print-definition `(defmacro ,x. ,.x.))
   (eval (macroexpand `(define-transpiler-std-macro *transpiler* ,@x)))
   (& *have-compiler?*
