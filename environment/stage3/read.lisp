@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008,2010,2012–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008,2010,2012–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun token-is-quote? (x)
   (in? x 'quote 'backquote 'quasiquote 'quasiquote-splice 'accent-circonflex))
@@ -48,10 +48,11 @@
 (defun get-symbol-and-package (str)
   (skip-spaces str)
   (let sym (get-symbol str)
-	(? (== (peek-char str) #\:)
-	   (values (| sym t) (& (read-char str)
-				            (get-symbol str)))
-	   (values nil sym))))
+	(awhen (peek-char str)
+	  (? (== ! #\:)
+	     (values (| sym t) (& (read-char str)
+				              (get-symbol str)))
+	     (values nil sym)))))
 
 (defun read-string-0 (str)
   (let c (read-char str)
@@ -82,37 +83,39 @@
         t)))
 
 (defun read-token (str)
-  (with ((pkg sym) (get-symbol-and-package str))
-	(values (? (& sym
-                  (not (cdr sym))
-                  (== #\. (car sym)))
-		       'dot
-		       (? sym
-                  (? (list-number? sym)
-                     'number
-			         'symbol)
-			      (case (read-char str) :test #'character==
-			        #\(	 'bracket-open
-			        #\)	 'bracket-close
-			        #\[	 'square-bracket-open
-			        #\]	 'square-bracket-close
-			        #\{	 'curly-bracket-open
-			        #\}	 'curly-bracket-close
-			        #\'	 'quote
-			        #\`	 'backquote
-			        #\^	 'accent-circonflex
-			        #\"	 'dblquote
-			        #\,	 (? (== #\@ (peek-char str))
-				            (& (read-char str) 'quasiquote-splice)
-				            'quasiquote)
-			        #\#	(case (read-char str) :test #'character==
-				          #\\  'char
-				          #\x  'hexnum
-				          #\'  'function
-				          #\|  (read-comment-block str)
-				          (error "Invalid character after '#'."))
-			        -1	'eof)))
-		     pkg sym)))
+  (awhen (get-symbol-and-package str)
+    (with ((pkg sym) !)
+	  (values (? (& sym
+                    (not (cdr sym))
+                    (== #\. (car sym)))
+		         'dot
+		         (? sym
+                    (? (list-number? sym)
+                       'number
+			           'symbol)
+			        (case (read-char str) :test #'character==
+			          #\(	 'bracket-open
+			          #\)	 'bracket-close
+			          #\[	 'square-bracket-open
+			          #\]	 'square-bracket-close
+			          #\{	 'curly-bracket-open
+			          #\}	 'curly-bracket-close
+			          #\'	 'quote
+			          #\`	 'backquote
+			          #\^	 'accent-circonflex
+			          #\"	 'dblquote
+			          #\,	 (? (== #\@ (peek-char str))
+				                (& (read-char str)
+                                   'quasiquote-splice)
+				                'quasiquote)
+			          #\#	(case (read-char str) :test #'character==
+				            #\\  'char
+				            #\x  'hexnum
+				            #\'  'function
+				            #\|  (read-comment-block str)
+				            (error "Invalid character after '#'."))
+			          -1	'eof)))
+		       pkg sym))))
 
 (defun read-slot-value (x)
   (? x
@@ -165,14 +168,16 @@
               (read-quote str token)
               (read-atom str token pkg sym))))
        (with-temporary *default-listprop* *default-listprop*
-         (with ((token pkg sym) (read-token str))
-           (? (eq 'dot token)
-              (with (x                (read-expr str)
-                     (token pkg sym)  (read-token str))
-                (| (%read-closing-bracket? token)
-                   (error "Only one value allowed after dotted cons."))
-                x)
-              (read-list str token pkg sym)))))))
+         (!? (read-token str)
+             (with ((token pkg sym) !)
+               (? (eq 'dot token)
+                  (with (x                (read-expr str)
+                         (token pkg sym)  (read-token str))
+                    (| (%read-closing-bracket? token)
+                       (error "Only one value allowed after dotted cons."))
+                    x)
+                  (read-list str token pkg sym)))
+             (error "Missing closing bracket."))))))
 
 (defun read-cons (str)
   (with ((token pkg sym) (read-token str))
