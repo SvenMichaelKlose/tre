@@ -1,4 +1,4 @@
-;;;;; tré - Copyright (C) 2008-2012 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (C) 2008–2012,2014 Sven Michael Klose <pixel@hugbox.org>
 
 ; XXX experimental!
 
@@ -16,24 +16,20 @@
   (/ (+ a b) 2))
 
 (defun average-damp (f)
-  #'((x)
-       (average (f x) x)))
+  [average (f _) _])
 
 (defun derivative (f precision)
-  #'((x)
-	   (/ (- (f (+ x precision))
-			 (f x))
-		  precision)))
+  [/ (- (f (+ _ precision))
+        (f _))
+     precision])
 
 (defvar *newton-precision* 0.00001)
 
 (defun newton (f &optional (guess 1) (precision *newton-precision*))
-  "Finds root of a function"
   (with (df (derivative f precision))
-	(fixed-point #'((x)
-					  (- x (/ (f x) (df x))))
-				 guess)))
+	(fixed-point [- _ (/ (f _) (df _))]
+				 guess
+                 precision)))
 
 (defun sqrt (x)
-  (newton #'((y)
-			   (- x (square y)))))
+  (newton [- x (* _ _)]))
