@@ -1,9 +1,9 @@
-;;;; tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
 
 (? (eq *assert* '*assert*)
    (setq *assert* t))
 (? (eq *targets* '*targets*)
-   (setq *targets* '(:c :js :php)))
+   (setq *targets* '(:c :cl :js :php)))
 
 (%defvar *tre-has-math*    t)
 (%defvar *tre-has-alien*   t)
