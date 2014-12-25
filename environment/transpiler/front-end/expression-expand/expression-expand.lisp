@@ -10,6 +10,7 @@
 
 (define-gensym-generator expex-sym e)
 
+
 ;;;; IMPORT
 
 (defun expex-import-function (x)
@@ -73,8 +74,9 @@
           (in? x. '%%go '%%go-nil '%%native '%%string '%quote))))
 
 (defun expex-expandable-args? (fun)
-  (| (transpiler-defined-function *transpiler* fun)
-     (not (transpiler-plain-arg-fun? *transpiler* fun))))
+  (& (not (alien-package? fun))
+     (| (transpiler-defined-function *transpiler* fun)
+        (not (transpiler-plain-arg-fun? *transpiler* fun)))))
 
 
 ;;;; ARGUMENT EXPANSION
