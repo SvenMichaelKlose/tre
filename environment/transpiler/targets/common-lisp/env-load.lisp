@@ -10,6 +10,7 @@
 
 (defvar *cl-base*
 	,(list 'quote (cl-load-base *cl-env-path*
+                                "defbuiltin.lisp"
                                 "array.lisp"
                                 "env-load.lisp"
                                 "eval.lisp"
