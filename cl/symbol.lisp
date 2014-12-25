@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2014 Sven Michael Klose <pixel@copei.de>
 
 (in-package :tre-core)
 
@@ -26,8 +26,7 @@
      (symbol-function x)))
 
 (defun %symbol-package (x)
-  (? (boundp x)
-     (symbol-package x)))
+  (symbol-package x))
 
 (defun =-symbol-function (v x)
   (setf (symbol-function x) v))
