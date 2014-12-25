@@ -35,4 +35,4 @@
 (defbuiltin / (&rest x) (apply #'cl:/ x))
 (defbuiltin < (&rest x) (apply #'cl:< x))
 (defbuiltin > (&rest x) (apply #'cl:> x))
-(defbuiltin bit-or (a b) (cl:bit-or a b))
+;(defbuiltin bit-or (a b) (cl:bit-or a b))
