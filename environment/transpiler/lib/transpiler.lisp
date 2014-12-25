@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defvar *transpiler* nil)
 (defvar *transpiler-log* nil)
@@ -94,6 +94,7 @@
   (cps-wrappers             (make-hash-table :test #'eq))
   (native-cps-functions     (make-hash-table :test #'eq))
 
+  (frontend-only?           nil)
   (make-text?               t)
   (encapsulate-strings?     t)
   (dump-passes?             nil)
@@ -235,6 +236,7 @@
         :native-cps-functions     (copy-hash-table native-cps-functions)
         :postprocessor            postprocessor
         :configurations           (copy-alist configurations)
+        :frontend-only?           frontend-only?
         :make-text?               make-text?
         :encapsulate-strings?     encapsulate-strings?
         :dump-passes?             dump-passes?
