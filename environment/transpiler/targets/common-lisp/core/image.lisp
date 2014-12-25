@@ -8,8 +8,8 @@
                             :purify t))
 
 (defbuiltin %start-core ()
-  (setf *launchfile* (cadr (or
-                             #+SBCL sb-ext:*posix-argv*
-                             #+LISPWORKS system:*line-arguments-list*
-                             #+CMU extensions:*command-line-words*
+  (setf *launchfile* (cadr (| sb-ext:*posix-argv*
+;                             #+SBCL sb-ext:*posix-argv*
+;                             #+LISPWORKS system:*line-arguments-list*
+;                             #+CMU extensions:*command-line-words*
                              nil))))
