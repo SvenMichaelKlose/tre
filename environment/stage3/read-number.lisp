@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
 
 (functional digit-number)
 
@@ -15,7 +15,9 @@
 
 (defun read-decimal-places-0 (str v s)
   (? (peek-digit str)
-     (read-decimal-places-0 str (+ v (* s (digit-number (read-char str)))) (/ s 10))
+     (read-decimal-places-0 str
+                            (+ v (* s (digit-number (read-char str))))
+                            (/ s 10))
      v))
 
 (defun read-decimal-places (&optional (str *standard-input*))
