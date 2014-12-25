@@ -3,7 +3,7 @@
 (defun cl-load-base (dir-path &rest files)
   (mapcan [alet (+ dir-path _)
 			(format t  "(cl-load-base \"~A\")~%" !)
-  			(macroexpand (read-file !))]
+  			(read-file !)]
 		  files))
 
 (defvar *cl-env-path* "environment/transpiler/targets/common-lisp/core/")
