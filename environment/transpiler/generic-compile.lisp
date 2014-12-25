@@ -100,6 +100,9 @@
                             (!? epilogue-gen
                                 (funcall !)))))
 
+(defun section-data (x)
+  (apply #'+ (cdrlist x)))
+
 (def-transpiler generic-compile-0 (transpiler sections)
   (!? frontend-init
       (funcall !))
@@ -112,7 +115,7 @@
                                                 (funcall ! transpiler))))
          deps         (import-from-environment transpiler))
     (? (transpiler-frontend-only? transpiler)
-       (+ before-deps deps after-deps)
+       (+ (section-data before-deps) deps (section-data after-deps))
        (generic-codegen transpiler before-deps deps after-deps))))
 
 (def-transpiler print-transpiler-stats (transpiler start-time)
