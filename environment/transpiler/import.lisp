@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@hugbox.org>
 
 (defvar *can-import-function?* nil)
 
@@ -12,6 +12,7 @@
 (defun can-import-function? (tr x)
   (& (symbol? x)
      (fbound? x)
+     (not (alien-package? x))
      (!? *can-import-function?*
          (funcall ! x)
          t)
