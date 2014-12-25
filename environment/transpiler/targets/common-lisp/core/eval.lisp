@@ -16,7 +16,7 @@
        `(cl:let ((,g #'(lambda ,@(make-lambdas .x.)))
           (cl:setf (cl:gethash ~anonymous-fun *function-atom-sources*) ',.x.)
           ,g))
-     `#'(lambda ,@(make-lambdas .x.))))
+     `#'(lambda ,@(make-lambdas .x.)))))
 
 (defun make-lambdas (x)
   (cond
