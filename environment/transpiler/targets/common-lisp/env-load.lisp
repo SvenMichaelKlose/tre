@@ -1,9 +1,9 @@
 ; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun cl-load-base (dir-path &rest files)
-  (mapcan [let f (+ dir-path _)
-			(format t  "(cl-load-base \"~A\")~%" f)
-  			(read-file f)]
+  (mapcan [alet (+ dir-path _)
+			(format t  "(cl-load-base \"~A\")~%" !)
+  			(macroexpand (read-file !))]
 		  files))
 
 (defvar *cl-env-path* "environment/transpiler/targets/common-lisp/core/")
