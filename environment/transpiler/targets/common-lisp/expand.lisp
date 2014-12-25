@@ -7,6 +7,7 @@
   `(cl:setf (cl:symbol-function ',x) ,v))
 
 (define-cl-std-macro %defun (name args &body body)
+  (transpiler-add-defined-function *transpiler* name args body)
   `(progn
      (push (. name ',(. args body)) *functions*)
      (cl:defun ,name ,args ,@body)
@@ -20,6 +21,7 @@
             *macros*))
 
 (define-cl-std-macro %defvar (name &optional (init nil))
+  (transpiler-add-defined-variable *transpiler* name)
   `(progn
      (push (. ',name ',init) *variables*)
      (cl:defvar ,name ,init)))
