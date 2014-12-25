@@ -10,15 +10,17 @@
 (defun accumulated-toplevel? (section)
   (not (eq 'accumulated-toplevel section)))
 
-(defun map-transpiler-sections (fun sections cached-sections)
-  (with-queue results
-	(dolist (i sections (queue-list results))
-      (with-cons section data i
-        (with-temporaries ((transpiler-current-section *transpiler*)       section
-                           (transpiler-current-section-data *transpiler*)  data)
-          (enqueue results (. section (? (compile-section? section cached-sections)
-                                         (funcall fun section data)
-                                         (assoc-value section cached-sections)))))))))
+(defun map-section (x fun sections cached-sections)
+  (with-cons section data x
+    (with-temporaries ((transpiler-current-section *transpiler*)       section
+                       (transpiler-current-section-data *transpiler*)  data)
+      (. section (? (compile-section? section cached-sections)
+                    (funcall fun section data)
+                    (assoc-value section cached-sections))))))
+
+(defun map-sections (fun sections cached-sections)
+  (filter [map-section _ fun sections cached-sections]
+          sections))
 
 (defun development-message (fmt &rest args)
   (when *development?*
@@ -32,9 +34,9 @@
     (backend (middleend data))))
 
 (defun generic-compile-2 (sections)
-  (alet (map-transpiler-sections #'codegen-section
-                                 sections
-                                 (transpiler-compiled-files *transpiler*))
+  (alet (map-sections #'codegen-section
+                      sections
+                      (transpiler-compiled-files *transpiler*))
     (= (transpiler-compiled-files *transpiler*) !)
     (cdrlist !)))
 
@@ -52,9 +54,9 @@
     (error "Don't know what to do with section ~A." section)))
 
 (defun generic-compile-1 (sections)
-  (alet (map-transpiler-sections #'frontend-section
-                                 sections
-                                 (transpiler-frontend-files *transpiler*))
+  (alet (map-sections #'frontend-section
+                      sections
+                      (transpiler-frontend-files *transpiler*))
     (= (transpiler-frontend-files *transpiler*) !)))
 
 (defun make-toplevel-function ()
