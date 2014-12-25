@@ -44,7 +44,6 @@
 
 (defun %type-id (x) x (error "Not implemented."))
 (defun %%id (x) x (error "Not implemented."))
-(defun %error (x) x (error x))
 (defun %strerror (x) x (error "Not implemented."))
 (defun atan2 (x) x (error "Not implemented."))
 (defun pow (x) x (error "Not implemented."))
