@@ -75,7 +75,7 @@
 
 (defun import-from-environment (tr)
   (when (transpiler-import-from-environment? tr)
-    (print-status "Importing variables and names functions from environment...~%")
+    (print-status "Importing variables and named functions from environment...~%")
     (with-temporary (transpiler-save-argument-defs-only? tr) nil
       (with (funs     (import-wanted-functions tr)
              exported (import-exported-closures tr)
