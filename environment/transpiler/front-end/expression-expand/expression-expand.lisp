@@ -16,9 +16,9 @@
 (defun expex-import-function (x)
   (& *expex-import?*
      (alet (metacode-function-name x)
-       (transpiler-add-wanted-function *transpiler* !)
+       (add-wanted-function *transpiler* !)
        (| (current-scope? x)
-          (transpiler-import-add-used !)))))
+          (import-add-used !)))))
 
 (defun expex-variable-name (x)
   (?
@@ -27,7 +27,7 @@
 
 (defun expex-import-variable (x)
   (!? (expex-variable-name x)
-      (transpiler-add-wanted-variable *transpiler* !)))
+      (add-wanted-variable *transpiler* !)))
 
 (defun expex-import-variables (place val)
   (& *expex-import?*

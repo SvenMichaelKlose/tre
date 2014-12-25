@@ -108,7 +108,7 @@
                                             sections
                                             (!? ending-sections
                                                 (funcall ! transpiler))))
-         deps         (transpiler-import-from-environment transpiler))
+         deps         (import-from-environment transpiler))
     (? (transpiler-frontend-only? transpiler)
        (+ before-deps deps after-deps)
        (generic-codegen transpiler before-deps deps after-deps))))
