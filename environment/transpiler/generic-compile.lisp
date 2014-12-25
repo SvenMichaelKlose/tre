@@ -130,8 +130,6 @@
     (with-temporaries (*recompiling?*  (& sections-to-update t)
                        *transpiler*    transpiler
                        *assert*        (| *assert* assert?))
-      (& *have-compiler?*
-         (= (transpiler-save-sources? transpiler) t))
       (& sections-to-update
          (clr (transpiler-emitted-decls transpiler)))
       (= (transpiler-host-functions-hash transpiler) (make-host-functions-hash))
