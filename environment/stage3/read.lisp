@@ -156,34 +156,38 @@
                              (. (memorized-number (stream-location-column !))
                                 (memorized-number (stream-location-line !)))))))
 
-(defun read-list (str token pkg sym)
-  (| token (error "Missing closing bracket."))
-  (unless (%read-closing-bracket? token)
-    (. (with-temporary *default-listprop* *default-listprop*
-         (case token :test #'eq
-           'bracket-open        (read-cons-slot str)
-           'square-bracket-open (. 'square (read-cons-slot str))
-           'curly-bracket-open  (. 'curly (read-cons-slot str))
-           (? (token-is-quote? token)
-              (read-quote str token)
-              (read-atom str token pkg sym))))
-       (with-temporary *default-listprop* *default-listprop*
-         (!? (read-token str)
-             (with ((token pkg sym) !)
-               (? (eq 'dot token)
-                  (with (x                (read-expr str)
-                         (token pkg sym)  (read-token str))
-                    (| (%read-closing-bracket? token)
-                       (error "Only one value allowed after dotted cons."))
-                    x)
-                  (read-list str token pkg sym)))
-             (error "Missing closing bracket."))))))
-
 (defun read-cons (str)
+  (with (loc    (stream-input-location str)
+         line   (stream-location-line loc)
+         column (stream-location-column loc)
+         file   (stream-location-id loc)
+         err [error "~A in form starting at line ~A, column ~A in file ~A."
+                    _ line column file]
+         f #'((token pkg sym)
+                (unless (%read-closing-bracket? token)
+                  (. (with-temporary *default-listprop* *default-listprop*
+                     (case token :test #'eq
+                       'bracket-open        (read-cons-slot str)
+                       'square-bracket-open (. 'square (read-cons-slot str))
+                       'curly-bracket-open  (. 'curly (read-cons-slot str))
+                       (? (token-is-quote? token)
+                          (read-quote str token)
+                          (read-atom str token pkg sym))))
+                     (with-temporary *default-listprop* *default-listprop*
+                      (!? (read-token str)
+                          (with ((token pkg sym) !)
+                          (? (eq 'dot token)
+                              (with (x                (read-expr str)
+                                      (token pkg sym)  (read-token str))
+                                  (| (%read-closing-bracket? token)
+                                  (err "Only one value allowed after dotted cons"))
+                                  x)
+                              (f token pkg sym)))
+                          (err "Missing closing bracket")))))))
   (with ((token pkg sym) (read-token str))
     (? (eq token 'dot)
        (. 'cons (read-cons str))
-	   (read-list str token pkg sym))))
+	   (f token pkg sym)))))
 
 (defun read-cons-slot (str)
   (read-set-listprop str)
