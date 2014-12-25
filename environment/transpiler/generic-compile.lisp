@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defvar *nil-symbol-name* "NIL")
 (defvar *t-symbol-name*   "T")
@@ -78,21 +78,25 @@
 
 (def-transpiler generic-codegen (transpiler before-deps deps after-deps)
   (print-status "Let me think. Hmm...~F")
-  (!? middleend-init (funcall !))
+  (!? middleend-init
+      (funcall !))
   (with (compiled-before  (generic-compile-2 before-deps)
          compiled-deps    (backend (middleend deps))
          compiled-after   (generic-compile-2 after-deps)
          compiled-acctop  (generic-compile-accumulated-toplevels))
     (!? compiled-deps
         (= (transpiler-imported-deps transpiler) (transpiler-postprocess imported-deps !)))
-    (transpiler-postprocess (!? prologue-gen (funcall !))
-                            (!? decl-gen (funcall !))
+    (transpiler-postprocess (!? prologue-gen
+                                (funcall !))
+                            (!? decl-gen
+                                (funcall !))
                             compiled-before
                             (reverse (transpiler-raw-decls transpiler))
                             (transpiler-imported-deps transpiler)
                             compiled-after
                             compiled-acctop
-                            (!? epilogue-gen (funcall !)))))
+                            (!? epilogue-gen
+                                (funcall !)))))
 
 (defun generic-import (tr)
   (print-status "Importing variables and names functions from environment...~%")
@@ -100,13 +104,19 @@
     (transpiler-import-from-environment tr)))
 
 (def-transpiler generic-compile-0 (transpiler sections)
-  (!? frontend-init (funcall !))
-  (with (before-deps  (generic-compile-1 (!? sections-before-deps (funcall ! transpiler)))
-         after-deps   (generic-compile-1 (+ (!? sections-after-deps (funcall ! transpiler))
+  (!? frontend-init
+      (funcall !))
+  (with (before-deps  (generic-compile-1 (!? sections-before-deps
+                                             (funcall ! transpiler)))
+         after-deps   (generic-compile-1 (+ (!? sections-after-deps
+                                                (funcall ! transpiler))
                                             sections
-                                            (!? ending-sections (funcall ! transpiler))))
+                                            (!? ending-sections
+                                                (funcall ! transpiler))))
          deps         (generic-import transpiler))
-    (generic-codegen transpiler before-deps deps after-deps)))
+    (? (transpiler-frontend-only? transpiler)
+       (+ before-deps deps after-deps)
+       (generic-codegen transpiler before-deps deps after-deps))))
 
 (def-transpiler print-transpiler-stats (transpiler start-time)
   (& obfuscate?
