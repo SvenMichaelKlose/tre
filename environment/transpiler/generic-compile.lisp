@@ -98,11 +98,6 @@
                             (!? epilogue-gen
                                 (funcall !)))))
 
-(defun generic-import (tr)
-  (print-status "Importing variables and names functions from environment...~%")
-  (with-temporary (transpiler-save-argument-defs-only? tr) nil
-    (transpiler-import-from-environment tr)))
-
 (def-transpiler generic-compile-0 (transpiler sections)
   (!? frontend-init
       (funcall !))
@@ -113,7 +108,7 @@
                                             sections
                                             (!? ending-sections
                                                 (funcall ! transpiler))))
-         deps         (generic-import transpiler))
+         deps         (transpiler-import-from-environment transpiler))
     (? (transpiler-frontend-only? transpiler)
        (+ before-deps deps after-deps)
        (generic-codegen transpiler before-deps deps after-deps))))

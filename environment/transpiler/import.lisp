@@ -75,12 +75,14 @@
 
 (defun transpiler-import-from-environment (tr)
   (when (transpiler-import-from-environment? tr)
-    (with (funs     (transpiler-import-wanted-functions tr)
-           exported (transpiler-import-exported-closures tr)
-           vars     (transpiler-import-wanted-variables tr))
-      (? (| funs exported vars)
-         (+ funs exported vars (transpiler-import-from-environment tr))
-         (transpiler-delayed-var-inits tr)))))
+    (print-status "Importing variables and names functions from environment...~%")
+    (with-temporary (transpiler-save-argument-defs-only? tr) nil
+      (with (funs     (transpiler-import-wanted-functions tr)
+             exported (transpiler-import-exported-closures tr)
+             vars     (transpiler-import-wanted-variables tr))
+        (? (| funs exported vars)
+           (+ funs exported vars (transpiler-import-from-environment tr))
+           (transpiler-delayed-var-inits tr))))))
 
 (defun current-scope? (x)
   (member x (funinfo-names *funinfo*) :test #'eq))
