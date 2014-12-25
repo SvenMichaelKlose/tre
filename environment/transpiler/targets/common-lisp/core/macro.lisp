@@ -23,5 +23,5 @@
      old
      (macroexpand x)))
 
-(defbuitin macroexpand (x)
+(defbuiltin macroexpand (x)
   (macroexpand-0 x (macroexpand-1 x)))
