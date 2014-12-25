@@ -1,6 +1,7 @@
-;;;;; tré – (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
+; tré – (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
 
 (env-load "transpiler/lib/print.lisp")
+(env-load "transpiler/lib/alien-packagep.lisp")
 
 (env-load "transpiler/lib/expex.lisp")
 (env-load "transpiler/lib/transpiler.lisp")
