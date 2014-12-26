@@ -1,7 +1,7 @@
 ; tré – Copyright (c) 2005–2009,2011–2014 Sven Michael Klose <pixel@hugbox.org>
 
 (defun %struct-option-keyword? (x)
-  (eq x :constructor))
+  (in? x :constructor :global))
 
 (defun %struct-constructor-name (name options)
   (!? (assoc-value :constructor options)
@@ -47,7 +47,7 @@
 (defun %struct-accessor-name (name field-name)
   ($ name "-" field-name))
 
-(defun %struct-slot-accessors (name field index)
+(defun %struct-slot-accessors (name field index options)
   (with (fname  (%struct-field-name field)
          aname  (%struct-accessor-name name fname))
     `(progn
@@ -56,11 +56,16 @@
        (defun ,aname (arr)
          (aref arr ,index))
        (defun (= ,aname) (val arr)
-         (= (aref arr ,index) val)))))
+         (= (aref arr ,index) val))
+       ,@(!? (assoc :global options)
+             `((defun ,fname ()
+                 (aref ,.!. ,index))
+               (defun (= ,fname) (val)
+                 (= (aref ,.!. ,index) val)))))))
 
-(defun %struct-accessors (name fields)
+(defun %struct-accessors (name fields options)
   (let index 1
-    (filter [%struct-slot-accessors name (%struct-field-name _) (++! index)]
+    (filter [%struct-slot-accessors name (%struct-field-name _) (++! index) options]
             fields)))
 
 (defun struct-predicate (x)
@@ -102,7 +107,7 @@
        (declare-cps-exception ,name)
        ,(%struct-constructor name fields options)
        ,(%struct-predicate name)
-       ,@(%struct-accessors name fields)
+       ,@(%struct-accessors name fields options)
        (defmacro ,($ "WITH-" name) (s &body body)
 		 `(with-struct ,name ,,s
             ,,@body))
