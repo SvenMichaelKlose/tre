@@ -11,5 +11,5 @@
             (return nil))))
      (cl:error "At least 2 arguments required.")))
 
-(defbuiltin eq (x) (variable-compare #'cl:eq x))
-(defbuiltin eql (x) (variable-compare #'cl:eql x))
+(defbuiltin eq (&rest x) (variable-compare #'cl:eq x))
+(defbuiltin eql (&rest x) (variable-compare #'cl:eql x))
