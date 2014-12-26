@@ -30,7 +30,7 @@
 
 (defun codegen-section (section data)
   (development-message "Middle-/backend ~A~%" section)
-  (with-temporary (transpiler-accumulate-toplevel-expressions? *transpiler*) (not (accumulated-toplevel? section))
+  (with-temporary (accumulate-toplevel-expressions?) (not (accumulated-toplevel? section))
     (backend (middleend data))))
 
 (defun generic-compile-2 (sections)
@@ -113,7 +113,7 @@
                                             sections
                                             (!? ending-sections
                                                 (funcall ! transpiler))))
-         deps         (import-from-environment transpiler))
+         deps         (import-from-environment))
     (? (transpiler-frontend-only? transpiler)
        (+ (section-data before-deps) deps (section-data after-deps))
        (generic-codegen transpiler before-deps deps after-deps))))

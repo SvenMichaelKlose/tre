@@ -16,7 +16,7 @@
 (defun expex-import-function (x)
   (& *expex-import?*
      (alet (metacode-function-name x)
-       (add-wanted-function *transpiler* !)
+       (add-wanted-function !)
        (| (current-scope? x)
           (import-add-used !)))))
 
@@ -27,11 +27,11 @@
 
 (defun expex-import-variable (x)
   (!? (expex-variable-name x)
-      (add-wanted-variable *transpiler* !)))
+      (add-wanted-variable !)))
 
 (defun expex-import-variables (place val)
   (& *expex-import?*
-     (when (transpiler-import-variables? *transpiler*)
+     (when (import-variables?)
        (expex-import-variable place)
        (? (atom val)
           (expex-import-variable val)
@@ -75,8 +75,8 @@
 
 (defun expex-expandable-args? (fun)
   (& (not (alien-package? fun))
-     (| (transpiler-defined-function *transpiler* fun)
-        (not (transpiler-plain-arg-fun? *transpiler* fun)))))
+     (| (defined-function fun)
+        (not (plain-arg-fun? fun)))))
 
 
 ;;;; ARGUMENT EXPANSION
@@ -97,7 +97,7 @@
 
 (defun expex-function? (x)
   (& (atom x)
-     (| (transpiler-function-arguments *transpiler* x)
+     (| (current-transpiler-function-arguments x)
         (fbound? x))))
 
 (defun expex-argexpand (x)

@@ -16,6 +16,7 @@
   (alist-hash (filter [cons _ t] *functionals*) :test #'eq))
 
 (defstruct transpiler
+  (:global *transpiler*)
   name
 
   (sections-to-update          nil)
@@ -276,8 +277,12 @@
     (transpiler-make-expex !)))
 
 (defmacro transpiler-getter (name &body body)
-  `(defun ,($ 'transpiler- name) (tr x)
-     ,@body))
+  `(progn
+     (defun ,($ 'transpiler- name) (tr x)
+       ,@body)
+     (defun ,($ name) (x)
+       (let tr *transpiler*
+         ,@body))))
 
 (defmacro transpiler-getter-list (name)
   `(transpiler-getter ,($ name '?) (member x (,($ 'transpiler- name 's) tr) :test #'eq)))
@@ -384,8 +389,8 @@
 (defun transpiler-add-toplevel-expression (tr x)
   (push (copy-tree x) (transpiler-accumulated-toplevel-expressions tr)))
 
-(defun transpiler-add-used-function (tr x)
-  (= (href (transpiler-used-functions tr) x) t)
+(defun add-used-function (x)
+  (= (href (transpiler-used-functions *transpiler*) x) t)
   x)
 
 (defun transpiler-configuration-item (tr x)
