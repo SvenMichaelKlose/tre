@@ -3,7 +3,7 @@
 (defun %struct-option-keyword? (x)
   (eq x :constructor))
 
-(defun %struct-make-symbol (name options)
+(defun %struct-constructor-name (name options)
   (!? (assoc-value :constructor options)
       !.
       ($ "MAKE-" name)))
@@ -16,12 +16,12 @@
      field.
      field))
 
-(defun %struct-make-args (fields)
+(defun %struct-constructor-args (fields)
   `(&key ,@(filter [let n (%struct-field-name _)
                      `(,n ',n)]
 				   fields)))
 
-(defun %struct-make-init (fields g)
+(defun %struct-init (fields g)
   (let index 1
     (filter [let argname (%struct-field-name _)
               `(= (aref ,g ,(++! index))
@@ -32,23 +32,23 @@
             fields)))
 
 (defun %struct-make (name fields options)
-  (with (sym        (%struct-make-symbol name options)
+  (with (fname      (%struct-constructor-name name options)
 		 g          (gensym)
-         user-init  (%struct-make-init fields g)
+         user-init  (%struct-init fields g)
 	     type-init  `((= (aref ,g 0) 'struct
                          (aref ,g 1) ',name)))
-    `(defun ,sym ,(%struct-make-args fields)
+    `(defun ,fname ,(%struct-constructor-args fields)
        (let ,g (make-array ,(+ 2 (length fields)))
          ,@(? user-init
-	          (append type-init user-init)
+	          (+ type-init user-init)
 	          type-init)
 	     ,g))))
 
-(defun %struct-getter-symbol (name field)
+(defun %struct-accessor-name (name field)
   ($ name "-" field))
 
-(defun %struct-single-get (name field index)
-  (let sym (%struct-getter-symbol name field)
+(defun %struct-slot-accessors (name field index)
+  (let sym (%struct-accessor-name name field)
     `(progn
        (functional ,sym)
        (declare-cps-exception ,sym ,(=-make-symbol sym))
@@ -57,9 +57,10 @@
        (defun (= ,sym) (val arr)
          (= (aref arr ,index) val)))))
 
-(defun %struct-getters (name fields)
+(defun %struct-accessors (name fields)
   (let index 1
-    (filter [%struct-single-get name (%struct-field-name _) (++! index)] fields)))
+    (filter [%struct-slot-accessors name (%struct-field-name _) (++! index)]
+            fields)))
 
 (defun struct? (x)
   (& (array? x)
@@ -100,7 +101,7 @@
        (declare-cps-exception ,name)
        ,(%struct-make name fields options)
        ,(%struct? name)
-       ,@(%struct-getters name fields)
+       ,@(%struct-accessors name fields)
        (defmacro ,($ "WITH-" name) (s &body body)
 		 `(with-struct ,name ,,s
             ,,@body))
