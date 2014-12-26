@@ -8,7 +8,7 @@
       !.
       ($ "MAKE-" name)))
 
-(defun %struct?-symbol (name)
+(defun %struct-predicate-name (name)
   ($ name "?"))
 
 (defun %struct-field-name (field)
@@ -31,7 +31,7 @@
                      ,argname))]
             fields)))
 
-(defun %struct-make (name fields options)
+(defun %struct-constructor (name fields options)
   (with (fname      (%struct-constructor-name name options)
 		 g          (gensym)
          user-init  (%struct-init fields g)
@@ -44,17 +44,18 @@
 	          type-init)
 	     ,g))))
 
-(defun %struct-accessor-name (name field)
-  ($ name "-" field))
+(defun %struct-accessor-name (name field-name)
+  ($ name "-" field-name))
 
 (defun %struct-slot-accessors (name field index)
-  (let sym (%struct-accessor-name name field)
+  (with (fname  (%struct-field-name field)
+         aname  (%struct-accessor-name name fname))
     `(progn
-       (functional ,sym)
-       (declare-cps-exception ,sym ,(=-make-symbol sym))
-       (defun ,sym (arr)
+       (functional ,aname)
+       (declare-cps-exception ,aname ,(=-make-symbol aname))
+       (defun ,aname (arr)
          (aref arr ,index))
-       (defun (= ,sym) (val arr)
+       (defun (= ,aname) (val arr)
          (= (aref arr ,index) val)))))
 
 (defun %struct-accessors (name fields)
@@ -62,12 +63,12 @@
     (filter [%struct-slot-accessors name (%struct-field-name _) (++! index)]
             fields)))
 
-(defun struct? (x)
+(defun struct-predicate (x)
   (& (array? x)
      (eq 'struct (aref x 0))))
 
-(defun %struct? (name)
-  (let sym (%struct?-symbol name)
+(defun %struct-predicate (name)
+  (let sym (%struct-predicate-name name)
     `(defun ,sym (x)
        (& (array? x)
           (eq 'struct (aref x 0))
@@ -99,8 +100,8 @@
     (%struct-add-def name fields)
     `(progn
        (declare-cps-exception ,name)
-       ,(%struct-make name fields options)
-       ,(%struct? name)
+       ,(%struct-constructor name fields options)
+       ,(%struct-predicate name)
        ,@(%struct-accessors name fields)
        (defmacro ,($ "WITH-" name) (s &body body)
 		 `(with-struct ,name ,,s
