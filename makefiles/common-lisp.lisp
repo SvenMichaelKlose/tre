@@ -18,9 +18,9 @@
   (= (transpiler-save-sources? !) nil)
   (with-output-file o "tre.lisp"
     (filter [late-print _ o]
-            (compile-sections (list (. 'core (+ (cl-packages)
-                                                *cl-base*
-                                                (cl-wrappers))))
-                              :transpiler !))))
+            (+ (cl-packages)
+               '((in-package :tre-core))
+               (compile-sections (list (. 'core (+ *cl-base* (cl-wrappers))))
+                                 :transpiler !)))))
 
 (quit)
