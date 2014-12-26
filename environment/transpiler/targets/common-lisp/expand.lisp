@@ -17,6 +17,8 @@
                     ',(. args (& (not (transpiler-save-argdefs-only? *transpiler*))
                                  body))))))
 
+(define-cl-std-macro defun (&rest x) `(%defun ,@x))
+
 (define-cl-std-macro %defmacro (name args &body body)
   (print-definition `(%defmacro ,name ,args))
   `(cl:push (. ',name
