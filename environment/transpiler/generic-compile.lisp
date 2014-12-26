@@ -135,8 +135,8 @@
                        *assert*        (| *assert* assert?))
       (& sections-to-update
          (clr (transpiler-emitted-decls transpiler)))
-      (= (transpiler-host-functions-hash transpiler) (make-host-functions-hash))
-      (= (transpiler-host-variables-hash transpiler) (make-host-variables-hash))
+      (= (host-functions) (make-host-functions))
+      (= (host-variables) (make-host-variables))
       (prog1
         (generic-compile-0 transpiler sections)
         (print-transpiler-stats transpiler start-time)

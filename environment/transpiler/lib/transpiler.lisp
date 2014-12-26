@@ -6,46 +6,46 @@
 (defvar *recompiling?* nil)
 (defvar *print-executed-functions?* nil)
 
-(defun make-host-functions-hash ()
+(defun make-host-functions ()
   (alist-hash (+ *functions* *macros* *builtin-argdefs*) :test #'eq))
 
-(defun make-host-variables-hash ()
+(defun make-host-variables ()
   (alist-hash (filter [cons _. t] *variables*) :test #'eq))
 
-(defun make-functionals-hash ()
+(defun make-functionals ()
   (alist-hash (filter [cons _ t] *functionals*) :test #'eq))
 
 (defstruct transpiler
   (:global *transpiler*)
   name
 
-  (sections-to-update          nil)
+  (sections-to-update    nil)
 
   frontend-init
   middleend-init
-  (prologue-gen                nil)
-  (epilogue-gen                nil)
-  (decl-gen                    nil)
-  (sections-before-deps        nil)
-  (sections-after-deps         nil)
-  (ending-sections             nil)
+  (prologue-gen          nil)
+  (epilogue-gen          nil)
+  (decl-gen              nil)
+  (sections-before-deps  nil)
+  (sections-after-deps   nil)
+  (ending-sections       nil)
 
   std-macro-expander
   codegen-expander
   separator
 
-  (identifier-char?         [_ (identity t)])
-  (literal-converter        #'identity)
+  (identifier-char?      [_ (identity t)])
+  (literal-converter     #'identity)
 
   expex
   expex-initializer
 
-  (defined-functions-hash   (make-hash-table :test #'eq))
-  (defined-variables-hash   (make-hash-table :test #'eq))
-  (literals                 (make-hash-table :test #'eq))
-  (host-functions-hash      nil)
-  (host-variables-hash      nil)
-  (functionals-hash         nil)
+  (defined-functions     (make-hash-table :test #'eq))
+  (defined-variables     (make-hash-table :test #'eq))
+  (literals              (make-hash-table :test #'eq))
+  (host-functions        nil)
+  (host-variables        nil)
+  (functionals           nil)
 
   ; Functions to be imported from the environment.
   (wanted-functions nil)
@@ -112,8 +112,6 @@
 
   (symbol-translations      nil)
   (thisify-classes          (make-hash-table :test #'eq))
-  (function-args            (make-hash-table :test #'eq))
-  (function-bodies          (make-hash-table :test #'eq))
   (obfuscations             (make-hash-table :test #'eq))
   (plain-arg-funs           nil)
   (late-symbols             (make-hash-table :test #'eq))
@@ -158,20 +156,18 @@
 (defun transpiler-reset (tr)
   (= (transpiler-thisify-classes tr)        (make-hash-table :test #'eq)	; thisified classes.
   	 (transpiler-wanted-functions tr)       nil
-  	 (transpiler-wanted-functions-hash tr)  (make-hash-table :test #'eq)
-  	 (transpiler-wanted-variables tr)       nil
-  	 (transpiler-wanted-variables-hash tr)  (make-hash-table :test #'eq)
-  	 (transpiler-defined-functions-hash tr) (make-hash-table :test #'eq)
-  	 (transpiler-host-functions-hash tr)    (make-host-functions-hash)
-  	 (transpiler-host-variables-hash tr)    (make-host-variables-hash)
-  	 (transpiler-functionals-hash tr)       (make-functionals-hash)
-  	 (transpiler-function-args tr)          (make-hash-table :test #'eq)
-  	 (transpiler-function-bodies tr)        (make-hash-table :test #'eq)
-  	 (transpiler-late-symbols tr)           (make-hash-table :test #'eq)
-  	 (transpiler-identifiers tr)            (make-hash-table :test #'eq)
-  	 (transpiler-converted-identifiers tr)  (make-hash-table :test #'eq)
-  	 (transpiler-exported-closures tr)      nil
-  	 (transpiler-delayed-var-inits tr)      nil
+     (transpiler-wanted-functions-hash tr)  (make-hash-table :test #'eq)
+     (transpiler-wanted-variables tr)       nil
+     (transpiler-wanted-variables-hash tr)  (make-hash-table :test #'eq)
+     (transpiler-defined-functions tr)      (make-hash-table :test #'eq)
+     (transpiler-host-functions tr)         (make-host-functions)
+     (transpiler-host-variables tr)         (make-host-variables)
+     (transpiler-functionals tr)            (make-functionals)
+     (transpiler-late-symbols tr)           (make-hash-table :test #'eq)
+     (transpiler-identifiers tr)            (make-hash-table :test #'eq)
+     (transpiler-converted-identifiers tr)  (make-hash-table :test #'eq)
+     (transpiler-exported-closures tr)      nil
+     (transpiler-delayed-var-inits tr)      nil
      (transpiler-memorized-sources tr)      nil
      (transpiler-memorize-sources? tr)      t)
   (transpiler-add-obfuscation-exceptions tr nil (make-symbol ""))
@@ -194,12 +190,12 @@
         :separator                separator
         :identifier-char?         identifier-char?
         :literal-converter        literal-converter
-        :defined-functions-hash   (copy-hash-table defined-functions-hash)
-        :defined-variables-hash   (copy-hash-table defined-variables-hash)
+        :defined-functions        (copy-hash-table defined-functions)
+        :defined-variables        (copy-hash-table defined-variables)
         :literals                 (copy-hash-table literals)
-        :host-functions-hash      (copy-hash-table host-functions-hash)
-        :host-variables-hash      (copy-hash-table host-variables-hash)
-        :functionals-hash         (copy-hash-table functionals-hash)
+        :host-functions           (copy-hash-table host-functions)
+        :host-variables           (copy-hash-table host-variables)
+        :functionals              (copy-hash-table functionals)
         :wanted-functions         (copy-list wanted-functions)
         :wanted-functions-hash    (copy-hash-table wanted-functions-hash)
         :wanted-variables         (copy-list wanted-variables)
@@ -243,8 +239,6 @@
         :dump-passes?             dump-passes?
         :symbol-translations      (copy-list symbol-translations)
         :thisify-classes          (copy-hash-table thisify-classes)
-        :function-args            (copy-hash-table function-args)
-        :function-bodies          (copy-hash-table function-bodies)
         :obfuscations             (copy-hash-table obfuscations)
         :plain-arg-funs           (copy-list plain-arg-funs)
         :late-symbols             (copy-hash-table late-symbols)
@@ -276,10 +270,13 @@
     (transpiler-copy-std-macro-expander transpiler !)
     (transpiler-make-expex !)))
 
+(defmacro transpiler-getter-not-global (name &body body)
+  `(defun ,($ 'transpiler- name) (tr x)
+       ,@body))
+
 (defmacro transpiler-getter (name &body body)
   `(progn
-     (defun ,($ 'transpiler- name) (tr x)
-       ,@body)
+     (transpiler-getter-not-global ,name ,@body)
      (defun ,($ name) (x)
        (let tr *transpiler*
          ,@body))))
@@ -287,20 +284,19 @@
 (defmacro transpiler-getter-list (name)
   `(transpiler-getter ,($ name '?) (member x (,($ 'transpiler- name 's) tr) :test #'eq)))
 
-(defun transpiler-defined-functions (tr) (hashkeys (transpiler-defined-functions-hash tr)))
 (defun transpiler-defined-functions-without-builtins (tr) (remove-if #'builtin? (transpiler-defined-functions tr)))
-(transpiler-getter defined-function        (href (transpiler-defined-functions-hash tr) x))
-(transpiler-getter defined-variable        (href (transpiler-defined-variables-hash tr) x))
+(transpiler-getter defined-function        (href (transpiler-defined-functions tr) x))
+(transpiler-getter defined-variable        (href (transpiler-defined-variables tr) x))
 (transpiler-getter literal?                (href (transpiler-literals tr) x))
 (transpiler-getter cps-exception?          (href (transpiler-cps-exceptions tr) x))
 (transpiler-getter cps-wrapper?            (href (transpiler-cps-wrappers tr) x))
 (transpiler-getter native-cps-function?    (href (transpiler-native-cps-functions tr) x))
-(transpiler-getter host-function?          (href (transpiler-host-functions-hash tr) x))
-(transpiler-getter host-function-arguments (car (transpiler-host-function? tr x)))
-(transpiler-getter host-function-body      (cdr (transpiler-host-function? tr x)))
-(transpiler-getter host-variable?          (href (transpiler-host-variables-hash tr) x))
-(transpiler-getter function-body           (href (transpiler-function-bodies tr) x))
-(transpiler-getter function-arguments      (href (transpiler-function-args tr) x))
+(transpiler-getter host-function           (href (transpiler-host-functions tr) x))
+(transpiler-getter host-function-arguments (car (transpiler-host-function tr x)))
+(transpiler-getter host-function-body      (cdr (transpiler-host-function tr x)))
+(transpiler-getter host-variable?          (href (transpiler-host-variables tr) x))
+(transpiler-getter-not-global function-arguments (car (transpiler-defined-function tr x)))
+(transpiler-getter-not-global function-body      (cdr (transpiler-defined-function tr x)))
 (transpiler-getter wanted-function?        (href (transpiler-wanted-functions-hash tr) x))
 (transpiler-getter wanted-variable?        (href (transpiler-wanted-variables-hash tr) x))
 (transpiler-getter late-symbol?            (href (transpiler-late-symbols tr) x))
@@ -308,7 +304,7 @@
   ,@(filter  [`(transpiler-getter-list ,_)]
             '(plain-arg-fun emitted-decl)))
 
-(transpiler-getter add-defined-variable  (= (href (transpiler-defined-variables-hash tr) x) t)
+(transpiler-getter add-defined-variable  (= (href (transpiler-defined-variables tr) x) t)
                                          x)
 (transpiler-getter add-literal           (= (href (transpiler-literals tr) x) t)
                                          x)
@@ -324,13 +320,9 @@
                                          (transpiler-host-variable? tr x)))
 
 (defun transpiler-add-defined-function (tr name args body)
-  (= (href (transpiler-defined-functions-hash tr) name) t)
-  (transpiler-add-function-args tr name args)
-  (transpiler-add-function-body tr name body)
+  (= (href (transpiler-defined-functions tr) name) (. args body))
   name)
 
-(defun transpiler-add-function-args (tr fun args) (= (href (transpiler-function-args tr) fun) args))
-(defun transpiler-add-function-body (tr fun args) (= (href (transpiler-function-bodies tr) fun) args))
 (define-slot-setter-push transpiler-add-exported-closure tr  (transpiler-exported-closures tr))
 (define-slot-setter-push transpiler-add-plain-arg-fun tr     (transpiler-plain-arg-funs tr))
 (define-slot-setter-push transpiler-add-emitted-decl tr      (transpiler-emitted-decls tr))
@@ -360,10 +352,10 @@
   (make-symbol (symbol-name x) (transpiler-current-package tr)))
 
 (defun transpiler-add-functional (tr x)
-  (= (href (transpiler-functionals-hash tr) x) t))
+  (= (href (transpiler-functionals tr) x) t))
 
 (defun transpiler-functional? (tr x)
-  (href (transpiler-functionals-hash tr) x))
+  (href (transpiler-functionals tr) x))
 
 (defun transpiler-defined-symbol? (fi x)
   (let tr *transpiler*
