@@ -74,7 +74,7 @@
        (redef-warn "redefinition of variable ~A.~%" name))
     (transpiler-add-defined-variable tr name)
     (& *have-compiler?*
-       (transpiler-add-delayed-var-init tr `((= *variables* (. (. ',name ',val) *variables*)))))
+       (add-delayed-var-init `((= *variables* (. (. ',name ',val) *variables*)))))
     `(progn
        ,@(& (transpiler-needs-var-declarations? tr)
             `((%var ,name)))
