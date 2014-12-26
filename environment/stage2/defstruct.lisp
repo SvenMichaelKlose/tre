@@ -1,4 +1,4 @@
-;;;; tré – Copyright (c) 2005–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2009,2011–2014 Sven Michael Klose <pixel@hugbox.org>
 
 (defun %struct-option-keyword? (x)
   (eq x :constructor))
@@ -32,11 +32,11 @@
             fields)))
 
 (defun %struct-make (name fields options)
-  (with (sym (%struct-make-symbol name options)
-		 g (gensym)
-         user-init (%struct-make-init fields g)
-	     type-init `((= (aref ,g 0) 'struct
-                        (aref ,g 1) ',name)))
+  (with (sym        (%struct-make-symbol name options)
+		 g          (gensym)
+         user-init  (%struct-make-init fields g)
+	     type-init  `((= (aref ,g 0) 'struct
+                         (aref ,g 1) ',name)))
     `(defun ,sym ,(%struct-make-args fields)
        (let ,g (make-array ,(+ 2 (length fields)))
          ,@(? user-init
@@ -74,11 +74,13 @@
 
 (defun %struct-sort-fields (fields-and-options)
   (with-queue (fields options)
-    (map [? (& (cons? _) (%struct-option-keyword? _.))
+    (map [? (& (cons? _)
+               (%struct-option-keyword? _.))
 	        (enqueue options _)
 	        (enqueue fields _)]
 	     fields-and-options)
-    (values (queue-list fields) (queue-list options))))
+    (values (queue-list fields)
+            (queue-list options))))
 
 (defvar *struct-defs*)
 
@@ -92,13 +94,13 @@
   (carlist (%struct-def name)))
 
 (defun %defstruct-expander (name &rest fields-and-options)
-  (multiple-value-bind (flds opts) (%struct-sort-fields fields-and-options)
-    (%struct-add-def name flds)
+  (with ((fields options) (%struct-sort-fields fields-and-options))
+    (%struct-add-def name fields)
     `(progn
        (declare-cps-exception ,name)
-       ,(%struct-make name flds opts)
+       ,(%struct-make name fields options)
        ,(%struct? name)
-       ,@(%struct-getters name flds)
+       ,@(%struct-getters name fields)
        (defmacro ,($ "WITH-" name) (s &body body)
 		 `(with-struct ,name ,,s
             ,,@body))
