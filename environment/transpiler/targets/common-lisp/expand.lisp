@@ -10,7 +10,10 @@
   (print-definition `(%defun ,name ,args))
   (add-defined-function name args body)
   `(progn
-     (push (. name ',(. args body)) *functions*)
+     ,@(& (save-sources?)
+          `((push (. name ',(. args (& (not (save-argdefs-only?))
+                                       body)))
+                  *functions*)))
      (cl:defun ,name ,args ,@body)
      ,@(& (save-sources?)
           `(cl:setf (cl:gethash #',name *function-atom-sources*)
@@ -31,5 +34,6 @@
   (print-definition `(%defvar ,name))
   (add-defined-variable name)
   `(progn
-     (push (. ',name ',init) *variables*)
+     ,@(& (save-sources?)
+          `((push (. ',name ',init) *variables*)))
      (cl:defvar ,name ,init)))
