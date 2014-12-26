@@ -1,7 +1,7 @@
 ;;;;; tré – Copyright (c) 2014 Sven Michael Klose <pixel@copei.de>
 
 (defun %load-r (s)
-  (when (tre-parallel:peek-char s)
+  (when (peek-char s)
     (cons (read s)
           (%load-r s))))
 
