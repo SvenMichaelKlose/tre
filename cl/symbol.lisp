@@ -8,7 +8,7 @@
   (intern x (? package
                (? (packagep package)
                   (package-name package)
-                  x)
+                  package)
                "TRE")))
 
 (defun %symbol-name (x)
