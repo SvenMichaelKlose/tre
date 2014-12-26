@@ -1,10 +1,10 @@
-;;;;; tré – Copyright (c) 2013–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2013–2014 Sven Michael Klose <pixel@copei.de>
 
-(defun warn-unused-functions (tr)
-  (alet (transpiler-defined-functions-hash tr)
-    (dolist (i (+ (hashkeys (transpiler-used-functions tr))
-                  (hashkeys (expander-macros (expander-get (transpiler-std-macro-expander tr))))
-                  (hashkeys (expander-macros (expander-get (transpiler-codegen-expander tr))))
+(defun warn-unused-functions ()
+  (alet (defined-functions)
+    (dolist (i (+ (hashkeys (used-functions))
+                  (hashkeys (expander-macros (expander-get (std-macro-expander))))
+                  (hashkeys (expander-macros (expander-get (codegen-expander))))
                   *macros*))
       (hremove ! i))
     (dolist (i (hashkeys !))

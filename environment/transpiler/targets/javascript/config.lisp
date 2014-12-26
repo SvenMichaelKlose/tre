@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun js-expex-initializer (ex)
   (= (expex-inline? ex)         #'%slot-value?
@@ -17,7 +17,7 @@
 	  :needs-var-declarations?  t
       :count-tags?              t
 	  :identifier-char?         #'c-identifier-char?
-	  :literal-converter        #'transpiler-expand-literal-characters
+	  :literal-converter        #'expand-literal-characters
       :expex-initializer        #'js-expex-initializer
       :ending-sections          #'js-ending-sections
       :configurations           '((environment       . browser)

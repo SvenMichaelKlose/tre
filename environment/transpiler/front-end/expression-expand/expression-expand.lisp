@@ -82,13 +82,14 @@
 			 _]
 		  x))
 
+(defun expex-argdef (fun)
+  (| (funinfo-get-local-function-args *funinfo* fun)
+     (current-transpiler-function-arguments fun)))
+
 (defun expex-argexpand-0 (fun args)
-  (transpiler-expand-literal-characters
+  (expand-literal-characters
       (? (defined-function fun)
-         (expex-argument-expand fun
-                                (| (funinfo-get-local-function-args *funinfo* fun)
-                                    (current-transpiler-function-arguments fun))
-                                args)
+         (expex-argument-expand fun (expex-argdef fun) args)
          args)))
 
 (defun expex-argexpand (x)

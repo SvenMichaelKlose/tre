@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun php-identifier-char? (x)
   (unless (== #\$ x)
@@ -23,7 +23,7 @@
       :stack-locals?            nil
       :gen-string               [literal-string _ #\" (list #\$)]
 	  :identifier-char?         #'php-identifier-char?
-      :literal-converter        #'transpiler-expand-literal-characters
+      :literal-converter        #'expand-literal-characters
       :expex-initializer        #'php-expex-initializer))
 
 (defun make-php-transpiler ()
