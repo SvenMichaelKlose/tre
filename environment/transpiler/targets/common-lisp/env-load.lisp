@@ -1,5 +1,7 @@
 ; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
+(defvar *cl-builtins* nil)
+
 (defun cl-load-base (dir-path &rest files)
   (mapcan [alet (+ dir-path _)
 			(format t  "(cl-load-base \"~A\")~%" !)

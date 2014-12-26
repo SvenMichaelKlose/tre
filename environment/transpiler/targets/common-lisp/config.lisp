@@ -11,6 +11,7 @@
       :import-variables?  t
       :lambda-export?     nil
       :stack-locals?      nil
+      :frontend-init      #'(() (= *cl-builtins* nil))
       :expex-initializer  #'cl-expex-initializer
       :postprocessor      #'tre2cl))
 
