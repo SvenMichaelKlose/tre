@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2006–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2006–2014 Sven Michael Klose <pixel@copei.de>
 
 (mapcar-macro x
 	'(identity %identity quote backquote quasiquote quasiquote-splice
@@ -34,7 +34,7 @@
   (& (cons? x)
      (| (string? x.)
         (in? x. '%%native '%%string)
-        (expander-has-macro? (transpiler-codegen-expander *transpiler*) x.))))
+        (expander-has-macro? (codegen-expander) x.))))
 
 (defun atom|codegen-expr? (x)
   (| (atom x)

@@ -25,7 +25,7 @@
   	    	               " "
                            (c-arguments (get-funinfo name))
 			               ";" *newline*)
-	    (transpiler-compiled-decls *transpiler*)))
+	    (compiled-decls)))
 
 (defun c-codegen-function (name x)
   (with (fi    (get-funinfo name)

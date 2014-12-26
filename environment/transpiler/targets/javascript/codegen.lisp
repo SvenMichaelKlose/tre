@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun js-call (x)
   `(,x. ,@(c-list .x)))
@@ -21,7 +21,7 @@
             (push `("var " ,(obfuscated-identifier g)
                            "=" ,@(js-codegen-symbol-constructor-expr x)
                            ,*js-separator*)
-                  (transpiler-raw-decls *transpiler*))
+                  (raw-decls))
             g)))))
 
 (define-codegen-macro-definer define-js-macro *js-transpiler*)
@@ -72,7 +72,7 @@
   (alet (cons 'function x)
     (? .x
        (with (name            (lambda-name !)
-              translated-name (? (transpiler-defined-function *transpiler* name)
+              translated-name (? (defined-function name)
                                  (compiled-function-name-string name)
                                  name))
          `(,*newline*
@@ -208,7 +208,7 @@
 ;;;; OBJECTS
 
 (define-js-macro %new (&rest x)
-  `(%%native "new " ,(? (transpiler-defined-function *transpiler* x.)
+  `(%%native "new " ,(? (defined-function x.)
                         (compiled-function-name-string x.)
                         (obfuscated-identifier x.))
                     ,@(c-list .x)))

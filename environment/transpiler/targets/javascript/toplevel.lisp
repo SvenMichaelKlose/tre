@@ -1,13 +1,13 @@
-;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun nodejs-prologue ()
    (apply #'+ (filter [format nil "var ~A = require ('~A');~%" _ _]
-                      (transpiler-configuration *transpiler* 'nodejs-requirements))))
+                      (configuration 'nodejs-requirements))))
 
 (defun js-prologue ()
   (+ (format nil "// tré revision ~A~%" *tre-revision*)
      (nodejs-prologue)
-     (& (transpiler-cps-transformation? *transpiler*)
+     (& (cps-transformation?)
         (format nil ,(fetch-file "environment/transpiler/targets/javascript/environment/native/cps.js")))
      (format nil "var _I_ = 0; while (1) {switch (_I_) {case 0: ~%")))
 
@@ -19,18 +19,20 @@
           (transpiler-memorized-sources *js-transpiler*)))
 
 (defun js-emit-memorized-sources ()
-  (clr (transpiler-memorize-sources? *transpiler*))
+  (clr (memorize-sources?))
   (filter [`(%= (slot-value ,_. '__source) ,(list 'quote ._))]
-          (transpiler-memorized-sources *transpiler*)))
+          (memorized-sources)))
 
 (defun js-var-decls ()
   (filter [generate-code `((%var ,_))]
-          (remove-if [transpiler-emitted-decl? *transpiler* _]
-                     (funinfo-vars (transpiler-global-funinfo *transpiler*)))))
+          (remove-if #'emitted-decl?
+                     (funinfo-vars (global-funinfo)))))
+
+(defun gen-funinfo-init ()
+  `(push '',(compiled-list `(,x. ,(funinfo-args .x))) *application-funinfos*))
 
 (defun gen-funinfo-inits ()
-  (filter [`(push '',(compiled-list `(,_. ,(funinfo-args ._))) *application-funinfos*)]
-          (hash-alist (transpiler-funinfos *transpiler*))))
+  (filter #'gen-funinfo-init (hash-alist (funinfos))))
 
 (defun js-sections-before-deps (tr)
   `((essential-functions-0 . ,*js-base0*)
@@ -40,7 +42,7 @@
                 `((debug-printing . ,*js-base-debug-print*)))
            (essential-functions-2 . ,*js-base2*)
            (standard-streams . ,(js-base-stream))
-           ,@(& (eq 'nodejs (transpiler-configuration *transpiler* 'environment))
+           ,@(& (eq 'nodejs (configuration 'environment))
                 `((nodejs-base . ,(js-base-nodejs))))
            ,@(& (t? *have-environment-tests*)
                 `((environment-tests . ,(make-environment-tests))))))))

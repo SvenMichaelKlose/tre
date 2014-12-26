@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun thisify-collect-methods-and-members (clsdesc)
   (+ (class-methods clsdesc)
@@ -40,7 +40,7 @@
   (?
 	 (atom x)        x
 	 (%thisify? x.)  (frontend-macroexpansions
-                         `((,@(? (transpiler-cps-transformation? *transpiler*)
+                         `((,@(? (cps-transformation?)
                                  '(%%block)
                                  '(let ~%this this))
                             ,@(| (+ (thisify-list classes (cddr x.) (cadr x.))

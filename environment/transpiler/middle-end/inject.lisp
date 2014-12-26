@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2012–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2012–2014 Sven Michael Klose <pixel@copei.de>
 
 (defvar *previous-position* nil)
 
@@ -14,7 +14,7 @@
 (defun find-next-location (x old)
   (& (cons? x)
      (| (& (not (same-or-previous-location? old (cpr x)))
-           (let section (transpiler-current-section *transpiler*)
+           (let section (current-section)
              (alet (cpr x)
                (& (string? section)
                   (string== section !.)

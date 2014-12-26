@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun js-load-base (dir-path &rest files)
   (mapcan [let f (+ dir-path _)
@@ -81,7 +81,7 @@
 (defun js-base-stream ()
   (+ ,(list 'quote (js-load-base *js-env-path* "error.lisp"))
      ,(list 'quote (js-load-base *js-env-path* "../../../../stage3/stream.lisp"))
-     (when (eq 'browser (transpiler-configuration *transpiler* 'environment))
+     (when (eq 'browser (configuration 'environment))
        ,(list 'quote (js-load-base *js-env-path* "%force-output.lisp")))
      ,(list 'quote (js-load-base *js-env-path* "standard-stream.lisp"))
      ,(list 'quote (js-load-base *js-env-path* "../../../environment/print.lisp"))))

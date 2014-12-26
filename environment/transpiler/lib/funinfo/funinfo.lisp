@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2006–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2006–2014 Sven Michael Klose <pixel@copei.de>
 
 (defvar *funinfo*)
 
@@ -79,14 +79,16 @@
     (get-funinfo (lambda-name x))))
 
 (defmacro with-global-funinfo (&body body)
-  `(with-temporary *funinfo* (transpiler-global-funinfo *transpiler*)
+  `(with-temporary *funinfo* (global-funinfo)
      ,@body))
 
 (defmacro with-lambda-funinfo (x &body body)
   `(with-temporary *funinfo* (get-lambda-funinfo ,x)
      ,@body))
 
-(defun create-funinfo (&key name parent args body (transpiler *transpiler*) (cps? nil))
+(defun create-funinfo (&key name parent args body
+                            (transpiler *transpiler*)
+                            (cps? nil))
   (& (href (transpiler-funinfos transpiler) name)
      (error "FUNFINFO for ~A is already memorized." name))
   (with (argnames (argument-expand-names 'lambda-expand args)

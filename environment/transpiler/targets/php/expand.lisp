@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defmacro define-php-std-macro (&rest x)
   `(define-transpiler-std-macro *php-transpiler* ,@x))
@@ -20,9 +20,9 @@
 
 (define-php-std-macro define-external-variable (name)
   (print-definition `(define-external-variable ,name))
-  (& (transpiler-defined-variable *transpiler* name)
+  (& (defined-variable name)
      (redef-warn "redefinition of variable ~A." name))
-  (transpiler-add-defined-variable *transpiler* name)
+  (add-defined-variable name)
   nil)
 
 (define-php-std-macro make-string (&optional len)

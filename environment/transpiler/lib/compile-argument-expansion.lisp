@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun compile-argument-expansion-defaults (defaults)
   (mapcar [`(& (eq ,_ ,(list 'quote _))
@@ -13,7 +13,7 @@
 			    (& key-args '((keywords))))
 
 		 static
-           [`(,@(? (transpiler-assert? *transpiler*)
+           [`(,@(? (assert?)
                    `((| ,p
                         (error-arguments-missing ,(symbol-name _.) ',fun-name))))
               (= ,_. (car ,p))
@@ -37,7 +37,7 @@
                (error-&rest-has-value fun-name))
             `(,@(key)
 			  (= ,_. ,p)
-              ,@(? (transpiler-assert? *transpiler*)
+              ,@(? (assert?)
                    `((= ,p nil))))]
 
          optional-rest
@@ -81,7 +81,7 @@
 
 (defun compile-argument-expansion-function-body-0 (fun-name adef p names)
   `(,@(compile-argument-expansion-0 fun-name adef p)
-    ,@(? (transpiler-assert? *transpiler*)
+    ,@(? (assert?)
          `((? ,p
               (error-too-many-arguments ,(symbol-name fun-name) ,p))))
     ((%%native ,(compiled-function-name fun-name)) ,@names)))

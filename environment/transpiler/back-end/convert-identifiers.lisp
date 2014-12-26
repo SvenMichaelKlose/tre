@@ -1,10 +1,10 @@
-;;;;; tré – Copyright (c) 2008–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun transpiler-translate-symbol (tr from to)
   (acons! from to (transpiler-symbol-translations tr)))
 
 (defun transpiler-special-char? (x)
-  (not (funcall (transpiler-identifier-char? *transpiler*) x)))
+  (not (funcall (identifier-char?) x)))
 
 (defun global-variable-notation? (x)
   (let l (length x)
@@ -72,19 +72,18 @@
 	   (convert-identifier-1 s))))
 
 (defun convert-identifier (s)
-  (let tr *transpiler*
-    (| (href (transpiler-identifiers tr) s)
-       (let n (convert-identifier-0 s)
-         (awhen (href (transpiler-converted-identifiers tr) n)
-           (error "Identifier conversion clash. Symbols ~A and ~A are both converted to ~A."
-                  (symbol-name s) (symbol-name !) (symbol-name n)))
-         (= (href (transpiler-identifiers tr) s) n)
-         (= (href (transpiler-converted-identifiers tr) n) s)
-         n))))
+  (| (href (identifiers) s)
+     (let n (convert-identifier-0 s)
+       (awhen (href (converted-identifiers) n)
+         (error "Identifier conversion clash. Symbols ~A and ~A are both converted to ~A."
+                s ! n))
+       (= (href (identifiers) s) n)
+       (= (href (converted-identifiers) n) s)
+       n)))
 
 (defun convert-identifiers-cons (x)
   (?
-    (%%string? x) (funcall (transpiler-gen-string *transpiler*) .x.)
+    (%%string? x) (funcall (gen-string) .x.)
     (%%native? x) (convert-identifiers .x)
     x))
 
@@ -92,7 +91,7 @@
   (maptree [?
              (cons? _)    (convert-identifiers-cons _)
              (string? _)  _
-             (symbol? _)  (| (assoc-value _ (transpiler-symbol-translations *transpiler*) :test #'eq)
+             (symbol? _)  (| (assoc-value _ (symbol-translations) :test #'eq)
                              (convert-identifier _))
              (number? _)  (princ _ nil)
              (error "Cannot translate ~A to string." _)]

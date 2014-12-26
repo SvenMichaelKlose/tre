@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defmacro define-js-std-macro (name args &body body)
   `(define-transpiler-std-macro *js-transpiler* ,name ,args ,@body))
@@ -15,7 +15,7 @@
 
 (defun js-requires-expander? (x)
   (& (not (body-has-noargs-tag? (lambda-body x)))
-     (| (transpiler-assert? *transpiler*)
+     (| (assert?)
         (not (simple-argument-list? (lambda-args x))))))
 
 (define-js-std-macro function (&rest x)
@@ -99,7 +99,7 @@
   `(%%%+ ,@x))
 
 (define-js-std-macro in-package (n)
-  (= (transpiler-current-package *transpiler*) (& n (make-package (symbol-name n))))
+  (= (current-package) (& n (make-package (symbol-name n))))
   `(%%in-package ,n))
 
 (define-js-std-macro invoke-debugger ()

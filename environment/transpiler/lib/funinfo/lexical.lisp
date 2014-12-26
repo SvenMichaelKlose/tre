@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2006–2007,2009,2011–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2006–2007,2009,2011–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun funinfo-scope-arg? (fi x)
   (eq x (funinfo-scope-arg fi)))
@@ -19,7 +19,7 @@
 (defun funinfo-setup-scope (fi var)
   (alet (funinfo-parent fi)
     (| ! (error "Couldn't find ~A in environment." var))
-    (when (transpiler-lambda-export? *transpiler*)
+    (when (lambda-export?)
       (funinfo-make-scope (funinfo-parent fi))
       (funinfo-make-scope-arg fi))
     (? (funinfo-arg-or-var? ! var)

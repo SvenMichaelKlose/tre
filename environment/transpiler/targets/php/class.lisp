@@ -1,4 +1,4 @@
-;;;;; Caroshi – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; Caroshi – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun php-constructor-name (class-name)
   ($ class-name '-constructor))
@@ -13,7 +13,7 @@
   (compiled-function-name (php-method-name class-name name)))
 
 (defun php-constructor (class-name bases args body)
-  (transpiler-add-defined-function *transpiler* class-name args body)
+  (add-defined-function class-name args body)
   `(function ,(php-constructor-name class-name)
              (,(. 'this args)
               (let ~%this this
@@ -56,7 +56,7 @@
             (reverse !))))
 
 (define-php-std-macro finalize-class (class-name)
-  (let classes (transpiler-thisify-classes *transpiler*)
+  (let classes (thisify-classes)
     (!? (href classes class-name)
 	    `(progn
            (dont-obfuscate is_a)
@@ -68,7 +68,7 @@
            ,@(php-method-functions class-name !)
            (%= nil (%%native
                      (%php-class-head ,class-name)
-                     ,(alet (argument-expand-names 'php-constructor-function (transpiler-function-arguments *transpiler* class-name))
+                     ,(alet (argument-expand-names 'php-constructor (transpiler-function-arguments *transpiler* class-name))
                         `("public function __construct " ,(php-argument-list !) ,*php-newline*
                           "{" ,*php-newline*
                               ,*php-indent* "return " ,(php-compiled-constructor-name class-name) ,(php-argument-list (. 'this !)) ,*php-separator*

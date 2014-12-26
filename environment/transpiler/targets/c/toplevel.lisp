@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defvar *c-init-group-size*  16)
 (defvar *c-init-counter*      0)
@@ -53,17 +53,17 @@
                  ,(c-compiled-symbol name)
                  ,name
                  ,(alet (c-expander-name name)
-                    (? (transpiler-defined-function *transpiler* !)
+                    (? (defined-function !)
                        (compiled-function-name !)
                        '(%%native "NULL"))))))
 
 (defun c-function-registrations ()
   (filter #'c-function-registration
 		  (remove-if [tail? (symbol-name _) "_TREEXP"]
-                     (transpiler-defined-functions-without-builtins *transpiler*))))
+                     (defined-functions-without-builtins))))
 
 (defun c-declarations-and-initialisations ()
-  (+ (transpiler-compiled-inits *transpiler*)
+  (+ (compiled-inits)
      (c-function-registrations)))
 
 (defun c-make-init-function (statements)
@@ -73,7 +73,7 @@
                  statements))))
 
 (defun c-make-init-functions ()
-  (transpiler-add-used-function *transpiler* 'c-init)
+  (add-used-function 'c-init)
   (with-temporary *c-init-counter* 0
     (+ (mapcar #'c-make-init-function
 			   (group (c-declarations-and-initialisations) *c-init-group-size*))
@@ -83,13 +83,12 @@
                  (enqueue q `(,($ 'C-INIT- (++ !)))))))))))
 
 (defun c-compile-init-functions ()
-  (alet *transpiler*
-    (with-temporaries ((transpiler-profile? !)    nil
-                       (transpiler-backtrace? !)  nil
-                       (transpiler-assert? !)     nil
-                       (transpiler-always-expand-arguments? !)  nil)
-        (backend (middleend (frontend (c-make-init-functions)))))))
+  (with-temporaries ((profile?)                  nil
+                     (backtrace?)                nil
+                     (assert?)                   nil
+                     (always-expand-arguments?)  nil)
+      (backend (middleend (frontend (c-make-init-functions))))))
 
 (defun c-decl-gen ()
-  (concat-stringtree (transpiler-compiled-decls *transpiler*)
+  (concat-stringtree (compiled-decls)
                      (c-compile-init-functions)))

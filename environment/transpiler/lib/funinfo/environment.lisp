@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2006–2007,2009–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2006–2007,2009–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun funinfo-find (fi x)
   (!? (funinfo-parent fi)
@@ -157,5 +157,5 @@
 
 (defun funinfo-global-variable? (fi x)
   (& (not (funinfo-find fi x))
-     (| (transpiler-defined-variable *transpiler* x)
-        (transpiler-host-variable? *transpiler* x))))
+     (| (defined-variable x)
+        (host-variable? x))))

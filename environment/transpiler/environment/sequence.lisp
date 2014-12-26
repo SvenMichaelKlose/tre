@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun maparray (fun hash)
   (with-queue q
@@ -17,7 +17,7 @@
 
 (defun (= elt) (val seq idx)
   (?
-	,@(when (transpiler-assert? *transpiler*)
-        '((string? seq) (error "Strings cannot be modified.")))
+	,@(& (assert?)
+         '((string? seq) (error "Strings cannot be modified.")))
 	(array? seq) (= (aref seq idx) val)
 	(cons? seq)  (rplaca (nthcdr idx seq) val)))

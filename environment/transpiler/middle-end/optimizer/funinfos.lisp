@@ -1,10 +1,10 @@
-;;;; tré – Copyright (c) 2009–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2009–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun used-vars ()
   (alet *funinfo*
     (+ (funinfo-scoped-vars !)
        (intersect (funinfo-vars !) (funinfo-used-vars !) :test #'eq)
-       (& (transpiler-copy-arguments-to-stack? *transpiler*)
+       (& (copy-arguments-to-stack?)
           (funinfo-args !)))))
 
 (defun remove-unused-scope-arg (fi)
@@ -53,12 +53,12 @@
 
 (defun correct-funinfo ()
   (alet *funinfo*
-;    (when (transpiler-lambda-export? *transpiler*)
+;    (when (lambda-export?)
 ;      (remove-unused-scope-arg !)
 ;      ;(remove-scoped-vars !)
 ;      (replace-scope-arg !))
     (funinfo-vars-set ! (intersect (funinfo-vars !) (funinfo-used-vars !) :test #'eq))
-    (when (transpiler-stack-locals? *transpiler*)
+    (when (stack-locals?)
       (remove-argument-stackplaces !))))
 
 (defun remove-unused-vars (x)

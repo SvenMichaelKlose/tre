@@ -1,17 +1,16 @@
-;;;;; tré – Copyright (c) 2010–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2010–2014 Sven Michael Klose <pixel@copei.de>
 
 (defvar *current-pass-input* nil)
 
 (defmacro transpiler-pass (name args &rest x)
   (with (cache-var ($ '*pass- name '*)
-         init (gensym)
-         tr '*transpiler*)
+         init (gensym))
     `(progn
        (defvar ,cache-var nil)
        (defun ,name (,@args ,init)
          (= ,cache-var ,init)
-         (dolist (i (list ,@(mapcan [`((with-temporary (transpiler-current-pass ,tr) ,(list 'quote _.)
-                                         (? (!? (transpiler-dump-passes? ,tr)
+         (dolist (i (list ,@(mapcan [`((with-temporary (current-pass) ,(list 'quote _.)
+                                         (? (!? (dump-passes?)
                                                 (| (t? !)
                                                    (member ',_. (ensure-list !))))
                                             #'((x)
@@ -25,4 +24,4 @@
                                     (group x 2)))
                    ,cache-var)
            (with-global-funinfo
-             (= ,cache-var (= (transpiler-last-pass-result ,tr) (funcall i ,cache-var)))))))))
+             (= ,cache-var (= (last-pass-result) (funcall i ,cache-var)))))))))

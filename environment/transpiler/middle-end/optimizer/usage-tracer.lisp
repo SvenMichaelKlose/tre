@@ -1,4 +1,4 @@
-;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun tag-code (tag)
   (| (member-if [& (number? _)
@@ -10,8 +10,8 @@
   (alet *funinfo*
     (& (| (funinfo-parent !)
           (eq '~%ret x)
-          (not (transpiler-defined-variable *transpiler* x)
-               (transpiler-literal? *transpiler* x)))
+          (not (defined-variable x)
+               (literal? x)))
        (funinfo-var? ! x)
        (not (eq x (funinfo-scope !))
             (funinfo-scoped-var? ! x)))))

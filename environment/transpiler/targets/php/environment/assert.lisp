@@ -1,7 +1,7 @@
-;;;;; tré – Copyright (c) 2012–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2012–2014 Sven Michael Klose <pixel@copei.de>
 
 (defmacro assert-method (place slot)
-  (& (transpiler-assert? *transpiler*)
+  (& (assert?)
      (with-gensym p
        `(let ,p ,place
           (| (is_object ,p)

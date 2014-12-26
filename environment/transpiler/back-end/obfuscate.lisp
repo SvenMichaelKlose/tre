@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defvar *obfuscation-counter* 0)
 
@@ -16,7 +16,7 @@
   (number-sym *obfuscation-counter*))
 
 (defun obfuscate-symbol-0 (x)
-  (let obs (transpiler-obfuscations *transpiler*)
+  (let obs (obfuscations)
     (| (href obs x)
        (= (href obs x)
 	      (!? (symbol-package x)
@@ -24,11 +24,11 @@
               (obfuscated-sym))))))
 
 (defun obfuscateable-symbol? (x)
-  (not (eq t (href (transpiler-obfuscations *transpiler*) (make-symbol (symbol-name x))))))
+  (not (eq t (href (obfuscations) (make-symbol (symbol-name x))))))
 
 (defun must-obfuscate-symbol? (x)
   (& x 
-     (transpiler-obfuscate? *transpiler*)
+     (obfuscate?)
      (obfuscateable-symbol? x)))
 
 (defun obfuscate-symbol (x)
@@ -40,7 +40,7 @@
   (symbol? x) (obfuscate-symbol x))
 
 (defun obfuscate (x)
-  (? (transpiler-obfuscate? *transpiler*)
+  (? (obfuscate?)
      (obfuscate-0 x)
      x))
 

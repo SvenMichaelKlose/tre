@@ -1,7 +1,7 @@
-;;;;; tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun funinfo-var-declarations (fi)
-  (unless (transpiler-stack-locals? *transpiler*)
+  (unless (stack-locals?)
     (mapcan [unless (funinfo-arg? fi _)
 		      `((%var ,_))]
 	        (funinfo-vars fi))))
@@ -13,9 +13,9 @@
         ,@(!? (funinfo-scoped-var? fi scope)
 		    `((%set-vec ,scope ,! ,scope)))
         ,@(mapcan [& (funinfo-scoped-var? fi _)
-				     `((%= ,_ ,(? (transpiler-arguments-on-stack? *transpiler*)
-                                     `(%stackarg ,(funinfo-name fi) ,_)
-                                     `(%%native ,_))))]
+				     `((%= ,_ ,(? (arguments-on-stack?)
+                                  `(%stackarg ,(funinfo-name fi) ,_)
+                                  `(%%native ,_))))]
 				  (funinfo-args fi))))))
 
 (defun make-framed-function (x)
@@ -23,11 +23,11 @@
          name (funinfo-name fi))
     (copy-lambda x
         :body (make-framed-functions
-                  `(,@(& (transpiler-needs-var-declarations? *transpiler*)
+                  `(,@(& (needs-var-declarations?)
                          (funinfo-var-declarations fi))
-                    ,@(& (transpiler-function-prologues? *transpiler*)
+                    ,@(& (function-prologues?)
                          `((%function-prologue ,name)))
-                    ,@(& (transpiler-lambda-export? *transpiler*)
+                    ,@(& (lambda-export?)
                          (funinfo-copiers-to-scoped-vars fi))
                     ,@(lambda-body x)
                     (%function-epilogue ,name))))))

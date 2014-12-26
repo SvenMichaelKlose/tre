@@ -1,7 +1,7 @@
-;;;;; tré – Copyright (c) 2009–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2009–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun php-expex-add-global (x)
-  (funinfo-var-add (transpiler-global-funinfo *transpiler*) x)
+  (funinfo-var-add (global-funinfo) x)
   (adjoin! x (funinfo-globals *funinfo*))
   x)
 

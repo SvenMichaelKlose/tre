@@ -1,8 +1,8 @@
-;;;;; tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun cps-marker (name)
-  (& (transpiler-cps-transformation? *transpiler*)
-     (every [not (transpiler-cps-exception? *transpiler* _)]
+  (& (cps-transformation?)
+     (every [not (cps-exception? _)]
             (. name (funinfo-names *funinfo*)))))
 
 ;;;; INLINING
@@ -35,7 +35,7 @@
                                  :parent *funinfo*
                                  :cps?   (cps-marker name)))
     (funinfo-make-scope-arg new-fi)
-    (transpiler-add-exported-closure *transpiler* `((defun ,name ,args ,@body)))
+    (add-exported-closure `((defun ,name ,args ,@body)))
     `(%%closure ,name)))
 
 
@@ -47,8 +47,8 @@
         (copy-lambda x :body (lambda-expand-r (lambda-body x))))
       (with (name    (| (lambda-name x)
                         (funinfo-sym))
-             args    (? (& (not (transpiler-cps-transformation? *transpiler*))
-                           (transpiler-native-cps-function? *transpiler* name))
+             args    (? (& (not (cps-transformation?))
+                           (native-cps-function? name))
                         (. '~%cont (lambda-args x))
                         (lambda-args x))
              new-fi  (create-funinfo :name   name
@@ -69,7 +69,7 @@
      (funinfo-add-local-function-args *funinfo* .x. (lambda-args ..x.)))
   (?
     (lambda-call? x)   (lambda-call-embed x)
-    (lambda? x)        (? (transpiler-lambda-export? *transpiler*)
+    (lambda? x)        (? (lambda-export?)
                           (lambda-export x)
                           (lambda-expand-r-unexported-lambda x))
     (named-lambda? x)  (lambda-expand-r-unexported-lambda x)

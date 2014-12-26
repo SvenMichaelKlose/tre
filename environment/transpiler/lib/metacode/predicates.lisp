@@ -1,4 +1,4 @@
-;;;; tré – Copyright (c) 2006–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2006–2014 Sven Michael Klose <pixel@copei.de>
 
 (mapcar-macro x
 	'(%quote %new
@@ -19,7 +19,7 @@
 
 (defun atomic-or-functional? (x)
   (| (atomic? x)
-     (& (cons? x) (transpiler-functional? *transpiler* x.))))
+     (& (cons? x) (functional? x.))))
 
 (defun ~%ret? (x)
   (eq '~%ret x))

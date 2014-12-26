@@ -8,13 +8,13 @@
 
 (define-cl-std-macro %defun (name args &body body)
   (print-definition `(%defun ,name ,args))
-  (transpiler-add-defined-function *transpiler* name args body)
+  (add-defined-function name args body)
   `(progn
      (push (. name ',(. args body)) *functions*)
      (cl:defun ,name ,args ,@body)
-     ,@(& (transpiler-save-sources? *transpiler*)
+     ,@(& (save-sources?)
           `(cl:setf (cl:gethash #',name *function-atom-sources*)
-                    ',(. args (& (not (transpiler-save-argdefs-only? *transpiler*))
+                    ',(. args (& (not (save-argdefs-only?))
                                  body))))))
 
 (define-cl-std-macro defun (&rest x) `(%defun ,@x))
@@ -29,7 +29,7 @@
 
 (define-cl-std-macro %defvar (name &optional (init nil))
   (print-definition `(%defvar ,name))
-  (transpiler-add-defined-variable *transpiler* name)
+  (add-defined-variable name)
   `(progn
      (push (. ',name ',init) *variables*)
      (cl:defvar ,name ,init)))

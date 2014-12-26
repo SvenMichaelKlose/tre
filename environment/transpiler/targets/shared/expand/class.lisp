@@ -1,11 +1,11 @@
-;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defvar *delayed-constructors* nil)
 
 (defun generic-defclass (constructor-maker class-name args &body body)
   (with (cname (? (cons? class-name) class-name. class-name)
 		 bases (& (cons? class-name) .class-name)
-		 classes (transpiler-thisify-classes *transpiler*))
+		 classes (thisify-classes))
 	(print-definition `(defclass ,class-name ,@(awhen args (list !))))
     (& (href classes cname)
 	   (warn "Class ~A already defined." cname))
@@ -22,7 +22,7 @@
 
 (defun generic-defmethod (class-name name args &body body)
   (print-definition `(defmethod ,class-name ,name ,@(awhen args (list !))))
-  (!? (href (transpiler-thisify-classes *transpiler*) class-name)
+  (!? (href (thisify-classes) class-name)
       (let code (list args body)  ;(append (head-if #'atom body :but-last t)
                                   ;        (tail-after-atoms body :keep-last t)))
         (? (assoc name (class-methods !))
@@ -35,7 +35,7 @@
 
 (defun generic-defmember (class-name &rest names)
   (print-definition `(defmember ,class-name ,@names))
-  (!? (href (transpiler-thisify-classes *transpiler*) class-name)
+  (!? (href (thisify-classes) class-name)
       (append! (class-members !) (mapcar [list _ t] names))
       (error "Class ~A is not defined." class-name))
   nil)

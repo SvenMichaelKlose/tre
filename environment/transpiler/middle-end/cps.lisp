@@ -1,18 +1,18 @@
-;;;;; tré – Copyright (c) 2013–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2013–2014 Sven Michael Klose <pixel@copei.de>
 
 (defvar *cps-toplevel?* nil)
 
 (defun call-from-argument-expander? (x)
   (& (%%native? x)
      (alet (real-function-name .x.)
-       (| (transpiler-native-cps-function? *transpiler* !)
-          (not (transpiler-cps-exception? *transpiler* (real-function-name !)))))))
+       (| (native-cps-function? !)
+          (not (cps-exception? (real-function-name !)))))))
 
 (defun call-to-non-cps-from-expander? (x)
   (& (%=-funcall? x)
      (alet (car (%=-value x))
        (& (%%native? !)
-          (transpiler-cps-exception? *transpiler* (real-function-name .!.))))))
+          (cps-exception? (real-function-name .!.))))))
 
 (defun call-to-non-cps-from-expander (x)
   (with-gensym g
@@ -21,7 +21,7 @@
       (%= nil (%cps-step ~%cont ,g)))))
 
 (defun call-of-global-cps-function? (name)
-  (& (not (transpiler-cps-exception? *transpiler* name))
+  (& (not (cps-exception? name))
      (!? (get-funinfo name)
          (funinfo-cps? !))))
 
@@ -34,7 +34,7 @@
              (? (%new? !)
                 .!.
                 !.))
-       (| (transpiler-native-cps-function? *transpiler* !)
+       (| (native-cps-function? !)
           (call-from-argument-expander? !)
           (call-of-local-function? !)
           (call-of-global-cps-function? !)))))
@@ -45,10 +45,10 @@
 
 (defun native-cps-funcall? (x)
   (& (%=-funcall? x)
-     (transpiler-native-cps-function? *transpiler* (alet (car (%=-value x))
-                                                     (? (%%native? !)
-                                                        (real-function-name .!.)
-                                                        !)))))
+     (native-cps-function? (alet (car (%=-value x))
+                             (? (%%native? !)
+                                (real-function-name .!.)
+                                !)))))
 
 (defun cps-splitpoint? (x)
   (| (number? x)
@@ -167,7 +167,7 @@
 
 (defun in-cps-wrapper? ()
   (!? (funinfo-topmost *funinfo*)
-      (transpiler-cps-wrapper? *transpiler* (funinfo-name !))))
+      (cps-wrapper? (funinfo-name !))))
 
 (defun cps-fun (x)
   (with-temporary *funinfo* (get-lambda-funinfo x)
@@ -175,7 +175,7 @@
       (?
         (eq 'apply (funinfo-name *funinfo*))
           (list (copy-lambda x :args (. '~%cont args)))
-        (transpiler-native-cps-function? *transpiler* (funinfo-name *funinfo*))
+        (native-cps-function? (funinfo-name *funinfo*))
           (list (copy-lambda x :args (. '~%cont args) :body (cps-passthrough body)))
         (funinfo-cps? *funinfo*)
           (with-temporary *cps-toplevel?* nil

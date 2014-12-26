@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defmacro define-c-std-macro (name args &body body)
   `(define-transpiler-std-macro *c-transpiler* ,name ,args ,@body))
@@ -28,7 +28,7 @@
      x))
 
 (defun c-fast-aref? (idx)
-  (& (not (transpiler-assert? *transpiler*))
+  (& (not (assert?))
      (sole? idx)))
 
 (define-c-std-macro =-aref (val arr &rest idx)

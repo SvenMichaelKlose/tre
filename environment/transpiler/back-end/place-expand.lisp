@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun make-scope-place-expr (fi var)
   (funinfo-add-free-var fi var)
@@ -31,7 +31,7 @@
             (funinfo-global-variable? fi x)))
       x
 
-    (& (transpiler-stack-locals? *transpiler*)
+    (& (stack-locals?)
        (eq x (funinfo-scope fi)))
       (place-expand-emit-stackplace fi x)
 
@@ -41,9 +41,9 @@
              ,(funinfo-name fi)
              ,x)
 
-    (| (& (transpiler-stack-locals? *transpiler*)
+    (| (& (stack-locals?)
           (funinfo-var? fi x))
-       (& (transpiler-arguments-on-stack? *transpiler*)
+       (& (arguments-on-stack?)
           (funinfo-arg? fi x)))
       (place-expand-emit-stackplace fi x)
 
@@ -79,7 +79,7 @@
   (%stackarg? x)        x)
 
 (defun place-expand (x)
-  (place-expand-0 (transpiler-global-funinfo *transpiler*) x))
+  (place-expand-0 (global-funinfo) x))
 
 (defun fake-place-expand (x)
   (place-expand x)

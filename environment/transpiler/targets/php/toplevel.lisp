@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defvar *php-native-environment*
         ,(apply #'+ (mapcar [fetch-file (+ "environment/transpiler/targets/php/environment/native/" _ ".php")]
@@ -31,10 +31,10 @@
   (format nil "?>~%"))
 
 (defun php-decl-gen ()
-  (backend (middleend (frontend (transpiler-compiled-inits *transpiler*)))))
+  (backend (middleend (frontend (compiled-inits)))))
 
 (defun php-frontend-init ()
-  (transpiler-add-defined-variable *transpiler* '*keyword-package*))
+  (add-defined-variable '*keyword-package*))
 
 (defun php-sections-before-deps (tr)
   `((base0 . ,*php-base0*)

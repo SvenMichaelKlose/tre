@@ -1,7 +1,7 @@
-;;;;; tré – Copyright (c) 2005–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun copy-arguments-to-vars (fi)
-  (& (transpiler-copy-arguments-to-stack? *transpiler*)
+  (& (copy-arguments-to-stack?)
      (mapcan [& (funinfo-var? fi _)
                 `((%= ,(place-assign (place-expand-0 fi _)) ,_))]
              (funinfo-local-args fi))))

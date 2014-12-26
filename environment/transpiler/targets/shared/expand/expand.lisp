@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defmacro define-shared-std-macro (targets &rest x)
   `(progn
@@ -7,34 +7,34 @@
 
 (define-shared-std-macro (js php) defvar-native (&rest x)
   (print-definition `(defvar-native ,@x))
-  (+! (transpiler-predefined-symbols *transpiler*) x)
-  (apply #'transpiler-add-obfuscation-exceptions *transpiler* x)
+  (+! (predefined-symbols) x)
+  (apply #'add-obfuscation-exceptions x)
   nil)
 
 (define-shared-std-macro (js php) dont-obfuscate (&rest symbols)
-  (apply #'transpiler-add-obfuscation-exceptions *transpiler* symbols)
+  (apply #'add-obfuscation-exceptions symbols)
   nil)
 
 (define-shared-std-macro (js php) declare-native-cps-function (&rest symbols)
   (print-definition `(declare-native-cps-function ,@symbols))
   (adolist symbols
-    (transpiler-add-native-cps-function *transpiler* !))
+    (add-native-cps-function !))
   nil)
 
 (define-shared-std-macro (js php) declare-cps-exception (&rest symbols)
   (print-definition `(declare-cps-exception ,@symbols))
   (adolist symbols
-    (transpiler-add-cps-exception *transpiler* !))
+    (add-cps-exception !))
   nil)
 
 (define-shared-std-macro (js php) declare-cps-wrapper (&rest symbols)
   (print-definition `(declare-cps-wrapper ,@symbols))
   (adolist symbols
-    (transpiler-add-cps-wrapper *transpiler* !))
+    (add-cps-wrapper !))
   nil)
 
 (define-shared-std-macro (js php) assert (x &optional (txt nil) &rest args)
-  (& (transpiler-assert? *transpiler*)
+  (& (assert?)
      (make-assertion x txt args)))
 
 (define-shared-std-macro (js php) functional (&rest x)
@@ -42,7 +42,7 @@
   (adolist x
     (? (transpiler-functional? *transpiler* !)
        (warn "Redefinition of functional ~A." !))
-    (transpiler-add-functional *transpiler* !))
+    (add-functional !))
   nil)
 
 (define-shared-std-macro (c js php) not (&rest x)
@@ -68,14 +68,13 @@
 (define-shared-std-macro (bc c js php) defvar (name &optional (val '%%no-value))
   (& (eq '%%no-value val)
      (= val `',name))
-  (let tr *transpiler*
-    (print-definition `(defvar ,name))
-    (& (transpiler-defined-variable tr name)
-       (redef-warn "redefinition of variable ~A.~%" name))
-    (transpiler-add-defined-variable tr name)
-    (& *have-compiler?*
-       (add-delayed-var-init `((= *variables* (. (. ',name ',val) *variables*)))))
-    `(progn
-       ,@(& (transpiler-needs-var-declarations? tr)
-            `((%var ,name)))
-	   (%= ,name ,val))))
+  (print-definition `(defvar ,name))
+  (& (defined-variable name)
+     (redef-warn "redefinition of variable ~A.~%" name))
+  (add-defined-variable name)
+  (& *have-compiler?*
+     (add-delayed-var-init `((= *variables* (. (. ',name ',val) *variables*)))))
+  `(progn
+     ,@(& (needs-var-declarations?)
+          `((%var ,name)))
+  (%= ,name ,val)))

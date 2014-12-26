@@ -1,7 +1,7 @@
-;;;;; tré – Copyright (c) 2010–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2010–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun translate-function-name (x)
-  (? (transpiler-defined-function *transpiler* x)
+  (? (defined-function x)
      (compiled-function-name x)
      x))
 

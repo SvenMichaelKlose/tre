@@ -314,8 +314,8 @@
                                          x)
 (transpiler-getter add-native-cps-function  (= (href (transpiler-native-cps-functions tr) x) t)
                                             x)
-(transpiler-getter macro? (| (expander-has-macro? (transpiler-std-macro-expander tr) x)
-                             (expander-has-macro? (transpiler-codegen-expander tr) x)))
+(transpiler-getter-not-global macro? (| (expander-has-macro? (transpiler-std-macro-expander tr) x)
+                                        (expander-has-macro? (transpiler-codegen-expander tr) x)))
 (transpiler-getter imported-variable? (& (transpiler-import-from-environment? tr)
                                          (transpiler-host-variable? tr x)))
 
@@ -323,10 +323,13 @@
   (= (href (transpiler-defined-functions tr) name) (. args body))
   name)
 
+(defun add-defined-function (name args body)
+  (transpiler-add-defined-function *transpiler* name args body))
+
 (define-slot-setter-push transpiler-add-exported-closure tr  (transpiler-exported-closures tr))
 (define-slot-setter-push transpiler-add-plain-arg-fun tr     (transpiler-plain-arg-funs tr))
 (define-slot-setter-push transpiler-add-emitted-decl tr      (transpiler-emitted-decls tr))
-(defun add-delayed-var-init (x) (nconc! (transpiler-delayed-var-inits *transpiler*) (copy-tree (frontend x))))
+(defun add-delayed-var-init (x) (nconc! (delayed-var-inits) (copy-tree (frontend x))))
 
 (defun transpiler-add-plain-arg-funs (tr lst)
   (adolist lst
@@ -334,11 +337,13 @@
 
 (defun transpiler-add-obfuscation-exceptions (tr &rest x)
   (adolist x
-	(= (href (transpiler-obfuscations tr) (make-symbol (symbol-name !)))
-	   t)))
+	(= (href (transpiler-obfuscations tr) (make-symbol (symbol-name !))) t)))
 
-(defun transpiler-add-late-symbol (tr x)
-  (= (href (transpiler-late-symbols tr) x) t)
+(defun add-obfuscation-exceptions (&rest x)
+  (apply #'transpiler-add-obfuscation-exceptions *transpiler* x))
+
+(defun add-late-symbol (x)
+  (= (href (late-symbols) x) t)
   x)
 
 (defun transpiler-macro (tr name)
@@ -348,8 +353,8 @@
 (defun make-global-funinfo (tr)
   (= (transpiler-global-funinfo tr) (create-funinfo :name 'global-scope :parent nil :args nil :body nil :transpiler tr)))
 
-(defun transpiler-package-symbol (tr x)
-  (make-symbol (symbol-name x) (transpiler-current-package tr)))
+(defun package-symbol (x)
+  (make-symbol (symbol-name x) (current-package)))
 
 (defun transpiler-add-functional (tr x)
   (= (href (transpiler-functionals tr) x) t))
@@ -358,44 +363,42 @@
   (href (transpiler-functionals tr) x))
 
 (defun transpiler-defined-symbol? (fi x)
-  (let tr *transpiler*
-    (| (funinfo-find fi x)
-       (function? x)
-       (keyword? x)
-       (member x (transpiler-predefined-symbols tr) :test #'eq)
-       (in? x nil t '~%ret 'this)
-       (transpiler-imported-variable? tr x)
-       (transpiler-defined-function tr x)
-       (transpiler-defined-variable tr x)
-       (transpiler-macro? tr x)
-       (transpiler-host-variable? tr x)
-       (transpiler-late-symbol? tr x)
-       (funinfo-var? (transpiler-global-funinfo tr) x))))
+  (| (funinfo-find fi x)
+     (function? x)
+     (keyword? x)
+     (member x (predefined-symbols) :test #'eq)
+     (in? x nil t '~%ret 'this)
+     (imported-variable? x)
+     (defined-function x)
+     (defined-variable x)
+     (transpiler-macro? *transpiler* x)
+     (host-variable? x)
+     (late-symbol? x)
+     (funinfo-var? (global-funinfo) x)))
 
 (defun current-transpiler-function-arguments (x)
-  (alet *transpiler*
-    (| (transpiler-function-arguments ! x)
-       (transpiler-host-function-arguments ! x)
-       (function-arguments (symbol-function x)))))
+  (| (transpiler-function-arguments *transpiler* x)
+     (host-function-arguments x)
+     (function-arguments (symbol-function x))))
 
 (defun transpiler-add-toplevel-expression (tr x)
   (push (copy-tree x) (transpiler-accumulated-toplevel-expressions tr)))
 
 (defun add-used-function (x)
-  (= (href (transpiler-used-functions *transpiler*) x) t)
+  (= (href (used-functions) x) t)
   x)
 
-(defun transpiler-configuration-item (tr x)
-  (alet (transpiler-configurations tr)
+(defun configuration-item (x)
+  (alet (transpiler-configurations)
     (| (assoc x ! :test #'eq)
        (error "Transpiler ~A has no configuration item ~A. Available items are ~A."
-              (transpiler-name tr) x (carlist !)))))
+              (name) x (carlist !)))))
 
-(defun transpiler-configuration (tr x)
-  (cdr (transpiler-configuration-item tr x)))
+(defun configuration (x)
+  (cdr (configuration-item x)))
 
-(defun (= transpiler-configuration) (value tr x)
-  (= (cdr (transpiler-configuration-item tr x)) value))
+(defun (= configuration) (value x)
+  (= (cdr (configuration-item x)) value))
 
 (defun transpiler-make-expex (tr)
   (funcall (transpiler-expex-initializer tr) (= (transpiler-expex tr) (make-expex))))

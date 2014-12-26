@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun js-gen-inherited-methods (class-name bases)
   (filter [`(hash-merge (slot-value ,class-name 'prototype)
@@ -45,7 +45,7 @@
 	              (%%%make-hash-table ,@(apply #'+ (carlist !)))))))
 
 (define-js-std-macro finalize-class (class-name)
-  (let classes (transpiler-thisify-classes *transpiler*)
+  (let classes (thisify-classes)
     (!? (href classes class-name)
 	    `(progn
 		   ,(assoc-value class-name *delayed-constructors*)

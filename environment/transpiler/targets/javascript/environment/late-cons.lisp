@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
 
 (declare-cps-exception car cdr cpr rplaca rplacd rplacp cons?)
 
@@ -22,7 +22,7 @@
 (defvar *rplacp-breakpoints* nil)
 
 (defmacro when-rplac-breakpoints (&body body)
-  (when (transpiler-configuration *transpiler* 'rplac-breakpoints)
+  (when (configuration 'rplac-breakpoints)
     body))
 
 (defun rplaca (x val)
