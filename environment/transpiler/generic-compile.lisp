@@ -4,7 +4,7 @@
 (defvar *t-symbol-name*   "T")
 
 (defun compile-section? (section processed-sections)
-  (| (member section (transpiler-sections-to-update *transpiler*))
+  (| (member section (sections-to-update))
      (not (assoc section processed-sections))))
 
 (defun accumulated-toplevel? (section)
@@ -12,8 +12,8 @@
 
 (defun map-section (x fun sections cached-sections)
   (with-cons section data x
-    (with-temporaries ((transpiler-current-section *transpiler*)       section
-                       (transpiler-current-section-data *transpiler*)  data)
+    (with-temporaries ((current-section)       section
+                       (current-section-data)  data)
       (. section (? (compile-section? section cached-sections)
                     (funcall fun section data)
                     (assoc-value section cached-sections))))))
@@ -36,8 +36,8 @@
 (defun generic-compile-2 (sections)
   (alet (map-sections #'codegen-section
                       sections
-                      (transpiler-compiled-files *transpiler*))
-    (= (transpiler-compiled-files *transpiler*) !)
+                      (compiled-files))
+    (= (compiled-files) !)
     (cdrlist !)))
 
 (defun generic-load (path)
@@ -56,20 +56,19 @@
 (defun generic-compile-1 (sections)
   (alet (map-sections #'frontend-section
                       sections
-                      (transpiler-frontend-files *transpiler*))
-    (= (transpiler-frontend-files *transpiler*) !)))
+                      (frontend-files))
+    (= (frontend-files) !)))
 
 (defun make-toplevel-function ()
   `((defun accumulated-toplevel ()
-      ,@(reverse (transpiler-accumulated-toplevel-expressions *transpiler*)))))
+      ,@(reverse (accumulated-toplevel-expressions)))))
 
 (defun generic-compile-accumulated-toplevels ()
-  (alet *transpiler*
-    (& (transpiler-accumulate-toplevel-expressions? !)
-       (transpiler-accumulated-toplevel-expressions !)
-       (with-temporary (transpiler-sections-to-update !) '(accumulated-toplevel)
-	     (backend (middleend (generic-compile-1 (list (. 'accumulated-toplevel
-                                                         #'make-toplevel-function)))))))))
+  (& (accumulate-toplevel-expressions?)
+     (accumulated-toplevel-expressions)
+     (with-temporary (sections-to-update) '(accumulated-toplevel)
+       (backend (middleend (generic-compile-1 (list (. 'accumulated-toplevel
+                                                       #'make-toplevel-function))))))))
 
 (defun tell-number-of-warnings ()
   (alet (length *warnings*)
@@ -78,66 +77,60 @@
             (? (zero? !) "No" !)
             (? (== 1 !) "" "s"))))
 
-(def-transpiler generic-codegen (transpiler before-deps deps after-deps)
+(defun generic-codegen (before-deps deps after-deps)
   (print-status "Let me think. Hmm...~F")
-  (!? middleend-init
+  (!? (middleend-init)
       (funcall !))
   (with (compiled-before  (generic-compile-2 before-deps)
          compiled-deps    (backend (middleend deps))
          compiled-after   (generic-compile-2 after-deps)
          compiled-acctop  (generic-compile-accumulated-toplevels))
     (!? compiled-deps
-        (= (transpiler-imported-deps transpiler) (transpiler-postprocess imported-deps !)))
-    (transpiler-postprocess (!? prologue-gen
-                                (funcall !))
-                            (!? decl-gen
-                                (funcall !))
+        (= (imported-deps) (transpiler-postprocess imported-deps !)))
+    (transpiler-postprocess (!? (prologue-gen) (funcall !))
+                            (!? decl-gen (funcall !))
                             compiled-before
-                            (reverse (transpiler-raw-decls transpiler))
-                            (transpiler-imported-deps transpiler)
+                            (reverse (raw-decls))
+                            (imported-deps)
                             compiled-after
                             compiled-acctop
-                            (!? epilogue-gen
-                                (funcall !)))))
+                            (!? (epilogue-gen) (funcall !)))))
 
 (defun section-data (x)
   (apply #'+ (cdrlist x)))
 
-(def-transpiler generic-compile-0 (transpiler sections)
-  (!? frontend-init
+(defun generic-compile-0 (sections)
+  (!? (frontend-init)
       (funcall !))
-  (with (before-deps  (generic-compile-1 (!? sections-before-deps
-                                             (funcall ! transpiler)))
-         after-deps   (generic-compile-1 (+ (!? sections-after-deps
-                                                (funcall ! transpiler))
+  (with (before-deps  (generic-compile-1 (!? (sections-before-deps) (funcall !)))
+         after-deps   (generic-compile-1 (+ (!? (sections-after-deps) (funcall !))
                                             sections
-                                            (!? ending-sections
-                                                (funcall ! transpiler))))
+                                            (!? (ending-sections) (funcall !))))
          deps         (import-from-environment))
-    (? (transpiler-frontend-only? transpiler)
+    (? (frontend-only?)
        (+ (section-data before-deps) deps (section-data after-deps))
-       (generic-codegen transpiler before-deps deps after-deps))))
+       (generic-codegen before-deps deps after-deps))))
 
-(def-transpiler print-transpiler-stats (transpiler start-time)
-  (& obfuscate?
-     print-obfuscations?
-     (transpiler-print-obfuscations transpiler))
-  (warn-unused-functions transpiler)
+(defun print-transpiler-stats (start-time)
+  (& (obfuscate?)
+     (print-obfuscations?)
+     (print-obfuscations))
+  (warn-unused-functions)
   (tell-number-of-warnings)
   (print-status "~A seconds passed.~%~F"
                 (integer (/ (- (nanotime) start-time) 1000000000))))
 
-(def-transpiler generic-compile (transpiler sections)
+(defun generic-compile (tr sections)
   (let start-time (nanotime)
     (= *warnings* nil)
-    (with-temporaries (*recompiling?*  (& sections-to-update t)
-                       *transpiler*    transpiler
-                       *assert*        (| *assert* assert?))
-      (& sections-to-update
-         (clr (transpiler-emitted-decls transpiler)))
+    (with-temporaries (*transpiler*    tr
+                       *recompiling?*  (& (sections-to-update) t)
+                       *assert*        (| *assert* (assert?)))
+      (& (sections-to-update)
+         (clr (emitted-decls)))
       (= (host-functions) (make-host-functions))
       (= (host-variables) (make-host-variables))
       (prog1
-        (generic-compile-0 transpiler sections)
-        (print-transpiler-stats transpiler start-time)
+        (generic-compile-0 sections)
+        (print-transpiler-stats start-time)
         (print-status "Phew!~%")))))
