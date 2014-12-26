@@ -73,11 +73,6 @@
           (literal-function? x)
           (in? x. '%%go '%%go-nil '%%native '%%string '%quote))))
 
-(defun expex-expandable-args? (fun)
-  (& (not (alien-package? fun))
-     (| (defined-function fun)
-        (not (plain-arg-fun? fun)))))
-
 
 ;;;; ARGUMENT EXPANSION
 
@@ -91,7 +86,7 @@
   (let argdef (| (funinfo-get-local-function-args *funinfo* fun)
                  (current-transpiler-function-arguments fun))
     (transpiler-expand-literal-characters
-	    (? (expex-expandable-args? fun)
+	    (? (defined-function fun)
    	       (expex-argument-expand fun argdef args)
 	       args))))
 
