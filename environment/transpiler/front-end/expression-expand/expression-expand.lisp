@@ -36,7 +36,7 @@
        (? (atom val)
           (expex-import-variable val)
           (adolist (.val)
-             (expex-import-variable !))))))
+            (expex-import-variable !))))))
 
 
 ;;;; GUEST CALLBACKS
@@ -83,25 +83,19 @@
 		  x))
 
 (defun expex-argexpand-0 (fun args)
-  (let argdef (| (funinfo-get-local-function-args *funinfo* fun)
-                 (current-transpiler-function-arguments fun))
-    (transpiler-expand-literal-characters
-	    (? (defined-function fun)
-   	       (expex-argument-expand fun argdef args)
-	       args))))
-
-(defun expex-function? (x)
-  (& (atom x)
-     (| (current-transpiler-function-arguments x)
-        (fbound? x))))
+  (transpiler-expand-literal-characters
+      (? (defined-function fun)
+         (expex-argument-expand fun
+                                (| (funinfo-get-local-function-args *funinfo* fun)
+                                    (current-transpiler-function-arguments fun))
+                                args)
+         args)))
 
 (defun expex-argexpand (x)
   (with (new?   (%new? x)
 		 fun    (? new? .x. x.)
 		 args   (? new? ..x .x)
-	     eargs  (? (expex-function? fun)
-	    	       (expex-convert-quotes (expex-argexpand-0 fun args))
-	    	       args))
+	     eargs  (expex-convert-quotes (expex-argexpand-0 fun args)))
 	`(,@(& new? '(%new)) ,fun ,@eargs)))
 
 
