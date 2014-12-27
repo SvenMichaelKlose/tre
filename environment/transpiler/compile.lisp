@@ -1,21 +1,18 @@
 ; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
-(defun compile-section? (section cached-sections)
+(defun update-section? (section cached-sections)
   (| (member section (sections-to-update))
      (not (assoc section cached-sections))))
 
 (defun accumulated-toplevel? (section)
   (not (eq 'accumulated-toplevel section)))
 
-(defun section-data (x)
-  (apply #'+ (cdrlist x)))
-
 (defun map-section (x fun sections cached-sections)
   (with-cons section data x
     (with-temporaries ((current-section)       section
                        (current-section-data)  data)
       (. section
-         (? (compile-section? section cached-sections)
+         (? (update-section? section cached-sections)
             (funcall fun section data)
             (assoc-value section cached-sections))))))
 
@@ -42,7 +39,7 @@
     (cdrlist !)))
 
 (defun quick-compile-sections (x)
-  (codegen (section-data (frontend-sections x))))
+  (codegen-sections (frontend-sections x)))
 
 (defun make-toplevel-function ()
   `((defun accumulated-toplevel ()
