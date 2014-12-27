@@ -31,7 +31,7 @@
   (format nil "?>~%"))
 
 (defun php-decl-gen ()
-  (backend (middleend (frontend (compiled-inits)))))
+  (codegen (frontend (compiled-inits))))
 
 (defun php-frontend-init ()
   (add-defined-variable '*keyword-package*))
