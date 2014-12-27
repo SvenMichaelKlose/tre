@@ -64,8 +64,7 @@
 
 (defun generate-imported-defvars (x)
   (mapcan [unless (defined-variable _)
-            (add-delayed-var-init `((= ,_ ,(assoc-value _ *variables* :test #'eq))))
-            `((defvar ,_ nil))]
+            `((defvar ,_ ,(assoc-value _ *variables* :test #'eq)))]
           x))
 
 (defun import-wanted-variables ()
