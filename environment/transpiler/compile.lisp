@@ -99,7 +99,7 @@
   (generic-codegen (frontend-sections (!? (sections-before-import)
                                           (funcall !)))
                    (frontend-sections (+ (!? (sections-after-import)
-                                         (funcall !))
+                                             (funcall !))
                                          sections
                                          (!? (ending-sections)
                                              (funcall !))))
@@ -131,7 +131,6 @@
     (= *warnings* nil)
     (with-temporaries (*transpiler*   (| transpiler
                                          (copy-transpiler *default-transpiler*))
-                       *recompiling?* (& (sections-to-update) t)
                        *assert*       (| *assert* (assert?)))
       (& (sections-to-update)
          (clr (emitted-decls)))

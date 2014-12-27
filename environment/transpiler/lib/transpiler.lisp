@@ -4,7 +4,6 @@
 (defvar *transpiler-log* nil)
 (defvar *default-transpiler* nil)
 
-(defvar *recompiling?* nil)
 (defvar *print-executed-functions?* nil)
 
 (defun make-host-functions ()
