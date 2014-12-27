@@ -64,22 +64,17 @@
   (print-status "Let me think. Hmm...~F")
   (!? (middleend-init)
       (funcall !))
-  (with (compiled-before   (codegen-sections before-import)
-         compiled-import     (codegen imports)
-         compiled-after    (codegen-sections after-import)
-         compiled-acctop   (codegen-accumulated-toplevels)
-         compiled-delayed  (codegen-delayed-exprs))
-    (!? compiled-import
-        (+! (imports) compiled-import))
-    (transpiler-postprocess (!? (prologue-gen) (funcall !))
-                            (!? (decl-gen) (funcall !))
-                            compiled-before
-                            (reverse (raw-decls))
-                            (imports)
-                            compiled-after
-                            compiled-acctop
-                            compiled-delayed
-                            (!? (epilogue-gen) (funcall !)))))
+  (!? (codegen imports)
+      (+! (imports) !))
+  (transpiler-postprocess (!? (prologue-gen) (funcall !))
+                          (!? (decl-gen) (funcall !))
+                          (codegen-sections before-import)
+                          (reverse (raw-decls))
+                          (imports)
+                          (codegen-sections after-import)
+                          (codegen-accumulated-toplevels)
+                          (codegen-delayed-exprs))
+                          (!? (epilogue-gen) (funcall !)))
 
 (defun frontend-section-load (path)
   (print-definition `(load ,path))
