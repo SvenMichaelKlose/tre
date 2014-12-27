@@ -46,12 +46,14 @@
      x))
 
 (defun make-lambdas (x)
-  (cond
-    ((atom x)                  (_-to-_ (&body-to-&rest x)))
-    ((eq 'quote (car x))       x)
-    ((function-expr? (car x))  (make-variable-function x))
-    ((function-expr? x)        (make-anonymous-function x))
-    (t (mapcar #'make-lambdas x))))
+  (labels ((f (x)
+             (cond
+               ((atom x)                  (&body-to-&rest x))
+               ((eq 'quote (car x))       x)
+               ((function-expr? (car x))  (make-variable-function x))
+               ((function-expr? x)        (make-anonymous-function x))
+               (t (mapcar #'f x)))))
+    (_-to-_ (f x))))
 
 (defun tre2cl (x)
   (make-lambdas (backquote-expand (early-macroexpand (car (backquote-expand (list x)))))))
