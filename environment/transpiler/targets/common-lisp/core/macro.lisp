@@ -19,7 +19,7 @@
      x))
 
 (defun macroexpand-0 (old x)
-  (? (%equal x old)
+  (? (equal x old)
      old
      (macroexpand x)))
 
