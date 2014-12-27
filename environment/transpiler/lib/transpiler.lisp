@@ -33,7 +33,6 @@
 
   std-macro-expander
   codegen-expander
-  separator
 
   (identifier-char?      [_ (identity t)])
   (literal-converter     #'identity)
@@ -189,7 +188,6 @@
         :sections-after-deps      sections-after-deps
         :ending-sections          ending-sections
         :codegen-expander         codegen-expander
-        :separator                separator
         :identifier-char?         identifier-char?
         :literal-converter        literal-converter
         :defined-functions        (copy-hash-table defined-functions)
