@@ -24,6 +24,7 @@
 (alet (copy-transpiler *cl-transpiler*)
   (= (transpiler-save-sources? !) nil)
   (with-output-file o "tre.lisp"
+    (princ "(declaim #+sbcl(sb-ext:muffle-conditions compiler-note style-warning))" o)
     (filter [late-print _ o]
             (let c (compile-sections (list (. 'core *cl-base*))
                                      :transpiler !)
