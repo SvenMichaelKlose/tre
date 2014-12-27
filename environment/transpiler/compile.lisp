@@ -1,8 +1,8 @@
 ; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
-(defun compile-section? (section processed-sections)
+(defun compile-section? (section cached-sections)
   (| (member section (sections-to-update))
-     (not (assoc section processed-sections))))
+     (not (assoc section cached-sections))))
 
 (defun accumulated-toplevel? (section)
   (not (eq 'accumulated-toplevel section)))
@@ -14,9 +14,10 @@
   (with-cons section data x
     (with-temporaries ((current-section)       section
                        (current-section-data)  data)
-      (. section (? (compile-section? section cached-sections)
-                    (funcall fun section data)
-                    (assoc-value section cached-sections))))))
+      (. section
+         (? (compile-section? section cached-sections)
+            (funcall fun section data)
+            (assoc-value section cached-sections))))))
 
 (defun map-sections (fun sections cached-sections)
   (filter [map-section _ fun sections cached-sections]
@@ -73,8 +74,8 @@
                           (imports)
                           (codegen-sections after-import)
                           (codegen-accumulated-toplevels)
-                          (codegen-delayed-exprs))
-                          (!? (epilogue-gen) (funcall !)))
+                          (codegen-delayed-exprs)
+                          (!? (epilogue-gen) (funcall !))))
 
 (defun frontend-section-load (path)
   (print-definition `(load ,path))
