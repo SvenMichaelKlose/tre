@@ -74,7 +74,7 @@
 
 (defun import-from-host ()
   (when (import-from-host?)
-    (print-status "Importing variables and named functions from environment...~%")
+    (print-status "Importing variables and named functions from host.~%")
     (with-temporary (save-argument-defs-only?) nil
       (with (funs     (import-wanted-functions)
              exported (import-exported-closures)
