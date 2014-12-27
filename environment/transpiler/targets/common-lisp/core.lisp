@@ -2,20 +2,16 @@
 
 ; Symbols directly imported from package CL-USER.
 (defconstant +cl-direct-imports+
-    '(nil t atom setq quote lambda
+    '(atom 
       cons car cdr rplaca rplacd
       apply function
-      progn block return return-from tagbody go
       mod sqrt sin cos atan exp round floor
       last copy-list nthcdr nth mapcar elt length make-string
       aref char-code
       make-package package-name find-package
       logxor bit-and
       print
-      list copy-list
-      &rest &body &optional &key
-      labels
-      *package*))
+      list copy-list))
 
 ; Functions we import from CL-USER, wrap and export to package TRE.
 (defconstant +cl-renamed-imports+
