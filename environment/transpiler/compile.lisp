@@ -20,17 +20,11 @@
   (filter [map-section _ fun sections cached-sections]
           sections))
 
-(defun development-message (fmt &rest args)
-  (when *development?*
-    (fresh-line)
-    (princ "; ")
-    (apply #'format t fmt args)))
-
 (defun codegen (x)
   (backend (middleend x)))
 
 (defun codegen-section (section data)
-  (development-message "Codegen ~A.~%" section)
+  (developer-note "Codegen ~A.~%" section)
   (codegen data))
 
 (defun codegen-sections (sections)
@@ -79,7 +73,7 @@
   (frontend (read-file path)))
 
 (defun frontend-section (section data)
-  (development-message "Frontend ~A.~%" section)
+  (developer-note "Frontend ~A.~%" section)
   (?
     (symbol? section)  (frontend (? (function? data)
                                     (funcall data)
