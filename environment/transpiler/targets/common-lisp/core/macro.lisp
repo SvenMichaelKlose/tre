@@ -1,7 +1,5 @@
 ; tré – Copyright (c) 2014 Sven Michael Klose <pixel@copei.de>
 
-(defvar *macros* nil)
-
 (defbuiltin macro? (x) (cl:rassoc x *macros* :test #'eq))
 
 (defun %%macrocall (x)

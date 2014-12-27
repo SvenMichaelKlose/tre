@@ -12,13 +12,13 @@
 
 (defvar *cl-base*
 	,(list 'quote (cl-load-base *cl-env-path*
+                                "global-variables.lisp"
                                 "defbuiltin.lisp"
                                 "array.lisp"
                                 "env-load.lisp"
                                 "eval.lisp"
                                 "file.lisp"
                                 "function.lisp"
-                                "global-variables.lisp"
                                 "hash-table.lisp"
                                 "image.lisp"
                                 "list.lisp"
