@@ -9,11 +9,12 @@
 (define-cl-std-macro %defun (name args &body body)
   (print-definition `(%defun ,name ,args))
   (add-defined-function name args body)
-  `(progn
+  `(cl:progn
      ,@(& (save-sources?)
-          `((push (. name ',(. args (& (not (save-argdefs-only?))
-                                       body)))
-                  *functions*)))
+          `((cl:push (. name
+                        ',(. args (& (not (save-argdefs-only?))
+                             body)))
+                     *functions*)))
      (cl:defun ,name ,args ,@body)
      ,@(& (save-sources?)
           `(cl:setf (cl:gethash #',name *function-atom-sources*)
@@ -26,16 +27,16 @@
   (print-definition `(%defmacro ,name ,args))
   `(cl:push (. ',name
                (. ',args
-                  #'(lambda ,(argument-expand-names 'define-cl-std-macro args)
+                  #'(cl:lambda ,(argument-expand-names 'define-cl-std-macro args)
                       ,@body)))
             *macros*))
 
 (define-cl-std-macro %defvar (name &optional (init nil))
   (print-definition `(%defvar ,name))
   (add-defined-variable name)
-  (add-delayed-expr `((progn
+  (add-delayed-expr `((cl:progn
                         ,@(& (save-sources?)
-                             `((push (. ',name ',init) *variables*)))
+                             `((cl:push (. ',name ',init) *variables*)))
                         (cl:defvar ,name ,init)))))
 
 (define-cl-std-macro defvar (&rest x) `(%defvar ,@x))
@@ -45,7 +46,7 @@
          end   (car (last tests)))
     (unless body
       (error "Body is missing."))
-    `(cond
+    `(cl:cond
        ,@(? (sole? end)
             (+ (butlast tests) (list (. t end)))
             tests))))
