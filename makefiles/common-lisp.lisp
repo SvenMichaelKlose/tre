@@ -5,7 +5,8 @@
       (:export :nil :t :setq :labels
                 ,@(make-keywords (+ +cl-direct-imports+
                                     (carlist +cl-renamed-imports+)
-                                    *cl-builtins*))))
+                                    *cl-builtins*
+                                    +cl-core-variables+))))
     (defpackage :tre
       (:use :tre-core))))
 
@@ -29,9 +30,9 @@
                              :transpiler !)
       (adolist ((cl-packages))
         (late-print ! o))
-      (late-print '(in-package :tre) o)
+      (late-print '(cl:in-package :tre-core) o)
       (adolist ((cl-wrappers))
         (princ ! o))
-      (filter [late-print _ o] c))))
-
+      (filter [late-print _ o] c)
+      (late-print '(cl:in-package :tre) o))))
 (quit)
