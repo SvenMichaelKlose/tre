@@ -19,17 +19,17 @@
   (:global *transpiler*)
   name
 
-  (sections-to-update    nil)
+  (sections-to-update      nil)
 
   frontend-init
-  (own-frontend          nil)
+  (own-frontend            nil)
   middleend-init
-  (prologue-gen          nil)
-  (epilogue-gen          nil)
-  (decl-gen              nil)
-  (sections-before-deps  nil)
-  (sections-after-deps   nil)
-  (ending-sections       nil)
+  (prologue-gen            nil)
+  (epilogue-gen            nil)
+  (decl-gen                nil)
+  (sections-before-import  nil)
+  (sections-after-import   nil)
+  (ending-sections         nil)
 
   std-macro-expander
   codegen-expander
@@ -65,7 +65,7 @@
 
   (obfuscate?               nil)
   (print-obfuscations?      nil)
-  (import-from-environment? t)
+  (import-from-host?        t)
   (import-variables?        t)
   (only-environment-macros? t)
   (save-sources?            nil)
@@ -134,7 +134,7 @@
   (compiled-decls           nil)
   (compiled-inits           nil)
   (emitted-decls            nil)
-  (imported-deps            nil)
+  (imports                  nil)
 
   (raw-decls                nil)
 
@@ -185,8 +185,8 @@
         :prologue-gen             prologue-gen
         :epilogue-gen             epilogue-gen
         :decl-gen                 decl-gen
-        :sections-before-deps     sections-before-deps
-        :sections-after-deps      sections-after-deps
+        :sections-before-import   sections-before-import
+        :sections-after-import    sections-after-import
         :ending-sections          ending-sections
         :codegen-expander         codegen-expander
         :identifier-char?         identifier-char?
@@ -209,7 +209,7 @@
         :inject-debugging?        inject-debugging?
         :obfuscate?               obfuscate?
         :print-obfuscations?      print-obfuscations?
-        :import-from-environment? import-from-environment?
+        :import-from-host?        import-from-host?
         :import-variables?        import-variables?
         :only-environment-macros? only-environment-macros?
         :save-sources?            save-sources?
@@ -260,7 +260,7 @@
         :compiled-decls           (copy-list compiled-decls)
         :compiled-inits           (copy-list compiled-inits)
         :emitted-decls            (copy-list emitted-decls)
-        :imported-deps            imported-deps
+        :imports                  imports
         :raw-decls                (copy-list raw-decls)
         :cached-frontend-sections (copy-alist cached-frontend-sections)
         :cached-output-sections   (copy-alist cached-output-sections)
@@ -318,7 +318,7 @@
                                             x)
 (transpiler-getter-not-global macro? (| (expander-has-macro? (transpiler-std-macro-expander tr) x)
                                         (expander-has-macro? (transpiler-codegen-expander tr) x)))
-(transpiler-getter imported-variable? (& (transpiler-import-from-environment? tr)
+(transpiler-getter imported-variable? (& (transpiler-import-from-host? tr)
                                          (transpiler-host-variable? tr x)))
 
 (defun transpiler-add-defined-function (tr name args body)

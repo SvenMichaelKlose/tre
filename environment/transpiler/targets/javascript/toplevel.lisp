@@ -34,7 +34,7 @@
 (defun gen-funinfo-inits ()
   (filter #'gen-funinfo-init (hash-alist (funinfos))))
 
-(defun js-sections-before-deps ()
+(defun js-sections-before-import ()
   `((essential-functions-0 . ,*js-base0*)
     ,@(& (not (exclude-base?))
          `((essential-functions-1 . ,*js-base*)
@@ -60,7 +60,7 @@
       (,(+ ! "late-macro.lisp"))
       (,(+ ! "eval.lisp")))))
 
-(defun js-sections-after-deps ()
+(defun js-sections-after-import ()
   `((late-symbol-function-assignments . ,#'emit-late-symbol-function-assignments)
     (memorized-source-emitter . ,#'js-emit-memorized-sources)
     ,@(& *have-compiler?*
@@ -79,8 +79,8 @@
       :prologue-gen             #'js-prologue
       :epilogue-gen             #'js-epilogue
       :decl-gen                 #'js-var-decls
-      :sections-before-deps     #'js-sections-before-deps
-      :sections-after-deps      #'js-sections-after-deps
+      :sections-before-import   #'js-sections-before-import
+      :sections-after-import    #'js-sections-after-import
 	  :lambda-export?           nil
 	  :stack-locals?            nil
 	  :needs-var-declarations?  t

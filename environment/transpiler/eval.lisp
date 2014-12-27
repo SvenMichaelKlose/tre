@@ -7,7 +7,7 @@
      (alet (copy-transpiler *bc-transpiler*)
        (transpiler-reset !)
        (clr (transpiler-only-environment-macros? !)
-            (transpiler-import-from-environment? !)
+            (transpiler-import-from-host? !)
             (transpiler-dump-passes? !)
             (expex-warnings? (transpiler-expex !)))
        (= *eval-transpiler* !))))

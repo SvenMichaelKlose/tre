@@ -60,22 +60,22 @@
        (quick-compile-sections (list (. 'accumulated-toplevel
                                         #'make-toplevel-function))))))
 
-(defun generic-codegen (before-deps deps after-deps)
+(defun generic-codegen (before-import imports after-import)
   (print-status "Let me think. Hmm...~F")
   (!? (middleend-init)
       (funcall !))
-  (with (compiled-before   (codegen-sections before-deps)
-         compiled-deps     (codegen deps)
-         compiled-after    (codegen-sections after-deps)
+  (with (compiled-before   (codegen-sections before-import)
+         compiled-import     (codegen imports)
+         compiled-after    (codegen-sections after-import)
          compiled-acctop   (codegen-accumulated-toplevels)
          compiled-delayed  (codegen-delayed-exprs))
-    (!? compiled-deps
-        (+! (imported-deps) compiled-deps))
+    (!? compiled-import
+        (+! (imports) compiled-import))
     (transpiler-postprocess (!? (prologue-gen) (funcall !))
                             (!? (decl-gen) (funcall !))
                             compiled-before
                             (reverse (raw-decls))
-                            (imported-deps)
+                            (imports)
                             compiled-after
                             compiled-acctop
                             compiled-delayed
@@ -117,12 +117,12 @@
 (defun generic-frontend (sections)
   (!? (frontend-init)
       (funcall !))
-  (with (before-deps  (frontend-sections (!? (sections-before-deps) (funcall !)))
-         after-deps   (frontend-sections (+ (!? (sections-after-deps) (funcall !))
+  (with (before-import  (frontend-sections (!? (sections-before-import) (funcall !)))
+         after-import   (frontend-sections (+ (!? (sections-after-import) (funcall !))
                                             sections
                                             (!? (ending-sections) (funcall !))))
-         deps         (import-from-environment))
-    (generic-codegen before-deps deps after-deps)))
+         imports        (import-from-host))
+    (generic-codegen before-import imports after-import)))
 
 (defun generic-compile (tr sections)
   (let start-time (nanotime)

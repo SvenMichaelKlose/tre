@@ -36,12 +36,12 @@
 (defun php-frontend-init ()
   (add-defined-variable '*keyword-package*))
 
-(defun php-sections-before-deps ()
+(defun php-sections-before-import ()
   `((base0 . ,*php-base0*)
     ,@(& (not (exclude-base?))
          `((base1 . ,*php-base*)))))
 
-(defun php-sections-after-deps ()
+(defun php-sections-after-import ()
   (+ (& (not (texclude-base?))
         `((base2 . ,*php-base2*)))
      (& (eq t *have-environment-tests*)
@@ -64,8 +64,8 @@
       :prologue-gen             #'php-prologue
       :epilogue-gen             #'php-epilogue
       :decl-gen                 #'php-decl-gen
-      :sections-before-deps     #'php-sections-before-deps
-      :sections-after-deps      #'php-sections-after-deps
+      :sections-before-import   #'php-sections-before-import
+      :sections-after-import    #'php-sections-after-import
       :lambda-export?           t
       :stack-locals?            nil
       :gen-string               [literal-string _ #\" (list #\$)]

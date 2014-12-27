@@ -32,7 +32,7 @@
 
 (defun can-import-variable? (x)
   (& (import-variables?)
-     (import-from-environment?)
+     (import-from-host?)
      x (symbol? x)
      (not (funinfo-find *funinfo* x)
           (defined-or-wanted? x))
@@ -72,15 +72,15 @@
     (print-note "Importing variables ~A.~%" !)
     (frontend (generate-imported-defvars !))))
 
-(defun import-from-environment ()
-  (when (import-from-environment?)
+(defun import-from-host ()
+  (when (import-from-host?)
     (print-status "Importing variables and named functions from environment...~%")
     (with-temporary (save-argument-defs-only?) nil
       (with (funs     (import-wanted-functions)
              exported (import-exported-closures)
              vars     (import-wanted-variables))
         (? (| funs exported vars)
-           (+ funs exported vars (import-from-environment))
+           (+ funs exported vars (import-from-host))
            (delayed-var-inits))))))
 
 (defun current-scope? (x)
