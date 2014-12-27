@@ -10,7 +10,8 @@
     (make-lambdas !)))
 
 (defun cl-sections-before-deps ()
-  (list (. 'cl-base *cl-base*)))
+  (unless (exclude-base?)
+    (list (. 'cl-base *cl-base*))))
 
 (defun make-cl-transpiler ()
   (create-transpiler
