@@ -51,26 +51,27 @@
     (error "Don't know what to do with section ~A." section)))
 
 (defun generic-compile-1 (sections)
-  (alet (map-sections #'frontend-section
-                      sections
-                      (frontend-files))
+  (alet (map-sections #'frontend-section sections (frontend-files))
     (= (frontend-files) !)))
+
+(defun quick-compile-sections (x)
+  (backend (middleend (apply #'+ (cdrlist (generic-compile-1 X))))))
 
 (defun make-toplevel-function ()
   `((defun accumulated-toplevel ()
       ,@(reverse (accumulated-toplevel-expressions)))))
 
 (defun generic-compile-delayed-exprs ()
-   (with-temporary (sections-to-update) '(delayed-exprs)
-     (backend (middleend (generic-compile-1 (list (. 'delayed-exprs
-                                                     (delayed-exprs))))))))
+  (with-temporary (sections-to-update) '(delayed-exprs)
+    (quick-compile-sections (list (. 'delayed-exprs
+                                     (delayed-exprs))))))
 
 (defun generic-compile-accumulated-toplevels ()
   (& (accumulate-toplevel-expressions?)
      (accumulated-toplevel-expressions)
      (with-temporary (sections-to-update) '(accumulated-toplevel)
-       (backend (middleend (generic-compile-1 (list (. 'accumulated-toplevel
-                                                       #'make-toplevel-function))))))))
+       (quick-compile-sections (list (. 'accumulated-toplevel
+                                        #'make-toplevel-function))))))
 
 (defun tell-number-of-warnings ()
   (alet (length *warnings*)
@@ -97,6 +98,7 @@
                             (imported-deps)
                             compiled-after
                             compiled-acctop
+                            compiled-delayed
                             (!? (epilogue-gen) (funcall !)))))
 
 (defun section-data (x)
