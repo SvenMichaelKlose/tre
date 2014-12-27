@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (declare-cps-exception make-symbol make-package symbol-name symbol-value symbol-function symbol-package symbol?)
 
@@ -12,25 +12,25 @@
 
 (defun symbol-name (x)
   (?
-    (%%%eq t x) ,*t-symbol-name*
+    (%%%eq t x)     "T"
     (%%%eq false x) "FALSE"
-    x x.n
-    ,*nil-symbol-name*))
+    x               x.n
+    "NIL"))
 
 (defun symbol-value (x)
   (?
-    (%%%eq t x) t
-    x x.v))
+    (%%%eq t x)  t
+    x            x.v))
 
 (defun symbol-function (x)
   (?
-    (%%%eq t x) nil
-    x x.f))
+    (%%%eq t x)  nil
+    x            x.f))
 
 (defun symbol-package (x)
   (?
-    (%%%eq t x) nil
-    x x.p))
+    (%%%eq t x)  nil
+    x            x.p))
 
 (defun symbol? (x)
   (| (not x)

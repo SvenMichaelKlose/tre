@@ -1,8 +1,5 @@
 ; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
-(defvar *nil-symbol-name* "NIL")
-(defvar *t-symbol-name*   "T")
-
 (defun compile-section? (section processed-sections)
   (| (member section (sections-to-update))
      (not (assoc section processed-sections))))
