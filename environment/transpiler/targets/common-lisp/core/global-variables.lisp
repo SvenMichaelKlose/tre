@@ -10,6 +10,8 @@
 (defvar *cpu-type* nil)
 (defvar *libc-path* nil)
 (defvar *rand-max* nil)
+(defvar *print-definitions?* nil)
+(defvar *default-stream-tabsize* 8)
 
 (defvar *quasiquoteexpand-hook* nil)
 (defvar *dotexpand-hook* nil)
