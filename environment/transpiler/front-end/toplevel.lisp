@@ -5,9 +5,7 @@
     rename-arguments          #'rename-arguments
     lambda-expand             #'lambda-expand
     fake-place-expand         #'fake-place-expand
-    fake-expression-expand    [(with-temporary *expex-import?* t
-                                 (expression-expand (make-packages _)))
-                               _])
+    fake-expression-expand    #'fake-expression-expand)
 
 (transpiler-pass frontend-1 ()
     file-input                #'identity
@@ -25,7 +23,9 @@
 
 (defun frontend (x)
   (remove-if #'not (mapcan [(= *default-listprop* nil)
-                            (frontend-0 (list _))]
+                            (funcall (| (own-frontend)
+                                        #'frontend-0)
+                                     (list _))]
                            x)))
 
 (defun frontend-macroexpansions (x)
