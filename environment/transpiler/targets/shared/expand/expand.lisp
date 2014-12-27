@@ -70,11 +70,11 @@
      (= val `',name))
   (print-definition `(defvar ,name))
   (& (defined-variable name)
-     (redef-warn "redefinition of variable ~A.~%" name))
+     (redef-warn "Redefinition of variable ~A.~%" name))
   (add-defined-variable name)
   (& *have-compiler?*
      (add-delayed-var-init `((= *variables* (. (. ',name ',val) *variables*)))))
   `(progn
      ,@(& (needs-var-declarations?)
           `((%var ,name)))
-  (%= ,name ,val)))
+     (%= ,name ,val)))
