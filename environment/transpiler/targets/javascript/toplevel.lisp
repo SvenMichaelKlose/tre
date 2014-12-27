@@ -16,7 +16,7 @@
 
 (defun js-emit-early-defined-functions ()
   (mapcar [`(push ',_ *functions*)]
-          (transpiler-memorized-sources *js-transpiler*)))
+          (memorized-sources)))
 
 (defun js-emit-memorized-sources ()
   (clr (memorize-sources?))
