@@ -60,6 +60,11 @@
   `((defun accumulated-toplevel ()
       ,@(reverse (accumulated-toplevel-expressions)))))
 
+(defun generic-compile-delayed-exprs ()
+   (with-temporary (sections-to-update) '(delayed-exprs)
+     (backend (middleend (generic-compile-1 (list (. 'delayed-exprs
+                                                     (delayed-exprs))))))))
+
 (defun generic-compile-accumulated-toplevels ()
   (& (accumulate-toplevel-expressions?)
      (accumulated-toplevel-expressions)
@@ -78,14 +83,15 @@
   (print-status "Let me think. Hmm...~F")
   (!? (middleend-init)
       (funcall !))
-  (with (compiled-before  (generic-compile-2 before-deps)
-         compiled-deps    (backend (middleend deps))
-         compiled-after   (generic-compile-2 after-deps)
-         compiled-acctop  (generic-compile-accumulated-toplevels))
+  (with (compiled-before   (generic-compile-2 before-deps)
+         compiled-deps     (backend (middleend deps))
+         compiled-after    (generic-compile-2 after-deps)
+         compiled-acctop   (generic-compile-accumulated-toplevels)
+         compiled-delayed  (generic-compile-delayed-exprs))
     (!? compiled-deps
-        (= (imported-deps) (transpiler-postprocess imported-deps !)))
+        (+! (imported-deps) compiled-deps))
     (transpiler-postprocess (!? (prologue-gen) (funcall !))
-                            (!? decl-gen (funcall !))
+                            (!? (decl-gen) (funcall !))
                             compiled-before
                             (reverse (raw-decls))
                             (imported-deps)
@@ -104,9 +110,7 @@
                                             sections
                                             (!? (ending-sections) (funcall !))))
          deps         (import-from-environment))
-    (? (frontend-only?)
-       (+ (section-data before-deps) deps (section-data after-deps))
-       (generic-codegen before-deps deps after-deps))))
+   (generic-codegen before-deps deps after-deps)))
 
 (defun print-transpiler-stats (start-time)
   (& (obfuscate?)
