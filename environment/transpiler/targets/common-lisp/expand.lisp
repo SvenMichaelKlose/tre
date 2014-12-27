@@ -37,3 +37,21 @@
      ,@(& (save-sources?)
           `((push (. ',name ',init) *variables*)))
      (cl:defvar ,name ,init)))
+
+(define-cl-std-macro ? (&body body)
+  (with (tests (group body 2)
+         end   (car (last tests)))
+    (unless body
+      (error "Body is missing."))
+    `(cond
+       ,@(? (sole? end)
+            (+ (butlast tests) (list (. t end)))
+            tests))))
+
+(define-cl-std-macro cond (&body body) `(cl:cond ,@body))
+(define-cl-std-macro progn (&body body) `(cl:progn ,@body))
+(define-cl-std-macro block (&body body) `(cl:block ,@body))
+(define-cl-std-macro return-from (&body body) `(cl:return-from ,@body))
+(define-cl-std-macro tagbody (&body body) `(cl:tagbody ,@body))
+(define-cl-std-macro go (&body body) `(cl:go ,@body))
+(define-cl-std-macro labels (&body body) `(cl:labels ,@body))
