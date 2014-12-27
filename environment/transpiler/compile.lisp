@@ -27,7 +27,7 @@
 (defun codegen-sections (sections)
   (alet (map-sections #'codegen-section sections (cached-output-sections))
     (= (cached-output-sections) !)
-    (cdrlist !)))
+    (apply #'+ (cdrlist !))))
 
 (defun quick-compile-sections (x)
   (codegen-sections (frontend-sections x)))
