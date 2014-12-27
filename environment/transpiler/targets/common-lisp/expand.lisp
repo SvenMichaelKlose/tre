@@ -33,10 +33,12 @@
 (define-cl-std-macro %defvar (name &optional (init nil))
   (print-definition `(%defvar ,name))
   (add-defined-variable name)
-  `(progn
-     ,@(& (save-sources?)
-          `((push (. ',name ',init) *variables*)))
-     (cl:defvar ,name ,init)))
+  (add-delayed-expr `((progn
+                        ,@(& (save-sources?)
+                             `((push (. ',name ',init) *variables*)))
+                        (cl:defvar ,name ,init)))))
+
+(define-cl-std-macro defvar (&rest x) `(%defvar ,@x))
 
 (define-cl-std-macro ? (&body body)
   (with (tests (group body 2)
