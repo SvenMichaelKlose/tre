@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2011–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2011–2014 Sven Michael Klose <pixel@copei.de>
 
 (defvar *eval-transpiler* nil)
 
@@ -21,8 +21,8 @@
 (defun late-eval (x)
   (with-gensym tmpfun
     (alet (make-eval-transpiler)
-      (clr (transpiler-frontend-files !)
-           (transpiler-compiled-files !)
+      (clr (transpiler-cached-frontend-sections !)
+           (transpiler-cached-output-sections !)
            (transpiler-raw-decls !))
       (with-mute-environment
         (load-bytecode (expr-to-code ! (compile-sections `((eval . ((defun ,tmpfun () ,x))))

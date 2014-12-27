@@ -37,8 +37,8 @@
     (codegen data)))
 
 (defun codegen-sections (sections)
-  (alet (map-sections #'codegen-section sections (compiled-files))
-    (= (compiled-files) !)
+  (alet (map-sections #'codegen-section sections (cached-output-sections))
+    (= (cached-output-sections) !)
     (cdrlist !)))
 
 (defun quick-compile-sections (x)
@@ -95,8 +95,8 @@
     (error "Don't know what to do with section ~A." section)))
 
 (defun frontend-sections (sections)
-  (alet (map-sections #'frontend-section sections (frontend-files))
-    (= (frontend-files) !)))
+  (alet (map-sections #'frontend-section sections (cached-frontend-sections))
+    (= (cached-frontend-sections) !)))
 
 (defun tell-number-of-warnings ()
   (alet (length *warnings*)

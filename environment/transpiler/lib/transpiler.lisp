@@ -141,9 +141,8 @@
   (identifiers              (make-hash-table :test #'eq))
   (converted-identifiers    (make-hash-table :test #'eq))
 
-  ; Recompiling
-  (frontend-files)
-  (compiled-files)
+  (cached-frontend-sections)
+  (cached-output-sections)
 
   (current-package          nil)
   
@@ -263,8 +262,8 @@
         :emitted-decls            (copy-list emitted-decls)
         :imported-deps            imported-deps
         :raw-decls                (copy-list raw-decls)
-        :frontend-files           (copy-alist frontend-files)
-        :compiled-files           (copy-alist compiled-files)
+        :cached-frontend-sections (copy-alist cached-frontend-sections)
+        :cached-output-sections   (copy-alist cached-output-sections)
         :current-package          current-package
         :identifiers              (copy-hash-table identifiers)
         :converted-identifiers    (copy-hash-table converted-identifiers)
