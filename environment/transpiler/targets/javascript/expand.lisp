@@ -35,7 +35,7 @@
 (defun emit-late-symbol-function-assignments ()
   (reverse *late-symbol-function-assignments*))
 
-(define-js-std-macro define-native-js-fun (name args &body body)
+(define-js-std-macro defnative (name args &body body)
   (js-make-late-symbol-function-assignment name)
   `(progn
      (%var ,(%defun-name name))

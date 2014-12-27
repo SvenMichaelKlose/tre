@@ -4,7 +4,7 @@
 
 (declare-cps-exception %symbol symbol =-symbol-function)
 
-(define-native-js-fun %symbol (name pkg)
+(defnative %symbol (name pkg)
   (= this.__class ,(obfuscated-identifier 'symbol)
      this.n name
      this.v this
@@ -12,7 +12,7 @@
      this.p (| pkg nil))
   this)
 
-(define-native-js-fun symbol (name pkg)
+(defnative symbol (name pkg)
   (unless (%%%== "NIL" name)
     (| (%%%== "T" name)
 	   (with (pkg-name     (? pkg pkg.n "NIL")
@@ -21,5 +21,5 @@
          (| (%%%aref symbol-table name)
             (%%%=-aref (new %symbol name pkg) symbol-table name))))))
 
-(define-native-js-fun =-symbol-function (v x)
+(defnative =-symbol-function (v x)
   (setq x.f v))

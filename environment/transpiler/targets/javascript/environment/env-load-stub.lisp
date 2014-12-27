@@ -1,3 +1,3 @@
-;;;;; tré - Copyright (c) 2011 Sven Klose <pixel@copei.de>
+; tré - Copyright (c) 2011,2014 Sven Michael Klose <pixel@hugbox.org>
 
-(define-native-js-fun env-load (&rest x))
+(defnative env-load (&rest x))

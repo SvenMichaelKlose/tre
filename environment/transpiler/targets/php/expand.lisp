@@ -3,7 +3,7 @@
 (defmacro define-php-std-macro (&rest x)
   `(define-transpiler-std-macro *php-transpiler* ,@x))
 
-(define-php-std-macro define-native-php-fun (name args &body body)
+(define-php-std-macro defnative (name args &body body)
   (shared-defun name args body))
 
 (define-php-std-macro eq (&rest x)

@@ -3,10 +3,10 @@
 (dont-obfuscate *symbol-values* *symbol-functions* *keyword-package*
                 __symbol n pn v f sv sf)
 
-(define-native-php-fun symbol (name pkg)
+(defnative symbol (name pkg)
   (unless (%%%== "NIL" name)
     (| (%%%== "T" name)
        (new __symbol name pkg))))
 
-(define-native-php-fun =-symbol-function (v x)
+(defnative =-symbol-function (v x)
   (x.sf v))
