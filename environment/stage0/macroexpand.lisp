@@ -1,5 +1,6 @@
-;;;;; tré – Copyright (c) 2006–2009,2012–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2006–2009,2012–2014 Sven Michael Klose <pixel@copei.de>
 
+(%defvar *macros* nil)
 (%defvar *macro?-diversion* nil)
 (%defvar *macrocall-diversion* nil)
 (%defvar *current-macro* nil)
