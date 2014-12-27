@@ -28,4 +28,6 @@
                                 _])
 
 (defun middleend (x)
-  (mapcan [middleend-0 (list _)] x))
+  (? (frontend-only?)
+     x
+     (mapcan [middleend-0 (list _)] x)))

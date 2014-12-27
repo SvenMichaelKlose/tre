@@ -1,7 +1,7 @@
 ; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun transpiler-postprocess (&rest x)
-  (apply (transpiler-postprocessor) x))
+  (apply (postprocessor) x))
 
 (transpiler-pass generate-code ()
     print-o                [(& *development?*
@@ -40,8 +40,9 @@
 	 (make-framed-functions x)))
 
 (defun backend-0 (x)
-  (generate-code (backend-prepare (list x))))
+  (? (frontend-only?)
+     x
+     (generate-code (backend-prepare (list x)))))
 
 (defun backend (x)
-  (& x
-     (transpiler-postprocess (filter #'backend-0 x))))
+  (& x (filter #'backend-0 x)))
