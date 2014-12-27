@@ -28,5 +28,4 @@
                                 "number.lisp"
                                 "object.lisp"
                                 "string.lisp"
-                                "symbol.lisp"
-                                "variable.lisp")))
+                                "symbol.lisp")))

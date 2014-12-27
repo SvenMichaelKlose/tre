@@ -3,8 +3,6 @@
 (defvar *functions* nil)
 (defvar *function-atom-sources* (make-hash-table :test #'eq))
 
-(push '*functions* *universe*)
-
 (defbuiltin function-native (x) x)
 
 (defbuiltin function-source (x)
