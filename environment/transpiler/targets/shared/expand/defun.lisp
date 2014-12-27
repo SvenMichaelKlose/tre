@@ -92,7 +92,7 @@
   (& (macro? name)
      (add-used-function name))
   (let fun-name (%defun-name name)
-    `(%%block
+    `(progn
        ,@(shared-defun-without-expander fun-name args body :allow-source-memorizer? t :allow-backtrace? t)
        ,@(when (& make-expander?
                   (| (always-expand-arguments?)
