@@ -4,9 +4,6 @@
   (| (member section (sections-to-update))
      (not (assoc section cached-sections))))
 
-(defun accumulated-toplevel? (section)
-  (not (eq 'accumulated-toplevel section)))
-
 (defun map-section (x fun sections cached-sections)
   (with-cons section data x
     (with-temporaries ((current-section)       section
