@@ -93,6 +93,18 @@
   (alet (map-sections #'frontend-section sections (cached-frontend-sections))
     (= (cached-frontend-sections) !)))
 
+(defun generic-frontend (sections)
+  (!? (frontend-init)
+      (funcall !))
+  (generic-codegen (frontend-sections (!? (sections-before-import)
+                                          (funcall !)))
+                   (frontend-sections (+ (!? (sections-after-import)
+                                         (funcall !))
+                                         sections
+                                         (!? (ending-sections)
+                                             (funcall !))))
+                   (import-from-host)))
+
 (defun tell-number-of-warnings ()
   (alet (length *warnings*)
     (fresh-line)
@@ -108,18 +120,6 @@
   (tell-number-of-warnings)
   (print-status "~A seconds passed.~%~F"
                 (integer (/ (- (nanotime) start-time) 1000000000))))
-
-(defun generic-frontend (sections)
-  (!? (frontend-init)
-      (funcall !))
-  (generic-codegen (frontend-sections (!? (sections-before-import)
-                                          (funcall !)))
-                   (frontend-sections (+ (!? (sections-after-import)
-                                         (funcall !))
-                                         sections
-                                         (!? (ending-sections)
-                                             (funcall !))))
-                   (import-from-host)))
 
 (define-filter wrap-strings-in-lists (x)
   (? (string? x)
