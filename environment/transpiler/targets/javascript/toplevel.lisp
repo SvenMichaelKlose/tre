@@ -2,7 +2,7 @@
 
 (defun nodejs-prologue ()
    (apply #'+ (filter [format nil "var ~A = require ('~A');~%" _ _]
-                      (configuration 'nodejs-requirements))))
+                      (configuration :nodejs-requirements))))
 
 (defun js-prologue ()
   (+ (format nil "// tré revision ~A~%" *tre-revision*)
@@ -42,7 +42,7 @@
                 `((debug-printing . ,*js-base-debug-print*)))
            (essential-functions-2 . ,*js-base2*)
            (standard-streams . ,(js-base-stream))
-           ,@(& (eq 'nodejs (configuration 'platform))
+           ,@(& (eq :nodejs (configuration :platform))
                 `((nodejs-base . ,(js-base-nodejs))))
            ,@(& (t? *have-environment-tests*)
                 `((environment-tests . ,(make-environment-tests))))))))
@@ -89,9 +89,9 @@
 	  :literal-converter        #'expand-literal-characters
       :expex-initializer        #'js-expex-initializer
       :ending-sections          #'js-ending-sections
-      :configurations           '((platform . browser)
-                                  (nodejs-requirements . nil)
-                                  (rplac-breakpoints . nil))))
+      :configurations           '((:platform . :browser)
+                                  (:nodejs-requirements . nil)
+                                  (:rplac-breakpoints . nil))))
 
 (defun make-javascript-transpiler ()
   (aprog1 (make-javascript-transpiler-0)

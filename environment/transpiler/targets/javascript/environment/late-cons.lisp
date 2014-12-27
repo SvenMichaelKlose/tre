@@ -22,7 +22,7 @@
 (defvar *rplacp-breakpoints* nil)
 
 (defmacro when-rplac-breakpoints (&body body)
-  (when (configuration 'rplac-breakpoints)
+  (when (configuration :rplac-breakpoints)
     body))
 
 (defun rplaca (x val)
