@@ -1,8 +1,7 @@
-;;;; tré – Copyright (c) 2005–2010,2012–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2010,2012–2014 Sven Michael Klose <pixel@copei.de>
 
 (env-load "transpiler/targets/javascript/argument-filter.lisp")
 (env-load "transpiler/targets/javascript/toplevel.lisp")
-(env-load "transpiler/targets/javascript/config.lisp")
 (env-load "transpiler/targets/javascript/expand.lisp")
 (env-load "transpiler/targets/javascript/expand-inline.lisp")
 (env-load "transpiler/targets/javascript/class.lisp")
