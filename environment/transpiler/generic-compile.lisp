@@ -60,7 +60,7 @@
        (quick-compile-sections (list (. 'accumulated-toplevel
                                         #'make-toplevel-function))))))
 
-(defun generic-codegen (before-import imports after-import)
+(defun generic-codegen (before-import after-import imports)
   (print-status "Let me think. Hmm...~F")
   (!? (middleend-init)
       (funcall !))
@@ -112,12 +112,14 @@
 (defun generic-frontend (sections)
   (!? (frontend-init)
       (funcall !))
-  (with (before-import  (frontend-sections (!? (sections-before-import) (funcall !)))
-         after-import   (frontend-sections (+ (!? (sections-after-import) (funcall !))
-                                            sections
-                                            (!? (ending-sections) (funcall !))))
-         imports        (import-from-host))
-    (generic-codegen before-import imports after-import)))
+  (generic-codegen (frontend-sections (!? (sections-before-import)
+                                          (funcall !)))
+                   (frontend-sections (+ (!? (sections-after-import)
+                                         (funcall !))
+                                         sections
+                                         (!? (ending-sections)
+                                             (funcall !))))
+                   (import-from-host)))
 
 (defun generic-compile (tr sections)
   (let start-time (nanotime)
