@@ -5,4 +5,4 @@
 
 (defbuiltin env-load (pathname &optional (target nil))
   (setq *environment-filenames* (cons (cons pathname target) *environment-filenames*))
-  (%load (string-concat *environment-path* "/environment/" pathname)))
+  (load (string-concat *environment-path* "/environment/" pathname)))
