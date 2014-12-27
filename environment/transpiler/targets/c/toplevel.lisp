@@ -123,6 +123,6 @@
       :expex-initializer        #'c-expex-initializer
       :backtrace?		        t))
 
-(defvar *c-transpiler* (copy-transpiler (make-c-transpiler)))
+(defvar *c-transpiler* (make-c-transpiler))
 (defvar *c-separator*  (+ ";" *newline*))
 (defvar *c-indent*     "    ")

@@ -97,6 +97,6 @@
   (aprog1 (make-javascript-transpiler-0)
     (transpiler-add-plain-arg-funs ! *builtins*)))
 
-(defvar *js-transpiler* (copy-transpiler (make-javascript-transpiler)))
+(defvar *js-transpiler* (make-javascript-transpiler))
 (defvar *js-separator*  (+ ";" *newline*))
 (defvar *js-indent*     "    ")

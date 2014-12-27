@@ -31,4 +31,4 @@
       :expex-initializer       #'cl-expex-initializer
       :postprocessor           #'cl-postprocessor))
 
-(defvar *cl-transpiler* (copy-transpiler (make-cl-transpiler)))
+(defvar *cl-transpiler* (make-cl-transpiler))

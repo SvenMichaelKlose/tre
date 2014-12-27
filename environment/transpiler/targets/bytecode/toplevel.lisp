@@ -19,4 +19,4 @@
               :postprocessor        #'tree-list)
     (transpiler-add-plain-arg-funs ! *builtins*)))
 
-(defvar *bc-transpiler* (copy-transpiler (make-bc-transpiler)))
+(defvar *bc-transpiler* (make-bc-transpiler))

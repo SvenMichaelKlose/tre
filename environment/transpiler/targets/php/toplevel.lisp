@@ -80,7 +80,7 @@
     (transpiler-add-defined-function ! 'phphash-hashkeys '(x) nil)
     (transpiler-add-plain-arg-funs ! *builtins*)))
 
-(defvar *php-transpiler* (copy-transpiler (make-php-transpiler)))
+(defvar *php-transpiler* (make-php-transpiler))
 (defvar *php-newline*    (format nil "~%"))
 (defvar *php-separator*  (format nil ";~%"))
 (defvar *php-indent*     "    ")
