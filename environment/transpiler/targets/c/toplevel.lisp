@@ -126,5 +126,3 @@
 (defvar *c-transpiler* (copy-transpiler (make-c-transpiler)))
 (defvar *c-separator*  (+ ";" *newline*))
 (defvar *c-indent*     "    ")
-
-(= *default-transpiler* *c-transpiler*)

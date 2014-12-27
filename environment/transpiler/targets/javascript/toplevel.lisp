@@ -98,7 +98,5 @@
     (transpiler-add-plain-arg-funs ! *builtins*)))
 
 (defvar *js-transpiler* (copy-transpiler (make-javascript-transpiler)))
-(| *default-transpiler*
-   (= *default-transpiler* *js-transpiler*))
 (defvar *js-separator*  (+ ";" *newline*))
 (defvar *js-indent*     "    ")
