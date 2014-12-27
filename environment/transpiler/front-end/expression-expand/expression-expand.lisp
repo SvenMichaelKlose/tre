@@ -230,7 +230,13 @@
 ;;;; TOPLEVEL
 
 (defun expression-expand (x)
-  (with-temporary *expex* (transpiler-expex *transpiler*)
-    (& x
-       (= *expex-sym-counter* 0)
-       (expex-body x))))
+  (& x
+     (with-temporary *expex* (transpiler-expex *transpiler*)
+       (with-global-funinfo
+         (= *expex-sym-counter* 0)
+         (expex-body x)))))
+
+(defun fake-expression-expand (x)
+  (with-temporary *expex-import?* t
+    (expression-expand (make-packages x)))
+  x)
