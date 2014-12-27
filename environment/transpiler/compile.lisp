@@ -32,9 +32,8 @@
   (backend (middleend x)))
 
 (defun codegen-section (section data)
-  (development-message "Codegen ~A~%" section)
-  (with-temporary (accumulate-toplevel-expressions?) (not (accumulated-toplevel? section))
-    (codegen data)))
+  (development-message "Codegen ~A.~%" section)
+  (codegen data))
 
 (defun codegen-sections (sections)
   (alet (map-sections #'codegen-section sections (cached-output-sections))
@@ -56,7 +55,8 @@
 (defun codegen-accumulated-toplevels ()
   (& (accumulate-toplevel-expressions?)
      (accumulated-toplevel-expressions)
-     (with-temporary (sections-to-update) '(accumulated-toplevel)
+     (with-temporaries ((sections-to-update) '(accumulated-toplevel)
+                        (accumulate-toplevel-expressions?) nil)
        (quick-compile-sections (list (. 'accumulated-toplevel
                                         #'make-toplevel-function))))))
 
@@ -81,7 +81,7 @@
   (frontend (read-file path)))
 
 (defun frontend-section (section data)
-  (development-message "Frontend ~A~%" section)
+  (development-message "Frontend ~A.~%" section)
   (?
     (symbol? section)  (frontend (? (function? data)
                                     (funcall data)
