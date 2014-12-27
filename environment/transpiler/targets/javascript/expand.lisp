@@ -45,8 +45,8 @@
    `(,@(unless (eq g '~%tfun)
          `((%var ,g)))
      (%= ,g (symbol ,(obfuscated-symbol-name sym)
-                       ,(!? (symbol-package sym)
-                            `(make-package ,(obfuscated-symbol-name !)))))))
+                    ,(!? (symbol-package sym)
+                         `(make-package ,(obfuscated-symbol-name !)))))))
 
 (define-js-std-macro defun (name args &body body)
   (with (dname (apply-current-package (transpiler-package-symbol *js-transpiler* (%defun-name name)))
