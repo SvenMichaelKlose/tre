@@ -29,14 +29,11 @@
   (!? (expex-variable-name x)
       (add-wanted-variable !)))
 
-(defun expex-import-variables (place val)
+(defun expex-import-variables (val)
   (& *expex-import?*
-     (when (import-variables?)
-       (expex-import-variable place)
-       (? (atom val)
-          (expex-import-variable val)
-          (adolist (.val)
-            (expex-import-variable !))))))
+     (import-variables?)
+     (adolist (.val)
+       (expex-import-variable !))))
 
 
 ;;;; GUEST CALLBACKS
@@ -137,6 +134,7 @@
 ;;;; MOVING ARGUMENTS
 
 (defun expex-filter-and-move-args (x)
+  (expex-import-variables x)
   (with ((moved new-expr) (assoc-splice (filter #'expex-move (expex-guest-filter-arguments x))))
     (values (apply #'+ moved) new-expr)))
 
@@ -169,7 +167,7 @@
     (values moved `((%%go-nil ,.x. ,@new-expr)))))
 
 (defun expex-expr-%=-0 (place val)
-  (expex-import-variables place val)
+  (expex-import-variable place)
   (with ((moved new-expr) (expex-move-args (list val)))
     (values moved (expex-make-%= place new-expr.))))
 
