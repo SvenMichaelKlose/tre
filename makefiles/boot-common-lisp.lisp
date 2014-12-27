@@ -23,6 +23,8 @@
              +cl-renamed-imports+)))
 
 (alet (copy-transpiler *cl-transpiler*)
+  (with-temporary *transpiler* !
+    (add-defined-variable '*macros*))
   (= (transpiler-save-sources? !) nil)
   (with-output-file o "boot-common.lisp"
     (format o "(declaim #+sbcl(sb-ext:muffle-conditions compiler-note style-warning))~%")
