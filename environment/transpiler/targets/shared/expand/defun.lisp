@@ -1,16 +1,16 @@
 ; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun collect-symbols (x)
-  (with (ret (make-queue)
-  		 rec [& _
-    			(? (& (symbol? _)
-					  (empty-string? (symbol-name _)))
-        		   (enqueue ret _)
-        		   (when (cons? _)
-          		     (rec _.)
-          		     (rec ._)))])
-	(rec x)
-	(queue-list ret)))
+  (with-queue q
+    (with (f    [& _
+                   (? (& (symbol? _)
+                         (empty-string? (symbol-name _)))
+                      (enqueue ret _)
+                      (when (cons? _)
+                        (f _.)
+                        (f ._)))])
+      (f x)
+      (queue-list q))))
 
 (defvar *allow-redefinitions?* nil)
 
@@ -41,7 +41,7 @@
      body))
 
 (defun shared-defun-memorize-source (name args body)
-  (acons! name (cons args body) (memorized-sources))
+  (acons! name (. args body) (memorized-sources))
   nil)
 
 (defun shared-defun-source-setter (name args body)
@@ -93,7 +93,9 @@
      (add-used-function name))
   (let fun-name (%defun-name name)
     `(progn
-       ,@(shared-defun-without-expander fun-name args body :allow-source-memorizer? t :allow-backtrace? t)
+       ,@(shared-defun-without-expander fun-name args body
+                                        :allow-source-memorizer? t
+                                        :allow-backtrace? t)
        ,@(when (& make-expander?
                   (| (always-expand-arguments?)
                      (not (simple-argument-list? args))))
