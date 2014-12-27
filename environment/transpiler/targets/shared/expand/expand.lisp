@@ -59,8 +59,7 @@
 (define-shared-std-macro (bc c cl js php) defmacro (&rest x)
   (print-definition `(defmacro ,x. ,.x.))
   (eval (macroexpand `(define-transpiler-std-macro *transpiler* ,@x)))
-  (& *have-compiler?*
-     `(define-std-macro ,@x)))
+  `(%defmacro ,@x))
 
 (define-shared-std-macro (bc c js php) defconstant (&rest x)
   `(defvar ,@x))
