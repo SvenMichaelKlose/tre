@@ -22,6 +22,7 @@
   (sections-to-update    nil)
 
   frontend-init
+  (own-frontend          nil)
   middleend-init
   (prologue-gen          nil)
   (epilogue-gen          nil)
@@ -179,6 +180,7 @@
         :name                     name
         :sections-to-update       (copy-list sections-to-update)
         :frontend-init            frontend-init
+        :own-frontend             own-frontend
         :middleend-init           middleend-init
         :prologue-gen             prologue-gen
         :epilogue-gen             epilogue-gen
