@@ -75,7 +75,7 @@
 
 (defun make-javascript-transpiler-0 ()
   (create-transpiler
-      :name                     'js
+      :name                     :js
       :prologue-gen             #'js-prologue
       :epilogue-gen             #'js-epilogue
       :decl-gen                 #'js-var-decls

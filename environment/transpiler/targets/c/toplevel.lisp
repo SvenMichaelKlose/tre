@@ -109,7 +109,7 @@
 
 (defun make-c-transpiler ()
   (create-transpiler
-      :name                     'c
+      :name                     :c
       :prologue-gen             #'c-header-includes
       :decl-gen                 #'c-decl-gen
       :sections-before-import   #'(()
