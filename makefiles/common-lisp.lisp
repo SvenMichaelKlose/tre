@@ -3,7 +3,8 @@
 (defun cl-packages ()
   `((defpackage :tre-core
       (:export :nil :t :setq :labels
-                ,@(make-keywords (+ (carlist +cl-renamed-imports+)
+                ,@(make-keywords (+ +cl-direct-imports+
+                                    (carlist +cl-renamed-imports+)
                                     *cl-builtins*))))
     (defpackage :tre
       (:use :tre-core))))
@@ -28,7 +29,7 @@
                                      :transpiler !)
               (+ (cl-packages)
                  '((in-package :tre-core))
-                 c)))
+                 (make-lambdas c))))
     (adolist ((cl-wrappers))
       (princ ! o))))
 
