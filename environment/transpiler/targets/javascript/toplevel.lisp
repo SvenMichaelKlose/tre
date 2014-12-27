@@ -42,7 +42,7 @@
                 `((debug-printing . ,*js-base-debug-print*)))
            (essential-functions-2 . ,*js-base2*)
            (standard-streams . ,(js-base-stream))
-           ,@(& (eq 'nodejs (configuration 'environment))
+           ,@(& (eq 'nodejs (configuration 'platform))
                 `((nodejs-base . ,(js-base-nodejs))))
            ,@(& (t? *have-environment-tests*)
                 `((environment-tests . ,(make-environment-tests))))))))
@@ -89,7 +89,7 @@
 	  :literal-converter        #'expand-literal-characters
       :expex-initializer        #'js-expex-initializer
       :ending-sections          #'js-ending-sections
-      :configurations           '((environment       . browser)
+      :configurations           '((platform . browser)
                                   (nodejs-requirements . nil)
                                   (rplac-breakpoints . nil))))
 

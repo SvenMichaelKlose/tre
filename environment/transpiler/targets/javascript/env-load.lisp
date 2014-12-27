@@ -81,7 +81,7 @@
 (defun js-base-stream ()
   (+ ,(list 'quote (js-load-base *js-env-path* "error.lisp"))
      ,(list 'quote (js-load-base *js-env-path* "../../../../stage3/stream.lisp"))
-     (when (eq 'browser (configuration 'environment))
+     (when (eq 'browser (configuration 'platform))
        ,(list 'quote (js-load-base *js-env-path* "%force-output.lisp")))
      ,(list 'quote (js-load-base *js-env-path* "standard-stream.lisp"))
      ,(list 'quote (js-load-base *js-env-path* "../../../environment/print.lisp"))))
