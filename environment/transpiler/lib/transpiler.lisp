@@ -116,6 +116,7 @@
   (plain-arg-funs           nil)
   (late-symbols             (make-hash-table :test #'eq))
   (exported-closures        nil)
+  (delayed-exprs            nil)
   (delayed-var-inits        nil)
   (dot-expand?              t)
   (memorized-sources        nil)
@@ -133,7 +134,7 @@
   (compiled-decls           nil)
   (compiled-inits           nil)
   (emitted-decls            nil)
-  (imported-deps            "")
+  (imported-deps            nil)
 
   (raw-decls                nil)
 
@@ -167,6 +168,7 @@
      (transpiler-identifiers tr)            (make-hash-table :test #'eq)
      (transpiler-converted-identifiers tr)  (make-hash-table :test #'eq)
      (transpiler-exported-closures tr)      nil
+     (transpiler-delayed-exprs tr)          nil
      (transpiler-delayed-var-inits tr)      nil
      (transpiler-memorized-sources tr)      nil
      (transpiler-memorize-sources? tr)      t)
@@ -243,6 +245,7 @@
         :plain-arg-funs           (copy-list plain-arg-funs)
         :late-symbols             (copy-hash-table late-symbols)
         :exported-closures        (copy-list exported-closures)
+        :delayed-exprs            (copy-list delayed-exprs)
         :delayed-var-inits        (copy-list delayed-var-inits)
         :dot-expand?              dot-expand?
         :memorized-sources        (copy-list memorized-sources)
@@ -329,7 +332,14 @@
 (define-slot-setter-push transpiler-add-exported-closure tr  (transpiler-exported-closures tr))
 (define-slot-setter-push transpiler-add-plain-arg-fun tr     (transpiler-plain-arg-funs tr))
 (define-slot-setter-push transpiler-add-emitted-decl tr      (transpiler-emitted-decls tr))
-(defun add-delayed-var-init (x) (nconc! (delayed-var-inits) (copy-tree (frontend x))))
+
+(defun add-delayed-expr (x)
+  (+! (delayed-exprs) (frontend x))
+  nil)
+
+(defun add-delayed-var-init (x)
+  (+! (delayed-var-inits) (frontend x))
+  nil)
 
 (defun transpiler-add-plain-arg-funs (tr lst)
   (adolist lst
