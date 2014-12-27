@@ -217,13 +217,13 @@ environment)
 	(echo "(compile-c-environment)" | $TRE | tee boot.log) || exit 1
 	;;
 
-core-sbcl)
+core)
     echo "(load \"cl/main.lisp\")" | sbcl --noinform
 	;;
 
 boot)
     git checkout -- cl/generated-from-environment.lisp
-	./make.sh core-sbcl $ARGS || exit 1
+	./make.sh core $ARGS || exit 1
 	./make.sh ctests $ARGS || exit 1
 	;;
 
