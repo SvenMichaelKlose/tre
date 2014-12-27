@@ -26,7 +26,7 @@
   (with-output-file o "tre.lisp"
     (princ "(declaim #+sbcl(sb-ext:muffle-conditions compiler-note style-warning))" o)
     (filter [late-print _ o]
-            (let c (compile-sections (list (. 'core *cl-base*))
+            (let c (compile-sections (list (. 'core nil))
                                      :transpiler !)
               (+ (cl-packages)
                  '((in-package :tre-core))

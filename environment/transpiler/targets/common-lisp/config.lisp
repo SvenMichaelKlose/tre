@@ -9,15 +9,19 @@
     (fake-expression-expand (fake-place-expand (lambda-expand (rename-arguments (backquote-expand (compiler-macroexpand !))))))
     (make-lambdas !)))
 
+(defun cl-sections-before-deps ()
+  (list (. 'cl-base *cl-base*)))
+
 (defun make-cl-transpiler ()
   (create-transpiler
-      :name               :common-lisp
-      :frontend-only?     t
-      :import-variables?  t
-      :lambda-export?     nil
-      :stack-locals?      nil
-      :frontend-init      #'(() (= *cl-builtins* nil))
-      :own-frontend       #'cl-frontend
-      :expex-initializer  #'cl-expex-initializer))
+      :name                  :common-lisp
+      :frontend-only?        t
+      :import-variables?     t
+      :lambda-export?        nil
+      :stack-locals?         nil
+      :sections-before-deps  #'cl-sections-before-deps
+      :frontend-init         #'(() (= *cl-builtins* nil))
+      :own-frontend          #'cl-frontend
+      :expex-initializer     #'cl-expex-initializer))
 
 (defvar *cl-transpiler* (copy-transpiler (make-cl-transpiler)))
