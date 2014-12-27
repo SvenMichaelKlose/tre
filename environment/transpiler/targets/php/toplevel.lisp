@@ -36,13 +36,13 @@
 (defun php-frontend-init ()
   (add-defined-variable '*keyword-package*))
 
-(defun php-sections-before-deps (tr)
+(defun php-sections-before-deps ()
   `((base0 . ,*php-base0*)
-    ,@(& (not (transpiler-exclude-base? tr))
+    ,@(& (not (exclude-base?))
          `((base1 . ,*php-base*)))))
 
-(defun php-sections-after-deps (tr)
-  (+ (& (not (transpiler-exclude-base? tr))
+(defun php-sections-after-deps ()
+  (+ (& (not (texclude-base?))
         `((base2 . ,*php-base2*)))
      (& (eq t *have-environment-tests*)
         (list (cons 'env-tests (make-environment-tests))))))

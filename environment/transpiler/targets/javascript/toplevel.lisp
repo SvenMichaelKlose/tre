@@ -34,11 +34,11 @@
 (defun gen-funinfo-inits ()
   (filter #'gen-funinfo-init (hash-alist (funinfos))))
 
-(defun js-sections-before-deps (tr)
+(defun js-sections-before-deps ()
   `((essential-functions-0 . ,*js-base0*)
-    ,@(& (not (transpiler-exclude-base? tr))
+    ,@(& (not (exclude-base?))
          `((essential-functions-1 . ,*js-base*)
-           ,@(& (transpiler-assert? tr)
+           ,@(& (assert?)
                 `((debug-printing . ,*js-base-debug-print*)))
            (essential-functions-2 . ,*js-base2*)
            (standard-streams . ,(js-base-stream))
@@ -60,7 +60,7 @@
       (,(+ ! "late-macro.lisp"))
       (,(+ ! "eval.lisp")))))
 
-(defun js-sections-after-deps (tr)
+(defun js-sections-after-deps ()
   `((late-symbol-function-assignments . ,#'emit-late-symbol-function-assignments)
     (memorized-source-emitter . ,#'js-emit-memorized-sources)
     ,@(& *have-compiler?*

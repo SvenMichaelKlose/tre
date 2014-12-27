@@ -199,8 +199,8 @@
 (defun c-builtin-argdef (x)
   (href *c-builtin-argdefs* x))
 
-(defun c-make-builtin-wrappers (tr)
-  (& (transpiler-backtrace? tr)
+(defun c-make-builtin-wrappers ()
+  (& (backtrace?)
      (filter [alet (c-builtin-argdef _)
                `(defun ,_ ,!
                   (,(make-symbol (c-builtin-name _))

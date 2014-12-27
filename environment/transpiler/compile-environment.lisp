@@ -2,9 +2,10 @@
 
 (defun %environment-transpiler (tr funs)
   (aprog1 (copy-transpiler tr)
-    (add-wanted-functions ! (| (!? funs
+    (with-temporary *transpiler* !
+      (add-wanted-functions (| (!? funs
                                    (ensure-list !))
-                               (carlist (+ *functions* *macros*))))))
+                                 (carlist (+ *functions* *macros*)))))))
 
 (defun compile-c-environment (&optional (funs nil))
   (put-file "environment/transpiler/targets/c/native/_compiled-env.c"

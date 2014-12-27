@@ -16,7 +16,7 @@
       :name                     'c
       :prologue-gen             #'c-header-includes
       :decl-gen                 #'c-decl-gen
-      :sections-before-deps     [list (. 'builtin-wrappers (c-make-builtin-wrappers _))]
+      :sections-before-deps     #'(() (list (. 'builtin-wrappers (c-make-builtin-wrappers))))
       :lambda-export?           t
       :stack-locals?            t
       :copy-arguments-to-stack? t
