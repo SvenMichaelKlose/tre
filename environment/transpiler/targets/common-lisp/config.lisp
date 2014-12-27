@@ -4,6 +4,10 @@
   (= (expex-argument-filter ex) #'identity
      (expex-setter-filter ex)   #'identity))
 
+(defun cl-frontend (x)
+  (aprog1 (transpiler-macroexpand (quasiquote-expand (dot-expand x)))
+    (fake-expression-expand (fake-place-expand (lambda-expand (rename-arguments (backquote-expand (compiler-macroexpand !))))))))
+
 (defun make-cl-transpiler ()
   (create-transpiler
       :name               :common-lisp
@@ -12,7 +16,8 @@
       :lambda-export?     nil
       :stack-locals?      nil
       :frontend-init      #'(() (= *cl-builtins* nil))
+      :own-frontend       #'cl-frontend
       :expex-initializer  #'cl-expex-initializer
-      :postprocessor      #'tre2cl))
+      :postprocessor      #'make-lambdas))
 
 (defvar *cl-transpiler* (copy-transpiler (make-cl-transpiler)))

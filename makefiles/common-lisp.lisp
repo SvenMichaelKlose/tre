@@ -30,7 +30,7 @@
                                      :transpiler !)
               (+ (cl-packages)
                  '((in-package :tre-core))
-                 (make-lambdas c))))
+                 c)))
     (adolist ((cl-wrappers))
       (princ ! o))))
 
