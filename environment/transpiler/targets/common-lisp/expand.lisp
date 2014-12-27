@@ -40,6 +40,7 @@
                         (cl:defvar ,name ,init)))))
 
 (define-cl-std-macro defvar (&rest x) `(%defvar ,@x))
+(define-cl-std-macro defconstant (&rest x) `(%defvar ,@x))
 
 (define-cl-std-macro ? (&body body)
   (with (tests (group body 2)
