@@ -27,7 +27,7 @@
     (t (cl:mapcar #'make-lambdas x))))
 
 (defun tre2cl (x)
-  (make-lambdas (backquote-expand (early-macroexpand (car (backquote-expand (list x)))))))
+  (make-lambdas (backquote-expand (native-macroexpand (car (backquote-expand (list x)))))))
 
 (defbuiltin eval (x)
   (cl:eval (tre2cl x)))
