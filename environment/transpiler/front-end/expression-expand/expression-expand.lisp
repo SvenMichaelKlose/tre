@@ -29,10 +29,10 @@
   (!? (expex-variable-name x)
       (add-wanted-variable !)))
 
-(defun expex-import-variables (val)
+(defun expex-import-variables (x)
   (& *expex-import?*
      (import-variables?)
-     (adolist (.val)
+     (adolist x
        (expex-import-variable !))))
 
 
