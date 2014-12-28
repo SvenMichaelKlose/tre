@@ -1,5 +1,11 @@
 ; tré – Copyright (c) 2014 Sven Michael Klose <pixel@copei.de>
 
+(defun make-%defun-quiet (name args body)
+  `(cl:progn
+     (cl:push (. ',name ',(. args body)) *functions*)
+     (cl:defun ,name ,args ,@body)
+     (cl:setf (cl:gethash #',name *function-atom-sources*) ',(. args body))))
+
 (defmacro define-cl-std-macro (name args &body body)
   `(define-transpiler-std-macro *cl-transpiler* ,name ,args ,@body))
 
@@ -27,7 +33,8 @@
 
 (define-cl-std-macro defspecial (name args &body body)
   (print-definition `(defspecial ,name ,args))
-  (add-delayed-expr `((cl:push (. ',name (. ',args #'(cl:lambda ,(argument-expand-names 'defspecial args)
+  (add-delayed-expr `((cl:push (. (make-symbol ,(symbol-name name) "TRE")
+                                  (. ',args #'(cl:lambda ,(argument-expand-names 'defspecial args)
                                                        ,@body)))
                                *macros*))))
 

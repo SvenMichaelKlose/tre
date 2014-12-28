@@ -5,7 +5,9 @@
     (apply .! (cdrlist (argument-expand x. !. .x)))))
 
 (defun %%macro? (x)
-  (assoc x *macros* :test #'eq))
+  (& (cons? x)
+     (symbol? x.)
+     (assoc x. *macros* :test #'eq)))
 
 (defun specialexpand (x)
   (with (f #'((old x)
@@ -15,14 +17,11 @@
     (f x (native-macroexpand x))))
 
 (defspecial %defun-quiet (name args &body body)
-  `(cl:progn
-     (cl:push (. ',name ',(. args body)) *functions*)
-     (cl:defun ,name ,args ,@body)
-     (cl:setf (cl:gethash #',name *function-atom-sources*) ',(. args body))))
+  (make-%defun-quiet name args body))
 
 (defspecial %defun (name args &body body)
   (print-definition `(%defun ,name ,args))
-  `(%defun-quiet ,name ,args ,@body))
+  (make-%defun-quiet name args body))
 
 (defspecial %defmacro (name args &body body)
   (print-definition `(%defmacro ,name ,args))
