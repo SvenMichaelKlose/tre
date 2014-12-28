@@ -86,7 +86,7 @@
 (defun expex-argexpand-0 (fun args)
   (expand-literal-characters
       (? (defined-function fun)
-         (expex-argument-expand fun (expex-argdef fun) args)
+         (argument-expand-values fun (expex-argdef fun) args)
          args)))
 
 (defun expex-argexpand (x)

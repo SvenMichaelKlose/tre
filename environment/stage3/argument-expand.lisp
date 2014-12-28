@@ -1,7 +1,7 @@
 ;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
-(defun argument-rest-keyword? (x)     (in? x '&rest '&body))
-(defun argument-keyword? (x)          (in? x '&rest '&body '&optional '&key))
+(defun argument-rest-keyword? (x)     (in? x (make-symbol "&REST" "TRE") (make-symbol "&BODY" "TRE")))
+(defun argument-keyword? (x)          (in? x (make-symbol "&REST" "TRE") (make-symbol "&BODY" "TRE") (make-symbol "&OPTIONAL" "TRE") (make-symbol "&KEY" "TRE")))
 (defun argument-name? (x)             (atom x))
 (defun argument-name (x)              x)
 
@@ -29,7 +29,7 @@
 
 		 copy-def-until-&key
 		   [when _
-		     (? (eq '&key _.)
+		     (? (eq (make-symbol "&KEY" "TRE") _.)
 				(make-&key-descr ._)
 				(. _. (copy-def-until-&key ._)))])
 
@@ -106,9 +106,9 @@
          exp-optional-rest
 		   #'((def vals)
 		        (case def. :test #'eq
-				  '&rest     (exp-rest def vals)
-				  '&body     (exp-rest def vals)
-				  '&optional (exp-optional .def vals)))
+				  (make-symbol "&REST" "TRE")     (exp-rest def vals)
+				  (make-symbol "&BODY" "TRE")     (exp-rest def vals)
+				  (make-symbol "&OPTIONAL" "TRE") (exp-optional .def vals)))
 
 		 exp-sub
 		   #'((def vals)
@@ -154,3 +154,11 @@
 
 (defun argument-expand-names (fun def)
   (argument-expand fun def nil :apply-values? nil))
+
+(defun argument-expand-values (fun def vals)
+  (with (f [& _ `(. ,_. ,(f ._))])
+    (filter [? (& (cons? _)
+                  (argument-rest-keyword? _.))
+               (f ._)
+               _]
+            (cdrlist (argument-expand fun def vals)))))
