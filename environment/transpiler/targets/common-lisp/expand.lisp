@@ -41,6 +41,7 @@
             (+ (butlast tests) (list (. t end)))
             tests))))
 
+(define-cl-std-macro setq (&body body) `(cl:setq ,@body))
 (define-cl-std-macro cond (&body body) `(cl:cond ,@body))
 (define-cl-std-macro progn (&body body) `(cl:progn ,@body))
 (define-cl-std-macro block (&body body) `(cl:block ,@body))
