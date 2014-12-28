@@ -2,7 +2,7 @@
 
 (defun cl-packages ()
   `((defpackage :tre-core
-      (:export :nil :t :setq :labels
+      (:export :nil :t
                 ,@(make-keywords (+ +cl-direct-imports+
                                     (carlist +cl-renamed-imports+)
                                     *cl-builtins*
