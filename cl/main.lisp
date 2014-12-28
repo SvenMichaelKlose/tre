@@ -14,5 +14,4 @@
 
 (in-package :tre)
 
-(env-load "stage0/main.lisp")
 (env-load "main.lisp") 
