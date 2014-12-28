@@ -43,7 +43,7 @@
                                          ,@body)))
                                *macros*))))
 
-(define-cl-std-macro ? (&body body)
+(defun make-? (body)
   (with (tests (group body 2)
          end   (car (last tests)))
     (unless body
@@ -52,6 +52,9 @@
        ,@(? (sole? end)
             (+ (butlast tests) (list (. t end)))
             tests))))
+
+(define-cl-std-macro ? (&body body)
+  (make-? body))
 
 (define-cl-std-macro setq (&body body) `(cl:setq ,@body))
 (define-cl-std-macro cond (&body body) `(cl:cond ,@body))

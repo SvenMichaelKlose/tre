@@ -43,3 +43,4 @@
 (defspecial tagbody (&body body) `(cl:tagbody ,@body))
 (defspecial go (&body body) `(cl:go ,@body))
 (defspecial labels (&body body) `(cl:labels ,@body))
+(defspecial ? (&body body) (make-? body))

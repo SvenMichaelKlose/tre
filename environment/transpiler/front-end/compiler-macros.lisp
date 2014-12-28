@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2006–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2006–2014 Sven Michael Klose <pixel@copei.de>
 
 (defvar *tagbody-replacements*)
 
@@ -82,15 +82,18 @@
   `(%%block ,@(filter [`(%= ,_. ,._.)]
                       (group args 2))))
 
-(define-compiler-macro ? (&body body)
+(defun make-? (body)
   (with (tests (group body 2)
-		 end   (car (last tests)))
+         end   (car (last tests)))
     (unless body
       (error "Body is missing."))
-    `(cond
-        ,@(? (sole? end)
-			 (+ (butlast tests) (list (. t end)))
-			 tests))))
+    `(cl:cond
+       ,@(? (sole? end)
+            (+ (butlast tests) (list (. t end)))
+            tests))))
+
+(define-compiler-macro ? (&body body)
+  (make-? body))
 
 ; XXX the expression expansion should be redone from scratch and then it should be able to deal with this.
 (defun compress-%%blocks (body)
