@@ -2,7 +2,7 @@
 
 (defun %%macrocall (x)
   (alet (cdr (assoc x. *macros* :test #'eq))
-    (apply .! (argument-expand-values x. !.) .x)))
+    (apply .! (argument-expand-values x. !. .x))))
 
 (defun %%macro? (x)
   (& (cons? x)
