@@ -34,4 +34,4 @@
   (make-lambdas (backquote-expand (specialexpand (car (backquote-expand (list x)))))))
 
 (defbuiltin eval (x)
-  (cl:eval (print (tre2cl x))))
+  (cl:eval (tre2cl x)))
