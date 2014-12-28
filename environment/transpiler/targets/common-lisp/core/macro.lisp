@@ -2,6 +2,15 @@
 
 (defbuiltin macro? (x) (cl:rassoc x *macros* :test #'eq))
 
+(defbuiltin %%macrocall (x)
+  (alet (cdr (assoc x. (symbol-value (make-symbol "*MACROS*" "TRE")) :test #'eq))
+        (apply .! (cdrlist (argument-expand x. !. .x)))))
+
+(defbuiltin %%macro? (x)
+  (& (cons? x)
+     (symbol? x.)
+     (assoc x. (symbol-value (make-symbol "*MACROS*" "TRE")) :test #'eq)))
+
 (defvar *macroexpand-hook* nil)
 
 (defbuiltin macroexpand-1 (x)
