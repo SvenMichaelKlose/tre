@@ -1,11 +1,11 @@
 ; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
-(defun js-gen-inherited-methods (class-name bases)
+(defun js-gen-inherit-methods (class-name bases)
   (filter [`(hash-merge (slot-value ,class-name 'prototype)
                         (slot-value ,_ 'prototype))]
           bases))
 
-(defun js-gen-inherited-constructor-calls (bases)
+(defun js-gen-inherit-constructor-calls (bases)
   (filter [`((slot-value ,_ 'CALL) this)]
           bases))
 
@@ -14,9 +14,9 @@
     `(progn
        (defun ,class-name ,args
          (%thisify ,class-name
-;           ,@(js-gen-inherited-constructor-calls bases)
+;           ,@(js-gen-inherit-constructor-calls bases)
            ,@body))
-       ,@(js-gen-inherited-methods class-name bases)
+       ,@(js-gen-inherit-methods class-name bases)
        (declare-cps-exception ,($ class-name '?))
 	   (defun ,($ class-name '?) (x)
 	     (%%native x " instanceof " ,(compiled-function-name-string class-name))))))

@@ -13,7 +13,7 @@
       (? bases
          (let bc (href classes bases.)
            (make-class :members (class-members bc)
-                       :parent bc));:methods (class-methods bc)))
+                       :parent bc))
          (make-class)))
 	(acons! cname
 			(funcall constructor-maker cname bases args body)
@@ -23,14 +23,15 @@
 (defun generic-defmethod (class-name name args &body body)
   (print-definition `(defmethod ,class-name ,name ,@(awhen args (list !))))
   (!? (href (thisify-classes) class-name)
-      (let code (list args body)  ;(append (head-if #'atom body :but-last t)
-                                  ;        (tail-after-atoms body :keep-last t)))
+      (let code (list args body)
         (? (assoc name (class-methods !))
            (progn
              (= (assoc-value name (class-methods !)) code)
-             (warn "In class '~A': member '~A' already defined." class-name name))
+             (warn "In class '~A': member '~A' already defined."
+                   class-name name))
            (acons! name code (class-methods !))))
-      (error "Definition of method ~A: class ~A is not defined." name class-name))
+      (error "Definition of method ~A: class ~A is not defined."
+             name class-name))
   nil)
 
 (defun generic-defmember (class-name &rest names)
