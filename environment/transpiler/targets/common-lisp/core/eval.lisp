@@ -20,7 +20,11 @@
 
 (defun make-lambdas (x)
   (cond
-    ((atom x)           x)
+    ((atom x)           (? (symbol? x)
+                           (? (equal "&BODY" (symbol-name x))
+                              (make-symbol (symbol-name x) "TRE")
+                              x)
+                           x))
     ((eq 'quote x.)     x)
     ((lambda-expr? x.)  (make-variable-function x))
     ((lambda-expr? x)   (make-anonymous-function x))
@@ -30,4 +34,4 @@
   (make-lambdas (backquote-expand (specialexpand (car (backquote-expand (list x)))))))
 
 (defbuiltin eval (x)
-  (cl:eval (tre2cl x)))
+  (cl:eval (print (tre2cl x))))

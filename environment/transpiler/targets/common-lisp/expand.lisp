@@ -34,8 +34,13 @@
 (define-cl-std-macro defspecial (name args &body body)
   (print-definition `(defspecial ,name ,args))
   (add-delayed-expr `((cl:push (. (make-symbol ,(symbol-name name) "TRE")
-                                  (. ',args #'(cl:lambda ,(argument-expand-names 'defspecial args)
-                                                       ,@body)))
+                                  (. (list ,@(filter [? (& (not (eq t _))
+                                                           (symbol? _))
+                                                        `(make-symbol ,(symbol-name _) "TRE")
+                                                        `',_]
+                                                     args))
+                                     #'(cl:lambda ,(argument-expand-names 'defspecial args)
+                                         ,@body)))
                                *macros*))))
 
 (define-cl-std-macro ? (&body body)
