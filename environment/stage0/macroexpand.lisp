@@ -48,8 +48,7 @@
     (apply *macrocall-diversion* (list x))))
 
 (%defun %macroexpand-call (x)
-  (? (? (atom x.)
-        (apply *macro?-diversion* (list x)))
+  (? (apply *macro?-diversion* (list x))
      (%macroexpand-xlat x)
      x))
 
@@ -61,10 +60,6 @@
     (eq x. 'QUASIQUOTE)        (. 'QUASIQUOTE (%macroexpand .x))
     (eq x. 'QUASIQUOTE-SPLICE) (. 'QUASIQUOTE-SPLICE (%macroexpand .x))
     (%macroexpand-call (%macroexpand-rest x))))
-
-(%defun %%macro? (x)
-  (? (symbol? x.)
-     (%%%macro? x.)))
 
 (%defun %%env-macro? (x)
   (%%macro? x))

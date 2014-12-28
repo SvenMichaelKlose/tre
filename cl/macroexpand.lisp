@@ -30,7 +30,7 @@
 
 (defun %macroexpand-call (x)
   (? (and (symbol? (car x))
-          (%%%macro? (car x)))
+          (%%macro? x))
      (%%macrocall x)
      x))
 

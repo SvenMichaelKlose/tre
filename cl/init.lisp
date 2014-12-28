@@ -59,7 +59,7 @@
       %make-hash-table href =-href copy-hash-table hashkeys hremove hash-table?
       ? functional
       builtin? macro?
-      %%macrocall %%%macro?
+      %%macrocall %%macro?
       %princ %force-output
       %fopen %fclose %read-char
       quit sys-image-create tre2cl

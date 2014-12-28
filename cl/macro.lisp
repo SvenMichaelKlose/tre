@@ -4,7 +4,8 @@
 
 (defvar *macros* nil)
 
-(defun macro? (x) (rassoc x *macros* :test #'eq))
+(defun macro? (x)
+  (rassoc x *macros* :test #'eq))
 
 (defmacro %defmacro (name args &body body)
   (print `(%defmacro ,name ,args))
@@ -18,7 +19,9 @@
   (alet (cdr (assoc (car x) *macros* :test #'eq))
     (apply (cdr !) (cdrlist (argument-expand (car x) (car !) (cdr x))))))
 
-(defun %%%macro? (x)
-  (assoc x *macros* :test #'eq))
+(defun %%macro? (x)
+  (and (consp x)
+       (symbolp (car x))
+       (assoc (car x) *macros* :test #'eq)))
 
 (defun %equal (a b) (equal a b))
