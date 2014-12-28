@@ -2,13 +2,6 @@
 
 (defbuiltin macro? (x) (cl:rassoc x *macros* :test #'eq))
 
-(defun %%macrocall (x)
-  (alet (cdr (cl:assoc x. *macros* :test #'eq))
-    (cl:apply .! (cdrlist (argument-expand x. !. .x)))))
-
-(defun %%%macro? (x)
-  (assoc x *macros* :test #'eq))
-
 (defvar *macroexpand-hook* nil)
 
 (defbuiltin macroexpand-1 (x)

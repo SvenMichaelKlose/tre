@@ -1,8 +1,22 @@
 ; tré – Copyright (c) 2014 Sven Michael Klose <pixel@copei.de>
 
+(defun %%macrocall (x)
+  (alet (cdr (assoc x. *macros* :test #'eq))
+    (apply .! (cdrlist (argument-expand x. !. .x)))))
+
+(defun %%macro? (x)
+  (assoc x *macros* :test #'eq))
+
+(defun specialexpand (x)
+  (with (f #'((old x)
+               (? (equal old x)
+                  x
+                  (specialexpand x))))
+    (f x (native-macroexpand x))))
+
 (defspecial %defun-quiet (name args &body body)
   `(cl:progn
-     (cl:push (. name ',(. args body)) *functions*)
+     (cl:push (. ',name ',(. args body)) *functions*)
      (cl:defun ,name ,args ,@body)
      (cl:setf (cl:gethash #',name *function-atom-sources*) ',(. args body))))
 
