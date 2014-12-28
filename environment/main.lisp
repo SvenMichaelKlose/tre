@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
 
 (env-load "stage1/main.lisp")
 (env-load "stage2/main.lisp")
@@ -9,8 +9,6 @@
 ;(& *tre-has-math*       (env-load "math/main.lisp"))
 ;(& *tre-has-alien*      (env-load "alien/main.lisp" :c))
 (when *tre-has-class*   (env-load "oo/class.lisp"))
-;                        (env-load "oo/ducktype.lisp")
-;                        (env-load "oo/ducktype-test.lisp")
 (env-load "transpiler/main.lisp")
 
 (env-load "read-eval-loop.lisp")
