@@ -6,7 +6,7 @@
   (cl:intern x (? package
                   (? (cl:packagep package)
                      (cl:package-name package)
-                     x)
+                     package)
                   "TRE")))
 
 (defbuiltin symbol-name (x)
