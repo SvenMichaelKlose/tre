@@ -27,7 +27,7 @@
 
 (define-cl-std-macro defspecial (name args &body body)
   (print-definition `(defspecial ,name ,args))
-  (add-delayed-expr `((cl:push (. ',name (. ',args #'(cl:lambda ,(argument-expand-names '%defmacro args)
+  (add-delayed-expr `((cl:push (. ',name (. ',args #'(cl:lambda ,(argument-expand-names 'defspecial args)
                                                        ,@body)))
                                *macros*))))
 
