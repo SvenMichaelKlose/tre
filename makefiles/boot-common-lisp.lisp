@@ -2,11 +2,10 @@
 
 (defun cl-packages ()
   `((defpackage :tre-core
-      (:export :nil :t
-                ,@(make-keywords (+ +cl-direct-imports+
-                                    (carlist +cl-renamed-imports+)
-                                    *cl-builtins*
-                                    +cl-core-variables+))))
+      (:export ,@(make-keywords (+ +cl-direct-imports+
+                                   (carlist +cl-renamed-imports+)
+                                   *cl-builtins*
+                                   +cl-core-variables+))))
     (defpackage :tre
       (:use :tre-core))))
 
@@ -41,5 +40,6 @@
         (princ ! o))
       (filter [late-print _ o] c)
       (late-print '(cl:in-package :tre) o)
+      (princ "(cl:defconstant t cl:t)" o)
       (late-print '(env-load "main.lisp") o))))
 (quit)
