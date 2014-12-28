@@ -1,4 +1,8 @@
-;;;;; tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
+
+; !!! This is just preparing the launch of
+; !!! "environment/transpiler/targets/common-lisp" and
+; !!! "makefiles/boot-common.lisp".
 
 (defun tre-expansions (x)
   (backquote-expand (quasiquote-expand (macroexpand (dot-expand x)))))
