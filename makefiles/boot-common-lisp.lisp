@@ -40,6 +40,7 @@
         (princ ! o))
       (filter [late-print _ o] c)
       (late-print '(cl:in-package :tre) o)
+      (princ "(cl:defconstant nil cl:nil)" o)
       (princ "(cl:defconstant t cl:t)" o)
       (late-print '(env-load "main.lisp") o))))
 (quit)
