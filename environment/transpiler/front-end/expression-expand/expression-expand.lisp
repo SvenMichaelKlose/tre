@@ -73,6 +73,14 @@
 
 ;;;; ARGUMENT EXPANSION
 
+(defun argument-expand-values-compiled (fun def vals)
+  (with (f [& _ `(. ,_. ,(f ._))])
+    (filter [? (& (cons? _)
+                  (argument-rest-keyword? _.))
+               (f ._)
+               _]
+            (cdrlist (argument-expand fun def vals)))))
+
 (defun expex-convert-quotes (x)
   (filter [? (quote? _)
 		     `(%quote ,._.)
@@ -86,7 +94,7 @@
 (defun expex-argexpand-0 (fun args)
   (expand-literal-characters
       (? (defined-function fun)
-         (argument-expand-values fun (expex-argdef fun) args)
+         (argument-expand-values-compiled fun (expex-argdef fun) args)
          args)))
 
 (defun expex-argexpand (x)

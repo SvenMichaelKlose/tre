@@ -156,9 +156,8 @@
   (argument-expand fun def nil :apply-values? nil))
 
 (defun argument-expand-values (fun def vals)
-  (with (f [& _ `(. ,_. ,(f ._))])
-    (filter [? (& (cons? _)
-                  (argument-rest-keyword? _.))
-               (f ._)
-               _]
-            (cdrlist (argument-expand fun def vals)))))
+  (filter [? (& (cons? _)
+                (argument-rest-keyword? _.))
+             ._
+             _]
+          (cdrlist (argument-expand fun def vals))))
