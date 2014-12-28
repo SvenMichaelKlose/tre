@@ -2,7 +2,7 @@
 
 (defun %%macrocall (x)
   (alet (cdr (assoc x. *macros* :test #'eq))
-    (apply .! (cdrlist (argument-expand x. !. .x)))))
+    (apply .! (argument-expand-values x. !.) .x)))
 
 (defun %%macro? (x)
   (& (cons? x)
@@ -29,7 +29,7 @@
                (. ',args
                   #'(cl:lambda ,(argument-expand-names '%defmacro args)
                       ,@body)))
-            *macros*))
+            ,(make-symbol "*MACROS*" "TRE")))
 
 (defspecial %defvar (name &optional (init nil))
   (print-definition `(%defvar ,name))

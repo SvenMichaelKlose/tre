@@ -4,7 +4,7 @@
 
 (defbuiltin %%macrocall (x)
   (alet (cdr (assoc x. (symbol-value (make-symbol "*MACROS*" "TRE")) :test #'eq))
-        (apply .! (cdrlist (argument-expand x. !. .x)))))
+        (apply .! (argument-expand-values x. !. .x))))
 
 (defbuiltin %%macro? (x)
   (& (cons? x)
