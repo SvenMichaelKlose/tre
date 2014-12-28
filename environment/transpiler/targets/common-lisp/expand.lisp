@@ -6,41 +6,30 @@
 (define-cl-std-macro %set-atom-fun (x v)
   `(cl:setf (cl:symbol-function ',x) ,v))
 
-(define-cl-std-macro %defun (name args &body body)
-  (print-definition `(%defun ,name ,args))
+(define-cl-std-macro defun (name args &body body)
+  (print-definition `(defun ,name))
   (add-defined-function name args body)
-  `(cl:progn
-     ,@(& (save-sources?)
-          `((cl:push (. name
-                        ',(. args (& (not (save-argdefs-only?))
-                             body)))
-                     *functions*)))
-     (cl:defun ,name ,args ,@body)
-     ,@(& (save-sources?)
-          `(cl:setf (cl:gethash #',name *function-atom-sources*)
-                    ',(. args (& (not (save-argdefs-only?))
-                                 body))))))
+  `(cl:defun ,name ,args ,@body))
 
-(define-cl-std-macro defun (&rest x) `(%defun ,@x))
-
-(define-cl-std-macro %defmacro (name args &body body)
-  (print-definition `(%defmacro ,name ,args))
-  `(cl:push (. ',name
-               (. ',args
-                  #'(cl:lambda ,(argument-expand-names 'define-cl-std-macro args)
-                      ,@body)))
-            *macros*))
-
-(define-cl-std-macro %defvar (name &optional (init nil))
-  (print-definition `(%defvar ,name))
+(define-cl-std-macro defvar (name &optional (init nil))
+  (print-definition `(defvar ,name))
   (add-defined-variable name)
-  (add-delayed-expr `((cl:progn
-                        ,@(& (save-sources?)
-                             `((cl:push (. ',name ',init) *variables*)))
-                        (cl:defvar ,name ,init)))))
+  (add-delayed-expr `((cl:defvar ,name ,init))))
 
-(define-cl-std-macro defvar (&rest x) `(%defvar ,@x))
-(define-cl-std-macro defconstant (&rest x) `(%defvar ,@x))
+(define-cl-std-macro defconstant (name &optional (init nil))
+  (print-definition `(defconstant ,name))
+  (add-defined-variable name)
+  (add-delayed-expr `((cl:defconstant ,name ,init))))
+
+(define-cl-std-macro defmacro (name args &body body)
+  (print-definition `(defmacro ,name ,args))
+  (make-transpiler-std-macro name args body))
+
+(define-cl-std-macro defspecial (name args &body body)
+  (print-definition `(defspecial ,name ,args))
+  (add-delayed-expr `((cl:push (. ',name (. ',args #'(cl:lambda ,(argument-expand-names '%defmacro args)
+                                                       ,@body)))
+                               *macros*))))
 
 (define-cl-std-macro ? (&body body)
   (with (tests (group body 2)

@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun make-overlayed-std-macro-expander (tr expander-name)
   (with (e       (define-expander expander-name)
@@ -26,6 +26,10 @@
 (defmacro define-transpiler-std-macro (tr name args &body body)
   (print-definition `(define-transpiler-std-macro ,tr ,name ,args))
   `(define-expander-macro ,(transpiler-std-macro-expander (eval tr)) ,name ,args ,@body))
+
+(defun make-transpiler-std-macro (name args body)
+  (eval (macroexpand `(define-transpiler-std-macro *transpiler* ,name ,args ,@body)))
+  nil)
 
 (defun transpiler-macroexpand (x)
   (with-temporary *=-function?* [| (defined-function _)

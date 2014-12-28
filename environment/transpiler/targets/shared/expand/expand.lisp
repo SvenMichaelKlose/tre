@@ -56,10 +56,10 @@
         'filter)
         ,fun ,@lsts))
 
-(define-shared-std-macro (bc c cl js php) defmacro (&rest x)
-  (print-definition `(defmacro ,x. ,.x.))
-  (eval (macroexpand `(define-transpiler-std-macro *transpiler* ,@x)))
-  `(%defmacro ,@x))
+(define-shared-std-macro (bc c js php) defmacro (name args &body body)
+  (print-definition `(defmacro ,name ,args))
+  (make-transpiler-std-macro name args body)
+  `(%defmacro ,name ,args ,@body))
 
 (define-shared-std-macro (bc c js php) defconstant (&rest x)
   `(defvar ,@x))
