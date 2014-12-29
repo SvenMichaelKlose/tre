@@ -5,11 +5,11 @@
 
 (defun add-profile (name nsec)
   (with-temporary *profile-lock* t
-    (= (href *profile* name) (integer+ (| (href *profile* name) 0) nsec))))
+    (= (href *profile* name) (+ (| (href *profile* name) 0) nsec))))
 
 (defun add-profile-call (name)
   (with-temporary *profile-lock* t
-    (= (href *profile* name) (integer+ (| (href *profile* name) 0) 1))))
+    (= (href *profile* name) (+ (| (href *profile* name) 0) 1))))
 
 (defun clear-profile ()
   (= *profile* (make-hash-table :test #'eq)))

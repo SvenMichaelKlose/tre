@@ -1,31 +1,31 @@
-;;;;; tré – Copyright (c) 2009–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2009–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun sort-divide (x left right test<)
   (with (i     left
-		 j     (integer-- right)
+		 j     (-- right)
 		 pivot (elt x right))
-    (while (integer< i j)
+    (while (< i j)
 		   nil
-	  (while (& (integer< i right)
+	  (while (& (< i right)
                 (not (funcall test< pivot (elt x i))))
 			 nil
-	    (integer++! i))
-	  (while (& (integer> j left)
+	    (++! i))
+	  (while (& (> j left)
                 (funcall test< pivot (elt x j)))
 			 nil
-		(integer--! j))
-	  (& (integer< i j)
+		(--! j))
+	  (& (< i j)
          (xchg (elt x i) (elt x j))))
 	(& (funcall test< pivot (elt x i))
        (xchg (elt x i) (elt x right)))
 	i))
 
 (defun sort-0 (x left right test<)
-  (when (integer< left right)
+  (when (< left right)
 	(let divisor (sort-divide x left right test<)
-	  (sort-0 x left (integer-- divisor) test<)
-	  (sort-0 x (integer++ divisor) right test<))))
+	  (sort-0 x left (-- divisor) test<)
+	  (sort-0 x (++ divisor) right test<))))
 
 (defun sort (x &key (test #'<))
-  (& x (sort-0 x 0 (integer-- (length x)) test))
+  (& x (sort-0 x 0 (-- (length x)) test))
   x)

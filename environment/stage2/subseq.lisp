@@ -4,30 +4,30 @@
 
 (defun copy-num (lst len)
   (& lst
-     (integer< 0 len)
-     (. lst. (copy-num .lst (integer-- len)))))
+     (< 0 len)
+     (. lst. (copy-num .lst (-- len)))))
 
 (defun list-subseq (seq start &optional (end 999999))
   (when (& seq
-           (not (integer== start end)))
-    (& (integer> start end)
+           (not (== start end)))
+    (& (> start end)
        (xchg start end))
-    (copy-num (nthcdr start seq) (integer- end start))))
+    (copy-num (nthcdr start seq) (- end start))))
 
 (defun %subseq-sequence (maker seq start end)
-  (unless (integer== start end)
+  (unless (== start end)
     (alet (length seq)
-      (when (integer< start !)
-	    (& (integer>= end !)
+      (when (< start !)
+	    (& (>= end !)
 	       (= end !))
-  	    (with (l (integer- end start)
+  	    (with (l (- end start)
 	           s (funcall maker l))
           (dotimes (x l s)
-	        (= (elt s x) (elt seq (integer+ start x)))))))))
+	        (= (elt s x) (elt seq (+ start x)))))))))
 
 (defun subseq (seq start &optional (end 99999))
   (when seq
-    (& (integer> start end)
+    (& (> start end)
        (xchg start end))
 	(?
 	  (cons? seq)   (list-subseq seq start end)

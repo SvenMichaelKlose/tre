@@ -1,9 +1,9 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defun copy-array (arr)
   (do ((ret (make-array))
        (i 0 (++ i)))
-      ((integer== i (length arr)) ret)
+      ((== i (length arr)) ret)
     (= (aref ret i) (aref arr i))))
 
 (defun array-list (x)

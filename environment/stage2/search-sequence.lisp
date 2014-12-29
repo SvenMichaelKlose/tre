@@ -1,4 +1,4 @@
-;;;; tré – Copyright (c) 2005–2006,2008-2009,2011–2014 Sven Michael Klose <pixel@hugbox.org>
+; tré – Copyright (c) 2005–2006,2008-2009,2011–2014 Sven Michael Klose <pixel@hugbox.org>
 
 (functional find position)
 
@@ -17,19 +17,19 @@
             (return !))))))
 
 (defun %find-if-sequence (pred seq start end from-end with-index)
-  (& seq (integer< 0 (length seq))
-     (let* ((e (| end (integer-- (length seq))))
+  (& seq (< 0 (length seq))
+     (let* ((e (| end (-- (length seq))))
 	 	    (s (| start 0)))
        ; Make sure the start and end indexes are sane.
-       (& (| (& (integer> s e) (not from-end))
-             (& (integer< s e) from-end))
+       (& (| (& (> s e) (not from-end))
+             (& (< s e) from-end))
           (xchg s e))
        (do ((i s (? from-end
-				    (integer-- i)
-				    (integer++ i))))
+				    (-- i)
+				    (++ i))))
            ((? from-end
-	           (integer< i e)
-			   (integer> i e)))
+	           (< i e)
+			   (> i e)))
 	     (alet (elt seq i)
            (& (apply pred (. ! (& with-index (list i))))
 		      (return !)))))))
@@ -43,22 +43,18 @@
   (find-if [funcall test _ obj] seq :start start :end end :from-end from-end))
 
 (defun position (obj seq &key (start nil) (end nil) (from-end nil) (test #'eql))
-  (let position-index nil
+  (aprog1 nil
     (find-if #'((x i)
                  (& (funcall test x obj)
-                    (= position-index i)))
-             seq :start start :end end :from-end from-end :with-index t)
-    (!? position-index
-        (integer !))))
+                    (= ! i)))
+             seq :start start :end end :from-end from-end :with-index t)))
 
 (defun position-if (pred seq &key (start nil) (end nil) (from-end nil))
-  (let position-index nil
+  (aprog1 nil
     (find-if #'((x i)
 				  (& (funcall pred x)
-					 (= position-index i)))
-			 seq :start start :end end :from-end from-end :with-index t)
-    (!? position-index
-        (integer !))))
+					 (= ! i)))
+			 seq :start start :end end :from-end from-end :with-index t)))
 
 (defun some (pred &rest seqs)
   (find-if pred (apply #'append seqs)))
@@ -95,11 +91,11 @@
 
 (define-test "POSITION works with character list"
   ((position 's '(l i s p)))
-  (integer 2))
+  2)
 
 (define-test "POSITION works with strings"
   ((position #\/ "lisp/foo/bar"))
-  (integer 4))
+  4)
 
 (define-test "SOME works"
   ((& (some #'number? '(a b 3)))

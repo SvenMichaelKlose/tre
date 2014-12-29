@@ -1,4 +1,4 @@
-;;;; tré – Copyright (c) 2005–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
 
 (functional string-concat string== upcase downcase list-string string-list queue-string)
 
@@ -13,8 +13,8 @@
 (defun string-list (x)
   (let* ((l (length x))
 		 (s))
-    (do ((i (integer-- l) (integer-- i)))
-		((integer< i 0))
+    (do ((i (-- l) (-- i)))
+		((< i 0))
       (= s (push (elt x i) s)))
 	s))
 

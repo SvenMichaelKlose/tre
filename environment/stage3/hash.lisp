@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2006,2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2006,2008–2014 Sven Michael Klose <pixel@copei.de>
 
 (defvar *default-hash-size* 2039)
 
@@ -14,9 +14,9 @@
 (defun %make-hash-index-string (h str)
   (with (k 0
 	     l (length str))
-    (do ((i 0 (integer++ i)))
-        ((| (integer== ,(* 8 *pointer-size*) i)
-            (integer== i l))
+    (do ((i 0 (++ i)))
+        ((| (== ,(* 8 *pointer-size*) i)
+            (== i l))
 		 (mod (abs k) (hash-table-size h)))
       (= k (logxor (<< k 1) (elt str i))))))
 
