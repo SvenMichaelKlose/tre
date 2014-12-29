@@ -89,7 +89,7 @@
 
 (defun expex-argdef (fun)
   (| (funinfo-get-local-function-args *funinfo* fun)
-     (current-transpiler-function-arguments fun)))
+     (transpiler-function-arguments *transpiler* fun)))
 
 (defun expex-argexpand-0 (fun args)
   (expand-literal-characters

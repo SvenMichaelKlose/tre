@@ -385,11 +385,6 @@
      (late-symbol? x)
      (funinfo-var? (global-funinfo) x)))
 
-(defun current-transpiler-function-arguments (x)
-  (| (transpiler-function-arguments *transpiler* x)
-     (host-function-arguments x)
-     (function-arguments (symbol-function x))))
-
 (defun transpiler-add-toplevel-expression (tr x)
   (push (copy-tree x) (transpiler-accumulated-toplevel-expressions tr)))
 
