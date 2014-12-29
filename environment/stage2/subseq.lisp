@@ -1,4 +1,4 @@
-;;;; tré – Copyright (c) 2007–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2007–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
 
 (functional subseq)
 
@@ -7,28 +7,12 @@
      (integer< 0 len)
      (. lst. (copy-num .lst (integer-- len)))))
 
-(define-test "COPY-NUM"
-  ((copy-num '(a b c) 2))
-  '(a b))
-
 (defun list-subseq (seq start &optional (end 999999))
   (when (& seq
            (not (integer== start end)))
     (& (integer> start end)
        (xchg start end))
     (copy-num (nthcdr start seq) (integer- end start))))
-
-(define-test "LIST-SUBSEQ work at the beginning"
-  ((list-subseq '(a b c) 0 1))
-  '(a))
-
-(define-test "LIST-SUBSEQ works in the middle"
-  ((list-subseq '(1 2 3 4) 1 3))
-  '(2 3))
-
-(define-test "LIST-SUBSEQ works at the end"
-  ((list-subseq '(1 2 3 4) 2))
-  '(3 4))
 
 (defun %subseq-sequence (maker seq start end)
   (unless (integer== start end)
@@ -50,11 +34,3 @@
 	  (string? seq) (string-subseq seq start end)
 	  (array? seq)  (%subseq-sequence #'make-array seq start end)
       (error "Type of ~A not supported." seq))))
-
-(define-test "SUBSEQ returns NIL when totally out of range"
-  ((subseq "lisp" 10))
-  nil)
-
-(define-test "SUBSEQ returns empty string when start and end are the same"
-  ((string== "" (subseq "lisp" 1 1)))
-  t)
