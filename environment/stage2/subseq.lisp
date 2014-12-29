@@ -2,17 +2,17 @@
 
 (functional subseq)
 
-(defun copy-num (lst len)
-  (& lst
-     (< 0 len)
-     (. lst. (copy-num .lst (-- len)))))
-
 (defun list-subseq (seq start &optional (end 999999))
   (when (& seq
            (not (== start end)))
     (& (> start end)
        (xchg start end))
-    (copy-num (nthcdr start seq) (- end start))))
+    (with (copy-num #'((lst len)
+                        (& lst
+                            (< 0 len)
+                            (. lst.
+                               (copy-num .lst (-- len))))))
+      (copy-num (nthcdr start seq) (- end start)))))
 
 (defun %subseq-sequence (maker seq start end)
   (unless (== start end)
