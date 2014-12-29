@@ -5,7 +5,7 @@
 ; That's why it's disabled here.
 (defconstant +anonymous-function-sources?+ nil)
 
-(defun make-variable-function (x)
+(defun make-scoping-function (x)
   (with-gensym g
     `(labels ((,g ,@(make-lambdas (cadar x))))
        (,g ,@(make-lambdas .x)))))
@@ -15,8 +15,14 @@
      (with-gensym g
        `(cl:let ((,g #'(lambda ,@(make-lambdas .x.)))
           (cl:setf (cl:gethash ~anonymous-fun *function-atom-sources*) ',.x.)
-          ,g))
-     `#'(lambda ,@(make-lambdas .x.)))))
+          ,g)))
+     `#'(lambda ,@(make-lambdas .x.))))
+
+(defun lambda-expr-without-lambda-keyword? (x)
+  (& (cons? x)
+     (eq 'function x.)
+     (not (atom .x.))
+     (not (eq 'lambda (car .x.)))))
 
 (defun make-lambdas (x)
   (cond
@@ -26,8 +32,8 @@
                               x)
                            x))
     ((eq 'quote x.)     x)
-    ((lambda-expr? x.)  (make-variable-function x))
-    ((lambda-expr? x)   (make-anonymous-function x))
+    ((lambda-expr-without-lambda-keyword? x.) (make-scoping-function x))
+    ((lambda-expr-without-lambda-keyword? x)  (make-anonymous-function x))
     (t (cl:mapcar #'make-lambdas x))))
 
 (defun tre2cl (x)
