@@ -1,20 +1,22 @@
 ; tré – Copyright (c) 2014 Sven Michael Klose <pixel@copei.de>
 
-(defun %%macrocall (x)
+(defun special-%%macrocall (x)
   (alet (cdr (assoc x. *macros* :test #'eq))
     (apply .! (argument-expand-values x. !. .x))))
 
-(defun %%macro? (x)
+(defun special-%%macro? (x)
   (& (cons? x)
      (symbol? x.)
      (assoc x. *macros* :test #'eq)))
 
 (defun specialexpand (x)
-  (with (f #'((old x)
-               (? (equal old x)
-                  x
-                  (specialexpand x))))
-    (f x (native-macroexpand x))))
+  (with-temporaries (*macro?-diversion*    #'special-%%macro?
+                     *macrocall-diversion* #'special-%%macrocall)
+    (with (f #'((old x)
+                 (? (equal old x)
+                    x
+                    (specialexpand x))))
+      (f x (%macroexpand x)))))
 
 (defspecial %defun-quiet (name args &body body)
   (make-%defun-quiet name args body))
