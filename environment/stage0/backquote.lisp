@@ -38,7 +38,6 @@
                      (%backquote .x))))
        (%quasiquote-eval x))))
 
-;; Expand BACKQUOTE arguments.
 (%defun %backquote (x)
   (?
     (atom x) x
