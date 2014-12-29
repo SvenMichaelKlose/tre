@@ -6,7 +6,7 @@
        (%load-r s))))
 
 (defun %expand (x)
-  (alet (quasiquote-expand (tre:macroexpand (dot-expand x)))
+  (alet (quasiquote-expand (macroexpand (dot-expand x)))
     (? (equal x !)
        x
        (%expand !))))
