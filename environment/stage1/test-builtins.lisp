@@ -1,4 +1,4 @@
-;;;; tré – Copyright (C) 2006,2009,2011–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (C) 2006,2009,2011–2015 Sven Michael Klose <pixel@copei.de>
 
 (define-test "CAR accepts NIL"
   ((car nil))
@@ -117,7 +117,7 @@
   nil)
 
 (define-test "FUNCTION? recognizes functions"
-  ((function? #'%backquote))
+  ((function? #'copy-list))
   t)
 
 (define-test "FUNCTION? recognizes built-in functions"
