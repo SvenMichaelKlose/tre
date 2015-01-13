@@ -14,11 +14,9 @@
                    `(. ,(cadr _.)
                        ,(conv ._))]
          qs     [? (any-quasiquote? (cadr _.))
-                   (error "~A in QUASIQUOTE-SPLICE (or ',@' for short)."
+                   (error "Illegal ~A as argument to ,@ (QUASIQUOTE-SPLICE)."
                           (cadr _.))
-                   (!? (conv ._)
-                       `(append ,(cadr _.) ,(conv ._))
-                       (cadr _.))]
+                   `(append ,(cadr _.) ,(conv ._))]
          conv   [?
                   (atom _)                (atomic _)
                   (atom _.)               `(. ,(atomic _.)
