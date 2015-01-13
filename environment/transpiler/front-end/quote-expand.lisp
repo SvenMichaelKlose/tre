@@ -4,29 +4,29 @@
   (with (atomic [? (constant-literal? _)
                    _
                    `(quote ,_)]
-         quot   [? (atom _)
+         static [? (atom _)
                    (atomic _)
-                   `(. ,(quot _.)
-                       ,(quot ._))]
+                   `(. ,(static _.)
+                       ,(static ._))]
          qq     [? (any-quasiquote? (cadr _.))
-                   `(. ,(conv (cadr _.))
-                       ,(conv ._))
+                   `(. ,(backq (cadr _.))
+                       ,(backq ._))
                    `(. ,(cadr _.)
-                       ,(conv ._))]
-         qs     [? (any-quasiquote? (cadr _.))
+                       ,(backq ._))]
+         qqs    [? (any-quasiquote? (cadr _.))
                    (error "Illegal ~A as argument to ,@ (QUASIQUOTE-SPLICE)."
                           (cadr _.))
-                   `(append ,(cadr _.) ,(conv ._))]
-         conv   [?
+                   `(append ,(cadr _.) ,(backq ._))]
+         backq  [?
                   (atom _)                (atomic _)
                   (atom _.)               `(. ,(atomic _.)
-                                              ,(conv ._))
+                                              ,(backq ._))
                   (quasiquote? _.)        (qq _)
-                  (quasiquote-splice? _.) (qs _)
-                  `(. ,(conv _.)
-                      ,(conv ._))])
-    (tree-walk x
-               :ascending [?
-                            (quote? _)     (quot ._.)
-                            (backquote? _) (conv ._.)
-                            _])))
+                  (quasiquote-splice? _.) (qqs _)
+                  `(. ,(backq _.)
+                      ,(backq ._))]
+         disp   [?
+                  (quote? _)     (static ._.)
+                  (backquote? _) (backq ._.)
+                  _])
+    (tree-walk x :ascending #'disp)))
