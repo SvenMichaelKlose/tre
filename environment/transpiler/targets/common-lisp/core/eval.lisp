@@ -13,10 +13,10 @@
 (defun make-anonymous-function (x)
   (? +anonymous-function-sources?+
      (with-gensym g
-       `(cl:let ((,g #'(lambda ,@(make-lambdas .x.)))
+       `(cl:let ((,g (lambda ,@(make-lambdas .x.)))
           (cl:setf (cl:gethash ~anonymous-fun *function-atom-sources*) ',.x.)
           ,g)))
-     `#'(lambda ,@(make-lambdas .x.))))
+     `(lambda ,@(make-lambdas .x.))))
 
 (defun lambda-expr-without-lambda-keyword? (x)
   (& (cons? x)

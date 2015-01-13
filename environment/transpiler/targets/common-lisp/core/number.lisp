@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2014–2015 Sven Michael Klose <pixel@copei.de>
 
 (defbuiltin number? (x)
   (| (cl:numberp x)
@@ -8,10 +8,10 @@
   (cl:floor x))
 
 (defun chars-to-numbers (x)
-  (cl:mapcar #'(lambda (x)
-                 (? (cl:characterp x)
-                    (cl:char-code x)
-                    x))
+  (cl:mapcar (lambda (x)
+               (? (cl:characterp x)
+                  (cl:char-code x)
+                  x))
              x))
 
 (defbuiltin == (&rest x) (apply #'cl:= (chars-to-numbers x)))

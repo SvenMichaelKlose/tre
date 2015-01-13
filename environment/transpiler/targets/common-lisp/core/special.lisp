@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2014–2015 Sven Michael Klose <pixel@copei.de>
 
 (defun special-%%macrocall (x)
   (alet (cdr (assoc x. *macros* :test #'eq))
@@ -29,8 +29,8 @@
   (print-definition `(%defmacro ,name ,args))
   `(cl:push (. ',name
                (. ',args
-                  #'(cl:lambda ,(argument-expand-names '%defmacro args)
-                      ,@body)))
+                  (cl:lambda ,(argument-expand-names '%defmacro args)
+                    ,@body)))
             ,(make-symbol "*MACROS*" "TRE")))
 
 (defspecial %defvar (name &optional (init nil))

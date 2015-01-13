@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2014–2015 Sven Michael Klose <pixel@copei.de>
 
 (defbuiltin string-concat (&rest x)
   (apply #'cl:concatenate 'cl:string x))
@@ -13,8 +13,8 @@
 (defbuiltin list-string (x)
   (apply #'cl:concatenate
          'cl:string
-         (cl:mapcar #'(lambda (x)
-                        (cl:string (? (cl:numberp x)
-                                      (cl:code-char x)
-                                      x)))
+         (cl:mapcar (lambda (x)
+                      (cl:string (? (cl:numberp x)
+                                    (cl:code-char x)
+                                    x)))
                     x)))
