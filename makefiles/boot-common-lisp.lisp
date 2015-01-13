@@ -31,8 +31,7 @@
     (format o "(proclaim '(optimize (speed 0) (space 0) (safety 3) (debug 3)))~%")
     ; Use if happy...
     ;(format o "(proclaim '(optimize (speed 3) (space 3) (safety 0) (debug 0)))~%")
-    (let c (compile-sections (list (. 'core nil))
-                             :transpiler !)
+    (let c (compile-sections (list (. 'core nil)) :transpiler !)
       (adolist ((cl-packages))
         (late-print ! o))
       (late-print '(cl:in-package :tre-core) o)
@@ -42,5 +41,6 @@
       (late-print '(cl:in-package :tre) o)
       (princ "(cl:defconstant nil cl:nil)" o)
       (princ "(cl:defconstant t cl:t)" o)
+      (princ "(cl:format t \"Loading environment...~%\")" o)
       (late-print '(env-load "main.lisp") o))))
 (quit)
