@@ -44,7 +44,7 @@
 (defun expex-guest-filter-arguments (x)
   (filter [(expex-import-function _)
            (funcall (expex-argument-filter *expex*) _)]
-           x))
+          x))
 
 
 ;;;; UTILS
@@ -65,10 +65,10 @@
 
 ;;;; PREDICATES
 
-(defun expex-able? (x)
-  (not (| (atom x)
-          (literal-function? x)
-          (in? x. '%%go '%%go-nil '%%native '%%string '%quote))))
+(defun unexpex-able? (x)
+  (| (atom x)
+     (literal-function? x)
+     (in? x. '%%go '%%go-nil '%%native '%%string '%quote)))
 
 
 ;;;; ARGUMENT EXPANSION
@@ -130,12 +130,15 @@
              new-expr))
        s)))
 
+(defun expex-inlinable? (x)
+  (funcall (expex-inline? *expex*) x))
+
 (defun expex-move (x)
-  (?
-	(not (expex-able? x))                (. nil x)
-    (atom x)                             (expex-move-atom x)
-	(funcall (expex-inline? *expex*) x)  (expex-move-inline x)
-    (%%block? x)                         (expex-move-%%block x)
+  (pcase x
+	unexpex-able?     (. nil x)
+    atom              (expex-move-atom x)
+	expex-inlinable?  (expex-move-inline x)
+    %%block?          (expex-move-%%block x)
 	(expex-move-std x)))
 
 
@@ -194,13 +197,13 @@
 
 (defun expex-expr (x)
   (with-default-listprop x
-    (?
-      (%%go-nil? x)            (expex-%%go-nil x)
-	  (%var? x)                (expex-var x)
-	  (named-lambda? x)        (expex-lambda x)
-      (%%block? x)             (values nil (expex-body (%%block-body x)))
-      (%=? x)                  (expex-expr-%= x)
-      (not (expex-able? x))    (values nil (list x))
+    (pcase x
+      %%go-nil?      (expex-%%go-nil x)
+	  %var?          (expex-var x)
+	  named-lambda?  (expex-lambda x)
+      %%block?       (values nil (expex-body (%%block-body x)))
+      %=?            (expex-expr-%= x)
+      unexpex-able?  (values nil (list x))
       (expex-expr-std x))))
 
 

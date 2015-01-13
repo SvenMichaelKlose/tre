@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2013–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2013–2015 Sven Michael Klose <pixel@copei.de>
 
 (defvar *cps-toplevel?* nil)
 
@@ -195,12 +195,12 @@
 
 (defun cps-passthrough (x)
   (with-temporary *cps-toplevel?* t
-    (mapcan [?
-              (native-cps-funcall? _)  (let v (%=-value _)
-                                         `((%= nil (,v. ,(cps-return-value _) ,@.v))))
-              (cps-call? _)            (cps-make-call _ (cps-return-value _))
-              (cps-methodcall? _)      (cps-make-methodcall _ (cps-return-value _))
-              (named-lambda? _)        (cps-fun _)
+    (mapcan [pcase _
+              native-cps-funcall?  (let v (%=-value _)
+                                     `((%= nil (,v. ,(cps-return-value _) ,@.v))))
+              cps-call?            (cps-make-call _ (cps-return-value _))
+              cps-methodcall?      (cps-make-methodcall _ (cps-return-value _))
+              named-lambda?        (cps-fun _)
               (list _)]
             x)))
 

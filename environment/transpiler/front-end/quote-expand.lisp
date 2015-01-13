@@ -19,14 +19,15 @@
                    `(append ,(cadr _.) ,(backq ._))]
          backq  [?
                   (atom _)                (atomic _)
-                  (atom _.)               `(. ,(atomic _.)
-                                              ,(backq ._))
-                  (quasiquote? _.)        (qq _)
-                  (quasiquote-splice? _.) (qqs _)
-                  `(. ,(backq _.)
-                      ,(backq ._))]
-         disp   [?
-                  (quote? _)     (static ._.)
-                  (backquote? _) (backq ._.)
+                  (pcase _.
+                    atom               `(. ,(atomic _.)
+                                           ,(backq ._))
+                    quasiquote?        (qq _)
+                    quasiquote-splice? (qqs _)
+                    `(. ,(backq _.)
+                        ,(backq ._)))]
+         disp   [pcase _
+                  quote?     (static ._.)
+                  backquote? (backq ._.)
                   _])
     (tree-walk x :ascending #'disp)))

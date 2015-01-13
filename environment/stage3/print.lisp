@@ -1,4 +1,4 @@
-;;;;; trè – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
+; trè – Copyright (c) 2005–2015 Sven Michael Klose <pixel@copei.de>
 
 (defstruct print-info
   (pretty-print?  nil)
@@ -146,14 +146,14 @@
 
 (defun %print-atom (x str info)
   (%with-padding str info
-    (?
-      (symbol? x)     (%print-symbol x str info)
-      (character? x)  (%print-character x str)
-      (number? x)     (princ x str)
-      (string? x)     (%print-string x str)
-      (array? x)      (%print-array x str info)
-      (function? x)   (%print-function x str info)
-      (object? x)     (%print-object x str info)
+    (pcase x
+      symbol?     (%print-symbol x str info)
+      character?  (%print-character x str)
+      number?     (princ x str)
+      string?     (%print-string x str)
+      array?      (%print-array x str info)
+      function?   (%print-function x str info)
+      object?     (%print-object x str info)
       "UNKNOWN OBJECT")))
 
 (defun %late-print (x str info)

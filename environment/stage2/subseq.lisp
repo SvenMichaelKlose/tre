@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2007–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2007–2009,2011–2015 Sven Michael Klose <pixel@copei.de>
 
 (functional subseq)
 
@@ -20,8 +20,8 @@
       (when (< start !)
 	    (& (>= end !)
 	       (= end !))
-  	    (with (l (- end start)
-	           s (funcall maker l))
+  	    (with (l  (- end start)
+	           s  (funcall maker l))
           (dotimes (x l s)
 	        (= (elt s x) (elt seq (+ start x)))))))))
 
@@ -29,8 +29,8 @@
   (when seq
     (& (> start end)
        (xchg start end))
-	(?
-	  (cons? seq)   (list-subseq seq start end)
-	  (string? seq) (string-subseq seq start end)
-	  (array? seq)  (%subseq-sequence #'make-array seq start end)
+	(pcase seq
+	  cons?    (list-subseq seq start end)
+	  string?  (string-subseq seq start end)
+	  array?   (%subseq-sequence #'make-array seq start end)
       (error "Type of ~A not supported." seq))))

@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2015 Sven Michael Klose <pixel@hugbox.org>
 
 (defun cps-marker (name)
   (& (cps-transformation?)
@@ -67,12 +67,12 @@
   (& (%set-atom-fun? x)
      (lambda? ..x.)
      (funinfo-add-local-function-args *funinfo* .x. (lambda-args ..x.)))
-  (?
-    (lambda-call? x)   (lambda-call-embed x)
-    (lambda? x)        (? (lambda-export?)
-                          (lambda-export x)
-                          (lambda-expand-r-unexported-lambda x))
-    (named-lambda? x)  (lambda-expand-r-unexported-lambda x)
+  (pcase x
+    lambda-call?   (lambda-call-embed x)
+    lambda?        (? (lambda-export?)
+                      (lambda-export x)
+                      (lambda-expand-r-unexported-lambda x))
+    named-lambda?  (lambda-expand-r-unexported-lambda x)
     (lambda-expand-r x)))
 
 (defun lambda-expand-r (x)

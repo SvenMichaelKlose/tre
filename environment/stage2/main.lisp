@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2005–2011,2013–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2011,2013–2015 Sven Michael Klose <pixel@copei.de>
 
 (env-load "stage2/multiple-value-bind.lisp")
 (env-load "stage2/values.lisp")
@@ -7,6 +7,7 @@
 (env-load "stage2/array.lisp")
 (env-load "stage2/xchg.lisp")
 (env-load "stage2/group.lisp")
+(env-load "stage2/pcase.lisp")
 (env-load "stage2/remove.lisp")
 (env-load "stage2/subseq-c.lisp" :c)
 (env-load "stage2/subseq.lisp")
