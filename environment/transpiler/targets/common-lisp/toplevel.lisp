@@ -1,11 +1,11 @@
-; tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2015 Sven Michael Klose <pixel@copei.de>
 
 (defun cl-postprocessor (&rest x)
   (make-lambdas (apply #'+ x)))
 
 (defun cl-frontend (x)
   (aprog1 (transpiler-macroexpand (quasiquote-expand (dot-expand x)))
-    (fake-expression-expand (fake-place-expand (lambda-expand (rename-arguments (backquote-expand (compiler-macroexpand !))))))))
+    (fake-expression-expand (fake-place-expand (lambda-expand (rename-arguments (quote-expand (compiler-macroexpand !))))))))
 
 (defun cl-frontend-init ()
   (= *cl-builtins* nil))

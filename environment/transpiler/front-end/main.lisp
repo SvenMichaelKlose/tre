@@ -1,4 +1,4 @@
-; tré transpiler – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
+; tré transpiler – Copyright (c) 2005–2015 Sven Michael Klose <pixel@copei.de>
 
 (env-load "transpiler/front-end/arith-wrappers.lisp" :c)
 
@@ -12,7 +12,7 @@
 (env-load "transpiler/front-end/rename-arguments.lisp")
 (env-load "transpiler/front-end/expand-literal-characters.lisp")
 (env-load "transpiler/front-end/define-compiled-literal.lisp")
-(env-load "transpiler/front-end/backquote-expand.lisp")
+(env-load "transpiler/front-end/quote-expand.lisp")
 (env-load "transpiler/front-end/compiler-macros.lisp")
 (env-load "transpiler/front-end/expand.lisp")
 (env-load "transpiler/front-end/toplevel.lisp")

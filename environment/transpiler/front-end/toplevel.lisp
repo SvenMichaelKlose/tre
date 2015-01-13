@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
 
 (transpiler-pass frontend-2 ()
     thisify                   [thisify (thisify-classes) _]
@@ -15,7 +15,7 @@
     quasiquote-expand         #'quasiquote-expand
     transpiler-macroexpand    #'transpiler-macroexpand
     compiler-macroexpand      #'compiler-macroexpand
-    backquote-expand          #'backquote-expand
+    quote-expand              #'quote-expand
     literal-conversion        [funcall (literal-converter) _])
 
 (defun frontend-0 (x)
