@@ -15,13 +15,13 @@
 (defbuiltin copy-hash-table (x)
   (aprog1 (cl:make-hash-table :test (cl:hash-table-test x)
                               :size (cl:hash-table-size x))
-    (cl:maphash #'(lambda (k v)
-                    (cl:setf (cl:gethash k n) v))
+    (cl:maphash (lambda (k v)
+                    (cl:setf (cl:gethash k !) v))
              x)))
 
 (defbuiltin hashkeys (x)
   (aprog1 nil
-    (cl:maphash #'(lambda (k v)
-                    v
-                    (cl:push k !))
+    (cl:maphash (lambda (k v)
+                  v
+                  (cl:push k !))
              x)))
