@@ -1,16 +1,15 @@
-; tré – Copyright (c) 2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2014–2015 Sven Michael Klose <pixel@copei.de>
 
 (defvar *functions* nil)
-(defvar *function-atom-sources* (make-hash-table :test #'eq))
 
 (defbuiltin function-native (x) x)
 
 (defbuiltin function-source (x)
   (| (cl:functionp x)
      (cl:error "Not a function."))
-  (cl:gethash x *function-atom-sources*))
+  (cl:gethash x *functions*))
 
 (defbuiltin =-function-source (v x)
-  (cl:setf (cl:gethash x *function-atom-sources*) v))
+  (cl:setf (cl:gethash x *functions*) v))
 
 (defbuiltin function-bytecode (x) x nil)
