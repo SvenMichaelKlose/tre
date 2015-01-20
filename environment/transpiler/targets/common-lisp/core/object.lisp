@@ -11,5 +11,14 @@
             (return nil))))
      (cl:error "At least 2 arguments required.")))
 
-(defbuiltin eq (&rest x) (variable-compare #'cl:eq x))
+(defun xpackeq (a b)
+  (? (& (symbol? a)
+        (symbol? b)
+        (not (keyword? a)
+             (keyword? b)))
+     (cl:string= (symbol-name a)
+                 (symbol-name b))
+     (cl:eq a b)))
+
+(defbuiltin eq (&rest x) (variable-compare #'xpackeq x))
 (defbuiltin eql (&rest x) (variable-compare #'cl:eql x))
