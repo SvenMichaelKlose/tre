@@ -9,20 +9,14 @@
 
 (%defun %macroexpand-backquote (x)
   (?
-    (atom x) x
-    (atom x.)
-        (. x. (%macroexpand-backquote .x))
-
-    (eq x.. 'QUASIQUOTE)
-        (. (. 'QUASIQUOTE
-              (%macroexpand (cdr x.)))
-           (%macroexpand-backquote .x))
-
-    (eq x.. 'QUASIQUOTE-SPLICE)
-        (. (. 'QUASIQUOTE-SPLICE
-              (%macroexpand (cdr x.)))
-           (%macroexpand-backquote .x))
-
+    (atom x)                    x
+    (atom x.)                   (. x. (%macroexpand-backquote .x))
+    (eq x.. 'QUASIQUOTE)        (. (. 'QUASIQUOTE
+                                      (%macroexpand (cdr x.)))
+                                   (%macroexpand-backquote .x))
+    (eq x.. 'QUASIQUOTE-SPLICE) (. (. 'QUASIQUOTE-SPLICE
+                                      (%macroexpand (cdr x.)))
+                                   (%macroexpand-backquote .x))
     (. (%macroexpand-backquote x.)
        (%macroexpand-backquote .x))))
 
