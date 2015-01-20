@@ -1,11 +1,10 @@
-;;;;; tré – Copyright (c) 2011–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2011–2015 Sven Michael Klose <pixel@copei.de>
 
 (defvar *functionals* nil)
 
 (%defmacro functional (&rest names)
   (print-definition `(functional ,@names))
-  `(progn
-     (setq *functionals* (%nconc ',names *functionals*))))
+  `(setq *functionals* (%nconc ',names *functionals*)))
 
 (%defun functional? (name)
   (member name *functionals* :test #'eq))
