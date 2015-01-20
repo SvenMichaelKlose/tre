@@ -1,10 +1,4 @@
-; tré – Copyright (c) 2014 Sven Michael Klose <pixel@copei.de>
-
-(defun make-%defun-quiet (name args body)
-  `(cl:progn
-     (cl:push (. ',name ',(. args body)) *functions*)
-     (cl:defun ,name ,args ,@body)
-     (cl:setf (cl:gethash #',name *function-atom-sources*) ',(. args body))))
+; tré – Copyright (c) 2014–2015 Sven Michael Klose <pixel@copei.de>
 
 (defmacro define-cl-std-macro (name args &body body)
   `(define-transpiler-std-macro *cl-transpiler* ,name ,args ,@body))
@@ -39,15 +33,15 @@
                                                         `(make-symbol ,(symbol-name _) "TRE")
                                                         `',_]
                                                      args))
-                                     #'(cl:lambda ,(argument-expand-names 'defspecial args)
-                                         ,@body)))
+                                     #'(,(argument-expand-names 'defspecial args)
+                                       ,@body)))
                                *macros*))))
 
 (defun make-? (body)
   (with (tests (group body 2)
          end   (car (last tests)))
-    (unless body
-      (error "Body is missing."))
+    (| body
+       (error "Body is missing."))
     `(cl:cond
        ,@(? (sole? end)
             (+ (butlast tests) (list (. t end)))
