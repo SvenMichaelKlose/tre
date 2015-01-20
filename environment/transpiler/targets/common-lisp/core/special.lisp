@@ -18,6 +18,11 @@
                     (specialexpand x))))
       (f x (%macroexpand x)))))
 
+(defun make-%defun-quiet (name args body)
+  `(cl:progn
+     (cl:push (. ',name ',(. args body)) *functions*)
+     (cl:defun ,name ,args ,@body)))
+
 (defspecial %defun-quiet (name args &body body)
   (make-%defun-quiet name args body))
 
@@ -29,7 +34,7 @@
   (print-definition `(%defmacro ,name ,args))
   `(cl:push (. ',name
                (. ',args
-                  (cl:lambda ,(argument-expand-names '%defmacro args)
+                  #'(,(argument-expand-names '%defmacro args)
                     ,@body)))
             ,(make-symbol "*MACROS*" "TRE")))
 
@@ -44,6 +49,6 @@
 (defspecial return-from (&body body) `(cl:return-from ,@body))
 (defspecial tagbody (&body body) `(cl:tagbody ,@body))
 (defspecial go (&body body) `(cl:go ,@body))
-(defspecial function (&body body) `(cl:function ,@body))
+;(defspecial function (&body body) `(cl:function ,@body))
 (defspecial labels (&body body) `(cl:labels ,@body))
 (defspecial ? (&body body) (make-? body))
