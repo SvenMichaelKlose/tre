@@ -28,13 +28,3 @@
       (character> >)
       (%error error)
       (%nconc nconc)))
-
-; Global variables provided by all tré cores.
-(defconstant +cl-core-variables+
-    '(*universe* *variables* *functions*
-      *environment-path* *environment-filenames*
-      *macroexpand-hook* *quasiquoteexpand-hook* *dotexpand-hook*
-      *default-listprop* *keyword-package*
-      *pointer-size* *launchfile*
-      *assert* *targets*
-      *endianess* *cpu-type* *libc-path* *rand-max*))
