@@ -227,6 +227,11 @@ boot)
 	./make.sh ctests $ARGS || exit 1
 	;;
 
+nboot)
+    ./make.sh boot && sbcl --core image makefiles/boot-common-lisp.lisp || exit 1
+    (echo "(load \"boot-common.lisp\")" | sbcl) || exit 1
+	;;
+
 pgo)
     echo "Profile-guided optimization..."
 	./make.sh crunsh -pg -fprofile-generate $ARGS || exit 1
