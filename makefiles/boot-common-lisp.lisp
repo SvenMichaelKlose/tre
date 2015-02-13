@@ -1,11 +1,11 @@
-; tré – Copyright (c) 2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2014–2015 Sven Michael Klose <pixel@hugbox.org>
 
 (defun cl-packages ()
   `((defpackage :tre-core
       (:export ,@(make-keywords (+ +cl-direct-imports+
                                    (carlist +cl-renamed-imports+)
                                    *cl-builtins*
-                                   +cl-core-variables+))))
+                                   +core-variables+))))
     (defpackage :tre
       (:use :tre-core))))
 
