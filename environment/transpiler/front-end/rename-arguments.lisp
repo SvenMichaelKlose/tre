@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2015 Sven Michael Klose <pixel@hugbox.org>
 
 (define-gensym-generator argument-sym a)
 
@@ -24,6 +24,6 @@
   (%slot-value? x)  `(%slot-value ,(rename-arguments-0 replacements .x.)
 				                  ,..x.))
 
-(defun rename-arguments (x)
+(def-pass-fun rename-arguments x
   (= *argument-sym-counter* 0)
   (rename-arguments-0 nil x))

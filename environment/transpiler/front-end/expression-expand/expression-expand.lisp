@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2006–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2006–2015 Sven Michael Klose <pixel@hugbox.org>
 
 ; This pass converts the input into a sequence of statements without
 ; %%BLOCKs, it expands arguments and moves statements out of
@@ -238,14 +238,14 @@
 
 ;;;; TOPLEVEL
 
-(defun expression-expand (x)
+(def-pass-fun expression-expand x
   (& x
      (with-temporary *expex* (transpiler-expex *transpiler*)
        (with-global-funinfo
          (= *expex-sym-counter* 0)
          (expex-body x)))))
 
-(defun fake-expression-expand (x)
+(def-pass-fun fake-expression-expand x
   (with-temporary *expex-import?* t
     (expression-expand (make-packages x)))
   x)

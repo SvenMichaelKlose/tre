@@ -1,7 +1,7 @@
-; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@hugbox.org>
 
 (transpiler-pass frontend-2 ()
-    thisify                   [thisify (thisify-classes) _]
+    thisify                   #'thisify
     rename-arguments          #'rename-arguments
     lambda-expand             #'lambda-expand
     fake-place-expand         #'fake-place-expand
@@ -9,14 +9,12 @@
 
 (transpiler-pass frontend-1 ()
     file-input                #'identity
-    dot-expand                [? (dot-expand?)
-                                 (dot-expand _)
-                                 _]
-    quasiquote-expand         #'quasiquote-expand
+    dot-expand                #'pass-dot-expand
+    quasiquote-expand         #'pass-quasiquote-expand
     transpiler-macroexpand    #'transpiler-macroexpand
     compiler-macroexpand      #'compiler-macroexpand
     quote-expand              #'quote-expand
-    literal-conversion        [funcall (literal-converter) _])
+    literal-conversion        #'literal-conversion)
 
 (defun frontend-0 (x)
   (frontend-2 (frontend-1 x)))

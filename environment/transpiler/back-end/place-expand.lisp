@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2015 Sven Michael Klose <pixel@hugbox.org>
 
 (defun make-scope-place-expr (fi var)
   (funinfo-add-free-var fi var)
@@ -78,10 +78,10 @@
   (%slot-value? x)      `(%slot-value ,(place-expand-0 fi .x.) ,..x.)
   (%stackarg? x)        x)
 
-(defun place-expand (x)
+(def-pass-fun place-expand x
   (place-expand-0 (global-funinfo) x))
 
-(defun fake-place-expand (x)
+(def-pass-fun fake-place-expand x
   (place-expand x)
   x)
 

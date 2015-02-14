@@ -1,6 +1,6 @@
-; tré – Copyright (c) 2006–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2006–2015 Sven Michael Klose <pixel@hugbox.org>
 
-(defun quote-expand (x)
+(def-pass-fun quote-expand x
   (with (atomic [? (constant-literal? _)
                    _
                    `(quote ,_)]

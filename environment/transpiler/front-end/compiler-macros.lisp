@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2006–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2006–2015 Sven Michael Klose <pixel@hugbox.org>
 
 (defvar *tagbody-replacements*)
 
@@ -11,7 +11,7 @@
   (print-definition `(define-compiler-macro ,name ,args))
   `(define-expander-macro compiler ,name ,args ,@x))
 
-(defun compiler-macroexpand (x)
+(def-pass-fun compiler-macroexpand x
   (expander-expand 'compiler x))
 
 (define-compiler-macro cond (&rest args)

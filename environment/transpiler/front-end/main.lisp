@@ -1,9 +1,12 @@
-; tré transpiler – Copyright (c) 2005–2015 Sven Michael Klose <pixel@copei.de>
+; tré transpiler – Copyright (c) 2005–2015 Sven Michael Klose <pixel@hugbox.org>
 
 (env-load "transpiler/front-end/arith-wrappers.lisp" :c)
 
 (env-load "transpiler/front-end/cpr-count.lisp")
 (env-load "transpiler/front-end/tag-convert.lisp")
+(env-load "transpiler/front-end/dot-expand.lisp")
+(env-load "transpiler/front-end/quasiquote-expand.lisp")
+(env-load "transpiler/front-end/literal-conversion.lisp")
 (env-load "transpiler/front-end/expression-expand/expression-expand.lisp")
 (env-load "transpiler/front-end/expression-expand/funcalls.lisp")
 (env-load "transpiler/front-end/expression-expand/set-global-variable-value.lisp")

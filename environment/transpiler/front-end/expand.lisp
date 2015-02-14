@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@hugbox.org>
 
 (defun make-overlayed-std-macro-expander (tr expander-name)
   (with (e       (define-expander expander-name)
@@ -31,7 +31,7 @@
   (eval (macroexpand `(define-transpiler-std-macro *transpiler* ,name ,args ,@body)))
   nil)
 
-(defun transpiler-macroexpand (x)
+(def-pass-fun transpiler-macroexpand x
   (with-temporary *=-function?* [| (defined-function _)
                                    (can-import-function? _)
                                    (%=-function? _)]

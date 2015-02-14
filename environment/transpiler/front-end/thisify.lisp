@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@hugbox.org>
 
 (defun thisify-collect-methods-and-members (clsdesc)
   (+ (class-methods clsdesc)
@@ -22,8 +22,9 @@
 	(atom x)         (thisify-symbol classdef x exclusions)
 	(%quote? x)      x
     (%slot-value? x) `(%slot-value ,(thisify-symbol classdef .x. exclusions) ,..x.)
-	(lambda? x)      (copy-lambda x :body (thisify-list-0 classdef (lambda-body x) (+ exclusions
-                                                                                   (lambda-args x))))
+	(lambda? x)      (copy-lambda x :body (thisify-list-0 classdef
+                                                          (lambda-body x)
+                                                          (+ exclusions (lambda-args x))))
     (listprop-cons x
                    (? (%slot-value? x.)
 			          `(%slot-value ,(thisify-list-0 classdef (cadr x.) exclusions)
@@ -36,7 +37,7 @@
 
 (def-head-predicate %thisify)
 
-(defun thisify (classes x)
+(defun thisify-0 (classes x)
   (?
 	 (atom x)        x
 	 (%thisify? x.)  (frontend-macroexpansions
@@ -44,6 +45,9 @@
                                  '(%%block)
                                  '(let ~%this this))
                             ,@(| (+ (thisify-list classes (cddr x.) (cadr x.))
-			                        (thisify classes .x))
+			                        (thisify-0 classes .x))
                                  '(nil)))))
-     (listprop-cons x (thisify classes x.) (thisify classes .x))))
+     (listprop-cons x (thisify-0 classes x.) (thisify-0 classes .x))))
+
+(def-pass-fun thisify x
+  (thisify-0 (thisify-classes) x))

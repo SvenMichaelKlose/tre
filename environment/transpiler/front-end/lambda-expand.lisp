@@ -82,6 +82,6 @@
     (listprop-cons x (lambda-expand-expr x.)
 	                 (lambda-expand-r .x))))
 
-(defun lambda-expand (x)
+(def-pass-fun lambda-expand x
   (with-global-funinfo
     (lambda-expand-r x)))
