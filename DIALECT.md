@@ -1,19 +1,20 @@
 # JavaScript target
 
+This is the most used target.
+
 ## Global variables
 
-This is the most used target. Global variables aren't bound
-to symbols.
+Global variables are not bound to symbols.
 
 ## Character type
 
-The character type is emulated by internal character objects
-and must be converted via CHAR-CODE before being passed to
-native JavaScript functions.
+The character type is emulated and must be converted with
+CHAR-CODE before passing them to native JavaScript
+functions.
 
 ## NIL
 
-NIL is the same as the boolean 'false'.
+NIL is the same as 'false'.
 
 ## Hash tables
 
@@ -25,7 +26,7 @@ iterated over the array.
 
 # C/SBCL target
 
-The C target has no dynamically sized arrays.
+These targets have no dynamically sized arrays.
 
 
 # PHP target
@@ -33,7 +34,7 @@ The C target has no dynamically sized arrays.
 ## Object identity
 
 The PHP target trades garbage collection for object identity
-of symbols, conses and arrays.
+of symbols, conses and arrays – to make EQ work.
 
 ## Hash tables
 
