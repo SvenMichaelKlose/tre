@@ -3,6 +3,7 @@
 (defvar *current-pass-input* nil)
 
 (defmacro transpiler-pass (name &rest name-fun-pairs)
+  (print-definition `(transpiler-pass ,name))
   (with (cache-var ($ '*pass- name '*)
          init (gensym))
     `(progn
@@ -14,13 +15,14 @@
              (= ,cache-var (= (last-pass-result) (funcall i ,cache-var)))))))))
 
 (defmacro def-pass-fun (name arg &body body)
-  (with (fun (gensym))
-        (print
+  (print-definition `(def-pass-fun ,name ,arg))
+  (with-gensym fun
     `(defun ,name (,arg)
        (with (,fun  #'((,arg) ,@body))
-         (? (!? (dump-passes?)
+         (? (& *transpiler*
+               (!? (dump-passes?)
                 (| (t? !)
-                   (member ',name (ensure-list !))))
+                   (member ',name (ensure-list !)))))
             (progn
               (fresh-line)
               (format t ,(string-concat "; **** " (symbol-name name) "~%"))
@@ -28,5 +30,4 @@
                 (prog1
                   (print (,fun ,arg))
                   (format t ,(string-concat "; **** end of " (symbol-name name) "~%")))))
-            (fun ,arg)))))
-    (quit)))
+            (,fun ,arg))))))
