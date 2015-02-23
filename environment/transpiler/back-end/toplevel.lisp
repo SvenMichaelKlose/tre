@@ -29,7 +29,7 @@
      x))
 
 (def-pass-fun transpiler-postprocess x
-  (apply (postprocessor) (list x)))
+  (apply (postprocessor) x))
 
 (def-pass-fun pass-warn-unused x
   (? (warn-on-unused-symbols?)
