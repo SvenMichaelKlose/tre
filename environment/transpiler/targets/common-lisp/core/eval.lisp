@@ -11,7 +11,10 @@
        (,g ,@(make-lambdas .x)))))
 
 (defun make-anonymous-function (x)
-  `(lambda ,@(make-lambdas .x.)))
+  (alet (make-lambdas .x.)
+    (? (equal ! '(nil))
+       `(lambda nil nil)
+       `(lambda ,@!))))
 
 (defun lambda-expr-without-lambda-keyword? (x)
   (& (cons? x)
@@ -27,8 +30,8 @@
                            (| (cl:equal "&OPTIONAL" !)
                               (cl:equal "&REST" !)
                               (cl:equal "&BODY" !)
-                              (cl:equal "&KEY" !))    (make-symbol ! "CL")
-                            x))
+                              (cl:equal "&KEY" !))      (make-symbol ! "CL")
+                           x))
                        x)
     (eq 'quote x.)  x
     (lambda-expr-without-lambda-keyword? x.) (make-scoping-function x)
