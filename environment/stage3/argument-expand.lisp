@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@hugbox.org>
 
 (defun argument-rest-keyword? (x)     (in? x (make-symbol "&REST" "TRE") (make-symbol "&BODY" "TRE")))
 (defun argument-keyword? (x)          (in? x (make-symbol "&REST" "TRE") (make-symbol "&BODY" "TRE") (make-symbol "&OPTIONAL" "TRE") (make-symbol "&KEY" "TRE")))
@@ -100,7 +100,8 @@
 		   #'((def vals)
 				(= no-static '&rest)
   			    (= rest-arg (list (. (argdef-get-name .def.)
-                                     (. def. vals))))
+                                     (. (make-symbol "%REST" "TRE")
+                                        vals))))
 			    nil)
 
          exp-optional-rest
@@ -157,7 +158,7 @@
 
 (defun argument-expand-values (fun def vals)
   (filter [? (& (cons? _)
-                (argument-rest-keyword? _.))
+                (eq _. (make-symbol "%REST" "TRE")))
              ._
              _]
           (cdrlist (argument-expand fun def vals))))
