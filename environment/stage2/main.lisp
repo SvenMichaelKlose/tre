@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2005–2011,2013–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2011,2013–2015 Sven Michael Klose <pixel@hugbox.org>
 
 (env-load "stage2/multiple-value-bind.lisp")
 (env-load "stage2/values.lisp")
@@ -27,7 +27,7 @@
 (env-load "stage2/assoc-splice.lisp")
 (env-load "stage2/pairlist.lisp")
 (env-load "stage2/in.lisp")
-(env-load "stage2/deftype.lisp" :c)
+;(env-load "stage2/deftype.lisp" :c)
 (env-load "stage2/defstruct.lisp")
 (env-load "stage2/abs.lisp" :c)
 (env-load "stage2/doarray.lisp")
