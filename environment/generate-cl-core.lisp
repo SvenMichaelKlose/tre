@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2015 Sven Michael Klose <pixel@hugbox.org>
 
 ; !!! This is just preparing the launch of
 ; !!! "environment/transpiler/targets/common-lisp" and
@@ -56,4 +56,5 @@
     (unless (eq 'progn !)
       (late-print ! o)))))
 
-(generate-cl-core)
+(when (symbol-function 'make-lambdas)
+  (generate-cl-core))
