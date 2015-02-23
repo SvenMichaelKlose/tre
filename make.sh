@@ -1,5 +1,5 @@
 #!/bin/sh
-# tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
+# tré – Copyright (c) 2005–2015 Sven Michael Klose <pixel@hugbox.org>
 
 ARGS="$2 $3 $4 $5 $6 $7 $8 $9"
 
@@ -221,14 +221,14 @@ core)
     echo "(load \"cl/main.lisp\")" | sbcl --noinform
 	;;
 
-boot)
+oldboot)
     git checkout -- cl/generated-from-environment.lisp
 	./make.sh core $ARGS || exit 1
 	./make.sh ctests $ARGS || exit 1
 	;;
 
-nboot)
-    (./make.sh boot 2>&1 | tee old-boot.log.lisp) || exit 1
+boot)
+    (./make.sh oldboot 2>&1 | tee old-boot.log.lisp) || exit 1
     (sbcl --core image makefiles/boot-common-lisp.lisp 2>&1 | tee make-new-boot.log.lisp) || exit 1
     (echo "(load \"boot-common.lisp\")" | sbcl 2>&1 | tee new-boot.log.lisp) || exit 1
 	;;
