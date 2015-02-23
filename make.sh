@@ -228,8 +228,9 @@ boot)
 	;;
 
 nboot)
-    ./make.sh boot && sbcl --core image makefiles/boot-common-lisp.lisp || exit 1
-    (echo "(load \"boot-common.lisp\")" | sbcl) || exit 1
+    (./make.sh boot 2>&1 | tee old-boot.log.lisp) || exit 1
+    (sbcl --core image makefiles/boot-common-lisp.lisp 2>&1 | tee make-new-boot.log.lisp) || exit 1
+    (echo "(load \"boot-common.lisp\")" | sbcl 2>&1 | tee new-boot.log.lisp) || exit 1
 	;;
 
 pgo)
