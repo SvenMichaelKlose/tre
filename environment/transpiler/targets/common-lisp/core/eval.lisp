@@ -22,9 +22,13 @@
 (defun make-lambdas (x)
   (?
     (atom x)        (? (symbol? x)
-                       (? (equal "&BODY" (symbol-name x))
-                          (make-symbol (symbol-name x) "TRE")
-                          x)
+                       (alet (symbol-name x)
+                         (?
+                           (| (cl:equal "&OPTIONAL" !)
+                              (cl:equal "&REST" !)
+                              (cl:equal "&BODY" !)
+                              (cl:equal "&KEY" !))    (make-symbol ! "CL")
+                            x))
                        x)
     (eq 'quote x.)  x
     (lambda-expr-without-lambda-keyword? x.) (make-scoping-function x)
@@ -32,12 +36,7 @@
     (cl:mapcar #'make-lambdas x)))
 
 (defun tre2cl (x)
-  (print 'tre2cl)
-  (print 'quote-expand) (print x) (print (= x (quote-expand x)))
-  (print 'specialexpand) (print x) (print (= x (specialexpand x)))
-  (print 'quote-expand) (print x) (print (= x (quote-expand x)))
-  (print 'make-lambdas) (print x) (print (= x (make-lambdas x))))
-;  (make-lambdas (quote-expand (specialexpand (quote-expand x)))))
+  (make-lambdas (quote-expand (specialexpand (quote-expand x)))))
 
 (defbuiltin eval (x)
   (cl:eval (tre2cl x)))
