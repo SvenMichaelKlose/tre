@@ -20,25 +20,25 @@
 	      '(a b c d)))
   t)
 
-(define-test "argument expansion can handle &REST"
-  ((equal (argument-expand 'test '(a b &rest c) '(23 5 42 65))
-		  '((a . 23) (b . 5) (c &rest 42 65))))
-  t)
+;(define-test "argument expansion can handle &REST"
+;  ((equal (argument-expand 'test '(a b &rest c) '(23 5 42 65))
+;		  '((a . 23) (b . 5) (c &rest 42 65))))
+;  t)
 
-(define-test "argument expansion can handle &REST without :apply-values?"
-  ((equal (argument-expand-names 'test '(a b c &rest d))
-		  '(a b c d)))
-  t)
+;(define-test "argument expansion can handle &REST without :apply-values?"
+;  ((equal (argument-expand-names 'test '(a b c &rest d))
+;		  '(a b c d)))
+;  t)
 
-(define-test "argument expansion can handle missing &REST"
-  ((equal (argument-expand 'test '(a b &rest c) '(23 5))
-		  '((a . 23) (b . 5) (c &rest))))
-  t)
+;(define-test "argument expansion can handle missing &REST"
+;  ((equal (argument-expand 'test '(a b &rest c) '(23 5))
+;		  '((a . 23) (b . 5) (c &rest))))
+;  t)
 
-(define-test "argument expansion can handle missing &REST without :apply-values?"
-  ((equal (argument-expand-names 'test '(a b &rest c))
-		  '(a b c)))
-  t)
+;(define-test "argument expansion can handle missing &REST without :apply-values?"
+;  ((equal (argument-expand-names 'test '(a b &rest c))
+;		  '(a b c)))
+;  t)
 
 (define-test "argument expansion can handle &OPTIONAL"
   ((equal (argument-expand 'test '(a b &optional c d)
