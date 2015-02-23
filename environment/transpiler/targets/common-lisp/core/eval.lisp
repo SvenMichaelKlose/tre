@@ -27,6 +27,7 @@
     (atom x)        (? (symbol? x)
                        (alet (symbol-name x)
                          (?
+                           (cl:equal "&BODY" !)        (make-symbol "&REST" "CL")
                            (| (cl:equal "&OPTIONAL" !)
                               (cl:equal "&REST" !)
                               (cl:equal "&BODY" !)
