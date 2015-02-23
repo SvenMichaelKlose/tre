@@ -30,4 +30,4 @@
                   quote?     (static ._.)
                   backquote? (backq ._.)
                   _])
-    (tree-walk x :ascending #'disp)))
+    (car (tree-walk (list x) :ascending #'disp))))
