@@ -1,10 +1,10 @@
-; tré – Copyright (c) 2014 Sven Michael Klose <pixel@copei.de>
-
-(defbuiltin macro? (x)
-  (cl:rassoc x *macros* :test #'eq))
+; tré – Copyright (c) 2014–2015 Sven Michael Klose <pixel@hugbox.org>
 
 (defun env-macros ()
   (symbol-value (make-symbol "*MACROS*" "TRE")))
+
+(defbuiltin macro? (x)
+  (cl:rassoc x (env-macros) :test #'eq))
 
 (defbuiltin %%macrocall (x)
   (alet (cdr (assoc x. (env-macros) :test #'eq))
