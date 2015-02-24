@@ -34,7 +34,8 @@
   (sys-image-create path #'%load-launchfile)
   (fresh-line))
 
-(env-load "generate-cl-core.lisp")
+(unless (eq t *new-core*)
+  (env-load "generate-cl-core.lisp"))
 (env-load "version.lisp")
 (env-load "config-after-reload.lisp")
 

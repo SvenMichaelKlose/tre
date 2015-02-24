@@ -56,5 +56,4 @@
     (unless (eq 'progn !)
       (late-print ! o)))))
 
-(when (symbol-function 'make-lambdas)
-  (generate-cl-core))
+(generate-cl-core)
