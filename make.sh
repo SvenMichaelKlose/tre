@@ -227,10 +227,18 @@ oldboot)
 	./make.sh ctests $ARGS || exit 1
 	;;
 
+nboot)
+    (echo "(load \"boot-common.lisp\")" | sbcl 2>&1) || exit 1
+	;;
+
+genboot)
+    sbcl --core image makefiles/boot-common-lisp.lisp 2>&1 || exit 1
+	;;
+
 boot)
-    (./make.sh oldboot 2>&1 | tee old-boot.log.lisp) || exit 1
-    (sbcl --core image makefiles/boot-common-lisp.lisp 2>&1 | tee make-new-boot.log.lisp) || exit 1
-    (echo "(load \"boot-common.lisp\")" | sbcl 2>&1 | tee new-boot.log.lisp) || exit 1
+    ./make.sh oldboot 2>&1 || exit 1
+    ./make.sh genboot 2>&1 || exit 1
+    ./make.sh nboot 2>&1 || exit 1
 	;;
 
 pgo)
