@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2014–2015 Sven Michael Klose <pixel@hugbox.org>
 
 ; Use to debug...
 ;(proclaim '(optimize (speed 0) (space 0) (safety 3) (debug 3)))
@@ -14,4 +14,5 @@
 
 (in-package :tre)
 
+(cl:defconstant *new-core* nil)
 (env-load "main.lisp") 
