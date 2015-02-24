@@ -42,6 +42,7 @@
       (late-print '(cl:in-package :tre) o)
       (princ "(cl:defconstant nil cl:nil)" o)
       (princ "(cl:defconstant t cl:t)" o)
+      (princ "(cl:defconstant *new-core* cl:t)" o)
       (princ "(cl:format t \"Loading environment...~%\")" o)
       (late-print '(env-load "main.lisp") o))))
 (quit)
