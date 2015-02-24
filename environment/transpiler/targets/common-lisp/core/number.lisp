@@ -36,3 +36,19 @@
 (defbuiltin < (&rest x) (apply #'%< x))
 (defbuiltin > (&rest x) (apply #'%> x))
 ;(defbuiltin bit-or (a b) (cl:bit-or a b))
+
+(defun bits-integer (bits)
+  (cl:reduce #'((a b)
+                 (+ (* a 2) b))
+             bits))
+
+(defun integer-bits (x)
+  (with (l nil)
+    (cl:dotimes (i 32)
+      (cl:multiple-value-bind (i r) (cl:truncate x 2)
+        (cl:setq x i)
+        (cl:push r l)))
+    (cl:coerce l 'cl:bit-vector)))
+
+(defbuiltin bit-and (a b)
+  (bits-integer (cl:bit-and (integer-bits a) (integer-bits b))))

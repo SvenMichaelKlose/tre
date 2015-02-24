@@ -6,7 +6,7 @@
       cons car cdr rplaca rplacd
       list last copy-list nthcdr nth mapcar
       elt length make-string
-      mod sqrt sin cos atan exp round floor logxor bit-and
+      mod sqrt sin cos atan exp round floor
       aref char-code
       make-package package-name find-package
       print))

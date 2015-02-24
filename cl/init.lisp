@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2014–2015 Sven Michael Klose <pixel@hugbox.org>
 
 (defpackage :tre-init
   (:use :common-lisp)
@@ -19,7 +19,6 @@
       last copy-list nthcdr nth mapcar elt length make-string
       aref char-code
       make-package package-name find-package
-      logxor bit-and
       print
       list copy-list
       &rest &body &optional &key
