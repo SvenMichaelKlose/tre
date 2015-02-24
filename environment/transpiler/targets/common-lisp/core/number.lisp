@@ -52,3 +52,12 @@
 
 (defbuiltin bit-and (a b)
   (bits-integer (cl:bit-and (integer-bits a) (integer-bits b))))
+
+(defbuiltin >> (x bits)
+  (cl:dotimes (n bits x)
+    (cl:multiple-value-bind (i r) (cl:truncate x 2)
+      (cl:setq x i))))
+
+(defbuiltin << (x bits)
+  (cl:dotimes (n bits x)
+      (cl:setq x (* x 2))))
