@@ -117,7 +117,6 @@
   (delayed-var-inits        nil)
   (dot-expand?              t)
   (memorized-sources        nil)
-  (memorize-sources?        t)
 
   (funinfos                 (make-hash-table :test #'eq))
   (funinfos-reverse         (make-hash-table :test #'eq))
@@ -166,8 +165,7 @@
      (transpiler-exported-closures tr)      nil
      (transpiler-delayed-exprs tr)          nil
      (transpiler-delayed-var-inits tr)      nil
-     (transpiler-memorized-sources tr)      nil
-     (transpiler-memorize-sources? tr)      t)
+     (transpiler-memorized-sources tr)      nil)
   (transpiler-add-obfuscation-exceptions tr nil (make-symbol ""))
   tr)
 
@@ -242,7 +240,6 @@
         :delayed-var-inits        (copy-list delayed-var-inits)
         :dot-expand?              dot-expand?
         :memorized-sources        (copy-list memorized-sources)
-        :memorize-sources?        memorize-sources?
         :predefined-symbols       (copy-list predefined-symbols)
         :funinfos                 (copy-hash-table funinfos)
         :funinfos-reverse         (copy-hash-table funinfos-reverse)
@@ -405,7 +402,8 @@
   (aprog1 (apply #'make-transpiler args)
     (awhen (member :configurations args)
       (rplaca (+ '((:save-sources?)
-                   (:save-argument-defs-only?))
+                   (:save-argument-defs-only?)
+                   (memorize-sources? . t))
                  .!.)
               .!.))
 	(transpiler-reset !)

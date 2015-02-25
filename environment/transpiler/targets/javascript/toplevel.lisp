@@ -19,7 +19,7 @@
           (memorized-sources)))
 
 (defun js-emit-memorized-sources ()
-  (clr (memorize-sources?))
+  (clr (configuration :memorize-sources?))
   (filter [`(%= (slot-value ,_. '__source) ,(list 'quote ._))]
           (memorized-sources)))
 
