@@ -24,7 +24,6 @@
 (alet (copy-transpiler *cl-transpiler*)
   (with-temporary *transpiler* !
     (add-defined-variable '*macros*))
-  (= (transpiler-save-sources? !) nil)
 ;  (= (transpiler-dump-passes? !) t)
   (let c (compile-sections (list (. 'core nil)) :transpiler !)
     (with-output-file o "boot-common.lisp"

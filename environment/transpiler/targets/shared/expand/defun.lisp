@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
 
 (defun collect-symbols (x)
   (with-queue q
@@ -47,11 +47,11 @@
 (defun shared-defun-source-setter (name args body)
   (alet (assoc-value name *functions* :test #'eq)
     `((%= (slot-value ,name '__source) '(. ,(| !. args) 
-                                           ,(unless (save-argument-defs-only?)
+                                           ,(unless (configuration :save-argument-defs-only?)
                                               (| .! body)))))))
 
 (defun shared-defun-source-memorizer (name args body)
-  (when (save-sources?)
+  (when (configuration :save-sources?)
     (apply #'add-obfuscation-exceptions (collect-symbols (list name args body)))
     (? (memorize-sources?)
        (shared-defun-memorize-source name args body)

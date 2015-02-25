@@ -68,8 +68,6 @@
   (import-from-host?        t)
   (import-variables?        t)
   (only-environment-macros? t)
-  (save-sources?            nil)
-  (save-argument-defs-only? nil)
   (warn-on-unused-symbols?  nil)
   (function-prologues?      t)
   (count-tags?              nil)
@@ -211,8 +209,6 @@
         :import-from-host?        import-from-host?
         :import-variables?        import-variables?
         :only-environment-macros? only-environment-macros?
-        :save-sources?            save-sources?
-        :save-argument-defs-only? save-argument-defs-only?
         :warn-on-unused-symbols?  warn-on-unused-symbols?
         :function-prologues?      function-prologues?
         :count-tags?              count-tags?
@@ -407,6 +403,11 @@
 
 (defun create-transpiler (&rest args)
   (aprog1 (apply #'make-transpiler args)
+    (awhen (member :configurations args)
+      (rplaca (+ '((:save-sources?)
+                   (:save-argument-defs-only?))
+                 .!.)
+              .!.))
 	(transpiler-reset !)
     (= (transpiler-assert? !) *assert*)
 	(transpiler-make-std-macro-expander !)
