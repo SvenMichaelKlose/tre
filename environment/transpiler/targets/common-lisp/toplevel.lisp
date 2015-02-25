@@ -15,7 +15,7 @@
      (expex-setter-filter ex)   #'identity))
 
 (defun cl-sections-before-import ()
-  (unless (exclude-base?)
+  (unless (configuration :exclude-core?)
     (list (. 'cl-base *cl-base*))))
 
 (defun make-cl-transpiler ()
@@ -29,6 +29,7 @@
       :frontend-init           #'cl-frontend-init
       :own-frontend            #'cl-frontend
       :expex-initializer       #'cl-expex-initializer
-      :postprocessor           #'cl-postprocessor))
+      :postprocessor           #'cl-postprocessor
+      :configurations          '((:exclude-core? . nil))))
 
 (defvar *cl-transpiler* (make-cl-transpiler))

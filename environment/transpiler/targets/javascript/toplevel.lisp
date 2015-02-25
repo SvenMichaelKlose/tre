@@ -29,14 +29,14 @@
                      (funinfo-vars (global-funinfo)))))
 
 (defun gen-funinfo-init ()
-  `(push '',(compiled-list `(,x. ,(funinfo-args .x))) *application-funinfos*))
+  `(push ',(compiled-list `(,x. ,(funinfo-args .x))) *application-funinfos*))
 
 (defun gen-funinfo-inits ()
   (filter #'gen-funinfo-init (hash-alist (funinfos))))
 
 (defun js-sections-before-import ()
   `((essential-functions-0 . ,*js-core0*)
-    ,@(& (not (exclude-base?))
+    ,@(& (not (configuration :exclude-core?))
          `((essential-functions-1 . ,*js-core*)
            ,@(& (assert?)
                 `((debug-printing . ,*js-core-debug-print*)))
@@ -91,7 +91,8 @@
       :ending-sections          #'js-ending-sections
       :configurations           '((:platform . :browser)
                                   (:nodejs-requirements . nil)
-                                  (:rplac-breakpoints . nil))))
+                                  (:rplac-breakpoints . nil)
+                                  (:exclude-core? . nil))))
 
 (defun make-javascript-transpiler ()
   (aprog1 (make-javascript-transpiler-0)

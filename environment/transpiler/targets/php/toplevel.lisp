@@ -38,7 +38,7 @@
 
 (defun php-sections-before-import ()
   `((base0 . ,*php-core0*)
-    ,@(& (not (exclude-base?))
+    ,@(& (not (configuration :exclude-base?))
          `((base1 . ,*php-core*)))))
 
 (defun php-sections-after-import ()
@@ -71,7 +71,8 @@
       :gen-string               [literal-string _ #\" (list #\$)]
 	  :identifier-char?         #'php-identifier-char?
       :literal-converter        #'expand-literal-characters
-      :expex-initializer        #'php-expex-initializer))
+      :expex-initializer        #'php-expex-initializer
+      :configurations           '((:exclude-core? . nil))))
 
 (defun make-php-transpiler ()
   (aprog1 (make-php-transpiler-0)

@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
 
 (defvar *transpiler* nil)
 (defvar *transpiler-log* nil)
@@ -72,7 +72,6 @@
   (save-argument-defs-only? nil)
   (warn-on-unused-symbols?  nil)
   (function-prologues?      t)
-  (exclude-base?            nil)
   (count-tags?              nil)
   (funinfo-comments?        nil)
 
@@ -216,7 +215,6 @@
         :save-argument-defs-only? save-argument-defs-only?
         :warn-on-unused-symbols?  warn-on-unused-symbols?
         :function-prologues?      function-prologues?
-        :exclude-base?            exclude-base?
         :count-tags?              count-tags?
         :funinfo-comments?        funinfo-comments?
         :gen-string               gen-string
