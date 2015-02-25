@@ -1,11 +1,11 @@
-; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
 
-(defvar *php-native-environment*
-        ,(apply #'+ (mapcar [fetch-file (+ "environment/transpiler/targets/php/environment/native/" _ ".php")]
+(defvar *php-core-native*
+        ,(apply #'+ (mapcar [fetch-file (+ "environment/transpiler/targets/php/core/native/" _ ".php")]
                             '("settings" "error" "character" "cons" "lexical" "closure" "symbol" "array"))))
 
 (defun php-print-native-environment (out)
-  (princ *php-native-environment* out))
+  (princ *php-core-native* out))
 
 (defun php-prologue ()
   (with-string-stream out
@@ -37,13 +37,13 @@
   (add-defined-variable '*keyword-package*))
 
 (defun php-sections-before-import ()
-  `((base0 . ,*php-base0*)
+  `((base0 . ,*php-core0*)
     ,@(& (not (exclude-base?))
-         `((base1 . ,*php-base*)))))
+         `((base1 . ,*php-core*)))))
 
 (defun php-sections-after-import ()
-  (+ (& (not (texclude-base?))
-        `((base2 . ,*php-base2*)))
+  (+ (& (not (exclude-base?))
+        `((base2 . ,*php-core2*)))
      (& (eq t *have-environment-tests*)
         (list (cons 'env-tests (make-environment-tests))))))
 

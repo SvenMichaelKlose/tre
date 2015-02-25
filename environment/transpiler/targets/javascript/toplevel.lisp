@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@hugbox.org>
 
 (defun nodejs-prologue ()
    (apply #'+ (filter [format nil "var ~A = require ('~A');~%" _ _]
@@ -8,7 +8,7 @@
   (+ (format nil "// tré revision ~A~%" *tre-revision*)
      (nodejs-prologue)
      (& (cps-transformation?)
-        (format nil ,(fetch-file "environment/transpiler/targets/javascript/environment/native/cps.js")))
+        (format nil ,(fetch-file "environment/transpiler/targets/javascript/core/native/cps.js")))
      (format nil "var _I_ = 0; while (1) {switch (_I_) {case 0: ~%")))
 
 (defun js-epilogue ()
@@ -35,15 +35,15 @@
   (filter #'gen-funinfo-init (hash-alist (funinfos))))
 
 (defun js-sections-before-import ()
-  `((essential-functions-0 . ,*js-base0*)
+  `((essential-functions-0 . ,*js-core0*)
     ,@(& (not (exclude-base?))
-         `((essential-functions-1 . ,*js-base*)
+         `((essential-functions-1 . ,*js-core*)
            ,@(& (assert?)
-                `((debug-printing . ,*js-base-debug-print*)))
-           (essential-functions-2 . ,*js-base2*)
-           (standard-streams . ,(js-base-stream))
+                `((debug-printing . ,*js-core-debug-print*)))
+           (essential-functions-2 . ,*js-core2*)
+           (standard-streams . ,(js-core-stream))
            ,@(& (eq :nodejs (configuration :platform))
-                `((nodejs-base . ,(js-base-nodejs))))
+                `((nodejs-core . ,(js-core-nodejs))))
            ,@(& (t? *have-environment-tests*)
                 `((environment-tests . ,(make-environment-tests))))))))
 

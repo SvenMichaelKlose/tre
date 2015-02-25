@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
 
 (defvar *cl-builtins* nil)
 
@@ -8,10 +8,10 @@
   			(read-file !)]
 		  files))
 
-(defvar *cl-env-path* "environment/transpiler/targets/common-lisp/core/")
+(defvar *cl-core-path* "environment/transpiler/targets/common-lisp/core/")
 
-(defvar *cl-base*
-	,(list 'quote (cl-load-base *cl-env-path*
+(defvar *cl-core*
+	,(list 'quote (cl-load-base *cl-core-path*
                                 "global-variables.lisp"
                                 "defbuiltin.lisp"
                                 "array.lisp"
