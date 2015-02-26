@@ -16,7 +16,7 @@
 
 (defun cl-sections-before-import ()
   (unless (configuration :exclude-core?)
-    (list (. 'cl-base *cl-base*))))
+    (list (. 'cl-core *cl-core*))))
 
 (defun make-cl-transpiler ()
   (create-transpiler
