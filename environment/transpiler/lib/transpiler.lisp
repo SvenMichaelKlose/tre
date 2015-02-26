@@ -384,7 +384,7 @@
   x)
 
 (defun configuration-item (x)
-  (alet (transpiler-configurations)
+  (alet (configurations)
     (| (assoc x ! :test #'eq)
        (error "Transpiler ~A has no configuration item ~A. Available items are ~A."
               (name) x (carlist !)))))
@@ -398,14 +398,13 @@
 (defun transpiler-make-expex (tr)
   (funcall (transpiler-expex-initializer tr) (= (transpiler-expex tr) (make-expex))))
 
+(defun default-configurations ()
+  '((:save-sources?)
+    (:save-argument-defs-only?)
+    (:memorize-sources? . t)))
+
 (defun create-transpiler (&rest args)
   (aprog1 (apply #'make-transpiler args)
-    (awhen (member :configurations args)
-      (rplaca (+ '((:save-sources?)
-                   (:save-argument-defs-only?)
-                   (memorize-sources? . t))
-                 .!.)
-              .!.))
 	(transpiler-reset !)
     (= (transpiler-assert? !) *assert*)
 	(transpiler-make-std-macro-expander !)

@@ -30,6 +30,7 @@
       :own-frontend            #'cl-frontend
       :expex-initializer       #'cl-expex-initializer
       :postprocessor           #'cl-postprocessor
-      :configurations          '((:exclude-core? . nil))))
+      :configurations          (+ (default-configurations)
+                                  '((:exclude-core? . nil)))))
 
 (defvar *cl-transpiler* (make-cl-transpiler))
