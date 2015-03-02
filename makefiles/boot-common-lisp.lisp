@@ -1,15 +1,16 @@
 ; tré – Copyright (c) 2014–2015 Sven Michael Klose <pixel@hugbox.org>
 
 (defun cl-packages ()
-  `((defpackage :tre-core
-      (:export ,@(make-keywords (+ +cl-direct-imports+
-                                   (carlist +cl-renamed-imports+)
-                                   *cl-builtins*
-                                   +core-variables+)))
-      (:import-from :cl :nil :t))
-    (defpackage :tre
-      (:use :tre-core)
-      (:import-from :cl :nil :t))))
+  `((defpackage "TRE-CORE"
+      (:export ,@(filter #'symbol-name
+                         (+ +cl-direct-imports+
+                            (carlist +cl-renamed-imports+)
+                            *cl-builtins*
+                            +core-variables+)))
+      (:import-from "CL" "NIL" "T"))
+    (defpackage "TRE"
+      (:use "TRE-CORE")
+      (:import-from "CL" "NIL" "T"))))
 
 (defun cl-symbol (x)
   (make-symbol (symbol-name x) "COMMON-LISP"))
