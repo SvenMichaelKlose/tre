@@ -53,7 +53,7 @@
           (reverse *environment-filenames*)))
 
 (defun js-sections-compiler ()
-  (alet *js-env-path*
+  (alet *js-core-path*
     `((list-of-early-defined-functions . ,#'js-emit-early-defined-functions)
       (,(+ ! "env-load-stub.lisp"))
       ,@(js-environment-files)
