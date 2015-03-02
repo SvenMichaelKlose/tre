@@ -28,11 +28,11 @@
           (remove-if #'emitted-decl?
                      (funinfo-vars (global-funinfo)))))
 
-(defun gen-funinfo-init ()
-  `(push ',(compiled-list `(,x. ,(funinfo-args .x))) *application-funinfos*))
+;(defun gen-funinfo-init ()
+;  `(push ',(compiled-list `(,x. ,(funinfo-args .x))) *application-funinfos*))
 
-(defun gen-funinfo-inits ()
-  (filter #'gen-funinfo-init (hash-alist (funinfos))))
+;(defun gen-funinfo-inits ()
+;  (filter #'gen-funinfo-init (hash-alist (funinfos))))
 
 (defun js-sections-before-import ()
   `((essential-functions-0 . ,*js-core0*)

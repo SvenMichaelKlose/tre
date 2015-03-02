@@ -14,5 +14,5 @@
 (env-load "transpiler/compile.lisp")
 (env-load "transpiler/targets/main.lisp")
 (env-load "transpiler/compile-environment.lisp" :c)
-(env-load "transpiler/eval.lisp" :c)
+;(env-load "transpiler/eval.lisp" :c)
 (env-load "transpiler/make-project.lisp" :c)
