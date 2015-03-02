@@ -14,7 +14,8 @@
 (define-cl-std-macro defvar (name &optional (init nil))
   (print-definition `(defvar ,name))
   (add-defined-variable name)
-  (add-delayed-expr `((cl:defvar ,name ,init))))
+  (add-delayed-expr `((cl:setq ,name ,init)))
+  `(cl:defvar ,name))
 
 (define-cl-std-macro defconstant (name &optional (init nil))
   (print-definition `(defconstant ,name))
