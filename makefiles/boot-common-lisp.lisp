@@ -38,7 +38,7 @@
       (adolist ((cl-wrappers))
         (princ ! o))
       (filter [late-print _ o] c)
-      (late-print '(cl:in-package :tre) o)
+      (princ "(cl:in-package :tre)" o)
       (princ "(cl:defconstant nil cl:nil)" o)
       (princ "(cl:defconstant t cl:t)" o)
       (princ "(cl:defconstant *new-core* cl:t)" o)
