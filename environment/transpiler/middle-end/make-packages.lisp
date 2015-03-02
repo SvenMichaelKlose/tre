@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2011–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2011–201j Sven Michael Klose <pixel@copei.de>
 
 (defun process-%%in-package (x)
   (?
@@ -15,7 +15,7 @@
     (& (symbol? x)
        (not (symbol-package x)))
                        (alet (package-symbol x)
-                         (? (defined-function tr !)
+                         (? (defined-function !)
                             !
                             x))
     (atom x)           x
