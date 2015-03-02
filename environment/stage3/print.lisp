@@ -39,7 +39,7 @@
 
 (defun %print-body (x str info)
   (terpri str)
-  (with-temporary (print-info-indentation info) (+ 2 (print-info-indentation info))
+  (with-temporary (print-info-indentation info) (++ (print-info-indentation info))
     (adolist x
       (%print-indentation str info)
       (%late-print ! str info)
