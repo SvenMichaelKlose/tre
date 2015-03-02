@@ -2,25 +2,25 @@
 
 (defvar *php-core-path* "environment/transpiler/targets/php/core/")
 
-(defun php-load-base (dir-path &rest files)
+(defun php-load-core (dir-path &rest files)
   (with-temporary *have-compiler?* nil
     (mapcan [alet (+ *php-core-path* dir-path _)
-              (format t  "(php-load-base \"~A\")~%" !)
+              (format t  "(php-load-core \"~A\")~%" !)
               (read-file !)]
             files)))
 
 (defvar *php-core0*
-	,(list 'quote (php-load-base ""
+	,(list 'quote (php-load-core ""
                                  "assert.lisp"
                                  "return-value.lisp"
                                  "superglobals.lisp")))
 (defvar *php-core*
-	,(list 'quote (php-load-base ""
+	,(list 'quote (php-load-core ""
                                  "cons.lisp"
                                  "symbol.lisp")))
 
 (defvar *php-core2*
-	,(list 'quote (+ (php-load-base ""
+	,(list 'quote (+ (php-load-core ""
                                     "../../../environment/number-typing.lisp"
                                     "print-object.lisp"
                                     "%princ.lisp"
@@ -29,12 +29,12 @@
                                     "array.lisp"
                                     "function.lisp"
                                     "objectp.lisp")
-                     (php-load-base "../../../environment/"
+                     (php-load-core "../../../environment/"
                                     "not.lisp"
                                     "atom.lisp"
                                     "exception.lisp"
                                     "cps-exceptions.lisp")
-                     (php-load-base ""
+                     (php-load-core ""
                                     "character.lisp"
                                     "eq.lisp"
                                     "../../../environment/equality.lisp"
@@ -54,5 +54,5 @@
                                     "string.lisp"
                                     "base64.lisp"
                                     "quit.lisp")
-                     (php-load-base "../../../environment/"
+                     (php-load-core "../../../environment/"
                                     "string.lisp"))))
