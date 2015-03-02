@@ -5,7 +5,7 @@
     (with (f    [& _
                    (? (& (symbol? _)
                          (empty-string? (symbol-name _)))
-                      (enqueue ret _)
+                      (enqueue q _)
                       (when (cons? _)
                         (f _.)
                         (f ._)))])
