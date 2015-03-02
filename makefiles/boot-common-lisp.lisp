@@ -5,9 +5,11 @@
       (:export ,@(make-keywords (+ +cl-direct-imports+
                                    (carlist +cl-renamed-imports+)
                                    *cl-builtins*
-                                   +core-variables+))))
+                                   +core-variables+)))
+      (:import-from :cl :nil :t))
     (defpackage :tre
-      (:use :tre-core))))
+      (:use :tre-core)
+      (:import-from :cl :nil :t))))
 
 (defun cl-symbol (x)
   (make-symbol (symbol-name x) "COMMON-LISP"))
@@ -25,7 +27,7 @@
   (with-temporary *transpiler* !
     (add-defined-variable '*macros*))
 ;  (= (transpiler-dump-passes? !) t)
-  (let c (compile-sections (list (. 'core nil)) :transpiler !)
+  (let c (compile-sections (list (. 'dummy nil)) :transpiler !)
     (with-output-file o "boot-common.lisp"
       (format o "(declaim #+sbcl(sb-ext:muffle-conditions compiler-note style-warning))~%")
       ; Use to debug...
@@ -39,8 +41,8 @@
         (princ ! o))
       (filter [late-print _ o] c)
       (princ "(cl:in-package :tre)" o)
-      (princ "(cl:defconstant nil cl:nil)" o)
-      (princ "(cl:defconstant t cl:t)" o)
+;      (princ "(cl:defconstant nil cl:nil)" o)
+;      (princ "(cl:defconstant t cl:t)" o)
       (princ "(cl:defconstant *new-core* cl:t)" o)
       (princ "(cl:format t \"Loading environment...~%\")" o)
       (late-print '(env-load "main.lisp") o))))
