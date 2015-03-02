@@ -29,5 +29,6 @@
               (with-temporary *current-pass-input* ,arg
                 (prog1
                   (print (,fun ,arg))
+                  (fresh-line)
                   (format t ,(string-concat "; **** end of " (symbol-name name) "~%")))))
             (,fun ,arg))))))
