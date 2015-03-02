@@ -1,9 +1,10 @@
-; tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2015 Sven Michael Klose <pixel@copei.de>
 
 (env-load "stage0/main.lisp")
 (env-load "stage1/main.lisp")
 (env-load "stage2/main.lisp")
 (env-load "stage3/main.lisp")
+(env-load "version.lisp")
 (env-load "stage4/main.lisp")
 (env-load "stage5/main.lisp")
 
@@ -36,7 +37,6 @@
 
 (unless (eq t *new-core*)
   (env-load "generate-cl-core.lisp"))
-(env-load "version.lisp")
 (env-load "config-after-reload.lisp")
 
 (dump-system "image")
