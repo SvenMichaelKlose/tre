@@ -6,6 +6,7 @@
                          (+ +cl-direct-imports+
                             (carlist +cl-renamed-imports+)
                             *cl-builtins*
+                            +cl-special-forms+
                             +core-variables+)))
       (:import-from "CL" "NIL" "T"))
     (defpackage "TRE"
