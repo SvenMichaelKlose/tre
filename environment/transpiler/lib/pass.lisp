@@ -9,6 +9,9 @@
     `(progn
        (defvar ,cache-var nil)
        (defun ,name (,init)
+         (when (dump-passes?)
+           (fresh-line)
+           (format t "; #### ~A ####~%" ',name))
          (= ,cache-var ,init)
          (dolist (i (list ,@(mapcar [list 'quote (cadr _)]
                                     (group name-fun-pairs 2))) ,cache-var)

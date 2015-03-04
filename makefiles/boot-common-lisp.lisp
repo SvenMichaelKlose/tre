@@ -28,7 +28,7 @@
 (alet (copy-transpiler *cl-transpiler*)
   (with-temporary *transpiler* !
     (add-defined-variable '*macros*))
-;  (= (transpiler-dump-passes? !) t)
+  (= (transpiler-dump-passes? !) t)
   (let c (compile-sections (list (. 'dummy nil)) :transpiler !)
     (with-output-file o "boot-common.lisp"
       (format o "(declaim #+sbcl(sb-ext:muffle-conditions compiler-note style-warning))~%")
@@ -43,7 +43,6 @@
         (princ ! o))
       (filter [late-print _ o] c)
       (princ "(cl:in-package :tre)" o)
-      (princ "(cl:defconstant *new-core* cl:t)" o)
       (princ "(cl:format t \"Loading environment...~%\")" o)
       (late-print '(env-load "main.lisp") o))))
 (quit)

@@ -57,3 +57,4 @@
       (late-print ! o)))))
 
 (generate-cl-core)
+(quit)

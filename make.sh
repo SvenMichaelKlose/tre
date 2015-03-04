@@ -221,6 +221,24 @@ core)
     echo "(load \"cl/main.lisp\")" | sbcl --noinform
 	;;
 
+oldgenboot)
+    echo
+    echo "#######################################################"
+    echo "### GENERATING 'cl/generated-from-environment.lisp' ###"
+    echo "#######################################################"
+    echo
+    sbcl --core image makefiles/old-boot-common.lisp 2>&1 || exit 1
+	;;
+
+genboot)
+    echo
+    echo "#####################################"
+    echo "### GENERATING 'boot-common.lisp' ###"
+    echo "#####################################"
+    echo
+    sbcl --core image makefiles/boot-common-lisp.lisp 2>&1 || exit 1
+	;;
+
 oldboot)
     echo
     echo "########################"
@@ -229,6 +247,7 @@ oldboot)
     echo
     git checkout -- cl/generated-from-environment.lisp
 	./make.sh core $ARGS || exit 1
+	./make.sh oldgenboot $ARGS || exit 1
 	./make.sh ctests $ARGS || exit 1
 	;;
 
@@ -241,14 +260,6 @@ nboot)
     (echo "(load \"boot-common.lisp\")" | sbcl 2>&1) || exit 1
 	;;
 
-genboot)
-    echo
-    echo "#####################################"
-    echo "### GENERATING 'boot-common.lisp' ###"
-    echo "#####################################"
-    echo
-    sbcl --core image makefiles/boot-common-lisp.lisp 2>&1 || exit 1
-	;;
 
 qboot)
     ./make.sh oldboot 2>&1 || exit 1

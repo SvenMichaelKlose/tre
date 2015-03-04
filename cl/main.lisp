@@ -14,5 +14,4 @@
 
 (in-package :tre)
 
-(cl:defconstant *new-core* nil)
 (env-load "main.lisp") 
