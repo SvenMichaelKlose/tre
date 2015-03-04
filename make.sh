@@ -249,6 +249,8 @@ oldboot)
 	./make.sh core $ARGS || exit 1
 	./make.sh oldgenboot $ARGS || exit 1
 	./make.sh ctests $ARGS || exit 1
+	./make.sh core $ARGS || exit 1
+	./make.sh ctests $ARGS || exit 1
 	;;
 
 nboot)
