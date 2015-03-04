@@ -222,21 +222,42 @@ core)
 	;;
 
 oldboot)
+    echo
+    echo "########################"
+    echo "### BOOTING WITH CL/ ###"
+    echo "########################"
+    echo
     git checkout -- cl/generated-from-environment.lisp
 	./make.sh core $ARGS || exit 1
 	./make.sh ctests $ARGS || exit 1
 	;;
 
 nboot)
+    echo
+    echo "#######################################"
+    echo "### BOOTING WITH 'boot-common.lisp' ###"
+    echo "#######################################"
+    echo
     (echo "(load \"boot-common.lisp\")" | sbcl 2>&1) || exit 1
 	;;
 
 genboot)
+    echo
+    echo "#####################################"
+    echo "### GENERATING 'boot-common.lisp' ###"
+    echo "#####################################"
+    echo
     sbcl --core image makefiles/boot-common-lisp.lisp 2>&1 || exit 1
 	;;
 
-boot)
+qboot)
     ./make.sh oldboot 2>&1 || exit 1
+    ./make.sh genboot 2>&1 || exit 1
+    ./make.sh nboot 2>&1 || exit 1
+	;;
+
+boot)
+    ./make.sh qboot 2>&1 || exit 1
     ./make.sh genboot 2>&1 || exit 1
     ./make.sh nboot 2>&1 || exit 1
 	;;
@@ -251,7 +272,11 @@ pgo)
 	;;
 
 ctests)
-    echo "Environment tests..."
+    echo
+    echo "#########################"
+    echo "### ENVIRONMENT TESTS ###"
+    echo "#########################"
+    echo
     (echo "(do-tests)" | $TRE) || exit 1
     echo "Environment tests passed."
 	;;
