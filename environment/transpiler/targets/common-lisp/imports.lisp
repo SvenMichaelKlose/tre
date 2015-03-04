@@ -28,3 +28,13 @@
       (character> >)
       (%error error)
       (%nconc nconc)))
+
+(defconstant +cl-special-forms+
+    '(%defun-quiet %defun %defvar
+      %defmacro
+      setq
+      progn block
+      return-from tagbody go
+      cond
+      labels
+      ?))
