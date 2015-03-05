@@ -259,19 +259,18 @@ nboot)
     echo "### BOOTING WITH 'boot-common.lisp' ###"
     echo "#######################################"
     echo
+    ./make.sh genboot 2>&1 || exit 1
     (echo "(load \"boot-common.lisp\")" | sbcl 2>&1) || exit 1
 	;;
 
 
 qboot)
     ./make.sh oldboot 2>&1 || exit 1
-    ./make.sh genboot 2>&1 || exit 1
     ./make.sh nboot 2>&1 || exit 1
 	;;
 
 boot)
     ./make.sh qboot 2>&1 || exit 1
-    ./make.sh genboot 2>&1 || exit 1
     ./make.sh nboot 2>&1 || exit 1
 	;;
 
