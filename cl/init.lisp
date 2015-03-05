@@ -101,9 +101,8 @@
      (:shadow :peek-char :read-char :read :append)
      (:export ,@(all-exports)
               :+builtins+
-              :defun :gethash :setf :cl-read-char :cl-peek-char
-              :%backquote :backquote :quasiquote :quasiquote-splice
-              :*standard-input* :*standard-output*)))
+              :cl-read-char :cl-peek-char
+              :%backquote :backquote :quasiquote :quasiquote-splice)))
 
 (define-core-package)
 
