@@ -27,11 +27,10 @@
     (atom x)        (? (symbol? x)
                        (alet (symbol-name x)
                          (?
-                           (cl:equal "&BODY" !)        (make-symbol "&REST" "CL")
-                           (| (cl:equal "&OPTIONAL" !)
-                              (cl:equal "&REST" !)
-                              (cl:equal "&BODY" !)
-                              (cl:equal "&KEY" !))      (make-symbol ! "CL")
+                           (cl:string= "&BODY" !)        (make-symbol "&REST" "CL")
+                           (| (cl:string= "&OPTIONAL" !)
+                              (cl:string= "&REST" !)
+                              (cl:string= "&KEY" !))     (make-symbol ! "CL")
                            x))
                        x)
     (eq 'quote x.)  x
