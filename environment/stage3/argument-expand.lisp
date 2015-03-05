@@ -1,7 +1,11 @@
 ; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@hugbox.org>
 
-(defun argument-rest-keyword? (x)     (in? x (make-symbol "&REST" "TRE") (make-symbol "&BODY" "TRE")))
-(defun argument-keyword? (x)          (in? x (make-symbol "&REST" "TRE") (make-symbol "&BODY" "TRE") (make-symbol "&OPTIONAL" "TRE") (make-symbol "&KEY" "TRE")))
+(defun argument-rest-keyword? (x)     (in? x (tre-symbol '&rest)
+                                             (tre-symbol '&body)))
+(defun argument-keyword? (x)          (in? x (tre-symbol '&rest)
+                                             (tre-symbol '&body)
+                                             (tre-symbol '&optional)
+                                             (tre-symbol '&key)))
 (defun argument-name? (x)             (atom x))
 (defun argument-name (x)              x)
 
@@ -29,7 +33,7 @@
 
 		 copy-def-until-&key
 		   [when _
-		     (? (eq (make-symbol "&KEY" "TRE") _.)
+		     (? (eq (tre-symbol '&key) _.)
 				(make-&key-descr ._)
 				(. _. (copy-def-until-&key ._)))])
 
@@ -100,16 +104,16 @@
 		   #'((def vals)
 				(= no-static '&rest)
   			    (= rest-arg (list (. (argdef-get-name .def.)
-                                     (. (make-symbol "%REST" "TRE")
+                                     (. (tre-symbol '%rest)
                                         vals))))
 			    nil)
 
          exp-optional-rest
 		   #'((def vals)
 		        (case def. :test #'eq
-				  (make-symbol "&REST" "TRE")     (exp-rest def vals)
-				  (make-symbol "&BODY" "TRE")     (exp-rest def vals)
-				  (make-symbol "&OPTIONAL" "TRE") (exp-optional .def vals)))
+				  (tre-symbol '&rest)     (exp-rest def vals)
+				  (tre-symbol '&body)     (exp-rest def vals)
+				  (tre-symbol '&optional) (exp-optional .def vals)))
 
 		 exp-sub
 		   #'((def vals)
@@ -158,7 +162,7 @@
 
 (defun argument-expand-values (fun def vals)
   (filter [? (& (cons? _)
-                (eq _. (make-symbol "%REST" "TRE")))
+                (eq _. (tre-symbol '%rest)))
              ._
              _]
           (cdrlist (argument-expand fun def vals))))
