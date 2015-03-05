@@ -89,7 +89,8 @@ if [ -f environment/transpiler/targets/c/native/$COMPILED_ENV ]; then
 fi
 
 CRUNSHTMP="tmp.c"
-TRE="sbcl --noinform --core image"
+SBCL="sbcl --noinform"
+TRE="$SBCL --core image"
 BINDIR="/usr/local/bin/"
 
 basic_clean ()
@@ -218,7 +219,7 @@ environment)
 	;;
 
 core)
-    echo "(load \"cl/main.lisp\")" | sbcl --noinform
+    echo "(load \"cl/main.lisp\")" | $SBCL --noinform
 	;;
 
 oldgenboot)
@@ -227,7 +228,7 @@ oldgenboot)
     echo "### GENERATING 'cl/generated-from-environment.lisp' ###"
     echo "#######################################################"
     echo
-    sbcl --core image makefiles/old-boot-common.lisp 2>&1 || exit 1
+    $SBCL --core image makefiles/old-boot-common.lisp 2>&1 || exit 1
 	;;
 
 genboot)
@@ -236,7 +237,7 @@ genboot)
     echo "### GENERATING 'boot-common.lisp' ###"
     echo "#####################################"
     echo
-    sbcl --core image makefiles/boot-common-lisp.lisp 2>&1 || exit 1
+    $SBCL --core image makefiles/boot-common-lisp.lisp 2>&1 || exit 1
 	;;
 
 oldboot)
@@ -260,7 +261,7 @@ nboot)
     echo "#######################################"
     echo
     ./make.sh genboot 2>&1 || exit 1
-    (echo "(load \"boot-common.lisp\")" | sbcl 2>&1) || exit 1
+    (echo "(load \"boot-common.lisp\")" | $SBCL 2>&1) || exit 1
 	;;
 
 
