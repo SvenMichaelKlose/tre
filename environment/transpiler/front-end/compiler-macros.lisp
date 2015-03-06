@@ -40,11 +40,11 @@
 
 (define-compiler-macro tagbody (&body body)
   `(%%block
-     ,@(filter [(? (cons? _)
-		           _
-		     	   (| (assoc-value _ *tagbody-replacements* :test #'eq)
-		       	      _))]
-               body)
+     ,@(@ [(? (cons? _)
+		      _
+		     (| (assoc-value _ *tagbody-replacements* :test #'eq)
+		       	_))]
+          body)
      (identity nil)))
 
 (define-compiler-macro progn (&body body)
@@ -79,8 +79,8 @@
     `(identity nil)))
 
 (define-compiler-macro setq (&rest args)
-  `(%%block ,@(filter [`(%= ,_. ,._.)]
-                      (group args 2))))
+  `(%%block ,@(@ [`(%= ,_. ,._.)]
+                 (group args 2))))
 
 (defun make-? (body)
   (with (tests (group body 2)

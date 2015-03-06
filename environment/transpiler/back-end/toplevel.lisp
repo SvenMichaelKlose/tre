@@ -66,4 +66,4 @@
      (generate-code (backend-prepare (list x)))))
 
 (defun backend (x)
-  (& x (filter #'backend-0 x)))
+  (& x (@ #'backend-0 x)))

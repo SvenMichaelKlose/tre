@@ -42,9 +42,9 @@
   (funcall (expex-setter-filter *expex*) x))
 
 (defun expex-guest-filter-arguments (x)
-  (filter [(expex-import-function _)
-           (funcall (expex-argument-filter *expex*) _)]
-          x))
+  (@ [(expex-import-function _)
+      (funcall (expex-argument-filter *expex*) _)]
+     x))
 
 
 ;;;; UTILS
@@ -75,17 +75,17 @@
 
 (defun argument-expand-values-compiled (fun def vals)
   (with (f [& _ `(. ,_. ,(f ._))])
-    (filter [? (& (cons? _)
-                  (argument-rest-keyword? _.))
-               (f ._)
-               _]
-            (cdrlist (argument-expand fun def vals)))))
+    (@ [? (& (cons? _)
+             (argument-rest-keyword? _.))
+          (f ._)
+          _]
+       (cdrlist (argument-expand fun def vals)))))
 
 (defun expex-convert-quotes (x)
-  (filter [? (quote? _)
-		     `(%quote ,._.)
-			 _]
-		  x))
+  (@ [? (quote? _)
+		`(%quote ,._.)
+		_]
+     x))
 
 (defun expex-argdef (fun)
   (| (funinfo-get-local-function-args *funinfo* fun)
@@ -146,7 +146,7 @@
 
 (defun expex-filter-and-move-args (x)
   (expex-import-variables x)
-  (with ((moved new-expr) (assoc-splice (filter #'expex-move (expex-guest-filter-arguments x))))
+  (with ((moved new-expr) (assoc-splice (@ #'expex-move (expex-guest-filter-arguments x))))
     (values (apply #'+ moved) new-expr)))
 
 (defun expex-move-slot-value (x)

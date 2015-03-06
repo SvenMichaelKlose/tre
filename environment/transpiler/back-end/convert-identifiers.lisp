@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2009,2011–2015 Sven Michael Klose <pixel@copei.de>
 
 (defun transpiler-translate-symbol (tr from to)
   (acons! from to (transpiler-symbol-translations tr)))
@@ -61,8 +61,8 @@
       (convert-identifier-r s)))
 
 (defun transpiler-dot-symbol-string (sl)
-  (apply #'string-concat (pad (filter [convert-identifier-0 (make-symbol (list-string _))]
-		                              (split #\. sl))
+  (apply #'string-concat (pad (@ [convert-identifier-0 (make-symbol (list-string _))]
+		                         (split #\. sl))
                               ".")))
 
 (defun convert-identifier-0 (s)
