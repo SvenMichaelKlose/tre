@@ -1,7 +1,7 @@
 ; tré – Copyright (c) 2014–2015 Sven Michael Klose <pixel@hugbox.org>
 
 (defun env-macros ()
-  (symbol-value (make-symbol "*MACROS*" "TRE")))
+  (symbol-value (tre-symbol '*macros*)))
 
 (defbuiltin macro? (x)
   (cl:rassoc x (env-macros) :test #'eq))
@@ -20,7 +20,7 @@
 (defvar *macroexpand-hook* nil)
 
 (defbuiltin macroexpand-1 (x)
-  (!? (symbol-value (make-symbol "*MACROEXPAND-HOOK*" "TRE"))
+  (!? (symbol-value (tre-symbol '*macroexpand-hook*))
       (apply ! (list x))
       x))
 
