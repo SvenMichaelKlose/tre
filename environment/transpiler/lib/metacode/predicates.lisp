@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2006–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2006–2015 Sven Michael Klose <pixel@copei.de>
 
 (mapcar-macro x
 	'(%quote %new
@@ -68,7 +68,8 @@
 
 (defun named-lambda? (x)
   (& (function-expr? x)
-     ..x))
+     ..x
+     x))
 
 (defun any-lambda? (x)
   (| (lambda? x)

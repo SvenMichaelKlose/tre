@@ -2,9 +2,8 @@
 
 (defun accumulate-toplevel-expressions (x)
    (remove-if #'not
-              (@ [? (| (named-lambda? _)
-                       (%var? _))
-                    _
+              (@ [| (named-lambda? _)
+                    (%var? _)
                     (& (add-toplevel-expression _)
                        nil)]
                  x)))
