@@ -101,6 +101,7 @@ basic_clean ()
     rm -vf environment/transpiler/targets/c/native/_revision.h environment/_current-version
     rm -vf examples/js/hello-world.js
     rm -vf gmon.out tmp.gcda profile.lisp
+	rm -vrf _nodejstests.log _phptests.log _bytecode-interpreter-tests.log make.log boot.log
 	echo "Checking out early reader..."
     git checkout -- cl/generated-from-environment.lisp
 }
@@ -108,9 +109,7 @@ basic_clean ()
 distclean ()
 {
 	echo "Cleaning for distribution..."
-    basic_clean
-	rm -vrf backup make.log boot.log
-	rm -vrf _nodejstests.log _phptests.log _bytecode-interpreter-tests.log
+	rm -vrf backup
 }
 
 link ()
