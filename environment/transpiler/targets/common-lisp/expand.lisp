@@ -28,11 +28,11 @@
 
 (define-cl-std-macro defspecial (name args &body body)
   (print-definition `(defspecial ,name ,args))
-  (add-delayed-expr `((cl:push (. (tre-symbol ',name)
+  (add-delayed-expr `((cl:push (. (cl:print (tre-symbol ',name))
                                   (. ',args
                                      #'(,(argument-expand-names 'defspecial args)
                                         ,@body)))
-                               *macros*))))
+                               *special-forms*))))
 
 (defun make-? (body)
   (with (tests (group body 2)
