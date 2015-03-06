@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
 
 (dont-obfuscate
 	node-name
@@ -215,7 +215,7 @@
   (has-attribute? "name"))
 
 (defmethod caroshi-element has-name? (x)
-  (member (downcase (get-name)) (mapcar #'downcase (ensure-list x)) :test #'string==))
+  (member (downcase (get-name)) (@ #'downcase (ensure-list x)) :test #'string==))
 
 (defmethod caroshi-element get-name ()
   (read-attribute "name"))
@@ -280,7 +280,7 @@
 (defmethod caroshi-element has-tag-name? (n)
   (? (cons? n)
      (member-if [has-tag-name? _] n)
-     (member (downcase tag-name) (mapcar #'downcase (ensure-list n)) :test #'string==)))
+     (member (downcase tag-name) (@ #'downcase (ensure-list n)) :test #'string==)))
 
 (defmethod caroshi-element set-styles (styles)
   (caroshi-element-set-styles this styles))

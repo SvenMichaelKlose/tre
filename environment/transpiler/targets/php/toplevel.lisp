@@ -1,8 +1,8 @@
 ; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
 
 (defvar *php-core-native*
-        ,(apply #'+ (mapcar [fetch-file (+ "environment/transpiler/targets/php/core/native/" _ ".php")]
-                            '("settings" "error" "character" "cons" "lexical" "closure" "symbol" "array"))))
+        ,(apply #'+ (@ [fetch-file (+ "environment/transpiler/targets/php/core/native/" _ ".php")]
+                       '("settings" "error" "character" "cons" "lexical" "closure" "symbol" "array"))))
 
 (defun php-print-native-environment (out)
   (princ *php-core-native* out))
@@ -53,7 +53,7 @@
 
 (defun php-expex-initializer (ex)
   (= (expex-inline? ex)         #'%slot-value?
-     (expex-setter-filter ex)   (compose [mapcar #'php-setter-filter _]
+     (expex-setter-filter ex)   (compose [@ #'php-setter-filter _]
                                          #'expex-compiled-funcall)
      (expex-argument-filter ex) #'php-argument-filter))
 

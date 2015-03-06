@@ -5,13 +5,14 @@
      (every [not (cps-exception? _)]
             (. name (funinfo-names *funinfo*)))))
 
+
 ;;;; INLINING
 
 (defun lambda-expand-make-inline-body (stack-places values body)
   `(%%block
-	 ,@(mapcar #'((stack-place init-value)
-				    `(%= ,stack-place ,init-value))
-			   stack-places values)
+     ,@(@ #'((stack-place init-value)
+              `(%= ,stack-place ,init-value))
+          stack-places values)
      ,@body))
 
 (defun lambda-call-embed (lambda-call)

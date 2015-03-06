@@ -13,8 +13,8 @@
            (fresh-line)
            (format t "; #### ~A ####~%" ',name))
          (= ,cache-var ,init)
-         (dolist (i (list ,@(mapcar [list 'quote (cadr _)]
-                                    (group name-fun-pairs 2))) ,cache-var)
+         (dolist (i (list ,@(@ [list 'quote (cadr _)]
+                               (group name-fun-pairs 2))) ,cache-var)
            (with-global-funinfo
              (= ,cache-var (= (last-pass-result) (funcall i ,cache-var)))))))))
 

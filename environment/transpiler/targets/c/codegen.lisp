@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
 
 (defun c-line (&rest x)
   `(,*c-indent* ,@x ,*c-separator*))
@@ -18,7 +18,7 @@
 ;;;; FUNCTIONS
 
 (defun c-arguments (fi)
-  (c-list (mapcar #'c-codegen-var-decl (funinfo-args fi))))
+  (c-list (@ #'c-codegen-var-decl (funinfo-args fi))))
 
 (defun c-make-function-declaration (name)
   (push (concat-stringtree "extern treptr " (compiled-function-name-string name)
@@ -35,7 +35,7 @@
     `(,*newline*
       ,(funinfo-comment fi)
 	  "treptr " ,(compiled-function-name name) " "
-	  ,@(c-list (mapcar [`("treptr " ,_)] args))
+	  ,@(c-list (@ [`("treptr " ,_)] args))
 	  ,*newline*
 	  "{" ,*newline*
           ,@(lambda-body x)

@@ -1,4 +1,4 @@
-; Caroshi – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; Caroshi – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
 
 (defun php-constructor-name (class-name)
   ($ class-name '-constructor))
@@ -36,8 +36,8 @@
 
 (defun php-method-functions (class-name cls)
   (awhen (class-methods cls)
-	(mapcar [php-method-function class-name _]
-            (reverse !))))
+	(@ [php-method-function class-name _]
+       (reverse !))))
 
 (defun php-method (class-name x)
   `("public function " ,x. " " ,(php-argument-list (argument-expand-names 'php-method .x.)) ,*php-newline*
@@ -47,8 +47,8 @@
 
 (defun php-members (class-name cls)
   (awhen (class-members cls)
-	(mapcar [`(%%native "var $" ,_. ,*php-separator*)]
-            (reverse !))))
+	(@ [`(%%native "var $" ,_. ,*php-separator*)]
+       (reverse !))))
 
 (defun php-methods (class-name cls)
   (awhen (class-methods cls)

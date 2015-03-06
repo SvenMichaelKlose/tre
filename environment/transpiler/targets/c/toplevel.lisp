@@ -46,7 +46,7 @@
 (defun c-header-includes ()
   (+ (format nil "#include <stdlib.h>~%")
      (format nil "#include <stdio.h>~%")
-     (apply #'+ (mapcar [format nil "#include \"~A\"~%" _] *c-core-headers*))))
+     (apply #'+ (@ [format nil "#include \"~A\"~%" _] *c-core-headers*))))
 
 (defun c-function-registration (name)
   `(%= ~%ret (register_compiled_function
@@ -69,14 +69,13 @@
 (defun c-make-init-function (statements)
   (alet ($ 'C-INIT- (++! *c-init-counter*))
     `(defun ,! ()
-       ,@(mapcar [`(tregc_add_unremovable ,_)]
-                 statements))))
+       ,@(@ [`(tregc_add_unremovable ,_)] statements))))
 
 (defun c-make-init-functions ()
   (add-used-function 'c-init)
   (with-temporary *c-init-counter* 0
-    (+ (mapcar #'c-make-init-function
-			   (group (c-declarations-and-initialisations) *c-init-group-size*))
+    (+ (@ #'c-make-init-function
+          (group (c-declarations-and-initialisations) *c-init-group-size*))
        `((defun c-init ()
            ,@(with-queue q
                (adotimes (*c-init-counter* (queue-list q))

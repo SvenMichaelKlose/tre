@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
 
 (defvar *delayed-constructors* nil)
 
@@ -37,6 +37,6 @@
 (defun generic-defmember (class-name &rest names)
   (print-definition `(defmember ,class-name ,@names))
   (!? (href (thisify-classes) class-name)
-      (append! (class-members !) (mapcar [list _ t] names))
+      (append! (class-members !) (@ [list _ t] names))
       (error "Class ~A is not defined." class-name))
   nil)

@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2007–2009,2011 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2007–2009,2011,2015 Sven Michael Klose <pixel@copei.de>
 
 (defun lml2dom-exec-function (x)
   (let f .x.
@@ -50,7 +50,7 @@
 	e))
 
 (defun lml2dom-exec (parent x doc)
-  (let children (mapcar (fn lml2dom parent _ :doc doc) ..x)
+  (let children (@ [lml2dom parent _ :doc doc] ..x)
 	(funcall (lml2dom-exec-function x) parent children)
 	children))
 

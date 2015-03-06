@@ -14,10 +14,8 @@
 (defun js-epilogue ()
   (format nil "}break;}~%"))
 
-; XXX js-emit-memorized-sources
 (defun js-emit-early-defined-functions ()
-  (mapcar [`(push ',_ *functions*)]
-          (memorized-sources)))
+  (@ [`(push ',_ *functions*)] (memorized-sources)))
 
 (defun js-emit-memorized-sources ()
   (clr (configuration :memorize-sources?))

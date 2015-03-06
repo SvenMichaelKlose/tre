@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2009,2012 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2009,2012,2015 Sven Michael Klose <pixel@copei.de>
 
 (defun little-endianess? (&optional (endianess *endianess*))
   (eq endianess 'little))
@@ -94,4 +94,4 @@
     m))
 
 (defun %free-list (x)
-  (mapcar #'%free x))
+  (@ #'%free x))

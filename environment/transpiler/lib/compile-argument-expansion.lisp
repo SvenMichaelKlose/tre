@@ -1,9 +1,9 @@
-; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
 
 (defun compile-argument-expansion-defaults (defaults)
-  (mapcar [`(& (eq ,_ ,(list 'quote _))
-		       (= ,_ ,(assoc-value _ defaults)))]
-		  (carlist defaults)))
+  (@ [`(& (eq ,_ ,(list 'quote _))
+          (= ,_ ,(assoc-value _ defaults)))]
+     (carlist defaults)))
 
 (defun compile-argument-expansion-0 (fun-name adef p)
   (with ((argdefs key-args) (make-&key-alist adef)
