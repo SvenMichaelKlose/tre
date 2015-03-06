@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2015 Sven Michael Klose <pixel@copei.de>
 
 (env-load "stage1/copy-tree.lisp" :c)
 (env-load "stage1/cons.lisp")
@@ -37,6 +37,7 @@
 (env-load "stage1/test-nthcdr.lisp")
 (env-load "stage1/queue.lisp")
 (env-load "stage1/dolist.lisp")
+(env-load "stage1/@.lisp")
 (env-load "stage1/map.lisp")
 (env-load "stage1/tp.lisp")
 (env-load "stage1/comparison-c.lisp" :c)

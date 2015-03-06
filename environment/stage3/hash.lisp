@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2005–2006,2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2006,2008–2015 Sven Michael Klose <pixel@copei.de>
 
 (defvar *default-hash-size* 2039)
 
@@ -67,8 +67,8 @@
 (defun hash-merge (&rest lst)
   (let l (remove-if #'not lst)
     (& l (let h (copy-hash-table l.)
-           (dolist (b .l h)
-             (dolist (j (hashkeys b))
+           (@ (b .l h)
+             (@ (j (hashkeys b))
                (= (href h j) (href b j))))))))
 
 (defun make-hash-table (&key (test #'eq) (size *default-hash-size*))

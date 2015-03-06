@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008,2012–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008,2012–2013,2015 Sven Michael Klose <pixel@copei.de>
 
 (defvar *collected-errors* nil)
 
@@ -7,6 +7,6 @@
 
 (defun issue-collected-errors ()
   (when *collected-errors*
-	(alet (apply #'+ (filter [+ _ "~%"] *collected-errors*))
+	(alet (apply #'+ (@ [+ _ "~%"] *collected-errors*))
 	  (= *collected-errors* nil)
 	  (error (format nil !)))))

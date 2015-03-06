@@ -94,7 +94,7 @@
 
 (defun %print-string (x str)
   (princ #\" str)
-  (dolist (i (string-list x))
+  (@ (i (string-list x))
     (?
       (== i #\")  (princ "\\\"" str)
       (== i #\\)  (princ "\\\\" str)
@@ -103,7 +103,7 @@
 
 (defun %print-escaped-symbol (x str)
   (princ #\| str)
-  (dolist (i (string-list x))
+  (@ (i (string-list x))
     (?
       (== i #\|)  (princ "\\|" str)
       (princ i str)))

@@ -1,11 +1,11 @@
-; tré – Copyright (c) 2005–2006,2009–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2006,2009–2015 Sven Michael Klose <pixel@copei.de>
 
 (functional assoc rassoc acons copy-alist ensure-alist)
 
 (defmacro %define-assoc (name getter)
   `(defun ,name (key lst &key (test #'eql))
      (& lst
-        (dolist (i lst)
+        (@ (i lst)
           (? (cons? i)
              (? (funcall test key (,getter i))
                 (return i))
@@ -31,7 +31,7 @@
   `(= ,place (acons ,key ,val ,place)))
 
 (defun copy-alist (x)
-  (filter [. _. ._] x))
+  (@ [. _. ._] x))
 
 (defun aremove (obj lst &key (test #'eql))
   (& lst
@@ -45,7 +45,7 @@
   `(= ,place (aremove ,obj ,place :test ,test)))
 
 (defun areplace (x replacements &key (test #'eql))
-  (filter [| (assoc _. replacements :test test) _] x))
+  (@ [| (assoc _. replacements :test test) _] x))
 
 (defmacro curly (&rest x)
   `(assoc ,@x))

@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2013,2015 Sven Michael Klose <pixel@copei.de>
 
 (defvar *type-predicates*
   '((nil        . not)
@@ -26,15 +26,15 @@
 (defun %declare-statement-type-1 (typ x)
   (| (symbol? x)
 	 (error "Symbol expected but got ~A to declare as of type ~A." x typ))
-  `(unless (| ,@(filter [%declare-statement-type-predicate _ x]
-                        (ensure-list typ)))
+  `(unless (| ,@(@ [%declare-statement-type-predicate _ x]
+                   (ensure-list typ)))
 	 (error "~A is not of type ~A. Object: ~A." ,(symbol-name x) (quote ,typ) ,x)))
 
 (defun %declare-statement-type (x)
   (| (<= 2 (length x))
 	 (error "Expected type and one or more variables, but got only ~A." x))
   `(progn
-	 ,@(filter [%declare-statement-type-1 x. _] .x)))
+	 ,@(@ [%declare-statement-type-1 x. _] .x)))
 
 (defvar *declare-statement-classes*
   '((type .	%declare-statement-type)))
@@ -47,7 +47,7 @@
 
 (defmacro declare (&rest x)
   (| x (error "Arguments expected."))
-  (alet (filter #'%declare-statement (ensure-tree x))
+  (alet (@ #'%declare-statement (ensure-tree x))
 	(when *assert*
   	  `(progn
 	 	 ,@!))))

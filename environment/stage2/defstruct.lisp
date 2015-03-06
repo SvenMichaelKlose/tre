@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2005–2009,2011–2014 Sven Michael Klose <pixel@hugbox.org>
+; tré – Copyright (c) 2005–2009,2011–2015 Sven Michael Klose <pixel@hugbox.org>
 
 (defun %struct-option-keyword? (x)
   (in? x :constructor :global))
@@ -17,19 +17,19 @@
      field))
 
 (defun %struct-constructor-args (fields)
-  `(&key ,@(filter [let n (%struct-field-name _)
-                     `(,n ',n)]
-				   fields)))
+  `(&key ,@(@ [let n (%struct-field-name _)
+                `(,n ',n)]
+              fields)))
 
 (defun %struct-init (fields g)
   (let index 1
-    (filter [let argname (%struct-field-name _)
-              `(= (aref ,g ,(++! index))
-                  (? (eq ,argname ',argname)
-                     ,(& (cons? _)
-                         ._.)
-                     ,argname))]
-            fields)))
+    (@ [let argname (%struct-field-name _)
+         `(= (aref ,g ,(++! index))
+             (? (eq ,argname ',argname)
+                 ,(& (cons? _)
+                     ._.)
+                 ,argname))]
+       fields)))
 
 (defun %struct-constructor (name fields options)
   (with (fname      (%struct-constructor-name name options)
@@ -65,8 +65,8 @@
 
 (defun %struct-accessors (name fields options)
   (let index 1
-    (filter [%struct-slot-accessors name (%struct-field-name _) (++! index) options]
-            fields)))
+    (@ [%struct-slot-accessors name (%struct-field-name _) (++! index) options]
+       fields)))
 
 (defun struct-predicate (x)
   (& (array? x)

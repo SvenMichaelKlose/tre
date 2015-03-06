@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2005–2006,2008-2009,2011–2014 Sven Michael Klose <pixel@hugbox.org>
+; tré – Copyright (c) 2005–2006,2008-2009,2011–2015 Sven Michael Klose <pixel@hugbox.org>
 
 (functional find position)
 
@@ -60,7 +60,7 @@
   (find-if pred (apply #'append seqs)))
 
 (defun every (pred &rest seqs)
-  (dolist (seq seqs t)
+  (@ (seq seqs t)
     (adotimes ((length seq))
       (| (funcall pred (elt seq !))
          (return-from every nil)))))

@@ -1,11 +1,11 @@
-;;;;; tré – Copyright (c) 2005–2006,2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2006,2008–2015 Sven Michael Klose <pixel@copei.de>
 
 (functional lower-case? upper-case? alpha-char? digit-char? alphanumeric?)
 
 (defmacro def-rest-predicate (name iter args test-expr)
   (with-gensym x
     `(defun ,name (&rest ,x ,@args)
-       (dolist (,iter ,x t)
+       (@ (,iter ,x t)
          (| ,test-expr
             (return nil))))))
 

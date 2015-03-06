@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2012,2014 Sven Michael Klose <pixel@hugbox.org>
+; tré – Copyright (c) 2012,2014–2015 Sven Michael Klose <pixel@hugbox.org>
 
 (defvar *profile*      (make-hash-table :test #'eq))
 (defvar *profile-lock* t)
@@ -19,6 +19,7 @@
      ,@body))
 
 (defun profile ()
-  (sort (filter [. ._ _.] (hash-alist *profile*))
+  (sort (@ [. ._ _.]
+           (hash-alist *profile*))
         :test #'((a b)
-                   (< a. b.))))
+                  (< a. b.))))

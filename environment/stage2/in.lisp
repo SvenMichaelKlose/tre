@@ -1,7 +1,7 @@
-;;;;; tré – Copyright (c) 2006–2008,2012 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2006–2008,2012,2015 Sven Michael Klose <pixel@copei.de>
 
 (defmacro in? (obj &rest lst)
-  `(| ,@(filter #'((x) `(eq ,obj ,x)) lst)))
+  `(| ,@(@ [`(eq ,obj ,_)] lst)))
 
 (defmacro in=? (obj &rest lst)
-  `(| ,@(filter #'((x) `(== ,obj ,x)) lst)))
+  `(| ,@(@ [`(== ,obj ,_)] lst)))

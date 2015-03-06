@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008,2010,2012–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008,2010,2012–2015 Sven Michael Klose <pixel@copei.de>
 
 (defun token-is-quote? (x)
   (in? x 'quote 'backquote 'quasiquote 'quasiquote-splice 'accent-circonflex))
@@ -126,8 +126,8 @@
            x.))))
 
 (defun read-symbol-or-slot-value (sym pkg)
-  (alet (filter [& _ (list-string _)]
-                (split #\. sym))
+  (alet (@ [& _ (list-string _)]
+           (split #\. sym))
     (? (& .! !. (car (last !)))
        (read-slot-value !)
        (tre:make-symbol (list-string sym)
