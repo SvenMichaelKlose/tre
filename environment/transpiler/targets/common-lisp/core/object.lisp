@@ -5,10 +5,9 @@
 
 (defun variable-compare (predicate x)
   (? .x
-     (alet x.
-       (@ (i .x t)
-         (| (funcall predicate ! i)
-            (return nil))))
+     (@ (i .x t)
+       (| (funcall predicate x. i)
+          (return nil)))
      (cl:error "At least 2 arguments required.")))
 
 (defun non-keyword-symbol? (x)
@@ -25,12 +24,12 @@
 (defun tre-eql (a b)
   (?
     (& (number? a)
-       (number? b))  (? (cl:eq (character? a)
-                               (character? b))
-                        (== a b))
-    (& (cons? a)
-       (cons? b))    (& (tre-eql a. b.)
-                        (tre-eql .a .b))
+       (number? b))   (& (cl:eq (cl:characterp a)
+                                (cl:characterp b))
+                         (== a b))
+    (& (cl:consp a)
+       (cl:consp b))  (& (tre-eql a. b.)
+                         (tre-eql .a .b))
     (xpackeq a b)))
 
 (defbuiltin eq (&rest x)  (variable-compare #'xpackeq x))
