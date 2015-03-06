@@ -68,10 +68,8 @@
 (load "cl/builtins.lisp")
 
 (defun %start-core ()
-  (setf *launchfile* (cadr (or
-                             #+SBCL sb-ext:*posix-argv*
-                             #+LISPWORKS system:*line-arguments-list*
-                             #+CMU extensions:*command-line-words*
-                             nil))))
+  (setf *launchfile* (cadr (or #+SBCL sb-ext:*posix-argv*
+                               #+LISPWORKS system:*line-arguments-list*
+                               #+CMU extensions:*command-line-words*))))
 
 (defun quit (&optional exit-code) (sb-ext:quit :unix-status exit-code))
