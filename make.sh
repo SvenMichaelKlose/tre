@@ -110,6 +110,7 @@ basic_clean ()
 gitclean ()
 {
 	echo "Cleaning for distribution..."
+    basic_clean
 	rm -vrf backup boot-common.lisp
 }
 
