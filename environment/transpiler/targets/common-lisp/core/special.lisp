@@ -1,13 +1,15 @@
 ; tré – Copyright (c) 2014–2015 Sven Michael Klose <pixel@copei.de>
 
+(defvar *special-forms* nil)
+
 (defun special-%%macrocall (x)
-  (alet (cdr (assoc x. *macros* :test #'eq))
+  (alet (cdr (assoc x. *special-forms* :test #'eq))
     (apply .! (argument-expand-values x. !. .x))))
 
 (defun special-%%macro? (x)
   (& (cons? x)
      (symbol? x.)
-     (assoc x. *macros* :test #'eq)))
+     (assoc x. *special-forms* :test #'eq)))
 
 (defun specialexpand (x)
   (with-temporaries (*macro?-diversion*    #'special-%%macro?
@@ -15,7 +17,7 @@
     (with (f #'((old x)
                  (? (equal old x)
                     x
-                    (specialexpand x))))
+                    (f x (%macroexpand x)))))
       (f x (%macroexpand x)))))
 
 (defun make-%defun-quiet (name args body)
@@ -36,7 +38,7 @@
                (. ',args
                   #'(,(argument-expand-names '%defmacro args)
                     ,@body)))
-            ,(make-symbol "*MACROS*" "TRE")))
+            ,(tre-symbol '*macros*)))
 
 (defspecial %defvar (name &optional (init nil))
   (print-definition `(%defvar ,name))
