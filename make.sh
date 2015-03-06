@@ -222,6 +222,10 @@ core)
     echo "(load \"cl/main.lisp\")" | $SBCL --noinform
 	;;
 
+newcore)
+    (echo "(load \"boot-common.lisp\")" | $SBCL 2>&1) || exit 1
+	;;
+
 oldgenboot)
     echo
     echo "#######################################################"
@@ -264,17 +268,19 @@ nboot)
     echo "#######################################"
     echo
     ./make.sh genboot 2>&1 || exit 1
-    (echo "(load \"boot-common.lisp\")" | $SBCL 2>&1) || exit 1
+    ./make.sh newcore 2>&1 || exit 1
 	;;
 
 
 qboot)
-    ./make.sh oldboot 2>&1 || exit 1
+    git checkout -- cl/generated-from-environment.lisp
+    ./make.sh oldqboot 2>&1 || exit 1
     ./make.sh nboot 2>&1 || exit 1
 	;;
 
 boot)
-    ./make.sh qboot 2>&1 || exit 1
+    ./make.sh oldboot 2>&1 || exit 1
+    ./make.sh nboot 2>&1 || exit 1
     ./make.sh nboot 2>&1 || exit 1
 	;;
 
