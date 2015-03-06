@@ -7,7 +7,7 @@
 
 (defun make-scoping-function (x)
   (with-gensym g
-    `(labels ((,g ,@(make-lambdas (cadar x))))
+    `(labels ((,g ,@(make-lambdas (cl:cadar x))))
        (,g ,@(make-lambdas .x)))))
 
 (defun make-anonymous-function (x)
@@ -17,14 +17,14 @@
        `(lambda ,@!))))
 
 (defun lambda-expr-without-lambda-keyword? (x)
-  (& (cons? x)
+  (& (cl:consp x)
      (eq 'function x.)
-     (not (atom .x.))
-     (not (eq 'lambda (car .x.)))))
+     (cl:not (cl:atom .x.))
+     (cl:not (eq 'lambda (cl:car .x.)))))
 
 (defun make-lambdas (x)
   (?
-    (atom x)        (? (symbol? x)
+    (cl:atom x)     (? (cl:symbolp x)
                        (alet (symbol-name x)
                          (?
                            (cl:string= "&BODY" !)         (make-symbol "&REST" "CL")
