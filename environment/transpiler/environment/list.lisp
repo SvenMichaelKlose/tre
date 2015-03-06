@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2015 Sven Michael Klose <pixel@copei.de>
 
 (declare-cps-exception list-length)
 
@@ -35,7 +35,7 @@
 
 (defun filter (func lst)
   (let result (. nil nil)
-    (dolist (i lst .result)
+    (@ (i lst .result)
       (rplaca result
               (cdr (rplacd (| result.
                               result)

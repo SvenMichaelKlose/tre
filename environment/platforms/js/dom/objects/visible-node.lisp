@@ -1,7 +1,7 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2013,2015 Sven Michael Klose <pixel@copei.de>
 
 (defun visible-node-insert-before (elm new-elm)
-  (dolist (i (ensure-list new-elm))
+  (@ (i (ensure-list new-elm))
     (!? *dom-callback-before-insert-before*
 	    (funcall ! elm))
     (elm.parent-node.insert-before i elm))
@@ -54,7 +54,7 @@
 
 (defmethod visible-node add-after (new-elm)
   (let to this
-    (dolist (i (ensure-list new-elm))
+    ( q (i (ensure-list new-elm))
       (!? to.next-sibling
 	      (visible-node-insert-before ! i)
           (parent-node.add i))

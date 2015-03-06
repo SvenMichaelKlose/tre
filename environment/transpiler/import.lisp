@@ -27,7 +27,7 @@
   x)
 
 (defun add-wanted-functions (x)
-  (dolist (i x x)
+  (@ (i x x)
     (add-wanted-function i)))
 
 (defun can-import-variable? (x)

@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2006,2008,2010–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2006,2008,2010–2015 Sven Michael Klose <pixel@copei.de>
 
 (functional member)
 
@@ -9,7 +9,7 @@
        (return-from member i))))
 
 (defun member-if (pred &rest lsts)
-  (dolist (i lsts)
+  (@ (i lsts)
     (do ((j i .j))
         ((not j))
       (? (funcall pred j.)

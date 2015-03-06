@@ -131,7 +131,7 @@
     (add i)))
 
 (defmethod caroshi-element add-list (x)
-  (dolist (i x this)
+  (@ (i x this)
     (add i)))
 
 (defmethod caroshi-element add-front (child)
@@ -237,7 +237,7 @@
 
 ;(defmethod caroshi-element generic-has-class? (x)
 ;  (let classes (get-classes)
-;    (dolist (i (ensure-list x))
+;    (@ (i (ensure-list x))
 ;      (& (member i (get-classes) :test #'string==)
 ;	      (return t)))))
 
@@ -245,7 +245,7 @@
   (read-attribute "class"))
 
 (defmethod caroshi-element get-first-of-classes (lst)
-  (dolist (i lst)
+  (@ (i lst)
     (& (has-class? i)
        (return i))))
 
@@ -263,7 +263,7 @@
 					   	  " "))))))
 
 (defmethod caroshi-element add-classes (x)
-  (dolist (i x x)
+  (@ (i x x)
     (add-class i)))
 
 (defmethod caroshi-element remove-class (x)
@@ -324,7 +324,7 @@
 (defmethod caroshi-element set-rotation (x)
   (alet (mod x 360)
     (= _caroshi-rotation x)
-    (dolist (i '("" "-webkit-" "-moz-" "-o-") x)
+    (@ (i '("" "-webkit-" "-moz-" "-o-") x)
       (set-style (+ i "transform") (+ "rotate(" ! "deg)")))))
 
 (defmethod caroshi-element get-rotation ()

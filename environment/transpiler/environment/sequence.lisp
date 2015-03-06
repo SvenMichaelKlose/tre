@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
 
 (defun maparray (fun hash)
   (with-queue q
@@ -6,7 +6,7 @@
       (enqueue q (funcall fun (aref hash i))))))
 
 (defun maphash (fun hash)
-  (dolist (i (%property-list hash))
+  (@ (i (%property-list hash))
     (funcall fun i. .i)))
 
 (defun elt (seq idx)

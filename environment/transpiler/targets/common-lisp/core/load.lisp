@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2014–2015 Sven Michael Klose <pixel@copei.de>
 
 (defun %load-r (s)
   (when (peek-char s)
@@ -13,6 +13,6 @@
 
 (defbuiltin load (pathname)
   (print-definition `(%load ,pathname))
-  (dolist (i (with-input-file s pathname
-               (%load-r s)))
+  (@ (i (with-input-file s pathname
+          (%load-r s)))
     (eval (%expand i))))

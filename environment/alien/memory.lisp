@@ -25,7 +25,7 @@
 
 (defun %put-list (ptr x)
   "Write list of bytes to memory. Returns following address."
-  (dolist (v x ptr)
+  (@ (v x ptr)
 	(= ptr (%put-char ptr v))))
 
 (defun %put-short (ptr val)

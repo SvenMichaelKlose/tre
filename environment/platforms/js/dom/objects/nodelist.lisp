@@ -17,7 +17,7 @@
 
 (defmacro def-nodelist-method (name &rest args)
   `(defmethod nodelist ,name ,args
-     (dolist (i _list)
+     (@ (i _list)
        ((slot-value i ',name) ,@args))))
 
 (def-nodelist-method remove)

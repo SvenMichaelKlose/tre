@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2009–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2009–2015 Sven Michael Klose <pixel@copei.de>
 
 (defvar *c-builtins-descr*
 	`(
@@ -180,9 +180,9 @@
 
 (defvar *c-builtins*
   (let h (make-hash-table)
-	(dolist (grp *c-builtins-descr* h)
+	(@ (grp *c-builtins-descr* h)
 	  (let head (downcase (symbol-name grp.))
-		(dolist (f .grp)
+		(@ (f .grp)
           (& (href h f.)
              (error "Built-in function ~A is defined more than once." f.))
 		  (= (href h f.) (? (cons? .f.)

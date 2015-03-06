@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
 
 (declare-cps-exception string %string? string? string== string-concat upcase downcase string-subseq)
 (dont-obfuscate push join char-code-at to-string to-upper-case to-lower-case substr length)
@@ -11,7 +11,7 @@
 
 (defun string-concat (&rest x)
   (alet (make-array)
-    (dolist (i x (!.join ""))
+    (@ (i x (!.join ""))
       (& i (!.push i)))))
 
 (defun %elt-string (seq idx)

@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2013,2015 Sven Michael Klose <pixel@copei.de>
 
 (dont-obfuscate constructor)
 (declare-cps-exception aref =-aref array? list-array array-find)
@@ -18,7 +18,7 @@
 
 (defun list-array (x)
   (alet (make-array)
-    (dolist (i x !)
+    (@ (i x !)
       (!.push i))))
 
 (dont-obfuscate *array)

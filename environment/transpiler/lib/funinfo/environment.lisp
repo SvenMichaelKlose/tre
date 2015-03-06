@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2006–2007,2009–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2006–2007,2009–2015 Sven Michael Klose <pixel@copei.de>
 
 (defun funinfo-find (fi x)
   (!? (funinfo-parent fi)
@@ -70,7 +70,7 @@
   x)
 
 (defun funinfo-var-add-many (fi x)
-  (dolist (i x)
+  (@ (i x)
 	(funinfo-var-add fi i)))
 
 (defun funinfo-vars-reset (fi)

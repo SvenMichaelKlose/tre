@@ -6,7 +6,7 @@
 (defun variable-compare (predicate x)
   (? .x
      (alet x.
-       (dolist (i .x t)
+       (@ (i .x t)
          (| (funcall predicate ! i)
             (return nil))))
      (cl:error "At least 2 arguments required.")))

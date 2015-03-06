@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2010–2012 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2010–2012,2014 Sven Michael Klose <pixel@copei.de>
 
 (dont-obfuscate elements class-name)
 
@@ -11,7 +11,7 @@
         (do-children (i elm (queue-list result))
           (when (string-has-class? i.class-name cls)
             (enqueue result i))
-          (dolist (j (get-elements-by-class-name-raw-0 i cls))
+          (@ (j (get-elements-by-class-name-raw-0 i cls))
             (enqueue result j))))))
 
 (defun get-elements-by-class-name-raw (cls)

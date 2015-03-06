@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2010,2012–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2010,2012–2015 Sven Michael Klose <pixel@copei.de>
 
 ; XXX This doesn't work yet!
 
@@ -25,7 +25,7 @@
   	    (= (href *alien-structs* struct-name) t)
 	    (format t "[")
 		(let idx -1
-		  (dolist (x (split #\  (trim (lml-get-attribute desc :members) " ")))
+		  (@ (x (split #\  (trim (lml-get-attribute desc :members) " ")))
 			(++! idx)
 		    (with (field (href hash x))
 			  (? (eq 'field field.)
@@ -62,7 +62,7 @@
     (alien-import-get-type hash (alien-import-get-type-desc hash a))))
 
 (defun alien-import-print (descr hash)
-  (dolist (x descr)
+  (@ (x descr)
     (& (eq x. 'function)
 	   (let fun-name (string (lml-get-attribute x :name))
 	     (unless (href *alien-imported-functions* fun-name)
@@ -71,7 +71,7 @@
 				   (alien-import-get-type hash (href hash (lml-get-attribute x :returns))))
 		   (awhen (lml-get-children x)
 			 (let idx -1
-		       (dolist (a !)
+		       (@ (a !)
 				 (++! idx)
 		         (& (eq a. 'argument)
 			        (alien-import-print-type (alien-import-get-type-from-desc hash a) (lml-get-attribute a :name) :first (== 0 idx))))))
@@ -80,7 +80,7 @@
 
 (defun alien-import-descr-hash (descr)
   (with (hash (make-hash-table :test #'string==))
-    (dolist (x descr hash)
+    (@ (x descr hash)
       (awhen (lml-get-attribute x :id)
 	    (with (h (case x.
 				   'namespace nil

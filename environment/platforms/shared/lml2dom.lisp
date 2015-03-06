@@ -19,7 +19,7 @@
 		 n))))
 
 (defun lml2dom-body (parent x doc)
-  (dolist (i x)
+  (@ (i x)
 	(lml2dom parent i :doc doc)))
 
 (defun lml2dom-attr-exec-0 (elm name x)

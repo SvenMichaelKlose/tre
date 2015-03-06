@@ -42,7 +42,7 @@
 
 (defun hash-merge (a b)
   (| a (= a (make-hash-table)))
-  (dolist (k (hashkeys b) a)
+  (@ (k (hashkeys b) a)
     (= (href a k) (href b k))))
 
 (defun alist-phphash (x)

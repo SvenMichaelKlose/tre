@@ -5,7 +5,7 @@
      d. (atom d.)))
 
 (defun has-no-jumps-to? (x tag)
-  (dolist (i x t)
+  (@ (i x t)
     (& (vm-jump? i)
        (== (%%go-tag i) tag)
        (return nil))))

@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2007-2009,2011–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2007-2009,2011–2015 Sven Michael Klose <pixel@copei.de>
 
 (def-head-predicate %exec)
 
@@ -42,7 +42,7 @@
 
 (defun lml2xml-body (s x)
   (lml2xml-end s)
-  (dolist (i x)
+  (@ (i x)
     (lml2xml-0 s i)))
 
 (defun lml2xml-attr-or-body (s x)
