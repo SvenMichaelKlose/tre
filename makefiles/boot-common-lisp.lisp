@@ -2,16 +2,16 @@
 
 (defun cl-packages ()
   `((defpackage "TRE-CORE"
-      (:export ,@(filter #'symbol-name
-                         (+ +cl-direct-imports+
-                            (carlist +cl-renamed-imports+)
-                            *cl-builtins*
-                            +cl-special-forms+
-                            +core-variables+)))
+      (:export ,@(@ #'symbol-name
+                    (+ +cl-direct-imports+
+                       (carlist +cl-renamed-imports+)
+                       *cl-builtins*
+                       +core-variables+)))
       (:import-from "CL" "NIL" "T"))
     (defpackage "TRE"
       (:use "TRE-CORE")
-      (:import-from "CL" "NIL" "T"))))
+      (:import-from "CL" "NIL" "T")
+      (:export ,@(@ #'symbol-name +cl-special-forms+)))))
 
 (defun cl-symbol (x)
   (make-symbol (symbol-name x) "COMMON-LISP"))
@@ -44,5 +44,5 @@
       (filter [late-print _ o] c)
       (princ "(cl:in-package :tre)" o)
       (princ "(cl:format t \"Loading environment...~%\")" o)
-      (late-print '(env-load "main.lisp") o))))
+      (princ "(env-load \"main.lisp\")" o))))
 (quit)
