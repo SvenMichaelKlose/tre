@@ -1,19 +1,17 @@
-; tré – Copyright (c) 2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2014–2015 Sven Michael Klose <pixel@copei.de>
 
 (defvar *universe* nil)
 (defvar *variables* nil)
 (defvar *launchfile* nil)
 (defvar *pointer-size* 4)
 (defvar *assert* t)
-(defvar *targets* '(:c :cl :js :php))
+(defvar *targets* ,`',*targets*)
 (defvar *endianess* nil)
 (defvar *cpu-type* nil)
 (defvar *libc-path* nil)
 (defvar *rand-max* nil)
 (defvar *print-definitions?* nil)
 (defvar *default-stream-tabsize* 8)
-
-(cl:defvar *macros* nil)
 
 (defvar *quasiquoteexpand-hook* nil)
 (defvar *dotexpand-hook* nil)
