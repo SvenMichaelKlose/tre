@@ -107,10 +107,10 @@ basic_clean ()
     git checkout -- cl/generated-from-environment.lisp
 }
 
-distclean ()
+gitclean ()
 {
 	echo "Cleaning for distribution..."
-	rm -vrf backup
+	rm -vrf backup boot-common.lisp
 }
 
 link ()
@@ -371,7 +371,7 @@ profile)
 releasetests)
     echo "Making release tests..." | tee make.log
     echo "Checking regular build." >>make.log
-	./make.sh distclean || exit 1
+	./make.sh gitclean || exit 1
 	./make.sh build $ARGS || exit 1
     echo "Checking regular build's reload." >>make.log
 	./make.sh reload || exit 1
@@ -388,8 +388,8 @@ clean)
 	basic_clean
 	;;
 
-distclean)
-	distclean
+gitclean)
+	gitclean
 	;;
 
 backup)
@@ -426,7 +426,7 @@ restore)
     echo "  restore         Restore the last 'backup'."
     echo "  install         Install compiled executable and environment image."
     echo "  clean           Remove built files but not the backup."
-    echo "  distclean       Like 'clean' but also removes backups."
+    echo "  gitclean        Like 'clean' but also removes backups."
     echo "  precompile      Precompile obligatory target environments (EXPERIMENTAL)."
     echo "  profile         Make a profile of the compiler compiling itself."
     echo "  ctests          Run C environemnt tests."
