@@ -240,6 +240,11 @@ genboot)
     $SBCL --core image makefiles/boot-common-lisp.lisp 2>&1 || exit 1
 	;;
 
+oldqboot)
+	./make.sh core $ARGS || exit 1
+	./make.sh ctests $ARGS || exit 1
+    ;;
+
 oldboot)
     echo
     echo "########################"
@@ -247,11 +252,9 @@ oldboot)
     echo "########################"
     echo
     git checkout -- cl/generated-from-environment.lisp
-	./make.sh core $ARGS || exit 1
+	./make.sh oldqboot $ARGS || exit 1
 	./make.sh oldgenboot $ARGS || exit 1
-	./make.sh ctests $ARGS || exit 1
-	./make.sh core $ARGS || exit 1
-	./make.sh ctests $ARGS || exit 1
+	./make.sh oldqboot $ARGS || exit 1
 	;;
 
 nboot)
