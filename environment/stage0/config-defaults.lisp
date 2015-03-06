@@ -3,7 +3,8 @@
 (? (eq *assert* '*assert*)
    (setq *assert* t))
 (? (eq *targets* '*targets*)
-   (setq *targets* '(:cl))) ; :c :js :php)))
+   (setq *targets* '(:cl :c :js :php)))
+;   (setq *targets* '(:cl))) ; :c :js :php)))
 
 (%defvar *tre-has-math*    t)
 (%defvar *tre-has-alien*   t)

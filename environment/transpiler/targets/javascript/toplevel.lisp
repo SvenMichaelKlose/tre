@@ -1,8 +1,8 @@
 ; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@hugbox.org>
 
 (defun nodejs-prologue ()
-   (apply #'+ (filter [format nil "var ~A = require ('~A');~%" _ _]
-                      (configuration :nodejs-requirements))))
+   (apply #'+ (@ [format nil "var ~A = require ('~A');~%" _ _]
+                 (configuration :nodejs-requirements))))
 
 (defun js-prologue ()
   (+ (format nil "// tré revision ~A~%" *tre-revision*)
@@ -14,25 +14,25 @@
 (defun js-epilogue ()
   (format nil "}break;}~%"))
 
+; XXX js-emit-memorized-sources
 (defun js-emit-early-defined-functions ()
   (mapcar [`(push ',_ *functions*)]
           (memorized-sources)))
 
 (defun js-emit-memorized-sources ()
   (clr (configuration :memorize-sources?))
-  (filter [`(%= (slot-value ,_. '__source) ,(list 'quote ._))]
-          (memorized-sources)))
+  (@ [`(%= (slot-value ,_. '__source) ,(list 'quote ._))]
+     (memorized-sources)))
 
 (defun js-var-decls ()
-  (filter [generate-code `((%var ,_))]
-          (remove-if #'emitted-decl?
-                     (funinfo-vars (global-funinfo)))))
+  (@ [generate-code `((%var ,_))]
+     (remove-if #'emitted-decl? (funinfo-vars (global-funinfo)))))
 
 ;(defun gen-funinfo-init ()
 ;  `(push ',(compiled-list `(,x. ,(funinfo-args .x))) *application-funinfos*))
 
 ;(defun gen-funinfo-inits ()
-;  (filter #'gen-funinfo-init (hash-alist (funinfos))))
+;  (@ #'gen-funinfo-init (hash-alist (funinfos))))
 
 (defun js-sections-before-import ()
   `((essential-functions-0 . ,*js-core0*)

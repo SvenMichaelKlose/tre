@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2006–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2006–2015 Sven Michael Klose <pixel@copei.de>
 
 (defvar *funinfo*)
 
@@ -111,7 +111,7 @@
      (not (funinfo-free-vars fi))))
 
 (defun print-funinfo-sources (tr)
-  (filter [(format t "Function ~A:~%" (funinfo-name _))
-           (format t "Arguments: ~A~%" (funinfo-argdef _))
-           (format t "Body: ~A~%" (funinfo-body _))]
-          (hashkeys (transpiler-funinfos tr))))
+  (@ [(format t "Function ~A:~%" (funinfo-name _))
+      (format t "Arguments: ~A~%" (funinfo-argdef _))
+      (format t "Body: ~A~%" (funinfo-body _))]
+     (hashkeys (transpiler-funinfos tr))))

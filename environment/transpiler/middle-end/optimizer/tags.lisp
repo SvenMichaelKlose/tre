@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
 
 (defun two-subsequent-tags? (a d)
   (& a (atom a)
@@ -11,9 +11,9 @@
        (return nil))))
 
 (defun tags-lambda (x)
-  (with (body x
-		 spare-tags (remove-if-not [has-no-jumps-to? body _]
-		  				           (remove-if-not #'number? x)))
+  (with (body        x
+		 spare-tags  (remove-if-not [has-no-jumps-to? body _]
+		  				            (remove-if-not #'number? x)))
     (remove-if [member _ spare-tags] x)))
 
 (defun remove-spare-tags-body (x)
@@ -30,10 +30,10 @@
   (with (removed-tags nil
          replace-tag
            #'((old-dest new-dest)
-			    (= removed-tags (filter [? (eq ._ old-dest)
-                                           (. _. new-dest)
-                                           _]
-                                        removed-tags)))
+			    (= removed-tags (@ [? (eq ._ old-dest)
+                                      (. _. new-dest)
+                                      _]
+                                   removed-tags)))
 
          add-removed-tag
            #'((old-tag new-tag)
@@ -54,6 +54,7 @@
 				      (reduce-tags d))))
 
          translate-tags
+                    ; XXX [| (assoc-value _ removed-tags) _]
 		   [maptree [!? (assoc _ removed-tags)
                         .!
                         _]

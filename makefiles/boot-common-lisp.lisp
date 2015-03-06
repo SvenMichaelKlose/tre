@@ -21,9 +21,9 @@
               (symbol-name x.) (symbol-name .x.)))
 
 (defun cl-wrappers ()
-  (filter #'cl-wrapper
-          (+ (filter [list _ _] +cl-direct-imports+)
-             +cl-renamed-imports+)))
+  (@ #'cl-wrapper
+     (+ (@ [list _ _] +cl-direct-imports+)
+        +cl-renamed-imports+)))
 
 (alet (copy-transpiler *cl-transpiler*)
   (with-temporary *transpiler* !
@@ -41,7 +41,7 @@
       (late-print '(cl:in-package :tre-core) o)
       (adolist ((cl-wrappers))
         (princ ! o))
-      (filter [late-print _ o] c)
+      (@ [late-print _ o] c)
       (princ "(cl:in-package :tre)" o)
       (princ "(cl:format t \"Loading environment...~%\")" o)
       (princ "(env-load \"main.lisp\")" o))))

@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
 
 (defvar *c-init-group-size*  16)
 (defvar *c-init-counter*      0)
@@ -58,9 +58,9 @@
                        '(%%native "NULL"))))))
 
 (defun c-function-registrations ()
-  (filter #'c-function-registration
-		  (remove-if [tail? (symbol-name _) "_TREEXP"]
-                     (defined-functions-without-builtins))))
+  (@ #'c-function-registration
+	(remove-if [tail? (symbol-name _) "_TREEXP"]
+               (defined-functions-without-builtins))))
 
 (defun c-declarations-and-initialisations ()
   (+ (compiled-inits)

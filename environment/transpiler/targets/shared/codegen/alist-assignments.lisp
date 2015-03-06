@@ -1,4 +1,4 @@
-;;;;; Caroshi – Copyright (c) 2009–2010,2012–2014 Sven Michael Klose <pixel@copei.de>
+; Caroshi – Copyright (c) 2009–2010,2012–2015 Sven Michael Klose <pixel@copei.de>
 
 (defun alist-assignments (x &key (padding ", ") (quote-char #\"))
   (apply #'+ (pad (mapcar #'((k v)
@@ -8,14 +8,14 @@
                   padding)))
 
 (defun kwlist-alist (x)
-  (filter [cons _. ._.] (group x 2)))
+  (@ [cons _. ._.] (group x 2)))
 
 (defun alist-kwlist (x)
   (mapcan [list _. ._] x))
 
 (defun kwlist-evalist (x)
-  (list 'backquote (filter [list _. (list 'quasiquote ._)]
-                           (kwlist-alist x))))
+  (list 'backquote (@ [list _. (list 'quasiquote ._)]
+                      (kwlist-alist x))))
 
 (define-filter alist-cassignments (x)
   (list (downcase (symbol-name x.)) "=" .x))

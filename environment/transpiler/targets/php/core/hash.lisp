@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2009,2011–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2009,2011–2015 Sven Michael Klose <pixel@copei.de>
 
 (dont-obfuscate is_a strpos substr)
 
@@ -37,7 +37,7 @@
 
 (defun hashkeys (x)
   (? (hash-table? x)
-     (filter #'%%unkey (x.keys))
+     (@ #'%%unkey (x.keys))
      (maparray #'identity (phphash-hashkeys x))))
 
 (defun hash-merge (a b)

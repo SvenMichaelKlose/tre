@@ -60,8 +60,8 @@
 (defvar *cps-function-counter* 0)
 
 (defun cps-split-body (x)
-  (filter [. ($ '~CPS (++! *cps-function-counter*)) _]
-          (split-if #'cps-splitpoint? x :include? t)))
+  (@ [. ($ '~CPS (++! *cps-function-counter*)) _]
+     (split-if #'cps-splitpoint? x :include? t)))
 
 (defun cps-tag-names (x)
   (with-queue q
@@ -150,7 +150,7 @@
   (!? (cps-split-body x)
       (+ (cps-make-funs :names     (carlist !)
                         :tag-names (cps-tag-names !)
-                        :bodies    (filter #'cps-body-0 (cdrlist !)))
+                        :bodies    (@ #'cps-body-0 (cdrlist !)))
          `((%= nil (,!..))))
       x))
 

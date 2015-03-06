@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008,2012–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008,2012–2013,2015 Sven Michael Klose <pixel@copei.de>
 
 (defun fork ()
   (alet (alien-dlopen *libc-path*)
@@ -23,14 +23,14 @@
          cexecve   (alien-dlsym libc "execve")
          cperror   (alien-dlsym libc "perror")
          cpath     (%malloc-string path :null-terminated t)
-         argptrs   (filter [%malloc-string _ :null-terminated t] args)
+         argptrs   (@ [%malloc-string _ :null-terminated t] args)
          argv      (%malloc (* *pointer-size* (++ (length args))))
          environv  (? environment
                      (%malloc (* *pointer-size* (++ (length environment))))
                       0)
          envptrs   (& environment
-                      (filter [%malloc-string (string-concat _. "=" ._) :null-terminated t]
-                              environment)))
+                      (@ [%malloc-string (string-concat _. "=" ._) :null-terminated t]
+                         environment)))
 	(%put-pointer-list argv argptrs :null-terminated t)
 	(& environment
 	   (%put-pointer-list environv envptrs :null-terminated t))

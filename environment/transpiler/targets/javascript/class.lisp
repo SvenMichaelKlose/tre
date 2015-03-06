@@ -1,13 +1,13 @@
-; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
 
 (defun js-gen-inherit-methods (class-name bases)
-  (filter [`(hash-merge (slot-value ,class-name 'prototype)
+  (@ [`(hash-merge (slot-value ,class-name 'prototype)
                         (slot-value ,_ 'prototype))]
-          bases))
+     bases))
 
 (defun js-gen-inherit-constructor-calls (bases)
-  (filter [`((slot-value ,_ 'CALL) this)]
-          bases))
+  (@ [`((slot-value ,_ 'CALL) this)]
+     bases))
 
 (defun js-gen-constructor (class-name bases args body)
   (let magic (list 'quote ($ '__ class-name))
@@ -38,8 +38,8 @@
 	        ,@(| ..x. (list nil)))))))
 
 (defun js-emit-methods (class-name cls)
-  (awhen (filter [js-emit-method class-name _]
-                 (reverse (class-methods cls)))
+  (awhen (@ [js-emit-method class-name _]
+            (reverse (class-methods cls)))
 	`(,@(cdrlist !)
       (hash-merge (slot-value ,class-name 'prototype)
 	              (%%%make-hash-table ,@(apply #'+ (carlist !)))))))

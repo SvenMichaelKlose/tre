@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2009,2011–2015 Sven Michael Klose <pixel@copei.de>
 
 (defvar *classes* (make-hash-table :test #'eq))
 
@@ -12,12 +12,12 @@
   slots)
 
 (defun ducktype-inherited-members (classes)
-  (apply #'hash-merge (filter [class-members (href *classes* _)]
-                              (reverse classes))))
+  (apply #'hash-merge (@ [class-members (href *classes* _)]
+                         (reverse classes))))
 
 (defun ducktype-inherited-methods (classes)
-  (| (apply #'hash-merge (filter [class-methods (href *classes* _)]
-                                 (reverse classes)))
+  (| (apply #'hash-merge (@ [class-methods (href *classes* _)]
+                            (reverse classes)))
      (make-hash-table :test #'eq)))
 
 (defmacro defclass (classes args &body body)
@@ -32,9 +32,9 @@
      (%thisify ,classes. ,@body)))
 
 (defun %new (name &rest args)
-  (with (class  (href *classes* name)
-         object (make-object :class class
-                             :slots (copy-hash-table (class-methods class))))
+  (with (class   (href *classes* name)
+         object  (make-object :class class
+                              :slots (copy-hash-table (class-methods class))))
     (apply (symbol-function name) object args)
     object))
 

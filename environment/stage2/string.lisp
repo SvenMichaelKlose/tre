@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2005–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2009,2011–2015 Sven Michael Klose <pixel@copei.de>
 
 (functional string-concat string== upcase downcase list-string string-list queue-string)
 
@@ -19,10 +19,10 @@
 	s))
 
 (defun queue-string (x)
-  (apply #'string-concat (filter [?
-                                   (string? _)    _
-                                   (character? _) (string _)]
-                                 (queue-list x))))
+  (apply #'string-concat (@ [?
+                              (string? _)    _
+                              (character? _) (string _)]
+                            (queue-list x))))
 
 (define-test "ELT on string returns char"
   ((character? (elt "LISP" 0)))

@@ -1,4 +1,4 @@
-;;;;; Caroshi – Copyright (c) 2012 Sven Michael Klose <pixel@copei.de>
+; Caroshi – Copyright (c) 2012,2015 Sven Michael Klose <pixel@copei.de>
 
 (defun |? (x)
   (& (cons? x)
@@ -27,7 +27,7 @@
 
 (defun orize-0 (x)
   (!? (find-first-or x)
-      (filter [replace-first-or x _] !)
+      (@ [replace-first-or x _] !)
       (list x)))
 
 (defun orize (x)

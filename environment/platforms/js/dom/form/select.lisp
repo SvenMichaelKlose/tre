@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2009–2010,2012–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2009–2010,2012–2013,2015 Sven Michael Klose <pixel@copei.de>
 
 (defun form-select? (x)
   (& (element? x)
@@ -8,7 +8,7 @@
   ((x.ancestor-or-self "select").get-list "option"))
 
 (defun form-select-get-select-names (x)
-  (filter [_.get-name] (x.get-list "select")))
+  (@ [_.get-name] (x.get-list "select")))
 
 (defun form-select-get-by-name (x name)
   (adolist ((x.get-list "select"))

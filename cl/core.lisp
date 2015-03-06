@@ -35,6 +35,7 @@
   (print x)
   (fresh-line))
 
+(load "environment/stage1/@.lisp")
 (load "cl/list.lisp")
 (load "cl/utils.lisp")
 (load "cl/function-source.lisp")

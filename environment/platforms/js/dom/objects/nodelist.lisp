@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2013,2015 Sven Michael Klose <pixel@copei.de>
 
 (defclass nodelist (x)
   (= _list x)
@@ -13,7 +13,7 @@
     (funcall fun !)))
 
 (defmethod nodelist filter (fun)
-  (filter fun _list))
+  (@ fun _list))
 
 (defmacro def-nodelist-method (name &rest args)
   `(defmethod nodelist ,name ,args

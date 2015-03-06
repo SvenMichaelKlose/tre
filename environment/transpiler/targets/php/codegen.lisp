@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
 
 ;;;; CODE GENERATION HELPERS
 
@@ -18,10 +18,10 @@
 	 x))
 
 (defun php-list (x)
-  (pad (filter #'php-dollarize x) ","))
+  (pad (@ #'php-dollarize x) ","))
 
 (defun php-argument-list (x)
-  (c-list (filter #'php-dollarize x)))
+  (c-list (@ #'php-dollarize x)))
 
 (define-codegen-macro-definer define-php-macro *php-transpiler*)
 
@@ -136,7 +136,7 @@
       (list "$" val)
 	(codegen-expr? val)
 	  (list val)
-    `((,val. ,@(c-list (filter #'php-codegen-argument-filter .val))))))
+    `((,val. ,@(c-list (@ #'php-codegen-argument-filter .val))))))
 
 (defun php-%=-0 (dest val)
   `((%%native
@@ -183,7 +183,7 @@
   (let tre *php-transpiler*
 	(transpiler-add-plain-arg-fun tre op)
 	`(define-expander-macro ,(transpiler-codegen-expander tre) ,op (&rest args)
-	   `(%%native ,,@(pad (filter #'php-dollarize args) ,replacement-op)))))
+	   `(%%native ,,@(pad (@ #'php-dollarize args) ,replacement-op)))))
 
 (mapcar-macro x
     '((%%%+   "+")
@@ -205,14 +205,13 @@
 ;;;; ARRAYS
 
 (defun php-array-subscript (indexes)
-  (filter [`("[" ,(php-dollarize _) "]")]
-          indexes))
+  (@ [`("[" ,(php-dollarize _) "]")] indexes))
 
 (defun php-literal-array-element (x)
   (list (compiled-function-name '%%key) " (" (php-dollarize x.) ") => " (php-dollarize .x.)))
 
 (defun php-literal-array-elements (x)
-  (pad (filter #'php-literal-array-element x) ","))
+  (pad (@ #'php-literal-array-element x) ","))
 
 (define-php-macro %%%make-hash-table (&rest elements)
   `(%%native "Array (" ,@(php-literal-array-elements (group elements 2)) ")"))

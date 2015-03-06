@@ -36,4 +36,4 @@
     (eq 'quote x.)  x
     (lambda-expr-without-lambda-keyword? x.) (make-scoping-function x)
     (lambda-expr-without-lambda-keyword? x)  (make-anonymous-function x)
-    (filter #'make-lambdas x)))
+    (@ #'make-lambdas x)))

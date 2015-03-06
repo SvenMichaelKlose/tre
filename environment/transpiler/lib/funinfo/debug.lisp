@@ -1,6 +1,6 @@
-;;;;; tré – Copyright (C) 2006–2007,2009,2012–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (C) 2006–2007,2009,2012–2013,2015 Sven Michael Klose <pixel@copei.de>
 
-;;;; DEBUG PRINTERS
+; XXX Rename file to 'debug-printers.lisp'.
 
 (defun only-element-or-all-of (x)
   (? .x x x.))
@@ -11,23 +11,23 @@
 (defun print-funinfo (fi &optional (str nil))
   (with-default-stream s str
     (format s (concat-stringtree
-                  (filter [!? ._.
-                              (format s "  ~A~A~%" _. !)
-                              !]
-                          `(("Scope:           " ,(human-readable-funinfo-names fi))
-                            ("CPS transformed: " ,(funinfo-cps? fi))
-                            ("Argument def:    " ,(| (funinfo-argdef fi)
-                                                     "no arguments"))
-                            ("Expanded args:   " ,(funinfo-args fi))
-                            ("Scope argument:  " ,(funinfo-scope-arg fi))
-                            ("Local vars:      " ,(funinfo-vars fi))
-                            ("Used vars:       " ,(funinfo-used-vars fi))
-                            ("Free vars:       " ,(funinfo-free-vars fi))
-                            ("Places:          " ,(funinfo-places fi))
-                            ("Globals:         " ,(funinfo-globals fi))
-                            ("Local fun args:  " ,(funinfo-local-function-args fi))
-                            ("Local scope:     " ,(funinfo-scope fi))
-                            ("Scoped vars:     " ,(funinfo-scoped-vars fi))))))))
+                  (@ [!? ._.
+                         (format s "  ~A~A~%" _. !)
+                         !]
+                     `(("Scope:           " ,(human-readable-funinfo-names fi))
+                       ("CPS transformed: " ,(funinfo-cps? fi))
+                       ("Argument def:    " ,(| (funinfo-argdef fi)
+                                                "no arguments"))
+                       ("Expanded args:   " ,(funinfo-args fi))
+                       ("Scope argument:  " ,(funinfo-scope-arg fi))
+                       ("Local vars:      " ,(funinfo-vars fi))
+                       ("Used vars:       " ,(funinfo-used-vars fi))
+                       ("Free vars:       " ,(funinfo-free-vars fi))
+                       ("Places:          " ,(funinfo-places fi))
+                       ("Globals:         " ,(funinfo-globals fi))
+                       ("Local fun args:  " ,(funinfo-local-function-args fi))
+                       ("Local scope:     " ,(funinfo-scope fi))
+                       ("Scoped vars:     " ,(funinfo-scoped-vars fi))))))))
 
 (defun print-funinfo-stack (fi &key (include-global? nil))
   (when fi

@@ -201,8 +201,8 @@
 
 (defun c-make-builtin-wrappers ()
   (& (backtrace?)
-     (filter [alet (c-builtin-argdef _)
-               `(defun ,_ ,!
-                  (,(make-symbol (c-builtin-name _))
-                   ,@(argument-expand-names 'builtin-wrapper !)))]
-             (remove 'cons (c-builtin-names)))))
+     (@ [alet (c-builtin-argdef _)
+          `(defun ,_ ,!
+             (,(make-symbol (c-builtin-name _))
+              ,@(argument-expand-names 'builtin-wrapper !)))]
+        (remove 'cons (c-builtin-names)))))

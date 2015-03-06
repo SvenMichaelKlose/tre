@@ -10,10 +10,10 @@
   (alist-hash (+ *functions* *macros* *builtin-argdefs*) :test #'eq))
 
 (defun make-host-variables ()
-  (alist-hash (filter [cons _. t] *variables*) :test #'eq))
+  (alist-hash (@ [cons _. t] *variables*) :test #'eq))
 
 (defun make-functionals ()
-  (alist-hash (filter [cons _ t] *functionals*) :test #'eq))
+  (alist-hash (@ [cons _ t] *functionals*) :test #'eq))
 
 (defstruct transpiler
   (:global *transpiler*)
@@ -294,8 +294,8 @@
 (transpiler-getter wanted-variable?        (href (transpiler-wanted-variables-hash tr) x))
 (transpiler-getter late-symbol?            (href (transpiler-late-symbols tr) x))
 (progn
-  ,@(filter  [`(transpiler-getter-list ,_)]
-            '(plain-arg-fun emitted-decl)))
+  ,@(@ [`(transpiler-getter-list ,_)]
+       '(plain-arg-fun emitted-decl)))
 
 (transpiler-getter add-defined-variable  (= (href (transpiler-defined-variables tr) x) t)
                                          x)

@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
 
 (defun js-call (x)
   `(,x. ,@(c-list .x)))
@@ -172,7 +172,7 @@
   `(%%native ,@(c-list elements :type 'square)))
 
 (define-js-macro %%%aref (arr &rest idx)
-  `(%%native ,arr ,@(filter [`("[" ,_ "]")] idx)))
+  `(%%native ,arr ,@(@ [`("[" ,_ "]")] idx)))
 
 (define-js-macro %%%=-aref (val &rest x)
   `(%%native (%%%aref ,@x) "=" ,val))
@@ -193,7 +193,7 @@
      ":" ,value))
 
 (define-js-macro %%%make-hash-table (&rest args)
-  (c-list (filter [js-literal-hash-entry _. ._] (group args 2)) :type 'curly))
+  (c-list (@ [js-literal-hash-entry _. ._] (group args 2)) :type 'curly))
 
 (define-js-macro href (arr &rest idx)
   `(aref ,arr ,@idx))

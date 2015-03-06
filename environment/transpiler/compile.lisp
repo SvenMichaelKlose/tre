@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
 
 (defun update-section? (section cached-sections)
   (| (member section (sections-to-update))
@@ -14,8 +14,8 @@
             (assoc-value section cached-sections))))))
 
 (defun map-sections (fun sections cached-sections)
-  (filter [map-section _ fun sections cached-sections]
-          sections))
+  (@ [map-section _ fun sections cached-sections]
+     sections))
 
 (defun codegen (x)
   (backend (middleend x)))

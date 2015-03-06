@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2009,2012–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2009,2012–2015 Sven Michael Klose <pixel@copei.de>
 
 (defmacro with-queue-string-while (q pred &body body)
   `(with-queue ,q
@@ -97,17 +97,17 @@
 
 (defun charlist-to-octalstring (x)
   (concat-stringtree
-	  (filter [? (< _ 256)
-				 (+ "\\" (print-octal _ nil))
-				 (+ "\\u" (print-hexword _ nil))]
-			  (ensure-list x))))
+      (@ [? (< _ 256)
+            (+ "\\" (print-octal _ nil))
+            (+ "\\u" (print-hexword _ nil))]
+         (ensure-list x))))
 
 (defun xml2lml-entity (in)
   (xml-read-char in) ; #\&
   (let e (xml-read-while in [not (== _ #\;)])
-	(prog1
-	  (charlist-to-octalstring (href *xml-entities-hash* e))
-	  (xml-read-char in))))
+    (prog1
+      (charlist-to-octalstring (href *xml-entities-hash* e))
+      (xml-read-char in))))
 
 (defun xml2lml-text (in)
   (xml-skip-spaces in)
