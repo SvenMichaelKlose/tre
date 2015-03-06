@@ -1,13 +1,13 @@
-; tré – Copyright (c) 2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2014–2015 Sven Michael Klose <pixel@copei.de>
 
 (defvar *keyword-package* (find-package "KEYWORD"))
 
 (defbuiltin make-symbol (x &optional (package nil))
-  (cl:intern x (? package
-                  (? (cl:packagep package)
-                     (cl:package-name package)
-                     package)
-                  "TRE")))
+  (cl:intern x (?
+                 (cl:not package)       "TRE"
+                 (cl:packagep package)  (cl:package-name package)
+                 (cl:symbolp package)   (cl:symbol-name package)
+                 package)))
 
 (defbuiltin symbol-name (x)
   (? (cl:packagep x)
