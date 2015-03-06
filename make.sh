@@ -222,7 +222,7 @@ core)
     echo "(load \"cl/main.lisp\")" | $SBCL --noinform
 	;;
 
-newcore)
+ncore)
     (echo "(load \"boot-common.lisp\")" | $SBCL 2>&1) || exit 1
 	;;
 
@@ -268,7 +268,7 @@ nboot)
     echo "#######################################"
     echo
     ./make.sh genboot 2>&1 || exit 1
-    ./make.sh newcore 2>&1 || exit 1
+    ./make.sh ncore 2>&1 || exit 1
 	;;
 
 
