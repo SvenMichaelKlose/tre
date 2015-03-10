@@ -17,10 +17,10 @@
        (& (cons? !)
           (assoc x. ! :test #'eq)))))
 
-(defvar *macroexpand-hook* nil)
+(defvar *macroexpand* nil)
 
 (defbuiltin macroexpand-1 (x)
-  (!? (symbol-value (tre-symbol '*macroexpand-hook*))
+  (!? (symbol-value (tre-symbol '*macroexpand*))
       (apply ! (list x))
       x))
 

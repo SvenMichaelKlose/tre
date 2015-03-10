@@ -12,8 +12,8 @@
      (assoc x. *special-forms* :test #'eq)))
 
 (defun specialexpand (x)
-  (with-temporaries (*macro?-diversion*    #'special-%%macro?
-                     *macrocall-diversion* #'special-%%macrocall)
+  (with-temporaries (*macro?*     #'special-%%macro?
+                     *macrocall*  #'special-%%macrocall)
     (with (f #'((old x)
                  (? (equal old x)
                     x
@@ -52,4 +52,4 @@
 (defspecial tagbody (&body body)      `(cl:tagbody ,@body))
 (defspecial go (&body body)           `(cl:go ,@body))
 (defspecial labels (&body body)       `(cl:labels ,@body))
-(defspecial ? (&body body) (make-? body))
+(defspecial ? (&body body)            (make-? body))

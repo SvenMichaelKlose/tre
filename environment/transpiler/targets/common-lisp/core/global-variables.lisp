@@ -13,5 +13,5 @@
 (defvar *print-definitions?* nil)
 (defvar *default-stream-tabsize* 8)
 
-(defvar *quasiquoteexpand-hook* nil)
-(defvar *dotexpand-hook* nil)
+(defvar *quasiquote-expand* nil)
+(defvar *dot-expand* nil)

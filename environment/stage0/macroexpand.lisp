@@ -1,10 +1,10 @@
-; tré – Copyright (c) 2006–2009,2012–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2006–2009,2012–2015 Sven Michael Klose <pixel@copei.de>
 
 (%defvar *macros* nil)
-(%defvar *macro?-diversion* nil)
-(%defvar *macrocall-diversion* nil)
+(%defvar *macro?* nil)
+(%defvar *macrocall* nil)
 (%defvar *current-macro* nil)
-(%defvar *macroexpand-backquote-diversion* nil)
+(%defvar *macroexpand* nil)
 (%defvar *macroexpand-print?* nil)
 
 (%defun %macroexpand-backquote (x)
@@ -20,7 +20,7 @@
     (. (%macroexpand-backquote x.)
        (%macroexpand-backquote .x))))
 
-(setq *macroexpand-backquote-diversion* #'%macroexpand-backquote)
+(setq *macroexpand-backquote* #'%macroexpand-backquote)
 
 (%defun %macroexpand-rest (x)
   (? (atom x)
@@ -39,10 +39,10 @@
            (print x))
         (setq *current-macro* nil)
         x)
-    (apply *macrocall-diversion* (list x))))
+    (apply *macrocall* (list x))))
 
 (%defun %macroexpand-call (x)
-  (? (apply *macro?-diversion* (list x))
+  (? (apply *macro?* (list x))
      (%macroexpand-xlat x)
      x))
 
@@ -50,7 +50,7 @@
   (?
     (atom x)                   x
     (eq x. 'QUOTE)             x
-    (eq x. 'BACKQUOTE)         (. 'BACKQUOTE (apply *macroexpand-backquote-diversion* (list .x)))
+    (eq x. 'BACKQUOTE)         (. 'BACKQUOTE (apply *macroexpand-backquote* (list .x)))
     (eq x. 'QUASIQUOTE)        (. 'QUASIQUOTE (%macroexpand .x))
     (eq x. 'QUASIQUOTE-SPLICE) (. 'QUASIQUOTE-SPLICE (%macroexpand .x))
     (%macroexpand-call (%macroexpand-rest x))))
@@ -63,15 +63,15 @@
 
 (%defun native-macroexpand (x)
   (#'((predicate caller current-macro)
-        (setq *macro?-diversion*    #'%%macro?
-              *macrocall-diversion* #'%%macrocall
-              *current-macro*       nil)
+        (setq *macro?*         #'%%macro?
+              *macrocall*      #'%%macrocall
+              *current-macro*  nil)
         (#'((x)
-              (setq *macro?-diversion*    predicate
-                    *macrocall-diversion* caller
-                    *current-macro*       current-macro)
+              (setq *macro?*         predicate
+                    *macrocall*      caller
+                    *current-macro*  current-macro)
               x)
           (%macroexpand x)))
-     *macro?-diversion* *macrocall-diversion* *current-macro*))
+     *macro?* *macrocall* *current-macro*))
 
-(setq *macroexpand-hook* #'native-macroexpand)
+(setq *macroexpand* #'native-macroexpand)

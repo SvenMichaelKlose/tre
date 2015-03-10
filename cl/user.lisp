@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2014–2015 Sven Michael Klose <pixel@copei.de>
 
 (in-package :tre)
 
@@ -30,11 +30,11 @@
 (%defun make-hash-table (&key (test #'eql)) (%make-hash-table :test test))
 (%defun load (pathname) (%load pathname))
 
-(%defvar *macroexpand-hook* nil)
+(%defvar *macroexpand* nil)
 
 (%defun macroexpand-1 (x)
-  (? *macroexpand-hook*
-     (apply *macroexpand-hook* (list x))
+  (? *macroexpand*
+     (apply *macroexpand* (list x))
      x))
 
 (%defun macroexpand-0 (old x)

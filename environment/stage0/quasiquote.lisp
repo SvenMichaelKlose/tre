@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2006–2009,2012–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2006–2009,2012–2015 Sven Michael Klose <pixel@copei.de>
 
 ;;;; QUASIQUOTEs outside BACKQUOTEs are treated here. They serve as
 ;;;; anonymous macros.
@@ -25,4 +25,4 @@
 (%defun quasiquote-expand (x)
   (car (%quasiquote-expand (list x))))
 
-(setq *QUASIQUOTEEXPAND-HOOK* #'quasiquote-expand)
+(setq *quasiquote-expand* #'quasiquote-expand)

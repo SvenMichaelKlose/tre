@@ -3,7 +3,7 @@
 (defconstant +core-variables+
     '(*universe* *variables* *functions*
       *environment-path* *environment-filenames*
-      *macroexpand-hook* *quasiquoteexpand-hook* *dotexpand-hook*
+      *macroexpand* *quasiquote-expand* *dot-expand*
       *default-listprop* *keyword-package*
       *pointer-size* *launchfile*
       *assert* *targets*

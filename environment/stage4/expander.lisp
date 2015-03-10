@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2006–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2006–2009,2011–2015 Sven Michael Klose <pixel@copei.de>
 
 (defvar *expanders* nil)
 
@@ -64,8 +64,8 @@
 (defun expander-expand-once (expander-name x)
   (alet (expander-get expander-name)
     (| (expander? !) (error "Expander ~A is not defined." (symbol-name expander-name)))
-    (with-temporaries (*macro?-diversion* (expander-pred !)
-                       *macrocall-diversion* (expander-call !))
+    (with-temporaries (*macro?*     (expander-pred !)
+                       *macrocall*  (expander-call !))
       (%macroexpand x))))
 
 (defun expander-expand (expander-name expr)

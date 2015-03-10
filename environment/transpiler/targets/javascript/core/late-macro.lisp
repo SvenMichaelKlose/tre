@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2011–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2011–2013,2015 Sven Michael Klose <pixel@copei.de>
 
 (define-expander 'standard-macros)
 (set-expander-macros 'standard-macros *macros*)
@@ -21,4 +21,4 @@
 (defun %%env-macrocall (x)
   (funcall (expander-call *environment-macro-expander*) x))
 
-(= *macroexpand-backquote-diversion* #'%macroexpand-backquote)
+(= *macroexpand-backquote* #'%macroexpand-backquote)

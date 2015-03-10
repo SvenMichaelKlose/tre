@@ -1,3 +1,3 @@
-;;;;; tré - Copyright (c) 2011 Sven Klose <pixel@copei.de>
+; tré - Copyright (c) 2011,2015 Sven Klose <pixel@copei.de>
 
-(defvar *dotexpand-hook* nil)
+(defvar *dot-expand* nil)

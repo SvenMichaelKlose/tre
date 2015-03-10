@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2014–2015 Sven Michael Klose <pixel@copei.de>
 
 (in-package :tre-core)
 
@@ -7,8 +7,8 @@
 ; That's why it's disabled here.
 (defconstant +anonymous-function-sources?+ nil)
 
-(defvar *quasiquoteexpand-hook* nil)
-(defvar *dotexpand-hook* nil)
+(defvar *quasiquote-expand* nil)
+(defvar *dot-expand* nil)
 
 (defun function-expr? (x)
   (and (consp x)

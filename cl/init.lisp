@@ -74,7 +74,7 @@
 (defconstant +core-variables+
     '(*universe* *variables* *functions* *function-atom-sources*
       *environment-path* *environment-filenames*
-      *quasiquoteexpand-hook* *dotexpand-hook*
+      *quasiquote-expand* *dot-expand*
       *default-listprop* *keyword-package*
       *pointer-size* *launchfile*
       *assert* *targets*

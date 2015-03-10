@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2009,2011–2015 Sven Michael Klose <pixel@copei.de>
 
 (defun dot-expand-make-expr (which num x)
   (? (< 0 num)
@@ -57,4 +57,4 @@
                                     (dot-expand .x))
       	x))))
 
-(= *dotexpand-hook* #'dot-expand)
+(= *dot-expand* #'dot-expand)
