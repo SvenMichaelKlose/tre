@@ -2,23 +2,22 @@
 
 (defun cl-packages ()
   `((defpackage "TRE-CORE"
-      (:export ,@(@ #'symbol-name
-                    (+ +cl-direct-imports+
-                       (carlist +cl-renamed-imports+)
-                       *cl-builtins*
-                       +core-variables+)))
-      (:import-from "CL" "NIL" "T"))
+      (:export       ,@(@ #'symbol-name
+                          (+ +cl-direct-imports+
+                             (carlist +cl-renamed-imports+)
+                             *cl-builtins*
+                             +core-variables+)))
+      (:import-from  "COMMON-LISP" "NIL" "T"))
     (defpackage "TRE"
-      (:use "TRE-CORE")
-      (:import-from "CL" "NIL" "T")
-      (:export ,@(@ #'symbol-name +cl-special-forms+)))))
+      (:use          "TRE-CORE")
+      (:import-from  "COMMON-LISP" "NIL" "T")
+      (:export       ,@(@ #'symbol-name +cl-special-forms+)))))
 
 (defun cl-symbol (x)
   (make-symbol (symbol-name x) "COMMON-LISP"))
 
 (defun cl-wrapper (x)
-  (format nil "(cl:defun ~A (cl:&rest x) (cl:apply #'cl:~A x))~%"
-              (symbol-name x.) (symbol-name .x.)))
+  (format nil "(cl:defun ~A (cl:&rest x) (cl:apply #'cl:~A x))~%" x. .x.))
 
 (defun cl-wrappers ()
   (@ #'cl-wrapper
