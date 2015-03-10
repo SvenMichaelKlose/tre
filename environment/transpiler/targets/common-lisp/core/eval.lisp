@@ -26,12 +26,9 @@
   (?
     (cl:atom x)     (? (cl:symbolp x)
                        (alet (symbol-name x)
-                         (?
-                           (cl:string= "&BODY" !)         (make-symbol "&REST" "CL")
-                           (| (cl:string= "&OPTIONAL" !)
-                              (cl:string= "&REST" !)
-                              (cl:string= "&KEY" !))      (make-symbol ! "CL")
-                           x))
+                         (? (cl:string= "&BODY" !)
+                            'cl:&rest
+                            x))
                        x)
     (eq 'quote x.)  x
     (lambda-expr-without-lambda-keyword? x.) (make-scoping-function x)

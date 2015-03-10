@@ -1,11 +1,7 @@
 ; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@hugbox.org>
 
-(defun argument-rest-keyword? (x)     (in? x (tre-symbol '&rest)
-                                             (tre-symbol '&body)))
-(defun argument-keyword? (x)          (in? x (tre-symbol '&rest)
-                                             (tre-symbol '&body)
-                                             (tre-symbol '&optional)
-                                             (tre-symbol '&key)))
+(defun argument-rest-keyword? (x)     (in? x '&rest '&body))
+(defun argument-keyword? (x)          (in? x '&rest '&body '&optional '&key))
 (defun argument-name? (x)             (atom x))
 (defun argument-name (x)              x)
 
@@ -33,7 +29,7 @@
 
 		 copy-def-until-&key
 		   [when _
-		     (? (eq (tre-symbol '&key) _.)
+		     (? (eq '&key _.)
 				(make-&key-descr ._)
 				(. _. (copy-def-until-&key ._)))])
 
@@ -104,16 +100,15 @@
 		   #'((def vals)
 				(= no-static '&rest)
   			    (= rest-arg (list (. (argdef-get-name .def.)
-                                     (. (tre-symbol '%rest)
-                                        vals))))
+                                     (. '%rest vals))))
 			    nil)
 
          exp-optional-rest
 		   #'((def vals)
 		        (case def. :test #'eq
-				  (tre-symbol '&rest)     (exp-rest def vals)
-				  (tre-symbol '&body)     (exp-rest def vals)
-				  (tre-symbol '&optional) (exp-optional .def vals)))
+				  '&rest     (exp-rest def vals)
+				  '&body     (exp-rest def vals)
+				  '&optional (exp-optional .def vals)))
 
 		 exp-sub
 		   #'((def vals)
@@ -162,7 +157,7 @@
 
 (defun argument-expand-values (fun def vals)
   (@ [? (& (cons? _)
-           (eq _. (tre-symbol '%rest)))
+           (eq _. '%rest))
         ._
         _]
      (cdrlist (argument-expand fun def vals))))

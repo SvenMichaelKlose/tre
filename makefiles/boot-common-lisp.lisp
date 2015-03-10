@@ -7,10 +7,10 @@
                              (carlist +cl-renamed-imports+)
                              *cl-builtins*
                              +core-variables+)))
-      (:import-from  "COMMON-LISP" "NIL" "T"))
+      (:import-from  "CL" "NIL" "T"))
     (defpackage "TRE"
       (:use          "TRE-CORE")
-      (:import-from  "COMMON-LISP" "NIL" "T")
+      (:import-from  "CL" "NIL" "T" "&REST" "&BODY" "&OPTIONAL" "&KEY")
       (:export       ,@(@ #'symbol-name +cl-special-forms+)))))
 
 (defun cl-symbol (x)
