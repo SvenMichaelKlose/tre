@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2014–2015 Sven Michael Klose <pixel@copei.de>
 
 (in-package :tre-core)
 
@@ -7,6 +7,7 @@
                            (eq test #'tre:eq)       #'eq
                            (or (eq test #'tre:eql)
                                (eq test #'==))      #'eql
+                           (eq test #'string==)     #'equal
                            test)))
 
 (defun hash-table? (x) (hash-table-p x))

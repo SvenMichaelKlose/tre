@@ -2,9 +2,10 @@
 
 (defbuiltin make-hash-table (&key (test #'eql))
   (cl:make-hash-table :test (?
-                              (cl:eq test #'eq)      #'cl:eq
+                              (cl:eq test #'eq)        #'cl:eq
                               (| (cl:eq test #'eql)
-                                 (cl:eq test #'==))  #'cl:eql
+                                 (cl:eq test #'==))    #'cl:eql
+                              (cl:eq test #'string==)  #'cl:equal
                               test)))
 
 (defbuiltin hash-table? (x)  (cl:hash-table-p x))
