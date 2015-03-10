@@ -124,7 +124,11 @@
     (unless (| (string== (package-name !) "TRE")
                (string== (package-name !) "TRE-CORE"))
       (unless (keyword? x)
-        (%print-symbol-component (package-name !) str))
+        (%print-symbol-component (let pn (package-name !)
+                                   (? (string== "COMMON-LISP" pn)
+                                      "CL"
+                                      pn))
+                                 str))
       (princ #\: str)))
   (%print-symbol-component (symbol-name x) str))
 
