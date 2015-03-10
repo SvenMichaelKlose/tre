@@ -120,16 +120,18 @@
      (princ x str)))
 
 (defun %print-symbol (x str info)
-  (awhen (symbol-package x)
-    (unless (| (string== (package-name !) "TRE")
-               (string== (package-name !) "TRE-CORE"))
-      (unless (keyword? x)
-        (%print-symbol-component (let pn (package-name !)
-                                   (? (string== "COMMON-LISP" pn)
-                                      "CL"
-                                      pn))
-                                 str))
-      (princ #\: str)))
+  (unless (| (not x)
+             (t? x))
+    (awhen (symbol-package x)
+      (unless (| (string== (package-name !) "TRE")
+                 (string== (package-name !) "TRE-CORE"))
+        (unless (keyword? x)
+          (%print-symbol-component (let pn (package-name !)
+                                     (? (string== "COMMON-LISP" pn)
+                                        "CL"
+                                        pn))
+                                   str))
+        (princ #\: str))))
   (%print-symbol-component (symbol-name x) str))
 
 (defun %print-array (x str info)
