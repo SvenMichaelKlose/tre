@@ -7,6 +7,7 @@
   (no-padding?    t))
 
 (defvar *print-automatic-newline?* t)
+(defvar *always-print-package-names?* nil)
 
 (defun %print-indentation (str info)
   (adotimes ((print-info-indentation info))
@@ -123,8 +124,9 @@
   (unless (| (not x)
              (t? x))
     (awhen (symbol-package x)
-      (unless (| (string== (package-name !) "TRE")
-                 (string== (package-name !) "TRE-CORE"))
+      (unless (& (not *always-print-package-names?*)
+                 (| (string== (package-name !) "TRE")
+                    (string== (package-name !) "TRE-CORE")))
         (unless (keyword? x)
           (%print-symbol-component (let pn (package-name !)
                                      (? (string== "COMMON-LISP" pn)
