@@ -24,8 +24,7 @@
      (cl:symbol-function x)))
 
 (defbuiltin symbol-package (x)
-  (? (cl:boundp x)
-     (cl:symbol-package x)))
+  (cl:symbol-package x))
 
 (defbuiltin =-symbol-function (v x)
   (cl:setf (cl:symbol-function x) v))
