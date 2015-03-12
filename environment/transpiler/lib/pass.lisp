@@ -32,7 +32,8 @@
               (format t ,(string-concat "; **** " (symbol-name name) "~%"))
               (with-temporary *current-pass-input* ,arg
                 (prog1
-                  (print (,fun ,arg))
+                  (with-temporary *always-print-package-names?* t
+                    (late-print (,fun ,arg)))
                   (fresh-line)
                   (format t ,(string-concat "; **** end of " (symbol-name name) "~%")))))
             (,fun ,arg))))))
