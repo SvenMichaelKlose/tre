@@ -1,7 +1,5 @@
 ; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@hugbox.org>
 
-(defvar *can-import-function?* nil)
-
 (defun defined-or-wanted? (x)
   (| (defined-function x)
      (defined-variable x)
@@ -12,11 +10,8 @@
 (defun can-import-function? (x)
   (& (symbol? x)
      (fbound? x)
-     (not (alien-package? x))
-     (!? *can-import-function?*
-         (funcall ! x)
-         t)
      (not (builtin? (symbol-function x))
+          (alien-package? x)
           (defined-or-wanted? x))))
 	
 (defun add-wanted-function (x)
