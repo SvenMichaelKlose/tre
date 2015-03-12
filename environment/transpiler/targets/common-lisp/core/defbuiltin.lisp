@@ -1,6 +1,13 @@
-; tré – Copyright (c) 2014 Sven Michael Klose <pixel@hugbox.org>
+; tré – Copyright (c) 2014–2015 Sven Michael Klose <pixel@hugbox.org>
+
+(cl:defvar *builtin-atoms* (cl:make-hash-table :test #'cl:eq))
 
 (defmacro defbuiltin (name args &body body)
   (print-definition `(defbuiltin ,name ,args))
   (push name *cl-builtins*)
-  `(defun ,name ,args ,@body))
+  `(progn
+     (defun ,name ,args ,@body)
+     (cl:setf (cl:gethash ',name *builtin-atoms*) #',name)))
+
+(defbuiltin builtin? (x)
+  (cl:gethash x *builtin-atoms*))
