@@ -1,7 +1,6 @@
 ; tré – Copyright (c) 2014–2015 Sven Michael Klose <pixel@hugbox.org>
 
 (defbuiltin not (&rest x) (cl:every #'cl:not x))
-(defbuiltin builtin? (x)  (cl:gethash x *builtins*))
 
 (defun variable-compare (predicate x)
   (? .x
