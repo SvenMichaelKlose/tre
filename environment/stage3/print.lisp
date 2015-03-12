@@ -120,20 +120,23 @@
      (%print-escaped-symbol x str)
      (princ x str)))
 
+(defun %print-symbol-package (name str)
+  (%print-symbol-component (? (string== "COMMON-LISP" name)
+                              "CL"
+                              name)
+                           str))
+
 (defun %print-symbol (x str info)
   (unless (| (not x)
              (t? x))
     (awhen (symbol-package x)
-      (unless (& (not *always-print-package-names?*)
-                 (| (string== (package-name !) "TRE")
-                    (string== (package-name !) "TRE-CORE")))
-        (unless (keyword? x)
-          (%print-symbol-component (let pn (package-name !)
-                                     (? (string== "COMMON-LISP" pn)
-                                        "CL"
-                                        pn))
-                                   str))
-        (princ #\: str))))
+      (alet (package-name !)
+        (unless (& (not *always-print-package-names?*)
+                   (| (string== ! "TRE")
+                      (string== ! "TRE-CORE")))
+           (| (keyword? x)
+              (%print-symbol-package ! str))
+          (princ #\: str)))))
   (%print-symbol-component (symbol-name x) str))
 
 (defun %print-array (x str info)
