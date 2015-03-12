@@ -134,7 +134,7 @@
                         (?
                           (not pkg)   nil
                           (eq t pkg)  *keyword-package*
-                          (find-package (list-string pkg)))))))
+                          (list-string pkg))))))
 
 (defun read-atom (str token pkg sym)
   (case token :test #'eq
