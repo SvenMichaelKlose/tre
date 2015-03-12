@@ -3,7 +3,6 @@
 (defbuiltin sys-image-create (pathname fun)
   (sb-ext:save-lisp-and-die pathname
                             :toplevel (lambda ()
-                                        (cl:in-package :tre)
                                         (cl:funcall fun))
                             :purify t))
 
