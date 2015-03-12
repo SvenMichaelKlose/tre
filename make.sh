@@ -221,12 +221,10 @@ environment)
 
 core)
     echo "(load \"cl/main.lisp\")" | $SBCL --noinform
-	./make.sh ctests $ARGS || exit 1
 	;;
 
 ncore)
     (echo "(load \"boot-common.lisp\")" | $SBCL 2>&1) || exit 1
-	./make.sh ctests $ARGS || exit 1
 	;;
 
 oldgenboot)
