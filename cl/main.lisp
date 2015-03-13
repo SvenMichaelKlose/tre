@@ -13,5 +13,5 @@
 (load "cl/core.lisp")
 
 (in-package :tre)
-
+(cl:defvar *new-core?* nil)
 (env-load "main.lisp") 
