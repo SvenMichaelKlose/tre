@@ -18,19 +18,15 @@
 
 (defun lambda-expr-without-lambda-keyword? (x)
   (& (cl:consp x)
-     (eq 'function x.)
+     (cl:eq 'function x.)
      (cl:not (cl:atom .x.))
-     (cl:not (eq 'lambda (cl:car .x.)))))
+     (cl:not (cl:eq 'lambda (car .x.)))))
 
 (defun make-lambdas (x)
   (?
-    (cl:atom x)     (? (cl:symbolp x)
-                       (alet (symbol-name x)
-                         (? (cl:string= "&BODY" !)
-                            'cl:&rest
-                            x))
-                       x)
-    (eq 'quote x.)  x
+    (cl:eq '&body x)   '&rest
+    (cl:atom x)        x
+    (cl:eq 'quote x.)  x
     (lambda-expr-without-lambda-keyword? x.) (make-scoping-function x)
     (lambda-expr-without-lambda-keyword? x)  (make-anonymous-function x)
     (cl:mapcar #'make-lambdas x)))

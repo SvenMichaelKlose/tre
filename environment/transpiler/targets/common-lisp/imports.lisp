@@ -1,7 +1,16 @@
 ; tré – Copyright (c) 2014–2015 Sven Michael Klose <pixel@copei.de>
 
-; Symbols directly imported from package CL-USER.
-(defconstant +cl-direct-imports+
+(defconstant +cl-symbol-imports+
+    '(nil t
+      setq cond progn block return-from tagbody go labels
+      quote function lambda
+      &rest &body &optional &key))
+
+(defconstant +cl-core-symbols+
+    '(backquote quasiquote quasiquote-splice
+      square curly accent-circonflex))
+
+(defconstant +cl-function-imports+
     '(atom apply
       cons car cdr rplaca rplacd
       list last copy-list nthcdr nth mapcar
@@ -11,7 +20,6 @@
       make-package package-name find-package
       print))
 
-; Functions we import from CL-USER, wrap and export to package TRE.
 (defconstant +cl-renamed-imports+
     '((cons? consp)
       (symbol? symbolp)
@@ -30,11 +38,4 @@
       (%nconc nconc)))
 
 (defconstant +cl-special-forms+
-    '(%defun-quiet %defun %defvar
-      %defmacro
-      setq
-      progn block
-      return-from tagbody go
-      cond
-      labels
-      ?))
+    '(%defun-quiet %defun %defvar %defmacro ?))

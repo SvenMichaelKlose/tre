@@ -24,15 +24,8 @@
 
 (defun make-lambdas (x)
   (?
-    (atom x)        (? (symbol? x)
-                       (alet (symbol-name x)
-                         (?
-                           (cl:string= "&BODY" !)        (make-symbol "&REST" "CL")
-                           (| (cl:string= "&OPTIONAL" !)
-                              (cl:string= "&REST" !)
-                              (cl:string= "&KEY" !))     (make-symbol ! "CL")
-                           x))
-                       x)
+    (eq '&body x)   '&rest
+    (atom x)        x
     (eq 'quote x.)  x
     (lambda-expr-without-lambda-keyword? x.) (make-scoping-function x)
     (lambda-expr-without-lambda-keyword? x)  (make-anonymous-function x)

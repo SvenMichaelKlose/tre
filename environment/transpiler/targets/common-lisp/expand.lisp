@@ -46,12 +46,3 @@
 
 (define-cl-std-macro ? (&body body)
   (make-? body))
-
-(define-cl-std-macro setq (&body body) `(cl:setq ,@body))
-(define-cl-std-macro cond (&body body) `(cl:cond ,@body))
-(define-cl-std-macro progn (&body body) `(cl:progn ,@body))
-(define-cl-std-macro block (&body body) `(cl:block ,@body))
-(define-cl-std-macro return-from (&body body) `(cl:return-from ,@body))
-(define-cl-std-macro tagbody (&body body) `(cl:tagbody ,@body))
-(define-cl-std-macro go (&body body) `(cl:go ,@body))
-(define-cl-std-macro labels (&body body) `(cl:labels ,@body))

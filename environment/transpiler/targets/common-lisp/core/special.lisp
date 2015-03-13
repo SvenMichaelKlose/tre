@@ -44,12 +44,4 @@
   (print-definition `(%defvar ,name))
   `(cl:defvar ,name ,init))
 
-(defspecial setq (&body body)         `(cl:setq ,@body))
-(defspecial cond (&body body)         `(cl:cond ,@body))
-(defspecial progn (&body body)        `(cl:progn ,@body))
-(defspecial block (&body body)        `(cl:block ,@body))
-(defspecial return-from (&body body)  `(cl:return-from ,@body))
-(defspecial tagbody (&body body)      `(cl:tagbody ,@body))
-(defspecial go (&body body)           `(cl:go ,@body))
-(defspecial labels (&body body)       `(cl:labels ,@body))
 (defspecial ? (&body body)            (make-? body))
