@@ -1,5 +1,7 @@
 ; tré – Copyright (c) 2008,2010,2012–2015 Sven Michael Klose <pixel@copei.de>
 
+(defvar *reader-finds-symbols?* nil)
+
 (defun token-is-quote? (x)
   (in? x 'quote 'backquote 'quasiquote 'quasiquote-splice 'accent-circonflex))
 
@@ -130,11 +132,18 @@
            (split #\. sym))
     (? (& .! !. (car (last !)))
        (read-slot-value !)
-       (tre:make-symbol (list-string sym)
-                        (?
-                          (not pkg)   nil
-                          (eq t pkg)  *keyword-package*
-                          (list-string pkg))))))
+       (? *reader-finds-symbols?*
+          (cl:find-symbol (list-string sym)
+                          (? (not pkg)
+                             cl:*package*
+                             (find-package (? (t? pkg)
+                                              *keyword-package*
+                                              (list-string pkg)))))
+          (tre:make-symbol (list-string sym)
+                           (?
+                             (not pkg)  nil
+                             (t? pkg)   *keyword-package*
+                             (list-string pkg)))))))
 
 (defun read-atom (str token pkg sym)
   (case token :test #'eq
