@@ -9,17 +9,6 @@
           (return nil)))
      (cl:error "At least 2 arguments required.")))
 
-(defun non-keyword-symbol? (x)
-  (& (cl:symbolp x)
-     (cl:not (cl:keywordp x))))
-
-(defun xpackeq (a b)
-  (? (& (non-keyword-symbol? a)
-        (non-keyword-symbol? b))
-     (cl:string= (cl:symbol-name a)
-                 (cl:symbol-name b))
-     (cl:eq a b)))
-
 (defun tre-eql (a b)
   (?
     (& (number? a)
@@ -29,7 +18,7 @@
     (& (cl:consp a)
        (cl:consp b))  (& (tre-eql a. b.)
                          (tre-eql .a .b))
-    (xpackeq a b)))
+    (cl:eq a b)))
 
-(defbuiltin eq (&rest x)  (variable-compare #'xpackeq x))
+(defbuiltin eq (&rest x)  (variable-compare #'cl:eq x))
 (defbuiltin eql (&rest x) (variable-compare #'tre-eql x))
