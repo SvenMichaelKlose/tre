@@ -42,6 +42,8 @@
 
 (defspecial %defvar (name &optional (init nil))
   (print-definition `(%defvar ,name))
-  `(cl:defvar ,name ,init))
+  `(progn
+     (cl:push (. ',name ',init) *variables*)
+     (cl:defvar ,name ,init)))
 
 (defspecial ? (&body body)            (make-? body))
