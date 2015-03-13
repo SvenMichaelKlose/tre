@@ -16,6 +16,7 @@
                                 "defbuiltin.lisp"
                                 "array.lisp"
                                 "env-load.lisp"
+                                "../make-lambdas.lisp"
                                 "eval.lisp"
                                 "file.lisp"
                                 "function.lisp"
