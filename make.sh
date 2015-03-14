@@ -102,16 +102,15 @@ basic_clean ()
     rm -vf examples/js/hello-world.js
     rm -vf gmon.out tmp.gcda profile.lisp
 	rm -vrf _nodejstests.log _phptests.log _bytecode-interpreter-tests.log make.log boot.log
-    rm -vf boot-common.lisp
 	echo "Checking out early reader..."
-    git checkout -- cl/generated-from-environment.lisp
+    git checkout -- boot-common.lisp
 }
 
 gitclean ()
 {
 	echo "Cleaning for distribution..."
     basic_clean
-	rm -vrf backup boot-common.lisp
+	rm -vrf backup
 }
 
 link ()
@@ -220,67 +219,21 @@ environment)
 	;;
 
 core)
-    echo "(load \"cl/main.lisp\")" | $SBCL --noinform
-	;;
-
-ncore)
     (echo "(load \"boot-common.lisp\")" | $SBCL 2>&1) || exit 1
 	;;
 
-oldgenboot)
-    echo
-    echo "#######################################################"
-    echo "### GENERATING 'cl/generated-from-environment.lisp' ###"
-    echo "#######################################################"
-    echo
-    $SBCL --core image makefiles/old-boot-common.lisp 2>&1 || exit 1
-	;;
-
 genboot)
-    echo
-    echo "#####################################"
-    echo "### GENERATING 'boot-common.lisp' ###"
-    echo "#####################################"
-    echo
     $SBCL --core image makefiles/boot-common-lisp.lisp 2>&1 || exit 1
 	;;
 
-oldqboot)
-	./make.sh core $ARGS || exit 1
-    ;;
-
-oldboot)
-    echo
-    echo "########################"
-    echo "### BOOTING WITH CL/ ###"
-    echo "########################"
-    echo
+qboot)
     git checkout -- cl/generated-from-environment.lisp
-	./make.sh oldqboot $ARGS || exit 1
-	./make.sh oldgenboot $ARGS || exit 1
-	./make.sh oldqboot $ARGS || exit 1
-	;;
-
-nboot)
-    echo
-    echo "#######################################"
-    echo "### BOOTING WITH 'boot-common.lisp' ###"
-    echo "#######################################"
-    echo
-    ./make.sh genboot 2>&1 || exit 1
     ./make.sh ncore 2>&1 || exit 1
 	;;
 
-
-qboot)
-    git checkout -- cl/generated-from-environment.lisp
-    ./make.sh oldqboot 2>&1 || exit 1
-    ./make.sh nboot 2>&1 || exit 1
-	;;
-
 boot)
-    ./make.sh oldboot 2>&1 || exit 1
-    ./make.sh nboot 2>&1 || exit 1
+    ./make.sh qboot 2>&1 || exit 1
+    ./make.sh genboot 2>&1 || exit 1
     ./make.sh nboot 2>&1 || exit 1
 	;;
 
@@ -294,11 +247,6 @@ pgo)
 	;;
 
 ctests)
-    echo
-    echo "#########################"
-    echo "### ENVIRONMENT TESTS ###"
-    echo "#########################"
-    echo
     (echo "(do-tests)" | $TRE) || exit 1
     echo "Environment tests passed."
 	;;
@@ -356,10 +304,6 @@ all)
     echo "Making all..." >>make.log
     echo "Regular boot." >>make.log
 	./make.sh boot $ARGS || exit 1
-    echo "Transpile environment with booted version." >>make.log
-	./make.sh environment $ARGS || exit 1
-    echo "Compiling the transpiled." >>make.log
-	./make.sh crunsh $ARGS || exit 1
     echo "Testing it." >>make.log
 	./make.sh tests || exit 1
 #	./make.sh bytecode-image || exit 1
