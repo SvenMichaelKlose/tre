@@ -228,13 +228,13 @@ genboot)
 
 qboot)
     git checkout -- cl/generated-from-environment.lisp
-    ./make.sh ncore 2>&1 || exit 1
+    ./make.sh core 2>&1 || exit 1
 	;;
 
 boot)
     ./make.sh qboot 2>&1 || exit 1
     ./make.sh genboot 2>&1 || exit 1
-    ./make.sh nboot 2>&1 || exit 1
+    ./make.sh core 2>&1 || exit 1
 	;;
 
 pgo)
