@@ -19,12 +19,6 @@
 (defun cl-symbol (x)
   (make-symbol (symbol-name x) "CL"))
 
-(defun cl-wrapper (x)
-  (format nil "(cl:defun ~A (cl:&rest x) (cl:apply #'cl:~A x))~%" x. .x.))
-
-(defun cl-wrappers ()
-  (@ #'cl-wrapper +cl-renamed-imports+))
-
 (alet (copy-transpiler *cl-transpiler*)
   (with-temporary *transpiler* !
     (add-defined-variable '*macros*))
@@ -40,8 +34,6 @@
       (adolist ((cl-packages))
         (late-print ! o))
       (late-print '(cl:in-package :tre-core) o)
-      (adolist ((cl-wrappers))
-        (princ ! o))
       (@ [late-print _ o] c)
       (princ "(cl:in-package :tre)" o)
       (princ "(cl:format t \"Loading environment...~%\")" o)
