@@ -1,3 +1,7 @@
+# WARNING: UNDER RECONSTRUCTION!
+
+Don't try to use tré for real work until this message is gone.
+
 # Overview
 
 This is tré, a metamorphic Lisp transpiler.  It can generate
