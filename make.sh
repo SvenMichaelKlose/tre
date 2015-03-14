@@ -227,7 +227,7 @@ genboot)
 	;;
 
 qboot)
-    git checkout -- cl/generated-from-environment.lisp
+    git checkout -- boot-common.lisp
     ./make.sh core 2>&1 || exit 1
 	;;
 
