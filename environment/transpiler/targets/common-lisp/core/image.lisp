@@ -3,8 +3,7 @@
 (defbuiltin sys-image-create (pathname fun)
   (sb-ext:save-lisp-and-die pathname
                             :toplevel (lambda ()
-                                        (cl:funcall fun))
-                            :purify t))
+                                        (cl:funcall fun))))
 
 (defbuiltin %start-core ()
   (setq *launchfile* (cadr (| sb-ext:*posix-argv*

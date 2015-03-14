@@ -18,7 +18,10 @@
 
 (defun cl-sections-before-import ()
   (unless (configuration :exclude-core?)
-    (list (. 'cl-core *cl-core*))))
+    (list (. 'cl-core (+ *cl-core*
+                         (@ [`(defbuiltin ,_. (&rest x)
+                                (apply #',(make-symbol (symbol-name ._.) "CL") x))]
+                            +cl-renamed-imports+))))))
 
 (defun make-cl-transpiler ()
   (create-transpiler
