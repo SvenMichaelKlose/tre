@@ -1,13 +1,13 @@
 ; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@hugbox.org>
 
-(transpiler-pass frontend-2 ()
+(transpiler-pass frontend-2
     thisify                   #'thisify
     rename-arguments          #'rename-arguments
     lambda-expand             #'lambda-expand
     fake-place-expand         #'fake-place-expand
     fake-expression-expand    #'fake-expression-expand)
 
-(transpiler-pass frontend-1 ()
+(transpiler-pass frontend-1
     file-input                #'identity
     dot-expand                #'pass-dot-expand
     quasiquote-expand         #'pass-quasiquote-expand

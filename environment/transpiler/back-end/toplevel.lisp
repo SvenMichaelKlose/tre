@@ -36,7 +36,7 @@
      (warn-unused x)
      x))
 
-(transpiler-pass generate-code ()
+(transpiler-pass generate-code
     print-o                [(& *development?*
                                (format t "o~F"))
                             _]
@@ -49,7 +49,7 @@
     convert-identifiers    #'pass-convert-identifiers
     postprocess            #'transpiler-postprocess)
 
-(transpiler-pass backend-make-places ()
+(transpiler-pass backend-make-places
     make-framed-functions  #'make-framed-functions
     place-expand           #'place-expand
     place-assign           #'place-assign

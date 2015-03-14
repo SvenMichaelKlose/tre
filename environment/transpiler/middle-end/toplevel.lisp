@@ -28,7 +28,7 @@
      (funcall #'cps x)
      x))
  
-(transpiler-pass middleend-0 ()
+(transpiler-pass middleend-0
     print-dot                [(& *development?*
                                  (format t ".~F"))
                               _]
