@@ -2,5 +2,5 @@
 
 (defbuiltin elt (seq idx)
   (& seq
-     (cl:<= idx (cl:length seq)))
-     (cl:elt seq idx))
+     (cl:< idx (cl:length seq))
+     (cl:elt seq idx)))
