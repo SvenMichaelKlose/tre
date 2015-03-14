@@ -14,7 +14,7 @@
     '(atom apply
       cons car cdr rplaca rplacd
       list last copy-list nthcdr nth mapcar
-      elt length make-string
+      length make-string
       mod sqrt sin cos atan exp round floor
       aref char-code
       make-package package-name find-package

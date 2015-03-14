@@ -28,6 +28,7 @@
                                 "misc.lisp"
                                 "number.lisp"
                                 "object.lisp"
+                                "sequence.lisp"
                                 "string.lisp"
                                 "special.lisp"
                                 "symbol.lisp")))
