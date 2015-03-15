@@ -19,7 +19,7 @@
 
 (defvar *js-core-debug-print* ,(list 'quote (js-load-core "" "debug-print.lisp")))
 
-(defvar *js-core2*
+(defvar *js-core1*
 	,(list 'quote (+ (js-load-core "../../../environment/"
 		                           "not.lisp"
                                    "exception.lisp"
@@ -39,7 +39,7 @@
 		             (js-load-core ""
                                    "predefined-symbols.lisp"))))
 
-(= *js-core2* (+ *js-core2*
+(= *js-core1* (+ *js-core1*
 	             ,(list 'quote (js-load-core ""
 		                                     "bind.lisp"
 		                                     "../../../environment/eq.lisp"
@@ -61,9 +61,9 @@
                                              "nanotime.lisp"))))
 
 (when *have-compiler?*
-  (= *js-core2* (+ *js-core2* ,(list 'quote (js-load-core "" "native-eval.lisp")))))
+  (= *js-core1* (+ *js-core1* ,(list 'quote (js-load-core "" "native-eval.lisp")))))
 
-(= *js-core2* (+ *js-core2* ,(list 'quote (js-load-core "" "../../../environment/setf-function-p.lisp"))))
+(= *js-core1* (+ *js-core1* ,(list 'quote (js-load-core "" "../../../environment/setf-function-p.lisp"))))
 
 (defun js-core-stream ()
   (+ ,(list 'quote (js-load-core "" "error.lisp"))
