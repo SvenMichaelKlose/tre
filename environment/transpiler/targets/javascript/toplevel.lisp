@@ -64,7 +64,7 @@
     ,@(& *have-compiler?*
          (js-sections-compiler))))
 
-(defun js-ending-sections (tr)
+(defun js-ending-sections ()
   );`((funinfo-inits . ,#'gen-funinfo-inits)))
 
 (defun js-expex-initializer (ex)
@@ -90,7 +90,9 @@
       :configurations           '((:platform . :browser)
                                   (:nodejs-requirements . nil)
                                   (:rplac-breakpoints . nil)
-                                  (:exclude-core? . nil))))
+                                  (:exclude-core? . nil)
+                                  (:save-sources? . nil)
+                                  (:save-argument-defs-only? . nil))))
 
 (defun make-javascript-transpiler ()
   (aprog1 (make-javascript-transpiler-0)
