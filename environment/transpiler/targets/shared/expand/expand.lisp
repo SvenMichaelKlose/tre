@@ -42,7 +42,7 @@
   (adolist x
     (? (transpiler-functional? *transpiler* !)
        (warn "Redefinition of functional ~A." !))
-    (add-functional !))
+    (transpiler-add-functional *transpiler* !))
   nil)
 
 (define-shared-std-macro (c js php) not (&rest x)
