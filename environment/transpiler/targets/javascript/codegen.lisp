@@ -69,7 +69,7 @@
   (c-list (argument-expand-names debug-section args)))
 
 (define-js-macro function (&rest x)
-  (alet (cons 'function x)
+  (alet (. 'function x)
     (? .x
        (with (name            (lambda-name !)
               translated-name (? (defined-function name)
@@ -98,10 +98,10 @@
        "")))
 
 (define-js-macro %function-epilogue (name)
-  (alet (get-funinfo name)
-    (| `((%function-return ,name)
-	     ,@(& (< 0 (funinfo-num-tags !)) `("}}")))
-        "")))
+  (| `((%function-return ,name)
+       ,@(& (< 0 (funinfo-num-tags (get-funinfo name)))
+            `("}}")))
+      ""))
 
 
 ;;;; ASSIGNMENT
