@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2009–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2009–2015 Sven Michael Klose <pixel@copei.de>
 
 (defvar *compiled-function-names* (make-hash-table :test #'eq))
 
@@ -6,8 +6,7 @@
   (href *compiled-function-names* x))
 
 (defun compiled-function-name (name)
-  (aprog1 (make-symbol (+ (function-name-prefix) (symbol-name name))
-                       (symbol-package name))
+  (aprog1 (make-symbol (+ (function-name-prefix) (symbol-name name)))
     (let-when n (real-function-name name)
       (| (eq n name)
          (error "Compiled function name clash ~A for ~A and ~A." ! name n)))
