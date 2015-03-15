@@ -85,39 +85,38 @@
         t)))
 
 (defun read-token (str)
-  (awhen (get-symbol-and-package str)
-    (with ((pkg sym) !)
-	  (values (? (& sym
-                    (not .sym)
-                    (== #\. sym.))
-		         'dot
-		         (? sym
-                    (? (list-number? sym)
-                       'number
-			           'symbol)
-			        (case (read-char str) :test #'character==
-			          #\(	 'bracket-open
-			          #\)	 'bracket-close
-			          #\[	 'square-bracket-open
-			          #\]	 'square-bracket-close
-			          #\{	 'curly-bracket-open
-			          #\}	 'curly-bracket-close
-			          #\'	 'quote
-			          #\`	 'backquote
-			          #\^	 'accent-circonflex
-			          #\"	 'dblquote
-			          #\,	 (? (== #\@ (peek-char str))
-				                (& (read-char str)
-                                   'quasiquote-splice)
-				                'quasiquote)
-			          #\#	(case (read-char str) :test #'character==
-				            #\\  'char
-				            #\x  'hexnum
-				            #\'  'function
-				            #\|  (read-comment-block str)
-				            (error "Invalid character after '#'."))
-			          -1	'eof)))
-		       pkg sym))))
+  (with ((pkg sym) (get-symbol-and-package str))
+    (values (? (& sym
+                  (not .sym)
+                  (== #\. sym.))
+               'dot
+               (? sym
+                  (? (list-number? sym)
+                     'number
+                     'symbol)
+                  (case (read-char str) :test #'character==
+                    #\(	 'bracket-open
+                    #\)	 'bracket-close
+                    #\[	 'square-bracket-open
+                    #\]	 'square-bracket-close
+                    #\{	 'curly-bracket-open
+                    #\}	 'curly-bracket-close
+                    #\'	 'quote
+                    #\`	 'backquote
+                    #\^	 'accent-circonflex
+                    #\"	 'dblquote
+                    #\,	 (? (== #\@ (peek-char str))
+                            (& (read-char str)
+                               'quasiquote-splice)
+                            'quasiquote)
+                    #\#	 (case (read-char str) :test #'character==
+                           #\\  'char
+                           #\x  'hexnum
+                           #\'  'function
+                           #\|  (read-comment-block str)
+                           (error "Invalid character after '#'."))
+                    -1	'eof)))
+            pkg sym)))
 
 (defun read-slot-value (x)
   (? x
