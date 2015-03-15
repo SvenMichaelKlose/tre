@@ -71,11 +71,11 @@
 
 (defun frontend-section (section data)
   (developer-note "Frontend ~A.~%" section)
-  (?
-    (symbol? section)  (frontend (? (function? data)
-                                    (funcall data)
-                                    data))
-    (string? section)  (frontend-section-load section)
+  (pcase section
+    symbol?  (frontend (? (function? data)
+                          (funcall data)
+                          data))
+    string?  (frontend-section-load section)
     (error "Don't know what to do with section ~A." section)))
 
 (defun frontend-sections (sections)
@@ -110,11 +110,6 @@
   (print-status "~A seconds passed.~%~F"
                 (integer (/ (- (nanotime) start-time) 1000000000))))
 
-(define-filter wrap-strings-in-lists (x)
-  (? (string? x)
-     (list x)
-     x))
-
 (defun compile-sections (sections &key (transpiler nil))
   (let start-time (nanotime)
     (= *warnings* nil)
@@ -125,8 +120,7 @@
          (clr (emitted-decls)))
       (= (host-functions) (make-host-functions))
       (= (host-variables) (make-host-variables))
-      (prog1
-        (generic-frontend (wrap-strings-in-lists sections))
+      (prog1 (generic-frontend (@ [? (string? _) (list _) _]  sections))
         (print-transpiler-stats start-time)
         (print-status "Phew!~%")))))
 
