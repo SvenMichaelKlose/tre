@@ -6,6 +6,7 @@
   (print-definition `(transpiler-pass ,name))
   (with (cache-var ($ '*pass- name '*)
          init (gensym))
+        (print
     `(progn
        (defvar ,cache-var nil)
        (defun ,name (,init)
@@ -13,10 +14,10 @@
            (fresh-line)
            (format t "; #### ~A ####~%" ',name))
          (= ,cache-var ,init)
-         (@ (i (list ,@(@ [list 'quote (cadr _)]
-                          (group name-fun-pairs 2))) ,cache-var)
+         (@ (i (list ,@(@ #'cadr (group name-fun-pairs 2))) ,cache-var)
            (with-global-funinfo
-             (= ,cache-var (= (last-pass-result) (funcall i ,cache-var)))))))))
+             (= ,cache-var (= (last-pass-result) (funcall i ,cache-var)))))))
+    )))
 
 (defmacro def-pass-fun (name arg &body body)
   (print-definition `(def-pass-fun ,name ,arg))
