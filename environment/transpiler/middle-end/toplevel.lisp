@@ -1,6 +1,6 @@
 ; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@hugbox.org>
 
-(def-pass-fun pass-accumulate-toplevel-expression x
+(def-pass-fun pass-accumulate-toplevel-expressions x
   (? (accumulate-toplevel-expressions?)
      (accumulate-toplevel-expressions x)
      x))
