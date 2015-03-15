@@ -18,9 +18,10 @@
              (= ,cache-var (= (last-pass-result) (funcall i ,cache-var)))))))))
 
 (defun dump-pass? (name)
-  (!? (dump-passes?)
-      (| (t? !)
-         (member name (ensure-list !)))))
+  (& *transpiler*
+     (!? (dump-passes?)
+         (| (t? !)
+            (member name (ensure-list !))))))
 
 (defmacro def-pass-fun (name arg &body body)
   (print-definition `(def-pass-fun ,name ,arg))
