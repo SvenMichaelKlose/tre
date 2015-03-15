@@ -1,5 +1,7 @@
 ; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@hugbox.org>
 
+(def-pass-fun pass-backend-input x x)
+
 (def-pass-fun pass-function-names x
   (? (function-name-prefix)
      (translate-function-names (global-funinfo) x)
@@ -37,7 +39,7 @@
      x))
 
 (transpiler-pass generate-code
-    print-o                [(& *development?*
+    backend-input          [(& *development?*
                                (format t "o~F"))
                             _]
     function-names         #'pass-function-names

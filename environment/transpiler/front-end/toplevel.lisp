@@ -7,8 +7,10 @@
     fake-place-expand         #'fake-place-expand
     fake-expression-expand    #'fake-expression-expand)
 
+(def-pass-fun pass-frontend-input x x)
+
 (transpiler-pass frontend-1
-    file-input                #'identity
+    frontend-input            #'pass-frontend-input
     dot-expand                #'pass-dot-expand
     quasiquote-expand         #'pass-quasiquote-expand
     transpiler-macroexpand    #'transpiler-macroexpand
