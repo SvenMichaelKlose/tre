@@ -49,7 +49,7 @@
                          `(make-package ,(obfuscated-symbol-name !)))))))
 
 (define-js-std-macro defun (name args &body body)
-  (with (dname (apply-current-package (transpiler-package-symbol *js-transpiler* (%defun-name name)))
+  (with (dname (%defun-name name)
          g     '~%tfun)
       `(%%block
          (%var ,dname)
