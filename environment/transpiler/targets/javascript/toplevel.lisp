@@ -52,17 +52,17 @@
 
 (defun js-sections-compiler ()
   (alet *js-core-path*
-    `((list-of-early-defined-functions . ,#'js-emit-early-defined-functions)
-      (,(+ ! "env-load-stub.lisp"))
-      ,@(js-environment-files)
-      (,(+ ! "late-macro.lisp"))
-      (,(+ ! "eval.lisp")))))
+    (+ (list (. 'list-of-early-defined-functions #'js-emit-early-defined-functions)
+             (list (+ ! "env-load-stub.lisp")))
+       (js-environment-files)
+       (list (list (+ ! "late-macro.lisp"))
+             (list (+ ! "eval.lisp"))))))
 
 (defun js-sections-after-import ()
-  `((late-symbol-function-assignments . ,#'emit-late-symbol-function-assignments)
-    (memorized-source-emitter . ,#'js-emit-memorized-sources)
-    ,@(& *have-compiler?*
-         (js-sections-compiler))))
+  (+ (list (. 'late-symbol-function-assignments #'emit-late-symbol-function-assignments)
+           (. 'memorized-source-emitter #'js-emit-memorized-sources))
+     (& *have-compiler?*
+        (js-sections-compiler))))
 
 (defun js-ending-sections ()
   );`((funinfo-inits . ,#'gen-funinfo-inits)))
@@ -91,6 +91,7 @@
                                   (:nodejs-requirements . nil)
                                   (:rplac-breakpoints . nil)
                                   (:exclude-core? . nil)
+                                  (:memorize-sources? . nil)
                                   (:save-sources? . nil)
                                   (:save-argument-defs-only? . nil))))
 
