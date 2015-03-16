@@ -3,3 +3,4 @@
                 '("examples/js/hello-world.lisp")
                 :transpiler  *js-transpiler*
                 :emitter     [princ _ out]))
+(quit)
