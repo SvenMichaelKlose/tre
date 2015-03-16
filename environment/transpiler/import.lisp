@@ -18,7 +18,7 @@
   (when (can-import-function? x)
     (= (href (wanted-functions-hash) x) t)
     (push x (wanted-functions))
-    (print-note "Scheduled ~A for import from host.~%" x))
+    (print-note "Scheduled function ~A for import from host.~%" x))
   x)
 
 (defun add-wanted-functions (x)
@@ -38,7 +38,7 @@
   (when (can-import-variable? x)
     (= (href (wanted-variables-hash) x) t)
     (push x (wanted-variables))
-    (print-note "Scheduled ~A for import from host.~%" x))
+    (print-note "Scheduled global variable ~A for import from host.~%" x))
   x)
 
 (defun import-exported-closures ()
