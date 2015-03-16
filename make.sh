@@ -301,15 +301,12 @@ jsdebugger)
     ;;
 
 all)
-    echo "Making all..." >>make.log
-    echo "Regular boot." >>make.log
 	./make.sh boot $ARGS || exit 1
-    echo "Testing it." >>make.log
-	./make.sh tests || exit 1
+	./make.sh ctests || exit 1
+    $TRE examples/js/make-hello-world.lisp
 #	./make.sh bytecode-image || exit 1
 #   ./make.sh jsdebugger || exit 1
 #    $TRE makefiles/webconsole.lisp || exit 1
-    echo "All done." >>make.log
     ;;
 
 profile)
