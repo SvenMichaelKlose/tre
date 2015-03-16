@@ -110,6 +110,7 @@
       (NTH              (index x))
       (FILTER           (fun x))
       (MAPCAR           (fun &rest x))
+      (%NCONC           (&rest lists))
       (ELT              (&rest x)) ;sequence index)
       (%SET-ELT         (&rest x)) ;object sequence index)
       (LENGTH           (&rest x)) ;sequence)
