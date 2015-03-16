@@ -21,7 +21,7 @@
 (defbuiltin %fclose (stream) (cl:close stream))
 
 (defbuiltin %read-char (str)
-  (alet (cl:read-byte str nil 'eof)
+  (alet (cl:read-byte (| str cl:*standard-input*) nil 'eof)
     (unless (eq ! 'eof)
       (cl:code-char !))))
 
