@@ -16,6 +16,10 @@
      field.
      field))
 
+(defun %struct-field-options (field)
+  (& (cons? field)
+     ..field))
+
 (defun %struct-constructor-args (fields)
   `(&key ,@(@ [let n (%struct-field-name _)
                 `(,n ',n)]
@@ -57,7 +61,8 @@
          (aref arr ,index))
        (defun (= ,aname) (val arr)
          (= (aref arr ,index) val))
-       ,@(!? (assoc :global options)
+       ,@(!? (& (not (member :not-global (%struct-field-options field)))
+                (assoc :global options))
              `((defun ,fname ()
                  (aref ,.!. ,index))
                (defun (= ,fname) (val)
@@ -65,7 +70,7 @@
 
 (defun %struct-accessors (name fields options)
   (let index 1
-    (@ [%struct-slot-accessors name (%struct-field-name _) (++! index) options]
+    (@ [%struct-slot-accessors name _ (++! index) options]
        fields)))
 
 (defun struct-predicate (x)
