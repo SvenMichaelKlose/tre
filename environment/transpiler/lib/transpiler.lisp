@@ -17,7 +17,7 @@
 
 (defstruct transpiler
   (:global *transpiler*)
-  name
+  (name                    name :not-global)
 
   (sections-to-update      nil)
 
