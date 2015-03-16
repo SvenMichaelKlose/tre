@@ -29,8 +29,6 @@
       (format o "(declaim #+sbcl(sb-ext:muffle-conditions compiler-note style-warning))~%")
       ; Use to debug...
       ;(format o "(proclaim '(optimize (speed 0) (space 0) (safety 3) (debug 2)))~%")
-      ; Use if happy...
-      ;(format o "(proclaim '(optimize (speed 3) (space 3) (safety 0) (debug 0)))~%")
       (adolist ((cl-packages))
         (late-print ! o))
       (late-print '(cl:in-package :tre-core) o)
