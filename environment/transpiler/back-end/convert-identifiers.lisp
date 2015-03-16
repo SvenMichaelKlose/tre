@@ -56,7 +56,7 @@
     	                         (convert-camel (string-list str) 0))))))))
 
 (defun convert-identifier-1 (s)
-  (!? (symbol-package s)
+  (!? nil ;(symbol-package s)
       (convert-identifier-r (make-symbol (string-concat (symbol-name !) ":" (symbol-name s))))
       (convert-identifier-r s)))
 
