@@ -5,7 +5,6 @@
 (%defvar *macrocall* nil)
 (%defvar *current-macro* nil)
 (%defvar *macroexpand* nil)
-(%defvar *macroexpand-print?* nil)
 
 (%defun %macroexpand-backquote (x)
   (?
@@ -29,14 +28,8 @@
         (%macroexpand-rest .x))))
 
 (%defun %macroexpand-xlat (x)
-  (? *macroexpand-print?*
-     (progn
-       (print '*macroexpand-print?*)
-       (print x)))
   (setq *current-macro* x.)
   (#'((x)
-        (? *macroexpand-print?*
-           (print x))
         (setq *current-macro* nil)
         x)
     (apply *macrocall* (list x))))
