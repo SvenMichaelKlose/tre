@@ -5,25 +5,6 @@
 
 (defvar *js-compiled-symbols* (make-hash-table :test #'eq))
 
-(defun js-codegen-symbol-constructor-expr (x)
-  (let s (compiled-function-name-string 'symbol)
-    `(,s "(\"" ,(obfuscated-symbol-name x) "\","
-	           ,@(!? (symbol-package x)
-	                 `((,s "(\"" ,(obfuscated-symbol-name !) "\",null)"))
-	                 '(("null")))
-	     ")")))
-
-(defun js-codegen-symbol-constructor (x)
-  (alet *js-compiled-symbols*
-    (| (href ! x)
-       (= (href ! x)
-          (with-gensym g
-            (push `("var " ,(obfuscated-identifier g)
-                           "=" ,@(js-codegen-symbol-constructor-expr x)
-                           ,*js-separator*)
-                  (raw-decls))
-            g)))))
-
 (define-codegen-macro-definer define-js-macro *js-transpiler*)
 
 
@@ -220,7 +201,21 @@
 ;;;; METACODES
 
 (define-js-macro quote (x)
-  (js-codegen-symbol-constructor x))
+  (with (f  [let s (compiled-function-name-string 'symbol)
+              `(,s "(\"" ,(obfuscated-symbol-name _) "\","
+	            ,@(!? (symbol-package _)
+	                  `((,s "(\"" ,(obfuscated-symbol-name !) "\",null)"))
+	                  '(("null")))
+	            ")")])
+    (alet *js-compiled-symbols*
+      (| (href ! x)
+         (= (href ! x) (with-gensym g
+                         (push `("var " ,(obfuscated-identifier g)
+                                 "="
+                                 ,@(f x)
+                                 ,*js-separator*)
+                               (raw-decls))
+                         g))))))
 
 (define-js-macro %slot-value (x y)
   `(%%native ,x "." ,y))
