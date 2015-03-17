@@ -42,11 +42,12 @@
 (%defun %macroexpand (x)
   (?
     (atom x)                   x
-    (eq x. 'QUOTE)             x
     (eq x. 'BACKQUOTE)         (. 'BACKQUOTE (apply *macroexpand-backquote* (list .x)))
     (eq x. 'QUASIQUOTE)        (. 'QUASIQUOTE (%macroexpand .x))
     (eq x. 'QUASIQUOTE-SPLICE) (. 'QUASIQUOTE-SPLICE (%macroexpand .x))
-    (%macroexpand-call (%macroexpand-rest x))))
+    (%macroexpand-call (? (eq x. 'QUOTE)
+                          x
+                          (%macroexpand-rest x)))))
 
 (%defun %%env-macro? (x)
   (%%macro? x))
