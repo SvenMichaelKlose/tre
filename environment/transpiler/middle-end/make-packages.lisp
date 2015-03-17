@@ -1,9 +1,9 @@
-; tré – Copyright (c) 2011–201j Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2011–2015 Sven Michael Klose <pixel@copei.de>
 
 (defun process-%%in-package (x)
   (?
     (| (atom x) 
-       (%quote? x))    x
+       (quote? x))    x
     (%%in-package? x) (& (= (current-package ) (& .x. (make-package (symbol-name .x.))))
                          nil)
     (listprop-cons x (process-%%in-package x.)

@@ -19,7 +19,7 @@
 
 (define-tree-filter rename-arguments-0 (replacements x)
   (atom x)          (rename-argument replacements x)
-  (%quote? x)       x
+  (quote? x)        x
   (any-lambda? x)   (rename-arguments-lambda replacements x)
   (%slot-value? x)  `(%slot-value ,(rename-arguments-0 replacements .x.)
 				                  ,..x.))

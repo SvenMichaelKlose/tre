@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
 
 (defmacro define-c-std-macro (name args &body body)
   `(define-transpiler-std-macro *c-transpiler* ,name ,args ,@body))
@@ -17,10 +17,10 @@
      `(%%%eq ,@x)))
 
 (define-c-std-macro slot-value (obj slot)
-  `(%slot-value ,obj (%quote ,slot)))
+  `(%slot-value ,obj (quote ,slot)))
 
 (define-c-std-macro =-slot-value (val obj slot)
-  `(=-%slot-value ,val ,obj (%quote ,slot)))
+  `(=-%slot-value ,val ,obj (quote ,slot)))
 
 (defun make-number-%%native (x)
   (? (number? x)

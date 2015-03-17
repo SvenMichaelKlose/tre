@@ -1,6 +1,6 @@
-;;;;; tré – Copyright (c) 2013 Sven Michael Klose <pixel@copei.de>
-;;;;;
-;;;;; Non–recursive bytecode interpreter.
+; tré – Copyright (c) 2013,2015 Sven Michael Klose <pixel@copei.de>
+;
+; Non–recursive bytecode interpreter.
 
 (defstruct process
   fun
@@ -63,7 +63,7 @@
       (not !)                  nil
       (eq t !)                 t
       (number? !)              (process-get-stack tc !)
-      (eq '%quote !)           (process-fetch !)
+      (eq 'quote !)            (process-fetch !)
       (eq '%vec !)             (aref (process-get tc) (process-get tc))
       (eq '%closure !)         (process-get-closure tc)
       call?                    (process-call tc ! (process-fetch-args tc))

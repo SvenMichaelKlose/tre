@@ -64,7 +64,7 @@
 
 (define-tree-filter place-expand-0 (fi x)
   (atom x)              (place-expand-atom fi x)
-  (| (%quote? x)
+  (| (quote? x)
      (%%native? x)
      (%var? x))         x
   (named-lambda? x)     (place-expand-fun x)

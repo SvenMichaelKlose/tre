@@ -219,7 +219,7 @@
 
 ;;;; METACODES
 
-(define-js-macro %quote (x)
+(define-js-macro quote (x)
   (js-codegen-symbol-constructor x))
 
 (define-js-macro %slot-value (x y)

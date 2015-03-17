@@ -19,12 +19,12 @@
 
 (defun thisify-list-0 (classdef x exclusions)
   (?
-	(atom x)         (thisify-symbol classdef x exclusions)
-	(%quote? x)      x
-    (%slot-value? x) `(%slot-value ,(thisify-symbol classdef .x. exclusions) ,..x.)
-	(lambda? x)      (copy-lambda x :body (thisify-list-0 classdef
-                                                          (lambda-body x)
-                                                          (+ exclusions (lambda-args x))))
+	(atom x)          (thisify-symbol classdef x exclusions)
+	(quote? x)        x
+    (%slot-value? x)  `(%slot-value ,(thisify-symbol classdef .x. exclusions) ,..x.)
+	(lambda? x)       (copy-lambda x :body (thisify-list-0 classdef
+                                                           (lambda-body x)
+                                                           (+ exclusions (lambda-args x))))
     (listprop-cons x
                    (? (%slot-value? x.)
 			          `(%slot-value ,(thisify-list-0 classdef (cadr x.) exclusions)

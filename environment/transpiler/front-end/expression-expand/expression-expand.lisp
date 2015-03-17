@@ -68,7 +68,7 @@
 (defun unexpex-able? (x)
   (| (atom x)
      (literal-function? x)
-     (in? x. '%%go '%%go-nil '%%native '%%string '%quote)))
+     (in? x. '%%go '%%go-nil '%%native '%%string 'quote)))
 
 
 ;;;; ARGUMENT EXPANSION
@@ -80,12 +80,6 @@
           (f ._)
           _]
        (cdrlist (argument-expand fun def vals)))))
-
-(defun expex-convert-quotes (x)
-  (@ [? (quote? _)
-		`(%quote ,._.)
-		_]
-     x))
 
 (defun expex-argdef (fun)
   (| (funinfo-get-local-function-args *funinfo* fun)
@@ -101,7 +95,7 @@
   (with (new?   (%new? x)
 		 fun    (? new? .x. x.)
 		 args   (? new? ..x .x)
-	     eargs  (expex-convert-quotes (expex-argexpand-0 fun args)))
+	     eargs  (expex-argexpand-0 fun args))
 	`(,@(& new? '(%new)) ,fun ,@eargs)))
 
 

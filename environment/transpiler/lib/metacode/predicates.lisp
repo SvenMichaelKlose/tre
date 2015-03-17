@@ -1,7 +1,7 @@
 ; tré – Copyright (c) 2006–2015 Sven Michael Klose <pixel@copei.de>
 
 (mapcar-macro x
-	'(%quote %new
+	'(quote %new
 	  %%block %%go %%go-nil %%go-not-nil %%call-nil %%call-not-nil
 	  %stack %stackarg %vec %set-vec %= %tag %%tag
 	  %%native %%string
@@ -24,9 +24,9 @@
 (defun ~%ret? (x)
   (eq '~%ret x))
 
-(defun atom-or-%quote? (x)
+(defun atom-or-quote? (x)
   (| (atom x)
-     (%quote? x)))
+     (quote? x)))
 
 (defun vm-jump? (e)
   (& (cons? e)

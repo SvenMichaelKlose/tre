@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2012–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2012–2015 Sven Michael Klose <pixel@copei.de>
 
 (def-head-predicate %%bc-return)
 
@@ -14,7 +14,7 @@
          f #'((x i)
                 (?
                   (not x)      x
-                  (%quote? x)  (f ..x (+ 2 i))
+                  (quote? x)   (f ..x (+ 2 i))
                   (%%tag? x)   (progn
                                  (enqueue indexes (. .x. i))
                                  (f ..x i))
@@ -29,10 +29,10 @@
              (%%tag? _)  (f .._)
              (. _.
                 (case _. :test #'eq
-                  '%quote        (. ._.
-                                    (f .._))
-                  '%%go          (. (tag-index _)
-                                    (f .._))
+                  'quote        (. ._.
+                                   (f .._))
+                  '%%go         (. (tag-index _)
+                                   (f .._))
                   (? (in? _. '%%go-nil '%%go-not-nil)
                      (with ((cnd n) (get-bc-value .._))
                        `(,(tag-index _) ,@cnd ,@(f n)))
@@ -51,14 +51,14 @@
 (defun copy-until-%bc-return (x)
   (when x
     (?
-      (%quote? x)             (. x.  (. .x. (copy-until-%bc-return ..x)))
+      (quote? x)              (. x.  (. .x. (copy-until-%bc-return ..x)))
       (%stack? x)             (. .x. (copy-until-%bc-return ..x))
       (not (%%bc-return? x))  (. x.  (copy-until-%bc-return .x)))))
 
 (defun next-%bc-return (x)
   (?
     (not x)                 x
-    (%quote? x)             (next-%bc-return ..x)
+    (quote? x)              (next-%bc-return ..x)
     (not (%%bc-return? x))  (next-%bc-return .x)
     .x))
 

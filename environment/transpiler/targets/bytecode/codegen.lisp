@@ -1,10 +1,10 @@
-;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
 
 (define-codegen-macro-definer define-bc-macro *bc-transpiler*)
 
 (define-bc-macro function (name &optional (x 'only-name))
   (?
-    (eq 'only-name x)  `(symbol-function 1 %quote ,name)
+    (eq 'only-name x)  `(symbol-function 1 quote ,name)
     (atom x)           (error "Arguments and body expected instead of ~A." x)
     `(%%%bc-fun ,name
        ,@(lambda-body x))))
@@ -17,7 +17,7 @@
 
 (defun bc-quote-literal (x)
   (? (| (& x (symbol? x))
-        (number? x))       `(%quote ,x)
+        (number? x))       `(quote ,x)
      (%global? x)          (bc-make-value x)
      x))
 
@@ -28,7 +28,7 @@
      (%closure? x)
      (%stack? x)
      (%vec? x)
-     (%quote? x)))
+     (quote? x)))
 
 (defun bc-make-funcall (x)
   (case x. :test #'eq

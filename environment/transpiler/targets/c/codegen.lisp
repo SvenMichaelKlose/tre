@@ -143,7 +143,7 @@
 
 ;;;; SYMBOLS
 
-(define-c-macro %quote (x)
+(define-c-macro quote (x)
   (c-compiled-symbol x))
 
 

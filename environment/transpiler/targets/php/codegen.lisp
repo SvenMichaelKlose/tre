@@ -37,7 +37,7 @@
 
 ;;;; LITERAL SYMBOLS
 
-(define-php-macro %quote (x)
+(define-php-macro quote (x)
   (php-compiled-symbol x))
 
 

@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2010–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2010–2015 Sven Michael Klose <pixel@copei.de>
 
 (defun translate-function-name (x)
   (? (defined-function x)
@@ -6,7 +6,7 @@
      x))
 
 (defun nontranslatable-name? (x)
-  (| (%quote? x)
+  (| (quote? x)
      (%%native? x)
      (%%closure? x)
      (%function-prologue? x)
