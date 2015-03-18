@@ -1,5 +1,6 @@
 ; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@hugbox.org>
 
+(def-head-predicate %rest)
 (defun argument-rest-keyword? (x)     (in? x '&rest '&body))
 (defun argument-keyword? (x)          (in? x '&rest '&body '&optional '&key))
 (defun argument-name? (x)             (atom x))

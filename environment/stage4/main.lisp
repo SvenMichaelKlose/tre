@@ -1,11 +1,10 @@
-;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
 
 (env-load "stage4/@.lisp")
 (env-load "stage4/clr.lisp")
 (env-load "stage4/compose.lisp")
 (env-load "stage4/copy.lisp")
 (env-load "stage4/count-if.lisp")
-(env-load "stage4/def-head-predicate.lisp")
 (env-load "stage4/define-getset-alias.lisp")
 (env-load "stage4/define-gensym-generator.lisp")
 (env-load "stage4/define-tree-filter.lisp")

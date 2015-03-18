@@ -75,8 +75,7 @@
 
 (defun argument-expand-values-compiled (fun def vals)
   (with (f [& _ `(. ,_. ,(f ._))])
-    (@ [? (& (cons? _)
-             (argument-rest-keyword? _.))
+    (@ [? (%rest? _)
           (f ._)
           _]
        (cdrlist (argument-expand fun def vals)))))

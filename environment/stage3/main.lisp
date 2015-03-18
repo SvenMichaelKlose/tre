@@ -1,4 +1,4 @@
-; tré – Copyright (C) 2005–2009,2011–2014 Sven Michael Klose <pixel@hugbox.org>
+; tré – Copyright (C) 2005–2009,2011–2015 Sven Michael Klose <pixel@hugbox.org>
 
 (env-load "stage3/let-when.lisp")
 (env-load "stage3/ensure-tree.lisp")
@@ -21,6 +21,7 @@
 (env-load "stage3/princ.lisp")
 (env-load "stage3/line.lisp")
 (env-load "stage3/tre-symbol.lisp")
+(env-load "stage3/def-head-predicate.lisp")
 (env-load "stage3/argument-expand.lisp")
 (env-load "stage3/argument-expand-tests.lisp")
 ;(env-load "stage3/print-tracer.lisp")
