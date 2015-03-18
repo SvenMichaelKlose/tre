@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
 
 (declare-cps-exception make-symbol make-package symbol-name symbol-value symbol-function symbol-package symbol?)
 
@@ -8,7 +8,7 @@
 (defun make-package (x)
   (symbol x nil))
 
-(defvar *keyword-package* (make-package ""))
+(defvar *keyword-package* (make-package "KEYWORD"))
 
 (defun symbol-name (x)
   (?
