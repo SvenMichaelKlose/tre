@@ -43,7 +43,7 @@
             (& (eq :nodejs (configuration :platform))
                (list (. 'js-core-nodejs (js-core-nodejs))))
             (& (t? *have-environment-tests*)
-               (list (. environment-tests (make-environment-tests))))))))
+               (list (. 'environment-tests (make-environment-tests))))))))
 
 (defun js-environment-files ()
   (mapcan [& (in? ._ nil 'js)
