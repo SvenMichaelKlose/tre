@@ -18,7 +18,8 @@
       mod sqrt sin cos atan exp round floor
       aref char-code
       make-package package-name find-package
-      print))
+      print
+      invoke-debugger))
 
 (defconstant +cl-renamed-imports+
     '((cons? consp)
