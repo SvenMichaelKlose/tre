@@ -1,30 +1,37 @@
 ; trè – Copyright (c) 2005–2015 Sven Michael Klose <pixel@copei.de>
 
-(defstruct print-info
-  (pretty-print?  nil)
-  (downcase?      nil)
-  (indentation    0)
-  (no-padding?    t))
+(defconstant *printer-abbreviations* '((quote              "'")
+                                       (backquote          "`")
+                                       (quasiquote         ",")
+                                       (quasiquote-splice  ",@")
+                                       (function           "#'")))
 
 (defvar *print-automatic-newline?* t)
 (defvar *always-print-package-names?* nil)
 
+(defstruct print-info
+  (pretty-print?  t)
+  (downcase?      nil)
+  (indentation    0))
+
+(defun %print-gap (str)
+  (| (fresh-line? str)
+     (princ " " str)))
+
 (defun %print-indentation (str info)
-  (adotimes ((print-info-indentation info))
-    (princ " " str))
-  (= (print-info-no-padding? info) t))
+  (& (print-info-pretty-print? info)
+     (fresh-line? str)
+     (adotimes ((print-info-indentation info))
+       (princ " " str))))
 
 (defmacro %with-padding (str info &body body)
   `(progn
-     (? (print-info-no-padding? ,info)
-        (= (print-info-no-padding? ,info) nil)
-        (princ " " ,str))
+     (%print-indentation ,str ,info)
      ,@body))
 
 (defmacro %with-brackets (str info &body body)
   `(%with-padding ,str, info
      (princ "(" ,str)
-     (= (print-info-no-padding? ,info) t)
      ,@body
      (princ ")" ,str)))
 
@@ -32,32 +39,33 @@
   (when x
     (? (cons? x)
        (progn
+         (%print-gap str)
          (%late-print x. str info)
          (%print-rest .x str info))
        (progn
          (princ " . " str)
-         (%print-atom x str info)))))
+         (%late-print x str info)))))
 
 (defun %print-body (x str info)
-  (terpri str)
   (with-temporary (print-info-indentation info) (++ (print-info-indentation info))
     (adolist x
-      (%print-indentation str info)
-      (%late-print ! str info)
-      (unless (eq ! (car (last x)))
-        (terpri str)))))
+      (fresh-line str)
+      (%late-print ! str info))))
 
 (defun %print-args (x str info)
-  (adolist x
-    (?
-      (not !.)    (%with-brackets str info
-                    (%print-args .! str info))
-      (cons? .!)  (case .!. :test #'eq
-                    '&body  (%print-body ..! str info)
-                    '&rest  (%print-rest ..! str info)
-                    (%print-cons .! str info))
-      (with-temporary *print-automatic-newline?* nil
-        (%late-print .! str info)))))
+  (? (eq x 'error)
+     (%print-rest x str info)
+     (adolist x
+       (%print-gap str)
+       (?
+         (not !.)    (%with-brackets str info
+                       (%print-args .! str info))
+         (cons? .!)  (case .!. :test #'eq
+                       '%body  (%print-body ..! str info)
+                       '%rest  (%print-rest ..! str info)
+                       (%print-cons .! str info))
+         (with-temporary *print-automatic-newline?* nil
+           (%late-print .! str info))))))
 
 (defun %print-call (x argdef str info)
   (%print-args (%print-get-args x argdef) str info))
@@ -65,9 +73,10 @@
 (defun %print-call? (x info)
   (& (print-info-pretty-print? info)
      (symbol? x.)
-     (!? (symbol-function x.)
-         (& (function? !)
-            (function-arguments !)))))
+     (alet (symbol-function x.)
+       (?
+         (builtin? x.)   nil
+         (function? !)  (function-arguments x.)))))
 
 (defun %print-list (x str info)
   (%with-brackets str info
@@ -76,16 +85,9 @@
         (%print-call .x ! str info)
         (%print-rest .x str info))))
 
-(defconstant *printer-abbreviations* '((quote              "'")
-                                       (backquote          "`")
-                                       (quasiquote         ",")
-                                       (quasiquote-splice  ",@")
-                                       (function           "#'")))
-
 (defun %print-abbreviation (abbreviation x str info)
   (%with-padding str info
     (princ .abbreviation. str)
-    (= (print-info-no-padding? info) t)
     (%late-print .x. str info)))
 
 (defun %print-cons (x str info)
@@ -116,28 +118,34 @@
      (lower-case? x)))
 
 (defun %print-symbol-component (x str)
-  (? (some #'symbol-char-needs-escaping?
-           (string-list x))
+  (? (some #'symbol-char-needs-escaping? (string-list x))
      (%print-escaped-symbol x str)
      (princ x str)))
 
+(defun abbreviated-package-name (x)
+  (? (string== "COMMON-LISP" x)
+     "CL"
+     x))
+
 (defun %print-symbol-package (name str)
-  (%print-symbol-component (? (string== "COMMON-LISP" name)
-                              "CL"
-                              name)
-                           str))
+  (%print-symbol-component (abbreviated-package-name name) str))
+
+(defun invisible-package-name? (x)
+  (unless (| (not x)
+             (t? x)
+             *always-print-package-names?*)
+    (alet (package-name (symbol-package x))
+      (| (string== ! "TRE")
+         (string== ! "TRE-CORE")))))
 
 (defun %print-symbol (x str info)
-  (unless (| (not x)
-             (t? x))
-    (awhen (symbol-package x)
-      (alet (package-name !)
-        (unless (& (not *always-print-package-names?*)
-                   (| (string== ! "TRE")
-                      (string== ! "TRE-CORE")))
-           (| (keyword? x)
-              (%print-symbol-package ! str))
-          (princ #\: str)))))
+  (awhen (& x
+            (not (t? x))
+            (symbol-package x))
+    (unless (invisible-package-name? x)
+      (| (keyword? x)
+         (%print-symbol-package (package-name !) str))
+      (princ #\: str)))
   (%print-symbol-component (symbol-name x) str))
 
 (defun %print-array (x str info)
@@ -156,9 +164,10 @@
   (princ "#\\" str)
   (princ x str))
 
-(defun %print-atom (x str info)
+(defun %late-print (x str info)
   (%with-padding str info
     (pcase x
+      cons?       (%print-cons x str info)
       symbol?     (%print-symbol x str info)
       character?  (%print-character x str)
       number?     (princ x str)
@@ -166,18 +175,18 @@
       array?      (%print-array x str info)
       function?   (%print-function x str info)
       object?     (%print-object x str info)
-      "UNKNOWN OBJECT")))
+      (%error "Don't know how to print object."))))
 
-(defun %late-print (x str info)
-  (? (cons? x)
-     (%print-cons x str info)
-     (%print-atom x str info)))
-
-(defun late-print (x &optional (str *standard-output*) (print-info nil))
+(defun late-print (x &optional (str *standard-output*)
+                     &key (print-info (make-print-info)))
   (with-default-stream s str
-    (%late-print x s (| print-info (make-print-info)))
-    (when *print-automatic-newline?*
-	  (terpri s)))
+    (funcall (? (& (cons? x) (cons? x.))
+                #'%print-body
+                #'%late-print)
+             x s print-info)
+    (& *print-automatic-newline?*
+       (not (fresh-line? str))
+	   (terpri s)))
   x)
 
 (= *definition-printer* #'late-print)
