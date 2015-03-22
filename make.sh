@@ -102,7 +102,7 @@ basic_clean ()
     rm -vf examples/js/hello-world.js
     rm -vf gmon.out tmp.gcda profile.lisp
 	rm -vrf _nodejstests.log _phptests.log _bytecode-interpreter-tests.log make.log boot.log
-	echo "Checking out early reader..."
+	echo "Checking out last working core..."
     git checkout -- boot-common.lisp
 }
 
