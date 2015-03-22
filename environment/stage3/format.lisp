@@ -36,11 +36,16 @@
 
 (defun %format (inf txt args)
   (when txt
-    (? (character== txt. #\~)
-       (%format-directive inf .txt args)
-       (progn
-         (princ txt. (format-info-stream inf))
-         (%format inf .txt args)))))
+    (alet (format-info-stream inf)
+      (?
+        (character== txt. #\\)  (progn
+                                  (princ txt. !)
+                                  (princ .txt. !)
+                                  (%format inf ..txt args))
+        (character== txt. #\~)  (%format-directive inf .txt args)
+        (progn
+          (princ txt. !)
+          (%format inf .txt args))))))
 
 (defun format (str txt &rest args)
   (with-default-stream nstr str
