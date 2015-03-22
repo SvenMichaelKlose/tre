@@ -93,7 +93,8 @@
     (%late-print .x. str info)))
 
 (defun %print-cons (x str info)
-  (!? (& (not ..x)
+  (!? (& (cons? .x)
+         (not ..x)
          (assoc x. *printer-abbreviations* :test #'eq))
       (%print-abbreviation ! x str info)
       (%print-list x str info)))
