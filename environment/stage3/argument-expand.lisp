@@ -66,25 +66,25 @@
          err
 		   #'((msg args)
                 (? break-on-errors?
-				   (error "; Call of function ~A: ~A~%; Argument definition: ~A~%; Given arguments: ~A~%"
-                          (symbol-name fun)
-                          (apply #'format nil msg args)
-                          adef
-                          alst)
+				   (return (error "; Call of function ~A: ~A~%; Argument definition: ~A~%; Given arguments: ~A~%"
+                                  (symbol-name fun)
+                                  (apply #'format nil msg args)
+                                  adef
+                                  alst))
                    'error))
 		 exp-static
 		   #'((def vals)
 			    (& no-static
-				   (err "static argument definition after ~A" (list no-static)))
+				   (return (err "static argument definition after ~A" (list no-static))))
 			    (& apply-values? (not vals)
-				   (err "argument ~A missing" (list num)))
+				   (return (err "argument ~A missing" (list num))))
 				(. (. (argdef-get-name def.) vals.)
                    (exp-main .def .vals)))
 
 		 exp-optional
 		   #'((def vals)
 				(& (argument-keyword? def.)
-				   (err "Keyword ~A after &OPTIONAL" (list def.)))
+				   (return (err "Keyword ~A after &OPTIONAL" (list def.))))
 				(= no-static '&optional)
 				(. (. (argdef-get-name def.)
 				      (argdef-get-value def vals))
@@ -98,7 +98,7 @@
 			    (let k (assoc ($ vals.) key-args :test #'eq)
 				  (? k
 			         (alet vals
-					   (rplacd k .!.) ; check if key-value exists.
+					   (rplacd k .!.) ; TODO: Check if key-value exists.
 					   (exp-main def ..!))
 					 (exp-main-non-key def vals))))
 
@@ -119,9 +119,9 @@
 		 exp-sub
 		   #'((def vals)
 			    (& no-static
-				   (err "static sublevel argument definition after ~A" (list no-static)))
+				   (return (err "static sublevel argument definition after ~A" (list no-static))))
 				(& apply-values? (atom vals.)
-				   (err "sublist expected for argument ~A" (list num)))
+				   (return (err "sublist expected for argument ~A" (list num))))
                 (? concatenate-sublists?
 				   (%nconc (argument-expand-0 fun def. vals. apply-values? concatenate-sublists? break-on-errors?)
 					       (exp-main .def .vals))
@@ -131,7 +131,7 @@
 		 exp-check-too-many
            #'((def vals)
 			    (& (not def) vals
-				   (err "too many arguments. ~A max, but ~A more given" (list (length argdefs) (length vals)))))
+				   (return (err "too many arguments. ~A max, but ~A more given" (list (length argdefs) (length vals))))))
 
 		 exp-main-non-key
 		   #'((def vals)
