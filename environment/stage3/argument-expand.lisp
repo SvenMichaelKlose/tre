@@ -1,6 +1,9 @@
 ; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@hugbox.org>
 
 (def-head-predicate %rest)
+(def-head-predicate %body)
+(defun %rest-or-%body? (x) (| (%rest? x) (%body? x)))
+
 (defun argument-rest-keyword? (x)     (in? x '&rest '&body))
 (defun argument-keyword? (x)          (in? x '&rest '&body '&optional '&key))
 (defun argument-name? (x)             (atom x))
@@ -49,11 +52,11 @@
 
 (defun argdef-get-value (defs vals)
   (?
-    (cons? vals)  vals.
-    (cons? defs.) (cadr defs.)
+    (cons? vals)   vals.
+    (cons? defs.)  (cadr defs.)
     defs.))
 
-(defun argument-expand-0 (fun adef alst apply-values? concatenate-sublists?)
+(defun argument-expand-0 (fun adef alst apply-values? concatenate-sublists? break-on-errors?)
   (with ((a k)      (make-&key-alist adef)
 	     argdefs    a
 	     key-args   k
@@ -62,11 +65,13 @@
 	     rest-arg   nil
          err
 		   #'((msg args)
-				(error "; Call of function ~A: ~A~%; Argument definition: ~A~%; Given arguments: ~A~%"
-                       (symbol-name fun)
-                       (apply #'format nil msg args)
-                       adef
-                       alst))
+                (? break-on-errors?
+				   (error "; Call of function ~A: ~A~%; Argument definition: ~A~%; Given arguments: ~A~%"
+                          (symbol-name fun)
+                          (apply #'format nil msg args)
+                          adef
+                          alst)
+                   'error))
 		 exp-static
 		   #'((def vals)
 			    (& no-static
@@ -98,17 +103,17 @@
 					 (exp-main-non-key def vals))))
 
 		 exp-rest
-		   #'((def vals)
+		   #'((synonym def vals)
 				(= no-static '&rest)
   			    (= rest-arg (list (. (argdef-get-name .def.)
-                                     (. '%rest vals))))
+                                     (. synonym vals))))
 			    nil)
 
          exp-optional-rest
 		   #'((def vals)
 		        (case def. :test #'eq
-				  '&rest     (exp-rest def vals)
-				  '&body     (exp-rest def vals)
+				  '&rest     (exp-rest '%rest def vals)
+				  '&body     (exp-rest '%body def vals)
 				  '&optional (exp-optional .def vals)))
 
 		 exp-sub
@@ -118,9 +123,9 @@
 				(& apply-values? (atom vals.)
 				   (err "sublist expected for argument ~A" (list num)))
                 (? concatenate-sublists?
-				   (%nconc (argument-expand-0 fun def. vals. apply-values? concatenate-sublists?)
+				   (%nconc (argument-expand-0 fun def. vals. apply-values? concatenate-sublists? break-on-errors?)
 					       (exp-main .def .vals))
-				   (. (. nil (argument-expand-0 fun def. vals. apply-values? concatenate-sublists?))
+				   (. (. nil (argument-expand-0 fun def. vals. apply-values? concatenate-sublists? break-on-errors?))
 					  (exp-main .def .vals))))
 
 		 exp-check-too-many
@@ -145,20 +150,24 @@
 			          (& def
                          (exp-main-non-key def vals))))))
 
-	 (%nconc (exp-main argdefs alst)
-			 (%nconc key-args rest-arg))))
+	 (alet (exp-main argdefs alst)
+       (? (eq ! 'error)
+          !
+	      (%nconc ! (%nconc key-args rest-arg))))))
 
-(defun argument-expand (fun def vals &key (apply-values? t) (concatenate-sublists? t))
-  (? apply-values?
-	 (argument-expand-0 fun def vals apply-values? concatenate-sublists?)
-	 (carlist (argument-expand-0 fun def vals apply-values? concatenate-sublists?))))
+(defun argument-expand (fun def vals &key (apply-values? t)
+                                          (concatenate-sublists? t)
+                                          (break-on-errors? t))
+  (alet (argument-expand-0 fun def vals apply-values? concatenate-sublists? break-on-errors?)
+    (? apply-values?
+       !
+	   (carlist !))))
 
 (defun argument-expand-names (fun def)
   (argument-expand fun def nil :apply-values? nil))
 
-(defun argument-expand-values (fun def vals)
-  (@ [? (& (cons? _)
-           (eq _. '%rest))
+(defun argument-expand-values (fun def vals &key (break-on-errors? t))
+  (@ [? (%rest-or-%body? _)
         ._
         _]
-     (cdrlist (argument-expand fun def vals))))
+     (cdrlist (argument-expand fun def vals :break-on-errors? break-on-errors?))))
