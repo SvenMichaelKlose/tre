@@ -2,12 +2,15 @@
 
 (def-head-predicate %rest)
 (def-head-predicate %body)
-(defun %rest-or-%body? (x) (| (%rest? x) (%body? x)))
+(def-head-predicate %key)
+(defun %rest-or-%body? (x)    (| (%rest? x) (%body? x)))
+(defun argument-synonym? (x)  (| (%rest-or-%body? x)
+                                 (%key? x)))
 
-(defun argument-rest-keyword? (x)     (in? x '&rest '&body))
-(defun argument-keyword? (x)          (in? x '&rest '&body '&optional '&key))
-(defun argument-name? (x)             (atom x))
-(defun argument-name (x)              x)
+(defun argument-rest-keyword? (x)  (in? x '&rest '&body))
+(defun argument-keyword? (x)       (in? x '&rest '&body '&optional '&key))
+(defun argument-name? (x)          (atom x))
+(defun argument-name (x)           x)
 
 (defun error-arguments-missing (fun args)
   (error "Arguments ~A missing for function ~A." fun args))
@@ -56,7 +59,10 @@
     (cons? defs.)  (cadr defs.)
     defs.))
 
-(defun argument-expand-0 (fun adef alst apply-values? concatenate-sublists? break-on-errors?)
+(defun argument-expand-0 (fun adef alst
+                          apply-values?
+                          concatenate-sublists?
+                          break-on-errors?)
   (with ((a k)      (make-&key-alist adef)
 	     argdefs    a
 	     key-args   k
@@ -66,7 +72,9 @@
          err
 		   #'((msg args)
                 (? break-on-errors?
-				   (return (error "; Call of function ~A: ~A~%; Argument definition: ~A~%; Given arguments: ~A~%"
+				   (return (error (+ "; Call of function ~A: ~A~%"
+                                     "; Argument definition: ~A~%"
+                                     "; Given arguments: ~A~%")
                                   (symbol-name fun)
                                   (apply #'format nil msg args)
                                   adef
@@ -75,7 +83,8 @@
 		 exp-static
 		   #'((def vals)
 			    (& no-static
-				   (return (err "static argument definition after ~A" (list no-static))))
+				   (return (err "static argument definition after ~A"
+                                (list no-static))))
 			    (& apply-values? (not vals)
 				   (return (err "argument ~A missing" (list num))))
 				(. (. (argdef-get-name def.) vals.)
@@ -119,19 +128,28 @@
 		 exp-sub
 		   #'((def vals)
 			    (& no-static
-				   (return (err "static sublevel argument definition after ~A" (list no-static))))
+				   (return (err "static sublevel argument definition after ~A"
+                                (list no-static))))
 				(& apply-values? (atom vals.)
-				   (return (err "sublist expected for argument ~A" (list num))))
+				   (return (err "sublist expected for argument ~A"
+                                (list num))))
                 (? concatenate-sublists?
-				   (%nconc (argument-expand-0 fun def. vals. apply-values? concatenate-sublists? break-on-errors?)
+				   (%nconc (argument-expand-0 fun def. vals.
+                                              apply-values?
+                                              concatenate-sublists?
+                                              break-on-errors?)
 					       (exp-main .def .vals))
-				   (. (. nil (argument-expand-0 fun def. vals. apply-values? concatenate-sublists? break-on-errors?))
+				   (. (. nil (argument-expand-0 fun def. vals.
+                                                apply-values?
+                                                concatenate-sublists?
+                                                break-on-errors?))
 					  (exp-main .def .vals))))
 
 		 exp-check-too-many
            #'((def vals)
 			    (& (not def) vals
-				   (return (err "too many arguments. ~A max, but ~A more given" (list (length argdefs) (length vals))))))
+				   (return (err "too many arguments. ~A max, but ~A more given"
+                                (list (length argdefs) (length vals))))))
 
 		 exp-main-non-key
 		   #'((def vals)
@@ -153,21 +171,23 @@
 	 (alet (exp-main argdefs alst)
        (? (eq ! 'error)
           !
-	      (%nconc ! (%nconc key-args rest-arg))))))
+	      (%nconc ! (%nconc (@ [. _. (. '%key ._)] key-args)
+                            rest-arg))))))
 
 (defun argument-expand (fun def vals &key (apply-values? t)
                                           (concatenate-sublists? t)
                                           (break-on-errors? t))
   (alet (argument-expand-0 fun def vals apply-values? concatenate-sublists? break-on-errors?)
-    (? apply-values?
+    (? (| apply-values?
+          (eq ! 'error))
        !
-	   (carlist !))))
+       (carlist !))))
 
 (defun argument-expand-names (fun def)
   (argument-expand fun def nil :apply-values? nil))
 
 (defun argument-expand-values (fun def vals &key (break-on-errors? t))
-  (@ [? (%rest-or-%body? _)
+  (@ [? (argument-synonym? _)
         ._
         _]
      (cdrlist (argument-expand fun def vals :break-on-errors? break-on-errors?))))

@@ -58,12 +58,14 @@
      (adolist x
        (%print-gap str)
        (?
-         (not !.)    (%with-brackets str info
-                       (%print-args .! str info))
-         (cons? .!)  (case .!. :test #'eq
-                       '%body  (%print-body ..! str info)
-                       '%rest  (%print-rest ..! str info)
-                       (%print-cons .! str info))
+         (not !.)     (%with-brackets str info
+                        (%print-args .! str info))
+         (%body? .!)  (%print-body ..! str info)
+         (%rest? .!)  (%print-rest ..! str info)
+         (%key? .!)   (progn
+                        (%print-symbol (make-keyword !.) str info)
+                        (princ " " str)
+                        (%late-print ..! str info))
          (with-temporary *print-automatic-newline?* nil
            (%late-print .! str info))))))
 
