@@ -85,38 +85,39 @@
         t)))
 
 (defun read-token (str)
-  (with ((pkg sym) (get-symbol-and-package str))
-    (values (? (& sym
-                  (not .sym)
-                  (== #\. sym.))
-               'dot
-               (? sym
-                  (? (list-number? sym)
-                     'number
-                     'symbol)
-                  (case (read-char str) :test #'character==
-                    #\(	 'bracket-open
-                    #\)	 'bracket-close
-                    #\[	 'square-bracket-open
-                    #\]	 'square-bracket-close
-                    #\{	 'curly-bracket-open
-                    #\}	 'curly-bracket-close
-                    #\'	 'quote
-                    #\`	 'backquote
-                    #\^	 'accent-circonflex
-                    #\"	 'dblquote
-                    #\,	 (? (== #\@ (peek-char str))
-                            (& (read-char str)
-                               'quasiquote-splice)
-                            'quasiquote)
-                    #\#	 (case (read-char str) :test #'character==
-                           #\\  'char
-                           #\x  'hexnum
-                           #\'  'function
-                           #\|  (read-comment-block str)
-                           (error "Invalid character after '#'."))
-                    -1	'eof)))
-            pkg sym)))
+  (awhen (get-symbol-and-package str)
+    (with ((pkg sym) !)
+      (values (? (& sym
+                    (not .sym)
+                    (== #\. sym.))
+                 'dot
+                 (? sym
+                    (? (list-number? sym)
+                       'number
+                       'symbol)
+                    (case (read-char str) :test #'character==
+                      #\(	 'bracket-open
+                      #\)	 'bracket-close
+                      #\[	 'square-bracket-open
+                      #\]	 'square-bracket-close
+                      #\{	 'curly-bracket-open
+                      #\}	 'curly-bracket-close
+                      #\'	 'quote
+                      #\`	 'backquote
+                      #\^	 'accent-circonflex
+                      #\"	 'dblquote
+                      #\,	 (? (== #\@ (peek-char str))
+                              (& (read-char str)
+                                 'quasiquote-splice)
+                              'quasiquote)
+                      #\#	 (case (read-char str) :test #'character==
+                             #\\  'char
+                             #\x  'hexnum
+                             #\'  'function
+                             #\|  (read-comment-block str)
+                             (error "Invalid character after '#'."))
+                      -1	'eof)))
+              pkg sym))))
 
 (defun read-slot-value (x)
   (? x
@@ -153,7 +154,13 @@
     'hexnum    (read-hex str)
 	'function  `(function ,(read-expr str))
     'symbol    (read-symbol-or-slot-value sym pkg)
-	(error "Syntax error: token ~A, sym ~A." token sym)))
+    (? (%read-closing-bracket? token)
+       (error "~A bracket missing."
+              (case token
+                'bracket-close         "Round"
+                'curly-bracket-close   "Curly"
+                'square-bracket-close  "Square"))
+	   (error "Syntax error: token ~A, sym ~A." token sym))))
 
 (defun read-quote (str token)
   (list token (read-expr str)))
@@ -188,10 +195,10 @@
                                 (with (x                (read-expr str)
                                        (token pkg sym)  (read-token str))
                                   (| (%read-closing-bracket? token)
-                                     (err "Only one value allowed after dotted cons"))
+                                     (err "Only one value allowed after dotted cons."))
                                   x)
                                 (f token pkg sym)))
-                          (err "Missing closing bracket")))))))
+                          (err "Closing bracket missing.")))))))
   (with ((token pkg sym) (read-token str))
     (? (eq token 'dot)
        (. 'cons (read-cons str))
