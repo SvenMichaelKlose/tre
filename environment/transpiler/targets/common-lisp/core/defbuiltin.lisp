@@ -10,4 +10,5 @@
      (cl:setf (cl:gethash ',name *builtin-atoms*) #',name)))
 
 (defbuiltin builtin? (x)
-  (cl:gethash x *builtin-atoms*))
+  (| (cl:gethash x *builtin-atoms*)
+     (cl:member x +cl-function-imports+)))
