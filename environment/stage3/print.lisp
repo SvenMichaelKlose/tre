@@ -63,19 +63,20 @@
 
 (defun pretty-print-named-lambda (x str info)
   (%with-brackets str info
+    (princ "FUNCTION " str)
     (%late-print .x. str info)
     (%print-gap str)
     (pretty-print-lambda .x str info)))
 
 (defun pretty-print-lambdas (x str info)
-  (princ "#'" str)
-  (when (& (not ..x)
-           (atom .x.))
-    (%print-symbol .x. str info)
-    (return nil))
-  (? ..x
-     (pretty-print-named-lambda x str info)
-     (pretty-print-lambda x str info))
+  (?
+    ..x          (pretty-print-named-lambda x str info)
+    (cons? .x.)  (progn
+                   (princ "#'" str)
+                   (pretty-print-lambda x str info))
+    (progn
+      (princ "#'" str)
+      (%print-symbol .x. str info)))
   t)
 
 (add-printer-argument-definition 'function #'pretty-print-lambdas)
