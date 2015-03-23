@@ -19,7 +19,7 @@
       aref char-code
       make-package package-name find-package
       print
-      invoke-debugger))
+      break))
 
 (defconstant +cl-renamed-imports+
     '((cons? consp)
@@ -35,7 +35,7 @@
       (number> >)
       (integer> >)
       (character> >)
-      (%error error)
+      (%error break)
       (%nconc nconc)))
 
 (defconstant +cl-special-forms+
