@@ -1,5 +1,12 @@
 ; tré – Copyright (c) 2014–2015 Sven Michael Klose <pixel@copei.de>
 
+(add-printer-argument-definition 'cl:labels      '(assignments &body body))
+(add-printer-argument-definition 'cl:lambda      '(args &body body))
+(add-printer-argument-definition 'cl:defun       '(name args &body body))
+(add-printer-argument-definition 'cl:defmacro    '(name args &body body))
+(add-printer-argument-definition 'cl:defvar      '(name init))
+(add-printer-argument-definition 'cl:defconstant '(name init))
+
 (defmacro define-cl-std-macro (name args &body body)
   `(define-transpiler-std-macro *cl-transpiler* ,name ,args ,@body))
 
