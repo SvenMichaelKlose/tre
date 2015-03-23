@@ -87,8 +87,6 @@
        (adolist expanded
          (%print-gap str)
          (?
-           (not !.)     (%with-brackets str info
-                          (%print-args .! str info))
            (%body? .!)  (%print-body ..! str info)
            (%rest? .!)  (%print-rest ..! str info)
            (%key? .!)   (progn
