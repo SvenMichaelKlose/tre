@@ -8,6 +8,26 @@
 
 (defvar *print-automatic-newline?* t)
 (defvar *always-print-package-names?* nil)
+(defvar *printer-argument-definitions* (make-hash-table :test #'eq))
+
+(defun add-printer-argument-definition (name x)
+  (= (href *printer-argument-definitions* name) x))
+
+(add-printer-argument-definition '%%block '(&body body))
+(add-printer-argument-definition 'progn   '(&body body))
+(add-printer-argument-definition 'tagbody '(&body body))
+(add-printer-argument-definition 'block   '(name &body body))
+(add-printer-argument-definition 'cond    '(&body body))
+;(add-printer-argument-definition 'function ['(,@(? .._ '(name)) (args &body body))])
+
+(adolist *macros*
+  (add-printer-argument-definition !. .!.))
+
+(defun get-printer-argument-definition (x)
+  (!? (href *printer-argument-definitions* x.)
+      (? (function? !)
+         (funcall ! x)
+         !)))
 
 (defstruct print-info
   (pretty-print?  t)
@@ -24,13 +44,13 @@
      (adotimes ((print-info-indentation info))
        (princ " " str))))
 
-(defmacro %with-padding (str info &body body)
+(defmacro %with-indentation (str info &body body)
   `(progn
      (%print-indentation ,str ,info)
      ,@body))
 
 (defmacro %with-brackets (str info &body body)
-  `(%with-padding ,str, info
+  `(%with-indentation ,str, info
      (princ "(" ,str)
      ,@body
      (princ ")" ,str)))
@@ -52,33 +72,32 @@
       (fresh-line str)
       (%late-print ! str info))))
 
-(defun %print-args (x str info)
-  (? (eq x 'error)
-     (%print-rest x str info)
-     (adolist x
-       (%print-gap str)
-       (?
-         (not !.)     (%with-brackets str info
-                        (%print-args .! str info))
-         (%body? .!)  (%print-body ..! str info)
-         (%rest? .!)  (%print-rest ..! str info)
-         (%key? .!)   (progn
-                        (%print-symbol (make-keyword !.) str info)
-                        (princ " " str)
-                        (%late-print ..! str info))
-         (with-temporary *print-automatic-newline?* nil
-           (%late-print .! str info))))))
-
 (defun %print-call (x argdef str info)
-  (%print-args (%print-get-args x argdef) str info))
+  (let expanded (%print-get-args x argdef)
+    (? (eq expanded 'error)
+       (%print-rest x str info)
+       (adolist expanded
+         (%print-gap str)
+         (?
+           (not !.)     (%with-brackets str info
+                          (%print-args .! str info))
+           (%body? .!)  (%print-body ..! str info)
+           (%rest? .!)  (%print-rest ..! str info)
+           (%key? .!)   (progn
+                          (%print-symbol (make-keyword !.) str info)
+                          (princ " " str)
+                          (%late-print ..! str info))
+           (with-temporary *print-automatic-newline?* nil
+             (%late-print .! str info)))))))
 
 (defun %print-call? (x info)
   (& (print-info-pretty-print? info)
      (symbol? x.)
-     (alet (symbol-function x.)
-       (?
-         (builtin? x.)   nil
-         (function? !)  (function-arguments x.)))))
+     (| (get-printer-argument-definition x)
+        (alet (symbol-function x.)
+          (?
+            (builtin? x.)   nil
+            (function? !)  (function-arguments x.))))))
 
 (defun %print-list (x str info)
   (%with-brackets str info
@@ -88,7 +107,7 @@
         (%print-rest .x str info))))
 
 (defun %print-abbreviation (abbreviation x str info)
-  (%with-padding str info
+  (%with-indentation str info
     (princ .abbreviation. str)
     (%late-print .x. str info)))
 
@@ -168,7 +187,7 @@
   (princ x str))
 
 (defun %late-print (x str info)
-  (%with-padding str info
+  (%with-indentation str info
     (pcase x
       cons?       (%print-cons x str info)
       symbol?     (%print-symbol x str info)
