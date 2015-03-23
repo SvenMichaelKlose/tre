@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2006–2008,2011–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2006–2008,2011–2013,2015 Sven Michael Klose <pixel@copei.de>
 
 (defstruct format-info
   stream
@@ -29,10 +29,15 @@
 (defun %format-directive (inf txt args)
   (++! (format-info-processed-args inf))
   (case (char-upcase txt.) :test #'character==
-    #\% (%format-directive-eol inf .txt args)
-    #\A (%format-directive-placeholder inf .txt args)
-    #\F (%format-directive-force-output inf .txt args)
+    #\%  (%format-directive-eol inf .txt args)
+    #\A  (%format-directive-placeholder inf .txt args)
+    #\F  (%format-directive-force-output inf .txt args)
+    #\~  (%format-char inf txt args)
     (%format-directive-tilde inf txt args)))
+
+(defun %format-char (inf txt args)
+  (princ txt. (format-info-stream inf))
+  (%format inf .txt args))
 
 (defun %format (inf txt args)
   (when txt
@@ -43,11 +48,15 @@
                                   (princ .txt. !)
                                   (%format inf ..txt args))
         (character== txt. #\~)  (%format-directive inf .txt args)
-        (progn
-          (princ txt. !)
-          (%format inf .txt args))))))
+        (%format-char inf txt args)))))
 
 (defun format (str txt &rest args)
   (with-default-stream nstr str
     (with-temporary *print-automatic-newline?* nil
       (%format (make-format-info :stream nstr :text txt :args args) (string-list txt) args))))
+
+(defun neutralize-format-string (x)
+  (list-string (mapcan [? (== _ #\~)
+                          (list _ _)
+                          (list _)]
+                       (string-list x))))
