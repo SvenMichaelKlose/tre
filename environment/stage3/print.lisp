@@ -18,16 +18,12 @@
 (add-printer-argument-definition 'tagbody '(&body body))
 (add-printer-argument-definition 'block   '(name &body body))
 (add-printer-argument-definition 'cond    '(&body body))
-;(add-printer-argument-definition 'function ['(,@(? .._ '(name)) (args &body body))])
 
 (adolist *macros*
   (add-printer-argument-definition !. .!.))
 
-(defun get-printer-argument-definition (x)
-  (!? (href *printer-argument-definitions* x.)
-      (? (function? !)
-         (funcall ! x)
-         !)))
+(defun %get-printer-argument-definition (x)
+  (href *printer-argument-definitions* x))
 
 (defstruct print-info
   (pretty-print?  t)
@@ -59,6 +55,30 @@
        ,@body
        (princ ")" ,str)
        (pop (print-info-columns info)))))
+
+(defun pretty-print-named-lambda (x str info)
+  (%print-gap str)
+  (%late-print .x. str info)
+  (%print-gap str)
+  (%with-brackets str info
+    (%print-gap str)
+    (%late-print (car ..x.) str info)
+    (fresh-line str)
+    (%print-body (cdr ..x.) str info)))
+
+(defun pretty-print-lambda (x str info)
+  (%with-brackets str info
+    (%late-print (car ..x.) str info)
+    (fresh-line str)
+    (%print-body (cdr ..x.) str info)))
+
+(defun pretty-print-lambdas (x str info)
+  (? ..x
+     (pretty-print-named-lambda x str info)
+     (pretty-print-lambda x str info))
+  t)
+
+(add-printer-argument-definition 'function #'pretty-print-lambdas)
 
 (defun %print-rest (x str info)
   (when x
@@ -99,7 +119,7 @@
 (defun %print-call? (x info)
   (& (print-info-pretty-print? info)
      (symbol? x.)
-     (| (get-printer-argument-definition x)
+     (| (%get-printer-argument-definition x.)
         (alet (symbol-function x.)
           (?
             (builtin? x.)   nil
@@ -109,7 +129,9 @@
   (%with-brackets str info
     (%late-print x. str info)
     (!? (%print-call? x info)
-        (%print-call .x ! str info)
+        (? (function? !)
+           (funcall ! x str info)
+           (%print-call .x ! str info))
         (%print-rest .x str info))))
 
 (defun %print-abbreviation (abbreviation x str info)
