@@ -6,7 +6,8 @@
                       `(%set-atom-fun ,_.
                                       #'(,._.
                                            (block ,_.
-                                             ,@.._))))
+                                             (block nil
+                                               ,@.._)))))
                  fdefs)
       ,@body)
     ,@(mapcar [] fdefs)))
