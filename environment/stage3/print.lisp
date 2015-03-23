@@ -3,8 +3,7 @@
 (defconstant *printer-abbreviations* '((quote              "'")
                                        (backquote          "`")
                                        (quasiquote         ",")
-                                       (quasiquote-splice  ",@")
-                                       (function           "#'")))
+                                       (quasiquote-splice  ",@")))
 
 (defvar *print-automatic-newline?* t)
 (defvar *always-print-package-names?* nil)
@@ -56,23 +55,24 @@
        (princ ")" ,str)
        (pop (print-info-columns info)))))
 
-(defun pretty-print-named-lambda (x str info)
-  (%print-gap str)
-  (%late-print .x. str info)
-  (%print-gap str)
-  (%with-brackets str info
-    (%print-gap str)
-    (%late-print (car ..x.) str info)
-    (fresh-line str)
-    (%print-body (cdr ..x.) str info)))
-
 (defun pretty-print-lambda (x str info)
   (%with-brackets str info
-    (%late-print (car ..x.) str info)
+    (%late-print (car .x.) str info)
     (fresh-line str)
-    (%print-body (cdr ..x.) str info)))
+    (%print-body (cdr .x.) str info)))
+
+(defun pretty-print-named-lambda (x str info)
+  (%with-brackets str info
+    (%late-print .x. str info)
+    (%print-gap str)
+    (pretty-print-lambda .x str info)))
 
 (defun pretty-print-lambdas (x str info)
+  (princ "#'" str)
+  (when (& (not ..x)
+           (atom .x.))
+    (%print-symbol .x. str info)
+    (return nil))
   (? ..x
      (pretty-print-named-lambda x str info)
      (pretty-print-lambda x str info))
@@ -101,20 +101,22 @@
       (%late-print ! str info))))
 
 (defun %print-call (x argdef str info)
-  (let expanded (%print-get-args x argdef)
-    (? (eq expanded 'error)
-       (%print-rest x str info)
-       (adolist expanded
-         (%print-gap str)
-         (?
-           (%body? .!)  (%print-body ..! str info)
-           (%rest? .!)  (%print-rest ..! str info)
-           (%key? .!)   (progn
-                          (%print-symbol (make-keyword !.) str info)
-                          (princ " " str)
-                          (%late-print ..! str info))
-           (with-temporary *print-automatic-newline?* nil
-             (%late-print .! str info)))))))
+  (%with-brackets str info
+    (%late-print x. str info)
+    (let expanded (%print-get-args .x argdef)
+      (? (eq expanded 'error)
+         (%print-rest .x str info)
+         (adolist expanded
+           (%print-gap str)
+           (?
+             (%body? .!)  (%print-body ..! str info)
+             (%rest? .!)  (%print-rest ..! str info)
+             (%key? .!)   (progn
+                            (%print-symbol (make-keyword !.) str info)
+                            (princ " " str)
+                            (%late-print ..! str info))
+             (with-temporary *print-automatic-newline?* nil
+               (%late-print .! str info))))))))
 
 (defun %print-call? (x info)
   (& (print-info-pretty-print? info)
@@ -126,12 +128,12 @@
             (function? !)  (function-arguments x.))))))
 
 (defun %print-list (x str info)
-  (%with-brackets str info
-    (%late-print x. str info)
-    (!? (%print-call? x info)
-        (? (function? !)
-           (funcall ! x str info)
-           (%print-call .x ! str info))
+  (!? (%print-call? x info)
+      (? (function? !)
+         (funcall ! x str info)
+         (%print-call x ! str info))
+      (%with-brackets str info
+        (%late-print x. str info)
         (%print-rest .x str info))))
 
 (defun %print-abbreviation (abbreviation x str info)
