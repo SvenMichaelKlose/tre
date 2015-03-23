@@ -71,8 +71,11 @@
          (princ " . " str)
          (%late-print x str info)))))
 
+(defun %body-indentation (info)
+  (+ 1 (| (car (print-info-columns info)) 0)))
+
 (defun %print-body (x str info)
-  (with-temporary (print-info-indentation info) (+ 1 (car (print-info-columns info)))
+  (with-temporary (print-info-indentation info) (%body-indentation info)
     (adolist x
       (fresh-line str)
       (%late-print ! str info))))
@@ -207,7 +210,8 @@
 (defun late-print (x &optional (str *standard-output*)
                      &key (print-info (make-print-info)))
   (with-default-stream s str
-    (funcall (? (& (cons? x) (cons? x.))
+    (funcall (? (& (cons? x)
+                   (cons? x.))
                 #'%print-body
                 #'%late-print)
              x s print-info)
