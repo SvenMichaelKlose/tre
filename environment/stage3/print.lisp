@@ -32,7 +32,8 @@
 (defstruct print-info
   (pretty-print?  t)
   (downcase?      nil)
-  (indentation    0))
+  (indentation    0)
+  (columns        nil))
 
 (defun %print-gap (str)
   (| (fresh-line? str)
@@ -50,10 +51,14 @@
      ,@body))
 
 (defmacro %with-brackets (str info &body body)
-  `(%with-indentation ,str, info
-     (princ "(" ,str)
-     ,@body
-     (princ ")" ,str)))
+  (with-gensym g
+    `(%with-indentation ,str, info
+       (push (stream-location-column (stream-output-location str))
+             (print-info-columns info))
+       (princ "(" ,str)
+       ,@body
+       (princ ")" ,str)
+       (pop (print-info-columns info)))))
 
 (defun %print-rest (x str info)
   (when x
@@ -67,7 +72,7 @@
          (%late-print x str info)))))
 
 (defun %print-body (x str info)
-  (with-temporary (print-info-indentation info) (++ (print-info-indentation info))
+  (with-temporary (print-info-indentation info) (+ 1 (car (print-info-columns info)))
     (adolist x
       (fresh-line str)
       (%late-print ! str info))))
