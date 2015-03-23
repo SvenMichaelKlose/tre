@@ -57,7 +57,6 @@
 (env-load "stage1/list-synonyms.lisp")
 (env-load "stage1/lambda.lisp")
 (env-load "stage1/function-source.lisp" :c)
-;(env-load "stage1/labels.lisp" :c)
 (env-load "stage1/test-lexical-scope.lisp" :c)
 (env-load "stage1/test-block.lisp")
 (env-load "stage1/dollar.lisp")

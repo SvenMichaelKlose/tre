@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2015 Sven Michael Klose <pixel@copei.de>
 
 (defun has-target? (name)
   (member name *targets*))
@@ -17,4 +17,5 @@
    (env-load "transpiler/targets/php/main.lisp"))
 
 (env-load "transpiler/targets/shared/expand/expand.lisp")
+(env-load "transpiler/targets/shared/expand/labels.lisp")
 (env-load "transpiler/targets/shared/expand/opt-filter.lisp")
