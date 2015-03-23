@@ -35,7 +35,6 @@
       (number> >)
       (integer> >)
       (character> >)
-      (%error break)
       (%nconc nconc)))
 
 (defconstant +cl-special-forms+
