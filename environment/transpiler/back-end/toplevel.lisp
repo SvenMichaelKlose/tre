@@ -39,9 +39,7 @@
      x))
 
 (transpiler-pass generate-code
-    backend-input          [(& *development?*
-                               (format t "o~F"))
-                            _]
+    backend-input          #'pass-backend-input
     function-names         #'pass-function-names
     encapsulate-strings    #'pass-encapsulate-strings
     count-tags             #'pass-count-tags

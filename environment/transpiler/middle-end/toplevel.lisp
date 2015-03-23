@@ -1,5 +1,10 @@
 ; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@hugbox.org>
 
+(def-pass-fun middleend-input x
+  (& *development?*
+     (format t ".~F"))
+  x)
+
 (def-pass-fun pass-accumulate-toplevel-expressions x
   (? (accumulate-toplevel-expressions?)
      (accumulate-toplevel-expressions x)
@@ -29,9 +34,7 @@
      x))
  
 (transpiler-pass middleend-0
-    print-dot                [(& *development?*
-                                 (format t ".~F"))
-                              _]
+    middleend-input          #'middleend-input
     make-packages            #'make-packages
     expression-expand        #'expression-expand
     correct-functions        #'correct-functions
