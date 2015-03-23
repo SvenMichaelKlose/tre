@@ -74,11 +74,10 @@
 ;;;; ARGUMENT EXPANSION
 
 (defun argument-expand-values-compiled (fun def vals)
-  (with (f [? (atom _)
-              _
-              `(. ,_. , (f ._))])
-    (@ [? (argument-synonym? _)
-          (f ._)
+  (with (f [& _ `(. ,_. , (f ._))])
+    (@ [?
+         (%rest-or-%body? _)  (f ._)
+         (%key? _)            ._
           _]
        (cdrlist (argument-expand fun def vals)))))
 
