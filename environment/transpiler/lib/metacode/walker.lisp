@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2010–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2010–2013,2015 Sven Michael Klose <pixel@copei.de>
 
 (defvar *body*)
 
@@ -31,7 +31,7 @@
                                           (list (copy-lambda ,v :body ,(| if-named-function `(,name (lambda-body ,v) ,@r)))))
 
                   (not (metacode-statement? ,v))
-                     (error "Metacode statement expected instead of ~A." ,v)
+                     (funinfo-error "Metacode statement expected instead of ~A." ,v)
 
                   ,(| if-cons `(list ,v)))
                 (,name (cdr ,x) ,@r))))))))

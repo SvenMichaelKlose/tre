@@ -34,3 +34,8 @@
     (print-funinfo fi)
     (print-funinfo-stack (funinfo-parent fi) :include-global? include-global?))
   fi)
+
+(defun funinfo-error (fmt &rest args)
+  (error "In scope ~A: ~A"
+         (human-readable-funinfo-names *funinfo*)
+         (apply #'format nil fmt args)))

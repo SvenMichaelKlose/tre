@@ -13,13 +13,13 @@
   (& (%set-vec? x) ....x))
 
 (defun place-assign-error (x v)
-  (error "Can't assign place because the index in scoped vars for ~A is missing in ~A." v x))
+  (funinfo-error "Can't assign place because the index in scoped vars for ~A is missing in ~A." v x))
 
 (defun place-assign-stackarg (x)
   (let fi (get-funinfo .x.)
     (? (arguments-on-stack?)
        (integer (+ (length (funinfo-vars fi)) (- (length (funinfo-args fi)) (funinfo-arg-pos fi ..x.) 1)))
-       (error "Cannot assign stack argument ~A." ..x.))))
+       (funinfo-error "Cannot assign stack argument ~A." ..x.))))
 
 (define-tree-filter place-assign-0 (x)
   (| (quote? x)

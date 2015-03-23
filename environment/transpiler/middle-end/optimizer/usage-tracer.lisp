@@ -1,10 +1,10 @@
-; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
 
 (defun tag-code (tag)
   (| (member-if [& (number? _)
                    (== _ tag)]
                 *body*)
-     (error "Tag ~A not found in body ~A." tag *body*)))
+     (funinfo-error "Tag ~A not found in body ~A." tag *body*)))
 
 (defun removable-place? (x)
   (alet *funinfo*
@@ -43,6 +43,6 @@
                                   (traverse-statements d)
                    (progn
                      (print _)
-                     (error "Illegal metacode statement ~A." _))))])
+                     (funinfo-error "Illegal metacode statement ~A." _))))])
     (| (not (removable-place? v))
        (traverse-statements x))))

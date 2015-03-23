@@ -1,10 +1,10 @@
-;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
 
 (defun inverted-%%go (x)
   (case x :test #'eq
     '%%go-nil      '%%go-not-nil
     '%%go-not-nil  '%%go-nil
-    (error "Jump expected instead of ~A." x)))
+    (funinfo-error "Jump expected instead of ~A." x)))
 
 (defun jumps-to-tag (x)
   (count-if [& (vm-jump? _)

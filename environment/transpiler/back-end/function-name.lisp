@@ -9,7 +9,7 @@
   (aprog1 (make-symbol (+ (function-name-prefix) (symbol-name name)))
     (let-when n (real-function-name name)
       (| (eq n name)
-         (error "Compiled function name clash ~A for ~A and ~A." ! name n)))
+         (funinfo-error "Compiled function name clash ~A for ~A and ~A." ! name n)))
     (= (href *compiled-function-names* !) name)))
 
 (defun compiled-function-name-string (name)
