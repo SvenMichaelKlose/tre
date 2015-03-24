@@ -1,6 +1,6 @@
 ; tré – Copyright (c) 2006–2015 Sven Michael Klose <pixel@hugbox.org>
 
-(def-pass-fun quote-expand x
+(defun quote-expand (x)
   (with (atomic [? (constant-literal? _)
                    _
                    `(quote ,_)]

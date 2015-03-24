@@ -1,7 +1,7 @@
 ; tré – Copyright (c) 2005–2015 Sven Michael Klose <pixel@hugbox.org>
 
 (defun cps-marker (name)
-  (& (cps-transformation?)
+  (& (enabled-pass? :cps)
      (every [not (cps-exception? _)]
             (. name (funinfo-names *funinfo*)))))
 
@@ -48,7 +48,7 @@
         (copy-lambda x :body (lambda-expand-r (lambda-body x))))
       (with (name    (| (lambda-name x)
                         (funinfo-sym))
-             args    (? (& (not (cps-transformation?))
+             args    (? (& (not (enabled-pass? :cps))
                            (native-cps-function? name))
                         (. '~%cont (lambda-args x))
                         (lambda-args x))
@@ -83,6 +83,6 @@
     (listprop-cons x (lambda-expand-expr x.)
 	                 (lambda-expand-r .x))))
 
-(def-pass-fun lambda-expand x
+(defun lambda-expand (x)
   (with-global-funinfo
     (lambda-expand-r x)))

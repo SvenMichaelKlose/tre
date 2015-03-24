@@ -1,6 +1,6 @@
-; tré – Copyright (c) 2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2014–2015 Sven Michael Klose <pixel@copei.de>
 
-,(? (cps-transformation?)
+,(? (enabled-pass? :cps)
     '(progn
        (defvar *exceptions* nil)
        (defvar *exception* nil)

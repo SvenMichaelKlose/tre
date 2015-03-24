@@ -78,12 +78,8 @@
   (%slot-value? x)      `(%slot-value ,(place-expand-0 fi .x.) ,..x.)
   (%stackarg? x)        x)
 
-(def-pass-fun place-expand x
+(defun place-expand (x)
   (place-expand-0 (global-funinfo) x))
-
-(def-pass-fun fake-place-expand x
-  (place-expand x)
-  x)
 
 (defun place-expand-closure-scope (fi)
   (alet (funinfo-parent fi)

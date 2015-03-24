@@ -4,9 +4,6 @@
 
 (env-load "transpiler/front-end/cpr-count.lisp")
 (env-load "transpiler/front-end/tag-convert.lisp")
-(env-load "transpiler/front-end/dot-expand.lisp")
-(env-load "transpiler/front-end/quasiquote-expand.lisp")
-(env-load "transpiler/front-end/literal-conversion.lisp")
 (env-load "transpiler/front-end/expression-expand/expression-expand.lisp")
 (env-load "transpiler/front-end/expression-expand/funcalls.lisp")
 (env-load "transpiler/front-end/expression-expand/set-global-variable-value.lisp")

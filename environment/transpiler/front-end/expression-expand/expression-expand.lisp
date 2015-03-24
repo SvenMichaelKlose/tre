@@ -232,14 +232,14 @@
 
 ;;;; TOPLEVEL
 
-(def-pass-fun expression-expand x
+(defun expression-expand (x)
   (& x
      (with-temporary *expex* (transpiler-expex *transpiler*)
        (with-global-funinfo
          (= *expex-sym-counter* 0)
          (expex-body x)))))
 
-(def-pass-fun fake-expression-expand x
+(defun fake-expression-expand (x)       ; TODO make it gather-imports
   (with-temporary *expex-import?* t
     (expression-expand (make-packages x)))
   x)

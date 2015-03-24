@@ -4,19 +4,18 @@
     thisify                   #'thisify
     rename-arguments          #'rename-arguments
     lambda-expand             #'lambda-expand
-    fake-place-expand         #'fake-place-expand
+    fake-place-expand         [(place-expand _)
+                               _]
     fake-expression-expand    #'fake-expression-expand)
 
-(def-pass-fun pass-frontend-input x x)
-
 (transpiler-pass frontend-1
-    frontend-input            #'pass-frontend-input
-    dot-expand                #'pass-dot-expand
-    quasiquote-expand         #'pass-quasiquote-expand
+    frontend-input            #'identity
+    dot-expand                #'dot-expand
+    quasiquote-expand         #'quasiquote-expand
     transpiler-macroexpand    #'transpiler-macroexpand
     compiler-macroexpand      #'compiler-macroexpand
     quote-expand              #'quote-expand
-    literal-conversion        #'literal-conversion)
+    literal-conversion        [funcall (literal-converter) _])
 
 (defun frontend-0 (x)
   (frontend-2 (frontend-1 x)))

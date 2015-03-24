@@ -6,8 +6,8 @@
 (defun cl-frontend (x)
   (? (dump-passes?)
      (format t "; #### CL-FRONTED ####"))
-  (aprog1 (transpiler-macroexpand (pass-quasiquote-expand (pass-dot-expand x)))
-    (fake-expression-expand (fake-place-expand (lambda-expand (rename-arguments (quote-expand (compiler-macroexpand !))))))))
+  (aprog1 (transpiler-macroexpand (quasiquote-expand (dot-expand x)))
+    (fake-expression-expand (place-expand (lambda-expand (rename-arguments (quote-expand (compiler-macroexpand !))))))))
 
 (defun cl-frontend-init ()
   (= *cl-builtins* nil))

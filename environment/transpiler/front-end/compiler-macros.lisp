@@ -11,7 +11,7 @@
   (print-definition `(define-compiler-macro ,name ,args))
   `(define-expander-macro compiler ,name ,args ,@x))
 
-(def-pass-fun compiler-macroexpand x
+(defun compiler-macroexpand (x)
   (expander-expand 'compiler x))
 
 (define-compiler-macro cond (&rest args)

@@ -37,17 +37,15 @@
 
 (def-head-predicate %thisify)
 
-(defun thisify-0 (classes x)
+(defun thisify (x &optional (classes (thisify-classes)))
   (?
-	 (atom x)        x
-	 (%thisify? x.)  (frontend-macroexpansions
-                         `((,@(? (cps-transformation?)
-                                 '(%%block)
-                                 '(let ~%this this))
-                            ,@(| (+ (thisify-list classes (cddr x.) (cadr x.))
-			                        (thisify-0 classes .x))
-                                 '(nil)))))
-     (listprop-cons x (thisify-0 classes x.) (thisify-0 classes .x))))
-
-(def-pass-fun thisify x
-  (thisify-0 (thisify-classes) x))
+	(atom x)        x
+	(%thisify? x.)  (frontend-macroexpansions
+                        `((,@(? (enabled-pass? :cps)
+                                '(%%block)
+                                '(let ~%this this))
+                           ,@(| (+ (thisify-list classes (cddr x.) (cadr x.))
+			                       (thisify .x classes))
+                                '(nil)))))
+    (listprop-cons x (thisify x. classes)
+                     (thisify .x classes))))

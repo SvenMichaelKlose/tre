@@ -31,7 +31,7 @@
   (eval (macroexpand `(define-transpiler-std-macro *transpiler* ,name ,args ,@body)))
   nil)
 
-(def-pass-fun transpiler-macroexpand x
+(defun transpiler-macroexpand (x)
   (with-temporary *=-function?* [| (defined-function _)
                                    (can-import-function? _)
                                    (%=-function? _)]

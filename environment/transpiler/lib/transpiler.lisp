@@ -3,6 +3,9 @@
 (defvar *transpiler* nil)
 (defvar *transpiler-log* nil)
 (defvar *default-transpiler* nil)
+(defvar *additional-passes* '(:accumulate-toplevel
+                              :inject-debugging
+                              :cps))
 
 (defvar *print-executed-functions?* nil)
 
@@ -18,6 +21,9 @@
 (defstruct transpiler
   (:global *transpiler*)
   (name                    name :not-global)
+
+  (disabled-passes         nil)
+  (additional-passes       nil)
 
   (sections-to-update      nil)
 
@@ -61,23 +67,19 @@
   (profile-num-calls?       nil)
   (always-expand-arguments? nil)
   (backtrace?               nil)
-  (inject-debugging?        nil)
 
   (obfuscate?               nil)
   (print-obfuscations?      nil)
   (import-from-host?        t)
   (import-variables?        t)
   (only-environment-macros? t)
-  (warn-on-unused-symbols?  nil)
   (function-prologues?      t)
-  (count-tags?              nil)
   (funinfo-comments?        nil)
 
   (gen-string               #'literal-string)
 
   (lambda-export?           nil)
 
-  (accumulate-toplevel-expressions? nil)
   (accumulated-toplevel-expressions nil)
 
   (function-name-prefix     "USERFUN_")
@@ -87,14 +89,11 @@
   (arguments-on-stack?      nil)
   (copy-arguments-to-stack? nil)
 
-  (cps-transformation?      nil)
   (cps-exceptions           (make-hash-table :test #'eq))
   (cps-wrappers             (make-hash-table :test #'eq))
   (native-cps-functions     (make-hash-table :test #'eq))
 
   (frontend-only?           nil)
-  (make-text?               t)
-  (encapsulate-strings?     t)
   (dump-passes?             nil)
 
   (predefined-symbols       nil)
@@ -115,7 +114,6 @@
   (exported-closures        nil)
   (delayed-exprs            nil)
   (delayed-var-inits        nil)
-  (dot-expand?              t)
   (memorized-sources        nil)
 
   (funinfos                 (make-hash-table :test #'eq))
@@ -173,6 +171,8 @@
   (aprog1
     (make-transpiler
         :name                     name
+        :disabled-passes          (copy-list disabled-passes)
+        :additional-passes        (copy-list additional-passes)
         :sections-to-update       (copy-list sections-to-update)
         :frontend-init            frontend-init
         :own-frontend             own-frontend
@@ -201,34 +201,27 @@
         :profile-num-calls?       profile-num-calls?
         :always-expand-arguments? always-expand-arguments?
         :backtrace?               backtrace?
-        :inject-debugging?        inject-debugging?
         :obfuscate?               obfuscate?
         :print-obfuscations?      print-obfuscations?
         :import-from-host?        import-from-host?
         :import-variables?        import-variables?
         :only-environment-macros? only-environment-macros?
-        :warn-on-unused-symbols?  warn-on-unused-symbols?
         :function-prologues?      function-prologues?
-        :count-tags?              count-tags?
         :funinfo-comments?        funinfo-comments?
         :gen-string               gen-string
         :lambda-export?           lambda-export?
-        :accumulate-toplevel-expressions? accumulate-toplevel-expressions?
         :accumulated-toplevel-expressions (copy-list accumulated-toplevel-expressions)
         :function-name-prefix     function-name-prefix
         :needs-var-declarations?  needs-var-declarations?
         :stack-locals?            stack-locals?
         :arguments-on-stack?      arguments-on-stack?
         :copy-arguments-to-stack? copy-arguments-to-stack?
-        :cps-transformation?      cps-transformation?
         :cps-exceptions           (copy-hash-table cps-exceptions)
         :cps-wrappers             (copy-hash-table cps-wrappers)
         :native-cps-functions     (copy-hash-table native-cps-functions)
         :postprocessor            postprocessor
         :configurations           (copy-alist configurations)
         :frontend-only?           frontend-only?
-        :make-text?               make-text?
-        :encapsulate-strings?     encapsulate-strings?
         :dump-passes?             dump-passes?
         :symbol-translations      (copy-list symbol-translations)
         :thisify-classes          (copy-hash-table thisify-classes)
@@ -238,7 +231,6 @@
         :exported-closures        (copy-list exported-closures)
         :delayed-exprs            (copy-list delayed-exprs)
         :delayed-var-inits        (copy-list delayed-var-inits)
-        :dot-expand?              dot-expand?
         :memorized-sources        (copy-list memorized-sources)
         :predefined-symbols       (copy-list predefined-symbols)
         :funinfos                 (copy-hash-table funinfos)
@@ -376,12 +368,14 @@
      (late-symbol? x)
      (funinfo-var? (global-funinfo) x)))
 
-(defun transpiler-add-toplevel-expression (tr x)
-  (push (copy-tree x) (transpiler-accumulated-toplevel-expressions tr)))
-
 (defun add-used-function (x)
   (= (href (used-functions) x) t)
   x)
+
+(defun enabled-pass? (x)
+  (? (member x *additional-passes* :test #'eq)
+     (member x (ensure-list (additional-passes)) :test #'eq)
+     (not (member x (ensure-list (disabled-passes)) :test #'eq))))
 
 (defun configuration-item (x)
   (alet (configurations)

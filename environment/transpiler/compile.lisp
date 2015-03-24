@@ -42,12 +42,14 @@
                                      (delayed-exprs))))))
 
 (defun codegen-accumulated-toplevels ()
-  (& (accumulate-toplevel-expressions?)
+  (& (enabled-pass? :accumulate-toplevel)
      (accumulated-toplevel-expressions)
-     (with-temporaries ((sections-to-update) '(accumulated-toplevel)
-                        (accumulate-toplevel-expressions?) nil)
-       (quick-compile-sections (list (. 'accumulated-toplevel
-                                        #'make-toplevel-function))))))
+     (with-temporaries ((sections-to-update) '(accumulated-toplevel))
+       (push :accumulate-toplevel (disabled-passes))
+       (prog1
+         (quick-compile-sections (list (. 'accumulated-toplevel
+                                          #'make-toplevel-function)))
+         (pop (disabled-passes))))))
 
 (defun generic-codegen (before-import after-import imports)
   (print-status "Let me think. Hmm...~F")
@@ -63,9 +65,9 @@
                                  (codegen-accumulated-toplevels)
                                  (codegen-delayed-exprs)
                                  (!? (epilogue-gen) (funcall !))))
-    (transpiler-postprocess (+ before-raw-decls
-                               (reverse (raw-decls))
-                               after-raw-decls))))
+    (apply (postprocessor) (+ before-raw-decls
+                              (reverse (raw-decls))
+                              after-raw-decls))))
 
 (defun frontend-section-load (path)
   (print-definition `(load ,path))

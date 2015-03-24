@@ -24,6 +24,6 @@
   (%slot-value? x)  `(%slot-value ,(rename-arguments-0 replacements .x.)
 				                  ,..x.))
 
-(def-pass-fun rename-arguments x
+(defun rename-arguments (x)
   (= *argument-sym-counter* 0)
   (rename-arguments-0 nil x))
