@@ -296,6 +296,10 @@ bytecode-image)
 	(echo "(with-output-file o \"bytecode-image\" (adolist ((compile-bytecode-environment)) (late-print ! o)))" | $TRE) || exit 1
 	;;
 
+webconsole)
+    $TRE makefiles/webconsole.lisp || exit 1
+	;;
+
 jsdebugger)
     $TRE makefiles/debugger-js.lisp || exit 1
     ;;
@@ -304,9 +308,9 @@ all)
 	./make.sh boot $ARGS || exit 1
 	./make.sh ctests || exit 1
 	./make.sh jstests || exit 1
+	./make.sh webconsole || exit 1
 #	./make.sh bytecode-image || exit 1
 #   ./make.sh jsdebugger || exit 1
-#    $TRE makefiles/webconsole.lisp || exit 1
     ;;
 
 profile)
@@ -376,6 +380,7 @@ restore)
     echo "  distclean       Like 'clean' but removes backups, too."
     echo "  precompile      Precompile obligatory target environments (EXPERIMENTAL)."
     echo "  profile         Make a profile of the compiler compiling itself."
+    echo "  webconsole      Make web browser REPL."
     echo "  ctests          Run C environemnt tests."
     echo "  jstests         Compile JavaScript target tests and run them with"
     echo "                  Chromium and node.js."
