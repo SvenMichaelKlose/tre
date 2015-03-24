@@ -2,6 +2,8 @@
 
 (declare-cps-exception list-length)
 
+(defun list (&rest x) x)
+
 (defun list-length (x)
   (let len 0
     (while (cons? x)
