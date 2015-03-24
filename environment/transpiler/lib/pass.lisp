@@ -12,11 +12,11 @@
      (equal x. needle.)
      (sloppy-equal .x .needle)))
 
-(defun tree-equal (x needle)
+(defun sloppy-tree-equal (x needle)
   (| (sloppy-equal x needle)
      (& (cons? x)
-        (| (tree-equal x. needle)
-           (tree-equal .x needle)))))
+        (| (sloppy-tree-equal x. needle)
+           (sloppy-tree-equal .x needle)))))
 
 (defun dump-pass? (name x)
   (& *transpiler*
@@ -24,7 +24,7 @@
             (| (t? !)
                (member name (ensure-list !))))
         (!? (dump-selector)
-            (tree-equal x !)))))
+            (sloppy-tree-equal x !)))))
 
 (defmacro transpiler-end (name &rest name-fun-pairs)
   (print-definition `(transpiler-end ,name))
