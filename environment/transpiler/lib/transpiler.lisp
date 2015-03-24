@@ -64,6 +64,7 @@
   (dump-passes?               nil)
 
   ; Dump outputs of passes in which this expression is found.
+  ; '(FUNCTION BUTLAST) would dump everything related to compiling BUTLAST.
   (dump-selector              nil)
 
   ; Dump FUNINFOs in comments before their functions.
