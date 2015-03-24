@@ -22,13 +22,14 @@
   (:global *transpiler*)
   (name                    name :not-global)
 
+  (disabled-ends           nil)
   (disabled-passes         nil)
   (additional-passes       nil)
+  (output-passes           nil)
 
   (sections-to-update      nil)
 
   frontend-init
-  (own-frontend            nil)
   middleend-init
   (prologue-gen            nil)
   (epilogue-gen            nil)
@@ -93,7 +94,6 @@
   (cps-wrappers             (make-hash-table :test #'eq))
   (native-cps-functions     (make-hash-table :test #'eq))
 
-  (frontend-only?           nil)
   (dump-passes?             nil)
 
   (predefined-symbols       nil)
@@ -171,11 +171,12 @@
   (aprog1
     (make-transpiler
         :name                     name
+        :disabled-ends            (copy-list disabled-ends)
         :disabled-passes          (copy-list disabled-passes)
         :additional-passes        (copy-list additional-passes)
+        :output-passes            (copy-alist output-passes)
         :sections-to-update       (copy-list sections-to-update)
         :frontend-init            frontend-init
-        :own-frontend             own-frontend
         :middleend-init           middleend-init
         :prologue-gen             prologue-gen
         :epilogue-gen             epilogue-gen
@@ -221,7 +222,6 @@
         :native-cps-functions     (copy-hash-table native-cps-functions)
         :postprocessor            postprocessor
         :configurations           (copy-alist configurations)
-        :frontend-only?           frontend-only?
         :dump-passes?             dump-passes?
         :symbol-translations      (copy-list symbol-translations)
         :thisify-classes          (copy-hash-table thisify-classes)
@@ -376,6 +376,9 @@
   (? (member x *additional-passes* :test #'eq)
      (member x (ensure-list (additional-passes)) :test #'eq)
      (not (member x (ensure-list (disabled-passes)) :test #'eq))))
+
+(defun enabled-end? (x)
+  (not (member x (ensure-list (disabled-ends)) :test #'eq)))
 
 (defun configuration-item (x)
   (alet (configurations)

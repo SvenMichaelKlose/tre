@@ -1,13 +1,7 @@
 ; tré – Copyright (c) 2005–2015 Sven Michael Klose <pixel@hugbox.org>
 
 (defun cl-postprocessor (&rest x)
-  (make-lambdas (apply #'+ x)))
-
-(defun cl-frontend (x)
-  (? (dump-passes?)
-     (format t "; #### CL-FRONTED ####"))
-  (aprog1 (transpiler-macroexpand (quasiquote-expand (dot-expand x)))
-    (fake-expression-expand (place-expand (lambda-expand (rename-arguments (quote-expand (compiler-macroexpand !))))))))
+  (make-lambdas (remove-if #'not (apply #'+ x))))
 
 (defun cl-frontend-init ()
   (= *cl-builtins* nil))
@@ -26,13 +20,13 @@
 (defun make-cl-transpiler ()
   (create-transpiler
       :name                    :common-lisp
-      :frontend-only?          t
+      :output-passes           '((:frontend . :transpiler-macroexpand))
+      :disabled-ends           '(:middleend :backend)
       :import-variables?       t
       :lambda-export?          nil
       :stack-locals?           nil
       :sections-before-import  #'cl-sections-before-import
       :frontend-init           #'cl-frontend-init
-      :own-frontend            #'cl-frontend
       :expex-initializer       #'cl-expex-initializer
       :postprocessor           #'cl-postprocessor
       :configurations          (+ (default-configurations)

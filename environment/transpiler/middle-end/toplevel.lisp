@@ -13,7 +13,7 @@
           !
           (optimize !)))))
 
-(transpiler-pass middleend-0
+(transpiler-end middleend
     middleend-input          [(& *development?*
                                  (format t ".~F"))
                               _]
@@ -26,8 +26,3 @@
     optimize                 #'pass-optimize
     opt-tailcall             #'pass-opt-tailcall
     cps                      #'cps)
-
-(defun middleend (x)
-  (? (frontend-only?)
-     x
-     (mapcan [middleend-0 (list _)] x)))
