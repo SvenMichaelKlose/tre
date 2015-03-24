@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
 
 (load "environment/platforms/shared/lml.lisp")
 (load "environment/platforms/shared/lml2xml.lisp")
@@ -8,6 +8,7 @@
 
 (= *have-compiler?* t)
 (= *have-c-compiler?* nil)
+;(= (transpiler-dump-passes? *js-transpiler*) t)
 
 (unix-sh-mkdir "compiled" :parents t)
 (make-project "tré web console"
