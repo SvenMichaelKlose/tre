@@ -63,6 +63,9 @@
   ; of names.
   (dump-passes?               nil)
 
+  ; Dump outputs of passes in which this expression is found.
+  (dump-selector              nil)
+
   ; Dump FUNINFOs in comments before their functions.
   (funinfo-comments?          nil)
 
