@@ -71,16 +71,16 @@
 
 (defun frontend-section-load (path)
   (print-definition `(load ,path))
-  (frontend (read-file path)))
+  (read-file path))
 
 (defun frontend-section (section data)
   (developer-note "Frontend ~A.~%" section)
-  (pcase section
-    symbol?  (frontend (? (function? data)
+  (frontend (pcase section
+              symbol?  (? (function? data)
                           (funcall data)
-                          data))
-    string?  (frontend-section-load section)
-    (error "Don't know what to do with section ~A." section)))
+                          data)
+              string?  (frontend-section-load section)
+            (error "Don't know what to do with section ~A." section))))
 
 (defun frontend-sections (sections)
   (alet (map-sections #'frontend-section sections (cached-frontend-sections))
