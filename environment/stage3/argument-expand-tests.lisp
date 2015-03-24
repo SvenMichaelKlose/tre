@@ -20,25 +20,25 @@
 	      '(a b c d)))
   t)
 
-;(define-test "argument expansion can handle &REST"
-;  ((equal (argument-expand 'test-5 '(a b &rest c) '(23 5 42 65))
-;		  '((a . 23) (b . 5) (c &rest 42 65))))
-;  t)
+(define-test "argument expansion can handle &REST"
+  ((equal (argument-expand 'test-5 '(a b &rest c) '(23 5 42 65))
+          '((a . 23) (b . 5) (c %rest 42 65))))
+  t)
 
-;(define-test "argument expansion can handle &REST without :apply-values?"
-;  ((equal (argument-expand-names 'test-6 '(a b c &rest d))
-;		  '(a b c d)))
-;  t)
+(define-test "argument expansion can handle &REST without :apply-values?"
+  ((equal (argument-expand-names 'test-6 '(a b c &rest d))
+          '(a b c d)))
+  t)
 
-;(define-test "argument expansion can handle missing &REST"
-;  ((equal (argument-expand 'test-7 '(a b &rest c) '(23 5))
-;		  '((a . 23) (b . 5) (c &rest))))
-;  t)
+(define-test "argument expansion can handle missing &REST"
+  ((equal (argument-expand 'test-7 '(a b &rest c) '(23 5))
+          '((a . 23) (b . 5) (c %rest))))
+  t)
 
-;(define-test "argument expansion can handle missing &REST without :apply-values?"
-;  ((equal (argument-expand-names 'test-8 '(a b &rest c))
-;		  '(a b c)))
-;  t)
+(define-test "argument expansion can handle missing &REST without :apply-values?"
+  ((equal (argument-expand-names 'test-8 '(a b &rest c))
+          '(a b c)))
+  t)
 
 (define-test "argument expansion can handle &OPTIONAL"
   ((equal (argument-expand 'test-9 '(a b &optional c d)
@@ -92,5 +92,6 @@
 
 ;(define-test "argument expansion can handle &KEY with init forms"
 ;  ((equal (argument-expand 'test-18 '(a b &key (c 3) (d 42))
-;                                    '(23 2) t)
-;          '(values (a b c d) (23 2 3 42)))))
+;                                    '(23 2) t))
+;          '(values (a b c d) (23 2 3 42)))
+;  t)
