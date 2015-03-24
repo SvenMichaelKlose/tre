@@ -217,9 +217,9 @@
         :sections-to-update       (copy-list sections-to-update)
         :configurations           (copy-alist configurations)
 
-        :disabled-ends            (copy-list disabled-ends)
-        :disabled-passes          (copy-list disabled-passes)
-        :additional-passes        (copy-list additional-passes)
+        :disabled-ends            (copy-list (ensure-list disabled-ends))
+        :disabled-passes          (copy-list (ensure-list disabled-passes))
+        :additional-passes        (copy-list (ensure-list additional-passes))
         :output-passes            (copy-alist output-passes)
         :frontend-init            frontend-init
         :middleend-init           middleend-init
