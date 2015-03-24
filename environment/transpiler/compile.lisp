@@ -18,7 +18,7 @@
      sections))
 
 (defun codegen (x)
-  (backend (middleend x)))
+  (backend (mapcan [middleend (list _)] x)))
 
 (defun codegen-section (section data)
   (developer-note "Codegen ~A.~%" section)
@@ -75,12 +75,13 @@
 
 (defun frontend-section (section data)
   (developer-note "Frontend ~A.~%" section)
-  (frontend (pcase section
-              symbol?  (? (function? data)
-                          (funcall data)
-                          data)
-              string?  (frontend-section-load section)
-            (error "Don't know what to do with section ~A." section))))
+  (mapcan [frontend (list _)]
+          (pcase section
+            symbol?  (? (function? data)
+                        (funcall data)
+                        data)
+            string?  (frontend-section-load section)
+          (error "Don't know what to do with section ~A." section))))
 
 (defun frontend-sections (sections)
   (alet (map-sections #'frontend-section sections (cached-frontend-sections))
