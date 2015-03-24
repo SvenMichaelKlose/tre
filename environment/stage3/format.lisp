@@ -22,16 +22,22 @@
   (force-output (format-info-stream inf))
   (%format inf txt args))
 
+(defun %format-directive-fresh-line (inf txt args)
+  (fresh-line (format-info-stream inf))
+  (%format inf txt args))
+
 (defun %format-directive-tilde (inf txt args)
   (princ #\~ (format-info-stream inf))
   (%format inf txt args))
 
+; TODO: Do it the Common Lisp way.
 (defun %format-directive (inf txt args)
   (++! (format-info-processed-args inf))
   (case (char-upcase txt.) :test #'character==
     #\%  (%format-directive-eol inf .txt args)
     #\A  (%format-directive-placeholder inf .txt args)
     #\F  (%format-directive-force-output inf .txt args)
+    #\L  (%format-directive-fresh-line inf .txt args)
     #\~  (%format-char inf txt args)
     (%format-directive-tilde inf txt args)))
 
