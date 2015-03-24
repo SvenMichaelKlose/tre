@@ -10,8 +10,6 @@
          x)))
 
 (defun cpr-count (x name)
-  (? (cpr-count?)
-     (alet (make-hash-table :test #'eq)
-       (cpr-count-0 x !)
-       (format t "~A debugger positions after ~A~%" (length (hashkeys !)) name)))
-  x)
+  (alet (make-hash-table :test #'eq)
+    (cpr-count-0 x !)
+    (format t "~A debugger positions after ~A~%" (length (hashkeys !)) name)))
