@@ -203,9 +203,9 @@
 (define-js-macro quote (x)
   (with (f  [let s (compiled-function-name-string 'symbol)
               `(,s "(\"" ,(obfuscated-symbol-name _) "\","
-	            ,@(!? (symbol-package _)
-	                  `((,s "(\"" ,(obfuscated-symbol-name !) "\",null)"))
-	                  '(("null")))
+	            ,@(? (keyword? _)
+	                 `((,s "(\"" ,(obfuscated-symbol-name (symbol-package _)) "\",null)"))
+	                 '(("null")))
 	            ")")])
     (alet *js-compiled-symbols*
       (| (href ! x)

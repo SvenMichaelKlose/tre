@@ -30,7 +30,7 @@
 (defun symbol-package (x)
   (?
     (%%%eq t x)  nil
-    x            x.p))
+    x            (!? x.p ! 'tre)))
 
 (defun symbol? (x)
   (| (not x)
