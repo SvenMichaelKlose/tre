@@ -26,27 +26,30 @@
         (!? (dump-selector)
             (sloppy-tree-equal x !)))))
 
+(defun transpiler-pass (x i)
+  (aprog1 (with-global-funinfo (funcall .i x)))
+    (when (dump-pass? i. !)
+      (? (equal ! (last-pass-result))
+         (format t "; Pass ~A outputs no difference to previous dump.~%" i.)
+         (format t (+ "~L; **** Dump of pass ~A:~%"
+                      "~A"
+                      "~L; **** End of ~A.~%")
+                   i. ! i.))))
+
 (defmacro transpiler-end (name &rest name-fun-pairs)
   (print-definition `(transpiler-end ,name))
   `(defun ,name (x)
      (| (enabled-end? ,(make-keyword name))
         (return x))
-     (when (t? (dump-passes?))
-       (format t "~%~L; #### Compiler end ~A~%~%" ',name))
-     (with (outpass  (cdr (assoc ,(make-keyword name) (output-passes)))
-            out      nil)
-       (@ (i (list ,@(@ [`(. ,(make-keyword _.) ,._.)]
-                        (group name-fun-pairs 2))))
-         (when (enabled-pass? i.)
-           (= x (with-global-funinfo (funcall .i x)))
-           (when (dump-pass? i. x)
-             (? (equal x (last-pass-result))
-                (format t "; Pass ~A outputs no difference to previous dump.~%" i.)
-                (format t (+ "~L; **** Dump of pass ~A:~%"
-                             "~A"
-                             "~L; **** End of ~A.~%")
-                          i. x i.)))
-           (= (last-pass-result) x)
-           (when (eq outpass i.)
-             (= out x))))
-       (? outpass out x))))
+     (& (t? (dump-passes?))
+        (format t "~%~L; #### Compiler end ~A~%~%" ',name))
+     (@ [with (outpass  (cdr (assoc ,(make-keyword name) (output-passes)))
+               out      nil)
+          (@ (i
+              (list ,@(@ [`(. ,(make-keyword _.) ,._.)]
+                         (group name-fun-pairs 2)))
+              out)
+            (= (last-result) (transpiler-pass _ i))
+            (& (eq i. outpass)
+               (= out (last-result))))]
+        x)))
