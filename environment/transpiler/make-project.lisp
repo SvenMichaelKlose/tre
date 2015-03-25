@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2013,2015 Sven Michael Klose <pixel@copei.de>
 
 (defun make-project (project-name sections &key transpiler
                                                 (modified-file-getter  nil)
@@ -8,13 +8,16 @@
                                                 (obfuscate?            nil))
   (format t "; Making project '~A'...~%" project-name)
   (= (transpiler-sections-to-update transpiler) sections-to-update)
-  (= (transpiler-obfuscate? transpiler) obfuscate?)
+  (& obfuscate?
+     (transpiler-enable-pass transpiler :obfuscate))
   (let code (compile-sections sections :transpiler transpiler)
     (!? emitter
         (funcall ! code))
     (awhen recompiler-path
       (| modified-file-getter
-         (error "The recompiler requires argument MODIFIED-FILE-GETTER: a function without arguments which returns a list of modified sections."))
+         (error (+ "The recompiler requires argument MODIFIED-FILE-GETTER which is a function "
+                   "without arguments returning a list of modified sections.")))
+      ; TODO: Rename MODIFIED-FILE-GETTER to GEN-FILELIST.
       (format t "; Making recompiler '~A'...~F" recompiler-path)
       (= *allow-redefinitions?* t)
       (sys-image-create recompiler-path

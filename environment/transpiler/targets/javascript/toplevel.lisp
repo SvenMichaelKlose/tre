@@ -82,17 +82,17 @@
 	  :lambda-export?           nil
 	  :stack-locals?            nil
 	  :needs-var-declarations?  t
-      :additional-passes        :count-tags
+      :enabled-passes           '(:count-tags)
 	  :identifier-char?         #'c-identifier-char?
 	  :literal-converter        #'expand-literal-characters
       :expex-initializer        #'js-expex-initializer
       :ending-sections          #'js-ending-sections
-      :configurations           '((:platform . :browser)
-                                  (:nodejs-requirements . nil)
-                                  (:rplac-breakpoints . nil)
-                                  (:exclude-core? . nil)
-                                  (:memorize-sources? . nil)
-                                  (:save-sources? . nil)
+      :configurations           '((:platform                 . :browser)
+                                  (:nodejs-requirements      . nil)
+                                  (:rplac-breakpoints        . nil)
+                                  (:exclude-core?            . nil)
+                                  (:memorize-sources?        . nil)
+                                  (:save-sources?            . nil)
                                   (:save-argument-defs-only? . nil))))
 
 (defun make-javascript-transpiler ()

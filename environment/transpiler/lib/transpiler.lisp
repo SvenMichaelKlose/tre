@@ -3,9 +3,10 @@
 (defvar *transpiler* nil)
 (defvar *transpiler-log* nil)
 (defvar *default-transpiler* nil)
-(defvar *additional-passes* '(:accumulate-toplevel
-                              :inject-debugging
-                              :cps))
+(defvar *optional-passes* '(:accumulate-toplevel
+                            :inject-debugging
+                            :cps
+                            :obfuscate))
 
 (defvar *print-executed-functions?* nil)
 
@@ -32,9 +33,6 @@
   ; Backtrace stack at run-time.
   (backtrace?                 nil)
 
-  ; Obfuscate identifiers to compress the output and/or to make it intangible.
-  (obfuscate?                 nil)
-
   ; Print identifiers and their obfuscated versions when done.
   (print-obfuscations?        nil)
 
@@ -47,7 +45,7 @@
   (profile-num-calls?         nil)
 
   ; Also generate argument expanders for functions with simple
-  ; argument lists for additional assertions.
+  ; argument lists for optional assertions.
   (always-expand-arguments?   nil)
 
   ; Import functions from the compile-time host if missing.
@@ -83,7 +81,7 @@
 
   (disabled-ends           nil)
   (disabled-passes         nil)
-  (additional-passes       nil)
+  (enabled-passes          nil)
   (output-passes           nil)
 
   (frontend-init           nil)
@@ -204,7 +202,6 @@
         :name                     name
         :assert?                  assert?
         :backtrace?               backtrace?
-        :obfuscate?               obfuscate?
         :print-obfuscations?      print-obfuscations?
         :profile?                 profile?
         :profile-num-calls?       profile-num-calls?
@@ -219,7 +216,7 @@
 
         :disabled-ends            (copy-list (ensure-list disabled-ends))
         :disabled-passes          (copy-list (ensure-list disabled-passes))
-        :additional-passes        (copy-list (ensure-list additional-passes))
+        :enabled-passes           (copy-list (ensure-list enabled-passes))
         :output-passes            (copy-alist output-passes)
         :frontend-init            frontend-init
         :middleend-init           middleend-init
@@ -411,13 +408,40 @@
   (= (href (used-functions) x) t)
   x)
 
+(defun optional-pass? (x)
+  (member x *optional-passes* :test #'eq))
+
+(defun transpiler-disabled-pass? (tr x)
+  (member x (transpiler-disabled-passes tr) :test #'eq))
+
+(defun transpiler-enabled-pass? (tr x)
+  (? (optional-pass? x)
+     (member x (transpiler-enabled-passes tr) :test #'eq)
+     (not (transpiler-disabled-pass? tr x))))
+
 (defun enabled-pass? (x)
-  (? (member x *additional-passes* :test #'eq)
-     (member x (ensure-list (additional-passes)) :test #'eq)
-     (not (member x (ensure-list (disabled-passes)) :test #'eq))))
+  (transpiler-enabled-pass? *transpiler* x))
 
 (defun enabled-end? (x)
-  (not (member x (ensure-list (disabled-ends)) :test #'eq)))
+  (not (member x (disabled-ends) :test #'eq)))
+
+(defun transpiler-enable-pass (tr x)
+  (| (symbol? x)
+     (error "Pass name must be a symbol, got ~A." x))
+  (& (transpiler-enabled-pass? tr x)
+     (error "Pass ~A already enabled." x))
+  (| (optional-pass? x)
+     (error "Pass ~A is not optional or doesn't exist." x))
+  (= (transpiler-enabled-passes tr) (. (make-keyword x) (transpiler-enabled-passes tr))))
+
+(defun transpiler-disable-pass (tr x)
+  (| (symbol? x)
+     (error "Pass name must be a symbol, got ~A." x))
+  (& (transpiler-disabled-pass? tr x)
+     (error "Pass ~A already disabled." x))
+  (& (optional-pass? x)
+     (error "Pass ~A is optional. Don't enable it instead of disabling it." x))
+  (= (transpiler-disabled-passes tr) (. (make-keyword x) (transpiler-disabled-passes tr))))
 
 (defun configuration-item (x)
   (alet (configurations)

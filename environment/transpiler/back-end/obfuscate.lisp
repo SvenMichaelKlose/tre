@@ -2,6 +2,9 @@
 
 (defvar *obfuscation-counter* 0)
 
+(defun obfuscate? ()
+  (enabled-pass? :obfuscate))
+
 (defun number-sym-0 (x)
   (unless (== 0 x)
 	(let m (mod x 24)
@@ -37,7 +40,7 @@
      x))
 
 (define-tree-filter obfuscate-0 (x)
-  (symbol? x) (obfuscate-symbol x))
+  (symbol? x)  (obfuscate-symbol x))
 
 (defun obfuscate (x)
   (? (obfuscate?)
