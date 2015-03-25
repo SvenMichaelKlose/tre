@@ -1,18 +1,20 @@
 ; tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
 
-(? (eq *assert* '*assert*)
-   (setq *assert* t))
-(? (eq *targets* '*targets*)
-   (setq *targets* '(:cl :c :js :php)))
+(%defvar *development?*       t)
+(%defvar *assert*             t)
+(%defvar *print-definitions?* t)
 
-(%defvar *tre-has-math*    t)
-(%defvar *tre-has-alien*   t)
-(%defvar *tre-has-class*   t)
+;; Optional environment sections.
 
-(%defvar *print-definitions?*         t)
-(%defvar *print-notes?*               t)
-(%defvar *print-status?*              t)
-(%defvar *have-environment-tests*     nil)
-(%defvar *development?*               t)
-(%defvar *have-compiler?*             nil)
-(%defvar *have-c-compiler?*           t)
+(%defvar *tre-has-math*  t) ; Mathematical functions.
+(%defvar *tre-has-alien* t) ; C function interface. (C core only)
+(%defvar *tre-has-class* t) ; STRUCT CLASS.
+
+;; transpiler
+
+(%defvar *targets*                 '(:cl :c :js :php))
+(%defvar *print-notes?*            t)
+(%defvar *print-status?*           t)
+(%defvar *have-environment-tests*  nil)
+(%defvar *have-compiler?*          nil)
+(%defvar *have-c-compiler?*        t)
