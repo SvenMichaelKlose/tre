@@ -81,18 +81,14 @@
        (= (href (converted-identifiers) n) s)
        n)))
 
-(defun convert-identifiers-cons (x)
-  (?
-    (%%string? x) (funcall (gen-string) .x.)
-    (%%native? x) (convert-identifiers .x)
-    x))
-
 (defun convert-identifiers (x)
   (maptree [?
-             (cons? _)    (convert-identifiers-cons _)
-             (string? _)  _
-             (symbol? _)  (| (assoc-value _ (symbol-translations) :test #'eq)
-                             (convert-identifier _))
-             (number? _)  (princ _ nil)
+             (string? _)    _
+             (number? _)    (princ _ nil)
+             (symbol? _)    (| (assoc-value _ (symbol-translations) :test #'eq)
+                               (convert-identifier _))
+             (%%string? _)  (funcall (gen-string) ._.)
+             (%%native? _)  (convert-identifiers ._)
+             (cons? _)      _
              (error "Cannot translate ~A to string." _)]
            x))
