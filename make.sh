@@ -159,10 +159,13 @@ crunsh_compile ()
 
 install_it ()
 {
-	sudo cp -v tre $BINDIR || exit 1
+    echo "Installing 'tre' else to '$BINDIR'..."
+	sudo cp tre $BINDIR || exit 1
+    echo "Installing everything else to '/usr/local/lib/tre/'..."
     sudo mkdir -p /usr/local/lib/tre
-    sudo cp -v image /usr/local/lib/tre || exit 1
-    sudo cp -rv environment /usr/local/lib/tre || exit 1
+    sudo cp image /usr/local/lib/tre || exit 1
+    sudo cp -r environment /usr/local/lib/tre || exit 1
+    echo "Done."
 }
 
 case $1 in
