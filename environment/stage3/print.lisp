@@ -57,13 +57,15 @@
 
 (defun pretty-print-lambda (x str info)
   (%with-brackets str info
+    (++! (car (print-info-columns info)))
     (%late-print (car .x.) str info)
     (fresh-line str)
-    (%print-body (cdr .x.) str info)))
+    (%print-body (cdr .x.) str info))
+    (--! (car (print-info-columns info))))
 
 (defun pretty-print-named-lambda (x str info)
   (%with-brackets str info
-    (alet (car (print-info-columns info))
+    (alet (++ (car (print-info-columns info)))
       (princ "FUNCTION " str)
       (%late-print .x. str info)
       (%print-gap str)
