@@ -1,4 +1,4 @@
-(= (transpiler-dump-selector !) '(function butlast))
+(= (transpiler-dump-selector *js-transpiler*) '(function butlast))
 (make-project "Hello World"
               '("examples/hello-world.lisp")
               :transpiler  *js-transpiler*
