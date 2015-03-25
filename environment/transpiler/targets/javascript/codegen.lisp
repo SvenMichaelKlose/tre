@@ -1,8 +1,5 @@
 ; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
 
-(defun js-call (x)
-  `(,x. ,@(c-list .x)))
-
 (defvar *js-compiled-symbols* (make-hash-table :test #'eq))
 
 (define-codegen-macro-definer define-js-macro *js-transpiler*)
@@ -14,31 +11,31 @@
   `(%%native "case " ,tag ":" ,*newline*))
 
 (define-js-macro %%go (tag)
-  `(,*js-indent* "_I_=" ,tag ";continue" ,*js-separator*))
+  `(,*js-indent* "_I_ = " ,tag "; continue" ,*js-separator*))
 
 (defun js-nil? (x)
-  `("(!" ,x "&&" ,x "!==0&&" ,x "!=='')"))
+  `("(!" ,x " && " ,x " !== 0 && " ,x " !== '')"))
 
 (define-js-macro %%go-nil (tag val)
-  `(,*js-indent* "if" ,(js-nil? val) "{_I_=" ,tag ";continue;}" ,*newline*))
+  `(,*js-indent* "if " ,(js-nil? val) " { _I_= " ,tag "; continue; }" ,*newline*))
 
 (define-js-macro %%go-not-nil (tag val)
-  `(,*js-indent* "if(!" ,(js-nil? val) "){_I_=" ,tag ";continue;}" ,*newline*))
+  `(,*js-indent* "if (!" ,(js-nil? val) ") { _I_=" ,tag "; continue; }" ,*newline*))
 
 (define-js-macro %%call-nil (val consequence alternative)
-  `(,*js-indent* "if",(js-nil? val)
-                     ,consequence "();"
+  `(,*js-indent* "if " ,(js-nil? val) " "
+                     ,consequence " ();"
                  "else "
-                     ,alternative "();" ,*newline*))
+                     ,alternative " ();" ,*newline*))
 
 (define-js-macro %%call-not-nil (val consequence alternative)
-  `(,*js-indent* "if(!",(js-nil? val) ")"
-                     ,consequence "();"
+  `(,*js-indent* "if (!",(js-nil? val) ") "
+                     ,consequence " (); "
                  "else "
-                     ,alternative "();" ,*newline*))
+                     ,alternative " ();" ,*newline*))
 
 (define-js-macro %set-atom-fun (plc val)
-  `(%%native ,*js-indent* ,plc "=" ,val ,*js-separator*))
+  `(%%native ,*js-indent* ,plc " = " ,val ,*js-separator*))
 
 (define-js-macro return-from (block-name x)
   (error "Cannot return from unknown BLOCK ~A." block-name))
@@ -58,7 +55,7 @@
                                  name))
          `(,*newline*
            ,(funinfo-comment (get-funinfo name))
-           ,translated-name "=" "function " ,@(js-argument-list 'codegen-function-macro (lambda-args !)) ,*newline*
+           ,translated-name " = " " function " ,@(js-argument-list 'codegen-function-macro (lambda-args !)) ,*newline*
 	       "{" ,*newline*
 		       ,@(lambda-body !)
 	       "}" ,*newline*))
@@ -67,9 +64,9 @@
 (define-js-macro %function-prologue (name)
   `(%%native ""
 	   ,@(& (< 0 (funinfo-num-tags (get-funinfo name)))
-	        `(,*js-indent* "var _I_=0" ,*js-separator*
-		      ,*js-indent* "while(1){" ,*js-separator*
-		      ,*js-indent* "switch(_I_){case 0:" ,*js-separator*))))
+	        `(,*js-indent* "var _I_ = 0" ,*js-separator*
+		      ,*js-indent* "while (1) {" ,*js-separator*
+		      ,*js-indent* "switch (_I_) { case 0:" ,*js-separator*))))
 
 (define-js-macro %function-return (name)
   (alet (get-funinfo name)
@@ -89,13 +86,12 @@
 
 (defun js-%=-0 (dest val)
   `(,*js-indent*
-	(%%native
-        ,@(? dest
-		     `(,dest "=")
-		     '("")))
+	(%%native ,@(? dest
+		           `(,dest " = ")
+		           '("")))
 	,(? (atom|codegen-expr? val)
 		val
-		(js-call val))
+        `(,val. " " ,@(c-list .val)))
     ,*js-separator*))
 
 (define-js-macro %= (dest val)
@@ -156,7 +152,7 @@
   `(%%native ,arr ,@(@ [`("[" ,_ "]")] idx)))
 
 (define-js-macro %%%=-aref (val &rest x)
-  `(%%native (%%%aref ,@x) "=" ,val))
+  `(%%native (%%%aref ,@x) " = " ,val))
 
 (define-js-macro aref (arr &rest idx)
   `(%%%aref ,arr ,@idx))
@@ -202,16 +198,16 @@
 
 (define-js-macro quote (x)
   (with (f  [let s (compiled-function-name-string 'symbol)
-              `(,s "(\"" ,(obfuscated-symbol-name _) "\","
+              `(,s " (\"" ,(obfuscated-symbol-name _) "\", "
 	            ,@(? (keyword? _)
-	                 `((,s "(\"" ,(obfuscated-symbol-name (symbol-package _)) "\",null)"))
+	                 `((,s "(\"" ,(obfuscated-symbol-name (symbol-package _)) "\", null)"))
 	                 '(("null")))
 	            ")")])
     (alet *js-compiled-symbols*
       (| (href ! x)
          (= (href ! x) (with-gensym g
                          (push `("var " ,(obfuscated-identifier g)
-                                 "="
+                                 " = "
                                  ,@(f x)
                                  ,*js-separator*)
                                (raw-decls))
@@ -256,4 +252,4 @@
 ;;;; CPS FIXUPS
 
 (define-js-macro cps-toplevel-return-value (x)
-  `(%%native "function(r){" ,x "=r;}"))
+  `(%%native "function (r) { " ,x " = r; }"))
