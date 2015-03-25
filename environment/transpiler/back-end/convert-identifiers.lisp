@@ -13,48 +13,39 @@
        (== (elt x (-- l)) #\*))))
 
 (defun convert-identifier-r (s)
-  (with (encapsulate-char
-		   [string-list (string-concat "T" (format nil "~A" (char-code _)))]
-				
-		 convert-camel
+  (with (camel-notation
 		   #'((x pos)
-                (& x
-			       (let c (char-downcase x.)
-			         (? (& .x (| (character== #\- c)
-                                 (& (== 0 pos)
-                                    (character== #\* c))))
-                        (? (& (character== #\- c)
-                              (not (alphanumeric? .x.)))
-                           (+ (string-list "T45")
-                              (convert-camel .x (++ pos)))
-					       (. (char-upcase (cadr x))
-						      (convert-camel ..x (++ pos))))
-					    (. c (convert-camel .x (++ pos)))))))
-
-         convert-special2
-           [& _
-              (? (transpiler-special-char? _.)
-                 (+ (encapsulate-char _.)
-                    (convert-special2 ._))
-                 (. _. (convert-special2 ._)))]
-
-		 convert-special
-           [& _
-              (? (digit-char? _.)
-                 (+ (encapsulate-char _.)
-                    (convert-special2 ._))
-                 (convert-special2 _))]
-         convert-global
-           [remove-if [== _ #\-]
-                      (string-list (upcase (subseq _ 1 (-- (length _)))))])
-	(? (| (string? s) (number? s))
+               (with (bump?
+                       [& ._
+                          (| (& (== #\- _.)
+                                (alpha-char? ._.))
+                             (& (== #\* _.)
+                                (zero? pos)))])
+                 (& x
+                    (? (bump? x)
+                       (. (char-upcase .x.)
+                          (camel-notation ..x (++ pos)))
+                       (. (char-downcase x.)
+                          (camel-notation .x (++ pos)))))))
+		 corrected-chars
+           #'((x pos)
+               (with (char-synonym  [string-list (+ "T" (format nil "~A" (char-code _)))])
+                 (& x
+                    (? (| (& (zero? pos)
+                             (digit-char? x.))
+                          (transpiler-special-char? x.))
+                       (+ (char-synonym x.) (corrected-chars .x (++ pos)))
+                       (. x. (corrected-chars .x (++ pos)))))))
+         capitals
+           [remove #\- (string-list (upcase (subseq _ 1 (-- (length _))))) :test #'==])
+	(? (| (string? s)
+          (number? s))
 	   (string s)
-       (list-string
-           (let str (symbol-name s)
-	         (convert-special (? (global-variable-notation? str)
-                                 (convert-global str)
-    	                         (convert-camel (string-list str) 0))))))))
-
+       (list-string (alet (symbol-name s)
+	                  (corrected-chars (? (global-variable-notation? !)
+                                          (capitals !)
+    	                                  (camel-notation (string-list !) 0))
+                                       0)))))) ; TODO: Argument keywords for local functions.
 
 (defun convert-identifier (s)
   (| (href (identifiers) s)
