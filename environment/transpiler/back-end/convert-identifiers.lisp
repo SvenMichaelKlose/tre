@@ -55,27 +55,14 @@
                                  (convert-global str)
     	                         (convert-camel (string-list str) 0))))))))
 
-(defun convert-identifier-1 (s)
-  (!? nil ;(symbol-package s)
-      (convert-identifier-r (make-symbol (string-concat (symbol-name !) ":" (symbol-name s))))
-      (convert-identifier-r s)))
-
-(defun transpiler-dot-symbol-string (sl)
-  (apply #'string-concat (pad (@ [convert-identifier-0 (make-symbol (list-string _))]
-		                         (split #\. sl))
-                              ".")))
-
-(defun convert-identifier-0 (s)
-  (let sl (string-list (symbol-name s))
-    (? (position #\. sl)
-	   (transpiler-dot-symbol-string sl)
-	   (convert-identifier-1 s))))
 
 (defun convert-identifier (s)
   (| (href (identifiers) s)
-     (let n (convert-identifier-0 s)
+     (let n (!? nil ;(symbol-package s)
+                (convert-identifier-r (make-symbol (+ (symbol-name !) ":" (symbol-name s))))
+                (convert-identifier-r s))
        (awhen (href (converted-identifiers) n)
-         (error "Identifier conversion clash. Symbols ~A and ~A are both converted to ~A."
+         (error "Identifier clash: symbol ~A and ~A are both converted to ~A."
                 s ! n))
        (= (href (identifiers) s) n)
        (= (href (converted-identifiers) n) s)
