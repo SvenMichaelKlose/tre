@@ -447,7 +447,7 @@
   (alet (configurations)
     (| (assoc x ! :test #'eq)
        (error "Transpiler ~A has no configuration item ~A. Available items are ~A."
-              (name) x (carlist !)))))
+              (transpiler-name *transpiler*) x (carlist !)))))
 
 (defun configuration (x)
   (cdr (configuration-item x)))
