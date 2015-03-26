@@ -103,9 +103,12 @@
 
 (defun %print-body (x str info)
   (with-temporary (print-info-indentation info) (%body-indentation info)
-    (adolist x
-      (fresh-line str)
-      (%late-print ! str info))))
+    (let first? t
+      (adolist x
+        (? first?
+           (= first? nil)
+           (fresh-line str))
+        (%late-print ! str info)))))
 
 (defun %print-call (x argdef str info)
   (%with-brackets str info
