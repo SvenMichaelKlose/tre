@@ -1,6 +1,6 @@
 ; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@hugbox.org>
 
-(transpiler-end generate-code
+(define-transpiler-end generate-code
     backend-input          [(& *development?*
                                (format t "o~F"))
                             _]
@@ -13,7 +13,7 @@
     convert-identifiers    #'convert-identifiers
     postprocess            [apply (postprocessor) _])
 
-(transpiler-end backend-make-places
+(define-transpiler-end backend-make-places
     make-framed-functions  #'make-framed-functions
     place-expand           #'place-expand
     place-assign           #'place-assign

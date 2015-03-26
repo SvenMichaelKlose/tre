@@ -5,6 +5,7 @@
 ;   (%%usetf-transpiler-save-argument-defs-only? t !))
 
 (env-load "transpiler/lib/main.lisp")
+(env-load "transpiler/end.lisp")
 (env-load "transpiler/back-end/main.lisp")
 (env-load "transpiler/middle-end/main.lisp")
 (env-load "transpiler/front-end/main.lisp")

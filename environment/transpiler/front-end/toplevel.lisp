@@ -1,6 +1,6 @@
 ; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@hugbox.org>
 
-(transpiler-end frontend
+(define-transpiler-end frontend
     frontend-input            #'identity
     dot-expand                #'dot-expand
     quasiquote-expand         #'quasiquote-expand

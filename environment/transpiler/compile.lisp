@@ -55,7 +55,7 @@
   (print-status "Let me think. Hmm...~F")
   (!? (middleend-init)
       (funcall !))
-  (!? (codegen imports)
+  (!? (apply #'+ (codegen (@ #'list imports)))
       (+! (imports) !))
   (with (before-raw-decls  (list (!? (prologue-gen) (funcall !))
                                  (!? (decl-gen) (funcall !))
@@ -75,12 +75,12 @@
 
 (defun frontend-section (section data)
   (developer-note "Frontend ~A.~%" section)
-  (frontend (@ #'list (pcase section
-                        symbol?  (? (function? data)
-                                    (funcall data)
-                                    data)
-                        string?  (frontend-section-load section)
-                        (error "Don't know what to do with section ~A." section)))))
+  (apply #'+ (frontend (@ #'list (pcase section
+                                   symbol?  (? (function? data)
+                                               (funcall data)
+                                               data)
+                                   string?  (frontend-section-load section)
+                                   (error "Don't know what to do with section ~A." section))))))
 
 (defun frontend-sections (sections)
   (alet (map-sections #'frontend-section sections (cached-frontend-sections))

@@ -13,7 +13,7 @@
           !
           (optimize !)))))
 
-(transpiler-end middleend
+(define-transpiler-end middleend
     middleend-input          [(& *development?*
                                  (format t ".~F"))
                               _]
