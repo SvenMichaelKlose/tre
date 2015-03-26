@@ -2,6 +2,20 @@
 
 (defvar *php-core-path* "environment/transpiler/targets/php/core/")
 
+(defvar *php-core-native*
+        ,(apply #'+ (@ [fetch-file (+ "environment/transpiler/targets/php/core/native/" _ ".php")]
+                       '("settings"
+                         "error"
+                         "character"
+                         "cons"
+                         "lexical"
+                         "closure"
+                         "symbol"
+                         "array"))))
+
+(defun php-print-native-core (out)
+  (princ *php-core-native* out))
+
 (defun php-load-core (dir-path &rest files)
   (with-temporary *have-compiler?* nil
     (mapcan [alet (+ *php-core-path* dir-path _)
