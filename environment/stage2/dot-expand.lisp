@@ -47,14 +47,10 @@
                     ,(dot-expand-conv (list-symbol (subseq sl (++ p))))))))
 
 (defun dot-expand (x)
-  (with (label?  [not (| (cons? _)
-				         (number? _)
-				         (string? _))])
-    (when x
-      (?
-		(label? x) (dot-expand-conv x)
-		(cons? x)  (listprop-cons x (dot-expand x.)
-                                    (dot-expand .x))
-      	x))))
+  (?
+    (symbol? x)  (dot-expand-conv x)
+    (cons? x)    (listprop-cons x (dot-expand x.)
+                                  (dot-expand .x))
+    x))
 
 (= *dot-expand* #'dot-expand)
