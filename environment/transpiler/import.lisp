@@ -67,6 +67,7 @@
     (print-note "Importing variables ~A.~%" !)
     (frontend (generate-imported-defvars !))))
 
+; XXX: DELAYED-VAR-INITS doesn't belong here.
 (defun import-from-host ()
   (when (import-from-host?)
     (print-status "Importing variables and named functions from host.~%")

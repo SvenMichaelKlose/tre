@@ -32,6 +32,7 @@
 (defun quick-compile-sections (x)
   (codegen-sections (frontend-sections x)))
 
+; TODO: Rename to GEN-TOPLEVEL-FUNCTION.
 (defun make-toplevel-function ()
   `((defun accumulated-toplevel ()
       ,@(reverse (accumulated-toplevel-expressions)))))
@@ -100,8 +101,7 @@
 
 (defun tell-number-of-warnings ()
   (alet (length *warnings*)
-    (fresh-line)
-    (format t "; ~A warning~A.~%"
+    (format t "~L; ~A warning~A.~%"
             (? (zero? !) "No" !)
             (? (== 1 !) "" "s"))))
 
