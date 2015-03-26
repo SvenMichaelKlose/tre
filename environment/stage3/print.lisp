@@ -46,14 +46,13 @@
      ,@body))
 
 (defmacro %with-brackets (str info &body body)
-  (with-gensym g
-    `(%with-indentation ,str, info
-       (push (stream-location-column (stream-output-location str))
-             (print-info-columns info))
-       (princ "(" ,str)
-       ,@body
-       (princ ")" ,str)
-       (pop (print-info-columns info)))))
+  `(%with-indentation ,str ,info
+     (push (stream-location-column (stream-output-location str))
+           (print-info-columns ,info))
+     (princ "(" ,str)
+     ,@body
+     (princ ")" ,str)
+     (pop (print-info-columns ,info))))
 
 (defun pretty-print-lambda (x str info)
   (%with-brackets str info
@@ -240,13 +239,13 @@
 (defun late-print (x &optional (str *standard-output*)
                      &key (print-info (make-print-info)))
   (with-default-stream s str
-    (funcall (? (& (cons? x)
-                   (cons? x.))
-                #'%print-body
-                #'%late-print)
-             x s print-info)
+    (? (& (cons? x)
+          (cons? x.))
+       (%with-brackets s print-info
+         (%print-body x s print-info))
+       (%late-print x s print-info))
     (& *print-automatic-newline?*
-       (not (fresh-line? str))
+       (not (fresh-line? s))
 	   (terpri s)))
   x)
 
