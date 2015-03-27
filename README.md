@@ -2,7 +2,7 @@
 # Overview
 
 This is tré, a metamorphic Lisp transpiler.  It can generate
-Common Lisp (SBCL) and ECMAScript/JavaScript.
+Common Lisp (SBCL) and JavaScript (for browsers and node.js).
 
 tré has been used in real life business for a couple of years and is
 now cleaned up for the public.  That's why generating PHP, C and bytecode
@@ -12,7 +12,8 @@ across targets.
 
 # Building and installing
 
-Make sure you have sbcl installed installed.  Then, simply run:
+Make sure you have sbcl (Steel Bank Common Lisp) installed.
+Then, simply run:
 
 ```
 ./make.sh boot
