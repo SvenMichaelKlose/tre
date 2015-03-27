@@ -32,8 +32,7 @@
 (defun quick-compile-sections (x)
   (codegen-sections (frontend-sections x)))
 
-; TODO: Rename to GEN-TOPLEVEL-FUNCTION.
-(defun make-toplevel-function ()
+(defun gen-toplevel-function ()
   `((defun accumulated-toplevel ()
       ,@(reverse (accumulated-toplevel-expressions)))))
 
@@ -49,7 +48,7 @@
        (push :accumulate-toplevel (disabled-passes))
        (prog1
          (quick-compile-sections (list (. 'accumulated-toplevel
-                                          #'make-toplevel-function)))
+                                          #'gen-toplevel-function)))
          (pop (disabled-passes))))))
 
 (defun generic-codegen (before-import after-import imports)
