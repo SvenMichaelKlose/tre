@@ -119,12 +119,14 @@
          (adolist expanded
            (%print-gap str)
            (?
-             (%body? .!)  (%print-body ..! str info)
-             (%rest? .!)  (%print-rest ..! str info)
-             (%key? .!)   (progn
-                            (%print-symbol (make-keyword !.) str info)
-                            (princ " " str)
-                            (%late-print ..! str info))
+             (& (%body? .!) ..!)  (progn
+                                    (fresh-line str)
+                                    (%print-body ..! str info))
+             (%rest? .!)          (%print-rest ..! str info)
+             (%key? .!)           (progn
+                                    (%print-symbol (make-keyword !.) str info)
+                                    (princ " " str)
+                                    (%late-print ..! str info))
              (with-temporary *print-automatic-newline?* nil
                (%late-print .! str info))))))))
 
