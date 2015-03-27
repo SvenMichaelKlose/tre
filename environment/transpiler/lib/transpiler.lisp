@@ -432,7 +432,8 @@
      (error "Pass ~A already enabled." x))
   (| (optional-pass? x)
      (error "Pass ~A is not optional or doesn't exist." x))
-  (= (transpiler-enabled-passes tr) (. (make-keyword x) (transpiler-enabled-passes tr))))
+  (= (transpiler-enabled-passes tr)
+     (. (make-keyword x) (transpiler-enabled-passes tr))))
 
 (defun transpiler-disable-pass (tr x)
   (| (symbol? x)
@@ -441,19 +442,29 @@
      (error "Pass ~A already disabled." x))
   (& (optional-pass? x)
      (error "Pass ~A is optional. Don't enable it instead of disabling it." x))
-  (= (transpiler-disabled-passes tr) (. (make-keyword x) (transpiler-disabled-passes tr))))
+  (= (transpiler-disabled-passes tr)
+     (. (make-keyword x) (transpiler-disabled-passes tr))))
 
-(defun configuration-item (x)
-  (alet (configurations)
+(defun transpiler-configuration-item (tr x)
+  (alet (transpiler-configurations tr)
     (| (assoc x ! :test #'eq)
        (error "Transpiler ~A has no configuration item ~A. Available items are ~A."
-              (transpiler-name *transpiler*) x (carlist !)))))
+              (transpiler-name tr) x (carlist !)))))
 
-(defun configuration (x)
-  (cdr (configuration-item x)))
+(defun transpiler-configuration (tr x)
+  (cdr (transpiler-configuration-item tr x)))
+
+(defun (= transpiler-configuration) (value tr x)
+  (= (cdr (transpiler-configuration-item tr x)) value))
+
+(defun configuration-item (x)
+  (transpiler-configuration-item *transpiler* x))
 
 (defun (= configuration) (value x)
-  (= (cdr (configuration-item x)) value))
+  (= (transpiler-configuration *transpiler* x) value))
+
+(defun configuration (x)
+  (transpiler-configuration *transpiler* x))
 
 (defun transpiler-make-expex (tr)
   (funcall (transpiler-expex-initializer tr)
