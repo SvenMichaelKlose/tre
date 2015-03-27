@@ -13,10 +13,6 @@
 (defmacro define-filter (name &rest fun)
   `(define-mapped-fun filter ,name ,@fun))
 
-; TODO: Rename to DEFINE-CONCAT-FILTER.
-(defmacro define-mapcan-fun (name &rest fun)
-  `(define-mapped-fun mapcan ,name ,@fun))
-
 (define-filter carlist #'car)
 (define-filter cdrlist #'cdr)
 (define-filter cadrlist #'cadr)
