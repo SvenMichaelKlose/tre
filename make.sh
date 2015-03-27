@@ -99,7 +99,6 @@ basic_clean ()
 	rm -vrf obj compiled
 	rm -vf *.core obj compiled environment/transpiler/targets/c/native/$COMPILED_ENV image bytecode-image $CRUNSHTMP __alien.tmp files.lisp
     rm -vf environment/transpiler/targets/c/native/_revision.h environment/_current-version
-    rm -vf examples/js/hello-world.js
     rm -vf gmon.out tmp.gcda profile.lisp
 	rm -vrf _nodejstests.log _phptests.log _bytecode-interpreter-tests.log make.log boot.log
 	echo "Checking out last working core..."
@@ -307,11 +306,21 @@ jsdebugger)
     $TRE makefiles/debugger-js.lisp || exit 1
     ;;
 
+examples)
+    $TRE examples/make-standard.lisp
+    $TRE examples/make-standard-nodejs.lisp
+    $TRE examples/make-standard-php.lisp
+    $TRE examples/make-compiler-dumps-for-butlast.lisp | tee compiled/compiler-dumps-for-butlast.lisp
+    $TRE examples/make-compiler-dumps.lisp | tee compiled/compiler-dumps.lisp
+#   $TRE examples/make-obfuscated.lisp # TODO: Fix setting the current *PACKAGE*.
+    ;;
+
 all)
-	./make.sh boot $ARGS || exit 1
-	./make.sh ctests || exit 1
-	./make.sh jstests || exit 1
-	./make.sh phptests || exit 1
+    ./make.sh boot $ARGS || exit 1
+    ./make.sh ctests || exit 1
+    ./make.sh jstests || exit 1
+    ./make.sh examples || exit 1
+#   ./make.sh phptests || exit 1
 #   ./make.sh webconsole || exit 1
 #	./make.sh bytecode-image || exit 1
 #   ./make.sh jsdebugger || exit 1
@@ -371,6 +380,7 @@ restore)
     echo "  environment     Compile environment to C."
     echo "  bytecode        Compile environment to bytecode, replacing the functions."
     echo "  bytecode-image  Compile environment to PRINTed bytecode image."
+    echo "  examples        Compile everything in examples/."
     echo "  all             Compile everything makefiles/ has to offer."
     echo "  build           Do a regular build file by file."
     echo "  debug           Compile C sources for gdb. May the source be with you."
