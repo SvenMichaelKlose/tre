@@ -3,11 +3,6 @@
 (= *have-environment-tests* t)
 ;(= (transpiler-dump-passes? *js-transpiler*) t)
 
-(load "environment/platforms/shared/lml.lisp")
-(load "environment/platforms/shared/lml2xml.lisp")
-(load "environment/platforms/shared/html/doctypes.lisp")
-(load "environment/platforms/shared/html/script.lisp")
-
 (unix-sh-mkdir "compiled" :parents t)
 (make-project
       "tré JavaScript target test"
