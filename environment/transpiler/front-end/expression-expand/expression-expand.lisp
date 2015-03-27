@@ -238,8 +238,3 @@
        (with-global-funinfo
          (= *expex-sym-counter* 0)
          (expex-body x)))))
-
-(defun fake-expression-expand (x)       ; TODO make it gather-imports
-  (with-temporary *expex-import?* t
-    (expression-expand (make-packages x)))
-  x)
