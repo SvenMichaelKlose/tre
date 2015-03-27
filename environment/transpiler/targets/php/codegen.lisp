@@ -10,15 +10,15 @@
 (defun php-dollarize (x)
   (? (symbol? x)
      (?
-       (not x) "NULL"
-       (eq t x) "TRUE"
-       (number? x) x
-       (string? x) x
+       (not x)      "NULL"
+       (eq t x)     "TRUE"
+       (number? x)  x
+       (string? x)  x
 	   `("$" ,x))
 	 x))
 
 (defun php-list (x)
-  (pad (@ #'php-dollarize x) ","))
+  (pad (@ #'php-dollarize x) ", "))
 
 (defun php-argument-list (x)
   (c-list (@ #'php-dollarize x)))
@@ -54,11 +54,11 @@
 
 (define-php-macro %%go-nil (tag val)
   (let v (php-dollarize val)
-    (php-line "if (!" v "&&!is_string(" v ")&&!is_numeric(" v ")&&!is_array(" v ")) { " (php-jump tag) "; }")))
+    (php-line "if (!" v " && !is_string (" v ") && !is_numeric (" v ") && !is_array (" v ")) { " (php-jump tag) "; }")))
 
 (define-php-macro %%go-not-nil (tag val)
   (let v (php-dollarize val)
-    (php-line "if (!(!" v "&&!is_string(" v ")&&!is_numeric(" v ")&&!is_array(" v "))) { " (php-jump tag) "; }")))
+    (php-line "if (!(!" v " && !is_string (" v ") && !is_numeric (" v ") && !is_array (" v "))) { " (php-jump tag) "; }")))
 
 (define-php-macro return-from (block-name x)
   (error "Cannot return from unknown BLOCK ~A." block-name))
@@ -99,7 +99,7 @@
   (with (fi            (get-funinfo name)
          native-name  `(%%string ,(compiled-function-name-string name)))
     (? (funinfo-scope-arg fi)
-  	   `(%%native "new __closure(" ,native-name "," ,(php-dollarize (funinfo-scope (funinfo-parent fi))) ")")
+  	   `(%%native "new __closure (" ,native-name "," ,(php-dollarize (funinfo-scope (funinfo-parent fi))) ")")
        native-name)))
 
 
@@ -115,15 +115,15 @@
 	  	   (symbol? val))
 		(not (%%native-without-reference? val)))
      (? *php-by-reference?*
-   	    "=&"
-        "=")
-  	 "="))
+   	    " =& "
+        " = ")
+  	 " = "))
  
 (defun php-%=-value (val)
   (?
-    (& (cons? val)
+    (& (cons? val)      ; XXX required?
        (eq 'userfun_cons val.))
-      `("new __cons (" ,(php-dollarize .val.) "," ,(php-dollarize ..val.) ")")
+      `("new __cons (" ,(php-dollarize .val.) ", " ,(php-dollarize ..val.) ")")
     (| (not val)        ; XXX CONSTANT-LITERAL?
        (eq t val)
        (number? val)
@@ -136,7 +136,7 @@
       (list "$" val)
 	(codegen-expr? val)
 	  (list val)
-    `((,val. ,@(c-list (@ #'php-codegen-argument-filter .val))))))
+    `((,val. " " ,@(c-list (@ #'php-codegen-argument-filter .val))))))
 
 (defun php-%=-0 (dest val)
   `((%%native
@@ -167,13 +167,13 @@
 ;;;; VECTORS
 
 (define-php-macro %make-scope (&rest elements)
-  `(%%native "new __l()" ""))
+  `(%%native "new __l ()" ""))
 
 (define-php-macro %vec (v i)
-  `(%%native ,(php-dollarize v) "->g(" ,(php-dollarize i) ")"))
+  `(%%native ,(php-dollarize v) "->g (" ,(php-dollarize i) ")"))
 
 (define-php-macro %set-vec (v i x)
-  `(%%native ,*php-indent* ,(php-dollarize v) "->s(" ,(php-dollarize i) "," ,(php-%=-value x) ")",*php-separator*))
+  `(%%native ,*php-indent* ,(php-dollarize v) "->s (" ,(php-dollarize i) ", " ,(php-%=-value x) ")",*php-separator*))
 
 
 ;;;; NUMBERS
@@ -183,7 +183,8 @@
   (let tre *php-transpiler*
 	(transpiler-add-plain-arg-fun tre op)
 	`(define-expander-macro ,(transpiler-codegen-expander tre) ,op (&rest args)
-	   `(%%native ,,@(pad (@ #'php-dollarize args) ,replacement-op)))))
+	   `(%%native ,,@(pad (@ #'php-dollarize args)
+                          ,(+ " " replacement-op " "))))))
 
 (mapcar-macro x
     '((%%%+   "+")
@@ -211,7 +212,7 @@
   (list (compiled-function-name '%%key) " (" (php-dollarize x.) ") => " (php-dollarize .x.)))
 
 (defun php-literal-array-elements (x)
-  (pad (@ #'php-literal-array-element x) ","))
+  (pad (@ #'php-literal-array-element x) ", "))
 
 (define-php-macro %%%make-hash-table (&rest elements)
   `(%%native "Array (" ,@(php-literal-array-elements (group elements 2)) ")"))
