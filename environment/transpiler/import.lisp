@@ -86,3 +86,8 @@
   (| (current-scope? x)
      (add-used-function x))
   x)
+
+(defun gather-imports (x)
+  (with-temporary *expex-import?* t
+    (expression-expand (make-packages x)))
+  x)

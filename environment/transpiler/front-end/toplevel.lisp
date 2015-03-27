@@ -13,7 +13,7 @@
     lambda-expand             #'lambda-expand
     fake-place-expand         [(place-expand _)
                                _]
-    fake-expression-expand    #'fake-expression-expand)
+    gather-imports            #'gather-imports)
 
 (defun frontend-macroexpansions (x)
   (transpiler-macroexpand (compiler-macroexpand x)))
