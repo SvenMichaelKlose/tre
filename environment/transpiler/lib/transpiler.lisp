@@ -82,7 +82,7 @@
   (disabled-ends           nil)
   (disabled-passes         nil)
   (enabled-passes          nil)
-  (output-passes           nil)
+  (output-passes           '((:frontend . :lambda-expand)))
 
   (frontend-init           nil)
   (middleend-init          nil)
