@@ -1,11 +1,11 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2013,2015 Sven Michael Klose <pixel@copei.de>
 
 (dont-obfuscate *lexicals* *lexical-id* function_exists call_user_func_array)
 
 (defun apply (&rest lst)
   (with (fun            lst.
          l              (last .lst)
-         args           (%nconc (butlast .lst) l.)
+         args           (nconc (butlast .lst) l.)
          closure?       (is_a fun "__closure")
          fun-name       (? closure?
                            fun.n
