@@ -30,9 +30,9 @@
   (add-defined-variable '*keyword-package*))
 
 (defun php-sections-before-import ()
-  (list (. 'core-0 *php-core0*)
-        (& (not (configuration :exclude-core?))
-           (. 'core *php-core*))))
+  (+ (list (. 'core-0 *php-core0*))
+     (& (not (configuration :exclude-core?))
+        (list (. 'core *php-core*)))))
 
 (defun php-sections-after-import ()
   (+ (& (not (configuration :exclude-core?))
