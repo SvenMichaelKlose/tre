@@ -20,4 +20,5 @@
 ")))]
            *tests*)
       (defun environment-tests ()
-	    ,@(@ #'list (reverse names))))))
+	    ,@(@ #'list (reverse names))
+        (%princ "Tests done.")))))
