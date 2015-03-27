@@ -30,14 +30,14 @@
   (add-defined-variable '*keyword-package*))
 
 (defun php-sections-before-import ()
-  `((core-0 . ,*php-core0*)
-    ,@(& (not (configuration :exclude-core?))
-         `((core . ,*php-core*)))))
+  (list (. 'core-0 *php-core0*)
+        (& (not (configuration :exclude-core?))
+           (. 'core *php-core*))))
 
 (defun php-sections-after-import ()
-  (+ (& (not (configuration :exclude-base?))
-        `((core-2 . ,*php-core2*)))
-     (& (eq t *have-environment-tests*)
+  (+ (& (not (configuration :exclude-core?))
+        (list (. 'core-2 *php-core2*)))
+     (& (t? *have-environment-tests*)
         (list (. 'env-tests (make-environment-tests))))))
 
 (defun php-identifier-char? (x)
@@ -64,7 +64,9 @@
 	  :identifier-char?         #'php-identifier-char?
       :literal-converter        #'expand-literal-characters
       :expex-initializer        #'php-expex-initializer
-      :configurations           '((:exclude-core? . nil))))
+      :configurations           '((:exclude-core? . nil)
+                                  (:save-sources?            . nil)
+                                  (:save-argument-defs-only? . nil))))
 
 (defun make-php-transpiler ()
   (aprog1 (make-php-transpiler-0)
