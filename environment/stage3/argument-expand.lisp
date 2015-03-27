@@ -134,10 +134,10 @@
 				   (return (err "sublist expected for argument ~A"
                                 (list num))))
                 (? concatenate-sublists?
-				   (%nconc (argument-expand-0 fun def. vals.
-                                              apply-values?
-                                              concatenate-sublists?
-                                              break-on-errors?)
+				   (nconc (argument-expand-0 fun def. vals.
+                                             apply-values?
+                                             concatenate-sublists?
+                                             break-on-errors?)
 					       (exp-main .def .vals))
 				   (. (. nil (argument-expand-0 fun def. vals.
                                                 apply-values?
@@ -171,8 +171,8 @@
 	 (alet (exp-main argdefs alst)
        (? (eq ! 'error)
           !
-	      (%nconc ! (%nconc (@ [. _. (. '%key ._)] key-args)
-                            rest-arg))))))
+	      (nconc ! (nconc (@ [. _. (. '%key ._)] key-args)
+                          rest-arg))))))
 
 (defun argument-expand (fun def vals &key (apply-values? t)
                                           (concatenate-sublists? t)

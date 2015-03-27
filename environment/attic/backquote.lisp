@@ -1,4 +1,4 @@
-;;;; tré – Copyright (c) 2006–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2006–2015 Sven Michael Klose <pixel@copei.de>
 
 (%defun any-quasiquote? (x)
   (? (cons? x)
@@ -23,15 +23,15 @@
            (?
              (not evaluated)  (%backquote .x)
              (atom evaluated) (error "QUASIQUOTE-SPLICE expects a list instead of ~A." evaluated)
-             (%nconc (copy-list evaluated)
-                     (%backquote .x))))
+             (nconc (copy-list evaluated)
+                    (%backquote .x))))
        (%quasiquote-eval x))))
 
 (%defun %backquote (x)
         (print x)
   (?
     (atom x) x
-    (atom (print x.))                   (. x. (%backquote .x))
+    (atom x.)                   (. x. (%backquote .x))
     (eq x.. 'QUASIQUOTE)        (%backquote-quasiquote x)
     (eq x.. 'QUASIQUOTE-SPLICE) (%backquote-quasiquote-splice x)
     (. (%backquote x.)

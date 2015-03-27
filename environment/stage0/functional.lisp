@@ -4,7 +4,7 @@
 
 (%defmacro functional (&rest names)
   (print-definition `(functional ,@names))
-  `(setq *functionals* (%nconc ',names *functionals*)))
+  `(setq *functionals* (append ',names *functionals*)))
 
 (%defun functional? (name)
   (member name *functionals* :test #'eq))

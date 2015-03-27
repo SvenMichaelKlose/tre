@@ -1,4 +1,4 @@
-;;;; tré – Copyright (c) 2005–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2009,2011–2015 Sven Michael Klose <pixel@copei.de>
 
 (defun %nconc-0 (lsts)
   (when lsts
@@ -21,3 +21,11 @@
 (define-test "NCONC works with empty lists"
   ((nconc nil (copy-list '(l i)) nil (copy-list '(s p)) nil))
   '(l i s p))
+
+(define-test "NCONC with NIL first"
+  ((nconc nil '(3 4)))
+  '(3 4))
+
+(define-test "NCONC with NIL second"
+  ((nconc '(1 2) nil))
+  '(1 2))

@@ -34,8 +34,7 @@
       (character< <)
       (number> >)
       (integer> >)
-      (character> >)
-      (%nconc nconc)))
+      (character> >)))
 
 (defconstant +cl-special-forms+
     '(%defun-quiet %defun %defvar %defmacro ?))
