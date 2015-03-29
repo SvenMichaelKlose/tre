@@ -10,8 +10,7 @@
     wrap-tags              #'wrap-tags
     codegen-expand         [expander-expand (codegen-expander) _]
     obfuscate              #'obfuscate
-    convert-identifiers    #'convert-identifiers
-    postprocess            [apply (postprocessor) _])
+    convert-identifiers    #'convert-identifiers)
 
 (define-transpiler-end backend-make-places
     make-framed-functions  #'make-framed-functions
