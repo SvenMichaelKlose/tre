@@ -18,7 +18,7 @@
   (when (can-import-function? x)
     (= (href (wanted-functions-hash) x) t)
     (push x (wanted-functions))
-    (print-note "Scheduled function ~A for import from host.~%" x))
+    (print-note "Scheduled #'~A for import.~%" x))
   x)
 
 (defun add-wanted-functions (x)
@@ -38,7 +38,7 @@
   (when (can-import-variable? x)
     (= (href (wanted-variables-hash) x) t)
     (push x (wanted-variables))
-    (print-note "Scheduled global variable ~A for import from host.~%" x))
+    (print-note "Scheduled ~A for import.~%" x))
   x)
 
 (defun import-exported-closures ()
@@ -46,35 +46,30 @@
      (+ (frontend (pop (exported-closures)))
         (import-exported-closures))))
 
-(defun import-wanted-function (x)
-  (frontend `((defun ,x ,(host-function-arguments x)
-                ,@(host-function-body x)))))
-
 (defun import-wanted-functions ()
-  (with-queue q
-    (awhile (pop (wanted-functions))
-            (apply #'+ (queue-list q))
-      (| (defined-function !)
-         (enqueue q (import-wanted-function !))))))
-
-(defun generate-imported-defvars (x)
-  (mapcan [unless (defined-variable _)
-            `((defvar ,_ ,(assoc-value _ *variables* :test #'eq)))]
-          x))
+  (awhen (wanted-functions)
+    (= (wanted-functions) nil)
+    (print-note "Importing functions ~A.~%" !)
+    (frontend (mapcan [unless (defined-function _)
+                        `((defun ,_ ,(host-function-arguments _)
+                           ,@(host-function-body _)))]
+                      !))))
 
 (defun import-wanted-variables ()
   (awhen (wanted-variables)
+    (= (wanted-variables) nil)
     (print-note "Importing variables ~A.~%" !)
-    (frontend (generate-imported-defvars !))))
+    (frontend (mapcan [unless (defined-variable _)
+                       `((defvar ,_ ,(assoc-value _ *variables* :test #'eq)))]
+                      !))))
 
 ; XXX: DELAYED-VAR-INITS doesn't belong here.
 (defun import-from-host ()
   (when (import-from-host?)
-    (print-status "Importing variables and named functions from host.~%")
     (with-temporary (configuration :save-argument-defs-only?) nil
-      (with (funs     (import-wanted-functions)
-             exported (import-exported-closures)
-             vars     (import-wanted-variables))
+      (with (funs      (import-wanted-functions)
+             exported  (import-exported-closures)
+             vars      (import-wanted-variables))
         (? (| funs exported vars)
            (+ funs exported vars (import-from-host))
            (delayed-var-inits))))))
