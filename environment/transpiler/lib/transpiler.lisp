@@ -84,19 +84,19 @@
   (enabled-passes          nil)
   (output-passes           '((:frontend . :lambda-expand)))
 
-  (frontend-init           nil)
-  (middleend-init          nil)
+  (frontend-init           #'(()))
+  (middleend-init          #'(()))
 
   (identifier-char?        [_ (identity t)])
   (literal-converter       #'identity)
   (gen-string              #'literal-string)
   (postprocessor           #'concat-stringtree)
-  (prologue-gen            nil)
-  (epilogue-gen            nil)
-  (decl-gen                nil)
-  (sections-before-import  nil)
-  (sections-after-import   nil)
-  (ending-sections         nil)
+  (prologue-gen            #'(()))
+  (epilogue-gen            #'(()))
+  (decl-gen                #'(()))
+  (sections-before-import  #'(()))
+  (sections-after-import   #'(()))
+  (ending-sections         #'(()))
 
   std-macro-expander
   codegen-expander
