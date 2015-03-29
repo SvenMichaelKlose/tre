@@ -16,9 +16,6 @@
     (defpackage "TRE"
       (:use "TRE-CORE"))))
 
-(defun cl-symbol (x)
-  (make-symbol (symbol-name x) "CL"))
-
 (alet (copy-transpiler *cl-transpiler*)
   (with-temporary *transpiler* !
     (add-defined-variable '*macros*))
