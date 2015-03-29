@@ -74,7 +74,7 @@
 ;;;; ARGUMENT EXPANSION
 
 (defun argument-expand-values-compiled (fun def vals)
-  (with (f [& _ `(. ,_. , (f ._))])
+  (with (f [& _ `(. ,_. ,(f ._))])
     (@ [?
          (%rest-or-%body? _)  (f ._)
          (%key? _)            ._
@@ -147,14 +147,10 @@
   (with ((moved new-expr) (expex-filter-and-move-args (list .x.)))
     (values moved `(%slot-value ,new-expr. ,..x.))))
 
-(defun expex-move-args-0 (x)
-  (with ((moved new-expr) (expex-filter-and-move-args x))
-    (values moved new-expr)))
-
 (defun expex-move-args (x)
   (? (%slot-value? x)
 	 (expex-move-slot-value x)
-	 (expex-move-args-0 x)))
+	 (expex-filter-and-move-args x)))
 
 
 ;;;; EXPRESSION EXPANSION
