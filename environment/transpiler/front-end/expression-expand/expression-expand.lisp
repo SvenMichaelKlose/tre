@@ -195,7 +195,6 @@
       unexpex-able?  (values nil (list x))
       (expex-expr-std x))))
 
-
 ;;;; BODY EXPANSION
 
 (defun expex-force-%= (x)
@@ -220,10 +219,13 @@
                   (expex-make-%= s l)))
        x)))
 
+(defun expex-exprs (x)
+  (mapcan [with ((moved new-expr) (expex-expr _))
+           (append moved (mapcan #'expex-force-%= new-expr))]
+          x))
+
 (defun expex-body (x &optional (s '~%ret))
-  (expex-make-return-value s (mapcan [with ((moved new-expr) (expex-expr _))
-                                       (append moved (mapcan #'expex-force-%= new-expr))]
-                                     (distinguish-vars-from-tags (list-without-noargs-tag x)))))
+  (expex-make-return-value s (expex-exprs (wrap-atoms (list-without-noargs-tag x)))))
 
 
 ;;;; TOPLEVEL

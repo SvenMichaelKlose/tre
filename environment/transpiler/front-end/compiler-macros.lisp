@@ -22,7 +22,7 @@
                      `(,@(unless (t? _.)
                            `((%= ~%ret ,_.)
                              (%%go-nil ,next ~%ret)))
-				       ,@(!? (distinguish-vars-from-tags ._)
+				       ,@(!? (wrap-atoms ._)
 				             `((%= ~%ret (%%block ,@!))))
                        (%%go ,end-tag)
                        ,@(unless (t? _.)
@@ -49,7 +49,7 @@
 
 (define-compiler-macro progn (&body body)
   (!? body
-      `(%%block ,@(distinguish-vars-from-tags body))))
+      `(%%block ,@(wrap-atoms body))))
 
 (define-expander 'compiler-return)
 (defvar *blockname* nil)
