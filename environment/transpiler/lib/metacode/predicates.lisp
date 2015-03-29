@@ -10,7 +10,8 @@
 	  %function-prologue
 	  %function-epilogue
 	  %function-return
-      %var %global)
+      %var %global
+      %%comment)
   `(def-head-predicate ,x))
 
 (defun atomic? (x)
@@ -64,7 +65,8 @@
 
 (defun has-return-value? (x)
   (not (| (vm-jump? x)
-          (%var? x))))
+          (%var? x)
+          (%%comment? x))))
 
 (defun named-lambda? (x)
   (& (function-expr? x)
@@ -82,11 +84,9 @@
      .x.))
 
 (defun metacode-expression? (x)
-  (| (atom x)
-     (%=? x)
-     (vm-jump? x)
-     (%var? x)
-     (named-lambda? x)))
-
-(defun metacode-expression-only (x)
-  (& x (metacode-expression? x)))
+  (& x
+     (| (atom x)
+        (%=? x)
+        (vm-jump? x)
+        (%var? x)
+        (named-lambda? x))))

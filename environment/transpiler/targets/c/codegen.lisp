@@ -183,3 +183,9 @@
 
 (define-c-macro %backtrace-pop ()
   "NIL; trebacktrace_pop()")
+
+
+;;;; MISCELLANEOUS
+
+(define-c-macro %%comment (&rest x)
+  `(%%native "/* " ,@x " */" ,*newline*))

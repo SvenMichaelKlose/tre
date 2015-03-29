@@ -297,3 +297,9 @@
 
 (define-php-macro %global (x)
   `(%%native "$GLOBALS['" ,(obfuscated-identifier x) "']"))
+
+
+;;;; MISCELLANEOUS
+
+(define-php-macro %%comment (&rest x)
+  `(%%native "/* " ,@x " */" ,*newline*))

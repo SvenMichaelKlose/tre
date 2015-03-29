@@ -53,3 +53,6 @@
 
 (define-cl-std-macro ? (&body body)
   (make-? body))
+
+(define-cl-std-macro %%comment (&rest x)
+  (concat-stringtree (convert-identifiers x)))

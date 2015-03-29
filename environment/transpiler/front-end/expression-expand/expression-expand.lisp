@@ -68,7 +68,7 @@
 (defun unexpex-able? (x)
   (| (atom x)
      (literal-function? x)
-     (in? x. '%%go '%%go-nil '%%native '%%string 'quote)))
+     (in? x. '%%go '%%go-nil '%%native '%%string 'quote '%%comment)))
 
 
 ;;;; ARGUMENT EXPANSION
@@ -204,7 +204,8 @@
 ;;;; BODY EXPANSION
 
 (defun expex-force-%= (x)
-  (| (& (metacode-expression-only x)
+  (| (& (| (metacode-expression? x)
+           (%%comment? x))
         (list x))
      (expex-make-%= '~%ret x)))
 

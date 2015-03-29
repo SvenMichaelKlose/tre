@@ -249,7 +249,14 @@
 (define-js-macro %global (x)
   x)
 
+
 ;;;; CPS FIXUPS
 
 (define-js-macro cps-toplevel-return-value (x)
   `(%%native "function (r) { " ,x " = r; }"))
+
+
+;;;; MISCELLANEOUS
+
+(define-js-macro %%comment (&rest x)
+  `(%%native "/* " ,@x " */" ,*newline*))
