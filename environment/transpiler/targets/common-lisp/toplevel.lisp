@@ -1,7 +1,7 @@
 ; tré – Copyright (c) 2005–2015 Sven Michael Klose <pixel@hugbox.org>
 
-(defun cl-postprocessor (&rest x)
-  (make-lambdas (remove-if #'not (apply #'+ x))))
+(defun cl-symbol (x)
+  (make-symbol (symbol-name x) "CL"))
 
 (defun cl-frontend-init ()
   (= *cl-builtins* nil))
@@ -14,7 +14,7 @@
   (unless (configuration :exclude-core?)
     (list (. 'cl-core (+ *cl-core*
                          (@ [`(defbuiltin ,_. (&rest x)
-                                (apply #',(make-symbol (symbol-name ._.) "CL") x))]
+                                (apply #',(cl-symbol ._.) x))]
                             +cl-renamed-imports+))))))
 
 (defun make-cl-transpiler ()
@@ -28,7 +28,7 @@
       :sections-before-import  #'cl-sections-before-import
       :frontend-init           #'cl-frontend-init
       :expex-initializer       #'cl-expex-initializer
-      :postprocessor           #'cl-postprocessor
+      :postprocessor           #'make-lambdas
       :configurations          (+ (default-configurations)
                                   '((:exclude-core? . nil)))))
 
