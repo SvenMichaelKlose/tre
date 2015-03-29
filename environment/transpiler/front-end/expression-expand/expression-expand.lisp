@@ -52,11 +52,11 @@
 (defun expex-make-%= (plc val)
   (when (atom val)
     (= val (funcall (expex-argument-filter *expex*) val)))
-  (+ (? (%=? val)
-        (expex-guest-filter-setter val))
-     (expex-guest-filter-setter `(%= ,plc ,(? (%=? val)
-                                              (%=-place val)
-                                              val)))))
+  (append (? (%=? val)
+             (expex-guest-filter-setter val))
+          (expex-guest-filter-setter `(%= ,plc ,(? (%=? val)
+                                                   (%=-place val)
+                                                   val)))))
 
 (defun expex-funinfo-var-add ()
   (aprog1 (expex-sym)
@@ -118,10 +118,10 @@
 (defun expex-move-std (x)
   (with (s                (expex-funinfo-var-add)
          (moved new-expr) (expex-expr x))
-    (. (+ moved
-          (? (has-return-value? new-expr.)
-             (expex-make-%= s new-expr.)
-             new-expr))
+    (. (append moved
+               (? (has-return-value? new-expr.)
+                  (expex-make-%= s new-expr.)
+                  new-expr))
        s)))
 
 (defun expex-inlinable? (x)
@@ -141,7 +141,7 @@
 (defun expex-filter-and-move-args (x)
   (expex-import-variables x)
   (with ((moved new-expr) (assoc-splice (@ #'expex-move (expex-guest-filter-arguments x))))
-    (values (apply #'+ moved) new-expr)))
+    (values (apply #'append moved) new-expr)))
 
 (defun expex-move-slot-value (x)
   (with ((moved new-expr) (expex-filter-and-move-args (list .x.)))
@@ -210,24 +210,24 @@
      (expex-make-%= '~%ret x)))
 
 (defun expex-make-return-value (s x)
-  (with (last (car (last x))
-         wanted-return-value? #'(()
-                                   (eq s (%=-place last)))
-         make-return-value    #'(()
-                                   `(,last
-                                     ,@(expex-make-%= s (%=-place last)))))
-    (? (has-return-value? last)
-       (+ (butlast x)
-          (? (%=? last)
-             (? (wanted-return-value?)
-                (expex-guest-filter-setter last)
-                (make-return-value))
-             (expex-make-%= s last)))
+  (with (l                     (car (last x))
+         wanted-return-value?  #'(()
+                                   (eq s (%=-place l)))
+         make-return-value     #'(()
+                                   `(,l
+                                     ,@(expex-make-%= s (%=-place l)))))
+    (? (has-return-value? l)
+       (append (butlast x)
+               (? (%=? l)
+                  (? (wanted-return-value?)
+                     (expex-guest-filter-setter l)
+                     (make-return-value))
+                  (expex-make-%= s l)))
        x)))
 
 (defun expex-body (x &optional (s '~%ret))
   (expex-make-return-value s (mapcan [with ((moved new-expr) (expex-expr _))
-                                       (+ moved (mapcan #'expex-force-%= new-expr))]
+                                       (append moved (mapcan #'expex-force-%= new-expr))]
                                      (distinguish-vars-from-tags (list-without-noargs-tag x)))))
 
 
