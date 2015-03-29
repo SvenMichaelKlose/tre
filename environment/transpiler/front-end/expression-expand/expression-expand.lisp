@@ -177,8 +177,7 @@
     (values moved (expex-make-%= place new-expr.))))
 
 (defun expex-expr-%= (x)
-  (with (place  (%=-place x)
-         val    (%=-value x)) ; XXX
+  (with-%= place val x
     (? (%=? val)
        (values nil (expex-body `(,val
                                  (%= ,place ,(%=-place val)))))
@@ -236,6 +235,5 @@
 (defun expression-expand (x)
   (& x
      (with-temporary *expex* (transpiler-expex *transpiler*)
-       (with-global-funinfo
-         (= *expex-sym-counter* 0)
-         (expex-body x)))))
+       (= *expex-sym-counter* 0)
+       (expex-body x))))
