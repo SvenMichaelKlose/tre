@@ -58,7 +58,7 @@
                                                    (%=-place val)
                                                    val)))))
 
-(defun expex-funinfo-var-add ()
+(defun expex-add-var ()
   (aprog1 (expex-sym)
     (funinfo-var-add *funinfo* !)))
 
@@ -102,7 +102,7 @@
 ;;;;; MOVING SINGLE ARGUMENTS
 
 (defun expex-move-atom (x)
-  (let s (expex-funinfo-var-add)
+  (let s (expex-add-var)
     (. (expex-make-%= s x) s)))
 
 (defun expex-move-inline (x)
@@ -111,12 +111,12 @@
 
 (defun expex-move-%%block (x)
   (!? (%%block-body x)
-      (let s (expex-funinfo-var-add)
+      (let s (expex-add-var)
         (. (expex-body ! s) s))
 	  (. nil nil)))
 
 (defun expex-move-std (x)
-  (with (s                (expex-funinfo-var-add)
+  (with (s                (expex-add-var)
          (moved new-expr) (expex-expr x))
     (. (append moved
                (? (has-return-value? new-expr.)
