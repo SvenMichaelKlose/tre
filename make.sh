@@ -160,9 +160,10 @@ install_it ()
 {
     echo "Installing 'tre' else to '$BINDIR'..."
 	sudo cp tre $BINDIR || exit 1
-    echo "Installing everything else to '/usr/local/lib/tre/'..."
     sudo mkdir -p /usr/local/lib/tre
+    echo "Installing SBCL image to '/usr/local/lib/tre/image'..."
     sudo cp image /usr/local/lib/tre || exit 1
+    echo "Installing environment to '/usr/local/lib/tre/environment/'..."
     sudo cp -r environment /usr/local/lib/tre || exit 1
     echo "Done."
 }
