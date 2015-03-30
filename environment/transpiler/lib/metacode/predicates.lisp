@@ -7,9 +7,7 @@
 	  %%native %%string
 	  %%closure %closure
 	  %set-atom-fun
-	  %function-prologue
-	  %function-epilogue
-	  %function-return
+	  %function-prologue %function-return %function-epilogue
       %var %global
       %%comment)
   `(def-head-predicate ,x))
@@ -43,12 +41,6 @@
 (defun %=-place (x) .x.)
 (defun %=-value (x) ..x.)
 
-(defun %=-args (x)
-  (let v (%=-value x)
-    (? (cons? v)
-	   .v
-	   (list v))))
-
 (defun %=-funcall? (x)
   (? (%=? x)
      (cons? (%=-value x))))
@@ -56,12 +48,6 @@
 (defun %=-funcall-of? (x name)                                                                                                                                             
   (& (%=-funcall? x)
      (eq name (car (%=-value x)))))
-
-(defun %slot-value-obj (x)
-  .x.)
-
-(defun %slot-value-slot (x)
-  ..x.)
 
 (defun has-return-value? (x)
   (not (| (vm-jump? x)
@@ -76,12 +62,6 @@
 (defun any-lambda? (x)
   (| (lambda? x)
      (named-lambda? x)))
-
-(defun vec-function-expr? (x)
-  (& (cons? x)
-     (eq x. 'function)
-     (%vec? .x.)
-     .x.))
 
 (defun metacode-expression? (x)
   (& x
