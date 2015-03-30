@@ -98,10 +98,6 @@
 (define-js-std-macro string-concat (&rest x)
   `(%%%+ ,@x))
 
-(define-js-std-macro in-package (n)
-  (= (current-package) (& n (make-package (symbol-name n))))
-  `(%%in-package ,n))
-
 (define-js-std-macro invoke-debugger ()
  `(%= nil (%invoke-debugger)))
 

@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
 
 (defmacro define-php-std-macro (&rest x)
   `(define-transpiler-std-macro *php-transpiler* ,@x))
@@ -47,10 +47,6 @@
 
 (define-php-std-macro defined? (x)
   `(not (isset ,x)))
-
-(define-php-std-macro in-package (n)
-  (= (transpiler-current-package *js-transpiler*) (& n (make-package (symbol-name n))))
-  `(%%in-package ,n))
 
 (define-php-std-macro string-concat (&rest x)
   `(%%%string+ ,@x))

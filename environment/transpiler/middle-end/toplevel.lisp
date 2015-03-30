@@ -17,7 +17,6 @@
     middleend-input          [(& *development?*
                                  (format t ".~F"))
                               _]
-    make-packages            #'make-packages
     expression-expand        #'expression-expand
     unassign-lambdas         #'unassign-lambdas
     accumulate-toplevel      #'accumulate-toplevel-expressions

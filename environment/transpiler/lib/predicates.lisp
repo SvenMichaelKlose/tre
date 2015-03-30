@@ -1,8 +1,7 @@
-; tré – Copyright (c) 2006–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2006–2015 Sven Michael Klose <pixel@copei.de>
 
 (mapcar-macro x
-	'(identity %identity quote backquote quasiquote quasiquote-splice
-      %%in-package)
+	'(identity %identity quote backquote quasiquote quasiquote-splice) ; XXX %IDENTITY
   `(def-head-predicate ,x))
 
 (defun literal-function? (x)
