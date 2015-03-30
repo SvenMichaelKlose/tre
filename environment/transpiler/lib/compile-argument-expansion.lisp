@@ -1,10 +1,5 @@
 ; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
 
-(defun compile-argument-expansion-defaults (defaults)
-  (@ [`(& (eq ,_ ,(list 'quote _))
-          (= ,_ ,(assoc-value _ defaults)))]
-     (carlist defaults)))
-
 (defun compile-argument-expansion-0 (fun-name adef p)
   (with ((argdefs key-args) (make-&key-alist adef)
 
@@ -75,7 +70,9 @@
           ,@(& argdefs
                (main argdefs))
 		  ,@(key)
-		  ,@(compile-argument-expansion-defaults key-args)))
+		  ,@(@ [`(& (eq ,_ ,(list 'quote _))
+                    (= ,_ ,(assoc-value _ key-args)))]
+               (carlist key-args))))
        (main argdefs))))
 
 (defun compile-argument-expansion-function-body-0 (fun-name adef p names)
