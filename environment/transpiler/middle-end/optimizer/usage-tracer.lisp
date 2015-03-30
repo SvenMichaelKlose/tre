@@ -39,6 +39,7 @@
                                      (traverse-tag .a.)
                                      (traverse-statements d))
                    (| (number? a)
+                      (%%comment? a)
                       (named-lambda? a))
                                   (traverse-statements d)
                    (progn
