@@ -2,7 +2,20 @@
 
 (defvar *expex* nil)
 
-(define-gensym-generator expex-sym e)
+
+;;;; SHARED SETTER FILTER
+
+(defun %=-make-call-to-local-function (x)
+  (with-%= place value x
+    (expex-body (apply #'+ (frontend `((%= ,place (apply ,value. ,(compiled-list .value)))))))))
+
+(defun expex-compiled-funcall (x)
+  (alet (%=-value x)
+    (? (& (cons? !)
+          (| (function-expr? !.)
+             (funinfo-find *funinfo* !.)))
+       (%=-make-call-to-local-function x)
+       (list x))))
 
 
 ;;;; GUEST CALLBACKS
@@ -22,6 +35,8 @@
   (expex-guest-filter-setter `(%= ,p ,(? (%=? v)
                                          (%=-place v)
                                          v))))
+
+(define-gensym-generator expex-sym e)
 
 (defun expex-add-var ()
   (funinfo-var-add *funinfo* (expex-sym)))
@@ -51,33 +66,33 @@
 
 (defun expex-argexpand (x)
   (with (new?   (%new? x)
-		 fun    (? new? .x. x.)
-		 args   (? new? ..x .x)
-	     eargs  (? (defined-function fun)
+         fun    (? new? .x. x.)
+         args   (? new? ..x .x)
+         eargs  (? (defined-function fun)
                    (compiled-arguments fun (expex-argdef fun) args)
                    args))
-	`(,@(& new? '(%new)) ,fun ,@(expand-literal-characters eargs))))
+    `(,@(& new? '(%new)) ,fun ,@(expand-literal-characters eargs))))
 
 
 ;;;;; MOVING ARGUMENTS
 
 (defun expex-move-inline (x)
   (with ((moved new-expr) (expex-move-args x))
-	(. moved new-expr)))
+    (. moved new-expr)))
 
 (defun expex-move-%%block (x)
   (!? (%%block-body x)
       (let s (expex-add-var)
         (. (expex-body ! s) s))
-	  (. nil nil)))
+      (. nil nil)))
 
 (defun expex-move-std (x)
   (with (s                 (expex-add-var)
          (moved new-expr)  (expex-expr x))
-    (. (append moved
-               (? (has-return-value? new-expr.)
-                  (make-%= s new-expr.)
-                  new-expr))
+    (. (+ moved
+          (? (has-return-value? new-expr.)
+             (make-%= s new-expr.)
+             new-expr))
        s)))
 
 (defun expex-inlinable? (x)
@@ -92,7 +107,7 @@
 
 (defun expex-move-args (x)
   (with ((moved new-expr) (assoc-splice (@ #'expex-move (expex-guest-filter-arguments x))))
-    (values (apply #'append moved) new-expr)))
+    (values (apply #'+ moved) new-expr)))
 
 
 ;;;; EXPRESSION EXPANSION
@@ -140,12 +155,12 @@
                                    `(,l
                                      ,@(make-%= s (%=-place l)))))
     (? (has-return-value? l)
-       (append (butlast x)
-               (? (%=? l)
-                  (? (wanted-return-value?)
-                     (expex-guest-filter-setter l)
-                     (make-return-value))
-                  (make-%= s l)))
+       (+ (butlast x)
+          (? (%=? l)
+             (? (wanted-return-value?)
+                (expex-guest-filter-setter l)
+                (make-return-value))
+             (make-%= s l)))
        x)))
 
 (defun expex-body (x &optional (s '~%ret))
@@ -155,7 +170,7 @@
                        (make-%= '~%ret _)])
     (expex-make-return-value s 
         (mapcan [with ((moved new-expr) (expex-expr _))
-                 (append moved (mapcan #'ensure-%= new-expr))]
+                  (+ moved (mapcan #'ensure-%= new-expr))]
                 (wrap-atoms (list-without-noargs-tag x))))))
 
 
