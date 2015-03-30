@@ -4,6 +4,5 @@
                              (= (transpiler-configuration ! :platform) :nodejs)
                              ; Gives 'var fs = require ("fs");':
                              (= (transpiler-configuration ! :nodejs-requirements) '("fs")))
-                                                               '("fs" 
               :emitter     [put-file "compiled/hello-world.js" _])
 (quit)
