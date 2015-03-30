@@ -78,7 +78,7 @@
     (. moved new-expr)))
 
 (defun expex-move-%%block (x)
-  (!? (%%block-body x)
+  (!? .x
       (let s (expex-add-var)
         (. (expex-body ! s) s))
       (. nil nil)))
@@ -136,7 +136,7 @@
       %%go-nil?      (expex-%%go-nil x)
       %var?          (expex-var x)
       named-lambda?  (expex-lambda x)
-      %%block?       (values nil (expex-body (%%block-body x)))
+      %%block?       (values nil (expex-body .x))
       unexpex-able?  (values nil (list x))
       (with ((moved new-expr) (expex-move-args (expex-argexpand x)))
         (values moved (list new-expr))))))

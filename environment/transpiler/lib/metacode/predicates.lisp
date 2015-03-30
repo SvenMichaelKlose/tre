@@ -23,10 +23,6 @@
 (defun ~%ret? (x)
   (eq '~%ret x))
 
-(defun atom-or-quote? (x)
-  (| (atom x)
-     (quote? x)))
-
 (defun vm-jump? (e)
   (& (cons? e)
      (in? e. '%%go '%%go-nil '%%go-not-nil)))
@@ -37,7 +33,6 @@
 
 (defun %%go-tag (x) .x.)
 (defun %%go-value (x) ..x.)
-(defun %%block-body (x) .x)
 (defun %=-place (x) .x.)
 (defun %=-value (x) ..x.)
 
