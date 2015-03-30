@@ -19,7 +19,7 @@
                               _]
     make-packages            #'make-packages
     expression-expand        #'expression-expand
-    correct-functions        #'correct-functions
+    unassign-lambdas         #'unassign-lambdas
     accumulate-toplevel      #'accumulate-toplevel-expressions
     inject-debugging         #'inject-debugging
     quote-keywords           #'quote-keywords

@@ -14,7 +14,7 @@
     initialize-funinfos       [(place-expand _)
                                _]
     expression-expand         #'expression-expand
-    correct-functions         #'correct-functions
+    unassign-lambdas          #'unassign-lambdas
     gather-imports            #'gather-imports)
 
 (defun frontend-macroexpansions (x)

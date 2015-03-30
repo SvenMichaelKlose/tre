@@ -1,19 +1,19 @@
 ; tré – Copyright (c) 2008,2012–2014 Sven Michael Klose <pixel@copei.de>
 
-(defun correct-functions (x)
+(defun unassign-lambdas (x)
   (alet x.
     (?
       (not x) x
       (named-lambda? !)
-            (. (copy-lambda ! :body (correct-functions (lambda-body !)))
-               (correct-functions .x))
+            (. (copy-lambda ! :body (unassign-lambdas (lambda-body !)))
+               (unassign-lambdas .x))
       (& (%=? !)
          (named-lambda? (%=-value !)))
           (alet (%=-value !)
-            `(,(copy-lambda ! :body (correct-functions (lambda-body !)))
+            `(,(copy-lambda ! :body (unassign-lambdas (lambda-body !)))
               ,@(& (not (lambda-export?))
                    `((%= ,(%=-place x.) ,(lambda-name !))))
-              ,@(correct-functions .x)))
+              ,@(unassign-lambdas .x)))
       (%%block? !)
-        (cons-r correct-functions x)
-      (. ! (correct-functions .x)))))
+        (cons-r unassign-lambdas x)
+      (. ! (unassign-lambdas .x)))))

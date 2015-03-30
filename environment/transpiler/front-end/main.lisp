@@ -5,6 +5,7 @@
 (env-load "transpiler/front-end/cpr-count.lisp")
 (env-load "transpiler/front-end/wrap-atoms.lisp")
 (env-load "transpiler/front-end/gather-imports.lisp")
+(env-load "transpiler/front-end/unassign-lambdas.lisp")
 (env-load "transpiler/front-end/expression-expand/expression-expand.lisp")
 (env-load "transpiler/front-end/expression-expand/funcalls.lisp")
 (env-load "transpiler/front-end/expression-expand/set-global-variable-value.lisp")
