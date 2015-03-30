@@ -59,8 +59,7 @@
                                                    val)))))
 
 (defun expex-add-var ()
-  (aprog1 (expex-sym)
-    (funinfo-var-add *funinfo* !)))
+  (funinfo-var-add *funinfo* (expex-sym)))
 
 
 ;;;; PREDICATES
@@ -85,25 +84,21 @@
   (| (funinfo-get-local-function-args *funinfo* fun)
      (transpiler-function-arguments *transpiler* fun)))
 
-(defun expex-argexpand-0 (fun args)
-  (expand-literal-characters
-      (? (defined-function fun)
-         (argument-expand-values-compiled fun (expex-argdef fun) args)
-         args)))
-
 (defun expex-argexpand (x)
   (with (new?   (%new? x)
 		 fun    (? new? .x. x.)
 		 args   (? new? ..x .x)
-	     eargs  (expex-argexpand-0 fun args))
-	`(,@(& new? '(%new)) ,fun ,@eargs)))
+	     eargs  (? (defined-function fun)
+                   (argument-expand-values-compiled fun (expex-argdef fun) args)
+                   args))
+	`(,@(& new? '(%new)) ,fun ,@(expand-literal-characters eargs))))
 
 
 ;;;;; MOVING SINGLE ARGUMENTS
 
 (defun expex-move-atom (x)
-  (let s (expex-add-var)
-    (. (expex-make-%= s x) s)))
+  (alet (expex-add-var)
+    (. (expex-make-%= ! x) !)))
 
 (defun expex-move-inline (x)
   (with ((p a) (expex-move-args x))
@@ -167,17 +162,14 @@
   (with ((moved new-expr) (expex-filter-and-move-args (list ..x.)))
     (values moved `((%%go-nil ,.x. ,@new-expr)))))
 
-(defun expex-expr-%=-0 (place val)
-  (expex-import-variable place)
-  (with ((moved new-expr) (expex-move-args (list val)))
-    (values moved (expex-make-%= place new-expr.))))
-
 (defun expex-expr-%= (x)
   (with-%= place val x
     (? (%=? val)
-       (values nil (expex-body `(,val
-                                 (%= ,place ,(%=-place val)))))
-       (expex-expr-%=-0 place val))))
+       (return (values nil (expex-body `(,val
+                                         (%= ,place ,(%=-place val)))))))
+    (expex-import-variable place)
+    (with ((moved new-expr) (expex-move-args (list val)))
+      (values moved (expex-make-%= place new-expr.)))))
 
 (defun expex-expr-std (x)
   (expex-import-function x)
@@ -187,13 +179,14 @@
 (defun expex-expr (x)
   (with-default-listprop x
     (pcase x
+      %=?            (expex-expr-%= x)
       %%go-nil?      (expex-%%go-nil x)
 	  %var?          (expex-var x)
 	  named-lambda?  (expex-lambda x)
       %%block?       (values nil (expex-body (%%block-body x)))
-      %=?            (expex-expr-%= x)
       unexpex-able?  (values nil (list x))
       (expex-expr-std x))))
+
 
 ;;;; BODY EXPANSION
 
