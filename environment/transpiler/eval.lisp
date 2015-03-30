@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2011–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2011–2015 Sven Michael Klose <pixel@copei.de>
 
 (defvar *eval-transpiler* nil)
 
@@ -8,8 +8,7 @@
        (transpiler-reset !)
        (clr (transpiler-only-environment-macros? !)
             (transpiler-import-from-host? !)
-            (transpiler-dump-passes? !)
-            (expex-warnings? (transpiler-expex !)))
+            (transpiler-dump-passes? !))
        (= *eval-transpiler* !))))
 
 (defmacro with-mute-environment (&body x)
