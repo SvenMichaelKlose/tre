@@ -11,8 +11,10 @@
     thisify                   #'thisify
     rename-arguments          #'rename-arguments
     lambda-expand             #'lambda-expand
-    fake-place-expand         [(place-expand _)
+    initialize-funinfos       [(place-expand _)
                                _]
+    expression-expand         #'expression-expand
+    correct-functions         #'correct-functions
     gather-imports            #'gather-imports)
 
 (defun frontend-macroexpansions (x)

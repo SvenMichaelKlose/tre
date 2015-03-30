@@ -43,8 +43,8 @@
 
 (defun import-exported-closures ()
   (& (exported-closures)
-     (+ (frontend (pop (exported-closures)))
-        (import-exported-closures))))
+     (append (frontend (pop (exported-closures)))
+             (import-exported-closures))))
 
 (defun import-wanted-functions ()
   (awhen (wanted-functions)
@@ -71,7 +71,7 @@
              exported  (import-exported-closures)
              vars      (import-wanted-variables))
         (? (| funs exported vars)
-           (+ funs exported vars (import-from-host))
+           (append funs exported vars (import-from-host))
            (delayed-var-inits))))))
 
 (defun current-scope? (x)
@@ -80,9 +80,4 @@
 (defun import-add-used (x)
   (| (current-scope? x)
      (add-used-function x))
-  x)
-
-(defun gather-imports (x)
-  (with-temporary *expex-import?* t
-    (expression-expand (make-packages x)))
   x)

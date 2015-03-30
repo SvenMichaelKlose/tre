@@ -1,34 +1,8 @@
 ; tré – Copyright (c) 2006–2015 Sven Michael Klose <pixel@hugbox.org>
 
 (defvar *expex* nil)
-(defvar *expex-import?* nil)
 
 (define-gensym-generator expex-sym e)
-
-
-;;;; IMPORT
-
-(defun expex-import-function (x)
-  (& *expex-import?*
-     (alet (metacode-function-name x)
-       (add-wanted-function !)
-       (| (current-scope? x)
-          (import-add-used !)))))
-
-(defun expex-variable-name (x)
-  (?
-    (atom x)          x
-    (%slot-value? x)  .x.))
-
-(defun expex-import-variable (x)
-  (!? (expex-variable-name x)
-      (add-wanted-variable !)))
-
-(defun expex-import-variables (x)
-  (& *expex-import?*
-     (import-variables?)
-     (adolist x
-       (expex-import-variable !))))
 
 
 ;;;; GUEST CALLBACKS
@@ -37,9 +11,7 @@
   (funcall (expex-setter-filter *expex*) x))
 
 (defun expex-guest-filter-arguments (x)
-  (@ [(expex-import-function _)
-      (funcall (expex-argument-filter *expex*) _)]
-     x))
+  (@ [funcall (expex-argument-filter *expex*) _] x))
 
 
 ;;;; UTILS
@@ -124,7 +96,6 @@
 	(expex-move-std x)))
 
 (defun expex-move-args (x)
-  (expex-import-variables x)
   (with (filtered          (expex-guest-filter-arguments x)
          (moved new-expr)  (assoc-splice (@ #'expex-move filtered)))
     (values (apply #'append moved) new-expr)))
@@ -149,12 +120,10 @@
     (? (%=? val)
        (return (values nil (expex-body `(,val
                                          (%= ,place ,(%=-place val)))))))
-    (expex-import-variable place)
     (with ((moved new-expr) (expex-move-args (list val)))
       (values moved (expex-make-%= place new-expr.)))))
 
 (defun expex-expr-std (x)
-  (expex-import-function x)
   (with ((moved new-expr) (expex-move-args (expex-argexpand x)))
     (values moved (list new-expr))))
 
