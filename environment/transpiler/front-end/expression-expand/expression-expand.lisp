@@ -72,7 +72,7 @@
 
 ;;;; ARGUMENT EXPANSION
 
-(defun argument-expand-values-compiled (fun def vals)
+(defun compiled-arguments (fun def vals)
   (with (f [& _ `(. ,_. ,(f ._))])
     (@ [?
          (%rest-or-%body? _)  (f ._)
@@ -81,15 +81,15 @@
        (cdrlist (argument-expand fun def vals)))))
 
 (defun expex-argdef (fun)
-  (| (funinfo-get-local-function-args *funinfo* fun)
-     (transpiler-function-arguments *transpiler* fun)))
+;  (| (funinfo-get-local-function-args *funinfo* fun) ; XXX Doesn't work, yet.
+     (transpiler-function-arguments *transpiler* fun))
 
 (defun expex-argexpand (x)
   (with (new?   (%new? x)
 		 fun    (? new? .x. x.)
 		 args   (? new? ..x .x)
 	     eargs  (? (defined-function fun)
-                   (argument-expand-values-compiled fun (expex-argdef fun) args)
+                   (compiled-arguments fun (expex-argdef fun) args)
                    args))
 	`(,@(& new? '(%new)) ,fun ,@(expand-literal-characters eargs))))
 
@@ -133,19 +133,15 @@
 
 ;;;; MOVING ARGUMENTS
 
-(defun expex-filter-and-move-args (x)
-  (expex-import-variables x)
-  (with ((moved new-expr) (assoc-splice (@ #'expex-move (expex-guest-filter-arguments x))))
-    (values (apply #'append moved) new-expr)))
-
-(defun expex-move-slot-value (x)
-  (with ((moved new-expr) (expex-filter-and-move-args (list .x.)))
-    (values moved `(%slot-value ,new-expr. ,..x.))))
-
 (defun expex-move-args (x)
-  (? (%slot-value? x)
-	 (expex-move-slot-value x)
-	 (expex-filter-and-move-args x)))
+  (with (f [(expex-import-variables _)
+            (with (filtered          (expex-guest-filter-arguments _)
+                   (moved new-expr)  (assoc-splice (@ #'expex-move filtered)))
+              (values (apply #'append moved) new-expr))])
+  (? (%slot-value? x) ; Inline.
+     (with ((moved new-expr) (f (list .x.)))
+       (values moved `(%slot-value ,new-expr. ,..x.)))
+	 (f x))))
 
 
 ;;;; EXPRESSION EXPANSION
@@ -159,7 +155,7 @@
   (values nil nil))
 
 (defun expex-%%go-nil (x)
-  (with ((moved new-expr) (expex-filter-and-move-args (list ..x.)))
+  (with ((moved new-expr) (expex-move-args (list ..x.)))
     (values moved `((%%go-nil ,.x. ,@new-expr)))))
 
 (defun expex-expr-%= (x)
