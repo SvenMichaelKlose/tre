@@ -39,7 +39,7 @@
 (defun codegen-delayed-exprs ()
   (with-temporary (sections-to-update) '(delayed-exprs)
     (quick-compile-sections (list (. 'delayed-exprs
-                                     (delayed-exprs))))))
+                                     (apply #'append (delayed-exprs)))))))
 
 (defun codegen-accumulated-toplevels ()
   (& (enabled-pass? :accumulate-toplevel)
