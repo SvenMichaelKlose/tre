@@ -170,7 +170,7 @@
       (cps-wrapper? (funinfo-name !))))
 
 (defun cps-fun (x)
-  (with-temporary *funinfo* (get-lambda-funinfo x)
+  (with-lambda-funinfo x
     (with-lambda name args body x
       (?
         (eq 'apply (funinfo-name *funinfo*))

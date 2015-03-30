@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
 
 (defvar *opt-peephole?* t)
 
@@ -7,13 +7,14 @@
 	 (with-cons a d x
 	   (?
 		 (named-lambda? a)
-           (. (copy-lambda a :body (with-temporaries (*body*    (lambda-body a)
-                                                      *funinfo* (get-lambda-funinfo a))
-                                      (,fun *body*)))
-                 (,fun d))
+           (. (copy-lambda a :body (with-temporary *body* (lambda-body a)
+                                     (with-lambda-funinfo a
+                                       (,fun *body*))))
+              (,fun d))
 		 ,@body
 		 (. a (,fun d))))))
 
+; XXX Maybe try something with METACODE-WALKER.
 (defmacro define-optimizer (name &body body)
   `(defun ,name (x)
      (optimizer ,name

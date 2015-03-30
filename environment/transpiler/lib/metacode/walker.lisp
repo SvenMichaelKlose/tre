@@ -28,12 +28,10 @@
                   (%%call-nil? ,v)      (list ,v)
                   (%%call-not-nil? ,v)  (list ,v)
                   (%%comment? ,v)       (list ,v)
-                  (named-lambda? ,v)    (with-temporary *funinfo* (get-lambda-funinfo ,v)
+                  (named-lambda? ,v)    (with-lambda-funinfo ,v
                                           (list (copy-lambda ,v :body ,(| if-named-function
                                                                           `(,name (lambda-body ,v) ,@r)))))
-
                   (not (metacode-statement? ,v))
                      (funinfo-error "Metacode statement expected instead of ~A." ,v)
-
                   ,(| if-cons `(list ,v)))
                 (,name (cdr ,x) ,@r))))))))

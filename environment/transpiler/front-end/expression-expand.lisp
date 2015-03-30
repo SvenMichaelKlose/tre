@@ -110,7 +110,7 @@
 ;;;; EXPRESSION EXPANSION
 
 (defun expex-lambda (x)
-  (with-temporary *funinfo* (get-lambda-funinfo x)
+  (with-lambda-funinfo x
     (values nil (list (copy-lambda x :body (expex-body (lambda-body x)))))))
 
 (defun expex-var (x)
