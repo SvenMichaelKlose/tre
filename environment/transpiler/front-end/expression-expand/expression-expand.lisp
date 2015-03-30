@@ -61,10 +61,6 @@
 
 ;;;;; MOVING ARGUMENTS
 
-(defun expex-move-atom (x)
-  (alet (expex-add-var)
-    (. (expex-make-%= ! x) !)))
-
 (defun expex-move-inline (x)
   (with ((p a) (expex-move-args x))
 	(. p a)))
@@ -90,7 +86,6 @@
 (defun expex-move (x)
   (pcase x
 	unexpex-able?     (. nil x)
-    atom              (expex-move-atom x)
 	expex-inlinable?  (expex-move-inline x)
     %%block?          (expex-move-%%block x)
 	(expex-move-std x)))
@@ -123,10 +118,6 @@
     (with ((moved new-expr) (expex-move-args (list val)))
       (values moved (expex-make-%= place new-expr.)))))
 
-(defun expex-expr-std (x)
-  (with ((moved new-expr) (expex-move-args (expex-argexpand x)))
-    (values moved (list new-expr))))
-
 (defun expex-expr (x)
   (with-default-listprop x
     (pcase x
@@ -136,7 +127,8 @@
       named-lambda?  (expex-lambda x)
       %%block?       (values nil (expex-body (%%block-body x)))
       unexpex-able?  (values nil (list x))
-      (expex-expr-std x))))
+      (with ((moved new-expr) (expex-move-args (expex-argexpand x)))
+        (values moved (list new-expr))))))
 
 
 ;;;; BODY EXPANSION
