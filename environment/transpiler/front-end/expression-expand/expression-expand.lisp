@@ -94,7 +94,7 @@
 	`(,@(& new? '(%new)) ,fun ,@(expand-literal-characters eargs))))
 
 
-;;;;; MOVING SINGLE ARGUMENTS
+;;;;; MOVING ARGUMENTS
 
 (defun expex-move-atom (x)
   (alet (expex-add-var)
@@ -130,18 +130,11 @@
     %%block?          (expex-move-%%block x)
 	(expex-move-std x)))
 
-
-;;;; MOVING ARGUMENTS
-
 (defun expex-move-args (x)
-  (with (f [(expex-import-variables _)
-            (with (filtered          (expex-guest-filter-arguments _)
-                   (moved new-expr)  (assoc-splice (@ #'expex-move filtered)))
-              (values (apply #'append moved) new-expr))])
-  (? (%slot-value? x) ; Inline.
-     (with ((moved new-expr) (f (list .x.)))
-       (values moved `(%slot-value ,new-expr. ,..x.)))
-	 (f x))))
+  (expex-import-variables x)
+  (with (filtered          (expex-guest-filter-arguments x)
+         (moved new-expr)  (assoc-splice (@ #'expex-move filtered)))
+    (values (apply #'append moved) new-expr)))
 
 
 ;;;; EXPRESSION EXPANSION
