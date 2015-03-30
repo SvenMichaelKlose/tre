@@ -23,8 +23,7 @@
      (memorized-sources)))
 
 (defun js-var-decls ()
-  (@ [generate-code `(((%var ,_)))]
-     (remove-if #'emitted-decl? (funinfo-vars (global-funinfo)))))
+  (list (generate-code `(((%var ,@(remove-if #'emitted-decl? (funinfo-vars (global-funinfo)))))))))
 
 ;(defun gen-funinfo-init ()
 ;  `(push ',(compiled-list `(,x. ,(funinfo-args .x))) *application-funinfos*))

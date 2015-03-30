@@ -102,8 +102,8 @@
 
 ;;;; VARIABLE DECLARATIONS
 
-(define-js-macro %var (name)
-  `(%%native ,*js-indent* "var " ,name ,*js-separator*))
+(define-js-macro %var (&rest names)
+  `(%%native ,*js-indent* "var " ,(c-list names :brackets :none) ,*js-separator*))
 
 
 ;;;; TYPE PREDICATES
@@ -146,7 +146,7 @@
 ;;;; ARRAYS
 
 (define-js-macro make-array (&rest elements)
-  `(%%native ,@(c-list elements :type 'square)))
+  `(%%native ,@(c-list elements :brackets :square)))
 
 (define-js-macro %%%aref (arr &rest idx)
   `(%%native ,arr ,@(@ [`("[" ,_ "]")] idx)))
@@ -170,7 +170,7 @@
      ":" ,value))
 
 (define-js-macro %%%make-hash-table (&rest args)
-  (c-list (@ [js-literal-hash-entry _. ._] (group args 2)) :type 'curly))
+  (c-list (@ [js-literal-hash-entry _. ._] (group args 2)) :brackets :curly))
 
 (define-js-macro href (arr &rest idx)
   `(aref ,arr ,@idx))
