@@ -37,7 +37,7 @@
                                  :cps?   (cps-marker name)))
     (funinfo-make-scope-arg new-fi)
     (transpiler-add-exported-closure *transpiler* `((defun ,name ,args ,@body)))
-    `(%%closure ,name)))
+    `(%closure ,name)))
 
 
 ;;;; PASSTHROUGH

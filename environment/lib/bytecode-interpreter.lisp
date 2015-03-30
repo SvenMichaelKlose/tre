@@ -45,7 +45,7 @@
 (defun process-get-closure (tc)
   (with (fun (process-fetch tc)
          lex (process-get tc))
-    (cons '%%closure (cons fun lex))))
+    (. '%closure (. fun lex))))
 
 (defun process-fetch-args (tc)
   (with-queue q
@@ -60,13 +60,13 @@
 (defun process-get (tc &key (call? nil))
   (awhen (process-fetch tc)
     (?
-      (not !)                  nil
-      (eq t !)                 t
-      (number? !)              (process-get-stack tc !)
-      (eq 'quote !)            (process-fetch !)
-      (eq '%vec !)             (aref (process-get tc) (process-get tc))
-      (eq '%closure !)         (process-get-closure tc)
-      call?                    (process-call tc ! (process-fetch-args tc))
+      (not !)            nil
+      (eq t !)           t
+      (number? !)        (process-get-stack tc !)
+      (eq 'quote !)      (process-fetch !)
+      (eq '%vec !)       (aref (process-get tc) (process-get tc))
+      (eq '%%closure !)  (process-get-closure tc)
+      call?              (process-call tc ! (process-fetch-args tc))
       (error "Illegal bytecode."))))
 
 (defun process-exec-jump (tc)
@@ -96,14 +96,14 @@
     (!? (pop (process-microstack tc))
         (funcall ! tc)
         (case (process-fetch tc) :test #'eq
-          '%%go      (process-exec-jump tc)
-          '%%go-nil  (| (process-exec-cond tc)
-                        (return))
-          '%%set-vec (process-exec-set-vec tc)
+          '%%go       (process-exec-jump tc)
+          '%%go-nil   (| (process-exec-cond tc)
+                         (return))
+          '%%set-vec  (process-exec-set-vec tc)
           (process-exec-set tc)))))
 
 (defun process-push-fun (tc fun args num-locals)
-  (push (cons fun (cons args num-locals)) (process-funstack tc)))
+  (push (. fun (. args num-locals)) (process-funstack tc)))
 
 (defun process-pop-fun (tc)
   (pop (process-funstack tc)))

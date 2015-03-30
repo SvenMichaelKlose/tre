@@ -95,7 +95,7 @@
 (defun php-codegen-argument-filter (x)
   (php-dollarize x))
 
-(define-php-macro %%closure (name)
+(define-php-macro %closure (name)
   (with (fi            (get-funinfo name)
          native-name  `(%%string ,(compiled-function-name-string name)))
     (? (funinfo-scope-arg fi)

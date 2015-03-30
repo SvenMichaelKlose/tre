@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2012–2014 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2012–2015 Sven Michael Klose <pixel@copei.de>
  */
 
 #include <string.h>
@@ -259,7 +259,7 @@ trecode_init ()
     EXPAND_UNIVERSE(treptr_cons);
     treptr_quote = symbol_get ("%QUOTE");
     EXPAND_UNIVERSE(treptr_quote);
-    treptr_closure = symbol_get ("%CLOSURE");
+    treptr_closure = symbol_get ("%%CLOSURE");
     EXPAND_UNIVERSE(treptr_closure);
     treptr_quote = symbol_get ("%QUOTE");
     EXPAND_UNIVERSE(treptr_quote);

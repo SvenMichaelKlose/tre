@@ -12,8 +12,8 @@
 (define-bc-macro %function-epilogue (name)
   '((%%go nil) %%bc-return))
 
-(define-bc-macro %%closure (name)
-  `(%closure ,name ,(codegen-closure-scope name)))
+(define-bc-macro %closure (name)
+  `(%%closure ,name ,(codegen-closure-scope name)))
 
 (defun bc-quote-literal (x)
   (? (| (& x (symbol? x))
@@ -24,8 +24,8 @@
 (define-filter bc-quote-literals #'bc-quote-literal)
 
 (defun bc-special? (x)
-  (| (%%closure? x)
-     (%closure? x)
+  (| (%closure? x)
+     (%%closure? x)
      (%stack? x)
      (%vec? x)
      (quote? x)))

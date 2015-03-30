@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2013–2014 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2013–2015 Sven Michael Klose <pixel@copei.de>
  */
 
 #include <ctype.h>
@@ -84,6 +84,6 @@ trefunction_free (treptr x)
 void
 function_init ()
 {
-    treptr_closure = symbol_get ("%CLOSURE");
+    treptr_closure = symbol_get ("%%CLOSURE");
     EXPAND_UNIVERSE(treptr_closure);
 }

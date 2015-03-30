@@ -74,7 +74,7 @@
   (& (%set-atom-fun? x)
      (%vec? (place-expand-0 fi (%=-place x))))
                         (place-expand-setter fi x)
-  (%%closure? x)        x
+  (%closure? x)         x
   (%slot-value? x)      `(%slot-value ,(place-expand-0 fi .x.) ,..x.)
   (%stackarg? x)        x)
 

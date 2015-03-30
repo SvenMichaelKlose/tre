@@ -8,7 +8,7 @@
 (defun nontranslatable-name? (x)
   (| (quote? x)
      (%%native? x)
-     (%%closure? x)
+     (%closure? x)
      (%function-prologue? x)
      (%function-epilogue? x)
      (%new? x)))

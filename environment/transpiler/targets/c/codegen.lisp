@@ -68,10 +68,10 @@
   name
   `(%%native ,@(c-line "return __ret")))
 
-(define-c-macro %%closure (name)
+(define-c-macro %closure (name)
   (alet (get-funinfo name)
     (? (funinfo-scope-arg !)
-       `("CONS(" ,(c-compiled-symbol '%closure) ", "
+       `("CONS(" ,(c-compiled-symbol '%%closure) ", "
                 "CONS(" ,(c-compiled-symbol name) "," ,(codegen-closure-scope name) "))")
        `("SYMBOL_FUNCTION(" ,(c-compiled-symbol name) ")"))))
 
