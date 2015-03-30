@@ -1,10 +1,5 @@
 ; tré – Copyright (c) 2006–2015 Sven Michael Klose <pixel@hugbox.org>
 
-; This pass converts the input into a sequence of statements without
-; %%BLOCKs, it expands arguments and moves statements out of
-; arguments. Every instruction which is not a jump or tag is forced
-; into a %SETQ assignment.
-
 (defvar *expex* nil)
 (defvar *expex-import?* nil)
 
@@ -52,11 +47,9 @@
 (defun expex-make-%= (plc val)
   (when (atom val)
     (= val (funcall (expex-argument-filter *expex*) val)))
-  (append (? (%=? val)
-             (expex-guest-filter-setter val))
-          (expex-guest-filter-setter `(%= ,plc ,(? (%=? val)
-                                                   (%=-place val)
-                                                   val)))))
+  (expex-guest-filter-setter `(%= ,plc ,(? (%=? val)
+                                           (%=-place val)
+                                           val))))
 
 (defun expex-add-var ()
   (funinfo-var-add *funinfo* (expex-sym)))
@@ -170,20 +163,14 @@
     (pcase x
       %=?            (expex-expr-%= x)
       %%go-nil?      (expex-%%go-nil x)
-	  %var?          (expex-var x)
-	  named-lambda?  (expex-lambda x)
+      %var?          (expex-var x)
+      named-lambda?  (expex-lambda x)
       %%block?       (values nil (expex-body (%%block-body x)))
       unexpex-able?  (values nil (list x))
       (expex-expr-std x))))
 
 
 ;;;; BODY EXPANSION
-
-(defun expex-force-%= (x)
-  (| (& (| (metacode-expression? x)
-           (%%comment? x))
-        (list x))
-     (expex-make-%= '~%ret x)))
 
 (defun expex-make-return-value (s x)
   (with (l                     (car (last x))
@@ -201,13 +188,15 @@
                   (expex-make-%= s l)))
        x)))
 
-(defun expex-exprs (x)
-  (mapcan [with ((moved new-expr) (expex-expr _))
-           (append moved (mapcan #'expex-force-%= new-expr))]
-          x))
-
 (defun expex-body (x &optional (s '~%ret))
-  (expex-make-return-value s (expex-exprs (wrap-atoms (list-without-noargs-tag x)))))
+  (with (ensure-%=  [| (& (| (metacode-expression? _)
+                             (%%comment? _))
+                          (list _))
+                       (expex-make-%= '~%ret _)])
+    (expex-make-return-value s 
+        (mapcan [with ((moved new-expr) (expex-expr _))
+                 (append moved (mapcan #'ensure-%= new-expr))]
+                (wrap-atoms (list-without-noargs-tag x))))))
 
 
 ;;;; TOPLEVEL
