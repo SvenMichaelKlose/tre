@@ -6,7 +6,7 @@
 (unix-sh-mkdir "compiled" :parents t)
 (make-project
       "tré JavaScript target test"
-      `((toplevel . (((environment-tests)))))
+      `((toplevel . ((environment-tests))))
       :transpiler  *js-transpiler*
       :emitter     [(make-html-script "compiled/test.html" _)
                     (put-file "compiled/test.js" _)])
