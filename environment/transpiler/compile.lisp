@@ -57,16 +57,17 @@
 (defun generic-codegen (before-import after-import imports)
   (print-status "Let me think. Hmm...~F")
   (funcall (middleend-init))
-  (with (before-raw-decls  (codegen-sections before-import)
-         after-raw-decls   (append (codegen (@ #'list imports))
+  (with (before-imports    (codegen-sections before-import)
+         imports-and-rest  (append (codegen (@ #'list imports))
                                    (codegen-sections after-import)
                                    (codegen-accumulated-toplevels)
                                    (codegen-delayed-exprs)))
     (funcall (postprocessor) (append (!? (funcall (prologue-gen))
                                          (list !))
-                                     (dechunk (append before-raw-decls
+                                     (dechunk (append (funcall (decl-gen))
+                                                      before-imports
                                                      (reverse (raw-decls))
-                                                     after-raw-decls))
+                                                     imports-and-rest))
                                      (!? (funcall (epilogue-gen))
                                          (list !))))))
 
