@@ -161,7 +161,6 @@
 
   (raw-decls                nil)
   (emitted-decls            nil)
-  (imports                  nil)
 
   (identifiers              (make-hash-table :test #'eq))
   (converted-identifiers    (make-hash-table :test #'eq))
@@ -278,7 +277,6 @@
         :compiled-inits           (copy-list compiled-inits)
         :raw-decls                (copy-list raw-decls)
         :emitted-decls            (copy-list emitted-decls)
-        :imports                  imports
         :identifiers              (copy-hash-table identifiers)
         :converted-identifiers    (copy-hash-table converted-identifiers)
         :cached-frontend-sections (copy-alist cached-frontend-sections)
