@@ -109,9 +109,3 @@
 (defun funinfo-closure-without-free-vars? (fi)
   (& (funinfo-scope-arg fi)
      (not (funinfo-free-vars fi))))
-
-(defun print-funinfo-sources (tr)
-  (@ [(format t "Function ~A:~%" (funinfo-name _))
-      (format t "Arguments: ~A~%" (funinfo-argdef _))
-      (format t "Body: ~A~%" (funinfo-body _))]
-     (hashkeys (transpiler-funinfos tr))))
