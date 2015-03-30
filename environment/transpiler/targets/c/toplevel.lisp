@@ -59,8 +59,8 @@
 
 (defun c-function-registrations ()
   (@ #'c-function-registration
-	(remove-if [tail? (symbol-name _) "_TREEXP"]
-               (defined-functions-without-builtins))))
+	 (remove-if [tail? (symbol-name _) "_TREEXP"] ; TODO: Make this 100%.
+                (defined-functions-without-builtins))))
 
 (defun c-declarations-and-initialisations ()
   (+ (compiled-inits)
