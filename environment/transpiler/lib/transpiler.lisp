@@ -346,11 +346,11 @@
 (define-slot-setter-push transpiler-add-emitted-decl tr      (transpiler-emitted-decls tr))
 
 (defun add-delayed-expr (x)
-  (+! (delayed-exprs) (frontend x))
+  (+! (delayed-exprs) (frontend (list x)))
   nil)
 
 (defun add-delayed-var-init (x)
-  (+! (delayed-var-inits) (frontend x))
+  (+! (delayed-var-inits) (frontend (list x)))
   nil)
 
 (defun transpiler-add-plain-arg-funs (tr lst)
