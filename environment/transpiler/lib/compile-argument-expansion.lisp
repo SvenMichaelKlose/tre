@@ -62,17 +62,16 @@
    (? key-args
       `((with (keywords
 				  #'(()
-                      (block compexp
-				        (let v nil
-					      (while (keyword? (= v (car ,p)))
-							     nil
-						    (?
-						      ,@(mapcan [`((eq v ,(make-symbol (symbol-name _) *keyword-package*))
-										   (= ,p (cdr ,p)
-										      ,_ (car ,p)
-											  ,p (cdr ,p)))]
-									    (carlist key-args))
-						      (return-from compexp nil)))))))
+				      (let v nil
+					    (while (keyword? (= v (car ,p)))
+                                nil
+                          (?
+                            ,@(mapcan [`((eq v ,(make-symbol (symbol-name _) *keyword-package*))
+                                       (= ,p (cdr ,p)
+                                          ,_ (car ,p)
+                                          ,p (cdr ,p)))]
+                                      (carlist key-args))
+                            (return nil))))))
           ,@(& argdefs
                (main argdefs))
 		  ,@(key)
