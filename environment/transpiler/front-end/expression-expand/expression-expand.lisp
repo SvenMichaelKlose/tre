@@ -16,12 +16,12 @@
 
 ;;;; UTILS
 
-(defun expex-make-%= (plc val)
-  (when (atom val)
-    (= val (funcall (expex-argument-filter *expex*) val)))
-  (expex-guest-filter-setter `(%= ,plc ,(? (%=? val)
-                                           (%=-place val)
-                                           val))))
+(defun make-%= (p v)
+  (when (atom v)
+    (= v (funcall (expex-argument-filter *expex*) v)))
+  (expex-guest-filter-setter `(%= ,p ,(? (%=? v)
+                                         (%=-place v)
+                                         v))))
 
 (defun expex-add-var ()
   (funinfo-var-add *funinfo* (expex-sym)))
@@ -62,8 +62,8 @@
 ;;;;; MOVING ARGUMENTS
 
 (defun expex-move-inline (x)
-  (with ((p a) (expex-move-args x))
-	(. p a)))
+  (with ((moved new-expr) (expex-move-args x))
+	(. moved new-expr)))
 
 (defun expex-move-%%block (x)
   (!? (%%block-body x)
@@ -72,11 +72,11 @@
 	  (. nil nil)))
 
 (defun expex-move-std (x)
-  (with (s                (expex-add-var)
-         (moved new-expr) (expex-expr x))
+  (with (s                 (expex-add-var)
+         (moved new-expr)  (expex-expr x))
     (. (append moved
                (? (has-return-value? new-expr.)
-                  (expex-make-%= s new-expr.)
+                  (make-%= s new-expr.)
                   new-expr))
        s)))
 
@@ -85,14 +85,13 @@
 
 (defun expex-move (x)
   (pcase x
-	unexpex-able?     (. nil x)
-	expex-inlinable?  (expex-move-inline x)
+    unexpex-able?     (. nil x)
+    expex-inlinable?  (expex-move-inline x)
     %%block?          (expex-move-%%block x)
-	(expex-move-std x)))
+    (expex-move-std x)))
 
 (defun expex-move-args (x)
-  (with (filtered          (expex-guest-filter-arguments x)
-         (moved new-expr)  (assoc-splice (@ #'expex-move filtered)))
+  (with ((moved new-expr) (assoc-splice (@ #'expex-move (expex-guest-filter-arguments x))))
     (values (apply #'append moved) new-expr)))
 
 
@@ -111,12 +110,12 @@
     (values moved `((%%go-nil ,.x. ,@new-expr)))))
 
 (defun expex-expr-%= (x)
-  (with-%= place val x
-    (? (%=? val)
-       (return (values nil (expex-body `(,val
-                                         (%= ,place ,(%=-place val)))))))
-    (with ((moved new-expr) (expex-move-args (list val)))
-      (values moved (expex-make-%= place new-expr.)))))
+  (with-%= p v x
+    (? (%=? v)
+       (return (values nil (expex-body `(,v
+                                         (%= ,p ,(%=-place v)))))))
+    (with ((moved new-expr) (expex-move-args (list v)))
+      (values moved (make-%= p new-expr.)))))
 
 (defun expex-expr (x)
   (with-default-listprop x
@@ -139,21 +138,21 @@
                                    (eq s (%=-place l)))
          make-return-value     #'(()
                                    `(,l
-                                     ,@(expex-make-%= s (%=-place l)))))
+                                     ,@(make-%= s (%=-place l)))))
     (? (has-return-value? l)
        (append (butlast x)
                (? (%=? l)
                   (? (wanted-return-value?)
                      (expex-guest-filter-setter l)
                      (make-return-value))
-                  (expex-make-%= s l)))
+                  (make-%= s l)))
        x)))
 
 (defun expex-body (x &optional (s '~%ret))
   (with (ensure-%=  [| (& (| (metacode-expression? _)
                              (%%comment? _))
                           (list _))
-                       (expex-make-%= '~%ret _)])
+                       (make-%= '~%ret _)])
     (expex-make-return-value s 
         (mapcan [with ((moved new-expr) (expex-expr _))
                  (append moved (mapcan #'ensure-%= new-expr))]
