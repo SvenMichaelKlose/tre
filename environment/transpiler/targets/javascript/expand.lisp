@@ -14,12 +14,12 @@
          ,!))))
 
 (defun js-requires-expander? (x)
-  (& (not (body-has-noargs-tag? (lambda-body x)))
-     (| (assert?)
-        (not (simple-argument-list? (lambda-args x))))))
+  (unless (body-has-noargs-tag? (lambda-body x))
+    (| (assert?)
+       (not (simple-argument-list? (lambda-args x))))))
 
 (define-js-std-macro function (&rest x)
-  (alet (cons 'function x)
+  (alet (. 'function x)
     (? .x
        (? (js-requires-expander? !)
           (js-make-function-with-expander !)
@@ -49,8 +49,8 @@
 ;                         `(make-package ,(obfuscated-symbol-name !)))))))
 
 (define-js-std-macro defun (name args &body body)
-  (with (dname (%defun-name name)
-         g     '~%tfun)
+  (with (dname  (%defun-name name)
+         g      '~%tfun)
       `(%%block
          (%var ,dname)
          ,@(js-early-symbol-maker g dname)
