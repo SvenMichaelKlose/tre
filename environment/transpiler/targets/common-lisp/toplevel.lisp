@@ -6,10 +6,6 @@
 (defun cl-frontend-init ()
   (= *cl-builtins* nil))
 
-(defun cl-expex-initializer (ex)
-  (= (expex-argument-filter ex) #'identity
-     (expex-setter-filter ex)   #'identity))
-
 (defun cl-sections-before-import ()
   (unless (configuration :exclude-core?)
     (list (. 'cl-core (+ *cl-core*
@@ -27,7 +23,6 @@
       :stack-locals?           nil
       :sections-before-import  #'cl-sections-before-import
       :frontend-init           #'cl-frontend-init
-      :expex-initializer       #'cl-expex-initializer
       :postprocessor           #'make-lambdas
       :configurations          (+ (default-configurations)
                                   '((:exclude-core? . nil)))))

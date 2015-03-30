@@ -101,7 +101,7 @@
   std-macro-expander
   codegen-expander
 
-  expex-initializer
+  (expex-initializer       #'identity)
 
   (lambda-export?           nil)
   (function-prologues?      t)
@@ -156,9 +156,9 @@
   (compiled-numbers         (make-hash-table :test #'==))
   (compiled-strings         (make-hash-table :test #'eq))
   (compiled-symbols         (make-hash-table :test #'eq))
+
   (compiled-decls           nil)
   (compiled-inits           nil)
-
   (raw-decls                nil)
   (emitted-decls            nil)
 
