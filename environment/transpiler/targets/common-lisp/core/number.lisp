@@ -35,7 +35,6 @@
 (defbuiltin / (&rest x) (apply #'%/ x))
 (defbuiltin < (&rest x) (apply #'%< x))
 (defbuiltin > (&rest x) (apply #'%> x))
-;(defbuiltin bit-or (a b) (cl:bit-or a b))
 
 (defun bits-integer (bits)
   (cl:reduce #'((a b)
@@ -58,6 +57,9 @@
 
 (defbuiltin bit-and (a b)
   (bits-integer (cl:bit-and (integer-bits a) (integer-bits b))))
+
+(defbuiltin bit-or (a b)
+  (bits-integer (cl:bit-ior (integer-bits a) (integer-bits b))))
 
 (defbuiltin >> (x bits)
   (alet (number x)
