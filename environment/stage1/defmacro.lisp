@@ -12,7 +12,7 @@
 
 (%defmacro defmacro (name args &body body)
   (print-definition `(defmacro ,name ,args))
-  (%defmacro ,name ,args
-    `(block nil
+  `(%defmacro ,name ,args
+     (block nil
        (block ,name
          ,@(%add-documentation name body)))))
