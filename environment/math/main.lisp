@@ -2,7 +2,7 @@
 
 (env-load "math/pi.lisp" :c)
 (env-load "math/precision.lisp")
-(env-load "math/fractions.lisp")
+(env-load "math/fraction.lisp")
 (env-load "math/min.lisp")
 (env-load "math/percent.lisp")
 (env-load "math/saturate.lisp")
