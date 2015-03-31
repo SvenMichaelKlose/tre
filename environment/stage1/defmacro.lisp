@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2008,2011–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2008,2011–2015 Sven Michael Klose <pixel@copei.de>
 
 (defvar *documentation* nil)
 
@@ -12,7 +12,7 @@
 
 (%defmacro defmacro (name args &body body)
   (print-definition `(defmacro ,name ,args))
-  `(block nil
-     (%defmacro ,name ,args
+  (%defmacro ,name ,args
+    `(block nil
        (block ,name
          ,@(%add-documentation name body)))))
