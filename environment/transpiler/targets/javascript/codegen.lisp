@@ -84,20 +84,16 @@
 
 ;;;; ASSIGNMENT
 
-(defun js-%=-0 (dest val)
-  `(,*js-indent*
-	(%%native ,@(? dest
-		           `(,dest " = ")
-		           '("")))
-	,(? (atom|codegen-expr? val)
-		val
-        `(,val. " " ,@(c-list .val)))
-    ,*js-separator*))
-
 (define-js-macro %= (dest val)
   (? (& (not dest) (atom val))
-	 '(%%native "")
-	 (js-%=-0 dest val)))
+     '(%%native "")
+     `(,*js-indent*
+       ,@(? dest
+            `((%%native ,dest " = ")))
+       ,(? (atom|codegen-expr? val)
+           val
+           `(,val. " " ,@(c-list .val)))
+      ,*js-separator*)))
 
 
 ;;;; VARIABLE DECLARATIONS
