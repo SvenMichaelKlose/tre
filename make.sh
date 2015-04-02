@@ -318,10 +318,8 @@ examples)
 
 all)
     ./make.sh boot $ARGS || exit 1
-    ./make.sh ctests || exit 1
-    ./make.sh jstests || exit 1
+    ./make.sh tests || exit 1
     ./make.sh examples || exit 1
-#   ./make.sh phptests || exit 1
 #   ./make.sh webconsole || exit 1
 #	./make.sh bytecode-image || exit 1
 #   ./make.sh jsdebugger || exit 1
