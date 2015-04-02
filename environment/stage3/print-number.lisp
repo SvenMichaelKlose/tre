@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2009,2012–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2009,2012–2015 Sven Michael Klose <pixel@copei.de>
 
 (defun digit (x)
   (code-char (? (< x 10)
@@ -12,7 +12,7 @@
                      (f (integer (/ x r)))))))
     (list-string (reverse (f x)))))
 
-(defun print-hex (x n str)
+(defun print-hex (x n &optional (str *standard-output*))
   (princ (integer-string x n 16) (default-stream str)))
 
 (defun print-hexbyte (x &optional (str *standard-output*))
