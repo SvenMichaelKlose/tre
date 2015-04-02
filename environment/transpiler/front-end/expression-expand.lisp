@@ -11,7 +11,7 @@
           (| (function-expr? !.)
              (funinfo-find *funinfo* !.)))
        (with-%= p v x
-         (expex-body (apply #'+ (frontend `((%= ,p (apply ,v. ,(compiled-list .v))))))))
+         (expex-body (apply #'+ (frontend `(((%= ,p (apply ,v. ,(compiled-list .v)))))))))
        (list x))))
 
 
