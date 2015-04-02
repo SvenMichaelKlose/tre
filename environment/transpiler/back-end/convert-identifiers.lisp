@@ -29,12 +29,14 @@
                           (camel-notation .x (++ pos)))))))
 		 corrected-chars
            #'((x pos)
-               (with (char-synonym  [string-list (+ "T" (format nil "~A" (char-code _)))])
+               (with (char-synonym  [? (& ._ (== #\- _.))
+                                       (list #\_)
+                                       (string-list (+ "T" (format nil "~A" (char-code _.))))])
                  (& x
                     (? (| (& (zero? pos)
                              (digit-char? x.))
                           (transpiler-special-char? x.))
-                       (+ (char-synonym x.) (corrected-chars .x (++ pos)))
+                       (+ (char-synonym x) (corrected-chars .x (++ pos)))
                        (. x. (corrected-chars .x (++ pos)))))))
          capitals
            [remove #\- (string-list (upcase (subseq _ 1 (-- (length _))))) :test #'==])
