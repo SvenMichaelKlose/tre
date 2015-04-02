@@ -7,5 +7,6 @@
              (when (cons? value)
                (add-wanted-function value.)
                (adolist (.value)
+                 (add-wanted-function !)
                  (add-wanted-variable !)))
              (list x.)))
