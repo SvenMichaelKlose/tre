@@ -65,6 +65,9 @@
 (defbuiltin bit-or (a b)
   (bits-integer (cl:bit-ior (integer-bits a) (integer-bits b))))
 
+(defbuiltin bit-xor (a b)
+  (bits-integer (cl:bit-xor (integer-bits a) (integer-bits b))))
+
 (defbuiltin >> (x bits)
   (alet (number x)
     (dotimes (n bits !)
