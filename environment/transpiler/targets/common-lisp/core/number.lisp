@@ -14,6 +14,11 @@
                   x))
              x))
 
+(defbuiltin code-char (x)
+  (? (cl:characterp x)
+     x
+     (cl:code-char (cl:floor x))))
+
 (defbuiltin == (&rest x) (apply #'cl:= (chars-to-numbers x)))
 (defbuiltin number== (&rest x) (apply #'cl:= (chars-to-numbers x)))
 (defbuiltin integer== (&rest x) (apply #'cl:= (chars-to-numbers x)))
@@ -24,7 +29,6 @@
 (defbuiltin %/ (&rest x) (apply #'cl:/ (chars-to-numbers x)))
 (defbuiltin %< (&rest x) (apply #'cl:< (chars-to-numbers x)))
 (defbuiltin %> (&rest x) (apply #'cl:> (chars-to-numbers x)))
-(defbuiltin code-char (x) (cl:code-char (cl:floor x)))
 (defbuiltin number+ (&rest x) (apply #'%+ x))
 (defbuiltin integer+ (&rest x) (apply #'%+ x))
 (defbuiltin character+ (&rest x) (apply #'%+ x))
