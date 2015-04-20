@@ -18,7 +18,7 @@
         ((| (== ,(* 8 *pointer-size*) i)
             (== i l))
 		 (mod (abs k) (hash-table-size h)))
-      (= k (logxor (<< k 1) (elt str i))))))
+      (= k (bit-xor (<< k 1) (elt str i))))))
 
 (defun %make-hash-index (h key)
   (?

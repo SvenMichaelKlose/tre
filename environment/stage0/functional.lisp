@@ -14,11 +14,11 @@
             number+ number- number* number/
             integer+ integer- integer* integer/
             character+ character-
-            logxor number? == < >
+            number? == < >
             number== number< number>
             integer== integer< integer>
             character== character< character>
-            bit-or bit-and
+            bit-or bit-and bit-xor
             << >>
             code-char integer
             character?

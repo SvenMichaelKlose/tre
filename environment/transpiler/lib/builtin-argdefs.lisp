@@ -79,7 +79,7 @@
 
       (*                (&rest numbers))
       (/                (&rest numbers))
-      (LOGXOR           (&rest x)) ;a b)
+      (BIT-XOR          (&rest x)) ;a b)
       (BIT-OR           (&rest x)) ;a b)
       (BIT-AND          (&rest x)) ;a b)
       (<<               (&rest x)) ;x num-bits-to-left)

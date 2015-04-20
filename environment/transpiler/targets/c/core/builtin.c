@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2015 Sven Michael Klose <pixel@copei.de>
  */
 
 #include <stdlib.h>
@@ -85,7 +85,7 @@ char *tre_builtin_names[] = {
 	"INTEGER+", "INTEGER-",
 	"CHARACTER+", "CHARACTER-",
 	"*", "/", "MOD",
-    "LOGXOR", "SQRT", "SIN", "COS", "ATAN", "ATAN2", "RANDOM", "EXP", "POW", "ROUND", "FLOOR",
+    "BIT-XOR", "SQRT", "SIN", "COS", "ATAN", "ATAN2", "RANDOM", "EXP", "POW", "ROUND", "FLOOR",
     "NUMBER?",
     "==", "<", ">",
     "NUMBER==", "NUMBER<", "NUMBER>",
@@ -180,7 +180,7 @@ evalfunc_t eval_xlat_builtin[] = {
     trenumber_builtin_times,
     trenumber_builtin_quotient,
     trenumber_builtin_mod,
-    trenumber_builtin_logxor,
+    trenumber_builtin_bit_xor,
     trenumber_builtin_sqrt,
     trenumber_builtin_sin,
     trenumber_builtin_cos,

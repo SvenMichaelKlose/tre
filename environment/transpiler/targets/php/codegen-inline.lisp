@@ -10,10 +10,10 @@
 (define-php-binary >> ">>")
 (define-php-binary << "<<")
 (define-php-binary mod "%")
-(define-php-binary logxor "^")
 (define-php-binary userfun_eq "===")
 (define-php-binary bit-and "&")
 (define-php-binary bit-or "|")
+(define-php-binary bit-xor "^")
 
 (define-php-macro identity (x)
   x)

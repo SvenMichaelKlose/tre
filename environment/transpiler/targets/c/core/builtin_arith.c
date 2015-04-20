@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2010,2012–2014 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2010,2012–2015 Sven Michael Klose <pixel@copei.de>
  */
 
 #include <math.h>
@@ -48,13 +48,13 @@ double eval_op_plus       (double a, double b);
 double eval_op_difference (double a, double b);
 double eval_op_times      (double a, double b);
 double eval_op_quotient   (double a, double b);
-double eval_op_logxor     (double a, double b);
+double eval_op_bit_xor    (double a, double b);
 
 double eval_op_plus       (double a, double b) { return a + b; }
 double eval_op_difference (double a, double b) { return a - b; }
 double eval_op_times      (double a, double b) { return a * b; }
 double eval_op_quotient   (double a, double b) { return a / b; }
-double eval_op_logxor     (double a, double b) { return (size_t) a ^ (size_t) b; }
+double eval_op_bit_xor    (double a, double b) { return (size_t) a ^ (size_t) b; }
 
 treptr
 trenumber_builtin_plus (treptr x)
@@ -131,11 +131,11 @@ trenumber_mod (treptr x, treptr mod)
 }
 
 treptr
-trenumber_builtin_logxor (treptr x)
+trenumber_builtin_bit_xor (treptr x)
 {
     return NOT(x) ?
 		       treptr_number_zero :
-               eval_exprop (x, eval_op_logxor, "LOGXOR");
+               eval_exprop (x, eval_op_bit_xor, "BIT-XOR");
 }
 
 treptr
