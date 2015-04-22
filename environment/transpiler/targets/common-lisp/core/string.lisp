@@ -11,10 +11,10 @@
 (defbuiltin string== (a b) (cl:string= a b))
 
 (defbuiltin list-string (x)
-  (apply #'cl:concatenate
+  (cl:concatenate
          'cl:string
          (cl:mapcar (lambda (x)
-                      (cl:string (? (cl:numberp x)
-                                    (cl:code-char x)
-                                    x)))
+                      (? (cl:numberp x)
+                         (cl:code-char x)
+                         x))
                     x)))
