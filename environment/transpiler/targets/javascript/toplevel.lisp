@@ -53,10 +53,10 @@
   (alet *js-core-path*
     (+ (list (. 'list-of-early-defined-functions
                 #'js-emit-early-defined-functions)
-             (+ ! "env-load-stub.lisp"))
+             (list (+ ! "env-load-stub.lisp")))
        (js-environment-files)
-       (list (+ ! "late-macro.lisp")
-             (+ ! "eval.lisp")))))
+       (list (list (+ ! "late-macro.lisp"))
+             (list (+ ! "eval.lisp"))))))
 
 (defun js-sections-after-import ()
   (+ (list (. 'late-symbol-function-assignments
