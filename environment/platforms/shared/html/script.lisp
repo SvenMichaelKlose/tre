@@ -1,12 +1,14 @@
-;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
 
 (defun print-html-script (out script
                           &key (title nil)
                                (no-cache? nil)
                                (strict? t)
                                (copyright-title nil) (copyright-href nil)
+                               (external-script nil)
                                (external-stylesheet nil)
-                               (internal-stylesheet nil))
+                               (internal-stylesheet nil)
+                               (body nil))
   (with-default-stream o out
     (format o (+ (doctype-html-5) "~%"))
     (lml2xml `(html
@@ -27,6 +29,10 @@
                                   (ensure-list !)))
                     ,@(!? internal-stylesheet
                           `((style ,!)))
+                    ,@(!? external-script
+                          (mapcan [`((script :src ,_ ""))] (ensure-list !))))
+                  (body
+                    ,@body
                     (script :type "text/javascript"
                         "<!--"
                         ,@(& strict?
@@ -40,9 +46,13 @@
                               (no-cache? nil)
                               (strict? t)
                               (copyright-title nil) (copyright-href nil)
+                              (external-script nil)
                               (external-stylesheet nil)
-                              (internal-stylesheet nil))
+                              (internal-stylesheet nil)
+                              (body nil))
   (with-output-file o pathname
-    (print-html-script o script ,@(keyword-copiers 'title 'no-cache? 'strict?
-                                                   'copyright-title 'copyright-href
-                                                   'external-stylesheet 'internal-stylesheet))))
+    (print-html-script o script ,@(keyword-copiers :title :no-cache? :strict?
+                                                   :copyright-title :copyright-href
+                                                   :external-script
+                                                   :external-stylesheet :internal-stylesheet
+                                                   :body))))
