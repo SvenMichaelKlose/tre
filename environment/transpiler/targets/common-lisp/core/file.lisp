@@ -27,3 +27,7 @@
 
 (defbuiltin unix-sh-mkdir (pathname &key (parents nil))
   (cl:ensure-directories-exist pathname))
+
+(defbuiltin file-exists? (pathname)
+  (? (cl:probe-file pathname)
+     t))
