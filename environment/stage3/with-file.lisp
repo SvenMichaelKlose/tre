@@ -3,7 +3,7 @@
 (defmacro with-open-file (var file &body body)
   (with-gensym g
     `(with (,var ,file
-            ,g   (progn ,@body))
+            ,g   (block nil ,@body))
        (close ,var)
        ,g)))
 
