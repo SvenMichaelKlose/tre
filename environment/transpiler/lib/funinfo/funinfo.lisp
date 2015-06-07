@@ -25,6 +25,8 @@
   (local-function-args nil)
   (fast-scope?  nil)
 
+  (types        nil)  ; Strings of native type declarations.
+
   ; Number of jump tags in body.
   (num-tags     nil)
   
