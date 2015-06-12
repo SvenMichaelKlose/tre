@@ -1,10 +1,11 @@
-;;;;; tré – Copyright (c) 2005–2006,2008–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2006,2008–2009,2011–2015 Sven Michael Klose <pixel@copei.de>
 
 (functional zero? even? odd? end? keyword?)
 (declare-cps-exception zero? even? odd? end? keyword?)
 
 (defun zero? (x)
-  (== 0 x))
+  (& (number? x)
+     (== 0 x)))
 
 (defun even? (x)
   (== 0 (mod x 2)))
