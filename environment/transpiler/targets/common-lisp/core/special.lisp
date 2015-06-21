@@ -35,7 +35,7 @@
 (defspecial %defmacro (name args &body body)
   (print-definition `(%defmacro ,name ,args))
   `(cl:push (. ',name
-               (. ',args
+               (. ',(. args body)
                   #'(,(argument-expand-names '%defmacro args)
                     ,@body)))
             ,(tre-symbol '*macros*)))

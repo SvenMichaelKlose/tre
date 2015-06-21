@@ -8,7 +8,7 @@
 
 (defbuiltin %%macrocall (x)
   (alet (cdr (assoc x. (env-macros) :test #'eq))
-    (apply .! (argument-expand-values x. !. .x))))
+    (apply .! (argument-expand-values x. !.. .x))))
 
 (defbuiltin %%macro? (x)
   (& (cons? x)

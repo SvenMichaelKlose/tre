@@ -11,7 +11,10 @@
 (defvar *print-executed-functions?* nil)
 
 (defun make-host-functions ()
-  (alist-hash (+ *functions* *macros* *builtin-argdefs*) :test #'eq))
+  (alist-hash (+ *functions*
+                 (@ [. _. (cadr _)] *macros*)
+                 *builtin-argdefs*)
+              :test #'eq))
 
 (defun make-host-variables ()
   (alist-hash (@ [cons _. t] *variables*) :test #'eq))
