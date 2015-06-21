@@ -49,8 +49,8 @@
 (defun import-wanted-functions ()
   (awhen (wanted-functions)
     (= (wanted-functions) nil)
-    (print-note "Importing functions ~A.~%" !)
     (frontend (mapcan [unless (defined-function _)
+                        (print-note "Importing function ~A.~%" _)
                         `((defun ,_ ,(host-function-arguments _)
                            ,@(host-function-body _)))]
                       !))))
