@@ -120,7 +120,11 @@
       :import-variables?        nil
       :identifier-char?         #'c-identifier-char?
       :expex-initializer        #'c-expex-initializer
-      :backtrace?		        t))
+      :backtrace?		        nil
+      :configurations           '((:exclude-core?            . nil)
+                                  (:memorize-sources?        . nil)
+                                  (:save-sources?            . nil)
+                                  (:save-argument-defs-only? . nil))))
 
 (defvar *c-transpiler* (make-c-transpiler))
 (defvar *c-separator*  (+ ";" *newline*))
