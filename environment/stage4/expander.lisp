@@ -14,8 +14,6 @@
 (defun expander-get (name)
   (cdr (assoc name *expanders* :test #'eq)))
 
-(defvar *expander-print* nil)
-
 (defun expander-macro-function (expander-name macro-name)
   (href (expander-macros expander-name) macro-name))
 
@@ -33,8 +31,7 @@
     (| pred (= (expander-pred !) [& (cons? _)
                                     (symbol? _.)
 	                                (expander-macro-function ! _.)]))
-    (| call (= (expander-call !) [(& *expander-print* (print _))
-                                  (apply (expander-macro-function ! _.) ._)]))
+    (| call (= (expander-call !) [apply (expander-macro-function ! _.) ._]))
     (= (expander-lookup !)
        #'((expander name)
            (href (expander-macros expander) name)))))
@@ -63,14 +60,16 @@
 
 (defun expander-expand-once (expander-name x)
   (alet (expander-get expander-name)
-    (| (expander? !) (error "Expander ~A is not defined." (symbol-name expander-name)))
+    (| (expander? !)
+       (error "Expander ~A is not defined." (symbol-name expander-name)))
     (with-temporaries (*macro?*     (expander-pred !)
                        *macrocall*  (expander-call !))
       (%macroexpand x))))
 
 (defun expander-expand (expander-name expr)
   (alet (expander-get expander-name)
-    (| (expander? !) (error "Expander ~A is not defined." (symbol-name expander-name)))
+    (| (expander? !)
+       (error "Expander ~A is not defined." (symbol-name expander-name)))
     (funcall (expander-pre !))
     (prog1
       (repeat-while-changes [expander-expand-once expander-name _] expr)
