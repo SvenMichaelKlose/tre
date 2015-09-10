@@ -10,9 +10,6 @@
 (defmacro define-cl-std-macro (name args &body body)
   `(define-transpiler-std-macro *cl-transpiler* ,name ,args ,@body))
 
-(define-cl-std-macro %set-atom-fun (x v)
-  `(cl:setf (cl:symbol-function ',x) ,v))
-
 (define-cl-std-macro defun (name args &body body)
   (print-definition `(defun ,name))
   (add-defined-function name args body)
