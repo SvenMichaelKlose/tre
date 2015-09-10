@@ -13,7 +13,7 @@
   nil)
 
 (defun compile-bytecode-environment (&optional (funs nil))
-  (alet (%environment-transpiler *bc-transpiler* funs)
+  (alet (%environment-transpiler (eval '*bc-transpiler*) funs)
     (expr-to-code ! (compile-sections nil :transpiler !))))
 
 (defun compile-c-compiler ()
