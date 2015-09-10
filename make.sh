@@ -222,14 +222,17 @@ environment)
 	;;
 
 core)
+    echo "Booting environment..."
     (echo "(load \"boot-common.lisp\")" | $SBCL 2>&1) || exit 1
 	;;
 
 genboot)
+    echo "Compiling boot code with local image..."
     $SBCL --core image makefiles/boot-common-lisp.lisp 2>&1 || exit 1
 	;;
 
 qboot)
+    echo "Resetting boot code from repository..."
     git checkout -- boot-common.lisp
     ./make.sh core 2>&1 || exit 1
 	;;
