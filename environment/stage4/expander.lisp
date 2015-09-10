@@ -52,7 +52,7 @@
     (= (href (expander-argdefs !) name) argdef)))
 
 (defun set-expander-macros (expander-name lst)
-  (map [set-expander-macro expander-name _. ._] lst))
+  (map [set-expander-macro expander-name _. ._. .._] lst))
 
 (defmacro define-expander-macro (expander-name name args &body body)
   (| (atom expander-name)
