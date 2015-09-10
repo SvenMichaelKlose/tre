@@ -133,6 +133,7 @@
 (defun %print-call? (x info)
   (& (print-info-pretty-print? info)
      (symbol? x.)
+     (list? .x)
      (| (%get-printer-argument-definition x.)
         (alet (symbol-function x.)
           (?
