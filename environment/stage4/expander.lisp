@@ -15,14 +15,14 @@
 (defun expander-get (name)
   (cdr (assoc name *expanders* :test #'eq)))
 
-(defun expander-macro-function (expander-name macro-name)
-  (href (expander-macros expander-name) macro-name))
+(defun expander-macro-function (expander macro-name)
+  (href (expander-macros expander) macro-name))
 
-(defun expander-macro-argdef (expander-name macro-name)
-  (href (expander-argdefs expander-name) macro-name))
+(defun expander-macro-argdef (expander macro-name)
+  (href (expander-argdefs expander) macro-name))
 
-(defun (= expander-macro-function) (new-function expander-name macro-name)
-  (= (href (expander-macros expander-name) macro-name) new-function))
+(defun (= expander-macro-function) (new-function expander macro-name)
+  (= (href (expander-macros expander) macro-name) new-function))
 
 (defun define-expander (expander-name &key (pre nil) (post nil) (pred nil) (call nil))
   (format t "Making expander ~A.~%" expander-name)
@@ -33,10 +33,12 @@
                          :pre (| pre #'(nil))
                          :post (| post #'(nil)))
     (acons! expander-name ! *expanders*)
-    (| pred (= (expander-pred !) [& (cons? _)
-                                    (symbol? _.)
-	                                (expander-macro-function ! _.)]))
-    (| call (= (expander-call !) [apply (expander-macro-function ! _.) (argument-expand-values 'expander-call (expander-macro-argdef ! _.) ._)]))
+    (| pred
+       (= (expander-pred !) [& (cons? _)
+                               (symbol? _.)
+	                           (expander-macro-function ! _.)]))
+    (| call
+       (= (expander-call !) [apply (expander-macro-function ! _.) (argument-expand-values 'expander-call (expander-macro-argdef ! _.) ._)]))
     (= (expander-lookup !)
        #'((expander name)
            (href (expander-macros expander) name)))))
@@ -47,7 +49,7 @@
      (warn "Macro ~A already defined." name))
   (alet (expander-get expander-name)
     (= (href (expander-macros !) name) fun)
-    (= (href (expander-argdefs !) name) (argument-expand-names 'set-expander-macro `,args))))
+    (= (href (expander-argdefs !) name) argdef)))
 
 (defun set-expander-macros (expander-name lst)
   (map [set-expander-macro expander-name _. ._] lst))
