@@ -7,4 +7,5 @@
       *default-listprop* *keyword-package*
       *pointer-size* *launchfile*
       *assert* *targets*
-      *endianess* *cpu-type* *libc-path* *rand-max*))
+      *endianess* *cpu-type* *libc-path* *rand-max*
+      *eval*))
