@@ -19,7 +19,7 @@
     (. (%macroexpand-backquote x.)
        (%macroexpand-backquote .x))))
 
-(setq *macroexpand-backquote* #'%macroexpand-backquote)
+(%defvar *macroexpand-backquote* #'%macroexpand-backquote)
 
 (%defun %macroexpand-rest (x)
   (? (atom x)
