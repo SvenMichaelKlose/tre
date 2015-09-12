@@ -1,9 +1,9 @@
-;;;;; tré – Copyright (c) 2014 Sven Michael Klose <pixel@hugbox.org>
+; tré – Copyright (c) 2014–2015 Sven Michael Klose <pixel@hugbox.org>
 
 (defvar @bctest-global-with-fun nil)
 
-(defun @bc-test-%set-atom-fun ()
-  (%set-atom-fun @bctest-global-with-fun 'wannabe-fun)
+(defun @bc-test-%set-local-fun ()
+  (%set-local-fun @bctest-global-with-fun 'wannabe-fun)
   (symbol-value '@bctest-global-with-fun))
 
 (defun @bc-test-set-lexical ()
@@ -32,15 +32,15 @@
     a))
 
 (defun bytecode-interpreter-tests ()
-  (load-bytecode (compile-bytecode-environment '(@bc-test-%set-atom-fun
+  (load-bytecode (compile-bytecode-environment '(@bc-test-%set-local-fun
                                                  @bc-test-set-lexical
                                                  @bc-test-closure)))
 
-  (print '@bc-test-%set-atom-fun)
-  (alet (@bc-test-%set-atom-fun)
+  (print '@bc-test-%set-local-fun)
+  (alet (@bc-test-%set-local-fun)
     (unless (eq 'wannabe-fun !)
       (print !)
-      (error "%SET-ATOM-FUN isn't handled correctly by the bytecode interpreter.")))
+      (error "%SET-LOCAL-FUN isn't handled correctly by the bytecode interpreter.")))
 
   (print '@bc-test-set-lexical)
   (alet (@bc-test-set-lexical)

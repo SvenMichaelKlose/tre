@@ -158,7 +158,7 @@
      '(%%native "")
      (php-%=-0 dest val)))
 
-(define-php-macro %set-atom-fun (plc val)
+(define-php-macro %set-local-fun (plc val)
   `(%%native ,(php-dollarize plc)
              ,(php-assignment-operator val)
              ,(php-dollarize val)))

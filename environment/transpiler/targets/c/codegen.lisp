@@ -93,7 +93,7 @@
 (define-c-macro %= (dest val)
   (c-line `((%%native ,@(codegen-%=-place dest val)) ,(codegen-%=-value val))))
 
-(define-c-macro %set-atom-fun (dest val)
+(define-c-macro %set-local-fun (dest val)
   `(%%native ,dest "=" ,val ,*c-separator*))
 
 

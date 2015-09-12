@@ -77,6 +77,3 @@
      ,@(& (needs-var-declarations?)
           `((%var ,name)))
      (%= ,name ,val)))
-
-(define-shared-std-macro (bc c js php) %set-atom-fun (a b)
-  `(%set-atom-fun ,a ,b))

@@ -6,7 +6,7 @@
 	  %stack %stackarg %vec %set-vec %= %tag %%tag
 	  %%native %%string
 	  %closure %%closure
-	  %set-atom-fun
+	  %set-local-fun
 	  %function-prologue %function-return %function-epilogue
       %var %global
       %%comment)

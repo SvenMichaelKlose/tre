@@ -29,4 +29,4 @@
       OPEN-SOCKET ACCEPT RECV SEND CLOSE-CONNECTION CLOSE-SOCKET))
 
 (defvar *specials*
-    '(%SET-ATOM-FUN))
+    '(%SET-LOCAL-FUN))

@@ -71,7 +71,7 @@
   (& (%=? x)
      (%vec? (place-expand-0 fi (%=-place x))))
                         (place-expand-setter fi x)
-  (& (%set-atom-fun? x)
+  (& (%set-local-fun? x)
      (%vec? (place-expand-0 fi (%=-place x))))
                         (place-expand-setter fi x)
   (%closure? x)         x

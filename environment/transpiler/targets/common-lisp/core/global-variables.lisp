@@ -5,7 +5,6 @@
 (defvar *launchfile* nil)
 (defvar *pointer-size* 4)
 (defvar *assert* t)
-(defvar *targets* ,`',*targets*)
 (defvar *endianess* nil)
 (defvar *cpu-type* nil)
 (defvar *libc-path* nil)

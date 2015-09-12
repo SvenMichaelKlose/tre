@@ -35,7 +35,6 @@ treptr treptr_cond;
 treptr treptr_cond_not_nil;
 treptr treptr_vec;
 treptr treptr_set_vec;
-treptr treptr_set_atom_fun;
 treptr treptr_cons;
 treptr treptr_quote;
 treptr treptr_closure;
@@ -118,9 +117,6 @@ trecode_get (treptr ** p)
                 cdr = trecode_get (&x);
                 v = CONS(car, cdr);
                 tregc_pop_secondary ();
-            } else if (v == treptr_set_atom_fun) {
-                treerror_norecover (v, "%SET-ATOM-FUN shouldn't be in the bytecode interpreter at all");
-                trecode_set_place (&x, trecode_get (&x));
             } else {
                 num_args = TRENUMBER_INT(*x++);
                 args = trecode_list (&x, num_args);
@@ -253,8 +249,6 @@ trecode_init ()
     EXPAND_UNIVERSE(treptr_cond_not_nil);
     treptr_vec = symbol_get ("%VEC");
     EXPAND_UNIVERSE(treptr_vec);
-    treptr_set_atom_fun = symbol_get ("%SET-ATOM-FUN");
-    EXPAND_UNIVERSE(treptr_set_atom_fun);
     treptr_cons = symbol_get ("CONS");
     EXPAND_UNIVERSE(treptr_cons);
     treptr_quote = symbol_get ("%QUOTE");

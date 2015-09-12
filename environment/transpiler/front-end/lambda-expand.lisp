@@ -65,7 +65,7 @@
 ;;;; TOPLEVEL
 
 (defun lambda-expand-expr (x)
-  (& (%set-atom-fun? x)
+  (& (%set-local-fun? x)
      (lambda? ..x.)
      (funinfo-add-local-function-args *funinfo* .x. (lambda-args ..x.)))
   (pcase x

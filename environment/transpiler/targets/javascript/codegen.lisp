@@ -34,7 +34,7 @@
                  "else "
                      ,alternative " ();" ,*newline*))
 
-(define-js-macro %set-atom-fun (plc val)
+(define-js-macro %set-local-fun (plc val)
   `(%%native ,*js-indent* ,plc " = " ,val ,*js-separator*))
 
 (define-js-macro return-from (block-name x)
