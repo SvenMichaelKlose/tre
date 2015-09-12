@@ -1,6 +1,8 @@
 #!/bin/sh
 # tré – Copyright (c) 2005–2015 Sven Michael Klose <pixel@hugbox.org>
 
+set -e
+
 ARGS="$2 $3 $4 $5 $6 $7 $8 $9"
 
 FILES="
@@ -116,12 +118,12 @@ link ()
 {
 	echo "Linking..."
 	OBJS=`find obj -name \*.o`
-	$LD -o tre $OBJS $LIBFLAGS || exit 1
+	$LD -o tre $OBJS $LIBFLAGS
 }
 
 make_revision_header ()
 {
-    REV=`git log --pretty=oneline | wc -l` || exit 1
+    REV=`git log --pretty=oneline | wc -l`
     REV=`expr 3290 + $REV`
     echo $REV >environment/_current-version
     echo "#ifndef TRE_REVISION" >environment/transpiler/targets/c/native/_revision.h
@@ -136,7 +138,7 @@ standard_compile ()
 	mkdir -p obj
 	for f in $FILES; do
 		echo "Compiling $f"
-		$CC $CFLAGS $COPTS -c -o obj/$f.o environment/transpiler/targets/c/native/$f || exit 1
+		$CC $CFLAGS $COPTS -c -o obj/$f.o environment/transpiler/targets/c/native/$f
 	done
 }
 
@@ -152,19 +154,19 @@ crunsh_compile ()
 	done
 	echo
 	echo "Compiling..."
-	$CC $CFLAGS $COPTS -o tre $CRUNSHTMP $LIBFLAGS || exit 1
+	$CC $CFLAGS $COPTS -o tre $CRUNSHTMP $LIBFLAGS
 	rm $CRUNSHTMP
 }
 
 install_it ()
 {
     echo "Installing 'tre' else to '$BINDIR'..."
-	sudo cp tre $BINDIR || exit 1
+	sudo cp tre $BINDIR
     sudo mkdir -p /usr/local/lib/tre
     echo "Installing SBCL image to '/usr/local/lib/tre/image'..."
-    sudo cp image /usr/local/lib/tre || exit 1
+    sudo cp image /usr/local/lib/tre
     echo "Installing environment to '/usr/local/lib/tre/environment/'..."
-    sudo cp -r environment /usr/local/lib/tre || exit 1
+    sudo cp -r environment /usr/local/lib/tre
     echo "Done."
 }
 
@@ -177,12 +179,12 @@ crunsh)
 
 reload)
     echo "Reloading environment from source..."
-    echo | ./tre -n || exit 1
+    echo | ./tre -n
 	;;
 
 reloadnoassert)
     echo "Reloading environment from source..."
-    echo | ./tre -n -e "(setq *assert* nil)(setq *targets* '(c))" || exit 1
+    echo | ./tre -n -e "(setq *assert* nil)(setq *targets* '(c))"
 	;;
 
 debug)
@@ -201,148 +203,149 @@ build)
 
 precompile)
     echo "Precompiling target core functions..."
-	echo "(precompile-environments)" | $TRE || exit 1
+	echo "(precompile-environments)" | $TRE
 	;;
 
 
 compiler)
     echo "Compiling the compiler only..."
-	(echo "(compile-c-compiler)" | $TRE) || exit 1
+	echo "(compile-c-compiler)" | $TRE
     ;;
 
 bcompiler)
     echo "Compiling the bytecode compiler only..."
-	(echo "(compile-c-environment '(compile-bytecode-environment))" | $TRE) || exit 1
-	./make.sh crunsh $ARGS || exit 1
+	echo "(compile-c-environment '(compile-bytecode-environment))" | $TRE
+	./make.sh crunsh $ARGS
     ;;
 
 environment)
     echo "Compiling environment..."
-	(echo "(compile-c-environment)" | $TRE | tee boot.log) || exit 1
+	echo "(compile-c-environment)" | $TRE | tee boot.log
 	;;
 
 core)
     echo "Booting environment..."
-    (echo "(load \"boot-common.lisp\")" | $SBCL 2>&1) || exit 1
+    echo "(load \"boot-common.lisp\")" | $SBCL
 	;;
 
 genboot)
     echo "Compiling boot code with local image..."
-    $SBCL --core image makefiles/boot-common-lisp.lisp 2>&1 || exit 1
+    $SBCL --core image makefiles/boot-common-lisp.lisp
 	;;
 
 qboot)
     echo "Resetting boot code from repository..."
     git checkout -- boot-common.lisp
-    ./make.sh core 2>&1 || exit 1
+    ./make.sh core
 	;;
 
 boot)
-    ./make.sh qboot 2>&1 || exit 1
-    ./make.sh genboot 2>&1 || exit 1
-    ./make.sh core 2>&1 || exit 1
+    ./make.sh qboot
+    ./make.sh genboot
+    ./make.sh core
 	;;
 
 pgo)
     echo "Profile-guided optimization..."
-	./make.sh crunsh -pg -fprofile-generate $ARGS || exit 1
+	./make.sh crunsh -pg -fprofile-generate $ARGS
     mv environment/transpiler/targets/c/native/_compiled-env.c _ce.c
-	./make.sh environment $ARGS || exit 1
+	./make.sh environment $ARGS
     mv _ce.c environment/transpiler/targets/c/native/_compiled-env.c
-	./make.sh crunsh -fprofile-use $ARGS || exit 1
+	./make.sh crunsh -fprofile-use $ARGS
 	;;
 
 ctests)
-    (echo "(do-tests)" | $TRE) || exit 1
-    echo "Environment tests passed."
+    echo "(do-tests)" | $TRE
 	;;
 
 phptests)
     echo "PHP target tests..."
-    mkdir compiled
-    $TRE tests/php.lisp || exit 1
-    php compiled/test.php >_phptests.log || exit 1
+    mkdir -p compiled
+    $TRE tests/php.lisp
+    php compiled/test.php >_phptests.log
     cmp tests/php.correct-output _phptests.log || (diff tests/php.correct-output _phptests.log; exit 1)
-    echo "PHP target tests passed."
 	;;
 
 jstests)
     echo "JavaScript target tests..."
-    mkdir compiled
-    $TRE tests/js.lisp || exit 1
-    (nodejs compiled/test.js >_nodejstests.log || node compiled/test.js >_nodejstests.log) || exit 1
+    mkdir -p compiled
+    $TRE tests/js.lisp
+    nodejs compiled/test.js >_nodejstests.log
     cmp tests/js.correct-output _nodejstests.log || (diff tests/js.correct-output _nodejstests.log; exit 1)
     echo "JavaScript target tests passed in node.js."
     chromium-browser compiled/test.html &
 	;;
 
 updatetests)
-    $TRE tests/php.lisp || exit 1
-    $TRE tests/js.lisp || exit 1
+    $TRE tests/php.lisp
+    $TRE tests/js.lisp
     echo "Updating PHP target test data..."
-    php compiled/test.php >tests/php.correct-output || exit 1
+    php compiled/test.php >tests/php.correct-output
     echo "Updating JavaScript target test data (node.js only)..."
-    (nodejs compiled/test.js >tests/js.correct-output || node compiled/test.js >tests/js.correct-output) || exit 1
+    nodejs compiled/test.js >tests/js.correct-output || node compiled/test.js >tests/js.correct-output
     ;;
 
 tests)
     echo "Making tests..."
-	./make.sh ctests || exit 1
-	./make.sh phptests || exit 1
-	./make.sh jstests || exit 1
+	./make.sh ctests
+	./make.sh phptests
+	./make.sh jstests
 	;;
 
 bytecode)
     echo "Making bytecodes for everything..."
-	(echo "(load-bytecode (compile-bytecode-environment))(dump-system \"image\")" | $TRE) || exit 1
+	echo "(load-bytecode (compile-bytecode-environment))(dump-system \"image\")" | $TRE
 	;;
 
 bytecode-image)
     echo "Making bytecodes for everything..."
-	(echo "(with-output-file o \"bytecode-image\" (adolist ((compile-bytecode-environment)) (late-print ! o)))" | $TRE) || exit 1
+	echo "(with-output-file o \"bytecode-image\" (adolist ((compile-bytecode-environment)) (late-print ! o)))" | $TRE
 	;;
 
 webconsole)
-    $TRE makefiles/webconsole.lisp || exit 1
+    $TRE makefiles/webconsole.lisp
 	;;
 
 jsdebugger)
-    $TRE makefiles/debugger-js.lisp || exit 1
+    $TRE makefiles/debugger-js.lisp
     ;;
 
 examples)
     $TRE examples/make-standard.lisp
     $TRE examples/make-standard-nodejs.lisp
     $TRE examples/make-standard-php.lisp
-    $TRE examples/make-compiler-dumps-for-butlast.lisp | tee compiled/compiler-dumps-for-butlast.lisp
-    $TRE examples/make-compiler-dumps.lisp | tee compiled/compiler-dumps.lisp
+    echo "Making compiler dump for BUTLAST in examples/hello-world.lisp…"
+    $TRE examples/make-compiler-dumps-for-butlast.lisp > compiled/compiler-dumps-for-butlast.lisp
+    echo "Making complete compiler dump for examples/hello-world.lisp…"
+    $TRE examples/make-compiler-dumps.lisp > compiled/compiler-dumps.lisp
 #   $TRE examples/make-obfuscated.lisp # TODO: Fix setting the current *PACKAGE*.
     ;;
 
 all)
-    ./make.sh boot $ARGS || exit 1
-    ./make.sh tests || exit 1
-    ./make.sh examples || exit 1
-#   ./make.sh webconsole || exit 1
-#	./make.sh bytecode-image || exit 1
-#   ./make.sh jsdebugger || exit 1
+    ./make.sh boot $ARGS
+    ./make.sh tests
+    ./make.sh examples
+#   ./make.sh webconsole
+#	./make.sh bytecode-image
+#   ./make.sh jsdebugger
+    echo "All done."
     ;;
 
 profile)
-    echo "(= (transpiler-profile? *c-transpiler*) t)(compile-c-environment)" | $TRE || exit -1
-    ./make.sh crunsh || exit 1
-    echo "(with-profile (compile-c-environment))(with-output-file o \"profile.log\" (adolist ((profile)) (late-print ! o)))" | $TRE || exit -1
+    echo "(= (transpiler-profile? *c-transpiler*) t)(compile-c-environment)" | $TRE
+    ./make.sh crunsh
+    echo "(with-profile (compile-c-environment))(with-output-file o \"profile.log\" (adolist ((profile)) (late-print ! o)))" | $TRE
     ;;
 
 releasetests)
     echo "Making release tests..." | tee make.log
     echo "Checking regular build." >>make.log
-	./make.sh distclean || exit 1
-	./make.sh build $ARGS || exit 1
+	./make.sh distclean
+	./make.sh build $ARGS
     echo "Checking regular build's reload." >>make.log
-	./make.sh reload || exit 1
-	./make.sh clean || exit 1
-    ./make.sh all $ARGS || exit 1
+	./make.sh reload
+	./make.sh clean
+    ./make.sh all $ARGS
     echo "Release tests done." >>make.log
 	;;
 
