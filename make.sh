@@ -316,8 +316,6 @@ examples)
     $TRE examples/make-standard-php.lisp
     echo "Making compiler dump for BUTLAST in examples/hello-world.lisp…"
     $TRE examples/make-compiler-dumps-for-butlast.lisp > compiled/compiler-dumps-for-butlast.lisp
-    echo "Making complete compiler dump for examples/hello-world.lisp…"
-    $TRE examples/make-compiler-dumps.lisp > compiled/compiler-dumps.lisp
 #   $TRE examples/make-obfuscated.lisp # TODO: Fix setting the current *PACKAGE*.
     ;;
 
@@ -329,6 +327,11 @@ all)
 #	./make.sh bytecode-image
 #   ./make.sh jsdebugger
     echo "All done."
+    ;;
+
+extra)
+    echo "Making complete compiler dump for examples/hello-world.lisp…"
+    $TRE examples/make-compiler-dumps.lisp > compiled/compiler-dumps.lisp
     ;;
 
 profile)
@@ -386,7 +389,8 @@ restore)
     echo "  bytecode        Compile environment to bytecode, replacing the functions."
     echo "  bytecode-image  Compile environment to PRINTed bytecode image."
     echo "  examples        Compile everything in examples/."
-    echo "  all             Compile everything makefiles/ has to offer."
+    echo "  all             Compile almost everything."
+    echo "  all             Compile everything 'all' didn't compile."
     echo "  build           Do a regular build file by file."
     echo "  debug           Compile C sources for gdb. May the source be with you."
     echo "  crunsh          Compile C sources as one big file for best optimization."
