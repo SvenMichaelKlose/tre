@@ -12,12 +12,13 @@
 			  :arguments-on-stack?  t
               :disabled-passes      '(:encapsulate-strings
                                       :convert-identifiers)
-              :encapsulate-strings? nil
               :function-prologues?  nil
               :function-name-prefix nil
               :import-variables?    nil
               :expex-initializer    #'bc-expex-initializer
-              :postprocessor        #'tree-list)
+              :postprocessor        #'tree-list
+              :configurations       '((:save-sources? . nil)
+                                      (:save-argument-defs-only? . nil)))
     (transpiler-add-plain-arg-funs ! *builtins*)))
 
 (defvar *bc-transpiler* (make-bc-transpiler))

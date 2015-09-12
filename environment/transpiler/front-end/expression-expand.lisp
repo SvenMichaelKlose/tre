@@ -2,6 +2,9 @@
 
 (defvar *expex* nil)
 
+; TODO
+(defun expex-set-global-variable-value (x)
+  (list x))
 
 ;;;; SHARED SETTER FILTER
 

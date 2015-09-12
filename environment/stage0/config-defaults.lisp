@@ -12,7 +12,7 @@
 
 ;; transpiler
 
-(%defvar *targets*                 '(:cl :js))
+(%defvar *targets*                 '(:cl :js :php :bc :c))
 (%defvar *print-notes?*            t)
 (%defvar *print-status?*           t)
 (%defvar *have-environment-tests*  nil)
