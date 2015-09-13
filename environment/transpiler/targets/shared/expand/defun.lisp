@@ -99,7 +99,7 @@
        ,@(when (& make-expander?
                   (| (always-expand-arguments?)
                      (not (simple-argument-list? args))))
-           (with-gensym p
+           (with-gensym expander-arg
              (shared-defun-without-expander (c-expander-name fun-name)
-                                            (list p)
-                                            (compile-argument-expansion-function-body fun-name args p)))))))
+                                            (list expander-arg)
+                                            (compile-argument-expansion-function-body fun-name args expander-arg)))))))
