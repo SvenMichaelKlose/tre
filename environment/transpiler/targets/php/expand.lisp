@@ -12,6 +12,8 @@
          (eq ,x. ,@..x))
      `(eq ,@x)))
 
+(define-php-std-macro %defmacro (name args &body body))
+
 (define-php-std-macro defun (name args &body body)
   (let fun-name (%defun-name name)
     `(%%block
