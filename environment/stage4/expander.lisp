@@ -71,21 +71,16 @@
              (alet (expander-argdefs !)
                (= (href ! ',name) `,args)))))))
 
-(defun expander-expand-once (expander-name x)
-  (alet (expander-get expander-name)
-    (| (expander? !)
-       (error "Expander ~A is not defined." (symbol-name expander-name)))
-    (with-temporaries (*macro?*     (expander-pred !)
-                       *macrocall*  (expander-call !))
-      (%macroexpand x))))
-
 (defun expander-expand (expander-name expr)
   (alet (expander-get expander-name)
     (| (expander? !)
        (error "Expander ~A is not defined." (symbol-name expander-name)))
     (funcall (expander-pre !))
     (prog1
-      (repeat-while-changes [expander-expand-once expander-name _] expr)
+      (repeat-while-changes [with-temporaries (*macro?*     (expander-pred !)
+                                               *macrocall*  (expander-call !))
+                              (%macroexpand _)]
+                            expr)
       (funcall (expander-post !)))))
 
 (defun expander-has-macro? (expander-name macro-name)
