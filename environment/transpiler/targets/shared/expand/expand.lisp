@@ -5,15 +5,14 @@
      ,@(@ [`(,($ 'define- _ '-std-macro) ,@x)]
           (intersect *targets* (make-keywords targets)))))
 
-(define-shared-std-macro (js php) defvar-native (&rest x)
-  (print-definition `(defvar-native ,@x))
-  (+! (predefined-symbols) x)
-  (apply #'add-obfuscation-exceptions x)
-  nil)
-
 (define-shared-std-macro (js php) dont-obfuscate (&rest symbols)
   (apply #'add-obfuscation-exceptions symbols)
   nil)
+
+(define-shared-std-macro (js php) defvar-native (&rest x)
+  (print-definition `(defvar-native ,@x))
+  (+! (predefined-symbols) x)
+  `(dont-obfuscate ,@x))
 
 (define-shared-std-macro (js php) declare-native-cps-function (&rest symbols)
   (print-definition `(declare-native-cps-function ,@symbols))
