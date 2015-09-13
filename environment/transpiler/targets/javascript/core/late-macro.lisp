@@ -10,6 +10,9 @@
 (defun %%macrocall (x)
   (funcall (expander-call *standard-macro-expander*) x))
 
+; XXX I assume this is some work-around for some fixed xhost
+; macroexpansion issue and can be removed safely. (pixel)
+
 (defvar *environment-macros* (copy-alist *macros*))
 (define-expander 'environment-macros)
 (set-expander-macros 'environment-macros *environment-macros*)
