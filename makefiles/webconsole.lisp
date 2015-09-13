@@ -1,9 +1,5 @@
 ; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
 
-(load "environment/platforms/shared/lml.lisp")
-(load "environment/platforms/shared/lml2xml.lisp")
-(load "environment/platforms/shared/html/doctypes.lisp")
-(load "environment/platforms/shared/html/script.lisp")
 (load "environment/platforms/js/event/names.lisp")
 
 (defvar *log-events?* nil)
