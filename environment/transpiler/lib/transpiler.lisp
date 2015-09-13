@@ -17,10 +17,10 @@
               :test #'eq))
 
 (defun make-host-variables ()
-  (alist-hash (@ [cons _. t] *variables*) :test #'eq))
+  (alist-hash (@ [. _. t] *variables*) :test #'eq))
 
 (defun make-functionals ()
-  (alist-hash (@ [cons _ t] *functionals*) :test #'eq))
+  (alist-hash (@ [. _ t] *functionals*) :test #'eq))
 
 (defstruct transpiler
   (:global *transpiler*)
