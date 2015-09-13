@@ -1,4 +1,4 @@
-;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
 
 (defun assignment-to-self? (x)
   (& (%=? x)
@@ -9,8 +9,8 @@
     (& (%=? a)
 	   (%=? n)
        .a. (atom .a.)
-	   (eq .a. ..n.
-	   (eq .n. ..a.)))))
+	   (eq .a. ..n.)
+	   (eq .n. ..a.))))
 
 (defun jump-to-following-tag? (a d)
   (& d
