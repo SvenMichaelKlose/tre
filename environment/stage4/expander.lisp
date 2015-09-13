@@ -64,13 +64,13 @@
     (with-gensym g
       `(progn
          (& (expander-has-macro? ',expander-name ',name)
-            (error ,(format nil "Redefinition of macro ~A in expander ~A." name expander-name)))
-           (defun ,g ,expanded-argdef ,@body)
-           (alet (expander-get ',expander-name)
-             (alet (expander-macros !)
-               (= (href ! ',name) #',g))
-             (alet (expander-argdefs !)
-               (= (href ! ',name) `,args)))))))
+            (warn ,(format nil "Redefinition of macro ~A in expander ~A." name expander-name)))
+         (defun ,g ,expanded-argdef ,@body)
+         (alet (expander-get ',expander-name)
+           (alet (expander-macros !)
+             (= (href ! ',name) #',g))
+           (alet (expander-argdefs !)
+             (= (href ! ',name) `,args)))))))
 
 (defun expander-expand (expander-name expr)
   (alet (expander-get expander-name)
