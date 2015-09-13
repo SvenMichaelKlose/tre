@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2009–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2009–2013,2015 Sven Michael Klose <pixel@copei.de>
 
 (defun table-get-rows (x)
   (((x.ancestor-or-self "table").get "tbody").children-list))
@@ -7,7 +7,7 @@
   (x.ancestor-or-self "tr").children.length)
 
 (defun table-num-rows (x)
-  (x,ancestor-or-self "table").children.length)
+  (x.ancestor-or-self "table").children.length)
 
 (defun table-get-first-row (x)
   ((x.ancestor-or-self "table").get "tbody").first-child)
