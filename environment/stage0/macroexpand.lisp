@@ -27,27 +27,20 @@
      (. (%macroexpand x.)
         (%macroexpand-rest .x))))
 
-(%defun %macroexpand-xlat (x)
-  (setq *current-macro* x.)
-  (#'((x)
-        (setq *current-macro* nil)
-        x)
-    (apply *macrocall* (list x))))
-
-(%defun %macroexpand-call (x)
-  (? (apply *macro?* (list x))
-     (%macroexpand-xlat x)
-     x))
-
 (%defun %macroexpand (x)
   (?
-    (atom x)                   x
-    (eq x. 'BACKQUOTE)         (. 'BACKQUOTE (apply *macroexpand-backquote* (list .x)))
-    (eq x. 'QUASIQUOTE)        (. 'QUASIQUOTE (%macroexpand .x))
-    (eq x. 'QUASIQUOTE-SPLICE) (. 'QUASIQUOTE-SPLICE (%macroexpand .x))
-    (%macroexpand-call (? (eq x. 'QUOTE)
-                          x
-                          (%macroexpand-rest x)))))
+    (atom x)                    x
+    (apply *macro?* (list x))   (#'((x)
+                                     (? (cons? x)
+                                        (. x. (%macroexpand-rest .x))
+                                        x))
+                                 (apply *macrocall* (list x)))
+    (eq x. 'QUOTE)              x
+    (eq x. 'BACKQUOTE)          (. 'BACKQUOTE (apply *macroexpand-backquote* (list .x)))
+    (eq x. 'QUASIQUOTE)         (. 'QUASIQUOTE (%macroexpand .x))
+    (eq x. 'QUASIQUOTE-SPLICE)  (. 'QUASIQUOTE-SPLICE (%macroexpand .x))
+    (. (%macroexpand x.)
+       (%macroexpand-rest .x))))
 
 (%defun %%env-macro? (x)
   (%%macro? x))
