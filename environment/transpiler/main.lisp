@@ -1,8 +1,4 @@
-; tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@hugbox.org>
-
-;,(awhen (& (function? #'%%=-transpiler-save-argument-defs-only?)
-;           *transpiler*)
-;   (%%usetf-transpiler-save-argument-defs-only? t !))
+; tré – Copyright (c) 2005–2015 Sven Michael Klose <pixel@hugbox.org>
 
 (env-load "transpiler/lib/main.lisp")
 (env-load "transpiler/end.lisp")
