@@ -3,9 +3,6 @@
 (defmacro define-c-std-macro (name args &body body)
   `(define-transpiler-std-macro *c-transpiler* ,name ,args ,@body))
 
-(defun c-expander-name (x)
-  ($ x '_treexp))
-
 (define-c-std-macro defun (name args &body body)
   (c-compiled-symbol (%defun-name name))
   (shared-defun name args body))

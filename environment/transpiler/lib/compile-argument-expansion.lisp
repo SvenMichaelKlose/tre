@@ -1,5 +1,8 @@
 ; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
 
+(defun c-expander-name (x)
+  ($ x '_treexp))
+
 (defun compile-argument-expansion-0 (fun-name adef p)
   (with ((argdefs key-args) (make-&key-alist adef)
 
