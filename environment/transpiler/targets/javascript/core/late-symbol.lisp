@@ -38,3 +38,8 @@
      (& (object? x)
 	     x.__class
          (%%%== x.__class ,(obfuscated-identifier 'symbol)))))
+
+(defun package-name (x)
+  (? (eq x *keyword-package*)
+     "KEYWORD"
+     "TRE"))
