@@ -237,7 +237,7 @@
   '(%%native "null; debugger"))
 
 (define-js-macro %%%eval (x)
-  `((%%native "window.eval ") ,x))
+  `((%%native "window.eval (" ,x ")")))
 
 (define-js-macro %global (x)
   x)
