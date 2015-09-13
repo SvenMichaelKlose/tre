@@ -13,13 +13,13 @@
 (defun argument-name (x)           x)
 
 (defun error-arguments-missing (fun args)
-  (error "Arguments ~A missing for function ~A." fun args))
+  (error "Arguments ~A missing for ~A." args fun))
 
 (defun error-too-many-arguments (fun args)
-  (error "Too many arguments ~A for function ~A." args fun))
+  (error "Too many arguments ~A to ~A." args fun))
 
 (defun error-&rest-has-value (fun)
-  (error "In function ~A: &REST cannot have a value." fun))
+  (error "In arguments to ~A: &REST cannot have a value." fun))
 
 (defun make-&key-alist (def)
   (with (keys nil
@@ -72,7 +72,7 @@
          err
 		   #'((msg args)
                 (? break-on-errors?
-				   (return (error (+ "; Call of function ~A: ~A~%"
+				   (return (error (+ "~F; In argument expansion for ~A: ~A~%"
                                      "; Argument definition: ~A~%"
                                      "; Given arguments: ~A~%")
                                   (symbol-name fun)
@@ -83,17 +83,17 @@
 		 exp-static
 		   #'((def vals)
 			    (& no-static
-				   (return (err "static argument definition after ~A"
+				   (return (err "Static argument definition after ~A."
                                 (list no-static))))
 			    (& apply-values? (not vals)
-				   (return (err "argument ~A missing" (list num))))
+				   (return (err "Argument ~A missing." (list num))))
 				(. (. (argdef-get-name def.) vals.)
                    (exp-main .def .vals)))
 
 		 exp-optional
 		   #'((def vals)
 				(& (argument-keyword? def.)
-				   (return (err "Keyword ~A after &OPTIONAL" (list def.))))
+				   (return (err "Keyword ~A after &OPTIONAL." (list def.))))
 				(= no-static '&optional)
 				(. (. (argdef-get-name def.)
 				      (argdef-get-value def vals))
@@ -128,10 +128,10 @@
 		 exp-sub
 		   #'((def vals)
 			    (& no-static
-				   (return (err "static sublevel argument definition after ~A"
+				   (return (err "Static sublevel argument definition after ~A."
                                 (list no-static))))
 				(& apply-values? (atom vals.)
-				   (return (err "sublist expected for argument ~A"
+				   (return (err "Sublist expected for argument ~A."
                                 (list num))))
                 (? concatenate-sublists?
 				   (nconc (argument-expand-0 fun def. vals.
@@ -148,7 +148,7 @@
 		 exp-check-too-many
            #'((def vals)
 			    (& (not def) vals
-				   (return (err "too many arguments. ~A max, but ~A more given"
+				   (return (err "Too many arguments. Maximum is ~A, but ~A more given."
                                 (list (length argdefs) (length vals))))))
 
 		 exp-main-non-key
