@@ -1,10 +1,9 @@
-; tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2015 Sven Michael Klose <pixel@copei.de>
 
 (defun funinfo-var-declarations (fi)
   (unless (stack-locals?)
-    (mapcan [unless (funinfo-arg? fi _)
-		      `((%var ,_))]
-	        (funinfo-vars fi))))
+    (!? (funinfo-vars fi)
+        `((%var ,@(remove-if [funinfo-arg? fi _] !))))))
 
 (defun funinfo-copiers-to-scoped-vars (fi)
   (let-when scoped-vars (funinfo-scoped-vars fi)
