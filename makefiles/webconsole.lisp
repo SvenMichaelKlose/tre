@@ -64,5 +64,7 @@
                              (event-manager.set-send-natively-by-default? document t)
                              (format t "Welcome to tr&eacute;, revision ~A. Copyright (c) 2005-2013 Sven Michael Klose &lt;pixel@copei.de&gt;~%" *tre-revision*))))
               :transpiler  *js-transpiler*
-              :emitter     [make-html-script "compiled/webconsole.html" _])
+              :emitter     [(format t "Writing to 'compiled/webconsole.html'…~F")
+                            (make-html-script "compiled/webconsole.html" _)
+                            (terpri)])
 (quit)
