@@ -1,6 +1,6 @@
 ; tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
 
-(%defvar *development?*       t)
+(%defvar *development?*       nil)
 (%defvar *assert*             t)
 (%defvar *print-definitions?* t)
 

@@ -4,7 +4,7 @@
   (| (member-if [& (number? _)
                    (== _ tag)]
                 *body*)
-     (funinfo-error "Tag ~A not found in body ~A." tag *body*)))
+     (funinfo-error "Internal compiler error: Tag ~A not found in body ~A." tag *body*)))
 
 (defun removable-place? (x)
   (alet *funinfo*

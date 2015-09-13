@@ -31,59 +31,9 @@
        ,end-tag
 	   (identity ~%ret))))
 
-(define-compiler-macro go (tag)
-  (!? (cdr (assoc tag *tagbody-replacements* :test #'eq))
-      `(%%go ,!)
-      (with-compiler-tag g
-        (acons! tag g *tagbody-replacements*)
-        `(%%go ,g))))
-
-(define-compiler-macro tagbody (&body body)
-  `(%%block
-     ,@(@ [(? (cons? _)
-		      _
-		     (| (assoc-value _ *tagbody-replacements* :test #'eq)
-		       	_))]
-          body)
-     (identity nil)))
-
 (define-compiler-macro progn (&body body)
   (!? body
       `(%%block ,@(wrap-atoms !))))
-
-(define-expander 'blockexpand)
-(defvar *blocks* nil)
-
-(defun blockexpand (name body)
-  (? body
-	 (with-compiler-tag end-tag
-	   (with-temporary *blocks* (. (. name end-tag) *blocks*)
-         (with (b     (expander-expand 'blockexpand body)
-                head  (butlast b)
-                tail  (last b)
-                ret   `(%%block
-                         ,@head
-                         ,@(? (vm-jump? tail.)
-                              tail
-                              `((%= ~%ret ,@tail)))))
-           (append ret `(,end-tag
-                         (identity ~%ret))))))
-    `(identity nil)))
-
-(define-expander-macro blockexpand return-from (block-name expr)
-  (| *blocks*
-     (error "RETURN-FROM outside BLOCK."))
-  (!? (assoc block-name *blocks* :test #'eq)
-     `(%%block
-        (%= ~%ret ,expr)
-        (%%go ,.!))
-     (error "RETURN-FROM unknown BLOCK ~A." block-name)))
-
-(define-expander-macro blockexpand block (name &body body)
-  (blockexpand name body))
-
-(define-compiler-macro block (name &body body)
-  (blockexpand name body))
 
 (define-compiler-macro setq (&rest args)
   `(%%block ,@(@ [`(%= ,_. ,._.)]
@@ -118,3 +68,72 @@
 (define-compiler-macro function (&rest x)
   `(function ,x. ,@(!? .x
                        (compress-%%blocks !))))
+
+
+;; TAGBODY
+
+(define-expander 'tagbodyexpand)
+(defvar *tagbody-replacements* nil)
+
+(defun tag-replacement (tag)
+  (cdr (assoc tag *tagbody-replacements* :test #'eq)))
+
+(defun tagbodyexpand (body)
+  (with-temporary *tagbody-replacements* *tagbody-replacements*
+    (@ [? (atom _)
+          (acons! _ (make-compiler-tag) *tagbody-replacements*)]
+       body)
+    `(%%block
+       ,@(@ [| (& (atom _)
+                   (tag-replacement _))
+               _]
+            (expander-expand 'tagbodyexpand body))
+       (identity nil))))
+
+(define-expander-macro tagbodyexpand go (tag)
+  (!? (tag-replacement tag)
+      `(%%go ,!)
+      (error "Can't find tag ~A in TAGBODY." tag)))
+
+(define-expander-macro tagbodyexpand tagbody (&body body)
+  (tagbodyexpand body))
+
+(define-compiler-macro tagbody (&body body)
+  (tagbodyexpand body))
+
+
+;; BLOCK
+
+(define-expander 'blockexpand)
+(defvar *blocks* nil)
+
+(defun blockexpand (name body)
+  (? body
+	 (with-compiler-tag end-tag
+	   (with-temporary *blocks* (. (. name end-tag) *blocks*)
+         (with (b     (expander-expand 'blockexpand body)
+                head  (butlast b)
+                tail  (last b)
+                ret   `(%%block
+                         ,@head
+                         ,@(? (vm-jump? tail.)
+                              tail
+                              `((%= ~%ret ,@tail)))))
+           (append ret `(,end-tag
+                         (identity ~%ret))))))
+    `(identity nil)))
+
+(define-expander-macro blockexpand return-from (block-name expr)
+  (| *blocks*
+     (error "RETURN-FROM outside BLOCK."))
+  (!? (assoc block-name *blocks* :test #'eq)
+     `(%%block
+        (%= ~%ret ,expr)
+        (%%go ,.!))
+     (error "RETURN-FROM unknown BLOCK ~A." block-name)))
+
+(define-expander-macro blockexpand block (name &body body)
+  (blockexpand name body))
+
+(define-compiler-macro block (name &body body)
+  (blockexpand name body))
