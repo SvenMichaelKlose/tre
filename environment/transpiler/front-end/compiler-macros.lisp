@@ -79,7 +79,7 @@
   (cdr (assoc tag *tagbody-replacements* :test #'eq)))
 
 (defun tagbodyexpand (body)
-  (with-temporary *tagbody-replacements* *tagbody-replacements*
+  (with-temporary *tagbody-replacements* nil
     (@ [? (atom _)
           (acons! _ (make-compiler-tag) *tagbody-replacements*)]
        body)
