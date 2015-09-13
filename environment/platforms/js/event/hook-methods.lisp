@@ -1,9 +1,9 @@
 ; tré – Copyright (c) 2011–2012,2014–2015 Sven Michael Klose <pixel@copei.de>
 
 (progn
-  ,@(@ [= (slot-value userfun_event-module.prototype ,(list 'quote (make-symbol (upcase _))))
-          #'((fun elm)
-              (this.hook ,_ fun elm))]
+  ,@(@ [`(= (slot-value userfun_event-module.prototype ',(make-symbol (upcase _)))
+            #'((fun elm)
+                 (this.hook ,_ fun elm)))]
        '("click" "dblclick"
          "mousemove" "mouseover" "mouseout"
          "mousedownright" "mousedownleft"
