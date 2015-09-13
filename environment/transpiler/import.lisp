@@ -72,7 +72,7 @@
              vars      (import-wanted-variables))
         (? (| funs exported vars)
            (append funs exported vars (import-from-host))
-           (delayed-var-inits))))))
+           (apply #'append (delayed-var-inits)))))))
 
 (defun current-scope? (x)
   (member x (funinfo-names *funinfo*) :test #'eq))
