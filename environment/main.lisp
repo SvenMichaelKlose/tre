@@ -21,20 +21,5 @@
 (env-load "platforms/shared/lml.lisp")
 (env-load "platforms/shared/lml2xml.lisp")
 
-(setq *tests* (reverse *tests*))
-
-(defun %load-launchfile ()
-  (%start-core)
-  (awhen *launchfile*
-    (load !))
-  (read-eval-loop)
-  (quit))
-
-(defun dump-system (path)
-  (print-note "; Dumping environment to image '~A' ~F" path)
-  (sys-image-create path #'%load-launchfile)
-  (fresh-line))
-
 (env-load "config-after-reload.lisp")
-
-(dump-system "image")
+(env-load "write-image.lisp")
