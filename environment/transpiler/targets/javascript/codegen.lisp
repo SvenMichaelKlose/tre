@@ -37,11 +37,6 @@
 (define-js-macro %set-local-fun (plc val)
   `(%%native ,*js-indent* ,plc " = " ,val ,*js-separator*))
 
-(define-js-macro return-from (block-name x)
-  (print-funinfo *funinfo*)
-  (error "Cannot return from unknown BLOCK ~A in ~A."
-         block-name (human-readable-funinfo-names *funinfo*)))
-
 
 ;;;; FUNCTIONS
 

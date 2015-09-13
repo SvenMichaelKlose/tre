@@ -136,10 +136,6 @@
   `(,*c-indent* "if (" ,x " != NIL)" ,*newline*
 	,*c-indent* ,@(c-line `(%%native "goto l" ,tag))))
 
-(define-c-macro return-from (block-name x)
-  x
-  (error "Cannot return from unknown BLOCK ~A." block-name))
-
 
 ;;;; SYMBOLS
 

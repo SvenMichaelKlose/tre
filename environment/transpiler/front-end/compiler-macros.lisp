@@ -49,34 +49,41 @@
 
 (define-compiler-macro progn (&body body)
   (!? body
-      `(%%block ,@(wrap-atoms body))))
+      `(%%block ,@(wrap-atoms !))))
 
-(define-expander 'compiler-return)
-(defvar *blockname* nil)
-(defvar *blockname-replacement* nil)
+(define-expander 'blockexpand)
+(defvar *blocks* nil)
 
-(define-expander-macro compiler-return return-from (block-name expr)
-  (? (eq block-name *blockname*)
+(defun blockexpand (name body)
+  (? body
+	 (with-compiler-tag end-tag
+	   (with-temporary *blocks* (. (. name end-tag) *blocks*)
+         (with (b     (expander-expand 'blockexpand body)
+                head  (butlast b)
+                tail  (last b)
+                ret   `(%%block
+                         ,@head
+                         ,@(? (vm-jump? tail.)
+                              tail
+                              `((%= ~%ret ,@tail)))))
+           (append ret `(,end-tag
+                         (identity ~%ret))))))
+    `(identity nil)))
+
+(define-expander-macro blockexpand return-from (block-name expr)
+  (| *blocks*
+     (error "RETURN-FROM outside BLOCK."))
+  (!? (assoc block-name *blocks* :test #'eq)
      `(%%block
         (%= ~%ret ,expr)
-        (%%go ,*blockname-replacement*))
-	 `(return-from ,block-name ,expr)))
+        (%%go ,.!))
+     (error "RETURN-FROM unknown BLOCK ~A." block-name)))
 
-(define-compiler-macro block (block-name &body body)
-  (? body
-	 (with-compiler-tag g
-	   (with-temporaries (*blockname* block-name
-		                  *blockname-replacement* g)
-           (with (b     (expander-expand 'compiler-return body)
-			      head  (butlast b)
-                  tail  (last b)
-                  ret   `(%%block
-                           ,@head
-                           ,@(? (vm-jump? tail.)
-						        tail
-						        `((%= ~%ret ,@tail)))))
-            (append ret `(,g (identity ~%ret))))))
-    `(identity nil)))
+(define-expander-macro blockexpand block (name &body body)
+  (blockexpand name body))
+
+(define-compiler-macro block (name &body body)
+  (blockexpand name body))
 
 (define-compiler-macro setq (&rest args)
   `(%%block ,@(@ [`(%= ,_. ,._.)]
