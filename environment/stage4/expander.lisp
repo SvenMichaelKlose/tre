@@ -38,7 +38,8 @@
                                (symbol? _.)
 	                           (expander-macro-function ! _.)]))
     (| call
-       (= (expander-call !) [apply (expander-macro-function ! _.) (argument-expand-values 'expander-call (expander-macro-argdef ! _.) ._)]))
+       (= (expander-call !) [apply (expander-macro-function ! _.)
+                                   (argument-expand-values _. (expander-macro-argdef ! _.) ._)]))
     (= (expander-lookup !)
        #'((expander name)
            (href (expander-macros expander) name)))))
