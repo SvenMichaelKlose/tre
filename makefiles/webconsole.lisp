@@ -6,6 +6,9 @@
 (load "environment/platforms/shared/html/script.lisp")
 (load "environment/platforms/js/event/names.lisp")
 
+(defvar *log-events?* nil)
+
+(= *allow-redefinitions?* t)
 (= *have-compiler?* t)
 (= *have-c-compiler?* nil)
 ;(= (transpiler-dump-passes? *js-transpiler*) t)
