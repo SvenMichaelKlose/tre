@@ -76,3 +76,6 @@
      ,@(& (needs-var-declarations?)
           `((%var ,name)))
      (%= ,name ,val)))
+
+(define-shared-std-macro (bc c js php) %defvar (name &optional (val '%%no-value))
+  `(defvar ,name ,val))
