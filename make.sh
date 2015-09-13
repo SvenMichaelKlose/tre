@@ -233,14 +233,14 @@ genboot)
     $SBCL --core image makefiles/boot-common-lisp.lisp
 	;;
 
-qboot)
+reset)
     echo "Resetting boot code from repository..."
     git checkout -- boot-common.lisp
-    ./make.sh core
 	;;
 
 boot)
-    ./make.sh qboot
+    ./make.sh reset
+    ./make.sh core
     ./make.sh genboot
     ./make.sh core
 	;;
@@ -383,6 +383,7 @@ restore)
 	echo "Usage: make.sh [target]"
 	echo "Targets:"
 	echo "  boot            Build compiled environment from scratch."
+	echo "  reset           Checkout boot-common.lisp from repository."
 	echo "  compiler        Compile compiler and C target to C."
 	echo "  bcompiler       Compile compiler and bytecode target to C."
     echo "  environment     Compile environment to C."
