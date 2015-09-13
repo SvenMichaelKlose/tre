@@ -100,12 +100,6 @@
   (= (expex-argument-filter ex) #'c-argument-filter
      (expex-setter-filter ex) (c-expex-setter-filter)))
 
-(defun c-identifier-char? (x)
-  (| (<= #\a x #\z)
-     (<= #\A x #\Z)
-     (<= #\0 x #\9)
-     (in=? x #\_ #\. #\$ #\#)))
-
 (defun make-c-transpiler ()
   (create-transpiler
       :name                     :c

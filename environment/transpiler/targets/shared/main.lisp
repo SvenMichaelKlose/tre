@@ -4,6 +4,7 @@
 (env-load "transpiler/targets/shared/core-variables.lisp")
 (env-load "transpiler/targets/shared/functionals.lisp")
 (env-load "transpiler/targets/shared/noargs-tag.lisp")
+(env-load "transpiler/targets/shared/c-identifier-char-p.lisp")
 (env-load "transpiler/targets/shared/expand/defun.lisp")
 (env-load "transpiler/targets/shared/expand/class.lisp")
 (env-load "transpiler/targets/shared/expand/opt-string-concat.lisp")
