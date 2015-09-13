@@ -72,7 +72,7 @@
          err
 		   #'((msg args)
                 (? break-on-errors?
-				   (return (error (+ "~F; In argument expansion for ~A: ~A~%"
+				   (return (error (+ "~L; In argument expansion for ~A: ~A~%"
                                      "; Argument definition: ~A~%"
                                      "; Given arguments: ~A~%")
                                   (symbol-name fun)
