@@ -38,7 +38,9 @@
   `(%%native ,*js-indent* ,plc " = " ,val ,*js-separator*))
 
 (define-js-macro return-from (block-name x)
-  (error "Cannot return from unknown BLOCK ~A." block-name))
+  (print-funinfo *funinfo*)
+  (error "Cannot return from unknown BLOCK ~A in ~A."
+         block-name (human-readable-funinfo-names *funinfo*)))
 
 
 ;;;; FUNCTIONS
@@ -54,7 +56,7 @@
                                  (compiled-function-name-string name)
                                  name))
          `(,*newline*
-           ,(funinfo-comment (get-funinfo name))
+           ,(funinfo-comment (= *funinfo* (get-funinfo name)))
            ,translated-name " = " " function " ,@(js-argument-list 'codegen-function-macro (lambda-args !)) ,*newline*
 	       "{" ,*newline*
 		       ,@(lambda-body !)
