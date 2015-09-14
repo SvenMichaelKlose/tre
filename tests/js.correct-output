@@ -157,4 +157,4 @@ Test 156, TRIM-HEAD works<br>
 Test 157, TRIM-TAIL works<br>
 Test 158, TRIM works<br>
 Test 159, EMPTY-STRING? works<br>
-Tests done.
+Tests done.((BLOCK BUTLAST (BLOCK NIL (? (CDR PLIST) (CONS (CAR PLIST) (BUTLAST (CDR PLIST)))))))

@@ -19,7 +19,7 @@
 
 (defun js-emit-memorized-sources ()
   (clr (configuration :memorize-sources?))
-  (@ [`(%= (slot-value ,_. '__source) ,(list 'quote ._))]
+  (@ [`(%= (slot-value ,_. '__source) '(. ,_. (shared-defun-source ._)))]
      (memorized-sources)))
 
 (defun js-var-decls ()
