@@ -8,6 +8,7 @@
 (defvar *print-automatic-newline?* t)
 (defvar *always-print-package-names?* nil)
 (defvar *printer-argument-definitions* (make-hash-table :test #'eq))
+(defvar *invisible-package-names* '("TRE" "TRE-CORE"))
 
 (defun add-printer-argument-definition (name x)
   (= (href *printer-argument-definitions* name) x))
@@ -58,7 +59,8 @@
   (%with-brackets str info
     (++! (car (print-info-columns info)))
     (%late-print (car .x.) str info)
-    (fresh-line str)
+    (& *print-automatic-newline?*
+       (fresh-line str))
     (%print-body (cdr .x.) str info))
     (--! (car (print-info-columns info))))
 
@@ -69,7 +71,8 @@
       (%late-print .x. str info)
       (%print-gap str)
       (%late-print (car ..x.) str info)
-      (fresh-line str)
+      (& *print-automatic-newline?*
+         (fresh-line str))
       (push ! (print-info-columns info))
       (%print-body (cdr ..x.) str info)
       (pop (print-info-columns info)))))
@@ -107,7 +110,8 @@
       (adolist x
         (? first?
            (= first? nil)
-           (fresh-line str))
+           (& *print-automatic-newline?*
+              (fresh-line str)))
         (%late-print ! str info)))))
 
 (defun %print-call (x argdef str info)
@@ -120,7 +124,8 @@
            (%print-gap str)
            (?
              (& (%body? .!) ..!)  (progn
-                                    (fresh-line str)
+                                    (& *print-automatic-newline?*
+                                       (fresh-line str))
                                     (%print-body ..! str info))
              (%rest? .!)          (%print-rest ..! str info)
              (%key? .!)           (progn
@@ -200,8 +205,7 @@
              (t? x)
              *always-print-package-names?*)
     (alet (package-name (symbol-package x))
-      (| (string== ! "TRE")
-         (string== ! "TRE-CORE")))))
+      (some [string== ! _] *invisible-package-names*))))
 
 (defun %print-symbol (x str info)
   (awhen (& x
