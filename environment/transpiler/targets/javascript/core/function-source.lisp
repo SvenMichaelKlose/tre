@@ -8,14 +8,15 @@
 (defun function-arguments (x)
   (!? (function|symbol-function x)
       (!? !.__source
-          !.
+          (with-stream-string s !.
+            (read s))
           '(&rest unknown-args))
       '(&rest unknown-args)))
 
 (defun function-body (x)
   (alet (function|symbol-function x)
     (!? !.__source
-        (with-stream-string s ..!.
+        (with-stream-string s .!
           (read s)))))
 
 (defun function-source (x)

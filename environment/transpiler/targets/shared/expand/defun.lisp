@@ -52,9 +52,9 @@
 
 (defun shared-defun-source-setter (name args body)
   (alet (assoc-value name *functions* :test #'eq)
-    `((%= (slot-value ,name '__source) '(. ,(| !. args) 
-                                           ,@(unless (configuration :save-argument-defs-only?)
-                                               (list (shared-defun-source (| .! body)))))))))
+    `((%= (slot-value ,name '__source) (. ,(shared-defun-source (| !. args) )
+                                          ,@(unless (configuration :save-argument-defs-only?)
+                                              (list (shared-defun-source (| .! body)))))))))
 
 (defun shared-defun-source-memorizer (name args body)
   (when (configuration :save-sources?)
