@@ -193,7 +193,7 @@
   (with (f  [let s (compiled-function-name-string 'symbol)
               `(,s " (\"" ,(obfuscated-symbol-name _) "\", "
 	            ,@(? (keyword? _)
-	                 `((,s "(\"" ,(obfuscated-symbol-name (symbol-package _)) "\", null)"))
+	                 `("KEYWORDPACKAGE")
 	                 '(("null")))
 	            ")")])
     (alet *js-compiled-symbols*
