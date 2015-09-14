@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
 
 (defvar *symbols* (%%%make-hash-table))
 
@@ -20,6 +20,8 @@
 	   				          (%%%=-aref (%%%make-hash-table) *symbols* pkg-name)))
          (| (%%%aref symbol-table name)
             (%%%=-aref (new %symbol name pkg) symbol-table name))))))
+
+(defvar *keyword-package* (symbol "KEYWORD" nil))
 
 (defnative =-symbol-function (v x)
   (setq x.f v))

@@ -200,12 +200,15 @@
 (defun %print-symbol-package (name str)
   (%print-symbol-component (abbreviated-package-name name) str))
 
+(defun invisible-package? (x)
+  (alet (package-name x)
+    (some [string== ! _] *invisible-package-names*)))
+
 (defun invisible-package-name? (x)
   (unless (| (not x)
              (t? x)
              *always-print-package-names?*)
-    (alet (package-name (symbol-package x))
-      (some [string== ! _] *invisible-package-names*))))
+    (invisible-package? (symbol-package x))))
 
 (defun %print-symbol (x str info)
   (awhen (& x

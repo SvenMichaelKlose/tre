@@ -42,11 +42,15 @@
      ,(shared-defun name args (body-with-noargs-tag body))))
 
 (defun js-early-symbol-maker (g sym)
-   `(,@(unless (eq g '~%tfun)
-         `((%var ,g)))
-     (%= ,g (symbol ,(obfuscated-symbol-name sym)
-                    ,(!? (symbol-package sym)
-                         `(symbol ,(obfuscated-symbol-name !) nil))))))
+  `(,@(unless (eq g '~%tfun)
+        `((%var ,g)))
+    (%= ,g (symbol ,(obfuscated-symbol-name sym)
+                   ,(? (keyword? sym)
+                       '*keyword-package*
+                       (!? (symbol-package sym)
+                           (? (& (not (string== "COMMON-LISP" (package-name !)))
+                                 (invisible-package? !))
+                              `(symbol ,(obfuscated-symbol-name !) nil))))))))
 
 (define-js-std-macro defun (name args &body body)
   (with (dname  (%defun-name name)
