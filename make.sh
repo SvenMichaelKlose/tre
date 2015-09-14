@@ -302,6 +302,10 @@ bytecode-image)
 	echo "(with-output-file o \"bytecode-image\" (adolist ((compile-bytecode-environment)) (late-print ! o)))" | $TRE
 	;;
 
+nodeconsole)
+    $TRE makefiles/nodeconsole.lisp
+	;;
+
 webconsole)
     $TRE makefiles/webconsole.lisp
 	;;
@@ -324,6 +328,7 @@ all)
     ./make.sh tests
     ./make.sh examples
     ./make.sh webconsole
+    ./make.sh nodeconsole
 #	./make.sh bytecode-image
 #   ./make.sh jsdebugger
     echo "All done."
@@ -405,6 +410,7 @@ restore)
     echo "  precompile      Precompile obligatory target environments (EXPERIMENTAL)."
     echo "  profile         Make a profile of the compiler compiling itself."
     echo "  webconsole      Make web browser REPL."
+    echo "  nodeconsole     Make node.js REPL."
     echo "  ctests          Run C environemnt tests."
     echo "  jstests         Compile JavaScript target tests and run them with"
     echo "                  Chromium and node.js."
