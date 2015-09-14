@@ -49,7 +49,7 @@
                        '*keyword-package*
                        (!? (symbol-package sym)
                            (? (& (not (string== "COMMON-LISP" (package-name !)))
-                                 (invisible-package? !))
+                                 (not (invisible-package? !)))
                               `(symbol ,(obfuscated-symbol-name !) nil))))))))
 
 (define-js-std-macro defun (name args &body body)
