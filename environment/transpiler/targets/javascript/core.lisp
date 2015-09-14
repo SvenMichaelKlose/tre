@@ -11,9 +11,9 @@
 (defvar *js-core0* ,(list 'quote (js-load-core "" "return-value.lisp")))
 (defvar *js-core*
 	,(list 'quote (js-load-core ""
-                                "%princ.lisp"
-		                        "defined-functions.lisp"
 		                        "cons.lisp"
+		                        "defined-functions.lisp"
+                                "%princ.lisp"
 		                        "symbol.lisp"
 		                        "propertylist.lisp")))
 
