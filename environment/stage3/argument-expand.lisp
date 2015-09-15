@@ -16,7 +16,8 @@
   (error "Arguments ~A missing for ~A." args fun))
 
 (defun error-too-many-arguments (fun argdef args)
-  (error "Too many arguments ~A to ~A with argument definition ~A." args fun argdef))
+  (without-automatic-newline
+    (error "Too many arguments ~A to ~A with argument definition ~A." args fun argdef)))
 
 (defun error-&rest-has-value (fun)
   (error "In arguments to ~A: &REST cannot have a value." fun))
