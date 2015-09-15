@@ -327,8 +327,8 @@ all)
     ./make.sh boot $ARGS
     ./make.sh tests
     ./make.sh examples
-    ./make.sh webconsole
     ./make.sh nodeconsole
+#    ./make.sh webconsole
 #	./make.sh bytecode-image
 #   ./make.sh jsdebugger
     echo "All done."
