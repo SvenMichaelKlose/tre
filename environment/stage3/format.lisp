@@ -58,8 +58,7 @@
 
 (defun format (str txt &rest args)
   (with-default-stream nstr str
-    (with-temporary *print-automatic-newline?* nil
-      (%format (make-format-info :stream nstr :text txt :args args) (string-list txt) args))))
+    (%format (make-format-info :stream nstr :text txt :args args) (string-list txt) args)))
 
 (defun neutralize-format-string (x)
   (list-string (mapcan [? (== _ #\~)
