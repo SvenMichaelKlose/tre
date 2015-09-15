@@ -48,11 +48,11 @@
 (defun get-symbol-and-package (str)
   (skip-spaces str)
   (let sym (get-symbol str)
-	(awhen (peek-char str)
-	  (? (== ! #\:)
-	     (values (| sym t) (& (read-char str)
-				              (get-symbol str)))
-	     (values nil sym)))))
+    (? (awhen (peek-char str)
+         (== ! #\:))
+       (values (| sym t) (& (read-char str)
+                            (get-symbol str)))
+       (values nil sym))))
 
 (defun read-string-0 (str)
   (let c (read-char str)
@@ -68,8 +68,7 @@
 (defun read-comment-block (str)
   (while (not (& (== #\| (read-char str))
 			     (== #\# (peek-char str))))
-	     (read-char str)
-    nil))
+	     (read-char str)))
 
 (defun list-number? (x)
   (& (| (& .x
