@@ -45,7 +45,8 @@
      (digit-char? c)))
 
 (defun whitespace? (x)
-  (& (< x 33)
+  (& (character? x)
+     (< x 33)
      (>= x 0)))
 
 (defun control-char? (x)
