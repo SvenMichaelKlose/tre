@@ -23,4 +23,4 @@
   (alet (function|symbol-function x)
     (& !.__source
        `#'(,(function-arguments !)
-           ,(function-body !)))))
+           ,@(function-body !)))))
