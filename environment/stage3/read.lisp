@@ -22,48 +22,45 @@
 	   (skip-spaces str)
 	   (skip-comment str))))
 
+(defun semicolon? (x)
+  (& x (== x #\;)))
+
 (defun skip-spaces (str)
- (awhen (peek-char str)
-   (when (== ! #\;)
-     (skip-comment str)))
- (awhen (peek-char str)
-   (when (whitespace? !)
-     (read-char str)
-     (skip-spaces str))))
+  (when (semicolon? (peek-char str))
+    (skip-comment str))
+  (when (whitespace? (peek-char str))
+    (read-char str)
+    (skip-spaces str)))
 
-(defun get-symbol-0 (str)
-  (let c (char-upcase (peek-char str))
-    (? (== #\; c)
-       (progn
-         (skip-comment str)
-         (get-symbol-0 str))
-       (& (symbol-char? c)
-          (. (char-upcase (read-char str))
-             (get-symbol-0 str))))))
-
-(defun get-symbol (str)
-  (unless (special-char? (peek-char str))
-    (get-symbol-0 str)))
-
-(defun get-symbol-and-package (str)
+(defun seek-char (str)
   (skip-spaces str)
-  (let sym (get-symbol str)
-    (? (awhen (peek-char str)
-         (== ! #\:))
-       (values (| sym t) (& (read-char str)
-                            (get-symbol str)))
-       (values nil sym))))
+  (peek-char str))
 
-(defun read-string-0 (str)
-  (let c (read-char str)
-    (unless (== c #\")
-      (. (? (== c #\\)
-            (read-char str)
-            c)
-         (read-string-0 str)))))
+(defun read-symbol (str)
+  (with (f #'(()
+                (& (symbol-char? (peek-char str))
+                   (. (char-upcase (read-char str))
+                      (f)))))
+    (unless (special-char? (seek-char str))
+      (f))))
+
+(defun read-symbol-and-package (str)
+  (alet (read-symbol str)
+    (? (== (peek-char str) #\:)
+       (values (| ! *keyword-package*)
+               (& (read-char str)
+                  (read-symbol str)))
+       (values nil !))))
 
 (defun read-string (str)
-  (list-string (read-string-0 str)))
+  (with (f #'(()
+                (alet (read-char str)
+                  (unless (== ! #\")
+                    (. (? (== ! #\\)
+                          (read-char str)
+                          !)
+                       (f))))))
+    (list-string (f))))
 
 (defun read-comment-block (str)
   (while (not (& (== #\| (read-char str))
@@ -82,7 +79,7 @@
         t)))
 
 (defun read-token (str)
-  (awhen (get-symbol-and-package str)
+  (awhen (read-symbol-and-package str)
     (with ((pkg sym) !)
       (values (? (& sym
                     (not .sym)
@@ -124,16 +121,16 @@
            (tre:make-symbol x.)
            x.))))
 
-(defun read-symbol-or-slot-value (sym pkg)
+(defun read-symbol-or-slot-value (pkg sym)
   (alet (@ [& _ (list-string _)]
            (split #\. sym))
     (? (& .! !. (car (last !)))
        (read-slot-value !)
        (tre:make-symbol (list-string sym)
                         (?
-                          (not pkg)  nil
-                          (t? pkg)   *keyword-package*
-                          (list-string pkg))))))
+                          (not pkg)    nil
+                          (cons? pkg)  (list-string pkg)
+                          pkg)))))
 
 (defun read-atom (str token pkg sym)
   (case token :test #'eq
@@ -143,7 +140,7 @@
                  (read-number s))
     'hexnum    (read-hex str)
 	'function  `(function ,(read-expr str))
-    'symbol    (read-symbol-or-slot-value sym pkg)
+    'symbol    (read-symbol-or-slot-value pkg sym)
     (? (%read-closing-bracket? token)
        (error "~A bracket missing."
               (case token
@@ -218,12 +215,10 @@
          (read-atom str token pkg sym)))))
 
 (defun read (&optional (str *standard-input*))
-  (skip-spaces str)
-  (& (peek-char str)
+  (& (seek-char str)
 	 (read-expr str)))
 
 (defun read-all (str)
-  (skip-spaces str)
-  (& (peek-char str)
+  (& (seek-char str)
      (. (read str)
         (read-all str))))
