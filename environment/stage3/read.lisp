@@ -17,16 +17,17 @@
      (not (special-char? x))))
 
 (defun skip-comment (str)
-  (let-when c (read-char str)
-	(? (in=? c 10)
+  (awhen (read-char str)
+	(? (== ! 10)
 	   (skip-spaces str)
 	   (skip-comment str))))
 
 (defun skip-spaces (str)
- (let-when c (peek-char str)
-   (when (== #\; c)
-     (skip-comment str))
-   (when (whitespace? c)
+ (awhen (peek-char str)
+   (when (== ! #\;)
+     (skip-comment str)))
+ (awhen (peek-char str)
+   (when (whitespace? !)
      (read-char str)
      (skip-spaces str))))
 
@@ -41,9 +42,8 @@
              (get-symbol-0 str))))))
 
 (defun get-symbol (str)
-  (let-when c (peek-char str)
-    (unless (special-char? c)
-      (get-symbol-0 str))))
+  (unless (special-char? (peek-char str))
+    (get-symbol-0 str)))
 
 (defun get-symbol-and-package (str)
   (skip-spaces str)
