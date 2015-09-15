@@ -64,17 +64,17 @@
 					    (while (keyword? (= v (car ,p)))
                                 nil
                           (?
-                            ,@(mapcan [`((eq v ,(make-symbol (symbol-name _) *keyword-package*))
-                                       (= ,p (cdr ,p)
-                                          ,_ (car ,p)
-                                          ,p (cdr ,p)))]
+                            ,@(mapcan [`((eq v ,(make-keyword _))
+                                         (= ,p (cdr ,p)
+                                            ,_ (car ,p)
+                                            ,p (cdr ,p)))]
                                       (carlist key-args))
                             (return nil))))))
           ,@(& argdefs
                (main argdefs))
 		  ,@(key)
-		  ,@(@ [`(& (eq ,_ ,(list 'quote _))
-                    (= ,_ ,(assoc-value _ key-args)))]
+		  ,@(@ [`(& (eq ,_ ',_)
+                    (= ,_ ,(cdr (assoc _ key-args))))]
                (carlist key-args))))
        (main argdefs))))
 
@@ -88,9 +88,10 @@
 (defun compile-argument-expansion-function-body (fun-name adef p)
   (body-with-noargs-tag
     (!? (argument-expand-names 'compile-argument-expansion adef)
-        `((with ,(mapcan [`(,_ ',_)] !)
-            ,@(compile-argument-expansion-function-body-0 fun-name adef p !)))
-         (compile-argument-expansion-function-body-0 fun-name adef p !))))
+        `((#'(,!
+              ,@(compile-argument-expansion-function-body-0 fun-name adef p !))
+            ,@(@ [`',_] !)))
+        (compile-argument-expansion-function-body-0 fun-name adef p !))))
 
 (defun compile-argument-expansion-function (this-name fun-name adef)
   (with-gensym p
