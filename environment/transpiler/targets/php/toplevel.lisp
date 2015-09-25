@@ -30,13 +30,13 @@
   (add-defined-variable '*keyword-package*))
 
 (defun php-sections-before-import ()
-  (+ (list (. 'core-0 *php-core0*))
+  (+ (list (. 'core-0 (string-source *php-core0*)))
      (& (not (configuration :exclude-core?))
-        (list (. 'core *php-core*)))))
+        (list (. 'core (string-source *php-core*))))))
 
 (defun php-sections-after-import ()
   (+ (& (not (configuration :exclude-core?))
-        (list (. 'core-2 *php-core2*)))
+        (list (. 'core-2 (string-source *php-core2*))))
      (& (t? *have-environment-tests*)
         (list (. 'env-tests (make-environment-tests))))))
 
