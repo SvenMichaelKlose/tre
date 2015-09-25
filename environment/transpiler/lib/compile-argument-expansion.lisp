@@ -60,16 +60,15 @@
    (? key-args
       `((with (keywords
 				  #'(()
-				      (let v nil
-					    (while (keyword? (= v (car ,p)))
-                                nil
+					  (while (keyword? (car ,p))
+                             nil
                           (?
-                            ,@(mapcan [`((eq v ,(make-keyword _))
+                            ,@(mapcan [`((eq (car ,p) ,(make-keyword _))
                                          (= ,p (cdr ,p)
                                             ,_ (car ,p)
                                             ,p (cdr ,p)))]
                                       (carlist key-args))
-                            (return nil))))))
+                            (return nil)))))
           ,@(& argdefs
                (main argdefs))
 		  ,@(key)
