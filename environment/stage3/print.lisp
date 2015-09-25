@@ -11,6 +11,11 @@
 (defvar *invisible-package-names* '("TRE" "TRE-CORE"))
 
 (defun add-printer-argument-definition (name x)
+  (| (symbol? name)
+     (%error "Function name symbol expected."))
+  (| (list? x)
+     (function? x)
+     (%error "Argument definition list or printer function expected."))
   (= (href *printer-argument-definitions* name) x))
 
 (add-printer-argument-definition '%%block '(&body body))
@@ -140,10 +145,9 @@
      (symbol? x.)
      (list? .x)
      (| (%get-printer-argument-definition x.)
-        (alet (symbol-function x.)
-          (?
-            (builtin? x.)   nil
-            (function? !)  (function-arguments x.))))))
+        (unless (builtin? x.)
+          (? (function? (symbol-function x.))
+             (function-arguments x.))))))
 
 (defun %print-list (x str info)
   (!? (%print-call? x info)
