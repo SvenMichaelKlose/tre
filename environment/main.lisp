@@ -22,5 +22,5 @@
 (env-load "platforms/shared/lml2xml.lisp")
 
 (env-load "reverse-tests.lisp")
-(env-load "config-after-reload.lisp")
-(env-load "write-image.lisp")
+(env-load "config-after-reload.lisp" :cl)
+(env-load "write-image.lisp" :cl)
