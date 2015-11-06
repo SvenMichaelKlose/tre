@@ -1,7 +1,8 @@
 ; tré – Copyright (c) 2015 Sven Michael Klose <pixel@hugbox.org>
 
 (defun read-byte (i)
-  (char-code (read-char i)))
+  (alet (read-char i)
+    (& ! (char-code !))))
 
 (defun read-word (i)
   (+ (read-byte i)
