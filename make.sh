@@ -396,7 +396,7 @@ restore)
     echo "  bytecode-image  Compile environment to PRINTed bytecode image."
     echo "  examples        Compile everything in examples/."
     echo "  all             Compile almost everything."
-    echo "  all             Compile everything 'all' didn't compile."
+    echo "  extra           Compile everything 'all' didn't compile."
     echo "  build           Do a regular build file by file."
     echo "  debug           Compile C sources for gdb. May the source be with you."
     echo "  crunsh          Compile C sources as one big file for best optimization."
