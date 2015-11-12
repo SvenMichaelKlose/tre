@@ -24,6 +24,11 @@
                               (character? _) (string _)]
                             (queue-list x))))
 
+(defun string-array (x)
+  (alet (make-array (length x))
+    (dotimes (i (length x) !)
+      (= (elt ! i) (elt x i)))))
+
 (define-test "ELT on string returns char"
   ((character? (elt "LISP" 0)))
   t)
