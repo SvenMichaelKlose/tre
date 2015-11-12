@@ -4,11 +4,26 @@
   (alet (read-char i)
     (& ! (char-code !))))
 
+; TODO: Flexible endianess.
+
+(defun read-word (i)
+  (+ (read-byte i)
+     (<< (read-byte i) 8)))
+
+(defun read-dword (i)
+  (+ (read-word i)
+     (<< (read-word i) 16)))
+
 (defun write-byte (x o)
-  (princ (? (character? x)
-            x
-            (code-char x))
-         o))
+  (princ (code-char x) o))
+
+(defun write-word (x o)
+  (write-byte (bit-and x #xff) o)
+  (write-byte (>> x 8) o))
+
+(defun write-dword (x o)
+  (write-word (bit-and x #xffff) o)
+  (write-word (>> x 16) o))
 
 (defun read-byte-string (i num)
   (list-string (maptimes [read-byte i] num)))
