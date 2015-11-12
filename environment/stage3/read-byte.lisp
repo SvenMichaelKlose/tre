@@ -4,9 +4,11 @@
   (alet (read-char i)
     (& ! (char-code !))))
 
-(defun read-word (i)
-  (+ (read-byte i)
-     (<< (read-byte i) 8)))
+(defun write-byte (x o)
+  (princ (? (character? x)
+            x
+            (code-char x))
+         o))
 
 (defun read-byte-string (i num)
   (list-string (maptimes [read-byte i] num)))

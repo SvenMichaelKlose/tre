@@ -32,7 +32,7 @@
                                                                   (bit-stream-info-out-bit info))))
                      (= (bit-stream-info-out-bit info) (<< (bit-stream-info-out-bit info) 1))
                      (when (== 256 (bit-stream-info-out-bit info))
-                       (princ (code-char (bit-stream-info-out-byte info)) (bit-stream-info-out info))
+                       (write-byte (bit-stream-info-out-byte info) (bit-stream-info-out info))
                        (= (bit-stream-info-out-bit info) 1)
                        (= (bit-stream-info-out-byte info) 0))))
 	  :fun-eof #'((str)
