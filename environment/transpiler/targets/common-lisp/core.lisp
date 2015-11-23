@@ -33,4 +33,5 @@
                    "sequence.lisp"
                    "string.lisp"
                    "special.lisp"
-                   "symbol.lisp"))
+                   "symbol.lisp"
+                   "unix-sh.lisp"))
