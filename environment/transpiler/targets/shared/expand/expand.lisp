@@ -79,3 +79,7 @@
 
 (define-shared-std-macro (bc c js php) %defvar (name &optional (val '%%no-value))
   `(defvar ,name ,val))
+
+(define-shared-std-macro (bc c js php) in-package (name &optional (val '%%no-value))
+  (cl:make-package (symbol-name name))
+  (transpiler-add-defined-package name))

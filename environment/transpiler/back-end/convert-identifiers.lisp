@@ -51,8 +51,8 @@
 
 (defun convert-identifier (s)
   (| (href (identifiers) s)
-     (let n (!? nil ;(symbol-package s)
-                (convert-identifier-r (make-symbol (+ (symbol-name !) ":" (symbol-name s))))
+     (let n (!? (defined-package (symbol-package s))
+                (convert-identifier-r (make-symbol (+ (symbol-name (symbol-package s)) ":" (symbol-name s))))
                 (convert-identifier-r s))
        (awhen (href (converted-identifiers) n)
          (error "Identifier clash: symbol ~A and ~A are both converted to ~A."

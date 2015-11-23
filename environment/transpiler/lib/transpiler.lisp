@@ -136,6 +136,7 @@
 
   (defined-functions        (make-hash-table :test #'eq))
   (defined-variables        (make-hash-table :test #'eq))
+  (defined-packages         (make-hash-table :test #'eq))
   (literals                 (make-hash-table :test #'eq))
   (host-functions           nil)
   (host-variables           nil)
@@ -256,6 +257,7 @@
         :global-funinfo           (& global-funinfo (copy-funinfo global-funinfo))
         :defined-functions        (copy-hash-table defined-functions)
         :defined-variables        (copy-hash-table defined-variables)
+        :defined-packages         (copy-hash-table defined-packages)
         :literals                 (copy-hash-table literals)
         :host-functions           (copy-hash-table host-functions)
         :host-variables           (copy-hash-table host-variables)
@@ -305,6 +307,7 @@
 (defun transpiler-defined-functions-without-builtins (tr) (remove-if #'builtin? (transpiler-defined-functions tr)))
 (transpiler-getter defined-function        (href (transpiler-defined-functions tr) x))
 (transpiler-getter defined-variable        (href (transpiler-defined-variables tr) x))
+(transpiler-getter defined-package         (href (transpiler-defined-variables tr) x))
 (transpiler-getter literal?                (href (transpiler-literals tr) x))
 (transpiler-getter cps-exception?          (href (transpiler-cps-exceptions tr) x))
 (transpiler-getter cps-wrapper?            (href (transpiler-cps-wrappers tr) x))
@@ -323,6 +326,8 @@
        '(plain-arg-fun emitted-decl)))
 
 (transpiler-getter add-defined-variable  (= (href (transpiler-defined-variables tr) x) t)
+                                         x)
+(transpiler-getter add-defined-package   (= (href (transpiler-defined-packages tr) x) t)
                                          x)
 (transpiler-getter add-literal           (= (href (transpiler-literals tr) x) t)
                                          x)
