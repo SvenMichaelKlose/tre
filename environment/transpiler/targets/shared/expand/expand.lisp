@@ -82,4 +82,4 @@
 
 (define-shared-std-macro (bc c js php) in-package (name &optional (val '%%no-value))
   (cl:make-package (symbol-name name))
-  (transpiler-add-defined-package name))
+  (transpiler-add-defined-package *transpiler* name))
