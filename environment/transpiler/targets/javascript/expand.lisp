@@ -68,7 +68,7 @@
   `(%slot-value ,place ,.slot.))
 
 (define-js-std-macro bind (fun &rest args)
-  `(%bind ,(? (%slot-value? fun)
+  `(%bind ,(? (slot-value? fun)
  			  .fun.
     		  (error "Function must be a SLOT-VALUE, got ~A." fun))
 		  ,fun))
