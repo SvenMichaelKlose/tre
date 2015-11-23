@@ -328,7 +328,7 @@ all)
     ./make.sh tests
     ./make.sh examples
     ./make.sh nodeconsole
-#    ./make.sh webconsole
+    ./make.sh webconsole
 #	./make.sh bytecode-image
 #   ./make.sh jsdebugger
     echo "All done."
