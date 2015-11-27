@@ -78,11 +78,10 @@
      (eq 'struct (aref x 0))))
 
 (defun %struct-predicate (name)
-  (let sym (%struct-predicate-name name)
-    `(defun ,sym (x)
-       (& (array? x)
-          (eq 'struct (aref x 0))
-          (eq ',name (aref x 1))))))
+  `(defun ,(%struct-predicate-name name) (x)
+     (& (array? x)
+        (eq 'struct (aref x 0))
+        (eq ',name (aref x 1)))))
 
 (defun %struct-sort-fields (fields-and-options)
   (with-queue (fields options)
