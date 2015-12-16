@@ -13,7 +13,8 @@
           #\' #\` #\, #\: #\; #\" #\# #\^))
 
 (defun symbol-char? (x)
-  (& (> x 32)
+  (& x
+     (> x 32)
      (not (special-char? x))))
 
 (defun skip-comment (str)

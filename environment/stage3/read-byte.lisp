@@ -7,12 +7,18 @@
 ; TODO: Flexible endianess.
 
 (defun read-word (i)
-  (+ (read-byte i)
-     (<< (read-byte i) 8)))
+  (+ (| (read-byte i)
+        (return))
+     (<< (| (read-byte i)
+            (return))
+         8)))
 
 (defun read-dword (i)
-  (+ (read-word i)
-     (<< (read-word i) 16)))
+  (+ (| (read-word i)
+        (return))
+     (<< (| (read-word i)
+            (return))
+         16)))
 
 (defun write-byte (x o)
   (princ (code-char x) o))
