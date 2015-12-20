@@ -19,6 +19,7 @@
 
 (env-load "stage1/arg-keyword-p.lisp")
 (env-load "stage1/defun.lisp" :c)
+(env-load "stage1/tre-load.lisp")
 (env-load "stage1/require.lisp" :c)
 (env-load "stage1/fn.lisp")
 (env-load "stage1/accent-circonflex.lisp")
