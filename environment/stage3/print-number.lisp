@@ -21,5 +21,8 @@
 (defun print-hexword (x &optional (str *standard-output*))
   (print-hex x 4 str))
 
+(defun print-hexdword (x &optional (str *standard-output*))
+  (print-hex x 8 str))
+
 (defun print-octal (x &optional (str *standard-output*))
   (princ (integer-string x 3 8) (default-stream str)))
