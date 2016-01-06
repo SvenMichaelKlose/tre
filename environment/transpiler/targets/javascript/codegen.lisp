@@ -52,11 +52,13 @@
                                  name))
          `(,*newline*
            ,(funinfo-comment (= *funinfo* (get-funinfo name)))
-           ,translated-name " = " " function " ,@(js-argument-list 'codegen-function-macro (lambda-args !)) ,*newline*
+           ,translated-name " = function " ,@(js-argument-list 'codegen-function-macro (lambda-args !)) ,*newline*
 	       "{" ,*newline*
 		       ,@(lambda-body !)
 	       "}" ,*newline*))
-       !)))
+       (? (symbol? x.)
+          x.
+          !))))
 
 (define-js-macro %function-prologue (name)
   `(%%native ""
