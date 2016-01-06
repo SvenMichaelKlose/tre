@@ -127,9 +127,9 @@
        (string? val))
       (list val)
 	(| (atom val)
-	    (& (%%native? val)
-		   (atom .val.)
-		   (not ..val)))
+       (& (%%native? val)
+          (atom .val.)
+          (not ..val)))
       (list "$" val)
 	(codegen-expr? val)
 	  (list val)
@@ -177,11 +177,10 @@
 
 (defmacro define-php-binary (op replacement-op)
   (print-definition `(define-php-binary ,op ,replacement-op))
-  (let tre *php-transpiler*
-	(transpiler-add-plain-arg-fun tre op)
-	`(define-expander-macro ,(transpiler-codegen-expander tre) ,op (&rest args)
-	   `(%%native ,,@(pad (@ #'php-dollarize args)
-                          ,(+ " " replacement-op " "))))))
+  (transpiler-add-plain-arg-fun *php-transpiler* op)
+  `(define-expander-macro (expander-get (transpiler-codegen-expander *php-transpiler*)) ,op (&rest args)
+     `(%%native ,,@(pad (@ #'php-dollarize args)
+                ,(+ " " replacement-op " ")))))
 
 (mapcar-macro x
     '((%%%+   "+")

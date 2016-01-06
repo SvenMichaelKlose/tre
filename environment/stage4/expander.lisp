@@ -24,6 +24,9 @@
 (defun (= expander-macro-function) (new-function expander macro-name)
   (= (href (expander-macros expander) macro-name) new-function))
 
+(defun expander-has-macro? (expander macro-name)
+  (href (expander-macros expander) macro-name))
+
 (defun define-expander (expander-name &key (pre nil) (post nil) (pred nil) (call nil))
   (format t "Making expander ~A.~%" expander-name)
   (aprog1 (make-expander :macros (make-hash-table :test #'eq)
@@ -45,10 +48,10 @@
            (href (expander-macros expander) name)))))
 
 (defun set-expander-macro (expander-name name argdef fun &key (may-redefine? nil))
-  (& (not may-redefine?)
-     (expander-has-macro? expander-name name)
-     (warn "Macro ~A already defined." name))
   (alet (expander-get expander-name)
+    (& (not may-redefine?)
+       (expander-has-macro? ! name)
+       (warn "Macro ~A already defined." name))
     (= (href (expander-macros !) name) fun)
     (= (href (expander-argdefs !) name) argdef)))
 
@@ -56,21 +59,16 @@
   (map [set-expander-macro expander-name _. ._. .._] lst))
 
 (defmacro define-expander-macro (expander-name name args &body body)
-  (| (atom expander-name)
-     (error "Atom expected as expander-name instead of ~A." expander-name))
   (| (atom name)
      (error "Atom expected as macro-name instead of ~A for expander ~A." name expander-name))
   (let expanded-argdef (argument-expand-names 'define-expander-macro args)
-    (with-gensym g
-      `(progn
-         (& (expander-has-macro? ',expander-name ',name)
+    (with-gensym (g expander)
+      `(let ,expander ,expander-name
+         (& (expander-has-macro? ,expander ',name)
             (warn ,(format nil "Redefinition of macro ~A in expander ~A." name expander-name)))
          (defun ,g ,expanded-argdef ,@body)
-         (alet (expander-get ',expander-name)
-           (alet (expander-macros !)
-             (= (href ! ',name) #',g))
-           (alet (expander-argdefs !)
-             (= (href ! ',name) `,args)))))))
+         (= (href (expander-macros ,expander) ',name) #',g)
+         (= (href (expander-argdefs ,expander) ',name) `,args)))))
 
 (defun expander-expand (expander-name expr)
   (alet (expander-get expander-name)
@@ -83,9 +81,6 @@
                               (%macroexpand _)]
                             expr)
       (funcall (expander-post !)))))
-
-(defun expander-has-macro? (expander-name macro-name)
-  (href (expander-macros (expander-get expander-name)) macro-name))
 
 (defun expander-macro-names (expander-name)
   (hashkeys (expander-macros (expander-get expander-name))))
