@@ -196,7 +196,8 @@
   (read-set-listprop str)
   (with-temporary *default-listprop* *default-listprop*
     (alet (read-cons str)
-      (? (== #\. (peek-char str))
+      (? (!? (peek-char str)
+             (== #\. !))
          (progn
            (read-char str)
            (with ((token pkg sym) (read-token str))
