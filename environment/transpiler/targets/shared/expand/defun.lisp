@@ -92,7 +92,7 @@
                               (shared-defun-backtrace name !)
                               !))))
       ,@(& allow-source-memorizer?
-           (shared-defun-source-memorizer name args body-with-block)))))
+           (shared-defun-source-memorizer name args (list-without-noargs-tag body))))))
 
 (defun shared-defun (name args body &key (make-expander? t))
   (& (macro? name)
