@@ -2,9 +2,8 @@
 
 (defun transpiler-make-code-expander (tr)
   (let expander-name ($ (transpiler-name tr) '-codegen)
-    (= (transpiler-codegen-expander tr) expander-name)
-    (define-expander (transpiler-codegen-expander tr))))
+    (= (transpiler-codegen-expander tr) (define-expander expander-name))))
 
 (defmacro define-codegen-macro (tr name &rest x)
   (print-definition `(define-transpiler-macro ,tr ,name ,x.))
-  `(define-expander-macro (expander-get (transpiler-codegen-expander ,tr)) ,name ,@x))
+  `(define-expander-macro (transpiler-codegen-expander ,tr) ,name ,@x))

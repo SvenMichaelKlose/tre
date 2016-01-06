@@ -3,7 +3,7 @@
 (defmacro define-transpiler-infix (tr name)
   (print-definition `(define-transpiler-infix ,tr ,name))
   (print
-  `(define-expander-macro (expander-get (transpiler-codegen-expander ,tr)) ,name (x y)
+  `(define-expander-macro (transpiler-codegen-expander ,tr) ,name (x y)
      `(%%native ,,x " " ,(downcase (string name)) " " ,,y)))
   )
 
@@ -15,5 +15,5 @@
 (defmacro define-transpiler-binary (tr op repl-op)
   (print-definition `(define-transpiler-binary ,tr ,op))
   (transpiler-add-plain-arg-fun (symbol-value tr) op)
-  `(define-expander-macro (expander-get (transpiler-codegen-expander ,tr)) ,op (&rest args)
+  `(define-expander-macro (transpiler-codegen-expander ,tr) ,op (&rest args)
      `("(" ,,@(transpiler-binary-expand ,repl-op args) ")")))

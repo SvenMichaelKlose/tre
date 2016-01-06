@@ -4,8 +4,8 @@
   (alet (defined-functions)
     (@ [hremove ! _]
        (+ (hashkeys (used-functions))
-          (hashkeys (expander-macros (expander-get (std-macro-expander))))
-          (hashkeys (expander-macros (expander-get (codegen-expander))))
+          (hashkeys (expander-macros (std-macro-expander)))
+          (hashkeys (expander-macros (codegen-expander)))
           *macros*))
     (@ [alet (symbol-name _)
          (| (tail? ! "_TREEXP")

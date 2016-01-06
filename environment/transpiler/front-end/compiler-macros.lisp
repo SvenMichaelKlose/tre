@@ -5,14 +5,14 @@
 (defun init-compiler-macros ()
   (= *tagbody-replacements* nil))
 
-(define-expander 'compiler :pre  #'init-compiler-macros)
+(defvar *compiler-macro-expander* (define-expander 'compiler :pre  #'init-compiler-macros))
 
 (defmacro define-compiler-macro (name args &body x)
   (print-definition `(define-compiler-macro ,name ,args))
-  `(define-expander-macro (expander-get 'compiler) ,name ,args ,@x))
+  `(define-expander-macro *compiler-macro-expander* ,name ,args ,@x))
 
 (defun compiler-macroexpand (x)
-  (expander-expand 'compiler x))
+  (expander-expand *compiler-macro-expander* x))
 
 (define-compiler-macro cond (&rest args)
   (with-compiler-tag end-tag
@@ -72,7 +72,7 @@
 
 ;; TAGBODY
 
-(define-expander 'tagbodyexpand)
+(defvar *tagbody-expander* (define-expander 'tagbodyexpand))
 (defvar *tagbody-replacements* nil)
 
 (defun tag-replacement (tag)
@@ -87,15 +87,15 @@
        ,@(@ [| (& (atom _)
                    (tag-replacement _))
                _]
-            (expander-expand 'tagbodyexpand body))
+            (expander-expand *tagbody-expander* body))
        (identity nil))))
 
-(define-expander-macro (expander-get 'tagbodyexpand) go (tag)
+(define-expander-macro *tagbody-expander* go (tag)
   (!? (tag-replacement tag)
       `(%%go ,!)
       (error "Can't find tag ~A in TAGBODY." tag)))
 
-(define-expander-macro (expander-get 'tagbodyexpand) tagbody (&body body)
+(define-expander-macro *tagbody-expander* tagbody (&body body)
   (tagbodyexpand body))
 
 (define-compiler-macro tagbody (&body body)
@@ -104,14 +104,14 @@
 
 ;; BLOCK
 
-(define-expander 'blockexpand)
+(defvar *block-expander* (define-expander 'blockexpand))
 (defvar *blocks* nil)
 
 (defun blockexpand (name body)
   (? body
 	 (with-compiler-tag end-tag
 	   (with-temporary *blocks* (. (. name end-tag) *blocks*)
-         (with (b     (expander-expand 'blockexpand body)
+         (with (b     (expander-expand *block-expander* body)
                 head  (butlast b)
                 tail  (last b)
                 ret   `(%%block
@@ -123,7 +123,7 @@
                          (identity ~%ret))))))
     `(identity nil)))
 
-(define-expander-macro (expander-get 'blockexpand) return-from (block-name expr)
+(define-expander-macro *block-expander* return-from (block-name expr)
   (| *blocks*
      (error "RETURN-FROM outside BLOCK."))
   (!? (assoc block-name *blocks* :test #'eq)
@@ -132,7 +132,7 @@
         (%%go ,.!))
      (error "RETURN-FROM unknown BLOCK ~A." block-name)))
 
-(define-expander-macro (expander-get 'blockexpand) block (name &body body)
+(define-expander-macro *block-expander* block (name &body body)
   (blockexpand name body))
 
 (define-compiler-macro block (name &body body)

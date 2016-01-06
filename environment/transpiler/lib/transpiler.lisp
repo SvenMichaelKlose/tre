@@ -377,7 +377,7 @@
   x)
 
 (defun transpiler-macro (tr name)
-  (let expander (expander-get (transpiler-codegen-expander tr))
+  (let expander (transpiler-codegen-expander tr)
     (funcall (expander-lookup expander) expander name)))
 
 (defun make-global-funinfo (tr)
