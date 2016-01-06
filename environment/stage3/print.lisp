@@ -228,6 +228,8 @@
   (princ "#" str)
   (%with-brackets str info
     (doarray (i x)
+      (| (zero? i)
+         (princ #\  str))
       (%late-print i str info))))
 
 (defun %print-function (x str info)
