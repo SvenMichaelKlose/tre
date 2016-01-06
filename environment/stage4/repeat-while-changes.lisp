@@ -1,7 +1,8 @@
-;;;;; tré - Copyright (C) 2008,2012 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (C) 2008,2012,2015 Sven Michael Klose <pixel@copei.de>
 
 (defun repeat-while-changes (fun x)
-  (alet (funcall fun x)
-    (? (equal x !)
-       x
-       (repeat-while-changes fun !))))
+  (awhile (funcall fun x)
+          x
+    (when (equal x !)
+      (return x))
+    (= x !)))
