@@ -31,7 +31,7 @@
   (href *printer-argument-definitions* x))
 
 (defstruct print-info
-  (pretty-print?  t)
+  (pretty-print?  nil)
   (downcase?      nil)
   (indentation    0)
   (columns        nil))
