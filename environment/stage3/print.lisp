@@ -120,6 +120,8 @@
         (%late-print ! str info)))))
 
 (defun %print-call (x argdef str info)
+  (debug-print x)
+  (debug-print argdef)
   (%with-brackets str info
     (%late-print x. str info)
     (let expanded (%print-get-args .x argdef)
@@ -142,6 +144,8 @@
 
 (defun %print-call? (x info)
   (& (print-info-pretty-print? info)
+     (cons? x)
+     x.
      (symbol? x.)
      (list? .x)
      (| (%get-printer-argument-definition x.)

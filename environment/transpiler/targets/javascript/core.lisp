@@ -15,6 +15,7 @@
 		           "cons.lisp"
 		           "defined-functions.lisp"
                    "%princ.lisp"
+                   "%write-char.lisp"
 		           "symbol.lisp"
 		           "propertylist.lisp"))
 
