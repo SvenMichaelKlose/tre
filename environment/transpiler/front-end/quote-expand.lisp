@@ -38,7 +38,7 @@
                           (cadr _.))
                    `(append ,(cadr _.) ,(backq ._))]
          backq  [?
-                  (atom _)                (atomic _)
+                  (atom _)             (atomic _)
                   (pcase _.
                     atom               `(. ,(atomic _.)
                                            ,(backq ._))
