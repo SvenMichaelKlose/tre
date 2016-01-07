@@ -6,14 +6,16 @@
 ,(? *have-compiler?*
     '(defmacro %defmacro (name argdef &body body)
        (unless (eq '%defmacro name)
-         (with-gensym (g name-sym)
-           `(progn
-              (%var ,g)
-              (function ,g (,(argument-expand-names name argdef) ,@body))
-              ,@(js-early-symbol-maker name-sym g)
-              (= *macros* (. (. ,name-sym (. ',argdef ,g)) *macros*))
-              (when *standard-macro-expander*
-                (set-expander-macro 'standard-macros ,name-sym ',argdef ,g :may-redefine? t))))))
+         (with-gensym name-sym
+           (let fun-name ($ "macrofun_" name)
+             `(progn
+                (%var ,fun-name)
+                (%var ,name-sym)
+                ,@(js-early-symbol-maker name-sym name)
+                (function ,fun-name (,(argument-expand-names name argdef) ,@body))
+                (= *macros* (. (. ,name-sym (. ',argdef ,fun-name)) *macros*))
+                (!? *standard-macro-expander*
+                    (set-expander-macro ! ,name-sym ',argdef ,fun-name :may-redefine? t)))))))
     '(defmacro %defmacro (name argdef &body body)))
 
 ,(? *have-compiler?*
