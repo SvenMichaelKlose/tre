@@ -27,5 +27,5 @@
   ,(? (enabled-pass? :cps)
       '(? (defined? fun._cps-transformed?)
           (fun.apply obj (list-array (. ~%cont lst)))
-          (~%cont.call nil (fun.apply obj (list-array lst)))))
-      '(fun.apply obj (list-array lst)))
+          (~%cont.call nil (fun.apply obj (list-array lst))))
+      '(fun.apply obj (list-array lst))))
