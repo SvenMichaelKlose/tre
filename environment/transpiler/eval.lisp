@@ -6,8 +6,7 @@
   (| *eval-transpiler*
      (alet (copy-transpiler *bc-transpiler*)
        (transpiler-reset !)
-       (clr (transpiler-only-environment-macros? !)
-            (transpiler-import-from-host? !)
+       (clr (transpiler-import-from-host? !)
             (transpiler-dump-passes? !))
        (= *eval-transpiler* !))))
 

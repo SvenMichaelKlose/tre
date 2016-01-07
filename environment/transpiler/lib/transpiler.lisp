@@ -57,9 +57,6 @@
   ; Also import global variables from the compile-time host if missing.
   (import-variables?          t)
 
-  ; Only expand macros defined in the compile-time host.
-  (only-environment-macros?   t)
-
   ; Dump outputs of all passes if T.  Might also be a pass name or a list
   ; of names.
   (dump-passes?               nil)
@@ -211,7 +208,6 @@
         :always-expand-arguments? always-expand-arguments?
         :import-from-host?        import-from-host?
         :import-variables?        import-variables?
-        :only-environment-macros? only-environment-macros?
         :dump-passes?             dump-passes?
         :funinfo-comments?        funinfo-comments?
         :sections-to-update       (copy-list sections-to-update)

@@ -42,12 +42,6 @@
     (. (%macroexpand x.)
        (%macroexpand-rest .x))))
 
-(%defun %%env-macro? (x)
-  (%%macro? x))
-
-(%defun %%env-macrocall (x)
-  (%%macrocall x))
-
 (%defun native-macroexpand (x)
   (#'((predicate caller current-macro)
         (setq *macro?*         #'%%macro?

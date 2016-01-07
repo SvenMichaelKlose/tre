@@ -5,11 +5,9 @@
     (with (mypred  (expander-pred !)
 		   mycall  (expander-call !))
       (= (expander-pred !) [| (funcall mypred _)
-                              (? (transpiler-only-environment-macros? tr)
-                                 (%%env-macro? _)
-                                 (%%macro? _))]
-         (expander-call !) [? (funcall mypred _) (funcall mycall _)
-                              (transpiler-only-environment-macros? tr) (%%env-macrocall _)
+                              (%%macro? _)]
+         (expander-call !) [? (funcall mypred _)
+                              (funcall mycall _)
                               (%%macrocall _)]))))
 
 (defun transpiler-make-std-macro-expander (tr)
