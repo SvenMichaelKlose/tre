@@ -347,13 +347,8 @@ profile)
 
 releasetests)
     echo "Making release tests..." | tee make.log
-    echo "Checking regular build." >>make.log
-	./make.sh distclean
-	./make.sh build $ARGS
-    echo "Checking regular build's reload." >>make.log
-	./make.sh reload
-	./make.sh clean
     ./make.sh all $ARGS
+    ./make.sh extra
     echo "Release tests done." >>make.log
 	;;
 
