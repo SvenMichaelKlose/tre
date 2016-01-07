@@ -26,7 +26,6 @@
 
                 ,@(list+ "environment/platforms/js/"
                          '("milliseconds-since-1970.lisp"
-                           "log.lisp"
                            "wait.lisp"))
 
                 ,@(list+ "environment/platforms/js/dom/"
@@ -58,6 +57,9 @@
                            "utils.lisp"
                            "bind-event-methods.lisp"
                            "keycodes.lisp"))
+
+                ,@(list+ "environment/platforms/js/"
+                         '("log.lisp"))
 
                 (toplevel . ((document-extend)
                              (event-manager.init-document document)
