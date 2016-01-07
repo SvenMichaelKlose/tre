@@ -16,6 +16,6 @@
 (? (has-target? :php)
    (env-load "transpiler/targets/php/main.lisp"))
 
-(env-load "transpiler/targets/shared/expand/expand.lisp")
-(env-load "transpiler/targets/shared/expand/labels.lisp")
-(env-load "transpiler/targets/shared/expand/opt-filter.lisp")
+(env-load "transpiler/targets/shared/macroexpand/expand.lisp")
+(env-load "transpiler/targets/shared/macroexpand/labels.lisp")
+(env-load "transpiler/targets/shared/macroexpand/opt-filter.lisp")
