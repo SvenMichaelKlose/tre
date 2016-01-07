@@ -4,8 +4,8 @@
   (alet (| stream cl:*standard-output*)
     (?
       (character? x)  (cl:write-byte (cl:char-code x) !)
-      (string? x)     (adotimes ((length x))
-                        (%princ (cl:elt x !) stream))
+      (string? x)     (dosequence (i x)
+                        (%princ i !))
       (cl:princ x !))))
 
 (defbuiltin %force-output (stream) (cl:force-output stream))
