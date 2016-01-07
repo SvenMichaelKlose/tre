@@ -25,4 +25,4 @@
 (%defun quasiquote-expand (x)
   (car (%quasiquote-expand (list x))))
 
-(setq *quasiquote-expand* #'quasiquote-expand)
+(%defvar *quasiquote-expand* #'quasiquote-expand)
