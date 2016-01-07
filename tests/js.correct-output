@@ -133,28 +133,35 @@ Test 132, POSITION works with character list<br>
 Test 133, POSITION works with strings<br>
 Test 134, SOME works<br>
 Test 135, EVERY works<br>
-Test 136, argument expansion works with simple list<br>
-Test 137, argument expansion works without :apply-values?<br>
-Test 138, argument expansion can handle nested lists<br>
-Test 139, argument expansion can handle nested lists without :apply-values?<br>
-Test 140, argument expansion can handle &REST<br>
-Test 141, argument expansion can handle &REST without :apply-values?<br>
-Test 142, argument expansion can handle missing &REST<br>
-Test 143, argument expansion can handle missing &REST without :apply-values?<br>
-Test 144, argument expansion can handle &OPTIONAL<br>
-Test 145, argument expansion can handle &OPTIONAL without :apply-values?<br>
-Test 146, argument expansion can handle &OPTIONAL with init forms<br>
-Test 147, argument expansion can handle &OPTIONAL with init forms without :apply-values?<br>
-Test 148, argument expansion can handle &KEY<br>
-Test 149, argument expansion can handle &KEY with overloaded init forms<br>
-Test 150, argument expansion can handle &KEY without :apply-values?<br>
-Test 151, argument expansion can handle &OPTIONAL and &KEY with init forms without :apply-values?<br>
-Test 152, argument expansion can handle &OPTIONAL and &KEY with init forms with :apply-values?<br>
-Test 153, COUNT-IF<br>
-Test 154, SPLIT works on string<br>
-Test 155, SPLIT works on string with gaps<br>
-Test 156, TRIM-HEAD works<br>
-Test 157, TRIM-TAIL works<br>
-Test 158, TRIM works<br>
-Test 159, EMPTY-STRING? works<br>
+Test 136, HREF symbol key<br>
+Test 137, HREF number key<br>
+Test 138, HREF string key<br>
+Test 139, HREF empty string key<br>
+Test 140, HREF character key<br>
+Test 141, HREF hashtable key<br>
+Test 142, HREF array key<br>
+Test 143, argument expansion works with simple list<br>
+Test 144, argument expansion works without :apply-values?<br>
+Test 145, argument expansion can handle nested lists<br>
+Test 146, argument expansion can handle nested lists without :apply-values?<br>
+Test 147, argument expansion can handle &REST<br>
+Test 148, argument expansion can handle &REST without :apply-values?<br>
+Test 149, argument expansion can handle missing &REST<br>
+Test 150, argument expansion can handle missing &REST without :apply-values?<br>
+Test 151, argument expansion can handle &OPTIONAL<br>
+Test 152, argument expansion can handle &OPTIONAL without :apply-values?<br>
+Test 153, argument expansion can handle &OPTIONAL with init forms<br>
+Test 154, argument expansion can handle &OPTIONAL with init forms without :apply-values?<br>
+Test 155, argument expansion can handle &KEY<br>
+Test 156, argument expansion can handle &KEY with overloaded init forms<br>
+Test 157, argument expansion can handle &KEY without :apply-values?<br>
+Test 158, argument expansion can handle &OPTIONAL and &KEY with init forms without :apply-values?<br>
+Test 159, argument expansion can handle &OPTIONAL and &KEY with init forms with :apply-values?<br>
+Test 160, COUNT-IF<br>
+Test 161, SPLIT works on string<br>
+Test 162, SPLIT works on string with gaps<br>
+Test 163, TRIM-HEAD works<br>
+Test 164, TRIM-TAIL works<br>
+Test 165, TRIM works<br>
+Test 166, EMPTY-STRING? works<br>
 Tests done.((BLOCK BUTLAST (BLOCK NIL (? (CDR PLIST) (CONS (CAR PLIST) (BUTLAST (CDR PLIST)))))))
