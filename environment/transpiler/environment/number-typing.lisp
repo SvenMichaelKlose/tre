@@ -10,17 +10,17 @@
      `(character+ ,@x)))
 
 (defmacro character- (&rest x)
-  `(code-char ,(? (sole? x)
-                  `(%%native "(-" (slot-value ,x. 'v) ")")
+  `(code-char ,(? .x
                   `(%%%- ,@(@ [? (integer? _)
                                  _
                                  `(slot-value ,_ 'v)]
-                              x)))))
+                              x))
+                  `(%%native "(-" (slot-value ,x. 'v) ")"))))
 
 (defmacro integer- (&rest x)
-  (? (sole? x)
-     `(%%native "(-" ,x. ")")
-     `(%%%- ,@x)))
+  (? .x
+     `(%%%- ,@x)
+     `(%%native "(-" ,x. ")")))
 
 (defmacro integer1+ (x)
   `(%%%+ ,x 1))

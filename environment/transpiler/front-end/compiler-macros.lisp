@@ -45,9 +45,9 @@
     (unless body
       (error "Body is missing."))
     `(cl:cond
-       ,@(? (sole? end)
-            (+ (butlast tests) (list (. t end)))
-            tests))))
+       ,@(? .end
+            tests
+            (+ (butlast tests) (list (. t end)))))))
 
 (define-compiler-macro ? (&body body)
   (make-? body))

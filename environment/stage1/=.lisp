@@ -1,4 +1,4 @@
-;;;; tré – Copyright (c) 2005–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2009,2011–2015 Sven Michael Klose <pixel@hugbox.org>
 
 (defvar *=-function?* #'%=-function?)
 
@@ -31,8 +31,8 @@
 
 (defmacro = (&rest args)
   (? args
-    (? (sole? args)
-       `(= ,args.)
-       `(progn
-		  ,@(=-0 args)))
-    (error "Arguments expected.")))
+     (? .args
+        `(progn
+		   ,@(=-0 args))
+        `(= ,args.))
+     (error "Arguments expected.")))
