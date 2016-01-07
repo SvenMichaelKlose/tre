@@ -20,9 +20,5 @@
 
 ,(? *have-compiler?*
     '(defun macro? (name)
-	   (expander-has-macro? 'standard-macros name))
+	   (expander-has-macro? *standard-macro-expander* name))
     '(defun macro? (x)))
-
-;,(? *have-compiler?*
-;    (defun macroexpand (x)
-;      (expander-expand 'standard-macros x)))
