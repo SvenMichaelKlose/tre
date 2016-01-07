@@ -45,8 +45,9 @@
                (list (. 'environment-tests (make-environment-tests))))))))
 
 (defun js-environment-files ()
-  (mapcan [& (in? ._ nil 'js)
-            `((,(+ "environment/" _.)))]
+  (mapcan [& (| (not ._)
+                (member :js ._))
+             `((,(+ "environment/" _.)))]
           (reverse *environment-filenames*)))
 
 (defun js-sections-compiler ()

@@ -1,7 +1,7 @@
-;;;;; tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2015 Sven Michael Klose <pixel@hugbox.org>
 
-(%defun env-load (path &optional (target nil))
-  (setq *environment-filenames* (cons (cons path target) *environment-filenames*))
+(%defun env-load (path &rest targets)
+  (setq *environment-filenames* (. (. path targets) *environment-filenames*))
   (load (string-concat *environment-path* "/environment/" path)))
 
 (env-load "stage0/main.lisp")

@@ -19,6 +19,7 @@
 (env-load "stage3/profile.lisp")
 (env-load "stage3/object-p.lisp" :c)
 (env-load "stage3/force-output.lisp" :c)
+(env-load "stage3/princ-number.lisp" :c :cl)
 (env-load "stage3/princ.lisp")
 (env-load "stage3/line.lisp")
 (env-load "stage3/tre-symbol.lisp")

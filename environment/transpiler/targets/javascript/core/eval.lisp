@@ -24,7 +24,7 @@
 (defun eval-compile (x)
   (with-temporary *js-transpiler* (| *js-eval-transpiler* (make-js-eval-transpiler))
     (alet *js-transpiler*
-      (with-temporary (transpiler-dump-passes? !) nil
+      (with-temporary (transpiler-dump-passes? !) t
         (+ (js-eval-transpile ! x)
            (obfuscated-identifier '*native-eval-return-value*)
            " = "
