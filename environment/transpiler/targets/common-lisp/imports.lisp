@@ -3,7 +3,7 @@
 (defconstant +cl-symbol-imports+
     '(nil t
       setq cond progn block return-from tagbody go labels
-      quote function lambda
+      quote function lambda slot-value
       &rest &body &optional &key))
 
 (defconstant +cl-core-symbols+
