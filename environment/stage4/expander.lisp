@@ -46,7 +46,7 @@
 (defun set-expander-macro (expander name argdef fun &key (may-redefine? nil))
   (& (not may-redefine?)
      (expander-has-macro? expander name)
-     (warn "Macro ~A already defined." name))
+     (warn "Macro ~A already defined for expander ~A." name (expander-name expander)))
   (= (href (expander-macros expander) name) fun)
   (= (href (expander-argdefs expander) name) argdef))
 
@@ -60,7 +60,7 @@
     (with-gensym (g expander)
       `(let ,expander ,expander-name
          (& (expander-has-macro? ,expander ',name)
-            (warn ,(format nil "Redefinition of macro ~A in expander ~A." name expander-name)))
+            (warn ,(format nil "Redefinition of macro ~A for expander ~A." name expander-name)))
          (defun ,g ,expanded-argdef ,@body)
          (= (href (expander-macros ,expander) ',name) #',g)
          (= (href (expander-argdefs ,expander) ',name) `,args)))))
