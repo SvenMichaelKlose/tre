@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@hugbox.org>
 
 (defmacro define-shared-std-macro (targets &rest x)
   `(progn
@@ -39,8 +39,8 @@
 (define-shared-std-macro (js php) functional (&rest x)
   (print-definition `(functional ,@x))
   (adolist x
-    (? (transpiler-functional? *transpiler* !)
-       (warn "Redefinition of functional ~A." !))
+;    (? (transpiler-functional? *transpiler* !)
+;       (warn "Redefinition of functional ~A." !))
     (transpiler-add-functional *transpiler* !))
   nil)
 
