@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@hugbox.org>
 
 (env-load "stage4/@.lisp")
 (env-load "stage4/clr.lisp")
@@ -33,4 +33,4 @@
 (env-load "stage4/define-slot-setter.lisp")
 (env-load "stage4/merge.lisp")
 (env-load "stage4/unique.lisp")
-(env-load "stage4/hash-tests.lisp")
+;(env-load "stage4/hash-tests.lisp")
