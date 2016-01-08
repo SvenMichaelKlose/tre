@@ -271,9 +271,9 @@ jstests)
     mkdir -p compiled
     $TRE tests/js.lisp
     nodejs compiled/test.js >_nodejstests.log
+    chromium-browser compiled/test.html &
     cmp tests/js.correct-output _nodejstests.log || (diff tests/js.correct-output _nodejstests.log; exit 1)
     echo "JavaScript target tests passed in node.js."
-    chromium-browser compiled/test.html &
 	;;
 
 updatetests)
