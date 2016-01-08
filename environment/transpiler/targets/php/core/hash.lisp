@@ -13,19 +13,11 @@
     (is_a x "__character") (%%%string+ "~%C" x.v)
     x))
 
-(defun %%unkey-get-package-boundary (x)
-  (awhen (strpos "~" x)
-    (& (%%%== "%" (substr x (+ 1 !) 1))
-       (%%%== "P" (substr x (+ 2 !) 1))
-       (| (%%unkey-get-package-boundary (string-subseq ! 3))
-          !))))
-
 (defun %%unkey (x)
-  (? (& (%%%== "~" (substr x 0 1))
-        (%%%== "%" (substr x 1 1)))
+  (? (%%%== "~%" (substr x 0 2))
      (alet (substr x 3)
        (case (substr x 2 1) :test #'%%%==
-         "S" (let boundary (%%unkey-get-package-boundary !)
+         "S" (let boundary (strpos ! "~%P")
                (make-symbol (subseq ! 0 boundary)
                             (let-when p (subseq ! (+ 3 boundary))
                               (make-symbol p))))
