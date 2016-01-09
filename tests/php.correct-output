@@ -134,34 +134,50 @@ Test 133, POSITION works with strings<br>
 Test 134, SOME works<br>
 Test 135, EVERY works<br>
 Test 136, HREF symbol key<br>
-Test 137, HREF number key<br>
-Test 138, HREF string key<br>
-Test 139, HREF empty string key<br>
-Test 140, HREF character key<br>
-Test 141, HREF hashtable key<br>
-Test 142, HREF array key<br>
-Test 143, argument expansion works with simple list<br>
-Test 144, argument expansion works without :apply-values?<br>
-Test 145, argument expansion can handle nested lists<br>
-Test 146, argument expansion can handle nested lists without :apply-values?<br>
-Test 147, argument expansion can handle &REST<br>
-Test 148, argument expansion can handle &REST without :apply-values?<br>
-Test 149, argument expansion can handle missing &REST<br>
-Test 150, argument expansion can handle missing &REST without :apply-values?<br>
-Test 151, argument expansion can handle &OPTIONAL FAILED Expected:1 Result:<br>
-Test 152, argument expansion can handle &OPTIONAL without :apply-values? FAILED Expected:1 Result:<br>
-Test 153, argument expansion can handle &OPTIONAL with init forms FAILED Expected:1 Result:<br>
-Test 154, argument expansion can handle &OPTIONAL with init forms without :apply-values? FAILED Expected:1 Result:<br>
-Test 155, argument expansion can handle &KEY<br>
-Test 156, argument expansion can handle &KEY with overloaded init forms<br>
-Test 157, argument expansion can handle &KEY without :apply-values?<br>
-Test 158, argument expansion can handle &OPTIONAL and &KEY with init forms without :apply-values? FAILED Expected:1 Result:<br>
-Test 159, argument expansion can handle &OPTIONAL and &KEY with init forms with :apply-values? FAILED Expected:1 Result:<br>
-Test 160, COUNT-IF<br>
-Test 161, SPLIT works on string<br>
-Test 162, SPLIT works on string with gaps<br>
-Test 163, TRIM-HEAD works<br>
-Test 164, TRIM-TAIL works<br>
-Test 165, TRIM works<br>
-Test 166, EMPTY-STRING? works<br>
+Test 137, HREF symbol key missing<br>
+Test 138, HREF number key<br>
+Test 139, HREF number key missing<br>
+Test 140, HREF string key<br>
+Test 141, HREF string key missing<br>
+Test 142, HREF empty string key<br>
+Test 143, HREF character key<br>
+Test 144, HREF character key missing<br>
+Test 145, HREF hashtable key<br>
+Test 146, HREF hashtable key missing__array(): invalid index#0  __array->_chk(1) called at [/home/pixel/Desktop/git/tre/compiled/test.php:232]
+#1  __array->g(1) called at [/home/pixel/Desktop/git/tre/compiled/test.php:6847]
+#2  userfun_href(__array Object ([id] => 24), 1) called at [/home/pixel/Desktop/git/tre/compiled/test.php:12260]
+#3  userfun_test_146() called at [/home/pixel/Desktop/git/tre/compiled/test.php:13173]
+#4  userfun_environmentTests() called at [/home/pixel/Desktop/git/tre/compiled/test.php:13205]
+<br>
+Test 147, HREF array key<br>
+Test 148, HREF array key missing__array(): invalid index#0  __array->_chk(1) called at [/home/pixel/Desktop/git/tre/compiled/test.php:232]
+#1  __array->g(1) called at [/home/pixel/Desktop/git/tre/compiled/test.php:6847]
+#2  userfun_href(__array Object ([id] => 28), 1) called at [/home/pixel/Desktop/git/tre/compiled/test.php:12303]
+#3  userfun_test_148() called at [/home/pixel/Desktop/git/tre/compiled/test.php:13175]
+#4  userfun_environmentTests() called at [/home/pixel/Desktop/git/tre/compiled/test.php:13205]
+<br>
+Test 149, argument expansion works with simple list<br>
+Test 150, argument expansion works without :apply-values?<br>
+Test 151, argument expansion can handle nested lists<br>
+Test 152, argument expansion can handle nested lists without :apply-values?<br>
+Test 153, argument expansion can handle &REST<br>
+Test 154, argument expansion can handle &REST without :apply-values?<br>
+Test 155, argument expansion can handle missing &REST<br>
+Test 156, argument expansion can handle missing &REST without :apply-values?<br>
+Test 157, argument expansion can handle &OPTIONAL FAILED Expected:1 Result:<br>
+Test 158, argument expansion can handle &OPTIONAL without :apply-values? FAILED Expected:1 Result:<br>
+Test 159, argument expansion can handle &OPTIONAL with init forms FAILED Expected:1 Result:<br>
+Test 160, argument expansion can handle &OPTIONAL with init forms without :apply-values? FAILED Expected:1 Result:<br>
+Test 161, argument expansion can handle &KEY<br>
+Test 162, argument expansion can handle &KEY with overloaded init forms<br>
+Test 163, argument expansion can handle &KEY without :apply-values?<br>
+Test 164, argument expansion can handle &OPTIONAL and &KEY with init forms without :apply-values? FAILED Expected:1 Result:<br>
+Test 165, argument expansion can handle &OPTIONAL and &KEY with init forms with :apply-values? FAILED Expected:1 Result:<br>
+Test 166, COUNT-IF<br>
+Test 167, SPLIT works on string<br>
+Test 168, SPLIT works on string with gaps<br>
+Test 169, TRIM-HEAD works<br>
+Test 170, TRIM-TAIL works<br>
+Test 171, TRIM works<br>
+Test 172, EMPTY-STRING? works<br>
 Tests done.
