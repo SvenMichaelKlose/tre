@@ -481,7 +481,7 @@
   (aprog1 (apply #'make-transpiler args)
 	(transpiler-reset !)
     (= (transpiler-assert? !) *assert*)
-	(transpiler-make-std-macro-expander !)
+	(= (transpiler-std-macro-expander !) (transpiler-make-std-macro-expander !))
 	(transpiler-make-code-expander !)
 	(transpiler-make-expex !)
     (make-global-funinfo !)
