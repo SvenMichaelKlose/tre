@@ -4,7 +4,7 @@
   (let g (gensym)
     `(let ,g (integer ,times)
        (? (integer< ,g 0)
-          (error "Negative number of iterations: ~A." ,g))
+          (error "DOTIMES: Number of iterations is negative. It's ~A." ,g))
        (do ((,iter 0 (integer+ 1 ,iter)))
 	       ((integer== ,iter ,g) ,@result)
 	     ,@body))))
