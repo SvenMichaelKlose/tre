@@ -26,7 +26,7 @@
   (href (expander-macros expander) macro-name))
 
 (defun define-expander (expander-name &key (pre nil) (post nil) (pred nil) (call nil))
-  (format t "Making expander ~A.~%" expander-name)
+  (print-definition `(define-expander ,expander-name))
   (aprog1 (make-expander :name expander-name
                          :macros (make-hash-table :test #'eq)
                          :pred pred
