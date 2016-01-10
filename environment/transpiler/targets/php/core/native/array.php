@@ -17,13 +17,13 @@ class __array {
     {
         if (is_string ($i) || is_int ($i) || is_float ($i))
             return;
-        echo "__array(): invalid index";
+        echo "__array(): invalid index $i";
         debug_print_backtrace ();
     }
 
     public function g ($i)
     {
-        $this->_chk ($i);
+//        $this->_chk ($i);
 		if (isset ($GLOBALS['ARRAYS'][$this->id][$i]))
 		    return $GLOBALS['ARRAYS'][$this->id][$i];
         return NULL;
@@ -36,7 +36,7 @@ class __array {
 
     public function s ($i, $v)
     {
-        $this->_chk ($i);
+//        $this->_chk ($i);
 		$GLOBALS['ARRAYS'][$this->id][$i] = $v;
         return $v;
     }
@@ -48,7 +48,7 @@ class __array {
 
     public function r ($i)
     {
-        $this->_chk ($i);
+//        $this->_chk ($i);
 		unset ($GLOBALS['ARRAYS'][$this->id][$i]);
     }
 
