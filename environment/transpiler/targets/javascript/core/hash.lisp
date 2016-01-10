@@ -76,7 +76,7 @@
   (when (| a b)
     (| a (= a (make-hash-table :test b.__tre-test)))
     (? (defined? b.__tre-keys)
-       (= a.__tre-keys (b.__tre-keys.slice)))
+       (= a.__tre-keys (*Object.create b.__tre-keys)))
     (%= nil (%%native
                 "for (var k in " b ") "
                     "if (k != \"" '__tre-object-id "\" && k != \"" '__tre-test "\" && k != \"" '__tre-keys "\") "
