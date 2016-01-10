@@ -3,7 +3,9 @@
 (define-test "HREF symbol key"
   ((let h (make-hash-table :test #'eq)
      (= (href h 'a) 'x)
-     (eq (href h 'a) 'x)))
+     (= (href h 'b) 'y)
+     (& (eq (href h 'a) 'x)
+        (eq (href h 'b) 'y))))
   t)
 
 (define-test "HREF symbol key missing"
@@ -15,7 +17,9 @@
 (define-test "HREF number key"
   ((let h (make-hash-table :test #'eql)
      (= (href h 1) 'x)
-     (eq (href h 1) 'x)))
+     (= (href h 2) 'y)
+     (& (eq (href h 1) 'x)
+        (eq (href h 2) 'y))))
   t)
 
 (define-test "HREF number key missing"
