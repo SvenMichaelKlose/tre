@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2010–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2010–2013,2015 Sven Michael Klose <pixel@copei.de>
 
 (declare-cps-exception %property-list-0 %property-list)
 
@@ -11,6 +11,6 @@
   (= *%property-list-tmp* nil)
   (%= nil (%%native
               "for (var k in " hash ") "
-                  "if (k != \"" ,(obfuscated-identifier '__tre-object-id) "\" && k != \"" ,(obfuscated-identifier '__tre-test) "\") "
-                      ,(compiled-function-name-string '%property-list-0) "(typeof k == \"string\" ? (" *obj-keys* "[k] || k) : k, " hash "[k]);"))
+                  "if (k != \"" ,(obfuscated-identifier '__tre-object-id) "\" && k != \"" ,(obfuscated-identifier '__tre-test) "\" && k != \"" ,(obfuscated-identifier '__tre-keys) "\") "
+                      ,(compiled-function-name-string '%property-list-0) " (typeof k == \"string\" && typeof " hash "." ,(obfuscated-identifier '__tre-keys) " != \"undefined\" ? (" hash "." ,(obfuscated-identifier '__tre-keys) "[k] || k) : k, " hash "[k]);"))
   (reverse *%property-list-tmp*))
