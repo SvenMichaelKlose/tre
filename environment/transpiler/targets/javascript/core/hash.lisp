@@ -18,8 +18,12 @@
   (& (defined? x.__tre-test)
      x.__tre-test))
 
-(defun %%objkey ()   (%%%string+ "~~O" (= *obj-id-counter* (%%%+ 1 *obj-id-counter*))))
-(defun %%numkey (x)  (%%%string+ "~~N" x))
+(defun %%objkey ()
+  (setq *obj-id-counter* (%%%+ 1 *obj-id-counter*))
+  (%%%string+ "~~O" *obj-id-counter*))
+
+(defun %%numkey (x)
+  (%%%string+ "~~N" x))
 
 (defun hashkeys (hash)
   (? (& (hash-table? hash)
