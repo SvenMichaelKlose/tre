@@ -191,6 +191,12 @@
 
 ;;;; METACODES
 
+(defun make-compiled-symbol-identifier (x)
+  (alet ($ 'sym_ x)
+    (? (href *js-compiled-symbols* !)
+       (make-compiled-symbol-identifier ($ '_ x))
+       !)))
+
 (define-js-macro quote (x)
   (with (f  [let s (compiled-function-name-string 'symbol)
               `(,s " (\"" ,(obfuscated-symbol-name _) "\", "
@@ -198,15 +204,14 @@
 	                 `("KEYWORDPACKAGE")
 	                 '(("null")))
 	            ")")])
-    (alet *js-compiled-symbols*
-      (| (href ! x)
-         (= (href ! x) (with-gensym g
-                         (push `("var " ,(obfuscated-identifier g)
-                                 " = "
-                                 ,@(f x)
-                                 ,*js-separator*)
-                               (raw-decls))
-                         g))))))
+      (| (href *js-compiled-symbols* x)
+         (= (href *js-compiled-symbols* x)
+            (aprog1 (make-compiled-symbol-identifier x)
+              (push `("var " ,(obfuscated-identifier !)
+                      " = "
+                      ,@(f x)
+                      ,*js-separator*)
+                      (raw-decls)))))))
 
 (define-js-macro %slot-value (x y)
   `(%%native ,x "." ,y))
