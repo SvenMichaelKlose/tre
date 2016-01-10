@@ -23,7 +23,7 @@
               (fun.tre-exp.apply nil (%%native "[" ! "]"))
               (fun.apply nil (list-array !)))))))
 
-(defun methodapply (obj fun &rest lst)
+(defun applymethod (obj fun &rest lst)
   ,(? (enabled-pass? :cps)
       '(? (defined? fun._cps-transformed?)
           (fun.apply obj (list-array (. ~%cont lst)))

@@ -1,8 +1,8 @@
-;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@hugbox.org>
 
 (defun bind-event-listener (obj fun)
   (assert (function? fun) "BIND-EVENT-LISTENER requires a function")
-  [methodapply obj fun (make-array (new caroshi-event :native-event _))])
+  [applymethod obj fun (new caroshi-event :native-event _)])
 
 (defclass _event-manager ()
   (clr _modules
