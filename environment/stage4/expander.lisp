@@ -84,6 +84,3 @@
   (funcall (expander-pre expander))
   (prog1 (repeat-while-changes [expander-expand-0 expander _] expr)
     (funcall (expander-post expander))))
-
-(defun expander-macro-names (expander)
-  (hashkeys (expander-macros expander)))
