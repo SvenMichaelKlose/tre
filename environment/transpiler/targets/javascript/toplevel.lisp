@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@hugbox.org>
+; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@hugbox.org>
 
 (defun nodejs-prologue ()
    (apply #'+ (@ [format nil "var ~A = require ('~A');~%" _ _]
@@ -23,7 +23,7 @@
      (memorized-sources)))
 
 (defun js-var-decls ()
-  (list (generate-code `(((%var ,@(remove-if #'emitted-decl? (funinfo-vars (global-funinfo)))))))))
+  (list (backend-generate-code `(((%var ,@(remove-if #'emitted-decl? (funinfo-vars (global-funinfo)))))))))
 
 ;(defun gen-funinfo-init ()
 ;  `(push ',(compiled-list `(,x. ,(funinfo-args .x))) *application-funinfos*))
