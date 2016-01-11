@@ -192,10 +192,10 @@
 ;;;; METACODES
 
 (defun make-compiled-symbol-identifier (x)
-  (alet ($ 'sym_ x)
-    (? (href *js-compiled-symbols* !)
-       (make-compiled-symbol-identifier ($ '_ x))
-       !)))
+  ($ (? (keyword? x)
+        'keyword_
+        'symbol_)
+     x))
 
 (define-js-macro quote (x)
   (with (f  [let s (compiled-function-name-string 'symbol)
@@ -204,7 +204,7 @@
 	                 `("KEYWORDPACKAGE")
 	                 '(("null")))
 	            ")")])
-      (cache (aprog1 (gensym) ;(make-compiled-symbol-identifier x)
+      (cache (aprog1 (make-compiled-symbol-identifier x)
                (push `("var " ,(obfuscated-identifier !)
                        " = "
                        ,@(f x)
