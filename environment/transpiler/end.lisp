@@ -31,10 +31,10 @@
         (dump-pass? end x))
      (? (equal x (last-pass-result))
         (format t "; Pass ~A outputs no difference to previous dump.~%" pass)
-        (format t (+ "~L; **** Dump of pass ~A:~%"
-                     "~A"
-                     "~L; **** End of ~A.~%")
-                  pass x pass)))
+        (progn
+          (format t "~%; **** Dump of pass ~A:~%" pass)
+          (print x)
+          (format t "~%; **** End of ~A.~%" pass))))
   x)
 
 (defun transpiler-pass (p list-of-exprs)
