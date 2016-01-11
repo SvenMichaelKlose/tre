@@ -204,14 +204,13 @@
 	                 `("KEYWORDPACKAGE")
 	                 '(("null")))
 	            ")")])
-      (| (href *js-compiled-symbols* x)
-         (= (href *js-compiled-symbols* x)
-            (aprog1 (make-compiled-symbol-identifier x)
-              (push `("var " ,(obfuscated-identifier !)
-                      " = "
-                      ,@(f x)
-                      ,*js-separator*)
-                      (raw-decls)))))))
+      (cache (aprog1 (gensym) ;(make-compiled-symbol-identifier x)
+               (push `("var " ,(obfuscated-identifier !)
+                       " = "
+                       ,@(f x)
+                       ,*js-separator*)
+                       (raw-decls)))
+             (href *js-compiled-symbols* x))))
 
 (define-js-macro %slot-value (x y)
   `(%%native ,x "." ,y))
