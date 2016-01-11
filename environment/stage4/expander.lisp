@@ -72,9 +72,9 @@
     (alet (expander-name expander)
       (? (eq ! *expander-dump?*)
          (progn
-           (format t "~L; Expander ~A input:~%" !)
+           (format t "~%; Expander ~A input:~%" !)
            (print expr)
-           (format t "~L; Expander ~A output:~%" !)
+           (format t "~%; Expander ~A output:~%" !)
            (print (%macroexpand expr)))
          (%macroexpand expr)))))
 
