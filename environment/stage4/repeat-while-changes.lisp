@@ -3,6 +3,6 @@
 (defun repeat-while-changes (fun x)
   (awhile (funcall fun x)
           x
-    (when (equal x !)
-      (return x))
+    (!? (equal x !)
+        (return x))
     (= x !)))
