@@ -60,10 +60,11 @@
           body))
 
 (define-compiler-macro %%block (&body body)
-   (?
-     .body            `(%%block ,@(compress-%%blocks body))
-     (vm-jump? body.) `(%%block ,body.)
-     body.            body.))
+  (?
+    .body            `(%%block ,@(compress-%%blocks body))
+    (vm-jump? body.) `(%%block ,body.)
+    `(%%block ,@body)))
+;    body.            body.)) ; XXX Shouldn't this work?
 
 (define-compiler-macro function (&rest x)
   `(function ,x. ,@(!? .x
