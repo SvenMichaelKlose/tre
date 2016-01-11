@@ -1,4 +1,6 @@
-; tré – Copyright (c) 2006–2009,2011–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2006–2009,2011–2016 Sven Michael Klose <pixel@copei.de>
+
+(defvar *expander-dump?* nil)
 
 (defstruct expander
   name
@@ -67,7 +69,14 @@
 (defun expander-expand-0 (expander expr)
   (with-temporaries (*macro?*     (expander-pred expander)
                      *macrocall*  (expander-call expander))
-    (%macroexpand expr)))
+    (alet (expander-name expander)
+      (? (eq ! *expander-dump?*)
+         (progn
+           (format t "~F; Expander ~A input:~%" !)
+           (print expr)
+           (format t "~F; Expander ~A output:~%" !)
+           (print (%macroexpand expr)))
+         (%macroexpand expr)))))
 
 (defun expander-expand (expander expr)
   (| (expander? expander)
