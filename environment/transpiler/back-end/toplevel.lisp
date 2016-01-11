@@ -1,6 +1,6 @@
 ; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@hugbox.org>
 
-(define-transpiler-end generate-code
+(define-transpiler-end :backend-generate-code
     backend-input          [(& *development?*
                                (format t "o~F"))
                             _]
@@ -26,5 +26,5 @@
 
 (defun backend (x)
   (? (enabled-end? :backend)
-     (@ [generate-code (backend-prepare (list _))] x)
+     (@ [backend-generate-code (backend-prepare (list _))] x)
      x))

@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@hugbox.org>
+; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@hugbox.org>
 
 (defun pass-optimize (x)
   (? (enabled-pass? :inject-debugging)
@@ -13,7 +13,7 @@
           !
           (optimize !)))))
 
-(define-transpiler-end middleend
+(define-transpiler-end :middleend
     middleend-input          [(& *development?*
                                  (format t ".~F"))
                               _]

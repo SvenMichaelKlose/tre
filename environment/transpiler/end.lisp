@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2010–2015 Sven Michael Klose <pixel@hugbox.org>
+; tré – Copyright (c) 2010–2016 Sven Michael Klose <pixel@hugbox.org>
 
 (defun sloppy-equal (x needle)
   (& (atom x)
@@ -60,8 +60,8 @@
 
 (defmacro define-transpiler-end (name &rest name-function-pairs)
   (alet (group name-function-pairs 2)
-    `(defun ,name (list-of-lists-of-exprs)
-       (transpiler-end ,(make-keyword name)
+    `(defun ,(make-symbol (symbol-name name)) (list-of-lists-of-exprs)
+       (transpiler-end ,name
                        (list ,@(@ [`(. ,@_)] ; [. '. _]
                                   (pairlist (@ #'make-keyword (carlist !))
                                             (cdrlist !))))
