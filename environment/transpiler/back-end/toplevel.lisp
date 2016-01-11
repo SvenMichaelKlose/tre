@@ -13,7 +13,7 @@
     convert-identifiers    #'convert-identifiers
     output-filter          #'concat-stringtree)
 
-(define-transpiler-end backend-make-places
+(define-transpiler-end :backend-make-places
     make-framed-functions  #'make-framed-functions
     place-expand           #'place-expand
     place-assign           #'place-assign
