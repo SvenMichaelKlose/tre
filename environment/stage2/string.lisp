@@ -19,10 +19,7 @@
 	s))
 
 (defun queue-string (x)
-  (apply #'string-concat (@ [? (character? _)
-                               (string _)
-                               _]
-                            (queue-list x))))
+  (list-string (queue-list x)))
 
 (defun string-array (x)
   (alet (make-array (length x))
