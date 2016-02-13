@@ -59,7 +59,7 @@
      (>= (char-code x) 0)))
 
 (defun control-char? (x)
-  (< x (code-char 32)))
+  (character< x (code-char 32)))
 
 (define-test "DIGIT-CHAR? #\0"
   ((digit-char? #\0))
