@@ -25,7 +25,7 @@
   (user-detail      nil))
 
 (defun next-tabulator-column (column size)
-  (++ (* size (++ (integer (/ (-- column) size))))))
+  (integer (++ (* size (++ (/ (-- column) size))))))
 
 (def-stream-location %track-location (stream-location x)
   (when track?
@@ -33,13 +33,13 @@
        (adosequence x
          (%track-location stream-location !))
        (when x
-         (? (== 10 x)
+         (? (== 10 (char-code x))
             (progn
               (= (stream-location-column stream-location) 1)
               (++! (stream-location-line stream-location)))
             (?
-              (== 9 x) (= (stream-location-column stream-location) (next-tabulator-column column tabsize))
-              (< 31 x) (++! (stream-location-column stream-location)))))))
+              (== 9 (char-code x)) (= (stream-location-column stream-location) (next-tabulator-column column tabsize))
+              (< 31 (char-code x)) (++! (stream-location-column stream-location)))))))
   x)
 
 (defun stream-princ (x str)

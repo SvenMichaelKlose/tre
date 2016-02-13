@@ -1,9 +1,9 @@
-; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2013,2016 Sven Michael Klose <pixel@hugbox.org>
 
 (functional digit-number)
 
 (defun digit-number (x)
-  (- x #\0))
+  (- (char-code x) (char-code #\0)))
 
 (defun peek-digit (str)
   (awhen (peek-char str)

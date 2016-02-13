@@ -1,7 +1,7 @@
-; tré – Copyright (c) 2005–2015 Sven Michael Klose <pixel@hugbox.org>
+; tré – Copyright (c) 2005–2016 Sven Michael Klose <pixel@hugbox.org>
 
 (defun number-digit (x)
-  (code-char (+ x #\0)))
+  (code-char (+ x (char-code #\0))))
 
 (defun integer-chars-0 (x)
   (alet (integer (mod x 10))

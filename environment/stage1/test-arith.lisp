@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005,2008-2009,2012,2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005,2008-2009,2012,2014,2016 Sven Michael Klose <pixel@hugbox.org>
 
 (define-test "CHARACTER- literal"
   ((== 1 (character- #\b #\a)))
@@ -14,10 +14,6 @@
 
 (define-test "INTEGER+ literal"
   ((== 66 (integer+ 65 1)))
-  t)
-
-(define-test "+ INTEGER and CHARACTER"
-  ((== 66 (+ 65 (code-char 1))))
   t)
 
 (define-test "INTEGER== to be T"

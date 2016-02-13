@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2009,2012–2015 Sven Michael Klose <pixel@hugbox.org>
+; tré – Copyright (c) 2008–2009,2012–2016 Sven Michael Klose <pixel@hugbox.org>
 
 (defun read-hex (str)
   (with (rec #'((v)
@@ -8,10 +8,11 @@
                                 !)))
 					   (progn
 					     (read-char str)
-					     (rec (+ (* v 16)
-						         (- ! (? (digit-char? !)
-								         #\0
-								         (- #\A 10))))))
+					     (rec (number+ (* v 16)
+						               (- (char-code !)
+                                          (? (digit-char? !)
+								             (char-code #\0)
+								             (- (char-code #\A) 10))))))
 					   v)))
     (| (hex-digit-char? (peek-char str))
 	   (error "Illegal character '~A' at begin of hexadecimal number." (peek-char str)))

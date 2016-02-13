@@ -7,24 +7,26 @@
   (in? x 'bracket-close 'square-bracket-close 'curly-bracket-close))
 
 (defun special-char? (x)
-  (in=? x #\( #\)
-          #\[ #\]
-          #\{ #\}
-          #\' #\` #\, #\: #\; #\" #\# #\^))
+  (in-chars? x #\( #\)
+               #\[ #\]
+               #\{ #\}
+               #\" #\' #\`
+               #\, #\: #\;
+               #\# #\^))
 
 (defun symbol-char? (x)
   (& x
-     (> x 32)
+     (> (char-code x) 32)
      (not (special-char? x))))
 
 (defun skip-comment (str)
   (awhen (read-char str)
-	(? (== ! 10)
+	(? (== (char-code !) 10)
 	   (skip-spaces str)
 	   (skip-comment str))))
 
 (defun semicolon? (x)
-  (& x (== x #\;)))
+  (& x (character== x #\;)))
 
 (defun skip-spaces (str)
   (when (semicolon? (peek-char str))
@@ -47,7 +49,7 @@
 
 (defun read-symbol-and-package (str)
   (alet (read-symbol str)
-    (? (== (peek-char str) #\:)
+    (? (character== (peek-char str) #\:)
        (values (| ! *keyword-package*)
                (& (read-char str)
                   (read-symbol str)))
@@ -56,26 +58,26 @@
 (defun read-string (str)
   (with (f #'(()
                 (alet (read-char str)
-                  (unless (== ! #\")
-                    (. (? (== ! #\\)
+                  (unless (character== ! #\")
+                    (. (? (character== ! #\\)
                           (read-char str)
                           !)
                        (f))))))
     (list-string (f))))
 
 (defun read-comment-block (str)
-  (while (not (& (== #\| (read-char str))
-			     (== #\# (peek-char str))))
+  (while (not (& (character== #\| (read-char str))
+			     (character== #\# (peek-char str))))
 	     (read-char str)))
 
 (defun list-number? (x)
   (& (| (& .x
-           (| (== #\- x.)
-              (== #\. x.)))
+           (| (character== #\- x.)
+              (character== #\. x.)))
         (digit-char? x.))
      (? .x
         (every [| (digit-char? _)
-                  (== #\. _)]
+                  (character== #\. _)]
                .x)
         t)))
 
@@ -84,7 +86,7 @@
     (with ((pkg sym) !)
       (values (? (& sym
                     (not .sym)
-                    (== #\. sym.))
+                    (character== #\. sym.))
                  'dot
                  (? sym
                     (? (list-number? sym)
@@ -101,7 +103,7 @@
                       #\`	 'backquote
                       #\^	 'accent-circonflex
                       #\"	 'dblquote
-                      #\,	 (? (== #\@ (peek-char str))
+                      #\,	 (? (character== #\@ (peek-char str))
                               (& (read-char str)
                                  'quasiquote-splice)
                               'quasiquote)
@@ -144,7 +146,7 @@
     'symbol    (read-symbol-or-slot-value pkg sym)
     (? (%read-closing-bracket? token)
        (error "~A bracket missing."
-              (case token
+              (case token :test #'eq
                 'bracket-close         "Round"
                 'curly-bracket-close   "Curly"
                 'square-bracket-close  "Square"))
@@ -197,7 +199,7 @@
   (with-temporary *default-listprop* *default-listprop*
     (alet (read-cons str)
       (? (!? (peek-char str)
-             (== #\. !))
+             (character== #\. !))
          (progn
            (read-char str)
            (with ((token pkg sym) (read-token str))
