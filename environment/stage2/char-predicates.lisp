@@ -26,7 +26,7 @@
   (charrange? x #\0 #\9))
 
 (defun %nondecimal-digit? (x start base)
-  (charrange? x start (character+ start (character- base (code-char 10)))))
+  (charrange? x start (character+ start (code-char (- base 10)))))
 
 (defun nondecimal-digit? (x &key (base 10))
   (& (< 10 base)
