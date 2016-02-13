@@ -20,7 +20,7 @@
   (peeked-char	    nil)
 
   (input-location   (make-stream-location))
-  (output-location  (make-stream-location))
+  (output-location  (make-stream-location :track? nil))
 
   (user-detail      nil))
 
