@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2014–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2014–2016 Sven Michael Klose <pixel@hugbox.org>
 
 (defconstant +cl-symbol-imports+
     '(nil t
@@ -29,11 +29,25 @@
       (array? arrayp)
       (character? characterp)
       (%code-char code-char)
+      (* *)
+      (/ /)
+      (%* *)
+      (%/ /)
+      (number== =)
+      (number+ +)
+      (number- -)
+      (number* *)
+      (number/ /)
       (number< <)
-      (integer< <)
-      (character< <)
       (number> >)
+      (integer== =)
+      (integer+ +)
+      (integer- -)
+      (integer* *)
+      (integer/ /)
+      (integer< <)
       (integer> >)
+      (character< <)
       (character> >)))
 
 (defconstant +cl-special-forms+
