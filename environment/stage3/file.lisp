@@ -1,7 +1,8 @@
-;;;;; tré – Copyright (c) 2012–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2012–2014,2016 Sven Michael Klose <pixel@hugbox.org>
 
 (defun fetch-file (path)
   (with-input-file in path
+    (= (stream-track-input-location? in) nil)
     (with-queue q
       (awhile (read-char in)
               (list-string (queue-list q))
@@ -9,6 +10,7 @@
 
 (defun fetch-all-lines (path)
   (with-input-file in path
+    (= (stream-track-input-location? in) nil)
     (read-all-lines in)))
 
 (defun put-file (path data)
