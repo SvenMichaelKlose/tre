@@ -16,12 +16,6 @@
        (return nil))
     (setq n i)))
 
-(defun character>= (x y)
-  (| (character== x y) (character> x y)))
-
-(defun character<= (x y)
-  (| (character== x y) (character< x y)))
-
 (defun integer>= (x y)
   (| (integer== x y) (integer> x y)))
 

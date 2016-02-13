@@ -1,7 +1,7 @@
-; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@hugbox.org>
 
 (defun c-identifier-char? (x)
-  (| (<= #\a x #\z)
-     (<= #\A x #\Z)
-     (<= #\0 x #\9)
-     (in=? x #\_ #\. #\$ #\#)))
+  (| (character<= #\a x #\z)
+     (character<= #\A x #\Z)
+     (character<= #\0 x #\9)
+     (in-chars? x #\_ #\. #\$ #\#)))

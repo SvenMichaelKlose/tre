@@ -38,12 +38,6 @@
      (| (decimal-digit? c)
         (nondecimal-digit? c :base base))))
 
-(defun character>= (a b)
-  (>= (char-code a) (char-code b)))
-
-(defun character<= (a b)
-  (<= (char-code a) (char-code b)))
-
 (defun hex-digit-char? (x)
   (| (digit-char? x)
      (& (character>= x #\A) (character<= x #\F))
