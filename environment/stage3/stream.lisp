@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2005–2006,2010,2012–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2006,2010,2012–2016 Sven Michael Klose <pixel@copei.de>
 
 (defvar *default-stream-tabsize* 8)
 
@@ -30,7 +30,7 @@
 (def-stream-location %track-location (stream-location x)
   (when track?
     (? (string? x)
-       (adolist ((string-list x))
+       (adosequence x
          (%track-location stream-location !))
        (when x
          (? (== 10 x)
@@ -44,8 +44,8 @@
 
 (defun stream-princ (x str)
   (?
-    (cons? x)             (adolist (x x)
-                            (stream-princ ! str))
+    (cons? x)            (adolist (x x)
+                           (stream-princ ! str))
     (| (string? x)
        (character? x))   (unless (& (string? x)
                                     (zero? (length x)))
