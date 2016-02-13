@@ -3,7 +3,8 @@
 (= *allow-redefinitions?* t)
 (= *have-compiler?* t)
 (= *have-c-compiler?* nil)
-;(= (transpiler-dump-passes? *js-transpiler*) t)
+;(= *expander-dump?* 'compiler)
+;(= (transpiler-dump-passes? *js-transpiler*) :frontend)
 ;(= (transpiler-dump-selector *js-transpiler*) '(function princ-number))
 
 (unix-sh-mkdir "compiled" :parents t)
