@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2005–2011,2013–2015 Sven Michael Klose <pixel@hugbox.org>
+; tré – Copyright (c) 2005–2011,2013–2016 Sven Michael Klose <pixel@hugbox.org>
 
 (env-load "stage2/multiple-value-bind.lisp")
 (env-load "stage2/values.lisp")
@@ -9,7 +9,7 @@
 (env-load "stage2/group.lisp")
 (env-load "stage2/pcase.lisp")
 (env-load "stage2/remove.lisp")
-(env-load "stage2/subseq-c.lisp" :c)
+(env-load "stage2/subseq-c.lisp" :c :cl)
 (env-load "stage2/subseq.lisp")
 (env-load "stage2/subseq-tests.lisp")
 (env-load "stage2/make-default-listprop.lisp")
@@ -17,7 +17,7 @@
 (env-load "stage2/char.lisp")
 (env-load "stage2/char-predicates.lisp")
 (env-load "stage2/string.lisp")
-(env-load "stage2/string-c.lisp" :c)
+(env-load "stage2/string-c.lisp" :c :cl)
 (env-load "stage2/search-sequence.lisp")
 (env-load "stage2/list-symbol.lisp")
 (env-load "stage2/dot-expand.lisp")
@@ -27,10 +27,10 @@
 (env-load "stage2/assoc-splice.lisp")
 (env-load "stage2/pairlist.lisp")
 (env-load "stage2/in.lisp")
-;(env-load "stage2/deftype.lisp" :c)
+;(env-load "stage2/deftype.lisp" :c :cl)
 (env-load "stage2/defstruct.lisp")
-(env-load "stage2/abs.lisp" :c)
+(env-load "stage2/abs.lisp" :c :cl)
 (env-load "stage2/doarray.lisp")
 (env-load "stage2/dosequence.lisp")
-(env-load "stage2/list-array.lisp" :c)
+(env-load "stage2/list-array.lisp" :c :cl)
 (env-load "stage2/aadjoin.lisp")

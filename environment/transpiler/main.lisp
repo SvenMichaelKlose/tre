@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2005–2015 Sven Michael Klose <pixel@hugbox.org>
+; tré – Copyright (c) 2005–2016 Sven Michael Klose <pixel@hugbox.org>
 
 (env-load "transpiler/lib/main.lisp")
 (env-load "transpiler/end.lisp")
@@ -10,6 +10,6 @@
 (env-load "transpiler/import.lisp")
 (env-load "transpiler/compile.lisp")
 (env-load "transpiler/targets/main.lisp")
-(env-load "transpiler/compile-environment.lisp" :c)
+(env-load "transpiler/compile-environment.lisp" :c :cl)
 ;(env-load "transpiler/eval.lisp" :c)
-(env-load "transpiler/make-project.lisp" :c)
+(env-load "transpiler/make-project.lisp" :c :cl)
