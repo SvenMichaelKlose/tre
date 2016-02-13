@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2005–2006,2008–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2006,2008–2016 Sven Michael Klose <pixel@hugbox.org>
 
 (functional lower-case? upper-case? alpha-char? digit-char? alphanumeric?)
 
@@ -9,21 +9,24 @@
          (| ,test-expr
             (return nil))))))
 
+(defun charrange? (x start end)
+  (range? (char-code x) (char-code start) (char-code end)))
+
 (def-rest-predicate lower-case? c ()
-  (range? c #\a #\z))
+  (charrange? c #\a #\z))
 
 (def-rest-predicate upper-case? c ()
-  (range? c #\A #\Z))
+  (charrange? c #\A #\Z))
 
 (def-rest-predicate alpha-char? c ()
   (| (lower-case? c)
      (upper-case? c)))
 
 (defun decimal-digit? (x)
-  (range? x #\0 #\9))
+  (charrange? x #\0 #\9))
 
 (defun %nondecimal-digit? (x start base)
-  (range? x start (character+ start (character- base 10))))
+  (charrange? x start (character+ start (character- base (code-char 10)))))
 
 (defun nondecimal-digit? (x &key (base 10))
   (& (< 10 base)
@@ -35,10 +38,16 @@
      (| (decimal-digit? c)
         (nondecimal-digit? c :base base))))
 
+(defun character>= (a b)
+  (>= (char-code a) (char-code b)))
+
+(defun character<= (a b)
+  (<= (char-code a) (char-code b)))
+
 (defun hex-digit-char? (x)
   (| (digit-char? x)
-     (& (>= x #\A) (<= x #\F))
-     (& (>= x #\a) (<= x #\f))))
+     (& (character>= x #\A) (character<= x #\F))
+     (& (character>= x #\a) (character<= x #\f))))
 
 (def-rest-predicate alphanumeric? c ()
   (| (alpha-char? c)
@@ -46,11 +55,11 @@
 
 (defun whitespace? (x)
   (& (character? x)
-     (< x 33)
-     (>= x 0)))
+     (< (char-code x) 33)
+     (>= (char-code x) 0)))
 
 (defun control-char? (x)
-  (< x 32))
+  (< x (code-char 32)))
 
 (define-test "DIGIT-CHAR? #\0"
   ((digit-char? #\0))

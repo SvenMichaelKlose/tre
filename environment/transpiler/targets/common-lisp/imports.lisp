@@ -31,6 +31,8 @@
       (%code-char code-char)
       (* *)
       (/ /)
+      (< <)
+      (> >)
       (%* *)
       (%/ /)
       (number== =)
@@ -47,8 +49,8 @@
       (integer/ /)
       (integer< <)
       (integer> >)
-      (character< <)
-      (character> >)))
+      (character< char<)
+      (character> char>)))
 
 (defconstant +cl-special-forms+
     '(%defun-quiet %defun %defvar %defmacro ?))
