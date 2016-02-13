@@ -29,6 +29,7 @@
       (array? arrayp)
       (character? characterp)
       (%code-char code-char)
+      (- -)
       (* *)
       (/ /)
       (< <)

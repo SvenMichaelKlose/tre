@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2014,2016 Sven Michael Klose <pixel@hugbox.org>
 
 (%defun identity (x) x)
 
@@ -13,6 +13,3 @@
            (? .x
               (apply #'+ .x))))
     x.))
-
-(%defun - (&rest x)
-  (apply #'number- x))
