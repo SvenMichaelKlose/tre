@@ -17,7 +17,7 @@
 (defbuiltin code-char (x)
   (? (cl:characterp x)
      x
-     (cl:code-char (cl:floor x))))
+     (cl:code-char x)))
 
 (defbuiltin == (&rest x) (apply #'cl:= (chars-to-numbers x)))
 (defbuiltin character== (&rest x) (apply #'cl:= (chars-to-numbers x)))
