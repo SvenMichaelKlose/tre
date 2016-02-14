@@ -13,7 +13,7 @@
     (list-string (reverse (f x)))))
 
 (defun print-hex (x n &optional (str *standard-output*))
-  (princ (integer-string x n 16) (default-stream str)))
+  (princ (integer-string (integer x) n 16) (default-stream str)))
 
 (defun print-hexbyte (x &optional (str *standard-output*))
   (print-hex x 2 str))

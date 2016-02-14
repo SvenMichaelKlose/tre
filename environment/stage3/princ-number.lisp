@@ -15,7 +15,7 @@
 (defun decimals-chars (x)
   (alet (mod (* x 10) 10)
     (& (< 0 !)
-       (. (number-digit !)
+       (. (number-digit (integer !))
           (decimals-chars !)))))
 
 (defun princ-number (x str)
