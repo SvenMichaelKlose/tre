@@ -52,6 +52,7 @@
       (integer/ /)
       (integer< <)
       (integer> >)
+      (character== char=)
       (character< char<)
       (character> char>)))
 
