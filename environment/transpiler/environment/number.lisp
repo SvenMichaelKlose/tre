@@ -35,9 +35,9 @@
 
 (defmacro define-generic-transpiler-minus ()
   (let gen-body `(? .x
-                    (let n (%wrap-char-number x.)
+                    (let n x.
 	   		          (adolist (.x n)
-	      		        (= n (%%%- n (%wrap-char-number !)))))
+	      		        (= n (%%%- n !))))
                     (%%%- x.))
     `(progn
        (defun - (&rest x)
@@ -49,11 +49,16 @@
             (let n x.
 	          (adolist (.x n)
 	            (= n (%%%- n !))))
-            (%%%- x.)))
-       (defun character- (&rest x)
-         (code-char ,gen-body)))))
+            (%%%- x.))))))
 
 (define-generic-transpiler-minus)
+
+(defun character- (&rest x)
+  (code-char (? .x
+                (let n (char-code x.)
+	   		      (adolist (.x n)
+	      	        (= n (%%%- n (char-code !)))))
+                (%%%- (char-code x.)))))
 
 (defmacro def-generic-transpiler-comparison (name)
   (let op ($ '%%% name)
