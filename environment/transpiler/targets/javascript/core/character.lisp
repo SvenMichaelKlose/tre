@@ -1,11 +1,11 @@
-;;;;; tré – Copyright (c) 2008–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2009,2011–2013,2016 Sven Michael Klose <pixel@hugbox.org>
 
 (dont-obfuscate from-char-code)
 (declare-cps-exception %character character? code-char char-code char-string)
 
 (defun %character (x)
   (= this.__class ,(obfuscated-identifier '%character)
-     this.v       (%wrap-char-number x))
+     this.v       x)
   this)
 
 (defun character? (x)

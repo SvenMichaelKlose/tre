@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2012,2016 Sven Michael Klose <pixel@hugbox.org>
 
 (defvar *characters* (make-array))
 
@@ -9,7 +9,7 @@
 
 (defun code-char (x)
   (declare type number x)
-  (new __character (%wrap-char-number x)))
+  (new __character x))
 
 (defun char-code (x)
   (declare type character x)

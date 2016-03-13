@@ -1,11 +1,6 @@
 ; tré – Copyright (c) 2008–2014,2016 Sven Michael Klose <pixel@hugbox.org>
 
-(declare-cps-exception %wrap-char-number + - * / mod number+ integer+ character+ number- integer- character- == < > <= >= number== number< number> number<= number >= integer== integer< integer> integer<= integer>= character== character< character> character<= character>= number? integer)
-
-(defun %wrap-char-number (x)
-  (? (character? x)
-	 (char-code x)
-	 x))
+(declare-cps-exception + - * / mod number+ integer+ character+ number- integer- character- == < > <= >= number== number< number> number<= number >= integer== integer< integer> integer<= integer>= character== character< character> character<= character>= number? integer)
 
 (defun number== (x &rest y)
   (every [%%%== x _] y))
@@ -31,7 +26,7 @@
 (defun character+ (&rest x)
   (let n 0
 	(adolist (x (code-char n))
-	  (= n (%%%+ n (%wrap-char-number !))))))
+	  (= n (%%%+ n (char-code !))))))
 
 (defmacro define-generic-transpiler-minus ()
   (let gen-body `(? .x
@@ -73,8 +68,8 @@
            (| (,op n !)
               (return nil))
            (= n !)))
-	   (defun ,($ 'character name) (n-wrapped &rest x)
-         (let n (char-code n-wrapped)
+	   (defun ,($ 'character name) (n &rest x)
+         (let n (char-code n)
            (adolist (x t)
              (| (,op n (char-code !))
                 (return nil))
