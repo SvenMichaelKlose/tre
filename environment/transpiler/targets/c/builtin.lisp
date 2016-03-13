@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2009–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2009–2016 Sven Michael Klose <pixel@hugbox.org>
 
 (defvar *c-builtins-descr*
 	`(
@@ -53,8 +53,6 @@
 		(NUMBER-        builtin_difference      &rest x)
 		(INTEGER+       builtin_plus            &rest x)
 		(INTEGER-       builtin_difference      &rest x)
-		(CHARACTER+     builtin_character_plus  &rest x)
-		(CHARACTER-     builtin_character_difference  &rest x)
 		(*              builtin_times           &rest x)
 		(/              builtin_quotient        &rest x)
 		(MOD            builtin_mod             &rest x)

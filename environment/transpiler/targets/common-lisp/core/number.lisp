@@ -21,8 +21,6 @@
 
 (defbuiltin == (&rest x) (apply #'cl:= (chars-to-numbers x)))
 (defbuiltin character== (&rest x) (apply #'cl:= (chars-to-numbers x)))
-(defbuiltin character+ (&rest x) (code-char (apply #'cl:+ (chars-to-numbers x))))
-(defbuiltin character- (&rest x) (code-char (apply #'cl:- (chars-to-numbers x))))
 
 (defun bits-integer (bits)
   (cl:reduce #'((a b)

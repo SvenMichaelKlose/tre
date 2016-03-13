@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2009–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2009–2016 Sven Michael Klose <pixel@copei.de>
 
 (defvar *builtins*
 	'(APPLY EVAL
@@ -6,7 +6,7 @@
 	  %MALLOC %MALLOC-EXEC %FREE %FREE-EXEC
 	  %%SET %%GET
       %ERROR %STRERROR
-      NUMBER+ NUMBER- INTEGER+ INTEGER- CHARACTER+ CHARACTER-
+      NUMBER+ NUMBER- INTEGER+ INTEGER-
       * / MOD NUMBER?
       == < > NUMBER== NUMBER< NUMBER> INTEGER== INTEGER< INTEGER> CHARACTER== CHARACTER< CHARACTER>
       BIT-OR BIT-AND BIT-XOR << >> CODE-CHAR INTEGER CHARACTER?

@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2010,2012–2015 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2010,2012–2016 Sven Michael Klose <pixel@hugbox.org>
  */
 
 #include <math.h>
@@ -73,12 +73,6 @@ trenumber_plus (treptr a, treptr b)
 }
 
 treptr
-trenumber_builtin_character_plus (treptr x)
-{
-    return trenumber_code_char (trenumber_builtin_plus (x));
-}
-
-treptr
 trenumber_difference (treptr a, treptr b)
 {
     ASSERT_NUMBER(a);
@@ -95,12 +89,6 @@ trenumber_builtin_difference (treptr x)
 		return number_get_float (-TRENUMBER_VAL(CAR(x)));
 
     return eval_exprop (x, eval_op_difference, "-");
-}
-
-treptr
-trenumber_builtin_character_difference (treptr x)
-{
-    return trenumber_code_char (trenumber_builtin_difference (x));
 }
 
 treptr

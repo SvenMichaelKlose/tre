@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@hugbox.org>
 
 (defmacro define-c-std-macro (name args &body body)
   `(define-transpiler-std-macro *c-transpiler* ,name ,args ,@body))
@@ -57,9 +57,7 @@
      `(%- ,@x)))
 
 (define-c-std-macro integer+   (&rest x) `(number+ ,@x))
-(define-c-std-macro character+ (&rest x) `(number+ ,@x))
 (define-c-std-macro integer-   (&rest x) `(number- ,@x))
-(define-c-std-macro character- (&rest x) `(number- ,@x))
 
 (define-c-std-macro catch (catcher &body body)
   (with-gensym g

@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2011–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2011–2016 Sven Michael Klose <pixel@hugbox.org>
 
 (defvar *functionals* nil)
 
@@ -13,7 +13,6 @@
             + - * / mod
             number+ number- number* number/
             integer+ integer- integer* integer/
-            character+ character-
             number? == < >
             number== number< number>
             integer== integer< integer>

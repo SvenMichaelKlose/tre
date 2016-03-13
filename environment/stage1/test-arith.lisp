@@ -1,13 +1,5 @@
 ; tré – Copyright (c) 2005,2008-2009,2012,2014,2016 Sven Michael Klose <pixel@hugbox.org>
 
-(define-test "CHARACTER- literal"
-  ((character== (code-char 1) (character- #\b #\a)))
-  t)
-
-(define-test "CHARACTER+ literal"
-  ((character== (code-char 66) (character+ #\A (code-char 1))))
-  t)
-
 (define-test "INTEGER- literal"
   ((== 1 (- 66 65)))
   t)

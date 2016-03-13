@@ -10,10 +10,10 @@
 
 (defun char-upcase (c)
   (? (lower-case? c)
-     (character- (character+ c #\A) #\a)
+     (code-char (- (+ (char-code c) (char-code #\A)) (char-code #\a)))
      c))
 
 (defun char-downcase (c)
   (? (upper-case? c)
-     (character- (character+ c #\a) #\A)
+     (code-char (- (+ (char-code c) (char-code #\a)) (char-code #\A)))
      c))
