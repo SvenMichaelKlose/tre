@@ -60,113 +60,112 @@ Test 59, IDENTITY<br>
 Test 60, LAST works<br>
 Test 61, LAST returns NIL for empty list<br>
 Test 62, == works with floats<br>
-Test 63, == works with characters<br>
-Test 64, 0 is a boolean T<br>
-Test 65, ELT returns CHARACTER of STRING<br>
-Test 66, NTHCDR works at the start<br>
-Test 67, NTHCDR works in the middle<br>
-Test 68, NTHCDR works at the end<br>
-Test 69, NTHCDR works beyond the end<br>
-Test 70, NOT 0 is NIL<br>
-Test 71, LENGHT with conses<br>
-Test 72, LENGHT with strings<br>
-Test 73, CHARACTER- literal<br>
-Test 74, CHARACTER+ literal<br>
-Test 75, INTEGER- literal<br>
-Test 76, INTEGER+ literal<br>
-Test 77, INTEGER== to be T<br>
-Test 78, INTEGER== to be NIL<br>
-Test 79, INTEGER> to be T<br>
-Test 80, INTEGER> to be NIL<br>
-Test 81, INTEGER< to be T<br>
-Test 82, INTEGER< to be NIL<br>
-Test 83, EQUAL with CONS<br>
-Test 84, EQUAL fails on different lists<br>
-Test 85, NTHCDR basically works<br>
-Test 86, ENQUEUE and QUEUE-LIST work<br>
-Test 87, MEMBER finds elements<br>
-Test 88, MEMBER finds elements with user predicate<br>
-Test 89, MEMBER falsely detects foureign elements<br>
+Test 63, 0 is a boolean T<br>
+Test 64, ELT returns CHARACTER of STRING<br>
+Test 65, NTHCDR works at the start<br>
+Test 66, NTHCDR works in the middle<br>
+Test 67, NTHCDR works at the end<br>
+Test 68, NTHCDR works beyond the end<br>
+Test 69, NOT 0 is NIL<br>
+Test 70, LENGHT with conses<br>
+Test 71, LENGHT with strings<br>
+Test 72, CHARACTER- literal<br>
+Test 73, CHARACTER+ literal<br>
+Test 74, INTEGER- literal<br>
+Test 75, INTEGER+ literal<br>
+Test 76, INTEGER== to be T<br>
+Test 77, INTEGER== to be NIL<br>
+Test 78, INTEGER> to be T<br>
+Test 79, INTEGER> to be NIL<br>
+Test 80, INTEGER< to be T<br>
+Test 81, INTEGER< to be NIL<br>
+Test 82, EQUAL with CONS<br>
+Test 83, EQUAL fails on different lists<br>
+Test 84, NTHCDR basically works<br>
+Test 85, ENQUEUE and QUEUE-LIST work<br>
+Test 86, MEMBER finds elements<br>
+Test 87, MEMBER finds elements with user predicate<br>
+Test 88, MEMBER falsely detects foureign elements<br>
+Test 89, can handle nested functions with double argument names<br>
 Test 90, can handle nested functions with double argument names<br>
-Test 91, can handle nested functions with double argument names<br>
-Test 92, can handle closures<br>
-Test 93, LAMBDA? works<br>
-Test 94, LAMBDA? works with LAMBDA<br>
-Test 95, LAMBDA-CALL? works<br>
-Test 96, $<br>
-Test 97, REVERSE works<br>
-Test 98, APPEND works with two lists<br>
-Test 99, APPEND works with empty lists<br>
-Test 100, APPEND works with three lists<br>
-Test 101, APPEND copies last<br>
-Test 102, NCONC works<br>
-Test 103, NCONC works with empty lists<br>
-Test 104, NCONC with NIL first<br>
-Test 105, NCONC with NIL second<br>
-Test 106, ADJOIN doesn't add known member<br>
-Test 107, ADJOIN adds new member<br>
-Test 108, BUTLAST basically works<br>
-Test 109, BUTLAST returns NIL for single cons<br>
-Test 110, COPY-WHILE<br>
-Test 111, LIST-SUBSEQ work at the beginning FAILED Expected:(:A . ) Result:(((:B . (:C . )) . (0 . )) . )<br>
-Test 112, LIST-SUBSEQ works in the middle FAILED Expected:(2 . (3 . )) Result:(((3 . (4 . )) . (1 . )) . (((4 . ) . (0 . )) . ))<br>
-Test 113, LIST-SUBSEQ works at the end FAILED Expected:(3 . (4 . )) Result:(((4 . ) . (999996 . )) . (( . (999995 . )) . ))<br>
-Test 114, SUBSEQ returns NIL when totally out of range<br>
-Test 115, SUBSEQ returns empty string when start and end are the same<br>
-Test 116, DIGIT-CHAR? #0<br>
-Test 117, DIGIT-CHAR? #a<br>
-Test 118, ELT on string returns char<br>
-Test 119, ELT on string returns right char<br>
-Test 120, STRING== works<br>
-Test 121, LIST-STRING works<br>
-Test 122, STRING-LIST works<br>
-Test 123, UPCASE works<br>
-Test 124, DOWNCASE works<br>
-Test 125, FIND finds elements<br>
-Test 126, FIND accepts :FROM-END<br>
-Test 127, FIND accepts :END<br>
-Test 128, FIND accepts :START<br>
-Test 129, FIND accepts :START, :END, :FROM-END<br>
-Test 130, FIND-IF finds elements<br>
-Test 131, POSITION works with character list<br>
-Test 132, POSITION works with strings<br>
-Test 133, SOME works<br>
-Test 134, EVERY works<br>
-Test 135, HREF symbol key<br>
-Test 136, HREF symbol key missing<br>
-Test 137, HREF number key<br>
-Test 138, HREF number key missing<br>
-Test 139, HREF string key<br>
-Test 140, HREF string key missing<br>
-Test 141, HREF empty string key<br>
-Test 142, HREF character key<br>
-Test 143, HREF character key missing<br>
-Test 144, HREF hashtable key<br>
-Test 145, HREF hashtable key missing<br>
-Test 146, HREF array key<br>
-Test 147, HREF array key missing<br>
-Test 148, argument expansion works with simple list<br>
-Test 149, argument expansion works without :apply-values?<br>
-Test 150, argument expansion can handle nested lists<br>
-Test 151, argument expansion can handle nested lists without :apply-values?<br>
-Test 152, argument expansion can handle &REST<br>
-Test 153, argument expansion can handle &REST without :apply-values?<br>
-Test 154, argument expansion can handle missing &REST<br>
-Test 155, argument expansion can handle missing &REST without :apply-values?<br>
-Test 156, argument expansion can handle &OPTIONAL FAILED Expected:1 Result:<br>
-Test 157, argument expansion can handle &OPTIONAL without :apply-values? FAILED Expected:1 Result:<br>
-Test 158, argument expansion can handle &OPTIONAL with init forms FAILED Expected:1 Result:<br>
-Test 159, argument expansion can handle &OPTIONAL with init forms without :apply-values? FAILED Expected:1 Result:<br>
-Test 160, argument expansion can handle &KEY<br>
-Test 161, argument expansion can handle &KEY with overloaded init forms<br>
-Test 162, argument expansion can handle &KEY without :apply-values?<br>
-Test 163, argument expansion can handle &OPTIONAL and &KEY with init forms without :apply-values? FAILED Expected:1 Result:<br>
-Test 164, argument expansion can handle &OPTIONAL and &KEY with init forms with :apply-values? FAILED Expected:1 Result:<br>
-Test 165, COUNT-IF<br>
-Test 166, SPLIT works on string<br>
-Test 167, SPLIT works on string with gaps<br>
-Test 168, TRIM-HEAD works<br>
-Test 169, TRIM-TAIL works<br>
-Test 170, TRIM works<br>
-Test 171, EMPTY-STRING? works<br>
+Test 91, can handle closures<br>
+Test 92, LAMBDA? works<br>
+Test 93, LAMBDA? works with LAMBDA<br>
+Test 94, LAMBDA-CALL? works<br>
+Test 95, $<br>
+Test 96, REVERSE works<br>
+Test 97, APPEND works with two lists<br>
+Test 98, APPEND works with empty lists<br>
+Test 99, APPEND works with three lists<br>
+Test 100, APPEND copies last<br>
+Test 101, NCONC works<br>
+Test 102, NCONC works with empty lists<br>
+Test 103, NCONC with NIL first<br>
+Test 104, NCONC with NIL second<br>
+Test 105, ADJOIN doesn't add known member<br>
+Test 106, ADJOIN adds new member<br>
+Test 107, BUTLAST basically works<br>
+Test 108, BUTLAST returns NIL for single cons<br>
+Test 109, COPY-WHILE<br>
+Test 110, LIST-SUBSEQ work at the beginning FAILED Expected:(:A . ) Result:(((:B . (:C . )) . (0 . )) . )<br>
+Test 111, LIST-SUBSEQ works in the middle FAILED Expected:(2 . (3 . )) Result:(((3 . (4 . )) . (1 . )) . (((4 . ) . (0 . )) . ))<br>
+Test 112, LIST-SUBSEQ works at the end FAILED Expected:(3 . (4 . )) Result:(((4 . ) . (999996 . )) . (( . (999995 . )) . ))<br>
+Test 113, SUBSEQ returns NIL when totally out of range<br>
+Test 114, SUBSEQ returns empty string when start and end are the same<br>
+Test 115, DIGIT-CHAR? #0<br>
+Test 116, DIGIT-CHAR? #a<br>
+Test 117, ELT on string returns char<br>
+Test 118, ELT on string returns right char<br>
+Test 119, STRING== works<br>
+Test 120, LIST-STRING works<br>
+Test 121, STRING-LIST works<br>
+Test 122, UPCASE works<br>
+Test 123, DOWNCASE works<br>
+Test 124, FIND finds elements<br>
+Test 125, FIND accepts :FROM-END<br>
+Test 126, FIND accepts :END<br>
+Test 127, FIND accepts :START<br>
+Test 128, FIND accepts :START, :END, :FROM-END<br>
+Test 129, FIND-IF finds elements<br>
+Test 130, POSITION works with character list<br>
+Test 131, POSITION works with strings<br>
+Test 132, SOME works<br>
+Test 133, EVERY works<br>
+Test 134, HREF symbol key<br>
+Test 135, HREF symbol key missing<br>
+Test 136, HREF number key<br>
+Test 137, HREF number key missing<br>
+Test 138, HREF string key<br>
+Test 139, HREF string key missing<br>
+Test 140, HREF empty string key<br>
+Test 141, HREF character key<br>
+Test 142, HREF character key missing<br>
+Test 143, HREF hashtable key<br>
+Test 144, HREF hashtable key missing<br>
+Test 145, HREF array key<br>
+Test 146, HREF array key missing<br>
+Test 147, argument expansion works with simple list<br>
+Test 148, argument expansion works without :apply-values?<br>
+Test 149, argument expansion can handle nested lists<br>
+Test 150, argument expansion can handle nested lists without :apply-values?<br>
+Test 151, argument expansion can handle &REST<br>
+Test 152, argument expansion can handle &REST without :apply-values?<br>
+Test 153, argument expansion can handle missing &REST<br>
+Test 154, argument expansion can handle missing &REST without :apply-values?<br>
+Test 155, argument expansion can handle &OPTIONAL FAILED Expected:1 Result:<br>
+Test 156, argument expansion can handle &OPTIONAL without :apply-values? FAILED Expected:1 Result:<br>
+Test 157, argument expansion can handle &OPTIONAL with init forms FAILED Expected:1 Result:<br>
+Test 158, argument expansion can handle &OPTIONAL with init forms without :apply-values? FAILED Expected:1 Result:<br>
+Test 159, argument expansion can handle &KEY<br>
+Test 160, argument expansion can handle &KEY with overloaded init forms<br>
+Test 161, argument expansion can handle &KEY without :apply-values?<br>
+Test 162, argument expansion can handle &OPTIONAL and &KEY with init forms without :apply-values? FAILED Expected:1 Result:<br>
+Test 163, argument expansion can handle &OPTIONAL and &KEY with init forms with :apply-values? FAILED Expected:1 Result:<br>
+Test 164, COUNT-IF<br>
+Test 165, SPLIT works on string<br>
+Test 166, SPLIT works on string with gaps<br>
+Test 167, TRIM-HEAD works<br>
+Test 168, TRIM-TAIL works<br>
+Test 169, TRIM works<br>
+Test 170, EMPTY-STRING? works<br>
 Tests done.

@@ -31,7 +31,7 @@
   t)
 
 (define-test "ELT on string returns right char"
-  ((== #\L (elt "LISP" 0)))
+  ((character== #\L (elt "LISP" 0)))
   t)
 
 (define-test "STRING== works"
