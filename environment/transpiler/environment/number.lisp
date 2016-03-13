@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2014,2016 Sven Michael Klose <pixel@hugbox.org>
 
 (declare-cps-exception %wrap-char-number + - * / mod number+ integer+ character+ number- integer- character- == < > <= >= number== number< number> number<= number >= integer== integer< integer> integer<= integer>= character== character< character> character<= character>= number? integer)
 
@@ -8,22 +8,21 @@
 	 x))
 
 (defun number== (x &rest y)
-  (alet (%wrap-char-number x)
-    (every [%%%== ! (%wrap-char-number _)] y)))
+  (every [%%%== x _] y))
 
 (defmacro def-simple-op (op)
   `(defun ,op (&rest x)
-     (let n (%wrap-char-number x.)
+     (let n x.
 	   (adolist (.x n)
-         (= n (,($ '%%% op) n (%wrap-char-number !)))))))
+         (= n (,($ '%%% op) n !))))))
 
 (mapcar-macro x '(* / mod)
   `(def-simple-op ,x))
 
 (defun number+ (&rest x)
-  (let n (%wrap-char-number x.)
+  (let n x.
 	(adolist (.x n)
-	  (= n (%%%+ n (%wrap-char-number !))))))
+	  (= n (%%%+ n !)))))
 
 (defun integer+ (n &rest x)
   (adolist (x n)
