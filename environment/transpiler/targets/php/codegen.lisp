@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@copei.de>
 
 ;;;; CODE GENERATION HELPERS
 
@@ -277,9 +277,10 @@
 
 (define-php-macro %slot-value (x y)
   (? (cons? x)
-	 (? (%%native? x)
-		`(%%native ,(php-dollarize x) "->" ,y)
-		(error "%%NATIVE expected instead of ~A." x))
+	 (?
+       (%%native? x)  `(%%native ,(php-dollarize x) "->" ,y)
+       (%vec? x)      `(%%native ,x "->" ,y)
+		(error "%%NATIVE or %VEC expected instead of ~A." x))
 	 `(%%native "$" ,x "->" ,y)))
 
 (define-php-macro %php-class-head (name)
