@@ -43,8 +43,7 @@
 (defun transpiler-end (name passes list-of-lists-of-exprs)
   (| (enabled-end? name)
      (return list-of-lists-of-exprs))
-  (& (| (t? (dump-passes?))
-        (dump-pass? name list-of-lists-of-exprs))
+  (& (dump-pass? name list-of-lists-of-exprs)
      (format t "~%~L; #### Compiler end ~A~%~%" name))
   (@ #'((list-of-exprs)
          (& list-of-exprs
@@ -62,7 +61,7 @@
   (alet (group name-function-pairs 2)
     `(defun ,(make-symbol (symbol-name name)) (list-of-lists-of-exprs)
        (transpiler-end ,name
-                       (list ,@(@ [`(. ,@_)] ; [. '. _]
+                       (list ,@(@ [`(. ,@_)]
                                   (pairlist (@ #'make-keyword (carlist !))
                                             (cdrlist !))))
                        list-of-lists-of-exprs))))
