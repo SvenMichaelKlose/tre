@@ -152,7 +152,7 @@
   (cps-wrappers             (make-hash-table :test #'eq))
   (native-cps-functions     (make-hash-table :test #'eq))
 
-  ; Literals that must be declared or cached before code with them is emitted.
+  ; Literals that must be declared or cached before code containing them is emitted.
   (compiled-chars           (make-hash-table :test #'==))
   (compiled-numbers         (make-hash-table :test #'==))
   (compiled-strings         (make-hash-table :test #'eq))
