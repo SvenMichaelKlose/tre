@@ -1,9 +1,7 @@
-; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@hugbox.org>
+; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@hugbox.org>
 
 (define-transpiler-end :backend-generate-code
-    backend-input          [(& *development?*
-                               (format t "o~F"))
-                            _]
+    backend-input          #'identity
     function-names         #'translate-function-names
     encapsulate-strings    #'encapsulate-strings
     count-tags             #'count-tags

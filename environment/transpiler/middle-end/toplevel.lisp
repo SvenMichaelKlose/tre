@@ -14,9 +14,7 @@
           (optimize !)))))
 
 (define-transpiler-end :middleend
-    middleend-input          [(& *development?*
-                                 (format t ".~F"))
-                              _]
+    middleend-input          #'identity
     expression-expand        #'expression-expand
     unassign-lambdas         #'unassign-lambdas
     accumulate-toplevel      #'accumulate-toplevel-expressions
