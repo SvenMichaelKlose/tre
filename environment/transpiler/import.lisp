@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@hugbox.org>
+; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@hugbox.org>
 
 (defun defined-or-wanted? (x)
   (| (defined-function x)
@@ -28,7 +28,8 @@
 (defun can-import-variable? (x)
   (& (import-variables?)
      (import-from-host?)
-     x (symbol? x)
+     x
+     (symbol? x)
      (not (funinfo-find *funinfo* x)
           (defined-or-wanted? x))
      (| (host-variable? x)
@@ -49,8 +50,8 @@
 (defun import-wanted-functions ()
   (awhen (wanted-functions)
     (= (wanted-functions) nil)
+    (print-note "Importing functions ~A…~%" !)
     (frontend (mapcan [unless (defined-function _)
-                        (print-note "Importing function ~A.~%" _)
                         `((defun ,_ ,(host-function-arguments _)
                            ,@(host-function-body _)))]
                       !))))
@@ -58,7 +59,7 @@
 (defun import-wanted-variables ()
   (awhen (wanted-variables)
     (= (wanted-variables) nil)
-    (print-note "Importing variables ~A.~%" !)
+    (print-note "Importing variables ~A…~%" !)
     (frontend (mapcan [unless (defined-variable _)
                        `((defvar ,_ ,(assoc-value _ *variables* :test #'eq)))]
                       !))))
@@ -67,10 +68,10 @@
   (when (import-from-host?)
     (with-temporary (configuration :save-argument-defs-only?) nil
       (with (funs      (import-wanted-functions)
-             exported  (import-exported-closures)
+             closures  (import-exported-closures)
              vars      (import-wanted-variables))
-        (& (| funs exported vars)
-           (append funs exported vars (import-from-host)))))))
+        (& (| funs closures vars)
+           (append (import-from-host) closures funs vars))))))
 
 (defun current-scope? (x)
   (member x (funinfo-names *funinfo*) :test #'eq))
