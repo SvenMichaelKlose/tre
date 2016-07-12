@@ -124,7 +124,6 @@
   (late-symbols             (make-hash-table :test #'eq))
   (exported-closures        nil)
   (delayed-exprs            nil)
-  (delayed-var-inits        nil)
   (memorized-sources        nil)
 
   (funinfos                 (make-hash-table :test #'eq))
@@ -191,7 +190,6 @@
      (transpiler-converted-identifiers tr)  (make-hash-table :test #'eq)
      (transpiler-exported-closures tr)      nil
      (transpiler-delayed-exprs tr)          nil
-     (transpiler-delayed-var-inits tr)      nil
      (transpiler-memorized-sources tr)      nil)
   (transpiler-add-obfuscation-exceptions tr nil (make-symbol ""))
   tr)
@@ -246,7 +244,6 @@
         :late-symbols             (copy-hash-table late-symbols)
         :exported-closures        (copy-list exported-closures)
         :delayed-exprs            (copy-list delayed-exprs)
-        :delayed-var-inits        (copy-list delayed-var-inits)
         :memorized-sources        (copy-list memorized-sources)
         :funinfos                 (copy-hash-table funinfos)
         :funinfos-reverse         (copy-hash-table funinfos-reverse)
@@ -351,10 +348,6 @@
 
 (defun add-delayed-expr (x)
   (+! (delayed-exprs) (frontend (list x)))
-  nil)
-
-(defun add-delayed-var-init (x)
-  (+! (delayed-var-inits) (frontend (list x)))
   nil)
 
 (defun transpiler-add-plain-arg-funs (tr lst)

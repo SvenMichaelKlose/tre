@@ -63,16 +63,14 @@
                        `((defvar ,_ ,(assoc-value _ *variables* :test #'eq)))]
                       !))))
 
-; XXX: DELAYED-VAR-INITS doesn't belong here.
 (defun import-from-host ()
   (when (import-from-host?)
     (with-temporary (configuration :save-argument-defs-only?) nil
       (with (funs      (import-wanted-functions)
              exported  (import-exported-closures)
              vars      (import-wanted-variables))
-        (? (| funs exported vars)
-           (append funs exported vars (import-from-host))
-           (apply #'append (delayed-var-inits)))))))
+        (& (| funs exported vars)
+           (append funs exported vars (import-from-host)))))))
 
 (defun current-scope? (x)
   (member x (funinfo-names *funinfo*) :test #'eq))
