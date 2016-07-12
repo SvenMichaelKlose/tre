@@ -68,6 +68,7 @@
          name          (funinfo-name fi)
 		 num-locals    (length (funinfo-vars fi))
 	     compiled-name (compiled-function-name name))
+    (developer-note "Generating function ~A…~%" name)
     `(,*php-newline*
       ,(funinfo-comment fi)
 	  "function " ,compiled-name ,@(php-argument-list (funinfo-args fi))

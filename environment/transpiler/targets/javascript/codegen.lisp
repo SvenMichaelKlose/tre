@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@hugbox.org>
 
 (defvar *js-compiled-symbols* (make-hash-table :test #'eq))
 
@@ -50,6 +50,7 @@
               translated-name (? (defined-function name)
                                  (compiled-function-name-string name)
                                  name))
+         (developer-note "Generating function ~A…~%" name)
          `(,*newline*
            ,(funinfo-comment (= *funinfo* (get-funinfo name)))
            ,translated-name " = function " ,@(js-argument-list 'codegen-function-macro (lambda-args !)) ,*newline*
