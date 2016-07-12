@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@copei.de>
 
 (defun update-section? (section cached-sections)
   (| (member section (sections-to-update))
@@ -21,7 +21,7 @@
   (backend (middleend x)))
 
 (defun codegen-section (section data)
-  (developer-note "Codegen ~A.~%" section)
+  (developer-note "Generating section ~A…~%" section)
   (apply #'+ (remove-if #'not (codegen data))))
 
 (defun codegen-sections (sections)
@@ -37,6 +37,7 @@
       ,@(reverse (accumulated-toplevel-expressions)))))
 
 (defun codegen-delayed-exprs ()
+  (developer-note "Generating delayed expressions…~%")
   (with-temporary (sections-to-update) '(delayed-exprs)
     (quick-compile-sections (list (. 'delayed-exprs
                                      (apply #'append (delayed-exprs)))))))
@@ -45,6 +46,7 @@
   (& (enabled-pass? :accumulate-toplevel)
      (accumulated-toplevel-expressions)
      (with-temporaries ((sections-to-update) '(accumulated-toplevel))
+       (developer-note "Generating top–level expressions…~%")
        (push :accumulate-toplevel (disabled-passes))
        (prog1
          (quick-compile-sections (list (. 'accumulated-toplevel
@@ -58,10 +60,12 @@
   (print-status "Let me think. Hmm...~F")
   (funcall (middleend-init))
   (with (before-imports    (codegen-sections before-import)
-         imports-and-rest  (append (codegen (@ #'list imports))
+         imports-and-rest  (append (progn
+                                     (developer-note "Generating imports…~%")
+                                     (codegen (@ #'list imports)))
+                                   (codegen-delayed-exprs)
                                    (codegen-sections after-import)
-                                   (codegen-accumulated-toplevels)
-                                   (codegen-delayed-exprs)))
+                                   (codegen-accumulated-toplevels)))
     (funcall (postprocessor) (append (!? (funcall (prologue-gen))
                                          (list !))
                                      (dechunk (append (funcall (decl-gen))
@@ -115,7 +119,7 @@
      (print-obfuscations))
   ;(warn-unused-functions)
   (tell-number-of-warnings)
-  (print-status "~A seconds passed.~%~F"
+  (print-status "~A seconds passed.~%"
                 (integer (/ (- (nanotime) start-time) 1000000000))))
 
 (defun compile-sections (sections &key (transpiler nil))
