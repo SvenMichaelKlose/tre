@@ -1,5 +1,5 @@
 #!/bin/sh
-# tré – Copyright (c) 2005–2015 Sven Michael Klose <pixel@hugbox.org>
+# tré – Copyright (c) 2005–2016 Sven Michael Klose <pixel@hugbox.org>
 
 set -e
 
@@ -315,7 +315,7 @@ jsdebugger)
     ;;
 
 examples)
-    $TRE examples/make-standard.lisp
+    $TRE examples/make-standard-js.lisp
     $TRE examples/make-standard-nodejs.lisp
     $TRE examples/make-standard-php.lisp
     echo "Making compiler dump for BUTLAST in examples/hello-world.lisp…"
