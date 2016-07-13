@@ -1,6 +1,6 @@
-; tré – Copyright (c) 2008,2010,2012–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008,2010,2012–2016 Sven Michael Klose <pixel@copei.de>
 
-(defun wait (continue millisecs)
+(defun wait (continuer millisecs)
   (let timeout-id nil
     (= timeout-id (window.set-timeout #'(()
 				                           (window.clear-timeout timeout-id)
