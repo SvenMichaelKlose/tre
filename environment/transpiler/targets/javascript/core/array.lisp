@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2013,2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2013,2015–2016 Sven Michael Klose <pixel@copei.de>
 
 (dont-obfuscate constructor)
 (declare-cps-exception aref =-aref array? list-array array-find)
@@ -21,8 +21,7 @@
     (@ (i x !)
       (!.push i))))
 
-(dont-obfuscate *array)
+(dont-obfuscate *array index-of)
 
 (defun array-find (arr obj)
-  (%= nil (%%native "return " arr ".indexOf (" obj ") != -1;"))
-  nil)
+  (not (== -1 (arr.index-of obj))))
