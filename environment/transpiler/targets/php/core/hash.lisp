@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2009,2011–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2009,2011–2016 Sven Michael Klose <pixel@copei.de>
 
 (dont-obfuscate is_a strpos substr)
 
@@ -51,21 +51,15 @@
   (error "HREF expects an hash table instead of ~A." h))
 
 (defun href (h k)
-  (| (is_a h "__array")
-     (%href-error h))
   (alet (%%key k)
-    (?  (| (is_a h "__l") 
-           (is_a h "__array"))
-        (h.g !)
-        (& (php-aref-defined? h !)
-           (php-aref h !)))))
+    (? (is_a h "__array")
+       (h.g !)
+       (& (php-aref-defined? h !)
+          (php-aref h !)))))
 
 (defun (= href) (v h k)
-  (| (is_a h "__array")
-     (%href-error h))
   (alet (%%key k)
-    (?  (| (is_a h "__l") 
-           (is_a h "__array"))
+    (?  (is_a h "__array")
         (h.s (%%key !) v)
         (=-php-aref v h !) v))
   v)
