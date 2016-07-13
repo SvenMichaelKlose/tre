@@ -278,11 +278,9 @@
 
 (define-php-macro %slot-value (x y)
   (? (cons? x)
-	 (?
-       (%%native? x)    `(%%native ,(php-dollarize x) "->" ,y)
-       (| (%vec? x)
-          (%global? x)) `(%%native ,x "->" ,y)
-		(error "%%NATIVE, %VEC or %GLOBAL expected instead of ~A." x))
+	 (? (%%native? x)
+        `(%%native ,(php-dollarize x) "->" ,y)
+        `(%%native ,x "->" ,y))
 	 `(%%native "$" ,x "->" ,y)))
 
 (define-php-macro %php-class-head (name)
