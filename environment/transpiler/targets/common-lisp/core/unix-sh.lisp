@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2015–2016 Sven Michael Klose <pixel@copei.de>
 
 (defbuiltin sh (program &rest arguments)
   (sb-ext:run-program program arguments :pty cl:*standard-output*))
@@ -8,6 +8,15 @@
                           ,@(? recursively? '("-r"))
                           ,from
                           ,to)))
+
+(defbuiltin unix-sh-mkdir (pathname &key (parents nil))
+  (apply #'sh "/bin/mkdir" `(,@(? parents '("-p")) ,pathname)))
+
+(defbuiltin unix-sh-rm (x &key (verbose? nil) (recursively? nil) (force? nil))
+  (apply #'sh "/bin/rm" `(,@(? verbose?     '("-v"))
+                          ,@(? recursively? '("-r"))
+                          ,@(? force?       '("-f"))
+                          ,x)))
 
 ; TODO Implement NANOTIME.
 (defbuiltin nanotime () 0)
