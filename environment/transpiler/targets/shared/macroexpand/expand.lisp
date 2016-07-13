@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@hugbox.org>
+; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@hugbox.org>
 
 (defmacro define-shared-std-macro (targets &rest x)
   `(progn
@@ -71,7 +71,7 @@
      (redef-warn "Redefinition of variable ~A.~%" name))
   (add-defined-variable name)
   (& *have-compiler?*
-     (add-delayed-var-init `((= *variables* (. (. ',name ',val) *variables*)))))
+     (add-delayed-expr `((= *variables* (. (. ',name ',val) *variables*)))))
   `(progn
      ,@(& (needs-var-declarations?)
           `((%var ,name)))
