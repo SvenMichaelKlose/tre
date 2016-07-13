@@ -40,7 +40,7 @@
      (%find-if-sequence pred seq start end from-end with-index)))
 
 (defun find-if-not (pred seq &key (start nil) (end nil) (from-end nil) (with-index nil))
-  (find-if [not (funcall pred _)] seq :start start :end end :from-end from-end :with-index width-index))
+  (find-if [not (funcall pred _)] seq :start start :end end :from-end from-end :with-index with-index))
 
 (defun find (obj seq &key (start nil) (end nil) (from-end nil) (test #'eql))
   (find-if [funcall test _ obj] seq :start start :end end :from-end from-end))
