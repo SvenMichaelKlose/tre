@@ -436,7 +436,7 @@
   (last (get-list css-selector)))
 
 (defmethod caroshi-element get-nodes (css-selector)
-  (make-nodelist (get-list css-selector)))
+  (new nodelist (get-list css-selector)))
 
 (defmethod caroshi-element ancestor-or-self (css-selector)
   (alet (get-list css-selector)
