@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2005–2006,2008-2009,2011–2015 Sven Michael Klose <pixel@hugbox.org>
+; tré – Copyright (c) 2005–2006,2008-2009,2011–2016 Sven Michael Klose <pixel@hugbox.org>
 
 (functional find position)
 
@@ -38,6 +38,9 @@
   (? (not (atom seq) start end)
      (%find-if-list pred seq from-end with-index)
      (%find-if-sequence pred seq start end from-end with-index)))
+
+(defun find-if-not (pred seq &key (start nil) (end nil) (from-end nil) (with-index nil))
+  (find-if [not (funcall pred _)] seq :start start :end end :from-end from-end :with-index width-index))
 
 (defun find (obj seq &key (start nil) (end nil) (from-end nil) (test #'eql))
   (find-if [funcall test _ obj] seq :start start :end end :from-end from-end))
