@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@hugbox.org>
+; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@hugbox.org>
 
 (defun bind-event-listener (obj fun)
   (assert (function? fun) "BIND-EVENT-LISTENER requires a function")
@@ -180,15 +180,16 @@
 (defmethod _event-manager _bubble (evt init-elm)
   (with (modules         (copy-list _modules)
 		 stopped-modules (make-queue))
-	(loop
-      (when (evt.element)._hooked?
-        (_handle-modules evt (evt.element) modules stopped-modules))
-      (!? (| evt._stop
-             (not (evt.bubble)))
-          (return !)))
-    (unless evt._stop
-      (= evt._element init-elm)
-      (_handle-modules evt nil modules stopped-modules))))
+    (when (evt.element)
+	  (loop
+        (when (evt.element)._hooked?
+          (_handle-modules evt (evt.element) modules stopped-modules))
+        (!? (| evt._stop
+               (not (evt.bubble)))
+            (return !)))
+      (unless evt._stop
+        (= evt._element init-elm)
+        (_handle-modules evt nil modules stopped-modules)))))
 
 (defmethod _event-manager _dispatch (type evt)
   (log-events "Dispatching ~A event on ~A, X: ~A, Y: ~A.~%"
@@ -318,3 +319,4 @@
 (defvar event-manager (new _event-manager))
 (defvar *default-event-module* (aprog1 (new event-module "default")
                                  (event-manager.add !)))
+(defvar *event-module* *default-event-module*)
