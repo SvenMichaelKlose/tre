@@ -1,8 +1,8 @@
-; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@copei.de>
 
 (defun js-gen-inherit-methods (class-name bases)
   (@ [`(hash-merge (slot-value ,class-name 'prototype)
-                        (slot-value ,_ 'prototype))]
+                   (slot-value ,_ 'prototype))]
      bases))
 
 (defun js-gen-inherit-constructor-calls (bases)
@@ -14,7 +14,8 @@
     `(progn
        (defun ,class-name ,args
          (%thisify ,class-name
-;           ,@(js-gen-inherit-constructor-calls bases)
+           ; TOOD: Set 'super' instead.
+           ,@(js-gen-inherit-constructor-calls bases)
            ,@body))
        ,@(js-gen-inherit-methods class-name bases)
        (declare-cps-exception ,($ class-name '?))
