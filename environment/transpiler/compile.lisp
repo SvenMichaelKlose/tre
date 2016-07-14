@@ -21,7 +21,7 @@
   (backend (middleend x)))
 
 (defun codegen-section (section data)
-  (developer-note "Generating section ~A…~%" section)
+  (developer-note "Processing section ~A…~%" section)
   (apply #'+ (remove-if #'not (codegen data))))
 
 (defun codegen-sections (sections)
