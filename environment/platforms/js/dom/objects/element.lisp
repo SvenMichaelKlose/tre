@@ -44,6 +44,7 @@
     (!.write-attributes attrs)
 	(!.set-styles style)))
 
+; TODO: Removed these IE compatibility functions.
 (defun caroshi-element-children-array (n)
   n.child-nodes)
 
@@ -59,8 +60,7 @@
 (defun _caroshi-element-remove-class (elm x)
   (? (cons? x)
      (adolist x (_caroshi-element-remove-class elm !))
-     (elm.set-class (appy #'string-concat (pad (remove x (elm.get-classes) :test #'string==)
-                                               " ")))))
+     (elm.set-class (apply #'string-concat (pad (remove x (elm.get-classes) :test #'string==) " ")))))
 
 (defun caroshi-element-set-style (n k v)
   (= (aref n.style k) v))
@@ -76,9 +76,9 @@
 
 (defun caroshi-element-get-if (x predicate)
   (with-queue n
-    (x.walk (fn & (element? _)
-                  (funcall predicate)
-                  (enqueue n _)))
+    (x.walk [& (element? _)
+               (funcall predicate)
+               (enqueue n _)])
     (queue-list n)))
 
 (defclass (caroshi-element visible-node) ())
