@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2014,2016 Sven Michael Klose <pixel@copei.de>
 
 (defun child-of-ancestor-if (node pred)
   (let child node
@@ -38,6 +38,11 @@
   (do-self-and-ancestors-unless (x node)
 	(& (element? x)
 	   (x.get-id))))
+
+(defun ancestor-or-self-with-class (node)
+  (do-self-and-ancestors-unless (x node)
+	(& (element? x)
+	   (x.get-class))))
 
 (defun get-first-text-node (node)
   (do-self-and-next-siblings (elm node.first-child)
