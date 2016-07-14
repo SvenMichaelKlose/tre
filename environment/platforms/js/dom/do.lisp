@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@copei.de>
 
 (defmacro do-classes ((iterator element &optional result) &body body)
   `(@ (,iterator ((slot-value ,element 'get-classes)) ,result)
@@ -28,11 +28,11 @@
        ,@body)))
 
 (defmacro do-ancestors ((iter elm &optional (ret nil)) &body body)
-  `(do-elements ((parent-node ,iter) ,iter (parent-node ,elm) ,ret)
+  `(do-elements ((slot-value ,iter 'parent-node) ,iter (parent-node ,elm) ,ret)
 	 ,@body))
 
 (defmacro do-self-and-ancestors ((iter elm &optional (ret nil)) &body body)
-  `(do-elements ((parent-node ,iter) ,iter ,elm ,ret)
+  `(do-elements ((slot-value ,iter 'parent-node) ,iter ,elm ,ret)
 	 ,@body))
 
 (defmacro do-self-and-previous-siblings ((iter elm &optional (ret nil)) &body body)
