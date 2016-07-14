@@ -55,11 +55,11 @@
 (define-js-std-macro defun (name args &body body)
   (with (dname  (%defun-name name)
          g      '~%tfun)
-      `(%%block
-         (%var ,dname)
-         ,@(js-early-symbol-maker g dname)
-         ,(shared-defun dname args body :make-expander? nil)
-         (= (symbol-function ,g) ,dname))))
+    `(%%block
+       (%var ,dname)
+       ,@(js-early-symbol-maker g dname)
+       ,(shared-defun dname args body :make-expander? nil)
+       (= (symbol-function ,g) ,dname))))
 
 (define-js-std-macro %defun (name args &body body)
   `(defun ,name ,args ,@body))
