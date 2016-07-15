@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@hugbox.org>
+; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@hugbox.org>
 
 (def-head-predicate %rest)
 (def-head-predicate %body)
@@ -108,7 +108,8 @@
 			    (let k (assoc ($ vals.) key-args :test #'eq)
 				  (? k
 			         (alet vals
-					   (rplacd k .!.) ; TODO: Check if key-value exists.
+                       (| .! (return (err "Value of argument ~A missing." (list !.))))
+					   (rplacd k .!.)
 					   (exp-main def ..!))
 					 (exp-main-non-key def vals))))
 
@@ -129,11 +130,9 @@
 		 exp-sub
 		   #'((def vals)
 			    (& no-static
-				   (return (err "Static sublevel argument definition after ~A."
-                                (list no-static))))
+				   (return (err "Static sublevel argument definition after ~A." (list no-static))))
 				(& apply-values? (atom vals.)
-				   (return (err "Sublist expected for argument ~A."
-                                (list num))))
+				   (return (err "Sublist expected for argument ~A." (list num))))
                 (? concatenate-sublists?
 				   (nconc (argument-expand-0 fun def. vals.
                                              apply-values?
