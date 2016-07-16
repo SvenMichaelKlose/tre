@@ -447,7 +447,7 @@
 
 (defmethod caroshi-element ancestor (css-selector)
   (!? parent-node
-      (ancestor-or-self css-selector)))
+      (!.ancestor-or-self css-selector)))
 
 (defmethod caroshi-element ancestor-or-self-if (fun)
   (ancestor-or-self-if this fun))
