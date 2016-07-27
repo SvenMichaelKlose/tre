@@ -450,7 +450,7 @@
       (!.ancestor-or-self css-selector)))
 
 (defmethod caroshi-element ancestor-or-self-if (fun)
-  (ancestor-or-self-if this fun))
+  (caroshi-ancestor-or-self-if this fun))
 
 (defmethod caroshi-element get-first-child-by-class-name (name)
   (find-if [eq this _.parent-node]

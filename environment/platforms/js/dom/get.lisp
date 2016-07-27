@@ -12,6 +12,10 @@
     (& (funcall pred x)
 	   (return x))))
 
+; For use in CAROSHI-ELEMENT:ANCESTOR-OR-SELF-IF.
+(defun caroshi-ancestor-or-self-if (node pred)
+  (ancestor-or-self-if node pred))
+
 (defun ancestor-or-self? (x elm)
   (ancestor-or-self-if x [eq _ elm]))
 
