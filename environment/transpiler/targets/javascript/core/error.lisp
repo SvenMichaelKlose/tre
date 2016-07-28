@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2014,2016 Sven Michael Klose <pixel@copei.de>
 
 (defun %error (msg)
   (princ msg)
@@ -7,4 +7,4 @@
 
 (defun error (fmt &rest args)
   (alet (apply #'format nil fmt args)
-    (%error (format nil "Error: ~A~%" !))))
+    (format t "Error: ~A~%" !)))

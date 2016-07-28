@@ -159,7 +159,7 @@
       
 (defmethod _event-manager _call-handlers (evt module handlers)
   (adolist handlers
-	(log-events "Calling handler for ~A event/module `~A'.~%" event.type (module.get-name))
+	(log-events "Calling handler for ~A event/module `~A'.~%" evt.type (module.get-name))
     (!.callback evt this)
 	(!? evt._stop
         (return !))))
@@ -193,14 +193,14 @@
 
 (defmethod _event-manager _dispatch (type evt)
   (log-events "Dispatching ~A event on ~A, X: ~A, Y: ~A.~%"
-              type (evt.element).tag-name (evt.pointer-x) (evt.pointer-y))
+              type (!? (evt.element) !.tag-name) (evt.pointer-x) (evt.pointer-y))
   (let e (copy-hash-table evt)
     (= e.type type)
     (_bubble e (evt.element))
     (| e._send-natively?
        (e._stop-original))
     ,(when *log-events?*
-       `(format t "~A event ~Asent natively.~%" type (? evt._send-natively? "" "NOT "))))
+       `(format t "~A event ~A sent natively.~%" type (? evt._send-natively? "" "NOT "))))
   t)
 
 ;;;; DRAG'N DROP EVENT GENERATION
