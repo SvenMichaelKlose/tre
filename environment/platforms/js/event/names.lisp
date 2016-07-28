@@ -1,6 +1,8 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2013,2016 Sven Michael Klose <pixel@hugbox.org>
 
-(defconstant *mouse-events*   '("click" "dblclick" "mouseup" "mousedown" "mousemove" "mouseover" "mouseout"))
+(defconstant *mouse-events*   '("click" "dblclick" "mouseup" "mousedown" "mousemove" "mouseover" "mouseout"
+                                "mouseupleft" "mouseupmiddle" "mouseupright"
+                                "mousedownleft" "mousedownmiddle" "mousedownright"))
 (defconstant *touch-events*   '("touchdown" "touchmove" "touchup"))
 (defconstant *ignored-dragndrop-events* '("dragenter" "dragover"))
 (defconstant *key-events*     '("keypress" "keydown" "keyup"))
