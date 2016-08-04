@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2006–2008,2011–2013,2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2006–2008,2011–2013,2015,2016 Sven Michael Klose <pixel@copei.de>
 
 (defstruct format-info
   stream
@@ -30,7 +30,6 @@
   (princ #\~ (format-info-stream inf))
   (%format inf txt args))
 
-; TODO: Do it the Common Lisp way.
 (defun %format-directive (inf txt args)
   (++! (format-info-processed-args inf))
   (case (char-upcase txt.) :test #'character==
@@ -38,12 +37,10 @@
     #\A  (%format-directive-placeholder inf .txt args)
     #\F  (%format-directive-force-output inf .txt args)
     #\L  (%format-directive-fresh-line inf .txt args)
-    #\~  (%format-char inf txt args)
+    #\~  (progn
+           (princ txt. (format-info-stream inf))
+           (%format inf .txt args))
     (%format-directive-tilde inf txt args)))
-
-(defun %format-char (inf txt args)
-  (princ txt. (format-info-stream inf))
-  (%format inf .txt args))
 
 (defun %format (inf txt args)
   (when txt
@@ -54,7 +51,9 @@
                                   (princ .txt. !)
                                   (%format inf ..txt args))
         (character== txt. #\~)  (%format-directive inf .txt args)
-        (%format-char inf txt args)))))
+        (progn
+          (princ txt. (format-info-stream inf))
+          (%format inf .txt args))))))
 
 (defun format (str txt &rest args)
   (with-default-stream nstr str
