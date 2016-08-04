@@ -54,7 +54,7 @@
                                                         x))
                            (%track-location (stream-output-location str) x)
                            (funcall (stream-fun-out str) x str))
-    (error "Can only print strings and characters. Got ~A." x)))
+    (funcall (stream-fun-out str) x str)))
 
 (defun stream-track-input-location? (x)
   (stream-location-track? (stream-input-location x)))
