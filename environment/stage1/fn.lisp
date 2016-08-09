@@ -1,12 +1,13 @@
-; tré – Copyright (c) 2008,2011–2012,2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008,2011–2012,2015–2016 Sven Michael Klose <pixel@copei.de>
 
-(defmacro fn (&body body)
+(defmacro square (&body body)
   `#'((_)
         (block nil
-	      ,@(? (& (cons? (car body))
-			      (not (eq '%slot-value (car (car body)))))
+	      ,@(? (& (cons? body.)
+			      (not (eq 'slot-value body..)
+			           (eq '%slot-value body..)))
 			   body
 			   (list body)))))
 
-(defmacro square (&body body)
-  `(fn ,@body))
+(defmacro fn (&body body)
+  (error "Macro FN has been removed.~%"))
