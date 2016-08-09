@@ -1,4 +1,10 @@
-; tré – Copyright (c) 2009–2013,2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2009–2013,2015–2016 Sven Michael Klose <pixel@copei.de>
+
+(defun table-get-cell (x)
+  (x.ancestor-or-self "td"))
+
+(defun table-get-header (x)
+  (x.ancestor-or-self "th"))
 
 (defun table-get-rows (x)
   ((x.ancestor-or-self "tbody").children-list))
