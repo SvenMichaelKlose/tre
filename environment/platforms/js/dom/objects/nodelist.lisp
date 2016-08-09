@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2013,2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2013,2015–2016 Sven Michael Klose <pixel@copei.de>
 
 (defclass nodelist (x)
   (= _list x)
@@ -21,6 +21,7 @@
        ((slot-value i ',name) ,@args))))
 
 (def-nodelist-method remove)
+(def-nodelist-method remove-without-event-listeners)
 (def-nodelist-method show)
 (def-nodelist-method hide)
 
