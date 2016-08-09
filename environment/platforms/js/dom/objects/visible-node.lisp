@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2013,2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2013,2015–2016 Sven Michael Klose <pixel@copei.de>
 
 (defun visible-node-insert-before (elm new-elm)
   (@ (i (ensure-list new-elm))
@@ -133,10 +133,8 @@
 
 (defmethod visible-node get-document ()
   (alet this
-    (while (not (document? !))
+    (while (& ! (not (document? !)))
            !
-      (| !.parent-node
-         (return nil))
       (= ! !.parent-node))))
 
 (finalize-class visible-node)
