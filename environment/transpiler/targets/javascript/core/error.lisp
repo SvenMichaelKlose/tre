@@ -6,5 +6,4 @@
   nil)
 
 (defun error (fmt &rest args)
-  (alet (apply #'format nil fmt args)
-    (format t "Error: ~A~%" !)))
+  (%error (format nil "Error: ~A~%" (apply #'format nil fmt args))))
