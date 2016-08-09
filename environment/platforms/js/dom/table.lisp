@@ -1,7 +1,7 @@
 ; tré – Copyright (c) 2009–2013,2015 Sven Michael Klose <pixel@copei.de>
 
 (defun table-get-rows (x)
-  (((x.ancestor-or-self "table").get "tbody").children-list))
+  ((x.ancestor-or-self "tbody").children-list))
 
 (defun table-num-columns (x)
   (x.ancestor-or-self "tr").children.length)
@@ -10,15 +10,15 @@
   (x.ancestor-or-self "table").children.length)
 
 (defun table-get-first-row (x)
-  ((x.ancestor-or-self "table").get "tbody").first-child)
+  (x.ancestor-or-self "tbody").first-child)
 
 (defun table-get-column-index (cell)
   (cell.get-index))
 
 (defun table-get-column-0 (x idx)
-  (when x
-	(. (x.get-child-at idx)
-       (table-get-column-0 x.next-sibling idx))))
+  (& x
+	 (. (x.get-child-at idx)
+        (table-get-column-0 x.next-sibling idx))))
 
 (defun table-get-column (x)
   (table-get-column-0 (table-get-first-row x) (table-get-column-index x)))
