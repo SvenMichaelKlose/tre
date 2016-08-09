@@ -1,6 +1,7 @@
 ; tré – Copyright (c) 2005–2015 Sven Michael Klose <pixel@hugbox.org>
 
-; TODO: Get rid of this.
+; TODO: Enable QUASIQUOTE in dotted pairs like `(foo . ,bar).
+; TODO: Get rid of TREE-WALK.
 (defun tree-walk (i &key (ascending nil) (dont-ascend-if nil) (dont-ascend-after-if nil))
   (? (atom i)
 	 (funcall ascending i)
