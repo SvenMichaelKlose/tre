@@ -131,10 +131,4 @@
 	  (++! idx)
 	  (= x x.previous-sibling))))
 
-(defmethod visible-node get-document ()
-  (alet this
-    (while (& ! (not (document? !)))
-           !
-      (= ! !.parent-node))))
-
 (finalize-class visible-node)

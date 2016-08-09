@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2013,2016 Sven Michael Klose <pixel@copei.de>
 
 (defclass caroshi-event (&key (native-event nil) (new-type nil) (new-button nil) (x nil) (y nil))
   (clr _x _y
@@ -6,11 +6,10 @@
 	   _stop)
   (!? native-event (_copy-native-event-data !))
   (& _element
-     (alet (_element.get-document)
+     (alet _element.owner-document
        (= _send-natively? (& _element
-                             (!? (_element.get-document)
+                             (!? _element.owner-document
                                  !._send-natively?)))))
-
   (!? new-type (= type !))
   (!? x (= _x !))
   (!? y (= _y !))
