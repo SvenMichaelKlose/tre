@@ -8,12 +8,12 @@
      (x.has-tag-name? '("input" "textarea" "select"))))
 
 (defun form-get-input-elements (x)
-  (+ (remove-if-not #'form-input-element? (get-input-elements x))
+  (+ (remove-if-not #'form-input-element? (form-get-input-elements x))
      (get-textarea-elements x)
      (get-select-elements x)))
 
 (defun form-get-submit-buttons (x)
-  (remove-if-not #'submit-button? (get-input-elements x)))
+  (remove-if-not #'submit-button? (form-get-input-elements x)))
 
 (defun get-submit-button (form)
   (@ (elm (form.get-list "input"))
