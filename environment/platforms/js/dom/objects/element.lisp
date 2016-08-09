@@ -439,7 +439,7 @@
   (new nodelist (get-list css-selector)))
 
 (defmethod caroshi-element ancestor-or-self (css-selector)
-  (alet (get-list css-selector)
+  (alet (array-list ((this.get-document).query-selector-all css-selector))
     (do ((i this i.parent-node))
         ((not i))
       (& (member i ! :test #'eq)
