@@ -1,4 +1,6 @@
-;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2014,2016 Sven Michael Klose <pixel@copei.de>
+
+(defvar *event-module* nil)
 
 (defclass event-module (name)
   (log-events "New event module `~A'.~%" name)
