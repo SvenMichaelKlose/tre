@@ -1,13 +1,13 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2013,2016 Sven Michael Klose <pixel@copei.de>
 
 (defun make-log-stream ()
-  (make-stream :fun-in       #'((str))
-               :fun-out      #'((c str)
-                                  (logwindow-add-string (? (string? c)
-                                                           c
-                                                           (char-string c))))
+  (make-stream :fun-in    #'((str))
+               :fun-out   #'((c str)
+                              (logwindow-add-string (? (string? c)
+                                                       c
+                                                       (char-string c))))
 	           :fun-eof	  #'((str)
-                               t)))
+                              t)))
 
 (defvar *standard-log* (make-log-stream))
 (= *standard-output* (make-log-stream))
@@ -34,7 +34,7 @@
 
 (defun open-log-window ()
   (unless *logwindow*
-    (= *logwindow* (window.open "" "log" "width=640, height=480, scrollbars=yes"))
+    (= *logwindow* (window.open "" "log" "width=1200, height=300, scrollbars=yes"))
     (let doc *logwindow*.document
       (document-extend doc)
       (= doc.title "Console")
