@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2014,2016 Sven Michael Klose <pixel@copei.de>
 
 (load "environment/platforms/shared/lml.lisp")
 (load "environment/platforms/shared/lml2xml.lisp")
@@ -28,7 +28,6 @@
                           "event.lisp"
                           "handler.lisp"
                           "module.lisp"
-                          "hook-methods.lisp"
                           "names.lisp"
                           "manager.lisp"
                           "utils.lisp"
