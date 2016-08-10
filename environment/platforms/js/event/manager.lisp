@@ -162,7 +162,7 @@
 	(log-events "Calling handler for ~A event/module `~A'.~%" evt.type (module.get-name))
     (!.callback evt this)
 	(awhen evt._stop
-      (log "Event stopped.~%")
+      (log-events "Event stopped.~%")
       (return !))))
 
 (defmethod _event-manager _find-handlers (evt module elm)
@@ -172,7 +172,7 @@
   (adolist modules
     (log-events "Searching event handler in module '~A' / ~A on ~A (has ~A).~%"
                 (!.get-name) (!? evt !.type) (!? elm !.tag-name)
-                (concat-stringtree (pad (@ [identity _.type] !._handlers) " ")))
+                (concat-stringtree (pad (@ [+ _.type "/" (!? _.element !.tag-name)] !._handlers) " ")))
 	(evt._reset-flags)
     (unless (| !._killed? (member ! (queue-list stopped-modules) :test #'eq))
       (_call-handlers evt ! (_find-handlers evt ! elm))
