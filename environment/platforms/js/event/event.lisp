@@ -100,7 +100,7 @@
 (defmethod caroshi-event bubble	()
   (awhen _element
 	(unless (| (not (element? !))
-               (== "body" !.tag-name))
+               (== "BODY" !.tag-name))
 	  (= _element !.parent-node))))
 
 (defmethod caroshi-event stop-bubbling ()
