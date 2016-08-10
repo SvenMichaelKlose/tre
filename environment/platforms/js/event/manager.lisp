@@ -147,7 +147,7 @@
 	  (when (_sensible-position? x y)
 	    (_add-moved-distance-to-event evt)
         (= this.x x
-              this.y y)))))
+           this.y y)))))
 
 ;;;; EVENT DISPATCH
 
@@ -169,6 +169,8 @@
 
 (defmethod _event-manager _handle-modules (evt elm modules stopped-modules)
   (adolist modules
+    (log-events "Searching event handler in module '~A' / ~A on ~A.~%"
+                (!.get-name) (!? evt !.type) (!? elm !.tag-name))
 	(evt._reset-flags)
     (unless (| !._killed? (member ! (queue-list stopped-modules) :test #'eq))
       (_call-handlers evt ! (_find-handlers evt ! elm))
@@ -200,7 +202,7 @@
     (| e._send-natively?
        (e._stop-original))
     ,(when *log-events?*
-       `(format t "~A event ~A sent natively.~%" type (? evt._send-natively? "" "NOT "))))
+       `(format t "~A event ~Asent natively.~%" type (? evt._send-natively? "" "NOT "))))
   t)
 
 ;;;; DRAG'N DROP EVENT GENERATION
