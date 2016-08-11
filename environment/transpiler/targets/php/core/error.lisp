@@ -1,12 +1,13 @@
-;;;;; tré – Copyright (c) 2008–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2009,2011–2013,2016 Sven Michael Klose <pixel@copei.de>
 
-(dont-obfuscate exit)
+(dont-obfuscate exit error_log)
 
 (defun invoke-debugger ()
   (tre_backtrace "INVOKE-DEBUGGER called"))
 
 (defun %error (msg)
-  (princ msg)
+  (error_log msg)
+  (%princ msg)
   (invoke-debugger))
 
 (defun error (fmt &rest args)
