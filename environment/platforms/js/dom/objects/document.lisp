@@ -20,4 +20,7 @@
 (defmethod caroshi-html-document get-nodes (css-selector)
   (new nodelist (get-list css-selector)))
 
+(defmethod caroshi-html-document get-html ()
+  document-element.outer-h-t-m-l)
+
 (finalize-class caroshi-html-document)
