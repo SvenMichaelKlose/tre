@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@copei.de>
 
 (load "environment/platforms/js/event/names.lisp")
 
@@ -62,8 +62,8 @@
                          '("log.lisp"))
 
                 (toplevel . ((document-extend)
-                             (event-manager.init-document document)
-                             (event-manager.set-send-natively-by-default? document t)
+                             (*event-manager*.init-document document)
+                             (*event-manager*.set-send-natively-by-default? document t)
                              (format t "Welcome to tr&eacute;, revision ~A. Copyright (c) 2005-2013 Sven Michael Klose &lt;pixel@copei.de&gt;~%" *tre-revision*))))
               :transpiler  (aprog1 (copy-transpiler *js-transpiler*)
                              (= (transpiler-configuration ! :save-sources?) t))

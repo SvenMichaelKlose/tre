@@ -53,7 +53,7 @@
 (defmethod event-module close ())
 
 (defmethod event-module kill ()
-  (event-manager.kill this))
+  (*event-manager*.kill this))
 
 (mapcar-macro _ *all-events*
   `(defmethod event-module ,(make-symbol (upcase _)) (fun elm)
