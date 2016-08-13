@@ -48,7 +48,7 @@
 (defmethod _event-manager ctrl-down? ()  (get-key-stat 17))
 (defmethod _event-manager alt-down? ()   (get-key-stat 18))
 
-(defmethod _event-manager button-down? ()            _button-down?)
+(defmethod _event-manager button-down? ()           _button-down?)
 (defmethod _event-manager last-button-state ()      _last-button-state)
 (defmethod _event-manager last-click-shift-down? () _last-click-shift-down?)
 
