@@ -1,4 +1,4 @@
-;;;; tré – Copyright (c) 2005–2008,2011–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2008,2011–2014,2016 Sven Michael Klose <pixel@copei.de>
 
 (defmacro when (predicate &body body)
   `(& ,predicate
@@ -35,6 +35,8 @@
                                .cases)))))
 
 (defmacro case (&body cases)
+  (& (keyword? cases.)
+     (error "CASE value is a keyword."))
   (let g (gensym)
     `(let ,g ,cases.
        (? 
