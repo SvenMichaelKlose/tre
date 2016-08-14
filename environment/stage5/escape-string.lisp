@@ -1,4 +1,4 @@
-;;;; tré – Copyright (c) 2009,2012–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2009,2012–2014,2016 Sven Michael Klose <pixel@copei.de>
 
 (defun escape-charlist (x &optional (quote-char #\") (chars-to-escape #\"))
   (when x
@@ -15,4 +15,5 @@
       (. x. (escape-charlist .x quote-char chars-to-escape)))))
 
 (defun escape-string (x &optional (quote-char #\") (chars-to-escape #\"))
+  (declare type string x)
   (list-string (escape-charlist (string-list x) quote-char chars-to-escape)))
