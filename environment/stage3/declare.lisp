@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2013,2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2013,2015–2016 Sven Michael Klose <pixel@copei.de>
 
 (defvar *type-predicates*
   '((nil        . not)
@@ -48,6 +48,6 @@
 (defmacro declare (&rest x)
   (| x (error "Arguments expected."))
   (alet (@ #'%declare-statement (ensure-tree x))
-	(when *assert*
+	(when *assert?*
   	  `(progn
 	 	 ,@!))))
