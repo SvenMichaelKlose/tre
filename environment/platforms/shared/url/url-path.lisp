@@ -1,7 +1,7 @@
-;;;;; tré – Copyright (c) 2009–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2009–2014,2016 Sven Michael Klose <pixel@copei.de>
 
 (defun butlast-path-component (x)
-  (apply #'+ (pad (butlast (path-pathlist x)) "/")))
+  (pathlist-path (pad (butlast (path-pathlist x)) "/")))
 
 (defun url-without-filename (x)
   (? x
@@ -9,10 +9,10 @@
 	 ""))
 
 (defun url-schema (x)
-  (car (split #\/ x)))
+  (car (path-pathlist x)))
 
 (defun url-has-schema? (x)
-  (alet (split #\/ x)
+  (alet (path-pathlist x)
     (& (tail? !. ":")
 	   (empty-string? .!.))))
 
@@ -22,7 +22,7 @@
      x))
 
 (defun url-path (x)
-  (& x (apply #'+ (pad (cdr (path-pathlist (url-without-schema x))) "/"))))
+  (pathlist-path (pad (cdr (path-pathlist (url-without-schema x))) "/")))
 
 (defun url-without-path (x)
-  (apply #'+ (pad (subseq (path-pathlist x) 0 3) "/")))
+  (pathlist-path (pad (subseq (path-pathlist x) 0 3) "/")))
