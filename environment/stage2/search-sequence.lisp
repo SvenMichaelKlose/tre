@@ -68,6 +68,9 @@
       (| (funcall pred (elt seq !))
          (return-from every nil)))))
 
+(defun none? (pred &rest args)
+  (apply #'every [not (funcall pred _)] args))
+
 (define-test "FIND finds elements"
   ((find 's '(l i s p)))
   's)
