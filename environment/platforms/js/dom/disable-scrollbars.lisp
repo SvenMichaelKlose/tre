@@ -1,15 +1,15 @@
-;;;;; tré – Copyright (c) 2010–2012 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2010–2012,2016 Sven Michael Klose <pixel@copei.de>
 
 (dont-obfuscate window document body scroll)
 
 (defun disable-scrollbars (&optional (win window))
+  (win.document.body.set-style "overflow" "hidden")
   (let doc win.document
-    (caroshi-element-set-style win.document.body "overflow" "hidden")
-    (when doc.body.scroll
-	  (= doc.body.scroll "no"))))
+    (& doc.body.scroll
+	   (= doc.body.scroll "no"))))
 
 (defun enable-scrollbars (&optional (win window))
+  (win.document.body.set-style "overflow" "visible")
   (let doc win.document
-    (caroshi-element-set-style win.document.body "overflow" "visible")
-    (when doc.body.scroll
-	  (= doc.body.scroll "yes"))))
+    (& doc.body.scroll
+	   (= doc.body.scroll "yes"))))

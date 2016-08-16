@@ -44,43 +44,6 @@
     (!.write-attributes attrs)
 	(!.set-styles style)))
 
-; TODO: Removed these IE compatibility functions.
-(defun caroshi-element-children-array (n)
-  n.child-nodes)
-
-(defun caroshi-element-children-list (n)
-  (array-list n.child-nodes))
-
-(defun caroshi-element-remove-children (n)
-  (do-children (x n n)
-	(? (element? x)
-       (x.remove)
-	   (visible-node-remove-without-listeners-or-callbacks x))))
-
-(defun _caroshi-element-remove-class (elm x)
-  (? (cons? x)
-     (adolist x (_caroshi-element-remove-class elm !))
-     (elm.set-class (apply #'string-concat (pad (remove x (elm.get-classes) :test #'string==) " ")))))
-
-(defun caroshi-element-set-style (n k v)
-  (= (aref n.style k) v))
-
-(defun caroshi-element-set-styles (n styles)
-  (maphash #'((k v)
-                (caroshi-element-set-style n k v))
-	       styles)
-  styles)
-
-(defun caroshi-element-remove-styles (n)
-  (n.remove-attribute "style"))
-
-(defun caroshi-element-get-if (x predicate)
-  (with-queue n
-    (x.walk [& (element? _)
-               (funcall predicate)
-               (enqueue n _)])
-    (queue-list n)))
-
 (defclass (caroshi-element visible-node) ())
 
 ,(let x
@@ -112,10 +75,13 @@
   this.child-nodes)
 
 (defmethod caroshi-element children-list ()
-  (caroshi-element-children-list this))
+  (array-list child-nodes))
 
 (defmethod caroshi-element remove-children ()
-  (caroshi-element-remove-children this))
+  (do-children (x this this)
+	(? (element? x)
+       (x.remove)
+	   (x.remove-without-listeners-or-callbacks))))
 
 (defmethod caroshi-element remove-children-without-listeners-or-callbacks ()
   (do-children (x this this)
@@ -137,7 +103,7 @@
 (defmethod caroshi-element add-front (child)
   (& child
 	 (? first-child
-        (visible-node-insert-before first-child child)
+        (first-child.insert-before child)
 	    (append-child child)))
   this)
 
@@ -225,21 +191,12 @@
 
 (dont-obfuscate index-of)
 
-(defun string-has-class? (str cls)
-  (let c (+ " " str " ")
-    (adolist ((ensure-list cls))
-      (& (< -1 (c.index-of (+ " " ! " ")))
-         (return t)))))
-
 (defmethod caroshi-element has-class? (x)
-  (awhen (read-attribute "class")
-    (string-has-class? ! x)))
-
-;(defmethod caroshi-element generic-has-class? (x)
-;  (let classes (get-classes)
-;    (@ (i (ensure-list x))
-;      (& (member i (get-classes) :test #'string==)
-;	      (return t)))))
+  (!? (read-attribute "class")
+      (let c (+ " " ! " ")
+        (adolist ((ensure-list x))
+          (& (< -1 (c.index-of (+ " " ! " ")))
+             (return t))))))
 
 (defmethod caroshi-element get-class ()
   (read-attribute "class"))
@@ -250,7 +207,7 @@
        (return i))))
 
 (defmethod caroshi-element get-classes ()
-  (split #\  (read-attribute "class") :test #'character==))
+  (split #\  (get-class) :test #'character==))
 
 (defmethod caroshi-element set-class (x)
   (write-attribute "class" x))
@@ -266,16 +223,22 @@
   (@ (i x x)
     (add-class i)))
 
+(defun remove-string== (x lst)
+  (remove x lst :test #'string==))
+
 (defmethod caroshi-element remove-class (x)
-  (_caroshi-element-remove-class this x))
+  (? (cons? x)
+     (adolist x
+       (remove-class !))
+     (set-class (apply #'string-concat (pad (remove-string== x (get-classes)) " ")))))
 
 (defmethod caroshi-element set-id (id)
   (write-attribute "id" id))
 
 (defmethod caroshi-element get-id (id)
-  (awhen (read-attribute "id")
-	(unless (empty-string? !)
-	  (number !))))
+  (!? (read-attribute "id")
+	  (unless (empty-string? !)
+	    (number !))))
 
 (defmethod caroshi-element has-tag-name? (n)
   (? (cons? n)
@@ -283,24 +246,23 @@
      (member (downcase tag-name) (@ #'downcase (ensure-list n)) :test #'string==)))
 
 (defmethod caroshi-element set-styles (styles)
-  (caroshi-element-set-styles this styles))
+  (maphash #'((k v)
+               (set-style k v))
+	       styles)
+  styles)
 
 (defmethod caroshi-element remove-styles ()
-  (caroshi-element-remove-styles this))
+  (remove-attribute "style"))
 
 (defmethod caroshi-element set-style (k v)
-  (caroshi-element-set-style this k v))
+  (= (aref style k) v))
 
 (dont-obfuscate default-view get-computed-style)
 
-(defun caroshi-element-get-style (elm x)
-  (declare type string x)
-  (| (aref elm.style x)
-     (& (element? elm)
-        (aref (document.default-view.get-computed-style elm nil) x))))
-
 (defmethod caroshi-element get-style (x)
-  (caroshi-element-get-style this x))
+  (declare type string x)
+  (| (aref style x)
+     (aref (document.default-view.get-computed-style this nil) x)))
 
 (defmethod caroshi-element show ()
   (set-style "display" ""))
@@ -358,25 +320,21 @@
 (defmethod caroshi-element get-position-y ()
   (aref (cumulative-offset) 1))
 
-(defun caroshi-element-get-width (elm)
-  (let v (| (? (< 0 elm.offset-width)
-	           elm.offset-width
-	           elm.width)
-            0)
-    (& (number? v) v)))
-
 (defmethod caroshi-element get-width ()
-  (caroshi-element-get-width this))
-
-(defun caroshi-element-get-height (elm)
-  (let v (| (? (< 0 elm.offset-height)
-  	           elm.offset-height
-	           elm.height)
-            0)
-    (& (number? v) v)))
+  (alet (| (? (< 0 offset-width)
+	          offset-width
+	          width)
+           0)
+    (& (number? !)
+       !)))
 
 (defmethod caroshi-element get-height ()
-  (caroshi-element-get-height this))
+  (alet (| (? (< 0 offset-height)
+              offset-height
+              height)
+           0)
+    (& (number? !)
+       !)))
 
 (defmethod caroshi-element fix-opera-size-of-0 (x)
   (?
@@ -462,7 +420,11 @@
   (dom-tree-extend this))
 
 (defmethod caroshi-element get-if (predicate)
-  (caroshi-element-get-if this predicate))
+  (with-queue n
+    (walk [& (element? _)
+             (funcall predicate)
+             (enqueue n _)])
+    (queue-list n)))
 
 (defmethod caroshi-element get-child-at (idx)
   (assert (integer<= 0 idx) (+ "caroshi-element get-child-at " idx " is not a positive integer"))

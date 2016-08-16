@@ -1,23 +1,5 @@
 ; tré – Copyright (c) 2008–2013,2015–2016 Sven Michael Klose <pixel@copei.de>
 
-(defun visible-node-insert-before (elm new-elm)
-  (@ (i (ensure-list new-elm))
-    (!? *dom-callback-before-insert-before*
-	    (funcall ! elm))
-    (elm.parent-node.insert-before i elm))
-  new-elm)
-
-(defun visible-node-walk (n fun)
-  (declare type function fun)
-  (& (not (eq 'next-sibling (funcall fun n)))
-     (element? n)
-     (doarray (x (caroshi-element-children-array n) n)
-       (visible-node-walk x fun)))
-  n)
-
-(defun visible-node-remove-without-listeners-or-callbacks (n)
-  (n.parent-node.remove-child n))
-
 (defclass visible-node ())
 
 ,(let n '(parent-node
@@ -38,7 +20,8 @@
   (dom-tree-extend (clone-node children?)))
 
 (defmethod visible-node remove-without-listeners-or-callbacks ()
-  (visible-node-remove-without-listeners-or-callbacks this))
+  (!? parent-node
+      (!.remove-child this)))
 
 (defvar *dom-callback-before-remove* nil)
 
@@ -50,13 +33,17 @@
 (defvar *dom-callback-before-insert-before* nil)
 
 (defmethod visible-node add-before (new-elm)
-  (visible-node-insert-before this new-elm))
+  (@ (i (ensure-list new-elm))
+    (!? *dom-callback-before-insert-before*
+	    (funcall ! this))
+    (parent-node.insert-before i this))
+  new-elm)
 
 (defmethod visible-node add-after (new-elm)
   (let to this
     (dolist (i (ensure-list new-elm))
       (!? to.next-sibling
-	      (visible-node-insert-before ! i)
+	      (!.add-before i)
           (parent-node.add i))
       (= to i)))
   new-elm)
@@ -72,11 +59,17 @@
   this)
 
 (defmethod visible-node walk (fun)
-  (visible-node-walk this fun))
+  (declare type function fun)
+  (& (not (eq 'next-sibling (funcall fun this)))
+     (element? this)
+     (doarray (x this.child-nodes this)
+       (element-extend x)
+       (x.walk fun)))
+  this)
 
 (defmethod visible-node remove ()
   (& (element? this)
-	 (caroshi-element-remove-children this))
+	 (this.remove-children))
   (adolist _unhooks
     (funcall ! this))
   (remove-without-listeners)

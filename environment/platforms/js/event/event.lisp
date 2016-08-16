@@ -4,12 +4,8 @@
   (clr _x _y
 	   _stop-bubbling
 	   _stop)
+  (= _send-natively? t)
   (!? native-event (_copy-native-event-data !))
-  (& _element
-     (alet _element.owner-document
-       (= _send-natively? (& _element
-                             (!? _element.owner-document
-                                 !._send-natively?)))))
   (!? new-type (= type !))
   (!? x (= _x !))
   (!? y (= _y !))
