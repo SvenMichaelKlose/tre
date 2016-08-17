@@ -103,7 +103,7 @@
 (defmethod caroshi-element add-front (child)
   (& child
 	 (? first-child
-        (first-child.insert-before child)
+        (first-child.add-before child)
 	    (append-child child)))
   this)
 
