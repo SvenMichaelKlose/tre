@@ -107,7 +107,7 @@
   x)
 
 (defmethod event-manager init-document (doc)
-  (set-send-natively-by-default? doc nil)
+  (set-send-natively-by-default? doc t)
   (let exclusions `("mouseup" "mousedown" ,@(copy-list *ignored-dragndrop-events*) "drop" ,@(copy-list *key-events*) "unload")
     (_dochook doc (remove-if [member _ exclusions :test #'string==] *all-events*)
               (bind-event-listener this this._generic-handler)))

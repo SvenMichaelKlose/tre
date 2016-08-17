@@ -50,7 +50,6 @@
                 (form.add txt)
                 (form.add submit)
                 (*event-manager*.init-document doc)
-                (*event-manager*.set-send-natively-by-default? doc t)
                 (init-event-module *log-event-module* "log")
                 (*log-event-module*.click [(_.discard)
                                            (_.send-natively nil)
