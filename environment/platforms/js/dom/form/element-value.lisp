@@ -13,7 +13,7 @@
   (x.write-attribute "alternative-value" val))
 
 (defun input-element-w/-value-attribute? (x)
-  (& (x.has-tag-name? "input")
+  (& (x.tag-name? "input")
 	 (| (x.attribute-value? "type" "text")
 	    (x.attribute-value? "type" "password"))))
 
@@ -21,8 +21,8 @@
   (?
 	(input-element-w/-value-attribute? x)  (| (has-alternative-value? x)
                                               x.value)
-	(x.has-tag-name? "textarea")           x.text
-	(x.has-tag-name? "select")             (form-select-get-selected-option-value x)
+	(x.tag-name? "textarea")           x.text
+	(x.tag-name? "select")             (form-select-get-selected-option-value x)
     x.text-content))
 
 (defun set-element-value-attribute (x val)
@@ -33,7 +33,7 @@
 (defun (= element-value) (val x)
   (?
 	(input-element-w/-value-attribute? x)  (set-element-value-attribute x val)
-	(x.has-tag-name? "textarea")           (= x.text val)
+	(x.tag-name? "textarea")           (= x.text val)
     (progn
 	  (x.remove-children)
 	  (x.add-text val)))

@@ -2,15 +2,15 @@
 
 (defun form? (x)
   (& (element? x)
-     (x.has-tag-name? "form")))
+     (x.tag-name? "form")))
 
 (defun form-element? (x)
   (& (element? x)
-     (x.has-tag-name? '("input" "textarea" "select" "option" "radiobox"))))
+     (x.tag-name? '("input" "textarea" "select" "option" "radiobox"))))
 
 (defun submit-button? (x)
   (& (element? x)
      (x.attribute-value? "type" "submit")))
 
 (defun named-form-element? (x)
-  (x.has-tag-name? '("form" "select" "input" "textarea")))
+  (x.tag-name? '("form" "select" "input" "textarea")))

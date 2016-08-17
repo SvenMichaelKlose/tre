@@ -5,7 +5,7 @@
 
 (defun form-input-element? (x)
   (& (not (submit-button? x))
-     (x.has-tag-name? '("input" "textarea" "select"))))
+     (x.tag-name? '("input" "textarea" "select"))))
 
 (defun form-get-input-elements (x)
   (+ (remove-if-not #'form-input-element? (x.get-list "input"))
