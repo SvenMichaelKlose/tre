@@ -30,12 +30,14 @@
 
 (defmacro do-ancestors-unless ((iter start) &body body)
   `(do-ancestors (,iter ,start)
-     (& (progn ,@body)
+     (& (progn
+          ,@body)
 	    (return ,iter))))
 
 (defmacro do-self-and-ancestors-unless ((iter start) &body body)
   `(do-self-and-ancestors (,iter ,start)
-     (& (progn ,@body)
+     (& (progn
+          ,@body)
 	    (return ,iter))))
 
 (defun ancestor-or-self-with-i-d (node)

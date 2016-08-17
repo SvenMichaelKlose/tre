@@ -376,7 +376,9 @@
 	    this)))
 
 (defmethod caroshi-element get (css-selector)
-  (query-selector css-selector))
+  (? (head? css-selector "<")
+     (ancestor-or-self (subseq css-selector 1))
+     (query-selector css-selector)))
 
 (defmethod caroshi-element get-list (css-selector)
   (array-list (query-selector-all css-selector)))

@@ -5,7 +5,7 @@
      (x.has-tag-name? "select")))
 
 (defun form-select-get-options (x)
-  ((x.ancestor-or-self "select").get-list "option"))
+  ((x.get "<select").get-list "option"))
 
 (defun form-select-get-select-names (x)
   (@ [_.get-name] (x.get-list "select")))
@@ -50,7 +50,7 @@
 	(o.read-attribute "value")))
 
 (defun form-select-add-option (x txt &optional (attrs nil))
-  (with (select-element  (ancestor-or-self-select-element x)
+  (with (select-element  (x.get "<select")
 		 option-element  (new *element "option" attrs))
 	(option-element.add-text txt)
 	(select-element.add option-element)))
@@ -73,7 +73,7 @@
 	(form-select-add-string-list-options select-element .options)))
 
 (defun form-select-sort (x)
-  (with (select-element  (x.ancestor-or-self "select")
+  (with (select-element  (x.get "<select")
 		 option-list     (form-select-option-texts-to-string-lists (form-select-get-options x))
 		 sorted-options  (sort option-list :test #'<=-list))
 	(select-element.remove-children)

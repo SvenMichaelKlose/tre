@@ -1,7 +1,7 @@
 ; tré – Copyright (c) 2009–2010,2012–2016 Sven Michael Klose <pixel@copei.de>
 
 (defun form-action-get (x)
-  ((x.ancestor-or-self "form").read-attribute "action"))
+  ((x.get "<form").read-attribute "action"))
 
 (defun form-input-element? (x)
   (& (not (submit-button? x))
@@ -21,4 +21,4 @@
 	   (return elm))))
 
 (defun form-rename (x name)
-  ((x.ancestor-or-self "form").set-name name))
+  ((x.get "<form").set-name name))
