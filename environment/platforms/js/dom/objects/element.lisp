@@ -109,16 +109,12 @@
 
 (defmethod caroshi-element move-front ()
   (& this.next-sibling                                                                                                           
-     (alet parent-node
-       (remove-without-listeners)   ; TODO: No need to remove it first.
-       (!.add-front this)))
+     (parent-node.add-front this))
   this)
 
 (defmethod caroshi-element move-back ()
   (& this.next-sibling                                                                                                           
-     (alet parent-node
-       (remove-without-listeners)
-       (!.add this)))
+     (parent-node.add this))
   this)
 
 (defmethod caroshi-element add-element (name attrs)
@@ -200,12 +196,6 @@
 
 (defmethod caroshi-element get-class ()
   (read-attribute "class"))
-
-; TODO: Remove this.
-(defmethod caroshi-element get-first-of-classes (lst)
-  (@ (i lst)
-    (& (class? i)
-       (return i))))
 
 (defmethod caroshi-element get-classes ()
   (split #\  (get-class) :test #'character==))
