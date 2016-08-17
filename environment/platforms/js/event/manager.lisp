@@ -117,9 +117,8 @@
   (_dochook doc (_non-generic-event "drop")       (bind-event-listener this this._externaldrop))
   (_dochook doc (_non-generic-event *key-events*) (bind-event-listener this this._generic-keyhandler))
   (_dochook doc *ignored-dragndrop-events* #'native-stop-event)
-  (native-add-event-listener doc "unload" #'((evt)
-								               (_generic-handler evt)
-							                   (_remove-event-listeners doc))))
+  (native-add-event-listener doc "unload" [(_generic-handler _)
+							               (_remove-event-listeners doc)]))
 
 (defmethod event-manager _externaldrop (evt)
   (evt._stop-original)
@@ -161,9 +160,9 @@
   (adolist handlers
 	(log-events "Calling handler for ~A event/module `~A'.~%" evt.type (module.get-name))
     (!.callback evt this)
-	(awhen evt._stop
+	(when evt._stop
       (log-events "Event stopped.~%")
-      (return !))))
+      (return))))
 
 (defmethod event-manager _find-handlers (evt module elm)
   (_find-handlers-of-element (_find-handlers-of-type module._handlers evt.type) elm))
@@ -176,8 +175,8 @@
 	(evt._reset-flags)
     (unless (| !._killed? (member ! (queue-list stopped-modules) :test #'eq))
       (_call-handlers evt ! (_find-handlers evt ! elm))
-      (!? evt._stop
-          (return !))
+      (& evt._stop
+         (return))
 	  (when evt._stop-bubbling
 		(enqueue stopped-modules !)))))
 
@@ -188,9 +187,9 @@
 	  (loop
         (when (evt.element)._hooked?
           (_handle-modules evt (evt.element) modules stopped-modules))
-        (!? (| evt._stop
-               (not (evt.bubble)))
-            (return !)))
+        (& (| evt._stop
+              (not (evt.bubble)))
+            (return)))
       (unless evt._stop
         (= evt._element init-elm)
         (_handle-modules evt nil modules stopped-modules)))))
@@ -309,13 +308,13 @@
 
 (defmethod event-manager _mousedown (evt)
   (= _last-click-shift-down? (shift-down?))
-  (when (== 0 evt.button)
-	(_dnd-mousedown evt))
+  (& (zero? evt.button)
+	 (_dnd-mousedown evt))
   (_mousebutton evt "down"))
 
 (defmethod event-manager _mouseup (evt)
-  (when (== 0 evt.button)
-	(_dnd-mouseup evt))
+  (& (zero? evt.button)
+	 (_dnd-mouseup evt))
   (_mousebutton evt "up"))
 
 (finalize-class event-manager)
