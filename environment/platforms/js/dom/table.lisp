@@ -7,7 +7,7 @@
   (x.ancestor-or-self "th"))
 
 (defun table-get-rows (x)
-  ((x.ancestor-or-self "tbody").children-list))
+  ((x.ancestor-or-self "tbody").child-list))
 
 (defun table-num-columns (x)
   (x.ancestor-or-self "tr").children.length)

@@ -74,7 +74,7 @@
 (defmethod caroshi-element children-array ()
   this.child-nodes)
 
-(defmethod caroshi-element children-list ()
+(defmethod caroshi-element child-list ()
   (array-list child-nodes))
 
 (defmethod caroshi-element remove-children ()
