@@ -191,7 +191,7 @@
 
 (dont-obfuscate index-of)
 
-(defmethod caroshi-element has-class? (x)
+(defmethod caroshi-element class? (x)
   (!? (read-attribute "class")
       (let c (+ " " ! " ")
         (adolist ((ensure-list x))
@@ -201,9 +201,10 @@
 (defmethod caroshi-element get-class ()
   (read-attribute "class"))
 
+; TODO: Remove this.
 (defmethod caroshi-element get-first-of-classes (lst)
   (@ (i lst)
-    (& (has-class? i)
+    (& (class? i)
        (return i))))
 
 (defmethod caroshi-element get-classes ()
