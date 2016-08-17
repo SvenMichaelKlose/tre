@@ -19,23 +19,12 @@
 (defmethod visible-node clone (children?)
   (dom-tree-extend (clone-node children?)))
 
-(defmethod visible-node remove-without-listeners-or-callbacks ()
+(defmethod visible-node remove-without-listeners ()
   (!? parent-node
       (!.remove-child this)))
 
-(defvar *dom-callback-before-remove* nil)
-
-(defmethod visible-node remove-without-listeners ()
-  (!? *dom-callback-before-remove*
-	  (funcall ! this))
-  (remove-without-listeners-or-callbacks))
-
-(defvar *dom-callback-before-insert-before* nil)
-
 (defmethod visible-node add-before (new-elm)
   (@ (i (ensure-list new-elm))
-    (!? *dom-callback-before-insert-before*
-	    (funcall ! this))
     (parent-node.insert-before i this))
   new-elm)
 

@@ -81,11 +81,11 @@
   (do-children (x this this)
 	(? (element? x)
        (x.remove)
-	   (x.remove-without-listeners-or-callbacks))))
+	   (x.remove-without-listeners))))
 
-(defmethod caroshi-element remove-children-without-listeners-or-callbacks ()
+(defmethod caroshi-element remove-children-without-listeners ()
   (do-children (x this this)
-    (x.remove-without-listeners-or-callbacks)))
+    (x.remove-without-listeners)))
 
 (defmethod caroshi-element add (child)
   (& child (append-child child))
@@ -110,14 +110,14 @@
 (defmethod caroshi-element move-front ()
   (& this.next-sibling                                                                                                           
      (alet parent-node
-       (this.remove-without-listeners-or-callbacks)
+       (remove-without-listeners)   ; TODO: No need to remove it first.
        (!.add-front this)))
   this)
 
 (defmethod caroshi-element move-back ()
   (& this.next-sibling                                                                                                           
      (alet parent-node
-       (this.remove-without-listeners-or-callbacks)
+       (remove-without-listeners)
        (!.add this)))
   this)
 
