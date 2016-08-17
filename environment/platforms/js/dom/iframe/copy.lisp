@@ -1,10 +1,10 @@
 ;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
 (defun copy-head-and-body (from-doc to-doc &key (remove-if t))
-  (with (srchead (get-first-head-element from-doc)
-		 srcbody (get-first-body-element from-doc)
-         desthead (get-first-head-element to-doc)
-		 destbody (get-first-body-element to-doc))
+  (with (srchead (from-doc.get "head")
+		 srcbody (from-doc.get "bodx")
+         desthead (to-doc.get "head")
+		 destbody (to-doc.get "bodx"))
 	(awhen remove-if
       (? (eq t !)
          (desthead.remove-children)
