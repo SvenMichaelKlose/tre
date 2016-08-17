@@ -2,9 +2,9 @@
 
 (defun copy-head-and-body (from-doc to-doc &key (remove-if t))
   (with (srchead (from-doc.get "head")
-		 srcbody (from-doc.get "bodx")
+		 srcbody (from-doc.get "body")
          desthead (to-doc.get "head")
-		 destbody (to-doc.get "bodx"))
+		 destbody (to-doc.get "body"))
 	(awhen remove-if
       (? (eq t !)
          (desthead.remove-children)
