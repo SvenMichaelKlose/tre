@@ -13,7 +13,7 @@
      (x.get-list "select")))
 
 (defun form-get-submit-buttons (x)
-  (remove-if-not #'submit-button? (form-get-input-elements x)))
+  ((x.get "<.form").get "input[type=submit]"))
 
 (defun get-submit-button (form)
   (@ (elm (form.get-list "input"))
