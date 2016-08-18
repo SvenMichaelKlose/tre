@@ -375,6 +375,9 @@
               (return !)))
 	    this)))
 
+(defmethod caroshi-element is (css-selector)
+  (member this (array-list (parent-node.query-selector-all css-selector))))
+
 (defmethod caroshi-element get (css-selector)
   (? (head? css-selector "<")
      (ancestor-or-self (subseq css-selector 1))
