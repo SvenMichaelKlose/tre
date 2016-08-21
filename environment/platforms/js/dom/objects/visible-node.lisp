@@ -42,11 +42,6 @@
 	 (add-after new-elm)
 	 (add-before new-elm)))
 
-(defmethod visible-node move-to (new-parent)
-  (remove-without-listeners-or-callbacks)
-  (new-parent.add this)
-  this)
-
 (defmethod visible-node walk (fun)
   (declare type function fun)
   (& (not (eq 'next-sibling (funcall fun this)))
