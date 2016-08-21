@@ -62,5 +62,3 @@
 (defmacro with-event-module (x &body body)
   `(with-temporary *event-module* ,x
      ,@body))
-
-(defvar *event-module* (new event-module "default"))

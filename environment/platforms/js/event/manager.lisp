@@ -321,3 +321,5 @@
 (finalize-class event-manager)
 
 (defvar *event-manager* (new event-manager))
+(defvar *event-module* (new event-module "default"))
+(*event-manager*.add *event-module*)
