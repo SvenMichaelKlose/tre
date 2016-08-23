@@ -1,9 +1,7 @@
 ; tré – Copyright (c) 2008–2013,2016 Sven Michael Klose <pixel@copei.de>
 
 (defclass caroshi-event (&key (native-event nil) (new-type nil) (new-button nil) (x nil) (y nil))
-  (clr _x _y
-	   _stop-bubbling
-	   _stop)
+  (clr _x _y _stop)
   (= _send-natively? t)
   (!? native-event (_copy-native-event-data !))
   (!? new-type (= type !))
@@ -38,7 +36,6 @@
 	char-code
 	key-code
 	data-transfer
-	_stop-bubbling
 	_stop
 	_send-natively?)
 
@@ -99,24 +96,17 @@
                (== "BODY" !.tag-name))
 	  (= _element !.parent-node))))
 
-(defmethod caroshi-event stop-bubbling ()
-  (= _stop-bubbling t))
-
 (defmethod caroshi-event stop ()
   (= _stop t))
 
 (defmethod caroshi-event discard (send-natively?)
   (send-natively send-natively?)
-  (stop)
-  (stop-bubbling))
+  (stop))
 
 ;; For the EVENT-MANAGER only.
 (defmethod caroshi-event _stop-original ()
   (!? _native-event
       (native-stop-event !)))
-
-(defmethod caroshi-event _reset-flags ()
-  (clr _stop-bubbling _stop))
 
 (defmethod caroshi-event send-natively (x)
   (= _send-natively? x))

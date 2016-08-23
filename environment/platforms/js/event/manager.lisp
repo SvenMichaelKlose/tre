@@ -77,8 +77,8 @@
   nil)
 
 (defmethod event-manager unhook (obj)
-  (when (eq element obj)
-    (clr element))
+  (& (eq element obj)
+     (clr element))
   (adolist _modules
 	(!.unhook obj)))
 
@@ -95,8 +95,8 @@
   (? (cons? typ)
      (adolist typ
        (_dochook doc ! fun))
-     (push (. typ (native-add-event-listener doc typ fun))
-           (href _original-listeners doc))))
+     (acons! typ (native-add-event-listener doc typ fun)
+             (href _original-listeners doc))))
 
 (defmethod event-manager _non-generic-event (x)
   (? (string? x) (| (member x *non-generic-events* :test #'string==)
@@ -168,32 +168,28 @@
 (defmethod event-manager _find-handlers (evt module elm)
   (_find-handlers-of-element (_find-handlers-of-type module._handlers evt.type) elm))
 
-(defmethod event-manager _handle-modules (evt elm modules stopped-modules)
+(defmethod event-manager _handle-modules (evt elm modules)
   (adolist modules
     (log-events "Searching event handler in module '~A' / ~A on ~A (has ~A).~%"
                 (!.get-name) (!? evt !.type) (!? elm !.tag-name)
                 (concat-stringtree (pad (@ [+ _.type "/" (!? _.element !.tag-name)] !._handlers) " ")))
-	(evt._reset-flags)
-    (unless (| !._killed? (member ! (queue-list stopped-modules) :test #'eq))
+    (unless !._killed?
       (_call-handlers evt ! (_find-handlers evt ! elm))
       (& evt._stop
-         (return))
-	  (when evt._stop-bubbling
-		(enqueue stopped-modules !)))))
+         (return)))))
 
 (defmethod event-manager _bubble (evt init-elm)
-  (with (modules         (copy-list _modules)
-		 stopped-modules (make-queue))
+  (with (modules         (copy-list _modules))
     (when (evt.element)
 	  (loop
-        (when (evt.element)._hooked?
-          (_handle-modules evt (evt.element) modules stopped-modules))
+        (& (evt.element)._hooked?
+           (_handle-modules evt (evt.element) modules))
         (& (| evt._stop
               (not (evt.bubble)))
             (return)))
       (unless evt._stop
         (= evt._element init-elm)
-        (_handle-modules evt nil modules stopped-modules)))))
+        (_handle-modules evt nil modules)))))
 
 (defmethod event-manager _dispatch (type evt)
   (log-events "Dispatching ~A event on ~A, X: ~A, Y: ~A.~%"
@@ -203,8 +199,8 @@
     (_bubble e (evt.element))
     (| e._send-natively?
        (e._stop-original))
-    ,(when *log-events?*
-       `(format t "~A event ~Asent natively.~%" type (? evt._send-natively? "" "NOT "))))
+    ,(& *log-events?*
+        `(format t "~A event ~Asent natively.~%" type (? evt._send-natively? "" "NOT "))))
   t)
 
 ;;;; DRAG'N DROP EVENT GENERATION
@@ -237,16 +233,16 @@
 
 (defmethod event-manager _dnd-mousemove (evt)
   (?
-    (not _dragged-element) nil
-    _dragging? (_dispatch "caroshidrag" evt)
+    (not _dragged-element)     nil
+    _dragging?                 (_dispatch "caroshidrag" evt)
     (_dnd-past-threshold? evt) nil
     (_dnd-start evt)))
 
 ;; Drop element if it can be catched and end drag mode.
 (defmethod event-manager _dnd-mouseup (evt)
   (clr _button-down?)
-  (when _dragging?
-	(_dispatch "caroshidrop" evt))
+  (& _dragging?
+	 (_dispatch "caroshidrop" evt))
   (clr _dragging?
 	   _dragged-element))
 
@@ -259,8 +255,8 @@
 	      				 (& (< 0 s.range-count)
 			                (let r (s.get-range-at 0)
 						      (not r.collapsed))))
-    (unless (eq _has-selection? has-selection?)
-	  (_dispatch "selectionchange" evt))
+    (| (eq _has-selection? has-selection?)
+	   (_dispatch "selectionchange" evt))
     (= _has-selection? has-selection?)))
 
 ;; Generic event handler.
@@ -270,8 +266,8 @@
 	 (& (== 0 evt.button)
         (_dnd-mousemove evt))
      (_handle-selection evt))
-  (unless (& (== "click" evt.type)
-		     (not (== 0 evt.button)))
+  (| (& (== "click" evt.type)
+        (not (== 0 evt.button)))
     (_dispatch evt.type evt))
   t)
 
