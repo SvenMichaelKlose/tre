@@ -275,19 +275,8 @@
     (_dispatch evt.type evt))
   t)
 
-(defmethod event-manager _save-key-stat-down (code)
-  (= (aref _key-stats code) t))
-
-(defmethod event-manager _save-key-stat-up (code)
-  (clr (aref _key-stats code)))
-
-(defmethod event-manager _save-key-stat (evt)
-  (?
-	(== evt.type "keydown") (_save-key-stat-down evt.key-code)
-	(== evt.type "keyup")   (_save-key-stat-up evt.key-code)))
-
 (defmethod event-manager _generic-keyhandler (evt)
-  (_save-key-stat evt)
+  (= (aref _key-stats evt.key-code) (== evt.type "keydown"))
   (_dispatch evt.type evt))
 
 ;;;; MOUSE BUTTON EVENTS
