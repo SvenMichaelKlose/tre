@@ -96,12 +96,8 @@
                (== "BODY" !.tag-name))
 	  (= _element !.parent-node))))
 
-(defmethod caroshi-event stop ()
+(defmethod caroshi-event discard ()
   (= _stop t))
-
-(defmethod caroshi-event discard (send-natively?)
-  (send-natively send-natively?)
-  (stop))
 
 ;; For the EVENT-MANAGER only.
 (defmethod caroshi-event _stop-original ()
