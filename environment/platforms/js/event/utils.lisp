@@ -24,10 +24,6 @@
   (do-wait 1
     (fire-mousemove-event)))
 
-(defun swallow-event (evt)
-  (evt.discard)
-  (evt.send-natively nil))
-
 (defmacro init-event-module (place debug-name)
   (| (string? debug-name)
 	 (error "string expected as debug-name"))
