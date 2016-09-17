@@ -173,6 +173,10 @@
            attrs)
   attrs)
 
+(defmethod caroshi-element remove-attributes (attrs)
+  (adolist attrs
+    (remove-attribute !)))
+
 (defmethod caroshi-element has-name-attribute? ()
   (has-attribute? "name"))
 
