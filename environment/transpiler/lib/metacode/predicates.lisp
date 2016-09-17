@@ -18,7 +18,8 @@
 
 (defun atomic-or-functional? (x)
   (| (atomic? x)
-     (& (cons? x) (functional? x.))))
+     (& (cons? x)
+        (transpiler-functional? *transpiler* x.))))
 
 (defun ~%ret? (x)
   (eq '~%ret x))
