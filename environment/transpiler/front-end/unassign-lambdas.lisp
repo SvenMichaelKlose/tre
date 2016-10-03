@@ -1,5 +1,11 @@
 ; tré – Copyright (c) 2008,2012–2014 Sven Michael Klose <pixel@copei.de>
 
+; Translate
+;   (%= X (FUNCTION NAME ARGS+BODY))
+; to
+;   (FUNCTION NAME ARGS+BODY)
+;   (%= X NAME)
+
 (defun unassign-lambdas (x)
   (alet x.
     (?
@@ -11,8 +17,8 @@
          (named-lambda? (%=-value !)))
           (alet (%=-value !)
             `(,(copy-lambda ! :body (unassign-lambdas (lambda-body !)))
-              ,@(& (not (lambda-export?))
-                   `((%= ,(%=-place x.) ,(lambda-name !))))
+              ,@(unless (lambda-export?)
+                  `((%= ,(%=-place x.) ,(lambda-name !))))
               ,@(unassign-lambdas .x)))
       (%%block? !)
         (cons-r unassign-lambdas x)

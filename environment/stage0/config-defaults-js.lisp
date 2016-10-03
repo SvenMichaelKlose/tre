@@ -6,9 +6,9 @@
 
 ;; Optional environment sections.
 
-(%defvar *tre-has-math*  t) ; Mathematical functions.
-(%defvar *tre-has-alien* t) ; C function interface. (C core only)
-(%defvar *tre-has-class* t) ; STRUCT CLASS.
+(%defvar *tre-has-math*  t)   ; Mathematical functions.
+(%defvar *tre-has-alien* nil) ; C function interface. (C core only)
+(%defvar *tre-has-class* t)   ; Have CLASS.
 
 ;; Transpiler
 

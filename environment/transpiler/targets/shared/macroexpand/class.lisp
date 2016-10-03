@@ -31,7 +31,7 @@
                    class-name name))
            (acons! name code (class-methods !))))
       (error "Definition of method ~A: class ~A is not defined."
-             name class-name))
+             name class-name))  ; TODO: Fix. Isn't called.
   nil)
 
 (defun generic-defmember (class-name &rest names)
