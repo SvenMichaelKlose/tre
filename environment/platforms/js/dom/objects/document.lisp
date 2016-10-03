@@ -23,4 +23,9 @@
 (defmethod caroshi-html-document get-html ()
   document-element.outer-h-t-m-l)
 
+(defmethod caroshi-html-document add-style (txt)
+  (with (head   (document-element.get "head")
+         style  (new *element "style" (new "type" "text/css") nil :doc this))
+    (head.add (style.add-text txt))))
+
 (finalize-class caroshi-html-document)
