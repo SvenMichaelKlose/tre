@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2012,2016 Sven Michael Klose <pixel@copei.de>
 
 (defun copy-head-and-body (from-doc to-doc &key (remove-if t))
   (with (srchead (from-doc.get "head")
@@ -11,8 +11,8 @@
          (do-children (i desthead)
            (& (funcall ! i)
               (i.remove)))))
-    (move-children desthead srchead)
-    (move-children destbody srcbody)))
+    (@ [desthead.add _] (srchead.child-list))
+    (@ [destbody.add _] (srcbody.child-list))))
 
 (defun copy-iframe-to-document (iframe html-document &key (remove-if t))
   (let from-doc (iframe-document iframe)
