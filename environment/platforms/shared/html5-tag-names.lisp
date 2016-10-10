@@ -32,7 +32,6 @@
       dd
       figure
       figcaption
-      div
       a
       em
       strong
