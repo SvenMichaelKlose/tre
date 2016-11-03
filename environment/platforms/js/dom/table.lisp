@@ -1,16 +1,16 @@
 ; tré – Copyright (c) 2009–2013,2015–2016 Sven Michael Klose <pixel@copei.de>
 
 (defun table-get-rows (x)
-  ((x.get "<tbody").child-list))
+  ((x.get "tbody").child-list))
 
 (defun table-num-columns (x)
-  (x.get "<tr").children.length)
+  (x.get "tr").children.length)
 
 (defun table-num-rows (x)
-  (x.get "<table").children.length)
+  (x.get "table").children.length)
 
 (defun table-get-first-row (x)
-  (x.get "<tbody").first-child)
+  (x.get "tbody").first-child)
 
 (defun table-get-column-index (cell)
   (cell.get-index))
