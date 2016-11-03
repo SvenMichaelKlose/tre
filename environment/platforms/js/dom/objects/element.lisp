@@ -88,7 +88,8 @@
     (x.remove-without-listeners)))
 
 (defmethod caroshi-element add (child)
-  (& child (append-child child))
+  (& child
+     (append-child child))
   this)
 
 (defmethod caroshi-element add-array (x)
@@ -108,12 +109,12 @@
   this)
 
 (defmethod caroshi-element move-front ()
-  (& this.next-sibling                                                                                                           
+  (& this.next-sibling
      (parent-node.add-front this))
   this)
 
 (defmethod caroshi-element move-back ()
-  (& this.next-sibling                                                                                                           
+  (& this.next-sibling
      (parent-node.add this))
   this)
 
