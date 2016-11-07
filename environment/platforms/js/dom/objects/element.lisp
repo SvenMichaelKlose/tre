@@ -71,7 +71,7 @@
 	 (defmember caroshi-element ,@x)
 	 (dont-obfuscate ,@x)))
 
-(defmethod caroshi-element children-array ()
+(defmethod caroshi-element child-array ()
   this.child-nodes)
 
 (defmethod caroshi-element child-list ()
@@ -127,7 +127,7 @@
 ; XXX last-child-BY-class
 (defmethod caroshi-element last-child-of-class (cls)
   (with (elm nil
-		 chlds (children-array))
+		 chlds (child-array))
 	(doarray (x chlds elm)
 	  (& (string== cls (x.get-class))
 		 (= elm x)))))
