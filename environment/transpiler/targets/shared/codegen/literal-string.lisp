@@ -1,7 +1,8 @@
-;;;;; tré – Copyright (c) 2008–2009,2012–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2009,2012–2014,2016 Sven Michael Klose <pixel@copei.de>
 
+; TODO: Make sure == works the same on all targets. PHP doesn't allow CHARs with it.
 (defun make-c-newlines (x)
-  (list-string (mapcan [? (== 10 _)
+  (list-string (mapcan [? (== 10 (char-code _))
                           `(#\\ #\n)
                           `(,_)]
                        (string-list x))))
