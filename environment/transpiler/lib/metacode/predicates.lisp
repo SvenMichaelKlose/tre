@@ -41,7 +41,7 @@
   (? (%=? x)
      (cons? (%=-value x))))
 
-(defun %=-funcall-of? (x name)                                                                                                                                             
+(defun %=-funcall-of? (x name)
   (& (%=-funcall? x)
      (eq name (car (%=-value x)))))
 
