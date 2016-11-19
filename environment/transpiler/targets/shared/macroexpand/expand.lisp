@@ -63,7 +63,7 @@
 (define-shared-std-macro (bc c js php) defconstant (&rest x)
   `(defvar ,@x))
 
-(define-shared-std-macro (bc c js php) defvar (name &optional (val '%%no-value))
+(define-shared-std-macro (bc c js php) defvar (name &optional (val '%%no-value-in-defvar))
   (& (eq '%%no-value val)
      (= val `',name))
   (print-definition `(defvar ,name))
@@ -77,9 +77,9 @@
           `((%var ,name)))
      (%= ,name ,val)))
 
-(define-shared-std-macro (bc c js php) %defvar (name &optional (val '%%no-value))
+(define-shared-std-macro (bc c js php) %defvar (name &optional (val '%%no-value-in-%defvar))
   `(defvar ,name ,val))
 
-(define-shared-std-macro (bc c js php) in-package (name &optional (val '%%no-value))
+(define-shared-std-macro (bc c js php) in-package (name &optional (val '%%no-value-in-in-package))
   (cl:make-package (symbol-name name))
   (transpiler-add-defined-package *transpiler* name))
