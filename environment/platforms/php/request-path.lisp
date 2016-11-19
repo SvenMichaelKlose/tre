@@ -5,7 +5,7 @@
 
 (defun parse-request-path ()
   (with (path  (%%%href *_SERVER* "SCRIPT_NAME")
-         comp  (remove-if #'empty-string? (path-pathlist path))
+         comp  (path-pathlist path)
          ofs   (? comp
                   (-- (length comp))
                   0))
@@ -26,4 +26,4 @@
   (aref (parse-url) "path"))
 
 (defun request-path-components ()
-  (subseq (remove-if #'empty-string? (path-pathlist (request-uri))) *request-path-offset*))
+  (remove-if #'empty-string? (subseq (path-pathlist (request-uri)) *request-path-offset*)))
