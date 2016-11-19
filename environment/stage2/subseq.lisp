@@ -7,12 +7,15 @@
            (not (== start end)))
     (& (> start end)
        (xchg start end))
-    (with (copy-num #'((lst len)
-                        (& lst
-                            (< 0 len)
-                            (. lst.
-                               (copy-num .lst (-- len))))))
-      (copy-num (nthcdr start seq) (- end start)))))
+    (with-queue q
+      (with (len (- end start)
+             lst (nthcdr start seq))
+        (while (& lst
+                  (< 0 len))
+               (queue-list q)
+          (enqueue q lst.)
+          (--! len)
+          (= lst .lst))))))
 
 (defun %subseq-sequence (maker seq start end)
   (unless (== start end)
