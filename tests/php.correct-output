@@ -105,9 +105,9 @@ Test 104, ADJOIN adds new member<br>
 Test 105, BUTLAST basically works<br>
 Test 106, BUTLAST returns NIL for single cons<br>
 Test 107, COPY-WHILE<br>
-Test 108, LIST-SUBSEQ work at the beginning FAILED Expected:(:A . ) Result:(((:B . (:C . )) . (0 . )) . )<br>
-Test 109, LIST-SUBSEQ works in the middle FAILED Expected:(2 . (3 . )) Result:(((3 . (4 . )) . (1 . )) . (((4 . ) . (0 . )) . ))<br>
-Test 110, LIST-SUBSEQ works at the end FAILED Expected:(3 . (4 . )) Result:(((4 . ) . (999996 . )) . (( . (999995 . )) . ))<br>
+Test 108, LIST-SUBSEQ work at the beginning<br>
+Test 109, LIST-SUBSEQ works in the middle<br>
+Test 110, LIST-SUBSEQ works at the end<br>
 Test 111, SUBSEQ returns NIL when totally out of range<br>
 Test 112, SUBSEQ returns empty string when start and end are the same<br>
 Test 113, DIGIT-CHAR? #0<br>
