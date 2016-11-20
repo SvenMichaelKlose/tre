@@ -1,50 +1,50 @@
-// tré – Copyright (c) 2010–2013 Sven Michael Klose <pixel@copei.de>
+// tré – Copyright (c) 2010–2013,2016 Sven Michael Klose <pixel@copei.de>
 
-$CARS = Array ();
-$CDRS = Array ();
-$CPRS = Array ();
 $CONSID = 0;
 
 class __cons {
     var $id;
+    var $a;
+    var $d;
+    var $p;
 
 	public function __construct ($car, $cdr)
 	{
         $this->id = ++$GLOBALS['CONSID'];
-		$GLOBALS['CARS'][$this->id] = $car;
-		$GLOBALS['CDRS'][$this->id] = $cdr;
-		$GLOBALS['CPRS'][$this->id] = NULL;
+		$this->a = $car;
+		$this->d = $cdr;
+		$this->p = NULL;
         return $this;
 	}
 
     public function a ()
     {
-		return $GLOBALS['CARS'][$this->id];
+		return $this->a;
 	}
 
     public function d ()
     {
-		return $GLOBALS['CDRS'][$this->id];
+		return $this->d;
 	}
 
     public function p ()
     {
-		return $GLOBALS['CPRS'][$this->id];
+		return $this->p;
 	}
 
     public function sa ($x)
     {
-		return $GLOBALS['CARS'][$this->id] = $x;
+		return $this->a = $x;
 	}
 
     public function sd ($x)
     {
-		return $GLOBALS['CDRS'][$this->id] = $x;
+		return $this->d = $x;
 	}
 
     public function sp ($x)
     {
-		return $GLOBALS['CPRS'][$this->id] = $x;
+		return $this->p = $x;
 	}
 
     public function __toString ()
