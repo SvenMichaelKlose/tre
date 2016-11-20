@@ -17,36 +17,6 @@ class __cons {
         return $this;
 	}
 
-    public function a ()
-    {
-		return $this->a;
-	}
-
-    public function d ()
-    {
-		return $this->d;
-	}
-
-    public function p ()
-    {
-		return $this->p;
-	}
-
-    public function sa ($x)
-    {
-		return $this->a = $x;
-	}
-
-    public function sd ($x)
-    {
-		return $this->d = $x;
-	}
-
-    public function sp ($x)
-    {
-		return $this->p = $x;
-	}
-
     public function __toString ()
     {
         return '(' . $this->a () . ' . ' . $this->d () . ')';
