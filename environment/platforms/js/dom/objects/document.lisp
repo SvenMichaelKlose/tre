@@ -26,10 +26,19 @@
 (defmethod caroshi-html-document get-html ()
   document-element.outer-h-t-m-l)
 
+(defmethod caroshi-html-document get-html-body ()
+  document-element.body.outer-h-t-m-l)
+
 (defmethod caroshi-html-document set-html (x)
   (= document-element.inner-h-t-m-l x)
   (document-extend this)
   x)
+
+(defmethod caroshi-html-document set-html-body (x)
+  (set-html (+ "<html>"
+               "<head><meta http-equiv=\"content-type\" content=\"text/html;charset=utf-8\"></head>"
+               "<body>" data "</body>"
+               "</html>")))
 
 (defmethod caroshi-html-document add-style (txt)
   (with (head   (document-element.get "head")
