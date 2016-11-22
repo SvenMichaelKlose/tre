@@ -1,9 +1,9 @@
 ; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@copei.de>
 
-(defun js-gen-inherit-methods (class-name bases)
-  (@ [`(hash-merge (slot-value ,class-name 'prototype)
-                   (slot-value ,_ 'prototype))]
-     bases))
+(defun js-gen-inherit-methods (class-name base-name)
+  `(,@(!? base-name
+          `((= (slot-value ,(compiled-function-name class-name) 'prototype) (*object.create (slot-value ,! 'prototype)))))
+    (= (slot-value (slot-value ,(compiled-function-name class-name) 'prototype) 'constructor) ,class-name)))
 
 (defun js-gen-inherit-constructor-calls (bases)
   (@ [`((slot-value ,_ 'CALL) this)]
@@ -17,7 +17,6 @@
            ; TOOD: Set 'super' instead.
            ,@(js-gen-inherit-constructor-calls bases)
            ,@body))
-       ,@(js-gen-inherit-methods class-name bases)
        (declare-cps-exception ,($ class-name '?))
 	   (defun ,($ class-name '?) (x)
 	     (%%native x " instanceof " ,(compiled-function-name-string class-name))))))
@@ -42,6 +41,8 @@
   (awhen (@ [js-emit-method class-name _]
             (reverse (class-methods cls)))
 	`(,@(cdrlist !)
+      ,@(js-gen-inherit-methods class-name (!? (class-parent cls)
+                                               (class-name !)))
       (hash-merge (slot-value ,class-name 'prototype)
 	              (%%%make-hash-table ,@(apply #'+ (carlist !)))))))
 
