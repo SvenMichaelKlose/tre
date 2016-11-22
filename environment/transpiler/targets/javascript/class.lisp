@@ -46,6 +46,7 @@
 	              (%%%make-hash-table ,@(apply #'+ (carlist !)))))))
 
 (define-js-std-macro finalize-class (class-name)
+  (print-definition `(finalize-class ,class-name))
   (let classes (thisify-classes)
     (!? (href classes class-name)
 	    `(progn
