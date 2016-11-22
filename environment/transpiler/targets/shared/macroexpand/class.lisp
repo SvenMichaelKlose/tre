@@ -3,8 +3,11 @@
 (defvar *delayed-constructors* nil)
 
 (defun generic-defclass (constructor-maker class-name args &body body)
-  (with (cname  (? (cons? class-name) class-name. class-name)
-		 bases  (& (cons? class-name) .class-name)
+  (with (cname   (? (cons? class-name)
+                    class-name.
+                    class-name)
+		 bases   (& (cons? class-name)
+                    .class-name)
 		 classes (thisify-classes))
 	(print-definition `(defclass ,class-name ,@(awhen args (list !))))
     (& (href classes cname)
@@ -14,10 +17,10 @@
 	(= (href classes cname)
        (? bases
           (let bc (href classes bases.)
-            (make-class :name    class-name
+            (make-class :name    cname
                         :members (class-members bc)
                         :parent  bc))
-          (make-class)))
+          (make-class :name cname)))
 	(acons! cname
 			(funcall constructor-maker cname bases args body)
 		    *delayed-constructors*)
