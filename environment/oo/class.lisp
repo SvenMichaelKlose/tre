@@ -1,6 +1,7 @@
-;;;;; tré – Copyright (c) 2008,2012 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008,2012,2016 Sven Michael Klose <pixel@copei.de>
 
 (defstruct class
+  (name nil)
   (members nil)
   (methods nil)
   (parent nil))

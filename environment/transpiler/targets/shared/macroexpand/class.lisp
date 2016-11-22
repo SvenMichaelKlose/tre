@@ -3,18 +3,21 @@
 (defvar *delayed-constructors* nil)
 
 (defun generic-defclass (constructor-maker class-name args &body body)
-  (with (cname (? (cons? class-name) class-name. class-name)
-		 bases (& (cons? class-name) .class-name)
+  (with (cname  (? (cons? class-name) class-name. class-name)
+		 bases  (& (cons? class-name) .class-name)
 		 classes (thisify-classes))
 	(print-definition `(defclass ,class-name ,@(awhen args (list !))))
     (& (href classes cname)
 	   (warn "Class ~A already defined." cname))
+    (& .bases
+       (error "More than one base class but multiple inheritance is not supported."))
 	(= (href classes cname)
-      (? bases
-         (let bc (href classes bases.)
-           (make-class :members (class-members bc)
-                       :parent bc))
-         (make-class)))
+       (? bases
+          (let bc (href classes bases.)
+            (make-class :name    class-name
+                        :members (class-members bc)
+                        :parent  bc))
+          (make-class)))
 	(acons! cname
 			(funcall constructor-maker cname bases args body)
 		    *delayed-constructors*)
