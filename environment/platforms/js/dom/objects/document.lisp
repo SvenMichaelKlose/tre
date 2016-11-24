@@ -12,10 +12,12 @@
     query-selector-all)
 
 (defmethod caroshi-html-document get (css-selector)
-  (query-selector css-selector))
+  (unless (head? css-selector "<")
+    (query-selector css-selector)))
 
 (defmethod caroshi-html-document get-list (css-selector)
-  (array-list (query-selector-all css-selector)))
+  (unless (head? css-selector "<")
+    (array-list (query-selector-all css-selector))))
 
 (defmethod caroshi-html-document get-last (css-selector)
   (last (get-list css-selector)))
