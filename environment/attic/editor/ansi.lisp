@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008,2012–2013,2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008,2012–2013,2016 Sven Michael Klose <pixel@copei.de>
 
 ;;;; Primitives.
 
@@ -53,7 +53,7 @@
 ;;;; Public functions.
 
 (defmacro ansi-defx (head cmds)
-  `(progn ,@(@ [. head _] cmds)))
+  `{,@(@ [. head _] cmds)})
 
 (ansi-defx ansi-def0
 	  ((ansi-reset          "Reset/restart terminal." #\m)

@@ -1,4 +1,4 @@
-; trè – Copyright (c) 2005–2015 Sven Michael Klose <pixel@copei.de>
+; trè – Copyright (c) 2005–2016 Sven Michael Klose <pixel@copei.de>
 
 (defconstant *printer-abbreviations* '((quote              "'")
                                        (backquote          "`")
@@ -47,9 +47,8 @@
        (princ " " str))))
 
 (defmacro %with-indentation (str info &body body)
-  `(progn
-     (%print-indentation ,str ,info)
-     ,@body))
+  `{(%print-indentation ,str ,info)
+    ,@body})
 
 (defmacro %with-brackets (str info &body body)
   `(%with-indentation ,str ,info
@@ -85,12 +84,10 @@
 (defun pretty-print-lambdas (x str info)
   (?
     ..x          (pretty-print-named-lambda x str info)
-    (cons? .x.)  (progn
-                   (princ "#'" str)
-                   (pretty-print-lambda x str info))
-    (progn
-      (princ "#'" str)
-      (%print-symbol .x. str info)))
+    (cons? .x.)  {(princ "#'" str)
+                  (pretty-print-lambda x str info)}
+    {(princ "#'" str)
+     (%print-symbol .x. str info)})
   t)
 
 (add-printer-argument-definition 'function #'pretty-print-lambdas)
@@ -98,13 +95,11 @@
 (defun %print-rest (x str info)
   (when x
     (? (cons? x)
-       (progn
-         (%print-gap str)
-         (%late-print x. str info)
-         (%print-rest .x str info))
-       (progn
-         (princ " . " str)
-         (%late-print x str info)))))
+       {(%print-gap str)
+        (%late-print x. str info)
+        (%print-rest .x str info)}
+       {(princ " . " str)
+        (%late-print x str info)})))
 
 (defun %body-indentation (info)
   (| (car (print-info-columns info)) 1))
@@ -130,15 +125,13 @@
          (adolist expanded
            (%print-gap str)
            (?
-             (& (%body? .!) ..!)  (progn
-                                    (& *print-automatic-newline?*
-                                       (fresh-line str))
-                                    (%print-body ..! str info))
+             (& (%body? .!) ..!)  {(& *print-automatic-newline?*
+                                      (fresh-line str))
+                                   (%print-body ..! str info)}
              (%rest? .!)          (%print-rest ..! str info)
-             (%key? .!)           (progn
-                                    (%print-symbol (make-keyword !.) str info)
-                                    (princ " " str)
-                                    (%late-print ..! str info))
+             (%key? .!)           {(%print-symbol (make-keyword !.) str info)
+                                   (princ " " str)
+                                   (%late-print ..! str info)}
              (with-temporary *print-automatic-newline?* nil
                (%late-print .! str info))))))))
 

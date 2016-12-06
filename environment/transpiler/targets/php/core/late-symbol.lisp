@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2013,2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2013,2015–2016 Sven Michael Klose <pixel@copei.de>
 
 (defun make-symbol (x &optional (pkg nil))
   (symbol x pkg))
@@ -11,9 +11,8 @@
     (eq t x)  "T"
     x         (? (symbol? x)
                  x.n
-                 (progn
-                   (print x)
-                   (error "Symbol expected.")))
+                 {(print x)
+                  (error "Symbol expected.")})
     "NIL"))
 
 (defun symbol-value (x)

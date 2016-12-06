@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2005–2015 Sven Michael Klose <pixel@hugbox.org>
+; tré – Copyright (c) 2005–2016 Sven Michael Klose <pixel@hugbox.org>
 
 (defun make-scope-place-expr (fi var)
   (funinfo-add-free-var fi var)
@@ -14,12 +14,11 @@
 (defun make-scope-place (fi x)
   (? (funinfo-scope-arg? fi x)
 	 x
-     (progn
-       (funinfo-setup-scope fi x)
-       (alet (make-scope-place-1 fi x)
-	     `(%vec ,(place-expand-atom fi (make-scope-place fi .!.))
-		        ,..!.
-		        ,...!.)))))
+     {(funinfo-setup-scope fi x)
+      (alet (make-scope-place-1 fi x)
+	    `(%vec ,(place-expand-atom fi (make-scope-place fi .!.))
+               ,..!.
+               ,...!.))}))
 
 (defun place-expand-emit-stackplace (fi x)
   `(%stack ,(funinfo-name fi) ,x))

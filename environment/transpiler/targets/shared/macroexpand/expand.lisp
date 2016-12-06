@@ -1,9 +1,8 @@
 ; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@hugbox.org>
 
 (defmacro define-shared-std-macro (targets &rest x)
-  `(progn
-     ,@(@ [`(,($ 'define- _ '-std-macro) ,@x)]
-          (intersect *targets* (make-keywords targets)))))
+  `{,@(@ [`(,($ 'define- _ '-std-macro) ,@x)]
+         (intersect *targets* (make-keywords targets)))})
 
 (define-shared-std-macro (js php) dont-obfuscate (&rest symbols)
   (apply #'add-obfuscation-exceptions symbols)
@@ -72,10 +71,9 @@
   (add-defined-variable name)
   (& *have-compiler?*
      (add-delayed-expr `((= *variables* (. (. ',name ',val) *variables*)))))
-  `(progn
-     ,@(& (needs-var-declarations?)
-          `((%var ,name)))
-     (%= ,name ,val)))
+  `{,@(& (needs-var-declarations?)
+         `((%var ,name)))
+    (%= ,name ,val)})
 
 (define-shared-std-macro (bc c js php) %defvar (name &optional (val '%%no-value-in-%defvar))
   `(defvar ,name ,val))

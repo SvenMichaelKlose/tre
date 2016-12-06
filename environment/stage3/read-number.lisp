@@ -36,9 +36,8 @@
 
 (defun read-number (&optional (str *standard-input*))
   (* (? (== #\- (peek-char str))
-        (progn
-          (read-char str)
-          -1)
+        {(read-char str)
+         -1}
         1)
      (+ (read-integer str)
         (| (& (peek-dot str)

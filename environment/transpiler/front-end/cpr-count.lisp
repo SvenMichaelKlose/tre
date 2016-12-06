@@ -1,13 +1,13 @@
-; tré – Copyright (c) 2013–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2013–2014,2016 Sven Michael Klose <pixel@copei.de>
 
 (define-tree-filter cpr-count-0 (x h)
-  t (? (atom x)
+  t
+    (? (atom x)
        x
-       (progn
-         (cache t (href h (cpr x)))
-         (cpr-count-0 x. h)
-         (cpr-count-0 .x h)
-         x)))
+       {(cache t (href h (cpr x)))
+        (cpr-count-0 x. h)
+        (cpr-count-0 .x h)
+        x}))
 
 (defun cpr-count (x name)
   (alet (make-hash-table :test #'eq)

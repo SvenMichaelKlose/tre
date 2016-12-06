@@ -31,10 +31,9 @@
   (!? (href (thisify-classes) class-name)
       (let code (list args body)
         (? (assoc name (class-methods !))
-           (progn
-             (= (assoc-value name (class-methods !)) code)
-             (warn "In class '~A': member '~A' already defined."
-                   class-name name))
+           {(= (assoc-value name (class-methods !)) code)
+            (warn "In class '~A': member '~A' already defined."
+                  class-name name)}
            (acons! name code (class-methods !))))
       (error "Definition of method ~A: class ~A is not defined."
              name class-name))  ; TODO: Fix. Isn't called.

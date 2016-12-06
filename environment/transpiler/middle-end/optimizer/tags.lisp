@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@copei.de>
 
 (defun two-subsequent-tags? (a d)
   (& a (atom a)
@@ -44,14 +44,12 @@
 		   #'((x)
 			    (optimizer reduce-tags
     		      (two-subsequent-tags? a d)
-                    (progn
-				      (add-removed-tag a d.)
-				      (reduce-tags d))
+                    {(add-removed-tag a d.)
+				     (reduce-tags d)}
     		      (& (number? a)
                      (%%go? d.))
-                    (progn
-                      (add-removed-tag a (%%go-tag d.))
-				      (reduce-tags d))))
+                    {(add-removed-tag a (%%go-tag d.))
+				     (reduce-tags d)}))
 
          translate-tags
                     ; XXX [| (assoc-value _ removed-tags) _]

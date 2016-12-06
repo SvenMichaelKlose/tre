@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2005–2009,2011–2015 Sven Michael Klose <pixel@hugbox.org>
+; tré – Copyright (c) 2005–2009,2011–2016 Sven Michael Klose <pixel@hugbox.org>
 
 (defvar *=-function?* #'%=-function?)
 
@@ -9,10 +9,9 @@
   (? (| (atom p)
 	    (%slot-value? p)
 	    (slot-value? p))
-	 (progn
-	   (? (member p *constants* :test #'eq)
-		  (error "Cannot set constant ~A." p))
-       (list 'setq p val))
+	 {(? (member p *constants* :test #'eq)
+	     (error "Cannot set constant ~A." p))
+      (list 'setq p val)}
      (let* ((fun     p.)
 	        (args    .p)
 	        (setter  (=-make-symbol fun)))
@@ -32,7 +31,6 @@
 (defmacro = (&rest args)
   (? args
      (? .args
-        `(progn
-		   ,@(=-0 args))
+        `{,@(=-0 args)}
         `(= ,args.))
      (error "Arguments expected.")))

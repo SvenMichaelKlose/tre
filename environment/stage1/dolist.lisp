@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2005–2009,2012–2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2009,2012–2013,2016 Sven Michael Klose <pixel@copei.de>
 
 (defmacro dolist ((iter lst &rest result) &body body)
   (let* ((starttag  (gensym))
@@ -16,4 +16,4 @@
            (setq ,tmplst (cdr ,tmplst))
            (go ,starttag)
            ,endtag
-           (return (progn ,@result)))))))
+           (return {,@result}))))))

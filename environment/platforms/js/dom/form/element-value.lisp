@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2010–2012 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2010–2012,2016 Sven Michael Klose <pixel@copei.de>
 
 (defun (= attribute-value) (val x)
   (x.write-attribute "value" x))
@@ -34,9 +34,8 @@
   (?
 	(input-element-w/-value-attribute? x)  (set-element-value-attribute x val)
 	(x.tag-name? "textarea")           (= x.text val)
-    (progn
-	  (x.remove-children)
-	  (x.add-text val)))
+    {(x.remove-children)
+	 (x.add-text val)})
   val)
 
 (defun get-named-elements (x)

@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2005–2009,2011–2015 Sven Michael Klose <pixel@hugbox.org>
+; tré – Copyright (c) 2005–2009,2011–2016 Sven Michael Klose <pixel@hugbox.org>
 
 (defun %struct-option-keyword? (x)
   (in? x :constructor :global))
@@ -54,19 +54,18 @@
 (defun %struct-slot-accessors (name field index options)
   (with (fname  (%struct-field-name field)
          aname  (%struct-accessor-name name fname))
-    `(progn
-       (functional ,aname)
-       (declare-cps-exception ,aname ,(=-make-symbol aname))
-       (defun ,aname (arr)
-         (aref arr ,index))
-       (defun (= ,aname) (val arr)
-         (= (aref arr ,index) val))
-       ,@(!? (& (not (member :not-global (%struct-field-options field)))
-                (assoc :global options))
-             `((defun ,fname ()
-                 (aref ,.!. ,index))
-               (defun (= ,fname) (val)
-                 (= (aref ,.!. ,index) val)))))))
+    `{(functional ,aname)
+      (declare-cps-exception ,aname ,(=-make-symbol aname))
+      (defun ,aname (arr)
+        (aref arr ,index))
+      (defun (= ,aname) (val arr)
+        (= (aref arr ,index) val))
+      ,@(!? (& (not (member :not-global (%struct-field-options field)))
+               (assoc :global options))
+            `((defun ,fname ()
+                (aref ,.!. ,index))
+              (defun (= ,fname) (val)
+                (= (aref ,.!. ,index) val))))}))
 
 (defun %struct-accessors (name fields options)
   (let index 1
@@ -107,18 +106,17 @@
 (defun %defstruct-expander (name &rest fields-and-options)
   (with ((fields options) (%struct-sort-fields fields-and-options))
     (%struct-add-def name fields)
-    `(progn
-       (declare-cps-exception ,name)
-       ,(%struct-constructor name fields options)
-       ,(%struct-predicate name)
-       ,@(%struct-accessors name fields options)
-       (defmacro ,($ "WITH-" name) (s &body body)
-		 `(with-struct ,name ,,s
-            ,,@body))
-       (defmacro ,($ "DEF-" name) (name args &body body)
-	     `(defun ,,name ,,args
-            (with-struct ,name ,name
-              ,,@body))))))
+    `{(declare-cps-exception ,name)
+      ,(%struct-constructor name fields options)
+      ,(%struct-predicate name)
+      ,@(%struct-accessors name fields options)
+      (defmacro ,($ "WITH-" name) (s &body body)
+	    `(with-struct ,name ,,s
+           ,,@body))
+      (defmacro ,($ "DEF-" name) (name args &body body)
+	    `(defun ,,name ,,args
+           (with-struct ,name ,name
+             ,,@body)))}))
 
 (defmacro defstruct (name &body fields-and-options)
   (print-definition `(defstruct ,name))

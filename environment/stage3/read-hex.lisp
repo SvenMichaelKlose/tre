@@ -6,14 +6,13 @@
                            (alet (char-upcase (peek-char str))
                              (& (hex-digit-char? !)
                                 !)))
-					   (progn
-					     (read-char str)
+					    {(read-char str)
 					     (rec (number+ (* v 16)
 						               (- (char-code !)
                                           (? (digit-char? !)
-								             (char-code #\0)
-								             (- (char-code #\A) 10))))))
-					   v)))
+							                 (char-code #\0)
+							                 (- (char-code #\A) 10)))))]
+					    v)))
     (| (hex-digit-char? (peek-char str))
 	   (error "Illegal character '~A' at begin of hexadecimal number." (peek-char str)))
 	(prog1

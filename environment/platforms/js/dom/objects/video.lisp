@@ -34,10 +34,9 @@
        (@ (i (+ (!? high `((,! "video/mp4; codecs=\"avc1.4D401F, mp4a.40.2\"")))
                 (!? low  `((,! "video/mp4; codecs=\"avc1.42E01E, mp4a.40.2\"")))
                 (!? webm `((,! "video/webm"))))
-           (progn
-             (!? swf
-                 (video.add (make-video-flash ! width height)))
-             video))
+           {(!? swf
+                (video.add (make-video-flash ! width height)))
+            video})
          (video.add (new *element "source" (new :src i. :type .i.)))))))
 
 (defun frame-seconds (frames-per-second x)

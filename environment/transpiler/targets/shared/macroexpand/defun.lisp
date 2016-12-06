@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@copei.de>
 
 (defun collect-symbols (x)
   (with-queue q
@@ -27,15 +27,13 @@
         (not (eq 'add-profile name)
              (eq 'add-profile-call name)))
      (? (profile-num-calls?)
-        `((progn
-            (& (not *profile-lock*)
-               (add-profile-call ',name))
-            ,@body))
+        `({(& (not *profile-lock*)
+              (add-profile-call ',name))
+           ,@body})
         `((let ~%profiling-timer (& (not *profile-lock*)
                                     (%%%nanotime))
             (prog1
-              (progn
-                ,@body)
+              {,@body}
               (& ~%profiling-timer
                  (add-profile ',name (integer- (%%%nanotime) ~%profiling-timer)))))))
      body))
@@ -67,7 +65,7 @@
   (? (& (backtrace?)
         (not (in? name '%cons '__cons)))
      `((setq nil (%backtrace-push ',name))
-       (prog1 (progn ,@body)
+       (prog1 {,@body}
          (%backtrace-pop)))
      body))
 
@@ -98,14 +96,13 @@
   (& (macro? name)
      (add-used-function name))
   (let fun-name (%defun-name name)
-    `(progn
-       ,@(shared-defun-without-expander fun-name args body
-                                        :allow-source-memorizer? t
-                                        :allow-backtrace? t)
-       ,@(when (& make-expander?
-                  (| (always-expand-arguments?)
-                     (not (simple-argument-list? args))))
-           (with-gensym expander-arg
-             (shared-defun-without-expander (c-expander-name fun-name)
-                                            (list expander-arg)
-                                            (compile-argument-expansion-function-body fun-name args expander-arg)))))))
+    `{,@(shared-defun-without-expander fun-name args body
+                                       :allow-source-memorizer? t
+                                       :allow-backtrace? t)
+      ,@(when (& make-expander?
+                 (| (always-expand-arguments?)
+                    (not (simple-argument-list? args))))
+          (with-gensym expander-arg
+            (shared-defun-without-expander (c-expander-name fun-name)
+                                           (list expander-arg)
+                                           (compile-argument-expansion-function-body fun-name args expander-arg))))}))

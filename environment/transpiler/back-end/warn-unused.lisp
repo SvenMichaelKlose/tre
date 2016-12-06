@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2013 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2013,2016 Sven Michael Klose <pixel@copei.de>
 
 (defun warn-on-unused-variables (fi)
   (when (funinfo-parent fi)
@@ -12,6 +12,5 @@
                    "toplevel"))))))
 
 (metacode-walker warn-unused (x)
-  :if-named-function (progn
-                       (warn-on-unused-variables (get-lambda-funinfo x.))
-                       (warn-unused (lambda-body x.))))
+  :if-named-function {(warn-on-unused-variables (get-lambda-funinfo x.))
+                      (warn-unused (lambda-body x.))})

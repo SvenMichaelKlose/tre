@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2012–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2012–2014,2016 Sven Michael Klose <pixel@copei.de>
 
 (defvar *previous-position* nil)
 
@@ -25,8 +25,7 @@
 (metacode-walker inject-debugging (x)
 	:if-cons (!? (& (%=? x.)
                     (find-next-location x *previous-position*))
-                 (progn
-                   (= *previous-position* !)
-                   `((%= nil (debugger-step ,(car !) ,(car .!) ,(cdr .!)))
-                     ,x.))
+                 {(= *previous-position* !)
+                  `((%= nil (debugger-step ,(car !) ,(car .!) ,(cdr .!)))
+                    ,x.)}
                  (list x.)))

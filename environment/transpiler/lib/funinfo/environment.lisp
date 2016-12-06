@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2006–2007,2009–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2006–2007,2009–2016 Sven Michael Klose <pixel@copei.de>
 
 (defun funinfo-find (fi x)
   (!? (funinfo-parent fi)
@@ -108,13 +108,12 @@
 (defun funinfo-add-used-var-0 (fi x)
   (& (funinfo-parent fi)
      (not (funinfo-used-var? fi x))
-     (progn
-       (push x (funinfo-used-vars fi))
-       (| (funinfo-arg-or-var? fi x)
-          (alet (funinfo-scope-arg fi)
-            (& (not (funinfo-used-var? fi 1))
-               (push ! (funinfo-used-vars fi)))
-            (funinfo-add-used-var-0 (funinfo-parent fi) x))))))
+     {(push x (funinfo-used-vars fi))
+      (| (funinfo-arg-or-var? fi x)
+         (alet (funinfo-scope-arg fi)
+           (& (not (funinfo-used-var? fi 1))
+              (push ! (funinfo-used-vars fi)))
+           (funinfo-add-used-var-0 (funinfo-parent fi) x)))}))
 
 (defun funinfo-add-used-var (fi x)
   (& (symbol? x)

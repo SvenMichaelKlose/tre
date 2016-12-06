@@ -37,23 +37,20 @@
     #\A  (%format-directive-placeholder inf .txt args)
     #\F  (%format-directive-force-output inf .txt args)
     #\L  (%format-directive-fresh-line inf .txt args)
-    #\~  (progn
-           (princ txt. (format-info-stream inf))
-           (%format inf .txt args))
+    #\~  {(princ txt. (format-info-stream inf))
+          (%format inf .txt args)}
     (%format-directive-tilde inf txt args)))
 
 (defun %format (inf txt args)
   (when txt
     (alet (format-info-stream inf)
       (?
-        (character== txt. #\\)  (progn
-                                  (princ txt. !)
-                                  (princ .txt. !)
-                                  (%format inf ..txt args))
+        (character== txt. #\\)  {(princ txt. !)
+                                 (princ .txt. !)
+                                 (%format inf ..txt args)}
         (character== txt. #\~)  (%format-directive inf .txt args)
-        (progn
-          (princ txt. (format-info-stream inf))
-          (%format inf .txt args))))))
+        {(princ txt. (format-info-stream inf))
+         (%format inf .txt args)}))))
 
 (defun format (str txt &rest args)
   (with-default-stream nstr str

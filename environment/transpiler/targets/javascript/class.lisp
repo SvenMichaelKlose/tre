@@ -11,15 +11,14 @@
 
 (defun js-gen-constructor (class-name bases args body)
   (let magic (list 'quote ($ '__ class-name))
-    `(progn
-       (defun ,class-name ,args
-         (%thisify ,class-name
-           ; TOOD: Set 'super' instead.
-           ,@(js-gen-inherit-constructor-calls bases)
-           ,@body))
-       (declare-cps-exception ,($ class-name '?))
-	   (defun ,($ class-name '?) (x)
-	     (%%native x " instanceof " ,(compiled-function-name-string class-name))))))
+    `{(defun ,class-name ,args
+        (%thisify ,class-name
+          ; TOOD: Set 'super' instead.
+          ,@(js-gen-inherit-constructor-calls bases)
+          ,@body))
+      (declare-cps-exception ,($ class-name '?))
+	  (defun ,($ class-name '?) (x)
+	    (%%native x " instanceof " ,(compiled-function-name-string class-name)))}))
 
 (define-js-std-macro defclass (class-name args &body body)
   (apply #'generic-defclass #'js-gen-constructor class-name args body))
@@ -50,7 +49,6 @@
   (print-definition `(finalize-class ,class-name))
   (let classes (thisify-classes)
     (!? (href classes class-name)
-	    `(progn
-		   ,(assoc-value class-name *delayed-constructors*)
-		   ,@(js-emit-methods class-name !))
+	    `{,(assoc-value class-name *delayed-constructors*)
+		  ,@(js-emit-methods class-name !)}
 	    (error "Cannot finalize undefined class ~A." class-name))))

@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2010,2012–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2010,2012–2016 Sven Michael Klose <pixel@copei.de>
 
 ; XXX This doesn't work yet!
 
@@ -45,9 +45,8 @@
       'pointertype
          (string-concat (alien-import-get-type-from-desc hash tp) " *")
       'struct
-         (progn
-	       (alien-import-add-struct hash tp)
-           (string-concat "struct " (string (lml-get-attribute tp :name))))
+         {(alien-import-add-struct hash tp)
+          (string-concat "struct " (string (lml-get-attribute tp :name)))}
       'arraytype
          (format nil " ~A[~A]"
                  (alien-import-get-type-from-desc hash tp)

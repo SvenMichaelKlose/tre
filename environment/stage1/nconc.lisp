@@ -1,11 +1,10 @@
-; tré – Copyright (c) 2005–2009,2011–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2009,2011–2016 Sven Michael Klose <pixel@copei.de>
 
 (defun %nconc-0 (lsts)
   (when lsts
     (!? lsts.
-	    (progn
-		  (rplacd (last !) (%nconc-0 .lsts))
-		  !)
+	    {(rplacd (last !) (%nconc-0 .lsts))
+		 !}
 		(%nconc-0 .lsts))))
 
 (defun nconc (&rest lsts)

@@ -1,11 +1,10 @@
-; tré – Copyright (c) 2008–2010,2013–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2010,2013–2016 Sven Michael Klose <pixel@copei.de>
 
 (dont-obfuscate apply call)
 
 ,(& (enabled-pass? :cps)
-    '(progn
-       (declare-cps-exception apply methodapply nconc last butlast)
-       (declare-native-cps-function apply methodapply)))
+    '{(declare-cps-exception apply methodapply nconc last butlast)
+      (declare-native-cps-function apply methodapply)})
 
 (defun apply (fun &rest lst)
   (let l (last lst)

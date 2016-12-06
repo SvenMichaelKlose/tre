@@ -67,9 +67,8 @@
     query-selector
     query-selector-all
     _caroshi-rotation)
-  `(progn
-	 (defmember caroshi-element ,@x)
-	 (dont-obfuscate ,@x)))
+  `{(defmember caroshi-element ,@x)
+	(dont-obfuscate ,@x)})
 
 (defmethod caroshi-element child-array ()
   this.child-nodes)
@@ -332,16 +331,12 @@
     (& (number? !)
        !)))
 
-(defmethod caroshi-element fix-opera-size-of-0 (x)
+(defmethod caroshi-element fix-opera-size-of-0 (x)  ; TODO: Remove this.
   (?
-    (== 0 x)
-      (progn
-        (hide)
-        (= this._opera-size-fix t))
-    this._opera-size-fix
-      (progn
-        (show)
-        (= this._opera-size-fix nil))))
+    (== 0 x)              {(hide)
+                           (= this._opera-size-fix t)}
+    this._opera-size-fix  {(show)
+                           (= this._opera-size-fix nil)}))
 
 (defmethod caroshi-element set-width (x)
   (set-style "width" (+ x "px"))

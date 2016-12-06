@@ -1,25 +1,26 @@
-; tré – Copyright (c) 2005–2015 Sven Michael Klose <pixel@hugbox.org>
+; tré – Copyright (c) 2005–2016 Sven Michael Klose <pixel@hugbox.org>
 
 ; TODO: Enable QUASIQUOTE in dotted pairs like `(foo . ,bar).
 ; TODO: Get rid of TREE-WALK.
 (defun tree-walk (i &key (ascending nil) (dont-ascend-if nil) (dont-ascend-after-if nil))
   (? (atom i)
 	 (funcall ascending i)
-     (progn
-	   (with (y i.
-		      a (| (& dont-ascend-if (funcall dont-ascend-if y) y)
-				   (? (& dont-ascend-after-if (funcall dont-ascend-after-if y))
-					  (funcall ascending y)
-	  			      (tree-walk (? ascending
-					 	 		    (funcall ascending y)
-					 	 		    y)
-					 		     :ascending ascending
-					 		     :dont-ascend-if dont-ascend-if
-					 		     :dont-ascend-after-if dont-ascend-after-if))))
-        (listprop-cons i a
-                         (tree-walk .i :ascending ascending
-						               :dont-ascend-if dont-ascend-if
-						               :dont-ascend-after-if dont-ascend-after-if))))))
+     {(with (y i.
+             a (| (& dont-ascend-if
+                     (funcall dont-ascend-if y) y)
+                  (? (& dont-ascend-after-if
+                        (funcall dont-ascend-after-if y))
+                     (funcall ascending y)
+                     (tree-walk (? ascending
+                                   (funcall ascending y)
+                                   y)
+                                :ascending ascending
+                                :dont-ascend-if dont-ascend-if
+                                :dont-ascend-after-if dont-ascend-after-if))))
+       (listprop-cons i a (tree-walk .i
+                                     :ascending ascending
+                                     :dont-ascend-if dont-ascend-if
+                                     :dont-ascend-after-if dont-ascend-after-if)))}))
 
 (defun quote-expand (x)
   (with (atomic [? (constant-literal? _)

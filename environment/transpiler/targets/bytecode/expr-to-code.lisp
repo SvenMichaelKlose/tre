@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2012–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2012–2016 Sven Michael Klose <pixel@copei.de>
 
 (def-head-predicate %%bc-return)
 
@@ -15,9 +15,8 @@
                 (?
                   (not x)      x
                   (quote? x)   (f ..x (+ 2 i))
-                  (%%tag? x)   (progn
-                                 (enqueue indexes (. .x. i))
-                                 (f ..x i))
+                  (%%tag? x)   {(enqueue indexes (. .x. i))
+                                (f ..x i)}
                   (f .x (++ i)))))
     (f x 0)
     (queue-list indexes)))

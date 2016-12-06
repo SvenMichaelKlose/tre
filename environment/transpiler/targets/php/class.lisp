@@ -1,4 +1,4 @@
-; Caroshi – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
+; Caroshi – Copyright (c) 2008–2016 Sven Michael Klose <pixel@copei.de>
 
 (defun php-constructor-name (class-name)
   ($ class-name '-constructor))
@@ -58,22 +58,21 @@
 (define-php-std-macro finalize-class (class-name)
   (let classes (thisify-classes)
     (!? (href classes class-name)
-	    `(progn
-           (dont-obfuscate is_a)
-	       (defun ,($ class-name '?) (x)
-	         (& (object? x)
-	            (is_a x ,(obfuscated-identifier class-name))
-                x))
-	       ,(assoc-value class-name *delayed-constructors*)
-           ,@(php-method-functions class-name !)
-           (%= nil (%%native
-                     (%php-class-head ,class-name)
-                     ,(alet (argument-expand-names 'php-constructor (transpiler-function-arguments *transpiler* class-name))
-                        `("public function __construct " ,(php-argument-list !) ,*php-newline*
-                          "{" ,*php-newline*
-                              ,*php-indent* "return " ,(php-compiled-constructor-name class-name) ,(php-argument-list (. 'this !)) ,*php-separator*
-                          "}")) ,*php-newline*
-                     ,@(php-members class-name !)
-	                 ,@(php-methods class-name !)
-                     (%php-class-tail))))
+	    `{(dont-obfuscate is_a)
+	      (defun ,($ class-name '?) (x)
+	        (& (object? x)
+	           (is_a x ,(obfuscated-identifier class-name))
+               x))
+	      ,(assoc-value class-name *delayed-constructors*)
+          ,@(php-method-functions class-name !)
+          (%= nil (%%native
+                    (%php-class-head ,class-name)
+                    ,(alet (argument-expand-names 'php-constructor (transpiler-function-arguments *transpiler* class-name))
+                       `("public function __construct " ,(php-argument-list !) ,*php-newline*
+                         "{" ,*php-newline*
+                             ,*php-indent* "return " ,(php-compiled-constructor-name class-name) ,(php-argument-list (. 'this !)) ,*php-separator*
+                         "}")) ,*php-newline*
+                    ,@(php-members class-name !)
+	                ,@(php-methods class-name !)
+                    (%php-class-tail)))}
 	    (error "Cannot finalize undefined class ~A." class-name))))

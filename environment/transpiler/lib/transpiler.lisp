@@ -288,11 +288,10 @@
        ,@body))
 
 (defmacro transpiler-getter (name &body body)
-  `(progn
-     (transpiler-getter-not-global ,name ,@body)
-     (defun ,($ name) (x)
-       (let tr *transpiler*
-         ,@body))))
+  `{(transpiler-getter-not-global ,name ,@body)
+    (defun ,($ name) (x)
+      (let tr *transpiler*
+        ,@body))})
 
 (defmacro transpiler-getter-list (name)
   `(transpiler-getter ,($ name '?) (member x (,($ 'transpiler- name 's) tr) :test #'eq)))
@@ -314,9 +313,8 @@
 (transpiler-getter wanted-function?        (href (transpiler-wanted-functions-hash tr) x))
 (transpiler-getter wanted-variable?        (href (transpiler-wanted-variables-hash tr) x))
 (transpiler-getter late-symbol?            (href (transpiler-late-symbols tr) x))
-(progn
-  ,@(@ [`(transpiler-getter-list ,_)]
-       '(plain-arg-fun emitted-decl)))
+{,@(@ [`(transpiler-getter-list ,_)]
+      '(plain-arg-fun emitted-decl))}
 
 (transpiler-getter add-defined-variable  (= (href (transpiler-defined-variables tr) x) t)
                                          x)

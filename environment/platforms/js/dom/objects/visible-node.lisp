@@ -9,9 +9,8 @@
 		  insert-before
 		  remove-child
 		  text-content)
-   `(progn
-	  (defmember visible-node ,@n)
-	  (dont-obfuscate ,@n)))
+   `{(defmember visible-node ,@n)
+	 (dont-obfuscate ,@n)})
 
 (defmember visible-node
   _unhooks)
