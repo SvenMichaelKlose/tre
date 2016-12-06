@@ -48,22 +48,31 @@
 
 (define-generic-transpiler-minus)
 
+; TODO: CHARACTER shouldn't be a NUMBER.
 (defmacro def-generic-transpiler-comparison (name)
   (let op ($ '%%% name)
     `(progn
        (defun ,name (n &rest x)
+         (& (character? n)
+            (= n (char-code n)))
          (adolist (x t)
+           (& (character? !)
+              (= ! (char-code !)))
            (| (,op n !)
               (return nil))
            (= n !)))
 	   (defun ,($ 'integer name) (n &rest x)
          (adolist (x t)
+           (| (integer? !)      ; TODO: Conditional assertion at compile-time.
+              (error "~A is not an INTEGER." !))
            (| (,op n !)
               (return nil))
            (= n !)))
 	   (defun ,($ 'character name) (n &rest x)
          (let n (char-code n)
            (adolist (x t)
+             (| (character? !)  ; TODO: Conditional assertion at compile-time.
+                (error "~A is not a CHARACTER." !))
              (| (,op n (char-code !))
                 (return nil))
              (= n !)))))))
