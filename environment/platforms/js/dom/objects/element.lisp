@@ -380,7 +380,10 @@
 
 (defmethod caroshi-element get (css-selector)
   (? (head? css-selector "<")
-     (ancestor-or-self (subseq css-selector 1))
+     (alet (subseq css-selector 1)
+       (? (is? !)
+          this
+          (ancestor-or-self (subseq css-selector 1))))
      (query-selector css-selector)))
 
 (defmethod caroshi-element get-list (css-selector)
