@@ -54,16 +54,9 @@
 (defun set-expander-macros (expander x)
   (map [set-expander-macro expander _. ._. .._] x))
 
-(defmacro define-expander-macro (expander-name name args &body body)
-  (| (atom name)
-     (error "Atom expected as macro-name instead of ~A for expander ~A." name expander-name))
+(defmacro define-expander-macro (expander name args &body body)
   (let expanded-argdef (argument-expand-names 'define-expander-macro args)
-    (with-gensym (g expander)
-      `(let ,expander ,expander-name
-         (& (expander-has-macro? ,expander ',name)
-            (warn ,(format nil "Redefinition of macro ~A for expander ~A." name expander-name)))
-         (defun ,g ,expanded-argdef ,@body)
-         (= (href (expander-macros ,expander) ',name) (. ',args #',g))))))
+    `(set-expander-macro ,expander ',name ',args #'(,expanded-argdef ,@body))))
 
 (defun expander-expand-0 (expander expr)
   (with-temporaries (*macro?*     (expander-pred expander)
