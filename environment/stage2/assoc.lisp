@@ -47,9 +47,6 @@
 (defun areplace (x replacements &key (test #'eql))
   (@ [| (assoc _. replacements :test test) _] x))
 
-(defmacro curly (&rest x)
-  `(assoc ,@x))
-
 (defun ensure-alist (x)
   (when x
     (& (atom x)  (= x (list x)))

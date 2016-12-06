@@ -23,6 +23,7 @@
 (env-load "stage1/tre-load.lisp")
 (env-load "stage1/require.lisp" :c :cl)
 (env-load "stage1/fn.lisp")
+(env-load "stage1/curly.lisp")
 (env-load "stage1/accent-circonflex.lisp")
 (env-load "stage1/predicates-c.lisp" :c :cl)
 (env-load "stage1/predicates.lisp")
