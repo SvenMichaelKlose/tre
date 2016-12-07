@@ -22,3 +22,9 @@
   (adolist (.x t)
     (| (%eql x. !)
        (return))))
+
+(defmacro eql (&rest x)
+  (?
+    (some #'string? x)     `(string== ,@x)
+    (some #'character? x)  `(character== ,@x)
+    `(eql ,@x)))
