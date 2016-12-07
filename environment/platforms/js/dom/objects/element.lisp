@@ -266,7 +266,7 @@
   (set-style "display" "none"))
 
 (defmethod caroshi-element get-opacity ()
-  (get-style "opacity"))
+  (number (get-style "opacity")))
 
 (dont-obfuscate opacity remove-property filter)
 
