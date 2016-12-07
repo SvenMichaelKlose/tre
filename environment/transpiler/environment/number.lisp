@@ -88,8 +88,7 @@
 (def-generic-transpiler-comparison >=)
 
 (defun number? (x)
-  (| (%number? x)
-     (character? x)))
+  (%number? x))
 
 (defun integer (x)
   (?
