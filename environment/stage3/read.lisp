@@ -26,7 +26,7 @@
 	   (skip-comment str))))
 
 (defun semicolon? (x)
-  (& x (character== x #\;)))
+  (& x (eql x #\;)))
 
 (defun skip-spaces (str)
   (when (semicolon? (peek-char str))
@@ -49,7 +49,7 @@
 
 (defun read-symbol-and-package (str)
   (alet (read-symbol str)
-    (? (character== (peek-char str) #\:)
+    (? (eql (peek-char str) #\:)
        (values (| ! *keyword-package*)
                (& (read-char str)
                   (read-symbol str)))
@@ -58,26 +58,26 @@
 (defun read-string (str)
   (with (f #'(()
                 (alet (read-char str)
-                  (unless (character== ! #\")
-                    (. (? (character== ! #\\)
+                  (unless (eql ! #\")
+                    (. (? (eql ! #\\)
                           (read-char str)
                           !)
                        (f))))))
     (list-string (f))))
 
 (defun read-comment-block (str)
-  (while (not (& (character== #\| (read-char str))
-			     (character== #\# (peek-char str))))
+  (while (not (& (eql #\| (read-char str))
+			     (eql #\# (peek-char str))))
 	     (read-char str)))
 
 (defun list-number? (x)
   (& (| (& .x
-           (| (character== #\- x.)
-              (character== #\. x.)))
+           (| (eql #\- x.)
+              (eql #\. x.)))
         (digit-char? x.))
      (? .x
         (every [| (digit-char? _)
-                  (character== #\. _)]
+                  (eql #\. _)]
                .x)
         t)))
 
@@ -86,13 +86,13 @@
     (with ((pkg sym) !)
       (values (? (& sym
                     (not .sym)
-                    (character== #\. sym.))
+                    (eql #\. sym.))
                  'dot
                  (? sym
                     (? (list-number? sym)
                        'number
                        'symbol)
-                    (case (read-char str) :test #'character==
+                    (case (read-char str)
                       #\(	 'bracket-open
                       #\)	 'bracket-close
                       #\[	 'square-bracket-open
@@ -103,11 +103,11 @@
                       #\`	 'backquote
                       #\^	 'accent-circonflex
                       #\"	 'dblquote
-                      #\,	 (? (character== #\@ (peek-char str))
+                      #\,	 (? (eql #\@ (peek-char str))
                               (& (read-char str)
                                  'quasiquote-splice)
                               'quasiquote)
-                      #\#	 (case (read-char str) :test #'character==
+                      #\#	 (case (read-char str)
                              #\\  'char
                              #\x  'hexnum
                              #\'  'function
@@ -199,7 +199,7 @@
   (with-temporary *default-listprop* *default-listprop*
     (alet (read-cons str)
       (? (!? (peek-char str)
-             (character== #\. !))
+             (eql #\. !))
          {(read-char str)
           (with ((token pkg sym) (read-token str))
             (read-slot-value (list ! (list-string sym))))}
