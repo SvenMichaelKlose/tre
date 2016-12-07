@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2010,2012 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2010,2012,2016 Sven Michael Klose <pixel@copei.de>
 
 (defclass _event-handler (elm typ cb)
   (= element elm
@@ -15,7 +15,7 @@
   (eq element x))
 
 (defmethod _event-handler has-type (x)
-  (== type x))
+  (eql type x))
 
 (defmethod _event-handler has-callback (x)
   (eq callback x))
