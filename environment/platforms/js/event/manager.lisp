@@ -263,7 +263,7 @@
 (defmethod event-manager _generic-handler (evt)
   (_update-global-data evt)
   (& (eql "mousemove" evt.type)
-	 (& (== 0 evt.button)
+	 (& (eql 0 evt.button)
         (_dnd-mousemove evt))
      (_handle-selection evt))
   (| (& (eql "click" evt.type)
