@@ -171,8 +171,8 @@
   (princ #\" str)
   (@ (i (string-list x))
     (?
-      (== i #\")  (princ "\\\"" str)
-      (== i #\\)  (princ "\\\\" str)
+      (eql i #\")  (princ "\\\"" str)
+      (eql i #\\)  (princ "\\\\" str)
       (princ i str)))
   (princ #\" str))
 
@@ -180,12 +180,12 @@
   (princ #\| str)
   (@ (i (string-list x))
     (?
-      (== i #\|)  (princ "\\|" str)
+      (eql i #\|)  (princ "\\|" str)
       (princ i str)))
   (princ #\| str))
 
 (defun symbol-char-needs-escaping? (x)
-  (| (== #\| x)
+  (| (eql #\| x)
      (lower-case? x)))
 
 (defun %print-symbol-component (x str)

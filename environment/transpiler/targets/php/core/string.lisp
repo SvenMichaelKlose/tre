@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2014,2016 Sven Michael Klose <pixel@copei.de>
 
 (dont-obfuscate is_string ord strlen substr strval strtoupper strtolower)
 
@@ -6,6 +6,9 @@
 (defun string== (x y) (%%%== x y))
 (defun upcase (x)     (strtoupper x))
 (defun downcase (x)   (strtolower x))
+
+(defmacro string== (x y)
+  `(%%%== ,x ,y))
 
 (defun string-concat (&rest x)
   (!? (remove-if #'not x)

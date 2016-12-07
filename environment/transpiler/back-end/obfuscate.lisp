@@ -51,7 +51,7 @@
 
 (defun transpiler-print-obfuscations (tr)
   (@ (k (hashkeys (transpiler-obfuscations tr)))
-    (unless (in=? (elt (symbol-name k) 0) #\~) ; #\_)
+    (unless (find (elt (symbol-name k) 0) '(#\~)) ; #\_)
       (format t "~A~A -> ~A~%"
               (!? (symbol-package k)
                   (+ (package-name !) ":")

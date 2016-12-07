@@ -117,8 +117,8 @@
 
 (defun xml-entities-charlist-to-unicode (x)
   (when x
-    (when (== #\& x.)
-	  (awhen (position #\; .x :test #'==)
+    (when (eql #\& x.)
+	  (awhen (position #\; .x :test #'character==)
 	    (let-when n (href *xml-entities-hash* (list-string (subseq .x 0 !)))
 	      (return (. (code-char n)
                      (xml-entities-charlist-to-unicode (nthcdr (++ !) .x)))))))

@@ -27,5 +27,7 @@
 
 (defmacro == (&rest x)
   (& (some #'string? x)
-     (error "==: Unexpected string."))
+     (error "==: Unexpected STRING."))
+  (& (some #'character? x)
+     (error "==: Unexpected CHARACTER."))
   `(== ,@x))

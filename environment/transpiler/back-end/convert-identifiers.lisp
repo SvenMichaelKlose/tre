@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2009,2011–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2009,2011–2016 Sven Michael Klose <pixel@copei.de>
 
 (defun transpiler-translate-symbol (tr from to)
   (acons! from to (transpiler-symbol-translations tr)))
@@ -9,17 +9,17 @@
 (defun global-variable-notation? (x)
   (let l (length x)
     (& (< 2 l)
-       (== (elt x 0) #\*)
-       (== (elt x (-- l)) #\*))))
+       (eql (elt x 0) #\*)
+       (eql (elt x (-- l)) #\*))))
 
 (defun convert-identifier-r (s)
   (with (camel-notation
 		   #'((x pos)
                (with (bump?
                        [& ._
-                          (| (& (== #\- _.)
+                          (| (& (eql #\- _.)
                                 (alpha-char? ._.))
-                             (& (== #\* _.)
+                             (& (eql #\* _.)
                                 (zero? pos)))])
                  (& x
                     (? (bump? x)
@@ -29,7 +29,7 @@
                           (camel-notation .x (++ pos)))))))
 		 corrected-chars
            #'((x pos)
-               (with (char-synonym  [? (& ._ (== #\- _.))
+               (with (char-synonym  [? (& ._ (eql #\- _.))
                                        (list #\_)
                                        (string-list (+ "T" (format nil "~A" (char-code _.))))])
                  (& x
@@ -39,7 +39,7 @@
                        (+ (char-synonym x) (corrected-chars .x (++ pos)))
                        (. x. (corrected-chars .x (++ pos)))))))
          capitals
-           [remove #\- (string-list (upcase (subseq _ 1 (-- (length _))))) :test #'==])
+           [remove #\- (string-list (upcase (subseq _ 1 (-- (length _))))) :test #'character==])
 	(? (| (string? s)
           (number? s))
 	   (string s)

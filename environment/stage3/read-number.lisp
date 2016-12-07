@@ -11,7 +11,7 @@
 
 (defun peek-dot (str)
   (awhen (peek-char str)
-    (== #\. !)))
+    (eql #\. !)))
 
 (defun read-decimal-places-0 (str v s)
   (? (peek-digit str)
@@ -35,7 +35,7 @@
      (integer (read-integer-0 str 0))))
 
 (defun read-number (&optional (str *standard-input*))
-  (* (? (== #\- (peek-char str))
+  (* (? (eql #\- (peek-char str))
         {(read-char str)
          -1}
         1)

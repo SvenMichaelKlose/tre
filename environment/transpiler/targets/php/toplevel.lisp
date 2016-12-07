@@ -41,7 +41,7 @@
         (list (. 'env-tests (make-environment-tests))))))
 
 (defun php-identifier-char? (x)
-  (unless (== #\$ x)
+  (unless (eql #\$ x)
     (c-identifier-char? x)))
 
 (defun php-expex-initializer (ex)

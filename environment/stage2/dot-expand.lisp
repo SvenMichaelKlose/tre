@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2009,2011–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2009,2011–2016 Sven Michael Klose <pixel@copei.de>
 
 (defun dot-expand-make-expr (which num x)
   (? (< 0 num)
@@ -6,12 +6,12 @@
 	 x))
 
 (defun dot-expand-head-length (x &optional (num 0))
-  (? (== #\. x.)
+  (? (eql #\. x.)
 	 (dot-expand-head-length .x (++ num))
 	 (values num x)))
 
 (defun dot-expand-tail-length (x &optional (num 0))
-  (? (== #\. (car (last x)))
+  (? (eql #\. (car (last x)))
 	 (dot-expand-tail-length (butlast x) (++ num))
 	 (values num x)))
 
@@ -23,7 +23,7 @@
 		  	                                    (dot-expand (list-symbol without-end))))))
 
 (defun dot-position (x)
-  (position #\. x :test #'==))
+  (position #\. x :test #'character==))
 
 (defun no-dot-notation? (x)
   (with (sl  (string-list (symbol-name x))
@@ -34,8 +34,8 @@
 
 (defun has-dot-notation? (x)
   (with (sl  (string-list (symbol-name x)))
-    (| (== #\. sl.)
-       (== #\. (car (last sl))))))
+    (| (eql #\. sl.)
+       (eql #\. (car (last sl))))))
 
 (defun dot-expand-conv (x)
   (with (sl  (string-list (symbol-name x))
