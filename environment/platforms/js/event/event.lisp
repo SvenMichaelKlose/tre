@@ -54,7 +54,7 @@
      type          evt.type
 	 _element      (dom-extend evt.target)
 	button evt.button)
-  (? (== "keypress" type)
+  (? (eql "keypress" type)
      (= char-code (| evt.which evt.char-code evt.key-code))
 	 (= key-code evt.key-code))
   (with (docelm document.document-element
@@ -70,7 +70,7 @@
   this)
 
 (defmethod caroshi-event mouse-event? ()
-  (in=? type "mousedown" "mouseup" "mousemove" "mouseover"))
+  (find type '("mousedown" "mouseup" "mousemove" "mouseover")))
 
 (defmethod caroshi-event left-button? ()   (integer== 0 button))
 (defmethod caroshi-event middle-button? () (integer== 1 button))
@@ -93,7 +93,7 @@
 (defmethod caroshi-event bubble	()
   (awhen _element
 	(unless (| (not (element? !))
-               (== "BODY" !.tag-name))
+               (eql "BODY" !.tag-name))
 	  (= _element !.parent-node))))
 
 (defmethod caroshi-event discard ()

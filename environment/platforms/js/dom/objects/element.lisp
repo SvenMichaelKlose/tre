@@ -297,7 +297,7 @@
   this)
 
 (defmethod caroshi-element cumulative-offset ()
-  (? (== this.style.position "absolute")
+  (? (eql this.style.position "absolute")
      (make-array (alet this.style.left
                    (integer (subseq ! 0 (- (length !) 2))))
                  (alet this.style.top

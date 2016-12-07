@@ -262,17 +262,17 @@
 ;; Generic event handler.
 (defmethod event-manager _generic-handler (evt)
   (_update-global-data evt)
-  (& (== "mousemove" evt.type)
+  (& (eql "mousemove" evt.type)
 	 (& (== 0 evt.button)
         (_dnd-mousemove evt))
      (_handle-selection evt))
-  (| (& (== "click" evt.type)
+  (| (& (eql "click" evt.type)
         (not (== 0 evt.button)))
     (_dispatch evt.type evt))
   t)
 
 (defmethod event-manager _generic-keyhandler (evt)
-  (= (aref _key-stats evt.key-code) (== evt.type "keydown"))
+  (= (aref _key-stats evt.key-code) (eql evt.type "keydown"))
   (_dispatch evt.type evt))
 
 ;;;; MOUSE BUTTON EVENTS

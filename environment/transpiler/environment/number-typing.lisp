@@ -24,3 +24,8 @@
 (def-integer-op >)
 (def-integer-op <=)
 (def-integer-op >=)
+
+(defmacro == (&rest x)
+  (& (some #'string? x)
+     (error "==: Unexpected string."))
+  `(== ,@x))
