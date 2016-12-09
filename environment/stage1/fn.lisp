@@ -1,7 +1,11 @@
 ; tré – Copyright (c) 2008,2011–2012,2015–2016 Sven Michael Klose <pixel@copei.de>
 
 (defmacro square (&body body)
-  `#'((_)
+  `#'(,(? (eql 0 body.)
+          (progn
+            (setq body .body)
+            nil)
+          '(_))
         (block nil
 	      ,@(? (& (cons? body.)
 			      (not (eq 'slot-value body..)
