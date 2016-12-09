@@ -6,8 +6,7 @@
   (with (la  (length a)
          lb  (length b))
     (dotimes (i la (<= la lb))
-      (& (> (elt a i)
-            (elt b i))
+      (& (character> (elt a i) (elt b i))
          (return nil)))))
 
 (defun string-list (x)
