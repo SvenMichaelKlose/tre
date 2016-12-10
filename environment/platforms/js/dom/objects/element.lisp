@@ -439,7 +439,7 @@
        (& (element? i)
 	      (return nil)))))
 
-(mapcar-macro _ *all-events*
+(mapcar-macro _ (remove "focus" *all-events*) ; TODO: Prefix names instead?
   `(defmethod caroshi-element ,(make-symbol (upcase _)) (fun)
      (*event-module*.hook ,_ fun this)))
 

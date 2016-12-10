@@ -4,7 +4,7 @@
 (defvar *variables* nil)
 (defvar *launchfile* nil)
 (defvar *pointer-size* 4)
-(defvar *assert?* t)
+(defvar *assert?* nil)
 (defvar *endianess* nil)
 (defvar *cpu-type* nil)
 (defvar *libc-path* nil)
