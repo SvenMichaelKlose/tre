@@ -10,7 +10,7 @@
 (define-php-binary >> ">>")
 (define-php-binary << "<<")
 (define-php-binary mod "%")
-(define-php-binary userfun_eq "===")
+(define-php-binary tre_eq "===")
 (define-php-binary bit-and "&")
 (define-php-binary bit-or "|")
 (define-php-binary bit-xor "^")
@@ -18,6 +18,6 @@
 (define-php-macro identity (x)
   x)
 
-(define-php-macro userfun_cons (x y)
+(define-php-macro tre_cons (x y)
   `("new " ,(obfuscated-symbol-string '__cons)
            " (" ,(php-dollarize x) ", " ,(php-dollarize y) ")"))

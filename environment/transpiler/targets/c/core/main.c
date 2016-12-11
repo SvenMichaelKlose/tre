@@ -1,5 +1,5 @@
 /*
- * tré – Copyright (c) 2005–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
+ * tré – Copyright (c) 2005–2009,2011–2014,2016 Sven Michael Klose <pixel@copei.de>
  */
 
 #include <setjmp.h>
@@ -38,7 +38,7 @@
 #include "linenoise.h"
 
 #ifdef TRE_HAVE_COMPILED_ENV
-treptr userfun_cInit (void);
+treptr tre_cInit (void);
 #endif
 
 char * tremain_self = NULL;   /* Path to running executable. */
@@ -412,7 +412,7 @@ load_error:
 
 user:
 #ifdef TRE_HAVE_COMPILED_ENV
-	(void) userfun_cInit ();
+	(void) tre_cInit ();
 #endif
 
     if (NOT_NIL(tre_restart_fun)) {

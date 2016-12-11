@@ -120,7 +120,7 @@
 (defun php-%=-value (val)
   (?
     (& (cons? val)      ; XXX required?
-       (eq 'userfun_cons val.))
+       (eq 'tre_cons val.))
       `("new __cons (" ,(php-dollarize .val.) ", " ,(php-dollarize ..val.) ")")
     (| (not val)        ; XXX CONSTANT-LITERAL?
        (eq t val)
@@ -248,15 +248,15 @@
 
 (define-php-macro href (h k)
   `(%%native "(is_a (" ,(php-dollarize h) ", '__l') || is_a (" ,(php-dollarize h) ", '__array')) ? "
-                 ,(php-dollarize h) "->g(userfun_T37T37key (" ,(php-dollarize k) ")) : "
-                 "(isset (" ,(php-dollarize h) "[userfun_T37T37key (" ,(php-dollarize k) ")]) ? "
-                     ,(php-dollarize h) "[userfun_T37T37key (" ,(php-dollarize k) ")] : "
+                 ,(php-dollarize h) "->g(tre_T37T37key (" ,(php-dollarize k) ")) : "
+                 "(isset (" ,(php-dollarize h) "[tre_T37T37key (" ,(php-dollarize k) ")]) ? "
+                     ,(php-dollarize h) "[tre_T37T37key (" ,(php-dollarize k) ")] : "
                      "NULL)"))
 
 (define-php-macro =-href (v h k)
   `(%%native "(is_a (" ,(php-dollarize h) ", '__l') || is_a (" ,(php-dollarize h) ", '__array')) ? "
-                 ,(php-dollarize h) "->s(userfun_T37T37key (" ,(php-dollarize k) ")," ,(php-dollarize v) ") : "
-                 ,(php-dollarize h) "[userfun_T37T37key (" ,(php-dollarize k) ")] = " ,(php-dollarize v)))
+                 ,(php-dollarize h) "->s(tre_T37T37key (" ,(php-dollarize k) ")," ,(php-dollarize v) ") : "
+                 ,(php-dollarize h) "[tre_T37T37key (" ,(php-dollarize k) ")] = " ,(php-dollarize v)))
 
 (define-php-macro hremove (h key)
   `(%%native "null; unset ($" ,h "[" ,(php-dollarize key) "])"))
