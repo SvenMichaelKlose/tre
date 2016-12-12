@@ -1,20 +1,4 @@
-; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
-
-(dont-obfuscate
-	node-name
-	node-value)
-
-(dont-obfuscate
-	class
-	http-equiv
-	id
-	lang
-	meta
-	rel
-	src
-    width
-    height
-	left)
+; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@copei.de>
 
 (defvar *attribute-xlat*
   (new "class" "className"))
@@ -30,8 +14,6 @@
 
 (defun xlat-attribute (x)
   (aref *attribute-xlat* x))
-
-(dont-obfuscate create-element-n-s)
 
 (defun make-native-element (name doc ns)
   (? (& ns (defined? doc.create-element-n-s))
@@ -190,8 +172,6 @@
 (defmethod caroshi-element set-name (x)
   (write-attribute "name" x))
 
-(dont-obfuscate index-of)
-
 (defmethod caroshi-element class? (x)
   (!? (read-attribute "class")
       (let c (+ " " ! " ")
@@ -229,7 +209,9 @@
      (set-class (apply #'string-concat (pad (remove-string== x (get-classes)) " ")))))
 
 (defmethod caroshi-element set-id (id)
-  (write-attribute "id" id))
+  (? id
+     (write-attribute "id" id)
+     (remove-attribute "id")))
 
 (defmethod caroshi-element get-id (id)
   (!? (read-attribute "id")
@@ -253,8 +235,6 @@
 (defmethod caroshi-element set-style (k v)
   (= (aref style k) v))
 
-(dont-obfuscate default-view get-computed-style)
-
 (defmethod caroshi-element get-style (x)
   (declare type string x)
   (| (aref style x)
@@ -268,8 +248,6 @@
 
 (defmethod caroshi-element get-opacity ()
   (number (get-style "opacity")))
-
-(dont-obfuscate opacity remove-property filter)
 
 (defmethod caroshi-element set-opacity (x)
   (? (integer== 1 x)
@@ -290,7 +268,6 @@
   _caroshi-rotation)
 
 ;; Set absolute position relative to browser window.
-(dont-obfuscate left top)
 (defmethod caroshi-element set-position (x y)
   (declare type number x y)
   (set-styles (new "left" (+ x "px")
