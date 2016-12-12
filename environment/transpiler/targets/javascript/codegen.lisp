@@ -14,7 +14,7 @@
   `(,*js-indent* "_I_ = " ,tag "; continue" ,*js-separator*))
 
 (defun js-nil? (x)
-  `("(!" ,x " && " ,x " !== 0 && " ,x " !== '')"))
+  `("(" ,x " == null || " ,x " === false)"))
 
 (define-js-macro %%go-nil (tag val)
   `(,*js-indent* "if " ,(js-nil? val) " { _I_= " ,tag "; continue; }" ,*newline*))
