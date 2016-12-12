@@ -1,8 +1,4 @@
-;;;;; tré – Copyright (c) 2009–2010,2012 Sven Michael Klose <pixel@copei.de>
-
-(defun form? (x)
-  (& (element? x)
-     (x.tag-name? "form")))
+; tré – Copyright (c) 2009–2010,2012,2016 Sven Michael Klose <pixel@copei.de>
 
 (defun form-element? (x)
   (& (element? x)
