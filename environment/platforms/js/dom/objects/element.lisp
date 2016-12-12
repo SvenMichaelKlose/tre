@@ -64,6 +64,7 @@
 	offset-left offset-right
 	offset-top offset-bottom
 	offset-parent
+    owner-document
     query-selector
     query-selector-all
     _caroshi-rotation)
@@ -376,7 +377,8 @@
 	    this)))
 
 (defmethod caroshi-element is? (css-selector)
-  (member this (array-list (parent-node.query-selector-all css-selector))))
+  (member this (array-list ((| parent-node
+                               owner-document).query-selector-all css-selector))))
 
 (defmethod caroshi-element get (css-selector)
   (? (head? css-selector "<")
