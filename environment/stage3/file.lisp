@@ -16,7 +16,3 @@
 (defun put-file (path data)
   (with-output-file out path
     (princ data out)))
-
-(defun print-file (path data)
-  (with-output-file out path
-    (late-print data out)))
