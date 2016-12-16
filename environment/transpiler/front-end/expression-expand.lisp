@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2006–2015 Sven Michael Klose <pixel@hugbox.org>
+; tré – Copyright (c) 2006–2016 Sven Michael Klose <pixel@hugbox.org>
 
 (defvar *expex* nil)
 
@@ -9,7 +9,7 @@
 ;;;; SHARED SETTER FILTER
 
 (defun expex-compiled-funcall (x)
-  (alet (%=-value x)
+  (alet ..x.
     (? (& (cons? !)
           (| (function-expr? !.)
              (funinfo-find *funinfo* !.)))
@@ -33,7 +33,7 @@
   (when (atom v)
     (= v (funcall (expex-argument-filter *expex*) v)))
   (expex-guest-filter-setter `(%= ,p ,(? (%=? v)
-                                         (%=-place v)
+                                         .v.
                                          v))))
 
 (define-gensym-generator expex-sym e)
@@ -130,7 +130,7 @@
   (with-%= p v x
     (? (%=? v)
        (return (values nil (expex-body `(,v
-                                         (%= ,p ,(%=-place v)))))))
+                                         (%= ,p ,.v.))))))
     (with ((moved new-expr) (expex-move-args (list v)))
       (values moved (make-%= p new-expr.)))))
 
@@ -152,10 +152,10 @@
 (defun expex-make-return-value (s x)
   (with (l                     (car (last x))
          wanted-return-value?  #'(()
-                                   (eq s (%=-place l)))
+                                   (eq s .l.))
          make-return-value     #'(()
                                    `(,l
-                                     ,@(make-%= s (%=-place l)))))
+                                     ,@(make-%= s .l.))))
     (? (has-return-value? l)
        (+ (butlast x)
           (? (%=? l)

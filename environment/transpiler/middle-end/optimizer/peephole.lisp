@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@copei.de>
 
 (defun assignment-to-self? (x)
   (& (%=? x)
@@ -19,8 +19,8 @@
 
 (defun unused-atom-or-functional? (x)
   (& (%=? x)
-     (not (%=-place x))
-     (atomic-or-functional? (%=-value x))))
+     (not .x.)
+     (atomic-or-functional? ..x.)))
 
 (defun %=-identity? (x)
   (& (%=? x)

@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2013–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2013–2016 Sven Michael Klose <pixel@copei.de>
 
 (defvar *cps-toplevel?* nil)
 
@@ -10,14 +10,14 @@
 
 (defun call-to-non-cps-from-expander? (x)
   (& (%=-funcall? x)
-     (alet (car (%=-value x))
+     (alet (car ..x.)
        (& (%%native? !)
           (cps-exception? (real-function-name .!.))))))
 
 (defun call-to-non-cps-from-expander (x)
   (with-gensym g
     (funinfo-var-add *funinfo* g)
-    `((%= ,g ,(%=-value x))
+    `((%= ,g ,..x.)
       (%= nil (%cps-step ~%cont ,g)))))
 
 (defun call-of-global-cps-function? (name)
@@ -30,7 +30,7 @@
 
 (defun cps-call? (x)
   (& (%=-funcall? x)
-     (alet (alet (%=-value x)
+     (alet (alet ..x.
              (? (%new? !)
                 .!.
                 !.))
@@ -41,11 +41,11 @@
 
 (defun cps-methodcall? (x)
   (& (%=-funcall? x)
-     (%slot-value? (car (%=-value x)))))
+     (%slot-value? (car ..x.))))
 
 (defun native-cps-funcall? (x)
   (& (%=-funcall? x)
-     (native-cps-function? (alet (car (%=-value x))
+     (native-cps-function? (alet (car ..x.)
                              (? (%%native? !)
                                 (real-function-name .!.)
                                 !)))))
@@ -73,7 +73,7 @@
                                 '~%cont))))))))
 
 (defun cps-make-call (x continuer)
-  (with (val               (%=-value x)
+  (with (val               ..x.
          constructorcall?  (%new? val)
          name              (? constructorcall?
                               .val.
@@ -86,7 +86,7 @@
                ,name ,continuer ,@args)))))
 
 (defun cps-make-methodcall (x continuer)
-  (with (val   (%=-value x)
+  (with (val   ..x.
          slot  val.)
     `((%= nil (cps-methodcall ,.slot. ,slot ,continuer ,@.val)))))
 
@@ -97,9 +97,9 @@
                             '(~%contret))
 
                    tag-to-name      [assoc-value ._. tag-names]
-                   make-call        [(= last-place (%=-place _))
+                   make-call        [(= last-place ._.)
                                      (cps-make-call _ (| .names. '~%cont))]
-                   make-methodcall  [(= last-place (%=-place _))
+                   make-methodcall  [(= last-place ._.)
                                      (cps-make-methodcall _ (| .names. '~%cont))]
                    make-go          [alet (tag-to-name _)
                                       `((%= nil (%cps-step ,! ,@(& (eq '~%cont !)
@@ -189,14 +189,14 @@
                                         '((%= (%global *cps-step?*) (%%%- (%global *cps-step?*) 1)))))))))))
 
 (defun cps-return-value (x)
-  (!? (%=-place x)
+  (!? .x.
       `(cps-toplevel-return-value ,!)
       'cps-identity))
 
 (defun cps-passthrough (x)
   (with-temporary *cps-toplevel?* t
     (mapcan [pcase _
-              native-cps-funcall?  (let v (%=-value _)
+              native-cps-funcall?  (let v .._.
                                      `((%= nil (,v. ,(cps-return-value _) ,@.v))))
               cps-call?            (cps-make-call _ (cps-return-value _))
               cps-methodcall?      (cps-make-methodcall _ (cps-return-value _))

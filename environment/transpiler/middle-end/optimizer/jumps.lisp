@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@copei.de>
 
 (defun inverted-%%go (x)
   (case x :test #'eq
@@ -26,8 +26,8 @@
 
 (defun setting-ret-to-bool? (x)
   (& (%=? x)
-     (~%ret? (%=-place x))
-     (alet (%=-value x)
+     (~%ret? .x.)
+     (alet ..x.
        (| (not !)
           (t? !)))))
 
@@ -39,12 +39,12 @@
     (. `(,a. ,(%%go-tag (cadr (tag-code (%%go-tag a)))) ,(%%go-value a))
        (optimize-jumps d))
   (& (setting-ret-to-bool? a)
-     (!? (target-tag d (%=-value a))
+     (!? (target-tag d ..a.)
          (not (will-be-used-again? (member ! *body*) '~%ret))))
-    (. `(%%go ,(target-tag d (%=-value a)))
+    (. `(%%go ,(target-tag d ..a.))
        (optimize-jumps d))
   (& (setting-ret-to-bool? a)
-     (? (%=-value a)
+     (? ..a.
         (%%go-nil? d.)
         (%%go-not-nil? d.)))
     (. a (optimize-jumps .d))

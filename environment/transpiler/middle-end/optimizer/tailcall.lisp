@@ -1,4 +1,4 @@
-;;;; tré – Copyright (c) 2010–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2010–2014,2016 Sven Michael Klose <pixel@copei.de>
 
 (defun atom&integer== (a b)
   (& (number? a)
@@ -21,7 +21,7 @@
   (+ (mapcan #'((arg val)
                   `((%= ,arg ,val)))
              (funinfo-args *funinfo*)
-             (cdr (%=-value body.)))
+             (cdr (caddr body.)))
      `((%%go ,front-tag))
      (opt-tailcall-fun l .body front-tag)))
 

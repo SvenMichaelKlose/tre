@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2006–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2006–2016 Sven Michael Klose <pixel@copei.de>
 
 (mapcar-macro x
 	'(quote %new
@@ -34,16 +34,14 @@
 
 (defun %%go-tag (x) .x.)
 (defun %%go-value (x) ..x.)
-(defun %=-place (x) .x.)
-(defun %=-value (x) ..x.)
 
 (defun %=-funcall? (x)
   (? (%=? x)
-     (cons? (%=-value x))))
+     (cons? ..x.)))
 
 (defun %=-funcall-of? (x name)
   (& (%=-funcall? x)
-     (eq name (car (%=-value x)))))
+     (eq name (car ..x.))))
 
 (defun has-return-value? (x)
   (not (| (vm-jump? x)
