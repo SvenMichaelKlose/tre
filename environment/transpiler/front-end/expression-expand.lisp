@@ -61,8 +61,10 @@
        (cdrlist (argument-expand fun def vals)))))
 
 (defun expex-argdef (fun)
-;  (| (funinfo-get-local-function-args *funinfo* fun) ; XXX Doesn't work, yet.
-     (transpiler-function-arguments *transpiler* fun))
+  ; TODO: The variable containing the function gets assigned to another one…
+  (| (!? (funinfo-get-local-function-args *funinfo* fun)
+         (print !)) ; …so this doesn't happen.
+     (transpiler-function-arguments *transpiler* fun)))
 
 (defun expex-argexpand (x)
   (with (new?   (%new? x)
