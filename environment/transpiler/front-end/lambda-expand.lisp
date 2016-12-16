@@ -65,8 +65,9 @@
 ;;;; TOPLEVEL
 
 (defun lambda-expand-expr (x)
-  (& (%set-local-fun? x)
-     (lambda? ..x.)
+  (when (%set-local-fun? x)
+     (| (lambda? ..x.)
+        (error "%SET-LOCAL-FUN: Lambda expression expected."))
      (funinfo-add-local-function-args *funinfo* .x. (lambda-args ..x.)))
   (pcase x
     lambda-call?   (lambda-call-embed x)
