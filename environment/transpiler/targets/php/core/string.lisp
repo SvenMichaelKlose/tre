@@ -7,7 +7,7 @@
 (defun upcase (x)     (strtoupper x))
 (defun downcase (x)   (strtolower x))
 
-(defmacro string== (x y)
+(defmacro string== (x y)    ; TODO: &REST – share same code with JS core.
   `(%%%== ,x ,y))
 
 (defun string-concat (&rest x)

@@ -18,11 +18,13 @@
   (& (%%%< idx seq.length)
      (code-char (seq.char-code-at idx))))
 
-(defun string== (x y)
-  (%%%== x y))
+(defun string== (x &rest y)
+  (@ (i y t)
+    (| (%%%== x i)
+       (return))))
 
-(defmacro string== (x y)
-  `(%%%== ,x ,y))
+(defmacro string== (x &rest y)
+  `(%%%== ,x ,@y))
 
 (defun upcase (x)
   (& x (x.to-upper-case)))
