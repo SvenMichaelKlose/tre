@@ -309,21 +309,12 @@
     (& (number? !)
        !)))
 
-(defmethod caroshi-element fix-opera-size-of-0 (x)  ; TODO: Remove this.
-  (?
-    (== 0 x)              {(hide)
-                           (= this._opera-size-fix t)}
-    this._opera-size-fix  {(show)
-                           (= this._opera-size-fix nil)}))
-
 (defmethod caroshi-element set-width (x)
   (set-style "width" (+ x "px"))
-  (fix-opera-size-of-0 x)
   x)
 
 (defmethod caroshi-element set-height (x)
   (set-style "height" (+ x "px"))
-  (fix-opera-size-of-0 x)
   x)
 
 (defmethod caroshi-element inside-x? (x)
