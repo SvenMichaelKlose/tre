@@ -76,9 +76,9 @@
   ((number? 42))
   t)
 
-(define-test "NUMBER? recognizes characters"
+(define-test "NUMBER? fails on characters"
   ((number? #\a))
-  t)
+  nil)
 
 (define-test "NUMBER? fails on arrays"
   ((number? (make-array 1)))

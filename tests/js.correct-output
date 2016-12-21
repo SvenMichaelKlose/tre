@@ -38,7 +38,7 @@ Test 37, SYMBOL? fails on characters<br>
 Test 38, SYMBOL? fails on strings<br>
 Test 39, SYMBOL? fails on arrays<br>
 Test 40, NUMBER? recognizes numbers<br>
-Test 41, NUMBER? recognizes characters<br>
+Test 41, NUMBER? recognizes characters FAILED Expected:T Result:FALSE<br>
 Test 42, NUMBER? fails on arrays<br>
 Test 43, NUMBER? fails on symbols<br>
 Test 44, CHARACTER? recognizes characters<br>
@@ -109,7 +109,7 @@ Test 108, LIST-SUBSEQ work at the beginning<br>
 Test 109, LIST-SUBSEQ works in the middle<br>
 Test 110, LIST-SUBSEQ works at the end<br>
 Test 111, SUBSEQ returns NIL when totally out of range<br>
-Test 112, SUBSEQ returns empty string when start and end are the same<br>
+Test 112, SUBSEQ returns empty string when start and end are the same FAILED Expected:T Result:FALSE<br>
 Test 113, DIGIT-CHAR? #0<br>
 Test 114, DIGIT-CHAR? #a<br>
 Test 115, ELT on string returns char<br>
@@ -162,8 +162,8 @@ Test 161, argument expansion can handle &OPTIONAL and &KEY with init forms with 
 Test 162, COUNT-IF<br>
 Test 163, SPLIT works on string<br>
 Test 164, SPLIT works on string with gaps<br>
-Test 165, TRIM-HEAD works<br>
-Test 166, TRIM-TAIL works<br>
-Test 167, TRIM works<br>
-Test 168, EMPTY-STRING? works<br>
-Tests done.((BLOCK BUTLAST (BLOCK NIL (? (CDR PLIST) (CONS (CAR PLIST) (BUTLAST (CDR PLIST)))))))
+Test 165, TRIM-HEAD works FAILED Expected:NIL Result:  <br>
+Test 166, TRIM-TAIL works FAILED Expected:NIL Result:  <br>
+Test 167, TRIM works FAILED Expected:NIL Result:  <br>
+Test 168, EMPTY-STRING? works FAILED Expected:T Result:NIL<br>
+Tests done.NIL
