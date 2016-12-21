@@ -6,6 +6,10 @@
 (defmacro / (&rest x)       `(%%%/ ,@x))
 (defmacro mod (&rest x)     `(%%%mod ,@x))
 (defmacro number+ (&rest x) `(%%%+ ,@x))
+(defmacro < (&rest x)       `(%%%< ,@x))
+(defmacro > (&rest x)       `(%%%> ,@x))
+(defmacro <= (&rest x)      `(%%%<= ,@x))
+(defmacro >= (&rest x)      `(%%%>= ,@x))
 
 (defmacro integer- (&rest x)
   (? .x
@@ -28,4 +32,4 @@
      (error "==: Unexpected STRING."))
   (& (some #'character? x)
      (error "==: Unexpected CHARACTER."))
-  `(== ,@x))
+  `(%%%== ,@x))
