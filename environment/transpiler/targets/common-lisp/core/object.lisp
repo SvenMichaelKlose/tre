@@ -1,6 +1,7 @@
 ; tré – Copyright (c) 2014–2016 Sven Michael Klose <pixel@hugbox.org>
 
 (defbuiltin not (&rest x) (cl:every #'cl:not x))
+(defbuiltin eq (a b)      (cl:eq a b))
 
 (defun variable-compare (predicate x)
   (? .x
@@ -25,5 +26,4 @@
        (& (cl:stringp a)
           (cl:stringp b))      (cl:string= a b))))
 
-(defbuiltin eq (&rest x)  (variable-compare #'cl:eq x))
 (defbuiltin eql (&rest x) (variable-compare #'tre-eql x))

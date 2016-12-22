@@ -7,10 +7,11 @@
 (defmacro mod (&rest x)     `(%%%mod ,@x))
 (defmacro number+ (&rest x) `(%%%+ ,@x))
 
-;(defmacro < (&rest x)       `(%%%< ,@x)) ; TODO: Native operators are binary! Split them up.
-;(defmacro > (&rest x)       `(%%%> ,@x))
-;(defmacro <= (&rest x)      `(%%%<= ,@x))
-;(defmacro >= (&rest x)      `(%%%>= ,@x))
+(defmacro == (a b) `(%%%== ,a ,b))
+(defmacro < (a b)  `(%%%< ,a ,b))
+(defmacro > (a b)  `(%%%> ,a ,b))
+(defmacro <= (a b) `(%%%<= ,a ,b))
+(defmacro >= (a b) `(%%%>= ,a ,b))
 
 (defmacro integer- (&rest x)
   (? .x
@@ -18,8 +19,8 @@
      `(%%native "(-" ,x. ")")))
 
 (defmacro def-integer-op (op)
-  `(defmacro ,($ 'integer op) (&rest x)
-     `(,($ '%%% op) ,,@x)))
+  `(defmacro ,($ 'integer op) (a b)
+     `(,($ '%%% op) ,,a ,,b)))
 
 (def-integer-op +)
 (def-integer-op ==)
@@ -27,10 +28,3 @@
 (def-integer-op >)
 (def-integer-op <=)
 (def-integer-op >=)
-
-(defmacro == (&rest x)
-  (& (some #'string? x)
-     (error "==: Unexpected STRING."))
-  (& (some #'character? x)
-     (error "==: Unexpected CHARACTER."))
-  `(%%%== ,@x))
