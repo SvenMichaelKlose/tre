@@ -6,10 +6,11 @@
 (defmacro / (&rest x)       `(%%%/ ,@x))
 (defmacro mod (&rest x)     `(%%%mod ,@x))
 (defmacro number+ (&rest x) `(%%%+ ,@x))
-(defmacro < (&rest x)       `(%%%< ,@x))
-(defmacro > (&rest x)       `(%%%> ,@x))
-(defmacro <= (&rest x)      `(%%%<= ,@x))
-(defmacro >= (&rest x)      `(%%%>= ,@x))
+
+;(defmacro < (&rest x)       `(%%%< ,@x)) ; TODO: Native operators are binary! Split them up.
+;(defmacro > (&rest x)       `(%%%> ,@x))
+;(defmacro <= (&rest x)      `(%%%<= ,@x))
+;(defmacro >= (&rest x)      `(%%%>= ,@x))
 
 (defmacro integer- (&rest x)
   (? .x
