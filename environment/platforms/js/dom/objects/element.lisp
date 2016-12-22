@@ -353,7 +353,7 @@
      (alet (subseq css-selector 1)
        (? (is? !)
           this
-          (ancestor-or-self (subseq css-selector 1))))
+          (ancestor-or-self !)))
      (query-selector css-selector)))
 
 (defmethod caroshi-element get-list (css-selector)
