@@ -1,4 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2009,2012–2014 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2009,2012–2014,2016 Sven Michael Klose <pixel@copei.de>
 
 (defvar *tests* nil)
 
@@ -10,16 +10,17 @@
       		    (test-equal .x .y)))
 
 (%defun do-test (test)
-  (print test.)
-  (? (test-equal (eval (macroexpand .test.))
-                 (eval (macroexpand ..test.)))
-	 (print 'OK)
+  (? *print-definitions?*
+     (print test.))
+  (? (not (test-equal (eval (macroexpand .test.))
+                      (eval (macroexpand ..test.))))
      (progn
-	   (print 'FAILED-RESULT)
-	   (print (eval (macroexpand .test.)))
-	   (print 'WANTED-RESULT)
-	   (print (eval (macroexpand ..test.)))
-	   (invoke-debugger))))
+       (print test.)
+       (print 'FAILED-RESULT)
+       (print (eval (macroexpand .test.)))
+       (print 'WANTED-RESULT)
+       (print (eval (macroexpand ..test.)))
+       (invoke-debugger))))
 
 (%defun do-tests (&optional (tests *tests*))
   (? (not tests)
