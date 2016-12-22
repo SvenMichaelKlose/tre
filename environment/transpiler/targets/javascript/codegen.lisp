@@ -90,7 +90,8 @@
      `(,*js-indent*
        ,@(? dest
             `((%%native ,dest " = ")))
-       ,(? (atom|codegen-expr? val)
+       ,(? (| (atom val)
+              (codegen-expr? val))
            val
            `(,val. " " ,@(c-list .val)))
       ,*js-separator*)))

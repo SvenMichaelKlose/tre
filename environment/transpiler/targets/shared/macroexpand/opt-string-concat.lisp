@@ -15,4 +15,5 @@
                             `(string-concat ,@!)
                             !.))
     (some #'number? x) `(number+ ,@x)
+    (some #'quote? x)  `(append ,@x)
     `(,op ,@x)))

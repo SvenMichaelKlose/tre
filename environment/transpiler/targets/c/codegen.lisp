@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@copei.de>
 
 (defun c-line (&rest x)
   `(,*c-indent* ,@x ,*c-separator*))
@@ -86,7 +86,8 @@
 	    '("(void) "))))
 
 (defun codegen-%=-value (x)
-   (? (atom|codegen-expr? x)
+   (? (| (atom x)
+         (codegen-expr? x))
       x
       `(,x. ,@(c-list .x))))
 
