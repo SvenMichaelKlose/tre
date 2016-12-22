@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@copei.de>
 
 (defvar *js-core-path* "environment/transpiler/targets/javascript/core/")
 
@@ -70,8 +70,8 @@
 (defun js-core-stream ()
   (+ ,(js-load-core "" "error.lisp")
      ,(js-load-core "" "../../../../stage3/stream.lisp")
-     (& (eq :browser (configuration :platform)
-        ,(js-load-core "" "%force-output.lisp")))
+     (& (eq :browser (configuration :platform))
+        ,(js-load-core "" "%force-output.lisp"))
      ,(js-load-core "" "standard-stream.lisp")
      ,(js-load-core "" "../../../environment/print.lisp")))
 
