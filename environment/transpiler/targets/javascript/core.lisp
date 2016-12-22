@@ -4,7 +4,7 @@
 
 (defun js-load-core (dir-path &rest files)
   (apply #'+ (@ [alet (+ *js-core-path* dir-path _)
-			      (format t  "(js-load-core \"~A\")~%" !)
+			      (print-definition `(js-load-core ,!))
                   (read-file !)
   			      (fetch-file !)]
 		        files)))

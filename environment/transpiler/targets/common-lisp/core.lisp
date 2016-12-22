@@ -4,7 +4,7 @@
 
 (defun cl-load-base (dir-path &rest files)
   (apply #'+ (@ [alet (+ dir-path _)
-			      (format t  "(cl-load-base \"~A\")~%" !)
+			      (print-definition '(cl-load-base ,!))
                   (read-file !)
   			      (fetch-file !)]
 		        files)))

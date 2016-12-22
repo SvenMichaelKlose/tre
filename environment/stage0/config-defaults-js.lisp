@@ -1,8 +1,8 @@
 ; tré – Copyright (c) 2005–2016 Sven Michael Klose <pixel@copei.de>
 
-(%defvar *development?*       t)
+(%defvar *development?*       nil)
 (%defvar *assert?*            nil)
-(%defvar *print-definitions?* t)
+(%defvar *print-definitions?* nil)
 
 ;; Optional environment sections.
 
@@ -25,4 +25,4 @@
 (%defvar *print-status?*           t)
 (%defvar *have-environment-tests*  nil)
 (%defvar *have-compiler?*          nil)
-(%defvar *have-c-compiler?*        t)
+(%defvar *have-c-compiler?*        nil)

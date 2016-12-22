@@ -13,12 +13,12 @@
      (not (builtin? (symbol-function x))
           (alien-package? x)
           (defined-or-wanted? x))))
-	
+
 (defun add-wanted-function (x)
   (when (can-import-function? x)
     (= (href (wanted-functions-hash) x) t)
     (push x (wanted-functions))
-    (print-note "Scheduled #'~A for import.~%" x))
+    (developer-note "Scheduled #'~A for import.~%" x))
   x)
 
 (defun add-wanted-functions (x)
@@ -39,7 +39,7 @@
   (when (can-import-variable? x)
     (= (href (wanted-variables-hash) x) t)
     (push x (wanted-variables))
-    (print-note "Scheduled ~A for import.~%" x))
+    (developer-note "Scheduled ~A for import.~%" x))
   x)
 
 (defun import-exported-closures ()
@@ -50,7 +50,7 @@
 (defun import-wanted-functions ()
   (awhen (wanted-functions)
     (= (wanted-functions) nil)
-    (print-note "Importing functions ~A…~%" !)
+    (developer-note "Importing functions ~A…~%" !)
     (frontend (mapcan [unless (defined-function _)
                         `((defun ,_ ,(host-function-arguments _)
                            ,@(host-function-body _)))]
@@ -59,7 +59,7 @@
 (defun import-wanted-variables ()
   (awhen (wanted-variables)
     (= (wanted-variables) nil)
-    (print-note "Importing variables ~A…~%" !)
+    (developer-note "Importing variables ~A…~%" !)
     (frontend (mapcan [unless (defined-variable _)
                        `((defvar ,_ ,(assoc-value _ *variables* :test #'eq)))]
                       !))))
