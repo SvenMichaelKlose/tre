@@ -270,7 +270,7 @@ jstests)
     echo "JavaScript target tests..."
     mkdir -p compiled
     $TRE tests/js.lisp
-    nodejs compiled/test.js >_nodejstests.log
+    node compiled/test.js >_nodejstests.log
     chromium-browser compiled/test.html &
     cmp tests/js.correct-output _nodejstests.log || (diff tests/js.correct-output _nodejstests.log; exit 1)
     echo "JavaScript target tests passed in node.js."
@@ -282,7 +282,7 @@ updatetests)
     echo "Updating PHP target test data..."
     php compiled/test.php >tests/php.correct-output
     echo "Updating JavaScript target test data (node.js only)..."
-    nodejs compiled/test.js >tests/js.correct-output || node compiled/test.js >tests/js.correct-output
+    node compiled/test.js >tests/js.correct-output || node compiled/test.js >tests/js.correct-output
     ;;
 
 tests)
