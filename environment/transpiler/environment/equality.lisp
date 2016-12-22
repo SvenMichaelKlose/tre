@@ -2,7 +2,7 @@
 
 (declare-cps-exception %eql eql)
 
-(defun %eql (x y)
+(defun eql (x y)
   (| x (setq x nil))
   (| y (setq y nil))
   (| (eq x y)
@@ -15,8 +15,3 @@
           (number? y))      (== x y)
        (& (string? x)
           (string? y))      (string== x y))))
-
-(defun eql (&rest x)
-  (adolist (.x t)
-    (| (%eql x. !)
-       (return))))
