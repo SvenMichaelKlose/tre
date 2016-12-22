@@ -1,12 +1,5 @@
 ; tré – Copyright (c) 2014–2016 Sven Michael Klose <pixel@hugbox.org>
 
-(defbuiltin number? (x)
-  (| (cl:numberp x)
-     (cl:characterp x)))
-
-(defbuiltin integer (x)
-  (cl:floor x))
-
 (defun chars-to-numbers (x)
   (cl:mapcar (lambda (x)
                (? (cl:characterp x)

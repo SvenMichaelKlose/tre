@@ -41,7 +41,8 @@
          capitals
            [remove #\- (string-list (upcase (subseq _ 1 (-- (length _))))) :test #'character==])
 	(? (| (string? s)
-          (number? s))
+          (number? s)
+          (character? s))
 	   (string s)
        (list-string (alet (symbol-name s)
 	                  (corrected-chars (? (global-variable-notation? !)
@@ -63,12 +64,13 @@
 
 (defun convert-identifiers (x)
   (maptree [?
-             (string? _)    _
-             (number? _)    (princ _ nil)
-             (symbol? _)    (| (assoc-value _ (symbol-translations) :test #'eq)
-                               (convert-identifier _))
-             (%%string? _)  (funcall (gen-string) ._.)
-             (%%native? _)  (convert-identifiers ._)
-             (cons? _)      _
+             (string? _)         _
+             (| (number? _)
+                (character? _))  (princ _ nil)
+             (symbol? _)         (| (assoc-value _ (symbol-translations) :test #'eq)
+                                    (convert-identifier _))
+             (%%string? _)       (funcall (gen-string) ._.)
+             (%%native? _)       (convert-identifiers ._)
+             (cons? _)           _
              (error "Cannot translate ~A to string." _)]
            x))

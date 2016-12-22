@@ -25,6 +25,7 @@
   (| (not x)
      (eq t x)
      (number? x)
+     (character? x)
      (string? x)
      (array? x)
      (hash-table? x)))

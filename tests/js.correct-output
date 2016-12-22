@@ -38,76 +38,76 @@ Test 37, SYMBOL? fails on characters<br>
 Test 38, SYMBOL? fails on strings<br>
 Test 39, SYMBOL? fails on arrays<br>
 Test 40, NUMBER? recognizes numbers<br>
-Test 41, NUMBER? recognizes characters FAILED Expected:T Result:FALSE<br>
-Test 42, NUMBER? fails on arrays<br>
-Test 43, NUMBER? fails on symbols<br>
-Test 44, CHARACTER? recognizes characters<br>
-Test 45, CHARACTER? fails on symbols<br>
-Test 46, CHARACTER? fails on cells<br>
-Test 47, CHARACTER? fails on numbers<br>
-Test 48, CHARACTER? fails on arrays<br>
-Test 49, CHARACTER? fails on strings<br>
-Test 50, EQL wants same type of numbers<br>
-Test 51, FUNCTION? recognizes functions<br>
-Test 52, FUNCTION? recognizes built-in functions<br>
-Test 53, STRING? recognizes strings<br>
-Test 54, STRING? fails on numbers<br>
-Test 55, STRING? fails on symbols<br>
-Test 56, CODE-CHAR converts number to char<br>
-Test 57, CHAR-CODE converts char to number<br>
-Test 58, SETQ returns the last value set<br>
-Test 59, IDENTITY<br>
-Test 60, LAST works<br>
-Test 61, LAST returns NIL for empty list<br>
-Test 62, == works with floats<br>
-Test 63, 0 is a boolean T<br>
-Test 64, ELT returns CHARACTER of STRING<br>
-Test 65, NTHCDR works at the start<br>
-Test 66, NTHCDR works in the middle<br>
-Test 67, NTHCDR works at the end<br>
-Test 68, NTHCDR works beyond the end<br>
-Test 69, NOT 0 is NIL<br>
-Test 70, LENGHT with conses<br>
-Test 71, LENGHT with strings<br>
-Test 72, INTEGER- literal<br>
-Test 73, INTEGER+ literal<br>
-Test 74, INTEGER== to be T<br>
-Test 75, INTEGER== to be NIL<br>
-Test 76, INTEGER> to be T<br>
-Test 77, INTEGER> to be NIL<br>
-Test 78, INTEGER< to be T<br>
-Test 79, INTEGER< to be NIL<br>
-Test 80, EQUAL with CONS<br>
-Test 81, EQUAL fails on different lists<br>
-Test 82, NTHCDR basically works<br>
-Test 83, ENQUEUE and QUEUE-LIST work<br>
-Test 84, MEMBER finds elements<br>
-Test 85, MEMBER finds elements with user predicate<br>
-Test 86, MEMBER falsely detects foureign elements<br>
+Test 41, NUMBER? fails on arrays<br>
+Test 42, NUMBER? fails on symbols<br>
+Test 43, CHARACTER? recognizes characters<br>
+Test 44, CHARACTER? fails on symbols<br>
+Test 45, CHARACTER? fails on cells<br>
+Test 46, CHARACTER? fails on numbers<br>
+Test 47, CHARACTER? fails on arrays<br>
+Test 48, CHARACTER? fails on strings<br>
+Test 49, EQL wants same type of numbers<br>
+Test 50, FUNCTION? recognizes functions<br>
+Test 51, FUNCTION? recognizes built-in functions<br>
+Test 52, STRING? recognizes strings<br>
+Test 53, STRING? fails on numbers<br>
+Test 54, STRING? fails on symbols<br>
+Test 55, CODE-CHAR converts number to char<br>
+Test 56, CHAR-CODE converts char to number<br>
+Test 57, SETQ returns the last value set<br>
+Test 58, IDENTITY<br>
+Test 59, LAST works<br>
+Test 60, LAST returns NIL for empty list<br>
+Test 61, == works with floats<br>
+Test 62, 0 is a boolean T<br>
+Test 63, ELT returns CHARACTER of STRING<br>
+Test 64, NTHCDR works at the start<br>
+Test 65, NTHCDR works in the middle<br>
+Test 66, NTHCDR works at the end<br>
+Test 67, NTHCDR works beyond the end<br>
+Test 68, NOT 0 is NIL<br>
+Test 69, LENGHT with conses<br>
+Test 70, LENGHT with strings<br>
+Test 71, INTEGER- literal<br>
+Test 72, INTEGER+ literal<br>
+Test 73, INTEGER== to be T<br>
+Test 74, INTEGER== to be NIL<br>
+Test 75, INTEGER> to be T<br>
+Test 76, INTEGER> to be NIL<br>
+Test 77, INTEGER< to be T<br>
+Test 78, INTEGER< to be NIL<br>
+Test 79, EQUAL with CONS<br>
+Test 80, EQUAL fails on different lists<br>
+Test 81, NTHCDR basically works<br>
+Test 82, ENQUEUE and QUEUE-LIST work<br>
+Test 83, MEMBER finds elements<br>
+Test 84, MEMBER finds elements with user predicate<br>
+Test 85, MEMBER falsely detects foureign elements<br>
+Test 86, can handle nested functions with double argument names<br>
 Test 87, can handle nested functions with double argument names<br>
-Test 88, can handle nested functions with double argument names<br>
-Test 89, can handle closures<br>
-Test 90, LAMBDA? works<br>
-Test 91, LAMBDA? works with LAMBDA<br>
-Test 92, LAMBDA-CALL? works<br>
-Test 93, $<br>
-Test 94, REVERSE works<br>
-Test 95, APPEND works with two lists<br>
-Test 96, APPEND works with empty lists<br>
-Test 97, APPEND works with three lists<br>
-Test 98, APPEND copies last<br>
-Test 99, NCONC works<br>
-Test 100, NCONC works with empty lists<br>
-Test 101, NCONC with NIL first<br>
-Test 102, NCONC with NIL second<br>
-Test 103, ADJOIN doesn't add known member<br>
-Test 104, ADJOIN adds new member<br>
-Test 105, BUTLAST basically works<br>
-Test 106, BUTLAST returns NIL for single cons<br>
-Test 107, COPY-WHILE<br>
-Test 108, LIST-SUBSEQ work at the beginning<br>
-Test 109, LIST-SUBSEQ works in the middle<br>
-Test 110, LIST-SUBSEQ works at the end<br>
+Test 88, can handle closures<br>
+Test 89, LAMBDA? works<br>
+Test 90, LAMBDA? works with LAMBDA<br>
+Test 91, LAMBDA-CALL? works<br>
+Test 92, $<br>
+Test 93, REVERSE works<br>
+Test 94, APPEND works with two lists<br>
+Test 95, APPEND works with empty lists<br>
+Test 96, APPEND works with three lists<br>
+Test 97, APPEND copies last<br>
+Test 98, NCONC works<br>
+Test 99, NCONC works with empty lists<br>
+Test 100, NCONC with NIL first<br>
+Test 101, NCONC with NIL second<br>
+Test 102, ADJOIN doesn't add known member<br>
+Test 103, ADJOIN adds new member<br>
+Test 104, BUTLAST basically works<br>
+Test 105, BUTLAST returns NIL for single cons<br>
+Test 106, COPY-WHILE<br>
+Test 107, LIST-SUBSEQ work at the beginning<br>
+Test 108, LIST-SUBSEQ works in the middle<br>
+Test 109, LIST-SUBSEQ works at the end<br>
+Test 110, SUBSEQ returns head FAILED Expected:isp Result:NIL<br>
 Test 111, SUBSEQ returns NIL when totally out of range<br>
 Test 112, SUBSEQ returns empty string when start and end are the same FAILED Expected:T Result:FALSE<br>
 Test 113, DIGIT-CHAR? #0<br>

@@ -11,9 +11,7 @@
           (integer? y))     (integer== x y)
        (& (character? x)
           (character? y))   (character== x y)
-       (& (not (character? x))
-          (not (character? y))
-          (number? x)
+       (& (number? x)
           (number? y))      (== x y)
        (& (string? x)
           (string? y))      (string== x y))))
@@ -22,9 +20,3 @@
   (adolist (.x t)
     (| (%eql x. !)
        (return))))
-
-(defmacro eql (&rest x)
-  (?
-    (some #'string? x)     `(string== ,@x)
-    (some #'character? x)  `(character== ,@x)
-    `(eql ,@x)))
