@@ -2,7 +2,7 @@
 
 (%defvar *development?*       nil)
 (%defvar *assert?*            nil)
-(%defvar *print-definitions?* nil)
+(%defvar *print-definitions?* t)
 
 ;; Optional environment sections.
 
