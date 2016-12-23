@@ -93,3 +93,8 @@
     (character? x)  (char-code x)
     (string? x)     (string-integer x)
     (number-integer x)))
+
+(defun << (a b)      (%%%<< a b))
+(defun >> (a b)      (%%%>> a b))
+(defun bit-or (a b)  (%%%bit-or a b))
+(defun bit-and (a b) (%%%bit-and a b))

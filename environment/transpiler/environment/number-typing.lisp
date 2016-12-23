@@ -13,6 +13,11 @@
 (defmacro <= (a b) `(%%%<= ,a ,b))
 (defmacro >= (a b) `(%%%>= ,a ,b))
 
+(defmacro << (a b)      `(%%%<< ,a ,b))
+(defmacro >> (a b)      `(%%%>> ,a ,b))
+(defmacro bit-or (a b)  `(%%%bit-or ,a ,b))
+(defmacro bit-and (a b) `(%%%bit-and ,a ,b))
+
 (defmacro integer- (&rest x)
   (? .x
      `(%%%- ,@x)
