@@ -1,11 +1,11 @@
 ; tré – Copyright (c) 2006–2015 Sven Michael Klose <pixel@hugbox.org>
 
-(defvar *tagbody-replacements*)
+(defvar *tagbody-replacements* nil)
 
 (defun init-compiler-macros ()
   (= *tagbody-replacements* nil))
 
-(defvar *compiler-macro-expander* (define-expander 'compiler :pre  #'init-compiler-macros))
+(defvar *compiler-macro-expander* (define-expander 'compiler :pre #'init-compiler-macros))
 
 (defmacro define-compiler-macro (name args &body x)
   (print-definition `(define-compiler-macro ,name ,args))
@@ -39,7 +39,7 @@
   `(%%block ,@(@ [`(%= ,_. ,._.)]
                  (group args 2))))
 
-(defun make-? (body)
+(define-compiler-macro ? (&body body)
   (with (tests (group body 2)
          end   (car (last tests)))
     (unless body
@@ -48,9 +48,6 @@
        ,@(? .end
             tests
             (+ (butlast tests) (list (. t end)))))))
-
-(define-compiler-macro ? (&body body)
-  (make-? body))
 
 
 ;; TAGBODY
