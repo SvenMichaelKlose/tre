@@ -52,24 +52,6 @@
 (define-compiler-macro ? (&body body)
   (make-? body))
 
-; XXX the expression expansion should be redone from scratch and then it should be able to deal with this.
-(defun compress-%%blocks (body)
-  (mapcan [? (%%block? _)
-             ._
-             (list _)]
-          body))
-
-(define-compiler-macro %%block (&body body)
-  (?
-    .body            `(%%block ,@(compress-%%blocks body))
-    (vm-jump? body.) `(%%block ,body.)
-    `(%%block ,@body)))
-;    body.            body.)) ; XXX Shouldn't this work?
-
-(define-compiler-macro function (&rest x)
-  `(function ,x. ,@(!? .x
-                       (compress-%%blocks !))))
-
 
 ;; TAGBODY
 
