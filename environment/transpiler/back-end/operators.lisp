@@ -5,13 +5,10 @@
   `(define-expander-macro (transpiler-codegen-expander ,tr) ,name (x y)
      `(%%native ,,x " " ,(downcase (string name)) " " ,,y)))
 
-(defun transpiler-binary-expand (op x)
-  (? .x
-     (pad x op)
-     (list op x.)))
-
 (defmacro define-transpiler-binary (tr op repl-op)
   (print-definition `(define-transpiler-binary ,tr ,op))
   (transpiler-add-plain-arg-fun (symbol-value tr) op)
-  `(define-expander-macro (transpiler-codegen-expander ,tr) ,op (&rest args)
-     `("(" ,,@(transpiler-binary-expand ,repl-op args) ")")))
+  `(define-expander-macro (transpiler-codegen-expander ,tr) ,op (&rest x)
+     (? .x
+        (pad x ,repl-op)
+        (list ,repl-op x.))))
