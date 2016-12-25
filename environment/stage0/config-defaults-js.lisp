@@ -7,7 +7,6 @@
 ;; Optional environment sections.
 
 (%defvar *tre-has-math*  t)   ; Mathematical functions.
-(%defvar *tre-has-alien* nil) ; C function interface. (C core only)
 (%defvar *tre-has-class* t)   ; Have CLASS.
 
 ;; Transpiler
@@ -16,10 +15,7 @@
 ;;; :cl     Common Lisp (sbcl)
 ;;; :js     JavaScript/ECMAScript (browser + node.js)
 ;;; :php    PHP
-;;; :bc     bytecode (defunct)
-;;; :c      C (defunct)
 (%defvar *targets*                 '(:js :php))
-(%defvar *defunct-targets*         '(:c :bc))
 
 (%defvar *print-notes?*            t)
 (%defvar *print-status?*           t)

@@ -5,10 +5,6 @@
 
 (env-load "transpiler/targets/shared/main.lisp")
 
-(? (has-target? :bc)
-   (env-load "transpiler/targets/bytecode/main.lisp"))
-(? (has-target? :c)
-   (env-load "transpiler/targets/c/main.lisp"))
 (? (has-target? :cl)
    (env-load "transpiler/targets/common-lisp/main.lisp"))
 (? (has-target? :js)

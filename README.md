@@ -2,12 +2,11 @@
 # Overview
 
 This is tré, a metamorphic Lisp transpiler.  It can generate
-Common Lisp (SBCL) and JavaScript (for browsers and node.js).
+Common Lisp (SBCL), JavaScript (for browsers and node.js) and
+PHP code.
 
 tré has been used in real life business for a couple of years and is
-now cleaned up for the public.  That's why generating PHP, C and bytecode
-is broken at them moment.  tré is also still unable to compile itself
-across targets.
+now cleaned up for the public.
 
 
 # Building and installing
@@ -25,8 +24,3 @@ Then, simply run:
 The installed binary is named "tre".  It takes an optional pathname
 of a source file to compile and execute.  If none is specified, it'll
 prompt you for expressions to execute.
-
-
-# Working applications:
-
-https://github.com/SvenMichaelKlose/bender/
