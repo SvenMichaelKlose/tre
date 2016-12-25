@@ -71,7 +71,7 @@
   txt)
 
 ,(? *transpiler-log*
-   `(defun log (txt)    ; TODO: Rename. Conflicts with math function.
+   `(defun log-message (txt)
       (logwindow-add-string (+ txt (string (code-char 10))))
       txt)
-   `(defmacro log (txt)))
+   `(defmacro log-message (txt)))

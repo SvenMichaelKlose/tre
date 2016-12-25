@@ -9,7 +9,7 @@
 (defun cos (x)     (*math.cos x))
 (defun exp (x)     (*math.exp x))
 (defun floor (x)   (*math.floor x))
-;(defun log (x)     (*math.log x))   ; TODO rename LOG in Caroshi.
+(defun log (x)     (*math.log x))
 ;(defun max (a b)   (*math.max a b))
 ;(defun min (a b)   (*math.min a b))
 (defun pow (x y)   (*math.pow x y))
