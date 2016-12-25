@@ -12,8 +12,6 @@
 		 (debug-print-write " . ")
 		 (debug-print-atom .x)))))
 
-(dont-obfuscate write)
-
 (defun debug-print-cons (x)
   (debug-print-write "(")
   (debug-print-cons-r x)

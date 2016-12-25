@@ -248,8 +248,6 @@
 
 ;;;; EVENT HANDLERS
 
-(dont-obfuscate get-selection range-count get-range-at collapsed)
-
 (defmethod event-manager _handle-selection (evt)
   (let has-selection?  (let s (window.get-selection)
 	      				 (& (< 0 s.range-count)

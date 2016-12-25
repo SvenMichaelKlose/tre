@@ -28,8 +28,8 @@
 
 (defclass (caroshi-element visible-node) ())
 
-,(let x
-  '(append-child
+(defmember caroshi-element
+    append-child
 	attributes
 	child-nodes
 	children
@@ -50,8 +50,6 @@
     query-selector
     query-selector-all
     _caroshi-rotation)
-  `{(defmember caroshi-element ,@x)
-	(dont-obfuscate ,@x)})
 
 (defmethod caroshi-element child-array ()
   this.child-nodes)

@@ -1,7 +1,5 @@
 ; tré – Copyright (c) 2009–2015 Sven Michael Klose <pixel@copei.de>
 
-(dont-obfuscate process stdin stdout read write set-encoding)
-
 (when (defined? process)
   (process.stdin.set-encoding "utf-8"))
 

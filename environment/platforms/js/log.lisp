@@ -24,14 +24,6 @@
  
 (defvar *log-event-module* nil)
 
-(dont-obfuscate
-	window
-	document
-	title
-    open
-	writeln
-	scroll-to)
-
 (defun open-log-window ()
   (unless *logwindow*
     (= *logwindow* (window.open "" "log" "width=1200, height=300, scrollbars=yes"))

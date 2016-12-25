@@ -1,7 +1,5 @@
 ; tré – Copyright (c) 2008–2010,2013–2016 Sven Michael Klose <pixel@copei.de>
 
-(dont-obfuscate apply call)
-
 (defun apply (fun &rest lst)
   (let l (last lst)
     (assert (function? fun) "First argument ~A is not a function." fun)

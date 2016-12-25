@@ -1,7 +1,5 @@
 ;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
 
-(dont-obfuscate sizeof strlen explode)
-
 (defun length (x)
   (?
     (not x) 0

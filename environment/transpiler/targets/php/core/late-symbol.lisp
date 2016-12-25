@@ -31,8 +31,6 @@
     (eq t x)  nil
     x.p))
 
-(dont-obfuscate is_a)
-
 (defun symbol? (x)
   (| (not x)
      (eq t x)

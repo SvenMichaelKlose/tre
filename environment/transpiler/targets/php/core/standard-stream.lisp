@@ -1,7 +1,5 @@
 ;;;;; tré – Copyright (c) 2009–2013 Sven Michael Klose <pixel@copei.de>
 
-(dont-obfuscate echo)
-
 (defun make-standard-stream ()
   (make-stream
       :fun-in       #'((str))

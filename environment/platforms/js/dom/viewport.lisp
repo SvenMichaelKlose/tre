@@ -1,19 +1,5 @@
 ; tré – Copyright (c) 2009–2010,2012,2016 Sven Michael Klose <pixel@copei.de>
 
-(dont-obfuscate
-  	document
-	document-element
-	window
-	body
-  	scroll-top
-	scroll-left
-	page-x-offset
-	page-y-offset
-	inner-width
-	inner-height
-	client-width
-	client-height)
-
 ; TODO: Make HTML5 style.
 (defun get-viewport (&optional (win window))
   (with (x  0
@@ -49,8 +35,6 @@
 	    win.page-x-offset
         (= win.page-x-offset x
 		   win.page-y-offset y))))
-
-(dont-obfuscate scroll-into-view)
 
 (defun adjust-viewport (elm)
   (with ((x y w h) (get-viewport)

@@ -1,7 +1,5 @@
 ; tré – Copyright (c) 2008–2014,2016 Sven Michael Klose <pixel@copei.de>
 
-(dont-obfuscate is_string ord strlen substr strval strtoupper strtolower)
-
 (defun string? (x)    (is_string x))
 (defun string== (x y) (%%%== x y))
 (defun upcase (x)     (strtoupper x))

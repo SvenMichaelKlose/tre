@@ -10,22 +10,6 @@
   (!? new-button (= button !))
   this)
 
-(dont-obfuscate
-	type
-	button
-	char-code
-	key-code
-    which
-	target
-	data-transfer
-	files
-	get-as-binary
-	get-as-data-u-r-l
-	get-as-text
-    offset-parent
-    offset-top
-    offset-left)
-
 (defmember caroshi-event
 	_native-event
 	type
@@ -39,16 +23,6 @@
 	_stop
 	_send-natively?)
 
-(dont-obfuscate
-	scroll-left
-	scroll-top
-	client-left
-	client-top
-	client-x
-	client-y
-	page-x
-	page-y)
-	
 (defmethod caroshi-event _copy-native-event-data (evt)
   (= _native-event evt
      type          evt.type

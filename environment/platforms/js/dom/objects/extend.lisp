@@ -14,8 +14,6 @@
   (!? root
       ((dom-extend !).walk #'dom-extend)))
 
-(dont-obfuscate document document-element)
-
 (defun document-extend (&optional (doc document))
   (dom-extend doc)
   (dom-tree-extend doc.document-element)

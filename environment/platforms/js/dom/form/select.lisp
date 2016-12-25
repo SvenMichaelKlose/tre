@@ -35,8 +35,6 @@
   (form-select-select-option (form-select-get-option-by-value x n))
   x)
 
-(dont-obfuscate selected)
-
 (defun form-select-get-selected-option (x)
   (do-children (i x)
 	(& i.selected

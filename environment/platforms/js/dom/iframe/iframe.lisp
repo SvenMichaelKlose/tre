@@ -1,6 +1,4 @@
-;;;;; tré – Copyright (c) 2010–2012,2014 Sven Michael Klose <pixel@copei.de>
-
-(dont-obfuscate content-document content-window open close)
+; tré – Copyright (c) 2010–2012,2014 Sven Michael Klose <pixel@copei.de>
 
 (defun iframe-document (x)
   (| x.content-document

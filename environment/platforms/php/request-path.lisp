@@ -17,8 +17,6 @@
 (defun request-uri () 
   (aref *_SERVER* "REQUEST_URI"))
 
-(dont-obfuscate parse_url)
-
 (defun parse-url ()
   (parse_url (request-uri)))
 

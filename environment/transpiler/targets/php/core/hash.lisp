@@ -1,7 +1,5 @@
 ; tré – Copyright (c) 2009,2011–2016 Sven Michael Klose <pixel@copei.de>
 
-(dont-obfuscate is_a strpos substr)
-
 (defun hash-table? (x)
   (is_a x "__array"))
 

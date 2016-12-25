@@ -11,7 +11,7 @@
 (define-shared-std-macro (js php) defvar-native (&rest x)
   (print-definition `(defvar-native ,@x))
   (+! (predefined-symbols) x)
-  `(dont-obfuscate ,@x))
+  nil)
 
 (define-shared-std-macro (js php) assert (x &optional (txt nil) &rest args)
   (& (assert?)
