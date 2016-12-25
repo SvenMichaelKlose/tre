@@ -1,18 +1,9 @@
 ; tré – Copyright (c) 2014–2016 Sven Michael Klose <pixel@hugbox.org>
 
-(defun chars-to-numbers (x)
-  (cl:mapcar (lambda (x)
-               (? (cl:characterp x)
-                  (cl:char-code x)
-                  x))
-             x))
-
 (defbuiltin code-char (x)
   (? (cl:characterp x)
      x
      (cl:code-char x)))
-
-(defbuiltin == (&rest x) (apply #'cl:= (chars-to-numbers x)))
 
 (defun bits-integer (bits)
   (cl:reduce #'((a b)
@@ -43,12 +34,10 @@
   (bits-integer (cl:bit-xor (integer-bits a) (integer-bits b))))
 
 (defbuiltin >> (x bits)
-  (alet (number x)
-    (dotimes (n bits !)
-      (cl:multiple-value-bind (i r) (cl:truncate ! 2)
-        (= ! i)))))
+  (dotimes (n bits !)
+    (cl:multiple-value-bind (i r) (cl:truncate ! 2)
+      (= ! i))))
 
 (defbuiltin << (x bits)
-  (alet (number x)
-    (dotimes (n bits !)
-      (= ! (* ! 2)))))
+  (dotimes (n bits !)
+    (= ! (* ! 2))))
