@@ -1,12 +1,5 @@
 ; tré – Copyright (c) 2008–2014,2016 Sven Michael Klose <pixel@hugbox.org>
 
-(declare-cps-exception + - * / mod
-                       == < > <= >=
-                       number?
-                       number number+ number- number== number< number> number<=
-                       integer integer+ integer- integer== integer< integer> integer<= integer>=
-                       character== character< character> character<= character>=)
-
 (defun number== (x &rest y)
   (every [%%%== x _] y))
 
@@ -47,7 +40,6 @@
 
 (define-generic-transpiler-minus)
 
-; TODO: CHARACTER shouldn't be a NUMBER.
 (defmacro def-generic-transpiler-comparison (name)
   (let op ($ '%%% name)
     `{(defun ,name (n &rest x)

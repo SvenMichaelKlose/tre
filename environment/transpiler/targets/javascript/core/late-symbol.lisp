@@ -1,6 +1,4 @@
-; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
-
-(declare-cps-exception make-symbol make-package symbol-name symbol-value symbol-function symbol-package symbol? package-name)
+; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@copei.de>
 
 (defun make-symbol (x &optional (pkg nil))
   (symbol x pkg))

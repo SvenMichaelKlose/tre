@@ -1,6 +1,4 @@
-; tré – Copyright (c) 2009–2015 Sven Michael Klose <pixel@hugbox.org>
-
-(declare-cps-exception %%objkey %%numkey %make-href-object-key %href-key =-href-obj %href-==? hash-table? =-href)
+; tré – Copyright (c) 2009–2016 Sven Michael Klose <pixel@hugbox.org>
 
 (defvar *obj-id-counter* 0)
 

@@ -1,7 +1,5 @@
 ; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@copei.de>
 
-(declare-cps-exception string %string? string? string== string-concat upcase downcase string-subseq)
-
 (js-type-predicate %string? "string")
 
 (defun string? (x)
@@ -26,7 +24,7 @@
   `(%%%== ,x ,@y))
 
 (defun upcase (x)
-  (& x (x.to-upper-case)))
+  (& x (x.to-upper-case)))  ; TODO: No need to check if not NIL.
 
 (defun downcase (x)
   (& x (x.to-lower-case)))

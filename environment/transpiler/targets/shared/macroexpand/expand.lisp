@@ -13,24 +13,6 @@
   (+! (predefined-symbols) x)
   `(dont-obfuscate ,@x))
 
-(define-shared-std-macro (js php) declare-native-cps-function (&rest symbols)
-  (print-definition `(declare-native-cps-function ,@symbols))
-  (adolist symbols
-    (add-native-cps-function !))
-  nil)
-
-(define-shared-std-macro (js php) declare-cps-exception (&rest symbols)
-  (print-definition `(declare-cps-exception ,@symbols))
-  (adolist symbols
-    (add-cps-exception !))
-  nil)
-
-(define-shared-std-macro (js php) declare-cps-wrapper (&rest symbols)
-  (print-definition `(declare-cps-wrapper ,@symbols))
-  (adolist symbols
-    (add-cps-wrapper !))
-  nil)
-
 (define-shared-std-macro (js php) assert (x &optional (txt nil) &rest args)
   (& (assert?)
      (make-assertion x txt args)))

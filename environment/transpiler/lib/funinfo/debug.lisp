@@ -1,4 +1,4 @@
-; tré – Copyright (C) 2006–2007,2009,2012–2013,2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (C) 2006–2007,2009,2012–2013,2015–2016 Sven Michael Klose <pixel@copei.de>
 
 ; XXX Rename file to 'debug-printers.lisp'.
 
@@ -15,7 +15,6 @@
                          (format s "  ~A~A~%" _. !)
                          !]
                      `(("Scope:           " ,(human-readable-funinfo-names fi))
-                       ("CPS transformed: " ,(funinfo-cps? fi))
                        ("Argument def:    " ,(| (funinfo-argdef fi)
                                                 "no arguments"))
                        ("Expanded args:   " ,(funinfo-args fi))

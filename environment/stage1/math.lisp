@@ -1,7 +1,6 @@
-;;;;; tré – Copyright (c) 2005,2009,2011,2013–2014 Sven Michael Klose <pixel@hugbox.org>
+; tré – Copyright (c) 2005,2009,2011,2013–2014,2016 Sven Michael Klose <pixel@hugbox.org>
 
 (functional ++ -- integer++ integer--)
-(declare-cps-exception ++ -- integer++ integer--)
 
 (%defun ++ (x) (number+ x 1))
 (%defun -- (x) (number- x 1))

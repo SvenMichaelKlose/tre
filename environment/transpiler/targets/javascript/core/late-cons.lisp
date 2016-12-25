@@ -1,7 +1,5 @@
 ; tré – Copyright (c) 2008–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
 
-(declare-cps-exception car cdr cpr rplaca rplacd rplacp cons?)
-
 (defun car (x)
   (? x
      x._
@@ -26,7 +24,7 @@
     body))
 
 (defun rplaca (x val)
-  (declare type cons x)
+  (declare type cons x)     ; TODO: Declaring the type isn't of much help anymore with modern debuggers.
   (when-rplac-breakpoints
     (& (member x *rplaca-breakpoints* :test #'eq)
        (invoke-debugger)))

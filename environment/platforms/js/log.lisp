@@ -63,8 +63,6 @@
 (defvar *logwindow-buffer* "")
 (defvar *logwindow-timer* nil)
 
-(declare-cps-exception logwindow-add-string-0 logwindow-add-string logwindow-timer)
-
 (defun logwindow-add-string-0 (txt)
   (open-log-window)
   (*logwindow*.document.body.first-child.add-text txt)

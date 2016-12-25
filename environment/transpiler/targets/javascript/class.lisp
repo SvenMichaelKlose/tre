@@ -16,7 +16,6 @@
           ; TOOD: Set 'super' instead.
           ,@(js-gen-inherit-constructor-calls bases)
           ,@body))
-      (declare-cps-exception ,($ class-name '?))
 	  (defun ,($ class-name '?) (x)
 	    (%%native x " instanceof " ,(compiled-function-name-string class-name)))}))
 

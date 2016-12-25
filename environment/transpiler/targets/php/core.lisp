@@ -48,8 +48,7 @@
         (php-load-core "../../../environment/"
                        "not.lisp"
                        "atom.lisp"
-                       "exception.lisp"
-                       "cps-exceptions.lisp")
+                       "exception.lisp")
         (php-load-core ""
                        "character.lisp"
                        "eq.lisp"

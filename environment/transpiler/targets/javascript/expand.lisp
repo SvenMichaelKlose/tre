@@ -80,13 +80,12 @@
      `(%new ,@x)))
 
 (define-js-std-macro js-type-predicate (name &rest types)
-  `{(declare-cps-exception ,name)
-    (defun ,name (x)
-      (when x
-	    ,(? (< 1 (length types))
-            `(| ,@(@ [`(%%%== (%js-typeof x) ,_)]
-                     types))
-             `(%%%== (%js-typeof x) ,types.))))})
+  `(defun ,name (x)
+     (when x
+       ,(? (< 1 (length types))
+           `(| ,@(@ [`(%%%== (%js-typeof x) ,_)]
+                    types))
+            `(%%%== (%js-typeof x) ,types.)))))
 
 (define-js-std-macro %href (hash key)
   `(aref ,hash ,key))

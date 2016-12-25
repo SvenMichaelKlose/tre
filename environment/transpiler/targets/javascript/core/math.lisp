@@ -1,7 +1,4 @@
-;;;;; tré – Copyright (c) 2013–2014 Sven Michael Klose <pixel@copei.de>
-
-(dont-obfuscate *math *p-i abs acos asin atan atan2 ceil cos exp floor log max min pow round sin sqrt tan random)
-(declare-cps-exception abs acos asin atan atan2 ceil cos exp floor log max min pow round sin sqrt tan random)
+; tré – Copyright (c) 2013–2014,2016 Sven Michael Klose <pixel@copei.de>
 
 (defconstant *pi* *math.*p-i)
 

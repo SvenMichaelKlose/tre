@@ -1,8 +1,6 @@
-; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@copei.de>
 
 (defvar *symbols* (%%%make-hash-table))
-
-(declare-cps-exception %symbol symbol =-symbol-function)
 
 (defnative %symbol (name pkg)
   (= this.__class ,(obfuscated-identifier 'symbol)

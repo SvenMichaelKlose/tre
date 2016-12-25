@@ -52,8 +52,6 @@
                                        (= video.current-time end)))
                                 (/ (/ 1000 frames-per-second) 2)))))
 
-(declare-cps-exception video-wait-while-seeking)
-
 (defun video-wait-while-seeking (video)
   (when (| video.paused video.seeking)
     (do-wait 100

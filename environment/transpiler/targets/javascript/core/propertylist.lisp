@@ -1,6 +1,4 @@
-; tré – Copyright (c) 2010–2013,2015 Sven Michael Klose <pixel@copei.de>
-
-(declare-cps-exception %property-list-0 %property-list)
+; tré – Copyright (c) 2010–2013,2015–2016 Sven Michael Klose <pixel@copei.de>
 
 (defvar *%property-list-tmp* nil)
 

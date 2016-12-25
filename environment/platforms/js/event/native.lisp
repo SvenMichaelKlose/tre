@@ -1,8 +1,4 @@
-;;;;; tré – Copyright (c) 2008–2010,2013 Sven Michael Klose <pixel@copei.de>
-
-(dont-obfuscate add-event-listener attach-event)
-
-(declare-cps-exception native-add-event-listener)
+; tré – Copyright (c) 2008–2010,2013,2016 Sven Michael Klose <pixel@copei.de>
 
 (defun native-add-event-listener (elm typ fun)
   (with (f [funcall fun _])
@@ -11,22 +7,16 @@
       elm.attach-event       (elm.attach-event (+ "on" typ) f)
       (error "Can't determine function to add the event listener for '~A' on DOM object ~A." typ elm))))
 
-(dont-obfuscate remove-event-listener detach-event)
-
 (defun native-remove-event-listener (elm typ fun)
   (? elm.remove-event-listener
 	 (elm.remove-event-listener typ fun false)
 	 (elm.detach-event (+ "on" typ) fun)))
-
-(dont-obfuscate prevent-default stop-propagation)
 
 (defun native-stop-event (evt)
   (& evt.prevent-default
      (evt.prevent-default))
   (& evt.stop-propagation
      (evt.stop-propagation)))
-
-(dont-obfuscate create-event-object create-event fire-event init-event dispatch-event)
 
 (defun native-fire-event (elm event-name)
   (? document.create-event-object

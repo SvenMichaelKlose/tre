@@ -23,9 +23,7 @@
 
 (defvar *js-core1*
 	,(+ (js-load-core "../../../environment/"
-	                  "not.lisp"
-                      "exception.lisp"
-                      "cps-exceptions.lisp")
+	                  "not.lisp")
 		(js-load-core ""
 			          "macro.lisp"
 			          "array.lisp"

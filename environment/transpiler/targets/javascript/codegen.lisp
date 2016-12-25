@@ -70,10 +70,8 @@
 
 (define-js-macro %function-return (name)
   (alet (get-funinfo name)
-    (? (& (funinfo-var? ! '~%ret)
-          (not (funinfo-cps? !)))
-       `(,*js-indent* "return " ~%ret ,*js-separator*)
-       "")))
+    (& (funinfo-var? ! '~%ret)
+       `(,*js-indent* "return " ~%ret ,*js-separator*))))
 
 (define-js-macro %function-epilogue (name)
   (| `((%function-return ,name)
@@ -255,12 +253,6 @@
 
 (define-js-macro %global (x)
   x)
-
-
-;;;; CPS FIXUPS
-
-(define-js-macro cps-toplevel-return-value (x)
-  `(%%native "function (r) { " ,x " = r; }"))
 
 
 ;;;; MISCELLANEOUS

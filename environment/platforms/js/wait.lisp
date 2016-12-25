@@ -8,7 +8,4 @@
                                       millisecs))))
 
 (defmacro do-wait (millisecs &body body)
-  (? (enabled-pass? :cps)
-     `{(wait #'(() ,@body) ,millisecs)
-       ,@body}
-     `(funcall #'wait #'(() ,@body) ,millisecs)))
+  `(funcall #'wait #'(() ,@body) ,millisecs))

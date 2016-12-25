@@ -21,5 +21,4 @@
     inject-debugging         #'inject-debugging
     quote-keywords           #'quote-keywords
     optimize                 #'pass-optimize
-    opt-tailcall             #'pass-opt-tailcall
-    cps                      #'cps)
+    opt-tailcall             #'pass-opt-tailcall)

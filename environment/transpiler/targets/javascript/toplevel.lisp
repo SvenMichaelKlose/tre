@@ -7,8 +7,6 @@
 (defun js-prologue ()
   (+ (format nil "// tré revision ~A~%" *tre-revision*)
      (nodejs-prologue)
-     (& (enabled-pass? :cps)
-        (format nil ,(fetch-file "environment/transpiler/targets/javascript/core/native/cps.js")))
      (format nil "var _I_ = 0; while (1) {switch (_I_) {case 0: ~%")))
 
 (defun js-epilogue ()
