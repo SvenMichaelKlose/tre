@@ -7,17 +7,13 @@
 	   (adolist (.x n)
          (= n (,($ '%%% op) n !))))))
 
-(mapcar-macro x '(* / mod)
+(mapcar-macro x '(* / mod)  ; TODO: Map to %%%…?
   `(def-simple-op ,x))
 
 (defun number+ (&rest x)
   (let n x.
 	(adolist (.x n)
 	  (= n (%%%+ n !)))))
-
-(defun integer+ (n &rest x)
-  (adolist (x n)
-    (= n (%%%+ n !))))
 
 (defmacro define-generic-transpiler-minus ()
   (let gen-body `(? .x
@@ -28,13 +24,7 @@
     `{(defun - (&rest x)
 	    ,gen-body)
 	  (defun number- (&rest x)
-	    ,gen-body)
-      (defun integer- (&rest x)
-        (? .x
-           (let n x.
-	         (adolist (.x n)
-	           (= n (%%%- n !))))
-           (%%%- x.)))}))
+	    ,gen-body)}))
 
 (define-generic-transpiler-minus)
 
@@ -50,13 +40,6 @@
                      ,(? (eq name '+)
                          '(string? !)))
                   "NUMBER expected instead of ~A." !)
-          (| (,op n !)
-             (return nil))
-          (= n !)))
-	  (defun ,($ 'integer name) (n &rest x)
-        (assert (integer? n) "NUMBER expected instead of ~A." n)
-        (adolist (x t)
-          (assert (integer? !) "NUMBER expected instead of ~A." !)
           (| (,op n !)
              (return nil))
           (= n !)))

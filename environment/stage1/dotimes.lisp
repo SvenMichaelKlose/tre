@@ -5,8 +5,8 @@
   (let g (gensym)
     `(let ,g ,times
        ,@(? *assert?*
-            `((? (integer< ,g 0)
+            `((? (< ,g 0)
                  (dotimes-error-negative ,g))))
-       (do ((,iter 0 (integer+ 1 ,iter)))
-	       ((integer== ,iter ,g) ,@result)
+       (do ((,iter 0 (number+ 1 ,iter)))
+	       ((== ,iter ,g) ,@result)
 	     ,@body))))

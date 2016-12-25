@@ -10,10 +10,8 @@
 (functional identity
             + - * / mod
             number+ number- number* number/
-            integer+ integer- integer* integer/
             number? == < >
             number== number< number>
-            integer== integer< integer>
             character== character< character>
             bit-or bit-and bit-xor
             << >>

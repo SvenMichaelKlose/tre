@@ -30,7 +30,7 @@
 (defun string-subseq (seq start &optional (end 99999))
   (unless (& (< (- (length seq) 1) start)
              (< start end))
-    (? (integer== start end)
+    (? (== start end)
 	   ""
        (seq.substr start (- end start)))))
 

@@ -246,7 +246,7 @@
   (number (get-style "opacity")))
 
 (defmethod caroshi-element set-opacity (x)
-  (? (integer== 1 x)
+  (? (== 1 x)
      (& (defined? style.remove-property)
 	    (style.remove-property "opacity"))
      (set-style "opacity" x))

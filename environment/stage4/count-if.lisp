@@ -1,6 +1,6 @@
 (defun count-if (pred lst &optional (init 0))
   (? lst
-	 (count-if pred .lst (integer+ (? (funcall pred lst.) 1 0) init))
+	 (count-if pred .lst (number+ (? (funcall pred lst.) 1 0) init))
      init))
 
 (define-test "COUNT-IF"

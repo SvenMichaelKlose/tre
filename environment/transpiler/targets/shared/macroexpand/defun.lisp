@@ -33,7 +33,7 @@
             (prog1
               {,@body}
               (& ~%profiling-timer
-                 (add-profile ',name (integer- (%%%nanotime) ~%profiling-timer)))))))
+                 (add-profile ',name (- (%%%nanotime) ~%profiling-timer)))))))
      body))
 
 (defun shared-defun-memorize-source (name args body)

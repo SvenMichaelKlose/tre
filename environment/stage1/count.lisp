@@ -3,7 +3,7 @@
 (%defun count-r (x lst init)
   (? lst
      (count-r x .lst (? (eq x lst.)
-                        (integer+ 1 init)
+                        (+ 1 init)
                         init))
      init))
 

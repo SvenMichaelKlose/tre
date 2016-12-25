@@ -44,7 +44,7 @@
   (%%%=-aref value hash (%href-key hash key)))
 
 (defun %href-==? (x)
-  (in? x #'== #'string== #'number== #'integer==))
+  (in? x #'== #'string== #'number==))
 
 (defun =-href (value hash key)
   (!? (%htest hash)
