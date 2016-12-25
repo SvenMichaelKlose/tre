@@ -1,5 +1,3 @@
-;;;;; tré – Copyright (c) 2011–2012 Sven Michael Klose <pixel@copei.de>
-
 (defvar __rfc2110boundary (uniqid (rand)))
 (defvar *rfc2110comment* nil)
 

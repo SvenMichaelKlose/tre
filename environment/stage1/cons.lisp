@@ -1,5 +1,3 @@
-;;;;; tré – Copyright (C) 2005–2006,2011,2013–2014 Sven Michael Klose <pixel@copei.de>
-
 (functional caar cadr cdar cddr cadar cddar caadar caddr caadr cdddr cdadar caaddr caddar cdddar cddddr cadadr cadaddr cadadar cddadar)
 
 (%defun caar (lst) (car (car lst)))

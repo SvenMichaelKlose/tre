@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
-
 (defvar *cl-builtins* nil)
 
 (defun cl-load-base (dir-path &rest files)

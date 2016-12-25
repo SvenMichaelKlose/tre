@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2014–2015 Sven Michael Klose <pixel@hugbox.org>
-
 (env-load "transpiler/targets/common-lisp/imports.lisp" :cl)
 (env-load "transpiler/targets/common-lisp/core.lisp" :cl)
 (unless (symbol-function 'make-lambdas)

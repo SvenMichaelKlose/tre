@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005–2015 Sven Michael Klose <pixel@hugbox.org>
-
 ;;;; INLINING
 
 (defun lambda-expand-make-inline-body (stack-places values body)

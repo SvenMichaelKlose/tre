@@ -1,4 +1,3 @@
-
 # Overview
 
 This is tré, a metamorphic Lisp transpiler.  It can generate
@@ -8,6 +7,7 @@ PHP code.
 tré has been used in real life business for a couple of years and is
 now cleaned up for the public.
 
+tré has been developed since 2005 by Sven Michael Klose <pixel@hugbox.org>.
 
 # Building and installing
 

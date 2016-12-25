@@ -1,5 +1,3 @@
-;;;;; tré – Copyright (c) 2009–2014 Sven Michael Klose <pixel@copei.de>
-
 (defvar *builtin-argdefs*
 	'((NOT          (&rest objects))
       (EQ           (&rest objects))

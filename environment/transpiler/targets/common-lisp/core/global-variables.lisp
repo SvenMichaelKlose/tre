@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2014–2016 Sven Michael Klose <pixel@copei.de>
-
 (defvar *universe* nil)
 (defvar *variables* nil)
 (defvar *launchfile* nil)

@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
-
 (defun php-prologue ()
   (with-string-stream out
     (format out "<?php // tré revision ~A~%" *tre-revision*)

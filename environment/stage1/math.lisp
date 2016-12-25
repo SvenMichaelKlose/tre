@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005,2009,2011,2013–2014,2016 Sven Michael Klose <pixel@hugbox.org>
-
 (functional ++ -- integer++ integer--)
 
 (%defun ++ (x) (number+ x 1))

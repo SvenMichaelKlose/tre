@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2016 Sven Michael Klose <pixel@copei.de>
-
 (defun make-caroshi-html-document ()
   (document-extend (document.implementation.create-h-t-m-l-document)))
 

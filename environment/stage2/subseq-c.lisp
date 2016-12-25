@@ -1,8 +1,6 @@
-; tré – Copyright (c) 2007–2009,2011–2012,2014 Sven Michael Klose <pixel@copei.de>
-
 (defun string-subseq (seq start &optional (end 99999))
   (? (== start end)
-	 ""
+	 ""     ; TODO: Should return NIL.
      (with (seqlen  (length seq))
        (when (< start seqlen)
          (when (>= end seqlen)

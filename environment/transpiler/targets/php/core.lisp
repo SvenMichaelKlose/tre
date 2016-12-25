@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@copei.de>
-
 (defvar *php-core-path* "environment/transpiler/targets/php/core/")
 
 (defvar *php-core-native*

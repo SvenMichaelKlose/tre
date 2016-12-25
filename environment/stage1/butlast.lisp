@@ -1,5 +1,3 @@
-;;;;; tré – Copyright (c) 2006,2012–2014 Sven Michael Klose <pixel@copei.de>
-
 (functional butlast)
 
 (defun butlast (plist)

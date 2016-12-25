@@ -1,5 +1,3 @@
-;;;;; tré – Copyright (c) 2010,2012–2013 Sven Michael Klose <pixel@copei.de>
-
 (defun hcache-remove (plc &rest vals)
   (& plc vals
   	 (| (not .vals)

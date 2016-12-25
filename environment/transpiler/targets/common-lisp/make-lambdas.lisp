@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2014–2015 Sven Michael Klose <pixel@hugbox.org>
-
 ; Usually every function keeps its source code.
 ; If we do this in SBCL, anonymous functions won't get garbage collected,
 ; That's why it's disabled here.

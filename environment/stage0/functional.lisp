@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2011–2016 Sven Michael Klose <pixel@hugbox.org>
-
 (defvar *functionals* nil)
 
 (%defmacro functional (&rest names)

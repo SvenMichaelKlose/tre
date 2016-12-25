@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2009–2014 Sven Michael Klose <pixel@copei.de>
-
 (defun sort-divide (x left right test<)
   (with (i     left
 		 j     (-- right)

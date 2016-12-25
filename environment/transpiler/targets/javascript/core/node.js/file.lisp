@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2014 Sven Michael Klose <pixel@hugbox.org>
-
 (defstruct nodejs-file
   fd-block
   fd-stream

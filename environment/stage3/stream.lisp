@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005–2006,2010,2012–2016 Sven Michael Klose <pixel@copei.de>
-
 (defvar *default-stream-tabsize* 8)
 
 (defstruct stream-location

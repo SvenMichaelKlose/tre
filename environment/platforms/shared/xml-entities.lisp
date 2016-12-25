@@ -1,5 +1,3 @@
-;;;; tré – Copyright (c) 2009,2011–2014 Sven Michael Klose <pixel@hugbox.org>
-
 (defvar *xml-entities*
 		'(("amp" . 38)
 		  ("quot" . 34)

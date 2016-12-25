@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005–2006,2008,2010–2013,2015 Sven Michael Klose <pixel@hugbox.org>
-
 (defun make-string-stream ()
   (make-stream
       :user-detail (make-queue)

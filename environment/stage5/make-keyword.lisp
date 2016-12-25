@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2011–2012,2016 Sven Michael Klose <pixel@copei.de>
-
 (define-filter make-keywords (x)
   (make-keyword x))
 

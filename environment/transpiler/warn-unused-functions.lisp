@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2013–2015 Sven Michael Klose <pixel@copei.de>
-
 (defun warn-unused-functions ()
   (alet (defined-functions)
     (@ [hremove ! _]

@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2009,2011–2013,2015 Sven Michael Klose <pixel@copei.de>
-
 (defun debug-print-write (x)
   (%write-char x))
 

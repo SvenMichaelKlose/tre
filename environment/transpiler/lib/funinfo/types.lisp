@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2015 Sven Michael Klose <pixel@hugbox.org>
-
 (defun funinfo-get-type (fi name)
   (cdr (assoc (funinfo-types fi) name)))
 

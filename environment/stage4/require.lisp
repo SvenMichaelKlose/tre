@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2009,2012,2014,2016 Sven Michael Klose <pixel@hugbox.org>
-
 (defvar *loaded-required-files* nil)
 
 (define-js-std-macro require (file)

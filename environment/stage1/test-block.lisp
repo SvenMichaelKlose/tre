@@ -1,5 +1,3 @@
-;;;;; tré – Copyright (c) 2009,2013 Sven Michael Klose <pixel@copei.de>
-
 (let x (block nil
 			  1
 			  (block some-block

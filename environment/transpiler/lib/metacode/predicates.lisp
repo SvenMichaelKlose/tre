@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2006–2016 Sven Michael Klose <pixel@copei.de>
-
 (mapcar-macro x
 	'(quote %new
 	  %%block %%go %%go-nil %%go-not-nil %%call-nil %%call-not-nil

@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005–2006,2008–2015 Sven Michael Klose <pixel@copei.de>
-
 (define-test "HREF symbol key"
   ((let h (make-hash-table :test #'eq)
      (= (href h 'a) 'x)

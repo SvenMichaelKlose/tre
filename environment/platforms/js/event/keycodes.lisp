@@ -1,5 +1,3 @@
-;;;;; tré – Copyright (c) 2010 Sven Michael Klose <pixel@copei.de>
-
 (defconstant *key-backspace* 8)
 (defconstant *key-tab* 9)
 (defconstant *key-enter* 13)

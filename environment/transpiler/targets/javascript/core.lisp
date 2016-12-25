@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@copei.de>
-
 (defvar *js-core-path* "environment/transpiler/targets/javascript/core/")
 
 (defun js-load-core (dir-path &rest files)
@@ -55,7 +53,6 @@
 		                        "hash.lisp"
                                 "base64.lisp"
                                 "function-source.lisp"
-                                "function-bytecode.lisp"
                                 "dot-expand.lisp"
                                 "math.lisp"
                                 "nanotime.lisp")))

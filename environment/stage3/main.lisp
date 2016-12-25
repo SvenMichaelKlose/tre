@@ -1,5 +1,3 @@
-; tré – Copyright (C) 2005–2009,2011–2016 Sven Michael Klose <pixel@hugbox.org>
-
 (env-load "stage3/let-when.lisp")
 (env-load "stage3/ensure-tree.lisp")
 (env-load "stage3/declare.lisp")

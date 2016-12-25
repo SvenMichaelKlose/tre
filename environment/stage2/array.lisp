@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
-
 (defun copy-array (arr)
   (do ((ret (make-array))
        (i 0 (++ i)))

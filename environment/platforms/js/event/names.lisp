@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2013,2016 Sven Michael Klose <pixel@hugbox.org>
-
 ; TODO: Update lists of event names.
 (defconstant *mouse-events*   '("click" "dblclick" "mouseup" "mousedown" "mousemove" "mouseover" "mouseout"
                                 "mouseupleft" "mouseupmiddle" "mouseupright"

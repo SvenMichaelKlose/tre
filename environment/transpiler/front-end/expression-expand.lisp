@@ -1,9 +1,6 @@
-; tré – Copyright (c) 2006–2016 Sven Michael Klose <pixel@hugbox.org>
-
 (defvar *expex* nil)
 
-; TODO
-(defun expex-set-global-variable-value (x)
+(defun expex-set-global-variable-value (x) ; TODO – What could this be about?
   (list x))
 
 ;;;; SHARED SETTER FILTER

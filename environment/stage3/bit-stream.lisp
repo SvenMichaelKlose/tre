@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005–2006,2008,2010–2013,2015 Sven Michael Klose <pixel@hugbox.org>
-
 ; TODO: BIT-STREAMs are not flushed automatically! Write extra 8 bits at the end!
 
 (defstruct bit-stream-info

@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2009–2014,2016 Sven Michael Klose <pixel@copei.de>
-
 (defun butlast-path-component (x)
   (pathlist-path (pad (butlast (path-pathlist x)) "/")))
 

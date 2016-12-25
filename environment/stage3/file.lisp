@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2012–2014,2016 Sven Michael Klose <pixel@hugbox.org>
-
 (defun fetch-file (path)
   (with-input-file in path
     (= (stream-track-input-location? in) nil)

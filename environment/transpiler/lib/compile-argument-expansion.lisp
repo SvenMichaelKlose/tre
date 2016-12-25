@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
-
 (defun c-expander-name (x)
   ($ x '_treexp))
 

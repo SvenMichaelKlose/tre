@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2009,2011–2012,2015 Sven Michael Klose <pixel@copei.de>
-
 (defun replace (old-elm new-elm lst &key (test #'eq))
   (@ [? (funcall test _ old-elm)
         new-elm

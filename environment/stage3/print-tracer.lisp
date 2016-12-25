@@ -1,5 +1,3 @@
-;;;;; tré – Copyright (c) 2011–2012 Sven Michael Klose <pixel@copei.de>
-
 (defstruct print-info
   (visited (make-hash-table :test #'eq))
   (first-occurences (make-hash-table :test #'eq)))

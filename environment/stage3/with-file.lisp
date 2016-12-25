@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005–2006,2008,2011–2013,2015–2016 Sven Michael Klose <pixel@hugbox.org>
-
 (defmacro with-open-file (var file &body body)
   (with-gensym g
     `(with (,var ,file

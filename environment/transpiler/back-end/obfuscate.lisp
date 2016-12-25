@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
-
 (defvar *obfuscation-counter* 0)
 
 (defun obfuscate? ()

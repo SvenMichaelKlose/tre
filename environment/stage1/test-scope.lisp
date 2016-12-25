@@ -1,5 +1,3 @@
-;;;;; tré – Copyright (c) 2009–2010,2012,2014 Sven Michael Klose <pixel@hugbox.org>
-
 (define-test "can handle nested functions with double argument names"
   ((let x 'y
 	 (let x 'z

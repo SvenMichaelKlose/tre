@@ -1,5 +1,3 @@
-;;;;; tré – Copyright (c) 2005–2009,2012–2014 Sven Michael Klose <pixel@copei.de>
-
 (defun %map-args (lists)
   (block nil
     (let* ((i lists)	        ; List iterator.

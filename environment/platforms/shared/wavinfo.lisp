@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2016 Sven Michael Klose <pixel@hugbox.org>
-
 (defstruct wavinfo
   file-size
   format-tag

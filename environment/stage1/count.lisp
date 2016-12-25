@@ -1,5 +1,3 @@
-;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
-
 (functional count)
 
 (%defun count-r (x lst init)

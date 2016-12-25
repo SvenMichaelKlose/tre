@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2010–2013,2015 Sven Michael Klose <pixel@copei.de>
-
 (defun function-to-funcall (x i)
   (alet (macroexpand x)
     (?

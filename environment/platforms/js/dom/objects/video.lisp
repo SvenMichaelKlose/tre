@@ -1,5 +1,3 @@
-; Caroshi – Copyright (c) 2012–2013,2016 Sven Michael Klose <pixel@copei.de>
-
 (defun make-video-flash (url width height)
   (aprog1 (new *element "object"
                         (new :classid  "clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"

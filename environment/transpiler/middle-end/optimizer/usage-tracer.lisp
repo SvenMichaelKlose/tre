@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
-
 (defun tag-code (tag)
   (| (member-if [& (number? _)
                    (== _ tag)]

@@ -1,5 +1,3 @@
-;;;;; tré – Copyright (c) 2005–2006,2012–2014 Sven Michael Klose <pixel@hugbox.org>
-
 (defun make-standard-stream ()
   (make-stream
       :fun-in  [%read-char nil]

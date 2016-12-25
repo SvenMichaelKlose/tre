@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2011–2015 Sven Michael Klose <pixel@copei.de>
-
 (= *gensym-prefix* "~jsG")
 
 (unless (eq '*native-eval-return-value* *native-eval-return-value*)

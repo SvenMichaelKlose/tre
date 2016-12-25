@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2009–2014 Sven Michael Klose <pixel@copei.de>
-
 (defmacro php-define-compiled-literal (name (x table) &key maker init-maker)
   `(define-compiled-literal ,name (,x ,table)
 	   :maker      ,maker

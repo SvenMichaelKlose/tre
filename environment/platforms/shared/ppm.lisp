@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2012,2015 Sven Michael Klose <pixel@copei.de>
-
 (defstruct image
   (:constructor %make-image)
   width

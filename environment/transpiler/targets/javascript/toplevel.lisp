@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@hugbox.org>
-
 (defun nodejs-prologue ()
    (apply #'+ (@ [format nil "var ~A = require ('~A');~%" _ _]
                  (configuration :nodejs-requirements))))
@@ -22,12 +20,6 @@
 
 (defun js-var-decls ()
   (list (backend-generate-code `(((%var ,@(remove-if #'emitted-decl? (funinfo-vars (global-funinfo)))))))))
-
-;(defun gen-funinfo-init ()
-;  `(push ',(compiled-list `(,x. ,(funinfo-args .x))) *application-funinfos*))
-
-;(defun gen-funinfo-inits ()
-;  (@ #'gen-funinfo-init (hash-alist (funinfos))))
 
 (defun js-sections-before-import ()
   (. (. '*js-core0* (string-source *js-core0*))
@@ -65,8 +57,7 @@
      (& *have-compiler?*
         (js-sections-compiler))))
 
-(defun js-ending-sections ()
-  );`((funinfo-inits . ,#'gen-funinfo-inits)))
+(defun js-ending-sections ())
 
 (defun js-expex-initializer (ex)
   (= (expex-inline? ex)         #'%slot-value?

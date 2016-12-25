@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2013,2015–2016 Sven Michael Klose <pixel@copei.de>
-
 (defvar *type-predicates*
   '((nil        . not)
     (cons       . cons?)

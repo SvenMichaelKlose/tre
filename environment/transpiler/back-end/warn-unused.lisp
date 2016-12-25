@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2013,2016 Sven Michael Klose <pixel@copei.de>
-
 (defun warn-on-unused-variables (fi)
   (when (funinfo-parent fi)
     (adolist ((funinfo-vars fi))

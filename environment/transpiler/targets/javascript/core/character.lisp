@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2009,2011–2013,2016 Sven Michael Klose <pixel@hugbox.org>
-
 (defun %character (x)
   (= this.__class ,(obfuscated-identifier '%character)
      this.v       x)

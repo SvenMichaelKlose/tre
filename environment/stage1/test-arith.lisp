@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005,2008-2009,2012,2014,2016 Sven Michael Klose <pixel@hugbox.org>
-
 (define-test "INTEGER- literal"
   ((== 1 (- 66 65)))
   t)

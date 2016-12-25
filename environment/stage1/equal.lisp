@@ -1,5 +1,3 @@
-;;;; tré – Copyright (c) 2005-2006,2008-2009,2012,2014 Sven Michael Klose <pixel@copei.de>
-
 (functional equal)
 
 (defun equal (x y)

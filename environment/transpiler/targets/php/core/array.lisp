@@ -1,5 +1,3 @@
-;;;;; tré – Copyright (c) 2008–2014 Sven Michael Klose <pixel@copei.de>
-
 (defun array? (x)
   (| (is_a x "__array")
      (is_array x)))

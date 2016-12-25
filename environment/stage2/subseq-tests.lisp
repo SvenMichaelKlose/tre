@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2007–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
-
 (define-test "LIST-SUBSEQ work at the beginning"
   ((list-subseq '(a b c) 0 1))
   '(a))

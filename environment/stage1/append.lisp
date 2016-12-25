@@ -1,5 +1,3 @@
-;;;;; tré – Copyright (c) 2005–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
-
 (defmacro append! (place &rest args)
   `(= ,place (append ,place ,@args)))
 

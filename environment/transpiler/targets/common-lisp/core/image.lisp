@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2014–2015 Sven Michael Klose <pixel@hugbox.org>
-
 (defbuiltin sys-image-create (pathname fun)
   (sb-ext:save-lisp-and-die pathname
                             :toplevel (lambda ()

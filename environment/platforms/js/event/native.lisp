@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2010,2013,2016 Sven Michael Klose <pixel@copei.de>
-
 (defun native-add-event-listener (elm typ fun)
   (with (f [funcall fun _])
     (?

@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2006–2015 Sven Michael Klose <pixel@hugbox.org>
-
 (defvar *tagbody-replacements* nil)
 
 (defun init-compiler-macros ()

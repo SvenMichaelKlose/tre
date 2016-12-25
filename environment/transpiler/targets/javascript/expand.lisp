@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@copei.de>
-
 (defmacro define-js-std-macro (name args &body body)
   `(define-transpiler-std-macro *js-transpiler* ,name ,args ,@body))
 

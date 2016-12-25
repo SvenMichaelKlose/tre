@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@copei.de>
-
 (defvar *transpiler* nil)
 (defvar *transpiler-log* nil)
 (defvar *default-transpiler* nil)

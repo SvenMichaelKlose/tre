@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005–2016 Sven Michael Klose <pixel@hugbox.org>
-
 (defun number-digit (x)
   (code-char (+ x (char-code #\0))))
 

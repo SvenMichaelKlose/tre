@@ -1,5 +1,3 @@
-;;;;; tré – Copyright (c) 2005,2008–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
-
 (%defun %simple-map (func lst)
   (? lst
      (? (cons? lst)

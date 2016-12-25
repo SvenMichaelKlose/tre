@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005–2015 Sven Michael Klose <pixel@hugbox.org>
-
 (defun cl-symbol (x)
   (make-symbol (symbol-name x) "CL"))
 

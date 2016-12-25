@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2014,2016 Sven Michael Klose <pixel@hugbox.org>
-
 (defun number== (x &rest y)
   (every [%%%== x _] y))
 

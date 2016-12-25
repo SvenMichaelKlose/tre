@@ -1,6 +1,4 @@
-; tré – Copyright (C) 2006–2007,2009,2012–2013,2015–2016 Sven Michael Klose <pixel@copei.de>
-
-; XXX Rename file to 'debug-printers.lisp'.
+; TODO: Rename file to 'debug-printers.lisp'.
 
 (defun only-element-or-all-of (x)
   (? .x x x.))

@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005–2016 Sven Michael Klose <pixel@hugbox.org>
-
 (defun make-scope-place-expr (fi var)
   (funinfo-add-free-var fi var)
   `(%vec ,(funinfo-scope-arg fi)

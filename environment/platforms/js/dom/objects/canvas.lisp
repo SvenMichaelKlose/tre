@@ -1,5 +1,3 @@
-; Caroshi – Copyright (c) 2012–2013 Sven Michael Klose <pixel@copei.de>
-
 (defmacro with-canvas-context (type ctx elm &rest body)
   `(let ,ctx ((slot-value ,elm 'get-context) ,type)
      ,@body))

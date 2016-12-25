@@ -1,5 +1,3 @@
-;;;;; tré – (c) 2012–2013 Sven Michael Klose <pixel@copei.de>
-
 (env-load "transpiler/middle-end/optimizer/message.lisp")
 (env-load "transpiler/middle-end/optimizer/define-optimizer.lisp")
 (env-load "transpiler/middle-end/optimizer/collect-places.lisp")

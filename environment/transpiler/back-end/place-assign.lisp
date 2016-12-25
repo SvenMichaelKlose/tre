@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2009–2015 Sven Michael Klose <pixel@hugbox.org>
-
 (defun unassigned-%stackarg? (x)
   (& (%stackarg? x) ..x))
 

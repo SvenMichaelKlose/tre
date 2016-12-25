@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@hugbox.org>
-
 (defmacro define-shared-std-macro (targets &rest x)
   `{,@(@ [`(,($ 'define- _ '-std-macro) ,@x)]
          (intersect *targets* (make-keywords targets)))})

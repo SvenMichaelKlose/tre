@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2014,2016 Sven Michael Klose <pixel@copei.de>
-
 (defclass event-module (name)
   (log-events "New event module `~A'.~%" name)
   (= _name     name

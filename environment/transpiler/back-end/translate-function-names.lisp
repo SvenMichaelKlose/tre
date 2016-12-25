@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2010–2015 Sven Michael Klose <pixel@copei.de>
-
 (defun translate-function-name (x)
   (? (defined-function x)
      (compiled-function-name x)

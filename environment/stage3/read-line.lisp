@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2007,2010,2012–2014,2016 Sven Michael Klose <pixel@copei.de>
-
 (defun cr-or-lf? (x)
   (in=? (char-code x) 10 13))
 

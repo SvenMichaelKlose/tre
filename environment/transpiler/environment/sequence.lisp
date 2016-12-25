@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
-
 (defun maparray (fun hash)
   (with-queue q
     (dotimes (i (length hash) (queue-list q))

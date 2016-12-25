@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
-
 (defun print-html-script (out script
                           &key (title nil)
                                (no-cache? nil)

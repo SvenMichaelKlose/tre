@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005–2009,2011,2015–2016 Sven Michael Klose <pixel@hugbox.org>
-
 (defun list-string-0 (x)
   (apply #'string-concat (@ #'string x)))
 

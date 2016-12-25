@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005–2016 Sven Michael Klose <pixel@hugbox.org>
-
 (defun quote-expand (x)
   (with (atomic [? (constant-literal? _)
                    _

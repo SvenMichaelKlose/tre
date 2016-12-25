@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2009,2012–2015 Sven Michael Klose <pixel@hugbox.org>
-
 (defun permutate-1 (head tail-permutations)
   (& head
 	 (!? tail-permutations

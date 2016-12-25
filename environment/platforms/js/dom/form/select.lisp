@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2009–2010,2012–2013,2015 Sven Michael Klose <pixel@copei.de>
-
 (defun form-select? (x)
   (& (element? x)
      (x.tag-name? "select")))

@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2007–2009,2011–2015 Sven Michael Klose <pixel@copei.de>
-
 (functional remove)
 
 (defun remove-if (fun x)

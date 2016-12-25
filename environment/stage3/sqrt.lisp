@@ -1,5 +1,3 @@
-; tré – Copyright (C) 2008–2012,2014 Sven Michael Klose <pixel@hugbox.org>
-
 ; XXX experimental!
 
 (defun close-enough? (x y precision)

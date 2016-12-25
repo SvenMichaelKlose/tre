@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008,2012–2014 Sven Michael Klose <pixel@copei.de>
-
 ; Translate
 ;   (%= X (FUNCTION NAME ARGS+BODY))
 ; to

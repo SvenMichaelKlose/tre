@@ -1,4 +1,4 @@
-; tré – Copyright (c) 2005–2015 Sven Michael Klose <pixel@copei.de>
+; tré – Copyright (c) 2005–2016 Sven Michael Klose <pixel@copei.de>
 
 (env-load "stage0/main.lisp")
 (env-load "stage1/main.lisp")

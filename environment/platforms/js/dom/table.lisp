@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2009–2013,2015–2016 Sven Michael Klose <pixel@copei.de>
-
 (defun table-get-rows (x)
   (((x.get "<table").get "tbody").child-list))
 

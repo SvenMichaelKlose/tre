@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005–2015 Sven Michael Klose <pixel@hugbox.org>
-
 (defun number-not-character? (x)
   (& (not (character? x))
      (number? x)))

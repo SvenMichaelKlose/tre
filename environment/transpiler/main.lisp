@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005–2016 Sven Michael Klose <pixel@hugbox.org>
-
 (env-load "transpiler/lib/main.lisp")
 (env-load "transpiler/end.lisp")
 (env-load "transpiler/back-end/main.lisp")

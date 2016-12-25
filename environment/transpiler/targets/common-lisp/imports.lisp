@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2014–2016 Sven Michael Klose <pixel@hugbox.org>
-
 (defconstant +cl-symbol-imports+
     '(nil t
       setq cond progn block return-from tagbody go labels

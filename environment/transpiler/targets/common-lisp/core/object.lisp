@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2014–2016 Sven Michael Klose <pixel@hugbox.org>
-
 (defbuiltin not (&rest x) (cl:every #'cl:not x))
 (defbuiltin eq (a b)      (cl:eq a b))
 

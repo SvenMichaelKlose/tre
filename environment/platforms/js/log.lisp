@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2013,2016 Sven Michael Klose <pixel@copei.de>
-
 (defun make-log-stream ()
   (make-stream :fun-in    #'((str))
                :fun-out   #'((c str)
@@ -73,7 +71,7 @@
   txt)
 
 ,(? *transpiler-log*
-   `(defun log (txt)
+   `(defun log (txt)    ; TODO: Rename. Conflicts with math function.
       (logwindow-add-string (+ txt (string (code-char 10))))
       txt)
    `(defmacro log (txt)))

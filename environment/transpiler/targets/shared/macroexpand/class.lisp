@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
-
 (defvar *delayed-constructors* nil)
 
 (defun generic-defclass (constructor-maker class-name args &body body)

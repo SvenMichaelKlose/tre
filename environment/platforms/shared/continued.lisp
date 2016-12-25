@@ -1,5 +1,3 @@
-;;;;; tré – Copyright (c) 2009–2010,2012–2014 Sven Michael Klose <pixel@copei.de>
-
 (defmacro continued (return-values (fun &rest args) &body body)
   `(,fun
 	   #'(,(when return-values

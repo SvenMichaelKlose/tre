@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005–2008,2010,2012–2015 Sven Michael Klose <pixel@hugbox.org>
-
 (defun fresh-line? (&optional (str *standard-output*))
   (alet (stream-output-location str)
     (& (stream-location-track? !)

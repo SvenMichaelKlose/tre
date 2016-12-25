@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2010–2013,2015–2016 Sven Michael Klose <pixel@copei.de>
-
 (defvar *%property-list-tmp* nil)
 
 (defun %property-list-0 (key val)

@@ -1,5 +1,3 @@
-; tré – Copyright (C) 2006,2009,2011–2016 Sven Michael Klose <pixel@hugbox.org>
-
 (define-test "CAR accepts NIL"
   ((car nil))
   nil)

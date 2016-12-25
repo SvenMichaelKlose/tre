@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2006–2008,2011–2013,2015,2016 Sven Michael Klose <pixel@copei.de>
-
 (defstruct format-info
   stream
   text

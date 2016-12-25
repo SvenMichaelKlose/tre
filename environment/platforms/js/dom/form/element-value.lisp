@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2010–2012,2016 Sven Michael Klose <pixel@copei.de>
-
 (defun (= attribute-value) (val x)
   (x.write-attribute "value" x))
 

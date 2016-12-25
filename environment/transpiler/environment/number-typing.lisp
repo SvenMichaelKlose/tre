@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@hugbox.org>
-
 (defmacro + (&rest x)       (opt-string-concat x '+))
 (defmacro - (&rest x)       `(%%%- ,@x))
 (defmacro * (&rest x)       `(%%%* ,@x))

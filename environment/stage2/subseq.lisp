@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2007–2009,2011–2015 Sven Michael Klose <pixel@copei.de>
-
 (functional subseq)
 
 (defun list-subseq (seq start &optional (end 999999))

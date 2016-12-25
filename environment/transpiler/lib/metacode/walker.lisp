@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2010–2013,2015 Sven Michael Klose <pixel@copei.de>
-
 (defvar *body*)
 
 (defun metacode-statement? (x)

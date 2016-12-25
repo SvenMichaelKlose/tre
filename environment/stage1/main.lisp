@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005–2016 Sven Michael Klose <pixel@hugbox.org>
-
 (env-load "stage1/copy-tree.lisp")
 (env-load "stage1/cons.lisp")
 (env-load "stage1/gensym.lisp")

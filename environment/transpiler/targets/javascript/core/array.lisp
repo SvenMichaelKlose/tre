@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2013,2015–2016 Sven Michael Klose <pixel@copei.de>
-
 (defvar *js-array-constructor* (make-array).constructor)
 
 (defun aref (a k)     (%%%aref a k))

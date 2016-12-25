@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005–2006,2008-2009,2011–2016 Sven Michael Klose <pixel@hugbox.org>
-
 (functional find position)
 
 (defun %find-if-list (pred seq from-end with-index)

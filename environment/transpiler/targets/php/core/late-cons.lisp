@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2013,2016 Sven Michael Klose <pixel@copei.de>
-
 (= (symbol-function 'cons) "tre_cons")
 
 (defun car (x)

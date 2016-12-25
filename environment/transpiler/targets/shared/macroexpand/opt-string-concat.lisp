@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2088–2013,2015,2016 Sven Michael Klose <pixel@hugbox.org>
-
 (defun concat-successive-strings (x)
   (& x
      (? (& (string? x.)

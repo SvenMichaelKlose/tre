@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2010–2015 Sven Michael Klose <pixel@copei.de>
-
 (env-load "transpiler/targets/shared/builtin.lisp")
 (env-load "transpiler/targets/shared/core-variables.lisp")
 (env-load "transpiler/targets/shared/functionals.lisp")

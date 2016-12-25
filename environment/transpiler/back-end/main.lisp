@@ -1,5 +1,3 @@
-;;;;; tré – Copyright (c) 2005–2010,2012–2014 Sven Michael Klose <pixel@copei.de>
-
 (env-load "transpiler/back-end/convert-identifiers.lisp")
 (env-load "transpiler/back-end/macros.lisp")
 (env-load "transpiler/back-end/operators.lisp")

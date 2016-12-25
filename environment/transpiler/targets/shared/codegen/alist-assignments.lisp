@@ -1,5 +1,3 @@
-; Caroshi – Copyright (c) 2009–2010,2012–2015 Sven Michael Klose <pixel@copei.de>
-
 (defun alist-assignments (x &key (padding ", ") (quote-char #\"))
   (apply #'+ (pad (@ #'((k v)
                          (+ k "=" (literal-string (string v) quote-char quote-char)))

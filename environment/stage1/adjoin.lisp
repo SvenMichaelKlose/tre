@@ -1,5 +1,3 @@
-;;;;; tré – Copyright (c) 2005–2009,2011–2014 Sven Michael Klose <pixel@copei.de>
-
 (functional adjoin)
 
 (defun adjoin (obj lst &rest args)

@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2009–2015 Sven Michael Klose <pixel@copei.de>
-
 (defvar *compiled-function-names* (make-hash-table :test #'eq))
 
 (defun real-function-name (x)

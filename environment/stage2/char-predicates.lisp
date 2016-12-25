@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005–2006,2008–2016 Sven Michael Klose <pixel@hugbox.org>
-
 (functional lower-case? upper-case? alpha-char? digit-char? alphanumeric?)
 
 (defmacro def-rest-predicate (name iter args test-expr)

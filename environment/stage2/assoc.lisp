@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005–2006,2009–2015 Sven Michael Klose <pixel@copei.de>
-
 (functional assoc rassoc acons copy-alist ensure-alist)
 
 (defmacro %define-assoc (name getter)

@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2013,2015 Sven Michael Klose <pixel@copei.de>
-
 (defun make-project (project-name sections &key transpiler
                                                 (modified-file-getter  nil)
                                                 (sections-to-update    nil)

@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@hugbox.org>
-
 (defun pass-optimize (x)
   (? (enabled-pass? :inject-debugging)
      x

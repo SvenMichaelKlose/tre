@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005–2015 Sven Michael Klose <pixel@copei.de>
-
 (defun has-target? (name)
   (member name *targets*))
 

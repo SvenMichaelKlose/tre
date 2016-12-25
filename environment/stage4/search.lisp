@@ -1,5 +1,3 @@
-;;;;; tré – Copyright (c) 2011–2012 Sven Michael Klose <pixel@copei.de>
-
 (defun search (needle haystack &key (test #'eql))
   (& haystack
      (not (zero? (length haystack)))

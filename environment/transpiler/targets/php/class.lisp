@@ -1,5 +1,3 @@
-; Caroshi – Copyright (c) 2008–2016 Sven Michael Klose <pixel@copei.de>
-
 (defun php-constructor-name (class-name)
   ($ class-name '-constructor))
 

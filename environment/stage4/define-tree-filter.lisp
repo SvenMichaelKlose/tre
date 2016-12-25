@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2010,2012–2013,2016 Sven Michael Klose <pixel@copei.de>
-
 (defmacro define-tree-filter (name args &body body)
   (let iter (car (last args))
     `(defun ,name ,args

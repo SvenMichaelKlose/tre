@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2009–2010,2012,2016 Sven Michael Klose <pixel@copei.de>
-
 ; TODO: Make HTML5 style.
 (defun get-viewport (&optional (win window))
   (with (x  0

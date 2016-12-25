@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@hugbox.org>
-
 (defvar *js-compiled-symbols* (make-hash-table :test #'eq))
 
 (define-codegen-macro-definer define-js-macro *js-transpiler*)

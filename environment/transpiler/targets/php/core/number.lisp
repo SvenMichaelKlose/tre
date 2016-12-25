@@ -1,5 +1,3 @@
-;;;;; tré – Copyright (c) 2008–2013 Sven Michael Klose <pixel@copei.de>
-
 (defun integer? (x)
   (is_int x))
 

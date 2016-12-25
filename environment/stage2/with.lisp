@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005–2015 Sven Michael Klose <pixel@copei.de>
-
 (defun copy-while (pred x)
   (& x
      (funcall pred x.)

@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005–2009,2011–2016 Sven Michael Klose <pixel@hugbox.org>
-
 (functional string-concat string== upcase downcase list-string string-list queue-string)
 
 (defun string<= (a b)

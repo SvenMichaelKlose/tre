@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005,2008–2009,2011–2014,2016 Sven Michael Klose <pixel@copei.de>
-
 (functional list?)
 
 (%defun list? (x)

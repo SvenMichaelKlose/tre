@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2009,2015 Sven Michael Klose <pixel@copei.de>
-
 (define-test "NOT 0 is NIL"
   ((not 0))
   nil)

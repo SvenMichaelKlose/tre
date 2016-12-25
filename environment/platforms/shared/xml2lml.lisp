@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005–2009,2012–2015 Sven Michael Klose <pixel@copei.de>
-
 (defmacro with-queue-string-while (q pred &body body)
   `(with-queue ,q
      (while ,pred (queue-string ,q)

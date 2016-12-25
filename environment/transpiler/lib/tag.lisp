@@ -1,5 +1,3 @@
-;;;;; tré – Copyright (c) 2006–2010,2012–2014 Sven Michael Klose <pixel@copei.de>
-
 (defvar *tag-counter* 1)
 
 (defun make-compiler-tag ()

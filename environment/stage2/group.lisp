@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2007,2011–2014 Sven Michael Klose <pixel@copei.de>
-
 (functional copy-head group)
 
 (defun copy-head (x size)

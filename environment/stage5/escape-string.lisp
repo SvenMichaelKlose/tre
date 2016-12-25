@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2009,2012–2014,2016 Sven Michael Klose <pixel@copei.de>
-
 (defun escape-charlist (x &optional (quote-char #\") (chars-to-escape #\"))
   (when x
     (= chars-to-escape (ensure-list chars-to-escape))

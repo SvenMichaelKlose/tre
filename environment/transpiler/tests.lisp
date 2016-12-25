@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2009,2011–2015 Sven Michael Klose <pixel@copei.de>
-
 (defun make-environment-tests ()
   (with (names  nil
 		 num    0)

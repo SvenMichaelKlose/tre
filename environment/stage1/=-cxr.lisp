@@ -1,5 +1,3 @@
-;;;;; tré – Copyright (c) 2006,2009,2011–2013 Sven Michael Klose <pixel@copei.de>
-
 (defun (= car) (val lst)
   (rplaca lst val)
   val)

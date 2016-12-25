@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005–2006,2009,2012–2014,2016 Sven Michael Klose <pixel@copei.de>
-
 (defun multiple-value-bind-0 (forms gl body)
   (? forms
      (with-gensym gn

@@ -1,5 +1,3 @@
-// tré – Copyright (c) 2010–2013,2016 Sven Michael Klose <pixel@copei.de>
-
 $CONSID = 0;
 
 class __cons {

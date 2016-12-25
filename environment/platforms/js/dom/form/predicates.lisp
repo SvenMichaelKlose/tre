@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2009–2010,2012,2016 Sven Michael Klose <pixel@copei.de>
-
 (defun form-element? (x)
   (& (element? x)
      (x.tag-name? '("input" "textarea" "select" "option" "radiobox"))))

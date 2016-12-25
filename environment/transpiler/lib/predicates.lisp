@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2006–2015 Sven Michael Klose <pixel@copei.de>
-
 (mapcar-macro x '(identity quote backquote quasiquote quasiquote-splice)
   `(def-head-predicate ,x))
 

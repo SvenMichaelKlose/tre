@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
-
 (defmacro define-compiled-literal (name (x table) &key maker init-maker decl-maker)
   (let slot `(,($ 'compiled- table 's))
     `(defun ,name (,x)

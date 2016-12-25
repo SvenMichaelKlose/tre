@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2012,2016 Sven Michael Klose <pixel@hugbox.org>
-
 (defvar *characters* (make-array))
 
 (defun character? (x)

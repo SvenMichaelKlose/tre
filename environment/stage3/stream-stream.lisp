@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005–2006,2008,2011–2015 Sven Michael Klose <pixel@copei.de>
-
 (defun make-stream-stream (&key stream
                                 (input-location (make-stream-location))
                                 (output-location (make-stream-location)))

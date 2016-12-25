@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@copei.de>
-
 (defun two-subsequent-tags? (a d)
   (& a (atom a)
      d. (atom d.)))

@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2006–2007,2009–2016 Sven Michael Klose <pixel@copei.de>
-
 (defun funinfo-find (fi x)
   (!? (funinfo-parent fi)
       (| (funinfo-arg-or-var? fi x)

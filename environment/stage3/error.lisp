@@ -1,5 +1,3 @@
-;;;;; tré – Copyright (c) 2006–2008,2011–2014 Sven Michael Klose <pixel@copei.de>
-
 (defvar *warnings* nil)
 
 (defmacro without-automatic-newline (&body body)

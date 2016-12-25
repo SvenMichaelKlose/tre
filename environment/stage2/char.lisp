@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005–2006,2008–2014,2016 Sven Michael Klose <pixel@hugbox.org>
-
 (functional character>= character<= char-upcase char-downcase char-code code-char)
 
 (defun character>= (&rest x)

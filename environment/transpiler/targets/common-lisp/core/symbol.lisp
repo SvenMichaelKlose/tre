@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2014–2015 Sven Michael Klose <pixel@copei.de>
-
 (defvar *keyword-package* (find-package "KEYWORD"))
 
 (defbuiltin make-symbol (x &optional (package nil))

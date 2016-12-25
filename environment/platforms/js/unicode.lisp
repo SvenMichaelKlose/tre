@@ -1,5 +1,3 @@
-;;;;; tré – Copyright (c) 2010–2011 Sven Michael Klose <pixel@copei.de>
-
 (defvar *copyright-symbol* 169)
 (defvar *copyright-symbol-string* (string (code-char *copyright-symbol*)))
 (defvar *registered-symbol* 174)

@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2014–2015 Sven Michael Klose <pixel@hugbox.org>
-
 (defvar *environment-path* ".")
 (defvar *environment-filenames* nil)
 

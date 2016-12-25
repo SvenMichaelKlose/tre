@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2006–2009,2011–2016 Sven Michael Klose <pixel@copei.de>
-
 (defvar *expander-dump?* nil)
 
 (defstruct expander

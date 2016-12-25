@@ -1,5 +1,3 @@
-; trè – Copyright (c) 2005–2016 Sven Michael Klose <pixel@copei.de>
-
 (defconstant *printer-abbreviations* '((quote              "'")
                                        (backquote          "`")
                                        (quasiquote         ",")

@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2009–2016 Sven Michael Klose <pixel@hugbox.org>
-
 (defvar *obj-id-counter* 0)
 
 (defun make-hash-table (&key (test #'eql) (size nil))

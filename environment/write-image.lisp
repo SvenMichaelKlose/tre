@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005–2015 Sven Michael Klose <pixel@copei.de>
-
 (defun %load-launchfile ()
   (%start-core)
   (awhen *launchfile*

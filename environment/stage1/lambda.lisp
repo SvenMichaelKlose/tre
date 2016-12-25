@@ -1,5 +1,3 @@
-;;;;; tré – Copyright (c) 2006–2014 Sven Michael Klose <pixel@copei.de>
-
 ;;;; (FUNCTION [LAMBDA] [name] [arguments body...])
 ;;;; (FUNCTION name)
 

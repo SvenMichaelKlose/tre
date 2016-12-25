@@ -1,5 +1,3 @@
-;;;;; tré – Copyright (c) 2008,2012–2014 Sven Michael Klose <pixel@hugbox.org>
-
 (defun lexical2 ()
   (labels ((x () 2))
     (unless (== 2 (x))

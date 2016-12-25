@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2014–2015 Sven Michael Klose <pixel@copei.de>
-
 (defvar *default-listprop* nil)
 
 (defbuiltin cpr (x) x nil)

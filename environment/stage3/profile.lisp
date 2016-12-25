@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2012,2014–2015 Sven Michael Klose <pixel@hugbox.org>
-
 (defvar *profile*      (make-hash-table :test #'eq))
 (defvar *profile-lock* t)
 

@@ -1,5 +1,3 @@
-;;;;; tré – Copyright (c) 2005–2008,2010,2012–2014 Sven Michael Klose <pixel@hugbox.org>
-
 (defun read-peeked-char (str)
   (awhen (stream-peeked-char str)
     (= (stream-peeked-char str) nil)

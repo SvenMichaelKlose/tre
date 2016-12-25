@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@copei.de>
-
 (defun make-symbol (x &optional (pkg nil))
   (symbol x pkg))
 

@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2012–2014,2016 Sven Michael Klose <pixel@copei.de>
-
 (defvar *previous-position* nil)
 
 (def-head-predicate debugger-step)

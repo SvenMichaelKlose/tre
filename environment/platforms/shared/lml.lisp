@@ -1,5 +1,3 @@
-;;;;; tré – Copyright (C) 2006–2008,2011–2014 Sven Michael Klose <pixel@copei.de>
-
 (defun string-or-cons? (expr)
   (| (string? expr) (cons? expr)))
 

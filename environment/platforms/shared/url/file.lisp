@@ -1,4 +1,2 @@
-;;;;; tré – Copyright (c) 2010–2012 Sven Michael Klose <pixel@copei.de>
-
-(defun fileurl? (x)
+(defun fileurl? (x)     ; TODO: Remove. HEAD? does nicely.
   (string== "file://" (subseq x 0 7)))

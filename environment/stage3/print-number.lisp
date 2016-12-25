@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005–2009,2012–2016 Sven Michael Klose <pixel@hugbox.org>
-
 (defun digit (x)
   (code-char (? (< x 10)
                 (+ (char-code #\0) x)

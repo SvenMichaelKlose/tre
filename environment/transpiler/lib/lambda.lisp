@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005–2015 Sven Michael Klose <pixel@copei.de>
-
 (defmacro with-lambda-call ((args vals body x) &body exec-body)
   (with-gensym (tmp fun)
     `(with (,tmp ,x

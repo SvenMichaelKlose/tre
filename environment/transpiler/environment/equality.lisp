@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2009,2011–2014,2016 Sven Michael Klose <pixel@copei.de>
-
 (defun eql (x y)
   (| x (setq x nil))
   (| y (setq y nil))

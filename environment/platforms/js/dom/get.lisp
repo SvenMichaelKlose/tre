@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2014,2016 Sven Michael Klose <pixel@copei.de>
-
 (defun child-of-ancestor-if (node pred)
   (let child node
     (do-self-and-ancestors (x node)

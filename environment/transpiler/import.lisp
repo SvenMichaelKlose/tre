@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@hugbox.org>
-
 (defun defined-or-wanted? (x)
   (| (defined-function x)
      (defined-variable x)

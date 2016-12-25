@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2009,2012–2016 Sven Michael Klose <pixel@hugbox.org>
-
 (defun read-hex (str)
   (with (rec #'((v)
 				    (!? (& (peek-char str)

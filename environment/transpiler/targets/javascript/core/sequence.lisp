@@ -1,5 +1,3 @@
-;;;;; tré – Copyright (c) 2008–2012 Sven Michael Klose <pixel@copei.de>
-
 (defun length (x)
   (? x
      (? (cons? x)

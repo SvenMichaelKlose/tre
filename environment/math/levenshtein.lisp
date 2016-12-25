@@ -1,5 +1,3 @@
-;;;;; tré – Copyright (c) 2011–2013 Sven Michael Klose <pixel@copei.de>
-
 (defun make-levenshtein (row column)
   (with (width  (length row)
          height (length column)

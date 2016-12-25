@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2009–2013,2015 Sven Michael Klose <pixel@copei.de>
-
 (defun count-tags (x)
   (& (named-lambda? x.)
      (alet (lambda-body x.)

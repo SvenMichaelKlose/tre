@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005–2011,2013–2016 Sven Michael Klose <pixel@hugbox.org>
-
 (env-load "stage2/multiple-value-bind.lisp")
 (env-load "stage2/values.lisp")
 (env-load "stage2/while.lisp")

@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2013,2016 Sven Michael Klose <pixel@copei.de>
-
 (defclass caroshi-event (&key (native-event nil) (new-type nil) (new-button nil) (x nil) (y nil))
   (clr _x _y _stop)
   (= _send-natively? t)

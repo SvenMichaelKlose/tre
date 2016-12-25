@@ -1,5 +1,3 @@
-; tré transpiler – Copyright (c) 2005–2016 Sven Michael Klose <pixel@hugbox.org>
-
 (env-load "transpiler/front-end/arith-wrappers.lisp" :c)
 (env-load "transpiler/front-end/wrap-atoms.lisp")
 (env-load "transpiler/front-end/gather-imports.lisp")

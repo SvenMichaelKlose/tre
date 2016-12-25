@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005–2006,2008,2010,2012–2014,2016 Sven Michael Klose <pixel@copei.de>
-
 (functional queue-list queue-front)
 
 (defun make-queue ()

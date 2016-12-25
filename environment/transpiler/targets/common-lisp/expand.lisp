@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2014–2015 Sven Michael Klose <pixel@copei.de>
-
 (add-printer-argument-definition 'cl:labels      '(assignments &body body))
 (add-printer-argument-definition 'cl:lambda      '(args &body body))
 (add-printer-argument-definition 'cl:defun       '(name args &body body))

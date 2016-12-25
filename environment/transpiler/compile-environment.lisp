@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2014,2016 Sven Michael Klose <pixel@copei.de>
-
 (defun %environment-transpiler (tr funs)
   (aprog1 (copy-transpiler tr)
     (with-temporary *transpiler* !

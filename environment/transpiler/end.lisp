@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2010–2016 Sven Michael Klose <pixel@hugbox.org>
-
 (defun sloppy-equal (x needle)
   (& (atom x)
      (atom needle)

@@ -1,7 +1,4 @@
-; tré – Copyright (c) 2006–2009,2012–2015 Sven Michael Klose <pixel@copei.de>
-
-;;;; QUASIQUOTEs outside BACKQUOTEs are treated here. They serve as
-;;;; anonymous macros.
+; QUASIQUOTEs outside BACKQUOTEs are treated here. They serve as anonymous macros.
 
 (%defun any-quasiquote? (x)
   (? (cons? x)

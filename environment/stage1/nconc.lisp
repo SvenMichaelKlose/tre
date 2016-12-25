@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005–2009,2011–2016 Sven Michael Klose <pixel@copei.de>
-
 (defun %nconc-0 (lsts)
   (when lsts
     (!? lsts.

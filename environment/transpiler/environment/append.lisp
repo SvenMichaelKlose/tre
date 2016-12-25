@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005–2009,2011–2015 Sven Michael Klose <pixel@copei.de>
-
 (functional append)
 
 (defun append (&rest lists)

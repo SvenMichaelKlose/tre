@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005–2006,2008,2012–2014 Sven Michael Klose <pixel@hugbox.org>
-
 (%defun %chk-place (x)
   (? (%arg-keyword? x)
      (error "Place ~A is an argument keyword." x)))

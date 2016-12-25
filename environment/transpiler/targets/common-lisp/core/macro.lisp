@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2014–2015 Sven Michael Klose <pixel@hugbox.org>
-
 (defun env-macros ()
   (symbol-value (tre-symbol '*macros*)))
 

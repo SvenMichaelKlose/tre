@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2010–2014,2016 Sven Michael Klose <pixel@copei.de>
-
 (defun function-exits? (x)
   (alet x.
     (?

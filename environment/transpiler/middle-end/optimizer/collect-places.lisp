@@ -1,5 +1,3 @@
-;;;;; tré – Copyright (c) 2009–2014 Sven Michael Klose <pixel@copei.de>
-
 (defun collect-places-r (x)
   (?
     (named-lambda? x.) (with-lambda-funinfo x.

@@ -1,6 +1,3 @@
-; tré – Copyright (c) 2006–2008,2011–2016 Sven Michael Klose <pixel@copei.de>
-
-; XXX +first-to-tenth+
 (defconstant *first-to-tenth*
   '(first second third fourth fifth sixth seventh eighth ninth tenth))
 

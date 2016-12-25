@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@hugbox.org>
-
 (define-transpiler-end :backend-generate-code
     backend-input          #'identity
     function-names         #'translate-function-names

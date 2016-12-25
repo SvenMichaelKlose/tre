@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2012,2016 Sven Michael Klose <pixel@copei.de>
-
 (defun copy-head-and-body (from-doc to-doc &key (remove-if t))
   (with (srchead (from-doc.get "head")
 		 srcbody (from-doc.get "body")

@@ -1,5 +1,3 @@
-;;;;; tré – Copyright (c) 2011,2013 Sven Michael Klose <pixel@copei.de>
-
 (defun funinfo-add-local-function-args (fi fun-name args)
   (& (assoc fun-name (funinfo-local-function-args fi) :test #'eq)
      (error "Local function arguments for ~A are already set." fun-name))

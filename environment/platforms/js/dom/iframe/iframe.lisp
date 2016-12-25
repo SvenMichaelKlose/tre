@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2010–2012,2014 Sven Michael Klose <pixel@copei.de>
-
 (defun iframe-document (x)
   (| x.content-document
      (awhen x.content-window

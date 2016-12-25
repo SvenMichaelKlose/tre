@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2013,2016 Sven Michael Klose <pixel@hugbox.org>
-
 (functional digit-number)
 
 (defun digit-number (x)

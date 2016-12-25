@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@copei.de>
-
 (define-test "argument expansion works with simple list"
   ((equal (argument-expand 'test-1 '(a b) '(2 3))
 	      '((a . 2) (b . 3))))

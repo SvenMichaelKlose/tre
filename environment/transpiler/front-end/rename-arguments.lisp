@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005–2016 Sven Michael Klose <pixel@hugbox.org>
-
 (define-gensym-generator argument-sym a)
 
 (defun list-aliases (x)

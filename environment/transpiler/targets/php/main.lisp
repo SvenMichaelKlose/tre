@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005–2011,2013–2015 Sven Michael Klose <pixel@copei.de>
-
 (env-load "transpiler/targets/php/core.lisp")
 (env-load "transpiler/targets/php/literals.lisp")
 (env-load "transpiler/targets/php/argument-filter.lisp")

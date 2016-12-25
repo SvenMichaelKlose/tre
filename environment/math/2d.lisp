@@ -1,5 +1,3 @@
-;;;;; Caroshi – Copyright (c) 2008–2009,2011–2013 Sven Michael Klose <pixel@copei.de>
-
 (defun distance (x y x2 y2)
   (sqrt (+ (pow (abs (- x x2)) 2)
            (pow (abs (- y y2)) 2))))

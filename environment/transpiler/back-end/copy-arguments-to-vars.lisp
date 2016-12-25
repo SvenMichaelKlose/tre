@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005–2014 Sven Michael Klose <pixel@copei.de>
-
 (defun copy-arguments-to-vars (fi)
   (& (copy-arguments-to-stack?)
      (mapcan [& (funinfo-var? fi _)

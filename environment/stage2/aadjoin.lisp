@@ -1,5 +1,3 @@
-;;;;; tré – Copyright (c) 2014 Sven Michael Klose <pixel@copei.de>
-
 (defun aadjoin (key value lst &key (test #'eql) (to-end? nil))
   (? (assoc key lst :test test)
      (aprog1 (copy-alist lst)

@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@hugbox.org>
-
 (env-load "stage4/@.lisp")
 (env-load "stage4/clr.lisp")
 (env-load "stage4/compose.lisp")

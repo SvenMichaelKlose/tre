@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2014–2015 Sven Michael Klose <pixel@hugbox.org>
-
 (cl:defvar *builtin-atoms* (cl:make-hash-table :test #'cl:eq))
 
 (defmacro defbuiltin (name args &body body)

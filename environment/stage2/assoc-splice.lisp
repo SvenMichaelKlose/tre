@@ -1,7 +1,4 @@
-;;;; TRE environment
-;;;; Copyright (C) 2005-2008,2011 Sven Klose <pixel@copei.de>
-
 (functional assoc-splice)
 
-(defun assoc-splice (x)
+(defun assoc-splice (x)     ; TODO: Remove this.
   (values (carlist x) (cdrlist x)))

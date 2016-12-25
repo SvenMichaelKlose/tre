@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2015 Sven Michael Klose <pixel@hugbox.org>
-
 (defmacro @ (what &body body)
   (alet (macroexpand what)
     (?

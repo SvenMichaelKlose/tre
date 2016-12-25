@@ -1,5 +1,3 @@
-;;;;; tré – Copyright (c) 2009,2012–2014 Sven Michael Klose
-
 (defmacro define-file-ending-predicate (name)
   (let sname (downcase (symbol-name name))
     `(defun ,($ name '-suffix?) (x)

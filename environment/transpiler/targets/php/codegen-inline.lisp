@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2013,2015 Sven Michael Klose <pixel@copei.de>
-
 ;(define-php-binary - "-")
 (define-php-binary / "/")
 (define-php-binary * "*")

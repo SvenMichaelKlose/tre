@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005–2008,2012–2013,2016 Sven Michael Klose <pixel@hugbox.org>
-
 (defmacro with-temporary (place val &body body)
   (with-gensym old-val
     `(with (,old-val ,place)

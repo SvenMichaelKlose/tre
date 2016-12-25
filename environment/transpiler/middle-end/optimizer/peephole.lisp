@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@copei.de>
-
 (defun assignment-to-self? (x)
   (& (%=? x)
      (eq .x. ..x.)))

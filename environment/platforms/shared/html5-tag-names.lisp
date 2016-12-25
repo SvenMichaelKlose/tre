@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2016 Sven Michael Klose
-
 (defconstant *html5-block-element-names*
     '(head
       title

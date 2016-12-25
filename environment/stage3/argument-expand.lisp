@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@hugbox.org>
-
 (def-head-predicate %rest)
 (def-head-predicate %body)
 (def-head-predicate %key)

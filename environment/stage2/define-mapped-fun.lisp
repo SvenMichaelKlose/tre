@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2006,2009,2012–2015 Sven Michael Klose <pixel@copei.de>
-
 (defmacro define-mapped-fun (mapfun name &rest fun)
   (with-gensym g
     `(defun ,name (,g)

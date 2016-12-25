@@ -1,5 +1,3 @@
-;;;;; tré – Copyright (c) 2011 Sven Michael Klose <pixel@copei.de>
-
 (defun caroshi-add-event-listener (typ fun elm)
   (native-add-event-listener elm typ fun))
 

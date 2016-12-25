@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2006–2007,2009,2011–2014 Sven Michael Klose <pixel@copei.de>
-
 (defun funinfo-scope-arg? (fi x)
   (eq x (funinfo-scope-arg fi)))
 

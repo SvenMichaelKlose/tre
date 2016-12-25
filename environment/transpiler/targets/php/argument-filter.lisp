@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2009–2015 Sven Michael Klose <pixel@copei.de>
-
 (defun php-expex-add-global (x)
   (funinfo-var-add (global-funinfo) x)
   (adjoin! x (funinfo-globals *funinfo*))

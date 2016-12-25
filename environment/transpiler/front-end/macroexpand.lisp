@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2015 Sven Michael Klose <pixel@hugbox.org>
-
 (defun transpiler-make-std-macro-expander (tr)
   (aprog1 (define-expander ($ (transpiler-name tr) '-standard (gensym)))
     (with (mypred  (expander-pred !)

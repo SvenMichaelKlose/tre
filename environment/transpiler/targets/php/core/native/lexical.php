@@ -1,5 +1,3 @@
-// tré - Copyright (c) 2010-2012 Sven Michael Klose <pixel@copei.de>
-
 $LEXICALS = Array ();
 $LEXICALID = 0;
 

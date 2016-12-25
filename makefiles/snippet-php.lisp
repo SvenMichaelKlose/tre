@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2008–2016 Sven Michael Klose <pixel@copei.de>
-
 (= (transpiler-dump-passes? *php-transpiler*) nil)
 
 (unix-sh-mkdir "compiled" :parents t)

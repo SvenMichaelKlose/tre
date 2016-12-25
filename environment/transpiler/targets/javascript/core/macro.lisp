@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2011–2016 Sven Michael Klose <pixel@copei.de>
-
 (defvar *macros* nil)
 (defvar *standard-macro-expander* nil)
 

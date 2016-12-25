@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2014–2016 Sven Michael Klose <pixel@hugbox.org>
-
 (defbuiltin code-char (x)
   (? (cl:characterp x)
      x
