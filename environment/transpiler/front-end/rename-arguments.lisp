@@ -1,19 +1,20 @@
-; tré – Copyright (c) 2005–2015 Sven Michael Klose <pixel@hugbox.org>
+; tré – Copyright (c) 2005–2016 Sven Michael Klose <pixel@hugbox.org>
 
 (define-gensym-generator argument-sym a)
 
-(defun list-aliases (x &key (gensym-generator #'gensym))
+(defun list-aliases (x)
   (when x
-    (. (. x. (funcall gensym-generator))
+    (. (. x. (argument-sym))
        (list-aliases .x))))
 
 (defun rename-argument (replacements x)
-  (| (assoc-value x replacements :test #'eq) x))
+  (| (assoc-value x replacements :test #'eq)
+     x))
 
 (defun rename-arguments-lambda (replacements x)
   (? (get-lambda-funinfo x)
      x
-     (alet (+ (list-aliases (expanded-lambda-args x) :gensym-generator #'argument-sym) replacements)
+     (alet (+ (list-aliases (expanded-lambda-args x)) replacements)
 	   (copy-lambda x :args (rename-arguments-0 ! (lambda-args x))
                       :body (rename-arguments-0 ! (lambda-body x))))))
 
