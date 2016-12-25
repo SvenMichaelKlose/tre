@@ -105,7 +105,7 @@
     (= (href (transpiler-funinfos transpiler) name) fi)
     (funinfo-var-add fi '~%ret)
     (& (transpiler-copy-arguments-to-stack? transpiler)
-       (funinfo-var-add-many fi argnames))
+       (@ [funinfo-var-add fi _] argnames))
     fi))
 
 (defun funinfo-closure-without-free-vars? (fi)

@@ -12,13 +12,14 @@
   `(%%block
      ,@(@ #'((stack-place init-value)
               `(%= ,stack-place ,init-value))
-          stack-places values)
+          stack-places
+          values)
      ,@body))
 
 (defun lambda-call-embed (lambda-call)
   (with-lambda-call (args vals body lambda-call)
     (with ((a v) (assoc-splice (argument-expand 'dummy-in-lambda-call-embed args vals)))
-      (funinfo-var-add-many *funinfo* a)
+      (@ [funinfo-var-add *funinfo* _] a)
       (lambda-expand-r (lambda-expand-make-inline-body a v body)))))
 
 

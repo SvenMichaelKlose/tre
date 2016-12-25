@@ -69,10 +69,6 @@
          t)))
   x)
 
-(defun funinfo-var-add-many (fi x)
-  (@ (i x)
-	(funinfo-var-add fi i)))
-
 (defun funinfo-vars-reset (fi)
   (= (funinfo-vars fi) nil)
   (unless (funinfo-parent fi)
@@ -80,7 +76,7 @@
 
 (defun funinfo-vars-set (fi x)
   (funinfo-vars-reset fi)
-  (funinfo-var-add-many fi x))
+  (@ [funinfo-var-add fi _] x))
 
 
 ;;;; LEXICALS
