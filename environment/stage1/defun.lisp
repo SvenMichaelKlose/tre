@@ -32,3 +32,6 @@
            (block nil
              ,@(%add-documentation name body))))
 	   (return-from nil ',name))))
+
+(defmacro fn (name args &body body)
+  `(defun ,name ,args ,@body))
