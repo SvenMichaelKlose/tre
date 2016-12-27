@@ -35,13 +35,13 @@
 
 (defun alist-phphash (x)
   (let a (%%%make-hash-table)
-    (adolist (x a)
-      (%%%href-set .! a !.))))
+    (@ (i x a)
+      (%%%href-set .i a i.))))
 
 (defun phphash-alist (x)
   (with-queue q
-    (adolist ((hashkeys x) (queue-list q))
-      (enqueue q (. ! (aref x !))))))
+    (@ (i (hashkeys x) (queue-list q))
+      (enqueue q (. i (aref x i))))))
 
 (defun %href-error (h)
   (error "HREF expects an hash table instead of ~A." h))
