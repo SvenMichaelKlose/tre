@@ -10,6 +10,3 @@
 			           (eq '%slot-value body..)))
 			   body
 			   (list body)))))
-
-(defmacro fn (&body body)
-  (error "Macro FN has been removed.~%"))
