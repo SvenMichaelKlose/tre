@@ -4,7 +4,7 @@
   (is_a x "__character"))
 
 (defun code-char (x)
-  (declare type number x)   ; TODO: No use to declare types here.
+  (declare type number x)
   (new __character x))
 
 (defun char-code (x)
