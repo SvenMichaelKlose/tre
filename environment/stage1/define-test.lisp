@@ -53,17 +53,9 @@
   ((eq 'x 'x))
   t)
 
-;(define-test "EQ with three symbols"
-;  ((eq 'x 'x 'x))
-;  t)
-
 (define-test "EQL with symbols"
   ((eql 'x 'x))
   t)
-
-;(define-test "EQL with three symbols"
-;  ((eql 'x 'x 'x))
-;  t)
 
 (define-test "EQL with numbers"
   ((eql 1 1))
