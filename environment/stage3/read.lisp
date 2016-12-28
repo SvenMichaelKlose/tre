@@ -1,8 +1,8 @@
 (defun token-is-quote? (x)
-  (in? x 'quote 'backquote 'quasiquote 'quasiquote-splice 'accent-circonflex))
+  (in? x :quote :backquote :quasiquote :quasiquote-splice :accent-circonflex))
 
 (defun %read-closing-bracket? (x)
-  (in? x 'bracket-close 'square-bracket-close 'curly-bracket-close))
+  (in? x :bracket-close :square-bracket-close :curly-bracket-close))
 
 (defun special-char? (x)
   (in-chars? x #\( #\)
@@ -85,34 +85,35 @@
       (values (? (& sym
                     (not .sym)
                     (eql #\. sym.))
-                 'dot
+                 :dot
                  (? sym
                     (? (list-number? sym)
-                       'number
-                       'symbol)
+                       :number
+                       :symbol)
                     (case (read-char str)
-                      #\(	 'bracket-open
-                      #\)	 'bracket-close
-                      #\[	 'square-bracket-open
-                      #\]	 'square-bracket-close
-                      #\{	 'curly-bracket-open
-                      #\}	 'curly-bracket-close
-                      #\'	 'quote
-                      #\`	 'backquote
-                      #\^	 'accent-circonflex
-                      #\"	 'dblquote
+                      #\(	 :bracket-open
+                      #\)	 :bracket-close
+                      #\[	 :square-bracket-open
+                      #\]	 :square-bracket-close
+                      #\{	 :curly-bracket-open
+                      #\}	 :curly-bracket-close
+                      #\'	 :quote
+                      #\`	 :backquote
+                      #\^	 :accent-circonflex
+                      #\"	 :dblquote
                       #\,	 (? (eql #\@ (peek-char str))
-                              (& (read-char str)
-                                 'quasiquote-splice)
-                              'quasiquote)
+                                (& (read-char str)
+                                   :quasiquote-splice)
+                                :quasiquote)
                       #\#	 (case (read-char str)
-                             #\\  'char
-                             #\x  'hexnum
-                             #\'  'function
+                             #\\  :char
+                             #\x  :hexnum
+                             #\'  :function
                              #\|  (read-comment-block str)
                              (error "Invalid character after '#'."))
-                      -1	'eof)))
-              pkg sym))))
+                      -1	:eof)))
+              pkg
+              sym))))
 
 (defun read-slot-value (x)
   (? x
@@ -135,23 +136,23 @@
 
 (defun read-atom (str token pkg sym)
   (case token :test #'eq
-    'dblquote  (read-string str)
-    'char      (read-char str)
-    'number    (with-stream-string s (list-string sym)
+    :dblquote  (read-string str)
+    :char      (read-char str)
+    :number    (with-stream-string s (list-string sym)
                  (read-number s))
-    'hexnum    (read-hex str)
-	'function  `(function ,(read-expr str))
-    'symbol    (read-symbol-or-slot-value pkg sym)
+    :hexnum    (read-hex str)
+	:function  `(function ,(read-expr str))
+    :symbol    (read-symbol-or-slot-value pkg sym)
     (? (%read-closing-bracket? token)
        (error "~A bracket missing."
-              (case token :test #'eq
-                'bracket-close         "Round"
-                'curly-bracket-close   "Curly"
-                'square-bracket-close  "Square"))
+              (case token
+                :bracket-close         "Round"
+                :curly-bracket-close   "Curly"
+                :square-bracket-close  "Square"))
 	   (error "Syntax error: token ~A, sym ~A." token sym))))
 
 (defun read-quote (str token)
-  (list token (read-expr str)))
+  (list (make-symbol (symbol-name token)) (read-expr str)))
 
 (defun read-set-listprop (str)
   (alet (stream-input-location str)
@@ -164,31 +165,31 @@
          line   (stream-location-line loc)
          column (stream-location-column loc)
          file   (stream-location-id loc)
-         err [error "~A in form starting at line ~A, column ~A in file ~A."
-                    _ line column file]
+         err    [error "~A in form starting at line ~A, column ~A in file ~A."
+                       _ line column file]
          f #'((token pkg sym)
                 (unless (%read-closing-bracket? token)
                   (. (with-temporary *default-listprop* *default-listprop*
-                     (case token :test #'eq
-                       'bracket-open        (read-cons-slot str)
-                       'square-bracket-open (. 'square (read-cons-slot str))
-                       'curly-bracket-open  (. 'curly (read-cons-slot str))
-                       (? (token-is-quote? token)
-                          (read-quote str token)
-                          (read-atom str token pkg sym))))
+                       (case token
+                         :bracket-open        (read-cons-slot str)
+                         :square-bracket-open (. 'square (read-cons-slot str))
+                         :curly-bracket-open  (. 'curly (read-cons-slot str))
+                         (? (token-is-quote? token)
+                            (read-quote str token)
+                            (read-atom str token pkg sym))))
                      (with-temporary *default-listprop* *default-listprop*
-                      (!? (read-token str)
-                          (with ((token pkg sym) !)
-                            (? (eq 'dot token)
-                                (with (x                (read-expr str)
-                                       (token pkg sym)  (read-token str))
-                                  (| (%read-closing-bracket? token)
-                                     (err "Only one value allowed after dotted cons."))
-                                  x)
-                                (f token pkg sym)))
-                          (err "Closing bracket missing.")))))))
+                       (!? (read-token str)
+                           (with ((token pkg sym) !)
+                             (? (eq :dot token)
+                                 (with (x                (read-expr str)
+                                        (token pkg sym)  (read-token str))
+                                   (| (%read-closing-bracket? token)
+                                      (err "Only one value allowed after dotted cons."))
+                                   x)
+                                 (f token pkg sym)))
+                           (err "Closing bracket missing.")))))))
   (with ((token pkg sym) (read-token str))
-    (? (eq token 'dot)
+    (? (eq token :dot)
        (. 'cons (read-cons str))
 	   (f token pkg sym)))))
 
@@ -205,12 +206,12 @@
 
 (defun read-expr (str)
   (with ((token pkg sym) (read-token str))
-    (case token :test #'eq
+    (case token
       nil                   nil
-      'eof                  nil
-      'bracket-open         (read-cons-slot str)
-      'square-bracket-open  (. 'square (read-cons-slot str))
-      'curly-bracket-open   (. 'curly (read-cons-slot str))
+      :eof                  nil
+      :bracket-open         (read-cons-slot str)
+      :square-bracket-open  (. 'square (read-cons-slot str))
+      :curly-bracket-open   (. 'curly (read-cons-slot str))
       (? (token-is-quote? token)
          (read-quote str token)
          (read-atom str token pkg sym)))))
