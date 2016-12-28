@@ -1,4 +1,3 @@
-; TODO: Update lists of event names.
 (defconstant *mouse-events*   '("click" "dblclick" "mouseup" "mousedown" "mousemove" "mouseover" "mouseout"
                                 "mouseupleft" "mouseupmiddle" "mouseupright"
                                 "mousedownleft" "mousedownmiddle" "mousedownright"))
