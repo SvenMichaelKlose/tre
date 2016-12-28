@@ -27,7 +27,7 @@
      (~%ret? .x.)
      (alet ..x.
        (| (not !)
-          (t? !)))))
+          (eq t !)))))
 
 (define-optimizer optimize-jumps
   (& (%%go-cond? a)

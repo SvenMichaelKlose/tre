@@ -17,13 +17,13 @@
     `(%%block
        ,@(mapcan [with-compiler-tag next
                    (when _.
-                     `(,@(unless (t? _.)
+                     `(,@(unless (eq t _.)
                            `((%= ~%ret ,_.)
                              (%%go-nil ,next ~%ret)))
 				       ,@(!? (wrap-atoms ._)
 				             `((%= ~%ret (%%block ,@!))))
                        (%%go ,end-tag)
-                       ,@(unless (t? _.)
+                       ,@(unless (eq t _.)
                            (list next))))]
 			     args)
        ,end-tag

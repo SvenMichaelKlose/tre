@@ -205,13 +205,13 @@
 
 (defun invisible-package-name? (x)
   (unless (| (not x)
-             (t? x)
+             (eq t x)
              *always-print-package-names?*)
     (invisible-package? (symbol-package x))))
 
 (defun %print-symbol (x str info)
   (awhen (& x
-            (not (t? x))
+            (not (eq t x))
             (symbol-package x))
     (unless (invisible-package-name? x)
       (| (keyword? x)

@@ -19,7 +19,7 @@
 (defun dump-pass? (name x)
   (& *transpiler*
      (| (!? (dump-passes?)
-            (| (t? !)
+            (| (eq t !)
                (member name (ensure-list !))))
         (!? (dump-selector)
             (sloppy-tree-equal x !)))))

@@ -35,7 +35,7 @@
 (defun php-sections-after-import ()
   (+ (& (not (configuration :exclude-core?))
         (list (. 'core-2 (string-source *php-core2*))))
-     (& (t? *have-environment-tests*)
+     (& (eq t *have-environment-tests*)
         (list (. 'env-tests (make-environment-tests))))))
 
 (defun php-identifier-char? (x)

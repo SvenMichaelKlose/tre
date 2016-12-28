@@ -31,7 +31,7 @@
                   (. 'js-core-stream (string-source (js-core-stream))))
             (& (eq :nodejs (configuration :platform))
                (list (. 'js-core-nodejs (string-source (js-core-nodejs)))))
-            (& (t? *have-environment-tests*)
+            (& (eq t *have-environment-tests*)
                (list (. 'environment-tests (make-environment-tests))))))))
 
 (defun js-environment-files ()
