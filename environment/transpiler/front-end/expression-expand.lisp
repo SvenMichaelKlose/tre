@@ -105,7 +105,9 @@
     (expex-move-std x)))
 
 (defun expex-move-args (x)
-  (with ((moved new-expr) (assoc-splice (@ #'expex-move (expex-guest-filter-arguments x))))
+  (with (args      (@ #'expex-move (expex-guest-filter-arguments x))
+         moved     (carlist args)
+         new-expr  (cdrlist args))
     (values (apply #'+ moved) new-expr)))
 
 
