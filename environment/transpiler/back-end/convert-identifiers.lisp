@@ -46,7 +46,7 @@
 	                  (corrected-chars (? (global-variable-notation? !)
                                           (capitals !)
     	                                  (camel-notation (string-list !) 0))
-                                       0)))))) ; TODO: Argument keywords for local functions.
+                                       0))))))
 
 (defun convert-identifier (s)
   (| (href (identifiers) s)
