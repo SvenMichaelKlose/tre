@@ -48,7 +48,8 @@
       (number> >)
       (character== char=)
       (character< char<)
-      (character> char>)))
+      (character> char>)
+      (pow expt)))
 
 (defconstant +cl-special-forms+
     '(%defun-quiet %defun %defvar %defmacro ?))
