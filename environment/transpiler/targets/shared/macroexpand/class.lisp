@@ -7,17 +7,17 @@
 		 bases   (& (cons? class-name)
                     .class-name)
 		 classes (thisify-classes))
-	(print-definition `(defclass ,class-name ,@(awhen args (list !))))
+	(print-definition `(defclass ,class-name ,@(!? args (list !))))
     (& (href classes cname)
 	   (warn "Class ~A already defined." cname))
     (& .bases
        (error "More than one base class but multiple inheritance is not supported."))
 	(= (href classes cname)
        (? bases
-          (let bc (href classes bases.)
+          (alet (href classes bases.)
             (make-class :name    cname
-                        :members (class-members bc)
-                        :parent  bc))
+                        :members (class-members !)
+                        :parent  !))
           (make-class :name cname)))
 	(acons! cname
 			(funcall constructor-maker cname bases args body)
@@ -25,16 +25,14 @@
 	nil))
 
 (defun generic-defmethod (class-name name args &body body)
-  (print-definition `(defmethod ,class-name ,name ,@(awhen args (list !))))
+  (print-definition `(defmethod ,class-name ,name ,@(!? args (list !))))
   (!? (href (thisify-classes) class-name)
       (let code (list args body)
         (? (assoc name (class-methods !))
            {(= (assoc-value name (class-methods !)) code)
-            (warn "In class '~A': member '~A' already defined."
-                  class-name name)}
+            (warn "In class '~A': member '~A' already defined." class-name name)}
            (acons! name code (class-methods !))))
-      (error "Definition of method ~A: class ~A is not defined."
-             name class-name))  ; TODO: Fix. Isn't called.
+      (error "Cannot define method ~A for undefined class ~A." name class-name))
   nil)
 
 (defun generic-defmember (class-name &rest names)
