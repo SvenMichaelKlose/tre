@@ -30,9 +30,8 @@
 (fn string-subseq (seq start &optional (end 99999))
   (unless (& (< (- (length seq) 1) start)
              (< start end))
-    (? (== start end)   ; TODO: Should return NIL.
-	   ""
-       (seq.substr start (- end start)))))
+    (unless (== start end)
+      (seq.substr start (- end start)))))
 
 (fn number-string (x)
   (*String x))

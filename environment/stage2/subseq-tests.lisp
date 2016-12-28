@@ -18,6 +18,6 @@
   ((subseq "lisp" 10))
   nil)
 
-(define-test "SUBSEQ returns empty string when start and end are the same"
-  ((string== "" (subseq "lisp" 1 1)))
+(define-test "SUBSEQ returns NIL when start and end are the same"
+  ((not (subseq "lisp" 1 1)))
   t)
