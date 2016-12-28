@@ -12,6 +12,3 @@
   (alet (make-array)
     (@ (i x !)
       (!.push i))))
-
-(defun array-find (arr obj)     ; TODO: Move to application that uses it.
-  (not (== -1 (arr.index-of obj))))
