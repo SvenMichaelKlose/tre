@@ -1,5 +1,5 @@
 (defun make-project (project-name sections &key transpiler
-                                                (modified-file-getter  nil)
+                                                (section-list-gen      nil)
                                                 (sections-to-update    nil)
                                                 (recompiler-path       nil)
                                                 (emitter               nil)
@@ -12,18 +12,17 @@
     (!? emitter
         (funcall ! code))
     (awhen recompiler-path
-      (| modified-file-getter
-         (error (+ "The recompiler requires argument MODIFIED-FILE-GETTER which is a function "
-                   "without arguments returning a list of modified sections.")))
-      ; TODO: Rename MODIFIED-FILE-GETTER to GEN-FILELIST.
+      (| section-list-gen
+         (error (+ "The recompiler requires argument SECTION-LIST-GEN which is a function "
+                   "without arguments that returns a list of modified sections.")))
       (format t "; Making recompiler '~A'...~F" recompiler-path)
-      (= *allow-redefinitions?* t)
+      (= *allow-redefinitions?* t)  ; TODO: Set default to NIL.
       (sys-image-create recompiler-path
                         #'(()
                              (make-project project-name sections
                                            :transpiler            transpiler
-                                           :modified-file-getter  modified-file-getter
-                                           :sections-to-update    (funcall modified-file-getter)
+                                           :section-list-gen      section-list-gen
+                                           :sections-to-update    (funcall section-list-gen)
                                            :recompiler-path       recompiler-path
                                            :emitter               emitter
                                            :obfuscate?            obfuscate?)
