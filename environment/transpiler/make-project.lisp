@@ -5,6 +5,7 @@
                                                 (emitter               nil)
                                                 (obfuscate?            nil))
   (format t "; Making project '~A'...~%" project-name)
+  (= sections (ensure-list sections))
   (= (transpiler-sections-to-update transpiler) sections-to-update)
   (& obfuscate?
      (transpiler-enable-pass transpiler :obfuscate))

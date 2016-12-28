@@ -1,5 +1,5 @@
 (make-project "Hello World for node.js"
-              '("examples/hello-world.lisp")
+              "examples/hello-world.lisp"
               :transpiler  (aprog1 *js-transpiler*
                              (= (transpiler-configuration ! :platform) :nodejs)
                              ; Gives 'var fs = require ("fs");':

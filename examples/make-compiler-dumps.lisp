@@ -1,7 +1,6 @@
-(= (transpiler-dump-passes? *js-transpiler*) t)
-
 (make-project "Hello World"
-              '("examples/hello-world.lisp")
-              :transpiler  *js-transpiler*
+              "examples/hello-world.lisp"
+              :transpiler  (aprog1 *js-transpiler*
+                             (= (transpiler-dump-passes? !) t))
               :emitter     [make-html-script "compiled/hello-world.html" _])
 (quit)
