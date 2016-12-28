@@ -14,18 +14,16 @@
     (awhen recompiler-path
       (| section-list-gen
          (error (+ "The recompiler requires argument SECTION-LIST-GEN which is a function "
-                   "without arguments that returns a list of modified sections.")))
+                   "without arguments that returns a list of names of modified sections.")))
       (format t "; Making recompiler '~A'...~F" recompiler-path)
-      (= *allow-redefinitions?* t)  ; TODO: Set default to NIL.
       (sys-image-create recompiler-path
-                        #'(()
-                             (make-project project-name sections
-                                           :transpiler            transpiler
-                                           :section-list-gen      section-list-gen
-                                           :sections-to-update    (funcall section-list-gen)
-                                           :recompiler-path       recompiler-path
-                                           :emitter               emitter
-                                           :obfuscate?            obfuscate?)
-                             (quit)))
+                        [0 (make-project project-name sections
+                                         :transpiler          transpiler
+                                         :section-list-gen    section-list-gen
+                                         :sections-to-update  (funcall section-list-gen)
+                                         :recompiler-path     recompiler-path
+                                         :emitter             emitter
+                                         :obfuscate?          obfuscate?)
+                           (quit)])
       (format t " OK.~%"))
     code))
