@@ -5,12 +5,13 @@
   (in? x :bracket-close :square-bracket-close :curly-bracket-close))
 
 (defun special-char? (x)
-  (in-chars? x #\( #\)
-               #\[ #\]
-               #\{ #\}
-               #\" #\' #\`
-               #\, #\: #\;
-               #\# #\^))
+  (& x
+     (in-chars? x #\( #\)
+                  #\[ #\]
+                  #\{ #\}
+                  #\" #\' #\`
+                  #\, #\: #\;
+                  #\# #\^)))
 
 (defun symbol-char? (x)
   (& x
@@ -88,27 +89,27 @@
                        :number
                        :symbol)
                     (case (read-char str)
-                      #\(	 :bracket-open
-                      #\)	 :bracket-close
-                      #\[	 :square-bracket-open
-                      #\]	 :square-bracket-close
-                      #\{	 :curly-bracket-open
-                      #\}	 :curly-bracket-close
-                      #\'	 :quote
-                      #\`	 :backquote
-                      #\^	 :accent-circonflex
-                      #\"	 :dblquote
-                      #\,	 (? (eql #\@ (peek-char str))
-                                (& (read-char str)
-                                   :quasiquote-splice)
-                                :quasiquote)
-                      #\#	 (case (read-char str)
+                      #\(  :bracket-open
+                      #\)  :bracket-close
+                      #\[  :square-bracket-open
+                      #\]  :square-bracket-close
+                      #\{  :curly-bracket-open
+                      #\}  :curly-bracket-close
+                      #\'  :quote
+                      #\`  :backquote
+                      #\^  :accent-circonflex
+                      #\"  :dblquote
+                      #\,  (? (eql #\@ (peek-char str))
+                              (& (read-char str)
+                                 :quasiquote-splice)
+                              :quasiquote)
+                      #\#  (case (read-char str)
                              #\\  :char
                              #\x  :hexnum
                              #\'  :function
                              #\|  (read-comment-block str)
                              (error "Invalid character after '#'."))
-                      -1	:eof)))
+                      -1   :eof)))
               pkg
               sym))))
 
@@ -141,12 +142,12 @@
 	:function  `(function ,(read-expr str))
     :symbol    (read-symbol-or-slot-value pkg sym)
     (? (%read-closing-bracket? token)
-       (error "~A bracket missing."
+	   (error "Unexpected closing ~A bracket."
               (case token
-                :bracket-close         "Round"
-                :curly-bracket-close   "Curly"
-                :square-bracket-close  "Square"))
-	   (error "Syntax error: token ~A, sym ~A." token sym))))
+                :bracket-close         "round"
+                :curly-bracket-close   "curly"
+                :square-bracket-close  "square"))
+       (error "Closing bracket missing."))))
 
 (defun read-quote (str token)
   (list (make-symbol (symbol-name token)) (read-expr str)))
