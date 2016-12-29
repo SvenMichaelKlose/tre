@@ -50,9 +50,12 @@
 
 (defun convert-identifier (s)
   (| (href (identifiers) s)
-     (let n (!? (defined-package (symbol-package s))
-                (convert-identifier-r (make-symbol (+ (symbol-name (symbol-package s)) ":" (symbol-name s))))
-                (convert-identifier-r s))
+     (let n (alet (symbol-name (symbol-package s))
+              (? (| (eql "TRE" !)
+                    (eql "TRE-CORE" !)
+                    (eql "COMMON-LISP" !))
+                 (convert-identifier-r s)
+                 (convert-identifier-r (make-symbol (+ ! "_P_" (symbol-name s))))))
        (awhen (href (converted-identifiers) n)
          (error "Identifier clash: symbol ~A and ~A are both converted to ~A."
                 s ! n))

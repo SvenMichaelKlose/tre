@@ -48,7 +48,7 @@
        (values (| ! *keyword-package*)
                (& (read-char str)
                   (read-symbol str)))
-       (values nil !))))
+       (values "TRE" !))))
 
 (defun read-string (str)
   (with (f #'(()
@@ -115,7 +115,7 @@
 (defun read-slot-value (x)
   (? x
      (? .x
-        `(slot-value ,(read-slot-value (butlast x)) ',(tre:make-symbol (car (last x))))
+        `(slot-value ,(read-slot-value (butlast x)) ',(tre:make-symbol (car (last x)) "TRE"))
         (? (string? x.)
            (tre:make-symbol x.)
            x.))))
