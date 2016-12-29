@@ -23,11 +23,8 @@
 	   (skip-spaces str)
 	   (skip-comment str))))
 
-(defun semicolon? (x)
-  (& x (eql x #\;)))
-
 (defun skip-spaces (str)
-  (when (semicolon? (peek-char str))
+  (when (eql #\; (peek-char str))
     (skip-comment str))
   (when (whitespace? (peek-char str))
     (read-char str)
