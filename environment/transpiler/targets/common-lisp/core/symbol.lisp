@@ -7,6 +7,8 @@
                  (cl:symbolp package)   (cl:symbol-name package)
                  package)))
 
+(defvar *package* (make-symbol "TRE"))
+
 (defbuiltin symbol-name (x)
   (? (cl:packagep x)
      (cl:package-name x)
