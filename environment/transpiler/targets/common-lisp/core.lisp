@@ -12,6 +12,7 @@
 (defvar *cl-core*
 	,(cl-load-base *cl-core-path*
                    "global-variables.lisp"
+                   "tre-symbol.lisp"
                    "defbuiltin.lisp"
                    "array.lisp"
                    "env-load.lisp"

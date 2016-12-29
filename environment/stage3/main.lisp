@@ -19,7 +19,6 @@
 (env-load "stage3/princ-number.lisp" :cl)
 (env-load "stage3/princ.lisp")
 (env-load "stage3/line.lisp")
-(env-load "stage3/tre-symbol.lisp")
 (env-load "stage3/def-head-predicate.lisp")
 (env-load "stage3/argument-expand.lisp")
 (env-load "stage3/argument-expand-tests.lisp")
