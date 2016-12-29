@@ -194,9 +194,9 @@
 ;;;; METACODES
 
 (defun make-compiled-symbol-identifier (x)
-  ($ (? (keyword? x)
-        'keyword_
-        'symbol_)
+  ($ (!? (symbol-package x)
+         (+ (symbol-name !) "_p_")
+         "")
      x))
 
 (defvar *js-compiled-symbols* (make-hash-table :test #'eq))
