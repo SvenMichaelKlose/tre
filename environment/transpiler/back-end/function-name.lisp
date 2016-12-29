@@ -4,7 +4,14 @@
   (href *compiled-function-names* x))
 
 (defun compiled-function-name (name)
-  (aprog1 (make-symbol (+ (function-name-prefix) (symbol-name name)))
+  (aprog1 (make-symbol (+ (function-name-prefix)
+                          (alet (symbol-name (symbol-package name))
+                            (? (| (eql "TRE" !)
+                                  (eql "TRE-CORE" !)
+                                  (eql "COMMON-LISP" !))
+                               ""
+                               (+ ! "_p_")))
+                          (symbol-name name)))
     (let-when n (real-function-name name)
       (| (eq n name)
          (funinfo-error "Compiled function name clash ~A for ~A and ~A." ! name n)))
