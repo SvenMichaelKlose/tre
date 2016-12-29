@@ -1,5 +1,3 @@
-(defvar *js-compiled-symbols* (make-hash-table :test #'eq))
-
 (define-codegen-macro-definer define-js-macro *js-transpiler*)
 
 
@@ -201,19 +199,21 @@
         'symbol_)
      x))
 
+(defvar *js-compiled-symbols* (make-hash-table :test #'eq))
+
 (define-js-macro quote (x)
   (with (f  [let s (compiled-function-name-string 'symbol)
               `(,s " (\"" ,(obfuscated-symbol-name _) "\", "
 	            ,@(? (keyword? _)
 	                 `("KEYWORDPACKAGE")
-	                 '(("null")))
+	                 '("null"))
 	            ")")])
       (cache (aprog1 (make-compiled-symbol-identifier x)
                (push `("var " ,(obfuscated-identifier !)
                        " = "
                        ,@(f x)
                        ,*js-separator*)
-                       (raw-decls)))
+                     (raw-decls)))
              (href *js-compiled-symbols* x))))
 
 (define-js-macro %slot-value (x y)
