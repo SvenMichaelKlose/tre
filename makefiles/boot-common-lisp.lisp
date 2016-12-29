@@ -9,7 +9,8 @@
                              +core-variables+
                              (carlist +cl-renamed-imports+))))
       (:import-from  "CL" ,@(@ #'symbol-name
-                               (+ +cl-symbol-imports+
+                               (+ (list 'format)
+                                  +cl-symbol-imports+
                                   +cl-function-imports+))))
     (defpackage "TRE"
       (:use "TRE-CORE"))))
