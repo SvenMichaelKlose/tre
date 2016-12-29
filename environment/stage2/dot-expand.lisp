@@ -47,8 +47,8 @@
 (defun dot-expand (x)
   (?
     (symbol? x)  (dot-expand-conv x)
-    (cons? x)    (listprop-cons x (dot-expand x.)
-                                  (dot-expand .x))
+    (cons? x)    (. (dot-expand x.)
+                    (dot-expand .x))
     x))
 
 (= *dot-expand* #'dot-expand)

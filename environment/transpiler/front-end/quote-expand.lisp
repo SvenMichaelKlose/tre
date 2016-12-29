@@ -30,6 +30,6 @@
                   _]
          walk   [? (atom _)
 	               (disp _)
-                   (listprop-cons _ (walk (disp _.))
-                                    (walk ._))])
+                   (. (walk (disp _.))
+                      (walk ._))])
     (car (walk (list x)))))

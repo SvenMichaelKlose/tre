@@ -70,9 +70,9 @@
 (defun lambda-expand-r (x)
   (?
     (atom x)   x
-    (atom x.)  (listprop-cons x x. (lambda-expand-r .x))
-    (listprop-cons x (lambda-expand-expr x.)
-	                 (lambda-expand-r .x))))
+    (atom x.)  (. x. (lambda-expand-r .x))
+    (. (lambda-expand-expr x.)
+	   (lambda-expand-r .x))))
 
 (defun lambda-expand (x)
   (with-global-funinfo

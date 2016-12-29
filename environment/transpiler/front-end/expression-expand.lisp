@@ -134,16 +134,15 @@
       (values moved (make-%= p new-expr.)))))
 
 (defun expex-expr (x)
-  (with-default-listprop x
-    (pcase x
-      %=?            (expex-expr-%= x)
-      %%go-nil?      (expex-%%go-nil x)
-      %var?          (expex-var x)
-      named-lambda?  (expex-lambda x)
-      %%block?       (values nil (expex-body .x))
-      unexpex-able?  (values nil (list x))
-      (with ((moved new-expr) (expex-move-args (expex-argexpand x)))
-        (values moved (list new-expr))))))
+  (pcase x
+    %=?            (expex-expr-%= x)
+    %%go-nil?      (expex-%%go-nil x)
+    %var?          (expex-var x)
+    named-lambda?  (expex-lambda x)
+    %%block?       (values nil (expex-body .x))
+    unexpex-able?  (values nil (list x))
+    (with ((moved new-expr) (expex-move-args (expex-argexpand x)))
+      (values moved (list new-expr)))))
 
 
 ;;;; BODY EXPANSION

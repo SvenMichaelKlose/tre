@@ -8,11 +8,6 @@
      x.__
      (assert (not x) "Cons or NIL expected instead of ~A." x)))
 
-(fn cpr (x)
-  (? x
-     x._p
-     (assert (not x) "Cons or NIL expected instead of ~A." x)))
-
 (fn rplaca (x val)
   (declare type cons x)
   (= x._ val)
@@ -21,11 +16,6 @@
 (fn rplacd (x val)
   (declare type cons x)
   (= x.__ val)
-  x)
-
-(fn rplacp (x val)
-  (declare type cons x)
-  (= x._p val)
   x)
 
 (fn cons? (x)
