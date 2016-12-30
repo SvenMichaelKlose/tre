@@ -30,7 +30,7 @@
 (defbuiltin =-symbol-function (v x)
   (cl:setf (cl:symbol-function x) v))
 
-(defbuiltin find-symbol (x &optional pkg)
+(defbuiltin find-symbol (x &optional (pkg *package*))
   (cl:find-symbol (symbol-name x) (find-package (symbol-name *package*))))
 
 (defun tre-symbol (x)
