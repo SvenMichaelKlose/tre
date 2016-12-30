@@ -59,5 +59,10 @@
   `(defvar ,name ,val))
 
 (define-shared-std-macro (bc c js php) in-package (name &optional (val '%%no-value-in-in-package))
-  (cl:make-package (symbol-name name))
-  (transpiler-add-defined-package *transpiler* name))
+  (cl:eval `(cl:in-package ,(symbol-name name)))
+  (= *package* name)
+  nil)
+
+(define-shared-std-macro (bc c js php) defpackage (&rest x)
+  (cl:eval `(cl:defpackage ,@x))
+  nil)
