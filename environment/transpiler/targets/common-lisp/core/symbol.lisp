@@ -31,3 +31,6 @@
 
 (defbuiltin find-symbol (x &optional pkg)
   (cl:find-symbol (symbol-name x) (find-package (symbol-name *package*))))
+
+(defun tre-symbol (x)
+  (cl:intern (symbol-name x) "TRE"))
