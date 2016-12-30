@@ -1,13 +1,14 @@
 (defvar *keyword-package* (find-package "KEYWORD"))
+(defvar *package* nil)
 
 (defbuiltin make-symbol (x &optional (package nil))
   (cl:intern x (?
-                 (cl:not package)       "TRE"
+                 (cl:not package)       (| (!? *package*
+                                               (symbol-name !))
+                                           "TRE")
                  (cl:packagep package)  (cl:package-name package)
                  (cl:symbolp package)   (cl:symbol-name package)
                  package)))
-
-(defvar *package* (make-symbol "TRE"))
 
 (defbuiltin symbol-name (x)
   (? (cl:packagep x)
