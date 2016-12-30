@@ -48,7 +48,7 @@
         (values (| (& ! (list-string !))
                    *keyword-package*)
                 (read-symbol str))}
-       (values (make-symbol "TRE") !))))
+       (values nil !))))
 
 (defun read-string (str)
   (with (f [0 alet (read-char str)
