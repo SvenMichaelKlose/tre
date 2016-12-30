@@ -1,4 +1,3 @@
-(env-load "transpiler/lib/string-source.lisp")
 (env-load "transpiler/lib/print.lisp")
 (env-load "transpiler/lib/alien-packagep.lisp")
 (env-load "transpiler/lib/builtin-argdefs.lisp")
