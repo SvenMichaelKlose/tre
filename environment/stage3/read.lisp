@@ -131,7 +131,7 @@
     :number    (with-stream-string s sym
                  (read-number s))
     :hexnum    (read-hex str)
-   :function  `(function ,(read-expr str))
+    :function  `(function ,(read-expr str))
     :symbol    (read-symbol-or-slot-value pkg sym)
     (? (%read-closing-bracket? token)
        (error "Unexpected closing ~A bracket."
