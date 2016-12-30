@@ -74,7 +74,7 @@
 
 (defun frontend-section-load (path)
   (print-definition `(load ,path))
-  (read-file path))
+  (load-file path))
 
 (defun section-comment (section)
   `((%%comment "Section " ,(? (symbol? section)

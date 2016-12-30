@@ -1,23 +1,9 @@
 (defvar *js-core-path* "environment/transpiler/targets/javascript/core/")
 
-(defun load-file (name)
-  (with-open-file s (open name :direction 'input)
-    (with-queue q
-      (while (seek-char s)
-             (queue-list q)
-        (alet (read s)
-          (? (cons? !)
-             (?
-               (eq 'defpackage !.)  (eval `(cl:defpackage ,@.!))
-               (eq 'in-package !.)  (= *package* (make-symbol (symbol-name .!.)))
-               (enqueue q !))
-             (enqueue q !)))))))
-
 (defun js-load-core (dir-path &rest files)
   (apply #'+ (@ [alet (+ *js-core-path* dir-path _)
                   (print-definition `(js-load-core ,!))
-                  (with-temporary *package* (make-symbol "TRE")
-                    (read-file !))
+                  (load-file !)
   			      (fetch-file !)]
 		        files)))
 

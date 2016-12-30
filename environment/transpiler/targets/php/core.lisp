@@ -18,7 +18,7 @@
   (with-temporary *have-compiler?* nil
     (apply #'+ (@ [alet (+ *php-core-path* dir-path _)
                     (print-definition  `(php-load-core ,!))
-                    (read-file !)
+                    (load-file !)
                     (fetch-file !)]
                   files))))
 
