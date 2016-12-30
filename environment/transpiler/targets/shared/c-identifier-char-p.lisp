@@ -2,4 +2,4 @@
   (| (character<= #\a x #\z)
      (character<= #\A x #\Z)
      (character<= #\0 x #\9)
-     (in-chars? x #\_ #\. #\$ #\#)))
+     (in? x #\_ #\. #\$ #\#)))

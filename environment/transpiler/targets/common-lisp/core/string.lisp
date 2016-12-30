@@ -9,4 +9,6 @@
 (defbuiltin string== (a b) (cl:string= a b))
 
 (defbuiltin list-string (x)
+  (| (list? x)
+     (error "List expected instead of ~A." x))
   (cl:concatenate 'cl:string x))

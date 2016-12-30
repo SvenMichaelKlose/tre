@@ -1,5 +1,5 @@
 (defun cr-or-lf? (x)
-  (in=? (char-code x) 10 13))
+  (in? (char-code x) 10 13))
 
 (defun read-line (&optional (str *standard-input*))
   (with-default-stream nstr str

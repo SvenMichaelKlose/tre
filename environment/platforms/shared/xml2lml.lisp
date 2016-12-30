@@ -15,14 +15,14 @@
   (xml-error "Unexpected end of file."))
 
 (defun xml-special-char? (x)
-  (in=? x #\< #\> #\/ #\: #\=))
+  (in? x #\< #\> #\/ #\: #\=))
 
 (defun xml-whitespace? (x)
   (& (< x 33)
      (> x 0)))
 
 (defun xml-text-char? (x)
-  (not (in=? x #\<))); #\&)))
+  (not (in? x #\<))); #\&)))
 
 (defun xml-identifier-char? (x)
   (not (| (xml-special-char? x)
