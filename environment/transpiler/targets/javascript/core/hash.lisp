@@ -22,7 +22,6 @@
   (%%%string+ "~~N" x))
 
 (defun hashkeys (hash)
-  (invoke-debugger)
   (? (& (hash-table? hash)
         (defined? hash.__tre-keys))
      (cdrlist (%property-list hash.__tre-keys))
