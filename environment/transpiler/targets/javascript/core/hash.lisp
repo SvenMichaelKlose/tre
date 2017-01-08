@@ -22,6 +22,7 @@
   (%%%string+ "~~N" x))
 
 (defun hashkeys (hash)
+  (invoke-debugger)
   (? (& (hash-table? hash)
         (defined? hash.__tre-keys))
      (cdrlist (%property-list hash.__tre-keys))
@@ -29,9 +30,8 @@
 
 (defun %make-href-object-key (hash key)
   (unless (defined? key.__tre-object-id)
-    (alet (%%objkey)
-      (= key.__tre-object-id !)
-      (%%%=-aref key hash.__tre-keys !)))
+    (= key.__tre-object-id (%%objkey)))
+  (%%%=-aref key hash.__tre-keys key.__tre-object-id)
   key.__tre-object-id)
 
 (defun %href-key (hash key)
@@ -44,7 +44,9 @@
   (%%%=-aref value hash (%href-key hash key)))
 
 (defun %href-==? (x)
-  (in? x #'== #'string== #'number==))
+  (| (eq x #'==)
+     (eq x #'string==)
+     (eq x #'number==)))
 
 (defun =-href (value hash key)
   (!? (%htest hash)
@@ -54,9 +56,9 @@
       (%%%=-aref value hash key)))
 
 (defun %href-user (hash key)
-  (adolist ((hashkeys hash))
-    (& (funcall hash.__tre-test ! key)
-       (return (%%%aref hash (%href-key hash !))))))
+  (@ (k (hashkeys hash))
+    (& (funcall hash.__tre-test k key)
+       (return (%%%aref hash (%href-key hash k))))))
 
 (defun href (hash key)
   (!? (%htest hash)
@@ -72,7 +74,7 @@
   (when (| a b)
     (| a (= a (make-hash-table :test b.__tre-test)))
     (? (defined? b.__tre-keys)
-       (= a.__tre-keys (*Object.create b.__tre-keys)))
+       (= a.__tre-keys (*object.create b.__tre-keys)))
     (%= nil (%%native
                 "for (var k in " b ") "
                     "if (k != \"" '__tre-object-id "\" && k != \"" '__tre-test "\" && k != \"" '__tre-keys "\") "
