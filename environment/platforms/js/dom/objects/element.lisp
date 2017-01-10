@@ -156,9 +156,6 @@
   (adolist attrs
     (remove-attribute !)))
 
-(defmethod caroshi-element has-name-attribute? ()
-  (has-attribute? "name"))
-
 (defmethod caroshi-element has-name? (x)
   (member (downcase (get-name)) (@ #'downcase (ensure-list x)) :test #'string==))
 
