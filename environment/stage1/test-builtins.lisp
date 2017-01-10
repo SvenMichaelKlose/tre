@@ -2,6 +2,10 @@
   ((not ""))
   nil)
 
+(define-test "Empty string is not NIL"
+  ((eq nil ""))
+  nil)
+
 (define-test "CAR accepts NIL"
   ((car nil))
   nil)
