@@ -17,6 +17,6 @@ class __cons {
 
     public function __toString ()
     {
-        return '(' . $this->a () . ' . ' . $this->d () . ')';
+        return '(' . $this->a . ' . ' . $this->d . ')';
     }
 }
