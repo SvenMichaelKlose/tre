@@ -32,10 +32,10 @@
   (bits-integer (cl:bit-xor (integer-bits a) (integer-bits b))))
 
 (defbuiltin >> (x bits)
-  (dotimes (n bits !)
-    (cl:multiple-value-bind (i r) (cl:truncate ! 2)
-      (= ! i))))
+  (dotimes (n bits x)
+    (cl:multiple-value-bind (i r) (cl:truncate x 2)
+      (= x i))))
 
 (defbuiltin << (x bits)
-  (dotimes (n bits !)
-    (= ! (* ! 2))))
+  (dotimes (n bits x)
+    (= x (* x 2))))
