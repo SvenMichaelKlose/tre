@@ -214,11 +214,6 @@
 	  (unless (empty-string? !)
 	    (number !))))
 
-(defmethod caroshi-element tag-name? (n)
-  (? (cons? n)
-     (member-if [tag-name? _] n)
-     (member (downcase tag-name) (@ #'downcase (ensure-list n)) :test #'string==)))
-
 (defmethod caroshi-element set-styles (styles)
   (maphash #'((k v)
                (set-style k v))

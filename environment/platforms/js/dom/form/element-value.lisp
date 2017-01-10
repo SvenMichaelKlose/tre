@@ -10,17 +10,15 @@
 (defun (= alternative-value) (val x)
   (x.write-attribute "alternative-value" val))
 
-(defun input-element-w/-value-attribute? (x)
-  (& (x.tag-name? "input")
-	 (| (x.attribute-value? "type" "text")
-	    (x.attribute-value? "type" "password"))))
-
 (defun element-value (x)
   (?
-	(input-element-w/-value-attribute? x)  (| (has-alternative-value? x)
-                                              x.value)
-	(x.tag-name? "textarea")           x.text
-	(x.tag-name? "select")             (form-select-get-selected-option-value x)
+    (x.is? "input[type=text], input[type=password]")
+      (| (has-alternative-value? x) ; TODO: Remove alternative-value thingy.
+         x.value)
+	(x.is? "textarea")
+      x.text
+	(x.is? "select")
+      (form-select-get-selected-option-value x)
     x.text-content))
 
 (defun set-element-value-attribute (x val)
@@ -31,7 +29,7 @@
 (defun (= element-value) (val x)
   (?
 	(input-element-w/-value-attribute? x)  (set-element-value-attribute x val)
-	(x.tag-name? "textarea")           (= x.text val)
+	(x.is? "textarea")           (= x.text val)
     {(x.remove-children)
 	 (x.add-text val)})
   val)

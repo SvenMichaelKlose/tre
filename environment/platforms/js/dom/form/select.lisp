@@ -1,6 +1,6 @@
 (defun form-select? (x)
   (& (element? x)
-     (x.tag-name? "select")))
+     (x.is? "select")))
 
 (defun form-select-get-options (x)
   ((x.get "<select").get-list "option"))
