@@ -1,3 +1,7 @@
+(define-test "NOT returns NIL for empty string"
+  ((not ""))
+  nil)
+
 (define-test "CAR accepts NIL"
   ((car nil))
   nil)
