@@ -3,7 +3,9 @@
 
 (defun %%key (x)
   (?
-    (is_a x "__symbol")    (%%%string+ "~%S" x.n "~%P" x.p)
+    (is_a x "__symbol")    (%%%string+ "~%S" x.n "~%P" (? (keyword? x)
+                                                          "_kw"
+                                                          x.p))
     (is_a x "__cons")      (%%%string+ "~%L" x.id)
     (is_a x "__array")     (%%%string+ "~%A" x.id)
     (is_a x "__character") (%%%string+ "~%C" x.v)
@@ -16,7 +18,9 @@
          "S" (let boundary (strpos ! "~%P")
                (make-symbol (subseq ! 0 boundary)
                             (let-when p (subseq ! (+ 3 boundary))
-                              (make-symbol p))))
+                              (? (%%%== p "_kw")
+                                 *keyword-package*
+                                 (make-symbol p)))))
          "L" (%%%href *conses* (substr x 3))
          "A" (%%%href *arrays* (substr x 3))
          "C" (code-char (substr x 3))
