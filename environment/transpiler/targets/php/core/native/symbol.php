@@ -44,7 +44,8 @@ class __symbol {
 
     public function __toString ()
     {
-        return (($this->pn ()) ? ":" : "") . $this->n;
+        $pn = $this->pn ();
+        return ($pn != "NIL" ? "$pn:" : "") . $this->n;
     }
 }
 
