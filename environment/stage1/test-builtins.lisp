@@ -6,6 +6,14 @@
   ((eq nil ""))
   nil)
 
+(define-test "KEYWORD? recognizes keywords"
+  ((keyword? :a))
+  t)
+
+(define-test "KEYWORD? returns NIL for non-keywords"
+  ((keyword? 'a))
+  nil)
+
 (define-test "CAR accepts NIL"
   ((car nil))
   nil)
