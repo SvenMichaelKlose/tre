@@ -12,14 +12,11 @@
               `(,@(list+ "environment/platforms/shared/"
                          '("continued.lisp"
 
-                           "url/file.lisp"
                            "url/path-pathlist.lisp"
                            "url/path-parent.lisp"
                            "url/path-suffix.lisp"
                            "url/pathname-filename.lisp"
-                           "url/unix-path.lisp"
                            "url/url-path.lisp"
-                           "url/url-with-new-filename.lisp"
                            "url/path-append.lisp"))
 
                 ,@(list+ "environment/platforms/js/"
