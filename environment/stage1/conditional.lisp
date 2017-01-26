@@ -20,7 +20,7 @@
         (? (eq 'function (caar ..cases))
            (cadar ..cases)
            (error ":TEST must be a function.")))
-        'equal))
+        'eql))
  
 (defun %case (g cases)
   (let test (%case-test cases)
