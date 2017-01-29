@@ -25,10 +25,6 @@
      (when (element? ,iterator)
        ,@body)))
 
-(defmacro do-ancestors ((iter elm &optional (ret nil)) &body body)
-  `(do-elements ((slot-value ,iter 'parent-node) ,iter (parent-node ,elm) ,ret)
-	 ,@body))
-
 (defmacro do-self-and-ancestors ((iter elm &optional (ret nil)) &body body)
   `(do-elements ((slot-value ,iter 'parent-node) ,iter ,elm ,ret)
 	 ,@body))

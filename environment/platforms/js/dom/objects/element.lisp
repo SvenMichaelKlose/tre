@@ -1,24 +1,25 @@
-(defvar *attribute-xlat*
-  (new "class" "className"))
+(fn caroshi-ancestor-or-self-if (node pred)
+  (ancestor-or-self-if node pred))
 
+(defvar *attribute-xlat* (new "class" "className"))
 (defvar *attribute-xlat-rev* (make-hash-table))
 
-(defun make-attribute-xlat ()
+(fn make-attribute-xlat ()
   (maphash #'((k v)
 		        (= (aref *attribute-xlat-rev* v) k)
 		        (= (aref *attribute-xlat-rev* (downcase v)) k))
 	   	   *attribute-xlat*))
 (make-attribute-xlat)
 
-(defun xlat-attribute (x)
+(fn xlat-attribute (x)
   (aref *attribute-xlat* x))
 
-(defun make-native-element (name doc ns)
+(fn make-native-element (name doc ns)
   (? (& ns (defined? doc.create-element-n-s))
      (doc.create-element-n-s ns name)
      (doc.create-element name)))
 
-(defun *element (name &optional (attrs nil) (style nil) &key (doc document) (ns nil))
+(fn *element (name &optional (attrs nil) (style nil) &key (doc document) (ns nil))
   (aprog1 (make-native-element name doc ns)
 	(hash-merge ! caroshi-element.prototype)
     (!.write-attributes attrs)
@@ -192,7 +193,7 @@
   (@ (i x x)
     (add-class i)))
 
-(defun remove-string== (x lst)
+(fn remove-string== (x lst)
   (remove x lst :test #'string==))
 
 (defmethod caroshi-element remove-class (x)
