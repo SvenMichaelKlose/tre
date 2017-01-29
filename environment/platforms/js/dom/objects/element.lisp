@@ -155,7 +155,7 @@
 (defmethod caroshi-element set-name (x)    (write-attribute "name" x))
 (defmethod caroshi-element get-class ()    (read-attribute "class"))
 (defmethod caroshi-element get-classes ()  (split #\  (get-class) :test #'character==))
-(defmethod caroshi-element class? (x)      (member x (get-classes) :test #'string==))
+(defmethod caroshi-element class? (x)      (find x (get-classes) :test #'string==))
 (defmethod caroshi-element set-class (x)   (write-attribute "class" x))
 
 (defmethod caroshi-element add-class (x)
