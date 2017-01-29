@@ -10,12 +10,12 @@
 (defvar *js-core0* ,(js-load-core "" "return-value.lisp"))
 (defvar *js-core*
     ,(js-load-core ""
-                    "cons.lisp"
-                    "defined-functions.lisp"
-                    "%princ.lisp"
-                    "%write-char.lisp"
-                    "symbol.lisp"
-                    "propertylist.lisp"))
+                   "cons.lisp"
+                   "defined-functions.lisp"
+                   "%princ.lisp"
+                   "%write-char.lisp"
+                   "symbol.lisp"
+                   "propertylist.lisp"))
 
 (defvar *js-core-debug-print* ,(js-load-core "" "debug-print.lisp"))
 
@@ -24,6 +24,7 @@
 	                  "not.lisp")
 		(js-load-core ""
 			          "macro.lisp"
+                      "eq.lisp"
 			          "array.lisp"
 			          "character.lisp"
 			          "number.lisp"
