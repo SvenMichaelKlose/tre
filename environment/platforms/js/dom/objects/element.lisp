@@ -162,8 +162,11 @@
   (unless (class? x)
     (set-class (+ (get-class) " " x))))
 
+(fn caroshi-remove-class (elm x)
+  (elm.set-class (apply #'string-concat (pad (remove x (elm.get-classes) :test #'string==) " "))))
+
 (defmethod caroshi-element remove-class (x)
-   (set-class (apply #'string-concat (pad (remove x (get-classes) :test #'string==) " "))))
+  (caroshi-remove-class this x))
 
 (defmethod caroshi-element set-id (id)
   (? id
