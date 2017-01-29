@@ -166,41 +166,31 @@
 (defmethod caroshi-element set-name (x)
   (write-attribute "name" x))
 
-(defmethod caroshi-element class? (x)
-  (!? (read-attribute "class")
-      (let c (+ " " ! " ")
-        (adolist ((ensure-list x))
-          (& (< -1 (c.index-of (+ " " ! " ")))
-             (return t))))))
-
 (defmethod caroshi-element get-class ()
   (read-attribute "class"))
 
 (defmethod caroshi-element get-classes ()
   (split #\  (get-class) :test #'character==))
 
+(defmethod caroshi-element class? (x)
+  (member x (get-classes) :test #'string==))
+
 (defmethod caroshi-element set-class (x)
   (write-attribute "class" x))
 
 (defmethod caroshi-element add-class (x)
-  (let classes (get-classes)
-	(unless (member x classes :test #'string==)
-      (set-class (concat-stringtree
-				     (pad (+ classes (list x))
-					   	  " "))))))
+  (unless (class? x)
+    (set-class (+ (get-class) " " x))))
 
 (defmethod caroshi-element add-classes (x)
   (@ (i x x)
     (add-class i)))
 
-(fn remove-string== (x lst)
-  (remove x lst :test #'string==))
-
 (defmethod caroshi-element remove-class (x)
   (? (cons? x)
      (adolist x
        (remove-class !))
-     (set-class (apply #'string-concat (pad (remove-string== x (get-classes)) " ")))))
+     (set-class (apply #'string-concat (pad (remove x (get-classes) :test #'string==) " ")))))
 
 (defmethod caroshi-element set-id (id)
   (? id
