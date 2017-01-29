@@ -103,16 +103,7 @@
 (defmethod caroshi-element add-text (text)
   (add (new *text-node text)))
 
-; XXX last-child-BY-class
-(defmethod caroshi-element last-child-of-class (cls)
-  (with (elm nil
-		 chlds (child-array))
-	(doarray (x chlds elm)
-	  (& (string== cls (x.get-class))
-		 (= elm x)))))
-
 (defmethod caroshi-element read-attribute (name)
-  (declare type string name)
   (| (awhen (xlat-attribute name)
        (get-attribute !))
      (get-attribute name)))
@@ -160,37 +151,19 @@
 (defmethod caroshi-element has-name? (x)
   (member (downcase (get-name)) (@ #'downcase (ensure-list x)) :test #'string==))
 
-(defmethod caroshi-element get-name ()
-  (read-attribute "name"))
-
-(defmethod caroshi-element set-name (x)
-  (write-attribute "name" x))
-
-(defmethod caroshi-element get-class ()
-  (read-attribute "class"))
-
-(defmethod caroshi-element get-classes ()
-  (split #\  (get-class) :test #'character==))
-
-(defmethod caroshi-element class? (x)
-  (member x (get-classes) :test #'string==))
-
-(defmethod caroshi-element set-class (x)
-  (write-attribute "class" x))
+(defmethod caroshi-element get-name ()     (read-attribute "name"))
+(defmethod caroshi-element set-name (x)    (write-attribute "name" x))
+(defmethod caroshi-element get-class ()    (read-attribute "class"))
+(defmethod caroshi-element get-classes ()  (split #\  (get-class) :test #'character==))
+(defmethod caroshi-element class? (x)      (member x (get-classes) :test #'string==))
+(defmethod caroshi-element set-class (x)   (write-attribute "class" x))
 
 (defmethod caroshi-element add-class (x)
   (unless (class? x)
     (set-class (+ (get-class) " " x))))
 
-(defmethod caroshi-element add-classes (x)
-  (@ (i x x)
-    (add-class i)))
-
 (defmethod caroshi-element remove-class (x)
-  (? (cons? x)
-     (adolist x
-       (remove-class !))
-     (set-class (apply #'string-concat (pad (remove x (get-classes) :test #'string==) " ")))))
+   (set-class (apply #'string-concat (pad (remove x (get-classes) :test #'string==) " "))))
 
 (defmethod caroshi-element set-id (id)
   (? id
@@ -215,15 +188,11 @@
   (= (aref style k) v))
 
 (defmethod caroshi-element get-style (x)
-  (declare type string x)
   (| (aref style x)
      (aref (document.default-view.get-computed-style this nil) x)))
 
-(defmethod caroshi-element show ()
-  (set-style "display" ""))
-
-(defmethod caroshi-element hide ()
-  (set-style "display" "none"))
+(defmethod caroshi-element show () (set-style "display" ""))
+(defmethod caroshi-element hide () (set-style "display" "none"))
 
 (defmethod caroshi-element get-opacity ()
   (number (get-style "opacity")))
@@ -248,7 +217,6 @@
 
 ;; Set absolute position relative to browser window.
 (defmethod caroshi-element set-position (x y)
-  (declare type number x y)
   (set-styles (new "left" (+ x "px")
                    "top"  (+ y "px")))
   this)
