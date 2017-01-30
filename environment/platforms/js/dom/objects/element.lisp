@@ -50,9 +50,6 @@
     query-selector-all
     _caroshi-rotation)
 
-(defmethod caroshi-element child-array ()
-  this.child-nodes)
-
 (defmethod caroshi-element child-list ()
   (array-list child-nodes))
 
@@ -104,8 +101,8 @@
   (add (new *text-node text)))
 
 (defmethod caroshi-element read-attribute (name)
-  (| (awhen (xlat-attribute name)
-       (get-attribute !))
+  (| (!? (xlat-attribute name)
+         (get-attribute !))
      (get-attribute name)))
 
 (defmethod caroshi-element read-attributes ()
@@ -134,8 +131,8 @@
 
 (defmethod caroshi-element write-attribute (name value)
   (set-attribute name value)
-  (awhen (xlat-attribute name)
-    (set-attribute ! value))
+  (!? (xlat-attribute name)
+      (set-attribute ! value))
   value)
 
 (defmethod caroshi-element write-attributes (attrs)
@@ -145,8 +142,8 @@
   attrs)
 
 (defmethod caroshi-element remove-attributes (attrs)
-  (adolist attrs
-    (remove-attribute !)))
+  (@ (i attrs)
+    (remove-attribute i)))
 
 (defmethod caroshi-element has-name? (x)
   (member (downcase (get-name)) (@ #'downcase (ensure-list x)) :test #'string==))
@@ -279,7 +276,6 @@
 
 (defmethod caroshi-element find-element-at (x y)
   (do-children (i this this)
-    (dom-extend i)
 	(& (element? i)
 	   (i.inside? x y)
 	   (return (| (i.find-element-at x y)
@@ -337,13 +333,6 @@
   (this.remove-children)
   (& html (= inner-h-t-m-l html))
   (dom-tree-extend this))
-
-(defmethod caroshi-element get-if (predicate)
-  (with-queue n
-    (walk [& (element? _)
-             (funcall predicate)
-             (enqueue n _)])
-    (queue-list n)))
 
 (defmethod caroshi-element get-child-at (idx)
   (assert (integer<= 0 idx) (+ "caroshi-element get-child-at " idx " is not a positive integer"))
