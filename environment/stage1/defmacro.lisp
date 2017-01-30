@@ -1,4 +1,4 @@
-(defvar *documentation* nil)    ; TODO: Move into own file. Functions should be documented as well.
+(var *documentation* nil)    ; TODO: Move into own file.
 
 (%defun %add-documentation (name body)
   (? (? (string? body.)
@@ -14,3 +14,6 @@
      (block nil
        (block ,name
          ,@(%add-documentation name body)))))
+
+(%defmacro macro (name args &body body)
+  `(defmacro ,name ,args ,@body))
