@@ -9,10 +9,13 @@
 (%defmacro var (name &optional (init nil))
   `(defvar ,name ,init))
 
-(defvar *constants* nil)
+(var *constants* nil)
 
 (%defmacro defconstant (name &optional (init nil))
   (print-definition `(defconstant ,name))
   `(progn
      (defvar ,name ,init)
      (setq *constants* (. (. ',name ',init) *constants*))))
+
+(%defmacro constant (name &optional (init nil))
+  `(var ,name ,init))
