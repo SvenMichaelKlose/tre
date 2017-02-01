@@ -11,9 +11,9 @@
   (let magic (list 'quote ($ '__ class-name))
     `{(defun ,class-name ,args
         (%thisify ,class-name
-          ; TOOD: Set 'super' instead.
-          ,@(js-gen-inherit-constructor-calls bases)
-          ,@body))
+          (macrolet ((super (&rest args)
+                       `((slot-value ,bases. 'call) this ,@args)))
+            ,@body)))
 	  (defun ,($ class-name '?) (x)
 	    (%%native x " instanceof " ,(compiled-function-name-string class-name)))}))
 
