@@ -11,6 +11,7 @@
 (env-load "stage4/tail-p.lisp")
 (env-load "stage4/repeat-while-changes.lisp")
 (env-load "stage4/expander.lisp")
+(env-load "stage4/macrolet.lisp")
 (env-load "stage4/hcache.lisp")
 (env-load "stage4/head-if.lisp")
 (env-load "stage4/keyword-copiers.lisp")
