@@ -1,9 +1,9 @@
 (defvar *%property-list-tmp* nil)
 
-(defun %property-list-0 (key val)
+(defnative %property-list-0 (key val)
   (acons! key val *%property-list-tmp*))
 
-(defun %property-list (hash)
+(defnative %property-list (hash)
   (= *%property-list-tmp* nil)
   (%= nil (%%native
               "for (var k in " hash ") "
