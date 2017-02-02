@@ -10,5 +10,3 @@
 ;             (? (== #\M (car (last !)))
 ;                (butlast !)
 ;                !))))))
-
-(format t "; Revision ~A.~%" *tre-revision*)
