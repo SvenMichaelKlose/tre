@@ -36,7 +36,7 @@
 (define-js-std-macro defnative (name args &body body)
   (js-make-late-symbol-function-assignment name)
   `{(%var ,(%defun-name name))
-    ,(shared-defun name args (body-with-noargs-tag body))})
+    ,(shared-defun name args (body-with-noargs-tag body) :allow-source-memorizer? nil)})
 
 (fn js-early-symbol-maker (g sym)
   `(,@(unless (eq g '~%tfun)

@@ -89,17 +89,17 @@
       ,@(& allow-source-memorizer?
            (shared-defun-source-memorizer name args (list-without-noargs-tag body))))))
 
-(fn shared-defun (name args body &key (make-expander? t))
+(fn shared-defun (name args body &key (make-expander? t) (allow-source-memorizer? t))
   (& (macro? name)
      (add-used-function name))
   (let fun-name (%defun-name name)
     `{,@(shared-defun-without-expander fun-name args body
-                                       :allow-source-memorizer? t
+                                       :allow-source-memorizer? allow-source-memorizer?
                                        :allow-backtrace? t)
-      ,@(when (& make-expander? ; TODO: Redux.
-                 (| (always-expand-arguments?)
-                    (not (simple-argument-list? args))))
-          (with-gensym expander-arg
-            (shared-defun-without-expander (c-expander-name fun-name)
-                                           (list expander-arg)
-                                           (compile-argument-expansion-function-body fun-name args expander-arg))))}))
+      ,@(& make-expander?
+           (| (always-expand-arguments?)
+              (not (simple-argument-list? args)))
+           (with-gensym expander-arg
+             (shared-defun-without-expander (c-expander-name fun-name)
+                                            (list expander-arg)
+                                            (compile-argument-expansion-function-body fun-name args expander-arg))))}))
