@@ -19,19 +19,3 @@
 
 (fn sole? (x)
   (== 1 (length x)))
-
-(define-test "NOT works with NIL"
-  ((not nil))
-  t)
-
-(define-test "NOT works with T"
-  ((not t))
-  nil)
-
-(define-test "KEYWORDP recognizes keyword-packaged symbols"
-  ((keyword? :lisp))
-  t)
-
-(define-test "KEYWORDP works with standard symbols"
-  ((keyword? 'lisp))
-  nil)
