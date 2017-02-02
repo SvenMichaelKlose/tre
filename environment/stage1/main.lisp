@@ -64,7 +64,6 @@
 (env-load "stage1/with-cons.lisp")
 (env-load "stage1/with-gensym.lisp")
 (env-load "stage1/reverse.lisp")
-(env-load "stage1/append.lisp")
 (env-load "stage1/nconc.lisp")
 (env-load "stage1/adjoin.lisp")
 (env-load "stage1/adjoin.tests.lisp")

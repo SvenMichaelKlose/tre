@@ -8,9 +8,6 @@
 (defun nconc (&rest lsts)
   (%nconc-0 lsts))
 
-(defmacro nconc! (place &rest lsts)
-  `(= ,place (nconc ,place ,@lsts)))
-
 (define-test "NCONC works"
   ((nconc (copy-list '(l i)) (copy-list '(s p))))
   '(l i s p))
