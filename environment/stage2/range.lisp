@@ -1,5 +1,5 @@
 (functional range?)
 
-(defun range? (x bottom top)
+(fn range? (x bottom top)
   (& (>= x bottom)
      (<= x top)))

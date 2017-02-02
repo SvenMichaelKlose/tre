@@ -1,29 +1,29 @@
-(defun %struct-option-keyword? (x)
+(fn %struct-option-keyword? (x)
   (in? x :constructor :global))
 
-(defun %struct-constructor-name (name options)
+(fn %struct-constructor-name (name options)
   (!? (assoc-value :constructor options)
       !.
       ($ "MAKE-" name)))
 
-(defun %struct-predicate-name (name)
+(fn %struct-predicate-name (name)
   ($ name "?"))
 
-(defun %struct-field-name (field)
+(fn %struct-field-name (field)
   (? (cons? field)
      field.
      field))
 
-(defun %struct-field-options (field)
+(fn %struct-field-options (field)
   (& (cons? field)
      ..field))
 
-(defun %struct-constructor-args (fields)
+(fn %struct-constructor-args (fields)
   `(&key ,@(@ [let n (%struct-field-name _)
                 `(,n ',n)]
               fields)))
 
-(defun %struct-init (fields g)
+(fn %struct-init (fields g)
   (let index 1
     (@ [let argname (%struct-field-name _)
          `(= (aref ,g ,(++! index))
@@ -33,53 +33,53 @@
                  ,argname))]
        fields)))
 
-(defun %struct-constructor (name fields options)
+(fn %struct-constructor (name fields options)
   (with (fname      (%struct-constructor-name name options)
 		 g          (gensym)
          user-init  (%struct-init fields g)
 	     type-init  `((= (aref ,g 0) 'struct
                          (aref ,g 1) ',name)))
-    `(defun ,fname ,(%struct-constructor-args fields)
+    `(fn ,fname ,(%struct-constructor-args fields)
        (let ,g (make-array ,(+ 2 (length fields)))
          ,@(? user-init
 	          (+ type-init user-init)
 	          type-init)
 	     ,g))))
 
-(defun %struct-accessor-name (name field-name)
+(fn %struct-accessor-name (name field-name)
   ($ name "-" field-name))
 
-(defun %struct-slot-accessors (name field index options)
+(fn %struct-slot-accessors (name field index options)
   (with (fname  (%struct-field-name field)
          aname  (%struct-accessor-name name fname))
     `{(functional ,aname)
-      (defun ,aname (arr)
+      (fn ,aname (arr)
         (aref arr ,index))
-      (defun (= ,aname) (val arr)
+      (fn (= ,aname) (val arr)
         (= (aref arr ,index) val))
       ,@(!? (& (not (member :not-global (%struct-field-options field)))
                (assoc :global options))
-            `((defun ,fname ()
+            `((fn ,fname ()
                 (aref ,.!. ,index))
-              (defun (= ,fname) (val)
+              (fn (= ,fname) (val)
                 (= (aref ,.!. ,index) val))))}))
 
-(defun %struct-accessors (name fields options)
+(fn %struct-accessors (name fields options)
   (let index 1
     (@ [%struct-slot-accessors name _ (++! index) options]
        fields)))
 
-(defun struct-predicate (x)
+(fn struct-predicate (x)
   (& (array? x)
      (eq 'struct (aref x 0))))
 
-(defun %struct-predicate (name)
-  `(defun ,(%struct-predicate-name name) (x)
+(fn %struct-predicate (name)
+  `(fn ,(%struct-predicate-name name) (x)
      (& (array? x)
         (eq 'struct (aref x 0))
         (eq ',name (aref x 1)))))
 
-(defun %struct-sort-fields (fields-and-options)
+(fn %struct-sort-fields (fields-and-options)
   (with-queue (fields options)
     (map [? (& (cons? _)
                (%struct-option-keyword? _.))
@@ -89,18 +89,18 @@
     (values (queue-list fields)
             (queue-list options))))
 
-(defvar *struct-defs*)
+(var *struct-defs*)
 
-(defun %struct-add-def (name def)
+(fn %struct-add-def (name def)
   (acons! name def *struct-defs*))
 
-(defun %struct-def (name)
+(fn %struct-def (name)
   (assoc-value name *struct-defs*))
 
-(defun %struct-fields (name)
+(fn %struct-fields (name)
   (carlist (%struct-def name)))
 
-(defun %defstruct-expander (name &rest fields-and-options)
+(fn %defstruct-expander (name &rest fields-and-options)
   (with ((fields options) (%struct-sort-fields fields-and-options))
     (%struct-add-def name fields)
     `{,(%struct-constructor name fields options)
@@ -110,7 +110,7 @@
 	    `(with-struct ,name ,,s
            ,,@body))
       (defmacro ,($ "DEF-" name) (name args &body body)
-	    `(defun ,,name ,,args
+	    `(fn ,,name ,,args
            (with-struct ,name ,name
              ,,@body)))}))
 

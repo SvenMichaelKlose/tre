@@ -1,4 +1,4 @@
 (functional pairlist)
 
-(defun pairlist (keys vals)
+(fn pairlist (keys vals)
   (@ #'cons keys vals))

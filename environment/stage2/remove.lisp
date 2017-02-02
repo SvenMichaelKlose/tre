@@ -1,6 +1,6 @@
 (functional remove)
 
-(defun remove-if (fun x)
+(fn remove-if (fun x)
   (? (array? x)
      (list-array (remove-if fun (array-list x)))
      (with-queue q
@@ -8,7 +8,7 @@
          (| (funcall fun !)
             (enqueue q !))))))
 
-(defun remove-if-not (fun x)
+(fn remove-if-not (fun x)
   (? (array? x)
      (list-array (remove-if-not fun (array-list x)))
      (with-queue q
@@ -16,5 +16,5 @@
          (& (funcall fun !)
             (enqueue q !))))))
 
-(defun remove (elm x &key (test #'eql))
+(fn remove (elm x &key (test #'eql))
   (remove-if [funcall test elm _] x))

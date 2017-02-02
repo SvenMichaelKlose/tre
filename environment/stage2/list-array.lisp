@@ -1,4 +1,4 @@
-(defun list-array (x)
+(fn list-array (x)
   (with (a    (make-array (length x))
          idx  0)
     (adolist (x a)

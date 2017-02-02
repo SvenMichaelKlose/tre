@@ -1,6 +1,6 @@
 (functional subseq)
 
-(defun list-subseq (seq start &optional (end 999999))
+(fn list-subseq (seq start &optional (end 999999))
   (when (& seq
            (not (== start end)))
     (& (> start end)
@@ -15,7 +15,7 @@
           (--! len)
           (= lst .lst))))))
 
-(defun %subseq-sequence (maker seq start end)
+(fn %subseq-sequence (maker seq start end)
   (unless (== start end)
     (alet (length seq)
       (when (< start !)
@@ -26,7 +26,7 @@
           (dotimes (x l s)
 	        (= (elt s x) (elt seq (+ start x)))))))))
 
-(defun subseq (seq start &optional (end 99999))
+(fn subseq (seq start &optional (end 99999))
   (when seq
     (& (> start end)
        (xchg start end))

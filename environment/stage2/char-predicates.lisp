@@ -2,12 +2,12 @@
 
 (defmacro def-rest-predicate (name iter args test-expr)
   (with-gensym x
-    `(defun ,name (&rest ,x ,@args)
+    `(fn ,name (&rest ,x ,@args)
        (@ (,iter ,x t)
          (| ,test-expr
             (return nil))))))
 
-(defun charrange? (x start end)
+(fn charrange? (x start end)
   (range? (char-code x) (char-code start) (char-code end)))
 
 (def-rest-predicate lower-case? c ()
@@ -20,23 +20,23 @@
   (| (lower-case? c)
      (upper-case? c)))
 
-(defun decimal-digit? (x)
+(fn decimal-digit? (x)
   (charrange? x #\0 #\9))
 
-(defun %nondecimal-digit? (x start base)
+(fn %nondecimal-digit? (x start base)
   (charrange? x start (code-char (+ (char-code start) (- base 10)))))
 
-(defun nondecimal-digit? (x &key (base 10))
+(fn nondecimal-digit? (x &key (base 10))
   (& (< 10 base)
      (| (%nondecimal-digit? x #\a base)
         (%nondecimal-digit? x #\A base))))
 
-(defun digit-char? (c &key (base 10))
+(fn digit-char? (c &key (base 10))
   (& (character? c)
      (| (decimal-digit? c)
         (nondecimal-digit? c :base base))))
 
-(defun hex-digit-char? (x)
+(fn hex-digit-char? (x)
   (| (digit-char? x)
      (& (character>= x #\A) (character<= x #\F))
      (& (character>= x #\a) (character<= x #\f))))
@@ -45,12 +45,12 @@
   (| (alpha-char? c)
      (digit-char? c)))
 
-(defun whitespace? (x)
+(fn whitespace? (x)
   (& (character? x)
      (< (char-code x) 33)
      (>= (char-code x) 0)))
 
-(defun control-char? (x)
+(fn control-char? (x)
   (character< x (code-char 32)))
 
 (define-test "DIGIT-CHAR? #\0"

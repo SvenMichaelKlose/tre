@@ -1,4 +1,4 @@
-(defun aadjoin (key value lst &key (test #'eql) (to-end? nil))
+(fn aadjoin (key value lst &key (test #'eql) (to-end? nil))
   (? (assoc key lst :test test)
      (aprog1 (copy-alist lst)
        (alet (assoc key ! :test test)

@@ -1,6 +1,6 @@
 (functional abs)
 
-(defun abs (x)
+(fn abs (x)
   (? (< x 0)
      (- x)
      x))

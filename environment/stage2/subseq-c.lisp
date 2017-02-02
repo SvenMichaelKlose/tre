@@ -1,4 +1,4 @@
-(defun string-subseq (seq start &optional (end 99999))
+(fn string-subseq (seq start &optional (end 99999))
   (unless (== start end)
     (alet (length seq)
       (when (< start !)

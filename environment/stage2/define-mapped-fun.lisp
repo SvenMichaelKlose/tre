@@ -1,6 +1,6 @@
 (defmacro define-mapped-fun (mapfun name &rest fun)
   (with-gensym g
-    `(defun ,name (,g)
+    `(fn ,name (,g)
        (,mapfun ,(? (& (not .fun)
                        (cons? fun.)
                        (eq 'function fun..))
