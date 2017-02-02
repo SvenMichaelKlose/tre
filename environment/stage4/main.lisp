@@ -25,7 +25,7 @@
 (env-load "stage4/search.lisp")
 (env-load "stage4/sort.lisp")
 (env-load "stage4/split.lisp" :cl)
-(env-load "stage4/split-tests.lisp")
+(env-load "stage4/split.tests.lisp")
 (env-load "stage4/head-p.lisp")
 (env-load "stage4/trim.lisp")
 (env-load "stage4/trim.tests.lisp")
