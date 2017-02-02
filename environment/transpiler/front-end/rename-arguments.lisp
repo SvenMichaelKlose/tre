@@ -6,6 +6,8 @@
        (list-aliases .x))))
 
 (fn rename-argument (replacements x)
+  (& (macro? x)
+     (error "Cannot use macro name ~A as an argument name." x))
   (| (assoc-value x replacements :test #'eq)
      x))
 

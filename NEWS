@@ -4,3 +4,5 @@ Changes of tre-0.1 relative to tre-0.0:
 
 Changes of tre-0.2 relative to tre-0.1:
   * Major cleanup.
+  * Additional basic optimisations.
+  * Forbids use of macro names as argument names.
