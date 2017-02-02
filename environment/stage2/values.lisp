@@ -1,4 +1,4 @@
-(const *values-magic* ($ 'values- ,`',(gensym)))
+(const *values-magic* ,`',($ 'values- (gensym)))
 
 (fn values (&rest vals)
   (. *values-magic* vals))
