@@ -1,38 +1,38 @@
 (functional digit-number)
 
-(defun digit-number (x)
+(fn digit-number (x)
   (- (char-code x) (char-code #\0)))
 
-(defun peek-digit (str)
+(fn peek-digit (str)
   (awhen (peek-char str)
     (& (digit-char? !) !)))
 
-(defun peek-dot (str)
+(fn peek-dot (str)
   (awhen (peek-char str)
     (eql #\. !)))
 
-(defun read-decimal-places-0 (str v s)
+(fn read-decimal-places-0 (str v s)
   (? (peek-digit str)
      (read-decimal-places-0 str
                             (+ v (* s (digit-number (read-char str))))
                             (/ s 10))
      v))
 
-(defun read-decimal-places (&optional (str *standard-input*))
+(fn read-decimal-places (&optional (str *standard-input*))
   (& (!? (peek-char str)
          (digit-char? !))
      (read-decimal-places-0 str 0 0.1)))
 
-(defun read-integer-0 (str v)
+(fn read-integer-0 (str v)
   (? (peek-digit str)
      (read-integer-0 str (+ (* v 10) (digit-number (read-char str))))
      v))
 
-(defun read-integer (&optional (str *standard-input*))
+(fn read-integer (&optional (str *standard-input*))
   (& (peek-digit str)
      (integer (read-integer-0 str 0))))
 
-(defun read-number (&optional (str *standard-input*))
+(fn read-number (&optional (str *standard-input*))
   (* (? (eql #\- (peek-char str))
         {(read-char str)
          -1}

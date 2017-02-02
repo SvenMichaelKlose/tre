@@ -1,4 +1,4 @@
-(defun fetch-file (path)
+(fn fetch-file (path)
   (with-input-file in path
     (= (stream-track-input-location? in) nil)
     (with-queue q
@@ -6,11 +6,11 @@
               (list-string (queue-list q))
         (enqueue q !)))))
 
-(defun fetch-all-lines (path)
+(fn fetch-all-lines (path)
   (with-input-file in path
     (= (stream-track-input-location? in) nil)
     (read-all-lines in)))
 
-(defun put-file (path data)
+(fn put-file (path data)
   (with-output-file out path
     (princ data out)))

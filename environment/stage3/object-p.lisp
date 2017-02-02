@@ -1,1 +1,1 @@
-(defun object? (x) x nil)
+(fn object? (x) x nil)

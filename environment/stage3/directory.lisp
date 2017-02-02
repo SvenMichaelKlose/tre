@@ -1,2 +1,2 @@
-(defun directory (pathname)
+(fn directory (pathname)
   (%directory pathname))

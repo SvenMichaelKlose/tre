@@ -22,7 +22,7 @@
 
   (user-detail      nil))
 
-(defun next-tabulator-column (column size)
+(fn next-tabulator-column (column size)
   (integer (++ (* size (++ (/ (-- column) size))))))
 
 (def-stream-location %track-location (stream-location x)
@@ -39,7 +39,7 @@
               (< 31 (char-code x)) (++! (stream-location-column stream-location)))))))
   x)
 
-(defun stream-princ (x str)
+(fn stream-princ (x str)
   (?
     (cons? x)            (@ (i x x)
                            (stream-princ i str))
@@ -53,8 +53,8 @@
                            (funcall (stream-fun-out str) x str))
     (funcall (stream-fun-out str) x str)))
 
-(defun stream-track-input-location? (x)
+(fn stream-track-input-location? (x)
   (stream-location-track? (stream-input-location x)))
 
-(defun (= stream-track-input-location?) (v x)
+(fn (= stream-track-input-location?) (v x)
   (= (stream-location-track? (stream-input-location x)) v))

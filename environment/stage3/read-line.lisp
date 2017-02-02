@@ -1,7 +1,7 @@
-(defun cr-or-lf? (x)
+(fn cr-or-lf? (x)
   (in? (char-code x) 10 13))
 
-(defun read-line (&optional (str *standard-input*))
+(fn read-line (&optional (str *standard-input*))
   (with-default-stream nstr str
     (with-queue q
       (while (!? (peek-char nstr)
@@ -17,7 +17,7 @@
       (!? (queue-list q)
           (list-string !)))))
 
-(defun read-all-lines (&optional (str *standard-input*))
+(fn read-all-lines (&optional (str *standard-input*))
   (with-default-stream nstr str
     (with-queue q
       (awhile (read-line nstr)

@@ -1,4 +1,4 @@
-(defun read-hex (str)
+(fn read-hex (str)
   (with (rec #'((v)
 				    (!? (& (peek-char str)
                            (alet (char-upcase (peek-char str))

@@ -1,67 +1,63 @@
 (def-head-predicate %rest)
 (def-head-predicate %body)
 (def-head-predicate %key)
-(defun %rest-or-%body? (x)    (| (%rest? x) (%body? x)))
-(defun argument-synonym? (x)  (| (%rest-or-%body? x)
-                                 (%key? x)))
+(fn %rest-or-%body? (x)    (| (%rest? x) (%body? x)))
+(fn argument-synonym? (x)  (| (%rest-or-%body? x)
+                              (%key? x)))
 
-(defun argument-rest-keyword? (x)  (in? x '&rest '&body))
-(defun argument-keyword? (x)       (in? x '&rest '&body '&optional '&key))
-(defun argument-name? (x)          (atom x))
-(defun argument-name (x)           x)
+(fn argument-rest-keyword? (x)  (in? x '&rest '&body))
+(fn argument-keyword? (x)       (in? x '&rest '&body '&optional '&key))
+(fn argument-name? (x)          (atom x))
+(fn argument-name (x)           x)
 
-(defun error-arguments-missing (fun args)
+(fn error-arguments-missing (fun args)
   (error "Arguments ~A missing for ~A." args fun))
 
-(defun error-too-many-arguments (fun argdef args)
+(fn error-too-many-arguments (fun argdef args)
   (without-automatic-newline
     (error "Too many arguments ~A to ~A with argument definition ~A." args fun argdef)))
 
-(defun error-&rest-has-value (fun)
+(fn error-&rest-has-value (fun)
   (error "In arguments to ~A: &REST cannot have a value." fun))
 
-(defun make-&key-alist (def)
-  (with (keys nil
-		 make-&key-descr
-		   [when _
-			 (? (argument-keyword? _.)
-				(copy-def-until-&key _)
-				(alet _.
-                  (push (? (cons? !)
-                           (. !. .!.) ; with default value
-                           (. ! !))   ; with itself
-                        keys)
-                  (make-&key-descr ._)))]
-
-		 copy-def-until-&key
-		   [when _
-		     (? (eq '&key _.)
-				(make-&key-descr ._)
-				(. _. (copy-def-until-&key ._)))])
-
+(fn make-&key-alist (def)
+  (with (keys                 nil
+		 make-&key-descr      [when _
+    			                (? (argument-keyword? _.)
+    				               (copy-def-until-&key _)
+    				               (alet _.
+                                     (push (? (cons? !)
+                                              (. !. .!.) ; with default value
+                                              (. ! !))   ; with itself
+                                           keys)
+                                     (make-&key-descr ._)))]
+		 copy-def-until-&key  [when _
+		                        (? (eq '&key _.)
+				                   (make-&key-descr ._)
+				                   (. _. (copy-def-until-&key ._)))])
 	(values (copy-def-until-&key def)
             (reverse keys))))
 
-(defun argdef-get-name (x)
+(fn argdef-get-name (x)
   (? (cons? x)
      x.
      x))
 
-(defun argdef-get-default (x)
+(fn argdef-get-default (x)
   (? (cons? x)
      .x.
      x))
 
-(defun argdef-get-value (defs vals)
+(fn argdef-get-value (defs vals)
   (?
     (cons? vals)   vals.
     (cons? defs.)  (cadr defs.)
     defs.))
 
-(defun argument-expand-0 (fun adef alst
-                          apply-values?
-                          concatenate-sublists?
-                          break-on-errors?)
+(fn argument-expand-0 (fun adef alst
+                       apply-values?
+                       concatenate-sublists?
+                       break-on-errors?)
   (with ((a k)      (make-&key-alist adef)
 	     argdefs    a
 	     key-args   k
@@ -172,19 +168,19 @@
 	      (nconc ! (nconc (@ [. _. (. '%key ._)] key-args)
                           rest-arg))))))
 
-(defun argument-expand (fun def vals &key (apply-values? t)
-                                          (concatenate-sublists? t)
-                                          (break-on-errors? t))
+(fn argument-expand (fun def vals &key (apply-values? t)
+                                       (concatenate-sublists? t)
+                                       (break-on-errors? t))
   (alet (argument-expand-0 fun def vals apply-values? concatenate-sublists? break-on-errors?)
     (? (| apply-values?
           (eq ! 'error))
        !
        (carlist !))))
 
-(defun argument-expand-names (fun def)
+(fn argument-expand-names (fun def)
   (argument-expand fun def nil :apply-values? nil))
 
-(defun argument-expand-values (fun def vals &key (break-on-errors? t))
+(fn argument-expand-values (fun def vals &key (break-on-errors? t))
   (@ [? (argument-synonym? _)
         ._
         _]

@@ -28,7 +28,6 @@
 (env-load "stage3/print.lisp")
 (env-load "stage3/print-number.lisp")
 (env-load "stage3/cache.lisp")
-(env-load "stage3/memorized-number.lisp")
 (env-load "stage3/loop.lisp")
 (env-load "stage3/read-char.lisp")
 (env-load "stage3/read-hex.lisp")
@@ -48,5 +47,4 @@
 (env-load "stage3/assert-c.lisp" :cl)
 (env-load "stage3/collected-errors.lisp")
 (env-load "stage3/string-integer.lisp" :cl)
-(env-load "stage3/dirent.lisp")
 (env-load "stage3/directory.lisp" :cl)

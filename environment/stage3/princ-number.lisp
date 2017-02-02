@@ -1,22 +1,22 @@
-(defun number-digit (x)
+(fn number-digit (x)
   (code-char (+ x (char-code #\0))))
 
-(defun integer-chars-0 (x)
+(fn integer-chars-0 (x)
   (alet (integer (mod x 10))
     (. (number-digit !)
        (& (<= 10 x)
           (integer-chars-0 (/ (- x !) 10))))))
 
-(defun integer-chars (x)
+(fn integer-chars (x)
   (reverse (integer-chars-0 (integer (abs x)))))
 
-(defun decimals-chars (x)
+(fn decimals-chars (x)
   (alet (mod (* x 10) 10)
     (& (< 0 !)
        (. (number-digit (integer !))
           (decimals-chars !)))))
 
-(defun princ-number (x str)
+(fn princ-number (x str)
   (& (< x 0)
      (princ #\- str))
   (stream-princ (integer-chars x) str)

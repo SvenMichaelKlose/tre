@@ -8,7 +8,7 @@
   (in-byte   0)
   (out-byte  0))
 
-(defun make-bit-stream (&key (in nil) (out nil))
+(fn make-bit-stream (&key (in nil) (out nil))
   (make-stream
       :user-detail (make-bit-stream-info :in in :out out)
       :fun-in #'((str)

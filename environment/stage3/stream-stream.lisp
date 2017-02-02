@@ -1,6 +1,6 @@
-(defun make-stream-stream (&key stream
-                                (input-location (make-stream-location))
-                                (output-location (make-stream-location)))
+(fn make-stream-stream (&key stream
+                             (input-location (make-stream-location))
+                             (output-location (make-stream-location)))
   (make-stream
       :handle           stream
       :input-location   input-location

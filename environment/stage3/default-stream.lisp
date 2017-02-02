@@ -1,5 +1,5 @@
-(defun default-stream (x)
-  (case x :test #'eq
+(fn default-stream (x)
+  (case x
     nil  (make-string-stream)
     t	 *standard-output*
 	x))

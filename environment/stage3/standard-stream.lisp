@@ -1,4 +1,4 @@
-(defun make-standard-stream ()
+(fn make-standard-stream ()
   (make-stream
       :fun-in  [%read-char nil]
       :fun-out #'((c str) (%princ c nil))

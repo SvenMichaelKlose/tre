@@ -1,8 +1,8 @@
-(defun number-not-character? (x)
+(fn number-not-character? (x)
   (& (not (character? x))
      (number? x)))
 
-(defun princ (x &optional (str *standard-output*))
+(fn princ (x &optional (str *standard-output*))
   (with-default-stream s str
     (?
       (number-not-character? x)  (princ-number x s)

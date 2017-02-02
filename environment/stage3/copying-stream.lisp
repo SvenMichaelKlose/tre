@@ -4,7 +4,7 @@
   (recorded-in  (make-queue))
   (recorded-out (make-queue)))
 
-(defun make-copying-stream (&key (in nil) (out nil))
+(fn make-copying-stream (&key (in nil) (out nil))
   (make-stream
       :user-detail (make-copying-stream-info :in in :out out)
       :fun-in #'((str)
@@ -18,8 +18,8 @@
 	  :fun-eof #'((str)
                    (stream-fun-eof (copying-stream-info-in (stream-user-detail str))))))
 
-(defun copying-stream-recorded-in (str)
+(fn copying-stream-recorded-in (str)
   (list-string (queue-list (copying-stream-info-recorded-in (stream-user-detail str)))))
 
-(defun copying-stream-recorded-out (str)
+(fn copying-stream-recorded-out (str)
   (list-string (queue-list (copying-stream-info-recorded-out (stream-user-detail str)))))
