@@ -22,8 +22,8 @@
 (add-printer-argument-definition 'block   '(name &body body))
 (add-printer-argument-definition 'cond    '(&body body))
 
-(adolist *macros*
-  (add-printer-argument-definition !. .!.))
+(@ (i *macros*)
+  (add-printer-argument-definition i. .i.))
 
 (fn %get-printer-argument-definition (x)
   (href *printer-argument-definitions* x))
@@ -105,12 +105,12 @@
 (fn %print-body (x str info)
   (with-temporary (print-info-indentation info) (%body-indentation info)
     (let first? t
-      (adolist x
+      (@ (i x)
         (? first?
            (= first? nil)
            (& *print-automatic-newline?*
               (fresh-line str)))
-        (%late-print ! str info)))))
+        (%late-print i str info)))))
 
 (fn %print-call (x argdef str info)
   (debug-print x)
@@ -120,18 +120,18 @@
     (let expanded (%print-get-args .x argdef)
       (? (eq expanded 'error)
          (%print-rest .x str info)
-         (adolist expanded
+         (@ (i expanded)
            (%print-gap str)
            (?
-             (& (%body? .!) ..!)  {(& *print-automatic-newline?*
+             (& (%body? .i) ..i)  {(& *print-automatic-newline?*
                                       (fresh-line str))
-                                   (%print-body ..! str info)}
-             (%rest? .!)          (%print-rest ..! str info)
-             (%key? .!)           {(%print-symbol (make-keyword !.) str info)
+                                   (%print-body ..i str info)}
+             (%rest? .i)          (%print-rest ..i str info)
+             (%key? .i)           {(%print-symbol (make-keyword i.) str info)
                                    (princ " " str)
-                                   (%late-print ..! str info)}
+                                   (%late-print ..i str info)}
              (with-temporary *print-automatic-newline?* nil
-               (%late-print .! str info))))))))
+               (%late-print .i str info))))))))
 
 (fn %print-call? (x info)
   (& (print-info-pretty-print? info)

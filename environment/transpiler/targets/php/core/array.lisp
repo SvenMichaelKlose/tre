@@ -14,13 +14,13 @@
 
 (defun list-array (x)
   (let a (make-array)
-    (adolist (x a)
-      (a.p !))))
+    (@ (i x a)
+      (a.p i))))
 
 (defun list-phphash (x)
   (let a (%%%make-hash-table)
-    (adolist (x a)
-      (%= (%%native "$" a "[]") !))))
+    (@ (i x a)
+      (%= (%%native "$" a "[]") i))))
 
 (defun aref (a k)
   (? (is_array a)

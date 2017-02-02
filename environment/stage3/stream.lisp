@@ -41,8 +41,8 @@
 
 (defun stream-princ (x str)
   (?
-    (cons? x)            (adolist (x x)
-                           (stream-princ ! str))
+    (cons? x)            (@ (i x x)
+                           (stream-princ i str))
     (| (string? x)
        (character? x))   (unless (& (string? x)
                                     (zero? (length x)))

@@ -7,8 +7,8 @@
 (defmethod nodelist list () _list)
 
 (defmethod nodelist iterate (fun)
-  (adolist _list
-    (funcall fun !)))
+  (@ (i _list)
+    (funcall fun i)))
 
 (defmethod nodelist filter (fun)
   (@ fun _list))

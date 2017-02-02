@@ -44,9 +44,9 @@
                 (*log-event-module*.click [(_.discard)
                                            (_.send-natively nil)
                                            (with-stream-string s txt.value
-                                             (adolist ((read-all s))
+                                             (@ (i (read-all s))
                                                (princ "* ")
-                                               (print (eval (print !)))))]
+                                               (print (eval (print i)))))]
                                           submit)))))
       (doc.body.first-child.add-text ""))))
 

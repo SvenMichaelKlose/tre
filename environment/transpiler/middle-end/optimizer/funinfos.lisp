@@ -44,8 +44,8 @@
                                   (funinfo-vars fi))))
 
 (defun warn-unused-arguments (fi)
-  (adolist ((funinfo-args fi))
-    (| (funinfo-used-var? fi !)
+  (@ (i(funinfo-args fi))
+    (| (funinfo-used-var? fi i)
        (warn "Unused argument ~A of function ~A."
              ! (human-readable-funinfo-names fi)))))
 

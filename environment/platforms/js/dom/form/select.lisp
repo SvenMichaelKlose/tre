@@ -9,9 +9,9 @@
   (@ [_.get-name] (x.get-list "select")))
 
 (defun form-select-get-by-name (x name)
-  (adolist ((x.get-list "select"))
-    (& (!.attribute-value? "name" name)
-       (return !))))
+  (@ (i (x.get-list "select"))
+    (& (i.attribute-value? "name" name)
+       (return i))))
 
 (defun form-select-get-option-by-value (x name)
   (do-children (i x)

@@ -329,12 +329,11 @@
   nil)
 
 (defun transpiler-add-plain-arg-funs (tr lst)
-  (adolist lst
-    (transpiler-add-plain-arg-fun tr !)))
+  (@ [transpiler-add-plain-arg-fun tr _] lst))
 
 (defun transpiler-add-obfuscation-exceptions (tr &rest x)
-  (adolist x
-	(= (href (transpiler-obfuscations tr) (make-symbol (symbol-name !))) t)))
+  (@ (i x)
+	(= (href (transpiler-obfuscations tr) (make-symbol (symbol-name i))) t)))
 
 (defun add-obfuscation-exceptions (&rest x)
   (apply #'transpiler-add-obfuscation-exceptions *transpiler* x))

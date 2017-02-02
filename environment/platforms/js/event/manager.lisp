@@ -77,8 +77,8 @@
 (defmethod event-manager unhook (obj)
   (& (eq element obj)
      (clr element))
-  (adolist _modules
-	(!.unhook obj)))
+  (@ (i _modules)
+	(i.unhook obj)))
 
 (defmethod event-manager fire-on-element (elm evt)
   (= evt._element elm)
@@ -91,16 +91,16 @@
 
 (defmethod event-manager _dochook (doc typ fun)
   (? (cons? typ)
-     (adolist typ
-       (_dochook doc ! fun))
+     (@ (i typ)
+       (_dochook doc i fun))
      (acons! typ (native-add-event-listener doc typ fun)
              (href _original-listeners doc))))
 
 (defmethod event-manager _non-generic-event (x)
   (? (string? x) (| (member x *non-generic-events* :test #'string==)
                     (alert (+ "'" x "' is a generic event.")))
-     (cons? x)   (adolist x
-                   (_non-generic-event !))
+     (cons? x)   (@ (i x)
+                   (_non-generic-event i))
      (error "Event name string expected instead of ~A." x))
   x)
 
@@ -124,8 +124,8 @@
   (_dispatch "externaldrop" evt))
 
 (defmethod event-manager _remove-event-listeners (doc)
-  (adolist ((href _original-listeners doc))
-	(native-remove-event-listener document !. .!)))
+  (@ (i (href _original-listeners doc))
+	(native-remove-event-listener document i. .i)))
 
 (defmethod event-manager _sensible-position? (x y)
   (& x y
@@ -140,8 +140,8 @@
 (defmethod event-manager _update-global-data (evt)
   (= element (evt.element))
   (when (evt.mouse-event?)
-    (with (x (evt.pointer-x)
-		   y (evt.pointer-y))
+    (with (x  (evt.pointer-x)
+		   y  (evt.pointer-y))
 	  (when (_sensible-position? x y)
 	    (_add-moved-distance-to-event evt)
         (= this.x x
@@ -156,9 +156,9 @@
   (remove-if-not [_.has-type type] handlers))
       
 (defmethod event-manager _call-handlers (evt module handlers)
-  (adolist handlers
+  (@ (i handlers)
 	(log-events "Calling handler for ~A event/module `~A'.~%" evt.type (module.get-name))
-    (!.callback evt this)
+    (i.callback evt this)
 	(when evt._stop
       (log-events "Event stopped.~%")
       (return))))
@@ -167,17 +167,17 @@
   (_find-handlers-of-element (_find-handlers-of-type module._handlers evt.type) elm))
 
 (defmethod event-manager _handle-modules (evt elm modules)
-  (adolist modules
+  (@ (i modules)
     (log-events "Searching event handler in module '~A' / ~A on ~A (has ~A).~%"
-                (!.get-name) (!? evt !.type) (!? elm !.tag-name)
-                (concat-stringtree (pad (@ [+ _.type "/" (!? _.element !.tag-name)] !._handlers) " ")))
-    (unless !._killed?
-      (_call-handlers evt ! (_find-handlers evt ! elm))
+                (i.get-name) (!? evt !.type) (!? elm !.tag-name)
+                (concat-stringtree (pad (@ [+ _.type "/" (!? _.element !.tag-name)] i._handlers) " ")))
+    (unless i._killed?
+      (_call-handlers evt i (_find-handlers evt i elm))
       (& evt._stop
          (return)))))
 
 (defmethod event-manager _bubble (evt init-elm)
-  (with (modules         (copy-list _modules))
+  (let modules (copy-list _modules)
     (when (evt.element)
 	  (loop
         (& (evt.element)._hooked?

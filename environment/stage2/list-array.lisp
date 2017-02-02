@@ -1,6 +1,6 @@
 (fn list-array (x)
   (with (a    (make-array (length x))
          idx  0)
-    (adolist (x a)
-      (= (aref a idx) !)
+    (@ (i x a)
+      (= (aref a idx) i)
       (++! idx))))

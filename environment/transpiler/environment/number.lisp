@@ -18,8 +18,8 @@
 (defmacro define-generic-transpiler-minus ()
   (let gen-body `(? .x
                     (let n x.
-	   		          (adolist (.x n)
-	      		        (= n (%%%- n !))))
+	   		          (@ (i .x n)
+	      		        (= n (%%%- n i))))
                     (%%%- x.))
     `{(defun - (&rest x)
 	    ,gen-body)

@@ -17,10 +17,10 @@
 
 (define-shared-std-macro (js php) functional (&rest x)
   (print-definition `(functional ,@x))
-  (adolist x
+  (@ (i x)
 ;    (? (transpiler-functional? *transpiler* !)
 ;       (warn "Redefinition of functional ~A." !))
-    (transpiler-add-functional *transpiler* !))
+    (transpiler-add-functional *transpiler* i))
   nil)
 
 (define-shared-std-macro (c js php) not (&rest x)

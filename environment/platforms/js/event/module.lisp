@@ -27,9 +27,9 @@
   (assert (function? callback-fun) "callback is not a function")
   (when elm
 	(= elm._hooked? t))
-  (adolist ((ensure-list types) elm)
-    (log-events "Module ~A will catch ~A events.~%" _name !)
-    (_hook-type ! callback-fun elm)))
+  (@ (i (ensure-list types) elm)
+    (log-events "Module ~A will catch ~A events.~%" _name i)
+    (_hook-type i callback-fun elm)))
 
 (defmethod event-module _unhook-0 (obj)
  (= _handlers (remove-if [?
@@ -40,8 +40,8 @@
 
 (defmethod event-module unhook (obj)
   (?
-    (cons? obj)           (adolist obj
-	                        (unhook !))
+    (cons? obj)           (@ (i obj)
+	                        (unhook i))
     (& (element? obj)
        obj._hooked?)      (_unhook-0 obj)
 	(not (comment? obj))  (_unhook-0 obj)))

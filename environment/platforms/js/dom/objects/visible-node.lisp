@@ -48,8 +48,8 @@
 (defmethod visible-node remove ()
   (& (element? this)
 	 (this.remove-children))
-  (adolist _unhooks
-    (funcall ! this))
+  (@ (i _unhooks)
+    (funcall i this))
   (remove-without-listeners)
   this)
 
