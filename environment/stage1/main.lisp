@@ -17,7 +17,6 @@
 (env-load "stage1/defun.lisp" :cl)
 (env-load "stage1/debug-print.lisp" :cl)
 (env-load "stage1/tre-load.lisp")
-(env-load "stage1/require.lisp" :cl)
 (env-load "stage1/fn.lisp")
 (env-load "stage1/curly.lisp")
 (env-load "stage1/accent-circonflex.lisp")
