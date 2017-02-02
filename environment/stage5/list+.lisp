@@ -1,2 +1,2 @@
-(defun list+ (a b)
+(fn list+ (a b)
   (@ [+ a _] b))

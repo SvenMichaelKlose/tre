@@ -1,8 +1,8 @@
-(defun assignment-to-self? (x)
+(fn assignment-to-self? (x)
   (& (%=? x)
      (eq .x. ..x.)))
 
-(defun reversed-assignments? (a d)
+(fn reversed-assignments? (a d)
   (let n d.
     (& (%=? a)
 	   (%=? n)
@@ -10,17 +10,17 @@
 	   (eq .a. ..n.)
 	   (eq .n. ..a.))))
 
-(defun jump-to-following-tag? (a d)
+(fn jump-to-following-tag? (a d)
   (& d
      (vm-jump? a)
      (eql (%%go-tag a) d.)))
 
-(defun unused-atom-or-functional? (x)
+(fn unused-atom-or-functional? (x)
   (& (%=? x)
      (not .x.)
      (atomic-or-functional? ..x.)))
 
-(defun %=-identity? (x)
+(fn %=-identity? (x)
   (& (%=? x)
      (identity? ..x.)))
 

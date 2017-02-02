@@ -1,4 +1,4 @@
-(defun warn-on-unused-variables (fi)
+(fn warn-on-unused-variables (fi)
   (when (funinfo-parent fi)
     (@ (i (funinfo-vars fi))
       (| (funinfo-used-var? fi i)

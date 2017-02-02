@@ -1,6 +1,6 @@
 (defmacro define-file-ending-predicate (name)
   (let sname (downcase (symbol-name name))
-    `(defun ,($ name '-suffix?) (x)
+    `(fn ,($ name '-suffix?) (x)
 	   (== ,(+ "." sname)
 		   (x.substr (- (length x) ,(++ (length sname))))))))
 

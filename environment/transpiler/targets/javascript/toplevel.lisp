@@ -1,27 +1,27 @@
-(defun nodejs-prologue ()
-   (apply #'+ (@ [format nil "var ~A = require ('~A');~%" _ _]
-                 (configuration :nodejs-requirements))))
+(fn nodejs-prologue ()
+  (apply #'+ (@ [format nil "var ~A = require ('~A');~%" _ _]
+                (configuration :nodejs-requirements))))
 
-(defun js-prologue ()
+(fn js-prologue ()
   (+ (format nil "// tré revision ~A~%" *tre-revision*)
      (nodejs-prologue)
      (format nil "var _I_ = 0; while (1) {switch (_I_) {case 0: ~%")))
 
-(defun js-epilogue ()
+(fn js-epilogue ()
   (format nil "}break;}~%"))
 
-(defun js-emit-early-defined-functions ()
+(fn js-emit-early-defined-functions ()
   (@ [`(push ',_ *functions*)] (memorized-sources)))
 
-(defun js-emit-memorized-sources ()
+(fn js-emit-memorized-sources ()
   (clr (configuration :memorize-sources?))
   (@ [`(%= (slot-value ,_. '__source) (. ,(shared-defun-source _.) (shared-defun-source ._)))]
      (memorized-sources)))
 
-(defun js-var-decls ()
+(fn js-var-decls ()
   (list (backend-generate-code `(((%var ,@(remove-if #'emitted-decl? (funinfo-vars (global-funinfo)))))))))
 
-(defun js-sections-before-import ()
+(fn js-sections-before-import ()
   (. (. '*js-core0* (load-string *js-core0*))
      (& (not (configuration :exclude-core?))
          (+ (list (. '*js-core* (load-string *js-core*)))
@@ -34,13 +34,13 @@
             (& (eq t *have-environment-tests*)
                (list (. 'environment-tests (make-environment-tests))))))))
 
-(defun js-environment-files ()
+(fn js-environment-files ()
   (mapcan [& (| (not ._)
                 (member :js ._))
              `((,(+ "environment/" _.)))]
           (reverse *environment-filenames*)))
 
-(defun js-sections-compiler ()
+(fn js-sections-compiler ()
   (alet *js-core-path*
     (+ (list (. 'js-emit-early-defined-functions
                 #'js-emit-early-defined-functions)
@@ -49,7 +49,7 @@
        (list (list (+ ! "late-macro.lisp"))
              (list (+ ! "eval.lisp"))))))
 
-(defun js-sections-after-import ()
+(fn js-sections-after-import ()
   (+ (list (. 'emit-late-symbol-function-assignments
               #'emit-late-symbol-function-assignments)
            (. 'js-emit-memorized-sources
@@ -57,13 +57,13 @@
      (& *have-compiler?*
         (js-sections-compiler))))
 
-(defun js-ending-sections ())
+(fn js-ending-sections ())
 
-(defun js-expex-initializer (ex)
+(fn js-expex-initializer (ex)
   (= (expex-inline? ex)         #'%slot-value?
      (expex-argument-filter ex) #'js-argument-filter))
 
-(defun make-javascript-transpiler-0 ()
+(fn make-javascript-transpiler-0 ()
   (create-transpiler
       :name                     :js
       :prologue-gen             #'js-prologue
@@ -87,7 +87,7 @@
                                   (:save-sources?            . nil)
                                   (:save-argument-defs-only? . nil))))
 
-(defun make-javascript-transpiler ()
+(fn make-javascript-transpiler ()
   (aprog1 (make-javascript-transpiler-0)
     (transpiler-add-plain-arg-funs ! *builtins*)))
 

@@ -30,7 +30,7 @@
   
   (globals      nil))
 
-(defun funinfo-framesize (fi)
+(fn funinfo-framesize (fi)
   (alet (funinfo-transpiler fi)
     (& (transpiler-stack-locals? !)
        (+ (length (funinfo-vars fi))
@@ -38,14 +38,14 @@
              (length (funinfo-args fi))
              0)))))
 
-(defun funinfo-topmost (fi)
+(fn funinfo-topmost (fi)
   (awhen (funinfo-parent fi)
     (? (& !
           (not (funinfo-parent !)))
        fi
        (funinfo-topmost !))))
 
-(defun funinfo-toplevel? (fi)
+(fn funinfo-toplevel? (fi)
   (!? (funinfo-parent fi)
       (not (funinfo-parent !))))
 
@@ -69,10 +69,10 @@
       :num-tags     num-tags
       :globals      (copy-list globals)))
 
-(defun get-funinfo (name &optional (tr *transpiler*))
+(fn get-funinfo (name &optional (tr *transpiler*))
   (& name (href (transpiler-funinfos tr) name)))
 
-(defun get-lambda-funinfo (x)
+(fn get-lambda-funinfo (x)
   (when (named-lambda? x)
     (get-funinfo (lambda-name x))))
 
@@ -84,7 +84,7 @@
   `(with-temporary *funinfo* (get-lambda-funinfo ,x)
      ,@body))
 
-(defun create-funinfo (&key name parent args body (transpiler *transpiler*))
+(fn create-funinfo (&key name parent args body (transpiler *transpiler*))
   (& (href (transpiler-funinfos transpiler) name)
      (error "FUNFINFO for ~A is already memorized." name))
   (with (argnames (argument-expand-names 'lambda-expand args)
@@ -100,6 +100,6 @@
        (@ [funinfo-var-add fi _] argnames))
     fi))
 
-(defun funinfo-closure-without-free-vars? (fi)
+(fn funinfo-closure-without-free-vars? (fi)
   (& (funinfo-scope-arg fi)
      (not (funinfo-free-vars fi))))

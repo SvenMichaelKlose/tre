@@ -1,4 +1,4 @@
-(defun quote-expand (x)
+(fn quote-expand (x)
   (with (atomic [? (constant-literal? _)
                    _
                    `(quote ,_)]

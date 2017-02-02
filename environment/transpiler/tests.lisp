@@ -1,10 +1,10 @@
-(defun make-environment-tests ()
+(fn make-environment-tests ()
   (with (names  nil
 		 num    0)
 	`(,@(@ [(++! num)
             (alet ($ 'test- num)
               (push ! names)
-              `(defun ,! ()
+              `(fn ,! ()
                  (%princ ,(+ "Test " (string num) ", " _.))
                  (with (result    ,._.
                         expected  ,.._.)
@@ -17,6 +17,6 @@
                      (%princ "<br>
 ")))]
            *tests*)
-      (defun environment-tests ()
+      (fn environment-tests ()
 	    ,@(@ #'list (reverse names))
         (%princ "Tests done.")))))

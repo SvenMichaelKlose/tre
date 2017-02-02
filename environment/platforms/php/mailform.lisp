@@ -1,10 +1,10 @@
 (defvar __rfc2110boundary (uniqid (rand)))
 (defvar *rfc2110comment* nil)
 
-(defun rfc2110-boundary ()
+(fn rfc2110-boundary ()
   (+ "rfc2110_boundary_cs" __rfc2110boundary))
 
-(defun rfc2110-header (fromemail)
+(fn rfc2110-header (fromemail)
   (+ "From: " fromemail "\n"
 	 "Reply-To: " fromemail "\n"
 	 "X-Mailer: tre rfc2110 support.\n"
@@ -12,10 +12,10 @@
 	 "Content-Type: Multipart/mixed; boundary=\""
 	 (rfc2110-boundary ) "\""))
 
-(defun rfc2110-tail ()
+(fn rfc2110-tail ()
   (+ "--" (rfc2110-boundary) "--\n"))
 
-(defun rfc2110-attachment (content type &optional (encoding 0) (contentid 0) inlinepath)
+(fn rfc2110-attachment (content type &optional (encoding 0) (contentid 0) inlinepath)
   (let header ""
     (unless *rfc2110comment*
       (= *rfc2110comment* t)
@@ -31,7 +31,7 @@
       (= inlinepath (+ inlinepath "Content-Disposition: inline; filename=\"" inlinepath "\"\n")))
     (+ header "\n" content)))
 
-(defun rfc2110-file (filename type)
+(fn rfc2110-file (filename type)
   (with (fd (fopen filename "r")
          bin (fread fd (filesize filename))
          image (base64_encode bin))
@@ -46,12 +46,12 @@
 		  "Content-MD5: " (md5 bin))
         "base64")))
 
-(defun send-mail (subject to body customer)
+(fn send-mail (subject to body customer)
   (mail to subject
     	(rfc2110-attachment body "text/plain; charset=UTF-8")
       	(rfc2110-header (urldecode customer))))
 
-(defun send-html-mail (from subject to body)
+(fn send-html-mail (from subject to body)
   (mail to subject
         (rfc2110-attachment body "text/html; charset=UTF-8")
       	(rfc2110-header from)))

@@ -1,4 +1,4 @@
-(defun sloppy-equal (x needle)
+(fn sloppy-equal (x needle)
   (& (atom x)
      (atom needle)
      (return (eql x needle)))
@@ -10,13 +10,13 @@
      (equal x. needle.)
      (sloppy-equal .x .needle)))
 
-(defun sloppy-tree-equal (x needle)
+(fn sloppy-tree-equal (x needle)
   (| (sloppy-equal x needle)
      (& (cons? x)
         (| (sloppy-tree-equal x. needle)
            (sloppy-tree-equal .x needle)))))
 
-(defun dump-pass? (name x)
+(fn dump-pass? (name x)
   (& *transpiler*
      (| (!? (dump-passes?)
             (| (eq t !)
@@ -24,7 +24,7 @@
         (!? (dump-selector)
             (sloppy-tree-equal x !)))))
 
-(defun dump-pass (end pass x)
+(fn dump-pass (end pass x)
   (& (| (dump-pass? pass x)
         (dump-pass? end x))
      (? (equal x (last-pass-result))
@@ -34,10 +34,10 @@
          (format t "~%; **** End of ~A.~%" pass)}))
   x)
 
-(defun transpiler-pass (p list-of-exprs)
+(fn transpiler-pass (p list-of-exprs)
   (with-global-funinfo (funcall p list-of-exprs)))
 
-(defun transpiler-end (name passes list-of-lists-of-exprs)
+(fn transpiler-end (name passes list-of-lists-of-exprs)
   (| (enabled-end? name)
      (return list-of-lists-of-exprs))
   (& (dump-pass? name list-of-lists-of-exprs)
@@ -56,7 +56,7 @@
 
 (defmacro define-transpiler-end (name &rest name-function-pairs)
   (alet (group name-function-pairs 2)
-    `(defun ,(make-symbol (symbol-name name)) (list-of-lists-of-exprs)
+    `(fn ,(make-symbol (symbol-name name)) (list-of-lists-of-exprs)
        (transpiler-end ,name
                        (list ,@(@ [`(. ,@_)]
                                   (pairlist (@ #'make-keyword (carlist !))

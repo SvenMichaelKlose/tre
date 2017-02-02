@@ -1,4 +1,4 @@
-(defun php-prologue ()
+(fn php-prologue ()
   (with-string-stream out
     (format out "<?php // tré revision ~A~%" *tre-revision*)
     (format out (+ "if (get_magic_quotes_gpc ()) {~%"
@@ -18,36 +18,36 @@
                    "}~%"))
     (php-print-native-core out)))
 
-(defun php-epilogue ()
+(fn php-epilogue ()
   (format nil "?>~%"))
 
-(defun php-decl-gen ()
+(fn php-decl-gen ()
   (codegen (frontend (@ #'list (compiled-inits)))))
 
-(defun php-frontend-init ()
+(fn php-frontend-init ()
   (add-defined-variable '*keyword-package*))
 
-(defun php-sections-before-import ()
+(fn php-sections-before-import ()
   (+ (list (. 'core-0 (load-string *php-core0*)))
      (& (not (configuration :exclude-core?))
         (list (. 'core (load-string *php-core*))))))
 
-(defun php-sections-after-import ()
+(fn php-sections-after-import ()
   (+ (& (not (configuration :exclude-core?))
         (list (. 'core-2 (load-string *php-core2*))))
      (& (eq t *have-environment-tests*)
         (list (. 'env-tests (make-environment-tests))))))
 
-(defun php-identifier-char? (x)
+(fn php-identifier-char? (x)
   (unless (eql #\$ x)
     (c-identifier-char? x)))
 
-(defun php-expex-initializer (ex)
+(fn php-expex-initializer (ex)
   (= (expex-inline? ex)          #'%slot-value?
      (expex-setter-filter ex)    (compose [@ #'php-setter-filter _] #'expex-compiled-funcall)
      (expex-argument-filter ex)  #'php-argument-filter))
 
-(defun make-php-transpiler-0 ()
+(fn make-php-transpiler-0 ()
   (create-transpiler
       :name                     :php
       :frontend-init            #'php-frontend-init
@@ -66,7 +66,7 @@
                                   (:save-sources?            . nil)
                                   (:save-argument-defs-only? . nil))))
 
-(defun make-php-transpiler ()
+(fn make-php-transpiler ()
   (aprog1 (make-php-transpiler-0)
     (transpiler-add-defined-function ! '%cons '(a d) nil)
     (transpiler-add-defined-function ! 'phphash-hash-table '(x) nil)

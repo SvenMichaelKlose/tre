@@ -1,17 +1,17 @@
-(defun element-extend (x)
+(fn element-extend (x)
   (hash-merge x caroshi-element.prototype))
 
-(defun dom-extend (x)
+(fn dom-extend (x)
   (pcase x
     document? (hash-merge x caroshi-html-document.prototype)
     element?  (element-extend x)
     text?     (hash-merge x *text-node.prototype)))
 
-(defun dom-tree-extend (root)
+(fn dom-tree-extend (root)
   (!? root
       ((dom-extend !).walk #'dom-extend)))
 
-(defun document-extend (&optional (doc document))
+(fn document-extend (&optional (doc document))
   (dom-extend doc)
   (dom-tree-extend doc.document-element)
   doc)

@@ -113,7 +113,7 @@
 
 (defvar *xml-entities-hash* (alist-hash *xml-entities* :test #'string==))
 
-(defun xml-entities-charlist-to-unicode (x)
+(fn xml-entities-charlist-to-unicode (x)
   (when x
     (when (eql #\& x.)
 	  (awhen (position #\; .x :test #'character==)
@@ -122,5 +122,5 @@
                      (xml-entities-charlist-to-unicode (nthcdr (++ !) .x)))))))
     (. x. (xml-entities-charlist-to-unicode .x))))
 
-(defun xml-entities-to-unicode (str)
+(fn xml-entities-to-unicode (str)
   (list-string (xml-entities-charlist-to-unicode (string-list str))))

@@ -1,9 +1,9 @@
-(defun print (x &optional (str *standard-output*))
+(fn print (x &optional (str *standard-output*))
   (late-print x str))
 
-(defun force-output (&optional (str *standard-output*)))
+(fn force-output (&optional (str *standard-output*)))
 
-(defun %print-get-args (args def))
+(fn %print-get-args (args def))
 
-(defun princ-number (x str)
+(fn princ-number (x str)
   (stream-princ (string x) str))

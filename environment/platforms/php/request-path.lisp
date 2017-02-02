@@ -1,7 +1,7 @@
 (defvar *request-path-offset* nil)
 (defvar *base-url* nil)
 
-(defun parse-request-path ()
+(fn parse-request-path ()
   (with (path  (%%%href *_SERVER* "SCRIPT_NAME")
          comp  (path-pathlist path)
          ofs   (? comp
@@ -12,14 +12,14 @@
 
 (parse-request-path)
 
-(defun request-uri () 
+(fn request-uri () 
   (aref *_SERVER* "REQUEST_URI"))
 
-(defun parse-url ()
+(fn parse-url ()
   (parse_url (request-uri)))
 
-(defun request-path ()
+(fn request-path ()
   (aref (parse-url) "path"))
 
-(defun request-path-components ()
+(fn request-path-components ()
   (remove-if #'empty-string? (subseq (path-pathlist (request-uri)) *request-path-offset*)))

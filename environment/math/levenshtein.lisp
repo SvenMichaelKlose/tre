@@ -1,4 +1,4 @@
-(defun make-levenshtein (row column)
+(fn make-levenshtein (row column)
   (with (width  (length row)
          height (length column)
          w      (++ width)
@@ -26,5 +26,5 @@
                   (number+ (aref m i jc) 1))))))
     m))
 
-(defun levenshtein (row column)
+(fn levenshtein (row column)
   (aref (make-levenshtein row column) (length row) (length column)))

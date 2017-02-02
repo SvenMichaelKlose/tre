@@ -1,4 +1,4 @@
-(defun function-exits? (x)
+(fn function-exits? (x)
   (alet x.
     (?
 	  (not x)          t
@@ -8,7 +8,7 @@
 	     (%=? !))      nil
 	  (function-exits? .x))))
 
-(defun opt-tailcall-make-restart (l body front-tag)
+(fn opt-tailcall-make-restart (l body front-tag)
   (developer-note "Removed tail call in ~A.~%"
                   (human-readable-funinfo-names *funinfo*))
   (+ (mapcan #'((arg val)
@@ -18,7 +18,7 @@
      `((%%go ,front-tag))
      (opt-tailcall-fun l .body front-tag)))
 
-(defun opt-tailcall-fun (l body front-tag)
+(fn opt-tailcall-fun (l body front-tag)
   (with-lambda name args dummy-body l 
     (& body
        (? (& (%=-funcall-of? body. name)

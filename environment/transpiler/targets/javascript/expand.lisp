@@ -1,7 +1,7 @@
 (defmacro define-js-std-macro (name args &body body)
   `(define-transpiler-std-macro *js-transpiler* ,name ,args ,@body))
 
-(defun js-make-function-with-expander (x)
+(fn js-make-function-with-expander (x)
   (alet (| (lambda-name x)
            (gensym))
     (with-gensym g
@@ -11,7 +11,7 @@
          (= (slot-value ,! 'tre-exp) ,(compile-argument-expansion g ! (lambda-args x)))
          ,!))))
 
-(defun js-requires-expander? (x)
+(fn js-requires-expander? (x)
   (unless (body-has-noargs-tag? (lambda-body x))
     (| (assert?)
        (not (simple-argument-list? (lambda-args x))))))
@@ -26,11 +26,11 @@
 
 (defvar *late-symbol-function-assignments* nil)
 
-(defun js-make-late-symbol-function-assignment (name)
+(fn js-make-late-symbol-function-assignment (name)
   (push `(= (slot-value ',name 'f) ,(compiled-function-name name))
         *late-symbol-function-assignments*))
 
-(defun emit-late-symbol-function-assignments ()
+(fn emit-late-symbol-function-assignments ()
   (reverse *late-symbol-function-assignments*))
 
 (define-js-std-macro defnative (name args &body body)
@@ -38,7 +38,7 @@
   `{(%var ,(%defun-name name))
     ,(shared-defun name args (body-with-noargs-tag body))})
 
-(defun js-early-symbol-maker (g sym)
+(fn js-early-symbol-maker (g sym)
   `(,@(unless (eq g '~%tfun)
         `((%var ,g)))
     (%= ,g (symbol ,(obfuscated-symbol-name sym)
@@ -78,7 +78,7 @@
      `(%new ,@x)))
 
 (define-js-std-macro js-type-predicate (name &rest types)
-  `(defun ,name (x)
+  `(fn ,name (x)
      (when x
        ,(? (< 1 (length types))
            `(| ,@(@ [`(%%%== (%js-typeof x) ,_)]

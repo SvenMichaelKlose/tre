@@ -12,8 +12,7 @@
 		 ,@body
 		 (. a (,fun d))))))
 
-; XXX Maybe try something with METACODE-WALKER.
-(defmacro define-optimizer (name &body body)
-  `(defun ,name (x)
+(defmacro define-optimizer (name &body body) ; TODO: Maybe try something with METACODE-WALKER.
+  `(fn ,name (x)
      (optimizer ,name
        ,@body)))

@@ -1,12 +1,12 @@
-(defun random-hexadecimal-digit ()
+(fn random-hexadecimal-digit ()
   (digit (integer (* (random) 16))))
 
-(defun random-hexadecimal-digits (num)
+(fn random-hexadecimal-digits (num)
   (with-queue q
     (dotimes (i num (queue-list q))
       (enqueue q (random-hexadecimal-digit)))))
 
-(defun uuid (&key (version 4))
+(fn uuid (&key (version 4))
   (| (== 4 version)
      (error "Only RFC4122 UUID version 4 is supported."))
   (list-string

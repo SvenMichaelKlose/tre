@@ -1,4 +1,4 @@
-(defun cl-packages ()
+(fn cl-packages ()
   `((defpackage "TRE-CORE"
       (:export       ,@(@ #'symbol-name
                           (+ +cl-symbol-imports+

@@ -1,4 +1,4 @@
-(defun make-video-flash (url width height)
+(fn make-video-flash (url width height)
   (aprog1 (new *element "object"
                         (new :classid  "clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
                              :codebase "http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0"
@@ -16,7 +16,7 @@
                                       :wmode "opaque"
                                       :scale "exactfit")))))
 
-(defun make-video (&key width height (high nil) (low nil) (webm nil) (swf nil) (loop? nil) (autoplay? nil))
+(fn make-video (&key width height (high nil) (low nil) (webm nil) (swf nil) (loop? nil) (autoplay? nil))
   (let video (new *element "video" (new :width width :height height))
     (when loop?
       (video.write-attribute "loop" "loop")
@@ -35,12 +35,12 @@
             video})
          (video.add (new *element "source" (new :src i. :type .i.)))))))
 
-(defun frame-seconds (frames-per-second x)
+(fn frame-seconds (frames-per-second x)
   (/ x frames-per-second))
 
-(defun make-video-stopper (video frames-per-second from-frame to-frame)
-  (with (int nil
-         end (frame-seconds frames-per-second to-frame))
+(fn make-video-stopper (video frames-per-second from-frame to-frame)
+  (with (int  nil
+         end  (frame-seconds frames-per-second to-frame))
     (= int (window.set-interval #'(()
                                      (when (< end video.current-time)
                                        (window.clear-interval int)
@@ -48,14 +48,14 @@
                                        (= video.current-time end)))
                                 (/ (/ 1000 frames-per-second) 2)))))
 
-(defun video-wait-while-seeking (video)
+(fn video-wait-while-seeking (video)
   (when (| video.paused video.seeking)
     (do-wait 100
       (video-wait-while-seeking video))))
 
 (defvar *google-chrome-illegal-video-position* 0)
 
-(defun video-play-snippet (&key video frames-per-second from-frame to-frame)
+(fn video-play-snippet (&key video frames-per-second from-frame to-frame)
   (| (== *google-chrome-illegal-video-position* from-frame)
      (= video.current-time (frame-seconds frames-per-second from-frame)))
   (video.play)

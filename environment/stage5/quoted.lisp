@@ -1,5 +1,5 @@
-(defun quoted (x)
+(fn quoted (x)
   (+ "\"" (escape-string x) "\""))
 
-(defun single-quoted (x)
+(fn single-quoted (x)
   (+ "'" (escape-string x #\' #\') "'"))

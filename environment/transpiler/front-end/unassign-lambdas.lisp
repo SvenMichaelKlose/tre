@@ -4,7 +4,7 @@
 ;   (FUNCTION NAME ARGS+BODY)
 ;   (%= X NAME)
 
-(defun unassign-lambdas (x)
+(fn unassign-lambdas (x)
   (alet x.
     (& x
        (?

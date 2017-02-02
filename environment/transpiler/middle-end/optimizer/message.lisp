@@ -1,2 +1,2 @@
-(defun optimizer-message (fmt &rest args)
+(fn optimizer-message (fmt &rest args)
   (apply #'format t fmt args))

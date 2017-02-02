@@ -1,11 +1,11 @@
-(defun %load-launchfile ()
+(fn %load-launchfile ()
   (%start-core)
-  (awhen *launchfile*
-    (load !))
+  (!? *launchfile*
+      (load !))
   (read-eval-loop)
   (quit))
 
-(defun dump-system (path)
+(fn dump-system (path)
   (print-note "; Dumping environment to image '~A' ~F" path)
   (sys-image-create path #'%load-launchfile)
   (fresh-line))

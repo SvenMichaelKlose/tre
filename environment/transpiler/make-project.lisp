@@ -1,9 +1,9 @@
-(defun make-project (project-name sections &key transpiler
-                                                (section-list-gen      nil)
-                                                (sections-to-update    nil)
-                                                (recompiler-path       nil)
-                                                (emitter               nil)
-                                                (obfuscate?            nil))
+(fn make-project (project-name sections &key transpiler
+                                             (section-list-gen      nil)
+                                             (sections-to-update    nil)
+                                             (recompiler-path       nil)
+                                             (emitter               nil)
+                                             (obfuscate?            nil))
   (format t "; Making project '~A'...~%" project-name)
   (= sections (ensure-list sections))
   (= (transpiler-sections-to-update transpiler) sections-to-update)

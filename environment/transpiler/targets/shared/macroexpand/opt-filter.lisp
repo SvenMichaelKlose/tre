@@ -1,4 +1,4 @@
-(defun function-to-funcall (x i)
+(fn function-to-funcall (x i)
   (alet (macroexpand x)
     (?
       (literal-function? !)  `(,.!. ,@i)

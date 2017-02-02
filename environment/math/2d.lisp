@@ -1,12 +1,12 @@
-(defun distance (x y x2 y2)
+(fn distance (x y x2 y2)
   (sqrt (+ (pow (abs (- x x2)) 2)
            (pow (abs (- y y2)) 2))))
 
-(defun inside-rect? (x y rx ry rw rh)
+(fn inside-rect? (x y rx ry rw rh)
   (& (within? x rx rw) 
      (within? y ry rh)))
 
-(defun clip-axis (p lower upper)
+(fn clip-axis (p lower upper)
   (? (< p lower)
      (- p lower)
      (? (> p upper)

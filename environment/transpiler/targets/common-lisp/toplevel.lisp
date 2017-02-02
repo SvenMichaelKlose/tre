@@ -1,17 +1,17 @@
-(defun cl-symbol (x)
+(fn cl-symbol (x)
   (make-symbol (symbol-name x) "CL"))
 
-(defun cl-frontend-init ()
+(fn cl-frontend-init ()
   (= *cl-builtins* nil))
 
-(defun cl-sections-before-import ()
+(fn cl-sections-before-import ()
   (unless (configuration :exclude-core?)
     (list (. 'cl-core (+ (load-string *cl-core*)
                          (@ [`(defbuiltin ,_. (&rest x)
                                 (apply #',(cl-symbol ._.) x))]
                          +cl-renamed-imports+))))))
 
-(defun make-cl-transpiler ()
+(fn make-cl-transpiler ()
   (create-transpiler
       :name                    :common-lisp
       :output-passes           '((:frontend . :transpiler-macroexpand))

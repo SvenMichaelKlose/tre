@@ -1,2 +1,2 @@
-(defun atom (x)
+(fn atom (x)
   (not (cons? x)))

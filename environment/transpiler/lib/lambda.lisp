@@ -15,7 +15,7 @@
             ,body (lambda-body ,g))
        ,@macro-body)))
 
-(defun copy-lambda (x &key (name nil) (args 'no-args) (body 'no-body))
+(fn copy-lambda (x &key (name nil) (args 'no-args) (body 'no-body))
   `(function
 	 ,@(!? (| name (lambda-name x))
 		   (list !))
@@ -26,5 +26,5 @@
            (lambda-body x)
            body))))
 
-(defun expanded-lambda-args (x)
+(fn expanded-lambda-args (x)
   (argument-expand-names (lambda-name x) (lambda-args x)))

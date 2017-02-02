@@ -1,8 +1,8 @@
-(defun empty-string? (&rest x)
+(fn empty-string? (&rest x)
   (every [& (string? _)
             (string== "" (| (trim _ " " :test #'string==) ""))] x))
 
-(defun empty-string-or-nil? (x)
+(fn empty-string-or-nil? (x)
   (| (not x)
      (& (string? x)
         (string== "" x))))

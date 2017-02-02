@@ -1,4 +1,4 @@
-(defun escape-charlist (x &optional (quote-char #\") (chars-to-escape #\"))
+(fn escape-charlist (x &optional (quote-char #\") (chars-to-escape #\"))
   (when x
     (= chars-to-escape (ensure-list chars-to-escape))
     (?
@@ -12,6 +12,5 @@
         (. #\\ (. x. (escape-charlist .x quote-char chars-to-escape)))
       (. x. (escape-charlist .x quote-char chars-to-escape)))))
 
-(defun escape-string (x &optional (quote-char #\") (chars-to-escape #\"))
-  (declare type string x)
+(fn escape-string (x &optional (quote-char #\") (chars-to-escape #\"))
   (list-string (escape-charlist (string-list x) quote-char chars-to-escape)))

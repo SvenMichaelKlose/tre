@@ -9,7 +9,7 @@
 (define-js-macro %%go (tag)
   `(,*js-indent* "_I_ = " ,tag "; continue" ,*js-separator*))
 
-(defun js-nil? (x)
+(fn js-nil? (x)
   `("(" ,x " == null || " ,x " === false)"))
 
 (define-js-macro %%go-nil (tag val)
@@ -36,7 +36,7 @@
 
 ;;;; FUNCTIONS
 
-(defun js-argument-list (debug-section args)
+(fn js-argument-list (debug-section args)
   (c-list (argument-expand-names debug-section args)))
 
 (define-js-macro function (&rest x)
@@ -160,7 +160,7 @@
 
 ;;;; HASH TABLES
 
-(defun js-literal-hash-entry (name value)
+(fn js-literal-hash-entry (name value)
   `(,(? (symbol? name)
         (make-symbol (symbol-name name))
         name)
@@ -193,7 +193,7 @@
 
 ;;;; METACODES
 
-(defun make-compiled-symbol-identifier (x)
+(fn make-compiled-symbol-identifier (x)
   ($ (!? (symbol-package x)
          (+ (symbol-name !) "_p_")
          "")

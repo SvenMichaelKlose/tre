@@ -1,8 +1,8 @@
-(defun update-section? (section cached-sections)
+(fn update-section? (section cached-sections)
   (| (member section (sections-to-update))
      (not (assoc section cached-sections))))
 
-(defun map-section (x fun sections cached-sections)
+(fn map-section (x fun sections cached-sections)
   (with-cons section data x
     (with-temporaries ((current-section)       section
                        (current-section-data)  data)
@@ -11,36 +11,36 @@
             (funcall fun section data)
             (assoc-value section cached-sections))))))
 
-(defun map-sections (fun sections cached-sections)
+(fn map-sections (fun sections cached-sections)
   (@ [map-section _ fun sections cached-sections]
      sections))
 
-(defun codegen (x)
+(fn codegen (x)
   (backend (middleend x)))
 
-(defun codegen-section (section data)
+(fn codegen-section (section data)
   (developer-note "Processing section ~A…~%" section)
   (apply #'+ (remove-if #'not (codegen data))))
 
-(defun codegen-sections (sections)
+(fn codegen-sections (sections)
   (alet (map-sections #'codegen-section sections (cached-output-sections))
     (= (cached-output-sections) !)
     (@ #'cdr !)))
 
-(defun quick-compile-sections (x)
+(fn quick-compile-sections (x)
   (codegen-sections (frontend-sections x)))
 
-(defun gen-toplevel-function ()
-  `((defun accumulated-toplevel ()
+(fn gen-toplevel-function ()
+  `((fn accumulated-toplevel ()
       ,@(reverse (accumulated-toplevel-expressions)))))
 
-(defun codegen-delayed-exprs ()
+(fn codegen-delayed-exprs ()
   (developer-note "Generating delayed expressions…~%")
   (with-temporary (sections-to-update) '(delayed-exprs)
     (quick-compile-sections (list (. 'delayed-exprs
                                      (apply #'append (delayed-exprs)))))))
 
-(defun codegen-accumulated-toplevels ()
+(fn codegen-accumulated-toplevels ()
   (& (enabled-pass? :accumulate-toplevel)
      (accumulated-toplevel-expressions)
      (with-temporaries ((sections-to-update) '(accumulated-toplevel))
@@ -51,10 +51,10 @@
                                           #'gen-toplevel-function)))
          (pop (disabled-passes))))))
 
-(defun dechunk (x)
+(fn dechunk (x)
   (remove-if #'not (apply #'append x)))
 
-(defun generic-codegen (before-import after-import imports)
+(fn generic-codegen (before-import after-import imports)
   (print-status "Let me think. Hmm...~F")
   (funcall (middleend-init))
   (with (before-imports    (codegen-sections before-import)
@@ -72,16 +72,16 @@
                                      (!? (funcall (epilogue-gen))
                                          (list !))))))
 
-(defun frontend-section-load (path)
+(fn frontend-section-load (path)
   (print-definition `(load ,path))
   (load-file path))
 
-(defun section-comment (section)
+(fn section-comment (section)
   `((%%comment "Section " ,(? (symbol? section)
                               (symbol-name section)
                               section))))
 
-(defun frontend-section (section data)
+(fn frontend-section (section data)
   (developer-note "Frontend ~A.~%" section)
   (frontend (@ #'list
                (+ (section-comment section)
@@ -92,11 +92,11 @@
                     string?  (frontend-section-load section)
                     (error "Don't know what to do with section ~A." section))))))
 
-(defun frontend-sections (sections)
+(fn frontend-sections (sections)
   (alet (map-sections #'frontend-section sections (cached-frontend-sections))
     (= (cached-frontend-sections) !)))
 
-(defun generic-frontend (sections)
+(fn generic-frontend (sections)
   (funcall (frontend-init))
   (generic-codegen (frontend-sections (funcall (sections-before-import)))
                    (frontend-sections (+ (funcall (sections-after-import))
@@ -104,13 +104,13 @@
                                          (funcall (ending-sections))))
                    (import-from-host)))
 
-(defun tell-number-of-warnings ()
+(fn tell-number-of-warnings ()
   (alet (length *warnings*)
     (format t "~L; ~A warning~A.~%"
               (? (zero? !) "No" !)
               (? (== 1 !) "" "s"))))
 
-(defun print-transpiler-stats (start-time)
+(fn print-transpiler-stats (start-time)
   (& (obfuscate?)
      (print-obfuscations?)
      (print-obfuscations))
@@ -119,7 +119,7 @@
   (print-status "~A seconds passed.~%"
                 (integer (/ (- (nanotime) start-time) 1000000000))))
 
-(defun compile-sections (sections &key (transpiler nil))
+(fn compile-sections (sections &key (transpiler nil))
   (let start-time (nanotime)
     (= *warnings* nil)
     (with-temporaries (*transpiler*  (| transpiler
@@ -133,5 +133,5 @@
         (print-transpiler-stats start-time)
         (print-status "Phew!~%")))))
 
-(defun compile (expression &key (transpiler nil))
+(fn compile (expression &key (transpiler nil))
   (compile-sections `((t ,expression)) :transpiler transpiler))

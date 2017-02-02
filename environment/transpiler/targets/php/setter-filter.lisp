@@ -1,4 +1,4 @@
-(defun php-setter-filter (x)
+(fn php-setter-filter (x)
   `(%= ,(php-argument-filter .x.)
        ,(alet ..x.
           (? (& (cons? !)

@@ -2,14 +2,14 @@
 
 (def-head-predicate debugger-step)
 
-(defun same-or-previous-location? (a b)
+(fn same-or-previous-location? (a b)
   (& a b
      (string== a. b.)
      (| (> (cdr .a) (cdr .b))
         (? (== (cdr .a) (cdr .b))
            (>= (car .a) (car .b))))))
 
-(defun find-next-location (x old)
+(fn find-next-location (x old)
   (& (cons? x)
      (| (& (not (same-or-previous-location? old (cpr x)))
            (let section (current-section)

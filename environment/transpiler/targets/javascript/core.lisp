@@ -1,6 +1,6 @@
 (defvar *js-core-path* "environment/transpiler/targets/javascript/core/")
 
-(defun js-load-core (dir-path &rest files)
+(fn js-load-core (dir-path &rest files)
   (apply #'+ (@ [alet (+ *js-core-path* dir-path _)
                   (print-definition `(js-load-core ,!))
                   (load-file !)
@@ -63,7 +63,7 @@
 
 (= *js-core1* (+ *js-core1* ,(js-load-core "" "../../../environment/setf-function-p.lisp")))
 
-(defun js-core-stream ()
+(fn js-core-stream ()
   (+ ,(js-load-core "" "error.lisp")
      ,(js-load-core "" "../../../../stage3/stream.lisp")
      (& (eq :browser (configuration :platform))
@@ -71,7 +71,7 @@
      ,(js-load-core "" "standard-stream.lisp")
      ,(js-load-core "" "../../../environment/print.lisp")))
 
-(defun js-core-nodejs ()
+(fn js-core-nodejs ()
   ,(js-load-core "node.js/" "file.lisp"))
 
 (defvar *js-core-eval* ,(js-load-core "" "eval.lisp"))

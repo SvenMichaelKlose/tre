@@ -1,5 +1,5 @@
-(defun open (path &key direction)
+(fn open (path &key direction)
   (error "OPEN is unsupported"))
 
-(defun close (str)
+(fn close (str)
   (error "CLOSE is unsupported"))

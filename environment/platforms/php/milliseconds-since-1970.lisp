@@ -1,2 +1,2 @@
-(defun get-current-time ()
+(fn get-current-time ()
   (time))

@@ -1,4 +1,4 @@
-(defun tree-find (v x &key (test #'eql))
+(fn tree-find (v x &key (test #'eql))
   (| (funcall test v x)
      (& (cons? x)
         (@ (i x)

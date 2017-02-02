@@ -4,7 +4,7 @@
   height
   data)
 
-(defun make-image (&key width height)
+(fn make-image (&key width height)
   (aprog1 (%make-image :width width :height height)
     (let size (* 3 width height)
       (= (image-data !) (make-array size))

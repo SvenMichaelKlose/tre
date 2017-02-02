@@ -1,4 +1,4 @@
-(defun transpiler-make-code-expander (tr)
+(fn transpiler-make-code-expander (tr)
   (let expander-name ($ (transpiler-name tr) '-codegen)
     (= (transpiler-codegen-expander tr) (define-expander expander-name))))
 

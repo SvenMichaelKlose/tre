@@ -6,5 +6,5 @@
 
 (finalize-class *reg-exp)
 
-(defun regexp-match (reg str)
+(fn regexp-match (reg str)
   (preg_match (+ "/" reg._pattern "/u" reg._scope) str))

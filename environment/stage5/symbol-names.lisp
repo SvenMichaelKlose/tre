@@ -1,4 +1,4 @@
-(defun symbol-names (x &key (downcase? nil))
+(fn symbol-names (x &key (downcase? nil))
   (@ [? (symbol? _)
         (funcall (? downcase?
                     #'downcase
@@ -7,5 +7,5 @@
         _]
      x))
 
-(defun symbol-names-string (x &key (downcase? nil))
+(fn symbol-names-string (x &key (downcase? nil))
   (apply #'string-concat (pad (symbol-names x :downcase? downcase?) " ")))

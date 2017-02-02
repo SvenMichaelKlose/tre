@@ -1,4 +1,4 @@
-(defun make-standard-stream ()
+(fn make-standard-stream ()
   (make-stream :fun-in   #'((str))
                :fun-out  #'((c str) (document.write (? (string? c) c (char-string c))))
 	           :fun-eof	 #'((str) t)))

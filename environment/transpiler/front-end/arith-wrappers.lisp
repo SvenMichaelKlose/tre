@@ -1,4 +1,4 @@
 (mapcan-macro _
     '(+ - == < > <= >=)
-  `((defun ,($ '%%% _) (&rest x)
+  `((fn ,($ '%%% _) (&rest x)
 	  (apply (function ,_) x))))

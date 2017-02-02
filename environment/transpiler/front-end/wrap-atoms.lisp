@@ -1,4 +1,4 @@
-(defun wrap-atom (x)
+(fn wrap-atom (x)
   (? (& (atom x)
         (not (number? x)))
      `(identity ,x)

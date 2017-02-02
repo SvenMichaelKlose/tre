@@ -1,2 +1,2 @@
-(defun path-suffix (x)
+(fn path-suffix (x)
   (car (last (split #\. x))))

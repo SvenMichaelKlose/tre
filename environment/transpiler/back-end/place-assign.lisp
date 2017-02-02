@@ -1,19 +1,19 @@
-(defun unassigned-%stackarg? (x)
+(fn unassigned-%stackarg? (x)
   (& (%stackarg? x) ..x))
 
-(defun unassigned-%stack? (x)
+(fn unassigned-%stack? (x)
   (& (%stack? x) ..x))
 
-(defun unassigned-%vec? (x)
+(fn unassigned-%vec? (x)
   (& (%vec? x) ...x))
 
-(defun unassigned-%set-vec? (x)
+(fn unassigned-%set-vec? (x)
   (& (%set-vec? x) ....x))
 
-(defun place-assign-error (x v)
+(fn place-assign-error (x v)
   (funinfo-error "Can't assign place because the index in scoped vars for ~A is missing in ~A." v x))
 
-(defun place-assign-stackarg (x)
+(fn place-assign-stackarg (x)
   (let fi (get-funinfo .x.)
     (? (arguments-on-stack?)
        (integer (+ (length (funinfo-vars fi)) (- (length (funinfo-args fi)) (funinfo-arg-pos fi ..x.) 1)))

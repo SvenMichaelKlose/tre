@@ -1,2 +1,2 @@
-(defun wait (continuer time-in-milliseconds)
+(fn wait (continuer time-in-milliseconds)
   (funcall continuer))

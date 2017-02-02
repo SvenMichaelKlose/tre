@@ -1,10 +1,10 @@
 (defvar *base64-key*
   		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=")
 
-(defun base64-encode-char (x)
+(fn base64-encode-char (x)
   (string (elt *base64-key* x)))
 
-(defun base64-encode (x)
+(fn base64-encode (x)
   (let out ""
 	(let len (length x)
 	  (while x
@@ -30,17 +30,17 @@
 				  (base64-encode-char e3)
 				  (base64-encode-char e4)))))))
  
-(defun base64-decode-char (x)
+(fn base64-decode-char (x)
   (position x *base64-key* :test #'==))
 
-(defun base64-compress (x)
+(fn base64-compress (x)
   (when x
     (? (| (alphanumeric? x.)
           (in? x. #\+ #\/ #\=))
        (. x. (base64-compress .x))
        (base64-compress .x))))
 
-(defun base64-decode (x)
+(fn base64-decode (x)
   (let out ""
 	(= x (base64-compress x))
 	(let len (length x)

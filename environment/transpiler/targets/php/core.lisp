@@ -11,10 +11,10 @@
                          "symbol"
                          "array"))))
 
-(defun php-print-native-core (out)
+(fn php-print-native-core (out)
   (princ *php-core-native* out))
 
-(defun php-load-core (dir-path &rest files)
+(fn php-load-core (dir-path &rest files)
   (with-temporary *have-compiler?* nil
     (apply #'+ (@ [alet (+ *php-core-path* dir-path _)
                     (print-definition  `(php-load-core ,!))

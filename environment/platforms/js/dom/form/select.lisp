@@ -1,74 +1,74 @@
-(defun form-select? (x)
+(fn form-select? (x) ; TODO: Remove.
   (& (element? x)
      (x.is? "select")))
 
-(defun form-select-get-options (x)
+(fn form-select-get-options (x) ; TODO: Remove.
   ((x.get "<select").get-list "option"))
 
-(defun form-select-get-select-names (x)
+(fn form-select-get-select-names (x) ; TODO: Remove.
   (@ [_.get-name] (x.get-list "select")))
 
-(defun form-select-get-by-name (x name)
+(fn form-select-get-by-name (x name) ; TODO: Remove.
   (@ (i (x.get-list "select"))
     (& (i.attribute-value? "name" name)
        (return i))))
 
-(defun form-select-get-option-by-value (x name)
+(fn form-select-get-option-by-value (x name) ; TODO: Remove.
   (do-children (i x)
     (& (i.attribute-value? "value" name)
        (return i))))
 
-(defun form-select-unselect-options (x)
+(fn form-select-unselect-options (x)
   (do-children (i x x)
     (i.remove-attribute "selected")))
 
-(defun form-select-select-option (x)
+(fn form-select-select-option (x)
   (when x
     (form-select-unselect-options x.parent-node)
     (= x.selected t)
     (x.write-attribute "selected" "1"))
   x)
 
-(defun form-select-select-option-by-value (x n)
+(fn form-select-select-option-by-value (x n)
   (form-select-select-option (form-select-get-option-by-value x n))
   x)
 
-(defun form-select-get-selected-option (x)
+(fn form-select-get-selected-option (x)
   (do-children (i x)
 	(& i.selected
 	   (return i))))
 
-(defun form-select-get-selected-option-text (x)
+(fn form-select-get-selected-option-text (x)
   (form-select-get-selected-option x).text-content)
 
-(defun form-select-get-selected-option-value (x)
+(fn form-select-get-selected-option-value (x)
   (let-when o (form-select-get-selected-option x)
 	(o.read-attribute "value")))
 
-(defun form-select-add-option (x txt &optional (attrs nil))
+(fn form-select-add-option (x txt &optional (attrs nil))
   (with (select-element  (x.get "<select")
 		 option-element  (new *element "option" attrs))
 	(option-element.add-text txt)
 	(select-element.add option-element)))
 
-(defun form-select-rename-option (option-element txt)
+(fn form-select-rename-option (option-element txt)
   (option-element.remove-children)
   (option-element.add-text txt))
 
-(defun form-select-option-texts-to-string-lists (options)
+(fn form-select-option-texts-to-string-lists (options)
   (when options
     (let option options.
       (. (string-list option.text-content)
          (form-select-option-texts-to-string-lists .options)))))
 
-(defun form-select-add-string-list-options (select-element options)
+(fn form-select-add-string-list-options (select-element options)
   (when options
 	(let option-element (new *element "option")
 	  (option-element.add-text (list-string options.))
 	  (select-element.add option-element))
 	(form-select-add-string-list-options select-element .options)))
 
-(defun form-select-sort (x)
+(fn form-select-sort (x)
   (with (select-element  (x.get "<select")
 		 option-list     (form-select-option-texts-to-string-lists (form-select-get-options x))
 		 sorted-options  (sort option-list :test #'<=-list))

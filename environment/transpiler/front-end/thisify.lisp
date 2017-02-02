@@ -1,10 +1,10 @@
-(defun thisify-collect-methods-and-members (clsdesc)
+(fn thisify-collect-methods-and-members (clsdesc)
   (+ (class-methods clsdesc)
      (class-members clsdesc)
      (!? (class-parent clsdesc)
          (thisify-collect-methods-and-members !))))
 
-(defun thisify-symbol (classdef x exclusions)
+(fn thisify-symbol (classdef x exclusions)
   (? (eq 'this x)
      '~%this
      (!? (& classdef
@@ -13,7 +13,7 @@
          `(%slot-value ~%this ,x)
          x)))
 
-(defun thisify-list-0 (classdef x exclusions)
+(fn thisify-list-0 (classdef x exclusions)
   (?
 	(symbol? x)       (thisify-symbol classdef x exclusions)
 	(| (atom x)
@@ -28,12 +28,12 @@
           (thisify-list-0 classdef x. exclusions))
        (thisify-list-0 classdef .x exclusions))))
 
-(defun thisify-list (classes x cls exclusions)
+(fn thisify-list (classes x cls exclusions)
   (thisify-list-0 (thisify-collect-methods-and-members (href classes cls)) x exclusions))
 
 (def-head-predicate %thisify)
 
-(defun thisify (x &optional (classes (thisify-classes)) (exclusions nil))
+(fn thisify (x &optional (classes (thisify-classes)) (exclusions nil))
   (?
 	(atom x)        x
 	(%thisify? x.)  (frontend-macroexpansions

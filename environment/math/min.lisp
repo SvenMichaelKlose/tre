@@ -1,4 +1,4 @@
-(defun min (&rest x)
+(fn min (&rest x)
   (& x
      (? .x
         (? (< x. .x.)

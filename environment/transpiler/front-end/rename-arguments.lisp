@@ -1,15 +1,15 @@
 (define-gensym-generator argument-sym a)
 
-(defun list-aliases (x)
+(fn list-aliases (x)
   (when x
     (. (. x. (argument-sym))
        (list-aliases .x))))
 
-(defun rename-argument (replacements x)
+(fn rename-argument (replacements x)
   (| (assoc-value x replacements :test #'eq)
      x))
 
-(defun rename-arguments-lambda (replacements x)
+(fn rename-arguments-lambda (replacements x)
   (? (get-lambda-funinfo x)
      x
      (alet (+ (list-aliases (expanded-lambda-args x)) replacements)
@@ -23,6 +23,6 @@
   (%slot-value? x)  `(%slot-value ,(rename-arguments-0 replacements .x.)
 				                  ,..x.))
 
-(defun rename-arguments (x)
+(fn rename-arguments (x)
   (= *argument-sym-counter* 0)
   (rename-arguments-0 nil x))

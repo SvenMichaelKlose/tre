@@ -1,4 +1,4 @@
-(defun read-binary (&optional (in *standard-input*))
+(fn read-binary (&optional (in *standard-input*))
   (let n 0
     (while (!? (peek-char in)
                (in? ! #\0 #\1))

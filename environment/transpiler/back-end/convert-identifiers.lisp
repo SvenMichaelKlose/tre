@@ -1,16 +1,16 @@
-(defun transpiler-translate-symbol (tr from to)
+(fn transpiler-translate-symbol (tr from to)
   (acons! from to (transpiler-symbol-translations tr)))
 
-(defun transpiler-special-char? (x)
+(fn transpiler-special-char? (x)
   (not (funcall (identifier-char?) x)))
 
-(defun global-variable-notation? (x)
+(fn global-variable-notation? (x)
   (let l (length x)
     (& (< 2 l)
        (eql (elt x 0) #\*)
        (eql (elt x (-- l)) #\*))))
 
-(defun convert-identifier-r (s)
+(fn convert-identifier-r (s)
   (with (camel-notation
 		   #'((x pos)
                (with (bump?
@@ -48,7 +48,7 @@
     	                                  (camel-notation (string-list !) 0))
                                        0))))))
 
-(defun convert-identifier (s)
+(fn convert-identifier (s)
   (| (href (identifiers) s)
      (let n (alet (symbol-name (symbol-package s))
               (? (| (eql "TRE" !)
@@ -63,7 +63,7 @@
        (= (href (converted-identifiers) n) s)
        n)))
 
-(defun convert-identifiers (x)
+(fn convert-identifiers (x)
   (maptree [?
              (string? _)         _
              (| (number? _)

@@ -1,26 +1,26 @@
-(defun list (&rest x) x)
+(fn list (&rest x) x)
 
-(defun list-length (x)
+(fn list-length (x)
   (let len 0
     (while (cons? x)
            len
       (= x .x)
       (++! len))))
 
-(defun last (x)
+(fn last (x)
   (& x
      (? .x
         (last .x)
         x)))
 
-(defun copy-list (x)
+(fn copy-list (x)
   (? (atom x)
      x
      (. x. (copy-list .x))))
 
 (functional nthcdr)
 
-(defun nthcdr (idx x)
+(fn nthcdr (idx x)
   (& x
      (? (zero? idx)
         x
@@ -28,10 +28,10 @@
 
 (functional nth)
 
-(defun nth (i x)
+(fn nth (i x)
   (car (nthcdr i x)))
 
-(defun filter (func lst)
+(fn filter (func lst)
   (let result (. nil nil)
     (@ (i lst .result)
       (rplaca result
@@ -39,7 +39,7 @@
                               result)
                            (list (funcall func i))))))))
 
-(defun mapcar (func &rest lists)
+(fn mapcar (func &rest lists)   ; TODO: LET-WHEN…
   (let args (%map-args lists)
     (& args
        (. (apply func args)

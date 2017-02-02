@@ -26,7 +26,7 @@
   (princ "data" o)
   (write-dword size o))
 
-(defun read-wavinfo (i)
+(fn read-wavinfo (i)
   (aprog1 (make-wavinfo)
     (| (equal "RIFF" (read-chars i 4))
        (error "RIFF signature missing."))

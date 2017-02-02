@@ -1,28 +1,28 @@
-(defun inverted-%%go (x)
-  (case x :test #'eq
+(fn inverted-%%go (x)
+  (case x
     '%%go-nil      '%%go-not-nil
     '%%go-not-nil  '%%go-nil
     (funinfo-error "Jump expected instead of ~A." x)))
 
-(defun jumps-to-tag (x)
+(fn jumps-to-tag (x)
   (count-if [& (vm-jump? _)
                (== x (%%go-tag _))]
             *body*))
 
-(defun constant-jump? (x constant)
+(fn constant-jump? (x constant)
   (| (? constant
         (%%go-not-nil? x)
         (%%go-nil? x))
      (%%go? x)))
 
-(defun target-tag (x constant)
+(fn target-tag (x constant)
   (& x
      (?
        (number? x.)                 (target-tag .x constant)
        (constant-jump? x. constant) (| (target-tag (member (%%go-tag x.) *body*) constant)
                                        (%%go-tag x.)))))
 
-(defun setting-ret-to-bool? (x)
+(fn setting-ret-to-bool? (x)
   (& (%=? x)
      (~%ret? .x.)
      (alet ..x.

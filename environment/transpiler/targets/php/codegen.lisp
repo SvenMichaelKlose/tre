@@ -2,10 +2,10 @@
 
 (defvar *php-by-reference?* nil)
 
-(defun php-line (&rest x)
+(fn php-line (&rest x)
   `(,*php-indent* ,@x ,*php-separator*))
 
-(defun php-dollarize (x)
+(fn php-dollarize (x)
   (? (symbol? x)
      (?
        (not x)      "NULL"
@@ -15,10 +15,10 @@
 	   `("$" ,x))
 	 x))
 
-(defun php-list (x)
+(fn php-list (x)
   (pad (@ #'php-dollarize x) ", "))
 
-(defun php-argument-list (x)
+(fn php-argument-list (x)
   (c-list (@ #'php-dollarize x)))
 
 (define-codegen-macro-definer define-php-macro *php-transpiler*)
@@ -44,7 +44,7 @@
 (define-php-macro %%tag (tag)
   `(%%native "_I_" ,tag ":" ,*php-newline*))
 
-(defun php-jump (tag)
+(fn php-jump (tag)
   `("goto _I_" ,tag))
 
 (define-php-macro %%go (tag)
@@ -61,7 +61,7 @@
 
 ;;;; FUNCTIONS
 
-(defun codegen-php-function (x)
+(fn codegen-php-function (x)
   (with (fi            (get-lambda-funinfo x)
          name          (funinfo-name fi)
 		 num-locals    (length (funinfo-vars fi))
@@ -88,7 +88,7 @@
 (define-php-macro %function-epilogue (name) '(%%native ""))
 (define-php-macro %function-return (name)   '(%%native ""))
 
-(defun php-codegen-argument-filter (x)
+(fn php-codegen-argument-filter (x)
   (php-dollarize x))
 
 (define-php-macro %closure (name)
@@ -101,12 +101,12 @@
 
 ;;;; ASSIGNMENTS
 
-(defun %%native-without-reference? (val)
+(fn %%native-without-reference? (val)
   (& (%%native? val)
      (string? .val.)
      (empty-string? .val.)))
 
-(defun php-assignment-operator (val)
+(fn php-assignment-operator (val)
   (? (| (& (atom val) ; XXX required?
 	  	   (symbol? val))
 		(not (%%native-without-reference? val)))
@@ -115,7 +115,7 @@
         " = ")
   	 " = "))
  
-(defun php-%=-value (val)
+(fn php-%=-value (val)
   (?
     (& (cons? val)      ; XXX required?
        (eq 'tre_cons val.))
@@ -134,7 +134,7 @@
 	  (list val)
     `((,val. " " ,@(c-list (@ #'php-codegen-argument-filter .val))))))
 
-(defun php-%=-0 (dest val)
+(fn php-%=-0 (dest val)
   `((%%native
 	    ,*php-indent*
 	    ,@(? dest
@@ -206,13 +206,13 @@
 
 ;;;; ARRAYS
 
-(defun php-array-subscript (indexes)
+(fn php-array-subscript (indexes)
   (@ [`("[" ,(php-dollarize _) "]")] indexes))
 
-(defun php-literal-array-element (x)
+(fn php-literal-array-element (x)
   (list (compiled-function-name '%%key) " (" (php-dollarize x.) ") => " (php-dollarize .x.)))
 
-(defun php-literal-array-elements (x)
+(fn php-literal-array-elements (x)
   (pad (@ #'php-literal-array-element x) ", "))
 
 (define-php-macro %%%make-hash-table (&rest elements)
@@ -241,7 +241,7 @@
 
 ;;;; HASH TABLES
 
-(defun php-array-indexes (x)
+(fn php-array-indexes (x)
   (mapcan [list "[" (php-dollarize _) "]"] x))
 
 (define-php-macro %%%href (h &rest k)

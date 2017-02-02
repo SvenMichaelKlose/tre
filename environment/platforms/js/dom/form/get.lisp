@@ -1,11 +1,11 @@
-(defun form-action-get (x)
+(fn form-action-get (x)
   ((x.get "<form").read-attribute "action"))
 
-(defun form-input-element? (x)
+(fn form-input-element? (x)     ; TODO: Move to predicates.lisp.
   (& (not (submit-button? x))
      (x.is? "input, textarea, select")))
 
-(defun form-get-input-elements (x)
+(fn form-get-input-elements (x)
   (+ (remove-if-not #'form-input-element? (x.get-list "input"))
      (x.get-list "textarea")
      (x.get-list "select")))

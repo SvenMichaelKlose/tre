@@ -1,6 +1,6 @@
 (defvar *tag-counter* 1)
 
-(defun make-compiler-tag ()
+(fn make-compiler-tag ()
   (++! *tag-counter*))
 
 (defmacro with-compiler-tag (tags &body body)

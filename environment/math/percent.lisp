@@ -1,2 +1,2 @@
-(defun percent (value p)
+(fn percent (value p)
   (/ (* value p) 100))

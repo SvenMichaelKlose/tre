@@ -1,4 +1,4 @@
-(defun %fopen-direction (direction)
+(fn %fopen-direction (direction)
   (case direction
     'input   "r"
     'output  "w"

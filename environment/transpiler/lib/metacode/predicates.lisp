@@ -10,52 +10,52 @@
       %%comment)
   `(def-head-predicate ,x))
 
-(defun atomic? (x)
+(fn atomic? (x)
   (| (atom x)
      (in? x. '%stack '%vec '%slot-value)))
 
-(defun atomic-or-functional? (x)
+(fn atomic-or-functional? (x)
   (| (atomic? x)
      (& (cons? x)
         (transpiler-functional? *transpiler* x.))))
 
-(defun ~%ret? (x)
+(fn ~%ret? (x)
   (eq '~%ret x))
 
-(defun vm-jump? (e)
+(fn vm-jump? (e)
   (& (cons? e)
      (in? e. '%%go '%%go-nil '%%go-not-nil)))
 
-(defun %%go-cond? (x)
+(fn %%go-cond? (x)
   (| (%%go-nil? x)
      (%%go-not-nil? x)))
 
-(defun %%go-tag (x) .x.)
-(defun %%go-value (x) ..x.)
+(fn %%go-tag (x) .x.)
+(fn %%go-value (x) ..x.)
 
-(defun %=-funcall? (x)
+(fn %=-funcall? (x)
   (? (%=? x)
      (cons? ..x.)))
 
-(defun %=-funcall-of? (x name)
+(fn %=-funcall-of? (x name)
   (& (%=-funcall? x)
      (eq name (car ..x.))))
 
-(defun has-return-value? (x)
+(fn has-return-value? (x)
   (not (| (vm-jump? x)
           (%var? x)
           (%%comment? x))))
 
-(defun named-lambda? (x)
+(fn named-lambda? (x)
   (& (function-expr? x)
      ..x
      x))
 
-(defun any-lambda? (x)
+(fn any-lambda? (x)
   (| (lambda? x)
      (named-lambda? x)))
 
-(defun metacode-expression? (x)
+(fn metacode-expression? (x)
   (& x
      (| (atom x)
         (%=? x)

@@ -1,4 +1,4 @@
-(defun make-caroshi-html-document ()
+(fn make-caroshi-html-document ()
   (document-extend (document.implementation.create-h-t-m-l-document)))
 
 (defclass caroshi-html-document ()

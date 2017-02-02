@@ -1,5 +1,5 @@
 (defmacro define-dom-node-predicate (which type)
-  `(defun ,($ which '?) (x)
+  `(fn ,($ which '?) (x)
      (& (object? x)
 	    (string== ,(string type) x.node-type))))
 

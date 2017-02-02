@@ -1,4 +1,4 @@
-(defun eql (a b)
+(fn eql (a b)
   (| a (setq a nil))
   (| b (setq b nil))
   (| (eq a b)

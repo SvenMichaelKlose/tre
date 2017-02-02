@@ -1,2 +1,2 @@
-(defun throw (&rest x)
+(fn throw (&rest x)
   (apply #'error x))

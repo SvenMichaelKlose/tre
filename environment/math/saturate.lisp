@@ -1,15 +1,15 @@
-(defun saturates? (x y max)
+(fn saturates? (x y max)
   (> (+ x y) max))
 
-(defun saturate (x y max)
+(fn saturate (x y max)
   (? (saturates? x y max)
      max
      (+ x y)))
 
-(defun desaturates? (x y &optional (min 0))
+(fn desaturates? (x y &optional (min 0))
   (< (- x y) min))
 
-(defun desaturate (x y &optional (min 0))
+(fn desaturate (x y &optional (min 0))
   (? (desaturates? x y min)
      min
      (- x y)))

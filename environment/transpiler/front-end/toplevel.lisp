@@ -15,5 +15,5 @@
     unassign-lambdas          #'unassign-lambdas
     gather-imports            #'gather-imports)
 
-(defun frontend-macroexpansions (x)
+(fn frontend-macroexpansions (x)
   (transpiler-macroexpand (compiler-macroexpand x)))

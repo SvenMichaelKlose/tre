@@ -1,20 +1,20 @@
 (defvar *obfuscation-counter* 0)
 
-(defun obfuscate? ()
+(fn obfuscate? ()
   (enabled-pass? :obfuscate))
 
-(defun obfuscateable-symbol? (x)
+(fn obfuscateable-symbol? (x)
   (not (eq t (href (obfuscations) (make-symbol (symbol-name x))))))
 
-(defun must-obfuscate-symbol? (x)
+(fn must-obfuscate-symbol? (x)
   (& x 
      (obfuscate?)
      (obfuscateable-symbol? x)))
 
-(defun firefox-symbol-table-bug-workaround (x)
+(fn firefox-symbol-table-bug-workaround (x)
   (+ x (list #\_)))
 
-(defun gen-obfuscated-symbol ()
+(fn gen-obfuscated-symbol ()
   (++! *obfuscation-counter*)
   (with (to-alpha  [unless (zero? _)
 	                (alet (mod _ 24)
@@ -22,7 +22,7 @@
                          (to-alpha (/ (- _ !) 24))))])
     (make-symbol (list-string (firefox-symbol-table-bug-workaround (to-alpha *obfuscation-counter*))))))
 
-(defun obfuscated-symbol (x)
+(fn obfuscated-symbol (x)
   (? (cl:packagep x) ; TODO: Introduce package objects.
      (= x (make-symbol (package-name x))))
   (? (must-obfuscate-symbol? x)
@@ -36,18 +36,18 @@
 (define-tree-filter obfuscate-0 (x)
   (symbol? x)  (obfuscated-symbol x))
 
-(defun obfuscate (x)
+(fn obfuscate (x)
   (? (obfuscate?)
      (obfuscate-0 x)
      x))
 
-(defun obfuscated-symbol-name (x)
+(fn obfuscated-symbol-name (x)
   (symbol-name (obfuscated-symbol x)))
 
-(defun obfuscated-identifier (x)
+(fn obfuscated-identifier (x)
   (convert-identifier (obfuscated-symbol x)))
 
-(defun transpiler-print-obfuscations (tr)
+(fn transpiler-print-obfuscations (tr)
   (@ (k (hashkeys (transpiler-obfuscations tr)))
     (unless (find (elt (symbol-name k) 0) '(#\~)) ; #\_)
       (format t "~A~A -> ~A~%"

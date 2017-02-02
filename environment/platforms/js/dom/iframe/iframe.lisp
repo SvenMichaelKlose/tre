@@ -1,4 +1,4 @@
-(defun iframe-document (x)
+(fn iframe-document (x)
   (| x.content-document
      (awhen x.content-window
        !.document)
@@ -6,6 +6,6 @@
 	    x.document
 	    (error "Don't know how to get an iframe's document in this browser. :("))))
 
-(defun iframe-extend (x)
+(fn iframe-extend (x)
   (document-extend (iframe-document x))
   x)

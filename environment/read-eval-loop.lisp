@@ -1,4 +1,4 @@
-(defun read-eval-loop (&key (in *standard-input*) (out *standard-output*))
+(fn read-eval-loop (&key (in *standard-input*) (out *standard-output*))
   (while (peek-char in)
          nil
     (format out "* ~F")

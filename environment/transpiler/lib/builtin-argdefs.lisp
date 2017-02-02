@@ -141,7 +141,7 @@
       (CLOSE-CONNECTION ())
       (CLOSE-SOCKET     ())))
 
-(defun sanity-check-builtin-argdefs ()
+(fn sanity-check-builtin-argdefs ()
   (alet (carlist *builtin-argdefs*)
     (while ! nil
       (& (member !. .!)

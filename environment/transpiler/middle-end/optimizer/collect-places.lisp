@@ -1,4 +1,4 @@
-(defun collect-places-r (x)
+(fn collect-places-r (x)
   (?
     (named-lambda? x.) (with-lambda-funinfo x.
                          (let fi *funinfo*
@@ -15,6 +15,6 @@
                              (funinfo-add-used-var fi i)))))
   (& x (collect-places-r .x)))
 
-(defun collect-places (x)
+(fn collect-places (x)
   (collect-places-r x)
   x)

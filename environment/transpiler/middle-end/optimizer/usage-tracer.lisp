@@ -1,10 +1,10 @@
-(defun tag-code (tag)
+(fn tag-code (tag)
   (| (member-if [& (number? _)
                    (== _ tag)]
                 *body*)
      (funinfo-error "Internal compiler error: Tag ~A not found in body ~A." tag *body*)))
 
-(defun removable-place? (x)
+(fn removable-place? (x)
   (alet *funinfo*
     (& (| (funinfo-parent !)
           (eq '~%ret x)
@@ -14,7 +14,7 @@
        (not (eq x (funinfo-scope !))
             (funinfo-scoped-var? ! x)))))
 
-(defun will-be-used-again? (x v)
+(fn will-be-used-again? (x v)
    (with (traversed-tags nil
           traversed-tag? [member _ traversed-tags :test #'==]
           traverse-tag   [unless (traversed-tag? _)

@@ -1,2 +1,2 @@
-(defun eq (x y)
+(fn eq (x y)
   (%%%eq x y))

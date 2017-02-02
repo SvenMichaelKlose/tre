@@ -1,3 +1,3 @@
-(defun email-domain (x)
+(fn email-domain (x)
   (!? (position #\@ x)
       (subseq x (1+ !))))

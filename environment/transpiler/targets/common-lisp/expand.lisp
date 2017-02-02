@@ -36,7 +36,7 @@
                                         ,@body)))
                                *special-forms*))))
 
-(defun make-? (body)
+(fn make-? (body)
   (with (tests (group body 2)
          end   (car (last tests)))
     (| body

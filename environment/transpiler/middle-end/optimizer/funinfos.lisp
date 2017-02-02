@@ -1,11 +1,11 @@
-(defun used-vars ()
+(fn used-vars ()
   (alet *funinfo*
     (+ (funinfo-scoped-vars !)
        (intersect (funinfo-vars !) (funinfo-used-vars !) :test #'eq)
        (& (copy-arguments-to-stack?)
           (funinfo-args !)))))
 
-(defun remove-unused-scope-arg (fi)
+(fn remove-unused-scope-arg (fi)
   (when (& (not (funinfo-fast-scope? fi))
            (funinfo-closure-without-free-vars? fi))
      (= (funinfo-scope-arg fi) nil)
@@ -14,7 +14,7 @@
      (optimizer-message "; Made ~A a regular function.~%"
                         (human-readable-funinfo-names fi))))
 
-(defun remove-scoped-vars (fi)
+(fn remove-scoped-vars (fi)
   (when (& (sole? (funinfo-scoped-vars fi))
            (not (funinfo-place? fi (car (funinfo-scoped-vars fi)))))
     (optimizer-message "; Unscoping ~A in ~A.~%"
@@ -23,7 +23,7 @@
     (= (funinfo-scoped-vars fi) nil)
     (= (funinfo-scope fi) nil)))
 
-(defun replace-scope-arg (fi)
+(fn replace-scope-arg (fi)
   (when (& (funinfo-scope-arg fi)
            (not (funinfo-fast-scope? fi))
            (sole? (funinfo-free-vars fi))
@@ -37,19 +37,19 @@
       (= (funinfo-args fi) (. ! (cdr (funinfo-args fi))))
       (= (funinfo-fast-scope? fi) t))))
 
-(defun remove-argument-stackplaces (fi)
+(fn remove-argument-stackplaces (fi)
   (funinfo-vars-set fi (remove-if [& (funinfo-arg? fi _)
                                      (not (funinfo-scoped-var? fi _)
                                           (funinfo-place? fi _))]
                                   (funinfo-vars fi))))
 
-(defun warn-unused-arguments (fi)
+(fn warn-unused-arguments (fi)
   (@ (i(funinfo-args fi))
     (| (funinfo-used-var? fi i)
        (warn "Unused argument ~A of function ~A."
              ! (human-readable-funinfo-names fi)))))
 
-(defun correct-funinfo ()
+(fn correct-funinfo ()
   (alet *funinfo*
 ;    (when (lambda-export?)
 ;      (remove-unused-scope-arg !)
@@ -59,7 +59,7 @@
     (when (stack-locals?)
       (remove-argument-stackplaces !))))
 
-(defun remove-unused-vars (x)
+(fn remove-unused-vars (x)
   (& (named-lambda? x.) 
      (with-lambda-funinfo x.
        (correct-funinfo)
@@ -67,7 +67,7 @@
        ;(warn-unused-arguments *funinfo*)))
   (& x (remove-unused-vars .x)))
 
-(defun optimize-funinfos (x)
+(fn optimize-funinfos (x)
   (collect-places x)
   (remove-unused-vars x)
   x)

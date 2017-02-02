@@ -1,4 +1,4 @@
-(defun bind-event-listener (obj fun)
+(fn bind-event-listener (obj fun)
   (assert (function? fun) "BIND-EVENT-LISTENER requires a function")
   [applymethod obj fun (new caroshi-event :native-event _)])
 

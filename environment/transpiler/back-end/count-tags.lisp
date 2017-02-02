@@ -1,4 +1,4 @@
-(defun count-tags (x)
+(fn count-tags (x)
   (& (named-lambda? x.)
      (alet (lambda-body x.)
        (= (funinfo-num-tags (get-lambda-funinfo x.)) (count-if #'number? !))

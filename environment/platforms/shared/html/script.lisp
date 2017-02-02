@@ -1,12 +1,11 @@
-(defun print-html-script (out script
-                          &key (title nil)
-                               (no-cache? nil)
-                               (strict? t)
-                               (copyright-title nil) (copyright-href nil)
-                               (external-script nil)
-                               (external-stylesheet nil)
-                               (internal-stylesheet nil)
-                               (body nil))
+(fn print-html-script (out script &key (title nil)
+                                       (no-cache? nil)
+                                       (strict? t)
+                                       (copyright-title nil) (copyright-href nil)
+                                       (external-script nil)
+                                       (external-stylesheet nil)
+                                       (internal-stylesheet nil)
+                                       (body nil))
   (with-default-stream o out
     (format o (+ (doctype-html-5) "~%"))
     (lml2xml `(html
@@ -39,15 +38,14 @@
                         "//-->")))
              o)))
 
-(defun make-html-script (pathname script
-                         &key (title nil)
-                              (no-cache? nil)
-                              (strict? t)
-                              (copyright-title nil) (copyright-href nil)
-                              (external-script nil)
-                              (external-stylesheet nil)
-                              (internal-stylesheet nil)
-                              (body nil))
+(fn make-html-script (pathname script &key (title nil)
+                                           (no-cache? nil)
+                                           (strict? t)
+                                           (copyright-title nil) (copyright-href nil)
+                                           (external-script nil)
+                                           (external-stylesheet nil)
+                                           (internal-stylesheet nil)
+                                           (body nil))
   (with-output-file o pathname
     (print-html-script o script ,@(keyword-copiers :title :no-cache? :strict?
                                                    :copyright-title :copyright-href

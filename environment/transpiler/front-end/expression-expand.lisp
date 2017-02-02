@@ -1,11 +1,11 @@
 (defvar *expex* nil)
 
-(defun expex-set-global-variable-value (x) ; TODO – What could this be about?
+(fn expex-set-global-variable-value (x) ; TODO – What could this be about?
   (list x))
 
 ;;;; SHARED SETTER FILTER
 
-(defun expex-compiled-funcall (x)
+(fn expex-compiled-funcall (x)
   (alet ..x.
     (? (& (cons? !)
           (| (function-expr? !.)
@@ -17,16 +17,16 @@
 
 ;;;; GUEST CALLBACKS
 
-(defun expex-guest-filter-setter (x)
+(fn expex-guest-filter-setter (x)
   (funcall (expex-setter-filter *expex*) x))
 
-(defun expex-guest-filter-arguments (x)
+(fn expex-guest-filter-arguments (x)
   (@ [funcall (expex-argument-filter *expex*) _] x))
 
 
 ;;;; UTILS
 
-(defun make-%= (p v)
+(fn make-%= (p v)
   (when (atom v)
     (= v (funcall (expex-argument-filter *expex*) v)))
   (expex-guest-filter-setter `(%= ,p ,(? (%=? v)
@@ -35,13 +35,13 @@
 
 (define-gensym-generator expex-sym e)
 
-(defun expex-add-var ()
+(fn expex-add-var ()
   (funinfo-var-add *funinfo* (expex-sym)))
 
 
 ;;;; PREDICATES
 
-(defun unexpex-able? (x)
+(fn unexpex-able? (x)
   (| (atom x)
      (literal-function? x)
      (in? x. '%%go '%%go-nil '%%native '%%string 'quote '%%comment)))
@@ -49,7 +49,7 @@
 
 ;;;; ARGUMENT EXPANSION
 
-(defun compiled-arguments (fun def vals)
+(fn compiled-arguments (fun def vals)
   (with (f [& _ `(. ,_. ,(f ._))])
     (@ [?
          (%rest-or-%body? _)  (f ._)
@@ -57,13 +57,13 @@
           _]
        (cdrlist (argument-expand fun def vals)))))
 
-(defun expex-argdef (fun)
+(fn expex-argdef (fun)
   ; TODO: The variable containing the function gets assigned to another one…
   (| (!? (funinfo-get-local-function-args *funinfo* fun)
          (print !)) ; …so this doesn't happen.
      (transpiler-function-arguments *transpiler* fun)))
 
-(defun expex-argexpand (x)
+(fn expex-argexpand (x)
   (with (new?   (%new? x)
          fun    (? new? .x. x.)
          args   (? new? ..x .x)
@@ -75,17 +75,17 @@
 
 ;;;;; MOVING ARGUMENTS
 
-(defun expex-move-inline (x)
+(fn expex-move-inline (x)
   (with ((moved new-expr) (expex-move-args x))
     (. moved new-expr)))
 
-(defun expex-move-%%block (x)
+(fn expex-move-%%block (x)
   (!? .x
       (let s (expex-add-var)
         (. (expex-body ! s) s))
       (. nil nil)))
 
-(defun expex-move-std (x)
+(fn expex-move-std (x)
   (with (s                 (expex-add-var)
          (moved new-expr)  (expex-expr x))
     (. (+ moved
@@ -94,17 +94,17 @@
              new-expr))
        s)))
 
-(defun expex-inlinable? (x)
+(fn expex-inlinable? (x)
   (funcall (expex-inline? *expex*) x))
 
-(defun expex-move (x)
+(fn expex-move (x)
   (pcase x
     unexpex-able?     (. nil x)
     expex-inlinable?  (expex-move-inline x)
     %%block?          (expex-move-%%block x)
     (expex-move-std x)))
 
-(defun expex-move-args (x)
+(fn expex-move-args (x)
   (with (args      (@ #'expex-move (expex-guest-filter-arguments x))
          moved     (carlist args)
          new-expr  (cdrlist args))
@@ -113,19 +113,19 @@
 
 ;;;; EXPRESSION EXPANSION
 
-(defun expex-lambda (x)
+(fn expex-lambda (x)
   (with-lambda-funinfo x
     (values nil (list (copy-lambda x :body (expex-body (lambda-body x)))))))
 
-(defun expex-var (x)
+(fn expex-var (x)
   (funinfo-var-add *funinfo* .x.)
   (values nil nil))
 
-(defun expex-%%go-nil (x)
+(fn expex-%%go-nil (x)
   (with ((moved new-expr) (expex-move-args (list ..x.)))
     (values moved `((%%go-nil ,.x. ,@new-expr)))))
 
-(defun expex-expr-%= (x)
+(fn expex-expr-%= (x)
   (with-%= p v x
     (? (%=? v)
        (return (values nil (expex-body `(,v
@@ -133,7 +133,7 @@
     (with ((moved new-expr) (expex-move-args (list v)))
       (values moved (make-%= p new-expr.)))))
 
-(defun expex-expr (x)
+(fn expex-expr (x)
   (pcase x
     %=?            (expex-expr-%= x)
     %%go-nil?      (expex-%%go-nil x)
@@ -147,7 +147,7 @@
 
 ;;;; BODY EXPANSION
 
-(defun expex-make-return-value (s x)
+(fn expex-make-return-value (s x)
   (with (l                     (car (last x))
          wanted-return-value?  #'(()
                                    (eq s .l.))
@@ -163,7 +163,7 @@
              (make-%= s l)))
        x)))
 
-(defun expex-body (x &optional (s '~%ret))
+(fn expex-body (x &optional (s '~%ret))
   (with (ensure-%=  [| (& (| (metacode-expression? _)
                              (%%comment? _))
                           (list _))
@@ -176,7 +176,7 @@
 
 ;;;; TOPLEVEL
 
-(defun expression-expand (x)
+(fn expression-expand (x)
   (& x
      (with-temporary *expex* (transpiler-expex *transpiler*)
        (= *expex-sym-counter* 0)

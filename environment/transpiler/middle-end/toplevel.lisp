@@ -1,9 +1,9 @@
-(defun pass-optimize (x)
+(fn pass-optimize (x)
   (? (enabled-pass? :inject-debugging)
      x
      (optimize x)))
 
-(defun pass-opt-tailcall (x)
+(fn pass-opt-tailcall (x)
   (? (enabled-pass? :inject-debugging)
      x
      (alet (opt-tailcall x)

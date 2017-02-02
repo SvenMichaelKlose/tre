@@ -1,6 +1,6 @@
 (defvar *body*)
 
-(defun metacode-statement? (x)
+(fn metacode-statement? (x)
   (| (in? x. '%= '%set-vec '%var '%function-prologue '%function-epilogue '%function-return '%%tag)
 	 (vm-jump? x)
      (%%call-nil? x)))
@@ -14,7 +14,7 @@
 									      (if-named-function nil))
   (with-cons x r args
     (with-gensym v
-      `(defun ,name ,args
+      `(fn ,name ,args
          (when ,x
            (let ,v (car ,x)
              (+ (?

@@ -1,6 +1,6 @@
 (defvar *cl-builtins* nil)
 
-(defun cl-load-base (dir-path &rest files)
+(fn cl-load-base (dir-path &rest files)
   (apply #'+ (@ [alet (+ dir-path _)
 			      (print-definition `(cl-load-base ,!))
                   (with-temporary *package* (make-symbol "TRE-CORE")

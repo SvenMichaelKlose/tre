@@ -1,7 +1,7 @@
-(defun add-toplevel-expression (x)
+(fn add-toplevel-expression (x)
   (push (copy-tree x) (accumulated-toplevel-expressions)))
 
-(defun accumulate-toplevel-expressions (x)
+(fn accumulate-toplevel-expressions (x)
    (remove-if #'not
               (@ [| (named-lambda? _)
                     (%var? _)

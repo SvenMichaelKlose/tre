@@ -1,9 +1,9 @@
-(defun translate-function-name (x)
+(fn translate-function-name (x)
   (? (defined-function x)
      (compiled-function-name x)
      x))
 
-(defun nontranslatable-name? (x)
+(fn nontranslatable-name? (x)
   (| (quote? x)
      (%%native? x)
      (%closure? x)
@@ -19,7 +19,7 @@
      (| (not (funinfo-parent fi))
         (not (funinfo-arg-or-var? fi x))))  (translate-function-name x))
 
-(defun translate-function-names (x)
+(fn translate-function-names (x)
   (? (function-name-prefix)
      (translate-function-names-0 (global-funinfo) x)
      x))

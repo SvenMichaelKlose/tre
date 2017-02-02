@@ -1,2 +1,2 @@
-(defun half (x)     (/ x 2))
-(defun quarter (x)  (/ x 4))
+(fn half (x)     (/ x 2))
+(fn quarter (x)  (/ x 4))

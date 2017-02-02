@@ -1,7 +1,7 @@
-(defun c-expander-name (x)
+(fn c-expander-name (x)
   ($ x '_treexp))
 
-(defun compile-argument-expansion-0 (fun-name adef p)
+(fn compile-argument-expansion-0 (fun-name adef p)
   (with ((argdefs key-args) (make-&key-alist adef)
 
 		 key
@@ -75,14 +75,14 @@
                (carlist key-args))))
        (main argdefs))))
 
-(defun compile-argument-expansion-function-body-0 (fun-name adef p names)
+(fn compile-argument-expansion-function-body-0 (fun-name adef p names)
   `(,@(compile-argument-expansion-0 fun-name adef p)
     ,@(? (assert?)
          `((? ,p
               (error-too-many-arguments ,(symbol-name fun-name) ,(shared-defun-source adef) ,p))))
     ((%%native ,(compiled-function-name fun-name)) ,@names)))
 
-(defun compile-argument-expansion-function-body (fun-name adef p)
+(fn compile-argument-expansion-function-body (fun-name adef p)
   (body-with-noargs-tag
     (!? (argument-expand-names 'compile-argument-expansion adef)
         `((#'(,!
@@ -90,11 +90,11 @@
             ,@(@ [`',_] !)))
         (compile-argument-expansion-function-body-0 fun-name adef p !))))
 
-(defun compile-argument-expansion-function (this-name fun-name adef)
+(fn compile-argument-expansion-function (this-name fun-name adef)
   (with-gensym p
     `(function ,this-name
                ((,p)
                   ,@(compile-argument-expansion-function-body fun-name adef p)))))
 
-(defun compile-argument-expansion (this-name fun-name adef)
+(fn compile-argument-expansion (this-name fun-name adef)
   (compile-argument-expansion-function this-name fun-name adef))

@@ -1,19 +1,19 @@
-(defun maparray (fun hash)
+(fn maparray (fun hash)
   (with-queue q
     (dotimes (i (length hash) (queue-list q))
       (enqueue q (funcall fun (aref hash i))))))
 
-(defun maphash (fun hash)
+(fn maphash (fun hash)
   (@ (i (%property-list hash))
     (funcall fun i. .i)))
 
-(defun elt (seq idx)
+(fn elt (seq idx)
   (?
     (string? seq) (%elt-string seq idx)
     (cons? seq)   (nth idx seq)
   	(aref seq idx)))
 
-(defun (= elt) (val seq idx)
+(fn (= elt) (val seq idx)
   (?
 	,@(& (assert?)
          '((string? seq) (error "Strings cannot be modified.")))

@@ -1,14 +1,14 @@
 ; TODO: Make HTML5 style.
-(defun get-viewport (&optional (win window))
-  (with (x  0
-		 y  0
-         wd win.document
-		 w  (| win.inner-width
-			   wd.document-element.client-width
-			   wd.body.client-width)
-		 h  (| win.inner-height
-			   wd.document-element.client-height
-			   wd.body.client-height))
+(fn get-viewport (&optional (win window))
+  (with (x   0
+		 y   0
+         wd  win.document
+		 w   (| win.inner-width
+			    wd.document-element.client-width
+			    wd.body.client-width)
+		 h   (| win.inner-height
+			    wd.document-element.client-height
+			    wd.body.client-height))
     (?
   	  wd.document-element.scroll-left
         (= x wd.document-element.scroll-left
@@ -21,7 +21,7 @@
 		   y win.page-y-offset))
 	(values x y w h)))
 
-(defun set-viewport (x y &optional (win window))
+(fn set-viewport (x y &optional (win window))
   (let wd win.document
     (?
 	  wd.document-element.scroll-left
@@ -34,7 +34,7 @@
         (= win.page-x-offset x
 		   win.page-y-offset y))))
 
-(defun adjust-viewport (elm)
+(fn adjust-viewport (elm)
   (with ((x y w h) (get-viewport)
          xr        (+ x w)
          yb        (+ y h)
@@ -51,7 +51,7 @@
 (defvar *old-viewport-width* 0)
 (defvar *old-viewport-height* 0)
 
-(defun viewport-changed? ()
+(fn viewport-changed? ()
   (with ((x y w h) (get-viewport))
     (prog1 (not (& (== *old-viewport-width* w)
                    (== *old-viewport-height* h)))

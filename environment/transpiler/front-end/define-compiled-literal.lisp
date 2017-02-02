@@ -1,6 +1,6 @@
 (defmacro define-compiled-literal (name (x table) &key maker init-maker decl-maker)
   (let slot `(,($ 'compiled- table 's))
-    `(defun ,name (,x)
+    `(fn ,name (,x)
        (cache (aprog1 ,maker
                 (unless (funinfo-var? (global-funinfo) !)
                   (add-literal !)

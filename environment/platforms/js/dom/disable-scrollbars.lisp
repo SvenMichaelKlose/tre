@@ -1,10 +1,10 @@
-(defun disable-scrollbars (&optional (win window))
+(fn disable-scrollbars (&optional (win window))
   (win.document.body.set-style "overflow" "hidden")
   (let doc win.document
     (& doc.body.scroll
 	   (= doc.body.scroll "no"))))
 
-(defun enable-scrollbars (&optional (win window))
+(fn enable-scrollbars (&optional (win window))
   (win.document.body.set-style "overflow" "visible")
   (let doc win.document
     (& doc.body.scroll

@@ -1,24 +1,24 @@
 (mapcar-macro x '(identity quote backquote quasiquote quasiquote-splice)
   `(def-head-predicate ,x))
 
-(defun literal-function? (x)
+(fn literal-function? (x)
   (& (cons? x)
      (eq 'function x.)
      (atom .x.)
      (not ..x)))
 
-(defun global-literal-function? (x)
+(fn global-literal-function? (x)
   (& (literal-function? x)
      (not (funinfo-find *funinfo* .x.))))
 
-(defun simple-argument-list? (x)
+(fn simple-argument-list? (x)
   (? x
      (not (some [| (cons? _)
                    (argument-keyword? _)]
                 x))
 	 t))
 
-(defun constant-literal? (x)
+(fn constant-literal? (x)
   (| (not x)
      (eq t x)
      (number? x)
@@ -27,7 +27,7 @@
      (array? x)
      (hash-table? x)))
 
-(defun codegen-expr? (x)
+(fn codegen-expr? (x)
   (& (cons? x)
      (| (string? x.)
         (in? x. '%%native '%%string)

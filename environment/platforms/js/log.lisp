@@ -1,4 +1,4 @@
-(defun make-log-stream ()
+(fn make-log-stream ()
   (make-stream :fun-in    #'((str))
                :fun-out   #'((c str)
                               (logwindow-add-string (? (string? c)
@@ -22,7 +22,7 @@
  
 (defvar *log-event-module* nil)
 
-(defun open-log-window ()
+(fn open-log-window ()
   (unless *logwindow*
     (= *logwindow* (window.open "" "log" "width=1200, height=300, scrollbars=yes"))
     (let doc *logwindow*.document
@@ -53,25 +53,25 @@
 (defvar *logwindow-buffer* "")
 (defvar *logwindow-timer* nil)
 
-(defun logwindow-add-string-0 (txt)
+(fn logwindow-add-string-0 (txt)
   (open-log-window)
   (*logwindow*.document.body.first-child.add-text txt)
   (*logwindow*.scroll-to 0 (%%native 100000))
   txt)
 
-(defun logwindow-timer ()
+(fn logwindow-timer ()
   (unless (empty-string? *logwindow-buffer*)
     (logwindow-add-string-0 *logwindow-buffer*)
     (= *logwindow-buffer* "")))
 
-(defun logwindow-add-string (txt)
+(fn logwindow-add-string (txt)
   (unless *logwindow-timer*
     (= *logwindow-timer* (window.set-interval #'logwindow-timer 100)))
   (= *logwindow-buffer* (+ *logwindow-buffer* txt))
   txt)
 
 ,(? *transpiler-log*
-   `(defun log-message (txt)
+   `(fn log-message (txt)
       (logwindow-add-string (+ txt (string (code-char 10))))
       txt)
    `(defmacro log-message (txt)))

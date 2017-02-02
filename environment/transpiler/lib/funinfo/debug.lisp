@@ -1,12 +1,12 @@
 ; TODO: Rename file to 'debug-printers.lisp'.
 
-(defun only-element-or-all-of (x)
+(fn only-element-or-all-of (x)
   (? .x x x.))
 
-(defun human-readable-funinfo-names (fi)
+(fn human-readable-funinfo-names (fi)
   (only-element-or-all-of (butlast (funinfo-names fi))))
 
-(defun print-funinfo (fi &optional (str nil))
+(fn print-funinfo (fi &optional (str nil))
   (with-default-stream s str
     (format s (concat-stringtree
                   (@ [!? ._.
@@ -26,13 +26,13 @@
                        ("Local scope:     " ,(funinfo-scope fi))
                        ("Scoped vars:     " ,(funinfo-scoped-vars fi))))))))
 
-(defun print-funinfo-stack (fi &key (include-global? nil))
+(fn print-funinfo-stack (fi &key (include-global? nil))
   (when fi
     (print-funinfo fi)
     (print-funinfo-stack (funinfo-parent fi) :include-global? include-global?))
   fi)
 
-(defun funinfo-error (fmt &rest args)
+(fn funinfo-error (fmt &rest args)
   (error "In scope ~A: ~A"
          (human-readable-funinfo-names *funinfo*)
          (apply #'format nil fmt args)))

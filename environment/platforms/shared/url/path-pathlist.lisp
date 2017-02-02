@@ -1,7 +1,7 @@
-(defun path-pathlist (x)
+(fn path-pathlist (x)
   (split #\/ x))
 
-(defun pathlist-path (x)
+(fn pathlist-path (x)
   (? x
      (apply #'string-concat (pad x "/"))
      ""))

@@ -15,12 +15,12 @@
     place-assign           #'place-assign
     warn-unused            #'warn-unused)
 
-(defun backend-prepare (x)
+(fn backend-prepare (x)
   (? (lambda-export?)
      (backend-make-places x)
 	 (make-framed-functions x)))
 
-(defun backend (x)
+(fn backend (x)
   (? (enabled-end? :backend)
      (@ [backend-generate-code (backend-prepare (list _))] x)
      x))
