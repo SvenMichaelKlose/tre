@@ -1,6 +1,6 @@
 (functional adjoin)
 
-(defun adjoin (obj lst &rest args)
+(fn adjoin (obj lst &rest args)
   (? (apply #'member obj lst args)
      lst
      (. obj lst)))

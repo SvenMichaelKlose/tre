@@ -1,54 +1,54 @@
 ;;;; (FUNCTION [LAMBDA] [name] [arguments body...])
 ;;;; (FUNCTION name)
 
-(defun past-lambda-1 (x)
+(fn past-lambda-1 (x)
   (? (eq x. 'lambda)
 	 .x
 	 x))
 
-(defun lambda-name (x)
+(fn lambda-name (x)
   (? (eq x. 'function)
      (? ..x
 	    .x.)))
 
-(defun past-function (x)
+(fn past-function (x)
   (? (eq x. 'function)
 	 (? ..x
 	    ..x.   ; (FUNCTION name lambda-expression)
         .x.)   ; (FUNCTION lambda-expression)
 	 x))
 
-(defun past-lambda (x)
+(fn past-lambda (x)
   (past-lambda-1 (past-function x)))
 
-(defun lambda-args (x)
+(fn lambda-args (x)
   (car (past-lambda x)))
 
-(defun lambda-body (x)
+(fn lambda-body (x)
   (cdr (past-lambda x)))
 
-(defun lambda-args-and-body (x)
+(fn lambda-args-and-body (x)
   (values (lambda-args x)
           (lambda-body x)))
 
-(defun lambda-call-vals (x) .x)
+(fn lambda-call-vals (x) .x)
 
-(defun function-expr? (x)
+(fn function-expr? (x)
   (& (cons? x)
      (eq 'function x.)))
 
-(defun lambda-expr? (x)
+(fn lambda-expr? (x)
   (& (function-expr? x)
      (cons? .x)
      (cons? .x.)))
 
-(defun lambda? (x)
+(fn lambda? (x)
   (& (lambda-expr? x)
      (let l (past-lambda .x.)
        (& (cons? l)
           (list? l.)))))
 
-(defun lambda-call? (x)
+(fn lambda-call? (x)
   (& (cons? x)
      .x
      (lambda? x.)))

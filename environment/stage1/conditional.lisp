@@ -6,14 +6,14 @@
   `(when (not ,predicate)
      ,@body))
 
-(defun group2 (x)
+(fn group2 (x)
   (? x
      (. (? .x
   		   (list x. .x.)
   		   (list x.))
         (group2 ..x))))
 
-(defun %case-test (cases)
+(fn %case-test (cases)
   (? (eq :test .cases.)
      (? (atom ..cases.)
         ..cases.
@@ -22,7 +22,7 @@
            (error ":TEST must be a function.")))
         'eql))
  
-(defun %case (g cases)
+(fn %case (g cases)
   (let test (%case-test cases)
     (%simple-mapcar #'((x)
                          (? .x

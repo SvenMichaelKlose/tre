@@ -1,22 +1,22 @@
 (functional queue-list queue-front)
 
-(defun make-queue ()
+(fn make-queue ()
   (. nil nil))
 
-(defun enqueue (x &rest vals)
+(fn enqueue (x &rest vals)
   (rplaca x (cdr (rplacd (| x. x) vals)))
   vals)
 
-(defun enqueue-list (x vals)
+(fn enqueue-list (x vals)
   (rplacd x (nconc .x vals))
   (rplaca x (last vals)))
 
-(defun queue-pop (x)
+(fn queue-pop (x)
   (prog1 .x.
     (? (not ..x)
        (rplaca x nil))
     (? .x
        (rplacd x ..x))))
 
-(defun queue-list (x) .x)
-(defun queue-front (x) .x.)
+(fn queue-list (x) .x)
+(fn queue-front (x) .x.)

@@ -6,7 +6,7 @@
      (= ,expr (cdr ,expr))
      ret))
 
-(defun pop! (args)
+(fn pop! (args)
   (let ret args.
     (= args. .args.
        .args ..args)

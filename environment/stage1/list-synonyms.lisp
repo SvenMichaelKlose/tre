@@ -1,7 +1,7 @@
 (defconstant *first-to-tenth*
   '(first second third fourth fifth sixth seventh eighth ninth tenth))
 
-(defun %make-cdr (i)
+(fn %make-cdr (i)
   (? (== i 0)
      'x
      `(cdr ,(%make-cdr (-- i)))))
@@ -13,9 +13,9 @@
          (@ #'((name)
            		(push `(block nil
                          (functional ,name)
-                         (defun ,name (x)
+                         (fn ,name (x)
                            (car ,(%make-cdr i)))
-                         (defun (= ,name) (v x)
+                         (fn (= ,name) (v x)
                            (rplaca ,(%make-cdr i) v)))
                       l)
                 (++! i))
@@ -26,4 +26,4 @@
 
 (functional rest)
 
-(defun rest (x) .x)
+(fn rest (x) .x)

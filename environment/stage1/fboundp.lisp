@@ -1,1 +1,2 @@
-(defun fbound? (x) (function? (symbol-function x)))
+(fn fbound? (x)
+  (function? (symbol-function x)))

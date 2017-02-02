@@ -1,6 +1,6 @@
 (functional equal)
 
-(defun equal (x y)
+(fn equal (x y)
   (?
 	(| (atom x)
        (atom y))   (eql x y)

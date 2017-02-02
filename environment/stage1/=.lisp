@@ -1,9 +1,9 @@
-(defvar *=-function?* #'%=-function?)
+(var *=-function?* #'%=-function?)
 
-(defun =-make-symbol (fun)
+(fn =-make-symbol (fun)
   (make-symbol (string-concat "=-" (symbol-name fun))))
 
-(defun =-complement (p val)
+(fn =-complement (p val)
   (? (| (atom p)
 	    (%slot-value? p)
 	    (slot-value? p))
@@ -19,7 +19,7 @@
 	         `(,setter ,val ,@args))
           (error "Place ~A isn't settable." p)))))
 
-(defun =-0 (args)
+(fn =-0 (args)
   (? (not .args)
      (error "Pair expected instead of single ~A." args.)
      (. (=-complement args. .args.)

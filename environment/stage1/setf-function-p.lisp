@@ -1,1 +1,2 @@
-(defun %=-function? (x) (fbound? x))
+(fn %=-function? (x)
+  (fbound? x))

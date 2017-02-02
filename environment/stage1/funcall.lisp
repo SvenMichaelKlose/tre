@@ -1,2 +1,2 @@
-(defun funcall (fun &rest args)
+(fn funcall (fun &rest args)
   (apply fun args))

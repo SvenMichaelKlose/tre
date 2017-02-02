@@ -1,4 +1,4 @@
 (functional $)
 
-(defun $ (&rest args)
+(fn $ (&rest args)
   (make-symbol (apply #'+ (@ #'string args))))

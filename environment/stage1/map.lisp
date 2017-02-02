@@ -1,4 +1,4 @@
-(defun %map-args (lists)
+(fn %map-args (lists)
   (block nil
     (let* ((i lists)	        ; List iterator.
            (nl (make-queue)))	; Argument list.
@@ -13,12 +13,12 @@
         (setq i (cdr i))	    ; Go for next list.
         (go start)))))
 
-(defun map (func &rest lists)
+(fn map (func &rest lists)
   (let args (%map-args lists)
     (when args
       (apply func args)
 	  (apply #'map func lists)))
   nil)
 
-(defun mapcan (func &rest lists)
+(fn mapcan (func &rest lists)
   (apply #'nconc (apply #'mapcar func lists)))

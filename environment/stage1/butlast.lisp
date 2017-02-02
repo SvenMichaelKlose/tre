@@ -1,5 +1,5 @@
 (functional butlast)
 
-(defun butlast (plist)
+(fn butlast (plist)
   (? .plist
      (. plist. (butlast .plist))))

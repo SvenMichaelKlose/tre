@@ -1,30 +1,8 @@
-(defun (= car) (val lst)
-  (rplaca lst val)
-  val)
-
-(defun (= cdr) (val lst)
-  (rplacd lst val)
-  val)
-
-(defun (= elt) (val seq idx)
-  (%set-elt val seq idx))
-
-(defun (= caar) (val lst)
-  (rplaca (car lst) val)
-  val)
-
-(defun (= cadr) (val lst)
-  (rplaca (cdr lst) val)
-  val)
-
-(defun (= cdar) (val lst)
-  (rplacd (car lst) val)
-  val)
-
-(defun (= cddr) (val lst)
-  (rplacd (cdr lst) val)
-  val)
-
-(defun (= caddr) (val lst)
-  (rplaca (cddr lst) val)
-  val)
+(fn (= elt) (val seq idx) (%set-elt val seq idx))
+(fn (= car) (val lst) (rplaca lst val) val)
+(fn (= cdr) (val lst) (rplacd lst val) val)
+(fn (= caar) (val lst) (rplaca (car lst) val) val)
+(fn (= cadr) (val lst) (rplaca (cdr lst) val) val)
+(fn (= cdar) (val lst) (rplacd (car lst) val) val)
+(fn (= cddr) (val lst) (rplacd (cdr lst) val) val)
+(fn (= caddr) (val lst) (rplaca (cddr lst) val) val)
