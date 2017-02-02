@@ -1,0 +1,6 @@
+Changes of tre-0.1 relative to tre-0.0:
+  * Removed parts that are not working anymore.
+  * Compiler cannot translate itself to JS, C or bytecode anymore.
+
+Changes of tre-0.2 relative to tre-0.1:
+  * Major cleanup.
