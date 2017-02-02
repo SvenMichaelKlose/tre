@@ -1,4 +1,4 @@
-(defun head-if (predicate x &key (but-last nil))
+(fn head-if (predicate x &key (but-last nil))
   (& x
      (funcall predicate x.)
 	 (| (not but-last)

@@ -1,6 +1,6 @@
 (defmacro define-tree-filter (name args &body body)
   (let iter (car (last args))
-    `(defun ,name ,args
+    `(fn ,name ,args
        (?
          ,@body
          (atom ,iter) ,iter
@@ -9,7 +9,7 @@
 
 (defmacro define-concat-tree-filter (name args &body body)
   (let iter (car (last args))
-    `(defun ,name ,args
+    `(fn ,name ,args
        (mapcan #'((,iter)
                    (?
                      ,@body

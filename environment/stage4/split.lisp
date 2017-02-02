@@ -1,4 +1,4 @@
-(defun split-if (predicate seq &key (include? nil))
+(fn split-if (predicate seq &key (include? nil))
   (& seq
      (!? (position-if predicate seq)
          (. (subseq seq 0 (? include?
@@ -8,7 +8,7 @@
                       :include? include?))
          (list seq))))
 
-(defun generic-split (obj seq &key (test #'eql) (include? nil))
+(fn generic-split (obj seq &key (test #'eql) (include? nil))
   (& seq
      (!? (position obj seq :test test)
          (. (subseq seq 0 (? include?
@@ -19,5 +19,5 @@
                            :include?  include?))
          (list seq))))
 
-(defun split (obj seq &key (test #'eql) (include? nil))
+(fn split (obj seq &key (test #'eql) (include? nil))
   (generic-split obj seq :test test :include? include?))

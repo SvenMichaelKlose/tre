@@ -1,8 +1,8 @@
-(defun keyword-copiers (&rest x)
+(fn keyword-copiers (&rest x)
   (mapcan [list (make-keyword _) (make-symbol (symbol-name _))] x))
 
-(defun keyword-argument-declarations (x)
+(fn keyword-argument-declarations (x)
   (& x `(&key ,@(@ [`(,_ nil)] x))))
 
-(defun gen-vars-to-alist (x)
+(fn gen-vars-to-alist (x)
   (@ [`(. ,(make-keyword _), _)] x))

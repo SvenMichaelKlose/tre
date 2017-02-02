@@ -1,4 +1,4 @@
-(defun get-definer (class)
+(fn get-definer (class)
   (? class
      `(defmethod ,class)
      '(defun)))

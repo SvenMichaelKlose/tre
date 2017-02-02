@@ -1,4 +1,4 @@
-(defun @ (x &rest keys)
+(fn @ (x &rest keys)
   (alet (?
           (list? x)        (cdr (assoc keys. x))
           (array? x)       (aref x keys.)

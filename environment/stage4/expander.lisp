@@ -10,22 +10,22 @@
   lookup
   user) ; For external use.
 
-(defun expander-macro (expander macro-name)
+(fn expander-macro (expander macro-name)
   (href (expander-macros expander) macro-name))
 
-(defun expander-argdef (expander macro-name)
+(fn expander-argdef (expander macro-name)
   (car (expander-macro expander macro-name)))
 
-(defun expander-function (expander macro-name)
+(fn expander-function (expander macro-name)
   (cdr (expander-macro expander macro-name)))
 
-;(defun (= expander-function) (new-function expander macro-name)
+;(fn (= expander-function) (new-function expander macro-name)
 ;  (= (cdr (href (expander-macros expander) macro-name)) new-function))
 
-(defun expander-has-macro? (expander macro-name)
+(fn expander-has-macro? (expander macro-name)
   (href (expander-macros expander) macro-name))
 
-(defun define-expander (expander-name &key (pre nil) (post nil) (pred nil) (call nil))
+(fn define-expander (expander-name &key (pre nil) (post nil) (pred nil) (call nil))
   (aprog1 (make-expander :name expander-name
                          :macros (make-hash-table :test #'eq)
                          :pred pred
@@ -43,20 +43,20 @@
        #'((expander name)
            (href (expander-macros expander) name)))))
 
-(defun set-expander-macro (expander name argdef fun &key (may-redefine? nil))
+(fn set-expander-macro (expander name argdef fun &key (may-redefine? nil))
   (& (not may-redefine?)
      (expander-has-macro? expander name)
      (warn "Macro ~A already defined for expander ~A." name (expander-name expander)))
   (= (href (expander-macros expander) name) (. argdef fun)))
 
-(defun set-expander-macros (expander x)
+(fn set-expander-macros (expander x)
   (map [set-expander-macro expander _. ._. .._] x))
 
 (defmacro define-expander-macro (expander name args &body body)
   (let expanded-argdef (argument-expand-names 'define-expander-macro args)
     `(set-expander-macro ,expander ',name ',args #'(,expanded-argdef ,@body))))
 
-(defun expander-expand-0 (expander expr)
+(fn expander-expand-0 (expander expr)
   (with-temporaries (*macro?*     (expander-pred expander)
                      *macrocall*  (expander-call expander))
     (alet (expander-name expander)
@@ -67,7 +67,7 @@
           (print (%macroexpand expr))}
          (%macroexpand expr)))))
 
-(defun expander-expand (expander expr)
+(fn expander-expand (expander expr)
   (| (expander? expander)
      (error "Expander ~A is not defined." (expander-name expander)))
   (funcall (expander-pre expander))

@@ -1,4 +1,4 @@
-(defun search (needle haystack &key (test #'eql))
+(fn search (needle haystack &key (test #'eql))
   (& haystack
      (not (zero? (length haystack)))
      (| (& (funcall test needle (subseq haystack 0 (length needle)))

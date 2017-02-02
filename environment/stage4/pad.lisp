@@ -1,4 +1,4 @@
-(defun pad (seq p)
+(fn pad (seq p)
   (!? seq
       (. !.  (& .!
                 (. p (pad .! p))))))

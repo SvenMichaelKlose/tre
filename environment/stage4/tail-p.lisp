@@ -1,4 +1,4 @@
-(defun tail? (x tail &key (test #'equal))
+(fn tail? (x tail &key (test #'equal))
   (with (xlen  (length x)
          tlen  (length tail))
     (unless (< xlen tlen)
