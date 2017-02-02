@@ -15,6 +15,7 @@
 (env-load "stage2/char-predicates.lisp")
 (env-load "stage2/string.lisp")
 (env-load "stage2/string-c.lisp" :cl)
+(env-load "stage2/string.tests.lisp" :cl)
 (env-load "stage2/search-sequence.lisp")
 (env-load "stage2/list-symbol.lisp")
 (env-load "stage2/dot-expand.lisp")
