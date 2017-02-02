@@ -7,6 +7,13 @@
      (atom .x.)
      (not ..x)))
 
+(fn literal-symbol? (x)
+  (| (not x)
+     (eq x t)
+     (keyword? x)
+     (& (cons? x)
+        (eq x. 'quote))))
+
 (fn global-literal-function? (x)
   (& (literal-function? x)
      (not (funinfo-find *funinfo* .x.))))
