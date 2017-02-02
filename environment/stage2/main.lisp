@@ -2,7 +2,6 @@
 (env-load "stage2/multiple-value-bind.lisp")
 (env-load "stage2/while.lisp")
 (env-load "stage2/with.lisp")
-(env-load "stage2/with.tests.lisp")
 (env-load "stage2/array.lisp")
 (env-load "stage2/xchg.lisp")
 (env-load "stage2/group.lisp")
