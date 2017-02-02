@@ -58,7 +58,7 @@
   (assert (atom x) (error "Atom expected instead of ~A."))
   (unless (funinfo-var? fi x)
     (? (funinfo-parent fi)
-       (append! (funinfo-vars fi) (list x))
+       (+! (funinfo-vars fi) (list x))
        (push x (funinfo-vars fi)))
     (unless (funinfo-parent fi)
 	  (= (href (| (funinfo-vars-hash fi)

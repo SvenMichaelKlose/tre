@@ -6,6 +6,7 @@
 
 (env-load "stage1/listp.lisp" :cl)
 (env-load "stage1/count.lisp")
+(env-load "stage1/count.tests.lisp")
 (env-load "stage1/simple-mapcar.lisp")
 (env-load "stage1/simple-mapcar.tests.lisp")
 (env-load "stage1/let.lisp")
@@ -68,3 +69,4 @@
 (env-load "stage1/adjoin.lisp")
 (env-load "stage1/adjoin.tests.lisp")
 (env-load "stage1/butlast.lisp")
+(env-load "stage1/butlast.tests.lisp")

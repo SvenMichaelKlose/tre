@@ -1,15 +1,13 @@
 (functional count)
 
-(%defun count-r (x lst init)
+(%defun count-if (pred lst &optional (init 0))
   (? lst
-     (count-r x .lst (? (eq x lst.)
-                        (+ 1 init)
-                        init))
+     (count-if pred .lst (? (apply pred (list lst.))
+                            (+ 1 init)
+                            init))
      init))
 
-(%defun count (x lst)
-  (count-r x lst 0))
-
-(define-test "COUNT"
-  ((count 'a '(a b a c a d)))
-  3)
+(%defun count (x lst &optional (init 0))
+  (count-if #'((i)
+                (eq i x))
+            lst init))

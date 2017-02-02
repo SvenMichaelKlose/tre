@@ -2,7 +2,6 @@
 (env-load "stage4/clr.lisp")
 (env-load "stage4/compose.lisp")
 (env-load "stage4/copy.lisp")
-(env-load "stage4/count-if.lisp")
 (env-load "stage4/define-getset-alias.lisp")
 (env-load "stage4/define-gensym-generator.lisp")
 (env-load "stage4/define-tree-filter.lisp")

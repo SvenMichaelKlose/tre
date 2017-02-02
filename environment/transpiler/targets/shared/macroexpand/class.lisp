@@ -38,6 +38,6 @@
 (defun generic-defmember (class-name &rest names)
   (print-definition `(defmember ,class-name ,@names))
   (!? (href (thisify-classes) class-name)
-      (append! (class-members !) (@ [list _ t] names))
+      (+! (class-members !) (@ [list _ t] names))
       (error "Class ~A is not defined." class-name))
   nil)
