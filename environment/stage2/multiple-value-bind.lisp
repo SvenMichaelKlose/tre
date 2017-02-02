@@ -1,4 +1,4 @@
-(defun multiple-value-bind-0 (forms gl body)
+(fn multiple-value-bind-0 (forms gl body)
   (? forms
      (with-gensym gn
        `((let* ((,forms. (car ,gl))
@@ -15,6 +15,6 @@
     `(let* ((,g   ,expr)
 	        (,gl  (cdr ,g)))
 	   ,@(& *assert?*
-            `((unless (eq (car ,g) 'values)
+            `((unless (eq (car ,g) *values-magic*)
          	    (error "VALUES expected instead of ~A." ,g))))
        ,@(multiple-value-bind-0 forms gl body))))

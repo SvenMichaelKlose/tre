@@ -1,6 +1,8 @@
-(defun values (&rest vals)
-  (. 'values vals))
+(const *values-magic* ($ 'values- ,`',(gensym)))
 
-(defun values? (x)
+(fn values (&rest vals)
+  (. *values-magic* vals))
+
+(fn values? (x)
   (& (cons? x)
-     (eq 'values x.)))
+     (eq *values-magic* x.)))
