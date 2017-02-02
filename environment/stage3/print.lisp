@@ -1,14 +1,14 @@
-(defconstant *printer-abbreviations* '((quote              "'")
-                                       (backquote          "`")
-                                       (quasiquote         ",")
-                                       (quasiquote-splice  ",@")))
+(const *printer-abbreviations* '((quote              "'")
+                                 (backquote          "`")
+                                 (quasiquote         ",")
+                                 (quasiquote-splice  ",@")))
 
-(defvar *print-automatic-newline?* t)
-(defvar *always-print-package-names?* nil)
-(defvar *printer-argument-definitions* (make-hash-table :test #'eq))
-(defvar *invisible-package-names* '("TRE" "TRE-CORE"))
+(var *print-automatic-newline?* t)
+(var *always-print-package-names?* nil)
+(var *printer-argument-definitions* (make-hash-table :test #'eq))
+(var *invisible-package-names* '("TRE" "TRE-CORE"))
 
-(defun add-printer-argument-definition (name x)
+(fn add-printer-argument-definition (name x)
   (| (symbol? name)
      (%error "Function name symbol expected."))
   (| (list? x)
@@ -25,7 +25,7 @@
 (adolist *macros*
   (add-printer-argument-definition !. .!.))
 
-(defun %get-printer-argument-definition (x)
+(fn %get-printer-argument-definition (x)
   (href *printer-argument-definitions* x))
 
 (defstruct print-info
@@ -34,11 +34,11 @@
   (indentation    0)
   (columns        nil))
 
-(defun %print-gap (str)
+(fn %print-gap (str)
   (| (fresh-line? str)
      (princ " " str)))
 
-(defun %print-indentation (str info)
+(fn %print-indentation (str info)
   (& (print-info-pretty-print? info)
      (fresh-line? str)
      (adotimes ((print-info-indentation info))
@@ -57,7 +57,7 @@
      (princ ")" ,str)
      (pop (print-info-columns ,info))))
 
-(defun pretty-print-lambda (x str info)
+(fn pretty-print-lambda (x str info)
   (%with-brackets str info
     (++! (car (print-info-columns info)))
     (%late-print (car .x.) str info)
@@ -66,7 +66,7 @@
     (%print-body (cdr .x.) str info))
     (--! (car (print-info-columns info))))
 
-(defun pretty-print-named-lambda (x str info)
+(fn pretty-print-named-lambda (x str info)
   (%with-brackets str info
     (alet (++ (car (print-info-columns info)))
       (princ "FUNCTION " str)
@@ -79,7 +79,7 @@
       (%print-body (cdr ..x.) str info)
       (pop (print-info-columns info)))))
 
-(defun pretty-print-lambdas (x str info)
+(fn pretty-print-lambdas (x str info)
   (?
     ..x          (pretty-print-named-lambda x str info)
     (cons? .x.)  {(princ "#'" str)
@@ -90,7 +90,7 @@
 
 (add-printer-argument-definition 'function #'pretty-print-lambdas)
 
-(defun %print-rest (x str info)
+(fn %print-rest (x str info)
   (when x
     (? (cons? x)
        {(%print-gap str)
@@ -99,10 +99,10 @@
        {(princ " . " str)
         (%late-print x str info)})))
 
-(defun %body-indentation (info)
+(fn %body-indentation (info)
   (| (car (print-info-columns info)) 1))
 
-(defun %print-body (x str info)
+(fn %print-body (x str info)
   (with-temporary (print-info-indentation info) (%body-indentation info)
     (let first? t
       (adolist x
@@ -112,7 +112,7 @@
               (fresh-line str)))
         (%late-print ! str info)))))
 
-(defun %print-call (x argdef str info)
+(fn %print-call (x argdef str info)
   (debug-print x)
   (debug-print argdef)
   (%with-brackets str info
@@ -133,7 +133,7 @@
              (with-temporary *print-automatic-newline?* nil
                (%late-print .! str info))))))))
 
-(defun %print-call? (x info)
+(fn %print-call? (x info)
   (& (print-info-pretty-print? info)
      (cons? x)
      x.
@@ -144,7 +144,7 @@
           (? (function? (symbol-function x.))
              (function-arguments x.))))))
 
-(defun %print-list (x str info)
+(fn %print-list (x str info)
   (!? (%print-call? x info)
       (? (function? !)
          (funcall ! x str info)
@@ -153,19 +153,19 @@
         (%late-print x. str info)
         (%print-rest .x str info))))
 
-(defun %print-abbreviation (abbreviation x str info)
+(fn %print-abbreviation (abbreviation x str info)
   (%with-indentation str info
     (princ .abbreviation. str)
     (%late-print .x. str info)))
 
-(defun %print-cons (x str info)
+(fn %print-cons (x str info)
   (!? (& (cons? .x)
          (not ..x)
          (assoc x. *printer-abbreviations* :test #'eq))
       (%print-abbreviation ! x str info)
       (%print-list x str info)))
 
-(defun %print-string (x str)
+(fn %print-string (x str)
   (princ #\" str)
   (@ (i (string-list x))
     (?
@@ -174,7 +174,7 @@
       (princ i str)))
   (princ #\" str))
 
-(defun %print-escaped-symbol (x str)
+(fn %print-escaped-symbol (x str)
   (princ #\| str)
   (@ (i (string-list x))
     (?
@@ -182,34 +182,34 @@
       (princ i str)))
   (princ #\| str))
 
-(defun symbol-char-needs-escaping? (x)
+(fn symbol-char-needs-escaping? (x)
   (| (eql #\| x)
      (lower-case? x)))
 
-(defun %print-symbol-component (x str)
+(fn %print-symbol-component (x str)
   (? (some #'symbol-char-needs-escaping? (string-list x))
      (%print-escaped-symbol x str)
      (princ x str)))
 
-(defun abbreviated-package-name (x)
+(fn abbreviated-package-name (x)
   (? (string== "COMMON-LISP" x)
      "CL"
      x))
 
-(defun %print-symbol-package (name str)
+(fn %print-symbol-package (name str)
   (%print-symbol-component (abbreviated-package-name name) str))
 
-(defun invisible-package? (x)
+(fn invisible-package? (x)
   (alet (package-name x)
     (some [string== ! _] *invisible-package-names*)))
 
-(defun invisible-package-name? (x)
+(fn invisible-package-name? (x)
   (unless (| (not x)
              (eq t x)
              *always-print-package-names?*)
     (invisible-package? (symbol-package x))))
 
-(defun %print-symbol (x str info)
+(fn %print-symbol (x str info)
   (awhen (& x
             (not (eq t x))
             (symbol-package x))
@@ -219,7 +219,7 @@
       (princ #\: str)))
   (%print-symbol-component (symbol-name x) str))
 
-(defun %print-array (x str info)
+(fn %print-array (x str info)
   (princ "#" str)
   (%with-brackets str info
     (doarray (i x)
@@ -227,17 +227,17 @@
          (princ #\  str))
       (%late-print i str info))))
 
-(defun %print-function (x str info)
+(fn %print-function (x str info)
   (princ "#'" str)
   (%late-print (. (function-arguments x)
                   (function-body x))
                str info))
 
-(defun %print-character (x str)
+(fn %print-character (x str)
   (princ "#\\" str)
   (princ x str))
 
-(defun %late-print (x str info)
+(fn %late-print (x str info)
   (%with-indentation str info
     (pcase x
       cons?       (%print-cons x str info)
@@ -250,8 +250,7 @@
       object?     (%print-object x str info)
       (%error "Don't know how to print object."))))
 
-(defun late-print (x &optional (str *standard-output*)
-                     &key (print-info (make-print-info)))
+(fn late-print (x &optional (str *standard-output*) &key (print-info (make-print-info)))
   (with-default-stream s str
     (? (& (cons? x)
           (cons? x.))

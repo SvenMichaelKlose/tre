@@ -17,5 +17,5 @@
      (defvar ,name ,init)
      (setq *constants* (. (. ',name ',init) *constants*))))
 
-(%defmacro constant (name &optional (init nil))
+(%defmacro const (name &optional (init nil))
   `(var ,name ,init))

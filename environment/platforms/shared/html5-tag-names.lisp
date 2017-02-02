@@ -1,4 +1,4 @@
-(defconstant *html5-block-element-names*
+(const *html5-block-element-names*
     '(head
       title
       style

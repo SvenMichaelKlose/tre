@@ -1,5 +1,4 @@
-(defconstant *first-to-tenth*
-  '(first second third fourth fifth sixth seventh eighth ninth tenth))
+(const *first-to-tenth* '(first second third fourth fifth sixth seventh eighth ninth tenth))
 
 (fn %make-cdr (i)
   (? (== i 0)
