@@ -1,23 +1,23 @@
 (functional zero? even? odd? end? keyword?)
 
-(defun zero? (x)
+(fn zero? (x)
   (& (number? x)
      (== 0 x)))
 
-(defun even? (x)
+(fn even? (x)
   (== 0 (mod x 2)))
 
-(defun odd? (x)
+(fn odd? (x)
   (== 1 (mod x 2)))
 
-(defun end? (x)
+(fn end? (x)
   (eq nil x))
 
-(defun keyword? (x)
+(fn keyword? (x)
   (& (symbol? x)
      (eq *keyword-package* (symbol-package x))))
 
-(defun sole? (x)
+(fn sole? (x)
   (== 1 (length x)))
 
 (define-test "NOT works with NIL"

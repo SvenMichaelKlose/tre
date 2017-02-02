@@ -1,2 +1,2 @@
-(defun debug-print (x)
+(fn debug-print (x)
   (cl:print x))
