@@ -1,10 +1,5 @@
 (define-gensym-generator argument-sym a)
 
-(fn list-aliases (x)
-  (when x
-    (. (. x. (argument-sym))
-       (list-aliases .x))))
-
 (fn rename-argument (replacements x)
   (& (macro? x)
      (error "Cannot use macro name ~A as an argument name." x))
@@ -14,7 +9,8 @@
 (fn rename-arguments-lambda (replacements x)
   (? (get-lambda-funinfo x)
      x
-     (alet (+ (list-aliases (expanded-lambda-args x)) replacements)
+     (alet (+ (@ [. _ (argument-sym)] (expanded-lambda-args x))
+              replacements)
 	   (copy-lambda x :args (rename-arguments-0 ! (lambda-args x))
                       :body (rename-arguments-0 ! (lambda-body x))))))
 
