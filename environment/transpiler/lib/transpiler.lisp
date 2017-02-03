@@ -347,11 +347,10 @@
     (funcall (expander-lookup expander) expander name)))
 
 (fn make-global-funinfo (tr)
-  (= (transpiler-global-funinfo tr) (create-funinfo :name 'global-scope
-                                                    :parent nil
-                                                    :args nil
-                                                    :body nil
-                                                    :transpiler tr)))
+  (= (transpiler-global-funinfo tr) (create-funinfo :name        'global-scope
+                                                    :parent      nil
+                                                    :args        nil
+                                                    :transpiler  tr)))
 
 (fn package-symbol (x)
   (make-symbol (symbol-name x) (current-package)))

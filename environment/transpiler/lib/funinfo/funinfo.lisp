@@ -9,7 +9,6 @@
 
   (argdef       nil) ; Argument definition.
   (args         nil) ; Expanded argument definition.
-  (body         nil)
 
   (vars         nil)
   (vars-hash    nil)
@@ -55,7 +54,6 @@
       :name         name
       :argdef        argdef
       :args         (copy-list args)
-      :body         (copy-list body)
       :vars         (copy-list vars)
       :vars-hash    (copy-hash-table vars-hash)
       :used-vars    (copy-list used-vars)
@@ -84,14 +82,13 @@
   `(with-temporary *funinfo* (get-lambda-funinfo ,x)
      ,@body))
 
-(fn create-funinfo (&key name parent args body (transpiler *transpiler*))
+(fn create-funinfo (&key name parent args (transpiler *transpiler*))
   (& (href (transpiler-funinfos transpiler) name)
      (error "FUNFINFO for ~A is already memorized." name))
   (with (argnames (argument-expand-names 'lambda-expand args)
          fi       (make-funinfo :name          name
                                 :argdef        args
                                 :args          argnames
-                                :body          body
                                 :parent        parent
                                 :transpiler    transpiler))
     (= (href (transpiler-funinfos transpiler) name) fi)

@@ -27,7 +27,6 @@
          body    (lambda-body x)
          new-fi  (create-funinfo :name   name
                                  :args   args
-                                 :body   body
                                  :parent *funinfo*))
     (funinfo-make-scope-arg new-fi)
     (transpiler-add-exported-closure *transpiler* `((fn ,name ,args ,@body)))
@@ -45,7 +44,6 @@
              args    (lambda-args x)
              new-fi  (create-funinfo :name   name
                                      :args   args
-                                     :body   (lambda-body x)
                                      :parent *funinfo*))
         (funinfo-var-add *funinfo* name)
         (with-temporary *funinfo* new-fi
