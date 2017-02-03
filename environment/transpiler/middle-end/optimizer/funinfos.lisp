@@ -47,7 +47,7 @@
   (@ (i(funinfo-args fi))
     (| (funinfo-used-var? fi i)
        (warn "Unused argument ~A of function ~A."
-             ! (human-readable-funinfo-names fi)))))
+             i (human-readable-funinfo-names fi)))))
 
 (fn correct-funinfo ()
   (alet *funinfo*
@@ -60,12 +60,13 @@
       (remove-argument-stackplaces !))))
 
 (fn remove-unused-vars (x)
-  (& (named-lambda? x.) 
-     (with-lambda-funinfo x.
-       (correct-funinfo)
-       (remove-unused-vars (lambda-body x.))))
-       ;(warn-unused-arguments *funinfo*)))
-  (& x (remove-unused-vars .x)))
+  (when x
+    (& (named-lambda? x.)
+       (with-lambda-funinfo x.
+         (correct-funinfo)
+         (remove-unused-vars (lambda-body x.))
+         (warn-unused-arguments *funinfo*)))
+    (remove-unused-vars .x)))
 
 (fn optimize-funinfos (x)
   (collect-places x)
