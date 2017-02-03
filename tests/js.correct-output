@@ -98,66 +98,65 @@ Test 97, ADJOIN adds new member<br>
 Test 98, BUTLAST basically works<br>
 Test 99, BUTLAST returns NIL for single cons<br>
 Test 100, COPY-WHILE<br>
-Test 101, COPY-WHILE<br>
-Test 102, LIST-SUBSEQ work at the beginning<br>
-Test 103, LIST-SUBSEQ works in the middle<br>
-Test 104, LIST-SUBSEQ works at the end<br>
-Test 105, SUBSEQ returns head<br>
-Test 106, SUBSEQ returns NIL when totally out of range<br>
-Test 107, SUBSEQ returns NIL when start and end are the same<br>
-Test 108, DIGIT-CHAR? #0<br>
-Test 109, DIGIT-CHAR? #a<br>
-Test 110, ELT on string returns char<br>
-Test 111, ELT on string returns right char<br>
-Test 112, STRING== works<br>
-Test 113, LIST-STRING works<br>
-Test 114, STRING-LIST works<br>
-Test 115, UPCASE works<br>
-Test 116, DOWNCASE works<br>
-Test 117, FIND finds elements<br>
-Test 118, FIND accepts :FROM-END<br>
-Test 119, FIND accepts :END<br>
-Test 120, FIND accepts :START<br>
-Test 121, FIND accepts :START, :END, :FROM-END<br>
-Test 122, FIND-IF finds elements<br>
-Test 123, POSITION works with character list<br>
-Test 124, POSITION works with strings<br>
-Test 125, SOME works<br>
-Test 126, EVERY works<br>
-Test 127, HREF symbol key<br>
-Test 128, HREF symbol key missing<br>
-Test 129, HREF number key<br>
-Test 130, HREF number key missing<br>
-Test 131, HREF string key<br>
-Test 132, HREF string key missing<br>
-Test 133, HREF empty string key<br>
-Test 134, HREF character key<br>
-Test 135, HREF character key missing<br>
-Test 136, HREF hashtable key<br>
-Test 137, HREF hashtable key missing<br>
-Test 138, HREF array key<br>
-Test 139, HREF array key missing<br>
-Test 140, argument expansion works with simple list<br>
-Test 141, argument expansion works without :apply-values?<br>
-Test 142, argument expansion can handle nested lists<br>
-Test 143, argument expansion can handle nested lists without :apply-values?<br>
-Test 144, argument expansion can handle &REST<br>
-Test 145, argument expansion can handle &REST without :apply-values?<br>
-Test 146, argument expansion can handle missing &REST<br>
-Test 147, argument expansion can handle missing &REST without :apply-values?<br>
-Test 148, argument expansion can handle &OPTIONAL<br>
-Test 149, argument expansion can handle &OPTIONAL without :apply-values?<br>
-Test 150, argument expansion can handle &OPTIONAL with init forms<br>
-Test 151, argument expansion can handle &OPTIONAL with init forms without :apply-values?<br>
-Test 152, argument expansion can handle &KEY<br>
-Test 153, argument expansion can handle &KEY with overloaded init forms<br>
-Test 154, argument expansion can handle &KEY without :apply-values?<br>
-Test 155, argument expansion can handle &OPTIONAL and &KEY with init forms without :apply-values?<br>
-Test 156, argument expansion can handle &OPTIONAL and &KEY with init forms with :apply-values?<br>
-Test 157, SPLIT works on string<br>
-Test 158, SPLIT works on string with gaps<br>
-Test 159, TRIM-HEAD works<br>
-Test 160, TRIM-TAIL works<br>
-Test 161, TRIM works<br>
-Test 162, EMPTY-STRING? works<br>
+Test 101, LIST-SUBSEQ work at the beginning<br>
+Test 102, LIST-SUBSEQ works in the middle<br>
+Test 103, LIST-SUBSEQ works at the end<br>
+Test 104, SUBSEQ returns head<br>
+Test 105, SUBSEQ returns NIL when totally out of range<br>
+Test 106, SUBSEQ returns NIL when start and end are the same<br>
+Test 107, DIGIT-CHAR? #0<br>
+Test 108, DIGIT-CHAR? #a<br>
+Test 109, ELT on string returns char<br>
+Test 110, ELT on string returns right char<br>
+Test 111, STRING== works<br>
+Test 112, LIST-STRING works<br>
+Test 113, STRING-LIST works<br>
+Test 114, UPCASE works<br>
+Test 115, DOWNCASE works<br>
+Test 116, FIND finds elements<br>
+Test 117, FIND accepts :FROM-END<br>
+Test 118, FIND accepts :END<br>
+Test 119, FIND accepts :START<br>
+Test 120, FIND accepts :START, :END, :FROM-END<br>
+Test 121, FIND-IF finds elements<br>
+Test 122, POSITION works with character list<br>
+Test 123, POSITION works with strings<br>
+Test 124, SOME works<br>
+Test 125, EVERY works<br>
+Test 126, HREF symbol key<br>
+Test 127, HREF symbol key missing<br>
+Test 128, HREF number key<br>
+Test 129, HREF number key missing<br>
+Test 130, HREF string key<br>
+Test 131, HREF string key missing<br>
+Test 132, HREF empty string key<br>
+Test 133, HREF character key<br>
+Test 134, HREF character key missing<br>
+Test 135, HREF hashtable key<br>
+Test 136, HREF hashtable key missing<br>
+Test 137, HREF array key<br>
+Test 138, HREF array key missing<br>
+Test 139, argument expansion works with simple list<br>
+Test 140, argument expansion works without :apply-values?<br>
+Test 141, argument expansion can handle nested lists<br>
+Test 142, argument expansion can handle nested lists without :apply-values?<br>
+Test 143, argument expansion can handle &REST<br>
+Test 144, argument expansion can handle &REST without :apply-values?<br>
+Test 145, argument expansion can handle missing &REST<br>
+Test 146, argument expansion can handle missing &REST without :apply-values?<br>
+Test 147, argument expansion can handle &OPTIONAL<br>
+Test 148, argument expansion can handle &OPTIONAL without :apply-values?<br>
+Test 149, argument expansion can handle &OPTIONAL with init forms<br>
+Test 150, argument expansion can handle &OPTIONAL with init forms without :apply-values?<br>
+Test 151, argument expansion can handle &KEY<br>
+Test 152, argument expansion can handle &KEY with overloaded init forms<br>
+Test 153, argument expansion can handle &KEY without :apply-values?<br>
+Test 154, argument expansion can handle &OPTIONAL and &KEY with init forms without :apply-values?<br>
+Test 155, argument expansion can handle &OPTIONAL and &KEY with init forms with :apply-values?<br>
+Test 156, SPLIT works on string<br>
+Test 157, SPLIT works on string with gaps<br>
+Test 158, TRIM-HEAD works<br>
+Test 159, TRIM-TAIL works<br>
+Test 160, TRIM works<br>
+Test 161, EMPTY-STRING? works<br>
 Tests done.NIL
