@@ -21,6 +21,10 @@
   `(let ! ,obj
 	 ,@body))
 
+(defmacro != (obj &body body)
+  `(alet ,obj
+     ,@body))
+
 (defmacro aprog1 (obj &body body)
   `(let ! ,obj
 	 ,@body
