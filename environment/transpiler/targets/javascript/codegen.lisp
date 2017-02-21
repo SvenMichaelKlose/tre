@@ -202,19 +202,18 @@
 (defvar *js-compiled-symbols* (make-hash-table :test #'eq))
 
 (define-js-macro quote (x)
-  (with (f  [let s (compiled-function-name-string 'symbol)
-              `(,s " (\"" ,(obfuscated-symbol-name _) "\", "
-	            ,@(? (keyword? _)
-	                 '("KEYWORDPACKAGE")
-                     `(,s "(\"" ,(obfuscated-symbol-name (symbol-package x)) "\")"))
-	            ")")])
-    (cache (aprog1 (make-compiled-symbol-identifier x)
-             (push `("var " ,(obfuscated-identifier !)
-                     " = "
-                     ,@(f x)
-                     ,*js-separator*)
+  (cache (aprog1 (make-compiled-symbol-identifier x)
+           (push `("var " ,(obfuscated-identifier !)
+                   " = "
+                   ,@(let s (compiled-function-name-string 'symbol)
+                       `(,s " (\"" ,(obfuscated-symbol-name x) "\", "
+                               ,@(? (keyword? x)
+                                    '("KEYWORDPACKAGE")
+                                    `(,s "(\"" ,(obfuscated-symbol-name (symbol-package x)) "\")"))
+                            ")"))
+                   ,*js-separator*)
                    (raw-decls)))
-           (href *js-compiled-symbols* x))))
+           (href *js-compiled-symbols* x)))
 
 (define-js-macro %slot-value (x y)
   `(%%native ,x "." ,y))
