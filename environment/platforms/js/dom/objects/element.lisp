@@ -195,7 +195,10 @@
 (defmethod caroshi-element hide () (set-style "display" "none"))
 
 (defmethod caroshi-element get-opacity ()
-  (number (get-style "opacity")))
+  (!= (get-style "opacity")
+    (? (empty-string-or-nil? !)
+       1
+       (number (get-style "opacity")))))
 
 (defmethod caroshi-element set-opacity (x)
   (? (== 1 x)
