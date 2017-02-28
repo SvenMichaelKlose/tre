@@ -168,9 +168,6 @@
 
 (defmethod event-manager _handle-modules (evt elm modules)
   (@ (i modules)
-    (log-events "Searching event handler in module '~A' / ~A on ~A (has ~A).~%"
-                (i.get-name) (!? evt !.type) (!? elm !.tag-name)
-                (concat-stringtree (pad (@ [+ _.type "/" (!? _.element !.tag-name)] i._handlers) " ")))
     (unless i._killed?
       (_call-handlers evt i (_find-handlers evt i elm))
       (& evt._stop
@@ -190,7 +187,7 @@
         (_handle-modules evt nil modules)))))
 
 (defmethod event-manager _dispatch (type evt)
-  (log-events "Dispatching ~A event on ~A, X: ~A, Y: ~A.~%"
+  (log-events ">>> ~A on ~A, X: ~A, Y: ~A.~%"
               type (!? (evt.element) !.tag-name) (evt.pointer-x) (evt.pointer-y))
   (let e (copy-hash-table evt)
     (= e.type type)
@@ -198,7 +195,7 @@
     (| e._send-natively?
        (e._stop-original))
     ,(& *log-events?*
-        `(format t "~A event ~Asent natively.~%" type (? evt._send-natively? "" "NOT "))))
+        `(format t "<<< ~A ~A~%" type (? evt._send-natively? "" " blocked"))))
   t)
 
 ;;;; DRAG'N DROP EVENT GENERATION
