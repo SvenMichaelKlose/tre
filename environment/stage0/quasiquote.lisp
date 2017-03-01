@@ -1,5 +1,3 @@
-; QUASIQUOTEs outside BACKQUOTEs are treated here. They serve as anonymous macros.
-
 (%defun any-quasiquote? (x)
   (? (cons? x)
      (?
