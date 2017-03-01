@@ -17,7 +17,7 @@
               (let ~%this this
                 (%thisify ,class-name
                   (macrolet ((super (&rest args)
-                              `((%%native "parent::__construct" ,@args))))
+                              `((%%native "parent::__construct" ,,@args))))
                     ,@body))))))
 
 (define-php-std-macro defclass (class-name args &body body)

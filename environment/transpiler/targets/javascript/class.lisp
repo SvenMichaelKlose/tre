@@ -4,7 +4,7 @@
     (= (slot-value (slot-value ,(compiled-function-name class-name) 'prototype) 'constructor) ,class-name)))
 
 (fn js-gen-inherit-constructor-calls (bases)
-  (@ [`((slot-value ,_ 'CALL) this)]
+  (@ [`((slot-value ,_ 'call) this)]
      bases))
 
 (fn js-gen-constructor (class-name bases args body)
@@ -12,7 +12,7 @@
     `{(fn ,class-name ,args
         (%thisify ,class-name
           (macrolet ((super (&rest args)
-                       `((slot-value ,bases. 'call) this ,@args)))
+                       `((slot-value ,bases. 'call) this ,,@args)))
             ,@body)))
 	  (fn ,($ class-name '?) (x)
 	    (%%native x " instanceof " ,(compiled-function-name-string class-name)))}))
