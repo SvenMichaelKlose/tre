@@ -1,15 +1,13 @@
-Changes of tre-0.3 relative to tre-0.2:
-  * DEFUN is now FN.
-  * DEVAR is now VAR.
-  * ALET is now !=.
-  * EQL is converted to EQ for literal symbols.
-  * In DEFCLASS Macro SUPER denotes the parent class' constructor.
-  * Macro MACROLET added.
-
 Changes of tre-0.2 relative to tre-0.1:
   * Major cleanup.
   * Additional basic optimisations.
   * Forbids use of macro names as argument names.
+  * DEFUN is now FN.
+  * DEVAR is now VAR.
+  * ALET is now !=.
+  * EQL is converted to EQ for literal symbols.
+  * In DEFCLASS Macro SUPER denotes the parent class constructor.
+  * Macro MACROLET added.
 
 Changes of tre-0.1 relative to tre-0.0:
   * Removed parts that are not working anymore.
