@@ -3,7 +3,7 @@ Changes of tre-0.3 relative to tre-0.2:
   * DEVAR is now VAR.
   * ALET is now !=.
   * EQL is converted to EQ for literal symbols.
-  * Macro SUPER denotes the parent class' constructor.
+  * In DEFCLASS Macro SUPER denotes the parent class' constructor.
   * Macro MACROLET added.
 
 Changes of tre-0.2 relative to tre-0.1:
