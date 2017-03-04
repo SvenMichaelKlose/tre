@@ -10,9 +10,9 @@
 (const *other-events*             '("contextmenu" "drop" "unload"))
 
 (const *all-events* (+ *mouse-events* *touch-events* *ignored-dragndrop-events*
-                             *key-events* *form-events*
-                             *media-events* 
-                             *network-events*
-                             *other-events*))
+                       *key-events* *form-events*
+                       *media-events* 
+                       *network-events*
+                       *other-events*))
 
 (const *non-generic-events* `("mouseup" "mousedown" ,@*ignored-dragndrop-events* "drop" ,@*key-events* "unload"))
