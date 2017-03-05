@@ -1,3 +1,8 @@
+Changes of tre-0.3 relative to tre-0.1:
+  * PROPERTY-NAME: New JavaScript function.
+  * NEW returns an empty JavaScript object when used without
+    arguments.
+
 Changes of tre-0.2 relative to tre-0.1:
   * Major cleanup.
   * Additional basic optimisations.
