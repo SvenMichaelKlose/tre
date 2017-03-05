@@ -169,11 +169,14 @@
 (define-js-macro %%%make-hash-table (&rest args)
   (c-list (@ [js-literal-hash-entry _. ._] (group args 2)) :brackets :curly))
 
-(define-js-macro href (arr &rest idx)
+(define-js-macro href (arr &rest idx)   ; TODO: WTF?
   `(aref ,arr ,@idx))
 
 (define-js-macro =-href (val &rest x)
   `(=-aref ,val ,@x))
+
+(define-js-macro property-remove (h key)
+  `(%%native "delete " ,h "[" ,key "]"))
 
 (define-js-macro hremove (h key)
   `(%%native "delete " ,h "[" ,key "]"))
