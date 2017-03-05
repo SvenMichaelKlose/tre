@@ -4,6 +4,4 @@
       (= (href h i.) .i))))
 
 (fn hash-alist (x)
-  (with-queue alist
-    (@ (i (hashkeys x) (queue-list alist))
-      (enqueue alist (. i (href x i))))))
+  (@ [. _ (href x _)] (hashkeys x)))
