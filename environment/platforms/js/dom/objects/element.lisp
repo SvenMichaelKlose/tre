@@ -136,9 +136,12 @@
   value)
 
 (defmethod caroshi-element write-attributes (attrs)
-  (maphash #'((k v)
-				(write-attribute k v))
-           attrs)
+  (? (hash-table? attrs)
+     (maphash #'((k v)
+                  (write-attribute k v))
+              attrs)
+     (@ (i attrs)
+       (write-attribute i. .i)))
   attrs)
 
 (defmethod caroshi-element remove-attributes (attrs)
