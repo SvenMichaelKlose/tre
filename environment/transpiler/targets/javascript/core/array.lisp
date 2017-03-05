@@ -1,14 +1,18 @@
-(defvar *js-array-constructor* (make-array).constructor)
+(var *js-array-constructor* (make-array).constructor)
 
-(defun aref (a k)     (%%%aref a k))
-(defun =-aref (v a k) (%%%=-aref v a k))
+(fn aref (a k)      (%%%aref a k))
+(fn =-aref (v a k)  (%%%=-aref v a k))
+
 (defmacro aref (a k)     `(%%%aref ,a ,k))
 (defmacro =-aref (v a k) `(%%%=-aref ,v ,a ,k))
 
-(defun array? (x)
+(fn array? (x)
   (& x (eq *js-array-constructor* x.constructor)))
 
-(defun list-array (x)
-  (alet (make-array)
+(fn list-array (x)
+  (!= (make-array)
     (@ (i x !)
       (!.push i))))
+
+(fn property-names (x)
+  (carlist (%property-list x)))
