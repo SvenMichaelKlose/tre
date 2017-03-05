@@ -182,10 +182,12 @@
 ;;;; OBJECTS
 
 (define-js-macro %new (&rest x)
-  `(%%native "new " ,(? (defined-function x.)
-                        (compiled-function-name-string x.)
-                        (obfuscated-identifier x.))
-                    ,@(c-list .x)))
+  (? x
+     `(%%native "new " ,(? (defined-function x.)
+                           (compiled-function-name-string x.)
+                           (obfuscated-identifier x.))
+                       ,@(c-list .x))
+     `(%%native "{}")))
 
 (define-js-macro delete-object (x)
   `(%%native "delete " ,x))

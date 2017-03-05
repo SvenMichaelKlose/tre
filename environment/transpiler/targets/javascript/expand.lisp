@@ -71,11 +71,12 @@
 		  ,fun))
 
 (define-js-std-macro new (&rest x)
-  (| x (error "Argument(s) expected."))
-  (? (| (keyword? x.)
-	    (string? x.))
-     `(%%%make-hash-table ,@x)
-     `(%new ,@x)))
+  (? x
+     (? (| (keyword? x.)
+	       (string? x.))
+        `(%%%make-hash-table ,@x)
+        `(%new ,@x))
+     `(%%%make-hash-table)))
 
 (define-js-std-macro js-type-predicate (name &rest types)
   `(fn ,name (x)
