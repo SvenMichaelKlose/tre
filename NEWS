@@ -1,7 +1,8 @@
 Changes of tre-0.3 relative to tre-0.1:
-  * PROPERTY-NAME: New JavaScript function.
-  * PROPERTY-REMOVE: New JavaScript codegen macro.
-  * NEW returns an empty JavaScript object when used without
+  * JavaScript: PROPERTY-NAME, PROPERTY-ALIST,
+    ALIST-PROPERTIES: New core functions.
+  * JavaScript: PROPERTY-REMOVE: New core codegen macro.
+  * JavaScript: NEW returns an empty object when used without
     arguments.
 
 Changes of tre-0.2 relative to tre-0.1:

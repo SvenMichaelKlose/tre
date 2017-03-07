@@ -15,7 +15,7 @@
                    "%princ.lisp"
                    "%write-char.lisp"
                    "symbol.lisp"
-                   "propertylist.lisp"))
+                   "property-list.lisp"))
 
 (defvar *js-core-debug-print* ,(js-load-core "" "debug-print.lisp"))
 
@@ -56,7 +56,8 @@
                                 "function-source.lisp"
                                 "dot-expand.lisp"
                                 "math.lisp"
-                                "nanotime.lisp")))
+                                "nanotime.lisp"
+                                "property.lisp")))
 
 (when *have-compiler?*
   (= *js-core1* (+ *js-core1* ,(js-load-core "" "native-eval.lisp"))))
