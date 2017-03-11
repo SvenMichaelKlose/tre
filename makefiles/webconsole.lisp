@@ -1,11 +1,9 @@
 (load "environment/platforms/js/event/names.lisp")
 
-(defvar *log-events?* nil)
+(var *log-events?* nil)
 
 (= *allow-redefinitions?* t)
 (= *have-compiler?* t)
-(= *have-c-compiler?* nil)
-;(= (transpiler-dump-passes? *js-transpiler*) t)
 
 (unix-sh-mkdir "compiled" :parents t)
 (make-project "tré web console"

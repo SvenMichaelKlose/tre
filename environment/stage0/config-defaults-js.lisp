@@ -19,4 +19,3 @@
 (%defvar *print-status?*           t)
 (%defvar *have-environment-tests*  nil)
 (%defvar *have-compiler?*          nil)
-(%defvar *have-c-compiler?*        nil)
