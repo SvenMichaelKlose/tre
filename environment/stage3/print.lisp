@@ -187,6 +187,7 @@
      (lower-case? x)))
 
 (fn %print-symbol-component (x str)
+  (symbol-char-needs-escaping? (code-char 65)) ; TODO: Next SOME won't import in PHP target.
   (? (some #'symbol-char-needs-escaping? (string-list x))
      (%print-escaped-symbol x str)
      (princ x str)))
