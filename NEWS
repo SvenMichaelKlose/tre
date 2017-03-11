@@ -1,4 +1,4 @@
-Changes of tre-0.3 relative to tre-0.1:
+Changes of tre-0.3 relative to tre-0.2:
   * JavaScript: PROPERTY-NAME, PROPERTY-ALIST,
     ALIST-PROPERTIES: New core functions.
   * JavaScript: PROPERTY-REMOVE: New core codegen macro.
