@@ -58,6 +58,11 @@ class __array {
         return $h;
     }
 
+    public function length ()
+    {
+        return count ($GLOBALS['ARRAYS'][$this->id]);
+    }
+
     public function __toString ()
     {
         return "array";

@@ -1,3 +1,5 @@
+Changes of tre-0.4 relative to tre-0.3:
+  * PHP: LENGTH returns correct value for wrapped arrays.
 Changes of tre-0.3 relative to tre-0.2:
   * JavaScript: PROPERTY-NAME, PROPERTY-ALIST,
     ALIST-PROPERTIES: New core functions.

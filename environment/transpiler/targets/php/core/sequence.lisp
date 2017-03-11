@@ -1,11 +1,12 @@
-(defun length (x)
+(fn length (x)
   (?
     (not x) 0
     (cons? x) (list-length x)
     (string? x) (strlen x)
-    (sizeof x)))
+    (is_a x "__array") (x.length)
+    (is_array x) (sizeof x)))
 
-(defun split (obj seq &key (test #'eql))
+(fn split (obj seq &key (test #'eql))
   (? (& (eq #'eql test) (string? seq))
      (array-list (explode (? (character? obj)
                              (char-string obj)
