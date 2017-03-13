@@ -17,6 +17,7 @@ class __cons {
 
     public function __toString ()
     {
-        return '(' . $this->a . ' . ' . $this->d . ')';
+        print_r ($this);
+        trigger_error ("Cannot convert to string.");
     }
 }
