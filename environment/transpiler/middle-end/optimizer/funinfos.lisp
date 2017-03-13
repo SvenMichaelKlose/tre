@@ -62,8 +62,8 @@
     (& (named-lambda? x.)
        (with-lambda-funinfo x.
          (correct-funinfo)
-         (remove-unused-vars (lambda-body x.))
-         (warn-unused-arguments *funinfo*)))
+         (remove-unused-vars (lambda-body x.))))
+;         (warn-unused-arguments *funinfo*)
     (remove-unused-vars .x)))
 
 (fn optimize-funinfos (x)
