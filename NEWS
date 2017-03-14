@@ -3,7 +3,8 @@ Changes of tre-0.4 relative to tre-0.3:
   * PHP: Issue an error when trying to convert a cons into
          string.
   * JavaScript/PHP: %%%MAKE-HASH-TABLE is now %%%MAKE-OBJECT.
-  * JavaScript: MAKE-OBJECT: New function.
+  * JavaScript: MAKE-OBJECT: New function to use dynamically
+                generated keys.
 
 RELEASES:
 
