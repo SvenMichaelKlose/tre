@@ -215,7 +215,7 @@
 (fn php-literal-array-elements (x)
   (pad (@ #'php-literal-array-element x) ", "))
 
-(define-php-macro %%%make-hash-table (&rest elements)
+(define-php-macro %%%make-object (&rest elements)
   `(%%native "Array (" ,@(php-literal-array-elements (group elements 2)) ")"))
 
 (define-php-macro make-array (&rest elements)

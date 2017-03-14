@@ -57,7 +57,8 @@
                                 "dot-expand.lisp"
                                 "math.lisp"
                                 "nanotime.lisp"
-                                "property.lisp")))
+                                "property.lisp"
+                                "make-object.lisp")))
 
 (when *have-compiler?*
   (= *js-core1* (+ *js-core1* ,(js-load-core "" "native-eval.lisp"))))

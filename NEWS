@@ -2,6 +2,8 @@ Changes of tre-0.4 relative to tre-0.3:
   * PHP: LENGTH returns correct value for wrapped arrays.
   * PHP: Issue an error when trying to convert a cons into
          string.
+  * JavaScript/PHP: %%%MAKE-HASH-TABLE is now %%%MAKE-OBJECT.
+  * JavaScript: MAKE-OBJECT: New function.
 
 RELEASES:
 

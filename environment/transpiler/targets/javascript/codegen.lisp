@@ -166,7 +166,7 @@
         name)
      ":" ,value))
 
-(define-js-macro %%%make-hash-table (&rest args)
+(define-js-macro %%%make-object (&rest args)
   (c-list (@ [js-literal-hash-entry _. ._] (group args 2)) :brackets :curly))
 
 (define-js-macro href (arr &rest idx)   ; TODO: WTF?
@@ -188,7 +188,7 @@
   (? x
      `(%%native "new " ,(? (defined-function x.)
                            (compiled-function-name-string x.)
-                           (obfuscated-identifier x.))
+                           x.)
                        ,@(c-list .x))
      `(%%native "{}")))
 

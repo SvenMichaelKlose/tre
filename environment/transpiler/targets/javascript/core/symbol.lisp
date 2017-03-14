@@ -1,5 +1,5 @@
-(defvar *symbols* (%%%make-hash-table))
-(defvar *package* nil)
+(var *symbols* (%%%make-object))
+(var *package* nil)
 
 (defnative %symbol (name pkg)
   (= this.__class ,(obfuscated-identifier 'symbol)
@@ -18,13 +18,13 @@
                                    !.n
                                    "NIL"))
               symbol-table  (| (%%%aref *symbols* pkg-name)
-   				               (%%%=-aref (%%%make-hash-table) *symbols* pkg-name)))
+   				               (%%%=-aref (%%%make-object) *symbols* pkg-name)))
          (| (%%%aref symbol-table name)
             (%%%=-aref (new %symbol name pkg) symbol-table name))))))
 
 (setq *package* (symbol "TRE" nil))
 
-(defvar *keyword-package* (symbol "KEYWORD" nil))
+(var *keyword-package* (symbol "KEYWORD" nil))
 
 (defnative =-symbol-function (v x)
   (setq x.f v))

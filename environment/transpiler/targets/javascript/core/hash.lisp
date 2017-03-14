@@ -1,65 +1,65 @@
-(defvar *obj-id-counter* 0)
+(var *obj-id-counter* 0)
 
-(defun make-hash-table (&key (test #'eql) (size nil))
-  (aprog1 (%%%make-hash-table)
+(fn make-hash-table (&key (test #'eql) (size nil))
+  (aprog1 (%%%make-object)
     (= !.__tre-test test)
     (unless (%href-==? test)
-      (= !.__tre-keys (%%%make-hash-table)))))
+      (= !.__tre-keys (%%%make-object)))))
 
-(defun hash-table? (x)
+(fn hash-table? (x)
   (& (object? x)
      (undefined? x.__class)))
 
-(defun %htest (x)
+(fn %htest (x)
   (& (defined? x.__tre-test)
      x.__tre-test))
 
-(defun %%objkey ()
+(fn %%objkey ()
   (setq *obj-id-counter* (%%%+ 1 *obj-id-counter*))
   (%%%string+ "~~O" *obj-id-counter*))
 
-(defun %%numkey (x)
+(fn %%numkey (x)
   (%%%string+ "~~N" x))
 
-(defun hashkeys (hash)
+(fn hashkeys (hash)
   (? (& (hash-table? hash)
         (defined? hash.__tre-keys))
      (cdrlist (%property-list hash.__tre-keys))
      (carlist (%property-list hash))))
 
-(defun %make-href-object-key (hash key)
+(fn %make-href-object-key (hash key)
   (unless (defined? key.__tre-object-id)
     (= key.__tre-object-id (%%objkey)))
   (%%%=-aref key hash.__tre-keys key.__tre-object-id)
   key.__tre-object-id)
 
-(defun %href-key (hash key)
+(fn %href-key (hash key)
   (? (object? key)
      (%make-href-object-key hash key)
      (aprog1 (%%numkey key)
        (%%%=-aref key hash.__tre-keys !))))
 
-(defun =-href-obj (value hash key)
+(fn =-href-obj (value hash key)
   (%%%=-aref value hash (%href-key hash key)))
 
-(defun %href-==? (x)
+(fn %href-==? (x)
   (| (eq x #'==)
      (eq x #'string==)
      (eq x #'number==)))
 
-(defun =-href (value hash key)
+(fn =-href (value hash key)
   (!? (%htest hash)
       (? (%href-==? !)
          (%%%=-aref value hash key)
          (=-href-obj value hash key))
       (%%%=-aref value hash key)))
 
-(defun %href-user (hash key)
+(fn %href-user (hash key)
   (@ (k (hashkeys hash))
     (& (funcall hash.__tre-test k key)
        (return (%%%aref hash (%href-key hash k))))))
 
-(defun href (hash key)
+(fn href (hash key)
   (!? (%htest hash)
       (?
         (eq #'eq !)   (%%%aref hash (? (object? key)
@@ -69,7 +69,7 @@
         (%href-user hash key))
       (%%%aref hash key)))
 
-(defun hash-merge (a b)
+(fn hash-merge (a b)
   (when (| a b)
     (| a (= a (make-hash-table :test b.__tre-test)))
     (? (defined? b.__tre-keys)
@@ -80,5 +80,5 @@
                         a "[k] = " b "[k];"))
     a))
 
-(defun copy-hash-table (x)
+(fn copy-hash-table (x)
   (hash-merge nil x))

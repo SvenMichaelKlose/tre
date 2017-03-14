@@ -74,9 +74,9 @@
   (? x
      (? (| (keyword? x.)
 	       (string? x.))
-        `(%%%make-hash-table ,@x)
+        `(%%%make-object ,@x)
         `(%new ,@x))
-     `(%%%make-hash-table)))
+     `(%%%make-object)))
 
 (define-js-std-macro js-type-predicate (name &rest types)
   `(fn ,name (x)
