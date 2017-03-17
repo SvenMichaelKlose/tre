@@ -1,6 +1,7 @@
 Changes of tre-0.5 relative to tre-0.4:
   * LOG-MESSAGE returns its argument if logging is switched
     off.
+  * LML: Attribute names must be keywords.
 
 Changes of tre-0.4 relative to tre-0.3:
   * PHP: LENGTH returns correct value for wrapped arrays.
