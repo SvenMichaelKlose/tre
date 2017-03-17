@@ -1,3 +1,7 @@
+Changes of tre-0.5 relative to tre-0.4:
+  * LOG-MESSAGE returns its argument if logging is switched
+    off.
+
 Changes of tre-0.4 relative to tre-0.3:
   * PHP: LENGTH returns correct value for wrapped arrays.
   * PHP: Issue an error when trying to convert a cons into
