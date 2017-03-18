@@ -52,7 +52,7 @@
                            "keycodes.lisp"))
 
                 ,@(list+ "environment/platforms/js/"
-                         '("log.lisp"))
+                         '("log-message.lisp"))
 
                 (toplevel . ((document-extend)
                              (*event-manager*.init-document document)
