@@ -1,3 +1,8 @@
+(fn lml-attr? (x)
+  (& (cons? x)
+     (cons? .x)
+     (keyword? x.)))
+
 (fn string-or-cons? (expr)
   (| (string? expr) (cons? expr)))
 

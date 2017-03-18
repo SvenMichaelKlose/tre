@@ -1,12 +1,5 @@
 (def-head-predicate %exec)
 
-(fn lml-attr? (x)
-  (& (cons? x) (cons? .x)
-     (atom x.)
-     (keyword? x.)
-     (| (atom .x.)
-	    (%exec? .x.))))
-
 (fn lml-body (x)
   (& x (? (lml-attr? x)
 	      (lml-body ..x)

@@ -1,5 +1,3 @@
-; tré – Copyright (c) 2005–2016 Sven Michael Klose <pixel@copei.de>
-
 (env-load "stage0/main.lisp")
 (env-load "stage1/main.lisp")
 (env-load "stage2/main.lisp")
@@ -15,7 +13,7 @@
 
 (env-load "read-eval-loop.lisp")
 
-(env-load "platforms/shared/html/doctypes.lisp")
+(env-load "platforms/shared/html/doctypes.lisp")    ; TODO: Remove these. Think up some tpm or something...
 (env-load "platforms/shared/html/script.lisp")
 (env-load "platforms/shared/lml.lisp")
 (env-load "platforms/shared/lml2xml.lisp")
