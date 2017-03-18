@@ -59,7 +59,7 @@
                                 "nanotime.lisp"
                                 "property-names.lisp"
                                 "../../../environment/property.lisp"
-                                "make-object.lisp")))
+                                "../../../environment/make-object.lisp")))
 
 (when *have-compiler?*
   (= *js-core1* (+ *js-core1* ,(js-load-core "" "native-eval.lisp"))))

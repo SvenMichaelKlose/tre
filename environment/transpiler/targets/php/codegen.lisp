@@ -230,6 +230,9 @@
 (define-php-macro php-aref (arr &rest indexes)
   `(%%native ,(php-dollarize arr) ,@(php-array-subscript indexes)))
 
+(define-php-macro %%%=-aref (val &rest x)
+  `(=-php-aref ,val ,@x))
+
 (define-php-macro php-aref-defined? (arr &rest indexes)
   `(%%native "isset (" ,(php-dollarize arr) ,@(php-array-subscript indexes) ")"))
 
