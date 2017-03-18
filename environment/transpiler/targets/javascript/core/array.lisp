@@ -13,6 +13,3 @@
   (!= (make-array)
     (@ (i x !)
       (!.push i))))
-
-(fn property-names (x)
-  (carlist (%property-list x)))

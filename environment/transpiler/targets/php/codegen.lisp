@@ -275,7 +275,9 @@
 ;;;; OBJECTS
 
 (define-php-macro %new (&rest x)
-  `(%%native "new " ,x. ,@(php-argument-list .x)))
+  (? x
+     `(%%native "new " ,x. ,@(php-argument-list .x))
+     `(%%native "[]")))
 
 (define-php-macro delete-object (x)
   `(%%native "null; unset " ,x))

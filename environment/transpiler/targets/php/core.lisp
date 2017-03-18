@@ -65,6 +65,8 @@
                        "../../../environment/print.lisp"
                        "../../../environment/list-string.lisp"
                        "string.lisp"
+                       "property-names.lisp"
+                       "../../../environment/property.lisp"
                        "base64.lisp"
                        "quit.lisp")
         (php-load-core "../../../environment/"

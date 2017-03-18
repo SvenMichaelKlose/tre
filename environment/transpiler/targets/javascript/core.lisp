@@ -57,7 +57,8 @@
                                 "dot-expand.lisp"
                                 "math.lisp"
                                 "nanotime.lisp"
-                                "property.lisp"
+                                "property-names.lisp"
+                                "../../../environment/property.lisp"
                                 "make-object.lisp")))
 
 (when *have-compiler?*

@@ -2,6 +2,10 @@ Changes of tre-0.5 relative to tre-0.4:
   * LOG-MESSAGE returns its argument if logging is switched
     off.
   * LML: Attribute names must be keywords.
+  * PHP: NEW create a native object when used witout
+         arguments.
+  * PHP: PROPERTY-NAME, PROPERTY-ALIST, ALIST-PROPERTIES:
+         New core functions.
 
 Changes of tre-0.4 relative to tre-0.3:
   * PHP: LENGTH returns correct value for wrapped arrays.
