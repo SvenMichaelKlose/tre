@@ -9,33 +9,33 @@
   (with-default-stream o out
     (format o (+ (doctype-html-5) "~%"))
     (lml2xml `(html
-                  (head
-                    (title ,title)
-                    (meta :http-equiv "Content-Type" :content "text/html; charset=utf-8")
-                    ,@(& no-cache?
-                         `((meta :http-equiv "pragma" :content "no-cache")))
-                    ,@(& (| copyright-title
-                            copyright-href)
-                         `((link :rel "copyright"
-                                 ,@(!? copyright-title
-                                       `(:title ,(escape-string !)))
-                                 ,@(!? copyright-href
-                                       `(:href  ,(escape-string !))))))
-                    ,@(!? external-stylesheet
-                          (mapcan [`(link :rel "stylesheet" :type "text/css" :href ,_)]
-                                  (ensure-list !)))
-                    ,@(!? internal-stylesheet
-                          `((style ,!)))
-                    ,@(!? external-script
-                          (mapcan [`((script :src ,_ ""))] (ensure-list !))))
-                  (body
-                    ,@body
-                    (script :type "text/javascript"
-                        "<!--"
-                        ,@(& strict?
-                             `("\"use strict\";"))
-                        ,script
-                        "//-->")))
+                (head
+                  (title ,title)
+                  (meta :http-equiv "Content-Type" :content "text/html; charset=utf-8")
+                  ,@(& no-cache?
+                       `((meta :http-equiv "pragma" :content "no-cache")))
+                  ,@(& (| copyright-title
+                          copyright-href)
+                       `((link :rel "copyright"
+                               ,@(!? copyright-title
+                                     `(:title ,(escape-string !)))
+                               ,@(!? copyright-href
+                                     `(:href  ,(escape-string !))))))
+                  ,@(!? external-stylesheet
+                        (mapcan [`(link :rel "stylesheet" :type "text/css" :href ,_)]
+                                (ensure-list !)))
+                  ,@(!? internal-stylesheet
+                        `((style ,!)))
+                  ,@(!? external-script
+                        (mapcan [`((script :src ,_ ""))] (ensure-list !))))
+                (body
+                  ,@body
+                  (script :type "text/javascript"
+                    "<!--"
+                    ,@(& strict?
+                         `("\"use strict\";"))
+                    ,script
+                    "//-->")))
              o)))
 
 (fn make-html-script (pathname script &key (title nil)
