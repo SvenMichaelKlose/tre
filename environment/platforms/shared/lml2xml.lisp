@@ -12,23 +12,16 @@
   (princ "/>" s))
 
 (fn lml2xml-open (s x)
-  (princ (string-concat "<" (lml-attr-string x.)) s))
+  (princ (string-concat "<" (lml-symbol-string x.)) s))
 
 (fn lml2xml-close (s x)
-  (princ (string-concat "</" (lml-attr-string x.) ">") s))
+  (princ (string-concat "</" (lml-symbol-string x.) ">") s))
 
 (fn lml2xml-atom (s x)
   (& x (princ x s)))
 
 (fn lml2xml-attr (s x)
-  (princ (string-concat " "
-                        (lml-attr-string x.)
-                        "=\""
-		                (? (string? .x.)
-                           .x.
-                           (lml-attr-string .x.))
-                        "\"")
-             s)
+  (princ (string-concat " " (lml-attr-string x.) "=\"" (escape-string (string .x.)) "\"") s)
   (lml2xml-attr-or-body s ..x))
 
 (fn lml2xml-body (s x)
