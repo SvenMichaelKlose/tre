@@ -74,5 +74,5 @@
    `(fn log-message (txt)
       (logwindow-add-string (+ txt (string (code-char 10))))
       txt)
-   `(defmacro log-message (txt)
-      ,txt))
+   '(defmacro log-message (txt)
+      txt))

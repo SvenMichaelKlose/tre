@@ -5,4 +5,4 @@
        (%= nil (error_log txt))
        txt)
     '(defmacro log-message (txt)
-       ,txt))
+       txt))
