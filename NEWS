@@ -6,7 +6,7 @@ Changes of tre-0.5 relative to tre-0.4:
   * PHP: PROPERTY-NAME, PROPERTY-ALIST, ALIST-PROPERTIES,
          MAKE-OBJECT: New core functions.
   * PHP: ARRAY? returns T for indexed arrays only.
-  * JS/PHP: PURE-OBJECT? returns T for object or associative array.
+  * JS/PHP: ASSOC-ARRAY?: New predicate.
   * JS/PHP: JSON-ENCODE, JSON-DECODE added.
 
 Changes of tre-0.4 relative to tre-0.3:
