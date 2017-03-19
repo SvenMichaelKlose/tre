@@ -1,7 +1,10 @@
 #!/bin/sh
-# tré – Copyright (c) 2005–2016 Sven Michael Klose <pixel@hugbox.org>
 
 set -e
+
+# Get revision number and date.
+git log | grep ^commit | wc -l >environment/_current-version
+date >environment/_release-date
 
 ARGS="$2 $3 $4 $5 $6 $7 $8 $9"
 
