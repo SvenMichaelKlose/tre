@@ -1,2 +1,5 @@
 (defmacro curly (&rest x)
-  `(progn ,@x))
+  (? (| (string? x.)
+        (keyword? x.))
+     `(make-object ,@x)
+     `(progn ,@x)))
