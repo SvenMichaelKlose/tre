@@ -1,6 +1,7 @@
 (fn array? (x)
   (| (is_a x "__array")
-     (is_array x)))
+     (& (is_array x)
+        (is_int (key x)))))
 
 (fn %array-push (arr x)
   (%= (%%native "$" arr "[]") x)
