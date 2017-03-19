@@ -1,28 +1,27 @@
 Changes of tre-0.5 relative to tre-0.4:
-  * LOG-MESSAGE returns its argument if logging is switched
-    off.
+  * LOG-MESSAGE returns its argument if logging has been
+    switched off.
   * LML: Attribute names must be keywords.
-  * PHP: NEW create a native object when used witout
-         arguments.
+  * PHP: NEW create a native object when used witout arguments.
   * PHP: PROPERTY-NAME, PROPERTY-ALIST, ALIST-PROPERTIES,
          MAKE-OBJECT: New core functions.
+  * PHP: ARRAY? returns T for indexed arrays only.
+  * JS/PHP: PURE-OBJECT? returns T for object or associative array.
+  * JS/PHP: JSON-ENCODE, JSON-DECODE added.
 
 Changes of tre-0.4 relative to tre-0.3:
   * PHP: LENGTH returns correct value for wrapped arrays.
-  * PHP: Issue an error when trying to convert a cons into
-         string.
-  * JavaScript/PHP: %%%MAKE-HASH-TABLE is now %%%MAKE-OBJECT.
-  * JavaScript: MAKE-OBJECT: New function to use dynamically
-                generated keys.
+  * PHP: Issue an error when trying to convert a cons into string.
+  * JS/PHP: %%%MAKE-HASH-TABLE is now %%%MAKE-OBJECT.
+  * JS: MAKE-OBJECT: New function to use dynamically generated keys.
 
 RELEASES:
 
 Changes of tre-0.3 relative to tre-0.2:
-  * JavaScript: PROPERTY-NAME, PROPERTY-ALIST,
-    ALIST-PROPERTIES: New core functions.
-  * JavaScript: PROPERTY-REMOVE: New core codegen macro.
-  * JavaScript: NEW returns an empty object when used without
-    arguments.
+  * JS: PROPERTY-NAME, PROPERTY-ALIST, ALIST-PROPERTIES: New
+        core functions.
+  * JS: PROPERTY-REMOVE: New core codegen macro.
+  * JS: NEW returns an empty object when used without arguments.
 
 Changes of tre-0.2 relative to tre-0.1:
   * Major cleanup.
