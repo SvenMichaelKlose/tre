@@ -1,13 +1,9 @@
-(var *js-array-constructor* (make-array).constructor)
-
-(fn aref (a k)      (%%%aref a k))
-(fn =-aref (v a k)  (%%%=-aref v a k))
-
-(defmacro aref (a k)     `(%%%aref ,a ,k))
-(defmacro =-aref (v a k) `(%%%=-aref ,v ,a ,k))
-
-(fn array? (x)
-  (& x (eq *js-array-constructor* x.constructor)))
+(fn aref (a k)            (%%%aref a k))
+(fn =-aref (v a k)        (%%%=-aref v a k))
+(fn array? (x)            (*array.is-array x))
+(defmacro aref (a k)      `(%%%aref ,a ,k))
+(defmacro =-aref (v a k)  `(%%%=-aref ,v ,a ,k))
+(defmacro array? (x)      `(*array.is-array ,x))
 
 (fn list-array (x)
   (!= (make-array)
