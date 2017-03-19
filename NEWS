@@ -1,3 +1,7 @@
+Changes of tre-0.6 relative to tre-0.5:
+  * PHP: PROPERTY-NAMES fixed for associative arrays.
+  * PHP: ASSOC-ARRAY? test if first key is a string.
+
 Changes of tre-0.5 relative to tre-0.4:
   * LOG-MESSAGE returns its argument if logging has been
     switched off.
