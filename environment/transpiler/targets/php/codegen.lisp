@@ -280,7 +280,7 @@
 (define-php-macro %new (&rest x)
   (? x
      `(%%native "new " ,x. ,@(php-argument-list .x))
-     `(%%native "[]")))
+     `(%%native "new stdClass()")))
 
 (define-php-macro delete-object (x)
   `(%%native "null; unset " ,x))
