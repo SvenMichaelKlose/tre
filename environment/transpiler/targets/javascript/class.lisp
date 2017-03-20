@@ -8,14 +8,13 @@
      bases))
 
 (fn js-gen-constructor (class-name bases args body)
-  (let magic (list 'quote ($ '__ class-name))
-    `{(fn ,class-name ,args
-        (%thisify ,class-name
-          (macrolet ((super (&rest args)
-                       `((slot-value ,bases. 'call) this ,,@args)))
-            ,@body)))
-	  (fn ,($ class-name '?) (x)
-	    (%%native x " instanceof " ,(compiled-function-name-string class-name)))}))
+  `{(fn ,class-name ,args
+      (%thisify ,class-name
+        (macrolet ((super (&rest args)
+                     `((slot-value ,bases. 'call) this ,,@args)))
+          ,@body)))
+    (fn ,($ class-name '?) (x)
+      (%%native x " instanceof " ,(compiled-function-name-string class-name)))})
 
 (define-js-std-macro defclass (class-name args &body body)
   (apply #'generic-defclass #'js-gen-constructor class-name args body))
