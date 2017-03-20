@@ -1,2 +1,3 @@
 (fn property-names (x)
-  (carlist (%property-list x)))
+  (& x
+     (carlist (%property-list x))))
