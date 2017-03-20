@@ -37,16 +37,6 @@
   (@ (k (hashkeys b) a)
     (= (href a k) (href b k))))
 
-(fn alist-phphash (x)
-  (!= (%%%make-object)
-    (@ (i x !)
-      (%%%href-set .i ! i.))))
-
-(fn phphash-alist (x)
-  (with-queue q
-    (@ (i (hashkeys x) (queue-list q))
-      (enqueue q (. i (aref x i))))))
-
 (fn %href-error (h)
   (error "HREF expects an hash table instead of ~A." h))
 
