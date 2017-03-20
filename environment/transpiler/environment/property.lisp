@@ -15,3 +15,6 @@
 
 (fn copy-properties (x)
   (merge-properties x nil))
+
+(fn update-properties (x &rest props)
+  (merge-properties x (apply #'make-object props)))
