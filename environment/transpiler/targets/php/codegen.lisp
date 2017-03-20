@@ -241,15 +241,6 @@
 
 ;;;; HASH TABLES
 
-(fn php-array-indexes (x)
-  (mapcan [list "[" (php-dollarize _) "]"] x))
-
-(define-php-macro %%%href (h &rest k)
-  `(%%native ,(php-dollarize h) ,@(php-array-indexes k)))
-
-(define-php-macro %%%href-set (v h &rest k)
-  `(%%native ,(php-dollarize h) ,@(php-array-indexes k) " = " ,(php-dollarize v)))
-
 (define-php-macro href (h k)
   `(%%native "(is_a (" ,(php-dollarize h) ", '__l') || is_a (" ,(php-dollarize h) ", '__array')) ? "
                  ,(php-dollarize h) "->g(tre_T37T37key (" ,(php-dollarize k) ")) : "

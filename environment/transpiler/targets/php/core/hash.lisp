@@ -21,8 +21,8 @@
                               (? (%%%== p "_kw")
                                  *keyword-package*
                                  (make-symbol p)))))
-         "L" (%%%href *conses* (substr x 3))
-         "A" (%%%href *arrays* (substr x 3))
+         "L" (%aref *conses* (substr x 3))
+         "A" (%aref *arrays* (substr x 3))
          "C" (code-char (substr x 3))
          (error "Illegal index ~A." x)))
      x))
@@ -32,13 +32,10 @@
      (@ #'%%unkey (x.keys))
      (maparray #'identity (phphash-hashkeys x))))
 
-(fn hash-merge (a b)
+(fn hash-merge (a b)    ; TODO: Use generic version.
   (| a (= a (make-hash-table)))
   (@ (k (hashkeys b) a)
     (= (href a k) (href b k))))
-
-(fn %href-error (h)
-  (error "HREF expects an hash table instead of ~A." h))
 
 (fn href (h k)
   (alet (%%key k)

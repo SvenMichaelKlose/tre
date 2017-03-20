@@ -1,8 +1,8 @@
-(defvar *request-path-offset* nil)
-(defvar *base-url* nil)
+(var *request-path-offset* nil)
+(var *base-url* nil)
 
 (fn parse-request-path ()
-  (with (path  (%%%href *_SERVER* "SCRIPT_NAME")
+  (with (path  (%aref *_SERVER* "SCRIPT_NAME")
          comp  (path-pathlist path)
          ofs   (? comp
                   (-- (length comp))
