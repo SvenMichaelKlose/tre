@@ -77,7 +77,7 @@
     (%= nil (%%native
                 "for (var k in " b ") "
                     "if (k != \"" '__tre-object-id "\" && k != \"" '__tre-test "\" && k != \"" '__tre-keys "\") "
-                        a "[k] = " b "[k];"))
+                        a "[k] = " b "[k]"))
     a))
 
 (fn copy-hash-table (x)
