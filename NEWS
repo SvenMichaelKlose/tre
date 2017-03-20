@@ -1,3 +1,6 @@
+Changes of tre-0.7 relative to tre-0.6:
+  * (%NEW): Accidentally converted to (%NEW NIL) – fixed.
+
 Changes of tre-0.6 relative to tre-0.5:
   * PHP: PROPERTY-NAMES fixed for associative arrays.
   * PHP: ASSOC-ARRAY? test if first key is a string.

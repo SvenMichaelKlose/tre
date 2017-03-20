@@ -70,7 +70,7 @@
          eargs  (? (defined-function fun)
                    (compiled-arguments fun (expex-argdef fun) args)
                    args))
-    `(,@(& new? '(%new)) ,fun ,@(expand-literal-characters eargs))))
+    `(,@(& new? '(%new)) ,@(!? fun (list !)) ,@(expand-literal-characters eargs))))
 
 
 ;;;;; MOVING ARGUMENTS
