@@ -145,17 +145,17 @@
 (define-js-macro make-array (&rest elements)
   `(%%native ,@(c-list elements :brackets :square)))
 
-(define-js-macro %%%aref (arr &rest idx)
+(define-js-macro %aref (arr &rest idx)
   `(%%native ,arr ,@(@ [`("[" ,_ "]")] idx)))
 
-(define-js-macro %%%=-aref (val &rest x)
-  `(%%native (%%%aref ,@x) " = " ,val))
+(define-js-macro %=-aref (val &rest x)
+  `(%%native (%aref ,@x) " = " ,val))
 
 (define-js-macro aref (arr &rest idx)
-  `(%%%aref ,arr ,@idx))
+  `(%aref ,arr ,@idx))
 
 (define-js-macro =-aref (val &rest x)
-  `(%%%=-aref ,val ,@x))
+  `(%=-aref ,val ,@x))
 
 
 ;;;; HASH TABLES

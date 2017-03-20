@@ -25,10 +25,10 @@
 
 (fn aref (a k)
   (? (is_array a)
-     (php-aref a k)
+     (%aref a k)
      (href a k)))
 
 (fn (= aref) (v a k)
   (? (is_array a)
-     (=-php-aref v a k)
+     (%=-aref v a k)
      (=-href v a k)))

@@ -227,17 +227,14 @@
 (define-php-macro =-aref (val arr &rest indexes)
   `(=-href ,val ,arr ,@indexes))
 
-(define-php-macro php-aref (arr &rest indexes)
+(define-php-macro %aref (arr &rest indexes)
   `(%%native ,(php-dollarize arr) ,@(php-array-subscript indexes)))
 
-(define-php-macro %%%=-aref (val &rest x)
-  `(=-php-aref ,val ,@x))
-
-(define-php-macro php-aref-defined? (arr &rest indexes)
+(define-php-macro %aref-defined? (arr &rest indexes)
   `(%%native "isset (" ,(php-dollarize arr) ,@(php-array-subscript indexes) ")"))
 
-(define-php-macro =-php-aref (val &rest x)
-  `(%%native (php-aref ,@x)
+(define-php-macro %=-aref (val &rest x)
+  `(%%native (%aref ,@x)
              ,(php-assignment-operator val)
              ,(php-dollarize val)))
 
