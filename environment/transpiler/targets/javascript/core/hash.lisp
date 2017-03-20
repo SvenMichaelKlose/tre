@@ -30,17 +30,17 @@
 (fn %make-href-object-key (hash key)
   (unless (defined? key.__tre-object-id)
     (= key.__tre-object-id (%%objkey)))
-  (%=-aref key hash.__tre-keys key.__tre-object-id)
+  (=-%aref key hash.__tre-keys key.__tre-object-id)
   key.__tre-object-id)
 
 (fn %href-key (hash key)
   (? (object? key)
      (%make-href-object-key hash key)
      (aprog1 (%%numkey key)
-       (%=-aref key hash.__tre-keys !))))
+       (=-%aref key hash.__tre-keys !))))
 
 (fn =-href-obj (value hash key)
-  (%=-aref value hash (%href-key hash key)))
+  (=-%aref value hash (%href-key hash key)))
 
 (fn %href-==? (x)
   (| (eq x #'==)
@@ -50,9 +50,9 @@
 (fn =-href (value hash key)
   (!? (%htest hash)
       (? (%href-==? !)
-         (%=-aref value hash key)
+         (=-%aref value hash key)
          (=-href-obj value hash key))
-      (%=-aref value hash key)))
+      (=-%aref value hash key)))
 
 (fn %href-user (hash key)
   (@ (k (hashkeys hash))

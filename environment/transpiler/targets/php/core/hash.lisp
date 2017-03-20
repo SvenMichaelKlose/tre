@@ -61,5 +61,5 @@
   (alet (%%key k)
     (?  (is_a h "__array")
         (h.s (%%key !) v)
-        (%=-aref v h !) v))
+        (=-%aref v h !) v))
   v)

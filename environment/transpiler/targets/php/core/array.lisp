@@ -30,5 +30,5 @@
 
 (fn (= aref) (v a k)
   (? (is_array a)
-     (%=-aref v a k)
+     (=-%aref v a k)
      (=-href v a k)))
