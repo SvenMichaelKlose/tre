@@ -52,11 +52,11 @@
 
 (define-php-macro %%go-nil (tag val)
   (let v (php-dollarize val)
-    (php-line "if (!" v " && !is_string (" v ") && !is_numeric (" v ") && !is_array (" v ")) { " (php-jump tag) "; }")))
+    (php-line "if (!" v " && !is_string (" v ") && !is_numeric (" v ") && !is_array (" v ")) " (php-jump tag))))
 
 (define-php-macro %%go-not-nil (tag val)
   (let v (php-dollarize val)
-    (php-line "if (!(!" v " && !is_string (" v ") && !is_numeric (" v ") && !is_array (" v "))) { " (php-jump tag) "; }")))
+    (php-line "if (!(!" v " && !is_string (" v ") && !is_numeric (" v ") && !is_array (" v "))) " (php-jump tag))))
 
 
 ;;;; FUNCTIONS
@@ -280,7 +280,7 @@
 (define-php-macro %new (&rest x)
   (? x
      `(%%native "new " ,x. ,@(php-argument-list .x))
-     `(%%native "new stdClass()")))
+     `(%%native "[]")))
 
 (define-php-macro delete-object (x)
   `(%%native "null; unset " ,x))
