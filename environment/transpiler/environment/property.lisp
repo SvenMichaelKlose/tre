@@ -12,3 +12,6 @@
       (= (aref ! i) (aref a i)))
     (@ (i (property-names b))
       (= (aref ! i) (aref b i)))))
+
+(fn copy-properties (x)
+  (merge-properties x nil))

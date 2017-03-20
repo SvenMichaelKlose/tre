@@ -5,7 +5,7 @@ Changes of tre-0.6 relative to tre-0.5:
     is a string or keyword.
   * MAKE-OBJECT, NEW, {}: Also takes keywords whose symbol names
     are converted to downcase as property names.
-  * JS/PHP: MERGE-PROPERTIES: New function.
+  * JS/PHP: COPY-PROPERTIES, MERGE-PROPERTIES: New functions.
 
 Changes of tre-0.5 relative to tre-0.4:
   * LOG-MESSAGE returns its argument if logging has been
