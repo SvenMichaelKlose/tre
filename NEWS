@@ -1,6 +1,8 @@
 Changes of tre-0.7 relative to tre-0.6:
   * (%NEW): Accidentally converted to (%NEW NIL) – fixed.
   * PHP: Debugged property and associative array functions.
+  * PHP: AREF returns NIL for undefined indexes instead of breaking with an
+         error message.
   * JS: Methods are also available as functions whose
         identifier is ($ class-name "-" method-name).
 

@@ -25,7 +25,8 @@
 
 (fn aref (a k)
   (? (is_array a)
-     (%aref a k)
+     (& (%aref-defined? a k)
+        (%aref a k))
      (href a k)))
 
 (fn (= aref) (v a k)
