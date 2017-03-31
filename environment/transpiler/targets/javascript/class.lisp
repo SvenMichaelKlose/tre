@@ -26,7 +26,7 @@
   (apply #'generic-defmember class-name names))
 
 (fn js-emit-method (class-name x)
-  (!= ($ '~meth- class-name '- x.)
+  (!= ($ class-name '- x.)
     (. `((%%native ,x.) #',!)
 	   `(fn ,! ,.x.
 		  (%thisify ,class-name
