@@ -1,3 +1,6 @@
+Changes of tre-0.8 relative to tre-0.7:
+  * WITHOUT-HEAD, WITHOUT-TAIL: New functions.
+
 Changes of tre-0.7 relative to tre-0.6:
   * (%NEW): Accidentally converted to (%NEW NIL) – fixed.
   * PHP: Debugged property and associative array functions.
@@ -5,7 +8,6 @@ Changes of tre-0.7 relative to tre-0.6:
          error message.
   * JS: Methods are also available as functions whose identifier is
         ($ class-name "-" method-name).
-  * WITHOUT-HEAD, WITHOUT-TAIL: New functions.
 
 Changes of tre-0.6 relative to tre-0.5:
   * PHP: PROPERTY-NAMES fixed for associative arrays.
