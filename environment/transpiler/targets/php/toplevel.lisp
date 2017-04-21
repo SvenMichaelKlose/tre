@@ -1,5 +1,5 @@
 (fn php-prologue ()
-  (format nil "<?php // tré revision ~A~%" *tre-revision*))
+  (format nil "<?php // tré revision ~A~%~A" *tre-revision* *php-core-native*))
 
 (fn php-epilogue ()
   (format nil "?>~%"))
