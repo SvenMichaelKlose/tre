@@ -1,3 +1,7 @@
+Changes of tre-0.9 relative to tre-0.8:
+  * PHP: TRANSPILER-CONFIGURATION :NATIVE-CODE holds a string of native code
+         without opening or closing angle brackets to insert in the prologue.
+
 Changes of tre-0.8 relative to tre-0.7:
   * WITHOUT-HEAD, WITHOUT-TAIL: New functions.
   * PHP: AREF returns NIL for undefined indexes instead of breaking with an

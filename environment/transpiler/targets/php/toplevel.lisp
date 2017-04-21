@@ -1,5 +1,6 @@
 (fn php-prologue ()
-  (format nil "<?php // tré revision ~A~%~A" *tre-revision* *php-core-native*))
+  (format nil "<?php // tré revision ~A~%~A"
+              *tre-revision* (+ (configuration :native-code) *php-core-native*)))
 
 (fn php-epilogue ()
   (format nil "?>~%"))
@@ -45,9 +46,10 @@
 	  :identifier-char?         #'php-identifier-char?
       :literal-converter        #'expand-literal-characters
       :expex-initializer        #'php-expex-initializer
-      :configurations           '((:exclude-core? . nil)
+      :configurations           '((:exclude-core?            . nil)
                                   (:save-sources?            . nil)
-                                  (:save-argument-defs-only? . nil))))
+                                  (:save-argument-defs-only? . nil)
+                                  (:native-code              . nil))))
 
 (fn make-php-transpiler ()
   (aprog1 (make-php-transpiler-0)
