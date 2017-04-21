@@ -15,9 +15,11 @@ BINDIR="/usr/local/bin/"
 basic_clean ()
 {
 	echo "Cleaning..."
-	rm -vf *.core compiled environment/transpiler/targets/c/native/$COMPILED_ENV image files.lisp
+	rm -rv compiled
+	rm -vf *.core environment/transpiler/targets/c/native/$COMPILED_ENV image files.lisp
     rm -vf environment/_current-version
-	rm -vrf _nodejstests.log _phptests.log
+    rm -vf environment/_release-date
+	rm -vf _nodejstests.log _phptests.log
 	echo "Checking out last working core..."
     git checkout -- boot-common.lisp
 }
