@@ -3,7 +3,7 @@
                                        (strict? t)
                                        (copyright-title nil) (copyright-href nil)
                                        (external-script nil)
-                                       (external-stylesheet nil)
+                                       (external-stylesheets nil)
                                        (internal-stylesheet nil)
                                        (body nil))
   (with-default-stream o out
@@ -21,7 +21,7 @@
                                      `(:title ,(escape-string !)))
                                ,@(!? copyright-href
                                      `(:href  ,(escape-string !))))))
-                  ,@(!? external-stylesheet
+                  ,@(!? external-stylesheets
                         (mapcan [`(link :rel "stylesheet" :type "text/css" :href ,_)]
                                 (ensure-list !)))
                   ,@(!? internal-stylesheet
@@ -43,12 +43,13 @@
                                            (strict? t)
                                            (copyright-title nil) (copyright-href nil)
                                            (external-script nil)
-                                           (external-stylesheet nil)
+                                           (external-stylesheets nil)
                                            (internal-stylesheet nil)
                                            (body nil))
   (with-output-file o pathname
     (print-html-script o script ,@(keyword-copiers :title :no-cache? :strict?
                                                    :copyright-title :copyright-href
                                                    :external-script
-                                                   :external-stylesheet :internal-stylesheet
+                                                   :external-stylesheets
+                                                   :internal-stylesheet
                                                    :body))))
