@@ -33,7 +33,7 @@ distclean ()
 
 install_it ()
 {
-    echo "Installing 'tre' else to '$BINDIR'..."
+    echo "Installing 'tre' to '$BINDIR'..."
 	sudo cp tre $BINDIR
     sudo mkdir -p /usr/local/lib/tre
     echo "Installing SBCL image to '/usr/local/lib/tre/image'..."
