@@ -1,6 +1,7 @@
 Changes of tre-0.9 relative to tre-0.8:
   * PHP: TRANSPILER-CONFIGURATION :NATIVE-CODE holds a string of native code
          without opening or closing angle brackets to insert in the prologue.
+  * ATAN2: New math function.
 
 Changes of tre-0.8 relative to tre-0.7:
   * WITHOUT-HEAD, WITHOUT-TAIL: New functions.
