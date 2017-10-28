@@ -1,6 +1,7 @@
 Changes of tre-0.9 relative to tre-0.8:
   * PHP: TRANSPILER-CONFIGURATION :NATIVE-CODE holds a string of native code
          without opening or closing angle brackets to insert in the prologue.
+  * PHP: GET-CURRENT-TIME has been replaced by MILLISECONDS-SINCE-1970.
   * ATAN2, RAD-DEG: New math function.
   * CL: ASIN and ACOS added.
 
