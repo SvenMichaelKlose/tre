@@ -177,9 +177,10 @@
 (fn read-cons-slot (str)
   (alet (read-cons str)
     (? (eql #\. (peek-char str))
-       {(read-char str)
-        (with ((token pkg sym) (read-token str))
-          (read-slot-value (list ! sym)))}
+       (progn
+         (read-char str)
+         (with ((token pkg sym) (read-token str))
+           (read-slot-value (list ! sym))))
        !)))
 
 (fn read-expr (str)
