@@ -28,9 +28,16 @@
 (define-php-std-macro make-string (&optional len)
   "")
 
-;; Translate SLOT-VALUE to unquoted variant.
 (define-php-std-macro slot-value (place slot)
-  `(%slot-value ,place ,(cadr slot)))
+  (?
+    (quote? slot)  `(%slot-value ,place ,.slot.)
+    (string? slot) `(%slot-value ,place ,slot)
+    (symbol? slot) `(%property-value ,place ,slot)
+    (with-gensym g
+      `(%%block
+         (%var ,g)
+         (%= ,g ,slot)
+         (%property-value ,place ,g)))))
 
 (define-php-std-macro new (&rest x)
   (? (| (keyword? x.)
@@ -47,5 +54,5 @@
 (define-php-std-macro string-concat (&rest x)
   `(%%%string+ ,@x))
 
-(define-php-std-macro %%%nanotime ()
+(define-php-std-macro %%%nanotime ()    ; TODO: Remove?
   '(microtime t))

@@ -1,4 +1,4 @@
-(defun apply (&rest lst)
+(fn apply (&rest lst)
   (with (fun            lst.
          l              (last .lst)
          args           (nconc (butlast .lst) l.)
@@ -11,5 +11,5 @@
        (= args (. fun.g args)))
 	(?
       (function_exists expander-name)  (call_user_func_array expander-name (%%native "array ($" args ")"))
-	  (function_exists fun-name)       (call_user_func_array fun-name (list-phphash args))
+	  (function_exists fun-name)       (call_user_func_array fun-name (list-phparray args))
       (error (+ "Function '" fun-name "' does not exist.")))))

@@ -223,6 +223,9 @@
 (define-js-macro %slot-value (x y)
   `(%%native ,x "." ,y))
 
+(define-js-macro %property-value (x y)
+  `(%slot-value ,x ,y))
+
 (define-js-macro %try ()
   '(%%native "try {"))
 

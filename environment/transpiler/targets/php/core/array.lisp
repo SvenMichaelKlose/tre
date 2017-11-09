@@ -18,8 +18,8 @@
     (@ (i x a)
       (a.p i))))
 
-(fn list-phphash (x)
-  (!= (%%%make-object)
+(fn list-phparray (x)
+  (!= (%%%make-array)
     (@ (i x !)
       (%= (%%native "$" ! "[]") i))))
 

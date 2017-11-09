@@ -215,8 +215,8 @@
 (fn php-literal-array-elements (x)
   (pad (@ #'php-literal-array-element x) ", "))
 
-(define-php-macro %%%make-object (&rest elements)
-  `(%%native "Array (" ,@(php-literal-array-elements (group elements 2)) ")"))
+(define-php-macro %%%make-array (&rest elements)
+  `(%%native "array (" ,@(php-literal-array-elements (group elements 2)) ")"))
 
 (define-php-macro make-array (&rest elements)
   `(%%native "new __array ()" ""))
@@ -265,10 +265,13 @@
 
 ;;;; OBJECTS
 
+(define-php-macro %%%make-object (&rest elements)
+  `(%%native "(object) array (" ,@(php-literal-array-elements (group elements 2)) ")"))
+
 (define-php-macro %new (&rest x)
   (? x
      `(%%native "new " ,x. ,@(php-argument-list .x))
-     `(%%native "[]")))
+     `(%%native "new stdClass")))
 
 (define-php-macro delete-object (x)
   `(%%native "null; unset " ,x))
@@ -279,6 +282,9 @@
         `(%%native ,(php-dollarize x) "->" ,y)
         `(%%native ,x "->" ,y))
 	 `(%%native "$" ,x "->" ,y)))
+
+(define-php-macro %property-value (x y)
+  `(%%native "$" ,x "->$" ,y))
 
 (define-php-macro %php-class-head (name)
   `(%%native "class " ,name "{"))

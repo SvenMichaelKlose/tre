@@ -1,8 +1,14 @@
 Changes of tre-0.9 relative to tre-0.8:
+  * SLOT-VALUE can get and set by names passed as symbol or string,
+    also by variable.
+  * JSON obects must not be accessed like arrays. Use SLOT-VALUE instead
+    of AREF.
   * PHP: TRANSPILER-CONFIGURATION :NATIVE-CODE holds a string of native code
          without opening or closing angle brackets to insert in the prologue.
   * PHP: GET-CURRENT-TIME has been replaced by MILLISECONDS-SINCE-1970.
-  * ATAN2, RAD-DEG: New math function.
+  * PHP: JSON objects are treated as objects, not arrays.
+  * PHP: NEW returns a stdClass.
+  * JS: ATAN2: New math function.
   * CL: ASIN and ACOS added.
 
 Changes of tre-0.8 relative to tre-0.7:

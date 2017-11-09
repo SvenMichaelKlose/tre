@@ -27,7 +27,7 @@
 (defvar *late-symbol-function-assignments* nil)
 
 (fn js-make-late-symbol-function-assignment (name)
-  (push `(= (slot-value ',name 'f) ,(compiled-function-name name))
+  (push `(= (%slot-value ,name f) ,(compiled-function-name name))
         *late-symbol-function-assignments*))
 
 (fn emit-late-symbol-function-assignments ()
@@ -62,7 +62,10 @@
   `(defun ,name ,args ,@body))
 
 (define-js-std-macro slot-value (place slot)
-  `(%slot-value ,place ,.slot.))
+  (?
+    (quote? slot)   `(%slot-value ,place ,.slot.)
+    (string? slot)  `(%slot-value ,place ,slot)
+    `(%aref ,place ,slot)))
 
 (define-js-std-macro bind (fun &rest args)
   `(%bind ,(? (slot-value? fun)
