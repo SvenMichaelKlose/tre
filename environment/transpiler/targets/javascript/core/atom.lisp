@@ -1,10 +1,10 @@
 (js-type-predicate function? "function")
 (js-type-predicate object? "object")
 
-(fn assoc-array? (x)
-  (& (object? x)
-     (not (array? x))
-     (not (defined? x.__tre-test))
-     (not (defined? x.__class))))
-
 (fn builtin? (x))
+
+(const +simple-object-constructor+ (%%%make-object).constructor)
+
+(fn simple-object? (x)
+  (& (object? x)
+     (eq x.constructor +simple-object-constructor+)))

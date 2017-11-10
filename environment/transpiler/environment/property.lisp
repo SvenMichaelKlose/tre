@@ -4,7 +4,8 @@
 (fn alist-properties (x)
   (& x
      (aprog1 (new)
-       (@ [= (slot-value ! _.) ._] x))))
+       (@ (i x)
+         (= (slot-value ! i.) .i)))))
 
 (fn merge-properties (a b)
   (aprog1 (new)

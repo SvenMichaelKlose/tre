@@ -10,7 +10,8 @@
                          "lexical"
                          "closure"
                          "symbol"
-                         "array"))))
+                         "array"
+                         "json-encode"))))
 
 (fn php-print-native-core (out)
   (princ *php-core-native* out))
