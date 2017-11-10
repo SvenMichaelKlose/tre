@@ -1,3 +1,6 @@
+Changes of tre-0.10 relative to tre-0.9:
+  * PHP: DEFINED? and UNDEFINED? had opposite effects.
+
 Changes of tre-0.9 relative to tre-0.8:
   * SLOT-VALUE can get and set by names passed as symbol or string,
     also by variable.

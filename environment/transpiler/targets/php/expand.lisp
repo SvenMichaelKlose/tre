@@ -46,13 +46,13 @@
      `(%new ,@x)))
 
 (define-php-std-macro undefined? (x)
-  `(isset ,x))
+  `(not (isset ,x)))
 
 (define-php-std-macro defined? (x)
-  `(not (isset ,x)))
+  `(isset ,x))
 
 (define-php-std-macro string-concat (&rest x)
   `(%%%string+ ,@x))
 
-(define-php-std-macro %%%nanotime ()    ; TODO: Remove?
+(define-php-std-macro %%%nanotime ()
   '(microtime t))
