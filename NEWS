@@ -1,5 +1,8 @@
 Changes of tre-0.10 relative to tre-0.9:
   * PHP: DEFINED? and UNDEFINED? had opposite effects.
+  * WITH-STRUCT: Most embarassing bug removed. Did not
+    introduce a GENSYM to evaluate the STRUCT's origin only
+    once.
 
 Changes of tre-0.9 relative to tre-0.8:
   * SLOT-VALUE can get and set by names passed as symbol or string,

@@ -1,6 +1,8 @@
 (defmacro with-struct (typ strct &body body)
-  (alet (assoc-value typ *struct-defs*)
-    `(#'((,typ ,@(@ #'%struct-field-name !))
-           ,@(@ [%struct-field-name _] !)
-           ,@body)
-       ,strct ,@(@ [`(,(%struct-accessor-name typ (%struct-field-name _)) ,strct)] !))))
+  (!= (assoc-value typ *struct-defs*)
+    (with-gensym g
+      `(let ,g ,strct
+         (#'((,typ ,@(@ #'%struct-field-name !))
+             ,@(@ [%struct-field-name _] !)
+             ,@body)
+          ,g ,@(@ [`(,(%struct-accessor-name typ (%struct-field-name _)) ,g)] !))))))
