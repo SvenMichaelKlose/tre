@@ -5,6 +5,7 @@
      (. x. (copy-head .x (-- size)))))
 
 (fn group (x size)
-  (& x
-     (. (copy-head x size)
-        (group (nthcdr size x) size))))
+  (with-queue q
+    (while x (queue-list q)
+       (enqueue q (copy-head x size))
+       (= x (nthcdr size x)))))
