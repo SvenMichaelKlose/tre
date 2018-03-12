@@ -3,7 +3,7 @@
 
 (defmacro dotimes ((iter times &rest result) &body body)
   (let g (gensym)
-    `(let ,g ,times
+    `(let ,g (integer ,times)
        ,@(? *assert?*
             `((? (< ,g 0)
                  (dotimes-error-negative ,g))))
