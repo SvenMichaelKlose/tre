@@ -35,8 +35,8 @@
 
 (fn form-select-get-selected-option (x)
   (do-children (i x)
-	(& i.selected
-	   (return i))))
+    (& i.selected
+       (return i))))
 
 (fn form-select-get-selected-option-text (x)
   (form-select-get-selected-option x).text-content)
@@ -71,6 +71,6 @@
 (fn form-select-sort (x)
   (with (select-element  (x.get "<select")
 		 option-list     (form-select-option-texts-to-string-lists (form-select-get-options x))
-		 sorted-options  (sort option-list :test #'<=-list))
+		 sorted-options  (sort option-list :test #'<=-list)) ; TODO: Fix me.
 	(select-element.remove-children)
 	(form-select-add-string-list-options select-element sorted-options)))
