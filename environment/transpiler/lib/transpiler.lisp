@@ -1,11 +1,11 @@
-(defvar *transpiler* nil)
-(defvar *transpiler-log* nil)
-(defvar *default-transpiler* nil)
-(defvar *optional-passes* '(:accumulate-toplevel
-                            :inject-debugging
-                            :obfuscate))
+(var *transpiler* nil)
+(var *transpiler-log* nil)
+(var *default-transpiler* nil)
+(var *optional-passes* '(:accumulate-toplevel
+                         :inject-debugging
+                         :obfuscate))
 
-(defvar *print-executed-functions?* nil)
+(var *print-executed-functions?* nil)
 
 (fn make-host-functions ()
   (alist-hash (+ *functions*
@@ -107,7 +107,7 @@
   (arguments-on-stack?      nil)
   (copy-arguments-to-stack? nil)
 
-  (function-name-prefix     "USERFUN_")
+  (function-name-prefix     "tre_")
 
   ;;;
   ;;; Generic
