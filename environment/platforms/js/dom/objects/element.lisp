@@ -112,12 +112,18 @@
 			  		    a.node-name))
 	     a.node-value))))
 
+(defmethod caroshi-element attribute-names ()
+  (let attrs (make-queue)
+    (doarray (a attributes (queue-list attrs))
+      (enqueue attrs (| (aref *attribute-xlat-rev* a.node-name)
+                        a.node-name)))))
+
 (defmethod caroshi-element attributes-alist ()
   (let attrs (make-queue)
     (doarray (a attributes (queue-list attrs))
-	    (enqueue attrs (. (| (aref *attribute-xlat-rev* a.node-name)
-				  		     a.node-name)
-			              a.node-value)))))
+      (enqueue attrs (. (| (aref *attribute-xlat-rev* a.node-name)
+                           a.node-name)
+                        a.node-value)))))
 
 (defmethod caroshi-element has-attribute? (name)
   (doarray (a attributes)
