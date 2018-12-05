@@ -102,4 +102,10 @@
 	  (++! idx)
 	  (= x x.previous-sibling))))
 
+(defmethod visible-node update (o n)
+  (& o n
+     (? (o.is-equal-node n))
+        (o.first-child.update n.first-child)
+        (o.replace-by n)))
+
 (finalize-class visible-node)
