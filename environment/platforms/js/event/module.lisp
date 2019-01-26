@@ -1,3 +1,6 @@
+; NOTE: Requires *ALL-EVENTS* from environment/platforms/js/event/names.lisp
+;       in compiling environment.
+
 (defclass event-module (name)
   (log-events "New event module `~A'.~%" name)
   (= _name     name
