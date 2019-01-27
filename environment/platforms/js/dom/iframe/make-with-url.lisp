@@ -1,6 +1,0 @@
-(fn make-iframe-with-url (continuer url html-document &key (ns nil))
-  (alet (make-iframe html-document :ns ns)
-    (= !.onload [0 (clr !.onload)
-                   (iframe-extend !)
-                   (funcall continuer !)])
-    (!.write-attribute "src" url)))

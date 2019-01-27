@@ -113,9 +113,9 @@ nodeconsole)
     $TRE makefiles/nodeconsole.lisp
 	;;
 
-webconsole)
-    $TRE makefiles/webconsole.lisp
-	;;
+#webconsole)
+#    $TRE makefiles/webconsole.lisp
+#	;;
 
 examples)
     $TRE examples/make-standard-js.lisp
@@ -131,7 +131,7 @@ all)
     ./make.sh tests
     ./make.sh examples
     ./make.sh nodeconsole
-    ./make.sh webconsole
+#    ./make.sh webconsole
     echo "All done."
     ;;
 
@@ -174,8 +174,8 @@ distclean)
     echo "  install         Install compiled executable and environment image."
     echo "  clean           Remove built files but not the backup."
     echo "  distclean       Like 'clean' but removes backups, too."
-    echo "  webconsole      Make web browser REPL."
-    echo "  nodeconsole     Make node.js REPL."
+#    echo "  webconsole      Make web browser REPL. (defunct)"
+    echo "  nodeconsole     Make node.js REPL. (defunct)"
     echo "  jstests         Compile JavaScript target tests and run them with"
     echo "                  Chromium and node.js."
     echo "  phptests        Compile PHP target tests and run them with the"

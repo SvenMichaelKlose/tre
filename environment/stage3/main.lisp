@@ -37,6 +37,7 @@
 (env-load "stage3/read-file.lisp")
 (env-load "stage3/read-byte.lisp")
 (env-load "stage3/read-chars.lisp")
+(env-load "stage3/read-binary.lisp")
 (env-load "stage3/file.lisp")
 (env-load "stage3/format.lisp")
 (env-load "stage3/terpri.lisp")
