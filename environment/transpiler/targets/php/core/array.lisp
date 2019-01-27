@@ -33,3 +33,9 @@
   (? (is_array a)
      (=-%aref v a k)
      (=-href v a k)))
+
+(fn phparray-object (x)
+  (%%native "(object)$" x))
+
+(fn object-phparray (x)
+  (%%native "(array)$" x))
