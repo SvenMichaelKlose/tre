@@ -48,6 +48,18 @@ inspired by Arc:
 * !? instead of AIF (Arc)
 * !@ instead of ADOLIST (Arc) (See also '@'.)
 
+## Dot instead of LIST
+
+```lisp
+(. a b)
+```
+
+is the same as
+
+```lisp
+(list a b)
+```
+
 ## Dots instead of CAR or CDR
 
 Probably inspired by some COBOL manual tré first of all
