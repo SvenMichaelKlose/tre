@@ -5,14 +5,14 @@ Common Lisp (SBCL), JavaScript (for browsers and node.js) and
 PHP code.
 
 tré has been used in real life business for a couple of years and is
-now cleaned up for the public.
+now being cleaned up for the public.
 
 tré has been developed since 2005 by Sven Michael Klose <pixel@hugbox.org>.
 
 # Building and installing
 
 Make sure you have sbcl (Steel Bank Common Lisp) installed.
-Then, simply run:
+Then run:
 
 ```
 ./make.sh boot
