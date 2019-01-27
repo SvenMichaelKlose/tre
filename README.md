@@ -32,7 +32,8 @@ the best thing to get started with if you know Lisp already.
 ## General abbreviations
 
 Inspired by the C syntax these are synonyms for what you
-would expect from Common Lisp (which should also be there).
+would expect from Common Lisp.  The original names are,
+most of the time, still there.
 
 * == instead of =
 * = instead of SETF
@@ -41,8 +42,11 @@ would expect from Common Lisp (which should also be there).
 * | instead of OR
 * / instead of DIV
 
+Due to name collision the original meaning of '=' is gone
+in favour of '=='.
+
 There are also abbreviations for some anaphoric macros
-inspired by Arc:
+inspired by Arc (which are still around):
 
 * != instead of ALET (Arc)
 * !? instead of AIF (Arc)
