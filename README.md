@@ -75,11 +75,11 @@ the two dots, so "(cadr x)" is ".x." for the second element.
 To access the third element "(caddr x)" just do "..x.".
 
 ```lisp
-x.      ; CAR
-.x      ; CDR
-.x.     ; CADR
-..x.    ; CADDR
-..x..   ; CAADDR
+x.      ; (car x)
+.x      ; (cdr x)
+.x.     ; (cadr x)
+..x.    ; (caddr x)
+..x..   ; (caaddr x)
 
 ```
 
@@ -129,6 +129,10 @@ Otherwise it'll become a PROGN.
 {item1    "1"
  "item2"   "2"}
 ```
+
+Not that the symbolic keys will be translated into camel
+notation as every other literal symbol.  'oh-no' will become
+'ohNo'.
 
 ## At sign instead of DOLIST or FILTER
 
