@@ -1,6 +1,6 @@
 Changes of tre-0.11 relative to tre-0.10:
   * Moved platform-specific functions into separate repositories
-    'tre-php' and 'tre-js'.
+    'tre-php', 'tre-js' and 'tre-shared'.
   * Path/URI functions and READ-BINARY added to the environment.
 
 Changes of tre-0.10 relative to tre-0.9:
