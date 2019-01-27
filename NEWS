@@ -1,6 +1,6 @@
 Changes of tre-0.10 relative to tre-0.9:
-  * PHP: DEFINED? and UNDEFINED? had opposite effects.
-  * WITH-STRUCT: Most embarassing bug removed. Did not
+  * PHP: DEFINED? and UNDEFINED? had reversed effects.
+  * WITH-STRUCT: Most embarassing bug removed.  Did not
     introduce a GENSYM to evaluate the STRUCT's origin only
     once.
 
