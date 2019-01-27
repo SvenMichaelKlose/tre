@@ -7,11 +7,11 @@
                                        (internal-stylesheet nil)
                                        (body nil))
   (with-default-stream o out
-    (format o (+ (doctype-html-5) "~%"))
+    (format o "<!doctype html>~%")
     (lml2xml `(html
                 (head
                   (title ,title)
-                  (meta :http-equiv "Content-Type" :content "text/html; charset=utf-8")
+                  (meta :encoding "utf-8")
                   ,@(& no-cache?
                        `((meta :http-equiv "pragma" :content "no-cache")))
                   ,@(& (| copyright-title
