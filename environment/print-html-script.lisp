@@ -11,7 +11,7 @@
     (lml2xml `(html
                 (head
                   (title ,title)
-                  (meta :encoding "utf-8")
+                  (meta :charset "utf-8")
                   ,@(& no-cache?
                        `((meta :http-equiv "pragma" :content "no-cache")))
                   ,@(& (| copyright-title
