@@ -13,9 +13,9 @@
 
 (env-load "read-eval-loop.lisp")
 
-(env-load "platforms/shared/html/script.lisp")
-(env-load "platforms/shared/lml.lisp")
-(env-load "platforms/shared/lml2xml.lisp")
+(env-load "print-html-script.lisp")
+(env-load "lml.lisp")
+(env-load "lml2xml.lisp")
 
 (env-load "reverse-tests.lisp")
 (env-load "config-after-reload.lisp" :cl)
