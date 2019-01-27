@@ -48,7 +48,7 @@ inspired by Arc:
 * !? instead of AIF (Arc)
 * !@ instead of ADOLIST (Arc) (See also '@'.)
 
-## Dot instead of LIST
+## Dot instead of CONS
 
 ```lisp
 (. a b)
@@ -57,7 +57,7 @@ inspired by Arc:
 is the same as
 
 ```lisp
-(list a b)
+(cons a b)
 ```
 
 ## Dots instead of CAR or CDR
