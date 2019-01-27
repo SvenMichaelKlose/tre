@@ -72,7 +72,8 @@ related expressions.  Instead of doing "(car x)" you are now
 invited to use "x." instead.  The equivalent for "(cdr x)"
 would be ".x".  You can also combine the two dots, so "(cadr
 x)" is ".x." or use more than one dot.  To access the second
-element "(caddr x)" just do "..x.".
+element "(caddr x)" just do "..x.".  Probably inspired by
+COBOL,  Yes, you've heard right, bitch.
 
 ```lisp
 x.      ; CAR
