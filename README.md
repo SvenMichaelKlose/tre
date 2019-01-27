@@ -71,7 +71,7 @@ bitch, tré first of all takes the edge off by removing the
 zoo of CAR, CDR and related expressions.  Instead of doing
 "(car x)" you are now invited to use "x." instead.  The
 equivalent for "(cdr x)" would be ".x".  You can also combine
-the two dots, so "(cadr x)" is ".x." or use more than one dot.
+the two dots, so "(cadr x)" is ".x." for the second element.
 To access the third element "(caddr x)" just do "..x.".
 
 ```lisp
