@@ -10,7 +10,7 @@ already.
 Make sure you have sbcl (Steel Bank Common Lisp) installed.
 Then run:
 
-```
+```sh
 ./make.sh boot
 ./make.sh install
 ```
@@ -58,7 +58,7 @@ would be ".x".  You can also combine the two dots, so "(cadr
 x)" is ".x." or use more than one dot.  To access the second
 element "(caddr x)" just do "..x.".
 
-```
+```lisp
 x.      ; CAR
 .x      ; CDR
 .x.     ; CADR
@@ -71,13 +71,13 @@ x.      ; CAR
 
 Inspired by Arc
 
-```
+```lisp
 [body]
 ```
 
 is the equivalent for
 
-```
+```lisp
 #'((_) body)
 ```
 
@@ -89,7 +89,7 @@ Tré also lets you make your own argument definitions.
 To roll your own basically end them with a syntax-violating
 closing round bracket:
 
-```
+```lisp
 [body]              #'((_) body)
 [) body]            #'(() body)
 [x) body]           #'((x) body)
@@ -103,7 +103,7 @@ MAKE-OBJECT if the first element is a keyword or a string.
 Then the argument is grouped into key/value pairs.
 Otherwise it'll become a PROGN.
 
-```
+```lisp
 ; Use as PROGN (first element is not a string or keyword).
 (| x
    {(do-something)
@@ -116,12 +116,12 @@ Otherwise it'll become a PROGN.
 
 ## At sign instead of DOLIST or FILTER
 
-```
+```lisp
 ; Use as FILTER.
 (@ #'filter-function x)
 ```
 
-```
+```lisp
 (@ (i x)
   (filter-function/return-value-lost i))
 ```
@@ -132,7 +132,7 @@ These are QUASIQUOTEs aka commas outside BACKQUOTEs aka
 backticks aka '`'.  They are evaluated before the standard
 macro expansion pass.
 
-```
+```lisp
 Some exciting example missing here.
 ```
 
@@ -141,7 +141,7 @@ Some exciting example missing here.
 When working with JSON data for example lots of SLOT-VALUE
 expressions can spoil the fun.  Here's an example:
 
-```
+```lisp
 (slot-value slot name)  ; Old style.
 slot.,name              ; New style.
 ```
