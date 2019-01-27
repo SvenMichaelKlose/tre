@@ -1,18 +1,18 @@
 (= (symbol-function 'cons) "tre_cons")
 
-(defun car (x)
+(fn car (x)
   (& x x.a))
 
-(defun cdr (x)
+(fn cdr (x)
   (& x x.d))
 
-(defun rplaca (x val)
+(fn rplaca (x val)
   (= x.a val)
   x)
 
-(defun rplacd (x val)
+(fn rplacd (x val)
   (= x.d val)
   x)
 
-(defun cons? (x)
+(fn cons? (x)
   (is_a x "__cons"))

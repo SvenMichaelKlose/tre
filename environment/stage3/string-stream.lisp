@@ -1,4 +1,4 @@
-(defun make-string-stream ()
+(fn make-string-stream ()
   (make-stream
       :user-detail (make-queue)
       :fun-in #'((str)
@@ -11,7 +11,7 @@
 	  :fun-eof #'((str)
 			       (not (queue-list (stream-user-detail str))))))
 
-(defun get-stream-string (str)
+(fn get-stream-string (str)
   (prog1
 	(queue-string (stream-user-detail str))
 	(= (stream-user-detail str) (make-queue))))

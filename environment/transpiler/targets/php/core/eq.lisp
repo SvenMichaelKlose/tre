@@ -1,4 +1,4 @@
-(defun eq (a b)
+(fn eq (a b)
   (| (& (is_a a "__cons") (is_a b "__cons")
         (%%%== a.id b.id))
      (& (is_a a "__symbol") (is_a b "__symbol")

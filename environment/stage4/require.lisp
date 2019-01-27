@@ -1,4 +1,4 @@
-(defvar *loaded-required-files* nil)
+(var *loaded-required-files* nil)
 
 (define-js-std-macro require (file)
   (unless (member file *loaded-required-files* :test #'string==)

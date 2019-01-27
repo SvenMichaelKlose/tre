@@ -1,7 +1,7 @@
-(defun debug-print-write (x)
+(fn debug-print-write (x)
   (%write-char x))
 
-(defun debug-print-cons-r (x)
+(fn debug-print-cons-r (x)
   (when x
     (debug-print x.)
     (? (cons? .x)
@@ -10,23 +10,23 @@
 		 (debug-print-write " . ")
 		 (debug-print-atom .x)))))
 
-(defun debug-print-cons (x)
+(fn debug-print-cons (x)
   (debug-print-write "(")
   (debug-print-cons-r x)
   (debug-print-write ")"))
 
-(defun debug-print-symbol (x)
+(fn debug-print-symbol (x)
   (when (keyword? x)
 	(debug-print-write ":"))
   (debug-print-write (+ (symbol-name x) " ")))
 
-(defun debug-print-character (x)
+(fn debug-print-character (x)
   (debug-print-write (+ "#\\\\" (*string.from-char-code (char-code x)))))
 
-(defun debug-print-string (x)
+(fn debug-print-string (x)
   (debug-print-write (+ "\"" x "\"")))
 
-(defun debug-print-object (x)
+(fn debug-print-object (x)
   (debug-print-write "{")
   (maphash #'((k v)
 			    (debug-print k)
@@ -36,7 +36,7 @@
 	       x)
   (debug-print-write "}<br/>"))
 
-(defun debug-print-atom (x)
+(fn debug-print-atom (x)
   (?
     (not x)		   (debug-print-write "NIL")
     (symbol? x)	   (debug-print-symbol x)
@@ -45,7 +45,7 @@
     (object? x)	   (debug-print-object x)
 	(debug-print-write (+ "[unknown type: " (string x) "]"))))
 
-(defun debug-print (x)
+(fn debug-print (x)
   (? (cons? x)
 	 (debug-print-cons x)
 	 (debug-print-atom x))

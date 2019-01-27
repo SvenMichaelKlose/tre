@@ -1,7 +1,7 @@
 (fn get-definer (class)
   (? class
      `(defmethod ,class)
-     '(defun)))
+     '(fn)))
 
 (defmacro define-alias (alias real &key (class nil))
   `(,@(get-definer class) ,alias ()

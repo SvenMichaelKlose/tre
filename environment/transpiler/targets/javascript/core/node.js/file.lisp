@@ -6,12 +6,12 @@
   mode
   (eof? nil))
 
-(defun read-flags? (flags)
+(fn read-flags? (flags)
   (| (string? flags)
      (error "Flags for opening a file must be a string."))
   (== #\r (elt flags 0)))
 
-(defun %fopen (path flags &optional (mode 438))
+(fn %fopen (path flags &optional (mode 438))
   (with (fd-block   (fs.open-sync path flags mode)
          options    (new :mode mode)
          fd-stream  (? (read-flags? flags)
@@ -23,19 +23,19 @@
                       :flags      flags
                       :mode       mode)))
 
-(defun %fclose (fd)
+(fn %fclose (fd)
   (fs.close-sync (nodejs-file-fd-block fd))
   (alet (nodejs-file-fd-stream fd)
     (? (defined? !.end)
        (!.end))))
 
-(defun %force-output (fd)
+(fn %force-output (fd)
   (fs.fflush-sync (nodejs-file-fd-block fd)))
 
-(defun %feof (fd)
+(fn %feof (fd)
   (nodejs-file-eof? fd))
 
-(defun %read-char (fd)
+(fn %read-char (fd)
   (alet ((nodejs-file-fd-stream fd).read)
     (when (| (not !)
              (zero? !.length))

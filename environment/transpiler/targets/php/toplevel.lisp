@@ -58,7 +58,7 @@
     (transpiler-add-defined-function ! 'phphash-hashkeys '(x) nil)
     (transpiler-add-plain-arg-funs ! *builtins*)))
 
-(defvar *php-transpiler* (make-php-transpiler))
-(defvar *php-newline*    (format nil "~%"))
-(defvar *php-separator*  (format nil ";~%"))
-(defvar *php-indent*     "    ")
+(var *php-transpiler* (make-php-transpiler))
+(var *php-newline*    (format nil "~%"))
+(var *php-separator*  (format nil ";~%"))
+(var *php-indent*     "    ")

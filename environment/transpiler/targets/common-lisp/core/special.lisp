@@ -1,15 +1,15 @@
-(defvar *special-forms* nil)
+(var *special-forms* nil)
 
-(defun special-%%macrocall (x)
+(fn special-%%macrocall (x)
   (alet (cdr (assoc x. *special-forms* :test #'eq))
     (apply .! (argument-expand-values x. !. .x))))
 
-(defun special-%%macro? (x)
+(fn special-%%macro? (x)
   (& (cons? x)
      (symbol? x.)
      (assoc x. *special-forms* :test #'eq)))
 
-(defun specialexpand (x)
+(fn specialexpand (x)
   (with-temporaries (*macro?*     #'special-%%macro?
                      *macrocall*  #'special-%%macrocall)
     (with (f #'((old x)
@@ -18,7 +18,7 @@
                     (f x (%macroexpand x)))))
       (f x (%macroexpand x)))))
 
-(defun make-%defun-quiet (name args body)
+(fn make-%defun-quiet (name args body)
   `(cl:progn
      (cl:push (. ',name ',(. args body)) *functions*)
      (cl:defun ,name ,args ,@body)))

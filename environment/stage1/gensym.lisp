@@ -1,5 +1,5 @@
-(defvar *gensym-prefix* "~G")
-(defvar *gensym-counter* 0)
+(var *gensym-prefix* "~G")
+(var *gensym-counter* 0)
 
 ;; Returns newly created, unique symbol.
 (%defun gensym-number ()

@@ -1,1 +1,1 @@
-(defvar *dot-expand* nil)
+(var *dot-expand* nil)

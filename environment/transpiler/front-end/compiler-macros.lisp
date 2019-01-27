@@ -1,9 +1,9 @@
-(defvar *tagbody-replacements* nil)
+(var *tagbody-replacements* nil)
 
 (fn init-compiler-macros ()
   (= *tagbody-replacements* nil))
 
-(defvar *compiler-macro-expander* (define-expander 'compiler :pre #'init-compiler-macros))
+(var *compiler-macro-expander* (define-expander 'compiler :pre #'init-compiler-macros))
 
 (defmacro define-compiler-macro (name args &body x)
   (print-definition `(define-compiler-macro ,name ,args))
@@ -50,8 +50,8 @@
 
 ;; TAGBODY
 
-(defvar *tagbody-expander* (define-expander 'tagbodyexpand))
-(defvar *tagbody-replacements* nil)
+(var *tagbody-expander* (define-expander 'tagbodyexpand))
+(var *tagbody-replacements* nil)
 
 (fn tag-replacement (tag)
   (cdr (assoc tag *tagbody-replacements* :test #'eq)))
@@ -82,8 +82,8 @@
 
 ;; BLOCK
 
-(defvar *block-expander* (define-expander 'blockexpand))
-(defvar *blocks* nil)
+(var *block-expander* (define-expander 'blockexpand))
+(var *blocks* nil)
 
 (fn blockexpand (name body)
   (? body

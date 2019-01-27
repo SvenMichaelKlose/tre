@@ -10,7 +10,7 @@
       (f x)
       (queue-list q))))
 
-(defvar *allow-redefinitions?* t)
+(var *allow-redefinitions?* t)
 
 (fn redef-warn (&rest args)
   (apply (? *allow-redefinitions?* #'warn #'error) args))

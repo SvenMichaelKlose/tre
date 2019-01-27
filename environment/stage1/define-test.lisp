@@ -1,4 +1,4 @@
-(defvar *tests* nil)
+(var *tests* nil)
 
 (%defun test-equal (x y)
   (?

@@ -1,4 +1,4 @@
-(defvar *builtin-argdefs*
+(var *builtin-argdefs*
 	'((NOT          (&rest objects))
       (EQ           (&rest objects))
       (EQL          (&rest objects))
@@ -59,7 +59,7 @@
       (GC           ())
       (DEBUG        ())
       (INTERN       (&rest x)) ;name &optional (package nil))
-	  (%MALLOC      (&rest x)) ;number-of-bytes)
+      (%MALLOC      (&rest x)) ;number-of-bytes)
       (%MALLOC-EXEC (&rest x)) ;number-of-bytes)
       (%FREE        (&rest x)) ;return-value-of-%malloc)
       (%FREE-EXEC   (&rest x)) ;return-value-of-%malloc-exec)

@@ -1,4 +1,4 @@
-(defun warn-unused-functions ()
+(fn warn-unused-functions ()
   (alet (defined-functions)
     (@ [hremove ! _]
        (+ (hashkeys (used-functions))

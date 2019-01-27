@@ -1,4 +1,4 @@
-(defun %bind (obj fun)
+(fn %bind (obj fun)
   (assert (function? fun) "BIND requires a function")
   #'(()
       (fun.apply obj arguments)))

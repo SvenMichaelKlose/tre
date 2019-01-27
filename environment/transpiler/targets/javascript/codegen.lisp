@@ -204,7 +204,7 @@
          "")
      x))
 
-(defvar *js-compiled-symbols* (make-hash-table :test #'eq))
+(var *js-compiled-symbols* (make-hash-table :test #'eq))
 
 (define-js-macro quote (x)
   (cache (aprog1 (make-compiled-symbol-identifier x)

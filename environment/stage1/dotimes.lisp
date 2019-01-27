@@ -1,4 +1,4 @@
-(defun dotimes-error-negative (x)
+(fn dotimes-error-negative (x)
   (error "DOTIMES: Number of iterations is negative. It's ~A." x))
 
 (defmacro dotimes ((iter times &rest result) &body body)

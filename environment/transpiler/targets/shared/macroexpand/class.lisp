@@ -1,4 +1,4 @@
-(defvar *delayed-constructors* nil)
+(var *delayed-constructors* nil)
 
 (fn generic-defclass (constructor-maker class-name args &body body) ; TODO: Check if base classes are defined.
   (with (cname   (? (cons? class-name)

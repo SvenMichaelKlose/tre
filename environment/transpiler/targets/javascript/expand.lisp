@@ -24,7 +24,7 @@
           !)
        !)))
 
-(defvar *late-symbol-function-assignments* nil)
+(var *late-symbol-function-assignments* nil)
 
 (fn js-make-late-symbol-function-assignment (name)
   (push `(= (%slot-value ,name f) ,(compiled-function-name name))
@@ -59,7 +59,7 @@
        (= (symbol-function ,g) ,dname))))
 
 (define-js-std-macro %defun (name args &body body)
-  `(defun ,name ,args ,@body))
+  `(fn ,name ,args ,@body))
 
 (define-js-std-macro slot-value (place slot)
   (?

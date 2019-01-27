@@ -1,2 +1,1 @@
-;; The global variable for return values of expressions.
-(defvar ~%ret nil)
+(var ~%ret nil) ; Keeps return values of expressions.

@@ -59,7 +59,7 @@
     (= (wanted-variables) nil)
     (developer-note "Importing variables ~A…~%" !)
     (frontend (mapcan [unless (defined-variable _)
-                       `((defvar ,_ ,(assoc-value _ *variables* :test #'eq)))]
+                       `((var ,_ ,(assoc-value _ *variables* :test #'eq)))]
                       !))))
 
 (fn import-from-host ()

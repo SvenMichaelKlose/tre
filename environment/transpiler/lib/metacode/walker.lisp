@@ -1,4 +1,4 @@
-(defvar *body*)
+(var *body*)
 
 (fn metacode-statement? (x)
   (| (in? x. '%= '%set-vec '%var '%function-prologue '%function-epilogue '%function-return '%%tag)

@@ -1,11 +1,11 @@
-(defun lexical2 ()
+(fn lexical2 ()
   (labels ((x () 2))
     (unless (== 2 (x))
       (print (x))
       (%error "LEXICAL2: X not 2."))
     (x)))
 
-(defun lexical-test ()
+(fn lexical-test ()
   (labels ((x (cnt)
                 cnt
 	            (unless (== 2 (lexical2))

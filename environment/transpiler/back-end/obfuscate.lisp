@@ -1,4 +1,4 @@
-(defvar *obfuscation-counter* 0)
+(var *obfuscation-counter* 0)
 
 (fn obfuscate? ()
   (enabled-pass? :obfuscate))

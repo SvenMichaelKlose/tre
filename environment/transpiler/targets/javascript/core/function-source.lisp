@@ -1,29 +1,29 @@
-(defun function|symbol-function (x)
+(fn function|symbol-function (x)
   (? (symbol? x)
      (symbol-function x)
      x))
 
 ,(? (| (configuration :save-sources?)
        (configuration :save-argument-defs-only?))
-    '(defun function-arguments (x)
+    '(fn function-arguments (x)
        (!? (function|symbol-function x)
            (!? !.__source
                (with-stream-string s !.
                  (read s))
                '(&rest unknown-args))
            '(&rest unknown-args)))
-    '(defun function-arguments (x)
+    '(fn function-arguments (x)
        '(&rest unknown-args)))
 
 ,(? (configuration :save-sources?)
-    '(defun function-body (x)
+    '(fn function-body (x)
        (alet (function|symbol-function x)
          (!? !.__source
              (with-stream-string s .!
                (read s)))))
-    '(defun function-body (x)))
+    '(fn function-body (x)))
 
-(defun function-source (x)
+(fn function-source (x)
   (alet (function|symbol-function x)
     (& !.__source
        `#'(,(function-arguments !)

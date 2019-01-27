@@ -1,5 +1,5 @@
-(defun upcase (str)
+(fn upcase (str)
   (list-string (@ #'char-upcase (string-list str))))
 
-(defun downcase (str)
+(fn downcase (str)
   (list-string (@ #'char-downcase (string-list str))))

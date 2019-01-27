@@ -1,2 +1,2 @@
-(defun %print-object (x str info)
+(fn %print-object (x str info)
   (print_r x))

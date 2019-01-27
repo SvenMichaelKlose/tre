@@ -1,4 +1,4 @@
-(defvar *functions* nil)
+(var *functions* nil)
 
 (defbuiltin function-native (x) x)
 

@@ -1,1 +1,1 @@
-(defvar *functions* nil)
+(var *functions* nil)

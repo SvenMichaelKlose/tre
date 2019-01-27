@@ -4,6 +4,6 @@
       :fun-out #'((c str) (%princ c nil))
       :fun-eof [%feof nil]))
 
-(defvar *standard-output* (make-standard-stream))
-(defvar *standard-input* (make-standard-stream))
-(defvar *standard-error* (make-standard-stream))
+(var *standard-output* (make-standard-stream))
+(var *standard-input* (make-standard-stream))
+(var *standard-error* (make-standard-stream))

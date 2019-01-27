@@ -1,9 +1,9 @@
-(defun %load-r (s)
+(fn %load-r (s)
   (when (peek-char s)
     (. (read s)
        (%load-r s))))
 
-(defun %expand (x)
+(fn %expand (x)
   (alet (quasiquote-expand (macroexpand (dot-expand x)))
     (? (equal x !)
        x

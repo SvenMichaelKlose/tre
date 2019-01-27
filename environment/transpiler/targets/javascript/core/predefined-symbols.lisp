@@ -1,4 +1,5 @@
 (defvar-native true false window document)
-(defvar *application-funinfos* nil)
-(defvar *variables* nil)
-(defvar *tests* nil)
+
+(var *application-funinfos* nil)
+(var *variables* nil)
+(var *tests* nil)

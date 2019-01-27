@@ -1,4 +1,4 @@
-(defun make-standard-stream ()
+(fn make-standard-stream ()
   (make-stream
       :fun-in       #'((str))
       :fun-out      #'((c str)
@@ -6,5 +6,5 @@
                          nil)
 	  :fun-eof	  #'((str) t)))
 
-(defvar *standard-output* (make-standard-stream))
-(defvar *standard-input*  (make-standard-stream))
+(var *standard-output* (make-standard-stream))
+(var *standard-input*  (make-standard-stream))

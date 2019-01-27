@@ -1,4 +1,4 @@
-(defvar *js-core-path* "environment/transpiler/targets/javascript/core/")
+(var *js-core-path* "environment/transpiler/targets/javascript/core/")
 
 (fn js-load-core (dir-path &rest files)
   (apply #'+ (@ [alet (+ *js-core-path* dir-path _)
@@ -7,8 +7,8 @@
   			      (fetch-file !)]
 		        files)))
 
-(defvar *js-core0* ,(js-load-core "" "return-value.lisp"))
-(defvar *js-core*
+(var *js-core0* ,(js-load-core "" "return-value.lisp"))
+(var *js-core*
     ,(js-load-core ""
                    "cons.lisp"
                    "defined-functions.lisp"
@@ -17,9 +17,9 @@
                    "symbol.lisp"
                    "property-list.lisp"))
 
-(defvar *js-core-debug-print* ,(js-load-core "" "debug-print.lisp"))
+(var *js-core-debug-print* ,(js-load-core "" "debug-print.lisp"))
 
-(defvar *js-core1*
+(var *js-core1*
 	,(+ (js-load-core "../../../environment/"
 	                  "not.lisp")
 		(js-load-core ""
@@ -77,4 +77,4 @@
 (fn js-core-nodejs ()
   ,(js-load-core "node.js/" "file.lisp"))
 
-(defvar *js-core-eval* ,(js-load-core "" "eval.lisp"))
+(var *js-core-eval* ,(js-load-core "" "eval.lisp"))

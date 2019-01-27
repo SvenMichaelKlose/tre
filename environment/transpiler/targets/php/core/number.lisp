@@ -1,12 +1,12 @@
-(defun integer? (x)
+(fn integer? (x)
   (is_int x))
 
-(defun %number? (x)
+(fn %number? (x)
   (| (is_int x)
      (is_float x)))
 
-(defun number (x)
+(fn number (x)
   (%%native "(float)$" x))
 
-(defun number-integer (x)
+(fn number-integer (x)
   (%%native "(int)$" x))

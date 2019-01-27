@@ -40,12 +40,12 @@
   `(%defmacro ,name ,args ,@body))
 
 (define-shared-std-macro (bc c js php) defconstant (&rest x)
-  `(defvar ,@x))
+  `(var ,@x))
 
 (define-shared-std-macro (bc c js php) defvar (name &optional (val '%%no-value-in-defvar))
   (& (eq '%%no-value val)
      (= val `',name))
-  (print-definition `(defvar ,name))
+  (print-definition `(var ,name))
   (& (defined-variable name)
      (redef-warn "Redefinition of variable ~A.~%" name))
   (add-defined-variable name)
@@ -56,7 +56,7 @@
     (%= ,name ,val)})
 
 (define-shared-std-macro (bc c js php) %defvar (name &optional (val '%%no-value-in-%defvar))
-  `(defvar ,name ,val))
+  `(var ,name ,val))
 
 (define-shared-std-macro (bc c js php) in-package (name &optional (val '%%no-value-in-in-package))
   (cl:eval `(cl:in-package ,(symbol-name name)))

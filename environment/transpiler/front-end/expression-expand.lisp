@@ -1,4 +1,4 @@
-(defvar *expex* nil)
+(var *expex* nil)
 
 (fn expex-set-global-variable-value (x) ; TODO – What could this be about?
   (list x))

@@ -1,4 +1,4 @@
-(defvar *funinfo*)
+(var *funinfo*)
 
 (define-gensym-generator funinfo-sym ~f)
 

@@ -1,4 +1,4 @@
-(defvar *function-sources* nil)
+(var *function-sources* nil)
 
 (%defun %defun-arg-keyword (args)
   (let a args.

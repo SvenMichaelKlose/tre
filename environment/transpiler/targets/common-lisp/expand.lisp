@@ -9,18 +9,18 @@
   `(define-transpiler-std-macro *cl-transpiler* ,name ,args ,@body))
 
 (define-cl-std-macro defun (name args &body body)
-  (print-definition `(defun ,name))
+  (print-definition `(fn ,name))
   (add-defined-function name args body)
   `(cl:defun ,name ,args ,@body))
 
 (define-cl-std-macro defvar (name &optional (init nil))
-  (print-definition `(defvar ,name))
+  (print-definition `(var ,name))
   (add-defined-variable name)
   (add-delayed-expr `((cl:setq ,name ,init)))
   `(cl:defvar ,name))
 
 (define-cl-std-macro defconstant (name &optional (init nil))
-  (print-definition `(defconstant ,name))
+  (print-definition `(const ,name))
   (add-defined-variable name)
   (add-delayed-expr `((cl:defconstant ,name ,init))))
 

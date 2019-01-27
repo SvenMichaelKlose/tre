@@ -1,17 +1,17 @@
-(defvar *php-core-path* "environment/transpiler/targets/php/core/")
+(var *php-core-path* "environment/transpiler/targets/php/core/")
 
-(defvar *php-core-native*
-        ,(apply #'+ (@ [fetch-file (+ "environment/transpiler/targets/php/core/native/" _ ".php")]
-                       '("remove-magic-quotes"
-                         "settings"
-                         "error"
-                         "character"
-                         "cons"
-                         "lexical"
-                         "closure"
-                         "symbol"
-                         "array"
-                         "json-encode"))))
+(var *php-core-native*
+     ,(apply #'+ (@ [fetch-file (+ "environment/transpiler/targets/php/core/native/" _ ".php")]
+                    '("remove-magic-quotes"
+                      "settings"
+                      "error"
+                      "character"
+                      "cons"
+                      "lexical"
+                      "closure"
+                      "symbol"
+                      "array"
+                      "json-encode"))))
 
 (fn php-print-native-core (out)
   (princ *php-core-native* out))
@@ -24,18 +24,18 @@
                     (fetch-file !)]
                   files))))
 
-(defvar *php-core0*
+(var *php-core0*
 	,(php-load-core ""
                     "assert.lisp"
                     "return-value.lisp"
                     "superglobals.lisp"))
 
-(defvar *php-core*
+(var *php-core*
 	,(php-load-core ""
                     "cons.lisp"
                     "symbol.lisp"))
 
-(defvar *php-core2*
+(var *php-core2*
 	,(+ (php-load-core ""
                        "../../../environment/number-typing.lisp"
                        "print-object.lisp"
@@ -63,7 +63,7 @@
                        "sequence.lisp"
                        "../../../environment/sequence.lisp"
                        "standard-stream.lisp"
-                       "stream.lisp"
+                       "%force-output.lisp"
                        "../../../environment/print.lisp"
                        "../../../environment/list-string.lisp"
                        "string.lisp"

@@ -1,4 +1,4 @@
-(defvar *warnings* nil)
+(var *warnings* nil)
 
 (defmacro without-automatic-newline (&body body)
   `(with-temporary *print-automatic-newline?* nil

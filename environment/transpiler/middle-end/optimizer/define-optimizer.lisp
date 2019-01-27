@@ -1,4 +1,4 @@
-(defvar *opt-peephole?* t)
+(var *opt-peephole?* t)
 
 (defmacro optimizer (fun &body body)
   `(when x

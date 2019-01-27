@@ -1,4 +1,4 @@
-(defvar *expander-dump?* nil)
+(var *expander-dump?* nil)
 
 (defstruct expander
   name

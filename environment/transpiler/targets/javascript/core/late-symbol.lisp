@@ -1,37 +1,37 @@
-(defun make-symbol (x &optional (pkg nil))
+(fn make-symbol (x &optional (pkg nil))
   (symbol x pkg))
 
-(defun make-package (x)
+(fn make-package (x)
   (symbol x nil))
 
-(defun symbol-name (x)
+(fn symbol-name (x)
   (?
     (%%%eq t x)     "T"
     (%%%eq false x) "FALSE"
     x               x.n
     "NIL"))
 
-(defun symbol-value (x)
+(fn symbol-value (x)
   (?
     (%%%eq t x)  t
     x            x.v))
 
-(defun symbol-function (x)
+(fn symbol-function (x)
   (?
     (%%%eq t x)  nil
     x            x.f))
 
-(defun symbol-package (x)
+(fn symbol-package (x)
   (?
     (%%%eq t x)  nil
     x            (!? x.p ! 'tre)))
 
-(defun symbol? (x)
+(fn symbol? (x)
   (| (not x)
      (%%%eq t x)
      (& (object? x)
 	     x.__class
          (%%%== x.__class ,(obfuscated-identifier 'symbol)))))
 
-(defun package-name (x)
+(fn package-name (x)
   x.n)

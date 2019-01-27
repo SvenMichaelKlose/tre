@@ -1,5 +1,5 @@
-(defvar *environment-path* ".")
-(defvar *environment-filenames* nil)
+(var *environment-path* ".")
+(var *environment-filenames* nil)
 
 (defbuiltin env-load (pathname &rest targets)
   (print-definition `(env-load ,pathname ,@targets))

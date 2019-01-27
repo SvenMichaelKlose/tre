@@ -1,5 +1,5 @@
-(defvar *profile*      (make-hash-table :test #'eq))
-(defvar *profile-lock* t)
+(var *profile*      (make-hash-table :test #'eq))
+(var *profile-lock* t)
 
 (fn add-profile (name nsec)
   (with-temporary *profile-lock* t

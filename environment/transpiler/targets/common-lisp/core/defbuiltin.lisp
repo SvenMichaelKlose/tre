@@ -4,7 +4,7 @@
   (print-definition `(defbuiltin ,name ,args))
   (push name *cl-builtins*)
   `(progn
-     (defun ,name ,args ,@body)
+     (fn ,name ,args ,@body)
      (cl:setf (cl:gethash ',name *builtin-atoms*) #',name)))
 
 (defbuiltin builtin? (x)

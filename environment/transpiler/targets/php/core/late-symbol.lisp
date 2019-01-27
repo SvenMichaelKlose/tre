@@ -1,10 +1,10 @@
-(defun make-symbol (x &optional (pkg nil))
+(fn make-symbol (x &optional (pkg nil))
   (symbol x pkg))
 
-(defun make-package (x)
+(fn make-package (x)
   (symbol x nil))
 
-(defun symbol-name (x)
+(fn symbol-name (x)
   (?
     (eq t x)  "T"
     x         (? (symbol? x)
@@ -13,23 +13,23 @@
                   (error "Symbol expected.")})
     "NIL"))
 
-(defun symbol-value (x)
+(fn symbol-value (x)
   (?
     (eq t x)  t
     (x.v)))
 
-(defun symbol-function (x)
+(fn symbol-function (x)
   (?
     (eq t x)  nil
     x         (x.f)))
 
-(defun symbol-package (x)
+(fn symbol-package (x)
   (?
     (not x)   nil
     (eq t x)  nil
     x.p))
 
-(defun symbol? (x)
+(fn symbol? (x)
   (| (not x)
      (eq t x)
      (is_a x "__symbol")))

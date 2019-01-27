@@ -1,1 +1,1 @@
-(defvar *newline* (string (code-char 10)))
+(var *newline* (string (code-char 10)))

@@ -1,5 +1,5 @@
-(defvar *keyword-package* (find-package "KEYWORD"))
-(defvar *package* nil)
+(var *keyword-package* (find-package "KEYWORD"))
+(var *package* nil)
 
 (defbuiltin make-symbol (x &optional (package nil))
   (cl:intern x (?
@@ -33,5 +33,5 @@
 (defbuiltin find-symbol (x &optional (pkg *package*))
   (cl:find-symbol (symbol-name x) (find-package (symbol-name *package*))))
 
-(defun tre-symbol (x)
+(fn tre-symbol (x)
   (cl:intern (symbol-name x) "TRE"))

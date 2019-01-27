@@ -25,4 +25,4 @@
       :configurations          (+ (default-configurations)
                                   '((:exclude-core? . nil)))))
 
-(defvar *cl-transpiler* (make-cl-transpiler))
+(var *cl-transpiler* (make-cl-transpiler))

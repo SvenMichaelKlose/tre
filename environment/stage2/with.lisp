@@ -1,4 +1,4 @@
-(defun copy-while (pred x)
+(fn copy-while (pred x)
   (& x
      (funcall pred x.)
      (. x. (copy-while pred .x))))
@@ -7,7 +7,7 @@
   ((copy-while #'number? '(1 2 3 a)))
   '(1 2 3))
 
-(defun separate (pred x)
+(fn separate (pred x)
   (values (copy-while pred x)
 		  (remove-if pred x)))
 

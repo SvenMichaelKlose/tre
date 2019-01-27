@@ -1,4 +1,4 @@
-(defvar *compiled-function-names* (make-hash-table :test #'eq))
+(var *compiled-function-names* (make-hash-table :test #'eq))
 
 (fn real-function-name (x)
   (href *compiled-function-names* x))

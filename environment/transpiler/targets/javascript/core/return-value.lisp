@@ -1,3 +1,3 @@
-(defvar ~%ret nil) ; The global variable for return values of expressions.
-(defvar ~%tfun nil)
-(defvar ~%cargs nil)
+(var ~%ret nil) ; Keeps return values of expressions.
+(var ~%tfun nil)
+(var ~%cargs nil)

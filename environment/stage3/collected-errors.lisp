@@ -1,4 +1,4 @@
-(defvar *collected-errors* nil)
+(var *collected-errors* nil)
 
 (fn collect-error (format-string &rest args)
   (push (apply #'format nil format-string args) *collected-errors*))

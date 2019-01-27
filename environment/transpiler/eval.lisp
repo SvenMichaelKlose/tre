@@ -1,4 +1,4 @@
-(defvar *eval-transpiler* nil)
+(var *eval-transpiler* nil)
 
 (fn make-eval-transpiler ()
   (cache (alet (copy-transpiler *bc-transpiler*)
@@ -9,9 +9,9 @@
          *eval-transpiler*))
 
 (defmacro with-mute-environment (&body x)
-  `(with-temporaries (*print-definitions?*         nil
-                      *print-notes?*               nil
-                      *print-status?*              nil)
+  `(with-temporaries (*print-definitions?*  nil
+                      *print-notes?*        nil
+                      *print-status?*       nil)
      ,@x))
 
 (fn late-eval (x)

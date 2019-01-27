@@ -1,3 +1,3 @@
-(defun quit ()
+(fn quit ()
   (%= nil (exit))
   nil)

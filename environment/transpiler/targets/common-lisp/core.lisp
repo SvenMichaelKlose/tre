@@ -1,4 +1,4 @@
-(defvar *cl-builtins* nil)
+(var *cl-builtins* nil)
 
 (fn cl-load-base (dir-path &rest files)
   (apply #'+ (@ [alet (+ dir-path _)
@@ -8,9 +8,9 @@
   			      (fetch-file !)]
 		        files)))
 
-(defvar *cl-core-path* "environment/transpiler/targets/common-lisp/core/")
+(var *cl-core-path* "environment/transpiler/targets/common-lisp/core/")
 
-(defvar *cl-core*
+(var *cl-core*
 	,(cl-load-base *cl-core-path*
                    "global-variables.lisp"
                    "defbuiltin.lisp"

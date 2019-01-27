@@ -1,7 +1,7 @@
-(defun has-target? (name)
-  (member name *targets*))
-
 (env-load "transpiler/targets/shared/main.lisp")
+
+(fn has-target? (name)
+  (member name *targets*))
 
 (? (has-target? :cl)
    (env-load "transpiler/targets/common-lisp/main.lisp"))

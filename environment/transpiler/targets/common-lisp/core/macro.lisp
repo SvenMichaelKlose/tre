@@ -1,4 +1,4 @@
-(defun env-macros ()
+(fn env-macros ()
   (symbol-value (tre-symbol '*macros*)))
 
 (defbuiltin macro? (x)
@@ -15,7 +15,7 @@
        (& (cons? !)
           (assoc x. ! :test #'eq)))))
 
-(defvar *macroexpand* nil)
+(var *macroexpand* nil)
 
 (defbuiltin macroexpand-1 (x)
   (!? (symbol-value (tre-symbol '*macroexpand*))

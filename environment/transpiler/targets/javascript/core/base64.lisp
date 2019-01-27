@@ -1,2 +1,2 @@
-(defun base64-encode (x) (btoa x))
-(defun base64-decode (x) (atob x))
+(fn base64-encode (x) (btoa x))
+(fn base64-decode (x) (atob x))

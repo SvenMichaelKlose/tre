@@ -1,4 +1,4 @@
-(defvar *tag-counter* 1)
+(var *tag-counter* 1)
 
 (fn make-compiler-tag ()
   (++! *tag-counter*))

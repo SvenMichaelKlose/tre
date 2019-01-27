@@ -1,16 +1,16 @@
-(defvar *characters* (make-array))
+(var *characters* (make-array))
 
-(defun character? (x)
+(fn character? (x)
   (is_a x "__character"))
 
-(defun code-char (x)
+(fn code-char (x)
   (declare type number x)
   (new __character x))
 
-(defun char-code (x)
+(fn char-code (x)
   (declare type character x)
   x.v)
 
-(defun char-string (x)
+(fn char-string (x)
   (declare type character x)
   (chr x.v))

@@ -1,1 +1,1 @@
-(defvar *terpri* (string (code-char 10)))
+(var *terpri* (string (code-char 10)))

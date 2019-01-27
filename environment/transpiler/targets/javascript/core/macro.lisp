@@ -1,5 +1,5 @@
-(defvar *macros* nil)
-(defvar *standard-macro-expander* nil)
+(var *macros* nil)
+(var *standard-macro-expander* nil)
 
 ,(? *have-compiler?*
     '(defmacro %defmacro (name argdef &body body)
@@ -16,6 +16,6 @@
     '(defmacro %defmacro (name argdef &body body)))
 
 ,(? *have-compiler?*
-    '(defun macro? (name)
+    '(fn macro? (name)
 	   (expander-has-macro? *standard-macro-expander* name))
-    '(defun macro? (x)))
+    '(fn macro? (x)))

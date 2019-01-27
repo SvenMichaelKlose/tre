@@ -1,4 +1,4 @@
-(defvar *default-stream-tabsize* 8)
+(var *default-stream-tabsize* 8)
 
 (defstruct stream-location
   (track?   t)

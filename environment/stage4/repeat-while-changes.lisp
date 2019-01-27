@@ -1,4 +1,4 @@
-(defun repeat-while-changes (fun x)
+(fn repeat-while-changes (fun x)
   (awhile (funcall fun x)
           x
     (!? (equal x !)

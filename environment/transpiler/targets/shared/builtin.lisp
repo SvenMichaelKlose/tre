@@ -1,4 +1,4 @@
-(defvar *builtins*
+(var *builtins*
 	'(APPLY EVAL
       QUIT LOAD %MACROCALL PRINT GC DEBUG
 	  %MALLOC %MALLOC-EXEC %FREE %FREE-EXEC
@@ -26,5 +26,4 @@
       SYS-IMAGE-CREATE SYS-IMAGE-LOAD
       OPEN-SOCKET ACCEPT RECV SEND CLOSE-CONNECTION CLOSE-SOCKET))
 
-(defvar *specials*
-    '(%SET-LOCAL-FUN))
+(var *specials* '(%SET-LOCAL-FUN))

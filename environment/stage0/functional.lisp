@@ -1,4 +1,4 @@
-(defvar *functionals* nil)
+(var *functionals* nil)
 
 (%defmacro functional (&rest names)
   (print-definition `(functional ,@names))

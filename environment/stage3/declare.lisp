@@ -1,4 +1,4 @@
-(defvar *type-predicates*
+(var *type-predicates*
   '((nil        . not)
     (cons       . cons?)
 	(list       . list?)
@@ -33,7 +33,7 @@
 	 (error "Expected type and one or more variables, but got only ~A." x))
   `{,@(@ [%declare-statement-type-1 x. _] .x)})
 
-(defvar *declare-statement-classes*
+(var *declare-statement-classes*
   '((type .	%declare-statement-type)))
 
 (fn %declare-statement (x)

@@ -1,6 +1,6 @@
 ;;;; CODE GENERATION HELPERS
 
-(defvar *php-by-reference?* nil)
+(var *php-by-reference?* nil)
 
 (fn php-line (&rest x)
   `(,*php-indent* ,@x ,*php-separator*))

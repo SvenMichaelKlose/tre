@@ -1,6 +1,6 @@
-(defvar *native-eval-return-value* nil)
+(var *native-eval-return-value* nil)
 
-(defun native-eval (str)
+(fn native-eval (str)
   (unless (string? str)
     (late-print 'not-a-string)
     (late-print str))

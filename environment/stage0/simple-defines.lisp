@@ -1,5 +1,5 @@
 (%defmacro defvar (name &optional (init '%%%no-init))
-  (print-definition `(defvar ,name))
+  (print-definition `(var ,name))
   (? (not (symbol? name))
      (%error "Symbol expected as variable name."))
   `(%defvar ,name ,(? (eq '%%%no-init init)
@@ -14,7 +14,7 @@
 (%defmacro defconstant (name &optional (init nil))
   (print-definition `(defconstant ,name))
   `(progn
-     (defvar ,name ,init)
+     (var ,name ,init)
      (setq *constants* (. (. ',name ',init) *constants*))))
 
 (%defmacro const (name &optional (init nil))

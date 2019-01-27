@@ -1,3 +1,5 @@
+; TODO: Move to math/?
+
 (fn close-enough? (x y precision)
   (> precision (abs (- x y))))
 
@@ -19,7 +21,7 @@
         (f _))
      precision])
 
-(defvar *newton-precision* 0.00001)
+(var *newton-precision* 0.00001)
 
 (fn newton (f &optional (guess 1) (precision *newton-precision*))
   (with (df (derivative f precision))

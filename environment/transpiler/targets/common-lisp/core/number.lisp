@@ -3,17 +3,17 @@
      x
      (cl:code-char x)))
 
-(defun bits-integer (bits)
+(fn bits-integer (bits)
   (cl:reduce #'((a b)
                  (+ (* a 2) b))
              bits))
 
-(defun number (x)
+(fn number (x)
   (? (character? x)
      (char-code x)
      x))
 
-(defun integer-bits (x)
+(fn integer-bits (x)
   (alet (number x)
     (let l nil
       (dotimes (i 32)

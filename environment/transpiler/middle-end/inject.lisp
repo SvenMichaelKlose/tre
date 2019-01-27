@@ -1,4 +1,4 @@
-(defvar *previous-position* nil)
+(var *previous-position* nil)
 
 (def-head-predicate debugger-step)
 
