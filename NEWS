@@ -2,6 +2,7 @@ Changes of tre-0.12 relative to tre-0.11:
   * LML2XML: Don't generate string for attribute values of NIL.
   * PHP: OBJECT-PHPARRAY, PHPARRAY-OBJECT: New functions.
   * PHP: PROPERTY-NAMES now supports native objects.
+  * PHP: HASHKEYS fixed for native arrays.
 
 Changes of tre-0.11 relative to tre-0.10:
   * Moved platform-specific functions into separate repositories

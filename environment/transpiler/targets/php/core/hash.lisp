@@ -30,7 +30,7 @@
 (fn hashkeys (x)
   (? (hash-table? x)
      (@ #'%%unkey (x.keys))
-     (maparray #'identity (phphash-hashkeys x))))
+     (array-list (array_keys x))))
 
 (fn hash-merge (a b)    ; TODO: Use generic version.
   (| a (= a (make-hash-table)))
