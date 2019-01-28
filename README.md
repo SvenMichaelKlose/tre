@@ -5,6 +5,27 @@ Its for web developers who know a bit of Common Lisp or Arc
 already.
 
 
+# External resources
+
+## Applications
+
+* https://github.com/SvenMichaelKlose/phitamine-shop
+
+## Examples
+
+* https://github.com/SvenMichaelKlose/tre-example-js-canvas3d
+
+## Modules
+
+* https://github.com/SvenMichaelKlose/phitamine
+* https://github.com/SvenMichaelKlose/tre-js
+* https://github.com/SvenMichaelKlose/tre-php
+* https://github.com/SvenMichaelKlose/tre-php-db-mysql
+* https://github.com/SvenMichaelKlose/tre-shared
+* https://github.com/SvenMichaelKlose/tre-sql-clause
+* https://github.com/SvenMichaelKlose/tre-timetable
+
+
 # Building and installing
 
 Make sure you have sbcl (Steel Bank Common Lisp) installed.
