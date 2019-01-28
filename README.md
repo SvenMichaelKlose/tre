@@ -19,6 +19,7 @@ already.
 
 * https://github.com/SvenMichaelKlose/phitamine
 * https://github.com/SvenMichaelKlose/tre-js
+* https://github.com/SvenMichaelKlose/tre-l10n
 * https://github.com/SvenMichaelKlose/tre-php
 * https://github.com/SvenMichaelKlose/tre-php-db-mysql
 * https://github.com/SvenMichaelKlose/tre-shared
