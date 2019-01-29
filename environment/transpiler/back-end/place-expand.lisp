@@ -6,15 +6,15 @@
 
 (fn make-scope-place-1 (fi x)
   (? (funinfo-arg-or-var? (funinfo-parent fi) x)
-	 (make-scope-place-expr fi x)
-	 (make-scope-place-1 (funinfo-parent fi) x)))
+     (make-scope-place-expr fi x)
+     (make-scope-place-1 (funinfo-parent fi) x)))
 
 (fn make-scope-place (fi x)
   (? (funinfo-scope-arg? fi x)
-	 x
+     x
      {(funinfo-setup-scope fi x)
       (alet (make-scope-place-1 fi x)
-	    `(%vec ,(place-expand-atom fi (make-scope-place fi .!.))
+        `(%vec ,(place-expand-atom fi (make-scope-place fi .!.))
                ,..!.
                ,...!.))}))
 

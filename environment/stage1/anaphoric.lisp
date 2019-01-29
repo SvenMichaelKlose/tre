@@ -2,8 +2,8 @@
   (? alternatives
      `(let ! ,predicate
         (? !
-		   ,alternatives.
-		   ,@(? .alternatives
+           ,alternatives.
+           ,@(? .alternatives
                 `((%!? ,@.alternatives)))))
      predicate))
 
@@ -15,11 +15,11 @@
 (defmacro awhen (predicate &body body)
   `(let ! ,predicate
      (when !
-	   ,@body)))
+       ,@body)))
 
 (defmacro alet (obj &body body)
   `(let ! ,obj
-	 ,@body))
+     ,@body))
 
 (defmacro != (obj &body body)
   `(alet ,obj
@@ -27,8 +27,8 @@
 
 (defmacro aprog1 (obj &body body)
   `(let ! ,obj
-	 ,@body
-	 !))
+     ,@body
+     !))
 
 (defmacro adolist (params &body body)
   (warn "Macro ADOLIST is deprecated. Consider it gone soon.")

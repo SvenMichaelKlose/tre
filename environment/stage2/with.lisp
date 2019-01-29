@@ -9,7 +9,7 @@
 
 (fn separate (pred x)
   (values (copy-while pred x)
-		  (remove-if pred x)))
+          (remove-if pred x)))
 
 (defmacro with (lst &body body)
   (| lst  (error "Pair(s) of variable names and initializers expected."))
@@ -22,14 +22,14 @@
            (plc alst.)
            (val .alst.))
       (?
-	    (cons? plc) `(multiple-value-bind ,plc ,val
-		               ,@(sub ..alst))
+        (cons? plc) `(multiple-value-bind ,plc ,val
+                       ,@(sub ..alst))
 
-	    ; Accumulate this and all following functions into a LABEL,
+        ; Accumulate this and all following functions into a LABEL,
         ; so they can call each other.
-		(lambda? val) (multiple-value-bind (funs others) (separate [lambda? ._.] (group alst 2))
-		                `(labels ,(@ [`(,_. ,@(past-lambda ._.))] funs)
-			               ,@(sub (apply #'append others))))
+        (lambda? val) (multiple-value-bind (funs others) (separate [lambda? ._.] (group alst 2))
+                        `(labels ,(@ [`(,_. ,@(past-lambda ._.))] funs)
+                           ,@(sub (apply #'append others))))
 
         `(let ,plc ,val
-		   ,@(sub ..alst))))))
+           ,@(sub ..alst))))))

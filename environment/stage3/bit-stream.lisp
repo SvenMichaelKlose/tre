@@ -35,5 +35,5 @@
                        (write-byte (bit-stream-info-out-byte info) (bit-stream-info-out info))
                        (= (bit-stream-info-out-bit info) 128)
                        (= (bit-stream-info-out-byte info) 0))))
-	  :fun-eof #'((str)
+      :fun-eof #'((str)
                    (stream-fun-eof (bit-stream-info-in (stream-user-detail str))))))

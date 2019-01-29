@@ -1,5 +1,5 @@
 (fn documentation (sym)
   (!? (assoc-value sym *documentation*)
-	  (format t "Documentation for ~A:~%~A~%" sym !))
+      (format t "Documentation for ~A:~%~A~%" sym !))
   (!? (symbol-function sym)
-	  (format t "Arguments to ~A:~%~A~%" sym (function-arguments !))))
+      (format t "Arguments to ~A:~%~A~%" sym (function-arguments !))))

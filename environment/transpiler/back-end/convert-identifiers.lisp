@@ -12,7 +12,7 @@
 
 (fn convert-identifier-r (s)
   (with (camel-notation
-		   #'((x pos)
+           #'((x pos)
                (with (bump?
                        [& ._
                           (| (& (eql #\- _.)
@@ -25,7 +25,7 @@
                           (camel-notation ..x (++ pos)))
                        (. (char-downcase x.)
                           (camel-notation .x (++ pos)))))))
-		 corrected-chars
+         corrected-chars
            #'((x pos)
                (with (char-synonym  [? (& ._ (eql #\- _.))
                                        (list #\_)
@@ -38,14 +38,14 @@
                        (. x. (corrected-chars .x (++ pos)))))))
          capitals
            [remove #\- (string-list (upcase (subseq _ 1 (-- (length _))))) :test #'character==])
-	(? (| (string? s)
+    (? (| (string? s)
           (number? s)
           (character? s))
-	   (string s)
+       (string s)
        (list-string (alet (symbol-name s)
-	                  (corrected-chars (? (global-variable-notation? !)
+                      (corrected-chars (? (global-variable-notation? !)
                                           (capitals !)
-    	                                  (camel-notation (string-list !) 0))
+                                          (camel-notation (string-list !) 0))
                                        0))))))
 
 (fn convert-identifier (s)

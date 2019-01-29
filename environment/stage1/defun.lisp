@@ -2,7 +2,7 @@
 
 (%defun %defun-arg-keyword (args)
   (let a args.
-	(let d (& .args .args.)
+    (let d (& .args .args.)
       (? (%arg-keyword? a)
          (? d
             (? (%arg-keyword? d)
@@ -26,12 +26,12 @@
 (defmacro defun (name args &body body)
   (let name (%defun-name name)
     `(block nil
-	   (print-definition `(defun ,name ,args))
+       (print-definition `(defun ,name ,args))
        (%defun-quiet ,name ,(%defun-checked-args args)
          (block ,name
            (block nil
              ,@(%add-documentation name body))))
-	   (return-from nil ',name))))
+       (return-from nil ',name))))
 
 (defmacro fn (name args &body body)
   `(defun ,name ,args ,@body))

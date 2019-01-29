@@ -71,12 +71,12 @@
       :decl-gen                 #'js-var-decls
       :sections-before-import   #'js-sections-before-import
       :sections-after-import    #'js-sections-after-import
-	  :lambda-export?           nil
-	  :stack-locals?            nil
-	  :needs-var-declarations?  t
+      :lambda-export?           nil
+      :stack-locals?            nil
+      :needs-var-declarations?  t
       :enabled-passes           '(:count-tags)
-	  :identifier-char?         #'c-identifier-char?
-	  :literal-converter        #'expand-literal-characters
+      :identifier-char?         #'c-identifier-char?
+      :literal-converter        #'expand-literal-characters
       :expex-initializer        #'js-expex-initializer
       :ending-sections          #'js-ending-sections
       :configurations           '((:platform                 . :browser)

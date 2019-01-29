@@ -1,11 +1,11 @@
 (mapcar-macro x
-	'(quote %new
-	  %%block %%go %%go-nil %%go-not-nil %%call-nil %%call-not-nil
-	  %stack %stackarg %vec %set-vec %= %tag %%tag
-	  %%native %%string
-	  %closure %%closure
-	  %set-local-fun
-	  %function-prologue %function-return %function-epilogue
+    '(quote %new
+      %%block %%go %%go-nil %%go-not-nil %%call-nil %%call-not-nil
+      %stack %stackarg %vec %set-vec %= %tag %%tag
+      %%native %%string
+      %closure %%closure
+      %set-local-fun
+      %function-prologue %function-return %function-epilogue
       %var %global
       %%comment)
   `(def-head-predicate ,x))

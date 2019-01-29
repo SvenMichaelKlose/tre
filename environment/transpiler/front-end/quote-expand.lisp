@@ -29,7 +29,7 @@
                   backquote? (backq ._.)
                   _]
          walk   [? (atom _)
-	               (disp _)
+                   (disp _)
                    (. (walk (disp _.))
                       (walk ._))])
     (car (walk (list x)))))

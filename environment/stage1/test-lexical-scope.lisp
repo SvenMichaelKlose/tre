@@ -8,7 +8,7 @@
 (fn lexical-test ()
   (labels ((x (cnt)
                 cnt
-	            (unless (== 2 (lexical2))
+                (unless (== 2 (lexical2))
                   (print (lexical2))
                   (%error "LEXICAL-TEST: Parent (X) called."))
                 1))

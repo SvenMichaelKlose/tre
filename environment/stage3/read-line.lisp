@@ -22,4 +22,4 @@
     (with-queue q
       (awhile (read-line nstr)
               (queue-list q)
-	    (enqueue q !)))))
+        (enqueue q !)))))

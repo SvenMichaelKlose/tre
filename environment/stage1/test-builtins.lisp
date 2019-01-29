@@ -160,7 +160,7 @@
 
 (define-test "SETQ returns the last value set"
   ((#'((a b c)
-	 (setq a 23 b 5 c 42)) nil nil nil))
+     (setq a 23 b 5 c 42)) nil nil nil))
   42)
 
 (define-test "IDENTITY"

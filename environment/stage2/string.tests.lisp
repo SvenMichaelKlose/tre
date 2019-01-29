@@ -15,7 +15,7 @@
 
 (define-test "LIST-STRING works"
   ((string== (list-string '(#\L #\I #\S #\P))
-	        "LISP"))
+            "LISP"))
   t)
 
 (define-test "STRING-LIST works"

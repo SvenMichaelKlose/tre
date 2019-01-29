@@ -11,11 +11,11 @@
   (?
     (string? seq) (%elt-string seq idx)
     (cons? seq)   (nth idx seq)
-  	(aref seq idx)))
+    (aref seq idx)))
 
 (fn (= elt) (val seq idx)
   (?
-	,@(& (assert?)
+    ,@(& (assert?)
          '((string? seq) (error "Strings cannot be modified.")))
-	(array? seq) (= (aref seq idx) val)
-	(cons? seq)  (rplaca (nthcdr idx seq) val)))
+    (array? seq) (= (aref seq idx) val)
+    (cons? seq)  (rplaca (nthcdr idx seq) val)))

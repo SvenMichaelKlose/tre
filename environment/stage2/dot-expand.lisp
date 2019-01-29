@@ -1,24 +1,24 @@
 (fn dot-expand-make-expr (which num x)
   (? (< 0 num)
-	 `(,which ,(dot-expand-make-expr which (-- num) x))
-	 x))
+     `(,which ,(dot-expand-make-expr which (-- num) x))
+     x))
 
 (fn dot-expand-head-length (x &optional (num 0))
   (? (eql #\. x.)
-	 (dot-expand-head-length .x (++ num))
-	 (values num x)))
+     (dot-expand-head-length .x (++ num))
+     (values num x)))
 
 (fn dot-expand-tail-length (x &optional (num 0))
   (? (eql #\. (car (last x)))
-	 (dot-expand-tail-length (butlast x) (++ num))
-	 (values num x)))
+     (dot-expand-tail-length (butlast x) (++ num))
+     (values num x)))
 
 (fn dot-expand-list (x)
   (with ((num-cdrs without-start) (dot-expand-head-length x)
-		 (num-cars without-end)   (dot-expand-tail-length without-start))
-	(dot-expand-make-expr 'car num-cars
-		                  (dot-expand-make-expr 'cdr num-cdrs
-		  	                                    (dot-expand (list-symbol without-end))))))
+         (num-cars without-end)   (dot-expand-tail-length without-start))
+    (dot-expand-make-expr 'car num-cars
+                          (dot-expand-make-expr 'cdr num-cdrs
+                                                (dot-expand (list-symbol without-end))))))
 
 (fn dot-position (x)
   (position #\. x :test #'character==))

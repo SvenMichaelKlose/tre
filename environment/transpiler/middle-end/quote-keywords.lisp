@@ -2,6 +2,6 @@
   (| (quote? x)
      (& (cons? x)
         (in? x. 'make-hash-table '%%%make-object)))
-	x
+    x
   (keyword? x) 
     `(quote ,x))

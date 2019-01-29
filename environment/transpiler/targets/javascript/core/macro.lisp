@@ -17,5 +17,5 @@
 
 ,(? *have-compiler?*
     '(fn macro? (name)
-	   (expander-has-macro? *standard-macro-expander* name))
+       (expander-has-macro? *standard-macro-expander* name))
     '(fn macro? (x)))

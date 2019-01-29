@@ -25,18 +25,18 @@
                   files))))
 
 (var *php-core0*
-	,(php-load-core ""
+    ,(php-load-core ""
                     "assert.lisp"
                     "return-value.lisp"
                     "superglobals.lisp"))
 
 (var *php-core*
-	,(php-load-core ""
+    ,(php-load-core ""
                     "cons.lisp"
                     "symbol.lisp"))
 
 (var *php-core2*
-	,(+ (php-load-core ""
+    ,(+ (php-load-core ""
                        "../../../environment/number-typing.lisp"
                        "print-object.lisp"
                        "%princ.lisp"

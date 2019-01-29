@@ -1,6 +1,6 @@
 (defmacro when (predicate &body body)
   `(& ,predicate
-	  {,@body}))
+      {,@body}))
 
 (defmacro unless (predicate &body body)
   `(when (not ,predicate)
@@ -9,8 +9,8 @@
 (fn group2 (x)
   (? x
      (. (? .x
-  		   (list x. .x.)
-  		   (list x.))
+           (list x. .x.)
+           (list x.))
         (group2 ..x))))
 
 (fn %case-test (cases)

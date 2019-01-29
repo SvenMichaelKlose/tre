@@ -4,8 +4,8 @@
   (apply #'+ (@ [alet (+ *js-core-path* dir-path _)
                   (print-definition `(js-load-core ,!))
                   (load-file !)
-  			      (fetch-file !)]
-		        files)))
+                  (fetch-file !)]
+                files)))
 
 (var *js-core0* ,(js-load-core "" "return-value.lisp"))
 (var *js-core*
@@ -20,38 +20,38 @@
 (var *js-core-debug-print* ,(js-load-core "" "debug-print.lisp"))
 
 (var *js-core1*
-	,(+ (js-load-core "../../../environment/"
-	                  "not.lisp")
-		(js-load-core ""
-			          "macro.lisp"
+    ,(+ (js-load-core "../../../environment/"
+                      "not.lisp")
+        (js-load-core ""
+                      "macro.lisp"
                       "eq.lisp"
-			          "array.lisp"
-			          "character.lisp"
-			          "number.lisp"
-			          "../../../environment/number.lisp"
-			          "../../../environment/number-typing.lisp"
-			          "apply.lisp"
-			          "atom.lisp")
-	 	(js-load-core "../../../environment/"
-			          "atom.lisp"
+                      "array.lisp"
+                      "character.lisp"
+                      "number.lisp"
+                      "../../../environment/number.lisp"
+                      "../../../environment/number-typing.lisp"
+                      "apply.lisp"
+                      "atom.lisp")
+        (js-load-core "../../../environment/"
+                      "atom.lisp"
                       "string.lisp")
-		(js-load-core ""
+        (js-load-core ""
                       "predefined-symbols.lisp")))
 
 (= *js-core1* (+ *js-core1*
-	             ,(js-load-core ""
-		                        "bind.lisp"
-		                        "../../../environment/eq.lisp"
-		                        "../../../environment/equality.lisp"
-		                        "late-cons.lisp"
-		                        "late-symbol.lisp"
-		                        "../../../environment/list.lisp"
-		                        "../../../environment/append.lisp"
-		                        "../../../environment/sequence.lisp"
-		                        "sequence.lisp"
-		                        "../../../environment/list-string.lisp"
-		                        "string.lisp"
-		                        "hash.lisp"
+                 ,(js-load-core ""
+                                "bind.lisp"
+                                "../../../environment/eq.lisp"
+                                "../../../environment/equality.lisp"
+                                "late-cons.lisp"
+                                "late-symbol.lisp"
+                                "../../../environment/list.lisp"
+                                "../../../environment/append.lisp"
+                                "../../../environment/sequence.lisp"
+                                "sequence.lisp"
+                                "../../../environment/list-string.lisp"
+                                "string.lisp"
+                                "hash.lisp"
                                 "base64.lisp"
                                 "function-source.lisp"
                                 "dot-expand.lisp"

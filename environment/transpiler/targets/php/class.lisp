@@ -33,11 +33,11 @@
   `(function ,(php-method-name class-name x.)
              (,(. 'this .x.)
               (let ~%this this
-	            (%thisify ,class-name ,@(| ..x. (list nil)))))))
+                (%thisify ,class-name ,@(| ..x. (list nil)))))))
 
 (fn php-method-functions (class-name cls)
   (awhen (class-methods cls)
-	(@ [php-method-function class-name _]
+    (@ [php-method-function class-name _]
        (reverse !))))
 
 (fn php-method (class-name x)
@@ -48,22 +48,22 @@
 
 (fn php-members (class-name cls)
   (awhen (class-members cls)
-	(@ [`(%%native "var $" ,_. ,*php-separator*)]
+    (@ [`(%%native "var $" ,_. ,*php-separator*)]
        (reverse !))))
 
 (fn php-methods (class-name cls)
   (awhen (class-methods cls)
-	(mapcan [php-method class-name _]
+    (mapcan [php-method class-name _]
             (reverse !))))
 
 (define-php-std-macro finalize-class (class-name)
   (let classes (thisify-classes)
     (!? (href classes class-name)
-	    `{(fn ,($ class-name '?) (x)
-	        (& (object? x)
-	           (is_a x ,(obfuscated-identifier class-name))
+        `{(fn ,($ class-name '?) (x)
+            (& (object? x)
+               (is_a x ,(obfuscated-identifier class-name))
                x))
-	      ,(assoc-value class-name *delayed-constructors*)
+          ,(assoc-value class-name *delayed-constructors*)
           ,@(php-method-functions class-name !)
           (%= nil (%%native
                     (%php-class-head ,class-name)
@@ -73,6 +73,6 @@
                              ,*php-indent* "return " ,(php-compiled-constructor-name class-name) ,(php-argument-list (. 'this !)) ,*php-separator*
                          "}")) ,*php-newline*
                     ,@(php-members class-name !)
-	                ,@(php-methods class-name !)
+                    ,@(php-methods class-name !)
                     (%php-class-tail)))}
-	    (error "Cannot finalize undefined class ~A." class-name))))
+        (error "Cannot finalize undefined class ~A." class-name))))

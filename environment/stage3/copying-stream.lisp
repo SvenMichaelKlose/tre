@@ -15,7 +15,7 @@
                    (let info (stream-user-detail str)
                      (enqueue (copying-stream-info-recorded-out info) x)
                      (princ x (copying-stream-info-out info))))
-	  :fun-eof #'((str)
+      :fun-eof #'((str)
                    (stream-fun-eof (copying-stream-info-in (stream-user-detail str))))))
 
 (fn copying-stream-recorded-in (str)

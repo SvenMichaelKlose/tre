@@ -19,19 +19,19 @@
   (unless (== start end)
     (alet (length seq)
       (when (< start !)
-	    (& (>= end !)
-	       (= end !))
-  	    (with (l  (- end start)
-	           s  (funcall maker l))
+        (& (>= end !)
+           (= end !))
+        (with (l  (- end start)
+               s  (funcall maker l))
           (dotimes (x l s)
-	        (= (elt s x) (elt seq (+ start x)))))))))
+            (= (elt s x) (elt seq (+ start x)))))))))
 
 (fn subseq (seq start &optional (end 99999))
   (when seq
     (& (> start end)
        (xchg start end))
-	(pcase seq
-	  cons?    (list-subseq seq start end)
-	  string?  (string-subseq seq start end)
-	  array?   (%subseq-sequence #'make-array seq start end)
+    (pcase seq
+      cons?    (list-subseq seq start end)
+      string?  (string-subseq seq start end)
+      array?   (%subseq-sequence #'make-array seq start end)
       (error "Type of ~A not supported." seq))))

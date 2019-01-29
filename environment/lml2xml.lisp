@@ -2,8 +2,8 @@
 
 (fn lml-body (x)
   (& x (? (lml-attr? x)
-	      (lml-body ..x)
-	      x)))
+          (lml-body ..x)
+          x)))
 
 (fn lml2xml-end (s)
   (princ ">" s))
@@ -61,9 +61,9 @@
 (fn lml2xml-0 (s x)
   (& x
      (? (cons? x)
-	    (lml2xml-expr s x)
-	    (lml2xml-atom s x))))
+        (lml2xml-expr s x)
+        (lml2xml-atom s x))))
 
 (fn lml2xml (x &optional (str nil))
   (with-default-stream s str
-	(lml2xml-0 s x)))
+    (lml2xml-0 s x)))

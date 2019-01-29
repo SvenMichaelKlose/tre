@@ -260,7 +260,7 @@
        (%late-print x s print-info))
     (& *print-automatic-newline?*
        (not (fresh-line? s))
-	   (terpri s)))
+       (terpri s)))
   x)
 
 (= *definition-printer* #'late-print)

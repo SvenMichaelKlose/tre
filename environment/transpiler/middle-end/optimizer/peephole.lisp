@@ -5,10 +5,10 @@
 (fn reversed-assignments? (a d)
   (let n d.
     (& (%=? a)
-	   (%=? n)
+       (%=? n)
        .a. (atom .a.)
-	   (eq .a. ..n.)
-	   (eq .n. ..a.))))
+       (eq .a. ..n.)
+       (eq .n. ..a.))))
 
 (fn jump-to-following-tag? (a d)
   (& d

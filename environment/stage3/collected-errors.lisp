@@ -5,6 +5,6 @@
 
 (fn issue-collected-errors ()
   (when *collected-errors*
-	(alet (apply #'+ (@ [+ _ "~%"] *collected-errors*))
-	  (= *collected-errors* nil)
-	  (error (format nil !)))))
+    (alet (apply #'+ (@ [+ _ "~%"] *collected-errors*))
+      (= *collected-errors* nil)
+      (error (format nil !)))))

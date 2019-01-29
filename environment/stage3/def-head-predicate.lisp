@@ -1,5 +1,5 @@
 (defmacro def-head-predicate (sym)
   `(fn ,($ sym '?) (x)
      (& (cons? x)
-	    (eq ',sym x.)
+        (eq ',sym x.)
         x)))

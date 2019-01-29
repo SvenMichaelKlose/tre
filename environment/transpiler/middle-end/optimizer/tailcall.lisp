@@ -1,12 +1,12 @@
 (fn function-exits? (x)
   (alet x.
     (?
-	  (not x)          t
-	  (%%go? !)        (!? (member .!. .x)
-		                   (function-exits? .!))
-	  (| (vm-jump? !)
-	     (%=? !))      nil
-	  (function-exits? .x))))
+      (not x)          t
+      (%%go? !)        (!? (member .!. .x)
+                           (function-exits? .!))
+      (| (vm-jump? !)
+         (%=? !))      nil
+      (function-exits? .x))))
 
 (fn opt-tailcall-make-restart (l body front-tag)
   (developer-note "Removed tail call in ~A.~%"

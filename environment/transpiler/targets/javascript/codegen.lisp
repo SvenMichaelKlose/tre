@@ -50,19 +50,19 @@
          `(,*newline*
            ,(funinfo-comment (= *funinfo* (get-funinfo name)))
            ,translated-name " = function " ,@(js-argument-list 'codegen-function-macro (lambda-args !)) ,*newline*
-	       "{" ,*newline*
-		       ,@(lambda-body !)
-	       "}" ,*newline*))
+           "{" ,*newline*
+               ,@(lambda-body !)
+           "}" ,*newline*))
        (? (symbol? x.)
           x.
           !))))
 
 (define-js-macro %function-prologue (name)
   `(%%native ""
-	   ,@(& (< 0 (funinfo-num-tags (get-funinfo name)))
-	        `(,*js-indent* "var _I_ = 0" ,*js-separator*
-		      ,*js-indent* "while (1) {" ,*js-separator*
-		      ,*js-indent* "switch (_I_) { case 0:" ,*js-separator*))))
+       ,@(& (< 0 (funinfo-num-tags (get-funinfo name)))
+            `(,*js-indent* "var _I_ = 0" ,*js-separator*
+              ,*js-indent* "while (1) {" ,*js-separator*
+              ,*js-indent* "switch (_I_) { case 0:" ,*js-separator*))))
 
 (define-js-macro %function-return (name)
   (alet (get-funinfo name)
@@ -117,26 +117,26 @@
   `(define-transpiler-binary *js-transpiler* ,op ,repl-op))
 
 (mapcar-macro x
-	'((%%%+       "+")
-	  (%%%string+ "+")
-	  (%%%-       "-")
-	  (%%%/       "/")
-	  (%%%*       "*")
-	  (%%%mod     "%")
+    '((%%%+       "+")
+      (%%%string+ "+")
+      (%%%-       "-")
+      (%%%/       "/")
+      (%%%*       "*")
+      (%%%mod     "%")
 
-	  (%%%==      "==")
-	  (%%%!=      "!=")
-	  (%%%<       "<")
-	  (%%%>       ">")
-	  (%%%<=      "<=")
-	  (%%%>=      ">=")
-	  (%%%eq      "===")
-	  (%%%neq     "!==")
+      (%%%==      "==")
+      (%%%!=      "!=")
+      (%%%<       "<")
+      (%%%>       ">")
+      (%%%<=      "<=")
+      (%%%>=      ">=")
+      (%%%eq      "===")
+      (%%%neq     "!==")
 
-	  (%%%<<      "<<")
-	  (%%%>>      ">>")
-	  (%%%bit-or  "|")
-	  (%%%bit-and "&"))
+      (%%%<<      "<<")
+      (%%%>>      ">>")
+      (%%%bit-or  "|")
+      (%%%bit-and "&"))
   `(define-js-binary ,@x))
 
 

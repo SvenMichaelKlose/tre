@@ -17,8 +17,8 @@
 (fn gen-obfuscated-symbol ()
   (++! *obfuscation-counter*)
   (with (to-alpha  [unless (zero? _)
-	                (alet (mod _ 24)
-	                  (. (+ #\a !)
+                    (alet (mod _ 24)
+                      (. (+ #\a !)
                          (to-alpha (/ (- _ !) 24))))])
     (make-symbol (list-string (firefox-symbol-table-bug-workaround (to-alpha *obfuscation-counter*))))))
 

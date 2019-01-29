@@ -3,20 +3,20 @@
 
 (fn past-lambda-1 (x)
   (? (eq x. 'lambda)
-	 .x
-	 x))
+     .x
+     x))
 
 (fn lambda-name (x)
   (? (eq x. 'function)
      (? ..x
-	    .x.)))
+        .x.)))
 
 (fn past-function (x)
   (? (eq x. 'function)
-	 (? ..x
-	    ..x.   ; (FUNCTION name lambda-expression)
+     (? ..x
+        ..x.   ; (FUNCTION name lambda-expression)
         .x.)   ; (FUNCTION lambda-expression)
-	 x))
+     x))
 
 (fn past-lambda (x)
   (past-lambda-1 (past-function x)))

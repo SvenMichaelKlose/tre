@@ -1,21 +1,21 @@
 (fn hcache-remove (plc &rest vals)
   (& plc vals
-  	 (| (not .vals)
-	 	(apply #'hcache-remove plc .vals))
-	 (| (hremove plc vals.)
-		t)))
+     (| (not .vals)
+        (apply #'hcache-remove plc .vals))
+     (| (hremove plc vals.)
+        t)))
 
 (fn hcache (plc &rest vals)
   (& plc vals
      (| (& (not .vals)
-		   (href plc vals.))
-	  	(apply #'hcache (href plc vals.) .vals))))
+           (href plc vals.))
+        (apply #'hcache (href plc vals.) .vals))))
 
 (fn %=-hcache (x plc vals)
   (? .vals
      (%=-hcache x (| (href plc vals.)
-	                 (= (href plc vals.) (make-hash-table)))
-			    .vals)
+                     (= (href plc vals.) (make-hash-table)))
+                .vals)
      (= (href plc vals.) x)))
 
 (fn (= hcache) (x plc &rest vals)

@@ -15,15 +15,15 @@
 
 (fn thisify-list-0 (classdef x exclusions)
   (?
-	(symbol? x)       (thisify-symbol classdef x exclusions)
-	(| (atom x)
-	   (quote? x))    x
+    (symbol? x)       (thisify-symbol classdef x exclusions)
+    (| (atom x)
+       (quote? x))    x
     (%slot-value? x)  `(%slot-value ,(thisify-symbol classdef .x. exclusions) ,..x.)
-	(lambda? x)       (copy-lambda x :body (thisify-list-0 classdef
+    (lambda? x)       (copy-lambda x :body (thisify-list-0 classdef
                                                            (lambda-body x)
                                                            (+ exclusions (lambda-args x))))
     (. (? (%slot-value? x.)
-	      `(%slot-value ,(thisify-list-0 classdef (cadr x.) exclusions)
+          `(%slot-value ,(thisify-list-0 classdef (cadr x.) exclusions)
                         ,(caddr x.))
           (thisify-list-0 classdef x. exclusions))
        (thisify-list-0 classdef .x exclusions))))
@@ -35,13 +35,13 @@
 
 (fn thisify (x &optional (classes (thisify-classes)) (exclusions nil))
   (?
-	(atom x)        x
-	(%thisify? x.)  (frontend-macroexpansions
+    (atom x)        x
+    (%thisify? x.)  (frontend-macroexpansions
                         `((let ~%this this
                             ,@(| (+ (thisify-list classes (cddr x.) (cadr x.) exclusions)
-			                        (thisify .x classes exclusions))
+                                    (thisify .x classes exclusions))
                                  '(nil)))))
-	(lambda? x.)    (. (copy-lambda x. :body (thisify (lambda-body x.)
+    (lambda? x.)    (. (copy-lambda x. :body (thisify (lambda-body x.)
                                                       classes
                                                       (+ exclusions (lambda-args x.))))
                        (thisify .x classes exclusions))

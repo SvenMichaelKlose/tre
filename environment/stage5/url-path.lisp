@@ -4,7 +4,7 @@
 (fn url-without-filename (x)
   (? x
      (butlast-path-component x)
-	 ""))
+     ""))
 
 (fn url-schema (x)
   (car (path-pathlist x)))
@@ -12,7 +12,7 @@
 (fn url-has-schema? (x)
   (alet (path-pathlist x)
     (& (tail? !. ":")
-	   (empty-string? .!.))))
+       (empty-string? .!.))))
 
 (fn url-without-schema (x)
   (? (url-has-schema? x)

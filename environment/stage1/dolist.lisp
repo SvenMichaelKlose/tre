@@ -1,10 +1,10 @@
 (defmacro dolist ((iter lst &rest result) &body body)
   (let* ((starttag  (gensym))
          (endtag    (gensym))
-	     (tmplst    (gensym)))
+         (tmplst    (gensym)))
     `(block nil
        (let* ((,tmplst  ,lst)
-	          (,iter    nil))
+              (,iter    nil))
          (tagbody
            ,starttag
            (? (not ,tmplst)

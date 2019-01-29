@@ -2,16 +2,16 @@
 
 (fn metacode-statement? (x)
   (| (in? x. '%= '%set-vec '%var '%function-prologue '%function-epilogue '%function-return '%%tag)
-	 (vm-jump? x)
+     (vm-jump? x)
      (%%call-nil? x)))
 
 (defmacro metacode-walker (name args &key (if-atom nil)
-					  	    	          (if-cons nil)
-					  	    	          (if-setq nil)
-					  	    	          (if-go nil)
-					  	    	          (if-go-nil nil)
-					  	    	          (if-go-not-nil nil)
-									      (if-named-function nil))
+                                          (if-cons nil)
+                                          (if-setq nil)
+                                          (if-go nil)
+                                          (if-go-nil nil)
+                                          (if-go-not-nil nil)
+                                          (if-named-function nil))
   (with-cons x r args
     (with-gensym v
       `(fn ,name ,args

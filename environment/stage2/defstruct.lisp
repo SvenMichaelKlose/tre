@@ -35,16 +35,16 @@
 
 (fn %struct-constructor (name fields options)
   (with (fname      (%struct-constructor-name name options)
-		 g          (gensym)
+         g          (gensym)
          user-init  (%struct-init fields g)
-	     type-init  `((= (aref ,g 0) 'struct
+         type-init  `((= (aref ,g 0) 'struct
                          (aref ,g 1) ',name)))
     `(fn ,fname ,(%struct-constructor-args fields)
        (let ,g (make-array ,(+ 2 (length fields)))
          ,@(? user-init
-	          (+ type-init user-init)
-	          type-init)
-	     ,g))))
+              (+ type-init user-init)
+              type-init)
+         ,g))))
 
 (fn %struct-accessor-name (name field-name)
   ($ name "-" field-name))
@@ -83,9 +83,9 @@
   (with-queue (fields options)
     (map [? (& (cons? _)
                (%struct-option-keyword? _.))
-	        (enqueue options _)
-	        (enqueue fields _)]
-	     fields-and-options)
+            (enqueue options _)
+            (enqueue fields _)]
+         fields-and-options)
     (values (queue-list fields)
             (queue-list options))))
 
@@ -107,10 +107,10 @@
       ,(%struct-predicate name)
       ,@(%struct-accessors name fields options)
       (defmacro ,($ "WITH-" name) (s &body body)
-	    `(with-struct ,name ,,s
+        `(with-struct ,name ,,s
            ,,@body))
       (defmacro ,($ "DEF-" name) (name args &body body)
-	    `(fn ,,name ,,args
+        `(fn ,,name ,,args
            (with-struct ,name ,name
              ,,@body)))}))
 

@@ -18,7 +18,7 @@
 (fn backend-prepare (x)
   (? (lambda-export?)
      (backend-make-places x)
-	 (make-framed-functions x)))
+     (make-framed-functions x)))
 
 (fn backend (x)
   (? (enabled-end? :backend)

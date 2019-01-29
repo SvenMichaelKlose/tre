@@ -9,11 +9,11 @@
 
 (fn string-list (x)
   (let* ((l (length x))
-		 (s))
+         (s))
     (do ((i (-- l) (-- i)))
-		((< i 0))
+        ((< i 0))
       (= s (push (elt x i) s)))
-	s))
+    s))
 
 (fn queue-string (x)
   (list-string (queue-list x)))

@@ -22,20 +22,20 @@
 
 (fn make-&key-alist (def)
   (with (keys                 nil
-		 make-&key-descr      [when _
-    			                (? (argument-keyword? _.)
-    				               (copy-def-until-&key _)
-    				               (alet _.
+         make-&key-descr      [when _
+                                (? (argument-keyword? _.)
+                                   (copy-def-until-&key _)
+                                   (alet _.
                                      (push (? (cons? !)
                                               (. !. .!.) ; with default value
                                               (. ! !))   ; with itself
                                            keys)
                                      (make-&key-descr ._)))]
-		 copy-def-until-&key  [when _
-		                        (? (eq '&key _.)
-				                   (make-&key-descr ._)
-				                   (. _. (copy-def-until-&key ._)))])
-	(values (copy-def-until-&key def)
+         copy-def-until-&key  [when _
+                                (? (eq '&key _.)
+                                   (make-&key-descr ._)
+                                   (. _. (copy-def-until-&key ._)))])
+    (values (copy-def-until-&key def)
             (reverse keys))))
 
 (fn argdef-get-name (x)
@@ -59,15 +59,15 @@
                        concatenate-sublists?
                        break-on-errors?)
   (with ((a k)      (make-&key-alist adef)
-	     argdefs    a
-	     key-args   k
-	     num        0
-	     no-static  nil
-	     rest-arg   nil
+         argdefs    a
+         key-args   k
+         num        0
+         no-static  nil
+         rest-arg   nil
          err
-		   #'((msg args)
+           #'((msg args)
                 (? break-on-errors?
-				   (return (error (+ "~L; In argument expansion for ~A: ~A~%"
+                   (return (error (+ "~L; In argument expansion for ~A: ~A~%"
                                      "; Argument definition: ~A~%"
                                      "; Given arguments: ~A~%")
                                   (symbol-name fun)
@@ -75,97 +75,97 @@
                                   adef
                                   alst))
                    'error))
-		 exp-static
-		   #'((def vals)
-			    (& no-static
-				   (return (err "Static argument definition after ~A."
+         exp-static
+           #'((def vals)
+                (& no-static
+                   (return (err "Static argument definition after ~A."
                                 (list no-static))))
-			    (& apply-values? (not vals)
-				   (return (err "Argument ~A missing." (list num))))
-				(. (. (argdef-get-name def.) vals.)
+                (& apply-values? (not vals)
+                   (return (err "Argument ~A missing." (list num))))
+                (. (. (argdef-get-name def.) vals.)
                    (exp-main .def .vals)))
 
-		 exp-optional
-		   #'((def vals)
-				(& (argument-keyword? def.)
-				   (return (err "Keyword ~A after &OPTIONAL." (list def.))))
-				(= no-static '&optional)
-				(. (. (argdef-get-name def.)
-				      (argdef-get-value def vals))
-				   (?
-					 (argument-keyword? .def.)  (exp-main .def .vals)
-					 .def                       (exp-optional .def .vals)
-					 (exp-main .def .vals))))
+         exp-optional
+           #'((def vals)
+                (& (argument-keyword? def.)
+                   (return (err "Keyword ~A after &OPTIONAL." (list def.))))
+                (= no-static '&optional)
+                (. (. (argdef-get-name def.)
+                      (argdef-get-value def vals))
+                   (?
+                     (argument-keyword? .def.)  (exp-main .def .vals)
+                     .def                       (exp-optional .def .vals)
+                     (exp-main .def .vals))))
 
-		 exp-key
-		   #'((def vals)
-			    (let k (assoc ($ vals.) key-args :test #'eq)
-				  (? k
-			         (alet vals
+         exp-key
+           #'((def vals)
+                (let k (assoc ($ vals.) key-args :test #'eq)
+                  (? k
+                     (alet vals
                        (| .! (return (err "Value of argument ~A missing." (list !.))))
-					   (rplacd k .!.)
-					   (exp-main def ..!))
-					 (exp-main-non-key def vals))))
+                       (rplacd k .!.)
+                       (exp-main def ..!))
+                     (exp-main-non-key def vals))))
 
-		 exp-rest
-		   #'((synonym def vals)
-				(= no-static '&rest)
-  			    (= rest-arg (list (. (argdef-get-name .def.)
+         exp-rest
+           #'((synonym def vals)
+                (= no-static '&rest)
+                (= rest-arg (list (. (argdef-get-name .def.)
                                      (. synonym vals))))
-			    nil)
+                nil)
 
          exp-optional-rest
-		   #'((def vals)
-		        (case def. :test #'eq
-				  '&rest     (exp-rest '%rest def vals)
-				  '&body     (exp-rest '%body def vals)
-				  '&optional (exp-optional .def vals)))
+           #'((def vals)
+                (case def. :test #'eq
+                  '&rest     (exp-rest '%rest def vals)
+                  '&body     (exp-rest '%body def vals)
+                  '&optional (exp-optional .def vals)))
 
-		 exp-sub
-		   #'((def vals)
-			    (& no-static
-				   (return (err "Static sublevel argument definition after ~A." (list no-static))))
-				(& apply-values? (atom vals.)
-				   (return (err "Sublist expected for argument ~A." (list num))))
+         exp-sub
+           #'((def vals)
+                (& no-static
+                   (return (err "Static sublevel argument definition after ~A." (list no-static))))
+                (& apply-values? (atom vals.)
+                   (return (err "Sublist expected for argument ~A." (list num))))
                 (? concatenate-sublists?
-				   (nconc (argument-expand-0 fun def. vals.
+                   (nconc (argument-expand-0 fun def. vals.
                                              apply-values?
                                              concatenate-sublists?
                                              break-on-errors?)
-					       (exp-main .def .vals))
-				   (. (. nil (argument-expand-0 fun def. vals.
+                           (exp-main .def .vals))
+                   (. (. nil (argument-expand-0 fun def. vals.
                                                 apply-values?
                                                 concatenate-sublists?
                                                 break-on-errors?))
-					  (exp-main .def .vals))))
+                      (exp-main .def .vals))))
 
-		 exp-check-too-many
+         exp-check-too-many
            #'((def vals)
-			    (& (not def) vals
-				   (return (err "Too many arguments. Maximum is ~A, but ~A more given."
+                (& (not def) vals
+                   (return (err "Too many arguments. Maximum is ~A, but ~A more given."
                                 (list (length argdefs) (length vals))))))
 
-		 exp-main-non-key
-		   #'((def vals)
-				(exp-check-too-many def vals)
-				(?
-				  (argument-keyword? def.)     (exp-optional-rest def vals)
-				  (not (argument-name? def.))  (exp-sub def vals)
-				  (exp-static def vals)))
+         exp-main-non-key
+           #'((def vals)
+                (exp-check-too-many def vals)
+                (?
+                  (argument-keyword? def.)     (exp-optional-rest def vals)
+                  (not (argument-name? def.))  (exp-sub def vals)
+                  (exp-static def vals)))
 
          exp-main
-		   #'((def vals)
-			    (++! num)
-			    (? (keyword? vals.)
-				   (exp-key def vals)
-				   (| (exp-check-too-many def vals)
-			          (& def
+           #'((def vals)
+                (++! num)
+                (? (keyword? vals.)
+                   (exp-key def vals)
+                   (| (exp-check-too-many def vals)
+                      (& def
                          (exp-main-non-key def vals))))))
 
-	 (alet (exp-main argdefs alst)
+     (alet (exp-main argdefs alst)
        (? (eq ! 'error)
           !
-	      (nconc ! (nconc (@ [. _. (. '%key ._)] key-args)
+          (nconc ! (nconc (@ [. _. (. '%key ._)] key-args)
                           rest-arg))))))
 
 (fn argument-expand (fun def vals &key (apply-values? t)

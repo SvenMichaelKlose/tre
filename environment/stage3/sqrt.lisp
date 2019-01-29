@@ -5,10 +5,10 @@
 
 (fn fixed-point (f start precision)
   (with (iter #'((old new)
-				   (? (close-enough? old new precision)
-					  new
-					  (iter new (f new)))))
-	(iter start (f start))))
+                   (? (close-enough? old new precision)
+                      new
+                      (iter new (f new)))))
+    (iter start (f start))))
 
 (fn average (a b)
   (/ (+ a b) 2))
@@ -25,8 +25,8 @@
 
 (fn newton (f &optional (guess 1) (precision *newton-precision*))
   (with (df (derivative f precision))
-	(fixed-point [- _ (/ (f _) (df _))]
-				 guess
+    (fixed-point [- _ (/ (f _) (df _))]
+                 guess
                  precision)))
 
 (fn sqrt (x)

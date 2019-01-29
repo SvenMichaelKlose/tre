@@ -8,5 +8,5 @@
             `((? (< ,g 0)
                  (dotimes-error-negative ,g))))
        (do ((,iter 0 (number+ 1 ,iter)))
-	       ((== ,iter ,g) ,@result)
-	     ,@body))))
+           ((== ,iter ,g) ,@result)
+         ,@body))))

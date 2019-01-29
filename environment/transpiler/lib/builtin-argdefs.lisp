@@ -1,5 +1,5 @@
 (var *builtin-argdefs*
-	'((NOT          (&rest objects))
+    '((NOT          (&rest objects))
       (EQ           (&rest objects))
       (EQL          (&rest objects))
       (ATOM         (&rest objects))
@@ -63,7 +63,7 @@
       (%MALLOC-EXEC (&rest x)) ;number-of-bytes)
       (%FREE        (&rest x)) ;return-value-of-%malloc)
       (%FREE-EXEC   (&rest x)) ;return-value-of-%malloc-exec)
-	  (%%SET        (&rest x)) ;address byte-value)
+      (%%SET        (&rest x)) ;address byte-value)
       (%%GET        (&rest x)) ;address)
 
       (FUNCTION-NATIVE      (fun))

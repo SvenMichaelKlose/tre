@@ -21,7 +21,7 @@
         (find-next-location .x old))))
 
 (metacode-walker inject-debugging (x)
-	:if-cons (!? (& (%=? x.)
+    :if-cons (!? (& (%=? x.)
                     (find-next-location x *previous-position*))
                  {(= *previous-position* !)
                   `((%= nil (debugger-step ,(car !) ,(car .!) ,(cdr .!)))

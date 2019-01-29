@@ -1,8 +1,8 @@
 (fn length (x)
   (? x
      (? (cons? x)
-	    (list-length x)
-	    x.length)
+        (list-length x)
+        x.length)
      0))
 
 (fn split (obj seq &key (test #'eql))

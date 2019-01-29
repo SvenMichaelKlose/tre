@@ -4,9 +4,9 @@
 
 (%defun %error-if-not-unique (x)
   (%simple-map #'((i)
-					(? (< 1 (count i x))
-					   (error "Place ~A is not unique." i)))
-			   x))
+                    (? (< 1 (count i x))
+                       (error "Place ~A is not unique." i)))
+               x))
 
 (%defun %let-places (x)
   (%simple-mapcar #'car x))
@@ -18,18 +18,18 @@
   (%simple-map #'((p)
                     p
                     (%error-if-not-unique (%let-places x)))
-			   x))
+               x))
 
 (defmacro let* (alst &body body)
   (?
     (not alst)        `(progn
-		                 ,@body)
+                         ,@body)
     (not (cdr alst))  (progn
                         (%let-chk-places alst)
                         `(let ,(caar alst) ,(cadar alst)
-		                    ,@body))
+                            ,@body))
     (progn
-	  (%let-chk-places alst)
-	  `(let ,(caar alst) ,(cadar alst)
-		 (let* ,(cdr alst)
-		   ,@body)))))
+      (%let-chk-places alst)
+      `(let ,(caar alst) ,(cadar alst)
+         (let* ,(cdr alst)
+           ,@body)))))

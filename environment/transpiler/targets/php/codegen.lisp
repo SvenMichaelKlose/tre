@@ -12,8 +12,8 @@
        (eq t x)     "TRUE"
        (number? x)  x
        (string? x)  x
-	   `("$" ,x))
-	 x))
+       `("$" ,x))
+     x))
 
 (fn php-list (x)
   (pad (@ #'php-dollarize x) ", "))
@@ -64,19 +64,19 @@
 (fn codegen-php-function (x)
   (with (fi            (get-lambda-funinfo x)
          name          (funinfo-name fi)
-		 num-locals    (length (funinfo-vars fi))
-	     compiled-name (compiled-function-name name))
+         num-locals    (length (funinfo-vars fi))
+         compiled-name (compiled-function-name name))
     (developer-note "Generating function ~A…~%" name)
     `(,*php-newline*
       ,(funinfo-comment fi)
-	  "function " ,compiled-name ,@(php-argument-list (funinfo-args fi))
+      "function " ,compiled-name ,@(php-argument-list (funinfo-args fi))
       "{" ,(code-char 10)
-		 ,@(awhen (funinfo-globals fi)
+         ,@(awhen (funinfo-globals fi)
              (php-line "global " (php-list !)))
          ,@(& *print-executed-functions?*
               `("echo \"" ,compiled-name "\\n\";"))
          ,@(lambda-body x)
-       	 ,(php-line "return $" '~%ret)
+         ,(php-line "return $" '~%ret)
       "}" ,*php-newline*)))
 
 (define-php-macro function (&rest x)
@@ -95,7 +95,7 @@
   (with (fi            (get-funinfo name)
          native-name  `(%%string ,(compiled-function-name-string name)))
     (? (funinfo-scope-arg fi)
-  	   `(%%native "new __closure (" ,native-name "," ,(php-dollarize (funinfo-scope (funinfo-parent fi))) ")")
+       `(%%native "new __closure (" ,native-name "," ,(php-dollarize (funinfo-scope (funinfo-parent fi))) ")")
        native-name)))
 
 
@@ -108,12 +108,12 @@
 
 (fn php-assignment-operator (val)
   (? (| (& (atom val) ; XXX required?
-	  	   (symbol? val))
-		(not (%%native-without-reference? val)))
+           (symbol? val))
+        (not (%%native-without-reference? val)))
      (? *php-by-reference?*
-   	    " =& "
+        " =& "
         " = ")
-  	 " = "))
+     " = "))
  
 (fn php-%=-value (val)
   (?
@@ -125,24 +125,24 @@
        (number? val)
        (string? val))
       (list val)
-	(| (atom val)
+    (| (atom val)
        (& (%%native? val)
           (atom .val.)
           (not ..val)))
       (list "$" val)
-	(codegen-expr? val)
-	  (list val)
+    (codegen-expr? val)
+      (list val)
     `((,val. " " ,@(c-list (@ #'php-codegen-argument-filter .val))))))
 
 (fn php-%=-0 (dest val)
   `((%%native
-	    ,*php-indent*
-	    ,@(? dest
-			 `(,@(& (atom dest)
-				    (list "$"))
-			   ,dest
-			   ,(php-assignment-operator val))
-	         '(""))
+        ,*php-indent*
+        ,@(? dest
+             `(,@(& (atom dest)
+                    (list "$"))
+               ,dest
+               ,(php-assignment-operator val))
+             '(""))
         ,@(php-%=-value val)
         ,@(unless (& (not dest)
                      (%%native? val)
@@ -281,10 +281,10 @@
          .y.
          y)
     (? (cons? x)
-	   (? (%%native? x)
+       (? (%%native? x)
           `(%%native ,(php-dollarize x) "->" ,!)
           `(%%native ,x "->" ,!))
-	   `(%%native "$" ,x "->" ,!))))
+       `(%%native "$" ,x "->" ,!))))
 
 (define-php-macro %property-value (x y)
   `(%%native "$" ,x "->$" ,y))

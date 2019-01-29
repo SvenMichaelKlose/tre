@@ -5,15 +5,15 @@
 
 (fn funinfo-copiers-to-scoped-vars (fi)
   (let-when scoped-vars (funinfo-scoped-vars fi)
-	(let scope (funinfo-scope fi)
+    (let scope (funinfo-scope fi)
       `((%= ,scope (%make-scope ,(length scoped-vars)))
         ,@(!? (funinfo-scoped-var? fi scope)
-		      `((%set-vec ,scope ,! ,scope)))
+              `((%set-vec ,scope ,! ,scope)))
         ,@(mapcan [& (funinfo-scoped-var? fi _)
-				     `((%= ,_ ,(? (arguments-on-stack?)
+                     `((%= ,_ ,(? (arguments-on-stack?)
                                   `(%stackarg ,(funinfo-name fi) ,_)
                                   `(%%native ,_))))]
-				  (funinfo-args fi))))))
+                  (funinfo-args fi))))))
 
 (fn make-framed-function (x)
   (with (fi   (get-lambda-funinfo x)

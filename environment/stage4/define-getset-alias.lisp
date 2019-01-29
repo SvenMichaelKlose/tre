@@ -17,4 +17,4 @@
 
 (defmacro define-getset-alias (alias real &key (class nil))
   `{(define-get-alias ,alias ,real :class ,class)
-	(define-set-alias ,alias ,real :class ,class)})
+    (define-set-alias ,alias ,real :class ,class)})

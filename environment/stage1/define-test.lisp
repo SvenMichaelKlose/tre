@@ -2,10 +2,10 @@
 
 (%defun test-equal (x y)
   (?
-    (atom x)	(eql x y)
-    (atom y)	(eql x y)
+    (atom x)    (eql x y)
+    (atom y)    (eql x y)
     (test-equal x. y.)
-      		    (test-equal .x .y)))
+                (test-equal .x .y)))
 
 (%defun do-test (test)
   (? *print-definitions?*
@@ -24,8 +24,8 @@
   (? (not tests)
      nil
      (progn
-	   (do-test tests.)
-	   (do-tests .tests))))
+       (do-test tests.)
+       (do-tests .tests))))
 
 ;; Add test to global list.
 (defmacro define-test (description expr result)

@@ -14,8 +14,8 @@
   fun-out
   fun-eof
 
-  (last-char	    nil)
-  (peeked-char	    nil)
+  (last-char        nil)
+  (peeked-char      nil)
 
   (input-location   (make-stream-location))
   (output-location  (make-stream-location :track? nil))

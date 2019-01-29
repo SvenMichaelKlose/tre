@@ -28,18 +28,18 @@
 (fn js-emit-method (class-name x)
   (!= ($ class-name '- x.)
     (. `((%%native ,x.) #',!)
-	   `(fn ,! ,.x.
-		  (%thisify ,class-name
-	        ,@(| ..x. (list nil)))))))
+       `(fn ,! ,.x.
+          (%thisify ,class-name
+            ,@(| ..x. (list nil)))))))
 
 (fn js-emit-methods (class-name cls)
   (!? (@ [js-emit-method class-name _]
          (reverse (class-methods cls)))
-	  `(,@(cdrlist !)
+      `(,@(cdrlist !)
         ,@(js-gen-inherit-methods class-name (!? (class-parent cls)
                                                  (class-name !)))
         (hash-merge (slot-value ,class-name 'prototype)
-	                (%%%make-object ,@(apply #'+ (carlist !)))))))
+                    (%%%make-object ,@(apply #'+ (carlist !)))))))
 
 (define-js-std-macro finalize-class (class-name)
   (print-definition `(finalize-class ,class-name))

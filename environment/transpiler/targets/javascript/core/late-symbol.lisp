@@ -30,7 +30,7 @@
   (| (not x)
      (%%%eq t x)
      (& (object? x)
-	     x.__class
+         x.__class
          (%%%== x.__class ,(obfuscated-identifier 'symbol)))))
 
 (fn package-name (x)

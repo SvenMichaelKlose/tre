@@ -4,11 +4,11 @@
 (fn compile-argument-expansion-0 (fun-name adef p)
   (with ((argdefs key-args) (make-&key-alist adef)
 
-		 key
-		   #'(()
-			    (& key-args '((keywords))))
+         key
+           #'(()
+                (& key-args '((keywords))))
 
-		 static
+         static
            [`(,@(? (assert?)
                    `((| ,p
                         (error-arguments-missing ,(symbol-name _.) ',fun-name))))
@@ -16,8 +16,8 @@
               (= ,p (cdr ,p))
               ,@(main ._))]
 
-		 optional
-		   [`(,@(key)
+         optional
+           [`(,@(key)
               (? ,p
                  (= ,(argdef-get-name _.) (car ,p)
                     ,p (cdr ,p))
@@ -28,37 +28,37 @@
                       (main ._)
                       (optional ._))))]
 
-		 arest
-		   [(? (cons? _.)
+         arest
+           [(? (cons? _.)
                (error-&rest-has-value fun-name))
             `(,@(key)
-			  (= ,_. ,p)
+              (= ,_. ,p)
               ,@(? (assert?)
                    `((= ,p nil))))]
 
          optional-rest
-		   [case _.
-			 '&rest     (arest ._)
-			 '&body     (arest ._)
-			 '&optional (optional ._)]
+           [case _.
+             '&rest     (arest ._)
+             '&body     (arest ._)
+             '&optional (optional ._)]
 
-		 sub
+         sub
            [`(,@(key)
-			  (with-temporary ,p (car ,p)
-			    ,@(compile-argument-expansion-0 fun-name _. p))
-			    (= ,p (cdr ,p))
-			    ,@(main ._))]
+              (with-temporary ,p (car ,p)
+                ,@(compile-argument-expansion-0 fun-name _. p))
+                (= ,p (cdr ,p))
+                ,@(main ._))]
 
-		 main
-		   [?
+         main
+           [?
              (not _)                nil
              (argument-keyword? _.) (optional-rest _)
              (cons? _.)             (sub _)
              (static _)])
    (? key-args
       `((with (keywords
-				  #'(()
-					  (while (keyword? (car ,p))
+                  #'(()
+                      (while (keyword? (car ,p))
                              nil
                           (?
                             ,@(mapcan [`((eq (car ,p) ,(make-keyword _))
@@ -69,8 +69,8 @@
                             (return nil)))))
           ,@(& argdefs
                (main argdefs))
-		  ,@(key)
-		  ,@(@ [`(& (eq ,_ ',_)
+          ,@(key)
+          ,@(@ [`(& (eq ,_ ',_)
                     (= ,_ ,(cdr (assoc _ key-args))))]
                (carlist key-args))))
        (main argdefs))))

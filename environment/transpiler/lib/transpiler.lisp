@@ -169,8 +169,8 @@
   (last-pass-result         nil))
 
 (fn transpiler-reset (tr)
-  (= (transpiler-thisify-classes tr)        (make-hash-table :test #'eq)	; thisified classes.
-  	 (transpiler-wanted-functions tr)       nil
+  (= (transpiler-thisify-classes tr)        (make-hash-table :test #'eq)    ; thisified classes.
+     (transpiler-wanted-functions tr)       nil
      (transpiler-wanted-functions-hash tr)  (make-hash-table :test #'eq)
      (transpiler-wanted-variables tr)       nil
      (transpiler-wanted-variables-hash tr)  (make-hash-table :test #'eq)
@@ -333,7 +333,7 @@
 
 (fn transpiler-add-obfuscation-exceptions (tr &rest x)
   (@ (i x)
-	(= (href (transpiler-obfuscations tr) (make-symbol (symbol-name i))) t)))
+    (= (href (transpiler-obfuscations tr) (make-symbol (symbol-name i))) t)))
 
 (fn add-obfuscation-exceptions (&rest x)
   (apply #'transpiler-add-obfuscation-exceptions *transpiler* x))
@@ -448,10 +448,10 @@
 
 (fn create-transpiler (&rest args)
   (aprog1 (apply #'make-transpiler args)
-	(transpiler-reset !)
+    (transpiler-reset !)
     (= (transpiler-assert? !) *assert?*)
-	(= (transpiler-std-macro-expander !) (transpiler-make-std-macro-expander !))
-	(transpiler-make-code-expander !)
-	(transpiler-make-expex !)
+    (= (transpiler-std-macro-expander !) (transpiler-make-std-macro-expander !))
+    (transpiler-make-code-expander !)
+    (transpiler-make-expex !)
     (make-global-funinfo !)
     (transpiler-add-obfuscation-exceptions ! '%%native)))

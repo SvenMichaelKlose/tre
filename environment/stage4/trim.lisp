@@ -1,9 +1,9 @@
 (fn trim-tail (seq tail &key (test #'equal))
   (alet (length seq)
-	(when (< 0 !)
+    (when (< 0 !)
       (? (tail? seq tail :test test)
-	     (trim-tail (subseq seq 0 (- ! (length tail))) tail :test test)
-		 seq))))
+         (trim-tail (subseq seq 0 (- ! (length tail))) tail :test test)
+         seq))))
 
 (fn trim-head (seq head &key (test #'equal))
   (when (< 0 (length seq))
@@ -14,5 +14,5 @@
 (fn trim (seq obj &key (test #'equal))
   (& seq
      (? (< 0 (length seq))
-  	    (trim-tail (trim-head seq obj :test test) obj :test test)
-	    seq)))
+        (trim-tail (trim-head seq obj :test test) obj :test test)
+        seq)))

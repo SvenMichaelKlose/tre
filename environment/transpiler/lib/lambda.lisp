@@ -17,12 +17,12 @@
 
 (fn copy-lambda (x &key (name nil) (args 'no-args) (body 'no-body))
   `(function
-	 ,@(!? (| name (lambda-name x))
-		   (list !))
-	 (,(? (eq 'no-args args)
+     ,@(!? (| name (lambda-name x))
+           (list !))
+     (,(? (eq 'no-args args)
           (lambda-args x)
           args)
-	  ,@(? (eq 'no-body body)
+      ,@(? (eq 'no-body body)
            (lambda-body x)
            body))))
 

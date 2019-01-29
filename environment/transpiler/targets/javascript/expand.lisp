@@ -69,14 +69,14 @@
 
 (define-js-std-macro bind (fun &rest args)
   `(%bind ,(? (slot-value? fun)
- 			  .fun.
-    		  (error "Function must be a SLOT-VALUE, got ~A." fun))
-		  ,fun))
+              .fun.
+              (error "Function must be a SLOT-VALUE, got ~A." fun))
+          ,fun))
 
 (define-js-std-macro new (&rest x)
   (? x
      (? (| (keyword? x.)
-	       (string? x.))
+           (string? x.))
         `(%%%make-object ,@x)
         `(%new ,@x))
      `(%%%make-object)))

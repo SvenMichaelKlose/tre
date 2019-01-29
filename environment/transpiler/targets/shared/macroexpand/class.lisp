@@ -4,25 +4,25 @@
   (with (cname   (? (cons? class-name)
                     class-name.
                     class-name)
-		 bases   (& (cons? class-name)
+         bases   (& (cons? class-name)
                     .class-name)
-		 classes (thisify-classes))
-	(print-definition `(defclass ,class-name ,@(!? args (list !))))
+         classes (thisify-classes))
+    (print-definition `(defclass ,class-name ,@(!? args (list !))))
     (& (href classes cname)
-	   (warn "Class ~A already defined." cname))
+       (warn "Class ~A already defined." cname))
     (& .bases
        (error "More than one base class but multiple inheritance is not supported."))
-	(= (href classes cname)
+    (= (href classes cname)
        (? bases
           (alet (href classes bases.)
             (make-class :name    cname
                         :members (class-members !)
                         :parent  !))
           (make-class :name cname)))
-	(acons! cname
-			(funcall constructor-maker cname bases args body)
-		    *delayed-constructors*)
-	nil))
+    (acons! cname
+            (funcall constructor-maker cname bases args body)
+            *delayed-constructors*)
+    nil))
 
 (fn generic-defmethod (class-name name args &body body)
   (print-definition `(defmethod ,class-name ,name ,@(!? args (list !))))
