@@ -1,14 +1,14 @@
 (fn %slot-value? (x)
   (& (cons? x)
-     (eq '%SLOT-VALUE x.)
+     (eq '%slot-value x.)
      (cons? .x)))
 
 (fn slot-value? (x)
   (& (cons? x)
-     (eq 'SLOT-VALUE x.)
+     (eq 'slot-value x.)
      (cons? .x)))
 
-(fn %property-value? (x)
+(fn prop-value? (x)
   (& (cons? x)
-     (eq '%PROPERTY-VALUE x.)
+     (eq 'prop-value x.)
      (cons? .x)))

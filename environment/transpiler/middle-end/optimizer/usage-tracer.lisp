@@ -29,7 +29,7 @@
                    (%=? a)        (with-%= place value a
                                     (| (tree-find v value :test #'eq)
                                        (& (| (%slot-value? place)
-                                             (%property-value? place))
+                                             (prop-value? place))
                                           (tree-find v place :test #'eq))
                                        (unless (eq v place)
                                          (traverse-statements d))))

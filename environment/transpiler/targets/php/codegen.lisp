@@ -286,7 +286,7 @@
           `(%%native ,x "->" ,!))
        `(%%native "$" ,x "->" ,!))))
 
-(define-php-macro %property-value (x y)
+(define-php-macro prop-value (x y)
   `(%%native "$" ,x "->$" ,y))
 
 (define-php-macro %php-class-head (name)

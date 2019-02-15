@@ -32,12 +32,12 @@
   (?
     (quote? slot)  `(%slot-value ,place ,.slot.)
     (string? slot) `(%slot-value ,place ,slot)
-    (symbol? slot) `(%property-value ,place ,slot)
+    (symbol? slot) `(prop-value ,place ,slot)
     (with-gensym g
       `(%%block
          (%var ,g)
          (%= ,g ,slot)
-         (%property-value ,place ,g)))))
+         (prop-value ,place ,g)))))
 
 (define-php-std-macro new (&rest x)
   (? (| (keyword? x.)

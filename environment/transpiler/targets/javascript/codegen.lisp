@@ -225,7 +225,7 @@
                         .y.
                         y)))
 
-(define-js-macro %property-value (x y)
+(define-js-macro prop-value (x y)
   `(%aref ,x ,y))
 
 (define-js-macro %try ()
