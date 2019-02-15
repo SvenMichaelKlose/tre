@@ -4,7 +4,7 @@
       (enqueue q (funcall fun (aref hash i))))))
 
 (fn maphash (fun hash)
-  (@ (i (%property-list hash))
+  (@ (i (%properties-list hash))
     (funcall fun i. .i)))
 
 (fn elt (seq idx)

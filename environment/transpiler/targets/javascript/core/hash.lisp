@@ -24,8 +24,8 @@
 (fn hashkeys (hash)
   (? (& (hash-table? hash)
         (defined? hash.__tre-keys))
-     (cdrlist (%property-list hash.__tre-keys))
-     (carlist (%property-list hash))))
+     (cdrlist (%properties-list hash.__tre-keys))
+     (carlist (%properties-list hash))))
 
 (fn %make-href-object-key (hash key)
   (unless (defined? key.__tre-object-id)

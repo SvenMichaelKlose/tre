@@ -15,7 +15,7 @@
                    "%princ.lisp"
                    "%write-char.lisp"
                    "symbol.lisp"
-                   "property-list.lisp"))
+                   "properties-list.lisp"))
 
 (var *js-core-debug-print* ,(js-load-core "" "debug-print.lisp"))
 
