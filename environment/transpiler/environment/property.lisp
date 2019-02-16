@@ -19,3 +19,9 @@
 
 (fn add-properties (x &rest props)
   (merge-properties x (apply #'make-object props)))
+
+(fn remove-property (props key)
+  (aprog1 (new)
+    (@ (i (property-names props))
+      (| (eql i key)
+         (= (slot-value ! i) (slot-value props i))))))
