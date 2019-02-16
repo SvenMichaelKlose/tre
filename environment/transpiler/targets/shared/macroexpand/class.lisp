@@ -9,9 +9,12 @@
          classes (thisify-classes))
     (print-definition `(defclass ,class-name ,@(!? args (list !))))
     (& (href classes cname)
-       (warn "Class ~A already defined." cname))
+       (error "Class ~A already defined." cname))
     (& .bases
        (error "More than one base class but multiple inheritance is not supported."))
+    (& bases
+       (not (href classes bases.))
+       (error "Base class ~A is not defined." bases.))
     (= (href classes cname)
        (? bases
           (alet (href classes bases.)
