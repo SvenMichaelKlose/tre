@@ -6,14 +6,11 @@
   `(,*php-indent* ,@x ,*php-separator*))
 
 (fn php-dollarize (x)
-  (? (symbol? x)
-     (?
-       (not x)      "NULL"
-       (eq t x)     "TRUE"
-       (number? x)  x
-       (string? x)  x
-       `("$" ,x))
-     x))
+  (?
+    (not x)        "NULL"
+    (eq t x)       "TRUE"
+    (symbol? x)    `("$" ,x)
+    x))
 
 (fn php-list (x)
   (pad (@ #'php-dollarize x) ", "))
@@ -284,10 +281,10 @@
        (? (%%native? x)
           `(%%native ,(php-dollarize x) "->" ,!)
           `(%%native ,x "->" ,!))
-       `(%%native "$" ,x "->" ,!))))
+       `(%%native ,(php-dollarize x) "->" ,!))))
 
 (define-php-macro prop-value (x y)
-  `(%%native "$" ,x "->$" ,y))
+  `(%%native ,(php-dollarize x) "->$" ,y))
 
 (define-php-macro %php-class-head (name)
   `(%%native "class " ,name "{"))

@@ -12,5 +12,4 @@
 
 (env-load "transpiler/targets/shared/macroexpand/expand.lisp")
 (env-load "transpiler/targets/shared/macroexpand/labels.lisp")
-(env-load "transpiler/targets/shared/macroexpand/opt-filter.lisp")
 (env-load "transpiler/targets/shared/macroexpand/=-slot-value.lisp")
