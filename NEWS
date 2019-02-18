@@ -8,6 +8,7 @@ Changes of tre-0.12 relative to tre-0.11:
   * DEFCLASS fails on re-definitions or if a base class has
     not been defined.
   * FILTER functions aren't inlined anymore.  Caused nasty bugs.
+  * JS: LENGTH: Works with objects.
 
 Changes of tre-0.11 relative to tre-0.10:
   * Moved platform-specific functions into separate repositories
