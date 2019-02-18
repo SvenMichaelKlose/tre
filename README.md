@@ -25,25 +25,15 @@ A UNIX command line 6502-CPU assembler.
 
 ## Modules
 
-[JavaScript DOM and utilities](https://github.com/SvenMichaelKlose/tre-js)
-
-[Localisation](https://github.com/SvenMichaelKlose/tre-l10n)
-
-[PHP utilities](https://github.com/SvenMichaelKlose/tre-php)
-
-[PHP MySQL interface](https://github.com/SvenMichaelKlose/tre-php-db-mysql)
-
-[Utilities shared across platforms](https://github.com/SvenMichaelKlose/tre-shared)
-
-[SQL clause generators](https://github.com/SvenMichaelKlose/tre-sql-clause)
-
-[Multitrack timetable + JS DOM graphics](https://github.com/SvenMichaelKlose/tre-timetable)
-
-## Examples
-
-### [JavaScript 3D canvas](https://github.com/SvenMichaelKlose/tre-example-js-canvas3d)
-
-Software-rendered 3D, playing a video on a rotating plane.
+* https://github.com/SvenMichaelKlose/phitamine
+* https://github.com/SvenMichaelKlose/tre-js
+* https://github.com/SvenMichaelKlose/tre-l10n
+* https://github.com/SvenMichaelKlose/tre-lml
+* https://github.com/SvenMichaelKlose/tre-php
+* https://github.com/SvenMichaelKlose/tre-php-db-mysql
+* https://github.com/SvenMichaelKlose/tre-shared
+* https://github.com/SvenMichaelKlose/tre-sql-clause
+* https://github.com/SvenMichaelKlose/tre-timetable
 
 
 # Building and installing
@@ -107,13 +97,13 @@ is the same as
 
 ## Dots instead of CAR or CDR
 
-Probably inspired by some COBOL manual, yes, you read right,
-bitch, tré first of all takes the edge off by removing the
-zoo of CAR, CDR and related expressions.  Instead of doing
-"(car x)" you are now invited to use "x." instead.  The
-equivalent for "(cdr x)" would be ".x".  You can also combine
-the two dots, so "(cadr x)" is ".x." for the second element.
-To access the third element "(caddr x)" just do "..x.".
+Probably inspired by some COBOL manual, tré first of all takes
+the edge off by removing the zoo of CAR, CDR and related
+expressions.  Instead of doing "(car x)" you are now invited to
+use "x." instead.  The equivalent for "(cdr x)" would be ".x".
+You can also combine the two dots, so "(cadr x)" is ".x." for the
+second element.  To access the third element "(caddr x)" just do
+"..x.".
 
 ```lisp
 x.      ; (car x)
@@ -142,9 +132,9 @@ If 'body' starts with a symbol, it is wrapped in a list to
 form an expression.
 
 NOT IMPLEMENTED YET:
-Tré also lets you make your own argument definitions.
-To roll your own basically end them with a syntax-violating
-closing round bracket:
+Tré also lets you make your own argument definitions.  To roll
+your own basically end them with a syntax-violating closing round
+bracket:
 
 ```lisp
 [body]              #'((_) body)
@@ -156,9 +146,9 @@ closing round bracket:
 ## Curly brackets {} to make JSON objects or instead of PROGN
 
 If you open an expression with a curly brace it'll become a
-MAKE-OBJECT if the first element is a keyword or a string.
-Then the argument is grouped into key/value pairs.
-Otherwise it'll become a PROGN.
+MAKE-OBJECT if the first element is a keyword or a string.  Then
+the argument is grouped into key/value pairs.  Otherwise it'll
+become a PROGN.
 
 ```lisp
 ; Use as PROGN (first element is not a string or keyword).
@@ -171,9 +161,8 @@ Otherwise it'll become a PROGN.
  "item2"   "2"}
 ```
 
-Not that the symbolic keys will be translated into camel
-notation as every other literal symbol.  'oh-no' will become
-'ohNo'.
+Not that the symbolic keys will be translated into camel notation
+as every other literal symbol.  'oh-no' will become 'ohNo'.
 
 ## At sign instead of DOLIST or FILTER
 
@@ -189,9 +178,9 @@ notation as every other literal symbol.  'oh-no' will become
 
 ## Comma for anonymous macros
 
-These are QUASIQUOTEs aka commas outside BACKQUOTEs aka
-backticks aka '`'.  They are evaluated before the standard
-macro expansion pass.
+These are QUASIQUOTEs aka commas outside BACKQUOTEs aka backticks
+aka '`'.  They are evaluated before the standard macro expansion
+pass.
 
 ```lisp
 Some exciting example missing here.
