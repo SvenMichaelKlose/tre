@@ -1,6 +1,6 @@
 Changes relative to tre-0.13:
-  * Don't miss functions that need to get imported from the
-    transpiler's environment.anymore
+  * Don't miss functions that need to get imported from the host
+    environment anymore.
 
 Changes of tre-0.13 relative to tre-0.12:
   * REMOVE-PROPERTY: New, non-destructive function.
