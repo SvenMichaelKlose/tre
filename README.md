@@ -1,17 +1,19 @@
+The tré programming language
+============================
+
 # Overview
 
-tré compiles its own dialect of Lisp to JavaScript and PHP.
-Its for web developers who know a bit of Common Lisp or Arc
-already.
+tré compiles its own dialect of the Lisp programming language to
+JavaScript or PHP.
 
 
-# External resources
+## External resources
 
-## Applications
+### Applications
 
 ### [phitamine demo shop](https://github.com/SvenMichaelKlose/phitamine-shop)
 
-Shows how a PHP shop can be done with phitamine.
+### Examples
 
 ### [phitamine](https://github.com/SvenMichaelKlose/phitamine)
 
@@ -23,7 +25,7 @@ provides a couple of widgets.
 
 A UNIX command line 6502-CPU assembler.
 
-## Modules
+### Modules
 
 * https://github.com/SvenMichaelKlose/phitamine
 * https://github.com/SvenMichaelKlose/tre-js
@@ -54,11 +56,8 @@ expressions to execute.
 
 # Syntax
 
-tré comes with a lot of syntactical sugar and it's probably
-the best thing to get started with if you know Lisp already.
-
-* to get rid of those embarrassing parentheses
-* to keep one from repeating oneself
+tré comes with a lot of syntactical sugar to get rid of those
+embarrassing braces and to keep things snappy.
 
 ## General abbreviations
 
@@ -125,7 +124,7 @@ Inspired by Arc
 is the equivalent for
 
 ```lisp
-#'((_) body)
+ #'((_) body)
 ```
 
 If 'body' starts with a symbol, it is wrapped in a list to
@@ -165,7 +164,7 @@ Otherwise it'll become a PROGN.
 Note that keyword keys will be translated into camel notation.
 ':oh-no' will become 'ohNo'.
 
-## At sign instead of DOLIST or FILTER
+## At sign @ instead of DOLIST or FILTER
 
 ```lisp
 ; Use as FILTER.
