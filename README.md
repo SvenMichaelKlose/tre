@@ -59,6 +59,22 @@ expressions to execute.
 tré comes with a lot of syntactical sugar to get rid of those
 embarrassing braces and to keep things snappy.
 
+## No LAMBDA symbol required
+
+The LAMBDA symbol may be safely omitted when defining functions.
+Influenced by Arc.
+
+```lisp
+ #'(lambda (args)
+     function-body)
+```
+can be written:
+
+```lisp
+ #'((args)
+     function-body)
+```
+
 ## General abbreviations
 
 Inspired by the C syntax these are synonyms for what you
@@ -118,16 +134,24 @@ x.      ; (car x)
 Inspired by Arc
 
 ```lisp
-[body]
+[expr]
+
+[(expr1)
+ (expr2)]
 ```
 
-is the equivalent for
+is the equivalent of
 
 ```lisp
- #'((_) body)
+ #'((_)
+      (expr))
+
+ #'((_)
+      (expr1)
+      (expr2))
 ```
 
-If 'body' starts with a symbol, it is wrapped in a list to
+If 'expr' starts with a symbol, it is wrapped into a list to
 form an expression.
 
 NOT IMPLEMENTED YET:
