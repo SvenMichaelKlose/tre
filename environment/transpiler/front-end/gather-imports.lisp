@@ -1,7 +1,12 @@
+(fn gather-imports-list (x)
+  (@ (i x)
+    (? (cons? i)
+       (gather-imports-list i)
+       {(add-wanted-function i)
+        (add-wanted-variable i)})))
+
 (metacode-walker gather-imports (x)
   :if-setq (with-%= place value x.
              (add-wanted-variable place)
-             (@ (i (ensure-list value))
-               (add-wanted-function i)
-               (add-wanted-variable i))
+             (gather-imports-list (ensure-list value))
              (list x.)))
