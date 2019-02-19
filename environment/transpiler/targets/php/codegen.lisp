@@ -262,8 +262,14 @@
 
 ;;;; OBJECTS
 
+(fn php-literal-object-element (x)
+  `(,x. " => " ,(php-dollarize .x.)))
+
+(fn php-literal-object-elements (x)
+  (pad (@ #'php-literal-object-element x) ", "))
+
 (define-php-macro %%%make-object (&rest elements)
-  `(%%native "(object) array (" ,@(php-literal-array-elements (group elements 2)) ")"))
+  `(%%native "(object) array (" ,@(php-literal-object-elements (group elements 2)) ")"))
 
 (define-php-macro %new (&rest x)
   (? x

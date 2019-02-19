@@ -160,15 +160,6 @@
 
 ;;;; HASH TABLES
 
-(fn js-literal-hash-entry (name value)
-  `(,(? (symbol? name)
-        (make-symbol (symbol-name name))
-        name)
-     ":" ,value))
-
-(define-js-macro %%%make-object (&rest args)
-  (c-list (@ [js-literal-hash-entry _. ._] (group args 2)) :brackets :curly))
-
 (define-js-macro href (arr &rest idx)   ; TODO: WTF?
   `(aref ,arr ,@idx))
 
@@ -183,6 +174,9 @@
 
 
 ;;;; OBJECTS
+
+(define-js-macro %%%make-object (&rest args)
+  (c-list (@ [`( ,_. ": " ,._.)] (group args 2)) :brackets :curly))
 
 (define-js-macro %new (&rest x)
   (? x

@@ -10,26 +10,25 @@
        (eql (elt x 0) #\*)
        (eql (elt x (-- l)) #\*))))
 
+(fn camel-notation (x &optional (pos 0))
+  (with (bump? [& ._
+                  (| (& (eql #\- _.)
+                        (alpha-char? ._.))
+                     (& (eql #\* _.)
+                        (zero? pos)))])
+    (& x
+       (? (bump? x)
+          (. (char-upcase .x.)
+             (camel-notation ..x (++ pos)))
+          (. (char-downcase x.)
+             (camel-notation .x (++ pos)))))))
+ 
 (fn convert-identifier-r (s)
-  (with (camel-notation
-           #'((x pos)
-               (with (bump?
-                       [& ._
-                          (| (& (eql #\- _.)
-                                (alpha-char? ._.))
-                             (& (eql #\* _.)
-                                (zero? pos)))])
-                 (& x
-                    (? (bump? x)
-                       (. (char-upcase .x.)
-                          (camel-notation ..x (++ pos)))
-                       (. (char-downcase x.)
-                          (camel-notation .x (++ pos)))))))
-         corrected-chars
+  (with (corrected-chars
            #'((x pos)
                (with (char-synonym  [? (& ._ (eql #\- _.))
                                        (list #\_)
-                                       (string-list (+ "T" (format nil "~A" (char-code _.))))])
+                                       (string-list (format nil "T~A" (char-code _.)))])
                  (& x
                     (? (| (& (zero? pos)
                              (digit-char? x.))
@@ -45,7 +44,7 @@
        (list-string (alet (symbol-name s)
                       (corrected-chars (? (global-variable-notation? !)
                                           (capitals !)
-                                          (camel-notation (string-list !) 0))
+                                          (camel-notation (string-list !)))
                                        0))))))
 
 (fn convert-identifier (s)

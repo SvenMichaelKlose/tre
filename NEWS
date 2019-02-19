@@ -9,6 +9,9 @@ Changes of tre-0.12 relative to tre-0.11:
     not been defined.
   * FILTER functions aren't inlined anymore.  Caused nasty bugs.
   * JS: LENGTH: Works with objects.
+  * JS/PHP: Curly brackets now produce real literal objects, not
+            calls of MAKE-OBJECT. Keyword keys are now actually
+            converted to camel notation as stated in the README.
 
 Changes of tre-0.11 relative to tre-0.10:
   * Moved platform-specific functions into separate repositories

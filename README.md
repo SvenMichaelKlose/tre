@@ -146,9 +146,9 @@ bracket:
 ## Curly brackets {} to make JSON objects or instead of PROGN
 
 If you open an expression with a curly brace it'll become a
-MAKE-OBJECT if the first element is a keyword or a string.  Then
-the argument is grouped into key/value pairs.  Otherwise it'll
-become a PROGN.
+literal (JSON) object if the first element is a keyword or a
+string.  Then the argument is grouped into key/value pairs.
+Otherwise it'll become a PROGN.
 
 ```lisp
 ; Use as PROGN (first element is not a string or keyword).
@@ -156,13 +156,14 @@ become a PROGN.
    {(do-something)
     (do-something-else)}
 
-; Use as MAKE-OBJECT.
-{item1    "1"
- "item2"   "2"}
+; Use as literal object.
+{:item1    "1"
+ "item2"   "2"
+ :oh-no    3}
 ```
 
-Not that the symbolic keys will be translated into camel notation
-as every other literal symbol.  'oh-no' will become 'ohNo'.
+Note that keyword keys will be translated into camel notation.
+':oh-no' will become 'ohNo'.
 
 ## At sign instead of DOLIST or FILTER
 
