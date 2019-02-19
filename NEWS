@@ -1,8 +1,4 @@
-Changes of tre-0.12 relative to tre-0.11:
-  * LML2XML: Don't generate string for attribute values of NIL.
-  * PHP: OBJECT-PHPARRAY, PHPARRAY-OBJECT: New functions.
-  * PHP: PROPERTY-NAMES now supports native objects.
-  * PHP: HASHKEYS fixed for native arrays.
+Changes of tre-0.13 relative to tre-0.12:
   * REMOVE-PROPERTY: New, non-destructive function.
   * PROPERTY-LIST has been renamed to PROPERTIES-LIST.
   * DEFCLASS fails on re-definitions or if a base class has
@@ -12,6 +8,12 @@ Changes of tre-0.12 relative to tre-0.11:
   * JS/PHP: Curly brackets now produce real literal objects, not
             calls of MAKE-OBJECT. Keyword keys are now actually
             converted to camel notation as stated in the README.
+
+Changes of tre-0.12 relative to tre-0.11:
+  * LML2XML: Don't generate string for attribute values of NIL.
+  * PHP: OBJECT-PHPARRAY, PHPARRAY-OBJECT: New functions.
+  * PHP: PROPERTY-NAMES now supports native objects.
+  * PHP: HASHKEYS fixed for native arrays.
 
 Changes of tre-0.11 relative to tre-0.10:
   * Moved platform-specific functions into separate repositories
