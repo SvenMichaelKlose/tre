@@ -1,8 +1,12 @@
-# Major efforts
+# Wishlist
 
-* packaging across all platforms
+If a whish becomes fullfilled it immediately gets kids.
 
-# Syntactical sugar
+## packaging across all platforms
+
+To get rid of identifier prefixing.
+
+## Syntactical sugar
 
 * [args) x] for #'((args) (x))
 * (x).      for (car (x)) – CxR dot notation for expression results.
@@ -10,7 +14,7 @@
 * x.,name   for dynamic slot access. (Needs new READ.)
 * #name     Allow denoting variable functions like that.
 
-# Destructuring argument definitions
+## Destructuring argument definitions
 
 Great for dealing with JSON objects.
 
