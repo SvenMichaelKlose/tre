@@ -27,15 +27,27 @@ A UNIX command line 6502-CPU assembler.
 
 ### Modules
 
-* https://github.com/SvenMichaelKlose/phitamine
-* https://github.com/SvenMichaelKlose/tre-js
-* https://github.com/SvenMichaelKlose/tre-l10n
-* https://github.com/SvenMichaelKlose/tre-lml
-* https://github.com/SvenMichaelKlose/tre-php
-* https://github.com/SvenMichaelKlose/tre-php-db-mysql
-* https://github.com/SvenMichaelKlose/tre-shared
-* https://github.com/SvenMichaelKlose/tre-sql-clause
-* https://github.com/SvenMichaelKlose/tre-timetable
+[JavaScript DOM and utilities](https://github.com/SvenMichaelKlose/tre-js)
+
+[Localisation](https://github.com/SvenMichaelKlose/tre-l10n)
+
+[PHP utilities](https://github.com/SvenMichaelKlose/tre-php)
+
+[PHP MySQL interface](https://github.com/SvenMichaelKlose/tre-php-db-mysql)
+
+[Utilities shared across platforms](https://github.com/SvenMichaelKlose/tre-shared)
+
+[SQL clause generators](https://github.com/SvenMichaelKlose/tre-sql-clause)
+
+[Lisp Markup Language utilities](https://github.com/SvenMichaelKlose/tre-lml)
+
+[Multitrack timetable + JS DOM graphics](https://github.com/SvenMichaelKlose/tre-timetable)
+
+## Examples
+
+### [JavaScript 3D canvas](https://github.com/SvenMichaelKlose/tre-example-js-canvas3d)
+
+Software-rendered 3D, playing a video on a rotating plane.
 
 
 # Building and installing
