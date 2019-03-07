@@ -81,11 +81,11 @@
 
 (fn %struct-sort-fields (fields-and-options)
   (with-queue (fields options)
-    (map [? (& (cons? _)
-               (%struct-option-keyword? _.))
-            (enqueue options _)
-            (enqueue fields _)]
-         fields-and-options)
+    (mapcar [? (& (cons? _)
+                  (%struct-option-keyword? _.))
+               (enqueue options _)
+               (enqueue fields _)]
+            fields-and-options)
     (values (queue-list fields)
             (queue-list options))))
 
