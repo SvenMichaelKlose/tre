@@ -22,3 +22,5 @@ Great for dealing with JSON objects.
 #'({:name :surname})
     (format t "Hello ~A ~A!~%" name surname))
 ```
+
+# VAR inside functions instead of LET.
