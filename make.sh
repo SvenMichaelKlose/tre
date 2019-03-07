@@ -93,14 +93,17 @@ tests)
 	;;
 
 nodeconsole)
+    echo "Making defunct 'nodeconsole'…"
     $TRE makefiles/nodeconsole.lisp
 	;;
 
 webconsole)
+    echo "Making defunct 'webconsole'…"
     $TRE makefiles/webconsole.lisp
 	;;
 
 examples)
+    echo "Making directory 'examples'…"
     $TRE examples/make-standard-js.lisp
     $TRE examples/make-standard-nodejs.lisp
     $TRE examples/make-standard-php.lisp
@@ -110,6 +113,7 @@ examples)
     ;;
 
 all)
+    echo "Making 'all'…"
     ./make.sh boot $ARGS
     ./make.sh tests
     ./make.sh examples
@@ -117,9 +121,8 @@ all)
     ;;
 
 extra)
-    echo "Making defunct 'nodeconsole' and 'webconsole'…"
+    echo "Making 'extra'…"
     ./make.sh nodeconsole
-    ./make.sh webconsole
     echo "Making complete compiler dump of examples/hello-world.lisp…"
     $TRE examples/make-compiler-dumps.lisp > compiled/compiler-dumps.lisp
     ;;
