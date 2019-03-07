@@ -12,23 +12,16 @@ SBCL="sbcl --noinform"
 TRE="$SBCL --core image"
 BINDIR="/usr/local/bin/"
 
-basic_clean ()
+clean ()
 {
 	echo "Cleaning..."
-	rm -rv compiled
+	rm -rvf compiled
 	rm -vf *.core environment/transpiler/targets/c/native/$COMPILED_ENV image files.lisp
     rm -vf environment/_current-version
     rm -vf environment/_release-date
-	rm -vf _nodejstests.log _phptests.log
+	rm -vf _nodejstests.log _phptests.log make.log
 	echo "Checking out last working core..."
     git checkout -- boot-common.lisp
-}
-
-distclean ()
-{
-	echo "Cleaning for distribution..."
-    basic_clean
-	rm -vrf backup
 }
 
 install_it ()
@@ -44,16 +37,6 @@ install_it ()
 }
 
 case $1 in
-reload)
-    echo "Reloading environment from source..."
-    echo | ./tre -n
-	;;
-
-reloadnoassert)
-    echo "Reloading environment from source..."
-    echo | ./tre -n -e "(setq *assert* nil)(setq *targets* '(c))"
-	;;
-
 core)
     echo "Booting environment..."
     echo "(load \"boot-common.lisp\")" | $SBCL
@@ -113,9 +96,9 @@ nodeconsole)
     $TRE makefiles/nodeconsole.lisp
 	;;
 
-#webconsole)
-#    $TRE makefiles/webconsole.lisp
-#	;;
+webconsole)
+    $TRE makefiles/webconsole.lisp
+	;;
 
 examples)
     $TRE examples/make-standard-js.lisp
@@ -130,13 +113,14 @@ all)
     ./make.sh boot $ARGS
     ./make.sh tests
     ./make.sh examples
-    ./make.sh nodeconsole
-#    ./make.sh webconsole
     echo "All done."
     ;;
 
 extra)
-    echo "Making complete compiler dump for examples/hello-world.lisp…"
+    echo "Making defunct 'nodeconsole' and 'webconsole'…"
+    ./make.sh nodeconsole
+    ./make.sh webconsole
+    echo "Making complete compiler dump of examples/hello-world.lisp…"
     $TRE examples/make-compiler-dumps.lisp > compiled/compiler-dumps.lisp
     ;;
 
@@ -152,37 +136,34 @@ install)
 	;;
 
 clean)
-	basic_clean
+	clean
 	;;
-
-distclean)
-	distclean
-	;;
-
 *)
 	echo "Usage: make.sh [target]"
+    echo ""
 	echo "Targets:"
-	echo "  boot            Build compiled environment from scratch."
-	echo "  genboot         Generate CL core used to boot environment."
-	echo "  reset           Check out boot-common.lisp from repository."
-
-    echo "  examples        Compile everything in examples/."
-    echo "  all             Compile almost everything."
-    echo "  extra           Compile everything 'all' didn't compile."
-
-    echo "  reload          Reload the environment."
-    echo "  install         Install compiled executable and environment image."
-    echo "  clean           Remove built files but not the backup."
-    echo "  distclean       Like 'clean' but removes backups, too."
-#    echo "  webconsole      Make web browser REPL. (defunct)"
-    echo "  nodeconsole     Make node.js REPL. (defunct)"
-    echo "  jstests         Compile JavaScript target tests and run them with"
-    echo "                  Chromium and node.js."
-    echo "  phptests        Compile PHP target tests and run them with the"
-    echo "                  command-line version of PHP."
-	echo "  tests           Run all tests."
-    echo "  updatetests     Generate new test reference files."
-    echo "  releasetests    Run 'all' and everything that's hardly used."
+	echo "  genboot       Generate CL code for target 'core'."
+	echo "  reset         Check out boot-common.lisp from repository."
+	echo "                (E.g. when 'genboot' went wrong.)"
+	echo "  core          Load environment from scratch."
+	echo "  boot          Make 'core', 'genboot' then 'core' again."
+    echo "  install       Install executable and environment image made"
+    echo "                by 'core' or 'boot',"
+    echo "  clean         Remove built files, except 'genboot'."
+    echo ""
+	echo "  tests         Run tests defined in the environment."
+    echo "  jstests       Only do 'tests' with Chromium browser and node.js."
+    echo "  phptests      Only do 'tests' with command-line PHP."
+    echo ""
+    echo "  examples      Compile everything in directory 'examples'."
+    echo "  all           Compile everything listed until here."
+    echo "  extra         Also compiles what's listed below."
+    echo ""
+    echo "  nodeconsole   Make node.js REPL. (defunct)"
+#    echo "  webconsole    Make web browser REPL. (defunct)"
+    echo ""
+    echo "  releasetests  Make 'all', 'extra' and 'nodeconsole'."
+    echo "  updatetests   Generate new reference files from current test."
 
     ;;
 esac
