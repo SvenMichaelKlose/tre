@@ -4,7 +4,7 @@
                                              (recompiler-path       nil)
                                              (emitter               nil)
                                              (obfuscate?            nil))
-  (format t "; Making project '~A'...~%" project-name)
+  (format t "; Making project '~A'…~%" project-name)
   (= sections (ensure-list sections))
   (= (transpiler-sections-to-update transpiler) sections-to-update)
   (& obfuscate?
@@ -16,7 +16,7 @@
       (| section-list-gen
          (error (+ "The recompiler requires argument SECTION-LIST-GEN which is a function "
                    "without arguments that returns a list of names of modified sections.")))
-      (format t "; Making recompiler '~A'...~F" recompiler-path)
+      (format t "; Making recompiler '~A'…~F" recompiler-path)
       (sys-image-create recompiler-path
                         [0 (make-project project-name sections
                                          :transpiler          transpiler

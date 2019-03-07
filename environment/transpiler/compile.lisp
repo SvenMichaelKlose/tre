@@ -55,7 +55,7 @@
   (remove-if #'not (apply #'append x)))
 
 (fn generic-codegen (before-import after-import imports)
-  (print-status "Let me think. Hmm...~F")
+  (print-status "Let me think. Hmm…~F")
   (funcall (middleend-init))
   (with (before-imports    (codegen-sections before-import)
          imports-and-rest  (append {(developer-note "Generating imports…~%")
