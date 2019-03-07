@@ -1,4 +1,12 @@
-Changes relative to tre-0.13:
+Changes relative to tre-0.14:
+  * MAP has been removed.  It has been the same as MAPCAR.
+  * @: The functional version deals with arrays and strings.  The
+       types will be checked at run-time and cannot get mixed.
+       The result type is the argument type.  (You'll get a
+       string for strings.)  This version of @ is also available
+       as new function DYNAMIC-MAP.
+
+Changes of tre-0.14 relative to tre-0.13:
   * Don't miss functions that need to get imported from the host
     environment anymore.
   * Only convert keywords that are keys in literal JSON objects

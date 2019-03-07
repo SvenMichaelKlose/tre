@@ -3,8 +3,8 @@
     (?
       (cons? !)
         (? (eq 'function (car !))
-           `(mapcar ,! ,@body)
+           `(dynamic-map ,! ,@body)
            `(dolist ,! ,@body))
       (symbol? what)
-        `(mapcar ,! ,@body)
+        `(dynamic-map ,! ,@body)
       (error !))))

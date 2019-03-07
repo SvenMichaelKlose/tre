@@ -13,12 +13,11 @@
         (setq i (cdr i))        ; Go for next list.
         (go start)))))
 
-(fn map (func &rest lists)
-  (let args (%map-args lists)
-    (when args
-      (apply func args)
-      (apply #'map func lists)))
-  nil)
+(fn dynamic-map (func &rest lists)
+  (?
+    (string? lists.)  (list-string (apply #'mapcar func (mapcar #'string-list lists)))
+    (array? lists.)   (list-array (apply #'mapcar func (mapcar #'array-list lists)))
+    (apply #'mapcar func lists)))
 
 (fn mapcan (func &rest lists)
   (apply #'nconc (apply #'mapcar func lists)))

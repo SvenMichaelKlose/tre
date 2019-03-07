@@ -28,11 +28,11 @@
                     `(not ,@!)
                     t)))
 
-(define-shared-std-macro (bc c js php) mapcar (fun &rest lsts)
-  `(,(? .lsts
-        'mapcar
-        'filter)
-        ,fun ,@lsts))
+;(define-shared-std-macro (bc c js php) mapcar (fun &rest lsts)
+;  `(,(? .lsts
+;        'mapcar
+;        'filter)
+;        ,fun ,@lsts))
 
 (define-shared-std-macro (bc c js php) defmacro (name args &body body)
   (print-definition `(defmacro ,name ,args))
