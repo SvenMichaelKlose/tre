@@ -22,5 +22,16 @@ Great for dealing with JSON objects.
 #'({:name :surname})
     (format t "Hello ~A ~A!~%" name surname))
 ```
+```
+; CAR ;)
+#'(x.)
+    x)
+```
 
 # VAR inside functions instead of LET.
+
+# Warn/error when accessing undefined vars somehow.
+
+# Misc
+
+{} instead of (new).
