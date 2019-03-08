@@ -5,6 +5,8 @@ Changes relative to tre-0.14:
        The result type is the argument type.  (You'll get a
        string for strings.)  This version of @ is also available
        as new function DYNAMIC-MAP.
+  * JS: Accidently didn't inherit base class methods when no own
+        methods have been defined.
 
 Changes of tre-0.14 relative to tre-0.13:
   * Don't miss functions that need to get imported from the host
