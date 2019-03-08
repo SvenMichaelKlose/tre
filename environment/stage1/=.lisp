@@ -34,6 +34,6 @@
 (defmacro = (&rest args)
   (? args
      (? .args
-        `{,@(=-0 args)}
+        `(progn ,@(=-0 args))
         `(= ,args.))
      (error "Arguments expected.")))

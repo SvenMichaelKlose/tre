@@ -5,7 +5,7 @@
          (tagbody
            ,tag
            (? ,test
-              (return {,@result}))
+              (return (progn ,@result)))
            ,@body
            ,@(@ [& .._. `(setq ,_. ,.._.)] binds)
            (go ,tag))))))

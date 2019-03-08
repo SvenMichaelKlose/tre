@@ -9,6 +9,7 @@ Changes relative to tre-0.14:
         methods have been defined.
   * LML keyword attributes are translated to camel notation when
     XML or DOM nodes are being generated.
+  * Empty curly braces became literal empty JSON objects.
 
 Changes of tre-0.14 relative to tre-0.13:
   * Don't miss functions that need to get imported from the host

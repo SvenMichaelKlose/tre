@@ -1,6 +1,6 @@
 (defmacro when (predicate &body body)
   `(& ,predicate
-      {,@body}))
+      (progn ,@body)))
 
 (defmacro unless (predicate &body body)
   `(when (not ,predicate)

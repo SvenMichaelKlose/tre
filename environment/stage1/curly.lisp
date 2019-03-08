@@ -1,5 +1,6 @@
 (defmacro curly (&rest x)
-  (? (| (string? x.)
+  (? (| (not x)
+        (string? x.)
         (keyword? x.))
      `(%%make-object ,@x)
      `(progn ,@x)))

@@ -9,5 +9,5 @@
   t)
 
 (define-test "MEMBER falsely detects foureign elements"
-  ((member 'A '(l i s p)))
+  ((member 'a '(l i s p)))
   nil)
