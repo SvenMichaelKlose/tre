@@ -1,12 +1,3 @@
-(fn js-gen-inherit-methods (class-name base-name)
-  `(,@(!? base-name
-          `((= (slot-value ,(compiled-function-name class-name) 'prototype) (*object.create (slot-value ,! 'prototype)))))
-    (= (slot-value (slot-value ,(compiled-function-name class-name) 'prototype) 'constructor) ,class-name)))
-
-(fn js-gen-inherit-constructor-calls (bases)
-  (@ [`((slot-value ,_ 'call) this)]
-     bases))
-
 (fn js-gen-constructor (class-name bases args body)
   `{(fn ,class-name ,args
       (%thisify ,class-name
@@ -32,8 +23,13 @@
           (%thisify ,class-name
             ,@(| ..x. (list nil)))))))
 
+(fn js-gen-inherit-methods (class-name base-name)
+  (!? base-name
+      `((= (slot-value ,(compiled-function-name class-name) 'prototype)
+           (*object.create (slot-value ,! 'prototype))))))
+
 (fn js-emit-methods (class-name cls)
-  (!? (@ [js-emit-method class-name _]
+  (!= (@ [js-emit-method class-name _]
          (reverse (class-methods cls)))
       `(,@(cdrlist !)
         ,@(js-gen-inherit-methods class-name (!? (class-parent cls)
@@ -45,5 +41,6 @@
   (print-definition `(finalize-class ,class-name))
   (!? (href (thisify-classes) class-name)
       `{,(assoc-value class-name *delayed-constructors*)
-        ,@(js-emit-methods class-name !)}
+        ,@(js-emit-methods class-name !)
+        (= (slot-value (slot-value ,(compiled-function-name class-name) 'prototype) 'constructor) ,class-name)}
       (error "Cannot finalize undefined class ~A." class-name)))
