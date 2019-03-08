@@ -4,7 +4,7 @@
      (keyword? x.)))
 
 (fn lml-symbol-string (x)
-  (downcase (symbol-name x)))
+  (list-string (camel-notation (string-list (symbol-name x)))))
 
 (fn lml-attr-string (x)
   (| (keyword? x)
