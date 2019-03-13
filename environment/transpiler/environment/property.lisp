@@ -17,7 +17,7 @@
 (fn copy-props (x)
   (merge-props x nil))
 
-(fn add-properties (x &rest props)
+(fn add-props (x &rest props)
   (merge-props x (apply #'make-object props)))
 
 (fn remove-property (props key)
