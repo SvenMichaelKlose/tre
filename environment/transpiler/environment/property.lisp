@@ -1,7 +1,7 @@
-(fn properties-alist (x)
+(fn props-alist (x)
   (@ [. _ (slot-value x _)] (property-names x)))
 
-(fn alist-properties (x)
+(fn alist-props (x)
   (& x
      (aprog1 (new)
        (@ (i x)
