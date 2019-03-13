@@ -20,7 +20,7 @@
 (fn add-props (x &rest props)
   (merge-props x (apply #'make-object props)))
 
-(fn remove-property (props key)
+(fn remove-prop (props key)
   (aprog1 (new)
     (@ (i (property-names props))
       (| (eql i key)
