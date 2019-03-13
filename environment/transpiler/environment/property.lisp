@@ -14,7 +14,7 @@
     (@ (i (property-names b))
       (= (slot-value ! i) (slot-value b i)))))
 
-(fn copy-properties (x)
+(fn copy-props (x)
   (merge-props x nil))
 
 (fn add-properties (x &rest props)
