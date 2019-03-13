@@ -7,7 +7,7 @@
        (@ (i x)
          (= (slot-value ! i.) .i)))))
 
-(fn merge-properties (a b)
+(fn merge-props (a b)
   (aprog1 (new)
     (@ (i (property-names a))
       (= (slot-value ! i) (slot-value a i)))
@@ -15,10 +15,10 @@
       (= (slot-value ! i) (slot-value b i)))))
 
 (fn copy-properties (x)
-  (merge-properties x nil))
+  (merge-props x nil))
 
 (fn add-properties (x &rest props)
-  (merge-properties x (apply #'make-object props)))
+  (merge-props x (apply #'make-object props)))
 
 (fn remove-property (props key)
   (aprog1 (new)
