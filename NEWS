@@ -4,13 +4,14 @@ Changes relative to tre-0.14:
        types will be checked at run-time and cannot get mixed.
        The result type is the argument type.  (You'll get a
        string for strings.)  This version of @ is also available
-       as new function DYNAMIC-MAP.
+       as function DYNAMIC-MAP.
   * JS: Accidently didn't inherit base class methods when no own
         methods have been defined.
   * LML keyword attributes are translated to camel notation when
     XML or DOM nodes are being generated.
   * Empty curly braces became literal empty JSON objects.
   * JS: ROUND, FLOOR, CEILING: More accurate implementations.
+  * PHP: ROUND, FLOOR, CEILING: New functions.
 
 Changes of tre-0.14 relative to tre-0.13:
   * Don't miss functions that need to get imported from the host

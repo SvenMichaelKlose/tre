@@ -71,6 +71,7 @@
                        "../../../environment/property.lisp"
                        "../../../environment/make-object.lisp"
                        "base64.lisp"
-                       "quit.lisp")
+                       "quit.lisp"
+                       "math.lisp")
         (php-load-core "../../../environment/"
                        "string.lisp")))
