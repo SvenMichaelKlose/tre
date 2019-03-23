@@ -231,3 +231,12 @@ expressions can spoil the fun.  Here's an example:
 (slot-value slot name)  ; Old style.
 slot.,name              ; New style.
 ```
+
+# Porting from PHP to tré
+
+## Literal constants
+
+Use %%NATIVE to inject native source strings:
+```lisp
+(some_php_function (%%native "LITERAL_CONSTANT_NAME_WITHOUT_DOLLAR"))
+```
