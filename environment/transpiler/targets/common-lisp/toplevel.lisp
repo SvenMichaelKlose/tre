@@ -9,7 +9,7 @@
     (list (. 'cl-core (+ (load-string *cl-core*)
                          (@ [`(defbuiltin ,_. (&rest x)
                                 (apply #',(cl-symbol ._.) x))]
-                         +cl-renamed-imports+))))))
+                            +cl-renamed-imports+))))))
 
 (fn make-cl-transpiler ()
   (create-transpiler
