@@ -7,7 +7,7 @@
        (@ (i .x n)
          (= n (,($ '%%% op) n i))))))
 
-(mapcar-macro x '(* / mod)  ; TODO: Map to %%%…?
+(mapcar-macro x '(* / mod)
   `(def-simple-op ,x))
 
 (fn number+ (&rest x)
