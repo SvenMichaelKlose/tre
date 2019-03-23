@@ -28,16 +28,18 @@ Great for dealing with JSON objects.
     x)
 ```
 
-# VAR inside functions instead of LET.
+## VAR inside functions instead of LET.
 
-# Warn/error when accessing undefined vars somehow.
+## Warn/error when accessing undefined vars somehow.
 
-# Misc
+## Misc
 
 {} instead of (new).
 
-# Literal arrays
+## Literal arrays
 
-# . instead of &REST
+## . instead of &REST
 
-# Only import target-specific environment functions that are required, like imports from host environment..
+## Only import target-specific environment functions that are required, like imports from host environment..
+
+## CL target: move DEFVARs (without inits) before imports.
