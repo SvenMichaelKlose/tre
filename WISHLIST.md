@@ -35,3 +35,7 @@ Great for dealing with JSON objects.
 # Misc
 
 {} instead of (new).
+
+# Literal arrays
+
+# . instead of &REST
