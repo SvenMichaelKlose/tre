@@ -48,9 +48,6 @@
 (def-generic-transpiler-comparison <=)
 (def-generic-transpiler-comparison >=)
 
-(fn number? (x)
-  (%number? x))
-
 (fn integer (x)
   (?
     (character? x)  (char-code x)
