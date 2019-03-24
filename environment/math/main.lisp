@@ -1,5 +1,5 @@
-(env-load "math/atan2.lisp")
 (env-load "math/pi.lisp" :cl)
+(env-load "math/atan2.lisp")
 (env-load "math/precision.lisp")
 (env-load "math/fraction.lisp")
 (env-load "math/min.lisp")
