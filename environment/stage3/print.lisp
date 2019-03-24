@@ -113,8 +113,6 @@
         (%late-print i str info)))))
 
 (fn %print-call (x argdef str info)
-  (debug-print x)
-  (debug-print argdef)
   (%with-brackets str info
     (%late-print x. str info)
     (let expanded (%print-get-args .x argdef)
