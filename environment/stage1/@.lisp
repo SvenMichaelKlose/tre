@@ -1,5 +1,5 @@
 (defmacro @ (what &body body)
-  (alet (macroexpand what)
+  (!= (macroexpand what)
     (?
       (cons? !)
         (? (eq 'function (car !))
