@@ -1,4 +1,4 @@
-(var *documentation* nil)    ; TODO: Move into own file.
+(var *documentation* nil)
 
 (%defun %add-documentation (name body)
   (? (? (string? body.)
