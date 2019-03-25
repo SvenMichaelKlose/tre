@@ -6,7 +6,7 @@
                (symbol-name i)
                (human-readable-funinfo-names fi)
                (!? (butlast (funinfo-names fi))
-                   (apply #'+ "scope of " (symbol-names-string (reverse i)))
+                   (+ "scope of " (symbol-names-string (reverse !)))
                    "toplevel"))))))
 
 (metacode-walker warn-unused (x)

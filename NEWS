@@ -16,6 +16,8 @@ Changes relative to tre-0.14:
        also available as function DYNAMIC-MAP.
   * JS: Accidently didn't inherit base class methods when no
         methods have been defined in the derived class.  Fixed.
+  * PHP: Closures are converted to regular functions again, if
+         that's possible.
 
 Changes of tre-0.14 relative to tre-0.13:
   * Don't miss functions that need to get imported from the host

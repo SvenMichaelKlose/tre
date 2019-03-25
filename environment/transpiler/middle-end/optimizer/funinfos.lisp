@@ -17,10 +17,11 @@
   (& (sole? (funinfo-scoped-vars fi))
      (not (funinfo-place? fi (car (funinfo-scoped-vars fi))))
      {(optimizer-message "; Unscoping ~A in ~A.~%"
-                         (alet (funinfo-scoped-vars fi) (? .! ! !.))
+                         (!= (funinfo-scoped-vars fi)
+                           (? .! ! !.))
                          (human-readable-funinfo-names fi))
-      (= (funinfo-scoped-vars fi) nil)
-      (= (funinfo-scope fi) nil)}))
+      (= (funinfo-scoped-vars fi) nil
+         (funinfo-scope fi) nil)}))
 
 (fn replace-scope-arg (fi)
   (& (funinfo-scope-arg fi)
@@ -30,11 +31,11 @@
      (!= (car (funinfo-free-vars fi))
        (optimizer-message "; Removing array allocation for sole scoped ~A in ~A.~%"
                           ! (human-readable-funinfo-names fi))
-       (= (funinfo-free-vars fi) nil)
-       (= (funinfo-scope-arg fi) !)
-       (= (funinfo-argdef fi) (. ! (cdr (funinfo-argdef fi))))
-       (= (funinfo-args fi) (. ! (cdr (funinfo-args fi))))
-       (= (funinfo-fast-scope? fi) t))))
+       (= (funinfo-free-vars fi)    nil
+          (funinfo-scope-arg fi)    !
+          (funinfo-argdef fi)       (. ! (cdr (funinfo-argdef fi)))
+          (funinfo-args fi)         (. ! (cdr (funinfo-args fi)))
+          (funinfo-fast-scope? fi)  t))))
 
 (fn remove-argument-stackplaces (fi)
   (funinfo-vars-set fi (remove-if [& (funinfo-arg? fi _)
@@ -49,10 +50,10 @@
 
 (fn correct-funinfo ()
   (!= *funinfo*
-;    (when (lambda-export?) ; TODO: What? Why is this gone? Probably buggy…
-;      (remove-unused-scope-arg !)
-;      ;(remove-scoped-vars !)
-;      (replace-scope-arg !))
+    (when (lambda-export?)
+      (remove-unused-scope-arg !)
+      ;(remove-scoped-vars !)   ; TODO: Fix
+      (replace-scope-arg !))
     (funinfo-vars-set ! (intersect (funinfo-vars !) (funinfo-used-vars !) :test #'eq))
     (& (stack-locals?)
        (remove-argument-stackplaces !))))
