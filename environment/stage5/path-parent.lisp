@@ -1,3 +1,3 @@
 (fn path-parent (x)
-  (!? (butlast (path-pathlist x))   ; TODO: Not conditional.
-      (pathlist-path !)))
+  (!? (butlast (path-pathlist x))
+      (pathlist-path !)))   ; Would return "" otherwise.
