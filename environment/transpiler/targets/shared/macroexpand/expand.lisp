@@ -60,3 +60,9 @@
 (define-shared-std-macro (bc c js php) defpackage (&rest x)
   (cl:eval `(cl:defpackage ,@x))
   nil)
+
+(define-shared-std-macro (bc c js php) mapcar (fun &rest lsts)
+  `(,(? .lsts
+        'mapcar
+        'filter)
+        ,fun ,@lsts))
