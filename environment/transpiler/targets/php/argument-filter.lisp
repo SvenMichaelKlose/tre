@@ -3,9 +3,9 @@
   (adjoin! x (funinfo-globals *funinfo*))
   x)
 
-(fn php-argument-filter (x) ; TODO: PCASE…
-  (?
-    (character? x)  (php-expex-add-global (php-compiled-char x))
-    (quote? x)      (php-expex-add-global (php-compiled-symbol .x.))
-    (keyword? x)    (php-expex-add-global (php-compiled-symbol x))
+(fn php-argument-filter (x)
+  (pcase x
+    character?  (php-expex-add-global (php-compiled-char x))
+    quote?      (php-expex-add-global (php-compiled-symbol .x.))
+    keyword?    (php-expex-add-global (php-compiled-symbol x))
     x))
