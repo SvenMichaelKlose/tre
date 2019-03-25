@@ -39,8 +39,7 @@
                               result)
                            (list (funcall func i))))))))
 
-(fn mapcar (func &rest lists)   ; TODO: LET-WHEN…
-  (let args (%map-args lists)
-    (& args
-       (. (apply func args)
-          (apply #'mapcar func lists)))))
+(fn mapcar (func &rest lists)
+  (let-when args (%map-args lists)
+    (. (apply func args)
+       (apply #'mapcar func lists))))
