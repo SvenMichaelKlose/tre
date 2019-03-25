@@ -3,9 +3,6 @@
 (fn upcase (x)     (strtoupper x))
 (fn downcase (x)   (strtolower x))
 
-(defmacro string== (x y)    ; TODO: &REST – share same code with JS core.
-  `(%%%== ,x ,y))
-
 (fn string-concat (&rest x)
   (!? (remove-if #'not x)
       (implode (list-phparray !))))

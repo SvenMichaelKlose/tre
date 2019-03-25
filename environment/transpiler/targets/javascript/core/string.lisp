@@ -17,9 +17,6 @@
     (| (%%%== x i)
        (return))))
 
-(defmacro string== (x &rest y)
-  `(%%%== ,x ,@y))
-
 (fn upcase (x)
   (x.to-upper-case))
 

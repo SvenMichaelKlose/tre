@@ -8,6 +8,7 @@ Changes relative to tre-0.14:
   * Empty curly braces {} became literal empty JSON objects.
   * PHP: ROUND, FLOOR, CEILING: New functions.
   * JS: ROUND, FLOOR, CEILING: More accurate implementations.
+  * JS: STRING== with more than two arguments fixed.
   * @: The functional version now deals with arrays and strings.
        as well.  The types will be checked at run-time and must
        not be mixed.  The result type is the argument type.
