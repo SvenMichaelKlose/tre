@@ -1,4 +1,4 @@
-(defmacro + (&rest x)       (opt-string-concat x '+))
+(defmacro + (&rest x)       (opt-+ x))
 (defmacro - (&rest x)       `(%%%- ,@x))
 (defmacro * (&rest x)       `(%%%* ,@x))
 (defmacro / (&rest x)       `(%%%/ ,@x))

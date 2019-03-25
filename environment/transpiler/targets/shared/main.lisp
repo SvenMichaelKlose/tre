@@ -6,7 +6,7 @@
 (env-load "transpiler/targets/shared/load-file.lisp")
 (env-load "transpiler/targets/shared/macroexpand/defun.lisp")
 (env-load "transpiler/targets/shared/macroexpand/class.lisp")
-(env-load "transpiler/targets/shared/macroexpand/opt-string-concat.lisp")
+(env-load "transpiler/targets/shared/macroexpand/opt-+.lisp")
 (env-load "transpiler/targets/shared/codegen/newline.lisp")
 (env-load "transpiler/targets/shared/codegen/literal-string.lisp")
 (env-load "transpiler/targets/shared/codegen/c-list.lisp")
