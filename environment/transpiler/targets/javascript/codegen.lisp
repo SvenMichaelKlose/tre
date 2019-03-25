@@ -160,11 +160,11 @@
 
 ;;;; HASH TABLES
 
-(define-js-macro href (arr &rest idx)   ; TODO: WTF?
-  `(aref ,arr ,@idx))
+(define-js-macro href (arr &rest idx)
+  `(%aref ,arr ,@idx))
 
 (define-js-macro =-href (val &rest x)
-  `(=-aref ,val ,@x))
+  `(=-%aref ,val ,@x))
 
 (define-js-macro property-remove (h key)
   `(%%native "delete " ,h "[" ,key "]"))
