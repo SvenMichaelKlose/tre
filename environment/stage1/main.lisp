@@ -1,6 +1,7 @@
 (env-load "stage1/copy-tree.lisp")
 (env-load "stage1/cons.lisp")
 (env-load "stage1/gensym.lisp")
+(env-load "stage1/documentation.lisp")
 (env-load "stage1/defmacro.lisp" :cl)
 (env-load "stage1/define-test.lisp" :cl)
 
