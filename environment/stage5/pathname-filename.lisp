@@ -1,2 +1,2 @@
-(fn pathname-filename (x) ; TODO: Rename to PATH-FILENAME.
+(fn path-filename (x)
   (car (last (path-pathlist x))))

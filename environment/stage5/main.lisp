@@ -17,6 +17,6 @@
 (env-load "stage5/path-parent.lisp")
 (env-load "stage5/path-suffix.lisp")
 (env-load "stage5/data-url.lisp")
-(env-load "stage5/pathname-filename.lisp")
+(env-load "stage5/path-filename.lisp")
 (env-load "stage5/path-pathlist.lisp")
 (env-load "stage5/url-path.lisp")
