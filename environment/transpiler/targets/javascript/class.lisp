@@ -34,8 +34,8 @@
       `(,@(cdrlist !)
         ,@(js-gen-inherit-methods class-name (!? (class-parent cls)
                                                  (class-name !)))
-        (hash-merge (slot-value ,class-name 'prototype)
-                    (%%%make-object ,@(apply #'+ (carlist !)))))))
+        (js-merge-props! (slot-value ,class-name 'prototype)
+                         (%%%make-object ,@(apply #'+ (carlist !)))))))
 
 (define-js-std-macro finalize-class (class-name)
   (print-definition `(finalize-class ,class-name))

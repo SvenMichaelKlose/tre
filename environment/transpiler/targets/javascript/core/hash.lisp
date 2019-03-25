@@ -69,7 +69,7 @@
         (%href-user hash key))
       (%aref hash key)))
 
-(fn hash-merge (a b)
+(fn js-merge-props! (a b)
   (when (| a b)
     (| a (= a (make-hash-table :test b.__tre-test)))
     (? (defined? b.__tre-keys)
@@ -81,4 +81,4 @@
     a))
 
 (fn copy-hash-table (x)
-  (hash-merge nil x))
+  (js-merge-props! nil x))

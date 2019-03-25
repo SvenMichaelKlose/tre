@@ -32,11 +32,6 @@
      (@ #'%%unkey (x.keys))
      (array-list (array_keys x))))
 
-(fn hash-merge (a b)    ; TODO: Use generic version.
-  (| a (= a (make-hash-table)))
-  (@ (k (hashkeys b) a)
-    (= (href a k) (href b k))))
-
 (fn href (h k)
   (alet (%%key k)
     (? (is_a h "__array")

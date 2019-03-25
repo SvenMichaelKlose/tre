@@ -1,6 +1,6 @@
 Changes relative to tre-0.14:
   * MAP has been removed.  It has been the same as MAPCAR.
-  * MERGE! and OPTIONAL-DOWNCASE have been removed.
+  * MERGE!, HASH-MERGE and OPTIONAL-DOWNCASE have been removed.
   * PATHNAME-FILENAME has been renamed to PATH-FILENAME.
   * LML keyword attributes are translated to camel notation when
     XML or DOM nodes are being generated.  Affects
