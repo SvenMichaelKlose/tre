@@ -1,6 +1,6 @@
 (functional append)
 
-(fn append (&rest lists)    ; TODO: Cleanup.
+(fn append (&rest lists)
   (when lists
     (let f nil
       (let l nil
