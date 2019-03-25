@@ -8,14 +8,7 @@
 (unix-sh-mkdir "compiled" :parents t)
 (make-project "tré web console"
               `(,@(list+ "environment/platforms/shared/"
-                         '("continued.lisp"
-
-                           "url/path-pathlist.lisp"
-                           "url/path-parent.lisp"
-                           "url/path-suffix.lisp"
-                           "url/pathname-filename.lisp"
-                           "url/url-path.lisp"
-                           "url/path-append.lisp"))
+                         '("continued.lisp"))
 
                 ,@(list+ "environment/platforms/js/"
                          '("milliseconds-since-1970.lisp"
