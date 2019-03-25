@@ -6,7 +6,8 @@
      (cl:format nil "~A" x)
      (cl:string x)))
 
-(defbuiltin string== (a b) (cl:string= a b))
+(defbuiltin string== (a b)
+  (cl:string= a b))
 
 (defbuiltin list-string (x)
   (| (list? x)
