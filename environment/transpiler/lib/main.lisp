@@ -10,7 +10,7 @@
 (env-load "transpiler/lib/funinfo/lexical.lisp")
 (env-load "transpiler/lib/funinfo/local-function-args.lisp")
 (env-load "transpiler/lib/funinfo/types.lisp")
-(env-load "transpiler/lib/funinfo/debug.lisp")
+(env-load "transpiler/lib/funinfo/debug-printers.lisp")
 
 (env-load "transpiler/lib/lambda.lisp")
 (env-load "transpiler/lib/predicates.lisp")

@@ -1,5 +1,3 @@
-; TODO: Rename file to 'debug-printers.lisp'.
-
 (fn only-element-or-all-of (x)
   (? .x x x.))
 
