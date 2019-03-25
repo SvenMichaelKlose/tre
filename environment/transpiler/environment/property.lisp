@@ -1,5 +1,5 @@
 (fn props-alist (x)
-  (@ [. _ (slot-value x _)] (property-names x)))
+  (mapcar [. _ (slot-value x _)] (property-names x)))
 
 (fn alist-props (x)
   (& x
