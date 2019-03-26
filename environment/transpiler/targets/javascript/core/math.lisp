@@ -41,3 +41,6 @@
 
 (fn ceiling (x &key (decimals 0))
   (%decimal-adjust *math.ceil x (- decimals)))
+
+(fn fixed-point (x &key (decimals 0))
+  (x.to-fixed decimals))
