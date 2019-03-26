@@ -1,4 +1,4 @@
-(load "environment/platforms/js/event/names.lisp")
+(load "tre_modules/js/event/names.lisp")
 
 (var *log-events?* nil)
 
@@ -7,14 +7,11 @@
 
 (unix-sh-mkdir "compiled" :parents t)
 (make-project "tré web console"
-              `(,@(list+ "environment/platforms/shared/"
-                         '("continued.lisp"))
-
-                ,@(list+ "environment/platforms/js/"
+              `(,@(list+ "tre_modules/js/"
                          '("milliseconds-since-1970.lisp"
                            "wait.lisp"))
 
-                ,@(list+ "environment/platforms/js/dom/"
+                ,@(list+ "tre_modules/js/dom/"
                          '("def-aos.lisp"
                            "do.lisp"
                            "objects/native-symbols.lisp"
@@ -31,7 +28,7 @@
                            "table.lisp"
                            "viewport.lisp"))
 
-                ,@(list+ "environment/platforms/js/event/"
+                ,@(list+ "tre_modules/js/event/"
                          '("log.lisp"
                            "native-symbols.lisp"
                            "native.lisp"
@@ -43,14 +40,13 @@
                            "utils.lisp"
                            "bind-event-methods.lisp"
                            "keycodes.lisp"))
-
-                ,@(list+ "environment/platforms/js/"
+                ,@(list+ "tre_modules/js/"
                          '("log-message.lisp"))
 
                 (toplevel . ((document-extend)
                              (*event-manager*.init-document document)
                              (*event-manager*.set-send-natively-by-default? document t)
-                             (format t "Welcome to tr&eacute;, revision ~A.~%" *tre-revision*))))
+                             (format t "Welcome to tré, revision ~A.~%" *tre-revision*))))
               :transpiler  (aprog1 (copy-transpiler *js-transpiler*)
                              (= (transpiler-configuration ! :save-sources?) t))
               :emitter     [(format t "Writing to 'compiled/webconsole.html'…~F")
