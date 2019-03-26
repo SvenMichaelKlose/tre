@@ -104,6 +104,7 @@ webconsole)
 
 examples)
     echo "Making directory 'examples'…"
+    mkdir -p compiled
     $TRE examples/make-standard-js.lisp
     $TRE examples/make-standard-nodejs.lisp
     $TRE examples/make-standard-php.lisp
@@ -122,6 +123,7 @@ all)
 
 extra)
     echo "Making 'extra'…"
+    mkdir -p compiled
     ./make.sh nodeconsole
     echo "Making complete compiler dump of examples/hello-world.lisp…"
     $TRE examples/make-compiler-dumps.lisp > compiled/compiler-dumps.lisp
