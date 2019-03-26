@@ -11,12 +11,12 @@
      {(= (funinfo-scope-arg fi) nil)
       (pop (funinfo-args fi))
       (pop (funinfo-argdef fi))
-      (optimizer-message "; Made ~A a regular function.~%" (human-readable-funinfo-names fi))}))
+      (optimizer-message "Made ~A a regular function.~%" (human-readable-funinfo-names fi))}))
 
 (fn remove-scoped-vars (fi)
   (& (sole? (funinfo-scoped-vars fi))
      (not (funinfo-place? fi (car (funinfo-scoped-vars fi))))
-     {(optimizer-message "; Unscoping ~A in ~A.~%"
+     {(optimizer-message "Unscoping ~A in ~A.~%"
                          (!= (funinfo-scoped-vars fi)
                            (? .! ! !.))
                          (human-readable-funinfo-names fi))
@@ -29,7 +29,7 @@
      (sole? (funinfo-free-vars fi))
      (not (funinfo-scoped-vars (funinfo-parent fi)))
      (!= (car (funinfo-free-vars fi))
-       (optimizer-message "; Removing array allocation for sole scoped ~A in ~A.~%"
+       (optimizer-message "Removing array allocation for sole scoped ~A in ~A.~%"
                           ! (human-readable-funinfo-names fi))
        (= (funinfo-free-vars fi)    nil
           (funinfo-scope-arg fi)    !
@@ -64,7 +64,7 @@
        (with-lambda-funinfo x.
          (correct-funinfo)
          (remove-unused-vars (lambda-body x.))))
-;         (warn-unused-arguments *funinfo*)
+;         (warn-unused-arguments *funinfo*) ; TODO: Fix.
     (remove-unused-vars .x)))
 
 (fn optimize-funinfos (x)
