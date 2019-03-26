@@ -1,2 +1,2 @@
 (fn optimizer-message (fmt &rest args)
-  (apply #'format t fmt args))
+  (princ (+ "; " (apply #'format nil fmt args))))
