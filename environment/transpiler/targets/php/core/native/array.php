@@ -69,7 +69,7 @@ class __array {
     }
 }
 
-function userfun_phphashHashTable ($x)
+function tre_phphashHashTable ($x)
 {
     $h = new __array ();
     foreach ($x as $k => $v)
@@ -77,7 +77,7 @@ function userfun_phphashHashTable ($x)
     return $h;
 }
 
-function userfun_phphashHashkeys ($x)
+function tre_phphashHashkeys ($x)
 {
     $h = Array ();
     foreach ($x as $k => $v)
