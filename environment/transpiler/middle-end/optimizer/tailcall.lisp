@@ -9,8 +9,7 @@
       (function-exits? .x))))
 
 (fn opt-tailcall-make-restart (l body front-tag)
-  (developer-note "Removed tail call in ~A.~%"
-                  (human-readable-funinfo-names *funinfo*))
+  (optimizer-message "Resolved tail call in ~A.~%" (human-readable-funinfo-names *funinfo*))
   (+ (mapcan #'((arg val)
                   `((%= ,arg ,val)))
              (funinfo-args *funinfo*)
