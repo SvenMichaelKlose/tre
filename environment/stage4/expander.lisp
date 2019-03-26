@@ -26,12 +26,12 @@
   (href (expander-macros expander) macro-name))
 
 (fn define-expander (expander-name &key (pre nil) (post nil) (pred nil) (call nil))
-  (aprog1 (make-expander :name expander-name
-                         :macros (make-hash-table :test #'eq)
-                         :pred pred
-                         :call call
-                         :pre (| pre #'(nil))
-                         :post (| post #'(nil)))
+  (aprog1 (make-expander :name    expander-name
+                         :macros  (make-hash-table :test #'eq)
+                         :pred    pred
+                         :call    call
+                         :pre     (| pre #'(nil))
+                         :post    (| post #'(nil)))
     (| pred
        (= (expander-pred !) [& (cons? _)
                                (symbol? _.)
@@ -50,7 +50,7 @@
   (= (href (expander-macros expander) name) (. argdef fun)))
 
 (fn set-expander-macros (expander x)
-  (map [set-expander-macro expander _. ._. .._] x))
+  (mapcar [set-expander-macro expander _. ._. .._] x))
 
 (defmacro define-expander-macro (expander name args &body body)
   (let expanded-argdef (argument-expand-names 'define-expander-macro args)
