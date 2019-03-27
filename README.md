@@ -58,8 +58,11 @@ cp examples/project-js <someplace-new>
 cd <someplace-new>
 ```sh
 
-Then install the required modules – well, they're not exactly
-required but they're rather practical when hacking around.
+Then install the required modules;
+
+```sh
+./install-modules.sh
+```
 
 Now compile the example code:
 
@@ -81,27 +84,51 @@ Now point your browser at http://localhost:19020/ – voilà!
 ## Creating a PHP-only project
 
 This works the same as creating a JavaScript-only project, except
-that you have to copy examples/project-php.  But this time the
-docker container also has a MySQL database installed.  Within the
-container it's listening on hostname "db" from the outside you can
-read it at IP 0.0.0.0.  It's got two users, "root" and "tre", both
-with password "secret".  You can change these in file
-"docker-compose.yml" before doing your first web server launch.
-You can also remove the whole database section from that file, if
-you won't need it.  A database configuration has already been
-prepared for use with module "php-db-mysql".
+that you have to copy examples/project-php.
+
+But this time the docker container also has a MySQL database
+installed.  Within the container it's listening on hostname "db"
+from the outside you can read it at IP 0.0.0.0.  It's got two
+users, "root" and "tre", both with password "secret".  You can
+change these in file "docker-compose.yml" before doing your
+first web server launch.  You can also remove the whole database
+section from that file, if you won't need it.  A database
+configuration has already been prepared for use with module
+"php-db-mysql".
 
 If you want to see a full-blown PHP-only example in action, please
 visit https://github.com/SvenMichaelKlose/phitamine-shop.
 
-## Creating a JavaScript project with PHP server
+## Creating a JavaScript project with PHP server and function calls via HTTP
 
 Again, this works like "project-js".  This time the server
-implements function SERVER-APPLY which takes a function name(!) and
-its arguments – the JavaScript client basically asks the PHP server
-to add 1 and 2 with function "+" and returns the result by just
-calling SERVER-APPLY as if it was a JavaScript function.
-This example also contains the MySQL database code.
+implements function SERVER-APPLY which takes a function name(!)
+and its arguments – the JavaScript client basically asks the PHP
+server to add 1 and 2 with function "+" and returns the result by
+just calling SERVER-APPLY as if it was a JavaScript function.
+This example also contains the MySQL database code and
+configuration.
+
+
+# Developing a project – here's the catch
+
+The initial project setups come with a bunch of external modules 
+included already, so you can play around with them without needing
+to tweak the makefiles.  That's as simple as it can get at this
+time.  tré comes with no IDE whatsoever.  But what you'll see in
+your browser's debugger is more or less readable.  Some
+
+```lisp
+(console.log "%o" buggyobject)
+```
+
+in considerate places might help out a lot, as well as PRINT and
+LOG-MESSAGE on the PHP side.  If you decide to continue working
+with tré you WILL find inconveniences and bugs.  And that's the
+point where you hopefully contribute by filing bugs and ask
+questions on github.com or even contribute own code.  Yep.  It's
+a great time to become a key part of the tré programming language
+project, with fame and honour and so on.
 
 
 # Syntax
