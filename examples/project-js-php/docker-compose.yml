@@ -1,0 +1,30 @@
+app:
+  build: ./docker/httpd
+  links:
+    - db
+  volumes_from:
+    - appdata
+  ports:
+    - 19020:80
+
+db:
+  image: mariadb
+  volumes_from:
+    - dbdata
+  ports:
+    - 3306:3306
+  environment:
+    - MYSQL_ROOT_PASSWORD=secret
+    - MYSQL_DATABASE=tre_php_app
+    - MYSQL_USER=tre
+    - MYSQL_PASSWORD=secret
+
+appdata:
+  image: tianon/true
+  volumes:
+    - ./:/var/www/html/
+
+dbdata:
+  image: tianon/true
+  volumes:
+    - ./data/mysql:/var/lib/mysql

@@ -1,0 +1,11 @@
+www:
+  build: ./docker/httpd
+  volumes_from:
+    - wwwdata
+  ports:
+    - 19020:80
+
+wwwdata:
+  image: tianon/true
+  volumes:
+    - ./:/var/www/html/

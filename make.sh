@@ -5,6 +5,7 @@ set -e
 # Get revision number and date.
 git log | grep ^commit | wc -l >environment/_current-version
 date >environment/_release-date
+mkdir -p compiled
 
 ARGS="$2 $3 $4 $5 $6 $7 $8 $9"
 
@@ -16,6 +17,12 @@ clean ()
 {
 	echo "Cleaning..."
 	rm -rvf compiled
+	rm -rvf examples/project-js/compiled
+	rm -rvf examples/project-js/tre_modules
+	rm -rvf examples/project-php/compiled
+	rm -rvf examples/project-php/tre_modules
+	rm -rvf examples/project-js-php/compiled
+	rm -rvf examples/project-js-php/tre_modules
 	rm -vf *.core environment/transpiler/targets/c/native/$COMPILED_ENV image files.lisp
     rm -vf environment/_current-version
     rm -vf environment/_release-date
@@ -61,7 +68,6 @@ boot)
 
 phptests)
     echo "PHP target tests..."
-    mkdir -p compiled
     $TRE tests/php.lisp
     php compiled/test.php >_phptests.log
     cmp tests/php.correct-output _phptests.log || (diff tests/php.correct-output _phptests.log; exit 1)
@@ -69,7 +75,6 @@ phptests)
 
 jstests)
     echo "JavaScript target tests..."
-    mkdir -p compiled
     $TRE tests/js.lisp
     node compiled/test.js >_nodejstests.log
     chromium-browser compiled/test.html &
@@ -104,7 +109,6 @@ webconsole)
 
 examples)
     echo "Making directory 'examples'…"
-    mkdir -p compiled
     $TRE examples/make-standard-js.lisp
     $TRE examples/make-standard-nodejs.lisp
     $TRE examples/make-standard-php.lisp
@@ -123,7 +127,6 @@ all)
 
 extra)
     echo "Making 'extra'…"
-    mkdir -p compiled
     ./make.sh nodeconsole
     echo "Making complete compiler dump of examples/hello-world.lisp…"
     $TRE examples/make-compiler-dumps.lisp > compiled/compiler-dumps.lisp

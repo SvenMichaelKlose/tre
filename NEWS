@@ -1,4 +1,8 @@
-Changes relative to tre-0.14:
+Changes relative to tre-0.15:
+  * Added ready-made project directories in example/ to make
+    it easier to start projects.
+
+Changes of tre-0.15 relative to tre-0.14:
   * MAP has been removed.  It has been the same as MAPCAR.
   * MERGE!, HASH-MERGE and OPTIONAL-DOWNCASE have been removed.
   * PATHNAME-FILENAME has been renamed to PATH-FILENAME.
