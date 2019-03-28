@@ -119,6 +119,7 @@ time.  tré comes with no IDE whatsoever.  But what you'll see in
 your browser's debugger is more or less readable.  Some
 
 ```lisp
+(invoke-debugger)
 (console.log "%o" buggyobject)
 ```
 
