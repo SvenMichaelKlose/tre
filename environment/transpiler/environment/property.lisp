@@ -1,5 +1,5 @@
 (fn props-alist (x)
-  (mapcar [. _ (slot-value x _)] (property-names x)))
+  (filter [. _ (slot-value x _)] (property-names x)))
 
 (fn alist-props (x)
   (& x
@@ -20,8 +20,11 @@
 (fn add-props (x &rest props)
   (merge-props x (apply #'make-object props)))
 
-(fn remove-prop (props key)
+(fn remove-props (props &rest names)
   (aprog1 (new)
     (@ (i (property-names props))
-      (| (eql i key)
+      (| (member i names)
          (= (slot-value ! i) (slot-value props i))))))
+
+(fn property-values (x)
+  (filter [slot-value x _] (property-names x)))
