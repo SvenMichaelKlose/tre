@@ -2,8 +2,7 @@
 (const *available-languages* '(en))
 
 (make-project "tré PHP only project"
-              `(
-                "tre_modules/php/json.lisp"
+              `("tre_modules/php/json.lisp"
                 "tre_modules/php/log-message.lisp"
                 "tre_modules/php/milliseconds-since-1970.lisp"
                 "tre_modules/php/server-name.lisp"
@@ -20,6 +19,7 @@
                            "select.lisp"
                            "update.lisp"
                            "utils-querystring.lisp"))
+                "tre_modules/session/php/toplevel.lisp"
                 "toplevel.lisp")
               :transpiler  *php-transpiler*
               :emitter     [put-file "compiled/index.php" _])
