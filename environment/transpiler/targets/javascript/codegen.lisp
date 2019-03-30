@@ -4,7 +4,7 @@
 ;;;; CONTROL FLOW
 
 (define-js-macro %%tag (tag)
-  `(%%native "case " ,tag ":" ,*newline*))
+  `(%%native "case " ,tag ":" ,*terpri*))
 
 (define-js-macro %%go (tag)
   `(,*js-indent* "_I_ = " ,tag "; continue" ,*js-separator*))
@@ -13,22 +13,22 @@
   `("(" ,x " == null || " ,x " === false)"))
 
 (define-js-macro %%go-nil (tag val)
-  `(,*js-indent* "if " ,(js-nil? val) " { _I_= " ,tag "; continue; }" ,*newline*))
+  `(,*js-indent* "if " ,(js-nil? val) " { _I_= " ,tag "; continue; }" ,*terpri*))
 
 (define-js-macro %%go-not-nil (tag val)
-  `(,*js-indent* "if (!" ,(js-nil? val) ") { _I_=" ,tag "; continue; }" ,*newline*))
+  `(,*js-indent* "if (!" ,(js-nil? val) ") { _I_=" ,tag "; continue; }" ,*terpri*))
 
 (define-js-macro %%call-nil (val consequence alternative)
   `(,*js-indent* "if " ,(js-nil? val) " "
                      ,consequence " ();"
                  "else "
-                     ,alternative " ();" ,*newline*))
+                     ,alternative " ();" ,*terpri*))
 
 (define-js-macro %%call-not-nil (val consequence alternative)
   `(,*js-indent* "if (!",(js-nil? val) ") "
                      ,consequence " (); "
                  "else "
-                     ,alternative " ();" ,*newline*))
+                     ,alternative " ();" ,*terpri*))
 
 (define-js-macro %set-local-fun (plc val)
   `(%%native ,*js-indent* ,plc " = " ,val ,*js-separator*))
@@ -47,12 +47,12 @@
                                  (compiled-function-name-string name)
                                  name))
          (developer-note "Generating function ~A…~%" name)
-         `(,*newline*
+         `(,*terpri*
            ,(funinfo-comment (= *funinfo* (get-funinfo name)))
-           ,translated-name " = function " ,@(js-argument-list 'codegen-function-macro (lambda-args !)) ,*newline*
-           "{" ,*newline*
+           ,translated-name " = function " ,@(js-argument-list 'codegen-function-macro (lambda-args !)) ,*terpri*
+           "{" ,*terpri*
                ,@(lambda-body !)
-           "}" ,*newline*))
+           "}" ,*terpri*))
        (? (symbol? x.)
           x.
           !))))
@@ -259,4 +259,4 @@
 ;;;; MISCELLANEOUS
 
 (define-js-macro %%comment (&rest x)
-  `(%%native "/* " ,@x " */" ,*newline*))
+  `(%%native "/* " ,@x " */" ,*terpri*))

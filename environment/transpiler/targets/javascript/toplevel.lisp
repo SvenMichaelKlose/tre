@@ -92,5 +92,5 @@
     (transpiler-add-plain-arg-funs ! *builtins*)))
 
 (var *js-transpiler* (make-javascript-transpiler))
-(var *js-separator*  (+ ";" *newline*))
+(var *js-separator*  (+ ";" *terpri*))
 (var *js-indent*     "    ")

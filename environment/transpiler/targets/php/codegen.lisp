@@ -39,7 +39,7 @@
 ;;;; CONTROL FLOW
 
 (define-php-macro %%tag (tag)
-  `(%%native "_I_" ,tag ":" ,*php-newline*))
+  `(%%native "_I_" ,tag ":" ,*terpri*))
 
 (fn php-jump (tag)
   `("goto _I_" ,tag))
@@ -64,7 +64,7 @@
          num-locals    (length (funinfo-vars fi))
          compiled-name (compiled-function-name name))
     (developer-note "Generating function ~A…~%" name)
-    `(,*php-newline*
+    `(,*terpri*
       ,(funinfo-comment fi)
       "function " ,compiled-name ,@(php-argument-list (funinfo-args fi))
       "{" ,(code-char 10)
@@ -74,7 +74,7 @@
               `("echo \"" ,compiled-name "\\n\";"))
          ,@(lambda-body x)
          ,(php-line "return $" '~%ret)
-      "}" ,*php-newline*)))
+      "}" ,*terpri*)))
 
 (define-php-macro function (&rest x)
   (? .x
@@ -308,4 +308,4 @@
 ;;;; MISCELLANEOUS
 
 (define-php-macro %%comment (&rest x)
-  `(%%native "/* " ,@x " */" ,*newline*))
+  `(%%native "/* " ,@x " */" ,*terpri*))

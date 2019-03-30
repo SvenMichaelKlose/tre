@@ -1,6 +1,6 @@
 (fn funinfo-comment (fi)
   (? (funinfo-comments?)
-        `("/*" ,*newline*
+        `("/*" ,*terpri*
           ,(print-funinfo fi nil)
-          "*/" ,*newline*)
+          "*/" ,*terpri*)
      ""))

@@ -59,6 +59,5 @@
     (transpiler-add-plain-arg-funs ! *builtins*)))
 
 (var *php-transpiler* (make-php-transpiler))
-(var *php-newline*    (format nil "~%"))
 (var *php-separator*  (format nil ";~%"))
 (var *php-indent*     "    ")
