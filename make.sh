@@ -13,49 +13,55 @@ SBCL="sbcl --noinform"
 TRE="$SBCL --core image"
 BINDIR="/usr/local/bin/"
 
+clean_example_projects ()
+{
+	echo "Cleaning examples (requires root privileges)…"
+	sudo rm -rvf examples/project-js/compiled
+	rm -rvf examples/project-js/tre_modules
+	sudo rm -rvf examples/project-php/compiled
+	rm -rvf examples/project-php/tre_modules
+	sudo rm -rvf examples/project-js-php/compiled
+	rm -rvf examples/project-js-php/tre_modules
+}
+
 clean ()
 {
-	echo "Cleaning..."
+	echo "Cleaning…"
 	rm -rvf compiled
-	rm -rvf examples/project-js/compiled
-	rm -rvf examples/project-js/tre_modules
-	rm -rvf examples/project-php/compiled
-	rm -rvf examples/project-php/tre_modules
-	rm -rvf examples/project-js-php/compiled
-	rm -rvf examples/project-js-php/tre_modules
 	rm -vf *.core environment/transpiler/targets/c/native/$COMPILED_ENV image files.lisp
     rm -vf environment/_current-version
     rm -vf environment/_release-date
 	rm -vf _nodejstests.log _phptests.log make.log
-	echo "Checking out last working core..."
+    clean_example_projects
+	echo "Checking out last working core…"
     git checkout -- boot-common.lisp
 }
 
 install_it ()
 {
-    echo "Installing 'tre' to '$BINDIR'..."
+    echo "Installing 'tre' to '$BINDIR'…"
 	sudo cp tre $BINDIR
     sudo mkdir -p /usr/local/lib/tre
-    echo "Installing SBCL image to '/usr/local/lib/tre/image'..."
+    echo "Installing SBCL image to '/usr/local/lib/tre/image'…"
     sudo cp image /usr/local/lib/tre
-    echo "Installing environment to '/usr/local/lib/tre/environment/'..."
+    echo "Installing environment to '/usr/local/lib/tre/environment/'…"
     sudo cp -r environment /usr/local/lib/tre
     echo "Done."
 }
 
 case $1 in
 core)
-    echo "Booting environment..."
+    echo "Booting environment…"
     echo "(load \"boot-common.lisp\")" | $SBCL
 	;;
 
 genboot)
-    echo "Compiling boot code with local image..."
+    echo "Compiling boot code with local image…"
     $SBCL --core image makefiles/boot-common-lisp.lisp
 	;;
 
 reset)
-    echo "Resetting boot code from repository..."
+    echo "Resetting boot code from repository…"
     git checkout -- boot-common.lisp
 	;;
 
@@ -67,14 +73,14 @@ boot)
 	;;
 
 phptests)
-    echo "PHP target tests..."
+    echo "PHP target tests…"
     $TRE tests/php.lisp
     php compiled/test.php >_phptests.log
     cmp tests/php.correct-output _phptests.log || (diff tests/php.correct-output _phptests.log; exit 1)
 	;;
 
 jstests)
-    echo "JavaScript target tests..."
+    echo "JavaScript target tests…"
     $TRE tests/js.lisp
     node compiled/test.js >_nodejstests.log
     chromium-browser compiled/test.html &
@@ -85,14 +91,14 @@ jstests)
 updatetests)
     $TRE tests/php.lisp
     $TRE tests/js.lisp
-    echo "Updating PHP target test data..."
+    echo "Updating PHP target test data…"
     php compiled/test.php >tests/php.correct-output
-    echo "Updating JavaScript target test data (node.js only)..."
+    echo "Updating JavaScript target test data (node.js only)…"
     node compiled/test.js >tests/js.correct-output || node compiled/test.js >tests/js.correct-output
     ;;
 
 tests)
-    echo "Making tests..."
+    echo "Making tests…"
 	./make.sh phptests
 	./make.sh jstests
 	;;
@@ -115,6 +121,10 @@ examples)
     echo "Making compiler dump for BUTLAST in examples/hello-world.lisp…"
     $TRE examples/make-compiler-dumps-for-butlast.lisp > compiled/compiler-dumps-for-butlast.lisp
 #   $TRE examples/make-obfuscated.lisp # TODO: Fix setting the current *PACKAGE*.
+    clean_example_projects
+    cd examples/project-php && ./install-modules.sh && ./make.sh && cd -
+    cd examples/project-js && ./install-modules.sh && ./make.sh && cd -
+    cd examples/project-js-php && ./install-modules.sh && ./make.sh && cd -
     ;;
 
 all)
@@ -133,7 +143,7 @@ extra)
     ;;
 
 releasetests)
-    echo "Making release tests..." | tee make.log
+    echo "Making release tests…" | tee make.log
     ./make.sh all $ARGS
     ./make.sh extra
     echo "Release tests done." >>make.log
