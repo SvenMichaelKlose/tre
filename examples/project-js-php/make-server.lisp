@@ -21,6 +21,9 @@
                 ,@(list+ "tre_modules/http-funcall/"
                          '("shared/expr2dom.lisp"
                            "php/toplevel.lisp"))
+                ,@(list+ "tre_modules/session/"
+                         '("php/toplevel.lisp"
+                           "api.lisp"))
                 "server-api.lisp"
                 "server/toplevel.lisp")
               :transpiler  *php-transpiler*

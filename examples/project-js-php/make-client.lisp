@@ -65,6 +65,7 @@
       ,@(list+ "tre_modules/http-funcall/"
                '("shared/expr2dom.lisp"
                  "js/toplevel.lisp"))
+      "tre_modules/session/api.lisp"
       "server-api.lisp"
       "client/toplevel.lisp")
     :transpiler  *js-transpiler*
