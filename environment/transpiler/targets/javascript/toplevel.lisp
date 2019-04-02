@@ -60,10 +60,8 @@
 (fn js-ending-sections ())
 
 (fn js-expex-initializer (ex)
-  (= (expex-inline? ex)         [| (%slot-value? _)
-                                   (& (cons? _)
-                                      (eq '%aref _.))]
-     (expex-argument-filter ex) #'js-argument-filter))
+  (= (expex-inline? ex)          #'%slot-value?
+     (expex-argument-filter ex)  #'js-argument-filter))
 
 (fn make-javascript-transpiler-0 ()
   (create-transpiler
