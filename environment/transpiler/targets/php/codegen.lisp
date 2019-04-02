@@ -280,14 +280,13 @@
   `(%%native "null; unset " ,x))
 
 (define-php-macro %slot-value (x y)
-  (!= (? (%%string? y)
-         .y.
-         y)
-    (? (cons? x)
-       (? (%%native? x)
-          `(%%native ,(php-dollarize x) "->" ,!)    ; TODO required?
-          `(%%native ,x "->" ,!))
-       `(%%native ,(php-dollarize x) "->" ,!))))
+  `(%%native ,(? (cons? x)
+                 x
+                 (php-dollarize x))
+             "->"
+             (? (%%string? y)
+                .y.
+                y)))
 
 (define-php-macro prop-value (x y)
   `(%%native ,(php-dollarize x) "->$" ,y))
