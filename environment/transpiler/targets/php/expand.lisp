@@ -42,7 +42,7 @@
 (define-php-std-macro new (&rest x)
   (? (| (keyword? x.)
         (string? x.))
-     `(%%make-hash-table ,@x)
+     `(%%%make-object ,@x)
      `(%new ,@x)))
 
 (define-php-std-macro undefined? (x)

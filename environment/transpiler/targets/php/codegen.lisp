@@ -256,9 +256,6 @@
 (define-php-macro make-hash-table (&rest ignored-args)
   `(make-array))
 
-(define-php-macro %%make-hash-table (&rest args)
-  `(%%native "new __array (Array (" ,@(php-literal-array-elements (group args 2)) "))"))
-
 
 ;;;; OBJECTS
 
@@ -284,9 +281,9 @@
                  x
                  (php-dollarize x))
              "->"
-             (? (%%string? y)
-                .y.
-                y)))
+             ,(? (%%string? y)
+                 .y.
+                 y)))
 
 (define-php-macro prop-value (x y)
   `(%%native ,(php-dollarize x) "->$" ,y))

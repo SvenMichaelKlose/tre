@@ -74,12 +74,11 @@
           ,fun))
 
 (define-js-std-macro new (&rest x)
-  (? x
-     (? (| (keyword? x.)
-           (string? x.))
-        `(%%%make-object ,@x)
-        `(%new ,@x))
-     `(%%%make-object)))
+  (? (| (not x)
+        (keyword? x.)
+        (string? x.))
+     `(%%%make-object ,@x)
+     `(%new ,@x)))
 
 (define-js-std-macro js-type-predicate (name &rest types)
   `(fn ,name (x)
