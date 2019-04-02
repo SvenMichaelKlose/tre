@@ -73,13 +73,6 @@
               (error "Function must be a SLOT-VALUE, got ~A." fun))
           ,fun))
 
-(define-js-std-macro new (&rest x)
-  (? (| (not x)
-        (keyword? x.)
-        (string? x.))
-     `(%%%make-object ,@x)
-     `(%new ,@x)))
-
 (define-js-std-macro js-type-predicate (name &rest types)
   `(fn ,name (x)
      (when x

@@ -57,6 +57,13 @@
   (cl:eval `(cl:defpackage ,@x))
   nil)
 
+(define-shared-std-macro (js php) new (&rest x)
+  (? (| (not x)
+        (keyword? x.)
+        (string? x.))
+     `(%%%make-object ,@x)
+     `(%new ,@x)))
+
 (define-shared-std-macro (bc c js php) mapcar (fun &rest lsts)
   `(,(? .lsts
         'mapcar

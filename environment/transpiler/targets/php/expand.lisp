@@ -39,12 +39,6 @@
          (%= ,g ,slot)
          (prop-value ,place ,g)))))
 
-(define-php-std-macro new (&rest x)
-  (? (| (keyword? x.)
-        (string? x.))
-     `(%%%make-object ,@x)
-     `(%new ,@x)))
-
 (define-php-std-macro undefined? (x)
   `(not (isset ,x)))
 
