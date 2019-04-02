@@ -285,7 +285,7 @@
          y)
     (? (cons? x)
        (? (%%native? x)
-          `(%%native ,(php-dollarize x) "->" ,!)
+          `(%%native ,(php-dollarize x) "->" ,!)    ; TODO required?
           `(%%native ,x "->" ,!))
        `(%%native ,(php-dollarize x) "->" ,!))))
 
