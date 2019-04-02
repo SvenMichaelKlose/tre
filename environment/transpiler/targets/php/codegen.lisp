@@ -7,9 +7,9 @@
 
 (fn php-dollarize (x)
   (?
-    (not x)        "NULL"
-    (eq t x)       "TRUE"
-    (symbol? x)    `("$" ,x)
+    (not x)      "NULL"
+    (eq t x)     "TRUE"
+    (symbol? x)  `("$" ,x)
     x))
 
 (fn php-list (x)
@@ -59,17 +59,17 @@
 ;;;; FUNCTIONS
 
 (fn codegen-php-function (x)
-  (with (fi            (get-lambda-funinfo x)
-         name          (funinfo-name fi)
-         num-locals    (length (funinfo-vars fi))
-         compiled-name (compiled-function-name name))
+  (with (fi             (get-lambda-funinfo x)
+         name           (funinfo-name fi)
+         num-locals     (length (funinfo-vars fi))
+         compiled-name  (compiled-function-name name))
     (developer-note "Generating function ~A…~%" name)
     `(,*terpri*
       ,(funinfo-comment fi)
       "function " ,compiled-name ,@(php-argument-list (funinfo-args fi))
       "{" ,(code-char 10)
-         ,@(awhen (funinfo-globals fi)
-             (php-line "global " (php-list !)))
+         ,@(!? (funinfo-globals fi)
+               (php-line "global " (php-list !)))
          ,@(& *print-executed-functions?*
               `("echo \"" ,compiled-name "\\n\";"))
          ,@(lambda-body x)
@@ -84,9 +84,6 @@
 (define-php-macro %function-prologue (name) '(%%native ""))
 (define-php-macro %function-epilogue (name) '(%%native ""))
 (define-php-macro %function-return (name)   '(%%native ""))
-
-(fn php-codegen-argument-filter (x)
-  (php-dollarize x))
 
 (define-php-macro %closure (name)
   (with (fi            (get-funinfo name)
@@ -129,7 +126,7 @@
       (list "$" val)
     (codegen-expr? val)
       (list val)
-    `((,val. " " ,@(c-list (@ #'php-codegen-argument-filter .val))))))
+    `((,val. " " ,@(c-list (@ #'php-dollarize .val))))))
 
 (fn php-%=-0 (dest val)
   `((%%native
