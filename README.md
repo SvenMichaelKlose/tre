@@ -116,7 +116,7 @@ The initial project setups come with a bunch of external modules
 included already, so you can play around with them without needing
 to tweak the makefiles.  That's as simple as it can get at this
 time.  tré comes with no IDE whatsoever.  But what you'll see in
-your browser's debugger is more or less readable.  Some
+your browser's debugger is more or less readable.  One of
 
 ```lisp
 (invoke-debugger)
@@ -129,7 +129,7 @@ with tré you WILL find inconveniences and bugs.  And that's the
 point where you hopefully contribute by filing bugs and ask
 questions on github.com or even contribute own code.  Yep.  It's
 a great time to become a key part of the tré programming language
-project, with fame and honour and so on.
+project, with all the fame and honour and so on.
 
 
 # Syntax
