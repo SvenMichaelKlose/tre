@@ -193,7 +193,10 @@
 ;;;; METACODES
 
 (fn make-compiled-symbol-identifier (x)
-  ($ "" x))
+  ($ (!? (symbol-package x)
+         (+ (symbol-name !) "_p_")
+         "")
+     x))
 
 (var *js-compiled-symbols* (make-hash-table :test #'eq))
 
