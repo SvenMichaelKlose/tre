@@ -25,9 +25,6 @@
   (add-defined-variable name)
   nil)
 
-(define-php-std-macro make-string (&optional len)
-  "")
-
 (define-php-std-macro slot-value (place slot)
   (?
     (quote? slot)  `(%slot-value ,place ,.slot.)
