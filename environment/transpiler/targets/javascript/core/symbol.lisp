@@ -2,7 +2,7 @@
 (var *package* nil)
 
 (defnative %symbol (name pkg)
-  (= this.__class ,(obfuscated-identifier 'symbol)
+  (= this.__class ,(convert-identifier 'symbol)
      this.n name
      this.v this
      this.f nil

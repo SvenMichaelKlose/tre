@@ -41,13 +41,13 @@
 (fn js-early-symbol-maker (g sym)
   `(,@(unless (eq g '~%tfun)
         `((%var ,g)))
-    (%= ,g (symbol ,(obfuscated-symbol-name sym)
+    (%= ,g (symbol ,(symbol-name sym)
                    ,(? (keyword? sym)
                        '*keyword-package*
                        (!? (symbol-package sym)
                            (? (& (not (string== "COMMON-LISP" (package-name !)))
                                  (not (invisible-package? !)))
-                              `(symbol ,(obfuscated-symbol-name !) nil))))))))
+                              `(symbol ,(symbol-name !) nil))))))))
 
 (define-js-std-macro defun (name args &body body)
   (with (dname  (%defun-name name)

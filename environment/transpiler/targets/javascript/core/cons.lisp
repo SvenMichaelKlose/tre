@@ -1,5 +1,5 @@
 (defnative %cons (a d)
-  (= this.__class ,(obfuscated-identifier 'cons)
+  (= this.__class ,(convert-identifier 'cons)
      this._  a
      this.__ d)
   this)

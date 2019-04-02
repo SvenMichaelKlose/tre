@@ -202,13 +202,13 @@
 
 (define-js-macro quote (x)
   (cache (aprog1 (make-compiled-symbol-identifier x)
-           (push `("var " ,(obfuscated-identifier !)
+           (push `("var " ,(convert-identifier !)
                    " = "
                    ,@(let s (compiled-function-name-string 'symbol)
-                       `(,s " (\"" ,(obfuscated-symbol-name x) "\", "
+                       `(,s " (\"" ,(symbol-name x) "\", "
                                ,@(? (keyword? x)
                                     '("KEYWORDPACKAGE")
-                                    `(,s "(\"" ,(obfuscated-symbol-name (symbol-package x)) "\")"))
+                                    `(,s "(\"" ,(symbol-name (symbol-package x)) "\")"))
                             ")"))
                    ,*js-separator*)
                    (raw-decls)))

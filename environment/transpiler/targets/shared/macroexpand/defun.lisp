@@ -54,7 +54,6 @@
 
 (fn shared-defun-source-memorizer (name args body)
   (when (configuration :save-sources?)
-    (apply #'add-obfuscation-exceptions (collect-symbols (list name args body)))
     (? (configuration :memorize-sources?)
        (shared-defun-memorize-source name args body)
        (shared-defun-source-setter name args body))))

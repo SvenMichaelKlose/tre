@@ -17,5 +17,4 @@
   x)
 
 (define-php-macro tre_cons (x y)
-  `("new " ,(obfuscated-symbol-string '__cons)
-           " (" ,(php-dollarize x) ", " ,(php-dollarize y) ")"))
+  `("new " ,(convert-identifier '__cons) " (" ,(php-dollarize x) ", " ,(php-dollarize y) ")"))

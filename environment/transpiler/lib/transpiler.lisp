@@ -2,8 +2,7 @@
 (var *transpiler-log* nil)
 (var *default-transpiler* nil)
 (var *optional-passes* '(:accumulate-toplevel
-                         :inject-debugging
-                         :obfuscate))
+                         :inject-debugging))
 
 (var *print-executed-functions?* nil)
 
@@ -32,9 +31,6 @@
 
   ; Backtrace stack at run-time.
   (backtrace?                 nil)
-
-  ; Print identifiers and their obfuscated versions when done.
-  (print-obfuscations?        nil)
 
   ; Measure the time each function needs at run-time.
   ; See also file 'stage3/profile.lisp'.
@@ -116,7 +112,6 @@
   (expex                    nil)
   (symbol-translations      nil)
   (thisify-classes          (make-hash-table :test #'eq))
-  (obfuscations             (make-hash-table :test #'eq))
   (plain-arg-funs           nil)
   (late-symbols             (make-hash-table :test #'eq))
   (exported-closures        nil)
@@ -184,7 +179,6 @@
      (transpiler-exported-closures tr)      nil
      (transpiler-delayed-exprs tr)          nil
      (transpiler-memorized-sources tr)      nil)
-  (transpiler-add-obfuscation-exceptions tr nil (make-symbol ""))
   tr)
 
 (def-transpiler copy-transpiler (transpiler)
@@ -193,7 +187,6 @@
         :name                     name
         :assert?                  assert?
         :backtrace?               backtrace?
-        :print-obfuscations?      print-obfuscations?
         :profile?                 profile?
         :profile-num-calls?       profile-num-calls?
         :always-expand-arguments? always-expand-arguments?
@@ -232,7 +225,6 @@
 
         :symbol-translations      (copy-list symbol-translations)
         :thisify-classes          (copy-hash-table thisify-classes)
-        :obfuscations             (copy-hash-table obfuscations)
         :plain-arg-funs           (copy-list plain-arg-funs)
         :late-symbols             (copy-hash-table late-symbols)
         :exported-closures        (copy-list exported-closures)
@@ -330,13 +322,6 @@
 
 (fn transpiler-add-plain-arg-funs (tr lst)
   (@ [transpiler-add-plain-arg-fun tr _] lst))
-
-(fn transpiler-add-obfuscation-exceptions (tr &rest x)
-  (@ (i x)
-    (= (href (transpiler-obfuscations tr) (make-symbol (symbol-name i))) t)))
-
-(fn add-obfuscation-exceptions (&rest x)
-  (apply #'transpiler-add-obfuscation-exceptions *transpiler* x))
 
 (fn add-late-symbol (x)
   (= (href (late-symbols) x) t)
@@ -453,5 +438,4 @@
     (= (transpiler-std-macro-expander !) (transpiler-make-std-macro-expander !))
     (transpiler-make-code-expander !)
     (transpiler-make-expex !)
-    (make-global-funinfo !)
-    (transpiler-add-obfuscation-exceptions ! '%%native)))
+    (make-global-funinfo !)))

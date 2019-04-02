@@ -31,7 +31,7 @@
      (%%%eq t x)
      (& (object? x)
          x.__class
-         (%%%== x.__class ,(obfuscated-identifier 'symbol)))))
+         (%%%== x.__class ,(convert-identifier 'symbol)))))
 
 (fn package-name (x)
   x.n)

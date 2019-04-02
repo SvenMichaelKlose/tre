@@ -1,4 +1,7 @@
-Changes relative to tre-0.15:
+Changes relative to tre-0.16:
+  * Identifier obfuscation is not supported anymore.
+
+Changes of tre-0.16 relative to tre-0.15:
   * Added ready-made project directories in example/ to make
     it easier to start projects.
   * REMOVE-PROP is now REMOVE-PROPS and works on an arbitrarily

@@ -111,9 +111,6 @@
               (? (== 1 !) "" "s"))))
 
 (fn print-transpiler-stats (start-time)
-  (& (obfuscate?)
-     (print-obfuscations?)
-     (print-obfuscations))
   ;(warn-unused-functions)
   (tell-number-of-warnings)
   (print-status "~A seconds passed.~%"

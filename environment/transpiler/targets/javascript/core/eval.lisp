@@ -23,9 +23,9 @@
   (with-temporary *js-transpiler* (| *js-eval-transpiler* (make-js-eval-transpiler))
     (alet *js-transpiler*
       (+ (js-eval-transpile ! x)
-         (obfuscated-identifier '*native-eval-return-value*)
+         (convert-identifier '*native-eval-return-value*)
          " = "
-         (obfuscated-identifier '~%ret)
+         (convert-identifier '~%ret)
          ";"))))
 
 (fn eval (x)

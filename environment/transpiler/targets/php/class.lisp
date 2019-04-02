@@ -61,7 +61,7 @@
     (!? (href classes class-name)
         `{(fn ,($ class-name '?) (x)
             (& (object? x)
-               (is_a x ,(obfuscated-identifier class-name))
+               (is_a x ,(convert-identifier class-name))
                x))
           ,(assoc-value class-name *delayed-constructors*)
           ,@(php-method-functions class-name !)

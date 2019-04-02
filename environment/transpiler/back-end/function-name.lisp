@@ -18,4 +18,4 @@
     (= (href *compiled-function-names* !) name)))
 
 (fn compiled-function-name-string (name)
-  (obfuscated-identifier (compiled-function-name name)))
+  (convert-identifier (compiled-function-name name)))

@@ -79,7 +79,7 @@
 (define-php-macro function (&rest x)
   (? .x
      (codegen-php-function (. 'function x))
-     `(%%native (%%string ,(obfuscated-identifier x.)))))
+     `(%%native (%%string ,(convert-identifier x.)))))
 
 (define-php-macro %function-prologue (name) '(%%native ""))
 (define-php-macro %function-epilogue (name) '(%%native ""))
@@ -302,7 +302,7 @@
 ;;;; GLOBAL VARIABLES
 
 (define-php-macro %global (x)
-  `(%%native "$GLOBALS['" ,(obfuscated-identifier x) "']"))
+  `(%%native "$GLOBALS['" ,(convert-identifier x) "']"))
 
 
 ;;;; MISCELLANEOUS

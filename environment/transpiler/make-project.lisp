@@ -1,14 +1,11 @@
 (fn make-project (project-name sections &key transpiler
-                                             (section-list-gen      nil)
-                                             (sections-to-update    nil)
-                                             (recompiler-path       nil)
-                                             (emitter               nil)
-                                             (obfuscate?            nil))
+                                             (section-list-gen    nil)
+                                             (sections-to-update  nil)
+                                             (recompiler-path     nil)
+                                             (emitter             nil))
   (format t "; Making project '~A'…~%" project-name)
   (= sections (ensure-list sections))
   (= (transpiler-sections-to-update transpiler) sections-to-update)
-  (& obfuscate?
-     (transpiler-enable-pass transpiler :obfuscate))
   (let code (compile-sections sections :transpiler transpiler)
     (!? emitter
         (funcall ! code))
@@ -23,8 +20,7 @@
                                          :section-list-gen    section-list-gen
                                          :sections-to-update  (funcall section-list-gen)
                                          :recompiler-path     recompiler-path
-                                         :emitter             emitter
-                                         :obfuscate?          obfuscate?)
+                                         :emitter             emitter)
                            (quit)])
       (format t " OK.~%"))
     code))

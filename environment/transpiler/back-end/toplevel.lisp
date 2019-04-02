@@ -5,7 +5,6 @@
     count-tags             #'count-tags
     wrap-tags              #'wrap-tags
     codegen-expand         [expander-expand (codegen-expander) _]
-    obfuscate              #'obfuscate
     convert-identifiers    #'convert-identifiers
     output-filter          #'concat-stringtree)
 

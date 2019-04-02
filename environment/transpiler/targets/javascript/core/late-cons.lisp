@@ -21,4 +21,4 @@
 (fn cons? (x)
   (& (object? x)
      x.__class
-     (%%%== x.__class ,(obfuscated-identifier 'cons))))
+     (%%%== x.__class ,(convert-identifier 'cons))))
