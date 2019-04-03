@@ -122,8 +122,6 @@
     (with-temporaries (*transpiler*  (| transpiler
                                         (copy-transpiler *default-transpiler*))
                        *assert?*     (| *assert?* (assert?)))
-      (& (sections-to-update)
-         (clr (emitted-decls)))
       (= (host-functions) (make-host-functions))
       (= (host-variables) (make-host-variables))
       (prog1 (generic-frontend (@ [? (string? _) (list _) _]  sections))

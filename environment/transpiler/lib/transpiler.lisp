@@ -146,7 +146,6 @@
 
   (compiled-decls           nil)
   (compiled-inits           nil)
-  (emitted-decls            nil)
 
   (identifiers              (make-hash-table :test #'eq))
   (converted-identifiers    (make-hash-table :test #'eq))
@@ -251,7 +250,6 @@
         :compiled-symbols         (copy-hash-table compiled-symbols)
         :compiled-decls           (copy-list compiled-decls)
         :compiled-inits           (copy-list compiled-inits)
-        :emitted-decls            (copy-list emitted-decls)
         :identifiers              (copy-hash-table identifiers)
         :converted-identifiers    (copy-hash-table converted-identifiers)
         :cached-frontend-sections (copy-alist cached-frontend-sections)
@@ -270,9 +268,6 @@
       (let tr *transpiler*
         ,@body))})
 
-(defmacro transpiler-getter-list (name)
-  `(transpiler-getter ,($ name '?) (member x (,($ 'transpiler- name 's) tr) :test #'eq)))
-
 (fn transpiler-defined-functions-without-builtins (tr) (remove-if #'builtin? (transpiler-defined-functions tr)))
 (transpiler-getter defined-function        (href (transpiler-defined-functions tr) x))
 (transpiler-getter defined-variable        (href (transpiler-defined-variables tr) x))
@@ -287,7 +282,6 @@
 (transpiler-getter wanted-function?        (href (transpiler-wanted-functions-hash tr) x))
 (transpiler-getter wanted-variable?        (href (transpiler-wanted-variables-hash tr) x))
 (transpiler-getter late-symbol?            (href (transpiler-late-symbols tr) x))
-(transpiler-getter-list emitted-decl)
 
 (transpiler-getter add-defined-variable  (= (href (transpiler-defined-variables tr) x) t)
                                          x)
@@ -308,7 +302,6 @@
   (transpiler-add-defined-function *transpiler* name args body))
 
 (define-slot-setter-push transpiler-add-exported-closure tr  (transpiler-exported-closures tr))
-(define-slot-setter-push transpiler-add-emitted-decl tr      (transpiler-emitted-decls tr))
 
 (fn add-delayed-expr (x)
   (+! (delayed-exprs) (frontend (list x)))

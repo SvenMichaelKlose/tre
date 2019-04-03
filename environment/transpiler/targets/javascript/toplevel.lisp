@@ -19,7 +19,7 @@
      (memorized-sources)))
 
 (fn js-var-decls ()
-  (list (backend-generate-code `(((%var ,@(remove-if #'emitted-decl? (funinfo-vars (global-funinfo)))))))))
+  (list (backend-generate-code `(((%var ,@(funinfo-vars (global-funinfo))))))))
 
 (fn js-sections-before-import ()
   (. (. '*js-core0* (load-string *js-core0*))
