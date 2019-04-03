@@ -1,1 +1,1 @@
-(functional quote %closure cons %%%eq %immediate-aref %global)
+(functional quote %closure cons %%%eq %global)
