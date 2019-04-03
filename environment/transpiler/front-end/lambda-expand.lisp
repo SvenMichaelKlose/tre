@@ -25,9 +25,9 @@
   (with (name    (closure-name)
          args    (lambda-args x)
          body    (lambda-body x)
-         new-fi  (create-funinfo :name   name
-                                 :args   args
-                                 :parent *funinfo*))
+         new-fi  (create-funinfo :name    name
+                                 :args    args
+                                 :parent  *funinfo*))
     (funinfo-make-scope-arg new-fi)
     (transpiler-add-exported-closure *transpiler* `((fn ,name ,args ,@body)))
     `(%closure ,name)))
@@ -42,12 +42,14 @@
       (with (name    (| (lambda-name x)
                         (funinfo-sym))
              args    (lambda-args x)
-             new-fi  (create-funinfo :name   name
-                                     :args   args
-                                     :parent *funinfo*))
+             new-fi  (create-funinfo :name    name
+                                     :args    args
+                                     :parent  *funinfo*))
         (funinfo-var-add *funinfo* name)
         (with-temporary *funinfo* new-fi
-          (copy-lambda x :name name :args args :body (lambda-expand-r (lambda-body x)))))))
+          (copy-lambda x :name  name
+                         :args  args
+                         :body  (lambda-expand-r (lambda-body x)))))))
 
 
 ;;;; TOPLEVEL
