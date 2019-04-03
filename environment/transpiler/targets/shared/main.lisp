@@ -1,5 +1,3 @@
-(env-load "transpiler/targets/shared/builtin.lisp")
-(env-load "transpiler/targets/shared/core-variables.lisp")
 (env-load "transpiler/targets/shared/functionals.lisp")
 (env-load "transpiler/targets/shared/noargs-tag.lisp")
 (env-load "transpiler/targets/shared/c-identifier-char-p.lisp")
