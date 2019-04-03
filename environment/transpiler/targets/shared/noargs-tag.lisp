@@ -8,8 +8,3 @@
   (& (body-has-noargs-tag? body)
      (error "Body already has NOARGS tag."))
   `(no-args ,@body))
-
-(fn body-without-noargs-tag (body)
-  (? (body-has-noargs-tag? body)
-     .body
-     body))
