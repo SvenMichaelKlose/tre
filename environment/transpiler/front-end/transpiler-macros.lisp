@@ -26,3 +26,7 @@
                                    (can-import-function? _)
                                    (%=-function? _)]
     (expander-expand (transpiler-macro-expander) x)))
+
+{,@(@ [`(defmacro ,($ 'def- _ '-transpiler-macro) (name args &body body)
+          `(define-transpiler-macro ,($ '* _ '-transpiler*) ,,name ,,args ,,@body))]
+      *targets*)}

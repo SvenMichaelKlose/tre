@@ -1,6 +1,3 @@
-(defmacro def-php-transpiler-macro (&rest x)
-  `(define-transpiler-macro *php-transpiler* ,@x))
-
 (def-php-transpiler-macro defnative (name args &body body)
   (shared-defun name args body :allow-source-memorizer? nil))
 

@@ -1,6 +1,3 @@
-(defmacro def-js-transpiler-macro (name args &body body)
-  `(define-transpiler-macro *js-transpiler* ,name ,args ,@body))
-
 (fn js-make-function-with-expander (x)
   (!= (| (lambda-name x)
          (gensym))
