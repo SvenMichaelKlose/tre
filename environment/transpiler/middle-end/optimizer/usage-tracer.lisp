@@ -5,7 +5,7 @@
      (funinfo-error "Internal compiler error: Tag ~A not found in body ~A." tag *body*)))
 
 (fn removable-place? (x)
-  (alet *funinfo*
+  (!= *funinfo*
     (& (| (funinfo-parent !)
           (eq '~%ret x)
           (not (defined-variable x)

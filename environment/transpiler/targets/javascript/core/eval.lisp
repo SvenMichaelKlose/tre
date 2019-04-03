@@ -21,7 +21,7 @@
 
 (fn eval-compile (x)
   (with-temporary *js-transpiler* (| *js-eval-transpiler* (make-js-eval-transpiler))
-    (alet *js-transpiler*
+    (!= *js-transpiler*
       (+ (js-eval-transpile ! x)
          (convert-identifier '*native-eval-return-value*)
          " = "

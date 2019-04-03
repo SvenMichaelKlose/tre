@@ -1,6 +1,6 @@
 (functional reverse)
 
 (fn reverse (lst)
-  (alet nil
+  (!= nil
     (@ (i lst !)
       (push i !))))

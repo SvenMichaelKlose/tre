@@ -1,4 +1,4 @@
 (fn merge (&rest x)
-  (alet nil
+  (!= nil
     (@ (x (apply #'append x) !)
       (adjoin! x !))))

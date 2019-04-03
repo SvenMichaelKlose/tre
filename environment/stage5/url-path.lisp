@@ -10,7 +10,7 @@
   (car (path-pathlist x)))
 
 (fn url-has-schema? (x)
-  (alet (path-pathlist x)
+  (!= (path-pathlist x)
     (& (tail? !. ":")
        (empty-string? .!.))))
 

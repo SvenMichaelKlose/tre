@@ -15,7 +15,7 @@
       (push scope-arg (funinfo-args fi)))))
 
 (fn funinfo-setup-scope (fi x)
-  (alet (funinfo-parent fi)
+  (!= (funinfo-parent fi)
     (| ! (error "Couldn't find ~A in environment." x))
     (when (lambda-export?)
       (funinfo-make-scope (funinfo-parent fi))

@@ -1,7 +1,7 @@
 (var *js-core-path* "environment/transpiler/targets/javascript/core/")
 
 (fn js-load-core (dir-path &rest files)
-  (apply #'+ (@ [alet (+ *js-core-path* dir-path _)
+  (apply #'+ (@ [!= (+ *js-core-path* dir-path _)
                   (print-definition `(js-load-core ,!))
                   (load-file !)
                   (fetch-file !)]

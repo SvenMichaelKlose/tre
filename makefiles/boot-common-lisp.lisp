@@ -16,7 +16,7 @@
     (defpackage "TRE"
       (:use "TRE-CORE"))))
 
-(alet (copy-transpiler *cl-transpiler*)
+(!= (copy-transpiler *cl-transpiler*)
   (with-temporary *transpiler* !
     (add-defined-variable '*macros*))
   (with (c           (compile-sections (list (. 'dummy nil)) :transpiler !)

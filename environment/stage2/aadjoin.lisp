@@ -1,8 +1,7 @@
 (fn aadjoin (key value lst &key (test #'eql) (to-end? nil))
   (? (assoc key lst :test test)
      (aprog1 (copy-alist lst)
-       (alet (assoc key ! :test test)
-         (= .! value)))
+       (= (cdr (assoc key ! :test test)) value))
      (? to-end?
         (+ lst (list (. key value)))
         (. (. key value) lst))))

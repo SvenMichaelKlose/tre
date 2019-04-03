@@ -23,7 +23,7 @@
   (apply #'+ (remove-if #'not (codegen data))))
 
 (fn codegen-sections (sections)
-  (alet (map-sections #'codegen-section sections (cached-output-sections))
+  (!= (map-sections #'codegen-section sections (cached-output-sections))
     (= (cached-output-sections) !)
     (@ #'cdr !)))
 
@@ -93,7 +93,7 @@
                     (error "Don't know what to do with section ~A." section))))))
 
 (fn frontend-sections (sections)
-  (alet (map-sections #'frontend-section sections (cached-frontend-sections))
+  (!= (map-sections #'frontend-section sections (cached-frontend-sections))
     (= (cached-frontend-sections) !)))
 
 (fn generic-frontend (sections)
@@ -105,7 +105,7 @@
                    (import-from-host)))
 
 (fn tell-number-of-warnings ()
-  (alet (length *warnings*)
+  (!= (length *warnings*)
     (format t "~L; ~A warning~A.~%"
               (? (zero? !) "No" !)
               (? (== 1 !) "" "s"))))

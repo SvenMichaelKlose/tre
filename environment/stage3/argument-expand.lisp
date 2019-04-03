@@ -25,7 +25,7 @@
          make-&key-descr      [when _
                                 (? (argument-keyword? _.)
                                    (copy-def-until-&key _)
-                                   (alet _.
+                                   (!= _.
                                      (push (? (cons? !)
                                               (. !. .!.) ; with default value
                                               (. ! !))   ; with itself
@@ -101,7 +101,7 @@
            #'((def vals)
                 (let k (assoc ($ vals.) key-args :test #'eq)
                   (? k
-                     (alet vals
+                     (!= vals
                        (| .! (return (err "Value of argument ~A missing." (list !.))))
                        (rplacd k .!.)
                        (exp-main def ..!))
@@ -162,7 +162,7 @@
                       (& def
                          (exp-main-non-key def vals))))))
 
-     (alet (exp-main argdefs alst)
+     (!= (exp-main argdefs alst)
        (? (eq ! 'error)
           !
           (nconc ! (nconc (@ [. _. (. '%key ._)] key-args)
@@ -171,7 +171,7 @@
 (fn argument-expand (fun def vals &key (apply-values? t)
                                        (concatenate-sublists? t)
                                        (break-on-errors? t))
-  (alet (argument-expand-0 fun def vals apply-values? concatenate-sublists? break-on-errors?)
+  (!= (argument-expand-0 fun def vals apply-values? concatenate-sublists? break-on-errors?)
     (? (| apply-values?
           (eq ! 'error))
        !

@@ -41,7 +41,7 @@
 
 (fn %format (inf txt args)
   (when txt
-    (alet (format-info-stream inf)
+    (!= (format-info-stream inf)
       (?
         (eql txt. #\\)  {(princ txt. !)
                          (princ .txt. !)

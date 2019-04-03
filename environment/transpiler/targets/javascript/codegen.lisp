@@ -40,7 +40,7 @@
   (c-list (argument-expand-names debug-section args)))
 
 (define-js-macro function (&rest x)
-  (alet (. 'function x)
+  (!= (. 'function x)
     (? .x
        (with (name            (lambda-name !)
               translated-name (? (defined-function name)
@@ -65,9 +65,8 @@
               ,*js-indent* "switch (_I_) { case 0:" ,*js-separator*))))
 
 (define-js-macro %function-return (name)
-  (alet (get-funinfo name)
-    (& (funinfo-var? ! '~%ret)
-       `(,*js-indent* "return " ~%ret ,*js-separator*))))
+  (& (funinfo-var? (get-funinfo name) '~%ret)   ; TODO: Required?
+     `(,*js-indent* "return " ~%ret ,*js-separator*)))
 
 (define-js-macro %function-epilogue (name)
   (| `((%function-return ,name)

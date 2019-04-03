@@ -9,7 +9,7 @@
                               (%%macrocall _)]))))
 
 (fn transpiler-copy-std-macro-expander (tr-old tr-new)
-  (alet (transpiler-make-std-macro-expander tr-new)
+  (!= (transpiler-make-std-macro-expander tr-new)
     (= (transpiler-std-macro-expander tr-new) !)
     (= (expander-macros !) (copy-hash-table (expander-macros (transpiler-std-macro-expander tr-old))))))
 

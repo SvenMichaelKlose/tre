@@ -68,7 +68,7 @@
 
 (fn pretty-print-named-lambda (x str info)
   (%with-brackets str info
-    (alet (++ (car (print-info-columns info)))
+    (!= (++ (car (print-info-columns info)))
       (princ "FUNCTION " str)
       (%late-print .x. str info)
       (%print-gap str)
@@ -198,7 +198,7 @@
   (%print-symbol-component (abbreviated-package-name name) str))
 
 (fn invisible-package? (x)
-  (alet (package-name x)
+  (!= (package-name x)
     (some [string== ! _] *invisible-package-names*)))
 
 (fn invisible-package-name? (x)

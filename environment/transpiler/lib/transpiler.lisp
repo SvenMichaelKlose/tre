@@ -386,7 +386,7 @@
      (. (make-keyword x) (transpiler-disabled-passes tr))))
 
 (fn transpiler-configuration-item (tr x)
-  (alet (transpiler-configurations tr)
+  (!= (transpiler-configurations tr)
     (| (assoc x ! :test #'eq)
        (error "Transpiler ~A has no configuration item ~A. Available items are ~A."
               (transpiler-name tr) x (carlist !)))))

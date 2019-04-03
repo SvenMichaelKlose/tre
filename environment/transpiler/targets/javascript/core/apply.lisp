@@ -2,7 +2,7 @@
   (let l (last lst)
     (assert (function? fun) "First argument ~A is not a function." fun)
     (assert (list? l.) "Last argument is not a list. Got ~A." l)
-    (alet (nconc (butlast lst) l.)
+    (!= (nconc (butlast lst) l.)
       (? (defined? fun.tre-exp)
          (fun.tre-exp.apply nil (%%native "[" ! "]"))
          (fun.apply nil (list-array !))))))

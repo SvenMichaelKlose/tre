@@ -2,7 +2,7 @@
   (with (names  nil
          num    0)
     `(,@(@ [(++! num)
-            (alet ($ 'test- num)
+            (!= ($ 'test- num)
               (push ! names)
               `(fn ,! ()
                  (%princ ,(+ "Test " (string num) ", " _.))

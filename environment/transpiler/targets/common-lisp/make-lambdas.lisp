@@ -9,7 +9,7 @@
        (,g ,@(make-lambdas .x)))))
 
 (fn make-anonymous-function (x)
-  (alet (make-lambdas .x.)
+  (!= (make-lambdas .x.)
     (? (equal ! '(nil))
        `(lambda nil nil)
        `(lambda ,@!))))

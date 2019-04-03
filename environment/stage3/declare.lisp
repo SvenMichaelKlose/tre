@@ -44,6 +44,6 @@
 
 (defmacro declare (&rest x)
   (| x (error "Arguments expected."))
-  (alet (@ #'%declare-statement (ensure-tree x))
+  (!= (@ #'%declare-statement (ensure-tree x))
     (when *assert?*
       `{,@!})))

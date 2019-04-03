@@ -13,7 +13,7 @@
 
 (fn %%unkey (x)
   (? (%%%== "~%" (substr x 0 2))
-     (alet (substr x 3)
+     (!= (substr x 3)
        (case (substr x 2 1) :test #'%%%==
          "S" (let boundary (strpos ! "~%P")
                (make-symbol (subseq ! 0 boundary)
@@ -33,14 +33,14 @@
      (array-list (array_keys x))))
 
 (fn href (h k)
-  (alet (%%key k)
+  (!= (%%key k)
     (? (is_a h "__array")
        (h.g !)
        (& (%aref-defined? h !)
           (%aref h !)))))
 
 (fn (= href) (v h k)
-  (alet (%%key k)
+  (!= (%%key k)
     (?  (is_a h "__array")
         (h.s (%%key !) v)
         (=-%aref v h !) v))

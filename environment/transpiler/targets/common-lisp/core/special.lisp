@@ -1,7 +1,7 @@
 (var *special-forms* nil)
 
 (fn special-%%macrocall (x)
-  (alet (cdr (assoc x. *special-forms* :test #'eq))
+  (!= (cdr (assoc x. *special-forms* :test #'eq))
     (apply .! (argument-expand-values x. !. .x))))
 
 (fn special-%%macro? (x)

@@ -104,7 +104,7 @@
      (not (funinfo-used-var? fi x))
      {(push x (funinfo-used-vars fi))
       (| (funinfo-arg-or-var? fi x)
-         (alet (funinfo-scope-arg fi)
+         (!= (funinfo-scope-arg fi)
            (& (not (funinfo-used-var? fi 1))
               (push ! (funinfo-used-vars fi)))
            (funinfo-add-used-var-0 (funinfo-parent fi) x)))}))

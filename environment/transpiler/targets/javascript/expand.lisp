@@ -2,8 +2,8 @@
   `(define-transpiler-std-macro *js-transpiler* ,name ,args ,@body))
 
 (fn js-make-function-with-expander (x)
-  (alet (| (lambda-name x)
-           (gensym))
+  (!= (| (lambda-name x)
+         (gensym))
     (with-gensym g
       `(%%block
          (%var ,g)
@@ -17,7 +17,7 @@
        (not (simple-argument-list? (lambda-args x))))))
 
 (define-js-std-macro function (&rest x)
-  (alet (. 'function x)
+  (!= (. 'function x)
     (? .x
        (? (js-requires-expander? !)
           (js-make-function-with-expander !)

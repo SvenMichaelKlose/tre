@@ -17,7 +17,7 @@
 
 (fn %subseq-sequence (maker seq start end)
   (unless (== start end)
-    (alet (length seq)
+    (!= (length seq)
       (when (< start !)
         (& (>= end !)
            (= end !))

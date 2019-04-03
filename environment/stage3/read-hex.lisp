@@ -1,7 +1,7 @@
 (fn read-hex (str)
   (with (rec #'((v)
                     (!? (& (peek-char str)
-                           (alet (char-upcase (peek-char str))
+                           (!= (char-upcase (peek-char str))
                              (& (hex-digit-char? !)
                                 !)))
                         {(read-char str)

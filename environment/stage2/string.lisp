@@ -19,6 +19,6 @@
   (list-string (queue-list x)))
 
 (fn string-array (x)
-  (alet (make-array (length x))
+  (!= (make-array (length x))
     (dotimes (i (length x) !)
       (= (elt ! i) (elt x i)))))

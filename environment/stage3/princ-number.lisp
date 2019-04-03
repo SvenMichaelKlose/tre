@@ -2,7 +2,7 @@
   (code-char (+ x (char-code #\0))))
 
 (fn integer-chars-0 (x)
-  (alet (integer (mod x 10))
+  (!= (integer (mod x 10))
     (. (number-digit !)
        (& (<= 10 x)
           (integer-chars-0 (/ (- x !) 10))))))
@@ -11,7 +11,7 @@
   (reverse (integer-chars-0 (integer (abs x)))))
 
 (fn decimals-chars (x)
-  (alet (mod (* x 10) 10)
+  (!= (mod (* x 10) 10)
     (& (< 0 !)
        (. (number-digit (integer !))
           (decimals-chars !)))))
@@ -20,7 +20,7 @@
   (& (< x 0)
      (princ #\- str))
   (stream-princ (integer-chars x) str)
-  (alet (mod x 1)
+  (!= (mod x 1)
     (unless (zero? !)
       (princ #\. str)
       (stream-princ (decimals-chars !) str))))

@@ -1,9 +1,9 @@
 (fn peek-byte (i)
-  (alet (peek-char i)
+  (!= (peek-char i)
     (& ! (char-code !))))
 
 (fn read-byte (i)
-  (alet (read-char i)
+  (!= (read-char i)
     (& ! (char-code !))))
 
 ; TODO: Flexible endianess.

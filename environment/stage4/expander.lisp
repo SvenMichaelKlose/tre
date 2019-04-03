@@ -59,7 +59,7 @@
 (fn expander-expand-0 (expander expr)
   (with-temporaries (*macro?*     (expander-pred expander)
                      *macrocall*  (expander-call expander))
-    (alet (expander-name expander)
+    (!= (expander-name expander)
       (? (eq ! *expander-dump?*)
          {(format t "~%; Expander ~A input:~%" !)
           (print expr)

@@ -59,7 +59,7 @@
      list-of-lists-of-exprs))
 
 (defmacro define-transpiler-end (name &rest name-function-pairs)
-  (alet (group name-function-pairs 2)
+  (!= (group name-function-pairs 2)
     `(fn ,(make-symbol (symbol-name name)) (list-of-lists-of-exprs)
        (transpiler-end ,name
                        (list ,@(@ [`(. ,@_)]

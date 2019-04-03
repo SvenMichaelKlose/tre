@@ -41,7 +41,7 @@
           (number? s)
           (character? s))
        (string s)
-       (list-string (alet (symbol-name s)
+       (list-string (!= (symbol-name s)
                       (corrected-chars (? (global-variable-notation? !)
                                           (capitals !)
                                           (camel-notation (string-list !)))
@@ -49,7 +49,7 @@
 
 (fn convert-identifier (s)
   (| (href (identifiers) s)
-     (let n (alet (symbol-name (symbol-package s))
+     (let n (!= (symbol-name (symbol-package s))
               (? (| (eql "TRE" !)
                     (eql "TRE-CORE" !)
                     (eql "COMMON-LISP" !))

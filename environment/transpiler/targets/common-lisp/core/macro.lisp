@@ -5,13 +5,13 @@
   (cl:rassoc x (env-macros) :test #'eq))
 
 (defbuiltin %%macrocall (x)
-  (alet (cdr (assoc x. (env-macros) :test #'eq))
+  (!= (cdr (assoc x. (env-macros) :test #'eq))
     (apply .! (argument-expand-values x. !.. .x))))
 
 (defbuiltin %%macro? (x)
   (& (cons? x)
      (symbol? x.)
-     (alet (env-macros)
+     (!= (env-macros)
        (& (cons? !)
           (assoc x. ! :test #'eq)))))
 

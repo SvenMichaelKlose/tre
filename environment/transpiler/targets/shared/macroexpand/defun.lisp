@@ -81,7 +81,7 @@
     `((function ,name (,args
                        ,@(& (body-has-noargs-tag? body)
                             '(no-args))
-                       ,@(alet (shared-defun-profiling-body name body-with-block)
+                       ,@(!= (shared-defun-profiling-body name body-with-block)
                            (? allow-backtrace?
                               (shared-defun-backtrace name !)
                               !))))

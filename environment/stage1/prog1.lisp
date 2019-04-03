@@ -1,5 +1,5 @@
 (defmacro prog1 (&body body)
-  (alet (gensym)
+  (!= (gensym)
     `(let ,! ,body.
       ,@.body
       ,!)))

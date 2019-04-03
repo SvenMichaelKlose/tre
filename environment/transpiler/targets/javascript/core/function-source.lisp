@@ -17,14 +17,14 @@
 
 ,(? (configuration :save-sources?)
     '(fn function-body (x)
-       (alet (function|symbol-function x)
+       (!= (function|symbol-function x)
          (!? !.__source
              (with-stream-string s .!
                (read s)))))
     '(fn function-body (x)))
 
 (fn function-source (x)
-  (alet (function|symbol-function x)
+  (!= (function|symbol-function x)
     (& !.__source
        `#'(,(function-arguments !)
            ,@(function-body !)))))

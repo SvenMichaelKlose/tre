@@ -17,7 +17,7 @@
        (error "Base class ~A is not defined." bases.))
     (= (href classes cname)
        (? bases
-          (alet (href classes bases.)
+          (!= (href classes bases.)
             (make-class :name    cname
                         :members (class-members !)
                         :parent  !))

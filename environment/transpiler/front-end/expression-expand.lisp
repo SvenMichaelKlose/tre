@@ -4,7 +4,7 @@
 ;;;; SHARED SETTER FILTER
 
 (fn expex-compiled-funcall (x)
-  (alet ..x.
+  (!= ..x.
     (? (& (cons? !)
           (| (function-expr? !.)
              (funinfo-find *funinfo* !.)))

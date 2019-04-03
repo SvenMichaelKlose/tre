@@ -1,9 +1,9 @@
 (functional find position)
 
 (fn %find-if-list (pred seq from-end with-index)
-  (alet (? from-end
-           (reverse seq)
-           seq)
+  (!= (? from-end
+         (reverse seq)
+         seq)
     (? with-index
        (let idx 0
          (@ (i !)
@@ -27,7 +27,7 @@
            ((? from-end
                (< i e)
                (> i e)))
-         (alet (elt seq i)
+         (!= (elt seq i)
            (& (apply pred (. ! (& with-index (list i))))
               (return !)))))))
  

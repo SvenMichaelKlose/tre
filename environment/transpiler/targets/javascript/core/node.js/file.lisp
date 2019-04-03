@@ -25,7 +25,7 @@
 
 (fn %fclose (fd)
   (fs.close-sync (nodejs-file-fd-block fd))
-  (alet (nodejs-file-fd-stream fd)
+  (!= (nodejs-file-fd-stream fd)
     (? (defined? !.end)
        (!.end))))
 
@@ -36,7 +36,7 @@
   (nodejs-file-eof? fd))
 
 (fn %read-char (fd)
-  (alet ((nodejs-file-fd-stream fd).read)
+  (!= ((nodejs-file-fd-stream fd).read)
     (when (| (not !)
              (zero? !.length))
       (= (nodejs-file-eof? fd) t)

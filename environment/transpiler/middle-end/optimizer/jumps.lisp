@@ -25,7 +25,7 @@
 (fn setting-ret-to-bool? (x)
   (& (%=? x)
      (~%ret? .x.)
-     (alet ..x.
+     (!= ..x.
        (| (not !)
           (eq t !)))))
 

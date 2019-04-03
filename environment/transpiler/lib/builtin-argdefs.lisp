@@ -142,7 +142,7 @@
       (CLOSE-SOCKET     ())))
 
 (fn sanity-check-builtin-argdefs ()
-  (alet (carlist *builtin-argdefs*)
+  (!= (carlist *builtin-argdefs*)
     (while ! nil
       (& (member !. .!)
          (error "~A occurs more than once in argument definitions." !.))

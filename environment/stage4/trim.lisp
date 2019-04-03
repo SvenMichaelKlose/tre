@@ -1,5 +1,5 @@
 (fn trim-tail (seq tail &key (test #'equal))
-  (alet (length seq)
+  (!= (length seq)
     (when (< 0 !)
       (? (tail? seq tail :test test)
          (trim-tail (subseq seq 0 (- ! (length tail))) tail :test test)

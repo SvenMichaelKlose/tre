@@ -1,5 +1,5 @@
 (fn function-exits? (x)
-  (alet x.
+  (!= x.
     (?
       (not x)          t
       (%%go? !)        (!? (member .!. .x)

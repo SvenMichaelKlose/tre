@@ -5,7 +5,7 @@
 
 (fn compiled-function-name (name)
   (aprog1 (make-symbol (+ (function-name-prefix)
-                          (alet (symbol-name (symbol-package name))
+                          (!= (symbol-name (symbol-package name))
                             (? (| (eql "TRE" !)
                                   (eql "TRE-CORE" !)
                                   (eql "COMMON-LISP" !))

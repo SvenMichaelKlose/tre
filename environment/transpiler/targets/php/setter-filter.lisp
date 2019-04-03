@@ -1,6 +1,6 @@
 (fn php-setter-filter (x)
   `(%= ,(php-argument-filter .x.)
-       ,(alet ..x.
+       ,(!= ..x.
           (? (& (cons? !)
                 (defined-function !.))
              `(,(compiled-function-name !.) ,@.!))

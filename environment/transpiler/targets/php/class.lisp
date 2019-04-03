@@ -67,7 +67,7 @@
           ,@(php-method-functions class-name !)
           (%= nil (%%native
                     (%php-class-head ,class-name)
-                    ,(alet (argument-expand-names 'php-constructor (transpiler-function-arguments *transpiler* class-name))
+                    ,(!= (argument-expand-names 'php-constructor (transpiler-function-arguments *transpiler* class-name))
                        `("public function __construct " ,(php-argument-list !) ,*terpri*
                          "{" ,*terpri*
                              ,*php-indent* "return " ,(php-compiled-constructor-name class-name) ,(php-argument-list (. 'this !)) ,*php-separator*

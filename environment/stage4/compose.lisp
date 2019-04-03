@@ -1,6 +1,6 @@
 (defmacro compose (&rest function-list)
   (with (rec #'((l)
-                  `(,(alet l.
+                  `(,(!= l.
                        (? (& (cons? !)
                              (eq 'function !.)
                              (atom .!.))

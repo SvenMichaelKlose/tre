@@ -2,7 +2,7 @@
   (with-queue q
     (while (seek-char s)
            (queue-list q)
-      (alet (read s)
+      (!= (read s)
         (? (cons? !)
            (?
              (eq 'defpackage !.)  (eval `(cl:defpackage ,@.!))

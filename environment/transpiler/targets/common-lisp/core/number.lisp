@@ -14,7 +14,7 @@
      x))
 
 (fn integer-bits (x)
-  (alet (number x)
+  (!= (number x)
     (let l nil
       (dotimes (i 32)
         (cl:multiple-value-bind (i r) (cl:truncate ! 2)

@@ -1,6 +1,6 @@
 (fn string-subseq (seq start &optional (end 99999))
   (unless (== start end)
-    (alet (length seq)
+    (!= (length seq)
       (when (< start !)
         (when (>= end !)
           (= end !))

@@ -13,7 +13,7 @@
   (? (funinfo-scope-arg? fi x)
      x
      {(funinfo-setup-scope fi x)
-      (alet (make-scope-place-1 fi x)
+      (!= (make-scope-place-1 fi x)
         `(%vec ,(place-expand-atom fi (make-scope-place fi .!.))
                ,..!.
                ,...!.))}))
@@ -79,5 +79,5 @@
   (place-expand-0 (global-funinfo) x))
 
 (fn place-expand-closure-scope (fi)
-  (alet (funinfo-parent fi)
+  (!= (funinfo-parent fi)
     (place-expand-0 ! (funinfo-scope !))))

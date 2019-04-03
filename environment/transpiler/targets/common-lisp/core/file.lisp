@@ -1,5 +1,5 @@
 (defbuiltin %princ (x stream)
-  (alet (| stream cl:*standard-output*)
+  (!= (| stream cl:*standard-output*)
     (?
       (character? x)  (cl:write-byte (cl:char-code x) !)
       (string? x)     (dosequence (i x)
@@ -19,10 +19,10 @@
 (defbuiltin %fclose (stream) (cl:close stream))
 
 (defbuiltin %read-char (str)
-  (alet (cl:read-byte (| str cl:*standard-input*) nil 'eof)
+  (!= (cl:read-byte (| str cl:*standard-input*) nil 'eof)
     (unless (eq ! 'eof)
       (cl:code-char !))))
 
 (defbuiltin file-exists? (pathname)
-  (? (cl:probe-file pathname)
+  (& (cl:probe-file pathname)
      t))

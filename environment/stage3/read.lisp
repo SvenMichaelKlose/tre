@@ -42,7 +42,7 @@
       (f))))
 
 (fn read-symbol-and-package (str)
-  (alet (read-symbol str)
+  (!= (read-symbol str)
     (? (eql (peek-char str) #\:)
        {(read-char str)
         (values (| (& ! (list-string !))
@@ -51,7 +51,7 @@
        (values nil !))))
 
 (fn read-string (str)
-  (with (f [0 alet (read-char str)
+  (with (f [0 != (read-char str)
                (unless (eql ! #\")
                  (. (? (eql ! #\\)
                        (read-char str)
@@ -119,7 +119,7 @@
     x.))
 
 (fn read-symbol-or-slot-value (pkg sym)
-  (alet (split #\. sym)
+  (!= (split #\. sym)
     (? (& .! !. (car (last !)))
        (read-slot-value !)
        (make-symbol sym pkg))))
@@ -145,7 +145,7 @@
   (list (make-symbol (symbol-name token)) (read-expr str)))
 
 (fn read-cons (str)
-  (with (err [alet (stream-input-location str)
+  (with (err [!= (stream-input-location str)
                (error "~A at line ~A, column ~A in file ~A."
                       _ (stream-location-line !)
                         (stream-location-column !)
@@ -175,7 +175,7 @@
        (f token pkg sym))))
 
 (fn read-cons-slot (str)
-  (alet (read-cons str)
+  (!= (read-cons str)
     (? (eql #\. (peek-char str))
        (progn
          (read-char str)

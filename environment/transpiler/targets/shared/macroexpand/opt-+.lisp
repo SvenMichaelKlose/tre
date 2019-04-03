@@ -8,7 +8,7 @@
 (fn opt-+ (x)
   (?
     (not .x) x.
-    (some #'string? x) (alet (concat-successive-strings x)
+    (some #'string? x) (!= (concat-successive-strings x)
                          (? .!
                             `(string-concat ,@!)
                             !.))

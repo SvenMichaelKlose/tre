@@ -5,7 +5,7 @@
 ;   (%= X NAME)
 
 (fn unassign-lambdas (x)
-  (alet x.
+  (!= x.
     (& x
        (?
          (named-lambda? !)
@@ -13,7 +13,7 @@
               (unassign-lambdas .x))
          (& (%=? !)
             (named-lambda? ..!.))
-           (alet ..!.
+           (!= ..!.
              `(,(copy-lambda ! :body (unassign-lambdas (lambda-body !)))
                ,@(unless (lambda-export?)
                    `((%= ,(cadr x.) ,(lambda-name !))))

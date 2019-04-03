@@ -4,7 +4,7 @@
   (%string? x))
 
 (fn string-concat (&rest x)
-  (alet (make-array)
+  (!= (make-array)
     (@ (i x (!.join ""))
       (& i (!.push i)))))
 

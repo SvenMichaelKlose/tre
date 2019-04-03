@@ -30,7 +30,7 @@
   (globals      nil))
 
 (fn funinfo-framesize (fi)
-  (alet (funinfo-transpiler fi)
+  (!= (funinfo-transpiler fi)
     (& (transpiler-stack-locals? !)
        (+ (length (funinfo-vars fi))
           (? (transpiler-arguments-on-stack? !)
