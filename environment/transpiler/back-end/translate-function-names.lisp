@@ -12,15 +12,18 @@
      (%new? x)))
 
 (define-tree-filter translate-function-names-0 (fi x)
-  (named-lambda? x)          (copy-lambda x :body (translate-function-names-0 (get-lambda-funinfo x) (lambda-body x)))
-  (nontranslatable-name? x)  x
-  (%slot-value? x)           `(%slot-value ,(translate-function-name .x.) ,..x.)
+  (named-lambda? x)
+    (copy-lambda x :body (translate-function-names-0 (get-lambda-funinfo x) (lambda-body x)))
+  (nontranslatable-name? x)
+    x
+  (%slot-value? x)
+    `(%slot-value ,(translate-function-name .x.) ,..x.)
   (& (atom x)
      (| (not (funinfo-parent fi))
-        (not (funinfo-arg-or-var? fi x))))  (translate-function-name x))
+        (not (funinfo-arg-or-var? fi x))))
+    (translate-function-name x))
 
 (fn translate-function-names (x)
   (? (function-name-prefix)
      (translate-function-names-0 (global-funinfo) x)
      x))
-
