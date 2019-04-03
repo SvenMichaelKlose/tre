@@ -12,9 +12,6 @@
     (symbol? x)  `("$" ,x)
     x))
 
-(fn php-list (x)
-  (pad (@ #'php-dollarize x) ", "))
-
 (fn php-argument-list (x)
   (c-list (@ #'php-dollarize x)))
 
@@ -69,7 +66,7 @@
       "function " ,compiled-name ,@(php-argument-list (funinfo-args fi))
       "{" ,(code-char 10)
          ,@(!? (funinfo-globals fi)
-               (php-line "global " (php-list !)))
+               (php-line "global " (pad (@ #'php-dollarize !) ", ")))
          ,@(& *print-executed-functions?*
               `("echo \"" ,compiled-name "\\n\";"))
          ,@(lambda-body x)
@@ -175,27 +172,25 @@
      `(%%native ,,@(pad (@ #'php-dollarize args)
                 ,(+ " " replacement-op " ")))))
 
-(mapcar-macro x
-    '((%%%+       "+")
-      (%%%-       "-")
-      (%%%*       "*")
-      (%%%/       "/")
-      (%%%mod     "%")
+{,@(@ [`(define-php-binary ,@_)]
+      '((%%%+        "+")
+        (%%%string+  ".")
+        (%%%-        "-")
+        (%%%*        "*")
+        (%%%/        "/")
+        (%%%mod      "%")
 
-      (%%%==      "==")
-      (%%%<       "<")
-      (%%%>       ">")
-      (%%%<=      "<=")
-      (%%%>=      ">=")
-      (%%%eq      "===")
+        (%%%==       "==")
+        (%%%<        "<")
+        (%%%>        ">")
+        (%%%<=       "<=")
+        (%%%>=       ">=")
+        (%%%eq       "===")
 
-      (%%%<<      "<<")
-      (%%%>>      ">>")
-      (%%%bit-or  "|")
-      (%%%bit-and "&"))
-  `(define-php-binary ,@x))
-
-(define-php-binary %%%string+ ".")
+        (%%%<<       "<<")
+        (%%%>>       ">>")
+        (%%%bit-or   "|")
+        (%%%bit-and  "&")))}
 
 
 ;;;; ARRAYS

@@ -1,5 +1,5 @@
-(mapcar-macro x '(identity quote backquote quasiquote quasiquote-splice)
-  `(def-head-predicate ,x))
+{,@(@ [`(def-head-predicate ,_)]
+      '(identity quote backquote quasiquote quasiquote-splice))}
 
 (fn literal-function? (x)
   (& (cons? x)

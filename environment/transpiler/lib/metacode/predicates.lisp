@@ -1,14 +1,13 @@
-(mapcar-macro x
-    '(quote %new
-      %%block %%go %%go-nil %%go-not-nil %%call-nil %%call-not-nil
-      %stack %stackarg %vec %set-vec %= %tag %%tag
-      %%native %%string
-      %closure %%closure
-      %set-local-fun
-      %function-prologue %function-return %function-epilogue
-      %var %global
-      %%comment)
-  `(def-head-predicate ,x))
+{,@(@ [`(def-head-predicate ,_)]
+      '(quote %new
+        %%block %%go %%go-nil %%go-not-nil %%call-nil %%call-not-nil
+        %stack %stackarg %vec %set-vec %= %tag %%tag
+        %%native %%string
+        %closure %%closure
+        %set-local-fun
+        %function-prologue %function-return %function-epilogue
+        %var %global
+        %%comment))}
 
 (fn atomic? (x)
   (| (atom x)
@@ -39,7 +38,7 @@
 
 (fn %=-funcall-of? (x name)
   (& (%=-funcall? x)
-     (eq name (car ..x.))))
+     (eq name (car ..x.)))) ; TODO ..x..?
 
 (fn has-return-value? (x)
   (not (| (vm-jump? x)

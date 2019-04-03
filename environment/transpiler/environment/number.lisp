@@ -7,8 +7,7 @@
        (@ (i .x n)
          (= n (,($ '%%% op) n i))))))
 
-(mapcar-macro x '(* / mod)
-  `(def-simple-op ,x))
+{,@(@ [`(def-simple-op ,_)] '(* / mod))}
 
 (fn number+ (&rest x)
   (let n x.

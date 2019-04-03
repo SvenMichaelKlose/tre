@@ -1,5 +1,6 @@
 Changes relative to tre-0.16:
   * Identifier obfuscation is not supported anymore.
+  * Macros MAPCAR-MACRO and MAPCAN-MACRO have been removed.
 
 Changes of tre-0.16 relative to tre-0.15:
   * Added ready-made project directories in example/ to make
