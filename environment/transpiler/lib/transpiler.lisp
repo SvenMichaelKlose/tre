@@ -303,6 +303,9 @@
   (= (href (late-symbols) x) t)
   x)
 
+(fn add-toplevel-expression (x)
+  (push x (accumulated-toplevel-expressions)))
+
 (fn transpiler-macro (tr name)
   (let expander (transpiler-codegen-expander tr)
     (funcall (expander-lookup expander) expander name)))
