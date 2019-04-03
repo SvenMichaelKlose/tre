@@ -149,6 +149,7 @@
 
   (identifiers              (make-hash-table :test #'eq))
   (converted-identifiers    (make-hash-table :test #'eq))
+  (real-function-names      (make-hash-table :test #'eq))
 
   (cached-frontend-sections nil)
   (cached-output-sections   nil)
@@ -173,6 +174,7 @@
      (transpiler-late-symbols tr)           (make-hash-table :test #'eq)
      (transpiler-identifiers tr)            (make-hash-table :test #'eq)
      (transpiler-converted-identifiers tr)  (make-hash-table :test #'eq)
+     (transpiler-real-function-names tr)    (make-hash-table :test #'eq)
      (transpiler-exported-closures tr)      nil
      (transpiler-delayed-exprs tr)          nil
      (transpiler-memorized-sources tr)      nil)
@@ -252,6 +254,7 @@
         :compiled-inits           (copy-list compiled-inits)
         :identifiers              (copy-hash-table identifiers)
         :converted-identifiers    (copy-hash-table converted-identifiers)
+        :real-function-names      (copy-hash-table real-function-names)
         :cached-frontend-sections (copy-alist cached-frontend-sections)
         :cached-output-sections   (copy-alist cached-output-sections)
         :current-package          current-package)
