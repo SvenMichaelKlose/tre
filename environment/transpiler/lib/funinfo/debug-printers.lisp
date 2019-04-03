@@ -1,8 +1,5 @@
-(fn only-element-or-all-of (x)
-  (? .x x x.))
-
 (fn human-readable-funinfo-names (fi)
-  (only-element-or-all-of (butlast (funinfo-names fi))))
+  (symbol-names-string (butlast (funinfo-names fi))))
 
 (fn print-funinfo (fi &optional (str nil))
   (with-default-stream s str
