@@ -10,3 +10,4 @@
 (env-load "math/2d.lisp")
 (env-load "math/get-angle.lisp")
 (env-load "math/levenshtein.lisp" :cl)
+(env-load "math/sqrt.lisp" :c)
