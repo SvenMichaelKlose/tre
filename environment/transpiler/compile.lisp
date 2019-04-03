@@ -67,8 +67,9 @@
                                          (list !))
                                      (dechunk (append (funcall (decl-gen))
                                                       before-imports
-                                                     (reverse (raw-decls))
-                                                     imports-and-rest))
+                                                      (reverse (raw-decls))
+                                                      (codegen (frontend (@ #'list (compiled-inits))))
+                                                      imports-and-rest))
                                      (!? (funcall (epilogue-gen))
                                          (list !))))))
 

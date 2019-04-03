@@ -196,21 +196,8 @@
          "")
      x))
 
-(var *js-compiled-symbols* (make-hash-table :test #'eq))
-
 (define-js-macro quote (x)
-  (cache (aprog1 (make-compiled-symbol-identifier x)
-           (push `("var " ,(convert-identifier !)
-                   " = "
-                   ,@(let s (compiled-function-name-string 'symbol)
-                       `(,s " (\"" ,(symbol-name x) "\", "
-                               ,@(? (keyword? x)
-                                    '("KEYWORDPACKAGE")
-                                    `(,s "(\"" ,(symbol-name (symbol-package x)) "\")"))
-                            ")"))
-                   ,*js-separator*)
-                   (raw-decls)))
-           (href *js-compiled-symbols* x)))
+  (js-compiled-symbol x))
 
 (define-js-macro %slot-value (x y)
   `(%%native ,x "." ,(? (%%string? y)

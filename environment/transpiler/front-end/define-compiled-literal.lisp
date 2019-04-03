@@ -1,4 +1,4 @@
-(defmacro define-compiled-literal (name (x table) &key maker init-maker decl-maker)
+(defmacro define-compiled-literal (name (x table) &key maker init-maker (decl-maker nil))
   (let slot `(,($ 'compiled- table 's))
     `(fn ,name (,x)
        (cache (aprog1 ,maker

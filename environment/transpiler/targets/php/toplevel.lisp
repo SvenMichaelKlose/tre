@@ -6,7 +6,7 @@
   (format nil "?>~%"))
 
 (fn php-decl-gen ()
-  (codegen (frontend (@ #'list (compiled-inits)))))
+  (codegen (frontend (@ #'list (compiled-inits))))) ; TODO: Double in JS target.
 
 (fn php-frontend-init ()
   (add-defined-variable '*keyword-package*))
