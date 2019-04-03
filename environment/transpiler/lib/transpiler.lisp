@@ -1,8 +1,7 @@
 (var *transpiler* nil)
 (var *transpiler-log* nil)
 (var *default-transpiler* nil)
-(var *optional-passes* '(:accumulate-toplevel
-                         :inject-debugging))
+(var *optional-passes* '(:accumulate-toplevel))
 
 (var *print-executed-functions?* nil)
 

@@ -3,7 +3,6 @@
     expression-expand        #'expression-expand
     unassign-lambdas         #'unassign-lambdas
     accumulate-toplevel      #'accumulate-toplevel-expressions
-    inject-debugging         #'inject-debugging
     quote-keywords           #'quote-keywords
-    optimize                 #'pass-optimize
+    optimize                 #'optimize
     opt-tailcall             #'pass-opt-tailcall)

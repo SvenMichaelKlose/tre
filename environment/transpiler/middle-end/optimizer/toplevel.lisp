@@ -9,20 +9,13 @@
 
 (fn optimize (statements)
   (? *opt-peephole?*
-     (with-temporaries (*funinfo* (global-funinfo)
-                        *body*    statements)
+     (with-temporaries (*funinfo*  (global-funinfo)
+                        *body*     statements)
        (optimize-funinfos (repeat-while-changes (optimizer-passes) statements)))
      statements))
 
-(fn pass-optimize (x)
-  (? (enabled-pass? :inject-debugging)
-     x
-     (optimize x)))
-
 (fn pass-opt-tailcall (x)
-  (? (enabled-pass? :inject-debugging)
-     x
-     (!= (opt-tailcall x)
-       (? (equal ! x)
-          !
-          (optimize !)))))
+  (!= (opt-tailcall x)
+    (? (equal ! x)
+       !
+       (optimize !))))
