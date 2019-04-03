@@ -1,6 +1,5 @@
 (env-load "transpiler/back-end/convert-identifiers.lisp")
-(env-load "transpiler/back-end/macros.lisp")
-(env-load "transpiler/back-end/operators.lisp")
+(env-load "transpiler/back-end/codegen-macros.lisp")
 (env-load "transpiler/back-end/count-tags.lisp")
 (env-load "transpiler/back-end/wrap-tags.lisp")
 (env-load "transpiler/back-end/encapsulate-strings.lisp")

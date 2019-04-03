@@ -16,7 +16,7 @@
 (def-codegen-macro def-php-codegen *php-transpiler*)
 
 (defmacro define-php-infix (name)
-  `(define-transpiler-infix *php-transpiler* ,name))
+  `(def-codegen-infix *php-transpiler* ,name))
 
 
 ;;;; TRUTH
