@@ -5,7 +5,6 @@
 
 (fn php-argument-filter (x)
   (pcase x
-    character?  (php-expex-add-global (php-compiled-char x))
     quote?      (php-expex-add-global (php-compiled-symbol .x.))
     keyword?    (php-expex-add-global (php-compiled-symbol x))
     x))
