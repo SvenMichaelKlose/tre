@@ -1,4 +1,3 @@
-(env-load "transpiler/front-end/arith-wrappers.lisp" :c)
 (env-load "transpiler/front-end/wrap-atoms.lisp")
 (env-load "transpiler/front-end/gather-imports.lisp")
 (env-load "transpiler/front-end/unassign-lambdas.lisp")
