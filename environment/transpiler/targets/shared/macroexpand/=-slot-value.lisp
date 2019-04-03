@@ -1,4 +1,4 @@
-(define-shared-std-macro (bc c js php) =-slot-value (val obj slot)
+(define-shared-transpiler-macro (bc c js php) =-slot-value (val obj slot)
   (?
     (quote? slot)  `(%= (%slot-value ,obj ,.slot.) ,val)
     (string? slot) `(%= (%slot-value ,obj ,slot) ,val)

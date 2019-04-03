@@ -1,4 +1,4 @@
-(defmacro define-js-std-macro (name args &body body)
+(defmacro def-js-transpiler-macro (name args &body body)
   `(define-transpiler-macro *js-transpiler* ,name ,args ,@body))
 
 (fn js-make-function-with-expander (x)
@@ -16,7 +16,7 @@
     (| (assert?)
        (not (simple-argument-list? (lambda-args x))))))
 
-(define-js-std-macro function (&rest x)
+(def-js-transpiler-macro function (&rest x)
   (!= (. 'function x)
     (? .x
        (? (js-requires-expander? !)
@@ -33,7 +33,7 @@
 (fn emit-late-symbol-function-assignments ()
   (reverse *late-symbol-function-assignments*))
 
-(define-js-std-macro defnative (name args &body body)
+(def-js-transpiler-macro defnative (name args &body body)
   (js-make-late-symbol-function-assignment name)
   `{(%var ,(%defun-name name))
     ,(shared-defun name args (body-with-noargs-tag body) :allow-source-memorizer? nil)})
@@ -49,7 +49,7 @@
                                  (not (invisible-package? !)))
                               `(symbol ,(symbol-name !) nil))))))))
 
-(define-js-std-macro defun (name args &body body)
+(def-js-transpiler-macro defun (name args &body body)
   (with (dname  (%defun-name name)
          g      '~%tfun)
     `(%%block
@@ -58,22 +58,22 @@
        ,(shared-defun dname args body :make-expander? nil)
        (= (symbol-function ,g) ,dname))))
 
-(define-js-std-macro %defun (name args &body body)
+(def-js-transpiler-macro %defun (name args &body body)
   `(fn ,name ,args ,@body))
 
-(define-js-std-macro slot-value (place slot)
+(def-js-transpiler-macro slot-value (place slot)
   (?
     (quote? slot)   `(%slot-value ,place ,.slot.)
     (string? slot)  `(%slot-value ,place ,slot)
     `(%aref ,place ,slot)))
 
-(define-js-std-macro bind (fun &rest args)
+(def-js-transpiler-macro bind (fun &rest args)
   `(%bind ,(? (slot-value? fun)
               .fun.
               (error "Function must be a SLOT-VALUE, got ~A." fun))
           ,fun))
 
-(define-js-std-macro js-type-predicate (name &rest types)
+(def-js-transpiler-macro js-type-predicate (name &rest types)
   `(fn ,name (x)
      (when x
        ,(? (< 1 (length types))
@@ -81,16 +81,16 @@
                     types))
             `(%%%== (%js-typeof x) ,types.)))))
 
-(define-js-std-macro %href (hash key)
+(def-js-transpiler-macro %href (hash key)
   `(aref ,hash ,key))
 
-(define-js-std-macro undefined? (x)
+(def-js-transpiler-macro undefined? (x)
   `(%%%== "undefined" (%js-typeof ,x)))
 
-(define-js-std-macro defined? (x)
+(def-js-transpiler-macro defined? (x)
   `(%%%!= "undefined" (%js-typeof ,x)))
 
-(define-js-std-macro invoke-debugger ()
+(def-js-transpiler-macro invoke-debugger ()
  `(%= nil (%invoke-debugger)))
 
-(define-js-std-macro define-test (&rest x))
+(def-js-transpiler-macro define-test (&rest x))

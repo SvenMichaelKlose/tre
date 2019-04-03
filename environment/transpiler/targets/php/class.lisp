@@ -20,13 +20,13 @@
                               `((%%native "parent::__construct" ,,@args))))
                     ,@body))))))
 
-(define-php-std-macro defclass (class-name args &body body)
+(def-php-transpiler-macro defclass (class-name args &body body)
   (apply #'generic-defclass #'php-constructor class-name args body))
 
-(define-php-std-macro defmethod (class-name name args &body body)
+(def-php-transpiler-macro defmethod (class-name name args &body body)
   (apply #'generic-defmethod class-name name args body))
 
-(define-php-std-macro defmember (class-name &rest names)
+(def-php-transpiler-macro defmember (class-name &rest names)
   (apply #'generic-defmember class-name names))
 
 (fn php-method-function (class-name x)
@@ -56,7 +56,7 @@
     (mapcan [php-method class-name _]
             (reverse !))))
 
-(define-php-std-macro finalize-class (class-name)
+(def-php-transpiler-macro finalize-class (class-name)
   (let classes (thisify-classes)
     (!? (href classes class-name)
         `{(fn ,($ class-name '?) (x)

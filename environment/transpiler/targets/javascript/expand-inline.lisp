@@ -1,4 +1,4 @@
-(define-js-std-macro eq (&rest x)
+(def-js-transpiler-macro eq (&rest x)
   (? ..x
      `(& (eq ,x. ,.x.)
          (eq ,x. ,@..x))
