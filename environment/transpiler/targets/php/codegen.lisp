@@ -92,26 +92,12 @@
 
 ;;;; ASSIGNMENTS
 
-(fn %%native-without-reference? (val)
-  (& (%%native? val)
-     (string? .val.)
-     (empty-string? .val.)))
-
-(fn php-assignment-operator (val)
-  (? (| (& (atom val) ; XXX required?
-           (symbol? val))
-        (not (%%native-without-reference? val)))
-     (? *php-by-reference?*
-        " =& "
-        " = ")
-     " = "))
- 
 (fn php-%=-value (val)
   (?
-    (& (cons? val)      ; XXX required?
+    (& (cons? val)      ; TODO: required?
        (eq 'tre_cons val.))
       `("new __cons (" ,(php-dollarize .val.) ", " ,(php-dollarize ..val.) ")")
-    (| (not val)        ; XXX CONSTANT-LITERAL?
+    (| (not val)        ; TODO: CONSTANT-LITERAL?
        (eq t val)
        (number? val)
        (string? val))
@@ -132,7 +118,7 @@
              `(,@(& (atom dest)
                     (list "$"))
                ,dest
-               ,(php-assignment-operator val))
+               ," = ")
              '(""))
         ,@(php-%=-value val)
         ,@(unless (& (not dest)
@@ -146,9 +132,7 @@
      (php-%=-0 dest val)))
 
 (define-php-macro %set-local-fun (plc val)
-  `(%%native ,(php-dollarize plc)
-             ,(php-assignment-operator val)
-             ,(php-dollarize val)))
+  `(%%native ,(php-dollarize plc) " = " ,(php-dollarize val)))
 
 
 ;;;; VECTORS
@@ -223,9 +207,7 @@
   `(%%native "isset (" ,(php-dollarize arr) ,@(php-array-subscript indexes) ")"))
 
 (define-php-macro =-%aref (val &rest x)
-  `(%%native (%aref ,@x)
-             ,(php-assignment-operator val)
-             ,(php-dollarize val)))
+  `(%%native (%aref ,@x) " = " ,(php-dollarize val)))
 
 
 ;;;; HASH TABLES
