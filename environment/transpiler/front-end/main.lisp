@@ -10,5 +10,5 @@
 (env-load "transpiler/front-end/define-compiled-literal.lisp")
 (env-load "transpiler/front-end/quote-expand.lisp")
 (env-load "transpiler/front-end/compiler-macros.lisp")
-(env-load "transpiler/front-end/macroexpand.lisp")
+(env-load "transpiler/front-end/transpiler-macros.lisp")
 (env-load "transpiler/front-end/toplevel.lisp")

@@ -3,7 +3,7 @@
 (env-load "transpiler/targets/php/argument-filter.lisp")
 (env-load "transpiler/targets/php/setter-filter.lisp")
 (env-load "transpiler/targets/php/toplevel.lisp")
-(env-load "transpiler/targets/php/expand.lisp")
+(env-load "transpiler/targets/php/transpiler-macros.lisp")
 (env-load "transpiler/targets/php/class.lisp")
 (env-load "transpiler/targets/php/codegen.lisp")
 ;(env-load "transpiler/targets/php/codegen-inline.lisp")
