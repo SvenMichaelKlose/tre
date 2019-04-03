@@ -1,16 +1,3 @@
-(fn pass-optimize (x)
-  (? (enabled-pass? :inject-debugging)
-     x
-     (optimize x)))
-
-(fn pass-opt-tailcall (x)
-  (? (enabled-pass? :inject-debugging)
-     x
-     (alet (opt-tailcall x)
-       (? (equal ! x)
-          !
-          (optimize !)))))
-
 (define-transpiler-end :middleend
     middleend-input          #'identity
     expression-expand        #'expression-expand
