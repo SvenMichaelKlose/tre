@@ -6,12 +6,10 @@
 (env-load "stage5/iterate.lisp")
 (env-load "stage5/list+.lisp")
 (env-load "stage5/make-keyword.lisp")
-(env-load "stage5/make-symbols.lisp")
 (env-load "stage5/quoted.lisp")
 (env-load "stage5/symbol-names.lisp")
 (env-load "stage5/toggle.lisp")
 
-(env-load "stage5/alist-url.lisp")
 (env-load "stage5/email-domain.lisp")
 (env-load "stage5/path-append.lisp")
 (env-load "stage5/path-parent.lisp")
