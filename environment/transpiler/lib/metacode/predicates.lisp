@@ -38,7 +38,7 @@
 
 (fn %=-funcall-of? (x name)
   (& (%=-funcall? x)
-     (eq name (car ..x.)))) ; TODO ..x..?
+     (eq name ..x..)))
 
 (fn has-return-value? (x)
   (not (| (vm-jump? x)
