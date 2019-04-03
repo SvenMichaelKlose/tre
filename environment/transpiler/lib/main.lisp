@@ -14,7 +14,7 @@
 
 (env-load "transpiler/lib/lambda.lisp")
 (env-load "transpiler/lib/predicates.lisp")
-(env-load "transpiler/lib/tag.lisp")
+(env-load "transpiler/lib/compiler-tag.lisp")
 (env-load "transpiler/lib/compiled-list.lisp")
 (env-load "transpiler/lib/compile-argument-expansion.lisp")
 
