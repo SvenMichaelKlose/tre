@@ -147,7 +147,6 @@
 
   (compiled-decls           nil)
   (compiled-inits           nil)
-  (raw-decls                nil)
   (emitted-decls            nil)
 
   (identifiers              (make-hash-table :test #'eq))
@@ -254,7 +253,6 @@
         :compiled-symbols         (copy-hash-table compiled-symbols)
         :compiled-decls           (copy-list compiled-decls)
         :compiled-inits           (copy-list compiled-inits)
-        :raw-decls                (copy-list raw-decls)
         :emitted-decls            (copy-list emitted-decls)
         :identifiers              (copy-hash-table identifiers)
         :converted-identifiers    (copy-hash-table converted-identifiers)

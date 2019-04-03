@@ -1,7 +1,7 @@
 (var *eval-transpiler* nil)
 
 (fn make-eval-transpiler ()
-  (cache (alet (copy-transpiler *bc-transpiler*)
+  (cache (!= (copy-transpiler *bc-transpiler*)
            (transpiler-reset !)
            (clr (transpiler-import-from-host? !)
                 (transpiler-dump-passes? !))
@@ -16,10 +16,10 @@
 
 (fn late-eval (x)
   (with-gensym tmpfun
-    (alet (make-eval-transpiler)
+    (!= (make-eval-transpiler)
       (clr (transpiler-cached-frontend-sections !)
            (transpiler-cached-output-sections !)
-           (transpiler-raw-decls !))
+           (transpiler-compiled-inits !))
       (with-mute-environment
         (load-bytecode (expr-to-code ! (compile-sections `((eval . ((fn ,tmpfun () ,x))))
                                                          :transpiler !))

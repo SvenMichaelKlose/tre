@@ -16,7 +16,7 @@
 (fn js-eval-transpile (tr expression)
   (clr (transpiler-cached-frontend-sections tr)
        (transpiler-cached-output-sections tr)
-       (transpiler-raw-decls tr))
+       (transpiler-compiled-inits tr))
   (compile expression :transpiler tr))
 
 (fn eval-compile (x)
