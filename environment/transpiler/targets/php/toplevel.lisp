@@ -5,9 +5,6 @@
 (fn php-epilogue ()
   (format nil "?>~%"))
 
-(fn php-decl-gen ()
-  (codegen (frontend (@ #'list (compiled-inits))))) ; TODO: Double in JS target.
-
 (fn php-frontend-init ()
   (add-defined-variable '*keyword-package*))
 
@@ -37,7 +34,6 @@
       :frontend-init            #'php-frontend-init
       :prologue-gen             #'php-prologue
       :epilogue-gen             #'php-epilogue
-      :decl-gen                 #'php-decl-gen
       :sections-before-import   #'php-sections-before-import
       :sections-after-import    #'php-sections-after-import
       :lambda-export?           t
