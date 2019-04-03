@@ -13,8 +13,8 @@
 (define-php-binary bit-or "|")
 (define-php-binary bit-xor "^")
 
-(define-php-macro identity (x)
+(def-php-codegen identity (x)
   x)
 
-(define-php-macro tre_cons (x y)
+(def-php-codegen tre_cons (x y)
   `("new " ,(convert-identifier '__cons) " (" ,(php-dollarize x) ", " ,(php-dollarize y) ")"))

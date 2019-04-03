@@ -1,36 +1,36 @@
-(define-codegen-macro-definer define-js-macro *js-transpiler*)
+(def-codegen-macro def-js-codegen *js-transpiler*)
 
 
 ;;;; CONTROL FLOW
 
-(define-js-macro %%tag (tag)
+(def-js-codegen %%tag (tag)
   `(%%native "case " ,tag ":" ,*terpri*))
 
-(define-js-macro %%go (tag)
+(def-js-codegen %%go (tag)
   `(,*js-indent* "_I_ = " ,tag "; continue" ,*js-separator*))
 
 (fn js-nil? (x)
   `("(" ,x " == null || " ,x " === false)"))
 
-(define-js-macro %%go-nil (tag val)
+(def-js-codegen %%go-nil (tag val)
   `(,*js-indent* "if " ,(js-nil? val) " { _I_= " ,tag "; continue; }" ,*terpri*))
 
-(define-js-macro %%go-not-nil (tag val)
+(def-js-codegen %%go-not-nil (tag val)
   `(,*js-indent* "if (!" ,(js-nil? val) ") { _I_=" ,tag "; continue; }" ,*terpri*))
 
-(define-js-macro %%call-nil (val consequence alternative)
+(def-js-codegen %%call-nil (val consequence alternative)
   `(,*js-indent* "if " ,(js-nil? val) " "
                      ,consequence " ();"
                  "else "
                      ,alternative " ();" ,*terpri*))
 
-(define-js-macro %%call-not-nil (val consequence alternative)
+(def-js-codegen %%call-not-nil (val consequence alternative)
   `(,*js-indent* "if (!",(js-nil? val) ") "
                      ,consequence " (); "
                  "else "
                      ,alternative " ();" ,*terpri*))
 
-(define-js-macro %set-local-fun (plc val)
+(def-js-codegen %set-local-fun (plc val)
   `(%%native ,*js-indent* ,plc " = " ,val ,*js-separator*))
 
 
@@ -39,7 +39,7 @@
 (fn js-argument-list (debug-section args)
   (c-list (argument-expand-names debug-section args)))
 
-(define-js-macro function (&rest x)
+(def-js-codegen function (&rest x)
   (!= (. 'function x)
     (? .x
        (with (name            (lambda-name !)
@@ -57,18 +57,18 @@
           x.
           !))))
 
-(define-js-macro %function-prologue (name)
+(def-js-codegen %function-prologue (name)
   `(%%native ""
        ,@(& (< 0 (funinfo-num-tags (get-funinfo name)))
             `(,*js-indent* "var _I_ = 0" ,*js-separator*
               ,*js-indent* "while (1) {" ,*js-separator*
               ,*js-indent* "switch (_I_) { case 0:" ,*js-separator*))))
 
-(define-js-macro %function-return (name)
+(def-js-codegen %function-return (name)
   (& (funinfo-var? (get-funinfo name) '~%ret)   ; TODO: Required?
      `(,*js-indent* "return " ~%ret ,*js-separator*)))
 
-(define-js-macro %function-epilogue (name)
+(def-js-codegen %function-epilogue (name)
   (| `((%function-return ,name)
        ,@(& (< 0 (funinfo-num-tags (get-funinfo name)))
             `("}}")))
@@ -77,7 +77,7 @@
 
 ;;;; ASSIGNMENT
 
-(define-js-macro %= (dest val)
+(def-js-codegen %= (dest val)
   (? (& (not dest) (atom val))
      '(%%native "")
      `(,*js-indent*
@@ -92,7 +92,7 @@
 
 ;;;; VARIABLE DECLARATIONS
 
-(define-js-macro %var (&rest names)
+(def-js-codegen %var (&rest names)
   `(%%native ,*js-indent* "var " ,(c-list names :brackets :none) ,*js-separator*))
 
 
@@ -139,43 +139,43 @@
 
 ;;;; ARRAYS
 
-(define-js-macro make-array (&rest elements)
+(def-js-codegen make-array (&rest elements)
   `(%%native ,@(c-list elements :brackets :square)))
 
-(define-js-macro %aref (arr &rest idx)
+(def-js-codegen %aref (arr &rest idx)
   `(%%native ,arr ,@(@ [`("[" ,_ "]")] idx)))
 
-(define-js-macro =-%aref (val &rest x)
+(def-js-codegen =-%aref (val &rest x)
   `(%%native (%aref ,@x) " = " ,val))
 
-(define-js-macro aref (arr &rest idx)
+(def-js-codegen aref (arr &rest idx)
   `(%aref ,arr ,@idx))
 
-(define-js-macro =-aref (val &rest x)
+(def-js-codegen =-aref (val &rest x)
   `(=-%aref ,val ,@x))
 
 
 ;;;; HASH TABLES
 
-(define-js-macro href (arr &rest idx)
+(def-js-codegen href (arr &rest idx)
   `(%aref ,arr ,@idx))
 
-(define-js-macro =-href (val &rest x)
+(def-js-codegen =-href (val &rest x)
   `(=-%aref ,val ,@x))
 
-(define-js-macro property-remove (h key)
+(def-js-codegen property-remove (h key)
   `(%%native "delete " ,h "[" ,key "]"))
 
-(define-js-macro hremove (h key)
+(def-js-codegen hremove (h key)
   `(%%native "delete " ,h "[" ,key "]"))
 
 
 ;;;; OBJECTS
 
-(define-js-macro %%%make-object (&rest args)
+(def-js-codegen %%%make-object (&rest args)
   (c-list (@ [`( ,_. ": " ,._.)] (group args 2)) :brackets :curly))
 
-(define-js-macro %new (&rest x)
+(def-js-codegen %new (&rest x)
   (? x
      `(%%native "new " ,(? (defined-function x.)
                            (compiled-function-name-string x.)
@@ -183,7 +183,7 @@
                        ,@(c-list .x))
      `(%%native "{}")))
 
-(define-js-macro delete-object (x)
+(def-js-codegen delete-object (x)
   `(%%native "delete " ,x))
 
 
@@ -195,52 +195,52 @@
          "")
      x))
 
-(define-js-macro quote (x)
+(def-js-codegen quote (x)
   (js-compiled-symbol x))
 
-(define-js-macro %slot-value (x y)
+(def-js-codegen %slot-value (x y)
   `(%%native ,x "." ,(? (%%string? y)
                         .y.
                         y)))
 
-(define-js-macro prop-value (x y)
+(def-js-codegen prop-value (x y)
   `(%aref ,x ,y))
 
-(define-js-macro %try ()
+(def-js-codegen %try ()
   '(%%native "try {"))
 
-(define-js-macro %closing-bracket ()
+(def-js-codegen %closing-bracket ()
   '(%%native "}"))
 
-(define-js-macro %catch (x)
+(def-js-codegen %catch (x)
   `(%%native "catch (" ,x ") {"))
 
 
 ;;;; BACKEND METACODES
 
-(define-js-macro %vec (v i)
+(def-js-codegen %vec (v i)
   `(%%native ,v "[" ,i "]"))
 
-(define-js-macro %set-vec (v i x)
+(def-js-codegen %set-vec (v i x)
   `(%%native (aref ,v ,i) "=" ,x ,*js-separator*))
 
-(define-js-macro %js-typeof (x)
+(def-js-codegen %js-typeof (x)
   `(%%native "typeof " ,x))
 
-(define-js-macro %defined? (x)
+(def-js-codegen %defined? (x)
   `(%%native "\"undefined\" != typeof " ,x))
 
-(define-js-macro %invoke-debugger ()
+(def-js-codegen %invoke-debugger ()
   '(%%native "null; debugger"))
 
-(define-js-macro %%%eval (x)
+(def-js-codegen %%%eval (x)
   `((%%native "window.eval (" ,x ")")))
 
-(define-js-macro %global (x)
+(def-js-codegen %global (x)
   x)
 
 
 ;;;; MISCELLANEOUS
 
-(define-js-macro %%comment (&rest x)
+(def-js-codegen %%comment (&rest x)
   `(%%native "/* " ,@x " */" ,*terpri*))

@@ -13,7 +13,7 @@
 (fn php-argument-list (x)
   (c-list (@ #'php-dollarize x)))
 
-(define-codegen-macro-definer define-php-macro *php-transpiler*)
+(def-codegen-macro def-php-codegen *php-transpiler*)
 
 (defmacro define-php-infix (name)
   `(define-transpiler-infix *php-transpiler* ,name))
@@ -27,26 +27,26 @@
 
 ;;;; LITERAL SYMBOLS
 
-(define-php-macro quote (x)
+(def-php-codegen quote (x)
   (php-compiled-symbol x))
 
 
 ;;;; CONTROL FLOW
 
-(define-php-macro %%tag (tag)
+(def-php-codegen %%tag (tag)
   `(%%native "_I_" ,tag ":" ,*terpri*))
 
 (fn php-jump (tag)
   `("goto _I_" ,tag))
 
-(define-php-macro %%go (tag)
+(def-php-codegen %%go (tag)
   (php-line (php-jump tag)))
 
-(define-php-macro %%go-nil (tag val)
+(def-php-codegen %%go-nil (tag val)
   (let v (php-dollarize val)
     (php-line "if (!" v " && !is_string (" v ") && !is_numeric (" v ") && !is_array (" v ")) " (php-jump tag))))
 
-(define-php-macro %%go-not-nil (tag val)
+(def-php-codegen %%go-not-nil (tag val)
   (let v (php-dollarize val)
     (php-line "if (!(!" v " && !is_string (" v ") && !is_numeric (" v ") && !is_array (" v "))) " (php-jump tag))))
 
@@ -71,16 +71,16 @@
          ,(php-line "return $" '~%ret)
       "}" ,*terpri*)))
 
-(define-php-macro function (&rest x)
+(def-php-codegen function (&rest x)
   (? .x
      (codegen-php-function (. 'function x))
      `(%%native (%%string ,(convert-identifier x.)))))
 
-(define-php-macro %function-prologue (name) '(%%native ""))
-(define-php-macro %function-epilogue (name) '(%%native ""))
-(define-php-macro %function-return (name)   '(%%native ""))
+(def-php-codegen %function-prologue (name) '(%%native ""))
+(def-php-codegen %function-epilogue (name) '(%%native ""))
+(def-php-codegen %function-return (name)   '(%%native ""))
 
-(define-php-macro %closure (name)
+(def-php-codegen %closure (name)
   (with (fi            (get-funinfo name)
          native-name  `(%%string ,(compiled-function-name-string name)))
     (? (funinfo-scope-arg fi)
@@ -106,7 +106,7 @@
       (list val)
     `((,val. " " ,@(c-list (@ #'php-dollarize .val))))))
 
-(define-php-macro %= (dest val)
+(def-php-codegen %= (dest val)
   (? (& (not dest) (atom val))
      '(%%native "")
      `(%%native
@@ -117,19 +117,19 @@
 
         ,*php-separator*)))
 
-(define-php-macro %set-local-fun (plc val)
+(def-php-codegen %set-local-fun (plc val)
   `(%%native ,(php-dollarize plc) " = " ,(php-dollarize val)))
 
 
 ;;;; VECTORS
 
-(define-php-macro %make-scope (&rest elements)
+(def-php-codegen %make-scope (&rest elements)
   `(%%native "new __l ()" ""))
 
-(define-php-macro %vec (v i)
+(def-php-codegen %vec (v i)
   `(%%native ,(php-dollarize v) "->g (" ,(php-dollarize i) ")"))
 
-(define-php-macro %set-vec (v i x)
+(def-php-codegen %set-vec (v i x)
   `(%%native ,*php-indent* ,(php-dollarize v) "->s (" ,(php-dollarize i) ", " ,(php-%=-value x) ")",*php-separator*))
 
 
@@ -173,46 +173,46 @@
 (fn php-literal-array-elements (x)
   (pad (@ #'php-literal-array-element x) ", "))
 
-(define-php-macro %%%make-array (&rest elements)
+(def-php-codegen %%%make-array (&rest elements)
   `(%%native "array (" ,@(php-literal-array-elements (group elements 2)) ")"))
 
-(define-php-macro make-array (&rest elements)
+(def-php-codegen make-array (&rest elements)
   `(%%native "new __array ()" ""))
 
-(define-php-macro aref (arr &rest indexes)
+(def-php-codegen aref (arr &rest indexes)
   `(href ,arr ,@indexes))
 
-(define-php-macro =-aref (val arr &rest indexes)
+(def-php-codegen =-aref (val arr &rest indexes)
   `(=-href ,val ,arr ,@indexes))
 
-(define-php-macro %aref (arr &rest indexes)
+(def-php-codegen %aref (arr &rest indexes)
   `(%%native ,(php-dollarize arr) ,@(php-array-subscript indexes)))
 
-(define-php-macro %aref-defined? (arr &rest indexes)
+(def-php-codegen %aref-defined? (arr &rest indexes)
   `(%%native "isset (" ,(php-dollarize arr) ,@(php-array-subscript indexes) ")"))
 
-(define-php-macro =-%aref (val &rest x)
+(def-php-codegen =-%aref (val &rest x)
   `(%%native (%aref ,@x) " = " ,(php-dollarize val)))
 
 
 ;;;; HASH TABLES
 
-(define-php-macro href (h k)
+(def-php-codegen href (h k)
   `(%%native "(is_a (" ,(php-dollarize h) ", '__l') || is_a (" ,(php-dollarize h) ", '__array')) ? "
                  ,(php-dollarize h) "->g(tre_T37T37key (" ,(php-dollarize k) ")) : "
                  "(isset (" ,(php-dollarize h) "[tre_T37T37key (" ,(php-dollarize k) ")]) ? "
                      ,(php-dollarize h) "[tre_T37T37key (" ,(php-dollarize k) ")] : "
                      "NULL)"))
 
-(define-php-macro =-href (v h k)
+(def-php-codegen =-href (v h k)
   `(%%native "(is_a (" ,(php-dollarize h) ", '__l') || is_a (" ,(php-dollarize h) ", '__array')) ? "
                  ,(php-dollarize h) "->s(tre_T37T37key (" ,(php-dollarize k) ")," ,(php-dollarize v) ") : "
                  ,(php-dollarize h) "[tre_T37T37key (" ,(php-dollarize k) ")] = " ,(php-dollarize v)))
 
-(define-php-macro hremove (h key)
+(def-php-codegen hremove (h key)
   `(%%native "null; unset ($" ,h "[" ,(php-dollarize key) "])"))
 
-(define-php-macro make-hash-table (&rest ignored-args)
+(def-php-codegen make-hash-table (&rest ignored-args)
   `(make-array))
 
 
@@ -224,41 +224,41 @@
 (fn php-literal-object-elements (x)
   (pad (@ #'php-literal-object-element x) ", "))
 
-(define-php-macro %%%make-object (&rest elements)
+(def-php-codegen %%%make-object (&rest elements)
   `(%%native "(object) array (" ,@(php-literal-object-elements (group elements 2)) ")"))
 
-(define-php-macro %new (&rest x)
+(def-php-codegen %new (&rest x)
   (? x
      `(%%native "new " ,x. ,@(php-argument-list .x))
      `(%%native "new stdClass")))
 
-(define-php-macro delete-object (x)
+(def-php-codegen delete-object (x)
   `(%%native "null; unset " ,x))
 
-(define-php-macro %slot-value (x y)
+(def-php-codegen %slot-value (x y)
   `(%%native ,(php-dollarize x)
              "->"
              ,(? (%%string? y)
                  .y.
                  y)))
 
-(define-php-macro prop-value (x y)  ; TODO: Use SLOT-VALUE instead.
+(def-php-codegen prop-value (x y)  ; TODO: Use SLOT-VALUE instead.
   `(%%native ,(php-dollarize x) "->$" ,y))
 
-(define-php-macro %php-class-head (name)
+(def-php-codegen %php-class-head (name)
   `(%%native "class " ,name "{"))
 
-(define-php-macro %php-class-tail ()
+(def-php-codegen %php-class-tail ()
   `(%%native "}" ""))
 
 
 ;;;; GLOBAL VARIABLES
 
-(define-php-macro %global (x)
+(def-php-codegen %global (x)
   `(%%native "$GLOBALS['" ,(convert-identifier x) "']"))
 
 
 ;;;; MISCELLANEOUS
 
-(define-php-macro %%comment (&rest x)
+(def-php-codegen %%comment (&rest x)
   `(%%native "/* " ,@x " */" ,*terpri*))
