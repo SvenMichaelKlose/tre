@@ -31,14 +31,6 @@
   ; Backtrace stack at run-time.
   (backtrace?                 nil)
 
-  ; Measure the time each function needs at run-time.
-  ; See also file 'stage3/profile.lisp'.
-  (profile?                   nil)
-
-  ; Measure the number of calls in each function at run-time.
-  ; See also file 'stage3/profile.lisp'.
-  (profile-num-calls?         nil)
-
   ; Also generate argument expanders for functions with simple
   ; argument lists for optional assertions.
   (always-expand-arguments?   nil)
@@ -185,8 +177,6 @@
         :name                     name
         :assert?                  assert?
         :backtrace?               backtrace?
-        :profile?                 profile?
-        :profile-num-calls?       profile-num-calls?
         :always-expand-arguments? always-expand-arguments?
         :import-from-host?        import-from-host?
         :import-variables?        import-variables?

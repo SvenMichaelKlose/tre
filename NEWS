@@ -4,6 +4,7 @@ Changes relative to tre-0.16:
   * ASSOC-URL and MAKE-SYMBOLS have been removed.
   * *ENGLISH-NUMBERS* has been removed.
   * Removed transpiler pass INJECT-DEBUGGING.
+  * Pseudo-profiler has been removed.
 
 Changes of tre-0.16 relative to tre-0.15:
   * Added ready-made project directories in example/ to make

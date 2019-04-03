@@ -8,22 +8,6 @@
       (make-symbol (symbol-name x) !)
       x))
 
-(fn shared-defun-profiling-body (name body)
-  (? (& (profile?)
-        (not (eq 'add-profile name)
-             (eq 'add-profile-call name)))
-     (? (profile-num-calls?)
-        `({(& (not *profile-lock*)
-              (add-profile-call ',name))
-           ,@body})
-        `((let ~%profiling-timer (& (not *profile-lock*)
-                                    (%%%nanotime))
-            (prog1
-              {,@body}
-              (& ~%profiling-timer
-                 (add-profile ',name (- (%%%nanotime) ~%profiling-timer)))))))
-     body))
-
 (fn shared-defun-memorize-source (name args body)
   (acons! name (. args body) (memorized-sources))
   nil)
@@ -69,7 +53,7 @@
     `((function ,name (,args
                        ,@(& (body-has-noargs-tag? body)
                             '(no-args))
-                       ,@(!= (shared-defun-profiling-body name body-with-block)
+                       ,@(!= body-with-block
                            (? allow-backtrace?
                               (shared-defun-backtrace name !)
                               !))))

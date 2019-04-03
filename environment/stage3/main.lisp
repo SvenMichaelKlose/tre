@@ -14,7 +14,6 @@
 (env-load "stage3/with-string-stream.lisp")
 (env-load "stage3/copying-stream.lisp")
 (env-load "stage3/with-temporary.lisp")
-(env-load "stage3/profile.lisp")
 (env-load "stage3/force-output.lisp" :cl)
 (env-load "stage3/princ-number.lisp" :cl)
 (env-load "stage3/princ.lisp")
