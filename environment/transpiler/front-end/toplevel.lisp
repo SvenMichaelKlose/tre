@@ -14,6 +14,3 @@
     expression-expand         #'expression-expand
     unassign-lambdas          #'unassign-lambdas
     gather-imports            #'gather-imports)
-
-(fn frontend-macroexpansions (x)
-  (transpiler-macroexpand (compiler-macroexpand x)))
