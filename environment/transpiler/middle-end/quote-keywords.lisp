@@ -1,7 +1,5 @@
 (define-tree-filter quote-keywords (x)
-  (| (quote? x)
-     (& (cons? x)
-        (in? x. 'make-hash-table '%%%make-object)))
+  (quote? x)
     x
   (keyword? x) 
     `(quote ,x))
