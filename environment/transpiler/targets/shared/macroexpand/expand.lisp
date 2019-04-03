@@ -72,3 +72,9 @@
 
 (define-shared-transpiler-macro (js php) string-concat (&rest x)
   `(%%%string+ ,@x))
+
+(define-shared-transpiler-macro (js php) eq (&rest x)   ; TODO: There's another macro to do this.
+  (? ..x
+     `(& (eq ,x. ,.x.)
+         (eq ,x. ,@..x))
+     `(eq ,@x)))

@@ -4,12 +4,6 @@
 (def-php-transpiler-macro defnative (name args &body body)
   (shared-defun name args body :allow-source-memorizer? nil))
 
-(def-php-transpiler-macro eq (&rest x)
-  (? ..x
-     `(& (eq ,x. ,.x.)
-         (eq ,x. ,@..x))
-     `(eq ,@x)))
-
 (def-php-transpiler-macro %defmacro (name args &body body))
 
 (def-php-transpiler-macro defun (name args &body body)
