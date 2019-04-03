@@ -1,5 +1,5 @@
 (defmacro define-js-std-macro (name args &body body)
-  `(define-transpiler-std-macro *js-transpiler* ,name ,args ,@body))
+  `(define-transpiler-macro *js-transpiler* ,name ,args ,@body))
 
 (fn js-make-function-with-expander (x)
   (!= (| (lambda-name x)

@@ -2,7 +2,7 @@
   (!= (defined-functions)
     (@ [hremove ! _]
        (+ (hashkeys (used-functions))
-          (hashkeys (expander-macros (std-macro-expander)))
+          (hashkeys (expander-macros (transpiler-macro-expander)))
           (hashkeys (expander-macros (codegen-expander)))
           *macros*))
     (@ [!= (symbol-name _)

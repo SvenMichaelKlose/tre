@@ -91,7 +91,7 @@
   (sections-after-import   #'(()))
   (ending-sections         #'(()))
 
-  std-macro-expander
+  transpiler-macro-expander
   codegen-expander
 
   (expex-initializer       #'identity)
@@ -255,7 +255,7 @@
         :cached-frontend-sections (copy-alist cached-frontend-sections)
         :cached-output-sections   (copy-alist cached-output-sections)
         :current-package          current-package)
-    (transpiler-copy-std-macro-expander transpiler !)
+    (copy-transpiler-macro-expander transpiler !)
     (transpiler-make-expex !)))
 
 (defmacro transpiler-getter-not-global (name &body body)
@@ -289,7 +289,7 @@
                                          x)
 (transpiler-getter add-literal           (= (href (transpiler-literals tr) x) t)
                                          x)
-(transpiler-getter-not-global macro? (| (expander-has-macro? (transpiler-std-macro-expander tr) x)
+(transpiler-getter-not-global macro? (| (expander-has-macro? (transpiler-transpiler-macro-expander tr) x)
                                         (expander-has-macro? (transpiler-codegen-expander tr) x)))
 (transpiler-getter imported-variable? (& (transpiler-import-from-host? tr)
                                          (transpiler-host-variable? tr x)))
@@ -419,7 +419,7 @@
   (aprog1 (apply #'make-transpiler args)
     (transpiler-reset !)
     (= (transpiler-assert? !) *assert?*)
-    (= (transpiler-std-macro-expander !) (transpiler-make-std-macro-expander !))
+    (= (transpiler-transpiler-macro-expander !) (make-transpiler-macro-expander !))
     (transpiler-make-code-expander !)
     (transpiler-make-expex !)
     (make-global-funinfo !)))

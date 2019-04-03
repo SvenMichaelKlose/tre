@@ -6,7 +6,7 @@
 (add-printer-argument-definition 'cl:defconstant '(name init))
 
 (defmacro define-cl-std-macro (name args &body body)
-  `(define-transpiler-std-macro *cl-transpiler* ,name ,args ,@body))
+  `(define-transpiler-macro *cl-transpiler* ,name ,args ,@body))
 
 (define-cl-std-macro defun (name args &body body)
   (print-definition `(fn ,name))
@@ -26,7 +26,7 @@
 
 (define-cl-std-macro defmacro (name args &body body)
   (print-definition `(defmacro ,name ,args))
-  (make-transpiler-std-macro name args body))
+  (make-transpiler-macro name args body))
 
 (define-cl-std-macro defspecial (name args &body body)
   (print-definition `(defspecial ,name ,args))

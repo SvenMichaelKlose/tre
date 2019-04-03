@@ -1,5 +1,5 @@
 (defmacro define-php-std-macro (&rest x)
-  `(define-transpiler-std-macro *php-transpiler* ,@x))
+  `(define-transpiler-macro *php-transpiler* ,@x))
 
 (define-php-std-macro defnative (name args &body body)
   (shared-defun name args body :allow-source-memorizer? nil))

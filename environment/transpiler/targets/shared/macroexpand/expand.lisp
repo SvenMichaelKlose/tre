@@ -26,7 +26,7 @@
 
 (define-shared-std-macro (bc c js php) defmacro (name args &body body)
   (print-definition `(defmacro ,name ,args))
-  (make-transpiler-std-macro name args (macroexpand body))
+  (make-transpiler-macro name args (macroexpand body))
   `(%defmacro ,name ,args ,@body))
 
 (define-shared-std-macro (bc c js php) defconstant (&rest x)
