@@ -10,5 +10,4 @@
 (env-load "transpiler/back-end/place-assign.lisp")
 (env-load "transpiler/back-end/copy-arguments-to-vars.lisp")
 (env-load "transpiler/back-end/make-framed-functions.lisp")
-(env-load "transpiler/back-end/closure.lisp")
 (env-load "transpiler/back-end/toplevel.lisp")
