@@ -112,7 +112,6 @@
   (expex                    nil)
   (symbol-translations      nil)
   (thisify-classes          (make-hash-table :test #'eq))
-  (plain-arg-funs           nil)
   (late-symbols             (make-hash-table :test #'eq))
   (exported-closures        nil)
   (delayed-exprs            nil)
@@ -224,7 +223,6 @@
 
         :symbol-translations      (copy-list symbol-translations)
         :thisify-classes          (copy-hash-table thisify-classes)
-        :plain-arg-funs           (copy-list plain-arg-funs)
         :late-symbols             (copy-hash-table late-symbols)
         :exported-closures        (copy-list exported-closures)
         :delayed-exprs            (copy-list delayed-exprs)
@@ -289,8 +287,7 @@
 (transpiler-getter wanted-function?        (href (transpiler-wanted-functions-hash tr) x))
 (transpiler-getter wanted-variable?        (href (transpiler-wanted-variables-hash tr) x))
 (transpiler-getter late-symbol?            (href (transpiler-late-symbols tr) x))
-{,@(@ [`(transpiler-getter-list ,_)]
-      '(plain-arg-fun emitted-decl))}
+(transpiler-getter-list emitted-decl)
 
 (transpiler-getter add-defined-variable  (= (href (transpiler-defined-variables tr) x) t)
                                          x)
@@ -311,15 +308,11 @@
   (transpiler-add-defined-function *transpiler* name args body))
 
 (define-slot-setter-push transpiler-add-exported-closure tr  (transpiler-exported-closures tr))
-(define-slot-setter-push transpiler-add-plain-arg-fun tr     (transpiler-plain-arg-funs tr))
 (define-slot-setter-push transpiler-add-emitted-decl tr      (transpiler-emitted-decls tr))
 
 (fn add-delayed-expr (x)
   (+! (delayed-exprs) (frontend (list x)))
   nil)
-
-(fn transpiler-add-plain-arg-funs (tr lst)
-  (@ [transpiler-add-plain-arg-fun tr _] lst))
 
 (fn add-late-symbol (x)
   (= (href (late-symbols) x) t)

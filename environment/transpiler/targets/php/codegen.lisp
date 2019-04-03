@@ -137,7 +137,6 @@
 
 (defmacro define-php-binary (op replacement-op)
   (print-definition `(define-php-binary ,op ,replacement-op))
-  (transpiler-add-plain-arg-fun *php-transpiler* op)
   `(define-expander-macro (transpiler-codegen-expander *php-transpiler*) ,op (&rest args)
      `(%%native ,,@(pad (@ #'php-dollarize args)
                 ,(+ " " replacement-op " ")))))

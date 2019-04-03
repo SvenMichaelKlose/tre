@@ -51,8 +51,7 @@
   (aprog1 (make-php-transpiler-0)
     (transpiler-add-defined-function ! '%cons '(a d) nil)
     (transpiler-add-defined-function ! 'phphash-hash-table '(x) nil)
-    (transpiler-add-defined-function ! 'phphash-hashkeys '(x) nil)
-    (transpiler-add-plain-arg-funs ! *builtins*)))
+    (transpiler-add-defined-function ! 'phphash-hashkeys '(x) nil)))
 
 (var *php-transpiler* (make-php-transpiler))
 (var *php-separator*  (format nil ";~%"))

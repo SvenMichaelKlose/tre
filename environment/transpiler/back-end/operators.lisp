@@ -5,7 +5,6 @@
 
 (defmacro define-transpiler-binary (tr op repl-op)
   (print-definition `(define-transpiler-binary ,tr ,op))
-  (transpiler-add-plain-arg-fun (symbol-value tr) op)
   `(define-expander-macro (transpiler-codegen-expander ,tr) ,op (&rest x)
      (? .x
         (pad x ,repl-op)

@@ -63,7 +63,7 @@
   (= (expex-inline? ex)          #'%slot-value?
      (expex-argument-filter ex)  #'js-argument-filter))
 
-(fn make-javascript-transpiler-0 ()
+(fn make-javascript-transpiler ()
   (create-transpiler
       :name                     :js
       :prologue-gen             #'js-prologue
@@ -86,10 +86,6 @@
                                   (:memorize-sources?        . nil)
                                   (:save-sources?            . nil)
                                   (:save-argument-defs-only? . nil))))
-
-(fn make-javascript-transpiler ()
-  (aprog1 (make-javascript-transpiler-0)
-    (transpiler-add-plain-arg-funs ! *builtins*)))
 
 (var *js-transpiler* (make-javascript-transpiler))
 (var *js-separator*  (+ ";" *terpri*))
