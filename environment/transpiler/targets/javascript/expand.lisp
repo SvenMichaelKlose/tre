@@ -90,9 +90,6 @@
 (define-js-std-macro defined? (x)
   `(%%%!= "undefined" (%js-typeof ,x)))
 
-(define-js-std-macro string-concat (&rest x)
-  `(%%%+ ,@x))
-
 (define-js-std-macro invoke-debugger ()
  `(%= nil (%invoke-debugger)))
 

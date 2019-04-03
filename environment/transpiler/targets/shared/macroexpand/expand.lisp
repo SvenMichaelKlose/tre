@@ -69,3 +69,6 @@
         'mapcar
         'filter)
         ,fun ,@lsts))
+
+(define-shared-std-macro (js php) string-concat (&rest x)
+  `(%%%string+ ,@x))
