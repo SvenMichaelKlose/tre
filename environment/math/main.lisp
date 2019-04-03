@@ -9,5 +9,4 @@
 (env-load "math/degree.lisp")
 (env-load "math/2d.lisp")
 (env-load "math/get-angle.lisp")
-(env-load "math/english-numbers.lisp")
 (env-load "math/levenshtein.lisp" :cl)
