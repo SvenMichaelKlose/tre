@@ -17,3 +17,9 @@
      (? .x
         (pad x ,repl-op)
         (list ,repl-op x.))))
+
+(fn codegen-expr? (x)
+  (& (cons? x)
+     (| (string? x.)
+        (in? x. '%%native '%%string)
+        (expander-has-macro? (codegen-expander) x.))))
