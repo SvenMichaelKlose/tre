@@ -1,7 +1,5 @@
 ;;;; CODE GENERATION HELPERS
 
-(var *php-by-reference?* nil)
-
 (fn php-line (&rest x)
   `(,*php-indent* ,@x ,*php-separator*))
 
@@ -94,13 +92,10 @@
 
 (fn php-%=-value (val)
   (?
-    (& (cons? val)      ; TODO: required?
+    (& (cons? val)
        (eq 'tre_cons val.))
       `("new __cons (" ,(php-dollarize .val.) ", " ,(php-dollarize ..val.) ")")
-    (| (not val)        ; TODO: CONSTANT-LITERAL?
-       (eq t val)
-       (number? val)
-       (string? val))
+    (constant-literal? val)
       (list val)
     (| (atom val)
        (& (%%native? val)
@@ -111,25 +106,16 @@
       (list val)
     `((,val. " " ,@(c-list (@ #'php-dollarize .val))))))
 
-(fn php-%=-0 (dest val)
-  `((%%native
-        ,*php-indent*
-        ,@(? dest
-             `(,@(& (atom dest)
-                    (list "$"))
-               ,dest
-               ," = ")
-             '(""))
-        ,@(php-%=-value val)
-        ,@(unless (& (not dest)
-                     (%%native? val)
-                     (not ..val))
-            (list *php-separator*)))))
-
 (define-php-macro %= (dest val)
   (? (& (not dest) (atom val))
      '(%%native "")
-     (php-%=-0 dest val)))
+     `(%%native
+        ,*php-indent*
+        ,@(& dest
+             `(,(php-dollarize dest) ," = "))
+        ,@(php-%=-value val)
+
+        ,*php-separator*)))
 
 (define-php-macro %set-local-fun (plc val)
   `(%%native ,(php-dollarize plc) " = " ,(php-dollarize val)))
@@ -251,15 +237,13 @@
   `(%%native "null; unset " ,x))
 
 (define-php-macro %slot-value (x y)
-  `(%%native ,(? (cons? x)
-                 x
-                 (php-dollarize x))
+  `(%%native ,(php-dollarize x)
              "->"
              ,(? (%%string? y)
                  .y.
                  y)))
 
-(define-php-macro prop-value (x y)
+(define-php-macro prop-value (x y)  ; TODO: Use SLOT-VALUE instead.
   `(%%native ,(php-dollarize x) "->$" ,y))
 
 (define-php-macro %php-class-head (name)

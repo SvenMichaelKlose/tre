@@ -34,7 +34,7 @@
      (array? x)
      (hash-table? x)))
 
-(fn codegen-expr? (x)
+(fn codegen-expr? (x)   ; TODO: Move to codegen.
   (& (cons? x)
      (| (string? x.)
         (in? x. '%%native '%%string)
