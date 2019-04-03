@@ -75,14 +75,14 @@ boot)
 phptests)
     echo "PHP target tests…"
     $TRE tests/php.lisp
-    php compiled/test.php >_phptests.log
+    php compiled/test.php | tee _phptests.log
     cmp tests/php.correct-output _phptests.log || (diff tests/php.correct-output _phptests.log; exit 1)
 	;;
 
 jstests)
     echo "JavaScript target tests…"
     $TRE tests/js.lisp
-    node compiled/test.js >_nodejstests.log
+    node compiled/test.js | tee _nodejstests.log
     chromium-browser compiled/test.html &
     cmp tests/js.correct-output _nodejstests.log || (diff tests/js.correct-output _nodejstests.log; exit 1)
     echo "JavaScript target tests passed in node.js."
