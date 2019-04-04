@@ -20,7 +20,7 @@
             not eq eql
             make-symbol make-package
             atom symbol-value %type %%id %make-ptr
-            symbol-function symbol-package function-native symbol?
+            symbol-function symbol-package symbol?
             function? builtin? macro?
             cons list car cdr cons?
             elt length

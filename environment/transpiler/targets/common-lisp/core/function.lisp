@@ -1,7 +1,5 @@
 (var *functions* nil)
 
-(defbuiltin function-native (x) x)
-
 (defbuiltin function-source (x)
   (cdr (cl:assoc x *functions* :test #'cl:eq)))
 
