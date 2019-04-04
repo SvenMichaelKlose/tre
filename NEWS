@@ -6,6 +6,7 @@ Changes relative to tre-0.16:
   * Transpiler cleaned up thoroughly.
   * Removed transpiler pass INJECT-DEBUGGING.
   * Pseudo-profiler has been removed.
+  * GENSYM now takes optional symbol name prefix.
 
 Changes of tre-0.16 relative to tre-0.15:
   * Added ready-made project directories in example/ to make

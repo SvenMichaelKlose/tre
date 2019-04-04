@@ -1,4 +1,3 @@
-(var *gensym-prefix* "~G")
 (var *gensym-counter* 0)
 
 ;; Returns newly created, unique symbol.
@@ -8,11 +7,11 @@
 (functional gensym)
 
 ;; Returns newly created, unique symbol.
-(%defun gensym ()
+(%defun gensym (&optional (prefix "~G"))
   (#'((x)
        (? (eq (symbol-value x) x)
           (? (symbol-function x)
              (gensym)
              x)
           (gensym)))
-     (make-symbol (string-concat *gensym-prefix* (string (gensym-number))))))
+     (make-symbol (string-concat prefix (string (gensym-number))))))

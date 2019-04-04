@@ -1,5 +1,3 @@
-(= *gensym-prefix* "~jsG")
-
 (unless (eq '*native-eval-return-value* *native-eval-return-value*)
   (var *native-eval-return-value* nil))
 
