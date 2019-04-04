@@ -17,6 +17,8 @@
 (env-load "lml.lisp")
 (env-load "lml2xml.lisp")
 
+(= *tests* (reverse *tests*))
+
 (env-load "reverse-tests.lisp")
 (env-load "config-after-reload.lisp" :cl)
 (env-load "write-image.lisp" :cl)
