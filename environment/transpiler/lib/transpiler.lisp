@@ -25,20 +25,20 @@
   ;;; For users.
   ;;;
 
-  ; Include low-level assertions.
+  ; Include assertions.
   (assert?                    nil)
 
-  ; Backtrace stack at run-time.
+  ; Trace call stack at run-time.
   (backtrace?                 nil)
 
-  ; Also generate argument expanders for functions with simple
-  ; argument lists for optional assertions.
+  ; Also generate argument expanders for functions with simple argument
+  ; lists to validate all calls at run-time.
   (always-expand-arguments?   nil)
 
-  ; Import functions from the compile-time host if missing.
+  ; Import functions from host if missing.
   (import-from-host?          t)
 
-  ; Also import global variables from the compile-time host if missing.
+  ; Import global variables from host if missing.
   (import-variables?          t)
 
   ; Dump outputs of all passes if T.  Might also be a pass name or a list
@@ -46,14 +46,15 @@
   (dump-passes?               nil)
 
   ; Dump outputs of passes in which this expression is found.
-  ; '(FUNCTION BUTLAST) would dump everything related to compiling BUTLAST.
+  ; '(FUNCTION BUTLAST) would dump every pass result containing
+  ; symbol BUTLAST.
   (dump-selector              nil)
 
   ; Dump FUNINFOs in comments before their functions.
   (funinfo-comments?          nil)
 
   ; Used for incremental compilations.  If set only this list of sections
-  ; is compiled and the rest is taken from the section caches.
+  ; is compiled and the rest is taken from the cache.
   (sections-to-update         nil)
 
   ; Associative list of target-dependent configurations.
@@ -129,11 +130,11 @@
   (accumulated-toplevel-expressions nil)
   (predefined-symbols       nil)
 
-  ; Literals that must be declared or cached before code containing them is emitted.
-  (compiled-chars           (make-hash-table :test #'==))
-  (compiled-numbers         (make-hash-table :test #'==))
-  (compiled-strings         (make-hash-table :test #'eq))
   (compiled-symbols         (make-hash-table :test #'eq))
+  ; Old C core.
+;  (compiled-chars           (make-hash-table :test #'==))
+;  (compiled-numbers         (make-hash-table :test #'==))
+;  (compiled-strings         (make-hash-table :test #'eq))
 
   (compiled-decls           nil)
   (compiled-inits           nil)
@@ -235,10 +236,10 @@
         :accumulated-toplevel-expressions (copy-list accumulated-toplevel-expressions)
         :predefined-symbols       (copy-list predefined-symbols)
 
-        :compiled-chars           (copy-hash-table compiled-chars)
-        :compiled-numbers         (copy-hash-table compiled-numbers)
-        :compiled-strings         (copy-hash-table compiled-strings)
         :compiled-symbols         (copy-hash-table compiled-symbols)
+;        :compiled-chars           (copy-hash-table compiled-chars)
+;        :compiled-numbers         (copy-hash-table compiled-numbers)
+;        :compiled-strings         (copy-hash-table compiled-strings)
         :compiled-decls           (copy-list compiled-decls)
         :compiled-inits           (copy-list compiled-inits)
         :identifiers              (copy-hash-table identifiers)
