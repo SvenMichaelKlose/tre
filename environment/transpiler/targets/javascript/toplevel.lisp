@@ -57,8 +57,6 @@
      (& *have-compiler?*
         (js-sections-compiler))))
 
-(fn js-ending-sections ())
-
 (fn js-expex-initializer (ex)
   (= (expex-inline? ex)          #'%slot-value?
      (expex-argument-filter ex)  #'js-argument-filter))
@@ -78,7 +76,6 @@
       :identifier-char?         #'c-identifier-char?
       :literal-converter        #'expand-literal-characters
       :expex-initializer        #'js-expex-initializer
-      :ending-sections          #'js-ending-sections
       :configurations           '((:platform                 . :browser)
                                   (:nodejs-requirements      . nil)
                                   (:rplac-breakpoints        . nil)
