@@ -31,8 +31,6 @@
   (values (lambda-args x)
           (lambda-body x)))
 
-(fn lambda-call-vals (x) .x)
-
 (fn function-expr? (x)
   (& (cons? x)
      (eq 'function x.)))
