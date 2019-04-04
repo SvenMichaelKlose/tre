@@ -1,5 +1,7 @@
 (fn quote-expand (x)
-  (with (atomic  [? (constant-literal? _)
+  (with (any-quasiquote?  [| (quasiquote? _)
+                             (quasiquote-splice? _)]
+         atomic  [? (constant-literal? _)
                     _
                     `(quote ,_)]
          static  [? (atom _)

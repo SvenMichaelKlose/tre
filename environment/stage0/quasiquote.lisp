@@ -1,9 +1,3 @@
-(%defun any-quasiquote? (x)
-  (? (cons? x)
-     (?
-       (eq x. 'quasiquote)         t
-       (eq x. 'quasiquote-splice)  t)))
-
 (%defun %quasiquote-expand (x)
   (?
     (atom x)                     x
