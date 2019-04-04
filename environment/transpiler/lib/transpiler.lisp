@@ -131,11 +131,6 @@
   (predefined-symbols       nil)
 
   (compiled-symbols         (make-hash-table :test #'eq))
-  ; Old C core.
-;  (compiled-chars           (make-hash-table :test #'==))
-;  (compiled-numbers         (make-hash-table :test #'==))
-;  (compiled-strings         (make-hash-table :test #'eq))
-
   (compiled-decls           nil)
   (compiled-inits           nil)
 
@@ -237,9 +232,6 @@
         :predefined-symbols       (copy-list predefined-symbols)
 
         :compiled-symbols         (copy-hash-table compiled-symbols)
-;        :compiled-chars           (copy-hash-table compiled-chars)
-;        :compiled-numbers         (copy-hash-table compiled-numbers)
-;        :compiled-strings         (copy-hash-table compiled-strings)
         :compiled-decls           (copy-list compiled-decls)
         :compiled-inits           (copy-list compiled-inits)
         :identifiers              (copy-hash-table identifiers)
