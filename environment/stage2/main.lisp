@@ -18,7 +18,6 @@
 (env-load "stage2/string.tests.lisp" :cl)
 (env-load "stage2/search-sequence.lisp")
 (env-load "stage2/search-sequence.tests.lisp")
-(env-load "stage2/list-symbol.lisp")
 (env-load "stage2/dot-expand.lisp")
 (env-load "stage2/define-mapped-fun.lisp")
 (env-load "stage2/assoc.lisp")

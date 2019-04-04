@@ -18,7 +18,7 @@
          (num-cars without-end)   (dot-expand-tail-length without-start))
     (dot-expand-make-expr 'car num-cars
                           (dot-expand-make-expr 'cdr num-cdrs
-                                                (dot-expand (list-symbol without-end))))))
+                                                (dot-expand (make-symbol (list-string without-end)))))))
 
 (fn dot-position (x)
   (position #\. x :test #'character==))
@@ -41,8 +41,8 @@
     (?
       (no-dot-notation? x)   x
       (has-dot-notation? x)  (dot-expand-list sl)
-      `(%slot-value ,(list-symbol (subseq sl 0 p))
-                    ,(dot-expand-conv (list-symbol (subseq sl (++ p))))))))
+      `(%slot-value ,(make-symbol (list-string (subseq sl 0 p)))
+                    ,(dot-expand-conv (make-symbol (list-string (subseq sl (++ p)))))))))
 
 (fn dot-expand (x)
   (?
