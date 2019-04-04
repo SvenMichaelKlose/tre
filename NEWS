@@ -1,20 +1,19 @@
-Changes relative to tre-0.16:
-  * Identifier obfuscation is not supported anymore.
-  * Macros MAPCAR-MACRO and MAPCAN-MACRO have been removed.
-  * ASSOC-URL and MAKE-SYMBOLS have been removed.
-  * *ENGLISH-NUMBERS* has been removed.
-  * Transpiler cleaned up thoroughly.
-  * Removed transpiler pass INJECT-DEBUGGING.
-  * Pseudo-profiler has been removed.
+Changes relative to tre-0.15:
+  * Transpiler cleaned up thoroughly.  Lots of stale code has
+    been removed.
   * GENSYM now takes optional symbol name prefix.
-
-Changes of tre-0.16 relative to tre-0.15:
   * Added ready-made project directories in example/ to make
     it easier to start projects.
   * REMOVE-PROP is now REMOVE-PROPS and works on an arbitrarily
     number of keys to remove.
   * PROPERTY-VALUES: New function to return the values of the
     keys PROPERTY-NAMES returns.
+  * Identifier obfuscation is not supported anymore.
+  * Macros MAPCAR-MACRO and MAPCAN-MACRO have been removed.
+  * ASSOC-URL and MAKE-SYMBOLS have been removed.
+  * *ENGLISH-NUMBERS* has been removed.
+  * Removed transpiler pass INJECT-DEBUGGING.
+  * Pseudo-profiler has been removed.
 
 Changes of tre-0.15 relative to tre-0.14:
   * MAP has been removed.  It has been the same as MAPCAR.
