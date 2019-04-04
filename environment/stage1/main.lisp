@@ -25,7 +25,7 @@
 (env-load "stage1/fn.lisp")
 (env-load "stage1/curly.lisp")
 (env-load "stage1/accent-circonflex.lisp")
-(env-load "stage1/predicates-c.lisp" :cl)
+(env-load "stage1/integerp.lisp" :cl)
 (env-load "stage1/predicates.lisp")
 (env-load "stage1/predicates.tests.lisp")
 (env-load "stage1/test-builtins.lisp")
