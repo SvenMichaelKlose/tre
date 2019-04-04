@@ -1,8 +1,8 @@
 (%defun any-quasiquote? (x)
   (? (cons? x)
      (?
-       (eq x. 'QUASIQUOTE)         t
-       (eq x. 'QUASIQUOTE-SPLICE)  t)))
+       (eq x. 'quasiquote)         t
+       (eq x. 'quasiquote-splice)  t)))
 
 (%defun %quasiquote-expand (x)
   (?

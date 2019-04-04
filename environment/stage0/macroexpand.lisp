@@ -6,14 +6,14 @@
 
 (%defun %macroexpand-backquote (x)
   (?
-    (atom x)                    x
-    (atom x.)                   (. x. (%macroexpand-backquote .x))
-    (eq x.. 'QUASIQUOTE)        (. (. 'QUASIQUOTE
-                                      (%macroexpand (cdr x.)))
-                                   (%macroexpand-backquote .x))
-    (eq x.. 'QUASIQUOTE-SPLICE) (. (. 'QUASIQUOTE-SPLICE
-                                      (%macroexpand (cdr x.)))
-                                   (%macroexpand-backquote .x))
+    (atom x)                     x
+    (atom x.)                    (. x. (%macroexpand-backquote .x))
+    (eq x.. 'quasiquote)         (. (. 'quasiquote
+                                       (%macroexpand (cdr x.)))
+                                    (%macroexpand-backquote .x))
+    (eq x.. 'quasiquote-splice)  (. (. 'quasiquote-splice
+                                       (%macroexpand (cdr x.)))
+                                    (%macroexpand-backquote .x))
     (. (%macroexpand-backquote x.)
        (%macroexpand-backquote .x))))
 
@@ -33,10 +33,10 @@
                                         (. x. (%macroexpand-rest .x))
                                         x))
                                  (apply *macrocall* (list x)))
-    (eq x. 'QUOTE)              x
-    (eq x. 'BACKQUOTE)          (. 'BACKQUOTE (apply *macroexpand-backquote* (list .x)))
-    (eq x. 'QUASIQUOTE)         (. 'QUASIQUOTE (%macroexpand .x))
-    (eq x. 'QUASIQUOTE-SPLICE)  (. 'QUASIQUOTE-SPLICE (%macroexpand .x))
+    (eq x. 'quote)              x
+    (eq x. 'backquote)          (. 'backquote (apply *macroexpand-backquote* (list .x)))
+    (eq x. 'quasiquote)         (. 'quasiquote (%macroexpand .x))
+    (eq x. 'quasiquote-splice)  (. 'quasiquote-splice (%macroexpand .x))
     (. (%macroexpand x.)
        (%macroexpand-rest .x))))
 
