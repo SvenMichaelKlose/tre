@@ -14,7 +14,6 @@
                 ,@(list+ "tre_modules/js/dom/"
                          '("def-aos.lisp"
                            "do.lisp"
-                           "objects/native-symbols.lisp"
                            "objects/node-predicates.lisp"
                            "objects/visible-node.lisp"
                            "objects/text-node.lisp"
@@ -30,7 +29,6 @@
 
                 ,@(list+ "tre_modules/js/event/"
                          '("log.lisp"
-                           "native-symbols.lisp"
                            "native.lisp"
                            "event.lisp"
                            "handler.lisp"
