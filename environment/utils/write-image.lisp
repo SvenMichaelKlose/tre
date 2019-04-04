@@ -9,5 +9,3 @@
   (print-note "; Dumping environment to image '~A' ~F" path)
   (sys-image-create path #'%load-launchfile)
   (fresh-line))
-
-(dump-system "image")
