@@ -31,7 +31,6 @@
      !))
 
 (defmacro adolist (params &body body)
-  (warn "Macro ADOLIST is deprecated. Consider it gone soon.")
   (let p (? (atom params)
             (list params)
             params)
