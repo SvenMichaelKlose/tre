@@ -28,11 +28,11 @@
 (env-load "stage1/predicates.tests.lisp")
 (env-load "stage1/test-builtins.lisp")
 (env-load "stage1/test-stage0.lisp")
-(env-load "stage1/anaphoric.lisp")
 (env-load "stage1/ensure-list.lisp")
 (env-load "stage1/equal.lisp")
 (env-load "stage1/equal.tests.lisp")
 (env-load "stage1/conditional.lisp")
+(env-load "stage1/anaphoric.lisp")
 (env-load "stage1/return.lisp")
 (env-load "stage1/prog1.lisp")
 
