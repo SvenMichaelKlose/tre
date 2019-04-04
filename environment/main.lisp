@@ -14,7 +14,7 @@
 (env-load "read-eval-loop.lisp")
 
 (env-load "print-html-script.lisp")
-(env-load "lml.lisp")
+(env-load "lml-utils.lisp")
 (env-load "lml2xml.lisp")
 
 (= *tests* (reverse *tests*))
