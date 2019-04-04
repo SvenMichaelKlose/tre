@@ -124,6 +124,9 @@ examples)
     echo "Making compiler dump for BUTLAST in examples/hello-world.lisp…"
     $TRE examples/make-compiler-dumps-for-butlast.lisp > compiled/compiler-dumps-for-butlast.lisp
 #   $TRE examples/make-obfuscated.lisp # TODO: Fix setting the current *PACKAGE*.
+    ;;
+
+projects)
     clean_example_projects
     cd examples/project-php && ./install-modules.sh && ./make.sh && cd -
     cd examples/project-js && ./install-modules.sh && ./make.sh && cd -
@@ -150,6 +153,8 @@ releasetests)
     ./make.sh clean
     ./make.sh all $ARGS
     ./make.sh extra
+    ./make.sh install
+    ./make.sh projects
     echo "Release tests done." >>make.log
 	;;
 
@@ -180,6 +185,7 @@ clean)
     echo "  examples      Compile everything in directory 'examples'."
     echo "  all           Compile everything listed until here."
     echo "  extra         Also compiles what's listed below."
+    echo "  projects      Make examples/project*."
     echo ""
     echo "  nodeconsole   Make node.js REPL. (defunct)"
 #    echo "  webconsole    Make web browser REPL. (defunct)"
