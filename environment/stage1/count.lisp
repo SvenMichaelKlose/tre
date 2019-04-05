@@ -7,7 +7,7 @@
                             init))
      init))
 
-(%defun count (x lst &optional (init 0))
+(%defun count (x lst &optional (init 0) &key (test #'eql))
   (count-if #'((i)
-                (eq i x))
+                (apply test i (list x)))
             lst init))
