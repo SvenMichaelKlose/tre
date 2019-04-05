@@ -6,6 +6,7 @@
 (env-load "stage1/define-test.lisp" :cl)
 (env-load "stage1/return.lisp")
 (env-load "stage1/andor.lisp")
+(env-load "stage1/curly.lisp")
 (env-load "stage1/defun.lisp" :cl)
 
 (env-load "stage1/listp.lisp" :cl)
@@ -24,7 +25,6 @@
 
 (env-load "stage1/debug-print.lisp" :cl)
 (env-load "stage1/fn.lisp")
-(env-load "stage1/curly.lisp")
 (env-load "stage1/accent-circonflex.lisp")
 (env-load "stage1/integerp.lisp" :cl)
 (env-load "stage1/test-builtins.lisp")
