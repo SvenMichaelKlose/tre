@@ -14,4 +14,4 @@
          (return-from member-if j)))))
 
 (fn member-if-not (pred &rest lsts)
-  (member-if #'((_) (not (funcall pred _))) lsts))
+  (member-if [not (funcall pred _)] lsts))

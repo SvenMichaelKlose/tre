@@ -6,7 +6,7 @@
      (? (& (cons? name)
            (eq name. '=))
         (make-symbol (string-concat "=-" (string .name.)))
-;                     (symbol-package (cadr name)))     ; TODO review
+;                     (symbol-package .name.)) ; TODO Resolve locking in package TRE.
         (error "Illegal function name ~A. It must be a symbol or of the form (= symbol)." name))))
 
 (defmacro defun (name args &body body)
@@ -17,7 +17,7 @@
             (block ,name
               (block nil
                 ,@(%add-documentation name body))))
-          (return-from nil ',name)))
+          (return ',name)))
       (%defun-name name)))
 
 (defmacro fn (name args &body body)
