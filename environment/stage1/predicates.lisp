@@ -1,4 +1,4 @@
-(functional zero? even? odd? end? keyword?)
+(functional zero? even? odd? end? keyword? sole?)
 
 (fn zero? (x)
   (& (number? x)
