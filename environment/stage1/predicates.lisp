@@ -1,21 +1,21 @@
 (functional zero? even? odd? end? keyword? sole?)
 
-(fn zero? (x)
+(%defun zero? (x)
   (& (number? x)
      (== 0 x)))
 
-(fn even? (x)
+(%defun even? (x)
   (== 0 (mod x 2)))
 
-(fn odd? (x)
+(%defun odd? (x)
   (== 1 (mod x 2)))
 
-(fn end? (x)
+(%defun end? (x)
   (eq nil x))
 
-(fn keyword? (x)
+(%defun keyword? (x)
   (& (symbol? x)
      (eq *keyword-package* (symbol-package x))))
 
-(fn sole? (x)
+(%defun sole? (x)
   (== 1 (length x)))
