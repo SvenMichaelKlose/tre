@@ -11,15 +11,15 @@ Test 10, LIST? for cell<br>
 Test 11, LIST? for NIL<br>
 Test 12, LIST? fails with number<br>
 Test 13, LIST? fails with symbol<br>
-Test 14, COUNT-IF<br>
-Test 15, COUNT<br>
-Test 16, %SIMPLE-MAPCAR<br>
-Test 17, ++<br>
-Test 18, --<br>
-Test 19, NOT works with NIL<br>
-Test 20, NOT works with T<br>
-Test 21, KEYWORD? recognizes keyword-packaged symbols<br>
-Test 22, KEYWORD? works with standard symbols<br>
+Test 14, NOT works with NIL<br>
+Test 15, NOT works with T<br>
+Test 16, KEYWORD? recognizes keyword-packaged symbols<br>
+Test 17, KEYWORD? works with standard symbols<br>
+Test 18, %SIMPLE-MAPCAR<br>
+Test 19, ++<br>
+Test 20, --<br>
+Test 21, COUNT-IF<br>
+Test 22, COUNT<br>
 Test 23, NOT returns NIL for empty string<br>
 Test 24, Empty string is not NIL<br>
 Test 25, KEYWORD? recognizes keywords<br>
