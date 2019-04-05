@@ -1,14 +1,13 @@
 (def-head-predicate %rest)
 (def-head-predicate %body)
 (def-head-predicate %key)
+
 (fn %rest-or-%body? (x)    (| (%rest? x) (%body? x)))
 (fn argument-synonym? (x)  (| (%rest-or-%body? x)
                               (%key? x)))
 
 (fn argument-rest-keyword? (x)  (in? x '&rest '&body))
-(fn argument-keyword? (x)       (in? x '&rest '&body '&optional '&key))
 (fn argument-name? (x)          (atom x))
-(fn argument-name (x)           x)
 
 (fn error-arguments-missing (fun args)
   (error "Arguments ~A missing for ~A." args fun))

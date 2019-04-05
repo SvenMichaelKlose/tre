@@ -6,7 +6,7 @@
       (error "Place ~A is not a symbol." place)
     (keyword? place)
       (error "Place ~A: symbol expected instead of a keyword." place)
-    (%arg-keyword? place)
+    (argument-keyword? place)
       (error "Place ~A: symbol expected instead of an argument keyword." place)
     `(#'((,place)
            ,@body)
