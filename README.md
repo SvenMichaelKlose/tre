@@ -7,8 +7,29 @@ a bunch of syntacical novelties that lets Lisp appear in a new
 light.
 
 tré is not just remapping its input. It's a "real" compiler, fit
-to support compiling to C, for example, so it also brings Lisp
-features to PHP 5+ – you can use code for both targets.
+to support compiling to C, for example.  This enables it to bring
+Lisp features to PHP 5+ – you can use code for both targets.
+
+
+# Spirit
+
+tré started in 2005 as a Lisp interpreter written in C to boot a
+compiler written in itself, all inspired by Common Lisp.  The
+interpreter, providing as little built-in functions as sensible,
+loaded the environment and the compiler and then compiled all
+functions and macros to C code that would then be compiled
+together with the native C core to speed things up.
+Next came a bytecode target that was intended to run anywhere else
+(preferably also in embedded systems), but it has never been used much.
+End of 2008 the JavaScript and PHP targets have been created to
+create LAMP applications which set the path of the tré dialect.
+Around 2013 the C and bytecode targets have been removed in favour
+of placing tré on top of SBCL.  Now 'boot-common.lisp', generated
+by the Common Lisp target, is building up the environment.
+
+Having evolved in this way tré's source code might surprise you
+with elements not too common in the Lisp world which survived
+regular gardening.
 
 
 # Build and install
@@ -110,13 +131,19 @@ This example also contains the MySQL database code and
 configuration.
 
 
-# Developing a project – here's the catch
+## Developing a project – here's the catch
 
 The initial project setups come with a bunch of external modules 
-included already, so you can play around with them without needing
+included already, so you can play around with them without need
 to tweak the makefiles.  That's as simple as it can get at this
-time.  tré comes with no IDE whatsoever.  But what you'll see in
-your browser's debugger is more or less readable.  One of
+time.  tré comes with no IDE whatsoever.
+If you decide to continue working with tré you WILL find
+inconveniences and bugs – and you are very welcome to help out.
+
+## How to debug tré programs
+
+What you'll see in your browser's debugger is more or less
+readable.  One of
 
 ```lisp
 (invoke-debugger)
@@ -124,12 +151,7 @@ your browser's debugger is more or less readable.  One of
 ```
 
 in considerate places might help out a lot, as well as PRINT and
-LOG-MESSAGE on the PHP side.  If you decide to continue working
-with tré you WILL find inconveniences and bugs.  And that's the
-point where you hopefully contribute by filing bugs and ask
-questions on github.com or even contribute own code.  Yep.  It's
-a great time to become a key part of the tré programming language
-project, with all the fame and honour and so on.
+LOG-MESSAGE on the PHP side.
 
 
 # Syntax
@@ -153,41 +175,6 @@ can be written:
      function-body)
 ```
 
-## General abbreviations
-
-Inspired by the C syntax these are synonyms for what you
-would expect from Common Lisp.  The original names are,
-most of the time, still there.
-
-* == instead of =
-* = instead of SETF
-* ? instead of IF
-* & instead of AND
-* | instead of OR
-* / instead of DIV
-
-Due to name collision the original meaning of '=' is gone
-in favour of '=='.
-
-There are also abbreviations for some anaphoric macros
-inspired by Arc (which are still around):
-
-* != instead of ALET (Arc)
-* !? instead of AIF (Arc)
-* !@ instead of ADOLIST (Arc) (See also '@'.)
-
-## Dot instead of CONS
-
-```lisp
-(. a b)
-```
-
-is the same as
-
-```lisp
-(cons a b)
-```
-
 ## Dots instead of CAR or CDR
 
 Probably inspired by some COBOL manual, tré first of all takes
@@ -204,7 +191,19 @@ x.      ; (car x)
 .x.     ; (cadr x)
 ..x.    ; (caddr x)
 ..x..   ; (caaddr x)
+```
 
+
+## Dot instead of CONS
+
+```lisp
+(. a b)
+```
+
+is the same as
+
+```lisp
+(cons a b)
 ```
 
 ## Brackets for anonymous functions
@@ -264,6 +263,30 @@ Otherwise it'll become a PROGN.
 
 Note that keyword keys will be translated into camel notation.
 ':oh-no' will become 'ohNo'.
+
+## General abbreviations
+
+Inspired by the C syntax these are synonyms for what you
+would expect from Common Lisp.  The original names are,
+most of the time, still there.
+
+* == instead of =
+* = instead of SETF
+* ? instead of IF
+* & instead of AND
+* | instead of OR
+* / instead of DIV
+
+Due to name collision the original meaning of '=' is gone
+in favour of '=='.
+
+There are also abbreviations for some anaphoric macros
+inspired by Arc (which are still around):
+
+* != instead of ALET (Arc)
+* !? instead of AIF (Arc)
+* !@ instead of ADOLIST (Arc) (See also '@'.)
+
 
 ## At sign @ instead of DOLIST or FILTER
 
