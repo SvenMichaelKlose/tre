@@ -9,11 +9,13 @@
 
 (%defun compiler-| (x)
   (? .x
-     (let g (gensym)
-       `(let ,g ,x.
-          (? ,g
-             ,g
-             ,(compiler-| .x))))
+     (#'((g)
+           `(#'((,g)
+                  (? ,g
+                     ,g
+                     ,(compiler-| .x)))
+                ,x.))
+         (gensym))
      x.))
 
 (defmacro | (&rest x)
