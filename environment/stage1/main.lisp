@@ -5,7 +5,7 @@
 (env-load "stage1/defmacro.lisp" :cl)
 (env-load "stage1/define-test.lisp" :cl)
 (env-load "stage1/return.lisp")
-(env-load "stage1/basic-conditional.lisp")
+(env-load "stage1/andor.lisp")
 (env-load "stage1/defun.lisp" :cl)
 
 (env-load "stage1/listp.lisp" :cl)
