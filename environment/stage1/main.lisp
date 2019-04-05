@@ -4,10 +4,12 @@
 (env-load "stage1/documentation.lisp")
 (env-load "stage1/defmacro.lisp" :cl)
 (env-load "stage1/define-test.lisp" :cl)
+(env-load "stage1/return.lisp")
+(env-load "stage1/basic-conditional.lisp")
+(env-load "stage1/defun.lisp" :cl)
 
 (env-load "stage1/listp.lisp" :cl)
 (env-load "stage1/listp.tests.lisp" :cl)
-(env-load "stage1/basic-conditional.lisp")
 (env-load "stage1/predicates.lisp")
 (env-load "stage1/predicates.tests.lisp")
 (env-load "stage1/arg-keyword-p.lisp")
@@ -20,7 +22,6 @@
 (env-load "stage1/count.lisp")
 (env-load "stage1/count.tests.lisp")
 
-(env-load "stage1/defun.lisp" :cl)
 (env-load "stage1/debug-print.lisp" :cl)
 (env-load "stage1/fn.lisp")
 (env-load "stage1/curly.lisp")
@@ -33,7 +34,6 @@
 (env-load "stage1/equal.tests.lisp")
 (env-load "stage1/conditional.lisp")
 (env-load "stage1/anaphoric.lisp")
-(env-load "stage1/return.lisp")
 (env-load "stage1/prog1.lisp")
 
 (env-load "stage1/test-nthcdr.lisp")

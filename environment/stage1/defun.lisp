@@ -10,14 +10,15 @@
         (error "Illegal function name ~A. It must be a symbol or of the form (= symbol)." name))))
 
 (defmacro defun (name args &body body)
-  (let name (%defun-name name)
-    `(block nil
-       (print-definition `(defun ,name ,args))
-       (%defun-quiet ,name ,args
-         (block ,name
-           (block nil
-             ,@(%add-documentation name body))))
-       (return-from nil ',name))))
+  (#'((name)
+       `(block nil
+          (print-definition `(defun ,name ,args))
+          (%defun-quiet ,name ,args
+            (block ,name
+              (block nil
+                ,@(%add-documentation name body))))
+          (return-from nil ',name)))
+      (%defun-name name)))
 
 (defmacro fn (name args &body body)
   `(defun ,name ,args ,@body))
