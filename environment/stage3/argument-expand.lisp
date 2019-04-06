@@ -131,7 +131,7 @@
                                              apply-values?
                                              concatenate-sublists?
                                              break-on-errors?)
-                           (exp-main .def .vals))
+                          (exp-main .def .vals))
                    (. (. nil (argument-expand-0 fun def. vals.
                                                 apply-values?
                                                 concatenate-sublists?
@@ -164,8 +164,7 @@
      (!= (exp-main argdefs alst)
        (? (eq ! 'error)
           !
-          (nconc ! (nconc (@ [. _. (. '%key ._)] key-args)
-                          rest-arg))))))
+          (nconc ! (nconc (mapcar [. _. (. '%key ._)] key-args) rest-arg))))))
 
 (fn argument-expand (fun def vals &key (apply-values? t)
                                        (concatenate-sublists? t)
@@ -180,7 +179,7 @@
   (argument-expand fun def nil :apply-values? nil))
 
 (fn argument-expand-values (fun def vals &key (break-on-errors? t))
-  (@ [? (argument-synonym? _)
-        ._
-        _]
-     (cdrlist (argument-expand fun def vals :break-on-errors? break-on-errors?))))
+  (mapcar [? (argument-synonym? _)
+             ._
+             _]
+          (cdrlist (argument-expand fun def vals :break-on-errors? break-on-errors?))))
