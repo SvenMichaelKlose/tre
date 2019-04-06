@@ -16,9 +16,9 @@
   (?
     (not alst)        `(progn
                          ,@body)
-    (not (cdr alst))  `(let ,(caar alst) ,(cadar alst)
+    (not (cdr alst))  `(let ,(car (car alst)) ,(car (cdr (car alst)))
                          ,@body)
-    `(let ,(caar alst) ,(cadar alst)
+    `(let ,(car (car alst)) ,(car (cdr (car alst)))
        (let* ,(cdr alst)
          ,@body))))
 
