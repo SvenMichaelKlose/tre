@@ -9,8 +9,6 @@
 (env-load "stage1/curly.lisp")
 (env-load "stage1/defun.lisp" :cl)
 
-(env-load "stage1/listp.lisp" :cl)
-(env-load "stage1/listp.tests.lisp" :cl)
 (env-load "stage1/predicates.lisp")
 (env-load "stage1/predicates.tests.lisp")
 (env-load "stage1/arg-keyword-p.lisp")

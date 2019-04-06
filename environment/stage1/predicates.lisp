@@ -15,3 +15,9 @@
 
 (fn sole? (x)
   (== 1 (length x)))
+(functional list?)
+
+(%defun list? (x)
+  (? (cons? x)
+     t
+     (not x)))
