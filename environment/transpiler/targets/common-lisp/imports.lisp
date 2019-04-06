@@ -11,7 +11,7 @@
 (defconstant +cl-function-imports+
     '(atom apply
       cons car cdr rplaca rplacd
-      list last copy-list nthcdr nth mapcar
+      last copy-list nthcdr nth mapcar
       length make-string
       mod sqrt sin cos tan asin acos atan exp round floor
       aref char-code

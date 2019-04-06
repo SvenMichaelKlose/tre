@@ -1,5 +1,3 @@
-(fn list (&rest x) x)
-
 (fn list-length (x)
   (let len 0
     (while (cons? x)
