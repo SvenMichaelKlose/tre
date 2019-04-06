@@ -1,10 +1,14 @@
-(functional equal zero? even? odd? end? keyword? sole?)
+(functional equal list? zero? even? odd? end? keyword? sole?)
 
 (fn equal (x y)
   (?
     (| (atom x)
        (atom y))   (eql x y)
     (equal x. y.)  (equal .x .y)))
+
+(fn list? (x)
+  (| (cons? x)
+     (not x)))
 
 (fn end? (x)
   (eq nil x))
@@ -15,9 +19,3 @@
 
 (fn sole? (x)
   (== 1 (length x)))
-(functional list?)
-
-(%defun list? (x)
-  (? (cons? x)
-     t
-     (not x)))
