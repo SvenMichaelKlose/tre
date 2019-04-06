@@ -1,21 +1,17 @@
-(functional zero? even? odd? end? keyword? sole?)
+(functional equal zero? even? odd? end? keyword? sole?)
 
-(%defun zero? (x)
-  (& (number? x)
-     (== 0 x)))
+(fn equal (x y)
+  (?
+    (| (atom x)
+       (atom y))   (eql x y)
+    (equal x. y.)  (equal .x .y)))
 
-(%defun even? (x)
-  (== 0 (mod x 2)))
-
-(%defun odd? (x)
-  (== 1 (mod x 2)))
-
-(%defun end? (x)
+(fn end? (x)
   (eq nil x))
 
-(%defun keyword? (x)
+(fn keyword? (x)
   (& (symbol? x)
      (eq *keyword-package* (symbol-package x))))
 
-(%defun sole? (x)
+(fn sole? (x)
   (== 1 (length x)))

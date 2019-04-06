@@ -30,7 +30,6 @@
 (env-load "stage1/test-builtins.lisp")
 (env-load "stage1/test-stage0.lisp")
 (env-load "stage1/ensure-list.lisp")
-(env-load "stage1/equal.lisp")
 (env-load "stage1/equal.tests.lisp")
 (env-load "stage1/conditional.lisp")
 (env-load "stage1/anaphoric.lisp")
@@ -53,7 +52,6 @@
 (env-load "stage1/=.lisp")
 (env-load "stage1/=-cxr.lisp")
 
-(env-load "stage1/incdec.lisp")
 (env-load "stage1/stack.lisp")
 (env-load "stage1/test-scope.lisp")
 (env-load "stage1/list-synonyms.lisp")
