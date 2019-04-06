@@ -25,8 +25,6 @@
 (env-load "stage1/=.lisp")
 (env-load "stage1/math.lisp")
 (env-load "stage1/list.lisp")
-(env-load "stage1/simple-mapcar.lisp")
-(env-load "stage1/simple-mapcar.tests.lisp")
 (env-load "stage1/cons-r.lisp")
 (env-load "stage1/math.tests.lisp")
 (env-load "stage1/count.lisp")

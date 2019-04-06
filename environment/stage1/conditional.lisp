@@ -24,13 +24,13 @@
  
 (fn %case (g cases)
   (let test (%case-test cases)
-    (%simple-mapcar #'((x)
-                         (? .x
-                            `((,test ,g ,x.) ,.x.)
-                            (list x.)))
-                    (group2 (? (eq :test .cases.)
-                               ...cases
-                               .cases)))))
+    (mapcar #'((x)
+                (? .x
+                   `((,test ,g ,x.) ,.x.)
+                   (list x.)))
+            (group2 (? (eq :test .cases.)
+                       ...cases
+                       .cases)))))
 
 (defmacro case (&body cases)
   (& (keyword? cases.)
