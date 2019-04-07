@@ -35,8 +35,6 @@
         (js-load-core "../../../environment/"
                       "atom.lisp"
                       "string.lisp")))
-;        (js-load-core ""
-;                      "variables.lisp")))
 
 (= *js-core1* (+ *js-core1*
                  ,(js-load-core ""
