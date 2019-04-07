@@ -8,7 +8,7 @@
                                   (eql "TRE-CORE" !)
                                   (eql "COMMON-LISP" !))
                                ""
-                               (+ ! "_p_")))
+                               (+ ! "_P_")))
                           (symbol-name name)))
     (let-when n (real-function-name name)
       (| (eq n name)
