@@ -114,10 +114,10 @@
   ; Declarations that appear right after the imports.
   (delayed-exprs            nil)
 
+  ; DEFUN function sources.
   (memorized-sources        nil)
 
   (funinfos                 (make-hash-table :test #'eq))
-  (funinfos-reverse         (make-hash-table :test #'eq))
   (global-funinfo           nil)
 
   (defined-functions        (make-hash-table :test #'eq))
@@ -222,7 +222,6 @@
         :delayed-exprs            (copy-list delayed-exprs)
         :memorized-sources        (copy-list memorized-sources)
         :funinfos                 (copy-hash-table funinfos)
-        :funinfos-reverse         (copy-hash-table funinfos-reverse)
         :global-funinfo           (& global-funinfo (copy-funinfo global-funinfo))
         :defined-functions        (copy-hash-table defined-functions)
         :defined-variables        (copy-hash-table defined-variables)
