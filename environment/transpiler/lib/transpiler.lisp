@@ -87,9 +87,12 @@
   transpiler-macro-expander
   codegen-expander
 
+  ; Initialising EXPEX in TRANSPILER-EXPEX.
   (expex-initializer       #'identity)
 
+  ; Turn closures into top-level functions.
   (lambda-export?           nil)
+
   (function-prologues?      t)
   (needs-var-declarations?  nil)
   (stack-locals?            nil)
