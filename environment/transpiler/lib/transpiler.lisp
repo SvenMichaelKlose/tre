@@ -117,7 +117,10 @@
   ; DEFUN function sources.
   (memorized-sources        nil)
 
+  ; FUNINFOs by function name.
   (funinfos                 (make-hash-table :test #'eq))
+
+  ; The root of the FUNINFO tree.
   (global-funinfo           nil)
 
   (defined-functions        (make-hash-table :test #'eq))
@@ -131,10 +134,16 @@
   (host-variables           nil)
   (functionals              nil)
 
+  ; Functions and variables we want to import.  Imports
+  ; take place after running everything through the front
+  ; end.
   (wanted-functions nil)
   (wanted-functions-hash    (make-hash-table :test #'eq))
   (wanted-variables nil)
   (wanted-variables-hash    (make-hash-table :test #'eq))
+
+  ; List of used functions to warn about unused functions
+  ; at the end of COMPILE.
   (used-functions           (make-hash-table :test #'eq))
 
   (accumulated-toplevel-expressions nil)
