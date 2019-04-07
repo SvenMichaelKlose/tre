@@ -8,11 +8,9 @@
            (optimizer-pass optimize-tags)))
 
 (fn optimize (statements)
-  (? *opt-peephole?*
-     (with-temporaries (*funinfo*  (global-funinfo)
-                        *body*     statements)
-       (optimize-funinfos (repeat-while-changes (optimizer-passes) statements)))
-     statements))
+  (with-global-funinfo
+    (with-temporary *body* statements
+      (optimize-funinfos (repeat-while-changes (optimizer-passes) statements)))))
 
 (fn pass-opt-tailcall (x)
   (!= (opt-tailcall x)

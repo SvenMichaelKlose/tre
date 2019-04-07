@@ -1,5 +1,3 @@
-(var *opt-peephole?* t)
-
 (defmacro optimizer (fun &body body)
   `(when x
      (with-cons a d x
@@ -12,7 +10,7 @@
          ,@body
          (. a (,fun d))))))
 
-(defmacro define-optimizer (name &body body) ; TODO: Maybe try something with METACODE-WALKER.
+(defmacro define-optimizer (name &body body)
   `(fn ,name (x)
      (optimizer ,name
        ,@body)))
