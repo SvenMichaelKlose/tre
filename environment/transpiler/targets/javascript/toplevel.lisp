@@ -5,7 +5,8 @@
 (fn js-prologue ()
   (+ (format nil "// tré revision ~A~%" *tre-revision*)
      (nodejs-prologue)
-     (format nil "var _I_ = 0; while (1) {switch (_I_) {case 0: ~%")))
+     (format nil "var _I_ = 0; while (1) {switch (_I_) {case 0: ~%")
+     (concat-stringtree (backend-generate-code `(((%var ,@(funinfo-vars (global-funinfo)))))))))
 
 (fn js-epilogue ()
   (format nil "}break;}~%"))
@@ -17,9 +18,6 @@
   (clr (configuration :memorize-sources?))
   (@ [`(%= (slot-value ,_. '__source) (. ,(shared-defun-source _.) (shared-defun-source ._)))]
      (memorized-sources)))
-
-(fn js-var-decls ()
-  (list (backend-generate-code `(((%var ,@(funinfo-vars (global-funinfo))))))))
 
 (fn js-sections-before-import ()
   (. (. '*js-core0* (load-string *js-core0*))
@@ -66,7 +64,6 @@
       :name                     :js
       :prologue-gen             #'js-prologue
       :epilogue-gen             #'js-epilogue
-      :decl-gen                 #'js-var-decls
       :sections-before-import   #'js-sections-before-import
       :sections-after-import    #'js-sections-after-import
       :lambda-export?           nil

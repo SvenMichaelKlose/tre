@@ -66,8 +66,7 @@
                                    (codegen-accumulated-toplevels)))
     (funcall (postprocessor) (append (!? (funcall (prologue-gen))
                                          (list !))
-                                     (dechunk (append (funcall (decl-gen))
-                                                      before-imports
+                                     (dechunk (append before-imports
                                                       (quick-compile (@ #'list (reverse (compiled-inits))))
                                                       imports-and-rest))
                                      (!? (funcall (epilogue-gen))

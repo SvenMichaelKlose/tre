@@ -73,10 +73,14 @@
 
   (identifier-char?        [_ (identity t)])
   (gen-string              #'literal-string)
+
+  ; The very last pass.
   (postprocessor           #'concat-stringtree)
+
+  ; Prologue/epilogue of generated source.
   (prologue-gen            #'(()))
   (epilogue-gen            #'(()))
-  (decl-gen                #'(()))
+
   (sections-before-import  #'(()))
   (sections-after-import   #'(()))
 
@@ -204,7 +208,6 @@
         :postprocessor            postprocessor
         :prologue-gen             prologue-gen
         :epilogue-gen             epilogue-gen
-        :decl-gen                 decl-gen
         :sections-before-import   sections-before-import
         :sections-after-import    sections-after-import
         :codegen-expander         codegen-expander
