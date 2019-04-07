@@ -14,15 +14,17 @@
 (define-shared-transpiler-macro (js php) functional (&rest x)
   (print-definition `(functional ,@x))
   (@ (i x)
-;    (? (transpiler-functional? *transpiler* !)
-;       (warn "Redefinition of functional ~A." !))
+    (? (transpiler-functional? *transpiler* i)
+       (warn "FUNCTIONAL: Already declared ~A as being a pure function." i))
     (transpiler-add-functional *transpiler* i))
   nil)
 
 (define-shared-transpiler-macro (c js php) not (&rest x)
-   `(? ,x. nil ,(!? .x
-                    `(not ,@!)
-                    t)))
+  `(? ,x.
+      nil
+      ,(? .x
+          `(not ,@.x)
+          t)))
 
 (define-shared-transpiler-macro (bc c js php) defmacro (name args &body body)
   (print-definition `(defmacro ,name ,args))
@@ -37,7 +39,7 @@
      (= val `',name))
   (print-definition `(var ,name))
   (& (defined-variable name)
-     (redef-warn "Redefinition of variable ~A.~%" name))
+     (warn "Redefinition of variable ~A." name))
   (add-defined-variable name)
   (& *have-compiler?*
      (add-delayed-expr `((= *variables* (. (. ',name ',val) *variables*)))))

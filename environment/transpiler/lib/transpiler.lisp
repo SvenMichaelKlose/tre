@@ -108,8 +108,12 @@
   ; e.g. to translate NIL to "false" and T to "true".
   (symbol-translations      nil)
 
+  ; Closures cut out of their parent functions.
   (closures                 nil)
+
+  ; Declarations that appear right after the imports.
   (delayed-exprs            nil)
+
   (memorized-sources        nil)
 
   (funinfos                 (make-hash-table :test #'eq))

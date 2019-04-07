@@ -12,7 +12,7 @@
 (def-php-transpiler-macro define-external-variable (name)
   (print-definition `(define-external-variable ,name))
   (& (defined-variable name)
-     (redef-warn "redefinition of variable ~A." name))
+     (warn "Redefinition of variable ~A." name))
   (add-defined-variable name)
   nil)
 

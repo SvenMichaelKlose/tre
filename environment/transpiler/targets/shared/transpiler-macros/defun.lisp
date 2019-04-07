@@ -1,8 +1,3 @@
-(var *allow-redefinitions?* t)
-
-(fn redef-warn (&rest args)
-  (apply (? *allow-redefinitions?* #'warn #'error) args))
-
 (fn apply-current-package (x)
   (!? (current-package)
       (make-symbol (symbol-name x) !)
@@ -48,7 +43,8 @@
     (| (list? args)
        (error "Argument list expected instead of ~A." args))
     (& (defined-function name)
-       (redef-warn "Redefinition of function ~A." name))
+       (warn "Redefining #'~A." name))
+
     (add-defined-function name args body-with-block)
     `((function ,name (,args
                        ,@(& (body-has-noargs-tag? body)
