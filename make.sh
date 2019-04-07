@@ -151,7 +151,11 @@ extra)
 releasetests)
     echo "Making release tests…" | tee make.log
     ./make.sh clean
-    ./make.sh all $ARGS
+    ./make.sh boot
+    ./make.sh genboot
+    ./make.sh core
+    ./make.sh tests
+    ./make.sh examples
     ./make.sh extra
     ./make.sh install
     ./make.sh projects
