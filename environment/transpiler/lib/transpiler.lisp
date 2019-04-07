@@ -73,7 +73,6 @@
   (middleend-init          #'(()))
 
   (identifier-char?        [_ (identity t)])
-  (literal-converter       #'identity)
   (gen-string              #'literal-string)
   (postprocessor           #'concat-stringtree)
   (prologue-gen            #'(()))
@@ -203,7 +202,6 @@
         :frontend-init            frontend-init
         :middleend-init           middleend-init
         :identifier-char?         identifier-char?
-        :literal-converter        literal-converter
         :gen-string               gen-string
         :postprocessor            postprocessor
         :prologue-gen             prologue-gen

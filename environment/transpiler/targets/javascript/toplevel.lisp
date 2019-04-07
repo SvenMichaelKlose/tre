@@ -74,7 +74,6 @@
       :needs-var-declarations?  t
       :enabled-passes           '(:count-tags)
       :identifier-char?         #'c-identifier-char?
-      :literal-converter        #'expand-literal-characters
       :expex-initializer        #'js-expex-initializer
       :configurations           '((:platform                 . :browser)
                                   (:nodejs-requirements      . nil)

@@ -40,7 +40,6 @@
       :stack-locals?            nil
       :gen-string               [literal-string _ #\" (list #\$)]
       :identifier-char?         #'php-identifier-char?
-      :literal-converter        #'expand-literal-characters
       :expex-initializer        #'php-expex-initializer
       :configurations           '((:exclude-core?            . nil)
                                   (:save-sources?            . nil)
