@@ -42,7 +42,6 @@
 (env-load "stage1/test-nthcdr.lisp")
 (env-load "stage1/queue.tests.lisp")
 (env-load "stage1/@.lisp")
-(env-load "stage1/funcall.lisp" :cl)
 (env-load "stage1/dotimes.lisp")
 (env-load "stage1/member.tests.lisp")
 
