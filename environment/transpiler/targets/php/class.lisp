@@ -57,7 +57,7 @@
             (reverse !))))
 
 (def-php-transpiler-macro finalize-class (class-name)
-  (let classes (thisify-classes)
+  (let classes (defined-classes)
     (!? (href classes class-name)
         `{(fn ,($ class-name '?) (x)
             (& (object? x)

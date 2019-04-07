@@ -109,7 +109,7 @@
   (symbol-translations      nil)
 
   ; Defined CLASSes.
-  (thisify-classes          (make-hash-table :test #'eq))
+  (defined-classes          (make-hash-table :test #'eq))
 
   (late-symbols             (make-hash-table :test #'eq))
   (exported-closures        nil)
@@ -156,7 +156,7 @@
   (last-pass-result         nil))
 
 (fn transpiler-reset (tr)
-  (= (transpiler-thisify-classes tr)        (make-hash-table :test #'eq)
+  (= (transpiler-defined-classes tr)        (make-hash-table :test #'eq)
      (transpiler-wanted-functions tr)       nil
      (transpiler-wanted-functions-hash tr)  (make-hash-table :test #'eq)
      (transpiler-wanted-variables tr)       nil
@@ -215,7 +215,7 @@
         :function-name-prefix     function-name-prefix
 
         :symbol-translations      (copy-list symbol-translations)
-        :thisify-classes          (copy-hash-table thisify-classes)
+        :defined-classes          (copy-hash-table defined-classes)
         :late-symbols             (copy-hash-table late-symbols)
         :exported-closures        (copy-list exported-closures)
         :delayed-exprs            (copy-list delayed-exprs)

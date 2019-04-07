@@ -6,7 +6,7 @@
                     class-name)
          bases   (& (cons? class-name)
                     .class-name)
-         classes (thisify-classes))
+         classes (defined-classes))
     (print-definition `(defclass ,class-name ,@(!? args (list !))))
     (& (href classes cname)
        (error "Class ~A already defined." cname))
@@ -29,7 +29,7 @@
 
 (fn generic-defmethod (class-name name args &body body)
   (print-definition `(defmethod ,class-name ,name ,@(!? args (list !))))
-  (!? (href (thisify-classes) class-name)
+  (!? (href (defined-classes) class-name)
       (let code (list args body)
         (? (assoc name (class-methods !))
            {(= (assoc-value name (class-methods !)) code)
@@ -40,7 +40,7 @@
 
 (fn generic-defmember (class-name &rest names)
   (print-definition `(defmember ,class-name ,@names))
-  (!? (href (thisify-classes) class-name)
+  (!? (href (defined-classes) class-name)
       (+! (class-members !) (@ [list _ t] names))
       (error "Class ~A is not defined." class-name))
   nil)

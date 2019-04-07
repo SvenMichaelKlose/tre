@@ -33,7 +33,7 @@
 
 (def-head-predicate %thisify)
 
-(fn thisify (x &optional (classes (thisify-classes)) (exclusions nil))
+(fn thisify (x &optional (classes (defined-classes)) (exclusions nil))
   (?
     (atom x)        x
     (%thisify? x.)  (transpiler-macroexpand

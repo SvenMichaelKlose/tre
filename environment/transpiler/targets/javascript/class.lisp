@@ -39,7 +39,7 @@
 
 (def-js-transpiler-macro finalize-class (class-name)
   (print-definition `(finalize-class ,class-name))
-  (!? (href (thisify-classes) class-name)
+  (!? (href (defined-classes) class-name)
       `{,(assoc-value class-name *delayed-constructors*)
         ,@(js-emit-methods class-name !)
         (= (slot-value (slot-value ,(compiled-function-name class-name) 'prototype) 'constructor) ,class-name)}
