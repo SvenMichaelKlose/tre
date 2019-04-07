@@ -395,6 +395,6 @@
     (transpiler-reset !)
     (= (transpiler-assert? !) *assert?*)
     (= (transpiler-transpiler-macro-expander !) (make-transpiler-macro-expander !))
-    (transpiler-make-code-expander !)
+    (make-transpiler-codegen-expander !)
     (transpiler-make-expex !)
     (make-global-funinfo !)))
