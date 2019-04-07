@@ -3,7 +3,7 @@
      (defined-variable x)
      (wanted-function? x)
      (wanted-variable? x)
-     (transpiler-macro *transpiler* x)))
+     (codegen-macro? x)))
 
 (fn can-import-function? (x)
   (& (symbol? x)

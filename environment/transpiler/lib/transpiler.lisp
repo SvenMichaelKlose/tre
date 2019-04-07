@@ -300,10 +300,6 @@
 (fn add-toplevel-expression (x)
   (push x (accumulated-toplevel-expressions)))
 
-(fn transpiler-macro (tr name)
-  (!= (transpiler-codegen-expander tr)
-    (funcall (expander-lookup !) ! name)))
-
 (fn make-global-funinfo (tr)
   (= (transpiler-global-funinfo tr) (create-funinfo :name        'global-scope
                                                     :parent      nil
