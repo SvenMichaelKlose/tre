@@ -57,8 +57,6 @@
            (shared-defun-source-memorizer name args (list-without-noargs-tag body))))))
 
 (fn shared-defun (name args body &key (make-expander? t) (allow-source-memorizer? t))
-  (& (macro? name)
-     (add-used-function name))
   (let fun-name (%defun-name name)
     `{,@(shared-defun-without-expander fun-name args body
                                        :allow-source-memorizer? allow-source-memorizer?
