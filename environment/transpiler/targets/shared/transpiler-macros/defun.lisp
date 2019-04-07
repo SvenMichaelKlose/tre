@@ -1,8 +1,3 @@
-(fn apply-current-package (x)
-  (!? (current-package)
-      (make-symbol (symbol-name x) !)
-      x))
-
 (fn shared-defun-memorize-source (name args body)
   (acons! name (. args body) (memorized-sources))
   nil)
@@ -35,7 +30,6 @@
 
 (fn shared-defun-without-expander (name args body &key (allow-source-memorizer? nil)
                                                        (allow-backtrace? nil))
-  (= name (apply-current-package name))
   (print-definition `(fn ,name ,args))
   (let body-with-block `((block ,name
                            (block nil

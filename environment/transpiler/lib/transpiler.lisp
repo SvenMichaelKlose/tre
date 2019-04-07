@@ -152,15 +152,16 @@
   (compiled-decls           nil)
   (compiled-inits           nil)
 
+  ; Identifier conversions.
   (identifiers              (make-hash-table :test #'eq))
+
+  ; Reversed conversions to detect clashes.
   (converted-identifiers    (make-hash-table :test #'eq))
   (real-function-names      (make-hash-table :test #'eq))
 
   (cached-frontend-sections nil)
   (cached-output-sections   nil)
 
-  (current-package          nil)
-  
   (current-pass             nil)
   (current-section          nil)
   (current-section-data     nil)
@@ -251,8 +252,7 @@
         :converted-identifiers    (copy-hash-table converted-identifiers)
         :real-function-names      (copy-hash-table real-function-names)
         :cached-frontend-sections (copy-alist cached-frontend-sections)
-        :cached-output-sections   (copy-alist cached-output-sections)
-        :current-package          current-package)
+        :cached-output-sections   (copy-alist cached-output-sections))
     (copy-transpiler-macro-expander transpiler !)
     (transpiler-make-expex !)))
 
@@ -310,9 +310,6 @@
                                                     :parent      nil
                                                     :args        nil
                                                     :transpiler  tr)))
-
-(fn package-symbol (x)
-  (make-symbol (symbol-name x) (current-package)))
 
 (fn transpiler-add-functional (tr x)
   (= (href (transpiler-functionals tr) x) t))
