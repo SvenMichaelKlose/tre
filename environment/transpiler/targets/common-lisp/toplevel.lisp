@@ -15,6 +15,7 @@
   (create-transpiler
       :name                    :common-lisp
       :output-passes           '((:frontend . :transpiler-macroexpand))
+      :disabled-passes         '(:expand-literal-characters)
       :disabled-ends           '(:middleend :backend)
       :import-variables?       t
       :lambda-export?          nil
