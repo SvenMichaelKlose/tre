@@ -22,12 +22,13 @@
         :body (make-framed-functions
                   `(,@(& (needs-var-declarations?)
                          (funinfo-var-declarations fi))
-                    ,@(& (function-prologues?)
+                    ,@(& (function-frames?)
                          `((%function-prologue ,name)))
                     ,@(& (lambda-export?)
                          (funinfo-copiers-to-scoped-vars fi))
                     ,@(lambda-body x)
-                    (%function-epilogue ,name))))))
+                    ,@(& (function-frames?)
+                         `((%function-epilogue ,name))))))))
 
 (define-tree-filter make-framed-functions (x)
   (named-lambda? x) (make-framed-function x))

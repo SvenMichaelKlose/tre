@@ -93,8 +93,11 @@
   ; Turn closures into top-level functions.
   (lambda-export?           nil)
 
-  (function-prologues?      t)
+  (function-frames?         t)
+
+  ; Generate %VAR declarations for each function.
   (needs-var-declarations?  nil)
+
   (stack-locals?            nil)
   (arguments-on-stack?      nil)
   (copy-arguments-to-stack? nil)
@@ -216,7 +219,7 @@
         :codegen-expander         codegen-expander
         :expex-initializer        expex-initializer
         :lambda-export?           lambda-export?
-        :function-prologues?      function-prologues?
+        :function-frames?      function-frames?
         :needs-var-declarations?  needs-var-declarations?
         :stack-locals?            stack-locals?
         :arguments-on-stack?      arguments-on-stack?
