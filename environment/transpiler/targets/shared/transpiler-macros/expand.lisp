@@ -2,11 +2,6 @@
   `{,@(@ [`(,($ 'def- _ '-transpiler-macro) ,@x)]
          (intersect *targets* (make-keywords targets)))})
 
-(define-shared-transpiler-macro (js php) defvar-native (&rest x)
-  (print-definition `(defvar-native ,@x))
-  (+! (predefined-symbols) x)
-  nil)
-
 (define-shared-transpiler-macro (js php) assert (x &optional (txt nil) &rest args)
   (& (assert?)
      (make-assertion x txt args)))

@@ -147,7 +147,6 @@
   (used-functions           (make-hash-table :test #'eq))
 
   (accumulated-toplevel-expressions nil)
-  (predefined-symbols       nil)
 
   (compiled-symbols         (make-hash-table :test #'eq))
   (compiled-decls           nil)
@@ -244,7 +243,6 @@
         :wanted-variables-hash    (copy-hash-table wanted-variables-hash)
 
         :accumulated-toplevel-expressions (copy-list accumulated-toplevel-expressions)
-        :predefined-symbols       (copy-list predefined-symbols)
 
         :compiled-symbols         (copy-hash-table compiled-symbols)
         :compiled-decls           (copy-list compiled-decls)

@@ -26,8 +26,7 @@
 (var *php-core0*
     ,(php-load-core ""
                     "assert.lisp"
-                    "return-value.lisp"
-                    "superglobals.lisp"))
+                    "return-value.lisp"))
 
 (var *php-core*
     ,(php-load-core ""
