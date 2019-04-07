@@ -149,7 +149,7 @@
   (last-pass-result         nil))
 
 (fn transpiler-reset (tr)
-  (= (transpiler-thisify-classes tr)        (make-hash-table :test #'eq)    ; thisified classes.
+  (= (transpiler-thisify-classes tr)        (make-hash-table :test #'eq)
      (transpiler-wanted-functions tr)       nil
      (transpiler-wanted-functions-hash tr)  (make-hash-table :test #'eq)
      (transpiler-wanted-variables tr)       nil
@@ -317,20 +317,6 @@
 
 (fn transpiler-functional? (tr x)
   (href (transpiler-functionals tr) x))
-
-(fn transpiler-defined-symbol? (fi x)
-  (| (funinfo-find fi x)
-     (function? x)
-     (keyword? x)
-     (member x (predefined-symbols) :test #'eq)
-     (in? x nil t '~%ret 'this)
-     (imported-variable? x)
-     (defined-function x)
-     (defined-variable x)
-     (transpiler-macro? *transpiler* x)
-     (host-variable? x)
-     (late-symbol? x)
-     (funinfo-var? (global-funinfo) x)))
 
 (fn add-used-function (x)
   (= (href (used-functions) x) t)
