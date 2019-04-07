@@ -114,7 +114,7 @@
               (? (== 1 !) "" "s"))))
 
 (fn print-transpiler-stats (start-time)
-  ;(warn-unused-functions)
+  (warn-unused-functions)
   (tell-number-of-warnings)
   (print-status "~A seconds passed.~%"
                 (integer (/ (- (nanotime) start-time) 1000000000))))
