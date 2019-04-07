@@ -6,10 +6,7 @@
 
 (fn removable-place? (x)
   (!= *funinfo*
-    (& (| (funinfo-parent !)
-          (eq '~%ret x)
-          (not (defined-variable x)
-               (literal? x)))
+    (& (funinfo-parent !)
        (funinfo-var? ! x)
        (not (eq x (funinfo-scope !))
             (funinfo-scoped-var? ! x)))))
