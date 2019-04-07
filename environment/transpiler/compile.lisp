@@ -4,12 +4,10 @@
 
 (fn map-section (x fun sections cached-sections)
   (with-cons section data x
-    (with-temporaries ((current-section)       section
-                       (current-section-data)  data)
-      (. section
-         (? (update-section? section cached-sections)
-            (funcall fun section data)
-            (assoc-value section cached-sections))))))
+    (. section
+       (? (update-section? section cached-sections)
+          (funcall fun section data)
+          (assoc-value section cached-sections)))))
 
 (fn map-sections (fun sections cached-sections)
   (@ [map-section _ fun sections cached-sections]

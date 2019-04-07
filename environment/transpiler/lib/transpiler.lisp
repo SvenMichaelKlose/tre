@@ -162,9 +162,6 @@
   (cached-frontend-sections nil)
   (cached-output-sections   nil)
 
-  (current-pass             nil)
-  (current-section          nil)
-  (current-section-data     nil)
   (last-pass-result         nil))
 
 (fn transpiler-reset (tr)
