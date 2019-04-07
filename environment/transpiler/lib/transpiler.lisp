@@ -25,12 +25,6 @@
   ;;; For users.
   ;;;
 
-  ; Include assertions.
-  (assert?                    nil)
-
-  ; Trace call stack at run-time.
-  (backtrace?                 nil)
-
   ; Also generate argument expanders for functions with simple argument
   ; lists to validate all calls at run-time.
   (always-expand-arguments?   nil)
@@ -56,6 +50,12 @@
   ; Used for incremental compilations.  If set only this list of sections
   ; is compiled and the rest is taken from the cache.
   (sections-to-update         nil)
+
+  ; Include assertions.
+  (assert?                    nil)
+
+  ; Trace call stack at run-time.
+  (backtrace?                 nil)
 
   ; Associative list of target-dependent configurations.
   (configurations             nil)
@@ -108,10 +108,6 @@
   ; e.g. to translate NIL to "false" and T to "true".
   (symbol-translations      nil)
 
-  ; Defined CLASSes.
-  (defined-classes          (make-hash-table :test #'eq))
-
-  (late-symbols             (make-hash-table :test #'eq))
   (exported-closures        nil)
   (delayed-exprs            nil)
   (memorized-sources        nil)
@@ -123,6 +119,10 @@
   (defined-functions        (make-hash-table :test #'eq))
   (defined-variables        (make-hash-table :test #'eq))
   (defined-packages         (make-hash-table :test #'eq))
+
+  ; Defined CLASSes.
+  (defined-classes          (make-hash-table :test #'eq))
+
   (literals                 (make-hash-table :test #'eq))
   (host-functions           nil)
   (host-variables           nil)
@@ -165,7 +165,6 @@
      (transpiler-host-functions tr)         (make-host-functions)
      (transpiler-host-variables tr)         (make-host-variables)
      (transpiler-functionals tr)            (make-functionals)
-     (transpiler-late-symbols tr)           (make-hash-table :test #'eq)
      (transpiler-identifiers tr)            (make-hash-table :test #'eq)
      (transpiler-converted-identifiers tr)  (make-hash-table :test #'eq)
      (transpiler-real-function-names tr)    (make-hash-table :test #'eq)
@@ -216,7 +215,6 @@
 
         :symbol-translations      (copy-list symbol-translations)
         :defined-classes          (copy-hash-table defined-classes)
-        :late-symbols             (copy-hash-table late-symbols)
         :exported-closures        (copy-list exported-closures)
         :delayed-exprs            (copy-list delayed-exprs)
         :memorized-sources        (copy-list memorized-sources)
@@ -273,7 +271,6 @@
 (transpiler-getter-not-global function-body      (cdr (transpiler-defined-function tr x)))
 (transpiler-getter wanted-function?        (href (transpiler-wanted-functions-hash tr) x))
 (transpiler-getter wanted-variable?        (href (transpiler-wanted-variables-hash tr) x))
-(transpiler-getter late-symbol?            (href (transpiler-late-symbols tr) x))
 
 (transpiler-getter add-defined-variable  (= (href (transpiler-defined-variables tr) x) t)
                                          x)
@@ -298,10 +295,6 @@
 (fn add-delayed-expr (x)
   (+! (delayed-exprs) (frontend (list x)))
   nil)
-
-(fn add-late-symbol (x)
-  (= (href (late-symbols) x) t)
-  x)
 
 (fn add-toplevel-expression (x)
   (push x (accumulated-toplevel-expressions)))
