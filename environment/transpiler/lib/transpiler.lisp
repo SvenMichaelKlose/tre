@@ -79,7 +79,6 @@
   (decl-gen                #'(()))
   (sections-before-import  #'(()))
   (sections-after-import   #'(()))
-  (ending-sections         #'(()))
 
   transpiler-macro-expander
   codegen-expander
@@ -208,7 +207,6 @@
         :decl-gen                 decl-gen
         :sections-before-import   sections-before-import
         :sections-after-import    sections-after-import
-        :ending-sections          ending-sections
         :codegen-expander         codegen-expander
         :expex-initializer        expex-initializer
         :lambda-export?           lambda-export?

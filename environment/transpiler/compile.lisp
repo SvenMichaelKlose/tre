@@ -101,8 +101,7 @@
   (funcall (frontend-init))
   (generic-codegen (frontend-sections (funcall (sections-before-import)))
                    (frontend-sections (+ (funcall (sections-after-import))
-                                         sections
-                                         (funcall (ending-sections))))
+                                         sections))
                    (import-from-host)))
 
 (fn tell-number-of-warnings ()
