@@ -65,8 +65,6 @@
       "{" ,*terpri*
          ,@(!? (funinfo-globals fi)
                (php-line "global " (pad (@ #'php-dollarize !) ", ")))
-         ,@(& *print-executed-functions?*
-              `("echo \"" ,compiled-name "\\n\";"))
          ,@(lambda-body x)
          ,(php-line "return $" '~%ret)
       "}" ,*terpri*)))
