@@ -101,9 +101,16 @@
   ;;; Generic
   ;;;
 
+  ; Class EXPEX object to configure EXPRESSION-EXPAND.
   (expex                    nil)
+
+  ; Symbol to identifier translations that override CONVERT-IDENTIFIER,
+  ; e.g. to translate NIL to "false" and T to "true".
   (symbol-translations      nil)
+
+  ; Defined CLASSes.
   (thisify-classes          (make-hash-table :test #'eq))
+
   (late-symbols             (make-hash-table :test #'eq))
   (exported-closures        nil)
   (delayed-exprs            nil)
