@@ -70,11 +70,3 @@
              vars      (import-wanted-variables))
         (& (| funs closures vars)
            (append vars (import-from-host) closures funs))))))
-
-(fn current-scope? (x)
-  (member x (funinfo-names *funinfo*) :test #'eq))
-
-(fn import-add-used (x)
-  (| (current-scope? x)
-     (add-used-function x))
-  x)
