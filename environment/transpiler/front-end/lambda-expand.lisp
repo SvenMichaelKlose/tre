@@ -29,7 +29,7 @@
                                  :args    args
                                  :parent  *funinfo*))
     (funinfo-make-scope-arg new-fi)
-    (transpiler-add-exported-closure *transpiler* `((fn ,name ,args ,@body)))
+    (transpiler-add-closure *transpiler* `((fn ,name ,args ,@body)))
     `(%closure ,name)))
 
 

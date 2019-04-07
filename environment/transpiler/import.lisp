@@ -40,10 +40,10 @@
     (developer-note "Scheduled ~A for import.~%" x))
   x)
 
-(fn import-exported-closures ()
-  (& (exported-closures)
-     (append (frontend (pop (exported-closures)))
-             (import-exported-closures))))
+(fn import-closures ()
+  (& (closures)
+     (append (frontend (pop (closures)))
+             (import-closures))))
 
 (fn import-wanted-functions ()
   (awhen (wanted-functions)
@@ -66,7 +66,7 @@
   (when (import-from-host?)
     (with-temporary (configuration :save-argument-defs-only?) nil
       (with (funs      (import-wanted-functions)
-             closures  (import-exported-closures)
+             closures  (import-closures)
              vars      (import-wanted-variables))
         (& (| funs closures vars)
            (append vars (import-from-host) closures funs))))))

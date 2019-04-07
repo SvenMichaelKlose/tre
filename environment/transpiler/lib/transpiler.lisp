@@ -108,7 +108,7 @@
   ; e.g. to translate NIL to "false" and T to "true".
   (symbol-translations      nil)
 
-  (exported-closures        nil)
+  (closures                 nil)
   (delayed-exprs            nil)
   (memorized-sources        nil)
 
@@ -168,7 +168,7 @@
      (transpiler-identifiers tr)            (make-hash-table :test #'eq)
      (transpiler-converted-identifiers tr)  (make-hash-table :test #'eq)
      (transpiler-real-function-names tr)    (make-hash-table :test #'eq)
-     (transpiler-exported-closures tr)      nil
+     (transpiler-closures tr)               nil
      (transpiler-delayed-exprs tr)          nil
      (transpiler-memorized-sources tr)      nil)
   tr)
@@ -215,7 +215,7 @@
 
         :symbol-translations      (copy-list symbol-translations)
         :defined-classes          (copy-hash-table defined-classes)
-        :exported-closures        (copy-list exported-closures)
+        :closures                 (copy-list closures)
         :delayed-exprs            (copy-list delayed-exprs)
         :memorized-sources        (copy-list memorized-sources)
         :funinfos                 (copy-hash-table funinfos)
@@ -290,7 +290,8 @@
 (fn add-defined-function (name args body)
   (transpiler-add-defined-function *transpiler* name args body))
 
-(define-slot-setter-push transpiler-add-exported-closure tr  (transpiler-exported-closures tr))
+(define-slot-setter-push transpiler-add-closure tr
+  (transpiler-closures tr))
 
 (fn add-delayed-expr (x)
   (+! (delayed-exprs) (frontend (list x)))
@@ -300,8 +301,8 @@
   (push x (accumulated-toplevel-expressions)))
 
 (fn transpiler-macro (tr name)
-  (let expander (transpiler-codegen-expander tr)
-    (funcall (expander-lookup expander) expander name)))
+  (!= (transpiler-codegen-expander tr)
+    (funcall (expander-lookup !) ! name)))
 
 (fn make-global-funinfo (tr)
   (= (transpiler-global-funinfo tr) (create-funinfo :name        'global-scope
