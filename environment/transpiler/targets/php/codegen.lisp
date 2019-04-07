@@ -61,8 +61,8 @@
     (developer-note "Generating function ~A…~%" name)
     `(,*terpri*
       ,(funinfo-comment fi)
-      "function " ,compiled-name ,@(php-argument-list (funinfo-args fi))
-      "{" ,(code-char 10)
+      "function " ,compiled-name ,@(php-argument-list (funinfo-args fi)) ,*terpri*
+      "{" ,*terpri*
          ,@(!? (funinfo-globals fi)
                (php-line "global " (pad (@ #'php-dollarize !) ", ")))
          ,@(& *print-executed-functions?*
