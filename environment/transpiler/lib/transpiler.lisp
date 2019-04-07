@@ -98,8 +98,14 @@
   ; Generate %VAR declarations for each function.
   (needs-var-declarations?  nil)
 
+  ; Place local variables on the stack.  Generates expressions
+  ; of the form (%STACK stack-index).
   (stack-locals?            nil)
+
+  ; Have arguments on GC stack. (Was C core.)
   (arguments-on-stack?      nil)
+
+  ; Copy arguments to GC stack. (Was C core.)
   (copy-arguments-to-stack? nil)
 
   (function-name-prefix     "tre_")
