@@ -306,7 +306,7 @@
   (transpiler-closures tr))
 
 (fn add-delayed-expr (x)
-  (+! (delayed-exprs) (frontend (list x)))
+  (+! (delayed-exprs) (frontend x))
   nil)
 
 (fn add-toplevel-expression (x)

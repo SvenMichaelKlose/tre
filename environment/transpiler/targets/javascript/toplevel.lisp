@@ -6,7 +6,7 @@
   (+ (format nil "// tré revision ~A~%" *tre-revision*)
      (nodejs-prologue)
      (format nil "var _I_ = 0; while (1) {switch (_I_) {case 0: ~%")
-     (concat-stringtree (backend-generate-code `(((%var ,@(funinfo-vars (global-funinfo)))))))))
+     (concat-stringtree (backend-generate-code `((%var ,@(funinfo-vars (global-funinfo))))))))
 
 (fn js-epilogue ()
   (format nil "}break;}~%"))

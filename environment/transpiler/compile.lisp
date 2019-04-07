@@ -18,12 +18,12 @@
 
 (fn codegen-section (section data)
   (developer-note "Processing section ~A…~%" section)
-  (apply #'+ (remove-if #'not (codegen data))))
+  (codegen data))
 
 (fn codegen-sections (sections)
   (!= (map-sections #'codegen-section sections (cached-output-sections))
     (= (cached-output-sections) !)
-    (@ #'cdr !)))
+    (apply #'+ (@ #'cdr !))))
 
 (fn quick-compile (x)
   (codegen (frontend x)))
@@ -49,28 +49,23 @@
 (fn compile-delayed-exprs ()
   (developer-note "Generating delayed expressions…~%")
   (with-temporary (sections-to-update) '(delayed-exprs)
-    (quick-compile-sections (list (. 'delayed-exprs
-                                     (apply #'append (delayed-exprs)))))))
-
-(fn dechunk (x)
-  (remove-if #'not (apply #'append x)))
+    (quick-compile-sections (list (. 'delayed-exprs (delayed-exprs))))))
 
 (fn generic-codegen (before-import after-import imports)
   (print-status "Let me think. Hmm…~F")
   (funcall (middleend-init))
   (with (before-imports    (codegen-sections before-import)
-         imports-and-rest  (append {(developer-note "Generating imports…~%")
-                                    (codegen (@ #'list imports))}
-                                   (compile-delayed-exprs)
-                                   (codegen-sections after-import)
-                                   (codegen-accumulated-toplevels)))
-    (funcall (postprocessor) (append (!? (funcall (prologue-gen))
-                                         (list !))
-                                     (dechunk (append before-imports
-                                                      (quick-compile (@ #'list (reverse (compiled-inits))))
-                                                      imports-and-rest))
-                                     (!? (funcall (epilogue-gen))
-                                         (list !))))))
+         imports-and-rest  (+ {(developer-note "Generating imports…~%")
+                               (codegen imports)}
+                              (compile-delayed-exprs)
+                              (codegen-sections after-import)
+                              (codegen-accumulated-toplevels)))
+    (funcall (postprocessor) (+ (list (funcall (prologue-gen)))
+                                before-imports
+                                (quick-compile-sections (list (. 'compiled-inits
+                                                                 (reverse (compiled-inits)))))
+                                imports-and-rest
+                                (list (funcall (epilogue-gen)))))))
 
 (fn frontend-section-load (path)
   (print-definition `(load ,path))
@@ -83,14 +78,14 @@
 
 (fn frontend-section (section data)
   (developer-note "Frontend ~A.~%" section)
-  (frontend (@ #'list
-               (+ (section-comment section)
-                  (pcase section
-                    symbol?  (? (function? data)
-                                (funcall data)
-                                data)
-                    string?  (frontend-section-load section)
-                    (error "Don't know what to do with section ~A." section))))))
+  (apply #'+ (@ [frontend (list _)]
+                (+ (section-comment section)
+                   (pcase section
+                     symbol?  (? (function? data)
+                                 (funcall data)
+                                 data)
+                     string?  (frontend-section-load section)
+                     (error "Don't know what to do with section ~A." section))))))
 
 (fn frontend-sections (sections)
   (!= (map-sections #'frontend-section sections (cached-frontend-sections))
@@ -101,7 +96,8 @@
   (generic-codegen (frontend-sections (funcall (sections-before-import)))
                    (frontend-sections (+ (funcall (sections-after-import))
                                          sections))
-                   (import-from-host)))
+                   (+ (list "Section imports")
+                      (import-from-host))))
 
 (fn tell-number-of-warnings ()
   (!= (length *warnings*)
