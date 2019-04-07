@@ -3,7 +3,6 @@
     `(fn ,name (,x)
        (cache (aprog1 ,maker
                 (unless (funinfo-var? (global-funinfo) !)
-                  (add-literal !)
                   (funinfo-var-add (global-funinfo) !))
                 ,@(& decl-maker
                      `((push (funcall ,decl-maker !) (compiled-decls))))

@@ -123,7 +123,6 @@
   ; Defined CLASSes.
   (defined-classes          (make-hash-table :test #'eq))
 
-  (literals                 (make-hash-table :test #'eq))
   (host-functions           nil)
   (host-variables           nil)
   (functionals              nil)
@@ -224,7 +223,6 @@
         :defined-functions        (copy-hash-table defined-functions)
         :defined-variables        (copy-hash-table defined-variables)
         :defined-packages         (copy-hash-table defined-packages)
-        :literals                 (copy-hash-table literals)
         :host-functions           (copy-hash-table host-functions)
         :host-variables           (copy-hash-table host-variables)
         :functionals              (copy-hash-table functionals)
@@ -262,7 +260,6 @@
 (transpiler-getter defined-function        (href (transpiler-defined-functions tr) x))
 (transpiler-getter defined-variable        (href (transpiler-defined-variables tr) x))
 (transpiler-getter defined-package         (href (transpiler-defined-variables tr) x))
-(transpiler-getter literal?                (href (transpiler-literals tr) x))
 (transpiler-getter host-function           (href (transpiler-host-functions tr) x))
 (transpiler-getter host-function-arguments (car (transpiler-host-function tr x)))
 (transpiler-getter host-function-body      (cdr (transpiler-host-function tr x)))
@@ -275,8 +272,6 @@
 (transpiler-getter add-defined-variable  (= (href (transpiler-defined-variables tr) x) t)
                                          x)
 (transpiler-getter add-defined-package   (= (href (transpiler-defined-packages tr) x) t)
-                                         x)
-(transpiler-getter add-literal           (= (href (transpiler-literals tr) x) t)
                                          x)
 (transpiler-getter-not-global macro? (| (expander-has-macro? (transpiler-transpiler-macro-expander tr) x)
                                         (expander-has-macro? (transpiler-codegen-expander tr) x)))
