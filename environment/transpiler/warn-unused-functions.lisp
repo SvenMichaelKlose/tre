@@ -5,8 +5,9 @@
           (hashkeys (expander-macros (transpiler-macro-expander)))
           (hashkeys (expander-macros (codegen-expander)))
           *macros*))
-    (@ [!= (symbol-name _)
-         (| (tail? ! "_TREEXP")
-            (head? ! "~")
-            (warn "Unused function ~A." _))]
-       (hashkeys !))))
+    (!? (mapcan [!= (symbol-name _)
+                  (& (not (tail? ! "_TREEXP")
+                          (head? ! "~"))
+                     (list !))]
+           (hashkeys !))
+      (warn "Unused functions: ~A." (symbol-names-string !)))))
