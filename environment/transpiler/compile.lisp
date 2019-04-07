@@ -27,18 +27,15 @@
     (= (cached-output-sections) !)
     (@ #'cdr !)))
 
+(fn quick-compile (x)
+  (codegen (frontend x)))
+
 (fn quick-compile-sections (x)
   (codegen-sections (frontend-sections x)))
 
 (fn gen-toplevel-function ()
   `((fn accumulated-toplevel ()
       ,@(reverse (accumulated-toplevel-expressions)))))
-
-(fn codegen-delayed-exprs ()
-  (developer-note "Generating delayed expressions…~%")
-  (with-temporary (sections-to-update) '(delayed-exprs)
-    (quick-compile-sections (list (. 'delayed-exprs
-                                     (apply #'append (delayed-exprs)))))))
 
 (fn codegen-accumulated-toplevels ()
   (& (enabled-pass? :accumulate-toplevel)
@@ -51,6 +48,12 @@
                                           #'gen-toplevel-function)))
          (pop (disabled-passes))))))
 
+(fn compile-delayed-exprs ()
+  (developer-note "Generating delayed expressions…~%")
+  (with-temporary (sections-to-update) '(delayed-exprs)
+    (quick-compile-sections (list (. 'delayed-exprs
+                                     (apply #'append (delayed-exprs)))))))
+
 (fn dechunk (x)
   (remove-if #'not (apply #'append x)))
 
@@ -60,14 +63,14 @@
   (with (before-imports    (codegen-sections before-import)
          imports-and-rest  (append {(developer-note "Generating imports…~%")
                                     (codegen (@ #'list imports))}
-                                   (codegen-delayed-exprs)
+                                   (compile-delayed-exprs)
                                    (codegen-sections after-import)
                                    (codegen-accumulated-toplevels)))
     (funcall (postprocessor) (append (!? (funcall (prologue-gen))
                                          (list !))
                                      (dechunk (append (funcall (decl-gen))
                                                       before-imports
-                                                      (codegen (frontend (@ #'list (reverse (compiled-inits)))))
+                                                      (quick-compile (@ #'list (reverse (compiled-inits))))
                                                       imports-and-rest))
                                      (!? (funcall (epilogue-gen))
                                          (list !))))))
