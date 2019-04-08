@@ -1,6 +1,12 @@
 (var *expex* nil)
 
 
+(fn compiled-list (x)
+  (? (cons? x)
+     `(. ,x.
+         ,(compiled-list .x))
+     x))
+
 ;;;; SHARED SETTER FILTER
 
 (fn expex-compiled-funcall (x)
