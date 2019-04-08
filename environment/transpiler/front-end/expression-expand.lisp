@@ -47,13 +47,12 @@
 
 ;;;; ARGUMENT EXPANSION
 
-(fn compiled-arguments (fun def vals)
-  (with (f [& _ `(. ,_. ,(f ._))])
-    (@ [?
-         (%rest-or-%body? _)  (f ._)
-         (%key? _)            ._
-          _]
-       (cdrlist (argument-expand fun def vals)))))
+(fn compiled-expanded-arguments (fun def vals)
+  (@ [?
+       (%rest-or-%body? _)  (compiled-list ._)
+       (%key? _)            ._
+        _]
+     (cdrlist (argument-expand fun def vals))))
 
 (fn expex-argdef (fun)
   ; TODO: The variable containing the function gets assigned to another one…
@@ -66,7 +65,7 @@
          fun    (? new? .x. x.)
          args   (? new? ..x .x)
          eargs  (? (defined-function fun)
-                   (compiled-arguments fun (expex-argdef fun) args)
+                   (compiled-expanded-arguments fun (expex-argdef fun) args)
                    args))
     `(,@(& new? '(%new)) ,@(!? fun (list !)) ,@(expand-literal-characters eargs))))
 
