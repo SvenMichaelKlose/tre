@@ -13,3 +13,6 @@
   (| (list? x)
      (error "List expected instead of ~A." x))
   (cl:concatenate 'cl:string x))
+
+(defbuiltin %elt-string (obj idx)
+  (cl:elt obj idx))
