@@ -183,10 +183,6 @@
   ((? 0 t))
   t)
 
-(define-test "ELT returns CHARACTER of STRING"
-  ((character? (elt "fnord" 0)))
-  t)
-
 (define-test "NTHCDR works at the start"
   ((nthcdr 0 '(a b c)))
   '(a b c))

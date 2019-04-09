@@ -7,6 +7,8 @@
 (env-load "stage2/group.lisp")
 (env-load "stage2/pcase.lisp")
 (env-load "stage2/remove.lisp")
+(env-load "stage2/elt.lisp")
+(env-load "stage2/elt.tests.lisp")
 (env-load "stage2/subseq-c.lisp" :cl)
 (env-load "stage2/subseq.lisp")
 (env-load "stage2/subseq.tests.lisp")
