@@ -1,4 +1,4 @@
-Changes relative to tre-0.15:
+Changes of tre-0.17 relative to tre-0.16:
   * COUNT now has :TEST argument.
   * COMPILE lists unused functions.
   * SUBSEQ: Doesn't claim error if sequence is NIL anymore.
