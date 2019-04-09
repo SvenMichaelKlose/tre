@@ -6,10 +6,9 @@
       (++! len))))
 
 (fn last (x)
-  (& x
-     (? .x
-        (last .x)
-        x)))
+  (? .x
+     (last .x)
+     x))
 
 (fn copy-list (x)
   (? (atom x)
