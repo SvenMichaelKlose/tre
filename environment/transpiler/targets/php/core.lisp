@@ -44,8 +44,7 @@
                        "function.lisp"
                        "objectp.lisp")
         (php-load-core "../../../environment/"
-                       "not.lisp"
-                       "exception.lisp")
+                       "not.lisp")
         (php-load-core ""
                        "character.lisp"
                        "eq.lisp"
