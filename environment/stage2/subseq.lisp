@@ -31,7 +31,7 @@
     (& (> start end)
        (xchg start end))
     (pcase seq
-      cons?    (list-subseq seq start end)
+      list?    (list-subseq seq start end)
       string?  (string-subseq seq start end)
       array?   (%subseq-sequence #'make-array seq start end)
       (error "Type of ~A not supported." seq))))
