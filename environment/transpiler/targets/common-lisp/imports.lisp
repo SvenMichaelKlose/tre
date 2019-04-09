@@ -9,7 +9,7 @@
       square curly accent-circonflex))
 
 (defconstant +cl-function-imports+
-    '(atom apply
+    '(apply
       cons car cdr rplaca rplacd
       length make-string
       mod sqrt sin cos tan asin acos atan exp round floor

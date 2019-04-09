@@ -2,7 +2,6 @@
     '((NOT          (&rest objects))
       (EQ           (&rest objects))
       (EQL          (&rest objects))
-      (ATOM         (&rest objects))
       (SYMBOL?      (object))
       (FUNCTION?    (object))
       (BUILTIN?     (object))

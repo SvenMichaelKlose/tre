@@ -1,3 +1,7 @@
+(functional rest)
+(fn rest (x)
+  .x)
+
 (functional last)
 (fn last (x)
   (? .x
@@ -36,6 +40,19 @@
 (fn nth (i x)
   (car (nthcdr i x)))
 
+(functional append)
+
+(fn append (&rest lists)
+  (& lists
+     (let f nil
+       (let l nil
+         (dolist (i lists f)
+           (& i
+              (? l
+                 (setq l (last (rplacd l (copy-list i))))
+                 (setq f (copy-list i)
+                       l (last f)))))))))
+
 (functional caar cadr cdar cddr cadar cddar caadar caddr caadr cdddr cdadar caaddr caddar cdddar cddddr cadadr cadaddr cadadar cddadar)
 
 (%defun caar (lst) (car (car lst)))
@@ -60,7 +77,6 @@
 (%defun cddadar (lst) (cddr (cadr (car lst))))
 
 (functional copy-tree)
-
 (%defun copy-tree (x)
   (? (atom x)
      x
@@ -68,7 +84,6 @@
         (copy-tree .x))))
 
 (functional ensure-list)
-
 (fn ensure-list (x)
   (? (list? x)
      x
@@ -113,10 +128,6 @@
 
 (%make-list-synonyms)
 
-(functional rest)
-
-(fn rest (x) .x)
-
 (fn dynamic-map (func &rest lists)
   (?
     (string? lists.)  (list-string (apply #'mapcar func (mapcar #'string-list lists)))
@@ -137,14 +148,12 @@
   (member-if #'((_) (not (funcall pred _))) lsts))
 
 (functional reverse)
-
 (fn reverse (lst)
   (!= nil
     (dolist (i lst !)
       (push i !))))
 
 (functional adjoin)
-
 (fn adjoin (obj lst &rest args)
   (? (apply #'member obj lst args)
      lst
