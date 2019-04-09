@@ -1,6 +1,3 @@
-(fn %=-elt-string (val seq idx)
-  (error "Cannot modify strings."))
-
 (fn string (x)
   (pcase x
     string?     x

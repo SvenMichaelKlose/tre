@@ -3,6 +3,7 @@
 
 (fn elt (seq idx)
   (?
+    (not seq)      nil
     (string? seq)  (%elt-string seq idx)
     (cons? seq)    (nth idx seq)
     (aref seq idx)))

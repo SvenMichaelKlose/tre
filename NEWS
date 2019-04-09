@@ -2,6 +2,8 @@ Changes relative to tre-0.15:
   * COUNT now has :TEST argument.
   * COMPILE lists unused functions.
   * SUBSEQ: Doesn't claim error if sequence is NIL anymore.
+  * ELT: Returns NIL if object is NIL.
+  * Another thorough cleanup took place.
 
 Changes of tre-0.16 relative to tre-0.15:
   * Transpiler cleaned up thoroughly.  Lots of stale code has

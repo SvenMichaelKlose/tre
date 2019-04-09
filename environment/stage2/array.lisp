@@ -8,3 +8,8 @@
   (let result (make-queue)
     (adotimes ((length x) (queue-list result))
       (enqueue result (aref x !)))))
+
+(fn maparray (fun hash)
+  (with-queue q
+    (dotimes (i (length hash) (queue-list q))
+      (enqueue q (funcall fun (aref hash i))))))

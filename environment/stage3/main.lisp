@@ -1,6 +1,7 @@
 (env-load "stage3/let-when.lisp")
 (env-load "stage3/ensure-tree.lisp")
 (env-load "stage3/declare.lisp")
+(env-load "stage3/maphash.lisp")
 (env-load "stage3/hash-tests.lisp")
 (env-load "stage3/alist-hash.lisp")
 (env-load "stage3/with-struct.lisp")
