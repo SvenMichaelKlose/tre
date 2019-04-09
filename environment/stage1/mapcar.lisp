@@ -13,7 +13,7 @@
         (setq i (cdr i))        ; Go for next list.
         (go start)))))
 
-;(fn mapcar (func &rest lists)
-;  (let-if args (%map-args lists)
-;    (. (apply func args)
-;       (apply #'mapcar func lists))))
+(fn mapcar (func &rest lists)
+  (let-if args (%map-args lists)
+    (. (apply func args)
+       (apply #'mapcar func lists))))

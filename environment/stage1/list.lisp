@@ -1,3 +1,9 @@
+(functional last)
+(fn last (x)
+  (? .x
+     (last .x)
+     x))
+
 (fn %nconc-0 (lsts)
   (& lsts
      (!? lsts.
@@ -9,10 +15,26 @@
   (%nconc-0 lsts))
 
 (functional butlast)
-
 (fn butlast (plist)
   (? .plist
      (. plist. (butlast .plist))))
+
+(functional copy-list)
+(fn copy-list (x)
+  (? (atom x)
+     x
+     (. x. (copy-list .x))))
+
+(functional nthcdr)
+(fn nthcdr (idx x)
+  (& x
+     (? (zero? idx)
+        x
+        (nthcdr (-- idx) .x))))
+
+(functional nth)
+(fn nth (i x)
+  (car (nthcdr i x)))
 
 (functional caar cadr cdar cddr cadar cddar caadar caddr caadr cdddr cdadar caaddr caddar cdddar cddddr cadadr cadaddr cadadar cddadar)
 
@@ -137,30 +159,6 @@
            len
       (setq x .x)
       (++! len))))
-
-;(fn last (x)
-;  (& x
-;     (? .x
-;        (last .x)
-;        x)))
-
-;(fn copy-list (x)
-;  (? (atom x)
-;     x
-;     (. x. (copy-list .x))))
-
-;(functional nthcdr)
-
-;(fn nthcdr (idx x)
-;  (& x
-;     (? (zero? idx)
-;        x
-;        (nthcdr (-- idx) .x))))
-
-;(functional nth)
-
-;(fn nth (i x)
-;  (car (nthcdr i x)))
 
 (fn filter (func lst)
   (let result (. nil nil)
