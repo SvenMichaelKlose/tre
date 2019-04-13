@@ -93,7 +93,7 @@
 ;;;; VARIABLE DECLARATIONS
 
 (def-js-codegen %var (&rest names)
-  `(%%native ,*js-indent* "var " ,(c-list names :brackets :none) ,*js-separator*))
+  `(%%native ,*js-indent* "var " ,(c-list names :parens-type nil) ,*js-separator*))
 
 
 ;;;; TYPE PREDICATES
@@ -140,7 +140,7 @@
 ;;;; ARRAYS
 
 (def-js-codegen make-array (&rest elements)
-  `(%%native ,@(c-list elements :brackets :square)))
+  `(%%native ,@(c-list elements :parens-type :brackets)))
 
 (def-js-codegen %aref (arr &rest idx)
   `(%%native ,arr ,@(@ [`("[" ,_ "]")] idx)))
@@ -173,7 +173,7 @@
 ;;;; OBJECTS
 
 (def-js-codegen %%%make-object (&rest args)
-  (c-list (@ [`( ,_. ": " ,._.)] (group args 2)) :brackets :curly))
+  (c-list (@ [`( ,_. ": " ,._.)] (group args 2)) :parens-type :braces))
 
 (def-js-codegen %new (&rest x)
   (? x

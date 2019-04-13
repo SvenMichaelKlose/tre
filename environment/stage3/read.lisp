@@ -2,7 +2,7 @@
   (in? x :quote :backquote :quasiquote :quasiquote-splice :accent-circonflex))
 
 (fn %read-closing-bracket? (x)
-  (in? x :bracket-close :square-bracket-close :curly-bracket-close))
+  (in? x :bracket-close :square-bracket-close :brace-close))
 
 (fn special-char? (x)
   (in? x #\( #\)
@@ -91,8 +91,8 @@
                       #\)  :bracket-close
                       #\[  :square-bracket-open
                       #\]  :square-bracket-close
-                      #\{  :curly-bracket-open
-                      #\}  :curly-bracket-close
+                      #\{  :brace-open
+                      #\}  :brace-close
                       #\'  :quote
                       #\`  :backquote
                       #\^  :accent-circonflex
@@ -137,7 +137,7 @@
        (error "Unexpected closing ~A bracket."
               (case token
                 :bracket-close         "round"
-                :curly-bracket-close   "curly"
+                :brace-close           "braces"
                 :square-bracket-close  "square"))
        (error "Closing bracket missing."))))
 
@@ -153,9 +153,9 @@
          f   #'((token pkg sym)
                  (unless (%read-closing-bracket? token)
                    (. (case token
-                        :bracket-open        (read-cons-slot str)
-                        :square-bracket-open (. 'square (read-cons-slot str))
-                        :curly-bracket-open  (. 'curly (read-cons-slot str))
+                        :bracket-open         (read-cons-slot str)
+                        :square-bracket-open  (. 'square (read-cons-slot str))
+                        :brace-open           (. 'braces (read-cons-slot str))
                         (? (token-is-quote? token)
                            (read-quote str token)
                            (read-atom str token pkg sym)))
@@ -190,7 +190,7 @@
       :eof                  nil
       :bracket-open         (read-cons-slot str)
       :square-bracket-open  (. 'square (read-cons-slot str))
-      :curly-bracket-open   (. 'curly (read-cons-slot str))
+      :brace-open           (. 'braces (read-cons-slot str))
       (? (token-is-quote? token)
          (read-quote str token)
          (read-atom str token pkg sym)))))

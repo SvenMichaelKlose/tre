@@ -6,7 +6,7 @@
 
 (defconstant +cl-core-symbols+
     '(backquote quasiquote quasiquote-splice
-      square curly accent-circonflex))
+      square curly braces accent-circonflex))
 
 (defconstant +cl-function-imports+
     '(apply

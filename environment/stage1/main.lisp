@@ -4,7 +4,7 @@
 (env-load "stage1/define-test.lisp" :cl)
 (env-load "stage1/return.lisp")
 (env-load "stage1/andor.lisp")
-(env-load "stage1/curly.lisp")
+(env-load "stage1/braces.lisp")
 (env-load "stage1/defun.lisp" :cl)
 
 (env-load "stage1/predicates.lisp")
