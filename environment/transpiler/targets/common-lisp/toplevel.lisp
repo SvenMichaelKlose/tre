@@ -1,9 +1,6 @@
 (fn cl-symbol (x)
   (make-symbol (symbol-name x) "CL"))
 
-(fn cl-frontend-init ()
-  (= *cl-builtins* nil))
-
 (fn cl-sections-before-import ()
   (unless (configuration :exclude-core?)
     (list (. 'cl-core (+ (load-string *cl-core*)
@@ -21,7 +18,6 @@
       :lambda-export?          nil
       :stack-locals?           nil
       :sections-before-import  #'cl-sections-before-import
-      :frontend-init           #'cl-frontend-init
       :postprocessor           #'make-lambdas
       :configurations          (+ (default-configurations)
                                   '((:exclude-core? . nil)))))

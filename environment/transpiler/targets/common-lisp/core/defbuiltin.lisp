@@ -2,7 +2,6 @@
 
 (defmacro defbuiltin (name args &body body)
   (print-definition `(defbuiltin ,name ,args))
-  (push name *cl-builtins*)
   `(progn
      (fn ,name ,args ,@body)
      (cl:setf (cl:gethash ',name *builtin-atoms*) #',name)))
