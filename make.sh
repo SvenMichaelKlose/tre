@@ -143,7 +143,7 @@ all)
 
 extra)
     echo "Making 'extra'…"
-    ./make.sh nodeconsole
+#    ./make.sh nodeconsole
     echo "Making complete compiler dump of examples/hello-world.lisp…"
     $TRE examples/make-compiler-dumps.lisp > compiled/compiler-dumps.lisp
     ;;
@@ -192,7 +192,7 @@ clean)
     echo "  projects      Make examples/project*."
     echo ""
     echo "  nodeconsole   Make node.js REPL. (defunct)"
-#    echo "  webconsole    Make web browser REPL. (defunct)"
+    echo "  webconsole    Make web browser REPL. (defunct)"
     echo ""
     echo "  releasetests  Make 'all', 'extra' and 'nodeconsole'."
     echo "  updatetests   Generate new reference files from current test."
