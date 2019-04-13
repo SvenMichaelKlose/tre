@@ -273,7 +273,6 @@
       (let tr *transpiler*
         ,@body))})
 
-(fn transpiler-defined-functions-without-builtins (tr) (remove-if #'builtin? (transpiler-defined-functions tr)))
 (transpiler-getter defined-function        (href (transpiler-defined-functions tr) x))
 (transpiler-getter defined-variable        (href (transpiler-defined-variables tr) x))
 (transpiler-getter defined-package         (href (transpiler-defined-variables tr) x))
