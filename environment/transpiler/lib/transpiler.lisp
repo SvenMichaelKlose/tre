@@ -5,10 +5,7 @@
 (const *optional-passes* '(:accumulate-toplevel))
 
 (fn make-host-functions ()
-  (alist-hash (+ *functions*
-                 (@ [. _. (cadr _)] *macros*)
-                 *builtin-argdefs*)
-              :test #'eq))
+  (alist-hash (+ *functions* (@ [. _. (cadr _)] *macros*)) :test #'eq))
 
 (fn make-host-variables ()
   (alist-hash (@ [. _. t] *variables*) :test #'eq))

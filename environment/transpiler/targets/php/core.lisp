@@ -67,4 +67,5 @@
                        "quit.lisp"
                        "math.lisp")
         (php-load-core "../../../environment/"
-                       "string.lisp")))
+                       "string.lisp"
+                       "files-unsupported.lisp")))

@@ -53,7 +53,8 @@
                                 "nanotime.lisp"
                                 "property-names.lisp"
                                 "../../../environment/property.lisp"
-                                "../../../environment/make-object.lisp")))
+                                "../../../environment/make-object.lisp"
+                                "../../../environment/files-unsupported.lisp")))
 
 (when *have-compiler?*
   (= *js-core1* (+ *js-core1* ,(js-load-core "" "native-eval.lisp"))))
