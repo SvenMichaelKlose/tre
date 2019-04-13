@@ -48,7 +48,7 @@
   `{(%print-indentation ,str ,info)
     ,@body})
 
-(defmacro %with-brackets (str info &body body)
+(defmacro %with-parens (str info &body body)
   `(%with-indentation ,str ,info
      (push (stream-location-column (stream-output-location str))
            (print-info-columns ,info))
@@ -58,7 +58,7 @@
      (pop (print-info-columns ,info))))
 
 (fn pretty-print-lambda (x str info)
-  (%with-brackets str info
+  (%with-parens str info
     (++! (car (print-info-columns info)))
     (%late-print (car .x.) str info)
     (& *print-automatic-newline?*
@@ -67,7 +67,7 @@
     (--! (car (print-info-columns info))))
 
 (fn pretty-print-named-lambda (x str info)
-  (%with-brackets str info
+  (%with-parens str info
     (!= (++ (car (print-info-columns info)))
       (princ "FUNCTION " str)
       (%late-print .x. str info)
@@ -113,7 +113,7 @@
         (%late-print i str info)))))
 
 (fn %print-call (x argdef str info)
-  (%with-brackets str info
+  (%with-parens str info
     (%late-print x. str info)
     (let expanded (%print-get-args .x argdef)
       (? (eq expanded 'error)
@@ -147,7 +147,7 @@
       (? (function? !)
          (funcall ! x str info)
          (%print-call x ! str info))
-      (%with-brackets str info
+      (%with-parens str info
         (%late-print x. str info)
         (%print-rest .x str info))))
 
@@ -219,7 +219,7 @@
 
 (fn %print-array (x str info)
   (princ "#" str)
-  (%with-brackets str info
+  (%with-parens str info
     (doarray (i x)
       (| (zero? i)
          (princ #\  str))
@@ -252,7 +252,7 @@
   (with-default-stream s str
     (? (& (cons? x)
           (cons? x.))
-       (%with-brackets s print-info
+       (%with-parens s print-info
          (%print-body x s print-info))
        (%late-print x s print-info))
     (& *print-automatic-newline?*
