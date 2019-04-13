@@ -6,7 +6,7 @@
 (add-printer-argument-definition 'cl:defconstant '(name init))
 
 (def-cl-transpiler-macro defun (name args &body body)
-  (print-definition `(fn ,name))
+  (print-definition `(fn ,name ,args))
   (add-defined-function name args body)
   `(cl:defun ,name ,args ,@body))
 
