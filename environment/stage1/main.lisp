@@ -5,6 +5,7 @@
 (env-load "stage1/return.lisp")
 (env-load "stage1/andor.lisp")
 (env-load "stage1/braces.lisp")
+(env-load "stage1/brackets.lisp")
 (env-load "stage1/defun.lisp" :cl)
 
 (env-load "stage1/predicates.lisp")
@@ -31,7 +32,6 @@
 (env-load "stage1/count.tests.lisp")
 
 (env-load "stage1/debug-print.lisp" :cl)
-(env-load "stage1/fn.lisp")
 (env-load "stage1/accent-circonflex.lisp")
 (env-load "stage1/integerp.lisp" :cl)
 (env-load "stage1/test-builtins.lisp")

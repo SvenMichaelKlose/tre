@@ -1,8 +1,8 @@
 (fn token-is-quote? (x)
   (in? x :quote :backquote :quasiquote :quasiquote-splice :accent-circonflex))
 
-(fn %read-closing-bracket? (x)
-  (in? x :bracket-close :square-bracket-close :brace-close))
+(fn %read-closing-parens? (x)
+  (in? x :parenthesis-close :bracket-close :brace-close))
 
 (fn special-char? (x)
   (in? x #\( #\)
@@ -87,10 +87,10 @@
                        :number
                        :symbol)
                     (case (read-char str)
-                      #\(  :bracket-open
-                      #\)  :bracket-close
-                      #\[  :square-bracket-open
-                      #\]  :square-bracket-close
+                      #\(  :parenthesis-open
+                      #\)  :parenthesis-close
+                      #\[  :bracket-open
+                      #\]  :bracket-close
                       #\{  :brace-open
                       #\}  :brace-close
                       #\'  :quote
@@ -133,12 +133,12 @@
     :hexnum    (read-hex str)
     :function  `(function ,(read-expr str))
     :symbol    (read-symbol-or-slot-value pkg sym)
-    (? (%read-closing-bracket? token)
-       (error "Unexpected closing ~A bracket."
+    (? (%read-closing-parens? token)
+       (error "Unexpected closing ~A."
               (case token
-                :bracket-close         "round"
-                :brace-close           "braces"
-                :square-bracket-close  "square"))
+                :parenthesis-close  "parenthesis"
+                :brace-close        "brace"
+                :bracket-close      "bracket"))
        (error "Closing bracket missing."))))
 
 (fn read-quote (str token)
@@ -151,11 +151,11 @@
                         (stream-location-column !)
                         (stream-location-id !))]
          f   #'((token pkg sym)
-                 (unless (%read-closing-bracket? token)
+                 (unless (%read-closing-parens? token)
                    (. (case token
-                        :bracket-open         (read-cons-slot str)
-                        :square-bracket-open  (. 'square (read-cons-slot str))
-                        :brace-open           (. 'braces (read-cons-slot str))
+                        :parenthesis-open  (read-cons-slot str)
+                        :bracket-open      (. 'brackets (read-cons-slot str))
+                        :brace-open        (. 'braces   (read-cons-slot str))
                         (? (token-is-quote? token)
                            (read-quote str token)
                            (read-atom str token pkg sym)))
@@ -164,7 +164,7 @@
                             (? (eq :dot token)
                                (with (x                (read-expr str)
                                       (token pkg sym)  (read-token str))
-                                 (| (%read-closing-bracket? token)
+                                 (| (%read-closing-parens? token)
                                     (err "Only one value allowed after dotted cons"))
                                  x)
                                (f token pkg sym)))
@@ -186,11 +186,11 @@
 (fn read-expr (str)
   (with ((token pkg sym) (read-token str))
     (case token
-      nil                   nil
-      :eof                  nil
-      :bracket-open         (read-cons-slot str)
-      :square-bracket-open  (. 'square (read-cons-slot str))
-      :brace-open           (. 'braces (read-cons-slot str))
+      nil                nil
+      :eof               nil
+      :parenthesis-open  (read-cons-slot str)
+      :bracket-open      (. 'brackets (read-cons-slot str))
+      :brace-open        (. 'braces   (read-cons-slot str))
       (? (token-is-quote? token)
          (read-quote str token)
          (read-atom str token pkg sym)))))

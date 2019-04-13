@@ -1,4 +1,4 @@
-(defmacro square (&body body)
+(defmacro brackets (&body body)
   `#'(,(? (eql 0 body.)
           (progn
             (setq body .body)
@@ -10,3 +10,6 @@
                        (eq '%slot-value body..)))
                body
                (list body)))))
+
+(defmacro square (&body body)
+  `(brackets ,@body))
