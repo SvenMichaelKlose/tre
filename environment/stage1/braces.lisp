@@ -4,6 +4,3 @@
         (keyword? x.))
      `(%%make-object ,@x)
      `(progn ,@x)))
-
-(defmacro curly (&rest x)
-  `(braces ,@x))

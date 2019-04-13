@@ -10,6 +10,3 @@
                        (eq '%slot-value body..)))
                body
                (list body)))))
-
-(defmacro square (&body body)
-  `(brackets ,@body))
