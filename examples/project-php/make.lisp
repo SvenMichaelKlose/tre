@@ -1,6 +1,8 @@
 (const *fallback-language* 'en)
 (const *available-languages* '(en))
 
+(load "tre_modules/l10n/compile-time.lisp")
+
 (make-project "tré PHP only project"
               `("tre_modules/php/json.lisp"
                 "tre_modules/php/log-message.lisp"
