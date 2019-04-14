@@ -25,10 +25,9 @@
 
 (fn no-dot-notation? (x)
   (with (sl  (string-list (symbol-name x))
-         l   (length sl)
-         p   (dot-position sl))
+         l   (length sl))
     (| (== 1 l)
-       (not p))))
+       (not (dot-position sl)))))
 
 (fn has-dot-notation? (x)
   (!= (symbol-name x)
@@ -36,13 +35,14 @@
        (eql #\. (elt ! (-- (length !)))))))
 
 (fn dot-expand-conv (x)
-  (with (sl  (string-list (symbol-name x))
-         p   (dot-position sl))
-    (?
-      (no-dot-notation? x)   x
-      (has-dot-notation? x)  (dot-expand-list sl)
-      `(%slot-value ,(make-symbol (list-string (subseq sl 0 p)))
-                    ,(dot-expand-conv (make-symbol (list-string (subseq sl (++ p)))))))))
+  (? (no-dot-notation? x)
+     x
+     (let sl (string-list (symbol-name x))
+       (? (has-dot-notation? x)
+          (dot-expand-list sl)
+          (let p (dot-position sl)
+            `(%slot-value ,(make-symbol (list-string (subseq sl 0 p)))
+                          ,(dot-expand-conv (make-symbol (list-string (subseq sl (++ p)))))))))))
 
 (fn dot-expand (x)
   (?
