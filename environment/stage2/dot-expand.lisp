@@ -31,9 +31,9 @@
        (not p))))
 
 (fn has-dot-notation? (x)
-  (with (sl  (string-list (symbol-name x)))
-    (| (eql #\. sl.)
-       (eql #\. (car (last sl))))))
+  (!= (symbol-name x)
+    (| (eql #\. (elt ! 0))
+       (eql #\. (elt ! (-- (length !)))))))
 
 (fn dot-expand-conv (x)
   (with (sl  (string-list (symbol-name x))
