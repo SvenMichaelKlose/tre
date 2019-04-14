@@ -1,4 +1,4 @@
-(%defun argument-keyword? (x)
+(fn argument-keyword? (x)
   (| (eq x '&rest)
      (eq x '&body)
      (eq x '&optional)
