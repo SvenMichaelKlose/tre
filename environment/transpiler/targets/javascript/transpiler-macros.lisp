@@ -9,7 +9,7 @@
          ,!))))
 
 (fn js-requires-expander? (x)
-  (unless (body-has-noargs-tag? (lambda-body x))
+  (unless (eq 'no-args (car (lambda-body x)))
     (| (assert?)
        (not (simple-argument-list? (lambda-args x))))))
 

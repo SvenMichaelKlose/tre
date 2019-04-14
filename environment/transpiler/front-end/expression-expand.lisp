@@ -174,7 +174,7 @@
     (expex-make-return-value s 
         (mapcan [with ((moved new-expr) (expex-expr _))
                   (+ moved (mapcan #'ensure-%= new-expr))]
-                (wrap-atoms (list-without-noargs-tag x))))))
+                (wrap-atoms (remove 'no-args x))))))
 
 
 ;;;; TOPLEVEL

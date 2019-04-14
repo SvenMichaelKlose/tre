@@ -33,7 +33,7 @@
   (print-definition `(fn ,name ,args))
   (let body-with-block `((block ,name
                            (block nil
-                             ,@(list-without-noargs-tag body))))
+                             ,@(remove 'no-args body))))
     (| (list? args)
        (error "Argument list expected instead of ~A." args))
     (& (defined-function name)
@@ -41,14 +41,14 @@
 
     (add-defined-function name args body-with-block)
     `((function ,name (,args
-                       ,@(& (body-has-noargs-tag? body)
+                       ,@(& (eq 'no-args body.)
                             '(no-args))
                        ,@(!= body-with-block
                            (? allow-backtrace?
                               (shared-defun-backtrace name !)
                               !))))
       ,@(& allow-source-memorizer?
-           (shared-defun-source-memorizer name args (list-without-noargs-tag body))))))
+           (shared-defun-source-memorizer name args (remove 'no-args body))))))
 
 (fn shared-defun (name args body &key (make-expander? t) (allow-source-memorizer? t))
   (let fun-name (%defun-name name)

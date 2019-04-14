@@ -11,6 +11,7 @@
 (env-load "transpiler/lib/funinfo/types.lisp")
 (env-load "transpiler/lib/funinfo/debug-printers.lisp")
 
+(env-load "transpiler/lib/body-with-noargs-tag.lisp")
 (env-load "transpiler/lib/lambda.lisp")
 (env-load "transpiler/lib/predicates.lisp")
 (env-load "transpiler/lib/compiler-tag.lisp")
