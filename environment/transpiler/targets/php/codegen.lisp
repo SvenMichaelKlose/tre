@@ -112,7 +112,6 @@
         ,@(& dest
              `(,(php-dollarize dest) ," = "))
         ,@(php-%=-value val)
-
         ,*php-separator*)))
 
 (def-php-codegen %set-local-fun (plc val)
