@@ -1,6 +1,7 @@
 Changes relative to tre-0.17:
   * Beautified compiler dumps.
   * AADJOIN moved to phitamine.
+  * Removed STRING-ARRAY.
 
 Changes of tre-0.17 relative to tre-0.16:
   * COUNT now has :TEST argument.

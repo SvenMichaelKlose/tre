@@ -1,5 +1,4 @@
-(functional string-concat string== upcase downcase list-string string-list queue-string)
-
+(functional string<=)
 (fn string<= (a b)
   (with (la  (length a)
          lb  (length b))
@@ -7,18 +6,15 @@
       (& (character> (elt a i) (elt b i))
          (return nil)))))
 
+(functional string-list)
 (fn string-list (x)
-  (let* ((l (length x))
-         (s))
+  (with (l  (length x)
+         s  nil)
     (do ((i (-- l) (-- i)))
         ((< i 0))
       (= s (push (elt x i) s)))
     s))
 
+(functional queue-string)
 (fn queue-string (x)
   (list-string (queue-list x)))
-
-(fn string-array (x)
-  (!= (make-array (length x))
-    (dotimes (i (length x) !)
-      (= (elt ! i) (elt x i)))))
