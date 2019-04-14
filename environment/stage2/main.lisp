@@ -27,4 +27,3 @@
 (env-load "stage2/doarray.lisp")
 (env-load "stage2/dosequence.lisp")
 (env-load "stage2/list-array.lisp" :cl)
-(env-load "stage2/aadjoin.lisp")
