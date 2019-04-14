@@ -17,7 +17,6 @@
 (env-load "stage1/dolist.lisp")
 (env-load "stage1/anaphoric.lisp")
 (env-load "stage1/member.lisp")
-(env-load "stage1/=-cxr.lisp")
 (env-load "stage1/slot-value-p.lisp")
 (env-load "stage1/fboundp.lisp")
 (env-load "stage1/setf-function-p.lisp" :cl)
