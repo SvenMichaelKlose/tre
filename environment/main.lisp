@@ -14,7 +14,8 @@
 (env-load "utils/lml2xml.lisp")
 (env-load "utils/print-html-script.lisp")
 
-(= *tests* (reverse *tests*))
+(env-load "tests/main.lisp")
+
 (env-load "config-after-reload.lisp" :cl)
 
 (env-load "utils/write-image.lisp" :cl)

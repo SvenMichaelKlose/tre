@@ -1,8 +1,24 @@
 The tré programming language
 ============================
 
-tré compiles Lisp to JavaScript and PHP (5+).  It has been under
-development since 2005.
+tré transpiles Lisp to JavaScript and PHP (5+).  It has been under
+development since 2005 and runs on top of Steel Bank Common Lisp
+(sbcl).
+
+## tré is making non-Lispers feel comfortable.
+
+* It won't scare you off with countless parentheses.
+* Its naming is inspired by better-known languages.
+
+## tré is simple.
+
+It's a compiler:
+
+* All features work with both JavaScript and PHP.
+* tré is written in itself. Also compiles to Common Lisp for that
+  matter.
+* The compiler is simple but can support low-level back ends like
+  C or assembly, for example.
 
 
 # Build and install

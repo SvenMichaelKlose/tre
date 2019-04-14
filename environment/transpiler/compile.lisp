@@ -119,7 +119,7 @@
                        *assert?*     (| *assert?* (assert?)))
       (= (host-functions) (make-host-functions))
       (= (host-variables) (make-host-variables))
-      (prog1 (generic-frontend (@ [? (string? _) (list _) _]  sections))
+      (prog1 (generic-frontend (@ [? (string? _) (list _) _] sections))
         (print-transpiler-stats start-time)
         (print-status "Phew!~%")))))
 
