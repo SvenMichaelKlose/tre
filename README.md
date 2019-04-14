@@ -1,42 +1,15 @@
 The tré programming language
 ============================
 
-tré compiles Lisp to browser JavaScript and PHP to bring the joy
-of Lisp development to web-site programming.  tré also somes with
-a bunch of syntacical novelties that lets Lisp appear in a new
-light.
-
-tré is not just remapping its input. It's a "real" compiler, fit
-to support compiling to C, for example.  This enables it to bring
-Lisp features to PHP 5+ – you can use code for both targets.
-
-
-# Spirit
-
-tré started in 2005 as a Lisp interpreter written in C to boot a
-compiler written in itself, all inspired by Common Lisp.  The
-interpreter, providing as little built-in functions as sensible,
-loaded the environment and the compiler and then compiled all
-functions and macros to C code that would then be compiled
-together with the native C core to speed things up.
-Next came a bytecode target that was intended to run anywhere else
-(preferably also in embedded systems), but it has never been used much.
-End of 2008 the JavaScript and PHP targets have been created to
-create LAMP applications which set the path of the tré dialect.
-Around 2013 the C and bytecode targets have been removed in favour
-of placing tré on top of SBCL.  Now 'boot-common.lisp', generated
-by the Common Lisp target, is building up the environment.
-
-Having evolved in this way tré's source code might surprise you
-with elements not too common in the Lisp world which survived
-regular gardening.
+tré compiles Lisp to JavaScript and PHP (5+).  It has been under
+development since 2005.
 
 
 # Build and install
 
 tré requires some Linux with "sbcl" (Steel Bank Common Lisp)
 installed.  But to get real kicks out of tré, you'd need "git"
-and "docker-compose", too. On an Debia-derived distributions,
+and "docker-compose", too.  On a Debia-derived distributions,
 like "Ubuntu" or "Linux Mint"
 
 ```sh
@@ -56,18 +29,18 @@ This will install an executable called "tre" in /usr/local/bin.
 It takes an optional pathname of a source file to compile and
 execute.  If none is specified, it'll prompt you for
 expressions to execute.  We won't to that too often, though.
-Now let's get started.
 
 
 # Starting a project
 
 Let's get ready to hack.  There're three initial projects
-prepared for you in directory example/ which you can copy to
-take off.  All contain configurations for docker-compose to run
-your project in a virtual LAMP server.  "project-js" for making a
-plain JavaScript app,  "project-php" to create a PHP-only
-challenge and "project-js-php" to make an app that'll communicate
-with it's PHP server – by function calls wrapped in HTTP requests.
+prepared for you in directory example/ which you should copy to
+take off as they are subject to getting cleaned thoroughly.  All
+contain configurations for docker-compose to run your project in
+a virtual LAMP server.  "project-js" for making a plain JavaScript
+app,  "project-php" to create a PHP-only challenge and
+"project-js-php" to make an app that'll communicate with it's PHP
+server – by function calls wrapped in HTTP requests.
 
 ## Creating a JavaScript-only project
 
