@@ -121,6 +121,7 @@ examples)
     $TRE examples/make-standard-js.lisp
     $TRE examples/make-standard-nodejs.lisp
     $TRE examples/make-standard-php.lisp
+    $TRE examples/make-coreless-js.lisp
     echo "Making compiler dump for BUTLAST in examples/hello-world.lisp…"
     $TRE examples/make-compiler-dumps-for-butlast.lisp > compiled/compiler-dumps-for-butlast.lisp
 #   $TRE examples/make-obfuscated.lisp # TODO: Fix setting the current *PACKAGE*.
