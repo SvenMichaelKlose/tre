@@ -32,7 +32,7 @@ clean ()
 	rm -vf *.core environment/transpiler/targets/c/native/$COMPILED_ENV image files.lisp
     rm -vf environment/_current-version
     rm -vf environment/_release-date
-	rm -vf _nodejstests.log _phptests.log make.log
+	rm -vf log-nodetests.lisp log-phptests.lisp log-make.lisp
     clean_example_projects
 	echo "Checking out last working core…"
     git checkout -- boot-common.lisp
@@ -76,16 +76,16 @@ boot)
 phptests)
     echo "PHP target tests…"
     $TRE tests/php.lisp
-    php compiled/test.php | tee _phptests.log
-    cmp tests/php.correct-output _phptests.log || (diff tests/php.correct-output _phptests.log; exit 1)
+    php compiled/test.php | tee log-phptests.lisp
+    cmp tests/php.correct-output log-phptests.lisp || (diff tests/php.correct-output log-phptests.lisp; exit 1)
 	;;
 
 jstests)
     echo "JavaScript target tests…"
     $TRE tests/js.lisp
-    node compiled/test.js | tee _nodejstests.log
+    node compiled/test.js | tee log-nodetests.lisp
     chromium-browser compiled/test.html &
-    cmp tests/js.correct-output _nodejstests.log || (diff tests/js.correct-output _nodejstests.log; exit 1)
+    cmp tests/js.correct-output log-nodetests.lisp || (diff tests/js.correct-output log-nodetests.lisp; exit 1)
     echo "JavaScript target tests passed in node.js."
 	;;
 
@@ -119,7 +119,7 @@ webconsole)
 examples)
     echo "Making directory 'examples'…"
     $TRE examples/make-standard-js.lisp
-    $TRE examples/make-standard-nodejs.lisp
+    $TRE examples/make-standard-node.lisp
     $TRE examples/make-standard-php.lisp
     $TRE examples/make-coreless-js.lisp
     echo "Making compiler dump for BUTLAST in examples/hello-world.lisp…"
@@ -150,7 +150,7 @@ extra)
     ;;
 
 releasetests)
-    echo "Making release tests…" | tee make.log
+    echo "Making release tests…" | tee log-make.lisp
     ./make.sh clean
     ./make.sh boot
     ./make.sh genboot
@@ -160,7 +160,7 @@ releasetests)
     ./make.sh extra
     ./make.sh install
     ./make.sh projects
-    echo "Release tests done." >>make.log
+    echo "Release tests done." >>log-make.lisp
 	;;
 
 install)
