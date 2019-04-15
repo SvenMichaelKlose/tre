@@ -32,7 +32,7 @@
 
 (def-js-transpiler-macro defnative (name args &body body)
   (js-make-late-symbol-function-assignment name)
-  `{(%var ,(%defun-name name))
+  `{(%var ,(%fn-name name))
     ,(shared-defun name args (body-with-noargs-tag body) :allow-source-memorizer? nil)})
 
 (fn js-early-symbol-maker (g sym)
@@ -47,7 +47,7 @@
                               `(symbol ,(symbol-name !) nil))))))))
 
 (def-js-transpiler-macro defun (name args &body body)
-  (with (dname  (%defun-name name)
+  (with (dname  (%fn-name name)
          g      '~%tfun)
     `(%%block
        (%var ,dname)
@@ -55,7 +55,7 @@
        ,(shared-defun dname args body :make-expander? nil)
        (= (symbol-function ,g) ,dname))))
 
-(def-js-transpiler-macro %defun (name args &body body)
+(def-js-transpiler-macro %fn (name args &body body)
   `(defun ,name ,args ,@body))
 
 (def-js-transpiler-macro slot-value (place slot)

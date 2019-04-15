@@ -1,13 +1,13 @@
 (var *gensym-counter* 0)
 
 ;; Returns newly created, unique symbol.
-(%defun gensym-number ()
+(%fn gensym-number ()
   (setq *gensym-counter* (+ 1 *gensym-counter*)))
 
 (functional gensym)
 
 ;; Returns newly created, unique symbol.
-(%defun gensym (&optional (prefix "~G"))
+(%fn gensym (&optional (prefix "~G"))
   (#'((x)
        (? (eq (symbol-value x) x)
           (? (symbol-function x)

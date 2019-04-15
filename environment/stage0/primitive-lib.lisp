@@ -1,16 +1,16 @@
-(%defun identity (x)
+(%fn identity (x)
   x)
 
-(%defun list (&rest x)
+(%fn list (&rest x)
   x)
 
-(%defun funcall (fun &rest x)
+(%fn funcall (fun &rest x)
   (apply fun x))
 
-(%defun atom (x)
+(%fn atom (x)
   (not (cons? x)))
 
-(%defun + (&rest x)
+(%fn + (&rest x)
   (#'((a)
         (? a
            (apply (?

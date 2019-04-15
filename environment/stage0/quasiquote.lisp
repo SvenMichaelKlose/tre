@@ -1,4 +1,4 @@
-(%defun %quasiquote-expand (x)
+(%fn %quasiquote-expand (x)
   (?
     (atom x)                     x
     (atom x.)                    (. x. (%quasiquote-expand .x))
@@ -11,7 +11,7 @@
     (. (%quasiquote-expand x.)
        (%quasiquote-expand .x))))
 
-(%defun quasiquote-expand (x)
+(%fn quasiquote-expand (x)
   (car (%quasiquote-expand (list x))))
 
 (%defvar *quasiquote-expand* #'quasiquote-expand)

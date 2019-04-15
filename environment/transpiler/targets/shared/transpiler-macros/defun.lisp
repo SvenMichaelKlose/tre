@@ -51,7 +51,7 @@
            (shared-defun-source-memorizer name args (remove 'no-args body))))))
 
 (fn shared-defun (name args body &key (make-expander? t) (allow-source-memorizer? t))
-  (let fun-name (%defun-name name)
+  (let fun-name (%fn-name name)
     `{,@(shared-defun-without-expander fun-name args body
                                        :allow-source-memorizer? allow-source-memorizer?
                                        :allow-backtrace? t)

@@ -1,4 +1,4 @@
-(%defun compiler-& (x)
+(%fn compiler-& (x)
   (? .x
      `(? ,x.
          ,(compiler-& .x))
@@ -7,7 +7,7 @@
 (defmacro & (&rest x)
   (compiler-& x))
 
-(%defun compiler-| (x)
+(%fn compiler-| (x)
   (? .x
      (#'((g)
            `(#'((,g)

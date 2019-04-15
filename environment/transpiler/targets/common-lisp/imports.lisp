@@ -51,4 +51,4 @@
       (pow expt)))
 
 (defconstant +cl-special-forms+
-    '(%defun-quiet %defun %defvar %defmacro ?))
+    '(%fn-quiet %fn %defvar %defmacro ?))

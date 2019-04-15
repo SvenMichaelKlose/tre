@@ -18,20 +18,17 @@
                     (f x (%macroexpand x)))))
       (f x (%macroexpand x)))))
 
-(fn make-%defun-quiet (name args body)
+(fn make-%fn-quiet (name args body)
   `(cl:progn
      (cl:push (. ',name ',(. args body)) *functions*)
      (cl:defun ,name ,args ,@body)))
 
-(defspecial %defun-quiet (name args &body body)
-  (make-%defun-quiet name args body))
+(defspecial %fn-quiet (name args &body body)
+  (make-%fn-quiet name args body))
 
-(defspecial %defun (name args &body body)
-  (print-definition `(%defun ,name ,args))
-  (make-%defun-quiet name args body))
-
-(defspecial %fn (&rest x) `(%defun ,@x))
-(defspecial %fn-quiet (&rest x) `(%defun-quiet ,@x))
+(defspecial %fn (name args &body body)
+  (print-definition `(%fn ,name ,args))
+  (make-%fn-quiet name args body))
 
 (defspecial %defmacro (name args &body body)
   (print-definition `(%defmacro ,name ,args))

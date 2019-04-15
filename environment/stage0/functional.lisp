@@ -4,7 +4,7 @@
   (print-definition `(functional ,@names))
   `(setq *functionals* (append ',names *functionals*)))
 
-(%defun functional? (name)
+(%fn functional? (name)
   (member name *functionals* :test #'eq))
 
 (functional identity

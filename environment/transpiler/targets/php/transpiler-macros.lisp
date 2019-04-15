@@ -4,7 +4,7 @@
 (def-php-transpiler-macro %defmacro (name args &body body))
 
 (def-php-transpiler-macro defun (name args &body body)
-  (let fun-name (%defun-name name)
+  (let fun-name (%fn-name name)
     `(%%block
        ,(shared-defun name args body)
        (%= nil ((slot-value ',fun-name 'sf) ,(compiled-function-name-string fun-name))))))

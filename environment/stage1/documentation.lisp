@@ -1,6 +1,6 @@
 (var *documentation* nil)
 
-(%defun %add-documentation (name body)
+(%fn %add-documentation (name body)
   (? (? (string? body.)
         .body)
      (progn

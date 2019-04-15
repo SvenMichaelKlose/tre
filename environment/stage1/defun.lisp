@@ -1,6 +1,6 @@
 (var *function-sources* nil)
 
-(%defun %defun-name (name)
+(%fn %fn-name (name)
   (? (symbol? name)
      name
      (? (& (cons? name)
@@ -13,12 +13,12 @@
   (#'((name)
        `(block nil
           (print-definition `(defun ,name ,args))
-          (%defun-quiet ,name ,args
+          (%fn-quiet ,name ,args
             (block ,name
               (block nil
                 ,@(%add-documentation name body))))
           (return ',name)))
-      (%defun-name name)))
+      (%fn-name name)))
 
 (defmacro fn (name args &body body)
   `(defun ,name ,args ,@body))

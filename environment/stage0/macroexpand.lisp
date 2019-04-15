@@ -4,7 +4,7 @@
 (%defvar *current-macro* nil)
 (%defvar *macroexpand* nil)
 
-(%defun %macroexpand-backquote (x)
+(%fn %macroexpand-backquote (x)
   (?
     (atom x)                     x
     (atom x.)                    (. x. (%macroexpand-backquote .x))
@@ -19,13 +19,13 @@
 
 (%defvar *macroexpand-backquote* #'%macroexpand-backquote)
 
-(%defun %macroexpand-rest (x)
+(%fn %macroexpand-rest (x)
   (? (atom x)
      x
      (. (%macroexpand x.)
         (%macroexpand-rest .x))))
 
-(%defun %macroexpand (x)
+(%fn %macroexpand (x)
   (?
     (atom x)                    x
     (apply *macro?* (list x))   (#'((x)
@@ -40,7 +40,7 @@
     (. (%macroexpand x.)
        (%macroexpand-rest .x))))
 
-(%defun native-macroexpand (x)
+(%fn native-macroexpand (x)
   (#'((predicate caller current-macro)
         (setq *macro?*         #'%%macro?
               *macrocall*      #'%%macrocall

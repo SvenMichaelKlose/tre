@@ -1,13 +1,13 @@
 (var *tests* nil)
 
-(%defun test-equal (x y)
+(%fn test-equal (x y)
   (?
     (atom x)    (eql x y)
     (atom y)    (eql x y)
     (test-equal x. y.)
                 (test-equal .x .y)))
 
-(%defun do-test (test)
+(%fn do-test (test)
   (? *print-definitions?*
      (print test.))
   (? (not (test-equal (eval (macroexpand .test.))
@@ -20,7 +20,7 @@
        (print (eval (macroexpand ..test.)))
        (invoke-debugger))))
 
-(%defun do-tests (&optional (tests *tests*))
+(%fn do-tests (&optional (tests *tests*))
   (? (not tests)
      nil
      (progn
