@@ -5,21 +5,6 @@ tré transpiles Lisp to JavaScript and PHP (5+).  It has been under
 development since 2005 and runs on top of Steel Bank Common Lisp
 (sbcl).
 
-## tré is making non-Lispers feel comfortable.
-
-* It won't scare you off with countless parentheses.
-* Its naming is inspired by better-known languages.
-
-## tré is simple.
-
-It's a compiler:
-
-* All features work with both JavaScript and PHP.
-* tré is written in itself. Also compiles to Common Lisp for that
-  matter.
-* The compiler is simple but can support low-level back ends like
-  C or assembly, for example.
-
 
 # Build and install
 
@@ -150,18 +135,17 @@ embarrassing braces and to keep things snappy.
 
 ## No LAMBDA symbol required
 
-The LAMBDA symbol may be safely omitted when defining functions.
+The LAMBDA symbol may be omitted when defining functions.
 Influenced by Arc.
 
 ```lisp
- #'(lambda (args)
-     function-body)
-```
-can be written:
+; Old style.
+#'(lambda (args)
+    function-body)
 
-```lisp
- #'((args)
-     function-body)
+; tré style.
+#'((args)
+    function-body)
 ```
 
 ## Dots instead of CAR or CDR
@@ -182,17 +166,16 @@ x.      ; (car x)
 ..x..   ; (caaddr x)
 ```
 
+It does not work around parentheses yet.
 
 ## Dot instead of CONS
 
 ```lisp
-(. a b)
-```
-
-is the same as
-
-```lisp
+; Old style.
 (cons a b)
+
+; tré style.
+(. a b)
 ```
 
 ## Brackets for anonymous functions
@@ -209,12 +192,12 @@ Inspired by Arc
 is the equivalent of
 
 ```lisp
- #'((_)
-      (expr))
+#'((_)
+    (expr))
 
- #'((_)
-      (expr1)
-      (expr2))
+#'((_)
+    (expr1)
+    (expr2))
 ```
 
 If 'expr' starts with a symbol, it is wrapped into a list to
