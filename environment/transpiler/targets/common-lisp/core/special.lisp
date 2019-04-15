@@ -30,6 +30,9 @@
   (print-definition `(%defun ,name ,args))
   (make-%defun-quiet name args body))
 
+(defspecial %fn (&rest x) `(%defun ,@x))
+(defspecial %fn-quiet (&rest x) `(%defun-quiet ,@x))
+
 (defspecial %defmacro (name args &body body)
   (print-definition `(%defmacro ,name ,args))
   `(cl:push (. ',name
