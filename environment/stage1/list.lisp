@@ -170,6 +170,7 @@
 (defmacro adjoin! (obj &rest place)
   `(= ,place. (adjoin ,obj ,@place)))
 
+(functional list-length)
 (fn list-length (x)
   (let len 0
     (while (cons? x)
@@ -177,6 +178,7 @@
       (setq x .x)
       (++! len))))
 
+(functional functional)
 (fn filter (func lst)
   (let result (. nil nil)
     (dolist (i lst .result)
