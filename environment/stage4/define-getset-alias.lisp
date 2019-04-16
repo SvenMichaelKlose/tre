@@ -1,18 +1,9 @@
-(fn get-definer (class)
-  (? class
-     `(defmethod ,class)
-     '(fn)))
-
-(defmacro define-alias (alias real &key (class nil))
-  `(,@(get-definer class) ,alias ()
-      ,real))
-
 (defmacro define-get-alias (alias real &key (class nil))
-  `(,@(get-definer class) ,($ 'get- alias) ()
+  `(defmethod ,class ,($ 'get- alias) ()
       ,real))
 
 (defmacro define-set-alias (alias real &key (class nil))
-  `(,@(get-definer class) ,($ 'set- alias) (x)
+  `(defmethod ,class ,($ 'set- alias) ()
       (= ,real x)))
 
 (defmacro define-getset-alias (alias real &key (class nil))
