@@ -25,9 +25,8 @@
 (fn setting-ret-to-bool? (x)
   (& (%=? x)
      (~%ret? .x.)
-     (!= ..x.
-       (| (not !)
-          (eq t !)))))
+     (| (not ..x.)
+        (eq t ..x.))))
 
 (define-optimizer optimize-jumps
   (& (%%go-cond? a)

@@ -3,10 +3,9 @@
      d. (atom d.)))
 
 (fn has-no-jumps-to? (x tag)
-  (@ (i x t)
-    (& (vm-jump? i)
-       (== (%%go-tag i) tag)
-       (return nil))))
+  (notany [& (vm-jump? _)
+             (== (%%go-tag _) tag)]
+          x))
 
 (fn tags-lambda (x)
   (with (body        x
