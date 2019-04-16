@@ -1,4 +1,7 @@
-Changes relative to tre-0.17:
+Changes relative to tre-0.18:
+  * PERMUTATE: Takes &REST argument instead of list of lists.
+
+Changes of tre-0.18 relative to tre-0.17:
   * Slightly improved optimizer.
   * NONE? renamed to NOTANY.
   * AADJOIN moved to outside project "phitamine".

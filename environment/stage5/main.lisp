@@ -9,6 +9,7 @@
 (env-load "stage5/quoted.lisp")
 (env-load "stage5/symbol-names.lisp")
 (env-load "stage5/toggle.lisp")
+(env-load "stage5/permutate.lisp")
 
 (env-load "stage5/email-domain.lisp")
 (env-load "stage5/path-append.lisp")
