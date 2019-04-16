@@ -55,8 +55,8 @@
      (named-lambda? x)))
 
 (fn metacode-statement? (x)
-  (& x
-     (| (atom x)
-        (named-lambda? x)
-        (in? x. '%= '%set-vec '%var '%function-prologue '%function-epilogue '%function-return '%%tag '%%comment)
-        (vm-jump? x))))
+  (| (number? x)
+     (& (cons? x)
+        (| (named-lambda? x)
+           (in? x. '%= '%set-vec '%var '%function-prologue '%function-epilogue '%function-return '%%tag '%%comment)
+           (vm-jump? x)))))
