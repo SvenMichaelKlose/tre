@@ -1,5 +1,6 @@
 Changes relative to tre-0.18:
   * PERMUTATE: Takes &REST argument instead of list of lists.
+  * DEFINE-SLOT-SETTER*: Weird idea removed.
 
 Changes of tre-0.18 relative to tre-0.17:
   * Slightly improved optimizer.

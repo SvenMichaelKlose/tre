@@ -30,3 +30,5 @@
 (env-load "tests/split.lisp")
 (env-load "tests/trim.lisp")
 (env-load "tests/argument-expand.lisp")
+
+(= *tests* (reverse *tests*))
