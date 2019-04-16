@@ -179,7 +179,7 @@
 
 (fn make-compiled-symbol-identifier (x)
   ($ (!? (symbol-package x)
-         (+ (symbol-name !) "_p_")
+         (+ (abbreviated-package-name (symbol-name !)) "_p_")
          "")
      x))
 
