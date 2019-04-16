@@ -3,6 +3,7 @@ Changes relative to tre-0.17:
   * AADJOIN moved to phitamine.
   * Removed STRING-ARRAY.
   * NONE? renamed to NOTANY.
+  * Slightly improved optimizer.
 
 Changes of tre-0.17 relative to tre-0.16:
   * COUNT now has :TEST argument.

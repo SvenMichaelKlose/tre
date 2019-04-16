@@ -398,4 +398,9 @@
     (= (transpiler-transpiler-macro-expander !) (make-transpiler-macro-expander !))
     (make-transpiler-codegen-expander !)
     (transpiler-make-expex !)
-    (make-global-funinfo !)))
+    (make-global-funinfo !)
+    (@ [transpiler-add-functional ! _]
+       '(%%%+ %%%string+ %%%- %%%/ %%%* %%%mod
+         %%%== %%%!= %%%< %%%> %%%<= %%%>=
+         %%%eq %%%<< %%%>> %%%bit-or %%%bit-and
+         %aref %aref-defined))))

@@ -60,25 +60,26 @@
      (expex-argument-filter ex)  #'js-argument-filter))
 
 (fn make-javascript-transpiler ()
-  (create-transpiler
-      :name                     :js
-      :prologue-gen             #'js-prologue
-      :epilogue-gen             #'js-epilogue
-      :sections-before-import   #'js-sections-before-import
-      :sections-after-import    #'js-sections-after-import
-      :lambda-export?           nil
-      :stack-locals?            nil
-      :needs-var-declarations?  t
-      :enabled-passes           '(:count-tags)
-      :identifier-char?         #'c-identifier-char?
-      :expex-initializer        #'js-expex-initializer
-      :configurations           '((:platform                 . :browser)
-                                  (:nodejs-requirements      . nil)
-                                  (:rplac-breakpoints        . nil)
-                                  (:exclude-core?            . nil)
-                                  (:memorize-sources?        . nil)
-                                  (:save-sources?            . nil)
-                                  (:save-argument-defs-only? . nil))))
+  (aprog1 (create-transpiler
+            :name                     :js
+            :prologue-gen             #'js-prologue
+            :epilogue-gen             #'js-epilogue
+            :sections-before-import   #'js-sections-before-import
+            :sections-after-import    #'js-sections-after-import
+            :lambda-export?           nil
+            :stack-locals?            nil
+            :needs-var-declarations?  t
+            :enabled-passes           '(:count-tags)
+            :identifier-char?         #'c-identifier-char?
+            :expex-initializer        #'js-expex-initializer
+            :configurations           '((:platform                 . :browser)
+                                        (:nodejs-requirements      . nil)
+                                        (:rplac-breakpoints        . nil)
+                                        (:exclude-core?            . nil)
+                                        (:memorize-sources?        . nil)
+                                        (:save-sources?            . nil)
+                                        (:save-argument-defs-only? . nil)))
+    (transpiler-add-functional ! '%js-typeof)))
 
 (var *js-transpiler* (make-javascript-transpiler))
 (var *js-separator*  (+ ";" *terpri*))

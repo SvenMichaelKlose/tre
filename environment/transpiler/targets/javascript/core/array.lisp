@@ -5,6 +5,7 @@
 (defmacro =-aref (v a k)  `(=-%aref ,v ,a ,k))
 (defmacro array? (x)      `(*array.is-array ,x))
 
+(functional list-array)
 (fn list-array (x)
   (!= (make-array)
     (@ (i x !)
