@@ -10,7 +10,7 @@
        (eq .a. ..n.)
        (eq .n. ..a.))))
 
-(fn jump-to-following-tag? (a d)
+(fn jump-to-subsequent-tag? (a d)
   (& d
      (vm-jump? a)
      (eql (%%go-tag a) d.)))
@@ -26,7 +26,7 @@
 
 (define-optimizer opt-peephole
   (reversed-assignments? a d)        (. a (opt-peephole .d))
-  (| (jump-to-following-tag? a d)
+  (| (jump-to-subsequent-tag? a d)
      (unused-atom-or-functional? a)
      (assignment-to-self? a))        (opt-peephole d)
   (%%go? a)                          (. a (opt-peephole (member-if #'atom d)))
