@@ -298,8 +298,8 @@
 (fn add-defined-function (name args body)
   (transpiler-add-defined-function *transpiler* name args body))
 
-(define-slot-setter-push transpiler-add-closure tr
-  (transpiler-closures tr))
+(fn transpiler-add-closure (tr x)
+  (push x (transpiler-closures tr)))
 
 (fn add-delayed-expr (x)
   (+! (delayed-exprs) (frontend x))

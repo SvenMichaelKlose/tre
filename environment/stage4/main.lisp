@@ -24,6 +24,5 @@
 (env-load "stage4/sort.lisp")
 (env-load "stage4/split.lisp" :cl)
 (env-load "stage4/trim.lisp")
-(env-load "stage4/define-slot-setter.lisp")
 (env-load "stage4/merge.lisp")
 (env-load "stage4/unique.lisp")
