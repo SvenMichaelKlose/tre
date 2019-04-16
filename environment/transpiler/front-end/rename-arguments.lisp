@@ -1,4 +1,4 @@
-(define-gensym-generator argument-sym a)
+(def-gensym argument-sym a)
 
 (fn rename-argument (replacements x)
   (& (macro? x)

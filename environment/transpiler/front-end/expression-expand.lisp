@@ -37,7 +37,7 @@
                                          .v.
                                          v))))
 
-(define-gensym-generator expex-sym e)
+(def-gensym expex-sym e)
 
 (fn expex-add-var ()
   (funinfo-var-add *funinfo* (expex-sym)))

@@ -1,4 +1,4 @@
-(defmacro define-gensym-generator (name prefix)
+(defmacro def-gensym (name prefix)
   (let counter ($ '* name '-counter*)
     `{(var ,counter 0)
       (fn ,name ()

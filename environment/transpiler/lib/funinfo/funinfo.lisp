@@ -1,6 +1,6 @@
 (var *funinfo*)
 
-(define-gensym-generator funinfo-sym ~f)
+(def-gensym funinfo-sym ~f)
 
 (defstruct funinfo
   (transpiler   nil)

@@ -19,7 +19,7 @@
 
 ;;;; EXPORT
 
-(define-gensym-generator closure-name ~closure-)
+(def-gensym closure-name ~closure-)
 
 (fn lambda-export (x)
   (with (name    (closure-name)

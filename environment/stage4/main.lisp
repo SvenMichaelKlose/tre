@@ -3,7 +3,7 @@
 (env-load "stage4/compose.lisp")
 (env-load "stage4/copy.lisp")
 (env-load "stage4/define-getset-alias.lisp")
-(env-load "stage4/define-gensym-generator.lisp")
+(env-load "stage4/def-gensym.lisp")
 (env-load "stage4/define-tree-filter.lisp")
 (env-load "stage4/destructive-arith.lisp")
 (env-load "stage4/intersect.lisp")
