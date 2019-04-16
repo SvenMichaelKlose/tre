@@ -5,14 +5,14 @@
 
 (var *compiler-macro-expander* (define-expander 'compiler :pre #'init-compiler-macros))
 
-(defmacro define-compiler-macro (name args &body x)
-  (print-definition `(define-compiler-macro ,name ,args))
+(defmacro def-compiler-macro (name args &body x)
+  (print-definition `(def-compiler-macro ,name ,args))
   `(def-expander-macro *compiler-macro-expander* ,name ,args ,@x))
 
 (fn compiler-macroexpand (x)
   (expander-expand *compiler-macro-expander* x))
 
-(define-compiler-macro cond (&rest args)
+(def-compiler-macro cond (&rest args)
   (with-compiler-tag end-tag
     `(%%block
        ,@(mapcan [with-compiler-tag next
@@ -29,15 +29,15 @@
        ,end-tag
        (identity ~%ret))))
 
-(define-compiler-macro progn (&body body)
+(def-compiler-macro progn (&body body)
   (!? body
       `(%%block ,@(wrap-atoms !))))
 
-(define-compiler-macro setq (&rest args)
+(def-compiler-macro setq (&rest args)
   `(%%block ,@(@ [`(%= ,_. ,._.)]
                  (group args 2))))
 
-(define-compiler-macro ? (&body body)
+(def-compiler-macro ? (&body body)
   (with (tests (group body 2)
          end   (car (last tests)))
     (unless body
@@ -76,7 +76,7 @@
 (def-expander-macro *tagbody-expander* tagbody (&body body)
   (tagbodyexpand body))
 
-(define-compiler-macro tagbody (&body body)
+(def-compiler-macro tagbody (&body body)
   (tagbodyexpand body))
 
 
@@ -113,5 +113,5 @@
 (def-expander-macro *block-expander* block (name &body body)
   (blockexpand name body))
 
-(define-compiler-macro block (name &body body)
+(def-compiler-macro block (name &body body)
   (blockexpand name body))
