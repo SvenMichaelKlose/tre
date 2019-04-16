@@ -178,7 +178,6 @@
       (setq x .x)
       (++! len))))
 
-(functional functional)
 (fn filter (func lst)
   (let result (. nil nil)
     (dolist (i lst .result)
