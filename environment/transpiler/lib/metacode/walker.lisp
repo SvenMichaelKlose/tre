@@ -2,8 +2,7 @@
 
 (fn metacode-statement? (x)
   (| (in? x. '%= '%set-vec '%var '%function-prologue '%function-epilogue '%function-return '%%tag)
-     (vm-jump? x)
-     (%%call-nil? x)))
+     (vm-jump? x)))
 
 (defmacro metacode-walker (name args &key (if-atom nil)
                                           (if-cons nil)
@@ -23,8 +22,6 @@
                   ,@(!? if-go           `((%%go? ,v) ,!))
                   ,@(!? if-go-nil       `((%%go-nil? ,v) ,!))
                   ,@(!? if-go-not-nil   `((%%go-not-nil? ,v) ,!))
-                  (%%call-nil? ,v)      (list ,v)
-                  (%%call-not-nil? ,v)  (list ,v)
                   (%%comment? ,v)       (list ,v)
                   (named-lambda? ,v)    (with-lambda-funinfo ,v
                                           (list (copy-lambda ,v :body ,(| if-named-function

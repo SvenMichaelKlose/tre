@@ -18,18 +18,6 @@
 (def-js-codegen %%go-not-nil (tag val)
   `(,*js-indent* "if (!" ,(js-nil? val) ") { _I_=" ,tag "; continue; }" ,*terpri*))
 
-(def-js-codegen %%call-nil (val consequence alternative)
-  `(,*js-indent* "if " ,(js-nil? val) " "
-                     ,consequence " ();"
-                 "else "
-                     ,alternative " ();" ,*terpri*))
-
-(def-js-codegen %%call-not-nil (val consequence alternative)
-  `(,*js-indent* "if (!",(js-nil? val) ") "
-                     ,consequence " (); "
-                 "else "
-                     ,alternative " ();" ,*terpri*))
-
 (def-js-codegen %set-local-fun (plc val)
   `(%%native ,*js-indent* ,plc " = " ,val ,*js-separator*))
 

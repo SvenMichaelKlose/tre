@@ -1,6 +1,6 @@
 {,@(@ [`(def-head-predicate ,_)]
       '(quote %new
-        %%block %%go %%go-nil %%go-not-nil %%call-nil %%call-not-nil
+        %%block %%go %%go-nil %%go-not-nil
         %stack %stackarg %vec %set-vec %= %tag %%tag
         %%native %%string
         %closure %%closure
