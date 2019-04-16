@@ -54,10 +54,9 @@
   (| (lambda? x)
      (named-lambda? x)))
 
-(fn metacode-expression? (x)
+(fn metacode-statement? (x)
   (& x
      (| (atom x)
-        (%=? x)
-        (vm-jump? x)
-        (%var? x)
-        (named-lambda? x))))
+        (named-lambda? x)
+        (in? x. '%= '%set-vec '%var '%function-prologue '%function-epilogue '%function-return '%%tag '%%comment)
+        (vm-jump? x))))

@@ -1,9 +1,5 @@
 (var *body*)
 
-(fn metacode-statement? (x)
-  (| (in? x. '%= '%set-vec '%var '%function-prologue '%function-epilogue '%function-return '%%tag)
-     (vm-jump? x)))
-
 (defmacro metacode-walker (name args &key (if-atom nil)
                                           (if-cons nil)
                                           (if-setq nil)

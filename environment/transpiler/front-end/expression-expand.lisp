@@ -167,8 +167,7 @@
        x)))
 
 (fn expex-body (x &optional (s '~%ret))
-  (with (ensure-%=  [| (& (| (metacode-expression? _)
-                             (%%comment? _))
+  (with (ensure-%=  [| (& (metacode-statement? _)
                           (list _))
                        (make-%= '~%ret _)])
     (expex-make-return-value s 
