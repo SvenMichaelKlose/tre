@@ -1,3 +1,4 @@
+(functional copy)
 (fn copy (x)
   (?
     (cons? x)       (copy-list x)

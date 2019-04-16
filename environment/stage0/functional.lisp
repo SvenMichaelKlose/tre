@@ -29,4 +29,5 @@
             list-string
             make-array array? aref
             slot-value %slot-value
-            href hash-table?)
+            href hash-table?
+            object?)

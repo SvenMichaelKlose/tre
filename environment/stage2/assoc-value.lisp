@@ -1,5 +1,4 @@
 (functional assoc-value)
-
 (fn assoc-value (key lst &key (test #'eql))
   (cdr (assoc key lst :test test)))
 

@@ -11,6 +11,7 @@
        (trim-head (subseq seq (length head)) head :test test)
        seq)))
 
+(functional trim)
 (fn trim (seq obj &key (test #'equal))
   (& seq
      (? (< 0 (length seq))

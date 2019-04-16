@@ -19,5 +19,6 @@
                            :include?  include?))
          (list seq))))
 
+(functional split)
 (fn split (obj seq &key (test #'eql) (include? nil))
   (generic-split obj seq :test test :include? include?))

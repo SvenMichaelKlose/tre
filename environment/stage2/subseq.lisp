@@ -1,4 +1,4 @@
-(functional subseq)
+(functional subseq list-subseq)
 
 (fn list-subseq (seq start &optional (end 999999))
   (when (& seq

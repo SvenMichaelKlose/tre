@@ -1,3 +1,4 @@
+(functional tail?)
 (fn tail? (x tail &key (test #'equal))
   (with (xlen  (length x)
          tlen  (length tail))

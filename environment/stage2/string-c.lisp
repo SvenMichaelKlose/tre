@@ -1,3 +1,5 @@
+(functional upcase downcase)
+
 (fn upcase (str)
   (list-string (@ #'char-upcase (string-list str))))
 

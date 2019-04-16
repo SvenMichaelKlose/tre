@@ -1,4 +1,4 @@
-(functional character>= character<= char-upcase char-downcase char-code code-char)
+(functional character>= character<= char-upcase char-downcase)
 
 (fn character>= (&rest x)
   (apply #'>= (@ #'char-code x)))
