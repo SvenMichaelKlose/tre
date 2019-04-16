@@ -13,7 +13,8 @@
 (fn php-argument-list (x)
   (c-list (@ #'php-dollarize x)))
 
-(def-codegen-macro def-php-codegen *php-transpiler*)
+(defmacro def-php-codegen (name &body body)
+  `(define-codegen-macro *php-transpiler* ,name ,@body))
 
 (defmacro define-php-infix (name)
   `(def-codegen-infix *php-transpiler* ,name))

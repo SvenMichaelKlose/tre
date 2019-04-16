@@ -1,4 +1,5 @@
-(def-codegen-macro def-js-codegen *js-transpiler*)
+(defmacro def-js-codegen (name &body body)
+  `(define-codegen-macro *js-transpiler* ,name ,@body))
 
 
 ;;;; CONTROL FLOW
