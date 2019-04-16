@@ -1,11 +1,11 @@
-(define-test "BACKQUOTE"
+(deftest "BACKQUOTE"
   (`(1 2 3))
   `(1 2 3))
 
-(define-test "QUASIQUOTE"
+(deftest "QUASIQUOTE"
   (`(1 ,2 ,,3 ,,4))
   '(1 2 ,3 ,4))
 
-(define-test "QUASIQUOTE-SPLICE"
+(deftest "QUASIQUOTE-SPLICE"
   (`(1 ,@'(2) ,,@3 ,,@4))
   '(1 2 ,@3 ,@4))

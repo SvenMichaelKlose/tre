@@ -1,3 +1,3 @@
-;(define-test "ELT returns CHARACTER of STRING"
+;(deftest "ELT returns CHARACTER of STRING"
 ;  ((character? (elt "fnord" 0)))
 ;  t)

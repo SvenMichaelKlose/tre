@@ -90,4 +90,4 @@
 (def-js-transpiler-macro invoke-debugger ()
  `(%= nil (%invoke-debugger)))
 
-(def-js-transpiler-macro define-test (&rest x))
+(def-js-transpiler-macro deftest (&rest x))

@@ -1,3 +1,3 @@
-(define-test "$"
+(deftest "$"
   (($ "DOLLAR-" 'test))
   'dollar-test)

@@ -1,7 +1,7 @@
-(define-test "++"
+(deftest "++"
   ((++ 1))
   2)
 
-(define-test "--"
+(deftest "--"
   ((-- 2))
   1)

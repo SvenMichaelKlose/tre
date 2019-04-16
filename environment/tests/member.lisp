@@ -1,13 +1,13 @@
-(define-test "MEMBER finds elements"
+(deftest "MEMBER finds elements"
   ((? (member 's '(l i s p))
       t))
   t)
 
-(define-test "MEMBER finds elements with user predicate"
+(deftest "MEMBER finds elements with user predicate"
   ((? (member "lisp" '("tre" "lisp") :test #'string==)
       t))
   t)
 
-(define-test "MEMBER falsely detects foureign elements"
+(deftest "MEMBER falsely detects foureign elements"
   ((member 'a '(l i s p)))
   nil)

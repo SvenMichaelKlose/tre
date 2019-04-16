@@ -1,11 +1,11 @@
-(define-test "TRIM-HEAD works"
+(deftest "TRIM-HEAD works"
   ((trim-head "  " " " :test #'string==))
   nil)
 
-(define-test "TRIM-TAIL works"
+(deftest "TRIM-TAIL works"
   ((trim-tail "  " " " :test #'string==))
   nil)
 
-(define-test "TRIM works"
+(deftest "TRIM works"
   ((trim "  " " " :test #'string==))
   nil)

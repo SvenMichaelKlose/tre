@@ -1,11 +1,11 @@
-(define-test "LAMBDA? works"
+(deftest "LAMBDA? works"
   ((lambda? '#'((x) x)))
   t)
 
-(define-test "LAMBDA? works with LAMBDA"
+(deftest "LAMBDA? works with LAMBDA"
   ((lambda? '#'(lambda (x) x)))
   t)
 
-(define-test "LAMBDA-CALL? works"
+(deftest "LAMBDA-CALL? works"
   ((lambda-call? '(#'((x) x) nil)))
   t)

@@ -28,8 +28,8 @@
        (do-tests .tests))))
 
 ;; Add test to global list.
-(defmacro define-test (description expr result)
-  (print-definition (list 'define-test description))
+(defmacro deftest (description expr result)
+  (print-definition (list 'deftest description))
   (setq *tests* (. (. description
                       (. (. 'block (. nil expr))
                          (. result nil)))

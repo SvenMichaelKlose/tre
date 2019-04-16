@@ -1,3 +1,3 @@
-(define-test "EMPTY-STRING? works"
+(deftest "EMPTY-STRING? works"
   ((empty-string? "  " ""))
   t)
